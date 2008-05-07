@@ -1,0 +1,1 @@
+EXPORTS_NP_GetEntryPoints@4	@1	NP_GetEntryPoints_NP_Initialize@4		@2	NP_Initialize_NP_Shutdown@0			@1	NP_Shutdown
