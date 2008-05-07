@@ -41,6 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if defined(linux)
 #	include <sys/sysinfo.h> // For sysinfo
+#	include <cstdio> // For FILE and fopen
 #endif
 
 #if defined(__APPLE__)
