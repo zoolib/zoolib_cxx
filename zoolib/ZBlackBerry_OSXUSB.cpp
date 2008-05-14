@@ -171,6 +171,9 @@ void Manager_OSXUSB::Start()
 	fUSBWatcher_PearlDual = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 4);
 	fUSBWatcher_PearlDual->SetObserver(this);
 
+	fUSBWatcher_Pearl8120 = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8004);
+	fUSBWatcher_Pearl8120->SetObserver(this);
+
 	Manager::Start();
 	}
 
@@ -182,6 +185,7 @@ void Manager_OSXUSB::Stop()
 	fUSBWatcher_Traditional.Clear();
 	fUSBWatcher_Pearl.Clear();
 	fUSBWatcher_PearlDual.Clear();
+	fUSBWatcher_Pearl8120.Clear();
 
 	if (fIONotificationPortRef)
 		{
@@ -265,6 +269,12 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 		{
 		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
 			s << "Got an 8xxx series, dual mode";
+		}
+
+	if (theIDProduct == 0x8004)
+		{
+		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+			s << "Got an 8120";
 		}
 
 	if (theIDProduct == 1)

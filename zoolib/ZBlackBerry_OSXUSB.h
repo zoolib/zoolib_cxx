@@ -71,6 +71,7 @@ private:
 	ZRef<ZUSBWatcher> fUSBWatcher_Traditional;
 	ZRef<ZUSBWatcher> fUSBWatcher_Pearl;
 	ZRef<ZUSBWatcher> fUSBWatcher_PearlDual;
+	ZRef<ZUSBWatcher> fUSBWatcher_Pearl8120;
 
 	struct Device_t
 		{
