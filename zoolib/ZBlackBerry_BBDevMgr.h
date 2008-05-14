@@ -37,8 +37,8 @@ class Device_BBDevMgr;
 #pragma mark * ZBlackBerry::Manager_BBDevMgr
 
 class Manager_BBDevMgr
-:	public Manager,
-	ZBlackBerryCOM::IDeviceManagerEvents
+:	private ZBlackBerryCOM::IDeviceManagerEvents,
+	public Manager
 	{
 	typedef ZBlackBerryCOM::IDevice IDevice;
 	typedef ZBlackBerryCOM::IDeviceManager IDeviceManager;
@@ -49,10 +49,6 @@ public:
 
 	virtual ~Manager_BBDevMgr();
 
-// From Manager
-	virtual void GetDeviceIDs(vector<uint64>& oDeviceIDs);
-	virtual ZRef<Device> Open(uint64 iDeviceID);
-
 // From IUnknown via IDeviceManagerEvents
 	virtual STDMETHODIMP QueryInterface(const IID& inInterfaceID, void** outObjectRef);
 	virtual ULONG STDMETHODCALLTYPE AddRef();
@@ -61,6 +57,10 @@ public:
 // From IDeviceManagerEvents
 	virtual STDMETHODIMP DeviceConnect(IDevice* iDevice);
 	virtual STDMETHODIMP DeviceDisconnect(IDevice* iDevice);
+
+// From Manager
+	virtual void GetDeviceIDs(vector<uint64>& oDeviceIDs);
+	virtual ZRef<Device> Open(uint64 iDeviceID);
 
 private:
 	ZMutex fMutex;

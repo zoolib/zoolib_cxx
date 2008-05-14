@@ -33,8 +33,8 @@ namespace ZBlackBerry {
 #pragma mark * ZBlackBerry::Channel_BBDevMgr
 
 class Channel_BBDevMgr
-:	public ZBlackBerry::Channel,
-	private ZBlackBerryCOM::IChannelEvents,
+:	private ZBlackBerryCOM::IChannelEvents,
+	public ZBlackBerry::Channel,
 	private ZStreamRCon,
 	private ZStreamWCon
 	{
@@ -50,6 +50,17 @@ public:
 		IDevice* iDevice, const string& iName, const PasswordHash* iPasswordHash);
 
 	virtual ~Channel_BBDevMgr();
+
+// From IUnknown via IChannelEvents
+	virtual STDMETHODIMP QueryInterface(const IID& inInterfaceID, void** outObjectRef);
+	virtual ULONG STDMETHODCALLTYPE AddRef();
+	virtual ULONG STDMETHODCALLTYPE Release();
+
+// From IChannelEvents
+	virtual STDMETHODIMP CheckClientStatus(uint16 iRHS);
+	virtual STDMETHODIMP OnChallenge(int32 iAttemptsRemaining, uint8 oPasswordHash[20]);
+	virtual STDMETHODIMP OnNewData();
+	virtual STDMETHODIMP OnClose();
 
 // From ZStreamerR via ZBlackBerry::Channel
 	virtual const ZStreamRCon& GetStreamRCon();
@@ -73,17 +84,6 @@ public:
 
 // From ZStreamRCon and ZStreamWCon
 	virtual void Imp_Abort();
-
-// From IUnknown via IChannelEvents
-	virtual STDMETHODIMP QueryInterface(const IID& inInterfaceID, void** outObjectRef);
-	virtual ULONG STDMETHODCALLTYPE AddRef();
-	virtual ULONG STDMETHODCALLTYPE Release();
-
-// From IChannelEvents
-	virtual STDMETHODIMP CheckClientStatus(uint16 iRHS);
-	virtual STDMETHODIMP OnChallenge(int32 iAttemptsRemaining, uint8 oPasswordHash[20]);
-	virtual STDMETHODIMP OnNewData();
-	virtual STDMETHODIMP OnClose();
 
 // Our protocol
 	bool IsOkay();
@@ -129,6 +129,87 @@ Channel_BBDevMgr::~Channel_BBDevMgr()
 
 	if (fChannel)
 		fChannel->Release();
+	}
+
+STDMETHODIMP Channel_BBDevMgr::QueryInterface(const IID& iInterfaceID, void** oObjectRef)
+	{
+	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 3, "ZBlackBerry::Channel_BBDevMgr"))
+		s << "QueryInterface";
+
+	*oObjectRef = nil;
+	if (iInterfaceID == IID_IUnknown)
+		{
+		*oObjectRef = static_cast<IUnknown*>(this);
+		this->AddRef();
+		return NOERROR;
+		}
+
+	if (iInterfaceID == ZUUIDOF(IChannelEvents))
+		{
+		*oObjectRef = static_cast<IChannelEvents*>(this);
+		this->AddRef();
+		return NOERROR;
+		}
+
+	return E_NOINTERFACE;
+	}
+
+ULONG STDMETHODCALLTYPE Channel_BBDevMgr::AddRef()
+	{ return ZRefCountedWithFinalization::AddRef(); }
+
+ULONG STDMETHODCALLTYPE Channel_BBDevMgr::Release()
+	{ return ZRefCountedWithFinalization::Release(); }
+
+STDMETHODIMP Channel_BBDevMgr::CheckClientStatus(uint16 iRHS)
+	{
+	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 3, "ZBlackBerry::Channel_BBDevMgr"))
+		s << "CheckClientStatus";
+	// Not implemented - what does this do?
+
+	return S_OK;
+	}
+
+STDMETHODIMP Channel_BBDevMgr::OnChallenge(int32 iAttemptsRemaining, uint8 oPasswordHash[20])
+	{
+	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 3, "ZBlackBerry::Channel_BBDevMgr"))
+		s << "OnChallenge";
+
+	#warning not working yet
+	if (false && fHasPasswordHash && iAttemptsRemaining > 6)
+		{
+		*reinterpret_cast<PasswordHash*>(oPasswordHash) = fPasswordHash;
+		return S_OK;
+		}
+	else
+		{
+		return E_FAIL;
+		}
+	}
+
+STDMETHODIMP Channel_BBDevMgr::OnNewData()
+	{
+	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 3, "ZBlackBerry::Channel_BBDevMgr"))
+		s << "OnNewData";
+
+	ZMutexLocker locker(fMutex);
+	fCondition_Reader.Broadcast();
+
+	return NOERROR;
+	}
+
+STDMETHODIMP Channel_BBDevMgr::OnClose()
+	{
+	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 3, "ZBlackBerry::Channel_BBDevMgr"))
+		s << "OnClose";
+
+	// Close initiated by device removal or the other side. An abort
+	// here seems to deadlock, hence our use of the fClosed flag.
+
+	ZMutexLocker locker(fMutex);
+	fClosed = true;
+	fCondition_Reader.Broadcast();
+
+	return NOERROR;
 	}
 
 bool Channel_BBDevMgr::IsOkay()
@@ -330,87 +411,6 @@ void Channel_BBDevMgr::Imp_Abort()
 		s << "Imp_Abort";
 
 	this->pAbort();
-	}
-
-STDMETHODIMP Channel_BBDevMgr::QueryInterface(const IID& iInterfaceID, void** oObjectRef)
-	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "QueryInterface";
-
-	*oObjectRef = nil;
-	if (iInterfaceID == IID_IUnknown)
-		{
-		*oObjectRef = static_cast<IUnknown*>(this);
-		this->AddRef();
-		return NOERROR;
-		}
-
-	if (iInterfaceID == ZUUIDOF(IChannelEvents))
-		{
-		*oObjectRef = static_cast<IChannelEvents*>(this);
-		this->AddRef();
-		return NOERROR;
-		}
-
-	return E_NOINTERFACE;
-	}
-
-ULONG STDMETHODCALLTYPE Channel_BBDevMgr::AddRef()
-	{ return ZRefCountedWithFinalization::AddRef(); }
-
-ULONG STDMETHODCALLTYPE Channel_BBDevMgr::Release()
-	{ return ZRefCountedWithFinalization::Release(); }
-
-STDMETHODIMP Channel_BBDevMgr::CheckClientStatus(uint16 iRHS)
-	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "CheckClientStatus";
-	// Not implemented - what does this do?
-
-	return S_OK;
-	}
-
-STDMETHODIMP Channel_BBDevMgr::OnChallenge(int32 iAttemptsRemaining, uint8 oPasswordHash[20])
-	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "OnChallenge";
-
-	#warning not working yet
-	if (false && fHasPasswordHash && iAttemptsRemaining > 6)
-		{
-		*reinterpret_cast<PasswordHash*>(oPasswordHash) = fPasswordHash;
-		return S_OK;
-		}
-	else
-		{
-		return E_FAIL;
-		}
-	}
-
-STDMETHODIMP Channel_BBDevMgr::OnNewData()
-	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "OnNewData";
-
-	ZMutexLocker locker(fMutex);
-	fCondition_Reader.Broadcast();
-
-	return NOERROR;
-	}
-
-STDMETHODIMP Channel_BBDevMgr::OnClose()
-	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "OnClose";
-
-	// Close initiated by device removal or the other side. An abort
-	// here seems to deadlock, hence our use of the fClosed flag.
-
-	ZMutexLocker locker(fMutex);
-	fClosed = true;
-	fCondition_Reader.Broadcast();
-
-	return NOERROR;
 	}
 
 void Channel_BBDevMgr::pAbort()
@@ -615,33 +615,6 @@ Manager_BBDevMgr::~Manager_BBDevMgr()
 		}
 	}
 
-void Manager_BBDevMgr::GetDeviceIDs(vector<uint64>& oDeviceIDs)
-	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 3, "ZBlackBerry::Manager_BBDevMgr"))
-		s << "GetDeviceIDs";
-
-	ZMutexLocker locker(fMutex);
-
-	for (vector<Entry_t>::iterator i = fEntries.begin(); i != fEntries.end(); ++i)
-		oDeviceIDs.push_back(i->fID);
-	}
-
-ZRef<Device> Manager_BBDevMgr::Open(uint64 iDeviceID)
-	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 3, "ZBlackBerry::Manager_BBDevMgr"))
-		s << "Open";
-
-	ZMutexLocker locker(fMutex);
-
-	for (vector<Entry_t>::iterator i = fEntries.begin(); i != fEntries.end(); ++i)
-		{
-		if (i->fID == iDeviceID)
-			return i->fDevice;;
-		}
-
-	return ZRef<Device>();
-	}
-
 STDMETHODIMP Manager_BBDevMgr::QueryInterface(
 	const IID& iInterfaceID, void** oObjectRef)
 	{
@@ -712,6 +685,33 @@ STDMETHODIMP Manager_BBDevMgr::DeviceDisconnect(IDevice* iDevice)
 
 	this->pNotifyObservers();
 	return S_OK;
+	}
+
+void Manager_BBDevMgr::GetDeviceIDs(vector<uint64>& oDeviceIDs)
+	{
+	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 3, "ZBlackBerry::Manager_BBDevMgr"))
+		s << "GetDeviceIDs";
+
+	ZMutexLocker locker(fMutex);
+
+	for (vector<Entry_t>::iterator i = fEntries.begin(); i != fEntries.end(); ++i)
+		oDeviceIDs.push_back(i->fID);
+	}
+
+ZRef<Device> Manager_BBDevMgr::Open(uint64 iDeviceID)
+	{
+	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 3, "ZBlackBerry::Manager_BBDevMgr"))
+		s << "Open";
+
+	ZMutexLocker locker(fMutex);
+
+	for (vector<Entry_t>::iterator i = fEntries.begin(); i != fEntries.end(); ++i)
+		{
+		if (i->fID == iDeviceID)
+			return i->fDevice;;
+		}
+
+	return ZRef<Device>();
 	}
 
 } // namespace ZBlackBerry
