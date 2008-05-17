@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZAtomic.h"
 
 // =================================================================================================
-#if ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, PPC) && !ZCONFIG(OS, Be)
+#if ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, PPC)
 #pragma mark -
 #pragma mark * CodeWarrior/PPC/Not BeOS
 

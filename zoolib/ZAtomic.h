@@ -161,7 +161,7 @@ asm inline void ZAtomic_Dec(ZAtomic_t* : __A0)
 	}
 
 // =================================================================================================
-#elif ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, PPC) && !ZCONFIG(OS, Be)
+#elif ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, PPC)
 #pragma mark -
 #pragma mark * CodeWarrior/PPC/Not BeOS
 
@@ -187,49 +187,6 @@ int ZAtomic_Xor(ZAtomic_t* iAtomic, int iParam);
 bool ZAtomic_DecAndTest(ZAtomic_t* iAtomic);
 void ZAtomic_Inc(ZAtomic_t* iAtomic);
 void ZAtomic_Dec(ZAtomic_t* iAtomic);
-
-// =================================================================================================
-#elif ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, PPC) && ZCONFIG(OS, Be)
-#pragma mark -
-#pragma mark * CodeWarrior/PPC/BeOS
-
-#include <support/SupportDefs.h>
-
-// CodeWarrior for BeOS's inline assembly syntax is giving us problems. For now we call through to
-// the standard BeOS implementations from <support/SupportDefs.h>
-
-inline int ZAtomic_Get(const ZAtomic_t* iAtomic)
-	{ return iAtomic->fValue; }
-
-inline void ZAtomic_Set(ZAtomic_t* iAtomic, int iParam)
-	{ iAtomic->fValue = iParam; }
-
-inline int ZAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
-	{ return int(atomic_add(reinterpret_cast<int32*>(iAtomic), 0)); }
-
-inline bool ZAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewValue)
-	{ ZUnimplemented(); }
-
-inline int ZAtomic_Add(ZAtomic_t* iAtomic, int iParam)
-	{ return int(atomic_add(reinterpret_cast<int32*>(iAtomic), int32(iParam))); }
-
-int ZAtomic_And(ZAtomic_t* iAtomic, int iParam)
-	{ return int(atomic_and(reinterpret_cast<int32*>(iAtomic), int32(iParam))); }
-
-int ZAtomic_Or(ZAtomic_t* iAtomic, int iParam)
-	{ return int(atomic_or(reinterpret_cast<int32*>(iAtomic), int32(iParam))); }
-
-int ZAtomic_Xor(ZAtomic_t* iAtomic, int iParam)
-	{ ZUnimplemented(); }
-
-bool ZAtomic_DecAndTest(ZAtomic_t* iAtomic)
-	{ return 1 == atomic_add(reinterpret_cast<int32*>(iAtomic), -1); }
-
-void ZAtomic_Inc(ZAtomic_t* iAtomic)
-	{ atomic_add(reinterpret_cast<int32*>(iAtomic), 1); }
-
-void ZAtomic_Dec(ZAtomic_t* iAtomic)
-	{ atomic_add(reinterpret_cast<int32*>(iAtomic), -1); }
 
 // =================================================================================================
 #elif ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, x86)
