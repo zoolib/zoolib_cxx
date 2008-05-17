@@ -2499,7 +2499,7 @@ static void sMunge_T(
 
 	for (int32 vCurrent = 0; vCurrent < vSize; ++vCurrent)
 		{
-		void* rowAddress = iRasterDesc.CalcRowAddress(iBaseAddress, iBounds.top + vCurrent);
+		void* rowAddress = iRasterDesc.CalcRowAddressDest(iBaseAddress, iBounds.top + vCurrent);
 		sMungeRow_T(rowAddress, iRasterDesc.fPixvalDesc,
 				iMapPixvalToRGB, iMapRGBToPixval,
 				iBounds.left, hSize, vCurrent,
@@ -2628,7 +2628,7 @@ static void sBlitWithMaps_T(
 				= iSourceRasterDesc.CalcRowAddress(iSourceBase, iSourceBounds.top + vCurrent);
 
 			void* destRowAddress
-				= iDestRasterDesc.CalcRowAddress(iDestBase, iDestLocation.v + vCurrent);
+				= iDestRasterDesc.CalcRowAddressDest(iDestBase, iDestLocation.v + vCurrent);
 
 			sBlitRowInvert_T(
 				sourceRowAddress, iSourceRasterDesc.fPixvalDesc, iSourcePixvalToRGB,
@@ -2646,7 +2646,7 @@ static void sBlitWithMaps_T(
 				= iSourceRasterDesc.CalcRowAddress(iSourceBase, iSourceBounds.top + vCurrent);
 
 			void* destRowAddress
-				= iDestRasterDesc.CalcRowAddress(iDestBase, iDestLocation.v + vCurrent);
+				= iDestRasterDesc.CalcRowAddressDest(iDestBase, iDestLocation.v + vCurrent);
 
 			sBlitRow_T(
 				sourceRowAddress, iSourceRasterDesc.fPixvalDesc, iSourcePixvalToRGB,
@@ -2680,7 +2680,7 @@ void ZDCPixmapNS::sBlitPixvals(const void* iSourceBase, const RasterDesc& iSourc
 
 			uint8* destRowAddress =
 				static_cast<uint8*>(
-					const_cast<void*>(iDestRasterDesc.CalcRowAddress(iDestBase, iDestLocation.v + vCurrent)
+					const_cast<void*>(iDestRasterDesc.CalcRowAddressDest(iDestBase, iDestLocation.v + vCurrent)
 					)) + hOffsetDest;
 
 			ZBlockCopy(sourceRowAddress, destRowAddress, countToCopy);
