@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZXLib.h"
 
 // =================================================================================================
-#if ZCONFIG(API_OSWindow, X)
+#if ZCONFIG_SPI_Enabled(X11)
 
 #include "ZThread.h"
 
@@ -470,31 +470,31 @@ XFontStruct* ZXLib::LoadQueryFont(Display* a0, _Xconst char* a1)
 	return ::XLoadQueryFont(a0, a1);
 	}
 
-Cursor ZXLib::CreateFontCursor(Display* a0, unsigned int a1)
+ZooLib_X11_Cursor ZXLib::CreateFontCursor(Display* a0, unsigned int a1)
 	{
 	ZMutexLocker locker(sMutex);
 	return ::XCreateFontCursor(a0, a1);
 	}
 
-Cursor ZXLib::CreatePixmapCursor(Display* a0, Pixmap a1, Pixmap a2, XColor* a3, XColor* a4, unsigned int a5, unsigned int a6)
+ZooLib_X11_Cursor ZXLib::CreatePixmapCursor(Display* a0, Pixmap a1, Pixmap a2, XColor* a3, XColor* a4, unsigned int a5, unsigned int a6)
 	{
 	ZMutexLocker locker(sMutex);
 	return ::XCreatePixmapCursor(a0, a1, a2, a3, a4, a5, a6);
 	}
 
-int ZXLib::FreeCursor(Display* a0, Cursor a1)
+int ZXLib::FreeCursor(Display* a0, ZooLib_X11_Cursor a1)
 	{
 	ZMutexLocker locker(sMutex);
 	return ::XFreeCursor(a0, a1);
 	}
 
-int ZXLib::DefineCursor(Display* a0, Window a1, Cursor a2)
+int ZXLib::DefineCursor(Display* a0, Window a1, ZooLib_X11_Cursor a2)
 	{
 	ZMutexLocker locker(sMutex);
 	return ::XDefineCursor(a0, a1, a2);
 	}
 
-int ZXLib::GrabPointer(Display* a0, Window a1, Bool a2, unsigned int a3, int a4, int a5, Window a6, Cursor a7, Time a8)
+int ZXLib::GrabPointer(Display* a0, Window a1, Bool a2, unsigned int a3, int a4, int a5, Window a6, ZooLib_X11_Cursor a7, Time a8)
 	{
 	ZMutexLocker locker(sMutex);
 	return ::XGrabPointer(a0, a1, a2, a3, a4, a5, a6, a7, a8);
@@ -728,6 +728,6 @@ void ZXLib::SetWMProperties(Display* a0, Window a1, XTextProperty* a2, XTextProp
 	::XSetWMProperties(a0, a1, a2, a3, a4, a5, a6, a7, a8);
 	}
 
-#endif // ZCONFIG(API_OSWindow, X)
+#endif // ZCONFIG_SPI_Enabled(X11)
 
 // =================================================================================================

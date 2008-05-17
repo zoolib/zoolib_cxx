@@ -20,10 +20,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZXServer__
 #define __ZXServer__ 1
-
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
-#if ZCONFIG(API_OSWindow, X)
+#if ZCONFIG_SPI_Enabled(X11)
 
 #include "ZDCFont.h"
 #include "ZDCPixmapNS.h"
@@ -76,11 +76,11 @@ public:
 	void MoveWindow(Window inWindow, int inLocationH, int inLocationV);
 	void ResizeWindow(Window inWindow, unsigned int inSizeH, unsigned int inSizeV);
 	void MoveResizeWindow(Window inWindow, int inLocationH, int inLocationV, unsigned int inSizeH, unsigned int inSizeV);
-	Cursor CreateFontCursor(int inCursorShape);
-	Cursor CreateCursorFromDCPixmaps(Drawable inDrawable, const ZDCPixmap& inPixmap, const ZDCPixmap& inMask, ZPoint inHotPoint);
-	void FreeCursor(Cursor inCursor);
-	void DefineCursor(Window inWindow, Cursor inCursor);
-	int GrabPointer(Window inWindow, Bool inOwnerEvents, unsigned int inEventMask, int inPointerMode, int inKeyboardMode, Window inConfineTo, Cursor inCursor, Time inTime);
+	ZooLib_X11_Cursor CreateFontCursor(int inCursorShape);
+	ZooLib_X11_Cursor CreateCursorFromDCPixmaps(Drawable inDrawable, const ZDCPixmap& inPixmap, const ZDCPixmap& inMask, ZPoint inHotPoint);
+	void FreeCursor(ZooLib_X11_Cursor inCursor);
+	void DefineCursor(Window inWindow, ZooLib_X11_Cursor inCursor);
+	int GrabPointer(Window inWindow, Bool inOwnerEvents, unsigned int inEventMask, int inPointerMode, int inKeyboardMode, Window inConfineTo, ZooLib_X11_Cursor inCursor, Time inTime);
 	int UngrabPointer(Time inTime);
 	int GrabKeyboard(Window inWindow, Bool inOwnerEvents, int inPointerMode, int inKeyboardMode, Time inTime);
 	int UngrabKeyboard(Time inTime);
@@ -195,6 +195,6 @@ protected:
 
 // =================================================================================================
 
-#endif // ZCONFIG(API_OSWindow, X)
+#endif // ZCONFIG_SPI_Enabled(X11)
 
 #endif // __ZXServer__

@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZXServer.h"
 
-#if ZCONFIG(API_OSWindow, X)
+#if ZCONFIG_SPI_Enabled(X11)
 
 #include "ZDCPixmap.h"
 #include "ZDebug.h"
@@ -297,34 +297,34 @@ void ZXServer::MoveResizeWindow(Window inWindow, int inLocationH, int inLocation
 	ZXLib::MoveResizeWindow(fDisplay, inWindow, inLocationH, inLocationV, inSizeH, inSizeV);
 	}
 
-Cursor ZXServer::CreateFontCursor(int inCursorShape)
+ZooLib_X11_Cursor ZXServer::CreateFontCursor(int inCursorShape)
 	{
 	return ZXLib::CreateFontCursor(fDisplay, inCursorShape);
 	}
 
-Cursor ZXServer::CreateCursorFromDCPixmaps(Drawable inDrawable, const ZDCPixmap& inPixmap, const ZDCPixmap& inMask, ZPoint inHotPoint)
+ZooLib_X11_Cursor ZXServer::CreateCursorFromDCPixmaps(Drawable inDrawable, const ZDCPixmap& inPixmap, const ZDCPixmap& inMask, ZPoint inHotPoint)
 	{
 	Pixmap theCursorPixmap = this->CreateBitmapFromDCPixmap(inDrawable, inPixmap, ZRect(16, 16), true);
 	Pixmap theMaskPixmap = this->CreateBitmapFromDCPixmap(inDrawable, inMask, ZRect(16, 16), false);
 	XColor theForeColor = ZRGBColor::sBlack;
 	XColor theBackColor = ZRGBColor::sWhite;
-	Cursor theCursor = ZXLib::CreatePixmapCursor(fDisplay, theCursorPixmap, theMaskPixmap, &theForeColor, &theBackColor, inHotPoint.h, inHotPoint.v);
+	ZooLib_X11_Cursor theCursor = ZXLib::CreatePixmapCursor(fDisplay, theCursorPixmap, theMaskPixmap, &theForeColor, &theBackColor, inHotPoint.h, inHotPoint.v);
 	ZXLib::FreePixmap(fDisplay, theCursorPixmap);
 	ZXLib::FreePixmap(fDisplay, theMaskPixmap);
 	return theCursor;
 	}
 
-void ZXServer::FreeCursor(Cursor inCursor)
+void ZXServer::FreeCursor(ZooLib_X11_Cursor inCursor)
 	{
 	ZXLib::FreeCursor(fDisplay, inCursor);
 	}
 
-void ZXServer::DefineCursor(Window inWindow, Cursor inCursor)
+void ZXServer::DefineCursor(Window inWindow, ZooLib_X11_Cursor inCursor)
 	{
 	ZXLib::DefineCursor(fDisplay, inWindow, inCursor);
 	}
 
-int ZXServer::GrabPointer(Window inWindow, Bool inOwnerEvents, unsigned int inEventMask, int inPointerMode, int inKeyboardMode, Window inConfineTo, Cursor inCursor, Time inTime)
+int ZXServer::GrabPointer(Window inWindow, Bool inOwnerEvents, unsigned int inEventMask, int inPointerMode, int inKeyboardMode, Window inConfineTo, ZooLib_X11_Cursor inCursor, Time inTime)
 	{
 	return ZXLib::GrabPointer(fDisplay, inWindow, inOwnerEvents, inEventMask, inPointerMode, inKeyboardMode, inConfineTo, inCursor, inTime);
 	}
@@ -1270,4 +1270,4 @@ ZXWindow* ZXWindow::sFromDisplayAndWindowNilOkay(Display* inDisplay, Window inWi
 
 // =================================================================================================
 
-#endif // ZCONFIG(API_OSWindow, X)
+#endif // ZCONFIG_SPI_Enabled(X11)

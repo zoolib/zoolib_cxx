@@ -21,13 +21,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZXLib__
 #define __ZXLib__ 1
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
 // =================================================================================================
-#if ZCONFIG(API_OSWindow, X)
+#if ZCONFIG_SPI_Enabled(X11)
 
 #include "ZThread.h"
 
-#include <X11/Xlib.h>
+#include "ZCompat_Xlib.h"
 #include <X11/Xresource.h>
 #include <X11/Xutil.h>
 
@@ -102,13 +103,13 @@ void SetWMProtocols(Display* a0, Window a1, Atom* a2, int a3);
 
 XFontStruct* LoadQueryFont(Display* a0, _Xconst char* a1);
 
-Cursor CreateFontCursor(Display* a0, unsigned int a1);
-Cursor CreatePixmapCursor(Display* a0, Pixmap a1, Pixmap a2, XColor* a3, XColor* a4, unsigned int a5, unsigned int a6);
-int FreeCursor(Display* a0, Cursor a1);
+ZooLib_X11_Cursor CreateFontCursor(Display* a0, unsigned int a1);
+ZooLib_X11_Cursor CreatePixmapCursor(Display* a0, Pixmap a1, Pixmap a2, XColor* a3, XColor* a4, unsigned int a5, unsigned int a6);
+int FreeCursor(Display* a0, ZooLib_X11_Cursor a1);
 
-int DefineCursor(Display* a0, Window a1, Cursor a2);
+int DefineCursor(Display* a0, Window a1, ZooLib_X11_Cursor a2);
 
-int GrabPointer(Display* a0, Window a1, Bool a2, unsigned int a3, int a4, int a5, Window a6, Cursor a7, Time a8);
+int GrabPointer(Display* a0, Window a1, Bool a2, unsigned int a3, int a4, int a5, Window a6, ZooLib_X11_Cursor a7, Time a8);
 int UngrabPointer(Display* a0, Time a1);
 int GrabKeyboard(Display* a0, Window a1, Bool a2, int a3, int a4, Time a5);
 int UngrabKeyboard(Display* a0, Time a1);
@@ -153,7 +154,8 @@ void SetWMProperties(Display* a0, Window a1, XTextProperty* a2, XTextProperty* a
 
 } // namespace ZXLib
 
-#endif // ZCONFIG(API_OSWindow, X)
+#endif // ZCONFIG_SPI_Enabled(X11)
+
 // =================================================================================================
 
 #endif // __ZXLib__
