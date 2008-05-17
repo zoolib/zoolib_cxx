@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::runtime_error;
 using std::vector;
 
-// From wingdi.h
-#if !ZCONFIG(OS, Win32)
+#ifndef BI_RGB
 #	define BI_RGB 0L
 #	define BI_RLE8 1L
 #	define BI_RLE4 2L

@@ -185,8 +185,8 @@ public:
 			&& fFlipped == iOther.fFlipped;
 		}
 
-	const void* CalcRowAddress(const void* iBaseAddress, int32 iRow) const;
-	void* CalcRowAddress(void* iBaseAddress, int32 iRow) const;
+	const void* CalcRowAddress(const void* iBaseAddress, int iRow) const;
+	void* CalcRowAddressDest(void* iBaseAddress, int iRow) const;
 
 	PixvalDesc fPixvalDesc;
 	size_t fRowBytes;

@@ -336,15 +336,15 @@ ZDCPixmapNS::RasterDesc::RasterDesc(ZPoint iSize, EFormatStandard iFormat, bool 
 	ZUnimplemented();
 	}
 
-const void* ZDCPixmapNS::RasterDesc::CalcRowAddress(const void* iBaseAddress, int32 iRow) const
+const void* ZDCPixmapNS::RasterDesc::CalcRowAddress(const void* iBaseAddress, int iRow) const
 	{
-	return reinterpret_cast<const uint8*>(iBaseAddress)
+	return static_cast<const uint8*>(iBaseAddress)
 		+ fRowBytes * (fFlipped ? fRowCount - iRow - 1 : iRow);
 	}
 
-void* ZDCPixmapNS::RasterDesc::CalcRowAddress(void* iBaseAddress, int32 iRow) const
+void* ZDCPixmapNS::RasterDesc::CalcRowAddressDest(void* iBaseAddress, int iRow) const
 	{
-	return reinterpret_cast<uint8*>(iBaseAddress)
+	return static_cast<uint8*>(iBaseAddress)
 		+ fRowBytes * (fFlipped ? fRowCount - iRow - 1 : iRow);
 	}
 
@@ -504,31 +504,31 @@ uint32 ZDCPixmapNS::PixvalAccessor::GetPixval(const void* iRowAddress, int32 inH
 		{
 		case eCase1Byte:
 			{
-			value = reinterpret_cast<const uint8*>(iRowAddress)[inHCoord];
+			value = static_cast<const uint8*>(iRowAddress)[inHCoord];
 			break;
 			}
 		case eCase1ByteWithShiftBE:
 		case eCase1ByteWithShiftLE:
 			{
-			value = reinterpret_cast<const uint8*>(iRowAddress)[inHCoord >> fDivisorShift];
+			value = static_cast<const uint8*>(iRowAddress)[inHCoord >> fDivisorShift];
 			value &= fBitMask[inHCoord & fModMask];
 			value >>= fBitShift[inHCoord & fModMask];
 			break;
 			}
 		case eCase2Bytes:
 			{
-			value = reinterpret_cast<const uint16*>(iRowAddress)[inHCoord];
+			value = static_cast<const uint16*>(iRowAddress)[inHCoord];
 			break;
 			}
 		case eCase2BytesWithSwap:
 			{
-			value = ZByteSwap_Read16(reinterpret_cast<const uint16*>(iRowAddress) + inHCoord);
+			value = ZByteSwap_Read16(static_cast<const uint16*>(iRowAddress) + inHCoord);
 			break;
 			}
 		case eCase3BytesBEHostBE:
 		case eCase3BytesBEHostLE:
 			{
-			const uint8* temp = reinterpret_cast<const uint8*>(iRowAddress) + (inHCoord * 3);
+			const uint8* temp = static_cast<const uint8*>(iRowAddress) + (inHCoord * 3);
 			value = temp[0] << 16;
 			value |= temp[1] << 8;
 			value |= temp[2];
@@ -537,7 +537,7 @@ uint32 ZDCPixmapNS::PixvalAccessor::GetPixval(const void* iRowAddress, int32 inH
 		case eCase3BytesLEHostBE:
 		case eCase3BytesLEHostLE:
 			{
-			const uint8* temp = reinterpret_cast<const uint8*>(iRowAddress) + (inHCoord * 3);
+			const uint8* temp = static_cast<const uint8*>(iRowAddress) + (inHCoord * 3);
 			value = temp[0];
 			value |= temp[1] << 8;
 			value |= temp[2] << 16;
@@ -545,12 +545,12 @@ uint32 ZDCPixmapNS::PixvalAccessor::GetPixval(const void* iRowAddress, int32 inH
 			}
 		case eCase4Bytes:
 			{
-			value = reinterpret_cast<const uint32*>(iRowAddress)[inHCoord];
+			value = static_cast<const uint32*>(iRowAddress)[inHCoord];
 			break;
 			}
 		case eCase4BytesWithSwap:
 			{
-			value = ZByteSwap_Read32(reinterpret_cast<const uint32*>(iRowAddress) + inHCoord);
+			value = ZByteSwap_Read32(static_cast<const uint32*>(iRowAddress) + inHCoord);
 			break;
 			}
 		default:
@@ -565,32 +565,32 @@ void ZDCPixmapNS::PixvalAccessor::SetPixval(void* iRowAddress, int32 inHCoord, u
 		{
 		case eCase1Byte:
 			{
-			reinterpret_cast<uint8*>(iRowAddress)[inHCoord] = iPixval;
+			static_cast<uint8*>(iRowAddress)[inHCoord] = iPixval;
 			break;
 			}
 		case eCase1ByteWithShiftBE:
 		case eCase1ByteWithShiftLE:
 			{
 			uint8* destAddress
-				= reinterpret_cast<uint8*>(iRowAddress) + (inHCoord >> fDivisorShift);
+				= static_cast<uint8*>(iRowAddress) + (inHCoord >> fDivisorShift);
 			*destAddress = (*destAddress & fBitNotMask[inHCoord & fModMask])
 				| (iPixval << fBitShift[inHCoord & fModMask]);
 			break;
 			}
 		case eCase2Bytes:
 			{
-			reinterpret_cast<uint16*>(iRowAddress)[inHCoord] = iPixval;
+			static_cast<uint16*>(iRowAddress)[inHCoord] = iPixval;
 			break;
 			}
 		case eCase2BytesWithSwap:
 			{
-			ZByteSwap_Write16(reinterpret_cast<uint16*>(iRowAddress) + inHCoord, iPixval);
+			ZByteSwap_Write16(static_cast<uint16*>(iRowAddress) + inHCoord, iPixval);
 			break;
 			}
 		case eCase3BytesBEHostBE:
 		case eCase3BytesBEHostLE:
 			{
-			uint8* temp = reinterpret_cast<uint8*>(iRowAddress) + (inHCoord * 3);
+			uint8* temp = static_cast<uint8*>(iRowAddress) + (inHCoord * 3);
 			temp[0] = iPixval >> 16;
 			temp[1] = iPixval >> 8;
 			temp[2] = iPixval;
@@ -599,7 +599,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixval(void* iRowAddress, int32 inHCoord, u
 		case eCase3BytesLEHostBE:
 		case eCase3BytesLEHostLE:
 			{
-			uint8* temp = reinterpret_cast<uint8*>(iRowAddress) + (inHCoord * 3);
+			uint8* temp = static_cast<uint8*>(iRowAddress) + (inHCoord * 3);
 			temp[0] = iPixval;
 			temp[1] = iPixval >> 8;
 			temp[2] = iPixval >> 16;
@@ -607,12 +607,12 @@ void ZDCPixmapNS::PixvalAccessor::SetPixval(void* iRowAddress, int32 inHCoord, u
 			}
 		case eCase4Bytes:
 			{
-			reinterpret_cast<uint32*>(iRowAddress)[inHCoord] = iPixval;
+			static_cast<uint32*>(iRowAddress)[inHCoord] = iPixval;
 			break;
 			}
 		case eCase4BytesWithSwap:
 			{
-			ZByteSwap_Write32(reinterpret_cast<uint32*>(iRowAddress) + inHCoord, iPixval);
+			ZByteSwap_Write32(static_cast<uint32*>(iRowAddress) + inHCoord, iPixval);
 			break;
 			}
 		default:
@@ -680,14 +680,14 @@ void ZDCPixmapNS::PixvalAccessor::GetPixvals(const void* iRowAddress,
 		case eCase1Byte:
 			{
 			localCount = iCount + 1;
-			localSource8 = reinterpret_cast<const uint8*>(iRowAddress) + iStartH;
+			localSource8 = static_cast<const uint8*>(iRowAddress) + iStartH;
 			while (--localCount)
 				*oPixvals++ = *localSource8++;
 			break;
 			}
 		case eCase1ByteWithShiftBE:
 			{
-			localSource8 = reinterpret_cast<const uint8*>(iRowAddress) + (iStartH >> fDivisorShift);
+			localSource8 = static_cast<const uint8*>(iRowAddress) + (iStartH >> fDivisorShift);
 			const int32 leftShift = fDepth;
 			const int32 rightShift = 8 - fDepth;
 			const size_t masterLoadCount = 8 / fDepth;
@@ -716,7 +716,7 @@ void ZDCPixmapNS::PixvalAccessor::GetPixvals(const void* iRowAddress,
 			}
 		case eCase1ByteWithShiftLE:
 			{
-			localSource8 = reinterpret_cast<const uint8*>(iRowAddress) + (iStartH >> fDivisorShift);
+			localSource8 = static_cast<const uint8*>(iRowAddress) + (iStartH >> fDivisorShift);
 			const int32 rightShift = fDepth;
 			const uint32 mask = (1 << fDepth) - 1;
 			const size_t masterLoadCount = 8 / fDepth;
@@ -746,7 +746,7 @@ void ZDCPixmapNS::PixvalAccessor::GetPixvals(const void* iRowAddress,
 		case eCase2Bytes:
 			{
 			localCount = iCount + 1;
-			localSource16 = reinterpret_cast<const uint16*>(iRowAddress) + iStartH;
+			localSource16 = static_cast<const uint16*>(iRowAddress) + iStartH;
 			while (--localCount)
 				*oPixvals++ = *localSource16++;
 			break;
@@ -754,14 +754,14 @@ void ZDCPixmapNS::PixvalAccessor::GetPixvals(const void* iRowAddress,
 		case eCase2BytesWithSwap:
 			{
 			localCount = iCount + 1;
-			localSource16 = reinterpret_cast<const uint16*>(iRowAddress) + iStartH;
+			localSource16 = static_cast<const uint16*>(iRowAddress) + iStartH;
 			while (--localCount)
 				*oPixvals++ = uint16(ZByteSwap_Read16(localSource16++));
 			break;
 			}
 		case eCase3BytesBEHostBE:
 			{
-			localSource8 = reinterpret_cast<const uint8*>(iRowAddress) + (iStartH * 3);
+			localSource8 = static_cast<const uint8*>(iRowAddress) + (iStartH * 3);
 			localCount = iCount;
 			while ((reinterpret_cast<uint32>(localSource8) & 0x03) && localCount)
 				{
@@ -806,7 +806,7 @@ void ZDCPixmapNS::PixvalAccessor::GetPixvals(const void* iRowAddress,
 			}
 		case eCase3BytesBEHostLE:
 			{
-			localSource8 = reinterpret_cast<const uint8*>(iRowAddress) + (iStartH * 3);
+			localSource8 = static_cast<const uint8*>(iRowAddress) + (iStartH * 3);
 			localCount = iCount;
 			while ((reinterpret_cast<uint32>(localSource8) & 0x03) && localCount)
 				{
@@ -850,7 +850,7 @@ void ZDCPixmapNS::PixvalAccessor::GetPixvals(const void* iRowAddress,
 			}
 		case eCase3BytesLEHostBE:
 			{
-			localSource8 = reinterpret_cast<const uint8*>(iRowAddress) + (iStartH * 3);
+			localSource8 = static_cast<const uint8*>(iRowAddress) + (iStartH * 3);
 			localCount = iCount;
 			while ((reinterpret_cast<uint32>(localSource8) & 0x03) && localCount)
 				{
@@ -904,7 +904,7 @@ void ZDCPixmapNS::PixvalAccessor::GetPixvals(const void* iRowAddress,
 			}
 		case eCase3BytesLEHostLE:
 			{
-			localSource8 = reinterpret_cast<const uint8*>(iRowAddress) + (iStartH * 3);
+			localSource8 = static_cast<const uint8*>(iRowAddress) + (iStartH * 3);
 			localCount = iCount;
 			while ((reinterpret_cast<uint32>(localSource8) & 0x03) && localCount)
 				{
@@ -949,14 +949,14 @@ void ZDCPixmapNS::PixvalAccessor::GetPixvals(const void* iRowAddress,
 			}
 		case eCase4Bytes:
 			{
-			ZBlockCopy(reinterpret_cast<const uint32*>(iRowAddress) + iStartH,
+			ZBlockCopy(static_cast<const uint32*>(iRowAddress) + iStartH,
 				oPixvals, iCount * sizeof(uint32));
 			break;
 			}
 		case eCase4BytesWithSwap:
 			{
 			localCount = iCount + 1;
-			localSource32 = reinterpret_cast<const uint32*>(iRowAddress) + iStartH;
+			localSource32 = static_cast<const uint32*>(iRowAddress) + iStartH;
 			while (--localCount)
 				*oPixvals++ = uint32(ZByteSwap_Read32(localSource32++));
 			break;
@@ -986,7 +986,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 		case eCase1Byte:
 			{
 			localCount = iCount + 1;
-			localDest8 = reinterpret_cast<uint8*>(iRowAddress) + iStartH;
+			localDest8 = static_cast<uint8*>(iRowAddress) + iStartH;
 			while (--localCount)
 				*localDest8++ = *iPixvals++;
 			break;
@@ -1001,7 +1001,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 				{
 				case 1:
 					{
-					localDest8 = reinterpret_cast<uint8*>(iRowAddress) + (iStartH >> 3);
+					localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH >> 3);
 					if (iStartH & 0x07)
 						{
 						destVal8 = 0;
@@ -1054,7 +1054,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 				case 2:
 					{
 					int32 sourceShift;
-					localDest8 = reinterpret_cast<uint8*>(iRowAddress) + (iStartH >> 2);
+					localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH >> 2);
 					if (iStartH & 0x03)
 						{
 						destVal8 = 0;
@@ -1103,7 +1103,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 					}
 				case 3: case 4:
 					{
-					localDest8 = reinterpret_cast<uint8*>(iRowAddress) + (iStartH >> 1);
+					localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH >> 1);
 					if (iStartH & 0x01)
 						{
 						--localCount;
@@ -1134,7 +1134,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 				{
 				case 1:
 					{
-					localDest8 = reinterpret_cast<uint8*>(iRowAddress) + (iStartH >> 3);
+					localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH >> 3);
 					if (iStartH & 0x07)
 						{
 						destVal8 = 0;
@@ -1187,7 +1187,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 				case 2:
 					{
 					int32 sourceShift;
-					localDest8 = reinterpret_cast<uint8*>(iRowAddress) + (iStartH >> 2);
+					localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH >> 2);
 					if (iStartH & 0x03)
 						{
 						destVal8 = 0;
@@ -1236,7 +1236,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 					}
 				case 3: case 4:
 					{
-					localDest8 = reinterpret_cast<uint8*>(iRowAddress) + (iStartH >> 1);
+					localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH >> 1);
 					if (iStartH & 0x01)
 						{
 						--localCount;
@@ -1260,7 +1260,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 		case eCase2Bytes:
 			{
 			localCount = iCount + 1;
-			localDest16 = reinterpret_cast<uint16*>(iRowAddress) + iStartH;
+			localDest16 = static_cast<uint16*>(iRowAddress) + iStartH;
 			while (--localCount)
 				*localDest16++ = *iPixvals++;
 			break;
@@ -1268,14 +1268,14 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 		case eCase2BytesWithSwap:
 			{
 			localCount = iCount + 1;
-			localDest16 = reinterpret_cast<uint16*>(iRowAddress) + iStartH;
+			localDest16 = static_cast<uint16*>(iRowAddress) + iStartH;
 			while (--localCount)
 				*localDest16++ = uint16(ZByteSwap_Read16(iPixvals++));
 			break;
 			}
 		case eCase3BytesBEHostBE:
 			{
-			localDest8 = reinterpret_cast<uint8*>(iRowAddress) + (iStartH * 3);
+			localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH * 3);
 			localCount = iCount;
 			while ((reinterpret_cast<uint32>(localDest8) & 0x03) && localCount)
 				{
@@ -1320,7 +1320,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 		case eCase3BytesBEHostLE:
 			{
 			localCount = iCount;
-			localDest8 = reinterpret_cast<uint8*>(iRowAddress) + (iStartH * 3);
+			localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH * 3);
 			while ((reinterpret_cast<uint32>(localDest8) & 0x03) && localCount)
 				{
 				--localCount;
@@ -1363,7 +1363,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 		case eCase3BytesLEHostBE:
 			{
 			localCount = iCount;
-			localDest8 = reinterpret_cast<uint8*>(iRowAddress) + (iStartH * 3);
+			localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH * 3);
 			while ((reinterpret_cast<uint32>(localDest8) & 0x03) && localCount)
 				{
 				--localCount;
@@ -1412,7 +1412,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 		case eCase3BytesLEHostLE:
 			{
 			localCount = iCount;
-			localDest8 = reinterpret_cast<uint8*>(iRowAddress) + (iStartH * 3);
+			localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH * 3);
 			while ((reinterpret_cast<uint32>(localDest8) & 0x03) && localCount)
 				{
 				--localCount;
@@ -1454,14 +1454,14 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 			}
 		case eCase4Bytes:
 			{
-			ZBlockCopy(iPixvals, reinterpret_cast<uint32*>(iRowAddress) + iStartH,
+			ZBlockCopy(iPixvals, static_cast<uint32*>(iRowAddress) + iStartH,
 				iCount * sizeof(uint32));
 			break;
 			}
 		case eCase4BytesWithSwap:
 			{
 			localCount = iCount + 1;
-			localDest32 = reinterpret_cast<uint32*>(iRowAddress) + iStartH;
+			localDest32 = static_cast<uint32*>(iRowAddress) + iStartH;
 			while (--localCount)
 				*localDest32++ = uint32(ZByteSwap_Read32(iPixvals++));
 			break;
@@ -2366,7 +2366,7 @@ void ZDCPixmapNS::sFill(void* iBaseAddress, const RasterDesc& iRasterDesc, uint3
 			{
 			size_t localRowCount = iRasterDesc.fRowCount + 1;
 			size_t localChunkCount = (iRasterDesc.fRowBytes / 3) + 1;
-			uint8* localBaseAddress = reinterpret_cast<uint8*>(iBaseAddress);
+			uint8* localBaseAddress = static_cast<uint8*>(iBaseAddress);
 			while (--localRowCount)
 				{
 				size_t chunkCount = localChunkCount;
@@ -2436,7 +2436,7 @@ void ZDCPixmapNS::sFill(void* iBaseAddress, const RasterDesc& iRasterDesc, uint3
 			if (iRasterDesc.fPixvalDesc.fBigEndian != ZCONFIG(Endian, Big))
 				storedValue = ZByteSwap_32(storedValue);
 			size_t chunkCount = ((iRasterDesc.fRowBytes * iRasterDesc.fRowCount) / 4) + 1;
-			uint32* chunkAddress = reinterpret_cast<uint32*>(iBaseAddress);
+			uint32* chunkAddress = static_cast<uint32*>(iBaseAddress);
 			while (--chunkCount)
 				*chunkAddress++ = storedValue;
 			}
@@ -2456,7 +2456,7 @@ void ZDCPixmapNS::sFill(
 
 	for (int32 vCurrent = 0; vCurrent < vSize; ++vCurrent)
 		{
-		void* rowAddress = iRasterDesc.CalcRowAddress(iBaseAddress, iBounds.top + vCurrent);
+		void* rowAddress = iRasterDesc.CalcRowAddressDest(iBaseAddress, iBounds.top + vCurrent);
 		destAccessor.SetPixvals(rowAddress, iBounds.left, hSize, &sourcePixvals[0]);
 		}
 	}
@@ -2674,12 +2674,14 @@ void ZDCPixmapNS::sBlitPixvals(const void* iSourceBase, const RasterDesc& iSourc
 		int32 countToCopy = hCount * iSourceRasterDesc.fPixvalDesc.fDepth / 8;
 		for (int32 vCurrent = 0; vCurrent < vCount; ++vCurrent)
 			{
-			const uint8* sourceRowAddress = reinterpret_cast<const uint8*>(
+			const uint8* sourceRowAddress = static_cast<const uint8*>(
 				iSourceRasterDesc.CalcRowAddress(iSourceBase, iSourceBounds.top + vCurrent))
 				+ hOffsetSource;
 
-			uint8* destRowAddress = reinterpret_cast<uint8*>(
-				iDestRasterDesc.CalcRowAddress(iDestBase, iDestLocation.v + vCurrent)) + hOffsetDest;
+			uint8* destRowAddress =
+				static_cast<uint8*>(
+					const_cast<void*>(iDestRasterDesc.CalcRowAddress(iDestBase, iDestLocation.v + vCurrent)
+					)) + hOffsetDest;
 
 			ZBlockCopy(sourceRowAddress, destRowAddress, countToCopy);
 			}
@@ -2692,7 +2694,7 @@ void ZDCPixmapNS::sBlitPixvals(const void* iSourceBase, const RasterDesc& iSourc
 				= iSourceRasterDesc.CalcRowAddress(iSourceBase, iSourceBounds.top + vCurrent);
 
 			void* destRowAddress
-				= iDestRasterDesc.CalcRowAddress(iDestBase, iDestLocation.v + vCurrent);
+				= iDestRasterDesc.CalcRowAddressDest(iDestBase, iDestLocation.v + vCurrent);
 
 			PixvalAccessor sourceAccessor(iSourceRasterDesc.fPixvalDesc);
 			PixvalAccessor destAccessor(iDestRasterDesc.fPixvalDesc);
@@ -2916,8 +2918,8 @@ void ZDCPixmapNS::sBlitRowPixvals(
 		int32 hOffsetSource = iSourceH * iSourcePixvalDesc.fDepth / 8;
 		int32 hOffsetDest = iDestH * iDestPixvalDesc.fDepth / 8;
 		int32 countToCopy = iCount * iSourcePixvalDesc.fDepth / 8;
-		const uint8* sourceAddress = reinterpret_cast<const uint8*>(iSourceBase) + hOffsetSource;
-		uint8* destAddress = reinterpret_cast<uint8*>(iDestBase) + hOffsetDest;
+		const uint8* sourceAddress = static_cast<const uint8*>(iSourceBase) + hOffsetSource;
+		uint8* destAddress = static_cast<uint8*>(iDestBase) + hOffsetDest;
 		ZBlockCopy(sourceAddress, destAddress, countToCopy);
 		}
 	else

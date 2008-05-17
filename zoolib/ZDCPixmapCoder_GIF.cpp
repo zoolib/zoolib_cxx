@@ -301,7 +301,7 @@ static void sReadImageData(const ZStreamR& iStream,
 				currentY < iBounds.bottom; currentY += sInterlaceIncrement[pass])
 				{
 				theSILZW.Read(theRowBuffer, iBounds.Width());
-				void* destRowAddress = destRasterDesc.CalcRowAddress(destBaseAddress, currentY);
+				void* destRowAddress = destRasterDesc.CalcRowAddressDest(destBaseAddress, currentY);
 
 				ZDCPixmapNS::sBlitRowPixvals(theRowBuffer, sourcePixvalDesc, 0,
 					destRowAddress, destRasterDesc.fPixvalDesc, iBounds.left,
@@ -314,7 +314,7 @@ static void sReadImageData(const ZStreamR& iStream,
 		for (ZCoord currentY = iBounds.top; currentY < iBounds.bottom; ++currentY)
 			{
 			theSILZW.Read(theRowBuffer, iBounds.Width());
-			void* destRowAddress = destRasterDesc.CalcRowAddress(destBaseAddress, currentY);
+			void* destRowAddress = destRasterDesc.CalcRowAddressDest(destBaseAddress, currentY);
 
 			ZDCPixmapNS::sBlitRowPixvals(theRowBuffer, sourcePixvalDesc, 0,
 				destRowAddress, destRasterDesc.fPixvalDesc, iBounds.left,

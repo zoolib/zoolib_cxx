@@ -557,7 +557,7 @@ uint32 ZDCPixmapRaster::GetPixval(ZCoord iLocationH, ZCoord iLocationV)
 
 void ZDCPixmapRaster::SetPixval(ZCoord iLocationH, ZCoord iLocationV, uint32 iPixval)
 	{
-	void* rowAddress = fRasterDesc.CalcRowAddress(fBaseAddress, iLocationV);
+	void* rowAddress = fRasterDesc.CalcRowAddressDest(fBaseAddress, iLocationV);
 	PixvalAccessor(fRasterDesc.fPixvalDesc).SetPixval(rowAddress, iLocationH, iPixval);
 	}
 
