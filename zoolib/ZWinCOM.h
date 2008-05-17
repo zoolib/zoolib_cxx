@@ -20,13 +20,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZWinCOM__
 #define __ZWinCOM__ 1
-#include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
 // =================================================================================================
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 
 #include "ZWinHeader.h"
+
+// Necessary when building with Cocotron
+#include <ole2.h>
 
 #if ZCONFIG(Compiler, GCC)
 
@@ -58,6 +61,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #endif
 
-#endif // ZCONFIG(OS, Win32)
+#endif // ZCONFIG_SPI_Enabled(Win)
 
 #endif // __ZWinCOM__
