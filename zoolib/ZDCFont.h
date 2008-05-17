@@ -21,24 +21,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZDCFont__
 #define __ZDCFont__ 1
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
 #include "ZTypes.h"
 #include "ZUnicode.h"
 
-#if ZCONFIG(API_Graphics, QD)
-#	if ZCONFIG(OS, MacOSX)
-#		define __NOEXTENSIONS__
-#		include <HIToolbox/TextEdit.h>
-#	else
-#		include <TextEdit.h> // For TextStyle
-#	endif
+#if ZCONFIG_SPI_Enabled(QuickDraw)
+#	include ZMACINCLUDE(HIToolbox,TextEdit.h)
 #endif
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 #	include <interface/Font.h>
 #endif
-
-#include <string>
 
 class ZStreamR;
 class ZStreamW;
@@ -70,20 +64,20 @@ public:
 	ZDCFont& operator=(const ZDCFont& inOther);
 	bool operator==(const ZDCFont& inOther) const;
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(QuickDraw)
 	ZDCFont(const TextStyle& inStyle);
 	ZDCFont(int16 inFontID, Style inStyle, int16 inSize);
 
 	TextStyle GetTextStyle() const;
 	int16 GetFontID() const;
 	void SetFontID(int16 inID);
-#endif // ZCONFIG(API_Graphics, QD)
+#endif // ZCONFIG_SPI_Enabled(QuickDraw)
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 	ZDCFont(const BFont& inBFont);
 
 	void GetBFont(BFont& outBFont);
-#endif // ZCONFIG(API_Graphics, Be)
+#endif // ZCONFIG_SPI_Enabled(BeOS)
 
 	int16 GetSize() const;
 	void SetSize(int16 inSize);

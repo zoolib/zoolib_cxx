@@ -21,41 +21,38 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZDCRgn__
 #define __ZDCRgn__ 1
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
 #include "ZGeom.h"
 #include "ZRefCount.h"
 #include <vector>
 
-#if ZCONFIG(API_Graphics, QD)
-#	if ZCONFIG(OS, MacOSX)
-#		include <QD/QuickDraw.h>
-#	else
-#		include <QuickDraw.h>
-#	endif
+#if ZCONFIG_SPI_Enabled(QuickDraw)
+#	include ZMACINCLUDE(QD,QuickDraw.h)
 #endif
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 #	include "ZWinHeader.h"
 #endif
 
-#if ZCONFIG(API_Graphics, X)
-#	include <X11/Xlib.h>
+#if ZCONFIG_SPI_Enabled(X11)
+#	include "ZCompat_Xlib.h"
 #	include <X11/Xutil.h>
 #endif
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 #	include <interface/Region.h>
 #endif
 
-#if ZCONFIG(API_Graphics, ZooLib)
-#	include "ZBigRegion.h"
-#endif
+#include "ZBigRegion.h"
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCRgn
 
 class ZDCPoly;
+
+#define ZCONFIG_API_Graphics_Multi 1
 
 class ZDCRgn
 	{
@@ -67,23 +64,23 @@ class ZDCRgn
 
 		union
 			{
-			#if ZCONFIG(API_Graphics, QD)
+			#if ZCONFIG_SPI_Enabled(QuickDraw)
 			RgnHandle fRgnHandle;
 			#endif
 
-			#if ZCONFIG(API_Graphics, GDI)
+			#if ZCONFIG_SPI_Enabled(GDI)
 			HRGN fHRGN;
 			#endif
 
-			#if ZCONFIG(API_Graphics, X)
+			#if ZCONFIG_SPI_Enabled(X11)
 			Region fRegion;
 			#endif
 
-			#if ZCONFIG(API_Graphics, Be)
+			#if ZCONFIG_SPI_Enabled(BeOS)
 			BRegion* fBRegion;
 			#endif
 
-			#if ZCONFIG(API_Graphics, ZooLib)
+			#if 1//ZCONFIG(API_Graphics, ZooLib)
 			ZBigRegion* fBigRegion;
 			#endif
 			};
@@ -174,32 +171,32 @@ public:
 	ZDCRgn(ZCoord iLeft, ZCoord iTop, ZCoord iRight, ZCoord iBottom);
 	ZDCRgn& operator=(const ZRect& iRect);
 
-	#if ZCONFIG(API_Graphics, QD)
+	#if ZCONFIG_SPI_Enabled(QuickDraw)
 	ZDCRgn(RgnHandle iRgnHandle, bool iAdopt);
 	ZDCRgn& operator=(RgnHandle iRgnHandle);
 	RgnHandle GetRgnHandle();
 	#endif
 
-	#if ZCONFIG(API_Graphics, GDI)
+	#if ZCONFIG_SPI_Enabled(GDI)
 	ZDCRgn(HRGN iHRGN, bool iAdopt);
 	ZDCRgn& operator=(HRGN iHRGN);
 	HRGN GetHRGN();
 	#endif
 
-	#if ZCONFIG(API_Graphics, X)
+	#if ZCONFIG_SPI_Enabled(X11)
 	ZDCRgn(Region iRegion, bool iAdopt);
 	ZDCRgn& operator=(Region iRegion);
 	Region GetRegion();
 	#endif
 
-	#if ZCONFIG(API_Graphics, Be)
+	#if ZCONFIG_SPI_Enabled(BeOS)
 	ZDCRgn(BRegion* iBRegion, bool iAdopt);
 	ZDCRgn& operator=(BRegion* iBRegion);
 	BRegion* GetBRegion();
 	#endif
 
 // Scaling, required on Windows, could be implemented elsewhere if essential.
-	#if ZCONFIG(API_Graphics, GDI)
+	#if ZCONFIG_SPI_Enabled(GDI)
 	void MakeScale(float m11, float m12, float m21, float m22, float hOffset, float vOffset);
 	ZDCRgn Scale(float m11, float m12, float m21, float m22, float hOffset, float vOffset) const
 		{
@@ -317,7 +314,7 @@ public:
 	};
 
 // Inline accessor if we're building for QD and no other graphics API is active.
-#if !ZCONFIG_API_Graphics_Multi && ZCONFIG(API_Graphics, QD) && !OPAQUE_TOOLBOX_STRUCTS
+#if !ZCONFIG_API_Graphics_Multi && ZCONFIG_SPI_Enabled(QuickDraw) && !OPAQUE_TOOLBOX_STRUCTS
 inline ZRect ZDCRgn::Bounds() const
 	{
 	return fRep ? ZRect(fRep->fRgnHandle[0]->rgnBBox) : ZRect::sZero;

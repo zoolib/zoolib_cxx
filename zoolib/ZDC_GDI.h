@@ -21,10 +21,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZDC_GDI__
 #define __ZDC_GDI__ 1
 #include "zconfig.h"
+#include "ZCONFIG_API.h"
+#include "ZCONFIG_SPI.h"
+
+#ifndef ZCONFIG_API_Avail__DC_GDI
+#	define ZCONFIG_API_Avail__DC_GDI ZCONFIG_SPI_Enabled(GDI)
+#endif
+
+#ifndef ZCONFIG_API_Desired__DC_GDI
+#	define ZCONFIG_API_Desired__DC_GDI 1
+#endif
 
 #include "ZDC.h"
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_API_Enabled(DC_GDI)
 
 #include "ZWinHeader.h"
 
@@ -270,6 +280,6 @@ protected:
 
 // =================================================================================================
 
-#endif // ZCONFIG(API_Graphics, GDI)
+#endif // ZCONFIG_API_Enabled(DC_GDI)
 
 #endif // __ZDC_GDI__

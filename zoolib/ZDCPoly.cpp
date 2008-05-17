@@ -72,12 +72,8 @@ SOFTWARE.
 #include "ZDebug.h"
 #include "ZMemory.h" // For ZBlockCopy
 
-#if ZCONFIG(API_Graphics, QD)
-#	if ZCONFIG(OS, MacOSX)
-#		include <CarbonCore/MacMemory.h>
-#	else
-#		include <MacMemory.h> // For HLock etc.
-#	endif
+#if ZCONFIG_SPI_Enabled(QuickDraw)
+#	include ZMACINCLUDE(CarbonCore,MacMemory.h) // For HLock etc.
 #endif
 
 using std::min;
@@ -93,19 +89,19 @@ ZDCPoly::ZDCPoly()
 
 	fCachedPoints = nil;
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(QuickDraw)
 	fCachedPolyHandle = nil;
 #endif
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 	fCachedPOINTs = nil;
 #endif
 
-#if ZCONFIG(API_Graphics, X)
+#if ZCONFIG_SPI_Enabled(X11)
 	fCachedXPoints = nil;
 #endif
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 	fCachedBPoints = nil;
 #endif
 	}
@@ -117,19 +113,19 @@ ZDCPoly::ZDCPoly(const ZPoint& iStartPoint)
 
 	fCachedPoints = nil;
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(QuickDraw)
 	fCachedPolyHandle = nil;
 #endif
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 	fCachedPOINTs = nil;
 #endif
 
-#if ZCONFIG(API_Graphics, X)
+#if ZCONFIG_SPI_Enabled(X11)
 	fCachedXPoints = nil;
 #endif
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 	fCachedBPoints = nil;
 #endif
 	}
@@ -141,19 +137,19 @@ ZDCPoly::ZDCPoly(ZCoord iPointH, ZCoord iPointV)
 
 	fCachedPoints = nil;
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(QuickDraw)
 	fCachedPolyHandle = nil;
 #endif
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 	fCachedPOINTs = nil;
 #endif
 
-#if ZCONFIG(API_Graphics, X)
+#if ZCONFIG_SPI_Enabled(X11)
 	fCachedXPoints = nil;
 #endif
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 	fCachedBPoints = nil;
 #endif
 	}
@@ -164,19 +160,19 @@ ZDCPoly::ZDCPoly(const ZDCPoly& iOther)
 	{
 	fCachedPoints = nil;
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(QuickDraw)
 	fCachedPolyHandle = nil;
 #endif
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 	fCachedPOINTs = nil;
 #endif
 
-#if ZCONFIG(API_Graphics, X)
+#if ZCONFIG_SPI_Enabled(X11)
 	fCachedXPoints = nil;
 #endif
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 	fCachedBPoints = nil;
 #endif
 	}
@@ -245,7 +241,7 @@ void ZDCPoly::GetPoints(const ZPoint& iOrigin, ZPoint*& oPoints, size_t& oCount)
 	oCount = fPoints.size();
 	}
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(QuickDraw)
 PolyHandle ZDCPoly::GetPolyHandle(const ZPoint& iOrigin) const
 	{
 	ZDCPoly* nonConstThis = const_cast<ZDCPoly*>(this);
@@ -305,9 +301,9 @@ PolyHandle ZDCPoly::GetPolyHandle(const ZPoint& iOrigin) const
 		}
 	return nonConstThis->fCachedPolyHandle;
 	}
-#endif // ZCONFIG(API_Graphics, QD)
+#endif // ZCONFIG_SPI_Enabled(QuickDraw)
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 void ZDCPoly::GetPOINTs(const ZPoint& iOrigin, POINT*& oPOINTs, size_t& oCount) const
 	{
 	ZDCPoly* nonConstThis = const_cast<ZDCPoly*>(this);
@@ -328,9 +324,9 @@ void ZDCPoly::GetPOINTs(const ZPoint& iOrigin, POINT*& oPOINTs, size_t& oCount) 
 	oPOINTs = nonConstThis->fCachedPOINTs;
 	oCount = fPoints.size();
 	}
-#endif // ZCONFIG(API_Graphics, GDI)
+#endif // ZCONFIG_SPI_Enabled(GDI)
 
-#if ZCONFIG(API_Graphics, X)
+#if ZCONFIG_SPI_Enabled(X11)
 void ZDCPoly::GetXPoints(const ZPoint& iOrigin, XPoint*& oXPoints, size_t& oCount) const
 	{
 	ZDCPoly* nonConstThis = const_cast<ZDCPoly*>(this);
@@ -351,9 +347,9 @@ void ZDCPoly::GetXPoints(const ZPoint& iOrigin, XPoint*& oXPoints, size_t& oCoun
 	oXPoints = nonConstThis->fCachedXPoints;
 	oCount = fPoints.size();
 	}
-#endif // ZCONFIG(API_Graphics, X)
+#endif // ZCONFIG_SPI_Enabled(X11)
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 void ZDCPoly::GetBPoints(const ZPoint& iOrigin, BPoint*& oBPoints, size_t& oCount) const
 	{
 	ZDCPoly* nonConstThis = const_cast<ZDCPoly*>(this);
@@ -374,29 +370,32 @@ void ZDCPoly::GetBPoints(const ZPoint& iOrigin, BPoint*& oBPoints, size_t& oCoun
 	oBPoints = nonConstThis->fCachedBPoints;
 	oCount = fPoints.size();
 	}
-#endif // ZCONFIG(API_Graphics, Be)
+#endif // ZCONFIG_SPI_Enabled(BeOS)
 
 void ZDCPoly::pEmptyCache()
 	{
 	delete[] fCachedPoints;
 	fCachedPoints = nil;
-#if ZCONFIG(API_Graphics, QD)
-	if (fCachedPolyHandle)
-		::KillPoly(fCachedPolyHandle);
-	fCachedPolyHandle = nil;
-#endif // ZCONFIG(API_Graphics, QD)
-#if ZCONFIG(API_Graphics, GDI)
-	delete[] fCachedPOINTs;
-	fCachedPOINTs = nil;
-#endif // ZCONFIG(API_Graphics, GDI)
-#if ZCONFIG(API_Graphics, X)
-	delete[] fCachedXPoints;
-	fCachedXPoints = nil;
-#endif // ZCONFIG(API_Graphics, X)
-#if ZCONFIG(API_Graphics, Be)
-	delete[] fCachedBPoints;
-	fCachedBPoints = nil;
-#endif // ZCONFIG(API_Graphics, Be)
+	#if ZCONFIG_SPI_Enabled(QuickDraw)
+		if (fCachedPolyHandle)
+			::KillPoly(fCachedPolyHandle);
+		fCachedPolyHandle = nil;
+	#endif
+
+	#if ZCONFIG_SPI_Enabled(GDI)
+		delete[] fCachedPOINTs;
+		fCachedPOINTs = nil;
+	#endif
+
+	#if ZCONFIG_SPI_Enabled(X11)
+		delete[] fCachedXPoints;
+		fCachedXPoints = nil;
+	#endif
+
+	#if ZCONFIG_SPI_Enabled(BeOS)
+		delete[] fCachedBPoints;
+		fCachedBPoints = nil;
+	#endif
 	}
 
 // =================================================================================================
@@ -412,14 +411,14 @@ void ZDCPoly::Decompose(bool iEvenOdd, ZCoord iOffsetH, ZCoord iOffsetV,
 	}
 
 // Linux and Be headers currently don't provide <limits>, so we have to futz around.
-#if ZCONFIG(OS, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 	#include <climits>
 	static const ZCoord sCoord_Max = LONG_MAX;
 	static const ZCoord sCoord_Min = LONG_MIN;
-#elif ZCONFIG(OS, POSIX)
-	#include <climits>
-	static const ZCoord sCoord_Max = SHRT_MAX;
-	static const ZCoord sCoord_Min = SHRT_MIN;
+//#elif ZCONFIG(OS, POSIX)
+//	#include <climits>
+//	static const ZCoord sCoord_Max = SHRT_MAX;
+//	static const ZCoord sCoord_Min = SHRT_MIN;
 #else
 	#include <limits>
 	static const ZCoord sCoord_Max = numeric_limits<ZCoord>::max();

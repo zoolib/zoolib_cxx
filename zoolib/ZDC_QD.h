@@ -21,18 +21,25 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZDC_QD__
 #define __ZDC_QD__ 1
 #include "zconfig.h"
+#include "ZCONFIG_API.h"
+#include "ZCONFIG_SPI.h"
+
+#ifndef ZCONFIG_API_Avail__DC_QD
+#	define ZCONFIG_API_Avail__DC_QD ZCONFIG_SPI_Enabled(QuickDraw)
+#endif
+
+#ifndef ZCONFIG_API_Desired__DC_QD
+#	define ZCONFIG_API_Desired__DC_QD 1
+#endif
+
 
 #include "ZDC.h"
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_API_Enabled(DC_QD)
 
 #include "ZUtil_Mac_LL.h"
 
-#if ZCONFIG(OS, MacOSX)
-#	include <QD/QDOffscreen.h>
-#else
-#	include <QDOffscreen.h>
-#endif
+#include ZMACINCLUDE(QD,QDOffscreen.h)
 
 // =================================================================================================
 #pragma mark -
@@ -278,9 +285,9 @@ public:
 	CGrafPtr GetCGrafPtr();
 
 protected:
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+#if ZCONFIG(API_Thread, Mac)
 	ZUtil_Mac_LL::PreserveCurrentPort fPCP;
-#endif // ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+#endif // ZCONFIG(API_Thread, Mac)
 	ZRef<ZDCCanvas_QD> fCanvas;
 	ZPoint fOffset;
 	};
@@ -312,6 +319,6 @@ protected:
 
 // =================================================================================================
 
-#endif // ZCONFIG(API_Graphics, QD)
+#endif // ZCONFIG_API_Enabled(DC_QD)
 
 #endif // __ZDC_QD__

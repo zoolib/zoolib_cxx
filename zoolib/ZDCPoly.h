@@ -51,19 +51,19 @@ public:
 
 	void GetPoints(const ZPoint& iOrigin, ZPoint*& oPoints, size_t& oCount) const;
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(QuickDraw)
 	PolyHandle GetPolyHandle(const ZPoint& iOrigin) const;
 #endif
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 	void GetPOINTs(const ZPoint& iOrigin, POINT*& oPOINTs, size_t& oCount) const;
 #endif
 
-#if ZCONFIG(API_Graphics, X)
+#if ZCONFIG_SPI_Enabled(X11)
 	void GetXPoints(const ZPoint& iOrigin, XPoint*& oXPoints, size_t& oCount) const;
 #endif
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 	void GetBPoints(const ZPoint& iOrigin, BPoint*& oBPoints, size_t& oCount) const;
 #endif
 
@@ -87,19 +87,19 @@ private:
 	ZPoint fCachedOrigin;
 	ZPoint* fCachedPoints;
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(QuickDraw)
 	PolyHandle fCachedPolyHandle;
 #endif
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 	POINT* fCachedPOINTs;
 #endif
 
-#if ZCONFIG(API_Graphics, X)
+#if ZCONFIG_SPI_Enabled(X11)
 	XPoint* fCachedXPoints;
 #endif
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 	BPoint* fCachedBPoints;
 #endif
 	};

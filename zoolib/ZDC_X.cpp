@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZDC_X.h"
 
-#if ZCONFIG(API_Graphics, X)
+#if ZCONFIG_API_Enabled(DC_X)
 
 // =================================================================================================
 #pragma mark -
@@ -1023,4 +1023,4 @@ ZDCPixmapNS::EFormatStandard ZDCPixmapFactory_X::MapEfficientToStandard(ZDCPixma
 	return standardFormat;
 	}
 
-#endif // ZCONFIG(API_Graphics, X)
+#endif // ZCONFIG_API_Enabled(DC_X)

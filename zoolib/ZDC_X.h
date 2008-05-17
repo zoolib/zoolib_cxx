@@ -21,10 +21,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZDC_X__
 #define __ZDC_X__ 1
 #include "zconfig.h"
+#include "ZCONFIG_API.h"
+#include "ZCONFIG_SPI.h"
 
-#if ZCONFIG(API_Graphics, X)
+#ifndef ZCONFIG_API_Avail__DC_X
+#	define ZCONFIG_API_Avail__DC_X ZCONFIG_SPI_Enabled(X11)
+#endif
+
+#ifndef ZCONFIG_API_Desired__DC_X
+#	define ZCONFIG_API_Desired__DC_X 1
+#endif
 
 #include "ZDC.h"
+
+#if ZCONFIG_API_Enabled(DC_X)
+
 #include "ZXServer.h"
 
 // =================================================================================================
@@ -199,6 +210,6 @@ protected:
 	};
 */
 
-#endif // ZCONFIG(API_Graphics, X)
+#endif // ZCONFIG_API_Enabled(DC_X)
 
 #endif // __ZDC_X__

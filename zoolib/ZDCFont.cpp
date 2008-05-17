@@ -20,27 +20,24 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZDCFont.h"
 
+#include "ZCONFIG_SPI.h"
+
 #include "ZDebug.h"
 #include "ZStream.h"
 #include "ZString.h"
-#include "ZUnicode.h"
 
-#if ZCONFIG(API_Graphics, QD)
-#	if ZCONFIG(OS, MacOSX)
-#		include <QD/Fonts.h>
-#	else
-#		include <Fonts.h>
-#	endif
+#if ZCONFIG_SPI_Enabled(QuickDraw)
+#	include ZMACINCLUDE(QD,Fonts.h)
 #endif
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(QuickDraw)
 
 const ZDCFont ZDCFont::sApp9(applFont, ZDCFont::normal, 9);
 const ZDCFont ZDCFont::sApp10Bold(applFont, ZDCFont::bold, 10);
 const ZDCFont ZDCFont::sSystem(systemFont, ZDCFont::normal, 12);
 const ZDCFont ZDCFont::sMonospaced9(kFontIDMonaco, ZDCFont::normal, 9);
 
-#elif ZCONFIG(OS, Win32)
+#elif ZCONFIG_SPI_Enabled(Win)
 
 // AG 98-07-15. This is not how things should be done, but it'll do for now
 const ZDCFont ZDCFont::sApp9("Arial", ZDCFont::normal, 9);
@@ -48,7 +45,7 @@ const ZDCFont ZDCFont::sApp10Bold("Arial", ZDCFont::bold, 10);
 const ZDCFont ZDCFont::sSystem("Arial", ZDCFont::normal, 12);
 const ZDCFont ZDCFont::sMonospaced9("Courier", ZDCFont::normal, 9);
 
-#elif ZCONFIG(API_Graphics, Be)
+#elif ZCONFIG_SPI_Enabled(BeOS)
 
 const ZDCFont ZDCFont::sApp9(*be_plain_font);
 const ZDCFont ZDCFont::sApp10Bold(*be_bold_font);
@@ -120,7 +117,7 @@ bool ZDCFont::operator==(const ZDCFont& inOther) const
 
 // ==================================================
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(QuickDraw)
 ZDCFont::ZDCFont(const TextStyle& inStyle)
 	{
 	Str255 fontName;
@@ -145,11 +142,11 @@ TextStyle ZDCFont::GetTextStyle() const
 	{
 	TextStyle theTextStyle;
 
-#if ZCONFIG(OS, Carbon)
-	theTextStyle.tsFont = ::FMGetFontFamilyFromName(ZString::sAsPString(fFontName));
-#else
-	::GetFNum(ZString::sAsPString(fFontName), &theTextStyle.tsFont);
-#endif
+	#if ZCONFIG_SPI_Enabled(Carbon)
+		theTextStyle.tsFont = ::FMGetFontFamilyFromName(ZString::sAsPString(fFontName));
+	#else
+		::GetFNum(ZString::sAsPString(fFontName), &theTextStyle.tsFont);
+	#endif
 
 	theTextStyle.tsFace = fStyle;
 	theTextStyle.tsSize = fSize;
@@ -161,13 +158,13 @@ TextStyle ZDCFont::GetTextStyle() const
 
 int16 ZDCFont::GetFontID() const
 	{
-#if ZCONFIG(OS, Carbon)
-	return ::FMGetFontFamilyFromName(ZString::sAsPString(fFontName));
-#else
-	int16 theFontID;
-	::GetFNum(ZString::sAsPString(fFontName), &theFontID);
-	return theFontID;
-#endif
+	#if ZCONFIG_SPI_Enabled(Carbon)
+		return ::FMGetFontFamilyFromName(ZString::sAsPString(fFontName));
+	#else
+		int16 theFontID;
+		::GetFNum(ZString::sAsPString(fFontName), &theFontID);
+		return theFontID;
+	#endif
 	}
 
 void ZDCFont::SetFontID(int16 inID)
@@ -176,11 +173,11 @@ void ZDCFont::SetFontID(int16 inID)
 	::GetFontName(inID, fontName);
 	fFontName = ZString::sFromPString(fontName);
 	}
-#endif // ZCONFIG(API_Graphics, QD)
+#endif // ZCONFIG_SPI_Enabled(QuickDraw)
 
 // ==================================================
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 ZDCFont::ZDCFont(const BFont& inBFont)
 	{
 	}
@@ -189,7 +186,7 @@ void ZDCFont::GetBFont(BFont& outBFont)
 	{
 	outBFont = *be_plain_font;
 	}
-#endif // ZCONFIG(API_Graphics, Be)
+#endif // ZCONFIG_SPI_Enabled(BeOS)
 
 // ==================================================
 

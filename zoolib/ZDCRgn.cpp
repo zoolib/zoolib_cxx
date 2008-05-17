@@ -80,12 +80,8 @@ using std::vector;
 
 // =================================================================================================
 
-#if ZCONFIG(API_Graphics, QD)
-#	if ZCONFIG(OS, MacOSX)
-#		include <CarbonCore/MacMemory.h>
-#	else
-#		include <MacMemory.h>
-#	endif
+#if ZCONFIG_SPI_Enabled(QuickDraw)
+#	include ZMACINCLUDE(CarbonCore,MacMemory.h)
 #endif
 
 #if !defined(TARGET_OS_MAC) || (TARGET_OS_MAC && !defined(MacOffsetRgn))
@@ -97,7 +93,7 @@ using std::vector;
 #	define MacCopyRgn CopyRgn
 #endif
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 #	ifndef ZCONFIG_BRegionAlternateEnabled
 #		define ZCONFIG_BRegionAlternateEnabled 0
 #	endif
@@ -106,12 +102,12 @@ using std::vector;
 #	endif
 #endif
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 #	include "ZUtil_Win.h"
 #endif
 
 
-#if ZCONFIG(API_Graphics, X)
+#if ZCONFIG_SPI_Enabled(X11)
 // These definitions are used in Decompose, and should be generally correct
 // but the code will break silently if used by an unusal xlib implementation.
 struct _BOX
@@ -129,7 +125,7 @@ struct _XRegion
 	_BOX* rects;
 	_BOX extents;
 	};
-#endif // ZCONFIG(API_Graphics, X)
+#endif // ZCONFIG_SPI_Enabled(X11)
 
 // ==================================================
 
@@ -154,48 +150,42 @@ struct _XRegion
 #	define StoreFormat(formatField, formatValue) ((void)(0))
 #endif
 
-// ==================================================
+enum
+	{
+	ZCONFIG_API_Graphics_QD = 1,
+	ZCONFIG_API_Graphics_GDI,
+	ZCONFIG_API_Graphics_X,
+	ZCONFIG_API_Graphics_Be,
+	ZCONFIG_API_Graphics_ZooLib
+	};
 
-#if ZCONFIG(OS, MacOS7)
-static RgnHandle sCachedRgnHandle = nil;
-#endif
+// ==================================================
 
 ZDCRgn::Rep::~Rep()
 	{
 	if (false) {}
 
-	#if ZCONFIG(API_Graphics, QD) && ZCONFIG(OS, MacOS7)
-	else if (CheckFormat(fFormat, ZCONFIG_API_Graphics_QD))
-		{
-		if (!sCachedRgnHandle)
-			sCachedRgnHandle = fRgnHandle;
-		else
-			::DisposeRgn(fRgnHandle);
-		}
-
-	#endif
-
-	#if ZCONFIG(API_Graphics, QD) && !ZCONFIG(OS, MacOS7)
+	#if ZCONFIG_SPI_Enabled(QuickDraw)
 	else if (CheckFormat(fFormat, ZCONFIG_API_Graphics_QD))
 		::DisposeRgn(fRgnHandle);
 	#endif
 
-	#if ZCONFIG(API_Graphics, GDI)
+	#if ZCONFIG_SPI_Enabled(GDI)
 	else if (CheckFormat(fFormat, ZCONFIG_API_Graphics_GDI))
 		::DeleteObject(fHRGN);
 	#endif
 
-	#if ZCONFIG(API_Graphics, X)
+	#if ZCONFIG_SPI_Enabled(X11)
 	else if (CheckFormat(fFormat, ZCONFIG_API_Graphics_X))
 		::XDestroyRegion(fRegion);
 	#endif
 
-	#if ZCONFIG(API_Graphics, Be)
+	#if ZCONFIG_SPI_Enabled(BeOS)
 	else if (CheckFormat(fFormat, ZCONFIG_API_Graphics_Be))
 		delete fBRegion;
 	#endif
 
-	#if ZCONFIG(API_Graphics, ZooLib)
+	#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 	else if (CheckFormat(fFormat, ZCONFIG_API_Graphics_ZooLib))
 		delete fBigRegion;
 	#endif
@@ -217,7 +207,7 @@ void ZDCRgn::Internal_Harmonize(const ZDCRgn& iOther) const
 
 void ZDCRgn::Internal_ChangeFormat(short iRequiredFormat) const
 	{
-#if ZCONFIG(API_Graphics, QD) && ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(QuickDraw) && ZCONFIG_SPI_Enabled(GDI)
 	ZAssertStop(kDebug_DCRgn, fRep && fRep->fFormat != iRequiredFormat);
 
 	ZDCRgn* nonConstThis = const_cast<ZDCRgn*>(this);
@@ -241,7 +231,7 @@ void ZDCRgn::Internal_ChangeFormat(short iRequiredFormat) const
 
 void ZDCRgn::Internal_TouchAndSetFormat(short iRequiredFormat)
 	{
-	#if ZCONFIG(API_Graphics, QD) && ZCONFIG(API_Graphics, GDI)
+	#if ZCONFIG_SPI_Enabled(QuickDraw) && ZCONFIG_SPI_Enabled(GDI)
 
 	Rep* newRep = new Rep; // Don't assign to a ZRef, generates extra code unnecessarily
 
@@ -289,11 +279,11 @@ void ZDCRgn::Internal_TouchAndSetFormat(short iRequiredFormat)
 		}
 	fRep = newRep;
 
-	#else // ZCONFIG(API_Graphics, QD) && ZCONFIG(API_Graphics, GDI)
+	#else // ZCONFIG_SPI_Enabled(QuickDraw) && ZCONFIG_SPI_Enabled(GDI)
 
 	this->Internal_TouchReal();
 
-	#endif // ZCONFIG(API_Graphics, QD) && ZCONFIG(API_Graphics, GDI)
+	#endif // ZCONFIG_SPI_Enabled(QuickDraw) && ZCONFIG_SPI_Enabled(GDI)
 	}
 
 #endif // ZCONFIG_API_Graphics_Multi
@@ -311,7 +301,7 @@ void ZDCRgn::Internal_TouchReal()
 	Rep* newRep = new Rep; // Don't assign to a ZRef, generates extra code unnecessarily
 	if (false) {}
 
-	#if ZCONFIG(API_Graphics, GDI)
+	#if ZCONFIG_SPI_Enabled(GDI)
 	else if (!fRep || CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 		{
 		newRep->fHRGN = ::CreateRectRgn(0,0,0,0);
@@ -321,35 +311,7 @@ void ZDCRgn::Internal_TouchReal()
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, QD) && ZCONFIG(OS, MacOS7)
-	else if (!fRep || CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
-		{
-		// Use sCachedRgnHandle if we're on MacOS (ie we're not preemptive)
-		if (fRep)
-			{
-			// We can safely use the cache if we're going to be moving data from our current rep
-			if (sCachedRgnHandle)
-				{
-				newRep->fRgnHandle = sCachedRgnHandle;
-				sCachedRgnHandle = nil;
-				}
-			else
-				{
-				newRep->fRgnHandle = ::NewRgn();
-				}
-			StoreFormat(newRep->fFormat, ZCONFIG_API_Graphics_QD);
-			::MacCopyRgn(fRep->fRgnHandle, newRep->fRgnHandle);
-			}
-		else
-			{
-			// Otherwise we should just new up an empty rgn (the cached one might not be empty)
-			newRep->fRgnHandle = ::NewRgn();
-			StoreFormat(newRep->fFormat, ZCONFIG_API_Graphics_QD);
-			}
-		}
-	#endif
-
-	#if ZCONFIG(API_Graphics, QD) && !ZCONFIG(OS, MacOS7)
+	#if ZCONFIG_SPI_Enabled(QuickDraw)
 	else if (!fRep || CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 		{
 		newRep->fRgnHandle = ::NewRgn();
@@ -359,7 +321,7 @@ void ZDCRgn::Internal_TouchReal()
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, X)
+	#if ZCONFIG_SPI_Enabled(X11)
 	else if (!fRep || CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 		{
 		newRep->fRegion = ::XCreateRegion();
@@ -369,7 +331,7 @@ void ZDCRgn::Internal_TouchReal()
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, Be)
+	#if ZCONFIG_SPI_Enabled(BeOS)
 	else if (!fRep || CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 		{
 		if (fRep)
@@ -380,7 +342,7 @@ void ZDCRgn::Internal_TouchReal()
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, ZooLib)
+	#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 	else if (!fRep || CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 		{
 		if (fRep)
@@ -405,32 +367,18 @@ void ZDCRgn::sInternal_CreateRep_Rect(ZRef<Rep>& oRep,
 		return;
 	oRep = new Rep;
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 
 	StoreFormat(oRep->fFormat, ZCONFIG_API_Graphics_GDI);
 	oRep->fHRGN = ::CreateRectRgn(iLeft, iTop, iRight, iBottom);
 
-#elif ZCONFIG(API_Graphics, QD) && ZCONFIG(OS, MacOS7)
-
-	StoreFormat(oRep->fFormat, ZCONFIG_API_Graphics_QD);
-	if (sCachedRgnHandle)
-		{
-		oRep->fRgnHandle = sCachedRgnHandle;
-		sCachedRgnHandle = nil;
-		}
-	else
-		{
-		oRep->fRgnHandle = ::NewRgn();
-		}
-	::MacSetRectRgn(oRep->fRgnHandle, iLeft, iTop, iRight, iBottom);
-
-#elif ZCONFIG(API_Graphics, QD) && !ZCONFIG(OS, MacOS7)
+#elif ZCONFIG_SPI_Enabled(QuickDraw)
 
 	StoreFormat(oRep->fFormat, ZCONFIG_API_Graphics_QD);
 	oRep->fRgnHandle = ::NewRgn();
 	::MacSetRectRgn(oRep->fRgnHandle, iLeft, iTop, iRight, iBottom);
 
-#elif ZCONFIG(API_Graphics, X)
+#elif ZCONFIG_SPI_Enabled(X11)
 
 	StoreFormat(oRep->fFormat, ZCONFIG_API_Graphics_X);
 	oRep->fRegion = ::XCreateRegion();
@@ -441,13 +389,13 @@ void ZDCRgn::sInternal_CreateRep_Rect(ZRef<Rep>& oRep,
 	tempRect.height = iBottom - iTop;
 	::XUnionRectWithRegion(&tempRect, oRep->fRegion, oRep->fRegion);
 
-#elif ZCONFIG(API_Graphics, Be) && ZCONFIG_BRegionAlternateEnabled
+#elif ZCONFIG_SPI_Enabled(BeOS) && ZCONFIG_BRegionAlternateEnabled
 
 	StoreFormat(oRep->fFormat, ZCONFIG_API_Graphics_Be);
 	oRep->fBRegion = new BRegion;
 	::ZBRegionAlternate_Set(oRep->fBRegion, iLeft, iTop, iRight - 1, iBottom - 1);
 
-#elif ZCONFIG(API_Graphics, Be) && !ZCONFIG_BRegionAlternateEnabled
+#elif ZCONFIG_SPI_Enabled(BeOS) && !ZCONFIG_BRegionAlternateEnabled
 
 	StoreFormat(oRep->fFormat, ZCONFIG_API_Graphics_Be);
 	oRep->fBRegion = new BRegion;
@@ -458,7 +406,7 @@ void ZDCRgn::sInternal_CreateRep_Rect(ZRef<Rep>& oRep,
 	tempRect.bottom = iBottom - 1;
 	oRep->fBRegion->Set(tempRect);
 
-#elif ZCONFIG(API_Graphics, ZooLib)
+#elif 1//ZCONFIG_SPI_Enabled(ZooLib)
 
 	StoreFormat(oRep->fFormat, ZCONFIG_API_Graphics_ZooLib);
 	oRep->fBigRegion = new ZBigRegion(ZRect_T<int32>(iLeft, iTop, iRight, iBottom));
@@ -477,7 +425,7 @@ void ZDCRgn::sInternal_CreateRep_RoundRect(ZRef<Rep>& oRep,
 
 	// AG 2000-07-27. We're not using Mac native round rects because
 	// I do not yet know how to match them exactly on other platforms.
-#if 0 // ZCONFIG(API_Graphics, QD)
+#if 0 // ZCONFIG_SPI_Enabled(QuickDraw)
 
 	oRep = new Rep;
 	StoreFormat(oRep->fFormat, ZCONFIG_API_Graphics_QD);
@@ -491,7 +439,7 @@ void ZDCRgn::sInternal_CreateRep_RoundRect(ZRef<Rep>& oRep,
 	::FrameRoundRect(&tempRect, iCornerSizeH, iCornerSizeV);
 	::CloseRgn(oRep->fRgnHandle);
 
-#else // ZCONFIG(API_Graphics, QD)
+#else // ZCONFIG_SPI_Enabled(QuickDraw)
 
 	// From Graphics Programming Column, DDJ #216 July 1994, page 119. (Source is on page 146.)
 	// Force corner sizes into a valid range
@@ -615,7 +563,7 @@ void ZDCRgn::sInternal_CreateRep_RoundRect(ZRef<Rep>& oRep,
 
 	oRep = tempRgn.fRep;
 
-#endif // ZCONFIG(API_Graphics, QD)
+#endif // ZCONFIG_SPI_Enabled(QuickDraw)
 	}
 
 // ==================================================
@@ -714,7 +662,7 @@ ZDCRgn ZDCRgn::sRects(const ZRect* iRects, size_t iCount, bool iAlreadySorted)
 		resultRgn = iRects[0];
 		}
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 
 	else if (iAlreadySorted && !ZUtil_Win::sIsWinNT())
 		{
@@ -779,7 +727,7 @@ ZDCRgn ZDCRgn::sRects(const ZRect* iRects, size_t iCount, bool iAlreadySorted)
 			}
 		}
 
-#elif ZCONFIG(API_Graphics, Be)
+#elif ZCONFIG_SPI_Enabled(BeOS)
 
 	else if (iAlreadySorted)
 		{
@@ -915,7 +863,7 @@ ZDCRgn ZDCRgn::sEllipse(const ZRect& iBounds)
 	{
 	// AG 2000-07-27. We're not using Mac native ellipses because I do not yet know
 	// how to match them exactly on other platforms.
-#if 0 // ZCONFIG(API_Graphics, QD)
+#if 0 // ZCONFIG_SPI_Enabled(QuickDraw)
 	::OpenRgn();
 	Rect tempRect(iBounds);
 	::FrameOval(&tempRect);
@@ -944,7 +892,7 @@ ZDCRgn ZDCRgn::sEllipse(ZCoord iLeft, ZCoord iTop, ZCoord iRight, ZCoord iBottom
 	{
 	// AG 2000-07-27. We're not using Mac native ellipses because I do not yet know
 	// how to match them exactly on other platforms.
-#if 0 // ZCONFIG(API_Graphics, QD)
+#if 0 // ZCONFIG_SPI_Enabled(QuickDraw)
 	::OpenRgn();
 	Rect tempRect;
 	tempRect.left = iLeft;
@@ -1018,7 +966,7 @@ static bool sRegionFromPoly_Rects(ZCoord iTopCoord, ZCoord iBottomCoord,
 	return false;
 	}
 
-#if ZCONFIG(API_Graphics, QD) && !OPAQUE_TOOLBOX_STRUCTS
+#if ZCONFIG_SPI_Enabled(QuickDraw) && !OPAQUE_TOOLBOX_STRUCTS
 
 namespace ZANONYMOUS {
 
@@ -1141,12 +1089,12 @@ static bool sRegionFromPoly_QD(ZCoord iTopCoord, ZCoord iBottomCoord,
 
 	return false;
 	}
-#endif // ZCONFIG(API_Graphics, QD) && !OPAQUE_TOOLBOX_STRUCTS
+#endif // ZCONFIG_SPI_Enabled(QuickDraw) && !OPAQUE_TOOLBOX_STRUCTS
 
 ZDCRgn ZDCRgn::sPoly(const ZDCPoly& iPoly, bool iEvenOdd, ZCoord iOffsetH, ZCoord iOffsetV)
 	{
 	// Prefer GDI HRGN over QD RgnHandle
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 
 	POINT* thePOINTs;
 	size_t theCount;
@@ -1158,7 +1106,7 @@ ZDCRgn ZDCRgn::sPoly(const ZDCPoly& iPoly, bool iEvenOdd, ZCoord iOffsetH, ZCoor
 		}
 	return ZDCRgn();
 
-#elif ZCONFIG(API_Graphics, QD) && !OPAQUE_TOOLBOX_STRUCTS
+#elif ZCONFIG_SPI_Enabled(QuickDraw) && !OPAQUE_TOOLBOX_STRUCTS
 
 	if (iEvenOdd)
 		{
@@ -1214,7 +1162,7 @@ ZDCRgn ZDCRgn::sPoly(const ZDCPoly& iPoly, bool iEvenOdd, ZCoord iOffsetH, ZCoor
 		}
 	return ZDCRgn();
 
-#elif ZCONFIG(API_Graphics, X)
+#elif ZCONFIG_SPI_Enabled(X11)
 
 	XPoint* theXPoints;
 	size_t theCount;
@@ -1229,7 +1177,7 @@ ZDCRgn ZDCRgn::sPoly(const ZDCPoly& iPoly, bool iEvenOdd, ZCoord iOffsetH, ZCoor
 		}
 	return ZDCRgn();
 
-#elif ZCONFIG(API_Graphics, Be)
+#elif ZCONFIG_SPI_Enabled(BeOS)
 
 	vector<ZRect> theRects;
 	iPoly.Decompose(iEvenOdd, iOffsetH, iOffsetV, sRegionFromPoly_Rects, &theRects);
@@ -1254,7 +1202,7 @@ ZDCRgn ZDCRgn::sPoly(const ZPoint* iPoints, size_t iCount, bool iEvenOdd,
 		return resultRgn;
 	// Prefer GDI HRGN over QD RgnHandle
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 
 	vector<POINT> thePOINTs(iCount);
 	for (size_t x = 0; x < iCount; ++x)
@@ -1265,7 +1213,7 @@ ZDCRgn ZDCRgn::sPoly(const ZPoint* iPoints, size_t iCount, bool iEvenOdd,
 	if (HRGN theHRGN = ::CreatePolygonRgn(&thePOINTs[0], iCount, iEvenOdd ? ALTERNATE : WINDING))
 		resultRgn = ZDCRgn(theHRGN, true);
 
-#elif ZCONFIG(API_Graphics, QD) && !OPAQUE_TOOLBOX_STRUCTS
+#elif ZCONFIG_SPI_Enabled(QuickDraw) && !OPAQUE_TOOLBOX_STRUCTS
 
 	if (iEvenOdd)
 		{
@@ -1311,7 +1259,7 @@ ZDCRgn ZDCRgn::sPoly(const ZPoint* iPoints, size_t iCount, bool iEvenOdd,
 			}
 		}
 
-#elif ZCONFIG(API_Graphics, X)
+#elif ZCONFIG_SPI_Enabled(X11)
 
 	vector<XPoint> theXPoints(iCount);
 	for (size_t x = 0; x < iCount; ++x)
@@ -1325,7 +1273,7 @@ ZDCRgn ZDCRgn::sPoly(const ZPoint* iPoints, size_t iCount, bool iEvenOdd,
 		resultRgn = ZDCRgn(theXRegion, true);
 		}
 
-#elif ZCONFIG(API_Graphics, Be)
+#elif ZCONFIG_SPI_Enabled(BeOS)
 
 	vector<ZRect> theRects;
 	ZDCPoly::sDecompose(iPoints, iCount, iEvenOdd, iOffsetH, iOffsetV,
@@ -1363,7 +1311,7 @@ ZDCRgn& ZDCRgn::operator=(const ZRect& iRect)
 		fRep.Clear();
 		}
 
-	#if ZCONFIG(API_Graphics, GDI)
+	#if ZCONFIG_SPI_Enabled(GDI)
 	else if (!fRep || CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 		{
 		this->Internal_Touch();
@@ -1371,7 +1319,7 @@ ZDCRgn& ZDCRgn::operator=(const ZRect& iRect)
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, QD)
+	#if ZCONFIG_SPI_Enabled(QuickDraw)
 	else if (!fRep || CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 		{
 		this->Internal_Touch();
@@ -1379,7 +1327,7 @@ ZDCRgn& ZDCRgn::operator=(const ZRect& iRect)
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, X)
+	#if ZCONFIG_SPI_Enabled(X11)
 	else if (!fRep || CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 		{
 		XRectangle tempRect;
@@ -1395,7 +1343,7 @@ ZDCRgn& ZDCRgn::operator=(const ZRect& iRect)
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, Be) && ZCONFIG_BRegionAlternateEnabled
+	#if ZCONFIG_SPI_Enabled(BeOS) && ZCONFIG_BRegionAlternateEnabled
 	else if (!fRep || CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 		{
 		this->Internal_Touch();
@@ -1404,7 +1352,7 @@ ZDCRgn& ZDCRgn::operator=(const ZRect& iRect)
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, Be) && !ZCONFIG_BRegionAlternateEnabled
+	#if ZCONFIG_SPI_Enabled(BeOS) && !ZCONFIG_BRegionAlternateEnabled
 	else if (!fRep || CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 		{
 		this->Internal_Touch();
@@ -1417,7 +1365,7 @@ ZDCRgn& ZDCRgn::operator=(const ZRect& iRect)
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, ZooLib)
+	#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 	else if (!fRep || CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 		{
 		fRep = new Rep;
@@ -1431,7 +1379,7 @@ ZDCRgn& ZDCRgn::operator=(const ZRect& iRect)
 
 // ==================================================
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(QuickDraw)
 
 ZDCRgn::ZDCRgn(RgnHandle iRgnHandle, bool iAdopt)
 	{
@@ -1461,11 +1409,11 @@ RgnHandle ZDCRgn::GetRgnHandle()
 	return fRep->fRgnHandle;
 	}
 
-#endif // ZCONFIG(API_Graphics, QD)
+#endif // ZCONFIG_SPI_Enabled(QuickDraw)
 
 // ==================================================
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 
 ZDCRgn::ZDCRgn(HRGN iHRGN, bool iAdopt)
 	{
@@ -1495,11 +1443,11 @@ HRGN ZDCRgn::GetHRGN()
 	return fRep->fHRGN;
 	}
 
-#endif // ZCONFIG(API_Graphics, GDI)
+#endif // ZCONFIG_SPI_Enabled(GDI)
 
 // ==================================================
 
-#if ZCONFIG(API_Graphics, X)
+#if ZCONFIG_SPI_Enabled(X11)
 
 ZDCRgn::ZDCRgn(Region iRegion, bool iAdopt)
 	{
@@ -1529,11 +1477,11 @@ Region ZDCRgn::GetRegion()
 	return fRep->fRegion;
 	}
 
-#endif // ZCONFIG(API_Graphics, X)
+#endif // ZCONFIG_SPI_Enabled(X11)
 
 // ==================================================
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 
 ZDCRgn::ZDCRgn(BRegion* iBRegion, bool iAdopt)
 	{
@@ -1568,11 +1516,11 @@ BRegion* ZDCRgn::GetBRegion()
 	return fRep->fBRegion;
 	}
 
-#endif // ZCONFIG(API_Graphics, Be)
+#endif // ZCONFIG_SPI_Enabled(BeOS)
 
 // ==================================================
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 
 void ZDCRgn::MakeScale(float m11, float m12, float m21, float m22, float hOffset, float vOffset)
 	{
@@ -1593,7 +1541,7 @@ void ZDCRgn::MakeScale(float m11, float m12, float m21, float m22, float hOffset
 	fRep->fHRGN = newHRGN;
 	}
 
-#endif // ZCONFIG(API_Graphics, GDI)
+#endif // ZCONFIG_SPI_Enabled(GDI)
 
 bool ZDCRgn::Contains(ZCoord iH, ZCoord iV) const
 	{
@@ -1601,7 +1549,7 @@ bool ZDCRgn::Contains(ZCoord iH, ZCoord iV) const
 		{
 		if (false) {}
 
-		#if ZCONFIG(API_Graphics, QD)
+		#if ZCONFIG_SPI_Enabled(QuickDraw)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			{
 			Point thePoint;
@@ -1611,27 +1559,27 @@ bool ZDCRgn::Contains(ZCoord iH, ZCoord iV) const
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, GDI)
+		#if ZCONFIG_SPI_Enabled(GDI)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 			return ::PtInRegion(fRep->fHRGN, iH, iV);
 		#endif
 
-		#if ZCONFIG(API_Graphics, X)
+		#if ZCONFIG_SPI_Enabled(X11)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 			return ::XPointInRegion(fRep->fRegion, iH, iV);
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			return ::ZBRegionAlternate_Contains(fRep->fBRegion, iH, iV);
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && !ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && !ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			return fRep->fBRegion->Contains(iH, iV);
 		#endif
 
-		#if ZCONFIG(API_Graphics, ZooLib)
+		#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 			return fRep->fBigRegion->Contains(iH, iV);
 		#endif
@@ -1646,7 +1594,7 @@ ZDCRgn ZDCRgn::Outline() const
 	{ return *this - this->Inset(1,1); }
 
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 
 static void CompressHRGN(HRGN iHRGN, HRGN tempHRGN1, HRGN tempHRGN2,
 	ZCoord iDelta, bool iHorizontal, bool iGrow)
@@ -1677,10 +1625,10 @@ static void CompressHRGN(HRGN iHRGN, HRGN tempHRGN1, HRGN tempHRGN2,
 		}
 	}
 
-#endif // ZCONFIG(API_Graphics, GDI)
+#endif // ZCONFIG_SPI_Enabled(GDI)
 
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 
 static void CompressBRegion(BRegion* iBRegion, BRegion* tempBRegion1, BRegion* tempBRegion2,
 	ZCoord iDelta, bool iHorizontal, bool iGrow)
@@ -1759,7 +1707,7 @@ static void CompressBRegion(BRegion* iBRegion, BRegion* tempBRegion1, BRegion* t
 		}
 	}
 
-#endif // ZCONFIG(API_Graphics, Be)
+#endif // ZCONFIG_SPI_Enabled(BeOS)
 
 
 void ZDCRgn::MakeInset(ZCoord iInsetH, ZCoord iInsetV)
@@ -1770,12 +1718,12 @@ void ZDCRgn::MakeInset(ZCoord iInsetH, ZCoord iInsetV)
 
 	if (false) {}
 
-	#if ZCONFIG(API_Graphics, QD)
+	#if ZCONFIG_SPI_Enabled(QuickDraw)
 	else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 		::InsetRgn(fRep->fRgnHandle, iInsetH, iInsetV);
 	#endif
 
-	#if ZCONFIG(API_Graphics, GDI)
+	#if ZCONFIG_SPI_Enabled(GDI)
 	else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 		{
 		// AG 98-05-06. This logic was lifted from XFree86's Region.c -- who knows
@@ -1806,12 +1754,12 @@ void ZDCRgn::MakeInset(ZCoord iInsetH, ZCoord iInsetV)
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, X)
+	#if ZCONFIG_SPI_Enabled(X11)
 	else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 		::XShrinkRegion(fRep->fRegion, iInsetH, iInsetV);
 	#endif
 
-	#if ZCONFIG(API_Graphics, Be)
+	#if ZCONFIG_SPI_Enabled(BeOS)
 	else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 		{
 		if (fRep->fBRegion->CountRects() == 1)
@@ -1845,7 +1793,7 @@ void ZDCRgn::MakeInset(ZCoord iInsetH, ZCoord iInsetV)
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, ZooLib)
+	#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 	else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 		fRep->fBigRegion->MakeInset(iInsetH, iInsetV);
 	#endif
@@ -1860,12 +1808,12 @@ bool ZDCRgn::IsEmpty() const
 		{
 		if (false) {}
 
-		#if ZCONFIG(API_Graphics, QD)
+		#if ZCONFIG_SPI_Enabled(QuickDraw)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			return ::EmptyRgn(fRep->fRgnHandle);
 		#endif
 
-		#if ZCONFIG(API_Graphics, GDI)
+		#if ZCONFIG_SPI_Enabled(GDI)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 			{
 			RECT dummyRect;
@@ -1873,17 +1821,17 @@ bool ZDCRgn::IsEmpty() const
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, X)
+		#if ZCONFIG_SPI_Enabled(X11)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 			return ::XEmptyRegion(fRep->fRegion);
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			return ::ZBRegionAlternate_IsEmpty(fRep->fBRegion);
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && !ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && !ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			{
 			clipping_rect frame = fRep->fBRegion->FrameInt();
@@ -1896,7 +1844,7 @@ bool ZDCRgn::IsEmpty() const
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, ZooLib)
+		#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 			return fRep->fBigRegion->IsEmpty();
 		#endif
@@ -1904,7 +1852,7 @@ bool ZDCRgn::IsEmpty() const
 	return true;
 	}
 
-#if ZCONFIG_API_Graphics_Multi || !ZCONFIG(API_Graphics, QD) || OPAQUE_TOOLBOX_STRUCTS
+#if ZCONFIG_API_Graphics_Multi || !ZCONFIG_SPI_Enabled(QuickDraw) || OPAQUE_TOOLBOX_STRUCTS
 // The complex conditional compilation is because we define an inline version of this if
 // we're compiling for QD only with non-opaque toolbox structs.
 ZRect ZDCRgn::Bounds() const
@@ -1913,7 +1861,7 @@ ZRect ZDCRgn::Bounds() const
 		{
 		if (false) {}
 
-		#if ZCONFIG(API_Graphics, QD) && OPAQUE_TOOLBOX_STRUCTS
+		#if ZCONFIG_SPI_Enabled(QuickDraw) && OPAQUE_TOOLBOX_STRUCTS
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			{
 			Rect theRect;
@@ -1922,12 +1870,12 @@ ZRect ZDCRgn::Bounds() const
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, QD) && !OPAQUE_TOOLBOX_STRUCTS
+		#if ZCONFIG_SPI_Enabled(QuickDraw) && !OPAQUE_TOOLBOX_STRUCTS
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			return ZRect(fRep->fRgnHandle[0]->rgnBBox);
 		#endif
 
-		#if ZCONFIG(API_Graphics, GDI)
+		#if ZCONFIG_SPI_Enabled(GDI)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 			{
 			RECT theRECT;
@@ -1936,7 +1884,7 @@ ZRect ZDCRgn::Bounds() const
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, X)
+		#if ZCONFIG_SPI_Enabled(X11)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 			{
 			XRectangle theBounds;
@@ -1945,7 +1893,7 @@ ZRect ZDCRgn::Bounds() const
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be)
+		#if ZCONFIG_SPI_Enabled(BeOS)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			{
 			if (fRep->fBRegion->CountRects() > 0)
@@ -1957,7 +1905,7 @@ ZRect ZDCRgn::Bounds() const
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, ZooLib)
+		#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 			{
 			return fRep->fBigRegion->Bounds();
@@ -1966,7 +1914,7 @@ ZRect ZDCRgn::Bounds() const
 		}
 	return ZRect::sZero;
 	}
-#endif // ZCONFIG_API_Graphics_Multi || !ZCONFIG(API_Graphics, QD) || OPAQUE_TOOLBOX_STRUCTS
+#endif // ZCONFIG_API_Graphics_Multi || !ZCONFIG_SPI_Enabled(QuickDraw) || OPAQUE_TOOLBOX_STRUCTS
 
 bool ZDCRgn::IsSimpleRect() const
 	{
@@ -1974,17 +1922,17 @@ bool ZDCRgn::IsSimpleRect() const
 		{
 		if (false) {}
 
-		#if ZCONFIG(API_Graphics, QD) && OPAQUE_TOOLBOX_STRUCTS
+		#if ZCONFIG_SPI_Enabled(QuickDraw) && OPAQUE_TOOLBOX_STRUCTS
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			return ::IsRegionRectangular(fRep->fRgnHandle);
 		#endif
 
-		#if ZCONFIG(API_Graphics, QD) && !OPAQUE_TOOLBOX_STRUCTS
+		#if ZCONFIG_SPI_Enabled(QuickDraw) && !OPAQUE_TOOLBOX_STRUCTS
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			return fRep->fRgnHandle[0]->rgnSize == 10;
 		#endif
 
-		#if ZCONFIG(API_Graphics, GDI)
+		#if ZCONFIG_SPI_Enabled(GDI)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 			{
 			RECT dummyRect;
@@ -1992,7 +1940,7 @@ bool ZDCRgn::IsSimpleRect() const
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, X)
+		#if ZCONFIG_SPI_Enabled(X11)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 			{
 			// AG 98-08-11. If regions are implemented as a list of rectangles then we could
@@ -2011,12 +1959,12 @@ bool ZDCRgn::IsSimpleRect() const
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be)
+		#if ZCONFIG_SPI_Enabled(BeOS)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			return fRep->fBRegion->CountRects() <= 1;
 		#endif
 
-		#if ZCONFIG(API_Graphics, ZooLib)
+		#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 			return fRep->fBigRegion->IsSimpleRect();
 		#endif
@@ -2039,7 +1987,7 @@ void ZDCRgn::Decompose(vector<ZRect>& oRects) const
 	}
 
 
-#if ZCONFIG(API_Graphics, QD) && OPAQUE_TOOLBOX_STRUCTS
+#if ZCONFIG_SPI_Enabled(QuickDraw) && OPAQUE_TOOLBOX_STRUCTS
 
 struct DecomposeRgnHandle_t
 	{
@@ -2063,10 +2011,10 @@ static OSStatus sDecompose_RgnHandle(UInt16 iMessage, RgnHandle iRgnHandle,
 
 static RegionToRectsUPP sDecompose_RgnHandleUPP = NewRegionToRectsUPP(sDecompose_RgnHandle);
 
-#endif // ZCONFIG(API_Graphics, QD) && OPAQUE_TOOLBOX_STRUCTS
+#endif // ZCONFIG_SPI_Enabled(QuickDraw) && OPAQUE_TOOLBOX_STRUCTS
 
 
-#if ZCONFIG(API_Graphics, ZooLib)
+#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 
 struct DecomposeBigRegion_t
 	{
@@ -2080,7 +2028,7 @@ static bool sDecompose_BigRegion(const ZRect_T<int32>& iRect, void* iRefcon)
 	return theStruct->fDecomposeProc(iRect, theStruct->fRefcon);
 	}
 
-#endif // ZCONFIG(API_Graphics, ZooLib)
+#endif // ZCONFIG_SPI_Enabled(ZooLib)
 
 
 long ZDCRgn::Decompose(DecomposeProc iProc, void* iRefcon) const
@@ -2097,7 +2045,7 @@ long ZDCRgn::Decompose(DecomposeProc iProc, void* iRefcon) const
 
 	if (false) {}
 
-	#if ZCONFIG(API_Graphics, QD) && OPAQUE_TOOLBOX_STRUCTS
+	#if ZCONFIG_SPI_Enabled(QuickDraw) && OPAQUE_TOOLBOX_STRUCTS
 	else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 		{
 		DecomposeRgnHandle_t theStruct;
@@ -2110,7 +2058,7 @@ long ZDCRgn::Decompose(DecomposeProc iProc, void* iRefcon) const
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, QD) && !OPAQUE_TOOLBOX_STRUCTS
+	#if ZCONFIG_SPI_Enabled(QuickDraw) && !OPAQUE_TOOLBOX_STRUCTS
 	else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 		{
 		// Check for the simple case
@@ -2179,9 +2127,9 @@ long ZDCRgn::Decompose(DecomposeProc iProc, void* iRefcon) const
 		::HSetState((Handle)fRep->fRgnHandle, oldState);
 		return callbacksMade;
 		}
-	#endif // ZCONFIG(API_Graphics, QD) && !OPAQUE_TOOLBOX_STRUCTS
+	#endif // ZCONFIG_SPI_Enabled(QuickDraw) && !OPAQUE_TOOLBOX_STRUCTS
 
-	#if ZCONFIG(API_Graphics, GDI)
+	#if ZCONFIG_SPI_Enabled(GDI)
 	else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 		{
 		RECT bounds;
@@ -2214,7 +2162,7 @@ long ZDCRgn::Decompose(DecomposeProc iProc, void* iRefcon) const
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, X)
+	#if ZCONFIG_SPI_Enabled(X11)
 	else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 		{
 		_XRegion* skanky = reinterpret_cast<_XRegion*>(fRep->fRegion);
@@ -2231,7 +2179,7 @@ long ZDCRgn::Decompose(DecomposeProc iProc, void* iRefcon) const
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, Be)
+	#if ZCONFIG_SPI_Enabled(BeOS)
 	else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 		{
 		long theCount = fRep->fBRegion->CountRects();
@@ -2250,7 +2198,7 @@ long ZDCRgn::Decompose(DecomposeProc iProc, void* iRefcon) const
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, ZooLib)
+	#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 	else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 		{
 		DecomposeBigRegion_t theStruct;
@@ -2283,17 +2231,17 @@ bool ZDCRgn::IsEqualTo(const ZDCRgn& iOther) const
 
 		if (false) {}
 
-		#if ZCONFIG(API_Graphics, QD)
+		#if ZCONFIG_SPI_Enabled(QuickDraw)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			return ::MacEqualRgn(fRep->fRgnHandle, iOther.fRep->fRgnHandle);
 		#endif
 
-		#if ZCONFIG(API_Graphics, GDI)
+		#if ZCONFIG_SPI_Enabled(GDI)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 			return ::EqualRgn(fRep->fHRGN, iOther.fRep->fHRGN);
 		#endif
 
-		#if ZCONFIG(API_Graphics, X)
+		#if ZCONFIG_SPI_Enabled(X11)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 			return ::XEqualRegion(fRep->fRegion, iOther.fRep->fRegion);
 		#endif
@@ -2308,7 +2256,7 @@ bool ZDCRgn::IsEqualTo(const ZDCRgn& iOther) const
 		// was built up. With the use of ZBRegionAlternate that constraint cannot be maintained,
 		// so this approach will have to do.
 
-		#if ZCONFIG(API_Graphics, Be) && ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			{
 			BRegion subResult(*fRep->fBRegion);
@@ -2324,7 +2272,7 @@ bool ZDCRgn::IsEqualTo(const ZDCRgn& iOther) const
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && !ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && !ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			{
 			BRegion subResult(*fRep->fBRegion);
@@ -2340,7 +2288,7 @@ bool ZDCRgn::IsEqualTo(const ZDCRgn& iOther) const
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, ZooLib)
+		#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 			return *fRep->fBigRegion == *iOther.fRep->fBigRegion;
 		#endif
@@ -2357,32 +2305,32 @@ ZDCRgn& ZDCRgn::OffsetBy(ZCoord iOffsetH, ZCoord iOffsetV)
 
 		if (false) {}
 
-		#if ZCONFIG(API_Graphics, QD)
+		#if ZCONFIG_SPI_Enabled(QuickDraw)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			::MacOffsetRgn(fRep->fRgnHandle, iOffsetH, iOffsetV);
 		#endif
 
-		#if ZCONFIG(API_Graphics, GDI)
+		#if ZCONFIG_SPI_Enabled(GDI)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 			::OffsetRgn(fRep->fHRGN, iOffsetH, iOffsetV);
 		#endif
 
-		#if ZCONFIG(API_Graphics, X)
+		#if ZCONFIG_SPI_Enabled(X11)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 			::XOffsetRegion(fRep->fRegion, iOffsetH, iOffsetV);
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			::ZBRegionAlternate_OffsetBy(fRep->fBRegion, iOffsetH, iOffsetV);
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && !ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && !ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			fRep->fBRegion->OffsetBy(iOffsetH, iOffsetV);
 		#endif
 
-		#if ZCONFIG(API_Graphics, ZooLib)
+		#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 			*fRep->fBigRegion += ZPoint_T<int32>(iOffsetH, iOffsetV);
 		#endif
@@ -2398,32 +2346,32 @@ ZDCRgn& ZDCRgn::OffsetByNegative(ZCoord iOffsetH, ZCoord iOffsetV)
 
 		if (false) {}
 
-		#if ZCONFIG(API_Graphics, QD)
+		#if ZCONFIG_SPI_Enabled(QuickDraw)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			::MacOffsetRgn(fRep->fRgnHandle, short(-iOffsetH), short(-iOffsetV));
 		#endif
 
-		#if ZCONFIG(API_Graphics, GDI)
+		#if ZCONFIG_SPI_Enabled(GDI)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 			::OffsetRgn(fRep->fHRGN, -iOffsetH, -iOffsetV);
 		#endif
 
-		#if ZCONFIG(API_Graphics, X)
+		#if ZCONFIG_SPI_Enabled(X11)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 			::XOffsetRegion(fRep->fRegion, -iOffsetH, -iOffsetV);
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			::ZBRegionAlternate_OffsetBy(fRep->fBRegion, -iOffsetH, -iOffsetV);
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && !ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && !ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			fRep->fBRegion->OffsetBy(-iOffsetH, -iOffsetV);
 		#endif
 
-		#if ZCONFIG(API_Graphics, ZooLib)
+		#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 			*fRep->fBigRegion += ZPoint_T<int32>(-iOffsetH, -iOffsetV);
 		#endif
@@ -2450,7 +2398,7 @@ ZDCRgn& ZDCRgn::Include(const ZRect& iRect)
 
 		if (false) {}
 
-		#if ZCONFIG(API_Graphics, QD) && OPAQUE_TOOLBOX_STRUCTS
+		#if ZCONFIG_SPI_Enabled(QuickDraw) && OPAQUE_TOOLBOX_STRUCTS
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			{
 			RgnHandle tempRgn = ::NewRgn();
@@ -2460,7 +2408,7 @@ ZDCRgn& ZDCRgn::Include(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, QD) && !OPAQUE_TOOLBOX_STRUCTS
+		#if ZCONFIG_SPI_Enabled(QuickDraw) && !OPAQUE_TOOLBOX_STRUCTS
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			{
 			// If iRect completely subsumes our regions bounding
@@ -2482,7 +2430,7 @@ ZDCRgn& ZDCRgn::Include(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, GDI)
+		#if ZCONFIG_SPI_Enabled(GDI)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 			{
 			HRGN tempHRGN = ::CreateRectRgn(iRect.left, iRect.top, iRect.right, iRect.bottom);
@@ -2491,7 +2439,7 @@ ZDCRgn& ZDCRgn::Include(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, X)
+		#if ZCONFIG_SPI_Enabled(X11)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 			{
 			XRectangle tempRect;
@@ -2503,7 +2451,7 @@ ZDCRgn& ZDCRgn::Include(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			{
 			::ZBRegionAlternate_Include(fRep->fBRegion, iRect.left, iRect.top,
@@ -2511,7 +2459,7 @@ ZDCRgn& ZDCRgn::Include(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && !ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && !ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			{
 			clipping_rect theRect;
@@ -2523,7 +2471,7 @@ ZDCRgn& ZDCRgn::Include(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, ZooLib)
+		#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 			*fRep->fBigRegion |= ZRect_T<int32>(iRect);
 		#endif
@@ -2541,7 +2489,7 @@ ZDCRgn& ZDCRgn::Intersect(const ZRect& iRect)
 		{
 		if (false) {}
 
-		#if ZCONFIG(API_Graphics, QD) && OPAQUE_TOOLBOX_STRUCTS
+		#if ZCONFIG_SPI_Enabled(QuickDraw) && OPAQUE_TOOLBOX_STRUCTS
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			{
 			this->Internal_Touch();
@@ -2552,7 +2500,7 @@ ZDCRgn& ZDCRgn::Intersect(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, QD) && !OPAQUE_TOOLBOX_STRUCTS
+		#if ZCONFIG_SPI_Enabled(QuickDraw) && !OPAQUE_TOOLBOX_STRUCTS
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			{
 			if (iRect.left >= fRep->fRgnHandle[0]->rgnBBox.right
@@ -2579,7 +2527,7 @@ ZDCRgn& ZDCRgn::Intersect(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, GDI)
+		#if ZCONFIG_SPI_Enabled(GDI)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 			{
 			this->Internal_Touch();
@@ -2589,7 +2537,7 @@ ZDCRgn& ZDCRgn::Intersect(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, X)
+		#if ZCONFIG_SPI_Enabled(X11)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 			{
 			this->Internal_Touch();
@@ -2605,7 +2553,7 @@ ZDCRgn& ZDCRgn::Intersect(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			{
 			this->Internal_Touch();
@@ -2614,7 +2562,7 @@ ZDCRgn& ZDCRgn::Intersect(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && !ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && !ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			{
 			this->Internal_Touch();
@@ -2629,7 +2577,7 @@ ZDCRgn& ZDCRgn::Intersect(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, ZooLib)
+		#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 			{
 			this->Internal_Touch();
@@ -2646,7 +2594,7 @@ ZDCRgn& ZDCRgn::Exclude(const ZRect& iRect)
 		{
 		if (false) {}
 
-		#if ZCONFIG(API_Graphics, QD) && OPAQUE_TOOLBOX_STRUCTS
+		#if ZCONFIG_SPI_Enabled(QuickDraw) && OPAQUE_TOOLBOX_STRUCTS
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			{
 			this->Internal_Touch();
@@ -2657,7 +2605,7 @@ ZDCRgn& ZDCRgn::Exclude(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, QD) && !OPAQUE_TOOLBOX_STRUCTS
+		#if ZCONFIG_SPI_Enabled(QuickDraw) && !OPAQUE_TOOLBOX_STRUCTS
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			{
 			if (iRect.left <= fRep->fRgnHandle[0]->rgnBBox.left
@@ -2679,7 +2627,7 @@ ZDCRgn& ZDCRgn::Exclude(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, GDI)
+		#if ZCONFIG_SPI_Enabled(GDI)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 			{
 			this->Internal_Touch();
@@ -2689,7 +2637,7 @@ ZDCRgn& ZDCRgn::Exclude(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, X)
+		#if ZCONFIG_SPI_Enabled(X11)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 			{
 			this->Internal_Touch();
@@ -2705,7 +2653,7 @@ ZDCRgn& ZDCRgn::Exclude(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			{
 			this->Internal_Touch();
@@ -2714,7 +2662,7 @@ ZDCRgn& ZDCRgn::Exclude(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && !ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && !ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			{
 			this->Internal_Touch();
@@ -2727,7 +2675,7 @@ ZDCRgn& ZDCRgn::Exclude(const ZRect& iRect)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, ZooLib)
+		#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 			{
 			this->Internal_Touch();
@@ -2749,32 +2697,32 @@ ZDCRgn& ZDCRgn::Include(const ZDCRgn& iOther)
 		TouchAndSetFormat(this, iOther.fRep->fFormat);
 		if (false) {}
 
-		#if ZCONFIG(API_Graphics, QD)
+		#if ZCONFIG_SPI_Enabled(QuickDraw)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			::MacUnionRgn(fRep->fRgnHandle, iOther.fRep->fRgnHandle, fRep->fRgnHandle);
 		#endif
 
-		#if ZCONFIG(API_Graphics, GDI)
+		#if ZCONFIG_SPI_Enabled(GDI)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 			::CombineRgn(fRep->fHRGN, fRep->fHRGN, iOther.fRep->fHRGN, RGN_OR);
 		#endif
 
-		#if ZCONFIG(API_Graphics, X)
+		#if ZCONFIG_SPI_Enabled(X11)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 			::XUnionRegion(fRep->fRegion, iOther.fRep->fRegion, fRep->fRegion);
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			::ZBRegionAlternate_Include(fRep->fBRegion, iOther.fRep->fBRegion);
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && !ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && !ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			fRep->fBRegion->Include(iOther.fRep->fBRegion);
 		#endif
 
-		#if ZCONFIG(API_Graphics, ZooLib)
+		#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 			*fRep->fBigRegion |= *iOther.fRep->fBigRegion;
 		#endif
@@ -2793,32 +2741,32 @@ ZDCRgn& ZDCRgn::Intersect(const ZDCRgn& iOther)
 		TouchAndSetFormat(this, iOther.fRep->fFormat);
 		if (false) {}
 
-		#if ZCONFIG(API_Graphics, QD)
+		#if ZCONFIG_SPI_Enabled(QuickDraw)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			::SectRgn(fRep->fRgnHandle, iOther.fRep->fRgnHandle, fRep->fRgnHandle);
 		#endif
 
-		#if ZCONFIG(API_Graphics, GDI)
+		#if ZCONFIG_SPI_Enabled(GDI)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 			::CombineRgn(fRep->fHRGN, fRep->fHRGN, iOther.fRep->fHRGN, RGN_AND);
 		#endif
 
-		#if ZCONFIG(API_Graphics, X)
+		#if ZCONFIG_SPI_Enabled(X11)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 			::XIntersectRegion(fRep->fRegion, iOther.fRep->fRegion, fRep->fRegion);
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			::ZBRegionAlternate_IntersectWith(fRep->fBRegion, iOther.fRep->fBRegion);
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && !ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && !ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			fRep->fBRegion->IntersectWith(iOther.fRep->fBRegion);
 		#endif
 
-		#if ZCONFIG(API_Graphics, ZooLib)
+		#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 			*fRep->fBigRegion &= *iOther.fRep->fBigRegion;
 		#endif
@@ -2833,32 +2781,32 @@ ZDCRgn& ZDCRgn::Exclude(const ZDCRgn& iOther)
 		TouchAndSetFormat(this, iOther.fRep->fFormat);
 		if (false) {}
 
-		#if ZCONFIG(API_Graphics, QD)
+		#if ZCONFIG_SPI_Enabled(QuickDraw)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			::DiffRgn(fRep->fRgnHandle, iOther.fRep->fRgnHandle, fRep->fRgnHandle);
 		#endif
 
-		#if ZCONFIG(API_Graphics, GDI)
+		#if ZCONFIG_SPI_Enabled(GDI)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 			::CombineRgn(fRep->fHRGN, fRep->fHRGN, iOther.fRep->fHRGN, RGN_DIFF);
 		#endif
 
-		#if ZCONFIG(API_Graphics, X)
+		#if ZCONFIG_SPI_Enabled(X11)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 			::XSubtractRegion(fRep->fRegion, iOther.fRep->fRegion, fRep->fRegion);
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			::ZBRegionAlternate_Exclude(fRep->fBRegion, iOther.fRep->fBRegion);
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && !ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && !ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			fRep->fBRegion->Exclude(iOther.fRep->fBRegion);
 		#endif
 
-		#if ZCONFIG(API_Graphics, ZooLib)
+		#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 			*fRep->fBigRegion -= *iOther.fRep->fBigRegion;
 		#endif
@@ -2881,22 +2829,22 @@ ZDCRgn& ZDCRgn::Xor(const ZDCRgn& iOther)
 		TouchAndSetFormat(this, iOther.fRep->fFormat);
 		if (false) {}
 
-		#if ZCONFIG(API_Graphics, QD)
+		#if ZCONFIG_SPI_Enabled(QuickDraw)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_QD))
 			::MacXorRgn(fRep->fRgnHandle, iOther.fRep->fRgnHandle, fRep->fRgnHandle);
 		#endif
 
-		#if ZCONFIG(API_Graphics, GDI)
+		#if ZCONFIG_SPI_Enabled(GDI)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_GDI))
 			::CombineRgn(fRep->fHRGN, fRep->fHRGN, iOther.fRep->fHRGN, RGN_XOR);
 		#endif
 
-		#if ZCONFIG(API_Graphics, X)
+		#if ZCONFIG_SPI_Enabled(X11)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_X))
 			::XXorRegion(fRep->fRegion, iOther.fRep->fRegion, fRep->fRegion);
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			{
 			BRegion intersection(*fRep->fBRegion);
@@ -2906,7 +2854,7 @@ ZDCRgn& ZDCRgn::Xor(const ZDCRgn& iOther)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, Be) && !ZCONFIG_BRegionAlternateEnabled
+		#if ZCONFIG_SPI_Enabled(BeOS) && !ZCONFIG_BRegionAlternateEnabled
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_Be))
 			{
 			BRegion intersection(*fRep->fBRegion);
@@ -2916,7 +2864,7 @@ ZDCRgn& ZDCRgn::Xor(const ZDCRgn& iOther)
 			}
 		#endif
 
-		#if ZCONFIG(API_Graphics, ZooLib)
+		#if 1//ZCONFIG_SPI_Enabled(ZooLib)
 		else if (CheckFormat(fRep->fFormat, ZCONFIG_API_Graphics_ZooLib))
 			*fRep->fBigRegion ^= *iOther.fRep->fBigRegion;
 		#endif

@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZDC_QD.h"
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_API_Enabled(DC_QD)
 
 #include "ZDCInk.h"
 #include "ZDCPixmapBlit.h"
@@ -42,19 +42,13 @@ static short sModeLookup[] = { srcCopy, srcOr, srcXor, srcBic};
 #	define MacOffsetRgn OffsetRgn
 #endif
 
-#if ZCONFIG(OS, MacOSX)
-#	include <CarbonCore/LowMem.h>
-#	include <CarbonCore/FixMath.h>
-#	include <CarbonCore/TextUtils.h>
-#else
-#	include <LowMem.h> // For LMSetHiliteMode
-#	include <FixMath.h> // For Long2Fix
-#	include <TextUtils.h> // For StyledLineBreak stuff
-#endif
+#include ZMACINCLUDE(CarbonCore,LowMem.h) // For LMSetHiliteMode
+#include ZMACINCLUDE(CarbonCore,FixMath.h) // For Long2Fix
+#include ZMACINCLUDE(CarbonCore,TextUtils.h) // For StyledLineBreak stuff
 
 static inline void sUseHiliteColor()
 	{
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#if !ZCONFIG_SPI_Enabled(Win)//Hmm 
 		::LMSetHiliteMode(0);
 	#endif
 	}
@@ -1894,13 +1888,13 @@ ZDCCanvas_QD_OffScreen::ZDCCanvas_QD_OffScreen(ZPoint inDimensions, ZDCPixmapNS:
 			break;
 			}
 		case ZDCPixmapNS::eFormatEfficient_Color_24:
-			#if !ZCONFIG(OS, MacOS7) && !ZCONFIG(OS, Carbon)
-			// Mac doesn't support 24 bit, although QD does on Windows
 			{
-			theQDErr = ::NewGWorld(&fGWorldPtr, 24, &bounds, nil, nil, 0);
-			break;
+			#if ZCONFIG_SPI_Enabled(Win)
+				// Mac doesn't support 24 bit, although QD does on Windows
+				theQDErr = ::NewGWorld(&fGWorldPtr, 24, &bounds, nil, nil, 0);
+				break;
+			#endif
 			}
-			#endif // !ZCONFIG(OS, MacOS7) && !ZCONFIG(OS, Carbon)
 		case ZDCPixmapNS::eFormatEfficient_Color_32:
 			{
 			theQDErr = ::NewGWorld(&fGWorldPtr, 32, &bounds, nil, nil, 0);
@@ -2140,9 +2134,9 @@ void ZDCCanvas_QD_PICT::PutPicProc(const void* dataPtr, short byteCount)
 		}
 	catch (...)
 		{
-		#if ZCONFIG(OS, Carbon)
+		#if ZCONFIG_SPI_Enabled(Carbon)
 			::SetQDError(cNoMemErr);
-		#elif ZCONFIG(OS, MacOS7)
+		#elif ZCONFIG_SPI_Enabled(MacClassic)
 			*((QDErr*)(0x0D6E)) = cNoMemErr;
 		#endif
 		fStreamOkay = false;
@@ -2317,7 +2311,7 @@ static bool sCheckDesc(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect&
 					}
 				break;
 				}
-			#if !ZCONFIG(OS, MacOS7) && !ZCONFIG(OS, Carbon) && !ZCONFIG(OS, MacOSX)
+			#if ZCONFIG_SPI_Enabled(Win)
 			case 24:
 				{
 				if ((inRasterDesc.fPixvalDesc.fBigEndian == true && maskRed == 0xFF0000 && maskGreen == 0x00FF00 && maskBlue == 0x0000FF)
@@ -2609,7 +2603,7 @@ static ZRef<ZDCPixmapRep_QD> sGetPixmapRep_QDIfComplex(const ZRef<ZDCInk::Rep>& 
 		// Our PixMapHandle is considered 'complex' if its width or height are not a power of two <= 64
 		bool isComplex = false;
 
-		if (ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX))
+		if (ZCONFIG_SPI_Enabled(Carbon))
 			{
 			// We force the pixmap to be considered complex so as not to get into difficulties
 			// with MacOS X's problems with the manually created PixPatHandles we'll use if
@@ -2778,4 +2772,4 @@ ZRef<ZDCCanvas> ZDCCanvasFactory_QD::CreateCanvas(ZPoint iSize, bool iBigEndian,
 	return ZRef<ZDCCanvas>();
 	}
 
-#endif // ZCONFIG(API_Graphics, QD)
+#endif // ZCONFIG_API_Enabled(DC_QD)

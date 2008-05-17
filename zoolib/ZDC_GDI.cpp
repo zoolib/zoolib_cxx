@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZDC_GDI.h"
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_API_Enabled(DC_GDI)
 
 #include "ZMemory.h"
 #include "ZUtil_Win.h"
@@ -2334,4 +2334,4 @@ ZDCPixmapNS::EFormatStandard ZDCPixmapFactory_GDI::MapEfficientToStandard(ZDCPix
 	return standardFormat;
 	}
 
-#endif // ZCONFIG(API_Graphics, GDI)
+#endif // ZCONFIG_API_Enabled(DC_GDI)
