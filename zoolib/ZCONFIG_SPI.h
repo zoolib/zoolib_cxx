@@ -25,6 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZCONFIG_SPI_Definitions.h"
 #include "ZCONFIG_SPI_Choices.h"
 
+// Although it seems to me that this formulation should work:
+//#define ZCONFIG_SPI_Avail__pthread (ZCONFIG_SPI_Enabled(POSIX))
+// instead it is safer to do this:
+//#define ZCONFIG_SPI_Avail__pthread (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
+
 
 // =================================================================================================
 #pragma mark BeOS
@@ -184,7 +189,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark DNSSD (aka ZeroConf)
 #ifndef ZCONFIG_SPI_Avail__DNSSD
-//#	define ZCONFIG_SPI_Avail__DNSSD ZCONFIG_SPI_Enabled(POSIX)
+// Not sure about this one. Assumes POSIX for now, may need to drop back
+// to MacOSX and Linux only (by default).
 #	define ZCONFIG_SPI_Avail__DNSSD (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
 #endif
 
@@ -257,6 +263,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 // =================================================================================================
+#pragma mark JNI
+#ifndef ZCONFIG_SPI_Avail__JNI
+#	define ZCONFIG_SPI_Avail__JNI 0
+#endif
+
+#ifndef ZCONFIG_SPI_Desired__JNI
+#	define ZCONFIG_SPI_Desired__JNI 1
+#endif
+
+
+// =================================================================================================
 #pragma mark libpng
 #ifndef ZCONFIG_SPI_Avail__libpng
 #	define ZCONFIG_SPI_Avail__libpng 0
@@ -287,6 +304,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark MacClassic
 #ifndef ZCONFIG_SPI_Avail__MacClassic
+// This one is at least well-defined, but basically generally irrelevant at this point,
+// so I'll leave the definition of a default value for later.
 #	define ZCONFIG_SPI_Avail__MacClassic 0
 #endif
 
@@ -345,7 +364,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark pthread
 #ifndef ZCONFIG_SPI_Avail__pthread
-//#	define ZCONFIG_SPI_Avail__pthread (ZCONFIG_SPI_Enabled(POSIX))
 #	define ZCONFIG_SPI_Avail__pthread (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
 #endif
 
@@ -410,7 +428,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark X11
 #ifndef ZCONFIG_SPI_Avail__X11
-//#	define ZCONFIG_SPI_Avail__X11 (ZCONFIG_SPI_Enabled(POSIX))
 #	define ZCONFIG_SPI_Avail__X11 (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
 #endif
 

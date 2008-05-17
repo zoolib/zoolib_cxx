@@ -20,9 +20,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZStream_JNI__
 #define __ZStream_JNI__ 1
-#include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
 #include "ZStream.h"
+
+#if ZCONFIG_SPI_Enabled(JNI)
+
 #include <jni.h>
 
 // =================================================================================================
@@ -46,4 +49,5 @@ private:
 	JNIEnv* fEnv;
 	};
 
+#endif // ZCONFIG_SPI_Enabled(JNI)
 #endif // __ZStream_JNI__

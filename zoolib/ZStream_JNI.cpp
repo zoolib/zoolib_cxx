@@ -19,6 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "ZStream_JNI.h"
+
+#if ZCONFIG_SPI_Enabled(JNI)
+
 #include "ZMemory.h"
 
 // =================================================================================================
@@ -82,3 +85,5 @@ size_t ZStreamR_JNI::Imp_CountReadable()
 		}
 	return 0;
 	}
+
+#endif // ZCONFIG_SPI_Enabled(JNI)
