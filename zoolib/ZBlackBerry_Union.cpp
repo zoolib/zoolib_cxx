@@ -99,11 +99,11 @@ void Manager_Union::pValidate()
 				i != deviceIDs.end(); ++i)
 				{
 				bool gotIt = false;
-				uint64 deviceID = *i;
+				const uint64 deviceID = *i;
 				for (vector<pair<uint64, uint64> >::iterator j = curEntry.fIDs.begin();
 					!gotIt && j != curEntry.fIDs.end(); ++j)
 					{
-					if (j->second = deviceID)
+					if (deviceID == j->second)
 						gotIt = true;
 					}
 				if (!gotIt)
