@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZWinService.h"
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 
 #include "ZLog.h"
 
@@ -199,4 +199,4 @@ DWORD WINAPI ZWinService::sServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventTy
 	return static_cast<ZWinService*>(lpContext)->ServiceCtrlHandlerEx(dwControl, dwEventType, lpEventData);
 	}
 
-#endif // ZCONFIG(OS, Win32)
+#endif // ZCONFIG_SPI_Enabled(Win)

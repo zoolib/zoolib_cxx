@@ -27,15 +27,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <ctime>
 
-#if ZCONFIG(OS, MacOS7)
+#if ZCONFIG_SPI_Enabled(MacClassic)
 #	include <OSUtils.h>
 #endif
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 #	include "ZWinHeader.h"
 #endif
 
-#if ZCONFIG(OS, POSIX) || ZCONFIG(OS, Be)
+#if ZCONFIG_SPI_Enabled(POSIX)
 #	include <sys/time.h>
 #endif
 
@@ -45,7 +45,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::string;
 
-#if _MSL_USING_MW_C_HEADERS || (ZCONFIG(OS, Win32) && ZCONFIG(Compiler, GCC))
+#if _MSL_USING_MW_C_HEADERS || (ZCONFIG_SPI_Enabled(Win) && ZCONFIG(Compiler, GCC))
 #	define DO_IT_OURSELVES 1
 #else
 #	define DO_IT_OURSELVES 0
@@ -311,7 +311,7 @@ string ZUtil_Time::sAsStringUTC(ZTime iTime, const string& iFormat)
 #if DO_IT_OURSELVES
 static int sUTCToLocalDelta()
 	{
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+	#if ZCONFIG_SPI_Enabled(MacClassic)
 
 		MachineLocation loc;
 		int delta = 0;
@@ -328,7 +328,7 @@ static int sUTCToLocalDelta()
 			}
 		return delta;
 
-	#elif ZCONFIG(OS, POSIX) || ZCONFIG(OS, Be)
+	#elif ZCONFIG_SPI_Enabled(POSIX)
 
 		struct timezone zone;
 
@@ -348,7 +348,7 @@ static int sUTCToLocalDelta()
 			return -60 * zone.tz_minuteswest;
 			}
 
-	#elif ZCONFIG(OS, Win32)
+	#elif ZCONFIG_SPI_Enabled(Win)
 
 		TIME_ZONE_INFORMATION tzi;
 		int delta = 0;

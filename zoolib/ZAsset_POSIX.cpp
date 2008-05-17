@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZAsset_POSIX.h"
 
-#if ZCONFIG(OS, POSIX)
+#if ZCONFIG_SPI_Enabled(POSIX)
 
 #include <stdexcept>
 #include <string> // because runtime_error may require it
@@ -78,4 +78,4 @@ void ZAssetTree_POSIX_MemoryMapped::LoadUp(int inFileDescriptor, size_t inStart,
 	ZAssetTree_Std_Memory::LoadUp(reinterpret_cast<char*>(fMappedAddress) + inStart - realStart, inLength);
 	}
 
-#endif // ZCONFIG(OS, POSIX)
+#endif // ZCONFIG_SPI_Enabled(POSIX)

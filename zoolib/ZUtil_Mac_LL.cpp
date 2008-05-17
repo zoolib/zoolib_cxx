@@ -32,25 +32,21 @@ using std::pair;
 
 #define kDebug_Mac 3
 
-#if ZCONFIG(OS, MacOSX)
-#	include <CarbonCore/Resources.h>
-#endif
-
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
-#	include <Resources.h>
+#if ZCONFIG_SPI_Enabled(Carbon)
+#	include ZMACINCLUDE(CarbonCore,Resources.h)
 #endif
 
 // =================================================================================================
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
 void ZUtil_Mac_LL::sSetupPixMapColor(ZPoint inSize, int32 inDepth, PixMap& oPixMap)
 	{
 	ZAssert(inDepth == 16 || inDepth == 24 || inDepth == 32);
 
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
-	ZAssert(inDepth != 24);
-#endif
+	#if ZCONFIG_SPI_Enabled(Carbon)
+		ZAssert(inDepth != 24);
+	#endif
 
 	oPixMap.baseAddr = nil;
 	oPixMap.pmTable = nil;
@@ -110,9 +106,9 @@ void ZUtil_Mac_LL::sSetupPixMapColor(
 	{
 	ZAssert(inDepth == 16 || inDepth == 24 || inDepth == 32);
 
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
-	ZAssert(inDepth != 24);
-#endif
+	#if ZCONFIG_SPI_Enabled(Carbon)
+		ZAssert(inDepth != 24);
+	#endif
 
 	oPixMap.baseAddr = nil;
 	oPixMap.pmTable = nil;
@@ -440,13 +436,13 @@ ZDCPixmapNS::PixelDesc ZUtil_Mac_LL::sCTabHandleToPixelDesc(CTabHandle inCTabHan
 
 void ZUtil_Mac_LL::sSetWindowManagerPort()
 	{
-	#if ZCONFIG(OS, MacOS7)
+	#if ZCONFIG_SPI_Enabled(MacClassic)
 
 		CGrafPtr windowManagerPort;
 		::GetCWMgrPort(&windowManagerPort);
 		::SetGWorld(windowManagerPort, nil);
 
-	#elif ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+	#elif ZCONFIG_SPI_Enabled(Carbon)
 
 		if (ZMacOSX::sIsMacOSX())
 			{
@@ -544,7 +540,7 @@ ZUtil_Mac_LL::SaveSetBlackWhite::~SaveSetBlackWhite()
 	::RGBBackColor(&fPreConstruct_BackColor);
 	}
 
-#endif // ZCONFIG(API_Graphics, QD)
+#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 // =================================================================================================
 #pragma mark -
@@ -626,7 +622,7 @@ void ZUtil_Mac_LL::PreserveResFile::sSwitchProc(
 #pragma mark -
 #pragma mark * ZUtil_Mac_LL::SaveRestoreResFile
 
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
 ZUtil_Mac_LL::SaveRestoreResFile::SaveRestoreResFile()
 	{
@@ -646,4 +642,4 @@ ZUtil_Mac_LL::SaveRestoreResFile::~SaveRestoreResFile()
 		::UseResFile(fPreConstruct_ResFile);
 	}
 
-#endif // ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#endif // ZCONFIG_SPI_Enabled(Carbon)

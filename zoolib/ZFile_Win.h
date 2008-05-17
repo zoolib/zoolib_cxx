@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__File_Win
-#	define ZCONFIG_API_Avail__File_Win ZCONFIG(OS, Win32)
+#	define ZCONFIG_API_Avail__File_Win ZCONFIG_SPI_Enabled(Win)
 #endif
 
 #ifndef ZCONFIG_API_Desired__File_Win

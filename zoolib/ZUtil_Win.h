@@ -21,8 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZUtil_Win__
 #define __ZUtil_Win__
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 
 namespace ZUtil_Win {
 
@@ -34,6 +35,6 @@ void sDisallowWAPI();
 
 } // namespace ZUtil_Win
 
-#endif //  ZCONFIG(OS, Win32)
+#endif // ZCONFIG_SPI_Enabled(Win)
 
 #endif // __ZUtil_Win__

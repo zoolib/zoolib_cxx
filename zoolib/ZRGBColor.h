@@ -21,27 +21,23 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZRGBColor__
 #define __ZRGBColor__ 1
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
 #include "ZTypes.h"
 
-#if ZCONFIG(API_Graphics, QD)
-#	if ZCONFIG(OS, MacOSX)
-#		define __NOEXTENSIONS__
-#		include <QD/QuickDraw.h>
-#	else
-#		include <QuickDraw.h>
-#	endif
+#if ZCONFIG_SPI_Enabled(QuickDraw)
+#	include ZMACINCLUDE(QD,QuickDraw.h)
 #endif
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 	typedef unsigned long COLORREF;
 #endif
 
-#if ZCONFIG(API_Graphics, X)
-#	include <X11/Xlib.h>
+#if ZCONFIG_SPI_Enabled(X11)
+#	include "ZCompat_Xlib.h"
 #endif
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 #	include <GraphicsDefs.h>
 #endif
 
@@ -70,7 +66,7 @@ public:
 	uint16 blue;
 	uint16 alpha;
 
-	#if ZCONFIG(API_Graphics, QD)
+	#if ZCONFIG_SPI_Enabled(QuickDraw)
 	operator RGBColor() const
 		{
 		RGBColor theRGB;
@@ -81,7 +77,7 @@ public:
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, X)
+	#if ZCONFIG_SPI_Enabled(X11)
 	operator XColor() const
 		{
 		XColor theXColor;
@@ -93,7 +89,7 @@ public:
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, Be)
+	#if ZCONFIG_SPI_Enabled(BeOS)
 	operator rgb_color() const
 		{
 		rgb_color theRGB;
@@ -186,7 +182,7 @@ public:
 	uint8 blue;
 	uint8 alpha;
 
-	#if ZCONFIG(API_Graphics, QD)
+	#if ZCONFIG_SPI_Enabled(QuickDraw)
 	operator RGBColor() const
 		{
 		RGBColor theRGB;
@@ -197,7 +193,7 @@ public:
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, X)
+	#if ZCONFIG_SPI_Enabled(X11)
 	operator XColor() const
 		{
 		XColor theXColor;
@@ -208,7 +204,7 @@ public:
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, Be)
+	#if ZCONFIG_SPI_Enabled(BeOS)
 	operator rgb_color() const
 		{ return *((rgb_color*)this); }
 	#endif
@@ -314,7 +310,7 @@ public:
 		return *this;
 		}
 
-	#if ZCONFIG(API_Graphics, QD)
+	#if ZCONFIG_SPI_Enabled(QuickDraw)
 	ZRGBColor(const RGBColor& iRGBColor)
 		{
 		red = iRGBColor.red;
@@ -333,11 +329,11 @@ public:
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, GDI)
+	#if ZCONFIG_SPI_Enabled(GDI)
 	static ZRGBColor sFromCOLORREF(COLORREF iColorRef);
 	#endif
 
-	#if ZCONFIG(API_Graphics, X)
+	#if ZCONFIG_SPI_Enabled(X11)
 	ZRGBColor(const XColor& iXColor)
 		{
 		red = iXColor.red;
@@ -356,7 +352,7 @@ public:
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, Be)
+	#if ZCONFIG_SPI_Enabled(BeOS)
 	ZRGBColor(const rgb_color& other)
 		{
 		red = uint16(other.red * 0x101);
@@ -429,7 +425,7 @@ public:
 		return *this;
 		}
 
-	#if ZCONFIG(API_Graphics, QD)
+	#if ZCONFIG_SPI_Enabled(QuickDraw)
 	ZRGBColorSmall(const RGBColor& iRGBColor)
 		{
 		red = uint8(iRGBColor.red >> 8);
@@ -448,11 +444,11 @@ public:
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, GDI)
+	#if ZCONFIG_SPI_Enabled(GDI)
 	static ZRGBColorSmall sFromCOLORREF(COLORREF iColorRef);
 	#endif
 
-	#if ZCONFIG(API_Graphics, X)
+	#if ZCONFIG_SPI_Enabled(X11)
 	ZRGBColorSmall(const XColor& iXColor)
 		{
 		red = uint8(iXColor.red >> 8);
@@ -471,7 +467,7 @@ public:
 		}
 	#endif
 
-	#if ZCONFIG(API_Graphics, Be)
+	#if ZCONFIG_SPI_Enabled(BeOS)
 	ZRGBColorSmall(const rgb_color& other)
 		{
 		red = other.red;

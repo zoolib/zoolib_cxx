@@ -33,8 +33,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::min;
 using std::runtime_error;
-//using std::sscanf;
-//using std::sprintf;
 using std::string;
 
 #if ZCONFIG(Compiler, MSVC)
@@ -46,51 +44,6 @@ using std::string;
 #ifndef va_copy
 #	define va_copy(dest, src) dest = src
 #endif
-
-#if ZCONFIG(OS, Win32)
-#include "ZWinHeader.h"
-#include "ZUnicode.h"
-#include "ZUtil_Win.h"
-
-string ZString::FromStrResource(short iStringID)
-	{ return sFromStrResource(iStringID); }
-
-string ZString::sFromStrResource(short iStringID)
-	{
-	if (ZUtil_Win::sUseWAPI())
-		{
-		wchar_t buffer[1024];
-		::LoadStringW(::GetModuleHandleW(nil), iStringID, buffer, countof(buffer));
-		return ZUnicode::sAsUTF8(buffer);
-		}
-	else
-		{
-		char buffer[1024];
-		::LoadStringA(::GetModuleHandleA(nil), iStringID, buffer, countof(buffer));
-		return string(buffer, strlen(buffer));
-		}
-	}
-
-#endif // ZCONFIG(OS, Win32)
-
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
-
-string ZString::FromStrResource(short iStringID)
-	{ return sFromStrResource(iStringID); }
-
-string ZString::sFromStrResource(short iStringID)
-	{
-	Handle theHandle = (Handle)::GetString(iStringID);
-	if (theHandle == nil || *theHandle == nil)
-		return string();
-
-	SignedByte oldState = ::HGetState(theHandle);
-	string result((char*)(&(*theHandle)[1]), ::GetHandleSize(theHandle)-1);
-	::HSetState(theHandle, oldState);
-	return result;
-	}
-
-#endif // ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
 
 // =================================================================================================
 
@@ -397,13 +350,11 @@ void ZString::sMakeFresh(string& inOutString)
 
 // =================================================================================================
 
-#if !(ZCONFIG(OS, MacOS7) && !ZCONFIG(OS, Carbon))
-typedef unsigned char Str255[256];
-#endif // !(ZCONFIG(OS, MacOS7) && !ZCONFIG(OS, Carbon))
-
 static const long sStringCacheCount = 8;
-static Str255 sStringCache[sStringCacheCount];
-static long sStringCacheCurrent = 0;
+static long sStringCacheCurrent;
+
+typedef unsigned char ZStr255[256];
+static ZStr255 sStringCache[sStringCacheCount];
 
 const unsigned char* ZString::sAsPString(const string& inString)
 	{

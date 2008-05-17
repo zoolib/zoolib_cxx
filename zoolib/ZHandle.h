@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZHandle__
 #define __ZHandle__ 1
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
 #include "ZCompat_NonCopyable.h"
 #include "ZRefCount.h"
@@ -28,8 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cstddef> // For size_t
 
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
-#	include <MacMemory.h>
+#if ZCONFIG_SPI_Enabled(Carbon)
+#	include ZMACINCLUDE(CarbonCore,MacMemory.h)
 #endif
 
 // =================================================================================================
@@ -68,7 +69,7 @@ public:
 
 	void Touch();
 
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#if ZCONFIG_SPI_Enabled(Carbon)
 		Handle GetMacHandle();
 	#endif
 
@@ -90,7 +91,7 @@ public:
 private:
 	ZThreadSafe_t fLockCount;
 
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#if ZCONFIG_SPI_Enabled(Carbon)
 		Handle fMacHandle;
 	#else
 		char* fData;

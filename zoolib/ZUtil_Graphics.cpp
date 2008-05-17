@@ -19,13 +19,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "ZUtil_Graphics.h"
+#include "ZCONFIG_SPI.h"
+
 #include "ZDebug.h"
 #include "ZDC.h"
 #include "ZDC_QD.h"
 
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
-#	include <Drag.h> // For GetDragHiliteColor
-#	include <LowMem.h> // For LMGetHiliteRGB
+#if ZCONFIG_SPI_Enabled(MacClassic) || ZCONFIG_SPI_Enabled(Carbon)
+#	include ZMACINCLUDE(HIToolbox,Drag.h) // For GetDragHiliteColor
+#	include ZMACINCLUDE(CarbonCore,LowMem.h) // For LMGetHiliteRGB
 #endif
 
 using std::vector;
@@ -86,7 +88,7 @@ void ZUtil_Graphics::sDrawDragDropHilite(const ZDC& inDC, const ZDCRgn& inRgn)
 	ZDC localDC(inDC);
 	ZDCRgn realRgn = inRgn - inRgn.Inset(3, 3);
 
-	#if (ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)) && ZCONFIG(API_Graphics, QD)
+	#if (ZCONFIG_SPI_Enabled(MacClassic) || ZCONFIG_SPI_Enabled(Carbon)) && ZCONFIG_SPI_Enabled(QuickDraw)
 
 		if (localDC.GetDepth() >= 4)
 			{

@@ -21,16 +21,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZStream_Mac__
 #define __ZStream_Mac__ 1
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
 #include "ZStreamer.h"
 
-#if ZCONFIG(OS, MacOSX)
-#	include <CarbonCore/MacMemory.h>
-#else
-#	include <MacMemory.h>
-#endif
+#include ZMACINCLUDE(CarbonCore,MacMemory.h)
 
 // =================================================================================================
 #pragma mark -
@@ -76,6 +73,6 @@ protected:
 	ZStreamRPos_Mac_PartialResource fStream;
 	};
 
-#endif // ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 #endif // __ZStream_Mac__

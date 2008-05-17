@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZBlackBerry_OSXUSB.h"
 
-#if ZCONFIG(OS, MacOSX)
+#if ZCONFIG_SPI_Enabled(MacOSX)
 
 #include "ZBlackBerry_Streamer.h"
 
@@ -352,4 +352,4 @@ void Manager_OSXUSB::Detached(ZRef<ZUSBDevice> iUSBDevice)
 
 } // namespace ZBlackBerry
 
-#endif // ZCONFIG(OS, MacOSX)
+#endif // ZCONFIG_SPI_Enabled(MacOSX)

@@ -1,3 +1,4 @@
+#if 0
 /* -------------------------------------------------------------------------------------------------
 Copyright (c) 2008 Andrew Green
 http://www.zoolib.org
@@ -564,3 +565,5 @@ void ZTSWatcher_Undo::sCallback(void* iRefcon)
 	{
 	static_cast<ZTSWatcher_Undo*>(iRefcon)->Callback();
 	}
+
+#endif

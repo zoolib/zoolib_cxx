@@ -29,18 +29,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(File_POSIX)
 
+#if ZCONFIG_SPI_Enabled(BeOS)
+#	define ZCONFIG_File_AtAPISupported 0
+#else
+#	define ZCONFIG_File_AtAPISupported 1
+#endif
+
 #include "ZDebug.h"
 #include "ZMain.h" // For ZMain::sArgV
 
 #include <vector>
 
 #define kDebug_File_POSIX 2
-
-#if ZCONFIG(OS, Be)
-#	define ZCONFIG_File_AtAPISupported 0
-#else
-#	define ZCONFIG_File_AtAPISupported 1
-#endif
 
 #include <dirent.h>
 #include <errno.h>
@@ -131,7 +131,7 @@ static int sLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreventWriters, 
 	{
 	ZAssertStop(kDebug_File_POSIX, iRead || iWrite);
 
-	if (ZCONFIG(OS, Be))
+	if (ZCONFIG_SPI_Enabled(BeOS))
 		{
 		// Doesn't look like BeOS supports advisory locks.
 		return iFD;

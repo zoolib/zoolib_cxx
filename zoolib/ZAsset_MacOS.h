@@ -22,16 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZAsset_MacOS__ 1
 
 #include "zconfig.h"
-
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#include "ZCONFIG_SPI.h"
 
 #include "ZAsset_Std.h" // For ZAssetTree_Std_Memory
 
-#if ZCONFIG(OS, MacOSX)
-#	include <CarbonCore/MacMemory.h>
-#else
-#	include <Memory.h>
-#endif
+#if ZCONFIG_SPI_Enabled(Carbon)
+
+#include ZMACINCLUDE(CarbonCore,MacMemory.h)
 
 // =================================================================================================
 #pragma mark -
@@ -48,6 +45,6 @@ protected:
 	bool fAdopted;
 	};
 
-#endif // ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 #endif // __ZAsset_MacOS__

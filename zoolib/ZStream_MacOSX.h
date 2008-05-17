@@ -21,14 +21,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZStream_MacOSX__
 #define __ZStream_MacOSX__ 1
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
-#if ZCONFIG(OS, MacOSX)
+#if ZCONFIG_SPI_Enabled(CoreFoundation)
+#include <CoreFoundation/CFStream.h>
 
 #include "ZStreamer.h"
-
-#include <CoreFoundation/CFStream.h>
-#include <CoreGraphics/CGDataProvider.h>
-#include <CoreGraphics/CGDataConsumer.h>
 
 // =================================================================================================
 #pragma mark -
@@ -99,9 +97,15 @@ protected:
 	ZStreamW_CFStream fStream;
 	};
 
+#endif // ZCONFIG_SPI_Enabled(CoreFoundation)
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStream_MacOSX
+
+#if ZCONFIG_SPI_Enabled(CoreGraphics)
+#include <CoreGraphics/CGDataProvider.h>
+#include <CoreGraphics/CGDataConsumer.h>
 
 namespace ZStream_MacOSX {
 
@@ -112,6 +116,6 @@ CGDataConsumerRef sCGDataConsumerCreate(ZRef<ZStreamerW> iStreamer);
 
 } // ZStream_MacOSX
 
-#endif // ZCONFIG(OS, MacOSX)
+#endif // ZCONFIG_SPI_Enabled(CoreGraphics)
 
 #endif // __ZStream_MacOSX__

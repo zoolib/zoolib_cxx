@@ -21,18 +21,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZNetDNSSD__
 #define __ZNetDNSSD__ 1
 #include "zconfig.h"
-
+#include "ZCONFIG_API.h"
 #include "ZCONFIG_SPI.h"
 
-#ifndef ZCONFIG_SPI_Avail__DNSSD
-#	define ZCONFIG_SPI_Avail__DNSSD 1
+#ifndef ZCONFIG_API_Avail__NetDNSSD
+#	define ZCONFIG_API_Avail__NetDNSSD ZCONFIG_SPI_Enabled(DNSSD)
 #endif
 
-#ifndef ZCONFIG_SPI_Desired__DNSSD
-#	define ZCONFIG_SPI_Desired__DNSSD 1
+#ifndef ZCONFIG_API_Desired__NetDNSSD
+#	define ZCONFIG_API_Desired__NetDNSSD 1
 #endif
 
-#if ZCONFIG_SPI_Enabled(DNSSD)
+
+#if ZCONFIG_API_Enabled(NetDNSSD)
 
 #include "ZNet_Internet.h" // For ip_port
 
@@ -110,6 +111,6 @@ private:
 	ip_port fPort;
 	};
 
-#endif // ZCONFIG_SPI_Enabled(DNSSD)
+#endif // ZCONFIG_API_Enabled(NetDNSSD)
 
 #endif // __ZNetDNSSD__

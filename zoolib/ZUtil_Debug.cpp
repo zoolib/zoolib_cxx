@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cmath> // For fmod
 
-#if ZCONFIG(OS, POSIX)
+#if ZCONFIG_SPI_Enabled(POSIX)
 #	include <csignal>
 #endif
 
@@ -82,7 +82,7 @@ void ZUtil_Debug::sDumpStackCrawl(const ZStackCrawl& iCrawl, const ZStrimW& s)
 #pragma mark -
 #pragma mark * Sync signal handler
 
-#if ZCONFIG(OS, POSIX) && ZCONFIG_API_Enabled(StackCrawl)
+#if ZCONFIG_SPI_Enabled(POSIX) && ZCONFIG_API_Enabled(StackCrawl)
 
 static bool sHandlingFatal;
 static void sHandleSignal_Sync(int inSignal)
@@ -110,7 +110,7 @@ static void sHandleSignal_Sync(int inSignal)
 		}
 	}
 
-#endif // ZCONFIG(OS, POSIX) && ZCONFIG_API_Enabled(StackCrawl)
+#endif // ZCONFIG_SPI_Enabled(POSIX) && ZCONFIG_API_Enabled(StackCrawl)
 
 // =================================================================================================
 #pragma mark -
@@ -234,7 +234,7 @@ void ZUtil_Debug::sInstall()
 
 	ZLog::sSetLogMeister(new LogMeister);
 
-	#if ZCONFIG(OS, POSIX) && ZCONFIG_API_Enabled(StackCrawl)
+	#if ZCONFIG_SPI_Enabled(POSIX) && ZCONFIG_API_Enabled(StackCrawl)
 		// Install the sync handler only if we're on POSIX and
 		// we have stack crawl capabilities.
 		struct sigaction theSigAction;

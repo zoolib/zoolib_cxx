@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__Internet_Socket
-#	define ZCONFIG_API_Avail__Internet_Socket (ZCONFIG(OS, POSIX) || ZCONFIG(OS, MacOSX))
+#	define ZCONFIG_API_Avail__Internet_Socket ZCONFIG_SPI_Enabled(POSIX)
 #endif
 
 #ifndef ZCONFIG_API_Desired__Internet_Socket

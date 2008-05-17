@@ -20,16 +20,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZStream_Mac.h"
 
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
 #include "ZCompat_algorithm.h" // For min
 #include "ZDebug.h"
 
-#if ZCONFIG(OS, MacOSX)
-#	include <CarbonCore/Resources.h>
-#else
-#	include <Resources.h>
-#endif
+#include ZMACINCLUDE(CarbonCore,Resources.h)
 
 // =================================================================================================
 #pragma mark -
@@ -93,8 +89,7 @@ ZStreamerRPos_Mac_PartialResource::ZStreamerRPos_Mac_PartialResource(Handle inRe
 ZStreamerRPos_Mac_PartialResource::~ZStreamerRPos_Mac_PartialResource()
 	{}
 
-// From ZStreamerRPos
 const ZStreamRPos& ZStreamerRPos_Mac_PartialResource::GetStreamRPos()
 	{ return fStream; }
 
-#endif // ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#endif // ZCONFIG_SPI_Enabled(Carbon)

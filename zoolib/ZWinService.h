@@ -21,8 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZWinService__
 #define __ZWinService__ 1
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 
 #include "ZThread.h" // For ZMutex
 #include "ZWinHeader.h"
@@ -98,6 +99,6 @@ private:
 	};
 
 
-#endif // ZCONFIG(OS, Win32)
+#endif // ZCONFIG_SPI_Enabled(Win)
 
 #endif // __ZWinService__

@@ -35,7 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZStrimmer.h"
 #include "ZStrimmer_Stream.h"
 #include "ZStrimmer_Streamer.h"
-#include "ZUtil_TextCoder.h"
+#include "ZTextCoder.h"
 
 #include <cctype>
 
@@ -1626,7 +1626,7 @@ static ZRef<ZStrimmerR> sCreateStrimmerR(const ZTuple& iHeader, const ZStreamR& 
 	{
 	string charset = iHeader.GetTuple("content-type").GetTuple("parameters").GetString("charset");
 
-	if (ZTextDecoder* theDecoder = ZUtil_TextCoder::sCreateDecoder(charset))
+	if (ZTextDecoder* theDecoder = ZTextDecoder::sMake(charset))
 		return new ZStrimmerR_StreamR_T<ZStrimR_StreamDecoder>(theDecoder, iStreamR);
 	else
 		return new ZStrimmerR_StreamR_T<ZStrimR_StreamUTF8>(iStreamR);

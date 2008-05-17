@@ -21,18 +21,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZUtil_Mac_HL__
 #define __ZUtil_Mac_HL__ 1
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
 #include "ZDCPixmap.h"
 
-#if (ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)) && ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
-#if ZCONFIG(OS, MacOSX)
-#	include <HIToolbox/Dialogs.h>
-#	include <HIToolbox/Events.h>
-#else
-#	include <Dialogs.h> // For DialogPtr
-#	include <Events.h> // For EventRecord
-#endif
+#include ZMACINCLUDE(HIToolbox,Dialogs.h) // For DialogPtr
+#include ZMACINCLUDE(HIToolbox,Events.h) // For EventRecord
 
 #include <string>
 
@@ -75,11 +71,11 @@ IconRef sIconRefFromPixmaps(const ZDCPixmap& inColorPixmap, const ZDCPixmap& inM
 
 } // namespace ZUtil_Mac_HL
 
-#endif // (ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)) && ZCONFIG(API_Graphics, QD)
+#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 // =================================================================================================
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(QuickDraw)
 
 class ZStreamR;
 
@@ -89,7 +85,7 @@ ZDCPixmap sPixmapFromStreamPICT(const ZStreamR& inStream);
 
 } // namespace ZUtil_Mac_HL
 
-#endif // ZCONFIG(API_Graphics, QD)
+#endif // ZCONFIG_SPI_Enabled(QuickDraw)
 
 // =================================================================================================
 

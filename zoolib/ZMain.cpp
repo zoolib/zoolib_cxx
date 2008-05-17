@@ -55,7 +55,8 @@ static int sMain(int argc, char **argv)
 
 // =================================================================================================
 
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+#if ZCONFIG_SPI_Enabled(MacClassic)\
+	|| (ZCONFIG_SPI_Enabled(Carbon) && !ZCONFIG_SPI_Enabled(MacOSX))
 
 #include "ZMacOSX.h"
 #include "ZThreadSimple.h"
@@ -199,16 +200,7 @@ extern "C"int main(int argc, char **argv)
  
 // =================================================================================================
 
-#elif ZCONFIG(OS, MacOSX)
-
-extern "C"int main(int argc, char **argv)
-	{
-	return sMain(argc, argv);
-	}
-
-// =================================================================================================
-
-#elif ZCONFIG(OS, Win32)
+#elif ZCONFIG_SPI_Enabled(Win)
 
 #include "ZWinHeader.h"
 
@@ -248,29 +240,21 @@ extern "C" int main(int argc, char** argv)
 
 // =================================================================================================
 
-#elif ZCONFIG(OS, POSIX)
+#else
 
 extern "C"int main(int argc, char **argv)
 	{
 	return sMain(argc, argv);
 	}
 
-// =================================================================================================
-
-#elif ZCONFIG(OS, Be)
-
-extern "C" int main(int argc, char** argv)
-	{
-	return sMain(argc, argv);
-	}
 
 // =================================================================================================
 
-#endif // ZCONFIG(OS, XXX)
+#endif
 
 // =================================================================================================
 
-#if ZCONFIG(OS, POSIX)
+#if ZCONFIG_SPI_Enabled(POSIX)
 #	include <cstdlib>
 #	include <unistd.h>
 #	include <fcntl.h>
@@ -278,42 +262,42 @@ extern "C" int main(int argc, char** argv)
 
 void ZMainNS::sDaemonize(bool iForceFDClose)
 	{
-#if ZCONFIG(OS, POSIX)
-	switch (::fork())
-		{
-		case -1:
+	#if ZCONFIG_SPI_Enabled(POSIX)
+		switch (::fork())
 			{
-			ZDebugStopf(0,("cannot fork"));
-			break;
-			}
-		case 0:
-			{
-			// stdin
-			if (iForceFDClose || ::isatty(0))
+			case -1:
 				{
-				close(0);
-				::open("/dev/null",O_RDONLY);
+				ZDebugStopf(0,("cannot fork"));
+				break;
 				}
-			// stdout
-			if (iForceFDClose || ::isatty(1))
+			case 0:
 				{
-				close(1);
-				::open("/dev/null",O_WRONLY);
+				// stdin
+				if (iForceFDClose || ::isatty(0))
+					{
+					close(0);
+					::open("/dev/null",O_RDONLY);
+					}
+				// stdout
+				if (iForceFDClose || ::isatty(1))
+					{
+					close(1);
+					::open("/dev/null",O_WRONLY);
+					}
+				// stderr
+				if (iForceFDClose || ::isatty(2))
+					{
+					close(2);
+					::open("/dev/null",O_WRONLY);
+					}
+				// Previously we'd used setpgrp. Changed per Chris Teplov's suggestion.
+				::setsid();
+				break;
 				}
-			// stderr
-			if (iForceFDClose || ::isatty(2))
+			default:
 				{
-				close(2);
-				::open("/dev/null",O_WRONLY);
+				exit(0);
 				}
-			// Previously we'd used setpgrp. Changed per Chris Teplov's suggestion.
-			::setsid();
-			break;
 			}
-		default:
-			{
-			exit(0);
-			}
-		}
-#endif // ZCONFIG(OS, POSIX)
+	#endif // ZCONFIG_SPI_Enabled(POSIX)
 	}

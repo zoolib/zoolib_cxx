@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZAsset_Win.h"
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 
 #include "ZStream_Win.h"
 
@@ -120,4 +120,4 @@ ZAssetTree_Win_MultiResource::~ZAssetTree_Win_MultiResource()
 	delete fStream_Resource;
 	}
 
-#endif // ZCONFIG(OS, Win32)
+#endif // ZCONFIG_SPI_Enabled(Win)

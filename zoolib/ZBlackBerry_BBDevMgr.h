@@ -21,10 +21,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZBlackBerry_BBDevMgr__
 #define __ZBlackBerry_BBDevMgr__ 1
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
 #include "ZBlackBerry.h"
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 
 #include "ZBlackBerryCOM.h"
 
@@ -81,6 +82,6 @@ private:
 
 } // namespace ZBlackBerry
 
-#endif // ZCONFIG(OS, Win32)
+#endif // ZCONFIG_SPI_Enabled(Win)
 
 #endif // __ZBlackBerry_BBDevMgr__

@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZBlackBerryCOM.h"
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 
 namespace ZBlackBerryCOM {
 
@@ -38,4 +38,4 @@ const GUID IDeviceManager::sCLSID =
 
 } // namespace ZBlackBerryCOM
 
-#endif // ZCONFIG(OS, Win32)
+#endif // ZCONFIG_SPI_Enabled(Win)

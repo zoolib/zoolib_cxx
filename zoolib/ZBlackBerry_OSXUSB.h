@@ -20,10 +20,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZBlackBerry_OSXUSB__
 #define __ZBlackBerry_OSXUSB__ 1
+
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
+
 #include "ZBlackBerry.h"
 
-#if ZCONFIG(OS, MacOSX)
+#if ZCONFIG_SPI_Enabled(MacOSX)
 
 #include "ZUSB_OSX.h"
 
@@ -86,6 +89,6 @@ private:
 
 } // namespace ZBlackBerry
 
-#endif // ZCONFIG(OS, MacOSX)
+#endif // ZCONFIG_SPI_Enabled(MacOSX)
 
 #endif // __ZBlackBerry_OSXUSB__

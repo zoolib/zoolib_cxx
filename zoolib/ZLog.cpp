@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZThread.h"
 
 // Metrowerks Standard Library doesn't include strcasecmp
-#if _MSL_USING_MW_C_HEADERS && ZCONFIG(OS, MacOSX)
+#if _MSL_USING_MW_C_HEADERS && __MACH__
 #	include "/usr/include/string.h"
 #endif
 

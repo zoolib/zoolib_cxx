@@ -24,27 +24,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZTypes.h" // For ZRectPOD and ZPointPOD
 
-#if ZCONFIG(API_Graphics, QD)
-#	if ZCONFIG(OS, MacOSX)
-#		define __NOEXTENSIONS__
-#		include <CarbonCore/MacTypes.h>
-#		include <QD/QuickDraw.h>
-#	else
-#		include <MacTypes.h>
-#		include <QuickDraw.h>
-#	endif
+#if ZCONFIG_SPI_Enabled(QuickDraw)
+#	include ZMACINCLUDE(CarbonCore,MacTypes.h)
+#	include ZMACINCLUDE(QD,QuickDraw.h)
 #endif
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 #	include "ZWinHeader.h"
 #endif
 
-#if ZCONFIG(API_Graphics, X)
-#	include <X11/Xlib.h>
+#if ZCONFIG_SPI_Enabled(X11)
+#	include "ZCompat_Xlib.h"
 #	include <X11/Xutil.h>
 #endif
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 #	include <interface/Point.h>
 #	include <interface/Rect.h>
 #endif
@@ -59,21 +53,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark -
 #pragma mark * ZCoord
 
-// Definition of ZCoord -- the native coordinate types. If both GDI & QD are
-// active, then we use the GDI version.
-
-#if ZCONFIG(API_Graphics, GDI)
-	typedef int32 ZCoord;
-#elif ZCONFIG(API_Graphics, QD)
-	typedef int16 ZCoord;
-#elif ZCONFIG(API_Graphics, X)
-	typedef int16 ZCoord;
-#elif ZCONFIG(API_Graphics, Be)
-// Although Be supports float coords, we're not going to use that facility for now
-	typedef int32 ZCoord;
-#else
-	typedef int32 ZCoord;
-#endif
+typedef int32 ZCoord;
 
 // =================================================================================================
 #pragma mark -
@@ -111,22 +91,22 @@ public:
 
 	operator ZPointPOD() const;
 
-	#if ZCONFIG(API_Graphics, QD)
+	#if ZCONFIG_SPI_Enabled(QuickDraw)
 	ZPoint_T(const Point& pt) : h(T(pt.h)), v(T(pt.v)) {}
 	operator Point() const;
 	#endif
 
-	#if ZCONFIG(API_Graphics, GDI)
+	#if ZCONFIG_SPI_Enabled(GDI)
 	ZPoint_T(const POINT& pt) : h(T(pt.x)), v(T(pt.y)) {}
 	operator POINT() const;
 	#endif
 
-	#if ZCONFIG(API_Graphics, X)
+	#if ZCONFIG_SPI_Enabled(X11)
 	ZPoint_T(const XPoint& pt) : h(T(pt.x)), v(T(pt.y)) {}
 	operator XPoint() const;
 	#endif
 
-	#if ZCONFIG(API_Graphics, Be)
+	#if ZCONFIG_SPI_Enabled(BeOS)
 	ZPoint_T(const BPoint& pt) : h(T(pt.x)), v(T(pt.y)) {}
 	operator BPoint() const;
 	#endif
@@ -325,7 +305,7 @@ public:
 	operator ZRectPOD() const;
 
 // Conversions to & from native types
-	#if ZCONFIG(API_Graphics, QD)
+	#if ZCONFIG_SPI_Enabled(QuickDraw)
 	ZRect_T(const Rect& iRect)
 	:	left(iRect.left),
 		top(iRect.top),
@@ -335,7 +315,7 @@ public:
 	operator Rect() const;
 	#endif
 
-	#if ZCONFIG(API_Graphics, GDI)
+	#if ZCONFIG_SPI_Enabled(GDI)
 	ZRect_T(const RECT& iRect)
 	:	left(iRect.left),
 		top(iRect.top),
@@ -345,7 +325,7 @@ public:
 	operator RECT() const;
 	#endif
 
-	#if ZCONFIG(API_Graphics, X)
+	#if ZCONFIG_SPI_Enabled(X11)
 	ZRect_T(const XRectangle& iRect)
 	:	left(iRect.x),
 		top(iRect.y),
@@ -355,7 +335,7 @@ public:
 	operator XRectangle() const;
 	#endif
 
-	#if ZCONFIG(API_Graphics, Be)
+	#if ZCONFIG_SPI_Enabled(Be)
 	ZRect_T(const BRect& iRect)
 	:	left(ZCoord(iRect.left)),
 		top(ZCoord(iRect.top)),
@@ -738,7 +718,7 @@ inline ZRect_T<T>::operator ZRectPOD() const
 	return theRectPOD;
 	}
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(QuickDraw)
 template <class T>
 inline ZPoint_T<T>::operator Point() const
 	{
@@ -758,9 +738,9 @@ inline ZRect_T<T>::operator Rect() const
 	theRect.bottom = bottom;
 	return theRect;
 	}
-#endif // ZCONFIG(API_Graphics, QD)
+#endif // ZCONFIG_SPI_Enabled(QuickDraw)
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 template <class T>
 inline ZPoint_T<T>::operator POINT() const
 	{
@@ -780,9 +760,9 @@ inline ZRect_T<T>::operator RECT() const
 	theRECT.bottom = bottom;
 	return theRECT;
 	}
-#endif // ZCONFIG(API_Graphics, GDI)
+#endif // ZCONFIG_SPI_Enabled(GDI)
 
-#if ZCONFIG(API_Graphics, X)
+#if ZCONFIG_SPI_Enabled(X11)
 template <class T>
 inline ZPoint_T<T>::operator XPoint() const
 	{
@@ -802,14 +782,14 @@ inline ZRect_T<T>::operator XRectangle() const
 	theXRectangle.height = (unsigned short)(bottom - top);
 	return theXRectangle;
 	}
-#endif // ZCONFIG(API_Graphics, X)
+#endif // ZCONFIG_SPI_Enabled(X11)
 
-#if ZCONFIG(API_Graphics, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 template <class T> inline ZPoint_T<T>::operator BPoint() const
 	{ return BPoint(h, v); }
 
 template <class T> inline ZRect_T<T>::operator BRect() const
 	{ return BRect(left, top, right - 1, bottom - 1); }
-#endif // ZCONFIG(API_Graphics, Be)
+#endif // ZCONFIG_SPI_Enabled(BeOS)
 
 #endif // __ZGeom__

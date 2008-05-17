@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZThread.h"
 #include "ZCompat_algorithm.h" // For min()
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 #	include "ZWinHeader.h"
 #endif
 
@@ -38,7 +38,7 @@ using std::min;
 
 ZHandle::Rep::Rep()
 	{
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#if ZCONFIG_SPI_Enabled(Carbon)
 		fMacHandle = nil;
 	#else
 		fData = nil;
@@ -50,12 +50,12 @@ ZHandle::Rep::Rep()
 
 ZHandle::Rep::Rep(size_t iSize)
 	{
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#if ZCONFIG_SPI_Enabled(Carbon)
 		// May need toolbox lock.
 		fMacHandle = ::NewHandle(iSize);
 		if (fMacHandle == nil)
 			throw bad_alloc();
-	#elif ZCONFIG(OS, Win32)
+	#elif ZCONFIG_SPI_Enabled(Win)
 		if (iSize)
 			{
 			fData = reinterpret_cast<char*>(::GlobalAlloc(GMEM_FIXED, iSize));
@@ -87,13 +87,13 @@ ZHandle::Rep::Rep(size_t iSize)
 ZHandle::Rep::~Rep()
 	{
 	ZAssertStop(2, fLockCount.fValue == 0);
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#if ZCONFIG_SPI_Enabled(Carbon)
 		if (fMacHandle)
 			{
 			// May need toolbox lock.
 			::DisposeHandle(fMacHandle);
 			}
-	#elif ZCONFIG(OS, Win32)
+	#elif ZCONFIG_SPI_Enabled(Win)
 		if (fData)
 			::GlobalFree(reinterpret_cast<HGLOBAL>(fData));
 	#else
@@ -135,7 +135,7 @@ ZHandle& ZHandle::operator=(const ZHandle& iOther)
 
 size_t ZHandle::GetSize() const
 	{
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#if ZCONFIG_SPI_Enabled(Carbon)
 		if (fRep->fMacHandle)
 			{
 			// May need toolbox lock.
@@ -151,7 +151,7 @@ void ZHandle::SetSize(size_t iSize)
 	{
 // We shouldn't be trying to resize when we're locked
 	ZAssertStop(2, fRep->fLockCount.fValue == 0);
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#if ZCONFIG_SPI_Enabled(Carbon)
 		if (iSize == 0)
 			{
 			if (fRep->fMacHandle == nil)
@@ -186,7 +186,7 @@ void ZHandle::SetSize(size_t iSize)
 					}
 				}
 			}
-	#else // ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#else // ZCONFIG_SPI_Enabled(Carbon)
 		if (iSize == 0)
 			{
 			if (fRep->fData == nil)
@@ -205,7 +205,7 @@ void ZHandle::SetSize(size_t iSize)
 					{
 					if (fRep->GetRefCount() == 1)
 						{
-						#if ZCONFIG(OS, Win32)
+						#if ZCONFIG_SPI_Enabled(Win)
 							char* newData = reinterpret_cast<char*>(
 								::GlobalReAlloc(
 									reinterpret_cast<HGLOBAL>(fRep->fData),
@@ -229,7 +229,7 @@ void ZHandle::SetSize(size_t iSize)
 					}
 				}
 			}
-	#endif // ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#endif // ZCONFIG_SPI_Enabled(Carbon)
 	}
 
 void ZHandle::CopyFrom(const void* iSource, size_t iSize, size_t iOffset)
@@ -239,7 +239,7 @@ void ZHandle::CopyFrom(const void* iSource, size_t iSize, size_t iOffset)
 		return;
 	this->Touch();
 
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#if ZCONFIG_SPI_Enabled(Carbon)
 		// We don't need to lock the handle -- this call will complete
 		// without any other calls to the memory manager possible
 		ZBlockCopy(iSource, fRep->fMacHandle[0] + iOffset, iSize);
@@ -254,7 +254,7 @@ void ZHandle::CopyTo(void* iDest, size_t iSize, size_t iOffset) const
 	if (iSize == 0)
 		return;
 
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#if ZCONFIG_SPI_Enabled(Carbon)
 		ZBlockCopy(fRep->fMacHandle[0] + iOffset, iDest, iSize);
 	#else
 		ZBlockCopy(fRep->fData + iOffset, iDest, iSize);
@@ -266,7 +266,7 @@ void ZHandle::Touch()
 	if (fRep->GetRefCount() == 1)
 		return;
 
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#if ZCONFIG_SPI_Enabled(Carbon)
 		ZRef<Rep> newRep = new Rep;
 		if (fRep->fMacHandle)
 			{
@@ -284,12 +284,12 @@ void ZHandle::Touch()
 	#endif
 	}
 
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
 Handle ZHandle::GetMacHandle()
 	{ return fRep->fMacHandle; }
 
-#endif // ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 // =================================================================================================
 #pragma mark -
@@ -300,7 +300,7 @@ ZHandle::Ref::Ref(ZHandle& iHandle)
 	{
 	if (ZThreadSafe_IncReturnOld(fHandle.fRep->fLockCount) == 0)
 		{
-		#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+		#if ZCONFIG_SPI_Enabled(Carbon)
 			if (fHandle.fRep->fMacHandle)
 				{
 				// May need toolbox lock.
@@ -314,7 +314,7 @@ ZHandle::Ref::~Ref()
 	{
 	if (ZThreadSafe_DecReturnOld(fHandle.fRep->fLockCount) == 1)
 		{
-		#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+		#if ZCONFIG_SPI_Enabled(Carbon)
 			if (fHandle.fRep->fMacHandle)
 				{
 				// May need toolbox lock.
@@ -326,7 +326,7 @@ ZHandle::Ref::~Ref()
 
 void* ZHandle::Ref::GetData()
 	{
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#if ZCONFIG_SPI_Enabled(Carbon)
 		if (fHandle.fRep->fMacHandle)
 			return fHandle.fRep->fMacHandle[0];
 		return nil;
@@ -337,7 +337,7 @@ void* ZHandle::Ref::GetData()
 
 size_t ZHandle::Ref::GetSize()
 	{
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#if ZCONFIG_SPI_Enabled(Carbon)
 		if (fHandle.fRep->fMacHandle)
 			{
 			// May need toolbox lock.
@@ -358,7 +358,7 @@ ZHandle::ConstRef::ConstRef(const ZHandle& iHandle)
 	{
 	if (ZThreadSafe_IncReturnOld(fHandle.fRep->fLockCount) == 0)
 		{
-		#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+		#if ZCONFIG_SPI_Enabled(Carbon)
 			if (fHandle.fRep->fMacHandle)
 				{
 				// May need toolbox lock.
@@ -372,7 +372,7 @@ ZHandle::ConstRef::~ConstRef()
 	{
 	if (ZThreadSafe_DecReturnOld(fHandle.fRep->fLockCount) == 1)
 		{
-		#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+		#if ZCONFIG_SPI_Enabled(Carbon)
 			if (fHandle.fRep->fMacHandle)
 				{
 				::HUnlock(fHandle.fRep->fMacHandle);
@@ -383,7 +383,7 @@ ZHandle::ConstRef::~ConstRef()
 
 const void* ZHandle::ConstRef::GetData()
 	{
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#if ZCONFIG_SPI_Enabled(Carbon)
 		if (fHandle.fRep->fMacHandle)
 			return fHandle.fRep->fMacHandle[0];
 		return nil;
@@ -394,7 +394,7 @@ const void* ZHandle::ConstRef::GetData()
 
 size_t ZHandle::ConstRef::GetSize()
 	{
-	#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+	#if ZCONFIG_SPI_Enabled(Carbon)
 		if (fHandle.fRep->fMacHandle)
 			{
 			// May need toolbox lock.

@@ -21,9 +21,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZTS_DB__
 #define __ZTS_DB__
 #include "zconfig.h"
+#include "ZCONFIG_API.h"
+#include "ZCONFIG_SPI.h"
+
+#ifndef ZCONFIG_API_Avail__TS_DB
+#	define ZCONFIG_API_Avail__TS_DB ZCONFIG_SPI_Enabled(BerkeleyDB)
+#endif
+
+#ifndef ZCONFIG_API_Desired__TS_DB
+#	define ZCONFIG_API_Desired__TS_DB 1
+#endif
+
+#include "ZTS.h"
+
+#if ZCONFIG_API_Enabled(TS_DB)
 
 #include "ZFile.h"
-#include "ZTS.h"
 #include "ZTupleIndex.h"
 
 #include <string>
@@ -76,4 +89,5 @@ private:
 	vector<ZTupleIndex*> fIndices;
 	};
 
+#endif // ZCONFIG_API_Enabled(TS_DB)
 #endif // __ZTS_DB__

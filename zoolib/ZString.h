@@ -27,11 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZTypes.h" // for uint64
 
-namespace ZString {
-std::string FromStrResource(short iStringID);
-std::string sFromStrResource(short iStringID);
-} // namespace ZString
-
 // ==================================================
 
 class ZStreamR;

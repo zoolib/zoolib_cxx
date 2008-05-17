@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZUtil_Win.h"
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 
 #include "ZWinHeader.h"
 
@@ -83,4 +83,4 @@ bool ZUtil_Win::sUseWAPI()
 void ZUtil_Win::sDisallowWAPI()
 	{ sFlag_DisallowWAPI = true; }
 
-#endif // ZCONFIG(OS, Win32)
+#endif // ZCONFIG_SPI_Enabled(Win)

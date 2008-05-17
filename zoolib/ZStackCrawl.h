@@ -26,10 +26,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__StackCrawl
-#	if defined(linux) && ZCONFIG(Processor, x86)
+#	if ZCONFIG_SPI_Enabled(Linux) && ZCONFIG(Processor, x86)
 #		define ZCONFIG_API_Avail__StackCrawl 1
 #	endif
-#	if ZCONFIG(OS, Win32)
+#	if ZCONFIG_SPI_Enabled(Win)
 #		define ZCONFIG_API_Avail__StackCrawl ZCONFIG_SPI_Enabled(imagehlp)
 #	endif
 #endif

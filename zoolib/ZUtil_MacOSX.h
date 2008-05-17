@@ -22,9 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_MacOSX__ 1
 #include "zconfig.h"
 
-
-#if ZCONFIG(OS, MacOSX) || ZCONFIG(OS, Carbon)
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_MacOSX
@@ -32,7 +29,5 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZUtil_MacOSX {
 
 } // namespace ZUtil_MacOSX
-
-#endif // ZCONFIG(OS, MacOSX) || ZCONFIG(OS, Carbon)
 
 #endif // __ZUtil_MacOSX__

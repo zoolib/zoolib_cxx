@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "ZStream_POSIX.h"
+#include "ZCONFIG_SPI.h"
 
 #include <errno.h>
 #include <stdexcept> // for range_error
@@ -30,7 +31,7 @@ using std::range_error;
 #if defined(_MSL_USING_MW_C_HEADERS)
 #	define ZCONFIG_Has_fseeko (!_MSL_USING_MW_C_HEADERS)
 #else
-#	define ZCONFIG_Has_fseeko (!ZCONFIG(OS, Win32))
+#	define ZCONFIG_Has_fseeko (!ZCONFIG_SPI_Enabled(Win))
 #endif
 
 #if !defined(_MSL_USING_MW_C_HEADERS) || !_MSL_USING_MW_C_HEADERS

@@ -20,24 +20,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZUtil_Mac_HL.h"
 
-#if (ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)) && ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
 #include "ZDC_QD.h"
 #include "ZMacOSX.h"
 #include "ZMemory.h" // For ZBlockMove and ZBlockSet
-#include "ZOSWindow_Mac.h" // For ZOSApp_Mac
-#include "ZOSWindow_Carbon.h" // For ZOSApp_Carbon
+//#include "ZOSWindow_Mac.h" // For ZOSApp_Mac
+//#include "ZOSWindow_Carbon.h" // For ZOSApp_Carbon
 #include "ZUtil_Mac_LL.h"
 
-#if ZCONFIG(OS, MacOSX)
-#	include <CarbonCore/Gestalt.h>
-#	include <CarbonCore/Resources.h>
-#	include <HIToolbox/AEInteraction.h>
-#else
-#	include <Gestalt.h>
-#	include <Resources.h>
-#	include <AppleEvents.h>
-#endif
+#include ZMACINCLUDE(CarbonCore,Gestalt.h)
+#include ZMACINCLUDE(CarbonCore,Resources.h)
+#include ZMACINCLUDE(HIToolbox,AEInteraction.h)
 
 // =================================================================================================
 
@@ -652,17 +646,18 @@ bool ZUtil_Mac_HL::sInteractWithUser()
 void ZUtil_Mac_HL::sPreDialog()
 	{
 	ZUtil_Mac_HL::sInteractWithUser();
-#if ZCONFIG(OS, MacOS7)
-	ZOSApp_Mac::sGet()->PreDialog();
-	ZOSApp_Mac::sGet()->UpdateAllWindows();
-#endif // ZCONFIG(OS, MacOS7)
+
+	#if ZCONFIG_SPI_Enabled(MacClassic)
+		ZOSApp_Mac::sGet()->PreDialog();
+		ZOSApp_Mac::sGet()->UpdateAllWindows();
+	#endif
 	}
 
 void ZUtil_Mac_HL::sPostDialog()
 	{
-#if ZCONFIG(OS, MacOS7)
-	ZOSApp_Mac::sGet()->PostDialog();
-#endif // ZCONFIG(OS, MacOS7)
+	#if ZCONFIG_SPI_Enabled(MacClassic)
+		ZOSApp_Mac::sGet()->PostDialog();
+	#endif
 	}
 
 static ModalFilterUPP sModalFilterUPP = NewModalFilterUPP(ZUtil_Mac_HL::sModalFilter);
@@ -688,22 +683,17 @@ string ZUtil_Mac_HL::sGetVersionString()
 	return version;
 	}
 
-#endif // (ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)) && ZCONFIG(API_Graphics, QD)
+#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 // =================================================================================================
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(QuickDraw)
 
 #include "ZDC_QD.h"
 #include "ZStream.h"
 
-#if ZCONFIG(OS, MacOSX)
-#	include <CarbonCore/MacMemory.h>
-#	include <QD/QDOffscreen.h>
-#else
-#	include <MacMemory.h>
-#	include <QDOffscreen.h>
-#endif
+#include ZMACINCLUDE(CarbonCore,MacMemory.h)
+#include ZMACINCLUDE(QD,QDOffscreen.h)
 
 namespace ZANONYMOUS {
 struct PixmapFromStreamPICTInfo
@@ -847,5 +837,5 @@ ZDCPixmap ZUtil_Mac_HL::sPixmapFromStreamPICT(const ZStreamR& inStream)
 	return thePixmap;
 	}
 
-#endif // ZCONFIG(API_Graphics, QD)
+#endif // ZCONFIG_SPI_Enabled(QuickDraw)
 

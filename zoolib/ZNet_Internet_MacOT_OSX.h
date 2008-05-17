@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__Internet_MacOT_OSX
-#	define ZCONFIG_API_Avail__Internet_MacOT_OSX (ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX))
+#	define ZCONFIG_API_Avail__Internet_MacOT_OSX ZCONFIG_SPI_Enabled(Carbon)
 #endif
 
 #ifndef ZCONFIG_API_Desired__Internet_MacOT_OSX
@@ -36,8 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Internet_MacOT_OSX)
 
-#if ZCONFIG(OS, MacOSX)
-#	define __NOEXTENSIONS__
+#if ZCONFIG_SPI_Enabled(MacOSX)
 // Uggh. OpenTransportProviders.h is now part of the
 // OSServices subframework of CoreServices.
 #	include <CoreServices/CoreServices.h>

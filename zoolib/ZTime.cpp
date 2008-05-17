@@ -20,31 +20,33 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZTime.h"
 
+#include "ZCONFIG_SPI.h"
+
 #include "ZCompat_cmath.h"
 
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
-#	include <DriverServices.h>
+#if ZCONFIG_SPI_Enabled(POSIX)
+#	include <sys/time.h> // For timeval
 #endif
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(MacClassic)
+#	include <DriverServices.h> // For UpTime
+#endif
+
+#if ZCONFIG_SPI_Enabled(Carbon)
+#	include <CoreServices/CoreServices.h>
+#endif
+
+#if ZCONFIG_SPI_Enabled(Win)
 #	include "ZWinHeader.h"
 #	include "ZUtil_Win.h"
 #endif
 
-#if ZCONFIG(OS, POSIX) || ZCONFIG(OS, Be) || ZCONFIG(OS, MacOSX)
-#	include <sys/time.h> // For timeval
-#endif
-
-#if ZCONFIG(OS, Be)
-#	include <kernel/OS.h> // for system_time
-#endif
-
-#if defined(linux)
+#if ZCONFIG_SPI_Enabled(Linux)
 #	include <sys/sysinfo.h> // For sysinfo
 #	include <cstdio> // For FILE and fopen
 #endif
 
-#if defined(__APPLE__)
+#if ZCONFIG_SPI_Enabled(BSD)
 #	include <sys/types.h> // For sysctl etc.
 #	include <sys/sysctl.h>
 #endif
@@ -113,7 +115,7 @@ int ZTime::Compare(const ZTime& iOther) const
 
 ZTime ZTime::sNow()
 	{
-#if ZCONFIG(OS, Carbon)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
 	UTCDateTime theUTCDateTime;
 	::GetUTCDateTime(&theUTCDateTime, kUTCDefaultOptions);
@@ -123,14 +125,14 @@ ZTime ZTime::sNow()
 	result += double(theUTCDateTime.fraction) / 65536.0;
 	return result;
 
-#elif ZCONFIG(OS, MacOS7)
+#elif ZCONFIG_SPI_Enabled(MacClassic)
 
 	// This has a resolution of one second, not a lot of use really.
 	unsigned long theDateTime;
 	::GetDateTime(&theDateTime);
 	return theDateTime - kEpochDelta_1904_To_1970;
 
-#elif ZCONFIG(OS, Win32)
+#elif ZCONFIG_SPI_Enabled(Win)
 
 	// FILETIME is a 64 bit count of the number of 100-nanosecond (1e-7)
 	// periods since January 1, 1601 (UTC).
@@ -145,7 +147,7 @@ ZTime ZTime::sNow()
 	result -= kEpochDelta_1601_To_1970;
     return result;
 
-#elif ZCONFIG(OS, POSIX) || ZCONFIG(OS, Be) || ZCONFIG(OS, MacOSX)
+#elif ZCONFIG_SPI_Enabled(POSIX)
 
 	timeval theTimeVal;
 	::gettimeofday(&theTimeVal, nil);
@@ -160,12 +162,12 @@ ZTime ZTime::sNow()
 
 ZTime ZTime::sSystem()
 	{
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+#if ZCONFIG_SPI_Enabled(Carbon) || ZCONFIG_SPI_Enabled(MacClassic)
 
 	Nanoseconds theNanoseconds = AbsoluteToNanoseconds(UpTime());
 	return double(*reinterpret_cast<uint64*>(&theNanoseconds)) / 1e9;
 
-#elif ZCONFIG(OS, Win32)
+#elif ZCONFIG_SPI_Enabled(Win)
 
 	if (ZUtil_Win::sIsWinNT())
 		{
@@ -193,7 +195,7 @@ ZTime ZTime::sSystem()
 	// Use GetTickCount if we're not on NT or QPC is not available.
 	return double(::GetTickCount()) / 1e3;
 
-#elif ZCONFIG(OS, POSIX) || ZCONFIG(OS, MacOSX)
+#elif ZCONFIG_SPI_Enabled(POSIX)
 
 	/* AG 2003-10-26.
 	I've spent all day trying to find a monotonic clock for unix. Mozilla's
@@ -226,7 +228,7 @@ ZTime ZTime::sSystem()
 	sLast = result;
 	return result + sDelta;
 
-#elif ZCONFIG(OS, Be)
+#elif ZCONFIG_SPI_Enabled(BeOS)
 
 	return double(::system_time()) / 1e6;
 
@@ -239,7 +241,7 @@ ZTime ZTime::sSystem()
 
 ZTime ZTime::sBoot()
 	{
-#if defined(__APPLE__) // And probably any BSD
+#if ZCONFIG_SPI_Enabled(BSD)
 
 	int theMIB[] = { CTL_KERN, KERN_BOOTTIME };
 	struct timeval theTimeVal;
@@ -260,7 +262,7 @@ ZTime ZTime::sBoot()
 
 ZTime ZTime::sSinceBoot()
 	{
-#if defined(linux)
+#if ZCONFIG_SPI_Enabled(Linux)
 
 	if (FILE* theFILE = ::fopen("/proc/uptime", "r"))
 		{
@@ -277,7 +279,7 @@ ZTime ZTime::sSinceBoot()
 
 	return ZTime();
 	
-#elif defined(__APPLE__)
+#elif ZCONFIG_SPI_Enabled(BSD)
 
 	return sNow() - sBoot();
 

@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZThread__
 #define __ZThread__ 1
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
 #include <stdexcept>
 #include <vector>
@@ -29,6 +30,29 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZCompat_NonCopyable.h"
 #include "ZDebug.h"
 #include "ZTypes.h" // For bigtime_t
+
+#define ZCONFIG_API_Thread_Unknown 0
+#define ZCONFIG_API_Thread_Win32 2
+#define ZCONFIG_API_Thread_POSIX 4
+#define ZCONFIG_API_Thread_Be 8
+   
+// =================================================================================================
+
+#include "ZCONFIG_SPI.h"
+
+#ifndef ZCONFIG_API_Thread
+#	if 0
+#	elif ZCONFIG_SPI_Enabled(Win)
+#		define ZCONFIG_API_Thread ZCONFIG_API_Thread_Win32
+#	elif ZCONFIG_SPI_Enabled(pthread)
+#		define ZCONFIG_API_Thread ZCONFIG_API_Thread_POSIX
+#	endif
+#endif
+
+#ifndef ZCONFIG_API_Thread
+#	error "Don't know what thread API we're using"
+#endif
+
 
 // =================================================================================================
 #pragma mark -
@@ -49,12 +73,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ZCONFIG_Thread_Preemptive is 1 if threading is preemptive, that is if control can switch
 // between one thread and another at *any* time. 
 
-#if ZCONFIG(API_Thread, Mac)
-#	include "ZThreadTM.h"
-#	define ZCONFIG_Thread_Preemptive 0
-#endif
-
-
 #if ZCONFIG(API_Thread, Win32)
 #	ifndef _MT
 #		define _MT
@@ -69,13 +87,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG(API_Thread, POSIX)
 #	include <pthread.h>
-#	define ZCONFIG_Thread_Preemptive 1
-#endif
-
-
-#if ZCONFIG(API_Thread, Be)
-#	include <OS.h>
-#	include "TLS.h"
 #	define ZCONFIG_Thread_Preemptive 1
 #endif
 
@@ -156,10 +167,7 @@ public:
 	class Ex_Disposed;
 
 	// Appropriate per-platform definitions of thread ID, TLS key and TLS data
-	#if ZCONFIG(API_Thread, Mac)
-		typedef uint32 ThreadID;
-		typedef struct TLSKey_t_Opaque* TLSKey_t;
-		typedef struct TLSData_t_Opaque* TLSData_t;
+	#if 0
 	#elif ZCONFIG(API_Thread, Win32)
 		typedef DWORD ThreadID;
 		typedef DWORD TLSKey_t;
@@ -211,8 +219,7 @@ protected:
 	bool fStarted;
 	const char* fName;
 
-	#if ZCONFIG(API_Thread, Mac)
-		ZThreadTM_State* fTMState;
+	#if 0
 	#elif ZCONFIG(API_Thread, Win32)
 	public:
 		HANDLE fThreadHANDLE;
@@ -229,8 +236,7 @@ protected:
 	#endif
 
 private:
-	#if ZCONFIG(API_Thread, Mac)
-		static void sThreadEntry_MacTM(void* iArg);
+	#if 0
 	#elif ZCONFIG(API_Thread, Win32)
 		static unsigned int __stdcall sThreadEntry_Win32(void* iArg);
 	#elif ZCONFIG(API_Thread, POSIX)
@@ -304,12 +310,9 @@ public:
 // This static is what makes auto-initialization work. Every file that (transitively) includes ZThread.h will
 // get their own instance of a ZThread::InitHelper, whose constructor creates the main thread object and
 // whose destructor deletes it. This ensures that ZThread is initialized at static construction time
-// and is usable regardless of the link order. Unfortunately this chokes with the BeOS compiler, but ZThread
-// will still be initialized before main() is invoked.
+// and is usable regardless of the link order.
 
-#if !ZCONFIG(OS, Be)
 static ZThread::InitHelper sZThread_InitHelper;
-#endif // !ZCONFIG(OS, Be)
 
 // =================================================================================================
 #pragma mark -

@@ -21,30 +21,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZUtil_Mac_LL__
 #define __ZUtil_Mac_LL__ 1
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
-#if ZCONFIG(API_Graphics, QD) || ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
 #include "ZDCPixmapNS.h" 
 #include "ZGeom.h"
 #include "ZRefCount.h"
 
-#if ZCONFIG(OS, MacOSX)
-#	include <CarbonCore/MacMemory.h>
-#	include <QD/QDOffscreen.h>
-#else
-#	include <MacMemory.h>
-#	include <QDOffscreen.h>
-#endif
+#include ZMACINCLUDE(CarbonCore,MacMemory.h)
+#include ZMACINCLUDE(QD,QDOffscreen.h)
 
-#endif // ZCONFIG(API_Graphics, QD) || ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
-#include "ZThreadTM.h"
+//#include "ZThreadTM.h"
 #include "ZTypes.h"
 
-#endif // ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 class ZDCPixmap;
 class ZDCPattern;
@@ -53,7 +49,7 @@ namespace ZUtil_Mac_LL {
 
 // =================================================================================================
 
-#if ZCONFIG(API_Graphics, QD)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
 void sSetupPixMapColor(ZPoint inSize, int32 inDepth, PixMap& oPixMap);
 void sSetupPixMapColor(size_t inRowBytes, int32 inDepth, int32 inHeight, PixMap& oPixMap);
@@ -120,7 +116,7 @@ protected:
 	RGBColor fPreConstruct_BackColor;
 	};
 
-#endif // ZCONFIG(API_Graphics, QD)
+#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 // =================================================================================================
 #pragma mark -
@@ -175,7 +171,7 @@ protected:
 #pragma mark -
 #pragma mark * ZUtil_Mac_LL::SaveRestoreResFile
 
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
 class SaveRestoreResFile
 	{
@@ -188,13 +184,13 @@ protected:
 	short fPreConstruct_ResFile;
 	};
 
-#endif // ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Mac_LL::HandleLocker
 
-#if ZCONFIG(API_Graphics, QD) || ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
 class HandleLocker
 	{
@@ -226,7 +222,7 @@ protected:
 	SignedByte fOldState;
 	};
 
-#endif // ZCONFIG(API_Graphics, QD) || ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 // =================================================================================================
 

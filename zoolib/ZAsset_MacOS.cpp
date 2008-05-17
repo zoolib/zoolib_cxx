@@ -20,13 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZAsset_MacOS.h"
 
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
-#if ZCONFIG(OS, MacOSX)
-#	include <CarbonCore/Resources.h>
-#else
-#	include <Resources.h>
-#endif
+#include ZMACINCLUDE(CarbonCore,Resources.h)
 
 // =================================================================================================
 #pragma mark -
@@ -50,4 +46,4 @@ ZAssetTree_MacOS_Resource::~ZAssetTree_MacOS_Resource()
 		::ReleaseResource(fResourceHandle);
 	}
 
-#endif // ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#endif // ZCONFIG_SPI_Enabled(Carbon)

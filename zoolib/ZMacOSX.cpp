@@ -20,20 +20,23 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZMacOSX.h"
 
-#define kDebug_MacOSX 1
+#include "ZCONFIG_SPI.h"
 
-#if ZCONFIG(OS, Carbon)
-	static bool sIsMacOSX_Checked;
-	static bool sIsMacOSX_Value;
+#if ZCONFIG_SPI_Enabled(Carbon)
+#	include ZMACINCLUDE(CarbonCore,Gestalt.h)
+#	if !ZCONFIG_SPI_Enabled(MacOSX)
+		static bool sIsMacOSX_Checked;
+		static bool sIsMacOSX_Value;
+#	endif
 #endif
 
 bool ZMacOSX::sIsMacOSX()
 	{
-	#if ZCONFIG(OS, MacOSX)
+	#if ZCONFIG_SPI_Enabled(MacOSX)
 
 		return true;
 
-	#elif ZCONFIG(OS, Carbon)
+	#elif ZCONFIG_SPI_Enabled(Carbon)
 
 		if (!sIsMacOSX_Checked)
 			{

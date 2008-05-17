@@ -20,7 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZUtil_Win_UI.h"
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
+
+#include "ZUtil_Win.h"
 
 #include "ZDC_GDI.h"
 #include "ZDCPixmap.h"
@@ -46,7 +48,7 @@ bool ZUtil_Win::sDragFullWindows()
 	return dragFullWindows;
 	}
 
-�static bool sMungeProc_Invert(ZCoord hCoord, ZCoord vCoord, ZRGBColorPOD& ioColor, void* iRefcon)
+static bool sMungeProc_Invert(ZCoord hCoord, ZCoord vCoord, ZRGBColorPOD& ioColor, void* iRefcon)
 	{
 	ioColor = ZRGBColor::sWhite - ioColor;
 	return true;
@@ -126,4 +128,4 @@ HICON ZUtil_Win::sLoadIconID(bool iFromApp, int iResourceID)
 		return ::LoadIconA(theHINSTANCE, MAKEINTRESOURCEA(iResourceID));
 	}
 
-#endif // ZCONFIG(OS, Win32)
+#endif // ZCONFIG_SPI_Enabled(Win)

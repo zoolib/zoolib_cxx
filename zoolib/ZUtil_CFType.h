@@ -21,22 +21,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZUtil_CFType__
 #define __ZUtil_CFType__ 1
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
-
-#if ZCONFIG(OS, MacOSX) || ZCONFIG(OS, Carbon)
+#if ZCONFIG_SPI_Enabled(CFType)
 
 #include "ZTuple.h"
 #include "ZUnicode.h"
 
-#if ZCONFIG(OS, MacOSX)
-#	include <CoreFoundation/CFArray.h>
-#	include <CoreFoundation/CFBase.h>
-#	include <CoreFoundation/CFDictionary.h>
-#else
-#	include <CFArray.h>
-#	include <CFBase.h>
-#	include <CFDictionary.h>
-#endif
+#include ZMACINCLUDE(CoreFoundation,CFArray.h)
+#include ZMACINCLUDE(CoreFoundation,CFBase.h)
+#include ZMACINCLUDE(CoreFoundation,CFDictionary.h)
 
 // =================================================================================================
 #pragma mark -
@@ -61,6 +55,6 @@ CFArrayRef sCreateCFArray(const vector<ZTValue>& iVector);
 
 } // namespace ZUtil_CFType
 
-#endif // ZCONFIG(OS, MacOSX) || ZCONFIG(OS, Carbon)
+#endif // ZCONFIG_SPI_Enabled(CFType)
 
 #endif // __ZUtil_CFType__

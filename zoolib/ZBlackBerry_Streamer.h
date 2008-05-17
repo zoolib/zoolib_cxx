@@ -103,7 +103,7 @@ private:
 		eLifecycle_Running,
 		eLifecycle_StreamsDead,
 		eLifecycle_StoppingRun,
-		eLifecycle_StoppingRead,
+		eLifecycle_StoppingRead
 		};
 
 	ELifecycle fLifecycle;

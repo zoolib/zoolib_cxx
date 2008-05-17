@@ -20,7 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZMemory__
 #define __ZMemory__ 1
-#include "zconfig.h"
+
+#include "ZCONFIG_SPI.h"
 
 // =================================================================================================
 #pragma mark -
@@ -33,16 +34,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string.h> // This is needed for memmove, memcpy and memset
 
-#if ZCONFIG(OS, POSIX)
-#	include <strings.h> // And this for bzero
-#endif
-
 #define ZBlockMove(srcPtr, destPtr, byteCount) ::memmove((destPtr), (srcPtr), (size_t)(byteCount))
 #define ZBlockCopy(srcPtr, destPtr, byteCount) ::memcpy((destPtr), (srcPtr), (size_t)(byteCount))
 
 #define ZBlockSet(destPtr, size, value) ::memset((destPtr), (int)(value), (size_t)(size))
 
-#if ZCONFIG(OS, POSIX)
+#if ZCONFIG_SPI_Enabled(POSIX)
 #	define ZBlockZero(destPtr, size) ::bzero((destPtr), (size_t)(size))
 #else
 #	define ZBlockZero(destPtr, size) ::memset((destPtr), 0, (size_t)(size))

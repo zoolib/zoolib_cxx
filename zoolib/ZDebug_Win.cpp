@@ -20,9 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZDebug_Win.h"
 
+#include "ZCONFIG_SPI.h"
+
 // =================================================================================================
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 
 #include <cstdarg>
 #include <cstdio>
@@ -123,6 +125,4 @@ static bool sIsDebuggerPresent()
 	return false;
 	}
 
-#endif // ZCONFIG(OS, Win32)
-
-// =================================================================================================
+#endif // ZCONFIG_SPI_Enabled(Win)

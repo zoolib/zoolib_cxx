@@ -21,14 +21,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZTypes__
 #define __ZTypes__
 
-#include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
 #include <cstddef> // Pull in definition of size_t, which is heavily used by zoolib
 
 // ==================================================
 // The usual suite of types with known sizes and signedness.
 
-#if ZCONFIG(OS, Be)
+#if 0
 
 #	include<support/SupportDefs.h>
 
@@ -48,12 +48,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	typedef int64 bigtime_t;
 
-#elif ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+#elif ZCONFIG_SPI_Enabled(MacClassic) || ZCONFIG_SPI_Enabled(Carbon) && !ZCONFIG_SPI_Enabled(POSIX)
 
-	#if ZCONFIG(Compiler, GCC)
-		#include <Carbon/Carbon.h>
-	#else
+	#if ZCONFIG_SPI_Enabled(MacClassic)
 		#include <MacTypes.h>
+	#else
+		#include <CoreServices/CoreServices.h>
 	#endif
 
 	typedef SInt8 int8;
@@ -176,7 +176,7 @@ extern char sGarbageBuffer[4096];
 // but on MacOS 9 we don't want to blow the 24K - 32K that's normally available.
 // This constant is 4096 on most platforms, 256 on MacOS 9.
 
-#if ZCONFIG(OS, MacOS7) || (ZCONFIG(OS, Carbon) && !__MACH__)
+#if ZCONFIG_SPI_Enabled(MacClassic)
 	static const size_t sStackBufferSize = 256;
 #else
 	static const size_t sStackBufferSize = 4096;

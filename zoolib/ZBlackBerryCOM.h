@@ -21,10 +21,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZBlackBerryCOM__
 #define __ZBlackBerryCOM__ 1
 #include "zconfig.h"
+#include "ZCONFIG_SPI.h"
 
 // =================================================================================================
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 
 #include "ZTypes.h"
 #include "ZWinCOM.h"
@@ -162,6 +163,6 @@ ZWinCOM_CLASS_(IDeviceManager, IUnknown,
 
 } // namespace ZBlackBerryCOM
 
-#endif // ZCONFIG(OS, Win32)
+#endif // ZCONFIG_SPI_Enabled(Win)
 
 #endif // __ZBlackBerryCOM__

@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZStream_Win.h"
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 
 #include "ZCompat_algorithm.h" // For lower_bound, min
 #include "ZDebug.h"
@@ -178,4 +178,4 @@ ZStreamerRPos_Win_MultiResource::~ZStreamerRPos_Win_MultiResource()
 const ZStreamRPos& ZStreamerRPos_Win_MultiResource::GetStreamRPos()
 	{ return fStream; }
 
-#endif // ZCONFIG(OS, Win32)
+#endif // ZCONFIG_SPI_Enabled(Win)

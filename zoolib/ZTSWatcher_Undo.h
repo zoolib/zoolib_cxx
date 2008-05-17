@@ -1,3 +1,4 @@
+#if 0
 /* -------------------------------------------------------------------------------------------------
 Copyright (c) 2008 Andrew Green
 http://www.zoolib.org
@@ -89,3 +90,4 @@ private:
 	};
 
 #endif // __ZTSWatcher_Undo__
+#endif

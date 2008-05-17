@@ -20,17 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZUtil_CFType.h"
 
-#if ZCONFIG(OS, MacOSX) || ZCONFIG(OS, Carbon)
+#if ZCONFIG_SPI_Enabled(CFType)
 
-#if ZCONFIG(OS, MacOSX)
-#	include <CoreFoundation/CFData.h>
-#	include <CoreFoundation/CFNumber.h>
-#	include <CoreFoundation/CFString.h>
-#else
-#	include <CFData.h>
-#	include <CFNumber.h>
-#	include <CFString.h>
-#endif
+#include ZMACINCLUDE(CoreFoundation,CFData.h)
+#include ZMACINCLUDE(CoreFoundation,CFNumber.h)
+#include ZMACINCLUDE(CoreFoundation,CFString.h)
 
 // =================================================================================================
 #pragma mark -
@@ -326,4 +320,4 @@ CFArrayRef ZUtil_CFType::sCreateCFArray(const vector<ZTValue>& iVector)
 	return theCFArrayRef;
 	}
 
-#endif // ZCONFIG(OS, MacOSX) || ZCONFIG(OS, Carbon)
+#endif // ZCONFIG_SPI_Enabled(CFType)

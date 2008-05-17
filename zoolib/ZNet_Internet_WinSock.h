@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNet_Internet_WinSock__ 1
 #include "zconfig.h"
 #include "ZCONFIG_API.h"
+#include "ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__Internet_WinSock
-#	define ZCONFIG_API_Avail__Internet_WinSock ZCONFIG(OS, Win32)
+#	define ZCONFIG_API_Avail__Internet_WinSock ZCONFIG_SPI_Enabled(Win)
 #endif
 
 #ifndef ZCONFIG_API_Desired__Internet_WinSock

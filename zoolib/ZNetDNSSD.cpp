@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZNetDNSSD.h"
 
-#if ZCONFIG_SPI_Enabled(DNSSD)
+#if ZCONFIG_API_Enabled(NetDNSSD)
 
 #include "ZLog.h"
 
@@ -193,4 +193,4 @@ void ZNetNameRegistered_DNSSD::spDNSServiceRegisterReply(
 	theNNR->pDNSServiceRegisterReply(flags, errorCode, name, regtype, domain);
 	}
 
-#endif // ZCONFIG_SPI_Enabled(DNSSD)
+#endif // ZCONFIG_API_Enabled(NetDNSSD)

@@ -20,11 +20,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZUtil_Asset.h"
 
+#include "ZCONFIG_SPI.h"
+
 #include "ZAsset_MacOS.h"
 #include "ZAsset_POSIX.h"
 #include "ZAsset_Std.h"
 #include "ZAsset_Win.h"
 #include "ZFile_POSIX.h"
+#include "ZMacOSX.h"
 #include "ZStream_Mac.h"
 #include "ZStream_PageBuffered.h"
 #include "ZString.h" // For pascal string conversions
@@ -41,7 +44,7 @@ file or in external files.
 
 // =================================================================================================
 
-#if ZCONFIG(OS, POSIX)
+#if ZCONFIG_SPI_Enabled(POSIX)
 
 #include <sys/types.h> // For lseek
 #include <fcntl.h> // For open
@@ -116,11 +119,11 @@ static bool sGetAssetTreeInfoFromExecutable(const string& iName, int& oFD, size_
 	return false;
 	}
 
-#endif // ZCONFIG(OS, POSIX)
+#endif // ZCONFIG_SPI_Enabled(POSIX)
 
 // =================================================================================================
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 
 #include "ZUnicode.h"
 #include "ZUtil_Win.h"
@@ -129,19 +132,11 @@ static bool sGetAssetTreeInfoFromExecutable(const string& iName, int& oFD, size_
 
 // MinGW screws up its headers -- callback functions for A and W have the same signatures,
 // which is okay if you're only building for one or the other. We build for both, so we
-// provide a corrected definition.
+// provide faked-out A and W definitions.
 
 typedef ENUMRESNAMEPROC ENUMRESNAMEPROCA;
 typedef ENUMRESNAMEPROC ENUMRESNAMEPROCW;
 
-#if 0
-extern "C"
-{
-typedef BOOL (CALLBACK* ENUMRESNAMEPROCA)(HMODULE hModule, LPCSTR lpType, LPSTR lpName, LONG_PTR lParam);
-WINBASEAPI BOOL WINAPI EnumResourceNamesA(IN HMODULE hModule, IN LPCSTR lpType, IN ENUMRESNAMEPROCA lpEnumFunc, IN LONG_PTR lParam );
-}
-
-#endif
 #endif //  defined(__MINGW32__)
 
 static BOOL CALLBACK sEnumResNameCallbackW(HMODULE iHMODULE, const UTF16* iType, UTF16* iName, LONG iParam)
@@ -160,19 +155,17 @@ static BOOL CALLBACK sEnumResNameCallbackA(HMODULE iHMODULE, const char* iType, 
 	return TRUE;
 	}
 
-#endif // ZCONFIG(OS, Win32)
+#endif // ZCONFIG_SPI_Enabled(Win)
 
 // =================================================================================================
 
-#if ZCONFIG(OS, Be)
-#	include <app/Application.h>
-#	include <storage/Resources.h>
-#endif
+//#if ZCONFIG(OS, Be)
+//#	include <app/Application.h>
+//#	include <storage/Resources.h>
+//#endif
 
-#if ZCONFIG(OS, MacOSX)
-#	include <CarbonCore/Resources.h>
-#elif ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOS7)
-#	include <Resources.h>
+#if ZCONFIG_SPI_Enabled(Carbon)
+#	include ZMACINCLUDE(CarbonCore, Resources.h)
 #endif
 
 // =================================================================================================
@@ -214,7 +207,7 @@ void ZUtil_Asset::sGetAssetTreeNamesFromExecutable(vector<string>& oAssetTreeNam
 	{
 	oAssetTreeNames.clear();
 
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
 	short count = ::CountResources('ZAO_');
 	::SetResLoad(false);
@@ -237,7 +230,7 @@ void ZUtil_Asset::sGetAssetTreeNamesFromExecutable(vector<string>& oAssetTreeNam
 		}
 	::SetResLoad(true);
 
-#elif ZCONFIG(OS, Win32)
+#elif ZCONFIG_SPI_Enabled(Win)
 
 	if (ZUtil_Win::sUseWAPI())
 		{
@@ -250,7 +243,7 @@ void ZUtil_Asset::sGetAssetTreeNamesFromExecutable(vector<string>& oAssetTreeNam
 			(ENUMRESNAMEPROCA)sEnumResNameCallbackA, reinterpret_cast<LONG>(&oAssetTreeNames));
 		}
 
-#elif ZCONFIG(OS, POSIX)
+#elif ZCONFIG_SPI_Enabled(POSIX)
 
 	if (ZRef<ZStreamerRPos> theStreamer = ZFileSpec::sApp().OpenRPos())
 		{
@@ -287,7 +280,6 @@ void ZUtil_Asset::sGetAssetTreeNamesFromExecutable(vector<string>& oAssetTreeNam
 			}
 		}
 
-#elif ZCONFIG(OS, Be)
 #endif
 	}
 
@@ -309,12 +301,12 @@ in a global static or in an instance variable of your application object (or equ
 */
 ZRef<ZAssetTree> ZUtil_Asset::sGetAssetTreeFromExecutable(const string& iAssetTreeName)
 	{
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
+#if ZCONFIG_SPI_Enabled(Carbon)
 
 	Str255 theResourceName;
 	ZString::sToPString(iAssetTreeName, theResourceName, 255);
 
-	if (ZCONFIG(OS, MacOSX))
+	if (ZMacOSX::sIsMacOSX())
 		{
 		// This variant sucks the entire resource into memory, which is what
 		// MacOS X does anyway even when SetResLoad is false.
@@ -338,7 +330,7 @@ ZRef<ZAssetTree> ZUtil_Asset::sGetAssetTreeFromExecutable(const string& iAssetTr
 			}
 		}
 
-#elif ZCONFIG(OS, Win32)
+#elif ZCONFIG_SPI_Enabled(Win)
 
 	HINSTANCE theHINSTANCE;
 	if (ZUtil_Win::sUseWAPI())
@@ -348,14 +340,14 @@ ZRef<ZAssetTree> ZUtil_Asset::sGetAssetTreeFromExecutable(const string& iAssetTr
 
 	return new ZAssetTree_Win_MultiResource(theHINSTANCE, "ZAO_", iAssetTreeName);
 
-#elif ZCONFIG(OS, POSIX)
+#elif ZCONFIG_SPI_Enabled(POSIX)
 
 	int theFD;
 	size_t theStart, theLength;
 	if (sGetAssetTreeInfoFromExecutable(iAssetTreeName, theFD, theStart, theLength))
 		return new ZAssetTree_POSIX_MemoryMapped(theFD, true, theStart, theLength);
 
-#elif ZCONFIG(OS, Be)
+#elif ZCONFIG_SPI_Enabled(BeOS)
 
 	// AG 2000-01-28. I know, I know, this is not thread safe.
 	static BResources* sBResources = nil;
@@ -377,7 +369,7 @@ ZRef<ZAssetTree> ZUtil_Asset::sGetAssetTreeFromExecutable(const string& iAssetTr
 			return new ZAssetTree_Std_Memory_StaticData(theResourceData, theSize);
 		}
 
-#endif // ZCONFIG(OS)
+#endif
 
 	return ZRef<ZAssetTree>();
 	}
@@ -417,7 +409,8 @@ ZRef<ZAssetTree> ZUtil_Asset::sGetAssetTreeFromFileSpec(const ZFileSpec& iFileSp
 	{
 	ZRef<ZAssetTree> theAssetTree;
 
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
+#if ZCONFIG_SPI_Enabled(Carbon)
+
 	try
 		{
 		if (ZRef<ZStreamerRPos> theStreamer = iFileSpec.OpenRPos())
@@ -426,7 +419,7 @@ ZRef<ZAssetTree> ZUtil_Asset::sGetAssetTreeFromFileSpec(const ZFileSpec& iFileSp
 	catch (...)
 		{}
 
-#elif ZCONFIG(OS, Win32)
+#elif ZCONFIG_SPI_Enabled(Win)
 
 	try
 		{
@@ -461,7 +454,7 @@ ZRef<ZAssetTree> ZUtil_Asset::sGetAssetTreeFromFileSpec(const ZFileSpec& iFileSp
 	catch (...)
 		{}
 
-#elif ZCONFIG(OS, POSIX)
+#elif ZCONFIG_SPI_Enabled(POSIX)
 
 	try
 		{
@@ -475,9 +468,7 @@ ZRef<ZAssetTree> ZUtil_Asset::sGetAssetTreeFromFileSpec(const ZFileSpec& iFileSp
 	catch (...)
 		{}
 
-#elif ZCONFIG(OS, Be)
-
-#endif // ZCONFIG(OS)
+#endif
 
 	if (!theAssetTree)
 		{

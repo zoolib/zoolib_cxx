@@ -100,7 +100,7 @@ ZRGBColorPOD& ZRGBColorPOD::operator-=(const ZRGBColorPOD& other)
 #pragma mark -
 #pragma mark * ZRGBColor
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 ZRGBColor ZRGBColor::sFromCOLORREF(COLORREF iColorRef)
 	{
 	ZRGBColor theColor;
@@ -110,7 +110,7 @@ ZRGBColor ZRGBColor::sFromCOLORREF(COLORREF iColorRef)
 	theColor.alpha = 0xFFFFU;
 	return theColor;
 	}
-#endif // ZCONFIG(API_Graphics, GDI)
+#endif // ZCONFIG_SPI_Enabled(GDI)
 
 // =================================================================================================
 #pragma mark -
@@ -171,7 +171,7 @@ ZRGBColorSmallPOD& ZRGBColorSmallPOD::operator-=(const ZRGBColorSmallPOD& other)
 #pragma mark -
 #pragma mark * ZRGBColorSmall
 
-#if ZCONFIG(API_Graphics, GDI)
+#if ZCONFIG_SPI_Enabled(GDI)
 ZRGBColorSmall ZRGBColorSmall::sFromCOLORREF(COLORREF iColorRef)
 	{
 	ZRGBColorSmall theColor;
@@ -181,6 +181,6 @@ ZRGBColorSmall ZRGBColorSmall::sFromCOLORREF(COLORREF iColorRef)
 	theColor.alpha = 0xFFU;
 	return theColor;
 	}
-#endif // ZCONFIG(API_Graphics, GDI)
+#endif // ZCONFIG_SPI_Enabled(GDI)
 
 

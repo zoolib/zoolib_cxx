@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "ZDebug.h"
+#include "ZCONFIG_SPI.h"
 
 #include <cstdarg>
 #include <cstdio>
@@ -116,7 +117,7 @@ ZDebug_HandleInitial_t sDebug_HandleInitial = ZDebug_HandleInitial_Generic;
 
 // =================================================================================================
 
-#if ZCONFIG(OS, POSIX) || ZCONFIG(OS, MacOSX)
+#if ZCONFIG_SPI_Enabled(POSIX)
 
 #include <cstdlib> // For abort
 
@@ -134,11 +135,11 @@ static void ZDebug_HandleActual_POSIX(int inLevel, ZDebug_Action inAction, const
 
 ZDebug_HandleActual_t sDebug_HandleActual = ZDebug_HandleActual_POSIX;
 
-#endif // ZCONFIG(OS, POSIX)
+#endif // ZCONFIG_SPI_Enabled(POSIX)
 
 // =================================================================================================
 
-#if ZCONFIG(OS, Be)
+#if ZCONFIG_SPI_Enabled(BeOS)
 
 #include <kernel/OS.h>
 
@@ -152,6 +153,6 @@ static void ZDebug_HandleActual_Be(int inLevel, ZDebug_Action inAction, const ch
 
 ZDebug_HandleActual_t sDebug_HandleActual = ZDebug_HandleActual_Be;
 
-#endif // ZCONFIG(OS, Be)
+#endif // ZCONFIG_SPI_Enabled(BeOS)
 
 // =================================================================================================

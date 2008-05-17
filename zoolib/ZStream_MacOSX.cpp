@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZStream_MacOSX.h"
 
-#if ZCONFIG(OS, MacOSX)
+#if ZCONFIG_SPI_Enabled(CoreFoundation)
 
 // =================================================================================================
 #pragma mark -
@@ -120,9 +120,15 @@ ZStreamerW_CFStream::~ZStreamerW_CFStream()
 const ZStreamW& ZStreamerW_CFStream::GetStreamW()
 	{ return fStream; }
 
+#endif // ZCONFIG_SPI_Enabled(CoreFoundation)
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * CGDataProviderRef, ZStreamerRPos
+
+#if ZCONFIG_SPI_Enabled(CoreGraphics)
+
+#include "ZStreamer.h"
 
 namespace ZANONYMOUS {
 
@@ -237,4 +243,4 @@ CGDataConsumerRef ZStream_MacOSX::sCGDataConsumerCreate(ZRef<ZStreamerW> iStream
 	return ::CGDataConsumerCreate(new ZRef<ZStreamerW>(iStreamer), &sCallbacksW);
 	}
 
-#endif // ZCONFIG(OS, MacOSX)
+#endif // ZCONFIG_SPI_Enabled(CoreGraphics)

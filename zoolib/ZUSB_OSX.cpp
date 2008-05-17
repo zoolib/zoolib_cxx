@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZUSB_OSX.h"
 
-#if ZCONFIG(OS, MacOSX)
+#if ZCONFIG_SPI_Enabled(MacOSX)
 
 #include "ZByteSwap.h"
 #include "ZLog.h"
@@ -532,4 +532,4 @@ void ZUSBInterfaceInterface::Close()
 		}
 	}
 
-#endif // ZCONFIG(OS, MacOSX)
+#endif // ZCONFIG_SPI_Enabled(MacOSX)

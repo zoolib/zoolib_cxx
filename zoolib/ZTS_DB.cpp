@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZTS_DB.h"
 
+#if ZCONFIG_API_Enabled(TS_DB)
+
 #include "ZByteSwap.h"
 #include "ZDebug.h"
 #include "ZMemoryBlock.h"
@@ -936,3 +938,4 @@ int ZTS_DB::sBTree_Compare(const DBT* iLeft, const DBT* iRight)
 		}
 	return 0;
 	}
+#endif // ZCONFIG_API_Enabled(TS_DB)

@@ -20,11 +20,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZBlackBerry_BBDevMgr.h"
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 
 #include "ZLog.h"
 #include "ZTime.h"
-//#include "ZUtil_Strim_Data.h"
 
 namespace ZBlackBerry {
 
@@ -716,4 +715,4 @@ ZRef<Device> Manager_BBDevMgr::Open(uint64 iDeviceID)
 
 } // namespace ZBlackBerry
 
-#endif // ZCONFIG(OS, Win32)
+#endif // ZCONFIG_SPI_Enabled(Win)

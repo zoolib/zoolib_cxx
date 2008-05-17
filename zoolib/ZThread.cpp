@@ -19,20 +19,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "ZThread.h"
+
 #include "ZAtomic.h"
 #include "ZCompat_algorithm.h" // for find, lower_bound, swap
-#include "ZTicks.h" // For ZTicks::sNow()
+#include "ZTime.h"
+
 
 #if ZCONFIG_Thread_DeadlockDetect
 #	include "ZString.h" // For ZString::sFormat
 #endif
 
 #include <string> // because runtime_error relies on it
-
-#if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
-#	include <DriverServices.h> // For UpTime, AddDurationToAbsolute
-#	include <Gestalt.h>
-#endif
 
 #if ZCONFIG(API_Thread, Win32)
 #	include "ZWinHeader.h"
@@ -89,7 +86,7 @@ static ZThread* sCurrent()
 #pragma mark -
 #pragma mark * Win32 utility functions
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 	#if ZCONFIG(Compiler, CodeWarrior)
 
 		#include <ThreadLocalData.h>
@@ -171,15 +168,6 @@ static void sReleaseSpinlock(ZAtomic_t* iSpinlock)
 #pragma mark -
 #pragma mark * ZThread Initialization/Tear Down
 
-#if ZCONFIG(OS, Be)
-// On all other platforms, we declare a ZThread::InitHelper in ZThread.h, so that anything that includes the header gets their own
-// separate instance. That allows any code at static initialization time to make use of ZThread facilities, knowing that
-// the ZThread subsystem will already be initialized. The BeOS linker chokes on that scheme, so we have a single instance
-// defined here. That means that ZThread is only guaranteed to be initialized before main() is entered on BeOS. This will get fixed
-// at some point.
-static ZThread::InitHelper sZThread_InitHelper;
-#endif 
-
 namespace ZANONYMOUS {
 
 class MainThread : public ZThread
@@ -197,10 +185,6 @@ ZThread::InitHelper::InitHelper()
 	{
 	if (sInitCount++ != 0)
 		return;
-
-#if ZCONFIG(API_Thread, Mac) && ZCONFIG(OS, Carbon)
-	MPLibraryIsLoaded();
-#endif
 
 	new MainThread;
 	}
@@ -226,11 +210,7 @@ ZThread::ZThread(struct Dummy*)
 	fMutexBase_Wait = nil;
 	#endif
 
-#if ZCONFIG(API_Thread, Mac)
-
-	ZThreadTM_Initialize();
-
-#elif ZCONFIG(API_Thread, Be)
+#if ZCONFIG(API_Thread, Be)
 
 	::tls_init(TLS_VERSION);
 
@@ -263,13 +243,7 @@ ZThread::ZThread(const char* iName)
 	fMutexBase_Wait = nil;
 	#endif // ZCONFIG_Thread_DeadlockDetect
 
-#if ZCONFIG(API_Thread, Mac)
-
-	::ThreadID theThreadID;
-	if (!ZThreadTM_NewThread(sThreadEntry_MacTM, this, theThreadID, fTMState))
-	 	throw bad_alloc();
-	fThreadID = (ZThread::ThreadID)theThreadID;
-
+#if 0
 #elif ZCONFIG(API_Thread, Win32)
 
 	fThreadHANDLE = (HANDLE) ::_beginthreadex(nil, 0, sThreadEntry_Win32,
@@ -320,10 +294,7 @@ ZThread::~ZThread()
 		sMainThread = nil;
 		sTLSFree(sKeyCurrentThread);
 
-#if ZCONFIG(API_Thread, Mac)
-
-		ZThreadTM_Exit();
-
+#if 0
 #elif ZCONFIG(API_Thread, Be)
 
 		::tls_term();
@@ -355,11 +326,7 @@ void ZThread::Start()
 	{
 	ZAssertStop(kDebug_Thread, !fStarted);
 
-#if ZCONFIG(API_Thread, Mac)
-
-	fStarted = true;
-	ZThreadTM_Resume(fTMState);
-	ZThreadTM_Yield();
+#if 0
 
 #elif ZCONFIG(API_Thread, Win32)
 
@@ -383,9 +350,7 @@ void ZThread::Start()
 
 void ZThread::sSleepMicro(bigtime_t iMicroseconds)
 	{
-#if ZCONFIG(API_Thread, Mac)
-
-	ZThreadTM_Sleep(iMicroseconds);
+#if 0
 
 #elif ZCONFIG(API_Thread, Win32)
 
@@ -418,9 +383,7 @@ void ZThread::sSleepMicro(bigtime_t iMicroseconds)
 
 void ZThread::sSleep(int32 iMilliseconds)
 	{
-#if ZCONFIG(API_Thread, Mac)
-
-	ZThreadTM_Sleep(iMilliseconds * 1000);
+#if 0
 
 #elif ZCONFIG(API_Thread, Win32)
 
@@ -485,9 +448,7 @@ string* ZThread::CheckForDeadlock(ZThread* iAcquiringThread)
 
 void ZThread::sGetProcessTimes(bigtime_t& oRealTime, bigtime_t& oCumulativeRunTime)
 	{
-#if ZCONFIG(API_Thread, Mac)
-
-	ZThreadTM_GetProcessTimes(oRealTime, oCumulativeRunTime);
+#if 0
 
 #elif ZCONFIG(API_Thread, Win32)
 
@@ -539,9 +500,7 @@ ZThread::ThreadID ZThread::sCurrentID()
 
 ZThread::TLSKey_t ZThread::sTLSAllocate()
 	{
-#if ZCONFIG(API_Thread, Mac)
-
-	return reinterpret_cast<TLSKey_t>(ZThreadTM_TLSAllocate());
+#if 0
 
 #elif ZCONFIG(API_Thread, Win32)
 
@@ -565,9 +524,7 @@ ZThread::TLSKey_t ZThread::sTLSAllocate()
 
 void ZThread::sTLSFree(TLSKey_t iTLSKey)
 	{
-#if ZCONFIG(API_Thread, Mac)
-
-	return ZThreadTM_TLSFree(reinterpret_cast<ZThreadTM_TLSKey_t>(iTLSKey));
+#if 0
 
 #elif ZCONFIG(API_Thread, Win32)
 
@@ -592,9 +549,7 @@ ZThread::TLSData_t ZThread::sTLSGet(ZThread::TLSKey_t iTLSKey)
 
 void ZThread::sTLSSet(TLSKey_t iKey, TLSData_t iValue)
 	{
-#if ZCONFIG(API_Thread, Mac)
-
-	ZThreadTM_TLSSet(reinterpret_cast<ZThreadTM_TLSKey_t>(iKey), reinterpret_cast<ZThreadTM_TLSData_t>(iValue));
+#if 0
 
 #elif ZCONFIG(API_Thread, Win32)
 
@@ -615,29 +570,7 @@ void ZThread::sTLSSet(TLSKey_t iKey, TLSData_t iValue)
 #pragma mark -
 #pragma mark * ZThread::sThreadEntry
 
-#if ZCONFIG(API_Thread, Mac)
-
-void ZThread::sThreadEntry_MacTM(void* iArg)
-	{
-	ZThread* currentThread = reinterpret_cast<ZThread*>(iArg);
-	ZAssertStop(kDebug_Thread, currentThread);
-	try
-		{
-		sTLSSet(sKeyCurrentThread, reinterpret_cast<TLSData_t>(currentThread));
-
-		currentThread->Run();
-		}
-	catch (exception& theEx)
-		{
-		ZDebugLogf(2, ("Uncaught exception: %s", theEx.what()));
-		}
-	catch (...)
-		{
-		ZDebugLogf(2, ("Uncaught exception, unknown type"));
-		}
-
-	delete currentThread;
-	}
+#if 0
 
 #elif ZCONFIG(API_Thread, Win32)
 
@@ -740,42 +673,8 @@ ZThread::Ex_Disposed::~Ex_Disposed() throw()
 	{}
 
 // =================================================================================================
-#if ZCONFIG(API_Thread, Mac)
-#pragma mark -
-#pragma mark * ZSemaphore - Mac
-
-ZSemaphore::ZSemaphore(int32 iInitialCount, const char* iName)
-	{
-	fName = iName;
-	ZAssertStop(kDebug_Thread, iInitialCount >= 0);
-
-	ZThreadTM_SemInit(&fSem_TM, iInitialCount);
-	}
-
-ZSemaphore::~ZSemaphore()
-	{
-	ZThreadTM_SemDestroy(&fSem_TM);
-	}
-
-ZThread::Error ZSemaphore::Wait(int32 iCount)
-	{
-	return (ZThread::Error) ZThreadTM_SemWait(&fSem_TM, iCount);
-	}
-
-ZThread::Error ZSemaphore::Wait(int32 iCount, bigtime_t iMicroseconds)
-	{
-	return (ZThread::Error) ZThreadTM_SemWait(&fSem_TM, iCount, iMicroseconds);
-	}
-
-void ZSemaphore::Signal(int32 iCount)
-	{
-	ZThreadTM_SemSignal(&fSem_TM, iCount);
-	}
-
-#endif // ZCONFIG(API_Thread, Mac)
-
-// =================================================================================================
 #if ZCONFIG(API_Thread, Win32)
+
 #pragma mark -
 #pragma mark * ZSemaphore - Win32
 
@@ -784,25 +683,25 @@ struct ZSemaphore::Waiter_Win32
 	Waiter_Win32* fPrev;
 	Waiter_Win32* fNext;
 	int32 fCount;
-	bigtime_t fWake;
+	ZTime fWake;
 	bool fSemaphoreDisposed;
 	HANDLE fThreadHANDLE;
 	ZThread::ThreadID fThreadID;
 	};
 
-static bool sWaitForSemaphoreAbsolute(HANDLE iSemaphoreHANDLE, bigtime_t iWaitUntil)
+static bool sWaitForSemaphoreAbsolute(HANDLE iSemaphoreHANDLE, ZTime iWaitUntil)
 	{
 	while (true)
 		{
-		bigtime_t timeout = iWaitUntil - ZTicks::sNow();
+		double timeout = iWaitUntil - ZTime::sSystem();
 		if (timeout <= 0)
 			break;
 
-		int32 currentDelay = 1000000;
+		double currentDelay = 1;
 		if (currentDelay > timeout)
 			currentDelay = timeout;
 
-		DWORD result = ::WaitForSingleObject(iSemaphoreHANDLE, currentDelay / 1000);
+		DWORD result = ::WaitForSingleObject(iSemaphoreHANDLE, currentDelay * 1000);
 
 		if (result == WAIT_OBJECT_0)
 			return true;
@@ -884,10 +783,7 @@ ZThread::Error ZSemaphore::Internal_Wait_Win32(int32 iCount, bigtime_t iMicrosec
 	// Set up our waiter
 	Waiter_Win32 theWaiter;
 
-	bigtime_t now = ZTicks::sNow();
-	theWaiter.fWake = now + iMicroseconds;
-	if (theWaiter.fWake < now) // Handle overflow
-		theWaiter.fWake = WAITFOREVER;
+	theWaiter.fWake = ZTime::sSystem() + (iMicroseconds / 1e6);
 
 	theWaiter.fSemaphoreDisposed = false;
 	theWaiter.fThreadHANDLE = nil;
@@ -910,7 +806,7 @@ ZThread::Error ZSemaphore::Internal_Wait_Win32(int32 iCount, bigtime_t iMicrosec
 		{
 		if (fWaiter_Head == &theWaiter)
 			{
-			bigtime_t earliestWake = theWaiter.fWake;
+			ZTime earliestWake = theWaiter.fWake;
 			Waiter_Win32* current = theWaiter.fNext;
 			while (current)
 				{
@@ -919,7 +815,7 @@ ZThread::Error ZSemaphore::Internal_Wait_Win32(int32 iCount, bigtime_t iMicrosec
 				current = current->fNext;
 				}
 			::sReleaseSpinlock(&fSpinlock);
-			bool gotIt = ::sWaitForSemaphoreAbsolute(fSemaphoreHANDLE, earliestWake);
+			::sWaitForSemaphoreAbsolute(fSemaphoreHANDLE, earliestWake);
 			}
 		else
 			{
@@ -956,8 +852,7 @@ ZThread::Error ZSemaphore::Internal_Wait_Win32(int32 iCount, bigtime_t iMicrosec
 				{}
 			}
 
-		bigtime_t now2 = ZTicks::sNow();
-		if (theWaiter.fWake < now2)
+		if (theWaiter.fWake < ZTime::sSystem())
 			break;
 		if (theWaiter.fCount == 0)
 			break;
@@ -2081,7 +1976,7 @@ ZThread::Error ZMutexComposite::Acquire(bigtime_t iMicroseconds)
 	{
 	for (vector<ZMutexBase*>::iterator w = fLocks.begin(); w != fLocks.end(); ++w)
 		{
-		bigtime_t startTime = ZTicks::sNow();
+		ZTime startTime = ZTime::sSystem();
 		ZThread::Error err = (*w)->Acquire(iMicroseconds);
 		if (err != ZThread::errorNone)
 			{
@@ -2090,7 +1985,7 @@ ZThread::Error ZMutexComposite::Acquire(bigtime_t iMicroseconds)
 			return err;
 			}
 
-		bigtime_t timeConsumed = ZTicks::sNow() - startTime;
+		bigtime_t timeConsumed = (ZTime::sSystem() - startTime) * 1e6;
 		if (iMicroseconds >= timeConsumed)
 			iMicroseconds -= timeConsumed;
 		else
