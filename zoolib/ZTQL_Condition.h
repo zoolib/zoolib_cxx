@@ -28,8 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <set>
 
-class ZTSpec;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::ComparatorRep
@@ -261,6 +259,7 @@ public:
 private:
 	ZRef<ComparandRep> fRep;
 	};
+
 } // namespace ZTQL
 
 // =================================================================================================
