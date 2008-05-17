@@ -186,7 +186,7 @@ void sTile_SD_T(
 						iSourcePD);
 
 	int currentDestV = iDestB.top;
-	ZDCPixmapNS::PixelIterW_T<D> destIter(iDestRD.CalcRowAddress(iDestAddress, currentDestV),
+	ZDCPixmapNS::PixelIterW_T<D> destIter(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 						iDestRD.fPixvalDesc,
 						iDestB.left,
 						iDestPD);
@@ -213,7 +213,7 @@ void sTile_SD_T(
 		if (currentDestV >= destBottom)
 			break;
 
-		destIter.Reset(iDestRD.CalcRowAddress(iDestAddress, currentDestV), iDestB.left);
+		destIter.Reset(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV), iDestB.left);
 
  		++sourceV;
 		if (sourceV >= sourceBottom)
@@ -254,7 +254,7 @@ void sTile_SDO_T(
 						iSourcePD);
 
 	int currentDestV = iDestB.top;
-	ZDCPixmapNS::PixelIterRW_T<D> destIter(iDestRD.CalcRowAddress(iDestAddress, currentDestV),
+	ZDCPixmapNS::PixelIterRW_T<D> destIter(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 						iDestRD.fPixvalDesc,
 						iDestB.left,
 						iDestPD);
@@ -294,7 +294,7 @@ void sTile_SDO_T(
 		sourceRowAddress = iSourceRD.CalcRowAddress(iSourceAddress, sourceV);
 		sourceIter.Reset(sourceRowAddress, sourceHStart);
 
-		destIter.Reset(iDestRD.CalcRowAddress(iDestAddress, currentDestV), iDestB.left);
+		destIter.Reset(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV), iDestB.left);
 		}
 	}
 
@@ -349,7 +349,7 @@ void sTile_SMD_T(
 						iMattePD);
 
 	int currentDestV = iDestB.top;
-	ZDCPixmapNS::PixelIterW_T<D> destIter(iDestRD.CalcRowAddress(iDestAddress, currentDestV),
+	ZDCPixmapNS::PixelIterW_T<D> destIter(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 						iDestRD.fPixvalDesc,
 						iDestB.left,
 						iDestPD);
@@ -429,7 +429,7 @@ void sTile_SMD_T(
 		matteRowAddress = iMatteRD.CalcRowAddress(iMatteAddress, matteV);
 		matteIter.Reset(matteRowAddress, matteHStart);
 
-		destIter.Reset(iDestRD.CalcRowAddress(iDestAddress, currentDestV), iDestB.left);
+		destIter.Reset(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV), iDestB.left);
 		}
 	}
 
@@ -484,7 +484,7 @@ void sTile_SMDO_T(
 						iMattePD);
 
 	int currentDestV = iDestB.top;
-	ZDCPixmapNS::PixelIterRW_T<D> destIter(iDestRD.CalcRowAddress(iDestAddress, currentDestV),
+	ZDCPixmapNS::PixelIterRW_T<D> destIter(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 						iDestRD.fPixvalDesc,
 						iDestB.left,
 						iDestPD);
@@ -576,7 +576,7 @@ void sTile_SMDO_T(
 		matteRowAddress = iMatteRD.CalcRowAddress(iMatteAddress, matteV);
 		matteIter.Reset(matteRowAddress, matteHStart);
 
-		destIter.Reset(iDestRD.CalcRowAddress(iDestAddress, currentDestV), iDestB.left);
+		destIter.Reset(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV), iDestB.left);
 		}
 	}
 
@@ -597,7 +597,7 @@ void sCopy_SD_T(
 		iSourcePD);
 
 	ZDCPixmapNS::PixelIterW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, iDestB.top),
+		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -624,7 +624,7 @@ void sCopy_SD_T(
 			iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v + row), iSourceStart.h);
 
 		destIter.Reset(
-			iDestRD.CalcRowAddress(iDestAddress, iDestB.top + row), iDestB.left);
+			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
@@ -642,7 +642,7 @@ void sCopy_SDO_T(
 		iSourcePD);
 
 	ZDCPixmapNS::PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, iDestB.top),
+		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -675,7 +675,7 @@ void sCopy_SDO_T(
 			iSourceRD.CalcRowAddress(iSourceAddress, iSourceStart.v + row), iSourceStart.h);
 
 		destIter.Reset(
-			iDestRD.CalcRowAddress(iDestAddress, iDestB.top + row), iDestB.left);
+			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
@@ -701,7 +701,7 @@ void sCopy_SMD_T(
 		iMattePD);
 
 	ZDCPixmapNS::PixelIterW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, iDestB.top),
+		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -751,7 +751,7 @@ void sCopy_SMD_T(
 			iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v + row), iMatteStart.h);
 
 		destIter.Reset(
-			iDestRD.CalcRowAddress(iDestAddress, iDestB.top + row), iDestB.left);
+			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
@@ -778,7 +778,7 @@ void sCopy_SMDO_T(
 		iMattePD);
 
 	ZDCPixmapNS::PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, iDestB.top),
+		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -841,7 +841,7 @@ void sCopy_SMDO_T(
 			iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v + row), iMatteStart.h);
 
 		destIter.Reset(
-			iDestRD.CalcRowAddress(iDestAddress, iDestB.top + row), iDestB.left);
+			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
@@ -890,7 +890,7 @@ void sTileSource_SMD_T(
 
 	int currentDestV = iDestB.top;
 	ZDCPixmapNS::PixelIterW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, currentDestV),
+		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -954,7 +954,7 @@ void sTileSource_SMD_T(
 
 		matteIter.Reset(iMatteRD.CalcRowAddress(iMatteAddress, matteV), matteV);
 
-		destIter.Reset(iDestRD.CalcRowAddress(iDestAddress, currentDestV), iDestB.left);
+		destIter.Reset(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV), iDestB.left);
 		}
 	}
 
@@ -1000,7 +1000,7 @@ void sTileSource_SMDO_T(
 
 	int currentDestV = iDestB.top;
 	ZDCPixmapNS::PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, currentDestV),
+		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1076,7 +1076,7 @@ void sTileSource_SMDO_T(
 
 		matteIter.Reset(iMatteRD.CalcRowAddress(iMatteAddress, matteV), matteV);
 
-		destIter.Reset(iDestRD.CalcRowAddress(iDestAddress, currentDestV), iDestB.left);
+		destIter.Reset(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV), iDestB.left);
 		}
 	}
 
@@ -1124,7 +1124,7 @@ void sTileMatte_SMD_T(
 
 	int currentDestV = iDestB.top;
 	ZDCPixmapNS::PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, currentDestV),
+		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1188,7 +1188,7 @@ void sTileMatte_SMD_T(
 		matteRowAddress = iMatteRD.CalcRowAddress(iMatteAddress, matteV);
 		matteIter.Reset(matteRowAddress, matteHStart);
 
-		destIter.Reset(iDestRD.CalcRowAddress(iDestAddress, currentDestV), iDestB.left);
+		destIter.Reset(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV), iDestB.left);
 		}
 	}
 
@@ -1233,7 +1233,7 @@ void sTileMatte_SMDO_T(
 
 	int currentDestV = iDestB.top;
 	ZDCPixmapNS::PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, currentDestV),
+		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1309,7 +1309,7 @@ void sTileMatte_SMDO_T(
 		matteRowAddress = iMatteRD.CalcRowAddress(iMatteAddress, matteV);
 		matteIter.Reset(matteRowAddress, matteHStart);
 
-		destIter.Reset(iDestRD.CalcRowAddress(iDestAddress, currentDestV), iDestB.left);
+		destIter.Reset(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV), iDestB.left);
 		}
 	}
 
@@ -1321,7 +1321,7 @@ static void sFillPixval(void* iDestAddress, const RD& iDestRD, const ZRect& iDes
 			uint32 iPixval)
 	{
 	ZDCPixmapNS::PixvalIterW destIter(
-		iDestRD.CalcRowAddress(iDestAddress, iDestB.top),
+		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left);
 
@@ -1340,7 +1340,7 @@ static void sFillPixval(void* iDestAddress, const RD& iDestRD, const ZRect& iDes
 			break;
 
 		destIter.Reset(
-			iDestRD.CalcRowAddress(iDestAddress, iDestB.top + row), iDestB.left);
+			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
@@ -1351,7 +1351,7 @@ void sColor_DO_T(
 	const O& iOp)
 	{
 	ZDCPixmapNS::PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, iDestB.top),
+		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1376,7 +1376,7 @@ void sColor_DO_T(
 			break;
 
 		destIter.Reset(
-			iDestRD.CalcRowAddress(iDestAddress, iDestB.top + row), iDestB.left);
+			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
@@ -1394,7 +1394,7 @@ void sColor_MD_T(
 		iMattePD);
 
 	ZDCPixmapNS::PixelIterW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, iDestB.top),
+		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1428,7 +1428,7 @@ void sColor_MD_T(
 			iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v + row), iMatteStart.h);
 
 		destIter.Reset(
-			iDestRD.CalcRowAddress(iDestAddress, iDestB.top + row), iDestB.left);
+			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
@@ -1447,7 +1447,7 @@ void sColor_MDO_T(
 		iMattePD);
 
 	ZDCPixmapNS::PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, iDestB.top),
+		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1484,7 +1484,7 @@ void sColor_MDO_T(
 			iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v + row), iMatteStart.h);
 
 		destIter.Reset(
-			iDestRD.CalcRowAddress(iDestAddress, iDestB.top + row), iDestB.left);
+			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
@@ -1519,7 +1519,7 @@ void sColorTile_MD_T(
 
 	int currentDestV = iDestB.top;
 	ZDCPixmapNS::PixelIterW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, currentDestV),
+		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1561,7 +1561,7 @@ void sColorTile_MD_T(
 		matteRowAddress = iMatteRD.CalcRowAddress(iMatteAddress, matteV);
 		matteIter.Reset(matteRowAddress, matteHStart);
 
-		destIter.Reset(iDestRD.CalcRowAddress(iDestAddress, currentDestV), iDestB.left);
+		destIter.Reset(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV), iDestB.left);
 		}
 	}
 
@@ -1596,7 +1596,7 @@ void sColorTile_MDO_T(
 
 	int currentDestV = iDestB.top;
 	ZDCPixmapNS::PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, currentDestV),
+		iDestRD.CalcRowAddressDest(iDestAddress, currentDestV),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -1641,7 +1641,7 @@ void sColorTile_MDO_T(
 		matteRowAddress = iMatteRD.CalcRowAddress(iMatteAddress, matteV);
 		matteIter.Reset(matteRowAddress, matteHStart);
 
-		destIter.Reset(iDestRD.CalcRowAddress(iDestAddress, currentDestV), iDestB.left);
+		destIter.Reset(iDestRD.CalcRowAddressDest(iDestAddress, currentDestV), iDestB.left);
 		}
 	}
 
@@ -2026,7 +2026,7 @@ template <class D>
 void sInvert_T(void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const D& iDestPD)
 	{
 	ZDCPixmapNS::PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, iDestB.top),
+		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -2052,7 +2052,7 @@ void sInvert_T(void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const
 		if (row >= destHeight)
 			break;
 
-		destIter.Reset(iDestRD.CalcRowAddress(iDestAddress, iDestB.top + row), iDestB.left);
+		destIter.Reset(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
@@ -2062,7 +2062,7 @@ void sOpaque_T(
 	void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const D& iDestPD, uint16 iAmount)
 	{
 	ZDCPixmapNS::PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, iDestB.top),
+		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -2089,7 +2089,7 @@ void sOpaque_T(
 		if (row >= destHeight)
 			break;
 
-		destIter.Reset(iDestRD.CalcRowAddress(iDestAddress, iDestB.top + row), iDestB.left);
+		destIter.Reset(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
@@ -2099,7 +2099,7 @@ void sDarken_T(
 	void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const D& iDestPD, uint16 iAmount)
 	{
 	ZDCPixmapNS::PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, iDestB.top),
+		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -2125,7 +2125,7 @@ void sDarken_T(
 		if (row >= destHeight)
 			break;
 
-		destIter.Reset(iDestRD.CalcRowAddress(iDestAddress, iDestB.top + row), iDestB.left);
+		destIter.Reset(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
@@ -2135,7 +2135,7 @@ void sFade_T(
 	void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const D& iDestPD, uint16 iAmount)
 	{
 	ZDCPixmapNS::PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, iDestB.top),
+		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -2159,7 +2159,7 @@ void sFade_T(
 		if (row >= destHeight)
 			break;
 
-		destIter.Reset(iDestRD.CalcRowAddress(iDestAddress, iDestB.top + row), iDestB.left);
+		destIter.Reset(iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
@@ -2177,7 +2177,7 @@ void sApplyMatte_T(
 		iMattePD);
 
 	ZDCPixmapNS::PixelIterRW_T<D> destIter(
-		iDestRD.CalcRowAddress(iDestAddress, iDestB.top),
+		iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top),
 		iDestRD.fPixvalDesc,
 		iDestB.left,
 		iDestPD);
@@ -2211,7 +2211,7 @@ void sApplyMatte_T(
 			iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v + row), iMatteStart.h);
 
 		destIter.Reset(
-			iDestRD.CalcRowAddress(iDestAddress, iDestB.top + row), iDestB.left);
+			iDestRD.CalcRowAddressDest(iDestAddress, iDestB.top + row), iDestB.left);
 		}
 	}
 
