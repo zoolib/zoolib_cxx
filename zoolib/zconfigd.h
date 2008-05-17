@@ -21,9 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __zconfigd__
 #define __zconfigd__ 1
 
-// The flags are done as *defines* rather than enums or anything else because they may
-// be used in resource files, and they control the selection of source to compile.
-
 // Which compiler -- ZCONFIG_Compiler
 #define ZCONFIG_Compiler_CodeWarrior 1
 #define ZCONFIG_Compiler_MSVC 2
@@ -39,38 +36,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Byte order -- ZCONFIG_Endian
 #define ZCONFIG_Endian_Big 1
 #define ZCONFIG_Endian_Little 2
-
-// Which OS -- ZCONFIG_OS
-#define ZCONFIG_OS_MacOS7 1
-#define ZCONFIG_OS_Carbon 2
-#define ZCONFIG_OS_Win32 4
-#define ZCONFIG_OS_POSIX 8
-#define ZCONFIG_OS_Be 16
-#define ZCONFIG_OS_MacOSX 32
-
-// ZCONFIG_API_Thread
-#define ZCONFIG_API_Thread_Unknown 0
-#define ZCONFIG_API_Thread_Mac 1
-#define ZCONFIG_API_Thread_Win32 2
-#define ZCONFIG_API_Thread_POSIX 4
-#define ZCONFIG_API_Thread_Be 8
-
-// ZCONFIG_API_OSWindow
-#define ZCONFIG_API_OSWindow_Unknown 0
-#define ZCONFIG_API_OSWindow_Mac 1
-#define ZCONFIG_API_OSWindow_Carbon 2
-#define ZCONFIG_API_OSWindow_Win32 4
-#define ZCONFIG_API_OSWindow_X 8
-#define ZCONFIG_API_OSWindow_Be 16
-
-// ZCONFIG_API_Graphics
-// We support more than one graphics API simultaneously, so check for set bits *not* equivalence.
-#define ZCONFIG_API_Graphics_Unknown 0
-#define ZCONFIG_API_Graphics_QD 1
-#define ZCONFIG_API_Graphics_GDI 2
-#define ZCONFIG_API_Graphics_X 4
-#define ZCONFIG_API_Graphics_Be 8
-#define ZCONFIG_API_Graphics_ZooLib 16
 
 // Debugging
 // ZCONFIG_Debug can take on any value, but by convention use 0 for a non-debug build, 1 for light debugging, 2 for heavy.

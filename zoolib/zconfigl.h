@@ -25,9 +25,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfigd.h"
 
 // ==================================================
-
 #define ZCONFIG(a, b)\
-((ZCONFIG_##a##_##b) && (((ZCONFIG_##a) & (ZCONFIG_##a##_##b))==(ZCONFIG_##a##_##b)))
+	((ZCONFIG_##a##_##b) && (((ZCONFIG_##a) & (ZCONFIG_##a##_##b))==(ZCONFIG_##a##_##b)))
+
+// Disable some ZCONFIG_XXX stuff, to flush out older code.
+#undef ZCONFIG_OS
+#define ZCONFIG_OS $@ZCONFIG_OS_Is_Disabled
+
+#undef ZCONFIG_API_Graphics
+#define ZCONFIG_API_Graphics $@ZCONFIG_API_Graphics_Is_Disabled
+
+#undef ZCONFIG_API_OSWindow
+#define ZCONFIG_API_OSWindow $@ZCONFIG_API_Graphics_Is_Disabled
+
 
 // ==================================================
 // Compiler
@@ -89,46 +99,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // ==================================================
-// OS
-
-#ifndef ZCONFIG_OS
-#	if 0
-#	elif defined(__MWERKS__)
-#		if __MACH__
-#			if TARGET_API_MAC_CARBON
-#				define ZCONFIG_OS ZCONFIG_OS_MacOSX
-#			else
-#				define ZCONFIG_OS ZCONFIG_OS_POSIX
-#			endif
-#		elif TARGET_API_MAC_CARBON
-#			define ZCONFIG_OS ZCONFIG_OS_Carbon
-#		elif __MACOS__
-#			define ZCONFIG_OS ZCONFIG_OS_MacOS7
-#		elif __INTEL__
-#			define ZCONFIG_OS ZCONFIG_OS_Win32
-#		elif __BEOS__
-#			define ZCONFIG_OS ZCONFIG_OS_Be
-#		endif
-#	elif defined(__GNUC__)
-#		if TARGET_API_MAC_CARBON
-#			define ZCONFIG_OS ZCONFIG_OS_MacOSX
-#		elif __BEOS__
-#			define ZCONFIG_OS ZCONFIG_OS_Be
-#		elif defined(WIN32)
-#			define ZCONFIG_OS ZCONFIG_OS_Win32
-#		elif defined(__unix__) || defined(__NetBSD__)\
-			|| defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__APPLE__)
-#			define ZCONFIG_OS ZCONFIG_OS_POSIX
-#		endif
-#	elif defined(_MSC_VER)
-#		define ZCONFIG_OS ZCONFIG_OS_Win32
-#	endif
-#endif
-#ifndef ZCONFIG_OS
-#	error "Don't know what OS we're using."
-#endif
-
-// ==================================================
 // We have two different defines for debugging. ZCONFIG_DebugLevel is what type of debugging
 // is wanted for a debug build (one with SYM information being generated). 0 generally means
 // almost no debug code will be generated, although it's legal to have assertions that are always
@@ -174,86 +144,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // ==================================================
-// Which threads API?
-
-#ifndef ZCONFIG_API_Thread
-#	if 0
-#	elif ZCONFIG(OS, MacOS7)
-#		define ZCONFIG_API_Thread ZCONFIG_API_Thread_Mac
-#	elif ZCONFIG(OS, Carbon)
-#		define ZCONFIG_API_Thread ZCONFIG_API_Thread_Mac
-#	elif ZCONFIG(OS, MacOSX)
-#		define ZCONFIG_API_Thread ZCONFIG_API_Thread_POSIX
-#	elif ZCONFIG(OS, Win32)
-#		define ZCONFIG_API_Thread ZCONFIG_API_Thread_Win32
-#	elif ZCONFIG(OS, POSIX)
-#		define ZCONFIG_API_Thread ZCONFIG_API_Thread_POSIX
-#	elif ZCONFIG(OS, Be)
-#		define ZCONFIG_API_Thread ZCONFIG_API_Thread_Be
-#	endif
-#endif
-#ifndef ZCONFIG_API_Thread
-#	error "Don't know what thread API we're using"
-#endif
-
-// ==================================================
-// Which windowing API?
-
-#ifndef ZCONFIG_API_OSWindow
-#	if 0
-#	elif ZCONFIG(OS, MacOS7)
-#		define ZCONFIG_API_OSWindow ZCONFIG_API_OSWindow_Mac
-#	elif ZCONFIG(OS, Carbon) || ZCONFIG(OS, MacOSX)
-#		define ZCONFIG_API_OSWindow ZCONFIG_API_OSWindow_Carbon
-#	elif ZCONFIG(OS, Win32)
-#		define ZCONFIG_API_OSWindow ZCONFIG_API_OSWindow_Win32
-#	elif ZCONFIG(OS, POSIX)
-#		define ZCONFIG_API_OSWindow ZCONFIG_API_OSWindow_X
-#	elif ZCONFIG(OS, Be)
-#		define ZCONFIG_API_OSWindow ZCONFIG_API_OSWindow_Be
-#	endif
-#endif
-
-#ifndef ZCONFIG_API_OSWindow
-#	define ZCONFIG_API_OSWindow ZCONFIG_API_Window_Unknown
-#endif
-
-// ==================================================
-// Which graphics API(s)?
-
-#ifndef ZCONFIG_API_Graphics
-#	if 0
-#	elif ZCONFIG(OS, MacOS7)
-#		define ZCONFIG_API_Graphics ZCONFIG_API_Graphics_QD
-#	elif ZCONFIG(OS, Carbon)
-#		define ZCONFIG_API_Graphics ZCONFIG_API_Graphics_QD
-#	elif ZCONFIG(OS, MacOSX)
-#		define ZCONFIG_API_Graphics ZCONFIG_API_Graphics_QD
-#	elif ZCONFIG(OS, Win32)
-#		define ZCONFIG_API_Graphics ZCONFIG_API_Graphics_GDI
-#	elif ZCONFIG(OS, POSIX)
-#		define ZCONFIG_API_Graphics ZCONFIG_API_Graphics_X
-#	elif ZCONFIG(OS, Be)
-#		define ZCONFIG_API_Graphics ZCONFIG_API_Graphics_Be
-#	endif
-#endif
-
-#ifndef ZCONFIG_API_Graphics
-#	define ZCONFIG_API_Graphics ZCONFIG_API_Graphics_Unknown
-#endif
-
-// Set up a definition that will be true iff there is more than one graphics API active.
-#define ZCONFIG_API_Graphics_Multi \
-		( \
-		ZCONFIG_API_Graphics_Unknown != ZCONFIG_API_Graphics \
-		&& ZCONFIG_API_Graphics_QD != ZCONFIG_API_Graphics \
-		&& ZCONFIG_API_Graphics_GDI != ZCONFIG_API_Graphics \
-		&& ZCONFIG_API_Graphics_X != ZCONFIG_API_Graphics \
-		&& ZCONFIG_API_Graphics_Be != ZCONFIG_API_Graphics \
-		&& ZCONFIG_API_Graphics_ZooLib != ZCONFIG_API_Graphics \
-		)
-
-// ==================================================
 // Declare namespace std and use it -- injecting all std names into global
 // namespace. A necessary hack until we've gone through all source and done this on
 // a case by case basis. This can be switched *off* by defining ZCONFIG_NamespaceHack
@@ -282,6 +172,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #		error "Don't precompile zconfig"
 // because settings on individual files will not necessarily match claimed configuration settings.
 #	endif
+
+// This definition causes some problematic math-related stuff to drop out. Seems to
+// be only a CW/10.3.9 problem.
+#	define __NOEXTENSIONS__
 
 #	ifndef NEWMODE
 #		define NEWMODE NEWMODE_MALLOC
@@ -373,5 +267,7 @@ private:
 #	endif
 #endif
 
+
+#define ZMACINCLUDE(a,b) <a/b>
 
 #endif // __zconfigl__
