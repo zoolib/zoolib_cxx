@@ -35,6 +35,30 @@ using std::string;
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Factory functions
+
+#include "ZFactoryChain.h"
+
+static bool sMake_Collator(ZRef<ZTextCollatorRep>& oResult, const ZTextCollatorRep::Param_t& iParam)
+	{
+	try
+		{
+		if (iParam.fLocaleName.empty())
+			oResult = new ZTextCollatorRep_ICU(nil, iParam.fStrength);
+		else
+			oResult = new ZTextCollatorRep_ICU(iParam.fLocaleName.c_str(), iParam.fStrength);
+		return true;		
+		}
+	catch (...)
+		{}
+	return false;
+	}
+
+static ZFactoryChain_Maker_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>
+	sMaker_Collator(sMake_Collator);
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZTextCollatorRep_ICU
 
 ZAssertCompile(UCOL_EQUAL == 0);

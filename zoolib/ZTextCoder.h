@@ -52,6 +52,8 @@ protected:
 public:
 	virtual ~ZTextDecoder() {}
 
+	static ZTextDecoder* sMake(const std::string& iCharset);
+
 	virtual bool Decode(
 		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 		UTF32* iDest, size_t iDestCU, size_t* oDestCU) = 0;
@@ -76,6 +78,8 @@ protected:
 
 public:
 	virtual ~ZTextEncoder() {}
+
+	static ZTextEncoder* sMake(const std::string& iCharset);
 
 	virtual void Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 		void* iDest, size_t iDestBytes, size_t* oDestBytes) = 0;

@@ -22,6 +22,88 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Factory functions
+
+#include "ZFactoryChain.h"
+
+static bool sMake_Decoder(ZTextDecoder*& oResult, const string& iParam)
+	{
+	try
+		{
+		if (iParam == "ascii")
+			{
+			oResult = new ZTextDecoder_ASCII;
+			return true;
+			}
+		else if (iParam == "cp1252")
+			{
+			oResult = new ZTextDecoder_CP1252;
+			return true;
+			}
+		else if (iParam == "cp850")
+			{
+			oResult = new ZTextDecoder_CP850;
+			return true;
+			}
+		else if (iParam == "iso_8859-1" || iParam == "iso-8859-1")
+			{
+			oResult = new ZTextDecoder_ISO8859_1;
+			return true;
+			}
+		else if (iParam == "macroman")
+			{
+			oResult = new ZTextDecoder_MacRoman;
+			return true;
+			}
+		}
+	catch (...)
+		{}
+	return false;
+	}
+
+static ZFactoryChain_Maker_T<ZTextDecoder*, const string&>
+	sMaker_Decoder(sMake_Decoder);
+
+static bool sMake_Encoder(ZTextEncoder*& oResult, const string& iParam)
+	{
+	try
+		{
+		if (iParam == "ascii")
+			{
+			oResult = new ZTextEncoder_ASCII;
+			return true;
+			}
+		else if (iParam == "cp1252")
+			{
+			oResult = new ZTextEncoder_CP1252;
+			return true;
+			}
+		else if (iParam == "cp850")
+			{
+			oResult = new ZTextEncoder_CP850;
+			return true;
+			}
+		else if (iParam == "iso_8859-1" || iParam == "iso-8859-1")
+			{
+			oResult = new ZTextEncoder_ISO8859_1;
+			return true;
+			}
+		else if (iParam == "macroman")
+			{
+			oResult = new ZTextEncoder_MacRoman;
+			return true;
+			}
+		}
+	catch (...)
+		{}
+	return false;
+	}
+
+static ZFactoryChain_Maker_T<ZTextEncoder*, const string&>
+	sMaker_Encoder(sMake_Encoder);
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZTextDecoder_ASCII
 
 bool ZTextDecoder_ASCII::Decode(

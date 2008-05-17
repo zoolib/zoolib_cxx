@@ -19,9 +19,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "ZTextCollator.h"
-#include "ZTextCollator_ASCII.h"
-#include "ZTextCollator_ICU.h"
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Factories
+
+#include "ZFactoryChain.h"
+
+ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&);
 
 // =================================================================================================
 /**
@@ -97,44 +102,25 @@ ZTextCollator& ZTextCollator::operator=(const ZTextCollator& iOther)
 
 ZTextCollator::ZTextCollator(int iStrength)
 	{
-	#if 0
-	#elif ZCONFIG_API_Enabled(TextCollator_ICU)
-
-		fRep = new ZTextCollatorRep_ICU(nil, iStrength);
-
-	#else
-
-		fRep = new ZTextCollatorRep_ASCII(iStrength);
-
-	#endif
+	ZTextCollatorRep::Param_t theParam;
+	theParam.fStrength = iStrength;
+	fRep = ZFactoryChain_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>::sMake(theParam);
 	}
 
 ZTextCollator::ZTextCollator(const string8& iLocaleName, int iStrength)
 	{
-	#if 0
-	#elif ZCONFIG_API_Enabled(TextCollator_ICU)
-
-		fRep = new ZTextCollatorRep_ICU(iLocaleName.c_str(), iStrength);
-
-	#else
-
-		fRep = new ZTextCollatorRep_ASCII(iStrength);
-
-	#endif
+	ZTextCollatorRep::Param_t theParam;
+	theParam.fLocaleName = iLocaleName;
+	theParam.fStrength = iStrength;
+	fRep = ZFactoryChain_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>::sMake(theParam);
 	}
 
 ZTextCollator::ZTextCollator(const char* iLocaleName, int iStrength)
 	{
-	#if 0
-	#elif ZCONFIG_API_Enabled(TextCollator_ICU)
-
-		fRep = new ZTextCollatorRep_ICU(iLocaleName, iStrength);
-
-	#else
-
-		fRep = new ZTextCollatorRep_ASCII(iStrength);
-
-	#endif
+	ZTextCollatorRep::Param_t theParam;
+	theParam.fLocaleName = iLocaleName;
+	theParam.fStrength = iStrength;
+	fRep = ZFactoryChain_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>::sMake(theParam);
 	}
 
 bool ZTextCollator::Equals(const string8& iLeft, const string8& iRight) const

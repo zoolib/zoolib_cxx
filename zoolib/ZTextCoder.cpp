@@ -19,12 +19,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "ZMemory.h"
+#include "ZFactoryChain.h"
 #include "ZStream.h"
 #include "ZTextCoder.h"
 
 using std::min;
 
 static const size_t kBufSize = ZooLib::sStackBufferSize;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Factories
+
+ZOOLIB_FACTORYCHAIN_HEAD(ZTextDecoder*, const std::string&);
+ZOOLIB_FACTORYCHAIN_HEAD(ZTextEncoder*, const std::string&);
 
 // =================================================================================================
 #pragma mark -
@@ -473,6 +481,12 @@ can processed by multiple calls to ZTextDecoder::Decode. A decoder is assumed to
 state when first created, and can be returned to that state by calling ZTextDecoder::Reset.
 */
 
+ZTextDecoder* ZTextDecoder::sMake(const std::string& iCharset)
+	{
+	const string charsetLC = ZUnicode::sToLower(iCharset);
+	return ZFactoryChain_T<ZTextDecoder*, const string&>::sMake(charsetLC);
+	}
+
 /**
 \fn bool ZTextDecoder::Decode( \
 const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped, \
@@ -611,6 +625,12 @@ it was in when it was first instantiated.
 Encoding is less tricky than decoding because source material is always a sequence of
 UTF-32 code units and thus there is no need to deal with truncated source.
 */
+
+ZTextEncoder* ZTextEncoder::sMake(const std::string& iCharset)
+	{
+	const string charsetLC = ZUnicode::sToLower(iCharset);
+	return ZFactoryChain_T<ZTextEncoder*, const string&>::sMake(charsetLC);
+	}
 
 /**
 \fn void ZTextEncoder::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU, \

@@ -28,6 +28,120 @@ static const size_t kBufSize = ZooLib::sStackBufferSize;
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Factory functions
+
+#include "ZFactoryChain.h"
+
+static bool sMake_Decoder(ZTextDecoder*& oResult, const string& iParam)
+	{
+	try
+		{
+		if (iParam == "utf-8" || iParam == "utf8")
+			{
+			oResult = new ZTextDecoder_UTF8;
+			return true;
+			}
+		else if (iParam == "ucs-4" || iParam == "ucs4" || iParam == "utf-32" || iParam == "utf32")
+			{
+			if (ZCONFIG(Endian, Big))
+				oResult = new ZTextDecoder_UTF32BE;
+			else
+				oResult = new ZTextDecoder_UTF32LE;
+			return true;
+			}
+		else if (iParam == "utf-16" || iParam == "utf16")
+			{
+			if (ZCONFIG(Endian, Big))
+				oResult = new ZTextDecoder_UTF16BE;
+			else
+				oResult = new ZTextDecoder_UTF16LE;
+			return true;
+			}
+		else if (iParam == "ucs-4be" || iParam == "ucs4be" || iParam == "utf-32be" || iParam == "utf32be")
+			{
+			oResult = new ZTextDecoder_UTF32BE;
+			return true;
+			}
+		else if (iParam == "ucs-4le" || iParam == "ucs4le" || iParam == "utf-32le" || iParam == "utf32le")
+			{
+			oResult = new ZTextDecoder_UTF32LE;
+			return true;
+			}
+		else if (iParam == "utf-16be" || iParam == "utf16be")
+			{
+			oResult = new ZTextDecoder_UTF16BE;
+			return true;
+			}
+		else if (iParam == "utf-16le" || iParam == "utf16le")
+			{
+			oResult = new ZTextDecoder_UTF16LE;
+			return true;
+			}
+		}
+	catch (...)
+		{}
+	return false;
+	}
+
+static ZFactoryChain_Maker_T<ZTextDecoder*, const string&>
+	sMaker_Decoder(sMake_Decoder);
+
+static bool sMake_Encoder(ZTextEncoder*& oResult, const string& iParam)
+	{
+	try
+		{
+		if (iParam == "utf-8" || iParam == "utf8")
+			{
+			oResult = new ZTextEncoder_UTF8;
+			return true;
+			}
+		else if (iParam == "ucs-4" || iParam == "ucs4" || iParam == "utf-32" || iParam == "utf32")
+			{
+			if (ZCONFIG(Endian, Big))
+				oResult = new ZTextEncoder_UTF32BE;
+			else
+				oResult = new ZTextEncoder_UTF32LE;
+			return true;
+			}
+		else if (iParam == "utf-16" || iParam == "utf16")
+			{
+			if (ZCONFIG(Endian, Big))
+				oResult = new ZTextEncoder_UTF16BE;
+			else
+				oResult = new ZTextEncoder_UTF16LE;
+			return true;
+			}
+		else if (iParam == "ucs-4be" || iParam == "ucs4be" || iParam == "utf-32be" || iParam == "utf32be")
+			{
+			oResult = new ZTextEncoder_UTF32BE;
+			return true;
+			}
+		else if (iParam == "ucs-4le" || iParam == "ucs4le" || iParam == "utf-32le" || iParam == "utf32le")
+			{
+			oResult = new ZTextEncoder_UTF32LE;
+			return true;
+			}
+		else if (iParam == "utf-16be" || iParam == "utf16be")
+			{
+			oResult = new ZTextEncoder_UTF16BE;
+			return true;
+			}
+		else if (iParam == "utf-16le" || iParam == "utf16le")
+			{
+			oResult = new ZTextEncoder_UTF16LE;
+			return true;
+			}
+		}
+	catch (...)
+		{}
+	return false;
+	}
+
+static ZFactoryChain_Maker_T<ZTextEncoder*, const string&>
+	sMaker_Encoder(sMake_Encoder);
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Utility functions
 
 static void sCopyUTF32(const void* iSource, void* iDest, size_t iCount)

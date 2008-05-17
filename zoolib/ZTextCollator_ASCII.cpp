@@ -26,6 +26,30 @@ using std::min;
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Factory functions
+
+#include "ZFactoryChain.h"
+
+static bool sMake_Collator(ZRef<ZTextCollatorRep>& oResult, const ZTextCollatorRep::Param_t& iParam)
+	{
+	try
+		{
+		if (iParam.fLocaleName.empty())
+			{
+			oResult = new ZTextCollatorRep_ASCII(iParam.fStrength);
+			return true;
+			}
+		}
+	catch (...)
+		{}
+	return false;
+	}
+
+static ZFactoryChain_Maker_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>
+	sMaker_Collator(sMake_Collator);
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Helper functions
 
 static int sCompare_CaseSensitive(const UTF8* iLeft, size_t iLeftLength,

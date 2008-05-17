@@ -31,6 +31,42 @@ static const size_t kBufSize = ZooLib::sStackBufferSize;
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Factory functions
+
+#include "ZFactoryChain.h"
+
+static bool sMake_Decoder(ZTextDecoder*& oResult, const string& iParam)
+	{
+	try
+		{
+		oResult = new ZTextDecoder_Win(iParam);
+		return true;		
+		}
+	catch (...)
+		{}
+	return false;
+	}
+
+static ZFactoryChain_Maker_T<ZTextDecoder*, const string&>
+	sMaker_Decoder(sMake_Decoder);
+
+static bool sMake_Encoder(ZTextEncoder*& oResult, const string& iParam)
+	{
+	try
+		{
+		oResult = new ZTextEncoder_Win(iParam);
+		return true;
+		}
+	catch (...)
+		{}
+	return false;
+	}
+
+static ZFactoryChain_Maker_T<ZTextEncoder*, const string&>
+	sMaker_Encoder(sMake_Encoder);
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Helper functions
 
 namespace ZANONYMOUS {

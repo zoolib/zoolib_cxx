@@ -168,6 +168,12 @@ protected:
 public:
 	virtual ~ZTextCollatorRep();
 
+	struct Param_t
+		{
+		string8 fLocaleName;
+		int fStrength;		
+		};
+
 // Our protocol
 	virtual ZRef<ZTextCollatorRep> Clone() = 0;
 	virtual ZRef<ZTextCollatorRep> SafeCopy();
