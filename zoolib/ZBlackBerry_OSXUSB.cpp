@@ -217,11 +217,14 @@ ZRef<Device> Manager_OSXUSB::Open(uint64 iDeviceID)
 				{
 				if (ZRef<ZUSBInterfaceInterface> theII = theUSBDevice->CreateInterfaceInterface())
 					{
-					if (ZRef<ZStreamerRW> theSRW = theII->OpenRW(3, 4))
+					if (ZRef<ZStreamerR> theSR = theII->OpenR(3))
 						{
-						ZRef<Device_Streamer> theDevice = new Device_Streamer;
-						sStartRunners(theDevice.GetObject(), theSRW, theSRW);
-						return theDevice;
+						if (ZRef<ZStreamerW> theSW = theII->OpenW(4))
+							{
+							ZRef<Device_Streamer> theDevice = new Device_Streamer;
+							sStartRunners(theDevice.GetObject(), theSR, theSW);
+							return theDevice;
+							}
 						}
 					}
 				}
@@ -255,6 +258,29 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 		return;
 		}
 
+#if 1
+	const UInt8 usedPower = sGetUsedPower(iUSBDevice);
+	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+		s.Writef("Used power: %d", usedPower);
+
+	if (usedPower < 250)
+		{
+		// Note that call to sUseHighPower causes our connection to reset,
+		// so this device will disappear and be rediscovered.
+		if (!sUseHighPower(iUSBDevice))
+			{
+			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+				s << "UseHighPower returned false";
+			}
+		else
+			{
+			const UInt8 usedPower = sGetUsedPower(iUSBDevice);
+			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+				s.Writef("After calling UseHighPower, used power: %d", usedPower);
+			}
+		}
+#endif
+
 	if (theIDProduct == 6)
 		{
 		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
@@ -282,29 +308,6 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
 			s << "Got an older BlackBerry";
 		}
-
-#if 1
-	const UInt8 usedPower = sGetUsedPower(iUSBDevice);
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
-		s.Writef("Used power: %d", usedPower);
-
-	if (usedPower < 250)
-		{
-		// Note that call to sUseHighPower causes our connection to reset,
-		// so this device will disappear and be rediscovered.
-		if (!sUseHighPower(iUSBDevice))
-			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
-				s << "UseHighPower returned false";
-			}
-		else
-			{
-			const UInt8 usedPower = sGetUsedPower(iUSBDevice);
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
-				s.Writef("After calling UseHighPower, used power: %d", usedPower);
-			}
-		}
-#endif
 
 	ZMutexLocker locker(fMutex);
 	Device_t theD;
