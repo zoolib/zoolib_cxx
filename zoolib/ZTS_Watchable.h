@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZTSWatcher.h"
 
 #ifndef ZCONFIG_TS_Watchable_Debug
-#	define ZCONFIG_TS_Watchable_Debug 2
+#	define ZCONFIG_TS_Watchable_Debug 0
 #endif
 
 // =================================================================================================

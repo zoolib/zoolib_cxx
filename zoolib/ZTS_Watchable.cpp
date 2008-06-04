@@ -106,6 +106,9 @@ public:
 
 	ZMemoryBlock const fMB;
 	ZTBQuery const fTBQuery;
+
+	ZMutex fMutex;
+
 	set<PSpec*> fPSpecs;
 
 	bool fResultsValid;
@@ -119,11 +122,13 @@ public:
 #pragma mark * ZTS_Watchable::WatcherQuery
 
 class ZTS_Watchable::WatcherQueryTripped :
-	public ZooLib::DListLink<ZTS_Watchable::WatcherQuery, ZTS_Watchable::WatcherQueryTripped, ZTS_Watchable::kDebug>
+	public ZooLib::DListLink<ZTS_Watchable::WatcherQuery,
+		ZTS_Watchable::WatcherQueryTripped, ZTS_Watchable::kDebug>
 	{};
 
 class ZTS_Watchable::WatcherQueryUsing :
-	public ZooLib::DListLink<ZTS_Watchable::WatcherQuery, ZTS_Watchable::WatcherQueryUsing, ZTS_Watchable::kDebug>
+	public ZooLib::DListLink<ZTS_Watchable::WatcherQuery,
+		ZTS_Watchable::WatcherQueryUsing, ZTS_Watchable::kDebug>
 	{};
 
 class ZTS_Watchable::WatcherQuery :
@@ -287,7 +292,8 @@ ZTS_Watchable::~ZTS_Watchable()
 	for (map<ZMemoryBlock, PQuery*>::iterator i = fMB_To_PQuery.begin(); i != fMB_To_PQuery.end(); ++i)
 		{
 		PQuery* thePQuery = (*i).second;
-		for (set<PSpec*>::iterator i = thePQuery->fPSpecs.begin(), theEnd = thePQuery->fPSpecs.end();
+		for (set<PSpec*>::iterator
+			i = thePQuery->fPSpecs.begin(), theEnd = thePQuery->fPSpecs.end();
 			i != theEnd; ++i)
 			{
 			PSpec* thePSpec = *i;
@@ -413,6 +419,9 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 	// For some it's easy to provide the ZMemoryBlock, for others its easy to
 	// provide the ZTBQuery. Obviously it has to provide one or the other.
 
+	// This section of code takes the structure lock intermittently, so conversion between ZMemoryBlock
+	// and ZTBQuery run independently of any other caller to Watcher_Sync.
+
 	bool missingQueries = false;
 	for (vector<ZTSWatcher::AddedQueryCombo>::iterator i = local_AddedQueries.begin();
 		i != local_AddedQueries.end(); ++i)
@@ -432,10 +441,10 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 		}
 
 	// By this point we have MBs for every query. We may not have ZTBQueries for them though.
+	ZMutexLocker locker_Structure(fMutex_Structure);
 	if (missingQueries)
 		{
 		missingQueries = false;
-		fMutex_Structure.Acquire();
 		for (vector<ZTSWatcher::AddedQueryCombo>::iterator i = local_AddedQueries.begin();
 			i != local_AddedQueries.end(); ++i)
 			{
@@ -451,11 +460,12 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 					theTBQueryRef = existing->second->fTBQuery;
 				}
 			}
-		fMutex_Structure.Release();
 		}
 
 	if (missingQueries)
 		{
+		locker_Structure.Release();
+
 		// We're still missing one or more queries. We've grabbed everything from the
 		// map that we can. We'll have to regenerate from MBs. It may be
 		// that meanwhile something has come in, but wtf.
@@ -469,11 +479,12 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 				theTBQueryRef = ZTBQuery(ZStreamRPos_Memory(theMBRef.GetData(), theMBRef.GetSize()));
 				}
 			}
+
+		locker_Structure.Acquire();
 		}
 
-	ZLocker lockerRW(iWrittenTuplesCount ? this->GetWriteLock() : this->GetReadLock());
 
-	ZMutexLocker locker(fMutex_Structure);
+	// We hold the structure lock whilst we're updating the registered queries and tuples.
 
 	for (size_t count = iRemovedIDsCount; count; --count)
 		{
@@ -533,57 +544,76 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 		iWatcher->fTrippedWatcherQueries.Insert(theWatcherQuery);
 		}
 
-	if (size_t changedCount = iWatcher->fTrippedPTuples.size())
-		{
-		if (iWrittenTuplesCount)
-			{
-			oChangedTupleIDs.reserve(changedCount);
-			const uint64* writtenTupleIDsEnd = iWrittenTupleIDs + iWrittenTuplesCount;
-			for (set<PTuple*>::iterator
-				i = iWatcher->fTrippedPTuples.begin(), theEnd = iWatcher->fTrippedPTuples.end();
-				i != theEnd; ++i)
-				{
-				uint64 theID = (*i)->fID;
+	locker_Structure.Release();
 
-				// iWrittenTupleIDs/iWrittenTuples is sorted by ID.
-				// If not then don't call this method.
-				const uint64* wasWritten = lower_bound(iWrittenTupleIDs, writtenTupleIDsEnd, theID);
-				if (wasWritten == writtenTupleIDsEnd || *wasWritten != theID)
-					oChangedTupleIDs.push_back(theID);
+	// We now do the write, if any.
+
+	set<Watcher*> touchedWatchers;
+	if (iWrittenTuplesCount)
+		{
+		ZLocker locker_Write(this->GetWriteLock());
+		this->pSetTuples(iWrittenTuplesCount, iWrittenTupleIDs, iWrittenTuples, touchedWatchers);
+
+		// Remove from fTrippedPTuples anything which we just wrote, still under the protection of
+		// the write lock, but additionally of the structure lock.
+		locker_Structure.Acquire();
+
+		const uint64* writtenTupleIDsEnd = iWrittenTupleIDs + iWrittenTuplesCount;
+		for (set<PTuple*>::iterator i = iWatcher->fTrippedPTuples.begin();
+			i != iWatcher->fTrippedPTuples.end(); /*no inc*/)
+			{
+			PTuple* thePTuple = *i;
+			const uint64 theID = (*i)->fID;
+
+			// iWrittenTupleIDs/iWrittenTuples is sorted by ID.
+			// If not then don't call this method.
+			const uint64* wasWritten = lower_bound(iWrittenTupleIDs, writtenTupleIDsEnd, theID);
+			if (wasWritten != writtenTupleIDsEnd && *wasWritten != theID)
+				{
+				iWatcher->fTrippedPTuples.erase(i);
+				i = iWatcher->fTrippedPTuples.lower_bound(thePTuple);
+				}
+			else
+				{
+				++i;
 				}
 			}
-		else
+		locker_Structure.Release();
+		}
+
+	// Hold the read lock whilst we fetch the values of changed tuples, and the
+	// results of changed queries.
+	ZLocker locker_Read(this->GetReadLock());
+
+	locker_Structure.Acquire();
+
+	if (size_t changedCount = iWatcher->fTrippedPTuples.size())
+		{		
+		oChangedTupleIDs.resize(changedCount);
+		vector<uint64>::iterator iter = oChangedTupleIDs.begin();
+		for (set<PTuple*>::iterator
+			i = iWatcher->fTrippedPTuples.begin(), theEnd = iWatcher->fTrippedPTuples.end();
+			i != theEnd; ++i)
 			{
-			oChangedTupleIDs.resize(changedCount);
-			vector<uint64>::iterator iter = oChangedTupleIDs.begin();
-			for (set<PTuple*>::iterator
-				i = iWatcher->fTrippedPTuples.begin(), theEnd = iWatcher->fTrippedPTuples.end();
-				i != theEnd; ++i)
-				{
-				*iter++ = (*i)->fID;
-				}
-			}		
+			*iter++ = (*i)->fID;
+			}
+		iWatcher->fTrippedPTuples.clear();
+		locker_Structure.Release();
 
 		oChangedTuples.resize(oChangedTupleIDs.size());
 		fTS->GetTuples(oChangedTupleIDs.size(), &oChangedTupleIDs[0], &oChangedTuples[0]);
+
+		locker_Structure.Acquire();
 		}
-
-	set<Watcher*> touchedWatchers;
-
-	if (iWrittenTuplesCount)
-		this->pSetTuples(iWrittenTuplesCount, iWrittenTupleIDs, iWrittenTuples, touchedWatchers);
-
-	// We clear fTrippedPTuples *after* we've done the write, so that these changes made
-	// on behalf of this watcher are not given to this watcher on its next call to us.
-	iWatcher->fTrippedPTuples.clear();
-
 
 	for (ZooLib::DListIteratorEraseAll<WatcherQuery, WatcherQueryTripped>
 		iter = iWatcher->fTrippedWatcherQueries;iter; iter.Advance())
 		{
 		WatcherQuery* theWatcherQuery = iter.Current();
 		PQuery* thePQuery = theWatcherQuery->fPQuery;
+
 		this->pUpdateQueryResults(thePQuery);
+
 		ZUtil_STL::sInsertMustNotContain(kDebug,
 			oChangedQueries, theWatcherQuery->fRefcon, thePQuery->fResults);
 
@@ -609,6 +639,8 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 			}
 		}
 
+	locker_Structure.Release();
+
 	if (size_t addedSize = oAddedIDs.size())
 		{
 		oChangedTupleIDs.insert(oChangedTupleIDs.end(), oAddedIDs.begin(), oAddedIDs.end());
@@ -629,8 +661,7 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 			}
 		}
 
-	lockerRW.Release();
-	locker.Release();
+	locker_Read.Release();
 	}
 
 // =================================================================================================
@@ -639,6 +670,9 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 
 void ZTS_Watchable::Quisitioner_Search(PQuery* iPQuery, const ZTBSpec& iTBSpec, set<uint64>& ioIDs)
 	{
+	ASSERTUNLOCKED(fMutex_Structure);
+	ZMutexLocker locker(fMutex_Structure);
+
 	PSpec* thePSpec = this->pGetPSpec(iTBSpec);
 
 	ioIDs.insert(thePSpec->fResults.begin(), thePSpec->fResults.end());
@@ -650,6 +684,9 @@ void ZTS_Watchable::Quisitioner_Search(PQuery* iPQuery, const ZTBSpec& iTBSpec, 
 void ZTS_Watchable::Quisitioner_Search(PQuery* iPQuery,
 	const ZTBSpec& iTBSpec, vector<uint64>& oIDs)
 	{
+	ASSERTUNLOCKED(fMutex_Structure);
+	ZMutexLocker locker(fMutex_Structure);
+
 	PSpec* thePSpec = this->pGetPSpec(iTBSpec);
 
 	oIDs.insert(oIDs.end(), thePSpec->fResults.begin(), thePSpec->fResults.end());
@@ -699,6 +736,8 @@ void ZTS_Watchable::pSetTuples(size_t iCount, const uint64* iIDs, const ZTuple* 
 		this->pInvalidatePSpecs(oldTuple, newTuple, ioTouchedWatchers);
 		this->pInvalidateTuple(iIDs[x], ioTouchedWatchers);
 		}
+	locker.Release();
+
 	fTS->SetTuples(iCount, iIDs, iTuples);
 	}
 
@@ -933,9 +972,17 @@ void ZTS_Watchable::pUpdateQueryResults(PQuery* iPQuery)
 	if (ZRef<ZTBQueryNode> theNode = iPQuery->fTBQuery.GetNode())
 		{
 		const ZTime start = ZTime::sSystem();
+
+		fMutex_Structure.Release();
+
+		ASSERTUNLOCKED(fMutex_Structure);
+
 		Quisitioner(this, iPQuery).Query(theNode, nil, iPQuery->fResults);
+
+		fMutex_Structure.Acquire();
+
 		double elapsed = ZTime::sSystem() - start;
-		if (elapsed >= 2.0)
+		if (false && elapsed >= 2.0)
 			{
 			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTS_Watchable"))
 				{
@@ -943,7 +990,7 @@ void ZTS_Watchable::pUpdateQueryResults(PQuery* iPQuery)
 				sToStrim(s, iPQuery->fTBQuery.AsTuple(), 0, ZUtil_Strim_Tuple::Options(true));
 				}
 			}
-		if (sDumpQuery)
+		if (false && sDumpQuery)
 			{
 			// This is a temporary obscure debugging aid. will go soon.
 			sDumpQuery = false;

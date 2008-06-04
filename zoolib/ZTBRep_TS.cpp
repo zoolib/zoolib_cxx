@@ -784,54 +784,60 @@ void ZTBRep_TS::Trans_Commit(Transaction* iTransaction)
 	// with the changed values, and update referencing TransTuples with the time at which
 	// the value got changed.
 
-	ZLocker lockerRW(fTS->GetWriteLock());
-	ZMutexLocker lockerStructure(fMutex_Structure);
+	if (!iTransaction->fSet_Written.empty())
+		{	
+		ZLocker locker_Write(fTS->GetWriteLock());
+		ZMutexLocker lockerStructure(fMutex_Structure);
 
-	// It is commit operations that advance our clock.
-	++fClock;
+		// It is commit operations that advance our clock.
+		++fClock;
 
-	uint64 latestStart;
-	uint64 earliestEnd = fClock;
-	sLatestStartEarliestEnd(iTransaction->fTransTuples, latestStart, earliestEnd);
-
-	vector<uint64> storedIDs;
-	vector<ZTuple> storedTuples;
-	storedIDs.reserve(iTransaction->fTransTuples.size());
-	storedTuples.reserve(iTransaction->fTransTuples.size());
-
-	for (MapTransTuple_t::iterator
-		iterTT = iTransaction->fTransTuples.begin(), theEnd = iTransaction->fTransTuples.end();
-		iterTT != theEnd; ++iterTT)
-		{
-		TransTuple& currentTT = (*iterTT).second;
-		if (currentTT.fWritten)
+		if (!iTransaction->fSet_Written.empty())
 			{
-			TupleInUse& currentTIU = currentTT.fTupleInUse;
+			uint64 latestStart;
+			uint64 earliestEnd = fClock;
+			sLatestStartEarliestEnd(iTransaction->fTransTuples, latestStart, earliestEnd);
 
-			if (currentTIU.fClock_LastWritten < earliestEnd)
+			vector<uint64> storedIDs;
+			vector<ZTuple> storedTuples;
+			storedIDs.reserve(iTransaction->fTransTuples.size());
+			storedTuples.reserve(iTransaction->fTransTuples.size());
+
+			for (MapTransTuple_t::iterator
+				iterTT = iTransaction->fTransTuples.begin(), theEnd = iTransaction->fTransTuples.end();
+				iterTT != theEnd; ++iterTT)
 				{
-				// We're writing later than the last writer, so our value gets stored.
-				currentTIU.fClock_LastWritten = earliestEnd;
-				currentTIU.fValue = currentTT.fValue_Current;
-				storedIDs.push_back(currentTIU.fID);
-				storedTuples.push_back(currentTIU.fValue);
+				TransTuple& currentTT = (*iterTT).second;
+				if (currentTT.fWritten)
+					{
+					TupleInUse& currentTIU = currentTT.fTupleInUse;
+
+					if (currentTIU.fClock_LastWritten < earliestEnd)
+						{
+						// We're writing later than the last writer, so our value gets stored.
+						currentTIU.fClock_LastWritten = earliestEnd;
+						currentTIU.fValue = currentTT.fValue_Current;
+						storedIDs.push_back(currentTIU.fID);
+						storedTuples.push_back(currentTIU.fValue);
+						}
+
+					for (ZooLib::DListIterator<TransTuple, TransTupleUsing>
+						iter = currentTIU.fUsingTransTuples;
+						iter; iter.Advance())
+						{
+						TransTuple* otherTT = iter.Current();
+						if (otherTT->fClock_End == 0 || otherTT->fClock_End > earliestEnd)
+							otherTT->fClock_End = earliestEnd;
+						}
+					}
 				}
 
-			for (ZooLib::DListIterator<TransTuple, TransTupleUsing>
-				iter = currentTIU.fUsingTransTuples;
-				iter; iter.Advance())
-				{
-				TransTuple* otherTT = iter.Current();
-				if (otherTT->fClock_End == 0 || otherTT->fClock_End > earliestEnd)
-					otherTT->fClock_End = earliestEnd;
-				}
+			if (size_t storedSize = storedIDs.size())
+				fTS->SetTuples(storedSize, &storedIDs[0], &storedTuples[0]);
 			}
 		}
 
-	if (size_t storedSize = storedIDs.size())
-		fTS->SetTuples(storedSize, &storedIDs[0], &storedTuples[0]);
-
-	lockerRW.Release();
+	ZMutexLocker lockerStructure2(fMutex_Structure);
 
 	// Release our locks and TransTuples
 	for (MapTransTuple_t::iterator
@@ -847,7 +853,7 @@ void ZTBRep_TS::Trans_Commit(Transaction* iTransaction)
 
 	// And dispose the transaction.
 	ZUtil_STL::sEraseMustContain(kDebug, fTransactions, iTransaction);
-	lockerStructure.Release();
+	lockerStructure2.Release();
 
 	delete iTransaction;
 	}
