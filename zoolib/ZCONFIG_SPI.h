@@ -111,8 +111,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_SPI_Avail__Carbon 0
 #endif
 
+
 #ifndef ZCONFIG_SPI_Desired__Carbon
-#	define ZCONFIG_SPI_Desired__Carbon 1
+#	define ZCONFIG_SPI_Desired__Carbon 0
+//#	define ZCONFIG_SPI_Desired__Carbon 1
 #endif
 
 
