@@ -122,7 +122,8 @@ public:
 
 	ZRef<ZUSBDevice> GetUSBDevice();
 
-	ZRef<ZStreamerRW> OpenRW(int iPipeRefR, int iPipeRefW);
+	ZRef<ZStreamerR> OpenR(int iPipeRefR);
+	ZRef<ZStreamerW> OpenW(int iPipeRefW);
 
 	void Close();
 
@@ -130,7 +131,8 @@ private:
 	ZRef<ZUSBDevice> fUSBDevice;
 	IOUSBInterfaceInterface190** fIOUSBInterfaceInterface;
 	bool fOpen;
-	class StreamerRW;
+	class StreamerR;
+	class StreamerW;
 	};
 
 #endif // ZCONFIG_SPI_Enabled(MacOSX)

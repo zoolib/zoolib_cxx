@@ -340,69 +340,57 @@ void ZUSBDevice::pFetchDeviceDescriptor()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUSBInterfaceInterface::StreamerRW
+#pragma mark * ZUSBInterfaceInterface::StreamerR
 
-class ZUSBInterfaceInterface::StreamerRW
-:	public ZStreamerRW,
-	private ZStreamR,
-	private ZStreamW
+class ZUSBInterfaceInterface::StreamerR
+:	public ZStreamerR,
+	private ZStreamR
 	{
 public:
-	StreamerRW(ZRef<ZUSBInterfaceInterface> iUSBII,
+	StreamerR(ZRef<ZUSBInterfaceInterface> iUSBII,
 		IOUSBInterfaceInterface190** iIOUSBInterfaceInterface,
-		int iPipeRefR, int iPipeRefW);
+		int iPipeRefR);
 
-	virtual ~StreamerRW();
+	virtual ~StreamerR();
 
-// From ZStreamerR via ZStreamerRW
+// From ZStreamerR via ZStreamerR
 	virtual const ZStreamR& GetStreamR();
-
-// From ZStreamerW via ZStreamerRW
-	virtual const ZStreamW& GetStreamW();
 
 // From ZStreamR
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 
-// From ZStreamW
-	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-
 private:
 	ZRef<ZUSBInterfaceInterface> fUSBII;
 	IOUSBInterfaceInterface190** fII;
 	int fPipeRefR;
-	int fPipeRefW;
 	const size_t fBufferRead_Size;
 	size_t fBufferRead_Offset;
 	size_t fBufferRead_End;
 	uint8* fBufferRead;
 	};
 
-ZUSBInterfaceInterface::StreamerRW::StreamerRW(ZRef<ZUSBInterfaceInterface> iUSBII,
+ZUSBInterfaceInterface::StreamerR::StreamerR(ZRef<ZUSBInterfaceInterface> iUSBII,
 	IOUSBInterfaceInterface190** iIOUSBInterfaceInterface,
-	int iPipeRefR, int iPipeRefW)
+	int iPipeRefR)
 :	fUSBII(iUSBII),
 	fII(iIOUSBInterfaceInterface),
 	fPipeRefR(iPipeRefR),
-	fPipeRefW(iPipeRefW),
 	fBufferRead_Size(1024),
 	fBufferRead_Offset(0),
 	fBufferRead_End(0),
 	fBufferRead(new uint8[fBufferRead_Size])
 	{}
 
-ZUSBInterfaceInterface::StreamerRW::~StreamerRW()
+ZUSBInterfaceInterface::StreamerR::~StreamerR()
 	{
 	delete[] fBufferRead;
 	}
 
-const ZStreamR& ZUSBInterfaceInterface::StreamerRW::GetStreamR()
+const ZStreamR& ZUSBInterfaceInterface::StreamerR::GetStreamR()
 	{ return *this; }
 
-const ZStreamW& ZUSBInterfaceInterface::StreamerRW::GetStreamW()
-	{ return *this; }
-
-void ZUSBInterfaceInterface::StreamerRW::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZUSBInterfaceInterface::StreamerR::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
 	uint8* localDest = static_cast<uint8*>(iDest);
 
@@ -428,7 +416,7 @@ void ZUSBInterfaceInterface::StreamerRW::Imp_Read(void* iDest, size_t iCount, si
 				{
 				fII[0]->ClearPipeStallBothEnds(fII, fPipeRefR);
 				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2,
-					"ZUSBInterfaceInterface::StreamerRW"))
+					"ZUSBInterfaceInterface::StreamerR"))
 					{
 					s << "Imp_Read, Timeout";
 					}
@@ -438,7 +426,7 @@ void ZUSBInterfaceInterface::StreamerRW::Imp_Read(void* iDest, size_t iCount, si
 			if (0 == result)
 				{
 				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2,
-					"ZUSBInterfaceInterface::StreamerRW"))
+					"ZUSBInterfaceInterface::StreamerR"))
 					{
 					s.Writef("Imp_Read, pipe: %d, ", fPipeRefR);
 					ZUtil_Strim_Data::sDumpData(s, fBufferRead, localCount);
@@ -448,7 +436,7 @@ void ZUSBInterfaceInterface::StreamerRW::Imp_Read(void* iDest, size_t iCount, si
 			else
 				{
 				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug,
-					"ZUSBInterfaceInterface::StreamerRW"))
+					"ZUSBInterfaceInterface::StreamerR"))
 					{
 					s << "Imp_Read, Got result: ";
 
@@ -467,16 +455,57 @@ void ZUSBInterfaceInterface::StreamerRW::Imp_Read(void* iDest, size_t iCount, si
 		*oCountRead = localDest - static_cast<uint8*>(iDest);
 	}
 
-size_t ZUSBInterfaceInterface::StreamerRW::Imp_CountReadable()
+size_t ZUSBInterfaceInterface::StreamerR::Imp_CountReadable()
 	{ return fBufferRead_End - fBufferRead_Offset; }
 
-void ZUSBInterfaceInterface::StreamerRW::Imp_Write(
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZUSBInterfaceInterface::StreamerW
+
+class ZUSBInterfaceInterface::StreamerW
+:	public ZStreamerW,
+	private ZStreamW
+	{
+public:
+	StreamerW(ZRef<ZUSBInterfaceInterface> iUSBII,
+		IOUSBInterfaceInterface190** iIOUSBInterfaceInterface,
+		int iPipeRefW);
+
+	virtual ~StreamerW();
+
+// From ZStreamerW via ZStreamerRW
+	virtual const ZStreamW& GetStreamW();
+
+// From ZStreamW
+	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
+
+private:
+	ZRef<ZUSBInterfaceInterface> fUSBII;
+	IOUSBInterfaceInterface190** fII;
+	int fPipeRefW;
+	};
+
+ZUSBInterfaceInterface::StreamerW::StreamerW(ZRef<ZUSBInterfaceInterface> iUSBII,
+	IOUSBInterfaceInterface190** iIOUSBInterfaceInterface,
+	int iPipeRefW)
+:	fUSBII(iUSBII),
+	fII(iIOUSBInterfaceInterface),
+	fPipeRefW(iPipeRefW)
+	{}
+
+ZUSBInterfaceInterface::StreamerW::~StreamerW()
+	{}
+
+const ZStreamW& ZUSBInterfaceInterface::StreamerW::GetStreamW()
+	{ return *this; }
+
+void ZUSBInterfaceInterface::StreamerW::Imp_Write(
 	const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	if (size_t countToWrite = min(size_t(1024), iCount))
 		{
 		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2,
-			"ZUSBInterfaceInterface::StreamerRW"))
+			"ZUSBInterfaceInterface::StreamerW"))
 			{
 			s.Writef("Imp_Write, pipe: %d, ", fPipeRefW);
 			ZUtil_Strim_Data::sDumpData(s, iSource, countToWrite);
@@ -516,11 +545,18 @@ ZUSBInterfaceInterface::~ZUSBInterfaceInterface()
 ZRef<ZUSBDevice> ZUSBInterfaceInterface::GetUSBDevice()
 	{ return fUSBDevice; }
 
-ZRef<ZStreamerRW> ZUSBInterfaceInterface::OpenRW(int iPipeRefR, int iPipeRefW)
+ZRef<ZStreamerR> ZUSBInterfaceInterface::OpenR(int iPipeRefR)
 	{
 	if (fOpen)
-		return new StreamerRW(this, fIOUSBInterfaceInterface, iPipeRefR, iPipeRefW);
-	return ZRef<ZStreamerRW>();
+		return new StreamerR(this, fIOUSBInterfaceInterface, iPipeRefR);
+	return ZRef<ZStreamerR>();
+	}
+
+ZRef<ZStreamerW> ZUSBInterfaceInterface::OpenW(int iPipeRefW)
+	{
+	if (fOpen)
+		return new StreamerW(this, fIOUSBInterfaceInterface, iPipeRefW);
+	return ZRef<ZStreamerW>();
 	}
 
 void ZUSBInterfaceInterface::Close()
