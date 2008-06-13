@@ -42,6 +42,7 @@ string16 ZUtil_NSObject::sAsUTF16(NSString* iNSString)
 
 ZTValue ZUtil_NSObject::sAsTV(id iNSObject)
 	{
+	ZUnimplemented();
 #if 0
 	if (iCFType)
 		{
