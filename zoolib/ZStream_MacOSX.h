@@ -104,13 +104,15 @@ protected:
 #pragma mark * ZStream_MacOSX
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
+
 #include <CoreGraphics/CGDataProvider.h>
 #include <CoreGraphics/CGDataConsumer.h>
 
 namespace ZStream_MacOSX {
 
-CGDataProviderRef sCGDataProviderCreate(ZRef<ZStreamerRPos> iStreamer);
 CGDataProviderRef sCGDataProviderCreate(ZRef<ZStreamerR> iStreamer);
+
+CGDataProviderRef sCGDataProviderCreateRewind(ZRef<ZStreamerRPos> iStreamer);
 
 CGDataConsumerRef sCGDataConsumerCreate(ZRef<ZStreamerW> iStreamer);
 

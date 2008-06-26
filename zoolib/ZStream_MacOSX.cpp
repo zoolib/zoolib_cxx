@@ -122,56 +122,11 @@ const ZStreamW& ZStreamerW_CFStream::GetStreamW()
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * CGDataProviderRef, ZStreamerRPos
-
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
 
-#include "ZStreamer.h"
-
-namespace ZANONYMOUS {
-
-size_t sGetBytesRPos(void* iInfo, void* iBuffer, size_t iCount)
-	{
-	size_t countRead;
-	static_cast<ZRef<ZStreamerRPos>*>(iInfo)[0]->GetStreamR().Read(iBuffer, iCount, &countRead);
-	return countRead;
-	}
-
-void sSkipBytesRPos(void* iInfo, size_t iCount)
-	{
-	static_cast<ZRef<ZStreamerRPos>*>(iInfo)[0]->GetStreamR().Skip(iCount);
-	}
-
-void sRewindRPos(void* iInfo)
-	{
-	static_cast<ZRef<ZStreamerRPos>*>(iInfo)[0]->GetStreamRPos().SetPosition(0);
-	}
-
-void sReleaseProviderRPos(void* iInfo)
-	{
-	delete static_cast<ZRef<ZStreamerRPos>*>(iInfo);
-	}
-
-CGDataProviderCallbacks sCallbacksRPos =
-	{
-	sGetBytesRPos,
-	sSkipBytesRPos,
-	sRewindRPos,
-	sReleaseProviderRPos
-	};
-
-} // anonymous namespace
-
-CGDataProviderRef ZStream_MacOSX::sCGDataProviderCreate(ZRef<ZStreamerRPos> iStreamer)
-	{	
-	return ::CGDataProviderCreate(new ZRef<ZStreamerRPos>(iStreamer), &sCallbacksRPos);
-	}
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * CGDataProviderRef, ZStreamerR
+#pragma mark * ZStream_MacOSX::sCGDataProviderCreate
 
 namespace ZANONYMOUS {
 
@@ -210,6 +165,51 @@ CGDataProviderCallbacks sCallbacksR =
 CGDataProviderRef ZStream_MacOSX::sCGDataProviderCreate(ZRef<ZStreamerR> iStreamer)
 	{	
 	return ::CGDataProviderCreate(new ZRef<ZStreamerR>(iStreamer), &sCallbacksR);
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStream_MacOSX::sCGDataProviderCreateRewind
+
+#include "ZStreamer.h"
+
+namespace ZANONYMOUS {
+
+size_t sGetBytesRewind(void* iInfo, void* iBuffer, size_t iCount)
+	{
+	size_t countRead;
+	static_cast<ZRef<ZStreamerRPos>*>(iInfo)[0]->GetStreamR().Read(iBuffer, iCount, &countRead);
+	return countRead;
+	}
+
+void sSkipBytesRewind(void* iInfo, size_t iCount)
+	{
+	static_cast<ZRef<ZStreamerRPos>*>(iInfo)[0]->GetStreamR().Skip(iCount);
+	}
+
+void sRewind(void* iInfo)
+	{
+	static_cast<ZRef<ZStreamerRPos>*>(iInfo)[0]->GetStreamRPos().SetPosition(0);
+	}
+
+void sReleaseProviderRewind(void* iInfo)
+	{
+	delete static_cast<ZRef<ZStreamerRPos>*>(iInfo);
+	}
+
+CGDataProviderCallbacks sCallbacksRewind =
+	{
+	sGetBytesRewind,
+	sSkipBytesRewind,
+	sRewind,
+	sReleaseProviderRewind
+	};
+
+} // anonymous namespace
+
+CGDataProviderRef ZStream_MacOSX::sCGDataProviderCreateRewind(ZRef<ZStreamerRPos> iStreamer)
+	{	
+	return ::CGDataProviderCreate(new ZRef<ZStreamerRPos>(iStreamer), &sCallbacksRewind);
 	}
 
 // =================================================================================================
