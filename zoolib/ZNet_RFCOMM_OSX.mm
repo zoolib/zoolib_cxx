@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import <IOBluetooth/objc/IOBluetoothRFCOMMChannel.h>
 #import <IOBluetooth/objc/IOBluetoothSDPServiceRecord.h>
 
+#include "ZOBJC.h"
 
 // =================================================================================================
 #pragma mark -
