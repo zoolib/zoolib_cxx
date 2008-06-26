@@ -71,7 +71,8 @@ private:
 	void RealNotifier(OTEventCode iEventCode, OTResult iResult, void* iCookie);
 
 	void Notifier(OTEventCode iEventCode, OTResult iResult, void* iCookie);
-	static pascal void sNotifier(void* iContextPtr, OTEventCode iEventCode, OTResult iResult, void* iCookie);
+	static pascal void sNotifier(void* iContextPtr,
+		OTEventCode iEventCode, OTResult iResult, void* iCookie);
 
 	static pascal void sDeferredNotifier(long iDeferredTask ZPARAM_A1);
 	static DeferredTaskUPP sDeferredNotifierUPP;
@@ -95,8 +96,16 @@ class ZOTProviderWaiter
 	{
 public:
 	ZOTProviderWaiter(ZOTProviderWrapper* iProvider, OTEventCode iWaitForEventCode);
-	ZOTProviderWaiter(ZOTProviderWrapper* iProvider, OTEventCode iWaitForEventCode0, OTEventCode iWaitForEventCode1);
-	ZOTProviderWaiter(ZOTProviderWrapper* iProvider, OTEventCode iWaitForEventCode0, OTEventCode iWaitForEventCode1, OTEventCode iWaitForEventCode2);
+
+	ZOTProviderWaiter(ZOTProviderWrapper* iProvider,
+		OTEventCode iWaitForEventCode0,
+		OTEventCode iWaitForEventCode1);
+
+	ZOTProviderWaiter(ZOTProviderWrapper* iProvider,
+		OTEventCode iWaitForEventCode0,
+		OTEventCode iWaitForEventCode1,
+		OTEventCode iWaitForEventCode2);
+
 	~ZOTProviderWaiter();
 
 	void AddEventCode(OTEventCode iEventCode);
@@ -171,9 +180,10 @@ private:
 #pragma mark -
 #pragma mark * ZNetEndpoint_TCP_MacOT_Classic
 
-class ZNetEndpoint_TCP_MacOT_Classic : protected ZStreamR,
-						protected ZStreamW,
-						public ZNetEndpoint_TCP
+class ZNetEndpoint_TCP_MacOT_Classic
+:	protected ZStreamR,
+	protected ZStreamW,
+	public ZNetEndpoint_TCP
 	{
 private:
 	friend class ZNetListener_TCP_MacOT_Classic;

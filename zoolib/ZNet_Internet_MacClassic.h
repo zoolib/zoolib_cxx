@@ -96,8 +96,9 @@ protected:
 #pragma mark -
 #pragma mark * ZNetListener_TCP_MacClassic
 
-class ZNetListener_TCP_MacClassic : public ZNetListener_TCP,
-								protected ZNet_Internet_MacClassic
+class ZNetListener_TCP_MacClassic
+:	public ZNetListener_TCP,
+	protected ZNet_Internet_MacClassic
 	{
 	friend class ZNetEndpoint_TCP_MacClassic;
 	struct MacTCPControlBlock
@@ -133,10 +134,11 @@ protected:
 #pragma mark -
 #pragma mark * ZNetEndpoint_TCP_MacClassic
 
-class ZNetEndpoint_TCP_MacClassic : private ZStreamR,
-						private ZStreamW,
-						public ZNetEndpoint_TCP,
-						protected ZNet_Internet_MacClassic
+class ZNetEndpoint_TCP_MacClassic
+:	private ZStreamR,
+	private ZStreamW,
+	public ZNetEndpoint_TCP,
+	protected ZNet_Internet_MacClassic
 	{
 private:
 	friend class ZNetListener_TCP_MacClassic;

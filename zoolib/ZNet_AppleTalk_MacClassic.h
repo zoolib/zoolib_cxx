@@ -175,13 +175,13 @@ public:
 // From ZStreamW
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
 
-// From ZStreamerR via ZNetEndpoint_TCP
+// From ZStreamerR via ZNetEndpoint_ADSP
 	virtual ZStreamR& GetStreamR();
 
-// From ZStreamerW via ZNetEndpoint_TCP
+// From ZStreamerW via ZNetEndpoint_ADSP
 	virtual ZStreamW& GetStreamW();
 
-// From ZNetEndpoint via ZNetEndpoint_TCP
+// From ZNetEndpoint via ZNetEndpoint_ADSP
 	virtual void SendDisconnect();
 	virtual void ReceiveDisconnect();
 	virtual void Disconnect();

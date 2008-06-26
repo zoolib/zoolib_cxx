@@ -103,13 +103,13 @@ public:
 
 	virtual ~ZNetEndpoint_RFCOMM_OSX();
 
-// From ZStreamerRCon via ZNetListener_RFCOMM
+// From ZStreamerRCon via ZNetEndpoint_RFCOMM
 	virtual const ZStreamRCon& GetStreamRCon();
 
-// From ZStreamerWCon via ZNetListener_RFCOMM
+// From ZStreamerWCon via ZNetEndpoint_RFCOMM
 	virtual const ZStreamWCon& GetStreamWCon();
 
-// From ZNetEndpoint via ZNetListener_RFCOMM
+// From ZNetEndpoint via ZNetEndpoint_RFCOMM
 	virtual ZRef<ZNetAddress> GetLocalAddress();
 	virtual ZRef<ZNetAddress> GetRemoteAddress();
 
