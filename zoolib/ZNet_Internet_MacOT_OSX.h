@@ -18,23 +18,23 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNet_Internet_MacOT__
-#define __ZNet_Internet_MacOT__ 1
+#ifndef __ZNet_Internet_MacOT_OSX__
+#define __ZNet_Internet_MacOT_OSX__ 1
 #include "zconfig.h"
 #include "ZCONFIG_API.h"
 #include "ZCONFIG_SPI.h"
 
-#ifndef ZCONFIG_API_Avail__Internet_MacOT_OSX
-#	define ZCONFIG_API_Avail__Internet_MacOT_OSX ZCONFIG_SPI_Enabled(Carbon)
+#ifndef ZCONFIG_API_Avail__Net_Internet_MacOT_OSX
+#	define ZCONFIG_API_Avail__Net_Internet_MacOT_OSX ZCONFIG_SPI_Enabled(Carbon)
 #endif
 
-#ifndef ZCONFIG_API_Desired__Internet_MacOT_OSX
-#	define ZCONFIG_API_Desired__Internet_MacOT_OSX 1
+#ifndef ZCONFIG_API_Desired__Net_Internet_MacOT_OSX
+#	define ZCONFIG_API_Desired__Net_Internet_MacOT_OSX 1
 #endif
 
 #include "ZNet_Internet.h"
 
-#if ZCONFIG_API_Enabled(Internet_MacOT_OSX)
+#if ZCONFIG_API_Enabled(Net_Internet_MacOT_OSX)
 
 #if ZCONFIG_SPI_Enabled(MacOSX)
 // Uggh. OpenTransportProviders.h is now part of the
@@ -163,6 +163,6 @@ private:
 
 // =================================================================================================
 
-#endif // ZCONFIG_API_Enabled(Internet_MacOT_OSX)
+#endif // ZCONFIG_API_Enabled(Net_Internet_MacOT_OSX)
 
-#endif // __ZNet_Internet_MacOT__
+#endif // __ZNet_Internet_MacOT_OSX__

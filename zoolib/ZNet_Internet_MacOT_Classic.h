@@ -24,18 +24,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZCONFIG_API.h"
 #include "ZCONFIG_SPI.h"
 
-#ifndef ZCONFIG_API_Avail__Internet_MacOT_Classic
-#	define ZCONFIG_API_Avail__Internet_MacOT_Classic (ZCONFIG(API_Thread, Mac) && (ZCONFIG_SPI_Enabled(Carbon) || ZCONFIG_SPI_Enabled(MacClassic)))
+#ifndef ZCONFIG_API_Avail__Net_Internet_MacOT_Classic
+#	define ZCONFIG_API_Avail__Net_Internet_MacOT_Classic \
+	(ZCONFIG(API_Thread, Mac) && (ZCONFIG_SPI_Enabled(Carbon) || ZCONFIG_SPI_Enabled(MacClassic)))
 #endif
 
-#ifndef ZCONFIG_API_Desired__Internet_MacOT_Classic
-#	define ZCONFIG_API_Desired__Internet_MacOT_Classic 1
+#ifndef ZCONFIG_API_Desired__Net_Internet_MacOT_Classic
+#	define ZCONFIG_API_Desired__Net_Internet_MacOT_Classic 1
 #endif
 
 #include "ZCompat_NonCopyable.h"
 #include "ZNet_Internet.h"
 
-#if ZCONFIG_API_Enabled(Internet_MacOT_Classic)
+#if ZCONFIG_API_Enabled(Net_Internet_MacOT_Classic)
 
 #include "ZThreadTM.h"
 #include <OSUtils.h>
@@ -216,6 +217,6 @@ private:
 
 // =================================================================================================
 
-#endif // ZCONFIG_API_Enabled(Internet_MacOT_Classic)
+#endif // ZCONFIG_API_Enabled(Net_Internet_MacOT_Classic)
 
 #endif // __ZNet_Internet_MacOT_Classic__

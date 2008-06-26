@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZNet_Internet_WinSock.h"
 
-#if ZCONFIG_API_Enabled(Internet_WinSock)
+#if ZCONFIG_API_Enabled(Net_Internet_WinSock)
 
 #include "ZMemory.h"
 #include "ZTime.h"
@@ -576,4 +576,4 @@ void ZNetEndpointDG_UDP_WinSock::InternalAllocateSocket(ip_port inLocalPort)
 	}
 #endif
 
-#endif // ZCONFIG_API_Enabled(Internet_WinSock)
+#endif // ZCONFIG_API_Enabled(Net_Internet_WinSock)

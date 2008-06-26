@@ -22,38 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNet_Internet__ 1
 #include "zconfig.h"
 
+#include "ZMulti_T.h"
 #include "ZNet.h"
 #include "ZTypes.h"
 
 #include <string>
-
-template <class T0, class T1>
-class ZMulti_T2
-	{
-public:
-	ZMulti_T2(const T0& iT0, const T0& iT1)
-	:	f0(iT0),
-		f1(iT1)
-		{}
-
-	T0 f0;
-	T1 f1;
-	};
-
-template <class T0, class T1, class T2>
-class ZMulti_T3
-	{
-public:
-	ZMulti_T3(const T0& iT0, const T1& iT1, const T2& iT2)
-	:	f0(iT0),
-		f1(iT1),
-		f2(iT2)
-		{}
-
-	T0 f0;
-	T1 f1;
-	T2 f2;
-	};
 
 // =================================================================================================
 

@@ -24,17 +24,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZCONFIG_API.h"
 #include "ZCONFIG_SPI.h"
 
-#ifndef ZCONFIG_API_Avail__Internet_WinSock
-#	define ZCONFIG_API_Avail__Internet_WinSock ZCONFIG_SPI_Enabled(Win)
+#ifndef ZCONFIG_API_Avail__Net_Internet_WinSock
+#	define ZCONFIG_API_Avail__Net_Internet_WinSock ZCONFIG_SPI_Enabled(Win)
 #endif
 
-#ifndef ZCONFIG_API_Desired__Internet_WinSock
-#	define ZCONFIG_API_Desired__Internet_WinSock 1
+#ifndef ZCONFIG_API_Desired__Net_Internet_WinSock
+#	define ZCONFIG_API_Desired__Net_Internet_WinSock 1
 #endif
 
 #include "ZNet_Internet.h"
 
-#if ZCONFIG_API_Enabled(Internet_WinSock)
+#if ZCONFIG_API_Enabled(Net_Internet_WinSock)
 
 #include <winsock.h>
 
@@ -169,6 +169,6 @@ private:
 	};
 #endif
 
-#endif // ZCONFIG_API_Enabled(Internet_WinSock)
+#endif // ZCONFIG_API_Enabled(Net_Internet_WinSock)
 
 #endif // __ZNet_Internet_WinSock__

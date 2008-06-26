@@ -24,17 +24,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZCONFIG_API.h"
 #include "ZCONFIG_SPI.h"
 
-#ifndef ZCONFIG_API_Avail__Internet_Socket
-#	define ZCONFIG_API_Avail__Internet_Socket ZCONFIG_SPI_Enabled(POSIX)
+#ifndef ZCONFIG_API_Avail__Net_Internet_Socket
+#	define ZCONFIG_API_Avail__Net_Internet_Socket ZCONFIG_SPI_Enabled(POSIX)
 #endif
 
-#ifndef ZCONFIG_API_Desired__Internet_Socket
-#	define ZCONFIG_API_Desired__Internet_Socket 1
+#ifndef ZCONFIG_API_Desired__Net_Internet_Socket
+#	define ZCONFIG_API_Desired__Net_Internet_Socket 1
 #endif
 
 #include "ZNet_Internet.h"
 
-#if ZCONFIG_API_Enabled(Internet_Socket)
+#if ZCONFIG_API_Enabled(Net_Internet_Socket)
 
 // =================================================================================================
 
@@ -162,6 +162,6 @@ private:
 
 // =================================================================================================
 
-#endif // ZCONFIG_API_Enabled(Internet_Socket)
+#endif // ZCONFIG_API_Enabled(Net_Internet_Socket)
 
 #endif // __ZNet_Internet_Socket__

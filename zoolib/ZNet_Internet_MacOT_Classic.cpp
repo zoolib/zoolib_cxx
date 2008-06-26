@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZNet_Internet_MacOT_Classic.h"
 
-#if ZCONFIG_API_Enabled(Internet_MacOT_Classic)
+#if ZCONFIG_API_Enabled(Net_Internet_MacOT_Classic)
 
 #include "ZMemory.h"
 #include "ZThreadTM.h"
@@ -1038,4 +1038,4 @@ EndpointRef ZNetEndpoint_TCP_MacOT_Classic::GetEndpointRef()
 	}
 
 
-#endif // ZCONFIG_API_Enabled(Internet_MacOT_Classic)
+#endif // ZCONFIG_API_Enabled(Net_Internet_MacOT_Classic)

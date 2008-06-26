@@ -146,7 +146,7 @@ void ZMacMP::sInvokeInMP(EntryProc iProc, void* iParam)
 
 // =================================================================================================
 
-#if ZCONFIG_API_Enabled(Internet_MacOT_OSX)
+#if ZCONFIG_API_Enabled(Net_Internet_MacOT_OSX)
 
 #include "ZMemory.h" // For ZBlockZero
 
@@ -896,4 +896,4 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Abort(void* iParam)
 	::OTSndDisconnect(theStruct->fEndpointRef, nil);
 	}
 
-#endif // ZCONFIG_API_Enabled(Internet_MacOT_OSX)
+#endif // ZCONFIG_API_Enabled(Net_Internet_MacOT_OSX)

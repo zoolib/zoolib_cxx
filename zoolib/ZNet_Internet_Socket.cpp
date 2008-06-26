@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZNet_Internet_Socket.h"
 
 // =================================================================================================
-#if ZCONFIG_API_Enabled(Internet_Socket)
+#if ZCONFIG_API_Enabled(Net_Internet_Socket)
 
 #include "ZMemory.h"
 #include "ZTime.h"
@@ -810,5 +810,5 @@ void ZNetEndpoint_TCP_Socket::Imp_Abort()
 	::shutdown(fSocketFD, SHUT_RDWR);
 	}
 
-#endif // ZCONFIG_API_Enabled(Internet_Socket)
+#endif // ZCONFIG_API_Enabled(Net_Internet_Socket)
 // =================================================================================================
