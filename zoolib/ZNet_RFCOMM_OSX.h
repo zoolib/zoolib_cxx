@@ -24,8 +24,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZCONFIG_API.h"
 #include "ZCONFIG_SPI.h"
 
+// RFCOMM_OSX is only available when building for 10.2 and later
 #ifndef ZCONFIG_API_Avail__Net_RFCOMM_OSX
-#	define ZCONFIG_API_Avail__Net_RFCOMM_OSX ZCONFIG_SPI_Enabled(MacOSX)
+#	if ZCONFIG_SPI_Enabled(MacOSX)
+#		include <AvailabilityMacros.h>
+#		if defined(MAC_OS_X_VERSION_MIN_REQUIRED)
+#			if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
+#				define ZCONFIG_API_Avail__Net_RFCOMM_OSX 1
+#			endif
+#		endif
+#	endif
+#endif
+
+#ifndef ZCONFIG_API_Avail__Net_RFCOMM_OSX
+#	define ZCONFIG_API_Avail__Net_RFCOMM_OSX 0
 #endif
 
 #ifndef ZCONFIG_API_Desired__Net_RFCOMM_OSX
@@ -50,7 +62,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	@class Delegate_ZNetListener_RFCOMM_OSX;
 	@class Delegate_ZNetEndpoint_RFCOMM_OSX;
 #else
-	// Otherwise pretend its something compatible.
+	// Otherwise pretend it's something compatible.
 	#include <IOBluetooth/IOBluetoothUserLib.h>
 	typedef OpaqueIOBluetoothObjectRef IOBluetoothDevice;
 	typedef OpaqueIOBluetoothObjectRef IOBluetoothRFCOMMChannel;
@@ -136,11 +148,6 @@ public:
 
 private:
 	Delegate_ZNetEndpoint_RFCOMM_OSX* fDelegate;
-	
-//	void pEventCallback(IOBluetoothRFCOMMChannelEvent* iEvent);
-//	static void spEventCallback(
-//		IOBluetoothRFCOMMChannelRef iChannel,
-//		void* iRefcon, IOBluetoothRFCOMMChannelEvent* iEvent);
 
 	IOBluetoothRFCOMMChannel* fChannel;
 	ZMutex fMutex;

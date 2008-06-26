@@ -22,11 +22,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_RFCOMM_OSX)
 
+// For bluetooth support we need to be on 10.2
+#ifndef MAC_OS_X_VERSION_MIN_REQUIRED
+#	define MAC_OS_X_VERSION_MIN_REQUIRED MAC_OS_X_VERSION_10_2
+#endif
+
 #import <IOBluetooth/objc/IOBluetoothDevice.h>
 #import <IOBluetooth/objc/IOBluetoothRFCOMMChannel.h>
 #import <IOBluetooth/objc/IOBluetoothSDPServiceRecord.h>
 
 #include "ZOBJC.h"
+
+// ==================================================
 
 // =================================================================================================
 #pragma mark -
