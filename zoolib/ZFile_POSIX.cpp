@@ -684,14 +684,23 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 
 ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 	{
-	uint32_t theSize;
-	::_NSGetExecutablePath(nil, &theSize);
-	vector<char> buffer(theSize);
-	if (!::_NSGetExecutablePath(&buffer[0], &theSize))
+	// Prior to 10.4 _NSGetExecutablePath took a pointer to
+	// unsigned long, later headers specify a uint32_t.
+	#if MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_4
+		unsigned long theSize;
+	#else
+		uint32_t theSize;
+	#endif
+
+	if (!::_NSGetExecutablePath(nil, &theSize))
 		{
-		vector<string> comps;
-		::sSplit('/', false, &buffer[0], &buffer[theSize], comps);
-		return new ZFileLoc_POSIX(true, comps, true);
+		vector<char> buffer(theSize);
+		if (!::_NSGetExecutablePath(&buffer[0], &theSize))
+			{
+			vector<string> comps;
+			::sSplit('/', false, &buffer[0], &buffer[theSize], comps);
+			return new ZFileLoc_POSIX(true, comps, true);
+			}
 		}
 	return ZRef<ZFileLoc_POSIX>();
 	}
