@@ -24,10 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
 
-//#if ZCONFIG(OS, Win32)
-//#	include "ZWinHeader.h"
-//#endif
-
 using std::bad_alloc;
 using std::max;
 using std::min;

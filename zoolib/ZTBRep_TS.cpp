@@ -40,7 +40,7 @@ using std::vector;
 #endif
 
 #if ZCONFIG_TBRep_TS_Logging
-#	include "ZLog.h"
+#	include "zoolib/ZLog.h"
 #endif
 
 #define ASSERTLOCKED(a) ZAssertStop(kDebug, a.IsLocked())

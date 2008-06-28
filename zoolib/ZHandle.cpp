@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_algorithm.h" // For min()
 
 #if ZCONFIG_SPI_Enabled(Win)
-#	include "ZWinHeader.h"
+#	include "zoolib/ZWinHeader.h"
 #endif
 
 using std::bad_alloc;

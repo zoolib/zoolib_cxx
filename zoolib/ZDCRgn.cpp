@@ -98,12 +98,12 @@ using std::vector;
 #		define ZCONFIG_BRegionAlternateEnabled 0
 #	endif
 #	if ZCONFIG_BRegionAlternateEnabled
-#		include "ZBRegionAlternate.h"
+#		include "zoolib/ZBRegionAlternate.h"
 #	endif
 #endif
 
 #if ZCONFIG_SPI_Enabled(GDI)
-#	include "ZUtil_Win.h"
+#	include "zoolib/ZUtil_Win.h"
 #endif
 
 

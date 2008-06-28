@@ -30,11 +30,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if ZCONFIG_SPI_Enabled(GDI)
-#	include "ZWinHeader.h"
+#	include "zoolib/ZWinHeader.h"
 #endif
 
 #if ZCONFIG_SPI_Enabled(X11)
-#	include "ZCompat_Xlib.h"
+#	include "zoolib/ZCompat_Xlib.h"
 #	include <X11/Xutil.h>
 #endif
 

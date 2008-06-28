@@ -26,13 +26,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 #if ZCONFIG_Thread_DeadlockDetect
-#	include "ZString.h" // For ZString::sFormat
+#	include "zoolib/ZString.h" // For ZString::sFormat
 #endif
 
 #include <string> // because runtime_error relies on it
 
 #if ZCONFIG(API_Thread, Win32)
-#	include "ZWinHeader.h"
+#	include "zoolib/ZWinHeader.h"
 #	include <process.h>
 #endif
 
@@ -45,7 +45,6 @@ using std::exception;
 using std::min;
 using std::vector;
 using std::string;
-
 
 // =================================================================================================
 #pragma mark -
@@ -171,7 +170,7 @@ static void sReleaseSpinlock(ZAtomic_t* iSpinlock)
 
 namespace ZANONYMOUS {
 
-class MainThread : public ZooLib::ZThread
+class MainThread : public ZThread
 	{
 public:
 	MainThread() : ZThread((struct ZooLib::Dummy*)(0)){}
@@ -179,8 +178,6 @@ public:
 	};
 
 } // anonymous namespace
-
-namespace ZooLib {
 
 static int sInitCount;
 
@@ -2131,8 +2128,6 @@ void ZMutexLocker::Release()
 	--fAcquisitions;
 	fMutex.MutexRelease();
 	}
-
-} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
