@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Graphics__ 1
 #include "zconfig.h"
 
-#include "ZGeom.h"
+#include "zoolib/ZGeom.h"
 
 class ZDC;
 class ZDCRgn;

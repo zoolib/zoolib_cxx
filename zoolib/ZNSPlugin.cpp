@@ -1,5 +1,5 @@
-#include "ZDebug.h"
-#include "ZNSPlugin.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZNSPlugin.h"
 
 #if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
 #	include <CodeFragments.h>

@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZDCPixmap_Asset_BMP.h"
-#include "ZAsset.h"
-#include "ZDCPixmap.h"
+#include "zoolib/ZDCPixmap_Asset_BMP.h"
+#include "zoolib/ZAsset.h"
+#include "zoolib/ZDCPixmap.h"
 
 using std::runtime_error;
 using std::vector;

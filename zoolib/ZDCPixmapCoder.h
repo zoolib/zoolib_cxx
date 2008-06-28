@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDCPixmapCoder__ 1
 #include "zconfig.h"
 
-#include "ZDCPixmap.h"
-#include "ZStream.h"
+#include "zoolib/ZDCPixmap.h"
+#include "zoolib/ZStream.h"
 
 // =================================================================================================
 #pragma mark -

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTextCollator_ASCII__ 1
 #include "zconfig.h"
 
-#include "ZTextCollator.h"
+#include "zoolib/ZTextCollator.h"
 
 struct UCollator;
 

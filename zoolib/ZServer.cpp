@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZServer.h"
-#include "ZMemory.h"
-#include "ZThreadSimple.h"
+#include "zoolib/ZServer.h"
+#include "zoolib/ZMemory.h"
+#include "zoolib/ZThreadSimple.h"
 
-#include "ZCompat_algorithm.h"
+#include "zoolib/ZCompat_algorithm.h"
 
 using std::vector;
 

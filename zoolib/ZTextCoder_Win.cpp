@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTextCoder_Win.h"
+#include "zoolib/ZTextCoder_Win.h"
 
 #if ZCONFIG_API_Enabled(TextCoder_Win)
 
-#include "ZThread.h"
+#include "zoolib/ZThread.h"
 #include <map>
 
 ZAssertCompile(sizeof(WCHAR) == sizeof(UTF16));
@@ -33,7 +33,7 @@ static const size_t kBufSize = ZooLib::sStackBufferSize;
 #pragma mark -
 #pragma mark * Factory functions
 
-#include "ZFactoryChain.h"
+#include "zoolib/ZFactoryChain.h"
 
 static bool sMake_Decoder(ZTextDecoder*& oResult, const string& iParam)
 	{

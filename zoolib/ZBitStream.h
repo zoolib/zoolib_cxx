@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZBitStream__ 1
 #include "zconfig.h"
 
-#include "ZStream.h"
+#include "zoolib/ZStream.h"
 
 /*
 Bits may be packed from high-to-low (128 down to 1) or from low-to-high (1, 2, 4 ... 128) in

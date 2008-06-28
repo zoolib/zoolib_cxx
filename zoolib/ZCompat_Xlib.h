@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZCompat_XLib__
 #define __ZCompat_XLib__
 #include "zconfig.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(X11)
 // Unfortunately, QuickDraw also defines Cursor. For the moment this lets us compile

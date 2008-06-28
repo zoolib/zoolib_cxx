@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMemoryBlock__ 1
 #include "zconfig.h"
 
-#include "ZCompare.h"
-#include "ZRefCount.h"
-#include "ZStream.h"
+#include "zoolib/ZCompare.h"
+#include "zoolib/ZRefCount.h"
+#include "zoolib/ZStream.h"
 
 // =================================================================================================
 #pragma mark -

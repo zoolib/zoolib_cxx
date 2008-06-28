@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZNet_Internet_MacOT_OSX.h"
+#include "zoolib/ZNet_Internet_MacOT_OSX.h"
 
 // =================================================================================================
 #pragma mark -
@@ -49,8 +49,8 @@ void ZMacMP::sInvokeInMP(EntryProc iProc, void* iParam)
 
 #if ZCONFIG(Thread_API, Mac)
 
-#include "ZAtomic.h"
-#include "ZThreadTM.h"
+#include "zoolib/ZAtomic.h"
+#include "zoolib/ZThreadTM.h"
 
 #include <Multiprocessing.h>
 
@@ -148,7 +148,7 @@ void ZMacMP::sInvokeInMP(EntryProc iProc, void* iParam)
 
 #if ZCONFIG_API_Enabled(Net_Internet_MacOT_OSX)
 
-#include "ZMemory.h" // For ZBlockZero
+#include "zoolib/ZMemory.h" // For ZBlockZero
 
 #ifndef kDebug_OT
 #	define kDebug_OT 1
@@ -158,7 +158,7 @@ void ZMacMP::sInvokeInMP(EntryProc iProc, void* iParam)
 #pragma mark -
 #pragma mark * Factory functions
 
-#include "ZFactoryChain.h"
+#include "zoolib/ZFactoryChain.h"
 
 static bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Internet::LookupParam_t iParam)
 	{

@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZByteSwap.h"
+#include "zoolib/ZByteSwap.h"
 
 // Switch off optimization for CodeWarrior -- it runs out of registers.
 #if ZCONFIG(Compiler, CodeWarrior)

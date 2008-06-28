@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTQL_RelHead__ 1
 #include "zconfig.h"
 
-#include "ZTName.h" // For ZTName
+#include "zoolib/ZTName.h" // For ZTName
 
 #include <set>
 #include <vector>

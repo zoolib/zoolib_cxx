@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDCPoly__
 #include "zconfig.h"
 
-#include "ZGeom.h"
+#include "zoolib/ZGeom.h"
 
 #include <vector>
 

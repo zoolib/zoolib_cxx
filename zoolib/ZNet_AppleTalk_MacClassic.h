@@ -22,12 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNet_AppleTalk_MacClassic__ 1
 #include "zconfig.h"
 
-#include "ZNet_AppleTalk.h"
+#include "zoolib/ZNet_AppleTalk.h"
 
 // =================================================================================================
 #if ZCONFIG(API_Net, MacClassic)
 
-#include "ZThread.h"
+#include "zoolib/ZThread.h"
 #include <ADSP.h>
 
 // ==================================================

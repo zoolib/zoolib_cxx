@@ -21,10 +21,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZDCRgn__
 #define __ZDCRgn__ 1
 #include "zconfig.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#include "ZGeom.h"
-#include "ZRefCount.h"
+#include "zoolib/ZGeom.h"
+#include "zoolib/ZRefCount.h"
 #include <vector>
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
@@ -44,7 +44,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <interface/Region.h>
 #endif
 
-#include "ZBigRegion.h"
+#include "zoolib/ZBigRegion.h"
 
 // =================================================================================================
 #pragma mark -

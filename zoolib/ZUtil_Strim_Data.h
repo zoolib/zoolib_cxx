@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim_Data__ 1
 #include "zconfig.h"
 
-#include "ZStream.h"
-#include "ZStrim.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZStrim.h"
 
 // =================================================================================================
 #pragma mark -

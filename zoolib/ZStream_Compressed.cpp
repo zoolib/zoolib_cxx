@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStream_Compressed.h"
+#include "zoolib/ZStream_Compressed.h"
 
 #if ZCONFIG_API_Enabled(Stream_ZLib)
 
-#include "ZMemory.h" // For ZBlockCopy
-#include "ZUtil_STL.h"
+#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZUtil_STL.h"
 
 #define kDebug_StreamRWPos_Compressed 2
 

@@ -21,15 +21,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZThread__
 #define __ZThread__ 1
 #include "zconfig.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #include <stdexcept>
 #include <vector>
 
-#include "ZAtomic.h"
-#include "ZCompat_NonCopyable.h"
-#include "ZDebug.h"
-#include "ZTypes.h" // For bigtime_t
+#include "zoolib/ZAtomic.h"
+#include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZTypes.h" // For bigtime_t
 
 #define ZCONFIG_API_Thread_Unknown 0
 #define ZCONFIG_API_Thread_Win32 2
@@ -38,7 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    
 // =================================================================================================
 
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Thread
 #	if 0

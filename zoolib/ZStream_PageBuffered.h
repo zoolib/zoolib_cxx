@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStream_PageBuffered__ 1
 #include "zconfig.h"
 
-#include "ZStreamer.h"
+#include "zoolib/ZStreamer.h"
 
 // =================================================================================================
 #pragma mark -

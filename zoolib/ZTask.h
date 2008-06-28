@@ -2,8 +2,8 @@
 #define __ZTask__ 1
 #include "zconfig.h"
 
-#include "ZDList.h"
-#include "ZThread.h"
+#include "zoolib/ZDList.h"
+#include "zoolib/ZThread.h"
 
 class ZTask;
 class ZTaskOwner;

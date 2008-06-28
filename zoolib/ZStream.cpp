@@ -18,10 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStream.h"
+#include "zoolib/ZStream.h"
 
-#include "ZByteSwap.h"
-#include "ZCompat_algorithm.h"
+#include "zoolib/ZByteSwap.h"
+#include "zoolib/ZCompat_algorithm.h"
 
 #include <cstdarg>
 #include <cstdio>

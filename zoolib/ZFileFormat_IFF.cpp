@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZFileFormat_IFF.h"
-#include "ZByteSwap.h"
-#include "ZDebug.h"
+#include "zoolib/ZFileFormat_IFF.h"
+#include "zoolib/ZByteSwap.h"
+#include "zoolib/ZDebug.h"
 
 #ifndef kDebug_IFF
 #	define kDebug_IFF 1

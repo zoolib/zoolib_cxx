@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstdarg>
 #include <string>
 
-#include "ZTypes.h" // for uint64
+#include "zoolib/ZTypes.h" // for uint64
 
 // ==================================================
 

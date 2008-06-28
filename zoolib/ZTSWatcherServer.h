@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSWatcherServer__
 #include "zconfig.h"
 
-#include "ZCompat_NonCopyable.h"
-#include "ZTSWatcher.h"
+#include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZTSWatcher.h"
 
 class ZStreamR;
 class ZStreamW;

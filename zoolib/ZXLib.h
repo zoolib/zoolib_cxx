@@ -21,14 +21,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZXLib__
 #define __ZXLib__ 1
 #include "zconfig.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 // =================================================================================================
 #if ZCONFIG_SPI_Enabled(X11)
 
-#include "ZThread.h"
+#include "zoolib/ZThread.h"
 
-#include "ZCompat_Xlib.h"
+#include "zoolib/ZCompat_Xlib.h"
 #include <X11/Xresource.h>
 #include <X11/Xutil.h>
 

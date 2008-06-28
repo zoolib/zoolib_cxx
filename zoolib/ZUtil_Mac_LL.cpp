@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Mac_LL.h"
-#include "ZDC_QD.h"
-#include "ZDebug.h"
-#include "ZMacOSX.h"
-#include "ZMemory.h"
+#include "zoolib/ZUtil_Mac_LL.h"
+#include "zoolib/ZDC_QD.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZMacOSX.h"
+#include "zoolib/ZMemory.h"
 
 #include <new> // for bad_alloc
 

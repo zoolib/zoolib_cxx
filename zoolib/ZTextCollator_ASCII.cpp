@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTextCollator_ASCII.h"
+#include "zoolib/ZTextCollator_ASCII.h"
 
-#include "ZDebug.h"
+#include "zoolib/ZDebug.h"
 
 using std::min;
 
@@ -28,7 +28,7 @@ using std::min;
 #pragma mark -
 #pragma mark * Factory functions
 
-#include "ZFactoryChain.h"
+#include "zoolib/ZFactoryChain.h"
 
 static bool sMake_Collator(ZRef<ZTextCollatorRep>& oResult, const ZTextCollatorRep::Param_t& iParam)
 	{

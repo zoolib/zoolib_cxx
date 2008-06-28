@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Stream_BitTorrent.h"
-#include "ZMemoryBlock.h"
-#include "ZTuple.h"
-#include "ZStream.h"
-#include "ZStrim_Stream.h"
+#include "zoolib/ZUtil_Stream_BitTorrent.h"
+#include "zoolib/ZMemoryBlock.h"
+#include "zoolib/ZTuple.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZStrim_Stream.h"
 
 using std::runtime_error;
 using std::string;

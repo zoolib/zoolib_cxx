@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZDC_ZooLib.h"
+#include "zoolib/ZDC_ZooLib.h"
 
-#include "ZDCPixmapBlit.h"
+#include "zoolib/ZDCPixmapBlit.h"
 
 using ZDCPixmapNS::EFormatEfficient;
 using ZDCPixmapNS::PixelDesc;

@@ -18,15 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZDC_QD.h"
+#include "zoolib/ZDC_QD.h"
 
 #if ZCONFIG_API_Enabled(DC_QD)
 
-#include "ZDCInk.h"
-#include "ZDCPixmapBlit.h"
-#include "ZMacOSX.h"
-#include "ZStream.h"
-#include "ZUtil_Mac_LL.h"
+#include "zoolib/ZDCInk.h"
+#include "zoolib/ZDCPixmapBlit.h"
+#include "zoolib/ZMacOSX.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZUtil_Mac_LL.h"
 
 static short sModeLookup[] = { srcCopy, srcOr, srcXor, srcBic};
 

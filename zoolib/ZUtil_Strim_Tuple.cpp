@@ -18,18 +18,18 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Strim_Tuple.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
-#include "ZDebug.h"
-#include "ZMemoryBlock.h"
-#include "ZStream_HexStrim.h"
-#include "ZStream_Memory.h"
-#include "ZStrimR_Boundary.h"
-#include "ZStrimW_Escapify.h"
-#include "ZString.h"
-#include "ZTuple.h"
-#include "ZUtil_Strim.h"
-#include "ZUtil_Time.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZMemoryBlock.h"
+#include "zoolib/ZStream_HexStrim.h"
+#include "zoolib/ZStream_Memory.h"
+#include "zoolib/ZStrimR_Boundary.h"
+#include "zoolib/ZStrimW_Escapify.h"
+#include "zoolib/ZString.h"
+#include "zoolib/ZTuple.h"
+#include "zoolib/ZUtil_Strim.h"
+#include "zoolib/ZUtil_Time.h"
 
 #include <cctype>
 #include <cmath> // For fmod

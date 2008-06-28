@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTS_Umbrella__
 #include "zconfig.h"
 
-#include "ZTS.h"
+#include "zoolib/ZTS.h"
 
 #include <map>
 

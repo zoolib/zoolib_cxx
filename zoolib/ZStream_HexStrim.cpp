@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStream_HexStrim.h"
-#include "ZStrim.h"
-#include "ZUtil_Strim.h"
+#include "zoolib/ZStream_HexStrim.h"
+#include "zoolib/ZStrim.h"
+#include "zoolib/ZUtil_Strim.h"
 
 // =================================================================================================
 #pragma mark -

@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZNet_Internet_MacOT_Classic.h"
+#include "zoolib/ZNet_Internet_MacOT_Classic.h"
 
 #if ZCONFIG_API_Enabled(Net_Internet_MacOT_Classic)
 
-#include "ZMemory.h"
-#include "ZThreadTM.h"
+#include "zoolib/ZMemory.h"
+#include "zoolib/ZThreadTM.h"
 
 #ifndef kDebug_OT
 #	define kDebug_OT 1

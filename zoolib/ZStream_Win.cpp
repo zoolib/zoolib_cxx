@@ -18,16 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStream_Win.h"
+#include "zoolib/ZStream_Win.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "ZCompat_algorithm.h" // For lower_bound, min
-#include "ZDebug.h"
-#include "ZMemory.h" // For ZBlockCopy
-#include "ZStream_Memory.h" // For ZStreamRPos_Memory
-#include "ZUnicode.h"
-#include "ZUtil_Win.h"
+#include "zoolib/ZCompat_algorithm.h" // For lower_bound, min
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZStream_Memory.h" // For ZStreamRPos_Memory
+#include "zoolib/ZUnicode.h"
+#include "zoolib/ZUtil_Win.h"
 
 using std::min;
 using std::runtime_error;

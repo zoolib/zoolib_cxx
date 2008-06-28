@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim_OSXPList__ 1
 #include "zconfig.h"
 
-#include "ZML.h"
+#include "zoolib/ZML.h"
 
 #include <stdexcept>
 

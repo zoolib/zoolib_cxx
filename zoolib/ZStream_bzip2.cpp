@@ -18,13 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStream_bzip2.h"
+#include "zoolib/ZStream_bzip2.h"
 
 #if ZCONFIG_API_Enabled(Stream_bzip2)
 
-#include "ZBitStream.h"
-#include "ZCompat_algorithm.h" // For min/max
-#include "ZDebug.h"
+#include "zoolib/ZBitStream.h"
+#include "zoolib/ZCompat_algorithm.h" // For min/max
+#include "zoolib/ZDebug.h"
 
 #include <stdexcept> // For runtime_error
 

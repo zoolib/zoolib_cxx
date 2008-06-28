@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTupleQuisitioner__
 #include "zconfig.h"
 
-#include "ZTBQuery.h"
-#include "ZTextCollator.h"
+#include "zoolib/ZTBQuery.h"
+#include "zoolib/ZTextCollator.h"
 
 #include <map>
 #include <set>

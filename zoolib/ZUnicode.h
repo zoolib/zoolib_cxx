@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUnicode__ 1
 #include "zconfig.h"
 
-#include "ZTypes.h"
+#include "zoolib/ZTypes.h"
 #include <string>
 
 // =================================================================================================
@@ -181,7 +181,7 @@ inline string8 operator+(const string8& iString, UTF32 iCP)
 #pragma mark -
 #pragma mark * Include gnarly template stuff
 
-#include "ZUnicodePriv.h"
+#include "zoolib/ZUnicodePriv.h"
 
 // =================================================================================================
 #pragma mark -

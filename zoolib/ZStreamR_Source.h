@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
-#include "ZStreamer.h"
+#include "zoolib/ZStreamer.h"
 
 // =================================================================================================
 #pragma mark -

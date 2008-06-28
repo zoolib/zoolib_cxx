@@ -21,8 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZFile_POSIX__
 #define __ZFile_POSIX__ 1
 #include "zconfig.h"
-#include "ZCONFIG_API.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_API.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__File_POSIX
 #	define ZCONFIG_API_Avail__File_POSIX ZCONFIG_SPI_Enabled(POSIX)
@@ -32,11 +32,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_API_Desired__File_POSIX 1
 #endif
 
-#include "ZFile.h"
+#include "zoolib/ZFile.h"
 
 #if ZCONFIG_API_Enabled(File_POSIX)
 
-#include "ZFile.h"
+#include "zoolib/ZFile.h"
 
 // =================================================================================================
 #pragma mark -

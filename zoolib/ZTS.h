@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTS__
 #include "zconfig.h"
 
-#include "ZCompat_NonCopyable.h"
-#include "ZTuple.h"
-#include "ZTBSpec.h"
+#include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZTuple.h"
+#include "zoolib/ZTBSpec.h"
 
 #include <set>
 

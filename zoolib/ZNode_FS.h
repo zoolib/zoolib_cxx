@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
-#include "ZFile.h"
-#include "ZNode.h"
+#include "zoolib/ZFile.h"
+#include "zoolib/ZNode.h"
 
 // =================================================================================================
 #pragma mark -

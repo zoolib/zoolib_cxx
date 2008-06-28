@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTB__ 1
 #include "zconfig.h"
 
-#include "ZCompat_NonCopyable.h"
-#include "ZTBRep.h"
-#include "ZTBSpec.h"
-#include "ZTxn.h"
+#include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZTBRep.h"
+#include "zoolib/ZTBSpec.h"
+#include "zoolib/ZTxn.h"
 
 #include <set>
 

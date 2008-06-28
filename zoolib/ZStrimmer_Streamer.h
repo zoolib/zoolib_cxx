@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStrimmer_Streamer__ 1
 #include "zconfig.h"
 
-#include "ZStreamer.h"
-#include "ZStrimmer.h"
+#include "zoolib/ZStreamer.h"
+#include "zoolib/ZStrimmer.h"
 
 // =================================================================================================
 #pragma mark -

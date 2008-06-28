@@ -21,13 +21,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZUtil_Mac_LL__
 #define __ZUtil_Mac_LL__ 1
 #include "zconfig.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(Carbon)
 
-#include "ZDCPixmapNS.h" 
-#include "ZGeom.h"
-#include "ZRefCount.h"
+#include "zoolib/ZDCPixmapNS.h" 
+#include "zoolib/ZGeom.h"
+#include "zoolib/ZRefCount.h"
 
 #include ZMACINCLUDE(CarbonCore,MacMemory.h)
 #include ZMACINCLUDE(QD,QDOffscreen.h)
@@ -37,8 +37,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Carbon)
 
-//#include "ZThreadTM.h"
-#include "ZTypes.h"
+//#include "zoolib/ZThreadTM.h"
+#include "zoolib/ZTypes.h"
 
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTQL_Optimize__ 1
 #include "zconfig.h"
 
-#include "ZTQL_Node.h"
+#include "zoolib/ZTQL_Node.h"
 
 // =================================================================================================
 #pragma mark -

@@ -34,11 +34,11 @@ A million repetitions of "a"
 	34AA973C D4C4DAA4 F61EEB2B DBAD2731 6534016F
 */
 
-#include "ZStream_SHA1.h"
+#include "zoolib/ZStream_SHA1.h"
 
-#include "ZByteSwap.h"
-#include "ZDebug.h"
-#include "ZMemory.h"
+#include "zoolib/ZByteSwap.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZMemory.h"
 
 using std::min;
 

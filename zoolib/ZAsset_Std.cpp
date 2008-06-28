@@ -18,10 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZAsset_Std.h"
-#include "ZByteSwap.h"
-#include "ZCompat_algorithm.h" // For lower_bound and find_first_of
-#include "ZStream_Memory.h"
+#include "zoolib/ZAsset_Std.h"
+#include "zoolib/ZByteSwap.h"
+#include "zoolib/ZCompat_algorithm.h" // For lower_bound and find_first_of
+#include "zoolib/ZStream_Memory.h"
 
 using std::find_first_of;
 using std::lower_bound;

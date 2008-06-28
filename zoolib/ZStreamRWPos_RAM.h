@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
-#include "ZStream.h"
+#include "zoolib/ZStream.h"
 
 #include <vector>
 

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStreamCopier__
 #include "zconfig.h"
 
-#include "ZStreamReader.h"
+#include "zoolib/ZStreamReader.h"
 
 // =================================================================================================
 #pragma mark -

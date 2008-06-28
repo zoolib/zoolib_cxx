@@ -332,11 +332,11 @@ is merely a detail. MacOS classic and other pure GUI environments have no close
 equivalent of command-line options.
 */
 
-#include "ZCommandLine.h"
-#include "ZStream_Memory.h"
-#include "ZStrim.h"
-#include "ZStrim_Stream.h"
-#include "ZUtil_Strim_Tuple.h"
+#include "zoolib/ZCommandLine.h"
+#include "zoolib/ZStream_Memory.h"
+#include "zoolib/ZStrim.h"
+#include "zoolib/ZStrim_Stream.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::exception;
 using std::string;

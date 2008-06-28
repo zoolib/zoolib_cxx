@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Graphics.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZUtil_Graphics.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#include "ZDebug.h"
-#include "ZDC.h"
-#include "ZDC_QD.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZDC.h"
+#include "zoolib/ZDC_QD.h"
 
 #if ZCONFIG_SPI_Enabled(MacClassic) || ZCONFIG_SPI_Enabled(Carbon)
 #	include ZMACINCLUDE(HIToolbox,Drag.h) // For GetDragHiliteColor

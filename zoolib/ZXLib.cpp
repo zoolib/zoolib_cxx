@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZXLib.h"
+#include "zoolib/ZXLib.h"
 
 // =================================================================================================
 #if ZCONFIG_SPI_Enabled(X11)
 
-#include "ZThread.h"
+#include "zoolib/ZThread.h"
 
 #include <X11/Xproto.h> // For definitions of request codes
 

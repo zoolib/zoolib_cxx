@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTextCoder__ 1
 #include "zconfig.h"
 
-#include "ZUnicode.h"
+#include "zoolib/ZUnicode.h"
 #include <vector>
 
 class ZStreamR;

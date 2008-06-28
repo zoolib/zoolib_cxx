@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTBRep_Client__ 1
 #include "zconfig.h"
 
-#include "ZTBRep.h"
+#include "zoolib/ZTBRep.h"
 
-#include "ZStream.h"
-#include "ZTime.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZTime.h"
 
 #include <deque>
 #include <set>

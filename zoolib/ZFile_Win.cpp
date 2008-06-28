@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZFile_Win.h"
+#include "zoolib/ZFile_Win.h"
 
 #if ZCONFIG_API_Enabled(File_Win)
 
-#include "ZUtil_Win.h"
+#include "zoolib/ZUtil_Win.h"
 
 #include <cctype>
 
@@ -41,7 +41,7 @@ If fBase is empty then fComps must also be empty and we represent the root.
 #pragma mark -
 #pragma mark * Factory functions
 
-#include "ZFactoryChain.h"
+#include "zoolib/ZFactoryChain.h"
 
 static bool sMake_FileLoc(ZRef<ZFileLoc>& oResult, ZFileLoc::ELoc iParam)
 	{

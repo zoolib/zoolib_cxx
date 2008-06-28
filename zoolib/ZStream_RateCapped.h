@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStream_RateCapped__ 1
 #include "zconfig.h"
 
-#include "ZStream_Filter.h"
-#include "ZStreamer.h"
+#include "zoolib/ZStream_Filter.h"
+#include "zoolib/ZStreamer.h"
 
-#include "ZTime.h"
+#include "zoolib/ZTime.h"
 
 // =================================================================================================
 #pragma mark -

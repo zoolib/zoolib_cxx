@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_TQLConvert.h"
+#include "zoolib/ZUtil_TQLConvert.h"
 
-#include "ZTQL_Spec.h"
+#include "zoolib/ZTQL_Spec.h"
 
 using ZTQL::Query;
 using ZTQL::RelHead;

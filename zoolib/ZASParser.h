@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZASParser__ 1
 #include "zconfig.h"
 
-#include "ZRefCount.h"
-#include "ZStream.h"
-#include "ZStrim.h"
+#include "zoolib/ZRefCount.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZStrim.h"
 
 class ZFileSpec;
 class ZStreamerR;

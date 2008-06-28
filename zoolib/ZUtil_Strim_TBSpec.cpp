@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Strim_TBSpec.h"
+#include "zoolib/ZUtil_Strim_TBSpec.h"
 
-#include "ZStrim.h"
-#include "ZTBSpec.h"
-#include "ZUtil_Strim.h"
-#include "ZUtil_Strim_Tuple.h"
+#include "zoolib/ZStrim.h"
+#include "zoolib/ZTBSpec.h"
+#include "zoolib/ZUtil_Strim.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::string;
 

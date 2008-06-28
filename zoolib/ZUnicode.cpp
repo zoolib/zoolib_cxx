@@ -192,9 +192,9 @@ by using <code>#pragma ushort_wchar_t on</code>
 
 // =================================================================================================
 
-#include "ZUnicode.h"
-#include "ZDebug.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZUnicode.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(ICU)
 #	include "unicode/uchar.h"
@@ -312,7 +312,7 @@ const uint8 sUTF8StartByteMask[7] = { 0x00, 0x00, 0x3F, 0x1F, 0x0F, 0x07, 0x03 }
 #pragma mark -
 #pragma mark * Explicit instantiations of the template code
 
-#include "ZUnicodePrivB.h"
+#include "zoolib/ZUnicodePrivB.h"
 
 namespace ZUnicode {
 

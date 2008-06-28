@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZDC_GDI.h"
+#include "zoolib/ZDC_GDI.h"
 
 #if ZCONFIG_API_Enabled(DC_GDI)
 
-#include "ZMemory.h"
-#include "ZUtil_Win.h"
+#include "zoolib/ZMemory.h"
+#include "zoolib/ZUtil_Win.h"
 
 static short sModeLookup[] = { R2_COPYPEN, R2_MERGEPEN, R2_NOTXORPEN, R2_MASKNOTPEN };
 

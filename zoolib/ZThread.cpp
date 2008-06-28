@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZThread.h"
+#include "zoolib/ZThread.h"
 
-#include "ZAtomic.h"
-#include "ZCompat_algorithm.h" // for find, lower_bound, swap
-#include "ZTime.h"
+#include "zoolib/ZAtomic.h"
+#include "zoolib/ZCompat_algorithm.h" // for find, lower_bound, swap
+#include "zoolib/ZTime.h"
 
 
 #if ZCONFIG_Thread_DeadlockDetect

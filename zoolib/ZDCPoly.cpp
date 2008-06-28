@@ -68,9 +68,9 @@ SOFTWARE.
 
 ************************************************************************/
 
-#include "ZDCPoly.h"
-#include "ZDebug.h"
-#include "ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZDCPoly.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZMemory.h" // For ZBlockCopy
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 #	include ZMACINCLUDE(CarbonCore,MacMemory.h) // For HLock etc.

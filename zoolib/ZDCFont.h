@@ -21,10 +21,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZDCFont__
 #define __ZDCFont__ 1
 #include "zconfig.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#include "ZTypes.h"
-#include "ZUnicode.h"
+#include "zoolib/ZTypes.h"
+#include "zoolib/ZUnicode.h"
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 #	include ZMACINCLUDE(HIToolbox,TextEdit.h)

@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZLog.h"
-#include "ZString.h"
-#include "ZThread.h"
+#include "zoolib/ZLog.h"
+#include "zoolib/ZString.h"
+#include "zoolib/ZThread.h"
 
 // Metrowerks Standard Library doesn't include strcasecmp
 #if _MSL_USING_MW_C_HEADERS && __MACH__

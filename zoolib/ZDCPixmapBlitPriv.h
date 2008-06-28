@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDCPixmapBlitPriv__ 1
 #include "zconfig.h"
 
-#include "ZDCPixmapNS.h"
-#include "ZDCPixmapBlit.h" // For EOp and abbreviating typedefs
+#include "zoolib/ZDCPixmapNS.h"
+#include "zoolib/ZDCPixmapBlit.h" // For EOp and abbreviating typedefs
 
 namespace ZDCPixmapBlit {
 

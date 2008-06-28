@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZThreadSimple__ 1
 #include "zconfig.h"
 
-#include "ZThread.h"
+#include "zoolib/ZThread.h"
 
 template <class T = void*>
 class ZThreadSimple : public ZThread

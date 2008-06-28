@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZAsset_FS__ 1
 #include "zconfig.h"
 
-#include "ZAsset.h"
-#include "ZFile.h"
+#include "zoolib/ZAsset.h"
+#include "zoolib/ZFile.h"
 
 // =================================================================================================
 #pragma mark -

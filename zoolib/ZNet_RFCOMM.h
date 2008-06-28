@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
-#include "ZNet.h"
+#include "zoolib/ZNet.h"
 
 // Need to figure out what the accessors for all this stuff are.
 

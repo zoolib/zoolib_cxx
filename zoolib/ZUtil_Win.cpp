@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Win.h"
+#include "zoolib/ZUtil_Win.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "ZWinHeader.h"
+#include "zoolib/ZWinHeader.h"
 
 // From Whisper 1.3
 static bool sIsWinNT_Inited;

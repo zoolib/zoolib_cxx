@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSWatcher_Reader__
 #include "zconfig.h"
 
-#include "ZStreamReader.h"
-#include "ZTSWatcher.h"
+#include "zoolib/ZStreamReader.h"
+#include "zoolib/ZTSWatcher.h"
 
 // =================================================================================================
 #pragma mark -

@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZNet_Internet.h"
-#include "ZFactoryChain.h"
-#include "ZString.h"
+#include "zoolib/ZNet_Internet.h"
+#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZString.h"
 
 using std::string;
 

@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUSB_OSX__ 1
 
 #include "zconfig.h"
-#include "ZCONFIG_API.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_API.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__USB_OSX
 #	define ZCONFIG_API_Avail__USB_OSX ZCONFIG_SPI_Enabled(MacOSX)
@@ -38,8 +38,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <IOKit/IOKitLib.h> // For IONotificationPortRef
 #include <IOKit/usb/IOUSBLib.h>
 
-#include "ZRefCount.h"
-#include "ZStreamer.h"
+#include "zoolib/ZRefCount.h"
+#include "zoolib/ZStreamer.h"
 
 class ZUSBDevice;
 class ZUSBInterfaceInterface;

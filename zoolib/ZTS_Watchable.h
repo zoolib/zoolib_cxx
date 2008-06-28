@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTS_Watchable__
 #include "zconfig.h"
 
-#include "ZTS.h"
-#include "ZTSWatcher.h"
+#include "zoolib/ZTS.h"
+#include "zoolib/ZTSWatcher.h"
 
 #ifndef ZCONFIG_TS_Watchable_Debug
 #	define ZCONFIG_TS_Watchable_Debug 0

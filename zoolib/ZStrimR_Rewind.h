@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStrimR_Rewind__ 1
 #include "zconfig.h"
 
-#include "ZStrim.h"
+#include "zoolib/ZStrim.h"
 
 #include <string>
 

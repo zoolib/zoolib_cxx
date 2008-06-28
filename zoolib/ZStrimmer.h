@@ -24,8 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
-#include "ZRefCount.h"
-#include "ZStrim.h"
+#include "zoolib/ZRefCount.h"
+#include "zoolib/ZStrim.h"
 
 // =================================================================================================
 #pragma mark -

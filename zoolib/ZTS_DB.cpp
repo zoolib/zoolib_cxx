@@ -18,16 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTS_DB.h"
+#include "zoolib/ZTS_DB.h"
 
 #if ZCONFIG_API_Enabled(TS_DB)
 
-#include "ZByteSwap.h"
-#include "ZDebug.h"
-#include "ZMemoryBlock.h"
-#include "ZStream.h"
-#include "ZStream_Memory.h"
-#include "ZUtil_STL.h"
+#include "zoolib/ZByteSwap.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZMemoryBlock.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZStream_Memory.h"
+#include "zoolib/ZUtil_STL.h"
 
 #include <fcntl.h> // For O_RDWR etc
 

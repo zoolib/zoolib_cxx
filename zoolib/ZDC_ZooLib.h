@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDC_ZooLib__ 1
 #include "zconfig.h"
 
-#include "ZDC.h"
-#include "ZDCGlyphServer.h"
+#include "zoolib/ZDC.h"
+#include "zoolib/ZDCGlyphServer.h"
 
 // =================================================================================================
 #pragma mark -

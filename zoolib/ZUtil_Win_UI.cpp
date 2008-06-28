@@ -18,15 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Win_UI.h"
+#include "zoolib/ZUtil_Win_UI.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "ZUtil_Win.h"
+#include "zoolib/ZUtil_Win.h"
 
-#include "ZDC_GDI.h"
-#include "ZDCPixmap.h"
-#include "ZDebug.h"
+#include "zoolib/ZDC_GDI.h"
+#include "zoolib/ZDCPixmap.h"
+#include "zoolib/ZDebug.h"
 
 #define kDebug_Win 2
 

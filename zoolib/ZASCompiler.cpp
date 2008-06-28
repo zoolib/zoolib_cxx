@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZASCompiler.h"
+#include "zoolib/ZASCompiler.h"
 
-#include "ZCompat_algorithm.h" // For sort
-#include "ZMemory.h"
-#include "ZStream_Memory.h"
-#include "ZStreamRWPos_RAM.h"
+#include "zoolib/ZCompat_algorithm.h" // For sort
+#include "zoolib/ZMemory.h"
+#include "zoolib/ZStream_Memory.h"
+#include "zoolib/ZStreamRWPos_RAM.h"
 
 using std::runtime_error;
 using std::string;

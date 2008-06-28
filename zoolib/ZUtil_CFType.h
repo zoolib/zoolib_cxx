@@ -21,12 +21,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZUtil_CFType__
 #define __ZUtil_CFType__ 1
 #include "zconfig.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "ZTuple.h"
-#include "ZUnicode.h"
+#include "zoolib/ZTuple.h"
+#include "zoolib/ZUnicode.h"
 
 #include ZMACINCLUDE(CoreFoundation,CFArray.h)
 #include ZMACINCLUDE(CoreFoundation,CFBase.h)

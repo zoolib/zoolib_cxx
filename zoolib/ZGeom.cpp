@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZGeom.h"
+#include "zoolib/ZGeom.h"
 
 // AG 98-05-04. Major rework. Because it's possible to have more than one graphics
 // API available simultaneously on the same machine (QD and GDI when using QuickTime

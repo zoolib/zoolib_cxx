@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZCompat_algorithm.h"
-#include "ZTxn.h"
-#include "ZUtil_STL.h"
+#include "zoolib/ZCompat_algorithm.h"
+#include "zoolib/ZTxn.h"
+#include "zoolib/ZUtil_STL.h"
 
 using std::vector;
 

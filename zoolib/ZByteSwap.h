@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZByteSwap__ 1
 #include "zconfig.h"
 
-#include "ZDebug.h"
-#include "ZTypes.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZTypes.h"
 
 // AG 2000-02-06. Much of the code in this file inlines. For that to work we need the various
 // compilers to see quite different code. The first section of this file is #ifed out of

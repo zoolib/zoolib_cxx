@@ -18,19 +18,19 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Asset.h"
+#include "zoolib/ZUtil_Asset.h"
 
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#include "ZAsset_MacOS.h"
-#include "ZAsset_POSIX.h"
-#include "ZAsset_Std.h"
-#include "ZAsset_Win.h"
-#include "ZFile_POSIX.h"
-#include "ZMacOSX.h"
-#include "ZStream_Mac.h"
-#include "ZStream_PageBuffered.h"
-#include "ZString.h" // For pascal string conversions
+#include "zoolib/ZAsset_MacOS.h"
+#include "zoolib/ZAsset_POSIX.h"
+#include "zoolib/ZAsset_Std.h"
+#include "zoolib/ZAsset_Win.h"
+#include "zoolib/ZFile_POSIX.h"
+#include "zoolib/ZMacOSX.h"
+#include "zoolib/ZStream_Mac.h"
+#include "zoolib/ZStream_PageBuffered.h"
+#include "zoolib/ZString.h" // For pascal string conversions
 
 using std::string;
 using std::vector;
@@ -125,8 +125,8 @@ static bool sGetAssetTreeInfoFromExecutable(const string& iName, int& oFD, size_
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "ZUnicode.h"
-#include "ZUtil_Win.h"
+#include "zoolib/ZUnicode.h"
+#include "zoolib/ZUtil_Win.h"
 
 #if defined(__MINGW32__)
 

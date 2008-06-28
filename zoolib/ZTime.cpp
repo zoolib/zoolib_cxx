@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTime.h"
+#include "zoolib/ZTime.h"
 
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#include "ZCompat_cmath.h"
+#include "zoolib/ZCompat_cmath.h"
 
 #if ZCONFIG_SPI_Enabled(POSIX)
 #	include <sys/time.h> // For timeval

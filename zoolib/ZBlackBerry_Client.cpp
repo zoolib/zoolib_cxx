@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZBlackBerry_Client.h"
+#include "zoolib/ZBlackBerry_Client.h"
 
-#include "ZLog.h"
+#include "zoolib/ZLog.h"
 
 using std::runtime_error;
 using std::string;

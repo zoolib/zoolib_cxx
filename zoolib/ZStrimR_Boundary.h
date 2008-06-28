@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStrimR_Boundary__ 1
 #include "zconfig.h"
 
-#include "ZStrimmer.h"
+#include "zoolib/ZStrimmer.h"
 
 #include <string>
 

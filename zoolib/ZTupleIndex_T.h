@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTupleIndex_T__
 #include "zconfig.h"
 
-#include "ZTupleIndex.h"
+#include "zoolib/ZTupleIndex.h"
 
 // =================================================================================================
 #pragma mark -

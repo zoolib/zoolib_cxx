@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStreamerRWFactory_Buffered.h"
-#include "ZStream_Buffered.h"
+#include "zoolib/ZStreamerRWFactory_Buffered.h"
+#include "zoolib/ZStream_Buffered.h"
 
 // =================================================================================================
 #pragma mark -

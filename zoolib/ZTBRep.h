@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTBRep__ 1
 #include "zconfig.h"
 
-#include "ZCompat_NonCopyable.h"
-#include "ZTBQuery.h"
-#include "ZTuple.h"
-#include "ZTxn.h"
+#include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZTBQuery.h"
+#include "zoolib/ZTuple.h"
+#include "zoolib/ZTxn.h"
 
 class ZTBRepTransaction;
 

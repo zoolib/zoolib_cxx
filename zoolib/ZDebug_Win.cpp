@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZDebug_Win.h"
+#include "zoolib/ZDebug_Win.h"
 
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 // =================================================================================================
 
@@ -29,8 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstdarg>
 #include <cstdio>
 
-#include "ZTypes.h"
-#include "ZWinHeader.h"
+#include "zoolib/ZTypes.h"
+#include "zoolib/ZWinHeader.h"
 
 
 #if ZCONFIG(Compiler, MSVC)

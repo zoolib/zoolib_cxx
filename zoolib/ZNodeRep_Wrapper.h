@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNodeRep_Wrapper__ 1
 #include "zconfig.h"
 
-#include "ZNode.h"
+#include "zoolib/ZNode.h"
 
 // =================================================================================================
 #pragma mark -

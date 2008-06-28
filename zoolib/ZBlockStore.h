@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZBlockStore__ 1
 #include "zconfig.h"
 
-#include "ZStreamer.h" // For ZStreamerRWPos
-#include "ZThread.h" // For ZMutex
+#include "zoolib/ZStreamer.h" // For ZStreamerRWPos
+#include "zoolib/ZThread.h" // For ZMutex
 
 #include <string> // For string
 

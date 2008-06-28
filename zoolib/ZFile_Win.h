@@ -21,8 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZFile_Win__
 #define __ZFile_Win__ 1
 #include "zconfig.h"
-#include "ZCONFIG_API.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_API.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__File_Win
 #	define ZCONFIG_API_Avail__File_Win ZCONFIG_SPI_Enabled(Win)
@@ -32,11 +32,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_API_Desired__File_Win 1
 #endif
 
-#include "ZFile.h"
+#include "zoolib/ZFile.h"
 
 #if ZCONFIG_API_Enabled(File_Win)
 
-#include "ZWinHeader.h" // For HANDLE
+#include "zoolib/ZWinHeader.h" // For HANDLE
 
 // =================================================================================================
 #pragma mark -

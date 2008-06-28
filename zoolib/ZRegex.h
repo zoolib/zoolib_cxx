@@ -21,8 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZRegex__
 #define __ZRegex__ 1
 #include "zconfig.h"
-#include "ZCONFIG_API.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_API.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__Regex
 #	define ZCONFIG_API_Avail__Regex ZCONFIG_SPI_Enabled(boost)
@@ -34,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Regex)
 
-#include "ZRefCount.h"
+#include "zoolib/ZRefCount.h"
 
 #include <string>
 

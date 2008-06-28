@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNet_Internet__ 1
 #include "zconfig.h"
 
-#include "ZMulti_T.h"
-#include "ZNet.h"
-#include "ZTypes.h"
+#include "zoolib/ZMulti_T.h"
+#include "zoolib/ZNet.h"
+#include "zoolib/ZTypes.h"
 
 #include <string>
 

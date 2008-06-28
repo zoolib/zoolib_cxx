@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNet__ 1
 #include "zconfig.h"
 
-#include "ZCompat_NonCopyable.h"
-#include "ZStreamer.h"
+#include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZStreamer.h"
 
 #include <string>
 #include <stdexcept> // For runtime_error

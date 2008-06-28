@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Strim_JSON.h"
+#include "zoolib/ZUtil_Strim_JSON.h"
 
-#include "ZCompat_cmath.h"
-#include "ZStrimW_Escapify.h"
-#include "ZTuple.h"
-#include "ZUtil_Strim.h"
+#include "zoolib/ZCompat_cmath.h"
+#include "zoolib/ZStrimW_Escapify.h"
+#include "zoolib/ZTuple.h"
+#include "zoolib/ZUtil_Strim.h"
 
 using std::string;
 using std::vector;

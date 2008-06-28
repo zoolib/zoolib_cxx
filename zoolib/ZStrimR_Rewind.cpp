@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStrimR_Rewind.h"
+#include "zoolib/ZStrimR_Rewind.h"
 
-#include "ZDebug.h"
-#include "ZStream.h"
-#include "ZStrim_Stream.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZStrim_Stream.h"
 
 #define kDebug_StrimR_Rewind 1
 

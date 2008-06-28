@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDList__
 #include "zconfig.h"
 
-#include "ZCompat_operator_bool.h"
-#include "ZDebug.h"
-#include "ZTypes.h"
+#include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZTypes.h"
 
 namespace ZooLib {
 

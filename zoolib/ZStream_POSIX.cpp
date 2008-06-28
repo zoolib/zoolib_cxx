@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStream_POSIX.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZStream_POSIX.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #include <errno.h>
 #include <stdexcept> // for range_error

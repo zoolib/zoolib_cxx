@@ -66,9 +66,9 @@ SOFTWARE.
 
 ************************************************************************/
 
-#include "ZBigRegion.h"
-#include "ZDebug.h"
-#include "ZMemory.h"
+#include "zoolib/ZBigRegion.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZMemory.h"
 
 using std::max;
 using std::min;

@@ -18,10 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStream_PageBuffered.h"
+#include "zoolib/ZStream_PageBuffered.h"
 
-#include "ZCompat_algorithm.h"
-#include "ZMemory.h"
+#include "zoolib/ZCompat_algorithm.h"
+#include "zoolib/ZMemory.h"
 
 using std::min;
 

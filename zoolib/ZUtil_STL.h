@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_STL__
 #include "zconfig.h"
 
-#include "ZCompat_algorithm.h"
-#include "ZDebug.h"
+#include "zoolib/ZCompat_algorithm.h"
+#include "zoolib/ZDebug.h"
 
 #include <map>
 #include <set>

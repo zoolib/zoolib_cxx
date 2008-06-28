@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStream_ZLib.h"
+#include "zoolib/ZStream_ZLib.h"
 
 #if ZCONFIG_API_Enabled(Stream_ZLib)
 
-#include "ZCompat_algorithm.h" // For min/max
-#include "ZDebug.h"
+#include "zoolib/ZCompat_algorithm.h" // For min/max
+#include "zoolib/ZDebug.h"
 
 #include <stdexcept> // For runtime_error
 

@@ -21,8 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZPtrUseCounted__
 #define __ZPtrUseCounted__ 1
 
-#include "ZCompat_operator_bool.h"
-#include "ZThread.h"
+#include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZThread.h"
 
 // =================================================================================================
 #pragma mark -

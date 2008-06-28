@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDCPixmapBlit__ 1
 #include "zconfig.h"
 
-#include "ZDCPixmapNS.h"
+#include "zoolib/ZDCPixmapNS.h"
 
 // =================================================================================================
 

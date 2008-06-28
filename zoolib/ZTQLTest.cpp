@@ -1,10 +1,10 @@
-#include "ZTQL_Query.h"
+#include "zoolib/ZTQL_Query.h"
 
-#include "ZTQL_Optimize.h"
+#include "zoolib/ZTQL_Optimize.h"
 
-#include "ZUtil_Strim_TQL.h"
-#include "ZUtil_TQLConvert.h"
-#include "ZUtil_Strim_Tuple.h"
+#include "zoolib/ZUtil_Strim_TQL.h"
+#include "zoolib/ZUtil_TQLConvert.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::set;
 using std::string;

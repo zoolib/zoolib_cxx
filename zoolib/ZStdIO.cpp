@@ -1,7 +1,7 @@
-#include "ZStdIO.h"
+#include "zoolib/ZStdIO.h"
 
-#include "ZStream_POSIX.h"
-#include "ZStrim_Stream.h"
+#include "zoolib/ZStream_POSIX.h"
+#include "zoolib/ZStrim_Stream.h"
 
 static ZStreamR_FILE sStreamR_In(stdin);
 static ZStreamW_FILE sStreamW_Out(stdout);

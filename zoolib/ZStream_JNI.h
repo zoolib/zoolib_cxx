@@ -20,9 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZStream_JNI__
 #define __ZStream_JNI__ 1
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#include "ZStream.h"
+#include "zoolib/ZStream.h"
 
 #if ZCONFIG_SPI_Enabled(JNI)
 

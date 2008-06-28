@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZHTTP__ 1
 #include "zconfig.h"
 
-#include "ZStream.h"
-#include "ZStreamer.h"
-#include "ZTrail.h"
-#include "ZTuple.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZStreamer.h"
+#include "zoolib/ZTrail.h"
+#include "zoolib/ZTuple.h"
 
 #include <vector>
 

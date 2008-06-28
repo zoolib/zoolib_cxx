@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStreamWriter__
 #include "zconfig.h"
 
-#include "ZStreamer.h"
-#include "ZSleeper.h"
-#include "ZThread.h"
+#include "zoolib/ZStreamer.h"
+#include "zoolib/ZSleeper.h"
+#include "zoolib/ZThread.h"
 
 class ZStreamWriterRunner;
 

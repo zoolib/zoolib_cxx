@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZGeom__
 #include "zconfig.h"
 
-#include "ZTypes.h" // For ZRectPOD and ZPointPOD
+#include "zoolib/ZTypes.h" // For ZRectPOD and ZPointPOD
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 #	include ZMACINCLUDE(CarbonCore,MacTypes.h)
@@ -45,9 +45,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Include these after the platform files -- cmath causes problems
 // for Mac headers ('relation' is undefined) when building with CW.
-#include "ZCompat_algorithm.h" // For min and max
-#include "ZCompat_cmath.h" // For sqrt
-#include "ZCompat_operator_bool.h"
+#include "zoolib/ZCompat_algorithm.h" // For min and max
+#include "zoolib/ZCompat_cmath.h" // For sqrt
+#include "zoolib/ZCompat_operator_bool.h"
 
 // =================================================================================================
 #pragma mark -

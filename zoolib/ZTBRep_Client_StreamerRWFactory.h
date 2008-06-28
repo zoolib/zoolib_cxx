@@ -21,9 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZTBRep_Client_StreamerRWFactory__
 #define __ZTBRep_Client_StreamerRWFactory__ 1
 
-#include "ZClient.h"
-#include "ZStreamer.h"
-#include "ZTBRep_Client.h"
+#include "zoolib/ZClient.h"
+#include "zoolib/ZStreamer.h"
+#include "zoolib/ZTBRep_Client.h"
 
 // =================================================================================================
 #pragma mark -

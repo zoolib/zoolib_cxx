@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSWatcher_Undo__
 #include "zconfig.h"
 
-#include "ZTSWatcher.h"
+#include "zoolib/ZTSWatcher.h"
 
 #ifndef ZCONFIG_TSWatcher_Undo_Debug
 #	define ZCONFIG_TSWatcher_Undo_Debug 1

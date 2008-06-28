@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZBlackBerry_Union__ 1
 #include "zconfig.h"
 
-#include "ZBlackBerry.h"
+#include "zoolib/ZBlackBerry.h"
 
 namespace ZBlackBerry {
 

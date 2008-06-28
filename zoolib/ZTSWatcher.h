@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSWatcher__
 #include "zconfig.h"
 
-#include "ZCompat_NonCopyable.h"
-#include "ZMemoryBlock.h"
-#include "ZTBQuery.h"
+#include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZMemoryBlock.h"
+#include "zoolib/ZTBQuery.h"
 
 #include <map>
 #include <set>

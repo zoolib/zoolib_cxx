@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTextCoder_Std.h"
+#include "zoolib/ZTextCoder_Std.h"
 
 using std::string;
 
@@ -26,7 +26,7 @@ using std::string;
 #pragma mark -
 #pragma mark * Factory functions
 
-#include "ZFactoryChain.h"
+#include "zoolib/ZFactoryChain.h"
 
 static bool sMake_Decoder(ZTextDecoder*& oResult, const string& iParam)
 	{

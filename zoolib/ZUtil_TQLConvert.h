@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_TQLConvert__
 #include "zconfig.h"
 
-#include "ZTQL_Query.h"
-#include "ZTBQuery.h"
+#include "zoolib/ZTQL_Query.h"
+#include "zoolib/ZTBQuery.h"
 
 // =================================================================================================
 #pragma mark -

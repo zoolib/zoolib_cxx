@@ -18,24 +18,24 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZHTTP.h"
+#include "zoolib/ZHTTP.h"
 
-#include "ZCompat_algorithm.h"
-#include "ZDebug.h"
-#include "ZMemory.h"
-#include "ZMemoryBlock.h"
-#include "ZMIME.h"
-#include "ZStreamR_Boundary.h"
-#include "ZStreamR_SkipAllOnDestroy.h"
-#include "ZStream_Limited.h"
-#include "ZStream_String.h"
-#include "ZStreamer.h"
-#include "ZString.h"
-#include "ZStrim_Stream.h"
-#include "ZStrimmer.h"
-#include "ZStrimmer_Stream.h"
-#include "ZStrimmer_Streamer.h"
-#include "ZTextCoder.h"
+#include "zoolib/ZCompat_algorithm.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZMemory.h"
+#include "zoolib/ZMemoryBlock.h"
+#include "zoolib/ZMIME.h"
+#include "zoolib/ZStreamR_Boundary.h"
+#include "zoolib/ZStreamR_SkipAllOnDestroy.h"
+#include "zoolib/ZStream_Limited.h"
+#include "zoolib/ZStream_String.h"
+#include "zoolib/ZStreamer.h"
+#include "zoolib/ZString.h"
+#include "zoolib/ZStrim_Stream.h"
+#include "zoolib/ZStrimmer.h"
+#include "zoolib/ZStrimmer_Stream.h"
+#include "zoolib/ZStrimmer_Streamer.h"
+#include "zoolib/ZTextCoder.h"
 
 #include <cctype>
 

@@ -21,8 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZNet_RFCOMM_OSX__
 #define __ZNet_RFCOMM_OSX__ 1
 #include "zconfig.h"
-#include "ZCONFIG_API.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_API.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 // RFCOMM_OSX is only available when building for 10.2 and later
 #ifndef ZCONFIG_API_Avail__Net_RFCOMM_OSX
@@ -44,7 +44,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_API_Desired__Net_RFCOMM_OSX 1
 #endif
 
-#include "ZNet_RFCOMM.h"
+#include "zoolib/ZNet_RFCOMM.h"
 
 #if ZCONFIG_API_Enabled(Net_RFCOMM_OSX)
 

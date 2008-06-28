@@ -18,10 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZML.h"
-#include "ZStrimR_Boundary.h"
-#include "ZUtil_Strim.h"
-#include "ZMemory.h"
+#include "zoolib/ZML.h"
+#include "zoolib/ZStrimR_Boundary.h"
+#include "zoolib/ZUtil_Strim.h"
+#include "zoolib/ZMemory.h"
 
 using std::min;
 using std::pair;

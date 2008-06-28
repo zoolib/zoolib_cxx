@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStream__ 1
 #include "zconfig.h"
 
-#include "ZTypes.h"
+#include "zoolib/ZTypes.h"
 
 #include <stdexcept> // For std::range_error
 #include <string>

@@ -21,10 +21,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZBlackBerry_OSXUSB__
 #define __ZBlackBerry_OSXUSB__ 1
 #include "zconfig.h"
-#include "ZCONFIG_API.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_API.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#include "ZUSB_OSX.h"
+#include "zoolib/ZUSB_OSX.h"
 
 #ifndef ZCONFIG_API_Avail__BlackBerry_OSXUSB
 #	if ZCONFIG_API_Enabled(USB_OSX)
@@ -40,12 +40,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_API_Desired__BlackBerry_OSXUSB 1
 #endif
 
-#include "ZBlackBerry.h"
+#include "zoolib/ZBlackBerry.h"
 
 #if ZCONFIG_API_Enabled(BlackBerry_OSXUSB)
 
 
-#include "ZTime.h"
+#include "zoolib/ZTime.h"
 
 #include <CoreFoundation/CFRunLoop.h> // For CFRunLoopRef
 #include <mach/mach.h> // For mach_port_t

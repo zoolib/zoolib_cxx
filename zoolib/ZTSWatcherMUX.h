@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSWatcherMUX__
 #include "zconfig.h"
 
-#include "ZDList.h"
-#include "ZTSWatcher.h"
+#include "zoolib/ZDList.h"
+#include "zoolib/ZTSWatcher.h"
 
 #ifndef ZCONFIG_TSWatcherMUX_Debug
 #	define ZCONFIG_TSWatcherMUX_Debug 1

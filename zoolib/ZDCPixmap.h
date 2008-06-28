@@ -22,11 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDCPixmap__ 1
 #include "zconfig.h"
 
-#include "ZCompat_NonCopyable.h"
-#include "ZDCPixmapNS.h"
-#include "ZGeom.h"
-#include "ZRefCount.h"
-#include "ZRGBColor.h"
+#include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZDCPixmapNS.h"
+#include "zoolib/ZGeom.h"
+#include "zoolib/ZRefCount.h"
+#include "zoolib/ZRGBColor.h"
 
 // For documentation, see ZDCPixmapNS.cpp
 

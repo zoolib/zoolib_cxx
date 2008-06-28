@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZSleeper__ 1
 #include "zconfig.h"
 
-#include "ZRefCount.h"
-#include "ZThread.h"
-#include "ZTime.h"
+#include "zoolib/ZRefCount.h"
+#include "zoolib/ZThread.h"
+#include "zoolib/ZTime.h"
 
 class ZSleeperRunner;
 

@@ -18,14 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZBlackBerry_OSXUSB.h"
+#include "zoolib/ZBlackBerry_OSXUSB.h"
 
 #if ZCONFIG_API_Enabled(BlackBerry_OSXUSB)
 
-#include "ZBlackBerry_Streamer.h"
+#include "zoolib/ZBlackBerry_Streamer.h"
 
-#include "ZLog.h"
-#include "ZMemory.h"
+#include "zoolib/ZLog.h"
+#include "zoolib/ZMemory.h"
 
 using std::runtime_error;
 using std::vector;

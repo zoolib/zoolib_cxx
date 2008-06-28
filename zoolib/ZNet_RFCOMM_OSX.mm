@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZNet_RFCOMM_OSX.h"
+#include "zoolib/ZNet_RFCOMM_OSX.h"
 
 #if ZCONFIG_API_Enabled(Net_RFCOMM_OSX)
 
@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import <IOBluetooth/objc/IOBluetoothRFCOMMChannel.h>
 #import <IOBluetooth/objc/IOBluetoothSDPServiceRecord.h>
 
-#include "ZOBJC.h"
+#include "zoolib/ZOBJC.h"
 
 using std::deque;
 using std::min;
@@ -41,7 +41,7 @@ using std::runtime_error;
 #pragma mark -
 #pragma mark * Factory functions
 
-#include "ZFactoryChain.h"
+#include "zoolib/ZFactoryChain.h"
 
 /*
 static bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Internet::LookupParam_t iParam)

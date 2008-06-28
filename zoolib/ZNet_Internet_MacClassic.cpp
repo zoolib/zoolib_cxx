@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZNet_Internet_MacClassic.h"
+#include "zoolib/ZNet_Internet_MacClassic.h"
 
 // =================================================================================================
 #if 0//
-#include "ZMemory.h"
+#include "zoolib/ZMemory.h"
 
 struct ZNet_Internet_MacClassic::Threaded_UDPiopb : public ZThreadTM_PBHeader
 	{

@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSWatcherServerAsync__
 #include "zconfig.h"
 
-#include "ZCommer.h"
-#include "ZTSWatcher.h"
+#include "zoolib/ZCommer.h"
+#include "zoolib/ZTSWatcher.h"
 
 // =================================================================================================
 #pragma mark -

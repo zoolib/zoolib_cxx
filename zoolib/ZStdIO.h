@@ -2,8 +2,8 @@
 #define __ZStdIO__ 1
 #include "zconfig.h"
 
-#include "ZStream.h"
-#include "ZStrim.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZStrim.h"
 
 namespace ZStdIO {
 

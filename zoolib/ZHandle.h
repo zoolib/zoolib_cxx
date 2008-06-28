@@ -21,11 +21,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZHandle__
 #define __ZHandle__ 1
 #include "zconfig.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#include "ZCompat_NonCopyable.h"
-#include "ZRefCount.h"
-#include "ZStreamer.h"
+#include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZRefCount.h"
+#include "zoolib/ZStreamer.h"
 
 #include <cstddef> // For size_t
 

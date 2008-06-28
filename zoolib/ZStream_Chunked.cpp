@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStream_Chunked.h"
+#include "zoolib/ZStream_Chunked.h"
 
-#include "ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZMemory.h" // For ZBlockCopy
 
 using std::min;
 

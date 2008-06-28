@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStreamReader__
 #include "zconfig.h"
 
-#include "ZStreamer.h"
-#include "ZThread.h"
+#include "zoolib/ZStreamer.h"
+#include "zoolib/ZThread.h"
 
 class ZStreamReaderRunner;
 

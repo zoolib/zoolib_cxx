@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZNet_RFCOMM.h"
-#include "ZFactoryChain.h"
+#include "zoolib/ZNet_RFCOMM.h"
+#include "zoolib/ZFactoryChain.h"
 
 // =================================================================================================
 #pragma mark -

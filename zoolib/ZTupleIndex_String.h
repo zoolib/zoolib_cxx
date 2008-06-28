@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTupleIndex_String__
 #include "zconfig.h"
 
-#include "ZTupleIndex.h"
-#include "ZTextCollator.h"
+#include "zoolib/ZTupleIndex.h"
+#include "zoolib/ZTextCollator.h"
 
 // =================================================================================================
 #pragma mark -

@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStream_LZW__ 1
 #include "zconfig.h"
 
-#include "ZBitStream.h"
-#include "ZStream.h"
+#include "zoolib/ZBitStream.h"
+#include "zoolib/ZStream.h"
 
 // =================================================================================================
 #pragma mark -

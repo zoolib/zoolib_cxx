@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Strim_TQL.h"
-#include "ZUtil_Strim_TQL_Spec.h"
-#include "ZUtil_Strim_Tuple.h"
+#include "zoolib/ZUtil_Strim_TQL.h"
+#include "zoolib/ZUtil_Strim_TQL_Spec.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::set;
 using std::string;

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStreamR_Source.h"
-#include "ZMemory.h" // For ZBlockSet & ZBlockCopy
+#include "zoolib/ZStreamR_Source.h"
+#include "zoolib/ZMemory.h" // For ZBlockSet & ZBlockCopy
 
 using std::min;
 using std::pair;

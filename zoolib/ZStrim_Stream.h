@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZStrim_Stream__
 #define __ZStrim_Stream__ 1
 
-#include "ZStrim.h"
+#include "zoolib/ZStrim.h"
 
 class ZStreamR;
 class ZStreamW;

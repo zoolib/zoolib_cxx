@@ -18,17 +18,17 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTBServer.h"
+#include "zoolib/ZTBServer.h"
 
-#include "ZLog.h"
-#include "ZStream.h"
-#include "ZTB.h"
-#include "ZTime.h"
+#include "zoolib/ZLog.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZTB.h"
+#include "zoolib/ZTime.h"
 
-#include "ZUtil_STL.h" // For sSortedEraseMustContain etc
+#include "zoolib/ZUtil_STL.h" // For sSortedEraseMustContain etc
 using namespace ZUtil_STL;
 
-#include "ZUtil_Strim_Tuple.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::map;
 using std::pair;

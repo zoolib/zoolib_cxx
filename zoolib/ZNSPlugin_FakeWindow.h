@@ -2,8 +2,8 @@
 #define __ZNSPlugin_FakeWindow__ 1
 #include "zconfig.h"
 
-#include "ZNSPlugin.h"
-#include "ZFakeWindow.h"
+#include "zoolib/ZNSPlugin.h"
+#include "zoolib/ZFakeWindow.h"
 
 // =================================================================================================
 #pragma mark -

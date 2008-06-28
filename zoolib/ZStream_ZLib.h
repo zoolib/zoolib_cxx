@@ -21,8 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZStream_ZLib__
 #define __ZStream_ZLib__ 1
 #include "zconfig.h"
-#include "ZCONFIG_API.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_API.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__Stream_ZLib
 #	define ZCONFIG_API_Avail__Stream_ZLib ZCONFIG_SPI_Enabled(zlib)
@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_API_Desired__Stream_ZLib 1
 #endif
 
-#include "ZStreamer.h"
+#include "zoolib/ZStreamer.h"
 
 #if ZCONFIG_API_Enabled(Stream_ZLib)
 

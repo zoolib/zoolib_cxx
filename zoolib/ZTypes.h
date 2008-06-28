@@ -21,13 +21,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZTypes__
 #define __ZTypes__
 
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 // Pull in definition of size_t, which is heavily used by zoolib
 #include <cstddef>
 
 // Incorporate standard int types.
-#include "ZStdInt.h"
+#include "zoolib/ZStdInt.h"
 
 // ==================================================
 

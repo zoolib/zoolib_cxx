@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTQLEngine.h"
+#include "zoolib/ZTQLEngine.h"
 
-#include "ZStrim.h"
+#include "zoolib/ZStrim.h"
 
 using std::string;
 using std::vector;

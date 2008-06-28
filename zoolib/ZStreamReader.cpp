@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStreamReader.h"
-#include "ZThreadSimple.h"
+#include "zoolib/ZStreamReader.h"
+#include "zoolib/ZThreadSimple.h"
 
 // =================================================================================================
 #pragma mark -

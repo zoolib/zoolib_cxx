@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZDCPixmap.h"
-#include "ZMemory.h" // For ZBlockCopy
-#include "ZStream.h"
+#include "zoolib/ZDCPixmap.h"
+#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZStream.h"
 
 using namespace ZDCPixmapNS;
 

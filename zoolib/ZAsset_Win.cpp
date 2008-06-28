@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZAsset_Win.h"
+#include "zoolib/ZAsset_Win.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "ZStream_Win.h"
+#include "zoolib/ZStream_Win.h"
 
 #include <stdexcept>
 #include <string> // because runtime_error may require it

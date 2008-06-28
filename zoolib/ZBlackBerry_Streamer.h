@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZBlackBerry_Streamer__ 1
 #include "zconfig.h"
 
-#include "ZBlackBerry.h"
-#include "ZCommer.h"
-#include "ZMemoryBlock.h"
+#include "zoolib/ZBlackBerry.h"
+#include "zoolib/ZCommer.h"
+#include "zoolib/ZMemoryBlock.h"
 
 namespace ZBlackBerry {
 

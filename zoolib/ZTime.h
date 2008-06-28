@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTime__ 1
 #include "zconfig.h"
 
-#include "ZTypes.h"
+#include "zoolib/ZTypes.h"
 
-#include "ZCompat_operator_bool.h"
+#include "zoolib/ZCompat_operator_bool.h"
 
 // =================================================================================================
 #pragma mark -

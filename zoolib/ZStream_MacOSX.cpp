@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStream_MacOSX.h"
+#include "zoolib/ZStream_MacOSX.h"
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
 
@@ -171,7 +171,7 @@ CGDataProviderRef ZStream_MacOSX::sCGDataProviderCreate(ZRef<ZStreamerR> iStream
 #pragma mark -
 #pragma mark * ZStream_MacOSX::sCGDataProviderCreateRewind
 
-#include "ZStreamer.h"
+#include "zoolib/ZStreamer.h"
 
 namespace ZANONYMOUS {
 

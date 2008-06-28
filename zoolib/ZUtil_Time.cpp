@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Time.h"
-#include "ZCompat_cmath.h" // For fmod
-#include "ZDebug.h"
-#include "ZMemory.h" // For ZBlockZero
-#include "ZStream.h"
-#include "ZString.h"
+#include "zoolib/ZUtil_Time.h"
+#include "zoolib/ZCompat_cmath.h" // For fmod
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZMemory.h" // For ZBlockZero
+#include "zoolib/ZStream.h"
+#include "zoolib/ZString.h"
 
 #include <ctime>
 
@@ -39,7 +39,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <sys/time.h>
 #endif
 
-#include "ZThread.h"
+#include "zoolib/ZThread.h"
 
 #include <cstdio>
 

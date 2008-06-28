@@ -20,13 +20,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZWinCOM__
 #define __ZWinCOM__ 1
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 // =================================================================================================
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "ZWinHeader.h"
+#include "zoolib/ZWinHeader.h"
 
 // Necessary when building with Cocotron
 #include <ole2.h>

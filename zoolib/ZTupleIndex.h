@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTupleIndex__
 #include "zconfig.h"
 
-#include "ZTBSpec.h"
+#include "zoolib/ZTBSpec.h"
 
 #include <deque>
 #include <list>

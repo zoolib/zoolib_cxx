@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTextCollator_ICU.h"
+#include "zoolib/ZTextCollator_ICU.h"
 
 #if ZCONFIG_API_Enabled(TextCollator_ICU)
 
-#include "ZDebug.h"
+#include "zoolib/ZDebug.h"
 
 #include "unicode/ucol.h"
 #include "unicode/usearch.h"
@@ -37,7 +37,7 @@ using std::string;
 #pragma mark -
 #pragma mark * Factory functions
 
-#include "ZFactoryChain.h"
+#include "zoolib/ZFactoryChain.h"
 
 static bool sMake_Collator(ZRef<ZTextCollatorRep>& oResult, const ZTextCollatorRep::Param_t& iParam)
 	{

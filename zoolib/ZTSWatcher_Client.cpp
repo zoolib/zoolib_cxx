@@ -18,14 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTSWatcher_Client.h"
+#include "zoolib/ZTSWatcher_Client.h"
 
-#include "ZDebug.h"
-#include "ZLog.h"
-#include "ZMemoryBlock.h"
-#include "ZStream_Count.h"
-#include "ZUtil_STL.h"
-#include "ZUtil_Strim_Tuple.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZLog.h"
+#include "zoolib/ZMemoryBlock.h"
+#include "zoolib/ZStream_Count.h"
+#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::map;
 using std::pair;

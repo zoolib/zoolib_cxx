@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim_TQL_Spec__
 #include "zconfig.h"
 
-#include "ZTQL_Spec.h"
+#include "zoolib/ZTQL_Spec.h"
 
 class ZStrimW;
 

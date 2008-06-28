@@ -18,14 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUSB_OSX.h"
+#include "zoolib/ZUSB_OSX.h"
 
 #if ZCONFIG_API_Enabled(USB_OSX)
 
-#include "ZByteSwap.h"
-#include "ZLog.h"
-#include "ZMemory.h" // For ZBlockCopy
-#include "ZUtil_Strim_Data.h"
+#include "zoolib/ZByteSwap.h"
+#include "zoolib/ZLog.h"
+#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZUtil_Strim_Data.h"
 
 #include <CoreFoundation/CoreFoundation.h>
 

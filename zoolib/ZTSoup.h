@@ -21,8 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZTSoup__
 #define __ZTSoup__ 1
 
-#include "ZTSWatcher.h"
-#include "ZDList.h"
+#include "zoolib/ZTSWatcher.h"
+#include "zoolib/ZDList.h"
 
 class ZTCrouton;
 class ZTSieve;

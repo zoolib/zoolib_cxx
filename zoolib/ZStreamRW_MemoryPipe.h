@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
-#include "ZStream.h"
-#include "ZThread.h" // For ZMutexNR, ZCondition
+#include "zoolib/ZStream.h"
+#include "zoolib/ZThread.h" // For ZMutexNR, ZCondition
 
 // =================================================================================================
 #pragma mark -

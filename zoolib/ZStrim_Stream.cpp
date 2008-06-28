@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStrim_Stream.h"
+#include "zoolib/ZStrim_Stream.h"
 
-#include "ZByteSwap.h"
-#include "ZCompat_algorithm.h"
-#include "ZStream.h"
-#include "ZTextCoder.h"
+#include "zoolib/ZByteSwap.h"
+#include "zoolib/ZCompat_algorithm.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZTextCoder.h"
 
 using std::min;
 using std::pair;

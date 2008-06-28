@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStream_Mac.h"
+#include "zoolib/ZStream_Mac.h"
 
 #if ZCONFIG_SPI_Enabled(Carbon)
 
-#include "ZCompat_algorithm.h" // For min
-#include "ZDebug.h"
+#include "zoolib/ZCompat_algorithm.h" // For min
+#include "zoolib/ZDebug.h"
 
 #include ZMACINCLUDE(CarbonCore,Resources.h)
 

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Tuple__ 1
 #include "zconfig.h"
 
-#include "ZTuple.h"
+#include "zoolib/ZTuple.h"
 
 // =================================================================================================
 #pragma mark -

@@ -18,15 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStrimW_ML.h"
+#include "zoolib/ZStrimW_ML.h"
 
-#include "ZCompat_cmath.h" // For fmod
-#include "ZDebug.h"
-#include "ZString.h"
-#include "ZTuple.h"
-#include "ZUtil_STL.h"
-#include "ZUtil_Time.h"
-#include "ZUtil_Strim_Tuple.h"
+#include "zoolib/ZCompat_cmath.h" // For fmod
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZString.h"
+#include "zoolib/ZTuple.h"
+#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_Time.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 #define kDebug_StrimW_ML 1
 

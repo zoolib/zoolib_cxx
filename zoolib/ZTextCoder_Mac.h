@@ -21,8 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZTextCoder_Mac__
 #define __ZTextCoder_Mac__ 1
 #include "zconfig.h"
-#include "ZCONFIG_API.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_API.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__TextCoder_Mac
 #	define ZCONFIG_API_Avail__TextCoder_Mac \
@@ -33,7 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_API_Desired__TextCoder_Mac 1
 #endif
 
-#include "ZTextCoder.h"
+#include "zoolib/ZTextCoder.h"
 
 #if ZCONFIG_API_Enabled(TextCoder_Mac)
 

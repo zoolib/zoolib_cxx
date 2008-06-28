@@ -18,16 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZBlackBerry_Streamer.h"
+#include "zoolib/ZBlackBerry_Streamer.h"
 
-#include "ZByteSwap.h"
-#include "ZLog.h"
-#include "ZMemory.h" // For ZBlockCopy
-#include "ZPtrUseCounted.h"
-#include "ZStream_Limited.h"
-#include "ZStream_SHA1.h"
-#include "ZThreadSimple.h"
-#include "ZUtil_STL.h"
+#include "zoolib/ZByteSwap.h"
+#include "zoolib/ZLog.h"
+#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZPtrUseCounted.h"
+#include "zoolib/ZStream_Limited.h"
+#include "zoolib/ZStream_SHA1.h"
+#include "zoolib/ZThreadSimple.h"
+#include "zoolib/ZUtil_STL.h"
 
 #include <deque>
 

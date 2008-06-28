@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
-#include "ZTQL_RelHead.h"
-#include "ZTuple.h"
+#include "zoolib/ZTQL_RelHead.h"
+#include "zoolib/ZTuple.h"
 
 #include <set>
 

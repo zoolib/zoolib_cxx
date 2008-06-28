@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZMain.h"
-#include "ZDebug.h"
+#include "zoolib/ZMain.h"
+#include "zoolib/ZDebug.h"
 
 #include <stdexcept>
 
@@ -58,8 +58,8 @@ static int sMain(int argc, char **argv)
 #if ZCONFIG_SPI_Enabled(MacClassic)\
 	|| (ZCONFIG_SPI_Enabled(Carbon) && !ZCONFIG_SPI_Enabled(MacOSX))
 
-#include "ZMacOSX.h"
-#include "ZThreadSimple.h"
+#include "zoolib/ZMacOSX.h"
+#include "zoolib/ZThreadSimple.h"
 
 /*
 If WaitNextEvent is called from a thread other than the main thread then the Finder shows us as
@@ -202,7 +202,7 @@ extern "C"int main(int argc, char **argv)
 
 #elif ZCONFIG_SPI_Enabled(Win)
 
-#include "ZWinHeader.h"
+#include "zoolib/ZWinHeader.h"
 
 #if ZCONFIG(Compiler, CodeWarrior) || ZCONFIG(Compiler, MSVC) || defined(__MINGW32__)
 // MSL and the Visual C++ runtime put argc and argv into the globals __argc and __argv.

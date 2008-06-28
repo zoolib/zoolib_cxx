@@ -2,7 +2,7 @@
 #define __ZNSPlugin__ 1
 #include "zconfig.h"
 
-#include "ZTypes.h"
+#include "zoolib/ZTypes.h"
 
 #if ZCONFIG(OS, MacOS7) || ZCONFIG(OS, Carbon)
 #	include <Events.h>

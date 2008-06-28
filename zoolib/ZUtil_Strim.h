@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim__ 1
 #include "zconfig.h"
 
-#include "ZStrim.h"
-#include "ZStrim_CRLF.h" // For ZStrimR_CRLFRemove
-#include "ZStrim_Stream.h" // For ZStrimR_StreamDecoder
+#include "zoolib/ZStrim.h"
+#include "zoolib/ZStrim_CRLF.h" // For ZStrimR_CRLFRemove
+#include "zoolib/ZStrim_Stream.h" // For ZStrimR_StreamDecoder
 
 #include <stdexcept>
 

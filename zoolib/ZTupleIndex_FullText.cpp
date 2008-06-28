@@ -18,14 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTupleIndex_FullText.h"
+#include "zoolib/ZTupleIndex_FullText.h"
 
 #if ZCONFIG_SPI_Enabled(ICU)
 
-#include "ZLog.h"
-#include "ZMemory.h"
-#include "ZStrim.h"
-#include "ZUtil_STL.h"
+#include "zoolib/ZLog.h"
+#include "zoolib/ZMemory.h"
+#include "zoolib/ZStrim.h"
+#include "zoolib/ZUtil_STL.h"
 
 using std::string;
 

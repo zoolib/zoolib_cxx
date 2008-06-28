@@ -21,8 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZDC_QD__
 #define __ZDC_QD__ 1
 #include "zconfig.h"
-#include "ZCONFIG_API.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_API.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__DC_QD
 #	define ZCONFIG_API_Avail__DC_QD ZCONFIG_SPI_Enabled(QuickDraw)
@@ -33,11 +33,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 
-#include "ZDC.h"
+#include "zoolib/ZDC.h"
 
 #if ZCONFIG_API_Enabled(DC_QD)
 
-#include "ZUtil_Mac_LL.h"
+#include "zoolib/ZUtil_Mac_LL.h"
 
 #include ZMACINCLUDE(QD,QDOffscreen.h)
 

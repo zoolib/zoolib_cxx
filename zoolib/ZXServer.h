@@ -21,19 +21,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZXServer__
 #define __ZXServer__ 1
 #include "zconfig.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(X11)
 
-#include "ZDCFont.h"
-#include "ZDCPixmapNS.h"
-#include "ZDCRgn.h"
-#include "ZGeom.h"
-#include "ZRefCount.h"
-#include "ZRGBColor.h"
-#include "ZThread.h"
+#include "zoolib/ZDCFont.h"
+#include "zoolib/ZDCPixmapNS.h"
+#include "zoolib/ZDCRgn.h"
+#include "zoolib/ZGeom.h"
+#include "zoolib/ZRefCount.h"
+#include "zoolib/ZRGBColor.h"
+#include "zoolib/ZThread.h"
 
-#include "ZXLib.h"
+#include "zoolib/ZXLib.h"
 
 #include <map> // for fCachedColors
 

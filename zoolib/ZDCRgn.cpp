@@ -67,10 +67,10 @@ SOFTWARE.
 
 ************************************************************************/
 
-#include "ZDCRgn.h"
-#include "ZDCPoly.h"
-#include "ZDebug.h"
-#include "ZMemory.h"
+#include "zoolib/ZDCRgn.h"
+#include "zoolib/ZDCPoly.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZMemory.h"
 
 #include <cstdio>
 

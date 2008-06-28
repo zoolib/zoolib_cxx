@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZFileFormat_JPEG.h"
+#include "zoolib/ZFileFormat_JPEG.h"
 
 using std::min;
 
@@ -347,10 +347,10 @@ void ZFileFormat_JPEG::StreamR_Segment::Internal_Init(uint8& oSegmentType, bool 
 #pragma mark -
 #pragma mark * ZFileFormat_JPEG, testing
 
-#include "ZStream_HexStrim.h"
-#include "ZStream_Tee.h"
-#include "ZStreamRWPos_RAM.h"
-#include "ZStrim.h"
+#include "zoolib/ZStream_HexStrim.h"
+#include "zoolib/ZStream_Tee.h"
+#include "zoolib/ZStreamRWPos_RAM.h"
+#include "zoolib/ZStrim.h"
 
 namespace ZFileFormat_JPEG {
 void sDumpSegments(const ZStreamR& iStreamR, const ZStrimW& iStrimW);

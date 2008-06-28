@@ -18,16 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Strim_OSXPList.h"
+#include "zoolib/ZUtil_Strim_OSXPList.h"
 
-#include "ZMemoryBlock.h"
-#include "ZML.h"
-#include "ZStream_AsciiStrim.h"
-#include "ZStream_Base64.h"
-#include "ZStrimW_ML.h"
-#include "ZString.h"
-#include "ZUtil_Strim.h"
-#include "ZUtil_Time.h"
+#include "zoolib/ZMemoryBlock.h"
+#include "zoolib/ZML.h"
+#include "zoolib/ZStream_AsciiStrim.h"
+#include "zoolib/ZStream_Base64.h"
+#include "zoolib/ZStrimW_ML.h"
+#include "zoolib/ZString.h"
+#include "zoolib/ZUtil_Strim.h"
+#include "zoolib/ZUtil_Time.h"
 
 using std::string;
 using std::vector;

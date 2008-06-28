@@ -25,11 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define _LARGEFILE64_SOURCE
 #endif
 
-#include "ZFile_POSIX.h"
+#include "zoolib/ZFile_POSIX.h"
 
 #if ZCONFIG_API_Enabled(File_POSIX)
 
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(BeOS)
 #	define ZCONFIG_File_AtAPISupported 0
@@ -38,7 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 
-#include "ZDebug.h"
+#include "zoolib/ZDebug.h"
 
 #include <vector>
 
@@ -58,7 +58,7 @@ using std::vector;
 #pragma mark -
 #pragma mark * Factory functions
 
-#include "ZFactoryChain.h"
+#include "zoolib/ZFactoryChain.h"
 
 static bool sMake_FileLoc(ZRef<ZFileLoc>& oResult, ZFileLoc::ELoc iParam)
 	{
@@ -708,7 +708,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 #else
 
 // This will require that we're built as part of a real application.
-#include "ZMain.h" // For ZMainNS::sArgV
+#include "zoolib/ZMain.h" // For ZMainNS::sArgV
 
 ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 	{

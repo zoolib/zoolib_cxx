@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Strim.h"
+#include "zoolib/ZUtil_Strim.h"
 
-#include "ZCompat_cmath.h" // For pow, NAN and INFINITY
-#include "ZDebug.h"
-#include "ZStrimR_Boundary.h"
+#include "zoolib/ZCompat_cmath.h" // For pow, NAN and INFINITY
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZStrimR_Boundary.h"
 
 // =================================================================================================
 #pragma mark -

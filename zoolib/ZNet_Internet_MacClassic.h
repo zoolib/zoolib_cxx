@@ -22,11 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNet_Internet_MacClassic__ 1
 #include "zconfig.h"
 
-#include "ZNet_Internet.h"
+#include "zoolib/ZNet_Internet.h"
 
 // =================================================================================================
 #if 0
-#include "ZThread.h"
+#include "zoolib/ZThread.h"
 
 #include <AddressXlation.h>
 #include <MacTCP.h>

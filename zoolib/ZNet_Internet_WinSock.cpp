@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZNet_Internet_WinSock.h"
+#include "zoolib/ZNet_Internet_WinSock.h"
 
 #if ZCONFIG_API_Enabled(Net_Internet_WinSock)
 
-#include "ZMemory.h"
-#include "ZTime.h"
+#include "zoolib/ZMemory.h"
+#include "zoolib/ZTime.h"
 
 using std::string;
 
@@ -31,7 +31,7 @@ using std::string;
 #pragma mark -
 #pragma mark * Factory functions
 
-#include "ZFactoryChain.h"
+#include "zoolib/ZFactoryChain.h"
 
 static bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Internet::LookupParam_t iParam)
 	{

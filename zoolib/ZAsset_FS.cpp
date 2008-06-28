@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZAsset_FS.h"
-#include "ZStream_Memory.h" // For ZStreamerRPos_Memory
+#include "zoolib/ZAsset_FS.h"
+#include "zoolib/ZStream_Memory.h" // For ZStreamerRPos_Memory
 
 using std::string;
 using std::vector;

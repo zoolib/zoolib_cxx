@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Stream.h"
+#include "zoolib/ZUtil_Stream.h"
 
-#include "ZCompat_algorithm.h"
-#include "ZDebug.h"
-#include "ZMemory.h"
+#include "zoolib/ZCompat_algorithm.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZMemory.h"
 
 #include <cctype> // for tolower
 #include <vector>

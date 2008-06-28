@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRefCount__ 1
 #include "zconfig.h"
 
-#include "ZThread.h" // For ZThreadSafe_Get, ZThreadSafe_Inc && ZThreadSafe_DecAndTest
+#include "zoolib/ZThread.h" // For ZThreadSafe_Get, ZThreadSafe_Inc && ZThreadSafe_DecAndTest
 
-#include "ZCompat_operator_bool.h"
+#include "zoolib/ZCompat_operator_bool.h"
 
 /*
 Checked/slow versus unchecked/fast access to refcounted objects can be enabled

@@ -18,13 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTextCoder_Mac.h"
+#include "zoolib/ZTextCoder_Mac.h"
 
 #if ZCONFIG_API_Enabled(TextCoder_Mac)
 
-#include "ZDebug.h"
-#include "ZString.h"
-#include "ZUnicode.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZString.h"
+#include "zoolib/ZUnicode.h"
 
 #include <stdexcept>
 
@@ -39,7 +39,7 @@ static const size_t kBufSize = ZooLib::sStackBufferSize;
 #pragma mark -
 #pragma mark * Factory functions
 
-#include "ZFactoryChain.h"
+#include "zoolib/ZFactoryChain.h"
 
 static bool sMake_Decoder(ZTextDecoder*& oResult, const string& iParam)
 	{

@@ -21,8 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZTextCoder_ICU__
 #define __ZTextCoder_ICU__ 1
 #include "zconfig.h"
-#include "ZCONFIG_API.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_API.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__TextCoder_ICU
 #	define ZCONFIG_API_Avail__TextCoder_ICU ZCONFIG_SPI_Enabled(ICU)
@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_API_Desired__TextCoder_ICU 1
 #endif
 
-#include "ZTextCoder.h"
+#include "zoolib/ZTextCoder.h"
 
 #if ZCONFIG_API_Enabled(TextCoder_ICU)
 

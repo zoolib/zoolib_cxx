@@ -1,7 +1,7 @@
-#include "ZNSPlugin_FakeWindow.h"
-#include "ZDC_GDI.h"
-#include "ZDC_QD.h"
-#include "ZUtil_Win.h"
+#include "zoolib/ZNSPlugin_FakeWindow.h"
+#include "zoolib/ZDC_GDI.h"
+#include "zoolib/ZDC_QD.h"
+#include "zoolib/ZUtil_Win.h"
 
 #define kDebug_FakeWindow_NSPlugin 0
 

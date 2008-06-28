@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZASCompiler__ 1
 #include "zconfig.h"
 
-#include "ZASParser.h"
-#include "ZStream_Count.h"
+#include "zoolib/ZASParser.h"
+#include "zoolib/ZStream_Count.h"
 
 #include <vector>
 #include <string>

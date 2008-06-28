@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Strim_Data.h"
+#include "zoolib/ZUtil_Strim_Data.h"
 
-#include "ZMemory.h"
-#include "ZStream_HexStrim.h"
-#include "ZStream_Memory.h"
+#include "zoolib/ZMemory.h"
+#include "zoolib/ZStream_HexStrim.h"
+#include "zoolib/ZStream_Memory.h"
 
 using std::min;
 using std::string;

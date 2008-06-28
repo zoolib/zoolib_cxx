@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZFileFormat_IFF__ 1
 #include "zconfig.h"
 
-#include "ZStream.h"
-#include "ZTypes.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZTypes.h"
 
 #include <vector>
 

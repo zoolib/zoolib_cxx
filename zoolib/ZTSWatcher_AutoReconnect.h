@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSWatcher_AutoReconnect__
 #include "zconfig.h"
 
-#include "ZCompat_NonCopyable.h"
-#include "ZTSWatcher.h"
+#include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZTSWatcher.h"
 
 #ifndef ZCONFIG_ZTSWatcher_AutoReconnect_Debug
 #	define ZCONFIG_ZTSWatcher_AutoReconnect_Debug 1

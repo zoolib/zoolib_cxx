@@ -18,22 +18,22 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZASParser.h"
+#include "zoolib/ZASParser.h"
 
-#include "ZFile.h"
-#include "ZStreamRWPos_RAM.h"
-#include "ZStream_Buffered.h"
-#include "ZStream_HexStrim.h"
-#include "ZStreamer.h"
-#include "ZStrim_CRLF.h"
-#include "ZStrim_Stream.h"
-#include "ZStrimW_Escapify.h"
-#include "ZString.h"
-#include "ZTextCoder.h"
-#include "ZTextCoder_Unicode.h"
-#include "ZUtil_Strim.h"
-#include "ZUtil_TextCoder.h"
-#include "ZUnicode.h"
+#include "zoolib/ZFile.h"
+#include "zoolib/ZStreamRWPos_RAM.h"
+#include "zoolib/ZStream_Buffered.h"
+#include "zoolib/ZStream_HexStrim.h"
+#include "zoolib/ZStreamer.h"
+#include "zoolib/ZStrim_CRLF.h"
+#include "zoolib/ZStrim_Stream.h"
+#include "zoolib/ZStrimW_Escapify.h"
+#include "zoolib/ZString.h"
+#include "zoolib/ZTextCoder.h"
+#include "zoolib/ZTextCoder_Unicode.h"
+#include "zoolib/ZUtil_Strim.h"
+#include "zoolib/ZUtil_TextCoder.h"
+#include "zoolib/ZUnicode.h"
 
 using std::exception;
 using std::pair;

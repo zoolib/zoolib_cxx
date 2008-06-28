@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZDCGlyphServer_Asset.h"
-#include "ZString.h"
+#include "zoolib/ZDCGlyphServer_Asset.h"
+#include "zoolib/ZString.h"
 
 using std::string;
 

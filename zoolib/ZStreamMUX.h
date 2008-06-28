@@ -22,11 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStreamMUX__ 1
 
 #include "zconfig.h"
-#include "ZCompat_NonCopyable.h"
-#include "ZDList.h"
-#include "ZStreamer.h"
-#include "ZThread.h"
-#include "ZTime.h"
+#include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZDList.h"
+#include "zoolib/ZStreamer.h"
+#include "zoolib/ZThread.h"
+#include "zoolib/ZTime.h"
 
 #include <deque>
 #include <map>

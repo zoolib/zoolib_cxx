@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStackCrawl__ 1
 #include "zconfig.h"
 
-#include "ZCONFIG_API.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_API.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__StackCrawl
 #	if ZCONFIG_SPI_Enabled(Linux) && ZCONFIG(Processor, x86)
@@ -43,7 +43,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if ZCONFIG_API_Enabled(StackCrawl)
-#include "ZTypes.h"
+#include "zoolib/ZTypes.h"
 
 #include <string>
 #include <vector>

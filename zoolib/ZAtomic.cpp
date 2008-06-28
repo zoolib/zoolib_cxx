@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZAtomic.h"
+#include "zoolib/ZAtomic.h"
 
 // =================================================================================================
 #if ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, PPC)
@@ -390,7 +390,7 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 #pragma mark -
 #pragma mark * Dumb version
 
-#include "ZThread.h"
+#include "zoolib/ZThread.h"
 
 // Note that we actually use a semaphore as our locking primitive, not a ZMutexNR, which
 // is a benaphore and thus relies on calls to ZAtomic_Inc and ZAtomic_Dec -- which

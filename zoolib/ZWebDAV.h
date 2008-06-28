@@ -23,9 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
-#include "ZNode.h"
-#include "ZStream.h"
-#include "ZTuple.h"
+#include "zoolib/ZNode.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZTuple.h"
 
 namespace ZWebDAV {
 

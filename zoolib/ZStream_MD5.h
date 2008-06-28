@@ -21,13 +21,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZStream_MD5__
 #define __ZStream_MD5__ 1
 #include "zconfig.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_StreamMD5_UseOpenSSL
 #	define ZCONFIG_StreamMD5_UseOpenSSL ZCONFIG_SPI_Enabled(openssl)
 #endif
 
-#include "ZStream.h"
+#include "zoolib/ZStream.h"
 
 // =================================================================================================
 #pragma mark -

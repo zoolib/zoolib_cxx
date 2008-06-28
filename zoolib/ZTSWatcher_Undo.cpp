@@ -19,8 +19,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTSWatcher_Undo.h"
-#include "ZUtil_STL.h"
+#include "zoolib/ZTSWatcher_Undo.h"
+#include "zoolib/ZUtil_STL.h"
 
 // =================================================================================================
 #pragma mark -

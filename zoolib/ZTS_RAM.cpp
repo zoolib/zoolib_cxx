@@ -18,15 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTS_RAM.h"
+#include "zoolib/ZTS_RAM.h"
 
-#include "ZDebug.h"
-#include "ZLog.h"
-#include "ZStream.h"
-#include "ZTupleIndex.h"
-#include "ZUtil_STL.h"
-#include "ZUtil_Strim.h"
-#include "ZUtil_Strim_Tuple.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZLog.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZTupleIndex.h"
+#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_Strim.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::map;
 using std::pair;

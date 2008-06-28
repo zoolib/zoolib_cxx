@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTBRep_TS__ 1
 #include "zconfig.h"
 
-#include "ZTBRep.h"
-#include "ZTS.h"
-#include "ZDList.h"
+#include "zoolib/ZTBRep.h"
+#include "zoolib/ZTS.h"
+#include "zoolib/ZDList.h"
 
 #include <map>
 

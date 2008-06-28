@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTQL_Query__ 1
 #include "zconfig.h"
 
-#include "ZTQL_RelHead.h"
-#include "ZTQL_Node.h"
-#include "ZTQL_Spec.h"
+#include "zoolib/ZTQL_RelHead.h"
+#include "zoolib/ZTQL_Node.h"
+#include "zoolib/ZTQL_Spec.h"
 
 #include <set>
 #include <vector>

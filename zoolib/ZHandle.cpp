@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZHandle.h"
-#include "ZMemory.h"
-#include "ZDebug.h"
-#include "ZThread.h"
-#include "ZCompat_algorithm.h" // For min()
+#include "zoolib/ZHandle.h"
+#include "zoolib/ZMemory.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZThread.h"
+#include "zoolib/ZCompat_algorithm.h" // For min()
 
 #if ZCONFIG_SPI_Enabled(Win)
 #	include "ZWinHeader.h"

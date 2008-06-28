@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDCInk__ 1
 #include "zconfig.h"
 
-#include "ZRefCount.h"
-#include "ZRGBColor.h"
-#include "ZTypes.h"
+#include "zoolib/ZRefCount.h"
+#include "zoolib/ZRGBColor.h"
+#include "zoolib/ZTypes.h"
 
 // =================================================================================================
 #pragma mark -

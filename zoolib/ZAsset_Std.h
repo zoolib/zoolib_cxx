@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZAsset_Std__ 1
 #include "zconfig.h"
 
-#include "ZAsset.h"
-#include "ZFile.h"
+#include "zoolib/ZAsset.h"
+#include "zoolib/ZFile.h"
 
 class ZAssetIterRep_Std_Directory;
 class ZAssetRep_Std_Directory;

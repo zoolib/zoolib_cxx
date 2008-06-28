@@ -18,10 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZDCPixmapCoder_GIF.h"
-#include "ZMemory.h"
-#include "ZStream_Chunked.h"
-#include "ZStream_LZW.h"
+#include "zoolib/ZDCPixmapCoder_GIF.h"
+#include "zoolib/ZMemory.h"
+#include "zoolib/ZStream_Chunked.h"
+#include "zoolib/ZStream_LZW.h"
 
 using std::min;
 using std::runtime_error;

@@ -18,16 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZUtil_Mac_HL.h"
+#include "zoolib/ZUtil_Mac_HL.h"
 
 #if ZCONFIG_SPI_Enabled(Carbon)
 
-#include "ZDC_QD.h"
-#include "ZMacOSX.h"
-#include "ZMemory.h" // For ZBlockMove and ZBlockSet
-//#include "ZOSWindow_Mac.h" // For ZOSApp_Mac
-//#include "ZOSWindow_Carbon.h" // For ZOSApp_Carbon
-#include "ZUtil_Mac_LL.h"
+#include "zoolib/ZDC_QD.h"
+#include "zoolib/ZMacOSX.h"
+#include "zoolib/ZMemory.h" // For ZBlockMove and ZBlockSet
+//#include "zoolib/ZOSWindow_Mac.h" // For ZOSApp_Mac
+//#include "zoolib/ZOSWindow_Carbon.h" // For ZOSApp_Carbon
+#include "zoolib/ZUtil_Mac_LL.h"
 
 #include ZMACINCLUDE(CarbonCore,Gestalt.h)
 #include ZMACINCLUDE(CarbonCore,Resources.h)
@@ -689,8 +689,8 @@ string ZUtil_Mac_HL::sGetVersionString()
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 
-#include "ZDC_QD.h"
-#include "ZStream.h"
+#include "zoolib/ZDC_QD.h"
+#include "zoolib/ZStream.h"
 
 #include ZMACINCLUDE(CarbonCore,MacMemory.h)
 #include ZMACINCLUDE(QD,QDOffscreen.h)

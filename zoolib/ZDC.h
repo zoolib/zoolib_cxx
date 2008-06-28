@@ -22,14 +22,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDC__ 1
 #include "zconfig.h"
 
-#include "ZDCFont.h"
-#include "ZDCInk.h"
-#include "ZDCPoly.h"
-#include "ZDCPixmap.h"
-#include "ZDCRgn.h"
-#include "ZGeom.h"
-#include "ZRefCount.h"
-#include "ZRGBColor.h"
+#include "zoolib/ZDCFont.h"
+#include "zoolib/ZDCInk.h"
+#include "zoolib/ZDCPoly.h"
+#include "zoolib/ZDCPixmap.h"
+#include "zoolib/ZDCRgn.h"
+#include "zoolib/ZGeom.h"
+#include "zoolib/ZRefCount.h"
+#include "zoolib/ZRGBColor.h"
 
 // =================================================================================================
 #pragma mark -

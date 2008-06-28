@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZBlockStore_PhaseTree__ 1
 #include "zconfig.h"
 
-#include "ZBlockStore.h"
-#include "ZFile.h"
+#include "zoolib/ZBlockStore.h"
+#include "zoolib/ZFile.h"
 
 #include <set>
 #include <map>

@@ -18,13 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTSWatcherServerAsync.h"
+#include "zoolib/ZTSWatcherServerAsync.h"
 
-#include "ZTSWatcherDefines.h"
-#include "ZThreadSimple.h"
+#include "zoolib/ZTSWatcherDefines.h"
+#include "zoolib/ZThreadSimple.h"
 
-#include "ZDebug.h"
-#include "ZLog.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZLog.h"
 
 #define kDebug_TSWatcherServerAsync 1
 

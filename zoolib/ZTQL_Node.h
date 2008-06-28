@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTQL_Node__ 1
 #include "zconfig.h"
 
-#include "ZTQL_LogOp.h"
-#include "ZTQL_RelHead.h"
+#include "zoolib/ZTQL_LogOp.h"
+#include "zoolib/ZTQL_RelHead.h"
 
 // =================================================================================================
 #pragma mark -

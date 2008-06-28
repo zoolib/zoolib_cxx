@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMIME__ 1
 #include "zconfig.h"
 
-#include "ZStream.h"
+#include "zoolib/ZStream.h"
 
 namespace ZMIME {
 

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDCPixmapCoder_BMP__ 1
 #include "zconfig.h"
 
-#include "ZDCPixmapCoder.h"
+#include "zoolib/ZDCPixmapCoder.h"
 
 // =================================================================================================
 #pragma mark -

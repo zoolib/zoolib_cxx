@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZXServer.h"
+#include "zoolib/ZXServer.h"
 
 #if ZCONFIG_SPI_Enabled(X11)
 
-#include "ZDCPixmap.h"
-#include "ZDebug.h"
+#include "zoolib/ZDCPixmap.h"
+#include "zoolib/ZDebug.h"
 
 #include <sys/ipc.h>
 #include <sys/shm.h>

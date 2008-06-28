@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZDCInk.h"
-#include "ZDCPixmap.h"
-#include "ZDebug.h"
+#include "zoolib/ZDCInk.h"
+#include "zoolib/ZDCPixmap.h"
+#include "zoolib/ZDebug.h"
 
 // Because our static sGray, sBlack stuff are constructed before we've been able to call
 // InitGraf() qd.white, qd.gray etc. will not have valid values, so we have our own

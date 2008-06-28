@@ -18,14 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTBSpec.h"
+#include "zoolib/ZTBSpec.h"
 
-#include "ZCompare.h"
-#include "ZMemoryBlock.h"
-#include "ZRegex.h"
-#include "ZStream.h"
-#include "ZTextCollator.h"
-#include "ZUtil_STL.h"
+#include "zoolib/ZCompare.h"
+#include "zoolib/ZMemoryBlock.h"
+#include "zoolib/ZRegex.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZTextCollator.h"
+#include "zoolib/ZUtil_STL.h"
 
 #include <vector>
 

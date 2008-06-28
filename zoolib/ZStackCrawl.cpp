@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZStackCrawl.h"
-#include "ZMemory.h"
-#include "ZUtil_STL.h"
+#include "zoolib/ZStackCrawl.h"
+#include "zoolib/ZMemory.h"
+#include "zoolib/ZUtil_STL.h"
 
 #include <stdexcept>
 
@@ -38,7 +38,7 @@ using std::vector;
 #if ZCONFIG(OS, Win32)
 #include <csetjmp>
 
-#include "ZWinHeader.h"
+#include "zoolib/ZWinHeader.h"
 #include <imagehlp.h>
 
 void ZStackCrawl::sPopulateStackFrames(vector<ZStackCrawl::pFrame_t>& oFrames)

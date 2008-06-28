@@ -18,18 +18,18 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTS_Watchable.h"
+#include "zoolib/ZTS_Watchable.h"
 
-#include "ZDebug.h"
-#include "ZDList.h"
-#include "ZLog.h"
-#include "ZMemoryBlock.h"
-#include "ZStream_Memory.h"
-#include "ZString.h"
-#include "ZTSWatcher.h"
-#include "ZTupleQuisitioner.h"
-#include "ZUtil_STL.h"
-#include "ZUtil_Strim_Tuple.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZDList.h"
+#include "zoolib/ZLog.h"
+#include "zoolib/ZMemoryBlock.h"
+#include "zoolib/ZStream_Memory.h"
+#include "zoolib/ZString.h"
+#include "zoolib/ZTSWatcher.h"
+#include "zoolib/ZTupleQuisitioner.h"
+#include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::lower_bound;
 using std::map;

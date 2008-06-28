@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_TextCoder__ 1
 #include "zconfig.h"
 
-#include "ZTextCoder.h"
+#include "zoolib/ZTextCoder.h"
 
 // =================================================================================================
 #pragma mark -

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDebug_Win__ 1
 
 #include "zconfig.h"
-#include "ZDebug.h"
+#include "zoolib/ZDebug.h"
 
 // No windows-specific declarations yet.
 

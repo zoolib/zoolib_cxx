@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZCompat_operator_bool__
 #define __ZCompat_operator_bool__
 #include "zconfig.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 // If stlsoft is enabled, this file simply does a rename of the
 // stlsoft operator bool macros. Otherwise it provides the implementation

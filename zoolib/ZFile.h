@@ -21,11 +21,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZFile__
 #define __ZFile__ 1
 
-#include "ZCompat_NonCopyable.h"
-#include "ZStreamer.h"
-#include "ZTime.h"
-#include "ZTrail.h"
-#include "ZUnicode.h"
+#include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZStreamer.h"
+#include "zoolib/ZTime.h"
+#include "zoolib/ZTrail.h"
+#include "zoolib/ZUnicode.h"
 
 class ZFileIterRep;
 class ZFileLoc;

@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZTupleIndex.h"
+#include "zoolib/ZTupleIndex.h"
 
 using std::set;
 using std::vector;
 
-#include "ZStrim.h"
+#include "zoolib/ZStrim.h"
 
 // =================================================================================================
 #pragma mark -

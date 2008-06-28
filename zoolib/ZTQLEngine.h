@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTQLEngine__ 1
 #include "zconfig.h"
 
-#include "ZTQL_Node.h"
-//#include "ZTuple.h"
+#include "zoolib/ZTQL_Node.h"
+//#include "zoolib/ZTuple.h"
 
 // =================================================================================================
 #pragma mark -

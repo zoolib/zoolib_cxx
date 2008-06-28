@@ -22,12 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTupleIndex_FullText__
 #include "zconfig.h"
 
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 // FullText is dependent on ICU features.
 #if ZCONFIG_SPI_Enabled(ICU)
 
-#include "ZTupleIndex.h"
+#include "zoolib/ZTupleIndex.h"
 
 #include <map>
 

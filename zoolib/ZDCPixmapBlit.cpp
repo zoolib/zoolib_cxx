@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZDCPixmapBlit.h"
+#include "zoolib/ZDCPixmapBlit.h"
 
 #if ZCONFIG(Compiler, CodeWarrior)
 // Enforce higher level of optimization for this code.
@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	endif
 #endif
 
-#include "ZDCPixmapBlitPriv.h"
+#include "zoolib/ZDCPixmapBlitPriv.h"
 
 using std::min;
 

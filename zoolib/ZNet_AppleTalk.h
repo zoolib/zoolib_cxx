@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNet_AppleTalk__ 1
 #include "zconfig.h"
 
-#include "ZNet.h"
-#include "ZTypes.h"
+#include "zoolib/ZNet.h"
+#include "zoolib/ZTypes.h"
 
 // ==================================================
 #pragma mark -

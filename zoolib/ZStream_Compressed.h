@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
-#include "ZStream_ZLib.h"
+#include "zoolib/ZStream_ZLib.h"
 
 #if ZCONFIG_API_Enabled(Stream_ZLib)
 

@@ -18,10 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "ZCompat_algorithm.h" // For std::find
-#include "ZFactoryChain.h"
-#include "ZFile.h"
-#include "ZTrail.h"
+#include "zoolib/ZCompat_algorithm.h" // For std::find
+#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFile.h"
+#include "zoolib/ZTrail.h"
 
 using std::find;
 using std::min;

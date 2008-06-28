@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSWatcher_Latent__
 #include "zconfig.h"
 
-#include "ZTSWatcher.h"
+#include "zoolib/ZTSWatcher.h"
 
 #ifndef ZCONFIG_TSWatcher_Latent_Debug
 #	define ZCONFIG_TSWatcher_Latent_Debug 1

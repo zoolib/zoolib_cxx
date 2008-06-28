@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Debug__ 1
 #include "zconfig.h"
 
-#include "ZStackCrawl.h"
-#include "ZStrimmer.h"
-#include "ZLog.h"
+#include "zoolib/ZStackCrawl.h"
+#include "zoolib/ZStrimmer.h"
+#include "zoolib/ZLog.h"
 
 // =================================================================================================
 #pragma mark -

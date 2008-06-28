@@ -21,8 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZNetDNSSD__
 #define __ZNetDNSSD__ 1
 #include "zconfig.h"
-#include "ZCONFIG_API.h"
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_API.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #ifndef ZCONFIG_API_Avail__NetDNSSD
 #	define ZCONFIG_API_Avail__NetDNSSD ZCONFIG_SPI_Enabled(DNSSD)
@@ -35,7 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(NetDNSSD)
 
-#include "ZNet_Internet.h" // For ip_port
+#include "zoolib/ZNet_Internet.h" // For ip_port
 
 extern "C" {
 #include <dns_sd.h>

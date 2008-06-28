@@ -1,6 +1,6 @@
-#include "ZTask.h"
+#include "zoolib/ZTask.h"
 
-#include "ZThreadSimple.h"
+#include "zoolib/ZThreadSimple.h"
 
 using std::string;
 

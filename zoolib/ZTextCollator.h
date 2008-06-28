@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTextCollator__ 1
 #include "zconfig.h"
 
-#include "ZRefCount.h"
-#include "ZUnicode.h"
+#include "zoolib/ZRefCount.h"
+#include "zoolib/ZUnicode.h"
 
 class ZTextCollatorRep;
 class ZTextCollationKeyRep;
