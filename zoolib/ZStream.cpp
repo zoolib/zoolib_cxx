@@ -1122,11 +1122,18 @@ a value less than the current position then the current position is reduced to m
 
 ZStreamU_Unreader::ZStreamU_Unreader(const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource),
+	fStreamSourceU(dynamic_cast<ZStreamU*>(const_cast<ZStreamR*>(&iStreamSource))),
 	fState(eStateFresh)
 	{}
 
 void ZStreamU_Unreader::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
+	if (fStreamSourceU)
+		{
+		fStreamSourceU->Imp_Read(iDest, iCount, oCountRead);
+		return;
+		}
+
 	char* localDest = reinterpret_cast<char*>(iDest);
 	char* localDestEnd = localDest + iCount;
 
@@ -1166,6 +1173,12 @@ void ZStreamU_Unreader::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 
 void ZStreamU_Unreader::Imp_Unread()
 	{
+	if (fStreamSourceU)
+		{
+		fStreamSourceU->Imp_Unread();
+		return;
+		}
+
 	switch (fState)
 		{
 		case eStateFresh:

@@ -604,6 +604,7 @@ public:
 
 private:
 	const ZStreamR& fStreamSource;
+	ZStreamU* fStreamSourceU;
 	enum { eStateFresh, eStateNormal, eStateUnread, eStateHitEnd } fState;
 	char fChar;
 	};
