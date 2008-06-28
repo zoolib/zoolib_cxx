@@ -79,7 +79,7 @@ struct Format
 
 void sWrite_PropName(const ZStrimW& iStrimW, const ZTName& iPropName);
 
-bool sRead_Identifier(const ZStrimU& iStrimU, string* oStringLC, string* oStringExact);
+bool sRead_Identifier(const ZStrimU& iStrimU, std::string* oStringLC, std::string* oStringExact);
 
 // =================================================================================================
 #pragma mark -

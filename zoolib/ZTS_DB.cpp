@@ -31,7 +31,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <fcntl.h> // For O_RDWR etc
 
+using std::exception;
 using std::runtime_error;
+using std::set;
 using std::string;
 using std::vector;
 

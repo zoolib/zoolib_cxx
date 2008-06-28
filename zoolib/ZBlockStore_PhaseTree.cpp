@@ -28,6 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstdio>
 
 using std::lower_bound;
+using std::upper_bound;
 using std::map;
 using std::min;
 using std::set;

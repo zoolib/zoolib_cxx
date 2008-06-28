@@ -88,7 +88,7 @@ private:
 
 	TransTuple* pGetTransTuple(Transaction* iTransaction, uint64 iID);
 
-	void pFailTransactions(vector<Transaction*>& iTransactions);
+	void pFailTransactions(std::vector<Transaction*>& iTransactions);
 	void pDoStuff();
 
 	void pReader(const ZStreamR& iStream);

@@ -127,13 +127,13 @@ namespace ZTQL {
 class ComparatorRep_Regex : public ComparatorRep
 	{
 public:
-	ComparatorRep_Regex(const string& iPattern, int iStrength);
+	ComparatorRep_Regex(const std::string& iPattern, int iStrength);
 
 // From ComparatorRep
 	virtual bool Matches(const ZTValue& iLHS, const ZTValue& iRHS);
 
 private:
-	string fPattern;
+	std::string fPattern;
 	int fStrength;
 	};
 

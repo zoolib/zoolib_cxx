@@ -46,6 +46,7 @@ using std::min;
 using std::vector;
 using std::string;
 
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * kDebug
@@ -170,14 +171,16 @@ static void sReleaseSpinlock(ZAtomic_t* iSpinlock)
 
 namespace ZANONYMOUS {
 
-class MainThread : public ZThread
+class MainThread : public ZooLib::ZThread
 	{
 public:
-	MainThread() : ZThread((struct Dummy*)(0)){}
+	MainThread() : ZThread((struct ZooLib::Dummy*)(0)){}
 	virtual void Run() {}
 	};
 
 } // anonymous namespace
+
+namespace ZooLib {
 
 static int sInitCount;
 
@@ -2128,6 +2131,8 @@ void ZMutexLocker::Release()
 	--fAcquisitions;
 	fMutex.MutexRelease();
 	}
+
+} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -

@@ -56,7 +56,7 @@ public:
 
 	static Query sAllID(const ZTName& iIDPropName, const RelHead& iRelHead);
 
-	Query Difference(const Query& iOther) const;
+//##	Query Difference(const Query& iOther) const;
 
 	Query Intersect(const Query& iOther) const;
 

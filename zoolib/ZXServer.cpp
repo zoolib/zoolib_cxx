@@ -28,6 +28,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
+using std::bad_alloc;
+using std::less;
+using std::min;
+using std::map;
+using std::pair;
+using std::string;
+using std::runtime_error;
+using std::vector;
+
 static XContext sXContext_Window = 0;
 
 // =================================================================================================

@@ -24,6 +24,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZStream_HexStrim.h"
 #include "ZStream_Memory.h"
 
+using std::min;
+using std::string;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Helper functions

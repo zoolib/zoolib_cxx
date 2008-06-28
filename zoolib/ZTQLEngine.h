@@ -48,7 +48,7 @@ public:
 
 	ZTQLEngine();
 
-	void Execute(ZRef<ZTQL::Node> iNode, vector<ZTuple>& oResults);
+	void Execute(ZRef<ZTQL::Node> iNode, std::vector<ZTuple>& oResults);
 
 	virtual Iterator* Search();//ZTSpec::CriterionSect iSect);
 
@@ -56,7 +56,7 @@ public:
 //		const ZTSpec& iTSpec, std::vector<std::pair<uint64, ZTuple> >& oResults) = 0;
 
 private:	
-	void pExecute(ZRef<ZTQL::Node> iNode, vector<ZTuple>& oResults);
+	void pExecute(ZRef<ZTQL::Node> iNode, std::vector<ZTuple>& oResults);
 	};
 
 #endif // __ZTQLEngine__

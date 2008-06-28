@@ -30,18 +30,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZUtil_TupleIndex {
 
-ZRef<ZTupleIndexFactory> sCreate_General(const string& iPropName0);
+ZRef<ZTupleIndexFactory> sCreate_General(const std::string& iPropName0);
 
 ZRef<ZTupleIndexFactory> sCreate_General(
-	const string& iPropName0,
-	const string& iPropName1);
+	const std::string& iPropName0,
+	const std::string& iPropName1);
 
 ZRef<ZTupleIndexFactory> sCreate_General(
-	const string& iPropName0,
-	const string& iPropName1,
-	const string& iPropName2);
+	const std::string& iPropName0,
+	const std::string& iPropName1,
+	const std::string& iPropName2);
 
-ZRef<ZTupleIndexFactory> sCreate_String(const string& iPropName);
+ZRef<ZTupleIndexFactory> sCreate_String(const std::string& iPropName);
 
 } // namespace ZUtil_TupleIndex
 

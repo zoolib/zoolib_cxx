@@ -365,7 +365,7 @@ private:
 		ZPointPOD fAs_Point;
 
 		ZRectPOD* fAs_Rect;
-		vector<ZTValue>* fAs_Vector;
+		std::vector<ZTValue>* fAs_Vector;
 		};
 
 	struct Type
@@ -565,7 +565,7 @@ inline void ZTValue::SetVector_T(InputIterator iBegin, InputIterator iEnd, const
 	}
 //@}
 
-class ZTValue::Ex_IllegalType : public runtime_error
+class ZTValue::Ex_IllegalType : public std::runtime_error
 	{
 public:
 	Ex_IllegalType(int iType);

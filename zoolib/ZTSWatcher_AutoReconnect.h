@@ -100,8 +100,8 @@ private:
 	bool fConnectionFailed;
 	Callback_t fCallback;
 	void* fRefcon;
-	set<uint64> fTupleIDs;
-	set<AddedQueryCombo> fQueries;
+	std::set<uint64> fTupleIDs;
+	std::set<AddedQueryCombo> fQueries;
 	};
 
 // =================================================================================================

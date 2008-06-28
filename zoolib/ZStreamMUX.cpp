@@ -28,6 +28,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define kDebug 1
 
+using std::deque;
+using std::map;
+using std::min;
+using std::pair;
+using std::string;
+using std::vector;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamMUX, definitions and helper functions

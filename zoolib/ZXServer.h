@@ -70,7 +70,7 @@ public:
 	void SetWMName(Window inWindow, const XTextProperty* inWindowName);
 	void SetWMIconName(Window inWindow, const XTextProperty* inWindowName);
 	Atom InternAtom(const char* inAtomName);
-	string GetAtomName(Atom inAtom);
+	std::string GetAtomName(Atom inAtom);
 	void SetWMProtocols(Window inWindow, const Atom* inAtoms, int inCount);
 
 	void MoveWindow(Window inWindow, int inLocationH, int inLocationV);
@@ -137,7 +137,7 @@ protected:
 
 	void InitGraphics();
 
-	map<ZRGBColor, unsigned long, less<ZRGBColor> > fCachedColors;
+	std::map<ZRGBColor, unsigned long, std::less<ZRGBColor> > fCachedColors;
 
 	ZMutex fMutex_Structure;
 
@@ -161,7 +161,7 @@ protected:
 	int32 fTileH;
 	int32 fTileV1;
 	int32 fTileV2;
-	vector<pair<XImage*, XShmSegmentInfo*> > fImages;
+	std::vector<std::pair<XImage*, XShmSegmentInfo*> > fImages;
 
 	ZDCPixmapNS::PixelDesc fPixelDesc;
 	};

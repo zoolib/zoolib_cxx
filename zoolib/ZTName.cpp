@@ -23,6 +23,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZDebug.h"
 #include "ZStream.h"
 
+using std::pair;
+using std::string;
+using std::vector;
+
 static const int kDebug = 2;
 
 // =================================================================================================

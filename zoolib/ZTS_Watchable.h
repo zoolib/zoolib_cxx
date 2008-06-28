@@ -76,8 +76,8 @@ private:
 		const uint64* iAddedIDs, size_t iAddedIDsCount,
 		const int64* iRemovedQueries, size_t iRemovedQueriesCount,
 		const ZTSWatcher::AddedQueryCombo* iAddedQueries, size_t iAddedQueriesCount,
-		vector<uint64>& oAddedIDs,
-		vector<uint64>& oChangedTupleIDs, vector<ZTuple>& oChangedTuples,
+		std::vector<uint64>& oAddedIDs,
+		std::vector<uint64>& oChangedTupleIDs, std::vector<ZTuple>& oChangedTuples,
 		const uint64* iWrittenTupleIDs, const ZTuple* iWrittenTuples, size_t iWrittenTuplesCount,
 		std::map<int64, std::vector<uint64> >& oChangedQueries);
 

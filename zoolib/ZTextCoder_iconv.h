@@ -56,7 +56,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZTextDecoder_iconv : public ZTextDecoder
 	{
 public:
-	ZTextDecoder_iconv(const string& iSourceName);
+	ZTextDecoder_iconv(const std::string& iSourceName);
 	ZTextDecoder_iconv(const char* iSourceName);
 	virtual ~ZTextDecoder_iconv();
 
@@ -81,7 +81,7 @@ private:
 class ZTextEncoder_iconv : public ZTextEncoder
 	{
 public:
-	ZTextEncoder_iconv(const string& iDestName);
+	ZTextEncoder_iconv(const std::string& iDestName);
 	ZTextEncoder_iconv(const char* iDestName);
 	virtual ~ZTextEncoder_iconv();
 

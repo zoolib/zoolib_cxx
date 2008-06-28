@@ -6,6 +6,9 @@
 #include "ZUtil_TQLConvert.h"
 #include "ZUtil_Strim_Tuple.h"
 
+using std::set;
+using std::string;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL, test code
@@ -226,11 +229,11 @@ static void sTestOne(const string& iLabel, const ZStrimW& s, const ZTBQuery& iTB
 	sDumpQuery(s, query);
 	}
 
-Query sGetVCN();
+//Query sGetVCN();
 void sTestQL(const ZStrimW& s);
 void sTestQL(const ZStrimW& s)
 	{
-	sDumpQuery(s, sGetVCN());
+//	sDumpQuery(s, sGetVCN());
 //	sDumpQuery(s, sQuery());
 	return;
 	

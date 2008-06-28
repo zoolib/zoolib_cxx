@@ -37,7 +37,7 @@ class ZStrimW;
 
 namespace ZUtil_TS {
 
-class Ex_Base : public runtime_error
+class Ex_Base : public std::runtime_error
 	{
 protected:
 	Ex_Base(const char* what);

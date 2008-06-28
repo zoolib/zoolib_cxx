@@ -105,8 +105,14 @@ protected:
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
 
-#include <CoreGraphics/CGDataProvider.h>
-#include <CoreGraphics/CGDataConsumer.h>
+
+// Can't pick up these headers directly in some circumstances
+//#include <CoreGraphics/CGDataProvider.h>
+//#include <CoreGraphics/CGDataConsumer.h>
+
+// So we use the encompassing framework header
+#include <ApplicationServices/ApplicationServices.h>
+
 
 namespace ZStream_MacOSX {
 

@@ -28,10 +28,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZUtil_Strim_XMLRPC {
 
-class ParseException : public runtime_error
+class ParseException : public std::runtime_error
 	{
 public:
-	ParseException(const string& iWhat);
+	ParseException(const std::string& iWhat);
 	ParseException(const char* iWhat);
 	};
 

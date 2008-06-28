@@ -88,16 +88,16 @@ public:
 
 // These methods *can* be overridden, but it's by no means essential.
 	virtual void Updated(
-		const set<ZRef<ZTSieve> >& iSievesLoaded,
-		const set<ZRef<ZTSieve> >& iSievesChanged,
-		const set<ZRef<ZTCrouton> >& iCroutonsLoaded,
-		const set<ZRef<ZTCrouton> >& iCroutonsChanged);
+		const std::set<ZRef<ZTSieve> >& iSievesLoaded,
+		const std::set<ZRef<ZTSieve> >& iSievesChanged,
+		const std::set<ZRef<ZTCrouton> >& iCroutonsLoaded,
+		const std::set<ZRef<ZTCrouton> >& iCroutonsChanged);
 
-	virtual void Loaded(const set<ZRef<ZTSieve> >& iTSieves, ELoaded iLoaded);
-	virtual void Changed(const set<ZRef<ZTSieve> >& iTSieves, EChanged iChanged);
+	virtual void Loaded(const std::set<ZRef<ZTSieve> >& iTSieves, ELoaded iLoaded);
+	virtual void Changed(const std::set<ZRef<ZTSieve> >& iTSieves, EChanged iChanged);
 
-	virtual void Loaded(const set<ZRef<ZTCrouton> >& iTCroutons, ELoaded iLoaded);
-	virtual void Changed(const set<ZRef<ZTCrouton> >& iTCroutons, EChanged iChanged);
+	virtual void Loaded(const std::set<ZRef<ZTCrouton> >& iTCroutons, ELoaded iLoaded);
+	virtual void Changed(const std::set<ZRef<ZTCrouton> >& iTCroutons, EChanged iChanged);
 
 	virtual void Loaded(const ZRef<ZTSieve>& iTSieve, ELoaded iLoaded);
 	virtual void Changed(const ZRef<ZTSieve>& iTSieve, EChanged iChanged);

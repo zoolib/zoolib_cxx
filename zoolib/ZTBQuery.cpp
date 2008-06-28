@@ -1090,7 +1090,7 @@ static ZRef<ZTBQueryNode> sNodeFromTuple(const ZTuple& iTuple)
 		ZRef<ZTBQueryNode> sourceNode = sNodeFromTuple(iTuple.GetTuple("SourceNode"));
 		return new ZTBQueryNode_Property(ZTName(propName), sourceNode);
 		}
-	throw runtime_error(string("ZTBQuery, sNodeFromTuple, unknown nodeKind: " + nodeKind));
+	throw std::runtime_error(string("ZTBQuery, sNodeFromTuple, unknown nodeKind: " + nodeKind));
 	}
 
 static ZRef<ZTBQueryNode> sNodeFromStream(const ZStreamR& iStreamR)
@@ -1107,7 +1107,7 @@ static ZRef<ZTBQueryNode> sNodeFromStream(const ZStreamR& iStreamR)
 		case 6: return new ZTBQueryNode_ID_FromSource(iStreamR);
 		case 7: return new ZTBQueryNode_Property(iStreamR);
 		}
-	throw runtime_error("ZTBQuery, sNodeFromStream, unknown node type");
+	throw std::runtime_error("ZTBQuery, sNodeFromStream, unknown node type");
 	}
 
 static void sNodeToStream(const ZStreamW& iStreamW, const ZRef<ZTBQueryNode>& iNode)

@@ -56,12 +56,12 @@ private:
 	bool fDetachedReader;
 	bool fDetachedSleeper;
 
-	vector<uint64> fRemovedIDs;
-	vector<uint64> fAddedIDs;
-	vector<int64> fRemovedQueries;
-	vector<ZTSWatcher::AddedQueryCombo> fAddedQueries;
-	vector<uint64> fWrittenTupleIDs;
-	vector<ZTuple> fWrittenTuples;
+	std::vector<uint64> fRemovedIDs;
+	std::vector<uint64> fAddedIDs;
+	std::vector<int64> fRemovedQueries;
+	std::vector<ZTSWatcher::AddedQueryCombo> fAddedQueries;
+	std::vector<uint64> fWrittenTupleIDs;
+	std::vector<ZTuple> fWrittenTuples;
 	};
 
 #endif // __ZTSWatcherServerAsync__

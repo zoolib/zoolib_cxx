@@ -28,6 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::map;
 using std::pair;
 using std::set;
+using std::string;
 using std::vector;
 
 using ZUtil_STL::sFirstOrNil;

@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <Foundation/NSString.h>
 
+using std::vector;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_NSObject

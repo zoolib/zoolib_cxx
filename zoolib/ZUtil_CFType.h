@@ -50,8 +50,8 @@ CFTypeRef sCreateCFType(const ZTValue& iTV);
 ZTuple sAsTuple(CFDictionaryRef iCFDictionary);
 CFDictionaryRef sCreateCFDictionary(const ZTuple& iTuple);
 
-void sAsVector(CFArrayRef iCFArray, vector<ZTValue>& oVector);
-CFArrayRef sCreateCFArray(const vector<ZTValue>& iVector);
+void sAsVector(CFArrayRef iCFArray, std::vector<ZTValue>& oVector);
+CFArrayRef sCreateCFArray(const std::vector<ZTValue>& iVector);
 
 } // namespace ZUtil_CFType
 

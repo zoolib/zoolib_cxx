@@ -56,23 +56,23 @@ public:
 	typedef const unsigned char* ConstPString;
 
 	ZNetNameRegistered_DNSSD(ip_port iPort,
-		const string& iName, const string& iRegType,
-		const string& iDomain,
+		const std::string& iName, const std::string& iRegType,
+		const std::string& iDomain,
 		ConstPString* iTXT, size_t iTXTCount);
 
 	ZNetNameRegistered_DNSSD(ip_port iPort,
-		const string& iName, const string& iRegType,
+		const std::string& iName, const std::string& iRegType,
 		ConstPString* iTXT, size_t iTXTCount);
 
 	ZNetNameRegistered_DNSSD(ip_port iPort,
-		const string& iName, const string& iRegType);
+		const std::string& iName, const std::string& iRegType);
 
 	ZNetNameRegistered_DNSSD(ip_port iPort,
-		const string& iRegType,
+		const std::string& iRegType,
 		ConstPString* iTXT, size_t iTXTCount);
 
 	ZNetNameRegistered_DNSSD(ip_port iPort,
-		const string& iRegType);
+		const std::string& iRegType);
 
 	~ZNetNameRegistered_DNSSD();
 
@@ -83,7 +83,7 @@ public:
 
 private:
 	void pInit(ip_port iPort,
-		const char* iName, const string& iRegType,
+		const char* iName, const std::string& iRegType,
 		const char* iDomain,
 		ConstPString* iTXT, size_t iTXTCount);
 
@@ -105,9 +105,9 @@ private:
 
 	DNSServiceRef fDNSServiceRef;
 	ZMutex fMutex;
-	string fName;
-	string fRegType;
-	string fDomain;
+	std::string fName;
+	std::string fRegType;
+	std::string fDomain;
 	ip_port fPort;
 	};
 

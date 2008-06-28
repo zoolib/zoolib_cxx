@@ -34,7 +34,7 @@ public:
 
 // Notification
 	virtual void OwnerDetached();
-	virtual void Message(const string& iString, void* iRefcon);
+	virtual void Message(const std::string& iString, void* iRefcon);
 
 protected:
 // Called by subclasses
@@ -56,7 +56,7 @@ public:
 	ZTaskOwner();
 	~ZTaskOwner();
 
-	void Tell(const string& iString, void* iRefcon);
+	void Tell(const std::string& iString, void* iRefcon);
 	void StopAll();
 
 	void Wake();

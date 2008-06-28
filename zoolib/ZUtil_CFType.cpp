@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include ZMACINCLUDE(CoreFoundation,CFNumber.h)
 #include ZMACINCLUDE(CoreFoundation,CFString.h)
 
+using std::vector;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_CFType

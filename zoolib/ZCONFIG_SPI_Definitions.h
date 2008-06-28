@@ -27,5 +27,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define ZCONFIG_SPI_Enabled(facility) (ZCONFIG_SPI_Avail__##facility && ZCONFIG_SPI_Desired__##facility)
 
-
 #endif // __ZCONFIG_SPI_Definitions__

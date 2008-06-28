@@ -97,7 +97,7 @@ private:
 
 	ZMutex fMutex;
 	ZCondition fCondition;
-	deque<IOBluetoothRFCOMMChannel*> fQueue;
+	std::deque<IOBluetoothRFCOMMChannel*> fQueue;
 	};
 
 // =================================================================================================
@@ -152,7 +152,7 @@ private:
 	IOBluetoothRFCOMMChannel* fChannel;
 	ZMutex fMutex;
 	ZCondition fCondition;
-	deque<uint8> fBuffer;
+	std::deque<uint8> fBuffer;
 	bool fOpen;
 	};
 

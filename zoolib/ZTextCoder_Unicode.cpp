@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZMemory.h"
 
 using std::min;
+using std::string;
 
 static const size_t kBufSize = ZooLib::sStackBufferSize;
 

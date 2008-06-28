@@ -691,8 +691,10 @@ public:
 #pragma mark -
 #pragma mark * ZPoint and ZRect
 
+namespace ZooLib {
 typedef ZPoint_T<ZCoord> ZPoint;
 typedef ZRect_T<ZCoord> ZRect;
+} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
@@ -791,5 +793,10 @@ template <class T> inline ZPoint_T<T>::operator BPoint() const
 template <class T> inline ZRect_T<T>::operator BRect() const
 	{ return BRect(left, top, right - 1, bottom - 1); }
 #endif // ZCONFIG_SPI_Enabled(BeOS)
+
+#ifndef ZooLib_SuppressInjection
+	using ZooLib::ZPoint;
+	using ZooLib::ZRect;
+#endif // ZooLib_SuppressInjection
 
 #endif // __ZGeom__

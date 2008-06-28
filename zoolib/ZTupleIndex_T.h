@@ -96,7 +96,7 @@ public:
 	virtual void Find(const std::set<uint64>& iSkipIDs,
 		std::vector<const ZTBSpec::Criterion*>& ioCriteria, std::vector<uint64>& oIDs)
 		{	
-		typename set<Key>::const_iterator lowerBound, upperBound;
+		typename std::set<Key>::const_iterator lowerBound, upperBound;
 		if (this->pSetupIterators(ioCriteria, lowerBound, upperBound))
 			{
 			if (iSkipIDs.empty())
@@ -117,7 +117,7 @@ public:
 
 	virtual size_t CanHandle(const ZTBSpec::CriterionSect& iCriterionSect)
 		{
-		vector<const ZTBSpec::Criterion*> remainingCriteria;
+		std::vector<const ZTBSpec::Criterion*> remainingCriteria;
 		remainingCriteria.reserve(iCriterionSect.size());
 		for (ZTBSpec::CriterionSect::const_iterator i = iCriterionSect.begin(),
 			theEnd = iCriterionSect.end();

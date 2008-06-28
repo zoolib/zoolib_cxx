@@ -20,6 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZTQL_Condition.h"
 
+using std::set;
+using std::string;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::ComparatorRep
@@ -148,12 +151,14 @@ ZTQL::Comparand& ZTQL::Comparand::operator=(const Comparand& iOther)
 ZRef<ZTQL::ComparandRep> ZTQL::Comparand::GetRep() const
 	{ return fRep; }
 
+static ZTValue sEmptyValue;
+
 const ZTValue& ZTQL::Comparand::GetValue(const ZTuple& iTuple) const
 	{
 	if (fRep)
 		return fRep->Imp_GetValue(iTuple);
 
-	return ZTValue();
+	return sEmptyValue;
 	}
 
 void ZTQL::Comparand::GatherPropNames(set<ZTName>& ioNames) const

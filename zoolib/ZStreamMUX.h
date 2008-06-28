@@ -132,15 +132,15 @@ private:
 
 	ELifecycle fLifecycle;
 
-	deque<uint32> fOpenNacksToSend;
+	std::deque<uint32> fOpenNacksToSend;
 
 	ZTime fTime_LastRead;
 	double fPingInterval;
 	bool fPingReceived;
 	bool fPingSent;
 
-	map<uint32, Endpoint*> fMap_IDToEndpoint;
-	map<std::string, Listener*> fMap_NameToListener;
+	std::map<uint32, Endpoint*> fMap_IDToEndpoint;
+	std::map<std::string, Listener*> fMap_NameToListener;
 	};
 
 // =================================================================================================

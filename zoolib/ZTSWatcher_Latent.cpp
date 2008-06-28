@@ -21,6 +21,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZTSWatcher_Latent.h"
 #include "ZUtil_STL.h"
 
+using std::map;
+using std::pair;
+using std::set;
+using std::vector;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTSWatcher_Latent::PQuery
@@ -495,7 +500,7 @@ bool ZTSWatcher_Latent::HasChanges(bool iWaitForSync)
 		for (map<uint64, PTuple>::iterator i = fPTuples.begin();
 			i != fPTuples.end(); /*no inc*/)
 			{
-			const uint64 theID = i->first;
+			// const uint64 theID = i->first;
 			PTuple& thePTuple = i->second;
 			if (thePTuple.fWritten)
 				{

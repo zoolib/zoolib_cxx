@@ -27,6 +27,8 @@ using ZTQL::RelHead;
 
 #define VERBOSE 0
 
+using std::vector;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Static helpers.

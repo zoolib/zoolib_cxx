@@ -21,6 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZStrimU_StreamUTF8Buffered.h"
 #include "ZMemory.h"
 
+using std::min;
+using std::vector;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStrimU_StreamUTF8Buffered

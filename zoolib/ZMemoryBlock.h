@@ -151,7 +151,7 @@ inline int ZMemoryBlock::Compare(const ZMemoryBlock& iOther) const
 	if (myRep == otherRep)
 		return 0;
 
-	if (int result = memcmp(myRep->fData, otherRep->fData, min(myRep->fSize, otherRep->fSize)))
+	if (int result = memcmp(myRep->fData, otherRep->fData, std::min(myRep->fSize, otherRep->fSize)))
 		return result;
 
 	return int(myRep->fSize) - int(otherRep->fSize);
@@ -165,7 +165,7 @@ inline bool ZMemoryBlock::operator<(const ZMemoryBlock& iOther) const
 	if (myRep == otherRep)
 		return false;
 
-	if (int result = memcmp(myRep->fData, otherRep->fData, min(myRep->fSize, otherRep->fSize)))
+	if (int result = memcmp(myRep->fData, otherRep->fData, std::min(myRep->fSize, otherRep->fSize)))
 		return result < 0;
 
 	return fRep->fSize < otherRep->fSize;

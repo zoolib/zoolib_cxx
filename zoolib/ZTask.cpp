@@ -2,6 +2,8 @@
 
 #include "ZThreadSimple.h"
 
+using std::string;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTask

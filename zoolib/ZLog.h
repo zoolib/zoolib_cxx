@@ -55,8 +55,8 @@ typedef int EPriority;
 #pragma mark -
 #pragma mark * String/integer mapping
 
-EPriority sPriorityFromName(const string& iString);
-string sNameFromPriority(EPriority iPriority);
+EPriority sPriorityFromName(const std::string& iString);
+std::string sNameFromPriority(EPriority iPriority);
 
 // =================================================================================================
 #pragma mark -

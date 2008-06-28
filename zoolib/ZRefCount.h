@@ -199,7 +199,7 @@ public:
 	void Release() const { fMutex.Release(); }
 
 private:
-	mutable ZMutexNR fMutex;
+	mutable ZooLib::ZMutexNR fMutex;
 	S* fObject;
 	};
 

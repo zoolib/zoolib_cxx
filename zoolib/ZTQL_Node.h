@@ -114,10 +114,10 @@ public:
 	virtual RelHead GetEffectiveRelHead();
 
 // Our protocol
-	const vector<ZTuple>& GetTuples();
+	const std::vector<ZTuple>& GetTuples();
 
 private:
-	vector<ZTuple> fTuples;
+	std::vector<ZTuple> fTuples;
 	};
 
 } // namespace ZTQL

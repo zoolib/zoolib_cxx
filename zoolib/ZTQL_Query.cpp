@@ -131,8 +131,8 @@ Query sAllID(const ZTName& iIDName, const RelHead& iRelHead)
 Query sAll(const RelHead& iRelHead)
 	{ return Query::sAll(iRelHead); }
 
-Query sDifference(const Query& iQuery1, const Query& iQuery2)
-	{ return iQuery1.Difference(iQuery2); }
+//##Query sDifference(const Query& iQuery1, const Query& iQuery2)
+//##	{ return iQuery1.Difference(iQuery2); }
 
 Query sExplicit(const ZTuple* iTuples, size_t iCount)
 	{ return Query(iTuples, iCount); }

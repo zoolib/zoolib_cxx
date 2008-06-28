@@ -64,7 +64,7 @@ public:
 		const std::vector<ZTupleIndex*>& iIndices, std::vector<ZTupleIndex*>& oIndices);
 
 	static bool sGatherMergeConstraints(const ZTName& iPropName,
-		vector<const ZTBSpec::Criterion*>& ioCriteria,
+		std::vector<const ZTBSpec::Criterion*>& ioCriteria,
 		const ZTValue*& oValueEqual,
 		const ZTValue*& oBestValueLess, const ZTValue*& oBestValueLessEqual,
 		const ZTValue*& oBestValueGreater, const ZTValue*& oBestValueGreaterEqual);

@@ -48,8 +48,8 @@ id sCreateNSObject(const ZTValue& iTV);
 ZTuple sAsTuple(NSDictionary* iNSDictionary);
 NSDictionary* sCreateNSDictionary(const ZTuple& iTuple);
 
-void sAsVector(NSArray* iNSArray, vector<ZTValue>& oVector);
-NSArray* sCreateNSArray(const vector<ZTValue>& iVector);
+void sAsVector(NSArray* iNSArray, std::vector<ZTValue>& oVector);
+NSArray* sCreateNSArray(const std::vector<ZTValue>& iVector);
 
 } // namespace ZUtil_NSObject
 

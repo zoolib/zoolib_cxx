@@ -24,6 +24,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZLog.h"
 
+using std::runtime_error;
+using std::string;
+using std::vector;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetNameRegistered_DNSSD

@@ -86,7 +86,7 @@ private:
 	ZFileSpec fFileSpec;
 	bool fChanged;
 	DB* fDB;
-	vector<ZTupleIndex*> fIndices;
+	std::vector<ZTupleIndex*> fIndices;
 	};
 
 #endif // ZCONFIG_API_Enabled(TS_DB)

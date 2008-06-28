@@ -73,10 +73,10 @@ public:
 
 	void Add(const ZTName& iName);
 
-	void GetNames(set<ZTName>& oNames) const;
+	void GetNames(std::set<ZTName>& oNames) const;
 
 private:
-	set<ZTName> fNames;
+	std::set<ZTName> fNames;
 	};
 
 RelHead operator|(const ZTName& iName, const RelHead& iRelHead);

@@ -150,6 +150,8 @@ typedef ZAtomic_t ZThreadSafe_t;
 #pragma mark -
 #pragma mark * ZThread
 
+namespace ZooLib {
+
 class ZMutexBase;
 
 class ZThread : ZooLib::NonCopyable
@@ -697,5 +699,20 @@ private:
 	};
 
 // =================================================================================================
+
+} // namespace ZooLib
+
+#ifndef ZooLib_SuppressInjection
+	using ZooLib::ZCondition;
+	using ZooLib::ZLocker;
+	using ZooLib::ZMutex;
+	using ZooLib::ZMutexBase;
+	using ZooLib::ZMutexComposite;
+	using ZooLib::ZMutexLocker;
+	using ZooLib::ZMutexNR;
+	using ZooLib::ZRWLock;
+	using ZooLib::ZSemaphore;
+	using ZooLib::ZThread;
+#endif // ZooLib_SuppressInjection
 
 #endif // __ZThread__

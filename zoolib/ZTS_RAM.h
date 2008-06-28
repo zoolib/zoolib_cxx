@@ -56,7 +56,7 @@ public:
 	void AddIndices(const std::vector<ZRef<ZTupleIndexFactory> >& iIndexFactories);
 
 	bool GetDataIfChanged(uint64& oNextUnusedID, std::map<uint64, ZTuple>& oTuples);
-	bool GetDataIfChanged(uint64& oNextUnusedID, vector<pair<uint64, ZTuple> >& oTuples);
+	bool GetDataIfChanged(uint64& oNextUnusedID, std::vector<std::pair<uint64, ZTuple> >& oTuples);
 	void GetData(uint64& oNextUnusedID, std::map<uint64, ZTuple>& oTuples);
 
 private:

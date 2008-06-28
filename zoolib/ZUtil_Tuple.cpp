@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZString.h"
 
+using std::string;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Tuple

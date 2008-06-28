@@ -50,11 +50,11 @@ bool sBool(const ZTValue& iTV, bool& oVal);
 bool sBoolD(const ZTValue& iTV, bool iDefault);
 bool sBool(const ZTValue& iTV);
 
-bool sGetValuei(const ZTuple& iTuple, const string& iNamei, ZTValue& oTV);
-ZTValue sDGetValuei(const ZTuple& iTuple, const string& iNamei, const ZTValue& iDefault);
-ZTValue sGetValuei(const ZTuple& iTuple, const string& iNamei);
+bool sGetValuei(const ZTuple& iTuple, const std::string& iNamei, ZTValue& oTV);
+ZTValue sDGetValuei(const ZTuple& iTuple, const std::string& iNamei, const ZTValue& iDefault);
+ZTValue sGetValuei(const ZTuple& iTuple, const std::string& iNamei);
 
-ZTuple::const_iterator sIteratorofi(const ZTuple& iTuple, const string& iNamei);
+ZTuple::const_iterator sIteratorofi(const ZTuple& iTuple, const std::string& iNamei);
 
 } // namespace ZUtil_Tuple
 

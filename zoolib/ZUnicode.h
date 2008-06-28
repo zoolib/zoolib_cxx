@@ -535,7 +535,7 @@ inline void sAsWString(const string8& iString8, string16& oString16)
 inline void sAsWString(const string8& iString8, string32& oString32)
 	{ oString32 = sAsUTF32(iString8); }
 
-inline wstring sAsWString(const std::string& iString)
+inline std::wstring sAsWString(const std::string& iString)
 	{
 	std::wstring result;
 	sAsWString(iString, result);

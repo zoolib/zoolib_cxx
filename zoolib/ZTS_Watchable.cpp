@@ -31,6 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZUtil_STL.h"
 #include "ZUtil_Strim_Tuple.h"
 
+using std::lower_bound;
 using std::map;
 using std::pair;
 using std::set;

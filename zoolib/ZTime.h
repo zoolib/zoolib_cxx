@@ -26,8 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZCompat_operator_bool.h"
 
-class ZMutex;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTime

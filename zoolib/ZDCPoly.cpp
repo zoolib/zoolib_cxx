@@ -421,8 +421,8 @@ void ZDCPoly::Decompose(bool iEvenOdd, ZCoord iOffsetH, ZCoord iOffsetV,
 //	static const ZCoord sCoord_Min = SHRT_MIN;
 #else
 	#include <limits>
-	static const ZCoord sCoord_Max = numeric_limits<ZCoord>::max();
-	static const ZCoord sCoord_Min = numeric_limits<ZCoord>::min();
+	static const ZCoord sCoord_Max = std::numeric_limits<ZCoord>::max();
+	static const ZCoord sCoord_Min = std::numeric_limits<ZCoord>::min();
 #endif
 
 struct BresenhamInfo

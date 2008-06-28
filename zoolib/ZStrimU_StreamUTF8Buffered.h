@@ -45,7 +45,7 @@ public:
 
 protected:
 	const ZStreamR& fStreamR;
-	vector<UTF32> fBuffer;
+	std::vector<UTF32> fBuffer;
 	size_t fFeedIn;
 	size_t fFeedOut;
 	};

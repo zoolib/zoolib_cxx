@@ -28,3 +28,31 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t);
 ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetListener_RFCOMM>, ZNetListener_RFCOMM::MakeParam_t);
 ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetEndpoint_RFCOMM>, ZNetEndpoint_RFCOMM::MakeParam_t);
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZNetName_RFCOMM
+
+ZNetName_RFCOMM::ZNetName_RFCOMM()
+	{}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZNetAddress_RFCOMM
+
+ZNetAddress_RFCOMM::ZNetAddress_RFCOMM()
+	{}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZNetListener_RFCOMM
+
+ZNetListener_RFCOMM::ZNetListener_RFCOMM()
+	{}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZNetEndpoint_RFCOMM
+
+ZNetEndpoint_RFCOMM::ZNetEndpoint_RFCOMM()
+	{}

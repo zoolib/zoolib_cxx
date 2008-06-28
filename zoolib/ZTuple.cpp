@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept> // For runtime_error
 
+using std::min;
 using std::pair;
 using std::runtime_error;
 using std::string;

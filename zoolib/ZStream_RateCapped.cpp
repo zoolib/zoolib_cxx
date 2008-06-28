@@ -46,7 +46,7 @@ size_t RateLimiter::GetCount(size_t iLastCount, size_t iCount)
 		}
 
 	fLastTime = ZTime::sSystem();
-	return min(iCount, fQuantum);
+	return std::min(iCount, fQuantum);
 	}
 
 } // namespace ZooLib

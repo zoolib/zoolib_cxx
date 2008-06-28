@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZTQL_LogOp.h"
 
+using std::set;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::LogOp

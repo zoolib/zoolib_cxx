@@ -30,6 +30,8 @@ using ZTQL::Condition;
 using ZTQL::LogOp;
 using ZTQL::RelHead;
 
+using std::vector;
+
 typedef vector<Condition> CondSect;
 typedef vector<CondSect> CondUnion;
 
