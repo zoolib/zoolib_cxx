@@ -23,72 +23,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZCONFIG_SPI.h"
 
-#include <cstddef> // Pull in definition of size_t, which is heavily used by zoolib
+// Pull in definition of size_t, which is heavily used by zoolib
+#include <cstddef>
 
-// ==================================================
-// The usual suite of types with known sizes and signedness.
-
-#if 0
-
-#	include<support/SupportDefs.h>
-
-#elif ZCONFIG(Compiler, MSVC)
-
-	typedef signed char int8;
-	typedef unsigned char uint8;
-
-	typedef signed short int16;
-	typedef unsigned short uint16;
-
-	typedef signed int int32;
-	typedef unsigned int uint32;
-
-	typedef __int64 int64;
-	typedef unsigned __int64 uint64;
-
-	typedef int64 bigtime_t;
-
-#elif ZCONFIG_SPI_Enabled(MacClassic) || ZCONFIG_SPI_Enabled(Carbon) && !ZCONFIG_SPI_Enabled(POSIX)
-
-	#if ZCONFIG_SPI_Enabled(MacClassic)
-		#include <MacTypes.h>
-	#else
-		#include <CoreServices/CoreServices.h>
-	#endif
-
-	typedef SInt8 int8;
-	typedef UInt8 uint8;
-
-	typedef SInt16 int16;
-	typedef UInt16 uint16;
-
-	typedef SInt32 int32;
-	typedef UInt32 uint32;
-
-	typedef SInt64 int64;
-	typedef UInt64 uint64;
-
-	typedef int64 bigtime_t;
-	
-#else
-
-	#include <stdint.h>
-
-	typedef int8_t int8;
-	typedef uint8_t uint8;
-
-	typedef int16_t int16;
-	typedef uint16_t uint16;
-
-	typedef int32_t int32;
-	typedef uint32_t uint32;
-
-	typedef int64_t int64;
-	typedef uint64_t uint64;
-
-	typedef int64 bigtime_t;
-
-#endif
+// Incorporate standard int types.
+#include "ZStdInt.h"
 
 // ==================================================
 
@@ -193,19 +132,5 @@ uint8 (&byte_array_of_same_dimension_as(T(&)[N]))[N];
 } // namespace ZooLib
 
 #define countof(x) sizeof(ZooLib::byte_array_of_same_dimension_as((x)))
-
-// ==================================================
-// AG 2000-08-16. ZMouse being here is a temporary stopgap. We have to lose the file ZMouse.h,
-// because it conflicts with Microsoft's file of the same name, and I haven't decided where to
-// go with the ZMouse enums.
-
-namespace ZMouse {
-
-enum Motion { eMotionEnter, eMotionMove, eMotionLinger, eMotionLeave };
-enum Button { eButtonLeft, eButtonMiddle, eButtonRight,
-				buttonLeft = eButtonLeft,
-				buttonMiddle = eButtonMiddle,
-				buttonRight = eButtonRight };
-} // namespace ZMouse
 
 #endif // __ZTypes__
