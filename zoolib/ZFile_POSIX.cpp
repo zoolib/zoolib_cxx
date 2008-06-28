@@ -29,14 +29,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(File_POSIX)
 
+#include "ZCONFIG_SPI.h"
+
 #if ZCONFIG_SPI_Enabled(BeOS)
 #	define ZCONFIG_File_AtAPISupported 0
 #else
 #	define ZCONFIG_File_AtAPISupported 1
 #endif
 
+
 #include "ZDebug.h"
-#include "ZMain.h" // For ZMain::sArgV
 
 #include <vector>
 
@@ -654,6 +656,8 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_Root()
 	return new ZFileLoc_POSIX(true);
 	}
 
+#if ZCONFIG_SPI_Enabled(Linux)
+
 ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 	{
 	for (size_t bufSize = 1024; bufSize < 16384; bufSize *= 2)
@@ -669,12 +673,37 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 			return new ZFileLoc_POSIX(true, comps, true);
 			}
 		}
+	return ZRef<ZFileLoc_POSIX>();
+	}
 
-	// We've failed to extract the path to the executable from
-	// /proc/self/exe. Try using argv[0], the current working
-	// directory and entries in getenv("PATH").
+#elif ZCONFIG_SPI_Enabled(MacOSX)
 
-	string name = ZMainNS::sArgV[0];
+// From <http://www.oroboro.com/rafael/docserv.php/article/news/entry/52/num_entries/1>
+
+#include <mach-o/dyld.h>
+
+ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
+	{
+	uint32_t theSize;
+	::_NSGetExecutablePath(nil, &theSize);
+	vector<char> buffer(theSize);
+	if (!::_NSGetExecutablePath(&buffer[0], &theSize))
+		{
+		vector<string> comps;
+		::sSplit('/', false, &buffer[0], &buffer[theSize], comps);
+		return new ZFileLoc_POSIX(true, comps, true);
+		}
+	return ZRef<ZFileLoc_POSIX>();
+	}
+
+#else
+
+// This will require that we're built as part of a real application.
+#include "ZMain.h" // For ZMainNS::sArgV
+
+ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
+	{
+	const string name = ZMainNS::sArgV[0];
 
 	if (name.size())
 		{
@@ -729,6 +758,11 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 
 	return ZRef<ZFileLoc_POSIX>();
 	}
+
+#endif
+
+
+
 
 ZFileLoc_POSIX::ZFileLoc_POSIX(bool iIsAtRoot)
 :	fIsAtRoot(iIsAtRoot)
