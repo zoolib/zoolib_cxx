@@ -22,9 +22,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUSB_OSX__ 1
 
 #include "zconfig.h"
+#include "ZCONFIG_API.h"
 #include "ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(MacOSX)
+#ifndef ZCONFIG_API_Avail__USB_OSX
+#	define ZCONFIG_API_Avail__USB_OSX ZCONFIG_SPI_Enabled(MacOSX)
+#endif
+
+#ifndef ZCONFIG_API_Desired__USB_OSX
+#	define ZCONFIG_API_Desired__USB_OSX 1
+#endif
+
+#if ZCONFIG_API_Enabled(USB_OSX)
 
 #include <IOKit/IOKitLib.h> // For IONotificationPortRef
 #include <IOKit/usb/IOUSBLib.h>
@@ -135,5 +144,5 @@ private:
 	class StreamerW;
 	};
 
-#endif // ZCONFIG_SPI_Enabled(MacOSX)
+#endif // ZCONFIG_API_Enabled(USB_OSX)
 #endif // __ZUSB_OSX__

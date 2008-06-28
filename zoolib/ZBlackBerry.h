@@ -57,7 +57,7 @@ public:
 	virtual void Start();
 	virtual void Stop();
 
-	virtual void GetDeviceIDs(vector<uint64>& oDeviceIDs) = 0;
+	virtual void GetDeviceIDs(std::vector<uint64>& oDeviceIDs) = 0;
 	virtual ZRef<Device> Open(uint64 iDeviceID) = 0;
 
 	class Observer
@@ -79,7 +79,7 @@ private:
 	ZMutex fMutex;
 	ZCondition fCondition;
 	int fStartCount;
-	set<Observer*> fObservers;
+	std::set<Observer*> fObservers;
 	};
 
 // =================================================================================================
@@ -113,7 +113,7 @@ public:
 		};
 
 	virtual ZRef<Channel> Open(
-		const string& iName, const PasswordHash* iPasswordHash, Error* oError) = 0;
+		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError) = 0;
 	virtual ZMemoryBlock GetAttribute(uint16 iObject, uint16 iAttribute) = 0;
 
 	class Observer
@@ -132,7 +132,7 @@ private:
 	ZMutex fMutex;
 	ZCondition fCondition;
 	int fStartCount;
-	set<Observer*> fObservers;
+	std::set<Observer*> fObservers;
 	};
 
 // =================================================================================================

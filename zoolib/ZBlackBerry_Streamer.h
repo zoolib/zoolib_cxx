@@ -45,7 +45,7 @@ public:
 // From ZBlackBerry::Device
 	virtual void Stop();
 	virtual ZRef<Channel> Open(
-		const string& iName, const PasswordHash* iPasswordHash, Error* oError);
+		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError);
 	virtual ZMemoryBlock GetAttribute(uint16 iObject, uint16 iAttribute);
 
 // From ZStreamReader via ZCommer	
@@ -74,7 +74,7 @@ private:
 	void Channel_Abort(Channel_Streamer* iChannel);
 
 	ZRef<Channel_Streamer> pFindChannel(uint16 iChannelID);
-	ZRef<Channel_Streamer> pFindChannel(const string& iName);
+	ZRef<Channel_Streamer> pFindChannel(const std::string& iName);
 	bool pDetachIfUnused(Channel_Streamer* iChannel);
 
 	void pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZStreamR& iStreamR);
@@ -108,7 +108,7 @@ private:
 
 	ELifecycle fLifecycle;
 
-	vector<Channel_Streamer*> fChannels;
+	std::vector<Channel_Streamer*> fChannels;
 	};
 
 } // namespace ZBlackBerry

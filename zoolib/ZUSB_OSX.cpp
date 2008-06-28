@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZUSB_OSX.h"
 
-#if ZCONFIG_SPI_Enabled(MacOSX)
+#if ZCONFIG_API_Enabled(USB_OSX)
 
 #include "ZByteSwap.h"
 #include "ZLog.h"
@@ -31,6 +31,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <IOKit/IOMessage.h>
 #include <IOKit/IOCFPlugIn.h>
+
+using std::exception;
+using std::min;
+using std::runtime_error;
 
 // =================================================================================================
 #pragma mark -
@@ -568,4 +572,4 @@ void ZUSBInterfaceInterface::Close()
 		}
 	}
 
-#endif // ZCONFIG_SPI_Enabled(MacOSX)
+#endif // ZCONFIG_API_Enabled(USB_OSX)

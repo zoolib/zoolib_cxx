@@ -57,7 +57,7 @@ private:
 	class Handler_ManagerChanged;
 	friend class Handler_ManagerChanged;
 	void pRemove_ManagerChanged(Handler_ManagerChanged*);
-	vector<Handler_ManagerChanged*> fHandlers_ManagerChanged;
+	std::vector<Handler_ManagerChanged*> fHandlers_ManagerChanged;
 
 	class Handler_DeviceFinished;
 	friend class Handler_DeviceFinished;
@@ -68,12 +68,10 @@ private:
 		uint64 fID;
 		bool fLive;
 		ZRef<ZBlackBerry::Device> fDevice;
-		vector<Handler_DeviceFinished*> fHandlers;
+		std::vector<Handler_DeviceFinished*> fHandlers;
 		};
 
-	vector<Entry_t> fEntries;
+	std::vector<Entry_t> fEntries;
 	};
 
-
 #endif // __ZBlackBerry_Server__
-

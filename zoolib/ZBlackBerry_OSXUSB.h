@@ -20,15 +20,30 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZBlackBerry_OSXUSB__
 #define __ZBlackBerry_OSXUSB__ 1
-
 #include "zconfig.h"
+#include "ZCONFIG_API.h"
 #include "ZCONFIG_SPI.h"
+
+#include "ZUSB_OSX.h"
+
+#ifndef ZCONFIG_API_Avail__BlackBerry_OSXUSB
+#	if ZCONFIG_API_Enabled(USB_OSX)
+#		define ZCONFIG_API_Avail__BlackBerry_OSXUSB 1
+#	endif
+#endif
+
+#ifndef ZCONFIG_API_Avail__BlackBerry_OSXUSB
+#	define ZCONFIG_API_Avail__BlackBerry_OSXUSB 0
+#endif
+
+#ifndef ZCONFIG_API_Desired__BlackBerry_OSXUSB
+#	define ZCONFIG_API_Desired__BlackBerry_OSXUSB 1
+#endif
 
 #include "ZBlackBerry.h"
 
-#if ZCONFIG_SPI_Enabled(MacOSX)
+#if ZCONFIG_API_Enabled(BlackBerry_OSXUSB)
 
-#include "ZUSB_OSX.h"
 
 #include "ZTime.h"
 
@@ -47,7 +62,7 @@ class Manager_OSXUSB
 	ZUSBDevice::Observer
 	{
 public:
-	Manager_OSXUSB();
+	Manager_OSXUSB(bool iAllowMassStorage);
 
 	virtual ~Manager_OSXUSB();
 
@@ -55,7 +70,7 @@ public:
 	virtual void Start();
 	virtual void Stop();
 
-	virtual void GetDeviceIDs(vector<uint64>& oDeviceIDs);
+	virtual void GetDeviceIDs(std::vector<uint64>& oDeviceIDs);
 
 	virtual ZRef<Device> Open(uint64 iDeviceID);
 
@@ -68,6 +83,8 @@ public:
 private:
 	ZMutex fMutex;
 
+	bool fAllowMassStorage;
+	
 	mach_port_t fMasterPort;
 	IONotificationPortRef fIONotificationPortRef;
 
@@ -83,12 +100,12 @@ private:
 		uint64 fID;
 		};
 
-	vector<Device_t> fDevices;
+	std::vector<Device_t> fDevices;
 	uint64 fNextID;
 	};
 
 } // namespace ZBlackBerry
 
-#endif // ZCONFIG_SPI_Enabled(MacOSX)
+#endif // ZCONFIG_API_Enabled(BlackBerry_OSXUSB)
 
 #endif // __ZBlackBerry_OSXUSB__

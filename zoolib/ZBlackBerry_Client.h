@@ -46,7 +46,7 @@ public:
 	virtual void Start();
 	virtual void Stop();
 
-	virtual void GetDeviceIDs(vector<uint64>& oDeviceIDs);
+	virtual void GetDeviceIDs(std::vector<uint64>& oDeviceIDs);
 
 	virtual ZRef<Device> Open(uint64 iDeviceID);
 

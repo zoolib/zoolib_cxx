@@ -31,6 +31,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <deque>
 
+using std::deque;
+using std::min;
+using std::string;
+using std::vector;
+
 namespace ZBlackBerry {
 
 // =================================================================================================

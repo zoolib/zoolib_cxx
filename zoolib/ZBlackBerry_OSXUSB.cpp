@@ -20,12 +20,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZBlackBerry_OSXUSB.h"
 
-#if ZCONFIG_SPI_Enabled(MacOSX)
+#if ZCONFIG_API_Enabled(BlackBerry_OSXUSB)
 
 #include "ZBlackBerry_Streamer.h"
 
 #include "ZLog.h"
 #include "ZMemory.h"
+
+using std::runtime_error;
+using std::vector;
 
 namespace ZBlackBerry {
 
@@ -35,8 +38,9 @@ namespace ZBlackBerry {
 
 static bool sSendControlMessage(IOUSBDeviceInterface182** iUDI,
 	uint8_t bRequestType, uint8_t bRequest,
-	uint16_t wValue, uint16_t wIndex, void* bytes,
-	unsigned int numbytes, unsigned int timeout)
+	uint16_t wValue, uint16_t wIndex,
+	void* bytes, unsigned int numbytes,
+	unsigned int timeout)
 	{
 	IOUSBDevRequestTO urequest;
 	ZBlockZero(&urequest, sizeof(urequest));
@@ -92,7 +96,7 @@ static bool sUseHighPower(ZRef<ZUSBDevice> iUSBDevice)
 	return false;
 	}
 
-static void sChangeMode(ZRef<ZUSBDevice> iUSBDevice)
+static void sChangeMode(ZRef<ZUSBDevice> iUSBDevice, bool iAllowMassStorage)
 	{
 	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry_OSXUSB"))
 		s << "sChangeMode, Enter";
@@ -101,10 +105,11 @@ static void sChangeMode(ZRef<ZUSBDevice> iUSBDevice)
 		{
 		char buffer[2];
 		
-		// This line sets the operational mode to be Product ID 1
-		if (!sSendControlMessage(theUDI, 0xc0, 0xa9, 0, 1, buffer, 2, 100))
-		// whereas this sets it to be Product ID 4 (dual mode)
-		// if (!sSendControlMessage(theUDI, 0xc0, 0xa9, 1, 1, buffer, 2, 100))
+		uint16_t theValue = 0;
+		if (iAllowMassStorage)
+			theValue = 1;
+
+		if (!sSendControlMessage(theUDI, 0xc0, 0xa9, theValue, 1, buffer, 2, 100))
 			{
 			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Info, "ZBlackBerry_OSXUSB"))
 				s << "sChangeMode, Failed to send message";
@@ -131,8 +136,9 @@ static void sChangeMode(ZRef<ZUSBDevice> iUSBDevice)
 #pragma mark -
 #pragma mark * ZBlackBerry::Manager_OSXUSB
 
-Manager_OSXUSB::Manager_OSXUSB()
-:	fMasterPort(0),
+Manager_OSXUSB::Manager_OSXUSB(bool iAllowMassStorage)
+:	fAllowMassStorage(iAllowMassStorage),
+	fMasterPort(0),
 	fIONotificationPortRef(nil),
 	fNextID(1)
 	{
@@ -258,7 +264,6 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 		return;
 		}
 
-#if 1
 	const UInt8 usedPower = sGetUsedPower(iUSBDevice);
 	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
 		s.Writef("Used power: %d", usedPower);
@@ -279,14 +284,13 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 				s.Writef("After calling UseHighPower, used power: %d", usedPower);
 			}
 		}
-#endif
 
 	if (theIDProduct == 6)
 		{
 		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
 			s << "Got an 8xxx series, changing modes";
 
-		sChangeMode(iUSBDevice);
+		sChangeMode(iUSBDevice, fAllowMassStorage);
 
 		return;
 		}
@@ -300,7 +304,7 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 	if (theIDProduct == 0x8004)
 		{
 		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
-			s << "Got an 8120";
+			s << "Got an 8xxx series, dual mode, high-speed USB";
 		}
 
 	if (theIDProduct == 1)
@@ -355,4 +359,4 @@ void Manager_OSXUSB::Detached(ZRef<ZUSBDevice> iUSBDevice)
 
 } // namespace ZBlackBerry
 
-#endif // ZCONFIG_SPI_Enabled(MacOSX)
+#endif // ZCONFIG_API_Enabled(BlackBerry_OSXUSB)

@@ -27,6 +27,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZStreamCopier.h"
 #include "ZUtil_STL.h"
 
+using std::string;
+using std::vector;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZBlackBerryServer::Handler_ManagerChanged

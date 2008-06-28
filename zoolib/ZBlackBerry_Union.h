@@ -35,7 +35,7 @@ class Manager_Union
 	Manager::Observer
 	{
 public:
-	Manager_Union(const vector<ZRef<Manager> >& iManagers);
+	Manager_Union(const std::vector<ZRef<Manager> >& iManagers);
 
 	virtual ~Manager_Union();
 
@@ -43,7 +43,7 @@ public:
 	virtual void ManagerChanged(ZRef<ZBlackBerry::Manager> iManager);
 
 // From Manager
-	virtual void GetDeviceIDs(vector<uint64>& oDeviceIDs);
+	virtual void GetDeviceIDs(std::vector<uint64>& oDeviceIDs);
 
 	virtual ZRef<Device> Open(uint64 iDeviceID);
 
@@ -55,10 +55,10 @@ private:
 	struct Entry_t
 		{
 		ZRef<Manager> fManager;
-		vector<pair<uint64, uint64> > fIDs;
+		std::vector<std::pair<uint64, uint64> > fIDs;
 		bool fValid;
 		};
-	vector<Entry_t> fEntries;
+	std::vector<Entry_t> fEntries;
 	uint64 fNextID;
 	};
 

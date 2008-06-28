@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZLog.h"
 #include "ZUtil_STL.h"
 
+using std::set;
 
 /**
 These are some brief notes to get you started. If anything is unclear, drop me
