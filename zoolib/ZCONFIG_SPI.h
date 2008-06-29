@@ -206,7 +206,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 // =================================================================================================
-// GDI
+#pragma mark GDI (aka ZeroConf)
 #ifndef ZCONFIG_SPI_Avail__GDI
 #	define ZCONFIG_SPI_Avail__GDI (ZCONFIG_SPI_Avail__Win && ZCONFIG_SPI_Desired__Win)
 #endif
@@ -379,7 +379,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 // =================================================================================================
-// QuickDraw
+#pragma mark QuickDraw
 #ifndef ZCONFIG_SPI_Avail__QuickDraw
 #	define ZCONFIG_SPI_Avail__QuickDraw \
 	((ZCONFIG_SPI_Avail__Carbon && ZCONFIG_SPI_Desired__Carbon) \
