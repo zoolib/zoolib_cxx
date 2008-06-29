@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(JPEGLib)
 
-#if ZCONFIG(OS, Win32) && defined(__ZWinHeader__)
+#if ZCONFIG_SPI_Enabled(Win) && defined(__ZWinHeader__)
 	// Fix up some stuff that breaks jpeglib's jmorecfg.h when we've also already pulled in
 	// the Windows Headers. That happens when we're compiling for Windows using ZWinHeader
 	// and CodeWarrior's precompiled headers.
@@ -38,7 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	// But our code still needs to see boolean as being an int.
 	#define boolean int
-#endif // ZCONFIG(OS, Win32)
+#endif
 
 extern "C" {
 #include <jpeglib.h>
