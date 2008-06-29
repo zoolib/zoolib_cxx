@@ -92,12 +92,12 @@ Dead            FN:OpenRW                      LookupNeeded
 LookupNeeded                SelectMode         LookupSent
 
 LookupSent      SelectMode_Ack                 ConnectNeeded
-LookupSent      SelectMode_Nack                Failed
+LookupSent      SelectMode_Nack                Dead
 
-ConnectNeeded               ChannelOpen         ConnectSent
+ConnectNeeded               ChannelOpen        ConnectSent
 
 ConnectSent     PasswordChallenge              ChallengeRcvd
-ConnectSent     PasswordFailed                 Failed
+ConnectSent     PasswordFailed                 CloseNeeded
 ConnectSent     ChannelOpen_Ack                Connected
 
 ChallengeRcvd               PasswordResponse   ConnectSent
@@ -115,15 +115,15 @@ ConnectedData   FN:Close                       CloseNeeded
 Connected       FN:Close                       CloseNeeded
 Connected       ChannelClose                   CloseRcvd
 
-CloseNeeded                 ChannelClose        CloseSent
-CloseNeeded     ChannelClose                    CloseRcvd
+CloseNeeded                 ChannelClose       CloseSent
+CloseNeeded     ChannelClose                   CloseRcvd
 
-CloseSent       ChannelClose_Ack                Dead
-CloseSent       ChannelClose                    CloseSentAndRcvd
+CloseSent       ChannelClose_Ack               Dead
+CloseSent       ChannelClose                   CloseSentAndRcvd
 
-CloseRcvd                   ChannelClose_Ack    Dead
+CloseRcvd                   ChannelClose_Ack   Dead
 
-CloseSentAndRcvd            ChannelClose_Ack    Dead
+CloseSentAndRcvd            ChannelClose_Ack   Dead
 
 Note that ConnectedData is a virtual state -- it's just
 Connected, but with a non-empty send buffer.
