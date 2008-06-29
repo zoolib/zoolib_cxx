@@ -61,13 +61,45 @@ ZAssertCompile(sizeof(double) == sizeof(int64));
 #pragma mark -
 #pragma mark * Utility methods
 
+static void sCopyReadToWrite(void* iBuffer, size_t iBufferSize,
+	const ZStreamR& iStreamR, const ZStreamW& iStreamW, uint64 iCount,
+	uint64* oCountRead, uint64* oCountWritten)
+	{
+	uint64 countRemaining = iCount;
+	while (countRemaining > 0)
+		{
+		size_t countRead;
+		iStreamR.Read(iBuffer, min(countRemaining, uint64(iBufferSize)), &countRead);
+		if (countRead == 0)
+			break;
+		if (oCountRead)
+			*oCountRead += countRead;
+		countRemaining -= countRead;
+		const uint8* tempSource = static_cast<const uint8*>(iBuffer);
+		while (countRead > 0)
+			{
+			size_t countWritten;
+			iStreamW.Write(tempSource, countRead, &countWritten);
+			if (countWritten == 0)
+				{
+				countRemaining = 0;
+				break;
+				}
+			tempSource += countWritten;
+			countRead -= countWritten;
+			if (oCountWritten)
+				*oCountWritten += countWritten;
+			}
+		}
+	}
+
 /**
 Copy data from \a iStreamR to \a iStreamW by reading it into a buffer and writing
 from that buffer. If more than 8K is to be copied we try to allocate an 8K buffer
 in the heap. If less than 8K is to be copied, or the heap buffer could not be allocated,
 we use a 1K buffer on the stack.
 */
-void sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStreamW, uint64 iCount,
+void ZStream::sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
 	{
 	if (oCountRead)
@@ -85,32 +117,9 @@ void sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStreamW, uint64
 			{
 			try
 				{
-				uint64 countRemaining = iCount;
-				while (countRemaining > 0)
-					{
-					size_t countRead;
-					iStreamR.Read(heapBuffer, min(countRemaining, uint64(8192)), &countRead);
-					if (countRead == 0)
-						break;
-					if (oCountRead)
-						*oCountRead += countRead;
-					countRemaining -= countRead;
-					uint8* tempSource = heapBuffer;
-					while (countRead > 0)
-						{
-						size_t countWritten;
-						iStreamW.Write(tempSource, countRead, &countWritten);
-						if (countWritten == 0)
-							{
-							countRemaining = 0;
-							break;
-							}
-						tempSource += countWritten;
-						countRead -= countWritten;
-						if (oCountWritten)
-							*oCountWritten += countWritten;
-						}
-					}
+				sCopyReadToWrite(heapBuffer, 8192,
+					iStreamR, iStreamW, iCount,
+					oCountRead, oCountWritten);
 				}
 			catch (...)
 				{
@@ -129,33 +138,14 @@ void sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStreamW, uint64
 	// fewer than 8 times. Previously we'd unconditionally used one of size 4096, but that's
 	// fairly large and can contribute to blowing the stack on MacOS.
 	uint8 localBuffer[1024];
-	uint64 countRemaining = iCount;
-	while (countRemaining > 0)
-		{
-		size_t countRead;
-		iStreamR.Read(localBuffer, min(countRemaining, uint64(sizeof(localBuffer))), &countRead);
-		if (countRead == 0)
-			break;
-		if (oCountRead)
-			*oCountRead += countRead;
-		countRemaining -= countRead;
-		uint8* tempSource = localBuffer;
-		while (countRead > 0)
-			{
-			size_t countWritten;
-			iStreamW.Write(tempSource, countRead, &countWritten);
-			if (countWritten == 0)
-				{
-				countRemaining = 0;
-				break;
-				}
-			tempSource += countWritten;
-			countRead -= countWritten;
-			if (oCountWritten)
-				*oCountWritten += countWritten;
-			}
-		}
+	sCopyReadToWrite(localBuffer, sizeof(localBuffer),
+		iStreamR, iStreamW, iCount,
+		oCountRead, oCountWritten);
 	}
+
+ZStream::ExEndOfStream::ExEndOfStream(const char* iWhat)
+:	range_error(iWhat)
+	{}
 
 // =================================================================================================
 #pragma mark -
@@ -547,7 +537,7 @@ call to its \c Write method.
 */
 void ZStreamR::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
-	{ sCopyReadToWrite(*this, iStreamW, iCount, oCountRead, oCountWritten); }
+	{ ZStream::sCopyReadToWrite(*this, iStreamW, iCount, oCountRead, oCountWritten); }
 
 
 /** \brief Read and discard iCount bytes.
@@ -584,7 +574,7 @@ void ZStreamR::sThrowEndOfStream()
 #pragma mark * ZStreamR::ExEndOfStream
 
 ZStreamR::ExEndOfStream::ExEndOfStream()
-:	range_error("ZStreamR::ExEndOfStream")
+:	ZStream::ExEndOfStream("ZStreamR::ExEndOfStream")
 	{}
 
 // =================================================================================================
@@ -1026,7 +1016,7 @@ is in memory and thus can be modified by calling \a iStreamR's \c Read method.
 */
 void ZStreamW::Imp_CopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
-	{ sCopyReadToWrite(iStreamR, *this, iCount, oCountRead, oCountWritten); }
+	{ ZStream::sCopyReadToWrite(iStreamR, *this, iCount, oCountRead, oCountWritten); }
 
 
 /** \brief If this stream buffers data then pass it on to its ultimate destination.
@@ -1051,7 +1041,7 @@ void ZStreamW::sThrowEndOfStream()
 #pragma mark * ZStreamW::ExEndOfStream
 
 ZStreamW::ExEndOfStream::ExEndOfStream()
-:	range_error("ZStreamW::ExEndOfStream")
+:	ZStream::ExEndOfStream("ZStreamW::ExEndOfStream")
 	{}
 
 // =================================================================================================

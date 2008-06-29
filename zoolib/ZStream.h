@@ -30,10 +30,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZStreamR;
 class ZStreamW;
 
+namespace ZStream {
+
 /** Helper function used internally by ZStreamR and ZStreamW,
 but made available in case it's needed by application code. */
+
 void sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStreamW, uint64 iCount,
 						uint64* oCountRead, uint64* oCountWritten);
+
+class ExEndOfStream : public std::range_error
+	{
+protected:
+	ExEndOfStream(const char* iWhat);
+	};
+
+} // namespace ZStream
 
 // =================================================================================================
 #pragma mark -
@@ -199,7 +210,7 @@ inline size_t ZStreamR::CountReadable() const
 #pragma mark -
 #pragma mark * ZStreamR::ExEndOfStream
 
-class ZStreamR::ExEndOfStream : public std::range_error
+class ZStreamR::ExEndOfStream : public ZStream::ExEndOfStream
 	{
 public:
 	ExEndOfStream();
@@ -434,7 +445,7 @@ protected:
 #pragma mark -
 #pragma mark * ZStreamW::ExEndOfStream
 
-class ZStreamW::ExEndOfStream : public std::range_error
+class ZStreamW::ExEndOfStream : public ZStream::ExEndOfStream
 	{
 public:
 	ExEndOfStream();
