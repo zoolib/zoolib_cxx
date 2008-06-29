@@ -36,6 +36,9 @@ B = Bounds
 
 namespace ZDCPixmapBlit {
 
+typedef ZooLib::ZPoint ZPoint;
+typedef ZooLib::ZRect ZRect;
+
 typedef ZDCPixmapNS::RasterDesc RD;
 typedef ZDCPixmapNS::PixelDesc PD;
 
@@ -117,15 +120,15 @@ void sColor(
 /** Invert, replacing each pixel with white minus that pixel. */
 void sInvert(void* iDest, const RD& iDestRD, const ZRect& iDestB, const PD& iDestPD);
 
-/** Multiply r,g, b & alpha by iAmount/65536. */
+/** Multiply r,g, b & alpha by iAmount/65535. */
 void sOpaque(
 	void* iDest, const RD& iDestRD, const ZRect& iDestB, const PD& iDestPD, uint16 iAmount);
 
-/** Multiply r, g, b by iAmount/65536, leaving alpha alone. */
+/** Multiply r, g, b by iAmount/65535, leaving alpha alone. */
 void sDarken(
 	void* iDest, const RD& iDestRD, const ZRect& iDestB, const PD& iDestPD, uint16 iAmount);
 
-/** Multiply alpha by iAmount/65536, leaving r,g,b alone. */
+/** Multiply alpha by iAmount/65535, leaving r,g,b alone. */
 void sFade(
 	void* iDest, const RD& iDestRD, const ZRect& iDestB, const PD& iDestPD, uint16 iAmount);
 
