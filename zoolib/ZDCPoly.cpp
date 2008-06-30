@@ -73,7 +73,7 @@ SOFTWARE.
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
-#	include ZMACINCLUDE(CarbonCore,MacMemory.h) // For HLock etc.
+#	include ZMACINCLUDE(CoreServices,MacMemory.h) // For HLock etc.
 #endif
 
 using std::min;

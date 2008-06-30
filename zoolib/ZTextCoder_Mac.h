@@ -37,7 +37,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(TextCoder_Mac)
 
-#include <UnicodeConverter.h>
+#include ZMACINCLUDE(CoreServices,UnicodeConverter.h)
 
 // =================================================================================================
 #pragma mark -
@@ -47,7 +47,7 @@ class ZTextDecoder_Mac : public ZTextDecoder
 	{
 public:
 	ZTextDecoder_Mac(const char* iName);
-	ZTextDecoder_Mac(const string& iName);
+	ZTextDecoder_Mac(const std::string& iName);
 	ZTextDecoder_Mac(TextEncoding iSourceEncoding);
 	virtual ~ZTextDecoder_Mac();
 
@@ -72,7 +72,7 @@ class ZTextEncoder_Mac : public ZTextEncoder
 	{
 public:
 	ZTextEncoder_Mac(const char* iName);
-	ZTextEncoder_Mac(const string& iName);
+	ZTextEncoder_Mac(const std::string& iName);
 	ZTextEncoder_Mac(TextEncoding iDestEncoding);
 	virtual ~ZTextEncoder_Mac();
 

@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using namespace ZDCPixmapNS;
 
+
 using std::min;
 using std::max;
 using std::vector;
@@ -63,7 +64,7 @@ ZDCPixmapFactory::~ZDCPixmapFactory()
 	{}
 
 ZRef<ZDCPixmapRep> ZDCPixmapFactory::sCreateRep(const ZRef<ZDCPixmapRaster>& iRaster,
-	const ZRect& iBounds, const PixelDesc& iPixelDesc)
+	const ZooLib::ZRect& iBounds, const PixelDesc& iPixelDesc)
 	{
 	for (ZDCPixmapFactory* current = sHead; current; current = current->fNext)
 		{

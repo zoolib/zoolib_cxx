@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Carbon)
 
-#include ZMACINCLUDE(CarbonCore,Resources.h)
+#include ZMACINCLUDE(ApplicationServices,Resources.h)
 
 // =================================================================================================
 #pragma mark -

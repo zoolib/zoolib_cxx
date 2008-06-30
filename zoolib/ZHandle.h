@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstddef> // For size_t
 
 #if ZCONFIG_SPI_Enabled(Carbon)
-#	include ZMACINCLUDE(CarbonCore,MacMemory.h)
+#	include ZMACINCLUDE(CoreServices,MacMemory.h)
 #endif
 
 // =================================================================================================

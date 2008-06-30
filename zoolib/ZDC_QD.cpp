@@ -42,9 +42,13 @@ static short sModeLookup[] = { srcCopy, srcOr, srcXor, srcBic};
 #	define MacOffsetRgn OffsetRgn
 #endif
 
-#include ZMACINCLUDE(CarbonCore,LowMem.h) // For LMSetHiliteMode
-#include ZMACINCLUDE(CarbonCore,FixMath.h) // For Long2Fix
-#include ZMACINCLUDE(CarbonCore,TextUtils.h) // For StyledLineBreak stuff
+#include ZMACINCLUDE(CoreServices,LowMem.h) // For LMSetHiliteMode
+#include ZMACINCLUDE(CoreServices,FixMath.h) // For Long2Fix
+#include ZMACINCLUDE(CoreServices,TextUtils.h) // For StyledLineBreak stuff
+
+using std::bad_alloc;
+using std::string;
+using std::vector;
 
 static inline void sUseHiliteColor()
 	{

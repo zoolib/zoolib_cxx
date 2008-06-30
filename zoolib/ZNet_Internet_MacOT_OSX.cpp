@@ -154,6 +154,8 @@ void ZMacMP::sInvokeInMP(EntryProc iProc, void* iParam)
 #	define kDebug_OT 1
 #endif
 
+using std::string;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions

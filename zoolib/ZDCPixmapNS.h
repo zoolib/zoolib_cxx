@@ -36,8 +36,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZDCPixmapNS {
 
-typedef ZooLib::ZPoint ZPoint;
-typedef ZooLib::ZRect ZRect;
+using ZooLib::ZPoint;
+using ZooLib::ZRect;
 
 int sCalcRowBytes(int iWidth, int iDepth);
 

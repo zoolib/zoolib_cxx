@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
-#	include ZMACINCLUDE(QD,QuickDraw.h)
+#	include ZMACINCLUDE(ApplicationServices,QuickDraw.h)
 #endif
 
 #if ZCONFIG_SPI_Enabled(GDI)
@@ -56,6 +56,9 @@ class ZDCPoly;
 
 class ZDCRgn
 	{
+	typedef ZooLib::ZPoint ZPoint;
+	typedef ZooLib::ZRect ZRect;
+
     ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZDCRgn, operator_bool_generator_type, operator_bool_type);
 
 	struct Rep : public ZRefCounted

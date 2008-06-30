@@ -27,8 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Carbon)
 
-#include ZMACINCLUDE(HIToolbox,Dialogs.h) // For DialogPtr
-#include ZMACINCLUDE(HIToolbox,Events.h) // For EventRecord
+#include ZMACINCLUDE(Carbon,Dialogs.h) // For DialogPtr
+#include ZMACINCLUDE(Carbon,Events.h) // For EventRecord
 
 #include <string>
 
@@ -44,7 +44,7 @@ void sPostDialog();
 
 pascal Boolean sModalFilter(DialogPtr theDialog, EventRecord* inOutEventRecord, short* inOutItemHit);
 
-string sGetVersionString();
+std::string sGetVersionString();
 
 // =================================================================================================
 

@@ -28,12 +28,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept>
 
-#include ZMACINCLUDE(CarbonCore,MacErrors.h)
-#include ZMACINCLUDE(CarbonCore,TextEncodingConverter.h)
+#include ZMACINCLUDE(CoreServices,MacErrors.h)
+#include ZMACINCLUDE(CoreServices,TextEncodingConverter.h)
 
 ZAssertCompile(sizeof(UniChar) == sizeof(UTF16));
 
 static const size_t kBufSize = ZooLib::sStackBufferSize;
+
+using std::min;
+using std::runtime_error;
+using std::string;
+using std::vector;
 
 // =================================================================================================
 #pragma mark -

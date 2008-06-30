@@ -38,9 +38,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZCONFIG_Endian_Little 2
 
 // Debugging
-// ZCONFIG_Debug can take on any value, but by convention use 0 for a non-debug build, 1 for light debugging, 2 for heavy.
-// Note that ZCONFIG_Debug is what's _used_ in assert macros, but it takes its actual value from ZCONFIG_DebugLevel if
-// we're doing a debug build (.sym file being generated on CW, DEBUG defined on gcc). You should therefore define
-// ZCONFIG_DebugLevel in your zconfig.h file if it needs to be different from the default value of 1.
+// ZCONFIG_Debug can take on any value, but by convention use 0 for a non-debug build, 1 for light
+// debugging, 2 for heavy. Note that ZCONFIG_Debug is what's _used_ in assert macros, but it takes
+// its actual value from ZCONFIG_DebugLevel if we're doing a debug build (.sym file being generated
+// on CW, DEBUG defined on gcc). You should therefore define ZCONFIG_DebugLevel in your zconfig.h
+// file if it needs to be different from the default value of 1.
 
 #endif // __zconfigd__

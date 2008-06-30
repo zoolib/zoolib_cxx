@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTypes.h"
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
-#	include ZMACINCLUDE(QD,QuickDraw.h)
+#	include ZMACINCLUDE(ApplicationServices,QuickDraw.h)
 #endif
 
 #if ZCONFIG_SPI_Enabled(GDI)

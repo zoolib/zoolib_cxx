@@ -21,12 +21,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZGeom__
 #define __ZGeom__
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZTypes.h" // For ZRectPOD and ZPointPOD
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
-#	include ZMACINCLUDE(CarbonCore,MacTypes.h)
-#	include ZMACINCLUDE(QD,QuickDraw.h)
+#	include ZMACINCLUDE(ApplicationServices,MacTypes.h)
+#	include ZMACINCLUDE(ApplicationServices,QuickDraw.h)
 #endif
 
 #if ZCONFIG_SPI_Enabled(GDI)

@@ -28,9 +28,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTuple.h"
 #include "zoolib/ZUnicode.h"
 
-#include ZMACINCLUDE(CoreFoundation,CFArray.h)
-#include ZMACINCLUDE(CoreFoundation,CFBase.h)
-#include ZMACINCLUDE(CoreFoundation,CFDictionary.h)
+#include <CoreFoundation/CFArray.h>
+#include <CoreFoundation/CFBase.h>
+#include <CoreFoundation/CFDictionary.h>
 
 // =================================================================================================
 #pragma mark -

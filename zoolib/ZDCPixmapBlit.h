@@ -36,8 +36,8 @@ B = Bounds
 
 namespace ZDCPixmapBlit {
 
-typedef ZooLib::ZPoint ZPoint;
-typedef ZooLib::ZRect ZRect;
+using ZooLib::ZPoint;
+using ZooLib::ZRect;
 
 typedef ZDCPixmapNS::RasterDesc RD;
 typedef ZDCPixmapNS::PixelDesc PD;

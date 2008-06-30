@@ -189,7 +189,6 @@ static time_t sTMToTime(const struct tm& iTM)
 
 	#endif
 
-	#warning CHECK THIS
 	// MSL may not use the correct epoch start
 	#warning check this
 	return result;

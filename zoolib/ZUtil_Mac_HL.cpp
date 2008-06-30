@@ -25,13 +25,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDC_QD.h"
 #include "zoolib/ZMacOSX.h"
 #include "zoolib/ZMemory.h" // For ZBlockMove and ZBlockSet
-//#include "zoolib/ZOSWindow_Mac.h" // For ZOSApp_Mac
-//#include "zoolib/ZOSWindow_Carbon.h" // For ZOSApp_Carbon
 #include "zoolib/ZUtil_Mac_LL.h"
 
-#include ZMACINCLUDE(CarbonCore,Gestalt.h)
-#include ZMACINCLUDE(CarbonCore,Resources.h)
-#include ZMACINCLUDE(HIToolbox,AEInteraction.h)
+#include ZMACINCLUDE(CoreServices,Gestalt.h)
+#include ZMACINCLUDE(CoreServices,Resources.h)
+#include ZMACINCLUDE(Carbon,AEInteraction.h)
+
+using std::max;
+using std::runtime_error;
+using std::string;
 
 // =================================================================================================
 
@@ -692,8 +694,8 @@ string ZUtil_Mac_HL::sGetVersionString()
 #include "zoolib/ZDC_QD.h"
 #include "zoolib/ZStream.h"
 
-#include ZMACINCLUDE(CarbonCore,MacMemory.h)
-#include ZMACINCLUDE(QD,QDOffscreen.h)
+#include ZMACINCLUDE(CoreServices,MacMemory.h)
+#include ZMACINCLUDE(ApplicationServices,QDOffscreen.h)
 
 namespace ZANONYMOUS {
 struct PixmapFromStreamPICTInfo

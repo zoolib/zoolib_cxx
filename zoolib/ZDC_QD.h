@@ -39,7 +39,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_Mac_LL.h"
 
-#include ZMACINCLUDE(QD,QDOffscreen.h)
+#include ZMACINCLUDE(ApplicationServices,QDOffscreen.h)
 
 // =================================================================================================
 #pragma mark -

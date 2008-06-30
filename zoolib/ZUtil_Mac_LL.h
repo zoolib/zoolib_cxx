@@ -29,8 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZGeom.h"
 #include "zoolib/ZRefCount.h"
 
-#include ZMACINCLUDE(CarbonCore,MacMemory.h)
-#include ZMACINCLUDE(QD,QDOffscreen.h)
+#include ZMACINCLUDE(CoreServices,MacMemory.h)
+#include ZMACINCLUDE(ApplicationServices,QDOffscreen.h)
 
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 

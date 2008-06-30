@@ -268,6 +268,10 @@ private:
 #endif
 
 // ==================================================
-#define ZMACINCLUDE(a,b) <a/b>
+#if __MACH__
+	#define ZMACINCLUDE(a,b) <a/a.h>
+#else
+	#define ZMACINCLUDE(a,b) <b>
+#endif
 
 #endif // __zconfigl__

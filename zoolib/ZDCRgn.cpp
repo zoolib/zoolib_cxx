@@ -81,7 +81,7 @@ using std::vector;
 // =================================================================================================
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
-#	include ZMACINCLUDE(CarbonCore,MacMemory.h)
+#	include ZMACINCLUDE(ApplicationServices,MacMemory.h)
 #endif
 
 #if !defined(TARGET_OS_MAC) || (TARGET_OS_MAC && !defined(MacOffsetRgn))
