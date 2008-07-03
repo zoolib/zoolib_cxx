@@ -1,3 +1,4 @@
+
 /* -------------------------------------------------------------------------------------------------
 Copyright (c) 2000 Andrew Green and Learning in Motion, Inc.
 http://www.zoolib.org
@@ -26,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCPixmapBlit.h"
 #include "zoolib/ZMacOSX.h"
 #include "zoolib/ZStream.h"
+#include "zoolib/ZUtil_ATSUI.h"
 #include "zoolib/ZUtil_Mac_LL.h"
 
 static short sModeLookup[] = { srcCopy, srcOr, srcXor, srcBic};
@@ -936,332 +938,210 @@ void ZDCCanvas_QD::FloodFill(ZDCState& ioState, const ZPoint& inSeedLocation)
 	this->FillRegion(ioState, theFillRgn);
 	}
 
-#if 1
-static ATSUStyle sAsATSUStyle(const ZDCFont& iFont, float iFontSize)
-	{
-	ZDCFont::Style theStyle = iFont.GetStyle();
-
-	Fixed atsuSize = FixRatio(iFont.GetSize(), 1);
-	if (iFontSize > 0)
-		atsuSize = iFontSize * 65536.0;
-
-    ATSUFontID theATSUFontID;
-	// find the font ID
-	string fontName = iFont.GetName();
-	if (noErr != ::ATSUFindFontFromName((char*)fontName.data(), fontName.size(),
-		kFontFullName, kFontMacintoshPlatform,
-		kFontRomanScript, kFontNoLanguage, &theATSUFontID))
-//	if (noErr != ::ATSUFindFontFromName(fontName.data(), fontName.size() * 2,
-//		kFontFullName, kFontUnicodePlatform,
-//		kFontRomanScript, kFontNoLanguageCode, &atsuFont))
-		{
-		return nil;
-		}
-
-	// Three parallel arrays for setting up attributes.
-	ATSUAttributeTag theTags[] =
-		{
-		kATSUFontTag,
-		kATSUSizeTag,
-//		kATSUVerticalCharacterTag,
-		kATSUQDBoldfaceTag,
-		kATSUQDItalicTag,
-		kATSUQDUnderlineTag,
-		kATSUQDCondensedTag,
-		kATSUQDExtendedTag
-		};
-
-	ByteCount theSizes[countof(theTags)] =
-		{
-		sizeof(ATSUFontID),
-		sizeof(Fixed),
-//		sizeof(ATSUVerticalCharacterType),
-		sizeof(Boolean),
-		sizeof(Boolean),
-		sizeof(Boolean),
-		sizeof(Boolean),
-		sizeof(Boolean)
-		};
-
-	ATSUAttributeValuePtr theValues[countof(theTags)] =
-		{ 0, 0, 0, 0, 0, 0, 0 };
-
-//	ATSUVerticalCharacterType atsuOrientation = kATSUStronglyHorizontal;
-
-	Boolean trueV = true;
-	Boolean falseV = false;
-
-	// set the values array to point to our locals
-	theValues[0] = &theATSUFontID;
-	theValues[1] = &atsuSize;
-//	theValues[2] = &atsuOrientation;
-	theValues[2] = (theStyle & ZDCFont::bold ? &trueV : &falseV);
-	theValues[3] = (theStyle & ZDCFont::italic ? &trueV : &falseV);
-	theValues[4] = (theStyle & ZDCFont::underline ? &trueV : &falseV);
-	theValues[5] = (theStyle & ZDCFont::condense ? &trueV : &falseV);
-	theValues[6] = (theStyle & ZDCFont::extend ? &trueV : &falseV);
-
-	// create a style
-	ATSUStyle localStyle = nil;
-	if (noErr != ::ATSUCreateStyle(&localStyle))
-		return nil;
-
-	// set the style attributes
-	if (noErr != ::ATSUSetAttributes(localStyle, countof(theTags), theTags, theSizes, theValues))
-		{
-		::ATSUDisposeStyle(localStyle);
-		return nil;
-		}
-
-	return localStyle;
-	}
-
-static ATSUTextLayout sCreateLayout(const UTF16* iText, UniCharCount iTextLength, ATSUStyle iStyle)
-	{
-	ZAssertCompile(sizeof(UTF16) == sizeof(UniChar));
-	if (!iStyle)
-		return nil;
-
-  	if (!iTextLength)
-  		return nil;
-
-  	ATSUTextLayout theLayout = nil;
-	::ATSUCreateTextLayoutWithTextPtr((ConstUniCharArrayPtr)iText, 0, iTextLength, iTextLength,
-		1, &iTextLength, &iStyle, &theLayout);
-
-	ATSUFontFallbacks theFontFallbacks = nil;
-	if (noErr == ::ATSUCreateFontFallbacks(&theFontFallbacks))
-		{
-		if (noErr == ::ATSUSetObjFontFallbacks(theFontFallbacks, 0, nil, kATSUDefaultFontFallbacks))
-			{
-			ATSUAttributeTag theTags[] =
-				{
-				kATSULineFontFallbacksTag
-				};
-			ByteCount theSizes[countof(theTags)] =
-				{
-				sizeof(ATSUFontFallbacks)
-				};
-			ATSUAttributeValuePtr theValues[countof(theTags)] =
-				{
-				&theFontFallbacks
-				};
-
-			::ATSUSetLayoutControls(theLayout, 1, theTags, theSizes, theValues);
-			::ATSUSetTransientFontMatching(theLayout, true);
-			}
-		::ATSUDisposeFontFallbacks(theFontFallbacks);
-		}
-
-	return theLayout;
-	}
-
 void ZDCCanvas_QD::DrawText(ZDCState& ioState, const ZPoint& iLocation, const char* iText, size_t iTextLength)
 	{
-	if (ATSUStyle theStyle = sAsATSUStyle(ioState.fFont, 0))
-		{
-		SetupPort theSetupPort(this, ioState);	
-		ZPoint theLocation = iLocation + ioState.fOrigin + ioState.fPatternOrigin;
-	  	const string16 theTextAsUTF16 = ZUnicode::sAsUTF16(iText, iTextLength);
-		if (ATSUTextLayout theLayout = sCreateLayout(theTextAsUTF16.data(), theTextAsUTF16.size(), theStyle))
+	#if ZCONFIG_API_Enabled(Util_ATSUI)
+		if (ATSUStyle theStyle = ZUtil_ATSUI::sAsATSUStyle(ioState.fFont, 0))
 			{
-			RGBColor oldForeColor;
-			::GetForeColor(&oldForeColor);
-			RGBColor tempColor(ioState.fTextColor);
-			::RGBForeColor(&tempColor);
+			SetupPort theSetupPort(this, ioState);	
+			ZPoint theLocation = iLocation + ioState.fOrigin + ioState.fPatternOrigin;
+			const string16 theTextAsUTF16 = ZUnicode::sAsUTF16(iText, iTextLength);
+			if (ATSUTextLayout theLayout
+				= ZUtil_ATSUI::sCreateLayout(theTextAsUTF16.data(), theTextAsUTF16.size(), theStyle))
+				{
+				RGBColor oldForeColor;
+				::GetForeColor(&oldForeColor);
+				RGBColor tempColor(ioState.fTextColor);
+				::RGBForeColor(&tempColor);
 
-			::ATSUDrawText(theLayout, kATSUFromTextBeginning, kATSUToTextEnd, FixRatio(theLocation.h, 1), FixRatio(theLocation.v, 1));
+				::ATSUDrawText(theLayout, kATSUFromTextBeginning, kATSUToTextEnd, FixRatio(theLocation.h, 1), FixRatio(theLocation.v, 1));
 
-			::RGBForeColor(&oldForeColor);
+				::RGBForeColor(&oldForeColor);
 
-			::ATSUDisposeTextLayout(theLayout);
+				::ATSUDisposeTextLayout(theLayout);
+				}
+			::ATSUDisposeStyle(theStyle);
 			}
-		::ATSUDisposeStyle(theStyle);
-		}			
+	#else
+		if (!fGrafPtr)
+			return;
+
+		SetupPort theSetupPort(this, ioState);
+		SetupText theSetupText(this, ioState);
+
+		::MoveTo(inLocation.h + ioState.fOrigin.h + ioState.fPatternOrigin.h, inLocation.v + ioState.fOrigin.v + ioState.fPatternOrigin.v);
+
+		RGBColor oldForeColor;
+		::GetForeColor(&oldForeColor);
+		RGBColor tempColor(ioState.fTextColor);
+		::RGBForeColor(&tempColor);
+
+		::MacDrawText(inText, 0, inTextLength);
+
+		::RGBForeColor(&oldForeColor);
+		
+	#endif
 	}
 
 ZCoord ZDCCanvas_QD::GetTextWidth(ZDCState& ioState, const char* iText, size_t iTextLength)
 	{
-	ZCoord result = 0;
-	if (ATSUStyle theStyle = sAsATSUStyle(ioState.fFont, 0))
-		{
-	  	const string16 theTextAsUTF16 = ZUnicode::sAsUTF16(iText, iTextLength);
-		if (ATSUTextLayout theLayout = sCreateLayout(theTextAsUTF16.data(), theTextAsUTF16.size(), theStyle))
+	#if ZCONFIG_API_Enabled(Util_ATSUI)
+		ZCoord result = 0;
+		if (ATSUStyle theStyle = ZUtil_ATSUI::sAsATSUStyle(ioState.fFont, 0))
 			{
-			ATSUTextMeasurement left, right, top, bottom;
-			::ATSUGetUnjustifiedBounds(theLayout, kATSUFromTextBeginning, kATSUToTextEnd, &left, &right, &top, &bottom);
-//			if (oAscent)
-//				*oAscent = float(top) / 65536.0;
-//			if (oDescent)
-//				*oDescent = float(bottom) / 65536.0;
-//			if (oWidth)
-//				*oWidth = float(right - left) / 65536.0;
-			result = FixedToInt(right - left);
-			::ATSUDisposeTextLayout(theLayout);
+			const string16 theTextAsUTF16 = ZUnicode::sAsUTF16(iText, iTextLength);
+			if (ATSUTextLayout theLayout
+				= ZUtil_ATSUI::sCreateLayout(theTextAsUTF16.data(), theTextAsUTF16.size(), theStyle))
+				{
+				ATSUTextMeasurement left, right, top, bottom;
+				::ATSUGetUnjustifiedBounds(theLayout, kATSUFromTextBeginning, kATSUToTextEnd, &left, &right, &top, &bottom);
+	//			if (oAscent)
+	//				*oAscent = float(top) / 65536.0;
+	//			if (oDescent)
+	//				*oDescent = float(bottom) / 65536.0;
+	//			if (oWidth)
+	//				*oWidth = float(right - left) / 65536.0;
+				result = FixedToInt(right - left);
+				::ATSUDisposeTextLayout(theLayout);
+				}
+			::ATSUDisposeStyle(theStyle);
 			}
-		::ATSUDisposeStyle(theStyle);
-		}
-	return result;
+		return result;
+	#else
+		if (!fGrafPtr)
+			return 0;
+
+		ZUtil_Mac_LL::SaveRestorePort theSRP;
+		SetupPort theSetupPort(this, ioState);
+		SetupText theSetupText(this, ioState);
+
+		return ::TextWidth(inText, 0, inTextLength);
+	#endif
 	}
 
 void ZDCCanvas_QD::GetFontInfo(ZDCState& ioState, ZCoord& oAscent, ZCoord& oDescent, ZCoord& oLeading)
 	{
-	oAscent = 0;
-	oDescent = 0;
-	oLeading = 0;
-	if (ATSUStyle theStyle = sAsATSUStyle(ioState.fFont, 0))
-		{
-		ATSUTextMeasurement metric;
-		ATSUGetAttribute(theStyle, kATSUAscentTag, sizeof(metric), &metric, 0);
-	    oAscent = FixedToInt(metric);
+	#if ZCONFIG_API_Enabled(Util_ATSUI)
+		oAscent = 0;
+		oDescent = 0;
+		oLeading = 0;
+		if (ATSUStyle theStyle = ZUtil_ATSUI::sAsATSUStyle(ioState.fFont, 0))
+			{
+			ATSUTextMeasurement metric;
+			ATSUGetAttribute(theStyle, kATSUAscentTag, sizeof(metric), &metric, 0);
+			oAscent = FixedToInt(metric);
 
-		ATSUGetAttribute(theStyle, kATSUDescentTag, sizeof(metric), &metric, 0);
-	    oDescent = FixedToInt(metric);
+			ATSUGetAttribute(theStyle, kATSUDescentTag, sizeof(metric), &metric, 0);
+			oDescent = FixedToInt(metric);
 
-		ATSUGetAttribute(theStyle, kATSULeadingTag, sizeof(metric), &metric, 0);
-	    oLeading = FixedToInt(metric);
+			ATSUGetAttribute(theStyle, kATSULeadingTag, sizeof(metric), &metric, 0);
+			oLeading = FixedToInt(metric);
 
-		::ATSUDisposeStyle(theStyle);
-		}
+			::ATSUDisposeStyle(theStyle);
+			}
+	#else
+		if (!fGrafPtr)
+			{
+			outAscent = 0;
+			outDescent = 0;
+			outLeading = 0;
+			return;
+			}
+
+		ZUtil_Mac_LL::SaveRestorePort theSRP;
+		SetupPort theSetupPort(this, ioState);
+		SetupText theSetupText(this, ioState);
+
+		FontInfo theFontInfo;
+		::GetFontInfo(&theFontInfo);
+	//	outAscent = theFontInfo.ascent - theFontInfo.descent; // <-- Just experimenting
+		outAscent = theFontInfo.ascent;
+		outDescent = theFontInfo.descent;
+		outLeading = theFontInfo.leading;
+	
+	#endif
 	}
 
 ZCoord ZDCCanvas_QD::GetLineHeight(ZDCState& ioState)
 	{
-	ZCoord ascent, descent, leading;
-	this->GetFontInfo(ioState, ascent, descent, leading);
-	return ascent + leading;
+	#if ZCONFIG_API_Enabled(Util_ATSUI)
+		ZCoord ascent, descent, leading;
+		this->GetFontInfo(ioState, ascent, descent, leading);
+		return ascent + leading;
+	#else
+		if (!fGrafPtr)
+			return 0;
+
+		ZUtil_Mac_LL::SaveRestorePort theSRP;
+		SetupPort theSetupPort(this, ioState);
+		SetupText theSetupText(this, ioState);
+
+		FontInfo theFontInfo;
+		::GetFontInfo(&theFontInfo);
+		return theFontInfo.ascent + theFontInfo.leading;
+	//	return theFontInfo.ascent + theFontInfo.descent + theFontInfo.leading;
+	#endif
 	}
 
 void ZDCCanvas_QD::BreakLine(ZDCState& ioState, const char* iLineStart, size_t iRemainingTextLength, ZCoord iTargetWidth, size_t& oNextLineDelta)
 	{
-	oNextLineDelta = iRemainingTextLength;
+	#if ZCONFIG_API_Enabled(Util_ATSUI)
+		oNextLineDelta = iRemainingTextLength;
 
-	if (ATSUStyle theStyle = sAsATSUStyle(ioState.fFont, 0))
-		{
-		SetupPort theSetupPort(this, ioState);	
-	  	const string16 theTextAsUTF16 = ZUnicode::sAsUTF16(iLineStart, iRemainingTextLength);
-		if (ATSUTextLayout theLayout = sCreateLayout(theTextAsUTF16.data(), theTextAsUTF16.size(), theStyle))
+		if (ATSUStyle theStyle = ZUtil_ATSUI::sAsATSUStyle(ioState.fFont, 0))
 			{
-			UniCharArrayOffset theEnd;
-			::ATSUBreakLine(theLayout, kATSUFromTextBeginning, FixRatio(iTargetWidth, 1), false, &theEnd);
-			size_t cp16 = ZUnicode::sCUToCP(theTextAsUTF16.begin(), theEnd);
-			oNextLineDelta = ZUnicode::sCPToCU(iLineStart, iRemainingTextLength, cp16, nil);
-			::ATSUDisposeTextLayout(theLayout);
+			SetupPort theSetupPort(this, ioState);	
+			const string16 theTextAsUTF16 = ZUnicode::sAsUTF16(iLineStart, iRemainingTextLength);
+			if (ATSUTextLayout theLayout
+				= ZUtil_ATSUI::sCreateLayout(theTextAsUTF16.data(), theTextAsUTF16.size(), theStyle))
+				{
+				UniCharArrayOffset theEnd;
+				::ATSUBreakLine(theLayout, kATSUFromTextBeginning, FixRatio(iTargetWidth, 1), false, &theEnd);
+				size_t cp16 = ZUnicode::sCUToCP(theTextAsUTF16.begin(), theEnd);
+				oNextLineDelta = ZUnicode::sCPToCU(iLineStart, iRemainingTextLength, cp16, nil);
+				::ATSUDisposeTextLayout(theLayout);
+				}
+			::ATSUDisposeStyle(theStyle);
 			}
-		::ATSUDisposeStyle(theStyle);
-		}
-	}
-
-#else
-// Text
-void ZDCCanvas_QD::DrawText(ZDCState& ioState, const ZPoint& inLocation, const char* inText, size_t inTextLength)
-	{
-	if (!fGrafPtr)
-		return;
-
-	SetupPort theSetupPort(this, ioState);
-	SetupText theSetupText(this, ioState);
-
-	::MoveTo(inLocation.h + ioState.fOrigin.h + ioState.fPatternOrigin.h, inLocation.v + ioState.fOrigin.v + ioState.fPatternOrigin.v);
-
-	RGBColor oldForeColor;
-	::GetForeColor(&oldForeColor);
-	RGBColor tempColor(ioState.fTextColor);
-	::RGBForeColor(&tempColor);
-
-	::MacDrawText(inText, 0, inTextLength);
-
-	::RGBForeColor(&oldForeColor);
-	}
-
-ZCoord ZDCCanvas_QD::GetTextWidth(ZDCState& ioState, const char* inText, size_t inTextLength)
-	{
-	if (!fGrafPtr)
-		return 0;
-
-	ZUtil_Mac_LL::SaveRestorePort theSRP;
-	SetupPort theSetupPort(this, ioState);
-	SetupText theSetupText(this, ioState);
-
-	return ::TextWidth(inText, 0, inTextLength);
-	}
-
-void ZDCCanvas_QD::GetFontInfo(ZDCState& ioState, ZCoord& outAscent, ZCoord& outDescent, ZCoord& outLeading)
-	{
-	if (!fGrafPtr)
-		{
-		outAscent = 0;
-		outDescent = 0;
-		outLeading = 0;
-		return;
-		}
-
-	ZUtil_Mac_LL::SaveRestorePort theSRP;
-	SetupPort theSetupPort(this, ioState);
-	SetupText theSetupText(this, ioState);
-
-	FontInfo theFontInfo;
-	::GetFontInfo(&theFontInfo);
-//	outAscent = theFontInfo.ascent - theFontInfo.descent; // <-- Just experimenting
-	outAscent = theFontInfo.ascent;
-	outDescent = theFontInfo.descent;
-	outLeading = theFontInfo.leading;
-	}
-
-ZCoord ZDCCanvas_QD::GetLineHeight(ZDCState& ioState)
-	{
-	if (!fGrafPtr)
-		return 0;
-
-	ZUtil_Mac_LL::SaveRestorePort theSRP;
-	SetupPort theSetupPort(this, ioState);
-	SetupText theSetupText(this, ioState);
-
-	FontInfo theFontInfo;
-	::GetFontInfo(&theFontInfo);
-	return theFontInfo.ascent + theFontInfo.leading;
-//	return theFontInfo.ascent + theFontInfo.descent + theFontInfo.leading;
-	}
-
-void ZDCCanvas_QD::BreakLine(ZDCState& ioState, const char* inLineStart, size_t inRemainingTextLength, ZCoord inTargetWidth, size_t& outNextLineDelta)
-	{
-	if (!fGrafPtr)
-		{
-		outNextLineDelta = inRemainingTextLength;
-		return;
-		}
-
-	ZAssertStop(kDebug_QD, inTargetWidth >= 0);
-	if (inRemainingTextLength == 0)
-		{
-		outNextLineDelta = 0;
-		return;
-		}
-
-	ZUtil_Mac_LL::SaveRestorePort theSRP;
-
-	SetupPort theSetupPort(this, ioState);
-	SetupText theSetupText(this, ioState);
-
-	long lineBytes = 1;
-	Fixed wrapWidth = ::Long2Fix((long)inTargetWidth);
-	StyledLineBreakCode theCode = ::StyledLineBreak(const_cast<char*>(inLineStart), inRemainingTextLength, 0, inRemainingTextLength, 0, &wrapWidth, &lineBytes);
-	ZAssertStop(kDebug_QD, lineBytes > 0);
-	outNextLineDelta = lineBytes;
-
-	// Try to find any '\r' characters (which don't work as CRs on Mac)
-	for (size_t x = 0; x < outNextLineDelta; ++x)
-		{
-		char theChar = inLineStart[x];
-		if (theChar == '\r' || theChar == '\n')
+	#else
+		if (!fGrafPtr)
 			{
-			// Found one. Use its position as the break length.
-			outNextLineDelta = x + 1;
+			outNextLineDelta = inRemainingTextLength;
 			return;
 			}
-		}
+
+		ZAssertStop(kDebug_QD, inTargetWidth >= 0);
+		if (inRemainingTextLength == 0)
+			{
+			outNextLineDelta = 0;
+			return;
+			}
+
+		ZUtil_Mac_LL::SaveRestorePort theSRP;
+
+		SetupPort theSetupPort(this, ioState);
+		SetupText theSetupText(this, ioState);
+
+		long lineBytes = 1;
+		Fixed wrapWidth = ::Long2Fix((long)inTargetWidth);
+		StyledLineBreakCode theCode = ::StyledLineBreak(const_cast<char*>(inLineStart), inRemainingTextLength, 0, inRemainingTextLength, 0, &wrapWidth, &lineBytes);
+		ZAssertStop(kDebug_QD, lineBytes > 0);
+		outNextLineDelta = lineBytes;
+
+		// Try to find any '\r' characters (which don't work as CRs on Mac)
+		for (size_t x = 0; x < outNextLineDelta; ++x)
+			{
+			char theChar = inLineStart[x];
+			if (theChar == '\r' || theChar == '\n')
+				{
+				// Found one. Use its position as the break length.
+				outNextLineDelta = x + 1;
+				return;
+				}
+			}		
+	#endif
 	}
-#endif
+
 void ZDCCanvas_QD::InvalCache()
 	{
 	if (!fGrafPtr)
@@ -1522,7 +1402,7 @@ struct TileRegion_t
 	};
 
 static int sDummy = 0;
-static PixMap sPixMap;
+//static PixMap sPixMap;
 
 static DEFINE_API(void) sTileRegion(short inDepth, short inDeviceFlags, GDHandle inTargetDevice, long inUserData)
 	{
