@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 
 // Because our static sGray, sBlack stuff are constructed before we've been able to call
-// InitGraf() qd.white, qd.gray etc. will not have valid values, so we have our own
+// InitGraf(), qd.white, qd.gray etc. will not have valid values, so we have our own
 // copies of them as follows:
 const ZDCPattern ZDCPattern::sBlack = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 const ZDCPattern ZDCPattern::sDkGray = { 0x22, 0x88, 0x22, 0x88, 0x22, 0x88, 0x22, 0x88 };

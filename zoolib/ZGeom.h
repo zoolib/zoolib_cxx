@@ -25,6 +25,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTypes.h" // For ZRectPOD and ZPointPOD
 
+#if ZCONFIG_SPI_Enabled(CoreGraphics)
+#	include <ApplicationServices/ApplicationServices.h>
+#endif
+
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 #	include ZMACINCLUDE(ApplicationServices,MacTypes.h)
 #	include ZMACINCLUDE(ApplicationServices,QuickDraw.h)
@@ -91,6 +95,12 @@ public:
 		{ h = T(other.h); v = T(other.v); return *this; }
 
 	operator ZPointPOD() const;
+
+// Conversions to & from native types
+	#if ZCONFIG_SPI_Enabled(CoreGraphics)
+	ZPoint_T(const CGPoint& pt) : h(T(pt.x)), v(T(pt.y)) {}
+	operator CGPoint() const;
+	#endif
 
 	#if ZCONFIG_SPI_Enabled(QuickDraw)
 	ZPoint_T(const Point& pt) : h(T(pt.h)), v(T(pt.v)) {}
@@ -306,42 +316,52 @@ public:
 	operator ZRectPOD() const;
 
 // Conversions to & from native types
+	#if ZCONFIG_SPI_Enabled(CoreGraphics)
+	ZRect_T(const CGRect& iRect)
+	:	left(T(iRect.origin.x)),
+		top(T(iRect.origin.y)),
+		right(T(iRect.origin.x + iRect.size.width)),
+		bottom(T(iRect.origin.y + iRect.size.height))
+		{}
+	operator CGRect() const;
+	#endif
+
 	#if ZCONFIG_SPI_Enabled(QuickDraw)
 	ZRect_T(const Rect& iRect)
-	:	left(iRect.left),
-		top(iRect.top),
-		right(iRect.right),
-		bottom(iRect.bottom)
+	:	left(T(iRect.left)),
+		top(T(iRect.top)),
+		right(T(iRect.right)),
+		bottom(T(iRect.bottom))
 		{}
 	operator Rect() const;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(GDI)
 	ZRect_T(const RECT& iRect)
-	:	left(iRect.left),
-		top(iRect.top),
-		right(iRect.right),
-		bottom(iRect.bottom)
+	:	left(T(iRect.left)),
+		top(T(iRect.top)),
+		right(T(iRect.right)),
+		bottom(T(iRect.bottom))
 		{}
 	operator RECT() const;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(X11)
 	ZRect_T(const XRectangle& iRect)
-	:	left(iRect.x),
-		top(iRect.y),
-		right(iRect.x + iRect.width),
-		bottom(iRect.y + iRect.height)
+	:	left(T(iRect.x)),
+		top(T(iRect.y)),
+		right(T(iRect.x + iRect.width)),
+		bottom(T(iRect.y + iRect.height))
 		{}
 	operator XRectangle() const;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(Be)
 	ZRect_T(const BRect& iRect)
-	:	left(ZCoord(iRect.left)),
-		top(ZCoord(iRect.top)),
-		right(ZCoord(iRect.right) + 1),
-		bottom(ZCoord(iRect.bottom) + 1)
+	:	left(T(iRect.left)),
+		top(T(iRect.top)),
+		right(T(iRect.right + 1)),
+		bottom(T(iRect.bottom + 1))
 		{}
 	operator BRect() const;
 	#endif
@@ -695,6 +715,10 @@ public:
 namespace ZooLib {
 typedef ZPoint_T<ZCoord> ZPoint;
 typedef ZRect_T<ZCoord> ZRect;
+
+typedef ZPoint_T<float> ZPointf;
+typedef ZRect_T<float> ZRectf;
+
 } // namespace ZooLib
 
 // =================================================================================================
@@ -720,6 +744,16 @@ inline ZRect_T<T>::operator ZRectPOD() const
 	theRectPOD.bottom = (int32)bottom;
 	return theRectPOD;
 	}
+
+#if ZCONFIG_SPI_Enabled(CoreGraphics)
+template <class T>
+inline ZPoint_T<T>::operator CGPoint() const
+	{ return ::CGPointMake(h, v); }
+
+template <class T>
+inline ZRect_T<T>::operator CGRect() const
+	{ return CGRectMake(left, top, right - left, bottom - top); }
+#endif // ZCONFIG_SPI_Enabled(QuickDraw)
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 template <class T>
@@ -798,6 +832,9 @@ template <class T> inline ZRect_T<T>::operator BRect() const
 #ifndef ZooLib_SuppressInjection
 	using ZooLib::ZPoint;
 	using ZooLib::ZRect;
+
+	using ZooLib::ZPointf;
+	using ZooLib::ZRectf;
 #endif // ZooLib_SuppressInjection
 
 #endif // __ZGeom__

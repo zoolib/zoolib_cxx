@@ -101,6 +101,18 @@ public:
 		}
 	#endif
 
+	float floatRed() const
+		{ return red / 65535.0; }
+
+	float floatGreen() const
+		{ return green / 65535.0; }
+
+	float floatBlue() const
+		{ return blue / 65535.0; }
+
+	float floatAlpha() const
+		{ return alpha / 65535.0; }
+
 	uint16 Luminance() const
 		{ return uint16((uint32(red) + uint32(green) + uint32(blue)) / 3); }
 
@@ -208,6 +220,18 @@ public:
 	operator rgb_color() const
 		{ return *((rgb_color*)this); }
 	#endif
+
+	float floatRed() const
+		{ return red / 255.0; }
+
+	float floatGreen() const
+		{ return green / 255.0; }
+
+	float floatBlue() const
+		{ return blue / 255.0; }
+
+	float floatAlpha() const
+		{ return alpha / 255.0; }
 
 	uint8 Luminance() const
 		{ return uint8((uint16(red) + uint16(green) + uint16(blue)) / 3); }
@@ -374,14 +398,145 @@ public:
 
 	ZRGBColor() {}
 
-	explicit ZRGBColor(uint16 iValue)
-		{ red = green = blue = iValue; alpha = 0xFFFFU; }
+	explicit ZRGBColor(uint16 iGray)
+		{
+		red = green = blue = iGray;
+		alpha = 0xFFFFU;
+		}
+
+	ZRGBColor(uint16 iGray, uint16 iAlpha)
+		{
+		red = green = blue = iGray;
+		alpha = iAlpha;
+		}
 
 	ZRGBColor(uint16 iRed, uint16 iGreen, uint16 iBlue)
-		{ red = iRed; green = iGreen; blue = iBlue; alpha = 0xFFFFU; }
+		{
+		red = iRed;
+		green = iGreen;
+		blue = iBlue;
+		alpha = 0xFFFFU;
+		}
 
 	ZRGBColor(uint16 iRed, uint16 iGreen, uint16 iBlue, uint16 iAlpha)
-		{ red = iRed; green = iGreen; blue = iBlue; alpha = iAlpha; }
+		{
+		red = iRed;
+		green = iGreen;
+		blue = iBlue;
+		alpha = iAlpha;
+		}
+
+	explicit ZRGBColor(int iGray)
+		{
+		red = green = blue = uint16(iGray);
+		alpha = 0xFFFFU;
+		}
+
+	ZRGBColor(int iGray, int iAlpha)
+		{
+		red = green = blue = uint16(iGray);
+		alpha = uint16(iAlpha);
+		}
+
+	ZRGBColor(int iRed, int iGreen, int iBlue)
+		{
+		red = uint16(iRed);
+		green = uint16(iGreen);
+		blue = uint16(iBlue);
+		alpha = 0xFFFFU;
+		}
+
+	ZRGBColor(int iRed, int iGreen, int iBlue, int iAlpha)
+		{
+		red = uint16(iRed);
+		green = uint16(iGreen);
+		blue = uint16(iBlue);
+		alpha = uint16(iAlpha);
+		}
+
+	explicit ZRGBColor(unsigned int iGray)
+		{
+		red = green = blue = uint16(iGray);
+		alpha = 0xFFFFU;
+		}
+
+	ZRGBColor(unsigned int iGray, unsigned int iAlpha)
+		{
+		red = green = blue = uint16(iGray);
+		alpha = uint16(iAlpha);
+		}
+
+	ZRGBColor(unsigned int iRed, unsigned int iGreen, unsigned int iBlue)
+		{
+		red = uint16(iRed);
+		green = uint16(iGreen);
+		blue = uint16(iBlue);
+		alpha = 0xFFFFU;
+		}
+
+	ZRGBColor(unsigned int iRed, unsigned int iGreen, unsigned int iBlue, unsigned int iAlpha)
+		{
+		red = uint16(iRed);
+		green = uint16(iGreen);
+		blue = uint16(iBlue);
+		alpha = uint16(iAlpha);
+		}
+
+	explicit ZRGBColor(float iGray)
+		{
+		red = green = blue = uint16(iGray * 65535);
+		alpha = 0xFFFFU;
+		}
+
+	ZRGBColor(float iGray, float iAlpha)
+		{
+		red = green = blue = uint16(iGray * 65535);
+		alpha = 0xFFFFU;
+		}
+
+	ZRGBColor(float iRed, float iGreen, float iBlue)
+		{
+		red = uint16(iRed * 65535);
+		green = uint16(iGreen * 65535);
+		blue = uint16(iBlue * 65535);
+		alpha = 0xFFFFU;
+		}
+
+	ZRGBColor(float iRed, float iGreen, float iBlue, float iAlpha)
+		{
+		red = uint16(iRed * 65535);
+		green = uint16(iGreen * 65535);
+		blue = uint16(iBlue * 65535);
+		alpha = uint16(iAlpha * 65535);
+		}
+
+	explicit ZRGBColor(double iGray)
+		{
+		red = green = blue = uint16(iGray * 65535);
+		alpha = 0xFFFFU;
+		}
+
+	ZRGBColor(double iGray, double iAlpha)
+		{
+		red = green = blue = uint16(iGray * 65535);
+		alpha = 0xFFFFU;
+		}
+
+	ZRGBColor(double iRed, double iGreen, double iBlue)
+		{
+		red = uint16(iRed * 65535);
+		green = uint16(iGreen * 65535);
+		blue = uint16(iBlue * 65535);
+		alpha = 0xFFFFU;
+		}
+
+	ZRGBColor(double iRed, double iGreen, double iBlue, double iAlpha)
+		{
+		red = uint16(iRed * 65535);
+		green = uint16(iGreen * 65535);
+		blue = uint16(iBlue * 65535);
+		alpha = uint16(iAlpha * 65535);
+		}
 	};
 
 // =================================================================================================
@@ -488,14 +643,145 @@ public:
 
 	ZRGBColorSmall() {}
 
-	explicit ZRGBColorSmall(uint8 iValue)
-		{ red = green = blue = iValue; alpha = 0xFFU; }
+	explicit ZRGBColorSmall(uint8 iGray)
+		{
+		red = green = blue = iGray;
+		alpha = 0xFFU;
+		}
+
+	ZRGBColorSmall(uint8 iGray, uint8 iAlpha)
+		{
+		red = green = blue = iGray;
+		alpha = iAlpha;
+		}
 
 	ZRGBColorSmall(uint8 iRed, uint8 iGreen, uint8 iBlue)
-		{ red = iRed; green = iGreen; blue = iBlue; alpha = 0xFFU; }
+		{
+		red = iRed;
+		green = iGreen;
+		blue = iBlue;
+		alpha = 0xFFU;
+		}
 
 	ZRGBColorSmall(uint8 iRed, uint8 iGreen, uint8 iBlue, uint8 iAlpha)
-		{ red = iRed; green = iGreen; blue = iBlue; alpha = iAlpha; }
+		{
+		red = iRed;
+		green = iGreen;
+		blue = iBlue;
+		alpha = iAlpha;
+		}
+
+	explicit ZRGBColorSmall(int iGray)
+		{
+		red = green = blue = uint8(iGray);
+		alpha = 0xFFU;
+		}
+
+	ZRGBColorSmall(int iGray, int iAlpha)
+		{
+		red = green = blue = uint8(iGray);
+		alpha = iAlpha;
+		}
+
+	ZRGBColorSmall(int iRed, int iGreen, int iBlue)
+		{
+		red = uint8(iRed);
+		green = uint8(iGreen);
+		blue = uint8(iBlue);
+		alpha = 0xFFU;
+		}
+
+	ZRGBColorSmall(int iRed, int iGreen, int iBlue, int iAlpha)
+		{
+		red = uint8(iRed);
+		green = uint8(iGreen);
+		blue = uint8(iBlue);
+		alpha = uint8(iAlpha);
+		}
+
+	explicit ZRGBColorSmall(unsigned int iGray)
+		{
+		red = green = blue = uint8(iGray);
+		alpha = 0xFFU;
+		}
+
+	ZRGBColorSmall(unsigned int iGray, unsigned int iAlpha)
+		{
+		red = green = blue = uint8(iGray);
+		alpha = iAlpha;
+		}
+
+	ZRGBColorSmall(unsigned int iRed, unsigned int iGreen, unsigned int iBlue)
+		{
+		red = uint8(iRed);
+		green = uint8(iGreen);
+		blue = uint8(iBlue);
+		alpha = 0xFFU;
+		}
+
+	ZRGBColorSmall(unsigned int iRed, unsigned int iGreen, unsigned int iBlue, unsigned int iAlpha)
+		{
+		red = uint8(iRed);
+		green = uint8(iGreen);
+		blue = uint8(iBlue);
+		alpha = uint8(iAlpha);
+		}
+
+	explicit ZRGBColorSmall(float iGray)
+		{
+		red = green = blue = uint16(iGray * 255);
+		alpha = 0xFFU;
+		}
+
+	ZRGBColorSmall(float iGray, float iAlpha)
+		{
+		red = green = blue = uint16(iGray * 255);
+		alpha = iAlpha;
+		}
+
+	ZRGBColorSmall(float iRed, float iGreen, float iBlue)
+		{
+		red = uint16(iRed * 255);
+		green = uint16(iGreen * 255);
+		blue = uint16(iBlue * 255);
+		alpha = 0xFFU;
+		}
+
+	ZRGBColorSmall(float iRed, float iGreen, float iBlue, float iAlpha)
+		{
+		red = uint16(iRed * 255);
+		green = uint16(iGreen * 255);
+		blue = uint16(iBlue * 255);
+		alpha = uint16(iAlpha * 255);
+		}
+
+	explicit ZRGBColorSmall(double iGray)
+		{
+		red = green = blue = uint16(iGray * 255);
+		alpha = 0xFFU;
+		}
+
+	ZRGBColorSmall(double iGray, double iAlpha)
+		{
+		red = green = blue = uint16(iGray * 255);
+		alpha = iAlpha;
+		}
+
+	ZRGBColorSmall(double iRed, double iGreen, double iBlue)
+		{
+		red = uint16(iRed * 255);
+		green = uint16(iGreen * 255);
+		blue = uint16(iBlue * 255);
+		alpha = 0xFFU;
+		}
+
+	ZRGBColorSmall(double iRed, double iGreen, double iBlue, double iAlpha)
+		{
+		red = uint16(iRed * 255);
+		green = uint16(iGreen * 255);
+		blue = uint16(iBlue * 255);
+		alpha = uint16(iAlpha * 255);
+		}
 	};
 
 // =================================================================================================

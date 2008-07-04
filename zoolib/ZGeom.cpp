@@ -33,5 +33,8 @@ template<> const ZRect_T<int16> ZRect_T<int16>::sZero(0, 0, 0, 0);
 template<> const ZPoint_T<int32> ZPoint_T<int32>::sZero(0, 0);
 template<> const ZRect_T<int32> ZRect_T<int32>::sZero(0, 0, 0, 0);
 
+template<> const ZPoint_T<float> ZPoint_T<float>::sZero(0, 0);
+template<> const ZRect_T<float> ZRect_T<float>::sZero(0, 0, 0, 0);
+
 template<> const ZPoint_T<double> ZPoint_T<double>::sZero(0, 0);
 template<> const ZRect_T<double> ZRect_T<double>::sZero(0, 0, 0, 0);

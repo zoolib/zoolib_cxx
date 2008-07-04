@@ -140,7 +140,7 @@ void ZDC::ZeroSettings()
 	fState.fOrigin.v = 0;
 	fState.fPatternOrigin.h = 0;
 	fState.fPatternOrigin.v = 0;
-	fState.fInk = ZDCInk(ZRGBColor(0x0000));
+	fState.fInk = ZDCInk(ZRGBColor(0));
 	fState.fPenWidth = 1;
 	fState.fMode = modeCopy;
 	fState.fClipOrigin.h = 0;

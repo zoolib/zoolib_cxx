@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI_Definitions.h"
 #include "ZCONFIG_SPI_Choices.h"
 
-// Although it seems to me that this formulation should work:
+// Although it seems that this formulation should work in this header, as it
+// does in application code:
 //#define ZCONFIG_SPI_Avail__pthread (ZCONFIG_SPI_Enabled(POSIX))
 // instead it is safer to do this:
 //#define ZCONFIG_SPI_Avail__pthread (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
@@ -206,7 +207,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 // =================================================================================================
-#pragma mark GDI (aka ZeroConf)
+#pragma mark GDI
 #ifndef ZCONFIG_SPI_Avail__GDI
 #	define ZCONFIG_SPI_Avail__GDI (ZCONFIG_SPI_Avail__Win && ZCONFIG_SPI_Desired__Win)
 #endif
