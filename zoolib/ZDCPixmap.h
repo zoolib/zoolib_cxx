@@ -77,7 +77,11 @@ private:
 class ZDCPixmap
 	{
     ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZDCPixmap, operator_bool_generator_type, operator_bool_type);
+
 public:
+	typedef ZooLib::ZPoint ZPoint;
+	typedef ZooLib::ZRect ZRect;
+
 // The usual mantra: constructor, copy constructor, destructor, assignment
 	ZDCPixmap();
 	ZDCPixmap(const ZDCPixmap& other);
@@ -295,6 +299,9 @@ protected:
 	ZDCPixmapRep();
 
 public:
+	typedef ZooLib::ZPoint ZPoint;
+	typedef ZooLib::ZRect ZRect;
+
 	static bool sCheckAccessEnabled() { return false; }
 
 	ZDCPixmapRep(const ZRef<ZDCPixmapRaster>& iRaster,
@@ -407,17 +414,17 @@ inline const ZDCPixmapNS::RasterDesc& ZDCPixmap::GetRasterDesc() const
 inline const ZDCPixmapNS::PixelDesc& ZDCPixmap::GetPixelDesc() const
 	{ return fRep->GetPixelDesc(); }
 
-inline const ZRect& ZDCPixmap::GetBounds() const
+inline const ZooLib::ZRect& ZDCPixmap::GetBounds() const
 	{ return fRep->GetBounds(); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCPixmapRep inline definitions
 
-inline const ZRect& ZDCPixmapRep::GetBounds()
+inline const ZooLib::ZRect& ZDCPixmapRep::GetBounds()
 	{ return fBounds; }
 
-inline ZPoint ZDCPixmapRep::GetSize()
+inline ZooLib::ZPoint ZDCPixmapRep::GetSize()
 	{ return fBounds.Size(); }
 
 inline const ZDCPixmapNS::PixelDesc& ZDCPixmapRep::GetPixelDesc()

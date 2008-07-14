@@ -388,56 +388,45 @@ protected:
 	MapPixvalToRGB_Gray& operator=(const MapPixvalToRGB_Gray&) { return *this; }
 
 public:
+	static uint32 sConvert(
+		uint32 iPixval, uint32 iMask, int32 iShift, uint32 iMultiplier, uint32 iAdd)
+		{
+		return iAdd + (((iPixval & iMask) >> iShift) *  iMultiplier);
+		}
+
 	void AsRGBColor(uint32 iPixval, ZRGBColorPOD& oColor) const
 		{
 		oColor.red = oColor.green = oColor.blue
-			= uint16((((iPixval & fMaskGray) >> fShiftGray) *  fMultiplierGray) >> 16);
+			= sConvert(iPixval, fMaskL, fShiftL, fMultiplierL, fAddL) >> 16;
 
-		if (fMaskAlpha)
-			{
-			oColor.alpha
-				= uint16((((iPixval & fMaskAlpha) >> fShiftAlpha) * fMultiplierAlpha) >> 16);
-			}
-		else
-			{
-			oColor.alpha = 0xFFFFU;
-			}
+		oColor.alpha = sConvert(iPixval, fMaskA, fShiftA, fMultiplierA, fAddA) >> 16;
 		}
 
 	void AsRGBColorSmall(uint32 iPixval, ZRGBColorSmallPOD& oColor) const
 		{
 		oColor.red = oColor.green = oColor.blue
-			= uint8((((iPixval & fMaskGray) >> fShiftGray) *  fMultiplierGray) >> 24);
+			= sConvert(iPixval, fMaskL, fShiftL, fMultiplierL, fAddL) >> 24;
 
-		if (fMaskAlpha)
-			{
-			oColor.alpha
-				= uint8((((iPixval & fMaskAlpha) >> fShiftAlpha) * fMultiplierAlpha) >> 24);
-			}
-		else
-			{
-			oColor.alpha = 0xFFU;
-			}
+		oColor.alpha = sConvert(iPixval, fMaskA, fShiftA, fMultiplierA, fAddA) >> 24;
 		}
 
 	uint16 AsAlpha(uint32 iPixval) const
 		{
-		if (fMaskAlpha)
-			return uint16((((iPixval & fMaskAlpha) >> fShiftAlpha) * fMultiplierAlpha) >> 16);
-		else
-			return 0xFFFFU;
+		return sConvert(iPixval, fMaskA, fShiftA, fMultiplierA, fAddA) >> 16;
 		}
 
 	void AsRGBColors(const uint32* iPixvals, size_t iCount, ZRGBColorPOD* oColors) const;
 
 protected:
-	int32 fShiftGray;
-	uint32 fMultiplierGray;
-	uint32 fMaskGray;
+	int32 fShiftL;
+	uint32 fMultiplierL;
+	uint32 fMaskL;
+	uint32 fAddL;
 
-	int32 fShiftAlpha;
-	uint32 fMultiplierAlpha;
-	uint32 fMaskAlpha;
+	int32 fShiftA;
+	uint32 fMultiplierA;
+	uint32 fMaskA;
+	uint32 fAddA;
 	};
 
 // =================================================================================================
@@ -453,66 +442,55 @@ protected:
 	MapPixvalToRGB_Color& operator=(const MapPixvalToRGB_Color&) { return *this; }
 
 public:
+	static uint32 sConvert(
+		uint32 iPixval, uint32 iMask, int32 iShift, uint32 iMultiplier, uint32 iAdd)
+		{
+		return iAdd + (((iPixval & iMask) >> iShift) *  iMultiplier);
+		}
+
 	void AsRGBColor(uint32 iPixval, ZRGBColorPOD& oColor) const
 		{
-		oColor.red = uint16((((iPixval & fMaskRed) >> fShiftRed) *  fMultiplierRed) >> 16);
-		oColor.green = uint16((((iPixval & fMaskGreen) >> fShiftGreen) * fMultiplierGreen) >> 16);
-		oColor.blue = uint16((((iPixval & fMaskBlue) >> fShiftBlue) * fMultiplierBlue) >> 16);
-
-		if (fMaskAlpha)
-			{
-			oColor.alpha
-				= uint16((((iPixval & fMaskAlpha) >> fShiftAlpha) * fMultiplierAlpha) >> 16);
-			}
-		else
-			{
-			oColor.alpha = 0xFFFFU;
-			}
+		oColor.red = sConvert(iPixval, fMaskR, fShiftR, fMultiplierR, fAddR) >> 16;
+		oColor.green = sConvert(iPixval, fMaskG, fShiftG, fMultiplierG, fAddG) >> 16;
+		oColor.blue = sConvert(iPixval, fMaskB, fShiftB, fMultiplierB, fAddB) >> 16;
+		oColor.alpha = sConvert(iPixval, fMaskA, fShiftA, fMultiplierA, fAddA) >> 16;
 		}
 
 	void AsRGBColorSmall(uint32 iPixval, ZRGBColorSmallPOD& oColor) const
 		{
-		oColor.red = uint8((((iPixval & fMaskRed) >> fShiftRed) *  fMultiplierRed) >> 24);
-		oColor.green = uint8((((iPixval & fMaskGreen) >> fShiftGreen) * fMultiplierGreen) >> 24);
-		oColor.blue = uint8((((iPixval & fMaskBlue) >> fShiftBlue) * fMultiplierBlue) >> 24);
-
-		if (fMaskAlpha)
-			{
-			oColor.alpha =
-			uint8((((iPixval & fMaskAlpha) >> fShiftAlpha) * fMultiplierAlpha) >> 24);
-			}
-		else
-			{
-			oColor.alpha = 0xFFU;
-			}
+		oColor.red = sConvert(iPixval, fMaskR, fShiftR, fMultiplierR, fAddR) >> 24;
+		oColor.green = sConvert(iPixval, fMaskG, fShiftG, fMultiplierG, fAddG) >> 24;
+		oColor.blue = sConvert(iPixval, fMaskB, fShiftB, fMultiplierB, fAddB) >> 24;
+		oColor.alpha = sConvert(iPixval, fMaskA, fShiftA, fMultiplierA, fAddA) >> 24;
 		}
 
 	void AsRGBColors(const uint32* iPixvals, size_t iCount, ZRGBColorPOD* oColors) const;
 
 	uint16 AsAlpha(uint32 iPixval) const
 		{
-		if (fMaskAlpha)
-			return uint16((((iPixval & fMaskAlpha) >> fShiftAlpha) * fMultiplierAlpha) >> 16);
-		else
-			return 0xFFFFU;
+		return sConvert(iPixval, fMaskA, fShiftA, fMultiplierA, fAddA) >> 16;
 		}
 
 protected:
-	int32 fShiftRed;
-	uint32 fMultiplierRed;
-	uint32 fMaskRed;
+	int32 fShiftR;
+	uint32 fMultiplierR;
+	uint32 fMaskR;
+	uint32 fAddR;
 
-	int32 fShiftGreen;
-	uint32 fMultiplierGreen;
-	uint32 fMaskGreen;
+	int32 fShiftG;
+	uint32 fMultiplierG;
+	uint32 fMaskG;
+	uint32 fAddG;
 
-	int32 fShiftBlue;
-	uint32 fMultiplierBlue;
-	uint32 fMaskBlue;
+	int32 fShiftB;
+	uint32 fMultiplierB;
+	uint32 fMaskB;
+	uint32 fAddB;
 
-	int32 fShiftAlpha;
-	uint32 fMultiplierAlpha;
-	uint32 fMaskAlpha;
+	int32 fShiftA;
+	uint32 fMultiplierA;
+	uint32 fMaskA;
+	uint32 fAddA;
 	};
 
 // =================================================================================================
@@ -574,9 +552,9 @@ public:
 		uint32 theValue = 0;
 		theValue |= ((uint32((uint32(iRGBColor.red)
 			+ uint32(iRGBColor.green)
-			+ uint32(iRGBColor.blue)) / 3) >> fShiftRightGray) << fShiftLeftGray);
+			+ uint32(iRGBColor.blue)) / 3) >> fShiftRightL) << fShiftLeftL);
 
-		theValue |= ((uint32(iRGBColor.alpha) >> fShiftRightAlpha) << fShiftLeftAlpha);
+		theValue |= ((uint32(iRGBColor.alpha) >> fShiftRightA) << fShiftLeftA);
 		return theValue;
 		}
 
@@ -585,20 +563,20 @@ public:
 		uint32 theValue = 0;
 		theValue |= ((uint32((uint32(iRGBColor.red)
 			+ uint32(iRGBColor.green)
-			+ uint32(iRGBColor.blue)) * 0x101U / 3) >> fShiftRightGray) << fShiftLeftGray);
+			+ uint32(iRGBColor.blue)) * 0x101U / 3) >> fShiftRightL) << fShiftLeftL);
 
-		theValue |= ((uint32(iRGBColor.alpha * 0x101U) >> fShiftRightAlpha) << fShiftLeftAlpha);
+		theValue |= ((uint32(iRGBColor.alpha * 0x101U) >> fShiftRightA) << fShiftLeftA);
 		return theValue;
 		}
 
 	void AsPixvals(const ZRGBColorPOD* iColors, size_t iCount, uint32* oPixvals) const;
 
 protected:
-	int32 fShiftRightGray;
-	int32 fShiftLeftGray;
+	int32 fShiftRightL;
+	int32 fShiftLeftL;
 
-	int32 fShiftRightAlpha;
-	int32 fShiftLeftAlpha;
+	int32 fShiftRightA;
+	int32 fShiftLeftA;
 	};
 
 // =================================================================================================
@@ -617,37 +595,37 @@ public:
 	uint32 AsPixval(const ZRGBColorPOD& iRGBColor) const
 		{
 		uint32 theValue = 0;
-		theValue |= ((uint32(iRGBColor.red) >> fShiftRightRed) << fShiftLeftRed);
-		theValue |= ((uint32(iRGBColor.green) >> fShiftRightGreen) << fShiftLeftGreen);
-		theValue |= ((uint32(iRGBColor.blue) >> fShiftRightBlue) << fShiftLeftBlue);
-		theValue |= ((uint32(iRGBColor.alpha) >> fShiftRightAlpha) << fShiftLeftAlpha);
+		theValue |= ((uint32(iRGBColor.red) >> fShiftRightR) << fShiftLeftR);
+		theValue |= ((uint32(iRGBColor.green) >> fShiftRightG) << fShiftLeftG);
+		theValue |= ((uint32(iRGBColor.blue) >> fShiftRightB) << fShiftLeftB);
+		theValue |= ((uint32(iRGBColor.alpha) >> fShiftRightA) << fShiftLeftA);
 		return theValue;
 		}
 
 	uint32 AsPixval(const ZRGBColorSmallPOD& iRGBColor) const
 		{
 		uint32 theValue = 0;
-		theValue |= ((uint32(iRGBColor.red * 0x101U) >> fShiftRightRed) << fShiftLeftRed);
-		theValue |= ((uint32(iRGBColor.green * 0x101U) >> fShiftRightGreen) << fShiftLeftGreen);
-		theValue |= ((uint32(iRGBColor.blue * 0x101U) >> fShiftRightBlue) << fShiftLeftBlue);
-		theValue |= ((uint32(iRGBColor.alpha * 0x101U) >> fShiftRightAlpha) << fShiftLeftAlpha);
+		theValue |= ((uint32(iRGBColor.red * 0x101U) >> fShiftRightR) << fShiftLeftR);
+		theValue |= ((uint32(iRGBColor.green * 0x101U) >> fShiftRightG) << fShiftLeftG);
+		theValue |= ((uint32(iRGBColor.blue * 0x101U) >> fShiftRightB) << fShiftLeftB);
+		theValue |= ((uint32(iRGBColor.alpha * 0x101U) >> fShiftRightA) << fShiftLeftA);
 		return theValue;
 		}
 
 	void AsPixvals(const ZRGBColorPOD* iColors, size_t iCount, uint32* oPixvals) const;
 
 protected:
-	int32 fShiftRightRed;
-	int32 fShiftLeftRed;
+	int32 fShiftRightR;
+	int32 fShiftLeftR;
 
-	int32 fShiftRightGreen;
-	int32 fShiftLeftGreen;
+	int32 fShiftRightG;
+	int32 fShiftLeftG;
 
-	int32 fShiftRightBlue;
-	int32 fShiftLeftBlue;
+	int32 fShiftRightB;
+	int32 fShiftLeftB;
 
-	int32 fShiftRightAlpha;
-	int32 fShiftLeftAlpha;
+	int32 fShiftRightA;
+	int32 fShiftLeftA;
 	};
 
 // =================================================================================================
@@ -692,9 +670,10 @@ protected:
 #pragma mark -
 #pragma mark * ZDCPixmapNS::PixelDescRep_Indexed
 
-class ZDCPixmapNS::PixelDescRep_Indexed : public ZDCPixmapNS::PixelDescRep,
-								public ZDCPixmapNS::MapPixvalToRGB_Indexed,
-								public ZDCPixmapNS::MapRGBToPixval_Indexed
+class ZDCPixmapNS::PixelDescRep_Indexed
+:	public ZDCPixmapNS::PixelDescRep,
+	public ZDCPixmapNS::MapPixvalToRGB_Indexed,
+	public ZDCPixmapNS::MapRGBToPixval_Indexed
 	{
 public:
 	PixelDescRep_Indexed(const ZRGBColorPOD* iColors, size_t iCount);
@@ -717,7 +696,8 @@ public:
 
 	virtual void Imp_AsRGBColor(uint32 iPixval, ZRGBColorPOD& oColor) const;
 	virtual void Imp_AsRGBColorSmall(uint32 iPixval, ZRGBColorSmallPOD& oColor) const;
-	virtual void Imp_AsRGBColors(const uint32* iPixvals, size_t iCount, ZRGBColorPOD* oColors) const;
+	virtual void Imp_AsRGBColors(
+		const uint32* iPixvals, size_t iCount, ZRGBColorPOD* oColors) const;
 	virtual uint16 Imp_AsAlpha(uint32 iPixval) const;
 
 	virtual uint32 Imp_AsPixval(const ZRGBColorPOD& iRGBColor) const;
@@ -740,9 +720,10 @@ protected:
 #pragma mark -
 #pragma mark * ZDCPixmapNS::PixelDescRep_Gray
 
-class ZDCPixmapNS::PixelDescRep_Gray : public ZDCPixmapNS::PixelDescRep,
-								public ZDCPixmapNS::MapPixvalToRGB_Gray,
-								public ZDCPixmapNS::MapRGBToPixval_Gray
+class ZDCPixmapNS::PixelDescRep_Gray
+:	public ZDCPixmapNS::PixelDescRep,
+	public ZDCPixmapNS::MapPixvalToRGB_Gray,
+	public ZDCPixmapNS::MapRGBToPixval_Gray
 	{
 public:
 	PixelDescRep_Gray(uint32 iMaskGray, uint32 iMaskAlpha);
@@ -753,7 +734,8 @@ public:
 
 	virtual void Imp_AsRGBColor(uint32 iPixval, ZRGBColorPOD& oColor) const;
 	virtual void Imp_AsRGBColorSmall(uint32 iPixval, ZRGBColorSmallPOD& oColor) const;
-	virtual void Imp_AsRGBColors(const uint32* iPixvals, size_t iCount, ZRGBColorPOD* oColors) const;
+	virtual void Imp_AsRGBColors(
+		const uint32* iPixvals, size_t iCount, ZRGBColorPOD* oColors) const;
 	virtual uint16 Imp_AsAlpha(uint32 iPixval) const;
 
 	virtual uint32 Imp_AsPixval(const ZRGBColorPOD& iRGBColor) const;
@@ -761,7 +743,7 @@ public:
 	virtual void Imp_AsPixvals(const ZRGBColorPOD* iColors, size_t iCount, uint32* oPixvals) const;
 
 // Our protocol
-	void GetMasks(uint32& oMaskGray, uint32& oMaskAlpha) const;
+	void GetMasks(uint32& oMaskL, uint32& oMaskA) const;
 
 	bool Matches(const PixelDescRep_Gray* iOther);
 	};
@@ -770,9 +752,10 @@ public:
 #pragma mark -
 #pragma mark * ZDCPixmapNS::PixelDescRep_Color
 
-class ZDCPixmapNS::PixelDescRep_Color : public ZDCPixmapNS::PixelDescRep,
-								public ZDCPixmapNS::MapPixvalToRGB_Color,
-								public ZDCPixmapNS::MapRGBToPixval_Color
+class ZDCPixmapNS::PixelDescRep_Color
+:	public ZDCPixmapNS::PixelDescRep,
+	public ZDCPixmapNS::MapPixvalToRGB_Color,
+	public ZDCPixmapNS::MapRGBToPixval_Color
 	{
 public:
 	PixelDescRep_Color(uint32 iMaskRed, uint32 iMaskGreen, uint32 iMaskBlue, uint32 iMaskAlpha);
@@ -783,14 +766,15 @@ public:
 
 	virtual void Imp_AsRGBColor(uint32 iPixval, ZRGBColorPOD& oColor) const;
 	virtual void Imp_AsRGBColorSmall(uint32 iPixval, ZRGBColorSmallPOD& oColor) const;
-	virtual void Imp_AsRGBColors(const uint32* iPixvals, size_t iCount, ZRGBColorPOD* oColors) const;
+	virtual void Imp_AsRGBColors(
+		const uint32* iPixvals, size_t iCount, ZRGBColorPOD* oColors) const;
 	virtual uint16 Imp_AsAlpha(uint32 iPixval) const;
 
 	virtual uint32 Imp_AsPixval(const ZRGBColorPOD& iRGBColor) const;
 	virtual uint32 Imp_AsPixval(const ZRGBColorSmallPOD& iRGBColorSmall) const;
 	virtual void Imp_AsPixvals(const ZRGBColorPOD* iColors, size_t iCount, uint32* oPixvals) const;
 
-	void GetMasks(uint32& oMaskRed, uint32& oMaskGreen, uint32& oMaskBlue, uint32& oMaskAlpha) const;
+	void GetMasks(uint32& oMaskR, uint32& oMaskG, uint32& oMaskB, uint32& oMaskA) const;
 
 	bool Matches(const PixelDescRep_Color* iOther);
 	};
@@ -808,8 +792,8 @@ public:
 	PixelDesc(const ZRGBColorPOD* iColors, size_t iCount); // indexed
 	PixelDesc(const ZRGBColorSmallPOD* iColors, size_t iCount); // indexed
 	PixelDesc(const ZRGBColorMap* iColorMap, size_t iCount); // indexed
-	PixelDesc(uint32 iMaskGray, uint32 iMaskAlpha); // Gray
-	PixelDesc(uint32 iMaskRed, uint32 iMaskGreen, uint32 iMaskBlue, uint32 iMaskAlpha); // Color
+	PixelDesc(uint32 iMaskL, uint32 iMaskA); // Gray (Luminance/Alpha)
+	PixelDesc(uint32 iMaskR, uint32 iMaskG, uint32 iMaskB, uint32 iMaskA); // Color
 	PixelDesc(const ZRef<PixelDescRep>& iPixelDescRep); // Generic
 	~PixelDesc();
 	PixelDesc& operator=(const PixelDesc& iOther);

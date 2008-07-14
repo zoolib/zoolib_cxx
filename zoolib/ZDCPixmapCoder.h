@@ -41,6 +41,8 @@ protected:
 	ZDCPixmapEncoder& operator=(const ZDCPixmapEncoder&);
 
 public:
+	typedef ZooLib::ZRect ZRect;
+
 	virtual ~ZDCPixmapEncoder();
 
 	void Write(const ZStreamW& iStream, const ZDCPixmap& iPixmap);

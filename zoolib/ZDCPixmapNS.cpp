@@ -184,7 +184,7 @@ StandardToInfoColor_t sStandardToInfoColor[] =
 	};
 
 static void sMaskToShiftsAndMultiplier(uint32 iMask,
-	int32& oShiftLeft, int32& oShiftRight, uint32& oMultiplier)
+	int32& oShiftLeft, int32& oShiftRight, uint32& oMultiplier, uint32& oAdd)
 	{
 	if (iMask == 0)
 		{
@@ -197,6 +197,7 @@ static void sMaskToShiftsAndMultiplier(uint32 iMask,
 		// actually does what we want on PPC, but not on x86).
 		oShiftRight = 16;
 		oMultiplier = 0;
+		oAdd = 0xFFFFFFFFU;
 		}
 	else
 		{
@@ -216,6 +217,7 @@ static void sMaskToShiftsAndMultiplier(uint32 iMask,
 		ZAssertStop(kDebug_PixmapNS, theDepth <= 16);
 		oShiftRight = 16 - theDepth;
 		oMultiplier = 0xFFFFFFFFU / ((1U << theDepth) - 1);
+		oAdd = 0;
 		}
 	}
 
@@ -1615,31 +1617,14 @@ void ZDCPixmapNS::MapPixvalToRGB_Gray::AsRGBColors(const uint32* iPixvals,
 	size_t iCount, ZRGBColorPOD* oColors) const
 	{
 	register size_t localCount = iCount + 1;
-	if (fMaskAlpha)
+	while (--localCount)
 		{
-		while (--localCount)
-			{
-			uint32 pixVal = *iPixvals++;
+		uint32 pixVal = *iPixvals++;
 
-			oColors->red = oColors->green = oColors->blue
-				= ((((pixVal & fMaskGray) >> fShiftGray) *  fMultiplierGray) >> 16);
+		oColors->red = oColors->green = oColors->blue
+			= sConvert(pixVal, fMaskL, fShiftL, fMultiplierL, fAddL) >> 16;
 
-			oColors->alpha = ((((pixVal & fMaskAlpha) >> fShiftAlpha) * fMultiplierAlpha) >> 16);
-			++oColors;
-			}
-		}
-	else
-		{
-		while (--localCount)
-			{
-			uint32 pixVal = *iPixvals++;
-
-			oColors->red = oColors->green = oColors->blue
-				= ((((pixVal & fMaskGray) >> fShiftGray) *  fMultiplierGray) >> 16);
-
-			oColors->alpha = 0xFFFFU;
-			++oColors;
-			}
+		oColors->alpha = sConvert(pixVal, fMaskA, fShiftA, fMultiplierA, fAddA) >> 16;
 		}
 	}
 
@@ -1651,29 +1636,13 @@ void ZDCPixmapNS::MapPixvalToRGB_Color::AsRGBColors(const uint32* iPixvals,
 	size_t iCount, ZRGBColorPOD* oColors) const
 	{
 	register size_t localCount = iCount + 1;
-	if (fMaskAlpha)
+	while (--localCount)
 		{
-		while (--localCount)
-			{
-			uint32 pixVal = *iPixvals++;
-			oColors->red = ((((pixVal & fMaskRed) >> fShiftRed) *  fMultiplierRed) >> 16);
-			oColors->green = ((((pixVal & fMaskGreen) >> fShiftGreen) * fMultiplierGreen) >> 16);
-			oColors->blue = ((((pixVal & fMaskBlue) >> fShiftBlue) * fMultiplierBlue) >> 16);
-			oColors->alpha = ((((pixVal & fMaskAlpha) >> fShiftAlpha) * fMultiplierAlpha) >> 16);
-			++oColors;
-			}
-		}
-	else
-		{
-		while (--localCount)
-			{
-			uint32 pixVal = *iPixvals++;
-			oColors->red = ((((pixVal & fMaskRed) >> fShiftRed) *  fMultiplierRed) >> 16);
-			oColors->green = ((((pixVal & fMaskGreen) >> fShiftGreen) * fMultiplierGreen) >> 16);
-			oColors->blue = ((((pixVal & fMaskBlue) >> fShiftBlue) * fMultiplierBlue) >> 16);
-			oColors->alpha = 0xFFFFU;
-			++oColors;
-			}
+		uint32 pixVal = *iPixvals++;
+		oColors->red = sConvert(pixVal, fMaskR, fShiftR, fMultiplierR, fAddR) >> 16;
+		oColors->green = sConvert(pixVal, fMaskG, fShiftG, fMultiplierG, fAddG) >> 16;
+		oColors->blue = sConvert(pixVal, fMaskB, fShiftB, fMultiplierB, fAddB) >> 16;
+		oColors->alpha = sConvert(pixVal, fMaskA, fShiftA, fMultiplierA, fAddA) >> 16;
 		}
 	}
 
@@ -1721,9 +1690,9 @@ void ZDCPixmapNS::MapRGBToPixval_Gray::AsPixvals(const ZRGBColorPOD* iColors,
 		{
 		uint32 theValue = ((uint32((uint32(iColors->red)
 			+ uint32(iColors->green)
-			+ uint32(iColors->blue)) * 0x101U / 3) >> fShiftRightGray) << fShiftLeftGray);
+			+ uint32(iColors->blue)) * 0x101U / 3) >> fShiftRightL) << fShiftLeftL);
 
-		theValue |= ((uint32(iColors->alpha) >> fShiftRightAlpha) << fShiftLeftAlpha);
+		theValue |= ((uint32(iColors->alpha) >> fShiftRightA) << fShiftLeftA);
 
 		++iColors;
 		*oPixvals++ = theValue;
@@ -1740,10 +1709,10 @@ void ZDCPixmapNS::MapRGBToPixval_Color::AsPixvals(const ZRGBColorPOD* iColors,
 	register size_t localCount = iCount + 1;
 	while (--localCount)
 		{
-		uint32 theValue = ((uint32(iColors->red) >> fShiftRightRed) << fShiftLeftRed);
-		theValue |= ((uint32(iColors->green) >> fShiftRightGreen) << fShiftLeftGreen);
-		theValue |= ((uint32(iColors->blue) >> fShiftRightBlue) << fShiftLeftBlue);
-		theValue |= ((uint32(iColors->alpha) >> fShiftRightAlpha) << fShiftLeftAlpha);
+		uint32 theValue = ((uint32(iColors->red) >> fShiftRightR) << fShiftLeftR);
+		theValue |= ((uint32(iColors->green) >> fShiftRightG) << fShiftLeftG);
+		theValue |= ((uint32(iColors->blue) >> fShiftRightB) << fShiftLeftB);
+		theValue |= ((uint32(iColors->alpha) >> fShiftRightA) << fShiftLeftA);
 		++iColors;
 		*oPixvals++ = theValue;
 		}
@@ -1831,7 +1800,8 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iCol
 			= lower_bound(vectorPixvals.begin(), vectorPixvals.end(), iPixvals[x]);
 
 		insertIter = vectorPixvals.insert(insertIter, iPixvals[x]);
-		vectorColors.insert(vectorColors.begin() + (insertIter - vectorPixvals.begin()), iColors[x]);
+		vectorColors.insert(
+			vectorColors.begin() + (insertIter - vectorPixvals.begin()), iColors[x]);
 		}
 
 	fCount = iCount;
@@ -1873,7 +1843,8 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iCol
 			= lower_bound(vectorPixvals.begin(), vectorPixvals.end(), iPixvals[x]);
 
 		insertIter = vectorPixvals.insert(insertIter, iPixvals[x]);
-		vectorColors.insert(vectorColors.begin() + (insertIter - vectorPixvals.begin()), iColors[x]);
+		vectorColors.insert(
+			vectorColors.begin() + (insertIter - vectorPixvals.begin()), iColors[x]);
 		}
 
 	fCount = iCount;
@@ -1955,7 +1926,8 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorSmallPOD*
 	ZBlockCopy(&vectorPixvals[0], MapPixvalToRGB_Indexed::fPixvals, iCount * sizeof(uint32));
 	}
 
-ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorMap* iColorMap, size_t iCount)
+ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(
+	const ZRGBColorMap* iColorMap, size_t iCount)
 :	fCheckedAlpha(false)
 	{
 	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
@@ -2071,25 +2043,25 @@ bool ZDCPixmapNS::PixelDescRep_Indexed::Matches(const PixelDescRep_Indexed* iOth
 #pragma mark -
 #pragma mark * ZDCPixmapNS::PixelDescRep_Gray
 
-ZDCPixmapNS::PixelDescRep_Gray::PixelDescRep_Gray(uint32 iMaskGray, uint32 iMaskAlpha)
+ZDCPixmapNS::PixelDescRep_Gray::PixelDescRep_Gray(uint32 iMaskL, uint32 iMaskA)
 	{
-	sMaskToShiftsAndMultiplier(iMaskGray, fShiftLeftGray, fShiftRightGray, fMultiplierGray);
-	fShiftGray = fShiftLeftGray;
-	fMaskGray = iMaskGray;
+	sMaskToShiftsAndMultiplier(iMaskL, fShiftLeftL, fShiftRightL, fMultiplierL, fAddL);
+	fShiftL = fShiftLeftL;
+	fMaskL = iMaskL;
 
-	sMaskToShiftsAndMultiplier(iMaskAlpha, fShiftLeftAlpha, fShiftRightAlpha, fMultiplierAlpha);
-	fShiftAlpha = fShiftLeftAlpha;
-	fMaskAlpha = iMaskAlpha;
+	sMaskToShiftsAndMultiplier(iMaskA, fShiftLeftA, fShiftRightA, fMultiplierA, fAddA);
+	fShiftA = fShiftLeftA;
+	fMaskA = iMaskA;
 	}
 
 bool ZDCPixmapNS::PixelDescRep_Gray::HasAlpha()
-	{ return fMaskAlpha; }
+	{ return fMaskA; }
 
 ZRef<ZDCPixmapNS::PixelDescRep> ZDCPixmapNS::PixelDescRep_Gray::WithoutAlpha()
 	{
-	if (!fMaskAlpha)
+	if (!fMaskA)
 		return this;
-	return new PixelDescRep_Gray(fMaskGray, 0);
+	return new PixelDescRep_Gray(fMaskL, 0);
 	}
 
 void ZDCPixmapNS::PixelDescRep_Gray::Imp_AsRGBColor(uint32 iPixval, ZRGBColorPOD& oColor) const
@@ -2116,17 +2088,17 @@ void ZDCPixmapNS::PixelDescRep_Gray::Imp_AsPixvals(
 	const ZRGBColorPOD* iColors, size_t iCount, uint32* oPixvals) const
 	{ MapRGBToPixval_Gray::AsPixvals(iColors, iCount, oPixvals); }
 
-void ZDCPixmapNS::PixelDescRep_Gray::GetMasks(uint32& oMaskGray, uint32& oMaskAlpha) const
+void ZDCPixmapNS::PixelDescRep_Gray::GetMasks(uint32& oMaskL, uint32& oMaskA) const
 	{
-	oMaskGray = fMaskGray;
-	oMaskAlpha = fMaskAlpha;
+	oMaskL = fMaskL;
+	oMaskA = fMaskA;
 	}
 
 bool ZDCPixmapNS::PixelDescRep_Gray::Matches(const PixelDescRep_Gray* iOther)
 	{
-	if (fMaskGray && iOther->fMaskGray && fMaskGray != iOther->fMaskGray)
+	if (fMaskL && iOther->fMaskL && fMaskL != iOther->fMaskL)
 		return false;
-	if (fMaskAlpha && iOther->fMaskAlpha && fMaskAlpha != iOther->fMaskAlpha)
+	if (fMaskA && iOther->fMaskA && fMaskA != iOther->fMaskA)
 		return false;
 	return true;
 	}
@@ -2136,36 +2108,37 @@ bool ZDCPixmapNS::PixelDescRep_Gray::Matches(const PixelDescRep_Gray* iOther)
 #pragma mark * ZDCPixmapNS::PixelDescRep_Color
 
 ZDCPixmapNS::PixelDescRep_Color::PixelDescRep_Color(
-	uint32 iMaskRed, uint32 iMaskGreen, uint32 iMaskBlue, uint32 iMaskAlpha)
+	uint32 iMaskR, uint32 iMaskG, uint32 iMaskB, uint32 iMaskA)
 	{
 	// Ensure that the masks are all non-overlapping
-	ZAssertStop(kDebug_PixmapNS, (iMaskRed & iMaskGreen & iMaskBlue & iMaskAlpha) == 0);
+	ZAssertStop(kDebug_PixmapNS, 0 == ((iMaskR & iMaskG) | (iMaskR & iMaskB) | (iMaskR & iMaskA)
+		| (iMaskG & iMaskB) | (iMaskG & iMaskA) | (iMaskB & iMaskA)));
 
-	sMaskToShiftsAndMultiplier(iMaskRed, fShiftLeftRed, fShiftRightRed, fMultiplierRed);
-	fShiftRed = fShiftLeftRed;
-	fMaskRed = iMaskRed;
+	sMaskToShiftsAndMultiplier(iMaskR, fShiftLeftR, fShiftRightR, fMultiplierR, fAddR);
+	fShiftR = fShiftLeftR;
+	fMaskR = iMaskR;
 
-	sMaskToShiftsAndMultiplier(iMaskGreen, fShiftLeftGreen, fShiftRightGreen, fMultiplierGreen);
-	fShiftGreen = fShiftLeftGreen;
-	fMaskGreen = iMaskGreen;
+	sMaskToShiftsAndMultiplier(iMaskG, fShiftLeftG, fShiftRightG, fMultiplierG, fAddG);
+	fShiftG = fShiftLeftG;
+	fMaskG = iMaskG;
 
-	sMaskToShiftsAndMultiplier(iMaskBlue, fShiftLeftBlue, fShiftRightBlue, fMultiplierBlue);
-	fShiftBlue = fShiftLeftBlue;
-	fMaskBlue = iMaskBlue;
+	sMaskToShiftsAndMultiplier(iMaskB, fShiftLeftB, fShiftRightB, fMultiplierB, fAddB);
+	fShiftB = fShiftLeftB;
+	fMaskB = iMaskB;
 
-	sMaskToShiftsAndMultiplier(iMaskAlpha, fShiftLeftAlpha, fShiftRightAlpha, fMultiplierAlpha);
-	fShiftAlpha = fShiftLeftAlpha;
-	fMaskAlpha = iMaskAlpha;
+	sMaskToShiftsAndMultiplier(iMaskA, fShiftLeftA, fShiftRightA, fMultiplierA, fAddA);
+	fShiftA = fShiftLeftA;
+	fMaskA = iMaskA;
 	}
 
 bool ZDCPixmapNS::PixelDescRep_Color::HasAlpha()
-	{ return fMaskAlpha; }
+	{ return fMaskA; }
 
 ZRef<ZDCPixmapNS::PixelDescRep> ZDCPixmapNS::PixelDescRep_Color::WithoutAlpha()
 	{
-	if (!fMaskAlpha)
+	if (!fMaskA)
 		return this;
-	return new PixelDescRep_Color(fMaskRed, fMaskGreen, fMaskBlue, 0);
+	return new PixelDescRep_Color(fMaskR, fMaskG, fMaskB, 0);
 	}
 
 void ZDCPixmapNS::PixelDescRep_Color::Imp_AsRGBColor(uint32 iPixval, ZRGBColorPOD& oColor) const
@@ -2193,23 +2166,23 @@ void ZDCPixmapNS::PixelDescRep_Color::Imp_AsPixvals(
 	{ MapRGBToPixval_Color::AsPixvals(iColors, iCount, oPixvals); }
 
 void ZDCPixmapNS::PixelDescRep_Color::GetMasks(
-	uint32& oMaskRed, uint32& oMaskGreen, uint32& oMaskBlue, uint32& oMaskAlpha) const
+	uint32& oMaskR, uint32& oMaskG, uint32& oMaskB, uint32& oMaskA) const
 	{
-	oMaskRed = fMaskRed;
-	oMaskGreen = fMaskGreen;
-	oMaskBlue = fMaskBlue;
-	oMaskAlpha = fMaskAlpha;
+	oMaskR = fMaskR;
+	oMaskG = fMaskG;
+	oMaskB = fMaskB;
+	oMaskA = fMaskA;
 	}
 
 bool ZDCPixmapNS::PixelDescRep_Color::Matches(const PixelDescRep_Color* iOther)
 	{
-	if (fMaskRed && iOther->fMaskRed && fMaskRed != iOther->fMaskRed)
+	if (fMaskR && iOther->fMaskR && fMaskR != iOther->fMaskR)
 		return false;
-	if (fMaskGreen && iOther->fMaskGreen && fMaskGreen != iOther->fMaskGreen)
+	if (fMaskG && iOther->fMaskG && fMaskG != iOther->fMaskG)
 		return false;
-	if (fMaskBlue && iOther->fMaskBlue && fMaskBlue != iOther->fMaskBlue)
+	if (fMaskB && iOther->fMaskB && fMaskB != iOther->fMaskB)
 		return false;
-	if (fMaskAlpha && iOther->fMaskAlpha && fMaskAlpha != iOther->fMaskAlpha)
+	if (fMaskA && iOther->fMaskA && fMaskA != iOther->fMaskA)
 		return false;
 	return true;
 	}
@@ -2535,7 +2508,6 @@ void ZDCPixmapNS::sMunge(
 		{
 		sMunge_T(iBaseAddress, iRasterDesc, iPixelDesc, iPixelDesc, iBounds, iMungeProc, iRefcon);
 		}
-
 	}
 
 // =================================================================================================
@@ -2678,10 +2650,9 @@ void ZDCPixmapNS::sBlitPixvals(const void* iSourceBase, const RasterDesc& iSourc
 				iSourceRasterDesc.CalcRowAddress(iSourceBase, iSourceBounds.top + vCurrent))
 				+ hOffsetSource;
 
-			uint8* destRowAddress =
-				static_cast<uint8*>(
-					const_cast<void*>(iDestRasterDesc.CalcRowAddressDest(iDestBase, iDestLocation.v + vCurrent)
-					)) + hOffsetDest;
+			uint8* destRowAddress = static_cast<uint8*>(
+					iDestRasterDesc.CalcRowAddressDest(iDestBase, iDestLocation.v + vCurrent))
+					+ hOffsetDest;
 
 			ZBlockCopy(sourceRowAddress, destRowAddress, countToCopy);
 			}
