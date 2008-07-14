@@ -23,8 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZCompat_algorithm.h"
 
-#include <cstdarg>
-#include <cstdio>
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h> // For strlen
 #include <string> // because range_error may require it
 
 using std::max;
@@ -35,8 +36,6 @@ using std::string;
 
 #if ZCONFIG(Compiler, MSVC)
 #	define vsnprintf _vsnprintf
-#elif !ZCONFIG(Compiler, GCC) || _GLIBCPP_USE_C99
-//	using std::vsnprintf;
 #endif
 
 #define kDebug_Stream 2
@@ -612,7 +611,7 @@ As data is read the position is updated by the number of bytes consumed.
 */
 
 size_t ZStreamRPos::Imp_CountReadable()
-	{ return sClampedR(sDiffPosR(this->GetSize(), this->GetPosition())); }
+	{ return ZStream::sClampedSize(this->GetSize(), this->GetPosition()); }
 
 void ZStreamRPos::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{

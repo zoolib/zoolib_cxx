@@ -20,17 +20,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZCONFIG_SPI.h"
+#include "ZTypes.h"
 
-#include <cstdarg>
-#include <cstdio>
-#include <cstring> // For strrchr
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h> // For strrchr
 
 #if ZCONFIG(Compiler, MSVC)
 #	define vsnprintf _vsnprintf
 #	define snprintf _snprintf
-#else
-//	using std::vsnprintf;
-//	using std::snprintf;
 #endif
 
 static const size_t sStringBufferSize = 1024;

@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZDebug.h"
 
+#include <string.h> // For strlen
+
 #ifndef kDebug_QTFile
 #	define kDebug_QTFile 1
 #endif
@@ -201,7 +203,7 @@ ZFileFormat_QuickTime::StreamRPos_Chunk::~StreamRPos_Chunk()
 void ZFileFormat_QuickTime::StreamRPos_Chunk::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
 	uint8* localDest = reinterpret_cast<uint8*>(iDest);
-	size_t countRemaining = min(uint64(iCount), sDiffPosR(fStart + fSize, fStream.GetPosition()));
+	size_t countRemaining = ZStream::sClampedSize(iCount, fStart + fSize, fStream.GetPosition());
 	while (countRemaining)
 		{
 		size_t countRead;
@@ -224,7 +226,7 @@ void ZFileFormat_QuickTime::StreamRPos_Chunk::Imp_CopyTo(const ZStreamW& iStream
 
 void ZFileFormat_QuickTime::StreamRPos_Chunk::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-	if (uint64 countToSkip = min(uint64(iCount), sDiffPosR(fStart + fSize, fStream.GetPosition())))
+	if (uint64 countToSkip = ZStream::sClampedCount(iCount, fStart + fSize, fStream.GetPosition()))
 		fStream.Skip(countToSkip, oCountSkipped);
 	else if (oCountSkipped)
 		*oCountSkipped = 0;

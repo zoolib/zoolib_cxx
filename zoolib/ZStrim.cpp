@@ -24,8 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
 
-#include <cstdarg>
-#include <cstdio>
+#include <stdio.h>
 
 using std::min;
 using std::nothrow;
@@ -34,8 +33,6 @@ using std::string;
 
 #if ZCONFIG(Compiler, MSVC)
 #	define vsnprintf _vsnprintf
-#elif !ZCONFIG(Compiler, GCC) || _GLIBCPP_USE_C99
-//	using std::vsnprintf;
 #endif
 
 #define kDebug_Strim 2

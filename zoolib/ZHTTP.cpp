@@ -37,7 +37,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimmer_Streamer.h"
 #include "zoolib/ZTextCoder.h"
 
-#include <cctype>
+#include <ctype.h>
+#include <stdio.h>
 
 using std::max;
 using std::min;
@@ -1859,7 +1860,9 @@ void ZHTTP::StreamR_Chunked::Imp_Read(void* iDest, size_t iCount, size_t* oCount
 		else
 			{
 			size_t countRead;
-			fStreamSource.Read(localDest, min(iCount, sClampedR(fChunkSize)), &countRead);
+			fStreamSource.Read(
+				localDest, min(iCount, ZStream::sClampedSize(fChunkSize)), &countRead);
+
 			if (countRead == 0)
 				fHitEnd = true;
 			localDest += countRead;
@@ -1872,7 +1875,7 @@ void ZHTTP::StreamR_Chunked::Imp_Read(void* iDest, size_t iCount, size_t* oCount
 	}
 
 size_t ZHTTP::StreamR_Chunked::Imp_CountReadable()
-	{ return min(sClampedR(fChunkSize), fStreamSource.CountReadable()); }
+	{ return min(ZStream::sClampedSize(fChunkSize), fStreamSource.CountReadable()); }
 
 // =================================================================================================
 #pragma mark -

@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTrail.h"
 
+#include <string.h> // For strlen
+
 using std::basic_string;
 using std::char_traits;
 using std::min;
@@ -32,11 +34,12 @@ using std::vector;
 #pragma mark * Helper functions
 
 template <class C>
-void sParseStringAndAppend_T(const C* iSeparator,
-						const C* iIgnore,
-						const C* iBounce,
-						const C* iTrail, size_t iTrailSize,
-						vector<basic_string<C> >& ioComps)
+void sParseStringAndAppend_T(
+	const C* iSeparator,
+	const C* iIgnore,
+	const C* iBounce,
+	const C* iTrail, size_t iTrailSize,
+	vector<basic_string<C> >& ioComps)
 	{
 	if (iTrailSize == 0)
 		return;
@@ -159,7 +162,7 @@ ZTrail::ZTrail(const string& iPOSIXTrail)
 ZTrail::ZTrail(const char* iPOSIXTrail)
 :	fValid(true)
 	{
-	if (size_t trailLength = ::strlen(iPOSIXTrail))
+	if (size_t trailLength = strlen(iPOSIXTrail))
 		sParseStringAndAppend("/", ".", "..", iPOSIXTrail, trailLength, fComps);
 	}
 
@@ -170,11 +173,15 @@ ZTrail::ZTrail(const char* iPOSIXTrail, size_t iSize)
 		sParseStringAndAppend("/", ".", "..", iPOSIXTrail, iSize, fComps);
 	}
 
-ZTrail::ZTrail(const std::string& iSeparator, const std::string& iIgnore, const std::string& iBounce, const std::string& iTrail)
+ZTrail::ZTrail(const std::string& iSeparator, const std::string& iIgnore,
+	const std::string& iBounce, const std::string& iTrail)
 :	fValid(true)
 	{
 	if (size_t trailLength = iTrail.size())
-		sParseStringAndAppend(iSeparator.c_str(), iIgnore.c_str(), iBounce.c_str(), iTrail.data(), trailLength, fComps);
+		{
+		sParseStringAndAppend(iSeparator.c_str(), iIgnore.c_str(),
+			iBounce.c_str(), iTrail.data(), trailLength, fComps);
+		}
 	}
 
 ZTrail::~ZTrail()

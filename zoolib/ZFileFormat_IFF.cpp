@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZDebug.h"
 
+#include <string.h> // For strlen
+
 #ifndef kDebug_IFF
 #	define kDebug_IFF 1
 #endif
@@ -253,7 +255,7 @@ ZFileFormat_IFF::StreamRPos_Chunk::~StreamRPos_Chunk()
 void ZFileFormat_IFF::StreamRPos_Chunk::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
 	uint8* localDest = reinterpret_cast<uint8*>(iDest);
-	size_t countRemaining = min(uint64(iCount), sDiffPosR(fStart + fSize, fStream.GetPosition()));
+	size_t countRemaining = ZStream::sClampedSize(iCount, fStart + fSize, fStream.GetPosition());
 	while (countRemaining)
 		{
 		size_t countRead;
@@ -275,7 +277,12 @@ void ZFileFormat_IFF::StreamRPos_Chunk::Imp_CopyTo(const ZStreamW& iStreamW, uin
 	{ fStream.CopyTo(iStreamW, min(iCount, fStart + fSize - fStream.GetPosition()), oCountRead, oCountWritten); }
 
 void ZFileFormat_IFF::StreamRPos_Chunk::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
-	{ fStream.Skip(min(iCount, fStart + fSize - fStream.GetPosition()), oCountSkipped); }
+	{
+	if (uint64 countToSkip = ZStream::sClampedCount(iCount, fStart + fSize, fStream.GetPosition()))
+		fStream.Skip(countToSkip, oCountSkipped);
+	else if (oCountSkipped)
+		*oCountSkipped = 0;
+	}
 
 uint64 ZFileFormat_IFF::StreamRPos_Chunk::Imp_GetPosition()
 	{ return fStream.GetPosition() - fStart; }

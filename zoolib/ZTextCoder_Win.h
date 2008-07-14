@@ -46,7 +46,7 @@ class ZTextDecoder_Win : public ZTextDecoder
 	{
 public:
 	ZTextDecoder_Win(const char* iName);
-	ZTextDecoder_Win(const string& iName);
+	ZTextDecoder_Win(const std::string& iName);
 	ZTextDecoder_Win(UINT iSourceCodePage);
 	virtual ~ZTextDecoder_Win();
 
@@ -69,7 +69,7 @@ class ZTextEncoder_Win : public ZTextEncoder
 	{
 public:
 	ZTextEncoder_Win(const char* iName);
-	ZTextEncoder_Win(const string& iName);
+	ZTextEncoder_Win(const std::string& iName);
 	ZTextEncoder_Win(UINT iDestCodePage);
 	virtual ~ZTextEncoder_Win();
 

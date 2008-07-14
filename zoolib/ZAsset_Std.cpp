@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_algorithm.h" // For lower_bound and find_first_of
 #include "zoolib/ZStream_Memory.h"
 
+#include <string.h> // For strcmp etc
+
 using std::find_first_of;
 using std::lower_bound;
 using std::min;
@@ -646,7 +648,7 @@ const ZStreamRPos& ZAssetTree_Std_Stream::StreamerRPos::GetStreamRPos()
 
 void ZAssetTree_Std_Stream::StreamerRPos::Imp_Read(void* inDest, size_t inCount, size_t* outCountRead)
 	{
-	size_t countToRead = min(uint64(inCount), sDiffPosR(fSize, fPosition));
+	size_t countToRead = ZStream::sClampedSize(inCount, fSize, fPosition);
 	fAssetTree->ReadData(fStartOffset + fPosition, countToRead, inDest);
 	fPosition += countToRead;
 	if (outCountRead)
@@ -655,7 +657,7 @@ void ZAssetTree_Std_Stream::StreamerRPos::Imp_Read(void* inDest, size_t inCount,
 
 void ZAssetTree_Std_Stream::StreamerRPos::Imp_Skip(uint64 inCount, uint64* outCountSkipped)
 	{
-	uint64 countToSkip = min(inCount, sDiffPosR(fSize, fPosition));
+	uint64 countToSkip = ZStream::sClampedCount(inCount, fSize, fPosition);
 	fPosition += countToSkip;
 	if (outCountSkipped)
 		*outCountSkipped = countToSkip;
@@ -932,7 +934,7 @@ const ZStreamRPos& ZAssetTree_Std_File::StreamerRPos::GetStreamRPos()
 
 void ZAssetTree_Std_File::StreamerRPos::Imp_Read(void* inDest, size_t inCount, size_t* outCountRead)
 	{
-	size_t countToRead = min(uint64(inCount), sDiffPosR(fSize, fPosition));
+	size_t countToRead = ZStream::sClampedSize(inCount, fSize, fPosition);
 	size_t countRead;
 	fFile->ReadAt(fStartOffset + fPosition, inDest, countToRead, &countRead);
 	fPosition += countRead;
@@ -942,7 +944,7 @@ void ZAssetTree_Std_File::StreamerRPos::Imp_Read(void* inDest, size_t inCount, s
 
 void ZAssetTree_Std_File::StreamerRPos::Imp_Skip(uint64 inCount, uint64* outCountSkipped)
 	{
-	uint64 countToSkip = min(uint64(inCount), sDiffPosR(fSize, fPosition));
+	uint64 countToSkip = ZStream::sClampedCount(inCount, fSize, fPosition);
 	fPosition += countToSkip;
 	if (outCountSkipped)
 		*outCountSkipped = countToSkip;

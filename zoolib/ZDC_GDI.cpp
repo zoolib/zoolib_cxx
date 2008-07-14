@@ -22,8 +22,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(DC_GDI)
 
+#include "zoolib/ZCompat_algorithm.h" // For min
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZUtil_Win.h"
+
+#include <string.h> // For memcpy
+
+#include <stdexcept> // For runtime_error
+#include <vector>
+
+using std::min;
+using std::runtime_error;
+using std::string;
+using std::vector;
 
 static short sModeLookup[] = { R2_COPYPEN, R2_MERGEPEN, R2_NOTXORPEN, R2_MASKNOTPEN };
 

@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
+#include <stdio.h>
+
 #define kDebug_StrimW_ML 1
 
 // =================================================================================================

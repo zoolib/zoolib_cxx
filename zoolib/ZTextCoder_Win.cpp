@@ -25,6 +25,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread.h"
 #include <map>
 
+using std::map;
+using std::min;
+using std::runtime_error;
+using std::string;
+using std::vector;
+
 ZAssertCompile(sizeof(WCHAR) == sizeof(UTF16));
 
 static const size_t kBufSize = ZooLib::sStackBufferSize;

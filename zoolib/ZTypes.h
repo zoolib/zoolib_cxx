@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCONFIG_SPI.h"
 
-// Pull in definition of size_t, which is heavily used by zoolib
-#include <cstddef>
+// Pull in definition of size_t, which is heavily used by zoolib.
+#include <stddef.h>
 
 // Incorporate standard int types.
 #include "zoolib/ZStdInt.h"

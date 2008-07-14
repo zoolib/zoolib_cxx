@@ -69,7 +69,7 @@ public:
 	virtual STDMETHODIMP DeviceDisconnect(IDevice* iDevice);
 
 // From Manager
-	virtual void GetDeviceIDs(vector<uint64>& oDeviceIDs);
+	virtual void GetDeviceIDs(std::vector<uint64>& oDeviceIDs);
 	virtual ZRef<Device> Open(uint64 iDeviceID);
 
 private:
@@ -85,7 +85,7 @@ private:
 		uint64 fID;
 		};
 
-	vector<Entry_t> fEntries;
+	std::vector<Entry_t> fEntries;
 	uint64 fNextID;
 	};
 

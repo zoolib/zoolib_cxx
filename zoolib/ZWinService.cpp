@@ -26,6 +26,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+using std::vector;
+using std::wstring;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWinService
@@ -34,7 +37,7 @@ static vector<SERVICE_TABLE_ENTRYW> sEntries;
 
 void ZWinService::sRunDispatcher()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZWinService"))
+	if (ZLOG(s, eDebug, "ZWinService"))
 		s << "ZWinService::sRunDispatcher 1";
 
 	if (sEntries.empty())
@@ -47,7 +50,7 @@ void ZWinService::sRunDispatcher()
 	SERVICE_TABLE_ENTRYW nullEntry = { nil, nil };
 	sEntries.push_back(nullEntry);
 
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZWinService"))
+	if (ZLOG(s, eDebug, "ZWinService"))
 		s << "ZWinService::sRunDispatcher 2";
 	::StartServiceCtrlDispatcherW(&sEntries[0]);	
 	}
@@ -56,7 +59,7 @@ ZWinService::ZWinService(const wstring& iServiceName, LPSERVICE_MAIN_FUNCTIONW i
 :	fServiceName(iServiceName),
 	fAllowPause(iAllowPause)
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZWinService"))
+	if (ZLOG(s, eDebug, "ZWinService"))
 		s << "ZWinService::ZWinService";
 
 	SERVICE_TABLE_ENTRYW theEntry;
@@ -77,7 +80,7 @@ void ZWinService::Continue()
 
 DWORD ZWinService::ServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVOID lpEventData)
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZWinService"))
+	if (ZLOG(s, eDebug, "ZWinService"))
 		s.Writef("ZWinService::ServiceCtrlHandlerEx, dwControl=%d, dwEventType=%d", dwControl, dwEventType);
 
 	switch (dwControl)
@@ -174,7 +177,7 @@ void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 	fServiceStatusHandle = ::RegisterServiceCtrlHandlerExW(const_cast<wchar_t*>(fServiceName.c_str()), sServiceCtrlHandlerEx, this);
 	if (!fServiceStatusHandle)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::eErr, "ZWinService"))
+		if (ZLOG(s, eErr, "ZWinService"))
 			s << "ZWinService::pServiceMain, RegisterServiceCtrlHandlerExW failed";
 		return;
 		}

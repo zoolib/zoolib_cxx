@@ -338,6 +338,8 @@ equivalent of command-line options.
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
+#include <stdio.h>
+
 using std::exception;
 using std::string;
 

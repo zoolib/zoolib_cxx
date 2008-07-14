@@ -200,7 +200,7 @@ by using <code>#pragma ushort_wchar_t on</code>
 #	include "unicode/uchar.h"
 #endif
 
-#include <cctype>
+#include <ctype.h>
 
 ZAssertCompile(sizeof(UTF32) == 4);
 ZAssertCompile(sizeof(UTF16) == 2);

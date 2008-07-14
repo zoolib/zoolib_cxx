@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZString__ 1
 #include "zconfig.h"
 
-#include <cstdarg>
+#include <stdarg.h>
 #include <string>
 
 #include "zoolib/ZTypes.h" // for uint64

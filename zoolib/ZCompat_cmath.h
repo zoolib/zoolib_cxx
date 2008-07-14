@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #define __USE_ISOC99 1
-#include <cmath>
+#include <math.h>
 
 #if !defined(INFINITY)
 #	define INFINITY (1.0/0.0)

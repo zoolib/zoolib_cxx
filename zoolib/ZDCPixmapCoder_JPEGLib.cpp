@@ -44,6 +44,9 @@ extern "C" {
 #include <jpeglib.h>
 } // extern "C"
 
+using std::min;
+using std::runtime_error;
+using std::vector;
 
 // =================================================================================================
 #pragma mark -
@@ -432,8 +435,8 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 			ZUnimplemented();
 			}
 
-		ZDCPixmapNS::PixelDesc destPixelDesc = oPixmap.GetPixelDesc();
-		ZDCPixmapNS::RasterDesc destRasterDesc = oPixmap.GetRasterDesc();
+		const ZDCPixmapNS::PixelDesc& destPixelDesc = oPixmap.GetPixelDesc();
+		const ZDCPixmapNS::RasterDesc& destRasterDesc = oPixmap.GetRasterDesc();
 		void* destBaseAddress = oPixmap.GetBaseAddress();
 
 		JSAMPROW rowPtr[1];
@@ -444,7 +447,7 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 			ZAssertStop(1, scanlinesRead == 1);
 
 			void* destRowAddress
-				= destRasterDesc.CalcRowAddress(destBaseAddress, theJDS.output_scanline - 1);
+				= destRasterDesc.CalcRowAddressDest(destBaseAddress, theJDS.output_scanline - 1);
 
 			ZDCPixmapNS::sBlitRow(
 				rowPtr[0], sourcePixvalDesc, sourcePixelDesc, 0,

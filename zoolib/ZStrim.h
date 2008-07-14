@@ -23,7 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZUnicode.h"
-#include <cstdarg> // For va_list
+
+#include <stdarg.h> // For va_list
 #include <stdexcept> // For range_error
 
 class ZStrimW;

@@ -26,8 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 #include "zoolib/ZUnicode.h"
 
-#include <cctype>
-#include <cstdio>
+#include <ctype.h>
+#include <stdio.h>
 #include <stdexcept>
 #include <string>
 
@@ -37,8 +37,6 @@ using std::string;
 
 #if ZCONFIG(Compiler, MSVC)
 #	define vsnprintf _vsnprintf
-#elif !ZCONFIG(Compiler, GCC) || _GLIBCPP_USE_C99
-//	using std::vsnprintf;
 #endif
 
 #ifndef va_copy

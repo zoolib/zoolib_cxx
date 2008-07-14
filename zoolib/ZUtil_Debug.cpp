@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cmath> // For fmod
 
+#include <stdlib.h> // For abort
+
 #if ZCONFIG_SPI_Enabled(POSIX)
 #	include <csignal>
 #endif
@@ -95,7 +97,7 @@ static void sHandleSignal_Sync(int inSignal)
 			if (!sHandlingFatal)
 				{
 				sHandlingFatal = true;
-				const ZLog::S& s = ZLog::S(ZLog::ePriority_Crit, "ZUtil_Debug");
+				ZLog::S s(ZLog::ePriority_Crit, "ZUtil_Debug");
 				if (inSignal == SIGSEGV)
 					s << "SIGSEGV";
 				else
@@ -122,7 +124,7 @@ static void sDebug_HandleActual(int inLevel, ZDebug_Action inAction, const char*
 	{
 	if (inAction == eDebug_ActionStop)
 		{
-		const ZLog::S& s = ZLog::S(ZLog::eErr, "ZUtil_Debug");
+		ZLog::S s(ZLog::eErr, "ZUtil_Debug");
 		s << "STOP: " << inMessage << "\n";
 
 		#if ZCONFIG_API_Enabled(StackCrawl)
@@ -149,7 +151,7 @@ static void sDebug_HandleActual(int inLevel, ZDebug_Action inAction, const char*
 		}
 	else
 		{
-		const ZLog::S& s = ZLog::S(ZLog::eErr, "ZUtil_Debug");
+		ZLog::S s(ZLog::eErr, "ZUtil_Debug");
 		s << "DEBUG: " << inMessage;
 		}
 	}
@@ -180,7 +182,8 @@ ZUtil_Debug::LogMeister::LogMeister()
 bool ZUtil_Debug::LogMeister::Enabled(ZLog::EPriority iPriority, const string& iName)
 	{ return iPriority <= fLogPriority; }
 
-void ZUtil_Debug::LogMeister::LogIt(ZLog::EPriority iPriority, const string& iName, const string& iMessage)
+void ZUtil_Debug::LogMeister::LogIt(
+	ZLog::EPriority iPriority, const string& iName, const string& iMessage)
 	{
 	if (iPriority > fLogPriority)
 		return;

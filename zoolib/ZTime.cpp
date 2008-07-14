@@ -51,10 +51,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <sys/sysctl.h>
 #endif
 
-#if !ZCONFIG(Compiler, CodeWarrior)
-	using std::isnan;
-#endif
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTime

@@ -39,7 +39,7 @@ class ZWinService
 public:
 	static void sRunDispatcher();
 
-	ZWinService(const wstring& iServiceName, LPSERVICE_MAIN_FUNCTIONW iServiceMain, bool iAllowPause);
+	ZWinService(const std::wstring& iServiceName, LPSERVICE_MAIN_FUNCTIONW iServiceMain, bool iAllowPause);
 
 	virtual void Run(DWORD argc, LPWSTR* argv) = 0;
 
@@ -49,7 +49,7 @@ public:
 
 	virtual DWORD ServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVOID lpEventData);
 
-	const wstring& Name();
+	const std::wstring& Name();
 
 protected:
 	void Started();
@@ -61,7 +61,7 @@ protected:
 private:
 	static DWORD WINAPI sServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext);
 
-	wstring fServiceName;
+	std::wstring fServiceName;
 	SERVICE_STATUS fServiceStatus;
 	SERVICE_STATUS_HANDLE fServiceStatusHandle;
 	bool fAllowPause;
