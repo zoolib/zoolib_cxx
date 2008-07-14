@@ -114,7 +114,7 @@ void ZUSBWatcher::pDeviceAdded(io_iterator_t iIterator)
 	{
 	for (io_service_t iter; iter = ::IOIteratorNext(iIterator); /*no inc*/)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Info, "ZUSBWatcher"))
+		if (ZLOG(s, eInfo, "ZUSBWatcher"))
 			s.Writef("Device added, iterator: 0x%08x.", iter);
 
 		try
@@ -124,7 +124,7 @@ void ZUSBWatcher::pDeviceAdded(io_iterator_t iIterator)
 			}
 		catch (exception& ex)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Info, "ZUSBWatcher"))
+			if (ZLOG(s, eInfo, "ZUSBWatcher"))
 				s << "Couldn't instantiate ZUSBDevice, caught exception: " << ex.what();
 
 			fObserver->Added(ZRef<ZUSBDevice>());
@@ -154,7 +154,7 @@ ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_
 		fIOUSBDeviceInterface = sCreate_USBDeviceInterface(iUSBDevice);
 		if (!fIOUSBDeviceInterface)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZUSBDevice"))
+			if (ZLOG(s, eDebug, "ZUSBDevice"))
 				s.Writef("sCreate_USBDeviceInterface returned null");
 			throw runtime_error("Couldn't create fIOUSBDeviceInterface");
 			}
@@ -172,7 +172,7 @@ ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_
 
 		if (result)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Info, "ZUSBDevice"))
+			if (ZLOG(s, eInfo, "ZUSBDevice"))
 				s.Writef("ZUSBDevice, USBDeviceOpen failed");
 			throw runtime_error("ZUSBDevice, USBDeviceOpen failed");
 			}
@@ -183,7 +183,7 @@ ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_
 
 		if (!numConf)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZUSBDevice"))
+			if (ZLOG(s, eDebug, "ZUSBDevice"))
 				s.Writef("Got zero configurations");
 			throw runtime_error("Got zero configurations");
 			}
@@ -296,7 +296,7 @@ void ZUSBDevice::pDeviceNotification(
 	{
 	if (iMessageType == kIOMessageServiceIsTerminated)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Info, "ZUSBDevice"))
+		if (ZLOG(s, eInfo, "ZUSBDevice"))
 			s.Writef("Device removed, service: 0x%08x.", iService);
 
 		if (fObserver)
@@ -419,8 +419,7 @@ void ZUSBInterfaceInterface::StreamerR::Imp_Read(void* iDest, size_t iCount, siz
 			if (result == kIOUSBTransactionTimeout)
 				{
 				fII[0]->ClearPipeStallBothEnds(fII, fPipeRefR);
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2,
-					"ZUSBInterfaceInterface::StreamerR"))
+				if (ZLOG(s, eDebug + 2, "ZUSBInterfaceInterface::StreamerR"))
 					{
 					s << "Imp_Read, Timeout";
 					}
@@ -429,8 +428,7 @@ void ZUSBInterfaceInterface::StreamerR::Imp_Read(void* iDest, size_t iCount, siz
 
 			if (0 == result)
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2,
-					"ZUSBInterfaceInterface::StreamerR"))
+				if (ZLOG(s, eDebug + 2, "ZUSBInterfaceInterface::StreamerR"))
 					{
 					s.Writef("Imp_Read, pipe: %d, ", fPipeRefR);
 					ZUtil_Strim_Data::sDumpData(s, fBufferRead, localCount);
@@ -439,8 +437,7 @@ void ZUSBInterfaceInterface::StreamerR::Imp_Read(void* iDest, size_t iCount, siz
 				}
 			else
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug,
-					"ZUSBInterfaceInterface::StreamerR"))
+				if (ZLOG(s, eDebug, "ZUSBInterfaceInterface::StreamerR"))
 					{
 					s << "Imp_Read, Got result: ";
 
@@ -508,8 +505,7 @@ void ZUSBInterfaceInterface::StreamerW::Imp_Write(
 	{
 	if (size_t countToWrite = min(size_t(1024), iCount))
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2,
-			"ZUSBInterfaceInterface::StreamerW"))
+		if (ZLOG(s, eDebug + 2, "ZUSBInterfaceInterface::StreamerW"))
 			{
 			s.Writef("Imp_Write, pipe: %d, ", fPipeRefW);
 			ZUtil_Strim_Data::sDumpData(s, iSource, countToWrite);

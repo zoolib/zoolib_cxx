@@ -782,7 +782,7 @@ void ZTS_Watchable::pInvalidatePSpecs(const ZTuple& iOld, const ZTuple& iNew,
 					}
 				}
 			#if kDebug_CountInvalidations
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug + 2, "ZTS_Watchable"))
+			if (ZLOG(s, eDebug + 2, "ZTS_Watchable"))
 				{
 				s << "Examined "
 					<< ZString::sFromInt((*iter).second.size())
@@ -985,7 +985,7 @@ void ZTS_Watchable::pUpdateQueryResults(PQuery* iPQuery)
 		double elapsed = ZTime::sSystem() - start;
 		if (false && elapsed >= 2.0)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTS_Watchable"))
+			if (ZLOG(s, eDebug, "ZTS_Watchable"))
 				{
 				s.Writef("Slow query, %.3fms\n", elapsed * 1000);
 				sToStrim(s, iPQuery->fTBQuery.AsTuple(), 0, ZUtil_Strim_Tuple::Options(true));
@@ -995,7 +995,7 @@ void ZTS_Watchable::pUpdateQueryResults(PQuery* iPQuery)
 			{
 			// This is a temporary obscure debugging aid. will go soon.
 			sDumpQuery = false;
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTS_Watchable"))
+			if (ZLOG(s, eDebug, "ZTS_Watchable"))
 				{
 				s << iPQuery->fTBQuery.AsTuple();
 				}

@@ -60,7 +60,7 @@ static inline uint32 sReadCount(const ZStreamR& iStreamR)
 static void sDumpRequest(ZRef<ZTSWatcher> iWatcher, const ZTuple& iTuple)
 	{
 #if kDebug_ShowCommsTuples
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTSWatcherServer"))
+	if (ZLOG(s, eDebug, "ZTSWatcherServer"))
 		{
 		s.Writef(">> ZTSWatcherServer: %08X ", iWatcher.GetObject());
 		ZUtil_Strim_Tuple::sToStrim(s, iTuple);
@@ -72,7 +72,7 @@ static void sDumpRequest(ZRef<ZTSWatcher> iWatcher, const ZTuple& iTuple)
 static void sSendResponse(ZRef<ZTSWatcher> iWatcher, const ZStreamW& iStreamW, const ZTuple& iTuple)
 	{
 #if kDebug_ShowCommsTuples
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTSWatcherServer"))
+	if (ZLOG(s, eDebug, "ZTSWatcherServer"))
 		{
 		s.Writef("<< ZTSWatcherServer: %08X ", iWatcher.GetObject());
 		ZUtil_Strim_Tuple::sToStrim(s, iTuple);
@@ -294,7 +294,7 @@ static bool sSync1(
 
 	if (kDebug_ShowTimes)
 		{	
-		if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZTSWatcherServer"))
+		if (ZLOG(s, eInfo, "ZTSWatcherServer"))
 			{
 			bool isEmpty =
 				removedIDs.empty()
@@ -518,7 +518,7 @@ static bool sSync2(
 
 	if (kDebug_ShowTimes)
 		{	
-		if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZTSWatcherServer"))
+		if (ZLOG(s, eInfo, "ZTSWatcherServer"))
 			{
 			bool isEmpty =
 				removedIDs.empty()
@@ -649,7 +649,7 @@ static bool sSync3(
 
 	if (kDebug_ShowTimes)
 		{	
-		if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZTSWatcherServer"))
+		if (ZLOG(s, eInfo, "ZTSWatcherServer"))
 			{
 			bool isEmpty =
 				removedIDs.empty()
@@ -792,7 +792,7 @@ static bool sSync4(
 
 	if (kDebug_ShowTimes)
 		{	
-		if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZTSWatcherServer"))
+		if (ZLOG(s, eInfo, "ZTSWatcherServer"))
 			{
 			bool isEmpty =
 				removedIDs.empty()
@@ -897,7 +897,7 @@ void ZTSWatcherServer::Run(const ZStreamR& iStreamR, const ZStreamW& iStreamW)
 				}
 			else
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::eErr, "ZTSWatcherServer"))
+				if (ZLOG(s, eErr, "ZTSWatcherServer"))
 					s << "Unrecognized request: " << theWhat;
 				break;
 				}

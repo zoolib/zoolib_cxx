@@ -99,8 +99,9 @@ static const PNRep* sLookupAndTag(const string& iName)
 	if (!sNames)
 		return nil;
 
-	vector<const PNRep*>::iterator theIter =
-		lower_bound(sNames->begin(), sNames->end(), Key(iName.data(), iName.length()), Compare_PNRep_Key_t());
+	vector<const PNRep*>::iterator theIter = lower_bound(
+		sNames->begin(), sNames->end(), Key(iName.data(), iName.length()),
+		Compare_PNRep_Key_t());
 
 	if (theIter == sNames->end() || sDifferent(*theIter, iName.data(), iName.length()))
 		return nil;
@@ -172,8 +173,9 @@ int ZTName::sPreRegister(const char* const* iNames, size_t iCount)
 			// like a marker byte followed by 4 bytes of length, and things will break.
 			if (theLength < 255)
 				{
-				vector<const PNRep*>::iterator theIter =
-					lower_bound(sNames->begin(), sNames->end(), Key(theName, theLength), Compare_PNRep_Key_t());
+				vector<const PNRep*>::iterator theIter = lower_bound(
+					sNames->begin(), sNames->end(), Key(theName, theLength),
+					Compare_PNRep_Key_t());
 
 				if (theIter == sNames->end() || sDifferent(*theIter, theName, theLength))
 					{
@@ -268,7 +270,8 @@ int ZTName::Compare(const ZTName& iOther) const
 				if (const PNRep* otherPNRep = sGetPNRep(iOther.fData))
 					{
 					// Other is allocated, thus not empty.
-					return sCompare(thisPNRep->fBuffer, thisPNRep->fLength, otherPNRep->fBuffer, otherPNRep->fLength);
+					return sCompare(thisPNRep->fBuffer, thisPNRep->fLength,
+						otherPNRep->fBuffer, otherPNRep->fLength);
 					}
 				else
 					{
@@ -307,7 +310,8 @@ int ZTName::Compare(const ZTName& iOther) const
 				// return - iOther.fString->Compare(thisPNRep->fBuffer, thisPNRep->fLength);
 
 				// So we do the work explicitly:
-				return sCompare(thisPNRep->fBuffer, thisPNRep->fLength,  iOther.fString->fBuffer, iOther.fString->fSize);
+				return sCompare(thisPNRep->fBuffer, thisPNRep->fLength,
+					iOther.fString->fBuffer, iOther.fString->fSize);
 				}
 			else
 				{
@@ -373,7 +377,8 @@ bool ZTName::Equals(const std::string& iString) const
 			if (size_t otherLength = iString.size())
 				{
 				// Nor is iString -- match characters.
-				return 0 == sCompare(thePNRep->fBuffer, thePNRep->fLength, iString.data(), otherLength);
+				return 0 == sCompare(thePNRep->fBuffer, thePNRep->fLength,
+					iString.data(), otherLength);
 				}
 			else
 				{

@@ -66,7 +66,7 @@ void ZNetNameRegistered_DNSSD::pInit(ip_port iPort,
 
 	if (result)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Notice, "ZNetNameRegistered_DNSSD"))
+		if (ZLOG(s, eNotice, "ZNetNameRegistered_DNSSD"))
 			{
 			s.Writef("DNSServiceRegister, failed with result: %d", result);
 			throw runtime_error("Couldn't register name");
@@ -168,7 +168,7 @@ void ZNetNameRegistered_DNSSD::pDNSServiceRegisterReply(
 	{
 	ZMutexLocker locker(fMutex);
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Notice, "ZNetNameRegistered_DNSSD"))
+	if (ZLOG(s, eNotice, "ZNetNameRegistered_DNSSD"))
 		{
 		s.Writef("pDNSServiceRegisterReply, flags: %d, errorCode: %d", flags, errorCode);
 		s << ", name: " << name;

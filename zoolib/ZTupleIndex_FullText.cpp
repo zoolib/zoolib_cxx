@@ -255,7 +255,7 @@ void ZTupleIndex_FullText::Find(const set<uint64>& iSkipIDs,
 			break;
 		}
 
-	if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZTupleIndex_FullText"))
+	if (ZLOG(s, eInfo, "ZTupleIndex_FullText"))
 		{
 		s.Writef("%d results of %d in map, %d chunks in pattern",
 			results.size(), fMap.size(), theCPChunk_Pattern.size());

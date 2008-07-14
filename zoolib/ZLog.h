@@ -26,6 +26,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_operator_bool.h"
 
+#define ZLOGPF(s, p) const ZLog::S& s = ZLog::S(ZLog::p, __PRETTY_FUNCTION__)
+#define ZLOGF(s, p) const ZLog::S& s = ZLog::S(ZLog::p, __FUNCTION__)
+#define ZLOG(s, p, f) const ZLog::S& s = ZLog::S(ZLog::p, f)
+
 namespace ZLog {
 
 // =================================================================================================
@@ -45,6 +49,8 @@ enum
 
 // more succinct aliases
 	eErr = ePriority_Err,
+	eWarning = ePriority_Warning,
+	eNotice = ePriority_Notice,
 	eInfo = ePriority_Info,
 	eDebug = ePriority_Debug
 	};

@@ -108,7 +108,7 @@ Device_Client::Device_Client(ZRef<ZStreamerRWCon> theSRWCon,
 
 Device_Client::~Device_Client()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Device_Client"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device_Client"))
 		s << "~Device_Client";
 	}
 
@@ -202,11 +202,11 @@ void Device_Client::RunnerDetached(ZStreamReaderRunner* iRunner)
 
 bool Device_Client::Read(const ZStreamR& r)
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Device_Client"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device_Client"))
 		s << "Read, entered";
 	const bool req = r.ReadBool();
 	ZAssert(!req);
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Device_Client"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device_Client"))
 		s << "Read, got false";
 	return false;
 	}
@@ -215,19 +215,19 @@ bool Device_Client::Write(const ZStreamW& w)
 	{
 	if (!fOpen)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Device_Client"))
+		if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device_Client"))
 			s << "Write false, return false";
 		w.WriteBool(false);
 		return false;
 		}
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Device_Client"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device_Client"))
 		s << "Write, Return true";
 	return true;
 	}
 
 void Device_Client::Detached()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Device_Client"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device_Client"))
 		s << "Detached";
 	this->pFinished();
 	}

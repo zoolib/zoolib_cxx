@@ -435,7 +435,7 @@ ZStreamRWPos_Handle::~ZStreamRWPos_Handle()
 
 void ZStreamRWPos_Handle::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	size_t countToCopy = min(uint64(iCount), sDiffPosR(fSizeLogical, fPosition));
+	size_t countToCopy = ZStream::sClampedSize(iCount, fSizeLogical, fPosition);
 	fHandle.CopyTo(iDest, countToCopy, fPosition);
 	fPosition += countToCopy;
 	if (oCountRead)
@@ -444,7 +444,7 @@ void ZStreamRWPos_Handle::Imp_Read(void* iDest, size_t iCount, size_t* oCountRea
 
 void ZStreamRWPos_Handle::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-	uint64 realSkip = min(iCount, sDiffPosR(fSizeLogical, fPosition));
+	size_t realSkip = ZStream::sClampedSize(iCount, fSizeLogical, fPosition);
 	fPosition += realSkip;
 	if (oCountSkipped)
 		*oCountSkipped = realSkip;
@@ -460,7 +460,7 @@ void ZStreamRWPos_Handle::Imp_Write(const void* iSource, size_t iCount, size_t* 
 			fHandle.SetSize(realSize);
 		}
 
-	uint64 countToCopy = min(uint64(iCount), sDiffPosW(fHandle.GetSize(), fPosition));
+	size_t countToCopy = ZStream::sClampedSize(iCount, fHandle.GetSize(), fPosition);
 	
 	fHandle.CopyFrom(iSource, countToCopy, fPosition);
 

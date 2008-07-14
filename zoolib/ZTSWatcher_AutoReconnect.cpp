@@ -257,7 +257,7 @@ void ZTSWatcher_AutoReconnect::pUpdateRegistrations(
 		{
 		if (iRemovedIDsCount)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "TSWatcher_AutoConnect"))
+			if (ZLOG(s, eDebug, "TSWatcher_AutoConnect"))
 				{
 				s << "pUpdateRegistrations, removed IDs: ";
 				for (size_t x = 0; x < iRemovedIDsCount; ++x)
@@ -267,7 +267,7 @@ void ZTSWatcher_AutoReconnect::pUpdateRegistrations(
 
 		if (iAddedIDsCount)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "TSWatcher_AutoConnect"))
+			if (ZLOG(s, eDebug, "TSWatcher_AutoConnect"))
 				{
 				s << "pUpdateRegistrations, added IDs: ";
 				for (size_t x = 0; x < iAddedIDsCount; ++x)
@@ -277,7 +277,7 @@ void ZTSWatcher_AutoReconnect::pUpdateRegistrations(
 
 		if (iRemovedQueriesCount)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "TSWatcher_AutoConnect"))
+			if (ZLOG(s, eDebug, "TSWatcher_AutoConnect"))
 				{
 				s << "pUpdateRegistrations, removed queries: ";
 				for (size_t x = 0; x < iRemovedQueriesCount; ++x)
@@ -287,7 +287,7 @@ void ZTSWatcher_AutoReconnect::pUpdateRegistrations(
 
 		if (iAddedQueriesCount)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "TSWatcher_AutoConnect"))
+			if (ZLOG(s, eDebug, "TSWatcher_AutoConnect"))
 				{
 				s << "pUpdateRegistrations, added queries: ";
 				for (size_t x = 0; x < iAddedQueriesCount; ++x)
@@ -356,7 +356,7 @@ bool ZTSWatcher_AutoReconnect::pSync(
 			{
 			if (kDebug_ZTSWatcher_AutoReconnect_LogRegistrations)
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "TSWatcher_AutoConnect"))
+				if (ZLOG(s, eDebug, "TSWatcher_AutoConnect"))
 					{
 					s << "pSync, server added IDs: ";
 					for (vector<uint64>::iterator i = oAddedIDs.begin(); i != oAddedIDs.end(); ++i)

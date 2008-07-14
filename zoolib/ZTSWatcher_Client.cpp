@@ -254,7 +254,7 @@ void ZTSWatcher_Client::pSync1(
 	request.SetString("What", "DoIt");
 	if (kDebug_ShowCommsTuples)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZTSWatcher_Client"))
+		if (ZLOG(s, eInfo, "ZTSWatcher_Client"))
 			s << "<< " << request;
 		}
 
@@ -288,7 +288,7 @@ void ZTSWatcher_Client::pSync1(
 
 	if (kDebug_ShowCommsTuples)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZTSWatcher_Client"))
+		if (ZLOG(s, eInfo, "ZTSWatcher_Client"))
 			s << ">> " << response;
 		}
 
@@ -346,7 +346,7 @@ void ZTSWatcher_Client::pSync1(
 
 	if (kDebug_ShowStats)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Info, "ZTSWatcher_Client"))
+		if (ZLOG(s, eInfo, "ZTSWatcher_Client"))
 			{
 			bool isEmpty =
 				!iRemovedIDsCount
@@ -505,7 +505,7 @@ void ZTSWatcher_Client::pSync2(
 
 	if (kDebug_ShowStats)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Info, "ZTSWatcher_Client"))
+		if (ZLOG(s, eInfo, "ZTSWatcher_Client"))
 			{
 			bool isEmpty =
 				!iRemovedIDsCount
@@ -664,7 +664,7 @@ void ZTSWatcher_Client::pSync3(
 
 	if (kDebug_ShowStats)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Info, "ZTSWatcher_Client"))
+		if (ZLOG(s, eInfo, "ZTSWatcher_Client"))
 			{
 			bool isEmpty =
 				!iRemovedIDsCount
@@ -833,7 +833,7 @@ void ZTSWatcher_Client::pSync4(
 
 	if (kDebug_ShowStats)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Info, "ZTSWatcher_Client"))
+		if (ZLOG(s, eInfo, "ZTSWatcher_Client"))
 			{
 			bool isEmpty =
 				!iRemovedIDsCount

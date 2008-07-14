@@ -144,7 +144,7 @@ private:
 	PCrouton* pGetPCrouton(uint64 iID);
 
 	void pSetCroutonFromTCrouton(ZTCrouton* iTCrouton, const ZTuple& iTuple);
-	void pSet(ZMutexLocker& iLocker_Structure, PCrouton* iPCrouton, const ZTuple& iTuple);	
+	void pSet(ZMutexLocker& iLocker_Structure, PCrouton* iPCrouton, const ZTuple& iTuple);
 
 	void pTriggerUpdate();
 	void pTriggerSync();

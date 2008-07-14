@@ -172,8 +172,7 @@ ZBlackBerryServer::Handler_DeviceFinished::Handler_DeviceFinished(ZBlackBerrySer
 
 ZBlackBerryServer::Handler_DeviceFinished::~Handler_DeviceFinished()
 	{
-	if (const ZLog::S& s =
-		ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
 		{
 		s << "~Handler_DeviceFinished";
 		}
@@ -181,8 +180,7 @@ ZBlackBerryServer::Handler_DeviceFinished::~Handler_DeviceFinished()
 
 bool ZBlackBerryServer::Handler_DeviceFinished::Read(const ZStreamR& r)
 	{
-	if (const ZLog::S& s =
-		ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
 		{
 		s << "Read, entered";
 		}
@@ -190,8 +188,7 @@ bool ZBlackBerryServer::Handler_DeviceFinished::Read(const ZStreamR& r)
 	const bool req = r.ReadBool();
 	ZAssert(!req);
 
-	if (const ZLog::S& s =
-		ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
 		{
 		s << "Read, got false";
 		}
@@ -206,8 +203,7 @@ bool ZBlackBerryServer::Handler_DeviceFinished::Write(const ZStreamW& w)
 	{
 	if (!fClientOpen || !fRunning)
 		{
-		if (const ZLog::S& s =
-			ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
+		if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
 			{
 			s << "Write false, return false";
 			}
@@ -216,8 +212,7 @@ bool ZBlackBerryServer::Handler_DeviceFinished::Write(const ZStreamW& w)
 		return false;
 		}
 
-	if (const ZLog::S& s =
-		ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
 		{
 		s << "Write, Return true";
 		}
@@ -227,8 +222,7 @@ bool ZBlackBerryServer::Handler_DeviceFinished::Write(const ZStreamW& w)
 
 void ZBlackBerryServer::Handler_DeviceFinished::Detached()
 	{
-	if (const ZLog::S& s =
-		ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
 		{
 		s << "Detached";
 		}
@@ -237,8 +231,7 @@ void ZBlackBerryServer::Handler_DeviceFinished::Detached()
 
 void ZBlackBerryServer::Handler_DeviceFinished::TripIt()
 	{
-	if (const ZLog::S& s =
-		ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
 		{
 		s << "TripIt";
 		}

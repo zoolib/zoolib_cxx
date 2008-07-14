@@ -34,7 +34,11 @@ NSString* ZUtil_NSObject::sCreateNSString_UTF8(const string8& iString8)
 	{ return [[NSString alloc] initWithUTF8String:iString8.c_str()]; }
 
 NSString* ZUtil_NSObject::sCreateNSString_UTF16(const string16& iString16)
-	{ return [[NSString alloc] initWithCharacters:(const unichar*)iString16.c_str() length:iString16.length()]; }
+	{
+	return [[NSString alloc]
+		initWithCharacters:(const unichar*)iString16.c_str()
+		length:iString16.length()];
+	}
 
 string8 ZUtil_NSObject::sAsUTF8(NSString* iNSString)
 	{ return [iNSString UTF8String]; }

@@ -366,7 +366,7 @@ void ZTBRep_TS::Transaction::Search(
 	const ZTBQuery& iQuery, Callback_Search_t iCallback, void* iRefcon)
 	{
 	#if ZCONFIG_TBRep_TS_Logging
-		if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZTBRep_TS::Transaction::Search"))
+		if (ZLOG(s, eInfo, "ZTBRep_TS::Transaction::Search"))
 			s << "\n" << iQuery.AsTuple() << "\n";
 	#endif
 
@@ -509,7 +509,7 @@ void ZTBRep_TS::Trans_Search(Transaction* iTransaction, const ZTBSpec& iSpec, se
 
 	#if ZCONFIG_TBRep_TS_Logging
 		ZTime startTime = ZTime::sSystem();
-		const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZTBRep_TS::Trans_Search");
+		ZLog::S s(ZLog::eInfo, "ZTBRep_TS::Trans_Search");
 		s << iSpec.AsTuple();
 	#endif
 

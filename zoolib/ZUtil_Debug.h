@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Debug__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZLog.h"
 #include "zoolib/ZStackCrawl.h"
 #include "zoolib/ZStrimmer.h"
-#include "zoolib/ZLog.h"
 
 // =================================================================================================
 #pragma mark -
@@ -43,7 +43,8 @@ public:
 
 // From ZLog::LogMeister
 	virtual bool Enabled(ZLog::EPriority iPriority, const std::string& iName);
-	virtual void LogIt(ZLog::EPriority iPriority, const std::string& iName, const std::string& iMessage);
+	virtual void LogIt(
+		ZLog::EPriority iPriority, const std::string& iName, const std::string& iMessage);
 
 // Our protocol
 	void SetStrimmer(ZRef<ZStrimmerW> iStrimmerW);

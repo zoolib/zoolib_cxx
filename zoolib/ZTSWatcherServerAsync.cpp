@@ -74,7 +74,7 @@ static void sSort(vector<uint64>& ioWrittenTupleIDs, vector<ZTuple>& ioWrittenTu
 
 bool ZTSWatcherServerAsync::Read(const ZStreamR& iStreamR)
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTSWatcherServerAsync"))
+	if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))
 		s << "Read, start";
 
 	EReq theReq = (EReq)iStreamR.ReadUInt8();
@@ -91,7 +91,7 @@ bool ZTSWatcherServerAsync::Read(const ZStreamR& iStreamR)
 			}
 		case eReq_IDs:
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTSWatcherServerAsync"))
+			if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))
 				s << "Read, eReq_IDs";
 			const size_t theIDsNeeded = iStreamR.ReadCount();
 			ZMutexLocker locker(fMutex);
@@ -102,7 +102,7 @@ bool ZTSWatcherServerAsync::Read(const ZStreamR& iStreamR)
 			}
 		case eReq_Sync:
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTSWatcherServerAsync"))
+			if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))
 				s << "Read, eReq_Sync";
 			vector<uint64> removedIDs;
 			if (uint32 theCount = iStreamR.ReadCount())
@@ -212,7 +212,7 @@ bool ZTSWatcherServerAsync::Write(const ZStreamW& iStreamW)
 			}
 		else if (fIDsNeeded)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTSWatcherServerAsync"))
+			if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))
 				s << "Write, sending IDs";
 			const size_t countNeeded = fIDsNeeded;
 			fIDsNeeded = 0;
@@ -235,12 +235,12 @@ bool ZTSWatcherServerAsync::Write(const ZStreamW& iStreamW)
 
 			wroteAnything = true;
 
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTSWatcherServerAsync"))
+			if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))
 				s << "Write, sent IDs";
 			}
 		else if (fSyncNeeded)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTSWatcherServerAsync"))
+			if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))
 				s << "Write, sync";
 			fSyncNeeded = false;
 
@@ -317,7 +317,7 @@ bool ZTSWatcherServerAsync::Write(const ZStreamW& iStreamW)
 			}
 		else if (fCallbackNeeded)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTSWatcherServerAsync"))
+			if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))
 				s << "Write, callback";
 			fCallbackNeeded = false;
 			locker.Release();

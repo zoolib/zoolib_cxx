@@ -24,9 +24,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThreadSimple.h"
 #include "zoolib/ZTupleIndex.h"
 #include "zoolib/ZUtil_STL.h" // For sSortedEraseMustContain etc
-using namespace ZUtil_STL;
-
 #include "zoolib/ZUtil_Strim_Tuple.h"
+
+using namespace ZUtil_STL;
 
 using std::deque;
 using std::map;
@@ -285,7 +285,7 @@ bool ZTBRep_Client::Reader(const ZStreamR& iStreamR)
 		}
 	catch (...)
 		{}
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTBRep_Client"))
+	if (ZLOG(s, eDebug, "ZTBRep_Client"))
 		s << "Returning false from reader";
 
 	ZMutexLocker locker(fMutex_Structure);
@@ -302,7 +302,7 @@ bool ZTBRep_Client::Writer(const ZStreamW& iStreamW)
 		this->pWriter(iStreamW);
 		if (!fLive)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTBRep_Client"))
+			if (ZLOG(s, eDebug, "ZTBRep_Client"))
 				s << "Returning false from writer, fLive is false";
 			}
 		return fLive;
@@ -310,7 +310,7 @@ bool ZTBRep_Client::Writer(const ZStreamW& iStreamW)
 	catch (...)
 		{}
 
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTBRep_Client"))
+	if (ZLOG(s, eDebug, "ZTBRep_Client"))
 		s << "Returning false from writer, caught exception";
 	return false;
 	}
@@ -844,7 +844,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 
 	if (kDebug_ShowCommsTuples)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTBRep_Client"))
+		if (ZLOG(s, eDebug, "ZTBRep_Client"))
 			s << "<< " << theResp;
 		}
 
@@ -1000,7 +1000,8 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	else
 		{
-		printf("Unrecognized response\n");
+		if (ZLOG(s, eInfo, "ZTBRep_Client"))
+			s << "Unrecognized response";
 		}
 	}
 
@@ -1010,7 +1011,7 @@ static void sSend(ZMutexLocker& iLocker, const ZStreamW& iStream, const ZTuple& 
 
 	if (kDebug_ShowCommsTuples)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTBRep_Client"))
+		if (ZLOG(s, eDebug, "ZTBRep_Client"))
 			s << ">> " << iTuple;
 		}
 

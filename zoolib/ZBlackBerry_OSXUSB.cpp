@@ -98,7 +98,7 @@ static bool sUseHighPower(ZRef<ZUSBDevice> iUSBDevice)
 
 static void sChangeMode(ZRef<ZUSBDevice> iUSBDevice, bool iAllowMassStorage)
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry_OSXUSB"))
+	if (ZLOG(s, eDebug, "ZBlackBerry_OSXUSB"))
 		s << "sChangeMode, Enter";
 
 	if (IOUSBDeviceInterface182** theUDI = iUSBDevice->GetIOUSBDeviceInterface())
@@ -111,14 +111,14 @@ static void sChangeMode(ZRef<ZUSBDevice> iUSBDevice, bool iAllowMassStorage)
 
 		if (!sSendControlMessage(theUDI, 0xc0, 0xa9, theValue, 1, buffer, 2, 100))
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Info, "ZBlackBerry_OSXUSB"))
+			if (ZLOG(s, eInfo, "ZBlackBerry_OSXUSB"))
 				s << "sChangeMode, Failed to send message";
 			}
 		else
 			{
 			if (!sSetConfiguration(theUDI))
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Info, "ZBlackBerry_OSXUSB"))
+				if (ZLOG(s, eInfo, "ZBlackBerry_OSXUSB"))
 					s << "sChangeMode, Failed to set configuration";
 				}
 			else
@@ -128,7 +128,7 @@ static void sChangeMode(ZRef<ZUSBDevice> iUSBDevice, bool iAllowMassStorage)
 			}
 		}
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry_OSXUSB"))
+	if (ZLOG(s, eDebug, "ZBlackBerry_OSXUSB"))
 		s << "sChangeMode, Exit";
 	}
 
@@ -145,7 +145,7 @@ Manager_OSXUSB::Manager_OSXUSB(bool iAllowMassStorage)
 	kern_return_t kr = ::IOMasterPort(MACH_PORT_NULL, &fMasterPort);
 	if (kr || !fMasterPort)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Err, "ZBlackBerry::Manager_OSXUSB"))
+		if (ZLOG(s, eErr, "ZBlackBerry::Manager_OSXUSB"))
 			s.Writef("Constructor, couldn't create a master IOKit Port (%08x)\n", kr);
 		throw runtime_error("Manager_OSXUSB");
 		}
@@ -159,7 +159,7 @@ Manager_OSXUSB::~Manager_OSXUSB()
 
 void Manager_OSXUSB::Start()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+	if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 		s << "Start";
 
 	CFRunLoopRef theRunLoopRef = ::CFRunLoopGetCurrent();
@@ -185,7 +185,7 @@ void Manager_OSXUSB::Start()
 
 void Manager_OSXUSB::Stop()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+	if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 		s << "Stop";
 
 	fUSBWatcher_Traditional.Clear();
@@ -244,7 +244,7 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 	if (!iUSBDevice)
 		{
 		// Watcher fired, but could not create a USBDevice.
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Notice, "ZBlackBerry::Manager_OSXUSB"))
+		if (ZLOG(s, eNotice, "ZBlackBerry::Manager_OSXUSB"))
 			s << "Added, invoked with null device, PocketMac drivers installed?";
 //##		if (fPocketMacDriverInstalled)
 //##			fObserver->AddFailed();
@@ -254,18 +254,18 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 	uint16 theIDVendor = iUSBDevice->GetIDVendor();
 	uint16 theIDProduct = iUSBDevice->GetIDProduct();
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+	if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 		s.Writef("Added, IDVendor: 0x%X, IDProduct: 0x%X", theIDVendor, theIDProduct);
 
 	if (theIDVendor != 0xFCA)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+		if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 			s << "theIDVendor != 0xFCA";
 		return;
 		}
 
 	const UInt8 usedPower = sGetUsedPower(iUSBDevice);
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+	if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 		s.Writef("Used power: %d", usedPower);
 
 	if (usedPower < 250)
@@ -274,20 +274,20 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 		// so this device will disappear and be rediscovered.
 		if (!sUseHighPower(iUSBDevice))
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+			if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 				s << "UseHighPower returned false";
 			}
 		else
 			{
 			const UInt8 usedPower = sGetUsedPower(iUSBDevice);
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+			if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 				s.Writef("After calling UseHighPower, used power: %d", usedPower);
 			}
 		}
 
 	if (theIDProduct == 6)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+		if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 			s << "Got an 8xxx series, changing modes";
 
 		sChangeMode(iUSBDevice, fAllowMassStorage);
@@ -297,19 +297,19 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 
 	if (theIDProduct == 4)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+		if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 			s << "Got an 8xxx series, dual mode";
 		}
 
 	if (theIDProduct == 0x8004)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+		if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 			s << "Got an 8xxx series, dual mode, high-speed USB";
 		}
 
 	if (theIDProduct == 1)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+		if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 			s << "Got an older BlackBerry";
 		}
 
@@ -334,7 +334,7 @@ void Manager_OSXUSB::Detached(ZRef<ZUSBDevice> iUSBDevice)
 	// Trip if we recurse somehow.
 	ZAssert(!fMutex.IsLocked());
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Manager_OSXUSB"))
+	if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 		s << "Detached";
 
 	ZMutexLocker locker(fMutex);

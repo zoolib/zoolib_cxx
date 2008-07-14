@@ -415,7 +415,7 @@ static ZTrail sTrailFromTo(const ZNode& iFrom, const ZNode& iTo)
 		if (ZTrail toTrail = iTo.TrailFromRoot())
 			{
 			ZTrail result = ZTrail::sTrailFromTo(fromTrail.GetComps(), toTrail.GetComps());
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "sTrailFromTo"))
+			if (ZLOG(s, eDebug, "sTrailFromTo"))
 				{
 				s << "From: " << fromTrail.AsString()
 					<< "\nTo: " << toTrail.AsString()
@@ -432,7 +432,7 @@ static string sMakeHREF(const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& 
 	ZTrail fromTo = sTrailFromTo(iRoot, iNode);
 	ZTrail combined = iPrefix + fromTo;
 	string result = ZHTTP::sEncodeTrail(combined);
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "sMakeHREF"))
+	if (ZLOG(s, eDebug, "sMakeHREF"))
 		{
 		s << "iPrefix: " << iPrefix.AsString()
 			<< "\nfromTo: " << fromTo.AsString()
@@ -538,7 +538,7 @@ bool ZWebDAV::sHandle_GET(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, c
 
 	if (iHeader.Has("range"))
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZWebDAV"))
+		if (ZLOG(s, eInfo, "ZWebDAV"))
 			s << "GET with range:\n" << iHeader;
 		}
 
@@ -743,7 +743,7 @@ bool ZWebDAV::sHandle_MOVE(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, 
 		ZTrail theTrail = sStripPrefix(iPrefix, ZHTTP::sDecodeTrail(thePath));
 		ZNode theDestNode = iRoot.Trail(theTrail);
 
-		if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZWebDAV::sHandle_MOVE"))
+		if (ZLOG(s, eInfo, "ZWebDAV::sHandle_MOVE"))
 			{
 			s << "thePath: " << thePath << "\n";
 			s << "theTrail: " << theTrail.AsString() << "\n";
@@ -760,12 +760,12 @@ bool ZWebDAV::sHandle_MOVE(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, 
 			{
 			if (ZRef<ZStreamerR> sourceStreamer = theNode.OpenR(false))
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZWebDAV::sHandle_MOVE"))
+				if (ZLOG(s, eInfo, "ZWebDAV::sHandle_MOVE"))
 					s << "Got a source streamer, ";
 				const ZStreamR& source = sourceStreamer->GetStreamR();
 				if (ZRef<ZStreamerWPos> destStreamer = theDestNode.CreateWPos(true, false))
 					{
-					if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZWebDAV::sHandle_MOVE"))
+					if (ZLOG(s, eInfo, "ZWebDAV::sHandle_MOVE"))
 						s << "and a dest streamer";
 					const ZStreamWPos& dest = destStreamer->GetStreamWPos();
 					dest.Truncate();
@@ -897,7 +897,7 @@ bool ZWebDAV::sHandle_PROPFIND(const ZTrail& iPrefix, ZNode iRoot, const ZStream
 			sHandle_PROPFIND_Some(iPrefix, iRoot, theNode, depth, thePropNames, results);
 			}
 
-		if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZWebDAV"))
+		if (ZLOG(s, eDebug, "ZWebDAV"))
 			{
 			s << "PropFind Request:" << t << "\n";
 			s << "PropFind Results:" << results << "\n";
@@ -935,7 +935,7 @@ bool ZWebDAV::sHandle_PROPPATCH(const ZTrail& iPrefix, ZNode iRoot, const ZStrea
 	ZNode theNode = iRoot.Trail(iTrail);
 
 	ZTuple t = sReadTuple(theStrimR);
-	if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZWebDAV"))
+	if (ZLOG(s, eInfo, "ZWebDAV"))
 		s << "PROPPATCH Request:" << t << "\n";
 
 //	if (!theNode.Exists())

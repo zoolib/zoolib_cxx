@@ -188,7 +188,7 @@ ZTSoup::ZTSoup(ZRef<ZTSWatcher> iTSWatcher)
 
 ZTSoup::~ZTSoup()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug + 1, "ZTSoup"))
+	if (ZLOG(s, eDebug + 1, "ZTSoup"))
 		s << "destroying";
 	}
 
@@ -248,7 +248,7 @@ uint64 ZTSoup::AllocateID()
 	if (!this->AllocateIDs(1, theID, countIssued) || !countIssued)
 		return 0;
 
-	if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZTSoup"))
+	if (ZLOG(s, eInfo, "ZTSoup"))
 		s.Writef("AllocateID, elapsed: %gms", 1000*(ZTime::sSystem() - start));
 
 	return theID;
@@ -309,7 +309,7 @@ void ZTSoup::Register(ZRef<ZTSieve> iTSieve, const ZTBQuery& iTBQuery, bool iPre
 		this->pTriggerUpdate();
 		}
 
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug + 1, "ZTSoup"))
+	if (ZLOG(s, eDebug + 1, "ZTSoup"))
 		{
 		s.Writef("Registering against sieve, ID: %X", thePSieve);
 		if (!thePSieve->fWatcherKnown)
@@ -334,7 +334,7 @@ void ZTSoup::Register(ZRef<ZTCrouton> iTCrouton, uint64 iID)
 
 	PCrouton* thePCrouton = this->pGetPCrouton(iID);
 
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug + 1, "ZTSoup"))
+	if (ZLOG(s, eDebug + 1, "ZTSoup"))
 		{
 		s.Writef("Registering TCrouton, ID: %llX", iID);
 		if (!thePCrouton->fWatcherKnown)
@@ -372,7 +372,7 @@ bool ZTSoup::Sync()
 		return false;
 	locker_TSWatcher.Release();
 
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug + 1, "ZTSoup"))
+	if (ZLOG(s, eDebug + 1, "ZTSoup"))
 		s << "Sync start";
 
 	fCalled_SyncNeeded = false;
@@ -430,7 +430,7 @@ bool ZTSoup::Sync()
 				{
 				// It's not in use, and not known to the watcher, so it should have
 				// been pulled from the sync list by update and deleted.
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Notice, "ZTSoup"))
+				if (ZLOG(s, eNotice, "ZTSoup"))
 					{
 					s << "Got a PCrouton on the sync list that maybe shouldn't be there: "
 						<< " On update list? "
@@ -477,7 +477,7 @@ bool ZTSoup::Sync()
 		else
 			{
 			// Shouldn't still be on the sync list if it's not in use and not known to the watcher
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Notice, "ZTSoup"))
+			if (ZLOG(s, eNotice, "ZTSoup"))
 				{
 				s << "Got a PSieve on the sync list that maybe shouldn't be there: "
 					<< " On update list? "
@@ -488,7 +488,7 @@ bool ZTSoup::Sync()
 			}
 		}
 
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug + 1, "ZTSoup"))
+	if (ZLOG(s, eDebug + 1, "ZTSoup"))
 		s << "Sync releasing lock";
 	locker_Structure.Release();
 
@@ -527,7 +527,7 @@ bool ZTSoup::Sync()
 
 	locker_Structure.Acquire();
 
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug + 1, "ZTSoup"))
+	if (ZLOG(s, eDebug + 1, "ZTSoup"))
 		s << "Sync acquired lock";
 
 	for (vector<uint64>::iterator iterWatcherAddedIDs = watcherAddedIDs.begin(),
@@ -587,7 +587,7 @@ bool ZTSoup::Sync()
 		this->pTriggerUpdate();
 		}
 
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug + 1, "ZTSoup"))
+	if (ZLOG(s, eDebug + 1, "ZTSoup"))
 		s << "Sync exit";
 
 	return true;
@@ -607,7 +607,7 @@ void ZTSoup::Update()
 		return;
 		}
 
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug + 1, "ZTSoup"))
+	if (ZLOG(s, eDebug + 1, "ZTSoup"))
 		{
 		s << "Update start";
 		}
@@ -654,7 +654,7 @@ void ZTSoup::Update()
 					// to the watcher so we can toss it.
 					fPCroutons_Sync.RemoveIfContains(thePCrouton);
 					fPCroutons_Changed.RemoveIfContains(thePCrouton);
-					if (const ZLog::S& s = ZLog::S(ZLog::eDebug + 1, "ZTSoup"))
+					if (ZLOG(s, eDebug + 1, "ZTSoup"))
 						s.Writef("Deleting PCrouton, ID: %llX", thePCrouton->fID);
 
 					ZUtil_STL::sEraseMustContain(kDebug, fID_To_PCrouton, thePCrouton->fID);
@@ -737,7 +737,8 @@ void ZTSoup::Update()
 		// Need to separate stuff that's just loaded from stuff that's changed.
 		if (thePSieve->fHasResults)
 			{
-			for (ZooLib::DListIterator<ZTSieve, DLink_ZTSieve_Using> iter = thePSieve->fTSieves_Using;
+			for (ZooLib::DListIterator<ZTSieve, DLink_ZTSieve_Using>
+				iter = thePSieve->fTSieves_Using;
 				iter; iter.Advance())
 				{
 				ZTSieve* theTSieve = iter.Current();
@@ -748,7 +749,8 @@ void ZTSoup::Update()
 		else
 			{
 			thePSieve->fHasResults = true;
-			for (ZooLib::DListIterator<ZTSieve, DLink_ZTSieve_Using> iter = thePSieve->fTSieves_Using;
+			for (ZooLib::DListIterator<ZTSieve, DLink_ZTSieve_Using>
+				iter = thePSieve->fTSieves_Using;
 				iter; iter.Advance())
 				{
 				ZTSieve* theTSieve = iter.Current();
@@ -760,7 +762,7 @@ void ZTSoup::Update()
 
 	if (fPCroutons_Pending)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::eDebug + 1, "ZTSoup"))
+		if (ZLOG(s, eDebug + 1, "ZTSoup"))
 			s.Writef("Moving %d croutons from pending to update", fPCroutons_Pending.Size());
 
 		for (ZooLib::DListIteratorEraseAll<PCrouton, DLink_PCrouton_Pending>
@@ -776,14 +778,14 @@ void ZTSoup::Update()
 	if (!fPCroutons_Sync.Empty() || !fPSieves_Sync.Empty())
 		this->pTriggerSync();
 
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug + 1, "ZTSoup"))
+	if (ZLOG(s, eDebug + 1, "ZTSoup"))
 		s << "Update releasing lock";
 
 	locker_Structure.Release();
 
 	this->Updated(sievesLoaded, sievesChanged, croutonsLoaded, croutonsChanged);
 
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug + 1, "ZTSoup"))
+	if (ZLOG(s, eDebug + 1, "ZTSoup"))
 		s << "Update exit";
 	}
 
@@ -798,7 +800,8 @@ void ZTSoup::Purge()
 		return;
 		}
 
-	for (map<ZTBQuery, PSieve>::iterator i = fTBQuery_To_PSieve.begin(); i != fTBQuery_To_PSieve.end(); ++i)
+	for (map<ZTBQuery, PSieve>::iterator i = fTBQuery_To_PSieve.begin();
+		i != fTBQuery_To_PSieve.end(); ++i)
 		{
 		PSieve* thePSieve = &i->second;
 
@@ -810,7 +813,8 @@ void ZTSoup::Purge()
 		}
 	fTBQuery_To_PSieve.clear();
 
-	for (map<uint64, PCrouton>::iterator i = fID_To_PCrouton.begin(); i != fID_To_PCrouton.end(); ++i)
+	for (map<uint64, PCrouton>::iterator i = fID_To_PCrouton.begin();
+		i != fID_To_PCrouton.end(); ++i)
 		{
 		PCrouton* thePCrouton = &i->second;
 
@@ -932,7 +936,7 @@ void ZTSoup::pDisposingTCrouton(ZTCrouton* iTCrouton)
 
 	PCrouton* thePCrouton = iTCrouton->fPCrouton;
 
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug + 1, "ZTSoup"))
+	if (ZLOG(s, eDebug + 1, "ZTSoup"))
 		{
 		s.Writef("Disposing TCrouton, ID: %llX", thePCrouton->fID);
 		}
@@ -1260,9 +1264,10 @@ void ZTBowl::Changed(ZTSoup::EChanged iChanged)
 			if (ZUtil_STL::sContains(removedIDs, (*i)->GetID()))
 				{
 				ZRef<ZTCrouton> theTCrouton = *i;
-				if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTBowl"))
+				if (ZLOG(s, eDebug, "ZTBowl"))
 					{
-					s << "Changed, removing TCrouton, ID: " << ZString::sFormat("%llX", theTCrouton->GetID())
+					s << "Changed, removing TCrouton, ID: "
+						<< ZString::sFormat("%llX", theTCrouton->GetID())
 						<< ", Address: " << ZString::sFormat("%X", theTCrouton.GetObject())
 						<< ", Refcount: " << ZString::sFormat("%d", theTCrouton->GetRefCount());
 					}
@@ -1285,7 +1290,7 @@ void ZTBowl::Changed(ZTSoup::EChanged iChanged)
 		newCrouton->fTBowl = this;
 		fTCroutons.push_back(newCrouton);
 
-		if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTBowl"))
+		if (ZLOG(s, eDebug, "ZTBowl"))
 			{
 			s << "Changed, added TCrouton, ID: " << ZString::sFormat("%llX", *i)
 				<< ", Address: " << ZString::sFormat("%X", newCrouton.GetObject());

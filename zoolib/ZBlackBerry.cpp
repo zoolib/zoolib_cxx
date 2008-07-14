@@ -26,36 +26,32 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::set;
 
 /**
-These are some brief notes to get you started. If anything is unclear, drop me
-a line at ag@em.net.
+These are some brief notes to get you started. If anything is unclear, drop me a line at ag@em.net.
 
 The BlackBerry code is all in the namespace ZBlackBerry.
 
-Most entities in this API suite are ultimately derived from
-ZRefCountedWithFinalization, and thus we use refcounted pointers of the
-form ZRef<XXX> rather than using unadorned XXX*.
+Most entities in this API suite are ultimately derived from ZRefCountedWithFinalization, and thus
+we use refcounted pointers of the form ZRef<XXX> rather than using unadorned XXX*.
 
 There are three entities with which you'll be working: Manager, Device and Channel.
 
-An instance of Manager provides access to a roster of BlackBerrys. In the common case
-that will be one BlackBerry connected by USB. Registering with the Manager as an Observer
-will cause your ManagerChanged method to be invoked whenever the roster has or may
-have changed.
+An instance of Manager provides access to a roster of BlackBerrys. In the common case that will
+be one BlackBerry connected by USB. Registering with the Manager as an Observer will cause your
+ManagerChanged method to be invoked whenever the roster has or may have changed.
 
-Device represents a single connected BlackBerry. Register with the Device as
-an Observer to be told when it has been disconnected. Device's other job is to open
-channels to software running on the BlackBerry.
+Device represents a single connected BlackBerry. Register with the Device as an Observer to
+be told when it has been disconnected. Device's other job is to open channels to software
+running on the BlackBerry.
 
-Channel represents the connection to a channel on a BlackBerry. As happened with
-ZNetEndpoint, we may need additional entry points and controllable attributes, so
-Channel is a distinct class, but currently it adds nothing to its parent class
-ZStreamerRWCon. For detailed information on ZStreamerRWCon see ZStreamer.cpp.
+Channel represents the connection to a channel on a BlackBerry. As happened with ZNetEndpoint,
+we may need additional entry points and controllable attributes, so Channel is a distinct class,
+but currently it adds nothing to its parent class ZStreamerRWCon. For detailed information on
+ZStreamerRWCon see ZStreamer.cpp.
 
 You can see an example of real code in ZBlackBerryServer -- it's complicated by the
 details of safely handling multiple connections simultaneously. The sample application
-zoolib/samples/blackberry/BBDaemon provides access to a ZBlackBerryServer over
-a TCP connection, and thus allows multiple apps to talk to multiple BlackBerrys
-even on OSX.
+zoolib_samples/BlackBerry/BBDaemon provides access to a ZBlackBerryServer over a TCP
+connection, and thus allows multiple apps to talk to multiple BlackBerrys even on OSX.
 
 The essentials of working with ZBlackBerry are demonstrated in this code:
 
@@ -141,7 +137,7 @@ Manager::~Manager()
 
 void Manager::Initialize()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Manager"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager"))
 		s << "Initialize, enter";
 
 	ZMutexLocker locker(fMutex);
@@ -150,20 +146,20 @@ void Manager::Initialize()
 		if (fStartCount == 0)
 			{
 			locker.Release();
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Manager"))
+			if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager"))
 				s << "Initialize, calling Start";
 				
 			this->Start();
 			}
 		}
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Manager"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager"))
 		s << "Initialize, exit";
 	}
 
 void Manager::Finalize()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Manager"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager"))
 		s << "Finalize, enter";
 
 	ZMutexLocker locker(fMutex);
@@ -172,7 +168,7 @@ void Manager::Finalize()
 
 	if (this->GetRefCount() != 1)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Manager"))
+		if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager"))
 			s << "Finalize, busy";
 		this->FinalizationComplete();
 		return;
@@ -192,7 +188,7 @@ void Manager::Finalize()
 
 	if (this->GetRefCount() != 1)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Manager"))
+		if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager"))
 			s << "Finalize, post stop, busy";
 		this->FinalizationComplete();
 		return;
@@ -202,7 +198,7 @@ void Manager::Finalize()
 	locker.Release();
 	delete this;
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Manager"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager"))
 		s << "Finalize, deleted";
 	}
 
@@ -274,7 +270,7 @@ Device::~Device()
 
 void Device::Initialize()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Device"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device"))
 		s << "Initialize, enter";
 
 	ZMutexLocker locker(fMutex);
@@ -283,19 +279,19 @@ void Device::Initialize()
 		if (fStartCount == 0)
 			{
 			locker.Release();
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Device"))
+			if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device"))
 				s << "Initialize, calling Start";
 			this->Start();
 			}
 		}
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Device"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device"))
 		s << "Initialize, exit";
 	}
 
 void Device::Finalize()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Device"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device"))
 		s << "Finalize, enter";
 
 	ZMutexLocker locker(fMutex);
@@ -304,7 +300,7 @@ void Device::Finalize()
 
 	if (this->GetRefCount() != 1)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Device"))
+		if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device"))
 			s << "Finalize, busy";
 		this->FinalizationComplete();
 		return;
@@ -324,7 +320,7 @@ void Device::Finalize()
 
 	if (this->GetRefCount() != 1)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Device"))
+		if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device"))
 			s << "Finalize, post stop, busy";
 		this->FinalizationComplete();
 		return;
@@ -334,7 +330,7 @@ void Device::Finalize()
 	locker.Release();
 	delete this;
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZBlackBerry::Device"))
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device"))
 		s << "Finalize, deleted";
 	}
 

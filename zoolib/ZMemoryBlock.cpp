@@ -88,7 +88,8 @@ ZStreamRPos_MemoryBlock::~ZStreamRPos_MemoryBlock()
 
 void ZStreamRPos_MemoryBlock::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	size_t countToCopy = min(uint64(iCount), sDiffPosR(fMemoryBlock.GetSize(), fPosition));
+	size_t countToCopy = ZStream::sClampedSize(iCount, fMemoryBlock.GetSize(), fPosition);
+//	size_t countToCopy = min(uint64(iCount), sDiffPosR(fMemoryBlock.GetSize(), fPosition));
 	fMemoryBlock.CopyTo(fPosition, iDest, countToCopy);
 	fPosition += countToCopy;
 
@@ -98,7 +99,8 @@ void ZStreamRPos_MemoryBlock::Imp_Read(void* iDest, size_t iCount, size_t* oCoun
 
 void ZStreamRPos_MemoryBlock::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-	uint64 realSkip = min(iCount, sDiffPosR(fMemoryBlock.GetSize(), fPosition));
+	size_t realSkip = ZStream::sClampedSize(iCount, fMemoryBlock.GetSize(), fPosition);
+//	uint64 realSkip = min(iCount, sDiffPosR(fMemoryBlock.GetSize(), fPosition));
 	fPosition += realSkip;
 	if (oCountSkipped)
 		*oCountSkipped = realSkip;
@@ -143,10 +145,7 @@ ZStreamRWPos_MemoryBlock::~ZStreamRWPos_MemoryBlock()
 
 void ZStreamRWPos_MemoryBlock::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	if (oCountRead)
-		*oCountRead = 0;
-
-	size_t countToCopy = min(uint64(iCount), sDiffPosR(fSizeLogical, fPosition));
+	size_t countToCopy = ZStream::sClampedSize(iCount, fSizeLogical, fPosition);
 	fMemoryBlock.CopyTo(fPosition, iDest, countToCopy);
 	fPosition += countToCopy;
 
@@ -156,7 +155,7 @@ void ZStreamRWPos_MemoryBlock::Imp_Read(void* iDest, size_t iCount, size_t* oCou
 
 void ZStreamRWPos_MemoryBlock::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-	uint64 realSkip = min(iCount, sDiffPosR(fSizeLogical, fPosition));
+	size_t realSkip = ZStream::sClampedSize(iCount, fSizeLogical, fPosition);
 	fPosition += realSkip;
 	if (oCountSkipped)
 		*oCountSkipped = realSkip;
@@ -167,12 +166,12 @@ void ZStreamRWPos_MemoryBlock::Imp_Write(const void* iSource, size_t iCount, siz
 	uint64 neededSpace = fPosition + iCount;
 	if (fMemoryBlock.GetSize() < neededSpace)
 		{
-		uint64 realSize = max(uint64(fMemoryBlock.GetSize()) + fGrowIncrement, neededSpace);
+		uint64 realSize = max(neededSpace, uint64(fMemoryBlock.GetSize()) + fGrowIncrement);
 		if (realSize == size_t(realSize))
 			fMemoryBlock.SetSize(realSize);
 		}
 
-	uint64 countToCopy = min(uint64(iCount), sDiffPosR(fMemoryBlock.GetSize(), fPosition));
+	size_t countToCopy = ZStream::sClampedSize(iCount, fMemoryBlock.GetSize(), fPosition);
 
 	fMemoryBlock.CopyFrom(fPosition, iSource, iCount);
 
@@ -182,7 +181,7 @@ void ZStreamRWPos_MemoryBlock::Imp_Write(const void* iSource, size_t iCount, siz
 		fSizeLogical = fPosition;
 
 	if (oCountWritten)
-		*oCountWritten = iCount;
+		*oCountWritten = countToCopy;
 	}
 
 void ZStreamRWPos_MemoryBlock::Imp_Flush()

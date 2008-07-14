@@ -112,7 +112,7 @@ void ZTS_RAM::SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples
 
 		if (0 == theID || fNextUnusedID <= theID)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eErr, "ZTS_RAM::SetTuples"))
+			if (ZLOG(s, eErr, "ZTS_RAM::SetTuples"))
 				s.Writef("Ignoring ID %X, which is zero or lies beyond the allocated range (%X)", theID, fNextUnusedID);
 			continue;
 			}
@@ -175,7 +175,7 @@ void ZTS_RAM::Search(const ZTBSpec& iSpec, const set<uint64>& iSkipIDs, set<uint
 
 	#if ZCONFIG_TS_RAM_Logging
 		ZTime startTime = ZTime::sSystem();
-		const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZTS_RAM::Search");
+		ZLog::S s(ZLog::eInfo, "ZTS_RAM::Search");
 		s << iSpec.AsTuple();
 	#endif
 
@@ -186,7 +186,7 @@ void ZTS_RAM::Search(const ZTBSpec& iSpec, const set<uint64>& iSkipIDs, set<uint
 		{
 		if (ZCONFIG_TS_RAM_WarnWhenScanningAllTuples)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Warning, "ZTS_RAM::Search"))
+			if (ZLOG(s, eWarning, "ZTS_RAM::Search"))
 				s << "In the spec:\n" << iSpec.AsTuple() << "\nat least one clause does not have a usable index";
 			}
 

@@ -32,7 +32,8 @@ using std::vector;
 #pragma mark -
 #pragma mark * Static helper functions
 
-static string sReadReference(const ZStrimU& iStrim, ZML::Reader::EntityCallback iCallback, void* iRefcon)
+static string sReadReference(
+	const ZStrimU& iStrim, ZML::Reader::EntityCallback iCallback, void* iRefcon)
 	{
 	using namespace ZUtil_Strim;
 
@@ -151,7 +152,9 @@ static bool sReadUntil(const ZStrimU& s, UTF32 iTerminator, string& oText)
 		}
 	}
 
-static bool sReadUntil(const ZStrimU& s, ZML::Reader::EntityCallback iCallback, void* iRefcon, UTF32 iTerminator, string& oText)
+static bool sReadUntil(
+	const ZStrimU& s, ZML::Reader::EntityCallback iCallback,
+	void* iRefcon, UTF32 iTerminator, string& oText)
 	{
 	oText.resize(0);
 
@@ -220,7 +223,8 @@ static bool sReadMLAttributeName(const ZStrimU& s, string& oName)
 	return true;
 	}
 
-static bool sReadMLAttributeValue(const ZStrimU& s, ZML::Reader::EntityCallback iCallback, void* iRefcon, string& oValue)
+static bool sReadMLAttributeValue(
+	const ZStrimU& s, ZML::Reader::EntityCallback iCallback, void* iRefcon, string& oValue)
 	{
 	oValue.resize(0);
 

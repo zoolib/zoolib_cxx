@@ -238,7 +238,7 @@ ZRef<ZNodeRep> ZNodeRep_FS::MoveTo(ZRef<ZNodeRep> iDest, ZNode::Error* oError)
 	{
 	if (ZRef<ZNodeRep_FS> theDest = ZRefDynamicCast<ZNodeRep_FS>(iDest))
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZNodeRep_FS::MoveTo"))
+		if (ZLOG(s, eInfo, "ZNodeRep_FS::MoveTo"))
 			s << "Move " << fFileSpec.AsString() << " to " << theDest->GetFileSpec().AsString();
 		if (oError)
 			{

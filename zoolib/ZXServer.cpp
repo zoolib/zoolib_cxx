@@ -926,8 +926,12 @@ static bool sTryColormap(int32 inCountRed, int32 inCountGreen, int32 inCountBlue
 
 				if (bestPixValDistance[index] == 0x7FFFFFFF)
 					{
-					theRGBColor = ZRGBColor(indexRed * 65535 / (inCountRed - 1), indexGreen * 65535 / (inCountGreen - 1), indexBlue * 65535 / (inCountBlue - 1));
+					const unsigned int componentRed = indexRed * 0xFFFFU / (inCountRed - 1);
+					const unsigned int componentGreen = indexGreen * 0xFFFFU / (inCountGreen - 1);
+					const unsigned int componentBlue = indexBlue * 0xFFFFU / (inCountBlue - 1);
+					theRGBColor = ZRGBColor(componentRed, componentGreen, componentBlue);
 					XColor anXColor = theRGBColor;
+
 					anXColor.flags = 0;
 					if (!::XAllocColor(inDisplay, inColormap, &anXColor))
 						{
@@ -937,7 +941,7 @@ static bool sTryColormap(int32 inCountRed, int32 inCountGreen, int32 inCountBlue
 						{
 						ZDebugPrintf(kDebug_XHeavy, (" pixVal %d (newly allocated)", anXColor.pixel));
 						}
-					theRGBColor = anXColor;
+					theRGBColor = anXColor; // Hmm. Why?
 					pixVals.push_back(anXColor.pixel);
 					}
 				else

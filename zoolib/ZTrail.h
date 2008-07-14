@@ -45,7 +45,8 @@ public:
 	ZTrail(const char* iPOSIXTrail);
 	ZTrail(const char* iPOSIXTrail, size_t iSize);
 
-	ZTrail(const std::string& iSeparator, const std::string& iIgnore, const std::string& iBounce, const std::string& iTrail);
+	ZTrail(const std::string& iSeparator, const std::string& iIgnore,
+		const std::string& iBounce, const std::string& iTrail);
 
 	template <class I>
 	ZTrail(const I& iBegin, const I& iEnd)

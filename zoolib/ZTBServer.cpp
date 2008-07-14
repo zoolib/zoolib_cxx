@@ -443,7 +443,7 @@ void ZTBServer::Handle_Actions(const ZTuple& iReq)
 static void sDumpRequest(const string& iLogFacility, ZTBServer* iServer, const ZTuple& iTuple)
 	{
 #if kDebug_ShowCommsTuples
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug, iLogFacility))
+	if (ZLOG(s, eDebug, iLogFacility))
 		{
 		s.Writef("<< Server: %08X ", iServer);
 		ZUtil_Strim_Tuple::sToStrim(s, iTuple);
@@ -486,7 +486,7 @@ void ZTBServer::Reader(const ZStreamR& iStream)
 			}
 		else
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eErr, fLogFacility))
+			if (ZLOG(s, eErr, fLogFacility))
 				s << "Unrecognized request: " << theWhat;
 			return;
 			}
@@ -497,7 +497,7 @@ static void sSend(void* iConnection, const string& iLogFacility,
 	ZMutexLocker& locker, const ZStreamW& iStream, const ZTuple& iTuple)
 	{
 #if kDebug_ShowCommsTuples
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug, iLogFacility))
+	if (ZLOG(s, eDebug, iLogFacility))
 		{
 		s.Writef(">> Server: %08X ", iConnection);
 		ZUtil_Strim_Tuple::sToStrim(s, iTuple);

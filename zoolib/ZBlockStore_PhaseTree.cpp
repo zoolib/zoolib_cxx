@@ -217,7 +217,7 @@ void ZBlockStore_PhaseTree::StreamRPos::Imp_Read(void* iDest, size_t iCount, siz
 	}
 
 size_t ZBlockStore_PhaseTree::StreamRPos::Imp_CountReadable()
-	{ return sClampedR(sDiffPosR(fBlockStore->GetBlockSize(fBlockID, fBlockSlot), fPosition)); }
+	{ return ZStream::sClampedSize(fBlockStore->GetBlockSize(fBlockID, fBlockSlot), fPosition); }
 
 uint64 ZBlockStore_PhaseTree::StreamRPos::Imp_GetPosition()
 	{ return fPosition; }
@@ -330,7 +330,7 @@ void ZBlockStore_PhaseTree::StreamRWPos::Imp_Flush()
 	}
 
 size_t ZBlockStore_PhaseTree::StreamRWPos::Imp_CountReadable()
-	{ return sClampedR(sDiffPosR(fBlockStore->GetBlockSize(fBlockID, fBlockSlot), fPosition)); }
+	{ return ZStream::sClampedSize(fBlockStore->GetBlockSize(fBlockID, fBlockSlot), fPosition); }
 
 uint64 ZBlockStore_PhaseTree::StreamRWPos::Imp_GetPosition()
 	{ return fPosition; }
