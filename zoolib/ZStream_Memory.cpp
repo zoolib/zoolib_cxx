@@ -132,11 +132,11 @@ ZStreamRPos_Memory::ZStreamRPos_Memory(const pair<const void*, size_t>& iParam)
 
 void ZStreamRPos_Memory::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	size_t countToMove = min(uint64(iCount), sDiffPosR(fSize, fPosition));
-	ZBlockCopy(fAddress + fPosition, iDest, countToMove);
-	fPosition += countToMove;
+	size_t countToCopy = ZStream::sClampedSize(iCount, fSize, fPosition);
+	ZBlockCopy(fAddress + fPosition, iDest, countToCopy);
+	fPosition += countToCopy;
 	if (oCountRead)
-		*oCountRead = countToMove;
+		*oCountRead = countToCopy;
 	}
 
 size_t ZStreamRPos_Memory::Imp_CountReadable()
@@ -152,7 +152,7 @@ void ZStreamRPos_Memory::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
 
 void ZStreamRPos_Memory::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-	uint64 realSkip = min(iCount, sDiffPosR(fSize, fPosition));
+	size_t realSkip = ZStream::sClampedSize(iCount, fSize, fPosition);
 	fPosition += realSkip;
 	if (oCountSkipped)
 		*oCountSkipped = realSkip;
@@ -186,7 +186,7 @@ void ZStreamRPos_Memory::pCopyTo(const ZStreamW& iStreamW, uint64 iCount,
 		*oCountWritten = 0;
 	while (iCount)
 		{
-		uint64 countToWrite = min(uint64(iCount), sDiffPosR(fSize, fPosition));
+		size_t countToWrite = ZStream::sClampedSize(iCount, fSize, fPosition);
 		size_t countWritten;
 		iStreamW.Write(fAddress + fPosition, countToWrite, &countWritten);
 		if (countWritten == 0)
@@ -326,13 +326,13 @@ ZStreamWPos_Memory::ZStreamWPos_Memory(void* iAddress, size_t iSize, size_t iCap
 
 void ZStreamWPos_Memory::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	size_t countToMove = min(uint64(iCount), sDiffPosW(fCapacity, fPosition));
-	ZBlockCopy(iSource, fAddress + fPosition, countToMove);
-	fPosition += countToMove;
+	size_t countToCopy = ZStream::sClampedSize(iCount, fCapacity, fPosition);
+	ZBlockCopy(iSource, fAddress + fPosition, countToCopy);
+	fPosition += countToCopy;
 	if (fSize < fPosition)
 		fSize = fPosition;
 	if (oCountWritten)
-		*oCountWritten = countToMove;
+		*oCountWritten = countToCopy;
 	}
 
 void ZStreamWPos_Memory::Imp_CopyFromDispatch(const ZStreamR& iStreamR, uint64 iCount,
@@ -375,9 +375,9 @@ void ZStreamWPos_Memory::pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 		*oCountWritten = 0;
 	while (iCount)
 		{
-		uint64 countToMove = min(iCount, sDiffPosW(fCapacity, fPosition));
+		size_t countToRead = ZStream::sClampedSize(iCount, fCapacity, fPosition);
 		size_t countRead;
-		iStreamR.Read(fAddress + fPosition, countToMove, &countRead);
+		iStreamR.Read(fAddress + fPosition, countToRead, &countRead);
 		if (countRead == 0)
 			break;
 

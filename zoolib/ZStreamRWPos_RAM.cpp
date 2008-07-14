@@ -61,7 +61,7 @@ void ZStreamRWPos_RAM::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 		size_t currentChunkOffset = fPosition % fChunkSize; 
 		size_t currentChunkIndex = fPosition / fChunkSize;
 		size_t countToMove = min(iCount, fChunkSize - currentChunkOffset);
-		countToMove = min(uint64(countToMove), sDiffPosR(fSize, fPosition));
+		countToMove = ZStream::sClampedSize(countToMove, fSize, fPosition);
 		if (countToMove == 0)
 			break;
 		ZBlockCopy(fVector_Chunks[currentChunkIndex] + currentChunkOffset, localDest, countToMove);
@@ -74,11 +74,11 @@ void ZStreamRWPos_RAM::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	}
 
 size_t ZStreamRWPos_RAM::Imp_CountReadable()
-	{ return sClampedR(sDiffPosR(fSize, fPosition)); }
+	{ return ZStream::sClampedSize(fSize, fPosition); }
 
 void ZStreamRWPos_RAM::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-	uint64 countSkipped = min(iCount, sDiffPosR(fSize, fPosition));
+	size_t countSkipped = ZStream::sClampedSize(iCount, fSize, fPosition);
 	fPosition += countSkipped;
 	if (oCountSkipped)
 		*oCountSkipped = countSkipped;

@@ -43,12 +43,12 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Retry::MakeStreamerRW()
 		ZRef<ZStreamerRWFactory> theFactory = fStreamerRWFactory;
 		if (!theFactory)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZStreamerRWFactory_Retry"))
+			if (ZLOG(s, eInfo, "ZStreamerRWFactory_Retry"))
 				s.Writef("MakeStreamerRW, no factory");
 			break;
 			}
 
-		if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZStreamerRWFactory_Retry"))
+		if (ZLOG(s, eDebug, "ZStreamerRWFactory_Retry"))
 			{
 			s.Writef("Connect, attempt %d of %d",
 				attempt, fCount);
@@ -56,7 +56,7 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Retry::MakeStreamerRW()
 
 		if (ZRef<ZStreamerRW> theSRW = fStreamerRWFactory->MakeStreamerRW())
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZStreamerRWFactory_Retry"))
+			if (ZLOG(s, eInfo, "ZStreamerRWFactory_Retry"))
 				s << "Connect succeeded";
 
 			return theSRW;
@@ -64,7 +64,7 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Retry::MakeStreamerRW()
 
 		if (!fCount || attempt < fCount)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZStreamerRWFactory_Retry"))
+			if (ZLOG(s, eDebug, "ZStreamerRWFactory_Retry"))
 				{
 				s.Writef("Connect, couldn't connect, sleeping for %g seconds",
 					fInterval);
@@ -74,7 +74,7 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Retry::MakeStreamerRW()
 			}
 		else
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::eInfo, "ZStreamerRWFactory_Retry"))
+			if (ZLOG(s, eInfo, "ZStreamerRWFactory_Retry"))
 				s.Writef("Connect failed after %d attempts", fCount);
 
 			break;

@@ -52,7 +52,7 @@ bool ZTBRep_Client_StreamerRWFactory::Writer(const ZStreamW& iStreamW)
 
 void ZTBRep_Client_StreamerRWFactory::Notify_Established()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTBRep_Client_StreamerRWFactory"))
+	if (ZLOG(s, eDebug, "ZTBRep_Client_StreamerRWFactory"))
 		s << "Notify_Established";
 
 	ZClientAsync::Notify_Established();
@@ -61,7 +61,7 @@ void ZTBRep_Client_StreamerRWFactory::Notify_Established()
 
 void ZTBRep_Client_StreamerRWFactory::Notify_Failed()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::eDebug, "ZTBRep_Client_StreamerRWFactory"))
+	if (ZLOG(s, eDebug, "ZTBRep_Client_StreamerRWFactory"))
 		s << "Notify_Failed";
 
 	ZTBRep_Client::Fail();

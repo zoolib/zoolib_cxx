@@ -105,7 +105,7 @@ ZStreamRPos_PageBuffered::~ZStreamRPos_PageBuffered()
 void ZStreamRPos_PageBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
 	char* localDest = reinterpret_cast<char*>(iDest);
-	iCount = min(uint64(iCount), sDiffPosR(fStreamReal.GetSize(), fPosition));
+	iCount = ZStream::sClampedSize(iCount, fStreamReal.GetSize(), fPosition);
 	while (iCount)
 		{
 		// Do we have the offset in our buffers?
@@ -163,7 +163,7 @@ size_t ZStreamRPos_PageBuffered::Imp_CountReadable()
 
 void ZStreamRPos_PageBuffered::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-	uint64 realSkip = min(iCount, sDiffPosR(fStreamReal.GetSize(), fPosition));
+	uint64 realSkip = ZStream::sClampedCount(iCount, fStreamReal.GetSize(), fPosition);
 	fPosition += realSkip;
 	if (oCountSkipped)
 		*oCountSkipped = realSkip;
@@ -289,7 +289,7 @@ void ZStreamRWPos_PageBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCo
 	{
 	char* localDest = reinterpret_cast<char*>(iDest);
 	uint64 streamSize = fStreamReal.GetSize();
-	iCount = min(uint64(iCount), sDiffPosW(streamSize, fPosition));
+	iCount = ZStream::sClampedSize(iCount, streamSize, fPosition);
 	while (iCount)
 		{
 		// Do we have the offset in our buffers?

@@ -38,6 +38,26 @@ but made available in case it's needed by application code. */
 void sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStreamW, uint64 iCount,
 						uint64* oCountRead, uint64* oCountWritten);
 
+static inline uint64 sClampedCount(uint64 iSize, uint64 iPosition)
+	{ return iPosition > iSize ? 0 : iSize - iPosition; }
+
+static inline uint64 sClampedCount(uint64 iCount, uint64 iSize, uint64 iPosition)
+	{ return std::min(iCount, sClampedCount(iSize, iPosition)); }
+
+static inline size_t sClampedSize(uint64 iCount)
+	{
+	if (sizeof(size_t) < sizeof(uint64))
+		return size_t(std::min(iCount, uint64(size_t(-1))));
+	else
+		return iCount;
+	}
+
+static inline size_t sClampedSize(uint64 iSize, uint64 iPosition)
+	{ return sClampedSize(sClampedCount(iSize, iPosition)); }
+
+static inline size_t sClampedSize(size_t iCount, uint64 iSize, uint64 iPosition)
+	{ return std::min(iCount, ZStream::sClampedSize(iSize, iPosition)); }
+
 class ExEndOfStream : public std::range_error
 	{
 protected:
@@ -176,18 +196,6 @@ but particular subclasses may have more efficient implementations available.
 
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 	//@}
-
-protected:
-	static uint64 sDiffPosR(uint64 iSize, uint64 iPos)
-		{ return iSize > iPos ? iSize - iPos : 0; }
-
-	static size_t sClampedR(uint64 iCount)
-		{
-		if (sizeof(size_t) < sizeof(uint64))
-			return size_t(std::min(iCount, uint64(size_t(-1))));
-		else
-			return iCount;
-		}
 	};
 
 /** Read data into memory, returning the count actually read. */
@@ -428,17 +436,6 @@ but particular subclasses may have more efficient implementations available.
 
 	virtual void Imp_Flush();
 	//@}
-
-protected:
-	static uint64 sDiffPosW(uint64 iSize, uint64 iPos)
-		{ return iSize > iPos ? iSize - iPos : 0; }
-	static size_t sClampedW(uint64 iCount)
-		{
-		if (sizeof(size_t) < sizeof(uint64))
-			return size_t(std::min(iCount, uint64(size_t(-1))));
-		else
-			return iCount;
-		}
 	};
 
 // =================================================================================================

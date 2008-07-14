@@ -135,7 +135,7 @@ void ZStreamRPos_Win_MultiResource::Imp_Read(void* inDest, size_t inCount, size_
 			fEnd = fVector_Ends[fIndex];
 			}
 
-		size_t countToMove = min(uint64(inCount), sDiffPosR(fEnd, fPosition));
+		size_t countToMove = ZStream::sClampedSize(inCount, fEnd, fPosition);
 		if (countToMove == 0)
 			break;
 		ZBlockCopy(reinterpret_cast<char*>(fLPVOID_Current) + fPosition - fBegin, localDest, countToMove);
@@ -149,7 +149,7 @@ void ZStreamRPos_Win_MultiResource::Imp_Read(void* inDest, size_t inCount, size_
 
 void ZStreamRPos_Win_MultiResource::Imp_Skip(uint64 inCount, uint64* outCountSkipped)
 	{
-	uint64 realSkip = min(inCount, sDiffPosR(fVector_Ends.back(), fPosition));
+	uint64 realSkip = ZStream::sClampedCount(inCount, fVector_Ends.back(), fPosition);
 	fPosition += realSkip;
 	if (outCountSkipped)
 		*outCountSkipped = realSkip;

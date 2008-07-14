@@ -266,7 +266,7 @@ Channel_Streamer::Channel_Streamer(
 
 Channel_Streamer::~Channel_Streamer()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZBlackBerry::Channel_Streamer"))
+	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Channel_Streamer"))
 		s.Writef("~Channel_Streamer, this: %08X, channelID: %d", this, fChannelID);
 	}
 
@@ -376,20 +376,20 @@ Device_Streamer::Device_Streamer()
 
 Device_Streamer::~Device_Streamer()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZBlackBerry::Device_Streamer"))
+	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 		s << "~Device_Streamer";
 	}
 
 void Device_Streamer::Stop()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Device_Streamer"))
+	if (ZLOG(s, eDebug, "ZBlackBerry::Device_Streamer"))
 		s << "Stop, Enter";
 
 	ZMutexLocker locker(fMutex);
 
 	if (fLifecycle == eLifecycle_Running)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Device_Streamer"))
+		if (ZLOG(s, eDebug, "ZBlackBerry::Device_Streamer"))
 			s << "Stop, go from Running to StoppingRun";
 
 		fLifecycle = eLifecycle_StoppingRun;
@@ -410,11 +410,11 @@ void Device_Streamer::Stop()
 		}
 	else
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Device_Streamer"))
+		if (ZLOG(s, eDebug, "ZBlackBerry::Device_Streamer"))
 			s << "Stop, already stopping/stopped";
 		}
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Device_Streamer"))
+	if (ZLOG(s, eDebug, "ZBlackBerry::Device_Streamer"))
 		s << "Stop, Exit";
 	}
 
@@ -423,7 +423,7 @@ ZRef<Channel> Device_Streamer::Open(
 	{
 	ZMutexLocker locker(fMutex);
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZBlackBerry::Device_Streamer"))
+	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 		s << "Open name: " << iName;
 
 	if (fLifecycle == eLifecycle_Running)
@@ -442,8 +442,7 @@ ZRef<Channel> Device_Streamer::Open(
 
 		if (theChannel->fState == eState_Connected)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-				"ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{
 				s << "Open name: " << iName << ", succeeded";
 				}
@@ -462,7 +461,7 @@ ZRef<Channel> Device_Streamer::Open(
 			*oError = error_DeviceClosed;
 		}
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZBlackBerry::Device_Streamer"))
+	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 		s << "Open name: " << iName << ", failed";
 
 	return ZRef<Channel>();
@@ -680,8 +679,7 @@ bool Device_Streamer::Channel_Finalize(Channel_Streamer* iChannel)
 		{
 		case eState_Connected:
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-				"ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{
 				s.Writef("Channel_Finalize, ID: %d, Connected, Switch to CloseNeeded",
 					iChannel->fChannelID);
@@ -693,8 +691,7 @@ bool Device_Streamer::Channel_Finalize(Channel_Streamer* iChannel)
 			}
 		case eState_Dead:
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-				"ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{
 				s.Writef("Channel_Finalize, ID: %d, Dead", iChannel->fChannelID);
 				}
@@ -702,8 +699,7 @@ bool Device_Streamer::Channel_Finalize(Channel_Streamer* iChannel)
 			}
 		case eState_CloseSent:
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-				"ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{
 				s.Writef("Channel_Finalize, ID: %d, CloseSent", iChannel->fChannelID);
 				}
@@ -711,8 +707,7 @@ bool Device_Streamer::Channel_Finalize(Channel_Streamer* iChannel)
 			}
 		case eState_CloseRcvd:
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-				"ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{
 				s.Writef("Channel_Finalize, ID: %d, CloseRcvd", iChannel->fChannelID);
 				}
@@ -720,8 +715,7 @@ bool Device_Streamer::Channel_Finalize(Channel_Streamer* iChannel)
 			}
 		case eState_CloseSentAndRcvd:
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-				"ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{
 				s.Writef("Channel_Finalize, ID: %d, CloseSentAndRcvd", iChannel->fChannelID);
 				}
@@ -729,8 +723,7 @@ bool Device_Streamer::Channel_Finalize(Channel_Streamer* iChannel)
 			}
 		default:
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-				"ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{
 				s.Writef("Channel_Finalize, ID: %d, Bad State: %d ??",
 					iChannel->fChannelID, iChannel->fState);
@@ -754,8 +747,7 @@ void Device_Streamer::Channel_Read(
 		{
 		if (iChannel->fState != eState_Connected)
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-				"ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{
 				s.Writef("Channel_Read, ID: %d, not connected", iChannel->fChannelID);
 				}
@@ -825,7 +817,7 @@ void Device_Streamer::Channel_SendDisconnect(Channel_Streamer* iChannel)
 	{
 	ZMutexLocker locker(fMutex);
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZBlackBerry::Device_Streamer"))
+	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 		s.Writef("Channel_SendDisconnect, ID: %d", iChannel->fChannelID);
 
 	if (iChannel->fState == eState_Connected)
@@ -839,7 +831,7 @@ bool Device_Streamer::Channel_ReceiveDisconnect(Channel_Streamer* iChannel, int 
 	{
 	ZMutexLocker locker(fMutex);
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZBlackBerry::Device_Streamer"))
+	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 		s.Writef("Channel_ReceiveDisconnect, ID: %d", iChannel->fChannelID);
 
 	while (iChannel->fState != eState_Dead)
@@ -852,12 +844,12 @@ void Device_Streamer::Channel_Abort(Channel_Streamer* iChannel)
 	{
 	ZMutexLocker locker(fMutex);
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZBlackBerry::Device_Streamer"))
+	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 		s.Writef("Channel_Abort, ID: %d", iChannel->fChannelID);
 
 	if (iChannel->fState == eState_Connected)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZBlackBerry::Device_Streamer"))
+		if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 			{
 			s.Writef("Channel_Abort, ID: %d, connected, switch to close needed",
 				iChannel->fChannelID);
@@ -880,12 +872,12 @@ ZRef<Channel_Streamer> Device_Streamer::pFindChannel(uint16 iChannelID)
 			{
 			if ((*i)->fState != eState_Dead)
 				return *i;
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug, "ZBlackBerry::Device_Streamer"))
 				s.Writef("pFindChannel, found eState_Dead for channelID: %d", iChannelID);
 			}
 		}
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Device_Streamer"))
+	if (ZLOG(s, eDebug, "ZBlackBerry::Device_Streamer"))
 		s.Writef("pFindChannel, couldn't find channel for channelID: %d", iChannelID);
 
 	return ZRef<Channel_Streamer>();
@@ -901,7 +893,7 @@ ZRef<Channel_Streamer> Device_Streamer::pFindChannel(const string& iName)
 			return *i;
 		}
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Device_Streamer"))
+	if (ZLOG(s, eDebug, "ZBlackBerry::Device_Streamer"))
 		s << "pFindChannel, couldn't find channel for name: " << iName;
 
 	return ZRef<Channel_Streamer>();
@@ -925,7 +917,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 	{
 	ZAssert(!fMutex.IsLocked());
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZBlackBerry::Device_Streamer"))
+	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 		s.Writef("pReadOne, ID: %d, size: %d", iChannelID, iPayloadSize);
 
 	if (iChannelID != 0)
@@ -943,7 +935,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 			}
 		else
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug, "ZBlackBerry::Device_Streamer"))
 				{
 				s.Writef("pReadOne, channel not allocated, ID: %d, size; %d",
 					iChannelID, iPayloadSize);
@@ -959,8 +951,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 			{
 			case eMsg_GetAttribute_Ack:
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-					"ZBlackBerry::Device_Streamer"))
+				if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 					{
 					s << "pReadOne, GetAttribute_Ack";
 					}
@@ -981,8 +972,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 			case eMsg_SelectMode_Ack:
 			case eMsg_SelectMode_Nack:
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-					"ZBlackBerry::Device_Streamer"))
+				if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 					{
 					if (theCommand == eMsg_SelectMode_Ack)
 						s << "pReadOne, SelectMode_Ack";
@@ -1038,8 +1028,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				}
 			case eMsg_PasswordChallenge:
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-					"ZBlackBerry::Device_Streamer"))
+				if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 					{
 					s << "pReadOne, PasswordChallenge";
 					}
@@ -1078,8 +1067,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				}
 			case eMsg_PasswordFailed:
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-					"ZBlackBerry::Device_Streamer"))
+				if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 					{
 					s << "pReadOne, PasswordFailed";
 					}
@@ -1097,8 +1085,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				}
 			case eMsg_ChannelOpen_Ack:
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-					"ZBlackBerry::Device_Streamer"))
+				if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 					{
 					s << "pReadOne, Open_Ack";
 					}
@@ -1115,16 +1102,14 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				}
 			case eMsg_ChannelClose:
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-					"ZBlackBerry::Device_Streamer"))
+				if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 					{
 					s << "pReadOne, Close";
 					}
 
 				const uint16 theChannelID = iStreamR.ReadUInt8();
 
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug,
-					"ZBlackBerry::Device_Streamer"))
+				if (ZLOG(s, eDebug, "ZBlackBerry::Device_Streamer"))
 					{
 					s.Writef("Received close for channelID: %d", theChannelID);
 					}
@@ -1146,8 +1131,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 						}
 					else
 						{
-						if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug,
-							"ZBlackBerry::Device_Streamer"))
+						if (ZLOG(s, eDebug, "ZBlackBerry::Device_Streamer"))
 							{
 							s.Writef("Bad state, channelID: %d", theChannelID);
 							}
@@ -1161,8 +1145,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				}
 			case eMsg_ChannelClose_Ack:
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-					"ZBlackBerry::Device_Streamer"))
+				if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 					{
 					s << "pReadOne, Close_Ack";
 					}
@@ -1180,8 +1163,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				}
 			case eMsg_ChannelClose_Nack:
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-					"ZBlackBerry::Device_Streamer"))
+				if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 					{
 					s << "pReadOne, Close_Nack";
 					}
@@ -1199,8 +1181,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				}
 			case eMsg_SequenceHandshake:
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-					"ZBlackBerry::Device_Streamer"))
+				if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 					{
 					s << "pReadOne, SequenceHandshake";
 					}
@@ -1226,8 +1207,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					// Check that next sequence is good
 					if (theChannel->fNextSequence != sequence)
 						{
-						if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Notice,
-							"ZBlackBerry::Device_Streamer"))
+						if (ZLOG(s, eNotice, "ZBlackBerry::Device_Streamer"))
 							{
 							s.Writef("channel %d, expected sequence: %d, received: %d",
 								seqChannelID, theChannel->fNextSequence, sequence);
@@ -1272,8 +1252,7 @@ bool Device_Streamer::pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iCha
 			for (size_t x = nameLength; x < 16; ++x)
 				w.WriteUInt8(0x00); // Padding
 			
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-				"ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{
 				s << "pWriteOne, SelectMode";
 				}
@@ -1289,8 +1268,7 @@ bool Device_Streamer::pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iCha
 			w.WriteUInt16LE(iChannel->fChannelID);
 			w.WriteUInt8(0x00);
 
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-				"ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{
 				s << "pWriteOne, Open";
 				}
@@ -1326,8 +1304,7 @@ bool Device_Streamer::pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iCha
 			w.WriteUInt16LE(0x14); // Param ??
 			w.Write(sentHash, 20);
 
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-				"ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{
 				s << "pWriteOne, PasswordResponse";
 				}
@@ -1360,8 +1337,7 @@ bool Device_Streamer::pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iCha
 			iChannel->fSend_Size = 0;
 			iChannel->fCondition_Send.Broadcast();
 
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-				"ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{
 				s << "pWriteOne, Data";
 				}
@@ -1377,8 +1353,7 @@ bool Device_Streamer::pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iCha
 			w.WriteUInt16LE(iChannel->fChannelID);
 			w.WriteUInt8(0x00);
 
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-				"ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{
 				s << "pWriteOne, Close";
 				}
@@ -1396,8 +1371,7 @@ bool Device_Streamer::pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iCha
 
 			this->pDetachIfUnused(iChannel);
 
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-				"ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{
 				s << "pWriteOne, eState_CloseRcvd, Close_Ack";
 				}
@@ -1413,8 +1387,7 @@ bool Device_Streamer::pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iCha
 			w.WriteUInt16LE(iChannel->fChannelID);
 			w.WriteUInt8(0x00);
 
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1,
-				"ZBlackBerry::Device_Streamer"))
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{
 				s << "pWriteOne, eState_CloseSentAndRcvd, Close_Ack";
 				}

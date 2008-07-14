@@ -41,12 +41,12 @@ ZStreamRPos_String::~ZStreamRPos_String()
 
 void ZStreamRPos_String::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	if (size_t countToMove = min(uint64(iCount), sDiffPosR(fString.size(), fPosition)))
+	if (size_t countToRead = ZStream::sClampedSize(iCount, fString.size(), fPosition))
 		{
-		ZBlockCopy(&fString.at(fPosition), iDest, countToMove);
-		fPosition += countToMove;
+		ZBlockCopy(&fString.at(fPosition), iDest, countToRead);
+		fPosition += countToRead;
 		if (oCountRead)
-			*oCountRead = countToMove;
+			*oCountRead = countToRead;
 		}
 	else if (oCountRead)
 		{
@@ -77,7 +77,7 @@ ZStreamWPos_String::~ZStreamWPos_String()
 
 void ZStreamWPos_String::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	size_t neededSpace = sClampedW(fPosition + iCount);
+	size_t neededSpace = ZStream::sClampedSize(fPosition + iCount);
 	if (fString.size() < neededSpace)
 		{
 		try
@@ -88,12 +88,12 @@ void ZStreamWPos_String::Imp_Write(const void* iSource, size_t iCount, size_t* o
 			{}
 		}
 
-	if (size_t countToMove = min(uint64(iCount), sDiffPosW(fString.size(), fPosition)))
+	if (size_t countToWrite = ZStream::sClampedSize(iCount, fString.size(), fPosition))
 		{
-		ZBlockCopy(iSource, &fString.at(fPosition), countToMove);
-		fPosition += countToMove;
+		ZBlockCopy(iSource, &fString.at(fPosition), countToWrite);
+		fPosition += countToWrite;
 		if (oCountWritten)
-			*oCountWritten = countToMove;
+			*oCountWritten = countToWrite;
 		}
 	else if (oCountWritten)
 		{
@@ -133,12 +133,12 @@ ZStreamRWPos_String::~ZStreamRWPos_String()
 
 void ZStreamRWPos_String::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	if (size_t countToMove = min(uint64(iCount), sDiffPosR(fString.size(), fPosition)))
+	if (size_t countToRead = ZStream::sClampedSize(iCount, fString.size(), fPosition))
 		{
-		ZBlockCopy(&fString.at(fPosition), iDest, countToMove);
-		fPosition += countToMove;
+		ZBlockCopy(&fString.at(fPosition), iDest, countToRead);
+		fPosition += countToRead;
 		if (oCountRead)
-			*oCountRead = countToMove;
+			*oCountRead = countToRead;
 		}
 	else if (oCountRead)
 		{
@@ -148,7 +148,7 @@ void ZStreamRWPos_String::Imp_Read(void* iDest, size_t iCount, size_t* oCountRea
 
 void ZStreamRWPos_String::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	size_t neededSpace = sClampedW(fPosition + iCount);
+	size_t neededSpace = ZStream::sClampedSize(fPosition + iCount);
 	if (fString.size() < neededSpace)
 		{
 		try
@@ -159,7 +159,7 @@ void ZStreamRWPos_String::Imp_Write(const void* iSource, size_t iCount, size_t* 
 			{}
 		}
 
-	if (size_t countToMove = min(uint64(iCount), sDiffPosW(fString.size(), fPosition)))
+	if (size_t countToMove = ZStream::sClampedSize(iCount, fString.size(), fPosition))
 		{
 		ZBlockCopy(iSource, &fString.at(fPosition), countToMove);
 		fPosition += countToMove;

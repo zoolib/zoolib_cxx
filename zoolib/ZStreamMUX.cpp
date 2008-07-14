@@ -251,7 +251,7 @@ ZStreamMUX::Endpoint::~Endpoint()
 		|| fStateReceive == eStateReceive_Closed);
 	ZAssert(fStateSend == eStateSend_Closed);
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX::Endpoint"))
+	if (ZLOG(s, eDebug + 1, "ZStreamMUX::Endpoint"))
 		s.Writef("~Endpoint, this: %08X", this);
 	}
 
@@ -396,7 +396,7 @@ ZStreamMUX::Listener::Listener(ZStreamMUX* iMUX,
 ZStreamMUX::Listener::~Listener()
 	{
 	ZAssert(fEndpoints_Pending.Empty());
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX::"))
+	if (ZLOG(s, eDebug + 1, "ZStreamMUX::"))
 		s.Writef("~Listener, this: %08X", this);
 	}
 
@@ -467,13 +467,13 @@ ZStreamMUX::ZStreamMUX(const Options& iOptions)
 
 ZStreamMUX::~ZStreamMUX()
 	{
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 		s.Writef("~ZStreamMUX, this: %08X", this);
 
 	// Ensure that Run has returned.
 	this->Stop();
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 		s.Writef("~ZStreamMUX, this: %08X, Stop returned", this);
 
 	ZAssert(fMap_IDToEndpoint.empty());
@@ -493,7 +493,7 @@ ZStreamMUX::~ZStreamMUX()
 
 	locker.Release();
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 		s.Writef("~ZStreamMUX, this: %08X, Listeners terminated", this);
 
 	for (vector<ZRef<Listener> >::iterator i = localListeners.begin();
@@ -502,7 +502,7 @@ ZStreamMUX::~ZStreamMUX()
 
 	locker.Acquire();
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 		s.Writef("~ZStreamMUX, this: %08X, Exiting", this);
 	}
 
@@ -650,7 +650,7 @@ bool ZStreamMUX::Write(const ZStreamW& iStreamW)
 		{
 		ZAssert(fMap_IDToEndpoint.empty());
 
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZStreamMUX"))
+		if (ZLOG(s, eDebug, "ZStreamMUX"))
 			s.Writef("Write, this: %08X, send goodbye", this);
 		this->pSendMessage(iStreamW, eMsg_Goodbye);
 		this->pFlush(iStreamW);
@@ -676,7 +676,7 @@ void ZStreamMUX::Stop()
 		}
 	else
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug, "ZStreamMUX"))
+		if (ZLOG(s, eDebug, "ZStreamMUX"))
 			s << "Stop, already stopping/stopped";
 		}
 	}
@@ -710,7 +710,7 @@ ZRef<ZStreamerRWCon> ZStreamMUX::Connect(const std::string& iName, size_t iRecei
 		const uint32 theEPID = this->pGetUnusedID();
 		ZRef<Endpoint> theEndpoint = new Endpoint(this, theEPID, iReceiveBufferSize, &iName);
 
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+		if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 			{
 			s.Writef("Connect, this: %08X, Connect starting , theID: %d, theState: %d",
 				this, theEPID, theEndpoint->fStateEP);
@@ -722,7 +722,7 @@ ZRef<ZStreamerRWCon> ZStreamMUX::Connect(const std::string& iName, size_t iRecei
 		while (theEndpoint->fStateEP != eStateEP_Connected)
 			theEndpoint->fCondition_Receive.Wait(fMutex);
 
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+		if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 			{
 			s.Writef("Connect, this: %08X, Connect done, theID: %d, theState: %d",
 				this, theEPID, theEndpoint->fStateEP);
@@ -753,7 +753,7 @@ bool ZStreamMUX::Endpoint_Finalize(Endpoint* iEP)
 	{
 	ZMutexLocker locker(fMutex);
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 		{
 		s.Writef("Endpoint_Finalize, this: %08X, theID: %d",
 			this, iEP->fEPID);
@@ -889,7 +889,7 @@ bool ZStreamMUX::Endpoint_ReceiveDisconnect(Endpoint* iEP, int iMilliseconds)
 	{
 	ZMutexLocker locker(fMutex);
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 		{
 		s.Writef("Endpoint_ReceiveDisconnect, this: %08X, theID: %d",
 			this, iEP->fEPID);
@@ -931,7 +931,7 @@ void ZStreamMUX::Endpoint_SendDisconnect(Endpoint* iEP)
 
 	if (iEP->fStateEP == eStateEP_Connected && iEP->fStateSend == eStateSend_Open)
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+		if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 			{
 			s.Writef("Endpoint_SendDisconnect, this: %08X, theID: %d",
 				this, iEP->fEPID);
@@ -941,7 +941,7 @@ void ZStreamMUX::Endpoint_SendDisconnect(Endpoint* iEP)
 		}
 	else
 		{
-		if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+		if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 			{
 			s.Writef("Endpoint_SendDisconnect, no effect, this: %08X, theID: %d",
 				this, iEP->fEPID);
@@ -1055,7 +1055,7 @@ bool ZStreamMUX::pDetachIfUnused(Endpoint* iEP)
 	if (iEP->fStateReceive != eStateReceive_Closed)
 		return false;
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 		s.Writef("pDetachIfUnused, this: %08X, detaching theID: %d", this, iEP->fEPID);
 
 	// It's dead.
@@ -1074,7 +1074,7 @@ void ZStreamMUX::pAbort(Endpoint* iEP)
 	{
 	ZAssert(fMutex.IsLocked());
 
-	if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 		{
 		s.Writef("pAbort, this: %08X, theID: %d",
 			this, iEP->fEPID);
@@ -1138,7 +1138,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 			const uint32 creditLimit = sReceivePackedInt(iStreamR);
 			const string listenerName = sReceivePackedString(iStreamR);
 
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+			if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 				{
 				s.Writef("pReadOne, this: %08X, Open, theID: %d, creditLimit: %d, name: %s",
 					this, theID, creditLimit, listenerName.c_str());
@@ -1176,7 +1176,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 			ZAssert(sIsLocal(theID));			
 			const uint32 creditLimit = sReceivePackedInt(iStreamR);
 
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+			if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 				{
 				s.Writef("pReadOne, this: %08X, OpenAck, theID: %d, creditLimit: %d",
 					this, theID, creditLimit);
@@ -1201,7 +1201,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 			const uint32 theID = sReceivePackedID(iStreamR);
 			ZAssert(sIsLocal(theID));			
 
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+			if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 				{
 				s.Writef("pReadOne, this: %08X, OpenNack, theID: %d",
 					this, theID);
@@ -1223,7 +1223,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 
 			const uint32 theID = sReceivePackedID(iStreamR);
 
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+			if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 				{
 				s.Writef("pReadOne, this: %08X, CloseYourReceive, theID: %d",
 					this, theID);
@@ -1273,7 +1273,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 
 			const uint32 theID = sReceivePackedID(iStreamR);
 
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+			if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 				{
 				s.Writef("pReadOne, this: %08X, CloseYourSend, theID: %d",
 					this, theID);
@@ -1326,7 +1326,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 			const uint32 theCount = sReceivePackedInt(iStreamR);
 			if (true || sIsLocal(theID))
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZStreamMUX"))
+				if (ZLOG(s, eDebug + 2, "ZStreamMUX"))
 					{
 					s.Writef("pReadOne, this: %08X, Data, theID: %d, size: %d",
 						this, theID, theCount);
@@ -1368,7 +1368,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 
 			if (true || sIsLocal(theID))
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZStreamMUX"))
+				if (ZLOG(s, eDebug + 2, "ZStreamMUX"))
 					{
 					s.Writef("pReadOne, this: %08X, AddCredit, theID: %d, countAcked: %d",
 						this, theID, countAcked);
@@ -1389,7 +1389,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 			}
 		case eMsg_Goodbye:
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+			if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 				s.Writef("pReadOne, this: %08X, goodbye", this);
 
 			if (fLifecycle == eLifecycle_Running || fLifecycle == eLifecycle_StoppingRun)
@@ -1532,7 +1532,7 @@ bool ZStreamMUX::pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP)
 		case eStateEP_Accepted:
 			{
 			const uint32 creditLimit = iEP->fReceiveBufferSize;
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+			if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 				{
 				s.Writef("pWriteOne, this: %08X, send OpenAck, theID: %d, credit: %d",
 					this, theEPID, creditLimit);
@@ -1544,7 +1544,7 @@ bool ZStreamMUX::pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP)
 			}
 		case eStateEP_ConnectPending:
 			{
-			if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+			if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 				{
 				s.Writef("pWriteOne, this: %08X, send Open, theID: %d",
 					this, theEPID);
@@ -1557,7 +1557,7 @@ bool ZStreamMUX::pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP)
 			{
 			if (iEP->fStateReceive == eStateReceive_CloseReceived)
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+				if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 					{
 					s.Writef(
 						"pWriteOne, this: %08X, eStateReceive_CloseReceived, "
@@ -1572,7 +1572,7 @@ bool ZStreamMUX::pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP)
 
 			if (iEP->fStateReceive == eStateReceive_ClosePending)
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+				if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 					{
 					s.Writef(
 						"pWriteOne, this: %08X, eStateReceive_ClosePending, "
@@ -1593,7 +1593,7 @@ bool ZStreamMUX::pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP)
 						{
 						iEP->fReceivedSinceLastCredit = false;
 						iEP->fCount_Acked = iEP->fCount_Received;
-						if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 2, "ZStreamMUX"))
+						if (ZLOG(s, eDebug + 2, "ZStreamMUX"))
 							{
 							s.Writef(
 								"pWriteOne, this: %08X, send AddCredit, theID: %d, credit: %d",
@@ -1607,7 +1607,7 @@ bool ZStreamMUX::pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP)
 
 			if (iEP->fStateSend == eStateSend_CloseReceived)
 				{
-				if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+				if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 					{
 					s.Writef(
 						"pWriteOne, this: %08X, eStateSend_CloseReceived, "
@@ -1636,8 +1636,7 @@ bool ZStreamMUX::pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP)
 						theBS.erase(begin, end);
 						if (true || sIsLocal(iEP->fEPID))
 							{
-							if (const ZLog::S& s =
-								ZLog::S(ZLog::ePriority_Debug + 2, "ZStreamMUX"))
+							if (ZLOG(s, eDebug + 2, "ZStreamMUX"))
 								{
 								s.Writef("pWriteOne, this: %08X, send Data, theID: %d, size: %d",
 									this, theEPID, buffer.size());
@@ -1653,7 +1652,7 @@ bool ZStreamMUX::pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP)
 				if (iEP->fStateSend == eStateSend_ClosePending)
 					{
 					// Buffer is empty and local close has occurred.
-					if (const ZLog::S& s = ZLog::S(ZLog::ePriority_Debug + 1, "ZStreamMUX"))
+					if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 						{
 						s.Writef(
 							"pWriteOne, this: %08X, eStateSend_ClosePending with empty buffer, "

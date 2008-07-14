@@ -45,7 +45,7 @@ void ZStreamR_Limited::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	}
 
 size_t ZStreamR_Limited::Imp_CountReadable()
-	{ return sClampedR(min(fCountRemaining, uint64(fStreamSource.CountReadable()))); }
+	{ return min(fStreamSource.CountReadable(), ZStream::sClampedSize(fCountRemaining)); }
 
 void ZStreamR_Limited::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
