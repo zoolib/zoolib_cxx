@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
-#include <Foundation/NSString.h>
+#import <Foundation/NSString.h>
 
 using std::vector;
 

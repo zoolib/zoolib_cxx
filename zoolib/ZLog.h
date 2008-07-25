@@ -109,7 +109,8 @@ protected:
 public:
 	virtual ~LogMeister();
 	virtual bool Enabled(EPriority iPriority, const std::string& iName);
-	virtual void LogIt(EPriority iPriority, const std::string& iName, const std::string& iMessage) = 0;
+	virtual void LogIt(
+		EPriority iPriority, const std::string& iName, const std::string& iMessage) = 0;
 	};
 
 void sSetLogMeister(LogMeister* iLogMeister);

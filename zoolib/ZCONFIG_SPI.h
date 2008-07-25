@@ -430,9 +430,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 #pragma mark X11
-#ifndef ZCONFIG_SPI_Avail__X11
-#	define ZCONFIG_SPI_Avail__X11 (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
-#endif
+//#ifndef ZCONFIG_SPI_Avail__X11
+//#	define ZCONFIG_SPI_Avail__X11 (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
+//#endif
 
 #ifndef ZCONFIG_SPI_Avail__X11
 #	define ZCONFIG_SPI_Avail__X11 0
