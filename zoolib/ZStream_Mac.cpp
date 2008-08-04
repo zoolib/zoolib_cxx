@@ -56,7 +56,7 @@ ZStreamRPos_Mac_PartialResource::~ZStreamRPos_Mac_PartialResource()
 
 void ZStreamRPos_Mac_PartialResource::Imp_Read(void* inDest, size_t inCount, size_t* outCountRead)
 	{
-	size_t countToRead = min(uint64(inCount), sDiffPosR(fSize, fPosition));
+	size_t countToRead = ZStream::sClampedSize(inCount, fSize, fPosition);
 	::ReadPartialResource(fResourceHandle, fPosition, inDest, countToRead);
 	fPosition += countToRead;
 	if (outCountRead)
@@ -65,7 +65,7 @@ void ZStreamRPos_Mac_PartialResource::Imp_Read(void* inDest, size_t inCount, siz
 
 void ZStreamRPos_Mac_PartialResource::Imp_Skip(uint64 inCount, uint64* outCountSkipped)
 	{
-	uint64 realSkip = min(inCount, sDiffPosR(fSize, fPosition));
+	size_t realSkip = ZStream::sClampedSize(inCount, fSize, fPosition);
 	fPosition += realSkip;
 	if (outCountSkipped)
 		*outCountSkipped = realSkip;
