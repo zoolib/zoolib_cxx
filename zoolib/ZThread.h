@@ -60,7 +60,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Do we want deadlock detection to be active?
 #ifndef ZCONFIG_Thread_DeadlockDetect
-#	if ZCONFIG_Debug >= 1
+#	if ZCONFIG_Debug >= 2
 #		define ZCONFIG_Thread_DeadlockDetect 1
 #	else
 #		define ZCONFIG_Thread_DeadlockDetect 0
@@ -88,6 +88,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG(API_Thread, POSIX)
 #	include <pthread.h>
 #	define ZCONFIG_Thread_Preemptive 1
+#endif
+
+#if ZCONFIG_Thread_DeadlockDetect || ZCONFIG(API_Thread, Win32)
+#	include "zoolib/ZThreadMain.h"
 #endif
 
 // ==================================================
@@ -157,7 +161,7 @@ class ZMutexBase;
 class ZThread : ZooLib::NonCopyable
 	{
 protected:
-	// This protected constructor is used indirectly by ZThread::InitHelper.
+	// This protected constructor is used indirectly by ZThreadMainInitHelper.
 	ZThread(struct Dummy*);
 
 	// Our destructor is protected, so even with its pointer semantics it's illegal to
@@ -297,24 +301,6 @@ inline ZThread::TLSData_t ZThread::sTLSGet(ZThread::TLSKey_t iTLSKey)
 	}
 
 #endif // ZCONFIG(API_Thread, Win32)
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZThread::InitHelper
-
-class ZThread::InitHelper
-	{
-public:
-	InitHelper();
-	~InitHelper();
-	};
-
-// This static is what makes auto-initialization work. Every file that (transitively) includes ZThread.h will
-// get their own instance of a ZThread::InitHelper, whose constructor creates the main thread object and
-// whose destructor deletes it. This ensures that ZThread is initialized at static construction time
-// and is usable regardless of the link order.
-
-static ZThread::InitHelper sZThread_InitHelper;
 
 // =================================================================================================
 #pragma mark -

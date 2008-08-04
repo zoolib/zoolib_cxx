@@ -164,38 +164,6 @@ static void sReleaseSpinlock(ZAtomic_t* iSpinlock)
 	ZAssertStop(kDebug_Thread, priorValue == 1);
 	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZThread Initialization/Tear Down
-
-namespace ZANONYMOUS {
-
-class MainThread : public ZThread
-	{
-public:
-	MainThread() : ZThread((struct ZooLib::Dummy*)(0)){}
-	virtual void Run() {}
-	};
-
-} // anonymous namespace
-
-static int sInitCount;
-
-ZThread::InitHelper::InitHelper()
-	{
-	if (sInitCount++ != 0)
-		return;
-
-	new MainThread;
-	}
-
-ZThread::InitHelper::~InitHelper()
-	{
-	if (--sInitCount != 0)
-		return;
-	delete sMainThread;
-	}
-
 // ==================================================
 #pragma mark -
 #pragma mark * ZThread ctor/dtor
@@ -234,7 +202,9 @@ ZThread::ZThread(struct Dummy*)
 
 ZThread::ZThread(const char* iName)
 	{
-	ZAssertStop(kDebug_Thread, sMainThread);
+	if (ZCONFIG_Thread_DeadlockDetect || ZCONFIG(API_Thread, Win32))
+		ZAssertStop(kDebug_Thread, sMainThread);
+
 	fThreadID = kThreadID_None;
 	fStarted = false;
 	fName = iName;
