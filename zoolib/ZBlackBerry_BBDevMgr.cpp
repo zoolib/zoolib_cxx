@@ -391,7 +391,14 @@ void Channel_BBDevMgr::Imp_Write(const void* iSource, size_t iCount, size_t* oCo
 		const size_t countToWrite = std::min(iCount, size_t(fChannelParams.fMaxTransmitUnit));
 
 		if (SUCCEEDED(theChannel->WritePacket(localSource, countToWrite)))
+			{
 			localSource += countToWrite;
+			}
+		else
+			{
+			if (ZLOG(s, eDebug + 2, "ZBlackBerry::Channel_BBDevMgr"))
+				s.Writef("Write failed, count: %d, %d", iCount, countToWrite);
+			}
 
 		theChannel->Release();
 		}
