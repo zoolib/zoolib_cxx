@@ -275,7 +275,8 @@ ZThread::~ZThread()
 		{
 		// Back to asserting that the main thread is not nil -- it's just a design flaw
 		// that the main thread exit before any others.
-		ZAssertStop(kDebug_Thread, sMainThread != nil);
+		if (ZCONFIG_Thread_DeadlockDetect || ZCONFIG(API_Thread, Win32))
+			ZAssertStop(kDebug_Thread, sMainThread != nil);
 		}
 
 #if ZCONFIG(API_Thread, Win32)
