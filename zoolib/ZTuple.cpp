@@ -292,6 +292,12 @@ ZTValue::ZTValue(const ZStreamR& iStreamR)
 	this->pFromStream(iStreamR);
 	}
 
+ZTValue::ZTValue(bool dummy, const ZStreamR& iStreamR)
+	{
+	fType.fType = eZType_Null;
+	this->pFromStream(iStreamR);
+	}
+
 void ZTValue::ToStream(const ZStreamW& iStreamW) const
 	{
 	if (fType.fType < 0)
@@ -2306,6 +2312,10 @@ void ZTValue::pFromStream(const ZStreamR& iStreamR)
 #pragma mark * ZTuple Constructing/assigning from stream
 
 ZTuple::ZTuple(const ZStreamR& iStreamR)
+:	fRep(sRepFromStream(iStreamR))
+	{}
+
+ZTuple::ZTuple(bool dummy, const ZStreamR& iStreamR)
 :	fRep(sRepFromStream(iStreamR))
 	{}
 

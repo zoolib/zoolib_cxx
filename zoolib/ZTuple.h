@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompare.h"
-#include "zoolib/ZMemory.h" // For ZBlockCopy
 #include "zoolib/ZRefCount.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZTName.h"
@@ -107,6 +106,7 @@ public:
 /** \name Constructing from flattened data in a stream
 */	//@{
 	explicit ZTValue(const ZStreamR& iStreamR);
+	ZTValue(bool dummy, const ZStreamR& iStreamR);
 	//@}
 
 /** \name Efficient swapping with another instance
@@ -622,6 +622,7 @@ public:
 /** \name Constructing from stream
 */	//@{
 	explicit ZTuple(const ZStreamR& iStreamR);
+	ZTuple(bool dummy, const ZStreamR& iStreamR);
 	//@}
 
 
