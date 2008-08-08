@@ -59,6 +59,7 @@ struct ChannelParams
 	uint16 fMaxTransmitUnit;
 	uint16 fDeviceBuffers;
 	uint16 fHostBuffers;
+	uint16 fDroppedPacketCount;
 	};
 
 ZWinCOM_CLASS_(IChannel, IUnknown,
