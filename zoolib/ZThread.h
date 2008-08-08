@@ -67,6 +67,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	endif
 #endif
 
+#if ZCONFIG_Thread_DeadlockDetect || ZCONFIG(API_Thread, Win32)
+#	define ZCONFIG_Thread_UseCurrent 1
+#endif
+
+#ifndef ZCONFIG_Thread_UseCurrent
+#	define ZCONFIG_Thread_UseCurrent 0
+#endif
+
 // ==================================================
 // Include appropriate headers for each platform, and set up ZCONFIG_Thread_Preemptive.
 //
@@ -88,10 +96,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG(API_Thread, POSIX)
 #	include <pthread.h>
 #	define ZCONFIG_Thread_Preemptive 1
-#endif
-
-#if ZCONFIG_Thread_DeadlockDetect || ZCONFIG(API_Thread, Win32)
-#	include "zoolib/ZThreadMain.h"
 #endif
 
 // ==================================================
@@ -152,6 +156,23 @@ typedef ZAtomic_t ZThreadSafe_t;
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZThreadCurrentHelper
+
+#if ZCONFIG_Thread_UseCurrent
+
+class ZThreadCurrentHelper
+	{
+public:
+	ZThreadCurrentHelper();
+	~ZThreadCurrentHelper();
+	};
+
+static ZThreadCurrentHelper sZThreadCurrentHelper;
+
+#endif // ZCONFIG_Thread_UseCurrent
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZThread
 
 namespace ZooLib {
@@ -161,9 +182,6 @@ class ZMutexBase;
 class ZThread : ZooLib::NonCopyable
 	{
 protected:
-	// This protected constructor is used indirectly by ZThreadMainInitHelper.
-	ZThread(struct Dummy*);
-
 	// Our destructor is protected, so even with its pointer semantics it's illegal to
 	// simply delete a thread -- it must return from its Run method, at which point it is deleted.
 	virtual ~ZThread();
@@ -207,10 +225,6 @@ public:
 	static void sTLSFree(TLSKey_t iTLSKey);
 	static void sTLSSet(TLSKey_t iTLSKey, TLSData_t iValue);
 	static TLSData_t sTLSGet(TLSKey_t iTLSKey);
-
-	// InitHelper's role is explained in its definition below
-	class InitHelper;
-	friend class InitHelper;
 
 	// Deadlock detection.
 	typedef void (*DeadlockHandler_t)(const std::string& iString);

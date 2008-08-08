@@ -56,8 +56,6 @@ using std::string;
 #pragma mark -
 #pragma mark * ZThread static data
 
-static ZThread* sMainThread;
-
 static const ZThread::ThreadID kThreadID_None = 0;
 
 #if ZCONFIG(API_Thread, POSIX)
@@ -73,14 +71,89 @@ static const ZThread::ThreadID kThreadID_None = 0;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Current ZThread
+#pragma mark * sCurrent support
 
-// Used when deadlock detection is active, and in some situations on windows.
+#if ZCONFIG_Thread_UseCurrent
+
+namespace ZANONYMOUS {
+
+static int sInitCount;
 
 static ZThread::TLSKey_t sKeyCurrentThread;
 
 static ZThread* sCurrent()
 	{ return reinterpret_cast<ZThread*>(ZThread::sTLSGet(sKeyCurrentThread)); }
+
+class MainThread : public ZThread
+	{
+public:
+	MainThread();
+	virtual ~MainThread();
+
+	virtual void Run() {}
+	};
+
+static MainThread* sMainThread;
+
+static const char* sSkankyInit(MainThread* iMT)
+	{
+	ZAssertStop(kDebug_Thread, sMainThread == nil);
+	sMainThread = iMT;
+	return "ZThread::sMainThread";
+	}
+
+MainThread::MainThread()
+:	ZThread(sSkankyInit(this))
+	{
+#if ZCONFIG(API_Thread, Be)
+
+	::tls_init(TLS_VERSION);
+
+#endif // ZCONFIG_API_Thread
+
+	// Rememeber our thread ID
+	fThreadID = sCurrentID();
+
+	// Allocate the current thread key
+	sKeyCurrentThread = sTLSAllocate();
+
+	// And remember our current thread object
+	sTLSSet(sKeyCurrentThread, reinterpret_cast<TLSData_t>(this));
+
+	sMainThread = this;
+
+	fStarted = true;
+	}
+
+MainThread::~MainThread()
+	{
+	ZAssertStop(kDebug_Thread, sMainThread = this);
+	sTLSFree(sKeyCurrentThread);
+
+	#if ZCONFIG(API_Thread, Be)
+		::tls_term();
+	#endif
+	}
+
+} // anonymous namespace
+
+ZThreadCurrentHelper::ZThreadCurrentHelper()
+	{
+	if (sInitCount++ != 0)
+		return;
+
+	new MainThread;
+	}
+
+ZThreadCurrentHelper::~ZThreadCurrentHelper()
+	{
+	if (--sInitCount != 0)
+		return;
+	delete sMainThread;
+	sMainThread = nil;
+	}
+
+#endif // ZCONFIG_Thread_UseCurrent
 
 // =================================================================================================
 #pragma mark -
@@ -164,46 +237,15 @@ static void sReleaseSpinlock(ZAtomic_t* iSpinlock)
 	ZAssertStop(kDebug_Thread, priorValue == 1);
 	}
 
-// ==================================================
+// =================================================================================================
 #pragma mark -
 #pragma mark * ZThread ctor/dtor
 
-// Constructor called only by MainThread at initialization time.
-
-ZThread::ZThread(struct Dummy*)
-	{
-	ZAssertStop(kDebug_Thread, sMainThread == nil);
-
-	#if ZCONFIG_Thread_DeadlockDetect
-	fMutexBase_Wait = nil;
-	#endif
-
-#if ZCONFIG(API_Thread, Be)
-
-	::tls_init(TLS_VERSION);
-
-#endif // ZCONFIG_API_Thread
-
-	// Rememeber our thread ID
-	fThreadID = sCurrentID();
-
-	// Allocate the current thread key
-	sKeyCurrentThread = sTLSAllocate();
-
-	// And remember our current thread object
-	sTLSSet(sKeyCurrentThread, reinterpret_cast<TLSData_t>(this));
-
-	sMainThread = this;
-
-	fStarted = true;
-
-	fName = "ZThread::sMainThread";
-	}
-
 ZThread::ZThread(const char* iName)
 	{
-	if (ZCONFIG_Thread_DeadlockDetect || ZCONFIG(API_Thread, Win32))
+	#if ZCONFIG_Thread_UseCurrent
 		ZAssertStop(kDebug_Thread, sMainThread);
+	#endif
 
 	fThreadID = kThreadID_None;
 	fStarted = false;
@@ -259,34 +301,18 @@ ZThread::ZThread(const char* iName)
 
 ZThread::~ZThread()
 	{
-	if (sMainThread == this)
-		{
-		sMainThread = nil;
-		sTLSFree(sKeyCurrentThread);
-
-#if 0
-#elif ZCONFIG(API_Thread, Be)
-
-		::tls_term();
-
-#endif // ZCONFIG(API_Thread)
-		}
-	else
-		{
+	#if ZCONFIG_Thread_UseCurrent
 		// Back to asserting that the main thread is not nil -- it's just a design flaw
 		// that the main thread exit before any others.
-		if (ZCONFIG_Thread_DeadlockDetect || ZCONFIG(API_Thread, Win32))
-			ZAssertStop(kDebug_Thread, sMainThread != nil);
-		}
+		ZAssertStop(kDebug_Thread, sMainThread != nil);
+	#endif
 
-#if ZCONFIG(API_Thread, Win32)
-
-	// AG 2002-05-02. After examining MetroWerks' and Microsoft's runtime library sources
-	// it's clear that we have to close the thread handle iff we create the thread using beginthreadex.
-	if (HANDLE theThreadHANDLE = sCurrentThreadHANDLE())
-		::CloseHandle(theThreadHANDLE);
-
-#endif // ZCONFIG(API_Thread)
+	#if ZCONFIG(API_Thread, Win32)
+		// AG 2002-05-02. After examining MetroWerks' and Microsoft's runtime library sources
+		// it's clear that we have to close the thread handle iff we create the thread using beginthreadex.
+		if (HANDLE theThreadHANDLE = sCurrentThreadHANDLE())
+			::CloseHandle(theThreadHANDLE);
+	#endif
 	}
 
 // ==================================================
@@ -578,7 +604,9 @@ void* ZThread::sThreadEntry_POSIX(void* iArg)
 	ZAssertStop(kDebug_Thread, currentThread);
 	try
 		{
-		sTLSSet(sKeyCurrentThread, reinterpret_cast<TLSData_t>(currentThread));
+		#if ZCONFIG_Thread_UseCurrent
+			sTLSSet(sKeyCurrentThread, reinterpret_cast<TLSData_t>(currentThread));
+		#endif
 
 		// Wait till our start mutex is released
 		::pthread_mutex_lock(&currentThread->fMutex_Start);
@@ -613,7 +641,9 @@ int32 ZThread::sThreadEntry_Be(void* iArg)
 	ZAssertStop(kDebug_Thread, currentThread);
 	try
 		{
-		sTLSSet(sKeyCurrentThread, reinterpret_cast<TLSData_t>(currentThread));
+		#if ZCONFIG_Thread_UseCurrent
+			sTLSSet(sKeyCurrentThread, reinterpret_cast<TLSData_t>(currentThread));
+		#endif
 
 		currentThread->Run();
 		}
@@ -672,7 +702,7 @@ static bool sWaitForSemaphoreAbsolute(HANDLE iSemaphoreHANDLE, ZTime iWaitUntil)
 		if (currentDelay > timeout)
 			currentDelay = timeout;
 
-		DWORD result = ::WaitForSingleObject(iSemaphoreHANDLE, currentDelay * 1000);
+		DWORD result = ::WaitForSingleObject(iSemaphoreHANDLE, DWORD(currentDelay * 1000));
 
 		if (result == WAIT_OBJECT_0)
 			return true;
@@ -1956,7 +1986,7 @@ ZThread::Error ZMutexComposite::Acquire(bigtime_t iMicroseconds)
 			return err;
 			}
 
-		bigtime_t timeConsumed = (ZTime::sSystem() - startTime) * 1e6;
+		bigtime_t timeConsumed = bigtime_t((ZTime::sSystem() - startTime) * 1e6);
 		if (iMicroseconds >= timeConsumed)
 			iMicroseconds -= timeConsumed;
 		else
