@@ -353,7 +353,8 @@ class ZUSBInterfaceInterface::StreamerR
 public:
 	StreamerR(ZRef<ZUSBInterfaceInterface> iUSBII,
 		IOUSBInterfaceInterface190** iIOUSBInterfaceInterface,
-		int iPipeRefR);
+		int iPipeRefR,
+		size_t iReadBufferSize);
 
 	virtual ~StreamerR();
 
@@ -376,14 +377,15 @@ private:
 
 ZUSBInterfaceInterface::StreamerR::StreamerR(ZRef<ZUSBInterfaceInterface> iUSBII,
 	IOUSBInterfaceInterface190** iIOUSBInterfaceInterface,
-	int iPipeRefR)
+	int iPipeRefR,
+	size_t iReadBufferSize)
 :	fUSBII(iUSBII),
 	fII(iIOUSBInterfaceInterface),
 	fPipeRefR(iPipeRefR),
-	fBufferRead_Size(1024),
+	fBufferRead_Size(iReadBufferSize),
 	fBufferRead_Offset(0),
 	fBufferRead_End(0),
-	fBufferRead(new uint8[fBufferRead_Size])
+	fBufferRead(new uint8[iReadBufferSize])
 	{}
 
 ZUSBInterfaceInterface::StreamerR::~StreamerR()
@@ -548,7 +550,7 @@ ZRef<ZUSBDevice> ZUSBInterfaceInterface::GetUSBDevice()
 ZRef<ZStreamerR> ZUSBInterfaceInterface::OpenR(int iPipeRefR)
 	{
 	if (fOpen)
-		return new StreamerR(this, fIOUSBInterfaceInterface, iPipeRefR);
+		return new StreamerR(this, fIOUSBInterfaceInterface, iPipeRefR, 1024);
 	return ZRef<ZStreamerR>();
 	}
 
