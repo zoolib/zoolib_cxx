@@ -391,4 +391,14 @@ Channel::Channel()
 Channel::~Channel()
 	{}
 
+size_t Channel::GetIdealSize_Read()
+	{
+	return 4096;
+	}
+
+size_t Channel::GetIdealSize_Write()
+	{
+	return 4096;
+	}
+
 } // namespace ZBlackBerry

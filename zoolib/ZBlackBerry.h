@@ -146,6 +146,10 @@ protected:
 
 public:
 	virtual ~Channel();
+
+// Our protocol
+	virtual size_t GetIdealSize_Read();
+	virtual size_t GetIdealSize_Write();
 	};
 
 } // namespace ZBlackBerry

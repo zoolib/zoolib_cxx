@@ -343,12 +343,14 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 		ZBlackBerry::Device::Error theError = ZBlackBerry::Device::error_DeviceClosed;
 		if (ZRef<ZBlackBerry::Device> theDevice = this->pGetDevice(deviceID))
 			{
-			if (ZRef<ZStreamerRWCon> deviceCon =
+			if (ZRef<ZBlackBerry::Channel> deviceCon =
 				theDevice->Open(channelName, gotHash ? &thePasswordHash : nil, &theError))
 				{
 				w.WriteUInt32(ZBlackBerry::Device::error_None);
-				sStartReaderRunner(new ZStreamCopier(iSRWCon), deviceCon);
-				sStartReaderRunner(new ZStreamCopier(deviceCon), iSRWCon);
+				size_t readSize = deviceCon->GetIdealSize_Read();
+				size_t writeSize = deviceCon->GetIdealSize_Write();
+				sStartReaderRunner(new ZStreamCopier(iSRWCon, readSize), deviceCon);
+				sStartReaderRunner(new ZStreamCopier(deviceCon, writeSize), iSRWCon);
 				return;
 				}
 			}
