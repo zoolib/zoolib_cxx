@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(BlackBerry_BBDevMgr)
 
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMemory.h" // For ZBlockCopy
 #include "zoolib/ZTime.h"
 
 using std::string;
@@ -65,6 +66,10 @@ public:
 	virtual STDMETHODIMP OnNewData();
 	virtual STDMETHODIMP OnClose();
 
+// From ZBlackBerry::Channel
+	virtual size_t GetIdealSize_Read();
+	virtual size_t GetIdealSize_Write();
+
 // From ZStreamerR via ZBlackBerry::Channel
 	virtual const ZStreamRCon& GetStreamRCon();
 
@@ -92,6 +97,7 @@ public:
 	bool IsOkay();
 
 private:
+	bool pRefill(IChannel* iChannel, int* ioTimeout);
 	void pAbort();
 	IChannel* pUseChannel();
 
@@ -99,6 +105,10 @@ private:
 	ZCondition fCondition_Reader;
 	IChannel* fChannel;
 	ChannelParams fChannelParams;
+
+	vector<char> fBuffer;
+	size_t fStart;
+	size_t fEnd;
 
 	bool fHasPasswordHash;
 	PasswordHash fPasswordHash;
@@ -108,6 +118,8 @@ private:
 Channel_BBDevMgr::Channel_BBDevMgr(ZRef<Channel_BBDevMgr>& oChannel,
 	IDevice* iDevice, const string& iName, const PasswordHash* iPasswordHash)
 :	fChannel(nil),
+	fStart(0),
+	fEnd(0),
 	fHasPasswordHash(0 != iPasswordHash),
 	fClosed(false)
 	{
@@ -122,7 +134,10 @@ Channel_BBDevMgr::Channel_BBDevMgr(ZRef<Channel_BBDevMgr>& oChannel,
 	HRESULT theResult = iDevice->OpenChannel(wideName.c_str(), this, &fChannel);
 
 	if (SUCCEEDED(theResult) && fChannel)
+		{
 		fChannel->Params(&fChannelParams);
+		fBuffer.resize(fChannelParams.fMaxReceiveUnit);
+		}
 	}
 
 Channel_BBDevMgr::~Channel_BBDevMgr()
@@ -136,7 +151,7 @@ Channel_BBDevMgr::~Channel_BBDevMgr()
 
 STDMETHODIMP Channel_BBDevMgr::QueryInterface(const IID& iInterfaceID, void** oObjectRef)
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
+	if (ZLOG(s, eDebug + 4, "ZBlackBerry::Channel_BBDevMgr"))
 		s << "QueryInterface";
 
 	*oObjectRef = nil;
@@ -166,7 +181,7 @@ ULONG STDMETHODCALLTYPE Channel_BBDevMgr::Release()
 STDMETHODIMP Channel_BBDevMgr::CheckClientStatus(uint16 iRHS)
 	{
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "CheckClientStatus";
+		s.Writef("CheckClientStatus, iRHS: %d", iRHS);
 	// Not implemented - what does this do?
 
 	return S_OK;
@@ -215,8 +230,11 @@ STDMETHODIMP Channel_BBDevMgr::OnClose()
 	return NOERROR;
 	}
 
-bool Channel_BBDevMgr::IsOkay()
-	{ return fChannel; }
+size_t Channel_BBDevMgr::GetIdealSize_Read()
+	{ return fBuffer.size(); }
+
+size_t Channel_BBDevMgr::GetIdealSize_Write()
+	{ return fChannelParams.fMaxTransmitUnit; }
 
 const ZStreamRCon& Channel_BBDevMgr::GetStreamRCon()
 	{ return *this; }
@@ -227,7 +245,7 @@ const ZStreamWCon& Channel_BBDevMgr::GetStreamWCon()
 void Channel_BBDevMgr::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "Imp_Read";
+		s.Writef("Imp_Read, iCount: %d", iCount);
 
 	uint8* localDest = static_cast<uint8*>(iDest);
 
@@ -238,33 +256,24 @@ void Channel_BBDevMgr::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 		if (fClosed)
 			break;
 
-		IChannel* theChannel = this->pUseChannel();
-		if (!theChannel)
-			break;
-
-		int32 countAvailable;
-		if (FAILED(theChannel->PacketsAvailable(&countAvailable)))
+		if (fEnd > fStart)
 			{
+			const size_t countToCopy = std::min(iCount, fEnd - fStart);
+			ZBlockCopy(&fBuffer[fStart], localDest, countToCopy);
+			localDest += countToCopy;
+			fStart += countToCopy;
+			if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
+				s.Writef("Imp_Read, countToCopy: %d", countToCopy);
 			break;
-			}
-		else if (countAvailable == 0)
-			{
-			theChannel->Release();
-			fCondition_Reader.Wait(fMutex);
 			}
 		else
 			{
-			int32 countRead;
-			if (FAILED(theChannel->ReadPacket(iDest, iCount, &countRead)))
-				countRead = 0;
-
-			theChannel->Release();
-
-			if (countRead)
-				{
-				localDest += countRead;
+			IChannel* theChannel = this->pUseChannel();
+			if (!theChannel)
 				break;
-				}
+
+			if (!this->pRefill(theChannel, nil))
+				break;
 			}
 		}
 
@@ -278,17 +287,16 @@ size_t Channel_BBDevMgr::Imp_CountReadable()
 		s << "Imp_CountReadable";
 
 	ZMutexLocker locker(fMutex);
-	if (IChannel* theChannel = this->pUseChannel())
+	if (fEnd <= fStart)
 		{
-		locker.Release();
-
-		int32 countAvailable;
-		if (FAILED(theChannel->PacketsAvailable(&countAvailable)))
-			countAvailable = 0;
-		theChannel->Release();
+		IChannel* theChannel = this->pUseChannel();
+		if (!theChannel)
+			return 0;
+		int theTimeout = 0;
+		this->pRefill(theChannel, &theTimeout);
 		}
-
-	return 0;
+		
+	return fEnd - fStart;
 	}
 
 bool Channel_BBDevMgr::Imp_WaitReadable(int iMilliseconds)
@@ -303,30 +311,15 @@ bool Channel_BBDevMgr::Imp_WaitReadable(int iMilliseconds)
 		if (fClosed)
 			return true;
 
+		if (fEnd > fStart)
+			return true;
+
 		IChannel* theChannel = this->pUseChannel();
 		if (!theChannel)
 			return true;
 
-		int32 countAvailable;
-		if (FAILED(theChannel->PacketsAvailable(&countAvailable)))
-			countAvailable = 0;
-		theChannel->Release();
-
-		if (countAvailable)
-			return true;
-
-		if (iMilliseconds < 0)
-			{
-			fCondition_Reader.Wait(fMutex);
-			}
-		else
-			{
-			const ZTime start = ZTime::sSystem();
-			fCondition_Reader.Wait(fMutex, iMilliseconds * 1000);
-			iMilliseconds -= int(1000 * (ZTime::sSystem() - start));
-			if (iMilliseconds <= 0)
-				return false;
-			}
+		if (!this->pRefill(theChannel, &iMilliseconds))
+			return false;
 		}
 	}
 
@@ -342,44 +335,22 @@ bool Channel_BBDevMgr::Imp_ReceiveDisconnect(int iMilliseconds)
 		if (fClosed)
 			return true;
 
+		fEnd = 0;
+		fStart = 0;
+
 		IChannel* theChannel = this->pUseChannel();
 		if (!theChannel)
 			return true;
 
-		int32 countAvailable;
-		if (FAILED(theChannel->PacketsAvailable(&countAvailable)))
-			{
+		if (!this->pRefill(theChannel, &iMilliseconds))
 			return true;
-			}
-
-		if (countAvailable)
-			{
-			// Suck up and discard any data.
-			int32 countRead;
-			theChannel->ReadPacket(
-				ZooLib::sGarbageBuffer, sizeof(ZooLib::sGarbageBuffer), &countRead);
-			}
-		else if (iMilliseconds < 0)
-			{
-			fCondition_Reader.Wait(fMutex);
-			}
-		else
-			{
-			const ZTime start = ZTime::sSystem();
-			fCondition_Reader.Wait(fMutex, iMilliseconds * 1000);
-			iMilliseconds -= int(1000 * (ZTime::sSystem() - start));
-			if (iMilliseconds <= 0)
-				return false;
-			}
-
-		theChannel->Release();
 		}
 	}
 
 void Channel_BBDevMgr::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "Imp_Write";
+		s.Writef("Imp_Write, iCount: %d", iCount);
 
 	const uint8* localSource = static_cast<const uint8*>(iSource);
 
@@ -423,11 +394,76 @@ void Channel_BBDevMgr::Imp_Abort()
 	this->pAbort();
 	}
 
+bool Channel_BBDevMgr::IsOkay()
+	{ return fChannel; }
+
+bool Channel_BBDevMgr::pRefill(IChannel* iChannel, int* ioTimeout)
+	{
+	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
+		s.Writef("pRefill");
+
+	ZAssert(fMutex.IsLocked());
+	ZAssert(iChannel);
+	ZAssert(fEnd <= fStart);
+
+	bool result = false;
+	for (;;)
+		{
+		if (fClosed)
+			break;
+		int32 packetsAvailable;
+		if (FAILED(iChannel->PacketsAvailable(&packetsAvailable)))
+			{
+			break;
+			}
+		else if (packetsAvailable)
+			{
+			int32 countRead;
+			if (FAILED(iChannel->ReadPacket(&fBuffer[0], fBuffer.size(), &countRead)))
+				countRead = 0;
+
+			if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
+				s.Writef("pRefill, countRead: %d", countRead);
+
+			fStart = 0;
+			fEnd = countRead;
+			if (countRead)
+				{
+				result = true;
+				break;
+				}
+			}
+		else if (!ioTimeout)
+			{
+			if (ZThread::errorTimeout == fCondition_Reader.Wait(fMutex, 1000000))
+				{
+				if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
+					s.Writef("pRefill, timed out, looping");
+				continue;
+				}
+			}
+		else
+			{
+			const ZTime start = ZTime::sSystem();
+			fCondition_Reader.Wait(fMutex, *ioTimeout * 1000);
+			*ioTimeout -= int(1000 * (ZTime::sSystem() - start));
+			if (*ioTimeout <= 0)
+				{
+				*ioTimeout = 0;
+				break;
+				}
+			}
+		}
+	iChannel->Release();
+	return result;
+	}
+
 void Channel_BBDevMgr::pAbort()
 	{
 	ZMutexLocker locker(fMutex);
 	if (fChannel)
 		{
+		fClosed = true;
 		IChannel* theChannel = fChannel;
 		fChannel = nil;
 		fCondition_Reader.Broadcast();
@@ -628,7 +664,7 @@ Manager_BBDevMgr::~Manager_BBDevMgr()
 STDMETHODIMP Manager_BBDevMgr::QueryInterface(
 	const IID& iInterfaceID, void** oObjectRef)
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Manager_BBDevMgr"))
+	if (ZLOG(s, eDebug + 4, "ZBlackBerry::Manager_BBDevMgr"))
 		s << "QueryInterface";
 
 	*oObjectRef = nil;
