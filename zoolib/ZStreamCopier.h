@@ -32,6 +32,8 @@ class ZStreamCopier : public ZStreamReader
 	{
 public:
 	ZStreamCopier(ZRef<ZStreamerWCon> iStreamerWCon);
+	ZStreamCopier(ZRef<ZStreamerWCon> iStreamerWCon, size_t iChunkSize);
+
 	~ZStreamCopier();
 
 // From ZStreamReader
@@ -41,6 +43,7 @@ public:
 
 private:
 	ZRef<ZStreamerWCon> fStreamerWCon;
+	size_t fChunkSize;
 	};
 
 #endif // __ZStreamCopier__

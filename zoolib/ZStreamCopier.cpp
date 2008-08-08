@@ -20,12 +20,46 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamCopier.h"
 
+#include <vector>
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Static helpers
+
+static bool sRead(
+	const ZStreamR& iStreamR, void* iBuffer, size_t iBufferSize, const ZStreamWCon& iStreamWCon)
+	{
+	size_t countRead;
+	iStreamR.Read(iBuffer, iBufferSize, &countRead);
+
+	if (countRead == 0)
+		{
+		if (const ZStreamRCon* theSRC = dynamic_cast<const ZStreamRCon*>(&iStreamR))
+			theSRC->ReceiveDisconnect(-1);
+
+		iStreamWCon.SendDisconnect();
+
+		return false;
+		}
+
+	size_t countWritten;
+	iStreamWCon.Write(iBuffer, countRead, &countWritten);
+
+	return countWritten == countRead;	
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamCopier
 
 ZStreamCopier::ZStreamCopier(ZRef<ZStreamerWCon> iStreamerWCon)
-:	fStreamerWCon(iStreamerWCon)
+:	fStreamerWCon(iStreamerWCon),
+	fChunkSize(ZooLib::sStackBufferSize)
+	{}
+
+ZStreamCopier::ZStreamCopier(ZRef<ZStreamerWCon> iStreamerWCon, size_t iChunkSize)
+:	fStreamerWCon(iStreamerWCon),
+	fChunkSize(iChunkSize)
 	{}
 
 ZStreamCopier::~ZStreamCopier()
@@ -33,24 +67,16 @@ ZStreamCopier::~ZStreamCopier()
 
 bool ZStreamCopier::Read(const ZStreamR& iStreamR)
 	{
-	char buffer[ZooLib::sStackBufferSize];
-	size_t countRead;
-	iStreamR.Read(buffer, sizeof(buffer), &countRead);
-
-	if (countRead == 0)
+	if (fChunkSize <= ZooLib::sStackBufferSize)
 		{
-		if (const ZStreamRCon* theSRC = dynamic_cast<const ZStreamRCon*>(&iStreamR))
-			theSRC->ReceiveDisconnect(-1);
-
-		fStreamerWCon->GetStreamWCon().SendDisconnect();
-
-		return false;
+		char buffer[ZooLib::sStackBufferSize];
+		return sRead(iStreamR, buffer, ZooLib::sStackBufferSize, fStreamerWCon->GetStreamWCon());
 		}
-
-	size_t countWritten;
-	fStreamerWCon->GetStreamW().Write(buffer, countRead, &countWritten);
-
-	return countWritten == countRead;
+	else
+		{
+		std::vector<char> buffer(fChunkSize);
+		return sRead(iStreamR, &buffer[0], fChunkSize, fStreamerWCon->GetStreamWCon());
+		}
 	}
 
 void ZStreamCopier::RunnerDetached(ZStreamReaderRunner* iRunner)
