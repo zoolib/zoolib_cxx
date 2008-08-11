@@ -495,7 +495,7 @@ ZRef<ZDCCanvas> ZDCCanvas_ZooLib::CreateOffScreen(const ZRect& iCanvasRect)
 	const RasterDesc& myRasterDesc = fRep->GetRaster()->GetRasterDesc();
 
 	RasterDesc theRasterDesc(myRasterDesc.fPixvalDesc,
-		ZDCPixmapNS::sCalcRowBytes(theSize.h, myRasterDesc.fPixvalDesc.fDepth),
+		ZDCPixmapNS::sCalcRowBytes(theSize.h, myRasterDesc.fPixvalDesc.fDepth, 4),
 		theSize.v, false);
 
 	ZRef<ZDCPixmapRep> theRep

@@ -147,7 +147,7 @@ void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 		iStream.Write(&tempColorsVector[0], tempColorsVector.size());
 		}
 #endif
-	size_t rowBytes = ZDCPixmapNS::sCalcRowBytes(theSize.h, destPixvalDesc.fDepth);
+	size_t rowBytes = ZDCPixmapNS::sCalcRowBytes(theSize.h, destPixvalDesc.fDepth, 1);
 	vector<uint8> theRowBufferVector(rowBytes);
 
 	void* theRowBuffer = &theRowBufferVector[0];

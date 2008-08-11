@@ -39,7 +39,7 @@ namespace ZDCPixmapNS {
 using ZooLib::ZPoint;
 using ZooLib::ZRect;
 
-int sCalcRowBytes(int iWidth, int iDepth);
+int sCalcRowBytes(int iWidth, int iDepth, int iByteRound);
 
 class RasterDesc;
 class PixvalDesc;
@@ -248,8 +248,9 @@ public:
 	PixvalIterR(const void* iAddress, const PixvalDesc& iPixvalDesc, int iCoord);
 
 	uint32 ReadInc();
-	uint32 Read()
-		{ return fCurrent; }
+	uint32 Read();
+
+	void Inc();
 
 	void Reset(const void* iAddress, int iCoord);
 
@@ -258,7 +259,6 @@ protected:
 	PixvalAccessor fAccessor;
 
 	int fCoord;
-	uint32 fCurrent;
 	};
 
 // =================================================================================================
@@ -271,16 +271,10 @@ public:
 	PixvalIterRW(void* iAddress, const PixvalDesc& iPixvalDesc, int iCoord);
 
 	uint32 ReadInc();
-	uint32 Read()
-		{ return fCurrent; }
-
+	uint32 Read();
 
 	void WriteInc(uint32 iPixval);
-	void Write(uint32 iPixval)
-		{
-		fCurrent = iPixval;
-		fAccessor.SetPixval(fAddress, fCoord, iPixval);
-		}
+	void Write(uint32 iPixval);
 
 	void Inc();
 
@@ -291,7 +285,6 @@ private:
 	PixvalAccessor fAccessor;
 
 	int fCoord;
-	uint32 fCurrent;
 	};
 
 // =================================================================================================
@@ -304,11 +297,9 @@ public:
 	PixvalIterW(void* iAddress, const PixvalDesc& iPixvalDesc, int iCoord);
 
 	void WriteInc(uint32 iPixval);
-	void Write(uint32 iPixval)
-		{ fAccessor.SetPixval(fAddress, fCoord, iPixval); }
+	void Write(uint32 iPixval);
 
-	void Inc()
-		{ ++fCoord; }
+	void Inc();
 
 	void Reset(void* iAddress, int iCoord);
 

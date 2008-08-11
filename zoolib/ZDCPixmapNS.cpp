@@ -298,8 +298,11 @@ static uint8* sBuildReverseLookup(const ZRGBColorSmallPOD* iColors, size_t iCoun
 #pragma mark -
 #pragma mark * ZDCPixmapNS
 
-int ZDCPixmapNS::sCalcRowBytes(int iWidth, int iDepth)
-	{ return ((iWidth * iDepth + 31) / 32) * 4; }
+int ZDCPixmapNS::sCalcRowBytes(int iWidth, int iDepth, int iByteRound)
+	{
+	int bitRound = iByteRound * 8;
+	return ((iWidth * iDepth + bitRound - 1) / bitRound) * iByteRound;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -314,7 +317,7 @@ ZDCPixmapNS::RasterDesc::RasterDesc(ZPoint iSize, EFormatStandard iFormat, bool 
 			int32 depth = sStandardToInfoColor[x].fDepth;
 			fPixvalDesc.fDepth = depth;
 			fPixvalDesc.fBigEndian = sStandardToInfoColor[x].fBigEndian;
-			fRowBytes = sCalcRowBytes(iSize.h, depth);
+			fRowBytes = sCalcRowBytes(iSize.h, depth, 4);
 			fRowCount = iSize.v;
 			fFlipped = iFlipped;
 			return;
@@ -328,7 +331,7 @@ ZDCPixmapNS::RasterDesc::RasterDesc(ZPoint iSize, EFormatStandard iFormat, bool 
 			int32 depth = sStandardToInfoGray[x].fDepth;
 			fPixvalDesc.fDepth = depth;
 			fPixvalDesc.fBigEndian = sStandardToInfoGray[x].fBigEndian;
-			fRowBytes = sCalcRowBytes(iSize.h, depth);
+			fRowBytes = sCalcRowBytes(iSize.h, depth, 4);
 			fRowCount = iSize.v;
 			fFlipped = iFlipped;
 			return;
@@ -1484,23 +1487,29 @@ ZDCPixmapNS::PixvalIterR::PixvalIterR(const void* iAddress,
 :	fAddress(iAddress),
 	fAccessor(iPixvalDesc),
 	fCoord(iCoord)
-	{
-	fCurrent = fAccessor.GetPixval(fAddress, fCoord);
-	}
+	{}
 
 uint32 ZDCPixmapNS::PixvalIterR::ReadInc()
 	{
-	uint32 result = fCurrent;
+	uint32 result = fAccessor.GetPixval(fAddress, fCoord);
 	++fCoord;
-	fCurrent = fAccessor.GetPixval(fAddress, fCoord);
 	return result;
+	}
+
+uint32 ZDCPixmapNS::PixvalIterR::Read()
+	{
+	return fAccessor.GetPixval(fAddress, fCoord);
+	}
+
+void ZDCPixmapNS::PixvalIterR::Inc()
+	{
+	++fCoord;
 	}
 
 void ZDCPixmapNS::PixvalIterR::Reset(const void* iAddress, int iCoord)
 	{
 	fAddress = iAddress;
 	fCoord = iCoord;
-	fCurrent = fAccessor.GetPixval(fAddress, fCoord);
 	}
 
 // =================================================================================================
@@ -1511,36 +1520,40 @@ ZDCPixmapNS::PixvalIterRW::PixvalIterRW(void* iAddress, const PixvalDesc& iPixva
 :	fAddress(iAddress),
 	fAccessor(iPixvalDesc),
 	fCoord(iCoord)
-	{
-	fCurrent = fAccessor.GetPixval(fAddress, fCoord);
-	}
+	{}
 
 uint32 ZDCPixmapNS::PixvalIterRW::ReadInc()
 	{
-	uint32 result = fCurrent;
+	uint32 result = fAccessor.GetPixval(fAddress, fCoord);
 	++fCoord;
-	fCurrent = fAccessor.GetPixval(fAddress, fCoord);
 	return result;
+	}
+
+uint32 ZDCPixmapNS::PixvalIterRW::Read()
+	{
+	return fAccessor.GetPixval(fAddress, fCoord);
 	}
 
 void ZDCPixmapNS::PixvalIterRW::WriteInc(uint32 iPixval)
 	{
 	fAccessor.SetPixval(fAddress, fCoord, iPixval);
 	++fCoord;
-	fCurrent = fAccessor.GetPixval(fAddress, fCoord);
+	}
+
+void ZDCPixmapNS::PixvalIterRW::Write(uint32 iPixval)
+	{
+	fAccessor.SetPixval(fAddress, fCoord, iPixval);
 	}
 
 void ZDCPixmapNS::PixvalIterRW::Inc()
 	{
 	++fCoord;
-	fCurrent = fAccessor.GetPixval(fAddress, fCoord);
 	}
 
 void ZDCPixmapNS::PixvalIterRW::Reset(void* iAddress, int iCoord)
 	{
 	fAddress = iAddress;
 	fCoord = iCoord;
-	fCurrent = fAccessor.GetPixval(fAddress, fCoord);
 	}
 
 // =================================================================================================
@@ -1556,6 +1569,16 @@ ZDCPixmapNS::PixvalIterW::PixvalIterW(void* iAddress, const PixvalDesc& iPixvalD
 void ZDCPixmapNS::PixvalIterW::WriteInc(uint32 iPixval)
 	{
 	fAccessor.SetPixval(fAddress, fCoord, iPixval);
+	++fCoord;
+	}
+
+void ZDCPixmapNS::PixvalIterW::Write(uint32 iPixval)
+	{
+	fAccessor.SetPixval(fAddress, fCoord, iPixval);
+	}
+
+void ZDCPixmapNS::PixvalIterW::Inc()
+	{
 	++fCoord;
 	}
 

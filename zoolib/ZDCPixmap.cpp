@@ -762,7 +762,8 @@ ZRef<ZDCPixmapRep> ZDCPixmapRep::Touch()
 		{
 		const RasterDesc& ourRasterDesc = fRaster->GetRasterDesc();
 		RasterDesc newRasterDesc = ourRasterDesc;
-		newRasterDesc.fRowBytes = sCalcRowBytes(fBounds.Width(), newRasterDesc.fPixvalDesc.fDepth);
+		newRasterDesc.fRowBytes
+			= sCalcRowBytes(fBounds.Width(), newRasterDesc.fPixvalDesc.fDepth, 4);
 		newRasterDesc.fRowCount = fBounds.Height();
 
 		ZRef<ZDCPixmapRep> newRep
