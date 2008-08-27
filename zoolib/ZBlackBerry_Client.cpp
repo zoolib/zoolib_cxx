@@ -114,11 +114,8 @@ Device_Client::~Device_Client()
 
 static void sWriteString(const ZStreamW& w, const string& iString)
 	{
-	if (size_t theSize = iString.size())
-		{
-		w.WriteCount(theSize);
-		w.WriteString(iString);
-		}
+	w.WriteCount(iString.size());
+	w.WriteString(iString);
 	}
 
 void Device_Client::Stop()
