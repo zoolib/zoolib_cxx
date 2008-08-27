@@ -97,7 +97,7 @@ public:
 	bool IsOkay();
 
 private:
-	bool pRefill(IChannel* iChannel, int* ioTimeout);
+	bool pRefill(ZMutexLocker& iLocker, IChannel* iChannel, int* ioTimeout);
 	void pAbort();
 	IChannel* pUseChannel();
 
@@ -272,7 +272,7 @@ void Channel_BBDevMgr::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 			if (!theChannel)
 				break;
 
-			if (!this->pRefill(theChannel, nil))
+			if (!this->pRefill(locker, theChannel, nil))
 				break;
 			}
 		}
@@ -293,7 +293,7 @@ size_t Channel_BBDevMgr::Imp_CountReadable()
 		if (!theChannel)
 			return 0;
 		int theTimeout = 0;
-		this->pRefill(theChannel, &theTimeout);
+		this->pRefill(locker, theChannel, &theTimeout);
 		}
 		
 	return fEnd - fStart;
@@ -318,7 +318,7 @@ bool Channel_BBDevMgr::Imp_WaitReadable(int iMilliseconds)
 		if (!theChannel)
 			return true;
 
-		if (!this->pRefill(theChannel, &iMilliseconds))
+		if (!this->pRefill(locker, theChannel, &iMilliseconds))
 			return false;
 		}
 	}
@@ -342,7 +342,7 @@ bool Channel_BBDevMgr::Imp_ReceiveDisconnect(int iMilliseconds)
 		if (!theChannel)
 			return true;
 
-		if (!this->pRefill(theChannel, &iMilliseconds))
+		if (!this->pRefill(locker, theChannel, &iMilliseconds))
 			return true;
 		}
 	}
@@ -397,12 +397,11 @@ void Channel_BBDevMgr::Imp_Abort()
 bool Channel_BBDevMgr::IsOkay()
 	{ return fChannel; }
 
-bool Channel_BBDevMgr::pRefill(IChannel* iChannel, int* ioTimeout)
+bool Channel_BBDevMgr::pRefill(ZMutexLocker& iLocker, IChannel* iChannel, int* ioTimeout)
 	{
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 		s.Writef("pRefill");
 
-	ZAssert(fMutex.IsLocked());
 	ZAssert(iChannel);
 	ZAssert(fEnd <= fStart);
 
@@ -411,6 +410,7 @@ bool Channel_BBDevMgr::pRefill(IChannel* iChannel, int* ioTimeout)
 		{
 		if (fClosed)
 			break;
+
 		int32 packetsAvailable;
 		if (FAILED(iChannel->PacketsAvailable(&packetsAvailable)))
 			{
@@ -418,6 +418,8 @@ bool Channel_BBDevMgr::pRefill(IChannel* iChannel, int* ioTimeout)
 			}
 		else if (packetsAvailable)
 			{
+			iLocker.Release();
+
 			int32 countRead;
 			if (FAILED(iChannel->ReadPacket(&fBuffer[0], fBuffer.size(), &countRead)))
 				countRead = 0;
@@ -425,6 +427,7 @@ bool Channel_BBDevMgr::pRefill(IChannel* iChannel, int* ioTimeout)
 			if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 				s.Writef("pRefill, countRead: %d", countRead);
 
+			iLocker.Acquire();
 			fStart = 0;
 			fEnd = countRead;
 			if (countRead)
@@ -454,7 +457,10 @@ bool Channel_BBDevMgr::pRefill(IChannel* iChannel, int* ioTimeout)
 				}
 			}
 		}
+	iLocker.Release();
+	ZAssert(!fMutex.IsLocked());
 	iChannel->Release();
+	iLocker.Acquire();
 	return result;
 	}
 
