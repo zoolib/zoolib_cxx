@@ -32,6 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZStreamR;
 class ZStreamW;
 
+namespace ZooLib {
 namespace ZString {
 
 std::string sFormat(const char* inString, ...);
@@ -93,5 +94,10 @@ void sToPString(const std::string& iString, unsigned char* oPString, size_t iMax
 void sToPString(const char* iString, unsigned char* oPString, size_t iMaxLength);
 
 } // namespace ZString
+} // namespace ZooLib
+
+#ifndef ZooLib_SuppressInjection
+	namespace ZString = ZooLib::ZString;
+#endif
 
 #endif // __ZString__
