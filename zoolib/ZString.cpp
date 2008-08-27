@@ -45,6 +45,8 @@ using std::string;
 
 // =================================================================================================
 
+namespace ZooLib {
+
 string ZString::sFormat(const char* iString, ...)
 	{
 	va_list args;
@@ -382,3 +384,5 @@ void ZString::sToPString(const char* inString, unsigned char* outPString, size_t
 		ZBlockCopy(inString, &(outPString[1]), sourceLength);
 	outPString[0] = sourceLength;
 	}
+
+} // namespace ZooLib
