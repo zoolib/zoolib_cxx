@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __zconfigl__ 1
 
 // Ensure our definitions have been set up
-#include "zconfigd.h"
+#include "zoolib/zconfigd.h"
 
 // ==================================================
 #define ZCONFIG(a, b)\
