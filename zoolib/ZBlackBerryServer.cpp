@@ -65,7 +65,12 @@ ZBlackBerryServer::Handler_ManagerChanged::Handler_ManagerChanged(ZBlackBerrySer
 	{}
 
 ZBlackBerryServer::Handler_ManagerChanged::~Handler_ManagerChanged()
-	{}
+	{
+	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_ManagerChanged~"))
+		{
+		s << "~Handler_ManagerChanged";
+		}
+	}
 
 bool ZBlackBerryServer::Handler_ManagerChanged::Read(const ZStreamR& r)
 	{
@@ -122,7 +127,16 @@ bool ZBlackBerryServer::Handler_ManagerChanged::Write(const ZStreamW& w)
 	}
 
 void ZBlackBerryServer::Handler_ManagerChanged::Detached()
-	{ fServer->pRemove_ManagerChanged(this); }
+	{
+	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_ManagerChanged"))
+		{
+		s << "Detached";
+		}
+
+	fServer->pRemove_ManagerChanged(this);
+
+	delete this;
+	}
 
 void ZBlackBerryServer::Handler_ManagerChanged::TripIt()
 	{
@@ -226,7 +240,10 @@ void ZBlackBerryServer::Handler_DeviceFinished::Detached()
 		{
 		s << "Detached";
 		}
+
 	fServer->pRemove_DeviceFinished(this);
+
+	delete this;
 	}
 
 void ZBlackBerryServer::Handler_DeviceFinished::TripIt()
@@ -347,8 +364,8 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 				theDevice->Open(channelName, gotHash ? &thePasswordHash : nil, &theError))
 				{
 				w.WriteUInt32(ZBlackBerry::Device::error_None);
-				size_t readSize = deviceCon->GetIdealSize_Read();
-				size_t writeSize = deviceCon->GetIdealSize_Write();
+				const size_t readSize = deviceCon->GetIdealSize_Read();
+				const size_t writeSize = deviceCon->GetIdealSize_Write();
 				sStartReaderRunner(new ZStreamCopier(iSRWCon, readSize), deviceCon);
 				sStartReaderRunner(new ZStreamCopier(deviceCon, writeSize), iSRWCon);
 				return;
