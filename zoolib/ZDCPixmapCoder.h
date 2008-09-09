@@ -41,6 +41,7 @@ protected:
 	ZDCPixmapEncoder& operator=(const ZDCPixmapEncoder&);
 
 public:
+	typedef ZooLib::ZPoint ZPoint;
 	typedef ZooLib::ZRect ZRect;
 
 	virtual ~ZDCPixmapEncoder();
@@ -75,6 +76,9 @@ protected:
 	ZDCPixmapDecoder& operator=(const ZDCPixmapDecoder&);
 
 public:
+	typedef ZooLib::ZPoint ZPoint;
+	typedef ZooLib::ZRect ZRect;
+
 	virtual ~ZDCPixmapDecoder();
 
 	ZDCPixmap Read(const ZStreamR& iStream);

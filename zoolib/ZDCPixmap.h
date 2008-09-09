@@ -45,6 +45,8 @@ protected:
 	~ZDCPixmapFactory();
 
 public:
+	typedef ZooLib::ZRect ZRect;
+
 	static ZRef<ZDCPixmapRep> sCreateRep(const ZRef<ZDCPixmapRaster>& iRaster,
 		const ZRect& iBounds, const ZDCPixmapNS::PixelDesc& iPixelDesc);
 
@@ -474,7 +476,7 @@ public:
 	void SetMask(const ZDCPixmap& iPixmap) { fMaskPixmap = iPixmap; }
 	const ZDCPixmap& GetMask() const { return fMaskPixmap; }
 
-	ZPoint Size() const;
+	ZooLib::ZPoint Size() const;
 
 // Are we valid, i.e. do we have any pixels at all?
 	operator operator_bool_type() const;

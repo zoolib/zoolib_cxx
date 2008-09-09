@@ -310,7 +310,7 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 		ZDCPixmapNS::RasterDesc theRasterDesc;
 		theRasterDesc.fPixvalDesc.fDepth = realDepth;
 		theRasterDesc.fPixvalDesc.fBigEndian = true;
-		theRasterDesc.fRowBytes = ZDCPixmapNS::sCalcRowBytes(thePNGWidth, realDepth);
+		theRasterDesc.fRowBytes = ZDCPixmapNS::sCalcRowBytes(thePNGWidth, realDepth, 4);
 		theRasterDesc.fRowCount = thePNGHeight;
 		theRasterDesc.fFlipped = false;
 
@@ -318,7 +318,7 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 		void* baseAddress = oPixmap.GetRaster()->GetBaseAddress();
 		vector<void*> theRowPointers(thePNGHeight);
 		for (size_t y = 0; y < thePNGHeight; ++y)
-			theRowPointers[y] = theRasterDesc.CalcRowAddress(baseAddress, y);
+			theRowPointers[y] = theRasterDesc.CalcRowAddressDest(baseAddress, y);
 
 		if (setjmp(read_ptr->jmpbuf))
 			sThrowFromStream();
