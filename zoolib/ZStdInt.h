@@ -52,28 +52,30 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		typedef int64 bigtime_t;
 
-#	elif ZCONFIG_SPI_Enabled(MacClassic) || ZCONFIG_SPI_Enabled(Carbon) && !ZCONFIG_SPI_Enabled(POSIX)
+#	elif ZCONFIG_SPI_Enabled(MacOSX) || ZCONFIG_SPI_Enabled(MacClassic) || ZCONFIG_SPI_Enabled(Carbon)
 
 		#if ZCONFIG_SPI_Enabled(MacClassic)
 			#include <MacTypes.h>
 		#else
-			#include <CoreServices/CoreServices.h>
+			#include <CoreServices/../Frameworks/CarbonCore.framework/Headers/MacTypes.h>
 		#endif
 
-		typedef SInt8 int8;
+		#include <stdint.h>
+
+		typedef int8_t int8;
 		typedef UInt8 uint8;
 
-		typedef SInt16 int16;
+		typedef int16_t int16;
 		typedef UInt16 uint16;
 
-		typedef SInt32 int32;
+		typedef int32_t int32;
 		typedef UInt32 uint32;
 
-		typedef SInt64 int64;
+		typedef int64_t int64;
 		typedef UInt64 uint64;
 
 		typedef int64 bigtime_t;
-		
+
 #	else
 
 		#include <stdint.h>
