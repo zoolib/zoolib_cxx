@@ -545,7 +545,7 @@ public:
 	virtual ZFile::Error GetSize(uint64& oSize);
 
 private:
-	ZMutexNR fMutex;
+	ZooLib::ZMutexNR fMutex;
 	ZRef<ZStreamerRPos> fStreamer;
 	const ZStreamRPos& fStream;
 	};
@@ -571,7 +571,7 @@ public:
 	virtual ZFile::Error FlushVolume();
 
 private:
-	ZMutexNR fMutex;
+	ZooLib::ZMutexNR fMutex;
 	ZRef<ZStreamerWPos> fStreamer;
 	const ZStreamWPos& fStream;
 	};
@@ -598,7 +598,7 @@ public:
 	virtual ZFile::Error FlushVolume();
 
 private:
-	ZMutexNR fMutex;
+	ZooLib::ZMutexNR fMutex;
 	ZRef<ZStreamerRWPos> fStreamer;
 	const ZStreamRWPos& fStream;
 	};
