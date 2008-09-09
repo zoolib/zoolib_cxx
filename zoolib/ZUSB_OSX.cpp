@@ -251,7 +251,11 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface()
 	request.bAlternateSetting = kIOUSBFindInterfaceDontCare; 
 
 	io_iterator_t iterator;
-	fIOUSBDeviceInterface[0]->CreateInterfaceIterator(fIOUSBDeviceInterface, &request, &iterator); 
+	if (kIOReturnSuccess != fIOUSBDeviceInterface[0]->CreateInterfaceIterator(
+		fIOUSBDeviceInterface, &request, &iterator))
+		{
+		iterator = 0;
+		}
 
 	if (iterator)
 		{
@@ -261,30 +265,36 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface()
 			{
 			SInt32 score; 
 			IOCFPlugInInterface** plugInInterface;
-			::IOCreatePlugInInterfaceForService(usbInterface, 
+			if (kIOReturnSuccess != ::IOCreatePlugInInterfaceForService(usbInterface, 
 				kIOUSBInterfaceUserClientTypeID, 
 				kIOCFPlugInInterfaceID, 
-				&plugInInterface, &score); 
+				&plugInInterface, &score))
+				{
+				plugInInterface = nil;
+				}
 			::IOObjectRelease(usbInterface);
 
-			IOUSBInterfaceInterface190** theIOUSBInterfaceInterface;
-
-			if (plugInInterface[0]->QueryInterface(plugInInterface, 
-					CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID190),
-					(LPVOID*)&theIOUSBInterfaceInterface))
+			if (plugInInterface)
 				{
-				theIOUSBInterfaceInterface = nil;
-				}
-			::IODestroyPlugInInterface(plugInInterface);
+				IOUSBInterfaceInterface190** theIOUSBInterfaceInterface;
 
-			if (theIOUSBInterfaceInterface)
-				{
-				if (noErr == theIOUSBInterfaceInterface[0]->
-					USBInterfaceOpen(theIOUSBInterfaceInterface))
+				if (plugInInterface[0]->QueryInterface(plugInInterface, 
+						CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID190),
+						(LPVOID*)&theIOUSBInterfaceInterface))
 					{
-					return new ZUSBInterfaceInterface(this, theIOUSBInterfaceInterface);
+					theIOUSBInterfaceInterface = nil;
 					}
-				theIOUSBInterfaceInterface[0]->Release(theIOUSBInterfaceInterface);
+				::IODestroyPlugInInterface(plugInInterface);
+
+				if (theIOUSBInterfaceInterface)
+					{
+					if (kIOReturnSuccess == theIOUSBInterfaceInterface[0]->
+						USBInterfaceOpen(theIOUSBInterfaceInterface))
+						{
+						return new ZUSBInterfaceInterface(this, theIOUSBInterfaceInterface);
+						}
+					theIOUSBInterfaceInterface[0]->Release(theIOUSBInterfaceInterface);
+					}
 				}
 			}
 		}
