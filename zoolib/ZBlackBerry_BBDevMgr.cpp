@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 #include "zoolib/ZTime.h"
 
+#include <oleauto.h>
+
 using std::string;
 using std::vector;
 using std::wstring;
@@ -506,12 +508,14 @@ public:
 	virtual ZRef<Channel> Open(
 		const string& iName, const PasswordHash* iPasswordHash, Error* oError);
 	virtual ZMemoryBlock GetAttribute(uint16 iObject, uint16 iAttribute);
+	virtual uint32 GetPIN();
 
 // Called by Manager_BBDevMgr
 	bool Matches(IDevice* iDevice);
 	void pDisconnected();
 
 private:
+	bool pGetProperty(const string16& iName, VARIANT& oValue);
 	IDevice* pUseDevice();
 
 	ZMutex fMutex;
@@ -553,6 +557,7 @@ ZRef<Channel> Device_BBDevMgr::Open(
 			return theChannel;
 
 		// FIXME. Failure may also be due to a bad/missing/expired password.
+		#warning NDY
 		if (oError)
 			*oError = error_UnknownChannel;
 		}
@@ -573,6 +578,23 @@ ZMemoryBlock Device_BBDevMgr::GetAttribute(uint16 iObject, uint16 iAttribute)
 	return ZMemoryBlock();
 	}
 
+uint32 Device_BBDevMgr::GetPIN()
+	{
+	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Device_BBDevMgr"))
+		s << "GetPIN";
+
+	VARIANT theV;
+	::VariantInit(&theV);
+	uint32 thePIN = 0;
+	if (this->pGetProperty(ZUnicode::sAsUTF16("BBPIN"), theV))
+		{
+		if (VT_I4 == theV.vt)
+			thePIN = theV.lVal;
+		}
+	::VariantClear(&theV);
+	return thePIN;
+	}
+
 bool Device_BBDevMgr::Matches(IDevice* iDevice)
 	{
 	int32 result = 0;
@@ -587,17 +609,6 @@ bool Device_BBDevMgr::Matches(IDevice* iDevice)
 	return result == 1;
 	}
 
-ZBlackBerryCOM::IDevice* Device_BBDevMgr::pUseDevice()
-	{
-	ZMutexLocker locker(fMutex);
-	if (IDevice* theDevice = fDevice)
-		{
-		theDevice->AddRef();
-		return theDevice;
-		}
-	return nil;
-	}
-
 void Device_BBDevMgr::pDisconnected()
 	{
 	ZMutexLocker locker(fMutex);
@@ -609,6 +620,54 @@ void Device_BBDevMgr::pDisconnected()
 	theDevice->Release();
 
 	this->pFinished();
+	}
+
+bool Device_BBDevMgr::pGetProperty(const string16& iName, VARIANT& oValue)
+	{
+	bool gotIt = false;
+	if (IDevice* theDevice = this->pUseDevice())
+		{
+		ZBlackBerryCOM::IDeviceProperties* theDPs;
+		if (SUCCEEDED(theDevice->Properties(&theDPs)))
+			{
+			uint32 dpCount;
+			theDPs->Count(&dpCount);
+			for (uint32 x = 0; x < dpCount && !gotIt; ++x)
+				{
+				VARIANT indexV;
+				indexV.vt = VT_I4;
+				indexV.lVal = x;
+				ZBlackBerryCOM::IDeviceProperty* theDP;
+				if (SUCCEEDED(theDPs->Item(indexV, &theDP)))
+					{
+					BSTR theName;
+					if (SUCCEEDED(theDP->Name(&theName)))
+						{
+						if (iName == theName)
+							{
+							if (SUCCEEDED(theDP->Value(&oValue)))
+								gotIt = true;
+							}	
+						::SysFreeString(theName);
+						}
+					theDP->Release();
+					}
+				}
+			theDPs->Release();
+			}
+		}
+	return gotIt;
+	}
+
+ZBlackBerryCOM::IDevice* Device_BBDevMgr::pUseDevice()
+	{
+	ZMutexLocker locker(fMutex);
+	if (IDevice* theDevice = fDevice)
+		{
+		theDevice->AddRef();
+		return theDevice;
+		}
+	return nil;
 	}
 
 // =================================================================================================

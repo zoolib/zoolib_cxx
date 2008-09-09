@@ -393,6 +393,21 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 			w.WriteBool(false);
 			}
 		}
+	else if (req == 5)
+		{
+		// Synchronous get PIN
+		const uint64 deviceID = r.ReadUInt64();
+		if (ZRef<ZBlackBerry::Device> theDevice = this->pGetDevice(deviceID))
+			{
+			uint32 thePIN = theDevice->GetPIN();
+			w.WriteBool(true);
+			w.WriteUInt32(thePIN);
+			}
+		else
+			{
+			w.WriteBool(false);
+			}
+		}
 	}
 
 ZRef<ZBlackBerry::Device> ZBlackBerryServer::pGetDevice(uint64 iDeviceID)

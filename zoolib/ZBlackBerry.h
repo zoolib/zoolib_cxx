@@ -115,6 +115,7 @@ public:
 	virtual ZRef<Channel> Open(
 		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError) = 0;
 	virtual ZMemoryBlock GetAttribute(uint16 iObject, uint16 iAttribute) = 0;
+	virtual uint32 GetPIN();
 
 	class Observer
 		{

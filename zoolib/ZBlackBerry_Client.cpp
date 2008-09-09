@@ -81,6 +81,7 @@ public:
 	virtual ZRef<Channel> Open(
 		const string& iName, const PasswordHash* iPasswordHash, Error* oError);
 	virtual ZMemoryBlock GetAttribute(uint16 iObject, uint16 iAttribute);
+	virtual uint32 GetPIN();
 
 // From ZStreamReader via ZCommer
 	virtual void RunnerDetached(ZStreamReaderRunner* iRunner);
@@ -188,6 +189,27 @@ ZMemoryBlock Device_Client::GetAttribute(uint16 iObject, uint16 iAttribute)
 	catch (...)
 		{}
 	return ZMemoryBlock();
+	}
+
+uint32 Device_Client::GetPIN()
+	{
+	try
+		{
+		if (ZRef<ZStreamerRWCon> theSRWCon = fFactory->MakeStreamerRWCon())
+			{
+			const ZStreamW& w = theSRWCon->GetStreamW();
+			w.WriteUInt8(5);
+			w.WriteUInt64(fDeviceID);
+			w.Flush();
+
+			const ZStreamR& r = theSRWCon->GetStreamR();
+			if (r.ReadBool())
+				return r.ReadUInt32();
+			}
+		}
+	catch (...)
+		{}
+	return false;
 	}
 
 void Device_Client::RunnerDetached(ZStreamReaderRunner* iRunner)

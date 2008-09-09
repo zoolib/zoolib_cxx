@@ -200,6 +200,10 @@ public:
 // From ZRefCountedWithFinalization via ZStreamerRW
 	virtual void Finalize();
 
+// From ZBlackBerry::Channel
+	virtual size_t GetIdealSize_Read();
+	virtual size_t GetIdealSize_Write();
+
 // From ZStreamerR via ZStreamerRWCon
 	virtual const ZStreamRCon& GetStreamRCon();
 
@@ -301,6 +305,12 @@ void Channel_Streamer::Finalize()
 		delete this;
 		}
 	}
+
+size_t Channel_Streamer::GetIdealSize_Read()
+	{ return fReceive_ChunkSize; }
+
+size_t Channel_Streamer::GetIdealSize_Write()
+	{ return fSend_ChunkSize; }
 
 const ZStreamRCon& Channel_Streamer::GetStreamRCon()
 	{ return *this; }
@@ -490,6 +500,14 @@ ZMemoryBlock Device_Streamer::GetAttribute(uint16 iObject, uint16 iAttribute)
 		fCondition.Wait(fMutex);
 
 	return theGA.fResult;
+	}
+
+uint32 Device_Streamer::GetPIN()
+	{
+	ZMemoryBlock theMB_PIN = this->GetAttribute(8, 4);
+	if (theMB_PIN.GetSize() >= 15)
+		return ZByteSwap_ReadLittle32(static_cast<char*>(theMB_PIN.GetData()) + 11);
+	return 0;
 	}
 
 bool Device_Streamer::Read(const ZStreamR& iStreamR)
@@ -1019,6 +1037,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 						{
 						// Nack. 
 						ZAssert(theChannelID == 0xFF);
+						uint16 theError = iStreamR.ReadUInt16LE();
 						theChannel->fState = eState_Dead;
 						theChannel->fError = error_UnknownChannel;
 						theChannel->fCondition_Receive.Broadcast();
@@ -1046,15 +1065,15 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					{
 					if (!theChannel->fHasPasswordHash)
 						{
-						theChannel->fState = eState_Dead;
+						theChannel->fState = eState_CloseNeeded;
 						theChannel->fError = error_PasswordNeeded;
-						theChannel->fCondition_Receive.Broadcast();
+						this->Wake();
 						}
 					else if (remainingTries < 6)
 						{
-						theChannel->fState = eState_Dead;
+						theChannel->fState = eState_CloseNeeded;
 						theChannel->fError = error_PasswordExhausted;
-						theChannel->fCondition_Receive.Broadcast();
+						this->Wake();
 						}
 					else
 						{

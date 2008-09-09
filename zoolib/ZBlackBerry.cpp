@@ -334,6 +334,11 @@ void Device::Finalize()
 		s << "Finalize, deleted";
 	}
 
+uint32 Device::GetPIN()
+	{
+	return 0;
+	}
+
 void Device::ObserverAdd(Observer* iObserver)
 	{
 	ZMutexLocker locker(fMutex);
