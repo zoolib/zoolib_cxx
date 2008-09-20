@@ -654,7 +654,7 @@ void ZStreamRPos::Imp_Unread()
 /** \brief Write to the stream the \a iCount bytes starting at the address \a iSource.
 
 \param iSource The address in memory from which data should be read. It is the caller's
-responsibility to ensure that \c iSource to \c iSource + 1 are allocated and readable.
+responsibility to ensure that \c iSource to \c iSource + \c iCount are allocated and readable.
 \param iCount The number of bytes to write.
 
 If \a iCount bytes cannot be written to the stream an end of write stream exception
@@ -684,7 +684,7 @@ void ZStreamW::Write(const void* iSource, size_t iCount) const
 \a iSource, returning the count actually written.
 
 \param iSource The address in memory from which data should be read. It is the caller's
-responsibility to ensure that \c iSource to \c iSource + 1 are allocated and readable.
+responsibility to ensure that \c iSource to \c iSource + \c iCount are allocated and readable.
 \param iCount The number of bytes to write.
 \param oCountWritten (optional output) The number of bytes actually written. If iCount is
 non zero and oCountWritten is zero this indicates that the stream has reached its end.
