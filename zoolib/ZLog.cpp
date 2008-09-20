@@ -130,7 +130,10 @@ void ZLog::StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* o
 	}
 
 ZLog::StrimW::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(sLogMeister && sLogMeister->Enabled(fPriority, fName)); }
+	{
+	return operator_bool_generator_type::translate(sLogMeister
+		&& sLogMeister->Enabled(fPriority, fName));
+	}
 
 void ZLog::StrimW::Emit() const
 	{
