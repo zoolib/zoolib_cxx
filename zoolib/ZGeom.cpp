@@ -38,3 +38,21 @@ template<> const ZRect_T<float> ZRect_T<float>::sZero(0, 0, 0, 0);
 
 template<> const ZPoint_T<double> ZPoint_T<double>::sZero(0, 0);
 template<> const ZRect_T<double> ZRect_T<double>::sZero(0, 0, 0, 0);
+
+const ZGRect_T<float> a;
+const ZGRect_T<float> b(1, 2, 3, 4);
+const ZGRect_T<float> c(ZooLib::ZPoint(1, 2), 3, 4);
+const ZGRect_T<float> d(1, 2, ZooLib::ZPoint(3, 4));
+const ZGRect_T<float> e(ZooLib::ZPoint(1, 2), ZooLib::ZPoint(3, 4));
+const ZGRect_T<float> f(a);
+
+static void test()
+	{
+	ZGRectf theR;
+	ZPoint theP(0);
+	theR = theP;
+	CGRect theCGRect;
+	ZGRectf theR2 = ::CGRectMake(0, 0, 0, 0);
+	ZGRectf theR3 = ::CGSizeMake(0, 0);
+//	ZGRectf theR4 = ::CGPointMake(0, 0);
+	}
