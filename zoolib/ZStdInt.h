@@ -54,10 +54,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #	elif ZCONFIG_SPI_Enabled(MacOSX) || ZCONFIG_SPI_Enabled(MacClassic) || ZCONFIG_SPI_Enabled(Carbon)
 
-		#if ZCONFIG_SPI_Enabled(MacClassic)
-			#include <MacTypes.h>
-		#else
+		#if ZCONFIG_SPI_Enabled(MacOSX)
 			#include <CoreServices/../Frameworks/CarbonCore.framework/Headers/MacTypes.h>
+		#else
+			#include <MacTypes.h>
 		#endif
 
 		#include <stdint.h>
