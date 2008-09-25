@@ -26,8 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark -
 #pragma mark * Static helpers
 
-static bool sRead(
-	const ZStreamR& iStreamR, void* iBuffer, size_t iBufferSize, const ZStreamWCon& iStreamWCon)
+static bool sCopy(
+	const ZStreamR& iStreamR, void* iBuffer, size_t iBufferSize, const ZStreamW& iStreamW)
 	{
 	size_t countRead;
 	iStreamR.Read(iBuffer, iBufferSize, &countRead);
@@ -37,13 +37,14 @@ static bool sRead(
 		if (const ZStreamRCon* theSRC = dynamic_cast<const ZStreamRCon*>(&iStreamR))
 			theSRC->ReceiveDisconnect(-1);
 
-		iStreamWCon.SendDisconnect();
+		if (const ZStreamWCon* theSWC = dynamic_cast<const ZStreamWCon*>(&iStreamW))
+			theSWC->SendDisconnect();
 
 		return false;
 		}
 
 	size_t countWritten;
-	iStreamWCon.Write(iBuffer, countRead, &countWritten);
+	iStreamW.Write(iBuffer, countRead, &countWritten);
 
 	return countWritten == countRead;	
 	}
@@ -52,13 +53,13 @@ static bool sRead(
 #pragma mark -
 #pragma mark * ZStreamCopier
 
-ZStreamCopier::ZStreamCopier(ZRef<ZStreamerWCon> iStreamerWCon)
-:	fStreamerWCon(iStreamerWCon),
+ZStreamCopier::ZStreamCopier(ZRef<ZStreamerW> iStreamerW)
+:	fStreamerW(iStreamerW),
 	fChunkSize(ZooLib::sStackBufferSize)
 	{}
 
-ZStreamCopier::ZStreamCopier(ZRef<ZStreamerWCon> iStreamerWCon, size_t iChunkSize)
-:	fStreamerWCon(iStreamerWCon),
+ZStreamCopier::ZStreamCopier(ZRef<ZStreamerW> iStreamerW, size_t iChunkSize)
+:	fStreamerW(iStreamerW),
 	fChunkSize(iChunkSize)
 	{}
 
@@ -70,12 +71,12 @@ bool ZStreamCopier::Read(const ZStreamR& iStreamR)
 	if (fChunkSize <= ZooLib::sStackBufferSize)
 		{
 		char buffer[ZooLib::sStackBufferSize];
-		return sRead(iStreamR, buffer, ZooLib::sStackBufferSize, fStreamerWCon->GetStreamWCon());
+		return sCopy(iStreamR, buffer, ZooLib::sStackBufferSize, fStreamerW->GetStreamW());
 		}
 	else
 		{
 		std::vector<char> buffer(fChunkSize);
-		return sRead(iStreamR, &buffer[0], fChunkSize, fStreamerWCon->GetStreamWCon());
+		return sCopy(iStreamR, &buffer[0], fChunkSize, fStreamerW->GetStreamW());
 		}
 	}
 

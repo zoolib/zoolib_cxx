@@ -31,8 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZStreamCopier : public ZStreamReader
 	{
 public:
-	ZStreamCopier(ZRef<ZStreamerWCon> iStreamerWCon);
-	ZStreamCopier(ZRef<ZStreamerWCon> iStreamerWCon, size_t iChunkSize);
+	ZStreamCopier(ZRef<ZStreamerW> iStreamerW);
+	ZStreamCopier(ZRef<ZStreamerW> iStreamerW, size_t iChunkSize);
 
 	~ZStreamCopier();
 
@@ -42,7 +42,7 @@ public:
 	virtual void RunnerDetached(ZStreamReaderRunner* iRunner);
 
 private:
-	ZRef<ZStreamerWCon> fStreamerWCon;
+	ZRef<ZStreamerW> fStreamerW;
 	size_t fChunkSize;
 	};
 
