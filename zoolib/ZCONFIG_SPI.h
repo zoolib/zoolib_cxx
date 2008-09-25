@@ -105,6 +105,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef ZCONFIG_SPI_Avail__Carbon
 #	if __MACH__
 #		define ZCONFIG_SPI_Avail__Carbon 1
+#	elif macintosh
+#		define ZCONFIG_SPI_Avail__Carbon 1
 #	endif
 #endif
 
