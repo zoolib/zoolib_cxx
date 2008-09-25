@@ -33,7 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if ZCONFIG_SPI_Enabled(Carbon)
-#	include <CoreServices/CoreServices.h>
+#	include ZMACINCLUDE(CoreServices,CoreServices.h)
 #endif
 
 #if ZCONFIG_SPI_Enabled(Win)
