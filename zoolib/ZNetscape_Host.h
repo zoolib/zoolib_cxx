@@ -209,7 +209,7 @@ public:
 	void SendDataAsync(
 		void* iNotifyData,
 		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
-		ZRef<ZStreamerR> iStreamerR);
+		ZRef<ZStreamerRCon> iStreamerRCon);
 
 	void SendDataSync(
 		void* iNotifyData,

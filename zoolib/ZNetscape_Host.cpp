@@ -321,14 +321,6 @@ Host::~Host()
 
 void Host::Create(const string& iURL, const string& iMIME)
 	{
-//	char* npp_argv[] =
-//		{ const_cast<char*>(iURL.c_str()), const_cast<char*>(iMIME.c_str()),
-//		"true", "400", "300", "#0000ff", "true", "lzapp" };
-
-//	char* npp_argn[] =
-//		{ "src", "type",
-//		"swliveconnect", "width", "height", "bgcolor", "play", "id" };
-
     char* npp_argv[] =
 		{ const_cast<char*>(iURL.c_str()), const_cast<char*>(iMIME.c_str()),};
 
@@ -336,12 +328,12 @@ void Host::Create(const string& iURL, const string& iMIME)
 		{ "src", "type" };
 
 	
-	NPError theErr = fNPPluginFuncs.newp(const_cast<char*>(iMIME.c_str()), &fNPP_t, NP_FULL, countof(npp_argn), npp_argn, npp_argv, nil);
+	NPError theErr = fNPPluginFuncs.newp(
+		const_cast<char*>(iMIME.c_str()), &fNPP_t, NP_FULL,
+		countof(npp_argn), npp_argn, npp_argv, nil);
 
-	if (ZLOG(s, eDebug, "Host"))
-		{
+	if (ZLOG(s, eDebug + 1, "Host"))
 		s.Writef("Create, theErr: %d", theErr);
-		}
 	}
 
 void Host::Destroy()
@@ -355,7 +347,6 @@ void Host::HostActivate(bool iActivate)
 	EventRecord fakeEvent;
 	fakeEvent.what = activateEvt;
 	fakeEvent.when = ::TickCount();
-//	fakeEvent.message = 0;
 	fakeEvent.message = (UInt32)::GetWindowFromPort(fNP_Port.port);
 	if (iActivate)
 		fakeEvent.modifiers = activeFlag;
@@ -426,7 +417,7 @@ public:
 	Sender(NPP_t& iNPP_t, NPPluginFuncs& iNPPluginFuncs,
 		void* iNotifyData,
 		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
-		ZRef<ZStreamerR> iStreamerR);
+		ZRef<ZStreamerRCon> iStreamerRCon);
 	~Sender();
 
 	bool DeliverData();
@@ -442,14 +433,13 @@ private:
 	const string fMIME;
 	const ZMemoryBlock fHeaders;
 	NPStream_Z fNPStream;
-	ZRef<ZStreamerR> fStreamerR;
-	ZRef<ZStreamerRWCon> fStreamerRWCon;
+	ZRef<ZStreamerRCon> fStreamerRCon;
 	};
 
 Host::Sender::Sender(NPP_t& iNPP_t, NPPluginFuncs& iNPPluginFuncs,
 	void* iNotifyData,
 	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
-	ZRef<ZStreamerR> iStreamerR)
+	ZRef<ZStreamerRCon> iStreamerRCon)
 :	fSentNew(false),
 	fNPP_t(iNPP_t),
 	fNPPluginFuncs(iNPPluginFuncs),
@@ -457,40 +447,48 @@ Host::Sender::Sender(NPP_t& iNPP_t, NPPluginFuncs& iNPPluginFuncs,
 	fURL(iURL),
 	fMIME(iMIME),
 	fHeaders(iHeaders),
-	fStreamerR(iStreamerR)
+	fStreamerRCon(iStreamerRCon)
 	{
-	fStreamerRWCon = new ZStreamerRWCon_MemoryPipe;
-	ZStreamCopier* theSC = new ZStreamCopier(fStreamerRWCon);
-	sStartReaderRunner(theSC, fStreamerR);
-
 	fNPStream.ndata = fNPP_t.ndata;
 	fNPStream.pdata = fNPP_t.pdata;
 	fNPStream.url = fURL.c_str();
-	fNPStream.end = 0;//iStreamR.CountReadable();//81920; //??iCount;
+	fNPStream.end = 0;
 	fNPStream.lastmodified = 0;
 	fNPStream.notifyData = iNotifyData;
 	fNPStream.headers = static_cast<const char*>(fHeaders.GetData());
-	ZAssert(offsetof(NPStream_Z, headers) == 4 + offsetof(NPStream, notifyData));
-//	fNPStream.headers = nil;
-//	fNPStream.headers = (char*)0xDEADBEEF;//nil;//static_cast<const char*>(fHeaders.GetData());
 	}
 
 Host::Sender::~Sender()
-	{
-	fStreamerRWCon->Abort();
-	}
+	{}
 
 bool Host::Sender::DeliverData()
 	{
+	if (!fSentNew)
+		{
+		fSentNew = true;
+
+		if (!fStreamerRCon)
+			{
+			fNPPluginFuncs.urlnotify(&fNPP_t, fURL.c_str(), NPRES_NETWORK_ERR, fNotifyData);
+			return false;
+			}
+
+		uint16 theStreamType = NP_NORMAL;
+		if (fNPPluginFuncs.newstream(&fNPP_t,
+			const_cast<char*>(fMIME.c_str()), &fNPStream, false, &theStreamType))
+			{
+			// Failed -- what result should we pass?
+			fNPPluginFuncs.urlnotify(&fNPP_t, fURL.c_str(), NPRES_DONE, fNotifyData);
+			return false;
+			}
+		}
+
+
 	if (this->pDeliverData())
 		return true;
 
-	if (ZLOG(s, eDebug, "Host::Sender"))
-		s.Writef("DeliverData exiting");
-
 	if (fNotifyData)
 		fNPPluginFuncs.urlnotify(&fNPP_t, fURL.c_str(), NPRES_DONE, fNotifyData);
-//	else
 
 	fNPPluginFuncs.destroystream(&fNPP_t, &fNPStream, NPRES_DONE);
 
@@ -499,32 +497,16 @@ bool Host::Sender::DeliverData()
 
 bool Host::Sender::pDeliverData()
 	{
-	if (!fSentNew)
-		{
-		fSentNew = true;
-//		fNPPluginFuncs.urlnotify(&fNPP_t, fURL.c_str(), NPRES_DONE, fNotifyData);
+	const ZStreamRCon& theStreamRCon = fStreamerRCon->GetStreamRCon();
 
-//		fNPStream.end = fStreamerRWCon->GetStreamR().CountReadable();
-
-		uint16 theStreamType = NP_NORMAL;
-		if (fNPPluginFuncs.newstream(&fNPP_t,
-			const_cast<char*>(fMIME.c_str()), &fNPStream, false, &theStreamType))
-			{
-			// Failed.
-			return false;
-			}
-		}
-
-//	const ZStreamR& theStreamR = fStreamerRWCon->GetStreamR();
-	const ZStreamRCon& theStreamR = fStreamerRWCon->GetStreamRCon();
-	if (!theStreamR.WaitReadable(0))
+	if (!theStreamRCon.WaitReadable(0))
 		{
 		if (ZLOG(s, eDebug, "Host::Sender"))
 			s.Writef("waitReadable is false");
 		return true;
 		}
 
-	const size_t countReadable = theStreamR.CountReadable();
+	const size_t countReadable = theStreamRCon.CountReadable();
 
 	if (ZLOG(s, eDebug, "Host::Sender"))
 		s.Writef("countReadable = %d", countReadable);
@@ -533,43 +515,35 @@ bool Host::Sender::pDeliverData()
 		return false;
 
 	int32 countPossible = fNPPluginFuncs.writeready(&fNPP_t, &fNPStream);
+
 	if (ZLOG(s, eDebug, "Host::Sender"))
 		s.Writef("countPossible = %d", countPossible);
+
 	if (countPossible < 0)
 		{
 		return false;
 		}
 	else if (countPossible > 0)
 		{
-		countPossible = std::min(countPossible, 1024 * 1024);
-		countPossible = std::min(countPossible, 64*1024);
+		countPossible = std::min(countPossible, 64 * 1024);
 
 		vector<uint8> buffer;
 		buffer.resize(countPossible);
 		size_t countRead;
-//		ZStreamRWPos_RAM dataFromServer;
-//		ZStreamR_Tee(theStreamR, dataFromServer).Read(&buffer[0], countPossible, &countRead);
-		theStreamR.Read(&buffer[0], countPossible, &countRead);
+		theStreamRCon.Read(&buffer[0], countPossible, &countRead);
 		if (countRead == 0)
 			return false;
 
 		if (ZLOG(s, eDebug, "Host::Sender"))
 			s.Writef("countRead = %d", countRead);
 
-//		if (ZLOG(s, eDebug, "Host::Sender"))
-//			{
-//			dataFromServer.SetPosition(0);
-//			ZUtil_Strim_Data::sDumpData(dataFromServer, s);
-//			}
-
-
 		for (size_t start = 0; start < countRead; /*no inc*/)
 			{
 			int countWritten = fNPPluginFuncs.write(&fNPP_t, &fNPStream,
 				0, countRead - start, &buffer[start]);
 
-		if (ZLOG(s, eDebug, "Host::Sender"))
-			s.Writef("countWritten = %d", countWritten);
+			if (ZLOG(s, eDebug, "Host::Sender"))
+				s.Writef("countWritten = %d", countWritten);
 
 			if (countWritten < 0)
 				return false;
@@ -602,10 +576,11 @@ void Host::pDeliverData()
 void Host::SendDataAsync(
 	void* iNotifyData,
 	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
-	ZRef<ZStreamerR> iStreamerR)
+	ZRef<ZStreamerRCon> iStreamerRCon)
 	{
 	ZMutexLocker locker(fMutex);
-	Sender* theSender = new Sender(fNPP_t, fNPPluginFuncs, iNotifyData, iURL, iMIME, iHeaders, iStreamerR);
+	Sender* theSender = new Sender(fNPP_t, fNPPluginFuncs,
+		iNotifyData, iURL, iMIME, iHeaders, iStreamerRCon);
 	fSenders.push_back(theSender);
 	}
 
@@ -616,12 +591,13 @@ void Host::SendDataSync(
 	{
 	NPStream_Z theNPStream;
 	theNPStream.ndata = fNPP_t.ndata;
-	theNPStream.pdata = nil;//fNPP_t.pdata;
+	theNPStream.pdata = fNPP_t.pdata;
 	theNPStream.url = iURL.c_str();
-	theNPStream.end = iStreamR.CountReadable(); //??iCount;
+	theNPStream.end = iStreamR.CountReadable();
 	theNPStream.lastmodified = 0;
 	theNPStream.notifyData = iNotifyData;
 	theNPStream.headers = nil;
+
 	uint16 theStreamType = NP_NORMAL;
 
 	if (0 == fNPPluginFuncs.newstream(&fNPP_t,
@@ -665,8 +641,8 @@ void Host::SendDataSync(
 
 		if (iNotifyData)
             fNPPluginFuncs.urlnotify(&fNPP_t, iURL.c_str(), NPRES_DONE, iNotifyData);
-		else
-			fNPPluginFuncs.destroystream(&fNPP_t, &theNPStream, NPRES_DONE);
+
+		fNPPluginFuncs.destroystream(&fNPP_t, &theNPStream, NPRES_DONE);
 		}
 	}
 

@@ -21,7 +21,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNetscape_Host_Std.h"
 
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZHTTP.h"
 #include "zoolib/ZLog.h"
+#include "zoolib/ZMIME.h"
+#include "zoolib/ZNet_Internet.h"
+#include "zoolib/ZStreamRWPos_RAM.h"
+#include "zoolib/ZStream_CRLF.h"
+#include "zoolib/ZStream_Tee.h"
+#include "zoolib/ZString.h"
+#include "zoolib/ZThreadSimple.h"
+#include "zoolib/ZTuple.h"
+#include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::map;
 using std::pair;
@@ -173,6 +183,159 @@ Host_Std::~Host_Std()
 	{
 	}
 
+
+static bool sParseURL(const string& iURL, string& oHost, ip_port& oPort, string& oPath)
+	{
+	oPath.clear();
+
+	const char httpPrefix[] = "http://";
+	const size_t httpPrefixLength = strlen(httpPrefix);
+	string hostAndPort = iURL;
+	if (iURL.length() > httpPrefixLength)
+		{
+		if (ZString::sEquali(iURL.substr(0, httpPrefixLength), httpPrefix))
+			{
+			const size_t slashOffset = iURL.find('/', httpPrefixLength);
+			hostAndPort = iURL.substr(httpPrefixLength, slashOffset - httpPrefixLength);
+			if (slashOffset != string::npos)
+				oPath = iURL.substr(min(iURL.size(), slashOffset + 1));
+			}
+		}
+
+	const size_t colonOffset = hostAndPort.find(':');
+	if (colonOffset != string::npos)
+		{
+		oPort = ZString::sAsInt(hostAndPort.substr(colonOffset + 1));
+		oHost = hostAndPort.substr(0, colonOffset);
+		}
+	else
+		{
+		oPort = 80;
+		oHost = hostAndPort;
+		}
+
+	return true;
+	}
+
+static bool sHTTPThing(const ZStreamW& w, const ZStreamR& r,
+	const string& iURL, const string& iHost,
+	int& oResponseCode, ZMemoryBlock& oRawHeaders, ZTuple& oHeaders, string& oMIME)
+	{
+	w.WriteString("GET ");
+	w.WriteString(iURL);
+	w.WriteString(" HTTP/1.1\r\n");
+	w.WriteString("Host: ");
+	w.WriteString(iHost);
+	w.WriteString("\r\n");
+	w.WriteString("Connection: close\r\n");
+	w.WriteString("\r\n");
+	w.Flush();
+
+	ZStreamRWPos_RAM theHeaderStream;
+	ZStreamR_Tee theStream_Tee(r, theHeaderStream);
+	ZMIME::StreamR_Header theSIH_Server(theStream_Tee);
+
+	string serverResultMessage;
+	if (!ZHTTP::sReadResponse(ZStreamU_Unreader(theSIH_Server),
+		&oResponseCode, &serverResultMessage))
+		{
+		return false;
+		}
+
+	if (!ZHTTP::sReadHeader(theSIH_Server, &oHeaders))
+		{
+		return false;
+		}
+
+	if (ZLOG(s, eDebug, "sHTTPThing"))
+		{
+		s << "Server response, code: "
+			<< ZString::sFormat("%d", oResponseCode)
+			<< ", message: " << serverResultMessage
+			<< ", Headers: " << ZUtil_Strim_Tuple::Format(oHeaders, 1, ZUtil_Strim_Tuple::Options());
+		}
+
+	ZTuple theCT = oHeaders.GetTuple("content-type");
+	oMIME = theCT.GetString("type") + "/" + theCT.GetString("subtype");
+
+	// Zero-terminate the header data block.
+	theHeaderStream.WriteByte(0);
+	theHeaderStream.SetPosition(0);
+
+	ZStreamR_CRLFRemove(theHeaderStream).CopyAllTo(ZStreamRWPos_MemoryBlock(oRawHeaders));
+
+	return true;
+	}
+
+struct Getter_t
+	{
+	string fURL;
+	void* fNotifyData;
+	Host_Std* fHost;
+	};
+
+static void sGetter(Getter_t iGetter)
+	{
+	string theURL = iGetter.fURL;	
+
+	for (;;)
+		{
+		string theHost;
+		ip_port thePort;
+		string thePath;
+		if (sParseURL(theURL, theHost, thePort, thePath))
+			{
+			if (ZLOG(s, eDebug, "FlashWnd_Mac"))
+				s << "sGetter, parsed URL";			
+
+			ZRef<ZNetName_Internet> theNN = new ZNetName_Internet(theHost, thePort);
+			ZRef<ZNetEndpoint> theEndpoint = theNN->Connect();
+			if (!theEndpoint)
+				{
+				if (ZLOG(s, eDebug, "FlashWnd_Mac"))
+					s << "sGetter, couldn't connect to server";			
+				break;
+				}
+
+			int theResponseCode;
+			ZTuple theHeaders;
+			ZMemoryBlock theRawHeaders;
+			string theMIME;
+			if (!sHTTPThing(theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
+				theURL, theHost,
+				theResponseCode, theRawHeaders, theHeaders, theMIME))
+				{
+				break;
+				}
+
+			switch (theResponseCode)
+				{
+				case 200:
+					{
+					// Will need to inspect it to see if it's chunked or otherwise
+					// encoded, and undo that encoding in the streamer we pass off.
+					iGetter.fHost->SendDataAsync(
+						iGetter.fNotifyData, theURL, theMIME, theRawHeaders, theEndpoint);
+					return;
+					// 
+					}
+				case 301:
+				case 302:
+				case 303:
+					{
+					string newURI = ZHTTP::sGetString0(theHeaders.GetValue("location"));
+					theURL = newURI;
+					break;
+					}
+				}
+			}
+		}
+
+	// This causes async delivery of an error.
+	iGetter.fHost->SendDataAsync(
+		iGetter.fNotifyData, theURL, "", ZMemoryBlock(), ZRef<ZStreamerRCon>());
+	}
+
 NPError Host_Std::GetURLNotify(NPP npp,
 	const char* URL, const char* window, void* notifyData)
 	{
@@ -182,8 +345,18 @@ NPError Host_Std::GetURLNotify(NPP npp,
 		if (window)
 			s << " target: " << window;
 		}
+
+	if (URL == strstr(URL, "http:"))
+		{
+		Getter_t theG;
+		theG.fURL = URL;
+		theG.fNotifyData = notifyData;
+		theG.fHost = this;
+		(new ZThreadSimple<Getter_t>(sGetter, theG))->Start();
+		return NPERR_NO_ERROR;
+		}
+
 	return NPERR_INVALID_URL;
-//	return NPERR_GENERIC_ERROR;
 	}
 
 NPError Host_Std::PostURLNotify(NPP npp,
@@ -192,7 +365,7 @@ NPError Host_Std::PostURLNotify(NPP npp,
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s << "PostURLNotify: " << URL;
-	return NPERR_GENERIC_ERROR;
+	return NPERR_INVALID_URL;
 	}
 
 NPError Host_Std::RequestRead(NPStream* stream, NPByteRange* rangeList)
@@ -279,7 +452,6 @@ NPError Host_Std::GetURL(NPP npp, const char* URL, const char* window)
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s << "GetURL: " << URL;
 	return NPERR_INVALID_URL;
-//	return NPERR_GENERIC_ERROR;
 	}
 
 NPError Host_Std::PostURL(NPP npp,
@@ -287,7 +459,7 @@ NPError Host_Std::PostURL(NPP npp,
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s << "PostURL: " << URL;
-	return NPERR_GENERIC_ERROR;
+	return NPERR_INVALID_URL;
 	}
 
 void* Host_Std::GetJavaPeer(NPP npp)
