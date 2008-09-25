@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread.h"
 
 template <class T = void*>
-class ZThreadSimple : public ZThread
+class ZThreadSimple : public ZooLib::ZThread
 	{
 public:
 	typedef void (*ThreadProc)(T inArgument);
