@@ -285,14 +285,11 @@ static void sGetter(Getter_t iGetter)
 		string thePath;
 		if (sParseURL(theURL, theHost, thePort, thePath))
 			{
-			if (ZLOG(s, eDebug, "FlashWnd_Mac"))
-				s << "sGetter, parsed URL";			
-
 			ZRef<ZNetName_Internet> theNN = new ZNetName_Internet(theHost, thePort);
 			ZRef<ZNetEndpoint> theEndpoint = theNN->Connect();
 			if (!theEndpoint)
 				{
-				if (ZLOG(s, eDebug, "FlashWnd_Mac"))
+				if (ZLOG(s, eDebug, "ZNetscape"))
 					s << "sGetter, couldn't connect to server";			
 				break;
 				}
