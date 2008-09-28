@@ -45,7 +45,6 @@ extern "C" {
 } // extern "C"
 
 using std::min;
-using std::runtime_error;
 using std::vector;
 
 // =================================================================================================
@@ -57,9 +56,17 @@ namespace ZANONYMOUS {
 class JPEGErrorMgr : public jpeg_error_mgr
 	{
 public:
-	JPEGErrorMgr();
+	JPEGErrorMgr(struct jpeg_compress_struct& iJCS);
+	JPEGErrorMgr(struct jpeg_decompress_struct& iJDS);
+
+	void BeforeCall();
+	void Fail();
 
 private:
+	void pInit(struct jpeg_error_mgr*& oErrField);
+
+	jmp_buf fEnv;
+
 	static void sErrorExit(j_common_ptr cinfo);
 	static void sEmitMessage(j_common_ptr cinfo, int msg_level);
 	static void sOutputMessage(j_common_ptr cinfo);
@@ -67,8 +74,27 @@ private:
 	static void sReset(j_common_ptr cinfo);
 	};
 
-JPEGErrorMgr::JPEGErrorMgr()
+JPEGErrorMgr::JPEGErrorMgr(struct jpeg_compress_struct& iJCS)
+	{ this->pInit(iJCS.err); }
+
+JPEGErrorMgr::JPEGErrorMgr(struct jpeg_decompress_struct& iJDS)
+	{ this->pInit(iJDS.err); }
+
+void JPEGErrorMgr::BeforeCall()
 	{
+	if (setjmp(fEnv))
+		throw std::runtime_error("JPEGErrorMgr");
+	}
+
+void JPEGErrorMgr::Fail()
+	{
+	longjmp(fEnv, 1);
+	}
+
+void JPEGErrorMgr::pInit(struct jpeg_error_mgr*& oErrField)
+	{
+	oErrField = this;
+
 	error_exit = sErrorExit;
 	emit_message = sEmitMessage;
 	output_message = sOutputMessage;
@@ -78,7 +104,7 @@ JPEGErrorMgr::JPEGErrorMgr()
 
 void JPEGErrorMgr::sErrorExit(j_common_ptr cinfo)
 	{
-	throw runtime_error("JPEGErrorMgr::sErrorExit");
+	static_cast<JPEGErrorMgr*>(cinfo->err)->Fail();
 	}
 
 void JPEGErrorMgr::sEmitMessage(j_common_ptr cinfo, int msg_level)
@@ -137,20 +163,36 @@ void JPEGWriter::sInititialize(j_compress_ptr iCInfo)
 
 boolean JPEGWriter::sEmptyOutputBuffer(j_compress_ptr iCInfo)
 	{
-	JPEGWriter* theWriter = static_cast<JPEGWriter*>(iCInfo->dest);
+	try
+		{
+		JPEGWriter* theWriter = static_cast<JPEGWriter*>(iCInfo->dest);
+		theWriter->fStream.Write(&theWriter->fBuffer[0], theWriter->fBuffer.size());
+		theWriter->next_output_byte = &theWriter->fBuffer[0];
+		theWriter->free_in_buffer = theWriter->fBuffer.size();
 
-	theWriter->fStream.Write(&theWriter->fBuffer[0], theWriter->fBuffer.size());
-	theWriter->next_output_byte = &theWriter->fBuffer[0];
-	theWriter->free_in_buffer = theWriter->fBuffer.size();
-
-	return TRUE;
+		return TRUE;
+		}
+	catch (...)
+		{
+		static_cast<JPEGErrorMgr*>(iCInfo->err)->Fail();
+		}
+	// Can't get here.
+	ZUnimplemented();
+	return FALSE;
 	}
 
 void JPEGWriter::sTerminate(j_compress_ptr iCInfo)
 	{
-	JPEGWriter* theWriter = static_cast<JPEGWriter*>(iCInfo->dest);
-	if (size_t countToWrite = theWriter->next_output_byte - &theWriter->fBuffer[0])
-		theWriter->fStream.Write(&theWriter->fBuffer[0], countToWrite);
+	try
+		{
+		JPEGWriter* theWriter = static_cast<JPEGWriter*>(iCInfo->dest);
+		if (size_t countToWrite = theWriter->next_output_byte - &theWriter->fBuffer[0])
+			theWriter->fStream.Write(&theWriter->fBuffer[0], countToWrite);
+		}
+	catch (...)
+		{
+		static_cast<JPEGErrorMgr*>(iCInfo->err)->Fail();
+		}
 	}
 
 } // anonymous namespace
@@ -200,30 +242,41 @@ void JPEGReader::sInititialize(j_decompress_ptr iCInfo)
 
 boolean JPEGReader::sFillInputBuffer(j_decompress_ptr iCInfo)
 	{
-	JPEGReader* theReader = static_cast<JPEGReader*>(iCInfo->src);
-
-	size_t countAvailable = theReader->fStream.CountReadable();
-	if (countAvailable == 0)
-		countAvailable = theReader->fBuffer.size();
-	else
-		countAvailable = min(countAvailable, theReader->fBuffer.size());
-
-	size_t countRead;
-	theReader->fStream.Read(&theReader->fBuffer[0], countAvailable, &countRead);
-	if (countRead == 0)
+	try
 		{
-		// Insert a fake EOI marker - as per jpeglib recommendation
-		theReader->fBuffer[0] = 0xFF;
-		theReader->fBuffer[1] = JPEG_EOI;
-		theReader->bytes_in_buffer = 2;
-		}
-	else
-		{
-		theReader->next_input_byte = &theReader->fBuffer[0];
-		theReader->bytes_in_buffer = countRead;
-		}
+		JPEGReader* theReader = static_cast<JPEGReader*>(iCInfo->src);
 
-	return TRUE;
+		size_t countAvailable = theReader->fStream.CountReadable();
+
+		if (countAvailable == 0)
+			countAvailable = theReader->fBuffer.size();
+		else
+			countAvailable = min(countAvailable, theReader->fBuffer.size());
+
+		size_t countRead;
+		theReader->fStream.Read(&theReader->fBuffer[0], countAvailable, &countRead);
+		if (countRead == 0)
+			{
+			// Insert a fake EOI marker - as per jpeglib recommendation
+			theReader->fBuffer[0] = 0xFF;
+			theReader->fBuffer[1] = JPEG_EOI;
+			theReader->bytes_in_buffer = 2;
+			}
+		else
+			{
+			theReader->next_input_byte = &theReader->fBuffer[0];
+			theReader->bytes_in_buffer = countRead;
+			}
+
+		return TRUE;
+		}
+	catch (...)
+		{
+		static_cast<JPEGErrorMgr*>(iCInfo->err)->Fail();
+		}
+	// Can't get here.
+	ZUnimplemented();
+	return FALSE;
 	}
 
 void JPEGReader::sSkip(j_decompress_ptr iCInfo, long num_bytes)
@@ -246,7 +299,6 @@ void JPEGReader::sTerminate(j_decompress_ptr iCInfo)
 	{}
 
 } // anonymous namespace
-
 
 // =================================================================================================
 #pragma mark -
@@ -274,8 +326,10 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 	const ZRect& iBounds)
 	{
 	jpeg_compress_struct theJCS;
-	JPEGErrorMgr theEM;
-	theJCS.err = &theEM;
+
+	JPEGErrorMgr theEM(theJCS);
+
+	theEM.BeforeCall();
 	::jpeg_create_compress(&theJCS);
 
 	theJCS.image_width = iBounds.Width();
@@ -314,6 +368,7 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 			destPixvalDesc.fBigEndian = true;
 			}
 
+		theEM.BeforeCall();
 		::jpeg_set_defaults(&theJCS);
 		::jpeg_set_quality(&theJCS, fQuality, TRUE);
 		theJCS.dct_method = JDCT_FASTEST;
@@ -339,6 +394,7 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 					sourceRowAddress += (3 * iBounds.left);
 					rowPtr[0] = const_cast<JSAMPLE*>(sourceRowAddress);
 
+					theEM.BeforeCall();
 					::jpeg_write_scanlines(&theJCS, rowPtr, 1);
 					}				
 				}
@@ -358,6 +414,7 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 					rowPtr[0], destPixvalDesc, destPixelDesc, 0,
 					iBounds.Width());
 
+				theEM.BeforeCall();
 				::jpeg_write_scanlines(&theJCS, rowPtr, 1);
 				}
 			}
@@ -392,16 +449,19 @@ ZDCPixmapDecoder_JPEGLib::~ZDCPixmapDecoder_JPEGLib()
 void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 	{
 	struct jpeg_decompress_struct theJDS;
-	JPEGErrorMgr theEM;
-	theJDS.err = &theEM;
+
+	JPEGErrorMgr theEM(theJDS);
 			  
+	theEM.BeforeCall();
 	::jpeg_create_decompress(&theJDS);
 
 	JPEGReader theJR(iStream);
 	theJDS.src = &theJR;
 	try
 		{
-		::jpeg_read_header(&theJDS, TRUE);
+		theEM.BeforeCall();
+		int result = ::jpeg_read_header(&theJDS, TRUE);
+
 		::jpeg_start_decompress(&theJDS);
 
 		ZDCPixmapNS::PixelDesc sourcePixelDesc;
@@ -443,6 +503,7 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 		rowPtr[0] = &rowBufferVector[0];
 		while (theJDS.output_scanline < theJDS.output_height)
 			{
+			theEM.BeforeCall();
 			int scanlinesRead = ::jpeg_read_scanlines(&theJDS, rowPtr, 1);
 			ZAssertStop(1, scanlinesRead == 1);
 
