@@ -51,8 +51,8 @@ static void test()
 	ZGRectf theR;
 	ZPoint theP(0);
 	theR = theP;
-	CGRect theCGRect;
 	ZGRectf theR2 = ::CGRectMake(0, 0, 0, 0);
 	ZGRectf theR3 = ::CGSizeMake(0, 0);
 //	ZGRectf theR4 = ::CGPointMake(0, 0);
+	CGRect theCGRect = theR2;
 	}
