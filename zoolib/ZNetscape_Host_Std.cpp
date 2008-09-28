@@ -199,6 +199,7 @@ static bool sParseURL(const string& iURL, string& oHost, ip_port& oPort, string&
 			hostAndPort = iURL.substr(httpPrefixLength, slashOffset - httpPrefixLength);
 			if (slashOffset != string::npos)
 				oPath = iURL.substr(min(iURL.size(), slashOffset + 1));
+			oPath = "/" + oPath;
 			}
 		}
 
@@ -218,11 +219,11 @@ static bool sParseURL(const string& iURL, string& oHost, ip_port& oPort, string&
 	}
 
 static bool sHTTPThing(const ZStreamW& w, const ZStreamR& r,
-	const string& iURL, const string& iHost,
+	const string& iHost, const string& iPath,
 	int& oResponseCode, ZMemoryBlock& oRawHeaders, ZTuple& oHeaders, string& oMIME)
 	{
 	w.WriteString("GET ");
-	w.WriteString(iURL);
+	w.WriteString(iPath);
 	w.WriteString(" HTTP/1.1\r\n");
 	w.WriteString("Host: ");
 	w.WriteString(iHost);
@@ -299,7 +300,7 @@ static void sGetter(Getter_t iGetter)
 			ZMemoryBlock theRawHeaders;
 			string theMIME;
 			if (!sHTTPThing(theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
-				theURL, theHost,
+				theHost, thePath,
 				theResponseCode, theRawHeaders, theHeaders, theMIME))
 				{
 				break;
