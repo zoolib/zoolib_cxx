@@ -342,9 +342,9 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 		ByteCount utf16Consumed;
 		ByteCount destGenerated;
 		OSStatus err = ::ConvertFromUnicodeToText(fInfo, utf16Generated * 2, utf16Buffer, 
-						flags,
-						0, nil, nil, nil, // Offset array stuff.
-						iDestBytes, &utf16Consumed, &destGenerated, localDest);
+			flags,
+			0, nil, nil, nil, // Offset array stuff.
+			iDestBytes, &utf16Consumed, &destGenerated, localDest);
 
 		ZAssertStopf(1, (utf16Consumed & 1) == 0, ("utf16Consumed should be even")); 
 		utf16Consumed /= 2;
