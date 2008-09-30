@@ -89,38 +89,19 @@ ATSUTextLayout ZUtil_ATSUI::sCreateLayout(
 	::ATSUCreateTextLayoutWithTextPtr((ConstUniCharArrayPtr)iText, 0, iTextLength, iTextLength,
 		1, &iTextLength, &iStyle, &theLayout);
 
-#if 0
 	ATSUFontFallbacks theFontFallbacks = nil;
 	if (noErr == ::ATSUCreateFontFallbacks(&theFontFallbacks))
 		{
 		if (noErr == ::ATSUSetObjFontFallbacks(
 			theFontFallbacks, 0, nil, kATSUDefaultFontFallbacks))
 			{
-			#if 1
-				ATSUAttributeTag theTags[] =
-					{
-					kATSULineFontFallbacksTag
-					};
-				ByteCount theSizes[countof(theTags)] =
-					{
-					sizeof(ATSUFontFallbacks)
-					};
-				ATSUAttributeValuePtr theValues[countof(theTags)] =
-					{
-					&theFontFallbacks
-					};
+			Attributes theAttributes;
+			theAttributes.Add_T(kATSULineFontFallbacksTag, theFontFallbacks);
+			theAttributes.Apply(theLayout);
 
-				::ATSUSetLayoutControls(theLayout, 1, theTags, theSizes, theValues);
-			#else
-				Attributes theAttributes;
-				theAttributes.Add_T(kATSULineFontFallbacksTag, theFontFallbacks);
-				theAttributes.Apply(theLayout);
-			#endif
 			::ATSUSetTransientFontMatching(theLayout, true);
 			}
-		::ATSUDisposeFontFallbacks(theFontFallbacks);
 		}
-#endif
 
 	return theLayout;
 	}
