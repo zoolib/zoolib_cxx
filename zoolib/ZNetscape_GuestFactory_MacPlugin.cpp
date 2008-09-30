@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNetscape_GuestFactory_MacPlugin.h"
 
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZLog.h"
 
 namespace ZNetscape {
 
@@ -70,12 +71,18 @@ GuestFactory_MacPlugin::~GuestFactory_MacPlugin()
 		fBundleRef, CFSTR("NP_Shutdown"));
 	theShutdown();
 
-	#warning
-	// Check this -- may have ref counting probs.
-	if (fBundleRef)
-		::CFRelease(fBundleRef);
+	// fBundleRef came from CFPlugInGetBundle, and thus is valid so long
+	// as we keep our reference to fPluginRef.
+
 	if (fPlugInRef)
+		{
+		if (ZLOG(s, eDebug, "GuestFactory_MacPlugin"))
+			{
+			s.Writef("~GuestFactory_MacPlugin, fPlugInRef refcount = %d",
+				::CFGetRetainCount(fPlugInRef));
+			}
 		::CFRelease(fPlugInRef);
+		}
 	}
 
 void GuestFactory_MacPlugin::GetEntryPoints(NPPluginFuncs& oNPPluginFuncs)
