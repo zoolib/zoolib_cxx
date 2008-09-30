@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZDebug.h" // For ZAssertCompile
 
+ZAssertCompile(sizeof(UTF16) == sizeof(UniChar));
+
 using std::string;
 
 // =================================================================================================
@@ -43,76 +45,40 @@ ATSUStyle ZUtil_ATSUI::sAsATSUStyle(const ZDCFont& iFont, float iFontSize)
 	string fontName = iFont.GetName();
 	if (noErr != ::ATSUFindFontFromName((char*)fontName.data(), fontName.size(),
 		kFontFullName, kFontMacintoshPlatform,
-		kFontRomanScript, kFontNoLanguage, &theATSUFontID))
-//	if (noErr != ::ATSUFindFontFromName(fontName.data(), fontName.size() * 2,
-//		kFontFullName, kFontUnicodePlatform,
-//		kFontRomanScript, kFontNoLanguageCode, &atsuFont))
+		kFontRomanScript, kFontNoLanguageCode, &theATSUFontID))
 		{
 		return nil;
 		}
 
 	// Three parallel arrays for setting up attributes.
-	ATSUAttributeTag theTags[] =
-		{
-		kATSUFontTag,
-		kATSUSizeTag,
-//		kATSUVerticalCharacterTag,
-		kATSUQDBoldfaceTag,
-		kATSUQDItalicTag,
-		kATSUQDUnderlineTag,
-		kATSUQDCondensedTag,
-		kATSUQDExtendedTag
-		};
-
-	ByteCount theSizes[countof(theTags)] =
-		{
-		sizeof(ATSUFontID),
-		sizeof(Fixed),
-//		sizeof(ATSUVerticalCharacterType),
-		sizeof(Boolean),
-		sizeof(Boolean),
-		sizeof(Boolean),
-		sizeof(Boolean),
-		sizeof(Boolean)
-		};
-
-	ATSUAttributeValuePtr theValues[countof(theTags)] =
-		{ 0, 0, 0, 0, 0, 0, 0 };
-
-//	ATSUVerticalCharacterType atsuOrientation = kATSUStronglyHorizontal;
-
-	Boolean trueV = true;
-	Boolean falseV = false;
-
-	// set the values array to point to our locals
-	theValues[0] = &theATSUFontID;
-	theValues[1] = &atsuSize;
-//	theValues[2] = &atsuOrientation;
-	theValues[2] = (theStyle & ZDCFont::bold ? &trueV : &falseV);
-	theValues[3] = (theStyle & ZDCFont::italic ? &trueV : &falseV);
-	theValues[4] = (theStyle & ZDCFont::underline ? &trueV : &falseV);
-	theValues[5] = (theStyle & ZDCFont::condense ? &trueV : &falseV);
-	theValues[6] = (theStyle & ZDCFont::extend ? &trueV : &falseV);
+	const Boolean trueV = true;
+	const Boolean falseV = false;
+	Attributes theAttributes;
+	theAttributes.Add_T(kATSUFontTag, theATSUFontID);
+	theAttributes.Add_T(kATSUSizeTag, atsuSize);
+	theAttributes.Add_T(kATSUQDBoldfaceTag, theStyle & ZDCFont::bold ? trueV : falseV);
+	theAttributes.Add_T(kATSUQDItalicTag, theStyle & ZDCFont::italic ? trueV : falseV);
+	theAttributes.Add_T(kATSUQDUnderlineTag, theStyle & ZDCFont::underline ? trueV : falseV);
+	theAttributes.Add_T(kATSUQDCondensedTag, theStyle & ZDCFont::condense ? trueV : falseV);
+	theAttributes.Add_T(kATSUQDExtendedTag, theStyle & ZDCFont::extend ? trueV : falseV);
 
 	// create a style
-	ATSUStyle localStyle = nil;
+	ATSUStyle localStyle;
 	if (noErr != ::ATSUCreateStyle(&localStyle))
 		return nil;
 
-	// set the style attributes
-	if (noErr != ::ATSUSetAttributes(localStyle, countof(theTags), theTags, theSizes, theValues))
+	if (!theAttributes.Apply(localStyle))
 		{
 		::ATSUDisposeStyle(localStyle);
 		return nil;
 		}
-
+		
 	return localStyle;
 	}
 
 ATSUTextLayout ZUtil_ATSUI::sCreateLayout(
 	const UTF16* iText, UniCharCount iTextLength, ATSUStyle iStyle)
 	{
-	ZAssertCompile(sizeof(UTF16) == sizeof(UniChar));
 	if (!iStyle)
 		return nil;
 
@@ -123,32 +89,71 @@ ATSUTextLayout ZUtil_ATSUI::sCreateLayout(
 	::ATSUCreateTextLayoutWithTextPtr((ConstUniCharArrayPtr)iText, 0, iTextLength, iTextLength,
 		1, &iTextLength, &iStyle, &theLayout);
 
+#if 0
 	ATSUFontFallbacks theFontFallbacks = nil;
 	if (noErr == ::ATSUCreateFontFallbacks(&theFontFallbacks))
 		{
 		if (noErr == ::ATSUSetObjFontFallbacks(
 			theFontFallbacks, 0, nil, kATSUDefaultFontFallbacks))
 			{
-			ATSUAttributeTag theTags[] =
-				{
-				kATSULineFontFallbacksTag
-				};
-			ByteCount theSizes[countof(theTags)] =
-				{
-				sizeof(ATSUFontFallbacks)
-				};
-			ATSUAttributeValuePtr theValues[countof(theTags)] =
-				{
-				&theFontFallbacks
-				};
+			#if 1
+				ATSUAttributeTag theTags[] =
+					{
+					kATSULineFontFallbacksTag
+					};
+				ByteCount theSizes[countof(theTags)] =
+					{
+					sizeof(ATSUFontFallbacks)
+					};
+				ATSUAttributeValuePtr theValues[countof(theTags)] =
+					{
+					&theFontFallbacks
+					};
 
-			::ATSUSetLayoutControls(theLayout, 1, theTags, theSizes, theValues);
+				::ATSUSetLayoutControls(theLayout, 1, theTags, theSizes, theValues);
+			#else
+				Attributes theAttributes;
+				theAttributes.Add_T(kATSULineFontFallbacksTag, theFontFallbacks);
+				theAttributes.Apply(theLayout);
+			#endif
 			::ATSUSetTransientFontMatching(theLayout, true);
 			}
 		::ATSUDisposeFontFallbacks(theFontFallbacks);
 		}
+#endif
 
 	return theLayout;
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZUtil_ATSUI::Attributes
+
+ZUtil_ATSUI::Attributes::Attributes()
+	{}
+
+ZUtil_ATSUI::Attributes::~Attributes()
+	{}
+
+void ZUtil_ATSUI::Attributes::Add(
+	const ATSUAttributeTag& iTag, size_t iSize, const void* iValue)
+	{
+	fTags.push_back(iTag);
+	fSizes.push_back(iSize);
+	fValues.push_back(iValue);
+	}
+
+bool ZUtil_ATSUI::Attributes::Apply(ATSUTextLayout iLayout)
+	{
+	return noErr == ::ATSUSetLayoutControls(iLayout,
+		fTags.size(), &fTags[0], &fSizes[0], const_cast<void**>(&fValues[0]));
+	}
+
+bool ZUtil_ATSUI::Attributes::Apply(ATSUStyle iStyle)
+	{
+	return noErr == ::ATSUSetAttributes(iStyle,
+		fTags.size(), &fTags[0], &fSizes[0], const_cast<void**>(&fValues[0]));
+	}
+
 
 #endif // ZCONFIG_API_Enabled(Util_ATSUI)

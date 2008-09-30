@@ -37,6 +37,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCFont.h"
 
+#include <vector>
+
 #include ZMACINCLUDE(ApplicationServices,QD.h)
 
 // =================================================================================================
@@ -47,6 +49,35 @@ namespace ZUtil_ATSUI {
 
 ATSUStyle sAsATSUStyle(const ZDCFont& iFont, float iFontSize);
 ATSUTextLayout sCreateLayout(const UTF16* iText, UniCharCount iTextLength, ATSUStyle iStyle);
+
+class Attributes
+	{
+public:
+	Attributes();
+	~Attributes();
+
+	void Add(const ATSUAttributeTag& iTag, size_t iSize, const void* iValue);
+
+	template <typename T>
+	void Add_T(const ATSUAttributeTag& iTag, const T& iValue)
+		{ this->Add(iTag, sizeof(iValue), &iValue); }
+
+//	template <typename T>
+//	void Add_T(const ATSUAttributeTag& iTag, T* iValue)
+//		{ this->Add(iTag, sizeof (T*), iValue); }
+
+//	template <typename T>
+//	void Add_T(const ATSUAttributeTag& iTag, const T* iValue)
+//		{ this->Add(iTag, sizeof (const T*), iValue); }
+
+	bool Apply(ATSUTextLayout iLayout);
+	bool Apply(ATSUStyle iStyle);
+
+private:
+	std::vector<ATSUAttributeTag> fTags;
+	std::vector<ByteCount> fSizes;
+	std::vector<const void*> fValues;
+	};
 
 } // namespace ZUtil_ATSUI
 
