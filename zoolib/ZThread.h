@@ -204,6 +204,10 @@ public:
 		typedef thread_id ThreadID;
 		typedef int TLSKey_t;
 		typedef tls_data_t TLSData_t;
+	#else//##
+		typedef void* ThreadID;
+		typedef int TLSKey_t;
+		typedef int TLSData_t;
 	#endif // ZCONFIG(API_Thread)
 
 	ZThread(const char* iName = nil);
@@ -287,6 +291,10 @@ inline ZThread::ThreadID ZThread::sCurrentID()
 #elif ZCONFIG(API_Thread, Be)
 	return ::find_thread(nil);
 
+#else
+	ZUnimplemented();
+	return 0;
+
 #endif // ZCONFIG(API_Thread)
 	}
 
@@ -301,7 +309,8 @@ inline ZThread::ThreadID ZThread::sCurrentID()
 inline ZThread::TLSData_t ZThread::sTLSGet(ZThread::TLSKey_t iTLSKey)
 	{
 #if ZCONFIG(API_Thread, Mac)
-	return reinterpret_cast<TLSData_t>(ZThreadTM_TLSGet(reinterpret_cast<ZThreadTM_TLSKey_t>(iTLSKey)));
+	return reinterpret_cast<TLSData_t>(
+		ZThreadTM_TLSGet(reinterpret_cast<ZThreadTM_TLSKey_t>(iTLSKey)));
 
 #elif ZCONFIG(API_Thread, POSIX)
 	return ::pthread_getspecific(iTLSKey);
@@ -310,6 +319,10 @@ inline ZThread::TLSData_t ZThread::sTLSGet(ZThread::TLSKey_t iTLSKey)
 	tls_data_t theTLSData;
 	::tls_get(iTLSKey, &theTLSData);
 	return theTLSData;
+
+#else
+	ZUnimplemented();
+	return 0;
 
 #endif // ZCONFIG(API_Thread)
 	}
