@@ -1051,7 +1051,7 @@ inline ZRect_T<T>::operator ZRectPOD() const
 		}
 
 	template <class T>
-	inline ZRect_T<T>::operator RECT() const
+	inline ZGRect_T<T>::operator RECT() const
 		{
 		RECT theRECT;
 
@@ -1103,7 +1103,7 @@ inline ZRect_T<T>::operator ZRectPOD() const
 		}
 
 	template <class T>
-	inline ZRect_T<T>::operator XRectangle() const
+	inline ZGRect_T<T>::operator XRectangle() const
 		{
 		XRectangle theXRectangle;
 
