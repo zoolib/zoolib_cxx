@@ -218,6 +218,7 @@ public:
 
 	void HostActivate(bool iActivate);
 	void HostIdle();
+	void HostDeliverData();
 	void HostDraw();
 	void HostSetWindow(CGrafPtr iGrafPtr,
 		ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
@@ -231,6 +232,13 @@ public:
 
 	static std::string sAsString(NPNVariable iVar);
 	static std::string sAsString(NPPVariable iVar);
+
+// Host indirect API
+	virtual void HostURLNotify(const char* URL, NPReason reason, void* notifyData);
+	virtual NPError HostNewStream(NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
+	virtual void HostDestroyStream(NPStream* stream, NPReason reason);
+	virtual int32 HostWriteReady(NPStream* stream);
+	virtual int32 HostWrite(NPStream* stream, int32_t offset, int32_t len, void* buffer);
 
 // Host API
 	virtual NPError GetURLNotify(NPP npp,

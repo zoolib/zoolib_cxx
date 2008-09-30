@@ -366,7 +366,10 @@ void Host::HostIdle()
 	::GetGlobalMouse(&fakeEvent.where);
 	
 	NPError theErr = fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
+	}
 
+void Host::HostDeliverData()
+	{
 	this->pDeliverData();
 	}
 
@@ -414,7 +417,7 @@ void Host::HostSetBounds(
 class Host::Sender
 	{
 public:
-	Sender(NPP_t& iNPP_t, NPPluginFuncs& iNPPluginFuncs,
+	Sender(Host* iHost, const NPP_t& iNPP_t,
 		void* iNotifyData,
 		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
 		ZRef<ZStreamerRCon> iStreamerRCon);
@@ -426,8 +429,7 @@ private:
 	bool pDeliverData();
 
 	bool fSentNew;
-	NPP_t& fNPP_t;
-	NPPluginFuncs& fNPPluginFuncs;
+	Host* fHost;
 	void* fNotifyData;
 	const string fURL;
 	const string fMIME;
@@ -436,21 +438,20 @@ private:
 	ZRef<ZStreamerRCon> fStreamerRCon;
 	};
 
-Host::Sender::Sender(NPP_t& iNPP_t, NPPluginFuncs& iNPPluginFuncs,
+Host::Sender::Sender(Host* iHost, const NPP_t& iNPP_t,
 	void* iNotifyData,
 	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
 	ZRef<ZStreamerRCon> iStreamerRCon)
 :	fSentNew(false),
-	fNPP_t(iNPP_t),
-	fNPPluginFuncs(iNPPluginFuncs),
+	fHost(iHost),
 	fNotifyData(iNotifyData),
 	fURL(iURL),
 	fMIME(iMIME),
 	fHeaders(iHeaders),
 	fStreamerRCon(iStreamerRCon)
 	{
-	fNPStream.ndata = fNPP_t.ndata;
-	fNPStream.pdata = fNPP_t.pdata;
+	fNPStream.ndata = iNPP_t.ndata;
+	fNPStream.pdata = iNPP_t.pdata;
 	fNPStream.url = fURL.c_str();
 	fNPStream.end = 0;
 	fNPStream.lastmodified = 0;
@@ -459,7 +460,9 @@ Host::Sender::Sender(NPP_t& iNPP_t, NPPluginFuncs& iNPPluginFuncs,
 	}
 
 Host::Sender::~Sender()
-	{}
+	{
+	
+	}
 
 bool Host::Sender::DeliverData()
 	{
@@ -469,16 +472,15 @@ bool Host::Sender::DeliverData()
 
 		if (!fStreamerRCon)
 			{
-			fNPPluginFuncs.urlnotify(&fNPP_t, fURL.c_str(), NPRES_NETWORK_ERR, fNotifyData);
+			fHost->HostURLNotify(fURL.c_str(), NPRES_NETWORK_ERR, fNotifyData);
 			return false;
 			}
 
 		uint16 theStreamType = NP_NORMAL;
-		if (fNPPluginFuncs.newstream(&fNPP_t,
-			const_cast<char*>(fMIME.c_str()), &fNPStream, false, &theStreamType))
+		if (fHost->HostNewStream(const_cast<char*>(fMIME.c_str()), &fNPStream, false, &theStreamType))
 			{
 			// Failed -- what result should we pass?
-			fNPPluginFuncs.urlnotify(&fNPP_t, fURL.c_str(), NPRES_DONE, fNotifyData);
+			fHost->HostURLNotify(fURL.c_str(), NPRES_NETWORK_ERR, fNotifyData);
 			return false;
 			}
 		}
@@ -488,9 +490,9 @@ bool Host::Sender::DeliverData()
 		return true;
 
 	if (fNotifyData)
-		fNPPluginFuncs.urlnotify(&fNPP_t, fURL.c_str(), NPRES_DONE, fNotifyData);
+		fHost->HostURLNotify(fURL.c_str(), NPRES_DONE, fNotifyData);
 
-	fNPPluginFuncs.destroystream(&fNPP_t, &fNPStream, NPRES_DONE);
+	fHost->HostDestroyStream(&fNPStream, NPRES_DONE);
 
 	return false;
 	}
@@ -514,7 +516,7 @@ bool Host::Sender::pDeliverData()
 	if (countReadable == 0)
 		return false;
 
-	int32 countPossible = fNPPluginFuncs.writeready(&fNPP_t, &fNPStream);
+	int32 countPossible = fHost->HostWriteReady(&fNPStream);
 
 	if (ZLOG(s, eDebug, "Host::Sender"))
 		s.Writef("countPossible = %d", countPossible);
@@ -539,8 +541,7 @@ bool Host::Sender::pDeliverData()
 
 		for (size_t start = 0; start < countRead; /*no inc*/)
 			{
-			int countWritten = fNPPluginFuncs.write(&fNPP_t, &fNPStream,
-				0, countRead - start, &buffer[start]);
+			int countWritten = fHost->HostWrite(&fNPStream, 0, countRead - start, &buffer[start]);
 
 			if (ZLOG(s, eDebug, "Host::Sender"))
 				s.Writef("countWritten = %d", countWritten);
@@ -579,7 +580,7 @@ void Host::SendDataAsync(
 	ZRef<ZStreamerRCon> iStreamerRCon)
 	{
 	ZMutexLocker locker(fMutex);
-	Sender* theSender = new Sender(fNPP_t, fNPPluginFuncs,
+	Sender* theSender = new Sender(this, fNPP_t,
 		iNotifyData, iURL, iMIME, iHeaders, iStreamerRCon);
 	fSenders.push_back(theSender);
 	}
@@ -718,6 +719,21 @@ string Host::sAsString(NPPVariable iVar)
 	}
 
 #undef CASE
+
+void Host::HostURLNotify(const char* URL, NPReason reason, void* notifyData)
+	{ fNPPluginFuncs.urlnotify(&fNPP_t, URL, reason, notifyData); }
+
+NPError Host::HostNewStream(NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype)
+	{ return fNPPluginFuncs.newstream(&fNPP_t, type, stream, seekable, stype); }
+
+void Host::HostDestroyStream(NPStream* stream, NPReason reason)
+	{ fNPPluginFuncs.destroystream(&fNPP_t, stream, reason); }
+
+int32 Host::HostWriteReady(NPStream* stream)
+	{ return fNPPluginFuncs.writeready(&fNPP_t, stream); }
+
+int32 Host::HostWrite(NPStream* stream, int32_t offset, int32_t len, void* buffer)
+	{ return fNPPluginFuncs.write(&fNPP_t, stream, offset, len, buffer); }
 
 // =================================================================================================
 
