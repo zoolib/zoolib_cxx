@@ -564,6 +564,12 @@ bool Device_Streamer::Write(const ZStreamW& iStreamW)
 			w.WriteUInt8(0x02);
 			w.WriteUInt16LE(fGetAttribute->fObject);
 			w.WriteUInt16LE(fGetAttribute->fAttribute);
+
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
+				{
+				s << "Write, GetAttribute";
+				}
+
 			this->pSend(w, 0, iStreamW);
 			writtenSinceFlush = false;
 			this->pFlush(iStreamW);
@@ -1069,7 +1075,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 						theChannel->fError = error_PasswordNeeded;
 						this->Wake();
 						}
-					else if (remainingTries < 6)
+					else if (remainingTries <= 3)
 						{
 						theChannel->fState = eState_CloseNeeded;
 						theChannel->fError = error_PasswordExhausted;
