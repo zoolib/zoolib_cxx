@@ -568,7 +568,8 @@ ZRef<ZAssetRep> ZAssetRep::ResolvePath(const char* iPath)
 			// We have a parent, tell it to resolve the whole path.
 			return parent->ResolvePath(iPath);
 			}
-		// We have no parent, so strip off the prefix and call ourselves, probably invoking an overridden version.
+		// We have no parent, so strip off the prefix and call
+		// ourselves, probably invoking an overridden version.
 		return this->ResolvePath(iPath + 1);
 		}
 
@@ -631,7 +632,8 @@ ZAssetRep_Overlay::ZAssetRep_Overlay(const ZRef<ZAssetRep>& iParent, const vecto
 	ZAssertStop(1, !fOverlays.empty());
 	}
 
-ZAssetRep_Overlay::ZAssetRep_Overlay(const ZRef<ZAssetRep>& iParent, const ZRef<ZAssetRep>& iOverlay)
+ZAssetRep_Overlay::ZAssetRep_Overlay(
+	const ZRef<ZAssetRep>& iParent, const ZRef<ZAssetRep>& iOverlay)
 :	fParent(iParent)
 	{
 	ZAssertStop(1, iOverlay);
@@ -717,14 +719,17 @@ ZRef<ZStreamerRWPos> ZAssetRep_Overlay::OpenRWPos()
 #pragma mark -
 #pragma mark * ZAssetIterRep_Union
 
-ZAssetIterRep_Union::ZAssetIterRep_Union(ZRef<ZAssetRep> iParent, const vector<ZRef<ZAssetRep> >& iRepsUnvisited)
+ZAssetIterRep_Union::ZAssetIterRep_Union(
+	ZRef<ZAssetRep> iParent, const vector<ZRef<ZAssetRep> >& iRepsUnvisited)
 :	fParent(iParent),
 	fRepsUnvisited(iRepsUnvisited)
 	{
 	fCurrentIterRep = fRepsUnvisited.front()->CreateIterRep();
 	}
 
-ZAssetIterRep_Union::ZAssetIterRep_Union(ZRef<ZAssetRep> iParent, ZRef<ZAssetIterRep> iCurrentIterRep, const vector<ZRef<ZAssetRep> >& iRepsUnvisited, const set<string>& iNamesSeen)
+ZAssetIterRep_Union::ZAssetIterRep_Union(
+	ZRef<ZAssetRep> iParent, ZRef<ZAssetIterRep> iCurrentIterRep,
+	const vector<ZRef<ZAssetRep> >& iRepsUnvisited, const set<string>& iNamesSeen)
 :	fParent(iParent),
 	fCurrentIterRep(iCurrentIterRep),
 	fRepsUnvisited(iRepsUnvisited),
@@ -782,7 +787,8 @@ ZRef<ZAssetRep> ZAssetIterRep_Union::Current()
 		const char* currentNameCString = currentName.c_str();
 		vector<ZRef<ZAssetRep> > newOverlays;
 		newOverlays.push_back(fCurrentIterRep->Current());
-		for (vector<ZRef<ZAssetRep> >::iterator i = fRepsUnvisited.begin(); i != fRepsUnvisited.end(); ++i)
+		for (vector<ZRef<ZAssetRep> >::iterator i = fRepsUnvisited.begin();
+			i != fRepsUnvisited.end(); ++i)
 			{
 			if (ZRef<ZAssetRep> theChild = (*i)->ResolvePath(currentNameCString))
 				newOverlays.push_back(theChild);
@@ -805,4 +811,6 @@ string ZAssetIterRep_Union::CurrentName()
 	}
 
 ZRef<ZAssetIterRep> ZAssetIterRep_Union::Clone()
-	{ return new ZAssetIterRep_Union(fParent, fCurrentIterRep->Clone(), fRepsUnvisited, fNamesSeen); }
+	{
+	return new ZAssetIterRep_Union(fParent, fCurrentIterRep->Clone(), fRepsUnvisited, fNamesSeen);
+	}

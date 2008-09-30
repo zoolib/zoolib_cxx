@@ -42,7 +42,8 @@ static void sWriteCount(const ZStreamW& inStream, uint32 inCount)
 		}
 	}
 
-static void sWriteStringWithSizePrefixAndZeroTerminator(const ZStreamW& inStream, const string& inString)
+static void sWriteStringWithSizePrefixAndZeroTerminator(
+	const ZStreamW& inStream, const string& inString)
 	{
 	sWriteCount(inStream, inString.size());
 	if (inString.size())
@@ -63,8 +64,11 @@ static void sSkipWrite(const ZStreamW& inStream, size_t inCount)
 class ZASCompiler::NameEntry
 	{
 public:
-	struct ReverseCompareUseCounts { bool operator()(NameEntry* a, NameEntry* b) { return a->fUseCount > b->fUseCount; } };
-	struct CompareName { bool operator()(NameEntry* a, const string& b) { return a->fName < b; } };
+	struct ReverseCompareUseCounts
+		{ bool operator()(NameEntry* a, NameEntry* b) { return a->fUseCount > b->fUseCount; } };
+
+	struct CompareName
+		{ bool operator()(NameEntry* a, const string& b) { return a->fName < b; } };
 
 	string fName;
 	int fUseCount;
@@ -81,8 +85,12 @@ public:
 	Node(NameEntry* inNameEntry);
 	~Node();
 
-	void FindOrAllocate(NameEntry** inNameEntries, size_t inNameCount, size_t inDataOffset, size_t inDataSize);
-	void FindOrAllocate(NameEntry** inNameEntries, size_t inNameCount, const vector<NameEntry*>& inUnionEntries);
+	void FindOrAllocate(
+		NameEntry** inNameEntries, size_t inNameCount, size_t inDataOffset, size_t inDataSize);
+
+	void FindOrAllocate(
+		NameEntry** inNameEntries, size_t inNameCount, const vector<NameEntry*>& inUnionEntries);
+
 	void WriteTo(const ZStreamW& inStream);
 
 	size_t AssignUseCounts();
@@ -115,7 +123,8 @@ ZASCompiler::Node::~Node()
 		}
 	}
 
-void ZASCompiler::Node::FindOrAllocate(NameEntry** inNameEntries, size_t inNameCount, size_t inDataOffset, size_t inDataSize)
+void ZASCompiler::Node::FindOrAllocate(
+	NameEntry** inNameEntries, size_t inNameCount, size_t inDataOffset, size_t inDataSize)
 	{
 	if (inNameCount == 0)
 		{
@@ -130,7 +139,8 @@ void ZASCompiler::Node::FindOrAllocate(NameEntry** inNameEntries, size_t inNameC
 		{
 		if (currentNode->fNameEntry == inNameEntries[0])
 			{
-			currentNode->FindOrAllocate(inNameEntries + 1, inNameCount - 1, inDataOffset, inDataSize);
+			currentNode->FindOrAllocate(
+				inNameEntries + 1, inNameCount - 1, inDataOffset, inDataSize);
 			return;
 			}
 		priorNode = currentNode;
@@ -147,12 +157,16 @@ void ZASCompiler::Node::FindOrAllocate(NameEntry** inNameEntries, size_t inNameC
 	newNode->FindOrAllocate(inNameEntries + 1, inNameCount - 1, inDataOffset, inDataSize);
 	}
 
-void ZASCompiler::Node::FindOrAllocate(NameEntry** inNameEntries, size_t inNameCount, const vector<NameEntry*>& inUnionEntries)
+void ZASCompiler::Node::FindOrAllocate(
+	NameEntry** inNameEntries, size_t inNameCount, const vector<NameEntry*>& inUnionEntries)
 	{
 	if (inNameCount == 0)
 		{
-		for (vector<NameEntry*>::const_iterator i = inUnionEntries.begin(); i != inUnionEntries.end(); ++i)
+		for (vector<NameEntry*>::const_iterator i = inUnionEntries.begin();
+			i != inUnionEntries.end(); ++i)
+			{
 			fUnionEntries.push_back(*i);
+			}
 		return;
 		}
 
@@ -281,7 +295,9 @@ void ZASCompiler::EndParse()
 
 	// Find the first with a zero use count
 	vector<NameEntry*>::iterator firstZero;
-	for (firstZero = fNameEntries.begin(); (firstZero != fNameEntries.end()) && ((*firstZero)->fUseCount != 0); ++firstZero)
+	for (firstZero = fNameEntries.begin();
+		(firstZero != fNameEntries.end()) && ((*firstZero)->fUseCount != 0);
+		++firstZero)
 		{}
 
 	// Set the names' indices for use by the nodes as they write themselves.
@@ -370,7 +386,8 @@ void ZASCompiler::ParsedUnion(const vector<string>& iNames)
 	fRoot->FindOrAllocate(&nameEntries[0], nameEntries.size(), unionEntries);
 	}
 
-void ZASCompiler::AddAsset(const vector<string>& inNameStack, const string& inType, const ZStreamR& inStream)
+void ZASCompiler::AddAsset(const vector<string>& inNameStack,
+	const string& inType, const ZStreamR& inStream)
 	{
 	// Turn the list of names into a list of NameEntries
 	vector<NameEntry*> nameEntries;
@@ -390,10 +407,12 @@ void ZASCompiler::AddAsset(const vector<string>& inNameStack, const string& inTy
 	uint64 endPosition = fStreamW.GetCount();
 
 	// Find the node and tell it its data info
-	fRoot->FindOrAllocate(&nameEntries[0], nameEntries.size(), startPosition, endPosition - startPosition);
+	fRoot->FindOrAllocate(
+		&nameEntries[0], nameEntries.size(), startPosition, endPosition - startPosition);
 
-	// Align the end of the data at the next four byte boundary. Note that we're aligned relative to where
-	// we wrote our first byte in the stream, _not_ relative to the start of whatever underlies the stream.
+	// Align the end of the data at the next four byte boundary. Note that we're aligned
+	// relative to where we wrote our first byte in the stream, _not_ relative to the start
+	// of whatever underlies the stream.
 	::sSkipWrite(fStreamW, ((endPosition + 3) & ~3) - endPosition);
 	}
 
@@ -402,7 +421,9 @@ ZASCompiler::NameEntry* ZASCompiler::AllocateName(const string& inName)
 	if (inName.empty())
 		throw runtime_error("ZASCompiler::AllocateName, empty name");
 
-	vector<NameEntry*>::iterator iter = lower_bound(fNameEntries.begin(), fNameEntries.end(), inName, NameEntry::CompareName());
+	vector<NameEntry*>::iterator iter
+		= lower_bound(fNameEntries.begin(), fNameEntries.end(), inName, NameEntry::CompareName());
+
 	if (iter != fNameEntries.end() && (*iter)->fName == inName)
 		return *iter;
 

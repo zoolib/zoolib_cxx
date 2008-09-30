@@ -34,14 +34,15 @@ using std::string;
 #pragma mark -
 #pragma mark * ZAssetTree_Win_MemoryMapped
 
-ZAssetTree_Win_MemoryMapped::ZAssetTree_Win_MemoryMapped(HANDLE inFileHandle, bool inAdopt, size_t inStart, size_t inLength)
+ZAssetTree_Win_MemoryMapped::ZAssetTree_Win_MemoryMapped(
+	HANDLE iFileHandle, bool iAdopt, size_t iStart, size_t iLength)
 	{
-	ZAssertStop(1, inFileHandle != nil && inFileHandle != INVALID_HANDLE_VALUE);
-	fHANDLE_File = inFileHandle;
-	fAdopted = inAdopt;
+	ZAssertStop(1, iFileHandle != nil && iFileHandle != INVALID_HANDLE_VALUE);
+	fHANDLE_File = iFileHandle;
+	fAdopted = iAdopt;
 	try
 		{
-		this->LoadUp(fHANDLE_File, inStart, inLength);
+		this->LoadUp(fHANDLE_File, iStart, iLength);
 		}
 	catch (...)
 		{
@@ -70,7 +71,7 @@ ZAssetTree_Win_MemoryMapped::~ZAssetTree_Win_MemoryMapped()
 		}
 	}
 
-void ZAssetTree_Win_MemoryMapped::LoadUp(HANDLE inFileHandle, size_t inStart, size_t inLength)
+void ZAssetTree_Win_MemoryMapped::LoadUp(HANDLE iFileHandle, size_t iStart, size_t iLength)
 	{
 	fHANDLE_FileMapping = nil;
 	fMappedAddress = nil;
@@ -78,15 +79,21 @@ void ZAssetTree_Win_MemoryMapped::LoadUp(HANDLE inFileHandle, size_t inStart, si
 	SYSTEM_INFO theSYSTEM_INFO;
 	::GetSystemInfo(&theSYSTEM_INFO);
 
-	size_t realStart = (inStart / theSYSTEM_INFO.dwAllocationGranularity) * theSYSTEM_INFO.dwAllocationGranularity;
-	size_t mappedLength = inLength + inStart - realStart;
+	size_t realStart = theSYSTEM_INFO.dwAllocationGranularity
+		* (iStart / theSYSTEM_INFO.dwAllocationGranularity);
+
+	size_t mappedLength = iLength + iStart - realStart;
 
 	try
 		{
-		fHANDLE_FileMapping = ::CreateFileMapping(inFileHandle, nil, PAGE_READONLY, 0, 0, nil);
+		fHANDLE_FileMapping = ::CreateFileMapping(iFileHandle, nil, PAGE_READONLY, 0, 0, nil);
+
 		if (fHANDLE_FileMapping == nil)
 			throw runtime_error("ZAssetTree_Win_MemoryMapped, CreateFileMapping failed");
-		fMappedAddress = ::MapViewOfFile(fHANDLE_FileMapping, FILE_MAP_READ, 0, realStart, mappedLength);
+
+		fMappedAddress = ::MapViewOfFile(
+			fHANDLE_FileMapping, FILE_MAP_READ, 0, realStart, mappedLength);
+
 		if (fMappedAddress == nil)
 			throw runtime_error("ZAssetTree_Win_MemoryMapped, MapViewOfFile failed");
 		}
@@ -101,16 +108,18 @@ void ZAssetTree_Win_MemoryMapped::LoadUp(HANDLE inFileHandle, size_t inStart, si
 		throw;
 		}
 
-	ZAssetTree_Std_Memory::LoadUp(reinterpret_cast<char*>(fMappedAddress) + inStart - realStart, inLength);
+	ZAssetTree_Std_Memory::LoadUp(
+		reinterpret_cast<char*>(fMappedAddress) + iStart - realStart, iLength);
 	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZAssetTree_Win_MultiResource
 
-ZAssetTree_Win_MultiResource::ZAssetTree_Win_MultiResource(HMODULE inHMODULE, const string& inType, const string& inName)
+ZAssetTree_Win_MultiResource::ZAssetTree_Win_MultiResource(
+	HMODULE iHMODULE, const string& iType, const string& iName)
 	{
-	fStream_Resource = new ZStreamRPos_Win_MultiResource(inHMODULE, inType, inName);
+	fStream_Resource = new ZStreamRPos_Win_MultiResource(iHMODULE, iType, iName);
 	this->LoadUp(fStream_Resource, 0, fStream_Resource->GetSize());
 	}
 

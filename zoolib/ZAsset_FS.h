@@ -47,7 +47,10 @@ class ZAssetRep_FS : public ZAssetRep
 public:
 	ZAssetRep_FS(const ZFileSpec& iSpec);
 	ZAssetRep_FS(const ZFileSpec& iSpec, const std::vector<std::string>& iComps);
-	ZAssetRep_FS(const ZFileSpec& iSpec, const std::vector<std::string>::iterator& iBegin, const std::vector<std::string>::iterator& iEnd);
+	ZAssetRep_FS(const ZFileSpec& iSpec,
+		const std::vector<std::string>::iterator& iBegin,
+		const std::vector<std::string>::iterator& iEnd);
+
 	virtual ~ZAssetRep_FS();
 
 // From ZAssetRep

@@ -178,7 +178,8 @@ public:
 class ZAssetRep_Overlay : public ZAssetRep
 	{
 public:
-	ZAssetRep_Overlay(const ZRef<ZAssetRep>& iParent, const std::vector<ZRef<ZAssetRep> >& iOverlays);
+	ZAssetRep_Overlay(
+		const ZRef<ZAssetRep>& iParent, const std::vector<ZRef<ZAssetRep> >& iOverlays);
 	ZAssetRep_Overlay(const ZRef<ZAssetRep>& iParent, const ZRef<ZAssetRep>& iOverlay);
 	ZAssetRep_Overlay(const std::vector<ZRef<ZAssetRep> >& iOverlays);
 
@@ -212,8 +213,14 @@ protected:
 class ZAssetIterRep_Union : public ZAssetIterRep
 	{
 public:
-	ZAssetIterRep_Union(ZRef<ZAssetRep> iParent, const std::vector<ZRef<ZAssetRep> >& iRepsUnvisited);
-	ZAssetIterRep_Union(ZRef<ZAssetRep> iParent, ZRef<ZAssetIterRep> iCurrentIterRep, const std::vector<ZRef<ZAssetRep> >& iRepsUnvisited, const std::set<std::string>& iNamesSeen);
+	ZAssetIterRep_Union(
+		ZRef<ZAssetRep> iParent, const std::vector<ZRef<ZAssetRep> >& iRepsUnvisited);
+
+	ZAssetIterRep_Union(
+		ZRef<ZAssetRep> iParent,
+		ZRef<ZAssetIterRep> iCurrentIterRep,
+		const std::vector<ZRef<ZAssetRep> >& iRepsUnvisited,
+		const std::set<std::string>& iNamesSeen);
 
 	virtual bool HasValue();
 	virtual void Advance();

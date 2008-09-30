@@ -368,7 +368,8 @@ bool ZCommandLine::Parse(const ZStrimW& iStrimErrors, int argc, char** argv)
 bool ZCommandLine::Parse(bool iUpdateArgs, int& ioArgc, char**& ioArgv)
 	{ return this->Internal_Parse(true, nil, ioArgc, ioArgv); }
 
-bool ZCommandLine::Parse(bool iUpdateArgs, const ZStrimW& iStrimErrors, int& ioArgc, char**& ioArgv)
+bool ZCommandLine::Parse(
+	bool iUpdateArgs, const ZStrimW& iStrimErrors, int& ioArgc, char**& ioArgv)
 	{ return this->Internal_Parse(true, &iStrimErrors, ioArgc, ioArgv); }
 
 void ZCommandLine::WriteUsage(const ZStrimW& s) const
@@ -425,7 +426,8 @@ void ZCommandLine::WriteUsageExtended(const ZStrimW& s, const string& iIndent) c
 		}
 	}
 
-bool ZCommandLine::Internal_Parse(bool iUpdateArgs, const ZStrimW* iStrimErrors, int& ioArgc, char**& ioArgv)
+bool ZCommandLine::Internal_Parse(
+	bool iUpdateArgs, const ZStrimW* iStrimErrors, int& ioArgc, char**& ioArgv)
 	{
 	// Assume we've been passed the line including the app name in position zero.
 	int localArgc = ioArgc - 1;
@@ -539,7 +541,9 @@ bool ZCommandLine::Internal_ParseOne(const ZStrimW* iStrimErrors, int& ioArgc, c
 			{
 			try
 				{
-				if (!ZUtil_Strim_Tuple::sFromStrim(ZStrimU_Unreader(ZStrimR_StreamUTF8(ZStreamRPos_Memory(lexeme, strlen(lexeme)))), theTValue->fValue))
+				if (!ZUtil_Strim_Tuple::sFromStrim(
+					ZStrimU_Unreader(ZStrimR_StreamUTF8(
+					ZStreamRPos_Memory(lexeme, strlen(lexeme)))), theTValue->fValue))
 					{
 					if (iStrimErrors)
 						*iStrimErrors << "Could not parse parameter to option " << i->fName << "\n";
@@ -598,7 +602,8 @@ ZCommandLine::String::String(const string& iName, const string& iDescription, EF
 	fHasDefault(false)
 	{}
 
-ZCommandLine::String::String(const string& iName, const string& iDescription, const string& iDefault)
+ZCommandLine::String::String(
+	const string& iName, const string& iDescription, const string& iDefault)
 :	Opt(iName, iDescription, eOptional),
 	fHasDefault(true),
 	fDefault(iDefault)
@@ -679,7 +684,8 @@ ZCommandLine::TValue::TValue(const string& iName, const string& iDescription, EF
 	fHasDefault(false)
 	{}
 
-ZCommandLine::TValue::TValue(const string& iName, const string& iDescription, const ZTValue& iDefault)
+ZCommandLine::TValue::TValue(
+	const string& iName, const string& iDescription, const ZTValue& iDefault)
 :	Opt(iName, iDescription, eOptional),
 	fHasDefault(true),
 	fDefault(iDefault)

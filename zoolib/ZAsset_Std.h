@@ -36,7 +36,7 @@ class ZAssetTree_Std;
 class ZAssetRep_Std : public ZAssetRep
 	{
 public:
-	ZAssetRep_Std(ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength);
+	ZAssetRep_Std(ZAssetRep_Std_Directory* iParent, const char* iName, size_t iNameLength);
 	virtual ~ZAssetRep_Std();
 
 // From ZRefCountedWithFinalization via ZAssetRep
@@ -74,11 +74,15 @@ private:
 class ZAssetRep_Std_Directory : public ZAssetRep_Std
 	{
 public:
-	ZAssetRep_Std_Directory(ZAssetTree_Std* inAssetTree, ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream, const char* inNameTable, const size_t* inNameOffsets);
+	ZAssetRep_Std_Directory(
+		ZAssetTree_Std* iAssetTree, ZAssetRep_Std_Directory* iParent,
+		const char* iName, size_t iNameLength,
+		const ZStreamRPos& iStream,
+		const char* iNameTable, const size_t* iNameOffsets);
 	virtual ~ZAssetRep_Std_Directory();
 
 // From ZAssetRep via ZAssetRep_Std
-	virtual ZRef<ZAssetRep> ResolvePath(const char* inPath);
+	virtual ZRef<ZAssetRep> ResolvePath(const char* iPath);
 
 	virtual ZRef<ZAssetIterRep> CreateIterRep();
 
@@ -104,11 +108,16 @@ protected:
 class ZAssetRep_Std_Union : public ZAssetRep_Std
 	{
 public:
-	ZAssetRep_Std_Union(ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream, const char* inNameTable, const size_t* inNameOffsets);
+	ZAssetRep_Std_Union(
+		ZAssetRep_Std_Directory* iParent,
+		const char* iName, size_t iNameLength,
+		const ZStreamRPos& iStream,
+		const char* iNameTable, const size_t* iNameOffsets);
+
 	virtual ~ZAssetRep_Std_Union();
 
 // From ZAssetRep via ZAssetRep_Std
-	virtual ZRef<ZAssetRep> ResolvePath(const char* inPath);
+	virtual ZRef<ZAssetRep> ResolvePath(const char* iPath);
 
 	virtual ZRef<ZAssetIterRep> CreateIterRep();
 
@@ -158,10 +167,15 @@ protected:
 	virtual ~ZAssetTree_Std();
 
 // Called by sub classes and ZAssetRep_Std_Directory during load up
-	ZAssetRep_Std* LoadAssetRep(ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream, const char* inNameTable, const size_t* inNameOffsets);
+	ZAssetRep_Std* LoadAssetRep(
+		ZAssetRep_Std_Directory* iParent,
+		const char* iName, size_t iNameLength,
+		const ZStreamRPos& iStream,
+		const char* iNameTable, const size_t* iNameOffsets);
 
 // Implemented by subclasses
-	virtual ZAssetRep_Std* LoadAssetRep_Data(ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream) = 0;
+	virtual ZAssetRep_Std* LoadAssetRep_Data(ZAssetRep_Std_Directory* iParent,
+		const char* iName, size_t iNameLength, const ZStreamRPos& iStream) = 0;
 
 // Called by reps
 	ZRef<ZAssetRep_Std> UseRep(ZAssetRep_Std* iRep);
@@ -186,7 +200,7 @@ protected:
 	ZAssetTree_Std_Stream();
 
 public:
-	ZAssetTree_Std_Stream(const ZStreamRPos& inStream, size_t inOffset, size_t inSize);
+	ZAssetTree_Std_Stream(const ZStreamRPos& iStream, size_t iOffset, size_t iSize);
 	virtual ~ZAssetTree_Std_Stream();
 
 protected:
@@ -194,17 +208,18 @@ protected:
 	virtual ZRef<ZAssetRep> GetRoot();
 
 // From ZAssetTree_Std
-	virtual ZAssetRep_Std* LoadAssetRep_Data(ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream);
+	virtual ZAssetRep_Std* LoadAssetRep_Data(ZAssetRep_Std_Directory* iParent,
+		const char* iName, size_t iNameLength, const ZStreamRPos& iStream);
 
 // Our protocol
-	void LoadUp(const ZStreamRPos* inStream, size_t inOffset, size_t inSize);
+	void LoadUp(const ZStreamRPos* iStream, size_t iOffset, size_t iSize);
 	void ShutDown();
 
 // Called by ZAssetRep_Std_Data_Stream
-	ZRef<ZStreamerRPos> OpenRPos(size_t inOffset, size_t inSize);
+	ZRef<ZStreamerRPos> OpenRPos(size_t iOffset, size_t iSize);
 
 // Called by ZAssetRep_Std_Data_Stream and StreamerRPos
-	void ReadData(size_t inOffset, size_t inSize, void* outData);
+	void ReadData(size_t iOffset, size_t iSize, void* oData);
 
 	const ZStreamRPos* fStream;
 	char* fNameTable;
@@ -223,8 +238,8 @@ protected:
 class ZAssetTree_Std_Streamer : public ZAssetTree_Std_Stream
 	{
 public:
-	ZAssetTree_Std_Streamer(ZRef<ZStreamerRPos> inStreamer);
-	ZAssetTree_Std_Streamer(ZRef<ZStreamerRPos> inStreamer, size_t inOffset, size_t inSize);
+	ZAssetTree_Std_Streamer(ZRef<ZStreamerRPos> iStreamer);
+	ZAssetTree_Std_Streamer(ZRef<ZStreamerRPos> iStreamer, size_t iOffset, size_t iSize);
 	virtual ~ZAssetTree_Std_Streamer();
 
 protected:
@@ -240,7 +255,7 @@ class ZAssetRep_Std_Data_File;
 class ZAssetTree_Std_File : public ZAssetTree_Std
 	{
 public:
-	ZAssetTree_Std_File(ZRef<ZFileR> inFile, uint64 inOffset, size_t inSize);
+	ZAssetTree_Std_File(ZRef<ZFileR> iFile, uint64 iOffset, size_t iSize);
 	virtual ~ZAssetTree_Std_File();
 
 protected:
@@ -248,13 +263,14 @@ protected:
 	virtual ZRef<ZAssetRep> GetRoot();
 
 // From ZAssetTree_Std
-	virtual ZAssetRep_Std* LoadAssetRep_Data(ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream);
+	virtual ZAssetRep_Std* LoadAssetRep_Data(ZAssetRep_Std_Directory* iParent,
+		const char* iName, size_t iNameLength, const ZStreamRPos& iStream);
 
 // Called by ZAssetRep_Std_Data_File
-	ZRef<ZStreamerRPos> OpenRPos(uint64 inOffset, size_t inSize);
+	ZRef<ZStreamerRPos> OpenRPos(uint64 iOffset, size_t iSize);
 
 // Called by ZAssetRep_Std_Data_File and StreamerStream
-	void ReadData(uint64 inOffset, size_t inSize, void* outData);
+	void ReadData(uint64 iOffset, size_t iSize, void* oData);
 
 	ZRef<ZFileR> fFile;
 	char* fNameTable;
@@ -277,7 +293,7 @@ class ZAssetTree_Std_Memory : public ZAssetTree_Std
 protected:
 	ZAssetTree_Std_Memory();
 
-	ZAssetTree_Std_Memory(const void* inAddress, size_t inSize);
+	ZAssetTree_Std_Memory(const void* iAddress, size_t iSize);
 	virtual ~ZAssetTree_Std_Memory();
 
 public:
@@ -286,10 +302,11 @@ public:
 
 protected:
 // From ZAssetTree_Std
-	virtual ZAssetRep_Std* LoadAssetRep_Data(ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream);
+	virtual ZAssetRep_Std* LoadAssetRep_Data(ZAssetRep_Std_Directory* iParent,
+		const char* iName, size_t iNameLength, const ZStreamRPos& iStream);
 
 // Our protocol
-	void LoadUp(const void* inAddress, size_t inSize);
+	void LoadUp(const void* iAddress, size_t iSize);
 	void ShutDown();
 
 	const char* fAddress;
@@ -303,7 +320,7 @@ protected:
 class ZAssetTree_Std_Memory_StaticData : public ZAssetTree_Std_Memory
 	{
 public:
-	ZAssetTree_Std_Memory_StaticData(const void* inAddress, size_t inSize);
+	ZAssetTree_Std_Memory_StaticData(const void* iAddress, size_t iSize);
 	virtual ~ZAssetTree_Std_Memory_StaticData();
 	};
 

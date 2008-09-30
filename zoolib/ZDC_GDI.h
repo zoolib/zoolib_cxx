@@ -47,7 +47,7 @@ class ZDCSetupForGDI;
 class ZDCCanvas_GDI : public ZDCCanvas
 	{
 public:
-	static ZRef<ZDCCanvas_GDI> sFindCanvasOrCreateNative(HDC inHDC);
+	static ZRef<ZDCCanvas_GDI> sFindCanvasOrCreateNative(HDC iHDC);
 
 protected:
 	static ZMutex sMutex_List;
@@ -69,45 +69,51 @@ public:
 
 // From ZDCCanvas
 // Simple pixel and lines
-	virtual void Pixel(ZDCState& ioState, ZCoord inLocationH, ZCoord inLocationV, const ZRGBColor& inColor);
+	virtual void Pixel(ZDCState& ioState,
+		ZCoord iLocationH, ZCoord iLocationV, const ZRGBColor& iColor);
 
-	virtual void Line(ZDCState& ioState, ZCoord inStartH, ZCoord inStartV, ZCoord inEndH, ZCoord inEndV);
+	virtual void Line(ZDCState& ioState,
+		ZCoord iStartH, ZCoord iStartV, ZCoord iEndH, ZCoord iEndV);
 
 // Rectangle
-	virtual void FrameRect(ZDCState& ioState, const ZRect& inRect);
-	virtual void FillRect(ZDCState& ioState, const ZRect& inRect);
-	virtual void InvertRect(ZDCState& ioState, const ZRect& inRect);
+	virtual void FrameRect(ZDCState& ioState, const ZRect& iRect);
+	virtual void FillRect(ZDCState& ioState, const ZRect& iRect);
+	virtual void InvertRect(ZDCState& ioState, const ZRect& iRect);
 
 // Region
-	virtual void FrameRegion(ZDCState& ioState, const ZDCRgn& inRgn);
-	virtual void FillRegion(ZDCState& ioState, const ZDCRgn& inRgn);
-	virtual void InvertRegion(ZDCState& ioState, const ZDCRgn& inRgn);
+	virtual void FrameRegion(ZDCState& ioState, const ZDCRgn& iRgn);
+	virtual void FillRegion(ZDCState& ioState, const ZDCRgn& iRgn);
+	virtual void InvertRegion(ZDCState& ioState, const ZDCRgn& iRgn);
 
 // Round cornered rect
-	virtual void FrameRoundRect(ZDCState& ioState, const ZRect& inRect, const ZPoint& inCornerSize);
-	virtual void FillRoundRect(ZDCState& ioState, const ZRect& inRect, const ZPoint& inCornerSize);
-	virtual void InvertRoundRect(ZDCState& ioState, const ZRect& inRect, const ZPoint& inCornerSize);
+	virtual void FrameRoundRect(ZDCState& ioState, const ZRect& iRect, const ZPoint& iCornerSize);
+	virtual void FillRoundRect(ZDCState& ioState, const ZRect& iRect, const ZPoint& iCornerSize);
+	virtual void InvertRoundRect(ZDCState& ioState, const ZRect& iRect, const ZPoint& iCornerSize);
 
 // Ellipse
-	virtual void FrameEllipse(ZDCState& ioState, const ZRect& inBounds);
-	virtual void FillEllipse(ZDCState& ioState, const ZRect& inBounds);
-	virtual void InvertEllipse(ZDCState& ioState, const ZRect& inBounds);
+	virtual void FrameEllipse(ZDCState& ioState, const ZRect& iBounds);
+	virtual void FillEllipse(ZDCState& ioState, const ZRect& iBounds);
+	virtual void InvertEllipse(ZDCState& ioState, const ZRect& iBounds);
 
 // Poly
-	virtual void FillPoly(ZDCState& ioState, const ZDCPoly& inPoly);
-	virtual void InvertPoly(ZDCState& ioState, const ZDCPoly& inPoly);
+	virtual void FillPoly(ZDCState& ioState, const ZDCPoly& iPoly);
+	virtual void InvertPoly(ZDCState& ioState, const ZDCPoly& iPoly);
 
 // Pixmap
-	virtual void FillPixmap(ZDCState& ioState, const ZPoint& inLocation, const ZDCPixmap& inPixmap);
-	virtual void DrawPixmap(ZDCState& ioState, const ZPoint& inLocation, const ZDCPixmap& inSourcePixmap, const ZDCPixmap* inMaskPixmap);
+	virtual void FillPixmap(ZDCState& ioState, const ZPoint& iLocation, const ZDCPixmap& iPixmap);
+	virtual void DrawPixmap(ZDCState& ioState,
+		const ZPoint& iLocation, const ZDCPixmap& iSourcePixmap, const ZDCPixmap* iMaskPixmap);
 
 // Text
-	virtual void DrawText(ZDCState& ioState, const ZPoint& inLocation, const char* inText, size_t inTextLength);
+	virtual void DrawText(ZDCState& ioState,
+		const ZPoint& iLocation, const char* iText, size_t iTextLength);
 
-	virtual ZCoord GetTextWidth(ZDCState& ioState, const char* inText, size_t inTextLength);
-	virtual void GetFontInfo(ZDCState& ioState, ZCoord& outAscent, ZCoord& outDescent, ZCoord& outLeading);
+	virtual ZCoord GetTextWidth(ZDCState& ioState, const char* iText, size_t iTextLength);
+	virtual void GetFontInfo(ZDCState& ioState,
+		ZCoord& oAscent, ZCoord& oDescent, ZCoord& oLeading);
 	virtual ZCoord GetLineHeight(ZDCState& ioState);
-	virtual void BreakLine(ZDCState& ioState, const char* inLineStart, size_t inRemainingTextLength, ZCoord inTargetWidth, size_t& outNextLineDelta);
+	virtual void BreakLine(ZDCState& ioState, const char* iLineStart,
+		size_t iRemainingTextLength, ZCoord iTargetWidth, size_t& oNextLineDelta);
 
 	virtual void Flush();
 	virtual void Sync();
@@ -119,19 +125,20 @@ public:
 	virtual bool IsPrinting();
 
 // OffScreen
-	virtual ZRef<ZDCCanvas> CreateOffScreen(const ZRect& inCanvasRect);
-	virtual ZRef<ZDCCanvas> CreateOffScreen(ZPoint dimensions, ZDCPixmapNS::EFormatEfficient iFormat);
+	virtual ZRef<ZDCCanvas> CreateOffScreen(const ZRect& iCanvasRect);
+	virtual ZRef<ZDCCanvas> CreateOffScreen(
+		ZPoint dimensions, ZDCPixmapNS::EFormatEfficient iFormat);
 
 // ----------
 // Internal or non-virtual implementation stuff
 	ZPoint Internal_GDIStart(ZDCState& ioState, bool zeroOrigin);
 	void Internal_GDIEnd();
 
-	virtual ZDCRgn Internal_CalcClipRgn(const ZDCState& inState) = 0;
+	virtual ZDCRgn Internal_CalcClipRgn(const ZDCState& iState) = 0;
 
 	HDC Internal_GetHDC() { return fHDC; }
 
-	void Internal_TileRegion(ZDCState& ioState, const ZDCRgn& inRgn, const ZDCPixmap& inPixmap);
+	void Internal_TileRegion(ZDCState& ioState, const ZDCRgn& iRgn, const ZDCPixmap& iPixmap);
 
 	bool fOriginValid;
 	long fChangeCount_Clip;
@@ -166,9 +173,10 @@ public:
 	virtual ~ZDCCanvas_GDI_NonWindow();
 
 	virtual void Finalize();
-	virtual void Scroll(ZDCState& ioState, const ZRect& inRect, ZCoord inDeltaH, ZCoord inDeltaV);
-	virtual void CopyFrom(ZDCState& ioState, const ZPoint& inDestLocation, ZRef<ZDCCanvas> inSourceCanvas, const ZDCState& inSourceState, const ZRect& inSourceRect);
-	virtual ZDCRgn Internal_CalcClipRgn(const ZDCState& inState);
+	virtual void Scroll(ZDCState& ioState, const ZRect& iRect, ZCoord iDeltaH, ZCoord iDeltaV);
+	virtual void CopyFrom(ZDCState& ioState, const ZPoint& iDestLocation,
+		ZRef<ZDCCanvas> iSourceCanvas, const ZDCState& iSourceState, const ZRect& iSourceRect);
+	virtual ZDCRgn Internal_CalcClipRgn(const ZDCState& iState);
 
 protected:
 	ZMutex fMutex;
@@ -181,15 +189,15 @@ protected:
 class ZDCCanvas_GDI_OffScreen : public ZDCCanvas_GDI_NonWindow
 	{
 public:
-	ZDCCanvas_GDI_OffScreen(HDC inOther, const ZRect& inGlobalRect);
-	ZDCCanvas_GDI_OffScreen(HDC inOther, ZPoint inDimensions, ZDCPixmapNS::EFormatEfficient iFormat);
+	ZDCCanvas_GDI_OffScreen(HDC iOther, const ZRect& iGlobalRect);
+	ZDCCanvas_GDI_OffScreen(HDC iOther, ZPoint iDimensions, ZDCPixmapNS::EFormatEfficient iFormat);
 	virtual ~ZDCCanvas_GDI_OffScreen();
 
-	virtual ZRGBColor GetPixel(ZDCState& ioState, ZCoord inLocationH, ZCoord inLocationV);
+	virtual ZRGBColor GetPixel(ZDCState& ioState, ZCoord iLocationH, ZCoord iLocationV);
 
-	virtual void FloodFill(ZDCState& ioState, const ZPoint& inSeedLocation);
+	virtual void FloodFill(ZDCState& ioState, const ZPoint& iSeedLocation);
 
-	virtual ZDCPixmap GetPixmap(ZDCState& ioState, const ZRect& inBounds);
+	virtual ZDCPixmap GetPixmap(ZDCState& ioState, const ZRect& iBounds);
 
 	virtual bool IsOffScreen();
 
@@ -215,7 +223,7 @@ public:
 class ZDC_NativeGDI : public ZDC
 	{
 public:
-	ZDC_NativeGDI(HDC inHDC);
+	ZDC_NativeGDI(HDC iHDC);
 	~ZDC_NativeGDI();
 
 protected:
@@ -230,7 +238,7 @@ protected:
 class ZDCCanvas_GDI::SetupDC
 	{
 public:
-	SetupDC(ZDCCanvas_GDI* inCanvas, const ZDCState& inState);
+	SetupDC(ZDCCanvas_GDI* iCanvas, const ZDCState& iState);
 	~SetupDC();
 
 protected:
@@ -245,10 +253,11 @@ protected:
 class ZDCSetupForGDI
 	{
 public:
-	ZDCSetupForGDI(const ZDC& inDC, bool inZeroOrigin);
+	ZDCSetupForGDI(const ZDC& iDC, bool iZeroOrigin);
 	~ZDCSetupForGDI();
 	ZPoint GetOffset();
 	HDC GetHDC();
+
 protected:
 	ZRef<ZDCCanvas_GDI> fCanvas;
 	ZPoint fOffset;
@@ -261,17 +270,17 @@ protected:
 class ZDCPixmapRep_DIB : public ZDCPixmapRep
 	{
 public:
-	ZDCPixmapRep_DIB(ZRef<ZDCPixmapRaster> inBuffer,
-								const ZRect& inBounds,
-								const ZDCPixmapNS::PixelDesc& inPixelDesc);
+	ZDCPixmapRep_DIB(ZRef<ZDCPixmapRaster> iBuffer,
+		const ZRect& iBounds,
+		const ZDCPixmapNS::PixelDesc& iPixelDesc);
 
-	ZDCPixmapRep_DIB(HDC inHDC, HBITMAP inHBITMAP, bool inForce32BPP = false);
+	ZDCPixmapRep_DIB(HDC iHDC, HBITMAP iHBITMAP, bool iForce32BPP = false);
 
 	virtual ~ZDCPixmapRep_DIB();
 
-	void GetDIBStuff(BITMAPINFO*& outBITMAPINFO, char*& outBits, ZRect* outBounds);
+	void GetDIBStuff(BITMAPINFO*& oBITMAPINFO, char*& oBits, ZRect* oBounds);
 
-	static ZRef<ZDCPixmapRep_DIB> sAsPixmapRep_DIB(ZRef<ZDCPixmapRep> inRep);
+	static ZRef<ZDCPixmapRep_DIB> sAsPixmapRep_DIB(ZRef<ZDCPixmapRep> iRep);
 
 protected:
 	BITMAPINFO* fBITMAPINFO;

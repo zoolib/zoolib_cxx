@@ -497,7 +497,8 @@ static void sReadRLE4(const ZStreamR& iStream,
 			}
 		else
 			{
-			// Store a run of nibbles. The count is in 'count', the values are packed into 'command'.
+			// Store a run of nibbles. The count is in 'count',
+			// the values are packed into 'command'.
 			uint8* rowStart = iBuffer
 				+ iRowBytes * (iFlip ? iHeight - currentRow - 1 : currentRow);
 

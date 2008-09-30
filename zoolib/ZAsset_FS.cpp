@@ -106,7 +106,8 @@ ZAssetRep_FS::ZAssetRep_FS(const ZFileSpec& iSpec, const vector<string>& iComps)
 	fDataSize(0)
 	{}
 
-ZAssetRep_FS::ZAssetRep_FS(const ZFileSpec& iSpec, const vector<string>::iterator& iBegin, const vector<string>::iterator& iEnd)
+ZAssetRep_FS::ZAssetRep_FS(const ZFileSpec& iSpec,
+	const vector<string>::iterator& iBegin, const vector<string>::iterator& iEnd)
 :	fSpec(iSpec),
 	fComps(iBegin, iEnd),
 	fData(nil),
@@ -287,4 +288,3 @@ ZRef<ZStreamerRPos> ZAssetRep_FS::OpenRPos()
 
 	return fSpec.Trail(ZTrail(fComps.begin(), fComps.end())).OpenRPos();
 	}
-

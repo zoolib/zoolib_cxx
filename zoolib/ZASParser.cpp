@@ -301,7 +301,8 @@ bool Parser::TryParseStatement()
 				throw ParseException("Expected a quoted file name");
 	
 			ZFileSpec specUsed;
-			if (ZRef<ZStreamerR> theStreamer = fStreamProvider.ProvideStreamSource(fFileSpec, path, true, specUsed))
+			if (ZRef<ZStreamerR> theStreamer
+				= fStreamProvider.ProvideStreamSource(fFileSpec, path, true, specUsed))
 				{
 				if (fIncludeHandler)
 					fIncludeHandler->NotifyInclude(specUsed);
@@ -421,9 +422,13 @@ void Parser::ParseBinary()
 			throw ParseException("Expected a quoted file name");
 
 		ZFileSpec fileSpecUsed;
-		ZRef<ZStreamerR> theStreamer = fStreamProvider.ProvideStreamBinary(fFileSpec, fileName, true, fileSpecUsed);
+		ZRef<ZStreamerR> theStreamer
+			= fStreamProvider.ProvideStreamBinary(fFileSpec, fileName, true, fileSpecUsed);
 		if (!theStreamer)
-			throw ParseException(string("Could not open file \"") + fileName + string("\" to read binary data"));
+			{
+			throw ParseException(
+				string("Could not open file \"") + fileName + string("\" to read binary data"));
+			}
 
 		if (fIncludeHandler)
 			fIncludeHandler->NotifyInclude(fileSpecUsed);
@@ -561,7 +566,8 @@ bool ZASParser::sParse(const string& iPath, ParseHandler& iParseHandler,
 			const ErrorHandler& iErrorHandler, IncludeHandler* iIncludeHandler)
 	{
 	ZFileSpec fileSpecUsed;
-	if (ZRef<ZStreamerR> theStreamer = iStreamProvider.ProvideStreamSource(ZFileSpec(), iPath, true, fileSpecUsed))
+	if (ZRef<ZStreamerR> theStreamer
+		= iStreamProvider.ProvideStreamSource(ZFileSpec(), iPath, true, fileSpecUsed))
 		{
 		return sParse(fileSpecUsed, theStreamer->GetStreamR(),
 						iParseHandler, iStreamProvider, iErrorHandler, iIncludeHandler);
@@ -577,9 +583,10 @@ bool ZASParser::sParse(const string& iPath, ParseHandler& iParseHandler,
 This is the entry point for parsing when you have source stream and the textual name
 of that stream, and is also called
 */
-bool ZASParser::sParse(const ZFileSpec& iFileSpec, const ZStreamR& iStream, ParseHandler& iParseHandler,
-			const StreamProvider& iStreamProvider,
-			const ErrorHandler& iErrorHandler, IncludeHandler* iIncludeHandler)
+bool ZASParser::sParse(
+	const ZFileSpec& iFileSpec, const ZStreamR& iStream, ParseHandler& iParseHandler,
+	const StreamProvider& iStreamProvider,
+	const ErrorHandler& iErrorHandler, IncludeHandler* iIncludeHandler)
 	{
 	try
 		{
@@ -643,7 +650,8 @@ void ZASParser::ParseHandler::EnterInclude(const ZFileSpec& iFileSpec)
 void ZASParser::ParseHandler::ExitInclude()
 	{}
 
-void ZASParser::ParseHandler::EnterCharSet(const string& iCharSet, bool iWasInBlock, bool iNowInBlock)
+void ZASParser::ParseHandler::EnterCharSet(
+	const string& iCharSet, bool iWasInBlock, bool iNowInBlock)
 	{}
 
 void ZASParser::ParseHandler::ExitCharSet(bool iWasInBlock, bool iNowInBlock)
@@ -653,19 +661,22 @@ void ZASParser::ParseHandler::ExitCharSet(bool iWasInBlock, bool iNowInBlock)
 #pragma mark -
 #pragma mark * ZASParser::StreamProvider
 
-ZRef<ZStreamerR> ZASParser::StreamProvider::ProvideStreamSource(const ZFileSpec& iCurrent, const string& iPath,
-								bool iSearchUserDirectories, ZFileSpec& oFileSpec) const
+ZRef<ZStreamerR> ZASParser::StreamProvider::ProvideStreamSource(
+	const ZFileSpec& iCurrent, const string& iPath,
+	bool iSearchUserDirectories, ZFileSpec& oFileSpec) const
 	{ return ZRef<ZStreamerR>(); }
 
-ZRef<ZStreamerR> ZASParser::StreamProvider::ProvideStreamBinary(const ZFileSpec& iCurrent, const string& iPath,
-								bool iSearchUserDirectories, ZFileSpec& oFileSpec) const
+ZRef<ZStreamerR> ZASParser::StreamProvider::ProvideStreamBinary(
+	const ZFileSpec& iCurrent, const string& iPath,
+	bool iSearchUserDirectories, ZFileSpec& oFileSpec) const
 	{ return ZRef<ZStreamerR>(); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZASParser::ErrorHandler
 
-void ZASParser::ErrorHandler::ReportError(const vector<pair<ZFileSpec, int> >& iSources, const string& iMessage) const
+void ZASParser::ErrorHandler::ReportError(
+	const vector<pair<ZFileSpec, int> >& iSources, const string& iMessage) const
 	{}
 
 void ZASParser::ErrorHandler::ReportError(const string& iMessage) const
@@ -690,7 +701,8 @@ static void sWriteEscapifiedString(const ZStrimW& iStrimW, const string& iString
 	ZStrimW_Escapify(iStrimW).Write(iString);
 	}
 
-static void sWriteEscapifiedStringIndented(const ZStrimW& iStrimW, const string& iString, int iIndent)
+static void sWriteEscapifiedStringIndented(
+	const ZStrimW& iStrimW, const string& iString, int iIndent)
 	{
 	string eol = "\"\n";
 	eol += string(iIndent, '\t');
@@ -707,7 +719,8 @@ ZASParser::ParseHandler_Prettify::ParseHandler_Prettify(const ZStrimW& iStrimW, 
 	fInBlock(false)
 	{}
 
-void ZASParser::ParseHandler_Prettify::EnterName(const string& iName, bool iWasInBlock, bool iNowInBlock)
+void ZASParser::ParseHandler_Prettify::EnterName(
+	const string& iName, bool iWasInBlock, bool iNowInBlock)
 	{
 	if (iWasInBlock)
 		sWriteIndent(fStrimW, fIndent);
@@ -881,7 +894,8 @@ void ZASParser::ParseHandler_Prettify::ExitInclude()
 	fIncludes.pop_back();
 	}
 
-void ZASParser::ParseHandler_Prettify::EnterCharSet(const string& iCharSet, bool iWasInBlock, bool iNowInBlock)
+void ZASParser::ParseHandler_Prettify::EnterCharSet(
+	const string& iCharSet, bool iWasInBlock, bool iNowInBlock)
 	{
 	// We don't emit any charset designator -- we're dumping everything as unicode.
 	// However we do need to handle indentation.
@@ -894,4 +908,3 @@ void ZASParser::ParseHandler_Prettify::ExitCharSet(bool iWasInBlock, bool iNowIn
 	{
 	fInBlock = iNowInBlock;
 	}
-

@@ -194,7 +194,8 @@ private:
 	uint64 fPosition;
 	};
 
-ZBlockStore_PhaseTree::StreamRPos::StreamRPos(ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
+ZBlockStore_PhaseTree::StreamRPos::StreamRPos(
+	ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
 	{
 	fBlockStore = iBlockStore;
 	fBlockID = iBlockID;
@@ -245,7 +246,8 @@ protected:
 	ZBlockStore_PhaseTree::StreamRPos fStream;
 	};
 
-ZBlockStore_PhaseTree::StreamerRPos::StreamerRPos(ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
+ZBlockStore_PhaseTree::StreamerRPos::StreamerRPos(
+	ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
 :	fStream(iBlockStore, iBlockID, iBlockSlot)
 	{}
 
@@ -289,7 +291,8 @@ private:
 	size_t fPosition;
 	};
 
-ZBlockStore_PhaseTree::StreamRWPos::StreamRWPos(ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
+ZBlockStore_PhaseTree::StreamRWPos::StreamRWPos(
+	ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
 	{
 	fBlockStore = iBlockStore;
 	fBlockID = iBlockID;
@@ -311,7 +314,8 @@ void ZBlockStore_PhaseTree::StreamRWPos::Imp_Read(void* iDest, size_t iCount, si
 	fPosition += countRead;
 	}
 
-void ZBlockStore_PhaseTree::StreamRWPos::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+void ZBlockStore_PhaseTree::StreamRWPos::Imp_Write(
+	const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	size_t countWritten;
 	fBlockStore->WriteToBlock(fBlockID, fBlockSlot, fPosition, iSource, iCount, countWritten);
@@ -366,7 +370,8 @@ protected:
 	ZBlockStore_PhaseTree::StreamRWPos fStream;
 	};
 
-ZBlockStore_PhaseTree::StreamerRWPos::StreamerRWPos(ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
+ZBlockStore_PhaseTree::StreamerRWPos::StreamerRWPos(
+	ZBlockStore_PhaseTree* iBlockStore, BlockID iBlockID, Slot* iBlockSlot)
 :	fStream(iBlockStore, iBlockID, iBlockSlot)
 	{}
 
@@ -384,11 +389,14 @@ PT_INLINE uint32 ZBlockStore_PhaseTree::ReadField(Slot* iSlot, size_t iOffset)
 	{
 	ASSERT_LOCKED(iSlot->fMutex);
 
-#if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
-	fMutex_Slots.Acquire();
-	ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlot->fState != eStateReleasedForked && iSlot->fState != eStateReleasedClean);
-	fMutex_Slots.Release();
-#endif // ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
+	#if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
+		fMutex_Slots.Acquire();
+
+		ZAssertStop(ZCONFIG_PhaseTree_Debug,
+			iSlot->fState != eStateReleasedForked && iSlot->fState != eStateReleasedClean);
+
+		fMutex_Slots.Release();
+	#endif
 
 	return ZByteSwap_ReadBig32(reinterpret_cast<uint32*>(iSlot->fData) + iOffset);
 	}
@@ -397,11 +405,14 @@ PT_INLINE uint32* ZBlockStore_PhaseTree::FieldAddress(Slot* iSlot, size_t iOffse
 	{
 	ASSERT_LOCKED(iSlot->fMutex);
 
-#if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
-	fMutex_Slots.Acquire();
-	ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlot->fState != eStateReleasedForked && iSlot->fState != eStateReleasedClean);
-	fMutex_Slots.Release();
-#endif // ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
+	#if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
+		fMutex_Slots.Acquire();
+
+		ZAssertStop(ZCONFIG_PhaseTree_Debug,
+			iSlot->fState != eStateReleasedForked && iSlot->fState != eStateReleasedClean);
+
+		fMutex_Slots.Release();
+	#endif
 
 	return reinterpret_cast<uint32*>(iSlot->fData) + iOffset;
 	}
@@ -410,11 +421,11 @@ PT_INLINE void ZBlockStore_PhaseTree::WriteField(Slot* iSlot, size_t iOffset, ui
 	{
 	ASSERT_LOCKED(iSlot->fMutex);
 
-#if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
-	fMutex_Slots.Acquire();
-	ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlot->fState == eStateDirty);
-	fMutex_Slots.Release();
-#endif // ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
+	#if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
+		fMutex_Slots.Acquire();
+		ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlot->fState == eStateDirty);
+		fMutex_Slots.Release();
+	#endif
 
 	ZByteSwap_WriteBig32(reinterpret_cast<uint32*>(iSlot->fData) + iOffset, iValue);
 	}
@@ -423,11 +434,11 @@ PT_INLINE void ZBlockStore_PhaseTree::Move(Slot* iSlot, size_t iSource, size_t i
 	{
 	ASSERT_LOCKED(iSlot->fMutex);
 
-#if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
-	fMutex_Slots.Acquire();
-	ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlot->fState == eStateDirty);
-	fMutex_Slots.Release();
-#endif // ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
+	#if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
+		fMutex_Slots.Acquire();
+		ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlot->fState == eStateDirty);
+		fMutex_Slots.Release();
+	#endif
 
 	uint32* start = reinterpret_cast<uint32*>(iSlot->fData);
 	ZBlockMove(start + iSource, start + iDest, sizeof(uint32) * iCount);
@@ -437,10 +448,10 @@ PT_INLINE void ZBlockStore_PhaseTree::Fill(Slot* iSlot, size_t iBegin, size_t iC
 	{
 	ASSERT_LOCKED(iSlot->fMutex);
 
-#if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
-	uint32* start = reinterpret_cast<uint32*>(iSlot->fData);
-	ZBlockSet(start + iBegin, sizeof(uint32) * iCount, 0x55);
-#endif // ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
+	#if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
+		uint32* start = reinterpret_cast<uint32*>(iSlot->fData);
+		ZBlockSet(start + iBegin, sizeof(uint32) * iCount, 0x55);
+	#endif
 	}
 
 #if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
@@ -452,18 +463,22 @@ void ZBlockStore_PhaseTree::ValidateSlot(Slot* iSlot, const char* iFunctionName,
 		{
 		BlockID currentKey = ReadField(iSlot, x);
 
-		// AG 2001-11-29. This validation of the key's value only works for block stores where you can be sure
-		// that all keys are >= 0x40000000 -- which was the case when I was developing, but obviously is not any longer.
+		// AG 2001-11-29. This validation of the key's value only works for block stores where
+		// you can be sure that all keys are >= 0x40000000 -- which was the case when I was
+		// developing, but obviously is not any longer.
+
 		// ZAssert(currentKey >= 0x40000000);
 
 		BlockID priorKey = ReadField(iSlot, x - 1);
-		ZAssertLogf(0, priorKey <= currentKey, ("function: %s, line: %d, slot: %d priorKey: %06X, currentKey: %06X, count: %d, x:%d",
-									iFunctionName, iLineNumber, iSlot->fSlotNumber, priorKey, currentKey, count, x));
+		ZAssertLogf(0, priorKey <= currentKey,
+			("function: %s, line: %d, slot: %d priorKey: %06X, currentKey: %06X, count: %d, x:%d",
+			iFunctionName, iLineNumber, iSlot->fSlotNumber, priorKey, currentKey, count, x));
 		}
 	}
 #else // ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
 #define VALIDATESLOT(a)
-inline void ZBlockStore_PhaseTree::ValidateSlot(Slot* iSlot, const char* iFunctionName, int iLineNumber)
+inline void ZBlockStore_PhaseTree::ValidateSlot(
+	Slot* iSlot, const char* iFunctionName, int iLineNumber)
 	{}
 #endif // ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
 
@@ -471,7 +486,8 @@ inline void ZBlockStore_PhaseTree::ValidateSlot(Slot* iSlot, const char* iFuncti
 #pragma mark -
 #pragma mark * ZBlockStore_PhaseTree. Potentially inlined higher level field access.
 
-// These methods are the ones that are used most heavily and thus that benefit most from being inlined.
+// These methods are the ones that are used most
+// heavily and thus that benefit most from being inlined.
 
 PT_INLINE size_t ZBlockStore_PhaseTree::Index_GetCount(Slot* iSlot)
 	{
@@ -493,7 +509,8 @@ PT_INLINE bool ZBlockStore_PhaseTree::Index_IsFull(Slot* iSlot, bool iIsLeaf)
 		}
 	}
 
-PT_INLINE ZBlockStore_PhaseTree::BlockID ZBlockStore_PhaseTree::Index_GetKey(Slot* iSlot, bool iIsLeaf, size_t iOffset)
+PT_INLINE ZBlockStore_PhaseTree::BlockID ZBlockStore_PhaseTree::Index_GetKey(
+	Slot* iSlot, bool iIsLeaf, size_t iOffset)
 	{
 	if (iIsLeaf)
 		ZAssertStop(ZCONFIG_PhaseTree_Debug, iOffset < ReadField(iSlot, 0));
@@ -554,7 +571,8 @@ uint32 -- slot number of the head of the free list
 uint32 -- count of number of slots in the free list
 */
 
-ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(ZRef<ZFileRW> iFile, size_t iSlotSize, size_t iUserHeaderSize)
+ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(
+	ZRef<ZFileRW> iFile, size_t iSlotSize, size_t iUserHeaderSize)
 :	fUserHeaderSize(iUserHeaderSize),
 	fSlotSize(iSlotSize),
 	fMutex_Flush("fMutex_MetaRoot"),
@@ -585,7 +603,8 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(ZRef<ZFileRW> iFile, size_t iSlotSi
 	// on undersized nodes. With a minimum of three keys we don't have a wide enough
 	// range of sizes to maintain our constraints. Five keys implies six children/sub tree
 	// sizes, or 72 bytes.
-	ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlotSize >= sizeof(uint32) + (sizeof(uint32) * (5 + 6 + 6)));
+	ZAssertStop(ZCONFIG_PhaseTree_Debug,
+		iSlotSize >= sizeof(uint32) + (sizeof(uint32) * (5 + 6 + 6)));
 
 	// Additionally slots must be large enough to accomodate the metaroot (43 bytes.)
 	ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlotSize >= sizeof(sMagicText) + 6 * sizeof(uint32));
@@ -935,8 +954,11 @@ to the meta information until we've finished the transcription and state update.
 	for (map<uint32, Slot*>::iterator i = fSlots_Cached.begin(); i != fSlots_Cached.end(); ++i)
 		{
 		Slot* currentSlot = (*i).second;
+
 		// Cached slots can only be forked or clean.
-		ZAssertStop(kDebug_PhaseTreeFile, currentSlot->fState == eStateForked || currentSlot->fState == eStateClean);
+		ZAssertStop(kDebug_PhaseTreeFile,
+			currentSlot->fState == eStateForked || currentSlot->fState == eStateClean);
+
 		currentSlot->fState = eStateClean;
 		}
 
@@ -954,7 +976,8 @@ any write start until we reset fFlushInFirstStages.
 */
 	for (vector<Slot*>::iterator i = dirtySlots.begin(); i != dirtySlots.end(); ++i)
 		{
-		err = fFileRW->WriteAt(fUserHeaderSize + uint64((*i)->fSlotNumber) * fSlotSize, (*i)->fData, fSlotSize, nil);
+		err = fFileRW->WriteAt(fUserHeaderSize + uint64((*i)->fSlotNumber) * fSlotSize,
+			(*i)->fData, fSlotSize, nil);
 		ZAssertStop(kDebug_PhaseTreeFile, err == ZFile::errorNone);
 		}
 
@@ -970,23 +993,20 @@ any write start until we reset fFlushInFirstStages.
 
 /*
 Stage 3, fMutex_Slots is held.
-Build a list of all slots that are considered released for the purposes
-of the snapshot this flush is effectively building. That includes all slots
-that were on fSlots_ReleasedForked and fSlots_ReleasedClean when we entered
-stage one (ie stageOneReleasedForked and stageOneReleasedClean.) Build 'pages',
-a list of slots that will have the list of released slots written to them. For
-a page we can use any slot that is _currently_ in fSlots_ReleasedForked,
-removing it from that set of course. We don't use stageOneReleasedForked as our source
-for pages because ongoing access to the block store as we do this might make use of
-slots it references -- we want to record that the slots in stageOneReleasedForked and
-stageOneReleasedClean are released, but we mustn't actually write to any in
-stageOneReleasedClean at all or any in stageOneReleasedForked that have been grabbed
-in the meantime.
+Build a list of all slots that are considered released for the purposes of the snapshot this flush
+is effectively building. That includes all slots that were on fSlots_ReleasedForked and
+fSlots_ReleasedClean when we entered stage one (ie stageOneReleasedForked and
+stageOneReleasedClean.) Build 'pages', a list of slots that will have the list of released slots
+written to them. For a page we can use any slot that is _currently_ in fSlots_ReleasedForked,
+removing it from that set of course. We don't use stageOneReleasedForked as our source for pages
+because ongoing access to the block store as we do this might make use of slots it references -- we
+want to record that the slots in stageOneReleasedForked and stageOneReleasedClean are released, but
+we mustn't actually write to any in stageOneReleasedClean at all or any in stageOneReleasedForked
+that have been grabbed in the meantime.
 
-We also determine two highwater values. The first is what we'll write to the header
-as part of the consistent snapshot. The second is potentially larger, and will
-accomodate slots that have been allocated since we started the flush and that
-will form part of the next snapshot.
+We also determine two highwater values. The first is what we'll write to the header as part of the
+consistent snapshot. The second is potentially larger, and will accomodate slots that have been
+allocated since we started the flush and that will form part of the next snapshot.
 */
 
 	fMutex_Slots.Acquire();
@@ -1011,7 +1031,10 @@ will form part of the next snapshot.
 	// Build the list of slots (the 'pages') that will actually hold the list of free slots.
 	// We have to do this iteratively as we may have to increase the number of slots that
 	// need to be recorded when we are forced to push up the highwater mark to get a page.
-	const size_t slotsPerPage = fSlotSize / sizeof(uint32) - 1; // -1 accounts for the next page link.
+
+	// the -1 accounts for the next page link.
+	const size_t slotsPerPage = fSlotSize / sizeof(uint32) - 1;
+
 	set<uint32> pages;
 	while ((releasedAll.size() + slotsPerPage - 1) / slotsPerPage > pages.size())
 		{
@@ -1059,7 +1082,8 @@ will form part of the next snapshot.
 	stageOneReleasedClean.erase(someIter, stageOneReleasedClean.end());
 
 	// No slot in fSlots_ReleasedForked can be at or past fHighWater.
-	ZAssertStop(ZCONFIG_PhaseTree_Debug, fSlots_ReleasedForked.end() == fSlots_ReleasedForked.lower_bound(fHighWater));
+	ZAssertStop(ZCONFIG_PhaseTree_Debug,
+		fSlots_ReleasedForked.end() == fSlots_ReleasedForked.lower_bound(fHighWater));
 
 	// We can't have moved writtenHighWater past fHighWater.
 	ZAssertStop(ZCONFIG_PhaseTree_Debug, writtenHighWater <= fHighWater);
@@ -1097,7 +1121,9 @@ Write out the linked list of pages, filling them with slot numbers from released
 			ZByteSwap_WriteBig32(theAddress++, *pagesIter);
 			}
 
-		err = fFileRW->WriteAt(fUserHeaderSize + uint64(currentPage) * fSlotSize, &buffer[0], fSlotSize, nil);
+		err = fFileRW->WriteAt(fUserHeaderSize + uint64(currentPage) * fSlotSize,
+			&buffer[0], fSlotSize, nil);
+
 		ZAssertStop(kDebug_PhaseTreeFile, err == ZFile::errorNone);
 		}
 
@@ -1274,7 +1300,8 @@ size_t ZBlockStore_PhaseTree::EfficientSize()
 	return fSlotSize - sizeof(uint32);
 	}
 
-ZRef<ZStreamerRWPos> ZBlockStore_PhaseTree::CreateWithSpecificID(BlockID iDesiredBlockID, BlockID& oActualBlockID)
+ZRef<ZStreamerRWPos> ZBlockStore_PhaseTree::CreateWithSpecificID(
+	BlockID iDesiredBlockID, BlockID& oActualBlockID)
 	{
 	if (fFileRW && iDesiredBlockID)
 		{
@@ -1330,9 +1357,9 @@ void ZBlockStore_PhaseTree::DumpMeta()
 	{
 	fMutex_Slots.Acquire();
 	fprintf(stdout, "Root Slot: %d, Height: %d, Highwater: %d, "
-			"ReleasedClean: %d, ReleasedForked: %d, Forked: %d\n",
-			fRootSlotNumber, fHeight, fHighWater, fSlots_ReleasedClean.size(),
-			fSlots_ReleasedForked.size(), fSlots_Forked.size());
+		"ReleasedClean: %d, ReleasedForked: %d, Forked: %d\n",
+		fRootSlotNumber, fHeight, fHighWater, fSlots_ReleasedClean.size(),
+		fSlots_ReleasedForked.size(), fSlots_Forked.size());
 
 	int loadedHitRate = 0;
 	int cachedHitRate = 0;
@@ -1342,8 +1369,12 @@ void ZBlockStore_PhaseTree::DumpMeta()
 		cachedHitRate = (fUseCached * 100) / fUseRequests;
 		}
 
-	fprintf(stdout, "Loaded slots: %d, use requests: %d, use cached %d, use failures: %d, loaded hit rate: %d, cached hit rate\n",
-				fSlots_Loaded.size(), fUseRequests, fUseCached, fUseFailures, 100 - loadedHitRate, 100 - cachedHitRate);
+	fprintf(stdout,
+		"Loaded slots: %d, use requests: %d, use cached %d, "
+		"use failures: %d, loaded hit rate: %d, cached hit rate\n",
+		fSlots_Loaded.size(), fUseRequests, fUseCached,
+		fUseFailures, 100 - loadedHitRate, 100 - cachedHitRate);
+
 	fMutex_Slots.Release();
 	}
 
@@ -1411,7 +1442,8 @@ void ZBlockStore_PhaseTree::DumpBlock(Slot* iSlot, int iIndent)
 	fprintf(stdout, "Slot: %d, Size: %d\n", iSlot->fSlotNumber, this->ReadField(iSlot, 0));
 	}
 
-size_t ZBlockStore_PhaseTree::ValidateOne(Slot* iSlot, int iHeight, uint32 iMinKeyMinusOne, uint32 iMaxKey)
+size_t ZBlockStore_PhaseTree::ValidateOne(
+	Slot* iSlot, int iHeight, uint32 iMinKeyMinusOne, uint32 iMaxKey)
 	{
 	size_t count = this->Index_GetCount(iSlot);
 	uint32 priorKey = iMinKeyMinusOne;
@@ -1426,21 +1458,22 @@ size_t ZBlockStore_PhaseTree::ValidateOne(Slot* iSlot, int iHeight, uint32 iMinK
 			if (x == count)
 				{
 				ZAssertLogf(0, iMaxKey - priorKey >= expectedSubTreeSize,
-								("slotnumber: %d, priorKey: %X, iMaxKey: %X, expectedSubTreeSize: %d",
-								iSlot->fSlotNumber, priorKey, iMaxKey, expectedSubTreeSize));
+					("slotnumber: %d, priorKey: %X, iMaxKey: %X, expectedSubTreeSize: %d",
+					iSlot->fSlotNumber, priorKey, iMaxKey, expectedSubTreeSize));
 				actualSubTreeSize = this->ValidateOne(theSlot, iHeight - 1, priorKey, iMaxKey);
 				}
 			else
 				{
 				uint32 currentKey = this->Index_GetKey(iSlot, false, x);
 				ZAssertLogf(0, currentKey - priorKey >= expectedSubTreeSize,
-								("slotnumber: %d, priorKey: %X, currentKey: %X, expectedSubTreeSize: %d",
-								iSlot->fSlotNumber, priorKey, currentKey, expectedSubTreeSize));
+					("slotnumber: %d, priorKey: %X, currentKey: %X, expectedSubTreeSize: %d",
+					iSlot->fSlotNumber, priorKey, currentKey, expectedSubTreeSize));
 				actualSubTreeSize = this->ValidateOne(theSlot, iHeight - 1, priorKey, currentKey);
 				priorKey = currentKey;
 				}
-			ZAssertLogf(0, expectedSubTreeSize == actualSubTreeSize, ("slotnumber: %d, Expected: %d, actual:%d",
-								iSlot->fSlotNumber, expectedSubTreeSize, actualSubTreeSize));
+			ZAssertLogf(0, expectedSubTreeSize == actualSubTreeSize,
+				("slotnumber: %d, Expected: %d, actual:%d",
+				iSlot->fSlotNumber, expectedSubTreeSize, actualSubTreeSize));
 			accumulatedActual += actualSubTreeSize;
 			this->UnuseSlot(theSlot);
 			}
@@ -1452,8 +1485,8 @@ size_t ZBlockStore_PhaseTree::ValidateOne(Slot* iSlot, int iHeight, uint32 iMinK
 			{
 			uint32 currentKey = this->Index_GetKey(iSlot, false, x);
 			ZAssertLogf(0, currentKey > iMinKeyMinusOne && currentKey <= iMaxKey,
-										("slotnumber: %d, iMinKeyMinusOne: %X, iMaxKey:%X, currentKey:%X",
-										iSlot->fSlotNumber, iMinKeyMinusOne, iMaxKey, currentKey));
+				("slotnumber: %d, iMinKeyMinusOne: %X, iMaxKey:%X, currentKey:%X",
+				iSlot->fSlotNumber, iMinKeyMinusOne, iMaxKey, currentKey));
 			}
 		return count;
 		}
@@ -1535,7 +1568,9 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::FindBlockSlotForWrite(BlockI
 		bool isLeafNode = (currentHeight == 0);
 		size_t offset;
 		uint32 newChildSlotNumber;
-		Slot* childSlot = this->Index_FindChildForked(parentSlot, isLeafNode, iBlockID, offset, newChildSlotNumber);
+		Slot* childSlot = this->Index_FindChildForked(
+			parentSlot, isLeafNode, iBlockID, offset, newChildSlotNumber);
+
 		if (!childSlot)
 			{
 			ZAssertStop(ZCONFIG_PhaseTree_Debug, isLeafNode);
@@ -1562,7 +1597,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::FindBlockSlotForWrite(BlockI
 		}
 	}
 
-void ZBlockStore_PhaseTree::ReadFromBlock(BlockID iBlockID, Slot*& ioBlockSlot, uint64 iPosition, void* iDest, size_t iCount, size_t& oCountRead)
+void ZBlockStore_PhaseTree::ReadFromBlock(BlockID iBlockID, Slot*& ioBlockSlot,
+	uint64 iPosition, void* iDest, size_t iCount, size_t& oCountRead)
 	{
 	oCountRead = 0;
 	if (iCount == 0)
@@ -1576,7 +1612,8 @@ void ZBlockStore_PhaseTree::ReadFromBlock(BlockID iBlockID, Slot*& ioBlockSlot, 
 		size_t countRemaining = min(uint64(iCount), theSize > iPosition ? theSize - iPosition : 0);
 		if (theSize <= fCapacity_BlockRoot_Byte)
 			{
-			ZBlockCopy(reinterpret_cast<char*>(FieldAddress(ioBlockSlot, 1)) + iPosition, iDest, countRemaining);
+			ZBlockCopy(reinterpret_cast<char*>(FieldAddress(ioBlockSlot, 1)) + iPosition,
+				iDest, countRemaining);
 			oCountRead = countRemaining;
 			}
 		else
@@ -1588,7 +1625,9 @@ void ZBlockStore_PhaseTree::ReadFromBlock(BlockID iBlockID, Slot*& ioBlockSlot, 
 				Slot* dataSlot = this->Block_FindDataSlot(ioBlockSlot, localPosition);
 				size_t positionInData = localPosition % fCapacity_Data;
 				size_t countToMove = min(countRemaining, fCapacity_Data - positionInData);
-				ZBlockCopy(reinterpret_cast<char*>(dataSlot->fData) + positionInData, localDest, countToMove);
+				ZBlockCopy(reinterpret_cast<char*>(dataSlot->fData) + positionInData,
+					localDest, countToMove);
+
 				countRemaining -= countToMove;
 				localDest += countToMove;
 				localPosition += countToMove;
@@ -1601,7 +1640,8 @@ void ZBlockStore_PhaseTree::ReadFromBlock(BlockID iBlockID, Slot*& ioBlockSlot, 
 	this->ReadFinish(ioBlockSlot);
 	}
 
-void ZBlockStore_PhaseTree::WriteToBlock(BlockID iBlockID, Slot*& ioBlockSlot, uint64 iPosition, const void* iSource, size_t iCount, size_t& oCountWritten)
+void ZBlockStore_PhaseTree::WriteToBlock(BlockID iBlockID, Slot*& ioBlockSlot,
+	uint64 iPosition, const void* iSource, size_t iCount, size_t& oCountWritten)
 	{
 	oCountWritten = 0;
 	if (iCount == 0)
@@ -1623,7 +1663,8 @@ void ZBlockStore_PhaseTree::WriteToBlock(BlockID iBlockID, Slot*& ioBlockSlot, u
 
 		if (theSize <= fCapacity_BlockRoot_Byte)
 			{
-			ZBlockCopy(iSource, reinterpret_cast<char*>(FieldAddress(ioBlockSlot, 1)) + iPosition, countRemaining);
+			ZBlockCopy(iSource,
+				reinterpret_cast<char*>(FieldAddress(ioBlockSlot, 1)) + iPosition, countRemaining);
 			oCountWritten = countRemaining;
 			}
 		else
@@ -1634,8 +1675,10 @@ void ZBlockStore_PhaseTree::WriteToBlock(BlockID iBlockID, Slot*& ioBlockSlot, u
 				{
 				size_t positionInData = localPosition % fCapacity_Data;
 				size_t countToMove = min(countRemaining, fCapacity_Data - positionInData);
-				Slot* dataSlot = this->Block_FindDataSlotForWrite(ioBlockSlot, localPosition, positionInData != 0 || countToMove != fCapacity_Data);
-				ZBlockCopy(localSource, reinterpret_cast<char*>(dataSlot->fData) + positionInData, countToMove);
+				Slot* dataSlot = this->Block_FindDataSlotForWrite(ioBlockSlot,
+					localPosition, positionInData != 0 || countToMove != fCapacity_Data);
+				ZBlockCopy(localSource,
+					reinterpret_cast<char*>(dataSlot->fData) + positionInData, countToMove);
 				countRemaining -= countToMove;
 				localSource += countToMove;
 				localPosition += countToMove;
@@ -1648,7 +1691,8 @@ void ZBlockStore_PhaseTree::WriteToBlock(BlockID iBlockID, Slot*& ioBlockSlot, u
 	this->WriteFinish(ioBlockSlot);
 	}
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(BlockID iBlockID, BlockID& oBlockID)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(
+	BlockID iBlockID, BlockID& oBlockID)
 	{
 	BlockID smallestKeyLessThan = 0;
 	BlockID largestKeyGreaterOrEqual = 0xFFFFFFFF;
@@ -1661,9 +1705,14 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(BlockID iBloc
 		uint32 medianKey;
 		size_t leftSubTreeSize, rightSubTreeSize;
 		Slot* newChild;
-		this->Index_Split(rootSlot, fHeight == 0, leftSubTreeSize, medianKey, newChild, rightSubTreeSize);
+		this->Index_Split(rootSlot, fHeight == 0,
+			leftSubTreeSize, medianKey, newChild, rightSubTreeSize);
+
 		++fHeight;
-		Slot* newRoot = this->Index_CreateRoot(rootSlot, leftSubTreeSize, medianKey, newChild, rightSubTreeSize);
+
+		Slot* newRoot = this->Index_CreateRoot(
+			rootSlot, leftSubTreeSize, medianKey, newChild, rightSubTreeSize);
+
 		this->UnuseSlot(newChild);
 		this->UnuseSlot(rootSlot);
 		fRootSlotNumber = newRoot->fSlotNumber;
@@ -1699,8 +1748,9 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(BlockID iBloc
 						}
 					else
 						{
-						// This branch is fully populated. We need to start over at the
-						// very beginning, looking for smallestKeyAtStart + 1 instead of the requested ID.
+						// This branch is fully populated. We need to start over
+						// at the very beginning, looking for smallestKeyAtStart + 1
+						// instead of the requested ID.
 						iBlockID = smallestKeyAtStart + 1;
 						smallestKeyLessThan = smallestKeyAtStart;
 						offset = 0;
@@ -1742,7 +1792,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(BlockID iBloc
 				}
 
 			uint32 newSlotNumber;
-			Slot* childSlot = this->UseSlotDirty(this->Index_GetChild(currentSlot, false, offset), true, newSlotNumber);
+			Slot* childSlot = this->UseSlotDirty(
+				this->Index_GetChild(currentSlot, false, offset), true, newSlotNumber);
 
 			if (newSlotNumber)
 				this->Index_SetChild(currentSlot, false, offset, newSlotNumber);
@@ -1755,7 +1806,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(BlockID iBloc
 				uint32 medianKey;
 				size_t leftSubTreeSize, rightSubTreeSize;
 				Slot* newChild;
-				this->Index_Split(childSlot, currentHeight == 1, leftSubTreeSize, medianKey, newChild, rightSubTreeSize);
+				this->Index_Split(childSlot, currentHeight == 1,
+					leftSubTreeSize, medianKey, newChild, rightSubTreeSize);
 				VALIDATESLOT(currentSlot);
 				VALIDATESLOT(childSlot);
 				VALIDATESLOT(newChild);
@@ -1763,8 +1815,10 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(BlockID iBloc
 				if (ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug)
 					{
 					size_t oldSubTreeSize = this->Index_GetSubTreeSize(currentSlot, offset);
-					ZAssertStopf(ZCONFIG_PhaseTree_Debug, leftSubTreeSize + rightSubTreeSize == oldSubTreeSize,
-									("left: %d, right:%d, old:%d", leftSubTreeSize, rightSubTreeSize, oldSubTreeSize));
+					ZAssertStopf(ZCONFIG_PhaseTree_Debug,
+						leftSubTreeSize + rightSubTreeSize == oldSubTreeSize,
+						("left: %d, right:%d, old:%d",
+						leftSubTreeSize, rightSubTreeSize, oldSubTreeSize));
 					}
 
 				// And insert its new sibling (newChild) into currentSlot after offset.
@@ -1772,7 +1826,10 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(BlockID iBloc
 					{
 					this->Index_InternalMakeOneSpaceBefore(currentSlot, offset + 1);
 
-					this->Index_SetKey(currentSlot, false, offset + 1, this->Index_GetKey(currentSlot, false, offset));
+					this->Index_SetKey(
+						currentSlot, false, offset + 1,
+						this->Index_GetKey(currentSlot, false, offset));
+
 					this->Index_SetKey(currentSlot, false, offset, medianKey);
 					this->Index_SetChild(currentSlot, false, offset + 1, newChild->fSlotNumber);
 					this->Index_SetSubTreeSize(currentSlot, offset, leftSubTreeSize);
@@ -1801,7 +1858,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(BlockID iBloc
 			else
 				{
 				// Update the sub tree size, doing so *after* any split of the child.
-				this->Index_SetSubTreeSize(currentSlot, offset, this->Index_GetSubTreeSize(currentSlot, offset) + 1);
+				this->Index_SetSubTreeSize(
+					currentSlot, offset, this->Index_GetSubTreeSize(currentSlot, offset) + 1);
 				this->UnuseSlot(currentSlot);
 				--currentHeight;
 				currentSlot = childSlot;
@@ -1824,9 +1882,9 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(BlockID iBloc
 					}
 				else if (curKey == iBlockID)
 					{
-					// Damn. The key iBlockID was already allocated. We have to
-					// rerun the loop starting at smallestKeyLessThan + 1, where smallestKeyLessThan
-					// is the largest number smaller than anything in this node.
+					// Damn. The key iBlockID was already allocated. We have to rerun the loop
+					// starting at smallestKeyLessThan + 1, where smallestKeyLessThan is the
+					// largest number smaller than anything in this node.
 					iBlockID = smallestKeyLessThan + 1;
 					for (offset = 0; offset < count; ++offset)
 						{
@@ -1852,7 +1910,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::CreateBlockImp(BlockID iBloc
 		}
 	}
 
-bool ZBlockStore_PhaseTree::DeleteBlockRecurse(Slot* iParentSlot, int iHeight, BlockID iBlockID, Slot*& oBlockSlot, Slot** oNewRoot)
+bool ZBlockStore_PhaseTree::DeleteBlockRecurse(
+	Slot* iParentSlot, int iHeight, BlockID iBlockID, Slot*& oBlockSlot, Slot** oNewRoot)
 	{
 	if (oNewRoot)
 		*oNewRoot = iParentSlot;
@@ -1883,7 +1942,9 @@ bool ZBlockStore_PhaseTree::DeleteBlockRecurse(Slot* iParentSlot, int iHeight, B
 		{
 		size_t offset;
 		uint32 newChildSlotNumber;
-		Slot* childSlot = this->Index_FindChildForked(iParentSlot, false, iBlockID, offset, newChildSlotNumber);
+		Slot* childSlot = this->Index_FindChildForked(
+			iParentSlot, false, iBlockID, offset, newChildSlotNumber);
+
 		ZAssertStop(ZCONFIG_PhaseTree_Debug, childSlot);
 		if (newChildSlotNumber)
 			{
@@ -1903,10 +1964,16 @@ bool ZBlockStore_PhaseTree::DeleteBlockRecurse(Slot* iParentSlot, int iHeight, B
 				// We already dirtied the parent slot above
 				this->DirtySlot(iParentSlot);
 				}
-			this->Index_SetSubTreeSize(iParentSlot, offset, this->Index_GetSubTreeSize(iParentSlot, offset) - 1);
+
+			this->Index_SetSubTreeSize(iParentSlot, offset,
+				this->Index_GetSubTreeSize(iParentSlot, offset) - 1);
 
 			const bool childrenAreLeaves = (iHeight == 1);
-			size_t minimumCount = childrenAreLeaves ? ((fCapacity_IndexLeaf + 1) / 2) : ((fCapacity_IndexInternal + 1) / 2);
+
+			size_t minimumCount = childrenAreLeaves
+				? ((fCapacity_IndexLeaf + 1) / 2)
+				: ((fCapacity_IndexInternal + 1) / 2);
+
 			if (this->Index_GetCount(childSlot) < minimumCount)
 				{
 				this->DirtySlot(childSlot);
@@ -1914,7 +1981,9 @@ bool ZBlockStore_PhaseTree::DeleteBlockRecurse(Slot* iParentSlot, int iHeight, B
 				size_t otherOffset = (offset == 0) ? 1 : offset - 1;
 
 				uint32 newOtherChildSlotNumber;
-				Slot* otherChild = this->UseSlotForked(this->Index_GetChild(iParentSlot, false, otherOffset), true, newOtherChildSlotNumber);
+				Slot* otherChild = this->UseSlotForked(
+					this->Index_GetChild(iParentSlot, false, otherOffset),
+					true, newOtherChildSlotNumber);
 
 				if (newOtherChildSlotNumber)
 					this->Index_SetChild(iParentSlot, false, otherOffset, newOtherChildSlotNumber);
@@ -1922,7 +1991,9 @@ bool ZBlockStore_PhaseTree::DeleteBlockRecurse(Slot* iParentSlot, int iHeight, B
 
 				if (this->Index_GetCount(otherChild) < minimumCount)
 					{
-					this->Index_Merge(iParentSlot, childrenAreLeaves, offset, otherOffset, childSlot, otherChild);
+					this->Index_Merge(iParentSlot, childrenAreLeaves,
+						offset, otherOffset, childSlot, otherChild);
+
 					if (this->Index_GetCount(iParentSlot) == 0)
 						{
 						ZAssertStop(ZCONFIG_PhaseTree_Debug, oNewRoot);
@@ -1933,7 +2004,9 @@ bool ZBlockStore_PhaseTree::DeleteBlockRecurse(Slot* iParentSlot, int iHeight, B
 					}
 				else
 					{
-					this->Index_Rotate(iParentSlot, childrenAreLeaves, offset, otherOffset, childSlot, otherChild);
+					this->Index_Rotate(iParentSlot, childrenAreLeaves,
+						offset, otherOffset, childSlot, otherChild);
+
 					this->UnuseSlot(otherChild);
 					}
 				}
@@ -1943,7 +2016,8 @@ bool ZBlockStore_PhaseTree::DeleteBlockRecurse(Slot* iParentSlot, int iHeight, B
 		}
 	}
 
-ZBlockStore::BlockID ZBlockStore_PhaseTree::GetNextBlockIDRecurse(Slot* iParentSlot, int iHeight, BlockID iBlockID)
+ZBlockStore::BlockID ZBlockStore_PhaseTree::GetNextBlockIDRecurse(
+	Slot* iParentSlot, int iHeight, BlockID iBlockID)
 	{
 	const size_t count = this->Index_GetCount(iParentSlot);
 	const uint32* firstKey = this->Index_GetKeysAddress(iParentSlot);
@@ -2003,7 +2077,8 @@ void ZBlockStore_PhaseTree::SetBlockSize(BlockID iBlockID, Slot*& ioBlockSlot, s
 	this->WriteFinish(ioBlockSlot);
 	}
 
-void ZBlockStore_PhaseTree::SetBlockSizeIfLessThan(BlockID iBlockID, Slot*& ioBlockSlot, size_t iSize)
+void ZBlockStore_PhaseTree::SetBlockSizeIfLessThan(
+	BlockID iBlockID, Slot*& ioBlockSlot, size_t iSize)
 	{
 	this->WriteStart(iBlockID, ioBlockSlot);
 
@@ -2238,10 +2313,14 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlot(uint32 iSlotNumber)
 		if (iterCached == fSlots_Cached.end())
 			{
 			++fUseFailures;
-			ZAssertStopf(ZCONFIG_PhaseTree_Debug, !ZUtil_STL::sContains(fSlots_ReleasedForked, iSlotNumber),
-							("Slot: %d", iSlotNumber));
-			ZAssertStopf(ZCONFIG_PhaseTree_Debug, !ZUtil_STL::sContains(fSlots_ReleasedClean, iSlotNumber),
-							("Slot: %d", iSlotNumber));
+
+			ZAssertStopf(ZCONFIG_PhaseTree_Debug,
+				!ZUtil_STL::sContains(fSlots_ReleasedForked, iSlotNumber),
+				("Slot: %d", iSlotNumber));
+
+			ZAssertStopf(ZCONFIG_PhaseTree_Debug,
+				!ZUtil_STL::sContains(fSlots_ReleasedClean, iSlotNumber),
+				("Slot: %d", iSlotNumber));
 
 			if (ZUtil_STL::sEraseIfContains(fSlots_Forked, iSlotNumber))
 				theSlot = new(fSlotSize) Slot(iSlotNumber, true);
@@ -2251,7 +2330,9 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlot(uint32 iSlotNumber)
 			fSlots_Loaded[iSlotNumber] = theSlot;
 
 			fMutex_Slots.Release();
-			ZFile::Error err = fFileR->ReadAt(fUserHeaderSize + uint64(iSlotNumber) * fSlotSize, theSlot->fData, fSlotSize, nil);
+			ZFile::Error err = fFileR->ReadAt(fUserHeaderSize + uint64(iSlotNumber) * fSlotSize,
+				theSlot->fData, fSlotSize, nil);
+
 			ZAssertStop(kDebug_PhaseTreeFile, err == ZFile::errorNone);
 			}
 		else
@@ -2279,7 +2360,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlot(uint32 iSlotNumber)
 			fSlots_Loaded[iSlotNumber] = theSlot;
 			++theSlot->fUseCount;
 
-			ZAssertStop(ZCONFIG_PhaseTree_Debug, theSlot->fState != eStateReleasedForked && theSlot->fState != eStateReleasedClean);
+			ZAssertStop(ZCONFIG_PhaseTree_Debug,
+				theSlot->fState != eStateReleasedForked && theSlot->fState != eStateReleasedClean);
 			fMutex_Slots.Release();
 			}
 		}
@@ -2289,7 +2371,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlot(uint32 iSlotNumber)
 		ZAssertStop(ZCONFIG_PhaseTree_Debug, theSlot->fSlotNumber == iSlotNumber);
 		++theSlot->fUseCount;
 
-		ZAssertStop(ZCONFIG_PhaseTree_Debug, theSlot->fState != eStateReleasedForked && theSlot->fState != eStateReleasedClean);
+		ZAssertStop(ZCONFIG_PhaseTree_Debug,
+			theSlot->fState != eStateReleasedForked && theSlot->fState != eStateReleasedClean);
 		fMutex_Slots.Release();
 		}
 
@@ -2298,7 +2381,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlot(uint32 iSlotNumber)
 	return theSlot;
 	}
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal(bool iDirtied, uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal(
+	bool iDirtied, uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber)
 	{
 	ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlotNumber);
 
@@ -2329,10 +2413,13 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal(bool iDirtied, u
 		if (iterCached == fSlots_Cached.end())
 			{
 			++fUseFailures;
-			ZAssertStopf(ZCONFIG_PhaseTree_Debug, !ZUtil_STL::sContains(fSlots_ReleasedForked, iSlotNumber),
-							("Slot: %d", iSlotNumber));
-			ZAssertStopf(ZCONFIG_PhaseTree_Debug, !ZUtil_STL::sContains(fSlots_ReleasedClean, iSlotNumber),
-							("Slot: %d", iSlotNumber));
+			ZAssertStopf(ZCONFIG_PhaseTree_Debug,
+				!ZUtil_STL::sContains(fSlots_ReleasedForked, iSlotNumber),
+				("Slot: %d", iSlotNumber));
+
+			ZAssertStopf(ZCONFIG_PhaseTree_Debug,
+				!ZUtil_STL::sContains(fSlots_ReleasedClean, iSlotNumber),
+				("Slot: %d", iSlotNumber));
 
 			if (ZUtil_STL::sEraseIfContains(fSlots_Forked, iSlotNumber))
 				{
@@ -2351,7 +2438,10 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal(bool iDirtied, u
 
 			if (iReadOriginalContent)
 				{
-				ZFile::Error err = fFileRW->ReadAt(fUserHeaderSize + uint64(iSlotNumber) * fSlotSize, theSlot->fData, fSlotSize, nil);
+				ZFile::Error err = fFileRW->ReadAt(
+					fUserHeaderSize + uint64(iSlotNumber) * fSlotSize,
+					theSlot->fData, fSlotSize, nil);
+
 				ZAssertStop(kDebug_PhaseTreeFile, err == ZFile::errorNone);
 				}
 			}
@@ -2397,7 +2487,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal(bool iDirtied, u
 				{
 				oForkedSlotNumber = 0;
 				theSlot = existingSlot;
-				ZAssertStop(ZCONFIG_PhaseTree_Debug, theSlot->fState != eStateReleasedForked && theSlot->fState != eStateReleasedClean);
+				ZAssertStop(ZCONFIG_PhaseTree_Debug,theSlot->fState != eStateReleasedForked
+					&& theSlot->fState != eStateReleasedClean);
 				if (iDirtied)
 					theSlot->fState = eStateDirty;
 				fMutex_Slots.Release();
@@ -2428,7 +2519,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal(bool iDirtied, u
 			{
 			oForkedSlotNumber = 0;
 			theSlot = existingSlot;
-			ZAssertStop(ZCONFIG_PhaseTree_Debug, theSlot->fState != eStateReleasedForked && theSlot->fState != eStateReleasedClean);
+			ZAssertStop(ZCONFIG_PhaseTree_Debug, theSlot->fState != eStateReleasedForked
+				&& theSlot->fState != eStateReleasedClean);
 			if (iDirtied)
 				theSlot->fState = eStateDirty;
 			fMutex_Slots.Release();
@@ -2440,12 +2532,14 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal(bool iDirtied, u
 	return theSlot;
 	}
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotForked(uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotForked(
+	uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber)
 	{
 	return this->UseSlotReal(false, iSlotNumber, iReadOriginalContent, oForkedSlotNumber);
 	}
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotDirty(uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotDirty(
+	uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber)
 	{
 	return this->UseSlotReal(true, iSlotNumber, iReadOriginalContent, oForkedSlotNumber);
 	}
@@ -2463,7 +2557,8 @@ void ZBlockStore_PhaseTree::UnuseSlot(Slot* iSlot, bool iPurge)
 		{
 		iSlot->fState = eStateForked;
 		fMutex_Slots.Release();
-		ZFile::Error err = fFileRW->WriteAt(fUserHeaderSize + uint64(iSlot->fSlotNumber) * fSlotSize, iSlot->fData, fSlotSize, nil);
+		ZFile::Error err = fFileRW->WriteAt(
+			fUserHeaderSize + uint64(iSlot->fSlotNumber) * fSlotSize, iSlot->fData, fSlotSize, nil);
 		ZAssertStop(kDebug_PhaseTreeFile, err == ZFile::errorNone);
 		fMutex_Slots.Acquire();
 		ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlot->fSlotNumber);
@@ -2481,10 +2576,17 @@ void ZBlockStore_PhaseTree::UnuseSlot(Slot* iSlot, bool iPurge)
 			case eStateClean:
 			case eStateForked:
 				{
-				ZAssertStop(ZCONFIG_PhaseTree_Debug, !ZUtil_STL::sContains(fSlots_Forked, iSlot->fSlotNumber));
-				ZAssertStop(ZCONFIG_PhaseTree_Debug, !ZUtil_STL::sContains(fSlots_ReleasedForked, iSlot->fSlotNumber));
-				ZAssertStop(ZCONFIG_PhaseTree_Debug, !ZUtil_STL::sContains(fSlots_ReleasedClean, iSlot->fSlotNumber));
-				ZUtil_STL::sEraseMustContain(ZCONFIG_PhaseTree_Debug, fSlots_Loaded, iSlot->fSlotNumber);
+				ZAssertStop(ZCONFIG_PhaseTree_Debug,
+					!ZUtil_STL::sContains(fSlots_Forked, iSlot->fSlotNumber));
+
+				ZAssertStop(ZCONFIG_PhaseTree_Debug,
+					!ZUtil_STL::sContains(fSlots_ReleasedForked, iSlot->fSlotNumber));
+
+				ZAssertStop(ZCONFIG_PhaseTree_Debug,
+					!ZUtil_STL::sContains(fSlots_ReleasedClean, iSlot->fSlotNumber));
+
+				ZUtil_STL::sEraseMustContain(ZCONFIG_PhaseTree_Debug,
+					fSlots_Loaded, iSlot->fSlotNumber);
 
 				if (true)
 					{
@@ -2497,7 +2599,8 @@ void ZBlockStore_PhaseTree::UnuseSlot(Slot* iSlot, bool iPurge)
 
 					fCached_Tail = iSlot;
 
-					ZAssertStop(ZCONFIG_PhaseTree_Debug, !ZUtil_STL::sContains(fSlots_Cached, iSlot->fSlotNumber));
+					ZAssertStop(ZCONFIG_PhaseTree_Debug,
+						!ZUtil_STL::sContains(fSlots_Cached, iSlot->fSlotNumber));
 
 					fSlots_Cached[iSlot->fSlotNumber] = iSlot;
 
@@ -2518,8 +2621,12 @@ void ZBlockStore_PhaseTree::UnuseSlot(Slot* iSlot, bool iPurge)
 
 							ZAssertStop(ZCONFIG_PhaseTree_Debug, theSlot->fSlotNumber);
 
-							map<uint32, Slot*>::iterator cacheIter = fSlots_Cached.find(theSlot->fSlotNumber);
-							ZAssertStopf(ZCONFIG_PhaseTree_Debug, cacheIter != fSlots_Cached.end(), ("Slot: %d, state: %d", theSlot->fSlotNumber, theSlot->fState));
+							map<uint32, Slot*>::iterator cacheIter
+								= fSlots_Cached.find(theSlot->fSlotNumber);
+							ZAssertStopf(ZCONFIG_PhaseTree_Debug,
+								cacheIter != fSlots_Cached.end(),
+								("Slot: %d, state: %d", theSlot->fSlotNumber, theSlot->fState));
+
 							fSlots_Cached.erase(cacheIter);
 
 							if (theSlot->fState == eStateForked)
@@ -2542,8 +2649,11 @@ void ZBlockStore_PhaseTree::UnuseSlot(Slot* iSlot, bool iPurge)
 			case eStateReleasedClean:
 			case eStateReleasedForked:
 				{
-				// This slot should have been removed from fSlots_Loaded when ReleaseAndUnuseSlot was called.
-				ZAssertStopf(ZCONFIG_PhaseTree_Debug, !ZUtil_STL::sContains(fSlots_Loaded, iSlot->fSlotNumber), ("Slot: %d", iSlot->fSlotNumber));
+				// This slot should have been removed from
+				// fSlots_Loaded when ReleaseAndUnuseSlot was called.
+				ZAssertStopf(ZCONFIG_PhaseTree_Debug,
+					!ZUtil_STL::sContains(fSlots_Loaded, iSlot->fSlotNumber),
+					("Slot: %d", iSlot->fSlotNumber));
 				delete iSlot;
 				break;
 				}
@@ -2571,22 +2681,31 @@ void ZBlockStore_PhaseTree::UnuseUnlockedSlot(Slot* iSlot)
 			case eStateDirty:
 			case eStateForked:
 				{
-				// There are three callers of UnuseUnlockedSlot: Flush, WriteStart and StreamDisposing.
-				// Flush will have marked clean any slots which it might pass to this method.
-				// WriteStart only calls this method for slots which are not eStateForked and not eStateDirty.
-				// StreamDisposing only calls it for block slots which are released whilst a stream is referencing
-				// them, which thus have a zero fSlotNumber and whose fState is either eStateReleasedClean or
-				// eStateReleasedForked.
+				// There are three callers of UnuseUnlockedSlot: Flush, WriteStart
+				// and StreamDisposing. Flush will have marked clean any slots which
+				// it might pass to this method. WriteStart only calls this method
+				// for slots which are not eStateForked and not eStateDirty. StreamDisposing
+				// only calls it for block slots which are released whilst a stream is
+				// referencing them, which thus have a zero fSlotNumber and whose fState
+				// is either eStateReleasedClean or eStateReleasedForked.
 				ZUnimplemented();
 				break;
 				}
 			case eStateClean:
 				{
 				ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlot->fSlotNumber);
-				ZAssertStop(ZCONFIG_PhaseTree_Debug, !ZUtil_STL::sContains(fSlots_Forked, iSlot->fSlotNumber));
-				ZAssertStop(ZCONFIG_PhaseTree_Debug, !ZUtil_STL::sContains(fSlots_ReleasedForked, iSlot->fSlotNumber));
-				ZAssertStop(ZCONFIG_PhaseTree_Debug, !ZUtil_STL::sContains(fSlots_ReleasedClean, iSlot->fSlotNumber));
-				ZUtil_STL::sEraseMustContain(ZCONFIG_PhaseTree_Debug, fSlots_Loaded, iSlot->fSlotNumber);
+
+				ZAssertStop(ZCONFIG_PhaseTree_Debug,
+					!ZUtil_STL::sContains(fSlots_Forked, iSlot->fSlotNumber));
+
+				ZAssertStop(ZCONFIG_PhaseTree_Debug,
+					!ZUtil_STL::sContains(fSlots_ReleasedForked, iSlot->fSlotNumber));
+
+				ZAssertStop(ZCONFIG_PhaseTree_Debug,
+					!ZUtil_STL::sContains(fSlots_ReleasedClean, iSlot->fSlotNumber));
+
+				ZUtil_STL::sEraseMustContain(ZCONFIG_PhaseTree_Debug,
+					fSlots_Loaded, iSlot->fSlotNumber);
 
 				if (iSlot->fState == eStateForked)
 					fSlots_Forked.insert(iSlot->fSlotNumber);
@@ -2597,9 +2716,11 @@ void ZBlockStore_PhaseTree::UnuseUnlockedSlot(Slot* iSlot)
 			case eStateReleasedForked:
 				{
 				// This slot should have been removed from fSlots_Loaded when ReleaseAndUnuseSlot
-				// was called. If it's a block slot which has been deleted out from under a stream then
-				// its fSlotNumber will have been set to zero.
-				ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlot->fSlotNumber == 0 || !ZUtil_STL::sContains(fSlots_Loaded, iSlot->fSlotNumber));
+				// was called. If it's a block slot which has been deleted out from under a
+				// stream then its fSlotNumber will have been set to zero.
+				ZAssertStop(ZCONFIG_PhaseTree_Debug,
+					iSlot->fSlotNumber == 0
+					|| !ZUtil_STL::sContains(fSlots_Loaded, iSlot->fSlotNumber));
 				delete iSlot;
 				break;
 				}
@@ -2615,7 +2736,8 @@ void ZBlockStore_PhaseTree::DirtySlot(Slot* iSlot)
 
 	fMutex_Slots.Acquire();
 
-	ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlot->fState == eStateForked || iSlot->fState == eStateDirty);
+	ZAssertStop(ZCONFIG_PhaseTree_Debug,
+		iSlot->fState == eStateForked || iSlot->fState == eStateDirty);
 
 	iSlot->fState = eStateDirty;
 
@@ -2630,8 +2752,8 @@ void ZBlockStore_PhaseTree::ReleaseSlotNumber(uint32 iSlotNumber)
 	// and Extent_RecursiveDeletePartial, for which the slot in question
 	// cannot be loaded, because the ancestor block slot is locked.
 
-	ZAssertStopf(ZCONFIG_PhaseTree_Debug, !ZUtil_STL::sContains(fSlots_Loaded, iSlotNumber),
-					("Slot: %d", iSlotNumber));
+	ZAssertStopf(ZCONFIG_PhaseTree_Debug,
+		!ZUtil_STL::sContains(fSlots_Loaded, iSlotNumber), ("Slot: %d", iSlotNumber));
 
 
 	// However, the slot could be cached.
@@ -2671,7 +2793,10 @@ void ZBlockStore_PhaseTree::ReleaseAndUnuseSlot(Slot* iSlot)
 
 	fMutex_Slots.Acquire();
 
-	ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlot->fState == eStateClean || iSlot->fState == eStateForked || iSlot->fState == eStateDirty);
+	ZAssertStop(ZCONFIG_PhaseTree_Debug,
+		iSlot->fState == eStateClean
+		|| iSlot->fState == eStateForked
+		|| iSlot->fState == eStateDirty);
 
 	if (iSlot->fState == eStateClean)
 		{
@@ -2777,7 +2902,8 @@ void ZBlockStore_PhaseTree::ReadFinish(Slot* iBlockSlot)
 #pragma mark -
 #pragma mark * ZBlockStore_PhaseTree. Index node manipulation.
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_FindChild(Slot* iSlot, bool iIsLeaf, BlockID iBlockID, size_t& oOffset)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_FindChild(
+	Slot* iSlot, bool iIsLeaf, BlockID iBlockID, size_t& oOffset)
 	{
 	const size_t count = this->Index_GetCount(iSlot);
 	uint32* firstKey = this->Index_GetKeysAddress(iSlot);
@@ -2794,7 +2920,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_FindChild(Slot* iSlot,
 	return this->UseSlot(theSlotNumber);
 	}
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_FindChildForked(Slot* iSlot, bool iIsLeaf, BlockID iBlockID, size_t& oOffset, uint32& oForkedChildSlotNumber)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_FindChildForked(
+	Slot* iSlot, bool iIsLeaf, BlockID iBlockID, size_t& oOffset, uint32& oForkedChildSlotNumber)
 	{
 	const size_t count = this->Index_GetCount(iSlot);
 	uint32* firstKey = this->Index_GetKeysAddress(iSlot);
@@ -2812,7 +2939,9 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_FindChildForked(Slot* 
 	return this->UseSlotForked(theSlotNumber, true, oForkedChildSlotNumber);
 	}
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_CreateRoot(Slot* iLeftChild, size_t iLeftSubTreeSize, BlockID iKey, Slot* iRightChild, size_t iRightSubTreeSize)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_CreateRoot(
+	Slot* iLeftChild, size_t iLeftSubTreeSize,
+	BlockID iKey, Slot* iRightChild, size_t iRightSubTreeSize)
 	{
 	Slot* newRoot = this->AllocateSlotDirty();
 	WriteField(newRoot, 0, 1); // Count
@@ -2824,7 +2953,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_CreateRoot(Slot* iLeft
 	return newRoot;
 	}
 
-void ZBlockStore_PhaseTree::Index_Split(Slot* iSlot, bool iIsLeaf, size_t& oLeftSubTreeSize, BlockID& oMedianKey, Slot*& oNewSibling, size_t& oRightSubTreeSize)
+void ZBlockStore_PhaseTree::Index_Split(Slot* iSlot, bool iIsLeaf,
+	size_t& oLeftSubTreeSize, BlockID& oMedianKey, Slot*& oNewSibling, size_t& oRightSubTreeSize)
 	{
 	VALIDATESLOT(iSlot);
 	const size_t count = ReadField(iSlot, 0);
@@ -2905,7 +3035,8 @@ void ZBlockStore_PhaseTree::Index_Split(Slot* iSlot, bool iIsLeaf, size_t& oLeft
 	VALIDATESLOT(oNewSibling);
 	}
 
-void ZBlockStore_PhaseTree::Index_Merge(Slot* iSlot, bool iSlotsAreLeaves, size_t iOffsetA, size_t iOffsetB, Slot* iSlotA, Slot* iSlotB)
+void ZBlockStore_PhaseTree::Index_Merge(Slot* iSlot, bool iSlotsAreLeaves,
+	size_t iOffsetA, size_t iOffsetB, Slot* iSlotA, Slot* iSlotB)
 	{
 	ZAssertStop(ZCONFIG_PhaseTree_Debug, iOffsetA != iOffsetB);
 
@@ -2925,9 +3056,9 @@ void ZBlockStore_PhaseTree::Index_Merge(Slot* iSlot, bool iSlotsAreLeaves, size_
 				this->Index_SetChild(iSlotA, true, countA + x, aSlotNumber);
 				}
 
-			// We're going to be deleting the key, child slot number and sub tree size in iSlot at
-			// iOffsetB, but we need the key at iOffsetB to remain and to lose the key
-			// at iOffset A, so copy it now.
+			// We're going to be deleting the key, child slot number and sub tree size in iSlot
+			// at iOffsetB, but we need the key at iOffsetB to remain and to lose the key at
+			// iOffset A, so copy it now.
 			if (this->Index_GetCount(iSlot) > 1)
 				{
 				uint32 movedKey = this->Index_GetKey(iSlot, true, iOffsetB);
@@ -3016,7 +3147,8 @@ void ZBlockStore_PhaseTree::Index_Merge(Slot* iSlot, bool iSlotsAreLeaves, size_
 	this->ReleaseAndUnuseSlot(iSlotB);
 	}
 
-void ZBlockStore_PhaseTree::Index_Rotate(Slot* iSlot, bool iSlotsAreLeaves, size_t iOffsetA, size_t iOffsetB, Slot* iSlotA, Slot* iSlotB)
+void ZBlockStore_PhaseTree::Index_Rotate(Slot* iSlot, bool iSlotsAreLeaves,
+	size_t iOffsetA, size_t iOffsetB, Slot* iSlotA, Slot* iSlotB)
 	{
 	ZAssertStop(ZCONFIG_PhaseTree_Debug, iOffsetA != iOffsetB);
 
@@ -3051,8 +3183,13 @@ void ZBlockStore_PhaseTree::Index_Rotate(Slot* iSlot, bool iSlotsAreLeaves, size
 			this->Index_SetKey(iSlotA, true, 0, aKey);
 			this->Index_SetChild(iSlotA, true, 0, aSlotNumber);
 			}
-		ZAssertStop(ZCONFIG_PhaseTree_Debug, this->Index_GetSubTreeSize(iSlot, iOffsetA) == countA);
-		ZAssertStop(ZCONFIG_PhaseTree_Debug, this->Index_GetSubTreeSize(iSlot, iOffsetB) == countB);
+
+		ZAssertStop(ZCONFIG_PhaseTree_Debug,
+			this->Index_GetSubTreeSize(iSlot, iOffsetA) == countA);
+
+		ZAssertStop(ZCONFIG_PhaseTree_Debug,
+			this->Index_GetSubTreeSize(iSlot, iOffsetB) == countB);
+
 		subTreeSizeTransferred = 1;
 		}
 	else
@@ -3094,8 +3231,11 @@ void ZBlockStore_PhaseTree::Index_Rotate(Slot* iSlot, bool iSlotsAreLeaves, size
 	else
 		this->Index_SetKey(iSlot, false, iOffsetB, keyToParent);
 
-	this->Index_SetSubTreeSize(iSlot, iOffsetA, this->Index_GetSubTreeSize(iSlot, iOffsetA) + subTreeSizeTransferred);
-	this->Index_SetSubTreeSize(iSlot, iOffsetB, this->Index_GetSubTreeSize(iSlot, iOffsetB) - subTreeSizeTransferred);
+	this->Index_SetSubTreeSize(iSlot, iOffsetA,
+		this->Index_GetSubTreeSize(iSlot, iOffsetA) + subTreeSizeTransferred);
+
+	this->Index_SetSubTreeSize(iSlot, iOffsetB,
+		this->Index_GetSubTreeSize(iSlot, iOffsetB) - subTreeSizeTransferred);
 	}
 
 // =================================================================================================
@@ -3117,7 +3257,8 @@ void ZBlockStore_PhaseTree::Index_SetKey(Slot* iSlot, bool iIsLeaf, size_t iOffs
 	}
 
 
-void ZBlockStore_PhaseTree::Index_SetChild(Slot* iSlot, bool iIsLeaf, size_t iOffset, uint32 iSlotNumber)
+void ZBlockStore_PhaseTree::Index_SetChild(Slot* iSlot, bool iIsLeaf,
+	size_t iOffset, uint32 iSlotNumber)
 	{
 	if (iIsLeaf)
 		{
@@ -3155,7 +3296,9 @@ void ZBlockStore_PhaseTree::Index_InternalMakeSpaceOnLeft(Slot* iSlot, size_t iC
 	Fill(iSlot, 1 + fCapacity_IndexInternal, iCount);
 
 	// And the subtree sizes
-	Move(iSlot, 2 + 2 * fCapacity_IndexInternal, 2 + 2 * fCapacity_IndexInternal + iCount, count + 1);
+	Move(iSlot, 2 + 2 * fCapacity_IndexInternal, 2 + 2 * fCapacity_IndexInternal + iCount,
+		count + 1);
+
 	Fill(iSlot, 2 + 2 * fCapacity_IndexInternal, iCount);
 
 	WriteField(iSlot, 0, count + iCount);
@@ -3181,11 +3324,15 @@ void ZBlockStore_PhaseTree::Index_InternalMakeOneSpaceBefore(Slot* iSlot, size_t
 	Fill(iSlot, 1 + iOffset, 1);
 
 	// Move the slots
-	Move(iSlot, 1 + fCapacity_IndexInternal + iOffset, 1 + fCapacity_IndexInternal + iOffset + 1, count + 1 - iOffset);
+	Move(iSlot, 1 + fCapacity_IndexInternal + iOffset, 1 + fCapacity_IndexInternal + iOffset + 1,
+		count + 1 - iOffset);
+
 	Fill(iSlot, 1 + fCapacity_IndexInternal + iOffset, 1);
 
 	// And the subtree sizes
-	Move(iSlot, 2 + 2 * fCapacity_IndexInternal + iOffset, 2 + 2 * fCapacity_IndexInternal + iOffset + 1, count + 1 - iOffset);
+	Move(iSlot, 2 + 2 * fCapacity_IndexInternal + iOffset,
+		2 + 2 * fCapacity_IndexInternal + iOffset + 1, count + 1 - iOffset);
+
 	Fill(iSlot, 2 + 2 * fCapacity_IndexInternal + iOffset, 1);
 
 	WriteField(iSlot, 0, count + 1);
@@ -3237,11 +3384,15 @@ void ZBlockStore_PhaseTree::Index_InternalDeleteOneTowardsRight(Slot* iSlot, siz
 	Fill(iSlot, 1 + count - 1, 1);
 
 	// Remove the slots.
-	Move(iSlot, 1 + fCapacity_IndexInternal + iOffset + 1, 1 + fCapacity_IndexInternal + iOffset, count + 1 - iOffset);
+	Move(iSlot, 1 + fCapacity_IndexInternal + iOffset + 1,
+		1 + fCapacity_IndexInternal + iOffset, count + 1 - iOffset);
+
 	Fill(iSlot, 1 + fCapacity_IndexInternal + count, 1);
 
 	// Remove the sub tree sizes.
-	Move(iSlot, 2 + 2 * fCapacity_IndexInternal + iOffset + 1, 2 + 2 * fCapacity_IndexInternal + iOffset, count + 1 - iOffset);
+	Move(iSlot, 2 + 2 * fCapacity_IndexInternal + iOffset + 1,
+		2 + 2 * fCapacity_IndexInternal + iOffset, count + 1 - iOffset);
+
 	Fill(iSlot, 2 + 2 * fCapacity_IndexInternal + count, 1);
 
 	WriteField(iSlot, 0, count - 1);
@@ -3296,7 +3447,9 @@ void ZBlockStore_PhaseTree::Index_LeafMakeOneSpaceBefore(Slot* iSlot, size_t iOf
 	Fill(iSlot, 1 + iOffset, 1);
 
 	// Move the slots
-	Move(iSlot, 1 + fCapacity_IndexLeaf + iOffset, 1 + fCapacity_IndexLeaf + iOffset + 1, count - iOffset);
+	Move(iSlot, 1 + fCapacity_IndexLeaf + iOffset,
+		1 + fCapacity_IndexLeaf + iOffset + 1, count - iOffset);
+
 	Fill(iSlot, 1 + fCapacity_IndexLeaf + iOffset, 1);
 
 	WriteField(iSlot, 0, count + 1);
@@ -3348,7 +3501,9 @@ void ZBlockStore_PhaseTree::Index_LeafDeleteOne(Slot* iSlot, size_t iOffset)
 	Fill(iSlot, 1 + count - 1, 1);
 
 	// Remove the slots.
-	Move(iSlot, 1 + fCapacity_IndexLeaf + iOffset + 1, 1 + fCapacity_IndexLeaf + iOffset, count - iOffset - 1);
+	Move(iSlot, 1 + fCapacity_IndexLeaf + iOffset + 1,
+		1 + fCapacity_IndexLeaf + iOffset, count - iOffset - 1);
+
 	Fill(iSlot, 1 + fCapacity_IndexLeaf + count - 1, 1);
 
 	WriteField(iSlot, 0, count - 1);
@@ -3364,7 +3519,8 @@ void ZBlockStore_PhaseTree::Index_LeafDeleteToEnd(Slot* iSlot, size_t iOffset)
 #pragma mark -
 #pragma mark * ZBlockStore_PhaseTree. Block node manipulation.
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Block_FindDataSlot(Slot* iSlot, size_t iPosition)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Block_FindDataSlot(
+	Slot* iSlot, size_t iPosition)
 	{
 	// Figure out how high the tree is.
 	size_t blockSize = ReadField(iSlot, 0);
@@ -3397,7 +3553,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Block_FindDataSlot(Slot* iSl
 	return currentSlot;
 	}
 
-ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Block_FindDataSlotForWrite(Slot* iSlot, size_t iPosition, bool iNeedOriginalContent)
+ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Block_FindDataSlotForWrite(
+	Slot* iSlot, size_t iPosition, bool iNeedOriginalContent)
 	{
 	size_t blockSize = ReadField(iSlot, 0);
 
@@ -3416,7 +3573,9 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Block_FindDataSlotForWrite(S
 	if (bytesInBranch < fCapacity_Data)
 		{
 		uint32 newSlotNumber;
-		Slot* dataSlot = this->UseSlotDirty(ReadField(iSlot, 1 + offsetInLevel), iNeedOriginalContent, newSlotNumber);
+		Slot* dataSlot = this->UseSlotDirty(ReadField(iSlot, 1 + offsetInLevel),
+			iNeedOriginalContent, newSlotNumber);
+
 		if (newSlotNumber)
 			WriteField(iSlot, 1 + offsetInLevel, newSlotNumber);
 
@@ -3425,7 +3584,9 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Block_FindDataSlotForWrite(S
 	else
 		{
 		uint32 newSlotNumber;
-		Slot* currentSlot = this->UseSlotForked(ReadField(iSlot, 1 + offsetInLevel), true, newSlotNumber);
+		Slot* currentSlot = this->UseSlotForked(ReadField(iSlot, 1 + offsetInLevel),
+			true, newSlotNumber);
+
 		if (newSlotNumber)
 			WriteField(iSlot, 1 + offsetInLevel, newSlotNumber);
 
@@ -3438,7 +3599,9 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Block_FindDataSlotForWrite(S
 			if (bytesInBranch < fCapacity_Data)
 				{
 				uint32 newSlotNumber;
-				Slot* dataSlot = this->UseSlotForked(ReadField(currentSlot, offsetInLevel), iNeedOriginalContent, newSlotNumber);
+				Slot* dataSlot = this->UseSlotForked(ReadField(currentSlot, offsetInLevel),
+					iNeedOriginalContent, newSlotNumber);
+
 				if (newSlotNumber)
 					{
 					this->DirtySlot(currentSlot);
@@ -3453,7 +3616,9 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Block_FindDataSlotForWrite(S
 			else
 				{
 				uint32 newSlotNumber;
-				Slot* childSlot = this->UseSlotForked(ReadField(currentSlot, offsetInLevel), true, newSlotNumber);
+				Slot* childSlot = this->UseSlotForked(ReadField(currentSlot, offsetInLevel),
+					true, newSlotNumber);
+
 				if (newSlotNumber)
 					{
 					this->DirtySlot(currentSlot);
@@ -3483,8 +3648,11 @@ void ZBlockStore_PhaseTree::Block_KillTree(Slot* iSlot)
 		countInLastOfLevels.push_back(temp);
 		countInLastOfLevel = (countInLastOfLevel + fCapacity_Extent - 1) / fCapacity_Extent;
 		}
+
 	countInLastOfLevels.push_back(countInLastOfLevel);
-	this->Extent_RecursiveDeletePartial(iSlot, 1, countInLastOfLevels, countInLastOfLevels.size() - 1);
+
+	this->Extent_RecursiveDeletePartial(
+		iSlot, 1, countInLastOfLevels, countInLastOfLevels.size() - 1);
 	}
 
 void ZBlockStore_PhaseTree::Block_GrowTree(Slot* iSlot, size_t iNewSize)
@@ -3513,7 +3681,7 @@ void ZBlockStore_PhaseTree::Block_GrowTree(Slot* iSlot, size_t iNewSize)
 	while (additional)
 		{
 		this->Block_GrowTreeRecurse(iSlot, 1, fCapacity_BlockRoot_Slots,
-							countInLastOfLevels, countInLastOfLevels.size() - 1, additional);
+			countInLastOfLevels, countInLastOfLevels.size() - 1, additional);
 
 		if (additional && countInLastOfLevels.back() == fCapacity_BlockRoot_Slots)
 			{
@@ -3534,7 +3702,9 @@ void ZBlockStore_PhaseTree::Block_GrowTree(Slot* iSlot, size_t iNewSize)
 	WriteField(iSlot, 0, iNewSize);
 	}
 
-void ZBlockStore_PhaseTree::Block_GrowTreeRecurse(Slot* iSlot, size_t iFieldOffset, size_t iMaxChildren, vector<size_t>& ioCountInLastOfLevels, int iHeight, size_t& ioAdditional)
+void ZBlockStore_PhaseTree::Block_GrowTreeRecurse(
+	Slot* iSlot, size_t iFieldOffset, size_t iMaxChildren,
+	vector<size_t>& ioCountInLastOfLevels, int iHeight, size_t& ioAdditional)
 	{
 	// Called by Block_GrowTree and Block_GrowTreeRecurse
 
@@ -3570,13 +3740,17 @@ void ZBlockStore_PhaseTree::Block_GrowTreeRecurse(Slot* iSlot, size_t iFieldOffs
 				}
 			else
 				{
-				uint32 slotNumber = ReadField(iSlot, iFieldOffset + ioCountInLastOfLevels[iHeight] - 1);
+				uint32 slotNumber = ReadField(iSlot,
+					iFieldOffset + ioCountInLastOfLevels[iHeight] - 1);
+
 				uint32 newSlotNumber;
 				childSlot = this->UseSlotForked(slotNumber, true, newSlotNumber);
 				if (newSlotNumber)
 					{
 					this->DirtySlot(iSlot);
-					WriteField(iSlot, iFieldOffset + ioCountInLastOfLevels[iHeight] - 1, newSlotNumber);
+					WriteField(iSlot,
+						iFieldOffset + ioCountInLastOfLevels[iHeight] - 1,
+						newSlotNumber);
 					}
 				}
 			this->Block_GrowTreeRecurse(childSlot, 0, fCapacity_Extent,
@@ -3597,7 +3771,8 @@ void ZBlockStore_PhaseTree::Block_GrowTreeRecurse(Slot* iSlot, size_t iFieldOffs
 				ioCountInLastOfLevels[iHeight] += 1;
 				for (int x = 0; x < iHeight; ++x)
 					{
-					ZAssertStop(ZCONFIG_PhaseTree_Debug, ioCountInLastOfLevels[x] == fCapacity_Extent);
+					ZAssertStop(ZCONFIG_PhaseTree_Debug,
+						ioCountInLastOfLevels[x] == fCapacity_Extent);
 					ioCountInLastOfLevels[x] = 0;
 					}
 				}
@@ -3672,7 +3847,9 @@ void ZBlockStore_PhaseTree::Block_PruneTreeRecurse(Slot* iSlot, size_t iFieldOff
 			fMutex_Slots.Acquire();
 			for (size_t x = 0; x < toRelease; ++x)
 				{
-				uint32 theSlotNumber = ReadField(iSlot, iFieldOffset + ioCountInLastOfLevels[0] - x - 1);
+				uint32 theSlotNumber = ReadField(iSlot,
+					iFieldOffset + ioCountInLastOfLevels[0] - x - 1);
+
 				this->ReleaseSlotNumber(theSlotNumber);
 				}
 			fMutex_Slots.Release();
@@ -3743,7 +3920,8 @@ void ZBlockStore_PhaseTree::Extent_RecursiveDelete(Slot* iSlot, int iHeight)
 		}
 	}
 
-void ZBlockStore_PhaseTree::Extent_RecursiveDeletePartial(Slot* iSlot, size_t iFieldOffset, const vector<size_t>& iCountInLastOfLevels, int iHeight)
+void ZBlockStore_PhaseTree::Extent_RecursiveDeletePartial(
+	Slot* iSlot, size_t iFieldOffset, const vector<size_t>& iCountInLastOfLevels, int iHeight)
 	{
 	// Called by Block_KillTree, and self
 
@@ -3755,7 +3933,8 @@ void ZBlockStore_PhaseTree::Extent_RecursiveDeletePartial(Slot* iSlot, size_t iF
 			this->Extent_RecursiveDelete(childSlot, iHeight - 1);
 			this->ReleaseAndUnuseSlot(childSlot);
 			}
-		Slot* childSlot = this->UseSlot(ReadField(iSlot, iFieldOffset + iCountInLastOfLevels[iHeight] - 1));
+		Slot* childSlot = this->UseSlot(ReadField(iSlot,
+			iFieldOffset + iCountInLastOfLevels[iHeight] - 1));
 		this->Extent_RecursiveDeletePartial(childSlot, 0, iCountInLastOfLevels, iHeight - 1);
 		this->ReleaseAndUnuseSlot(childSlot);
 		}

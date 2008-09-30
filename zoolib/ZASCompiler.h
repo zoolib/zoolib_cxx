@@ -49,7 +49,9 @@ protected:
 	class NameEntry;
 	class Node;
 
-	void AddAsset(const std::vector<std::string>& inNameStack, const std::string& inType, const ZStreamR& inStream);
+	void AddAsset(const std::vector<std::string>& inNameStack,
+		const std::string& inType, const ZStreamR& inStream);
+
 	NameEntry* AllocateName(const std::string& inName);
 
 	ZStreamW_Count fStreamW;

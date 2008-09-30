@@ -97,7 +97,8 @@ protected:
 
 	size_t ValidateOne(Slot* iSlot, int iHeight, uint32 iMinKeyMinusOne, uint32 iMaxKey);
 
-	enum EState { eStateClean, eStateForked, eStateDirty, eStateReleasedClean, eStateReleasedForked };
+	enum EState
+		{ eStateClean, eStateForked, eStateDirty, eStateReleasedClean, eStateReleasedForked };
 
 	// Methods called by stream or our block store API.
 	void StreamDisposing(Slot* iBlockSlot);
@@ -105,12 +106,16 @@ protected:
 	Slot* FindBlockSlot(BlockID iBlockID);
 	Slot* FindBlockSlotForWrite(BlockID iBlockID);
 
-	void ReadFromBlock(BlockID iBlockID, Slot*& ioBlockSlot, uint64 iPosition, void* iDest, size_t iCount, size_t& oCountRead);
-	void WriteToBlock(BlockID iBlockID, Slot*& ioBlockSlot, uint64 iPosition, const void* iSource, size_t iCount, size_t& oCountWritten);
+	void ReadFromBlock(BlockID iBlockID, Slot*& ioBlockSlot,
+		uint64 iPosition, void* iDest, size_t iCount, size_t& oCountRead);
+
+	void WriteToBlock(BlockID iBlockID, Slot*& ioBlockSlot,
+		uint64 iPosition, const void* iSource, size_t iCount, size_t& oCountWritten);
 
 	Slot* CreateBlockImp(BlockID iBlockID, BlockID& oBlockID);
 
-	bool DeleteBlockRecurse(Slot* iParentSlot, int iHeight, BlockID iBlockID, Slot*& oBlockSlot, Slot** oNewRoot);
+	bool DeleteBlockRecurse(
+		Slot* iParentSlot, int iHeight, BlockID iBlockID, Slot*& oBlockSlot, Slot** oNewRoot);
 
 	BlockID GetNextBlockIDRecurse(Slot* iParentSlot, int iHeight, BlockID iBlockID);
 
@@ -131,7 +136,8 @@ protected:
 
 	Slot* UseSlot(uint32 iSlotNumber);
 
-	Slot* UseSlotReal(bool iDirtied, uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber);
+	Slot* UseSlotReal(
+		bool iDirtied, uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber);
 	Slot* UseSlotForked(uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber);
 	Slot* UseSlotDirty(uint32 iSlotNumber, bool iReadOriginalContent, uint32& oForkedSlotNumber);
 
@@ -154,13 +160,21 @@ protected:
 
 	// Index node manipulation.
 	Slot* Index_FindChild(Slot* iSlot, bool iIsLeaf, BlockID iBlockID, size_t& oChildOffset);
-	Slot* Index_FindChildForked(Slot* iSlot, bool iIsLeaf, BlockID iBlockID, size_t& oChildOffset, uint32& oForkedChildSlotNumber);
 
-	Slot* Index_CreateRoot(Slot* iLeftChild, size_t iLeftSubTreeSize, BlockID iKey, Slot* iRightChild, size_t iRightSubTreeSize);
+	Slot* Index_FindChildForked(Slot* iSlot, bool iIsLeaf, BlockID iBlockID,
+		size_t& oChildOffset, uint32& oForkedChildSlotNumber);
 
-	void Index_Split(Slot* iSlot, bool iIsLeaf, size_t& oLeftSubTreeSize, BlockID& oKey, Slot*& oNewSibling, size_t& oRightSubTreeSize);
-	void Index_Merge(Slot* iSlot, bool iSlotsAreLeaves, size_t iOffsetA, size_t iOffsetB, Slot* iSlotA, Slot* iSlotB);
-	void Index_Rotate(Slot* iSlot, bool iSlotsAreLeaves, size_t iOffsetA, size_t iOffsetB, Slot* iSlotA, Slot* iSlotB);
+	Slot* Index_CreateRoot(Slot* iLeftChild, size_t iLeftSubTreeSize,
+		BlockID iKey, Slot* iRightChild, size_t iRightSubTreeSize);
+
+	void Index_Split(Slot* iSlot, bool iIsLeaf,
+		size_t& oLeftSubTreeSize, BlockID& oKey, Slot*& oNewSibling, size_t& oRightSubTreeSize);
+
+	void Index_Merge(Slot* iSlot, bool iSlotsAreLeaves,
+		size_t iOffsetA, size_t iOffsetB, Slot* iSlotA, Slot* iSlotB);
+
+	void Index_Rotate(Slot* iSlot, bool iSlotsAreLeaves,
+		size_t iOffsetA, size_t iOffsetB, Slot* iSlotA, Slot* iSlotB);
 
 	// Index node accessors
 	void Index_Initialize(Slot* iSlot);
@@ -208,7 +222,8 @@ protected:
 
 	// Extent node manipulation.
 	void Extent_RecursiveDelete(Slot* iSlot, int iHeight);
-	void Extent_RecursiveDeletePartial(Slot* iSlot, size_t iFieldOffset, const std::vector<size_t>& iCountInLastOfLevels, int iHeight);
+	void Extent_RecursiveDeletePartial(Slot* iSlot, size_t iFieldOffset,
+		const std::vector<size_t>& iCountInLastOfLevels, int iHeight);
 
 	// Low level field access. Suitable for inlining?
 	uint32 ReadField(Slot* iSlot, size_t iOffset);

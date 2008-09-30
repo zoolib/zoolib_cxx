@@ -144,7 +144,8 @@ bool sTryRead_Value(ZML::Reader& r, ZTValue& oValue)
 		else if (tagName == "base64")
 			{
 			ZMemoryBlock theMB;
-			ZStreamR_Base64Decode(ZStreamR_ASCIIStrim(r.Text())).CopyAllTo(ZStreamRWPos_MemoryBlock(theMB));
+			ZStreamR_Base64Decode(ZStreamR_ASCIIStrim(r.Text()))
+				.CopyAllTo(ZStreamRWPos_MemoryBlock(theMB));
 
 			oValue.SetRaw(theMB);
 			}
@@ -245,8 +246,11 @@ void sWrite_Value(ZStrimW_ML& s, const ZTValue& iTValue)
 			s.Begin("array");
 				s.Begin("data");				
 					const vector<ZTValue>& asVector = iTValue.GetVector();
-					for (vector<ZTValue>::const_iterator i = asVector.begin(); i != asVector.end(); ++i)
+					for (vector<ZTValue>::const_iterator i = asVector.begin();
+						i != asVector.end(); ++i)
+						{
 						sWrite_Value(s, *i);
+						}
 				s.End("data");
 			s.End("array");
 			break;
@@ -286,7 +290,8 @@ void sWrite_Value(ZStrimW_ML& s, const ZTValue& iTValue)
 			{
 			s.Begin("base64");
 				const ZMemoryBlock& theMB = iTValue.GetRaw();
-				ZStreamW_Base64Encode(ZStreamW_ASCIIStrim(s)).Write(theMB.GetData(), theMB.GetSize());
+				ZStreamW_Base64Encode(ZStreamW_ASCIIStrim(s))
+					.Write(theMB.GetData(), theMB.GetSize());
 			s.End("base64");
 			}
 		case eZType_Time:

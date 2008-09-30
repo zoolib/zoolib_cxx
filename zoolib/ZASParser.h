@@ -90,11 +90,13 @@ public:
 	StreamProvider() {}
 	~StreamProvider() {}
 
-	virtual ZRef<ZStreamerR> ProvideStreamSource(const ZFileSpec& iCurrent, const std::string& iPath,
-								bool iSearchUserDirectories, ZFileSpec& oFileSpec) const;
+	virtual ZRef<ZStreamerR> ProvideStreamSource(
+		const ZFileSpec& iCurrent, const std::string& iPath,
+		bool iSearchUserDirectories, ZFileSpec& oFileSpec) const;
 
-	virtual ZRef<ZStreamerR> ProvideStreamBinary(const ZFileSpec& iCurrent, const std::string& iPath,
-								bool iSearchUserDirectories, ZFileSpec& oFileSpec) const;
+	virtual ZRef<ZStreamerR> ProvideStreamBinary(
+		const ZFileSpec& iCurrent, const std::string& iPath,
+		bool iSearchUserDirectories, ZFileSpec& oFileSpec) const;
 	};
 
 // =================================================================================================
@@ -111,7 +113,10 @@ public:
 	ErrorHandler() {}
 	~ErrorHandler() {}
 
-	virtual void ReportError(const std::vector<std::pair<ZFileSpec, int> >& iSources, const std::string& iMessage) const;
+	virtual void ReportError(
+		const std::vector<std::pair<ZFileSpec, int> >& iSources,
+		const std::string& iMessage) const;
+
 	virtual void ReportError(const std::string& iMessage) const;
 	virtual void ReportProgress(int iLinesProcessed) const;
 	};

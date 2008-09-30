@@ -37,8 +37,8 @@ using std::vector;
 #pragma mark -
 #pragma mark * Utility routines
 
-static uint32 sReadCount(const ZStreamR& inStream)
-	{ return inStream.ReadCount(); }
+static uint32 sReadCount(const ZStreamR& iStream)
+	{ return iStream.ReadCount(); }
 
 static void sThrowBadFormat()
 	{
@@ -84,10 +84,10 @@ struct ZAssetRep_Std::CompareAgainstPath
 #pragma mark -
 #pragma mark * ZAssetRep_Std
 
-ZAssetRep_Std::ZAssetRep_Std(ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength)
-:   fName(inName),
-	fNameLength(inNameLength),
-	fParent(inParent)
+ZAssetRep_Std::ZAssetRep_Std(ZAssetRep_Std_Directory* iParent, const char* iName, size_t iNameLength)
+:   fName(iName),
+	fNameLength(iNameLength),
+	fParent(iParent)
 	{}
 
 ZAssetRep_Std::~ZAssetRep_Std()
@@ -124,34 +124,39 @@ ZRef<ZAssetRep> ZAssetRep_Std::GetParentAssetRep()
 #pragma mark -
 #pragma mark * ZAssetRep_Std_Directory
 
-ZAssetRep_Std_Directory::ZAssetRep_Std_Directory(ZAssetTree_Std* inAssetTree, ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream, const char* inNameTable, const size_t* inNameOffsets)
-:	ZAssetRep_Std(inParent, inName, inNameLength)
+ZAssetRep_Std_Directory::ZAssetRep_Std_Directory(
+	ZAssetTree_Std* iAssetTree,
+	ZAssetRep_Std_Directory* iParent,
+	const char* iName, size_t iNameLength,
+	const ZStreamRPos& iStream,
+	const char* iNameTable, const size_t* iNameOffsets)
+:	ZAssetRep_Std(iParent, iName, iNameLength)
 	{
-	fChildrenCount = sReadCount(inStream);
+	fChildrenCount = sReadCount(iStream);
 	if (fChildrenCount == 0)
 		{
 		fChildren = nil;
 		}
 	else if (fChildrenCount == 1)
 		{
-		uint32 childNameIndex = sReadCount(inStream);
-		size_t nameOffset = ZByteSwap_ReadBig32(inNameOffsets + childNameIndex);
-		size_t nextNameOffset = ZByteSwap_ReadBig32(inNameOffsets + childNameIndex + 1);
-		fChild = inAssetTree->LoadAssetRep(this, inNameTable + nameOffset,
-									nextNameOffset - nameOffset - 1,
-									inStream, inNameTable, inNameOffsets);
+		uint32 childNameIndex = sReadCount(iStream);
+		size_t nameOffset = ZByteSwap_ReadBig32(iNameOffsets + childNameIndex);
+		size_t nextNameOffset = ZByteSwap_ReadBig32(iNameOffsets + childNameIndex + 1);
+		fChild = iAssetTree->LoadAssetRep(this, iNameTable + nameOffset,
+				nextNameOffset - nameOffset - 1,
+				iStream, iNameTable, iNameOffsets);
 		}
 	else
 		{
 		fChildren = new ZAssetRep_Std*[fChildrenCount];
 		for (size_t x = 0; x < fChildrenCount; ++x)
 			{
-			uint32 childNameIndex = sReadCount(inStream);
-			size_t nameOffset = ZByteSwap_ReadBig32(inNameOffsets + childNameIndex);
-			size_t nextNameOffset = ZByteSwap_ReadBig32(inNameOffsets + childNameIndex + 1);
-			fChildren[x] = inAssetTree->LoadAssetRep(this, inNameTable + nameOffset,
-									nextNameOffset - nameOffset - 1,
-									inStream, inNameTable, inNameOffsets);
+			uint32 childNameIndex = sReadCount(iStream);
+			size_t nameOffset = ZByteSwap_ReadBig32(iNameOffsets + childNameIndex);
+			size_t nextNameOffset = ZByteSwap_ReadBig32(iNameOffsets + childNameIndex + 1);
+			fChildren[x] = iAssetTree->LoadAssetRep(this, iNameTable + nameOffset,
+				nextNameOffset - nameOffset - 1,
+				iStream, iNameTable, iNameOffsets);
 			}
 		if (fChildrenCount > 7)
 			{
@@ -176,22 +181,22 @@ ZAssetRep_Std_Directory::~ZAssetRep_Std_Directory()
 		}
 	}
 
-ZRef<ZAssetRep> ZAssetRep_Std_Directory::ResolvePath(const char* inPath)
+ZRef<ZAssetRep> ZAssetRep_Std_Directory::ResolvePath(const char* iPath)
 	{
-	if (ZRef<ZAssetRep> theRep = ZAssetRep::ResolvePath(inPath))
+	if (ZRef<ZAssetRep> theRep = ZAssetRep::ResolvePath(iPath))
 		return theRep;
 
 	if (fChildrenCount == 1)
 		{
-		if (strncmp(inPath, fChild->fName, fChild->fNameLength) == 0)
+		if (strncmp(iPath, fChild->fName, fChild->fNameLength) == 0)
 			{
-			if (inPath[fChild->fNameLength] == '\0')
+			if (iPath[fChild->fNameLength] == '\0')
 				return fAssetTree->UseRep(fChild);
 
-			if (inPath[fChild->fNameLength] == '|')
+			if (iPath[fChild->fNameLength] == '|')
 				{
 				ZRef<ZAssetRep_Std> theChild = fAssetTree->UseRep(fChild);
-				return theChild->ResolvePath(inPath + fChild->fNameLength + 1);
+				return theChild->ResolvePath(iPath + fChild->fNameLength + 1);
 				}
 			}
 		}
@@ -200,15 +205,15 @@ ZRef<ZAssetRep> ZAssetRep_Std_Directory::ResolvePath(const char* inPath)
 		// With seven or fewer children we do a linear scan of the list.
 		for (size_t x = 0; x < fChildrenCount; ++x)
 			{
-			if (strncmp(inPath, fChildren[x]->fName, fChildren[x]->fNameLength) == 0)
+			if (strncmp(iPath, fChildren[x]->fName, fChildren[x]->fNameLength) == 0)
 				{
-				if (inPath[fChildren[x]->fNameLength] == '\0')
+				if (iPath[fChildren[x]->fNameLength] == '\0')
 					return fAssetTree->UseRep(fChildren[x]);
 
-				if (inPath[fChildren[x]->fNameLength] == '|')
+				if (iPath[fChildren[x]->fNameLength] == '|')
 					{
 					ZRef<ZAssetRep_Std> theChild = fAssetTree->UseRep(fChildren[x]);
-					return theChild->ResolvePath(inPath + fChildren[x]->fNameLength + 1);
+					return theChild->ResolvePath(iPath + fChildren[x]->fNameLength + 1);
 					}
 				}
 			}
@@ -218,36 +223,39 @@ ZRef<ZAssetRep> ZAssetRep_Std_Directory::ResolvePath(const char* inPath)
 		// With more than seven children we do a binary chop into the list,
 		// which was sorted in our constructor when we loaded up.
 		static const char* const terminators = "|^";
-		const char* pathEnd = find_first_of(inPath, inPath + strlen(inPath), terminators, terminators + 2);
+		const char* pathEnd
+			= find_first_of(iPath, iPath + strlen(iPath), terminators, terminators + 2);
 
 		ZAssetRep_Std** childrenEnd = fChildren + fChildrenCount;
-		ZAssetRep_Std** i = ::lower_bound(fChildren, childrenEnd, inPath, CompareAgainstPath(pathEnd - inPath));
+		ZAssetRep_Std** i = ::lower_bound(
+			fChildren, childrenEnd, iPath, CompareAgainstPath(pathEnd - iPath));
+
 		if (i != childrenEnd)
 			{
-			// We've found a child whose name is >= inPath...pathEnd.
+			// We've found a child whose name is >= iPath...pathEnd.
 			// There are three possibilities:
-			// 1. It's strictly greater than inPath, and may be shorter or longer.
-			// 2. It's a strict prefix of inPath.
-			// 3. It's equal to inPath.
+			// 1. It's strictly greater than iPath, and may be shorter or longer.
+			// 2. It's a strict prefix of iPath.
+			// 3. It's equal to iPath.
 			// There's no standard function to distinguish these three scenarios,
-			// at least without copying inPath...pathEnd into a zero-terminated string,
+			// at least without copying iPath...pathEnd into a zero-terminated string,
 			// so we do it manually.
 
-			const char* p = inPath;
+			const char* p = iPath;
 			const char* t = (*i)->fName;
 			for (; p != pathEnd && *t && *p == *t; ++p, ++t)
 				{}
 
 			if (p == pathEnd && !*t)
 				{
-				// inPath...pathEnd matched (*i)->fName and they're
+				// iPath...pathEnd matched (*i)->fName and they're
 				// the same length, so we've got a match.
 
 				switch (*pathEnd)
 					{
 					case 0:
 						{
-						// pathEnd is the end of the whole of inPath, so we've found our leaf.
+						// pathEnd is the end of the whole of iPath, so we've found our leaf.
 						return fAssetTree->UseRep(*i);
 						}
 					case '|':
@@ -292,24 +300,28 @@ void ZAssetRep_Std_Directory::DoFinalization()
 #pragma mark -
 #pragma mark * ZAssetRep_Std_Union
 
-ZAssetRep_Std_Union::ZAssetRep_Std_Union(ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream, const char* inNameTable, const size_t* inNameOffsets)
-:	ZAssetRep_Std(inParent, inName, inNameLength)
+ZAssetRep_Std_Union::ZAssetRep_Std_Union(
+	ZAssetRep_Std_Directory* iParent,
+	const char* iName, size_t iNameLength,
+	const ZStreamRPos& iStream,
+	const char* iNameTable, const size_t* iNameOffsets)
+:	ZAssetRep_Std(iParent, iName, iNameLength)
 	{
 	fResolved = false;
-	size_t countOfPaths = sReadCount(inStream);
+	size_t countOfPaths = sReadCount(iStream);
 	for (size_t x = 0; x < countOfPaths; ++x)
 		{
-		uint32 pathNameIndex = sReadCount(inStream);
-		fPaths.push_back(inNameTable + ZByteSwap_ReadBig32(inNameOffsets + pathNameIndex));
+		uint32 pathNameIndex = sReadCount(iStream);
+		fPaths.push_back(iNameTable + ZByteSwap_ReadBig32(iNameOffsets + pathNameIndex));
 		}
 	}
 
 ZAssetRep_Std_Union::~ZAssetRep_Std_Union()
 	{}
 
-ZRef<ZAssetRep> ZAssetRep_Std_Union::ResolvePath(const char* inPath)
+ZRef<ZAssetRep> ZAssetRep_Std_Union::ResolvePath(const char* iPath)
 	{
-	if (ZRef<ZAssetRep> theRep = ZAssetRep::ResolvePath(inPath))
+	if (ZRef<ZAssetRep> theRep = ZAssetRep::ResolvePath(iPath))
 		return theRep;
 
 	if (!fResolved)
@@ -320,16 +332,17 @@ ZRef<ZAssetRep> ZAssetRep_Std_Union::ResolvePath(const char* inPath)
 
 	if (fResolvedReps.size() == 1)
 		{
-		if (ZRef<ZAssetRep> theRep = fResolvedReps.front()->ResolvePath(inPath))
+		if (ZRef<ZAssetRep> theRep = fResolvedReps.front()->ResolvePath(iPath))
 			return new ZAssetRep_Overlay(this, theRep);
 		return ZRef<ZAssetRep>();
 		}
 
 	vector<ZRef<ZAssetRep> > overlaidReps;
 	overlaidReps.reserve(fResolvedReps.size());
-	for (vector<ZRef<ZAssetRep> >::iterator i = fResolvedReps.begin(); i != fResolvedReps.end(); ++i)
+	for (vector<ZRef<ZAssetRep> >::iterator i = fResolvedReps.begin();
+		i != fResolvedReps.end(); ++i)
 		{
-		if (ZRef<ZAssetRep> theRep = (*i)->ResolvePath(inPath))
+		if (ZRef<ZAssetRep> theRep = (*i)->ResolvePath(iPath))
 			overlaidReps.push_back(theRep);
 		}
 
@@ -373,11 +386,12 @@ void ZAssetRep_Std_Union::pResolvePaths()
 		fResolved = true;
 		if (ZRef<ZAssetRep> parent = this->GetParentAssetRep())
 			{
-			// Our paths are sorted from lowest priority to highest, but when we resolve them
-			// we store them from highest to lowest because when they're passed to ZAssetRep_Overlay
-			// it is significantly simpler for it to use the rep on the front of the list rather than
-			// the rep on the back.
-			for (vector<const char*>::reverse_iterator i = fPaths.rbegin(); i != fPaths.rend(); ++i)
+			// Our paths are sorted from lowest priority to highest, but when we resolve
+			// them we store them from highest to lowest because when they're passed to
+			// ZAssetRep_Overlay it is significantly simpler for it to use the rep on the
+			// front of the list rather than the rep on the back.
+			for (vector<const char*>::reverse_iterator i = fPaths.rbegin();
+				i != fPaths.rend(); ++i)
 				{
 				if (ZRef<ZAssetRep> resolvedRep = parent->ResolvePath(*i))
 					fResolvedReps.push_back(resolvedRep);
@@ -390,7 +404,8 @@ void ZAssetRep_Std_Union::pResolvePaths()
 #pragma mark -
 #pragma mark * ZAssetIterRep_Std_Directory
 
-ZAssetIterRep_Std_Directory::ZAssetIterRep_Std_Directory(ZRef<ZAssetRep_Std_Directory> iAssetRep, size_t iIndex)
+ZAssetIterRep_Std_Directory::ZAssetIterRep_Std_Directory(
+	ZRef<ZAssetRep_Std_Directory> iAssetRep, size_t iIndex)
 :	fAssetRep(iAssetRep),
 	fCurrent(iIndex)
 	{
@@ -442,21 +457,27 @@ ZAssetTree_Std::ZAssetTree_Std()
 ZAssetTree_Std::~ZAssetTree_Std()
 	{}
 
-ZAssetRep_Std* ZAssetTree_Std::LoadAssetRep(ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream, const char* inNameTable, const size_t* inNameOffsets)
+ZAssetRep_Std* ZAssetTree_Std::LoadAssetRep(
+	ZAssetRep_Std_Directory* iParent,
+	const char* iName, size_t iNameLength,
+	const ZStreamRPos& iStream,
+	const char* iNameTable, const size_t* iNameOffsets)
 	{
-	switch (inStream.ReadUInt8())
+	switch (iStream.ReadUInt8())
 		{
 		case 0:
 			{
-			return new ZAssetRep_Std_Directory(this, inParent, inName, inNameLength, inStream, inNameTable, inNameOffsets);
+			return new ZAssetRep_Std_Directory(this, iParent,
+				iName, iNameLength, iStream, iNameTable, iNameOffsets);
 			}
 		case 1:
 			{
-			return this->LoadAssetRep_Data(inParent, inName, inNameLength, inStream);
+			return this->LoadAssetRep_Data(iParent, iName, iNameLength, iStream);
 			}
 		case 2:
 			{
-			return new ZAssetRep_Std_Union(inParent, inName, inNameLength, inStream, inNameTable, inNameOffsets);
+			return new ZAssetRep_Std_Union(iParent,
+				iName, iNameLength, iStream, iNameTable, iNameOffsets);
 			}
 		}
 	ZUnimplemented();
@@ -510,15 +531,15 @@ namespace ZANONYMOUS {
 class StreamerMemory : public ZStreamerRPos_Memory
 	{
 public:
-	StreamerMemory(ZRef<ZAssetRep> inAssetRep, const void* inAddress, size_t inSize);
+	StreamerMemory(ZRef<ZAssetRep> iAssetRep, const void* iAddress, size_t iSize);
 
 private:
 	ZRef<ZAssetRep> fAssetRep;
 	};
 
-StreamerMemory::StreamerMemory(ZRef<ZAssetRep> inAssetRep, const void* inAddress, size_t inSize)
-:	ZStreamerRPos_Memory(inAddress, inSize),
-	fAssetRep(inAssetRep)
+StreamerMemory::StreamerMemory(ZRef<ZAssetRep> iAssetRep, const void* iAddress, size_t iSize)
+:	ZStreamerRPos_Memory(iAddress, iSize),
+	fAssetRep(iAssetRep)
 	{}
 
 } // anonymous namespace
@@ -530,12 +551,16 @@ StreamerMemory::StreamerMemory(ZRef<ZAssetRep> inAssetRep, const void* inAddress
 class ZAssetRep_Std_Data_Stream : public ZAssetRep_Std
 	{
 public:
-	ZAssetRep_Std_Data_Stream(ZAssetTree_Std_Stream* inAssetTree, ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream);
+	ZAssetRep_Std_Data_Stream(
+		ZAssetTree_Std_Stream* iAssetTree, ZAssetRep_Std_Directory* iParent,
+		const char* iName, size_t iNameLength,
+		const ZStreamRPos& iStream);
+
 	virtual ~ZAssetRep_Std_Data_Stream();
 
 // From ZAssetRep via ZAssetRep_Std
 	virtual ZRef<ZStreamerRPos> OpenRPos();
-	virtual void GetData(const void** outData, size_t* outSize);
+	virtual void GetData(const void** oData, size_t* oSize);
 
 // From ZAssetRep_Std
 	virtual void DoInitialization();
@@ -549,14 +574,17 @@ protected:
 	ZMutex fMutex_GetData;
 	};
 
-ZAssetRep_Std_Data_Stream::ZAssetRep_Std_Data_Stream(ZAssetTree_Std_Stream* inAssetTree, ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream)
-:	ZAssetRep_Std(inParent, inName, inNameLength)
+ZAssetRep_Std_Data_Stream::ZAssetRep_Std_Data_Stream(
+	ZAssetTree_Std_Stream* iAssetTree, ZAssetRep_Std_Directory* iParent,
+	const char* iName, size_t iNameLength,
+	const ZStreamRPos& iStream)
+:	ZAssetRep_Std(iParent, iName, iNameLength)
 	{
-	fAssetTree_Std_Stream = inAssetTree;
+	fAssetTree_Std_Stream = iAssetTree;
 	fDataOffset = 0;
-	fDataSize = sReadCount(inStream);
+	fDataSize = sReadCount(iStream);
 	if (fDataSize)
-		fDataOffset = inStream.ReadUInt32();
+		fDataOffset = iStream.ReadUInt32();
 	fData = nil;
 	}
 
@@ -575,12 +603,12 @@ ZRef<ZStreamerRPos> ZAssetRep_Std_Data_Stream::OpenRPos()
 	return fAssetTree_Std_Stream->OpenRPos(fDataOffset, fDataSize);
 	}
 
-void ZAssetRep_Std_Data_Stream::GetData(const void** outData, size_t* outSize)
+void ZAssetRep_Std_Data_Stream::GetData(const void** oData, size_t* oSize)
 	{
-	if (outSize)
-		*outSize = fDataSize;
+	if (oSize)
+		*oSize = fDataSize;
 
-	if (outData)
+	if (oData)
 		{
 		if (!fData)
 			{
@@ -591,7 +619,7 @@ void ZAssetRep_Std_Data_Stream::GetData(const void** outData, size_t* outSize)
 				fAssetTree_Std_Stream->ReadData(fDataOffset, fDataSize, fData);
 				}
 			}
-		*outData = fData;
+		*oData = fData;
 		}
 	}
 
@@ -614,18 +642,18 @@ class ZAssetTree_Std_Stream::StreamerRPos : public ZStreamerRPos,
 								private ZStreamRPos
 	{
 public:
-	StreamerRPos(const ZRef<ZAssetTree_Std_Stream>& inAssetTree, uint64 inStartOffset, size_t inSize);
+	StreamerRPos(const ZRef<ZAssetTree_Std_Stream>& iAssetTree, uint64 iStartOffset, size_t iSize);
 
 // From ZStreamerRPos
 	virtual const ZStreamRPos& GetStreamRPos();
 
 // From ZStreamR via ZStreamRPos
-	virtual void Imp_Read(void* inDest, size_t inCount, size_t* outCountRead);
-	virtual void Imp_Skip(uint64 inCount, uint64* outCountSkipped);
+	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 // From ZStreamRPos
 	virtual uint64 Imp_GetPosition();
-	virtual void Imp_SetPosition(uint64 inPosition);
+	virtual void Imp_SetPosition(uint64 iPosition);
 
 	virtual uint64 Imp_GetSize();
 
@@ -636,38 +664,39 @@ private:
 	size_t fSize;
 	};
 
-ZAssetTree_Std_Stream::StreamerRPos::StreamerRPos(const ZRef<ZAssetTree_Std_Stream>& inAssetTree, uint64 inStartOffset, size_t inSize)
-:	fAssetTree(inAssetTree),
-	fStartOffset(inStartOffset),
+ZAssetTree_Std_Stream::StreamerRPos::StreamerRPos(
+	const ZRef<ZAssetTree_Std_Stream>& iAssetTree, uint64 iStartOffset, size_t iSize)
+:	fAssetTree(iAssetTree),
+	fStartOffset(iStartOffset),
 	fPosition(0),
-	fSize(inSize)
+	fSize(iSize)
 	{}
 
 const ZStreamRPos& ZAssetTree_Std_Stream::StreamerRPos::GetStreamRPos()
 	{ return *this; }
 
-void ZAssetTree_Std_Stream::StreamerRPos::Imp_Read(void* inDest, size_t inCount, size_t* outCountRead)
+void ZAssetTree_Std_Stream::StreamerRPos::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	size_t countToRead = ZStream::sClampedSize(inCount, fSize, fPosition);
-	fAssetTree->ReadData(fStartOffset + fPosition, countToRead, inDest);
+	size_t countToRead = ZStream::sClampedSize(iCount, fSize, fPosition);
+	fAssetTree->ReadData(fStartOffset + fPosition, countToRead, iDest);
 	fPosition += countToRead;
-	if (outCountRead)
-		*outCountRead = countToRead;
+	if (oCountRead)
+		*oCountRead = countToRead;
 	}
 
-void ZAssetTree_Std_Stream::StreamerRPos::Imp_Skip(uint64 inCount, uint64* outCountSkipped)
+void ZAssetTree_Std_Stream::StreamerRPos::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-	uint64 countToSkip = ZStream::sClampedCount(inCount, fSize, fPosition);
+	uint64 countToSkip = ZStream::sClampedCount(iCount, fSize, fPosition);
 	fPosition += countToSkip;
-	if (outCountSkipped)
-		*outCountSkipped = countToSkip;
+	if (oCountSkipped)
+		*oCountSkipped = countToSkip;
 	}
 
 uint64 ZAssetTree_Std_Stream::StreamerRPos::Imp_GetPosition()
 	{ return fPosition; }
 
-void ZAssetTree_Std_Stream::StreamerRPos::Imp_SetPosition(uint64 inPosition)
-	{ fPosition = inPosition; }
+void ZAssetTree_Std_Stream::StreamerRPos::Imp_SetPosition(uint64 iPosition)
+	{ fPosition = iPosition; }
 
 uint64 ZAssetTree_Std_Stream::StreamerRPos::Imp_GetSize()
 	{ return fSize; }
@@ -683,12 +712,13 @@ ZAssetTree_Std_Stream::ZAssetTree_Std_Stream()
 	fRoot = nil;
 	}
 
-ZAssetTree_Std_Stream::ZAssetTree_Std_Stream(const ZStreamRPos& inStream, size_t inOffset, size_t inSize)
+ZAssetTree_Std_Stream::ZAssetTree_Std_Stream(
+	const ZStreamRPos& iStream, size_t iOffset, size_t iSize)
 	{
 	fStream = nil;
 	fNameTable = nil;
 	fRoot = nil;
-	this->LoadUp(&inStream, inOffset, inSize);
+	this->LoadUp(&iStream, iOffset, iSize);
 	}
 
 ZAssetTree_Std_Stream::~ZAssetTree_Std_Stream()
@@ -701,24 +731,27 @@ ZAssetTree_Std_Stream::~ZAssetTree_Std_Stream()
 ZRef<ZAssetRep> ZAssetTree_Std_Stream::GetRoot()
 	{ return this->UseRep(fRoot); }
 
-ZAssetRep_Std* ZAssetTree_Std_Stream::LoadAssetRep_Data(ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream)
-	{ return new ZAssetRep_Std_Data_Stream(this, inParent, inName, inNameLength, inStream); }
+ZAssetRep_Std* ZAssetTree_Std_Stream::LoadAssetRep_Data(
+	ZAssetRep_Std_Directory* iParent,
+	const char* iName, size_t iNameLength,
+	const ZStreamRPos& iStream)
+	{ return new ZAssetRep_Std_Data_Stream(this, iParent, iName, iNameLength, iStream); }
 
-void ZAssetTree_Std_Stream::LoadUp(const ZStreamRPos* inStream, size_t inOffset, size_t inSize)
+void ZAssetTree_Std_Stream::LoadUp(const ZStreamRPos* iStream, size_t iOffset, size_t iSize)
 	{
 	ZAssertStop(2, !fStream && !fNameTable && !fRoot);
-	ZAssertStop(1, inSize != 0); // Minimal sanity check on size
+	ZAssertStop(1, iSize != 0); // Minimal sanity check on size
 
-	fStream = inStream;
+	fStream = iStream;
 	try
 		{
 		// Check that the stream is big enough to hold the magic text and header size
 		size_t trailerSize = sizeof(uint32) + sMagicTextSize;
-		if (inSize < trailerSize)
+		if (iSize < trailerSize)
 			sThrowBadFormat();
 
 		// Get the header size and check the magic text
-		fStream->SetPosition(inOffset + inSize - trailerSize);
+		fStream->SetPosition(iOffset + iSize - trailerSize);
 
 		uint32 headerSize = fStream->ReadUInt32();
 
@@ -728,13 +761,13 @@ void ZAssetTree_Std_Stream::LoadUp(const ZStreamRPos* inStream, size_t inOffset,
 			sThrowBadFormat();
 
 		// Move back to the beginning of the header
-		fStream->SetPosition(inOffset + inSize - trailerSize - headerSize);
+		fStream->SetPosition(iOffset + iSize - trailerSize - headerSize);
 
-		// Read in the name table offsets. We suck in the data en masse for two reasons. First,
-		// reading one offset at a time is slow. Second, we share the implementation of ZAssetRep_Std_Directory
-		// with ZAssetTree_Std_Memory, and it's simpler to have non-conditional code in the directory
-		// parsing stuff -- it always swaps from big-endian to host-endian as it interprets the
-		// name table offsets.
+		// Read in the name table offsets. We suck in the data en masse for two reasons.
+		// First, reading one offset at a time is slow. Second, we share the implementation of
+		// ZAssetRep_Std_Directory with ZAssetTree_Std_Memory, and it's simpler to have
+		// non-conditional code in the directory parsing stuff -- it always swaps from
+		// big-endian to host-endian as it interprets the name table offsets.
 		size_t nameCount = fStream->ReadUInt32();
 		vector<size_t> nameOffsets(nameCount + 1);
 		fStream->Read(&nameOffsets[0], sizeof(uint32) * (nameCount + 1));
@@ -748,7 +781,7 @@ void ZAssetTree_Std_Stream::LoadUp(const ZStreamRPos* inStream, size_t inOffset,
 		fRoot = this->LoadAssetRep(nil, sEmptyString, 0, *fStream, fNameTable, &nameOffsets[0]);
 
 		// Remember where the start of the data is
-		fDataOffset = inOffset;
+		fDataOffset = iOffset;
 		}
 	catch (...)
 		{
@@ -771,36 +804,37 @@ void ZAssetTree_Std_Stream::ShutDown()
 	fStream = nil;
 	}
 
-ZRef<ZStreamerRPos> ZAssetTree_Std_Stream::OpenRPos(size_t inOffset, size_t inSize)
-	{ return new StreamerRPos(this, inOffset, inSize); }
+ZRef<ZStreamerRPos> ZAssetTree_Std_Stream::OpenRPos(size_t iOffset, size_t iSize)
+	{ return new StreamerRPos(this, iOffset, iSize); }
 
-void ZAssetTree_Std_Stream::ReadData(size_t inOffset, size_t inSize, void* outData)
+void ZAssetTree_Std_Stream::ReadData(size_t iOffset, size_t iSize, void* oData)
 	{
 	ZMutexLocker locker(fMutex);
-	fStream->SetPosition(fDataOffset + inOffset);
+	fStream->SetPosition(fDataOffset + iOffset);
 	size_t countRead;
-	fStream->Read(outData, inSize, &countRead);
+	fStream->Read(oData, iSize, &countRead);
 	// It should not be possible to hit the end of stream, unless it gets truncated or was
 	// badly formed to start with. In either case the programmer is at fault.
-	ZAssertStop(2, countRead == inSize);
+	ZAssertStop(2, countRead == iSize);
 	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZAssetTree_Std_Streamer
 
-ZAssetTree_Std_Streamer::ZAssetTree_Std_Streamer(ZRef<ZStreamerRPos> inStreamer)
-:	fStreamer(inStreamer)
+ZAssetTree_Std_Streamer::ZAssetTree_Std_Streamer(ZRef<ZStreamerRPos> iStreamer)
+:	fStreamer(iStreamer)
 	{
 	ZAssertStop(2, fStreamer);
 	this->LoadUp(&fStreamer->GetStreamRPos(), 0, fStreamer->GetStreamRPos().GetSize());
 	}
 
-ZAssetTree_Std_Streamer::ZAssetTree_Std_Streamer(ZRef<ZStreamerRPos> inStreamer, size_t inOffset, size_t inSize)
-:	fStreamer(inStreamer)
+ZAssetTree_Std_Streamer::ZAssetTree_Std_Streamer(
+	ZRef<ZStreamerRPos> iStreamer, size_t iOffset, size_t iSize)
+:	fStreamer(iStreamer)
 	{
 	ZAssertStop(2, fStreamer);
-	this->LoadUp(&fStreamer->GetStreamRPos(), inOffset, inSize);
+	this->LoadUp(&fStreamer->GetStreamRPos(), iOffset, iSize);
 	}
 
 ZAssetTree_Std_Streamer::~ZAssetTree_Std_Streamer()
@@ -815,12 +849,15 @@ ZAssetTree_Std_Streamer::~ZAssetTree_Std_Streamer()
 class ZAssetRep_Std_Data_File : public ZAssetRep_Std
 	{
 public:
-	ZAssetRep_Std_Data_File(ZAssetTree_Std_File* inAssetTree, ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream);
+	ZAssetRep_Std_Data_File(
+		ZAssetTree_Std_File* iAssetTree, ZAssetRep_Std_Directory* iParent,
+		const char* iName, size_t iNameLength,
+		const ZStreamRPos& iStream);
 	virtual ~ZAssetRep_Std_Data_File();
 
 // From ZAssetRep via ZAssetRep_Std;
 	virtual ZRef<ZStreamerRPos> OpenRPos();
-	virtual void GetData(const void** outData, size_t* outSize);
+	virtual void GetData(const void** oData, size_t* oSize);
 
 // From ZAssetRep_Std
 	virtual void DoInitialization();
@@ -834,14 +871,17 @@ protected:
 	ZMutex fMutex_GetData;
 	};
 
-ZAssetRep_Std_Data_File::ZAssetRep_Std_Data_File(ZAssetTree_Std_File* inAssetTree, ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream)
-:	ZAssetRep_Std(inParent, inName, inNameLength)
+ZAssetRep_Std_Data_File::ZAssetRep_Std_Data_File(
+	ZAssetTree_Std_File* iAssetTree, ZAssetRep_Std_Directory* iParent,
+	const char* iName, size_t iNameLength,
+	const ZStreamRPos& iStream)
+:	ZAssetRep_Std(iParent, iName, iNameLength)
 	{
-	fAssetTree_Std_File = inAssetTree;
+	fAssetTree_Std_File = iAssetTree;
 	fDataOffset = 0;
-	fDataSize = sReadCount(inStream);
+	fDataSize = sReadCount(iStream);
 	if (fDataSize)
-		fDataOffset = inStream.ReadUInt32();
+		fDataOffset = iStream.ReadUInt32();
 	fData = nil;
 	}
 
@@ -860,12 +900,12 @@ ZRef<ZStreamerRPos> ZAssetRep_Std_Data_File::OpenRPos()
 	return fAssetTree_Std_File->OpenRPos(fDataOffset, fDataSize);
 	}
 
-void ZAssetRep_Std_Data_File::GetData(const void** outData, size_t* outSize)
+void ZAssetRep_Std_Data_File::GetData(const void** oData, size_t* oSize)
 	{
-	if (outSize)
-		*outSize = fDataSize;
+	if (oSize)
+		*oSize = fDataSize;
 
-	if (outData)
+	if (oData)
 		{
 		if (!fData)
 			{
@@ -876,7 +916,7 @@ void ZAssetRep_Std_Data_File::GetData(const void** outData, size_t* outSize)
 				fAssetTree_Std_File->ReadData(fDataOffset, fDataSize, fData);
 				}
 			}
-		*outData = fData;
+		*oData = fData;
 		}
 	}
 
@@ -900,18 +940,18 @@ class ZAssetTree_Std_File::StreamerRPos : public ZStreamerRPos,
 								private ZStreamRPos
 	{
 public:
-	StreamerRPos(const ZRef<ZFileR>& inFile, uint64 inStartOffset, size_t inSize);
+	StreamerRPos(const ZRef<ZFileR>& iFile, uint64 iStartOffset, size_t iSize);
 
 // From ZStreamerRPos
 	virtual const ZStreamRPos& GetStreamRPos();
 
 // From ZStreamR via ZStreamRPos
-	virtual void Imp_Read(void* inDest, size_t inCount, size_t* outCountRead);
-	virtual void Imp_Skip(uint64 inCount, uint64* outCountSkipped);
+	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 // From ZStreamRPos
 	virtual uint64 Imp_GetPosition();
-	virtual void Imp_SetPosition(uint64 inPosition);
+	virtual void Imp_SetPosition(uint64 iPosition);
 
 	virtual uint64 Imp_GetSize();
 
@@ -922,39 +962,40 @@ private:
 	size_t fSize;
 	};
 
-ZAssetTree_Std_File::StreamerRPos::StreamerRPos(const ZRef<ZFileR>& inFile, uint64 inStartOffset, size_t inSize)
-:	fFile(inFile),
-	fStartOffset(inStartOffset),
+ZAssetTree_Std_File::StreamerRPos::StreamerRPos(
+	const ZRef<ZFileR>& iFile, uint64 iStartOffset, size_t iSize)
+:	fFile(iFile),
+	fStartOffset(iStartOffset),
 	fPosition(0),
-	fSize(inSize)
+	fSize(iSize)
 	{}
 
 const ZStreamRPos& ZAssetTree_Std_File::StreamerRPos::GetStreamRPos()
 	{ return *this; }
 
-void ZAssetTree_Std_File::StreamerRPos::Imp_Read(void* inDest, size_t inCount, size_t* outCountRead)
+void ZAssetTree_Std_File::StreamerRPos::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	size_t countToRead = ZStream::sClampedSize(inCount, fSize, fPosition);
+	size_t countToRead = ZStream::sClampedSize(iCount, fSize, fPosition);
 	size_t countRead;
-	fFile->ReadAt(fStartOffset + fPosition, inDest, countToRead, &countRead);
+	fFile->ReadAt(fStartOffset + fPosition, iDest, countToRead, &countRead);
 	fPosition += countRead;
-	if (outCountRead)
-		*outCountRead = countRead;
+	if (oCountRead)
+		*oCountRead = countRead;
 	}
 
-void ZAssetTree_Std_File::StreamerRPos::Imp_Skip(uint64 inCount, uint64* outCountSkipped)
+void ZAssetTree_Std_File::StreamerRPos::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-	uint64 countToSkip = ZStream::sClampedCount(inCount, fSize, fPosition);
+	uint64 countToSkip = ZStream::sClampedCount(iCount, fSize, fPosition);
 	fPosition += countToSkip;
-	if (outCountSkipped)
-		*outCountSkipped = countToSkip;
+	if (oCountSkipped)
+		*oCountSkipped = countToSkip;
 	}
 
 uint64 ZAssetTree_Std_File::StreamerRPos::Imp_GetPosition()
 	{ return fPosition; }
 
-void ZAssetTree_Std_File::StreamerRPos::Imp_SetPosition(uint64 inPosition)
-	{ fPosition = inPosition; }
+void ZAssetTree_Std_File::StreamerRPos::Imp_SetPosition(uint64 iPosition)
+	{ fPosition = iPosition; }
 
 uint64 ZAssetTree_Std_File::StreamerRPos::Imp_GetSize()
 	{ return fSize; }
@@ -963,25 +1004,25 @@ uint64 ZAssetTree_Std_File::StreamerRPos::Imp_GetSize()
 #pragma mark -
 #pragma mark * ZAssetTree_Std_File
 
-ZAssetTree_Std_File::ZAssetTree_Std_File(ZRef<ZFileR> inFile, uint64 inOffset, size_t inSize)
+ZAssetTree_Std_File::ZAssetTree_Std_File(ZRef<ZFileR> iFile, uint64 iOffset, size_t iSize)
 	{
 	fNameTable = nil;
 	fRoot = nil;
 
-	ZAssertStop(1, inSize != 0); // Minimal sanity check on size
+	ZAssertStop(1, iSize != 0); // Minimal sanity check on size
 
 	try
 		{
 		// Check that the stream is big enough to hold the magic text and header size
 		size_t trailerSize = sizeof(uint32) + sMagicTextSize;
-		if (inSize < trailerSize)
+		if (iSize < trailerSize)
 			sThrowBadFormat();
 
-		ZRef<StreamerRPos> theStreamer = new StreamerRPos(inFile, inOffset, inSize);
+		ZRef<StreamerRPos> theStreamer = new StreamerRPos(iFile, iOffset, iSize);
 		const ZStreamRPos& theStream = theStreamer->GetStreamRPos();
 
 		// Get the header size and check the magic text
-		theStream.SetPosition(inSize - trailerSize);
+		theStream.SetPosition(iSize - trailerSize);
 
 		uint32 headerSize = theStream.ReadUInt32();
 
@@ -991,13 +1032,13 @@ ZAssetTree_Std_File::ZAssetTree_Std_File(ZRef<ZFileR> inFile, uint64 inOffset, s
 			sThrowBadFormat();
 
 		// Move back to the beginning of the header
-		theStream.SetPosition(inSize - trailerSize - headerSize);
+		theStream.SetPosition(iSize - trailerSize - headerSize);
 
-		// Read in the name table offsets. We suck in the data en masse for two reasons. First,
-		// reading one offset at a time is slow. Second, we share the implementation of ZAssetRep_Std_Directory
-		// with ZAssetTree_Std_Memory, and it's simpler to have non-conditional code in the directory
-		// parsing stuff -- it always swaps from big-endian to host-endian as it interprets the
-		// name table offsets.
+		// Read in the name table offsets. We suck in the data en masse for two reasons.
+		// First, reading one offset at a time is slow. Second, we share the implementation of
+		// ZAssetRep_Std_Directory with ZAssetTree_Std_Memory, and it's simpler to have
+		// non-conditional code in the directory parsing stuff -- it always swaps from
+		// big-endian to host-endian as it interprets the name table offsets.
 		size_t nameCount = theStream.ReadUInt32();
 		vector<size_t> nameOffsets(nameCount + 1);
 		theStream.Read(&nameOffsets[0], sizeof(uint32) * (nameCount + 1));
@@ -1011,7 +1052,7 @@ ZAssetTree_Std_File::ZAssetTree_Std_File(ZRef<ZFileR> inFile, uint64 inOffset, s
 		fRoot = this->LoadAssetRep(nil, sEmptyString, 0, theStream, fNameTable, &nameOffsets[0]);
 
 		// Remember where the start of the data is
-		fDataOffset = inOffset;
+		fDataOffset = iOffset;
 		}
 	catch (...)
 		{
@@ -1035,14 +1076,17 @@ ZAssetTree_Std_File::~ZAssetTree_Std_File()
 ZRef<ZAssetRep> ZAssetTree_Std_File::GetRoot()
 	{ return this->UseRep(fRoot); }
 
-ZAssetRep_Std* ZAssetTree_Std_File::LoadAssetRep_Data(ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream)
-	{ return new ZAssetRep_Std_Data_File(this, inParent, inName, inNameLength, inStream); }
+ZAssetRep_Std* ZAssetTree_Std_File::LoadAssetRep_Data(
+	ZAssetRep_Std_Directory* iParent,
+	const char* iName, size_t iNameLength,
+	const ZStreamRPos& iStream)
+	{ return new ZAssetRep_Std_Data_File(this, iParent, iName, iNameLength, iStream); }
 
-ZRef<ZStreamerRPos> ZAssetTree_Std_File::OpenRPos(uint64 inOffset, size_t inSize)
-	{ return new StreamerRPos(fFile, inOffset, inSize); }
+ZRef<ZStreamerRPos> ZAssetTree_Std_File::OpenRPos(uint64 iOffset, size_t iSize)
+	{ return new StreamerRPos(fFile, iOffset, iSize); }
 
-void ZAssetTree_Std_File::ReadData(uint64 inOffset, size_t inSize, void* outData)
-	{ fFile->ReadAt(inOffset, outData, inSize, nil); }
+void ZAssetTree_Std_File::ReadData(uint64 iOffset, size_t iSize, void* oData)
+	{ fFile->ReadAt(iOffset, oData, iSize, nil); }
 
 // =================================================================================================
 #pragma mark -
@@ -1051,12 +1095,13 @@ void ZAssetTree_Std_File::ReadData(uint64 inOffset, size_t inSize, void* outData
 class ZAssetRep_Std_Data_Memory : public ZAssetRep_Std
 	{
 public:
-	ZAssetRep_Std_Data_Memory(const char* inBaseAddress, ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream);
+	ZAssetRep_Std_Data_Memory(const char* iBaseAddress, ZAssetRep_Std_Directory* iParent,
+		const char* iName, size_t iNameLength, const ZStreamRPos& iStream);
 	virtual ~ZAssetRep_Std_Data_Memory();
 
 // From ZAssetRep via ZAssetRep_Std;
 	virtual ZRef<ZStreamerRPos> OpenRPos();
-	virtual void GetData(const void** outData, size_t* outSize);
+	virtual void GetData(const void** oData, size_t* oSize);
 
 // From ZAssetRep_Std
 	virtual void DoInitialization();
@@ -1067,12 +1112,14 @@ protected:
 	const char* fDataAddress;
 	};
 
-ZAssetRep_Std_Data_Memory::ZAssetRep_Std_Data_Memory(const char* inBaseAddress, ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream)
-:	ZAssetRep_Std(inParent, inName, inNameLength)
+ZAssetRep_Std_Data_Memory::ZAssetRep_Std_Data_Memory(
+	const char* iBaseAddress, ZAssetRep_Std_Directory* iParent,
+	const char* iName, size_t iNameLength, const ZStreamRPos& iStream)
+:	ZAssetRep_Std(iParent, iName, iNameLength)
 	{
-	fDataSize = sReadCount(inStream);
+	fDataSize = sReadCount(iStream);
 	if (fDataSize)
-		fDataAddress = inBaseAddress + inStream.ReadUInt32();
+		fDataAddress = iBaseAddress + iStream.ReadUInt32();
 	else
 		fDataAddress = nil;
 	}
@@ -1083,12 +1130,12 @@ ZAssetRep_Std_Data_Memory::~ZAssetRep_Std_Data_Memory()
 ZRef<ZStreamerRPos> ZAssetRep_Std_Data_Memory::OpenRPos()
 	{ return new StreamerMemory(this, fDataAddress, fDataSize); }
 
-void ZAssetRep_Std_Data_Memory::GetData(const void** outData, size_t* outSize)
+void ZAssetRep_Std_Data_Memory::GetData(const void** oData, size_t* oSize)
 	{
-	if (outSize)
-		*outSize = fDataSize;
-	if (outData)
-		*outData = fDataAddress;
+	if (oSize)
+		*oSize = fDataSize;
+	if (oData)
+		*oData = fDataAddress;
 	}
 
 void ZAssetRep_Std_Data_Memory::DoInitialization()
@@ -1107,11 +1154,11 @@ ZAssetTree_Std_Memory::ZAssetTree_Std_Memory()
 	fRoot = nil;
 	}
 
-ZAssetTree_Std_Memory::ZAssetTree_Std_Memory(const void* inAddress, size_t inSize)
+ZAssetTree_Std_Memory::ZAssetTree_Std_Memory(const void* iAddress, size_t iSize)
 	{
 	fAddress = nil;
 	fRoot = nil;
-	this->LoadUp(inAddress, inSize);
+	this->LoadUp(iAddress, iSize);
 	}
 
 ZAssetTree_Std_Memory::~ZAssetTree_Std_Memory()
@@ -1124,15 +1171,17 @@ ZAssetTree_Std_Memory::~ZAssetTree_Std_Memory()
 ZRef<ZAssetRep> ZAssetTree_Std_Memory::GetRoot()
 	{ return this->UseRep(fRoot); }
 
-ZAssetRep_Std* ZAssetTree_Std_Memory::LoadAssetRep_Data(ZAssetRep_Std_Directory* inParent, const char* inName, size_t inNameLength, const ZStreamRPos& inStream)
-	{ return new ZAssetRep_Std_Data_Memory(fAddress, inParent, inName, inNameLength, inStream); }
+ZAssetRep_Std* ZAssetTree_Std_Memory::LoadAssetRep_Data(
+	ZAssetRep_Std_Directory* iParent,
+	const char* iName, size_t iNameLength, const ZStreamRPos& iStream)
+	{ return new ZAssetRep_Std_Data_Memory(fAddress, iParent, iName, iNameLength, iStream); }
 
-void ZAssetTree_Std_Memory::LoadUp(const void* inAddress, size_t inSize)
+void ZAssetTree_Std_Memory::LoadUp(const void* iAddress, size_t iSize)
 	{
 	ZAssertStop(2, !fAddress && !fRoot);
-	ZAssertStop(1, inSize != 0); // Minimal sanity check on size
+	ZAssertStop(1, iSize != 0); // Minimal sanity check on size
 
-	fAddress = reinterpret_cast<const char*>(inAddress);
+	fAddress = reinterpret_cast<const char*>(iAddress);
 
 	try
 		{
@@ -1141,15 +1190,15 @@ void ZAssetTree_Std_Memory::LoadUp(const void* inAddress, size_t inSize)
 
 		// We use a stream to parse some of the header info in memory, and to make it easier
 		// to determine the address of the various table boundaries.
-		ZStreamRPos_Memory theSIM(fAddress, inSize);
+		ZStreamRPos_Memory theSIM(fAddress, iSize);
 
 		// Check that the stream is big enough to hold the magic text and header size
 		size_t trailerSize = sizeof(int32) + sMagicTextSize;
-		if (inSize < trailerSize)
+		if (iSize < trailerSize)
 			sThrowBadFormat();
 
 		// Get the header size and check the magic text
-		theSIM.SetPosition(inSize - trailerSize);
+		theSIM.SetPosition(iSize - trailerSize);
 
 		uint32 headerSize = theSIM.ReadUInt32();
 
@@ -1159,7 +1208,7 @@ void ZAssetTree_Std_Memory::LoadUp(const void* inAddress, size_t inSize)
 			sThrowBadFormat();
 
 		// Move back to the beginning of the header
-		theSIM.SetPosition(inSize - trailerSize - headerSize);
+		theSIM.SetPosition(iSize - trailerSize - headerSize);
 
 		// Get the count of names. The count of offsets is one greater than that (to account
 		// for the zero offsets at the beginning).
@@ -1199,9 +1248,10 @@ void ZAssetTree_Std_Memory::ShutDown()
 #pragma mark -
 #pragma mark * ZAssetTree_Std_Memory_StaticData
 
-ZAssetTree_Std_Memory_StaticData::ZAssetTree_Std_Memory_StaticData(const void* inAddress, size_t inSize)
+ZAssetTree_Std_Memory_StaticData::ZAssetTree_Std_Memory_StaticData(
+	const void* iAddress, size_t iSize)
 	{
-	ZAssetTree_Std_Memory::LoadUp(inAddress, inSize);
+	ZAssetTree_Std_Memory::LoadUp(iAddress, iSize);
 	}
 
 ZAssetTree_Std_Memory_StaticData::~ZAssetTree_Std_Memory_StaticData()

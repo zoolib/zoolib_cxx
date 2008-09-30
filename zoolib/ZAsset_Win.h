@@ -36,11 +36,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZAssetTree_Win_MemoryMapped : public ZAssetTree_Std_Memory
 	{
 public:
-	ZAssetTree_Win_MemoryMapped(HANDLE inFileHandle, bool inAdopt, size_t inStart, size_t inLength);
+	ZAssetTree_Win_MemoryMapped(HANDLE iFileHandle, bool iAdopt, size_t iStart, size_t iLength);
 	virtual ~ZAssetTree_Win_MemoryMapped();
 
 protected:
-	void LoadUp(HANDLE inFileHandle, size_t inStart, size_t inLength);
+	void LoadUp(HANDLE iFileHandle, size_t iStart, size_t iLength);
 
 	HANDLE fHANDLE_File;
 	bool fAdopted;
@@ -58,7 +58,8 @@ class ZStreamRPos_Win_MultiResource;
 class ZAssetTree_Win_MultiResource : public ZAssetTree_Std_Stream
 	{
 public:
-	ZAssetTree_Win_MultiResource(HMODULE inHMODULE, const std::string& inType, const std::string& inName);
+	ZAssetTree_Win_MultiResource(
+		HMODULE iHMODULE, const std::string& iType, const std::string& iName);
 	virtual ~ZAssetTree_Win_MultiResource();
 
 protected:

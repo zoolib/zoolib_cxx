@@ -39,7 +39,8 @@ using std::vector;
 static short sModeLookup[] = { R2_COPYPEN, R2_MERGEPEN, R2_NOTXORPEN, R2_MASKNOTPEN };
 
 // Forward declarations of utility methods
-static BITMAPINFO* sCreateBITMAPINFO(const ZDCPixmapNS::RasterDesc& inRasterDesc, size_t inColorTableSize);
+static BITMAPINFO* sCreateBITMAPINFO(
+	const ZDCPixmapNS::RasterDesc& iRasterDesc, size_t iColorTableSize);
 
 // =================================================================================================
 #pragma mark -
@@ -51,31 +52,25 @@ static BITMAPINFO* sCreateBITMAPINFO(const ZDCPixmapNS::RasterDesc& inRasterDesc
 #pragma mark -
 #pragma mark * Static helper functions
 
-static inline COLORREF sAsCOLORREF_Palette(HDC inHDC, const ZRGBColor& inColor)
-	{ return PALETTERGB((inColor.red >> 8), (inColor.green >> 8), (inColor.blue >> 8)); }
-
-//static COLORREF sAsCOLORREF_Palette(HDC inHDC, const ZRGBColor& inColor)
-//	{
-//	COLORREF theColorRef = GetNearestColor(inHDC, RGB((inColor.red >> 8), (inColor.green >> 8), (inColor.blue >> 8)));
-//	return theColorRef | 0x02000000;
-//	return PALETTERGB((inColor.red >> 8), (inColor.green >> 8), (inColor.blue >> 8));
-//	}
+static inline COLORREF sAsCOLORREF_Palette(HDC iHDC, const ZRGBColor& iColor)
+	{ return PALETTERGB((iColor.red >> 8), (iColor.green >> 8), (iColor.blue >> 8)); }
 
 static WORD sAllBitsSet[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
 static HBITMAP sHBITMAP_AllBitsSet = ::CreateBitmap(8, 8, 1, 1, &sAllBitsSet[0]);
 
-static HBRUSH sCreateHBRUSH(HDC inHDC, const ZRef<ZDCInk::Rep>& inRep, ZPoint inRealPatternOrigin)
+static HBRUSH sCreateHBRUSH(HDC iHDC, const ZRef<ZDCInk::Rep>& iRep, ZPoint iRealPatternOrigin)
 	{
 	HBRUSH theHBRUSH = nil;
-	if (inRep->fType == ZDCInk::eTypeSolidColor)
+	if (iRep->fType == ZDCInk::eTypeSolidColor)
 		{
 		theHBRUSH = ::CreatePatternBrush(sHBITMAP_AllBitsSet);
 		}
-	else if (inRep->fType == ZDCInk::eTypeTwoColor)
+	else if (iRep->fType == ZDCInk::eTypeTwoColor)
 		{
 		uint8 tempPattern[8];
-		ZDCPattern::sOffset(inRealPatternOrigin.h, inRealPatternOrigin.v, inRep->fAsTwoColor.fPattern.pat, tempPattern);
+		ZDCPattern::sOffset(iRealPatternOrigin.h, iRealPatternOrigin.v,
+			iRep->fAsTwoColor.fPattern.pat, tempPattern);
 		WORD localBits[8];
 		for (size_t x = 0; x < 8; ++x)
 			localBits[x] = tempPattern[x];
@@ -83,9 +78,10 @@ static HBRUSH sCreateHBRUSH(HDC inHDC, const ZRef<ZDCInk::Rep>& inRep, ZPoint in
 		theHBRUSH = ::CreatePatternBrush(theHBITMAP);
 		::DeleteObject(theHBITMAP);
 		}
-	else if (inRep->fType == ZDCInk::eTypeMultiColor)
+	else if (iRep->fType == ZDCInk::eTypeMultiColor)
 		{
-		// We should not be called if inRep is MultiColor, but if we do, create something garish and obvious.
+		// We should not be called if iRep is MultiColor, but if we
+		// do, create something garish and obvious.
 		theHBRUSH = ::CreateSolidBrush(PALETTERGB(0xFF, 0xFF, 0));
 		}
 	else
@@ -93,7 +89,7 @@ static HBRUSH sCreateHBRUSH(HDC inHDC, const ZRef<ZDCInk::Rep>& inRep, ZPoint in
 	return theHBRUSH;
 	}
 
-static HFONT sCreateHFONT(const ZDCFont& inFont)
+static HFONT sCreateHFONT(const ZDCFont& iFont)
 	{
 	HFONT theHFONT;
 	if (ZUtil_Win::sUseWAPI())
@@ -101,9 +97,9 @@ static HFONT sCreateHFONT(const ZDCFont& inFont)
 		LOGFONTW theLOGFONT;
 		ZBlockZero(&theLOGFONT, sizeof(theLOGFONT));
 
-		theLOGFONT.lfHeight = -inFont.GetSize();
+		theLOGFONT.lfHeight = -iFont.GetSize();
 
-		ZDCFont::Style theStyle = inFont.GetStyle();
+		ZDCFont::Style theStyle = iFont.GetStyle();
 		if (theStyle & ZDCFont::bold)
 			theLOGFONT.lfWeight = FW_SEMIBOLD;
 		else
@@ -117,7 +113,7 @@ static HFONT sCreateHFONT(const ZDCFont& inFont)
 
 		theLOGFONT.lfQuality = ANTIALIASED_QUALITY;
 
-		string16 fontName = ZUnicode::sAsUTF16(inFont.GetName());
+		string16 fontName = ZUnicode::sAsUTF16(iFont.GetName());
 		ZBlockCopy(fontName.c_str(), theLOGFONT.lfFaceName, sizeof(UTF16) * (fontName.size() + 1));
 		theHFONT = ::CreateFontIndirectW(&theLOGFONT);
 		}
@@ -126,9 +122,9 @@ static HFONT sCreateHFONT(const ZDCFont& inFont)
 		LOGFONTA theLOGFONT;
 		ZBlockZero(&theLOGFONT, sizeof(theLOGFONT));
 
-		theLOGFONT.lfHeight = -inFont.GetSize();
+		theLOGFONT.lfHeight = -iFont.GetSize();
 
-		ZDCFont::Style theStyle = inFont.GetStyle();
+		ZDCFont::Style theStyle = iFont.GetStyle();
 		if (theStyle & ZDCFont::bold)
 			theLOGFONT.lfWeight = FW_SEMIBOLD;
 		else
@@ -140,7 +136,7 @@ static HFONT sCreateHFONT(const ZDCFont& inFont)
 		if (theStyle & ZDCFont::underline)
 			theLOGFONT.lfUnderline = 0xFF;
 		
-		string fontName = inFont.GetName();
+		string fontName = iFont.GetName();
 		ZBlockCopy(fontName.c_str(), theLOGFONT.lfFaceName, (fontName.size() + 1));
 		theHFONT = ::CreateFontIndirectA(&theLOGFONT);
 		}
@@ -151,10 +147,10 @@ static HFONT sCreateHFONT(const ZDCFont& inFont)
 #pragma mark -
 #pragma mark * ZDCCanvas_GDI::SetupDC
 
-ZDCCanvas_GDI::SetupDC::SetupDC(ZDCCanvas_GDI* inCanvas, const ZDCState& inState)
-:	fCanvas(inCanvas)
+ZDCCanvas_GDI::SetupDC::SetupDC(ZDCCanvas_GDI* iCanvas, const ZDCState& iState)
+:	fCanvas(iCanvas)
 	{
-	fState = &inState;
+	fState = &iState;
 	ZAssertStop(kDebug_GDI, fCanvas->fMutexToCheck == nil || fCanvas->fMutexToCheck->IsLocked());
 	fCanvas->fMutexToLock->Acquire();
 	if (!fCanvas->fOriginValid)
@@ -162,23 +158,23 @@ ZDCCanvas_GDI::SetupDC::SetupDC(ZDCCanvas_GDI* inCanvas, const ZDCState& inState
 		fCanvas->fOriginValid = true;
 		if (fCanvas->IsPrinting())
 			{
-			::SetMapMode(inCanvas->fHDC, MM_ANISOTROPIC);
-			int deviceHRes = ::GetDeviceCaps(inCanvas->fHDC, LOGPIXELSX);
-			int deviceVRes = ::GetDeviceCaps(inCanvas->fHDC, LOGPIXELSY);
-			::SetViewportExtEx(inCanvas->fHDC, deviceHRes, deviceVRes, nil);
-			::SetWindowExtEx(inCanvas->fHDC, 72, 72, nil);
+			::SetMapMode(iCanvas->fHDC, MM_ANISOTROPIC);
+			int deviceHRes = ::GetDeviceCaps(iCanvas->fHDC, LOGPIXELSX);
+			int deviceVRes = ::GetDeviceCaps(iCanvas->fHDC, LOGPIXELSY);
+			::SetViewportExtEx(iCanvas->fHDC, deviceHRes, deviceVRes, nil);
+			::SetWindowExtEx(iCanvas->fHDC, 72, 72, nil);
 			}
 		else
 			{
-			::SetMapMode(inCanvas->fHDC, MM_TEXT);
+			::SetMapMode(iCanvas->fHDC, MM_TEXT);
 			}
 
-		::SetWindowOrgEx(inCanvas->fHDC, 0, 0, nil);
+		::SetWindowOrgEx(iCanvas->fHDC, 0, 0, nil);
 		}
 
-	if (inState.fChangeCount_Clip != fCanvas->fChangeCount_Clip)
+	if (iState.fChangeCount_Clip != fCanvas->fChangeCount_Clip)
 		{
-		ZDCRgn theClipRgn = fCanvas->Internal_CalcClipRgn(inState);
+		ZDCRgn theClipRgn = fCanvas->Internal_CalcClipRgn(iState);
 		if (fCanvas->IsPrinting())
 			{
 			int deviceHRes = ::GetDeviceCaps(fCanvas->fHDC, LOGPIXELSX);
@@ -188,7 +184,7 @@ ZDCCanvas_GDI::SetupDC::SetupDC(ZDCCanvas_GDI* inCanvas, const ZDCState& inState
 			theClipRgn.MakeScale(hScale, 0.0f, 0.0f, vScale, 0.0f, 0.0f);
 			}
 		::SelectClipRgn(fCanvas->fHDC, theClipRgn.GetHRGN());
-		const_cast<ZDCState&>(inState).fChangeCount_Clip = ++fCanvas->fChangeCount_Clip;
+		const_cast<ZDCState&>(iState).fChangeCount_Clip = ++fCanvas->fChangeCount_Clip;
 		}
 	}
 
@@ -205,9 +201,10 @@ ZDCCanvas_GDI::SetupDC::~SetupDC()
 class ZDCCanvas_GDI::SetupHPEN
 	{
 public:
-	SetupHPEN(ZDCCanvas_GDI* inCanvas, ZDCState& ioState);
-	SetupHPEN(HDC inHDC, const ZRGBColor& inColor, ZCoord inPenWidth);
+	SetupHPEN(ZDCCanvas_GDI* iCanvas, ZDCState& ioState);
+	SetupHPEN(HDC iHDC, const ZRGBColor& iColor, ZCoord iPenWidth);
 	~SetupHPEN();
+
 protected:
 	HDC fHDC;
 
@@ -216,21 +213,23 @@ protected:
 	int fROP2_Saved;
 	};
 
-ZDCCanvas_GDI::SetupHPEN::SetupHPEN(ZDCCanvas_GDI* inCanvas, ZDCState& ioState)
-:	fHDC(inCanvas->fHDC)
+ZDCCanvas_GDI::SetupHPEN::SetupHPEN(ZDCCanvas_GDI* iCanvas, ZDCState& ioState)
+:	fHDC(iCanvas->fHDC)
 	{
 	ZRef<ZDCInk::Rep> theRep = ioState.fInk.GetRep();
 	ZAssertStop(kDebug_GDI, theRep && theRep->fType == ZDCInk::eTypeSolidColor);
-	HPEN theHPEN = ::CreatePen(PS_INSIDEFRAME, ioState.fPenWidth, sAsCOLORREF_Palette(fHDC, theRep->fAsSolidColor.fColor));
+	HPEN theHPEN = ::CreatePen(PS_INSIDEFRAME, ioState.fPenWidth,
+		sAsCOLORREF_Palette(fHDC, theRep->fAsSolidColor.fColor));
+
 	fHPEN_Saved = (HPEN)::SelectObject(fHDC, theHPEN);
 	fHBRUSH_Saved = (HBRUSH)::SelectObject(fHDC, ::GetStockObject(NULL_BRUSH));
 	fROP2_Saved = ::SetROP2(fHDC, sModeLookup[ioState.fMode]);
 	}
 
-ZDCCanvas_GDI::SetupHPEN::SetupHPEN(HDC inHDC, const ZRGBColor& inColor, ZCoord inPenWidth)
-:	fHDC(inHDC)
+ZDCCanvas_GDI::SetupHPEN::SetupHPEN(HDC iHDC, const ZRGBColor& iColor, ZCoord iPenWidth)
+:	fHDC(iHDC)
 	{
-	HPEN theHPEN = ::CreatePen(PS_INSIDEFRAME, inPenWidth, sAsCOLORREF_Palette(fHDC, inColor));
+	HPEN theHPEN = ::CreatePen(PS_INSIDEFRAME, iPenWidth, sAsCOLORREF_Palette(fHDC, iColor));
 	fHPEN_Saved = (HPEN)::SelectObject(fHDC, theHPEN);
 	fHBRUSH_Saved = (HBRUSH)::SelectObject(fHDC, ::GetStockObject(NULL_BRUSH));
 	fROP2_Saved = ::SetROP2(fHDC, R2_COPYPEN);
@@ -250,8 +249,8 @@ ZDCCanvas_GDI::SetupHPEN::~SetupHPEN()
 class ZDCCanvas_GDI::SetupHBRUSH
 	{
 public:
-	SetupHBRUSH(ZDCCanvas_GDI* inCanvas, ZDCState& ioState);
-	SetupHBRUSH(HDC inHDC, const ZRGBColor& inColor);
+	SetupHBRUSH(ZDCCanvas_GDI* iCanvas, ZDCState& ioState);
+	SetupHBRUSH(HDC iHDC, const ZRGBColor& iColor);
 	~SetupHBRUSH();
 
 protected:
@@ -266,8 +265,8 @@ protected:
 	COLORREF fBackColor_Saved;
 	};
 
-ZDCCanvas_GDI::SetupHBRUSH::SetupHBRUSH(ZDCCanvas_GDI* inCanvas, ZDCState& ioState)
-:	fHDC(inCanvas->fHDC)
+ZDCCanvas_GDI::SetupHBRUSH::SetupHBRUSH(ZDCCanvas_GDI* iCanvas, ZDCState& ioState)
+:	fHDC(iCanvas->fHDC)
 	{
 	ZRef<ZDCInk::Rep> theRep = ioState.fInk.GetRep();
 	ZAssertStop(kDebug_GDI, theRep);
@@ -278,20 +277,25 @@ ZDCCanvas_GDI::SetupHBRUSH::SetupHBRUSH(ZDCCanvas_GDI* inCanvas, ZDCState& ioSta
 
 		fSetTextColor = false;
 		fSetBackColor = true;
-		fBackColor_Saved = ::SetBkColor(fHDC, sAsCOLORREF_Palette(fHDC, theRep->fAsSolidColor.fColor));
+		fBackColor_Saved = ::SetBkColor(fHDC,
+			sAsCOLORREF_Palette(fHDC, theRep->fAsSolidColor.fColor));
 		}
 	else
 		{
 		ZAssertStop(kDebug_GDI, theRep->fType == ZDCInk::eTypeTwoColor);
 		fSetTextColor = true;
 		fSetBackColor = true;
-		// The seeming reversal of terms here is because GDI applies the back color to a set bit and the
-		// fore/text color to a cleared bit.
-		fTextColor_Saved = ::SetTextColor(fHDC, sAsCOLORREF_Palette(fHDC, theRep->fAsTwoColor.fBackColor));
-		fBackColor_Saved = ::SetBkColor(fHDC, sAsCOLORREF_Palette(fHDC, theRep->fAsTwoColor.fForeColor));
+		// The seeming reversal of terms here is because GDI applies the
+		// back color to a set bit and the fore/text color to a cleared bit.
+		fTextColor_Saved = ::SetTextColor(fHDC,
+			sAsCOLORREF_Palette(fHDC, theRep->fAsTwoColor.fBackColor));
+
+		fBackColor_Saved = ::SetBkColor(fHDC,
+			sAsCOLORREF_Palette(fHDC, theRep->fAsTwoColor.fForeColor));
 
 		uint8 tempPattern[8];
-		ZDCPattern::sOffset(ioState.fPatternOrigin.h, ioState.fPatternOrigin.v, theRep->fAsTwoColor.fPattern.pat, tempPattern);
+		ZDCPattern::sOffset(ioState.fPatternOrigin.h, ioState.fPatternOrigin.v,
+			theRep->fAsTwoColor.fPattern.pat, tempPattern);
 		WORD localBits[8];
 		for (size_t x = 0; x < 8; ++x)
 			localBits[x] = tempPattern[x];
@@ -306,14 +310,14 @@ ZDCCanvas_GDI::SetupHBRUSH::SetupHBRUSH(ZDCCanvas_GDI* inCanvas, ZDCState& ioSta
 	fROP2_Saved = ::SetROP2(fHDC, sModeLookup[ioState.fMode]);
 	}
 
-ZDCCanvas_GDI::SetupHBRUSH::SetupHBRUSH(HDC inHDC, const ZRGBColor& inColor)
-:	fHDC(inHDC)
+ZDCCanvas_GDI::SetupHBRUSH::SetupHBRUSH(HDC iHDC, const ZRGBColor& iColor)
+:	fHDC(iHDC)
 	{
 	HBRUSH theHBRUSH = ::CreatePatternBrush(sHBITMAP_AllBitsSet);
 
 	fSetTextColor = false;
 	fSetBackColor = true;
-	fBackColor_Saved = ::SetBkColor(fHDC, sAsCOLORREF_Palette(fHDC, inColor));
+	fBackColor_Saved = ::SetBkColor(fHDC, sAsCOLORREF_Palette(fHDC, iColor));
 
 	fHBRUSH_Saved = (HBRUSH)::SelectObject(fHDC, theHBRUSH);
 	fHPEN_Saved = (HPEN)::SelectObject(fHDC, ::GetStockObject(NULL_PEN));
@@ -338,7 +342,7 @@ ZDCCanvas_GDI::SetupHBRUSH::~SetupHBRUSH()
 class ZDCCanvas_GDI::SetupModeColor
 	{
 public:
-	SetupModeColor(ZDCCanvas_GDI* inCanvas, ZDCState& ioState);
+	SetupModeColor(ZDCCanvas_GDI* iCanvas, ZDCState& ioState);
 	~SetupModeColor();
 
 protected:
@@ -350,8 +354,8 @@ protected:
 	COLORREF fBackColor_Saved;
 	};
 
-ZDCCanvas_GDI::SetupModeColor::SetupModeColor(ZDCCanvas_GDI* inCanvas, ZDCState& ioState)
-:	fHDC(inCanvas->fHDC)
+ZDCCanvas_GDI::SetupModeColor::SetupModeColor(ZDCCanvas_GDI* iCanvas, ZDCState& ioState)
+:	fHDC(iCanvas->fHDC)
 	{
 	ZRef<ZDCInk::Rep> theRep = ioState.fInk.GetRep();
 	ZAssertStop(kDebug_GDI, theRep);
@@ -359,7 +363,8 @@ ZDCCanvas_GDI::SetupModeColor::SetupModeColor(ZDCCanvas_GDI* inCanvas, ZDCState&
 		{
 		fSetTextColor = false;
 		fSetBackColor = true;
-		fBackColor_Saved = ::SetBkColor(fHDC, sAsCOLORREF_Palette(fHDC, theRep->fAsSolidColor.fColor));
+		fBackColor_Saved = ::SetBkColor(fHDC,
+			sAsCOLORREF_Palette(fHDC, theRep->fAsSolidColor.fColor));
 		}
 	else
 		{
@@ -367,8 +372,10 @@ ZDCCanvas_GDI::SetupModeColor::SetupModeColor(ZDCCanvas_GDI* inCanvas, ZDCState&
 		fSetTextColor = true;
 		fSetBackColor = true;
 		// GDI has a different nomenclature for fore/back colors, hence the seeming reversal here.
-		fTextColor_Saved = ::SetTextColor(fHDC, sAsCOLORREF_Palette(fHDC, theRep->fAsTwoColor.fBackColor));
-		fBackColor_Saved = ::SetBkColor(fHDC, sAsCOLORREF_Palette(fHDC, theRep->fAsTwoColor.fForeColor));
+		fTextColor_Saved = ::SetTextColor(fHDC,
+			sAsCOLORREF_Palette(fHDC, theRep->fAsTwoColor.fBackColor));
+		fBackColor_Saved = ::SetBkColor(fHDC,
+			sAsCOLORREF_Palette(fHDC, theRep->fAsTwoColor.fForeColor));
 		}
 
 	fROP2_Saved = ::SetROP2(fHDC, sModeLookup[ioState.fMode]);
@@ -390,7 +397,7 @@ ZDCCanvas_GDI::SetupModeColor::~SetupModeColor()
 class ZDCCanvas_GDI::SetupHFONT
 	{
 public:
-	SetupHFONT(ZDCCanvas_GDI* inCanvas, ZDCState& ioState);
+	SetupHFONT(ZDCCanvas_GDI* iCanvas, ZDCState& ioState);
 	~SetupHFONT();
 
 protected:
@@ -401,8 +408,8 @@ protected:
 	COLORREF fTextColor_Saved;
 	};
 
-ZDCCanvas_GDI::SetupHFONT::SetupHFONT(ZDCCanvas_GDI* inCanvas, ZDCState& ioState)
-:	fHDC(inCanvas->fHDC)
+ZDCCanvas_GDI::SetupHFONT::SetupHFONT(ZDCCanvas_GDI* iCanvas, ZDCState& ioState)
+:	fHDC(iCanvas->fHDC)
 	{
 	HFONT theHFONT = ::sCreateHFONT(ioState.fFont);
 	ZAssertStop(kDebug_GDI, theHFONT);
@@ -429,13 +436,13 @@ ZDCCanvas_GDI::SetupHFONT::~SetupHFONT()
 class ZDCCanvas_GDI_Native : public ZDCCanvas_GDI_NonWindow
 	{
 public:
-	ZDCCanvas_GDI_Native(HDC inHDC);
+	ZDCCanvas_GDI_Native(HDC iHDC);
 	virtual ~ZDCCanvas_GDI_Native();
 	};
 
-ZDCCanvas_GDI_Native::ZDCCanvas_GDI_Native(HDC inHDC)
+ZDCCanvas_GDI_Native::ZDCCanvas_GDI_Native(HDC iHDC)
 	{
-	fHDC = inHDC;
+	fHDC = iHDC;
 	this->Internal_Link();
 	}
 
@@ -451,17 +458,17 @@ ZDCCanvas_GDI_Native::~ZDCCanvas_GDI_Native()
 ZMutex ZDCCanvas_GDI::sMutex_List;
 ZDCCanvas_GDI* ZDCCanvas_GDI::sCanvas_Head;
 
-ZRef<ZDCCanvas_GDI> ZDCCanvas_GDI::sFindCanvasOrCreateNative(HDC inHDC)
+ZRef<ZDCCanvas_GDI> ZDCCanvas_GDI::sFindCanvasOrCreateNative(HDC iHDC)
 	{
 	ZMutexLocker locker(sMutex_List);
 	ZDCCanvas_GDI* theCanvas = sCanvas_Head;
 	while (theCanvas)
 		{
-		if (theCanvas->fHDC == inHDC)
+		if (theCanvas->fHDC == iHDC)
 			return theCanvas;
 		theCanvas = theCanvas->fCanvas_Next;
 		}
-	theCanvas = new ZDCCanvas_GDI_Native(inHDC);
+	theCanvas = new ZDCCanvas_GDI_Native(iHDC);
 	return theCanvas;
 	}
 
@@ -482,7 +489,8 @@ ZDCCanvas_GDI::ZDCCanvas_GDI()
 
 ZDCCanvas_GDI::~ZDCCanvas_GDI()
 	{
-	// Subclasses must unlink themselves and detach/destroy grafports before this destructor is called.
+	// Subclasses must unlink themselves and detach/destroy
+	// grafports before this destructor is called.
 	ZAssertStop(kDebug_GDI, fCanvas_Prev == nil);
 	ZAssertStop(kDebug_GDI, fCanvas_Next == nil);
 	ZAssertStop(kDebug_GDI, fHDC == nil);
@@ -515,77 +523,82 @@ void ZDCCanvas_GDI::Internal_Unlink()
 
 // =================================================================================================
 
-void ZDCCanvas_GDI::Pixel(ZDCState& ioState, ZCoord inLocationH, ZCoord inLocationV, const ZRGBColor& inColor)
+void ZDCCanvas_GDI::Pixel(ZDCState& ioState,
+	ZCoord iLocationH, ZCoord iLocationV, const ZRGBColor& iColor)
 	{
 	if (!fHDC)
 		return;
 
 	SetupDC theSetupDC(this, ioState);
-	::SetPixelV(fHDC, inLocationH + ioState.fOrigin.h, inLocationV + ioState.fOrigin.v, sAsCOLORREF_Palette(fHDC, inColor));
+	::SetPixelV(fHDC,
+		iLocationH + ioState.fOrigin.h, iLocationV + ioState.fOrigin.v,
+		sAsCOLORREF_Palette(fHDC, iColor));
 	}
 
-static void sBuildPolygonForLine(ZCoord inStartH, ZCoord inStartV, ZCoord inEndH, ZCoord inEndV, ZCoord inPenWidth, POINT* outPOINTS)
+static void sBuildPolygonForLine(
+	ZCoord iStartH, ZCoord iStartV, ZCoord iEndH, ZCoord iEndV, ZCoord iPenWidth, POINT* oPOINTS)
 	{
 	// For notes on this see AG's log book, 97-03-05
 	ZPoint leftMostPoint, rightMostPoint;
-	if (inStartH < inEndH)
+	if (iStartH < iEndH)
 		{
-		leftMostPoint.h = inStartH;
-		leftMostPoint.v = inStartV;
-		rightMostPoint.h = inEndH;
-		rightMostPoint.v = inEndV;
+		leftMostPoint.h = iStartH;
+		leftMostPoint.v = iStartV;
+		rightMostPoint.h = iEndH;
+		rightMostPoint.v = iEndV;
 		}
 	else
 		{
-		leftMostPoint.h = inEndH;
-		leftMostPoint.v = inEndV;
-		rightMostPoint.h = inStartH;
-		rightMostPoint.v = inStartV;
+		leftMostPoint.h = iEndH;
+		leftMostPoint.v = iEndV;
+		rightMostPoint.h = iStartH;
+		rightMostPoint.v = iStartV;
 		}
 	// Two cases, from top left down to bottom right, or from bottom left up to top right
 	if (leftMostPoint.v < rightMostPoint.v)
 		{
-		outPOINTS[0].x = leftMostPoint.h;
-		outPOINTS[0].y = leftMostPoint.v;
+		oPOINTS[0].x = leftMostPoint.h;
+		oPOINTS[0].y = leftMostPoint.v;
 
-		outPOINTS[1].x = leftMostPoint.h + inPenWidth;
-		outPOINTS[1].y = leftMostPoint.v;
+		oPOINTS[1].x = leftMostPoint.h + iPenWidth;
+		oPOINTS[1].y = leftMostPoint.v;
 
-		outPOINTS[2].x = rightMostPoint.h + inPenWidth;
-		outPOINTS[2].y = rightMostPoint.v;
+		oPOINTS[2].x = rightMostPoint.h + iPenWidth;
+		oPOINTS[2].y = rightMostPoint.v;
 
-		outPOINTS[3].x = rightMostPoint.h + inPenWidth;
-		outPOINTS[3].y = rightMostPoint.v + inPenWidth;
+		oPOINTS[3].x = rightMostPoint.h + iPenWidth;
+		oPOINTS[3].y = rightMostPoint.v + iPenWidth;
 
-		outPOINTS[4].x = rightMostPoint.h;
-		outPOINTS[4].y = rightMostPoint.v + inPenWidth;
+		oPOINTS[4].x = rightMostPoint.h;
+		oPOINTS[4].y = rightMostPoint.v + iPenWidth;
 
-		outPOINTS[5].x = leftMostPoint.h;
-		outPOINTS[5].y = leftMostPoint.v + inPenWidth;
+		oPOINTS[5].x = leftMostPoint.h;
+		oPOINTS[5].y = leftMostPoint.v + iPenWidth;
 		}
 	else
 		{
-		outPOINTS[0].x = leftMostPoint.h;
-		outPOINTS[0].y = leftMostPoint.v;
+		oPOINTS[0].x = leftMostPoint.h;
+		oPOINTS[0].y = leftMostPoint.v;
 
-		outPOINTS[1].x = rightMostPoint.h;
-		outPOINTS[1].y = rightMostPoint.v;
+		oPOINTS[1].x = rightMostPoint.h;
+		oPOINTS[1].y = rightMostPoint.v;
 
-		outPOINTS[2].x = rightMostPoint.h + inPenWidth;
-		outPOINTS[2].y = rightMostPoint.v;
+		oPOINTS[2].x = rightMostPoint.h + iPenWidth;
+		oPOINTS[2].y = rightMostPoint.v;
 
-		outPOINTS[3].x = rightMostPoint.h + inPenWidth;
-		outPOINTS[3].y = rightMostPoint.v + inPenWidth;
+		oPOINTS[3].x = rightMostPoint.h + iPenWidth;
+		oPOINTS[3].y = rightMostPoint.v + iPenWidth;
 
-		outPOINTS[4].x = leftMostPoint.h + inPenWidth;
-		outPOINTS[4].y = leftMostPoint.v + inPenWidth;
+		oPOINTS[4].x = leftMostPoint.h + iPenWidth;
+		oPOINTS[4].y = leftMostPoint.v + iPenWidth;
 
-		outPOINTS[5].x = leftMostPoint.h;
-		outPOINTS[5].y = leftMostPoint.v + inPenWidth;
+		oPOINTS[5].x = leftMostPoint.h;
+		oPOINTS[5].y = leftMostPoint.v + iPenWidth;
 		}
 	}
 
-void ZDCCanvas_GDI::Line(ZDCState& ioState, ZCoord inStartH, ZCoord inStartV, ZCoord inEndH, ZCoord inEndV)
+void ZDCCanvas_GDI::Line(ZDCState& ioState,
+	ZCoord iStartH, ZCoord iStartV, ZCoord iEndH, ZCoord iEndV)
 	{
 	if (!fHDC)
 		return;
@@ -598,72 +611,74 @@ void ZDCCanvas_GDI::Line(ZDCState& ioState, ZCoord inStartH, ZCoord inStartV, ZC
 
 	if (theRep->fType == ZDCInk::eTypeMultiColor)
 		{
-		if (inStartH == inEndH)
+		if (iStartH == iEndH)
 			{
 			// Vertical line
 			ZRect theRect;
-			theRect.left = inStartH;
-			theRect.right = inEndH + ioState.fPenWidth;
-			if (inStartV < inEndV)
+			theRect.left = iStartH;
+			theRect.right = iEndH + ioState.fPenWidth;
+			if (iStartV < iEndV)
 				{
-				theRect.top = inStartV;
-				theRect.bottom = inEndV + ioState.fPenWidth;
+				theRect.top = iStartV;
+				theRect.bottom = iEndV + ioState.fPenWidth;
 				}
 			else
 				{
-				theRect.top = inEndV;
-				theRect.bottom = inStartV + ioState.fPenWidth;
+				theRect.top = iEndV;
+				theRect.bottom = iStartV + ioState.fPenWidth;
 				}
 			this->Internal_TileRegion(ioState, theRect, *theRep->fAsMultiColor.fPixmap);
 			}
-		else if (inStartV == inEndV)
+		else if (iStartV == iEndV)
 			{
 			// Horizontal line
 			ZRect theRect;
-			theRect.top = inStartV;
-			theRect.bottom = inStartV + ioState.fPenWidth;
-			if (inStartH < inEndH)
+			theRect.top = iStartV;
+			theRect.bottom = iStartV + ioState.fPenWidth;
+			if (iStartH < iEndH)
 				{
-				theRect.left = inStartH;
-				theRect.right = inEndH + ioState.fPenWidth;
+				theRect.left = iStartH;
+				theRect.right = iEndH + ioState.fPenWidth;
 				}
 			else
 				{
-				theRect.left = inEndH;
-				theRect.right = inStartH + ioState.fPenWidth;
+				theRect.left = iEndH;
+				theRect.right = iStartH + ioState.fPenWidth;
 				}
 			this->Internal_TileRegion(ioState, theRect, *theRep->fAsMultiColor.fPixmap);
 			}
 		else
 			{
 			// Some kind of diagonal
-			ZDCRgn theRgn = ZDCRgn::sLine(inStartH, inStartV, inEndH, inEndV, ioState.fPenWidth);
+			ZDCRgn theRgn = ZDCRgn::sLine(iStartH, iStartV, iEndH, iEndV, ioState.fPenWidth);
 			this->Internal_TileRegion(ioState, theRgn, *theRep->fAsMultiColor.fPixmap);
 			}
 		}
 	else
 		{
 		SetupDC theSetupDC(this, ioState);
-		if (theRep->fType == ZDCInk::eTypeSolidColor && ioState.fPenWidth == 1 && !this->IsPrinting())
+		if (theRep->fType == ZDCInk::eTypeSolidColor
+			&& ioState.fPenWidth == 1 && !this->IsPrinting())
 			{
 			SetupHPEN theSetupHPEN(this, ioState);
 			ZPoint leftMostPoint, rightMostPoint;
-			if (inStartH <= inEndH)
+			if (iStartH <= iEndH)
 				{
-				leftMostPoint.h = inStartH;
-				leftMostPoint.v = inStartV;
-				rightMostPoint.h = inEndH;
-				rightMostPoint.v = inEndV;
+				leftMostPoint.h = iStartH;
+				leftMostPoint.v = iStartV;
+				rightMostPoint.h = iEndH;
+				rightMostPoint.v = iEndV;
 				}
 			else
 				{
-				leftMostPoint.h = inEndH;
-				leftMostPoint.v = inEndV;
-				rightMostPoint.h = inStartH;
-				rightMostPoint.v = inStartV;
+				leftMostPoint.h = iEndH;
+				leftMostPoint.v = iEndV;
+				rightMostPoint.h = iStartH;
+				rightMostPoint.v = iStartV;
 				}
 			POINT dummyOldPoint;
-			::MoveToEx(fHDC, leftMostPoint.h + ioState.fOrigin.h, leftMostPoint.v + ioState.fOrigin.v, &dummyOldPoint);
+			::MoveToEx(fHDC, leftMostPoint.h + ioState.fOrigin.h,
+				leftMostPoint.v + ioState.fOrigin.v, &dummyOldPoint);
 			ZCoord hDiff = rightMostPoint.h - leftMostPoint.h;
 			if (leftMostPoint.v <= rightMostPoint.v)
 				{
@@ -672,17 +687,20 @@ void ZDCCanvas_GDI::Line(ZDCState& ioState, ZCoord inStartH, ZCoord inStartV, ZC
 				if (vDiff < hDiff)
 					{
 					// Less than 45 degrees
-					::LineTo(fHDC, rightMostPoint.h + ioState.fOrigin.h + 1, rightMostPoint.v + ioState.fOrigin.v);
+					::LineTo(fHDC, rightMostPoint.h + ioState.fOrigin.h + 1,
+						rightMostPoint.v + ioState.fOrigin.v);
 					}
 				else if (vDiff > hDiff)
 					{
 					// Greater than 45 degrees
-					::LineTo(fHDC, rightMostPoint.h + ioState.fOrigin.h, rightMostPoint.v + ioState.fOrigin.v + 1);
+					::LineTo(fHDC, rightMostPoint.h + ioState.fOrigin.h,
+						rightMostPoint.v + ioState.fOrigin.v + 1);
 					}
 				else
 					{
 					// Exactly 45 degrees
-					::LineTo(fHDC, rightMostPoint.h + ioState.fOrigin.h + 1, rightMostPoint.v + ioState.fOrigin.v + 1);
+					::LineTo(fHDC, rightMostPoint.h + ioState.fOrigin.h + 1,
+						rightMostPoint.v + ioState.fOrigin.v + 1);
 					}
 				}
 			else
@@ -692,17 +710,20 @@ void ZDCCanvas_GDI::Line(ZDCState& ioState, ZCoord inStartH, ZCoord inStartV, ZC
 				if (vDiff < hDiff)
 					{
 					// Less than 45 degrees
-					::LineTo(fHDC, rightMostPoint.h + ioState.fOrigin.h + 1, rightMostPoint.v + ioState.fOrigin.v);
+					::LineTo(fHDC, rightMostPoint.h + ioState.fOrigin.h + 1,
+						rightMostPoint.v + ioState.fOrigin.v);
 					}
 				else if (vDiff > hDiff)
 					{
 					// Greater than 45 degrees
-					::LineTo(fHDC, rightMostPoint.h + ioState.fOrigin.h, rightMostPoint.v + ioState.fOrigin.v - 1);
+					::LineTo(fHDC, rightMostPoint.h + ioState.fOrigin.h,
+						rightMostPoint.v + ioState.fOrigin.v - 1);
 					}
 				else
 					{
 					// Exactly 45 degrees
-					::LineTo(fHDC, rightMostPoint.h + ioState.fOrigin.h + 1, rightMostPoint.v + ioState.fOrigin.v - 1);
+					::LineTo(fHDC, rightMostPoint.h + ioState.fOrigin.h + 1,
+						rightMostPoint.v + ioState.fOrigin.v - 1);
 					}
 				}
 
@@ -710,51 +731,62 @@ void ZDCCanvas_GDI::Line(ZDCState& ioState, ZCoord inStartH, ZCoord inStartV, ZC
 		else
 			{
 			SetupHBRUSH theSetupHBRUSH(this, ioState);
-			if (inStartH == inEndH)
+			if (iStartH == iEndH)
 				{
 				// Vertical line
 				ZCoord top, bottom;
-				if (inStartV < inEndV)
+				if (iStartV < iEndV)
 					{
-					top = inStartV;
-					bottom = inEndV;
+					top = iStartV;
+					bottom = iEndV;
 					}
 				else
 					{
-					top = inEndV;
-					bottom = inStartV;
+					top = iEndV;
+					bottom = iStartV;
 					}
-				::Rectangle(fHDC, inStartH + ioState.fOrigin.h, top + ioState.fOrigin.v, inStartH + ioState.fOrigin.h + ioState.fPenWidth + 1, bottom + ioState.fOrigin.v + ioState.fPenWidth + 1);
+				::Rectangle(fHDC,
+					iStartH + ioState.fOrigin.h,
+					top + ioState.fOrigin.v,
+					iStartH + ioState.fOrigin.h + ioState.fPenWidth + 1,
+					bottom + ioState.fOrigin.v + ioState.fPenWidth + 1);
 				}
-			else if (inStartV == inEndV)
+			else if (iStartV == iEndV)
 				{
 				// Horizontal line
 				ZCoord left, right;
-				if (inStartH < inEndH)
+				if (iStartH < iEndH)
 					{
-					left = inStartH;
-					right = inEndH;
+					left = iStartH;
+					right = iEndH;
 					}
 				else
 					{
-					left = inEndH;
-					right = inStartH;
+					left = iEndH;
+					right = iStartH;
 					}
-				::Rectangle(fHDC, left + ioState.fOrigin.h, inStartV + ioState.fOrigin.v, right + ioState.fOrigin.h + ioState.fPenWidth + 1, inStartV + ioState.fOrigin.v + ioState.fPenWidth + 1);
+				::Rectangle(fHDC,
+					left + ioState.fOrigin.h,
+					iStartV + ioState.fOrigin.v,
+					right + ioState.fOrigin.h + ioState.fPenWidth + 1,
+					iStartV + ioState.fOrigin.v + ioState.fPenWidth + 1);
 				}
 			else
 				{
 				// Some kind of diagonal
 				POINT thePOINTS[6];
-				::sBuildPolygonForLine(inStartH + ioState.fOrigin.h, inStartV + ioState.fOrigin.v, inEndH + ioState.fOrigin.h, inEndV + ioState.fOrigin.v, ioState.fPenWidth, thePOINTS);
+				::sBuildPolygonForLine(iStartH + ioState.fOrigin.h,
+					iStartV + ioState.fOrigin.v,
+					iEndH + ioState.fOrigin.h,
+					iEndV + ioState.fOrigin.v,
+					ioState.fPenWidth, thePOINTS);
 				::Polygon(fHDC, thePOINTS, 6);
 				}
 			}
 		}
 	}
 
-// Rectangle
-void ZDCCanvas_GDI::FrameRect(ZDCState& ioState, const ZRect& inRect)
+void ZDCCanvas_GDI::FrameRect(ZDCState& ioState, const ZRect& iRect)
 	{
 	if (!fHDC)
 		return;
@@ -762,7 +794,7 @@ void ZDCCanvas_GDI::FrameRect(ZDCState& ioState, const ZRect& inRect)
 	if (ioState.fPenWidth <= 0)
 		return;
 
-	if (inRect.IsEmpty())
+	if (iRect.IsEmpty())
 		return;
 
 	ZRef<ZDCInk::Rep> theRep = ioState.fInk.GetRep();
@@ -771,53 +803,70 @@ void ZDCCanvas_GDI::FrameRect(ZDCState& ioState, const ZRect& inRect)
 
 	if (theRep->fType == ZDCInk::eTypeMultiColor)
 		{
-		if (inRect.Width() <= ioState.fPenWidth * 2 || inRect.Height() <= ioState.fPenWidth * 2)
-			this->Internal_TileRegion(ioState, inRect, *theRep->fAsMultiColor.fPixmap);
+		if (iRect.Width() <= ioState.fPenWidth * 2 || iRect.Height() <= ioState.fPenWidth * 2)
+			this->Internal_TileRegion(ioState, iRect, *theRep->fAsMultiColor.fPixmap);
 		else
 			{
 			// T
-			this->Internal_TileRegion(ioState, ZRect(inRect.left, inRect.top, inRect.right, inRect.top + ioState.fPenWidth), *theRep->fAsMultiColor.fPixmap);
+			this->Internal_TileRegion(ioState,
+				ZRect(iRect.left, iRect.top, iRect.right, iRect.top + ioState.fPenWidth),
+				*theRep->fAsMultiColor.fPixmap);
 			// L
-			this->Internal_TileRegion(ioState, ZRect(inRect.left, inRect.top + ioState.fPenWidth, inRect.left + ioState.fPenWidth, inRect.bottom - ioState.fPenWidth), *theRep->fAsMultiColor.fPixmap);
+			this->Internal_TileRegion(ioState,
+				ZRect(iRect.left, iRect.top + ioState.fPenWidth,
+				iRect.left + ioState.fPenWidth, iRect.bottom - ioState.fPenWidth),
+				*theRep->fAsMultiColor.fPixmap);
 			// B
-			this->Internal_TileRegion(ioState, ZRect(inRect.left, inRect.bottom - ioState.fPenWidth, inRect.right, inRect.bottom), *theRep->fAsMultiColor.fPixmap);
+			this->Internal_TileRegion(ioState,
+				ZRect(iRect.left, iRect.bottom - ioState.fPenWidth,
+				iRect.right, iRect.bottom),
+				*theRep->fAsMultiColor.fPixmap);
 			// R
-			this->Internal_TileRegion(ioState, ZRect(inRect.right - ioState.fPenWidth, inRect.top + ioState.fPenWidth, inRect.right, inRect.bottom - ioState.fPenWidth), *theRep->fAsMultiColor.fPixmap);
+			this->Internal_TileRegion(ioState,
+				ZRect(iRect.right - ioState.fPenWidth, iRect.top + ioState.fPenWidth,
+				iRect.right, iRect.bottom - ioState.fPenWidth),
+				*theRep->fAsMultiColor.fPixmap);
 			}
 		}
 	else if (theRep->fType == ZDCInk::eTypeSolidColor)
 		{
 		SetupDC theSetupDC(this, ioState);
 		SetupHPEN theSetupHPEN(this, ioState);
-		::Rectangle(fHDC, inRect.left + ioState.fOrigin.h, inRect.top + ioState.fOrigin.v, inRect.right + ioState.fOrigin.h, inRect.bottom + ioState.fOrigin.v);
+		::Rectangle(fHDC,
+			iRect.left + ioState.fOrigin.h, iRect.top + ioState.fOrigin.v,
+			iRect.right + ioState.fOrigin.h, iRect.bottom + ioState.fOrigin.v);
 		}
 	else
 		{
-		ZRect realRect = inRect + ioState.fOrigin;
+		ZRect realRect = iRect + ioState.fOrigin;
 		SetupDC theSetupDC(this, ioState);
 		SetupHBRUSH theSetupHBRUSH(this, ioState);
-		if (inRect.Width() <= ioState.fPenWidth * 2 || inRect.Height() <= ioState.fPenWidth * 2)
-			::Rectangle(fHDC, inRect.left, realRect.top, realRect.right + 1, realRect.bottom + 1);
+		if (iRect.Width() <= ioState.fPenWidth * 2 || iRect.Height() <= ioState.fPenWidth * 2)
+			::Rectangle(fHDC, iRect.left, realRect.top, realRect.right + 1, realRect.bottom + 1);
 		else
 			{
 			// Top
-			::Rectangle(fHDC, realRect.left, realRect.top, realRect.right + 1, realRect.top + ioState.fPenWidth + 1);
+			::Rectangle(fHDC, realRect.left, realRect.top,
+				realRect.right + 1, realRect.top + ioState.fPenWidth + 1);
 			// Left
-			::Rectangle(fHDC, realRect.left, realRect.top, realRect.left + ioState.fPenWidth + 1, realRect.bottom + 1);
+			::Rectangle(fHDC, realRect.left, realRect.top,
+				realRect.left + ioState.fPenWidth + 1, realRect.bottom + 1);
 			// Bottom
-			::Rectangle(fHDC, realRect.left, realRect.bottom - ioState.fPenWidth, realRect.right + 1, realRect.bottom + 1);
+			::Rectangle(fHDC, realRect.left, realRect.bottom - ioState.fPenWidth,
+				realRect.right + 1, realRect.bottom + 1);
 			// Right
-			::Rectangle(fHDC, realRect.right - ioState.fPenWidth, realRect.top, realRect.right + 1, realRect.bottom + 1);
+			::Rectangle(fHDC, realRect.right - ioState.fPenWidth, realRect.top,
+				realRect.right + 1, realRect.bottom + 1);
 			}
 		}
 	}
 
-void ZDCCanvas_GDI::FillRect(ZDCState& ioState, const ZRect& inRect)
+void ZDCCanvas_GDI::FillRect(ZDCState& ioState, const ZRect& iRect)
 	{
 	if (!fHDC)
 		return;
 
-	if (inRect.IsEmpty())
+	if (iRect.IsEmpty())
 		return;
 
 	ZRef<ZDCInk::Rep> theRep = ioState.fInk.GetRep();
@@ -826,32 +875,31 @@ void ZDCCanvas_GDI::FillRect(ZDCState& ioState, const ZRect& inRect)
 
 	if (theRep->fType == ZDCInk::eTypeMultiColor)
 		{
-		this->Internal_TileRegion(ioState, inRect, *theRep->fAsMultiColor.fPixmap);
+		this->Internal_TileRegion(ioState, iRect, *theRep->fAsMultiColor.fPixmap);
 		}
 	else
 		{
 		SetupDC theSetupDC(this, ioState);
 		SetupHBRUSH theSetupHBRUSH(this, ioState);
-		ZRect realRect = inRect + ioState.fOrigin;
+		ZRect realRect = iRect + ioState.fOrigin;
 		::Rectangle(fHDC, realRect.left, realRect.top, realRect.right + 1, realRect.bottom + 1);
 		}
 	}
 
-void ZDCCanvas_GDI::InvertRect(ZDCState& ioState, const ZRect& inRect)
+void ZDCCanvas_GDI::InvertRect(ZDCState& ioState, const ZRect& iRect)
 	{
 	if (!fHDC)
 		return;
 
-	if (inRect.IsEmpty())
+	if (iRect.IsEmpty())
 		return;
 
-	RECT realRECT = inRect + ioState.fOrigin;
+	RECT realRECT = iRect + ioState.fOrigin;
 	SetupDC theSetupDC(this, ioState);
 	::InvertRect(fHDC, &realRECT);
 	}
 
-// Region
-void ZDCCanvas_GDI::FrameRegion(ZDCState& ioState, const ZDCRgn& inRgn)
+void ZDCCanvas_GDI::FrameRegion(ZDCState& ioState, const ZDCRgn& iRgn)
 	{
 	if (!fHDC)
 		return;
@@ -865,19 +913,22 @@ void ZDCCanvas_GDI::FrameRegion(ZDCState& ioState, const ZDCRgn& inRgn)
 
 	if (theRep->fType == ZDCInk::eTypeMultiColor)
 		{
-		this->Internal_TileRegion(ioState, (inRgn - inRgn.Inset(ioState.fPenWidth, ioState.fPenWidth)), *theRep->fAsMultiColor.fPixmap);
+		this->Internal_TileRegion(ioState,
+			(iRgn - iRgn.Inset(ioState.fPenWidth, ioState.fPenWidth)),
+			*theRep->fAsMultiColor.fPixmap);
 		}
 	else
 		{
 		SetupDC theSetupDC(this, ioState);
 		SetupModeColor theSetupModeColor(this, ioState);
 		HBRUSH theHBRUSH = ::sCreateHBRUSH(fHDC, theRep, ioState.fPatternOrigin);
-		::FrameRgn(fHDC, (inRgn + ioState.fOrigin).GetHRGN(), theHBRUSH, ioState.fPenWidth, ioState.fPenWidth);
+		::FrameRgn(fHDC, (iRgn + ioState.fOrigin).GetHRGN(),
+			theHBRUSH, ioState.fPenWidth, ioState.fPenWidth);
 		::DeleteObject(theHBRUSH);
 		}
 	}
 
-void ZDCCanvas_GDI::FillRegion(ZDCState& ioState, const ZDCRgn& inRgn)
+void ZDCCanvas_GDI::FillRegion(ZDCState& ioState, const ZDCRgn& iRgn)
 	{
 	if (!fHDC)
 		return;
@@ -888,30 +939,29 @@ void ZDCCanvas_GDI::FillRegion(ZDCState& ioState, const ZDCRgn& inRgn)
 
 	if (theRep->fType == ZDCInk::eTypeMultiColor)
 		{
-		this->Internal_TileRegion(ioState, inRgn, *theRep->fAsMultiColor.fPixmap);
+		this->Internal_TileRegion(ioState, iRgn, *theRep->fAsMultiColor.fPixmap);
 		}
 	else
 		{
 		SetupDC theSetupDC(this, ioState);
 		SetupModeColor theSetupModeColor(this, ioState);
 		HBRUSH theHBRUSH = sCreateHBRUSH(fHDC, theRep, ioState.fPatternOrigin);
-		::FillRgn(fHDC, (inRgn + ioState.fOrigin).GetHRGN(), theHBRUSH);
+		::FillRgn(fHDC, (iRgn + ioState.fOrigin).GetHRGN(), theHBRUSH);
 		::DeleteObject(theHBRUSH);
 		}
 	}
 
-void ZDCCanvas_GDI::InvertRegion(ZDCState& ioState, const ZDCRgn& inRgn)
+void ZDCCanvas_GDI::InvertRegion(ZDCState& ioState, const ZDCRgn& iRgn)
 	{
 	if (!fHDC)
 		return;
 
-	ZDCRgn realRgn = inRgn + ioState.fOrigin;
+	ZDCRgn realRgn = iRgn + ioState.fOrigin;
 	SetupDC theSetupDC(this, ioState);
 	::InvertRgn(fHDC, realRgn.GetHRGN());
 	}
 
-// Round cornered rect
-void ZDCCanvas_GDI::FrameRoundRect(ZDCState& ioState, const ZRect& inRect, const ZPoint& inCornerSize)
+void ZDCCanvas_GDI::FrameRoundRect(ZDCState& ioState, const ZRect& iRect, const ZPoint& iCornerSize)
 	{
 	if (!fHDC)
 		return;
@@ -919,7 +969,7 @@ void ZDCCanvas_GDI::FrameRoundRect(ZDCState& ioState, const ZRect& inRect, const
 	if (ioState.fPenWidth <= 0)
 		return;
 
-	if (inRect.IsEmpty())
+	if (iRect.IsEmpty())
 		return;
 
 	ZRef<ZDCInk::Rep> theRep = ioState.fInk.GetRep();
@@ -928,8 +978,9 @@ void ZDCCanvas_GDI::FrameRoundRect(ZDCState& ioState, const ZRect& inRect, const
 
 	if (theRep->fType == ZDCInk::eTypeMultiColor)
 		{
-		ZDCRgn outerRgn = ZDCRgn::sRoundRect(inRect, inCornerSize);
-		ZDCRgn innerRgn = ZDCRgn::sRoundRect(inRect.Inset(ioState.fPenWidth, ioState.fPenWidth), inCornerSize);
+		ZDCRgn outerRgn = ZDCRgn::sRoundRect(iRect, iCornerSize);
+		ZDCRgn innerRgn =
+			ZDCRgn::sRoundRect(iRect.Inset(ioState.fPenWidth, ioState.fPenWidth), iCornerSize);
 		this->Internal_TileRegion(ioState, (outerRgn - innerRgn), *theRep->fAsMultiColor.fPixmap);
 		}
 	else
@@ -937,22 +988,25 @@ void ZDCCanvas_GDI::FrameRoundRect(ZDCState& ioState, const ZRect& inRect, const
 		SetupDC theSetupDC(this, ioState);
 		SetupModeColor theSetupModeColor(this, ioState);
 		HBRUSH theHBRUSH = ::sCreateHBRUSH(fHDC, theRep, ioState.fPatternOrigin);
-		ZRect realBounds = inRect + (ioState.fOrigin);
-		ZDCRgn outerRgn = ZDCRgn::sRoundRect(realBounds, inCornerSize);
-		ZDCRgn innerRgn = ZDCRgn::sRoundRect(realBounds.left + ioState.fPenWidth, realBounds.top + ioState.fPenWidth,
-							realBounds.right - ioState.fPenWidth, realBounds.bottom - ioState.fPenWidth,
-							inCornerSize.h - ioState.fPenWidth, inCornerSize.v - ioState.fPenWidth);
+		ZRect realBounds = iRect + (ioState.fOrigin);
+		ZDCRgn outerRgn = ZDCRgn::sRoundRect(realBounds, iCornerSize);
+		ZDCRgn innerRgn =
+			ZDCRgn::sRoundRect(realBounds.left + ioState.fPenWidth,
+			realBounds.top + ioState.fPenWidth,
+			realBounds.right - ioState.fPenWidth,
+			realBounds.bottom - ioState.fPenWidth,
+			iCornerSize.h - ioState.fPenWidth, iCornerSize.v - ioState.fPenWidth);
 		::FillRgn(fHDC, (outerRgn - innerRgn).GetHRGN(), theHBRUSH);
 		::DeleteObject(theHBRUSH);
 		}
 	}
 
-void ZDCCanvas_GDI::FillRoundRect(ZDCState& ioState, const ZRect& inRect, const ZPoint& inCornerSize)
+void ZDCCanvas_GDI::FillRoundRect(ZDCState& ioState, const ZRect& iRect, const ZPoint& iCornerSize)
 	{
 	if (!fHDC)
 		return;
 
-	if (inRect.IsEmpty())
+	if (iRect.IsEmpty())
 		return;
 
 	ZRef<ZDCInk::Rep> theRep = ioState.fInk.GetRep();
@@ -961,30 +1015,32 @@ void ZDCCanvas_GDI::FillRoundRect(ZDCState& ioState, const ZRect& inRect, const 
 
 	if (theRep->fType == ZDCInk::eTypeMultiColor)
 		{
-		this->Internal_TileRegion(ioState, ZDCRgn::sRoundRect(inRect, inCornerSize), *theRep->fAsMultiColor.fPixmap);
+		this->Internal_TileRegion(ioState,
+			ZDCRgn::sRoundRect(iRect, iCornerSize), *theRep->fAsMultiColor.fPixmap);
 		}
 	else
 		{
 		SetupDC theSetupDC(this, ioState);
 		SetupModeColor theSetupModeColor(this, ioState);
 		HBRUSH theHBRUSH = ::sCreateHBRUSH(fHDC, theRep, ioState.fPatternOrigin);
-		::FillRgn(fHDC, ZDCRgn::sRoundRect(inRect + ioState.fOrigin, inCornerSize).GetHRGN(), theHBRUSH);
+		::FillRgn(fHDC,
+			ZDCRgn::sRoundRect(iRect + ioState.fOrigin, iCornerSize).GetHRGN(), theHBRUSH);
 		::DeleteObject(theHBRUSH);
 		}
 	}
 
-void ZDCCanvas_GDI::InvertRoundRect(ZDCState& ioState, const ZRect& inRect, const ZPoint& inCornerSize)
+void ZDCCanvas_GDI::InvertRoundRect(
+	ZDCState& ioState, const ZRect& iRect, const ZPoint& iCornerSize)
 	{
 	if (!fHDC)
 		return;
 
-	ZRect realRect = inRect + ioState.fOrigin;
+	ZRect realRect = iRect + ioState.fOrigin;
 	SetupDC theSetupDC(this, ioState);
-	::InvertRgn(fHDC, ZDCRgn::sRoundRect(inRect + ioState.fOrigin, inCornerSize).GetHRGN());
+	::InvertRgn(fHDC, ZDCRgn::sRoundRect(iRect + ioState.fOrigin, iCornerSize).GetHRGN());
 	}
 
-// Ellipse
-void ZDCCanvas_GDI::FrameEllipse(ZDCState& ioState, const ZRect& inBounds)
+void ZDCCanvas_GDI::FrameEllipse(ZDCState& ioState, const ZRect& iBounds)
 	{
 	if (!fHDC)
 		return;
@@ -992,19 +1048,20 @@ void ZDCCanvas_GDI::FrameEllipse(ZDCState& ioState, const ZRect& inBounds)
 	if (ioState.fPenWidth <= 0)
 		return;
 
-	if (inBounds.IsEmpty())
+	if (iBounds.IsEmpty())
 		return;
 
 	ZRef<ZDCInk::Rep> theRep = ioState.fInk.GetRep();
 	if (!theRep)
 		return;
 
-	// Windows is inconsistent in how it renders ellipse frames and interiors. So we have to do them
-	// manually, otherwise interiors leak over frames and frames are drawn outside of the bounds we've been passed.
+	// Windows is inconsistent in how it renders ellipse frames and interiors. So we have
+	// to do them manually, otherwise interiors leak over frames and frames are drawn
+	// outside of the bounds we've been passed.
 	if (theRep->fType == ZDCInk::eTypeMultiColor)
 		{
-		ZDCRgn outerRgn = ZDCRgn::sEllipse(inBounds);
-		ZDCRgn innerRgn = ZDCRgn::sEllipse(inBounds.Inset(ioState.fPenWidth, ioState.fPenWidth));
+		ZDCRgn outerRgn = ZDCRgn::sEllipse(iBounds);
+		ZDCRgn innerRgn = ZDCRgn::sEllipse(iBounds.Inset(ioState.fPenWidth, ioState.fPenWidth));
 		this->Internal_TileRegion(ioState, outerRgn - innerRgn, *theRep->fAsMultiColor.fPixmap);
 		}
 	else
@@ -1012,7 +1069,7 @@ void ZDCCanvas_GDI::FrameEllipse(ZDCState& ioState, const ZRect& inBounds)
 		SetupDC theSetupDC(this, ioState);
 		SetupModeColor theSetupModeColor(this, ioState);
 
-		ZRect realBounds = inBounds + ioState.fOrigin;
+		ZRect realBounds = iBounds + ioState.fOrigin;
 		ZDCRgn outerRgn = ZDCRgn::sEllipse(realBounds);
 		ZDCRgn innerRgn = ZDCRgn::sEllipse(realBounds.Inset(ioState.fPenWidth, ioState.fPenWidth));
 
@@ -1022,50 +1079,49 @@ void ZDCCanvas_GDI::FrameEllipse(ZDCState& ioState, const ZRect& inBounds)
 		}
 	}
 
-void ZDCCanvas_GDI::FillEllipse(ZDCState& ioState, const ZRect& inBounds)
+void ZDCCanvas_GDI::FillEllipse(ZDCState& ioState, const ZRect& iBounds)
 	{
 	if (!fHDC)
 		return;
 
-	if (inBounds.IsEmpty())
+	if (iBounds.IsEmpty())
 		return;
 
 	ZRef<ZDCInk::Rep> theRep = ioState.fInk.GetRep();
 	if (!theRep)
 		return;
 
-	// Windows is inconsistent in how it renders ellipse frames and interiors. So we have to do them
-	// manually, otherwise interiors leak over frames and frames are drawn outside of the bounds we've been passed.
+	// Windows is inconsistent in how it renders ellipse frames and interiors. So
+	// we have to do them manually, otherwise interiors leak over frames and frames
+	// are drawn outside of the bounds we've been passed.
 	if (theRep->fType == ZDCInk::eTypeMultiColor)
 		{
-		this->Internal_TileRegion(ioState, ZDCRgn::sEllipse(inBounds), *theRep->fAsMultiColor.fPixmap);
+		this->Internal_TileRegion(ioState,
+			ZDCRgn::sEllipse(iBounds), *theRep->fAsMultiColor.fPixmap);
 		}
 	else
 		{
 		SetupDC theSetupDC(this, ioState);
 		SetupModeColor theSetupModeColor(this, ioState);
 		HBRUSH theHBRUSH = sCreateHBRUSH(fHDC, theRep, ioState.fPatternOrigin);
-		::FillRgn(fHDC, ZDCRgn::sEllipse(inBounds + ioState.fOrigin).GetHRGN(), theHBRUSH);
+		::FillRgn(fHDC, ZDCRgn::sEllipse(iBounds + ioState.fOrigin).GetHRGN(), theHBRUSH);
 		::DeleteObject(theHBRUSH);
 		}
 	}
 
-void ZDCCanvas_GDI::InvertEllipse(ZDCState& ioState, const ZRect& inBounds)
+void ZDCCanvas_GDI::InvertEllipse(ZDCState& ioState, const ZRect& iBounds)
 	{
 	if (!fHDC)
 		return;
 
-	if (inBounds.IsEmpty())
+	if (iBounds.IsEmpty())
 		return;
 
-	// Windows is inconsistent in how it renders ellipse frames and interiors. So we have to do them
-	// manually, otherwise interiors leak over frames and frames are drawn outside of the bounds we've been passed.
 	SetupDC theSetupDC(this, ioState);
-	::InvertRgn(fHDC, ZDCRgn::sEllipse(inBounds + ioState.fOrigin).GetHRGN());
+	::InvertRgn(fHDC, ZDCRgn::sEllipse(iBounds + ioState.fOrigin).GetHRGN());
 	}
 
-// Poly
-void ZDCCanvas_GDI::FillPoly(ZDCState& ioState, const ZDCPoly& inPoly)
+void ZDCCanvas_GDI::FillPoly(ZDCState& ioState, const ZDCPoly& iPoly)
 	{
 	if (!fHDC)
 		return;
@@ -1076,27 +1132,27 @@ void ZDCCanvas_GDI::FillPoly(ZDCState& ioState, const ZDCPoly& inPoly)
 
 	if (theRep->fType == ZDCInk::eTypeMultiColor)
 		{
-		this->Internal_TileRegion(ioState, ZDCRgn::sPoly(inPoly), *theRep->fAsMultiColor.fPixmap);
+		this->Internal_TileRegion(ioState, ZDCRgn::sPoly(iPoly), *theRep->fAsMultiColor.fPixmap);
 		}
 	else
 		{
 		size_t theCount;
 		POINT* thePOINTs;
-		inPoly.GetPOINTs(ioState.fOrigin, thePOINTs, theCount);
+		iPoly.GetPOINTs(ioState.fOrigin, thePOINTs, theCount);
 		SetupDC theSetupDC(this, ioState);
 		SetupHBRUSH theSetupHBRUSH(this, ioState);
 		::Polygon(fHDC, thePOINTs, theCount);
 		}
 	}
 
-void ZDCCanvas_GDI::InvertPoly(ZDCState& ioState, const ZDCPoly& inPoly)
+void ZDCCanvas_GDI::InvertPoly(ZDCState& ioState, const ZDCPoly& iPoly)
 	{
 	if (!fHDC)
 		return;
 
 	size_t theCount;
 	POINT* thePOINTs;
-	inPoly.GetPOINTs(ioState.fOrigin, thePOINTs, theCount);
+	iPoly.GetPOINTs(ioState.fOrigin, thePOINTs, theCount);
 
 	SetupDC theSetupDC(this, ioState);
 	// Do the inversion by using an ink mode
@@ -1106,26 +1162,27 @@ void ZDCCanvas_GDI::InvertPoly(ZDCState& ioState, const ZDCPoly& inPoly)
 	::SetROP2(fHDC, oldMode);
 	}
 
-// Pixmap
-void ZDCCanvas_GDI::FillPixmap(ZDCState& ioState, const ZPoint& inLocation, const ZDCPixmap& inPixmap)
+void ZDCCanvas_GDI::FillPixmap(ZDCState& ioState, const ZPoint& iLocation, const ZDCPixmap& iPixmap)
 	{
 	// Placeholder for code to tile the current ink using inPixmap as a mask
 	ZUnimplemented();
 	}
 
-void ZDCCanvas_GDI::DrawPixmap(ZDCState& ioState, const ZPoint& inLocation, const ZDCPixmap& inSourcePixmap, const ZDCPixmap* inMaskPixmap)
+void ZDCCanvas_GDI::DrawPixmap(ZDCState& ioState,
+	const ZPoint& iLocation, const ZDCPixmap& iSourcePixmap, const ZDCPixmap* iMaskPixmap)
 	{
 	if (fHDC == nil)
 		return;
 
-	if (!inSourcePixmap)
+	if (!iSourcePixmap)
 		return;
 
 	SetupDC theSetupDC(this, ioState);
 
-	ZPoint realLocation = inLocation + ioState.fOrigin;
+	ZPoint realLocation = iLocation + ioState.fOrigin;
 
-	ZRef<ZDCPixmapRep_DIB> sourceRepDIB = ZDCPixmapRep_DIB::sAsPixmapRep_DIB(inSourcePixmap.GetRep());
+	ZRef<ZDCPixmapRep_DIB> sourceRepDIB
+		= ZDCPixmapRep_DIB::sAsPixmapRep_DIB(iSourcePixmap.GetRep());
 	BITMAPINFO* sourceBMI;
 	char* sourceBits;
 	ZRect sourceDIBBounds;
@@ -1133,37 +1190,55 @@ void ZDCCanvas_GDI::DrawPixmap(ZDCState& ioState, const ZPoint& inLocation, cons
 
 	ZRect localSourceBounds = sourceDIBBounds.Size();
 
-	if (inMaskPixmap && *inMaskPixmap && !this->IsPrinting())
+	if (iMaskPixmap && *iMaskPixmap && !this->IsPrinting())
 		{
 		// Take a copy of the source
 		HDC sourceCopyHDC = ::CreateCompatibleDC(fHDC);
-		HBITMAP sourceCopyHBITMAP = ::CreateCompatibleBitmap(fHDC, localSourceBounds.Width(), localSourceBounds.Height());
-		HBITMAP sourceCopyOriginalHBITMAP = (HBITMAP)::SelectObject(sourceCopyHDC, sourceCopyHBITMAP);
+		HBITMAP sourceCopyHBITMAP =
+			::CreateCompatibleBitmap(fHDC, localSourceBounds.Width(), localSourceBounds.Height());
+		HBITMAP sourceCopyOriginalHBITMAP =
+			(HBITMAP)::SelectObject(sourceCopyHDC, sourceCopyHBITMAP);
 
-		::StretchDIBits(sourceCopyHDC, 0, 0, localSourceBounds.Width(), localSourceBounds.Height(),
-					localSourceBounds.left + sourceDIBBounds.left, localSourceBounds.top + sourceDIBBounds.top, localSourceBounds.Width(), localSourceBounds.Height(),
-					sourceBits, sourceBMI, DIB_RGB_COLORS, SRCCOPY);
+		::StretchDIBits(sourceCopyHDC,
+			0, 0, localSourceBounds.Width(), localSourceBounds.Height(),
+			localSourceBounds.left + sourceDIBBounds.left,
+			localSourceBounds.top + sourceDIBBounds.top,
+			localSourceBounds.Width(),
+			localSourceBounds.Height(),
+			sourceBits, sourceBMI, DIB_RGB_COLORS, SRCCOPY);
 
 
-		// Draw the mask *over* the source copy -- every place the mask is black, so will the source be.
-		ZRef<ZDCPixmapRep_DIB> maskRepDIB = ZDCPixmapRep_DIB::sAsPixmapRep_DIB(inMaskPixmap->GetRep());
+		// Draw the mask *over* the source copy -- every
+		// place the mask is black, so will the source be.
+		ZRef<ZDCPixmapRep_DIB> maskRepDIB
+			= ZDCPixmapRep_DIB::sAsPixmapRep_DIB(iMaskPixmap->GetRep());
 		BITMAPINFO* maskBMI;
 		char* maskBits;
 		ZRect maskDIBBounds;
 		maskRepDIB->GetDIBStuff(maskBMI, maskBits, &maskDIBBounds);
 
-		::StretchDIBits(sourceCopyHDC, 0, 0, localSourceBounds.Width(), localSourceBounds.Height(),
-					localSourceBounds.left + maskDIBBounds.left, localSourceBounds.top + maskDIBBounds.top, localSourceBounds.Width(), localSourceBounds.Height(),
-					maskBits, maskBMI, DIB_RGB_COLORS, SRCAND);
+		::StretchDIBits(sourceCopyHDC,
+			0, 0, localSourceBounds.Width(), localSourceBounds.Height(),
+			localSourceBounds.left + maskDIBBounds.left,
+			localSourceBounds.top + maskDIBBounds.top,
+			localSourceBounds.Width(),
+			localSourceBounds.Height(),
+			maskBits, maskBMI, DIB_RGB_COLORS, SRCAND);
 
-		// And the inverse of the mask with the destination -- white pixels in the mask will be black in the destination. Black pixels in the mask
-		// will leave the destination alone
-		::StretchDIBits(fHDC, realLocation.h, realLocation.v, localSourceBounds.Width(), localSourceBounds.Height(),
-					localSourceBounds.left + maskDIBBounds.left, localSourceBounds.top + maskDIBBounds.top, localSourceBounds.Width(), localSourceBounds.Height(),
-					maskBits, maskBMI, DIB_RGB_COLORS, 0x220326); // ~S & D
+		// And the inverse of the mask with the destination -- white pixels in the mask will be
+		// black in the destination. Black pixels in the mask will leave the destination alone.
+		::StretchDIBits(fHDC,
+			realLocation.h, realLocation.v, localSourceBounds.Width(), localSourceBounds.Height(),
+			localSourceBounds.left + maskDIBBounds.left,
+			localSourceBounds.top + maskDIBBounds.top,
+			localSourceBounds.Width(),
+			localSourceBounds.Height(),
+			maskBits, maskBMI, DIB_RGB_COLORS, 0x220326); // ~S & D
 
-		// Draw the copy of the source to the screen, using SRCPAINT. Anything black won't touch the screen, any other color will be ored in
-		::BitBlt(fHDC, realLocation.h, realLocation.v, localSourceBounds.Width(), localSourceBounds.Height(), sourceCopyHDC, 0, 0, SRCPAINT);
+		// Draw the copy of the source to the screen, using SRCPAINT. Anything
+		// black won't touch the screen, any other color will be ored in
+		::BitBlt(fHDC, realLocation.h, realLocation.v,
+			localSourceBounds.Width(), localSourceBounds.Height(), sourceCopyHDC, 0, 0, SRCPAINT);
 
 		// All done, clean up
 		::SelectObject(sourceCopyHDC, sourceCopyOriginalHBITMAP);
@@ -1172,16 +1247,20 @@ void ZDCCanvas_GDI::DrawPixmap(ZDCState& ioState, const ZPoint& inLocation, cons
 		}
 	else
 		{
-		::StretchDIBits(fHDC, realLocation.h, realLocation.v, localSourceBounds.Width(), localSourceBounds.Height(),
-					localSourceBounds.left + sourceDIBBounds.left, localSourceBounds.top + sourceDIBBounds.top, localSourceBounds.Width(), localSourceBounds.Height(),
-					sourceBits, sourceBMI, DIB_RGB_COLORS, SRCCOPY);
+		::StretchDIBits(fHDC,
+			realLocation.h, realLocation.v, localSourceBounds.Width(), localSourceBounds.Height(),
+			localSourceBounds.left + sourceDIBBounds.left,
+			localSourceBounds.top + sourceDIBBounds.top,
+			localSourceBounds.Width(),
+			localSourceBounds.Height(),
+			sourceBits, sourceBMI, DIB_RGB_COLORS, SRCCOPY);
 		}
 	}
 
-// Text
-void ZDCCanvas_GDI::DrawText(ZDCState& ioState, const ZPoint& inLocation, const char* inText, size_t inTextLength)
+void ZDCCanvas_GDI::DrawText(ZDCState& ioState,
+	const ZPoint& iLocation, const char* iText, size_t iTextLength)
 	{
-	if (!fHDC || inTextLength == 0)
+	if (!fHDC || iTextLength == 0)
 		return;
 
 	SetupDC theSetupDC(this, ioState);
@@ -1189,19 +1268,21 @@ void ZDCCanvas_GDI::DrawText(ZDCState& ioState, const ZPoint& inLocation, const 
 
 	if (ZUtil_Win::sUseWAPI())
 		{
-		string16 theString16 = ZUnicode::sAsUTF16(inText, inTextLength);
-//		::TextOutW(fHDC, inLocation.h + ioState.fOrigin.h, inLocation.v + ioState.fOrigin.v, theString16.data(), theString16.size());
-		::ExtTextOutW(fHDC, inLocation.h + ioState.fOrigin.h, inLocation.v + ioState.fOrigin.v, 0, nil, theString16.data(), theString16.size(), nil);
+		string16 theString16 = ZUnicode::sAsUTF16(iText, iTextLength);
+		::ExtTextOutW(fHDC,
+			iLocation.h + ioState.fOrigin.h,
+			iLocation.v + ioState.fOrigin.v, 0, nil, theString16.data(), theString16.size(), nil);
 		}
 	else
 		{
-		::TextOutA(fHDC, inLocation.h + ioState.fOrigin.h, inLocation.v + ioState.fOrigin.v, inText, inTextLength);
+		::TextOutA(fHDC,
+			iLocation.h + ioState.fOrigin.h, iLocation.v + ioState.fOrigin.v, iText, iTextLength);
 		}
 	}
 
-ZCoord ZDCCanvas_GDI::GetTextWidth(ZDCState& ioState, const char* inText, size_t inTextLength)
+ZCoord ZDCCanvas_GDI::GetTextWidth(ZDCState& ioState, const char* iText, size_t iTextLength)
 	{
-	if (!fHDC || inTextLength == 0)
+	if (!fHDC || iTextLength == 0)
 		return 0;
 
 	ZMutexLocker locker(*fMutexToLock);
@@ -1210,24 +1291,25 @@ ZCoord ZDCCanvas_GDI::GetTextWidth(ZDCState& ioState, const char* inText, size_t
 	SIZE theTextSize;
 	if (ZUtil_Win::sUseWAPI())
 		{
-		string16 theString16 = ZUnicode::sAsUTF16(inText, inTextLength);
+		string16 theString16 = ZUnicode::sAsUTF16(iText, iTextLength);
 		::GetTextExtentPoint32W(fHDC, theString16.data(), theString16.size(), &theTextSize);
 		}
 	else
 		{
-		::GetTextExtentPoint32A(fHDC, inText, inTextLength, &theTextSize);
+		::GetTextExtentPoint32A(fHDC, iText, iTextLength, &theTextSize);
 		}
 
 	return theTextSize.cx;
 	}
 
-void ZDCCanvas_GDI::GetFontInfo(ZDCState& ioState, ZCoord& outAscent, ZCoord& outDescent, ZCoord& outLeading)
+void ZDCCanvas_GDI::GetFontInfo(
+	ZDCState& ioState, ZCoord& oAscent, ZCoord& oDescent, ZCoord& oLeading)
 	{
 	if (!fHDC)
 		{
-		outAscent = 0;
-		outDescent = 0;
-		outLeading = 0;
+		oAscent = 0;
+		oDescent = 0;
+		oLeading = 0;
 		return;
 		}
 
@@ -1239,17 +1321,17 @@ void ZDCCanvas_GDI::GetFontInfo(ZDCState& ioState, ZCoord& outAscent, ZCoord& ou
 		{
 		TEXTMETRICW theTextMetrics;
 		::GetTextMetricsW(fHDC, &theTextMetrics);
-		outAscent = theTextMetrics.tmAscent;
-		outDescent = theTextMetrics.tmDescent;
-		outLeading = theTextMetrics.tmInternalLeading;
+		oAscent = theTextMetrics.tmAscent;
+		oDescent = theTextMetrics.tmDescent;
+		oLeading = theTextMetrics.tmInternalLeading;
 		}
 	else
 		{
 		TEXTMETRICA theTextMetrics;
 		::GetTextMetricsA(fHDC, &theTextMetrics);
-		outAscent = theTextMetrics.tmAscent;
-		outDescent = theTextMetrics.tmDescent;
-		outLeading = theTextMetrics.tmInternalLeading;
+		oAscent = theTextMetrics.tmAscent;
+		oDescent = theTextMetrics.tmDescent;
+		oLeading = theTextMetrics.tmInternalLeading;
 		}
 	}
 
@@ -1264,82 +1346,87 @@ ZCoord ZDCCanvas_GDI::GetLineHeight(ZDCState& ioState)
 
 	if (ZUtil_Win::sUseWAPI())
 		{
-		TEXTMETRICW theTextMetrics;
-		::GetTextMetricsW(fHDC, &theTextMetrics);
-		return theTextMetrics.tmAscent + theTextMetrics.tmDescent + theTextMetrics.tmInternalLeading;
+		TEXTMETRICW theTM;
+		::GetTextMetricsW(fHDC, &theTM);
+		return theTM.tmAscent + theTM.tmDescent + theTM.tmInternalLeading;
 		}
 	else
 		{
-		TEXTMETRICA theTextMetrics;
-		::GetTextMetricsA(fHDC, &theTextMetrics);
-		return theTextMetrics.tmAscent + theTextMetrics.tmDescent + theTextMetrics.tmInternalLeading;
+		TEXTMETRICA theTM;
+		::GetTextMetricsA(fHDC, &theTM);
+		return theTM.tmAscent + theTM.tmDescent + theTM.tmInternalLeading;
 		}
 	}
 
-void ZDCCanvas_GDI::BreakLine(ZDCState& ioState, const char* inLineStart, size_t inRemainingTextLength, ZCoord inTargetWidth, size_t& outNextLineDelta)
+void ZDCCanvas_GDI::BreakLine(ZDCState& ioState,
+	const char* iLineStart, size_t iRemainingTextLength,
+	ZCoord iTargetWidth, size_t& oNextLineDelta)
 	{
 	if (!fHDC)
 		{
-		outNextLineDelta = inRemainingTextLength;
+		oNextLineDelta = iRemainingTextLength;
 		return;
 		}
 
-	if (inRemainingTextLength == 0)
+	if (iRemainingTextLength == 0)
 		{
-		outNextLineDelta = 0;
+		oNextLineDelta = 0;
 		return;
 		}
 
-	if (inTargetWidth < 0)
-		inTargetWidth = 0;
+	if (iTargetWidth < 0)
+		iTargetWidth = 0;
 
 	SetupDC theSetupDC(this, ioState);
 	SetupHFONT theSetupHFONT(this, ioState);
 
 	if (ZUtil_Win::sUseWAPI())
 		{
-		string16 theString = ZUnicode::sAsUTF16(inLineStart, inRemainingTextLength);
+		string16 theString = ZUnicode::sAsUTF16(iLineStart, iRemainingTextLength);
 		SIZE dummySIZE;
 		int brokenLength = 0;
-		::GetTextExtentExPointW(fHDC, theString.data(), theString.size(), inTargetWidth, &brokenLength, nil, &dummySIZE);
+		::GetTextExtentExPointW(fHDC, theString.data(), theString.size(),
+			iTargetWidth, &brokenLength, nil, &dummySIZE);
 		size_t codePointOffset = ZUnicode::sCUToCP(theString.data(), brokenLength);
-		outNextLineDelta = ZUnicode::sCPToCU(inLineStart, inRemainingTextLength, codePointOffset, nil);
+		oNextLineDelta = ZUnicode::sCPToCU(iLineStart, iRemainingTextLength, codePointOffset, nil);
 		}
 	else
 		{
 		SIZE dummySIZE;
 		int brokenLength = 0;
-		::GetTextExtentExPointA(fHDC, inLineStart, inRemainingTextLength, inTargetWidth, &brokenLength, nil, &dummySIZE);
-		outNextLineDelta = brokenLength;
+		::GetTextExtentExPointA(fHDC, iLineStart, iRemainingTextLength,
+			iTargetWidth, &brokenLength, nil, &dummySIZE);
+		oNextLineDelta = brokenLength;
 		}
 
-	// Check for a '\n' or '\r' before the natural breaking point of the line (walking from beginning to end)
-	for (size_t x = 0; x < outNextLineDelta; ++x)
+	// Check for a '\n' or '\r' before the natural breaking
+	// point of the line (walking from beginning to end)
+	for (size_t x = 0; x < oNextLineDelta; ++x)
 		{
-		char theChar = inLineStart[x];
+		char theChar = iLineStart[x];
 		if (theChar == '\n' || theChar == '\r')
 			{
 			// Found one. Use its position as the break length.
-			outNextLineDelta = x + 1;
+			oNextLineDelta = x + 1;
 			return;
 			}
 		}
-	if (outNextLineDelta < inRemainingTextLength)
+	if (oNextLineDelta < iRemainingTextLength)
 		{
-		for (size_t x = outNextLineDelta; x > 0; --x)
+		for (size_t x = oNextLineDelta; x > 0; --x)
 			{
-			char theChar = inLineStart[x - 1];
+			char theChar = iLineStart[x - 1];
 			if (isspace(theChar))
 				{
 				// Found one. Use its position as the break length.
-				outNextLineDelta = x;
+				oNextLineDelta = x;
 				break;
 				}
 			}
 		}
 
-	if (outNextLineDelta == 0)
-		outNextLineDelta = 1;
+	if (oNextLineDelta == 0)
+		oNextLineDelta = 1;
 	}
 
 void ZDCCanvas_GDI::Flush()
@@ -1388,7 +1475,8 @@ ZRef<ZDCCanvas> ZDCCanvas_GDI::CreateOffScreen(const ZRect& canvasRect)
 	return new ZDCCanvas_GDI_OffScreen(fHDC, canvasRect);
 	}
 
-ZRef<ZDCCanvas> ZDCCanvas_GDI::CreateOffScreen(ZPoint dimensions, ZDCPixmapNS::EFormatEfficient iFormat)
+ZRef<ZDCCanvas> ZDCCanvas_GDI::CreateOffScreen(
+	ZPoint dimensions, ZDCPixmapNS::EFormatEfficient iFormat)
 	{
 	if (!fHDC)
 		return ZRef<ZDCCanvas>();
@@ -1398,7 +1486,7 @@ ZRef<ZDCCanvas> ZDCCanvas_GDI::CreateOffScreen(ZPoint dimensions, ZDCPixmapNS::E
 	return new ZDCCanvas_GDI_OffScreen(fHDC, dimensions, iFormat);
 	}
 
-ZPoint ZDCCanvas_GDI::Internal_GDIStart(ZDCState& ioState, bool inZeroOrigin)
+ZPoint ZDCCanvas_GDI::Internal_GDIStart(ZDCState& ioState, bool iZeroOrigin)
 	{
 	ZMutexLocker locker(*fMutexToLock);
 
@@ -1418,7 +1506,7 @@ ZPoint ZDCCanvas_GDI::Internal_GDIStart(ZDCState& ioState, bool inZeroOrigin)
 
 	::SetMapMode(fHDC, MM_TEXT);
 	ZPoint theOffset = ZPoint::sZero;
-	if (!inZeroOrigin)
+	if (!iZeroOrigin)
 		theOffset = ioState.fOrigin;
 	::SetWindowOrgEx(fHDC, -theOffset.h, -theOffset.v, nil);
 
@@ -1430,7 +1518,8 @@ void ZDCCanvas_GDI::Internal_GDIEnd()
 	this->InvalCache();
 	}
 
-void ZDCCanvas_GDI::Internal_TileRegion(ZDCState& ioState, const ZDCRgn& inRgn, const ZDCPixmap& inPixmap)
+void ZDCCanvas_GDI::Internal_TileRegion(
+	ZDCState& ioState, const ZDCRgn& iRgn, const ZDCPixmap& iPixmap)
 	{
 	ZMutexLocker locker(*fMutexToLock);
 
@@ -1441,7 +1530,7 @@ void ZDCCanvas_GDI::Internal_TileRegion(ZDCState& ioState, const ZDCRgn& inRgn, 
 		::SetWindowOrgEx(fHDC, 0, 0, nil);
 		}
 
-	ZDCRgn realRgn = (inRgn + ioState.fOrigin) & this->Internal_CalcClipRgn(ioState);
+	ZDCRgn realRgn = (iRgn + ioState.fOrigin) & this->Internal_CalcClipRgn(ioState);
 	if (this->IsPrinting())
 		{
 		int deviceHRes = ::GetDeviceCaps(fHDC, LOGPIXELSX);
@@ -1453,15 +1542,19 @@ void ZDCCanvas_GDI::Internal_TileRegion(ZDCState& ioState, const ZDCRgn& inRgn, 
 	::SelectClipRgn(fHDC, realRgn.GetHRGN());
 	++fChangeCount_Clip;
 
-	ZRef<ZDCPixmapRep_DIB> pixmapRepDIB = ZDCPixmapRep_DIB::sAsPixmapRep_DIB(inPixmap.GetRep());
+	ZRef<ZDCPixmapRep_DIB> pixmapRepDIB = ZDCPixmapRep_DIB::sAsPixmapRep_DIB(iPixmap.GetRep());
 	BITMAPINFO* sourceBMI;
 	char* sourceBits;
 	ZRect rasterBounds;
 	pixmapRepDIB->GetDIBStuff(sourceBMI, sourceBits, &rasterBounds);
 	ZPoint pixmapSize = rasterBounds.Size();
 	ZRect drawnBounds = realRgn.Bounds();
-	ZCoord drawnOriginH = drawnBounds.left - ((((drawnBounds.left + ioState.fPatternOrigin.h) % pixmapSize.h) + pixmapSize.h) % pixmapSize.h);
-	ZCoord drawnOriginV = drawnBounds.top - ((((drawnBounds.top + ioState.fPatternOrigin.v) % pixmapSize.v) + pixmapSize.v) % pixmapSize.v);
+	ZCoord drawnOriginH = drawnBounds.left
+		- ((((drawnBounds.left + ioState.fPatternOrigin.h)
+			% pixmapSize.h) + pixmapSize.h) % pixmapSize.h);
+	ZCoord drawnOriginV = drawnBounds.top
+		- ((((drawnBounds.top + ioState.fPatternOrigin.v)
+			% pixmapSize.v) + pixmapSize.v) % pixmapSize.v);
 
 	for (ZCoord y = drawnOriginV; y < drawnBounds.bottom; y += pixmapSize.v)
 		{
@@ -1508,19 +1601,21 @@ void ZDCCanvas_GDI_NonWindow::Finalize()
 		}
 	}
 
-void ZDCCanvas_GDI_NonWindow::Scroll(ZDCState& ioState, const ZRect& inRect, ZCoord inDeltaH, ZCoord inDeltaV)
+void ZDCCanvas_GDI_NonWindow::Scroll(ZDCState& ioState,
+	const ZRect& iRect, ZCoord iDeltaH, ZCoord iDeltaV)
 	{
 	if (!fHDC)
 		return;
 
 	SetupDC theSetupDC(this, ioState);
-	RECT realRECT = inRect + ioState.fOrigin;
-	::ScrollDC(fHDC, inDeltaH, inDeltaV, &realRECT, &realRECT, nil, nil);
+	RECT realRECT = iRect + ioState.fOrigin;
+	::ScrollDC(fHDC, iDeltaH, iDeltaV, &realRECT, &realRECT, nil, nil);
 	}
 
-void ZDCCanvas_GDI_NonWindow::CopyFrom(ZDCState& ioState, const ZPoint& inDestLocation, ZRef<ZDCCanvas> inSourceCanvas, const ZDCState& inSourceState, const ZRect& inSourceRect)
+void ZDCCanvas_GDI_NonWindow::CopyFrom(ZDCState& ioState, const ZPoint& iDestLocation,
+	ZRef<ZDCCanvas> iSourceCanvas, const ZDCState& iSourceState, const ZRect& iSourceRect)
 	{
-	ZRef<ZDCCanvas_GDI> sourceCanvasGDI = ZRefDynamicCast<ZDCCanvas_GDI>(inSourceCanvas);
+	ZRef<ZDCCanvas_GDI> sourceCanvasGDI = ZRefDynamicCast<ZDCCanvas_GDI>(iSourceCanvas);
 
 	ZAssertStop(kDebug_GDI, sourceCanvasGDI);
 
@@ -1528,17 +1623,17 @@ void ZDCCanvas_GDI_NonWindow::CopyFrom(ZDCState& ioState, const ZPoint& inDestLo
 		return;
 
 	SetupDC theSetupDC(this, ioState);
-	SetupDC theSetupDCSource(sourceCanvasGDI.GetObject(), inSourceState);
+	SetupDC theSetupDCSource(sourceCanvasGDI.GetObject(), iSourceState);
 
-	ZPoint realSource = inSourceRect.TopLeft() + inSourceState.fOrigin;
-	ZRect realDest = ZRect(inSourceRect.Size()) + (inDestLocation + ioState.fOrigin);
+	ZPoint realSource = iSourceRect.TopLeft() + iSourceState.fOrigin;
+	ZRect realDest = ZRect(iSourceRect.Size()) + (iDestLocation + ioState.fOrigin);
 	::BitBlt(fHDC, realDest.left, realDest.top, realDest.Width(), realDest.Height(),
-						sourceCanvasGDI->Internal_GetHDC(), realSource.h, realSource.v, SRCCOPY);
+		sourceCanvasGDI->Internal_GetHDC(), realSource.h, realSource.v, SRCCOPY);
 	}
 
-ZDCRgn ZDCCanvas_GDI_NonWindow::Internal_CalcClipRgn(const ZDCState& inState)
+ZDCRgn ZDCCanvas_GDI_NonWindow::Internal_CalcClipRgn(const ZDCState& iState)
 	{
-	return inState.fClip + inState.fClipOrigin;
+	return iState.fClip + iState.fClipOrigin;
 	}
 
 // =================================================================================================
@@ -1547,15 +1642,15 @@ ZDCRgn ZDCCanvas_GDI_NonWindow::Internal_CalcClipRgn(const ZDCState& inState)
 
 static HPALETTE sHPALETTE_Offscreen = ::CreateHalftonePalette(nil);
 
-ZDCCanvas_GDI_OffScreen::ZDCCanvas_GDI_OffScreen(HDC inOther, const ZRect& inGlobalRect)
+ZDCCanvas_GDI_OffScreen::ZDCCanvas_GDI_OffScreen(HDC iOther, const ZRect& iGlobalRect)
 	{
-	if (inGlobalRect.IsEmpty())
+	if (iGlobalRect.IsEmpty())
 		throw runtime_error("ZDCCanvas_GDI_OffScreen, inGlobalRect.IsEmpty()");
 
 	fOriginValid = false;
 
-	fHBITMAP = ::CreateCompatibleBitmap(inOther, inGlobalRect.Width(), inGlobalRect.Height());
-	fHDC = ::CreateCompatibleDC(inOther);
+	fHBITMAP = ::CreateCompatibleBitmap(iOther, iGlobalRect.Width(), iGlobalRect.Height());
+	fHDC = ::CreateCompatibleDC(iOther);
 	HBITMAP theOriginalHBITMAP = (HBITMAP)::SelectObject(fHDC, fHBITMAP);
 	::DeleteObject(theOriginalHBITMAP);
 
@@ -1589,32 +1684,33 @@ static short sFormateEfficientToDepth(ZDCPixmapNS::EFormatEfficient iFormat)
 	return 0;
 	}
 
-ZDCCanvas_GDI_OffScreen::ZDCCanvas_GDI_OffScreen(HDC inOther, ZPoint inDimensions, ZDCPixmapNS::EFormatEfficient iFormat)
+ZDCCanvas_GDI_OffScreen::ZDCCanvas_GDI_OffScreen(
+	HDC iOther, ZPoint iDimensions, ZDCPixmapNS::EFormatEfficient iFormat)
 	{
 	using namespace ZDCPixmapNS;
 
-	if (inDimensions.h <= 0 || inDimensions.v <= 0)
+	if (iDimensions.h <= 0 || iDimensions.v <= 0)
 		throw runtime_error("ZDCCanvas_GDI_OffScreen, zero sized offscreen");
 
 	short depth = sFormateEfficientToDepth(iFormat);
 
 	BITMAPINFO theBITMAPINFO;
 	theBITMAPINFO.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-	theBITMAPINFO.bmiHeader.biWidth = inDimensions.h;
-	theBITMAPINFO.bmiHeader.biHeight = inDimensions.v;
+	theBITMAPINFO.bmiHeader.biWidth = iDimensions.h;
+	theBITMAPINFO.bmiHeader.biHeight = iDimensions.v;
 	theBITMAPINFO.bmiHeader.biPlanes = 1;
 	theBITMAPINFO.bmiHeader.biBitCount = depth;
 	theBITMAPINFO.bmiHeader.biCompression = BI_RGB;
-	short rowBytes = ((depth * inDimensions.h + 31) / 32) * 4;
-	theBITMAPINFO.bmiHeader.biSizeImage = rowBytes * inDimensions.v;
+	short rowBytes = ((depth * iDimensions.h + 31) / 32) * 4;
+	theBITMAPINFO.bmiHeader.biSizeImage = rowBytes * iDimensions.v;
 	theBITMAPINFO.bmiHeader.biXPelsPerMeter = 0;
 	theBITMAPINFO.bmiHeader.biYPelsPerMeter = 0;
 	theBITMAPINFO.bmiHeader.biClrUsed = 0;
 	theBITMAPINFO.bmiHeader.biClrImportant = 0;
 
 	void* thePixelStorage;
-	fHBITMAP = ::CreateDIBSection(inOther, &theBITMAPINFO, DIB_RGB_COLORS, &thePixelStorage, nil, 0);
-	fHDC = ::CreateCompatibleDC(inOther);
+	fHBITMAP = ::CreateDIBSection(iOther, &theBITMAPINFO, DIB_RGB_COLORS, &thePixelStorage, nil, 0);
+	fHDC = ::CreateCompatibleDC(iOther);
 	HBITMAP theOriginalHBITMAP = (HBITMAP)::SelectObject(fHDC, fHBITMAP);
 	::DeleteObject(theOriginalHBITMAP);
 	ZAssertStop(kDebug_GDI, fHDC);
@@ -1636,13 +1732,14 @@ ZDCCanvas_GDI_OffScreen::~ZDCCanvas_GDI_OffScreen()
 		::DeleteObject(fHBITMAP);
 	}
 
-ZRGBColor ZDCCanvas_GDI_OffScreen::GetPixel(ZDCState& ioState, ZCoord inLocationH, ZCoord inLocationV)
+ZRGBColor ZDCCanvas_GDI_OffScreen::GetPixel(ZDCState& ioState, ZCoord iLocationH, ZCoord iLocationV)
 	{
 	SetupDC theSetupDC(this, ioState);
-	return ZRGBColor::sFromCOLORREF(::GetPixel(fHDC, inLocationH + ioState.fOrigin.h, inLocationV + ioState.fOrigin.v));
+	return ZRGBColor::sFromCOLORREF(::GetPixel(fHDC,
+		iLocationH + ioState.fOrigin.h, iLocationV + ioState.fOrigin.v));
 	}
 
-void ZDCCanvas_GDI_OffScreen::FloodFill(ZDCState& ioState, const ZPoint& inSeedLocation)
+void ZDCCanvas_GDI_OffScreen::FloodFill(ZDCState& ioState, const ZPoint& iSeedLocation)
 	{
 	if (!fHDC)
 		return;
@@ -1651,9 +1748,9 @@ void ZDCCanvas_GDI_OffScreen::FloodFill(ZDCState& ioState, const ZPoint& inSeedL
 	if (!theRep)
 		return;
 
-	ZPoint realSeedLocation = inSeedLocation + ioState.fOrigin;
+	ZPoint realSeedLocation = iSeedLocation + ioState.fOrigin;
 	ZDCRgn realClip = ioState.fClip + ioState.fClipOrigin;
-	if (!realClip.Contains(inSeedLocation))
+	if (!realClip.Contains(iSeedLocation))
 		return;
 
 	SetupDC theSetupDC(this, ioState);
@@ -1663,74 +1760,94 @@ void ZDCCanvas_GDI_OffScreen::FloodFill(ZDCState& ioState, const ZPoint& inSeedL
 		{
 		ZRect clipBounds = realClip.Bounds();
 
-		// To do a flood fill with a multi color ink (ie a pixmap) we have to help out some. First we take a
-		// one bit copy of our HDC, where every pixel that matches the seed pixel's color is set to white,
-		// and all other pixels are set to black.
+		// To do a flood fill with a multi color ink (ie a pixmap) we have to help out some.
+		// First we take a one bit copy of our HDC, where every pixel that matches the seed
+		// pixel's color is set to white, and all other pixels are set to black.
 		HDC theHDC1 = ::CreateCompatibleDC(fHDC);
-		::DeleteObject(::SelectObject(theHDC1, ::CreateBitmap(clipBounds.Width(), clipBounds.Height(), 1, 1, nil)));
+		::DeleteObject(::SelectObject(theHDC1,
+			::CreateBitmap(clipBounds.Width(), clipBounds.Height(), 1, 1, nil)));
 
-		// Set our back color to the seed color, so the StretchBlt knows which color should be mapped to white
+		// Set our back color to the seed color, so the StretchBlt
+		// knows which color should be mapped to white
 		COLORREF oldBackCOLORREF = ::SetBkColor(fHDC, theSeedCOLORREF);
-		::StretchBlt(theHDC1, 0, 0, clipBounds.Width(), clipBounds.Height(), fHDC, clipBounds.left, clipBounds.top,
-							clipBounds.Width(), clipBounds.Height(), SRCCOPY);
+		::StretchBlt(theHDC1, 0, 0, clipBounds.Width(), clipBounds.Height(),
+			fHDC, clipBounds.left, clipBounds.top,
+			clipBounds.Width(), clipBounds.Height(), SRCCOPY);
 
 		// Create a second HDC with a copy of the 1 bit HDC
 		HDC theHDC2 = ::CreateCompatibleDC(fHDC);
-		::DeleteObject(::SelectObject(theHDC2, ::CreateBitmap(clipBounds.Width(), clipBounds.Height(), 1, 1, nil)));
+		::DeleteObject(::SelectObject(theHDC2,
+			::CreateBitmap(clipBounds.Width(), clipBounds.Height(), 1, 1, nil)));
 		::BitBlt(theHDC2, 0, 0, clipBounds.Width(), clipBounds.Height(),
-							theHDC1, 0, 0, SRCCOPY);
+			theHDC1, 0, 0, SRCCOPY);
 
 		// Now we do a flood fill to black of theHDC1, the first monochrome copy of our HDC
-		HBRUSH tempHBRUSH = (HBRUSH)::SelectObject(theHDC1, ::CreateSolidBrush(PALETTERGB(0, 0, 0)));
-		::ExtFloodFill(theHDC1, realSeedLocation.h - clipBounds.left, realSeedLocation.v - clipBounds.top, PALETTERGB(0xFF, 0xFF, 0xFF), FLOODFILLSURFACE);
+		HBRUSH tempHBRUSH = (HBRUSH)::SelectObject(
+			theHDC1, ::CreateSolidBrush(PALETTERGB(0, 0, 0)));
+
+		::ExtFloodFill(theHDC1,
+			realSeedLocation.h - clipBounds.left, realSeedLocation.v - clipBounds.top,
+				PALETTERGB(0xFF, 0xFF, 0xFF), FLOODFILLSURFACE);
 		::DeleteObject(::SelectObject(theHDC1, tempHBRUSH));
 
-		// We now have theHDC2 containing white *everywhere* fHDC contains our seed color, and theHDC1 containing
-		// white everywhere fHDC contains our seed color *except* for those pixels reachable from the seed location. The
-		// exclusive or of the two HDCs thus identify exactly those pixels in fHDC that match the seed color, and are reachable
-		// from the seed location.
+		// We now have theHDC2 containing white *everywhere* fHDC contains our seed color, and
+		// theHDC1 containing white everywhere fHDC contains our seed color *except* for those
+		// pixels reachable from the seed location. The exclusive or of the two HDCs thus identify
+		// exactly those pixels in fHDC that match the seed color, and are reachable from the
+		// seed location.
 		::BitBlt(theHDC1, 0, 0, clipBounds.Width(), clipBounds.Height(),
-							theHDC2, 0, 0, SRCINVERT);
+			theHDC2, 0, 0, SRCINVERT);
 		// We can discard theHDC2
 		::DeleteDC(theHDC2);
 
 		// Use theHDC1 to set to black every pixel we're going to be filling
 		::BitBlt(fHDC, clipBounds.left, clipBounds.top, clipBounds.Width(), clipBounds.Height(),
-							theHDC1, 0, 0, 0x00220326); // (NOT src) AND dest -- DSna
+			theHDC1, 0, 0, 0x00220326); // (NOT src) AND dest -- DSna
 
 		// Get our ink's pixmap into an HDC
-		ZRef<ZDCPixmapRep_DIB> inkRepDIB = ZDCPixmapRep_DIB::sAsPixmapRep_DIB(theRep->fAsMultiColor.fPixmap->GetRep());
+		ZRef<ZDCPixmapRep_DIB> inkRepDIB
+			= ZDCPixmapRep_DIB::sAsPixmapRep_DIB(theRep->fAsMultiColor.fPixmap->GetRep());
 		BITMAPINFO* inkBMI;
 		char* inkBits;
 		ZRect theInkBounds;
 		inkRepDIB->GetDIBStuff(inkBMI, inkBits, &theInkBounds);
 		ZPoint theInkPixmapSize = theInkBounds.Size();
 		HDC inkHDC = ::CreateCompatibleDC(fHDC);
-		::DeleteObject(::SelectObject(inkHDC, ::CreateCompatibleBitmap(fHDC, theInkPixmapSize.h, theInkPixmapSize.v)));
+		::DeleteObject(::SelectObject(inkHDC,
+			::CreateCompatibleBitmap(fHDC, theInkPixmapSize.h, theInkPixmapSize.v)));
 
 		::StretchDIBits(inkHDC, 0, 0, theInkPixmapSize.h, theInkPixmapSize.v,
-					theInkBounds.left, theInkBounds.top, theInkPixmapSize.h, theInkPixmapSize.v,
-					inkBits, inkBMI, DIB_RGB_COLORS, SRCCOPY);
+			theInkBounds.left, theInkBounds.top, theInkPixmapSize.h, theInkPixmapSize.v,
+			inkBits, inkBMI, DIB_RGB_COLORS, SRCCOPY);
 
 		// Create another HDC for the ink, one that will hold each tile before it is blitted in
 		HDC intermediateInkHDC = ::CreateCompatibleDC(fHDC);
-		::DeleteObject(::SelectObject(intermediateInkHDC, ::CreateCompatibleBitmap(fHDC, theInkPixmapSize.h, theInkPixmapSize.v)));
+		::DeleteObject(::SelectObject(intermediateInkHDC,
+			::CreateCompatibleBitmap(fHDC, theInkPixmapSize.h, theInkPixmapSize.v)));
 
-		// Now tile our ink into fHDC by taking a copy of the ink for each tile, setting to black all pixels that aren't
-		// in theHDC1 and ORing the result into fHDC.
+		// Now tile our ink into fHDC by taking a copy of the ink for each tile, setting to
+		// black all pixels that aren't in theHDC1 and ORing the result into fHDC.
 
-		ZCoord drawnOriginH = clipBounds.left - ((((clipBounds.left + ioState.fPatternOrigin.h) % theInkPixmapSize.h) + theInkPixmapSize.h) % theInkPixmapSize.h);
-		ZCoord drawnOriginV = clipBounds.top - ((((clipBounds.top + ioState.fPatternOrigin.v) % theInkPixmapSize.v) + theInkPixmapSize.v) % theInkPixmapSize.v);
+		ZCoord drawnOriginH = clipBounds.left
+			- ((((clipBounds.left + ioState.fPatternOrigin.h)
+				% theInkPixmapSize.h) + theInkPixmapSize.h) % theInkPixmapSize.h);
+
+		ZCoord drawnOriginV = clipBounds.top
+			- ((((clipBounds.top + ioState.fPatternOrigin.v)
+				% theInkPixmapSize.v) + theInkPixmapSize.v) % theInkPixmapSize.v);
 
 		for (ZCoord y = drawnOriginV; y < clipBounds.bottom; y += theInkPixmapSize.v)
 			{
 			for (ZCoord x = drawnOriginH; x < clipBounds.right; x += theInkPixmapSize.h)
 				{
-				::BitBlt(intermediateInkHDC, 0, 0, theInkPixmapSize.h, theInkPixmapSize.v, inkHDC, 0, 0, SRCCOPY);
+				::BitBlt(intermediateInkHDC, 0, 0, theInkPixmapSize.h, theInkPixmapSize.v,
+					inkHDC, 0, 0, SRCCOPY);
 
-				::BitBlt(intermediateInkHDC, 0, 0, theInkPixmapSize.h, theInkPixmapSize.v, theHDC1, x - clipBounds.left, y - clipBounds.top, SRCAND);
+				::BitBlt(intermediateInkHDC, 0, 0, theInkPixmapSize.h, theInkPixmapSize.v,
+					theHDC1, x - clipBounds.left, y - clipBounds.top, SRCAND);
 
-				::BitBlt(fHDC, x, y, theInkPixmapSize.h, theInkPixmapSize.v, intermediateInkHDC, 0, 0, SRCPAINT);
+				::BitBlt(fHDC, x, y, theInkPixmapSize.h, theInkPixmapSize.v,
+					intermediateInkHDC, 0, 0, SRCPAINT);
 				}
 			}
 
@@ -1742,23 +1859,25 @@ void ZDCCanvas_GDI_OffScreen::FloodFill(ZDCState& ioState, const ZPoint& inSeedL
 		{
 		SetupHBRUSH theSetupHBRUSH(this, ioState);
 
-		::ExtFloodFill(fHDC, realSeedLocation.h, realSeedLocation.v, theSeedCOLORREF, FLOODFILLSURFACE);
+		::ExtFloodFill(fHDC, realSeedLocation.h, realSeedLocation.v,
+			theSeedCOLORREF, FLOODFILLSURFACE);
 		}
 	}
 
-ZDCPixmap ZDCCanvas_GDI_OffScreen::GetPixmap(ZDCState& ioState, const ZRect& inBounds)
+ZDCPixmap ZDCCanvas_GDI_OffScreen::GetPixmap(ZDCState& ioState, const ZRect& iBounds)
 	{
-	if (fHDC == nil || inBounds.IsEmpty())
+	if (fHDC == nil || iBounds.IsEmpty())
 		return ZDCPixmap();
 
 	SetupDC theSetupDC(this, ioState);
 
-	ZRect realBounds = inBounds + ioState.fOrigin;
+	ZRect realBounds = iBounds + ioState.fOrigin;
 
 	HDC resultHDC = ::CreateCompatibleDC(fHDC);
 	HBITMAP resultHBITMAP = ::CreateCompatibleBitmap(fHDC, realBounds.Width(), realBounds.Height());
 	HBITMAP oldResultHBITMAP = (HBITMAP)::SelectObject(resultHDC, resultHBITMAP);
-	::BitBlt(resultHDC, 0, 0, realBounds.Width(), realBounds.Height(), fHDC, realBounds.Left(), realBounds.Top(), SRCCOPY);
+	::BitBlt(resultHDC, 0, 0, realBounds.Width(), realBounds.Height(),
+		fHDC, realBounds.Left(), realBounds.Top(), SRCCOPY);
 	::SelectObject(resultHDC, oldResultHBITMAP);
 
 	ZRef<ZDCPixmapRep_DIB> theRep_DIB = new ZDCPixmapRep_DIB(resultHDC, resultHBITMAP);
@@ -1797,17 +1916,18 @@ ZDCCanvas_GDI_IC::~ZDCCanvas_GDI_IC()
 #pragma mark -
 #pragma mark * ZDC_NativeGDI
 
-ZDC_NativeGDI::ZDC_NativeGDI(HDC inHDC)
+ZDC_NativeGDI::ZDC_NativeGDI(HDC iHDC)
 	{
-	fHDC = inHDC;
+	fHDC = iHDC;
 	fSavedDCIndex = ::SaveDC(fHDC);
 	fCanvas = ZDCCanvas_GDI::sFindCanvasOrCreateNative(fHDC);
 
 	ZDCRgn clipRgn;
 	if (::GetClipRgn(fHDC, clipRgn.GetHRGN()) == 0)
 		{
-		// If no clipRgn is set then create one -- this is arbitrary, but use 2000 pixels for now. This will break
-		// when printing, when we should determine just how big the DC we're dealing with is
+		// If no clipRgn is set then create one -- this is arbitrary,
+		// but use 2000 pixels for now. This will break when printing, when we
+		// should determine just how big the DC we're dealing with is
 		clipRgn = ZRect(0, 0, 2000, 2000);
 		}
 	this->SetClip(clipRgn);
@@ -1830,10 +1950,10 @@ ZDC_NativeGDI::~ZDC_NativeGDI()
 #pragma mark -
 #pragma mark * ZDCSetupForGDI
 
-ZDCSetupForGDI::ZDCSetupForGDI(const ZDC& inDC, bool inZeroOrigin)
-:	fCanvas(ZRefDynamicCast<ZDCCanvas_GDI>(inDC.GetCanvas()))
+ZDCSetupForGDI::ZDCSetupForGDI(const ZDC& iDC, bool iZeroOrigin)
+:	fCanvas(ZRefDynamicCast<ZDCCanvas_GDI>(iDC.GetCanvas()))
 	{
-	fOffset = fCanvas->Internal_GDIStart(inDC.GetState(), inZeroOrigin);
+	fOffset = fCanvas->Internal_GDIStart(iDC.GetState(), iZeroOrigin);
 	}
 
 ZDCSetupForGDI::~ZDCSetupForGDI()
@@ -1851,25 +1971,26 @@ HDC ZDCSetupForGDI::GetHDC()
 #pragma mark -
 #pragma mark * ZDCPixmapRep_DIB
 
-static bool sCheckDesc(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect& inBounds,
-							const ZDCPixmapNS::PixelDesc& inPixelDesc)
+static bool sCheckDesc(const ZDCPixmapNS::RasterDesc& iRasterDesc, const ZRect& iBounds,
+	const ZDCPixmapNS::PixelDesc& iPixelDesc)
 	{
 	using namespace ZDCPixmapNS;
 
-	if ((inRasterDesc.fRowBytes % 4) != 0)
+	if ((iRasterDesc.fRowBytes % 4) != 0)
 		return false;
 
 	bool isOkay = false;
-	ZRef<PixelDescRep> theRep = inPixelDesc.GetRep();
+	ZRef<PixelDescRep> theRep = iPixelDesc.GetRep();
 	if (PixelDescRep_Color* thePixelDescRep_Color = ZRefDynamicCast<PixelDescRep_Color>(theRep))
 		{
 		uint32 maskRed, maskGreen, maskBlue, maskAlpha;
 		thePixelDescRep_Color->GetMasks(maskRed, maskGreen, maskBlue, maskAlpha);
-		switch (inRasterDesc.fPixvalDesc.fDepth)
+		switch (iRasterDesc.fPixvalDesc.fDepth)
 			{
 			case 16:
 				{
-				if (inRasterDesc.fPixvalDesc.fBigEndian == false && maskRed == 0x7C00 && maskGreen == 0x03E0 && maskBlue == 0x001F)
+				if (iRasterDesc.fPixvalDesc.fBigEndian == false
+					&& maskRed == 0x7C00 && maskGreen == 0x03E0 && maskBlue == 0x001F)
 					{
 					isOkay = true;
 					}
@@ -1877,8 +1998,10 @@ static bool sCheckDesc(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect&
 				}
 			case 24:
 				{
-				if ((inRasterDesc.fPixvalDesc.fBigEndian == true && maskRed == 0x0000FF && maskGreen == 0x00FF00 && maskBlue == 0xFF0000)
-					|| (inRasterDesc.fPixvalDesc.fBigEndian == false && maskRed == 0xFF0000 && maskGreen == 0x00FF00 && maskBlue == 0x0000FF))
+				if ((iRasterDesc.fPixvalDesc.fBigEndian == true
+					&& maskRed == 0x0000FF && maskGreen == 0x00FF00 && maskBlue == 0xFF0000)
+					|| (iRasterDesc.fPixvalDesc.fBigEndian == false
+					&& maskRed == 0xFF0000 && maskGreen == 0x00FF00 && maskBlue == 0x0000FF))
 					{
 					isOkay = true;
 					}
@@ -1886,8 +2009,10 @@ static bool sCheckDesc(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect&
 				}
 			case 32:
 				{
-				if ((inRasterDesc.fPixvalDesc.fBigEndian == true && maskRed == 0x0000FF00 && maskGreen == 0x00FF0000 && maskBlue == 0xFF000000)
-					|| (inRasterDesc.fPixvalDesc.fBigEndian == false && maskRed == 0x00FF0000 && maskGreen == 0x0000FF00 && maskBlue == 0x000000FF))
+				if ((iRasterDesc.fPixvalDesc.fBigEndian == true
+					&& maskRed == 0x0000FF00 && maskGreen == 0x00FF0000 && maskBlue == 0xFF000000)
+					|| (iRasterDesc.fPixvalDesc.fBigEndian == false
+					&& maskRed == 0x00FF0000 && maskGreen == 0x0000FF00 && maskBlue == 0x000000FF))
 					{
 					isOkay = true;
 					}
@@ -1897,7 +2022,7 @@ static bool sCheckDesc(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect&
 		}
 	else if (PixelDescRep_Gray* thePixelDescRep_Gray = ZRefDynamicCast<PixelDescRep_Gray>(theRep))
 		{
-		switch (inRasterDesc.fPixvalDesc.fDepth)
+		switch (iRasterDesc.fPixvalDesc.fDepth)
 			{
 			case 1:
 			case 4:
@@ -1907,9 +2032,10 @@ static bool sCheckDesc(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect&
 				}
 			}
 		}
-	else if (PixelDescRep_Indexed* thePixelDescRep_Indexed = ZRefDynamicCast<PixelDescRep_Indexed>(theRep))
+	else if (PixelDescRep_Indexed* thePixelDescRep_Indexed
+		= ZRefDynamicCast<PixelDescRep_Indexed>(theRep))
 		{
-		switch (inRasterDesc.fPixvalDesc.fDepth)
+		switch (iRasterDesc.fPixvalDesc.fDepth)
 			{
 			case 1:
 			case 4:
@@ -1922,28 +2048,31 @@ static bool sCheckDesc(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect&
 	return isOkay;
 	}
 
-static ZRef<ZDCPixmapRep_DIB> sCreateRepForDesc(ZRef<ZDCPixmapRaster> inRaster, const ZRect& inBounds,
-							const ZDCPixmapNS::PixelDesc& inPixelDesc)
+static ZRef<ZDCPixmapRep_DIB> sCreateRepForDesc(
+	ZRef<ZDCPixmapRaster> iRaster,
+	const ZRect& iBounds,
+	const ZDCPixmapNS::PixelDesc& iPixelDesc)
 	{
-	if (::sCheckDesc(inRaster->GetRasterDesc(), inBounds, inPixelDesc))
-		return new ZDCPixmapRep_DIB(inRaster, inBounds, inPixelDesc);
+	if (::sCheckDesc(iRaster->GetRasterDesc(), iBounds, iPixelDesc))
+		return new ZDCPixmapRep_DIB(iRaster, iBounds, iPixelDesc);
 
 	return ZRef<ZDCPixmapRep_DIB>();
 	}
 
-static BITMAPINFO* sAllocateBITMAPINFOColor(size_t inRowBytes, int32 inDepth, int32 inHeight, bool inFlipped)
+static BITMAPINFO* sAllocateBITMAPINFOColor(
+	size_t iRowBytes, int32 iDepth, int32 iHeight, bool iFlipped)
 	{
 	BITMAPINFO* theBITMAPINFO = reinterpret_cast<BITMAPINFO*>(new char[sizeof(BITMAPINFOHEADER)]);
 
 	theBITMAPINFO->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-	theBITMAPINFO->bmiHeader.biWidth = (inRowBytes * 8) / inDepth;
-	if (inFlipped)
-		theBITMAPINFO->bmiHeader.biHeight = inHeight;
+	theBITMAPINFO->bmiHeader.biWidth = (iRowBytes * 8) / iDepth;
+	if (iFlipped)
+		theBITMAPINFO->bmiHeader.biHeight = iHeight;
 	else
-		theBITMAPINFO->bmiHeader.biHeight = -inHeight;
-	theBITMAPINFO->bmiHeader.biSizeImage = inRowBytes * inHeight;
+		theBITMAPINFO->bmiHeader.biHeight = -iHeight;
+	theBITMAPINFO->bmiHeader.biSizeImage = iRowBytes * iHeight;
 	theBITMAPINFO->bmiHeader.biPlanes = 1;
-	theBITMAPINFO->bmiHeader.biBitCount = inDepth;
+	theBITMAPINFO->bmiHeader.biBitCount = iDepth;
 	theBITMAPINFO->bmiHeader.biCompression = BI_RGB;
 	theBITMAPINFO->bmiHeader.biXPelsPerMeter = 0;
 	theBITMAPINFO->bmiHeader.biYPelsPerMeter = 0;
@@ -1952,46 +2081,56 @@ static BITMAPINFO* sAllocateBITMAPINFOColor(size_t inRowBytes, int32 inDepth, in
 	return theBITMAPINFO;
 	}
 
-static bool sSetupDIB(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZDCPixmapNS::PixelDesc& inPixelDesc, BITMAPINFO*& outBITMAPINFO)
+static bool sSetupDIB(
+	const ZDCPixmapNS::RasterDesc& iRasterDesc, const ZDCPixmapNS::PixelDesc& iPixelDesc,
+	BITMAPINFO*& oBITMAPINFO)
 	{
 	using namespace ZDCPixmapNS;
 
-	if ((inRasterDesc.fRowBytes % 4) != 0)
+	if ((iRasterDesc.fRowBytes % 4) != 0)
 		return false;
 
 	bool isOkay = false;
-	ZRef<PixelDescRep> theRep = inPixelDesc.GetRep();
+	ZRef<PixelDescRep> theRep = iPixelDesc.GetRep();
 	if (PixelDescRep_Color* thePixelDescRep_Color = ZRefDynamicCast<PixelDescRep_Color>(theRep))
 		{
 		uint32 maskRed, maskGreen, maskBlue, maskAlpha;
 		thePixelDescRep_Color->GetMasks(maskRed, maskGreen, maskBlue, maskAlpha);
-		switch (inRasterDesc.fPixvalDesc.fDepth)
+		switch (iRasterDesc.fPixvalDesc.fDepth)
 			{
 			case 16:
 				{
-				if (inRasterDesc.fPixvalDesc.fBigEndian == false && maskRed == 0x7C00 && maskGreen == 0x03E0 && maskBlue == 0x001F)
+				if (iRasterDesc.fPixvalDesc.fBigEndian == false
+					&& maskRed == 0x7C00 && maskGreen == 0x03E0 && maskBlue == 0x001F)
 					{
-					outBITMAPINFO = sAllocateBITMAPINFOColor(inRasterDesc.fRowBytes, 16, inRasterDesc.fRowCount, inRasterDesc.fFlipped);
+					oBITMAPINFO = sAllocateBITMAPINFOColor(iRasterDesc.fRowBytes, 16,
+						iRasterDesc.fRowCount, iRasterDesc.fFlipped);
 					return true;
 					}
 				break;
 				}
 			case 24:
 				{
-				if ((inRasterDesc.fPixvalDesc.fBigEndian == true && maskRed == 0x0000FF && maskGreen == 0x00FF00 && maskBlue == 0xFF0000)
-					|| (inRasterDesc.fPixvalDesc.fBigEndian == false && maskRed == 0xFF0000 && maskGreen == 0x00FF00 && maskBlue == 0x0000FF))
+				if ((iRasterDesc.fPixvalDesc.fBigEndian == true
+					&& maskRed == 0x0000FF && maskGreen == 0x00FF00 && maskBlue == 0xFF0000)
+					|| (iRasterDesc.fPixvalDesc.fBigEndian == false
+					&& maskRed == 0xFF0000 && maskGreen == 0x00FF00 && maskBlue == 0x0000FF))
 					{
-					outBITMAPINFO = sAllocateBITMAPINFOColor(inRasterDesc.fRowBytes, 24, inRasterDesc.fRowCount, inRasterDesc.fFlipped);
+					oBITMAPINFO = sAllocateBITMAPINFOColor(iRasterDesc.fRowBytes, 24,
+						iRasterDesc.fRowCount, iRasterDesc.fFlipped);
 					return true;
 					}
 				break;
 				}
 			case 32:
 				{
-				if ((inRasterDesc.fPixvalDesc.fBigEndian == true && maskRed == 0x0000FF00 && maskGreen == 0x00FF0000 && maskBlue == 0xFF000000)
-					|| (inRasterDesc.fPixvalDesc.fBigEndian == false && maskRed == 0x00FF0000 && maskGreen == 0x0000FF00 && maskBlue == 0x000000FF))
+				if ((iRasterDesc.fPixvalDesc.fBigEndian == true
+					&& maskRed == 0x0000FF00 && maskGreen == 0x00FF0000 && maskBlue == 0xFF000000)
+					|| (iRasterDesc.fPixvalDesc.fBigEndian == false
+					&& maskRed == 0x00FF0000 && maskGreen == 0x0000FF00 && maskBlue == 0x000000FF))
 					{
-					outBITMAPINFO = sAllocateBITMAPINFOColor(inRasterDesc.fRowBytes, 32, inRasterDesc.fRowCount, inRasterDesc.fFlipped);
+					oBITMAPINFO = sAllocateBITMAPINFOColor(iRasterDesc.fRowBytes, 32,
+						iRasterDesc.fRowCount, iRasterDesc.fFlipped);
 					return true;
 					}
 				break;
@@ -2000,45 +2139,50 @@ static bool sSetupDIB(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZDCPixm
 		}
 	else if (PixelDescRep_Gray* thePixelDescRep_Gray = ZRefDynamicCast<PixelDescRep_Gray>(theRep))
 		{
-		switch (inRasterDesc.fPixvalDesc.fDepth)
+		switch (iRasterDesc.fPixvalDesc.fDepth)
 			{
 			case 1:
 			case 4:
 			case 8:
 				{
-				uint32 colorTableSize = 1 << inRasterDesc.fPixvalDesc.fDepth;
-				outBITMAPINFO = reinterpret_cast<BITMAPINFO*>(new char[sizeof(BITMAPINFOHEADER) + colorTableSize * sizeof(RGBQUAD)]);
-				outBITMAPINFO->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-				outBITMAPINFO->bmiHeader.biWidth = (inRasterDesc.fRowBytes * 8) / inRasterDesc.fPixvalDesc.fDepth;
-				if (inRasterDesc.fFlipped)
-					outBITMAPINFO->bmiHeader.biHeight = inRasterDesc.fRowCount;
+				uint32 colorTableSize = 1 << iRasterDesc.fPixvalDesc.fDepth;
+				oBITMAPINFO = reinterpret_cast<BITMAPINFO*>(new char
+					[sizeof(BITMAPINFOHEADER) + colorTableSize * sizeof(RGBQUAD)]);
+
+				oBITMAPINFO->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+				oBITMAPINFO->bmiHeader.biWidth
+					= (iRasterDesc.fRowBytes * 8) / iRasterDesc.fPixvalDesc.fDepth;
+
+				if (iRasterDesc.fFlipped)
+					oBITMAPINFO->bmiHeader.biHeight = iRasterDesc.fRowCount;
 				else
-					outBITMAPINFO->bmiHeader.biHeight = -inRasterDesc.fRowCount;
-				outBITMAPINFO->bmiHeader.biSizeImage = inRasterDesc.fRowBytes * inRasterDesc.fRowCount;
-				outBITMAPINFO->bmiHeader.biPlanes = 1;
-				outBITMAPINFO->bmiHeader.biBitCount = inRasterDesc.fPixvalDesc.fDepth;
-				outBITMAPINFO->bmiHeader.biCompression = BI_RGB;
-				outBITMAPINFO->bmiHeader.biXPelsPerMeter = 0;
-				outBITMAPINFO->bmiHeader.biYPelsPerMeter = 0;
-				outBITMAPINFO->bmiHeader.biClrUsed = colorTableSize;
-				outBITMAPINFO->bmiHeader.biClrImportant = 0;
+					oBITMAPINFO->bmiHeader.biHeight = -iRasterDesc.fRowCount;
+				oBITMAPINFO->bmiHeader.biSizeImage = iRasterDesc.fRowBytes * iRasterDesc.fRowCount;
+				oBITMAPINFO->bmiHeader.biPlanes = 1;
+				oBITMAPINFO->bmiHeader.biBitCount = iRasterDesc.fPixvalDesc.fDepth;
+				oBITMAPINFO->bmiHeader.biCompression = BI_RGB;
+				oBITMAPINFO->bmiHeader.biXPelsPerMeter = 0;
+				oBITMAPINFO->bmiHeader.biYPelsPerMeter = 0;
+				oBITMAPINFO->bmiHeader.biClrUsed = colorTableSize;
+				oBITMAPINFO->bmiHeader.biClrImportant = 0;
 
 				uint32 multiplier = 0xFFFFFFFFU / (colorTableSize - 1);
 				for (size_t x = 0; x < colorTableSize; ++x)
 					{
 					uint32 temp = (x * multiplier) >> 16;
-					outBITMAPINFO->bmiColors[x].rgbRed = temp;
-					outBITMAPINFO->bmiColors[x].rgbGreen = temp;
-					outBITMAPINFO->bmiColors[x].rgbBlue = temp;
-					outBITMAPINFO->bmiColors[x].rgbReserved = 0;
+					oBITMAPINFO->bmiColors[x].rgbRed = temp;
+					oBITMAPINFO->bmiColors[x].rgbGreen = temp;
+					oBITMAPINFO->bmiColors[x].rgbBlue = temp;
+					oBITMAPINFO->bmiColors[x].rgbReserved = 0;
 					}
 				return true;
 				}
 			}
 		}
-	else if (PixelDescRep_Indexed* thePixelDescRep_Indexed = ZRefDynamicCast<PixelDescRep_Indexed>(theRep))
+	else if (PixelDescRep_Indexed* thePixelDescRep_Indexed
+		= ZRefDynamicCast<PixelDescRep_Indexed>(theRep))
 		{
-		switch (inRasterDesc.fPixvalDesc.fDepth)
+		switch (iRasterDesc.fPixvalDesc.fDepth)
 			{
 			case 1:
 			case 4:
@@ -2048,30 +2192,34 @@ static bool sSetupDIB(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZDCPixm
 				size_t sourceColorsCount;
 				thePixelDescRep_Indexed->GetColors(sourceColors, sourceColorsCount);
 
-				size_t colorTableSize = 1 << inRasterDesc.fPixvalDesc.fDepth;
+				size_t colorTableSize = 1 << iRasterDesc.fPixvalDesc.fDepth;
 				sourceColorsCount = min(sourceColorsCount, colorTableSize);
 
-				outBITMAPINFO = reinterpret_cast<BITMAPINFO*>(new char[sizeof(BITMAPINFOHEADER) + colorTableSize * sizeof(RGBQUAD)]);
-				outBITMAPINFO->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-				outBITMAPINFO->bmiHeader.biWidth = (inRasterDesc.fRowBytes * 8) / inRasterDesc.fPixvalDesc.fDepth;
-				if (inRasterDesc.fFlipped)
-					outBITMAPINFO->bmiHeader.biHeight = inRasterDesc.fRowCount;
+				oBITMAPINFO = reinterpret_cast<BITMAPINFO*>(new char
+					[sizeof(BITMAPINFOHEADER) + colorTableSize * sizeof(RGBQUAD)]);
+
+				oBITMAPINFO->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+				oBITMAPINFO->bmiHeader.biWidth =
+					(iRasterDesc.fRowBytes * 8) / iRasterDesc.fPixvalDesc.fDepth;
+
+				if (iRasterDesc.fFlipped)
+					oBITMAPINFO->bmiHeader.biHeight = iRasterDesc.fRowCount;
 				else
-					outBITMAPINFO->bmiHeader.biHeight = -inRasterDesc.fRowCount;
-				outBITMAPINFO->bmiHeader.biSizeImage = inRasterDesc.fRowBytes * inRasterDesc.fRowCount;
-				outBITMAPINFO->bmiHeader.biPlanes = 1;
-				outBITMAPINFO->bmiHeader.biBitCount = inRasterDesc.fPixvalDesc.fDepth;
-				outBITMAPINFO->bmiHeader.biCompression = BI_RGB;
-				outBITMAPINFO->bmiHeader.biXPelsPerMeter = 0;
-				outBITMAPINFO->bmiHeader.biYPelsPerMeter = 0;
-				outBITMAPINFO->bmiHeader.biClrUsed = sourceColorsCount;
-				outBITMAPINFO->bmiHeader.biClrImportant = 0;
+					oBITMAPINFO->bmiHeader.biHeight = -iRasterDesc.fRowCount;
+				oBITMAPINFO->bmiHeader.biSizeImage = iRasterDesc.fRowBytes * iRasterDesc.fRowCount;
+				oBITMAPINFO->bmiHeader.biPlanes = 1;
+				oBITMAPINFO->bmiHeader.biBitCount = iRasterDesc.fPixvalDesc.fDepth;
+				oBITMAPINFO->bmiHeader.biCompression = BI_RGB;
+				oBITMAPINFO->bmiHeader.biXPelsPerMeter = 0;
+				oBITMAPINFO->bmiHeader.biYPelsPerMeter = 0;
+				oBITMAPINFO->bmiHeader.biClrUsed = sourceColorsCount;
+				oBITMAPINFO->bmiHeader.biClrImportant = 0;
 				for (size_t x = 0; x < sourceColorsCount; ++x)
 					{
-					outBITMAPINFO->bmiColors[x].rgbRed = sourceColors[x].red;
-					outBITMAPINFO->bmiColors[x].rgbGreen = sourceColors[x].green;
-					outBITMAPINFO->bmiColors[x].rgbBlue = sourceColors[x].blue;
-					outBITMAPINFO->bmiColors[x].rgbReserved = 0;
+					oBITMAPINFO->bmiColors[x].rgbRed = sourceColors[x].red;
+					oBITMAPINFO->bmiColors[x].rgbGreen = sourceColors[x].green;
+					oBITMAPINFO->bmiColors[x].rgbBlue = sourceColors[x].blue;
+					oBITMAPINFO->bmiColors[x].rgbReserved = 0;
 					}
 				return true;
 				}
@@ -2080,34 +2228,34 @@ static bool sSetupDIB(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZDCPixm
 	return false;
 	}
 
-ZDCPixmapRep_DIB::ZDCPixmapRep_DIB(ZRef<ZDCPixmapRaster> inRaster,
-								const ZRect& inBounds,
-								const ZDCPixmapNS::PixelDesc& inPixelDesc)
-:	ZDCPixmapRep(inRaster, inBounds, inPixelDesc)
+ZDCPixmapRep_DIB::ZDCPixmapRep_DIB(ZRef<ZDCPixmapRaster> iRaster,
+	const ZRect& iBounds,
+	const ZDCPixmapNS::PixelDesc& iPixelDesc)
+:	ZDCPixmapRep(iRaster, iBounds, iPixelDesc)
 	{
-	bool result = ::sSetupDIB(inRaster->GetRasterDesc(), inPixelDesc, fBITMAPINFO);
+	bool result = ::sSetupDIB(iRaster->GetRasterDesc(), iPixelDesc, fBITMAPINFO);
 	ZAssertStop(kDebug_GDI, result);
 	fChangeCount = fPixelDesc.GetChangeCount() - 1;
 	}
 
-ZDCPixmapRep_DIB::ZDCPixmapRep_DIB(HDC inHDC, HBITMAP inHBITMAP, bool inForce32BPP)
+ZDCPixmapRep_DIB::ZDCPixmapRep_DIB(HDC iHDC, HBITMAP iHBITMAP, bool iForce32BPP)
 	{
 	using namespace ZDCPixmapNS;
 
-	ZAssertStop(kDebug_GDI, inHBITMAP);
+	ZAssertStop(kDebug_GDI, iHBITMAP);
 
 	// Get information about inHBITMAP
 	BITMAP theBITMAP;
 	if (ZUtil_Win::sUseWAPI())
-		::GetObjectW(inHBITMAP, sizeof(theBITMAP), &theBITMAP);
+		::GetObjectW(iHBITMAP, sizeof(theBITMAP), &theBITMAP);
 	else
-		::GetObjectA(inHBITMAP, sizeof(theBITMAP), &theBITMAP);
+		::GetObjectA(iHBITMAP, sizeof(theBITMAP), &theBITMAP);
 
 	int32 absoluteHeight = abs(theBITMAP.bmHeight);
 
 	fBounds = ZPoint(theBITMAP.bmWidth, absoluteHeight);
 
-	if (inForce32BPP)
+	if (iForce32BPP)
 		{
 		RasterDesc theRasterDesc;
 		theRasterDesc.fPixvalDesc.fDepth = 32;
@@ -2131,7 +2279,8 @@ ZDCPixmapRep_DIB::ZDCPixmapRep_DIB(HDC inHDC, HBITMAP inHBITMAP, bool inForce32B
 		fBITMAPINFO->bmiHeader.biClrUsed = 0;
 		fBITMAPINFO->bmiHeader.biClrImportant = 0;
 
-		::GetDIBits(inHDC, inHBITMAP, 0, absoluteHeight, fRaster->GetBaseAddress(), fBITMAPINFO, DIB_PAL_COLORS);
+		::GetDIBits(iHDC, iHBITMAP,
+			0, absoluteHeight, fRaster->GetBaseAddress(), fBITMAPINFO, DIB_PAL_COLORS);
 
 		fPixelDesc = PixelDesc(0x00FF0000, 0x0000FF00, 0x000000FF, 0);
 		fChangeCount = fPixelDesc.GetChangeCount();
@@ -2147,14 +2296,16 @@ ZDCPixmapRep_DIB::ZDCPixmapRep_DIB(HDC inHDC, HBITMAP inHBITMAP, bool inForce32B
 				RasterDesc theRasterDesc;
 				theRasterDesc.fPixvalDesc.fDepth = theBITMAP.bmBitsPixel;
 				theRasterDesc.fPixvalDesc.fBigEndian = true;
-				theRasterDesc.fRowBytes =  (((theBITMAP.bmBitsPixel * theBITMAP.bmWidth) + 31) / 32) * 4;
+				theRasterDesc.fRowBytes
+					= (((theBITMAP.bmBitsPixel * theBITMAP.bmWidth) + 31) / 32) * 4;
 				theRasterDesc.fRowCount = absoluteHeight;
 				theRasterDesc.fFlipped = true;
 				fRaster = new ZDCPixmapRaster_Simple(theRasterDesc);
 
 				uint32 colorTableSize = 1 << theRasterDesc.fPixvalDesc.fDepth;
 
-				fBITMAPINFO = reinterpret_cast<BITMAPINFO*>(new char[sizeof(BITMAPINFOHEADER) + colorTableSize * sizeof(RGBQUAD)]);
+				fBITMAPINFO = reinterpret_cast<BITMAPINFO*>(new char
+					[sizeof(BITMAPINFOHEADER) + colorTableSize * sizeof(RGBQUAD)]);
 				fBITMAPINFO->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 				fBITMAPINFO->bmiHeader.biWidth = theBITMAP.bmWidth;
 				fBITMAPINFO->bmiHeader.biHeight = absoluteHeight;
@@ -2167,7 +2318,8 @@ ZDCPixmapRep_DIB::ZDCPixmapRep_DIB(HDC inHDC, HBITMAP inHBITMAP, bool inForce32B
 				fBITMAPINFO->bmiHeader.biClrUsed = colorTableSize;
 				fBITMAPINFO->bmiHeader.biClrImportant = 0;
 
-				::GetDIBits(inHDC, inHBITMAP, 0, absoluteHeight, fRaster->GetBaseAddress(), fBITMAPINFO, DIB_RGB_COLORS);
+				::GetDIBits(iHDC, iHBITMAP,
+					0, absoluteHeight, fRaster->GetBaseAddress(), fBITMAPINFO, DIB_RGB_COLORS);
 
 				if (theBITMAP.bmBitsPixel == 1
 					&& fBITMAPINFO->bmiColors[0].rgbRed == 0
@@ -2202,7 +2354,8 @@ ZDCPixmapRep_DIB::ZDCPixmapRep_DIB(HDC inHDC, HBITMAP inHBITMAP, bool inForce32B
 				RasterDesc theRasterDesc;
 				theRasterDesc.fPixvalDesc.fDepth = theBITMAP.bmBitsPixel;
 				theRasterDesc.fPixvalDesc.fBigEndian = false;
-				theRasterDesc.fRowBytes =  (((theBITMAP.bmBitsPixel * theBITMAP.bmWidth) + 31) / 32) * 4;
+				theRasterDesc.fRowBytes =
+					(((theBITMAP.bmBitsPixel * theBITMAP.bmWidth) + 31) / 32) * 4;
 				theRasterDesc.fRowCount = absoluteHeight;
 				theRasterDesc.fFlipped = true;
 				fRaster = new ZDCPixmapRaster_Simple(theRasterDesc);
@@ -2221,7 +2374,8 @@ ZDCPixmapRep_DIB::ZDCPixmapRep_DIB(HDC inHDC, HBITMAP inHBITMAP, bool inForce32B
 				fBITMAPINFO->bmiHeader.biClrUsed = 0;
 				fBITMAPINFO->bmiHeader.biClrImportant = 0;
 
-				::GetDIBits(inHDC, inHBITMAP, 0, absoluteHeight, fRaster->GetBaseAddress(), fBITMAPINFO, DIB_PAL_COLORS);
+				::GetDIBits(iHDC, iHBITMAP,
+					0, absoluteHeight, fRaster->GetBaseAddress(), fBITMAPINFO, DIB_PAL_COLORS);
 
 				if (theBITMAP.bmBitsPixel == 16)
 					fPixelDesc = PixelDesc(0x7C00, 0x03E0, 0x001F, 0);
@@ -2240,14 +2394,15 @@ ZDCPixmapRep_DIB::~ZDCPixmapRep_DIB()
 	fBITMAPINFO = nil;
 	}
 
-void ZDCPixmapRep_DIB::GetDIBStuff(BITMAPINFO*& outBITMAPINFO, char*& outBits, ZRect* outBounds)
+void ZDCPixmapRep_DIB::GetDIBStuff(BITMAPINFO*& oBITMAPINFO, char*& oBits, ZRect* oBounds)
 	{
 	using namespace ZDCPixmapNS;
 
 	if (fChangeCount != fPixelDesc.GetChangeCount())
 		{
 		fChangeCount = fPixelDesc.GetChangeCount();
-		if (PixelDescRep_Indexed* thePixelDesc = ZRefDynamicCast<PixelDescRep_Indexed>(fPixelDesc.GetRep()))
+		if (PixelDescRep_Indexed* thePixelDesc
+			= ZRefDynamicCast<PixelDescRep_Indexed>(fPixelDesc.GetRep()))
 			{
 			const ZRGBColorPOD* theColors;
 			size_t theSize;
@@ -2262,23 +2417,23 @@ void ZDCPixmapRep_DIB::GetDIBStuff(BITMAPINFO*& outBITMAPINFO, char*& outBits, Z
 			}
 		}
 
-	outBITMAPINFO = fBITMAPINFO;
-	outBits = reinterpret_cast<char*>(fRaster->GetBaseAddress());
-	if (outBounds)
-		*outBounds = fBounds;
+	oBITMAPINFO = fBITMAPINFO;
+	oBits = reinterpret_cast<char*>(fRaster->GetBaseAddress());
+	if (oBounds)
+		*oBounds = fBounds;
 	}
 
-ZRef<ZDCPixmapRep_DIB> ZDCPixmapRep_DIB::sAsPixmapRep_DIB(ZRef<ZDCPixmapRep> inRep)
+ZRef<ZDCPixmapRep_DIB> ZDCPixmapRep_DIB::sAsPixmapRep_DIB(ZRef<ZDCPixmapRep> iRep)
 	{
 	using namespace ZDCPixmapNS;
 
 	// Let's see if it's a DIB rep already
-	ZRef<ZDCPixmapRep_DIB> theRep_DIB = ZRefDynamicCast<ZDCPixmapRep_DIB>(inRep);
+	ZRef<ZDCPixmapRep_DIB> theRep_DIB = ZRefDynamicCast<ZDCPixmapRep_DIB>(iRep);
 	if (!theRep_DIB)
 		{
-		ZRef<ZDCPixmapRaster> theRaster = inRep->GetRaster();
-		ZRect theBounds = inRep->GetBounds();
-		PixelDesc thePixelDesc = inRep->GetPixelDesc();
+		ZRef<ZDCPixmapRaster> theRaster = iRep->GetRaster();
+		ZRect theBounds = iRep->GetBounds();
+		PixelDesc thePixelDesc = iRep->GetPixelDesc();
 		theRep_DIB = ::sCreateRepForDesc(theRaster, theBounds, thePixelDesc);
 		if (!theRep_DIB)
 			{
@@ -2288,8 +2443,10 @@ ZRef<ZDCPixmapRep_DIB> ZDCPixmapRep_DIB::sAsPixmapRep_DIB(ZRef<ZDCPixmapRep> inR
 
 			RasterDesc newRasterDesc(theBounds.Size(), fallbackFormat);
 			PixelDesc newPixelDesc(fallbackFormat);
-			theRep_DIB = new ZDCPixmapRep_DIB(new ZDCPixmapRaster_Simple(newRasterDesc), theBounds.Size(), newPixelDesc);
-			theRep_DIB->CopyFrom(ZPoint(0, 0), inRep, theBounds);
+			theRep_DIB = new ZDCPixmapRep_DIB(
+				new ZDCPixmapRaster_Simple(newRasterDesc), theBounds.Size(), newPixelDesc);
+
+			theRep_DIB->CopyFrom(ZPoint(0, 0), iRep, theBounds);
 			}
 		}
 	return theRep_DIB;
@@ -2302,34 +2459,50 @@ ZRef<ZDCPixmapRep_DIB> ZDCPixmapRep_DIB::sAsPixmapRep_DIB(ZRef<ZDCPixmapRep> inR
 class ZDCPixmapFactory_GDI : public ZDCPixmapFactory
 	{
 public:
-	virtual ZRef<ZDCPixmapRep> CreateRep(const ZRef<ZDCPixmapRaster>& inRaster, const ZRect& inBounds, const ZDCPixmapNS::PixelDesc& inPixelDesc);
-	virtual ZRef<ZDCPixmapRep> CreateRep(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect& inBounds, const ZDCPixmapNS::PixelDesc& inPixelDesc);
-	virtual ZDCPixmapNS::EFormatStandard MapEfficientToStandard(ZDCPixmapNS::EFormatEfficient inFormat);
+	virtual ZRef<ZDCPixmapRep> CreateRep(
+		const ZRef<ZDCPixmapRaster>& iRaster,
+		const ZRect& iBounds,
+		const ZDCPixmapNS::PixelDesc& iPixelDesc);
+
+	virtual ZRef<ZDCPixmapRep> CreateRep(
+		const ZDCPixmapNS::RasterDesc& iRasterDesc,
+		const ZRect& iBounds,
+		const ZDCPixmapNS::PixelDesc& iPixelDesc);
+
+	virtual ZDCPixmapNS::EFormatStandard MapEfficientToStandard(
+		ZDCPixmapNS::EFormatEfficient iFormat);
 	};
 
 static ZDCPixmapFactory_GDI sZDCPixmapFactory_GDI;
 
-ZRef<ZDCPixmapRep> ZDCPixmapFactory_GDI::CreateRep(const ZRef<ZDCPixmapRaster>& inRaster, const ZRect& inBounds, const ZDCPixmapNS::PixelDesc& inPixelDesc)
+ZRef<ZDCPixmapRep> ZDCPixmapFactory_GDI::CreateRep(
+	const ZRef<ZDCPixmapRaster>& iRaster,
+	const ZRect& iBounds,
+	const ZDCPixmapNS::PixelDesc& iPixelDesc)
 	{
 	// This may return nil, which is okay. The factory method will
 	// create a non-platform specific rep.
-	return ::sCreateRepForDesc(inRaster, inBounds, inPixelDesc);
+	return ::sCreateRepForDesc(iRaster, iBounds, iPixelDesc);
 	}
 
-ZRef<ZDCPixmapRep> ZDCPixmapFactory_GDI::CreateRep(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect& inBounds, const ZDCPixmapNS::PixelDesc& inPixelDesc)
+ZRef<ZDCPixmapRep> ZDCPixmapFactory_GDI::CreateRep(
+	const ZDCPixmapNS::RasterDesc& iRasterDesc,
+	const ZRect& iBounds,
+	const ZDCPixmapNS::PixelDesc& iPixelDesc)
 	{
-	if (::sCheckDesc(inRasterDesc, inBounds, inPixelDesc))
-		return new ZDCPixmapRep_DIB(new ZDCPixmapRaster_Simple(inRasterDesc), inBounds, inPixelDesc);
+	if (::sCheckDesc(iRasterDesc, iBounds, iPixelDesc))
+		return new ZDCPixmapRep_DIB(new ZDCPixmapRaster_Simple(iRasterDesc), iBounds, iPixelDesc);
 
 	return ZRef<ZDCPixmapRep>();
 	}
 
-ZDCPixmapNS::EFormatStandard ZDCPixmapFactory_GDI::MapEfficientToStandard(ZDCPixmapNS::EFormatEfficient inFormat)
+ZDCPixmapNS::EFormatStandard ZDCPixmapFactory_GDI::MapEfficientToStandard(
+	ZDCPixmapNS::EFormatEfficient iFormat)
 	{
 	using namespace ZDCPixmapNS;
 
 	EFormatStandard standardFormat = eFormatStandard_Invalid;
-	switch (inFormat)
+	switch (iFormat)
 		{
 //		case eFormatEfficient_Indexed_1: standardFormat = eFormatStandard_Indexed_1; break;
 //		case eFormatEfficient_Indexed_8: standardFormat = eFormatStandard_Indexed_8; break;

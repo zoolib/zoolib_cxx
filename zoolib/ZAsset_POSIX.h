@@ -35,7 +35,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZAssetTree_POSIX_MemoryMapped : public ZAssetTree_Std_Memory
 	{
 public:
-	ZAssetTree_POSIX_MemoryMapped(int inFileDescriptor, bool inAdopt, size_t inStart, size_t inLength);
+	ZAssetTree_POSIX_MemoryMapped(
+		int inFileDescriptor, bool inAdopt, size_t inStart, size_t inLength);
+
 	virtual ~ZAssetTree_POSIX_MemoryMapped();
 
 protected:

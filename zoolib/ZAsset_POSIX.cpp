@@ -35,7 +35,8 @@ using std::runtime_error;
 #pragma mark -
 #pragma mark * ZAssetTree_POSIX_MemoryMapped
 
-ZAssetTree_POSIX_MemoryMapped::ZAssetTree_POSIX_MemoryMapped(int inFileDescriptor, bool inAdopt, size_t inStart, size_t inLength)
+ZAssetTree_POSIX_MemoryMapped::ZAssetTree_POSIX_MemoryMapped(
+	int inFileDescriptor, bool inAdopt, size_t inStart, size_t inLength)
 	{
 	ZAssertStop(1, inFileDescriptor != 0);
 
@@ -71,11 +72,15 @@ void ZAssetTree_POSIX_MemoryMapped::LoadUp(int inFileDescriptor, size_t inStart,
 
 	// inLength must be extended to compensate for any change in the start offset
 	fMappedLength = inLength + inStart - realStart;
-	fMappedAddress = ::mmap(nil, fMappedLength, PROT_READ, MAP_PRIVATE, inFileDescriptor, realStart);
+	fMappedAddress = ::mmap(nil, fMappedLength,
+		PROT_READ, MAP_PRIVATE, inFileDescriptor, realStart);
+
 	if (fMappedAddress == MAP_FAILED)
 		throw runtime_error("ZAssetTree_POSIX_MemoryMapped, could not map file");
 
-	ZAssetTree_Std_Memory::LoadUp(reinterpret_cast<char*>(fMappedAddress) + inStart - realStart, inLength);
+	ZAssetTree_Std_Memory::LoadUp(
+		reinterpret_cast<char*>(fMappedAddress) + inStart - realStart,
+		inLength);
 	}
 
 #endif // ZCONFIG_SPI_Enabled(POSIX)
