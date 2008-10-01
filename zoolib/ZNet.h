@@ -124,6 +124,7 @@ public:
 	virtual ZRef<ZNetNameLookup> CreateLookup(size_t iMaxAddresses) const;
 
 	ZRef<ZNetEndpoint> Connect() const;
+	ZRef<ZNetEndpoint> Connect(size_t iMaxAddresses) const;
 
 	ZRef<ZNetAddress> Lookup() const;
 	};

@@ -66,10 +66,20 @@ ZRef<ZNetNameLookup> ZNetName::CreateLookup(size_t iMaxAddresses) const
 	{ return ZRef<ZNetNameLookup>(); };
 
 ZRef<ZNetEndpoint> ZNetName::Connect() const
-	{
-	if (ZRef<ZNetAddress> theAddress = this->Lookup())
-		return theAddress->Connect();
+	{ return this->Connect(1); }
 
+ZRef<ZNetEndpoint> ZNetName::Connect(size_t iMaxAddresses) const
+	{
+	if (ZRef<ZNetNameLookup> theLookup = this->CreateLookup(iMaxAddresses))
+		{
+		theLookup->Start();
+		while (!theLookup->Finished())
+			{
+			if (ZRef<ZNetEndpoint> theEP = theLookup->CurrentAddress()->Connect())
+				return theEP;
+			theLookup->Advance();
+			}
+		}
 	return ZRef<ZNetEndpoint>();
 	}
 
