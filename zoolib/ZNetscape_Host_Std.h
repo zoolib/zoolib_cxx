@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNetscape_Host.h"
 
 #include <map>
+#include <vector>
 
 namespace ZNetscape {
 
@@ -157,6 +158,17 @@ public:
 	virtual bool HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName);
 
 	virtual bool RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName);
+
+private:
+	class Getter;
+	friend class Getter;
+
+	void pGetterFinished(Getter* iGetter, void* iNotifyData,
+		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
+		ZRef<ZStreamerRCon> iStreamerRCon);
+	
+	ZooLib::ZMutex fMutex;
+	std::vector<Getter*> fGetters;
 	};
 
 } // namespace ZNetscape
