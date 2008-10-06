@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_GuestFactory_MacPlugin.h"
 
+#if ZCONFIG_SPI_Enabled(MacOSX)
+
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"
 
@@ -30,8 +32,7 @@ namespace ZNetscape {
 #pragma mark * GuestFactory_MacPlugin
 
 GuestFactory_MacPlugin::GuestFactory_MacPlugin(const std::string& iPath)
-:	fPlugInRef(nil),
-	fBundleRef(nil)
+:	fPlugInRef(nil)
 	{
 	CFStringRef thePath = ::CFStringCreateWithCString(nil, iPath.c_str(), kCFStringEncodingUTF8);
 	if (thePath)
@@ -44,53 +45,60 @@ GuestFactory_MacPlugin::GuestFactory_MacPlugin(const std::string& iPath)
 			fPlugInRef = ::CFPlugInCreate(nil, theURL);
 			if (fPlugInRef)
 				{
-				fBundleRef = ::CFPlugInGetBundle(fPlugInRef);
-				if (fBundleRef)
+				if (ZLOG(s, eDebug, "GuestFactory_MacPlugin"))
 					{
-					NPNetscapeFuncs theNPNetscapeFuncs;
-					this->GetNPNetscapeFuncs(theNPNetscapeFuncs);
-					
-					NP_InitializeFuncPtr theInitialize = (NP_InitializeFuncPtr)
-						::CFBundleGetFunctionPointerForName(
-						fBundleRef, CFSTR("NP_Initialize"));
-
-					theInitialize(&theNPNetscapeFuncs);
+					s.Writef("ctor, fPlugInRef refcount = %d",
+						::CFGetRetainCount(fPlugInRef));
 					}
+
+				CFBundleRef theBundleRef = ::CFPlugInGetBundle(fPlugInRef);
+				NPNetscapeFuncs theNPNetscapeFuncs;
+				this->GetNPNetscapeFuncs(theNPNetscapeFuncs);
+				
+				NP_InitializeFuncPtr theInitialize = (NP_InitializeFuncPtr)
+					::CFBundleGetFunctionPointerForName(
+					theBundleRef, CFSTR("NP_Initialize"));
+
+				theInitialize(&theNPNetscapeFuncs);
 				}
 			}
 		}
+
 	if (!fPlugInRef)
 		throw std::runtime_error("Couldn't load plugin");
 	}
 
 GuestFactory_MacPlugin::~GuestFactory_MacPlugin()
 	{
+	CFBundleRef theBundleRef = ::CFPlugInGetBundle(fPlugInRef);
+
 	NPP_ShutdownProcPtr theShutdown =
 		(NPP_ShutdownProcPtr)
 		::CFBundleGetFunctionPointerForName(
-		fBundleRef, CFSTR("NP_Shutdown"));
+		theBundleRef, CFSTR("NP_Shutdown"));
+
 	theShutdown();
 
-	// fBundleRef came from CFPlugInGetBundle, and thus is valid so long
-	// as we keep our reference to fPluginRef.
-
-	if (fPlugInRef)
+	if (ZLOG(s, eDebug, "GuestFactory_MacPlugin"))
 		{
-		if (ZLOG(s, eDebug, "GuestFactory_MacPlugin"))
-			{
-			s.Writef("~GuestFactory_MacPlugin, fPlugInRef refcount = %d",
-				::CFGetRetainCount(fPlugInRef));
-			}
-		::CFRelease(fPlugInRef);
+		s.Writef("dtor, fPlugInRef refcount = %d",
+			::CFGetRetainCount(fPlugInRef));
 		}
+
+	::CFRelease(fPlugInRef);
 	}
 
 void GuestFactory_MacPlugin::GetEntryPoints(NPPluginFuncs& oNPPluginFuncs)
 	{
+	CFBundleRef theBundleRef = ::CFPlugInGetBundle(fPlugInRef);
+
 	NP_GetEntryPointsFuncPtr theGetEntryPoints = (NP_GetEntryPointsFuncPtr)
 		::CFBundleGetFunctionPointerForName(
-		fBundleRef, CFSTR("NP_GetEntryPoints"));
+		theBundleRef, CFSTR("NP_GetEntryPoints"));
+
 	theGetEntryPoints(&oNPPluginFuncs);
 	}
 
 } // namespace ZNetscape
+
+#endif // ZCONFIG_SPI_Enabled(MacOSX)

@@ -22,6 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNetscape_GuestFactory_MacPlugin__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCONFIG_SPI.h"
+
+#if ZCONFIG_SPI_Enabled(MacOSX)
+
 #include "zoolib/ZNetscape_Host.h"
 
 #include <string>
@@ -41,9 +45,10 @@ public:
 	virtual void GetEntryPoints(NPPluginFuncs& oNPPluginFuncs);
 
 	CFPlugInRef fPlugInRef;
-	CFBundleRef fBundleRef;
 	};
 
 } // namespace ZNetscape
+
+#endif  //ZCONFIG_SPI_Enabled(MacOSX)
 
 #endif // __ZNetscape_GuestFactory_MacPlugin__
