@@ -503,14 +503,14 @@ bool Host::Sender::pDeliverData()
 
 	if (!theStreamRCon.WaitReadable(0))
 		{
-		if (ZLOG(s, eDebug, "Host::Sender"))
+		if (ZLOG(s, eDebug + 1, "Host::Sender"))
 			s.Writef("waitReadable is false");
 		return true;
 		}
 
 	const size_t countReadable = theStreamRCon.CountReadable();
 
-	if (ZLOG(s, eDebug, "Host::Sender"))
+	if (ZLOG(s, eDebug + 1, "Host::Sender"))
 		s.Writef("countReadable = %d", countReadable);
 	
 	if (countReadable == 0)
@@ -518,7 +518,7 @@ bool Host::Sender::pDeliverData()
 
 	int32 countPossible = fHost->HostWriteReady(&fNPStream);
 
-	if (ZLOG(s, eDebug, "Host::Sender"))
+	if (ZLOG(s, eDebug + 1, "Host::Sender"))
 		s.Writef("countPossible = %d", countPossible);
 
 	if (countPossible < 0)
@@ -536,14 +536,14 @@ bool Host::Sender::pDeliverData()
 		if (countRead == 0)
 			return false;
 
-		if (ZLOG(s, eDebug, "Host::Sender"))
+		if (ZLOG(s, eDebug + 1, "Host::Sender"))
 			s.Writef("countRead = %d", countRead);
 
 		for (size_t start = 0; start < countRead; /*no inc*/)
 			{
 			int countWritten = fHost->HostWrite(&fNPStream, 0, countRead - start, &buffer[start]);
 
-			if (ZLOG(s, eDebug, "Host::Sender"))
+			if (ZLOG(s, eDebug + 1, "Host::Sender"))
 				s.Writef("countWritten = %d", countWritten);
 
 			if (countWritten < 0)
