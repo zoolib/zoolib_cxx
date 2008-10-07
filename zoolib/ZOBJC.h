@@ -22,11 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZOBJC__ 1
 #include "zconfig.h"
 
-// The DESTROY macro from renaissance is useful. At some point, if we have renaissance available,
-// then we'll pull the definition from there.
+// The DESTROY macro from renaissance is useful. At some point, if we have
+// renaissance available, then we'll pull the definition from there.
 #ifndef DESTROY
 #	ifdef __OBJC__
-#		define DESTROY(a) do { if (a) {[a release]; a = 0; }} while(0)
+#		define DESTROY(a) do { if (a) {[a release]; a = 0; } } while(0)
 #	else
 #		define DESTROY(a) $ONLY_USE_IN_OBJECTIVE_C$
 #	endif

@@ -93,8 +93,8 @@ void HostMeister::pGetNPNetscapeFuncs(NPNetscapeFuncs& oNPNetscapeFuncs)
 	#ifdef NPVERS_HAS_RESPONSE_HEADERS
 	oNPNetscapeFuncs.version = NPVERS_HAS_RESPONSE_HEADERS;
 	#else
-	oNPNetscapeFuncs.version = 17; // Urg
-//	oNPNetscapeFuncs.version = 14; // Urg
+//	oNPNetscapeFuncs.version = 17; // Urg
+	oNPNetscapeFuncs.version = 14; // Urg
 	#endif
 
 	oNPNetscapeFuncs.size = sizeof(NPNetscapeFuncs);
@@ -302,117 +302,7 @@ void GuestFactory::GetNPNetscapeFuncs(NPNetscapeFuncs& oNPNetscapeFuncs)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Host
-
-Host::Host(ZRef<GuestFactory> iGuestFactory)
-:	fGuestFactory(iGuestFactory),
-	fNPObject(nil)
-	{
-	ZBlockZero(&fNPPluginFuncs, sizeof(fNPPluginFuncs));
-	ZBlockZero(&fNPP_t, sizeof(fNPP_t));
-	fNPPluginFuncs.size = sizeof(fNPPluginFuncs);
-	fGuestFactory->GetEntryPoints(fNPPluginFuncs);
-	fNPP_t.ndata = this;
-	}
-
-Host::~Host()
-	{
-	}
-
-void Host::Create(const string& iURL, const string& iMIME)
-	{
-    char* npp_argv[] =
-		{ const_cast<char*>(iURL.c_str()), const_cast<char*>(iMIME.c_str()),};
-
-    char* npp_argn[] =
-		{ "src", "type" };
-
-	
-	NPError theErr = fNPPluginFuncs.newp(
-		const_cast<char*>(iMIME.c_str()), &fNPP_t, NP_FULL,
-		countof(npp_argn), npp_argn, npp_argv, nil);
-
-	if (ZLOG(s, eDebug + 1, "Host"))
-		s.Writef("Create, theErr: %d", theErr);
-	}
-
-void Host::Destroy()
-	{
-	NPSavedData* theSavedData;
-	NPError theErr = fNPPluginFuncs.destroy(&fNPP_t, &theSavedData);
-	}
-
-void Host::HostActivate(bool iActivate)
-	{
-	EventRecord fakeEvent;
-	fakeEvent.what = activateEvt;
-	fakeEvent.when = ::TickCount();
-	fakeEvent.message = (UInt32)::GetWindowFromPort(fNP_Port.port);
-	if (iActivate)
-		fakeEvent.modifiers = activeFlag;
-	else
-		fakeEvent.modifiers = 0;
-	::GetGlobalMouse(&fakeEvent.where);
-	
-	NPError theErr = fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
-	}
-
-void Host::HostIdle()
-	{
-	EventRecord fakeEvent;
-	fakeEvent.what = nullEvent;
-	fakeEvent.when = ::TickCount();
-	fakeEvent.message = 0;
-	::GetGlobalMouse(&fakeEvent.where);
-	
-	NPError theErr = fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
-	}
-
-void Host::HostDeliverData()
-	{
-	this->pDeliverData();
-	}
-
-void Host::HostDraw()
-	{
-	EventRecord fakeEvent;
-	fakeEvent.what = updateEvt;
-	fakeEvent.when = ::TickCount();
-	fakeEvent.message = (UInt32)::GetWindowFromPort(fNP_Port.port);
-	fakeEvent.modifiers = 0;
-	::GetGlobalMouse(&fakeEvent.where);
-	
-	NPError theErr = fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
-	}
-
-void Host::HostSetWindow(CGrafPtr iGrafPtr,
-	ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip)
-	{
-	fNP_Port.port = iGrafPtr;
-	this->HostSetBounds(iLocation, iSize, iClip);
-	}
-
-void Host::HostSetBounds(
-	ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip)
-	{
-	fNP_Port.portx = -iLocation.h;
-	fNP_Port.porty = -iLocation.v;
-	fNPWindow.window = &fNP_Port;
-
-	fNPWindow.type = NPWindowTypeDrawable;
-
-	fNPWindow.x = iLocation.h;
-	fNPWindow.y = iLocation.v;
-	fNPWindow.width = iSize.h;
-	fNPWindow.height = iSize.v;
-
-	fNPWindow.clipRect.left = iClip.left;
-	fNPWindow.clipRect.top = iClip.top;
-	fNPWindow.clipRect.right = iClip.right;
-	fNPWindow.clipRect.bottom = iClip.bottom;
-
-	NPError theErr = fNPPluginFuncs.setwindow(&fNPP_t, &fNPWindow);
-	}
+#pragma mark * Host::Sender
 
 class Host::Sender
 	{
@@ -460,9 +350,7 @@ Host::Sender::Sender(Host* iHost, const NPP_t& iNPP_t,
 	}
 
 Host::Sender::~Sender()
-	{
-	
-	}
+	{}
 
 bool Host::Sender::DeliverData()
 	{
@@ -556,22 +444,116 @@ bool Host::Sender::pDeliverData()
 	return true;
 	}
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Host
 
-void Host::pDeliverData()
+Host::Host(ZRef<GuestFactory> iGuestFactory)
+:	fGuestFactory(iGuestFactory),
+	fNPObject(nil)
 	{
-	ZMutexLocker locker(fMutex);
-	for (list<Sender*>::iterator i = fSenders.begin(); i != fSenders.end(); /*no inc*/)
-		{
-		if ((*i)->DeliverData())
-			{
-			++i;
-			}
-		else
-			{
-			delete *i;
-			i = fSenders.erase(i);
-			}
-		}
+	ZBlockZero(&fNPPluginFuncs, sizeof(fNPPluginFuncs));
+	ZBlockZero(&fNPP_t, sizeof(fNPP_t));
+	fNPPluginFuncs.size = sizeof(fNPPluginFuncs);
+	fGuestFactory->GetEntryPoints(fNPPluginFuncs);
+	fNPP_t.ndata = this;
+	}
+
+Host::~Host()
+	{}
+
+void Host::Create(const string& iURL, const string& iMIME)
+	{
+    char* npp_argv[] =
+		{ const_cast<char*>(iURL.c_str()), const_cast<char*>(iMIME.c_str()),};
+
+    char* npp_argn[] =
+		{ "src", "type" };
+
+	NPError theErr = fNPPluginFuncs.newp(
+		const_cast<char*>(iMIME.c_str()), &fNPP_t, NP_FULL,
+		countof(npp_argn), npp_argn, npp_argv, nil);
+
+	if (ZLOG(s, eDebug + 1, "Host"))
+		s.Writef("Create, theErr: %d", theErr);
+	}
+
+void Host::Destroy()
+	{
+	NPSavedData* theSavedData;
+	NPError theErr = fNPPluginFuncs.destroy(&fNPP_t, &theSavedData);
+	}
+
+void Host::HostActivate(bool iActivate)
+	{
+	EventRecord fakeEvent;
+	fakeEvent.what = activateEvt;
+	fakeEvent.when = ::TickCount();
+	fakeEvent.message = (UInt32)::GetWindowFromPort(fNP_Port.port);
+	if (iActivate)
+		fakeEvent.modifiers = activeFlag;
+	else
+		fakeEvent.modifiers = 0;
+	::GetGlobalMouse(&fakeEvent.where);
+	
+	NPError theErr = fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
+	}
+
+void Host::HostIdle()
+	{
+	EventRecord fakeEvent;
+	fakeEvent.what = nullEvent;
+	fakeEvent.when = ::TickCount();
+	fakeEvent.message = 0;
+	::GetGlobalMouse(&fakeEvent.where);
+	
+	NPError theErr = fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
+	}
+
+void Host::HostDeliverData()
+	{
+	this->pDeliverData();
+	}
+
+void Host::HostDraw()
+	{
+	EventRecord fakeEvent;
+	fakeEvent.what = updateEvt;
+	fakeEvent.when = ::TickCount();
+	fakeEvent.message = (UInt32)::GetWindowFromPort(fNP_Port.port);
+	fakeEvent.modifiers = 0;
+	::GetGlobalMouse(&fakeEvent.where);
+	
+	NPError theErr = fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
+	}
+
+void Host::HostSetWindow(CGrafPtr iGrafPtr,
+	ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip)
+	{
+	fNP_Port.port = iGrafPtr;
+	this->HostSetBounds(iLocation, iSize, iClip);
+	}
+
+void Host::HostSetBounds(
+	ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip)
+	{
+	fNP_Port.portx = -iLocation.h;
+	fNP_Port.porty = -iLocation.v;
+	fNPWindow.window = &fNP_Port;
+
+	fNPWindow.type = NPWindowTypeDrawable;
+
+	fNPWindow.x = iLocation.h;
+	fNPWindow.y = iLocation.v;
+	fNPWindow.width = iSize.h;
+	fNPWindow.height = iSize.v;
+
+	fNPWindow.clipRect.left = iClip.left;
+	fNPWindow.clipRect.top = iClip.top;
+	fNPWindow.clipRect.right = iClip.right;
+	fNPWindow.clipRect.bottom = iClip.bottom;
+
+	NPError theErr = fNPPluginFuncs.setwindow(&fNPP_t, &fNPWindow);
 	}
 
 void Host::SendDataAsync(
@@ -726,14 +708,31 @@ void Host::HostURLNotify(const char* URL, NPReason reason, void* notifyData)
 NPError Host::HostNewStream(NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype)
 	{ return fNPPluginFuncs.newstream(&fNPP_t, type, stream, seekable, stype); }
 
-void Host::HostDestroyStream(NPStream* stream, NPReason reason)
-	{ fNPPluginFuncs.destroystream(&fNPP_t, stream, reason); }
+NPError Host::HostDestroyStream(NPStream* stream, NPReason reason)
+	{ return fNPPluginFuncs.destroystream(&fNPP_t, stream, reason); }
 
 int32 Host::HostWriteReady(NPStream* stream)
 	{ return fNPPluginFuncs.writeready(&fNPP_t, stream); }
 
 int32 Host::HostWrite(NPStream* stream, int32_t offset, int32_t len, void* buffer)
 	{ return fNPPluginFuncs.write(&fNPP_t, stream, offset, len, buffer); }
+
+void Host::pDeliverData()
+	{
+	ZMutexLocker locker(fMutex);
+	for (list<Sender*>::iterator i = fSenders.begin(); i != fSenders.end(); /*no inc*/)
+		{
+		if ((*i)->DeliverData())
+			{
+			++i;
+			}
+		else
+			{
+			delete *i;
+			i = fSenders.erase(i);
+			}
+		}
+	}
 
 // =================================================================================================
 

@@ -236,7 +236,7 @@ public:
 // Host indirect API
 	virtual void HostURLNotify(const char* URL, NPReason reason, void* notifyData);
 	virtual NPError HostNewStream(NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
-	virtual void HostDestroyStream(NPStream* stream, NPReason reason);
+	virtual NPError HostDestroyStream(NPStream* stream, NPReason reason);
 	virtual int32 HostWriteReady(NPStream* stream);
 	virtual int32 HostWrite(NPStream* stream, int32_t offset, int32_t len, void* buffer);
 
@@ -313,7 +313,9 @@ private:
 
 	ZRef<GuestFactory> fGuestFactory;
 	NPPluginFuncs fNPPluginFuncs;
+protected:
 	NPP_t fNPP_t;
+private:
 	NPWindow fNPWindow;
 	NP_Port fNP_Port;
 	NPObject* fNPObject;

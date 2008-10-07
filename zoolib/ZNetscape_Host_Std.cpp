@@ -110,7 +110,7 @@ void HostMeister_Std::GetStringIdentifiers(
 		*identifiers++ = this->GetStringIdentifier(*names++);
 		}
 	}
-	
+
 NPIdentifier HostMeister_Std::GetIntIdentifier(int32_t intid)
 	{
 	map<int, Identifier*>::iterator i = fMap_Ints.find(intid);
@@ -211,18 +211,28 @@ static bool sParseURL(const string& iURL, string& oHost, ip_port& oPort, string&
 	return true;
 	}
 
-static bool sHTTP_GET(const ZStreamW& w, const ZStreamR& r,
-	const string& iHost, const string& iPath,
+static bool sHTTP(const ZStreamW& w, const ZStreamR& r,
+	const string& iHost, const string& iPath, const ZMemoryBlock* iPOSTData,
 	int& oResponseCode, ZMemoryBlock& oRawHeaders, ZTuple& oHeaders, string& oMIME)
 	{
-	w.WriteString("GET ");
+	if (ZLOG(s, eDebug, "ZNetscape"))
+		s << "sHTTP";
+
+	if (iPOSTData)
+		w.WriteString("POST ");
+	else
+		w.WriteString("GET ");
 	w.WriteString(iPath);
 	w.WriteString(" HTTP/1.1\r\n");
 	w.WriteString("Host: ");
 	w.WriteString(iHost);
 	w.WriteString("\r\n");
 	w.WriteString("Connection: close\r\n");
+	if (iPOSTData)
+		w.Writef("Content-Length: %ld\r\n", iPOSTData->GetSize());
 	w.WriteString("\r\n");
+	if (iPOSTData)
+		w.Write(iPOSTData->GetData(), iPOSTData->GetSize());
 	w.Flush();
 
 	ZStreamRWPos_RAM theHeaderStream;
@@ -241,12 +251,13 @@ static bool sHTTP_GET(const ZStreamW& w, const ZStreamR& r,
 		return false;
 		}
 
-	if (ZLOG(s, eDebug, "sHTTP_GET"))
+	if (ZLOG(s, eDebug, "sHTTP"))
 		{
 		s << "Server response, code: "
 			<< ZString::sFormat("%d", oResponseCode)
 			<< ", message: " << serverResultMessage
-			<< ", Headers: " << ZUtil_Strim_Tuple::Format(oHeaders, 1, ZUtil_Strim_Tuple::Options());
+			<< ", Headers: "
+			<< ZUtil_Strim_Tuple::Format(oHeaders, 1, ZUtil_Strim_Tuple::Options());
 		}
 
 	ZTuple theCT = oHeaders.GetTuple("content-type");
@@ -263,42 +274,54 @@ static bool sHTTP_GET(const ZStreamW& w, const ZStreamR& r,
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Host_Std::Getter
+#pragma mark * Host_Std::HTTPer
 
-class Host_Std::Getter
+class Host_Std::HTTPer
 	{
 public:
-	Getter(Host_Std* iHost, const string& iURL, void* iNotifyData);
+	HTTPer(Host_Std* iHost, const string& iURL, ZMemoryBlock* iMB, void* iNotifyData);
 
 	void Start();
 	void Cancel();
 
 private:
 	void pRun();
-	static void spRun(Getter* iGetter);
+	static void spRun(HTTPer* iHTTPer);
 
 	string fURL;
 	void* fNotifyData;
 	Host_Std* fHost;
+	ZMemoryBlock fMB;
+	bool fIsPOST;
 	};
 
-Host_Std::Getter::Getter(Host_Std* iHost, const string& iURL, void* iNotifyData)
+Host_Std::HTTPer::HTTPer(Host_Std* iHost, const string& iURL, ZMemoryBlock* iMB, void* iNotifyData)
 :	fHost(iHost),
 	fURL(iURL),
 	fNotifyData(iNotifyData)
-	{}
+	{
+	if (iMB)
+		{
+		fMB = *iMB;
+		fIsPOST = true;
+		}
+	else
+		{
+		fIsPOST = false;
+		}
+	}
 
-void Host_Std::Getter::Start()
-	{ (new ZThreadSimple<Getter*>(spRun, this))->Start(); }
+void Host_Std::HTTPer::Start()
+	{ (new ZThreadSimple<HTTPer*>(spRun, this))->Start(); }
 
-void Host_Std::Getter::Cancel()
+void Host_Std::HTTPer::Cancel()
 	{
 	fHost = nil;
 	}
 
-void Host_Std::Getter::pRun()
+void Host_Std::HTTPer::pRun()
 	{
-	string theURL = fURL;	
+	string theURL = fURL;
 
 	for (bool keepGoing = true; keepGoing; /*no inc*/)
 		{
@@ -311,8 +334,8 @@ void Host_Std::Getter::pRun()
 			ZRef<ZNetEndpoint> theEndpoint = theNN->Connect(10);
 			if (!theEndpoint)
 				{
-				if (ZLOG(s, eDebug, "ZNetscape"))
-					s << "sGetter, couldn't connect to server";			
+				if (ZLOG(s, eDebug, "ZNetscape::Host_Std::HTTPer"))
+					s << "pRun, couldn't connect to server";
 				break;
 				}
 
@@ -320,11 +343,23 @@ void Host_Std::Getter::pRun()
 			ZTuple theHeaders;
 			ZMemoryBlock theRawHeaders;
 			string theMIME;
-			if (!sHTTP_GET(theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
-				theHostName, thePath,
-				theResponseCode, theRawHeaders, theHeaders, theMIME))
+			if (fIsPOST)
 				{
-				break;
+				if (!sHTTP(theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
+					theHostName, thePath, &fMB,
+					theResponseCode, theRawHeaders, theHeaders, theMIME))
+					{
+					break;
+					}
+				}
+			else
+				{
+				if (!sHTTP(theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
+					theHostName, thePath, nil,
+					theResponseCode, theRawHeaders, theHeaders, theMIME))
+					{
+					break;
+					}
 				}
 
 			switch (theResponseCode)
@@ -335,7 +370,8 @@ void Host_Std::Getter::pRun()
 					// encoded, and undo that encoding in the streamer we pass off.
 					if (fHost)
 						{
-						fHost->pGetterFinished(this, fNotifyData, theURL, theMIME, theRawHeaders, theEndpoint);
+						fHost->pHTTPerFinished(
+							this, fNotifyData, theURL, theMIME, theRawHeaders, theEndpoint);
 						}
 					return;
 					// 
@@ -344,13 +380,22 @@ void Host_Std::Getter::pRun()
 				case 302:
 				case 303:
 					{
-					string newURI = ZHTTP::sGetString0(theHeaders.GetValue("location"));
-					theURL = newURI;
+					if (fIsPOST)
+						{
+						keepGoing = false;
+						}
+					else
+						{
+						string newURI = ZHTTP::sGetString0(theHeaders.GetValue("location"));
+						theURL = newURI;
+						}
 					break;
 					}
 				default:
+					{
 					keepGoing = false;
 					break;
+					}
 				}
 			}
 		}
@@ -358,14 +403,15 @@ void Host_Std::Getter::pRun()
 	// This causes async delivery of an error.
 	if (fHost)
 		{
-		fHost->pGetterFinished(this, fNotifyData, theURL, "", ZMemoryBlock(), ZRef<ZStreamerRCon>());
+		fHost->pHTTPerFinished(
+			this, fNotifyData, theURL, "", ZMemoryBlock(), ZRef<ZStreamerRCon>());
 		}
 
 	delete this;
 	}
 
-void Host_Std::Getter::spRun(Getter* iGetter)
-	{ iGetter->pRun(); }
+void Host_Std::HTTPer::spRun(HTTPer* iHTTPer)
+	{ iHTTPer->pRun(); }
 
 // =================================================================================================
 #pragma mark -
@@ -378,70 +424,18 @@ Host_Std::Host_Std(ZRef<GuestFactory> iGuestFactory)
 Host_Std::~Host_Std()
 	{
 	ZMutexLocker locker(fMutex);
-	for (vector<Getter*>::iterator i = fGetters.begin(); i != fGetters.end(); ++i)
+	for (vector<HTTPer*>::iterator i = fHTTPers.begin(); i != fHTTPers.end(); ++i)
 		{
 		(*i)->Cancel();
 		}
 	}
 
-static bool sHTTP_POST(const ZStreamW& w, const ZStreamR& r,
-	const string& iHost, const string& iPath, const ZMemoryBlock& iData,
-	int& oResponseCode, ZMemoryBlock& oRawHeaders, ZTuple& oHeaders, string& oMIME)
-	{
-	w.WriteString("POST ");
-	w.WriteString(iPath);
-	w.WriteString(" HTTP/1.1\r\n");
-	w.WriteString("Host: ");
-	w.WriteString(iHost);
-	w.WriteString("\r\n");
-	w.Writef("Content-Length: %ld\r\n", iData.GetSize());
-	w.WriteString("Connection: close\r\n");
-	w.WriteString("\r\n");
-	w.Write(iData.GetData(), iData.GetSize());
-	w.Flush();
-
-	ZStreamRWPos_RAM theHeaderStream;
-	ZStreamR_Tee theStream_Tee(r, theHeaderStream);
-	ZMIME::StreamR_Header theSIH_Server(theStream_Tee);
-
-	string serverResultMessage;
-	if (!ZHTTP::sReadResponse(ZStreamU_Unreader(theSIH_Server),
-		&oResponseCode, &serverResultMessage))
-		{
-		return false;
-		}
-
-	if (!ZHTTP::sReadHeader(theSIH_Server, &oHeaders))
-		{
-		return false;
-		}
-
-	if (ZLOG(s, eDebug, "sHTTP_POST"))
-		{
-		s << "Server response, code: "
-			<< ZString::sFormat("%d", oResponseCode)
-			<< ", message: " << serverResultMessage
-			<< ", Headers: " << ZUtil_Strim_Tuple::Format(oHeaders, 1, ZUtil_Strim_Tuple::Options());
-		}
-
-	ZTuple theCT = oHeaders.GetTuple("content-type");
-	oMIME = theCT.GetString("type") + "/" + theCT.GetString("subtype");
-
-	// Zero-terminate the header data block.
-	theHeaderStream.WriteByte(0);
-	theHeaderStream.SetPosition(0);
-
-	ZStreamR_CRLFRemove(theHeaderStream).CopyAllTo(ZStreamRWPos_MemoryBlock(oRawHeaders));
-
-	return true;
-	}
-
-void Host_Std::pGetterFinished(Getter* iGetter, void* iNotifyData,
+void Host_Std::pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
 	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
 	ZRef<ZStreamerRCon> iStreamerRCon)
 	{
 	ZMutexLocker locker(fMutex);
-	ZUtil_STL::sEraseMustContain(1, fGetters, iGetter);
+	ZUtil_STL::sEraseMustContain(1, fHTTPers, iHTTPer);
 	this->SendDataAsync(iNotifyData, iURL, iMIME, iHeaders, iStreamerRCon);
 	}
 
@@ -458,8 +452,8 @@ NPError Host_Std::GetURLNotify(NPP npp,
 	if (URL == strstr(URL, "http:"))
 		{
 		ZMutexLocker locker(fMutex);
-		Getter* theG = new Getter(this, URL, notifyData);
-		fGetters.push_back(theG);
+		HTTPer* theG = new HTTPer(this, URL, nil, notifyData);
+		fHTTPers.push_back(theG);
 		theG->Start();
 		return NPERR_NO_ERROR;
 		}
@@ -467,68 +461,6 @@ NPError Host_Std::GetURLNotify(NPP npp,
 	return NPERR_INVALID_URL;
 	}
 
-struct Poster_t
-	{
-	string fURL;
-	void* fNotifyData;
-	Host_Std* fHost;
-	ZMemoryBlock fData;
-	};
-
-static void sPoster(Poster_t iPoster)
-	{
-	string theURL = iPoster.fURL;	
-
-	for (bool keepGoing = true; keepGoing; /*no inc*/)
-		{
-		string theHost;
-		ip_port thePort;
-		string thePath;
-		if (sParseURL(theURL, theHost, thePort, thePath))
-			{
-			ZRef<ZNetName_Internet> theNN = new ZNetName_Internet(theHost, thePort);
-			ZRef<ZNetEndpoint> theEndpoint = theNN->Connect(10);
-			if (!theEndpoint)
-				{
-				if (ZLOG(s, eDebug, "ZNetscape"))
-					s << "sGetter, couldn't connect to server";			
-				break;
-				}
-
-			int theResponseCode;
-			ZTuple theHeaders;
-			ZMemoryBlock theRawHeaders;
-			string theMIME;
-			if (!sHTTP_POST(theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
-				theHost, thePath, iPoster.fData,
-				theResponseCode, theRawHeaders, theHeaders, theMIME))
-				{
-				break;
-				}
-
-			switch (theResponseCode)
-				{
-				case 200:
-					{
-					// Will need to inspect it to see if it's chunked or otherwise
-					// encoded, and undo that encoding in the streamer we pass off.
-					iPoster.fHost->SendDataAsync(
-						iPoster.fNotifyData, theURL, theMIME, theRawHeaders, theEndpoint);
-					return;
-					// 
-					}
-				default:
-					// Hmm. How to handle redirects on return.
-					keepGoing = false;
-					break;
-				}
-			}
-		}
-
-	// This causes async delivery of an error.
-	iPoster.fHost->SendDataAsync(
-		iPoster.fNotifyData, theURL, "", ZMemoryBlock(), ZRef<ZStreamerRCon>());
-	}
 NPError Host_Std::PostURLNotify(NPP npp,
 	const char* URL, const char* window,
 	uint32 len, const char* buf, NPBool file, void* notifyData)
@@ -538,13 +470,10 @@ NPError Host_Std::PostURLNotify(NPP npp,
 
 	if (URL == strstr(URL, "http:"))
 		{
-		Poster_t theP;
-		theP.fURL = URL;
-		theP.fNotifyData = notifyData;
-		theP.fHost = this;
-		theP.fData = ZMemoryBlock(buf, len);
-		
-		(new ZThreadSimple<Poster_t>(sPoster, theP))->Start();
+		ZMemoryBlock theData(buf, len);
+		HTTPer* theG = new HTTPer(this, URL, &theData, notifyData);
+		fHTTPers.push_back(theG);
+		theG->Start();
 		return NPERR_NO_ERROR;
 		}
 
@@ -592,10 +521,6 @@ const char* Host_Std::UserAgent(NPP npp)
 		s.Writef("UserAgent");
 
 	return "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)";
-
-//	return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_4; en-us) AppleWebKit/525.18 (KHTML, like Gecko) Version/3.1.2 Safari/525.20.1";
-
-//    return "Mozilla/5.0 (Macintosh; U; PPC Mac OS X Mach-O; en-US; rv:1.8.1.9) Gecko/20071025 Firefox/2.0.0.9";
 	}
 
 NPError Host_Std::GetValue(NPP npp, NPNVariable variable, void* ret_value)

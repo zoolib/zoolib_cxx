@@ -160,15 +160,15 @@ public:
 	virtual bool RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName);
 
 private:
-	class Getter;
-	friend class Getter;
+	class HTTPer;
+	friend class HTTPer;
 
-	void pGetterFinished(Getter* iGetter, void* iNotifyData,
+	void pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
 		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
 		ZRef<ZStreamerRCon> iStreamerRCon);
 	
 	ZooLib::ZMutex fMutex;
-	std::vector<Getter*> fGetters;
+	std::vector<HTTPer*> fHTTPers;
 	};
 
 } // namespace ZNetscape
