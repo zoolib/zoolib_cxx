@@ -217,6 +217,7 @@ public:
 		const ZStreamR& iStreamR);
 
 	void HostActivate(bool iActivate);
+	void HostEvent(const EventRecord& iEvent);
 	void HostIdle();
 	void HostDeliverData();
 	void HostDraw();

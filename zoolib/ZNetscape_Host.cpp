@@ -499,6 +499,12 @@ void Host::HostActivate(bool iActivate)
 	NPError theErr = fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
 	}
 
+void Host::HostEvent(const EventRecord& iEvent)
+	{
+	EventRecord localEvent = iEvent;
+	NPError theErr = fNPPluginFuncs.event(&fNPP_t, &localEvent);
+	}
+
 void Host::HostIdle()
 	{
 	EventRecord fakeEvent;
