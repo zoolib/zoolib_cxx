@@ -44,9 +44,12 @@ public:
 
 // From ZBlackBerry::Device
 	virtual void Stop();
-	virtual ZRef<Channel> Open(
+
+	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError);
+
 	virtual ZMemoryBlock GetAttribute(uint16 iObject, uint16 iAttribute);
+
 	virtual uint32 GetPIN();
 
 // From ZStreamReader via ZCommer	
@@ -84,6 +87,7 @@ private:
 
 	class StreamW_Chunked;
 	bool pSend(StreamW_Chunked& iSC, uint16 iChannelID, const ZStreamW& iStreamW);
+	bool pSendFunky(uint16 iLength, const ZStreamW& iStreamW);
 	void pFlush(const ZStreamW& iStreamW);
 
 	ZMutex fMutex;

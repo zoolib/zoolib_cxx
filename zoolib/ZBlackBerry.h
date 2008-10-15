@@ -109,11 +109,16 @@ public:
 		error_UnknownChannel,
 		error_PasswordNeeded,
 		error_PasswordExhausted,
-		error_PasswordIncorrect
+		error_PasswordIncorrect,
+		error_Generic
 		};
 
 	virtual ZRef<Channel> Open(
+		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError);
+
+	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError) = 0;
+
 	virtual ZMemoryBlock GetAttribute(uint16 iObject, uint16 iAttribute) = 0;
 	virtual uint32 GetPIN();
 

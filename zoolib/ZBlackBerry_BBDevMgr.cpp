@@ -52,8 +52,8 @@ public:
 	typedef ZBlackBerryCOM::ChannelParams ChannelParams;
 	typedef ZBlackBerryCOM::IChannelEvents IChannelEvents;
 
-	Channel_BBDevMgr(ZRef<Channel_BBDevMgr>& oChannel,
-		IDevice* iDevice, const string& iName, const PasswordHash* iPasswordHash);
+	Channel_BBDevMgr(ZRef<Channel_BBDevMgr>& oChannel, IDevice* iDevice,
+		bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash);
 
 	virtual ~Channel_BBDevMgr();
 
@@ -117,8 +117,8 @@ private:
 	bool fClosed;
 	};
 
-Channel_BBDevMgr::Channel_BBDevMgr(ZRef<Channel_BBDevMgr>& oChannel,
-	IDevice* iDevice, const string& iName, const PasswordHash* iPasswordHash)
+Channel_BBDevMgr::Channel_BBDevMgr(ZRef<Channel_BBDevMgr>& oChannel, IDevice* iDevice,
+	bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash)
 :	fChannel(nil),
 	fStart(0),
 	fEnd(0),
@@ -505,7 +505,7 @@ public:
 	virtual ~Device_BBDevMgr();
 
 // From ZBlackBerry::Device
-	virtual ZRef<Channel> Open(
+	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const string& iName, const PasswordHash* iPasswordHash, Error* oError);
 	virtual ZMemoryBlock GetAttribute(uint16 iObject, uint16 iAttribute);
 	virtual uint32 GetPIN();
@@ -535,36 +535,44 @@ Device_BBDevMgr::~Device_BBDevMgr()
 		fDevice->Release();
 	}
 
-ZRef<Channel> Device_BBDevMgr::Open(
+ZRef<Channel> Device_BBDevMgr::Open(bool iPreserveBoundaries,
 	const string& iName, const PasswordHash* iPasswordHash, Error* oError)
 	{
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Device_BBDevMgr"))
 		s << "Open, iName: " << iName;
 
-	if (IDevice* theDevice = this->pUseDevice())
+	if (iPreserveBoundaries)
 		{
-		// theChannel's refcount is manipulated by both COM and ZRef. When created it is zero,
-		// and in the ZRef scheme is not incremented to one until it is first assigned to a
-		// ZRef<>. The process of opening a channel, and failing, will AddRef and Release
-		// theChannel, and it will be Finalized and thus disposed. So we pass a reference to a
-		// ZRef to the constructor, to which the constructor assigns 'this', extending the
-		// lifetime appropriately.
-		ZRef<Channel_BBDevMgr> theChannel;
-		new Channel_BBDevMgr(theChannel, theDevice, iName, iPasswordHash);
-		theDevice->Release();
-
-		if (theChannel->IsOkay())
-			return theChannel;
-
-		// FIXME. Failure may also be due to a bad/missing/expired password.
-		#warning NDY
 		if (oError)
-			*oError = error_UnknownChannel;
+			*oError = error_Generic;
 		}
 	else
 		{
-		if (oError)
-			*oError = error_DeviceClosed;
+		if (IDevice* theDevice = this->pUseDevice())
+			{
+			// theChannel's refcount is manipulated by both COM and ZRef. When created it is zero,
+			// and in the ZRef scheme is not incremented to one until it is first assigned to a
+			// ZRef<>. The process of opening a channel, and failing, will AddRef and Release
+			// theChannel, and it will be Finalized and thus disposed. So we pass a reference to a
+			// ZRef to the constructor, to which the constructor assigns 'this', extending the
+			// lifetime appropriately.
+			ZRef<Channel_BBDevMgr> theChannel;
+			new Channel_BBDevMgr(theChannel, theDevice, iPreserveBoundaries, iName, iPasswordHash);
+			theDevice->Release();
+
+			if (theChannel->IsOkay())
+				return theChannel;
+
+			// FIXME. Failure may also be due to a bad/missing/expired password.
+			#warning NDY
+			if (oError)
+				*oError = error_UnknownChannel;
+			}
+		else
+			{
+			if (oError)
+				*oError = error_DeviceClosed;
+			}
 		}
 
 	return ZRef<Channel>();

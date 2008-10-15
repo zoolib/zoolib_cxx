@@ -35,7 +35,7 @@ namespace ZBlackBerry {
 class Channel_Client : public Channel
 	{
 public:
-	Channel_Client(ZRef<ZStreamerRWCon> iSRWCon);
+	Channel_Client(ZRef<ZStreamerRWCon> iSRWCon, size_t iIdealReadSize, size_t iIdealWriteSize);
 	virtual ~Channel_Client();
 
 // From ZStreamerRCon via Channel
@@ -44,12 +44,21 @@ public:
 // From ZStreamerWCon via Channel
 	virtual const ZStreamWCon& GetStreamWCon();
 
+// From Channel
+	virtual size_t GetIdealSize_Read();
+	virtual size_t GetIdealSize_Write();
+
 private:
 	ZRef<ZStreamerRWCon> fSRWCon;
+	size_t fIdealReadSize;
+	size_t fIdealWriteSize;
 	};
 
-Channel_Client::Channel_Client(ZRef<ZStreamerRWCon> iSRWCon)
-:	fSRWCon(iSRWCon)
+Channel_Client::Channel_Client(
+	ZRef<ZStreamerRWCon> iSRWCon, size_t iIdealReadSize, size_t iIdealWriteSize)
+:	fSRWCon(iSRWCon),
+	fIdealReadSize(fIdealReadSize),
+	fIdealWriteSize(fIdealWriteSize)
 	{}
 	
 Channel_Client::~Channel_Client()
@@ -60,6 +69,12 @@ const ZStreamRCon& Channel_Client::GetStreamRCon()
 
 const ZStreamWCon& Channel_Client::GetStreamWCon()
 	{ return fSRWCon->GetStreamWCon(); }
+
+size_t Channel_Client::GetIdealSize_Read()
+	{ return fIdealReadSize; }
+
+size_t Channel_Client::GetIdealSize_Write()
+	{ return fIdealWriteSize; }
 
 // =================================================================================================
 #pragma mark -
@@ -78,7 +93,7 @@ public:
 // From Device
 	virtual void Stop();
 
-	virtual ZRef<Channel> Open(
+	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const string& iName, const PasswordHash* iPasswordHash, Error* oError);
 	virtual ZMemoryBlock GetAttribute(uint16 iObject, uint16 iAttribute);
 	virtual uint32 GetPIN();
@@ -125,7 +140,7 @@ void Device_Client::Stop()
 	this->Wake();
 	}
 
-ZRef<Channel> Device_Client::Open(
+ZRef<Channel> Device_Client::Open(bool iPreserveBoundaries,
 	const string& iName, const PasswordHash* iPasswordHash, Error* oError)
 	{
 	try
@@ -133,8 +148,10 @@ ZRef<Channel> Device_Client::Open(
 		if (ZRef<ZStreamerRWCon> theSRWCon = fFactory->MakeStreamerRWCon())
 			{
 			const ZStreamW& w = theSRWCon->GetStreamW();
-			w.WriteUInt8(3);
+			w.WriteUInt8(6);
 			w.WriteUInt64(fDeviceID);
+			w.WriteBool(iPreserveBoundaries);
+
 			if (iPasswordHash)
 				{
 				w.WriteBool(true);
@@ -144,18 +161,22 @@ ZRef<Channel> Device_Client::Open(
 				{
 				w.WriteBool(false);
 				}
+
 			sWriteString(w, iName);
+
 			w.Flush();
 
 			const ZStreamR& r = theSRWCon->GetStreamR();
 
-			Error theError = static_cast<Error>(r.ReadUInt32());
+			const Error theError = static_cast<Error>(r.ReadUInt32());
+			const size_t idealReadSize = r.ReadUInt32();
+			const size_t idealWriteSize = r.ReadUInt32();
 
 			if (oError)
 				*oError = theError;
 
 			if (theError == error_None)
-				return new Channel_Client(theSRWCon);
+				return new Channel_Client(theSRWCon, idealReadSize, idealWriteSize);
 			}
 		}
 	catch (...)

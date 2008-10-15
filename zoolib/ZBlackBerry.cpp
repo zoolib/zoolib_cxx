@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h"
 
 using std::set;
+using std::string;
 
 /**
 These are some brief notes to get you started. If anything is unclear, drop me a line at ag@em.net.
@@ -59,7 +60,7 @@ void Sample()
 	{
 	using namespace ZBlackBerry;
 
-	// Instantiate the Manager. On Windws you would create a Manager_BBDevMgr.
+	// Instantiate the Manager. On Windows you would create a Manager_BBDevMgr.
 	// If you're using BBDaemon you'd create a Manager_Client, passing a
 	// ZStreamerRWConFactory that will open connections to the
 	// appropriate TCP address.
@@ -334,6 +335,22 @@ void Device::Finalize()
 		s << "Finalize, deleted";
 	}
 
+void Device::Start()
+	{
+	ZMutexLocker locker(fMutex);
+	++fStartCount;
+	fCondition.Broadcast();
+	}
+
+void Device::Stop()
+	{
+	this->pFinished();
+	}
+
+ZRef<Channel> Device::Open(
+	const string& iName, const PasswordHash* iPasswordHash, Error* oError)
+	{ return this->Open(false, iName, iPasswordHash, oError); }
+
 uint32 Device::GetPIN()
 	{
 	return 0;
@@ -351,18 +368,6 @@ void Device::ObserverRemove(Observer* iObserver)
 	{
 	ZMutexLocker locker(fMutex);
 	ZUtil_STL::sEraseMustContain(1, fObservers, iObserver);
-	}
-
-void Device::Start()
-	{
-	ZMutexLocker locker(fMutex);
-	++fStartCount;
-	fCondition.Broadcast();
-	}
-
-void Device::Stop()
-	{
-	this->pFinished();
 	}
 
 void Device::pFinished()

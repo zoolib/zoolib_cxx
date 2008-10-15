@@ -358,10 +358,11 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 		const string channelName = sReadString(r);
 
 		ZBlackBerry::Device::Error theError = ZBlackBerry::Device::error_DeviceClosed;
+
 		if (ZRef<ZBlackBerry::Device> theDevice = this->pGetDevice(deviceID))
 			{
-			if (ZRef<ZBlackBerry::Channel> deviceCon =
-				theDevice->Open(channelName, gotHash ? &thePasswordHash : nil, &theError))
+			if (ZRef<ZBlackBerry::Channel> deviceCon = theDevice->Open(false,
+				channelName, gotHash ? &thePasswordHash : nil, &theError))
 				{
 				w.WriteUInt32(ZBlackBerry::Device::error_None);
 				const size_t readSize = deviceCon->GetIdealSize_Read();
@@ -407,6 +408,42 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 			{
 			w.WriteBool(false);
 			}
+		}
+	else if (req == 6)
+		{
+		// Open channel
+		const uint64 deviceID = r.ReadUInt64();
+
+		const bool preserveBoundaries = r.ReadBool();
+
+		const bool gotHash = r.ReadBool();
+		ZBlackBerry::PasswordHash thePasswordHash;
+		if (gotHash)
+			r.Read(&thePasswordHash, sizeof(thePasswordHash));
+
+		const string channelName = sReadString(r);
+
+		ZBlackBerry::Device::Error theError = ZBlackBerry::Device::error_DeviceClosed;
+
+		if (ZRef<ZBlackBerry::Device> theDevice = this->pGetDevice(deviceID))
+			{
+			if (ZRef<ZBlackBerry::Channel> deviceCon = theDevice->Open(preserveBoundaries,
+				channelName, gotHash ? &thePasswordHash : nil, &theError))
+				{
+				const size_t readSize = deviceCon->GetIdealSize_Read();
+				const size_t writeSize = deviceCon->GetIdealSize_Write();
+				w.WriteUInt32(ZBlackBerry::Device::error_None);
+				w.WriteUInt32(readSize);
+				w.WriteUInt32(writeSize);
+				w.Flush();
+				sStartReaderRunner(new ZStreamCopier(iSRWCon, readSize), deviceCon);
+				sStartReaderRunner(new ZStreamCopier(deviceCon, writeSize), iSRWCon);
+				return;
+				}
+			}
+
+		ZAssert(theError != ZBlackBerry::Device::error_None);
+		w.WriteUInt32(theError);
 		}
 	}
 

@@ -191,8 +191,8 @@ class Channel_Streamer
 	private ZStreamWCon
 	{
 	friend class Device_Streamer;
-	Channel_Streamer(
-		Device_Streamer* iDevice_Streamer, const string& iName, const PasswordHash* iPasswordHash);
+	Channel_Streamer(Device_Streamer* iDevice_Streamer,
+		bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash);
 
 public:
 	virtual ~Channel_Streamer();
@@ -231,6 +231,7 @@ private:
 	ZPtrUseCounted_T<Device_Streamer> fPUC_Device_Streamer;
 	EState fState;
 	Device::Error fError;
+	bool fPreserveBoundaries;
 	string fName;
 	bool fHasPasswordHash;
 	PasswordHash fPasswordHash;
@@ -249,11 +250,12 @@ private:
 	size_t fSend_Size;
 	};
 
-Channel_Streamer::Channel_Streamer(
-	Device_Streamer* iDevice_Streamer, const string& iName, const PasswordHash* iPasswordHash)
+Channel_Streamer::Channel_Streamer(Device_Streamer* iDevice_Streamer,
+	bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash)
 :	fPUC_Device_Streamer(iDevice_Streamer),
 	fState(eState_Dead),
 	fError(Device::error_None),
+	fPreserveBoundaries(iPreserveBoundaries),
 	fName(iName),
 	fHasPasswordHash(0 != iPasswordHash),
 	fChannelID(0),
@@ -428,7 +430,7 @@ void Device_Streamer::Stop()
 		s << "Stop, Exit";
 	}
 
-ZRef<Channel> Device_Streamer::Open(
+ZRef<Channel> Device_Streamer::Open(bool iPreserveBoundaries,
 	const string& iName, const PasswordHash* iPasswordHash, Error* oError)
 	{
 	ZMutexLocker locker(fMutex);
@@ -438,7 +440,8 @@ ZRef<Channel> Device_Streamer::Open(
 
 	if (fLifecycle == eLifecycle_Running)
 		{
-		ZRef<Channel_Streamer> theChannel = new Channel_Streamer(this, iName, iPasswordHash);
+		ZRef<Channel_Streamer> theChannel
+			= new Channel_Streamer(this, iPreserveBoundaries, iName, iPasswordHash);
 		fChannels.push_back(theChannel.GetObject());
 		theChannel->fState = eState_LookupNeeded;
 
@@ -954,6 +957,14 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 		if (ZRef<Channel_Streamer> theChannel = this->pFindChannel(iChannelID))
 			{
 			deque<uint8>& theBuffer = theChannel->fReceive_Buffer;
+			if (theChannel->fPreserveBoundaries)
+				{
+				// We're using little-endian notation here, as
+				// that's the standard BlackBerry generally uses.
+				theBuffer.insert(theBuffer.end(), iPayloadSize);
+				theBuffer.insert(theBuffer.end(), iPayloadSize >> 8);
+				}
+				
 			theBuffer.insert(theBuffer.end(), readBuffer.begin(), readBuffer.end());
 			theChannel->fCondition_Receive.Broadcast();
 			}
@@ -965,7 +976,6 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					iChannelID, iPayloadSize);
 				}
 			}
-		
 		}
 	else
 		{
@@ -1344,17 +1354,29 @@ bool Device_Streamer::pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iCha
 			if (iChannel->fWaitingForSequence)
 				return false;
 
-			iChannel->fWaitingForSequence = true;
 
-			StreamW_Chunked w;
+			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
+				{
+				s << "pWriteOne, Data";
+				}
 
 			size_t countToWrite = min(iChannel->fSend_ChunkSize, iChannel->fSend_Size);
-			// BB seems to be unable to receive a data packet that is an
-			// exact multiple of 64 bytes in length, so drop the last byte
-			// and let the caller requeue the remainder.
-			if (0 == ((countToWrite + 4) % 0x40))
-				countToWrite -= 1;
 
+			// If the physical amount written is a multiple of 64 bytes we need to send
+			// a funky three byte packet. It is virtually certain that we're running over
+			// a USB channel, so the boundary of the write will be known to the receiver
+			// and although a regular stream won't be able to detect this weirdness, a BB
+			// will. Perhaps this should be a parameterizable behavior.
+			if (0 == ((countToWrite + 4) % 0x40))
+				{
+				if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
+					s << "pWriteOne, Sending funky";
+
+				if (!this->pSendFunky(countToWrite + 4, iStreamW))
+					return false;
+				}
+
+			StreamW_Chunked w;
 			size_t countWritten;
 			w.Write(iChannel->fSend_Data, countToWrite, &countWritten);
 
@@ -1362,10 +1384,7 @@ bool Device_Streamer::pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iCha
 			iChannel->fSend_Size = 0;
 			iChannel->fCondition_Send.Broadcast();
 
-			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
-				{
-				s << "pWriteOne, Data";
-				}
+			iChannel->fWaitingForSequence = true;
 
 			return this->pSend(w, iChannel->fChannelID, iStreamW);
 			}
@@ -1436,6 +1455,23 @@ bool Device_Streamer::pSend(StreamW_Chunked& iSC, uint16 iChannelID, const ZStre
 	fLifecycle = eLifecycle_StreamsDead;
 // Should we return false here?
 	return false;
+	}
+
+bool Device_Streamer::pSendFunky(uint16 iLength, const ZStreamW& iStreamW)
+	{
+	ZAssert(0 == (iLength % 0x40));
+	const uint8 buffer[3] = { iLength, iLength >> 8, 0 };
+
+	fMutex.Release();
+	size_t countWritten;
+	iStreamW.Write(buffer, 3, &countWritten);
+	fMutex.Acquire();
+	
+	if (countWritten == 3)
+		return true;
+
+	fLifecycle = eLifecycle_StreamsDead;
+	return false;	
 	}
 
 void Device_Streamer::pFlush(const ZStreamW& iStreamW)
