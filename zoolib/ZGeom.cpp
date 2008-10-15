@@ -45,14 +45,3 @@ const ZGRect_T<float> c(ZooLib::ZPoint(1, 2), 3, 4);
 const ZGRect_T<float> d(1, 2, ZooLib::ZPoint(3, 4));
 const ZGRect_T<float> e(ZooLib::ZPoint(1, 2), ZooLib::ZPoint(3, 4));
 const ZGRect_T<float> f(a);
-
-static void test()
-	{
-	ZGRectf theR;
-	ZPoint theP(0);
-	theR = theP;
-	ZGRectf theR2 = ::CGRectMake(0, 0, 0, 0);
-	ZGRectf theR3 = ::CGSizeMake(0, 0);
-//	ZGRectf theR4 = ::CGPointMake(0, 0);
-	CGRect theCGRect = theR2;
-	}
