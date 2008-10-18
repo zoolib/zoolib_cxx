@@ -29,10 +29,54 @@ namespace ZNetscape {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Helper functions
+
+static void* sLookup(NSModule iModule, const char* iName)
+	{
+	if (NSSymbol theSymbol = ::NSLookupSymbolInModule(iModule, iName))
+		return ::NSAddressOfSymbol(theSymbol);
+	return nil;
+	}
+
+static NSModule sLoadNSModule(CFBundleRef iBundleRef)
+	{
+	NSModule module = nil;
+
+	if (CFURLRef executableURL = ::CFBundleCopyExecutableURL(iBundleRef))
+		{
+		char buff[PATH_MAX];
+
+		if (::CFURLGetFileSystemRepresentation(executableURL, true, (UInt8*)buff, PATH_MAX))
+			{
+			NSObjectFileImage image;
+			if (NSObjectFileImageSuccess == ::NSCreateObjectFileImageFromFile(buff, &image))
+				{
+				module = ::NSLinkModule(
+					image, buff,
+					NSLINKMODULE_OPTION_BINDNOW
+					| NSLINKMODULE_OPTION_PRIVATE
+					| NSLINKMODULE_OPTION_RETURN_ON_ERROR);
+				}
+			}
+		::CFRelease(executableURL);
+		}
+
+	return module;
+	}
+
+template <typename P>
+P sInvoke_T(NSModule iNSModule, const char* iName)
+	{
+	return reinterpret_cast<P>(sLookup(iNSModule, iName));
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * GuestFactory_MacPlugin
 
 GuestFactory_MacPlugin::GuestFactory_MacPlugin(const std::string& iPath)
-:	fPlugInRef(nil)
+:	fPlugInRef(nil),
+	fNSModule(nil)
 	{
 	CFStringRef thePath = ::CFStringCreateWithCString(nil, iPath.c_str(), kCFStringEncodingUTF8);
 	if (thePath)
@@ -45,21 +89,14 @@ GuestFactory_MacPlugin::GuestFactory_MacPlugin(const std::string& iPath)
 			fPlugInRef = ::CFPlugInCreate(nil, theURL);
 			if (fPlugInRef)
 				{
-				if (ZLOG(s, eDebug, "GuestFactory_MacPlugin"))
-					{
-					s.Writef("ctor, fPlugInRef refcount = %d",
-						::CFGetRetainCount(fPlugInRef));
-					}
+				fNSModule = sLoadNSModule(::CFPlugInGetBundle(fPlugInRef));
 
-				CFBundleRef theBundleRef = ::CFPlugInGetBundle(fPlugInRef);
 				NPNetscapeFuncs theNPNetscapeFuncs;
 				this->GetNPNetscapeFuncs(theNPNetscapeFuncs);
-				
-				NP_InitializeFuncPtr theInitialize = (NP_InitializeFuncPtr)
-					::CFBundleGetFunctionPointerForName(
-					theBundleRef, CFSTR("NP_Initialize"));
 
-				theInitialize(&theNPNetscapeFuncs);
+				sInvoke_T<NP_InitializeFuncPtr>
+					(fNSModule, "_NP_Initialize")
+					(&theNPNetscapeFuncs);
 				}
 			}
 		}
@@ -70,33 +107,18 @@ GuestFactory_MacPlugin::GuestFactory_MacPlugin(const std::string& iPath)
 
 GuestFactory_MacPlugin::~GuestFactory_MacPlugin()
 	{
-	CFBundleRef theBundleRef = ::CFPlugInGetBundle(fPlugInRef);
+	sInvoke_T<NPP_ShutdownProcPtr>
+		(fNSModule, "_NP_Shutdown")();
 
-	NPP_ShutdownProcPtr theShutdown =
-		(NPP_ShutdownProcPtr)
-		::CFBundleGetFunctionPointerForName(
-		theBundleRef, CFSTR("NP_Shutdown"));
-
-	theShutdown();
-
-	if (ZLOG(s, eDebug, "GuestFactory_MacPlugin"))
-		{
-		s.Writef("dtor, fPlugInRef refcount = %d",
-			::CFGetRetainCount(fPlugInRef));
-		}
-
+	::NSUnLinkModule(fNSModule, NSUNLINKMODULE_OPTION_NONE);
 	::CFRelease(fPlugInRef);
 	}
 
 void GuestFactory_MacPlugin::GetEntryPoints(NPPluginFuncs& oNPPluginFuncs)
 	{
-	CFBundleRef theBundleRef = ::CFPlugInGetBundle(fPlugInRef);
-
-	NP_GetEntryPointsFuncPtr theGetEntryPoints = (NP_GetEntryPointsFuncPtr)
-		::CFBundleGetFunctionPointerForName(
-		theBundleRef, CFSTR("NP_GetEntryPoints"));
-
-	theGetEntryPoints(&oNPPluginFuncs);
+	sInvoke_T<NP_GetEntryPointsFuncPtr>
+		(fNSModule, "_NP_GetEntryPoints")
+		(&oNPPluginFuncs);
 	}
 
 } // namespace ZNetscape

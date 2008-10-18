@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_Host.h"
 
+#include <mach-o/dyld.h> // For NSModule
+
 #include <string>
 
 namespace ZNetscape {
@@ -46,10 +48,11 @@ public:
 
 private:
 	CFPlugInRef fPlugInRef;
+	NSModule fNSModule;
 	};
 
 } // namespace ZNetscape
 
-#endif  //ZCONFIG_SPI_Enabled(MacOSX)
+#endif // ZCONFIG_SPI_Enabled(MacOSX)
 
 #endif // __ZNetscape_GuestFactory_MacPlugin__
