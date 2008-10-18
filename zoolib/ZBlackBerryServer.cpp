@@ -258,6 +258,74 @@ void ZBlackBerryServer::Handler_DeviceFinished::TripIt()
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * StreamCopier_Chunked
+
+namespace ZANONYMOUS {
+
+class StreamCopier_Chunked : public ZStreamReader
+	{
+public:
+	StreamCopier_Chunked(ZRef<ZStreamerWCon> iStreamerWCon);
+
+	~StreamCopier_Chunked();
+
+// From ZStreamReader
+	virtual bool Read(const ZStreamR& iStreamR);
+
+	virtual void RunnerDetached(ZStreamReaderRunner* iRunner);
+
+private:
+	ZRef<ZStreamerWCon> fStreamerWCon;
+	};
+
+StreamCopier_Chunked::StreamCopier_Chunked(ZRef<ZStreamerWCon> iStreamerWCon)
+:	fStreamerWCon(iStreamerWCon)
+	{}
+
+StreamCopier_Chunked::~StreamCopier_Chunked()
+	{}
+
+bool StreamCopier_Chunked::Read(const ZStreamR& iStreamR)
+	{
+	const ZStreamWCon& w = fStreamerWCon->GetStreamWCon();
+
+	try
+		{
+		const size_t theSize = iStreamR.ReadUInt16LE();
+
+		if (theSize == 0)
+			{
+			// End of stream
+			w.SendDisconnect();
+			return false;
+			}
+		else
+			{
+			std::vector<char> buffer(theSize);
+
+			iStreamR.Read(&buffer[0], theSize);
+			w.Write(&buffer[0], theSize);
+
+			return true;
+			}
+		}
+	catch (...)
+		{
+		w.SendDisconnect();
+		throw;
+		}
+	}
+
+void StreamCopier_Chunked::RunnerDetached(ZStreamReaderRunner* iRunner)
+	{
+	fStreamerWCon->GetStreamWCon().SendDisconnect();
+	delete this;
+	}
+
+} // anonymous namespace
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZBlackBerryServer
 
 static string sReadString(const ZStreamR& r)
@@ -345,37 +413,6 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 			w.WriteBool(false);
 			}
 		}
-	else if (req == 3)
-		{
-		// Open channel
-		const uint64 deviceID = r.ReadUInt64();
-
-		const bool gotHash = r.ReadBool();
-		ZBlackBerry::PasswordHash thePasswordHash;
-		if (gotHash)
-			r.Read(&thePasswordHash, sizeof(thePasswordHash));
-
-		const string channelName = sReadString(r);
-
-		ZBlackBerry::Device::Error theError = ZBlackBerry::Device::error_DeviceClosed;
-
-		if (ZRef<ZBlackBerry::Device> theDevice = this->pGetDevice(deviceID))
-			{
-			if (ZRef<ZBlackBerry::Channel> deviceCon = theDevice->Open(false,
-				channelName, gotHash ? &thePasswordHash : nil, &theError))
-				{
-				w.WriteUInt32(ZBlackBerry::Device::error_None);
-				const size_t readSize = deviceCon->GetIdealSize_Read();
-				const size_t writeSize = deviceCon->GetIdealSize_Write();
-				sStartReaderRunner(new ZStreamCopier(iSRWCon, readSize), deviceCon);
-				sStartReaderRunner(new ZStreamCopier(deviceCon, writeSize), iSRWCon);
-				return;
-				}
-			}
-
-		ZAssert(theError != ZBlackBerry::Device::error_None);
-		w.WriteUInt32(theError);
-		}
 	else if (req == 4)
 		{
 		// Synchronous get attribute
@@ -436,8 +473,12 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 				w.WriteUInt32(readSize);
 				w.WriteUInt32(writeSize);
 				w.Flush();
+				// Use a standard copier for the device-->client direction
 				sStartReaderRunner(new ZStreamCopier(iSRWCon, readSize), deviceCon);
-				sStartReaderRunner(new ZStreamCopier(deviceCon, writeSize), iSRWCon);
+
+				// And our specialized copier for the client-->device direction.
+				sStartReaderRunner(new StreamCopier_Chunked(deviceCon), iSRWCon);
+
 				return;
 				}
 			}

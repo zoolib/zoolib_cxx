@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZLog.h"
 
+using std::min;
 using std::runtime_error;
 using std::string;
 using std::vector;
@@ -32,21 +33,34 @@ namespace ZBlackBerry {
 #pragma mark -
 #pragma mark * Channel_Client
 
-class Channel_Client : public Channel
+class Channel_Client
+:	public Channel,
+	private ZStreamWCon
 	{
 public:
 	Channel_Client(ZRef<ZStreamerRWCon> iSRWCon, size_t iIdealReadSize, size_t iIdealWriteSize);
 	virtual ~Channel_Client();
 
-// From ZStreamerRCon via Channel
-	virtual const ZStreamRCon& GetStreamRCon();
-
-// From ZStreamerWCon via Channel
-	virtual const ZStreamWCon& GetStreamWCon();
-
-// From Channel
+// From ZBlackBerry::Channel
 	virtual size_t GetIdealSize_Read();
 	virtual size_t GetIdealSize_Write();
+
+// From ZStreamerR via ZStreamerRWCon
+	virtual const ZStreamRCon& GetStreamRCon();
+
+// From ZStreamerW via ZStreamerRWCon
+	virtual const ZStreamWCon& GetStreamWCon();
+
+private:
+// From ZStreamW via ZStreamWCon
+	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
+	virtual void Imp_Flush();
+
+// From ZStreamWCon
+	virtual void Imp_SendDisconnect();
+
+// From ZStreamWCon
+	virtual void Imp_Abort();
 
 private:
 	ZRef<ZStreamerRWCon> fSRWCon;
@@ -64,17 +78,48 @@ Channel_Client::Channel_Client(
 Channel_Client::~Channel_Client()
 	{}
 
-const ZStreamRCon& Channel_Client::GetStreamRCon()
-	{ return fSRWCon->GetStreamRCon(); }
-
-const ZStreamWCon& Channel_Client::GetStreamWCon()
-	{ return fSRWCon->GetStreamWCon(); }
-
 size_t Channel_Client::GetIdealSize_Read()
 	{ return fIdealReadSize; }
 
 size_t Channel_Client::GetIdealSize_Write()
 	{ return fIdealWriteSize; }
+
+const ZStreamRCon& Channel_Client::GetStreamRCon()
+	{ return fSRWCon->GetStreamRCon(); }
+
+const ZStreamWCon& Channel_Client::GetStreamWCon()
+	{ return *this; }
+
+void Channel_Client::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+	{
+	if (size_t countToWrite = min(iCount, size_t(0xFFFFU)))
+		{
+		const ZStreamW& w = fSRWCon->GetStreamW();
+		w.WriteUInt16LE(countToWrite);
+
+		// We rely on ZStreamW::Write's behavior that it will push out
+		// everything we pass to it by repeatedly invoking Imp_Write if
+		// necessary. If countWritten is less than countToWrite then
+		// the stream must have closed, and next time round we'll get zero written.
+		w.Write(iSource, countToWrite, oCountWritten);
+		}
+	else if (oCountWritten)
+		{
+		*oCountWritten = 0;
+		}
+	}
+
+void Channel_Client::Imp_Flush()
+	{ fSRWCon->GetStreamWCon().Flush(); }
+
+void Channel_Client::Imp_SendDisconnect()
+	{
+	// Hmm. Send zero-sized chunk?
+	fSRWCon->GetStreamWCon().SendDisconnect();
+	}
+
+void Channel_Client::Imp_Abort()
+	{ fSRWCon->GetStreamWCon().Abort(); }
 
 // =================================================================================================
 #pragma mark -
