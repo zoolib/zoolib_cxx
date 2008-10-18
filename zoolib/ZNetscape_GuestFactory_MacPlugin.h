@@ -44,6 +44,7 @@ public:
 
 	virtual void GetEntryPoints(NPPluginFuncs& oNPPluginFuncs);
 
+private:
 	CFPlugInRef fPlugInRef;
 	};
 
