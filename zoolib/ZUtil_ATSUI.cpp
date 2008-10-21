@@ -41,7 +41,6 @@ ATSUStyle ZUtil_ATSUI::sAsATSUStyle(const ZDCFont& iFont, float iFontSize)
 		atsuSize = iFontSize * 65536.0;
 
     ATSUFontID theATSUFontID;
-	// find the font ID
 	string fontName = iFont.GetName();
 	if (noErr != ::ATSUFindFontFromName((char*)fontName.data(), fontName.size(),
 		kFontFullName, kFontMacintoshPlatform,
@@ -50,19 +49,26 @@ ATSUStyle ZUtil_ATSUI::sAsATSUStyle(const ZDCFont& iFont, float iFontSize)
 		return nil;
 		}
 
-	// Three parallel arrays for setting up attributes.
 	const Boolean trueV = true;
-	const Boolean falseV = false;
 	Attributes theAttributes;
 	theAttributes.Add_T(kATSUFontTag, theATSUFontID);
 	theAttributes.Add_T(kATSUSizeTag, atsuSize);
-	theAttributes.Add_T(kATSUQDBoldfaceTag, theStyle & ZDCFont::bold ? trueV : falseV);
-	theAttributes.Add_T(kATSUQDItalicTag, theStyle & ZDCFont::italic ? trueV : falseV);
-	theAttributes.Add_T(kATSUQDUnderlineTag, theStyle & ZDCFont::underline ? trueV : falseV);
-	theAttributes.Add_T(kATSUQDCondensedTag, theStyle & ZDCFont::condense ? trueV : falseV);
-	theAttributes.Add_T(kATSUQDExtendedTag, theStyle & ZDCFont::extend ? trueV : falseV);
 
-	// create a style
+	if (theStyle & ZDCFont::bold)
+		theAttributes.Add_T(kATSUQDBoldfaceTag, trueV);
+
+	if (theStyle & ZDCFont::italic)
+		theAttributes.Add_T(kATSUQDItalicTag, trueV);
+
+	if (theStyle & ZDCFont::underline)
+		theAttributes.Add_T(kATSUQDUnderlineTag, trueV);
+
+	if (theStyle & ZDCFont::condense)
+		theAttributes.Add_T(kATSUQDCondensedTag, trueV);
+
+	if (theStyle & ZDCFont::extend)
+		theAttributes.Add_T(kATSUQDExtendedTag, trueV);
+
 	ATSUStyle localStyle;
 	if (noErr != ::ATSUCreateStyle(&localStyle))
 		return nil;
@@ -138,6 +144,5 @@ bool ZUtil_ATSUI::Attributes::Apply(ATSUStyle iStyle)
 	return noErr == ::ATSUSetAttributes(iStyle,
 		fTags.size(), &fTags[0], &fSizes[0], const_cast<void**>(&fValues[0]));
 	}
-
 
 #endif // ZCONFIG_API_Enabled(Util_ATSUI)
