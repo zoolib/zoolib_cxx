@@ -89,7 +89,14 @@ GuestFactory_MacPlugin::GuestFactory_MacPlugin(const std::string& iPath)
 			fPlugInRef = ::CFPlugInCreate(nil, theURL);
 			if (fPlugInRef)
 				{
-				fNSModule = sLoadNSModule(::CFPlugInGetBundle(fPlugInRef));
+				CFBundleRef theBundleRef = ::CFPlugInGetBundle(fPlugInRef);
+				// Force the bundle to be physically loaded by asking for an entry point. If we
+				// don't do this, and unload the bundle, then any subsequent loader will
+				// get nils for any entry point. In Safari this manifests with a
+				// "Internal error unloading bundle" log message.
+				::CFBundleGetFunctionPointerForName(theBundleRef, CFSTR("NP_Initialize"));
+
+				fNSModule = sLoadNSModule(theBundleRef);
 
 				NPNetscapeFuncs theNPNetscapeFuncs;
 				this->GetNPNetscapeFuncs(theNPNetscapeFuncs);
