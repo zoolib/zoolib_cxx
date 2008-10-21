@@ -63,6 +63,7 @@ public:
 
 	ZDCFont& operator=(const ZDCFont& inOther);
 	bool operator==(const ZDCFont& inOther) const;
+	bool operator!=(const ZDCFont& inOther) const;
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 	ZDCFont(const TextStyle& inStyle);

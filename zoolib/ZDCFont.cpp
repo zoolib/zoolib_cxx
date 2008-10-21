@@ -115,6 +115,9 @@ bool ZDCFont::operator==(const ZDCFont& inOther) const
 	return fFontName == inOther.fFontName;
 	}
 
+bool ZDCFont::operator!=(const ZDCFont& inOther) const
+	{ return ! (*this == inOther); }
+
 // ==================================================
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
