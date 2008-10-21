@@ -48,7 +48,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZUtil_ATSUI {
 
 ATSUStyle sAsATSUStyle(const ZDCFont& iFont, float iFontSize);
-ATSUTextLayout sCreateLayout(const UTF16* iText, UniCharCount iTextLength, ATSUStyle iStyle);
+ATSUTextLayout sCreateLayout(
+	const UTF16* iText, UniCharCount iTextLength, ATSUStyle iStyle, bool iUseFallbacks);
 
 class Attributes
 	{

@@ -947,7 +947,7 @@ void ZDCCanvas_QD::DrawText(ZDCState& ioState, const ZPoint& iLocation, const ch
 			ZPoint theLocation = iLocation + ioState.fOrigin + ioState.fPatternOrigin;
 			const string16 theTextAsUTF16 = ZUnicode::sAsUTF16(iText, iTextLength);
 			if (ATSUTextLayout theLayout
-				= ZUtil_ATSUI::sCreateLayout(theTextAsUTF16.data(), theTextAsUTF16.size(), theStyle))
+				= ZUtil_ATSUI::sCreateLayout(theTextAsUTF16.data(), theTextAsUTF16.size(), theStyle, true))
 				{
 				RGBColor oldForeColor;
 				::GetForeColor(&oldForeColor);
@@ -991,7 +991,7 @@ ZCoord ZDCCanvas_QD::GetTextWidth(ZDCState& ioState, const char* iText, size_t i
 			{
 			const string16 theTextAsUTF16 = ZUnicode::sAsUTF16(iText, iTextLength);
 			if (ATSUTextLayout theLayout
-				= ZUtil_ATSUI::sCreateLayout(theTextAsUTF16.data(), theTextAsUTF16.size(), theStyle))
+				= ZUtil_ATSUI::sCreateLayout(theTextAsUTF16.data(), theTextAsUTF16.size(), theStyle, true))
 				{
 				ATSUTextMeasurement left, right, top, bottom;
 				::ATSUGetUnjustifiedBounds(theLayout, kATSUFromTextBeginning, kATSUToTextEnd, &left, &right, &top, &bottom);
@@ -1093,7 +1093,7 @@ void ZDCCanvas_QD::BreakLine(ZDCState& ioState, const char* iLineStart, size_t i
 			SetupPort theSetupPort(this, ioState);	
 			const string16 theTextAsUTF16 = ZUnicode::sAsUTF16(iLineStart, iRemainingTextLength);
 			if (ATSUTextLayout theLayout
-				= ZUtil_ATSUI::sCreateLayout(theTextAsUTF16.data(), theTextAsUTF16.size(), theStyle))
+				= ZUtil_ATSUI::sCreateLayout(theTextAsUTF16.data(), theTextAsUTF16.size(), theStyle, true))
 				{
 				UniCharArrayOffset theEnd;
 				::ATSUBreakLine(theLayout, kATSUFromTextBeginning, FixRatio(iTargetWidth, 1), false, &theEnd);

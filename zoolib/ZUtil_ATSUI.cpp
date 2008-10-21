@@ -77,7 +77,7 @@ ATSUStyle ZUtil_ATSUI::sAsATSUStyle(const ZDCFont& iFont, float iFontSize)
 	}
 
 ATSUTextLayout ZUtil_ATSUI::sCreateLayout(
-	const UTF16* iText, UniCharCount iTextLength, ATSUStyle iStyle)
+	const UTF16* iText, UniCharCount iTextLength, ATSUStyle iStyle, bool iUseFallbacks)
 	{
 	if (!iStyle)
 		return nil;
@@ -89,17 +89,20 @@ ATSUTextLayout ZUtil_ATSUI::sCreateLayout(
 	::ATSUCreateTextLayoutWithTextPtr((ConstUniCharArrayPtr)iText, 0, iTextLength, iTextLength,
 		1, &iTextLength, &iStyle, &theLayout);
 
-	ATSUFontFallbacks theFontFallbacks = nil;
-	if (noErr == ::ATSUCreateFontFallbacks(&theFontFallbacks))
+	if (iUseFallbacks)
 		{
-		if (noErr == ::ATSUSetObjFontFallbacks(
-			theFontFallbacks, 0, nil, kATSUDefaultFontFallbacks))
+		ATSUFontFallbacks theFontFallbacks = nil;
+		if (noErr == ::ATSUCreateFontFallbacks(&theFontFallbacks))
 			{
-			Attributes theAttributes;
-			theAttributes.Add_T(kATSULineFontFallbacksTag, theFontFallbacks);
-			theAttributes.Apply(theLayout);
+			if (noErr == ::ATSUSetObjFontFallbacks(
+				theFontFallbacks, 0, nil, kATSUDefaultFontFallbacks))
+				{
+				Attributes theAttributes;
+				theAttributes.Add_T(kATSULineFontFallbacksTag, theFontFallbacks);
+				theAttributes.Apply(theLayout);
 
-			::ATSUSetTransientFontMatching(theLayout, true);
+				::ATSUSetTransientFontMatching(theLayout, true);
+				}
 			}
 		}
 
