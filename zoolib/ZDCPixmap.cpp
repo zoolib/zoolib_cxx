@@ -19,11 +19,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZDCPixmap.h"
+#include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 #include "zoolib/ZStream.h"
 
 using namespace ZDCPixmapNS;
-
 
 using std::min;
 using std::max;
@@ -50,67 +50,10 @@ clear the cache.
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZDCPixmapFactory
+#pragma mark * Factories
 
-ZDCPixmapFactory* ZDCPixmapFactory::sHead;
-
-ZDCPixmapFactory::ZDCPixmapFactory()
-	{
-	fNext = sHead;
-	sHead = this;
-	}
-
-ZDCPixmapFactory::~ZDCPixmapFactory()
-	{}
-
-ZRef<ZDCPixmapRep> ZDCPixmapFactory::sCreateRep(const ZRef<ZDCPixmapRaster>& iRaster,
-	const ZooLib::ZRect& iBounds, const PixelDesc& iPixelDesc)
-	{
-	for (ZDCPixmapFactory* current = sHead; current; current = current->fNext)
-		{
-		if (ZRef<ZDCPixmapRep> theRep = current->CreateRep(iRaster, iBounds, iPixelDesc))
-			return theRep;
-		}
-	return new ZDCPixmapRep(iRaster, iBounds, iPixelDesc);	
-	}
-
-ZRef<ZDCPixmapRep> ZDCPixmapFactory::sCreateRep(const RasterDesc& iRasterDesc,
-	const ZRect& iBounds, const PixelDesc& iPixelDesc)
-	{
-	for (ZDCPixmapFactory* current = sHead; current; current = current->fNext)
-		{
-		if (ZRef<ZDCPixmapRep> theRep = current->CreateRep(iRasterDesc, iBounds, iPixelDesc))
-			return theRep;
-		}
-
-	ZRef<ZDCPixmapRaster> theRaster = new ZDCPixmapRaster_Simple(iRasterDesc);
-	return new ZDCPixmapRep(theRaster, iBounds, iPixelDesc);
-	}
-
-EFormatStandard ZDCPixmapFactory::sMapEfficientToStandard(EFormatEfficient iFormat)
-	{
-	using namespace ZDCPixmapNS;
-
-	for (ZDCPixmapFactory* current = sHead; current; current = current->fNext)
-		{
-		EFormatStandard result = current->MapEfficientToStandard(iFormat);
-		if (result != eFormatStandard_Invalid)
-			return result;
-		}
-
-	EFormatStandard standardFormat = eFormatStandard_Invalid;
-	switch (iFormat)
-		{
-		case eFormatEfficient_Gray_1: standardFormat = eFormatStandard_Gray_1; break;
-		case eFormatEfficient_Gray_8: standardFormat = eFormatStandard_Gray_8; break;
-
-		case eFormatEfficient_Color_16: standardFormat = eFormatStandard_RGB_16_BE; break;
-		case eFormatEfficient_Color_24: standardFormat = eFormatStandard_RGB_24; break;
-		case eFormatEfficient_Color_32: standardFormat = eFormatStandard_ARGB_32; break;
-		default: ZUnimplemented();
-		}
-	return standardFormat;
-	}
+ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRaster_t&);
+ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRasterDesc_t&);
 
 // =================================================================================================
 #pragma mark -
@@ -134,12 +77,12 @@ ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource1, const ZDCPixmap& iSource2, const
 	resultSize.v = max(source1Size.v, max(source2Size.v, maskSize.v));
 
 	EFormatStandard theStandardFormat
-		= ZDCPixmapFactory::sMapEfficientToStandard(eFormatEfficient_Color_32);
+		= sMapEfficientToStandard(eFormatEfficient_Color_32);
 
 	RasterDesc theRasterDesc(resultSize, theStandardFormat);
 	PixelDesc thePixelDesc(theStandardFormat);
 
-	fRep = ZDCPixmapFactory::sCreateRep(theRasterDesc, resultSize, thePixelDesc);
+	fRep = ZDCPixmapRep::sCreate(theRasterDesc, resultSize, thePixelDesc);
 
 	// Do a simple version for now
 	for (ZCoord y = 0; y < resultSize.v; ++y)
@@ -157,22 +100,22 @@ ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource1, const ZDCPixmap& iSource2, const
 
 ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatEfficient iFormat)
 	{
-	EFormatStandard theStandardFormat = ZDCPixmapFactory::sMapEfficientToStandard(iFormat);
+	EFormatStandard theStandardFormat = sMapEfficientToStandard(iFormat);
 
 	RasterDesc theRasterDesc(iSize, theStandardFormat);
 	PixelDesc thePixelDesc(theStandardFormat);
 
-	fRep = ZDCPixmapFactory::sCreateRep(theRasterDesc, iSize, thePixelDesc);
+	fRep = ZDCPixmapRep::sCreate(theRasterDesc, iSize, thePixelDesc);
 	}
 
 ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatEfficient iFormat, const ZRGBColorPOD& iFillColor)
 	{
-	EFormatStandard theStandardFormat = ZDCPixmapFactory::sMapEfficientToStandard(iFormat);
+	EFormatStandard theStandardFormat = sMapEfficientToStandard(iFormat);
 
 	RasterDesc theRasterDesc(iSize, theStandardFormat);
 	PixelDesc thePixelDesc(theStandardFormat);
 
-	fRep = ZDCPixmapFactory::sCreateRep(theRasterDesc, iSize, thePixelDesc);
+	fRep = ZDCPixmapRep::sCreate(theRasterDesc, iSize, thePixelDesc);
 
 	uint32 fillPixval = fRep->GetPixelDesc().AsPixval(iFillColor);
 	fRep->GetRaster()->Fill(fillPixval);
@@ -183,7 +126,7 @@ ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatStandard iFormat)
 	RasterDesc theRasterDesc(iSize, iFormat);
 	PixelDesc thePixelDesc(iFormat);
 
-	fRep = ZDCPixmapFactory::sCreateRep(theRasterDesc, iSize, thePixelDesc);
+	fRep = ZDCPixmapRep::sCreate(theRasterDesc, iSize, thePixelDesc);
 	}
 
 ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatStandard iFormat, const ZRGBColorPOD& iFillColor)
@@ -191,7 +134,7 @@ ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatStandard iFormat, const ZRGBColorPOD& 
 	RasterDesc theRasterDesc(iSize, iFormat);
 	PixelDesc thePixelDesc(iFormat);
 
-	fRep = ZDCPixmapFactory::sCreateRep(theRasterDesc, iSize, thePixelDesc);
+	fRep = ZDCPixmapRep::sCreate(theRasterDesc, iSize, thePixelDesc);
 
 	uint32 fillPixval = fRep->GetPixelDesc().AsPixval(iFillColor);
 	fRep->GetRaster()->Fill(fillPixval);
@@ -199,7 +142,7 @@ ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatStandard iFormat, const ZRGBColorPOD& 
 
 ZDCPixmap::ZDCPixmap(const RasterDesc& iRasterDesc, ZPoint iSize, const PixelDesc& iPixelDesc)
 	{
-	fRep = ZDCPixmapFactory::sCreateRep(iRasterDesc, iSize, iPixelDesc);
+	fRep = ZDCPixmapRep::sCreate(iRasterDesc, iSize, iPixelDesc);
 	}
 
 ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource, const ZRect& iSourceBounds)
@@ -214,8 +157,8 @@ ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource, const ZRect& iSourceBounds)
 	if (realBounds.IsEmpty())
 		return;
 
-	fRep = ZDCPixmapFactory::sCreateRep(sourceRep->GetRaster(),
-		realBounds, sourceRep->GetPixelDesc());
+	fRep = ZDCPixmapRep::sCreate(
+		sourceRep->GetRaster(), realBounds, sourceRep->GetPixelDesc());
 	}
 
 ZDCPixmap::ZDCPixmap(ZPoint iSize, const uint8* iPixvals,
@@ -230,7 +173,7 @@ ZDCPixmap::ZDCPixmap(ZPoint iSize, const uint8* iPixvals,
 
 	ZRef<ZDCPixmapRaster> theRaster = new ZDCPixmapRaster_StaticData(iPixvals, theRasterDesc);
 	PixelDesc thePixelDesc(iColorTable, iColorTableSize);
-	fRep = ZDCPixmapFactory::sCreateRep(theRaster, iSize, thePixelDesc);
+	fRep = ZDCPixmapRep::sCreate(theRaster, iSize, thePixelDesc);
 	}
 
 ZDCPixmap::ZDCPixmap(ZPoint iSize, const char* iPixvals,
@@ -244,7 +187,7 @@ ZDCPixmap::ZDCPixmap(ZPoint iSize, const char* iPixvals,
 	theRasterDesc.fFlipped = false;
 	ZRef<ZDCPixmapRaster> theRaster = new ZDCPixmapRaster_StaticData(iPixvals, theRasterDesc);
 	PixelDesc thePixelDesc(iColorMap, iColorMapSize);
-	fRep = ZDCPixmapFactory::sCreateRep(theRaster, iSize, thePixelDesc);
+	fRep = ZDCPixmapRep::sCreate(theRaster, iSize, thePixelDesc);
 	}
 
 bool ZDCPixmap::operator==(const ZDCPixmap& other) const
@@ -503,7 +446,7 @@ void ZDCPixmap::Munge(bool iMungeColorTable, MungeProc iMungeProc, void* iRefcon
 
 			if (changedAny)
 				{
-				fRep = ZDCPixmapFactory::sCreateRep(fRep->GetRaster(),
+				fRep = ZDCPixmapRep::sCreate(fRep->GetRaster(),
 					fRep->GetBounds(), PixelDesc(&theVector[0], theCount));
 				}
 			return;
@@ -648,6 +591,36 @@ ZDCPixmapCache::~ZDCPixmapCache()
 #pragma mark -
 #pragma mark * ZDCPixmapRep
 
+ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
+	const ZRef<ZDCPixmapRaster>& iRaster,
+	const ZooLib::ZRect& iBounds,
+	const PixelDesc& iPixelDesc)
+	{
+	ZRef<ZDCPixmapRep> result;
+	if (ZFactoryChain_T<ZRef<ZDCPixmapRep>, const CreateRaster_t&>		
+		::sMake(result, CreateRaster_t(iRaster, iBounds, iPixelDesc)))
+		{
+		return result;
+		}
+	return new ZDCPixmapRep(iRaster, iBounds, iPixelDesc);	
+	}
+
+ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
+	const RasterDesc& iRasterDesc,
+	const ZRect& iBounds,
+	const PixelDesc& iPixelDesc)
+	{
+	ZRef<ZDCPixmapRep> result;
+	if (ZFactoryChain_T<ZRef<ZDCPixmapRep>, CreateRasterDesc_t>		
+		::sMake(result, CreateRasterDesc_t(iRasterDesc, iBounds, iPixelDesc)))
+		{
+		return result;
+		}
+
+	ZRef<ZDCPixmapRaster> theRaster = new ZDCPixmapRaster_Simple(iRasterDesc);
+	return new ZDCPixmapRep(theRaster, iBounds, iPixelDesc);
+	}
+
 ZDCPixmapRep::ZDCPixmapRep()
 	{}
 
@@ -766,7 +739,7 @@ ZRef<ZDCPixmapRep> ZDCPixmapRep::Touch()
 		newRasterDesc.fRowCount = fBounds.Height();
 
 		ZRef<ZDCPixmapRep> newRep
-			= ZDCPixmapFactory::sCreateRep(newRasterDesc, fBounds.Size(), fPixelDesc);
+			= sCreate(newRasterDesc, fBounds.Size(), fPixelDesc);
 
 		newRep->CopyFrom(ZPoint(0,0),
 			fRaster->GetBaseAddress(), ourRasterDesc, fPixelDesc, fBounds);

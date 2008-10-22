@@ -305,10 +305,10 @@ void ZDCCanvas::Pixels(ZDCState& ioState,
 	theRasterDesc.fFlipped = false;
 	ZRef<ZDCPixmapRaster> theRaster = new ZDCPixmapRaster_StaticData(inPixvals, theRasterDesc);
 
-	ZDCPixmap maskPixmap = ZDCPixmapFactory::sCreateRep(theRaster, ZPoint(inWidth, inHeight),
+	ZDCPixmap maskPixmap = ZDCPixmap::sCreateRep(theRaster, ZPoint(inWidth, inHeight),
 		ZDCPixmapNS::PixelDesc(&maskColors[0], 256));
 
-	ZDCPixmap mainPixmap = ZDCPixmapFactory::sCreateRep(theRaster, ZPoint(inWidth, inHeight),
+	ZDCPixmap mainPixmap = ZDCPixmap::sCreateRep(theRaster, ZPoint(inWidth, inHeight),
 		ZDCPixmapNS::PixelDesc(&normalColors[0], 256));
 
 	this->DrawPixmap(ioState, ZPoint(inLocationH, inLocationV), mainPixmap, &maskPixmap);

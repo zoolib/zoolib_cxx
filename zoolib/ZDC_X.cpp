@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(DC_X)
 
+#include "zoolib/ZFactoryChain.h"
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * kDebug
@@ -970,57 +972,68 @@ bool ZDCCanvas_X_OffScreen::IsOffScreen()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZDCPixmapFactory_X
+#pragma mark * Factory functions
 
-class ZDCPixmapFactory_X : public ZDCPixmapFactory
+static class Make_CreateRaster
+:	public ZFactoryChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRaster_t&>
 	{
 public:
-	virtual ZRef<ZDCPixmapRep> CreateRep(const ZRef<ZDCPixmapRaster>& inRaster, const ZRect& inBounds, const ZDCPixmapNS::PixelDesc& inPixelDesc);
-	virtual ZRef<ZDCPixmapRep> CreateRep(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect& inBounds, const ZDCPixmapNS::PixelDesc& inPixelDesc);
-	virtual ZDCPixmapNS::EFormatStandard MapEfficientToStandard(ZDCPixmapNS::EFormatEfficient inFormat);
-	};
+	Make_CreateRaster()
+	:	ZFactoryChain_T<Result_t, Param_t>(true)
+		{}
 
-static ZDCPixmapFactory_X sZDCPixmapFactory_X;
-
-ZRef<ZDCPixmapRep> ZDCPixmapFactory_X::CreateRep(const ZRef<ZDCPixmapRaster>& inRaster, const ZRect& inBounds, const ZDCPixmapNS::PixelDesc& inPixelDesc)
-	{
-	return ZRef<ZDCPixmapRep>();
-	}
-
-ZRef<ZDCPixmapRep> ZDCPixmapFactory_X::CreateRep(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect& inBounds, const ZDCPixmapNS::PixelDesc& inPixelDesc)
-	{
-	return ZRef<ZDCPixmapRep>();
-	}
-
-ZDCPixmapNS::EFormatStandard ZDCPixmapFactory_X::MapEfficientToStandard(ZDCPixmapNS::EFormatEfficient inFormat)
-	{
-	using namespace ZDCPixmapNS;
-
-	EFormatStandard standardFormat = eFormatStandard_Invalid;
-	switch (inFormat)
+	virtual bool Make(Result_t& oResult, Param_t iParam)
 		{
-//		case eFormatEfficient_Indexed_1: standardFormat = eFormatStandard_Indexed_1; break;
-//		case eFormatEfficient_Indexed_8: standardFormat = eFormatStandard_Indexed_8; break;
+		return false;
+		}	
+	} sMaker0;
 
-		case eFormatEfficient_Gray_1: standardFormat = eFormatStandard_Gray_1; break;
-		case eFormatEfficient_Gray_8: standardFormat = eFormatStandard_Gray_8; break;
 
-		#if ZCONFIG(Endian, Big)
+static class Make_CreateRasterDesc
+:	public ZFactoryChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRasterDesc_t&>
+	{
+public:
+	Make_CreateRasterDesc()
+	:	ZFactoryChain_T<Result_t, Param_t>(true)
+		{}
 
-		case eFormatEfficient_Color_16: standardFormat = eFormatStandard_xRGB_16_BE; break;
-		case eFormatEfficient_Color_24: standardFormat = eFormatStandard_RGB_24; break;
-		case eFormatEfficient_Color_32: standardFormat = eFormatStandard_ARGB_32; break;
+	virtual bool Make(Result_t& oResult, Param_t iParam)
+		{
+		return false;
+		}	
+	} sMaker1;
 
-		#else
 
-		case eFormatEfficient_Color_16: standardFormat = eFormatStandard_xRGB_16_LE; break;
-		case eFormatEfficient_Color_24: standardFormat = eFormatStandard_BGR_24; break;
-		case eFormatEfficient_Color_32: standardFormat = eFormatStandard_BGRA_32; break;
+static class Make_EfficientToStandard
+:	public ZFactoryChain_T<ZDCPixmapNS::EFormatStandard, ZDCPixmapNS::EFormatEfficient>
+	{
+public:
+	Make_EfficientToStandard()
+	:	ZFactoryChain_T<Result_t, Param_t>(true)
+		{}
 
-		#endif
-		}
+	virtual bool Make(Result_t& oResult, Param_t iParam)
+		{
+		using namespace ZDCPixmapNS;
 
-	return standardFormat;
-	}
+		switch (iParam)
+			{
+			case eFormatEfficient_Gray_1: oResult = eFormatStandard_Gray_1; return true;
+			case eFormatEfficient_Gray_8: oResult = eFormatStandard_Gray_8; return true;
+
+			#if ZCONFIG(Endian, Big)
+				case eFormatEfficient_Color_16: oResult = eFormatStandard_xRGB_16_BE; return true;
+				case eFormatEfficient_Color_24: oResult = eFormatStandard_RGB_24; return true;
+				case eFormatEfficient_Color_32: oResult = eFormatStandard_ARGB_32; return true;
+			#else
+				case eFormatEfficient_Color_16: oResult = eFormatStandard_xRGB_16_LE; return true;
+				case eFormatEfficient_Color_24: oResult = eFormatStandard_BGR_24; return true;
+				case eFormatEfficient_Color_32: oResult = eFormatStandard_BGRA_32; return true;
+			#endif
+			}
+
+		return false;
+		}	
+	} sMaker2;
 
 #endif // ZCONFIG_API_Enabled(DC_X)

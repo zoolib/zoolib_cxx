@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCInk.h"
 #include "zoolib/ZDCPixmapBlit.h"
+#include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZMacOSX.h"
 #include "zoolib/ZStream.h"
 #include "zoolib/ZUtil_ATSUI.h"
@@ -2522,49 +2523,71 @@ static ZRef<ZDCPixmapRep_QD> sGetPixmapRep_QDIfComplex(const ZRef<ZDCInk::Rep>& 
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZDCPixmapFactory_QD
+#pragma mark * Factory functions
 
-class ZDCPixmapFactory_QD : public ZDCPixmapFactory
+static class Make_CreateRaster
+:	public ZFactoryChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRaster_t&>
 	{
 public:
-	virtual ZRef<ZDCPixmapRep> CreateRep(const ZRef<ZDCPixmapRaster>& inRaster, const ZRect& inBounds, const ZDCPixmapNS::PixelDesc& inPixelDesc);
-	virtual ZRef<ZDCPixmapRep> CreateRep(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect& inBounds, const ZDCPixmapNS::PixelDesc& inPixelDesc);
-	virtual ZDCPixmapNS::EFormatStandard MapEfficientToStandard(ZDCPixmapNS::EFormatEfficient inFormat);
-	};
+	Make_CreateRaster()
+	:	ZFactoryChain_T<Result_t, Param_t>(true)
+		{}
 
-static ZDCPixmapFactory_QD sZDCPixmapFactory_QD;
-
-ZRef<ZDCPixmapRep> ZDCPixmapFactory_QD::CreateRep(const ZRef<ZDCPixmapRaster>& inRaster, const ZRect& inBounds, const ZDCPixmapNS::PixelDesc& inPixelDesc)
-	{
-	return ::sCreateRepForDesc(inRaster, inBounds, inPixelDesc);
-	}
-
-ZRef<ZDCPixmapRep> ZDCPixmapFactory_QD::CreateRep(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect& inBounds, const ZDCPixmapNS::PixelDesc& inPixelDesc)
-	{
-	if (::sCheckDesc(inRasterDesc, inBounds, inPixelDesc))
-		return new ZDCPixmapRep_QD(new ZDCPixmapRaster_Simple(inRasterDesc), inBounds, inPixelDesc);
-	return ZRef<ZDCPixmapRep>();
-	}
-
-ZDCPixmapNS::EFormatStandard ZDCPixmapFactory_QD::MapEfficientToStandard(ZDCPixmapNS::EFormatEfficient inFormat)
-	{
-	using namespace ZDCPixmapNS;
-	EFormatStandard standardFormat = eFormatStandard_Invalid;
-	switch (inFormat)
+	virtual bool Make(Result_t& oResult, Param_t iParam)
 		{
-//		case eFormatEfficient_Indexed_1: standardFormat = eFormatStandard_Indexed_1; break;
-//		case eFormatEfficient_Indexed_8: standardFormat = eFormatStandard_Indexed_8; break;
+		oResult = ::sCreateRepForDesc(iParam.f0, iParam.f1, iParam.f2);
+		return oResult;
+		}	
+	} sMaker0;
+	
 
-		case eFormatEfficient_Gray_1: standardFormat = eFormatStandard_Gray_1; break;
-		case eFormatEfficient_Gray_8: standardFormat = eFormatStandard_Gray_8; break;
+static class Make_CreateRasterDesc
+:	public ZFactoryChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRasterDesc_t&>
+	{
+public:
+	Make_CreateRasterDesc()
+	:	ZFactoryChain_T<Result_t, Param_t>(true)
+		{}
 
-		case eFormatEfficient_Color_16: standardFormat = eFormatStandard_xRGB_16_BE; break;
-		case eFormatEfficient_Color_24:
-		case eFormatEfficient_Color_32: standardFormat = eFormatStandard_xRGB_32; break;
-		}
+	virtual bool Make(Result_t& oResult, Param_t iParam)
+		{
+		if (::sCheckDesc(iParam.f0, iParam.f1, iParam.f2))
+			{
+			oResult = new ZDCPixmapRep_QD(
+				new ZDCPixmapRaster_Simple(iParam.f0), iParam.f1, iParam.f2);
+			return true;
+			}
 
-	return standardFormat;
-	}
+		return false;
+		}	
+	} sMaker1;
+
+
+static class Make_EfficientToStandard
+:	public ZFactoryChain_T<ZDCPixmapNS::EFormatStandard, ZDCPixmapNS::EFormatEfficient>
+	{
+public:
+	Make_EfficientToStandard()
+	:	ZFactoryChain_T<Result_t, Param_t>(true)
+		{}
+
+	virtual bool Make(Result_t& oResult, Param_t iParam)
+		{
+		using namespace ZDCPixmapNS;
+
+		switch (iParam)
+			{
+			case eFormatEfficient_Gray_1: oResult = eFormatStandard_Gray_1; return true;
+			case eFormatEfficient_Gray_8: oResult = eFormatStandard_Gray_8; return true;
+
+			case eFormatEfficient_Color_16: oResult = eFormatStandard_xRGB_16_BE; return true;
+			case eFormatEfficient_Color_24:
+			case eFormatEfficient_Color_32: oResult = eFormatStandard_xRGB_32; return true;
+			}
+
+		return false;
+		}	
+	} sMaker2;
 
 // =================================================================================================
 #pragma mark -

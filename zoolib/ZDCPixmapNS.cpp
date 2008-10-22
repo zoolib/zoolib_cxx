@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCPixmapNS.h"
 #include "zoolib/ZByteSwap.h"
+#include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 
 #define kDebug_PixmapNS 2
@@ -97,6 +98,12 @@ class ZDCPixmap. This complicated the declaration of ZDCPixmap enormously, it is
 smart pointer. So we have a namespace ZDCPixmapNS to scope those entities that are referenced by
 different parts of the ZDCPixmap suite.
 */
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Factories
+
+ZOOLIB_FACTORYCHAIN_HEAD(ZDCPixmapNS::EFormatStandard, ZDCPixmapNS::EFormatEfficient);
 
 // =================================================================================================
 
@@ -300,8 +307,29 @@ static uint8* sBuildReverseLookup(const ZRGBColorSmallPOD* iColors, size_t iCoun
 
 int ZDCPixmapNS::sCalcRowBytes(int iWidth, int iDepth, int iByteRound)
 	{
-	int bitRound = iByteRound * 8;
+	const int bitRound = iByteRound * 8;
 	return ((iWidth * iDepth + bitRound - 1) / bitRound) * iByteRound;
+	}
+
+EFormatStandard ZDCPixmapNS::sMapEfficientToStandard(EFormatEfficient iFormat)
+	{
+	EFormatStandard result;
+	if (ZFactoryChain_T<EFormatStandard, EFormatEfficient>::sMake(result, iFormat))
+		{
+		return result;
+		}
+
+	switch (iFormat)
+		{
+		case eFormatEfficient_Gray_1: return eFormatStandard_Gray_1;
+		case eFormatEfficient_Gray_8: return eFormatStandard_Gray_8;
+
+		case eFormatEfficient_Color_16: return eFormatStandard_RGB_16_BE;
+		case eFormatEfficient_Color_24: return eFormatStandard_RGB_24;
+		case eFormatEfficient_Color_32: return eFormatStandard_ARGB_32;
+		}
+
+	return eFormatStandard_Invalid;
 	}
 
 // =================================================================================================
@@ -1681,13 +1709,12 @@ void ZDCPixmapNS::MapRGBToPixval_Indexed::AsPixvals(const ZRGBColorPOD* iColors,
 		{
 		while (--localCount)
 			{
-			uint8 index = uint8(fReverseLookup[(iColors->blue >> 12)
+			const uint8 index = uint8(fReverseLookup[(iColors->blue >> 12)
 				+ 16 * ((iColors->green >> 12) + 16 * (iColors->red >> 12))]);
 
 			++iColors;
 			 *oPixvals++ = fPixvals[index];
 			}
-
 		}
 	else
 		{

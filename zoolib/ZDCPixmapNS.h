@@ -142,6 +142,16 @@ enum EFormatStandard
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * sMapEfficientToStandard
+
+namespace ZDCPixmapNS {
+
+EFormatStandard sMapEfficientToStandard(EFormatEfficient iFormat);
+
+} // namespace ZDCPixmapNS
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZDCPixmapNS::PixvalDesc
 
 /** PixvalDesc describes how a single pixval is laid out. */

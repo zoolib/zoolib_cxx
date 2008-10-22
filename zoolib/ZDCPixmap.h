@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZDCPixmapNS.h"
 #include "zoolib/ZGeom.h"
+#include "zoolib/ZMulti_T.h"
 #include "zoolib/ZRefCount.h"
 #include "zoolib/ZRGBColor.h"
 
@@ -33,42 +34,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZDCPixmapCache;
 class ZDCPixmapRep;
 class ZDCPixmapRaster;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapFactory
-
-class ZDCPixmapFactory
-	{
-protected:
-	ZDCPixmapFactory();
-	~ZDCPixmapFactory();
-
-public:
-	typedef ZooLib::ZRect ZRect;
-
-	static ZRef<ZDCPixmapRep> sCreateRep(const ZRef<ZDCPixmapRaster>& iRaster,
-		const ZRect& iBounds, const ZDCPixmapNS::PixelDesc& iPixelDesc);
-
-	static ZRef<ZDCPixmapRep> sCreateRep(const ZDCPixmapNS::RasterDesc& iRasterDesc,
-		const ZRect& iBounds, const ZDCPixmapNS::PixelDesc& iPixelDesc);
-
-	static ZDCPixmapNS::EFormatStandard sMapEfficientToStandard(
-		ZDCPixmapNS::EFormatEfficient iFormat);
-
-	virtual ZRef<ZDCPixmapRep> CreateRep(const ZRef<ZDCPixmapRaster>& iRaster,
-		const ZRect& iBounds, const ZDCPixmapNS::PixelDesc& iPixelDesc) = 0;
-
-	virtual ZRef<ZDCPixmapRep> CreateRep(const ZDCPixmapNS::RasterDesc& iRasterDesc,
-		const ZRect& iBounds, const ZDCPixmapNS::PixelDesc& iPixelDesc) = 0;
-
-	virtual ZDCPixmapNS::EFormatStandard MapEfficientToStandard(
-		ZDCPixmapNS::EFormatEfficient iFormat) = 0;
-
-private:
-	static ZDCPixmapFactory* sHead;
-	ZDCPixmapFactory* fNext;
-	};
 
 // =================================================================================================
 #pragma mark -
@@ -306,6 +271,20 @@ public:
 
 	static bool sCheckAccessEnabled() { return false; }
 
+// Factories
+	typedef ZMulti_T3<ZRef<ZDCPixmapRaster>, ZooLib::ZRect, ZDCPixmapNS::PixelDesc>
+		CreateRaster_t;
+
+	static ZRef<ZDCPixmapRep> sCreate(const ZRef<ZDCPixmapRaster>& iRaster,
+		const ZRect& iBounds, const ZDCPixmapNS::PixelDesc& iPixelDesc);
+
+	typedef ZMulti_T3<ZDCPixmapNS::RasterDesc, ZRect, ZDCPixmapNS::PixelDesc>
+		CreateRasterDesc_t;
+
+	static ZRef<ZDCPixmapRep> sCreate(const ZDCPixmapNS::RasterDesc& iRasterDesc,
+		const ZRect& iBounds, const ZDCPixmapNS::PixelDesc& iPixelDesc);
+
+// ctor/dtor
 	ZDCPixmapRep(const ZRef<ZDCPixmapRaster>& iRaster,
 		const ZRect& iBounds, const ZDCPixmapNS::PixelDesc& iPixelDesc);
 
@@ -318,6 +297,7 @@ public:
 	uint32 GetPixval(ZCoord iLocationH, ZCoord iLocationV);
 	void SetPixval(ZCoord iLocationH, ZCoord iLocationV, uint32 iPixval);
 
+// Blitting
 	void CopyFrom(ZPoint iDestLocation,
 		const ZRef<ZDCPixmapRep>& iSourceRep, const ZRect& iSourceBounds);
 
@@ -333,6 +313,7 @@ public:
 		const ZDCPixmapNS::PixelDesc& iDestPixelDesc,
 		const ZRect& iSourceBounds);
 
+// Attributes
 	ZPoint GetSize();
 
 	const ZRect& GetBounds();

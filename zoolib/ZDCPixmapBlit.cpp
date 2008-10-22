@@ -300,7 +300,6 @@ void ZDCPixmapBlit::sInvert(
 		{
 		sInvert_T(iDestAddress, iDestRD, iDestB, iDestPD);
 		}
-
 	}
 
 void ZDCPixmapBlit::sOpaque(

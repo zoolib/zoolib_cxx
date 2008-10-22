@@ -185,7 +185,7 @@ bool ZDCGlyphServer_Asset::GetGlyph(const ZDCFont& iFont, UTF32 iCP,
 					ZDCPixmapNS::PixelDesc thePixelDesc(uint32(0),
 						(1 << theRasterDesc.fPixvalDesc.fDepth) - 1);
 
-					oPixmap = ZDCPixmapFactory::sCreateRep(theRaster, theBounds, thePixelDesc);
+					oPixmap = ZDCPixmap::sCreateRep(theRaster, theBounds, thePixelDesc);
 					return true;
 					}
 				}
