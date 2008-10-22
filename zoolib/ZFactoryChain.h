@@ -23,16 +23,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 // Put one of these in the source file where you're defining the base class
-// or factory functions for a chain. The assignment of sHead to sHead is
+// or factory functions for a chain. The assignment of sHead_XXX to sHead_XXX is
 // a sneaky trick which causes the instantiation of the template, allocates
-// space for sHead, and does so without initialization order problems. It
+// space for sHead_XXX, and does so without initialization order problems. It
 // does rely on the loader initializing vars as zero, even when they're
 // going to be initialized by global static constructors.
 
 #define ZOOLIB_FACTORYCHAIN_HEAD(Result, Param) \
 	template<> \
 	ZFactoryChain_T<Result, Param>* \
-	ZFactoryChain_T<Result, Param>::sHead = sHead
+	ZFactoryChain_T<Result, Param>::sHead_Preferred = sHead_Preferred; \
+	template<> \
+	ZFactoryChain_T<Result, Param>* \
+	ZFactoryChain_T<Result, Param>::sHead_Normal = sHead_Normal
 
 // =================================================================================================
 #pragma mark -
@@ -42,9 +45,20 @@ template <class Result, class Param>
 class ZFactoryChain_T
 	{
 public:
+	typedef Result Result_t;
+	typedef Param Param_t;
+
 	static bool sMake(Result& oResult, Param iParam)
 		{
-		for (ZFactoryChain_T* iter = sHead; iter; iter = iter->fNext)
+		// Try preferred factories first
+		for (ZFactoryChain_T* iter = sHead_Preferred; iter; iter = iter->fNext)
+			{
+			if (iter->Make(oResult, iParam))
+				return true;
+			}
+
+		// Then non-preferred
+		for (ZFactoryChain_T* iter = sHead_Normal; iter; iter = iter->fNext)
 			{
 			if (iter->Make(oResult, iParam))
 				return true;
@@ -60,17 +74,26 @@ public:
 		return Result();
 		}
 
-	ZFactoryChain_T()
+	ZFactoryChain_T(bool iPreferred)
 		{
-		fNext = sHead;
-		sHead = this;
+		if (iPreferred)
+			{
+			fNext = sHead_Preferred;
+			sHead_Preferred = this;
+			}
+		else
+			{
+			fNext = sHead_Normal;
+			sHead_Normal = this;
+			}
 		}
 
 	virtual bool Make(Result& oResult, Param iParam)
 		{ return false; }
 
 private:
-	static ZFactoryChain_T* sHead;
+	static ZFactoryChain_T* sHead_Preferred;
+	static ZFactoryChain_T* sHead_Normal;
 	ZFactoryChain_T* fNext;
 	};
 
@@ -85,7 +108,13 @@ public:
 	typedef bool (*Maker_t)(Result& oResult, Param iParam);
 
 	ZFactoryChain_Maker_T(Maker_t iMaker)
-	:	fMaker(iMaker)
+	:	ZFactoryChain_T<Result, Param>(false),
+		fMaker(iMaker)
+		{}
+
+	ZFactoryChain_Maker_T(bool iPreferred, Maker_t iMaker)
+	:	ZFactoryChain_T<Result, Param>(iPreferred),
+		fMaker(iMaker)
 		{}
 
 	virtual bool Make(Result& oResult, Param iParam)
