@@ -23,12 +23,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZDCPixmap.h"
-
 #if ZCONFIG_SPI_Enabled(Carbon)
 
 #include ZMACINCLUDE(Carbon,Dialogs.h) // For DialogPtr
 #include ZMACINCLUDE(Carbon,Events.h) // For EventRecord
+
+#include "zoolib/ZDCPixmapCombo.h"
 
 #include <string>
 
