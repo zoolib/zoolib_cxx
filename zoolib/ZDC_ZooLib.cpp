@@ -354,7 +354,7 @@ ZDCPixmap ZDCCanvas_ZooLib::GetPixmap(ZDCState& ioState, const ZRect& inBounds)
 		ZRect realBounds = (inBounds + ioState.fOrigin) & fRep->GetBounds();
 		if (!realBounds.IsEmpty())
 			{
-			return ZDCPixmap::sCreateRep(
+			return ZDCPixmapRep::sCreate(
 				fRep->GetRaster(), realBounds, fRep->GetPixelDesc());
 			}
 		}
@@ -499,7 +499,7 @@ ZRef<ZDCCanvas> ZDCCanvas_ZooLib::CreateOffScreen(const ZRect& iCanvasRect)
 		theSize.v, false);
 
 	ZRef<ZDCPixmapRep> theRep
-		= ZDCPixmap::sCreateRep(theRasterDesc, theSize, fRep->GetPixelDesc());
+		= ZDCPixmapRep::sCreate(theRasterDesc, theSize, fRep->GetPixelDesc());
 
 	return new ZDCCanvas_ZooLib(theRep, fGlyphServer);
 	}
