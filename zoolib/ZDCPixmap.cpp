@@ -583,7 +583,7 @@ ZDCPixmapRaster_Simple::ZDCPixmapRaster_Simple(ZRef<ZDCPixmapRaster> iOther)
 :	ZDCPixmapRaster(iOther->GetRasterDesc())
 	{
 	fCanModify = true;
-	size_t bufferSize = fRasterDesc.fRowBytes * fRasterDesc.fRowCount;
+	const size_t bufferSize = fRasterDesc.fRowBytes * fRasterDesc.fRowCount;
 
 	// Oversize the buffer slightly, to allow for some code in ZDCPixmapBlit that
 	// may *read* past the end of a buffer in some situations.
@@ -749,7 +749,6 @@ void ZDCPixmapRep::CopyTo(ZPoint iDestLocation,
 		iSourceBounds, iDestLocation);
 	}
 
- 
 const ZRef<ZDCPixmapCache>& ZDCPixmapRep::GetCache()
 	{ return fCache; }
 
@@ -782,85 +781,4 @@ ZRef<ZDCPixmapRep> ZDCPixmapRep::Touch()
 	return this;
 	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapCombo
-
-ZDCPixmapCombo::ZDCPixmapCombo()
-	{}
-
-ZDCPixmapCombo::ZDCPixmapCombo(const ZDCPixmap& iColorPixmap,
-	const ZDCPixmap& iMonoPixmap,
-	const ZDCPixmap& iMaskPixmap)
-:	fColorPixmap(iColorPixmap),
-	fMonoPixmap(iMonoPixmap),
-	fMaskPixmap(iMaskPixmap)
-	{}
-
-ZDCPixmapCombo::ZDCPixmapCombo(const ZDCPixmap& iMainPixmap, const ZDCPixmap& iMaskPixmap)
-:	fColorPixmap(iMainPixmap),
-	fMaskPixmap(iMaskPixmap)
-	{}
-
-ZDCPixmapCombo& ZDCPixmapCombo::operator=(const ZDCPixmapCombo& iOther)
-	{
-	fColorPixmap = iOther.fColorPixmap;
-	fMonoPixmap = iOther.fMonoPixmap;
-	fMaskPixmap = iOther.fMaskPixmap;
-	return *this;
-	}
-
-bool ZDCPixmapCombo::operator==(const ZDCPixmapCombo& iOther) const
-	{
-	return fColorPixmap == iOther.fColorPixmap
-		&& fMonoPixmap == iOther.fMonoPixmap
-		&& fMaskPixmap == iOther.fMaskPixmap;
-	}
-
-void ZDCPixmapCombo::SetPixmaps(const ZDCPixmap& iColorPixmap,
-	const ZDCPixmap& iMonoPixmap,
-	const ZDCPixmap& iMaskPixmap)
-	{
-	fColorPixmap = iColorPixmap;
-	fMonoPixmap = iMonoPixmap;
-	fMaskPixmap = iMaskPixmap;
-	}
-
-void ZDCPixmapCombo::SetPixmaps(const ZDCPixmap& iMainPixmap, const ZDCPixmap& iMaskPixmap)
-	{
-	fColorPixmap = iMainPixmap;
-	fMonoPixmap = ZDCPixmap();
-	fMaskPixmap = iMaskPixmap;
-	}
-
-void ZDCPixmapCombo::GetPixmaps(ZDCPixmap& oColorPixmap,
-	ZDCPixmap& oMonoPixmap,
-	ZDCPixmap& oMaskPixmap) const
-	{
-	oColorPixmap = fColorPixmap;
-	oMonoPixmap = fMonoPixmap;
-	oMaskPixmap = fMaskPixmap;
-	}
-
-ZPoint ZDCPixmapCombo::Size() const
-	{
-	ZPoint theSize = ZPoint::sZero;
-	ZPoint tempSize = fColorPixmap.Size();
-	theSize.h = max(theSize.h, tempSize.h);
-	theSize.v = max(theSize.v, tempSize.v);
-
-	tempSize = fMonoPixmap.Size();
-	theSize.h = max(theSize.h, tempSize.h);
-	theSize.v = max(theSize.v, tempSize.v);
-
-	tempSize = fMaskPixmap.Size();
-	theSize.h = max(theSize.h, tempSize.h);
-	theSize.v = max(theSize.v, tempSize.v);
-
-	return theSize;
-	}
-
-ZDCPixmapCombo::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(fColorPixmap || fMonoPixmap); }
-	
 // =================================================================================================

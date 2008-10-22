@@ -436,57 +436,5 @@ inline const ZRef<ZDCPixmapRaster>& ZDCPixmapRep::GetRaster()
 	{ return fRaster; }
 
 // =================================================================================================
-#pragma mark -
-#pragma mark * ZDCPixmapCombo
-
-class ZDCPixmapCombo
-	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZDCPixmapCombo,
-    	operator_bool_generator_type, operator_bool_type);
-
-public:
-	ZDCPixmapCombo();
-
-	ZDCPixmapCombo(const ZDCPixmap& iColorPixmap,
-		const ZDCPixmap& iMonoPixmap,
-		const ZDCPixmap& iMaskPixmap);
-
-	ZDCPixmapCombo(const ZDCPixmap& iMainPixmap, const ZDCPixmap& iMaskPixmap);
-
-	ZDCPixmapCombo& operator=(const ZDCPixmapCombo& iOther);
-
-	bool operator==(const ZDCPixmapCombo& other) const;
-	bool operator!=(const ZDCPixmapCombo& other) const
-		{ return ! (*this == other); }
-
-	void SetPixmaps(const ZDCPixmap& iColorPixmap,
-		const ZDCPixmap& iMonoPixmap,
-		const ZDCPixmap& iMaskPixmap);
-
-	void SetPixmaps(const ZDCPixmap& iMainPixmap, const ZDCPixmap& iMaskPixmap);
-
-	void GetPixmaps(ZDCPixmap& oColorPixmap, ZDCPixmap& oMonoPixmap, ZDCPixmap& oMaskPixmap) const;
-
-	void SetColor(const ZDCPixmap& iPixmap) { fColorPixmap = iPixmap; }
-	const ZDCPixmap& GetColor() const { return fColorPixmap; }
-
-	void SetMono(const ZDCPixmap& iPixmap) { fMonoPixmap = iPixmap; }
-	const ZDCPixmap& GetMono() const { return fMonoPixmap; }
-
-	void SetMask(const ZDCPixmap& iPixmap) { fMaskPixmap = iPixmap; }
-	const ZDCPixmap& GetMask() const { return fMaskPixmap; }
-
-	ZooLib::ZPoint Size() const;
-
-// Are we valid, i.e. do we have any pixels at all?
-	operator operator_bool_type() const;
-
-protected:
-	ZDCPixmap fColorPixmap;
-	ZDCPixmap fMonoPixmap;
-	ZDCPixmap fMaskPixmap;
-	};
-
-// =================================================================================================
 
 #endif // __ZDCPixmap__
