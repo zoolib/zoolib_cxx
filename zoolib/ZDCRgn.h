@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
+#include "zoolib/ZAccumulator_T.h"
 #include "zoolib/ZGeom.h"
 #include "zoolib/ZRefCount.h"
 #include <vector>
@@ -328,19 +329,14 @@ inline ZRect ZDCRgn::Bounds() const
 #pragma mark -
 #pragma mark * ZDCRgnAccumulator
 
-class ZDCRgnAccumulator
+class ZDCRgnUnioner_t
 	{
 public:
-	ZDCRgnAccumulator();
-	~ZDCRgnAccumulator();
-
-	void Add(const ZDCRgn& iRgn);
-	ZDCRgn GetResult() const;
-
-private:
-	std::vector<ZDCRgn> fStack;
-	size_t fCount;
+	void operator()(ZDCRgn& ioRgn, const ZDCRgn& iOther) const
+		{ ioRgn.Include(iOther); }
 	};
+
+typedef ZAccumulator_T<ZDCRgn, ZDCRgnUnioner_t, std::vector<ZDCRgn> > ZDCRgnAccumulator;
 
 // =================================================================================================
 
