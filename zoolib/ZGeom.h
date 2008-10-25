@@ -1097,8 +1097,8 @@ inline ZRect_T<T>::operator ZRectPOD() const
 		XRectangle theXRectangle;
 		theXRectangle.x = short(left);
 		theXRectangle.y = short(top);
-		theXRectangle.width = unsigned short(right - left);
-		theXRectangle.height = unsigned short(bottom - top);
+		theXRectangle.width = (unsigned short)(right - left);
+		theXRectangle.height = (unsigned short)(bottom - top);
 		return theXRectangle;
 		}
 
