@@ -118,7 +118,7 @@ ZBigRegion ZBigRegion::sRects(const ZRect_T<int32>* iRects, size_t iCount, bool 
 			{
 			ZBigRegionAccumulator theAccumulator;
 			while (iCount--)
-				theAccumulator.Add(*iRects++);
+				theAccumulator.Add(ZBigRegion(*iRects++));
 			resultRgn = theAccumulator.GetResult();
 			}
 		}
@@ -1153,50 +1153,3 @@ int32 ZBigRegion::sInternal_Coalesce(ZBigRegion& ioRegion, int32 prevStart, int3
 		}
 	return curStart;
 	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZBigRegionAccumulator
-
-// See ZDCRgnAccumulator (in ZDCRgn.cpp) for discussion.
-
-ZBigRegionAccumulator::ZBigRegionAccumulator()
-:	fCount(0)
-	{}
-
-ZBigRegionAccumulator::~ZBigRegionAccumulator()
-	{}
-
-static inline uint32 sHammingWeight(uint32 w)
-	{
-	uint32 res = (w & 0x55555555) + ((w >> 1) & 0x55555555);
-	res = (res & 0x33333333) + ((res >> 2) & 0x33333333);
-	res = (res & 0x0F0F0F0F) + ((res >> 4) & 0x0F0F0F0F);
-	res = (res & 0x00FF00FF) + ((res >> 8) & 0x00FF00FF);
-	return (res & 0x0000FFFF) + ((res >> 16) & 0x0000FFFF);
-	}
-
-void ZBigRegionAccumulator::Add(const ZBigRegion& inRgn)
-	{
-	fStack.push_back(inRgn);
-
-	uint32 changedBits = fCount++;
-	changedBits ^= fCount;
-	uint32 changedBitsCount = sHammingWeight(changedBits);
-	while (--changedBitsCount)
-		{
-		ZBigRegion tailRgn = fStack.back();
-		fStack.pop_back();
-		fStack.back() |= tailRgn;
-		}
-	}
-
-ZBigRegion ZBigRegionAccumulator::GetResult() const
-	{
-	ZBigRegion result;
-	for (vector<ZBigRegion>::const_iterator i = fStack.begin(); i != fStack.end(); ++i)
-		result |= *i;
-	return result;
-	}
-
-// =================================================================================================

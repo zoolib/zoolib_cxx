@@ -70,6 +70,7 @@ SOFTWARE.
 #define __ZBigRegion__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZAccumulator_T.h"
 #include "zoolib/ZGeom.h"
 
 #include <vector>
@@ -228,24 +229,6 @@ protected:
 	size_t fNumRectsAllocated;
 	size_t fNumRects;
 	ZRect_T<int32> fExtent;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZBigRegionAccumulator
-
-class ZBigRegionAccumulator
-	{
-public:
-	ZBigRegionAccumulator();
-	~ZBigRegionAccumulator();
-
-	void Add(const ZBigRegion& inRgn);
-	ZBigRegion GetResult() const;
-
-private:
-	std::vector<ZBigRegion> fStack;
-	size_t fCount;
 	};
 
 #endif // __ZBigRegion__
