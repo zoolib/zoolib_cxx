@@ -100,17 +100,15 @@ public:
 	static ZTrail sTrailFromTo(const std::vector<std::string>& iSource,
 		const std::vector<std::string>& iDest);
 
-	static void sParseStringAndAppend(const UTF8* iSeparator,
-							const char* iIgnore,
-							const char* iBounce,
-							const char* iPath, size_t iPathSize,
-							std::vector<std::string>& ioComps);
+	static void sParseStringAndAppend(
+		const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
+		const UTF8* iPath, size_t iPathSize,
+		std::vector<std::string>& ioComps);
 
-	static void sParseStringAndAppend(const UTF16* iSeparator,
-							const UTF16* iIgnore,
-							const UTF16* iBounce,
-							const UTF16* iPath, size_t iPathSize,
-							std::vector<string16>& ioComps);
+	static void sParseStringAndAppend(
+		const UTF16* iSeparator, const UTF16* iIgnore, const UTF16* iBounce,
+		const UTF16* iPath, size_t iPathSize,
+		std::vector<string16>& ioComps);
 
 	static size_t sNormalize_ReturnLeadingBounces(const std::vector<std::string>& iComps,
 		std::vector<std::string>& oComps);

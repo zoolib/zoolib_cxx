@@ -112,18 +112,16 @@ static void sNormalize_KeepLeadingBounces(const vector<string>& iComps, vector<s
 /** \class ZTrail
 */
 
-void ZTrail::sParseStringAndAppend(const UTF8* iSeparator,
-						const UTF8* iIgnore,
-						const UTF8* iBounce,
-						const UTF8* iTrail, size_t iTrailSize,
-						vector<string8>& ioComps)
+void ZTrail::sParseStringAndAppend(
+	const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
+	const UTF8* iTrail, size_t iTrailSize,
+	vector<string8>& ioComps)
 	{ return sParseStringAndAppend_T(iSeparator, iIgnore, iBounce, iTrail, iTrailSize, ioComps); }
 
-void ZTrail::sParseStringAndAppend(const UTF16* iSeparator,
-						const UTF16* iIgnore,
-						const UTF16* iBounce,
-						const UTF16* iTrail, size_t iTrailSize,
-						vector<string16>& ioComps)
+void ZTrail::sParseStringAndAppend(
+	const UTF16* iSeparator, const UTF16* iIgnore, const UTF16* iBounce,
+	const UTF16* iTrail, size_t iTrailSize,
+	vector<string16>& ioComps)
 	{ return sParseStringAndAppend_T(iSeparator, iIgnore, iBounce, iTrail, iTrailSize, ioComps); }
 
 size_t ZTrail::sNormalize_ReturnLeadingBounces(const vector<string>& iComps,
