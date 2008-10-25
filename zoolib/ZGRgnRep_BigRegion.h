@@ -32,6 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZGRgnRep_BigRegion : public ZGRgnRep
 	{
 public:
+	static ZRef<ZGRgnRep_BigRegion> sGetRep(const ZRef<ZGRgnRep>& iRep);
+
 	ZGRgnRep_BigRegion();
 	ZGRgnRep_BigRegion(const ZBigRegion& iBigRegion);
 	virtual ~ZGRgnRep_BigRegion();
@@ -43,6 +45,7 @@ public:
 	virtual bool IsEmpty();
 	virtual ZRect Bounds();
 	virtual bool IsSimpleRect();
+	virtual bool IsEqualTo(const ZRef<ZGRgnRep>& iRep);
 
 	virtual void Inset(ZCoord iH, ZCoord iV);
 	virtual ZRef<ZGRgnRep> Insetted(ZCoord iH, ZCoord iV);

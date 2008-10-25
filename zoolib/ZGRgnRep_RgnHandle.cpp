@@ -65,9 +65,12 @@ RgnHandle sDecomposeRepIntoRgnHandle(const ZRef<ZGRgnRep>& iRep)
 	{
 	State_t theState;
 	theState.fResult = ::NewRgn();
-	theState.fTemp = ::NewRgn();
-	iRep->Decompose(sDecomposeRepProc, &theState);
-	::DisposeRgn(theState.fTemp);
+	if (iRep)
+		{
+		theState.fTemp = ::NewRgn();
+		iRep->Decompose(sDecomposeRepProc, &theState);
+		::DisposeRgn(theState.fTemp);
+		}
 	return theState.fResult;
 	}
 
@@ -90,6 +93,13 @@ RgnHandle sMakeRgnHandle(const ZRef<ZGRgnRep>& iRep)
 		return sCopyRgn(other->GetRgnHandle());
 
 	return sDecomposeRepIntoRgnHandle(iRep);
+	}
+
+RgnHandle sGetRgnHandle(RgnHandle iRgnHandle, bool iAdopt)
+	{
+	if (iAdopt)
+		return iRgnHandle;
+	return sCopyRgn(iRgnHandle);
 	}
 
 } // anonymous namespace
@@ -117,15 +127,23 @@ public:
 
 template <>
 ZRef<ZGRgnRep> ZGRgnRepCreator_T<RgnHandle>::sCreate(RgnHandle iNative, bool iAdopt)
-	{
-	if (!iAdopt)
-		iNative = sCopyRgn(iNative);
-	return new ZGRgnRep_RgnHandle(iNative);
-	}
+	{ return new ZGRgnRep_RgnHandle(iNative, iAdopt); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZGRgnRep_RgnHandle
+
+ZRef<ZGRgnRep_RgnHandle> ZGRgnRep_RgnHandle::sGetRep(const ZRef<ZGRgnRep>& iRep)
+	{
+	if (ZRef<ZGRgnRep_RgnHandle> other = ZRefDynamicCast<ZGRgnRep_RgnHandle>(iRep))
+		return other;
+	RgnHandle theRgnHandle = sDecomposeRepIntoRgnHandle(iRep);
+	return new ZGRgnRep_RgnHandle(theRgnHandle);
+	}
+
+ZGRgnRep_RgnHandle::ZGRgnRep_RgnHandle(RgnHandle iRgnHandle, bool iAdopt)
+:	fRgnHandle(sGetRgnHandle(iRgnHandle, iAdopt))
+	{}
 
 ZGRgnRep_RgnHandle::ZGRgnRep_RgnHandle(RgnHandle iRgnHandle)
 :	fRgnHandle(iRgnHandle)
@@ -191,6 +209,16 @@ ZRect ZGRgnRep_RgnHandle::Bounds()
 
 bool ZGRgnRep_RgnHandle::IsSimpleRect()
 	{ return ::IsRegionRectangular(fRgnHandle); }
+
+bool ZGRgnRep_RgnHandle::IsEqualTo(const ZRef<ZGRgnRep>& iRep)
+	{
+	bool dispose;
+	RgnHandle other = sGetRgnHandle(iRep, dispose);
+	bool result = ::MacEqualRgn(fRgnHandle, other);
+	if (dispose)
+		::DisposeRgn(other);
+	return result;
+	}
 
 void ZGRgnRep_RgnHandle::Inset(ZCoord iH, ZCoord iV)
 	{ ::InsetRgn(fRgnHandle, iH, iV); }

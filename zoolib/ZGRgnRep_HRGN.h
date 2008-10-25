@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_API.h"
 
 #ifndef ZCONFIG_API_Avail__GRgnRep_HRGN
-#	define ZCONFIG_API_Avail__GRgnRepRep_HRGN ZCONFIG_SPI_Enabled(GDI)
+#	define ZCONFIG_API_Avail__GRgnRep_HRGN ZCONFIG_SPI_Enabled(GDI)
 #endif
 
 #ifndef ZCONFIG_API_Desired__GRgnRep_HRGN
@@ -46,6 +46,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZGRgnRep_HRGN : public ZGRgnRep
 	{
 public:
+	static ZRef<ZGRgnRep_HRGN> sGetRep(const ZRef<ZGRgnRep>& iRep);
+
+	ZGRgnRep_HRGN(HRGN iHRGN, bool iAdopt);
 	ZGRgnRep_HRGN(HRGN iHRGN);
 	virtual ~ZGRgnRep_HRGN();
 
@@ -56,6 +59,7 @@ public:
 	virtual bool IsEmpty();
 	virtual ZRect Bounds();
 	virtual bool IsSimpleRect();
+	virtual bool IsEqualTo(const ZRef<ZGRgnRep>& iRep);
 
 	virtual void Inset(ZCoord iH, ZCoord iV);
 	virtual ZRef<ZGRgnRep> Insetted(ZCoord iH, ZCoord iV);

@@ -90,6 +90,13 @@ HRGN sMakeHRGN(const ZRef<ZGRgnRep>& iRep)
 	return sDecomposeRepIntoHRGN(iRep);
 	}
 
+HRGN sGetHRGN(HRGN iNative, bool iAdopt)
+	{
+	if (iAdopt)
+		return iNative;
+	return sCopyHRGN(iNative);
+	}
+
 } // anonymous namespace
 
 // =================================================================================================
@@ -114,15 +121,23 @@ public:
 
 template <>
 ZRef<ZGRgnRep> ZGRgnRepCreator_T<HRGN>::sCreate(HRGN iNative, bool iAdopt)
-	{
-	if (!iAdopt)
-		iNative = sCopyHRGN(iNative);
-	return new ZGRgnRep_HRGN(iNative);
-	}
+	{ return new ZGRgnRep_HRGN(iNative, iAdopt); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZGRgnRep_HRGN
+
+ZRef<ZGRgnRep_HRGN> ZGRgnRep_HRGN::sGetRep(const ZRef<ZGRgnRep>& iRep)
+	{
+	if (ZRef<ZGRgnRep_HRGN> other = ZRefDynamicCast<ZGRgnRep_HRGN>(iRep))
+		return other;
+	HRGN theHRGN = sDecomposeRepIntoHRGN(iRep);
+	return new ZGRgnRep_HRGN(theHRGN);
+	}
+
+ZGRgnRep_HRGN::ZGRgnRep_HRGN(HRGN iHRGN, bool iAdopt)
+:	fHRGN(sGetHRGN(iHRGN, iAdopt))
+	{}
 
 ZGRgnRep_HRGN::ZGRgnRep_HRGN(HRGN iHRGN)
 :	fHRGN(iHRGN)
@@ -182,6 +197,16 @@ bool ZGRgnRep_HRGN::IsSimpleRect()
 	{
 	RECT dummyRect;
 	return COMPLEXREGION != ::GetRgnBox(fHRGN, &dummyRect);
+	}
+
+bool ZGRgnRep_HRGN::IsEqualTo(const ZRef<ZGRgnRep>& iRep)
+	{
+	bool dispose;
+	HRGN other = sGetHRGN(iRep, dispose);
+	bool result = ::EqualRgn(fHRGN, other);
+	if (dispose)
+		::DeleteObject(other);
+	return result;
 	}
 
 namespace ZANONYMOUS {

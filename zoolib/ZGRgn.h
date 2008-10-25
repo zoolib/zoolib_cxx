@@ -50,6 +50,9 @@ protected:
 	ZGRgnRep();
 
 public:
+	typedef ZooLib::ZPoint ZPoint;
+	typedef ZooLib::ZRect ZRect;
+
 	typedef bool (*DecomposeProc)(const ZRect& iRect, void* iRefcon);
 	virtual size_t Decompose(DecomposeProc iProc, void* iRefcon) = 0;
 
@@ -57,6 +60,7 @@ public:
 	virtual bool IsEmpty() = 0;
 	virtual ZRect Bounds() = 0;
 	virtual bool IsSimpleRect() = 0;
+	virtual bool IsEqualTo(const ZRef<ZGRgnRep>& iRep) = 0;
 
 	virtual void Inset(ZCoord iH, ZCoord iV) = 0;
 	virtual ZRef<ZGRgnRep> Insetted(ZCoord iH, ZCoord iV) = 0;
@@ -92,12 +96,19 @@ public:
 
 class ZGRgn
 	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZGRgn, operator_bool_generator_type, operator_bool_type);
 	ZRef<ZGRgnRep> fRep;
 
 public:
+    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZGRgn, operator_bool_generator_type, operator_bool_type);
 	operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(fRep && !fRep->IsEmpty()); }
+
+	template <typename Native>
+	static ZGRgn sFromNative(Native iNative, bool iAdopt)
+		{ return ZGRgnRepCreator_T<Native>::sCreate(iNative, iAdopt); }
+
+	typedef ZooLib::ZPoint ZPoint;
+	typedef ZooLib::ZRect ZRect;
 
 	ZGRgn();
 
@@ -116,24 +127,8 @@ public:
 	ZGRgn(ZCoord iLeft, ZCoord iTop, ZCoord iRight, ZCoord iBottom);
 	ZGRgn& operator=(const ZRect& iRect);
 
-// From native types
-	template <typename Native>
-	ZGRgn(Native iNative, bool iAdopt)
-	:	fRep(ZGRgnRepCreator_T<Native>::sCreate(iNative, iAdopt)
-		{}
-
-	template <typename Native>
-	ZGRgn& operator=(Native iNative)
-		{
-		fRep = ZGRgnRepCreator_T<Native>::sCreate(iNative, false);
-		return *this;
-		}
-
-	template <typename Native>
-	Native Get()
-		{
-		return ZGRgnRepCreator_T<Native>::sGet(fRep);
-		}
+	void Fresh();
+	ZRef<ZGRgnRep> GetRep() const;
 
 // Procedural API
 	typedef ZGRgnRep::DecomposeProc DecomposeProc;
@@ -194,7 +189,7 @@ public:
 	void Xor(const ZGRgn& iOther);
 	ZGRgn Xoring(const ZGRgn& iOther) const;
 
-// Algrebraic API
+// Algebraic API
 	void operator+=(const ZPoint& iOffset);
 
 	ZGRgn operator+(const ZPoint& iOffset) const;

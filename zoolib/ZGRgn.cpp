@@ -38,6 +38,13 @@ static ZRef<ZGRgnRep> sMake(const ZRect& iBounds)
 #pragma mark -
 #pragma mark * ZGRgn
 
+ZGRgnRep::ZGRgnRep()
+	{}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZGRgn
+
 ZGRgn::ZGRgn()
 	{}
 ZGRgn::~ZGRgn()
@@ -62,6 +69,23 @@ ZGRgn& ZGRgn::operator=(const ZRef<ZGRgnRep>& iRep)
 	fRep = iRep;
 	return *this;
 	}
+
+ZGRgn::ZGRgn(const ZRect& iRect)
+:	fRep(sMake(iRect))
+	{}
+
+ZGRgn::ZGRgn(ZCoord iLeft, ZCoord iTop, ZCoord iRight, ZCoord iBottom)
+:	fRep(sMake(ZRect(iLeft, iTop, iRight, iBottom)))
+	{}
+
+ZGRgn& ZGRgn::operator=(const ZRect& iRect)
+	{
+	fRep = sMake(iRect);
+	return *this;
+	}
+
+ZRef<ZGRgnRep> ZGRgn::GetRep() const
+	{ return fRep; }
 
 size_t ZGRgn::Decompose(DecomposeProc iProc, void* iRefcon) const
 	{
@@ -102,6 +126,21 @@ bool ZGRgn::Contains(const ZPoint& iPoint) const
 	if (fRep)
 		return fRep->Contains(iPoint.h, iPoint.v);
 	return false;
+	}
+
+bool ZGRgn::IsEqualTo(const ZGRgn& iOther) const
+	{
+	if (fRep)
+		{
+		if (iOther.fRep)
+			fRep->IsEqualTo(iOther.fRep);
+		return fRep->IsEmpty();
+		}
+	else if (iOther.fRep)
+		{
+		return iOther.fRep->IsEmpty();
+		}
+	return true;
 	}
 
 void ZGRgn::Outline()

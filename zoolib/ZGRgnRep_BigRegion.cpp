@@ -45,14 +45,6 @@ ZGRgnRep_BigRegion* sDecomposeRepIntoBigRegion(const ZRef<ZGRgnRep>& iRep)
 	return theRep;
 	}
 
-ZRef<ZGRgnRep_BigRegion> sGetRep(const ZRef<ZGRgnRep>& iRep)
-	{
-	if (ZRef<ZGRgnRep_BigRegion> other = ZRefDynamicCast<ZGRgnRep_BigRegion>(iRep))
-		return other;
-
-	return sDecomposeRepIntoBigRegion(iRep);
-	}
-
 ZGRgnRep_BigRegion* sMakeRep(const ZRef<ZGRgnRep>& iRep)
 	{
 	if (ZRef<ZGRgnRep_BigRegion> other = ZRefDynamicCast<ZGRgnRep_BigRegion>(iRep))
@@ -91,6 +83,14 @@ ZRef<ZGRgnRep> ZGRgnRepCreator_T<ZBigRegion>::sCreate(ZBigRegion iNative, bool i
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZGRgnRep_BigRegion
+
+ZRef<ZGRgnRep_BigRegion> ZGRgnRep_BigRegion::sGetRep(const ZRef<ZGRgnRep>& iRep)
+	{
+	if (ZRef<ZGRgnRep_BigRegion> other = ZRefDynamicCast<ZGRgnRep_BigRegion>(iRep))
+		return other;
+
+	return sDecomposeRepIntoBigRegion(iRep);
+	}
 
 ZGRgnRep_BigRegion::ZGRgnRep_BigRegion()
 	{}
@@ -137,6 +137,9 @@ ZRect ZGRgnRep_BigRegion::Bounds()
 
 bool ZGRgnRep_BigRegion::IsSimpleRect()
 	{ return fBigRegion.IsSimpleRect(); }
+
+bool ZGRgnRep_BigRegion::IsEqualTo(const ZRef<ZGRgnRep>& iRep)
+	{ return fBigRegion == sGetRep(iRep)->GetBigRegion(); }
 
 void ZGRgnRep_BigRegion::Inset(ZCoord iH, ZCoord iV)
 	{ fBigRegion.MakeInset(iH, iV); }

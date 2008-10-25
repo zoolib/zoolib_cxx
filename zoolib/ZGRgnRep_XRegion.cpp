@@ -84,6 +84,12 @@ Region sMakeRegion(const ZRef<ZGRgnRep>& iRep)
 	return sDecomposeRepIntoRegion(iRep);
 	}
 
+Region sGetRegion(Region iNative, bool iAdopt)
+	{
+	if (iAdopt)
+		return iNative;
+	return sCopyRegion(iNative);
+	}
 } // anonymous namespace
 
 // =================================================================================================
@@ -110,15 +116,23 @@ public:
 
 template <>
 ZRef<ZGRgnRep> ZGRgnRepCreator_T<Region>::sCreate(Region iNative, bool iAdopt)
-	{
-	if (!iAdopt)
-		iNative = sCopyRegion(iNative);
-	return new ZGRgnRep_XRegion(iNative);
-	}
+	{ return new ZGRgnRep_XRegion(iNative, iAdopt); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZGRgnRep_XRegion
+
+ZRef<ZGRgnRep_XRegion> ZGRgnRep_XRegion::sGetRep(const ZRef<ZGRgnRep>& iRep)
+	{
+	if (ZRef<ZGRgnRep_XRegion> other = ZRefDynamicCast<ZGRgnRep_XRegion>(iRep))
+		return other;
+	Region theXRegion = sDecomposeRepIntoRegion(iRep);
+	return new ZGRgnRep_XRegion(theXRegion);
+	}
+
+ZGRgnRep_XRegion::ZGRgnRep_XRegion(Region iRegion, bool iAdopt)
+:	fRegion(sGetRegion(iRegion, iAdopt))
+	{}
 
 ZGRgnRep_XRegion::ZGRgnRep_XRegion(Region iRegion)
 :	fRegion(iRegion)
@@ -190,10 +204,18 @@ bool ZGRgnRep_XRegion::IsSimpleRect()
 	return isEmpty;
 	}
 
-void ZGRgnRep_XRegion::Inset(ZCoord iH, ZCoord iV)
+bool ZGRgnRep_XRegion::IsEqualTo(const ZRef<ZGRgnRep>& iRep)
 	{
-	::XShrinkRegion(fRegion, iH, iV);
+	bool dispose;
+	Region other = sGetRegion(iRep, dispose);
+	bool result = ::XEqualRegion(fRegion, other);
+	if (dispose)
+		::XDestroyRegion(other);
+	return result;
 	}
+
+void ZGRgnRep_XRegion::Inset(ZCoord iH, ZCoord iV)
+	{ ::XShrinkRegion(fRegion, iH, iV); }
 
 ZRef<ZGRgnRep> ZGRgnRep_XRegion::Insetted(ZCoord iH, ZCoord iV)
 	{

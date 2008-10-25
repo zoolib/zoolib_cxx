@@ -46,6 +46,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZGRgnRep_RgnHandle : public ZGRgnRep
 	{
 public:
+	static ZRef<ZGRgnRep_RgnHandle> sGetRep(const ZRef<ZGRgnRep>& iRep);
+
+	ZGRgnRep_RgnHandle(RgnHandle iRgnHandle, bool iAdopt);
 	ZGRgnRep_RgnHandle(RgnHandle iRgnHandle);
 	virtual ~ZGRgnRep_RgnHandle();
 
@@ -56,6 +59,7 @@ public:
 	virtual bool IsEmpty();
 	virtual ZRect Bounds();
 	virtual bool IsSimpleRect();
+	virtual bool IsEqualTo(const ZRef<ZGRgnRep>& iRep);
 
 	virtual void Inset(ZCoord iH, ZCoord iV);
 	virtual ZRef<ZGRgnRep> Insetted(ZCoord iH, ZCoord iV);
