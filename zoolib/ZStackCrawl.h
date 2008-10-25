@@ -89,7 +89,7 @@ public:
 		static void sPopulateStackFrames(std::vector<ZStackCrawl::pFrame_t>& oFrames);
 	#endif
 
-	#if ZCONFIG(OS, Win32)
+	#if ZCONFIG_SPI_Enabled(Win)
 		static void sPopulateStackFrames(std::vector<ZStackCrawl::pFrame_t>& oFrames);
 	#endif
 

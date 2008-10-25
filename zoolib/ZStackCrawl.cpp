@@ -35,7 +35,7 @@ using std::vector;
 #pragma mark -
 #pragma mark * Win32 Helpers
 
-#if ZCONFIG(OS, Win32)
+#if ZCONFIG_SPI_Enabled(Win)
 #include <csetjmp>
 
 #include "zoolib/ZWinHeader.h"
@@ -232,7 +232,7 @@ static void sGetSymNameAndOffset(const void* iAddress, string& oSymName, size_t&
 		}
 	}
 
-#endif // ZCONFIG(OS, Win32)
+#endif // ZCONFIG_SPI_Enabled(Win)
 
 // =================================================================================================
 #pragma mark -
@@ -546,7 +546,7 @@ ZStackCrawl::ZStackCrawl()
 		sPopulateStackFrames(fFrames);
 	#endif
 
-	#if ZCONFIG(OS, Win32)
+	#if ZCONFIG_SPI_Enabled(Win)
 		sPopulateStackFrames(fFrames);
 	#endif
 	}
@@ -583,7 +583,7 @@ ZStackCrawl::Frame ZStackCrawl::At(size_t iIndex) const
 			return result;
 		#endif
 
-		#if ZCONFIG(OS, Win32)
+		#if ZCONFIG_SPI_Enabled(Win)
 			const pFrame_t& theFrame = fFrames.at(iIndex);
 
 			result.fPC = theFrame.fPC;
