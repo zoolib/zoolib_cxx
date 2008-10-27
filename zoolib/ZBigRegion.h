@@ -231,4 +231,18 @@ protected:
 	ZRect_T<int32> fExtent;
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZBigRegionAccumulator
+
+class ZBigRegionUnioner_t
+	{
+public:
+	void operator()(ZBigRegion& ioRgn, const ZBigRegion& iOther) const
+		{ ioRgn |= iOther; }
+	};
+
+typedef ZAccumulator_T<ZBigRegion, ZBigRegionUnioner_t, std::vector<ZBigRegion> >
+	ZBigRegionAccumulator;
+
 #endif // __ZBigRegion__
