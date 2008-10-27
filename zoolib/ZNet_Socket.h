@@ -74,7 +74,7 @@ public:
 // Our protocol
 	int GetSocketFD();
 
-	virtual ZRef<ZNetEndpoint> Imp_MakeStreamer(int iSocketFD) = 0;
+	virtual ZRef<ZNetEndpoint> Imp_MakeEndpoint(int iSocketFD) = 0;
 
 	static void sEnableFastCancellation();
 

@@ -29,8 +29,8 @@ using std::string;
 #pragma mark * Factories
 
 ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetNameLookup>, ZNetName_Local::LookupParam_t);
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetListener_Local>, string);
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetEndpoint_Local>, string);
+ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetListener_Local>, ZNetListener_Local::MakeParam_t);
+ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetEndpoint_Local>, ZNetEndpoint_Local::MakeParam_t);
 
 // =================================================================================================
 #pragma mark -
@@ -93,8 +93,8 @@ const string& ZNetName_Local::GetPath() const
 ZRef<ZNetListener_Local> ZNetListener_Local::sCreateListener(
 	const string& iPath, size_t iListenQueueSize)
 	{
-	return ZFactoryChain_T<ZRef<ZNetListener_Local>, string>
-		::sMake(iPath);
+	return ZFactoryChain_T<ZRef<ZNetListener_Local>, MakeParam_t>
+		::sMake(MakeParam_t(iPath, iListenQueueSize));
 	}
 
 // =================================================================================================
@@ -104,6 +104,6 @@ ZRef<ZNetListener_Local> ZNetListener_Local::sCreateListener(
 ZRef<ZNetEndpoint_Local> ZNetEndpoint_Local::sCreateConnectedEndpoint(
 	const string& iPath)
 	{
-	return ZFactoryChain_T<ZRef<ZNetEndpoint_Local>, string>
-		::sMake(iPath);
+	return ZFactoryChain_T<ZRef<ZNetEndpoint_Local>, MakeParam_t>
+		::sMake(MakeParam_t(iPath));
 	}

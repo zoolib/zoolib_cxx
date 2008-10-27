@@ -56,7 +56,7 @@ private:
 class ZNetName_Local : public ZNetName
 	{
 public:
-	typedef ZMulti_T2<std::string, size_t> LookupParam_t;
+	typedef std::string LookupParam_t;
 
 	ZNetName_Local();
 	ZNetName_Local(const ZNetName_Local& other);
@@ -81,6 +81,8 @@ private:
 class ZNetListener_Local : public virtual ZNetListener
 	{
 public:
+	typedef ZMulti_T2<std::string, size_t> MakeParam_t;
+
 	static ZRef<ZNetListener_Local> sCreateListener(
 		const std::string& iPath, size_t iListenQueueSize);
 	};
@@ -92,6 +94,8 @@ public:
 class ZNetEndpoint_Local : public virtual ZNetEndpoint
 	{
 public:
+	typedef std::string MakeParam_t;
+
 	static ZRef<ZNetEndpoint_Local> sCreateConnectedEndpoint(
 		const std::string& iPath);
 	};

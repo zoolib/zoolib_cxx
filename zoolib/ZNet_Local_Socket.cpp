@@ -32,7 +32,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <errno.h>
 #endif
 
-//#include <stdio.h>
 #include <fcntl.h>
 
 #include <sys/socket.h>
@@ -42,7 +41,54 @@ using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Helper functions
+#pragma mark * Factory functions
+
+#include "zoolib/ZFactoryChain.h"
+
+static bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Local::LookupParam_t iParam)
+	{
+	try
+		{
+		oResult = new ZNetNameLookup_Local_Socket(iParam);
+		return true;
+		}
+	catch (...)
+		{}
+	return false;
+	}
+
+static ZFactoryChain_Maker_T<ZRef<ZNetNameLookup>, ZNetName_Local::LookupParam_t>
+	sMaker1(sMake_NameLookup);
+
+static bool sMake_Listener(ZRef<ZNetListener_Local>& oResult, ZNetListener_Local::MakeParam_t iParam)
+	{
+	try
+		{
+		oResult = new ZNetListener_Local_Socket(iParam.f0, iParam.f1);
+		return true;
+		}
+	catch (...)
+		{}
+	return false;
+	}
+
+static ZFactoryChain_Maker_T<ZRef<ZNetListener_Local>, ZNetListener_Local::MakeParam_t>
+	sMaker2(sMake_Listener);
+
+static bool sMake_Endpoint(ZRef<ZNetEndpoint_Local>& oResult, ZNetEndpoint_Local::MakeParam_t iParam)
+	{
+	try
+		{
+		oResult = new ZNetEndpoint_Local_Socket(iParam);
+		return true;
+		}
+	catch (...)
+		{}
+	return false;
+	}
+
+static ZFactoryChain_Maker_T<ZRef<ZNetEndpoint_Local>, ZNetEndpoint_Local::MakeParam_t>
+	sMaker3(sMake_Endpoint);
 
 // =================================================================================================
 #pragma mark -
@@ -119,19 +165,14 @@ ZNetListener_Local_Socket::ZNetListener_Local_Socket(
 
 static int sListen(const string& iPath)
 	{
+	sockaddr_un localSockAddr;
+	if (iPath.empty() || iPath.length() >= sizeof(localSockAddr.sun_path))
+		throw ZNetEx(ZNet::errorGeneric);
+
 	int theSocketFD = ::socket(PF_LOCAL, SOCK_STREAM, 0);
 	if (theSocketFD < 0)
-		{
-		int err = errno;
-		throw ZNetEx(ZNet_Socket::sTranslateError(err));
-		}
+		throw ZNetEx(ZNet_Socket::sTranslateError(errno));
 
-	// Enable SO_REUSEADDR, cause it's a real pain waiting for TIME_WAIT to expire
-	int reuseAddrFlag = 1;
-	::setsockopt(
-		theSocketFD, SOL_SOCKET, SO_REUSEADDR, (char*)&reuseAddrFlag, sizeof(reuseAddrFlag));
-
-	sockaddr_un localSockAddr;
 	ZBlockSet(&localSockAddr, sizeof(localSockAddr), 0);
 	localSockAddr.sun_family = AF_LOCAL;
 	strcpy(localSockAddr.sun_path, iPath.c_str());
@@ -152,7 +193,7 @@ ZNetListener_Local_Socket::ZNetListener_Local_Socket(const std::string& iPath, s
 ZNetListener_Local_Socket::~ZNetListener_Local_Socket()
 	{}
 
-ZRef<ZNetEndpoint> ZNetListener_Local_Socket::Imp_MakeStreamer(int iSocketFD)
+ZRef<ZNetEndpoint> ZNetListener_Local_Socket::Imp_MakeEndpoint(int iSocketFD)
 	{
 	return new ZNetEndpoint_Local_Socket(iSocketFD);
 	}

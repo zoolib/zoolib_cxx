@@ -312,7 +312,7 @@ ZRef<ZNetEndpoint> ZNetListener_Socket::Listen()
 		{
 		try
 			{
-			return this->Imp_MakeStreamer(result);
+			return this->Imp_MakeEndpoint(result);
 			}
 		catch (...)
 			{}

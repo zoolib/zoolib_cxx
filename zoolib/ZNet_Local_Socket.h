@@ -84,7 +84,7 @@ public:
 	virtual ~ZNetListener_Local_Socket();
 
 // From ZNetListener_Socket
-	virtual ZRef<ZNetEndpoint> Imp_MakeStreamer(int iSocketFD);
+	virtual ZRef<ZNetEndpoint> Imp_MakeEndpoint(int iSocketFD);
 	};
 
 // =================================================================================================
