@@ -23,9 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZGeom.h"
+#include "zoolib/ZDCRgn.h"
 
 class ZDC;
-class ZDCRgn;
 class ZDCPattern;
 class ZDCPixmap;
 
