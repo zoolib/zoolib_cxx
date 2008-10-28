@@ -87,10 +87,13 @@ private:
 	mach_port_t fMasterPort;
 	IONotificationPortRef fIONotificationPortRef;
 
-	ZRef<ZUSBWatcher> fUSBWatcher_Traditional;
+	ZRef<ZUSBWatcher> fUSBWatcher_Trad;
 	ZRef<ZUSBWatcher> fUSBWatcher_Pearl;
-	ZRef<ZUSBWatcher> fUSBWatcher_PearlDual;
-	ZRef<ZUSBWatcher> fUSBWatcher_Pearl8120;
+	ZRef<ZUSBWatcher> fUSBWatcher_Dual;
+
+	ZRef<ZUSBWatcher> fUSBWatcher_Trad_HS;
+	ZRef<ZUSBWatcher> fUSBWatcher_Pearl_HS;
+	ZRef<ZUSBWatcher> fUSBWatcher_Dual_HS;
 
 	struct Device_t
 		{

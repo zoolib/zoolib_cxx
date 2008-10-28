@@ -168,17 +168,23 @@ void Manager_OSXUSB::Start()
 	::CFRunLoopAddSource(theRunLoopRef,
 		::IONotificationPortGetRunLoopSource(fIONotificationPortRef), kCFRunLoopDefaultMode);
 
-	fUSBWatcher_Traditional = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 1);
-	fUSBWatcher_Traditional->SetObserver(this);
+	fUSBWatcher_Trad = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 1);
+	fUSBWatcher_Trad->SetObserver(this);
 
 	fUSBWatcher_Pearl = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 6);
 	fUSBWatcher_Pearl->SetObserver(this);
 
-	fUSBWatcher_PearlDual = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 4);
-	fUSBWatcher_PearlDual->SetObserver(this);
+	fUSBWatcher_Dual = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 4);
+	fUSBWatcher_Dual->SetObserver(this);
 
-	fUSBWatcher_Pearl8120 = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8004);
-	fUSBWatcher_Pearl8120->SetObserver(this);
+	fUSBWatcher_Trad_HS = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8001);
+	fUSBWatcher_Trad_HS->SetObserver(this);
+
+	fUSBWatcher_Pearl_HS = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8006);
+	fUSBWatcher_Pearl_HS->SetObserver(this);
+
+	fUSBWatcher_Dual_HS = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8004);
+	fUSBWatcher_Dual_HS->SetObserver(this);
 
 	Manager::Start();
 	}
@@ -188,10 +194,13 @@ void Manager_OSXUSB::Stop()
 	if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 		s << "Stop";
 
-	fUSBWatcher_Traditional.Clear();
+	fUSBWatcher_Trad.Clear();
 	fUSBWatcher_Pearl.Clear();
-	fUSBWatcher_PearlDual.Clear();
-	fUSBWatcher_Pearl8120.Clear();
+	fUSBWatcher_Dual.Clear();
+
+	fUSBWatcher_Trad_HS.Clear();
+	fUSBWatcher_Pearl_HS.Clear();
+	fUSBWatcher_Dual_HS.Clear();
 
 	if (fIONotificationPortRef)
 		{
@@ -285,32 +294,14 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 			}
 		}
 
-	if (theIDProduct == 6)
+	if (theIDProduct == 6 || theIDProduct == 0x8006)
 		{
 		if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
-			s << "Got an 8xxx series, changing modes";
+			s << "Mass storage only, changing modes.";
 
 		sChangeMode(iUSBDevice, fAllowMassStorage);
 
 		return;
-		}
-
-	if (theIDProduct == 4)
-		{
-		if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
-			s << "Got an 8xxx series, dual mode";
-		}
-
-	if (theIDProduct == 0x8004)
-		{
-		if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
-			s << "Got an 8xxx series, dual mode, high-speed USB";
-		}
-
-	if (theIDProduct == 1)
-		{
-		if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
-			s << "Got an older BlackBerry";
 		}
 
 	ZMutexLocker locker(fMutex);
