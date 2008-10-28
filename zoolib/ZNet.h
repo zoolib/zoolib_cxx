@@ -154,7 +154,9 @@ public:
 #pragma mark * ZNetListener
 
 /// Subclasses of this return ZNetEndpoint instances as connections arrive.
-class ZNetListener : public ZStreamerRWConFactory, ZooLib::NonCopyable
+class ZNetListener
+:	public virtual ZStreamerRWConFactory,
+	ZooLib::NonCopyable
 	{
 public:
 	virtual ~ZNetListener();
@@ -173,7 +175,9 @@ public:
 #pragma mark * ZNetEndpoint
 
 /// Subclasses of this provide the interface to network endpoints.
-class ZNetEndpoint : public ZStreamerRWCon, ZooLib::NonCopyable
+class ZNetEndpoint
+:	public virtual ZStreamerRWCon,
+	ZooLib::NonCopyable
 	{
 protected:
 	ZNetEndpoint();

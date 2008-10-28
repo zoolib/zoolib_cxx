@@ -89,7 +89,7 @@ private:
 #pragma mark -
 #pragma mark * ZNetListener_TCP
 
-class ZNetListener_TCP : public ZNetListener
+class ZNetListener_TCP : public virtual ZNetListener
 	{
 public:
 	typedef ZMulti_T3<ip_addr, ip_port, size_t> MakeParam_t;
@@ -107,7 +107,7 @@ public:
 #pragma mark -
 #pragma mark * ZNetEndpoint_TCP
 
-class ZNetEndpoint_TCP : public ZNetEndpoint
+class ZNetEndpoint_TCP : public virtual ZNetEndpoint
 	{
 public:
 	typedef ZMulti_T2<ip_addr, ip_port> MakeParam_t;

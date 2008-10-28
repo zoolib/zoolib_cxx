@@ -32,16 +32,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_API_Desired__Net_Socket 1
 #endif
 
-#include "zoolib/ZStreamer.h"
-#include "zoolib/ZNet.h" // For ZNet::Error etc.
+#include "zoolib/ZNet.h"
 
 #if ZCONFIG_API_Enabled(Net_Socket)
-
-// =================================================================================================
-
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/socket.h>
 
 // =================================================================================================
 #pragma mark -
