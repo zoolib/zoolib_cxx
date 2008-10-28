@@ -20,20 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNet_Local_Socket.h"
 
-// =================================================================================================
 #if ZCONFIG_API_Enabled(Net_Local_Socket)
 
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZTime.h"
 
-#include <unistd.h>
-
-#ifndef errno
-#	include <errno.h>
-#endif
-
-#include <fcntl.h>
-
+#include <errno.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 
@@ -177,6 +168,8 @@ static int sListen(const string& iPath)
 	localSockAddr.sun_family = AF_LOCAL;
 	strcpy(localSockAddr.sun_path, iPath.c_str());
 
+	::unlink(localSockAddr.sun_path);
+
 	if (::bind(theSocketFD, (sockaddr*)&localSockAddr, sizeof(localSockAddr)) < 0)
 		{
 		int err = errno;
@@ -252,5 +245,6 @@ ZRef<ZNetAddress> ZNetEndpoint_Local_Socket::GetRemoteAddress()
 	return ZRef<ZNetAddress>();
 	}
 
-#endif // ZCONFIG_API_Enabled(Net_Local_Socket)
 // =================================================================================================
+
+#endif // ZCONFIG_API_Enabled(Net_Local_Socket)

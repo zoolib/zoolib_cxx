@@ -59,7 +59,7 @@ ZNetAddress_Internet::~ZNetAddress_Internet()
 	{}
 
 ZRef<ZNetEndpoint> ZNetAddress_Internet::Connect() const
-	{ return ZNetEndpoint_TCP::sCreateConnectedEndpoint(fHost, fPort); }
+	{ return ZNetEndpoint_TCP::sCreateConnected(fHost, fPort); }
 
 // =================================================================================================
 #pragma mark -
@@ -101,6 +101,19 @@ ip_port ZNetName_Internet::GetPort() const
 #pragma mark -
 #pragma mark * ZNetListener_TCP
 
+ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(ip_port iPort, size_t iListenQueueSize)
+	{
+	return ZFactoryChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
+		::sMake(MakeParam_t(0, iPort, iListenQueueSize));
+	}
+
+ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(
+	ip_addr iAddress, ip_port iPort, size_t iListenQueueSize)
+	{
+	return ZFactoryChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
+		::sMake(MakeParam_t(iAddress, iPort, iListenQueueSize));
+	}
+
 ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreateListener(ip_port iPort, size_t iListenQueueSize)
 	{
 	return ZFactoryChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
@@ -117,6 +130,13 @@ ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreateListener(
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetEndpoint_TCP
+
+ZRef<ZNetEndpoint_TCP> ZNetEndpoint_TCP::sCreateConnected(
+	ip_addr iRemoteHost, ip_port iRemotePort)
+	{
+	return ZFactoryChain_T<ZRef<ZNetEndpoint_TCP>, MakeParam_t>
+		::sMake(MakeParam_t(iRemoteHost, iRemotePort));
+	}
 
 ZRef<ZNetEndpoint_TCP> ZNetEndpoint_TCP::sCreateConnectedEndpoint(
 	ip_addr iRemoteHost, ip_port iRemotePort)

@@ -96,6 +96,12 @@ public:
 
 	virtual ip_port GetPort() = 0;
 
+	static ZRef<ZNetListener_TCP> sCreate(
+		ip_port iPort, size_t iListenQueueSize);
+
+	static ZRef<ZNetListener_TCP> sCreate(
+		ip_addr iAddress, ip_port iPort, size_t iListenQueueSize);
+
 	static ZRef<ZNetListener_TCP> sCreateListener(
 		ip_port iPort, size_t iListenQueueSize);
 
@@ -111,6 +117,9 @@ class ZNetEndpoint_TCP : public virtual ZNetEndpoint
 	{
 public:
 	typedef ZMulti_T2<ip_addr, ip_port> MakeParam_t;
+
+	static ZRef<ZNetEndpoint_TCP> sCreateConnected(
+		ip_addr iRemoteHost, ip_port iRemotePort);
 
 	static ZRef<ZNetEndpoint_TCP> sCreateConnectedEndpoint(
 		ip_addr iRemoteHost, ip_port iRemotePort);

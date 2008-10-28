@@ -24,34 +24,25 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
+#include "zoolib/ZNet_Internet.h"
+#include "zoolib/ZNet_Socket.h"
+
 #ifndef ZCONFIG_API_Avail__Net_Internet_Socket
-#	define ZCONFIG_API_Avail__Net_Internet_Socket ZCONFIG_SPI_Enabled(POSIX)
+#	if ZCONFIG_API_Enabled(Net_Socket)
+#		define ZCONFIG_API_Avail__Net_Internet_Socket 1
+#	endif
+#endif
+
+#ifndef ZCONFIG_API_Avail__Net_Internet_Socket
+#	define ZCONFIG_API_Avail__Net_Internet_Socket 0
 #endif
 
 #ifndef ZCONFIG_API_Desired__Net_Internet_Socket
 #	define ZCONFIG_API_Desired__Net_Internet_Socket 1
 #endif
 
-#include "zoolib/ZNet_Internet.h"
 
 #if ZCONFIG_API_Enabled(Net_Internet_Socket)
-
-// =================================================================================================
-
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZNet_Internet_Socket
-
-class ZNet_Internet_Socket
-	{
-public:
-	static ZNet::Error sTranslateError(int iNativeError);
-	};
 
 // =================================================================================================
 #pragma mark -
@@ -84,33 +75,23 @@ protected:
 #pragma mark -
 #pragma mark * ZNetListener_TCP_Socket
 
-class ZNetListener_TCP_Socket : public ZNetListener_TCP,
-							private ZNet_Internet_Socket
+class ZNetListener_TCP_Socket
+:	public ZNetListener_TCP,
+	public ZNetListener_Socket
 	{
 	ZNetListener_TCP_Socket(int iFD, size_t iListenQueueSize, bool iKnowWhatImDoing);
 public:
 	static ZRef<ZNetListener_TCP_Socket> sCreateWithFD(int iFD, size_t iListenQueueSize);
+
 	ZNetListener_TCP_Socket(ip_port iLocalPort, size_t iListenQueueSize);
 	ZNetListener_TCP_Socket(ip_addr iLocalAddress, ip_port iLocalPort, size_t iListenQueueSize);
 	virtual ~ZNetListener_TCP_Socket();
 
-// From ZNetListener via ZNetListener_TCP
-	virtual ZRef<ZNetEndpoint> Listen();
-	virtual void CancelListen();
-
 // From ZNetListener_TCP
 	virtual ip_port GetPort();
 
-	static void sEnableFastCancellation();
-
-protected:
-	void pInit(ip_addr iLocalAddress, ip_port iLocalPort, size_t iListenQueueSize);
-	void pInitRemainder(size_t iListenQueueSize);
-
-	ZMutexNR fMutexNR;
-	ZCondition fCondition;
-	int fSocketFD;
-	ZThread::ThreadID fThreadID_Listening;
+// From ZNetListener_Socket
+	virtual ZRef<ZNetEndpoint> Imp_MakeEndpoint(int iSocketFD);
 	};
 
 // =================================================================================================
@@ -119,9 +100,7 @@ protected:
 
 class ZNetEndpoint_TCP_Socket
 :	public ZNetEndpoint_TCP,
-	private ZStreamRCon,
-	private ZStreamWCon,
-	private ZNet_Internet_Socket
+	public ZNetEndpoint_Socket
 	{
 public:
 	ZNetEndpoint_TCP_Socket(int iSocketFD);
@@ -129,35 +108,9 @@ public:
 
 	virtual ~ZNetEndpoint_TCP_Socket();
 
-// From ZStreamerRCon via ZNetEndpoint_TCP
-	virtual const ZStreamRCon& GetStreamRCon();
-
-// From ZStreamerWCon via ZNetEndpoint_TCP
-	virtual const ZStreamWCon& GetStreamWCon();
-
 // From ZNetEndpoint via ZNetEndpoint_TCP
 	virtual ZRef<ZNetAddress> GetLocalAddress();
 	virtual ZRef<ZNetAddress> GetRemoteAddress();
-
-// From ZStreamR via ZStreamRCon
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
-	virtual size_t Imp_CountReadable();
-
-// From ZStreamW via ZStreamWCon
-	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-
-// From ZStreamRCon
-	virtual bool Imp_WaitReadable(int iMilliseconds);
-	virtual bool Imp_ReceiveDisconnect(int iMilliseconds);
-
-// From ZStreamWCon
-	virtual void Imp_SendDisconnect();
-
-// From ZStreamRCon and ZStreamWCon
-	virtual void Imp_Abort();
-
-private:
-	int fSocketFD;
 	};
 
 // =================================================================================================

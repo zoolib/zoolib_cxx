@@ -83,7 +83,7 @@ class ZNetListener_Local : public virtual ZNetListener
 public:
 	typedef ZMulti_T2<std::string, size_t> MakeParam_t;
 
-	static ZRef<ZNetListener_Local> sCreateListener(
+	static ZRef<ZNetListener_Local> sCreate(
 		const std::string& iPath, size_t iListenQueueSize);
 	};
 
@@ -96,8 +96,7 @@ class ZNetEndpoint_Local : public virtual ZNetEndpoint
 public:
 	typedef std::string MakeParam_t;
 
-	static ZRef<ZNetEndpoint_Local> sCreateConnectedEndpoint(
-		const std::string& iPath);
+	static ZRef<ZNetEndpoint_Local> sCreateConnected(const std::string& iPath);
 	};
 
 #endif // __ZNet_Local__

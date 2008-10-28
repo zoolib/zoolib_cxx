@@ -51,7 +51,7 @@ ZNetAddress_Local::~ZNetAddress_Local()
 	{}
 
 ZRef<ZNetEndpoint> ZNetAddress_Local::Connect() const
-	{ return ZNetEndpoint_Local::sCreateConnectedEndpoint(fPath); }
+	{ return ZNetEndpoint_Local::sCreateConnected(fPath); }
 
 const string& ZNetAddress_Local::GetPath() const
 	{ return fPath ;}
@@ -90,7 +90,7 @@ const string& ZNetName_Local::GetPath() const
 #pragma mark -
 #pragma mark * ZNetListener_Local
 
-ZRef<ZNetListener_Local> ZNetListener_Local::sCreateListener(
+ZRef<ZNetListener_Local> ZNetListener_Local::sCreate(
 	const string& iPath, size_t iListenQueueSize)
 	{
 	return ZFactoryChain_T<ZRef<ZNetListener_Local>, MakeParam_t>
@@ -101,8 +101,7 @@ ZRef<ZNetListener_Local> ZNetListener_Local::sCreateListener(
 #pragma mark -
 #pragma mark * ZNetEndpoint_Local
 
-ZRef<ZNetEndpoint_Local> ZNetEndpoint_Local::sCreateConnectedEndpoint(
-	const string& iPath)
+ZRef<ZNetEndpoint_Local> ZNetEndpoint_Local::sCreateConnected(const string& iPath)
 	{
 	return ZFactoryChain_T<ZRef<ZNetEndpoint_Local>, MakeParam_t>
 		::sMake(MakeParam_t(iPath));

@@ -20,33 +20,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNet_Socket.h"
 
-// =================================================================================================
 #if ZCONFIG_API_Enabled(Net_Socket)
 
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZTime.h"
 
-#include <unistd.h>
-
-#ifndef errno
-#	include <errno.h>
-#endif
-
-#include <signal.h>
-
-#include <stdio.h>
+#include <errno.h>
 #include <fcntl.h>
-//#include <arpa/inet.h>
+#include <signal.h>
 
 // See comment in Solaris' /usr/include/sys/ioctl.h
 #if __sun__
 #	define BSD_COMP
 #endif
 #include <sys/ioctl.h>
-
 #include <sys/socket.h>
-//#include <netdb.h>
-//#include <netinet/in.h>
 
 // AG 2005-01-04. It looks like poll.h is not always present on MacOS X.
 // We don't use poll on MacOS, so we can just skip the include for now.
@@ -297,7 +285,7 @@ ZRef<ZNetEndpoint> ZNetListener_Socket::Listen()
 
 	sWaitReadable(fSocketFD, sleepTime);
 
-	char remoteSockAddr[128];
+	char remoteSockAddr[1024];
 	ZBlockSet(&remoteSockAddr, sizeof(remoteSockAddr), 0);
 	socklen_t addrSize = sizeof(remoteSockAddr);
 	int result = ::accept(fSocketFD, (sockaddr*)&remoteSockAddr, &addrSize);
@@ -539,4 +527,5 @@ void ZNetEndpoint_Socket::Imp_Abort()
 	}
 
 // =================================================================================================
+
 #endif // ZCONFIG_API_Enabled(Net_Socket)
