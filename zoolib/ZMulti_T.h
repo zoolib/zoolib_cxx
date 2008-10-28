@@ -30,7 +30,7 @@ template <class T0, class T1>
 class ZMulti_T2
 	{
 public:
-	ZMulti_T2(const T0& iT0, const T0& iT1)
+	ZMulti_T2(const T0& iT0, const T1& iT1)
 	:	f0(iT0),
 		f1(iT1)
 		{}
