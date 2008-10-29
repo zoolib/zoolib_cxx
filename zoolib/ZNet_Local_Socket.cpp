@@ -150,7 +150,6 @@ ZNetListener_Local_Socket::ZNetListener_Local_Socket(
 	int iSocketFD, size_t iListenQueueSize, bool iKnowWhatImDoing)
 :	ZNetListener_Socket(sEnsureLocal(iSocketFD), iListenQueueSize)
 	{
-	// We could ensure that iSocketFD
 	ZAssert(iKnowWhatImDoing);
 	}
 
@@ -180,11 +179,15 @@ static int sListen(const string& iPath)
 	}
 
 ZNetListener_Local_Socket::ZNetListener_Local_Socket(const std::string& iPath, size_t iListenQueueSize)
-:	ZNetListener_Socket(sListen(iPath), iListenQueueSize)
+:	ZNetListener_Socket(sListen(iPath), iListenQueueSize),
+	fPath(iPath)
 	{}
 
 ZNetListener_Local_Socket::~ZNetListener_Local_Socket()
-	{}
+	{
+	if (!fPath.empty())
+		::unlink(fPath.c_str());
+	}
 
 ZRef<ZNetEndpoint> ZNetListener_Local_Socket::Imp_MakeEndpoint(int iSocketFD)
 	{

@@ -74,7 +74,6 @@ protected:
 class ZNetListener_Local_Socket
 :	public ZNetListener_Local,
 	public ZNetListener_Socket
-	
 	{
 	ZNetListener_Local_Socket(int iFD, size_t iListenQueueSize, bool iKnowWhatImDoing);
 public:
@@ -85,6 +84,9 @@ public:
 
 // From ZNetListener_Socket
 	virtual ZRef<ZNetEndpoint> Imp_MakeEndpoint(int iSocketFD);
+
+private:
+	std::string fPath;
 	};
 
 // =================================================================================================
