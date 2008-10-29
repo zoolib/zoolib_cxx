@@ -56,6 +56,18 @@ public:
 	ZTaskOwner();
 	~ZTaskOwner();
 
+	class Visitor
+		{
+	protected:
+		Visitor();
+		~Visitor();
+	public:
+		virtual bool VisitTask(ZTask& iTask) = 0;
+		};
+
+	void Vist(Visitor& iVisitor);
+
+	// How about a visitor? Get's called once for each task.
 	void Tell(const std::string& iString, void* iRefcon);
 	void StopAll();
 
