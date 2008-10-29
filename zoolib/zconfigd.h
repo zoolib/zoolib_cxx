@@ -32,6 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZCONFIG_Processor_x86 4
 #define ZCONFIG_Processor_Sparc 8
 #define ZCONFIG_Processor_Alpha 16
+#define ZCONFIG_Processor_ARM 32
 
 // Byte order -- ZCONFIG_Endian
 #define ZCONFIG_Endian_Big 1

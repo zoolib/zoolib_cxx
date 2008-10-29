@@ -74,15 +74,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #			define ZCONFIG_Processor ZCONFIG_Processor_x86
 #		elif #cpu(sparc)
 #			define ZCONFIG_Processor ZCONFIG_Processor_Sparc
-#		elif #cpu(powerpc) || __APPLE__
+#		elif #cpu(powerpc)
 #			define ZCONFIG_Processor ZCONFIG_Processor_PPC
 #		elif #cpu(alpha)
 #			define ZCONFIG_Processor ZCONFIG_Processor_Alpha
+#		elif defined(__arm__)
+#			define ZCONFIG_Processor ZCONFIG_Processor_ARM
 #		endif
 #	elif defined(_MSC_VER)
 #		define ZCONFIG_Processor ZCONFIG_Processor_x86
 #	endif
 #endif
+
 #ifndef ZCONFIG_Processor
 #	error "Don't know what processor we're using."
 #endif
@@ -92,6 +95,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef ZCONFIG_Endian
 #	if (ZCONFIG_Processor == ZCONFIG_Processor_x86)
+#		define ZCONFIG_Endian ZCONFIG_Endian_Little
+#	elif (ZCONFIG_Processor == ZCONFIG_Processor_ARM)
 #		define ZCONFIG_Endian ZCONFIG_Endian_Little
 #	else
 #		define ZCONFIG_Endian ZCONFIG_Endian_Big
