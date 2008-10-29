@@ -32,6 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if 0
 // =================================================================================================
+#pragma mark -
+#pragma mark * API synopsis
 
 // We define processor-specific versions of these calls below.
 int16 ZByteSwap_16(int16 iValue);
@@ -304,41 +306,6 @@ asm inline void ZByteSwap_Write32(volatile void* iValueAddress : __A0, int32 iVa
 			);
 		}
 
-#else // ZCONFIG(Compiler)
-
-	// Dumb C version
-
-	inline int16 ZByteSwap_Read16(const volatile void* iValueAddress)
-		{
-		uint16 theValue = *static_cast<const volatile uint16*>(iValueAddress);
-		return (theValue >> 8) | (theValue << 8);
-		}
-
-	inline int32 ZByteSwap_Read32(const volatile void* iValueAddress)
-		{
-		uint32 theValue = *static_cast<const volatile uint32*>(iValueAddress);
-		return (theValue >> 24)
-			| ((theValue >> 8) & 0xFF00)
-			| ((theValue << 8) & 0xFF0000)
-			| (theValue << 24);
-		}
-
-	inline void ZByteSwap_Write16(volatile void* iValueAddress, int16 iValue)
-		{
-		uint16 theValue = iValue;
-		*static_cast<volatile uint16*>(iValueAddress) = (theValue >> 8) | (theValue << 8);
-		}
-
-	inline void ZByteSwap_Write32(volatile void* iValueAddress, int32 iValue)
-		{
-		uint32 theValue = iValue;
-		*static_cast<volatile uint32*>(iValueAddress) =
-			(theValue >> 24)
-			| ((theValue >> 8) & 0xFF00)
-			| ((theValue << 8) & 0xFF0000)
-			| (theValue << 24);
-		}
-
 #endif // ZCONFIG(Compiler)
 
 // ------------------------------
@@ -355,50 +322,6 @@ inline void ZByteSwap_16(volatile void* iValueAddress)
 
 inline void ZByteSwap_32(volatile void* iValueAddress)
 	{ *static_cast<volatile int32*>(iValueAddress) = ZByteSwap_Read32(iValueAddress); }
-
-inline int64 ZByteSwap_64(int64 iValue)
-	{
-	union
-		{
-		uint64 fInt64;
-		uint32 fInt32[2];
-		} u;
-
-	u.fInt32[1] = ZByteSwap_Read32(&iValue);
-	u.fInt32[0] = ZByteSwap_Read32(reinterpret_cast<uint32*>(&iValue) + 1);
-	return u.fInt64;
-	}
-
-inline void ZByteSwap_64(volatile void* iValueAddress)
-	{
-	union u_t
-		{
-		uint64 fInt64;
-		uint32 fInt32[2];
-		};
-
-	volatile u_t* theU = static_cast<volatile u_t*>(iValueAddress);
-	int32 temp = ZByteSwap_Read32(&theU->fInt32[1]);
-	theU->fInt32[1] = ZByteSwap_Read32(&theU->fInt32[0]);
-	theU->fInt32[0] = temp;
-	}
-
-inline int64 ZByteSwap_Read64(const volatile void* iValueAddress)
-	{
-	union
-		{
-		uint64 fInt64;
-		uint32 fInt32[2];
-		} u;
-
-	const volatile uint32* source = static_cast<const volatile uint32*>(iValueAddress);
-	u.fInt32[1] = ZByteSwap_Read32(&source[0]);
-	u.fInt32[0] = ZByteSwap_Read32(&source[1]);
-	return u.fInt64;
-	}
-
-inline void ZByteSwap_Write64(volatile void* iValueAddress, int64 iValue)
-	{ *static_cast<volatile int64*>(iValueAddress) = ZByteSwap_64(iValue); }
 
 #endif // ZCONFIG(Processor, PPC)
 
@@ -611,6 +534,50 @@ inline void ZByteSwap_Write64(volatile void* iValueAddress, int64 iValue)
 
 #endif // ZCONFIG(Compiler, CodeWarrior)
 
+#endif // ZCONFIG(Processor, x86)
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Dumb C version
+
+#if !defined(ZByteSwap_EndianBig)
+
+#	if ZCONFIG(Endian, Big)
+#		define ZByteSwap_EndianBig 1
+#	else
+#		define ZByteSwap_EndianBig 0
+#	endif
+
+	inline int16 ZByteSwap_16(int16 iValue)
+		{ return (iValue >> 8) | (iValue << 8); }
+
+	inline int32 ZByteSwap_32(int32 iValue)
+		{ return ZByteSwap_16(iValue) << 16 | ZByteSwap_16(uint32(iValue) >> 16); }
+
+	inline void ZByteSwap_16(void* iValue)
+		{ *static_cast<int16*>(iValue) = ZByteSwap_16(*static_cast<int16*>(iValue)); }
+
+	inline void ZByteSwap_32(void* iValue)
+		{ *static_cast<int32*>(iValue) = ZByteSwap_32(*static_cast<int32*>(iValue)); }
+
+	inline int16 ZByteSwap_Read16(const volatile void* iValueAddress)
+		{ return ZByteSwap_16(*static_cast<const volatile uint16*>(iValueAddress)); }
+
+	inline int32 ZByteSwap_Read32(const volatile void* iValueAddress)
+		{ return ZByteSwap_32(*static_cast<const volatile uint32*>(iValueAddress)); }
+
+	inline void ZByteSwap_Write16(volatile void* iValueAddress, int16 iValue)
+		{ *static_cast<volatile uint16*>(iValueAddress) = ZByteSwap_16(iValue); }
+
+	inline void ZByteSwap_Write32(volatile void* iValueAddress, int32 iValue)
+		{ *static_cast<volatile uint32*>(iValueAddress) = ZByteSwap_32(iValue); }
+
+#endif // ZByteSwap_EndianBig
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * 64 bit stuff
+
 inline int64 ZByteSwap_64(int64 iValue)
 	{
 	union
@@ -657,11 +624,10 @@ inline int64 ZByteSwap_Read64(const volatile void* iValueAddress)
 inline void ZByteSwap_Write64(volatile void* iValueAddress, int64 iValue)
 	{ *static_cast<volatile int64*>(iValueAddress) = ZByteSwap_64(iValue); }
 
-#endif // ZCONFIG(Processor, x86)
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * The Real Calls
+
 
 #if ZByteSwap_EndianBig
 
