@@ -54,7 +54,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #	elif ZCONFIG_SPI_Enabled(MacOSX) || ZCONFIG_SPI_Enabled(MacClassic) || ZCONFIG_SPI_Enabled(Carbon)
 
-		#if ZCONFIG_SPI_Enabled(MacOSX)
+		// This is a bit ugly, but will do till I get the iPhone/OSX stuff figured out.
+		#if ZCONFIG_SPI_Enabled(MacOSX) && !__arm__
 			#include <CoreServices/../Frameworks/CarbonCore.framework/Headers/MacTypes.h>
 		#else
 			#include <MacTypes.h>
@@ -69,7 +70,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		typedef UInt16 uint16;
 
 		typedef int32_t int32;
+		#ifndef _UINT32
 		typedef UInt32 uint32;
+		#endif
 
 		typedef int64_t int64;
 		typedef UInt64 uint64;
