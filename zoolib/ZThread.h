@@ -182,6 +182,7 @@ class ZMutexBase;
 class ZThread : ZooLib::NonCopyable
 	{
 protected:
+	ZThread(bool); // Main thread constructor
 	// Our destructor is protected, so even with its pointer semantics it's illegal to
 	// simply delete a thread -- it must return from its Run method, at which point it is deleted.
 	virtual ~ZThread();

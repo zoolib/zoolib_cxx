@@ -95,15 +95,8 @@ public:
 
 static MainThread* sMainThread;
 
-static const char* sSkankyInit(MainThread* iMT)
-	{
-	ZAssertStop(kDebug_Thread, sMainThread == nil);
-	sMainThread = iMT;
-	return "ZThread::sMainThread";
-	}
-
 MainThread::MainThread()
-:	ZThread(sSkankyInit(this))
+:	ZThread(false)
 	{
 #if ZCONFIG(API_Thread, Be)
 
@@ -114,11 +107,16 @@ MainThread::MainThread()
 	// Rememeber our thread ID
 	fThreadID = sCurrentID();
 
+	ZAssertStop(kDebug_Thread, sMainThread == nil);
+	sMainThread = this;
+
+#if ZCONFIG_Thread_UseCurrent
 	// Allocate the current thread key
 	sKeyCurrentThread = sTLSAllocate();
 
 	// And remember our current thread object
 	sTLSSet(sKeyCurrentThread, reinterpret_cast<TLSData_t>(this));
+#endif
 
 	sMainThread = this;
 
@@ -240,6 +238,10 @@ static void sReleaseSpinlock(ZAtomic_t* iSpinlock)
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZThread ctor/dtor
+
+ZThread::ZThread(bool)
+	{
+	}
 
 ZThread::ZThread(const char* iName)
 	{
