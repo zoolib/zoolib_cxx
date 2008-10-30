@@ -70,14 +70,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #			define ZCONFIG_Processor ZCONFIG_Processor_x86
 #		endif
 #	elif defined(__GNUC__)
-#		if #cpu(i386)
+#		if defined(__i386__)
 #			define ZCONFIG_Processor ZCONFIG_Processor_x86
-#		elif #cpu(sparc)
-#			define ZCONFIG_Processor ZCONFIG_Processor_Sparc
-#		elif #cpu(powerpc)
+#		elif defined(__ppc__)
 #			define ZCONFIG_Processor ZCONFIG_Processor_PPC
-#		elif #cpu(alpha)
-#			define ZCONFIG_Processor ZCONFIG_Processor_Alpha
 #		elif defined(__arm__)
 #			define ZCONFIG_Processor ZCONFIG_Processor_ARM
 #		endif
