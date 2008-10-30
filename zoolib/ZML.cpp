@@ -582,7 +582,35 @@ void ZML::sSkipText(ZML::Reader& r)
 		r.Advance();
 	}
 
-bool ZML::sTryRead_Begin(Reader& r, const std::string& iTagName)
+bool ZML::sSkip(ZML::Reader& r, vector<string>& ioTags)
+	{
+	while (!ioTags.empty())
+		{
+		switch (r.Current())
+			{
+			case eToken_TagBegin:
+				{
+				ioTags.push_back(r.Name());
+				break;
+				}
+			case eToken_TagEnd:
+				{
+				if (r.Name() != ioTags.back())
+					return false;
+				ioTags.pop_back();
+				break;
+				}
+			case eToken_Exhausted:
+				{
+				return false;
+				}
+			}
+		r.Advance();
+		}
+	return true;
+	}
+
+bool ZML::sTryRead_Begin(Reader& r, const string& iTagName)
 	{
 	if (r.Current() != ZML::eToken_TagBegin || r.Name() != iTagName)
 		return false;
@@ -591,7 +619,7 @@ bool ZML::sTryRead_Begin(Reader& r, const std::string& iTagName)
 	return true;
 	}
 
-bool ZML::sTryRead_End(Reader& r, const std::string& iTagName)
+bool ZML::sTryRead_End(Reader& r, const string& iTagName)
 	{
 	if (r.Current() != ZML::eToken_TagEnd || r.Name() != iTagName)
 		return false;
