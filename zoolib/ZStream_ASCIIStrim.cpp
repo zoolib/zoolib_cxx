@@ -33,31 +33,57 @@ void ZStreamR_ASCIIStrim::Imp_Read(void* iDest, size_t iCount, size_t* oCountRea
 	{
 	UTF8* localDest = reinterpret_cast<UTF8*>(iDest);
 
-	while (iCount)
+	if (iCount < 6)
 		{
-		// Top up our buffer with UTF8 code points.
-		size_t countRead;
-		fStrimR.Read(localDest, iCount, &countRead);
-		if (countRead == 0)
-			break;
-
-		// Scan till we find a non-ASCII code point (if any).
-		for (UTF8* readFrom = localDest, *destEnd = localDest + countRead;
-			readFrom < destEnd; ++readFrom)
+		// When reading UTF8 we must have up to six bytes available.
+		UTF8 buffer[6];
+		while (iCount)
 			{
-			if (*readFrom & 0x80)
-				{
-				// We found a problem, so start transcribing only those bytes that are okay.
-				for (UTF8* writeTo = readFrom; readFrom < destEnd; ++readFrom)
-					{
-					if (!(*readFrom & 0x80))
-						*writeTo++ = *readFrom;
-					}
+			size_t countCURead;
+			size_t countCPRead;
+			fStrimR.Read(buffer, 6, &countCURead, iCount, &countCPRead);
+			if (countCURead == 0)
 				break;
+
+			// Trasncribe only ASCII code units/points.
+			for (UTF8* readFrom = &buffer[0], *destEnd = &buffer[countCURead];
+				readFrom < destEnd; ++readFrom)
+				{
+				if (*readFrom & 0x80)
+					continue;
+				*localDest++ = *readFrom;
+				--iCount;
 				}
 			}
-		localDest += countRead;
-		iCount -= countRead;
+		}
+	else
+		{
+		while (iCount)
+			{
+			// Top up our buffer with UTF8 code points.
+			size_t countRead;
+			fStrimR.Read(localDest, iCount, &countRead);
+			if (countRead == 0)
+				break;
+
+			// Scan till we find a non-ASCII code point (if any).
+			for (UTF8* readFrom = localDest, *destEnd = localDest + countRead;
+				readFrom < destEnd; ++readFrom)
+				{
+				if (*readFrom & 0x80)
+					{
+					// We found a problem, so start transcribing only those bytes that are okay.
+					for (UTF8* writeTo = readFrom; readFrom < destEnd; ++readFrom)
+						{
+						if (!(*readFrom & 0x80))
+							*writeTo++ = *readFrom;
+						}
+					break;
+					}
+				}
+			localDest += countRead;
+			iCount -= countRead;
+			}
 		}
 
 	if (oCountRead)
