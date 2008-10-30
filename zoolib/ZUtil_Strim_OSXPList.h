@@ -22,18 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim_OSXPList__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZML.h"
+#include "zoolib/ZYAD_OSXPList.h"
 
 #include <stdexcept>
 
 namespace ZUtil_Strim_OSXPList {
 
-class ParseException : public std::runtime_error
-	{
-public:
-	ParseException(const std::string& iWhat);
-	ParseException(const char* iWhat);
-	};
+typedef ZYAD_OSXPList::ParseException ParseException;
 
 void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTValue);
 

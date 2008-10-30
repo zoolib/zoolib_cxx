@@ -1,0 +1,202 @@
+/* -------------------------------------------------------------------------------------------------
+Copyright (c) 2008 Andrew Green
+http://www.zoolib.org
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+and associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+------------------------------------------------------------------------------------------------- */
+
+#ifndef __ZYAD__
+#define __ZYAD__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZStreamer.h"
+#include "zoolib/ZTuple.h"
+#include "zoolib/ZTypes.h"
+
+#include <string>
+
+class ZYADReader;
+class ZMapReader;
+class ZListReader;
+
+class ZYADReaderRep;
+class ZMapReaderRep;
+class ZListReaderRep;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYAD
+
+class ZYAD : public ZRefCountedWithFinalization
+	{
+protected:
+	ZYAD();
+
+public:
+	virtual ~ZYAD();
+
+	virtual bool GetTValue(ZTValue& oYalue);
+	ZTValue GetTValue();
+
+	class ParseException;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYAD::ParseException
+
+class ZYAD::ParseException : public std::runtime_error
+	{
+public:
+	ParseException(const std::string& iWhat);
+	ParseException(const char* iWhat);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYADReader
+
+class ZYADReader
+	{
+public:
+	ZYADReader();
+	ZYADReader(ZRef<ZYADReaderRep> iRep);
+	~ZYADReader();
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZYADReader, operator_bool_generator_type, operator_bool_type);
+
+	operator operator_bool_type() const;
+
+	ZType Type() const;
+
+	bool IsMap() const;
+	bool IsList() const;
+	bool IsRaw() const;
+	bool IsOther() const;
+
+	ZMapReader ReadMap();
+	ZListReader ReadList();
+	ZRef<ZStreamerR> ReadRaw();
+	ZRef<ZYAD> ReadYAD();
+
+private:
+	ZRef<ZYADReaderRep> fRep;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYADReaderRep
+
+class ZYADReaderRep : public ZRefCountedWithFinalization
+	{
+protected:
+	ZYADReaderRep();
+
+public:
+	virtual ~ZYADReaderRep();
+
+	virtual bool HasValue() = 0;
+	virtual ZType Type() = 0;
+
+	virtual ZRef<ZMapReaderRep> ReadMap() = 0;
+	virtual ZRef<ZListReaderRep> ReadList() = 0;
+	virtual ZRef<ZStreamerR> ReadRaw() = 0;
+	virtual ZRef<ZYAD> ReadYAD() = 0;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMapReader
+
+class ZMapReader
+	{
+public:
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZMapReader, operator_bool_generator_type, operator_bool_type);
+
+	ZMapReader();
+	ZMapReader(ZRef<ZMapReaderRep> iRep);
+	~ZMapReader();
+
+	operator operator_bool_type() const;
+
+	std::string Name() const;
+	ZYADReader Read();
+	void Skip();
+
+private:
+	ZRef<ZMapReaderRep> fRep;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMapReaderRep
+
+class ZMapReaderRep : public ZRefCountedWithFinalization
+	{
+protected:
+	ZMapReaderRep();
+
+public:
+	virtual ~ZMapReaderRep();
+
+	virtual bool HasValue() = 0;
+	virtual std::string Name() = 0;
+	virtual ZRef<ZYADReaderRep> Read() = 0;
+	virtual void Skip() = 0;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZListReader
+
+class ZListReader
+	{
+public:
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZListReader, operator_bool_generator_type, operator_bool_type);
+
+	ZListReader();
+	ZListReader(ZRef<ZListReaderRep> iRep);
+	~ZListReader();
+
+	operator operator_bool_type() const;
+
+	size_t Index() const;
+	ZYADReader Read();
+	void Skip();
+
+private:
+	ZRef<ZListReaderRep> fRep;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZListReaderRep
+
+class ZListReaderRep : public ZRefCountedWithFinalization
+	{
+protected:
+	ZListReaderRep();
+
+public:
+	virtual ~ZListReaderRep();
+
+	virtual bool HasValue() = 0;
+	virtual size_t Index() const = 0;
+	virtual ZRef<ZYADReaderRep> Read() = 0;
+	virtual void Skip() = 0;
+	};
+
+#endif // __ZYAD__
