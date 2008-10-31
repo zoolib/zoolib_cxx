@@ -637,3 +637,31 @@ void ZYADUtil_OSXPList::sToStrimW_ML(const ZStrimW_ML& s, ZYADReader iYADReader)
 			}
 		}
 	}
+
+bool ZYADUtil_OSXPList::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTValue)
+	{
+	ZML::Reader r(iStrimU);
+	return sFromML(r, oTValue);
+	}
+
+bool ZYADUtil_OSXPList::sFromML(ZML::Reader& r, ZTValue& oTValue)
+	{
+	// Ignore the leading text, ?xml, !DOCTYPE and plist tags
+	for (;;)
+		{
+		sSkipText(r);
+
+		if (r.Current() == ZML::eToken_TagBegin)
+			{
+			const string& tagName = r.Name();
+			if (tagName == "?xml" || tagName == "!DOCTYPE" || tagName == "plist")
+				{
+				r.Advance();
+				continue;
+				}
+			}
+		break;
+		}
+
+	return ZYADUtil_ZooLib::sFromReader(ZYADReader(new ZYADReaderRep_OSXPList(r)), oTValue);
+	}

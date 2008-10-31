@@ -85,8 +85,9 @@ private:
 namespace ZYADUtil_OSXPList {
 
 void sToStrimW_ML(const ZStrimW_ML& s, ZYADReader iYADReader);
+bool sFromStrim(const ZStrimU& iStrimU, ZTValue& oTValue);
+bool sFromML(ZML::Reader& r, ZTValue& oTValue);
 
 } // namespace ZYADUtil_OSXPList
-
 
 #endif // __ZYAD_OSXPList__
