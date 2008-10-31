@@ -27,36 +27,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark -
 #pragma mark * ZUtil_Strim_OSXPList
 
-void ZUtil_Strim_OSXPListsToStrim(const ZStrimW& iStrimW, const ZTValue& iTValue)
+void ZUtil_Strim_OSXPList::sToStrim(const ZStrimW& iStrimW, const ZTValue& iTValue)
 	{
-	ZStrimW_ML s(iStrimW);
-	ZYADUtil_OSXPList::sToStrimW_ML(s, ZYADReader(new ZYADReaderRep_ZooLib(iTValue)));
+	ZYADUtil_OSXPList::sToStrimW_ML(ZStrimW_ML(iStrimW), ZYADReader(new ZYADReaderRep_ZooLib(iTValue)));
 	}
 
 bool ZUtil_Strim_OSXPList::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTValue)
 	{
-	ZML::Reader r(iStrimU);
-	return sFromML(r, oTValue);
+	return ZYADUtil_OSXPList::sFromStrim(iStrimU, oTValue);
 	}
 
 bool ZUtil_Strim_OSXPList::sFromML(ZML::Reader& r, ZTValue& oTValue)
 	{
-	// Ignore the leading text, ?xml, !DOCTYPE and plist tags
-	for (;;)
-		{
-		sSkipText(r);
-
-		if (r.Current() == ZML::eToken_TagBegin)
-			{
-			const string& tagName = r.Name();
-			if (tagName == "?xml" || tagName == "!DOCTYPE" || tagName == "plist")
-				{
-				r.Advance();
-				continue;
-				}
-			}
-		break;
-		}
-
-	return ZYADUtil_ZooLib::sFromReader(ZYADReader(new ZYADReaderRep_OSXPList(r)), oTValue);
+	return ZYADUtil_OSXPList::sFromML(r, oTValue);
 	}
