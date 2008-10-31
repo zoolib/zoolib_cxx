@@ -70,6 +70,10 @@ ZYADReader::ZYADReader(ZRef<ZYADReaderRep> iRep)
 :	fRep(iRep)
 	{}
 
+ZYADReader::ZYADReader(ZYADReaderRep* iRep)
+:	fRep(iRep)
+	{}
+
 ZYADReader::~ZYADReader()
 	{}
 
@@ -153,6 +157,10 @@ ZMapReader::ZMapReader(ZRef<ZMapReaderRep> iRep)
 :	fRep(iRep)
 	{}
 
+ZMapReader::ZMapReader(ZMapReaderRep* iRep)
+:	fRep(iRep)
+	{}
+
 ZMapReader::~ZMapReader()
 	{}
 
@@ -197,6 +205,10 @@ ZListReader::ZListReader()
 	{}
 
 ZListReader::ZListReader(ZRef<ZListReaderRep> iRep)
+:	fRep(iRep)
+	{}
+
+ZListReader::ZListReader(ZListReaderRep* iRep)
 :	fRep(iRep)
 	{}
 

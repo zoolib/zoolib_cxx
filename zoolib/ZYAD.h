@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZTuple.h"
-#include "zoolib/ZTypes.h"
 
 #include <string>
 
@@ -74,6 +73,7 @@ class ZYADReader
 public:
 	ZYADReader();
 	ZYADReader(ZRef<ZYADReaderRep> iRep);
+	ZYADReader(ZYADReaderRep* iRep);
 	~ZYADReader();
 
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZYADReader, operator_bool_generator_type, operator_bool_type);
@@ -128,6 +128,7 @@ public:
 
 	ZMapReader();
 	ZMapReader(ZRef<ZMapReaderRep> iRep);
+	ZMapReader(ZMapReaderRep* iRep);
 	~ZMapReader();
 
 	operator operator_bool_type() const;
@@ -169,6 +170,7 @@ public:
 
 	ZListReader();
 	ZListReader(ZRef<ZListReaderRep> iRep);
+	ZListReader(ZListReaderRep* iRep);
 	~ZListReader();
 
 	operator operator_bool_type() const;
