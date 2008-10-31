@@ -44,6 +44,8 @@ CFStringRef sCreateCFString_UTF16(const string16& iString16);
 string8 sAsUTF8(const CFStringRef& iCFString);
 string16 sAsUTF16(const CFStringRef& iCFString);
 
+ZType sTypeOf(CFTypeRef iCFType);
+
 ZTValue sAsTV(CFTypeRef iCFType);
 CFTypeRef sCreateCFType(const ZTValue& iTV);
 

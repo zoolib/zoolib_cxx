@@ -101,6 +101,72 @@ string16 ZUtil_CFType::sAsUTF16(const CFStringRef& iCFString)
 	return result;
 	}
 
+ZType ZUtil_CFType::sTypeOf(CFTypeRef iCFType)
+	{
+	if (iCFType)
+		{
+		const CFTypeID theTypeID = ::CFGetTypeID(iCFType);
+		if (theTypeID == ::CFDictionaryGetTypeID())
+			{
+			return eZType_Tuple;
+			}
+		else if (theTypeID == ::CFArrayGetTypeID())
+			{
+			return eZType_Vector;
+			}
+		else if (theTypeID == ::CFStringGetTypeID())
+			{
+			return eZType_String;
+			}
+		else if (theTypeID == ::CFBooleanGetTypeID())
+			{
+			return eZType_Bool;
+			}
+		else if (theTypeID == ::CFDataGetTypeID())
+			{
+			return eZType_Raw;
+			}
+		else if (theTypeID == ::CFNumberGetTypeID())
+			{
+			const CFNumberRef theNumberRef = static_cast<CFNumberRef>(iCFType);
+			switch (::CFNumberGetType(theNumberRef))
+				{
+				case kCFNumberSInt8Type:
+				case kCFNumberCharType:
+					{
+					return eZType_Int8;
+					}
+				case kCFNumberSInt16Type:
+				case kCFNumberShortType:
+					{
+					return eZType_Int16;
+					}
+				case kCFNumberSInt32Type:
+				case kCFNumberIntType:
+					{
+					return eZType_Int32;
+					}
+				case kCFNumberSInt64Type:
+				case kCFNumberLongLongType:
+					{
+					return eZType_Int64;
+					}
+				case kCFNumberFloat32Type:
+				case kCFNumberFloatType:
+					{
+					return eZType_Float;
+					}
+				case kCFNumberFloat64Type:
+				case kCFNumberDoubleType:
+					{
+					return eZType_Double;
+					}
+				}
+			}
+		}
+	return eZType_Null;
+	}
+
 ZTValue ZUtil_CFType::sAsTV(CFTypeRef iCFType)
 	{
 	if (iCFType)
