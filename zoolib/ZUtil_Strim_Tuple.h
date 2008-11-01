@@ -42,7 +42,7 @@ namespace ZUtil_Strim_Tuple {
 #pragma mark -
 #pragma mark * ZUtil_Strim_Tuple::Options
 
-typedef ZYADUtil_ZooLib::Options Options;
+typedef ZYADOptions Options;
 
 // =================================================================================================
 #pragma mark -
@@ -50,11 +50,11 @@ typedef ZYADUtil_ZooLib::Options Options;
 
 struct Format
 	{
-	Format(const ZTValue& iTValue, int iInitialIndent, const Options& iOptions);
+	Format(const ZTValue& iTValue, int iInitialIndent, const ZYADOptions& iOptions);
 
 	const ZTValue& fTValue;
 	int fInitialIndent;
-	const Options& fOptions;
+	const ZYADOptions& fOptions;
 	};
 
 // =================================================================================================
@@ -72,7 +72,7 @@ bool sRead_Identifier(const ZStrimU& iStrimU, std::string* oStringLC, std::strin
 void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTValue);
 
 void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTValue,
-	size_t iInitialIndent, const Options& iOptions);
+	size_t iInitialIndent, const ZYADOptions& iOptions);
 
 std::string sAsString(const ZTValue& iTValue);
 
@@ -87,7 +87,7 @@ bool sFromString(const std::string& iString, ZTValue& oTValue);
 void sToStrim(const ZStrimW& iStrimW, const std::vector<ZTValue>& iVector);
 
 void sToStrim(const ZStrimW& iStrimW, const std::vector<ZTValue>& iVector,
-	size_t iInitialIndent, const Options& iOptions);
+	size_t iInitialIndent, const ZYADOptions& iOptions);
 
 std::string sAsString(const std::vector<ZTValue>& iVector);
 
@@ -102,12 +102,12 @@ bool sFromString(const std::string& iString, std::vector<ZTValue>& oVector);
 void sToStrim(const ZStrimW& iStrimW, const ZTuple& iTuple);
 
 void sToStrim(const ZStrimW& iStrimW, const ZTuple& iTuple,
-	size_t iInitialIndent, const Options& iOptions);
+	size_t iInitialIndent, const ZYADOptions& iOptions);
 
 std::string sAsString(const ZTuple& iTuple);
 
 std::string sAsString(const ZTuple& iTuple,
-	size_t iInitialIndent, const Options& iOptions);
+	size_t iInitialIndent, const ZYADOptions& iOptions);
 
 bool sFromStrim(const ZStrimU& iStrimU, ZTuple& oTuple);
 

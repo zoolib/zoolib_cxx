@@ -76,6 +76,10 @@ public:
 	virtual ZRef<ZYADReaderRep> Read();
 	virtual void Skip();
 
+	virtual bool IsSimple(const ZYADOptions& iOptions);
+	virtual bool CanRandomAccess();
+	virtual ZRef<ZYADReaderRep> ReadWithName(const std::string& iName);
+
 private:
 	const ZTuple fTuple;
 	ZTuple::const_iterator fIter;
@@ -95,6 +99,11 @@ public:
 	virtual ZRef<ZYADReaderRep> Read();
 	virtual void Skip();
 
+	virtual bool IsSimple(const ZYADOptions& iOptions);
+	virtual bool CanRandomAccess();
+	virtual size_t Count();
+	virtual ZRef<ZYADReaderRep> ReadWithIndex(size_t iIndex);
+
 private:
 	const std::vector<ZTValue> fVector;
 	std::vector<ZTValue>::const_iterator fIter;
@@ -109,46 +118,25 @@ namespace ZYADUtil_ZooLib {
 bool sFromReader(ZYADReader iYADReader, ZTValue& oTV);
 ZTValue sFromReader(ZYADReader iYADReader);
 
-struct Options
-	{
-	Options(bool iDoIndentation = false);
-
-	std::string fEOLString;
-	std::string fIndentString;
-
-	int fRawChunkSize;
-	std::string fRawByteSeparator;
-	bool fRawAsASCII;
-
-	bool fBreakStrings;
-	int fStringLineLength;
-
-	bool fIDsHaveDecimalVersionComment;
-
-	bool fTimesHaveUserLegibleComment;
-
-	bool DoIndentation() const { return !fIndentString.empty(); }
-	};
-
 void sToStrim(const ZStrimW& s, ZListReader iListReader);
 
 void sToStrim(const ZStrimW& s, ZListReader iListReader,
-	size_t iInitialIndent, const Options& iOptions);
+	size_t iInitialIndent, const ZYADOptions& iOptions);
 
 void sToStrim(const ZStrimW& s, ZMapReader iMapReader);
 
 void sToStrim(const ZStrimW& s, ZMapReader iMapReader,
-	size_t iInitialIndent, const Options& iOptions);
+	size_t iInitialIndent, const ZYADOptions& iOptions);
 
 void sToStrim(const ZStrimW& s, const ZStreamR& iStreamR);
 
 void sToStrim(const ZStrimW& s, const ZStreamR& iStreamR,
-	size_t iInitialIndent, const Options& iOptions);
+	size_t iInitialIndent, const ZYADOptions& iOptions);
 
 void sToStrim(const ZStrimW& s, ZYADReader iYADReader);
 
 void sToStrim(const ZStrimW& s, ZYADReader iYADReader,
-	size_t iInitialIndent, const Options& iOptions);
+	size_t iInitialIndent, const ZYADOptions& iOptions);
 
 void sWrite_PropName(const ZStrimW& iStrimW, const string& iPropName);
 

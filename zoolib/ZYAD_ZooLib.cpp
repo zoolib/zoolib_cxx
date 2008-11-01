@@ -29,6 +29,69 @@ using std::vector;
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Helper functions
+
+static bool sIsComplexString(const ZYADOptions& iOptions, const string& iString)
+	{
+	if (iOptions.fStringLineLength && iString.size() > iOptions.fStringLineLength)
+		{
+		// We have a non-zero desired line length, and the string contains
+		// more characters than that. This doesn't account for increases in width
+		// due to escaping etc.
+		return true;
+		}
+
+	if (iOptions.fBreakStrings)
+		{
+		// We've been asked to break strings at line ending characters,
+		// which means (here and in ZStrimW_Escapify) LF and CR. Strictly
+		// speaking we should use ZUnicode::sIsEOL().
+		if (string::npos != iString.find_first_of("\n\r"))
+			return true;
+		}
+
+	return false;
+	}
+
+static bool sIsComplex(const ZYADOptions& iOptions, const ZTValue& iTV)
+	{
+	switch (iTV.TypeOf())
+		{
+		case eZType_Raw:
+			{
+			size_t theSize;
+			iTV.GetRawAttributes(nil, &theSize);
+			return theSize > iOptions.fRawChunkSize;
+			}
+		case eZType_Vector:
+			{
+			const vector<ZTValue>& theVector = iTV.GetVector();
+			if (theVector.empty())
+				return false;
+
+			if (theVector.size() == 1)
+				return sIsComplex(iOptions, theVector.at(0));
+
+			return true;
+			}
+		case eZType_Tuple:
+			{
+			const ZTuple& theTuple = iTV.GetTuple();
+			if (theTuple.Empty())
+				return false;
+
+			if (theTuple.Count() == 1)
+				return sIsComplex(iOptions, theTuple.GetValue(theTuple.begin()));
+
+			return true;
+			}
+		case eZType_String: return sIsComplexString(iOptions, iTV.GetString());
+		default: return false;
+		}
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYAD_ZTValue
 
 ZYAD_ZTValue::ZYAD_ZTValue(const ZTValue& iTV)
@@ -117,6 +180,21 @@ void ZMapReaderRep_ZTuple::Skip()
 		++fIter;
 	}
 
+bool ZMapReaderRep_ZTuple::IsSimple(const ZYADOptions& iOptions)
+	{ return !sIsComplex(iOptions, fTuple); }
+
+bool ZMapReaderRep_ZTuple::CanRandomAccess()
+	{ return true; }
+
+ZRef<ZYADReaderRep> ZMapReaderRep_ZTuple::ReadWithName(const string& iName)
+	{
+	ZTuple::const_iterator i = fTuple.IteratorOf(iName);
+	if (i != fTuple.end())
+		return new ZYADReaderRep_ZTValue(fTuple.GetValue(i));
+
+	return ZRef<ZYADReaderRep>();
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZListReaderRep_ZVector definition
@@ -146,9 +224,26 @@ void ZListReaderRep_ZVector::Skip()
 		++fIter;
 	}
 
+bool ZListReaderRep_ZVector::IsSimple(const ZYADOptions& iOptions)
+	{ return !sIsComplex(iOptions, fVector); }
+
+bool ZListReaderRep_ZVector::CanRandomAccess()
+	{ return true; }
+
+size_t ZListReaderRep_ZVector::Count()
+	{ return fVector.size(); }
+
+ZRef<ZYADReaderRep> ZListReaderRep_ZVector::ReadWithIndex(size_t iIndex)
+	{
+	if (iIndex < fVector.size())
+		return new ZYADReaderRep_ZTValue(fVector.at(iIndex));
+
+	return ZRef<ZYADReaderRep>();
+	}
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * Test code
+#pragma mark * sFromReader
 
 ZTValue sReadValue(ZYADReader iYADReader);
 
@@ -213,21 +308,21 @@ ZTValue ZYADUtil_ZooLib::sFromReader(ZYADReader iYADReader)
 #pragma mark * ZYADUtil_ZooLib, local implementation
 
 static void sWriteIndent(const ZStrimW& iStrimW,
-	size_t iCount, const ZYADUtil_ZooLib::Options& iOptions)
+	size_t iCount, const ZYADOptions& iOptions)
 	{
 	while (iCount--)
 		iStrimW.Write(iOptions.fIndentString);
 	}
 
 static void sWriteLFIndent(const ZStrimW& iStrimW,
-	size_t iCount, const ZYADUtil_ZooLib::Options& iOptions)
+	size_t iCount, const ZYADOptions& iOptions)
 	{
 	iStrimW.Write(iOptions.fEOLString);
 	sWriteIndent(iStrimW, iCount, iOptions);
 	}
 
 static void sWriteString(
-	const ZStrimW& s, const ZYADUtil_ZooLib::Options& iOptions, const string& iString)
+	const ZStrimW& s, const ZYADOptions& iOptions, const string& iString)
 	{
 	if (iOptions.fBreakStrings
 		&& iOptions.DoIndentation()
@@ -292,7 +387,7 @@ static void sWriteString(
 	}
 
 static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
-	size_t iLevel, const ZYADUtil_ZooLib::Options& iOptions)
+	size_t iLevel, const ZYADOptions& iOptions)
 	{
 	switch (iTV.TypeOf())
 		{
@@ -407,7 +502,7 @@ static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
 	}
 
 static void sToStrim_Raw(const ZStrimW& s, const ZStreamR& iStreamR,
-	size_t iLevel, const ZYADUtil_ZooLib::Options& iOptions, bool iMayNeedInitialLF)
+	size_t iLevel, const ZYADOptions& iOptions, bool iMayNeedInitialLF)
 	{
 #if 0
 	const ZStreamRPos* theStreamRPos = dynamic_cast<const ZStreamRPos*>(&iStreamR);
@@ -507,10 +602,10 @@ static void sToStrim_Raw(const ZStrimW& s, const ZStreamR& iStreamR,
 	}
 
 static void sToStrim_YAD(const ZStrimW& s, ZYADReader iYADReader,
-	size_t iInitialIndent, const ZYADUtil_ZooLib::Options& iOptions, bool iMayNeedInitialLF);
+	size_t iInitialIndent, const ZYADOptions& iOptions, bool iMayNeedInitialLF);
 
 static void sToStrim_List(const ZStrimW& s, ZListReader iListReader,
-	size_t iLevel, const ZYADUtil_ZooLib::Options& iOptions, bool iMayNeedInitialLF)
+	size_t iLevel, const ZYADOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	if (!iListReader)
 		{
@@ -527,17 +622,7 @@ static void sToStrim_List(const ZStrimW& s, ZListReader iListReader,
 		// 2. A non-empty tuple.
 		// or if iOptions.fBreakStrings is true, any element is a string with embedded
 		// line breaks or more than iOptions.fStringLineLength characters.
-		needsIndentation = true;
-#if 0
-		for (vector<ZTValue>::const_iterator i = theBegin; i != theEnd; ++i)
-			{
-			if (sIsComplex(iOptions, *i))
-				{
-				needsIndentation = true;
-				break;
-				}
-			}
-#endif
+		needsIndentation = !iListReader.IsSimple(iOptions) ;
 		}
 
 	if (needsIndentation)
@@ -579,7 +664,7 @@ static void sToStrim_List(const ZStrimW& s, ZListReader iListReader,
 	}
 
 static void sToStrim_Map(const ZStrimW& s, ZMapReader iMapReader,
-	size_t iLevel, const ZYADUtil_ZooLib::Options& iOptions, bool iMayNeedInitialLF)
+	size_t iLevel, const ZYADOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	if (!iMapReader)
 		{
@@ -591,17 +676,7 @@ static void sToStrim_Map(const ZStrimW& s, ZMapReader iMapReader,
 	bool needsIndentation = false;
 	if (iOptions.DoIndentation())
 		{
-		needsIndentation = true;
-#if 0
-		for (ZTuple::const_iterator i = theBegin; i != theEnd; ++i)
-			{
-			if (sIsComplex(iOptions, iTuple.GetValue(i)))
-				{
-				needsIndentation = true;
-				break;
-				}
-			}
-#endif
+		needsIndentation = ! iMapReader.IsSimple(iOptions);
 		}
 
 	if (needsIndentation)
@@ -649,7 +724,7 @@ static void sToStrim_Map(const ZStrimW& s, ZMapReader iMapReader,
 	}
 
 static void sToStrim_YAD(const ZStrimW& s, ZYADReader iYADReader,
-	size_t iLevel, const ZYADUtil_ZooLib::Options& iOptions, bool iMayNeedInitialLF)
+	size_t iLevel, const ZYADOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	if (!iYADReader)
 		return;
@@ -677,31 +752,31 @@ static void sToStrim_YAD(const ZStrimW& s, ZYADReader iYADReader,
 #pragma mark * ZYADUtil_ZooLib
 
 void ZYADUtil_ZooLib::sToStrim(const ZStrimW& s, ZListReader iListReader)
-	{ sToStrim_List(s, iListReader, 0, Options(), false); }
+	{ sToStrim_List(s, iListReader, 0, ZYADOptions(), false); }
 
 void ZYADUtil_ZooLib::sToStrim(const ZStrimW& s, ZListReader iListReader,
-	size_t iInitialIndent, const Options& iOptions)
+	size_t iInitialIndent, const ZYADOptions& iOptions)
 	{ sToStrim_List(s, iListReader, iInitialIndent, iOptions, false); }
 
 void ZYADUtil_ZooLib::sToStrim(const ZStrimW& s, ZMapReader iMapReader)
-	{ sToStrim_Map(s, iMapReader, 0, Options(), false); }
+	{ sToStrim_Map(s, iMapReader, 0, ZYADOptions(), false); }
 
 void ZYADUtil_ZooLib::sToStrim(const ZStrimW& s, ZMapReader iMapReader,
-	size_t iInitialIndent, const Options& iOptions)
+	size_t iInitialIndent, const ZYADOptions& iOptions)
 	{ sToStrim_Map(s, iMapReader, iInitialIndent, iOptions, false); }
 
 void ZYADUtil_ZooLib::sToStrim(const ZStrimW& s, const ZStreamR& iStreamR)
-	{ sToStrim_Raw(s, iStreamR, 0, Options(), false); }
+	{ sToStrim_Raw(s, iStreamR, 0, ZYADOptions(), false); }
 
 void ZYADUtil_ZooLib::sToStrim(const ZStrimW& s, const ZStreamR& iStreamR,
-	size_t iInitialIndent, const Options& iOptions)
+	size_t iInitialIndent, const ZYADOptions& iOptions)
 	{ sToStrim_Raw(s, iStreamR, iInitialIndent, iOptions, false); }
 
 void ZYADUtil_ZooLib::sToStrim(const ZStrimW& s, ZYADReader iYADReader)
-	{ sToStrim_YAD(s, iYADReader, 0, Options(), false); }
+	{ sToStrim_YAD(s, iYADReader, 0, ZYADOptions(), false); }
 
 void ZYADUtil_ZooLib::sToStrim(const ZStrimW& s, ZYADReader iYADReader,
-	size_t iInitialIndent, const Options& iOptions)
+	size_t iInitialIndent, const ZYADOptions& iOptions)
 	{ sToStrim_YAD(s, iYADReader, iInitialIndent, iOptions, false); }
 
 static bool sContainsProblemChars(const string& iString)
@@ -736,26 +811,6 @@ void ZYADUtil_ZooLib::sWrite_PropName(const ZStrimW& iStrimW, const string& iPro
 	else
 		{
 		iStrimW << iPropName;
-		}
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYADUtil_ZooLib::Options
-
-ZYADUtil_ZooLib::Options::Options(bool iDoIndentation)
-:	fRawChunkSize(16),
-	fRawByteSeparator(" "),
-	fRawAsASCII(iDoIndentation),
-	fBreakStrings(true),
-	fStringLineLength(80),
-	fIDsHaveDecimalVersionComment(iDoIndentation),
-	fTimesHaveUserLegibleComment(true)
-	{
-	if (iDoIndentation)
-		{
-		fEOLString = "\n";
-		fIndentString = "  ";
 		}
 	}
 

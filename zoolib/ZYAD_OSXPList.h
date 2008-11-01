@@ -74,7 +74,6 @@ public:
 	virtual ZRef<ZYAD> ReadYAD();
 
 private:
-	void pMove();
 	ZML::Reader& fR;
 	};
 

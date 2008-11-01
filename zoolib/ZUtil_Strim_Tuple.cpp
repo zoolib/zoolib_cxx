@@ -456,7 +456,8 @@ static void sFromStrim_BodyOfTuple(const ZStrimU& iStrimU, ZTuple& oTuple)
 #pragma mark -
 #pragma mark * Format
 
-ZUtil_Strim_Tuple::Format::Format(const ZTValue& iTValue, int iInitialIndent, const ZUtil_Strim_Tuple::Options& iOptions)
+ZUtil_Strim_Tuple::Format::Format(
+	const ZTValue& iTValue, int iInitialIndent, const ZYADOptions& iOptions)
 :	fTValue(iTValue),
 	fInitialIndent(iInitialIndent),
 	fOptions(iOptions)
@@ -469,7 +470,8 @@ ZUtil_Strim_Tuple::Format::Format(const ZTValue& iTValue, int iInitialIndent, co
 void ZUtil_Strim_Tuple::sWrite_PropName(const ZStrimW& iStrimW, const ZTName& iPropName)
 	{ ZYADUtil_ZooLib::sWrite_PropName(iStrimW, iPropName.AsString()); }
 
-bool ZUtil_Strim_Tuple::sRead_Identifier(const ZStrimU& iStrimU, string* oStringLC, string* oStringExact)
+bool ZUtil_Strim_Tuple::sRead_Identifier(
+	const ZStrimU& iStrimU, string* oStringLC, string* oStringExact)
 	{
 	bool gotAny = false;
 	for (;;)
@@ -498,11 +500,11 @@ bool ZUtil_Strim_Tuple::sRead_Identifier(const ZStrimU& iStrimU, string* oString
 #pragma mark * ZTValue
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTValue& iTV)
-	{ ZYADUtil_ZooLib::sToStrim(s, new ZYADReaderRep_ZTValue(iTV), 0, Options()); }
+	{ ZYADUtil_ZooLib::sToStrim(s, new ZYADReaderRep_ZTValue(iTV), 0, ZYADOptions()); }
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTValue& iTV,
-	size_t iInitialIndent, const Options& iOptions)
-	{ ZYADUtil_ZooLib::sToStrim(s, new ZYADReaderRep_ZTValue(iTV), 0, Options()); }
+	size_t iInitialIndent, const ZYADOptions& iOptions)
+	{ ZYADUtil_ZooLib::sToStrim(s, new ZYADReaderRep_ZTValue(iTV), iInitialIndent, iOptions); }
 
 string ZUtil_Strim_Tuple::sAsString(const ZTValue& iTV)
 	{
@@ -522,11 +524,11 @@ bool ZUtil_Strim_Tuple::sFromString(const string& iString, ZTValue& oTValue)
 #pragma mark * vector<ZTValue>
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const vector<ZTValue>& iVector)
-	{ ZYADUtil_ZooLib::sToStrim(s, new ZListReaderRep_ZVector(iVector), 0, Options()); }
+	{ ZYADUtil_ZooLib::sToStrim(s, new ZListReaderRep_ZVector(iVector), 0, ZYADOptions()); }
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const vector<ZTValue>& iVector,
-	size_t iInitialIndent, const Options& iOptions)
-	{ ZYADUtil_ZooLib::sToStrim(s, new ZListReaderRep_ZVector(iVector), 0, Options()); }
+	size_t iInitialIndent, const ZYADOptions& iOptions)
+	{ ZYADUtil_ZooLib::sToStrim(s, new ZListReaderRep_ZVector(iVector), iInitialIndent, iOptions); }
 
 string ZUtil_Strim_Tuple::sAsString(const vector<ZTValue>& iVector)
 	{
@@ -565,11 +567,11 @@ bool ZUtil_Strim_Tuple::sFromString(const string& iString, vector<ZTValue>& oVec
 #pragma mark * ZTuple
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTuple& iTuple)
-	{ ZYADUtil_ZooLib::sToStrim(s, new ZMapReaderRep_ZTuple(iTuple), 0, Options()); }
+	{ ZYADUtil_ZooLib::sToStrim(s, new ZMapReaderRep_ZTuple(iTuple), 0, ZYADOptions()); }
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTuple& iTuple,
-	size_t iInitialIndent, const Options& iOptions)
-	{ ZYADUtil_ZooLib::sToStrim(s, new ZMapReaderRep_ZTuple(iTuple), 0, Options()); }
+	size_t iInitialIndent, const ZYADOptions& iOptions)
+	{ ZYADUtil_ZooLib::sToStrim(s, new ZMapReaderRep_ZTuple(iTuple), iInitialIndent, iOptions); }
 
 string ZUtil_Strim_Tuple::sAsString(const ZTuple& iTuple)
 	{

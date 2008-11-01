@@ -300,15 +300,10 @@ const ZStreamR& ZStreamerR_OSXPlist::GetStreamR()
 #pragma mark -
 #pragma mark * ZYADReaderRep_OSXPList definition
 
-void ZYADReaderRep_OSXPList::pMove()
-	{
-	sSkipText(fR);
-	}
-
 ZYADReaderRep_OSXPList::ZYADReaderRep_OSXPList(ZML::Reader& iReader)
 :	fR(iReader)
 	{
-	this->pMove();	
+	sSkipText(fR);
 	}
 
 bool ZYADReaderRep_OSXPList::HasValue()
@@ -405,13 +400,12 @@ void ZMapReaderRep_OSXPList::pReadNameIfNecessary()
 
 	sSkipText(fR);
 
-	if (fR.Current() == ZML::eToken_TagEnd && fR.Name() == "dict")
+	if (sTryRead_End(fR, "dict"))
 		{
 		fFinished = true;
-		fR.Advance();
 		return;
 		}
-
+		
 	sBegin(fR, "key");
 	fName.clear();
 	ZStrimW_String(fName).CopyAllFrom(fR.Text());
@@ -458,6 +452,7 @@ ZRef<ZYADReaderRep> ZMapReaderRep_OSXPList::Read()
 
 void ZMapReaderRep_OSXPList::Skip()
 	{
+	ZUnimplemented();
 	}
 
 // =================================================================================================
@@ -476,11 +471,8 @@ void ZListReaderRep_OSXPList::pMoveIfNecessary()
 
 	sSkipText(fR);
 
-	if (fR.Current() == ZML::eToken_TagEnd && fR.Name() == "array")
-		{
+	if (sTryRead_End(fR, "array"))
 		fFinished = true;
-		fR.Advance();
-		}
 	}
 
 ZListReaderRep_OSXPList::ZListReaderRep_OSXPList(ZML::Reader& iR)
@@ -520,6 +512,7 @@ ZRef<ZYADReaderRep> ZListReaderRep_OSXPList::Read()
 
 void ZListReaderRep_OSXPList::Skip()
 	{
+	ZUnimplemented();
 	}
 
 // =================================================================================================

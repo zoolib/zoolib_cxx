@@ -37,6 +37,31 @@ class ZListReaderRep;
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYADOptions
+
+struct ZYADOptions
+	{
+	ZYADOptions(bool iDoIndentation = false);
+
+	std::string fEOLString;
+	std::string fIndentString;
+
+	int fRawChunkSize;
+	std::string fRawByteSeparator;
+	bool fRawAsASCII;
+
+	bool fBreakStrings;
+	int fStringLineLength;
+
+	bool fIDsHaveDecimalVersionComment;
+
+	bool fTimesHaveUserLegibleComment;
+
+	bool DoIndentation() const { return !fIndentString.empty(); }
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYAD
 
 class ZYAD : public ZRefCountedWithFinalization
@@ -137,6 +162,7 @@ public:
 	ZYADReader Read();
 	void Skip();
 
+	bool IsSimple(const ZYADOptions& iOptions) const;
 	bool CanRandomAccess() const;
 	ZYADReader ReadWithName(const std::string& iName);
 
@@ -161,6 +187,7 @@ public:
 	virtual ZRef<ZYADReaderRep> Read() = 0;
 	virtual void Skip() = 0;
 
+	virtual bool IsSimple(const ZYADOptions& iOptions);
 	virtual bool CanRandomAccess();
 	virtual ZRef<ZYADReaderRep> ReadWithName(const std::string& iName);
 	};
@@ -185,6 +212,11 @@ public:
 	ZYADReader Read();
 	void Skip();
 
+	bool IsSimple(const ZYADOptions& iOptions) const;
+	bool CanRandomAccess() const;
+	size_t Count() const;
+	ZYADReader ReadWithIndex(size_t iIndex);
+
 private:
 	ZRef<ZListReaderRep> fRep;
 	};
@@ -205,6 +237,11 @@ public:
 	virtual size_t Index() const = 0;
 	virtual ZRef<ZYADReaderRep> Read() = 0;
 	virtual void Skip() = 0;
+
+	virtual bool IsSimple(const ZYADOptions& iOptions);
+	virtual bool CanRandomAccess();
+	virtual size_t Count();
+	virtual ZRef<ZYADReaderRep> ReadWithIndex(size_t iIndex);
 	};
 
 #endif // __ZYAD__

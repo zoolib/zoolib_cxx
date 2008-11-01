@@ -34,6 +34,26 @@ access to them allows code to be applied to any of them.
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYADOptions
+
+ZYADOptions::ZYADOptions(bool iDoIndentation)
+:	fRawChunkSize(16),
+	fRawByteSeparator(" "),
+	fRawAsASCII(iDoIndentation),
+	fBreakStrings(true),
+	fStringLineLength(80),
+	fIDsHaveDecimalVersionComment(iDoIndentation),
+	fTimesHaveUserLegibleComment(true)
+	{
+	if (iDoIndentation)
+		{
+		fEOLString = "\n";
+		fIndentString = "  ";
+		}
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYAD
 
 ZYAD::ZYAD()
@@ -196,6 +216,13 @@ void ZMapReader::Skip()
 		return fRep->Skip();
 	}
 
+bool ZMapReader::IsSimple(const ZYADOptions& iOptions) const
+	{
+	if (fRep)
+		return fRep->IsSimple(iOptions);
+	return true;
+	}
+
 bool ZMapReader::CanRandomAccess() const
 	{
 	if (fRep)
@@ -219,6 +246,9 @@ ZMapReaderRep::ZMapReaderRep()
 
 ZMapReaderRep::~ZMapReaderRep()
 	{}
+
+bool ZMapReaderRep::IsSimple(const ZYADOptions& iOptions)
+	{ return false; }
 
 bool ZMapReaderRep::CanRandomAccess()
 	{ return false; }
@@ -267,6 +297,34 @@ void ZListReader::Skip()
 		return fRep->Skip();
 	}
 
+bool ZListReader::IsSimple(const ZYADOptions& iOptions) const
+	{
+	if (fRep)
+		return fRep->IsSimple(iOptions);
+	return true;
+	}
+
+bool ZListReader::CanRandomAccess() const
+	{
+	if (fRep)
+		return fRep->CanRandomAccess();
+	return false;
+	}
+
+size_t ZListReader::Count() const
+	{
+	if (fRep)
+		return fRep->Count();
+	return 0;
+	}
+
+ZYADReader ZListReader::ReadWithIndex(size_t iIndex)
+	{
+	if (fRep)
+		return fRep->ReadWithIndex(iIndex);
+	return ZYADReader();
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZListReaderRep
@@ -276,3 +334,15 @@ ZListReaderRep::ZListReaderRep()
 
 ZListReaderRep::~ZListReaderRep()
 	{}
+
+bool ZListReaderRep::IsSimple(const ZYADOptions& iOptions)
+	{ return false; }
+
+bool ZListReaderRep::CanRandomAccess()
+	{ return false; }
+
+size_t ZListReaderRep::Count()
+	{ return 0; }
+
+ZRef<ZYADReaderRep> ZListReaderRep::ReadWithIndex(size_t iIndex)
+	{ return ZRef<ZYADReaderRep>(); }

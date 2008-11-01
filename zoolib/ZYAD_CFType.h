@@ -89,6 +89,10 @@ public:
 	virtual ZRef<ZYADReaderRep> Read();
 	virtual void Skip();
 
+	virtual bool IsSimple(const ZYADOptions& iOptions);
+	virtual bool CanRandomAccess();
+	virtual ZRef<ZYADReaderRep> ReadWithName(const std::string& iName);
+
 private:
 	CFDictionaryRef fCFDictionaryRef;
 	size_t fIndex;
@@ -111,6 +115,11 @@ public:
 	virtual ZRef<ZYADReaderRep> Read();
 	virtual void Skip();
 
+	virtual bool IsSimple(const ZYADOptions& iOptions);
+	virtual bool CanRandomAccess();
+	virtual size_t Count();
+	virtual ZRef<ZYADReaderRep> ReadWithIndex(size_t iIndex);
+
 private:
 	CFArrayRef fCFArrayRef;
 	size_t fIndex;
@@ -122,7 +131,6 @@ private:
 
 namespace ZYADUtil_CFType {
 
-bool sFromReader(ZYADReader iYADReader, CFTypeRef& oCFTypeRef);
 CFTypeRef sFromReader(ZYADReader iYADReader);
 
 } // namespace ZYADUtil_CFType
