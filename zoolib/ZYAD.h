@@ -137,6 +137,9 @@ public:
 	ZYADReader Read();
 	void Skip();
 
+	bool CanRandomAccess() const;
+	ZYADReader ReadWithName(const std::string& iName);
+
 private:
 	ZRef<ZMapReaderRep> fRep;
 	};
@@ -157,6 +160,9 @@ public:
 	virtual std::string Name() = 0;
 	virtual ZRef<ZYADReaderRep> Read() = 0;
 	virtual void Skip() = 0;
+
+	virtual bool CanRandomAccess();
+	virtual ZRef<ZYADReaderRep> ReadWithName(const std::string& iName);
 	};
 
 // =================================================================================================

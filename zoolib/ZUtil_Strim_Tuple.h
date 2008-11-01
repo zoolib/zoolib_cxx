@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "ZTypes.h" // for size_t
+#include "zoolib/ZYAD_ZooLib.h"
 
 #include <string>
 #include <vector>
@@ -41,26 +42,7 @@ namespace ZUtil_Strim_Tuple {
 #pragma mark -
 #pragma mark * ZUtil_Strim_Tuple::Options
 
-struct Options
-	{
-	Options(bool iDoIndentation = false);
-
-	std::string fEOLString;
-	std::string fIndentString;
-
-	int fRawChunkSize;
-	std::string fRawByteSeparator;
-	bool fRawAsASCII;
-
-	bool fBreakStrings;
-	int fStringLineLength;
-
-	bool fIDsHaveDecimalVersionComment;
-
-	bool fTimesHaveUserLegibleComment;
-
-	bool DoIndentation() const { return !fIndentString.empty(); }
-	};
+typedef ZYADUtil_ZooLib::Options Options;
 
 // =================================================================================================
 #pragma mark -

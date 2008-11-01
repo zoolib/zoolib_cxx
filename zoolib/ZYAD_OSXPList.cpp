@@ -560,12 +560,12 @@ static void sToStrimW_ML(const ZStrimW_ML& s, const ZTValue& iTV)
 		{
 		case eZType_Tuple:
 			{
-			sToStrimW_ML(s, new ZMapReaderRep_ZooLib(iTV.GetTuple()));
+			sToStrimW_ML(s, ZMapReader(new ZMapReaderRep_ZTuple(iTV.GetTuple())));
 			break;
 			}
 		case eZType_Vector:
 			{
-			sToStrimW_ML(s, new ZListReaderRep_ZooLib(iTV.GetVector()));
+			sToStrimW_ML(s, ZListReader(new ZListReaderRep_ZVector(iTV.GetVector())));
 			break;
 			}
 		case eZType_String:
@@ -617,24 +617,24 @@ static void sToStrimW_ML(const ZStrimW_ML& s, ZRef<ZYAD> iYAD)
 
 void ZYADUtil_OSXPList::sToStrimW_ML(const ZStrimW_ML& s, ZYADReader iYADReader)
 	{
-	if (iYADReader)
+	if (!iYADReader)
+		return;
+
+	if (iYADReader.IsMap())
 		{
-		if (iYADReader.IsMap())
-			{
-			sToStrimW_ML(s, iYADReader.ReadMap());
-			}
-		else if (iYADReader.IsList())
-			{
-			sToStrimW_ML(s, iYADReader.ReadList());
-			}
-		else if (iYADReader.IsRaw())
-			{
-			sToStrimW_ML(s, iYADReader.ReadRaw()->GetStreamR());
-			}
-		else
-			{
-			sToStrimW_ML(s, iYADReader.ReadYAD());
-			}
+		sToStrimW_ML(s, iYADReader.ReadMap());
+		}
+	else if (iYADReader.IsList())
+		{
+		sToStrimW_ML(s, iYADReader.ReadList());
+		}
+	else if (iYADReader.IsRaw())
+		{
+		sToStrimW_ML(s, iYADReader.ReadRaw()->GetStreamR());
+		}
+	else
+		{
+		sToStrimW_ML(s, iYADReader.ReadYAD());
 		}
 	}
 

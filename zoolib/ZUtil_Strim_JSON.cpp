@@ -666,6 +666,8 @@ ZTValue ZUtil_Strim_JSON::sNormalized(
 void ZUtil_Strim_JSON::sNormalized(const ZTValue& iTV, ZTValue& oTV)
 	{ sNormalized(false, true, iTV, oTV); }
 
+#warning We want a reader that is a JSON normalizing reader.
+
 bool ZUtil_Strim_JSON::sNormalized(
 	bool iPreserveTuples, bool iPreserveVectors, const ZTValue& iTV, ZTValue& oTV)
 	{

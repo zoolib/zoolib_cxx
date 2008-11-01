@@ -22,32 +22,33 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYAD_ZooLib__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZStrim.h"
 #include "zoolib/ZYAD.h"
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYAD_ZooLib
+#pragma mark * ZYAD_ZTValue
 
-class ZYAD_ZooLib : public ZYAD
+class ZYAD_ZTValue : public ZYAD
 	{
 public:
-	ZYAD_ZooLib(const ZTValue& iTV);
-	virtual ~ZYAD_ZooLib();
+	ZYAD_ZTValue(const ZTValue& iTV);
+	virtual ~ZYAD_ZTValue();
 
 	virtual bool GetTValue(ZTValue& oYalue);
 
 private:
-	ZTValue fTV;
+	const ZTValue fTV;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYADReaderRep_ZooLib
+#pragma mark * ZYADReaderRep_ZTValue
 
-class ZYADReaderRep_ZooLib: public ZYADReaderRep
+class ZYADReaderRep_ZTValue: public ZYADReaderRep
 	{
 public:
-	ZYADReaderRep_ZooLib(const ZTValue& iTV);
+	ZYADReaderRep_ZTValue(const ZTValue& iTV);
 
 	virtual bool HasValue();
 	virtual ZType Type();
@@ -58,17 +59,17 @@ public:
 	virtual ZRef<ZYAD> ReadYAD();
 
 private:
-	const ZTValue& fTV;
+	const ZTValue fTV;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZMapReaderRep_ZooLib
+#pragma mark * ZMapReaderRep_ZTuple
 
-class ZMapReaderRep_ZooLib : public ZMapReaderRep
+class ZMapReaderRep_ZTuple : public ZMapReaderRep
 	{
 public:
-	ZMapReaderRep_ZooLib(const ZTuple& iTuple);
+	ZMapReaderRep_ZTuple(const ZTuple& iTuple);
 
 	virtual bool HasValue();
 	virtual std::string Name();
@@ -76,18 +77,18 @@ public:
 	virtual void Skip();
 
 private:
-	const ZTuple& fTuple;
+	const ZTuple fTuple;
 	ZTuple::const_iterator fIter;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZListReaderRep_ZooLib
+#pragma mark * ZListReaderRep_ZVector
 
-class ZListReaderRep_ZooLib : public ZListReaderRep
+class ZListReaderRep_ZVector : public ZListReaderRep
 	{
 public:
-	ZListReaderRep_ZooLib(const std::vector<ZTValue>& iVector);
+	ZListReaderRep_ZVector(const std::vector<ZTValue>& iVector);
 
 	virtual bool HasValue();
 	virtual size_t Index() const;
@@ -95,7 +96,7 @@ public:
 	virtual void Skip();
 
 private:
-	const std::vector<ZTValue>& fVector;
+	const std::vector<ZTValue> fVector;
 	std::vector<ZTValue>::const_iterator fIter;
 	};
 
@@ -107,6 +108,49 @@ namespace ZYADUtil_ZooLib {
 
 bool sFromReader(ZYADReader iYADReader, ZTValue& oTV);
 ZTValue sFromReader(ZYADReader iYADReader);
+
+struct Options
+	{
+	Options(bool iDoIndentation = false);
+
+	std::string fEOLString;
+	std::string fIndentString;
+
+	int fRawChunkSize;
+	std::string fRawByteSeparator;
+	bool fRawAsASCII;
+
+	bool fBreakStrings;
+	int fStringLineLength;
+
+	bool fIDsHaveDecimalVersionComment;
+
+	bool fTimesHaveUserLegibleComment;
+
+	bool DoIndentation() const { return !fIndentString.empty(); }
+	};
+
+void sToStrim(const ZStrimW& s, ZListReader iListReader);
+
+void sToStrim(const ZStrimW& s, ZListReader iListReader,
+	size_t iInitialIndent, const Options& iOptions);
+
+void sToStrim(const ZStrimW& s, ZMapReader iMapReader);
+
+void sToStrim(const ZStrimW& s, ZMapReader iMapReader,
+	size_t iInitialIndent, const Options& iOptions);
+
+void sToStrim(const ZStrimW& s, const ZStreamR& iStreamR);
+
+void sToStrim(const ZStrimW& s, const ZStreamR& iStreamR,
+	size_t iInitialIndent, const Options& iOptions);
+
+void sToStrim(const ZStrimW& s, ZYADReader iYADReader);
+
+void sToStrim(const ZStrimW& s, ZYADReader iYADReader,
+	size_t iInitialIndent, const Options& iOptions);
+
+void sWrite_PropName(const ZStrimW& iStrimW, const string& iPropName);
 
 } // namespace ZYADUtil_ZooLib
 

@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 void ZUtil_Strim_OSXPList::sToStrim(const ZStrimW& iStrimW, const ZTValue& iTValue)
 	{
-	ZYADUtil_OSXPList::sToStrimW_ML(ZStrimW_ML(iStrimW), ZYADReader(new ZYADReaderRep_ZooLib(iTValue)));
+	ZYADUtil_OSXPList::sToStrimW_ML(ZStrimW_ML(iStrimW), new ZYADReaderRep_ZTValue(iTValue));
 	}
 
 bool ZUtil_Strim_OSXPList::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTValue)

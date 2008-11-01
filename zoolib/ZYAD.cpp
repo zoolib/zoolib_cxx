@@ -23,6 +23,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::string;
 
+/*
+YAD is Yet Another Data. It provides a suite of facilities for accessing data that looks like
+ZooLib ZTuple suite -- CFDictionary, NSDictionary, PList, XMLRPC, JSON, Javascript types etc.
+
+The idea is that there are a Map-like and List-like entities in many APIs, and that abstracting
+access to them allows code to be applied to any of them.
+
+*/
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYAD
@@ -187,6 +196,20 @@ void ZMapReader::Skip()
 		return fRep->Skip();
 	}
 
+bool ZMapReader::CanRandomAccess() const
+	{
+	if (fRep)
+		return fRep->CanRandomAccess();
+	return false;
+	}
+
+ZYADReader ZMapReader::ReadWithName(const std::string& iName)
+	{
+	if (fRep)
+		return fRep->ReadWithName(iName);
+	return ZYADReader();
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZMapReaderRep
@@ -196,6 +219,12 @@ ZMapReaderRep::ZMapReaderRep()
 
 ZMapReaderRep::~ZMapReaderRep()
 	{}
+
+bool ZMapReaderRep::CanRandomAccess()
+	{ return false; }
+
+ZRef<ZYADReaderRep> ZMapReaderRep::ReadWithName(const std::string& iName)
+	{ return ZRef<ZYADReaderRep>(); }
 
 // =================================================================================================
 #pragma mark -
