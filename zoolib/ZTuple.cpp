@@ -289,13 +289,18 @@ ZTValue& ZTValue::operator=(const ZTValue& iOther)
 ZTValue::ZTValue(const ZStreamR& iStreamR)
 	{
 	fType.fType = eZType_Null;
-	this->pFromStream(iStreamR);
+	this->pFromStream((ZType)iStreamR.ReadUInt8(), iStreamR);
+	}
+
+ZTValue::ZTValue(ZType iType, const ZStreamR& iStreamR)
+	{
+	this->pFromStream(iType, iStreamR);
 	}
 
 ZTValue::ZTValue(bool dummy, const ZStreamR& iStreamR)
 	{
 	fType.fType = eZType_Null;
-	this->pFromStream(iStreamR);
+	this->pFromStream((ZType)iStreamR.ReadUInt8(), iStreamR);
 	}
 
 void ZTValue::ToStream(const ZStreamW& iStreamW) const
@@ -449,7 +454,14 @@ void ZTValue::FromStream(const ZStreamR& iStreamR)
 	{
 	this->pRelease();
 	fType.fType = eZType_Null;
-	this->pFromStream(iStreamR);
+	this->pFromStream((ZType)iStreamR.ReadUInt8(), iStreamR);
+	}
+
+void ZTValue::FromStream(ZType iType, const ZStreamR& iStreamR)
+	{
+	this->pRelease();
+	fType.fType = eZType_Null;
+	this->pFromStream(iType, iStreamR);
 	}
 
 void ZTValue::ToStreamOld(const ZStreamW& iStreamW) const
@@ -2126,10 +2138,9 @@ static ZRectPOD* sAllocRect()
 	return new ZRectPOD;
 	}
 
-void ZTValue::pFromStream(const ZStreamR& iStreamR)
+void ZTValue::pFromStream(ZType iType, const ZStreamR& iStreamR)
 	{
-	int myType = iStreamR.ReadUInt8();
-	switch (myType)
+	switch (iType)
 		{
 		case eZType_Null:
 			{
@@ -2220,7 +2231,7 @@ void ZTValue::pFromStream(const ZStreamR& iStreamR)
 			uint32 theSize = sReadCount(iStreamR);
 			if (theSize <= kBytesSize)
 				{
-				myType = -theSize-1;
+				iType = (ZType)(-theSize-1);
 				if (theSize)
 					iStreamR.Read(fType.fBytes, theSize);
 				}
@@ -2293,10 +2304,10 @@ void ZTValue::pFromStream(const ZStreamR& iStreamR)
 			}
 		default:
 			{
-			throw Ex_IllegalType(myType);
+			throw Ex_IllegalType(iType);
 			}
 		}
-	fType.fType = ZType(myType);
+	fType.fType = ZType(iType);
 	}
 
 // =================================================================================================

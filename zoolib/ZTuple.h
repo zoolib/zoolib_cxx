@@ -106,6 +106,7 @@ public:
 /** \name Constructing from flattened data in a stream
 */	//@{
 	explicit ZTValue(const ZStreamR& iStreamR);
+	explicit ZTValue(ZType iType, const ZStreamR& iStreamR);
 	ZTValue(bool dummy, const ZStreamR& iStreamR);
 	//@}
 
@@ -118,6 +119,7 @@ public:
 */	//@{
 	void ToStream(const ZStreamW& iStreamW) const;
 	void FromStream(const ZStreamR& iStreamR);
+	void FromStream(ZType iType, const ZStreamR& iStreamR);
 
 	void ToStreamOld(const ZStreamW& iStreamW) const;
 	void FromStreamOld(const ZStreamR& iStreamR);
@@ -327,7 +329,7 @@ private:
 
 	void pRelease();
 	void pCopy(const ZTValue& iOther);
-	void pFromStream(const ZStreamR& iStream);
+	void pFromStream(ZType iType, const ZStreamR& iStream);
 
 	friend class ZTuple;
 	
