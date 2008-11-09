@@ -294,6 +294,7 @@ ZTValue::ZTValue(const ZStreamR& iStreamR)
 
 ZTValue::ZTValue(ZType iType, const ZStreamR& iStreamR)
 	{
+	fType.fType = eZType_Null;
 	this->pFromStream(iType, iStreamR);
 	}
 
