@@ -94,6 +94,7 @@ Read data from this stream into memory.
 */	//@{
 	void Read(void* iDest, size_t iCount) const;
 	void Read(void* iDest, size_t iCount, size_t* oCountRead) const;
+	void ReadAll(void* iDest, size_t iCount, size_t* oCountRead) const;
 	//@}
 
 

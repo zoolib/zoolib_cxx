@@ -189,6 +189,25 @@ void ZStreamR::Read(void* iDest, size_t iCount) const
 	}
 
 
+void ZStreamR::ReadAll(void* iDest, size_t iCount, size_t* oCountRead) const
+	{
+	char* localDest = reinterpret_cast<char*>(iDest);
+	size_t countRemaining = iCount;
+	while (countRemaining > 0)
+		{
+		size_t countRead;
+		const_cast<ZStreamR*>(this)->Imp_Read(localDest, countRemaining, &countRead);
+		ZAssertStop(kDebug_Stream, countRead <= countRemaining);
+		if (countRead == 0)
+			break;
+		countRemaining -= countRead;
+		localDest += countRead;
+		}
+
+	if (oCountRead)
+		*oCountRead = localDest - reinterpret_cast<char*>(iDest);
+	}
+
 /** \brief Read data from this stream and write it
 to \a iStreamW until this stream reaches its end.
 */
