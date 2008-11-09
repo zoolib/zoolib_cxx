@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(BlackBerry_BBDevMgr)
 
+#include "zoolib/ZByteSwap.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 #include "zoolib/ZTime.h"
@@ -108,6 +109,8 @@ private:
 	IChannel* fChannel;
 	ChannelParams fChannelParams;
 
+	bool fPreserveBoundaries;
+
 	vector<char> fBuffer;
 	size_t fStart;
 	size_t fEnd;
@@ -120,6 +123,7 @@ private:
 Channel_BBDevMgr::Channel_BBDevMgr(ZRef<Channel_BBDevMgr>& oChannel, IDevice* iDevice,
 	bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash)
 :	fChannel(nil),
+	fPreserveBoundaries(iPreserveBoundaries),
 	fStart(0),
 	fEnd(0),
 	fHasPasswordHash(0 != iPasswordHash),
@@ -138,7 +142,8 @@ Channel_BBDevMgr::Channel_BBDevMgr(ZRef<Channel_BBDevMgr>& oChannel, IDevice* iD
 	if (SUCCEEDED(theResult) && fChannel)
 		{
 		fChannel->Params(&fChannelParams);
-		fBuffer.resize(fChannelParams.fMaxReceiveUnit);
+		// Allow for two extra bytes, just in case we're preserving boundaries.
+		fBuffer.resize(fChannelParams.fMaxReceiveUnit + 2);
 		}
 	}
 
@@ -423,8 +428,23 @@ bool Channel_BBDevMgr::pRefill(ZMutexLocker& iLocker, IChannel* iChannel, int* i
 			iLocker.Release();
 
 			int32 countRead;
-			if (FAILED(iChannel->ReadPacket(&fBuffer[0], fBuffer.size(), &countRead)))
-				countRead = 0;
+			if (fPreserveBoundaries)
+				{
+				if (FAILED(iChannel->ReadPacket(&fBuffer[2], fBuffer.size() - 2, &countRead)))
+					{
+					countRead = 0;
+					}
+				else
+					{
+					ZByteSwap_WriteLittle16(&fBuffer[0], countRead);
+					countRead += 2;
+					}
+				}
+			else
+				{
+				if (FAILED(iChannel->ReadPacket(&fBuffer[0], fBuffer.size(), &countRead)))
+					countRead = 0;
+				}
 
 			if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 				s.Writef("pRefill, countRead: %d", countRead);
@@ -541,38 +561,30 @@ ZRef<Channel> Device_BBDevMgr::Open(bool iPreserveBoundaries,
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Device_BBDevMgr"))
 		s << "Open, iName: " << iName;
 
-	if (iPreserveBoundaries)
+	if (IDevice* theDevice = this->pUseDevice())
 		{
+		// theChannel's refcount is manipulated by both COM and ZRef. When created it is zero,
+		// and in the ZRef scheme is not incremented to one until it is first assigned to a
+		// ZRef<>. The process of opening a channel, and failing, will AddRef and Release
+		// theChannel, and it will be Finalized and thus disposed. So we pass a reference to a
+		// ZRef to the constructor, to which the constructor assigns 'this', extending the
+		// lifetime appropriately.
+		ZRef<Channel_BBDevMgr> theChannel;
+		new Channel_BBDevMgr(theChannel, theDevice, iPreserveBoundaries, iName, iPasswordHash);
+		theDevice->Release();
+
+		if (theChannel->IsOkay())
+			return theChannel;
+
+		// FIXME. Failure may also be due to a bad/missing/expired password.
+		#warning NDY
 		if (oError)
-			*oError = error_Generic;
+			*oError = error_UnknownChannel;
 		}
 	else
 		{
-		if (IDevice* theDevice = this->pUseDevice())
-			{
-			// theChannel's refcount is manipulated by both COM and ZRef. When created it is zero,
-			// and in the ZRef scheme is not incremented to one until it is first assigned to a
-			// ZRef<>. The process of opening a channel, and failing, will AddRef and Release
-			// theChannel, and it will be Finalized and thus disposed. So we pass a reference to a
-			// ZRef to the constructor, to which the constructor assigns 'this', extending the
-			// lifetime appropriately.
-			ZRef<Channel_BBDevMgr> theChannel;
-			new Channel_BBDevMgr(theChannel, theDevice, iPreserveBoundaries, iName, iPasswordHash);
-			theDevice->Release();
-
-			if (theChannel->IsOkay())
-				return theChannel;
-
-			// FIXME. Failure may also be due to a bad/missing/expired password.
-			#warning NDY
-			if (oError)
-				*oError = error_UnknownChannel;
-			}
-		else
-			{
-			if (oError)
-				*oError = error_DeviceClosed;
-			}
+		if (oError)
+			*oError = error_DeviceClosed;
 		}
 
 	return ZRef<Channel>();
