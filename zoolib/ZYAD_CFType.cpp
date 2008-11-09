@@ -67,6 +67,7 @@ static void sCheckForComplex(const void* iKey, const void* iValue, void* iRefcon
 	CheckForComplex_t* theParam = static_cast<CheckForComplex_t*>(iRefcon);
 	theParam->fIsComplex = sIsComplex(*theParam->fOptions, static_cast<CFTypeRef>(iValue));
 	}
+
 } // anonymous namespace
 
 static bool sIsComplexDictionary(const ZYADOptions& iOptions, CFDictionaryRef iDictionaryRef)
@@ -131,7 +132,8 @@ CFTypeRef ZYAD_CFType::GetCFTypeRef()
 #pragma mark * ZYADReaderRep_CFType definition
 
 ZYADReaderRep_CFType::ZYADReaderRep_CFType(CFTypeRef iCFTypeRef)
-:	fCFTypeRef(iCFTypeRef)
+:	fCFTypeRef(iCFTypeRef),
+	fHasValue(true)
 	{
 	::CFRetain(fCFTypeRef);
 	}
@@ -142,40 +144,62 @@ ZYADReaderRep_CFType::~ZYADReaderRep_CFType()
 	}
 
 bool ZYADReaderRep_CFType::HasValue()
-	{ return true; }
+	{ return fHasValue; }
 
 ZType ZYADReaderRep_CFType::Type()
 	{
-	return ZUtil_CFType::sTypeOf(fCFTypeRef);
+	if (fHasValue)
+		return ZUtil_CFType::sTypeOf(fCFTypeRef);
+	return eZType_Null;
 	}
 
 ZRef<ZMapReaderRep> ZYADReaderRep_CFType::ReadMap()
 	{
-	if (::CFGetTypeID(fCFTypeRef) == ::CFDictionaryGetTypeID())
+	if (fHasValue && ::CFGetTypeID(fCFTypeRef) == ::CFDictionaryGetTypeID())
+		{
+		fHasValue = false;
 		return new ZMapReaderRep_CFType(static_cast<CFDictionaryRef>(fCFTypeRef));
+		}
 
 	return ZRef<ZMapReaderRep>();
 	}
 
 ZRef<ZListReaderRep> ZYADReaderRep_CFType::ReadList()
 	{
-	if (::CFGetTypeID(fCFTypeRef) == ::CFArrayGetTypeID())
+	if (fHasValue && ::CFGetTypeID(fCFTypeRef) == ::CFArrayGetTypeID())
+		{
+		fHasValue = false;
 		return new ZListReaderRep_CFType(static_cast<CFArrayRef>(fCFTypeRef));
+		}
 
 	return ZRef<ZListReaderRep>();
 	}
 
 ZRef<ZStreamerR> ZYADReaderRep_CFType::ReadRaw()
 	{
-	if (::CFGetTypeID(fCFTypeRef) == ::CFDataGetTypeID())
+	if (fHasValue && ::CFGetTypeID(fCFTypeRef) == ::CFDataGetTypeID())
+		{
+		fHasValue = false;
 		return new ZStreamerRPos_T<ZStreamRPos_CFData>(static_cast<CFDataRef>(fCFTypeRef));
+		}
 
 	return ZRef<ZStreamerR>();
 	}
 
 ZRef<ZYAD> ZYADReaderRep_CFType::ReadYAD()
 	{
-	return new ZYAD_CFType(fCFTypeRef);
+	if (fHasValue)
+		{
+		fHasValue = false;
+		return new ZYAD_CFType(fCFTypeRef);
+		}
+
+	return ZRef<ZYAD>();
+	}
+
+void ZYADReaderRep_CFType::Skip()
+	{
+	fHasValue = false;
 	}
 
 // =================================================================================================
@@ -223,14 +247,14 @@ bool ZMapReaderRep_CFType::HasValue()
 string ZMapReaderRep_CFType::Name()
 	{
 	if (fIndex < fNames.size())
-		return ZUtil_CFType::sAsUTF8(fNames[fIndex]);
+		return ZUtil_CFType::sAsUTF8(fNames.at(fIndex));
 	return string();
 	}
 
 ZRef<ZYADReaderRep> ZMapReaderRep_CFType::Read()
 	{
 	if (fIndex < fValues.size())
-		return new ZYADReaderRep_CFType(CFTypeRef(fValues[fIndex++]));
+		return new ZYADReaderRep_CFType(CFTypeRef(fValues.at(fIndex++)));
 	return ZRef<ZYADReaderRep>();
 	}
 
@@ -246,6 +270,9 @@ bool ZMapReaderRep_CFType::IsSimple(const ZYADOptions& iOptions)
 bool ZMapReaderRep_CFType::CanRandomAccess()
 	{ return true; }
 
+size_t ZMapReaderRep_CFType::Count()
+	{ return fValues.size(); }
+
 ZRef<ZYADReaderRep> ZMapReaderRep_CFType::ReadWithName(const string& iName)
 	{
 	CFStringRef theKey = ZUtil_CFType::sCreateCFString_UTF8(iName);
@@ -253,6 +280,14 @@ ZRef<ZYADReaderRep> ZMapReaderRep_CFType::ReadWithName(const string& iName)
 	::CFRelease(theKey);
 	if (result)
 		return new ZYADReaderRep_CFType(result);
+
+	return ZRef<ZYADReaderRep>();
+	}
+
+ZRef<ZYADReaderRep> ZMapReaderRep_CFType::ReadAtIndex(size_t iIndex)
+	{
+	if (iIndex < fValues.size())
+		return new ZYADReaderRep_CFType(CFTypeRef(fValues.at(iIndex)));
 
 	return ZRef<ZYADReaderRep>();
 	}
@@ -278,7 +313,7 @@ bool ZListReaderRep_CFType::HasValue()
 	return fIndex < ::CFArrayGetCount(fCFArrayRef);
 	}
 
-size_t ZListReaderRep_CFType::Index() const
+size_t ZListReaderRep_CFType::Index()
 	{
 	return fIndex;
 	}

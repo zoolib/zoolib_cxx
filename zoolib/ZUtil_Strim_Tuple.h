@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "ZTypes.h" // for size_t
-#include "zoolib/ZYAD_ZooLib.h"
+#include "zoolib/ZYAD_ZooLibStrim.h"
 
 #include <string>
 #include <vector>
@@ -50,7 +50,7 @@ typedef ZYADOptions Options;
 
 struct Format
 	{
-	Format(const ZTValue& iTValue, int iInitialIndent, const ZYADOptions& iOptions);
+	Format(const ZTValue& iTV, int iInitialIndent, const ZYADOptions& iOptions);
 
 	const ZTValue& fTValue;
 	int fInitialIndent;
@@ -69,16 +69,16 @@ bool sRead_Identifier(const ZStrimU& iStrimU, std::string* oStringLC, std::strin
 #pragma mark -
 #pragma mark * ZUtil_Strim_Tuple, TValue
 
-void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTValue);
+void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTV);
 
-void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTValue,
+void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTV,
 	size_t iInitialIndent, const ZYADOptions& iOptions);
 
-std::string sAsString(const ZTValue& iTValue);
+std::string sAsString(const ZTValue& iTV);
 
-bool sFromStrim(const ZStrimU& iStrimU, ZTValue& oTValue);
+bool sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV);
 
-bool sFromString(const std::string& iString, ZTValue& oTValue);
+bool sFromString(const std::string& iString, ZTValue& oTV);
 
 // =================================================================================================
 #pragma mark -
@@ -119,7 +119,7 @@ bool sFromString(const std::string& iString, ZTuple& oTuple);
 #pragma mark -
 #pragma mark * operator<< overloads
 
-const ZStrimW& operator<<(const ZStrimW& s, const ZTValue& iTValue);
+const ZStrimW& operator<<(const ZStrimW& s, const ZTValue& iTV);
 
 const ZStrimW& operator<<(const ZStrimW& s, const ZUtil_Strim_Tuple::Format& iFormat);
 

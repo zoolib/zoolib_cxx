@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZYAD_OSXPList.h"
-#include "zoolib/ZYAD_ZooLib.h"
+#include "zoolib/ZYAD_ZTValue.h"
 
 using std::string;
 
@@ -227,6 +227,7 @@ public:
 	virtual bool HasValue();
 	virtual std::string Name();
 	virtual ZRef<ZYADReaderRep> Read();
+
 	virtual void Skip();
 
 private:
@@ -248,8 +249,9 @@ public:
 	ZListReaderRep_OSXPList(ZML::Reader& iReader);
 
 	virtual bool HasValue();
-	virtual size_t Index() const;
+	virtual size_t Index();
 	virtual ZRef<ZYADReaderRep> Read();
+
 	virtual void Skip();
 
 private:
@@ -384,6 +386,18 @@ ZRef<ZYAD> ZYADReaderRep_OSXPList::ReadYAD()
 	return ZRef<ZYAD>();
 	}
 
+void ZYADReaderRep_OSXPList::Skip()
+	{
+	if (fR.Current() == ZML::eToken_TagEmpty)
+		{
+		fR.Advance();
+		}
+	else if (fR.Current() == ZML::eToken_TagBegin)
+		{
+		sSkip(fR, fR.Name());
+		}
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZMapReaderRep_OSXPList definition
@@ -452,7 +466,12 @@ ZRef<ZYADReaderRep> ZMapReaderRep_OSXPList::Read()
 
 void ZMapReaderRep_OSXPList::Skip()
 	{
-	ZUnimplemented();
+	if (!fFinished)
+		{
+		fFinished = true;
+		if (!sSkip(fR, "dict"))
+			throw ZYAD_OSXPList::ParseException("Expected dict end tag");
+		}
 	}
 
 // =================================================================================================
@@ -492,7 +511,7 @@ bool ZListReaderRep_OSXPList::HasValue()
 	return !fFinished;
 	}
 
-size_t ZListReaderRep_OSXPList::Index() const
+size_t ZListReaderRep_OSXPList::Index()
 	{
 	return fIndex;
 	}
@@ -512,7 +531,12 @@ ZRef<ZYADReaderRep> ZListReaderRep_OSXPList::Read()
 
 void ZListReaderRep_OSXPList::Skip()
 	{
-	ZUnimplemented();
+	if (!fFinished)
+		{
+		fFinished = true;
+		if (!sSkip(fR, "array"))
+			throw ZYAD_OSXPList::ParseException("Expected array end tag");
+		}
 	}
 
 // =================================================================================================
@@ -656,5 +680,5 @@ bool ZYADUtil_OSXPList::sFromML(ZML::Reader& r, ZTValue& oTValue)
 		break;
 		}
 
-	return ZYADUtil_ZooLib::sFromReader(ZYADReader(new ZYADReaderRep_OSXPList(r)), oTValue);
+	return ZYADUtil_ZTValue::sFromReader(ZYADReader(new ZYADReaderRep_OSXPList(r)), oTValue);
 	}

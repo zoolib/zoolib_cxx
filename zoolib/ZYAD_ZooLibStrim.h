@@ -18,24 +18,27 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYAD_ZooLib__
-#define __ZYAD_ZooLib__ 1
+#ifndef __ZYAD_ZooLibStrim__
+#define __ZYAD_ZooLibStrim__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZStream_HexStrim.h"
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZYAD.h"
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYAD_ZTValue
+#pragma mark * ZYAD_ZooLibStrim
 
-class ZYAD_ZTValue : public ZYAD
+class ZYAD_ZooLibStrim : public ZYAD
 	{
 public:
-	ZYAD_ZTValue(const ZTValue& iTV);
-	virtual ~ZYAD_ZTValue();
+	ZYAD_ZooLibStrim(const ZTValue& iTV);
+	virtual ~ZYAD_ZooLibStrim();
 
 	virtual bool GetTValue(ZTValue& oYalue);
+
+	class ParseException;
 
 private:
 	const ZTValue fTV;
@@ -43,12 +46,23 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYADReaderRep_ZTValue
+#pragma mark * ZYAD_ZooLibStrim::ParseException
 
-class ZYADReaderRep_ZTValue: public ZYADReaderRep
+class ZYAD_ZooLibStrim::ParseException : public ZYAD::ParseException
 	{
 public:
-	ZYADReaderRep_ZTValue(const ZTValue& iTV);
+	ParseException(const std::string& iWhat);
+	ParseException(const char* iWhat);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYADReaderRep_ZooLibStrim
+
+class ZYADReaderRep_ZooLibStrim: public ZYADReaderRep
+	{
+public:
+	ZYADReaderRep_ZooLibStrim(const ZStrimU& iStrimU);
 
 	virtual bool HasValue();
 	virtual ZType Type();
@@ -58,65 +72,89 @@ public:
 	virtual ZRef<ZStreamerR> ReadRaw();
 	virtual ZRef<ZYAD> ReadYAD();
 
+	void Finish();
+
 private:
-	const ZTValue fTV;
+	void pReadIfNecessary();
+
+	const ZStrimU& fStrimU;
+	bool fNeedsReadClose;
+	ZType fType;
+	bool fHasValue;
+	ZTValue fValue;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZMapReaderRep_ZTuple
+#pragma mark * ZMapReaderRep_ZooLibStrim
 
-class ZMapReaderRep_ZTuple : public ZMapReaderRep
+class ZMapReaderRep_ZooLibStrim : public ZMapReaderRep
 	{
 public:
-	ZMapReaderRep_ZTuple(const ZTuple& iTuple);
+	ZMapReaderRep_ZooLibStrim(const ZStrimU& iStrimU);
 
 	virtual bool HasValue();
 	virtual std::string Name();
 	virtual ZRef<ZYADReaderRep> Read();
-	virtual void Skip();
-
-	virtual bool IsSimple(const ZYADOptions& iOptions);
-	virtual bool CanRandomAccess();
-	virtual ZRef<ZYADReaderRep> ReadWithName(const std::string& iName);
 
 private:
-	const ZTuple fTuple;
-	ZTuple::const_iterator fIter;
+	void pMoveIfNecessary();
+
+	const ZStrimU& fStrimU;
+	string fName;
+	ZRef<ZYADReaderRep_ZooLibStrim> fValue_Current;
+	ZRef<ZYADReaderRep_ZooLibStrim> fValue_Prior;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZListReaderRep_ZVector
+#pragma mark * ZListReaderRep_ZooLibStrim
 
-class ZListReaderRep_ZVector : public ZListReaderRep
+class ZListReaderRep_ZooLibStrim : public ZListReaderRep
 	{
 public:
-	ZListReaderRep_ZVector(const std::vector<ZTValue>& iVector);
+	ZListReaderRep_ZooLibStrim(const ZStrimU& iStrimU);
 
 	virtual bool HasValue();
-	virtual size_t Index() const;
+	virtual size_t Index();
 	virtual ZRef<ZYADReaderRep> Read();
-	virtual void Skip();
-
-	virtual bool IsSimple(const ZYADOptions& iOptions);
-	virtual bool CanRandomAccess();
-	virtual size_t Count();
-	virtual ZRef<ZYADReaderRep> ReadWithIndex(size_t iIndex);
 
 private:
-	const std::vector<ZTValue> fVector;
-	std::vector<ZTValue>::const_iterator fIter;
+	void pMoveIfNecessary();
+
+	const ZStrimU& fStrimU;
+	ZRef<ZYADReaderRep_ZooLibStrim> fValue_Current;
+	ZRef<ZYADReaderRep_ZooLibStrim> fValue_Prior;
+	size_t fIndex;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYADUtil_ZooLib
+#pragma mark * ZStreamerR_ZooLibStrim
 
-namespace ZYADUtil_ZooLib {
+class ZStreamerR_ZooLibStrim
+:	public ZStreamerR
+	{
+public:
+	ZStreamerR_ZooLibStrim(const ZStrimU& iStrimU);
+	virtual ~ZStreamerR_ZooLibStrim();
+	
+// From ZStreamerR
+	const ZStreamR& GetStreamR();
 
-bool sFromReader(ZYADReader iYADReader, ZTValue& oTV);
-ZTValue sFromReader(ZYADReader iYADReader);
+private:
+	const ZStrimU& fStrimU;
+	ZStreamR_HexStrim fStreamR;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYADUtil_ZooLibStrim
+
+namespace ZYADUtil_ZooLibStrim {
+
+bool sRead_Identifier(
+	const ZStrimU& iStrimU, std::string* oStringLC, std::string* oStringExact);
 
 void sToStrim(const ZStrimW& s, ZListReader iListReader);
 
@@ -138,8 +176,8 @@ void sToStrim(const ZStrimW& s, ZYADReader iYADReader);
 void sToStrim(const ZStrimW& s, ZYADReader iYADReader,
 	size_t iInitialIndent, const ZYADOptions& iOptions);
 
-void sWrite_PropName(const ZStrimW& iStrimW, const string& iPropName);
+void sWrite_PropName(const ZStrimW& iStrimW, const std::string& iPropName);
 
-} // namespace ZYADUtil_ZooLib
+} // namespace ZYADUtil_ZooLibStrim
 
-#endif // __ZYAD_ZooLib__
+#endif // __ZYAD_ZooLibStrim__

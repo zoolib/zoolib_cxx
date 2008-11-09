@@ -18,55 +18,39 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYAD_OSXPList__
-#define __ZYAD_OSXPList__ 1
+#ifndef __ZYAD_ZooLibStream__
+#define __ZYAD_ZooLibStream__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZML.h"
+#include "zoolib/ZStream.h"
 #include "zoolib/ZYAD.h"
 
-class ZStrimW_ML;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYAD_OSXPList
+#pragma mark * ZYAD_ZooLibStream
 
-class ZYAD_OSXPList : public ZYAD
+class ZYAD_ZooLibStream : public ZYAD
 	{
 public:
-	ZYAD_OSXPList(ZML::Reader& iR);
-	virtual ~ZYAD_OSXPList();
+	ZYAD_ZooLibStream(ZType iType, const ZStreamR& iStreamR);
+	virtual ~ZYAD_ZooLibStream();
 
-	virtual bool GetTValue(ZTValue& oTV);
-
-	class ParseException;
+	virtual bool GetTValue(ZTValue& oYalue);
 
 private:
-	ZTValue fTV;
+	const ZTValue fTV;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYAD_OSXPList::ParseException
+#pragma mark * ZYADReaderRep_ZooLibStream
 
-class ZYAD_OSXPList::ParseException : public ZYAD::ParseException
+class ZYADReaderRep_ZooLibStream: public ZYADReaderRep
 	{
 public:
-	ParseException(const std::string& iWhat);
-	ParseException(const char* iWhat);
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYADReaderRep_OSXPList declaration
-
-class ZYADReaderRep_OSXPList: public ZYADReaderRep
-	{
-public:
-	ZYADReaderRep_OSXPList(ZML::Reader& iReader);
+	ZYADReaderRep_ZooLibStream(const ZStreamR& iStreamR);
 
 	virtual bool HasValue();
-
 	virtual ZType Type();
 
 	virtual ZRef<ZMapReaderRep> ReadMap();
@@ -74,23 +58,29 @@ public:
 	virtual ZRef<ZStreamerR> ReadRaw();
 	virtual ZRef<ZYAD> ReadYAD();
 
-	virtual void Skip();
-
 private:
-	ZML::Reader& fR;
+	void pReadIfNecessary();
+
+	const ZStreamR& fStreamR;
+	bool fNeedsRead;
+	bool fHasValue;
+	ZType fType;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYADUtil_OSXPList
+#pragma mark * ZYADUtil_ZooLibStream
 
-namespace ZYADUtil_OSXPList {
+namespace ZYADUtil_ZooLibStream {
 
-void sToStrimW_ML(const ZStrimW_ML& s, ZYADReader iYADReader);
+void sToStream(const ZStreamW& iStreamW, ZListReader iListReader);
 
-bool sFromStrim(const ZStrimU& iStrimU, ZTValue& oTValue);
-bool sFromML(ZML::Reader& r, ZTValue& oTValue);
+void sToStream(const ZStreamW& iStreamW, ZMapReader iMapReader);
 
-} // namespace ZYADUtil_OSXPList
+void sToStream(const ZStreamW& iStreamW, const ZStreamR& iStreamR);
 
-#endif // __ZYAD_OSXPList__
+void sToStream(const ZStreamW& iStreamW, ZYADReader iYADReader);
+
+} // namespace ZYADUtil_ZooLibStream
+
+#endif // __ZYAD_ZooLibStream__

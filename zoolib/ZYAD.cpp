@@ -165,6 +165,12 @@ ZRef<ZYAD> ZYADReader::ReadYAD()
 	return ZRef<ZYAD>();	
 	}
 
+void ZYADReader::Skip()
+	{
+	if (fRep)
+		fRep->Skip();
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYADReaderRep
@@ -174,6 +180,33 @@ ZYADReaderRep::ZYADReaderRep()
 
 ZYADReaderRep::~ZYADReaderRep()
 	{}
+
+void ZYADReaderRep::Skip()
+	{
+	switch (this->Type())
+		{
+		case eZType_Tuple:
+			{
+			this->ReadMap()->Skip();
+			break;
+			}
+		case eZType_Vector:
+			{
+			this->ReadList()->Skip();
+			break;
+			}
+		case eZType_Raw:
+			{
+			this->ReadRaw()->GetStreamR().SkipAll();
+			break;
+			}
+		default:
+			{
+			this->ReadYAD();
+			break;
+			}
+		}
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -230,10 +263,24 @@ bool ZMapReader::CanRandomAccess() const
 	return false;
 	}
 
-ZYADReader ZMapReader::ReadWithName(const std::string& iName)
+size_t ZMapReader::Count() const
+	{
+	if (fRep)
+		return fRep->Count();
+	return 0;
+	}
+	
+ZYADReader ZMapReader::ReadWithName(const std::string& iName) const
 	{
 	if (fRep)
 		return fRep->ReadWithName(iName);
+	return ZYADReader();
+	}
+
+ZYADReader ZMapReader::ReadAtIndex(size_t iIndex) const
+	{
+	if (fRep)
+		return fRep->ReadAtIndex(iIndex);
 	return ZYADReader();
 	}
 
@@ -247,13 +294,25 @@ ZMapReaderRep::ZMapReaderRep()
 ZMapReaderRep::~ZMapReaderRep()
 	{}
 
+void ZMapReaderRep::Skip()
+	{
+	while (this->HasValue())
+		this->Read()->Skip();
+	}
+
 bool ZMapReaderRep::IsSimple(const ZYADOptions& iOptions)
 	{ return false; }
 
 bool ZMapReaderRep::CanRandomAccess()
 	{ return false; }
 
+size_t ZMapReaderRep::Count()
+	{ return 0; }
+
 ZRef<ZYADReaderRep> ZMapReaderRep::ReadWithName(const std::string& iName)
+	{ return ZRef<ZYADReaderRep>(); }
+
+ZRef<ZYADReaderRep> ZMapReaderRep::ReadAtIndex(size_t iIndex)
 	{ return ZRef<ZYADReaderRep>(); }
 
 // =================================================================================================
@@ -346,3 +405,10 @@ size_t ZListReaderRep::Count()
 
 ZRef<ZYADReaderRep> ZListReaderRep::ReadWithIndex(size_t iIndex)
 	{ return ZRef<ZYADReaderRep>(); }
+
+void ZListReaderRep::Skip()
+	{
+	while (this->HasValue())
+		this->Read()->Skip();
+	}
+

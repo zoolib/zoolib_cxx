@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim_OSXPList.h"
 
 #include "zoolib/ZStrimW_ML.h"
-#include "zoolib/ZYAD_ZooLib.h"
+#include "zoolib/ZYAD_ZTValue.h"
 
 // =================================================================================================
 #pragma mark -

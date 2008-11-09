@@ -70,8 +70,11 @@ public:
 	virtual ZRef<ZStreamerR> ReadRaw();
 	virtual ZRef<ZYAD> ReadYAD();
 
+	virtual void Skip();
+
 private:
 	CFTypeRef fCFTypeRef;
+	bool fHasValue;
 	};
 
 // =================================================================================================
@@ -91,7 +94,9 @@ public:
 
 	virtual bool IsSimple(const ZYADOptions& iOptions);
 	virtual bool CanRandomAccess();
+	virtual size_t Count();
 	virtual ZRef<ZYADReaderRep> ReadWithName(const std::string& iName);
+	virtual ZRef<ZYADReaderRep> ReadAtIndex(size_t iIndex);
 
 private:
 	CFDictionaryRef fCFDictionaryRef;
@@ -111,7 +116,7 @@ public:
 	virtual ~ZListReaderRep_CFType();
 
 	virtual bool HasValue();
-	virtual size_t Index() const;
+	virtual size_t Index();
 	virtual ZRef<ZYADReaderRep> Read();
 	virtual void Skip();
 

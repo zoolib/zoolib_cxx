@@ -117,6 +117,8 @@ public:
 	ZRef<ZStreamerR> ReadRaw();
 	ZRef<ZYAD> ReadYAD();
 
+	void Skip();
+
 private:
 	ZRef<ZYADReaderRep> fRep;
 	};
@@ -140,6 +142,8 @@ public:
 	virtual ZRef<ZListReaderRep> ReadList() = 0;
 	virtual ZRef<ZStreamerR> ReadRaw() = 0;
 	virtual ZRef<ZYAD> ReadYAD() = 0;
+
+	virtual void Skip();
 	};
 
 // =================================================================================================
@@ -164,7 +168,9 @@ public:
 
 	bool IsSimple(const ZYADOptions& iOptions) const;
 	bool CanRandomAccess() const;
-	ZYADReader ReadWithName(const std::string& iName);
+	size_t Count() const;
+	ZYADReader ReadWithName(const std::string& iName) const;
+	ZYADReader ReadAtIndex(size_t iIndex) const;
 
 private:
 	ZRef<ZMapReaderRep> fRep;
@@ -185,11 +191,14 @@ public:
 	virtual bool HasValue() = 0;
 	virtual std::string Name() = 0;
 	virtual ZRef<ZYADReaderRep> Read() = 0;
-	virtual void Skip() = 0;
+
+	virtual void Skip();
 
 	virtual bool IsSimple(const ZYADOptions& iOptions);
 	virtual bool CanRandomAccess();
+	virtual size_t Count();
 	virtual ZRef<ZYADReaderRep> ReadWithName(const std::string& iName);
+	virtual ZRef<ZYADReaderRep> ReadAtIndex(size_t iIndex);
 	};
 
 // =================================================================================================
@@ -234,9 +243,10 @@ public:
 	virtual ~ZListReaderRep();
 
 	virtual bool HasValue() = 0;
-	virtual size_t Index() const = 0;
+	virtual size_t Index() = 0;
 	virtual ZRef<ZYADReaderRep> Read() = 0;
-	virtual void Skip() = 0;
+
+	virtual void Skip();
 
 	virtual bool IsSimple(const ZYADOptions& iOptions);
 	virtual bool CanRandomAccess();
