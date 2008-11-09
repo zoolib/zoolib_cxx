@@ -55,7 +55,10 @@ void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTValue& iTV)
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTValue& iTV,
 	size_t iInitialIndent, const ZYADOptions& iOptions)
-	{ ZYADUtil_ZooLibStrim::sToStrim(s, new ZYADReaderRep_ZTValue(iTV), iInitialIndent, iOptions); }
+	{
+	ZYADUtil_ZooLibStrim::sToStrim(
+		s, new ZYADReaderRep_ZTValue(iTV), iInitialIndent, iOptions);
+	}
 
 string ZUtil_Strim_Tuple::sAsString(const ZTValue& iTV)
 	{
@@ -79,7 +82,10 @@ void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const vector<ZTValue>& iVecto
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const vector<ZTValue>& iVector,
 	size_t iInitialIndent, const ZYADOptions& iOptions)
-	{ ZYADUtil_ZooLibStrim::sToStrim(s, new ZListReaderRep_ZVector(iVector), iInitialIndent, iOptions); }
+	{
+	ZYADUtil_ZooLibStrim::sToStrim(
+		s, new ZListReaderRep_ZVector(iVector), iInitialIndent, iOptions);
+	}
 
 string ZUtil_Strim_Tuple::sAsString(const vector<ZTValue>& iVector)
 	{
@@ -113,7 +119,10 @@ void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTuple& iTuple)
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTuple& iTuple,
 	size_t iInitialIndent, const ZYADOptions& iOptions)
-	{ ZYADUtil_ZooLibStrim::sToStrim(s, new ZMapReaderRep_ZTuple(iTuple), iInitialIndent, iOptions); }
+	{
+	ZYADUtil_ZooLibStrim::sToStrim(
+		s, new ZMapReaderRep_ZTuple(iTuple), iInitialIndent, iOptions);
+	}
 
 string ZUtil_Strim_Tuple::sAsString(const ZTuple& iTuple)
 	{

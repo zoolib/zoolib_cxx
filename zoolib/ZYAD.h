@@ -62,6 +62,17 @@ struct ZYADOptions
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYADParseException
+
+class ZYADParseException : public std::runtime_error
+	{
+public:
+	ZYADParseException(const std::string& iWhat);
+	ZYADParseException(const char* iWhat);
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYAD
 
 class ZYAD : public ZRefCountedWithFinalization
@@ -74,19 +85,23 @@ public:
 
 	virtual bool GetTValue(ZTValue& oYalue);
 	ZTValue GetTValue();
-
-	class ParseException;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYAD::ParseException
+#pragma mark * ZYAD_ZTValue
 
-class ZYAD::ParseException : public std::runtime_error
+class ZYAD_ZTValue : public ZYAD
 	{
 public:
-	ParseException(const std::string& iWhat);
-	ParseException(const char* iWhat);
+	ZYAD_ZTValue(const ZTValue& iTV);
+	ZYAD_ZTValue(ZType iType, const ZStreamR& iStreamR);
+	virtual ~ZYAD_ZTValue();
+
+	virtual bool GetTValue(ZTValue& oYalue);
+
+private:
+	const ZTValue fTV;
 	};
 
 // =================================================================================================

@@ -54,6 +54,18 @@ ZYADOptions::ZYADOptions(bool iDoIndentation)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYADParseException
+
+ZYADParseException::ZYADParseException(const string& iWhat)
+:	runtime_error(iWhat)
+	{}
+
+ZYADParseException::ZYADParseException(const char* iWhat)
+:	runtime_error(iWhat)
+	{}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYAD
 
 ZYAD::ZYAD()
@@ -78,15 +90,24 @@ ZTValue ZYAD::GetTValue()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYAD::ParseException
+#pragma mark * ZYAD_ZTValue
 
-ZYAD::ParseException::ParseException(const string& iWhat)
-:	runtime_error(iWhat)
+ZYAD_ZTValue::ZYAD_ZTValue(const ZTValue& iTV)
+:	fTV(iTV)
 	{}
 
-ZYAD::ParseException::ParseException(const char* iWhat)
-:	runtime_error(iWhat)
+ZYAD_ZTValue::ZYAD_ZTValue(ZType iType, const ZStreamR& iStreamR)
+:	fTV(iType, iStreamR)
 	{}
+
+ZYAD_ZTValue::~ZYAD_ZTValue()
+	{}
+
+bool ZYAD_ZTValue::GetTValue(ZTValue& oTV)
+	{
+	oTV = fTV;
+	return true;
+	}
 
 // =================================================================================================
 #pragma mark -

@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZUtil_Strim_OSXPList {
 
-typedef ZYAD_OSXPList::ParseException ParseException;
+typedef ZYADParseException_OSXPList ParseException;
 
 void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTValue);
 

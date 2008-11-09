@@ -28,31 +28,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYAD_ZooLibStrim
+#pragma mark * ZYADParseException_ZooLibStrim
 
-class ZYAD_ZooLibStrim : public ZYAD
+class ZYADParseException_ZooLibStrim : public ZYADParseException
 	{
 public:
-	ZYAD_ZooLibStrim(const ZTValue& iTV);
-	virtual ~ZYAD_ZooLibStrim();
-
-	virtual bool GetTValue(ZTValue& oYalue);
-
-	class ParseException;
-
-private:
-	const ZTValue fTV;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYAD_ZooLibStrim::ParseException
-
-class ZYAD_ZooLibStrim::ParseException : public ZYAD::ParseException
-	{
-public:
-	ParseException(const std::string& iWhat);
-	ParseException(const char* iWhat);
+	ZYADParseException_ZooLibStrim(const std::string& iWhat);
+	ZYADParseException_ZooLibStrim(const char* iWhat);
 	};
 
 // =================================================================================================

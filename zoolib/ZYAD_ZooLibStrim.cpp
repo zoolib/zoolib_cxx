@@ -34,7 +34,7 @@ using std::vector;
 
 static void sThrowParseException(const string& iMessage)
 	{
-	throw ZYAD_ZooLibStrim::ParseException(iMessage);
+	throw ZYADParseException_ZooLibStrim(iMessage);
 	}
 
 static int64 sMustRead_GenericInteger(const ZStrimU& iStrimU)
@@ -459,31 +459,14 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYAD_ZooLibStrim
+#pragma mark * ZYADParseException_ZooLibStrim
 
-ZYAD_ZooLibStrim::ZYAD_ZooLibStrim(const ZTValue& iTV)
-:	fTV(iTV)
+ZYADParseException_ZooLibStrim::ZYADParseException_ZooLibStrim(const string& iWhat)
+:	ZYADParseException(iWhat)
 	{}
 
-ZYAD_ZooLibStrim::~ZYAD_ZooLibStrim()
-	{}
-
-bool ZYAD_ZooLibStrim::GetTValue(ZTValue& oTV)
-	{
-	oTV = fTV;
-	return true;
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYAD_ZooLibStrim::ParseException
-
-ZYAD_ZooLibStrim::ParseException::ParseException(const string& iWhat)
-:	ZYAD::ParseException(iWhat)
-	{}
-
-ZYAD_ZooLibStrim::ParseException::ParseException(const char* iWhat)
-:	ZYAD::ParseException(iWhat)
+ZYADParseException_ZooLibStrim::ZYADParseException_ZooLibStrim(const char* iWhat)
+:	ZYADParseException(iWhat)
 	{}
 
 // =================================================================================================
@@ -759,7 +742,7 @@ ZRef<ZYAD> ZYADReaderRep_ZooLibStrim::ReadYAD()
 	if (fHasValue && fType == eZType_Null)
 		{
 		fHasValue = false;
-		return new ZYAD_ZooLibStrim(fValue);
+		return new ZYAD_ZTValue(fValue);
 		}
 
 	ZTValue theTV;
@@ -786,7 +769,7 @@ ZRef<ZYAD> ZYADReaderRep_ZooLibStrim::ReadYAD()
 		ZUnimplemented();
 		}
 
-	return new ZYAD_ZooLibStrim(theTV);
+	return new ZYAD_ZTValue(theTV);
 	}
 
 // =================================================================================================

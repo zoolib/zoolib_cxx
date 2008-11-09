@@ -29,31 +29,13 @@ class ZStrimW_ML;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYAD_OSXPList
+#pragma mark * ZYADParseException_OSXPList
 
-class ZYAD_OSXPList : public ZYAD
+class ZYADParseException_OSXPList : public ZYADParseException
 	{
 public:
-	ZYAD_OSXPList(ZML::Reader& iR);
-	virtual ~ZYAD_OSXPList();
-
-	virtual bool GetTValue(ZTValue& oTV);
-
-	class ParseException;
-
-private:
-	ZTValue fTV;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYAD_OSXPList::ParseException
-
-class ZYAD_OSXPList::ParseException : public ZYAD::ParseException
-	{
-public:
-	ParseException(const std::string& iWhat);
-	ParseException(const char* iWhat);
+	ZYADParseException_OSXPList(const std::string& iWhat);
+	ZYADParseException_OSXPList(const char* iWhat);
 	};
 
 // =================================================================================================

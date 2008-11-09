@@ -47,23 +47,6 @@ static string sStringFromStream(const ZStreamR& iStreamR)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYAD_ZooLibStream
-
-ZYAD_ZooLibStream::ZYAD_ZooLibStream(ZType iType, const ZStreamR& iStreamR)
-:	fTV(iType, iStreamR)
-	{}
-
-ZYAD_ZooLibStream::~ZYAD_ZooLibStream()
-	{}
-
-bool ZYAD_ZooLibStream::GetTValue(ZTValue& oTV)
-	{
-	oTV = fTV;
-	return true;
-	}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZMapReaderRep_ZooLibStream
 
 class ZMapReaderRep_ZooLibStream : public ZMapReaderRep
@@ -179,6 +162,7 @@ void ZListReaderRep_ZooLibStream::pMoveIfNecessary()
 
 ZListReaderRep_ZooLibStream::ZListReaderRep_ZooLibStream(const ZStreamR& iStreamR)
 :	fStreamR(iStreamR),
+	fIndex(0),
 	fHitEnd(true)
 	{
 	fCountRemaining = iStreamR.ReadCount();
@@ -211,6 +195,42 @@ ZRef<ZYADReaderRep> ZListReaderRep_ZooLibStream::Read()
 		}
 	return ZRef<ZYADReaderRep>();	
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStreamerR_OSXPlist
+
+class ZStreamerR_ZooLibStream
+:	public ZStreamerR
+	{
+public:
+	ZStreamerR_ZooLibStream(const ZStreamR& iStreamR);
+	virtual ~ZStreamerR_ZooLibStream();
+	
+// From ZStreamerR
+	const ZStreamR& GetStreamR();
+
+private:
+	const ZStreamR& fStreamR;
+	};
+
+#if 0
+ZStreamerR_ZooLibStream::ZStreamerR_ZooLibStream(ZML::Reader& iR)
+:	fR(iR),
+	fStreamR_ASCIIStrim(fR.Text()),
+	fStreamR_Base64Decode(fStreamR_ASCIIStrim)
+	{
+	sBegin(fR, "data");
+	}
+
+ZStreamerR_ZooLibStream::~ZStreamerR_ZooLibStream()
+	{
+	sEnd(fR, "data");
+	}
+
+const ZStreamR& ZStreamerR_ZooLibStream::GetStreamR()
+	{ return fStreamR_Base64Decode; }
+#endif
 
 // =================================================================================================
 #pragma mark -
@@ -283,7 +303,7 @@ ZRef<ZStreamerR> ZYADReaderRep_ZooLibStream::ReadRaw()
 		{
 		fHasValue = false;
 		ZUnimplemented();
-//		return new ZMapReaderRep_ZooLibStream(fStreamR);
+//!!		return new ZStreamerR_ZooLibStream(fStreamR);
 		}
 	return ZRef<ZStreamerR>();
 	}
@@ -296,7 +316,7 @@ ZRef<ZYAD> ZYADReaderRep_ZooLibStream::ReadYAD()
 		return ZRef<ZYAD>();
 
 	fHasValue = false;
-	return new ZYAD_ZooLibStream(fType, fStreamR);
+	return new ZYAD_ZTValue(fType, fStreamR);
 	}
 
 // =================================================================================================

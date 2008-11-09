@@ -27,22 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYAD_ZooLibStream
-
-class ZYAD_ZooLibStream : public ZYAD
-	{
-public:
-	ZYAD_ZooLibStream(ZType iType, const ZStreamR& iStreamR);
-	virtual ~ZYAD_ZooLibStream();
-
-	virtual bool GetTValue(ZTValue& oYalue);
-
-private:
-	const ZTValue fTV;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYADReaderRep_ZooLibStream
 
 class ZYADReaderRep_ZooLibStream: public ZYADReaderRep

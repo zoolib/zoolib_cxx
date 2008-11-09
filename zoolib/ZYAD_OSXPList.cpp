@@ -38,7 +38,7 @@ static void sBegin(ZML::Reader& r, const string& iTagName)
 	sSkipText(r);
 
 	if (!sTryRead_Begin(r, iTagName))
-		throw ZYAD_OSXPList::ParseException("Expected begin tag '" + iTagName + "'");
+		throw ZYADParseException_OSXPList("Expected begin tag '" + iTagName + "'");
 	}
 
 static void sEnd(ZML::Reader& r, const string& iTagName)
@@ -46,7 +46,7 @@ static void sEnd(ZML::Reader& r, const string& iTagName)
 	sSkipText(r);
 
 	if (!sTryRead_End(r, iTagName))
-		throw ZYAD_OSXPList::ParseException("Expected end tag '" + iTagName + "'");
+		throw ZYADParseException_OSXPList("Expected end tag '" + iTagName + "'");
 	}
 
 static void sRead_BodyOfDict(ZML::Reader& r, ZTuple& oTuple);
@@ -89,7 +89,7 @@ static bool sTryRead_Value(ZML::Reader& r, ZTValue& oTV)
 		{
 		int64 theInteger;
 		if (!ZUtil_Strim::sTryRead_SignedDecimalInteger(ZStrimU_Unreader(r.Text()), theInteger))
-			throw ZYAD_OSXPList::ParseException("Expected valid integer");
+			throw ZYADParseException_OSXPList("Expected valid integer");
 
 		oTV.SetInt32(theInteger);
 		}
@@ -97,7 +97,7 @@ static bool sTryRead_Value(ZML::Reader& r, ZTValue& oTV)
 		{
 		double theDouble;
 		if (!ZUtil_Strim::sTryRead_SignedDouble(ZStrimU_Unreader(r.Text()), theDouble))
-			throw ZYAD_OSXPList::ParseException("Expected valid real");
+			throw ZYADParseException_OSXPList("Expected valid real");
 
 		oTV.SetDouble(theDouble);
 		}
@@ -130,7 +130,7 @@ static bool sTryRead_Value(ZML::Reader& r, ZTValue& oTV)
 	else
 		{
 		// Hmm. Ignore tags we don't recognize?
-		// throw ZYAD_OSXPList::ParseException("Invalid begin tag '" + tagName + "'");
+		// throw ZYADParseException_OSXPList("Invalid begin tag '" + tagName + "'");
 		}
 
 	sEnd(r, tagName);
@@ -142,7 +142,7 @@ static void sRead_Value(ZML::Reader& r, ZTValue& oValue)
 	sSkipText(r);
 
 	if (!sTryRead_Value(r, oValue))
-		throw ZYAD_OSXPList::ParseException("Expected value");
+		throw ZYADParseException_OSXPList("Expected value");
 	}
 
 static void sRead_BodyOfDict(ZML::Reader& r, ZTuple& oTuple)
@@ -187,32 +187,14 @@ void sRead_BodyOfArray(ZML::Reader& r, vector<ZTValue>& oVector)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYAD_OSXPList
+#pragma mark * ZYADParseException_OSXPList
 
-ZYAD_OSXPList::ZYAD_OSXPList(ZML::Reader& iR)
-	{
-	sRead_Value(iR, fTV);
-	}
-
-ZYAD_OSXPList::~ZYAD_OSXPList()
+ZYADParseException_OSXPList::ZYADParseException_OSXPList(const string& iWhat)
+:	ZYADParseException(iWhat)
 	{}
 
-bool ZYAD_OSXPList::GetTValue(ZTValue& oTV)
-	{
-	oTV = fTV;
-	return true;
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYAD_OSXPList::ParseException
-
-ZYAD_OSXPList::ParseException::ParseException(const string& iWhat)
-:	ZYAD::ParseException(iWhat)
-	{}
-
-ZYAD_OSXPList::ParseException::ParseException(const char* iWhat)
-:	ZYAD::ParseException(iWhat)
+ZYADParseException_OSXPList::ZYADParseException_OSXPList(const char* iWhat)
+:	ZYADParseException(iWhat)
 	{}
 
 // =================================================================================================
@@ -379,7 +361,10 @@ ZRef<ZYAD> ZYADReaderRep_OSXPList::ReadYAD()
 	{
 	try
 		{
-		return new ZYAD_OSXPList(fR);
+		ZTValue theTV;
+		sRead_Value(fR, theTV);
+
+		return new ZYAD_ZTValue(theTV);
 		}
 	catch (...)
 		{}
@@ -470,7 +455,7 @@ void ZMapReaderRep_OSXPList::Skip()
 		{
 		fFinished = true;
 		if (!sSkip(fR, "dict"))
-			throw ZYAD_OSXPList::ParseException("Expected dict end tag");
+			throw ZYADParseException_OSXPList("Expected dict end tag");
 		}
 	}
 
@@ -535,7 +520,7 @@ void ZListReaderRep_OSXPList::Skip()
 		{
 		fFinished = true;
 		if (!sSkip(fR, "array"))
-			throw ZYAD_OSXPList::ParseException("Expected array end tag");
+			throw ZYADParseException_OSXPList("Expected array end tag");
 		}
 	}
 
