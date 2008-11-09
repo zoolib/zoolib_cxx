@@ -99,6 +99,7 @@ private:
 
 void sSkipText(Reader& r);
 
+bool sSkip(Reader& r, const std::string& iTagName);
 bool sSkip(Reader& r, std::vector<std::string>& ioTags);
 
 bool sTryRead_Begin(Reader& r, const std::string& iTagName);

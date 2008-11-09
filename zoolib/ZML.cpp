@@ -582,6 +582,12 @@ void ZML::sSkipText(ZML::Reader& r)
 		r.Advance();
 	}
 
+bool ZML::sSkip(Reader& r, const std::string& iTagName)
+	{
+	vector<string> theTags(1, iTagName);
+	return sSkip(r, theTags);
+	}
+
 bool ZML::sSkip(ZML::Reader& r, vector<string>& ioTags)
 	{
 	while (!ioTags.empty())
