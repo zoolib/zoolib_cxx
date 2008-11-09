@@ -32,6 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZYADReaderRep_ZooLibStream: public ZYADReaderRep
 	{
 public:
+	ZYADReaderRep_ZooLibStream(ZType iType, const ZStreamR& iStreamR);
 	ZYADReaderRep_ZooLibStream(const ZStreamR& iStreamR);
 
 	virtual bool HasValue();
