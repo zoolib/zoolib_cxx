@@ -182,9 +182,12 @@ public:
 	void Skip();
 
 	bool IsSimple(const ZYADOptions& iOptions) const;
-	bool CanRandomAccess() const;
+
+	bool CanReadAtName() const;
+	ZYADReader ReadAtName(const std::string& iName) const;
+
+	bool CanReadAtIndex() const;
 	size_t Count() const;
-	ZYADReader ReadWithName(const std::string& iName) const;
 	ZYADReader ReadAtIndex(size_t iIndex) const;
 
 private:
@@ -210,9 +213,12 @@ public:
 	virtual void Skip();
 
 	virtual bool IsSimple(const ZYADOptions& iOptions);
-	virtual bool CanRandomAccess();
+
+	virtual bool CanReadAtName();
+	virtual ZRef<ZYADReaderRep> ReadAtName(const std::string& iName);
+
+	virtual bool CanReadAtIndex();
 	virtual size_t Count();
-	virtual ZRef<ZYADReaderRep> ReadWithName(const std::string& iName);
 	virtual ZRef<ZYADReaderRep> ReadAtIndex(size_t iIndex);
 	};
 
@@ -237,9 +243,10 @@ public:
 	void Skip();
 
 	bool IsSimple(const ZYADOptions& iOptions) const;
-	bool CanRandomAccess() const;
+
+	bool CanReadAtIndex() const;
 	size_t Count() const;
-	ZYADReader ReadWithIndex(size_t iIndex);
+	ZYADReader ReadAtIndex(size_t iIndex) const;
 
 private:
 	ZRef<ZListReaderRep> fRep;
@@ -264,9 +271,10 @@ public:
 	virtual void Skip();
 
 	virtual bool IsSimple(const ZYADOptions& iOptions);
-	virtual bool CanRandomAccess();
+
+	virtual bool CanReadAtIndex();
 	virtual size_t Count();
-	virtual ZRef<ZYADReaderRep> ReadWithIndex(size_t iIndex);
+	virtual ZRef<ZYADReaderRep> ReadAtIndex(size_t iIndex);
 	};
 
 #endif // __ZYAD__

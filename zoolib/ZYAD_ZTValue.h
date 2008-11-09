@@ -18,49 +18,20 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYAD_CFType__
-#define __ZYAD_CFType__ 1
+#ifndef __ZYAD_ZTValue__
+#define __ZYAD_ZTValue__ 1
 #include "zconfig.h"
-
-#include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZYAD.h"
 
-#if ZCONFIG_SPI_Enabled(CFType)
-
-#include <vector>
-
-#include <CoreFoundation/CFArray.h>
-#include <CoreFoundation/CFBase.h>
-#include <CoreFoundation/CFDictionary.h>
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYAD_CFType
+#pragma mark * ZYADReaderRep_ZTValue
 
-class ZYAD_CFType : public ZYAD
+class ZYADReaderRep_ZTValue: public ZYADReaderRep
 	{
 public:
-	ZYAD_CFType(CFTypeRef iCFTypeRef);
-	virtual ~ZYAD_CFType();
-
-	virtual bool GetTValue(ZTValue& oYalue);
-
-	CFTypeRef GetCFTypeRef();
-	
-private:
-	CFTypeRef fCFTypeRef;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYADReaderRep_CFType
-
-class ZYADReaderRep_CFType: public ZYADReaderRep
-	{
-public:
-	ZYADReaderRep_CFType(CFTypeRef iCFTypeRef);
-	virtual ~ZYADReaderRep_CFType();
+	ZYADReaderRep_ZTValue(const ZTValue& iTV);
 
 	virtual bool HasValue();
 	virtual ZType Type();
@@ -73,19 +44,18 @@ public:
 	virtual void Skip();
 
 private:
-	CFTypeRef fCFTypeRef;
+	const ZTValue fTV;
 	bool fHasValue;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZMapReaderRep_CFType
+#pragma mark * ZMapReaderRep_ZTuple
 
-class ZMapReaderRep_CFType : public ZMapReaderRep
+class ZMapReaderRep_ZTuple : public ZMapReaderRep
 	{
 public:
-	ZMapReaderRep_CFType(CFDictionaryRef iCFDictionaryRef);
-	virtual ~ZMapReaderRep_CFType();
+	ZMapReaderRep_ZTuple(const ZTuple& iTuple);
 
 	virtual bool HasValue();
 	virtual std::string Name();
@@ -102,21 +72,18 @@ public:
 	virtual ZRef<ZYADReaderRep> ReadAtIndex(size_t iIndex);
 
 private:
-	CFDictionaryRef fCFDictionaryRef;
-	size_t fIndex;
-	std::vector<CFStringRef> fNames;
-	std::vector<CFTypeRef> fValues;
+	const ZTuple fTuple;
+	ZTuple::const_iterator fIter;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZListReaderRep_CFType
+#pragma mark * ZListReaderRep_ZVector
 
-class ZListReaderRep_CFType : public ZListReaderRep
+class ZListReaderRep_ZVector : public ZListReaderRep
 	{
 public:
-	ZListReaderRep_CFType(CFArrayRef iCFArrayRef);
-	virtual ~ZListReaderRep_CFType();
+	ZListReaderRep_ZVector(const std::vector<ZTValue>& iVector);
 
 	virtual bool HasValue();
 	virtual size_t Index();
@@ -124,26 +91,24 @@ public:
 	virtual void Skip();
 
 	virtual bool IsSimple(const ZYADOptions& iOptions);
-
 	virtual bool CanReadAtIndex();
 	virtual size_t Count();
 	virtual ZRef<ZYADReaderRep> ReadAtIndex(size_t iIndex);
 
 private:
-	CFArrayRef fCFArrayRef;
-	size_t fIndex;
+	const std::vector<ZTValue> fVector;
+	std::vector<ZTValue>::const_iterator fIter;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYADUtil_CFType
+#pragma mark * ZYADUtil_ZTValue
 
-namespace ZYADUtil_CFType {
+namespace ZYADUtil_ZTValue {
 
-CFTypeRef sFromReader(ZYADReader iYADReader);
+bool sFromReader(ZYADReader iYADReader, ZTValue& oTV);
+ZTValue sFromReader(ZYADReader iYADReader);
 
-} // namespace ZYADUtil_CFType
+} // namespace ZYADUtil_ZTValue
 
-#endif // ZCONFIG_SPI_Enabled(CFType)
-
-#endif // __ZYAD_CFType__
+#endif // __ZYAD_ZTValue__

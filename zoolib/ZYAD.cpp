@@ -277,10 +277,24 @@ bool ZMapReader::IsSimple(const ZYADOptions& iOptions) const
 	return true;
 	}
 
-bool ZMapReader::CanRandomAccess() const
+bool ZMapReader::CanReadAtName() const
 	{
 	if (fRep)
-		return fRep->CanRandomAccess();
+		return fRep->CanReadAtName();
+	return false;
+	}
+
+ZYADReader ZMapReader::ReadAtName(const std::string& iName) const
+	{
+	if (fRep)
+		return fRep->ReadAtName(iName);
+	return ZYADReader();
+	}
+
+bool ZMapReader::CanReadAtIndex() const
+	{
+	if (fRep)
+		return fRep->CanReadAtIndex();
 	return false;
 	}
 
@@ -291,13 +305,6 @@ size_t ZMapReader::Count() const
 	return 0;
 	}
 	
-ZYADReader ZMapReader::ReadWithName(const std::string& iName) const
-	{
-	if (fRep)
-		return fRep->ReadWithName(iName);
-	return ZYADReader();
-	}
-
 ZYADReader ZMapReader::ReadAtIndex(size_t iIndex) const
 	{
 	if (fRep)
@@ -324,14 +331,17 @@ void ZMapReaderRep::Skip()
 bool ZMapReaderRep::IsSimple(const ZYADOptions& iOptions)
 	{ return false; }
 
-bool ZMapReaderRep::CanRandomAccess()
+bool ZMapReaderRep::CanReadAtName()
+	{ return false; }
+
+ZRef<ZYADReaderRep> ZMapReaderRep::ReadAtName(const std::string& iName)
+	{ return ZRef<ZYADReaderRep>(); }
+
+bool ZMapReaderRep::CanReadAtIndex()
 	{ return false; }
 
 size_t ZMapReaderRep::Count()
 	{ return 0; }
-
-ZRef<ZYADReaderRep> ZMapReaderRep::ReadWithName(const std::string& iName)
-	{ return ZRef<ZYADReaderRep>(); }
 
 ZRef<ZYADReaderRep> ZMapReaderRep::ReadAtIndex(size_t iIndex)
 	{ return ZRef<ZYADReaderRep>(); }
@@ -384,10 +394,10 @@ bool ZListReader::IsSimple(const ZYADOptions& iOptions) const
 	return true;
 	}
 
-bool ZListReader::CanRandomAccess() const
+bool ZListReader::CanReadAtIndex() const
 	{
 	if (fRep)
-		return fRep->CanRandomAccess();
+		return fRep->CanReadAtIndex();
 	return false;
 	}
 
@@ -398,10 +408,10 @@ size_t ZListReader::Count() const
 	return 0;
 	}
 
-ZYADReader ZListReader::ReadWithIndex(size_t iIndex)
+ZYADReader ZListReader::ReadAtIndex(size_t iIndex) const
 	{
 	if (fRep)
-		return fRep->ReadWithIndex(iIndex);
+		return fRep->ReadAtIndex(iIndex);
 	return ZYADReader();
 	}
 
@@ -418,13 +428,13 @@ ZListReaderRep::~ZListReaderRep()
 bool ZListReaderRep::IsSimple(const ZYADOptions& iOptions)
 	{ return false; }
 
-bool ZListReaderRep::CanRandomAccess()
+bool ZListReaderRep::CanReadAtIndex()
 	{ return false; }
 
 size_t ZListReaderRep::Count()
 	{ return 0; }
 
-ZRef<ZYADReaderRep> ZListReaderRep::ReadWithIndex(size_t iIndex)
+ZRef<ZYADReaderRep> ZListReaderRep::ReadAtIndex(size_t iIndex)
 	{ return ZRef<ZYADReaderRep>(); }
 
 void ZListReaderRep::Skip()

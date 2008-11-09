@@ -267,13 +267,10 @@ void ZMapReaderRep_CFType::Skip()
 bool ZMapReaderRep_CFType::IsSimple(const ZYADOptions& iOptions)
 	{ return !sIsComplexDictionary(iOptions, fCFDictionaryRef); }
 
-bool ZMapReaderRep_CFType::CanRandomAccess()
+bool ZMapReaderRep_CFType::CanReadAtName()
 	{ return true; }
 
-size_t ZMapReaderRep_CFType::Count()
-	{ return fValues.size(); }
-
-ZRef<ZYADReaderRep> ZMapReaderRep_CFType::ReadWithName(const string& iName)
+ZRef<ZYADReaderRep> ZMapReaderRep_CFType::ReadAtName(const string& iName)
 	{
 	CFStringRef theKey = ZUtil_CFType::sCreateCFString_UTF8(iName);
 	CFTypeRef result = ::CFDictionaryGetValue(fCFDictionaryRef, theKey);
@@ -283,6 +280,12 @@ ZRef<ZYADReaderRep> ZMapReaderRep_CFType::ReadWithName(const string& iName)
 
 	return ZRef<ZYADReaderRep>();
 	}
+
+bool ZMapReaderRep_CFType::CanReadAtIndex()
+	{ return true; }
+
+size_t ZMapReaderRep_CFType::Count()
+	{ return fValues.size(); }
 
 ZRef<ZYADReaderRep> ZMapReaderRep_CFType::ReadAtIndex(size_t iIndex)
 	{
@@ -339,13 +342,13 @@ void ZListReaderRep_CFType::Skip()
 bool ZListReaderRep_CFType::IsSimple(const ZYADOptions& iOptions)
 	{ return !sIsComplexArray(iOptions, fCFArrayRef); }
 
-bool ZListReaderRep_CFType::CanRandomAccess()
+bool ZListReaderRep_CFType::CanReadAtIndex()
 	{ return true; }
 
 size_t ZListReaderRep_CFType::Count()
 	{ return ::CFArrayGetCount(fCFArrayRef); }
 
-ZRef<ZYADReaderRep> ZListReaderRep_CFType::ReadWithIndex(size_t iIndex)
+ZRef<ZYADReaderRep> ZListReaderRep_CFType::ReadAtIndex(size_t iIndex)
 	{
 	if (iIndex < ::CFArrayGetCount(fCFArrayRef))
 		{
