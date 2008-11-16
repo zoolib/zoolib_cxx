@@ -191,7 +191,7 @@ static bool sParseURL(const string& iURL, string& oHost, ip_port& oPort, string&
 			const size_t slashOffset = iURL.find('/', httpPrefixLength);
 			hostAndPort = iURL.substr(httpPrefixLength, slashOffset - httpPrefixLength);
 			if (slashOffset != string::npos)
-				oPath = iURL.substr(min(iURL.size(), slashOffset + 1));
+				oPath = iURL.substr(std::min(iURL.size(), slashOffset + 1));
 			oPath = "/" + oPath;
 			}
 		}
