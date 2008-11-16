@@ -79,7 +79,7 @@ private:
 		bool fIsString;
 		union
 			{
-			const UTF8* fAsString;
+			const char* fAsString;
 			int fAsInt;
 			};
 		};
