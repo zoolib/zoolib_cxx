@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMIME.h"
 #include "zoolib/ZNet_Internet.h"
+#include "zoolib/ZNetscape.h"
 #include "zoolib/ZStreamRWPos_RAM.h"
 #include "zoolib/ZStream_CRLF.h"
 #include "zoolib/ZStream_Tee.h"
@@ -439,7 +440,7 @@ void Host_Std::pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
 	this->SendDataAsync(iNotifyData, iURL, iMIME, iHeaders, iStreamerRCon);
 	}
 
-NPError Host_Std::GetURLNotify(NPP npp,
+NPError Host_Std::Host_GetURLNotify(NPP npp,
 	const char* URL, const char* window, void* notifyData)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
@@ -461,7 +462,7 @@ NPError Host_Std::GetURLNotify(NPP npp,
 	return NPERR_INVALID_URL;
 	}
 
-NPError Host_Std::PostURLNotify(NPP npp,
+NPError Host_Std::Host_PostURLNotify(NPP npp,
 	const char* URL, const char* window,
 	uint32 len, const char* buf, NPBool file, void* notifyData)
 	{
@@ -480,14 +481,14 @@ NPError Host_Std::PostURLNotify(NPP npp,
 	return NPERR_INVALID_URL;
 	}
 
-NPError Host_Std::RequestRead(NPStream* stream, NPByteRange* rangeList)
+NPError Host_Std::Host_RequestRead(NPStream* stream, NPByteRange* rangeList)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("RequestRead");
 	return NPERR_GENERIC_ERROR;
 	}
 
-NPError Host_Std::NewStream(NPP npp,
+NPError Host_Std::Host_NewStream(NPP npp,
 	NPMIMEType type, const char* window, NPStream** stream)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
@@ -495,27 +496,27 @@ NPError Host_Std::NewStream(NPP npp,
 	return NPERR_GENERIC_ERROR;
 	}
 
-int32 Host_Std::Write(NPP npp, NPStream* stream, int32 len, void* buffer)
+int32 Host_Std::Host_Write(NPP npp, NPStream* stream, int32 len, void* buffer)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("Write");
 	return -1;
 	}
 
-NPError Host_Std::DestroyStream(NPP npp, NPStream* stream, NPReason reason)
+NPError Host_Std::Host_DestroyStream(NPP npp, NPStream* stream, NPReason reason)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("DestroyStream");
 	return NPERR_GENERIC_ERROR;
 	}
 
-void Host_Std::Status(NPP npp, const char* message)
+void Host_Std::Host_Status(NPP npp, const char* message)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("Status");
 	}
 
-const char* Host_Std::UserAgent(NPP npp)
+const char* Host_Std::Host_UserAgent(NPP npp)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("UserAgent");
@@ -523,46 +524,46 @@ const char* Host_Std::UserAgent(NPP npp)
 	return "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)";
 	}
 
-NPError Host_Std::GetValue(NPP npp, NPNVariable variable, void* ret_value)
+NPError Host_Std::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "GetValue, " << sAsString(variable) ;
+		s << "GetValue, " << ZNetscape::sAsString(variable) ;
 	return NPERR_GENERIC_ERROR;
 	}
 
-NPError Host_Std::SetValue(NPP npp, NPPVariable variable, void* value)
+NPError Host_Std::Host_SetValue(NPP npp, NPPVariable variable, void* value)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "SetValue, " << sAsString(variable) ;
+		s << "SetValue, " << ZNetscape::sAsString(variable) ;
 	return NPERR_GENERIC_ERROR;
 	}
 
-void Host_Std::InvalidateRect(NPP npp, NPRect* rect)
+void Host_Std::Host_InvalidateRect(NPP npp, NPRect* rect)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("InvalidateRect");
 	}
 
-void Host_Std::InvalidateRegion(NPP npp, NPRegion region)
+void Host_Std::Host_InvalidateRegion(NPP npp, NPRegion region)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("InvalidateRegion");
 	}
 
-void Host_Std::ForceRedraw(NPP npp)
+void Host_Std::Host_ForceRedraw(NPP npp)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("ForceRedraw");
 	}
 
-NPError Host_Std::GetURL(NPP npp, const char* URL, const char* window)
+NPError Host_Std::Host_GetURL(NPP npp, const char* URL, const char* window)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s << "GetURL: " << URL;
 	return NPERR_INVALID_URL;
 	}
 
-NPError Host_Std::PostURL(NPP npp,
+NPError Host_Std::Host_PostURL(NPP npp,
 	const char* URL, const char* window, uint32 len, const char* buf, NPBool file)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
@@ -570,14 +571,14 @@ NPError Host_Std::PostURL(NPP npp,
 	return NPERR_INVALID_URL;
 	}
 
-void* Host_Std::GetJavaPeer(NPP npp)
+void* Host_Std::Host_GetJavaPeer(NPP npp)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("GetJavaPeer");
 	return nil;
 	}
 
-NPObject* Host_Std::CreateObject(NPP npp, NPClass* aClass)
+NPObject* Host_Std::Host_CreateObject(NPP npp, NPClass* aClass)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("CreateObject");
@@ -595,7 +596,7 @@ NPObject* Host_Std::CreateObject(NPP npp, NPClass* aClass)
 	return result;
 	}
 
-bool Host_Std::Invoke(NPP npp,
+bool Host_Std::Host_Invoke(NPP npp,
 	NPObject* obj, NPIdentifier methodName, const NPVariant* args, unsigned argCount,
 	NPVariant* result)
 	{
@@ -608,7 +609,7 @@ bool Host_Std::Invoke(NPP npp,
 	return false;
 	}
 
-bool Host_Std::InvokeDefault(NPP npp,
+bool Host_Std::Host_InvokeDefault(NPP npp,
 	NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
@@ -616,7 +617,7 @@ bool Host_Std::InvokeDefault(NPP npp,
 	return false;
 	}
 
-bool Host_Std::Evaluate(NPP npp,
+bool Host_Std::Host_Evaluate(NPP npp,
 	NPObject* obj, NPString* script, NPVariant* result)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
@@ -624,7 +625,7 @@ bool Host_Std::Evaluate(NPP npp,
 	return false;
 	}
 
-bool Host_Std::GetProperty(NPP npp,
+bool Host_Std::Host_GetProperty(NPP npp,
 	NPObject* obj, NPIdentifier propertyName, NPVariant* result)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
@@ -636,7 +637,7 @@ bool Host_Std::GetProperty(NPP npp,
 	return false;
 	}
 
-bool Host_Std::SetProperty(NPP npp,
+bool Host_Std::Host_SetProperty(NPP npp,
 	NPObject* obj, NPIdentifier propertyName, const NPVariant* value)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
@@ -644,21 +645,21 @@ bool Host_Std::SetProperty(NPP npp,
 	return false;
 	}
 
-bool Host_Std::HasProperty(NPP, NPObject* npobj, NPIdentifier propertyName)
+bool Host_Std::Host_HasProperty(NPP, NPObject* npobj, NPIdentifier propertyName)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("HasProperty");
 	return false;
 	}
 
-bool Host_Std::HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName)
+bool Host_Std::Host_HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("HasMethod");
 	return false;
 	}
 
-bool Host_Std::RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName)
+bool Host_Std::Host_RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("RemoveProperty");

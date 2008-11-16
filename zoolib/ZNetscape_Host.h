@@ -195,8 +195,14 @@ protected:
 	virtual ~Host();
 
 public:
+	void Release(NPObject* iObj);
+
+	bool Invoke(
+		NPObject* obj, const std::string& iMethod, const NPVariant* iArgs, size_t iCount,
+		NPVariant& oResult);
+
 	void Create(const std::string& iURL, const std::string& iMIME);
-	void Destroy();
+	void Guest_Destroy();
 
 	void SendDataAsync(
 		void* iNotifyData,
@@ -208,96 +214,87 @@ public:
 		const std::string& iURL, const std::string& iMIME,
 		const ZStreamR& iStreamR);
 
-	void HostActivate(bool iActivate);
-	void HostEvent(const EventRecord& iEvent);
-	void HostIdle();
-	void HostDeliverData();
-	void HostDraw();
-	void HostSetWindow(CGrafPtr iGrafPtr,
+	void DeliverData();
+
+	void Guest_Activate(bool iActivate);
+	void Guest_Event(const EventRecord& iEvent);
+	void Guest_Idle();
+	void Guest_Draw();
+	void Guest_SetWindow(CGrafPtr iGrafPtr,
 		ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
-	void HostSetBounds(ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
+	void Guest_SetBounds(ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
+	NPObject* Guest_GetScriptableNPObject();
 
-	bool HostInvoke(
-		NPObject* obj, const std::string& iMethod, const NPVariant* iArgs, size_t iCount,
-		NPVariant& oResult);
+// Calls into the guest
+	virtual void Guest_URLNotify(const char* URL, NPReason reason, void* notifyData);
+	virtual NPError Guest_NewStream(NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
+	virtual NPError Guest_DestroyStream(NPStream* stream, NPReason reason);
+	virtual int32 Guest_WriteReady(NPStream* stream);
+	virtual int32 Guest_Write(NPStream* stream, int32_t offset, int32_t len, void* buffer);
 
-	NPObject* GetScriptableNPObject();
-
-	static std::string sAsString(NPNVariable iVar);
-	static std::string sAsString(NPPVariable iVar);
-
-// Host indirect API
-	virtual void HostURLNotify(const char* URL, NPReason reason, void* notifyData);
-	virtual NPError HostNewStream(NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
-	virtual NPError HostDestroyStream(NPStream* stream, NPReason reason);
-	virtual int32 HostWriteReady(NPStream* stream);
-	virtual int32 HostWrite(NPStream* stream, int32_t offset, int32_t len, void* buffer);
-
-// Host API
-	virtual NPError GetURLNotify(NPP npp,
+// Our protocol
+	virtual NPError Host_GetURLNotify(NPP npp,
 		const char* URL, const char* window, void* notifyData) = 0;
 
-	virtual NPError PostURLNotify(NPP npp,
+	virtual NPError Host_PostURLNotify(NPP npp,
 		const char* URL, const char* window,
 		uint32 len, const char* buf, NPBool file, void* notifyData) = 0;
 
-	virtual NPError RequestRead(NPStream* stream, NPByteRange* rangeList) = 0;
+	virtual NPError Host_RequestRead(NPStream* stream, NPByteRange* rangeList) = 0;
 
-	virtual NPError NewStream(NPP npp,
+	virtual NPError Host_NewStream(NPP npp,
 		NPMIMEType type, const char* window, NPStream** stream) = 0;
 
-	virtual int32 Write(NPP npp, NPStream* stream, int32 len, void* buffer) = 0;
+	virtual int32 Host_Write(NPP npp, NPStream* stream, int32 len, void* buffer) = 0;
 
-	virtual NPError DestroyStream(NPP npp, NPStream* stream, NPReason reason) = 0;
+	virtual NPError Host_DestroyStream(NPP npp, NPStream* stream, NPReason reason) = 0;
 
-	virtual void Status(NPP npp, const char* message) = 0;
+	virtual void Host_Status(NPP npp, const char* message) = 0;
 
-	virtual const char* UserAgent(NPP npp) = 0;
+	virtual const char* Host_UserAgent(NPP npp) = 0;
 
-	virtual NPError GetValue(NPP npp, NPNVariable variable, void* ret_value) = 0;
+	virtual NPError Host_GetValue(NPP npp, NPNVariable variable, void* ret_value) = 0;
 
-	virtual NPError SetValue(NPP npp, NPPVariable variable, void* value) = 0;
+	virtual NPError Host_SetValue(NPP npp, NPPVariable variable, void* value) = 0;
 
-	virtual void InvalidateRect(NPP npp, NPRect* rect) = 0;
+	virtual void Host_InvalidateRect(NPP npp, NPRect* rect) = 0;
 
-	virtual void InvalidateRegion(NPP npp, NPRegion region) = 0;
+	virtual void Host_InvalidateRegion(NPP npp, NPRegion region) = 0;
 
-	virtual void ForceRedraw(NPP npp) = 0;
+	virtual void Host_ForceRedraw(NPP npp) = 0;
 
-	virtual NPError GetURL(NPP npp, const char* URL, const char* window) = 0;
+	virtual NPError Host_GetURL(NPP npp, const char* URL, const char* window) = 0;
 
-	virtual NPError PostURL(NPP npp,
+	virtual NPError Host_PostURL(NPP npp,
 		const char* URL, const char* window, uint32 len, const char* buf, NPBool file) = 0;
 
-	virtual void* GetJavaPeer(NPP npp) = 0;
+	virtual void* Host_GetJavaPeer(NPP npp) = 0;
 
-	virtual NPObject* CreateObject(NPP npp, NPClass* aClass) = 0;
+	virtual NPObject* Host_CreateObject(NPP npp, NPClass* aClass) = 0;
 
-	virtual bool Invoke(NPP npp,
+	virtual bool Host_Invoke(NPP npp,
 		NPObject* obj, NPIdentifier methodName, const NPVariant* args, unsigned argCount,
 		NPVariant* result) = 0;
 
-	virtual bool InvokeDefault(NPP npp,
+	virtual bool Host_InvokeDefault(NPP npp,
 		NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result) = 0;
 
-	virtual bool Evaluate(NPP npp,
+	virtual bool Host_Evaluate(NPP npp,
 		NPObject* obj, NPString* script, NPVariant* result) = 0;
 
-	virtual bool GetProperty(NPP npp,
+	virtual bool Host_GetProperty(NPP npp,
 		NPObject* obj, NPIdentifier propertyName, NPVariant* result) = 0;
 
-	virtual bool SetProperty(NPP npp,
+	virtual bool Host_SetProperty(NPP npp,
 		NPObject* obj, NPIdentifier propertyName, const NPVariant* value) = 0;
 
-	virtual bool HasProperty(NPP, NPObject* npobj, NPIdentifier propertyName) = 0;
+	virtual bool Host_HasProperty(NPP, NPObject* npobj, NPIdentifier propertyName) = 0;
 
-	virtual bool HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName) = 0;
+	virtual bool Host_HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName) = 0;
 
-	virtual bool RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName) = 0;
+	virtual bool Host_RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName) = 0;
 
 private:
-	void pDeliverData();
-
 	class Sender;
 	ZooLib::ZMutex fMutex;
 	std::list<Sender*> fSenders;
@@ -311,7 +308,6 @@ protected:
 private:
 	NPWindow fNPWindow;
 	NP_Port fNP_Port;
-	NPObject* fNPObject;
 	};
 
 // =================================================================================================

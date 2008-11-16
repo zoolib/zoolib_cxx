@@ -141,10 +141,10 @@ void Guest_Std::Guest_URLNotify(const char* url, NPReason reason, void* notifyDa
 	ZUnimplemented();
 	}
 
-NPError Guest_Std::Guest_GetValue(NPPVariable variable, void *value)
+NPError Guest_Std::Guest_GetValue(NPPVariable iNPPVariable, void* oValue)
 	{ return NPERR_GENERIC_ERROR; }
 
-NPError Guest_Std::Guest_SetValue(NPNVariable variable, void *value)
+NPError Guest_Std::Guest_SetValue(NPNVariable iNPNVariable, void* iValue)
 	{ return NPERR_GENERIC_ERROR; }
 
 } // namespace ZNetscape

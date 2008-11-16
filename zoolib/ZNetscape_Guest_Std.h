@@ -112,9 +112,9 @@ public:
 
 	virtual void Guest_URLNotify(const char* url, NPReason reason, void* notifyData);
 
-	virtual NPError Guest_GetValue(NPPVariable variable, void *value);
+	virtual NPError Guest_GetValue(NPPVariable iNPPVariable, void* oValue);
 
-	virtual NPError Guest_SetValue(NPNVariable variable, void *value);
+	virtual NPError Guest_SetValue(NPNVariable iNPNVariable, void* iValue);
 	};
 
 } // namespace ZNetscape

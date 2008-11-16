@@ -98,66 +98,66 @@ public:
 	Host_Std(ZRef<GuestFactory> iGuestFactory);
 	virtual ~Host_Std();
 
-	virtual NPError GetURLNotify(NPP npp,
+	virtual NPError Host_GetURLNotify(NPP npp,
 		const char* URL, const char* window, void* notifyData);
 
-	virtual NPError PostURLNotify(NPP npp,
+	virtual NPError Host_PostURLNotify(NPP npp,
 		const char* URL, const char* window,
 		uint32 len, const char* buf, NPBool file, void* notifyData);
 
-	virtual NPError RequestRead(NPStream* stream, NPByteRange* rangeList);
+	virtual NPError Host_RequestRead(NPStream* stream, NPByteRange* rangeList);
 
-	virtual NPError NewStream(NPP npp,
+	virtual NPError Host_NewStream(NPP npp,
 		NPMIMEType type, const char* window, NPStream** stream);
 
-	virtual int32 Write(NPP npp, NPStream* stream, int32 len, void* buffer);
+	virtual int32 Host_Write(NPP npp, NPStream* stream, int32 len, void* buffer);
 
-	virtual NPError DestroyStream(NPP npp, NPStream* stream, NPReason reason);
+	virtual NPError Host_DestroyStream(NPP npp, NPStream* stream, NPReason reason);
 
-	virtual void Status(NPP npp, const char* message);
+	virtual void Host_Status(NPP npp, const char* message);
 
-	virtual const char* UserAgent(NPP npp);
+	virtual const char* Host_UserAgent(NPP npp);
 
-	virtual NPError GetValue(NPP npp, NPNVariable variable, void* ret_value);
+	virtual NPError Host_GetValue(NPP npp, NPNVariable variable, void* ret_value);
 
-	virtual NPError SetValue(NPP npp, NPPVariable variable, void* value);
+	virtual NPError Host_SetValue(NPP npp, NPPVariable variable, void* value);
 
-	virtual void InvalidateRect(NPP npp, NPRect* rect);
+	virtual void Host_InvalidateRect(NPP npp, NPRect* rect);
 
-	virtual void InvalidateRegion(NPP npp, NPRegion region);
+	virtual void Host_InvalidateRegion(NPP npp, NPRegion region);
 
-	virtual void ForceRedraw(NPP npp);
+	virtual void Host_ForceRedraw(NPP npp);
 
-	virtual NPError GetURL(NPP npp, const char* URL, const char* window);
+	virtual NPError Host_GetURL(NPP npp, const char* URL, const char* window);
 
-	virtual NPError PostURL(NPP npp,
+	virtual NPError Host_PostURL(NPP npp,
 		const char* URL, const char* window, uint32 len, const char* buf, NPBool file);
 
-	virtual void* GetJavaPeer(NPP npp);
+	virtual void* Host_GetJavaPeer(NPP npp);
 
-	virtual NPObject* CreateObject(NPP npp, NPClass* aClass);
+	virtual NPObject* Host_CreateObject(NPP npp, NPClass* aClass);
 
-	virtual bool Invoke(NPP npp,
+	virtual bool Host_Invoke(NPP npp,
 		NPObject* obj, NPIdentifier methodName, const NPVariant* args, unsigned argCount,
 		NPVariant* result);
 
-	virtual bool InvokeDefault(NPP npp,
+	virtual bool Host_InvokeDefault(NPP npp,
 		NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result);
 
-	virtual bool Evaluate(NPP npp,
+	virtual bool Host_Evaluate(NPP npp,
 		NPObject* obj, NPString* script, NPVariant* result);
 
-	virtual bool GetProperty(NPP npp,
+	virtual bool Host_GetProperty(NPP npp,
 		NPObject* obj, NPIdentifier propertyName, NPVariant* result);
 
-	virtual bool SetProperty(NPP npp,
+	virtual bool Host_SetProperty(NPP npp,
 		NPObject* obj, NPIdentifier propertyName, const NPVariant* value);
 
-	virtual bool HasProperty(NPP, NPObject* npobj, NPIdentifier propertyName);
+	virtual bool Host_HasProperty(NPP, NPObject* npobj, NPIdentifier propertyName);
 
-	virtual bool HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName);
+	virtual bool Host_HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName);
 
-	virtual bool RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName);
+	virtual bool Host_RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName);
 
 private:
 	class HTTPer;

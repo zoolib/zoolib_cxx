@@ -197,93 +197,93 @@ void HostMeister::sSetException(NPObject* obj, const NPUTF8* message)
 
 NPError HostMeister::sGetURLNotify(NPP npp,
 	const char* URL, const char* window, void* notifyData)
-	{ return sHostFromNPP(npp)->GetURLNotify(npp, URL, window, notifyData); }
+	{ return sHostFromNPP(npp)->Host_GetURLNotify(npp, URL, window, notifyData); }
 
 NPError HostMeister::sPostURLNotify(NPP npp,
 	const char* URL, const char* window,
 	uint32 len, const char* buf, NPBool file, void* notifyData)
-	{ return sHostFromNPP(npp)->PostURLNotify(npp, URL, window, len, buf, file, notifyData); }
+	{ return sHostFromNPP(npp)->Host_PostURLNotify(npp, URL, window, len, buf, file, notifyData); }
 
 NPError HostMeister::sRequestRead(NPStream* stream, NPByteRange* rangeList)
-	{ return sHostFromStream(stream)->RequestRead(stream, rangeList); }
+	{ return sHostFromStream(stream)->Host_RequestRead(stream, rangeList); }
 
 NPError HostMeister::sNewStream(NPP npp,
 	NPMIMEType type, const char* window, NPStream** stream)
-	{ return sHostFromNPP(npp)->NewStream(npp, type, window, stream); }
+	{ return sHostFromNPP(npp)->Host_NewStream(npp, type, window, stream); }
 
 int32 HostMeister::sWrite(NPP npp, NPStream* stream, int32 len, void* buffer)
-	{ return sHostFromNPP(npp)->Write(npp, stream, len, buffer); }
+	{ return sHostFromNPP(npp)->Host_Write(npp, stream, len, buffer); }
 
 NPError HostMeister::sDestroyStream(NPP npp, NPStream* stream, NPReason reason)
-	{ return sHostFromNPP(npp)->DestroyStream(npp, stream, reason); }
+	{ return sHostFromNPP(npp)->Host_DestroyStream(npp, stream, reason); }
 
 void HostMeister::sStatus(NPP npp, const char* message)
-	{ return sHostFromNPP(npp)->Status(npp, message); }
+	{ return sHostFromNPP(npp)->Host_Status(npp, message); }
 
 const char* HostMeister::sUserAgent(NPP npp)
 	{
 	if (Host* theHost = sHostFromNPP(npp))
-		return theHost->UserAgent(npp);
+		return theHost->Host_UserAgent(npp);
 	return "Unknown";
 	}
 
 NPError HostMeister::sGetValue(NPP npp, NPNVariable variable, void* ret_value)
-	{ return sHostFromNPP(npp)->GetValue(npp, variable, ret_value); }
+	{ return sHostFromNPP(npp)->Host_GetValue(npp, variable, ret_value); }
 
 NPError HostMeister::sSetValue(NPP npp, NPPVariable variable, void* value)
-	{ return sHostFromNPP(npp)->SetValue(npp, variable, value); }
+	{ return sHostFromNPP(npp)->Host_SetValue(npp, variable, value); }
 
 void HostMeister::sInvalidateRect(NPP npp, NPRect* rect)
-	{ return sHostFromNPP(npp)->InvalidateRect(npp, rect); }
+	{ return sHostFromNPP(npp)->Host_InvalidateRect(npp, rect); }
 
 void HostMeister::sInvalidateRegion(NPP npp, NPRegion region)
-	{ return sHostFromNPP(npp)->InvalidateRegion(npp, region); }
+	{ return sHostFromNPP(npp)->Host_InvalidateRegion(npp, region); }
 
 void HostMeister::sForceRedraw(NPP npp)
-	{ return sHostFromNPP(npp)->ForceRedraw(npp); }
+	{ return sHostFromNPP(npp)->Host_ForceRedraw(npp); }
 
 NPError HostMeister::sGetURL(NPP npp, const char* URL, const char* window)
-	{ return sHostFromNPP(npp)->GetURL(npp, URL, window); }
+	{ return sHostFromNPP(npp)->Host_GetURL(npp, URL, window); }
 
 NPError HostMeister::sPostURL(NPP npp,
 	const char* URL, const char* window, uint32 len, const char* buf, NPBool file)
-	{ return sHostFromNPP(npp)->PostURL(npp, URL, window, len, buf, file); }
+	{ return sHostFromNPP(npp)->Host_PostURL(npp, URL, window, len, buf, file); }
 
 void* HostMeister::sGetJavaPeer(NPP npp)
-	{ return sHostFromNPP(npp)->GetJavaPeer(npp); }
+	{ return sHostFromNPP(npp)->Host_GetJavaPeer(npp); }
 
 NPObject* HostMeister::sCreateObject(NPP npp, NPClass* aClass)
-	{ return sHostFromNPP(npp)->CreateObject(npp, aClass); }
+	{ return sHostFromNPP(npp)->Host_CreateObject(npp, aClass); }
 
 bool HostMeister::sInvoke(NPP npp,
 	NPObject* obj, NPIdentifier methodName, const NPVariant* args, unsigned argCount,
 	NPVariant* result)
-	{ return sHostFromNPP(npp)->Invoke(npp, obj, methodName, args, argCount, result); }
+	{ return sHostFromNPP(npp)->Host_Invoke(npp, obj, methodName, args, argCount, result); }
 
 bool HostMeister::sInvokeDefault(NPP npp,
 	NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result)
-	{ return sHostFromNPP(npp)->InvokeDefault(npp, obj, args, argCount, result); }
+	{ return sHostFromNPP(npp)->Host_InvokeDefault(npp, obj, args, argCount, result); }
 
 bool HostMeister::sEvaluate(NPP npp,
 	NPObject* obj, NPString* script, NPVariant* result)
-	{ return sHostFromNPP(npp)->Evaluate(npp, obj, script, result); }
+	{ return sHostFromNPP(npp)->Host_Evaluate(npp, obj, script, result); }
 
 bool HostMeister::sGetProperty(NPP npp,
 	NPObject* obj, NPIdentifier propertyName, NPVariant* result)
-	{ return sHostFromNPP(npp)->GetProperty(npp, obj, propertyName, result); }
+	{ return sHostFromNPP(npp)->Host_GetProperty(npp, obj, propertyName, result); }
 
 bool HostMeister::sSetProperty(NPP npp,
 	NPObject* obj, NPIdentifier propertyName, const NPVariant* value)
-	{ return sHostFromNPP(npp)->SetProperty(npp, obj, propertyName, value); }
+	{ return sHostFromNPP(npp)->Host_SetProperty(npp, obj, propertyName, value); }
 
 bool HostMeister::sHasProperty(NPP npp, NPObject* npobj, NPIdentifier propertyName)
-	{ return sHostFromNPP(npp)->HasProperty(npp, npobj, propertyName); }
+	{ return sHostFromNPP(npp)->Host_HasProperty(npp, npobj, propertyName); }
 
 bool HostMeister::sHasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName)
-	{ return sHostFromNPP(npp)->HasMethod(npp, npobj, methodName); }
+	{ return sHostFromNPP(npp)->Host_HasMethod(npp, npobj, methodName); }
 
 bool HostMeister::sRemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName)
-	{ return sHostFromNPP(npp)->RemoveProperty(npp, obj, propertyName); }
+	{ return sHostFromNPP(npp)->Host_RemoveProperty(npp, obj, propertyName); }
 
 // =================================================================================================
 #pragma mark -
@@ -360,15 +360,15 @@ bool Host::Sender::DeliverData()
 
 		if (!fStreamerRCon)
 			{
-			fHost->HostURLNotify(fURL.c_str(), NPRES_NETWORK_ERR, fNotifyData);
+			fHost->Guest_URLNotify(fURL.c_str(), NPRES_NETWORK_ERR, fNotifyData);
 			return false;
 			}
 
 		uint16 theStreamType = NP_NORMAL;
-		if (fHost->HostNewStream(const_cast<char*>(fMIME.c_str()), &fNPStream, false, &theStreamType))
+		if (fHost->Guest_NewStream(const_cast<char*>(fMIME.c_str()), &fNPStream, false, &theStreamType))
 			{
 			// Failed -- what result should we pass?
-			fHost->HostURLNotify(fURL.c_str(), NPRES_NETWORK_ERR, fNotifyData);
+			fHost->Guest_URLNotify(fURL.c_str(), NPRES_NETWORK_ERR, fNotifyData);
 			return false;
 			}
 		}
@@ -378,9 +378,9 @@ bool Host::Sender::DeliverData()
 		return true;
 
 	if (fNotifyData)
-		fHost->HostURLNotify(fURL.c_str(), NPRES_DONE, fNotifyData);
+		fHost->Guest_URLNotify(fURL.c_str(), NPRES_DONE, fNotifyData);
 
-	fHost->HostDestroyStream(&fNPStream, NPRES_DONE);
+	fHost->Guest_DestroyStream(&fNPStream, NPRES_DONE);
 
 	return false;
 	}
@@ -404,7 +404,7 @@ bool Host::Sender::pDeliverData()
 	if (countReadable == 0)
 		return false;
 
-	int32 countPossible = fHost->HostWriteReady(&fNPStream);
+	int32 countPossible = fHost->Guest_WriteReady(&fNPStream);
 
 	if (ZLOG(s, eDebug + 1, "Host::Sender"))
 		s.Writef("countPossible = %d", countPossible);
@@ -429,7 +429,7 @@ bool Host::Sender::pDeliverData()
 
 		for (size_t start = 0; start < countRead; /*no inc*/)
 			{
-			int countWritten = fHost->HostWrite(&fNPStream, 0, countRead - start, &buffer[start]);
+			int countWritten = fHost->Guest_Write(&fNPStream, 0, countRead - start, &buffer[start]);
 
 			if (ZLOG(s, eDebug + 1, "Host::Sender"))
 				s.Writef("countWritten = %d", countWritten);
@@ -449,8 +449,7 @@ bool Host::Sender::pDeliverData()
 #pragma mark * Host
 
 Host::Host(ZRef<GuestFactory> iGuestFactory)
-:	fGuestFactory(iGuestFactory),
-	fNPObject(nil)
+:	fGuestFactory(iGuestFactory)
 	{
 	ZBlockZero(&fNPPluginFuncs, sizeof(fNPPluginFuncs));
 	ZBlockZero(&fNPP_t, sizeof(fNPP_t));
@@ -461,6 +460,29 @@ Host::Host(ZRef<GuestFactory> iGuestFactory)
 
 Host::~Host()
 	{}
+
+void Host::Release(NPObject* iObj)
+	{ HostMeister::sReleaseObject(iObj); }
+
+bool Host::Invoke(
+	NPObject* obj, const std::string& iMethod, const NPVariant* iArgs, size_t iCount,
+	NPVariant& oResult)
+	{
+	NPIdentifier methodID = HostMeister::sGetStringIdentifier(iMethod.c_str());
+
+	if (obj && obj->_class)
+		{
+		if (obj->_class->hasMethod(obj, methodID))
+			{
+			if (obj->_class->invoke)
+				{
+				if (obj->_class->invoke(obj, methodID, iArgs, iCount, &oResult))
+					return true;
+				}
+			}
+		}
+	return false;
+	}
 
 void Host::Create(const string& iURL, const string& iMIME)
 	{
@@ -478,88 +500,10 @@ void Host::Create(const string& iURL, const string& iMIME)
 		s.Writef("Create, theErr: %d", theErr);
 	}
 
-void Host::Destroy()
+void Host::Guest_Destroy()
 	{
 	NPSavedData* theSavedData;
-	NPError theErr = fNPPluginFuncs.destroy(&fNPP_t, &theSavedData);
-	}
-
-void Host::HostActivate(bool iActivate)
-	{
-	EventRecord fakeEvent;
-	fakeEvent.what = activateEvt;
-	fakeEvent.when = ::TickCount();
-	fakeEvent.message = (UInt32)::GetWindowFromPort(fNP_Port.port);
-	if (iActivate)
-		fakeEvent.modifiers = activeFlag;
-	else
-		fakeEvent.modifiers = 0;
-	::GetGlobalMouse(&fakeEvent.where);
-	
-	NPError theErr = fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
-	}
-
-void Host::HostEvent(const EventRecord& iEvent)
-	{
-	EventRecord localEvent = iEvent;
-	NPError theErr = fNPPluginFuncs.event(&fNPP_t, &localEvent);
-	}
-
-void Host::HostIdle()
-	{
-	EventRecord fakeEvent;
-	fakeEvent.what = nullEvent;
-	fakeEvent.when = ::TickCount();
-	fakeEvent.message = 0;
-	::GetGlobalMouse(&fakeEvent.where);
-	
-	NPError theErr = fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
-	}
-
-void Host::HostDeliverData()
-	{
-	this->pDeliverData();
-	}
-
-void Host::HostDraw()
-	{
-	EventRecord fakeEvent;
-	fakeEvent.what = updateEvt;
-	fakeEvent.when = ::TickCount();
-	fakeEvent.message = (UInt32)::GetWindowFromPort(fNP_Port.port);
-	fakeEvent.modifiers = 0;
-	::GetGlobalMouse(&fakeEvent.where);
-	
-	NPError theErr = fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
-	}
-
-void Host::HostSetWindow(CGrafPtr iGrafPtr,
-	ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip)
-	{
-	fNP_Port.port = iGrafPtr;
-	this->HostSetBounds(iLocation, iSize, iClip);
-	}
-
-void Host::HostSetBounds(
-	ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip)
-	{
-	fNP_Port.portx = -iLocation.h;
-	fNP_Port.porty = -iLocation.v;
-	fNPWindow.window = &fNP_Port;
-
-	fNPWindow.type = NPWindowTypeDrawable;
-
-	fNPWindow.x = iLocation.h;
-	fNPWindow.y = iLocation.v;
-	fNPWindow.width = iSize.h;
-	fNPWindow.height = iSize.v;
-
-	fNPWindow.clipRect.left = iClip.left;
-	fNPWindow.clipRect.top = iClip.top;
-	fNPWindow.clipRect.right = iClip.right;
-	fNPWindow.clipRect.bottom = iClip.bottom;
-
-	NPError theErr = fNPPluginFuncs.setwindow(&fNPP_t, &fNPWindow);
+	fNPPluginFuncs.destroy(&fNPP_t, &theSavedData);
 	}
 
 void Host::SendDataAsync(
@@ -635,95 +579,7 @@ void Host::SendDataSync(
 		}
 	}
 
-bool Host::HostInvoke(
-	NPObject* obj, const std::string& iMethod, const NPVariant* iArgs, size_t iCount,
-	NPVariant& oResult)
-	{
-	if (obj && obj->_class->invoke)
-		{
-		NPIdentifier methodID = HostMeister::sGetStringIdentifier(iMethod.c_str());
-		if (obj->_class->hasMethod(obj, methodID))
-			{
-			if (obj->_class->invoke(obj, methodID, iArgs, iCount, &oResult))
-				return true;
-			}
-		}
-	return false;
-	}
-
-NPObject* Host::GetScriptableNPObject()
-	{
-	if (!fNPObject)
-		fNPPluginFuncs.getvalue(&fNPP_t, NPPVpluginScriptableNPObject, &fNPObject);
-	return fNPObject;
-	}
-
-#define CASE(a) case a: return #a
-
-string Host::sAsString(NPNVariable iVar)
-	{
-	switch (iVar)
-		{
-		CASE(NPNVxDisplay);
-		CASE(NPNVxtAppContext);
-		CASE(NPNVnetscapeWindow);
-		CASE(NPNVjavascriptEnabledBool);
-		CASE(NPNVasdEnabledBool);
-		CASE(NPNVisOfflineBool);
-		CASE(NPNVserviceManager);
-		CASE(NPNVDOMElement);
-		CASE(NPNVDOMWindow);
-		CASE(NPNVToolkit);
-		CASE(NPNVSupportsXEmbedBool);
-		CASE(NPNVWindowNPObject);
-		CASE(NPNVPluginElementNPObject);
-		// Need to find a cleaner way to handle this portably.
-		case 1000: return "NPNVpluginDrawingModel";
-		case 2000: return "NPNVsupportsQuickDrawBool";
-		case 2001: return "NPNVsupportsCoreGraphicsBool";
-		}
-	return ZString::sFormat("NPNVariable=%d", iVar);
-	}
-
-string Host::sAsString(NPPVariable iVar)
-	{
-	switch (iVar)
-		{
-		CASE(NPPVpluginNameString);
-		CASE(NPPVpluginDescriptionString);
-		CASE(NPPVpluginWindowBool);
-		CASE(NPPVpluginTransparentBool);
-		CASE(NPPVjavaClass);
-		CASE(NPPVpluginWindowSize);
-		CASE(NPPVpluginTimerInterval);
-		CASE(NPPVpluginScriptableInstance);
-		CASE(NPPVpluginScriptableIID);
-		CASE(NPPVjavascriptPushCallerBool);
-		CASE(NPPVpluginKeepLibraryInMemory);
-		CASE(NPPVpluginNeedsXEmbed);
-		CASE(NPPVpluginScriptableNPObject);
-		}
-	return ZString::sFormat("NPPVariable=%d", iVar);
-	}
-
-#undef CASE
-
-void Host::HostURLNotify(const char* URL, NPReason reason, void* notifyData)
-	{ fNPPluginFuncs.urlnotify(&fNPP_t, URL, reason, notifyData); }
-
-NPError Host::HostNewStream(NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype)
-	{ return fNPPluginFuncs.newstream(&fNPP_t, type, stream, seekable, stype); }
-
-NPError Host::HostDestroyStream(NPStream* stream, NPReason reason)
-	{ return fNPPluginFuncs.destroystream(&fNPP_t, stream, reason); }
-
-int32 Host::HostWriteReady(NPStream* stream)
-	{ return fNPPluginFuncs.writeready(&fNPP_t, stream); }
-
-int32 Host::HostWrite(NPStream* stream, int32_t offset, int32_t len, void* buffer)
-	{ return fNPPluginFuncs.write(&fNPP_t, stream, offset, len, buffer); }
-
-void Host::pDeliverData()
+void Host::DeliverData()
 	{
 	ZMutexLocker locker(fMutex);
 	for (list<Sender*>::iterator i = fSenders.begin(); i != fSenders.end(); /*no inc*/)
@@ -740,8 +596,102 @@ void Host::pDeliverData()
 		}
 	}
 
-// =================================================================================================
+void Host::Guest_Activate(bool iActivate)
+	{
+	EventRecord fakeEvent;
+	fakeEvent.what = activateEvt;
+	fakeEvent.when = ::TickCount();
+	fakeEvent.message = (UInt32)::GetWindowFromPort(fNP_Port.port);
+	if (iActivate)
+		fakeEvent.modifiers = activeFlag;
+	else
+		fakeEvent.modifiers = 0;
+	::GetGlobalMouse(&fakeEvent.where);
+	
+	fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
+	}
 
+void Host::Guest_Event(const EventRecord& iEvent)
+	{
+	EventRecord localEvent = iEvent;
+	fNPPluginFuncs.event(&fNPP_t, &localEvent);
+	}
+
+void Host::Guest_Idle()
+	{
+	EventRecord fakeEvent;
+	fakeEvent.what = nullEvent;
+	fakeEvent.when = ::TickCount();
+	fakeEvent.message = 0;
+	::GetGlobalMouse(&fakeEvent.where);
+	
+	fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
+	}
+
+void Host::Guest_Draw()
+	{
+	EventRecord fakeEvent;
+	fakeEvent.what = updateEvt;
+	fakeEvent.when = ::TickCount();
+	fakeEvent.message = (UInt32)::GetWindowFromPort(fNP_Port.port);
+	fakeEvent.modifiers = 0;
+	::GetGlobalMouse(&fakeEvent.where);
+	
+	fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
+	}
+
+void Host::Guest_SetWindow(CGrafPtr iGrafPtr,
+	ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip)
+	{
+	fNP_Port.port = iGrafPtr;
+	this->Guest_SetBounds(iLocation, iSize, iClip);
+	}
+
+void Host::Guest_SetBounds(
+	ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip)
+	{
+	fNP_Port.portx = -iLocation.h;
+	fNP_Port.porty = -iLocation.v;
+	fNPWindow.window = &fNP_Port;
+
+	fNPWindow.type = NPWindowTypeDrawable;
+
+	fNPWindow.x = iLocation.h;
+	fNPWindow.y = iLocation.v;
+	fNPWindow.width = iSize.h;
+	fNPWindow.height = iSize.v;
+
+	fNPWindow.clipRect.left = iClip.left;
+	fNPWindow.clipRect.top = iClip.top;
+	fNPWindow.clipRect.right = iClip.right;
+	fNPWindow.clipRect.bottom = iClip.bottom;
+
+	fNPPluginFuncs.setwindow(&fNPP_t, &fNPWindow);
+	}
+
+NPObject* Host::Guest_GetScriptableNPObject()
+	{
+	NPObject* theNPObject;
+	fNPPluginFuncs.getvalue(&fNPP_t, NPPVpluginScriptableNPObject, &theNPObject);
+	return theNPObject;
+	}
+
+void Host::Guest_URLNotify(const char* URL, NPReason reason, void* notifyData)
+	{ fNPPluginFuncs.urlnotify(&fNPP_t, URL, reason, notifyData); }
+
+NPError Host::Guest_NewStream(NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype)
+	{ return fNPPluginFuncs.newstream(&fNPP_t, type, stream, seekable, stype); }
+
+NPError Host::Guest_DestroyStream(NPStream* stream, NPReason reason)
+	{ return fNPPluginFuncs.destroystream(&fNPP_t, stream, reason); }
+
+int32 Host::Guest_WriteReady(NPStream* stream)
+	{ return fNPPluginFuncs.writeready(&fNPP_t, stream); }
+
+int32 Host::Guest_Write(NPStream* stream, int32_t offset, int32_t len, void* buffer)
+	{ return fNPPluginFuncs.write(&fNPP_t, stream, offset, len, buffer); }
+
+// =================================================================================================
 
 NPBool NPN_VariantIsVoid (const NPVariant *variant)
 {
