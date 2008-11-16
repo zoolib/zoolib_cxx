@@ -133,7 +133,8 @@ public:
 	/// Close off all tags until \a iTag is reached in the stack, or the stack is emptied.
 	const ZStrimW_ML& EndAll(const string8& iTag);
 
-	/// Close off all tags until \a iTag is reached in the stack, but only if \a iTag is in the stack.
+	/** Close off all tags until \a iTag is reached in the
+	stack, but only if \a iTag is in the stack. */
 	const ZStrimW_ML& EndAllIfPresent(const string8& iTag);
 
 	/** If Begin, Empty, PI or Tag has been called, and no call to Write or End
