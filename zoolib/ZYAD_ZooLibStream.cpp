@@ -513,13 +513,6 @@ ZRef<ZYAD> ZYADReaderRep_ZooLibStream::ReadYAD()
 #pragma mark -
 #pragma mark * ZYADUtil_ZooLibStream
 
-void ZYADUtil_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZListReader iListReader)
-	{
-	while (iListReader)
-		sToStream(iStreamW, iListReader.Read());
-	iStreamW.WriteByte(0xFF); // Terminator (distinct from any value in ZType)
-	}
-
 void ZYADUtil_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZMapReader iMapReader)
 	{
 	while (iMapReader)
@@ -529,6 +522,13 @@ void ZYADUtil_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZMapReader iMapR
 		}
 	iStreamW.WriteByte(0); // Empty name
 	iStreamW.WriteByte(0xFF); // Terminator
+	}
+
+void ZYADUtil_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZListReader iListReader)
+	{
+	while (iListReader)
+		sToStream(iStreamW, iListReader.Read());
+	iStreamW.WriteByte(0xFF); // Terminator (distinct from any value in ZType)
 	}
 
 void ZYADUtil_ZooLibStream::sToStream(const ZStreamW& iStreamW, const ZStreamR& iStreamR)

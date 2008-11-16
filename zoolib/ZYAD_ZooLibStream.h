@@ -58,9 +58,9 @@ private:
 
 namespace ZYADUtil_ZooLibStream {
 
-void sToStream(const ZStreamW& iStreamW, ZListReader iListReader);
-
 void sToStream(const ZStreamW& iStreamW, ZMapReader iMapReader);
+
+void sToStream(const ZStreamW& iStreamW, ZListReader iListReader);
 
 void sToStream(const ZStreamW& iStreamW, const ZStreamR& iStreamR);
 

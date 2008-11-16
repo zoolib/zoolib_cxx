@@ -83,7 +83,7 @@ private:
 	void pMoveIfNecessary();
 
 	const ZStrimU& fStrimU;
-	string fName;
+	std::string fName;
 	ZRef<ZYADReaderRep_ZooLibStrim> fValue_Current;
 	ZRef<ZYADReaderRep_ZooLibStrim> fValue_Prior;
 	};

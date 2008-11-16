@@ -361,7 +361,7 @@ ZRef<ZYADReaderRep> ZListReaderRep_CFType::ReadAtIndex(size_t iIndex)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Test code
+#pragma mark * ZYADUtil_CFType
 
 static CFDictionaryRef sReadDictionary(ZMapReader iMapReader)
 	{
