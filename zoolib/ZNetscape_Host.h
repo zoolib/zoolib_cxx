@@ -24,11 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
-// Need to standardize a mechanism to pull in the np headers
-// where we can be agnostic as to which set we're using.
-#include "npapi.h"
-#include <WebKit/npfunctions.h>
-
+#include "zoolib/ZCompat_npapi.h"
 #include "zoolib/ZGeom.h"
 #include "zoolib/ZRefCount.h"
 #include "zoolib/ZMemoryBlock.h"
@@ -39,10 +35,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <list>
 
 namespace ZNetscape {
-
-//struct Variant : public NPVariant
-//	{
-//	}
 
 class GuestFactory;
 class Host;
@@ -97,7 +89,7 @@ public:
 	static Host* sHostFromNPP(NPP iNPP);
 	static Host* sHostFromStream(NPStream* iNPStream);
 
-// HostMeister-implemented
+// Forwarded to HostMeister
 	static void* sMemAlloc(uint32 size);
 
 	static void sMemFree(void* ptr);
@@ -303,8 +295,6 @@ public:
 
 	virtual bool RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName) = 0;
 
-// Plugin API
-
 private:
 	void pDeliverData();
 
@@ -314,8 +304,10 @@ private:
 
 	ZRef<GuestFactory> fGuestFactory;
 	NPPluginFuncs fNPPluginFuncs;
+
 protected:
 	NPP_t fNPP_t;
+
 private:
 	NPWindow fNPWindow;
 	NP_Port fNP_Port;
