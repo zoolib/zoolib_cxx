@@ -69,7 +69,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		typedef int16_t int16;
 		typedef UInt16 uint16;
 
+		#if !defined(_INT32)
 		typedef int32_t int32;
+		#endif
+
 		#ifndef _UINT32
 		typedef UInt32 uint32;
 		#endif
