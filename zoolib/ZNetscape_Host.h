@@ -114,23 +114,47 @@ class NPObjectH : public NPObject
 	{
 protected:
 	NPObjectH();
-	virtual ~NPObjectH();
+	~NPObjectH();
 
-	virtual void Invalidate();
-
-	virtual bool HasMethod(const std::string& iName);
-	virtual bool Invoke(
+public:
+	bool HasMethod(const std::string& iName);
+	bool Invoke(
 		const std::string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
-	virtual bool InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+	bool InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
 
-	virtual bool HasProperty(const std::string& iName);
-	virtual bool GetProperty(const std::string& iName, NPVariantH& oResult);
-	virtual bool SetProperty(const std::string& iName, const NPVariantH& iValue);
-	virtual bool RemoveProperty(const std::string& iName);
-	virtual bool Enumerate(NPIdentifier** identifier, uint32_t* count);
-	virtual bool Construct(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+	bool HasProperty(const std::string& iName);
+	bool GetProperty(const std::string& iName, NPVariantH& oResult);
+	bool SetProperty(const std::string& iName, const NPVariantH& iValue);
+	bool RemoveProperty(const std::string& iName);
+
+	static std::string sAsString(NPIdentifier iNPI);
+	static NPIdentifier sAsNPI(const std::string& iName);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ObjectH
+
+class ObjectH : public NPObjectH
+	{
+protected:
+	ObjectH();
+	virtual ~ObjectH();
+
+	virtual void Imp_Invalidate();
+
+	virtual bool Imp_HasMethod(const std::string& iName);
+	virtual bool Imp_Invoke(
+		const std::string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+	virtual bool Imp_InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+
+	virtual bool Imp_HasProperty(const std::string& iName);
+	virtual bool Imp_GetProperty(const std::string& iName, NPVariantH& oResult);
+	virtual bool Imp_SetProperty(const std::string& iName, const NPVariantH& iValue);
+	virtual bool Imp_RemoveProperty(const std::string& iName);
 
 private:
+	static NPObject* sAllocate(NPP npp, NPClass *aClass);
 	static void sDeallocate(NPObject* npobj);
 	static void sInvalidate(NPObject* npobj);
 
@@ -146,12 +170,8 @@ private:
 	static bool sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result);
 	static bool sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value);
 	static bool sRemoveProperty(NPObject* npobj, NPIdentifier name);
-	static bool sEnumerate(NPObject* npobj, NPIdentifier** identifier, uint32_t* count);
 
-	static bool sConstruct(NPObject* npobj,
-		const NPVariant* args, uint32_t argCount, NPVariant* result);
-
-	static std::string sAsString(NPIdentifier iNPI);
+	static NPClass sNPClass;
 	};
 
 // =================================================================================================
@@ -171,6 +191,8 @@ public:
 
 	HostMeister();
 	virtual ~HostMeister();
+
+	std::string StringFromIdentifier(NPIdentifier identifier);
 
 	virtual void* MemAlloc(uint32 size) = 0;
 

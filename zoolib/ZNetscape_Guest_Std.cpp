@@ -107,7 +107,10 @@ Guest_Std::~Guest_Std()
 	{}
 
 NPError Guest_Std::Guest_Destroy(NPSavedData** save)
-	{ return NPERR_NO_ERROR; }
+	{
+	delete this;
+	return NPERR_NO_ERROR;
+	}
 
 NPError Guest_Std::Guest_SetWindow(NPWindow* window)
 	{ return NPERR_GENERIC_ERROR; }

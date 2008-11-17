@@ -590,9 +590,9 @@ bool Host_Std::Host_Invoke(NPP npp,
 	NPVariant* result)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "Invoke: " << HostMeister::sGet()->UTF8FromIdentifier(methodName);
+		s << "Invoke: " << HostMeister::sGet()->StringFromIdentifier(methodName);
 
-	if (obj && obj->_class->invoke)
+	if (obj && obj->_class && obj->_class->invoke)
 		return obj->_class->invoke(obj, methodName, args, argCount, result);
 
 	return false;
@@ -603,6 +603,10 @@ bool Host_Std::Host_InvokeDefault(NPP npp,
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("InvokeDefault");
+
+	if (obj && obj->_class && obj->_class->invokeDefault)
+		return obj->_class->invokeDefault(obj, args, argCount, result);
+
 	return false;
 	}
 
@@ -618,9 +622,9 @@ bool Host_Std::Host_GetProperty(NPP npp,
 	NPObject* obj, NPIdentifier propertyName, NPVariant* result)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "GetProperty: " << HostMeister::sGet()->UTF8FromIdentifier(propertyName);
+		s << "GetProperty: " << HostMeister::sGet()->StringFromIdentifier(propertyName);
 
-	if (obj && obj->_class->getProperty)
+	if (obj && obj->_class && obj->_class->getProperty)
 		return obj->_class->getProperty(obj, propertyName, result);
 
 	return false;
@@ -631,6 +635,10 @@ bool Host_Std::Host_SetProperty(NPP npp,
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("SetProperty");
+
+	if (obj && obj->_class && obj->_class->getProperty)
+		return obj->_class->setProperty(obj, propertyName, value);
+
 	return false;
 	}
 
@@ -638,20 +646,32 @@ bool Host_Std::Host_RemoveProperty(NPP npp, NPObject* obj, NPIdentifier property
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("RemoveProperty");
+
+	if (obj && obj->_class && obj->_class->removeProperty)
+		return obj->_class->removeProperty(obj, propertyName);
+
 	return false;
 	}
 
-bool Host_Std::Host_HasProperty(NPP, NPObject* npobj, NPIdentifier propertyName)
+bool Host_Std::Host_HasProperty(NPP, NPObject* obj, NPIdentifier propertyName)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("HasProperty");
+
+	if (obj && obj->_class && obj->_class->hasProperty)
+		return obj->_class->hasProperty(obj, propertyName);
+
 	return false;
 	}
 
-bool Host_Std::Host_HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName)
+bool Host_Std::Host_HasMethod(NPP npp, NPObject* obj, NPIdentifier methodName)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("HasMethod");
+
+	if (obj && obj->_class && obj->_class->hasMethod)
+		return obj->_class->hasMethod(obj, methodName);
+
 	return false;
 	}
 

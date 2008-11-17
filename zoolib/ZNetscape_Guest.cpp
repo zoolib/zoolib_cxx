@@ -366,110 +366,158 @@ void NPVariantG::SetObject(NPObject* iValue)
 #pragma mark -
 #pragma mark * NPObjectG
 
-NPObjectG::NPObjectG(NPP iNPP)
-:	fNPP(iNPP)
+NPObjectG::NPObjectG()
 	{}
 
 NPObjectG::~NPObjectG()
-	{
-	}
+	{}
 
-NPP NPObjectG::GetNPP()
-	{ return fNPP; }
-
-void NPObjectG::Invalidate()
-	{ fNPP = nil; }
+static NPP fake = (NPP)1;
 
 bool NPObjectG::HasMethod(const string& iName)
-	{ return false; }
+	{ return GuestMeister::sGet()->Host_HasMethod(fake, this, sAsNPI(iName)); }
 
 bool NPObjectG::Invoke(
 	const string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
-	{ return false; }
+	{
+	return GuestMeister::sGet()->Host_Invoke(fake, this, sAsNPI(iName), iArgs, iCount, &oResult);
+	}
 
 bool NPObjectG::InvokeDefault(const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
-	{ return false; }
+	{ return GuestMeister::sGet()->Host_InvokeDefault(fake, this, iArgs, iCount, &oResult); }
 
 bool NPObjectG::HasProperty(const string& iName)
-	{ return false; }
+	{ return GuestMeister::sGet()->Host_HasProperty(fake, this, sAsNPI(iName)); }
 
 bool NPObjectG::GetProperty(const string& iName, NPVariantG& oResult)
-	{ return false; }
+	{ return GuestMeister::sGet()->Host_GetProperty(fake, this, sAsNPI(iName), &oResult); }
 
 bool NPObjectG::SetProperty(const string& iName, const NPVariantG& iValue)
-	{ return false; }
+	{ return GuestMeister::sGet()->Host_SetProperty(fake, this, sAsNPI(iName), &iValue); }
 
 bool NPObjectG::RemoveProperty(const string& iName)
+	{ return GuestMeister::sGet()->Host_RemoveProperty(fake, this, sAsNPI(iName)); }
+
+string NPObjectG::sAsString(NPIdentifier iNPI)
+	{
+	string result;
+	if (NPUTF8* theString = GuestMeister::sGet()->Host_UTF8FromIdentifier(iNPI))
+		{
+		result = theString;
+		free(theString);
+		}
+	return result;
+	}
+
+NPIdentifier NPObjectG::sAsNPI(const string& iName)
+	{ return GuestMeister::sGet()->Host_GetStringIdentifier(iName.c_str()); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ObjectG
+
+ObjectG::ObjectG()
+	{
+	_class = &sNPClass;
+	referenceCount = 1;
+	}
+
+ObjectG::~ObjectG()
+	{}
+
+void ObjectG::Imp_Invalidate()
+	{}
+
+bool ObjectG::Imp_HasMethod(const string& iName)
 	{ return false; }
 
-bool NPObjectG::Enumerate(NPIdentifier** identifier, uint32_t* count)
+bool ObjectG::Imp_Invoke(
+	const string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
 	{ return false; }
 
-bool NPObjectG::Construct(const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
+bool ObjectG::Imp_InvokeDefault(const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
 	{ return false; }
 
-void NPObjectG::sDeallocate(NPObject* npobj)
-	{ delete static_cast<NPObjectG*>(npobj); }
+bool ObjectG::Imp_HasProperty(const string& iName)
+	{ return false; }
 
-void NPObjectG::sInvalidate(NPObject* npobj)
-	{ static_cast<NPObjectG*>(npobj)->Invalidate(); }
+bool ObjectG::Imp_GetProperty(const string& iName, NPVariantG& oResult)
+	{ return false; }
 
-bool NPObjectG::sHasMethod(NPObject* npobj, NPIdentifier name)
-	{ return static_cast<NPObjectG*>(npobj)->HasMethod(sAsString(name)); }
+bool ObjectG::Imp_SetProperty(const string& iName, const NPVariantG& iValue)
+	{ return false; }
 
-bool NPObjectG::sInvoke(NPObject* npobj,
+bool ObjectG::Imp_RemoveProperty(const string& iName)
+	{ return false; }
+
+NPObject* ObjectG::sAllocate(NPP npp, NPClass *aClass)
+	{
+	ZUnimplemented();
+	return nil;
+	}
+
+void ObjectG::sDeallocate(NPObject* npobj)
+	{ delete static_cast<ObjectG*>(npobj); }
+
+void ObjectG::sInvalidate(NPObject* npobj)
+	{ static_cast<ObjectG*>(npobj)->Imp_Invalidate(); }
+
+bool ObjectG::sHasMethod(NPObject* npobj, NPIdentifier name)
+	{ return static_cast<ObjectG*>(npobj)->Imp_HasMethod(sAsString(name)); }
+
+bool ObjectG::sInvoke(NPObject* npobj,
 	NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result)
 	{
-	return static_cast<NPObjectG*>(npobj)->Invoke(
+	return static_cast<ObjectG*>(npobj)->Imp_Invoke(
 		sAsString(name),
 		static_cast<const NPVariantG*>(args),
 		argCount,
 		*static_cast<NPVariantG*>(result));
 	}
 
-bool NPObjectG::sInvokeDefault(NPObject* npobj,
+bool ObjectG::sInvokeDefault(NPObject* npobj,
 	const NPVariant* args, uint32_t argCount, NPVariant* result)
 	{
-	return static_cast<NPObjectG*>(npobj)->InvokeDefault(
+	return static_cast<ObjectG*>(npobj)->Imp_InvokeDefault(
 		static_cast<const NPVariantG*>(args),
 		argCount,
 		*static_cast<NPVariantG*>(result));
 	}
 
-bool NPObjectG::sHasProperty(NPObject*  npobj, NPIdentifier name)
-	{ return static_cast<NPObjectG*>(npobj)->HasProperty(sAsString(name)); }
+bool ObjectG::sHasProperty(NPObject*  npobj, NPIdentifier name)
+	{ return static_cast<ObjectG*>(npobj)->Imp_HasProperty(sAsString(name)); }
 
-bool NPObjectG::sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result)
+bool ObjectG::sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result)
 	{
-	return static_cast<NPObjectG*>(npobj)->GetProperty(
+	return static_cast<ObjectG*>(npobj)->Imp_GetProperty(
 		sAsString(name),
 		*static_cast<NPVariantG*>(result));
 	}
 
-bool NPObjectG::sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value)
+bool ObjectG::sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value)
 	{
-	return static_cast<NPObjectG*>(npobj)->SetProperty(
+	return static_cast<ObjectG*>(npobj)->Imp_SetProperty(
 		sAsString(name),
 		*static_cast<const NPVariantG*>(value));
 	}
 
-bool NPObjectG::sRemoveProperty(NPObject* npobj, NPIdentifier name)
-	{ return static_cast<NPObjectG*>(npobj)->RemoveProperty(sAsString(name)); }
+bool ObjectG::sRemoveProperty(NPObject* npobj, NPIdentifier name)
+	{ return static_cast<ObjectG*>(npobj)->Imp_RemoveProperty(sAsString(name)); }
 
-bool NPObjectG::sEnumerate(NPObject* npobj, NPIdentifier** identifier, uint32_t* count)
-	{ return false; }
-
-bool NPObjectG::sConstruct(NPObject* npobj,
-	const NPVariant* args, uint32_t argCount, NPVariant* result)
+NPClass ObjectG::sNPClass =
 	{
-	return static_cast<NPObjectG*>(npobj)->Construct(
-		static_cast<const NPVariantG*>(args),
-		argCount,
-		*static_cast<NPVariantG*>(result));
-	}
-
-string NPObjectG::sAsString(NPIdentifier iNPI)
-	{ return GuestMeister::sGet()->Host_UTF8FromIdentifier(iNPI); }
+	1,
+	sAllocate,
+	sDeallocate,
+	sInvalidate,
+	sHasMethod,
+	sInvoke,
+	sInvokeDefault,
+	sHasProperty,
+	sGetProperty,
+	sSetProperty,
+	sRemoveProperty
+	};
 
 // =================================================================================================
 #pragma mark -
@@ -764,6 +812,9 @@ Guest::Guest(NPP iNPP)
 
 Guest::~Guest()
 	{}
+
+NPP Guest::GetNPP()
+	{ return fNPP; }
 
 NPError Guest::Host_GetURL(const char* url, const char* target)
 	{ return GuestMeister::sGet()->Host_GetURL(fNPP, url, target); }
