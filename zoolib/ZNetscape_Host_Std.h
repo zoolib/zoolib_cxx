@@ -29,9 +29,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZNetscape {
 
-class Host;
-class HostMeister;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * HostMeister_Std
@@ -52,8 +49,6 @@ public:
 
 	virtual void* GetJavaEnv();
 
-	virtual void ReleaseVariantValue(NPVariant* variant);
-
 	virtual NPIdentifier GetStringIdentifier(const NPUTF8* name);
 
 	virtual void GetStringIdentifiers(
@@ -61,15 +56,17 @@ public:
 
 	virtual NPIdentifier GetIntIdentifier(int32_t intid);
 
-	virtual int32_t IntFromIdentifier(NPIdentifier identifier);
-
 	virtual bool IdentifierIsString(NPIdentifier identifier);
 
 	virtual NPUTF8* UTF8FromIdentifier(NPIdentifier identifier);
 
+	virtual int32_t IntFromIdentifier(NPIdentifier identifier);
+
 	virtual NPObject* RetainObject(NPObject* obj);
 
 	virtual void ReleaseObject(NPObject* obj);
+
+	virtual void ReleaseVariantValue(NPVariant* variant);
 
 	virtual void SetException(NPObject* obj, const NPUTF8* message);
 
@@ -98,12 +95,10 @@ public:
 	Host_Std(ZRef<GuestFactory> iGuestFactory);
 	virtual ~Host_Std();
 
-	virtual NPError Host_GetURLNotify(NPP npp,
-		const char* URL, const char* window, void* notifyData);
+	virtual NPError Host_GetURL(NPP npp, const char* URL, const char* window);
 
-	virtual NPError Host_PostURLNotify(NPP npp,
-		const char* URL, const char* window,
-		uint32 len, const char* buf, NPBool file, void* notifyData);
+	virtual NPError Host_PostURL(NPP npp,
+		const char* URL, const char* window, uint32 len, const char* buf, NPBool file);
 
 	virtual NPError Host_RequestRead(NPStream* stream, NPByteRange* rangeList);
 
@@ -118,6 +113,15 @@ public:
 
 	virtual const char* Host_UserAgent(NPP npp);
 
+	virtual void* Host_GetJavaPeer(NPP npp);
+
+	virtual NPError Host_GetURLNotify(NPP npp,
+		const char* URL, const char* window, void* notifyData);
+
+	virtual NPError Host_PostURLNotify(NPP npp,
+		const char* URL, const char* window,
+		uint32 len, const char* buf, NPBool file, void* notifyData);
+
 	virtual NPError Host_GetValue(NPP npp, NPNVariable variable, void* ret_value);
 
 	virtual NPError Host_SetValue(NPP npp, NPPVariable variable, void* value);
@@ -127,13 +131,6 @@ public:
 	virtual void Host_InvalidateRegion(NPP npp, NPRegion region);
 
 	virtual void Host_ForceRedraw(NPP npp);
-
-	virtual NPError Host_GetURL(NPP npp, const char* URL, const char* window);
-
-	virtual NPError Host_PostURL(NPP npp,
-		const char* URL, const char* window, uint32 len, const char* buf, NPBool file);
-
-	virtual void* Host_GetJavaPeer(NPP npp);
 
 	virtual NPObject* Host_CreateObject(NPP npp, NPClass* aClass);
 
@@ -153,11 +150,11 @@ public:
 	virtual bool Host_SetProperty(NPP npp,
 		NPObject* obj, NPIdentifier propertyName, const NPVariant* value);
 
+	virtual bool Host_RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName);
+
 	virtual bool Host_HasProperty(NPP, NPObject* npobj, NPIdentifier propertyName);
 
 	virtual bool Host_HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName);
-
-	virtual bool Host_RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName);
 
 private:
 	class HTTPer;

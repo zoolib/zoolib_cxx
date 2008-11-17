@@ -85,7 +85,7 @@ public:
 class Guest_Std : public Guest
 	{
 protected:
-	Guest_Std(NPP iNPP, const NPNetscapeFuncs& iNPNetscapeFuncs);
+	Guest_Std(NPP iNPP);
 
 public:
 	virtual ~Guest_Std();

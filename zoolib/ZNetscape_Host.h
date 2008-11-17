@@ -26,8 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_npapi.h"
 #include "zoolib/ZGeom.h"
-#include "zoolib/ZRefCount.h"
 #include "zoolib/ZMemoryBlock.h"
+#include "zoolib/ZRefCount.h"
 #include "zoolib/ZStream.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"
@@ -36,19 +36,138 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZNetscape {
 
-class GuestFactory;
-class Host;
-class HostMeister;
+void sRetainH(NPObject* iObject);
+void sReleaseH(NPObject* iObject);
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * NPVariantH
+
+class NPVariantH : public NPVariant
+	{
+public:
+	NPVariantH();
+	NPVariantH(const NPVariant& iOther);
+	~NPVariantH();
+	NPVariantH& operator=(const NPVariant& iOther);
+
+	NPVariantH(bool iValue);
+	NPVariantH(int32 iValue);
+	NPVariantH(double iValue);
+	NPVariantH(const std::string& iValue);
+	NPVariantH(NPObject* iValue);
+
+	NPVariantH& operator=(bool iValue);
+	NPVariantH& operator=(int32 iValue);
+	NPVariantH& operator=(double iValue);
+	NPVariantH& operator=(const std::string& iValue);
+	NPVariantH& operator=(NPObject* iValue);
+
+	bool IsVoid() const;
+	bool IsNull() const;
+
+	bool IsBool() const;
+	bool IsInt32() const;
+	bool IsDouble() const;
+	bool IsString() const;
+	bool IsObject() const;
+
+	void SetVoid();
+	void SetNull();
+
+	bool GetBool() const;
+	bool GetBool(bool& oValue) const;
+	bool DGetBool(bool iDefault) const;
+	void SetBool(bool iValue);
+
+	int32 GetInt32() const;
+	bool GetInt32(int32& oValue) const;
+	int32 DGetInt32(int32 iDefault) const;
+	void SetInt32(int32 iValue);
+
+	double GetDouble() const;
+	bool GetDouble(double& oValue) const;
+	double DGetDouble(double iDefault) const;
+	void SetDouble(bool iValue);
+
+	std::string GetString() const;
+	bool GetString(std::string& oValue) const;
+	std::string DGetString(const std::string& iDefault) const;
+	void SetString(const std::string& iValue);
+
+	NPObject* GetObject() const;
+	bool GetObject(NPObject*& oValue) const;
+	NPObject* DGetObject(NPObject* iDefault) const;
+	void SetObject(NPObject* iValue);
+
+private:
+	void pRelease();
+	void pRetain(NPObject* iObject) const;
+	void pCopyFrom(const NPVariant& iOther);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * NPObjectH
+
+class NPObjectH : public NPObject
+	{
+protected:
+	NPObjectH();
+	virtual ~NPObjectH();
+
+	virtual void Invalidate();
+
+	virtual bool HasMethod(const std::string& iName);
+	virtual bool Invoke(
+		const std::string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+	virtual bool InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+
+	virtual bool HasProperty(const std::string& iName);
+	virtual bool GetProperty(const std::string& iName, NPVariantH& oResult);
+	virtual bool SetProperty(const std::string& iName, const NPVariantH& iValue);
+	virtual bool RemoveProperty(const std::string& iName);
+	virtual bool Enumerate(NPIdentifier** identifier, uint32_t* count);
+	virtual bool Construct(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+
+private:
+	static void sDeallocate(NPObject* npobj);
+	static void sInvalidate(NPObject* npobj);
+
+	static bool sHasMethod(NPObject* npobj, NPIdentifier name);
+
+	static bool sInvoke(NPObject* npobj,
+		NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result);
+
+	static bool sInvokeDefault(NPObject* npobj,
+		const NPVariant* args, uint32_t argCount, NPVariant* result);
+
+	static bool sHasProperty(NPObject*  npobj, NPIdentifier name);
+	static bool sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result);
+	static bool sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value);
+	static bool sRemoveProperty(NPObject* npobj, NPIdentifier name);
+	static bool sEnumerate(NPObject* npobj, NPIdentifier** identifier, uint32_t* count);
+
+	static bool sConstruct(NPObject* npobj,
+		const NPVariant* args, uint32_t argCount, NPVariant* result);
+
+	static std::string sAsString(NPIdentifier iNPI);
+	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * HostMeister
 
+class Host;
+
 class HostMeister
 	{
-	friend class GuestFactory;
 public:
-	static HostMeister* sGetHostMeister();
+	static HostMeister* sGet();
+
+	static Host* sHostFromNPP(NPP iNPP);
+	static Host* sHostFromStream(NPStream* iNPStream);
+	static void sGetNPNF(NPNetscapeFuncs& oNPNF);
 
 	HostMeister();
 	virtual ~HostMeister();
@@ -63,8 +182,6 @@ public:
 
 	virtual void* GetJavaEnv() = 0;
 
-	virtual void ReleaseVariantValue(NPVariant* variant) = 0;
-
 	virtual NPIdentifier GetStringIdentifier(const NPUTF8* name) = 0;
 
 	virtual void GetStringIdentifiers(
@@ -72,23 +189,21 @@ public:
 
 	virtual NPIdentifier GetIntIdentifier(int32_t intid) = 0;
 
-	virtual int32_t IntFromIdentifier(NPIdentifier identifier) = 0;
-
 	virtual bool IdentifierIsString(NPIdentifier identifier) = 0;
 
 	virtual NPUTF8* UTF8FromIdentifier(NPIdentifier identifier) = 0;
+
+	virtual int32_t IntFromIdentifier(NPIdentifier identifier) = 0;
 
 	virtual NPObject* RetainObject(NPObject* obj) = 0;
 
 	virtual void ReleaseObject(NPObject* obj) = 0;
 
+	virtual void ReleaseVariantValue(NPVariant* variant) = 0;
+
 	virtual void SetException(NPObject* obj, const NPUTF8* message) = 0;
 
-	void pGetNPNetscapeFuncs(NPNetscapeFuncs& oNPNetscapeFuncs);
-
-	static Host* sHostFromNPP(NPP iNPP);
-	static Host* sHostFromStream(NPStream* iNPStream);
-
+private:
 // Forwarded to HostMeister
 	static void* sMemAlloc(uint32 size);
 
@@ -100,8 +215,6 @@ public:
 
 	static void* sGetJavaEnv();
 
-	static void sReleaseVariantValue(NPVariant* variant);
-
 	static NPIdentifier sGetStringIdentifier(const NPUTF8* name);
 
 	static void sGetStringIdentifiers(
@@ -109,25 +222,25 @@ public:
 
 	static NPIdentifier sGetIntIdentifier(int32_t intid);
 
-	static int32_t sIntFromIdentifier(NPIdentifier identifier);
-
 	static bool sIdentifierIsString(NPIdentifier identifier);
 
 	static NPUTF8* sUTF8FromIdentifier(NPIdentifier identifier);
+
+	static int32_t sIntFromIdentifier(NPIdentifier identifier);
 
 	static NPObject* sRetainObject(NPObject* obj);
 
 	static void sReleaseObject(NPObject* obj);
 
+	static void sReleaseVariantValue(NPVariant* variant);
+
 	static void sSetException(NPObject* obj, const NPUTF8* message);
 
 // Forwarded to Host
-	static NPError sGetURLNotify(NPP npp,
-		const char* URL, const char* window, void* notifyData);
+	static NPError sGetURL(NPP npp, const char* URL, const char* window);
 
-	static NPError sPostURLNotify(NPP npp,
-		const char* URL, const char* window,
-		uint32 len, const char* buf, NPBool file, void* notifyData);
+	static NPError sPostURL(NPP npp,
+		const char* URL, const char* window, uint32 len, const char* buf, NPBool file);
 
 	static NPError sRequestRead(NPStream* stream, NPByteRange* rangeList);
 
@@ -142,6 +255,15 @@ public:
 
 	static const char* sUserAgent(NPP npp);
 
+	static void* sGetJavaPeer(NPP npp);
+
+	static NPError sGetURLNotify(NPP npp,
+		const char* URL, const char* window, void* notifyData);
+
+	static NPError sPostURLNotify(NPP npp,
+		const char* URL, const char* window,
+		uint32 len, const char* buf, NPBool file, void* notifyData);
+
 	static NPError sGetValue(NPP npp, NPNVariable variable, void* ret_value);
 
 	static NPError sSetValue(NPP npp, NPPVariable variable, void* value);
@@ -151,13 +273,6 @@ public:
 	static void sInvalidateRegion(NPP npp, NPRegion region);
 
 	static void sForceRedraw(NPP npp);
-
-	static NPError sGetURL(NPP npp, const char* URL, const char* window);
-
-	static NPError sPostURL(NPP npp,
-		const char* URL, const char* window, uint32 len, const char* buf, NPBool file);
-
-	static void* sGetJavaPeer(NPP npp);
 
 	static NPObject* sCreateObject(NPP npp, NPClass* aClass);
 
@@ -177,11 +292,28 @@ public:
 	static bool sSetProperty(NPP npp,
 		NPObject* obj, NPIdentifier propertyName, const NPVariant* value);
 
+	static bool sRemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName);
+
 	static bool sHasProperty(NPP npp, NPObject* npobj, NPIdentifier propertyName);
 
 	static bool sHasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName);
+	};
 
-	static bool sRemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName);
+// =================================================================================================
+#pragma mark -
+#pragma mark * GuestFactory
+
+class GuestFactory : public ZRefCountedWithFinalization
+	{
+protected:
+	GuestFactory();
+
+public:
+	virtual ~GuestFactory();
+
+	void GetNPNF(NPNetscapeFuncs& oNPNF);
+
+	virtual void GetEntryPoints(NPPluginFuncs& oNPPluginFuncs) = 0;
 	};
 
 // =================================================================================================
@@ -220,25 +352,28 @@ public:
 	void Guest_Event(const EventRecord& iEvent);
 	void Guest_Idle();
 	void Guest_Draw();
+
 	void Guest_SetWindow(CGrafPtr iGrafPtr,
 		ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
-	void Guest_SetBounds(ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
+
+	void Guest_SetBounds(
+		ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
+
 	NPObject* Guest_GetScriptableNPObject();
 
 // Calls into the guest
 	virtual void Guest_URLNotify(const char* URL, NPReason reason, void* notifyData);
-	virtual NPError Guest_NewStream(NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
+	virtual NPError Guest_NewStream(
+		NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
 	virtual NPError Guest_DestroyStream(NPStream* stream, NPReason reason);
 	virtual int32 Guest_WriteReady(NPStream* stream);
 	virtual int32 Guest_Write(NPStream* stream, int32_t offset, int32_t len, void* buffer);
 
 // Our protocol
-	virtual NPError Host_GetURLNotify(NPP npp,
-		const char* URL, const char* window, void* notifyData) = 0;
+	virtual NPError Host_GetURL(NPP npp, const char* URL, const char* window) = 0;
 
-	virtual NPError Host_PostURLNotify(NPP npp,
-		const char* URL, const char* window,
-		uint32 len, const char* buf, NPBool file, void* notifyData) = 0;
+	virtual NPError Host_PostURL(NPP npp,
+		const char* URL, const char* window, uint32 len, const char* buf, NPBool file) = 0;
 
 	virtual NPError Host_RequestRead(NPStream* stream, NPByteRange* rangeList) = 0;
 
@@ -253,6 +388,15 @@ public:
 
 	virtual const char* Host_UserAgent(NPP npp) = 0;
 
+	virtual void* Host_GetJavaPeer(NPP npp) = 0;
+
+	virtual NPError Host_GetURLNotify(NPP npp,
+		const char* URL, const char* window, void* notifyData) = 0;
+
+	virtual NPError Host_PostURLNotify(NPP npp,
+		const char* URL, const char* window,
+		uint32 len, const char* buf, NPBool file, void* notifyData) = 0;
+
 	virtual NPError Host_GetValue(NPP npp, NPNVariable variable, void* ret_value) = 0;
 
 	virtual NPError Host_SetValue(NPP npp, NPPVariable variable, void* value) = 0;
@@ -262,13 +406,6 @@ public:
 	virtual void Host_InvalidateRegion(NPP npp, NPRegion region) = 0;
 
 	virtual void Host_ForceRedraw(NPP npp) = 0;
-
-	virtual NPError Host_GetURL(NPP npp, const char* URL, const char* window) = 0;
-
-	virtual NPError Host_PostURL(NPP npp,
-		const char* URL, const char* window, uint32 len, const char* buf, NPBool file) = 0;
-
-	virtual void* Host_GetJavaPeer(NPP npp) = 0;
 
 	virtual NPObject* Host_CreateObject(NPP npp, NPClass* aClass) = 0;
 
@@ -288,11 +425,11 @@ public:
 	virtual bool Host_SetProperty(NPP npp,
 		NPObject* obj, NPIdentifier propertyName, const NPVariant* value) = 0;
 
+	virtual bool Host_RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName) = 0;
+
 	virtual bool Host_HasProperty(NPP, NPObject* npobj, NPIdentifier propertyName) = 0;
 
 	virtual bool Host_HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName) = 0;
-
-	virtual bool Host_RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName) = 0;
 
 private:
 	class Sender;
@@ -302,29 +439,10 @@ private:
 	ZRef<GuestFactory> fGuestFactory;
 	NPPluginFuncs fNPPluginFuncs;
 
-protected:
-	NPP_t fNPP_t;
-
 private:
+	NPP_t fNPP_t;
 	NPWindow fNPWindow;
 	NP_Port fNP_Port;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * GuestFactory
-
-class GuestFactory : public ZRefCountedWithFinalization
-	{
-protected:
-	GuestFactory();
-
-public:
-	virtual ~GuestFactory();
-
-	void GetNPNetscapeFuncs(NPNetscapeFuncs& oNPNetscapeFuncs);
-
-	virtual void GetEntryPoints(NPPluginFuncs& oNPPluginFuncs) = 0;
 	};
 
 } // namespace ZNetscape

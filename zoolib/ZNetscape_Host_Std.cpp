@@ -47,12 +47,10 @@ namespace ZNetscape {
 #pragma mark * HostMeister_Std
 
 HostMeister_Std::HostMeister_Std()
-	{
-	}
+	{}
 
 HostMeister_Std::~HostMeister_Std()
-	{
-	}
+	{}
 
 void* HostMeister_Std::MemAlloc(uint32 size)
 	{ return ::malloc(size); }
@@ -68,24 +66,6 @@ void HostMeister_Std::ReloadPlugins(NPBool reloadPages)
 
 void* HostMeister_Std::GetJavaEnv()
 	{ return nil; }
-
-void HostMeister_Std::ReleaseVariantValue(NPVariant* variant)
-	{
-	ZAssert(variant);
-
-	if (variant->type == NPVariantType_Object)
-		{
-		sReleaseObject(variant->value.objectValue);
-		variant->value.objectValue = nil;
-		}
-	else if (variant->type == NPVariantType_String)
-		{
-		free((void*)variant->value.stringValue.UTF8Characters);
-		variant->value.stringValue.UTF8Characters = 0;
-		variant->value.stringValue.UTF8Length = 0;
-		}
-	variant->type = NPVariantType_Void;
-	}
 
 NPIdentifier HostMeister_Std::GetStringIdentifier(const NPUTF8* name)
 	{
@@ -127,15 +107,6 @@ NPIdentifier HostMeister_Std::GetIntIdentifier(int32_t intid)
 	return static_cast<NPIdentifier>(theIdentifier);
 	}
 
-int32_t HostMeister_Std::IntFromIdentifier(NPIdentifier identifier)
-	{
-    Identifier* theID = static_cast<Identifier*>(identifier);
-    if (theID->fIsString)
-        return 0;
-        
-    return theID->fAsInt;
-	}
-
 bool HostMeister_Std::IdentifierIsString(NPIdentifier identifier)
 	{
 	return static_cast<Identifier*>(identifier)->fIsString;
@@ -148,6 +119,15 @@ NPUTF8* HostMeister_Std::UTF8FromIdentifier(NPIdentifier identifier)
         return nil;
         
     return (NPUTF8*)strdup(theID->fAsString);
+	}
+
+int32_t HostMeister_Std::IntFromIdentifier(NPIdentifier identifier)
+	{
+    Identifier* theID = static_cast<Identifier*>(identifier);
+    if (theID->fIsString)
+        return 0;
+        
+    return theID->fAsInt;
 	}
 
 NPObject* HostMeister_Std::RetainObject(NPObject* obj)
@@ -167,6 +147,24 @@ void HostMeister_Std::ReleaseObject(NPObject* obj)
 		else
 			free(obj);
 		}
+	}
+
+void HostMeister_Std::ReleaseVariantValue(NPVariant* variant)
+	{
+	ZAssert(variant);
+
+	if (variant->type == NPVariantType_Object)
+		{
+		this->ReleaseObject(variant->value.objectValue);
+		variant->value.objectValue = nil;
+		}
+	else if (variant->type == NPVariantType_String)
+		{
+		free((void*)variant->value.stringValue.UTF8Characters);
+		variant->value.stringValue.UTF8Characters = 0;
+		variant->value.stringValue.UTF8Length = 0;
+		}
+	variant->type = NPVariantType_Void;
 	}
 
 void HostMeister_Std::SetException(NPObject* obj, const NPUTF8* message)
@@ -431,53 +429,18 @@ Host_Std::~Host_Std()
 		}
 	}
 
-void Host_Std::pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
-	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
-	ZRef<ZStreamerRCon> iStreamerRCon)
-	{
-	ZMutexLocker locker(fMutex);
-	ZUtil_STL::sEraseMustContain(1, fHTTPers, iHTTPer);
-	this->SendDataAsync(iNotifyData, iURL, iMIME, iHeaders, iStreamerRCon);
-	}
-
-NPError Host_Std::Host_GetURLNotify(NPP npp,
-	const char* URL, const char* window, void* notifyData)
+NPError Host_Std::Host_GetURL(NPP npp, const char* URL, const char* window)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
-		{
-		s << "GetURLNotify: " << URL;
-		if (window)
-			s << " target: " << window;
-		}
-
-	if (URL == strstr(URL, "http:"))
-		{
-		ZMutexLocker locker(fMutex);
-		HTTPer* theG = new HTTPer(this, URL, nil, notifyData);
-		fHTTPers.push_back(theG);
-		theG->Start();
-		return NPERR_NO_ERROR;
-		}
-
+		s << "GetURL: " << URL;
 	return NPERR_INVALID_URL;
 	}
 
-NPError Host_Std::Host_PostURLNotify(NPP npp,
-	const char* URL, const char* window,
-	uint32 len, const char* buf, NPBool file, void* notifyData)
+NPError Host_Std::Host_PostURL(NPP npp,
+	const char* URL, const char* window, uint32 len, const char* buf, NPBool file)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "PostURLNotify: " << URL;
-
-	if (URL == strstr(URL, "http:"))
-		{
-		ZMemoryBlock theData(buf, len);
-		HTTPer* theG = new HTTPer(this, URL, &theData, notifyData);
-		fHTTPers.push_back(theG);
-		theG->Start();
-		return NPERR_NO_ERROR;
-		}
-
+		s << "PostURL: " << URL;
 	return NPERR_INVALID_URL;
 	}
 
@@ -524,6 +487,54 @@ const char* Host_Std::Host_UserAgent(NPP npp)
 	return "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)";
 	}
 
+void* Host_Std::Host_GetJavaPeer(NPP npp)
+	{
+	if (ZLOG(s, eDebug, "Host_Std"))
+		s.Writef("GetJavaPeer");
+	return nil;
+	}
+
+NPError Host_Std::Host_GetURLNotify(NPP npp,
+	const char* URL, const char* window, void* notifyData)
+	{
+	if (ZLOG(s, eDebug, "Host_Std"))
+		{
+		s << "GetURLNotify: " << URL;
+		if (window)
+			s << " target: " << window;
+		}
+
+	if (URL == strstr(URL, "http:"))
+		{
+		ZMutexLocker locker(fMutex);
+		HTTPer* theG = new HTTPer(this, URL, nil, notifyData);
+		fHTTPers.push_back(theG);
+		theG->Start();
+		return NPERR_NO_ERROR;
+		}
+
+	return NPERR_INVALID_URL;
+	}
+
+NPError Host_Std::Host_PostURLNotify(NPP npp,
+	const char* URL, const char* window,
+	uint32 len, const char* buf, NPBool file, void* notifyData)
+	{
+	if (ZLOG(s, eDebug, "Host_Std"))
+		s << "PostURLNotify: " << URL;
+
+	if (URL == strstr(URL, "http:"))
+		{
+		ZMemoryBlock theData(buf, len);
+		HTTPer* theG = new HTTPer(this, URL, &theData, notifyData);
+		fHTTPers.push_back(theG);
+		theG->Start();
+		return NPERR_NO_ERROR;
+		}
+
+	return NPERR_INVALID_URL;
+	}
+
 NPError Host_Std::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
@@ -556,28 +567,6 @@ void Host_Std::Host_ForceRedraw(NPP npp)
 		s.Writef("ForceRedraw");
 	}
 
-NPError Host_Std::Host_GetURL(NPP npp, const char* URL, const char* window)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "GetURL: " << URL;
-	return NPERR_INVALID_URL;
-	}
-
-NPError Host_Std::Host_PostURL(NPP npp,
-	const char* URL, const char* window, uint32 len, const char* buf, NPBool file)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "PostURL: " << URL;
-	return NPERR_INVALID_URL;
-	}
-
-void* Host_Std::Host_GetJavaPeer(NPP npp)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("GetJavaPeer");
-	return nil;
-	}
-
 NPObject* Host_Std::Host_CreateObject(NPP npp, NPClass* aClass)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
@@ -601,7 +590,7 @@ bool Host_Std::Host_Invoke(NPP npp,
 	NPVariant* result)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "Invoke: " << HostMeister::sUTF8FromIdentifier(methodName);
+		s << "Invoke: " << HostMeister::sGet()->UTF8FromIdentifier(methodName);
 
 	if (obj && obj->_class->invoke)
 		return obj->_class->invoke(obj, methodName, args, argCount, result);
@@ -629,7 +618,7 @@ bool Host_Std::Host_GetProperty(NPP npp,
 	NPObject* obj, NPIdentifier propertyName, NPVariant* result)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "GetProperty: " << HostMeister::sUTF8FromIdentifier(propertyName);
+		s << "GetProperty: " << HostMeister::sGet()->UTF8FromIdentifier(propertyName);
 
 	if (obj && obj->_class->getProperty)
 		return obj->_class->getProperty(obj, propertyName, result);
@@ -642,6 +631,13 @@ bool Host_Std::Host_SetProperty(NPP npp,
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("SetProperty");
+	return false;
+	}
+
+bool Host_Std::Host_RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName)
+	{
+	if (ZLOG(s, eDebug, "Host_Std"))
+		s.Writef("RemoveProperty");
 	return false;
 	}
 
@@ -659,11 +655,13 @@ bool Host_Std::Host_HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName)
 	return false;
 	}
 
-bool Host_Std::Host_RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName)
+void Host_Std::pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
+	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
+	ZRef<ZStreamerRCon> iStreamerRCon)
 	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("RemoveProperty");
-	return false;
+	ZMutexLocker locker(fMutex);
+	ZUtil_STL::sEraseMustContain(1, fHTTPers, iHTTPer);
+	this->SendDataAsync(iNotifyData, iURL, iMIME, iHeaders, iStreamerRCon);
 	}
 
 } // namespace ZNetscape

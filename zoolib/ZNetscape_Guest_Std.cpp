@@ -99,8 +99,8 @@ NPError GuestMeister_Std::SetValue(NPP instance, NPNVariable variable, void *val
 #pragma mark -
 #pragma mark * Guest_Std
 
-Guest_Std::Guest_Std(NPP iNPP, const NPNetscapeFuncs& iNPNetscapeFuncs)
-:	Guest(iNPP, iNPNetscapeFuncs)
+Guest_Std::Guest_Std(NPP iNPP)
+:	Guest(iNPP)
 	{}
 
 Guest_Std::~Guest_Std()
@@ -138,7 +138,6 @@ int16 Guest_Std::Guest_HandleEvent(void* event)
 
 void Guest_Std::Guest_URLNotify(const char* url, NPReason reason, void* notifyData)
 	{
-	ZUnimplemented();
 	}
 
 NPError Guest_Std::Guest_GetValue(NPPVariable iNPPVariable, void* oValue)

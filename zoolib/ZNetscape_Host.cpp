@@ -49,28 +49,433 @@ using std::vector;
 
 namespace ZNetscape {
 
+void sRetainH(NPObject* iObject)
+	{ HostMeister::sGet()->RetainObject(iObject); }
+
+void sReleaseH(NPObject* iObject)
+	{ HostMeister::sGet()->ReleaseObject(iObject); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * NPVariantH
+
+void NPVariantH::pRelease()
+	{
+	HostMeister::sGet()->ReleaseVariantValue(this);
+	type = NPVariantType_Void;
+	}
+
+void NPVariantH::pRetain(NPObject* iObject) const
+	{ HostMeister::sGet()->RetainObject(iObject); }
+
+void NPVariantH::pCopyFrom(const NPVariant& iOther)
+	{
+	switch (iOther.type)
+		{
+		case NPVariantType_Void:
+		case NPVariantType_Null:
+			break;
+		case NPVariantType_Bool:
+			{
+			value.boolValue = iOther.value.boolValue;
+			break;
+			}
+		case NPVariantType_Int32:
+			{
+			value.intValue = iOther.value.intValue;
+			break;
+			}
+		case NPVariantType_Double:
+			{
+			value.doubleValue = iOther.value.doubleValue;
+			break;
+			}
+		case NPVariantType_String:
+			{
+			size_t theLength = iOther.value.stringValue.UTF8Length;
+			value.stringValue.UTF8Length = theLength;
+			value.stringValue.UTF8Characters = static_cast<char*>(malloc(theLength));
+			strncpy(const_cast<char*>(value.stringValue.UTF8Characters),
+				iOther.value.stringValue.UTF8Characters, theLength);
+			break;
+			}
+		case NPVariantType_Object:
+			{
+			value.objectValue = iOther.value.objectValue;
+			this->pRetain(value.objectValue);
+			break;
+			}
+		}
+	type = iOther.type;
+	}
+
+NPVariantH::NPVariantH()
+	{
+	type = NPVariantType_Void;
+	}
+
+NPVariantH::NPVariantH(const NPVariant& iOther)
+	{
+	ZAssert(this != &iOther);
+	this->pCopyFrom(iOther);
+	}
+
+NPVariantH::~NPVariantH()
+	{
+	this->pRelease();
+	}
+
+NPVariantH& NPVariantH::operator=(const NPVariant& iOther)
+	{
+	if (this != &iOther)
+		{
+		this->pRelease();
+		this->pCopyFrom(iOther);
+		}
+	return *this;
+	}
+
+NPVariantH::NPVariantH(bool iValue)
+	{
+	type = NPVariantType_Bool;
+	value.boolValue = iValue;
+	}
+
+NPVariantH::NPVariantH(int32 iValue)
+	{
+	type = NPVariantType_Int32;
+	value.intValue = iValue;
+	}
+
+NPVariantH::NPVariantH(double iValue)
+	{
+	type = NPVariantType_Double;
+	value.doubleValue = iValue;
+	}
+
+NPVariantH::NPVariantH(const std::string& iValue)
+	{
+	type = NPVariantType_Void;
+	this->SetString(iValue);
+	}
+
+NPVariantH::NPVariantH(NPObject* iValue)
+	{
+	type = NPVariantType_Void;
+	this->SetObject(iValue);
+	}
+
+NPVariantH& NPVariantH::operator=(bool iValue)
+	{
+	this->SetBool(iValue);
+	return *this;
+	}
+
+NPVariantH& NPVariantH::operator=(int32 iValue)
+	{
+	this->SetInt32(iValue);
+	return *this;
+	}
+
+NPVariantH& NPVariantH::operator=(double iValue)
+	{
+	this->SetDouble(iValue);
+	return *this;
+	}
+
+NPVariantH& NPVariantH::operator=(const std::string& iValue)
+	{
+	this->SetString(iValue);
+	return *this;
+	}
+
+NPVariantH& NPVariantH::operator=(NPObject* iValue)
+	{
+	this->SetObject(iValue);
+	return *this;
+	}
+
+bool NPVariantH::IsVoid() const
+	{ return type == NPVariantType_Void; }
+
+bool NPVariantH::IsNull() const
+	{ return type == NPVariantType_Null; }
+
+bool NPVariantH::IsBool() const
+	{ return type == NPVariantType_Bool; }
+
+bool NPVariantH::IsInt32() const
+	{ return type == NPVariantType_Int32; }
+
+bool NPVariantH::IsDouble() const
+	{ return type == NPVariantType_Double; }
+
+bool NPVariantH::IsString() const
+	{ return type == NPVariantType_String; }
+
+bool NPVariantH::IsObject() const
+	{ return type == NPVariantType_Object; }
+
+void NPVariantH::SetVoid()
+	{
+	this->pRelease();
+	type = NPVariantType_Void;
+	}
+
+void NPVariantH::SetNull()
+	{
+	this->pRelease();
+	type = NPVariantType_Null;
+	}
+
+bool NPVariantH::GetBool() const
+	{ return this->DGetBool(false); }
+
+bool NPVariantH::GetBool(bool& oValue) const
+	{
+	if (type != NPVariantType_Bool)
+		return false;
+	oValue = value.boolValue;
+	return true;
+	}
+
+bool NPVariantH::DGetBool(bool iDefault) const
+	{
+	if (type == NPVariantType_Bool)
+		return value.boolValue;
+	return iDefault;
+	}
+
+void NPVariantH::SetBool(bool iValue)
+	{
+	this->pRelease();
+	type = NPVariantType_Bool;
+	value.boolValue = iValue;
+	}
+
+int32 NPVariantH::GetInt32() const
+	{ return this->DGetInt32(0); }
+
+bool NPVariantH::GetInt32(int32& oValue) const
+	{
+	if (type != NPVariantType_Int32)
+		return false;
+	oValue = value.intValue;
+	return true;
+	}
+
+int32 NPVariantH::DGetInt32(int32 iDefault) const
+	{
+	if (type == NPVariantType_Int32)
+		return value.intValue;
+	return iDefault;
+	}
+
+void NPVariantH::SetInt32(int32 iValue)
+	{
+	this->pRelease();
+	type = NPVariantType_Int32;
+	value.intValue = iValue;
+	}
+
+double NPVariantH::GetDouble() const
+	{ return this->DGetDouble(0); }
+	
+bool NPVariantH::GetDouble(double& oValue) const
+	{
+	if (type != NPVariantType_Double)
+		return false;
+	oValue = value.doubleValue;
+	return true;
+	}
+
+double NPVariantH::DGetDouble(double iDefault) const
+	{
+	if (type == NPVariantType_Double)
+		return value.doubleValue;
+	return iDefault;
+	}
+
+void NPVariantH::SetDouble(bool iValue)
+	{
+	this->pRelease();
+	type = NPVariantType_Double;
+	value.doubleValue = iValue;
+	}
+
+std::string NPVariantH::GetString() const
+	{ return this->DGetString(string()); }
+
+bool NPVariantH::GetString(std::string& oValue) const
+	{
+	if (type != NPVariantType_String)
+		return false;
+	oValue = string(value.stringValue.UTF8Characters, value.stringValue.UTF8Length);
+	return true;
+	}
+
+std::string NPVariantH::DGetString(const std::string& iDefault) const
+	{
+	if (type != NPVariantType_String)
+		return iDefault;
+	return string(value.stringValue.UTF8Characters, value.stringValue.UTF8Length);
+	}
+
+void NPVariantH::SetString(const std::string& iValue)
+	{
+	this->pRelease();
+	size_t theLength = iValue.length();
+	value.stringValue.UTF8Length = theLength;
+	value.stringValue.UTF8Characters = static_cast<char*>(malloc(theLength));
+	strncpy(const_cast<char*>(value.stringValue.UTF8Characters), iValue.data(), theLength);
+	type = NPVariantType_String;
+	}
+
+NPObject* NPVariantH::GetObject() const
+	{ return this->DGetObject(nil); }
+
+bool NPVariantH::GetObject(NPObject*& oValue) const
+	{
+	if (type != NPVariantType_String)
+		return false;
+	oValue = value.objectValue;
+	this->pRetain(oValue);
+	return true;	
+	}
+
+NPObject* NPVariantH::DGetObject(NPObject* iDefault) const
+	{
+	NPObject* result = iDefault;
+	if (type == NPVariantType_Object)
+		result = value.objectValue;
+
+	this->pRetain(result);
+	return result;
+	}
+
+void NPVariantH::SetObject(NPObject* iValue)
+	{
+	this->pRelease();
+	value.objectValue = iValue;
+	this->pRetain(iValue);
+	type = NPVariantType_Object;	
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * NPObjectH
+
+NPObjectH::NPObjectH()
+	{}
+
+NPObjectH::~NPObjectH()
+	{
+	}
+
+void NPObjectH::Invalidate()
+	{}
+
+bool NPObjectH::HasMethod(const string& iName)
+	{ return false; }
+
+bool NPObjectH::Invoke(
+	const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult)
+	{ return false; }
+
+bool NPObjectH::InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult)
+	{ return false; }
+
+bool NPObjectH::HasProperty(const string& iName)
+	{ return false; }
+
+bool NPObjectH::GetProperty(const string& iName, NPVariantH& oResult)
+	{ return false; }
+
+bool NPObjectH::SetProperty(const string& iName, const NPVariantH& iValue)
+	{ return false; }
+
+bool NPObjectH::RemoveProperty(const string& iName)
+	{ return false; }
+
+bool NPObjectH::Enumerate(NPIdentifier** identifier, uint32_t* count)
+	{ return false; }
+
+bool NPObjectH::Construct(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult)
+	{ return false; }
+
+void NPObjectH::sDeallocate(NPObject* npobj)
+	{ delete static_cast<NPObjectH*>(npobj); }
+
+void NPObjectH::sInvalidate(NPObject* npobj)
+	{ static_cast<NPObjectH*>(npobj)->Invalidate(); }
+
+bool NPObjectH::sHasMethod(NPObject* npobj, NPIdentifier name)
+	{ return static_cast<NPObjectH*>(npobj)->HasMethod(sAsString(name)); }
+
+bool NPObjectH::sInvoke(NPObject* npobj,
+	NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result)
+	{
+	return static_cast<NPObjectH*>(npobj)->Invoke(
+		sAsString(name),
+		static_cast<const NPVariantH*>(args),
+		argCount,
+		*static_cast<NPVariantH*>(result));
+	}
+
+bool NPObjectH::sInvokeDefault(NPObject* npobj,
+	const NPVariant* args, uint32_t argCount, NPVariant* result)
+	{
+	return static_cast<NPObjectH*>(npobj)->InvokeDefault(
+		static_cast<const NPVariantH*>(args),
+		argCount,
+		*static_cast<NPVariantH*>(result));
+	}
+
+bool NPObjectH::sHasProperty(NPObject*  npobj, NPIdentifier name)
+	{ return static_cast<NPObjectH*>(npobj)->HasProperty(sAsString(name)); }
+
+bool NPObjectH::sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result)
+	{
+	return static_cast<NPObjectH*>(npobj)->GetProperty(
+		sAsString(name),
+		*static_cast<NPVariantH*>(result));
+	}
+
+bool NPObjectH::sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value)
+	{
+	return static_cast<NPObjectH*>(npobj)->SetProperty(
+		sAsString(name),
+		*static_cast<const NPVariantH*>(value));
+	}
+
+bool NPObjectH::sRemoveProperty(NPObject* npobj, NPIdentifier name)
+	{ return static_cast<NPObjectH*>(npobj)->RemoveProperty(sAsString(name)); }
+
+bool NPObjectH::sEnumerate(NPObject* npobj, NPIdentifier** identifier, uint32_t* count)
+	{ return false; }
+
+bool NPObjectH::sConstruct(NPObject* npobj,
+	const NPVariant* args, uint32_t argCount, NPVariant* result)
+	{
+	return static_cast<NPObjectH*>(npobj)->Construct(
+		static_cast<const NPVariantH*>(args),
+		argCount,
+		*static_cast<NPVariantH*>(result));
+	}
+
+string NPObjectH::sAsString(NPIdentifier iNPI)
+	{ return HostMeister::sGet()->UTF8FromIdentifier(iNPI); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * HostMeister
 
 HostMeister* sHostMeister;
 
-HostMeister* HostMeister::sGetHostMeister()
+HostMeister* HostMeister::sGet()
 	{
 	ZAssert(sHostMeister);
 	return sHostMeister;
-	}
-
-HostMeister::HostMeister()
-	{
-	ZAssert(!sHostMeister);
-	sHostMeister = this;
-	}
-
-HostMeister::~HostMeister()
-	{
-	ZAssert(sHostMeister == this);
-	sHostMeister = nil;
 	}
 
 Host* HostMeister::sHostFromNPP(NPP iNPP)
@@ -86,123 +491,133 @@ Host* HostMeister::sHostFromStream(NPStream* iNPStream)
 	return nil;
 	}
 
-void HostMeister::pGetNPNetscapeFuncs(NPNetscapeFuncs& oNPNetscapeFuncs)
+void HostMeister::sGetNPNF(NPNetscapeFuncs& oNPNF)
 	{
-	ZBlockZero(&oNPNetscapeFuncs, sizeof(NPNetscapeFuncs));
+	ZBlockZero(&oNPNF, sizeof(NPNetscapeFuncs));
 
 	#ifdef NPVERS_HAS_RESPONSE_HEADERS
-	oNPNetscapeFuncs.version = NPVERS_HAS_RESPONSE_HEADERS;
+	oNPNF.version = NPVERS_HAS_RESPONSE_HEADERS;
 	#else
-//	oNPNetscapeFuncs.version = 17; // Urg
-	oNPNetscapeFuncs.version = 14; // Urg
+//	oNPNF.version = 17; // Urg
+	oNPNF.version = 14; // Urg
 	#endif
 
-	oNPNetscapeFuncs.size = sizeof(NPNetscapeFuncs);
+	oNPNF.size = sizeof(NPNetscapeFuncs);
 	
-	oNPNetscapeFuncs.geturl = sGetURL;
-	oNPNetscapeFuncs.posturl = sPostURL;
-	oNPNetscapeFuncs.requestread = sRequestRead;
-	oNPNetscapeFuncs.newstream = sNewStream;
-	oNPNetscapeFuncs.write = sWrite;
-	oNPNetscapeFuncs.destroystream = sDestroyStream;
-	oNPNetscapeFuncs.status = sStatus;
-	oNPNetscapeFuncs.uagent = sUserAgent;
-	oNPNetscapeFuncs.memalloc = sMemAlloc;
-	oNPNetscapeFuncs.memfree = sMemFree;
-	oNPNetscapeFuncs.memflush = sMemFlush;
-	oNPNetscapeFuncs.reloadplugins = sReloadPlugins;
-	oNPNetscapeFuncs.getJavaEnv = sGetJavaEnv;
-	oNPNetscapeFuncs.getJavaPeer = sGetJavaPeer;
-	oNPNetscapeFuncs.geturlnotify = sGetURLNotify;
-	oNPNetscapeFuncs.posturlnotify = sPostURLNotify;
-	oNPNetscapeFuncs.getvalue = sGetValue;
-	oNPNetscapeFuncs.setvalue = sSetValue;
-	oNPNetscapeFuncs.invalidaterect = sInvalidateRect;
-	oNPNetscapeFuncs.invalidateregion = sInvalidateRegion;
-	oNPNetscapeFuncs.forceredraw = sForceRedraw;
+	oNPNF.geturl = sGetURL;
+	oNPNF.posturl = sPostURL;
+	oNPNF.requestread = sRequestRead;
+	oNPNF.newstream = sNewStream;
+	oNPNF.write = sWrite;
+	oNPNF.destroystream = sDestroyStream;
+	oNPNF.status = sStatus;
+	oNPNF.uagent = sUserAgent;
+	oNPNF.memalloc = sMemAlloc;
+	oNPNF.memfree = sMemFree;
+	oNPNF.memflush = sMemFlush;
+	oNPNF.reloadplugins = sReloadPlugins;
+	oNPNF.getJavaEnv = sGetJavaEnv;
+	oNPNF.getJavaPeer = sGetJavaPeer;
+	oNPNF.geturlnotify = sGetURLNotify;
+	oNPNF.posturlnotify = sPostURLNotify;
+	oNPNF.getvalue = sGetValue;
+	oNPNF.setvalue = sSetValue;
+	oNPNF.invalidaterect = sInvalidateRect;
+	oNPNF.invalidateregion = sInvalidateRegion;
+	oNPNF.forceredraw = sForceRedraw;
 
-	oNPNetscapeFuncs.getstringidentifier = sGetStringIdentifier;
-	oNPNetscapeFuncs.getstringidentifiers = sGetStringIdentifiers;
-	oNPNetscapeFuncs.getintidentifier = sGetIntIdentifier;
-	oNPNetscapeFuncs.identifierisstring = sIdentifierIsString;
-	oNPNetscapeFuncs.utf8fromidentifier = sUTF8FromIdentifier;
+	oNPNF.getstringidentifier = sGetStringIdentifier;
+	oNPNF.getstringidentifiers = sGetStringIdentifiers;
+	oNPNF.getintidentifier = sGetIntIdentifier;
+	oNPNF.identifierisstring = sIdentifierIsString;
+	oNPNF.utf8fromidentifier = sUTF8FromIdentifier;
 	// AG. Need to do this cast because Mac headers are wrong.
-	oNPNetscapeFuncs.intfromidentifier = (NPN_IntFromIdentifierProcPtr)sIntFromIdentifier;
-	oNPNetscapeFuncs.createobject = sCreateObject;
-	oNPNetscapeFuncs.retainobject = sRetainObject;
-	oNPNetscapeFuncs.releaseobject = sReleaseObject;
-	oNPNetscapeFuncs.invoke = sInvoke;
-	oNPNetscapeFuncs.invokeDefault = sInvokeDefault;
-	oNPNetscapeFuncs.evaluate = sEvaluate;
-	oNPNetscapeFuncs.getproperty = sGetProperty;
-	oNPNetscapeFuncs.setproperty = sSetProperty;
-	oNPNetscapeFuncs.removeproperty = sRemoveProperty;
-	oNPNetscapeFuncs.hasproperty = sHasProperty;
-	oNPNetscapeFuncs.hasmethod = sHasMethod;
-	oNPNetscapeFuncs.releasevariantvalue = sReleaseVariantValue;
-	oNPNetscapeFuncs.setexception = sSetException;
+	oNPNF.intfromidentifier = (NPN_IntFromIdentifierProcPtr)sIntFromIdentifier;
+	oNPNF.createobject = sCreateObject;
+	oNPNF.retainobject = sRetainObject;
+	oNPNF.releaseobject = sReleaseObject;
+	oNPNF.invoke = sInvoke;
+	oNPNF.invokeDefault = sInvokeDefault;
+	oNPNF.evaluate = sEvaluate;
+	oNPNF.getproperty = sGetProperty;
+	oNPNF.setproperty = sSetProperty;
+	oNPNF.removeproperty = sRemoveProperty;
+	oNPNF.hasproperty = sHasProperty;
+	oNPNF.hasmethod = sHasMethod;
+	oNPNF.releasevariantvalue = sReleaseVariantValue;
+	oNPNF.setexception = sSetException;
+	}
+
+HostMeister::HostMeister()
+	{
+	ZAssert(!sHostMeister);
+	sHostMeister = this;
+	}
+
+HostMeister::~HostMeister()
+	{
+	ZAssert(sHostMeister == this);
+	sHostMeister = nil;
 	}
 
 // -----
 // Forwarded to HostMeister
 
 void* HostMeister::sMemAlloc(uint32 size)
-	{ return sGetHostMeister()->MemAlloc(size); }
+	{ return sGet()->MemAlloc(size); }
 
 void HostMeister::sMemFree(void* ptr)
-	{ sGetHostMeister()->MemFree(ptr); }
+	{ sGet()->MemFree(ptr); }
 
 uint32 HostMeister::sMemFlush(uint32 size)
-	{ return sGetHostMeister()->MemFlush(size); }
+	{ return sGet()->MemFlush(size); }
 
 void HostMeister::sReloadPlugins(NPBool reloadPages)
-	{ sGetHostMeister()->ReloadPlugins(reloadPages); }
+	{ sGet()->ReloadPlugins(reloadPages); }
 
 void* HostMeister::sGetJavaEnv()
-	{ return sGetHostMeister()->GetJavaEnv(); }
-
-void HostMeister::sReleaseVariantValue(NPVariant* variant)
-	{ sGetHostMeister()->ReleaseVariantValue(variant); }
+	{ return sGet()->GetJavaEnv(); }
 
 NPIdentifier HostMeister::sGetStringIdentifier(const NPUTF8* name)
-	{ return sGetHostMeister()->GetStringIdentifier(name); }
+	{ return sGet()->GetStringIdentifier(name); }
 
 void HostMeister::sGetStringIdentifiers(
 	const NPUTF8** names, int32_t nameCount, NPIdentifier* identifiers)
-	{ sGetHostMeister()->GetStringIdentifiers(names, nameCount, identifiers); }
+	{ sGet()->GetStringIdentifiers(names, nameCount, identifiers); }
 
 NPIdentifier HostMeister::sGetIntIdentifier(int32_t intid)
-	{ return sGetHostMeister()->GetIntIdentifier(intid); }
-
-int32_t HostMeister::sIntFromIdentifier(NPIdentifier identifier)
-	{ return sGetHostMeister()->IntFromIdentifier(identifier); }
+	{ return sGet()->GetIntIdentifier(intid); }
 
 bool HostMeister::sIdentifierIsString(NPIdentifier identifier)
-	{ return sGetHostMeister()->IdentifierIsString(identifier); }
+	{ return sGet()->IdentifierIsString(identifier); }
 
 NPUTF8* HostMeister::sUTF8FromIdentifier(NPIdentifier identifier)
-	{ return sGetHostMeister()->UTF8FromIdentifier(identifier); }
+	{ return sGet()->UTF8FromIdentifier(identifier); }
+
+int32_t HostMeister::sIntFromIdentifier(NPIdentifier identifier)
+	{ return sGet()->IntFromIdentifier(identifier); }
 
 NPObject* HostMeister::sRetainObject(NPObject* obj)
-	{ return sGetHostMeister()->RetainObject(obj); }
+	{ return sGet()->RetainObject(obj); }
 
 void HostMeister::sReleaseObject(NPObject* obj)
-	{ sGetHostMeister()->ReleaseObject(obj); }
+	{ sGet()->ReleaseObject(obj); }
+
+void HostMeister::sReleaseVariantValue(NPVariant* variant)
+	{ sGet()->ReleaseVariantValue(variant); }
 
 void HostMeister::sSetException(NPObject* obj, const NPUTF8* message)
-	{ sGetHostMeister()->SetException(obj, message); }
+	{ sGet()->SetException(obj, message); }
 
 // -----
 // Forwarded to Host
 
-NPError HostMeister::sGetURLNotify(NPP npp,
-	const char* URL, const char* window, void* notifyData)
-	{ return sHostFromNPP(npp)->Host_GetURLNotify(npp, URL, window, notifyData); }
+NPError HostMeister::sGetURL(NPP npp, const char* URL, const char* window)
+	{ return sHostFromNPP(npp)->Host_GetURL(npp, URL, window); }
 
-NPError HostMeister::sPostURLNotify(NPP npp,
-	const char* URL, const char* window,
-	uint32 len, const char* buf, NPBool file, void* notifyData)
-	{ return sHostFromNPP(npp)->Host_PostURLNotify(npp, URL, window, len, buf, file, notifyData); }
+NPError HostMeister::sPostURL(NPP npp,
+	const char* URL, const char* window, uint32 len, const char* buf, NPBool file)
+	{ return sHostFromNPP(npp)->Host_PostURL(npp, URL, window, len, buf, file); }
 
 NPError HostMeister::sRequestRead(NPStream* stream, NPByteRange* rangeList)
 	{ return sHostFromStream(stream)->Host_RequestRead(stream, rangeList); }
@@ -227,6 +642,18 @@ const char* HostMeister::sUserAgent(NPP npp)
 	return "Unknown";
 	}
 
+void* HostMeister::sGetJavaPeer(NPP npp)
+	{ return sHostFromNPP(npp)->Host_GetJavaPeer(npp); }
+
+NPError HostMeister::sGetURLNotify(NPP npp,
+	const char* URL, const char* window, void* notifyData)
+	{ return sHostFromNPP(npp)->Host_GetURLNotify(npp, URL, window, notifyData); }
+
+NPError HostMeister::sPostURLNotify(NPP npp,
+	const char* URL, const char* window,
+	uint32 len, const char* buf, NPBool file, void* notifyData)
+	{ return sHostFromNPP(npp)->Host_PostURLNotify(npp, URL, window, len, buf, file, notifyData); }
+
 NPError HostMeister::sGetValue(NPP npp, NPNVariable variable, void* ret_value)
 	{ return sHostFromNPP(npp)->Host_GetValue(npp, variable, ret_value); }
 
@@ -241,16 +668,6 @@ void HostMeister::sInvalidateRegion(NPP npp, NPRegion region)
 
 void HostMeister::sForceRedraw(NPP npp)
 	{ return sHostFromNPP(npp)->Host_ForceRedraw(npp); }
-
-NPError HostMeister::sGetURL(NPP npp, const char* URL, const char* window)
-	{ return sHostFromNPP(npp)->Host_GetURL(npp, URL, window); }
-
-NPError HostMeister::sPostURL(NPP npp,
-	const char* URL, const char* window, uint32 len, const char* buf, NPBool file)
-	{ return sHostFromNPP(npp)->Host_PostURL(npp, URL, window, len, buf, file); }
-
-void* HostMeister::sGetJavaPeer(NPP npp)
-	{ return sHostFromNPP(npp)->Host_GetJavaPeer(npp); }
 
 NPObject* HostMeister::sCreateObject(NPP npp, NPClass* aClass)
 	{ return sHostFromNPP(npp)->Host_CreateObject(npp, aClass); }
@@ -276,14 +693,14 @@ bool HostMeister::sSetProperty(NPP npp,
 	NPObject* obj, NPIdentifier propertyName, const NPVariant* value)
 	{ return sHostFromNPP(npp)->Host_SetProperty(npp, obj, propertyName, value); }
 
+bool HostMeister::sRemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName)
+	{ return sHostFromNPP(npp)->Host_RemoveProperty(npp, obj, propertyName); }
+
 bool HostMeister::sHasProperty(NPP npp, NPObject* npobj, NPIdentifier propertyName)
 	{ return sHostFromNPP(npp)->Host_HasProperty(npp, npobj, propertyName); }
 
 bool HostMeister::sHasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName)
 	{ return sHostFromNPP(npp)->Host_HasMethod(npp, npobj, methodName); }
-
-bool HostMeister::sRemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName)
-	{ return sHostFromNPP(npp)->Host_RemoveProperty(npp, obj, propertyName); }
 
 // =================================================================================================
 #pragma mark -
@@ -295,9 +712,9 @@ GuestFactory::GuestFactory()
 GuestFactory::~GuestFactory()
 	{}
 
-void GuestFactory::GetNPNetscapeFuncs(NPNetscapeFuncs& oNPNetscapeFuncs)
+void GuestFactory::GetNPNF(NPNetscapeFuncs& oNPNF)
 	{
-	HostMeister::sGetHostMeister()->pGetNPNetscapeFuncs(oNPNetscapeFuncs);
+	HostMeister::sGet()->sGetNPNF(oNPNF);
 	}
 
 // =================================================================================================
@@ -462,23 +879,20 @@ Host::~Host()
 	{}
 
 void Host::Release(NPObject* iObj)
-	{ HostMeister::sReleaseObject(iObj); }
+	{ HostMeister::sGet()->ReleaseObject(iObj); }
 
 bool Host::Invoke(
 	NPObject* obj, const std::string& iMethod, const NPVariant* iArgs, size_t iCount,
 	NPVariant& oResult)
 	{
-	NPIdentifier methodID = HostMeister::sGetStringIdentifier(iMethod.c_str());
+	NPIdentifier methodID = HostMeister::sGet()->GetStringIdentifier(iMethod.c_str());
 
-	if (obj && obj->_class)
+	if (obj && obj->_class && obj->_class->hasMethod && obj->_class->invoke)
 		{
 		if (obj->_class->hasMethod(obj, methodID))
 			{
-			if (obj->_class->invoke)
-				{
-				if (obj->_class->invoke(obj, methodID, iArgs, iCount, &oResult))
-					return true;
-				}
+			if (obj->_class->invoke(obj, methodID, iArgs, iCount, &oResult))
+				return true;
 			}
 		}
 	return false;
@@ -690,193 +1104,5 @@ int32 Host::Guest_WriteReady(NPStream* stream)
 
 int32 Host::Guest_Write(NPStream* stream, int32_t offset, int32_t len, void* buffer)
 	{ return fNPPluginFuncs.write(&fNPP_t, stream, offset, len, buffer); }
-
-// =================================================================================================
-
-NPBool NPN_VariantIsVoid (const NPVariant *variant)
-{
-    return variant->type == NPVariantType_Void;
-}
-
-NPBool NPN_VariantIsNull (const NPVariant *variant)
-{
-    return variant->type == NPVariantType_Null;
-}
-
-NPBool NPN_VariantIsUndefined (const NPVariant *variant)
-{
-    return variant->type == NPVariantType_Void;
-}
-
-NPBool NPN_VariantIsBool (const NPVariant *variant)
-{
-    return variant->type == NPVariantType_Bool;
-}
-
-NPBool NPN_VariantIsInt32 (const NPVariant *variant)
-{
-    return variant->type == NPVariantType_Int32;
-}
-
-NPBool NPN_VariantIsDouble (const NPVariant *variant)
-{
-    return variant->type == NPVariantType_Double;
-}
-
-NPBool NPN_VariantIsString (const NPVariant *variant)
-{
-    return variant->type == NPVariantType_String;
-}
-
-NPBool NPN_VariantIsObject (const NPVariant *variant)
-{
-    return variant->type == NPVariantType_Object;
-}
-
-NPBool NPN_VariantToBool (const NPVariant *variant, NPBool *result)
-{
-    if (variant->type != NPVariantType_Bool)
-        return false;
-        
-    *result = variant->value.boolValue;
-    
-    return true;
-}
-
-NPString NPN_VariantToString (const NPVariant *variant)
-{
-    if (variant->type != NPVariantType_String) {
-        NPString emptyString = { 0, 0 };
-        return emptyString;
-    }
-            
-    return variant->value.stringValue;
-}
-
-NPBool NPN_VariantToInt32 (const NPVariant *variant, int32_t *result)
-{
-    if (variant->type == NPVariantType_Int32)
-        *result = variant->value.intValue;
-    else if (variant->type == NPVariantType_Double)
-        *result = (int32_t)variant->value.doubleValue;
-    else
-        return false;
-    
-    return true;
-}
-
-NPBool NPN_VariantToDouble (const NPVariant *variant, double *result)
-{
-    if (variant->type == NPVariantType_Int32)
-        *result = (double)variant->value.intValue;
-    else if (variant->type == NPVariantType_Double)
-        *result = variant->value.doubleValue;
-    else
-        return false;
-    
-    return true;
-}
-
-NPBool NPN_VariantToObject (const NPVariant *variant, NPObject **result)
-{
-    if (variant->type != NPVariantType_Object)
-        return false;
-            
-    *result = variant->value.objectValue;
-    
-    return true;
-}
-
-void NPN_InitializeVariantAsVoid (NPVariant *variant)
-{
-    variant->type = NPVariantType_Void;
-}
-
-void NPN_InitializeVariantAsNull (NPVariant *variant)
-{
-    variant->type = NPVariantType_Null;
-}
-
-void NPN_InitializeVariantAsUndefined (NPVariant *variant)
-{
-    variant->type = NPVariantType_Void;
-}
-
-void NPN_InitializeVariantWithBool (NPVariant *variant, NPBool value)
-{
-    variant->type = NPVariantType_Bool;
-    variant->value.boolValue = value;
-}
-
-void NPN_InitializeVariantWithInt32 (NPVariant *variant, int32_t value)
-{
-    variant->type = NPVariantType_Int32;
-    variant->value.intValue = value;
-}
-
-void NPN_InitializeVariantWithDouble (NPVariant *variant, double value)
-{
-    variant->type = NPVariantType_Double;
-    variant->value.doubleValue = value;
-}
-
-void NPN_InitializeVariantWithString (NPVariant *variant, const NPString *value)
-{
-    variant->type = NPVariantType_String;
-    variant->value.stringValue = *value;
-}
-
-void NPN_InitializeVariantWithStringCopy (NPVariant *variant, const NPString *value)
-{
-    variant->type = NPVariantType_String;
-    variant->value.stringValue.UTF8Length = value->UTF8Length;
-    variant->value.stringValue.UTF8Characters = (NPUTF8 *)malloc(sizeof(NPUTF8) * value->UTF8Length);
-    memcpy ((void *)variant->value.stringValue.UTF8Characters, value->UTF8Characters, sizeof(NPUTF8) * value->UTF8Length);
-}
-
-void NPN_InitializeVariantWithObject (NPVariant *variant, NPObject *value)
-{
-    variant->type = NPVariantType_Object;
-    variant->value.objectValue = HostMeister::sRetainObject(value);
-}
-
-void NPN_InitializeVariantWithVariant (NPVariant *destination, const NPVariant *source)
-{
-    switch (source->type){
-        case NPVariantType_Void: {
-            NPN_InitializeVariantAsVoid (destination);
-            break;
-        }
-        case NPVariantType_Null: {
-            NPN_InitializeVariantAsNull (destination);
-            break;
-        }
-        case NPVariantType_Bool: {
-            NPN_InitializeVariantWithBool (destination, source->value.boolValue);
-            break;
-        }
-        case NPVariantType_Int32: {
-            NPN_InitializeVariantWithInt32 (destination, source->value.intValue);
-            break;
-        }
-        case NPVariantType_Double: {
-            NPN_InitializeVariantWithDouble (destination, source->value.doubleValue);
-            break;
-        }
-        case NPVariantType_String: {
-            NPN_InitializeVariantWithStringCopy (destination, &source->value.stringValue);
-            break;
-        }
-        case NPVariantType_Object: {
-            NPN_InitializeVariantWithObject (destination, source->value.objectValue);
-            break;
-        }
-        default: {
-            NPN_InitializeVariantAsUndefined (destination);
-            break;
-        }
-    }
-}
-
 
 } // namespace ZNetscape

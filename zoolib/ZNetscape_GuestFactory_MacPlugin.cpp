@@ -98,12 +98,12 @@ GuestFactory_MacPlugin::GuestFactory_MacPlugin(const std::string& iPath)
 
 				fNSModule = sLoadNSModule(theBundleRef);
 
-				NPNetscapeFuncs theNPNetscapeFuncs;
-				this->GetNPNetscapeFuncs(theNPNetscapeFuncs);
+				NPNetscapeFuncs theNPNF;
+				this->GetNPNF(theNPNF);
 
 				sInvoke_T<NP_InitializeFuncPtr>
 					(fNSModule, "_NP_Initialize")
-					(&theNPNetscapeFuncs);
+					(&theNPNF);
 				}
 			}
 		}
