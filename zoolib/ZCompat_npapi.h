@@ -23,12 +23,35 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 // Pull in ZTypes so we see its int32 definition
-
 #include "zoolib/ZTypes.h"
 
+// And tell the npXXX headers that we have an int32 definition
 #define _INT32 1
-#include <WebKit/npapi.h>
-#include <WebKit/npfunctions.h>
-#include <WebKit/npruntime.h>
+
+#if defined(ZProjectHeader_npapi)
+#	include ZProjectHeader_npapi
+#elif defined(__APPLE__)
+#	include <WebKit/npapi.h>
+#else
+#	include <npapi.h>
+#endif
+
+#if defined(ZProjectHeader_npfunctions)
+#	include ZProjectHeader_npfunctions
+#elif defined(__APPLE__)
+#	include <WebKit/npfunctions.h>
+#else
+#	include <npfunctions.h>
+#endif
+
+#if defined(ZProjectHeader_npruntime)
+#	include ZProjectHeader_npruntime
+#elif defined(__APPLE__)
+#	include <WebKit/npruntime.h>
+#else
+#	include <npruntime.h>
+#endif
+
+
 
 #endif // __ZCompat_npapi__

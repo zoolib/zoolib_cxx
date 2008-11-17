@@ -25,12 +25,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ==================================================
 // The usual suite of types with known sizes and signedness.
 
-#if defined(ZStdInt_ProjectHeader)
+#if defined(ZProjectHeader_StdInt)
 
 // zconfig.h has defined the name of a project-specific header
 // providing definitions of our standard integer types.
 
-#	include ZStdInt_ProjectHeader
+#	include ZProjectHeader_StdInt
 
 #else
 
