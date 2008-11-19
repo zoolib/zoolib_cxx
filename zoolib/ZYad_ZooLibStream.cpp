@@ -21,6 +21,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_ZooLibStream.h"
 #include "zoolib/ZStream_Limited.h"
 
+using std::min;
+using std::string;
+using std::vector;
+
 class ZYadR_ZooLibStream;
 
 // =================================================================================================

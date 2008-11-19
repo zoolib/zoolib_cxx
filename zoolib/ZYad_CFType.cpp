@@ -19,6 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZYad_CFType.h"
+
+#if ZCONFIG_SPI_Enabled(CFType)
+
 #include "zoolib/ZStream_CFData.h"
 #include "zoolib/ZUtil_CFType.h"
 
@@ -214,10 +217,11 @@ std::string ZYadListMapRPos_CFDictionary::Name()
 
 void ZYadListMapRPos_CFDictionary::SetPosition(const std::string& iName)
 	{
-	#warning NDY
-	ZUnimplemented();
-//	fPosition = find(
-//	fIter = fTuple.IteratorOf(iName);
+	for (fPosition = 0; /*no test*/; ++fPosition)
+		{
+		if (iName == ZUtil_CFType::sAsUTF8(fNames.at(fPosition)))
+			break;
+		}
 	}
 
 // =================================================================================================
@@ -322,3 +326,5 @@ CFTypeRef ZYadUtil_CFType::sFromYadR(ZRef<ZYadR> iYadR)
 			}
 		}
 	}
+
+#endif // ZCONFIG_SPI_Enabled(CFType)

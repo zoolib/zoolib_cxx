@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad.h"
 #include "zoolib/ZMemoryBlock.h"
 
+using std::min;
 using std::string;
 using std::vector;
 
