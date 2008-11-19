@@ -217,7 +217,7 @@ std::string ZYadListMapRPos_CFDictionary::Name()
 
 void ZYadListMapRPos_CFDictionary::SetPosition(const std::string& iName)
 	{
-	for (fPosition = 0; /*no test*/; ++fPosition)
+	for (fPosition = 0; fPosition < fNames.size(); ++fPosition)
 		{
 		if (iName == ZUtil_CFType::sAsUTF8(fNames.at(fPosition)))
 			break;
