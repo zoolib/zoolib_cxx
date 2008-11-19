@@ -92,10 +92,12 @@ public:
 
 	IOUSBDeviceInterface182** GetIOUSBDeviceInterface();
 	
-	ZRef<ZUSBInterfaceInterface> CreateInterfaceInterface();
+	ZRef<ZUSBInterfaceInterface> CreateInterfaceInterface(uint8 iProtocol);
 
 	uint16 GetIDVendor();
 	uint16 GetIDProduct();
+
+	const IOUSBDeviceDescriptor& GetDeviceDescriptor();
 
 private:
 	void pFetchDeviceDescriptor();

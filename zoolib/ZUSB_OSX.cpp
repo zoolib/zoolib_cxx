@@ -192,8 +192,10 @@ ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_
 		sThrowIfErr(fIOUSBDeviceInterface[0]->
 			GetConfigurationDescriptorPtr(fIOUSBDeviceInterface, 0, &confDesc));
 
-		sThrowIfErr(fIOUSBDeviceInterface[0]->
-			SetConfiguration(fIOUSBDeviceInterface, confDesc->bConfigurationValue));
+// I'm disabling this unconditional SetConfiguration as it causes what looks like
+// a device re-enumeration, and does not appear to be essential for connecting to BlackBerries.
+//##		sThrowIfErr(fIOUSBDeviceInterface[0]->
+//##			SetConfiguration(fIOUSBDeviceInterface, confDesc->bConfigurationValue));
 		}
 	catch (...)
 		{
@@ -242,7 +244,7 @@ void ZUSBDevice::SetObserver(Observer* iObserver)
 IOUSBDeviceInterface182** ZUSBDevice::GetIOUSBDeviceInterface()
 	{ return fIOUSBDeviceInterface; }
 
-ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface()
+ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface(uint8 iProtocol)
 	{
 	IOUSBFindInterfaceRequest request; 
 	request.bInterfaceClass = kIOUSBFindInterfaceDontCare; 
@@ -257,44 +259,55 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface()
 		iterator = 0;
 		}
 
-	if (iterator)
+	while (iterator)
 		{
 		io_service_t usbInterface = ::IOIteratorNext(iterator);
-		::IOObjectRelease(iterator);
-		if (usbInterface)
+		if (!usbInterface)
 			{
-			SInt32 score; 
-			IOCFPlugInInterface** plugInInterface;
-			if (kIOReturnSuccess != ::IOCreatePlugInInterfaceForService(usbInterface, 
-				kIOUSBInterfaceUserClientTypeID, 
-				kIOCFPlugInInterfaceID, 
-				&plugInInterface, &score))
+			::IOObjectRelease(iterator);
+			iterator = 0;
+			continue;
+			}
+
+		SInt32 score; 
+		IOCFPlugInInterface** plugInInterface;
+		if (kIOReturnSuccess != ::IOCreatePlugInInterfaceForService(usbInterface, 
+			kIOUSBInterfaceUserClientTypeID, 
+			kIOCFPlugInInterfaceID, 
+			&plugInInterface, &score))
+			{
+			plugInInterface = nil;
+			}
+		::IOObjectRelease(usbInterface);
+
+		if (plugInInterface)
+			{
+			IOUSBInterfaceInterface190** theIOUSBInterfaceInterface;
+
+			if (plugInInterface[0]->QueryInterface(plugInInterface, 
+					CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID190),
+					(LPVOID*)&theIOUSBInterfaceInterface))
 				{
-				plugInInterface = nil;
+				theIOUSBInterfaceInterface = nil;
 				}
-			::IOObjectRelease(usbInterface);
+			::IODestroyPlugInInterface(plugInInterface);
 
-			if (plugInInterface)
+			if (theIOUSBInterfaceInterface)
 				{
-				IOUSBInterfaceInterface190** theIOUSBInterfaceInterface;
-
-				if (plugInInterface[0]->QueryInterface(plugInInterface, 
-						CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID190),
-						(LPVOID*)&theIOUSBInterfaceInterface))
+				UInt8 protocol = 0;
+				if (0 == theIOUSBInterfaceInterface[0]->
+					GetInterfaceProtocol(theIOUSBInterfaceInterface, &protocol))
 					{
-					theIOUSBInterfaceInterface = nil;
-					}
-				::IODestroyPlugInInterface(plugInInterface);
-
-				if (theIOUSBInterfaceInterface)
-					{
-					if (kIOReturnSuccess == theIOUSBInterfaceInterface[0]->
-						USBInterfaceOpen(theIOUSBInterfaceInterface))
+					if (protocol == iProtocol)
 						{
-						return new ZUSBInterfaceInterface(this, theIOUSBInterfaceInterface);
+						if (kIOReturnSuccess == theIOUSBInterfaceInterface[0]->
+							USBInterfaceOpen(theIOUSBInterfaceInterface))
+							{
+							return new ZUSBInterfaceInterface(this, theIOUSBInterfaceInterface);
+							}
 						}
-					theIOUSBInterfaceInterface[0]->Release(theIOUSBInterfaceInterface);
 					}
+				theIOUSBInterfaceInterface[0]->Release(theIOUSBInterfaceInterface);
 				}
 			}
 		}
@@ -335,6 +348,12 @@ uint16 ZUSBDevice::GetIDProduct()
 	return ZByteSwap_LittleToHost16(fIOUSBDeviceDescriptor.idProduct);
 	}
 
+const IOUSBDeviceDescriptor& ZUSBDevice::GetDeviceDescriptor()
+	{
+	this->pFetchDeviceDescriptor();
+	return fIOUSBDeviceDescriptor;
+	}
+	
 // If we use IOUSBDeviceInterface197 then we can bypass this crap.
 void ZUSBDevice::pFetchDeviceDescriptor()
 	{
@@ -561,13 +580,20 @@ ZRef<ZStreamerR> ZUSBInterfaceInterface::OpenR(int iPipeRefR)
 	{
 	if (fOpen)
 		return new StreamerR(this, fIOUSBInterfaceInterface, iPipeRefR, 1024);
+
 	return ZRef<ZStreamerR>();
 	}
 
 ZRef<ZStreamerW> ZUSBInterfaceInterface::OpenW(int iPipeRefW)
 	{
 	if (fOpen)
+		{
+		// We call ClearPipeStallBothEnds in case a previous use had not cleanly
+		// disconnected, which can leave the peripheral device stalled. Read will
+		// do this whenever it timesout, so we don't have to do it in OpenR.
+		fIOUSBInterfaceInterface[0]->ClearPipeStallBothEnds(fIOUSBInterfaceInterface, iPipeRefW);
 		return new StreamerW(this, fIOUSBInterfaceInterface, iPipeRefW);
+		}
 	return ZRef<ZStreamerW>();
 	}
 
