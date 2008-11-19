@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green
+Copyright (c) 2008 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,29 +18,23 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Strim_OSXPList.h"
+#ifndef __ZYad_ZooLibStream__
+#define __ZYad_ZooLibStream__ 1
+#include "zconfig.h"
 
-#include "zoolib/ZStrimW_ML.h"
-#include "zoolib/ZYad_ZooLib.h"
+#include "zoolib/ZStream.h"
+#include "zoolib/ZYad.h"
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_Strim_OSXPList
+#pragma mark * ZYadUtil_ZooLibStream
 
-void ZUtil_Strim_OSXPList::sToStrim(const ZStrimW& iStrimW, const ZTValue& iTValue)
-	{
-	ZYadUtil_XMLPList::sToStrimW_ML(ZStrimW_ML(iStrimW), ZYadUtil_ZooLib::sMakeYadR(iTValue));
-	}
+namespace ZYadUtil_ZooLibStream {
 
-bool ZUtil_Strim_OSXPList::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTValue)
-	{
-	ZML::Reader r(iStrimU);
-	return sFromML(r, oTValue);
-	}
+ZRef<ZYadR> sMakeYadR(const ZStreamR& iStreamR);
 
-bool ZUtil_Strim_OSXPList::sFromML(ZML::Reader& r, ZTValue& oTValue)
-	{
-	if (ZRef<ZYadR> theYadR = ZYadUtil_XMLPList::sMakeYadR(r))
-		return theYadR->ReadYad()->GetTValue(oTValue);
-	return false;
-	}
+void sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR);
+
+} // namespace ZYadUtil_ZooLibStream
+
+#endif // __ZYad_ZooLibStream__

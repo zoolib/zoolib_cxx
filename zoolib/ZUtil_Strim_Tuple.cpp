@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-#include "zoolib/ZYAD_ZTValue.h"
+#include "zoolib/ZYad_ZooLib.h"
 
 using std::string;
 using std::vector;
@@ -30,7 +30,7 @@ using std::vector;
 #pragma mark * Format
 
 ZUtil_Strim_Tuple::Format::Format(
-	const ZTValue& iTV, int iInitialIndent, const ZYADOptions& iOptions)
+	const ZTValue& iTV, int iInitialIndent, const ZYadOptions& iOptions)
 :	fTValue(iTV),
 	fInitialIndent(iInitialIndent),
 	fOptions(iOptions)
@@ -41,24 +41,27 @@ ZUtil_Strim_Tuple::Format::Format(
 #pragma mark * ZUtil_Strim_Tuple, writing and parsing pieces
 
 void ZUtil_Strim_Tuple::sWrite_PropName(const ZStrimW& iStrimW, const ZTName& iPropName)
-	{ ZYADUtil_ZooLibStrim::sWrite_PropName(iStrimW, iPropName.AsString()); }
+	{ ZYadUtil_ZooLibStrim::sWrite_PropName(iStrimW, iPropName.AsString()); }
 
 bool ZUtil_Strim_Tuple::sRead_Identifier(
 	const ZStrimU& iStrimU, string* oStringLC, string* oStringExact)
-	{ return ZYADUtil_ZooLibStrim::sRead_Identifier(iStrimU, oStringLC, oStringExact); }
+	{ return ZYadUtil_ZooLibStrim::sRead_Identifier(iStrimU, oStringLC, oStringExact); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTValue
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTValue& iTV)
-	{ ZYADUtil_ZooLibStrim::sToStrim(s, new ZYADReaderRep_ZTValue(iTV), 0, ZYADOptions()); }
+	{
+	ZRef<ZYadR> theYadR = ZYadUtil_ZooLib::sMakeYadR(iTV);
+	ZYadUtil_ZooLibStrim::sToStrim(s, theYadR, 0, ZYadOptions());
+	}
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTValue& iTV,
-	size_t iInitialIndent, const ZYADOptions& iOptions)
+	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{
-	ZYADUtil_ZooLibStrim::sToStrim(
-		s, new ZYADReaderRep_ZTValue(iTV), iInitialIndent, iOptions);
+	ZYadUtil_ZooLibStrim::sToStrim(
+		s, ZYadUtil_ZooLib::sMakeYadR(iTV), iInitialIndent, iOptions);
 	}
 
 string ZUtil_Strim_Tuple::sAsString(const ZTValue& iTV)
@@ -69,7 +72,7 @@ string ZUtil_Strim_Tuple::sAsString(const ZTValue& iTV)
 	}
 
 bool ZUtil_Strim_Tuple::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV)
-	{ return ZYADUtil_ZTValue::sFromReader(new ZYADReaderRep_ZooLibStrim(iStrimU), oTV); }
+	{ return ZYadUtil_ZooLibStrim::sMakeYadR(iStrimU)->ReadYad()->GetTValue(oTV); }
 
 bool ZUtil_Strim_Tuple::sFromString(const string& iString, ZTValue& oTV)
 	{ return sFromStrim(ZStrimU_String(iString), oTV); }
@@ -79,13 +82,16 @@ bool ZUtil_Strim_Tuple::sFromString(const string& iString, ZTValue& oTV)
 #pragma mark * vector<ZTValue>
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const vector<ZTValue>& iVector)
-	{ ZYADUtil_ZooLibStrim::sToStrim(s, new ZListReaderRep_ZVector(iVector), 0, ZYADOptions()); }
+	{
+	ZRef<ZYadListR> theYadListR = new ZYadListRPos_Vector(iVector);
+	ZYadUtil_ZooLibStrim::sToStrim(s, theYadListR, 0, ZYadOptions());
+	}
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const vector<ZTValue>& iVector,
-	size_t iInitialIndent, const ZYADOptions& iOptions)
+	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{
-	ZYADUtil_ZooLibStrim::sToStrim(
-		s, new ZListReaderRep_ZVector(iVector), iInitialIndent, iOptions);
+	ZRef<ZYadListR> theYadListR = new ZYadListRPos_Vector(iVector);
+	ZYadUtil_ZooLibStrim::sToStrim(s, theYadListR, iInitialIndent, iOptions);
 	}
 
 string ZUtil_Strim_Tuple::sAsString(const vector<ZTValue>& iVector)
@@ -116,13 +122,16 @@ bool ZUtil_Strim_Tuple::sFromString(const string& iString, vector<ZTValue>& oVec
 #pragma mark * ZTuple
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTuple& iTuple)
-	{ ZYADUtil_ZooLibStrim::sToStrim(s, new ZMapReaderRep_ZTuple(iTuple), 0, ZYADOptions()); }
+	{
+	ZRef<ZYadMapR> theYadMapR = new ZYadListMapRPos_Tuple(iTuple);
+	ZYadUtil_ZooLibStrim::sToStrim(s, theYadMapR, 0, ZYadOptions());
+	}
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTuple& iTuple,
-	size_t iInitialIndent, const ZYADOptions& iOptions)
+	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{
-	ZYADUtil_ZooLibStrim::sToStrim(
-		s, new ZMapReaderRep_ZTuple(iTuple), iInitialIndent, iOptions);
+	ZRef<ZYadMapR> theYadMapR = new ZYadListMapRPos_Tuple(iTuple);
+	ZYadUtil_ZooLibStrim::sToStrim(s, theYadMapR, iInitialIndent, iOptions);
 	}
 
 string ZUtil_Strim_Tuple::sAsString(const ZTuple& iTuple)
