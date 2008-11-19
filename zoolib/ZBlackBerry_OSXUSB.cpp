@@ -85,10 +85,10 @@ static bool sUseHighPower(ZRef<ZUSBDevice> iUSBDevice)
 		{
 		char buffer[2];
 
-		if (!sSendControlMessage(theUDI, 0xc0, 0xa5, 0, 1, buffer, 2, 100))
+		if (!sSendControlMessage(theUDI, 0xc0, 0xa5, 0, 0, buffer, 2, 100))
 			return false;
 
-		if (!sSendControlMessage(theUDI, 0x40, 0xa2, 0, 1, buffer, 0, 100))
+		if (!sSendControlMessage(theUDI, 0x40, 0xa2, 0, 0, buffer, 0, 100))
 			return false;
 
 		return sSetConfiguration(theUDI);
@@ -109,7 +109,7 @@ static void sChangeMode(ZRef<ZUSBDevice> iUSBDevice, bool iAllowMassStorage)
 		if (iAllowMassStorage)
 			theValue = 1;
 
-		if (!sSendControlMessage(theUDI, 0xc0, 0xa9, theValue, 1, buffer, 2, 100))
+		if (!sSendControlMessage(theUDI, 0xc0, 0xa9, theValue, 0, buffer, 2, 100))
 			{
 			if (ZLOG(s, eInfo, "ZBlackBerry_OSXUSB"))
 				s << "sChangeMode, Failed to send message";
@@ -216,7 +216,8 @@ void Manager_OSXUSB::GetDeviceIDs(vector<uint64>& oDeviceIDs)
 	const ZTime atMostThis = ZTime::sSystem();
 	for (vector<Device_t>::iterator i = fDevices.begin(); i != fDevices.end(); ++i)
 		{
-		if (i->fInsertedAt <= atMostThis)
+		// See comment in Added as to why this check is bypassed.
+		if (true || i->fInsertedAt <= atMostThis)
 			oDeviceIDs.push_back(i->fID);
 		}
 	}
@@ -230,7 +231,8 @@ ZRef<Device> Manager_OSXUSB::Open(uint64 iDeviceID)
 			{
 			if (ZRef<ZUSBDevice> theUSBDevice = i->fUSBDevice)
 				{
-				if (ZRef<ZUSBInterfaceInterface> theII = theUSBDevice->CreateInterfaceInterface())
+				if (ZRef<ZUSBInterfaceInterface> theII =
+					theUSBDevice->CreateInterfaceInterface(0xFF))
 					{
 					if (ZRef<ZStreamerR> theSR = theII->OpenR(3))
 						{
@@ -262,6 +264,7 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 
 	uint16 theIDVendor = iUSBDevice->GetIDVendor();
 	uint16 theIDProduct = iUSBDevice->GetIDProduct();
+	const IOUSBDeviceDescriptor theDescriptor = iUSBDevice->GetDeviceDescriptor();
 
 	if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 		s.Writef("Added, IDVendor: 0x%X, IDProduct: 0x%X", theIDVendor, theIDProduct);
@@ -284,7 +287,7 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 		if (!sUseHighPower(iUSBDevice))
 			{
 			if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
-				s << "UseHighPower returned false";
+				s << "sUseHighPower returned false";
 			}
 		else
 			{
@@ -308,10 +311,22 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 	Device_t theD;
 	theD.fID = fNextID++;
 	theD.fUSBDevice = iUSBDevice;
+	
 	if (usedPower < 250)
+		{
+		// We're not on full power, and so may have reconfigured the device to
+		// request full power, in which case it'll be resetting and we should
+		// not return it in our roster for a couple of seconds. That said,
+		// I've disabled the check of this value in GetDeviceIDs because we don't
+		// trip an observer notification in two seconds if the device didn't
+		// actually reset, and so any observer won't know to check in with us.
 		theD.fInsertedAt = ZTime::sSystem() + 2;
+		}
 	else
+		{
 		theD.fInsertedAt = ZTime::sSystem();
+		}
+
 	fDevices.push_back(theD);
 	locker.Release();
 
