@@ -65,7 +65,7 @@ public:
 \ingroup group_Streamer
 */
 
-class ZStreamerU : public ZStreamerR
+class ZStreamerU : public virtual ZStreamerR
 	{
 public:
 // From ZStreamerR
@@ -136,7 +136,7 @@ public:
 \ingroup group_Streamer
 */
 
-class ZStreamerWPos : public ZStreamerW
+class ZStreamerWPos : public virtual ZStreamerW
 	{
 public:
 // From ZStreamerW
@@ -154,7 +154,9 @@ public:
 \ingroup group_Streamer
 */
 
-class ZStreamerRWPos : public ZStreamerRPos, public ZStreamerWPos
+class ZStreamerRWPos
+:	public virtual ZStreamerRPos,
+	public virtual ZStreamerWPos
 	{
 public:
 // From ZStreamerR
