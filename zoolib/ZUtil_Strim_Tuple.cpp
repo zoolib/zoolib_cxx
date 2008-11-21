@@ -72,7 +72,14 @@ string ZUtil_Strim_Tuple::sAsString(const ZTValue& iTV)
 	}
 
 bool ZUtil_Strim_Tuple::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV)
-	{ return ZYadUtil_ZooLibStrim::sMakeYadR(iStrimU)->ReadYad()->GetTValue(oTV); }
+	{
+	if (ZRef<ZYadR> theYadR = ZYadUtil_ZooLibStrim::sMakeYadR(iStrimU))
+		{
+		oTV = ZYadUtil_ZooLib::sFromYadR(theYadR);
+		return true;
+		}
+	return false;
+	}
 
 bool ZUtil_Strim_Tuple::sFromString(const string& iString, ZTValue& oTV)
 	{ return sFromStrim(ZStrimU_String(iString), oTV); }

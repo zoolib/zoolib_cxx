@@ -41,6 +41,9 @@ bool ZUtil_Strim_OSXPList::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTValue)
 bool ZUtil_Strim_OSXPList::sFromML(ZML::Reader& r, ZTValue& oTValue)
 	{
 	if (ZRef<ZYadR> theYadR = ZYadUtil_XMLPList::sMakeYadR(r))
-		return theYadR->ReadYad()->GetTValue(oTValue);
+		{
+		oTValue = ZYadUtil_ZooLib::sFromYadR(theYadR);
+		return true;
+		}
 	return false;
 	}
