@@ -40,7 +40,7 @@ ZOOLIB_FACTORYCHAIN_HEAD(CFTypeRef, ZRef<ZYadR>);
 
 namespace ZANONYMOUS {
 
-static class Maker0
+class Maker0
 :	public ZFactoryChain_T<CFTypeRef, ZRef<ZYadR> >
 	{
 public:
@@ -60,7 +60,7 @@ public:
 		}	
 	} sMaker0;
 
-static class Maker1
+class Maker1
 :	public ZFactoryChain_T<CFTypeRef, ZRef<ZYadR> >
 	{
 public:
@@ -80,7 +80,7 @@ public:
 		}	
 	} sMaker1;
 
-static class Maker2
+class Maker2
 :	public ZFactoryChain_T<ZTValue, ZRef<ZYadR> >
 	{
 public:

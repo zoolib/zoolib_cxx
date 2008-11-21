@@ -42,7 +42,7 @@ access to them allows code to be applied to any of them.
 
 namespace ZANONYMOUS {
 
-static class Maker0
+class Maker0
 :	public ZFactoryChain_T<ZTValue, ZRef<ZYadR> >
 	{
 public:
