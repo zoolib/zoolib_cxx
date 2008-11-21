@@ -48,6 +48,10 @@ NPError NP_GetEntryPoints(NPPluginFuncs* oPluginFuncs)
 NPError NP_Shutdown()
 	{ return ZNetscape::GuestMeister::sGet()->Shutdown(); }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZNetscape
+
 namespace ZNetscape {
 
 void sRetainG(NPObject* iObject)
@@ -55,6 +59,12 @@ void sRetainG(NPObject* iObject)
 
 void sReleaseG(NPObject* iObject)
 	{ GuestMeister::sGet()->Host_ReleaseObject(iObject); }
+
+void sRetain(NPObjectG* iObject)
+	{ sRetainG(iObject); }
+
+void sRelease(NPObjectG* iObject)
+	{ sReleaseG(iObject); }
 
 // =================================================================================================
 #pragma mark -
@@ -160,7 +170,7 @@ NPVariantG::NPVariantG(const string& iValue)
 	this->SetString(iValue);
 	}
 
-NPVariantG::NPVariantG(NPObject* iValue)
+NPVariantG::NPVariantG(NPObjectG* iValue)
 	{
 	type = NPVariantType_Void;
 	this->SetObject(iValue);
@@ -190,7 +200,7 @@ NPVariantG& NPVariantG::operator=(const string& iValue)
 	return *this;
 	}
 
-NPVariantG& NPVariantG::operator=(NPObject* iValue)
+NPVariantG& NPVariantG::operator=(NPObjectG* iValue)
 	{
 	this->SetObject(iValue);
 	return *this;
@@ -297,7 +307,7 @@ double NPVariantG::DGetDouble(double iDefault) const
 	return iDefault;
 	}
 
-void NPVariantG::SetDouble(bool iValue)
+void NPVariantG::SetDouble(double iValue)
 	{
 	this->pRelease();
 	type = NPVariantType_Double;
@@ -332,29 +342,29 @@ void NPVariantG::SetString(const string& iValue)
 	type = NPVariantType_String;
 	}
 
-NPObject* NPVariantG::GetObject() const
+NPObjectG* NPVariantG::GetObject() const
 	{ return this->DGetObject(nil); }
 
-bool NPVariantG::GetObject(NPObject*& oValue) const
+bool NPVariantG::GetObject(NPObjectG*& oValue) const
 	{
 	if (type != NPVariantType_String)
 		return false;
-	oValue = value.objectValue;
+	oValue = static_cast<NPObjectG*>(value.objectValue);
 	this->pRetain(oValue);
 	return true;	
 	}
 
-NPObject* NPVariantG::DGetObject(NPObject* iDefault) const
+NPObjectG* NPVariantG::DGetObject(NPObjectG* iDefault) const
 	{
-	NPObject* result = iDefault;
+	NPObjectG* result = iDefault;
 	if (type == NPVariantType_Object)
-		result = value.objectValue;
+		result = static_cast<NPObjectG*>(value.objectValue);
 
 	this->pRetain(result);
 	return result;
 	}
 
-void NPVariantG::SetObject(NPObject* iValue)
+void NPVariantG::SetObject(NPObjectG* iValue)
 	{
 	this->pRelease();
 	value.objectValue = iValue;

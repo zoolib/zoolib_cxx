@@ -28,8 +28,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZNetscape {
 
+class NPObjectG;
+
 void sRetainG(NPObject* iObject);
 void sReleaseG(NPObject* iObject);
+
+void sRetain(NPObjectG* iObject);
+void sRelease(NPObjectG* iObject);
 
 // =================================================================================================
 #pragma mark -
@@ -47,13 +52,13 @@ public:
 	NPVariantG(int32 iValue);
 	NPVariantG(double iValue);
 	NPVariantG(const std::string& iValue);
-	NPVariantG(NPObject* iValue);
+	NPVariantG(NPObjectG* iValue);
 
 	NPVariantG& operator=(bool iValue);
 	NPVariantG& operator=(int32 iValue);
 	NPVariantG& operator=(double iValue);
 	NPVariantG& operator=(const std::string& iValue);
-	NPVariantG& operator=(NPObject* iValue);
+	NPVariantG& operator=(NPObjectG* iValue);
 
 	bool IsVoid() const;
 	bool IsNull() const;
@@ -80,17 +85,17 @@ public:
 	double GetDouble() const;
 	bool GetDouble(double& oValue) const;
 	double DGetDouble(double iDefault) const;
-	void SetDouble(bool iValue);
+	void SetDouble(double iValue);
 
 	std::string GetString() const;
 	bool GetString(std::string& oValue) const;
 	std::string DGetString(const std::string& iDefault) const;
 	void SetString(const std::string& iValue);
 
-	NPObject* GetObject() const;
-	bool GetObject(NPObject*& oValue) const;
-	NPObject* DGetObject(NPObject* iDefault) const;
-	void SetObject(NPObject* iValue);
+	NPObjectG* GetObject() const;
+	bool GetObject(NPObjectG*& oValue) const;
+	NPObjectG* DGetObject(NPObjectG* iDefault) const;
+	void SetObject(NPObjectG* iValue);
 
 private:
 	void pRelease();
