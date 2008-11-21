@@ -129,7 +129,7 @@ static bool sTryRead_Value(ZML::Reader& r, ZTValue& oTV)
 	else
 		{
 		// Hmm. Ignore tags we don't recognize?
-		// throw ZYadParseException_XMLPList("Invalid begin tag '" + tagName + "'");
+		throw ZYadParseException_XMLPList("Invalid begin tag '" + tagName + "'");
 		}
 
 	sEnd(r, tagName);
@@ -186,18 +186,23 @@ static void sRead_BodyOfArray(ZML::Reader& r, vector<ZTValue>& oVector)
 
 static ZRef<ZYadR_XMLPList> sMakeYadR_XMLPList(ZML::Reader& r)
 	{
+	sSkipText(r);
+
 	if (r.Current() == ZML::eToken_TagBegin)
 		{
 		if (r.Name() == "dict")
 			{
+			r.Advance();
 			return new ZYadMapR_XMLPList(r, true);
 			}
 		else if (r.Name() == "array")
 			{
+			r.Advance();
 			return new ZYadListR_XMLPList(r, true);
 			}
 		else if (r.Name() == "data")
 			{
+			r.Advance();
 			return new ZYadRawR_XMLPList(r, true);
 			}
 		}
@@ -226,37 +231,28 @@ ZYadParseException_XMLPList::ZYadParseException_XMLPList(const char* iWhat)
 #pragma mark * ZYadPrimR_XMLPList
 
 ZYadPrimR_XMLPList::ZYadPrimR_XMLPList(const ZTValue& iTV)
-:	fYad(new ZYad_TValue(iTV))
+:	ZYadR_TValue(iTV)
 	{}
 
-ZRef<ZYad> ZYadPrimR_XMLPList::ReadYad()
-	{
-	ZRef<ZYad> result = fYad;
-	fYad.Clear();
-	return result;
-	}
-
 void ZYadPrimR_XMLPList::Finish()
-	{ fYad.Clear(); }
+	{}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadRawR_XMLPList
 
-ZYadRawR_XMLPList::ZYadRawR_XMLPList(ZML::Reader& iReader, bool iReadDelimiter)
+ZYadRawR_XMLPList::ZYadRawR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
 :	fR(iReader),
-	fReadDelimiter(iReadDelimiter),
+	fMustReadEndTag(iMustReadEndTag),
 	fStreamR_ASCIIStrim(fR.Text()),
 	fStreamR_Base64Decode(fStreamR_ASCIIStrim)
 	{}
 
 void ZYadRawR_XMLPList::Finish()
 	{
-	using namespace ZUtil_Strim;
-
 	fStreamR_Base64Decode.SkipAll();
 
-	if (fReadDelimiter)
+	if (fMustReadEndTag)
 		sEnd(fR, "data");
 	}
 
@@ -267,9 +263,9 @@ const ZStreamR& ZYadRawR_XMLPList::GetStreamR()
 #pragma mark -
 #pragma mark * ZYadReaderRep_XMLPList
 
-ZYadListR_XMLPList::ZYadListR_XMLPList(ZML::Reader& iReader, bool iReadDelimiter)
+ZYadListR_XMLPList::ZYadListR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
 :	fR(iReader),
-	fReadDelimiter(iReadDelimiter),
+	fMustReadEndTag(iMustReadEndTag),
 	fPosition(0)
 	{}
 
@@ -298,18 +294,14 @@ size_t ZYadListR_XMLPList::GetPosition()
 
 void ZYadListR_XMLPList::Finish()
 	{
-	using namespace ZUtil_Strim;
-
 	this->SkipAll();
 
-	if (fReadDelimiter)
+	if (fMustReadEndTag)
 		sEnd(fR, "array");
 	}
 
 void ZYadListR_XMLPList::pMoveIfNecessary()
 	{
-	using namespace ZUtil_Strim;
-
 	if (fValue_Current)
 		return;
 
@@ -326,9 +318,9 @@ void ZYadListR_XMLPList::pMoveIfNecessary()
 #pragma mark -
 #pragma mark * ZYadMapR_XMLPList
 
-ZYadMapR_XMLPList::ZYadMapR_XMLPList(ZML::Reader& iReader, bool iReadDelimiter)
+ZYadMapR_XMLPList::ZYadMapR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
 :	fR(iReader),
-	fReadDelimiter(iReadDelimiter)
+	fMustReadEndTag(iMustReadEndTag)
 	{}
 	
 bool ZYadMapR_XMLPList::HasChild()
@@ -361,18 +353,14 @@ string ZYadMapR_XMLPList::Name()
 
 void ZYadMapR_XMLPList::Finish()
 	{
-	using namespace ZUtil_Strim;
-
 	this->SkipAll();
 
-	if (fReadDelimiter)
+	if (fMustReadEndTag)
 		sEnd(fR, "dict");
 	}
 
 void ZYadMapR_XMLPList::pMoveIfNecessary()
 	{
-	using namespace ZUtil_Strim;
-
 	if (fValue_Current)
 		return;
 
@@ -390,7 +378,6 @@ void ZYadMapR_XMLPList::pMoveIfNecessary()
 		{
 		ZStrimW_String(fName).CopyAllFrom(fR.Text());
 		sEnd(fR, "key");
-		sSkipText(fR);
 		fValue_Current = sMakeYadR_XMLPList(fR);
 		}
 	}
@@ -399,8 +386,17 @@ void ZYadMapR_XMLPList::pMoveIfNecessary()
 #pragma mark -
 #pragma mark * ZYadUtil_XMLPList
 
-ZRef<ZYadR> ZYadUtil_XMLPList::sMakeYadR(ZML::Reader& iReader)
-	{ return sMakeYadR_XMLPList(iReader); }
+ZRef<ZYadR> ZYadUtil_XMLPList::sMakeYadR(ZML::Reader& r)
+	{
+	for (;;)
+		{
+		sSkipText(r);
+		if (r.Current() != ZML::eToken_TagBegin || r.Name() != "plist")
+			break;
+		r.Advance();
+		}
+	return sMakeYadR_XMLPList(r);
+	}
 
 static void sToStrim_Raw(const ZStrimW_ML& s, const ZStreamR& iStreamR)
 	{
@@ -506,6 +502,6 @@ void ZYadUtil_XMLPList::sToStrimW_ML(const ZStrimW_ML& s, ZRef<ZYadR> iYadR)
 		}
 	else
 		{
-		sToStrim_SimpleTValue(s, iYadR->ReadYad()->GetTValue());
+		sToStrim_SimpleTValue(s, ZYadUtil_ZooLib::sFromYadR(iYadR));
 		}	
 	}

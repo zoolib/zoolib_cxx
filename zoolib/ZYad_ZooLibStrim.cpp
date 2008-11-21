@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimW_Escapify.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
+#include "zoolib/ZYad_ZooLib.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
 using std::string;
@@ -502,18 +503,11 @@ ZYadParseException_ZooLibStrim::ZYadParseException_ZooLibStrim(const char* iWhat
 #pragma mark * ZYadPrimR_ZooLibStrim
 
 ZYadPrimR_ZooLibStrim::ZYadPrimR_ZooLibStrim(const ZTValue& iTV)
-:	fYad(new ZYad_TValue(iTV))
+:	ZYadR_TValue(iTV)
 	{}
 
-ZRef<ZYad> ZYadPrimR_ZooLibStrim::ReadYad()
-	{
-	ZRef<ZYad> result = fYad;
-	fYad.Clear();
-	return result;
-	}
-
 void ZYadPrimR_ZooLibStrim::Finish()
-	{ fYad.Clear(); }
+	{}
 
 // =================================================================================================
 #pragma mark -
@@ -1142,9 +1136,10 @@ static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 		}
 	else
 		{
-		sToStrim_SimpleTValue(s, iYadR->ReadYad()->GetTValue(), iLevel, iOptions);
+		sToStrim_SimpleTValue(s, ZYadUtil_ZooLib::sFromYadR(iYadR), iLevel, iOptions);
 		}
 	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadUtil_ZooLibStrim

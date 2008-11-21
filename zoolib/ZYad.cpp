@@ -18,12 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZYad.h"
 #include "zoolib/ZMemoryBlock.h"
 
 using std::min;
 using std::string;
 using std::vector;
+
+ZOOLIB_FACTORYCHAIN_HEAD(ZTValue, ZRef<ZYadR>);
 
 /*
 YAD is Yet Another Data. It provides a suite of facilities for accessing data that looks like
@@ -32,6 +35,102 @@ ZooLib ZTuple suite -- CFDictionary, NSDictionary, PList, XMLRPC, JSON, Javascri
 The idea is that there are a Map-like and List-like entities in many APIs, and that abstracting
 access to them allows code to be applied to any of them.
 */
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Factory
+
+namespace ZANONYMOUS {
+
+static class Maker0
+:	public ZFactoryChain_T<ZTValue, ZRef<ZYadR> >
+	{
+public:
+	Maker0()
+	:	ZFactoryChain_T<Result_t, Param_t>(true)
+		{}
+
+	virtual bool Make(Result_t& oResult, Param_t iParam)
+		{
+		if (ZRef<ZYadR_TValue> theYadR = ZRefDynamicCast<ZYadR_TValue>(iParam))
+			{
+			oResult = theYadR->GetTValue();
+			return true;
+			}
+		return false;
+		}	
+	} sMaker0;
+
+} // anonymous namespace
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Helper functions
+
+static bool sIsSimpleString(const ZYadOptions& iOptions, const string& iString)
+	{
+	if (iOptions.fStringLineLength && iString.size() > iOptions.fStringLineLength)
+		{
+		// We have a non-zero desired line length, and the string contains
+		// more characters than that. This doesn't account for increases in width
+		// due to escaping etc.
+		return false;
+		}
+
+	if (iOptions.fBreakStrings)
+		{
+		// We've been asked to break strings at line ending characters,
+		// which means (here and in ZStrimW_Escapify) LF and CR. Strictly
+		// speaking we should use ZUnicode::sIsEOL().
+		if (string::npos != iString.find_first_of("\n\r"))
+			return false;
+		}
+
+	return true;
+	}
+
+static bool sIsSimple(const ZYadOptions& iOptions, const ZTValue& iTV)
+	{
+	switch (iTV.TypeOf())
+		{
+		case eZType_Raw:
+			{
+			size_t theSize;
+			iTV.GetRawAttributes(nil, &theSize);
+			return theSize <= iOptions.fRawChunkSize;
+			}
+		case eZType_Vector:
+			{
+			const vector<ZTValue>& theVector = iTV.GetVector();
+			if (theVector.empty())
+				return true;
+
+			if (theVector.size() == 1)
+				return sIsSimple(iOptions, theVector.at(0));
+
+			return false;
+			}
+		case eZType_Tuple:
+			{
+			const ZTuple& theTuple = iTV.GetTuple();
+			if (theTuple.Empty())
+				return true;
+
+			if (theTuple.Count() == 1)
+				return sIsSimple(iOptions, theTuple.GetValue(theTuple.begin()));
+
+			return false;
+			}
+		case eZType_String:
+			{
+			return sIsSimpleString(iOptions, iTV.GetString());
+			}
+		default:
+			{
+			return true;
+			}
+		}
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -67,20 +166,6 @@ ZYadParseException::ZYadParseException(const char* iWhat)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYad
-
-ZYad::ZYad()
-	{}
-
-ZTValue ZYad::GetTValue()
-	{
-	ZTValue result;
-	this->GetTValue(result);
-	return result;
-	}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadR
 
 ZYadR::ZYadR()
@@ -101,6 +186,25 @@ void ZYadR::SkipAll()
 bool ZYadR::IsSimple(const ZYadOptions& iOptions)
 	{ return false; }
 
+	
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadR_TValue
+
+ZYadR_TValue::ZYadR_TValue(ZType iType, const ZStreamR& iStreamR)
+:	fTValue(iType, iStreamR)
+	{}
+
+ZYadR_TValue::ZYadR_TValue(const ZTValue& iTV)
+:	fTValue(iTV)
+	{}
+
+ZTValue ZYadR_TValue::GetTValue()
+	{ return fTValue; }
+
+bool ZYadR_TValue::IsSimple(const ZYadOptions& iOptions)
+	{ return sIsSimple(iOptions, fTValue); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadPrimR
@@ -113,33 +217,16 @@ ZRef<ZYadR> ZYadPrimR::NextChild()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadRawR
+#pragma mark * ZYadPrimR_TValue
 
-ZRef<ZYad> ZYadRawR::ReadYad()
-	{
-	ZMemoryBlock theMB;
-	ZStreamRWPos_MemoryBlock(theMB).CopyAllFrom(this->GetStreamR());
-	return new ZYad_TValue(theMB);
-	}
+ZYadPrimR_TValue::ZYadPrimR_TValue(ZType iType, const ZStreamR& iStreamR)
+:	ZYadR_TValue(iType, iStreamR)
+	{}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadListR
+ZYadPrimR_TValue::ZYadPrimR_TValue(const ZTValue& iTV)
+:	ZYadR_TValue(iTV)
+	{}
 
-ZRef<ZYad> ZYadListR::ReadYad()
-	{
-	vector<ZTValue> theVector;
-	while (this->HasChild())
-		{
-		if (ZRef<ZYadR> theChild = this->NextChild())
-			{
-			if (ZRef<ZYad> theYad = theChild->ReadYad())
-				theVector.push_back(theYad->GetTValue());
-			}
-		}			
-	return new ZYad_TValue(theVector);	
-	}
-	
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadListRPos
@@ -173,25 +260,6 @@ void ZYadListRPos::SkipAll()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadMapR
-
-ZRef<ZYad> ZYadMapR::ReadYad()
-	{
-	ZTuple theTuple;
-	while (this->HasChild())
-		{
-		string theName = this->Name();
-		if (ZRef<ZYadR> theChild = this->NextChild())
-			{
-			if (ZRef<ZYad> theYad = theChild->ReadYad())
-				theTuple.SetValue(theName, theYad->GetTValue());
-			}
-		}
-	return new ZYad_TValue(theTuple);
-	}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadMapRPos
 
 bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
@@ -214,48 +282,19 @@ bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListMapR
-
-ZRef<ZYad> ZYadListMapR::ReadYad()
-	{
-	// Assume our list-ish implementation is more efficient
-	return ZYadListR::ReadYad();
-	}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadListMapRPos
 
 bool ZYadListMapRPos::IsSimple(const ZYadOptions& iOptions)
 	{
 	// Assume our list-ish implementation is more efficient
-	return ZYadListRPos::ReadYad();
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_TValue
-
-ZYad_TValue::ZYad_TValue(const ZTValue& iTV)
-:	fTV(iTV)
-	{}
-
-ZYad_TValue::ZYad_TValue(ZType iType, const ZStreamR& iStreamR)
-:	fTV(iType, iStreamR)
-	{}
-
-ZYad_TValue::~ZYad_TValue()
-	{}
-
-bool ZYad_TValue::GetTValue(ZTValue& oTV)
-	{
-	oTV = fTV;
-	return true;
+	return ZYadListRPos::IsSimple(iOptions);
 	}
 
 // =================================================================================================
 static void sTest(const vector<ZTValue>& iVector, const ZTuple& iTuple, ZRef<ZYadR> iYadR)
 	{
+	ZFactoryChain_T<ZTValue, ZRef<ZYadR> >::sMake(ZRef<ZYadR>());
+
 	ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR);
 	ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR);
 	ZRef<ZYadPrimR> theYadPrimR = ZRefDynamicCast<ZYadPrimR>(iYadR);

@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZYad_ZooLibStream.h"
 #include "zoolib/ZStream_Limited.h"
+#include "zoolib/ZYad_ZooLib.h"
+#include "zoolib/ZYad_ZooLibStream.h"
 
 using std::min;
 using std::string;
@@ -64,35 +65,23 @@ public:
 #pragma mark * ZYadPrimR_ZooLibStream
 
 class ZYadPrimR_ZooLibStream
-:	public ZYadPrimR,
+:	public ZYadR_TValue,
+	public ZYadPrimR,
 	public ZYadR_ZooLibStream
 	{
 public:
 	ZYadPrimR_ZooLibStream(ZType iType, const ZStreamR& iStreamR);
 
-// From ZYadR
-	virtual ZRef<ZYad> ReadYad();
-
 // From ZYadR_ZooLibStream
 	virtual void Finish();
-
-private:
-	ZRef<ZYad> fYad;
 	};
 
 ZYadPrimR_ZooLibStream::ZYadPrimR_ZooLibStream(ZType iType, const ZStreamR& iStreamR)
-:	fYad(new ZYad_TValue(iType, iStreamR))
+:	ZYadR_TValue(iType, iStreamR)
 	{}
 
-ZRef<ZYad> ZYadPrimR_ZooLibStream::ReadYad()
-	{
-	ZRef<ZYad> result = fYad;
-	fYad.Clear();
-	return result;
-	}
-
 void ZYadPrimR_ZooLibStream::Finish()
-	{ fYad.Clear(); }
+	{}
 
 // =================================================================================================
 #pragma mark -
@@ -627,7 +616,7 @@ void ZYadUtil_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYad
 		}
 	else
 		{
-		iYadR->ReadYad()->GetTValue().ToStream(iStreamW);
+		ZYadUtil_ZooLib::sFromYadR(iYadR).ToStream(iStreamW);
 		}
 	}
 

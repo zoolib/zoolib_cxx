@@ -65,20 +65,6 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYad
-
-class ZYad : public virtual ZRefCountedWithFinalization
-	{
-protected:
-	ZYad();
-
-public:
-	virtual bool GetTValue(ZTValue& oTV) = 0;
-	ZTValue GetTValue();
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadR
 
 class ZYadR : public virtual ZRefCountedWithFinalization
@@ -90,11 +76,29 @@ public:
 	virtual bool HasChild() = 0;
 	virtual ZRef<ZYadR> NextChild() = 0;
 
-	virtual ZRef<ZYad> ReadYad() = 0;
 	virtual void Skip();
 	virtual void SkipAll();
 
 	virtual bool IsSimple(const ZYadOptions& iOptions);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadR_TValue
+
+class ZYadR_TValue : public virtual ZYadR
+	{
+public:
+	ZYadR_TValue(ZType iType, const ZStreamR& iStreamR);
+	ZYadR_TValue(const ZTValue& iTV);
+
+// Our protocol
+	ZTValue GetTValue();
+
+// From ZYadR
+	virtual bool IsSimple(const ZYadOptions& iOptions);
+private:
+	const ZTValue fTValue;
 	};
 
 // =================================================================================================
@@ -110,6 +114,19 @@ public:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYadPrimR_TValue
+
+class ZYadPrimR_TValue
+:	public virtual ZYadR_TValue,
+	public virtual ZYadPrimR
+	{
+public:
+	ZYadPrimR_TValue(ZType iType, const ZStreamR& iStreamR);
+	ZYadPrimR_TValue(const ZTValue& iTV);
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYadRawR
 
 class ZYadRawR
@@ -117,8 +134,6 @@ class ZYadRawR
 	public virtual ZStreamerR
 	{
 public:
-// Implementation of required ZYadR method
-	virtual ZRef<ZYad> ReadYad();
 	};
 
 // =================================================================================================
@@ -128,9 +143,6 @@ public:
 class ZYadListR : public virtual ZYadR
 	{
 public:
-// From ZYadR
-	virtual ZRef<ZYad> ReadYad();
-
 	virtual size_t GetPosition() = 0;
 	};
 
@@ -158,9 +170,6 @@ public:
 class ZYadMapR : public virtual ZYadR
 	{
 public:
-// Implementation of required ZYadR method
-	virtual ZRef<ZYad> ReadYad();
-
 	virtual std::string Name() = 0;
 	};
 
@@ -187,8 +196,6 @@ class ZYadListMapR
 	public virtual ZYadListR
 	{
 public:
-// Disambiguating override from ZYadMapR and ZYadListR
-	virtual ZRef<ZYad> ReadYad();
 	};
 
 // =================================================================================================
@@ -203,24 +210,6 @@ class ZYadListMapRPos
 public:
 // Disambiguating override from ZYadMapRPos and ZYadListRPos
 	virtual bool IsSimple(const ZYadOptions& iOptions);
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_TValue
-
-class ZYad_TValue : public ZYad
-	{
-public:
-	ZYad_TValue(const ZTValue& iTV);
-	ZYad_TValue(ZType iType, const ZStreamR& iStreamR);
-	virtual ~ZYad_TValue();
-
-// From ZYad
-	virtual bool GetTValue(ZTValue& oTV);
-
-private:
-	const ZTValue fTV;
 	};
 
 #endif // __ZYad__

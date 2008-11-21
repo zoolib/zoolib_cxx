@@ -36,39 +36,35 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYad_CFType
+#pragma mark * ZYadR_CFType
 
-class ZYad_CFType : public ZYad
+class ZYadR_CFType : public virtual ZYadR
 	{
 public:
-	ZYad_CFType(CFTypeRef iCFTypeRef);
-	virtual ~ZYad_CFType();
-
-// From ZYad
-	virtual bool GetTValue(ZTValue& oTV);
+	ZYadR_CFType(CFTypeRef iCFTypeRef);
+	virtual ~ZYadR_CFType();
 
 // Our protocol
 	CFTypeRef GetCFTypeRef();
 
-private:
+private:	
 	CFTypeRef fCFTypeRef;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_TValue
+#pragma mark * ZYadPrimR_CFType
 
-class ZYadPrimR_CFType : public ZYadPrimR
+class ZYadPrimR_CFType
+:	public virtual ZYadR_CFType,
+	public virtual ZYadPrimR
 	{
 public:
 	ZYadPrimR_CFType(CFTypeRef iCFTypeRef);
 	virtual ~ZYadPrimR_CFType();
 
-	virtual ZRef<ZYad> ReadYad();
+// From ZYadR via ZYadPrimR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
-
-private:	
-	CFTypeRef fCFTypeRef;
 	};
 
 // =================================================================================================
@@ -78,25 +74,22 @@ private:
 typedef ZStreamerRPos_T<ZStreamRPos_CFData> ZStreamerRPos_CFData;
 
 class ZYadRawRPos_CFData
-:	public ZYadRawR,
+:	public virtual ZYadR_CFType,
+	public virtual ZYadRawR,
 	public virtual ZStreamerRPos_CFData
 	{
 public:
 	ZYadRawRPos_CFData(CFDataRef iCFDataRef);
 	virtual ~ZYadRawRPos_CFData();
-
-// From ZYadR
-	virtual ZRef<ZYad> ReadYad();
-
-private:
-	CFDataRef fCFDataRef;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadListRPos_CFArray
 
-class ZYadListRPos_CFArray : public ZYadListRPos
+class ZYadListRPos_CFArray
+:	public virtual ZYadR_CFType,
+	public virtual ZYadListRPos
 	{
 public:
 	ZYadListRPos_CFArray(CFArrayRef iCFArrayRef);
@@ -105,8 +98,6 @@ public:
 // From ZYadR via ZYadListRPos
 	virtual bool HasChild();
 	virtual ZRef<ZYadR> NextChild();
-
-	virtual ZRef<ZYad> ReadYad();
 
 // From ZYadListR via ZYadListRPos
 	virtual size_t GetPosition();
@@ -124,7 +115,9 @@ private:
 #pragma mark -
 #pragma mark * ZYadListMapRPos_CFDictionary
 
-class ZYadListMapRPos_CFDictionary : public ZYadListMapRPos
+class ZYadListMapRPos_CFDictionary
+:	public virtual ZYadR_CFType,
+	public ZYadListMapRPos
 	{
 public:
 	ZYadListMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef);
@@ -133,8 +126,6 @@ public:
 // From ZYadR via ZYadListMapRPos
 	virtual bool HasChild();
 	virtual ZRef<ZYadR> NextChild();
-
-	virtual ZRef<ZYad> ReadYad();
 
 // From ZYadListR via ZYadListMapRPos
 	virtual size_t GetPosition();

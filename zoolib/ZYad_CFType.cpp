@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
+#include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZStream_CFData.h"
 #include "zoolib/ZUtil_CFType.h"
 
@@ -31,98 +32,133 @@ using std::min;
 using std::string;
 using std::vector;
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Helper functions
+ZOOLIB_FACTORYCHAIN_HEAD(CFTypeRef, ZRef<ZYadR>);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYad_CFType
+#pragma mark * Factory
 
-ZYad_CFType::ZYad_CFType(CFTypeRef iCFTypeRef)
-:	fCFTypeRef(iCFTypeRef)
+namespace ZANONYMOUS {
+
+static class Maker0
+:	public ZFactoryChain_T<CFTypeRef, ZRef<ZYadR> >
 	{
-	::CFRetain(fCFTypeRef);
-	}
+public:
+	Maker0()
+	:	ZFactoryChain_T<Result_t, Param_t>(true)
+		{}
 
-ZYad_CFType::~ZYad_CFType()
+	virtual bool Make(Result_t& oResult, Param_t iParam)
+		{
+		if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iParam))
+			{
+			oResult = theYadR->GetCFTypeRef();
+			::CFRetain(oResult);
+			return true;
+			}
+		return false;
+		}	
+	} sMaker0;
+
+static class Maker1
+:	public ZFactoryChain_T<CFTypeRef, ZRef<ZYadR> >
+	{
+public:
+	Maker1()
+	:	ZFactoryChain_T<Result_t, Param_t>(false)
+		{}
+
+	virtual bool Make(Result_t& oResult, Param_t iParam)
+		{
+		ZTValue theTValue;
+		if (ZFactoryChain_T<ZTValue, ZRef<ZYadR> >::sMake(theTValue, iParam))
+			{
+			oResult = ZUtil_CFType::sCreateCFType(theTValue);
+			return true;
+			}
+		return false;
+		}	
+	} sMaker1;
+
+static class Maker2
+:	public ZFactoryChain_T<ZTValue, ZRef<ZYadR> >
+	{
+public:
+	Maker2()
+	:	ZFactoryChain_T<Result_t, Param_t>(false)
+		{}
+
+	virtual bool Make(Result_t& oResult, Param_t iParam)
+		{
+		if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iParam))
+			{
+			oResult = ZUtil_CFType::sAsTV(theYadR->GetCFTypeRef());
+			return true;
+			}
+		return false;
+		}	
+	} sMaker2;
+
+} // anonymous namespace
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadR_CFType
+
+ZYadR_CFType::ZYadR_CFType(CFTypeRef iCFTypeRef)
+:	fCFTypeRef(iCFTypeRef)
+	{ ::CFRetain(fCFTypeRef); }
+
+ZYadR_CFType::~ZYadR_CFType()
 	{ ::CFRelease(fCFTypeRef); }
 
-bool ZYad_CFType::GetTValue(ZTValue& oTV)
-	{
-	oTV = ZUtil_CFType::sAsTV(fCFTypeRef);
-	return true;
-	}
-
-CFTypeRef ZYad_CFType::GetCFTypeRef()
+CFTypeRef ZYadR_CFType::GetCFTypeRef()
 	{ return fCFTypeRef; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_TValue
+#pragma mark * ZYadPrimR_CFType
 
 ZYadPrimR_CFType::ZYadPrimR_CFType(CFTypeRef iCFTypeRef)
-:	fCFTypeRef(iCFTypeRef)
-	{
-	::CFRetain(fCFTypeRef);
-	}
+:	ZYadR_CFType(iCFTypeRef)
+	{}
 
 ZYadPrimR_CFType::~ZYadPrimR_CFType()
-	{ ::CFRelease(fCFTypeRef); }
-
-ZRef<ZYad> ZYadPrimR_CFType::ReadYad()
-	{ return new ZYad_CFType(fCFTypeRef); }
+	{}
 
 bool ZYadPrimR_CFType::IsSimple(const ZYadOptions& iOptions)
-	{
-	return true;
-	}
+	{ return true; }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadRawRPos_MemoryBlock
 
 ZYadRawRPos_CFData::ZYadRawRPos_CFData(CFDataRef iCFDataRef)
-:	ZStreamerRPos_CFData(iCFDataRef),
-	fCFDataRef(iCFDataRef)
-	{
-	::CFRetain(fCFDataRef);
-	}
+:	ZYadR_CFType(iCFDataRef),
+	ZStreamerRPos_CFData(iCFDataRef)
+	{}
 
 ZYadRawRPos_CFData::~ZYadRawRPos_CFData()
-	{ ::CFRelease(fCFDataRef); }
-
-ZRef<ZYad> ZYadRawRPos_CFData::ReadYad()
-	{ return new ZYad_CFType(fCFDataRef); }
+	{
+	CFDataRef theDataRef = nil;
+	::CFRetain(theDataRef);
+	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadListRPos_CFArray
 
 ZYadListRPos_CFArray::ZYadListRPos_CFArray(CFArrayRef iCFArrayRef)
-:	fCFArrayRef(iCFArrayRef),
+:	ZYadR_CFType(iCFArrayRef),
+	fCFArrayRef(iCFArrayRef),
 	fPosition(0)
-	{
-	::CFRetain(fCFArrayRef);
-	}
+	{}
 
 ZYadListRPos_CFArray::~ZYadListRPos_CFArray()
-	{ ::CFRelease(fCFArrayRef); }
+	{}
 
 bool ZYadListRPos_CFArray::HasChild()
 	{ return fPosition < ::CFArrayGetCount(fCFArrayRef); }
-
-ZRef<ZYad> ZYadListRPos_CFArray::ReadYad()
-	{
-	CFIndex theSize = ::CFArrayGetCount(fCFArrayRef);
-	if (fPosition < theSize)
-		{
-		CFTypeRef theValue = ::CFArrayGetValueAtIndex(fCFArrayRef, fPosition++);
-		return new ZYad_CFType(theValue);
-		}
-
-	return ZRef<ZYad>();
-	}
 
 ZRef<ZYadR> ZYadListRPos_CFArray::NextChild()
 	{
@@ -167,10 +203,10 @@ static void sGatherContents(const void* iKey, const void* iValue, void* iRefcon)
 } // anonymous namespace
 
 ZYadListMapRPos_CFDictionary::ZYadListMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef)
-:	fCFDictionaryRef(iCFDictionaryRef),
+:	ZYadR_CFType(iCFDictionaryRef),
+	fCFDictionaryRef(iCFDictionaryRef),
 	fPosition(0)
 	{
-	::CFRetain(fCFDictionaryRef);
 	GatherContents_t theParam;
 	theParam.fNames = &fNames;
 	theParam.fValues = &fValues;
@@ -178,19 +214,10 @@ ZYadListMapRPos_CFDictionary::ZYadListMapRPos_CFDictionary(CFDictionaryRef iCFDi
 	}
 
 ZYadListMapRPos_CFDictionary::~ZYadListMapRPos_CFDictionary()
-	{
-	::CFRelease(fCFDictionaryRef);	
-	}
+	{}
 
 bool ZYadListMapRPos_CFDictionary::HasChild()
 	{ return fPosition < fNames.size(); }
-
-ZRef<ZYad> ZYadListMapRPos_CFDictionary::ReadYad()
-	{
-	if (fPosition < fNames.size())
-		return new ZYad_CFType(fValues[fPosition++]);
-	return ZRef<ZYad>();
-	}
 
 ZRef<ZYadR> ZYadListMapRPos_CFDictionary::NextChild()
 	{
@@ -313,17 +340,7 @@ CFTypeRef ZYadUtil_CFType::sFromYadR(ZRef<ZYadR> iYadR)
 		}
 	else
 		{
-		ZRef<ZYad> theYad = iYadR->ReadYad();
-		if (ZRef<ZYad_CFType> theYad_CFType = ZRefDynamicCast<ZYad_CFType>(theYad))
-			{
-			CFTypeRef result = theYad_CFType->GetCFTypeRef();
-			::CFRetain(result);
-			return result;
-			}
-		else
-			{
-			return ZUtil_CFType::sCreateCFType(theYad->GetTValue());
-			}
+		return ZFactoryChain_T<CFTypeRef, ZRef<ZYadR> >::sMake(iYadR);
 		}
 	}
 

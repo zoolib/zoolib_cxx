@@ -53,20 +53,15 @@ public:
 #pragma mark * ZYadPrimR_ZooLibStrim
 
 class ZYadPrimR_ZooLibStrim
-:	public ZYadPrimR,
+:	public ZYadR_TValue,
+	public ZYadPrimR,
 	public ZYadR_ZooLibStrim
 	{
 public:
 	ZYadPrimR_ZooLibStrim(const ZTValue& iTV);
 
-// From ZYadR
-	virtual ZRef<ZYad> ReadYad();
-
 // From ZYadR_ZooLibStrim
 	virtual void Finish();
-
-private:
-	ZRef<ZYad> fYad;
 	};
 
 // =================================================================================================

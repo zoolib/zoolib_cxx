@@ -56,20 +56,15 @@ public:
 #pragma mark * ZYadPrimR_XMLPList
 
 class ZYadPrimR_XMLPList
-:	public ZYadPrimR,
+:	public ZYadR_TValue,
+	public ZYadPrimR,
 	public ZYadR_XMLPList
 	{
 public:
 	ZYadPrimR_XMLPList(const ZTValue& iTV);
 
-// From ZYadR
-	virtual ZRef<ZYad> ReadYad();
-
 // From ZYadR_XMLPList
 	virtual void Finish();
-
-private:
-	ZRef<ZYad> fYad;
 	};
 
 // =================================================================================================
@@ -81,7 +76,7 @@ class ZYadRawR_XMLPList
 	public ZYadR_XMLPList
 	{
 public:
-	ZYadRawR_XMLPList(ZML::Reader& iReader, bool iReadDelimiter);
+	ZYadRawR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
 
 // From ZYadR_XMLPList
 	virtual void Finish();
@@ -91,7 +86,7 @@ public:
 
 private:
 	ZML::Reader& fR;
-	bool fReadDelimiter;
+	bool fMustReadEndTag;
 	ZStreamR_ASCIIStrim fStreamR_ASCIIStrim;
 	ZStreamR_Base64Decode fStreamR_Base64Decode;
 	};
@@ -105,7 +100,7 @@ class ZYadListR_XMLPList
 	public ZYadR_XMLPList
 	{
 public:
-	ZYadListR_XMLPList(ZML::Reader& iReader, bool iReadDelimiter);
+	ZYadListR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
 
 // From ZYadR via ZYadListR
 	virtual bool HasChild();
@@ -121,7 +116,7 @@ private:
 	void pMoveIfNecessary();
 
 	ZML::Reader& fR;
-	bool fReadDelimiter;
+	bool fMustReadEndTag;
 	size_t fPosition;
 	ZRef<ZYadR_XMLPList> fValue_Current;
 	ZRef<ZYadR_XMLPList> fValue_Prior;
@@ -136,7 +131,7 @@ class ZYadMapR_XMLPList
 	public ZYadR_XMLPList
 	{
 public:
-	ZYadMapR_XMLPList(ZML::Reader& iReader, bool iReadDelimiter);
+	ZYadMapR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
 
 // From ZYadR via ZYadMapR
 	virtual bool HasChild();
@@ -152,7 +147,7 @@ private:
 	void pMoveIfNecessary();
 
 	ZML::Reader& fR;
-	bool fReadDelimiter;
+	bool fMustReadEndTag;
 	std::string fName;
 	ZRef<ZYadR_XMLPList> fValue_Current;
 	ZRef<ZYadR_XMLPList> fValue_Prior;
