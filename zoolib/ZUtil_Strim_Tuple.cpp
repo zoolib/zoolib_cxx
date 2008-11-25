@@ -158,6 +158,8 @@ string ZUtil_Strim_Tuple::sAsString(const ZTuple& iTuple,
 
 bool ZUtil_Strim_Tuple::sFromStrim(const ZStrimU& iStrimU, ZTuple& oTuple)
 	{
+	// Could/should use ZYadMapR_ZooLibStrim, as the caller
+	// is really asking that we read the body of a tuple.
 	ZTValue theTV;
 	if (!sFromStrim(iStrimU, theTV))
 		return false;
