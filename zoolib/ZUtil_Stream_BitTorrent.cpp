@@ -88,8 +88,7 @@ static int64 sReadInteger(const ZStreamU& s)
 static string sReadString(const ZStreamU& s)
 	{
 	const int32 stringLength = sReadInteger(s);
-	const uint8 terminator = s.ReadUInt8();
-	if (terminator != ':')
+	if (!sTryRead_Byte(s, ':'))
 		throw runtime_error("Expected ':' terminator for string length");
 
 	string theString(stringLength, 0);
@@ -100,8 +99,7 @@ static string sReadString(const ZStreamU& s)
 static ZTValue sReadStringish(const ZStreamU& s)
 	{
 	const int32 stringLength = sReadInteger(s);
-	const uint8 terminator = s.ReadUInt8();
-	if (terminator != ':')
+	if (!sTryRead_Byte(s, ':'))
 		throw runtime_error("Expected ':' terminator for string/binary length");
 
 	// Suck all the data into a memory block.
