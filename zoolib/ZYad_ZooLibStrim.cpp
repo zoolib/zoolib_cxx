@@ -546,6 +546,20 @@ ZYadListR_ZooLibStrim::ZYadListR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadD
 	fPosition(0)
 	{}
 
+void ZYadListR_ZooLibStrim::Finish()
+	{
+	using namespace ZUtil_Strim;
+
+	this->SkipAll();
+
+	if (fReadDelimiter)
+		{
+		sSkip_WSAndCPlusPlusComments(fStrimU);
+		if (!sTryRead_CP(fStrimU, ']'))
+			sThrowParseException("Expected ']' to close a vector");
+		}
+	}
+
 bool ZYadListR_ZooLibStrim::HasChild()
 	{
 	this->pMoveIfNecessary();
@@ -568,20 +582,6 @@ ZRef<ZYadR> ZYadListR_ZooLibStrim::NextChild()
 
 size_t ZYadListR_ZooLibStrim::GetPosition()
 	{ return fPosition; }
-
-void ZYadListR_ZooLibStrim::Finish()
-	{
-	using namespace ZUtil_Strim;
-
-	this->SkipAll();
-
-	if (fReadDelimiter)
-		{
-		sSkip_WSAndCPlusPlusComments(fStrimU);
-		if (!sTryRead_CP(fStrimU, ']'))
-			sThrowParseException("Expected ']' to close a vector");
-		}
-	}
 
 void ZYadListR_ZooLibStrim::pMoveIfNecessary()
 	{
@@ -611,6 +611,20 @@ ZYadMapR_ZooLibStrim::ZYadMapR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDel
 	fReadDelimiter(iReadDelimiter)
 	{}
 	
+void ZYadMapR_ZooLibStrim::Finish()
+	{
+	using namespace ZUtil_Strim;
+
+	this->SkipAll();
+
+	if (fReadDelimiter)
+		{
+		sSkip_WSAndCPlusPlusComments(fStrimU);
+		if (!sTryRead_CP(fStrimU, '}'))
+			sThrowParseException("Expected '}' to close a tuple");
+		}
+	}
+
 bool ZYadMapR_ZooLibStrim::HasChild()
 	{
 	this->pMoveIfNecessary();
@@ -637,20 +651,6 @@ string ZYadMapR_ZooLibStrim::Name()
 	this->pMoveIfNecessary();
 
 	return fName;
-	}
-
-void ZYadMapR_ZooLibStrim::Finish()
-	{
-	using namespace ZUtil_Strim;
-
-	this->SkipAll();
-
-	if (fReadDelimiter)
-		{
-		sSkip_WSAndCPlusPlusComments(fStrimU);
-		if (!sTryRead_CP(fStrimU, '}'))
-			sThrowParseException("Expected '}' to close a tuple");
-		}
 	}
 
 void ZYadMapR_ZooLibStrim::pMoveIfNecessary()
@@ -1048,7 +1048,7 @@ static void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 		for (;;)
 			{
 			sToStrim_Yad(s, iYadListR->NextChild(), iLevel, iOptions, false);
-			if (!iYadListR)
+			if (!iYadListR->HasChild())
 				break;
 			s.Write(", ");
 			}
@@ -1120,9 +1120,10 @@ static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	if (!iYadR)
+		{
 		return;
-
-	if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
+		}
+	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
 		sToStrim_Map(s, theYadMapR, iLevel, iOptions, iMayNeedInitialLF);
 		}
@@ -1172,24 +1173,24 @@ bool ZYadUtil_ZooLibStrim::sRead_Identifier(
 ZRef<ZYadR> ZYadUtil_ZooLibStrim::sMakeYadR(const ZStrimU& iStrimU)
 	{ return sMakeYadR_ZooLibStrim(iStrimU); }
 
-void ZYadUtil_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadListR> iYadListR)
+void ZYadUtil_ZooLibStrim::sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR)
 	{ sToStrim_List(s, iYadListR, 0, ZYadOptions(), false); }
 
-void ZYadUtil_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
+void ZYadUtil_ZooLibStrim::sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{ sToStrim_List(s, iYadListR, iInitialIndent, iOptions, false); }
 
-void ZYadUtil_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR)
+void ZYadUtil_ZooLibStrim::sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR)
 	{ sToStrim_Map(s, iYadMapR, 0, ZYadOptions(), false); }
 
-void ZYadUtil_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
+void ZYadUtil_ZooLibStrim::sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{ sToStrim_Map(s, iYadMapR, iInitialIndent, iOptions, false); }
 
-void ZYadUtil_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR)
+void ZYadUtil_ZooLibStrim::sToStrim_Raw(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR)
 	{ sToStrim_Raw(s, iYadRawR->GetStreamR(), 0, ZYadOptions(), false); }
 
-void ZYadUtil_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR,
+void ZYadUtil_ZooLibStrim::sToStrim_Raw(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{ sToStrim_Raw(s, iYadRawR->GetStreamR(), iInitialIndent, iOptions, false); }
 

@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream_HexStrim.h"
 #include "zoolib/ZStrim.h"
-#include "zoolib/ZYad.h"
+#include "zoolib/ZYad_ZooLib.h"
 
 // =================================================================================================
 #pragma mark -
@@ -98,15 +98,15 @@ class ZYadListR_ZooLibStrim
 public:
 	ZYadListR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter);
 
+// From ZYadR_ZooLibStrim
+	virtual void Finish();
+
 // From ZYadR via ZYadListR
 	virtual bool HasChild();
 	virtual ZRef<ZYadR> NextChild();
 
 // From ZYadListR
 	virtual size_t GetPosition();
-
-// From ZYadR_ZooLibStrim
-	virtual void Finish();
 
 private:
 	void pMoveIfNecessary();
@@ -129,15 +129,15 @@ class ZYadMapR_ZooLibStrim
 public:
 	ZYadMapR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter);
 
+// From ZYadR_ZooLibStrim
+	virtual void Finish();
+
 // From ZYadR via ZYadMapR
 	virtual bool HasChild();
 	virtual ZRef<ZYadR> NextChild();
 
 // From ZYadMapR
 	virtual std::string Name();
-
-// From ZYadR_ZooLibStrim
-	virtual void Finish();
 
 private:
 	void pMoveIfNecessary();
@@ -160,19 +160,19 @@ bool sRead_Identifier(
 
 ZRef<ZYadR> sMakeYadR(const ZStrimU& iStrimU);
 
-void sToStrim(const ZStrimW& s, ZRef<ZYadListR> iYadListR);
+void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR);
 
-void sToStrim(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
+void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 	size_t iInitialIndent, const ZYadOptions& iOptions);
 
-void sToStrim(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR);
+void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR);
 
-void sToStrim(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
+void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 	size_t iInitialIndent, const ZYadOptions& iOptions);
 
-void sToStrim(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR);
+void sToStrim_Raw(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR);
 
-void sToStrim(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR,
+void sToStrim_Raw(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR,
 	size_t iInitialIndent, const ZYadOptions& iOptions);
 
 void sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR);

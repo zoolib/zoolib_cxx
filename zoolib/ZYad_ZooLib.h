@@ -24,6 +24,39 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZYad.h"
 #include "zoolib/ZMemoryBlock.h"
+#include "zoolib/ZTuple.h"
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadR_TValue
+
+class ZYadR_TValue : public virtual ZYadR
+	{
+public:
+	ZYadR_TValue(ZType iType, const ZStreamR& iStreamR);
+	ZYadR_TValue(const ZTValue& iTV);
+
+// Our protocol
+	const ZTValue& GetTValue();
+
+// From ZYadR
+	virtual bool IsSimple(const ZYadOptions& iOptions);
+private:
+	const ZTValue fTValue;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadPrimR_TValue
+
+class ZYadPrimR_TValue
+:	public virtual ZYadR_TValue,
+	public virtual ZYadPrimR
+	{
+public:
+	ZYadPrimR_TValue(ZType iType, const ZStreamR& iStreamR);
+	ZYadPrimR_TValue(const ZTValue& iTV);
+	};
 
 // =================================================================================================
 #pragma mark -

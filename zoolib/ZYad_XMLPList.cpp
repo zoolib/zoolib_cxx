@@ -269,6 +269,14 @@ ZYadListR_XMLPList::ZYadListR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTa
 	fPosition(0)
 	{}
 
+void ZYadListR_XMLPList::Finish()
+	{
+	this->SkipAll();
+
+	if (fMustReadEndTag)
+		sEnd(fR, "array");
+	}
+
 bool ZYadListR_XMLPList::HasChild()
 	{
 	this->pMoveIfNecessary();
@@ -291,14 +299,6 @@ ZRef<ZYadR> ZYadListR_XMLPList::NextChild()
 
 size_t ZYadListR_XMLPList::GetPosition()
 	{ return fPosition; }
-
-void ZYadListR_XMLPList::Finish()
-	{
-	this->SkipAll();
-
-	if (fMustReadEndTag)
-		sEnd(fR, "array");
-	}
 
 void ZYadListR_XMLPList::pMoveIfNecessary()
 	{
@@ -323,6 +323,14 @@ ZYadMapR_XMLPList::ZYadMapR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
 	fMustReadEndTag(iMustReadEndTag)
 	{}
 	
+void ZYadMapR_XMLPList::Finish()
+	{
+	this->SkipAll();
+
+	if (fMustReadEndTag)
+		sEnd(fR, "dict");
+	}
+
 bool ZYadMapR_XMLPList::HasChild()
 	{
 	this->pMoveIfNecessary();
@@ -349,14 +357,6 @@ string ZYadMapR_XMLPList::Name()
 	this->pMoveIfNecessary();
 
 	return fName;
-	}
-
-void ZYadMapR_XMLPList::Finish()
-	{
-	this->SkipAll();
-
-	if (fMustReadEndTag)
-		sEnd(fR, "dict");
 	}
 
 void ZYadMapR_XMLPList::pMoveIfNecessary()
@@ -486,9 +486,10 @@ static void sToStrim_SimpleTValue(const ZStrimW_ML& s, const ZTValue& iTV)
 void ZYadUtil_XMLPList::sToStrimW_ML(const ZStrimW_ML& s, ZRef<ZYadR> iYadR)
 	{
 	if (!iYadR)
+		{
 		return;
-
-	if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
+		}
+	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
 		sToStrim_Map(s, theYadMapR);
 		}

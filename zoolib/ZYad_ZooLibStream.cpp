@@ -28,6 +28,8 @@ using std::vector;
 
 class ZYadR_ZooLibStream;
 
+ZRef<ZYadR_ZooLibStream> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR);
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Static helpers
@@ -46,8 +48,6 @@ static string sStringFromStream(const ZStreamR& iStreamR)
 		return iStreamR.ReadString(theLength);
 	return string();
 	}
-
-static ZRef<ZYadR_ZooLibStream> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR);
 
 // =================================================================================================
 #pragma mark -
@@ -597,9 +597,10 @@ static void sToStream(const ZStreamW& iStreamW, const ZStreamR& iStreamR)
 void ZYadUtil_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR)
 	{
 	if (!iYadR)
+		{
 		return;
-
-	if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
+		}
+	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
 		iStreamW.WriteUInt8(0x80 | eZType_Tuple);
 		sToStream(iStreamW, theYadMapR);
@@ -621,9 +622,11 @@ void ZYadUtil_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYad
 	}
 
 ZRef<ZYadR> ZYadUtil_ZooLibStream::sMakeYadR(const ZStreamR& iStreamR)
-	{ return sMakeYadR_ZooLibStream(iStreamR); }
+	{
+	return sMakeYadR_ZooLibStream(iStreamR);
+	}
 
-static ZRef<ZYadR_ZooLibStream> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR)
+ZRef<ZYadR_ZooLibStream> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR)
 	{
 	uint8 theType;
 	size_t countRead;

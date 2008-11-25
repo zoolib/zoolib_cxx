@@ -179,7 +179,7 @@ size_t ZYadListRPos_CFArray::GetSize()
 	{ return ::CFArrayGetCount(fCFArrayRef); }
 
 void ZYadListRPos_CFArray::SetPosition(size_t iPosition)
-	{ fPosition = min(iPosition, size_t(::CFArrayGetCount(fCFArrayRef))); }
+	{ fPosition = iPosition; }
 
 // =================================================================================================
 #pragma mark -
@@ -233,7 +233,7 @@ size_t ZYadListMapRPos_CFDictionary::GetSize()
 	{ return fNames.size(); }
 
 void ZYadListMapRPos_CFDictionary::SetPosition(size_t iPosition)
-	{ fPosition = min(iPosition, fNames.size()); }
+	{ fPosition = iPosition; }
 
 std::string ZYadListMapRPos_CFDictionary::Name()
 	{
@@ -324,9 +324,10 @@ static CFDataRef sReadData(const ZStreamR& iStreamR)
 CFTypeRef ZYadUtil_CFType::sFromYadR(ZRef<ZYadR> iYadR)
 	{
 	if (!iYadR)
+		{
 		return nil;
-
-	if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
+		}
+	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
 		return sReadDictionary(theYadMapR);
 		}

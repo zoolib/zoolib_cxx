@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZML.h"
 #include "zoolib/ZStream_ASCIIStrim.h"
 #include "zoolib/ZStream_Base64.h"
-#include "zoolib/ZYad.h"
+#include "zoolib/ZYad_ZooLib.h"
 
 class ZStrimW_ML;
 
@@ -102,15 +102,15 @@ class ZYadListR_XMLPList
 public:
 	ZYadListR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
 
+// From ZYadR_XMLPList
+	virtual void Finish();
+
 // From ZYadR via ZYadListR
 	virtual bool HasChild();
 	virtual ZRef<ZYadR> NextChild();
 
 // From ZYadListR
 	virtual size_t GetPosition();
-
-// From ZYadR_XMLPList
-	virtual void Finish();
 
 private:
 	void pMoveIfNecessary();
@@ -133,15 +133,15 @@ class ZYadMapR_XMLPList
 public:
 	ZYadMapR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
 
+// From ZYadR_XMLPList
+	virtual void Finish();
+
 // From ZYadR via ZYadMapR
 	virtual bool HasChild();
 	virtual ZRef<ZYadR> NextChild();
 
 // From ZYadMapR
 	virtual std::string Name();
-
-// From ZYadR_XMLPList
-	virtual void Finish();
 
 private:
 	void pMoveIfNecessary();

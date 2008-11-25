@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStreamer.h"
-#include "zoolib/ZTuple.h"
 
 #include <string>
 
@@ -84,25 +83,6 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadR_TValue
-
-class ZYadR_TValue : public virtual ZYadR
-	{
-public:
-	ZYadR_TValue(ZType iType, const ZStreamR& iStreamR);
-	ZYadR_TValue(const ZTValue& iTV);
-
-// Our protocol
-	ZTValue GetTValue();
-
-// From ZYadR
-	virtual bool IsSimple(const ZYadOptions& iOptions);
-private:
-	const ZTValue fTValue;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadPrimR
 
 class ZYadPrimR : public virtual ZYadR
@@ -114,26 +94,12 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_TValue
-
-class ZYadPrimR_TValue
-:	public virtual ZYadR_TValue,
-	public virtual ZYadPrimR
-	{
-public:
-	ZYadPrimR_TValue(ZType iType, const ZStreamR& iStreamR);
-	ZYadPrimR_TValue(const ZTValue& iTV);
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadRawR
 
 class ZYadRawR
 :	public virtual ZYadPrimR,
 	public virtual ZStreamerR
 	{
-public:
 	};
 
 // =================================================================================================
@@ -192,10 +158,9 @@ public:
 #pragma mark * ZYadListMapR
 
 class ZYadListMapR
-:	public virtual ZYadMapR,
-	public virtual ZYadListR
+:	public virtual ZYadListR,
+	public virtual ZYadMapR
 	{
-public:
 	};
 
 // =================================================================================================
@@ -203,13 +168,15 @@ public:
 #pragma mark * ZYadListMapRPos
 
 class ZYadListMapRPos
-:	public ZYadListMapR,
-	public ZYadMapRPos,
-	public ZYadListRPos
+:	public virtual ZYadListMapR,
+	public virtual ZYadListRPos,
+	public virtual ZYadMapRPos
 	{
 public:
-// Disambiguating override from ZYadMapRPos and ZYadListRPos
+// Disambiguating overrides from ZYadMapRPos and ZYadListRPos
 	virtual bool IsSimple(const ZYadOptions& iOptions);
+	virtual void SetPosition(size_t iPosition);
+	virtual void SetPosition(const std::string& iName);
 	};
 
 #endif // __ZYad__
