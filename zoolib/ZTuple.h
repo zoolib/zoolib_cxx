@@ -348,7 +348,7 @@ private:
 	// instances, we put the characters in fType.fBytes, and
 	// store an encoded length in fType.fType.
 	// If they're longer, we do placement new of a ZTupleString.
-
+public:
 	static const int kBytesSize = 11;
 
 	union Data
@@ -381,6 +381,7 @@ private:
 		char dummy[kBytesSize + 1];
 		};
 
+private:
 	union
 		{
 		Data fData;
