@@ -58,6 +58,7 @@ public:
 	typedef std::string (*EntityCallback)(void* iRefcon, const std::string& iEntity);
 
 	Reader(const ZStrimU& iStrim);
+	Reader(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues);
 	Reader(const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon);
 	~Reader();
 
@@ -80,6 +81,8 @@ private:
 	void pAdvance();
 
 	const ZStrimU& fStrim;
+
+	bool fRecognizeEntitiesInAttributeValues;
 
 	EntityCallback fCallback;
 	void* fRefcon;

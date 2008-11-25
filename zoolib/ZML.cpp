@@ -153,8 +153,9 @@ static bool sReadUntil(const ZStrimU& s, UTF32 iTerminator, string& oText)
 	}
 
 static bool sReadUntil(
-	const ZStrimU& s, ZML::Reader::EntityCallback iCallback,
-	void* iRefcon, UTF32 iTerminator, string& oText)
+	const ZStrimU& s, bool iRecognizeEntities,
+	ZML::Reader::EntityCallback iCallback, void* iRefcon,
+	UTF32 iTerminator, string& oText)
 	{
 	oText.resize(0);
 
@@ -169,7 +170,7 @@ static bool sReadUntil(
 			{
 			return true;
 			}
-		else if (theCP == '&')
+		else if (theCP == '&' && iRecognizeEntities)
 			{
 			oText += sReadReference(s, iCallback, iRefcon);
 			}
@@ -224,7 +225,9 @@ static bool sReadMLAttributeName(const ZStrimU& s, string& oName)
 	}
 
 static bool sReadMLAttributeValue(
-	const ZStrimU& s, ZML::Reader::EntityCallback iCallback, void* iRefcon, string& oValue)
+	const ZStrimU& s, bool iRecognizeEntities,
+	ZML::Reader::EntityCallback iCallback, void* iRefcon,
+	string& oValue)
 	{
 	oValue.resize(0);
 
@@ -234,11 +237,13 @@ static bool sReadMLAttributeValue(
 
 	if (curCP == '"')
 		{
-		return sReadUntil(s, iCallback, iRefcon, '"', oValue);
+		return sReadUntil(s, iRecognizeEntities,
+			iCallback, iRefcon, '"', oValue);
 		}
 	else if (curCP == '\'')
 		{
-		return sReadUntil(s, iCallback, iRefcon, '\'', oValue);
+		return sReadUntil(s, iRecognizeEntities,
+			iCallback, iRefcon, '\'', oValue);
 		}
 	else
 		{
@@ -261,7 +266,7 @@ static bool sReadMLAttributeValue(
 				{
 				break;
 				}
-			else if (curCP == '&')
+			else if (curCP == '&' && iRecognizeEntities)
 				{
 				oValue += sReadReference(s, iCallback, iRefcon);
 				}
@@ -283,7 +288,18 @@ ZML::Reader::Reader(const ZStrimU& iStrim)
 :	fStrim(iStrim),
 	fCallback(nil),
 	fBufferStart(0),
-	fToken(eToken_Exhausted)
+	fToken(eToken_Exhausted),
+	fRecognizeEntitiesInAttributeValues(false)
+	{
+	this->pAdvance();
+	}
+
+ZML::Reader::Reader(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues)
+:	fStrim(iStrim),
+	fCallback(nil),
+	fBufferStart(0),
+	fToken(eToken_Exhausted),
+	fRecognizeEntitiesInAttributeValues(iRecognizeEntitiesInAttributeValues)
 	{
 	this->pAdvance();
 	}
@@ -293,7 +309,8 @@ ZML::Reader::Reader(const ZStrimU& iStrim, EntityCallback iCallback, void* iRefc
 	fCallback(iCallback),
 	fRefcon(iRefcon),
 	fBufferStart(0),
-	fToken(eToken_Exhausted)
+	fToken(eToken_Exhausted),
+	fRecognizeEntitiesInAttributeValues(false)
 	{
 	this->pAdvance();
 	}
@@ -543,7 +560,9 @@ void ZML::Reader::pAdvance()
 						sSkip_WS(fStrim);
 						string attributeValue;
 						attributeValue.reserve(8);
-						if (!sReadMLAttributeValue(fStrim, fCallback, fRefcon, attributeValue))
+						if (!sReadMLAttributeValue(
+							fStrim, fRecognizeEntitiesInAttributeValues,
+							fCallback, fRefcon, attributeValue))
 							{
 							fToken = eToken_Exhausted;
 							return;
@@ -582,7 +601,7 @@ void ZML::sSkipText(ZML::Reader& r)
 		r.Advance();
 	}
 
-bool ZML::sSkip(Reader& r, const std::string& iTagName)
+bool ZML::sSkip(Reader& r, const string& iTagName)
 	{
 	vector<string> theTags(1, iTagName);
 	return sSkip(r, theTags);
