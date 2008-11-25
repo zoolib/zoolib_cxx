@@ -29,29 +29,55 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define _INT32 1
 
 #if defined(ZProjectHeader_npapi)
+
 #	include ZProjectHeader_npapi
-#elif defined(__APPLE__)
-#	include <WebKit/npapi.h>
-#else
-#	include <npapi.h>
-#endif
 
-#if defined(ZProjectHeader_npfunctions)
-#	include ZProjectHeader_npfunctions
 #elif defined(__APPLE__)
+
 #	include <WebKit/npfunctions.h>
+#	define ZCONFIG_NPStringUpperCaseFieldNames 1
+
 #else
-#	include <npfunctions.h>
+
+#	include <npupp.h>
+
 #endif
 
-#if defined(ZProjectHeader_npruntime)
-#	include ZProjectHeader_npruntime
-#elif defined(__APPLE__)
-#	include <WebKit/npruntime.h>
-#else
-#	include <npruntime.h>
+// =================================================================================================
+// Fixup the NPString field name change
+
+#ifndef ZCONFIG_NPStringUpperCaseFieldNames
+#	define ZCONFIG_NPStringUpperCaseFieldNames 0
 #endif
 
 
+#if ZCONFIG_NPStringUpperCaseFieldNames
+
+	inline const NPUTF8* const& sNPStringCharsConst(const NPString& iNPString)
+		{ return iNPString.UTF8Characters; }
+
+	inline NPUTF8*& sNPStringChars(NPString& iNPString)
+		{ return const_cast<NPUTF8*&>(iNPString.UTF8Characters); }
+
+	inline uint32_t sNPStringLengthConst(const NPString& iNPString)
+		{ return iNPString.UTF8Length; }
+
+	inline uint32_t& sNPStringLength(NPString& iNPString)
+		{ return iNPString.UTF8Length; }
+
+#else
+
+	inline const NPUTF8* const& sNPStringCharsConst(const NPString& iNPString)
+		{ return iNPString.utf8characters; }
+
+	inline NPUTF8*& sNPStringChars(NPString& iNPString)
+		{ return const_cast<NPUTF8*&>(iNPString.utf8characters); }
+
+	inline uint32_t sNPStringLengthConst(const NPString& iNPString)
+		{ return iNPString.utf8length; }
+
+	inline uint32_t& sNPStringLength(NPString& iNPString)
+		{ return iNPString.utf8length; }
+#endif
 
 #endif // __ZCompat_npapi__
