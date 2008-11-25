@@ -433,16 +433,16 @@ string ZUtil_Time::sAsString_ISO8601_s(ZTime iTime, bool iIncludeT)
 		return ZUtil_Time::sAsStringUTC(iTime, "%Y-%m-%d %H:%M:%S");
 	}
 
-string ZUtil_Time::sAsString_ISO8601_us(ZTime iTime, bool iIncludeT)
-	{
-	const string YmdHM = sYmdHM(iTime, iIncludeT);
-	return YmdHM + ZString::sFormat("%09.6f", fmod(iTime.fVal, 60));
-	}
-
 string ZUtil_Time::sAsString_ISO8601_ms(ZTime iTime, bool iIncludeT)
 	{
 	const string YmdHM = sYmdHM(iTime, iIncludeT);
 	return YmdHM + ZString::sFormat("%06.3f", fmod(iTime.fVal, 60));
+	}
+
+string ZUtil_Time::sAsString_ISO8601_us(ZTime iTime, bool iIncludeT)
+	{
+	const string YmdHM = sYmdHM(iTime, iIncludeT);
+	return YmdHM + ZString::sFormat("%09.6f", fmod(iTime.fVal, 60));
 	}
 
  ZTime ZUtil_Time::sFromString_ISO8601(const string& iString)

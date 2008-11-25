@@ -43,8 +43,8 @@ std::string sAsStringLocal(ZTime iTime, const std::string& iFormat);
 
 std::string sAsString_ISO8601(ZTime iTime, bool iIncludeT);
 std::string sAsString_ISO8601_s(ZTime iTime, bool iIncludeT);
-std::string sAsString_ISO8601_us(ZTime iTime, bool iIncludeT);
 std::string sAsString_ISO8601_ms(ZTime iTime, bool iIncludeT);
+std::string sAsString_ISO8601_us(ZTime iTime, bool iIncludeT);
 
 ZTime sFromString_ISO8601(const std::string& iString);
 
