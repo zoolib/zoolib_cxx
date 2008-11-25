@@ -193,7 +193,8 @@ void ZHTTP::Response::Send(const ZStreamW& s) const
 		s.WriteString(fMessage);
 		}
 	s.WriteString("\r\n");
-	for (vector<pair<string, string> >::const_iterator i = fHeaders.begin(); i != fHeaders.end(); ++i)
+	for (vector<pair<string, string> >::const_iterator i = fHeaders.begin();
+		i != fHeaders.end(); ++i)
 		{
 		s.WriteString((*i).first);
 		s.WriteString(": ");
@@ -210,7 +211,8 @@ void ZHTTP::Response::Send(const ZStreamW& s) const
 // This method should look at all the range entries in iRangeParam
 // and turn them into a list of ascending, non overlapping start/finish
 // pairs in oRanges.
-bool ZHTTP::sOrganizeRanges(size_t iSourceSize, const ZTValue& iRangeParam, vector<pair<size_t, size_t> >& oRanges)
+bool ZHTTP::sOrganizeRanges(size_t iSourceSize, const ZTValue& iRangeParam,
+	vector<pair<size_t, size_t> >& oRanges)
 	{
 	ZTuple asTuple = iRangeParam.GetTuple();
 	int64 reqBegin;
@@ -574,7 +576,10 @@ void ZHTTP::sParseParam(const string& iString, ZTuple& oParam)
 		string theData = iString.substr(prevPos, pos - prevPos);
 		string::size_type epos = theData.find_first_of('=');
 		if (epos != string::npos)
-			oParam.SetString(ZTName(theData.substr(0, epos)), sDecode_URI(theData.substr(epos + 1, pos - epos - 1)));
+			{
+			oParam.SetString(ZTName(theData.substr(0, epos)),
+				sDecode_URI(theData.substr(epos + 1, pos - epos - 1)));
+			}
 		prevPos = ++pos;
 		}
 
@@ -582,7 +587,10 @@ void ZHTTP::sParseParam(const string& iString, ZTuple& oParam)
 	string theData = iString.substr(prevPos, pos - prevPos);
 	string::size_type epos = theData.find_first_of('=');
 	if (epos != string::npos)
-		oParam.SetString(ZTName(theData.substr(0, epos)), sDecode_URI(theData.substr(epos + 1, pos - epos - 1)));
+		{
+		oParam.SetString(ZTName(theData.substr(0, epos)),
+			sDecode_URI(theData.substr(epos + 1, pos - epos - 1)));
+		}
 	}
 
 bool ZHTTP::sParseQuery(const string& iString, ZTuple& oTuple)
@@ -685,7 +693,8 @@ ZTrail ZHTTP::sDecodeTrail(const string& iURL)
 
 string ZHTTP::sEncodeComponent(const string& iString)
 	{
-	static const char sValidChars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	static const char sValidChars[]
+		= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	static const size_t sValidCharsLen = sizeof(sValidChars) - 1;
 
 	string result;
@@ -695,7 +704,9 @@ string ZHTTP::sEncodeComponent(const string& iString)
 	string::size_type lastGood = 0;
 	for (;;)
 		{
-		string::size_type nextProb = iString.find_first_not_of(sValidChars, lastGood, sValidCharsLen);
+		string::size_type nextProb
+			= iString.find_first_not_of(sValidChars, lastGood, sValidCharsLen);
+
 		if (nextProb == string::npos)
 			{
 			if (iString.size() > lastGood)
@@ -1045,7 +1056,8 @@ bool ZHTTP::sRead_content_range(const ZStreamU& iStream, ZTuple* ioFields)
 	return true;
 	}
 
-bool ZHTTP::sRead_content_range(const ZStreamU& iStream, int64& oBegin, int64& oEnd, int64& oMaxLength)
+bool ZHTTP::sRead_content_range(const ZStreamU& iStream,
+	int64& oBegin, int64& oEnd, int64& oMaxLength)
 	{
 	sSkipLWS(iStream);
 
@@ -1099,7 +1111,8 @@ bool ZHTTP::sRead_content_type(const ZStreamU& iStream, ZTuple* ioFields)
 	return true;
 	}
 
-bool ZHTTP::sRead_content_type(const ZStreamU& iStream, string& oType, string& oSubType, ZTuple& oParameters)
+bool ZHTTP::sRead_content_type(const ZStreamU& iStream,
+	string& oType, string& oSubType, ZTuple& oParameters)
 	{
 	if (!sReadMediaType(iStream, &oType, &oSubType, &oParameters, nil, nil))
 		return false;
@@ -1167,7 +1180,8 @@ bool ZHTTP::sReadURI(const ZStreamU& iStream, string* oURI)
 	return true;
 	}
 
-bool ZHTTP::sReadParameter(const ZStreamU& iStream, string* oName, string* oValue, string* oNameExact)
+bool ZHTTP::sReadParameter(const ZStreamU& iStream,
+	string* oName, string* oValue, string* oNameExact)
 	{
 	if (oName)
 		oName->resize(0);
@@ -1196,7 +1210,8 @@ bool ZHTTP::sReadParameter(const ZStreamU& iStream, string* oName, string* oValu
 	return false;
 	}
 
-bool ZHTTP::sReadParameter_Cookie(const ZStreamU& iStream, string* oName, string* oValue, string* oNameExact)
+bool ZHTTP::sReadParameter_Cookie(const ZStreamU& iStream,
+	string* oName, string* oValue, string* oNameExact)
 	{
 	if (oName)
 		oName->resize(0);
@@ -1225,7 +1240,8 @@ bool ZHTTP::sReadParameter_Cookie(const ZStreamU& iStream, string* oName, string
 	return false;
 	}
 
-bool ZHTTP::sReadMediaType(const ZStreamU& iStream, string* oType, string* oSubtype, ZTuple* oParameters, string* oTypeExact, string* oSubtypeExact)
+bool ZHTTP::sReadMediaType(const ZStreamU& iStream,
+	string* oType, string* oSubtype, ZTuple* oParameters, string* oTypeExact, string* oSubtypeExact)
 	{
 	if (oType)
 		oType->resize(0);
@@ -1703,7 +1719,8 @@ static void sReadParams(const ZStreamU& iStreamU, ZTuple& ioTuple)
 static bool sReadPOST(const ZStreamR& iStreamR, const ZTuple& iHeader, ZTValue& oTV)
 	{
 	ZTuple content_type = iHeader.GetTuple("content-type");
-	if (content_type.GetString("type") == "application" && content_type.GetString("subtype") == "x-www-url-encoded")
+	if (content_type.GetString("type") == "application"
+		&& content_type.GetString("subtype") == "x-www-url-encoded")
 		{
 		// It's application/x-www-url-encoded. So we're going to unpack it into a tuple.
 		ZTuple& theTuple = oTV.SetMutableTuple();
@@ -1711,7 +1728,8 @@ static bool sReadPOST(const ZStreamR& iStreamR, const ZTuple& iHeader, ZTValue& 
 		#warning not done yet
 		return true;
 		}
-	else if (content_type.GetString("type") == "multipart" && content_type.GetString("subtype") == "form-data")
+	else if (content_type.GetString("type") == "multipart"
+		&& content_type.GetString("subtype") == "form-data")
 		{
 		ZTuple& theTuple = oTV.SetMutableTuple();
 
@@ -1751,7 +1769,8 @@ static bool sReadPOST(const ZStreamR& iStreamR, const ZTuple& iHeader, ZTValue& 
 
 			// We parse it into the tuple called 'header'.
 			ZTuple header;
-			ZHTTP::sReadHeader(ZStreamR_SkipAllOnDestroy(ZMIME::StreamR_Header(streamPart)), &header);
+			ZHTTP::sReadHeader(
+				ZStreamR_SkipAllOnDestroy(ZMIME::StreamR_Header(streamPart)), &header);
 
 			ZTuple contentDisposition = header.GetTuple("content-disposition");
 			if (contentDisposition.GetString("value") == "form-data")
@@ -1926,7 +1945,7 @@ void ZHTTP::StreamW_Chunked::Imp_Write(const void* iSource, size_t iCount, size_
 			// The data would overflow the buffer, so we can write the
 			// buffer content (if any) plus this new stuff.
 			fStreamSink.Writef("%X\r\n", fBufferUsed + iCount);
-			// Hmmm. Do we allow the end of stream exception to propogate?
+			// Hmmm. Do we allow an end of stream exception to propogate?
 			fStreamSink.Write(fBuffer, fBufferUsed);
 			fBufferUsed = 0;
 			fStreamSink.Write(localSource, iCount);
