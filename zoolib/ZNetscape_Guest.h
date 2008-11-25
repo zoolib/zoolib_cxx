@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNetscape_Guest__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompat_npapi.h"
+#include "zoolib/ZNetscape.h"
 
 #include <string>
 
@@ -40,7 +40,7 @@ void sRelease(NPObjectG* iObject);
 #pragma mark -
 #pragma mark * NPVariantG
 
-class NPVariantG : public NPVariant
+class NPVariantG : public NPVariantBase
 	{
 public:
 	NPVariantG();
@@ -60,36 +60,11 @@ public:
 	NPVariantG& operator=(const std::string& iValue);
 	NPVariantG& operator=(NPObjectG* iValue);
 
-	bool IsVoid() const;
-	bool IsNull() const;
-
-	bool IsBool() const;
-	bool IsInt32() const;
-	bool IsDouble() const;
-	bool IsString() const;
-	bool IsObject() const;
-
 	void SetVoid();
 	void SetNull();
-
-	bool GetBool() const;
-	bool GetBool(bool& oValue) const;
-	bool DGetBool(bool iDefault) const;
 	void SetBool(bool iValue);
-
-	int32 GetInt32() const;
-	bool GetInt32(int32& oValue) const;
-	int32 DGetInt32(int32 iDefault) const;
 	void SetInt32(int32 iValue);
-
-	double GetDouble() const;
-	bool GetDouble(double& oValue) const;
-	double DGetDouble(double iDefault) const;
 	void SetDouble(double iValue);
-
-	std::string GetString() const;
-	bool GetString(std::string& oValue) const;
-	std::string DGetString(const std::string& iDefault) const;
 	void SetString(const std::string& iValue);
 
 	NPObjectG* GetObject() const;

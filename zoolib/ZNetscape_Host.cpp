@@ -102,11 +102,9 @@ void NPVariantH::pCopyFrom(const NPVariant& iOther)
 			}
 		case NPVariantType_String:
 			{
-			size_t theLength = iOther.value.stringValue.UTF8Length;
-			value.stringValue.UTF8Length = theLength;
-			value.stringValue.UTF8Characters = static_cast<char*>(malloc(theLength));
-			strncpy(const_cast<char*>(value.stringValue.UTF8Characters),
-				iOther.value.stringValue.UTF8Characters, theLength);
+			this->pSetString(
+				sNPStringCharsConst(iOther.value.stringValue),
+				sNPStringLengthConst(iOther.value.stringValue));
 			break;
 			}
 		case NPVariantType_Object:
@@ -120,9 +118,7 @@ void NPVariantH::pCopyFrom(const NPVariant& iOther)
 	}
 
 NPVariantH::NPVariantH()
-	{
-	type = NPVariantType_Void;
-	}
+	{}
 
 NPVariantH::NPVariantH(const NPVariant& iOther)
 	{
@@ -146,28 +142,20 @@ NPVariantH& NPVariantH::operator=(const NPVariant& iOther)
 	}
 
 NPVariantH::NPVariantH(bool iValue)
-	{
-	type = NPVariantType_Bool;
-	value.boolValue = iValue;
-	}
+:	NPVariantBase(iValue)
+	{}
 
 NPVariantH::NPVariantH(int32 iValue)
-	{
-	type = NPVariantType_Int32;
-	value.intValue = iValue;
-	}
+:	NPVariantBase(iValue)
+	{}
 
 NPVariantH::NPVariantH(double iValue)
-	{
-	type = NPVariantType_Double;
-	value.doubleValue = iValue;
-	}
+:	NPVariantBase(iValue)
+	{}
 
-NPVariantH::NPVariantH(const std::string& iValue)
-	{
-	type = NPVariantType_Void;
-	this->SetString(iValue);
-	}
+NPVariantH::NPVariantH(const string& iValue)
+:	NPVariantBase(iValue)
+	{}
 
 NPVariantH::NPVariantH(NPObjectH* iValue)
 	{
@@ -193,7 +181,7 @@ NPVariantH& NPVariantH::operator=(double iValue)
 	return *this;
 	}
 
-NPVariantH& NPVariantH::operator=(const std::string& iValue)
+NPVariantH& NPVariantH::operator=(const string& iValue)
 	{
 	this->SetString(iValue);
 	return *this;
@@ -204,27 +192,6 @@ NPVariantH& NPVariantH::operator=(NPObjectH* iValue)
 	this->SetObject(iValue);
 	return *this;
 	}
-
-bool NPVariantH::IsVoid() const
-	{ return type == NPVariantType_Void; }
-
-bool NPVariantH::IsNull() const
-	{ return type == NPVariantType_Null; }
-
-bool NPVariantH::IsBool() const
-	{ return type == NPVariantType_Bool; }
-
-bool NPVariantH::IsInt32() const
-	{ return type == NPVariantType_Int32; }
-
-bool NPVariantH::IsDouble() const
-	{ return type == NPVariantType_Double; }
-
-bool NPVariantH::IsString() const
-	{ return type == NPVariantType_String; }
-
-bool NPVariantH::IsObject() const
-	{ return type == NPVariantType_Object; }
 
 void NPVariantH::SetVoid()
 	{
@@ -238,47 +205,11 @@ void NPVariantH::SetNull()
 	type = NPVariantType_Null;
 	}
 
-bool NPVariantH::GetBool() const
-	{ return this->DGetBool(false); }
-
-bool NPVariantH::GetBool(bool& oValue) const
-	{
-	if (type != NPVariantType_Bool)
-		return false;
-	oValue = value.boolValue;
-	return true;
-	}
-
-bool NPVariantH::DGetBool(bool iDefault) const
-	{
-	if (type == NPVariantType_Bool)
-		return value.boolValue;
-	return iDefault;
-	}
-
 void NPVariantH::SetBool(bool iValue)
 	{
 	this->pRelease();
 	type = NPVariantType_Bool;
 	value.boolValue = iValue;
-	}
-
-int32 NPVariantH::GetInt32() const
-	{ return this->DGetInt32(0); }
-
-bool NPVariantH::GetInt32(int32& oValue) const
-	{
-	if (type != NPVariantType_Int32)
-		return false;
-	oValue = value.intValue;
-	return true;
-	}
-
-int32 NPVariantH::DGetInt32(int32 iDefault) const
-	{
-	if (type == NPVariantType_Int32)
-		return value.intValue;
-	return iDefault;
 	}
 
 void NPVariantH::SetInt32(int32 iValue)
@@ -288,24 +219,6 @@ void NPVariantH::SetInt32(int32 iValue)
 	value.intValue = iValue;
 	}
 
-double NPVariantH::GetDouble() const
-	{ return this->DGetDouble(0); }
-	
-bool NPVariantH::GetDouble(double& oValue) const
-	{
-	if (type != NPVariantType_Double)
-		return false;
-	oValue = value.doubleValue;
-	return true;
-	}
-
-double NPVariantH::DGetDouble(double iDefault) const
-	{
-	if (type == NPVariantType_Double)
-		return value.doubleValue;
-	return iDefault;
-	}
-
 void NPVariantH::SetDouble(double iValue)
 	{
 	this->pRelease();
@@ -313,31 +226,10 @@ void NPVariantH::SetDouble(double iValue)
 	value.doubleValue = iValue;
 	}
 
-std::string NPVariantH::GetString() const
-	{ return this->DGetString(string()); }
-
-bool NPVariantH::GetString(std::string& oValue) const
-	{
-	if (type != NPVariantType_String)
-		return false;
-	oValue = string(value.stringValue.UTF8Characters, value.stringValue.UTF8Length);
-	return true;
-	}
-
-std::string NPVariantH::DGetString(const std::string& iDefault) const
-	{
-	if (type != NPVariantType_String)
-		return iDefault;
-	return string(value.stringValue.UTF8Characters, value.stringValue.UTF8Length);
-	}
-
-void NPVariantH::SetString(const std::string& iValue)
+void NPVariantH::SetString(const string& iValue)
 	{
 	this->pRelease();
-	size_t theLength = iValue.length();
-	value.stringValue.UTF8Length = theLength;
-	value.stringValue.UTF8Characters = static_cast<char*>(malloc(theLength));
-	strncpy(const_cast<char*>(value.stringValue.UTF8Characters), iValue.data(), theLength);
+	this->pSetString(iValue);
 	type = NPVariantType_String;
 	}
 
@@ -602,8 +494,6 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs& oNPNF)
 	oNPNF.memfree = sMemFree;
 	oNPNF.memflush = sMemFlush;
 	oNPNF.reloadplugins = sReloadPlugins;
-	oNPNF.getJavaEnv = sGetJavaEnv;
-	oNPNF.getJavaPeer = sGetJavaPeer;
 	oNPNF.geturlnotify = sGetURLNotify;
 	oNPNF.posturlnotify = sPostURLNotify;
 	oNPNF.getvalue = sGetValue;
@@ -617,8 +507,6 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs& oNPNF)
 	oNPNF.getintidentifier = sGetIntIdentifier;
 	oNPNF.identifierisstring = sIdentifierIsString;
 	oNPNF.utf8fromidentifier = sUTF8FromIdentifier;
-	// AG. Need to do this cast because Mac headers are wrong.
-	oNPNF.intfromidentifier = (NPN_IntFromIdentifierProcPtr)sIntFromIdentifier;
 	oNPNF.createobject = sCreateObject;
 	oNPNF.retainobject = sRetainObject;
 	oNPNF.releaseobject = sReleaseObject;
@@ -632,6 +520,27 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs& oNPNF)
 	oNPNF.hasmethod = sHasMethod;
 	oNPNF.releasevariantvalue = sReleaseVariantValue;
 	oNPNF.setexception = sSetException;
+
+// Doing these out of order because they're problematic in one way or another.
+	// AG. Need to do this cast because Mac headers are wrong.
+
+	#if defined(NewNPN_IntFromIdentifierProc)
+		oNPNF.intfromidentifier = sIntFromIdentifier;
+	#else
+		oNPNF.intfromidentifier = (NPN_IntFromIdentifierProcPtr)sIntFromIdentifier;
+	#endif
+
+	#if defined(NewNPN_GetJavaEnvProc)
+		oNPNF.getJavaEnv = (NPN_GetJavaEnvUPP)sGetJavaEnv;
+	#else
+		oNPNF.getJavaEnv = sGetJavaEnv;
+	#endif
+
+	#if defined(NewNPN_GetJavaPeerProc)
+		oNPNF.getJavaPeer = (NPN_GetJavaPeerUPP)sGetJavaPeer;
+	#else
+		oNPNF.getJavaPeer = sGetJavaPeer;
+	#endif
 	}
 
 HostMeister::HostMeister()
@@ -770,12 +679,12 @@ NPObject* HostMeister::sCreateObject(NPP npp, NPClass* aClass)
 	{ return sHostFromNPP(npp)->Host_CreateObject(npp, aClass); }
 
 bool HostMeister::sInvoke(NPP npp,
-	NPObject* obj, NPIdentifier methodName, const NPVariant* args, unsigned argCount,
+	NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount,
 	NPVariant* result)
 	{ return sHostFromNPP(npp)->Host_Invoke(npp, obj, methodName, args, argCount, result); }
 
 bool HostMeister::sInvokeDefault(NPP npp,
-	NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result)
+	NPObject* obj, const NPVariant* args, uint32_t argCount, NPVariant* result)
 	{ return sHostFromNPP(npp)->Host_InvokeDefault(npp, obj, args, argCount, result); }
 
 bool HostMeister::sEvaluate(NPP npp,
@@ -929,7 +838,7 @@ bool Host::Sender::pDeliverData()
 		}
 	else if (countPossible > 0)
 		{
-		countPossible = std::min(countPossible, 64 * 1024);
+		countPossible = std::min(countPossible, int32(64 * 1024));
 
 		vector<uint8> buffer;
 		buffer.resize(countPossible);
@@ -1056,7 +965,7 @@ void Host::SendDataSync(
 				break;
 				}
 
-			countPossible = std::min(countPossible, 1024 * 1024);
+			countPossible = std::min(countPossible, int32(1024 * 1024));
 
 			vector<uint8> buffer;
 			buffer.resize(countPossible);

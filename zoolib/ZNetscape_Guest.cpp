@@ -25,28 +25,34 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
+
 using std::string;
 
 #pragma export on
 // Mach-o entry points
-extern "C" NPError NP_Initialize(NPNetscapeFuncs*);
-extern "C" NPError NP_GetEntryPoints(NPPluginFuncs*);
-extern "C" NPError NP_Shutdown();
 
-// For compatibility with CFM browsers.
-extern "C" int main(
-	NPNetscapeFuncs *browserFuncs, NPPluginFuncs *pluginFuncs, NPP_ShutdownProcPtr *shutdown);
-#pragma export off
+extern "C" {
 
-
+NPError NP_Initialize(NPNetscapeFuncs*);
 NPError NP_Initialize(NPNetscapeFuncs* iBrowserFuncs)
 	{ return ZNetscape::GuestMeister::sGet()->Initialize(iBrowserFuncs); }
 
+NPError NP_GetEntryPoints(NPPluginFuncs*);
 NPError NP_GetEntryPoints(NPPluginFuncs* oPluginFuncs)
 	{ return ZNetscape::GuestMeister::sGet()->GetEntryPoints(oPluginFuncs); }
 
+NPError NP_Shutdown();
 NPError NP_Shutdown()
 	{ return ZNetscape::GuestMeister::sGet()->Shutdown(); }
+
+// For compatibility with CFM browsers.
+//int main(
+//	NPNetscapeFuncs* browserFuncs, NPPluginFuncs* pluginFuncs, NPP_ShutdownProcPtr* shutdown);
+
+} // extern "C"
+
+#pragma export off
+
 
 // =================================================================================================
 #pragma mark -
@@ -103,11 +109,9 @@ void NPVariantG::pCopyFrom(const NPVariant& iOther)
 			}
 		case NPVariantType_String:
 			{
-			size_t theLength = iOther.value.stringValue.UTF8Length;
-			value.stringValue.UTF8Length = theLength;
-			value.stringValue.UTF8Characters = static_cast<char*>(malloc(theLength));
-			strncpy(const_cast<char*>(value.stringValue.UTF8Characters),
-				iOther.value.stringValue.UTF8Characters, theLength);
+			this->pSetString(
+				sNPStringCharsConst(iOther.value.stringValue),
+				sNPStringLengthConst(iOther.value.stringValue));
 			break;
 			}
 		case NPVariantType_Object:
@@ -121,9 +125,7 @@ void NPVariantG::pCopyFrom(const NPVariant& iOther)
 	}
 
 NPVariantG::NPVariantG()
-	{
-	type = NPVariantType_Void;
-	}
+	{}
 
 NPVariantG::NPVariantG(const NPVariant& iOther)
 	{
@@ -147,28 +149,20 @@ NPVariantG& NPVariantG::operator=(const NPVariant& iOther)
 	}
 
 NPVariantG::NPVariantG(bool iValue)
-	{
-	type = NPVariantType_Bool;
-	value.boolValue = iValue;
-	}
+:	NPVariantBase(iValue)
+	{}
 
 NPVariantG::NPVariantG(int32 iValue)
-	{
-	type = NPVariantType_Int32;
-	value.intValue = iValue;
-	}
+:	NPVariantBase(iValue)
+	{}
 
 NPVariantG::NPVariantG(double iValue)
-	{
-	type = NPVariantType_Double;
-	value.doubleValue = iValue;
-	}
+:	NPVariantBase(iValue)
+	{}
 
 NPVariantG::NPVariantG(const string& iValue)
-	{
-	type = NPVariantType_Void;
-	this->SetString(iValue);
-	}
+:	NPVariantBase(iValue)
+	{}
 
 NPVariantG::NPVariantG(NPObjectG* iValue)
 	{
@@ -206,27 +200,6 @@ NPVariantG& NPVariantG::operator=(NPObjectG* iValue)
 	return *this;
 	}
 
-bool NPVariantG::IsVoid() const
-	{ return type == NPVariantType_Void; }
-
-bool NPVariantG::IsNull() const
-	{ return type == NPVariantType_Null; }
-
-bool NPVariantG::IsBool() const
-	{ return type == NPVariantType_Bool; }
-
-bool NPVariantG::IsInt32() const
-	{ return type == NPVariantType_Int32; }
-
-bool NPVariantG::IsDouble() const
-	{ return type == NPVariantType_Double; }
-
-bool NPVariantG::IsString() const
-	{ return type == NPVariantType_String; }
-
-bool NPVariantG::IsObject() const
-	{ return type == NPVariantType_Object; }
-
 void NPVariantG::SetVoid()
 	{
 	this->pRelease();
@@ -239,47 +212,11 @@ void NPVariantG::SetNull()
 	type = NPVariantType_Null;
 	}
 
-bool NPVariantG::GetBool() const
-	{ return this->DGetBool(false); }
-
-bool NPVariantG::GetBool(bool& oValue) const
-	{
-	if (type != NPVariantType_Bool)
-		return false;
-	oValue = value.boolValue;
-	return true;
-	}
-
-bool NPVariantG::DGetBool(bool iDefault) const
-	{
-	if (type == NPVariantType_Bool)
-		return value.boolValue;
-	return iDefault;
-	}
-
 void NPVariantG::SetBool(bool iValue)
 	{
 	this->pRelease();
 	type = NPVariantType_Bool;
 	value.boolValue = iValue;
-	}
-
-int32 NPVariantG::GetInt32() const
-	{ return this->DGetInt32(0); }
-
-bool NPVariantG::GetInt32(int32& oValue) const
-	{
-	if (type != NPVariantType_Int32)
-		return false;
-	oValue = value.intValue;
-	return true;
-	}
-
-int32 NPVariantG::DGetInt32(int32 iDefault) const
-	{
-	if (type == NPVariantType_Int32)
-		return value.intValue;
-	return iDefault;
 	}
 
 void NPVariantG::SetInt32(int32 iValue)
@@ -289,24 +226,6 @@ void NPVariantG::SetInt32(int32 iValue)
 	value.intValue = iValue;
 	}
 
-double NPVariantG::GetDouble() const
-	{ return this->DGetDouble(0); }
-	
-bool NPVariantG::GetDouble(double& oValue) const
-	{
-	if (type != NPVariantType_Double)
-		return false;
-	oValue = value.doubleValue;
-	return true;
-	}
-
-double NPVariantG::DGetDouble(double iDefault) const
-	{
-	if (type == NPVariantType_Double)
-		return value.doubleValue;
-	return iDefault;
-	}
-
 void NPVariantG::SetDouble(double iValue)
 	{
 	this->pRelease();
@@ -314,31 +233,10 @@ void NPVariantG::SetDouble(double iValue)
 	value.doubleValue = iValue;
 	}
 
-string NPVariantG::GetString() const
-	{ return this->DGetString(string()); }
-
-bool NPVariantG::GetString(string& oValue) const
-	{
-	if (type != NPVariantType_String)
-		return false;
-	oValue = string(value.stringValue.UTF8Characters, value.stringValue.UTF8Length);
-	return true;
-	}
-
-string NPVariantG::DGetString(const string& iDefault) const
-	{
-	if (type != NPVariantType_String)
-		return iDefault;
-	return string(value.stringValue.UTF8Characters, value.stringValue.UTF8Length);
-	}
-
 void NPVariantG::SetString(const string& iValue)
 	{
 	this->pRelease();
-	size_t theLength = iValue.length();
-	value.stringValue.UTF8Length = theLength;
-	value.stringValue.UTF8Characters = static_cast<char*>(malloc(theLength));
-	strncpy(const_cast<char*>(value.stringValue.UTF8Characters), iValue.data(), theLength);
+	this->pSetString(iValue);
 	type = NPVariantType_String;
 	}
 
@@ -722,7 +620,8 @@ NPUTF8* GuestMeister::Host_UTF8FromIdentifier(NPIdentifier identifier)
 	{ return fNPNF.utf8fromidentifier(identifier); }
 
 int32_t GuestMeister::Host_IntFromIdentifier(NPIdentifier identifier)
-	{ return reinterpret_cast<int32_t>(fNPNF.intfromidentifier(identifier)); }
+	{ return (int32_t)(fNPNF.intfromidentifier(identifier)); }
+//	{ return reinterpret_cast<int32_t>(fNPNF.intfromidentifier(identifier)); }
 
 NPObject* GuestMeister::Host_CreateObject(NPP iNPP, NPClass* aClass)
 	{ return fNPNF.createobject(iNPP, aClass); }

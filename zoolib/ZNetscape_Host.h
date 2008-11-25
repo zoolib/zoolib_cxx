@@ -22,17 +22,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNetscape_Host__ 1
 #include "zconfig.h"
 
-#include <string>
-
-#include "zoolib/ZCompat_npapi.h"
 #include "zoolib/ZGeom.h"
 #include "zoolib/ZMemoryBlock.h"
-#include "zoolib/ZRefCount.h"
-#include "zoolib/ZStream.h"
+#include "zoolib/ZNetscape.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"
 
 #include <list>
+#include <string>
 
 namespace ZNetscape {
 
@@ -48,7 +45,7 @@ void sRelease(NPObjectH* iObject);
 #pragma mark -
 #pragma mark * NPVariantH
 
-class NPVariantH : public NPVariant
+class NPVariantH : public NPVariantBase
 	{
 public:
 	NPVariantH();
@@ -68,36 +65,11 @@ public:
 	NPVariantH& operator=(const std::string& iValue);
 	NPVariantH& operator=(NPObjectH* iValue);
 
-	bool IsVoid() const;
-	bool IsNull() const;
-
-	bool IsBool() const;
-	bool IsInt32() const;
-	bool IsDouble() const;
-	bool IsString() const;
-	bool IsObject() const;
-
 	void SetVoid();
 	void SetNull();
-
-	bool GetBool() const;
-	bool GetBool(bool& oValue) const;
-	bool DGetBool(bool iDefault) const;
 	void SetBool(bool iValue);
-
-	int32 GetInt32() const;
-	bool GetInt32(int32& oValue) const;
-	int32 DGetInt32(int32 iDefault) const;
 	void SetInt32(int32 iValue);
-
-	double GetDouble() const;
-	bool GetDouble(double& oValue) const;
-	double DGetDouble(double iDefault) const;
 	void SetDouble(double iValue);
-
-	std::string GetString() const;
-	bool GetString(std::string& oValue) const;
-	std::string DGetString(const std::string& iDefault) const;
 	void SetString(const std::string& iValue);
 
 	NPObjectH* GetObject() const;
@@ -304,11 +276,11 @@ private:
 	static NPObject* sCreateObject(NPP npp, NPClass* aClass);
 
 	static bool sInvoke(NPP npp,
-		NPObject* obj, NPIdentifier methodName, const NPVariant* args, unsigned argCount,
+		NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount,
 		NPVariant* result);
 
 	static bool sInvokeDefault(NPP npp,
-		NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result);
+		NPObject* obj, const NPVariant* args, uint32_t argCount, NPVariant* result);
 
 	static bool sEvaluate(NPP npp,
 		NPObject* obj, NPString* script, NPVariant* result);
@@ -437,11 +409,11 @@ public:
 	virtual NPObject* Host_CreateObject(NPP npp, NPClass* aClass) = 0;
 
 	virtual bool Host_Invoke(NPP npp,
-		NPObject* obj, NPIdentifier methodName, const NPVariant* args, unsigned argCount,
+		NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount,
 		NPVariant* result) = 0;
 
 	virtual bool Host_InvokeDefault(NPP npp,
-		NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result) = 0;
+		NPObject* obj, const NPVariant* args, uint32_t argCount, NPVariant* result) = 0;
 
 	virtual bool Host_Evaluate(NPP npp,
 		NPObject* obj, NPString* script, NPVariant* result) = 0;

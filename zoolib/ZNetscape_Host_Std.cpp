@@ -35,6 +35,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
+#include "zoolib/ZCompat_string.h" // For strdup
+
 using std::map;
 using std::pair;
 using std::string;
@@ -160,9 +162,9 @@ void HostMeister_Std::ReleaseVariantValue(NPVariant* variant)
 		}
 	else if (variant->type == NPVariantType_String)
 		{
-		free((void*)variant->value.stringValue.UTF8Characters);
-		variant->value.stringValue.UTF8Characters = 0;
-		variant->value.stringValue.UTF8Length = 0;
+		free((void*)sNPStringChars(variant->value.stringValue));
+		sNPStringChars(variant->value.stringValue) = nil;
+		sNPStringLength(variant->value.stringValue) = 0;
 		}
 	variant->type = NPVariantType_Void;
 	}
@@ -212,7 +214,7 @@ static bool sParseURL(const string& iURL, string& oHost, ip_port& oPort, string&
 
 static bool sHTTP(const ZStreamW& w, const ZStreamR& r,
 	const string& iHost, const string& iPath, const ZMemoryBlock* iPOSTData,
-	int& oResponseCode, ZMemoryBlock& oRawHeaders, ZTuple& oHeaders, string& oMIME)
+	int32& oResponseCode, ZMemoryBlock& oRawHeaders, ZTuple& oHeaders, string& oMIME)
 	{
 	if (ZLOG(s, eDebug, "ZNetscape"))
 		s << "sHTTP";
@@ -338,7 +340,7 @@ void Host_Std::HTTPer::pRun()
 				break;
 				}
 
-			int theResponseCode;
+			int32 theResponseCode;
 			ZTuple theHeaders;
 			ZMemoryBlock theRawHeaders;
 			string theMIME;
@@ -506,8 +508,9 @@ NPError Host_Std::Host_GetURLNotify(NPP npp,
 
 	if (URL == strstr(URL, "http:"))
 		{
-		ZMutexLocker locker(fMutex);
 		HTTPer* theG = new HTTPer(this, URL, nil, notifyData);
+
+		ZMutexLocker locker(fMutex);
 		fHTTPers.push_back(theG);
 		theG->Start();
 		return NPERR_NO_ERROR;
@@ -527,6 +530,8 @@ NPError Host_Std::Host_PostURLNotify(NPP npp,
 		{
 		ZMemoryBlock theData(buf, len);
 		HTTPer* theG = new HTTPer(this, URL, &theData, notifyData);
+
+		ZMutexLocker locker(fMutex);
 		fHTTPers.push_back(theG);
 		theG->Start();
 		return NPERR_NO_ERROR;
@@ -586,7 +591,7 @@ NPObject* Host_Std::Host_CreateObject(NPP npp, NPClass* aClass)
 	}
 
 bool Host_Std::Host_Invoke(NPP npp,
-	NPObject* obj, NPIdentifier methodName, const NPVariant* args, unsigned argCount,
+	NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount,
 	NPVariant* result)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
@@ -599,7 +604,7 @@ bool Host_Std::Host_Invoke(NPP npp,
 	}
 
 bool Host_Std::Host_InvokeDefault(NPP npp,
-	NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result)
+	NPObject* obj, const NPVariant* args, uint32_t argCount, NPVariant* result)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("InvokeDefault");

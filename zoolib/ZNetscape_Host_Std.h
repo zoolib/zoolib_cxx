@@ -135,11 +135,11 @@ public:
 	virtual NPObject* Host_CreateObject(NPP npp, NPClass* aClass);
 
 	virtual bool Host_Invoke(NPP npp,
-		NPObject* obj, NPIdentifier methodName, const NPVariant* args, unsigned argCount,
+		NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount,
 		NPVariant* result);
 
 	virtual bool Host_InvokeDefault(NPP npp,
-		NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result);
+		NPObject* obj, const NPVariant* args, uint32_t argCount, NPVariant* result);
 
 	virtual bool Host_Evaluate(NPP npp,
 		NPObject* obj, NPString* script, NPVariant* result);

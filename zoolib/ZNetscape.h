@@ -35,6 +35,53 @@ namespace ZNetscape {
 std::string sAsString(NPNVariable iVar);
 std::string sAsString(NPPVariable iVar);
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * NPVariantBase
+
+class NPVariantBase : public NPVariant
+	{
+public:
+	NPVariantBase();
+
+	NPVariantBase(bool iValue);
+	NPVariantBase(int32 iValue);
+	NPVariantBase(double iValue);
+	NPVariantBase(const std::string& iValue);
+
+	bool IsVoid() const;
+	bool IsNull() const;
+
+	bool IsBool() const;
+	bool IsInt32() const;
+	bool IsDouble() const;
+	bool IsString() const;
+	bool IsObject() const;
+
+	void SetVoid();
+	void SetNull();
+
+	bool GetBool() const;
+	bool GetBool(bool& oValue) const;
+	bool DGetBool(bool iDefault) const;
+
+	int32 GetInt32() const;
+	bool GetInt32(int32& oValue) const;
+	int32 DGetInt32(int32 iDefault) const;
+
+	double GetDouble() const;
+	bool GetDouble(double& oValue) const;
+	double DGetDouble(double iDefault) const;
+
+	std::string GetString() const;
+	bool GetString(std::string& oValue) const;
+	std::string DGetString(const std::string& iDefault) const;
+
+protected:
+	void pSetString(const char* iChars, size_t iLength);
+	void pSetString(const std::string& iString);
+	};
+
 } // namespace ZNetscape
 
 #endif // __ZNetscape__
