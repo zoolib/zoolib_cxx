@@ -77,7 +77,7 @@ protected:
 	ZooLib::ZMutexNR fMutexNR;
 	ZooLib::ZCondition fCondition;
 	int fSocketFD;
-	ZThread::ThreadID fThreadID_Listening;
+	ZooLib::ZThread::ThreadID fThreadID_Listening;
 	};
 
 // =================================================================================================

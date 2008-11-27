@@ -49,6 +49,8 @@ static short sModeLookup[] = { srcCopy, srcOr, srcXor, srcBic};
 #include ZMACINCLUDE(CoreServices,FixMath.h) // For Long2Fix
 #include ZMACINCLUDE(CoreServices,TextUtils.h) // For StyledLineBreak stuff
 
+using namespace ZooLib;
+
 using std::bad_alloc;
 using std::string;
 using std::vector;

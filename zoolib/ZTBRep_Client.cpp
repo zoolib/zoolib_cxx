@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h" // For sSortedEraseMustContain etc
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
+using namespace ZooLib;
 using namespace ZUtil_STL;
 
 using std::deque;

@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTSWatcher.h"
 #include "zoolib/ZStreamer.h"
+#include "zoolib/ZThread.h"
 
 // =================================================================================================
 #pragma mark -
@@ -95,7 +96,7 @@ private:
 		const uint64* iWrittenTupleIDs, const ZTuple* iWrittenTuples, size_t iWrittenTuplesCount,
 		std::map<int64, std::vector<uint64> >& oChangedQueries);
 
-	ZMutex fMutex;
+	ZooLib::ZMutex fMutex;
 	bool const fSupports2;
 	bool const fSupports3;
 	bool const fSupports4;

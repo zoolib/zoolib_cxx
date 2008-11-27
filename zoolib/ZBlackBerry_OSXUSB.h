@@ -80,7 +80,7 @@ public:
 	virtual void Detached(ZRef<ZUSBDevice> iUSBDevice);
 	
 private:
-	ZMutex fMutex;
+	ZooLib::ZMutex fMutex;
 
 	bool fAllowMassStorage;
 	

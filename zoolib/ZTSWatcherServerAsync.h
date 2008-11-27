@@ -46,7 +46,7 @@ private:
 	void pCallback();
 	static void spCallback(void* iRefcon);
 
-	ZMutex fMutex;
+	ZooLib::ZMutex fMutex;
 	ZRef<ZTSWatcher> fTSWatcher;
 	bool fReceivedClose;
 	bool fCallbackNeeded;

@@ -21,8 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZTSoup__
 #define __ZTSoup__ 1
 
-#include "zoolib/ZTSWatcher.h"
 #include "zoolib/ZDList.h"
+#include "zoolib/ZThread.h"
+#include "zoolib/ZTSWatcher.h"
 
 class ZTCrouton;
 class ZTSieve;
@@ -144,17 +145,17 @@ private:
 	PCrouton* pGetPCrouton(uint64 iID);
 
 	void pSetCroutonFromTCrouton(ZTCrouton* iTCrouton, const ZTuple& iTuple);
-	void pSet(ZMutexLocker& iLocker_Structure, PCrouton* iPCrouton, const ZTuple& iTuple);
+	void pSet(ZooLib::ZMutexLocker& iLocker_Structure, PCrouton* iPCrouton, const ZTuple& iTuple);
 
 	void pTriggerUpdate();
 	void pTriggerSync();
 
 	ZRef<ZTSWatcher> fTSWatcher;
 
-	ZMutex fMutex_CallSync;
-	ZMutex fMutex_CallUpdate;
-	ZMutex fMutex_Structure;
-	ZMutex fMutex_TSWatcher;
+	ZooLib::ZMutex fMutex_CallSync;
+	ZooLib::ZMutex fMutex_CallUpdate;
+	ZooLib::ZMutex fMutex_Structure;
+	ZooLib::ZMutex fMutex_TSWatcher;
 
 	bool fCalled_UpdateNeeded;
 	Callback_UpdateNeeded_t fCallback_UpdateNeeded;

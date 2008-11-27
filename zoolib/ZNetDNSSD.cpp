@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZLog.h"
 
+using namespace ZooLib;
+
 using std::runtime_error;
 using std::string;
 using std::vector;

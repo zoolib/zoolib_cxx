@@ -33,6 +33,9 @@ class ZStreamNP;
 
 namespace ZUtil_Graphics {
 
+typedef ZooLib::ZPoint ZPoint;
+typedef ZooLib::ZRect ZRect;
+
 void sCalculateRgnDifferences(const ZDCRgn& inOldRgn, const ZDCRgn& inNewRgn,
 	ZDCRgn* outOldRgnToPaint, ZDCRgn* outNewRgnToPaint, ZDCRgn* outDiffRgnToPaint);
 

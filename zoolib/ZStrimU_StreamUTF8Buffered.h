@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimmer.h"
 
 #include <string>
+#include <vector>
 
 // =================================================================================================
 #pragma mark -

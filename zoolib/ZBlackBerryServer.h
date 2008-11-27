@@ -48,8 +48,8 @@ private:
 	virtual void Finished(ZRef<ZBlackBerry::Device> iDevice);
 
 private:
-	ZMutex fMutex;
-	ZCondition fCondition;
+	ZooLib::ZMutex fMutex;
+	ZooLib::ZCondition fCondition;
 	ZRef<ZBlackBerry::Manager> fManager;
 
 	ZRef<ZBlackBerry::Device> pGetDevice(uint64 iDeviceID);

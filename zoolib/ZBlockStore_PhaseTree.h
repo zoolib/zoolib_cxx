@@ -33,9 +33,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
-	typedef ZMutex ZBlockStorePhaseTree_Mutex_t;
+	typedef ZooLib::ZMutex ZBlockStorePhaseTree_Mutex_t;
 #else
-	typedef ZMutexNR ZBlockStorePhaseTree_Mutex_t;
+	typedef ZooLib::ZMutexNR ZBlockStorePhaseTree_Mutex_t;
 #endif
 
 // =================================================================================================
@@ -245,7 +245,7 @@ protected:
 	ZThreadSafe_t fStreamsInstantiated;
 
 	ZBlockStorePhaseTree_Mutex_t fMutex_Flush;
-	ZCondition fCondition_Flush;
+	ZooLib::ZCondition fCondition_Flush;
 		int fCount_Writes;
 		int fCount_WaitingFlushes;
 		bool fFlushInProgress;

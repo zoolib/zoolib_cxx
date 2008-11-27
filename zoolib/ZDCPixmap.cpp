@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 #include "zoolib/ZStream.h"
 
+#include <vector>
+
 using namespace ZDCPixmapNS;
 
 using std::min;

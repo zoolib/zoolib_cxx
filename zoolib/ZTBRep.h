@@ -56,7 +56,7 @@ private:
 	virtual void TxnAbortPostValidate(int32 iTxnID, bool iValidationSucceeded);
 	virtual void TxnCommit(int32 iTxnID, CommitCallbackProc iCallback, void* iRefcon);
 
-	ZMutex fMutex_Transactions;
+	ZooLib::ZMutex fMutex_Transactions;
 	std::map<int32, ZTBRepTransaction*> fTransactions;
 	};
 

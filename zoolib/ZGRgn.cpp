@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZGRgn.h"
 
+using namespace ZooLib;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions

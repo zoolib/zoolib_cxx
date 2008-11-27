@@ -71,9 +71,9 @@ private:
 		const uint64* iWrittenTupleIDs, const ZTuple* iWrittenTuples, size_t iWrittenTuplesCount,
 		std::map<int64, std::vector<uint64> >& oChangedQueries);
 
-	ZMutex fMutex_Structure;
-	ZMutex fMutex_Stream;
-	ZCondition fCondition;
+	ZooLib::ZMutex fMutex_Structure;
+	ZooLib::ZMutex fMutex_Stream;
+	ZooLib::ZCondition fCondition;
 
 	ZRef<ZStreamerW> fStreamerW;
 	bool fStreamsOkay;

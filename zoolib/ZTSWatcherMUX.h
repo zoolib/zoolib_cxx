@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZDList.h"
+#include "zoolib/ZThread.h"
 #include "zoolib/ZTSWatcher.h"
 
 #ifndef ZCONFIG_TSWatcherMUX_Debug
@@ -95,8 +96,8 @@ private:
 	void Callback();
 	static void sCallback(void* iRefcon);
 
-	ZMutex fMutex_Structure;
-	ZCondition fCondition;
+	ZooLib::ZMutex fMutex_Structure;
+	ZooLib::ZCondition fCondition;
 
 	int64 fCurrentSyncNumber;
 	int64 fNextSyncNumber;

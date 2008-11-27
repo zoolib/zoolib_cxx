@@ -37,6 +37,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(DC_QD)
 
+#include "zoolib/ZThread.h"
 #include "zoolib/ZUtil_Mac_LL.h"
 
 #include ZMACINCLUDE(ApplicationServices,QDOffscreen.h)
@@ -58,7 +59,7 @@ protected:
 // Linked list of all canvases
 	void Internal_Link(CGrafPtr inGrafPtr);
 	void Internal_Unlink();
-	static ZMutex sMutex_List;
+	static ZooLib::ZMutex sMutex_List;
 	static ZDCCanvas_QD* sCanvas_Head;
 	ZDCCanvas_QD* fCanvas_Prev;
 	ZDCCanvas_QD* fCanvas_Next;
@@ -165,8 +166,8 @@ protected:
 
 	CGrafPtr fGrafPtr;
 
-	ZMutex* fMutexToLock;
-	ZMutex* fMutexToCheck;
+	ZooLib::ZMutex* fMutexToLock;
+	ZooLib::ZMutex* fMutexToCheck;
 
 	PixPatHandle fPixPatHandle;
 

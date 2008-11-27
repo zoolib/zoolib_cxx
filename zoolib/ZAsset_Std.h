@@ -130,7 +130,7 @@ protected:
 
 	std::vector<const char*> fPaths;
 
-	ZMutex fMutex;
+	ZooLib::ZMutex fMutex;
 	bool fResolved;
 	std::vector<ZRef<ZAssetRep> > fResolvedReps;
 	};
@@ -181,7 +181,7 @@ protected:
 	ZRef<ZAssetRep_Std> UseRep(ZAssetRep_Std* iRep);
 	void RepBeingFinalized(ZAssetRep_Std* iRep);
 
-	ZMutex fMutex;
+	ZooLib::ZMutex fMutex;
 
 	friend class ZAssetIterRep_Std_Directory;
 	friend class ZAssetRep_Std;

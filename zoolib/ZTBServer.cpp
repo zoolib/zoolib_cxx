@@ -24,11 +24,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream.h"
 #include "zoolib/ZTB.h"
 #include "zoolib/ZTime.h"
-
 #include "zoolib/ZUtil_STL.h" // For sSortedEraseMustContain etc
-using namespace ZUtil_STL;
-
 #include "zoolib/ZUtil_Strim_Tuple.h"
+
+using namespace ZUtil_STL;
+using namespace ZooLib;
 
 using std::map;
 using std::pair;

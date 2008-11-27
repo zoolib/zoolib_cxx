@@ -49,8 +49,8 @@ public:
 	virtual void GetTuples(size_t iCount, const uint64* iIDs, ZTuple* oTuples);
 	virtual void Search(const ZTBSpec& iTBSpec,
 		const std::set<uint64>& iSkipIDs, std::set<uint64>& oIDs);
-	virtual ZMutexBase& GetReadLock();
-	virtual ZMutexBase& GetWriteLock();
+	virtual ZooLib::ZMutexBase& GetReadLock();
+	virtual ZooLib::ZMutexBase& GetWriteLock();
 
 // Our protocol
 	ZRef<ZTSWatcher> NewWatcher();
@@ -115,7 +115,7 @@ private:
 	void pUpdateQueryResults(PQuery* iPQuery);
 
 	ZRef<ZTS> fTS;
-	ZMutex fMutex_Structure;
+	ZooLib::ZMutex fMutex_Structure;
 
 	std::map<ZMemoryBlock, PQuery*> fMB_To_PQuery;
 

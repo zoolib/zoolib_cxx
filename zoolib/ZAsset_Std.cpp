@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string.h> // For strcmp etc
 
+using namespace ZooLib;
+
 using std::find_first_of;
 using std::lower_bound;
 using std::min;

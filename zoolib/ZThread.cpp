@@ -40,6 +40,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <errno.h>
 #endif
 
+using namespace ZooLib;
+
 using std::bad_alloc;
 using std::exception;
 using std::min;

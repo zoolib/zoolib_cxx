@@ -48,8 +48,8 @@ public:
 	virtual void SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples);
 	virtual void GetTuples(size_t iCount, const uint64* iIDs, ZTuple* oTuples);
 	virtual void Search(const ZTBSpec& iSpec, const std::set<uint64>& iSkipIDs, std::set<uint64>& ioIDs);
-	virtual ZMutexBase& GetReadLock();
-	virtual ZMutexBase& GetWriteLock();
+	virtual ZooLib::ZMutexBase& GetReadLock();
+	virtual ZooLib::ZMutexBase& GetWriteLock();
 
 // Our protocol
 	void AddIndex(ZRef<ZTupleIndexFactory> iIndexFactory);
@@ -60,8 +60,8 @@ public:
 	void GetData(uint64& oNextUnusedID, std::map<uint64, ZTuple>& oTuples);
 
 private:
-	ZRWLock fRWLock;
-	ZMutex fMutex_ID;
+	ZooLib::ZRWLock fRWLock;
+	ZooLib::ZMutex fMutex_ID;
 	uint64 fNextUnusedID;
 	std::map<uint64, ZTuple> fTuples;
 	std::vector<ZTupleIndex*> fIndices;

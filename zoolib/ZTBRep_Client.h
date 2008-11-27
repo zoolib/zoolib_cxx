@@ -94,9 +94,9 @@ private:
 	void pReader(const ZStreamR& iStream);
 	void pWriter(const ZStreamW& iStream);
 
-	ZMutex fMutex_Structure;
-	ZCondition fCondition_Sender;
-	ZCondition fCondition_Transaction;
+	ZooLib::ZMutex fMutex_Structure;
+	ZooLib::ZCondition fCondition_Sender;
+	ZooLib::ZCondition fCondition_Transaction;
 
 	bool fLive;
 	uint64 fNextFakeID;

@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCPixmapBlit.h"
 
+using namespace ZooLib;
+
 using ZDCPixmapNS::EFormatEfficient;
 using ZDCPixmapNS::PixelDesc;
 using ZDCPixmapNS::PixvalDesc;

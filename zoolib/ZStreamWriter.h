@@ -97,8 +97,8 @@ private:
 	void pRun();
 	static void spRun(ZStreamWriterRunner_Threaded* iRunner);
 
-	ZMutex fMutex;
-	ZCondition fCondition;
+	ZooLib::ZMutex fMutex;
+	ZooLib::ZCondition fCondition;
 	ZStreamWriter* fStreamWriter;
 	ZRef<ZStreamerW> fSW;
 	ZTime fNextWake;

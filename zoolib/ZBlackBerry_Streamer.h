@@ -90,8 +90,8 @@ private:
 	bool pSendFunky(uint16 iLength, const ZStreamW& iStreamW);
 	void pFlush(const ZStreamW& iStreamW);
 
-	ZMutex fMutex;
-	ZCondition fCondition;
+	ZooLib::ZMutex fMutex;
+	ZooLib::ZCondition fCondition;
 
 	struct GetAttribute_t
 		{

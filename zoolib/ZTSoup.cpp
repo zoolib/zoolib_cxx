@@ -31,6 +31,8 @@ using std::set;
 using std::string;
 using std::vector;
 
+using namespace ZooLib;
+
 using ZUtil_STL::sFirstOrNil;
 
 #define ASSERTLOCKED(a) ZAssertStop(ZTSoup::kDebug, a.IsLocked())

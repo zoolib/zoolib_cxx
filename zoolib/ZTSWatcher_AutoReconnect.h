@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_NonCopyable.h"
+#include "zoolib/ZThread.h"
 #include "zoolib/ZTSWatcher.h"
 
 #ifndef ZCONFIG_ZTSWatcher_AutoReconnect_Debug
@@ -93,7 +94,7 @@ private:
 	static void sCallback(void* iRefcon);
 
 private:
-	ZMutex fMutex;
+	ZooLib::ZMutex fMutex;
 	ZRef<ZTSWatcherFactory> fFactory;
 	ZRef<ZTSWatcher> fTSWatcher;
 	EStatus fStatus;

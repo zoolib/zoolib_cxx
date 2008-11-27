@@ -48,6 +48,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_RFCOMM_OSX)
 
+#include "zoolib/ZThread.h"
+
 #include <deque>
 
 #include <CoreFoundation/CFDictionary.h>
@@ -95,8 +97,8 @@ private:
 	BluetoothSDPServiceRecordHandle fHandle;
 	IOBluetoothUserNotification* fNotification;
 
-	ZMutex fMutex;
-	ZCondition fCondition;
+	ZooLib::ZMutex fMutex;
+	ZooLib::ZCondition fCondition;
 	std::deque<IOBluetoothRFCOMMChannel*> fQueue;
 	};
 
@@ -150,8 +152,8 @@ private:
 	Delegate_ZNetEndpoint_RFCOMM_OSX* fDelegate;
 
 	IOBluetoothRFCOMMChannel* fChannel;
-	ZMutex fMutex;
-	ZCondition fCondition;
+	ZooLib::ZMutex fMutex;
+	ZooLib::ZCondition fCondition;
 	std::deque<uint8> fBuffer;
 	bool fOpen;
 	};

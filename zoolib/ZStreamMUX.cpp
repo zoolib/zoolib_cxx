@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_STL.h"
 
-#define kDebug 1
+using namespace ZooLib;
 
 using std::deque;
 using std::map;
@@ -34,6 +34,8 @@ using std::min;
 using std::pair;
 using std::string;
 using std::vector;
+
+#define kDebug 1
 
 // =================================================================================================
 #pragma mark -

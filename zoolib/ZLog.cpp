@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include "/usr/include/string.h"
 #endif
 
+using namespace ZooLib;
+
 using std::string;
 
 static ZMutexNR sMutex;

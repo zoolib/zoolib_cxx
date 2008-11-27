@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCRgn.h"
 
+using namespace ZooLib;
+
 using std::vector;
 
 // =================================================================================================

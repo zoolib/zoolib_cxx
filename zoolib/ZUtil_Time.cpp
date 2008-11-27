@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h" // For ZBlockZero
 #include "zoolib/ZStream.h"
 #include "zoolib/ZString.h"
+#include "zoolib/ZThread.h"
 
 #include <stdio.h>
 #include <time.h>
@@ -40,7 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <sys/time.h>
 #endif
 
-#include "zoolib/ZThread.h"
+using namespace ZooLib;
 
 using std::string;
 

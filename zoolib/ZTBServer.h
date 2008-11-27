@@ -88,8 +88,8 @@ private:
 
 	ZRef<ZTBRep> fTBRep;
 
-	ZMutex fMutex_Structure;
-	ZCondition fCondition_Sender;
+	ZooLib::ZMutex fMutex_Structure;
+	ZooLib::ZCondition fCondition_Sender;
 		bool fReaderExited;
 		bool fWriterExited;
 

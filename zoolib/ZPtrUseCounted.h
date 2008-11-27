@@ -31,8 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 template <class T>
 class ZPtrUseCounted_T
 	{
-	mutable ZMutexNR fMutexNR;
-	mutable ZCondition fCondition;
+	mutable ZooLib::ZMutexNR fMutexNR;
+	mutable ZooLib::ZCondition fCondition;
 	T* fPtr;
 	mutable size_t fUseCount;
 

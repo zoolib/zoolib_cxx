@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 
+#include <vector>
+
 #define kDebug_PixmapNS 2
 
 using namespace ZDCPixmapNS;

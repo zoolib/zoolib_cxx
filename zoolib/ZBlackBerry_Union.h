@@ -50,7 +50,7 @@ public:
 private:
 	void pValidate();
 
-	ZMutex fMutex;
+	ZooLib::ZMutex fMutex;
 
 	struct Entry_t
 		{

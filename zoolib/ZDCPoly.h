@@ -33,6 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZDCPoly
 	{
 public:
+	typedef ZooLib::ZPoint ZPoint;
+
 	ZDCPoly();
 	ZDCPoly(const ZPoint& inStartPoint);
 	ZDCPoly(ZCoord inPointH, ZCoord inPointV);

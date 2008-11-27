@@ -113,7 +113,7 @@ private:
 
 	ZRef<ZTS> fTS;
 
-	ZMutex fMutex_Structure;
+	ZooLib::ZMutex fMutex_Structure;
 	std::vector<ZRef<ZTupleIndexFactory> > fIndexFactories;
 
 	uint64 fClock;

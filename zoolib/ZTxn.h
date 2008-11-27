@@ -57,7 +57,7 @@ private:
 
 	int32 fID;
 
-	ZMutex fMutex;
+	ZooLib::ZMutex fMutex;
 	mutable std::vector<ZTxnTarget*> fTargets;
 
 	friend class ZTxnTarget;

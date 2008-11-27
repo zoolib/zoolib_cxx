@@ -54,10 +54,10 @@ public:
 	void Reset();
 
 private:
-	ZMutex fMutex;
-	ZCondition fCondition_UserCount;
-	ZCondition fCondition_Read;
-	ZCondition fCondition_Write;
+	ZooLib::ZMutex fMutex;
+	ZooLib::ZCondition fCondition_UserCount;
+	ZooLib::ZCondition fCondition_Read;
+	ZooLib::ZCondition fCondition_Write;
 	bool fClosed;
 	size_t fMaxSize;
 	std::deque<uint8> fBuffer;

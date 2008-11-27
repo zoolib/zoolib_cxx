@@ -38,7 +38,7 @@ protected:
 
 public:
 	virtual bool GetGlyph(const ZDCFont& iFont, UTF32 iCP,
-		ZPoint& oOrigin, ZCoord& oEscapement, ZDCPixmap& oPixmap) = 0;
+		ZooLib::ZPoint& oOrigin, ZCoord& oEscapement, ZDCPixmap& oPixmap) = 0;
 
 	virtual ZCoord GetEscapement(const ZDCFont& iFont, UTF32 iCP) = 0;
 

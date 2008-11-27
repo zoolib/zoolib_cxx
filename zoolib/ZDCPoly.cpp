@@ -76,6 +76,8 @@ SOFTWARE.
 #	include ZMACINCLUDE(CoreServices,MacMemory.h) // For HLock etc.
 #endif
 
+using namespace ZooLib;
+
 using std::min;
 using std::max;
 

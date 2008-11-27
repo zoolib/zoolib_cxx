@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSWatcher_Latent__
 #include "zconfig.h"
 
+#include "zoolib/ZThread.h"
 #include "zoolib/ZTSWatcher.h"
 
 #ifndef ZCONFIG_TSWatcher_Latent_Debug
@@ -77,9 +78,9 @@ private:
 	ZRef<ZTSWatcher> fTSWatcher;
 	Callback_t fCallback;
 	void* fRefcon;
-	ZMutex fMutex_CallSync;
-	ZMutex fMutex_Save;
-	ZCondition fCondition_Save;
+	ZooLib::ZMutex fMutex_CallSync;
+	ZooLib::ZMutex fMutex_Save;
+	ZooLib::ZCondition fCondition_Save;
 
 	enum { eMode_Normal, eMode_Save, eMode_Discard } fMode;
 

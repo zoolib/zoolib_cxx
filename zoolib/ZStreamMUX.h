@@ -115,7 +115,7 @@ private:
 	void pFlush(const ZStreamW& iStreamW);
 	bool pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP);
 
-	ZMutex fMutex;
+	ZooLib::ZMutex fMutex;
 
 	const size_t fMaxFragmentSize;
 	const size_t fDefaultReceiveBufferSize;

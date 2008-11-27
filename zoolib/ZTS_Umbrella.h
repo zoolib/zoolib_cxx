@@ -40,8 +40,8 @@ public:
 	virtual void SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples);
 	virtual void GetTuples(size_t iCount, const uint64* iIDs, ZTuple* oTuples);
 	virtual void Search(const ZTBSpec& iSpec, const std::set<uint64>& iSkipIDs, std::set<uint64>& ioIDs);
-	virtual ZMutexBase& GetReadLock();
-	virtual ZMutexBase& GetWriteLock();
+	virtual ZooLib::ZMutexBase& GetReadLock();
+	virtual ZooLib::ZMutexBase& GetWriteLock();
 
 private:
 	typedef std::map<uint64, std::pair<size_t, uint64> > GlobalToLocal_t;
@@ -64,7 +64,7 @@ private:
 
 	std::vector<Child> fChildren;
 	GlobalToLocal_t fGlobalToLocal;
-	ZMutexComposite fReadComposite;
+	ZooLib::ZMutexComposite fReadComposite;
 	};
 
 #endif // __ZTS_Umbrella__

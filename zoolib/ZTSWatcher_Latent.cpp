@@ -21,6 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTSWatcher_Latent.h"
 #include "zoolib/ZUtil_STL.h"
 
+using namespace ZooLib;
+
 using std::map;
 using std::pair;
 using std::set;

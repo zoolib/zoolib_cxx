@@ -70,7 +70,7 @@ protected:
 	ZFileSpec fSpec;
 	std::vector<std::string> fComps;
 	
-	ZMutex fMutex;
+	ZooLib::ZMutex fMutex;
 	char* fData;
 	size_t fDataSize;
 	};

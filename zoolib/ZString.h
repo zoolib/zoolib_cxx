@@ -33,7 +33,7 @@ class ZStreamR;
 class ZStreamW;
 
 namespace ZooLib {
-namespace ZString {
+namespace ZZString {
 
 std::string sFormat(const char* inString, ...);
 std::string sFormat(const char* inString, va_list iArgs);
@@ -93,11 +93,13 @@ std::string sFromPString(const unsigned char* iPString);
 void sToPString(const std::string& iString, unsigned char* oPString, size_t iMaxLength);
 void sToPString(const char* iString, unsigned char* oPString, size_t iMaxLength);
 
-} // namespace ZString
+} // namespace ZZString
 } // namespace ZooLib
 
-#ifndef ZooLib_SuppressInjection
-	namespace ZString = ZooLib::ZString;
+#ifdef ZooLib_SuppressInjection
+	namespace ZooLib { namespace ZString = ZZString; }
+#else
+	namespace ZString = ZooLib::ZZString;
 #endif
 
 #endif // __ZString__

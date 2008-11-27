@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZThread.h"
 
+using namespace ZooLib;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamerRWFactory_Retry

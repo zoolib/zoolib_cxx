@@ -23,6 +23,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_Chunked.h"
 #include "zoolib/ZStream_LZW.h"
 
+#include <vector>
+
+using namespace ZooLib;
+
 using std::min;
 using std::runtime_error;
 using std::vector;

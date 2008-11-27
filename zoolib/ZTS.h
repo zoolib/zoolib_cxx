@@ -23,8 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/ZTuple.h"
 #include "zoolib/ZTBSpec.h"
+#include "zoolib/ZThread.h"
+#include "zoolib/ZTuple.h"
 
 #include <set>
 
@@ -48,8 +49,8 @@ public:
 		const ZTBSpec& iSpec, const std::set<uint64>& iSkipIDs, std::set<uint64>& oIDs) = 0;
 
 	virtual void Flush();
-	virtual ZMutexBase& GetReadLock() = 0;
-	virtual ZMutexBase& GetWriteLock() = 0;
+	virtual ZooLib::ZMutexBase& GetReadLock() = 0;
+	virtual ZooLib::ZMutexBase& GetWriteLock() = 0;
 
 	ZTuple GetTuple(uint64 iID);
 	};

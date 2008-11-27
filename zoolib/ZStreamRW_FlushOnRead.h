@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStreamer.h"
+#include "zoolib/ZThread.h"
 
 // =================================================================================================
 #pragma mark -
@@ -62,7 +63,7 @@ public:
 
 protected:
 	ZThreadSafe_t fLastWasWrite;
-	ZMutexNR fMutex_Write;
+	ZooLib::ZMutexNR fMutex_Write;
 	const ZStreamR& fStreamR;
 	const ZStreamW& fStreamW;
 	};

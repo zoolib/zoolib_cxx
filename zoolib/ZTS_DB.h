@@ -61,8 +61,8 @@ public:
 	virtual void GetTuples(size_t iCount, const uint64* iIDs, ZTuple* oTuples);
 	virtual void Search(
 		const ZTBSpec& iSpec, const std::set<uint64>& iSkipIDs, std::set<uint64>& ioIDs);
-	virtual ZMutexBase& GetReadLock();
-	virtual ZMutexBase& GetWriteLock();
+	virtual ZooLib::ZMutexBase& GetReadLock();
+	virtual ZooLib::ZMutexBase& GetWriteLock();
 
 // Our protocol
 	void Flush();
@@ -80,8 +80,8 @@ private:
 	static int sBTree_Compare(const DBT* iLeft, const DBT* iRight);
 	static size_t sBTree_Prefix(const DBT* iLeft, const DBT* iRight);
 
-	ZMutex fMutex;
-	ZMutex fMutex_ID;
+	ZooLib::ZMutex fMutex;
+	ZooLib::ZMutex fMutex_ID;
 	uint64 fNextUnusedID;
 	ZFileSpec fFileSpec;
 	bool fChanged;

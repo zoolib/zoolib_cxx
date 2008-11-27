@@ -58,9 +58,9 @@ private:
 	static void sRunThread(ZServer* iServer);
 
 private:
-	ZMutex fMutex;
-	ZCondition fCondition;
-	ZSemaphore fSem;
+	ZooLib::ZMutex fMutex;
+	ZooLib::ZCondition fCondition;
+	ZooLib::ZSemaphore fSem;
 	std::vector<Responder*> fResponders;
 
 	ZRef<ZStreamerRWConFactory> fFactory;
@@ -90,7 +90,7 @@ protected:
 	void RunThread();
 	static void sRunThread(Responder* iResponder);
 
-	ZThread* fThread;
+	ZooLib::ZThread* fThread;
 	ZServer* fServer;
 	ZRef<ZStreamerRWCon> fStreamerRWCon;
 	};

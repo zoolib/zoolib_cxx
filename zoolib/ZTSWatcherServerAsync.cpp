@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define kDebug_TSWatcherServerAsync 1
 
+using namespace ZooLib;
+
 using std::map;
 using std::pair;
 using std::vector;
