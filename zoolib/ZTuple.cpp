@@ -22,8 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZMemoryBlock.h"
 
-#include <stdexcept> // For runtime_error
-
 using std::min;
 using std::pair;
 using std::runtime_error;
