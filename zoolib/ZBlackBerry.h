@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZStreamer.h"
+#include "zoolib/ZThread.h"
 
 #include <set>
 
@@ -76,8 +77,8 @@ protected:
 	void pStopped();
 
 private:
-	ZMutex fMutex;
-	ZCondition fCondition;
+	ZooLib::ZMutex fMutex;
+	ZooLib::ZCondition fCondition;
 	int fStartCount;
 	std::set<Observer*> fObservers;
 	};
@@ -135,8 +136,8 @@ protected:
 	void pFinished();
 
 private:
-	ZMutex fMutex;
-	ZCondition fCondition;
+	ZooLib::ZMutex fMutex;
+	ZooLib::ZCondition fCondition;
 	int fStartCount;
 	std::set<Observer*> fObservers;
 	};
