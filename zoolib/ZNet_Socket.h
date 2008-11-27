@@ -36,6 +36,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Socket)
 
+#include "zoolib/ZThread.h"
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNet_Socket
@@ -72,8 +74,8 @@ public:
 	static void sEnableFastCancellation();
 
 protected:
-	ZMutexNR fMutexNR;
-	ZCondition fCondition;
+	ZooLib::ZMutexNR fMutexNR;
+	ZooLib::ZCondition fCondition;
 	int fSocketFD;
 	ZThread::ThreadID fThreadID_Listening;
 	};
