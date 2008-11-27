@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRefCount__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZThread.h" // For ZThreadSafe_Get, ZThreadSafe_Inc && ZThreadSafe_DecAndTest
-
+#include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZThreadSafe.h"
+#include "zoolib/ZTypes.h" // For size_t
 
 /*
 Checked/slow versus unchecked/fast access to refcounted objects can be enabled
@@ -121,8 +122,6 @@ private:
 #pragma mark -
 #pragma mark * ZRef declaration
 
-template <class S> class ZRefSafe;
-
 template <class T>
 class ZRef
 	{
@@ -150,9 +149,6 @@ public:
 	template <class O> bool operator!=(const ZRef<O>& iOther) const;
 	template <class O> bool operator<(const ZRef<O>& iOther) const;
 
-	template <class S> ZRef(const ZRefSafe<S>& iOther);
-	template <class S> ZRef& operator=(const ZRefSafe<S>& iOther);
-
 	T* operator->() const;
 
 	operator operator_bool_type() const
@@ -166,41 +162,6 @@ public:
 
 private:
 	T* fObject;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZRefSafe declaration
-
-template <class S>
-class ZRefSafe
-	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRefSafe<S>,
-    	operator_bool_generator_type, operator_bool_type);
-
-	ZRefSafe(const ZRefSafe&); // Not implemented
-	const ZRefSafe& operator=(const ZRefSafe&); // Not implemented
-public:
-	ZRefSafe();
-	~ZRefSafe();
-
-	ZRefSafe(S* iObject);
-	ZRefSafe& operator=(S* iObject);
-
-	template <class T> ZRefSafe(const ZRef<T>& iOther);
-	template <class T> ZRefSafe& operator=(const ZRef<T>& iOther);
-
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(fObject); }
-
-	S* GetObject() const { return fObject; }
-
-	void Acquire() const { fMutex.Acquire(); }
-	void Release() const { fMutex.Release(); }
-
-private:
-	mutable ZooLib::ZMutexNR fMutex;
-	S* fObject;
 	};
 
 // =================================================================================================
@@ -306,26 +267,6 @@ template <class T> template <class O>
 inline bool ZRef<T>::operator<(const ZRef<O>& iOther) const
 	{ return fObject < iOther.GetObject(); }
 
-template <class T> template <class S>
-ZRef<T>::ZRef(const ZRefSafe<S>& iOther)
-	{
-	iOther.Acquire();
-	fObject = iOther.GetObject();
-	T::sIncRefCount(fObject);
-	iOther.Release();
-	}
-
-template <class T> template <class S>
-ZRef<T>& ZRef<T>::operator=(const ZRefSafe<S>& iOther)
-	{
-	iOther.Acquire();
-	T* temp = iOther.GetObject();
-	S::sIncRefCount(temp);
-	iOther.Release();
-
-	T::sDecRefCount(fObject);
-	fObject = temp;
-	}
 
 template <class T>
 inline T* ZRef<T>::operator->() const
@@ -340,63 +281,6 @@ inline void ZRef<T>::Clear()
 	{
 	T::sDecRefCount(fObject);
 	fObject = nil;
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZRefSafe inline definitions
-
-template <class S>
-inline ZRefSafe<S>::ZRefSafe()
-:	fObject(nil)
-	{}
-
-template <class S>
-inline ZRefSafe<S>::~ZRefSafe()
-	{
-	S::sDecRefCount(fObject);
-	}
-
-template <class S>
-inline ZRefSafe<S>::ZRefSafe(S* iObject)
-:	fObject(iObject)
-	{
-	S::sIncRefCount(iObject);
-	}
-
-template <class S>
-inline ZRefSafe<S>& ZRefSafe<S>::operator=(S* iObject)
-	{
-	S::sIncRefCount(iObject);
-
-	fMutex.Acquire();
-	S* temp = fObject;
-	fObject = iObject;
-	fMutex.Release();
-
-	S::sDecRefCount(temp);
-	return *this;
-	}
-
-template <class S> template <class T>
-inline ZRefSafe<S>::ZRefSafe(const ZRef<T>& iOther)
-:	fObject(iOther.GetObject())
-	{
-	S::sIncRefCount(fObject);
-	}
-
-template<class S> template <class T>
-inline ZRefSafe<S>& ZRefSafe<S>::operator=(const ZRef<T>& iOther)
-	{
-	T::sIncRefCount(iOther.GetObject());
-
-	fMutex.Acquire();
-	S* temp = fObject;
-	fObject = iOther.GetObject();
-	fMutex.Release();
-
-	S::sDecRefCount(temp);
-	return *this;
 	}
 
 // =================================================================================================
