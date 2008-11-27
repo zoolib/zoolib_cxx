@@ -29,17 +29,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAtomic.h"
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZThreadSafe.h"
 #include "zoolib/ZTypes.h" // For bigtime_t
+
+// =================================================================================================
 
 #define ZCONFIG_API_Thread_Unknown 0
 #define ZCONFIG_API_Thread_Win32 2
 #define ZCONFIG_API_Thread_POSIX 4
 #define ZCONFIG_API_Thread_Be 8
    
-// =================================================================================================
-
-#include "zoolib/ZCONFIG_SPI.h"
-
 #ifndef ZCONFIG_API_Thread
 #	if 0
 #	elif ZCONFIG_SPI_Enabled(Win)
@@ -52,7 +51,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef ZCONFIG_API_Thread
 #	error "Don't know what thread API we're using"
 #endif
-
 
 // =================================================================================================
 #pragma mark -
@@ -75,7 +73,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_Thread_UseCurrent 0
 #endif
 
-// ==================================================
 // Include appropriate headers for each platform, and set up ZCONFIG_Thread_Preemptive.
 //
 // ZCONFIG_Thread_Preemptive is 1 if threading is preemptive, that is if control can switch
@@ -98,61 +95,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_Thread_Preemptive 1
 #endif
 
-// ==================================================
+// =================================================================================================
 // A macro that has proven to be useful.
 #define ZAssertLocked(a, b) ZAssertStop(a, (b).IsLocked())
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZThreadSafe Macros
-// "Safe" increment and decrement. In non-preemptive environments this will do cheap addition/subtraction,
-// and in preemptive situations it will do slightly less efficient, but thread-safe operations. You need to use
-// the ZThreadSafe_t type for variables that will manipulated by this. Right now it is a struct, but might
-// degenerate into a simple integer at some point. ZThreadSafe_IncReturnNew and ZThreadSafe_DecReturnNew
-// are used by windows COM objects' AddRef and Release methods.
-
-typedef ZAtomic_t ZThreadSafe_t;
-
-#if ZCONFIG_Thread_Preemptive
-
-	#define ZThreadSafe_Get(x) ZAtomic_Get(&x)
-	#define ZThreadSafe_Set(x, y) ZAtomic_Set(&x, y)
-	#define ZThreadSafe_Swap(x, y) ZAtomic_Swap(&x, y)
-
-	#define ZThreadSafe_Inc(x) ZAtomic_Inc(&x)
-	#define ZThreadSafe_Dec(x) ZAtomic_Dec(&x)
-	#define ZThreadSafe_DecAndTest(x) ZAtomic_DecAndTest(&x)
-
-	#define ZThreadSafe_IncReturnNew(x) (ZAtomic_Add(&x, 1) + 1)
-	#define ZThreadSafe_DecReturnNew(x) (ZAtomic_Add(&x, -1) - 1)
-
-	#define ZThreadSafe_IncReturnOld(x) (ZAtomic_Add(&x, 1))
-	#define ZThreadSafe_DecReturnOld(x) (ZAtomic_Add(&x, -1))
-
-#else // ZCONFIG_Thread_Preemptive
-
-	inline int ZThreadSafe_SwapHelper(ZThreadSafe_t& inX, int inY)
-		{
-		int oldValue = inX.fValue;
-		inX.fValue = inY;
-		return oldValue;
-		}
-	#define ZThreadSafe_Swap(x, y) ZThreadSafe_SwapHelper(x, y)
-
-	#define ZThreadSafe_Get(x) (x.fValue)
-	#define ZThreadSafe_Set(x, y) ((void)((x).fValue = y))
-
-	#define ZThreadSafe_Inc(x) ((void)(++(x).fValue))
-	#define ZThreadSafe_Dec(x) ((void)(--(x).fValue))
-	#define ZThreadSafe_DecAndTest(x) ((--(x).fValue) == 0)
-
-	#define ZThreadSafe_IncReturnNew(x) (++(x).fValue)
-	#define ZThreadSafe_DecReturnNew(x) (--(x).fValue)
-
-	#define ZThreadSafe_IncReturnOld(x) ((x).fValue++)
-	#define ZThreadSafe_DecReturnOld(x) ((x).fValue--)
-
-#endif // ZCONFIG_Thread_Preemptive
 
 // =================================================================================================
 #pragma mark -
@@ -346,14 +291,14 @@ public:
 #pragma mark * ZSemaphore
 
 // ZSemaphore is available for use by applications and provides the foundation for all the other
-// synchronization facilities. ZFiber and BeOS provide exactly the behavior we want, but in the case
-// of BeOS the system-wide limit on semaphores precludes their profligate use, which can be problematic.
-// A call to Wait specifies a count and a timeout (the version without a timeout parameter has an effectively
-// infinite timeout). Wait will return one of three results: ZThread::errorNone if all the signals were
-// satisfied within the timeout, ZThread::errorTimeout if not all the signals could be satisified
-// within the timeout and ZThread::errorDisposed if the semaphore was destroyed *whilst* Wait was blocked.
-// If code is calling Wait whilst the destructor is being called the behavior is not well-defined -- any
-// Waits have to be already blocked.
+// synchronization facilities. ZFiber and BeOS provide exactly the behavior we want, but in the
+// case of BeOS the system-wide limit on semaphores precludes their profligate use, which can be
+// problematic. A call to Wait specifies a count and a timeout (the version without a timeout
+// parameter has an effectively infinite timeout). Wait will return one of three results:
+// ZThread::errorNone if all the signals were satisfied within the timeout, ZThread::errorTimeout
+// if not all the signals could be satisified within the timeout and ZThread::errorDisposed if the
+// semaphore was destroyed *whilst* Wait was blocked. If code is calling Wait whilst the destructor
+// is being called the behavior is not well-defined -- any Waits have to be already blocked.
 
 class ZSemaphore : ZooLib::NonCopyable
 	{
@@ -679,8 +624,8 @@ public:
 	~ZLocker();
 
 	// Used to temporarily release, then (usually) reacquire the lock
-	ZThread::Error Acquire();
 	void Release();
+	ZThread::Error Acquire();
 
 	bool IsOkay() { return fOkay; }
 
@@ -701,8 +646,8 @@ public:
 	~ZMutexLocker();
 
 	// Used to temporarily release, then (usually) reacquire the lock
-	ZThread::Error Acquire();
 	void Release();
+	ZThread::Error Acquire();
 
 	bool IsOkay() { return fOkay; }
 

@@ -261,15 +261,16 @@ ZThread::ZThread(const char* iName)
 #elif ZCONFIG(API_Thread, Win32)
 
 	fThreadHANDLE = (HANDLE) ::_beginthreadex(nil, 0, sThreadEntry_Win32,
-						this, fStarted ? 0 : CREATE_SUSPENDED, reinterpret_cast<unsigned int*>(&fThreadID));
+		this, fStarted ? 0 : CREATE_SUSPENDED, reinterpret_cast<unsigned int*>(&fThreadID));
 	if (!fThreadHANDLE)
 		throw bad_alloc();
 
 #elif ZCONFIG(API_Thread, POSIX)
 
-	// Because there's no standard way to create a suspended thread we allocate a mutex/condlock combo, which
-	// will get fired by our Start method. If we used a mutex, then only the thread that creates this thread
-	// would be able to release it to allow this thread to start executing.
+	// Because there's no standard way to create a suspended thread we allocate a
+	// mutex/condlock combo, which will get fired by our Start method. If we used
+	// a mutex, then only the thread that creates this thread would be able to
+	// release it to allow this thread to start executing.
 	::pthread_mutex_init(&fMutex_Start, nil);
 	::pthread_cond_init(&fCond_Start, nil);
 
@@ -310,8 +311,8 @@ ZThread::~ZThread()
 	#endif
 
 	#if ZCONFIG(API_Thread, Win32)
-		// AG 2002-05-02. After examining MetroWerks' and Microsoft's runtime library sources
-		// it's clear that we have to close the thread handle iff we create the thread using beginthreadex.
+		// AG 2002-05-02. After examining MetroWerks' and Microsoft's runtime it's clear that we
+		// have to close the thread handle iff we create the thread using beginthreadex.
 		if (HANDLE theThreadHANDLE = sCurrentThreadHANDLE())
 			::CloseHandle(theThreadHANDLE);
 	#endif
@@ -457,7 +458,8 @@ void ZThread::sGetProcessTimes(bigtime_t& oRealTime, bigtime_t& oCumulativeRunTi
 		FILETIME timeNow;
 		::GetSystemTimeAsFileTime(&timeNow);
 		oRealTime = (*reinterpret_cast<int64*>(&timeNow)) / 10;
-		oCumulativeRunTime = (*reinterpret_cast<int64*>(&kernelTime) + *reinterpret_cast<int64*>(&userTime)) / 10;
+		oCumulativeRunTime = (*reinterpret_cast<int64*>(&kernelTime)
+			+ *reinterpret_cast<int64*>(&userTime)) / 10;
 		}
 	else
 		{
@@ -842,7 +844,8 @@ ZThread::Error ZSemaphore::Internal_Wait_Win32(int32 iCount, bigtime_t iMicrosec
 			if (theWaiter.fNext)
 				{
 				theWaiter.fNext->fSemaphoreDisposed = true;
-				while (theWaiter.fNext->fThreadHANDLE && ::ResumeThread(theWaiter.fNext->fThreadHANDLE) != 1)
+				while (theWaiter.fNext->fThreadHANDLE
+					&& ::ResumeThread(theWaiter.fNext->fThreadHANDLE) != 1)
 					{}
 				}
 			return ZThread::errorDisposed;
@@ -851,7 +854,8 @@ ZThread::Error ZSemaphore::Internal_Wait_Win32(int32 iCount, bigtime_t iMicrosec
 		::sAcquireSpinlock(&fSpinlock);
 		if (theWaiter.fNext)
 			{
-			while (theWaiter.fNext->fThreadHANDLE && ::ResumeThread(theWaiter.fNext->fThreadHANDLE) != 1)
+			while (theWaiter.fNext->fThreadHANDLE
+				&& ::ResumeThread(theWaiter.fNext->fThreadHANDLE) != 1)
 				{}
 			}
 
@@ -1139,9 +1143,9 @@ void ZSemaphore::Signal(int32 iCount)
 #pragma mark -
 #pragma mark * ZMutexNR
 
-// AG 2000-03-08. ZMutexNR is now a Benaphore. When acquiring, we increment fLock, and if it was already
-// greater than zero, then we block on fSem. When releasing we decrement fLock, and if it was greater than one,
-// then we release fSem.
+// AG 2000-03-08. ZMutexNR is now a Benaphore. When acquiring, we increment fLock, and if it was
+// already greater than zero, then we block on fSem. When releasing we decrement fLock, and if it
+// was greater than one, then we release fSem.
 
 ZMutexNR::ZMutexNR(const char* iName)
 :	fSem(0, iName)
@@ -1202,8 +1206,9 @@ void ZMutexBase::CheckForDeadlock_Pre(ZThread* iAcquiringThread)
 				}
 			else
 				{
-				// AG 2000-07-12. We call ZDebugStop in a loop so that the message comes up over and over,
-				// so if I over-eagerly tell the debugger to start running again, we'll just drop back into the debugger.
+				// AG 2000-07-12. We call ZDebugStop in a loop so that the message comes up over
+				// and over, so if I over-eagerly tell the debugger to start running again, we'll
+				// just drop back into the debugger.
 				for (;;)
 					{
 					ZDebugStopf(0, (result->c_str()));
@@ -1232,7 +1237,7 @@ string* ZMutexBase::CheckDeadlockThread(ZThread* iAcquiringThread, ZThread* iOwn
 	if (string* result = iOwnerThread->CheckForDeadlock(iAcquiringThread))
 		{
 		*result += ZString::sFormat("mutex %08X (\"%s\"), owned by thread %08X ID %08X (\"%s\")\n",
-									this, this->fName, iOwnerThread, iOwnerThread->fThreadID, iOwnerThread->fName);
+			this, this->fName, iOwnerThread, iOwnerThread->fThreadID, iOwnerThread->fName);
 		return result;
 		}
 	return nil;
@@ -1281,7 +1286,8 @@ ZMutex::ZMutex(const char* iName, bool iCreateAcquired)
 ZMutex::~ZMutex()
 	{
 	// It's only legal to destroy an unowned mutex, or one that is owned by the current thread
-	ZAssertStopf(kDebug_Thread, fThreadID_Owner == kThreadID_None || fThreadID_Owner == ZThread::sCurrentID(), ("Mutex name %s", (fName ? fName : "none")));
+	ZAssertStopf(kDebug_Thread, fThreadID_Owner == kThreadID_None
+		|| fThreadID_Owner == ZThread::sCurrentID(), ("Mutex name %s", (fName ? fName : "none")));
 	}
 
 ZThread::Error ZMutex::Acquire()
@@ -1298,17 +1304,17 @@ bool ZMutex::IsLocked()
 
 ZThread::Error ZMutex::MutexAcquire(bigtime_t iMicroseconds)
 	{
-	// This check of fThreadID_Owner is safe, even if it doesn't look it. fThreadID_Owner is going to have one of
-	// three values. It could be nil, in which case it won't match sCurrentID, or it could be
-	// the ID of some other thread, in which case it still won't match currentID. In both these
-	// cases we'll simply call Internal_Acquire, which will block on fSem. The third value it
+	// This check of fThreadID_Owner is safe, even if it doesn't look it. fThreadID_Owner is going
+	// to have one of three values. It could be nil, in which case it won't match sCurrentID, or it
+	// could be the ID of some other thread, in which case it still won't match currentID. In both
+	// these cases we'll simply call Internal_Acquire, which will block on fSem. The third value it
 	// could have is sCurrentID, in which case we don't block on fSem, we just increment fCount.
 	// In the first two cases some other thread could race us and change the value from nil to
 	// some other ID, or vice versa -- which won't make any difference to us, we need to block
-	// anyway. The only way this could fuck up is if some other thread changes the value of fThreadID_Owner,
-	// and that change is not atomic -- so that at the point we read its value, fThreadID_Owner's bytes have
-	// taken on some value which isn't nil, and isn't the ID of the other thread, *and* which
-	// accidentally matches our ID.
+	// anyway. The only way this could fuck up is if some other thread changes the value of
+	// fThreadID_Owner, and that change is not atomic -- so that at the point we read its value,
+	// fThreadID_Owner's bytes have taken on some value which isn't nil, and isn't the ID of the
+	// other thread, *and* which accidentally matches our ID.
 	if (fThreadID_Owner != ZThread::sCurrentID())
 		{
 		ZThread::Error err = this->Internal_Acquire(iMicroseconds);
@@ -1592,15 +1598,21 @@ ZThread::Error ZRWLock::AcquireWrite(bigtime_t iMicroseconds)
 	fMutex_Structure.Acquire();
 	ZThread::ThreadID currentID = ZThread::sCurrentID();
 
-	// Trip an assertion if this is a call on a lock we've already locked for reading, which means we're gonna deadlock.
-	ZAssertLogf(kDebug_Thread, find(fVector_CurrentReaders.begin(), fVector_CurrentReaders.end(), currentID) == fVector_CurrentReaders.end(), ("DEADLOCK"));
+	// Trip an assertion if this is a call on a lock we've already
+	// locked for reading, which means we're gonna deadlock.
+	ZAssertLogf(kDebug_Thread,
+		find(fVector_CurrentReaders.begin(), fVector_CurrentReaders.end(), currentID)
+		== fVector_CurrentReaders.end(), ("DEADLOCK"));
 
 	if (fThreadID_CurrentWriter == currentID)
 		{
-		// We're the current writer so this is a recursive acquisition and we can just increment the count.
+		// We're the current writer so this is a recursive
+		// acquisition and we can just increment the count.
 		++fCount_CurrentWriter;
 		ZAssertStop(kDebug_Thread, fCount_CurrentReaders == 0);
-		ZDebugLogf(kDebug_RWLock, ("Thread %04X, Got it write recursive %d", ZThread::sCurrentID(), fCount_CurrentWriter));
+		ZDebugLogf(kDebug_RWLock,
+			("Thread %04X, Got it write recursive %d", ZThread::sCurrentID(),
+			fCount_CurrentWriter));
 		fMutex_Structure.Release();
 		return ZThread::errorNone;
 		}
@@ -1628,7 +1640,8 @@ ZThread::Error ZRWLock::AcquireWrite(bigtime_t iMicroseconds)
 	// We're no longer waiting
 	--fCount_WaitingWriters;
 
-	ZAssertStop(kDebug_Thread, fThreadID_CurrentWriter == kThreadID_None && fCount_CurrentWriter == 0);
+	ZAssertStop(kDebug_Thread,
+		fThreadID_CurrentWriter == kThreadID_None && fCount_CurrentWriter == 0);
 	ZAssertStop(kDebug_Thread, fCount_CurrentReaders == 0);
 	fThreadID_CurrentWriter = currentID;
 
@@ -1655,9 +1668,9 @@ ZThread::Error ZRWLock::AcquireRead(bigtime_t iMicroseconds)
 
 	if (fThreadID_CurrentWriter == currentID)
 		{
-		// We're the current writer, just reacquire the write lock (this is fair, cause we've already
-		// locked out other readers by the fact that we posess the write lock. And anyway, if we were
-		// to fail to acquire the read lock, we'd just deadlock the entire system)
+		// We're the current writer, just reacquire the write lock (this is fair, cause we've
+		// already locked out other readers by the fact that we posess the write lock. And anyway,
+		// if we were to fail to acquire the read lock, we'd just deadlock the entire system)
 		++fCount_CurrentWriter;
 		}
 	else
@@ -1668,7 +1681,9 @@ ZThread::Error ZRWLock::AcquireRead(bigtime_t iMicroseconds)
 
 		// The following check on fCount_CurrentReaders short circuits the call to find(); if
 		// fCount_CurrentReaders is zero then obviously we can't find ourselves in the vector.
-		if (fCount_CurrentReaders && find(fVector_CurrentReaders.begin(), fVector_CurrentReaders.end(), currentID) != fVector_CurrentReaders.end())
+		if (fCount_CurrentReaders
+			&& find(fVector_CurrentReaders.begin(), fVector_CurrentReaders.end(), currentID)
+			!= fVector_CurrentReaders.end())
 			{
 			// We're a current reader, so just stick ourselves on the list again.
 			++fCount_CurrentReaders;
@@ -1678,13 +1693,16 @@ ZThread::Error ZRWLock::AcquireRead(bigtime_t iMicroseconds)
 			fVector_Thread_CurrentReaders.push_back(currentThread);
 			#endif // ZCONFIG_Thread_DeadlockDetect
 
-			ZDebugLogf(kDebug_RWLock, ("Thread %04X, Got it read recursive, total: %d", ZThread::sCurrentID(), fCount_CurrentReaders));
+			ZDebugLogf(kDebug_RWLock,
+				("Thread %04X, Got it read recursive, total: %d", ZThread::sCurrentID(),
+				fCount_CurrentReaders));
 			}
 		else
 			{
 			if (fCount_WaitingWriters != 0 || fCount_CurrentReaders == 0)
 				{
-				// There are waiting writers, or there are no current readers, so we have to ensure the access lock is grabbed
+				// There are waiting writers, or there are no current
+				// readers, so we have to ensure the access lock is grabbed
 				++fCount_WaitingReaders;
 				if (fCount_WaitingReaders == 1)
 					{
@@ -1705,8 +1723,11 @@ ZThread::Error ZRWLock::AcquireRead(bigtime_t iMicroseconds)
 					fMutex_Structure.Acquire();
 
 					ZDebugLogf(kDebug_RWLock, ("Thread %04X, Got it read", ZThread::sCurrentID()));
-					ZAssertStop(kDebug_Thread, fThreadID_CurrentWriter == 0 && fCount_CurrentWriter == 0);
-					ZDebugLogf(kDebug_RWLock, ("Thread %04X, Signal subs: %d", ZThread::sCurrentID(), fCount_WaitingReaders - 1));
+					ZAssertStop(kDebug_Thread,
+						fThreadID_CurrentWriter == 0 && fCount_CurrentWriter == 0);
+					ZDebugLogf(kDebug_RWLock,
+						("Thread %04X, Signal subs: %d", ZThread::sCurrentID(),
+						fCount_WaitingReaders - 1));
 
 					// We've acquired the access lock, so let the subsequent readers through.
 					fSem_SubsequentReaders.Signal(fCount_WaitingReaders - 1);
@@ -1721,7 +1742,8 @@ ZThread::Error ZRWLock::AcquireRead(bigtime_t iMicroseconds)
 				else
 					{
 					// We're a subsequent reader. Wait for the read barrier to be opened
-					ZDebugLogf(kDebug_RWLock, ("Thread %04X, Waiting subsequent", ZThread::sCurrentID()));
+					ZDebugLogf(kDebug_RWLock,
+						("Thread %04X, Waiting subsequent", ZThread::sCurrentID()));
 
 					fMutex_Structure.Release();
 
@@ -1737,8 +1759,11 @@ ZThread::Error ZRWLock::AcquireRead(bigtime_t iMicroseconds)
 
 					fMutex_Structure.Acquire();
 
-					ZDebugLogf(kDebug_RWLock, ("Thread %04X, Got it subsequent, total: %d", ZThread::sCurrentID(), fCount_CurrentReaders));
-					ZAssertStop(kDebug_Thread, fThreadID_CurrentWriter == 0 && fCount_CurrentWriter == 0);
+					ZDebugLogf(kDebug_RWLock,
+						("Thread %04X, Got it subsequent, total: %d",
+							ZThread::sCurrentID(), fCount_CurrentReaders));
+					ZAssertStop(kDebug_Thread,
+						fThreadID_CurrentWriter == 0 && fCount_CurrentWriter == 0);
 
 					fVector_CurrentReaders.push_back(currentID);
 
@@ -1750,7 +1775,8 @@ ZThread::Error ZRWLock::AcquireRead(bigtime_t iMicroseconds)
 			else
 				{
 				// There were no waiting writers and there are current readers.
-				ZAssertStop(kDebug_Thread, fThreadID_CurrentWriter == 0 && fCount_CurrentWriter == 0);
+				ZAssertStop(kDebug_Thread,
+					fThreadID_CurrentWriter == 0 && fCount_CurrentWriter == 0);
 				ZDebugLogf(kDebug_RWLock, ("Thread %04X, Got it other", ZThread::sCurrentID()));
 
 				++fCount_CurrentReaders;
@@ -1813,13 +1839,16 @@ void ZRWLock::ReturnLock()
 		// there can't be a current writer
 		ZAssertStop(kDebug_Thread, fThreadID_CurrentWriter == kThreadID_None);
 
-		vector<ZThread::ThreadID>::iterator theIter = find(fVector_CurrentReaders.begin(), fVector_CurrentReaders.end(), currentID);
+		vector<ZThread::ThreadID>::iterator theIter
+			= find(fVector_CurrentReaders.begin(), fVector_CurrentReaders.end(), currentID);
 		ZAssertStop(kDebug_Thread, theIter != fVector_CurrentReaders.end());
 		fVector_CurrentReaders.erase(theIter);
 
 		#if ZCONFIG_Thread_DeadlockDetect
 		ZThread* currentThread = ::sCurrent();
-		vector<ZThread*>::iterator iterThread = find(fVector_Thread_CurrentReaders.begin(), fVector_Thread_CurrentReaders.end(), currentThread);
+		vector<ZThread*>::iterator iterThread
+			= find(fVector_Thread_CurrentReaders.begin(), fVector_Thread_CurrentReaders.end(),
+			currentThread);
 		ZAssertStop(kDebug_Thread, iterThread != fVector_Thread_CurrentReaders.end());
 		fVector_Thread_CurrentReaders.erase(iterThread);
 		#endif // ZCONFIG_Thread_DeadlockDetect
@@ -1851,7 +1880,8 @@ bool ZRWLock::CanRead()
 		return true;
 		}
 
-	if (find(fVector_CurrentReaders.begin(), fVector_CurrentReaders.end(), currentID) != fVector_CurrentReaders.end())
+	if (find(fVector_CurrentReaders.begin(), fVector_CurrentReaders.end(), currentID)
+		!= fVector_CurrentReaders.end())
 		{
 		// We're a current reader.
 		fMutex_Structure.Release();
@@ -1892,7 +1922,8 @@ string* ZRWLock::Internal_CheckForDeadlock(ZThread* iAcquiringThread, ZMutexBase
 		}
 	else
 		{
-		for (vector<ZThread*>::iterator i = fVector_Thread_CurrentReaders.begin(); i != fVector_Thread_CurrentReaders.end(); ++i)
+		for (vector<ZThread*>::iterator i = fVector_Thread_CurrentReaders.begin();
+			i != fVector_Thread_CurrentReaders.end(); ++i)
 			{
 			if (string* result = iLock->CheckDeadlockThread(iAcquiringThread, *i))
 				return result;
