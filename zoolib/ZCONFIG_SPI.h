@@ -106,7 +106,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	if __MACH__
 #		define ZCONFIG_SPI_Avail__Carbon 1
 #	elif macintosh
-#		define ZCONFIG_SPI_Avail__Carbon 1
+#		if defined(TARGET_API_MAC_CARBON) && TARGET_API_MAC_CARBON
+#			define ZCONFIG_SPI_Avail__Carbon 1
+#		endif
 #	endif
 #endif
 
@@ -309,8 +311,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark MacClassic
 #ifndef ZCONFIG_SPI_Avail__MacClassic
-// This one is at least well-defined, but basically generally irrelevant at this point,
-// so I'll leave the definition of a default value for later.
+#	if macintosh
+#		if !defined(TARGET_API_MAC_CARBON) || !TARGET_API_MAC_CARBON
+#			define ZCONFIG_SPI_Avail__MacClassic 1
+#		endif
+#	endif
+#endif
+
+#ifndef ZCONFIG_SPI_Avail__MacClassic
 #	define ZCONFIG_SPI_Avail__MacClassic 0
 #endif
 
