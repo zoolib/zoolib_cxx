@@ -34,7 +34,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /** A RW stream that queues written data and returns it in FIFO order when read. */
 
-class ZStreamRW_FIFO : public ZStreamR, public ZStreamW
+class ZStreamRW_FIFO
+:	public ZStreamR,
+	public ZStreamW
 	{
 public:
 	ZStreamRW_FIFO();
@@ -44,6 +46,7 @@ public:
 // From ZStreamR
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
+	virtual bool Imp_WaitReadable(int iMilliseconds);
 
 // From ZStreamW
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);

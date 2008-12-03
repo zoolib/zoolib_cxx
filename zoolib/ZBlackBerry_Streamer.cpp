@@ -215,9 +215,9 @@ public:
 // From ZStreamR via ZStreamRCon
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
+	virtual bool Imp_WaitReadable(int iMilliseconds);
 
 // From ZStreamRCon
-	virtual bool Imp_WaitReadable(int iMilliseconds);
 	virtual bool Imp_ReceiveDisconnect(int iMilliseconds);
 
 // From ZStreamW via ZStreamWCon
@@ -343,7 +343,12 @@ size_t Channel_Streamer::Imp_CountReadable()
 	}
 
 bool Channel_Streamer::Imp_WaitReadable(int iMilliseconds)
-	{ return false; }
+	{
+	if (ZUsedPtr_T<Device_Streamer> theDevice_Streamer = fPUC_Device_Streamer)
+		return theDevice_Streamer->Channel_WaitReadable(this, iMilliseconds);
+
+	return true;
+	}
 
 bool Channel_Streamer::Imp_ReceiveDisconnect(int iMilliseconds)
 	{
@@ -808,6 +813,18 @@ size_t Device_Streamer::Channel_CountReadable(Channel_Streamer* iChannel)
 	if (iChannel->fState != eState_Connected)
 		return 0;
 	return iChannel->fReceive_Buffer.size();
+	}
+
+bool Device_Streamer::Channel_WaitReadable(Channel_Streamer* iChannel, int iMilliseconds)
+	{
+	ZMutexLocker locker(fMutex);
+	if (iChannel->fState != eState_Connected)
+		return true;
+
+	if (!iChannel->fReceive_Buffer.size())
+		iChannel->fCondition_Receive.Wait(fMutex, iMilliseconds * 1000);		
+	
+	return iChannel->fState != eState_Connected || iChannel->fReceive_Buffer.size();
 	}
 
 void Device_Streamer::Channel_Write(

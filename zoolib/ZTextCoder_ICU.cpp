@@ -41,7 +41,9 @@ static const size_t kBufSize = ZooLib::sStackBufferSize;
 
 #include "zoolib/ZFactoryChain.h"
 
-static bool sMake_Decoder(ZTextDecoder*& oResult, const string& iParam)
+namespace ZANONYMOUS {
+
+bool sMake_Decoder(ZTextDecoder*& oResult, const string& iParam)
 	{
 	try
 		{
@@ -53,10 +55,10 @@ static bool sMake_Decoder(ZTextDecoder*& oResult, const string& iParam)
 	return false;
 	}
 
-static ZFactoryChain_Maker_T<ZTextDecoder*, const string&>
+ZFactoryChain_Maker_T<ZTextDecoder*, const string&>
 	sMaker_Decoder(sMake_Decoder);
 
-static bool sMake_Encoder(ZTextEncoder*& oResult, const string& iParam)
+bool sMake_Encoder(ZTextEncoder*& oResult, const string& iParam)
 	{
 	try
 		{
@@ -68,8 +70,10 @@ static bool sMake_Encoder(ZTextEncoder*& oResult, const string& iParam)
 	return false;
 	}
 
-static ZFactoryChain_Maker_T<ZTextEncoder*, const string&>
+ZFactoryChain_Maker_T<ZTextEncoder*, const string&>
 	sMaker_Encoder(sMake_Encoder);
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

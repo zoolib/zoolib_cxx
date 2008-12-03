@@ -39,7 +39,9 @@ using std::string;
 
 #include "zoolib/ZFactoryChain.h"
 
-static bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Internet::LookupParam_t iParam)
+namespace ZANONYMOUS {
+
+bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Internet::LookupParam_t iParam)
 	{
 	try
 		{
@@ -51,10 +53,10 @@ static bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Internet::L
 	return false;
 	}
 
-static ZFactoryChain_Maker_T<ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t>
+ZFactoryChain_Maker_T<ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t>
 	sMaker1(sMake_NameLookup);
 
-static bool sMake_Listener(ZRef<ZNetListener_TCP>& oResult, ZNetListener_TCP::MakeParam_t iParam)
+bool sMake_Listener(ZRef<ZNetListener_TCP>& oResult, ZNetListener_TCP::MakeParam_t iParam)
 	{
 	try
 		{
@@ -66,10 +68,10 @@ static bool sMake_Listener(ZRef<ZNetListener_TCP>& oResult, ZNetListener_TCP::Ma
 	return false;
 	}
 
-static ZFactoryChain_Maker_T<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam_t>
+ZFactoryChain_Maker_T<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam_t>
 	sMaker2(sMake_Listener);
 
-static bool sMake_Endpoint(ZRef<ZNetEndpoint_TCP>& oResult, ZNetEndpoint_TCP::MakeParam_t iParam)
+bool sMake_Endpoint(ZRef<ZNetEndpoint_TCP>& oResult, ZNetEndpoint_TCP::MakeParam_t iParam)
 	{
 	try
 		{
@@ -81,8 +83,10 @@ static bool sMake_Endpoint(ZRef<ZNetEndpoint_TCP>& oResult, ZNetEndpoint_TCP::Ma
 	return false;
 	}
 
-static ZFactoryChain_Maker_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
+ZFactoryChain_Maker_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
 	sMaker3(sMake_Endpoint);
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

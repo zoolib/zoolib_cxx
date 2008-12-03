@@ -103,7 +103,9 @@ HRGN sGetHRGN(HRGN iNative, bool iAdopt)
 #pragma mark -
 #pragma mark * Factory functions
 
-static class Make_Rect
+namespace ZANONYMOUS {
+
+class Make_Rect
 :	public ZFactoryChain_T<ZRef<ZGRgnRep>, const ZRect&>
 	{
 public:
@@ -122,6 +124,8 @@ public:
 template <>
 ZRef<ZGRgnRep> ZGRgnRepCreator_T<HRGN>::sCreate(HRGN iNative, bool iAdopt)
 	{ return new ZGRgnRep_HRGN(iNative, iAdopt); }
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

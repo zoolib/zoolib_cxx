@@ -275,7 +275,8 @@ void ZStream_SHA1::sFinal(ZStream_SHA1::Context& ioContext, uint8 oDigest[20])
 */
 
 ZStreamR_SHA1::ZStreamR_SHA1(const ZStreamR& iStreamSource)
-:	fStreamSource(iStreamSource),
+:	ZStreamR_Filter(iStreamSource),
+	fStreamSource(iStreamSource),
 	fDigest(nil)
 	{
 	ZStream_SHA1::sInit(fContext);
@@ -297,7 +298,8 @@ ZStreamR_SHA1(theDigest, sourceStream).Read(dest, destSize);
 \endcode
 */
 ZStreamR_SHA1::ZStreamR_SHA1(uint8 oDigest[20], const ZStreamR& iStreamSource)
-:	fStreamSource(iStreamSource),
+:	ZStreamR_Filter(iStreamSource),
+	fStreamSource(iStreamSource),
 	fDigest(oDigest)
 	{ ZStream_SHA1::sInit(fContext); }
 
@@ -316,9 +318,6 @@ void ZStreamR_SHA1::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	if (oCountRead)
 		*oCountRead = countRead;
 	}
-
-size_t ZStreamR_SHA1::Imp_CountReadable()
-	{ return fStreamSource.CountReadable(); }
 
 void ZStreamR_SHA1::GetDigest(uint8 oDigest[20])
 	{

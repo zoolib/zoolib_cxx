@@ -91,6 +91,15 @@ size_t ZStreamRW_FIFO::Imp_CountReadable()
 	return fBuffer.size();
 	}
 
+bool ZStreamRW_FIFO::Imp_WaitReadable(int iMilliseconds)
+	{
+	ZMutexLocker locker(fMutex);
+	if (!fBuffer.size())
+		fCondition_Read.Wait(fMutex, iMilliseconds * 1000);
+
+	return fBuffer.size();
+	}
+
 void ZStreamRW_FIFO::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	ZMutexLocker locker(fMutex);

@@ -37,8 +37,19 @@ void ZStreamR_Filter::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 size_t ZStreamR_Filter::Imp_CountReadable()
 	{ return const_cast<ZStreamR&>(fStreamReal).Imp_CountReadable(); }
 
+bool ZStreamR_Filter::Imp_WaitReadable(int iMilliseconds)
+	{ return const_cast<ZStreamR&>(fStreamReal).Imp_WaitReadable(iMilliseconds); }
+
 void ZStreamR_Filter::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{ const_cast<ZStreamR&>(fStreamReal).Imp_Skip(iCount, oCountSkipped); }
+
+void ZStreamR_Filter::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
+	uint64* oCountRead, uint64* oCountWritten)
+	{ const_cast<ZStreamR&>(fStreamReal).Imp_CopyToDispatch(iStreamW, iCount, oCountRead, oCountWritten); }
+
+void ZStreamR_Filter::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
+	uint64* oCountRead, uint64* oCountWritten)
+	{ const_cast<ZStreamR&>(fStreamReal).Imp_CopyTo(iStreamW, iCount, oCountRead, oCountWritten); }
 
 // =================================================================================================
 #pragma mark -
@@ -56,6 +67,9 @@ void ZStreamU_Filter::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 
 size_t ZStreamU_Filter::Imp_CountReadable()
 	{ return const_cast<ZStreamU&>(fStreamReal).Imp_CountReadable(); }
+
+bool ZStreamU_Filter::Imp_WaitReadable(int iMilliseconds)
+	{ return const_cast<ZStreamU&>(fStreamReal).Imp_WaitReadable(iMilliseconds); }
 
 void ZStreamU_Filter::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{ const_cast<ZStreamU&>(fStreamReal).Imp_Skip(iCount, oCountSkipped); }

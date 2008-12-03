@@ -142,6 +142,13 @@ size_t ZStreamR_Boundary::Imp_CountReadable()
 	return fDataEnd - fDataStart;
 	}
 
+bool ZStreamR_Boundary::Imp_WaitReadable(int iMilliseconds)
+	{
+	if (fDataEnd - fDataStart)
+		return true;
+	return fStreamSource.WaitReadable(iMilliseconds);
+	}
+
 /**
 This method distinguishes between a stream that's gone empty because the boundary
 was encountered and one that's gone empty because the source stream is empty.

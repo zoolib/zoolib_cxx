@@ -82,9 +82,9 @@ public:
 // From ZStreamR via ZStreamRCon
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
+	virtual bool Imp_WaitReadable(int iMilliseconds);
 
 // From ZStreamRCon
-	virtual bool Imp_WaitReadable(int iMilliseconds);
 	virtual bool Imp_ReceiveDisconnect(int iMilliseconds);
 
 // From ZStreamW via ZStreamWCon

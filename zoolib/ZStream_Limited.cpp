@@ -47,6 +47,13 @@ void ZStreamR_Limited::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 size_t ZStreamR_Limited::Imp_CountReadable()
 	{ return min(fStreamSource.CountReadable(), ZStream::sClampedSize(fCountRemaining)); }
 
+bool ZStreamR_Limited::Imp_WaitReadable(int iMilliseconds)
+	{
+	if (fCountRemaining)
+		return fStreamSource.WaitReadable(iMilliseconds);
+	return true;
+	}
+
 void ZStreamR_Limited::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
 	{
@@ -74,74 +81,6 @@ void ZStreamR_Limited::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	fCountRemaining -= countSkipped;
 	if (oCountSkipped)
 		*oCountSkipped = countSkipped;
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRCon_Limited
-
-ZStreamRCon_Limited::ZStreamRCon_Limited(uint64 iLimit, const ZStreamRCon& iStreamRCon)
-:	fStreamRCon(iStreamRCon),
-	fCountRemaining(iLimit)
-	{}
-
-void ZStreamRCon_Limited::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{
-	size_t countRead;
-	fStreamRCon.Read(iDest, min(uint64(iCount), fCountRemaining), &countRead);
-	fCountRemaining -= countRead;
-	if (oCountRead)
-		*oCountRead = countRead;
-	}
-
-size_t ZStreamRCon_Limited::Imp_CountReadable()
-	{ return min(fStreamRCon.CountReadable(), ZStream::sClampedSize(fCountRemaining)); }
-
-void ZStreamRCon_Limited::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
-	uint64* oCountRead, uint64* oCountWritten)
-	{
-	uint64 countRead;
-	fStreamRCon.CopyTo(iStreamW, min(iCount, fCountRemaining), &countRead, oCountWritten);
-	fCountRemaining -= countRead;
-	if (oCountRead)
-		*oCountRead = countRead;
-	}
-
-void ZStreamRCon_Limited::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
-	uint64* oCountRead, uint64* oCountWritten)
-	{
-	uint64 countRead;
-	fStreamRCon.CopyTo(iStreamW, min(iCount, fCountRemaining), &countRead, oCountWritten);
-	fCountRemaining -= countRead;
-	if (oCountRead)
-		*oCountRead = countRead;
-	}
-
-void ZStreamRCon_Limited::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
-	{
-	uint64 countSkipped;
-	fStreamRCon.Skip(min(iCount, fCountRemaining), &countSkipped);
-	fCountRemaining -= countSkipped;
-	if (oCountSkipped)
-		*oCountSkipped = countSkipped;
-	}
-
-bool ZStreamRCon_Limited::Imp_WaitReadable(int iMilliseconds)
-	{
-	if (fCountRemaining)
-		return fStreamRCon.WaitReadable(iMilliseconds);
-	return true;
-	}
-
-bool ZStreamRCon_Limited::Imp_ReceiveDisconnect(int iMilliseconds)
-	{
-	this->SkipAll();
-	return true;
-	}
-
-void ZStreamRCon_Limited::Imp_Abort()
-	{
-	fStreamRCon.Abort();
 	}
 
 // =================================================================================================

@@ -62,7 +62,9 @@ using std::vector;
 
 #include "zoolib/ZFactoryChain.h"
 
-static bool sMake_FileLoc(ZRef<ZFileLoc>& oResult, ZFileLoc::ELoc iParam)
+namespace ZANONYMOUS {
+
+bool sMake_FileLoc(ZRef<ZFileLoc>& oResult, ZFileLoc::ELoc iParam)
 	{
 	try
 		{
@@ -78,8 +80,10 @@ static bool sMake_FileLoc(ZRef<ZFileLoc>& oResult, ZFileLoc::ELoc iParam)
 	return false;
 	}
 
-static ZFactoryChain_Maker_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>
+ZFactoryChain_Maker_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>
 	sMaker1(sMake_FileLoc);
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

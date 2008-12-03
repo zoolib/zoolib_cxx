@@ -89,6 +89,17 @@ size_t ZStreamRW_FlushOnRead::Imp_CountReadable()
 	return fStreamR.CountReadable();
 	}
 
+bool ZStreamRW_FlushOnRead::Imp_WaitReadable(int iMilliseconds)
+	{
+	if (ZThreadSafe_Swap(fLastWasWrite, 0) == 1)
+		{
+		Locker locker_Write(fMutex_Write);
+		fStreamW.Flush();
+		}
+
+	return fStreamR.WaitReadable(iMilliseconds);
+	}
+
 void ZStreamRW_FlushOnRead::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
 	{

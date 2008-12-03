@@ -2527,7 +2527,9 @@ static ZRef<ZDCPixmapRep_QD> sGetPixmapRep_QDIfComplex(const ZRef<ZDCInk::Rep>& 
 #pragma mark -
 #pragma mark * Factory functions
 
-static class Make_CreateRaster
+namespace ZANONYMOUS {
+
+class Make_CreateRaster
 :	public ZFactoryChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRaster_t&>
 	{
 public:
@@ -2543,7 +2545,7 @@ public:
 	} sMaker0;
 	
 
-static class Make_CreateRasterDesc
+class Make_CreateRasterDesc
 :	public ZFactoryChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRasterDesc_t&>
 	{
 public:
@@ -2565,7 +2567,7 @@ public:
 	} sMaker1;
 
 
-static class Make_EfficientToStandard
+class Make_EfficientToStandard
 :	public ZFactoryChain_T<ZDCPixmapNS::EFormatStandard, ZDCPixmapNS::EFormatEfficient>
 	{
 public:
@@ -2590,6 +2592,8 @@ public:
 		return false;
 		}	
 	} sMaker2;
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

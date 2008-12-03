@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_StreamMD5_UseOpenSSL ZCONFIG_SPI_Enabled(openssl)
 #endif
 
-#include "zoolib/ZStream.h"
+#include "zoolib/ZStream_Filter.h"
 
 // =================================================================================================
 #pragma mark -
@@ -71,7 +71,7 @@ void sFinal(Context& ioContext, uint8 oDigest[16]);
 
 /// A read filter stream that MD5 hashes data read through it.
 
-class ZStreamR_MD5 : public ZStreamR
+class ZStreamR_MD5 : public ZStreamR_Filter
 	{
 public:
 	ZStreamR_MD5(const ZStreamR& iStreamSource);
@@ -80,7 +80,6 @@ public:
 
 // From ZStreamR
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
-	virtual size_t Imp_CountReadable();
 
 // Our protocol
 	void GetDigest(uint8 oDigest[16]);

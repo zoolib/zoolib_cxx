@@ -36,7 +36,8 @@ using std::min;
 */
 
 ZStreamR_Tee::ZStreamR_Tee(const ZStreamR& iStreamR, const ZStreamW& iStreamW)
-:	fStreamR(iStreamR),
+:	ZStreamR_Filter(iStreamR),
+	fStreamR(iStreamR),
 	fStreamW(iStreamW)
 	{}
 
@@ -74,9 +75,6 @@ void ZStreamR_Tee::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	if (oCountRead)
 		*oCountRead = localDest - static_cast<char*>(iDest);
 	}
-
-size_t ZStreamR_Tee::Imp_CountReadable()
-	{ return fStreamR.CountReadable(); }
 
 // =================================================================================================
 #pragma mark -

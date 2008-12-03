@@ -282,7 +282,8 @@ void ZStream_MD5::sFinal(ZStream_MD5::Context& ioContext, uint8 oDigest[16])
 #pragma mark * ZStreamR_MD5
 
 ZStreamR_MD5::ZStreamR_MD5(const ZStreamR& iStreamSource)
-:	fStreamSource(iStreamSource),
+:	ZStreamR_Filter(iStreamSource),
+	fStreamSource(iStreamSource),
 	fDigest(nil)
 	{
 	ZStream_MD5::sInit(fContext);
@@ -304,7 +305,8 @@ ZStreamR_MD5(theDigest, sourceStream).Read(dest, destSize);
 \endcode
 */
 ZStreamR_MD5::ZStreamR_MD5(uint8 oDigest[16], const ZStreamR& iStreamSource)
-:	fStreamSource(iStreamSource),
+:	ZStreamR_Filter(iStreamSource),
+	fStreamSource(iStreamSource),
 	fDigest(oDigest)
 	{ ZStream_MD5::sInit(fContext); }
 
@@ -323,9 +325,6 @@ void ZStreamR_MD5::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	if (oCountRead)
 		*oCountRead = countRead;
 	}
-
-size_t ZStreamR_MD5::Imp_CountReadable()
-	{ return fStreamSource.CountReadable(); }
 
 void ZStreamR_MD5::GetDigest(uint8 oDigest[16])
 	{

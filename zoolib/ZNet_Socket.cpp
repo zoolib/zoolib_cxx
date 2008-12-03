@@ -424,6 +424,11 @@ size_t ZNetEndpoint_Socket::Imp_CountReadable()
 	return 0;
 	}
 
+bool ZNetEndpoint_Socket::Imp_WaitReadable(int iMilliseconds)
+	{
+	return sWaitReadable(fSocketFD, iMilliseconds);
+	}
+
 void ZNetEndpoint_Socket::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	const char* localSource = static_cast<const char*>(iSource);
@@ -459,11 +464,6 @@ void ZNetEndpoint_Socket::Imp_Write(const void* iSource, size_t iCount, size_t* 
 		}
 	if (oCountWritten)
 		*oCountWritten = localSource - static_cast<const char*>(iSource);
-	}
-
-bool ZNetEndpoint_Socket::Imp_WaitReadable(int iMilliseconds)
-	{
-	return sWaitReadable(fSocketFD, iMilliseconds);
 	}
 
 bool ZNetEndpoint_Socket::Imp_ReceiveDisconnect(int iMilliseconds)

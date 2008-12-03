@@ -227,6 +227,7 @@ public:
 // From ZStreamR
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
+	virtual bool Imp_WaitReadable(int iMilliseconds);
 
 private:
 	const ZStreamR& fStreamSource;

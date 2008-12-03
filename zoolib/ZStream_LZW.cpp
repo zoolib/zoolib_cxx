@@ -47,7 +47,8 @@ compressing, thus avoiding infringement of the Unisys patent.
 
 ZStreamR_LZWEncodeNoPatent::ZStreamR_LZWEncodeNoPatent(
 	int iCodeSize_Alphabet, const ZStreamR& iStreamSource)
-:	fStreamSource(iStreamSource)
+:	ZStreamR_Filter(iStreamSource),
+	fStreamSource(iStreamSource)
 	{
 	ZAssertStop(kDebug_LZW, iCodeSize_Alphabet > 0 && iCodeSize_Alphabet <= 8);
 
@@ -126,7 +127,8 @@ size_t ZStreamR_LZWEncodeNoPatent::Imp_CountReadable()
 */
 
 ZStreamR_LZWDecode::ZStreamR_LZWDecode(int iCodeSize_Alphabet, const ZStreamR& iStreamSource)
-:	fStreamSource(iStreamSource)
+:	ZStreamR_Filter(iStreamSource),
+	fStreamSource(iStreamSource)
 	{
 	ZAssertStop(kDebug_LZW, iCodeSize_Alphabet > 0 && iCodeSize_Alphabet <= 8);
 

@@ -123,6 +123,13 @@ void ZStreamR_Buffered::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 size_t ZStreamR_Buffered::Imp_CountReadable()
 	{ return fBufferSize - fBufferOffset + fStreamSource.CountReadable(); }
 
+bool ZStreamR_Buffered::Imp_WaitReadable(int iMilliseconds)
+	{
+	if (fBufferSize - fBufferOffset)
+		return true;
+	return fStreamSource.WaitReadable(iMilliseconds);
+	}
+
 void ZStreamR_Buffered::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
 	if (oCountSkipped)
@@ -379,6 +386,14 @@ size_t ZStreamR_DynamicBuffered::Imp_CountReadable()
 		return fStreamBuffer.CountReadable();
 	else
 		return fStreamSource.CountReadable();
+	}
+
+bool ZStreamR_DynamicBuffered::Imp_WaitReadable(int iMilliseconds)
+	{
+	if (fMode == eModeReadBufferThenAppend || fMode == eModeReadBufferThenStream)
+		return fStreamBuffer.WaitReadable(iMilliseconds);
+	else
+		return fStreamSource.WaitReadable(iMilliseconds);
 	}
 
 void ZStreamR_DynamicBuffered::Rewind()

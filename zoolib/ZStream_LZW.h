@@ -23,14 +23,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZBitStream.h"
-#include "zoolib/ZStream.h"
+#include "zoolib/ZStream_Filter.h"
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamR_LZWEncode
 
 /* This one is not done yet.
-class ZStreamR_LZWEncode : public ZStreamR
+class ZStreamR_LZWEncode : public ZStreamR_F
 	{
 public:
 	ZStreamR_LZWEncode(int iCodeSize_Alphabet, const ZStreamR& iStreamSource);
@@ -62,7 +62,7 @@ protected:
 #pragma mark -
 #pragma mark * ZStreamR_LZWEncodeNoPatent
 
-class ZStreamR_LZWEncodeNoPatent : public ZStreamR
+class ZStreamR_LZWEncodeNoPatent : public ZStreamR_Filter
 	{
 public:
 	ZStreamR_LZWEncodeNoPatent(int iCodeSize_Alphabet, const ZStreamR& iStreamSource);
@@ -95,7 +95,7 @@ protected:
 
 /// A read filter stream that LZW-decompresses a source stream.
 
-class ZStreamR_LZWDecode : public ZStreamR
+class ZStreamR_LZWDecode : public ZStreamR_Filter
 	{
 public:
 	ZStreamR_LZWDecode(int iCodeSize_Alphabet, const ZStreamR& iStreamSource);

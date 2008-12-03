@@ -45,8 +45,11 @@ using std::runtime_error;
 
 #include "zoolib/ZFactoryChain.h"
 
+namespace ZANONYMOUS {
+
 /*
-static bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Internet::LookupParam_t iParam)
+
+bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Internet::LookupParam_t iParam)
 	{
 	try
 		{
@@ -58,11 +61,11 @@ static bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Internet::L
 	return false;
 	}
 
-static ZFactoryChain_Maker_T<ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t>
+ZFactoryChain_Maker_T<ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t>
 	sMaker1(sMake_NameLookup);
 */
 /*
-static bool sMake_Listener(ZRef<ZNetListener_RFCOMM>& oResult, ZNetListener_RFCOMM::MakeParam_t iParam)
+bool sMake_Listener(ZRef<ZNetListener_RFCOMM>& oResult, ZNetListener_RFCOMM::MakeParam_t iParam)
 	{
 	try
 		{
@@ -74,10 +77,10 @@ static bool sMake_Listener(ZRef<ZNetListener_RFCOMM>& oResult, ZNetListener_RFCO
 	return false;
 	}
 
-static ZFactoryChain_Maker_T<ZRef<ZNetListener_RFCOMM>, ZNetListener_RFCOMM::MakeParam_t>
+ZFactoryChain_Maker_T<ZRef<ZNetListener_RFCOMM>, ZNetListener_RFCOMM::MakeParam_t>
 	sMaker2(sMake_Listener);
 
-static bool sMake_Endpoint(ZRef<ZNetEndpoint_RFCOMM>& oResult, ZNetEndpoint_RFCOMM::MakeParam_t iParam)
+bool sMake_Endpoint(ZRef<ZNetEndpoint_RFCOMM>& oResult, ZNetEndpoint_RFCOMM::MakeParam_t iParam)
 	{
 	try
 		{
@@ -89,9 +92,13 @@ static bool sMake_Endpoint(ZRef<ZNetEndpoint_RFCOMM>& oResult, ZNetEndpoint_RFCO
 	return false;
 	}
 
-static ZFactoryChain_Maker_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
+ZFactoryChain_Maker_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
 	sMaker3(sMake_Endpoint);
+
 */
+
+} // anonymous namespace
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Delegate_ZNetListener_RFCOMM_OSX
@@ -321,6 +328,15 @@ size_t ZNetEndpoint_RFCOMM_OSX::Imp_CountReadable()
 	return fBuffer.size();
 	}
 
+bool ZNetEndpoint_RFCOMM_OSX::Imp_WaitReadable(int iMilliseconds)
+	{
+	ZMutexLocker locker(fMutex);
+	if (!fBuffer.size())
+		fCondition.Wait(fMutex, iMilliseconds);
+
+	return fBuffer.size();
+	}
+
 void ZNetEndpoint_RFCOMM_OSX::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	const char* localSource = static_cast<const char*>(iSource);
@@ -339,15 +355,6 @@ void ZNetEndpoint_RFCOMM_OSX::Imp_Write(const void* iSource, size_t iCount, size
 
 	if (oCountWritten)
 		*oCountWritten = localSource - static_cast<const char*>(iSource);
-	}
-
-bool ZNetEndpoint_RFCOMM_OSX::Imp_WaitReadable(int iMilliseconds)
-	{
-	ZMutexLocker locker(fMutex);
-	if (!fBuffer.size())
-		fCondition.Wait(fMutex, iMilliseconds);
-
-	return fBuffer.size();
 	}
 
 bool ZNetEndpoint_RFCOMM_OSX::Imp_ReceiveDisconnect(int iMilliseconds)

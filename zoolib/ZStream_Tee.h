@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
+#include "zoolib/ZStream_Filter.h"
 #include "zoolib/ZStreamer.h"
 
 // =================================================================================================
@@ -31,14 +32,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /// A read filter stream that echoes any data read from it to a write stream.
 
-class ZStreamR_Tee : public ZStreamR
+class ZStreamR_Tee : public ZStreamR_Filter
 	{
 public:
 	ZStreamR_Tee(const ZStreamR& iStreamR, const ZStreamW& iStreamW);
 	~ZStreamR_Tee();
 
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
-	virtual size_t Imp_CountReadable();
 
 protected:
 	const ZStreamR& fStreamR;

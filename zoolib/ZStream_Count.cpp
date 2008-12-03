@@ -36,13 +36,15 @@ the referenced real stream.
 */
 
 ZStreamR_Count::ZStreamR_Count(const ZStreamR& iStreamSource)
-:	fStreamSource(iStreamSource),
+:	ZStreamR_Filter(iStreamSource),
+	fStreamSource(iStreamSource),
 	fCount(0),
 	fCountPtr(&fCount)
 	{}
 
 ZStreamR_Count::ZStreamR_Count(uint64& oCount, const ZStreamR& iStreamSource)
-:	fStreamSource(iStreamSource),
+:	ZStreamR_Filter(iStreamSource),
+	fStreamSource(iStreamSource),
 	fCount(0xDEADBEEF),
 	fCountPtr(&oCount)
 	{
@@ -60,9 +62,6 @@ void ZStreamR_Count::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	if (oCountRead)
 		*oCountRead = countRead;
 	}
-
-size_t ZStreamR_Count::Imp_CountReadable()
-	{ return fStreamSource.CountReadable(); }
 
 void ZStreamR_Count::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)

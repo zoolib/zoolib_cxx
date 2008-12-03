@@ -30,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 ZStreamR_SkipAllOnDestroy::ZStreamR_SkipAllOnDestroy(const ZStreamR& iStreamR)
-:	fStreamR(const_cast<ZStreamR&>(iStreamR))
+:	ZStreamR_Filter(iStreamR),
+	fStreamR(const_cast<ZStreamR&>(iStreamR))
 	{}
 
 ZStreamR_SkipAllOnDestroy::~ZStreamR_SkipAllOnDestroy()
@@ -42,20 +43,3 @@ ZStreamR_SkipAllOnDestroy::~ZStreamR_SkipAllOnDestroy()
 	catch (...)
 		{}
 	}
-
-void ZStreamR_SkipAllOnDestroy::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ fStreamR.Imp_Read(iDest, iCount, oCountRead); }
-
-size_t ZStreamR_SkipAllOnDestroy::Imp_CountReadable()
-	{ return fStreamR.Imp_CountReadable(); }
-
-void ZStreamR_SkipAllOnDestroy::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
-	uint64* oCountRead, uint64* oCountWritten)
-	{ fStreamR.Imp_CopyToDispatch(iStreamW, iCount, oCountRead, oCountWritten); }
-
-void ZStreamR_SkipAllOnDestroy::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
-	uint64* oCountRead, uint64* oCountWritten)
-	{ fStreamR.Imp_CopyTo(iStreamW, iCount, oCountRead, oCountWritten); }
-
-void ZStreamR_SkipAllOnDestroy::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
-	{ fStreamR.Imp_Skip(iCount, oCountSkipped); }

@@ -167,6 +167,9 @@ void ZFileFormat_IFF::StreamR_Chunk::Imp_Read(void* iDest, size_t iCount, size_t
 size_t ZFileFormat_IFF::StreamR_Chunk::Imp_CountReadable()
 	{ return min(fCountRemaining, fStream.CountReadable()); }
 
+bool ZFileFormat_IFF::StreamR_Chunk::Imp_WaitReadable(int iMilliseconds)
+	{ return fStream.WaitReadable(iMilliseconds); }
+
 void ZFileFormat_IFF::StreamR_Chunk::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten)
 	{
 	if (oCountRead)

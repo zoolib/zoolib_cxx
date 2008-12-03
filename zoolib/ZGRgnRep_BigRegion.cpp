@@ -61,7 +61,9 @@ ZGRgnRep_BigRegion* sMakeRep(const ZRef<ZGRgnRep>& iRep)
 #pragma mark -
 #pragma mark * Factory functions
 
-static class Make_Rect
+namespace ZANONYMOUS {
+
+class Make_Rect
 :	public ZFactoryChain_T<ZRef<ZGRgnRep>, const ZRect&>
 	{
 public:
@@ -81,6 +83,8 @@ ZRef<ZGRgnRep> ZGRgnRepCreator_T<ZBigRegion>::sCreate(ZBigRegion iNative, bool i
 	{
 	return new ZGRgnRep_BigRegion(iNative);
 	}
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

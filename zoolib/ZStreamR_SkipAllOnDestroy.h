@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
-#include "zoolib/ZStream.h"
+#include "zoolib/ZStream_Filter.h"
 
 // =================================================================================================
 #pragma mark -
@@ -31,22 +31,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /// A read filter stream that when destroyed invokes SkipAll on its real stream.
 
-class ZStreamR_SkipAllOnDestroy : public ZStreamR
+class ZStreamR_SkipAllOnDestroy : public ZStreamR_Filter
 	{
 public:
 	ZStreamR_SkipAllOnDestroy(const ZStreamR& iStreamR);
 	~ZStreamR_SkipAllOnDestroy();
-
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
-	virtual size_t Imp_CountReadable();
-
-	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
-		uint64* oCountRead, uint64* oCountWritten);
-
-	virtual void Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
-		uint64* oCountRead, uint64* oCountWritten);
-
-	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 protected:
 	ZStreamR& fStreamR;

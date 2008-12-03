@@ -30,7 +30,9 @@ using std::min;
 
 #include "zoolib/ZFactoryChain.h"
 
-static bool sMake_Collator(ZRef<ZTextCollatorRep>& oResult, const ZTextCollatorRep::Param_t& iParam)
+namespace ZANONYMOUS {
+
+bool sMake_Collator(ZRef<ZTextCollatorRep>& oResult, const ZTextCollatorRep::Param_t& iParam)
 	{
 	try
 		{
@@ -45,8 +47,10 @@ static bool sMake_Collator(ZRef<ZTextCollatorRep>& oResult, const ZTextCollatorR
 	return false;
 	}
 
-static ZFactoryChain_Maker_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>
+ZFactoryChain_Maker_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>
 	sMaker_Collator(sMake_Collator);
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

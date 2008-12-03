@@ -33,7 +33,9 @@ using std::string;
 
 #include "zoolib/ZFactoryChain.h"
 
-static bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Internet::LookupParam_t iParam)
+namespace ZANONYMOUS {
+
+bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Internet::LookupParam_t iParam)
 	{
 	try
 		{
@@ -45,10 +47,10 @@ static bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Internet::L
 	return false;
 	}
 
-static ZFactoryChain_Maker_T<ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t>
+ZFactoryChain_Maker_T<ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t>
 	sMaker1(sMake_NameLookup);
 
-static bool sMake_Listener(ZRef<ZNetListener_TCP>& oResult, ZNetListener_TCP::MakeParam_t iParam)
+bool sMake_Listener(ZRef<ZNetListener_TCP>& oResult, ZNetListener_TCP::MakeParam_t iParam)
 	{
 	try
 		{
@@ -60,10 +62,10 @@ static bool sMake_Listener(ZRef<ZNetListener_TCP>& oResult, ZNetListener_TCP::Ma
 	return false;
 	}
 
-static ZFactoryChain_Maker_T<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam_t>
+ZFactoryChain_Maker_T<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam_t>
 	sMaker2(sMake_Listener);
 
-static bool sMake_Endpoint(ZRef<ZNetEndpoint_TCP>& oResult, ZNetEndpoint_TCP::MakeParam_t iParam)
+bool sMake_Endpoint(ZRef<ZNetEndpoint_TCP>& oResult, ZNetEndpoint_TCP::MakeParam_t iParam)
 	{
 	try
 		{
@@ -75,8 +77,10 @@ static bool sMake_Endpoint(ZRef<ZNetEndpoint_TCP>& oResult, ZNetEndpoint_TCP::Ma
 	return false;
 	}
 
-static ZFactoryChain_Maker_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
+ZFactoryChain_Maker_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
 	sMaker3(sMake_Endpoint);
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
@@ -411,6 +415,25 @@ size_t ZNetEndpoint_TCP_WinSock::Imp_CountReadable()
 	return localResult;
 	}
 
+static bool sWaitReadable(SOCKET iSOCKET, int iMilliseconds)
+	{
+	fd_set readSet, exceptSet;
+	FD_ZERO(&readSet);
+	FD_ZERO(&exceptSet);
+	FD_SET(iSOCKET, &readSet);
+	FD_SET(iSOCKET, &exceptSet);
+
+	struct timeval timeOut;
+	timeOut.tv_sec = iMilliseconds / 1000;
+	timeOut.tv_usec = (iMilliseconds % 1000) * 1000;
+	return 0 < ::select(iSOCKET + 1, &readSet, nil, &exceptSet, &timeOut);
+	}
+
+bool ZNetEndpoint_TCP_WinSock::Imp_WaitReadable(int iMilliseconds)
+	{
+	return sWaitReadable(fSOCKET, iMilliseconds);
+	}
+
 void ZNetEndpoint_TCP_WinSock::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	const char* localSource = static_cast<const char*>(iSource);
@@ -429,25 +452,6 @@ void ZNetEndpoint_TCP_WinSock::Imp_Write(const void* iSource, size_t iCount, siz
 		}
 	if (oCountWritten)
 		*oCountWritten = localSource - reinterpret_cast<const char*>(iSource);
-	}
-
-static bool sWaitReadable(SOCKET iSOCKET, int iMilliseconds)
-	{
-	fd_set readSet, exceptSet;
-	FD_ZERO(&readSet);
-	FD_ZERO(&exceptSet);
-	FD_SET(iSOCKET, &readSet);
-	FD_SET(iSOCKET, &exceptSet);
-
-	struct timeval timeOut;
-	timeOut.tv_sec = iMilliseconds / 1000;
-	timeOut.tv_usec = (iMilliseconds % 1000) * 1000;
-	return 0 < ::select(iSOCKET + 1, &readSet, nil, &exceptSet, &timeOut);
-	}
-
-bool ZNetEndpoint_TCP_WinSock::Imp_WaitReadable(int iMilliseconds)
-	{
-	return sWaitReadable(fSOCKET, iMilliseconds);
 	}
 
 bool ZNetEndpoint_TCP_WinSock::Imp_ReceiveDisconnect(int iMilliseconds)

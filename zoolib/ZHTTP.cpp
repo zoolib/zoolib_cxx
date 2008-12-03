@@ -31,6 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZString.h"
 
+#include <ctype.h>
+
 using std::max;
 using std::min;
 using std::pair;
@@ -748,22 +750,12 @@ static ZRef<ZStreamerR> sMakeStreamer_Transfer(
 	// is either a mistake, or is nested chunking. I'm assuming the former for now.
 	if (ZString::sContainsi(ZHTTP::sGetString0(iHeader.GetValue("transfer-encoding")), "chunked"))
 		{
-		if (ZRef<ZStreamerRCon> theStreamerRCon
-			= ZRefDynamicCast<ZStreamerRCon>(iStreamerR))
-			{
-			return new ZStreamerRCon_FT<ZStreamRCon_Limited>(contentLength, theStreamerRCon);
-			}
 		return new ZStreamerR_FT<ZHTTP::StreamR_Chunked>(iStreamerR);
 		}
 
 	int64 contentLength;
 	if (iHeader.GetInt64("content-length", contentLength))
 		{
-		if (ZRef<ZStreamerRCon> theStreamerRCon
-			= ZRefDynamicCast<ZStreamerRCon>(iStreamerR))
-			{
-			return new ZStreamerRCon_FT<ZStreamRCon_Limited>(contentLength, theStreamerRCon);
-			}
 		return new ZStreamerR_FT<ZStreamR_Limited>(contentLength, iStreamerR);
 		}
 
@@ -1788,6 +1780,9 @@ void ZHTTP::StreamR_Chunked::Imp_Read(void* iDest, size_t iCount, size_t* oCount
 
 size_t ZHTTP::StreamR_Chunked::Imp_CountReadable()
 	{ return min(ZStream::sClampedSize(fChunkSize), fStreamSource.CountReadable()); }
+
+bool ZHTTP::StreamR_Chunked::Imp_WaitReadable(int iMilliseconds)
+	{ return fStreamSource.WaitReadable(iMilliseconds); }
 
 // =================================================================================================
 #pragma mark -

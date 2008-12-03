@@ -68,6 +68,8 @@ private:
 
 	size_t Channel_CountReadable(Channel_Streamer* iChannel);
 
+	bool Channel_WaitReadable(Channel_Streamer* iChannel, int iMilliseconds);
+
 	void Channel_Write(
 		Channel_Streamer* iChannel, const void* iSource, size_t iCount, size_t* oCountWritten);
 

@@ -108,7 +108,9 @@ RgnHandle sGetRgnHandle(RgnHandle iRgnHandle, bool iAdopt)
 #pragma mark -
 #pragma mark * Factory functions
 
-static class Make_Rect
+namespace ZANONYMOUS {
+
+class Make_Rect
 :	public ZFactoryChain_T<ZRef<ZGRgnRep>, const ZRect&>
 	{
 public:
@@ -128,6 +130,8 @@ public:
 template <>
 ZRef<ZGRgnRep> ZGRgnRepCreator_T<RgnHandle>::sCreate(RgnHandle iNative, bool iAdopt)
 	{ return new ZGRgnRep_RgnHandle(iNative, iAdopt); }
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
-#include "zoolib/ZStream.h"
+#include "zoolib/ZStream_Filter.h"
 
 // =================================================================================================
 #pragma mark -
@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /// A read filter stream that counts the number of bytes read from it.
 
-class ZStreamR_Count : public ZStreamR
+class ZStreamR_Count : public ZStreamR_Filter
 	{
 public:
 	/// \param iStreamSource The stream from which data is to be read.
@@ -42,7 +42,6 @@ public:
 
 // From ZStreamR
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
-	virtual size_t Imp_CountReadable();
 
 	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
 		uint64* oCountRead, uint64* oCountWritten);
