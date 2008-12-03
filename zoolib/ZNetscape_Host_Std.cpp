@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNetscape_Host_Std.h"
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZHTTP.h"
+#include "zoolib/ZHTTP_Requests.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMIME.h"
 #include "zoolib/ZNet_Internet.h"
@@ -176,101 +176,80 @@ void HostMeister_Std::SetException(NPObject* obj, const NPUTF8* message)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * HTTP helper functions
+#pragma mark * ZStreamerRCon_Fake
 
-static bool sParseURL(const string& iURL, string& oHost, ip_port& oPort, string& oPath)
+class ZStreamerRCon_Fake
+:	public ZStreamerRCon,
+	private ZStreamRCon
 	{
-	oPath.clear();
+public:
+	ZStreamerRCon_Fake(ZRef<ZStreamerR> iStreamerR);
 
-	const char httpPrefix[] = "http://";
-	const size_t httpPrefixLength = strlen(httpPrefix);
-	string hostAndPort = iURL;
-	if (iURL.length() > httpPrefixLength)
-		{
-		if (ZString::sEquali(iURL.substr(0, httpPrefixLength), httpPrefix))
-			{
-			const size_t slashOffset = iURL.find('/', httpPrefixLength);
-			hostAndPort = iURL.substr(httpPrefixLength, slashOffset - httpPrefixLength);
-			if (slashOffset != string::npos)
-				oPath = iURL.substr(std::min(iURL.size(), slashOffset + 1));
-			oPath = "/" + oPath;
-			}
-		}
+// From ZStreamerRCon
+	virtual const ZStreamRCon& GetStreamRCon();
 
-	const size_t colonOffset = hostAndPort.find(':');
-	if (colonOffset != string::npos)
-		{
-		oPort = ZString::sAsInt(hostAndPort.substr(colonOffset + 1));
-		oHost = hostAndPort.substr(0, colonOffset);
-		}
-	else
-		{
-		oPort = 80;
-		oHost = hostAndPort;
-		}
+// From ZStreamR via ZStreamRCon
+	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual size_t Imp_CountReadable();
 
+// From ZStreamRCon
+	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual bool Imp_ReceiveDisconnect(int iMilliseconds);
+
+	virtual void Imp_Abort();
+
+private:
+	ZRef<ZStreamerR> fStreamerR;
+	const ZStreamR& fStreamR;
+	};
+
+ZStreamerRCon_Fake::ZStreamerRCon_Fake(ZRef<ZStreamerR> iStreamerR)
+:	fStreamerR(iStreamerR),
+	fStreamR(fStreamerR->GetStreamR())
+	{}
+
+const ZStreamRCon& ZStreamerRCon_Fake::GetStreamRCon()
+	{ return *this; }
+
+void ZStreamerRCon_Fake::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+	{
+	if (fStreamerR)
+		{
+		fStreamR.Read(iDest, iCount, oCountRead);
+		}
+	else if (oCountRead)
+		{
+		*oCountRead = 0;
+		}
+	}
+
+size_t ZStreamerRCon_Fake::Imp_CountReadable()
+	{
+	if (fStreamerR)
+		return fStreamR.CountReadable();
+	return 0;
+	}
+
+bool ZStreamerRCon_Fake::Imp_WaitReadable(int iMilliseconds)
+	{
+	if (fStreamerR)
+		return fStreamR.CountReadable();
 	return true;
 	}
 
-static bool sHTTP(const ZStreamW& w, const ZStreamR& r,
-	const string& iHost, const string& iPath, const ZMemoryBlock* iPOSTData,
-	int32& oResponseCode, ZMemoryBlock& oRawHeaders, ZTuple& oHeaders, string& oMIME)
+bool ZStreamerRCon_Fake::Imp_ReceiveDisconnect(int iMilliseconds)
 	{
-	if (ZLOG(s, eDebug, "ZNetscape"))
-		s << "sHTTP";
-
-	if (iPOSTData)
-		w.WriteString("POST ");
-	else
-		w.WriteString("GET ");
-	w.WriteString(iPath);
-	w.WriteString(" HTTP/1.1\r\n");
-	w.WriteString("Host: ");
-	w.WriteString(iHost);
-	w.WriteString("\r\n");
-	w.WriteString("Connection: close\r\n");
-	if (iPOSTData)
-		w.Writef("Content-Length: %ld\r\n", iPOSTData->GetSize());
-	w.WriteString("\r\n");
-	if (iPOSTData)
-		w.Write(iPOSTData->GetData(), iPOSTData->GetSize());
-	w.Flush();
-
-	ZStreamRWPos_RAM theHeaderStream;
-	ZStreamR_Tee theStream_Tee(r, theHeaderStream);
-	ZMIME::StreamR_Header theSIH_Server(theStream_Tee);
-
-	string serverResultMessage;
-	if (!ZHTTP::sReadResponse(ZStreamU_Unreader(theSIH_Server),
-		&oResponseCode, &serverResultMessage))
+	if (fStreamerR)
 		{
-		return false;
+		fStreamR.SkipAll();
+		return true;
 		}
+	return false;
+	}
 
-	if (!ZHTTP::sReadHeader(theSIH_Server, &oHeaders))
-		{
-		return false;
-		}
-
-	if (ZLOG(s, eDebug, "sHTTP"))
-		{
-		s << "Server response, code: "
-			<< ZString::sFormat("%d", oResponseCode)
-			<< ", message: " << serverResultMessage
-			<< ", Headers: "
-			<< ZUtil_Strim_Tuple::Format(oHeaders, 1, ZUtil_Strim_Tuple::Options());
-		}
-
-	ZTuple theCT = oHeaders.GetTuple("content-type");
-	oMIME = theCT.GetString("type") + "/" + theCT.GetString("subtype");
-
-	// Zero-terminate the header data block.
-	theHeaderStream.WriteByte(0);
-	theHeaderStream.SetPosition(0);
-
-	ZStreamR_CRLFRemove(theHeaderStream).CopyAllTo(ZStreamRWPos_MemoryBlock(oRawHeaders));
-
-	return true;
+void ZStreamerRCon_Fake::Imp_Abort()
+	{
+	fStreamerR.Clear();
 	}
 
 // =================================================================================================
@@ -289,7 +268,7 @@ private:
 	void pRun();
 	static void spRun(HTTPer* iHTTPer);
 
-	string fURL;
+	const string fURL;
 	void* fNotifyData;
 	Host_Std* fHost;
 	ZMemoryBlock fMB;
@@ -322,97 +301,52 @@ void Host_Std::HTTPer::Cancel()
 
 void Host_Std::HTTPer::pRun()
 	{
-	string theURL = fURL;
-
-	for (bool keepGoing = true; keepGoing; /*no inc*/)
+	try
 		{
-		string theHostName;
-		ip_port thePort;
-		string thePath;
-		if (sParseURL(theURL, theHostName, thePort, thePath))
+		string theURL = fURL;
+		ZTuple theHeaders;
+		ZMemoryBlock theRawHeaders;	
+		ZRef<ZStreamerR> theStreamerR;
+		if (fIsPOST)
 			{
-			ZRef<ZNetName_Internet> theNN = new ZNetName_Internet(theHostName, thePort);
-			ZRef<ZNetEndpoint> theEndpoint = theNN->Connect(10);
-			if (!theEndpoint)
-				{
-				if (ZLOG(s, eDebug, "ZNetscape::Host_Std::HTTPer"))
-					s << "pRun, couldn't connect to server";
-				break;
-				}
+			theStreamerR = ZHTTP::sPost(
+				theURL, ZStreamRWPos_MemoryBlock(fMB), nil, &theHeaders, &theRawHeaders);
+			}
+		else
+			{
+			theStreamerR = ZHTTP::sRequest("GET", theURL, nil, &theHeaders, &theRawHeaders);
+			}
 
-			int32 theResponseCode;
-			ZTuple theHeaders;
-			ZMemoryBlock theRawHeaders;
-			string theMIME;
-			if (fIsPOST)
-				{
-				if (!sHTTP(theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
-					theHostName, thePath, &fMB,
-					theResponseCode, theRawHeaders, theHeaders, theMIME))
-					{
-					break;
-					}
-				}
-			else
-				{
-				if (!sHTTP(theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
-					theHostName, thePath, nil,
-					theResponseCode, theRawHeaders, theHeaders, theMIME))
-					{
-					break;
-					}
-				}
+		if (theStreamerR && fHost)
+			{
+			const ZTuple theCT = theHeaders.GetTuple("content-type");
+			const string theMIME = theCT.GetString("type") + "/" + theCT.GetString("subtype");
 
-			switch (theResponseCode)
-				{
-				case 200:
-					{
-					// Will need to inspect it to see if it's chunked or otherwise
-					// encoded, and undo that encoding in the streamer we pass off.
-					if (fHost)
-						{
-						fHost->pHTTPerFinished(
-							this, fNotifyData, theURL, theMIME, theRawHeaders, theEndpoint);
-						}
-					return;
-					// 
-					}
-				case 301:
-				case 302:
-				case 303:
-					{
-					if (fIsPOST)
-						{
-						keepGoing = false;
-						}
-					else
-						{
-						string newURI = ZHTTP::sGetString0(theHeaders.GetValue("location"));
-						theURL = newURI;
-						}
-					break;
-					}
-				default:
-					{
-					keepGoing = false;
-					break;
-					}
-				}
+			ZRef<ZStreamerRCon> theStreamerRCon = ZRefDynamicCast<ZStreamerRCon>(theStreamerR);
+			if (!theStreamerRCon)
+				theStreamerRCon = new ZStreamerRCon_Fake(theStreamerR);
+
+			fHost->pHTTPerFinished(
+				this, fNotifyData, theURL, theMIME, theRawHeaders, theStreamerRCon);
+			return;
 			}
 		}
+	catch (...)
+		{}
 
 	// This causes async delivery of an error.
 	if (fHost)
 		{
 		fHost->pHTTPerFinished(
-			this, fNotifyData, theURL, "", ZMemoryBlock(), ZRef<ZStreamerRCon>());
+			this, fNotifyData, fURL, "", ZMemoryBlock(), ZRef<ZStreamerRCon>());
 		}
-
-	delete this;
 	}
 
 void Host_Std::HTTPer::spRun(HTTPer* iHTTPer)
-	{ iHTTPer->pRun(); }
+	{
+	iHTTPer->pRun();
+	delete iHTTPer;
+	}
 
 // =================================================================================================
 #pragma mark -
