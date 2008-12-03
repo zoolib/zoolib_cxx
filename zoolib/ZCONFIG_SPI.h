@@ -108,6 +108,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	elif macintosh
 #		if defined(TARGET_API_MAC_CARBON) && TARGET_API_MAC_CARBON
 #			define ZCONFIG_SPI_Avail__Carbon 1
+#		elif defined(TARGET_CARBON) && TARGET_CARBON
+#			define ZCONFIG_SPI_Avail__Carbon 1
 #		endif
 #	endif
 #endif
@@ -118,8 +120,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 #ifndef ZCONFIG_SPI_Desired__Carbon
-#	define ZCONFIG_SPI_Desired__Carbon 0
-//#	define ZCONFIG_SPI_Desired__Carbon 1
+#	define ZCONFIG_SPI_Desired__Carbon 1
 #endif
 
 
@@ -127,6 +128,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark CFType
 #ifndef ZCONFIG_SPI_Avail__CFType
 #	if defined(__MACH__)
+#		define ZCONFIG_SPI_Avail__CFType 1
+#	elif ZCONFIG_SPI_Avail__Carbon
 #		define ZCONFIG_SPI_Avail__CFType 1
 #	endif
 #endif
@@ -311,10 +314,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark MacClassic
 #ifndef ZCONFIG_SPI_Avail__MacClassic
-#	if macintosh
-#		if !defined(TARGET_API_MAC_CARBON) || !TARGET_API_MAC_CARBON
-#			define ZCONFIG_SPI_Avail__MacClassic 1
-#		endif
+#	if !(ZCONFIG_SPI_Avail__Carbon)
+#		define ZCONFIG_SPI_Avail__MacClassic 1
 #	endif
 #endif
 
