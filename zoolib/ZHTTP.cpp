@@ -26,19 +26,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZMIME.h"
 #include "zoolib/ZStreamR_Boundary.h"
-#include "zoolib/ZStreamR_SkipAllOnDestroy.h"
 #include "zoolib/ZStream_Limited.h"
 #include "zoolib/ZStream_String.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZString.h"
-#include "zoolib/ZStrim_Stream.h"
-#include "zoolib/ZStrimmer.h"
-#include "zoolib/ZStrimmer_Stream.h"
-#include "zoolib/ZStrimmer_Streamer.h"
-#include "zoolib/ZTextCoder.h"
-
-#include <ctype.h>
-#include <stdio.h>
 
 using std::max;
 using std::min;
@@ -129,7 +120,7 @@ static bool sReadInt64(const ZStreamU& iStream, int64* oInt64)
 
 } // anonymous namespace
 
-// ==================================================
+// =================================================================================================
 #pragma mark -
 #pragma mark * ZHTTP::Response
 
@@ -749,19 +740,43 @@ string ZHTTP::sGetString0(const ZTValue& iTV)
 	return string();
 	}
 
-ZRef<ZStreamerR> ZHTTP::sMakeContentStreamer(const ZTuple& iHeader, ZRef<ZStreamerR> iStreamerR)
+static ZRef<ZStreamerR> sMakeStreamer_Transfer(
+	const ZTuple& iHeader, ZRef<ZStreamerR> iStreamerR)
 	{
 	// According to the spec, if content is chunked, content-length must be ignored.
 	// I've seen some pages being returned with transfer-encoding "chunked, chunked", which
 	// is either a mistake, or is nested chunking. I'm assuming the former for now.
-	if (ZString::sContainsi(sGetString0(iHeader.GetValue("transfer-encoding")), "chunked"))
+	if (ZString::sContainsi(ZHTTP::sGetString0(iHeader.GetValue("transfer-encoding")), "chunked"))
+		{
+		if (ZRef<ZStreamerRCon> theStreamerRCon
+			= ZRefDynamicCast<ZStreamerRCon>(iStreamerR))
+			{
+			return new ZStreamerRCon_FT<ZStreamRCon_Limited>(contentLength, theStreamerRCon);
+			}
 		return new ZStreamerR_FT<ZHTTP::StreamR_Chunked>(iStreamerR);
+		}
 
 	int64 contentLength;
 	if (iHeader.GetInt64("content-length", contentLength))
+		{
+		if (ZRef<ZStreamerRCon> theStreamerRCon
+			= ZRefDynamicCast<ZStreamerRCon>(iStreamerR))
+			{
+			return new ZStreamerRCon_FT<ZStreamRCon_Limited>(contentLength, theStreamerRCon);
+			}
 		return new ZStreamerR_FT<ZStreamR_Limited>(contentLength, iStreamerR);
+		}
 
-	return ZRef<ZStreamerR>();
+	return iStreamerR;
+	}
+
+ZRef<ZStreamerR> ZHTTP::sMakeContentStreamer(const ZTuple& iHeader, ZRef<ZStreamerR> iStreamerR)
+	{
+	iStreamerR = sMakeStreamer_Transfer(iHeader, iStreamerR);
+
+	// We could/should look for gzip Content-Encoding, and wrap a decoding filter around it.
+
+	return iStreamerR;
 	}
 
 ZRef<ZStreamerR> ZHTTP::sMakeContentStreamer(const ZTuple& iHeader, const ZStreamR& iStreamR)
@@ -1119,7 +1134,7 @@ bool ZHTTP::sRead_content_type(const ZStreamU& iStream,
 	return true;
 	}
 
-// ==================================================
+// =================================================================================================
 
 bool ZHTTP::sReadHTTPVersion(const ZStreamU& iStream, int32* oVersionMajor, int32* oVersionMinor)
 	{
@@ -1134,26 +1149,6 @@ bool ZHTTP::sReadHTTPVersion(const ZStreamU& iStream, int32* oVersionMajor, int3
 
 	if (!sReadInt32(iStream, oVersionMinor))
 		return false;
-	return true;
-	}
-
-bool ZHTTP::sReadFieldName(const ZStreamU& iStream, string* oName, string* oNameExact)
-	{
-	if (oName)
-		oName->resize(0);
-	if (oNameExact)
-		oNameExact->resize(0);
-
-	sSkipLWS(iStream);
-
-	if (!sReadToken(iStream, oName, oNameExact))
-		return false;
-
-	sSkipLWS(iStream);
-
-	if (!sReadChar(iStream, ':'))
-		return false;
-
 	return true;
 	}
 
@@ -1177,6 +1172,26 @@ bool ZHTTP::sReadURI(const ZStreamU& iStream, string* oURI)
 		if (oURI)
 			oURI->append(1, readChar);
 		}
+	return true;
+	}
+
+bool ZHTTP::sReadFieldName(const ZStreamU& iStream, string* oName, string* oNameExact)
+	{
+	if (oName)
+		oName->resize(0);
+	if (oNameExact)
+		oNameExact->resize(0);
+
+	sSkipLWS(iStream);
+
+	if (!sReadToken(iStream, oName, oNameExact))
+		return false;
+
+	sSkipLWS(iStream);
+
+	if (!sReadChar(iStream, ':'))
+		return false;
+
 	return true;
 	}
 
@@ -1241,7 +1256,8 @@ bool ZHTTP::sReadParameter_Cookie(const ZStreamU& iStream,
 	}
 
 bool ZHTTP::sReadMediaType(const ZStreamU& iStream,
-	string* oType, string* oSubtype, ZTuple* oParameters, string* oTypeExact, string* oSubtypeExact)
+	string* oType, string* oSubtype, ZTuple* oParameters,
+	string* oTypeExact, string* oSubtypeExact)
 	{
 	if (oType)
 		oType->resize(0);
@@ -1320,9 +1336,57 @@ bool ZHTTP::sReadLanguageTag(const ZStreamU& iStream, string* oLanguageTag)
 		}
 	}
 
-bool ZHTTP::sParseURL(const string& iURL, string* oPath, string* oQuery)
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZHTTP, Lower level parsing
+
+bool ZHTTP::sParseURL(const string& iURL,
+	string* ioScheme, string* ioHost, uint16* ioPort, string* oPath)
 	{
-	return false;
+	if (oPath)
+		oPath->clear();
+
+	size_t start = 0;
+	const char schemeDivider[] = "://";
+	const size_t dividerOffset = iURL.find(schemeDivider);
+	if (string::npos != dividerOffset)
+		{
+		start = dividerOffset + strlen(schemeDivider);
+		if (ioScheme)
+			*ioScheme = iURL.substr(0, dividerOffset);
+		}
+
+	string hostAndPort;
+	const size_t slashOffset = iURL.find('/', start);
+	if (string::npos != slashOffset)
+		{
+		hostAndPort = iURL.substr(start, slashOffset - start);
+		if (oPath)
+			*oPath = iURL.substr(min(iURL.size(), slashOffset));
+		start = slashOffset;
+		}
+	else
+		{
+		hostAndPort = iURL.substr(start);
+		if (oPath)
+			*oPath = "/";
+		}
+
+	const size_t colonOffset = hostAndPort.find(':');
+	if (string::npos != colonOffset)
+		{
+		if (ioPort)
+			*ioPort = ZString::sAsInt(hostAndPort.substr(colonOffset + 1));
+		if (ioHost)
+			*ioHost = hostAndPort.substr(0, colonOffset);
+		}
+	else
+		{
+		if (ioHost)
+			*ioHost = hostAndPort;
+		}
+
+	return true;
 	}
 
 bool ZHTTP::sReadToken(const ZStreamU& iStream, string* oTokenLC, string* oTokenExact)
@@ -1540,6 +1604,10 @@ bool ZHTTP::sReadDecodedChars(const ZStreamU& iStream, string& ioString)
 	return true;
 	}
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZHTTP, Lexical classification
+
 bool ZHTTP::sIs_CHAR(char iChar)
 	{
 	// The following line:
@@ -1637,180 +1705,6 @@ bool ZHTTP::sIs_qdtext(char iChar)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZHTTP, read a POST into a tuple
-
-static ZRef<ZStrimmerR> sCreateStrimmerR(const ZTuple& iHeader, const ZStreamR& iStreamR)
-	{
-	string charset = iHeader.GetTuple("content-type").GetTuple("parameters").GetString("charset");
-
-	if (ZTextDecoder* theDecoder = ZTextDecoder::sMake(charset))
-		return new ZStrimmerR_StreamR_T<ZStrimR_StreamDecoder>(theDecoder, iStreamR);
-	else
-		return new ZStrimmerR_StreamR_T<ZStrimR_StreamUTF8>(iStreamR);
-	}
-
-static bool sReadName(const ZStreamU& iStreamU, string& oName)
-	{
-	bool gotAny = false;
-	for (;;)
-		{
-		char curChar;
-		if (!iStreamU.ReadChar(curChar))
-			break;
-		if (!isalnum(curChar) && curChar != '_')
-			{
-			iStreamU.Unread();
-			break;
-			}
-		oName += curChar;
-		gotAny = true;
-		}
-	return gotAny;
-	}
-
-#if 0
-static bool sReadValue(const ZStreamU& iStreamU, string& oValue)
-	{
-	#warning not done yet
-	bool gotAny = false;
-	for (;;)
-		{
-		char curChar;
-		if (!iStreamU.ReadChar(curChar))
-			break;
-
-		if (curChar == '%')
-			{
-			
-			}
-		else
-			{
-			oValue += curChar;
-			}
-		gotAny = true;
-		}
-	return gotAny;
-	}
-
-static void sReadParams(const ZStreamU& iStreamU, ZTuple& ioTuple)
-	{
-	for (;;)
-		{
-		string name;
-		if (!sReadName(iStreamU, name))
-			break;
-
-		if (!ZHTTP::sReadChar(iStreamU, '='))
-			{
-			// It's a param with no value.
-			ioTuple.SetNull(name);
-			}
-		else
-			{
-			string value;
-			if (!sReadValue(iStreamU, value))
-				break;
-			ioTuple.SetString(name, value);
-			}
-		}
-	}
-#endif
-
-static bool sReadPOST(const ZStreamR& iStreamR, const ZTuple& iHeader, ZTValue& oTV)
-	{
-	ZTuple content_type = iHeader.GetTuple("content-type");
-	if (content_type.GetString("type") == "application"
-		&& content_type.GetString("subtype") == "x-www-url-encoded")
-		{
-		// It's application/x-www-url-encoded. So we're going to unpack it into a tuple.
-		ZTuple& theTuple = oTV.SetMutableTuple();
-		// yadda yadda.
-		#warning not done yet
-		return true;
-		}
-	else if (content_type.GetString("type") == "multipart"
-		&& content_type.GetString("subtype") == "form-data")
-		{
-		ZTuple& theTuple = oTV.SetMutableTuple();
-
-		const string baseBoundary = content_type.GetTuple("parameters").GetString("boundary");
-
-		// Skip optional unheadered data section before the first boundary.
-		ZStreamR_Boundary(baseBoundary, iStreamR).SkipAll();
-
-		const string boundary = "\r\n--" + baseBoundary;
-		for (;;)
-			{
-			bool done = false;
-			// At this point we're sitting right after a boundary. We skip all subsequent
-			// characters, although there's supposed to be only white space, until
-			// we see "--", in which case we've hit the end, or we see CR LF, in which
-			// case there's another part following.
-			char prior = 0;
-			for (;;)
-				{
-				char current = iStreamR.ReadInt8();
-				if (prior == '-' && current == '-')
-					{
-					done = true;
-					break;
-					}
-
-				if (prior == '\r' && current =='\n')
-					break;
-
-				prior = current;
-				}
-			if (done)
-				break;
-
-			// We're now sitting at the beginning of the part's header.
-			ZStreamR_Boundary streamPart(boundary, iStreamR);
-
-			// We parse it into the tuple called 'header'.
-			ZTuple header;
-			ZHTTP::sReadHeader(
-				ZStreamR_SkipAllOnDestroy(ZMIME::StreamR_Header(streamPart)), &header);
-
-			ZTuple contentDisposition = header.GetTuple("content-disposition");
-			if (contentDisposition.GetString("value") == "form-data")
-				{
-				ZTuple parameters = contentDisposition.GetTuple("parameters");
-				ZTName name(parameters.GetString("name"));
-				if (!name.Empty())
-					{
-					if (!sReadPOST(streamPart, header, theTuple.SetMutableNull(name)))
-						theTuple.Erase(name);
-					}
-				}
-			streamPart.SkipAll();
-			}
-		}
-	else if (content_type.GetString("type") == "text")
-		{
-		// It's explicitly some kind of text. Use sCreateStrimmerR to create an appropriate
-		// strimmer, which it does by examining values in iHeader.
-		string theString;
-		sCreateStrimmerR(iHeader, iStreamR)->GetStrimR().CopyAllTo(ZStrimW_String(theString));
-		oTV.SetString(theString);
-		return true;		
-		}
-	else if (!content_type)
-		{
-		// There was no content type specified, so assume text.
-		string theString;
-		ZStreamWPos_String(theString).CopyAllFrom(iStreamR);
-		oTV.SetString(theString);
-		return true;
-		}
-
-	// It's some other kind of content. Put it into a raw.
-	oTV.SetRaw(iStreamR);
-	return true;
-	}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZHTTP::StreamR_Chunked
 
 static uint64 pReadChunkSize(const ZStreamR& s)
@@ -1821,7 +1715,6 @@ static uint64 pReadChunkSize(const ZStreamR& s)
 		char theChar;
 		if (!s.ReadChar(theChar))
 			return 0;
-//			ZStreamR::sThrowEndOfStream();
 
 		int theXDigit = 0;
 		if (theChar >= '0' && theChar <= '9')
