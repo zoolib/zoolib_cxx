@@ -54,7 +54,7 @@ bool sGetValuei(const ZTuple& iTuple, const std::string& iNamei, ZTValue& oTV);
 ZTValue sDGetValuei(const ZTuple& iTuple, const std::string& iNamei, const ZTValue& iDefault);
 ZTValue sGetValuei(const ZTuple& iTuple, const std::string& iNamei);
 
-ZTuple::const_iterator sIteratorofi(const ZTuple& iTuple, const std::string& iNamei);
+ZTuple::const_iterator sIteratorOfi(const ZTuple& iTuple, const std::string& iNamei);
 
 } // namespace ZUtil_Tuple
 

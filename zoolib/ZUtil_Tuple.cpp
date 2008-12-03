@@ -179,7 +179,7 @@ bool sBool(const ZTValue& iTV)
 
 bool sGetValuei(const ZTuple& iTuple, const string& iNamei, ZTValue& oTV)
 	{
-	ZTuple::const_iterator i = sIteratorofi(iTuple, iNamei);
+	ZTuple::const_iterator i = sIteratorOfi(iTuple, iNamei);
 	if (i !=  iTuple.end())
 		{
 		oTV = iTuple.GetValue(i);
@@ -199,7 +199,7 @@ ZTValue sDGetValuei(const ZTuple& iTuple, const string& iNamei, const ZTValue& i
 ZTValue sGetValuei(const ZTuple& iTuple, const string& iNamei)
 	{ return sDGetValuei(iTuple, iNamei, ZTValue()); }
 
-ZTuple::const_iterator sIteratorofi(const ZTuple& iTuple, const string& iNamei)
+ZTuple::const_iterator sIteratorOfi(const ZTuple& iTuple, const string& iNamei)
 	{
 	for (ZTuple::const_iterator i = iTuple.begin(); i != iTuple.end(); ++i)
 		{
