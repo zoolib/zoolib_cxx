@@ -397,7 +397,8 @@ static ZTuple sGetProp(const ZNode& iNode, const string& iPropName)
  	return propT;
  	}
 
-static void sGetProperties(const ZNode& iNode, const vector<string>& iPropNames, ZTuple& oGoodT, ZTuple& oBadT)
+static void sGetProperties(
+	const ZNode& iNode, const vector<string>& iPropNames, ZTuple& oGoodT, ZTuple& oBadT)
 	{
  	for (vector<string>::const_iterator i = iPropNames.begin(); i != iPropNames.end(); ++i)
  		{
@@ -468,8 +469,12 @@ static bool sDelete(const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& iNod
 static ZTrail sStripPrefix(const ZTrail& iPrefix, const ZTrail& iTrail)
 	{
 	size_t start = 0;
-	while (start < iPrefix.Count() && start < iTrail.Count() && iPrefix.At(start) == iTrail.At(start))
+	while (start < iPrefix.Count()
+		&& start < iTrail.Count()
+		&& iPrefix.At(start) == iTrail.At(start))
+		{
 		++start;
+		}
 
 	return iTrail.SubTrail(start, iTrail.Count());
 	}
@@ -478,7 +483,9 @@ static ZTrail sStripPrefix(const ZTrail& iPrefix, const ZTrail& iTrail)
 #pragma mark -
 #pragma mark * ZWebDAV
 
-bool ZWebDAV::sHandle_DELETE(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
+bool ZWebDAV::sHandle_DELETE(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
 	{
 	ZNode theNode = iRoot.Trail(iTrail);
 
@@ -529,7 +536,9 @@ bool ZWebDAV::sHandle_DELETE(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&
 	return true;
 	}
 
-bool ZWebDAV::sHandle_GET(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
+bool ZWebDAV::sHandle_GET(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
 	{
 	ZNode theNode = iRoot.Trail(iTrail);
 
@@ -565,7 +574,8 @@ bool ZWebDAV::sHandle_GET(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, c
 							s.Begin("a");
 								if (i.Current().CanHaveChildren())
 									{
-									s.Attr("href", ZHTTP::sEncodeComponent(i.Current().Name()) + "/");
+									s.Attr("href",
+										ZHTTP::sEncodeComponent(i.Current().Name()) + "/");
 									s << i.Current().Name() << "/";
 									}
 								else
@@ -595,7 +605,9 @@ bool ZWebDAV::sHandle_GET(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, c
 					}
 				r.SetResult(206, "Partial Content");
 
-				r.Set("Content-Range", ZString::sFormat("bytes %d-%d/%d", ranges.front().first, ranges.front().second - 1, sentSize));
+				r.Set("Content-Range",
+					ZString::sFormat("bytes %d-%d/%d",
+					ranges.front().first, ranges.front().second - 1, sentSize));
 
 				theStreamRPos.SetPosition(ranges.front().first);
 				sentSize = ranges.front().second - ranges.front().first;
@@ -639,7 +651,9 @@ bool ZWebDAV::sHandle_GET(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, c
 	return true;
 	}
 
-bool ZWebDAV::sHandle_LOCK(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
+bool ZWebDAV::sHandle_LOCK(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
 	{
 	ZHTTP::Response r;
 	r.SetResult(200);
@@ -697,7 +711,9 @@ bool ZWebDAV::sHandle_LOCK(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& i
 	return true;
 	}
 
-bool ZWebDAV::sHandle_MKCOL(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
+bool ZWebDAV::sHandle_MKCOL(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
 	{
 	ZNode theNode = iRoot.Trail(iTrail);
 
@@ -725,7 +741,9 @@ bool ZWebDAV::sHandle_MKCOL(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&,
 	return true;
 	}
 
-bool ZWebDAV::sHandle_MOVE(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
+bool ZWebDAV::sHandle_MOVE(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
 	{
 	ZHTTP::Response r;
 	r.Set("date", sAsString_WebDAV(ZTime::sNow()));
@@ -786,7 +804,9 @@ bool ZWebDAV::sHandle_MOVE(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, 
 	return true;
 	}
 
-bool ZWebDAV::sHandle_OPTIONS(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
+bool ZWebDAV::sHandle_OPTIONS(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR&, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
 	{
 //	r.Set("Allow", "OPTIONS,GET,HEAD,POST,DELETE,TRACE,PROPFIND,PROPPATCH,COPY,MOVE,LOCK,UNLOCK");
 
@@ -800,7 +820,9 @@ bool ZWebDAV::sHandle_OPTIONS(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR
 	return true;
 	}
 
-static void sHandle_PROPFIND_Some(const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& iNode, int iDepth, const vector<string>& iPropNames, ZTuple& ioTuple)
+static void sHandle_PROPFIND_Some(
+	const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& iNode,
+	int iDepth, const vector<string>& iPropNames, ZTuple& ioTuple)
 	{
 	for (DAVIter i = DAVIter(iNode, iDepth); i; i.Advance())
 		{
@@ -830,7 +852,8 @@ static void sHandle_PROPFIND_Some(const ZTrail& iPrefix, const ZNode& iRoot, con
 		}
 	}
 
-static void sHandle_PROPFIND_All(const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& iNode, int iDepth, ZTuple& ioTuple)
+static void sHandle_PROPFIND_All(
+	const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& iNode, int iDepth, ZTuple& ioTuple)
 	{
 	vector<string> thePropNames;
 	thePropNames.push_back("D:resourcetype");
@@ -922,7 +945,9 @@ bool ZWebDAV::sHandle_PROPFIND(const ZTrail& iPrefix, ZNode iRoot, const ZStream
 	return true;
 	}
 
-bool ZWebDAV::sHandle_PROPPATCH(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
+bool ZWebDAV::sHandle_PROPPATCH(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
 	{
 	int depth = sGetDepth(iHeader);
 
@@ -948,7 +973,9 @@ bool ZWebDAV::sHandle_PROPPATCH(const ZTrail& iPrefix, ZNode iRoot, const ZStrea
 	return true;
 	}
 
-bool ZWebDAV::sHandle_PUT(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
+bool ZWebDAV::sHandle_PUT(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
 	{
 	ZHTTP::Response r;
 	r.Set("date", sAsString_WebDAV(ZTime::sNow()));
@@ -973,7 +1000,9 @@ bool ZWebDAV::sHandle_PUT(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iS
 	return true;
 	}
 
-bool ZWebDAV::sHandle_UNLOCK(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
+bool ZWebDAV::sHandle_UNLOCK(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
 	{
 	ZHTTP::Response r;
 	r.SetResult(204);
