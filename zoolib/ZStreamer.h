@@ -285,6 +285,83 @@ protected:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZStreamerRCon_T
+
+template <class Stream_t>
+class ZStreamerRCon_T : public ZStreamerRCon
+	{
+public:
+	ZStreamerRCon_T() {}
+
+	virtual ~ZStreamerRCon_T() {}
+
+	template <class P>
+	ZStreamerRCon_T(P& iParam) : fStream(iParam) {}
+
+	template <class P>
+	ZStreamerRCon_T(const P& iParam) : fStream(iParam) {}
+
+// From ZStreamerR
+	virtual const ZStreamR& GetStreamR() { return fStream; }
+
+// From ZStreamerRCon
+	virtual const ZStreamRCon& GetStreamRCon() { return fStream; }
+
+// Our protocol
+	Stream_t& GetStream() { return fStream; }
+
+protected:
+	Stream_t fStream;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStreamerRCon_FT
+
+template <class Stream_t>
+class ZStreamerRCon_FT : public ZStreamerRCon
+	{
+protected:
+	ZStreamerRCon_FT() {}
+
+public:
+	virtual ~ZStreamerRCon_FT() {}
+
+	template <class P>
+	ZStreamerRCon_FT(P& iParam, ZRef<ZStreamerRCon> iStreamer)
+	:	fStreamerReal(iStreamer),
+		fStream(iParam, iStreamer->GetStreamRCon())
+		{}
+
+	template <class P>
+	ZStreamerRCon_FT(const P& iParam, ZRef<ZStreamerRCon> iStreamer)
+	:	fStreamerReal(iStreamer),
+		fStream(iParam, iStreamer->GetStreamRCon())
+		{}
+
+	ZStreamerRCon_FT(ZRef<ZStreamerRCon> iStreamer)
+	:	fStreamerReal(iStreamer),
+		fStream(iStreamer->GetStreamRCon())
+		{}
+
+// From ZStreamerR
+	virtual const ZStreamR& GetStreamR() { return fStream; }
+
+// From ZStreamerRCon
+	virtual const ZStreamRCon& GetStreamRCon() { return fStream; }
+
+// Our protocol
+	ZRef<ZStreamerR> GetStreamerR() { return fStreamerReal; }
+
+	Stream_t& GetStream() { return fStream; }
+
+protected:
+	ZRef<ZStreamerRCon> fStreamerReal;
+	Stream_t fStream;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZStreamerU_T
 
 template <class Stream_t>
