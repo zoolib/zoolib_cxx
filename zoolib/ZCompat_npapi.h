@@ -36,6 +36,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #	include <WebKit/npfunctions.h>
 #	define ZCONFIG_NPStringUpperCaseFieldNames 1
+#	define NPEventType_GetFocusEvent getFocusEvent
+#	define NPEventType_LoseFocusEvent loseFocusEvent
+#	define NPEventType_AdjustCursorEvent loseFocusEvent
 
 #else
 
