@@ -59,6 +59,38 @@ protected:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZStreamRCon_Limited
+
+class ZStreamRCon_Limited : public ZStreamRCon
+	{
+public:
+	ZStreamRCon_Limited(uint64 iLimit, const ZStreamRCon& iStreamRCon);
+
+// From ZStreamR
+	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual size_t Imp_CountReadable();
+
+	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
+		uint64* oCountRead, uint64* oCountWritten);
+
+	virtual void Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
+		uint64* oCountRead, uint64* oCountWritten);
+
+	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
+
+// From ZStreamRCon
+	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual bool Imp_ReceiveDisconnect(int iMilliseconds);
+
+	virtual void Imp_Abort();
+
+protected:
+	const ZStreamRCon& fStreamRCon;
+	uint64 fCountRemaining;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZStreamW_Limited
 
 /// A write filter stream that caps the number of bytes that can be written
