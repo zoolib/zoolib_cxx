@@ -176,84 +176,6 @@ void HostMeister_Std::SetException(NPObject* obj, const NPUTF8* message)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStreamerRCon_Fake
-
-class ZStreamerRCon_Fake
-:	public ZStreamerRCon,
-	private ZStreamRCon
-	{
-public:
-	ZStreamerRCon_Fake(ZRef<ZStreamerR> iStreamerR);
-
-// From ZStreamerRCon
-	virtual const ZStreamRCon& GetStreamRCon();
-
-// From ZStreamR via ZStreamRCon
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
-	virtual size_t Imp_CountReadable();
-
-// From ZStreamRCon
-	virtual bool Imp_WaitReadable(int iMilliseconds);
-	virtual bool Imp_ReceiveDisconnect(int iMilliseconds);
-
-	virtual void Imp_Abort();
-
-private:
-	ZRef<ZStreamerR> fStreamerR;
-	const ZStreamR& fStreamR;
-	};
-
-ZStreamerRCon_Fake::ZStreamerRCon_Fake(ZRef<ZStreamerR> iStreamerR)
-:	fStreamerR(iStreamerR),
-	fStreamR(fStreamerR->GetStreamR())
-	{}
-
-const ZStreamRCon& ZStreamerRCon_Fake::GetStreamRCon()
-	{ return *this; }
-
-void ZStreamerRCon_Fake::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{
-	if (fStreamerR)
-		{
-		fStreamR.Read(iDest, iCount, oCountRead);
-		}
-	else if (oCountRead)
-		{
-		*oCountRead = 0;
-		}
-	}
-
-size_t ZStreamerRCon_Fake::Imp_CountReadable()
-	{
-	if (fStreamerR)
-		return fStreamR.CountReadable();
-	return 0;
-	}
-
-bool ZStreamerRCon_Fake::Imp_WaitReadable(int iMilliseconds)
-	{
-	if (fStreamerR)
-		return fStreamR.CountReadable();
-	return true;
-	}
-
-bool ZStreamerRCon_Fake::Imp_ReceiveDisconnect(int iMilliseconds)
-	{
-	if (fStreamerR)
-		{
-		fStreamR.SkipAll();
-		return true;
-		}
-	return false;
-	}
-
-void ZStreamerRCon_Fake::Imp_Abort()
-	{
-	fStreamerR.Clear();
-	}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * Host_Std::HTTPer
 
 class Host_Std::HTTPer
@@ -322,12 +244,8 @@ void Host_Std::HTTPer::pRun()
 			const ZTuple theCT = theHeaders.GetTuple("content-type");
 			const string theMIME = theCT.GetString("type") + "/" + theCT.GetString("subtype");
 
-			ZRef<ZStreamerRCon> theStreamerRCon = ZRefDynamicCast<ZStreamerRCon>(theStreamerR);
-			if (!theStreamerRCon)
-				theStreamerRCon = new ZStreamerRCon_Fake(theStreamerR);
-
 			fHost->pHTTPerFinished(
-				this, fNotifyData, theURL, theMIME, theRawHeaders, theStreamerRCon);
+				this, fNotifyData, theURL, theMIME, theRawHeaders, theStreamerR);
 			return;
 			}
 		}
@@ -338,7 +256,7 @@ void Host_Std::HTTPer::pRun()
 	if (fHost)
 		{
 		fHost->pHTTPerFinished(
-			this, fNotifyData, fURL, "", ZMemoryBlock(), ZRef<ZStreamerRCon>());
+			this, fNotifyData, fURL, "", ZMemoryBlock(), ZRef<ZStreamerR>());
 		}
 	}
 
@@ -616,11 +534,11 @@ bool Host_Std::Host_HasMethod(NPP npp, NPObject* obj, NPIdentifier methodName)
 
 void Host_Std::pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
 	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
-	ZRef<ZStreamerRCon> iStreamerRCon)
+	ZRef<ZStreamerR> iStreamerR)
 	{
 	ZMutexLocker locker(fMutex);
 	ZUtil_STL::sEraseMustContain(1, fHTTPers, iHTTPer);
-	this->SendDataAsync(iNotifyData, iURL, iMIME, iHeaders, iStreamerRCon);
+	this->SendDataAsync(iNotifyData, iURL, iMIME, iHeaders, iStreamerR);
 	}
 
 } // namespace ZNetscape

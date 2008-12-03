@@ -733,7 +733,7 @@ public:
 	Sender(Host* iHost, const NPP_t& iNPP_t,
 		void* iNotifyData,
 		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
-		ZRef<ZStreamerRCon> iStreamerRCon);
+		ZRef<ZStreamerR> iStreamerR);
 	~Sender();
 
 	bool DeliverData();
@@ -748,20 +748,20 @@ private:
 	const string fMIME;
 	const ZMemoryBlock fHeaders;
 	NPStream_Z fNPStream;
-	ZRef<ZStreamerRCon> fStreamerRCon;
+	ZRef<ZStreamerR> fStreamerR;
 	};
 
 Host::Sender::Sender(Host* iHost, const NPP_t& iNPP_t,
 	void* iNotifyData,
 	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
-	ZRef<ZStreamerRCon> iStreamerRCon)
+	ZRef<ZStreamerR> iStreamerR)
 :	fSentNew(false),
 	fHost(iHost),
 	fNotifyData(iNotifyData),
 	fURL(iURL),
 	fMIME(iMIME),
 	fHeaders(iHeaders),
-	fStreamerRCon(iStreamerRCon)
+	fStreamerR(iStreamerR)
 	{
 	fNPStream.ndata = iNPP_t.ndata;
 	fNPStream.pdata = iNPP_t.pdata;
@@ -781,7 +781,7 @@ bool Host::Sender::DeliverData()
 		{
 		fSentNew = true;
 
-		if (!fStreamerRCon)
+		if (!fStreamerR)
 			{
 			fHost->Guest_URLNotify(fURL.c_str(), NPRES_NETWORK_ERR, fNotifyData);
 			return false;
@@ -810,16 +810,16 @@ bool Host::Sender::DeliverData()
 
 bool Host::Sender::pDeliverData()
 	{
-	const ZStreamRCon& theStreamRCon = fStreamerRCon->GetStreamRCon();
+	const ZStreamR& theStreamR = fStreamerR->GetStreamR();
 
-	if (!theStreamRCon.WaitReadable(0))
+	if (!theStreamR.WaitReadable(0))
 		{
 		if (ZLOG(s, eDebug + 1, "Host::Sender"))
 			s.Writef("waitReadable is false");
 		return true;
 		}
 
-	const size_t countReadable = theStreamRCon.CountReadable();
+	const size_t countReadable = theStreamR.CountReadable();
 
 	if (ZLOG(s, eDebug + 1, "Host::Sender"))
 		s.Writef("countReadable = %d", countReadable);
@@ -843,7 +843,7 @@ bool Host::Sender::pDeliverData()
 		vector<uint8> buffer;
 		buffer.resize(countPossible);
 		size_t countRead;
-		theStreamRCon.Read(&buffer[0], countPossible, &countRead);
+		theStreamR.Read(&buffer[0], countPossible, &countRead);
 		if (countRead == 0)
 			return false;
 
@@ -929,11 +929,11 @@ void Host::Guest_Destroy()
 void Host::SendDataAsync(
 	void* iNotifyData,
 	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
-	ZRef<ZStreamerRCon> iStreamerRCon)
+	ZRef<ZStreamerR> iStreamerR)
 	{
 	ZMutexLocker locker(fMutex);
 	Sender* theSender = new Sender(this, fNPP_t,
-		iNotifyData, iURL, iMIME, iHeaders, iStreamerRCon);
+		iNotifyData, iURL, iMIME, iHeaders, iStreamerR);
 	fSenders.push_back(theSender);
 	}
 

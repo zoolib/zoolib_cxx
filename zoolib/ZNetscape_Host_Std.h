@@ -162,7 +162,7 @@ private:
 
 	void pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
 		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
-		ZRef<ZStreamerRCon> iStreamerRCon);
+		ZRef<ZStreamerR> iStreamerR);
 	
 	ZooLib::ZMutex fMutex;
 	std::vector<HTTPer*> fHTTPers;

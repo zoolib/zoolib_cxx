@@ -338,7 +338,7 @@ public:
 	void SendDataAsync(
 		void* iNotifyData,
 		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
-		ZRef<ZStreamerRCon> iStreamerRCon);
+		ZRef<ZStreamerR> iStreamerR);
 
 	void SendDataSync(
 		void* iNotifyData,
