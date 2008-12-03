@@ -203,7 +203,9 @@ void ZUtil_Debug::LogMeister::LogIt(
 	string extraSpace(20 - min(size_t(20), ZUnicode::sCUToCP(iName.begin(), iName.end())), ' ');
 	theStrimW
 			<< ZUtil_Time::sAsString_ISO8601_us(now, false)
+	#ifndef __SGThread__
 			<< " " << ZString::sFormat("0x%08X", ZThread::sCurrentID())
+	#endif
 			<< " P" << ZString::sFormat("%X", iPriority)
 			<< " " << extraSpace << iName
 			<< " - " << iMessage << "\n";
@@ -235,7 +237,9 @@ void ZUtil_Debug::sInstall()
 	// sDebug_HandleActual is a global declared in ZDebug.h and defined in ZDebug.cpp.
 	::sDebug_HandleActual = ZUtil_Debug::sDebug_HandleActual;
 
+	#ifndef __SGThread__
 	ZThread::sSetDeadlockHandler(sDeadlockHandler);
+	#endif
 
 	ZLog::sSetLogMeister(new LogMeister);
 
