@@ -396,6 +396,8 @@ public:
 	virtual bool Imp_WaitReadable(int iMilliseconds);
 
 private:
+	bool pRefill(int iMilliseconds);
+
 	ZRef<ZUSBInterfaceInterface> fUSBII;
 	IOUSBInterfaceInterface190** fII;
 	int fPipeRefR;
@@ -442,45 +444,8 @@ void ZUSBInterfaceInterface::StreamerR::Imp_Read(void* iDest, size_t iCount, siz
 			}
 		else
 			{
-			fBufferRead_Offset = 0;
-			fBufferRead_End = 0;
-			UInt32 localCount = fBufferRead_Size;
-			IOReturn result = fII[0]->ReadPipeTO(
-				fII, fPipeRefR, fBufferRead, &localCount, 1000, 1000000);	
-
-			if (result == kIOUSBTransactionTimeout)
-				{
-				fII[0]->ClearPipeStallBothEnds(fII, fPipeRefR);
-				if (ZLOG(s, eDebug + 2, "ZUSBInterfaceInterface::StreamerR"))
-					{
-					s << "Imp_Read, Timeout";
-					}
-				continue;
-				}				
-
-			if (0 == result)
-				{
-				if (ZLOG(s, eDebug + 2, "ZUSBInterfaceInterface::StreamerR"))
-					{
-					s.Writef("Imp_Read, pipe: %d, ", fPipeRefR);
-					ZUtil_Strim_Data::sDumpData(s, fBufferRead, localCount);
-					}
-				fBufferRead_End = localCount;
-				}
-			else
-				{
-				if (ZLOG(s, eDebug, "ZUSBInterfaceInterface::StreamerR"))
-					{
-					s << "Imp_Read, Got result: ";
-
-					if (result == kIOReturnNotResponding) s << "kIOReturnNotResponding";
-					else if (result == kIOReturnNoDevice) s << "kIOReturnNoDevice";
-					else if (result == kIOReturnBadArgument) s << "kIOReturnBadArgument";
-					else if (result == kIOReturnAborted) s << "kIOReturnAborted";
-					else s.Writef("%X", result);
-					}
+			if (!this->pRefill(1000))
 				break;
-				}
 			}
 		}
 
@@ -490,6 +455,60 @@ void ZUSBInterfaceInterface::StreamerR::Imp_Read(void* iDest, size_t iCount, siz
 
 size_t ZUSBInterfaceInterface::StreamerR::Imp_CountReadable()
 	{ return fBufferRead_End - fBufferRead_Offset; }
+
+bool ZUSBInterfaceInterface::StreamerR::Imp_WaitReadable(int iMilliseconds)
+	{
+	if (this->pRefill(iMilliseconds))
+		return fBufferRead_End > fBufferRead_Offset;
+
+	return true;
+	}
+
+bool ZUSBInterfaceInterface::StreamerR::pRefill(int iMilliseconds)
+	{
+	if (fBufferRead_End > fBufferRead_Offset)
+		return true;
+
+	fBufferRead_Offset = 0;
+	fBufferRead_End = 0;
+	UInt32 localCount = fBufferRead_Size;
+	IOReturn result = fII[0]->ReadPipeTO(
+		fII, fPipeRefR, fBufferRead, &localCount, iMilliseconds, 1000000);	
+
+	if (kIOUSBTransactionTimeout == result)
+		{
+		fII[0]->ClearPipeStallBothEnds(fII, fPipeRefR);
+		if (ZLOG(s, eDebug + 2, "ZUSBInterfaceInterface::StreamerR"))
+			{
+			s << "pRefill, Timeout";
+			}
+		return true;
+		}
+	else if (0 == result)
+		{
+		if (ZLOG(s, eDebug + 2, "ZUSBInterfaceInterface::StreamerR"))
+			{
+			s.Writef("pRefill, pipe: %d, ", fPipeRefR);
+			ZUtil_Strim_Data::sDumpData(s, fBufferRead, localCount);
+			}
+		fBufferRead_End = localCount;
+		return true;
+		}
+	else
+		{
+		if (ZLOG(s, eDebug, "ZUSBInterfaceInterface::StreamerR"))
+			{
+			s << "pRefill, Got result: ";
+
+			if (kIOReturnNotResponding == result) s << "kIOReturnNotResponding";
+			else if (kIOReturnNoDevice == result) s << "kIOReturnNoDevice";
+			else if (kIOReturnBadArgument == result) s << "kIOReturnBadArgument";
+			else if (kIOReturnAborted == result) s << "kIOReturnAborted";
+			else s.Writef("%X", result);
+			}
+		return false;
+		}
+	}
 
 // =================================================================================================
 #pragma mark -
