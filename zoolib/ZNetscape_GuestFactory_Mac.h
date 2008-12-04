@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNetscape_GuestFactory_MacPlugin__
-#define __ZNetscape_GuestFactory_MacPlugin__ 1
+#ifndef __ZNetscape_GuestFactory_Mac__
+#define __ZNetscape_GuestFactory_Mac__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
@@ -55,4 +55,4 @@ private:
 
 #endif // ZCONFIG_SPI_Enabled(MacOSX)
 
-#endif // __ZNetscape_GuestFactory_MacPlugin__
+#endif // __ZNetscape_GuestFactory_Mac__
