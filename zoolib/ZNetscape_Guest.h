@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNetscape.h"
 
 #include <string>
+#include <vector>
 
 namespace ZNetscape {
 
@@ -165,6 +166,9 @@ public:
 	virtual NPError GetEntryPoints(NPPluginFuncs* oPluginFuncs);
 	virtual NPError Shutdown();
 
+	virtual int Main(
+		NPNetscapeFuncs* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc);
+
 	const NPNetscapeFuncs& GetNPNetscapeFuncs();
 	const NPNetscapeFuncs& GetNPNF();
 
@@ -272,7 +276,7 @@ public:
 
 	virtual int32 WriteReady(NPP instance, NPStream* stream) = 0;
 
-	virtual int32 Write(NPP instance, NPStream* stream, int32 offset, int32 len, void* buffer) = 0;
+	virtual int32 Write(NPP instance, NPStream* stream, int32_t offset, int32_t len, void* buffer) = 0;
 
 	virtual void StreamAsFile(NPP instance, NPStream* stream, const char* fname) = 0;
 
@@ -304,7 +308,7 @@ private:
 
 	static int32 sWriteReady(NPP instance, NPStream* stream);
 
-	static int32 sWrite(NPP instance, NPStream* stream, int32 offset, int32 len, void* buffer);
+	static int32 sWrite(NPP instance, NPStream* stream, int32_t offset, int32_t len, void* buffer);
 
 	static void sStreamAsFile(NPP instance, NPStream* stream, const char* fname);
 
@@ -321,7 +325,14 @@ private:
 	static NPError sSetValue(NPP instance, NPNVariable variable, void *value);
 
 	NPNetscapeFuncs fNPNF;
+
+	#if __MACH__ && ZCONFIG(Processor, PPC)
+		std::vector<char> fGlue_NPNF;
+		std::vector<char> fGlue_PluginFuncs;
+		std::vector<char> fGlue_Shutdown;
+	#endif
 	};
+
 
 // =================================================================================================
 #pragma mark -

@@ -22,16 +22,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZNetscape_Guest.h"
+#include "zoolib/ZUtil_MacOSX.h"
 
 #include <string>
 
-
+using std::min;
 using std::string;
 
-#pragma export on
-// Mach-o entry points
-
 extern "C" {
+
+#if __MACH__
+#	pragma export on
+#endif
 
 NPError NP_Initialize(NPNetscapeFuncs*);
 NPError NP_Initialize(NPNetscapeFuncs* iBrowserFuncs)
@@ -45,13 +47,21 @@ NPError NP_Shutdown();
 NPError NP_Shutdown()
 	{ return ZNetscape::GuestMeister::sGet()->Shutdown(); }
 
-// For compatibility with CFM browsers.
-//int main(
-//	NPNetscapeFuncs* browserFuncs, NPPluginFuncs* pluginFuncs, NPP_ShutdownProcPtr* shutdown);
+#if __MACH__
+#	pragma export off
+#endif
+
+// For compatibility with CFM and Mozilla-type browsers
+#pragma export on
+
+int main(NPNetscapeFuncs* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc);
+int main(NPNetscapeFuncs* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
+	{ return ZNetscape::GuestMeister::sGet()->Main(iNPNF, oPluginFuncs, oShutdownFunc); }
+
+#pragma export off
 
 } // extern "C"
 
-#pragma export off
 
 
 // =================================================================================================
@@ -455,7 +465,7 @@ GuestMeister* GuestMeister::sGet()
 NPError GuestMeister::Initialize(NPNetscapeFuncs* iBrowserFuncs)
 	{
 	fNPNF.version = iBrowserFuncs->version;
-	fNPNF.size = std::min(size_t(iBrowserFuncs->size), sizeof(NPNetscapeFuncs));
+	fNPNF.size = min(size_t(iBrowserFuncs->size), sizeof(NPNetscapeFuncs));
 
 	fNPNF.geturl = iBrowserFuncs->geturl;
 	fNPNF.posturl = iBrowserFuncs->posturl;
@@ -529,12 +539,61 @@ NPError GuestMeister::Shutdown()
     return NPERR_NO_ERROR;
 	}
 
+int GuestMeister::Main(
+	NPNetscapeFuncs* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
+	{
+	// This function is called by CFM browsers, and also by Mozilla-based code.
+	// On Intel the function pointers are just regular function pointers, on PPC they
+	// will be tvectors.
+
+	NPError result;
+	#if __MACH__ && ZCONFIG(Processor, PPC)
+		// We're MachO on PPC, but main has been called. We have to assume that
+		// the caller is expecting CFM function pointers.
+
+		// Take a local copy of the passed-in table, no bigger than what was
+		// passed, and no bigger than what we're expecting.
+		NPNetscapeFuncs localNPNF;
+		ZBlockZero(&localNPNF, sizeof(localNPNF));
+		ZBlockCopy(iNPNF, &localNPNF, min(size_t(iNPNF->size), sizeof(localNPNF)));
+
+		// Rewrite them as CFM-callable thunks.
+		ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
+			&localNPNF.geturl,
+			(localNPNF.size - offsetof(NPNetscapeFuncs, geturl)) / sizeof(void*),
+			fGlue_NPNF);
+
+		// And pass the munged local structure to NP_Initialize.
+		result = NP_Initialize(&localNPNF);
+
+		// Get our plugin's function pointers
+		NP_GetEntryPoints(oPluginFuncs);
+
+		// And munge them into MachO-callable thunks.
+		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
+			&oPluginFuncs->newp,
+			(oPluginFuncs->size - offsetof(NPPluginFuncs, newp)) / sizeof(void*),
+			fGlue_PluginFuncs);
+
+		*oShutdownFunc = (NPP_ShutdownProcPtr)NP_Shutdown; 	
+		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(&oShutdownFunc, 1, fGlue_Shutdown);
+		
+	#else
+		// We're something else, so raw function pointers are OK.
+		result = NP_Initialize(iNPNF);
+		NP_GetEntryPoints(oPluginFuncs);
+		*oShutdownFunc = (NPP_ShutdownProcPtr)NP_Shutdown; 	
+
+	#endif
+
+	return result;
+	}
+
 const NPNetscapeFuncs& GuestMeister::GetNPNetscapeFuncs()
 	{ return fNPNF; }
 
 const NPNetscapeFuncs& GuestMeister::GetNPNF()
 	{ return fNPNF; }
-
 
 NPError GuestMeister::Host_GetURL(NPP iNPP, const char* url, const char* target)
 	{ return fNPNF.geturl(iNPP, url, target); }
@@ -687,7 +746,7 @@ NPError GuestMeister::sDestroyStream(NPP instance, NPStream* stream, NPReason re
 int32 GuestMeister::sWriteReady(NPP instance, NPStream* stream)
 	{ return sGet()->WriteReady(instance, stream); }
 
-int32 GuestMeister::sWrite(NPP instance, NPStream* stream, int32 offset, int32 len, void* buffer)
+int32 GuestMeister::sWrite(NPP instance, NPStream* stream, int32_t offset, int32_t len, void* buffer)
 	{ return sGet()->Write(instance, stream, offset, len, buffer); }
 
 void GuestMeister::sStreamAsFile(NPP instance, NPStream* stream, const char* fname)
@@ -853,3 +912,57 @@ void Guest::Host_SetException(NPObject* obj, const NPUTF8* message)
 	{ return GuestMeister::sGet()->Host_SetException(obj, message); }
 
 } // namespace ZNetscape
+
+#warning look at this
+#if 0
+
+static bool shouldRetainReturnedNPObjects(NPP instance)
+{
+    // This check is necessary if you want your exposed NPObject to not leak in WebKit-based browsers (including
+    // Safari) released prior to Mac OS X 10.5 (Leopard).
+    //
+    // Earlier versions of WebKit retained the NPObject returned from NPP_GetValue(NPPVpluginScriptableNPObject).
+    // However, the NPRuntime API says NPObjects should be retained by the plug-in before they are returned.  WebKit
+    // versions later than 420 do not retain returned NPObjects automatically; plug-ins are required to retain them
+    // before returning from NPP_GetValue(), as in other browsers.
+    static const unsigned webKitVersionNumberWithRetainFix = 420;
+    static const char* const webKitVersionPrefix = " AppleWebKit/";
+    const char *userAgent = browser->uagent(instance);
+    if (userAgent) {
+        // Find " AppleWebKit/" in the user agent string
+        char *webKitVersionString = strstr(userAgent, webKitVersionPrefix);
+        if (!webKitVersionString)
+            return true; // Not WebKit
+            
+        // Skip past " AppleWebKit/"
+        webKitVersionString += strlen(webKitVersionPrefix);
+        
+        // Convert the version string into an integer.  There are some trailing junk characters after the version
+        // number, but atoi() is smart enough to handle those.
+        int webKitVersion = atoi(webKitVersionString);
+        
+        // Should not retain returned NPObjects when running in versions of WebKit earlier than 420
+        if (webKitVersion && webKitVersion < webKitVersionNumberWithRetainFix)
+            return false;
+    }
+    
+    return true;
+}
+
+NPError NPP_GetValue(NPP instance, NPPVariable variable, void *value)
+{
+    if (variable == NPPVpluginScriptableNPObject) {
+        void **v = (void **)value;
+        PluginObject *obj = instance->pdata;
+        
+        // Returned objects are expected to be retained in most browsers, but not all.
+        // See comments in shouldRetainReturnedNPObjects().
+        if (obj && shouldRetainReturnedNPObjects(instance))
+            browser->retainobject((NPObject*)obj);
+        
+        *v = obj;
+        return NPERR_NO_ERROR;
+    }
+    return NPERR_GENERIC_ERROR;
+}
+#endif

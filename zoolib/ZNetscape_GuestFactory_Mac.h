@@ -22,37 +22,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNetscape_GuestFactory_Mac__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCONFIG_SPI.h"
-
-#if ZCONFIG_SPI_Enabled(MacOSX)
-
-#include "zoolib/ZNetscape_Host.h"
-
-#include <mach-o/dyld.h> // For NSModule
+#include "zoolib/ZNetscape_Host.h" // For GuestFactory
 
 #include <string>
 
-namespace ZNetscape {
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * GuestFactory_MacPlugin
+#pragma mark * ZNetscape
 
-class GuestFactory_MacPlugin : public GuestFactory
-	{
-public:
-	GuestFactory_MacPlugin(const std::string& iPath);
-	virtual ~GuestFactory_MacPlugin();
+namespace ZNetscape {
 
-	virtual void GetEntryPoints(NPPluginFuncs& oNPPluginFuncs);
-
-private:
-	CFPlugInRef fPlugInRef;
-	NSModule fNSModule;
-	};
+ZRef<GuestFactory> sMakeGuestFactory_MacPlugin(const std::string& iPath);
 
 } // namespace ZNetscape
-
-#endif // ZCONFIG_SPI_Enabled(MacOSX)
 
 #endif // __ZNetscape_GuestFactory_Mac__
