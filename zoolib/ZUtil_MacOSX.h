@@ -22,11 +22,34 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_MacOSX__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCONFIG_SPI.h"
+#include "zoolib/ZTypes.h"
+
+#include <vector>
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_MacOSX
 
 namespace ZUtil_MacOSX {
+
+#if ZCONFIG_SPI_Enabled(Carbon)
+
+struct Thunk_CFMCalledByMachO
+	{
+	void* glue[2];	
+	};
+
+void sCreateThunks_CFMCalledByMachO(void* ioFuncs, size_t iCount, std::vector<char>& ioStorage);
+
+struct Thunk_MachOCalledByCFM
+	{
+	uint32 glue[6];		
+	};
+
+void sCreateThunks_MachOCalledByCFM(void* ioFuncs, size_t iCount, std::vector<char>& ioStorage);
+
+#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 } // namespace ZUtil_MacOSX
 
