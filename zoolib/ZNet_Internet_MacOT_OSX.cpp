@@ -77,7 +77,8 @@ public:
 			::MPDeleteQueue(sQueue);
 		}
 	};
-static InitHelper sInitHelper;
+
+InitHelper sInitHelper;
 
 } // anonymous namespace
 
@@ -158,6 +159,38 @@ using std::string;
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Initialize OpenTransport
+
+static OTClientContextPtr sOTClientContextPtr;
+
+namespace ZANONYMOUS {
+
+static int sInitCount;
+class InitHelper
+	{
+public:
+	InitHelper()
+		{
+		if (sInitCount++ == 0)
+			{
+			::InitOpenTransportInContext(kInitOTForExtensionMask, &sOTClientContextPtr);
+			MPLibraryIsLoaded();
+			}
+		}
+
+	~InitHelper()
+		{
+		if (--sInitCount == 0)
+			::CloseOpenTransportInContext(sOTClientContextPtr);
+		}
+	};
+
+InitHelper sInitHelper;
+
+} // anonymous namespace
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Factory functions
 
 #include "zoolib/ZFactoryChain.h"
@@ -213,6 +246,7 @@ ZFactoryChain_Maker_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
 	sMaker3(sMake_Endpoint);
 
 } // anonymous namespace
+
 
 // =================================================================================================
 #pragma mark -
@@ -345,12 +379,17 @@ ZRef<ZNetName> ZNetNameLookup_Internet_MacOT_OSX::CurrentName()
 	return new ZNetName_Internet(fName, fPort);
 	}
 
+//##OTClientContextPtr contentPtr
+
+
 void ZNetNameLookup_Internet_MacOT_OSX::sMP_Lookup(void* iParam)
 	{
 	MPLookup_t* theStruct = static_cast<MPLookup_t*>(iParam);
 
 	OSStatus theErr;
-	InetSvcRef theInetSvcRef = ::OTOpenInternetServicesInContext(kDefaultInternetServicesPath, 0, &theErr, nil);
+	InetSvcRef theInetSvcRef = ::OTOpenInternetServicesInContext(
+		kDefaultInternetServicesPath, 0, &theErr, sOTClientContextPtr);
+
 	if (noErr != theErr)
 		return;
 
@@ -398,24 +437,29 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 	{
 	ListenerConstruct_t* theStruct = static_cast<ListenerConstruct_t*>(iParam);
 
-	theStruct->fListener->fEndpointRef = ::OTOpenEndpointInContext(::OTCreateConfiguration("tilisten, tcp"), 0,
-												nil, &theStruct->fResult, nil);
+	theStruct->fListener->fEndpointRef = ::OTOpenEndpointInContext(
+		::OTCreateConfiguration("tilisten, tcp"),
+		0, nil, &theStruct->fResult, sOTClientContextPtr);
 
 	if (theStruct->fResult == noErr)
 		theStruct->fResult = ::OTSetBlocking(theStruct->fListener->fEndpointRef);
 		
 	if (theStruct->fResult == noErr)
-		theStruct->fResult = ::sSetFourByteOption(theStruct->fListener->fEndpointRef, INET_IP, kIP_REUSEADDR, 1);
+		{
+		theStruct->fResult = ::sSetFourByteOption(theStruct->fListener->fEndpointRef,
+			INET_IP, kIP_REUSEADDR, 1);
+		}
 
 	if (theStruct->fResult == noErr)
 		{
 		InetAddress theInetAddress;
-		::OTInitInetAddress(&theInetAddress, theStruct->fLocalPort, kOTAnyInetAddress); // port & host ip
+		::OTInitInetAddress(&theInetAddress, theStruct->fLocalPort, kOTAnyInetAddress);
 		TBind bindReq;
 		bindReq.addr.buf = (UInt8*)&theInetAddress;
 		bindReq.addr.len = sizeof(theInetAddress);
 		bindReq.qlen = theStruct->fListenQueueSize;
-		theStruct->fResult = ::OTBind(theStruct->fListener->fEndpointRef, &bindReq, nil);
+		theStruct->fResult
+			= ::OTBind(theStruct->fListener->fEndpointRef, &bindReq, nil);
 		}
 
 	if (theStruct->fResult != noErr)
@@ -522,13 +566,17 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Listen(void* iParam)
 	OTResult theOTResult = ::OTListen(theStruct->fListener->fEndpointRef, &theTCall);
 	if (theOTResult == noErr)
 		{
-		EndpointRef acceptedEndpointRef = ::OTOpenEndpointInContext(::OTCreateConfiguration("tcp"), 0,
-													nil, &theOTResult, nil);
+		EndpointRef acceptedEndpointRef = ::OTOpenEndpointInContext(
+			::OTCreateConfiguration("tcp"),
+			0, nil, &theOTResult, sOTClientContextPtr);
+
 		if (acceptedEndpointRef)
 			{
 			theOTResult = ::OTSetBlocking(acceptedEndpointRef);
 			if (theOTResult == noErr)		
-				theOTResult = ::OTAcceptQ(theStruct->fListener->fEndpointRef, acceptedEndpointRef, &theTCall);
+				theOTResult = ::OTAcceptQ(
+					theStruct->fListener->fEndpointRef, acceptedEndpointRef, &theTCall);
+
 			if (theOTResult == noErr)
 				{
 				theStruct->fAcceptedEndpointRef = acceptedEndpointRef;
@@ -602,8 +650,9 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 	{
 	EndpointConstruct_t* theStruct = static_cast<EndpointConstruct_t*>(iParam);
 
-	theStruct->fEndpoint->fEndpointRef = ::OTOpenEndpointInContext(::OTCreateConfiguration(kTCPName), 0,
-												nil, &theStruct->fResult, nil);
+	theStruct->fEndpoint->fEndpointRef = ::OTOpenEndpointInContext(
+		::OTCreateConfiguration(kTCPName),
+		0, nil, &theStruct->fResult, sOTClientContextPtr);
 
 	if (theStruct->fResult == noErr)
 		{
@@ -634,7 +683,8 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 		theSndCall.udata.len = 0;
 		theSndCall.udata.maxlen = 0;
 
-		OTResult theResult = ::OTConnect(theStruct->fEndpoint->fEndpointRef, &theSndCall, nil);
+		OTResult theResult = ::OTConnect(
+			theStruct->fEndpoint->fEndpointRef, &theSndCall, nil);
 		if (theResult == T_DISCONNECT)
 			{
 			::OTRcvDisconnect(theStruct->fEndpoint->fEndpointRef, nil);
@@ -757,8 +807,10 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_GetCountReadable(void* iParam)
 
 bool ZNetEndpoint_TCP_MacOT_OSX::Imp_WaitReadable(int iMilliseconds)
 	{
-	#warning AG NDY
-	return false;
+	#warning "Not done yet. We're not really timing out here"
+	return this->Imp_CountReadable();
+//	#warning AG NDY
+//	return false;
 	}
 
 struct Imp_Write_t
