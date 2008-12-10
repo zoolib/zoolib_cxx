@@ -33,7 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimmer_Streamer.h"
 #include "zoolib/ZTextCoder.h"
 
-//#include <ctype.h>
+#include <ctype.h> // For isalnum
 //#include <stdio.h>
 
 using std::string;
@@ -107,7 +107,7 @@ ZRef<ZStreamerR> ZHTTP::sRequest(
 			if (!theEndpoint)
 				break;
 
-			int theResponseCode;
+			int32 theResponseCode;
 			ZTuple theHeaders;
 			if (!sRequest(
 				theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
@@ -209,7 +209,7 @@ ZRef<ZStreamerR> ZHTTP::sPost(
 		ZRef<ZNetName_Internet> theNN = new ZNetName_Internet(theHost, thePort);
 		if (ZRef<ZNetEndpoint> theEndpoint = theNN->Connect(10))
 			{
-			int theResponseCode;
+			int32 theResponseCode;
 			ZTuple theHeaders;
 			if (sRequestPOST(theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
 				theHost, thePath,
