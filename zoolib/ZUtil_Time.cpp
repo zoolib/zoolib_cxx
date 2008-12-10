@@ -45,7 +45,7 @@ using namespace ZooLib;
 
 using std::string;
 
-#if _MSL_USING_MW_C_HEADERS || (ZCONFIG_SPI_Enabled(Win) && ZCONFIG(Compiler, GCC))
+#if (__MWERKS__ && !defined(_MSL_USING_MW_C_HEADERS) || _MSL_USING_MW_C_HEADERS) || (ZCONFIG_SPI_Enabled(Win) && ZCONFIG(Compiler, GCC))
 #	define DO_IT_OURSELVES 1
 #else
 #	define DO_IT_OURSELVES 0
@@ -310,24 +310,7 @@ string ZUtil_Time::sAsStringUTC(ZTime iTime, const string& iFormat)
 #if DO_IT_OURSELVES
 static int sUTCToLocalDelta()
 	{
-	#if ZCONFIG_SPI_Enabled(MacClassic)
-
-		MachineLocation loc;
-		int delta = 0;
-
-		::ReadLocation(&loc);
-
-		// Don't bother if the user has not set the location
-		if (loc.latitude != 0 && loc.longitude != 0 && loc.u.gmtDelta != 0)
-			{
-			delta = loc.u.gmtDelta & 0x00FFFFFF;
-
-			if (delta & 0x00800000)
-				delta |= 0xFF000000;
-			}
-		return delta;
-
-	#elif ZCONFIG_SPI_Enabled(POSIX)
+	#if ZCONFIG_SPI_Enabled(POSIX)
 
 		struct timezone zone;
 
@@ -346,6 +329,23 @@ static int sUTCToLocalDelta()
 			{
 			return -60 * zone.tz_minuteswest;
 			}
+
+	#elif ZCONFIG_SPI_Enabled(MacClassic) || ZCONFIG_SPI_Enabled(Carbon)
+
+		MachineLocation loc;
+		int delta = 0;
+
+		::ReadLocation(&loc);
+
+		// Don't bother if the user has not set the location
+		if (loc.latitude != 0 && loc.longitude != 0 && loc.u.gmtDelta != 0)
+			{
+			delta = loc.u.gmtDelta & 0x00FFFFFF;
+
+			if (delta & 0x00800000)
+				delta |= 0xFF000000;
+			}
+		return delta;
 
 	#elif ZCONFIG_SPI_Enabled(Win)
 
