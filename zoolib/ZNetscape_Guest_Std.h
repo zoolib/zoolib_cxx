@@ -56,7 +56,7 @@ public:
 
 	virtual int32 WriteReady(NPP instance, NPStream* stream);
 
-	virtual int32 Write(NPP instance, NPStream* stream, int32 offset, int32 len, void* buffer);
+	virtual int32 Write(NPP instance, NPStream* stream, int32_t offset, int32_t len, void* buffer);
 
 	virtual void StreamAsFile(NPP instance, NPStream* stream, const char* fname);
 

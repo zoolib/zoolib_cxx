@@ -71,7 +71,7 @@ int32 GuestMeister_Std::WriteReady(NPP instance, NPStream* stream)
 	{ return sGuest(instance)->Guest_WriteReady(stream); }
 
 int32 GuestMeister_Std::Write(NPP instance,
-	NPStream* stream, int32 offset, int32 len, void* buffer)
+	NPStream* stream, int32_t offset, int32_t len, void* buffer)
 	{ return sGuest(instance)->Guest_Write(stream, offset, len, buffer); }
 
 void GuestMeister_Std::StreamAsFile(NPP instance, NPStream* stream, const char* fname)
