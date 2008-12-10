@@ -22,9 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h"
 #include "zoolib/ZThread.h"
 
-// Metrowerks Standard Library doesn't include strcasecmp
-#if _MSL_USING_MW_C_HEADERS && __MACH__
-#	include "/usr/include/string.h"
+#if ZCONFIG(Compiler,CodeWarrior)
+#	if !defined(_MSL_USING_MW_C_HEADERS) || _MSL_USING_MW_C_HEADERS
+		// MSL doesn't include strcasecmp in the regular <strings.h>
+#		include <extras.h>
+#	endif
 #endif
 
 using namespace ZooLib;
