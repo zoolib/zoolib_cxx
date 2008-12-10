@@ -95,6 +95,7 @@ public:
 	Host_Std(ZRef<GuestFactory> iGuestFactory);
 	virtual ~Host_Std();
 
+// Simple or stub implementations of necessary Host methods
 	virtual NPError Host_GetURL(NPP npp, const char* URL, const char* window);
 
 	virtual NPError Host_PostURL(NPP npp,
@@ -156,16 +157,52 @@ public:
 
 	virtual bool Host_HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName);
 
+// Our protocol
+	void Create(const std::string& iURL, const std::string& iMIME);
+	void Destroy();
+
+	void SendDataAsync(
+		void* iNotifyData,
+		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
+		ZRef<ZStreamerR> iStreamerR);
+
+	void SendDataSync(
+		void* iNotifyData,
+		const std::string& iURL, const std::string& iMIME,
+		const ZStreamR& iStreamR);
+
+	void DeliverData();
+
+	void DoEvent(const EventRecord& iEvent);
+	void DoActivate(bool iActivate);
+	void DoFocus(bool iFocused);
+	void DoIdle();
+	void DoDraw();
+
+	void SetPortAndBounds(CGrafPtr iGrafPtr,
+		ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
+
+	void SetBounds(
+		ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
+
+	NPObjectH* GetScriptableNPObject();
+
 private:
 	class HTTPer;
 	friend class HTTPer;
+	class Sender;
+	friend class Sender;
 
 	void pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
 		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
 		ZRef<ZStreamerR> iStreamerR);
 	
-	ZooLib::ZMutex fMutex;
+	NPWindow fNPWindow;
+	NP_Port fNP_Port;
+
+	ZooLib::ZMutexNR fMutex;
 	std::vector<HTTPer*> fHTTPers;
+	std::list<Sender*> fSenders;
 	};
 
 } // namespace ZNetscape

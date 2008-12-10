@@ -24,28 +24,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h" // For ZBlockZero
-#include "zoolib/ZStreamCopier.h"
-#include "zoolib/ZStreamRWCon_MemoryPipe.h"
 #include "zoolib/ZString.h" // For ZString::sFormat
 
-#include "zoolib/ZStream_Tee.h"
-#include "zoolib/ZStreamRWPos_RAM.h"
-#include "zoolib/ZUtil_Strim_Data.h"
-
-#include <vector>
-
-using std::list;
 using std::string;
-using std::vector;
-
-#ifdef NPVERS_HAS_RESPONSE_HEADERS
-	typedef NPStream NPStream_Z;
-#else
-	struct NPStream_Z : public NPStream
-		{
-		const char* headers;
-		};
-#endif
 
 namespace ZNetscape {
 
@@ -448,7 +429,7 @@ NPClass ObjectH::sNPClass =
 #pragma mark -
 #pragma mark * HostMeister
 
-HostMeister* sHostMeister;
+static HostMeister* sHostMeister;
 
 HostMeister* HostMeister::sGet()
 	{
@@ -725,150 +706,6 @@ void GuestFactory::GetNPNF(NPNetscapeFuncs& oNPNF)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Host::Sender
-
-class Host::Sender
-	{
-public:
-	Sender(Host* iHost, const NPP_t& iNPP_t,
-		void* iNotifyData,
-		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
-		ZRef<ZStreamerR> iStreamerR);
-	~Sender();
-
-	bool DeliverData();
-
-private:
-	bool pDeliverData();
-
-	bool fSentNew;
-	Host* fHost;
-	void* fNotifyData;
-	const string fURL;
-	const string fMIME;
-	const ZMemoryBlock fHeaders;
-	NPStream_Z fNPStream;
-	ZRef<ZStreamerR> fStreamerR;
-	};
-
-Host::Sender::Sender(Host* iHost, const NPP_t& iNPP_t,
-	void* iNotifyData,
-	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
-	ZRef<ZStreamerR> iStreamerR)
-:	fSentNew(false),
-	fHost(iHost),
-	fNotifyData(iNotifyData),
-	fURL(iURL),
-	fMIME(iMIME),
-	fHeaders(iHeaders),
-	fStreamerR(iStreamerR)
-	{
-	fNPStream.ndata = iNPP_t.ndata;
-	fNPStream.pdata = iNPP_t.pdata;
-	fNPStream.url = fURL.c_str();
-	fNPStream.end = 0;
-	fNPStream.lastmodified = 0;
-	fNPStream.notifyData = iNotifyData;
-	fNPStream.headers = static_cast<const char*>(fHeaders.GetData());
-	}
-
-Host::Sender::~Sender()
-	{}
-
-bool Host::Sender::DeliverData()
-	{
-	if (!fSentNew)
-		{
-		fSentNew = true;
-
-		if (!fStreamerR)
-			{
-			fHost->Guest_URLNotify(fURL.c_str(), NPRES_NETWORK_ERR, fNotifyData);
-			return false;
-			}
-
-		uint16 theStreamType = NP_NORMAL;
-		if (fHost->Guest_NewStream(const_cast<char*>(fMIME.c_str()), &fNPStream, false, &theStreamType))
-			{
-			// Failed -- what result should we pass?
-			fHost->Guest_URLNotify(fURL.c_str(), NPRES_NETWORK_ERR, fNotifyData);
-			return false;
-			}
-		}
-
-
-	if (this->pDeliverData())
-		return true;
-
-	if (fNotifyData)
-		fHost->Guest_URLNotify(fURL.c_str(), NPRES_DONE, fNotifyData);
-
-	fHost->Guest_DestroyStream(&fNPStream, NPRES_DONE);
-
-	return false;
-	}
-
-bool Host::Sender::pDeliverData()
-	{
-	const ZStreamR& theStreamR = fStreamerR->GetStreamR();
-
-	if (!theStreamR.WaitReadable(0))
-		{
-		if (ZLOG(s, eDebug + 1, "Host::Sender"))
-			s.Writef("waitReadable is false");
-		return true;
-		}
-
-	const size_t countReadable = theStreamR.CountReadable();
-
-	if (ZLOG(s, eDebug + 1, "Host::Sender"))
-		s.Writef("countReadable = %d", countReadable);
-	
-	if (countReadable == 0)
-		return false;
-
-	int32 countPossible = fHost->Guest_WriteReady(&fNPStream);
-
-	if (ZLOG(s, eDebug + 1, "Host::Sender"))
-		s.Writef("countPossible = %d", countPossible);
-
-	if (countPossible < 0)
-		{
-		return false;
-		}
-	else if (countPossible > 0)
-		{
-		countPossible = std::min(countPossible, int32(64 * 1024));
-
-		vector<uint8> buffer;
-		buffer.resize(countPossible);
-		size_t countRead;
-		theStreamR.Read(&buffer[0], countPossible, &countRead);
-		if (countRead == 0)
-			return false;
-
-		if (ZLOG(s, eDebug + 1, "Host::Sender"))
-			s.Writef("countRead = %d", countRead);
-
-		for (size_t start = 0; start < countRead; /*no inc*/)
-			{
-			int countWritten = fHost->Guest_Write(&fNPStream, 0, countRead - start, &buffer[start]);
-
-			if (ZLOG(s, eDebug + 1, "Host::Sender"))
-				s.Writef("countWritten = %d", countWritten);
-
-			if (countWritten < 0)
-				return false;
-
-			start += countWritten;
-			}
-		}
-
-	return true;
-	}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * Host
 
 Host::Host(ZRef<GuestFactory> iGuestFactory)
@@ -883,6 +720,9 @@ Host::Host(ZRef<GuestFactory> iGuestFactory)
 
 Host::~Host()
 	{}
+
+ZRef<GuestFactory> Host::GetGuestFactory()
+	{ return fGuestFactory; }
 
 void Host::Release(NPObject* iObj)
 	{ HostMeister::sGet()->ReleaseObject(iObj); }
@@ -904,200 +744,18 @@ bool Host::Invoke(
 	return false;
 	}
 
-void Host::Create(const string& iURL, const string& iMIME)
-	{
-    char* npp_argv[] =
-		{ const_cast<char*>(iURL.c_str()), const_cast<char*>(iMIME.c_str()),};
+const NPP_t& Host::GetNPP()
+	{ return fNPP_t; }
 
-    char* npp_argn[] =
-		{ "src", "type" };
+NPError Host::Guest_New(NPMIMEType pluginType, uint16 mode,
+	int16 argc, char* argn[], char* argv[], NPSavedData* saved)
+	{ return fNPPluginFuncs.newp(pluginType, &fNPP_t, mode, argc, argn, argv, saved); }
 
-	NPError theErr = fNPPluginFuncs.newp(
-		const_cast<char*>(iMIME.c_str()), &fNPP_t, NP_FULL,
-		countof(npp_argn), npp_argn, npp_argv, nil);
+NPError Host::Guest_Destroy(NPSavedData** save)
+	{ return fNPPluginFuncs.destroy(&fNPP_t, save); }
 
-	if (ZLOG(s, eDebug + 1, "Host"))
-		s.Writef("Create, theErr: %d", theErr);
-	}
-
-void Host::Guest_Destroy()
-	{
-	NPSavedData* theSavedData;
-	fNPPluginFuncs.destroy(&fNPP_t, &theSavedData);
-	}
-
-void Host::SendDataAsync(
-	void* iNotifyData,
-	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
-	ZRef<ZStreamerR> iStreamerR)
-	{
-	ZMutexLocker locker(fMutex);
-	Sender* theSender = new Sender(this, fNPP_t,
-		iNotifyData, iURL, iMIME, iHeaders, iStreamerR);
-	fSenders.push_back(theSender);
-	}
-
-void Host::SendDataSync(
-	void* iNotifyData,
-	const string& iURL, const string& iMIME,
-	const ZStreamR& iStreamR)
-	{
-	NPStream_Z theNPStream;
-	theNPStream.ndata = fNPP_t.ndata;
-	theNPStream.pdata = fNPP_t.pdata;
-	theNPStream.url = iURL.c_str();
-	theNPStream.end = iStreamR.CountReadable();
-	theNPStream.lastmodified = 0;
-	theNPStream.notifyData = iNotifyData;
-	theNPStream.headers = nil;
-
-	uint16 theStreamType = NP_NORMAL;
-
-	if (0 == fNPPluginFuncs.newstream(&fNPP_t,
-		const_cast<char*>(iMIME.c_str()), &theNPStream, false, &theStreamType))
-		{
-		for (bool keepGoing = true; keepGoing; /*no inc*/)
-			{
-			int32 countPossible = fNPPluginFuncs.writeready(&fNPP_t, &theNPStream);
-			if (countPossible < 0)
-				{
-				// Failure.
-				break;
-				}
-
-			countPossible = std::min(countPossible, int32(1024 * 1024));
-
-			vector<uint8> buffer;
-			buffer.resize(countPossible);
-			size_t countRead;
-			iStreamR.Read(&buffer[0], countPossible, &countRead);
-			if (countRead == 0)
-				break;
-
-			for (size_t start = 0; start < countRead; /*no inc*/)
-				{
-				int countWritten = fNPPluginFuncs.write(&fNPP_t, &theNPStream,
-					0, countRead - start, &buffer[start]);
-
-				if (countWritten < 0)
-					{
-					if (ZLOG(s, eDebug, "Host"))
-						{
-						s << "write failure";
-						}
-					keepGoing = false;
-					break;
-					}
-				start += countWritten;
-				}
-			}
-
-		if (iNotifyData)
-            fNPPluginFuncs.urlnotify(&fNPP_t, iURL.c_str(), NPRES_DONE, iNotifyData);
-
-		fNPPluginFuncs.destroystream(&fNPP_t, &theNPStream, NPRES_DONE);
-		}
-	}
-
-void Host::DeliverData()
-	{
-	ZMutexLocker locker(fMutex);
-	for (list<Sender*>::iterator i = fSenders.begin(); i != fSenders.end(); /*no inc*/)
-		{
-		if ((*i)->DeliverData())
-			{
-			++i;
-			}
-		else
-			{
-			delete *i;
-			i = fSenders.erase(i);
-			}
-		}
-	}
-
-void Host::Guest_Activate(bool iActivate)
-	{
-	EventRecord fakeEvent;
-	fakeEvent.what = activateEvt;
-	fakeEvent.when = ::TickCount();
-	fakeEvent.message = (UInt32)::GetWindowFromPort(fNP_Port.port);
-	if (iActivate)
-		fakeEvent.modifiers = activeFlag;
-	else
-		fakeEvent.modifiers = 0;
-	::GetGlobalMouse(&fakeEvent.where);
-	
-	fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
-	}
-
-void Host::Guest_Event(const EventRecord& iEvent)
-	{
-	EventRecord localEvent = iEvent;
-	fNPPluginFuncs.event(&fNPP_t, &localEvent);
-	}
-
-void Host::Guest_Idle()
-	{
-	EventRecord fakeEvent;
-	fakeEvent.what = nullEvent;
-	fakeEvent.when = ::TickCount();
-	fakeEvent.message = 0;
-	::GetGlobalMouse(&fakeEvent.where);
-	
-	fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
-	}
-
-void Host::Guest_Draw()
-	{
-	EventRecord fakeEvent;
-	fakeEvent.what = updateEvt;
-	fakeEvent.when = ::TickCount();
-	fakeEvent.message = (UInt32)::GetWindowFromPort(fNP_Port.port);
-	fakeEvent.modifiers = 0;
-	::GetGlobalMouse(&fakeEvent.where);
-	
-	fNPPluginFuncs.event(&fNPP_t, &fakeEvent);
-	}
-
-void Host::Guest_SetWindow(CGrafPtr iGrafPtr,
-	ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip)
-	{
-	fNP_Port.port = iGrafPtr;
-	this->Guest_SetBounds(iLocation, iSize, iClip);
-	}
-
-void Host::Guest_SetBounds(
-	ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip)
-	{
-	fNP_Port.portx = -iLocation.h;
-	fNP_Port.porty = -iLocation.v;
-	fNPWindow.window = &fNP_Port;
-
-	fNPWindow.type = NPWindowTypeDrawable;
-
-	fNPWindow.x = iLocation.h;
-	fNPWindow.y = iLocation.v;
-	fNPWindow.width = iSize.h;
-	fNPWindow.height = iSize.v;
-
-	fNPWindow.clipRect.left = iClip.left;
-	fNPWindow.clipRect.top = iClip.top;
-	fNPWindow.clipRect.right = iClip.right;
-	fNPWindow.clipRect.bottom = iClip.bottom;
-
-	fNPPluginFuncs.setwindow(&fNPP_t, &fNPWindow);
-	}
-
-NPObject* Host::Guest_GetScriptableNPObject()
-	{
-	NPObject* theNPObject;
-	fNPPluginFuncs.getvalue(&fNPP_t, NPPVpluginScriptableNPObject, &theNPObject);
-	return theNPObject;
-	}
-
-void Host::Guest_URLNotify(const char* URL, NPReason reason, void* notifyData)
-	{ fNPPluginFuncs.urlnotify(&fNPP_t, URL, reason, notifyData); }
+NPError Host::Guest_SetWindow(NPWindow* window)
+	{ return fNPPluginFuncs.setwindow(&fNPP_t, window); }
 
 NPError Host::Guest_NewStream(NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype)
 	{ return fNPPluginFuncs.newstream(&fNPP_t, type, stream, seekable, stype); }
@@ -1105,10 +763,30 @@ NPError Host::Guest_NewStream(NPMIMEType type, NPStream* stream, NPBool seekable
 NPError Host::Guest_DestroyStream(NPStream* stream, NPReason reason)
 	{ return fNPPluginFuncs.destroystream(&fNPP_t, stream, reason); }
 
+void Host::Guest_StreamAsFile(NPStream* stream, const char* fname)
+	{ fNPPluginFuncs.asfile(&fNPP_t, stream, fname); }
+
 int32 Host::Guest_WriteReady(NPStream* stream)
 	{ return fNPPluginFuncs.writeready(&fNPP_t, stream); }
 
 int32 Host::Guest_Write(NPStream* stream, int32_t offset, int32_t len, void* buffer)
 	{ return fNPPluginFuncs.write(&fNPP_t, stream, offset, len, buffer); }
+
+void Host::Guest_Print(NPPrint* platformPrint)
+	{ return fNPPluginFuncs.print(&fNPP_t, platformPrint); }
+
+int16 Host::Guest_HandleEvent(void* event)
+	{ return fNPPluginFuncs.event(&fNPP_t, event); }
+
+void Host::Guest_URLNotify(const char* URL, NPReason reason, void* notifyData)
+	{ fNPPluginFuncs.urlnotify(&fNPP_t, URL, reason, notifyData); }
+
+// JRIGlobalRef
+
+NPError Host::Guest_GetValue(NPPVariable iNPPVariable, void* oValue)
+	{ return fNPPluginFuncs.getvalue(&fNPP_t, iNPPVariable, oValue); }
+
+NPError Host::Guest_SetValue(NPNVariable iNPNVariable, void* iValue)
+	{ return fNPPluginFuncs.setvalue(&fNPP_t, iNPNVariable, iValue); }
 
 } // namespace ZNetscape

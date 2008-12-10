@@ -35,7 +35,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
+//#include "zoolib/ZStreamCopier.h"
+//#include "zoolib/ZStreamRWCon_MemoryPipe.h"
+//#include "zoolib/ZStream_Tee.h"
+//#include "zoolib/ZStreamRWPos_RAM.h"
+//#include "zoolib/ZUtil_Strim_Data.h"
+#include <vector>
+
+using std::list;
+
+
 #include "zoolib/ZCompat_string.h" // For strdup
+
+#ifdef NPVERS_HAS_RESPONSE_HEADERS
+	typedef NPStream NPStream_Z;
+#else
+	struct NPStream_Z : public NPStream
+		{
+		const char* headers;
+		};
+#endif
 
 using std::map;
 using std::pair;
@@ -268,11 +287,157 @@ void Host_Std::HTTPer::spRun(HTTPer* iHTTPer)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Host_Std::Sender
+
+class Host_Std::Sender
+	{
+public:
+	Sender(Host* iHost, const NPP_t& iNPP_t,
+		void* iNotifyData,
+		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
+		ZRef<ZStreamerR> iStreamerR);
+	~Sender();
+
+	bool DeliverData();
+
+private:
+	bool pDeliverData();
+
+	bool fSentNew;
+	Host* fHost;
+	void* fNotifyData;
+	const string fURL;
+	const string fMIME;
+	const ZMemoryBlock fHeaders;
+	NPStream_Z fNPStream;
+	ZRef<ZStreamerR> fStreamerR;
+	};
+
+Host_Std::Sender::Sender(Host* iHost, const NPP_t& iNPP_t,
+	void* iNotifyData,
+	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
+	ZRef<ZStreamerR> iStreamerR)
+:	fSentNew(false),
+	fHost(iHost),
+	fNotifyData(iNotifyData),
+	fURL(iURL),
+	fMIME(iMIME),
+	fHeaders(iHeaders),
+	fStreamerR(iStreamerR)
+	{
+	fNPStream.ndata = iNPP_t.ndata;
+	fNPStream.pdata = iNPP_t.pdata;
+	fNPStream.url = fURL.c_str();
+	fNPStream.end = 0;
+	fNPStream.lastmodified = 0;
+	fNPStream.notifyData = iNotifyData;
+	fNPStream.headers = static_cast<const char*>(fHeaders.GetData());
+	}
+
+Host_Std::Sender::~Sender()
+	{}
+
+bool Host_Std::Sender::DeliverData()
+	{
+	if (!fSentNew)
+		{
+		fSentNew = true;
+
+		if (!fStreamerR)
+			{
+			fHost->Guest_URLNotify(fURL.c_str(), NPRES_NETWORK_ERR, fNotifyData);
+			return false;
+			}
+
+		uint16 theStreamType = NP_NORMAL;
+		if (fHost->Guest_NewStream(const_cast<char*>(fMIME.c_str()), &fNPStream, false, &theStreamType))
+			{
+			// Failed -- what result should we pass?
+			fHost->Guest_URLNotify(fURL.c_str(), NPRES_NETWORK_ERR, fNotifyData);
+			return false;
+			}
+		}
+
+
+	if (this->pDeliverData())
+		return true;
+
+	if (fNotifyData)
+		fHost->Guest_URLNotify(fURL.c_str(), NPRES_DONE, fNotifyData);
+
+	fHost->Guest_DestroyStream(&fNPStream, NPRES_DONE);
+
+	return false;
+	}
+
+bool Host_Std::Sender::pDeliverData()
+	{
+	const ZStreamR& theStreamR = fStreamerR->GetStreamR();
+
+	if (!theStreamR.WaitReadable(0))
+		{
+		if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
+			s.Writef("waitReadable is false");
+		return true;
+		}
+
+	const size_t countReadable = theStreamR.CountReadable();
+
+	if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
+		s.Writef("countReadable = %d", countReadable);
+	
+	if (countReadable == 0)
+		return false;
+
+	int32 countPossible = fHost->Guest_WriteReady(&fNPStream);
+
+	if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
+		s.Writef("countPossible = %d", countPossible);
+
+	if (countPossible < 0)
+		{
+		return false;
+		}
+	else if (countPossible > 0)
+		{
+		countPossible = std::min(countPossible, int32(64 * 1024));
+
+		vector<uint8> buffer;
+		buffer.resize(countPossible);
+		size_t countRead;
+		theStreamR.Read(&buffer[0], countPossible, &countRead);
+		if (countRead == 0)
+			return false;
+
+		if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
+			s.Writef("countRead = %d", countRead);
+
+		for (size_t start = 0; start < countRead; /*no inc*/)
+			{
+			int countWritten = fHost->Guest_Write(&fNPStream, 0, countRead - start, &buffer[start]);
+
+			if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
+				s.Writef("countWritten = %d", countWritten);
+
+			if (countWritten < 0)
+				return false;
+
+			start += countWritten;
+			}
+		}
+
+	return true;
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Host_Std
 
 Host_Std::Host_Std(ZRef<GuestFactory> iGuestFactory)
 :	Host(iGuestFactory)
-	{}
+	{
+	ZBlockZero(&fNP_Port, sizeof(fNP_Port));
+	}
 
 Host_Std::~Host_Std()
 	{
@@ -539,6 +704,224 @@ void Host_Std::pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
 	ZMutexLocker locker(fMutex);
 	ZUtil_STL::sEraseMustContain(1, fHTTPers, iHTTPer);
 	this->SendDataAsync(iNotifyData, iURL, iMIME, iHeaders, iStreamerR);
+	}
+
+
+void Host_Std::Create(const string& iURL, const string& iMIME)
+	{
+    char* npp_argv[] =
+		{ const_cast<char*>(iURL.c_str()), const_cast<char*>(iMIME.c_str()),};
+
+    char* npp_argn[] =
+		{ "src", "type" };
+
+	NPError theErr = this->Guest_New(
+		const_cast<char*>(iMIME.c_str()), NP_FULL,
+		countof(npp_argn), npp_argn, npp_argv, nil);
+
+	if (ZLOG(s, eDebug + 1, "Host"))
+		s.Writef("Create, theErr: %d", theErr);
+	}
+
+void Host_Std::Destroy()
+	{
+	NPSavedData* theSavedData;
+	this->Guest_Destroy(&theSavedData);
+	}
+
+void Host_Std::SendDataAsync(
+	void* iNotifyData,
+	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
+	ZRef<ZStreamerR> iStreamerR)
+	{
+	ZMutexLocker locker(fMutex);
+	Sender* theSender = new Sender(this, this->GetNPP(),
+		iNotifyData, iURL, iMIME, iHeaders, iStreamerR);
+	fSenders.push_back(theSender);
+	}
+
+void Host_Std::SendDataSync(
+	void* iNotifyData,
+	const string& iURL, const string& iMIME,
+	const ZStreamR& iStreamR)
+	{
+	NPStream_Z theNPStream;
+	theNPStream.ndata = this->GetNPP().ndata;
+	theNPStream.pdata = this->GetNPP().pdata;
+	theNPStream.url = iURL.c_str();
+	theNPStream.end = iStreamR.CountReadable();
+	theNPStream.lastmodified = 0;
+	theNPStream.notifyData = iNotifyData;
+	theNPStream.headers = nil;
+
+	uint16 theStreamType = NP_NORMAL;
+
+	if (0 == this->Guest_NewStream(
+		const_cast<char*>(iMIME.c_str()), &theNPStream, false, &theStreamType))
+		{
+		for (bool keepGoing = true; keepGoing; /*no inc*/)
+			{
+			int32 countPossible = this->Guest_WriteReady(&theNPStream);
+			if (countPossible < 0)
+				{
+				// Failure.
+				break;
+				}
+
+			countPossible = std::min(countPossible, int32(1024 * 1024));
+
+			vector<uint8> buffer;
+			buffer.resize(countPossible);
+			size_t countRead;
+			iStreamR.Read(&buffer[0], countPossible, &countRead);
+			if (countRead == 0)
+				break;
+
+			for (size_t start = 0; start < countRead; /*no inc*/)
+				{
+				int countWritten = this->Guest_Write(
+					&theNPStream, 0, countRead - start, &buffer[start]);
+
+				if (countWritten < 0)
+					{
+					if (ZLOG(s, eDebug, "Host"))
+						{
+						s << "write failure";
+						}
+					keepGoing = false;
+					break;
+					}
+				start += countWritten;
+				}
+			}
+
+		if (iNotifyData)
+            this->Guest_URLNotify(iURL.c_str(), NPRES_DONE, iNotifyData);
+
+		this->Guest_DestroyStream(&theNPStream, NPRES_DONE);
+		}
+	}
+
+void Host_Std::DeliverData()
+	{
+	ZMutexLocker locker(fMutex);
+	for (list<Sender*>::iterator i = fSenders.begin(); i != fSenders.end(); /*no inc*/)
+		{
+		if ((*i)->DeliverData())
+			{
+			++i;
+			}
+		else
+			{
+			delete *i;
+			i = fSenders.erase(i);
+			}
+		}
+	}
+
+void Host_Std::DoEvent(const EventRecord& iEvent)
+	{
+	// Hmm -- do we need to use the local?
+	EventRecord localEvent = iEvent;
+	this->Guest_HandleEvent(&localEvent);
+	}
+
+static void sStuffEventRecord(EventRecord& oEventRecord)
+	{
+	oEventRecord.what = nullEvent;
+	oEventRecord.message = 0;
+	oEventRecord.when = ::TickCount();
+	::GetGlobalMouse(&oEventRecord.where);
+	oEventRecord.modifiers = 0;
+	}
+
+void Host_Std::DoActivate(bool iActivate)
+	{
+	if (fNP_Port.port)
+		{
+		EventRecord theER;
+		sStuffEventRecord(theER);
+
+		theER.what = activateEvt;
+		theER.message = (UInt32)::GetWindowFromPort(fNP_Port.port);
+		if (iActivate)
+			theER.modifiers = activeFlag;
+		else
+			theER.modifiers = 0;
+		
+		this->DoEvent(theER);
+		}
+	}
+
+void Host_Std::DoFocus(bool iFocused)
+	{
+	EventRecord theER;
+	sStuffEventRecord(theER);
+
+	if (iFocused)
+		theER.what = NPEventType_GetFocusEvent;
+	else
+		theER.what = NPEventType_LoseFocusEvent;
+
+	this->DoEvent(theER);
+	}
+
+void Host_Std::DoIdle()
+	{
+	EventRecord theER;
+	sStuffEventRecord(theER);
+
+	this->DoEvent(theER);
+	}
+
+void Host_Std::DoDraw()
+	{
+	if (fNP_Port.port)
+		{
+		EventRecord theER;
+		sStuffEventRecord(theER);
+
+		theER.what = updateEvt;
+		theER.message = (UInt32)::GetWindowFromPort(fNP_Port.port);
+
+		this->DoEvent(theER);
+		}
+	}
+
+void Host_Std::SetPortAndBounds(CGrafPtr iGrafPtr,
+	ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip)
+	{
+	fNP_Port.port = iGrafPtr;
+	this->SetBounds(iLocation, iSize, iClip);
+	}
+
+void Host_Std::SetBounds(
+	ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip)
+	{
+	fNP_Port.portx = -iLocation.h;
+	fNP_Port.porty = -iLocation.v;
+	fNPWindow.window = &fNP_Port;
+
+	fNPWindow.type = NPWindowTypeDrawable;
+
+	fNPWindow.x = iLocation.h;
+	fNPWindow.y = iLocation.v;
+	fNPWindow.width = iSize.h;
+	fNPWindow.height = iSize.v;
+
+	fNPWindow.clipRect.left = iClip.left;
+	fNPWindow.clipRect.top = iClip.top;
+	fNPWindow.clipRect.right = iClip.right;
+	fNPWindow.clipRect.bottom = iClip.bottom;
+
+	this->Guest_SetWindow(&fNPWindow);
+	}
+
+NPObjectH* Host_Std::GetScriptableNPObject()
+	{
+	NPObjectH* theNPObject;
+	this->Guest_GetValue(NPPVpluginScriptableNPObject, &theNPObject);
+	return theNPObject;
 	}
 
 } // namespace ZNetscape

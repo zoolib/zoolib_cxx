@@ -326,47 +326,44 @@ protected:
 	virtual ~Host();
 
 public:
+	ZRef<GuestFactory> GetGuestFactory();
+
 	void Release(NPObject* iObj);
 
 	bool Invoke(
 		NPObject* obj, const std::string& iMethod, const NPVariant* iArgs, size_t iCount,
 		NPVariant& oResult);
 
-	void Create(const std::string& iURL, const std::string& iMIME);
-	void Guest_Destroy();
-
-	void SendDataAsync(
-		void* iNotifyData,
-		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
-		ZRef<ZStreamerR> iStreamerR);
-
-	void SendDataSync(
-		void* iNotifyData,
-		const std::string& iURL, const std::string& iMIME,
-		const ZStreamR& iStreamR);
-
-	void DeliverData();
-
-	void Guest_Activate(bool iActivate);
-	void Guest_Event(const EventRecord& iEvent);
-	void Guest_Idle();
-	void Guest_Draw();
-
-	void Guest_SetWindow(CGrafPtr iGrafPtr,
-		ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
-
-	void Guest_SetBounds(
-		ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
-
-	NPObject* Guest_GetScriptableNPObject();
+	const NPP_t& GetNPP();
 
 // Calls into the guest
-	virtual void Guest_URLNotify(const char* URL, NPReason reason, void* notifyData);
-	virtual NPError Guest_NewStream(
+	NPError Guest_New(NPMIMEType pluginType, uint16 mode,
+		int16 argc, char* argn[], char* argv[], NPSavedData* saved);
+
+	NPError Guest_Destroy(NPSavedData** save);
+
+	NPError Guest_SetWindow(NPWindow* window);
+
+	NPError Guest_NewStream(
 		NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
-	virtual NPError Guest_DestroyStream(NPStream* stream, NPReason reason);
-	virtual int32 Guest_WriteReady(NPStream* stream);
-	virtual int32 Guest_Write(NPStream* stream, int32_t offset, int32_t len, void* buffer);
+
+	NPError Guest_DestroyStream(NPStream* stream, NPReason reason);
+
+	int32 Guest_WriteReady(NPStream* stream);
+
+	int32 Guest_Write(NPStream* stream, int32_t offset, int32_t len, void* buffer);
+
+	void Guest_StreamAsFile(NPStream* stream, const char* fname);
+
+	void Guest_Print(NPPrint* platformPrint);
+
+	int16 Guest_HandleEvent(void* event);
+
+	void Guest_URLNotify(const char* url, NPReason reason, void* notifyData);
+
+	NPError Guest_GetValue(NPPVariable iNPPVariable, void* oValue);
+
+	NPError Guest_SetValue(NPNVariable iNPNVariable, void* iValue);
 
 // Our protocol
 	virtual NPError Host_GetURL(NPP npp, const char* URL, const char* window) = 0;
@@ -431,17 +428,9 @@ public:
 	virtual bool Host_HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName) = 0;
 
 private:
-	class Sender;
-	ZooLib::ZMutex fMutex;
-	std::list<Sender*> fSenders;
-
 	ZRef<GuestFactory> fGuestFactory;
 	NPPluginFuncs fNPPluginFuncs;
-
-private:
 	NPP_t fNPP_t;
-	NPWindow fNPWindow;
-	NP_Port fNP_Port;
 	};
 
 } // namespace ZNetscape
