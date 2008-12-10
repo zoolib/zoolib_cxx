@@ -167,6 +167,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef ZCONFIG_SPI_Avail__CoreFoundation
 #	if defined(__MACH__)
 #		define ZCONFIG_SPI_Avail__CoreFoundation 1
+#	elif ZCONFIG_SPI_Avail__Carbon
+#		define ZCONFIG_SPI_Avail__CoreFoundation 1
 #	endif
 #endif
 
