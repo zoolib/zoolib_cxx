@@ -169,7 +169,7 @@ ZRef<ZNetEndpoint> ZNetListener_RFCOMM_OSX::Listen()
 	{
 	ZRef<ZNetEndpoint> result;
 
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 	if (fQueue.empty())
 		fCondition.Wait(fMutex);
 
@@ -188,7 +188,7 @@ void ZNetListener_RFCOMM_OSX::CancelListen()
 
 void ZNetListener_RFCOMM_OSX::pChannelOpened(IOBluetoothRFCOMMChannel* iChannel)
 	{
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 	[iChannel release];
 	fQueue.push_back(iChannel);
 	fCondition.Broadcast();
@@ -287,7 +287,7 @@ ZRef<ZNetAddress> ZNetEndpoint_RFCOMM_OSX::GetRemoteAddress()
 
 void ZNetEndpoint_RFCOMM_OSX::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 
 	char* localDest = static_cast<char*>(iDest);
 
@@ -324,13 +324,13 @@ void ZNetEndpoint_RFCOMM_OSX::Imp_Read(void* iDest, size_t iCount, size_t* oCoun
 
 size_t ZNetEndpoint_RFCOMM_OSX::Imp_CountReadable()
 	{
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 	return fBuffer.size();
 	}
 
 bool ZNetEndpoint_RFCOMM_OSX::Imp_WaitReadable(int iMilliseconds)
 	{
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 	if (!fBuffer.size())
 		fCondition.Wait(fMutex, iMilliseconds);
 
@@ -359,7 +359,7 @@ void ZNetEndpoint_RFCOMM_OSX::Imp_Write(const void* iSource, size_t iCount, size
 
 bool ZNetEndpoint_RFCOMM_OSX::Imp_ReceiveDisconnect(int iMilliseconds)
 	{
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 
 	for (;;)
 		{
@@ -387,7 +387,7 @@ void ZNetEndpoint_RFCOMM_OSX::Imp_Abort()
 
 void ZNetEndpoint_RFCOMM_OSX::pReceived(const void* iSource, size_t iLength)
 	{
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 	const uint8* data = static_cast<const uint8*>(iSource);
 	fBuffer.insert(fBuffer.end(), data, data + iLength);
 	fCondition.Broadcast();
@@ -395,7 +395,7 @@ void ZNetEndpoint_RFCOMM_OSX::pReceived(const void* iSource, size_t iLength)
 
 void ZNetEndpoint_RFCOMM_OSX::pClosed()
 	{
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 	fOpen = false;
 	fCondition.Broadcast();
 	}

@@ -97,7 +97,7 @@ private:
 	BluetoothSDPServiceRecordHandle fHandle;
 	IOBluetoothUserNotification* fNotification;
 
-	ZooLib::ZMutex fMutex;
+	ZooLib::ZMutexNR fMutex;
 	ZooLib::ZCondition fCondition;
 	std::deque<IOBluetoothRFCOMMChannel*> fQueue;
 	};
@@ -152,7 +152,7 @@ private:
 	Delegate_ZNetEndpoint_RFCOMM_OSX* fDelegate;
 
 	IOBluetoothRFCOMMChannel* fChannel;
-	ZooLib::ZMutex fMutex;
+	ZooLib::ZMutexNR fMutex;
 	ZooLib::ZCondition fCondition;
 	std::deque<uint8> fBuffer;
 	bool fOpen;
