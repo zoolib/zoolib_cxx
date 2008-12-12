@@ -316,7 +316,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark MacClassic
 #ifndef ZCONFIG_SPI_Avail__MacClassic
-#	if !(ZCONFIG_SPI_Avail__Carbon)
+#	if defined(macintosh) && !(ZCONFIG_SPI_Avail__Carbon)
 #		define ZCONFIG_SPI_Avail__MacClassic 1
 #	endif
 #endif
@@ -327,6 +327,23 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef ZCONFIG_SPI_Desired__MacClassic
 #	define ZCONFIG_SPI_Desired__MacClassic 1
+#endif
+
+
+// =================================================================================================
+#pragma mark MacMP
+#ifndef ZCONFIG_SPI_Avail__MacMP
+#	if defined(macintosh) || (ZCONFIG_SPI_Avail__Carbon)
+#		define ZCONFIG_SPI_Avail__MacMP 1
+#	endif
+#endif
+
+#ifndef ZCONFIG_SPI_Avail__MacMP
+#	define ZCONFIG_SPI_Avail__MacMP 0
+#endif
+
+#ifndef ZCONFIG_SPI_Desired__MacMP
+#	define ZCONFIG_SPI_Desired__MacMP 1
 #endif
 
 
