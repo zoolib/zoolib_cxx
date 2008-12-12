@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h" // For ZBlockMove & ZBlockCopy
 
 using std::min;
+using std::max;
 
 // =================================================================================================
 #pragma mark -
