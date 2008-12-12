@@ -97,7 +97,7 @@ private:
 	void pRun();
 	static void spRun(ZStreamWriterRunner_Threaded* iRunner);
 
-	ZooLib::ZMutex fMutex;
+	ZooLib::ZMutexNR fMutex;
 	ZooLib::ZCondition fCondition;
 	ZStreamWriter* fStreamWriter;
 	ZRef<ZStreamerW> fSW;

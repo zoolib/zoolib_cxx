@@ -106,7 +106,7 @@ void ZSleeperRunner_Threaded::Start()
 
 void ZSleeperRunner_Threaded::WakeAt(ZSleeper* iSleeper, ZTime iSystemTime)
 	{
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 	ZAssert(iSleeper == fSleeper);
 	if (fNextWake > iSystemTime)
 		{
@@ -119,7 +119,8 @@ void ZSleeperRunner_Threaded::pRun()
 	{
 	for (;;)
 		{
-		ZMutexLocker locker(fMutex);
+		{
+		ZMutexNRLocker locker(fMutex);
 		for (;;)
 			{
 			const ZTime now = ZTime::sSystem();
@@ -131,7 +132,7 @@ void ZSleeperRunner_Threaded::pRun()
 
 			fCondition.Wait(fMutex, bigtime_t(1000000 * (fNextWake - now)));
 			}
-		locker.Release();
+		}
 
 		try
 			{

@@ -119,7 +119,7 @@ void ZStreamWriterRunner_Threaded::Start()
 
 void ZStreamWriterRunner_Threaded::WakeAt(ZStreamWriter* iStreamWriter, ZTime iSystemTime)
 	{
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 	if (fNextWake > iSystemTime)
 		{
 		fNextWake = iSystemTime;
@@ -135,7 +135,8 @@ void ZStreamWriterRunner_Threaded::pRun()
 
 	for (;;)
 		{
-		ZMutexLocker locker(fMutex);
+		{
+		ZMutexNRLocker locker(fMutex);
 		for (;;)
 			{
 			const ZTime now = ZTime::sSystem();
@@ -147,7 +148,7 @@ void ZStreamWriterRunner_Threaded::pRun()
 
 			fCondition.Wait(fMutex, bigtime_t(1000000 * (fNextWake - now)));
 			}
-		locker.Release();
+		}
 
 		try
 			{

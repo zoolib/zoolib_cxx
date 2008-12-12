@@ -101,7 +101,7 @@ private:
 	void pRun();
 	static void spRun(ZSleeperRunner_Threaded* iRunner);
 
-	ZooLib::ZMutex fMutex;
+	ZooLib::ZMutexNR fMutex;
 	ZooLib::ZCondition fCondition;
 	ZSleeper* fSleeper;
 	ZTime fNextWake;

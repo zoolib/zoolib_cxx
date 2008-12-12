@@ -56,7 +56,7 @@ public:
 	void WaitTillDetached();
 
 private:
-	ZooLib::ZMutex fMutex;
+	ZooLib::ZMutexNR fMutex;
 	ZooLib::ZCondition fCondition;
 	bool fAttachedReader;
 	bool fAttachedWriter;

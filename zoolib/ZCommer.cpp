@@ -42,7 +42,7 @@ void ZCommer::RunnerAttached(ZStreamReaderRunner* iRunner)
 	{
 	ZStreamReader::RunnerAttached(iRunner);
 
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 	ZAssert(!fAttachedReader);
 	fAttachedReader = true;
 	fCondition.Broadcast();
@@ -55,28 +55,37 @@ void ZCommer::RunnerDetached(ZStreamReaderRunner* iRunner)
 	{
 	ZStreamReader::RunnerDetached(iRunner);
 
-	ZMutexLocker locker(fMutex);
+	bool callDetached = false;
+	{
+	ZMutexNRLocker locker(fMutex);
 	ZAssert(fAttachedReader);
 	fAttachedReader = false;
 	fCondition.Broadcast();
 
 	if (!fAttachedWriter && !fAttachedReader)
-		{
-		locker.Release();
+		callDetached = true;
+	}
+
+	if (callDetached)
 		this->Detached();
-		}
 	}
 
 void ZCommer::RunnerAttached(ZStreamWriterRunner* iRunner)
 	{
 	ZStreamWriter::RunnerAttached(iRunner);
 
-	ZMutexLocker locker(fMutex);
+	bool callAttached = false;
+	{
+	ZMutexNRLocker locker(fMutex);
 	ZAssert(!fAttachedWriter);
 	fAttachedWriter = true;
 	fCondition.Broadcast();
 
 	if (fAttachedWriter && fAttachedReader)
+		callAttached = true;
+	}
+
+	if (callAttached)
 		this->Attached();
 	}
 
@@ -84,16 +93,19 @@ void ZCommer::RunnerDetached(ZStreamWriterRunner* iRunner)
 	{
 	ZStreamWriter::RunnerDetached(iRunner);
 
-	ZMutexLocker locker(fMutex);
+	bool callDetached = false;
+	{
+	ZMutexNRLocker locker(fMutex);
 	ZAssert(fAttachedWriter);
 	fAttachedWriter = false;
 	fCondition.Broadcast();
 
 	if (!fAttachedWriter && !fAttachedReader)
-		{
-		locker.Release();
+		callDetached = true;
+	}
+
+	if (callDetached)
 		this->Detached();
-		}
 	}
 
 void ZCommer::Attached()
@@ -109,7 +121,7 @@ void ZCommer::Wake()
 
 void ZCommer::WaitTillDetached()
 	{
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 	while (fAttachedWriter || fAttachedReader)
 		fCondition.Wait(fMutex);
 	}
