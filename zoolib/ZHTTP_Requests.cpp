@@ -34,7 +34,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTextCoder.h"
 
 #include <ctype.h> // For isalnum
-//#include <stdio.h>
 
 using std::string;
 
@@ -117,6 +116,9 @@ ZRef<ZStreamerR> ZHTTP::sRequest(
 				{
 				break;
 				}
+
+			if (oResultCode)
+				*oResultCode = theResponseCode;
 
 			switch (theResponseCode)
 				{
