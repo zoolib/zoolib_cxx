@@ -31,13 +31,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // "Safe" increment and decrement. In non-preemptive environments this will do cheap
 // addition/subtraction, and in preemptive situations it will do slightly less efficient, but
 // thread-safe operations. You need to use the ZThreadSafe_t type for variables that will
-// manipulated by this. Right now it is a struct, but might // degenerate into a simple integer
-// at some point. ZThreadSafe_IncReturnNew and ZThreadSafe_DecReturnNew are used by Windows
-// COM objects' AddRef and Release methods.
+// manipulated by this. Right now it is a struct, but might degenerate into a simple integer
+// at some point. ZThreadSafe_IncReturnNew and ZThreadSafe_DecReturnNew are used for
+// COM's AddRef and Release.
 
 typedef ZAtomic_t ZThreadSafe_t;
 
-#if !defined(ZCONFIG_Thread_Preemptive) || !ZCONFIG_Thread_Preemptive
+// If your environment is not preemptive, then define ZCONFIG_Thread_Preemptive as zero.
+#if !defined(ZCONFIG_Thread_Preemptive) || ZCONFIG_Thread_Preemptive
 
 	#define ZThreadSafe_Get(x) ZAtomic_Get(&x)
 	#define ZThreadSafe_Set(x, y) ZAtomic_Set(&x, y)
