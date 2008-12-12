@@ -57,7 +57,7 @@ public:
 	void Reset();
 
 private:
-	ZooLib::ZMutex fMutex;
+	ZooLib::ZMutexNR fMutex;
 	ZooLib::ZCondition fCondition_UserCount;
 	ZooLib::ZCondition fCondition_Read;
 	ZooLib::ZCondition fCondition_Write;
