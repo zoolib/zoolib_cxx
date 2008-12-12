@@ -456,7 +456,8 @@ ZDCCanvas_GDI_Native::~ZDCCanvas_GDI_Native()
 #pragma mark -
 #pragma mark * ZDCCanvas_GDI
 
-ZMutex ZDCCanvas_GDI::sMutex_List;
+ZMutex sMutex_List;
+
 ZDCCanvas_GDI* ZDCCanvas_GDI::sCanvas_Head;
 
 ZRef<ZDCCanvas_GDI> ZDCCanvas_GDI::sFindCanvasOrCreateNative(HDC iHDC)

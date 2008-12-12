@@ -36,6 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(DC_GDI)
 
+#include "zoolib/ZThread.h"
 #include "zoolib/ZWinHeader.h"
 
 // =================================================================================================
@@ -50,7 +51,6 @@ public:
 	static ZRef<ZDCCanvas_GDI> sFindCanvasOrCreateNative(HDC iHDC);
 
 protected:
-	static ZMutex sMutex_List;
 	static ZDCCanvas_GDI* sCanvas_Head;
 	ZDCCanvas_GDI* fCanvas_Prev;
 	ZDCCanvas_GDI* fCanvas_Next;
