@@ -1150,7 +1150,8 @@ void ZSemaphore::Signal(int32 iCount)
 // was greater than one, then we release fSem.
 
 ZMutexNR::ZMutexNR(const char* iName)
-:	fSem(0, iName)
+:	fSem(0, iName),
+	fThreadID_Owner(0)
 	{
 	fLock.fValue = 0;
 	}
@@ -1160,13 +1161,29 @@ ZMutexNR::~ZMutexNR()
 
 ZThread::Error ZMutexNR::Acquire()
 	{
+	const ZThread::ThreadID theID = ZThread::sCurrentID();
+	ZAssertStop(kDebug_Thread, theID != fThreadID_Owner);
+
 	if (ZThreadSafe_IncReturnOld(fLock) > 0)
-		return fSem.Wait(1);
+		{
+		ZThread::Error result = fSem.Wait(1);
+		if (result == ZThread::errorNone)
+			fThreadID_Owner = theID;
+		return result;
+		}
+
+	fThreadID_Owner = theID;
+
 	return ZThread::errorNone;
 	}
 
 void ZMutexNR::Release()
 	{
+	const ZThread::ThreadID theID = ZThread::sCurrentID();
+	ZAssertStop(kDebug_Thread, theID == fThreadID_Owner);
+
+	fThreadID_Owner = 0;
+
 	if (ZThreadSafe_DecReturnOld(fLock) > 1)
 		fSem.Signal(1);
 	}
@@ -1472,17 +1489,29 @@ ZThread::Error ZCondition::Wait(ZMutexNR& iMutex, bigtime_t iMicroseconds)
 	// Record the fact that we're waiting
 	ZThreadSafe_Inc(fWaitingThreads);
 
+	const ZThread::ThreadID theID = ZThread::sCurrentID();
+	ZAssertStop(kDebug_Thread, theID == iMutex.fThreadID_Owner);
+	iMutex.fThreadID_Owner = 0;
+
 	// Release iMutex
 	if (ZThreadSafe_DecReturnOld(iMutex.fLock) > 1)
+		{
 		iMutex.fSem.Signal(1);
+		}
 
 	// Wait for the wait semaphore to be signalled
 	fSem_Wait.Wait(1, iMicroseconds);
 
+	ZAssertStop(kDebug_Thread, theID != iMutex.fThreadID_Owner);
+
 	// Reacquire iMutex
 	if (ZThreadSafe_IncReturnOld(iMutex.fLock) > 0)
+		{
+		iMutex.fThreadID_Owner = theID;
 		return iMutex.fSem.Wait(1);
+		}
 
+	iMutex.fThreadID_Owner = theID;
 	return ZThread::errorNone;
 	}
 
@@ -2164,6 +2193,17 @@ void ZMutexLocker::Release()
 	--fAcquisitions;
 	fMutex.MutexRelease();
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMutexNRLocker
+
+ZMutexNRLocker::ZMutexNRLocker(const ZMutexNR& iMutex)
+:	fMutex(const_cast<ZMutexNR&>(iMutex))
+	{ fMutex.Acquire(); }
+
+ZMutexNRLocker::~ZMutexNRLocker()
+	{ fMutex.Release(); }
 
 // =================================================================================================
 #pragma mark -

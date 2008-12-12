@@ -133,6 +133,7 @@ protected:
 	virtual ~ZThread();
 
 public:
+//	typedef void* Error;
 	enum Error { errorNone, errorDisposed, errorTimeout };
 	class Ex_Disposed;
 
@@ -363,6 +364,7 @@ public:
 	void Release();
 
 private:
+	ZThread::ThreadID fThreadID_Owner;
 	ZSemaphore fSem;
 	ZThreadSafe_t fLock;
 	friend class ZCondition;
@@ -655,6 +657,20 @@ private:
 	ZMutex& fMutex;
 	int32 fAcquisitions;
 	bool fOkay;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMutexNRLocker
+
+class ZMutexNRLocker : ZooLib::NonCopyable
+	{
+public:
+	ZMutexNRLocker(const ZMutexNR& iMutex);
+	~ZMutexNRLocker();
+
+private:
+	ZMutexNR& fMutex;
 	};
 
 // =================================================================================================
