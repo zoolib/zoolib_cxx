@@ -460,12 +460,7 @@ bool Channel_BBDevMgr::pRefill(ZMutexLocker& iLocker, IChannel* iChannel, int* i
 			}
 		else if (!ioTimeout)
 			{
-			if (ZThread::errorTimeout == fCondition_Reader.Wait(fMutex, 1000000))
-				{
-				if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-					s.Writef("pRefill, timed out, looping");
-				continue;
-				}
+			fCondition_Reader.Wait(fMutex, 1000000);
 			}
 		else
 			{
