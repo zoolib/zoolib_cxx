@@ -35,6 +35,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #elif defined(__APPLE__)
 
 #	include <WebKit/npfunctions.h>
+#	if !defined(XP_MACOSX)
+		typedef NPError (*NP_InitializeFuncPtr)(NPNetscapeFuncs*);
+		typedef NPError (*NP_GetEntryPointsFuncPtr)(NPPluginFuncs*);
+		typedef void (*BP_CreatePluginMIMETypesPreferencesFuncPtr)(void);
+		typedef NPError (*MainFuncPtr)(NPNetscapeFuncs*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
+#	endif
+
 #	define ZCONFIG_NPStringUpperCaseFieldNames 1
 #	define NPEventType_GetFocusEvent getFocusEvent
 #	define NPEventType_LoseFocusEvent loseFocusEvent
