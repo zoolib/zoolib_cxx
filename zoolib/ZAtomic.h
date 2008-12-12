@@ -31,6 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 struct ZAtomic_t
 	{
+	ZAtomic_t() {}
+	ZAtomic_t(int iValue) : fValue(iValue) {}
 	volatile int fValue;
 	};
 
