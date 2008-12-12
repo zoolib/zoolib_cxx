@@ -234,6 +234,7 @@ private:
 	static void sReleaseVariantValue(NPVariant* variant);
 
 	static void sSetException(NPObject* obj, const NPUTF8* message);
+	static void sSetExceptionNPString(NPObject* obj, NPString* message);
 
 // Forwarded to Host
 	static NPError sGetURL(NPP npp, const char* URL, const char* window);

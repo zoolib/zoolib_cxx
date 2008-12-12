@@ -500,10 +500,13 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs& oNPNF)
 	oNPNF.hasproperty = sHasProperty;
 	oNPNF.hasmethod = sHasMethod;
 	oNPNF.releasevariantvalue = sReleaseVariantValue;
-	oNPNF.setexception = sSetException;
 
-// Doing these out of order because they're problematic in one way or another.
-	// AG. Need to do this cast because Mac headers are wrong.
+	// These are problematic in one way or another.
+	
+	// I'm disabling setexception for now -- it's defined as taking
+	// an NPString* or UTF8* in different versions of headers, and I
+	// haven't determined which is correct, or if it's a host-specific thing.
+	oNPNF.setexception = nil;
 
 	#if defined(NewNPN_IntFromIdentifierProc)
 		oNPNF.intfromidentifier = sIntFromIdentifier;
@@ -595,6 +598,9 @@ void HostMeister::sReleaseVariantValue(NPVariant* variant)
 
 void HostMeister::sSetException(NPObject* obj, const NPUTF8* message)
 	{ sGet()->SetException(obj, message); }
+
+void HostMeister::sSetExceptionNPString(NPObject* obj, NPString* message)
+	{ sGet()->SetException(obj, sNPStringChars(*message)); }
 
 // -----
 // Forwarded to Host

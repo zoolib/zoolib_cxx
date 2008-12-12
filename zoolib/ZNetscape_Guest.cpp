@@ -722,8 +722,20 @@ bool GuestMeister::Host_HasMethod(NPP iNPP, NPObject* npobj, NPIdentifier method
 void GuestMeister::Host_ReleaseVariantValue(NPVariant* variant)
 	{ return fNPNF.releasevariantvalue(variant); }
 
+// Disabled till I figure out what the real signature should be
+#if 0
 void GuestMeister::Host_SetException(NPObject* obj, const NPUTF8* message)
-	{ return fNPNF.setexception(obj, message); }
+	{
+	#if defined(NewNPN_SetExceptionProc)
+		return fNPNF.setexception(obj, message);
+	#else
+		NPString theString;
+		sNPStringChars(theString) = const_cast<NPUTF8*>(message);
+		sNPStringLength(theString) = strlen(message);
+		return fNPNF.setexception(obj, &theString);
+	#endif
+	}
+#endif
 
 NPError GuestMeister::sNew(
 	NPMIMEType pluginType, NPP instance, uint16 mode,
@@ -908,8 +920,9 @@ bool Guest::Host_HasMethod(NPObject* npobj, NPIdentifier methodName)
 void Guest::Host_ReleaseVariantValue(NPVariant* variant)
 	{ return GuestMeister::sGet()->Host_ReleaseVariantValue(variant); }
 
-void Guest::Host_SetException(NPObject* obj, const NPUTF8* message)
-	{ return GuestMeister::sGet()->Host_SetException(obj, message); }
+// Disabled till I figure out what the real signature should be
+//void Guest::Host_SetException(NPObject* obj, const NPUTF8* message)
+//	{ return GuestMeister::sGet()->Host_SetException(obj, message); }
 
 } // namespace ZNetscape
 

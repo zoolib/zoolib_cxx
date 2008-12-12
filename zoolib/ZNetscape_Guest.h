@@ -257,7 +257,8 @@ public:
 
 	void Host_ReleaseVariantValue(NPVariant* variant);
 
-	void Host_SetException(NPObject* obj, const NPUTF8* message);
+// Disabled till I figure out what the real signature should be
+//	void Host_SetException(NPObject* obj, const NPUTF8* message);
 
 // Calls from host to the guest meister.
 	virtual NPError New(
@@ -431,7 +432,8 @@ public:
 
 	void Host_ReleaseVariantValue(NPVariant* variant);
 
-	void Host_SetException(NPObject* obj, const NPUTF8* message);
+// Disabled till I figure out what the real signature should be
+//	void Host_SetException(NPObject* obj, const NPUTF8* message);
 
 private:
 	NPP fNPP;

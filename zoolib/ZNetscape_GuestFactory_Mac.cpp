@@ -31,13 +31,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE(CoreFoundation,CFBundle.h)
 
-#include<vector>
-
-using std::vector;
-
 #if __MACH__
 #	include <mach-o/dyld.h> // For NSModule
 #endif
+
+#include <vector>
+
+using std::vector;
 
 // =================================================================================================
 #pragma mark -
@@ -95,12 +95,12 @@ P sLookup_T(CFBundleRef iBundleRef, CFStringRef iName)
 #pragma mark -
 #pragma mark * GuestFactory_HostMachO
 
-// We may well be wanting to load the plugin into an environment where it's already been loaded.
-// GuestFactory_MacPlugin uses the Bundle mechanism to locate the plugin, but uses NSLinkModule
-// to load and instantiate an independent copy of the library. In this way the library's static
-// references to NPNetscapeFuncs is independent of any other instantiation of the library.
-
 #if __MACH__
+
+// We may well be wanting to load the plugin into an environment where it's already been loaded.
+// GuestFactory_HostMachO uses the Bundle mechanism to locate the plugin, but uses NSLinkModule
+// to load and instantiate an independent copy of the library. In this way the library's static
+// reference to NPNetscapeFuncs is independent of any other instantiation of the library.
 
 class GuestFactory_HostMachO : public ZNetscape::GuestFactory
 	{
@@ -117,9 +117,9 @@ private:
 	NPP_ShutdownProcPtr fShutdown;
 
 	#if ZCONFIG(Processor,PPC)
-		std::vector<char> fGlue_NPNF;
-		std::vector<char> fGlue_PluginFuncs;
-		std::vector<char> fGlue_Shutdown;
+		vector<char> fGlue_NPNF;
+		vector<char> fGlue_PluginFuncs;
+		vector<char> fGlue_Shutdown;
 	#endif
 	};
 
@@ -248,9 +248,9 @@ private:
 	NPP_ShutdownProcPtr fShutdown;
 
 	#if ZCONFIG(Processor,PPC)
-		std::vector<char> fGlue_NPNF;
-		std::vector<char> fGlue_PluginFuncs;
-		std::vector<char> fGlue_Shutdown;
+		vector<char> fGlue_NPNF;
+		vector<char> fGlue_PluginFuncs;
+		vector<char> fGlue_Shutdown;
 	#endif
 	};
 
@@ -258,8 +258,9 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(CFPlugInRef iPlugInRef)
 :	fPlugInRef(iPlugInRef)
 	{
 	::CFRetain(fPlugInRef);
-	// Retain it twice. If it contains ObjC data it'll kill the
-	// host application when we release.
+	// If the plugin contains ObjC code then unloading it will kill the
+	// host application. So (for now at least) we do an extra retain, leaving
+	// the rest of the plugin management as it should be.
 	::CFRetain(fPlugInRef);
 
 	// Get local copies of our host's function pointers
@@ -277,6 +278,7 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(CFPlugInRef iPlugInRef)
 		// We're PowerPC -- look for main(), and if it's there we can just call it.
 		theMain = sLookup_T<MainFuncPtr>(theBundleRef, CFSTR("main"));
 	#endif
+
 	if (theMain)
 		{
 		theMain(&localNPNF, &fNPPluginFuncs, &fShutdown);
@@ -284,7 +286,8 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(CFPlugInRef iPlugInRef)
 	else
 		{
 		#if ZCONFIG(Processor,PPC)
-			// Rework localNPNF as MachO-callable thunks
+			// We're running as CFM, but the plugin will be using MachO.
+			// Rework localNPNF as MachO-callable thunks.
 			ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
 				&localNPNF.geturl,
 				(localNPNF.size - offsetof(NPNetscapeFuncs, geturl)) / sizeof(void*),

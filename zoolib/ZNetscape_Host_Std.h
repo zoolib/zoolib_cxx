@@ -173,19 +173,22 @@ public:
 
 	void DeliverData();
 
-	void DoEvent(const EventRecord& iEvent);
+	NPObjectH* GetScriptableNPObject();
+
 	void DoActivate(bool iActivate);
 	void DoFocus(bool iFocused);
 	void DoIdle();
 	void DoDraw();
 
-	void SetPortAndBounds(CGrafPtr iGrafPtr,
-		ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
+	#if defined(XP_MAC) || defined(XP_MACOSX)
+		void DoEvent(const EventRecord& iEvent);
 
-	void SetBounds(
-		ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
+		void SetPortAndBounds(CGrafPtr iGrafPtr,
+			ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
 
-	NPObjectH* GetScriptableNPObject();
+		void SetBounds(
+			ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
+	#endif
 
 private:
 	class HTTPer;
@@ -198,9 +201,11 @@ private:
 		ZRef<ZStreamerR> iStreamerR);
 	
 	NPWindow fNPWindow;
-	NP_Port fNP_Port;
+	#if defined(XP_MAC) || defined(XP_MACOSX)
+		NP_Port fNP_Port;
+	#endif
 
-	ZooLib::ZMutexNR fMutex;
+	ZooLib::ZMutex fMutex;
 	std::vector<HTTPer*> fHTTPers;
 	std::list<Sender*> fSenders;
 	};

@@ -436,7 +436,9 @@ bool Host_Std::Sender::pDeliverData()
 Host_Std::Host_Std(ZRef<GuestFactory> iGuestFactory)
 :	Host(iGuestFactory)
 	{
-	ZBlockZero(&fNP_Port, sizeof(fNP_Port));
+	#if defined(XP_MAC) || defined(XP_MACOSX)
+		ZBlockZero(&fNP_Port, sizeof(fNP_Port));
+	#endif
 	}
 
 Host_Std::~Host_Std()
@@ -819,12 +821,14 @@ void Host_Std::DeliverData()
 		}
 	}
 
-void Host_Std::DoEvent(const EventRecord& iEvent)
+NPObjectH* Host_Std::GetScriptableNPObject()
 	{
-	// Hmm -- do we need to use the local?
-	EventRecord localEvent = iEvent;
-	this->Guest_HandleEvent(&localEvent);
+	NPObjectH* theNPObject;
+	this->Guest_GetValue(NPPVpluginScriptableNPObject, &theNPObject);
+	return theNPObject;
 	}
+
+#if defined(XP_MAC) || defined(XP_MACOSX)
 
 static void sStuffEventRecord(EventRecord& oEventRecord)
 	{
@@ -917,11 +921,13 @@ void Host_Std::SetBounds(
 	this->Guest_SetWindow(&fNPWindow);
 	}
 
-NPObjectH* Host_Std::GetScriptableNPObject()
+void Host_Std::DoEvent(const EventRecord& iEvent)
 	{
-	NPObjectH* theNPObject;
-	this->Guest_GetValue(NPPVpluginScriptableNPObject, &theNPObject);
-	return theNPObject;
+	// Hmm -- do we need to use the local?
+	EventRecord localEvent = iEvent;
+	this->Guest_HandleEvent(&localEvent);
 	}
+
+#endif // defined(XP_MAC) || defined(XP_MACOSX)
 
 } // namespace ZNetscape
