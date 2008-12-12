@@ -30,7 +30,7 @@ using std::vector;
 #pragma mark -
 #pragma mark * ZTxn
 
-ZThreadSafe_t sNextID = {1};
+ZThreadSafe_t sNextID(1);
 
 /** \class ZTxn
 Some more words about transactions.
@@ -43,7 +43,7 @@ ZTxn::ZTxn()
 
 ZTxn::~ZTxn()
 	{
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 	if (!fTargets.empty())
 		{
 		try
@@ -64,19 +64,19 @@ int32 ZTxn::GetID() const
 
 bool ZTxn::Commit()
 	{
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 	return this->pCommit();
 	}
 
 void ZTxn::Abort()
 	{
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 	this->pAbort();	
 	}
 
 struct Waiter_Validate
 	{
-	ZMutex* fMutex;
+	ZMutexNR* fMutex;
 	ZCondition* fCondition;
 	bool fCompleted;
 	bool fOkay;
@@ -84,14 +84,14 @@ struct Waiter_Validate
 
 struct Waiter_Commit
 	{
-	ZMutex* fMutex;
+	ZMutexNR* fMutex;
 	ZCondition* fCondition;
 	bool fCompleted;
 	};
 
 bool ZTxn::pCommit()
 	{
-	ZAssertStop(0, fMutex.IsLocked());
+//	ZAssertStop(0, fMutex.IsLocked());
 
 	ZCondition theCondition;
 
@@ -181,7 +181,7 @@ bool ZTxn::pCommit()
 
 void ZTxn::pAbort()
 	{
-	ZAssertStop(0, fMutex.IsLocked());
+//	ZAssertStop(0, fMutex.IsLocked());
 
 	// Abort all targets.
 	for (size_t x = 0; x < fTargets.size(); ++x)
@@ -192,7 +192,7 @@ void ZTxn::pAbort()
 
 void ZTxn::pRegisterTarget(ZTxnTarget* iTarget) const
 	{
-	ZMutexLocker locker(fMutex);
+	ZMutexNRLocker locker(fMutex);
 	ZAssertStop(0, !ZUtil_STL::sContains(fTargets, iTarget));
 	fTargets.push_back(iTarget);
 	}
