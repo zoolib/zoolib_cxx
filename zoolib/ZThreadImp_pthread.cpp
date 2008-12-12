@@ -101,15 +101,15 @@ void ZCnd_pthread::Broadcast()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSem_pthread
+#pragma mark * ZSemNoTimeout_pthread
 
-ZSem_pthread::ZSem_pthread()
+ZSemNoTimeout_pthread::ZSemNoTimeout_pthread()
 	{ ::sem_init(&fSem, 0, 0); }
 
-ZSem_pthread::~ZSem_pthread()
+ZSemNoTimeout_pthread::~ZSemNoTimeout_pthread()
 	{ ::sem_destroy(&fSem); }
 
-void ZSem_pthread::Wait()
+void ZSemNoTimeout_pthread::Wait()
 	{
 	for (;;)
 		{
@@ -123,10 +123,10 @@ void ZSem_pthread::Wait()
 		}
 	}
 
-bool ZSem_pthread::TryWait()
+bool ZSemNoTimeout_pthread::TryWait()
 	{ return 0 == ::sem_trywait(&fSem); }
 
-void ZSem_pthread::Signal()
+void ZSemNoTimeout_pthread::Signal()
 	{ ::sem_post(&fSem); }
 
 // =================================================================================================

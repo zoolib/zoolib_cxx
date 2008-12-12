@@ -50,19 +50,19 @@ class ZCnd_Win;
 #pragma mark -
 #pragma mark * ZTSS_Win
 
-class ZTSS_Win : NonCopyable
-	{
-	ZTSS_Win();
-public:
-	typedef DWORD Key;
-	typedef LPVOID Value;
+namespace ZTSS_Win {
 
-	static Key sCreate();
-	static void sFree(Key iKey);
+typedef DWORD Key;
+typedef LPVOID Value;
 
-	static void sSet(Key iKey, Value iValue);
-	static Value sGet(Key iKey);
-	};
+#elif ZCONFIG_API_Enabled(ThreadImp_boost)
+
+Key sCreate();
+static void sFree(Key iKey);
+
+void sSet(Key iKey, Value iValue);
+Value sGet(Key iKey);
+} // namespace ZTSS_Win
 
 // =================================================================================================
 #pragma mark -
@@ -121,18 +121,15 @@ public:
 #pragma mark -
 #pragma mark * ZThreadImp_Win
 
-class ZThreadImp_Win : NonCopyable
-	{
-private:
-	ZThreadImp_Win();
+namespace ZThreadImp_Win {
 
-public:
-	typedef unsigned (__stdcall* Proc_t)(void *);
-	typedef unsigned int ID;
+typedef unsigned (__stdcall* Proc_t)(void *);
+typedef unsigned int ID;
 
-	static ID sCreate(size_t iStackSize, Proc_t iProc, void* iParam);
-	static ID sID();
-	};
+ID sCreate(size_t iStackSize, Proc_t iProc, void* iParam);
+ID sID();
+
+} // namespace ZThreadImp_Win
 
 } // namespace ZooLib
 

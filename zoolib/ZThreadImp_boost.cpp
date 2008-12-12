@@ -74,21 +74,21 @@ void ZCnd_boost::Broadcast()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSemTimeout_boost
+#pragma mark * ZSem_boost
 
-ZSemTimeout_boost::ZSemTimeout_boost()
+ZSem_boost::ZSem_boost()
 	{}
 
-ZSemTimeout_boost::~ZSemTimeout_boost()
+ZSem_boost::~ZSem_boost()
 	{}
 
-void ZSemTimeout_boost::Wait()
+void ZSem_boost::Wait()
 	{ this->Imp_Wait(1); }
 
-bool ZSemTimeout_boost::Wait(double iTimeout)
+bool ZSem_boost::Wait(double iTimeout)
 	{ return this->Imp_Wait(1, iTimeout); }
 
-void ZSemTimeout_boost::Signal()
+void ZSem_boost::Signal()
 	{ this->Imp_Signal(1); }
 
 } // namespace ZooLib

@@ -48,18 +48,18 @@ ZTSS_MacMP::Value ZTSS_MacMP::sGet(Key iKey)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSemTimeout_MacMP
+#pragma mark * ZSem_MacMP
 
-ZSemTimeout_MacMP::ZSemTimeout_MacMP()
+ZSem_MacMP::ZSem_MacMP()
 	{ ::MPCreateSemaphore(0xFFFFFFFFU, 0, &fMPSemaphoreID); }
 
-ZSemTimeout_MacMP::~ZSemTimeout_MacMP()
+ZSem_MacMP::~ZSem_MacMP()
 	{ ::MPDeleteSemaphore(fMPSemaphoreID); }
 
-void ZSemTimeout_MacMP::Wait()
+void ZSem_MacMP::Wait()
 	{ ::MPWaitOnSemaphore(fMPSemaphoreID, kDurationForever); }
 
-bool ZSemTimeout_MacMP::Wait(double iTimeout)
+bool ZSem_MacMP::Wait(double iTimeout)
 	{
 	if (iTimeout <= 0)
 		{
@@ -77,7 +77,7 @@ bool ZSemTimeout_MacMP::Wait(double iTimeout)
 		}
 	}
 
-void ZSemTimeout_MacMP::Signal()
+void ZSem_MacMP::Signal()
 	{ ::MPSignalSemaphore(fMPSemaphoreID); }
 
 // =================================================================================================

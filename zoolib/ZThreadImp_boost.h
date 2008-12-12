@@ -87,13 +87,13 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSemTimeout_boost
+#pragma mark * ZSem_boost
 
-class ZSemTimeout_boost : ZSem_T<ZMtx_boost, ZCnd_boost>
+class ZSem_boost : ZSem_T<ZMtx_boost, ZCnd_boost>
 	{
 public:
-	ZSemTimeout_boost();
-	~ZSemTimeout_boost();
+	ZSem_boost();
+	~ZSem_boost();
 
 	void Wait();
 	bool Wait(double iTimeout);

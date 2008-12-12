@@ -51,30 +51,29 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZTSS_MacMP
 
-class ZTSS_MacMP : NonCopyable
-	{
-	ZTSS_MacMP();
-public:
-	typedef TaskStorageIndex Key;
-	typedef TaskStorageValue Value;
+namespace ZTSS_MacMP {
 
-	static Key sCreate();
-	static void sFree(Key iKey);
+typedef TaskStorageIndex Key;
+typedef TaskStorageValue Value;
 
-	static void sSet(Key iKey, Value iValue);
-	static Value sGet(Key iKey);
-	};
+Key sCreate();
+void sFree(Key iKey);
+
+void sSet(Key iKey, Value iValue);
+Value sGet(Key iKey);
+
+} // namespace ZTSS_MacMP
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSemTimeout_MacMP
+#pragma mark * ZSem_MacMP
 
-class ZSemTimeout_MacMP : NonCopyable
+class ZSem_MacMP : NonCopyable
 	{
 public:
-	ZSemTimeout_MacMP();
+	ZSem_MacMP();
 
-	~ZSemTimeout_MacMP();
+	~ZSem_MacMP();
 
 	void Wait();
 	bool Wait(double iTimeout);
@@ -105,7 +104,7 @@ protected:
 #pragma mark -
 #pragma mark * ZCnd_MacMP
 
-class ZCnd_MacMP : ZCnd_T<ZMtx_MacMP, ZSemTimeout_MacMP>
+class ZCnd_MacMP : ZCnd_T<ZMtx_MacMP, ZSem_MacMP>
 	{
 public:
 	ZCnd_MacMP();
@@ -122,18 +121,15 @@ public:
 #pragma mark -
 #pragma mark * ZThreadImp_MacMP
 
-class ZThreadImp_MacMP : NonCopyable
-	{
-private:
-	ZThreadImp_MacMP();
+namespace ZThreadImp_MacMP {
 
-public:
-	typedef TaskProc Proc_t;
-	typedef MPTaskID ID;
+typedef TaskProc Proc_t;
+typedef MPTaskID ID;
 
-	static ID sCreate(size_t iStackSize, Proc_t iProc, void* iParam);
-	static ID sID();
-	};
+ID sCreate(size_t iStackSize, Proc_t iProc, void* iParam);
+ID sID();
+
+} // namespace ZThreadImp_MacMP
 
 } // namespace ZooLib
 

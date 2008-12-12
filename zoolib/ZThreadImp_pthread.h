@@ -49,19 +49,18 @@ class ZCnd_pthread;
 #pragma mark -
 #pragma mark * ZTSS_pthread
 
-class ZTSS_pthread
-	{
-	ZTSS_pthread();
-public:
-	typedef pthread_key_t Key;
-	typedef void* Value;
+namespace ZTSS_pthread {
 
-	static Key sCreate();
-	static void sFree(Key iKey);
+typedef pthread_key_t Key;
+typedef void* Value;
 
-	static void sSet(Key iKey, Value iValue);
-	static Value sGet(Key iKey);
-	};
+Key sCreate();
+void sFree(Key iKey);
+
+void sSet(Key iKey, Value iValue);
+Value sGet(Key iKey);
+
+}
 
 // =================================================================================================
 #pragma mark -
@@ -103,13 +102,13 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSem_pthread
+#pragma mark * ZSemNoTimeout_pthread
 
-class ZSem_pthread : NonCopyable
+class ZSemNoTimeout_pthread : NonCopyable
 	{
 public:
-	ZSem_pthread();
-	~ZSem_pthread();
+	ZSemNoTimeout_pthread();
+	~ZSemNoTimeout_pthread();
 
 	void Wait();
 	bool TryWait();
@@ -123,18 +122,15 @@ protected:
 #pragma mark -
 #pragma mark * ZThreadImp_pthread
 
-class ZThreadImp_pthread : NonCopyable
-	{
-private:
-	ZThreadImp_pthread();
+namespace ZThreadImp_pthread {
 
-public:
-	typedef void* (*Proc_t)(void* iParam);
-	typedef pthread_t ID;
+typedef void* (*Proc_t)(void* iParam);
+typedef pthread_t ID;
 
-	static ID sCreate(size_t iStackSize, Proc_t iProc, void* iParam);
-	static ID sID();
-	};
+ID sCreate(size_t iStackSize, Proc_t iProc, void* iParam);
+ID sID();
+
+} // namespace ZThreadImp_pthread
 
 } // namespace ZooLib
 
