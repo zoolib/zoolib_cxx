@@ -293,7 +293,8 @@ static OTResult sSetFourByteOption(EndpointRef ep, OTXTILevel level, OTXTIName n
 #pragma mark -
 #pragma mark * ZNetNameLookup_Internet_MacOT_OSX
 
-ZNetNameLookup_Internet_MacOT_OSX::ZNetNameLookup_Internet_MacOT_OSX(const string& iName, ip_port iPort, size_t iMaxAddresses)
+ZNetNameLookup_Internet_MacOT_OSX::ZNetNameLookup_Internet_MacOT_OSX(
+	const string& iName, ip_port iPort, size_t iMaxAddresses)
 :	fName(iName),
 	fPort(iPort),
 	fStarted(false),
@@ -393,7 +394,9 @@ void ZNetNameLookup_Internet_MacOT_OSX::sMP_Lookup(void* iParam)
 	if (noErr != theErr)
 		return;
 
-	OTResult theResult = ::OTInetStringToAddress(theInetSvcRef, theStruct->fName, theStruct->fInetHostInfo);
+	OTResult theResult = ::OTInetStringToAddress(
+		theInetSvcRef, theStruct->fName, theStruct->fInetHostInfo);
+
 	::OTCloseProvider(theInetSvcRef);
 	}
 
@@ -549,9 +552,12 @@ ZRef<ZNetEndpoint> ZNetListener_TCP_MacOT_OSX::Listen()
 	theStruct.fListener = this;
 	ZMacMP::sInvokeInMP(sMP_Listen, &theStruct);
 	if (theStruct.fAcceptedEndpointRef)
-		return new ZNetEndpoint_TCP_MacOT_OSX(theStruct.fAcceptedEndpointRef, theStruct.fInetAddress);
-	else
-		return ZRef<ZNetEndpoint>();
+		{
+		return new ZNetEndpoint_TCP_MacOT_OSX(
+			theStruct.fAcceptedEndpointRef, theStruct.fInetAddress);
+		}
+
+	return ZRef<ZNetEndpoint>();
 	}
 
 void ZNetListener_TCP_MacOT_OSX::sMP_Listen(void* iParam)
@@ -615,7 +621,8 @@ ip_port ZNetListener_TCP_MacOT_OSX::GetPort()
 #pragma mark -
 #pragma mark * ZNetEndpoint_TCP_MacOT_OSX
 
-ZNetEndpoint_TCP_MacOT_OSX::ZNetEndpoint_TCP_MacOT_OSX(EndpointRef iEndpointRef, InetAddress& iRemoteInetAddress)
+ZNetEndpoint_TCP_MacOT_OSX::ZNetEndpoint_TCP_MacOT_OSX(
+	EndpointRef iEndpointRef, InetAddress& iRemoteInetAddress)
 	{
 	fEndpointRef = iEndpointRef;
 	fRemoteHost = iRemoteInetAddress.fHost;
@@ -821,7 +828,8 @@ struct Imp_Write_t
 	size_t* fCountWritten;
 	};
 
-void ZNetEndpoint_TCP_MacOT_OSX::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+void ZNetEndpoint_TCP_MacOT_OSX::Imp_Write(
+	const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	Imp_Write_t theStruct;
 	theStruct.fEndpointRef = fEndpointRef;
@@ -841,7 +849,9 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Imp_Write(void* iParam)
 	size_t countRemaining = theStruct->fCount;
 	while (countRemaining)
 		{
-		OTResult theResult = ::OTSnd(theStruct->fEndpointRef, const_cast<char*>(localSource), countRemaining, 0);
+		OTResult theResult = ::OTSnd(theStruct->fEndpointRef,
+			const_cast<char*>(localSource), countRemaining, 0);
+
 		if (theResult > 0)
 			{
 			if (theStruct->fCountWritten)
@@ -887,7 +897,9 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_ReceiveDisconnect(void* iParam)
 	while (true)
 		{
 		OTFlags theFlags = 0;
-		OTResult theResult = ::OTRcv(theStruct->fEndpointRef, ZooLib::sGarbageBuffer, sizeof(ZooLib::sGarbageBuffer), &theFlags);
+		OTResult theResult = ::OTRcv(theStruct->fEndpointRef,
+			ZooLib::sGarbageBuffer, sizeof(ZooLib::sGarbageBuffer), &theFlags);
+
 		if (theResult < 0)
 			{
 			if (theResult != kOTLookErr)
