@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&);
 
+typedef ZFactoryChain_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&> Factory_t;
+
 // =================================================================================================
 /**
 \defgroup TextCollation Text Collation
@@ -104,7 +106,7 @@ ZTextCollator::ZTextCollator(int iStrength)
 	{
 	ZTextCollatorRep::Param_t theParam;
 	theParam.fStrength = iStrength;
-	fRep = ZFactoryChain_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>::sMake(theParam);
+	fRep = Factory_t::sMake(theParam);
 	}
 
 ZTextCollator::ZTextCollator(const string8& iLocaleName, int iStrength)
@@ -112,7 +114,7 @@ ZTextCollator::ZTextCollator(const string8& iLocaleName, int iStrength)
 	ZTextCollatorRep::Param_t theParam;
 	theParam.fLocaleName = iLocaleName;
 	theParam.fStrength = iStrength;
-	fRep = ZFactoryChain_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>::sMake(theParam);
+	fRep = Factory_t::sMake(theParam);
 	}
 
 ZTextCollator::ZTextCollator(const char* iLocaleName, int iStrength)
@@ -120,7 +122,7 @@ ZTextCollator::ZTextCollator(const char* iLocaleName, int iStrength)
 	ZTextCollatorRep::Param_t theParam;
 	theParam.fLocaleName = iLocaleName;
 	theParam.fStrength = iStrength;
-	fRep = ZFactoryChain_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>::sMake(theParam);
+	fRep = Factory_t::sMake(theParam);
 	}
 
 bool ZTextCollator::Equals(const string8& iLeft, const string8& iRight) const
@@ -417,7 +419,7 @@ bool ZTextCollatorRep_NativeUTF32::Equals(const UTF8* iLeft, size_t iLeftLength,
 	{
 	return this->Equals(ZUnicode::sAsUTF32(iLeft, iLeftLength),
 		ZUnicode::sAsUTF32(iRight, iRightLength));
-		}
+	}
 
 bool ZTextCollatorRep_NativeUTF32::Equals(const UTF16* iLeft, size_t iLeftLength,
 	const UTF16* iRight, size_t iRightLength)
