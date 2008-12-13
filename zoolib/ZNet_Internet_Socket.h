@@ -17,7 +17,6 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLA
 OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
-
 #ifndef __ZNet_Internet_Socket__
 #define __ZNet_Internet_Socket__ 1
 #include "zconfig.h"
@@ -43,6 +42,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 #if ZCONFIG_API_Enabled(Net_Internet_Socket)
+
+#include <vector>
 
 // =================================================================================================
 #pragma mark -
