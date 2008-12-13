@@ -20,8 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZRWLock.h"
 
+#include "zoolib/ZCompat_algorithm.h"
+
 using namespace ZooLib;
 
+using std::find;
 using std::vector;
 
 // =================================================================================================
