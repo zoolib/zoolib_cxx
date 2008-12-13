@@ -26,6 +26,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_operator_bool.h"
 
+// s == strim name
+// p == priority
+// f == facility
+
 #define ZLOGPF(s, p) const ZLog::S& s = ZLog::S(ZLog::p, __PRETTY_FUNCTION__)
 #define ZLOGF(s, p) const ZLog::S& s = ZLog::S(ZLog::p, __FUNCTION__)
 #define ZLOG(s, p, f) const ZLog::S& s = ZLog::S(ZLog::p, f)
