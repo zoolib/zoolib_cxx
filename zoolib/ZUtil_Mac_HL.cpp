@@ -31,6 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include ZMACINCLUDE(CoreServices,Resources.h)
 #include ZMACINCLUDE(Carbon,AEInteraction.h)
 
+#include <stdexcept>
+
 using namespace ZooLib;
 
 using std::max;
