@@ -21,79 +21,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZThread__
 #define __ZThread__ 1
 #include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
 
-#include <stdexcept>
-#include <vector>
-
-#include "zoolib/ZAtomic.h"
-#include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/ZDebug.h"
+#include "zoolib/ZThreadImp.h"
 #include "zoolib/ZThreadSafe.h"
 #include "zoolib/ZTypes.h" // For bigtime_t
-
-// =================================================================================================
-
-#define ZCONFIG_API_Thread_Unknown 0
-#define ZCONFIG_API_Thread_Win32 2
-#define ZCONFIG_API_Thread_POSIX 4
-#define ZCONFIG_API_Thread_Be 8
-   
-#ifndef ZCONFIG_API_Thread
-#	if 0
-#	elif ZCONFIG_SPI_Enabled(Win)
-#		define ZCONFIG_API_Thread ZCONFIG_API_Thread_Win32
-#	elif ZCONFIG_SPI_Enabled(pthread)
-#		define ZCONFIG_API_Thread ZCONFIG_API_Thread_POSIX
-#	endif
-#endif
-
-#ifndef ZCONFIG_API_Thread
-#	error "Don't know what thread API we're using"
-#endif
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZThread Configuration
-
-// Do we want deadlock detection to be active?
-#ifndef ZCONFIG_Thread_DeadlockDetect
-#	if ZCONFIG_Debug >= 2
-#		define ZCONFIG_Thread_DeadlockDetect 1
-#	else
-#		define ZCONFIG_Thread_DeadlockDetect 0
-#	endif
-#endif
-
-#if ZCONFIG_Thread_DeadlockDetect || ZCONFIG(API_Thread, Win32)
-#	define ZCONFIG_Thread_UseCurrent 1
-#endif
-
-#ifndef ZCONFIG_Thread_UseCurrent
-#	define ZCONFIG_Thread_UseCurrent 0
-#endif
-
-// Include appropriate headers for each platform, and set up ZCONFIG_Thread_Preemptive.
-//
-// ZCONFIG_Thread_Preemptive is 1 if threading is preemptive, that is if control can switch
-// between one thread and another at *any* time. 
-
-#if ZCONFIG(API_Thread, Win32)
-#	ifndef _MT
-#		define _MT
-#	endif
-#	define ZCONFIG_Thread_Preemptive 1
-	// Explicitly declare the Win32 types used in this header, so that
-	// we don't pull ZWinHeader.h into every file that includes ZThread.h.
-	typedef void *HANDLE;
-	typedef unsigned long DWORD;
-	typedef void *LPVOID;
-#endif
-
-#if ZCONFIG(API_Thread, POSIX)
-#	include <pthread.h>
-#	define ZCONFIG_Thread_Preemptive 1
-#endif
 
 // =================================================================================================
 // A macro that has proven to be useful.
@@ -101,28 +32,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZThreadCurrentHelper
-
-#if ZCONFIG_Thread_UseCurrent
-
-class ZThreadCurrentHelper
-	{
-public:
-	ZThreadCurrentHelper();
-	~ZThreadCurrentHelper();
-	};
-
-static ZThreadCurrentHelper sZThreadCurrentHelper;
-
-#endif // ZCONFIG_Thread_UseCurrent
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZThread
 
 namespace ZooLib {
-
-class ZMutexBase;
 
 class ZThread : ZooLib::NonCopyable
 	{
@@ -130,59 +42,33 @@ protected:
 	ZThread(bool); // Main thread constructor
 	// Our destructor is protected, so even with its pointer semantics it's illegal to
 	// simply delete a thread -- it must return from its Run method, at which point it is deleted.
-	virtual ~ZThread();
+
+	virtual ~ZThread() {}
 
 public:
-//	typedef void* Error;
-	enum Error { errorNone, errorDisposed, errorTimeout };
-	class Ex_Disposed;
+	typedef bool Error;
+	static const Error errorNone = true;
+	static const Error errorTimeout = false;
 
-	// Appropriate per-platform definitions of thread ID, TLS key and TLS data
-	#if 0
-	#elif ZCONFIG(API_Thread, Win32)
-		typedef DWORD ThreadID;
-		typedef DWORD TLSKey_t;
-		typedef LPVOID TLSData_t;
-	#elif ZCONFIG(API_Thread, POSIX)
-		typedef pthread_t ThreadID;
-		typedef pthread_key_t TLSKey_t;
-		typedef void* TLSData_t;
-	#elif ZCONFIG(API_Thread, Be)
-		typedef thread_id ThreadID;
-		typedef int TLSKey_t;
-		typedef tls_data_t TLSData_t;
-	#else//##
-		typedef void* ThreadID;
-		typedef int TLSKey_t;
-		typedef int TLSData_t;
-	#endif // ZCONFIG(API_Thread)
+	typedef ZThreadImp::ID ThreadID;
+	static ThreadID kThreadID_None;
+
+	typedef ZTSS::Key TLSKey_t;
+	typedef ZTSS::Value TLSData_t;
 
 	ZThread(const char* iName = nil);
 	void Start();
 	virtual void Run() = 0;
 
-	// Identity
-	static ZThread::ThreadID sCurrentID();
+	static ZThread::ThreadID sCurrentID() { return ZThreadImp::sID(); }
 
-	// Sleep
-	static void sSleepMicro(bigtime_t iMicroseconds);
-	static void sSleep(int32 iMilliseconds);
+	static void sSleepMicro(bigtime_t iMicroseconds) { ZThreadImp::sSleep(iMicroseconds / 1e6); }
+	static void sSleep(int32 iMilliseconds) { ZThreadImp::sSleep(iMilliseconds / 1e3); }
 
-	// Process times
-	static void sGetProcessTimes(bigtime_t& oRealTime, bigtime_t& oCumulativeRunTime);
-
-	// Thread local storage (aka thread-specific data)
-	static TLSKey_t sTLSAllocate();
-	static void sTLSFree(TLSKey_t iTLSKey);
-	static void sTLSSet(TLSKey_t iTLSKey, TLSData_t iValue);
-	static TLSData_t sTLSGet(TLSKey_t iTLSKey);
-
-	// Deadlock detection.
-	typedef void (*DeadlockHandler_t)(const std::string& iString);
-	static DeadlockHandler_t sSetDeadlockHandler(DeadlockHandler_t iHandler);
-	#if ZCONFIG_Thread_DeadlockDetect
-		std::string* CheckForDeadlock(ZThread* iAcquiringThread);
-	#endif
+	static TLSKey_t sTLSAllocate() { return ZTSS::sCreate(); }
+	static void sTLSFree(TLSKey_t iKey) { ZTSS::sFree(iKey); }
+	static void sTLSSet(TLSKey_t iKey, TLSData_t iValue) { ZTSS::sSet(iKey, iValue); }
+	static TLSData_t sTLSGet(TLSKey_t iKey) { return ZTSS::sGet(iKey); }
 
 protected:
 	// State and informational variables
@@ -190,184 +76,36 @@ protected:
 	bool fStarted;
 	const char* fName;
 
-	#if 0
-	#elif ZCONFIG(API_Thread, Win32)
-	public:
-		HANDLE fThreadHANDLE;
-	protected:
-	#elif ZCONFIG(API_Thread, POSIX)
-		pthread_mutex_t fMutex_Start;
-		pthread_cond_t fCond_Start;
-	#endif // ZCONFIG(API_Thread)
-
-
-	#if ZCONFIG_Thread_DeadlockDetect
-		ZMutexBase* fMutexBase_Wait;
-		friend class ZMutexBase;
-	#endif
-
-private:
-	#if 0
-	#elif ZCONFIG(API_Thread, Win32)
-		static unsigned int __stdcall sThreadEntry_Win32(void* iArg);
-	#elif ZCONFIG(API_Thread, POSIX)
-		static void* sThreadEntry_POSIX(void* iArg);
-	#elif ZCONFIG(API_Thread, Be)
-		static int32 sThreadEntry_Be(void* iArg);
-	#endif // ZCONFIG(API_Thread)
-	};
-
-// ==================================================
-
-#if ZCONFIG(API_Thread, Win32)
-//##ZThread::ThreadID ZThread::sCurrentID();
-
-#else
-
-inline ZThread::ThreadID ZThread::sCurrentID()
-	{
-#if ZCONFIG(API_Thread, Mac)
-	::ThreadID currentID;
-	::GetCurrentThread(&currentID);
-	return (ZThread::ThreadID)currentID;
-
-
-#elif ZCONFIG(API_Thread, POSIX)
-	return ::pthread_self();
-
-#elif ZCONFIG(API_Thread, Be)
-	return ::find_thread(nil);
-
-#else
-	ZUnimplemented();
-	return 0;
-
-#endif // ZCONFIG(API_Thread)
-	}
-
-#endif // ZCONFIG(API_Thread, Win32)
-
-// ==================================================
-
-#if ZCONFIG(API_Thread, Win32)
-//##ZThread::TLSData_t ZThread::sTLSGet(ZThread::TLSKey_t iTLSKey);
-
-#else
-inline ZThread::TLSData_t ZThread::sTLSGet(ZThread::TLSKey_t iTLSKey)
-	{
-#if ZCONFIG(API_Thread, Mac)
-	return reinterpret_cast<TLSData_t>(
-		ZThreadTM_TLSGet(reinterpret_cast<ZThreadTM_TLSKey_t>(iTLSKey)));
-
-#elif ZCONFIG(API_Thread, POSIX)
-	return ::pthread_getspecific(iTLSKey);
-
-#elif ZCONFIG(API_Thread, Be)
-	tls_data_t theTLSData;
-	::tls_get(iTLSKey, &theTLSData);
-	return theTLSData;
-
-#else
-	ZUnimplemented();
-	return 0;
-
-#endif // ZCONFIG(API_Thread)
-	}
-
-#endif // ZCONFIG(API_Thread, Win32)
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZThread::Ex_Disposed
-
-class ZThread::Ex_Disposed : public std::runtime_error
-	{
-public:
-	Ex_Disposed();
-	virtual ~Ex_Disposed() throw();
+	ZMtx fMtx_Start;
+	ZCnd fCnd_Start;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZSemaphore
 
-// ZSemaphore is available for use by applications and provides the foundation for all the other
-// synchronization facilities. ZFiber and BeOS provide exactly the behavior we want, but in the
-// case of BeOS the system-wide limit on semaphores precludes their profligate use, which can be
-// problematic. A call to Wait specifies a count and a timeout (the version without a timeout
-// parameter has an effectively infinite timeout). Wait will return one of three results:
-// ZThread::errorNone if all the signals were satisfied within the timeout, ZThread::errorTimeout
-// if not all the signals could be satisified within the timeout and ZThread::errorDisposed if the
-// semaphore was destroyed *whilst* Wait was blocked. If code is calling Wait whilst the destructor
-// is being called the behavior is not well-defined -- any Waits have to be already blocked.
-
-class ZSemaphore : ZooLib::NonCopyable
+class ZSemaphore : public ZSem
 	{
 public:
-	ZSemaphore(int32 iInitialCount = 0, const char* iName = nil);
+	ZSemaphore() {}
+	ZSemaphore(int32 iInitialCount);
+	ZSemaphore(int32 iInitialCount, const char* iName);
 	~ZSemaphore();
 
-	ZThread::Error Wait(int32 iCount);
-	ZThread::Error Wait(int32 iCount, bigtime_t iMicroseconds);
+	void Wait(int32 iCount);
+	bool Wait(int32 iCount, bigtime_t iMicroseconds);
 	void Signal(int32 iCount);
-
-private:
-	const char* fName;
-
-	#if ZCONFIG(API_Thread, Mac)
-
-		ZThreadTM_Sem fSem_TM;
-
-	#elif ZCONFIG(API_Thread, Win32)
-
-		ZThread::Error Internal_Wait_Win32(int32 iCount, bigtime_t iMicroseconds);
-		void Internal_Signal_Win32(int32 iCount);
-
-		struct Waiter_Win32;
-		ZAtomic_t fSpinlock;
-		HANDLE fSemaphoreHANDLE;
-		Waiter_Win32* fWaiter_Head;
-		Waiter_Win32* fWaiter_Tail;
-		int32 fAvailable;
-
-	#elif ZCONFIG(API_Thread, POSIX)
-
-		ZThread::Error Internal_Wait_POSIX(int32 iCount, bigtime_t iMicroseconds);
-		void Internal_Signal_POSIX(int32 iCount);
-
-		struct Waiter_POSIX;
-		Waiter_POSIX* fWaiter_Head;
-		Waiter_POSIX* fWaiter_Tail;
-		int32 fAvailable;
-		bool fDisposed;
-		pthread_mutex_t fMutex;
-		pthread_cond_t fCond;
-
-	#elif ZCONFIG(API_Thread, Be)
-
-		sem_id fSem;
-
-	#endif // ZCONFIG(API_Thread)
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZMutexNR
 
-class ZMutexNR : ZooLib::NonCopyable
+class ZMutexNR : public ZMtx
 	{
 public:
-	ZMutexNR(const char* iName = nil);
-	~ZMutexNR();
-
-	ZThread::Error Acquire();
-	void Release();
-
-private:
-	ZThread::ThreadID fThreadID_Owner;
-	ZSemaphore fSem;
-	ZThreadSafe_t fLock;
-	friend class ZCondition;
+	ZMutexNR() {}
+	ZMutexNR(const char* iName) {}
 	};
 
 // =================================================================================================
@@ -380,35 +118,13 @@ private:
 class ZMutexBase : ZooLib::NonCopyable
 	{
 protected:
-	ZMutexBase(const char* iName = nil);
-	~ZMutexBase();
+	ZMutexBase() {}
+	~ZMutexBase() {}
 
 public:
-	// Accessors that return an error if there is a problem
-	virtual ZThread::Error Acquire() = 0;
-	virtual ZThread::Error Acquire(bigtime_t iMicroseconds) = 0;
+	virtual void Acquire() = 0;
 	virtual void Release() = 0;
-
 	virtual bool IsLocked() = 0;
-
-	// Convenience accessor that throws an exception if there is a problem
-	void AcquireOrThrow();
-
-	// For debugging. -ec 01.02.23
-	void SetName(const char* iName) { fName = iName; }
-
-	#if ZCONFIG_Thread_DeadlockDetect
-		void CheckForDeadlock_Pre(ZThread* iAcquiringThread);
-		void CheckForDeadlock_Post(ZThread* iAcquiringThread);
-		virtual std::string* CheckForDeadlockImp(ZThread* iAcquiringThread) = 0;
-		std::string* CheckDeadlockThread(ZThread* iAcquiringThread, ZThread* iOwnerThread);
-		void ReleaseForDeadlock_Pre();
-		void ReleaseForDeadlock_Post();
-		friend class ZThread;
-	#endif
-
-protected:
-	const char* fName;
 	};
 
 // =================================================================================================
@@ -421,36 +137,21 @@ public:
 	ZMutex(const char* iName = nil, bool iCreateAcquired = false);
 	~ZMutex();
 
-	virtual ZThread::Error Acquire();
-	virtual ZThread::Error Acquire(bigtime_t iMicroseconds);
+// From ZMutexBase
+	virtual void Acquire();
 	virtual void Release();
 
 	virtual bool IsLocked();
 
-	// These methods are available so we can bypass the virtual
-	// method dispatch overhead of Acquire/Release
-	ZThread::Error MutexAcquire(bigtime_t iMicroseconds);
-	void MutexRelease();
-
-	// FullRelease and FullAcquire are required for certain *very rare*
-	// circumstances. Do not abuse them.
-	ZThread::Error FullAcquire(int32 iCount);
-	int32 FullRelease();
-
 private:
-	ZThread::Error Internal_Acquire(bigtime_t iMicroseconds);
-	void Internal_Release();
+	void pWait(ZCnd& iCnd);
+	void pWait(ZCnd& iCnd, double iTimeout);
 
 	ZThread::ThreadID fThreadID_Owner;
-	ZSemaphore fSem;
-	int32 fCount;
+	ZMtx fMtx;
+	int fCount;
 
 	friend class ZCondition;
-
-	#if ZCONFIG_Thread_DeadlockDetect
-		ZThread* fThread_Owner;
-		virtual std::string* CheckForDeadlockImp(ZThread* iAcquiringThread);
-	#endif // ZCONFIG_Thread_DeadlockDetect
 	};
 
 // =================================================================================================
@@ -460,218 +161,30 @@ private:
 class ZCondition : ZooLib::NonCopyable
 	{
 public:
-	ZCondition(const char* iName = nil);
-	~ZCondition();
+	ZCondition() {}
+	ZCondition(const char* iName) {}
+	~ZCondition() {}
 
-	ZThread::Error Wait(ZMutex& iMutex);
-	ZThread::Error Wait(ZMutex& iMutex, bigtime_t iMicroseconds);
-	ZThread::Error Wait(ZMutexNR& iMutex);
-	ZThread::Error Wait(ZMutexNR& iMutex, bigtime_t iMicroseconds);
+	void Wait(ZMutex& iMutex);
+	void Wait(ZMutex& iMutex, bigtime_t iMicroseconds);
+
+	void Wait(ZMtx& iMtx);
+	void Wait(ZMtx& iMtx, bigtime_t iMicroseconds);
+
 	void Signal();
 	void Broadcast();
 
 private:
-	ZSemaphore fSem_Wait;
-	ZThreadSafe_t fWaitingThreads;
-	const char* fName;
+	ZCnd fCnd;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRWLock
+#pragma mark * Lockers
 
-class ZRWLock : ZooLib::NonCopyable
-	{
-public:
-	ZRWLock(const char* iName = nil);
-	~ZRWLock();
-
-	ZMutexBase& GetRead() { return fRead; }
-	ZMutexBase& GetWrite() { return fWrite; }
-
-	bool CanRead();
-	bool CanWrite();
-
-	void SetName(const char* iName);
-
-	void AcquireRead();
-	void ReleaseRead();
-
-	void AcquireWrite();
-	void ReleaseWrite();
-
-	void DemoteWriteToRead();
-
-protected:
-	ZThread::Error AcquireWrite(bigtime_t iMicroseconds);
-	ZThread::Error AcquireRead(bigtime_t iMicroseconds);
-
-	void ReturnLock();
-
-private:
-	// Mutex to provide mutual exclusion while fiddling with internal data
-	ZMutexNR fMutex_Structure;
-
-	// Used to queue up a reader and multiple writers.
-	ZSemaphore fSem_Access;
-
-	// Used to block subsequent readers
-	ZSemaphore fSem_SubsequentReaders;
-
-	// Writers waiting for the lock
-	int32 fCount_WaitingWriters;
-
-	// Writers holding the lock (the same writer recursively, of course)
-	int32 fCount_CurrentWriter;
-	ZThread::ThreadID fThreadID_CurrentWriter;
-
-	// Readers waiting for the lock
-	int32 fCount_WaitingReaders;
-
-	// Readers holding the lock (to allow recursive calls to AcquireRead)
-	int32 fCount_CurrentReaders;
-	std::vector<ZThread::ThreadID> fVector_CurrentReaders;
-
-	class Read : public ZMutexBase
-		{
-	public:
-		Read(ZRWLock* iRWLock, const char* iName) : ZMutexBase(iName), fRWLock(iRWLock) {}
-		~Read() {}
-	
-		virtual ZThread::Error Acquire();
-		virtual ZThread::Error Acquire(bigtime_t iMicroseconds);
-		virtual void Release();
-	
-		virtual bool IsLocked();
-	
-		#if ZCONFIG_Thread_DeadlockDetect
-			virtual std::string* CheckForDeadlockImp(ZThread* iAcquiringThread);
-		#endif
-	
-	private:
-		ZRWLock* fRWLock;
-		};
-	
-	Read fRead;
-	friend class Read;
-
-public:
-	class Write : public ZMutexBase
-		{
-	public:
-		Write(ZRWLock* iRWLock, const char* iName) : ZMutexBase(iName), fRWLock(iRWLock) {}
-		~Write() {}
-	
-		virtual ZThread::Error Acquire();
-		virtual ZThread::Error Acquire(bigtime_t iMicroseconds);
-		virtual void Release();
-	
-		virtual bool IsLocked();
-	
-		#if ZCONFIG_Thread_DeadlockDetect
-			virtual std::string* CheckForDeadlockImp(ZThread* iAcquiringThread);
-		#endif
-	
-		ZRWLock& GetRWLock() { return *fRWLock; }
-	private:
-		ZRWLock* fRWLock;
-		};
-private:
-
-	Write fWrite;
-	friend class Write;
-
-	#if ZCONFIG_Thread_DeadlockDetect
-		ZThread* fThread_CurrentWriter;
-		std::vector<ZThread*> fVector_Thread_CurrentReaders;
-		std::string* Internal_CheckForDeadlock(ZThread* iAcquiringThread, ZMutexBase* iLock);
-	#endif
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZMutexComposite
-
-class ZMutexComposite : public ZMutexBase
-	{
-public:
-	ZMutexComposite();
-	virtual ~ZMutexComposite();
-
-	void Add(ZMutexBase& iLock);
-
-	virtual ZThread::Error Acquire();
-	virtual ZThread::Error Acquire(bigtime_t iMicroseconds);
-	virtual void Release();
-
-	virtual bool IsLocked();
-
-	#if ZCONFIG_Thread_DeadlockDetect
-	// From ZMutexBase
-	virtual std::string* CheckForDeadlockImp(ZThread* iAcquiringThread);
-	#endif
-
-private:
-	std::vector<ZMutexBase*> fLocks;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZLocker
-
-class ZLocker : ZooLib::NonCopyable
-	{
-public:
-	ZLocker(const ZMutexBase& iMutex, bool iThrowIfProblem = true);
-	~ZLocker();
-
-	// Used to temporarily release, then (usually) reacquire the lock
-	void Release();
-	ZThread::Error Acquire();
-
-	bool IsOkay() { return fOkay; }
-
-private:
-	ZMutexBase& fMutexBase;
-	int32 fAcquisitions;
-	bool fOkay;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZMutexLocker
-
-class ZMutexLocker : ZooLib::NonCopyable
-	{
-public:
-	ZMutexLocker(const ZMutex& iMutex, bool iThrowIfProblem = true);
-	~ZMutexLocker();
-
-	// Used to temporarily release, then (usually) reacquire the lock
-	void Release();
-	ZThread::Error Acquire();
-
-	bool IsOkay() { return fOkay; }
-
-private:
-	ZMutex& fMutex;
-	int32 fAcquisitions;
-	bool fOkay;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZMutexNRLocker
-
-class ZMutexNRLocker : ZooLib::NonCopyable
-	{
-public:
-	ZMutexNRLocker(const ZMutexNR& iMutex);
-	~ZMutexNRLocker();
-
-private:
-	ZMutexNR& fMutex;
-	};
+typedef ZGuardR_T<ZMutexBase> ZLocker;
+typedef ZGuardR_T<ZMutex> ZMutexLocker;
+typedef ZGuard_T<ZMtx> ZMutexNRLocker;
 
 // =================================================================================================
 
@@ -682,12 +195,11 @@ private:
 	using ZooLib::ZLocker;
 	using ZooLib::ZMutex;
 	using ZooLib::ZMutexBase;
-	using ZooLib::ZMutexComposite;
 	using ZooLib::ZMutexLocker;
 	using ZooLib::ZMutexNR;
-	using ZooLib::ZRWLock;
+	using ZooLib::ZMutexNRLocker;
 	using ZooLib::ZSemaphore;
 	using ZooLib::ZThread;
-#endif // ZooLib_SuppressInjection
+#endif
 
 #endif // __ZThread__
