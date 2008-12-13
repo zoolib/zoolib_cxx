@@ -41,11 +41,56 @@ public:
 	:	fMtx(iMtx)
 		{ fMtx.Acquire(); }
 
+	ZGuard_T(const Mtx& iMtx)
+	:	fMtx(const_cast<Mtx&>(iMtx))
+		{ fMtx.Acquire(); }
+
 	~ZGuard_T()
 		{ fMtx.Release(); }
 
 protected:
 	Mtx& fMtx;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZGuardR_T
+
+template <class Mtx>
+class ZGuardR_T : NonCopyable
+	{
+public:
+	ZGuardR_T(Mtx& iMtx)
+	:	fMtx(iMtx),
+		fCount(1)
+		{ fMtx.Acquire(); }
+
+	ZGuardR_T(const Mtx& iMtx)
+	:	fMtx(const_cast<Mtx&>(iMtx)),
+		fCount(1)
+		{ fMtx.Acquire(); }
+
+	~ZGuardR_T()
+		{
+		while (--fCount)
+			fMtx.Release();
+		}
+
+	void Release()
+		{
+		--fCount;
+		fMtx.Release();
+		}
+
+	void Acquire()
+		{
+		fMtx.Acquire();
+		++fCount;
+		}
+
+protected:
+	Mtx& fMtx;
+	int fCount;
 	};
 
 // =================================================================================================
@@ -121,17 +166,14 @@ public:
 		Waiter theWaiter(iCount);
 		fWaiters.PushBack(&theWaiter);
 
-		while (theWaiter.fCount > 0)
-			{
-			if (!fCnd.Wait(fMtx, expired - ZTime::sSystem()))
-				break;
-			}
+		while (theWaiter.fCount > 0 && expired > ZTime::sSystem())
+			fCnd.Wait(fMtx, expired - ZTime::sSystem());
 
 		fWaiters.Remove(&theWaiter);
 
-		if (theWaiter.fCount > 0)
+		if (int acquired = iCount - theWaiter.fCount)
 			{
-			this->Imp_Signal(iCount - theWaiter.fCount);
+			this->Imp_Signal(acquired);
 			return false;
 			}
 		

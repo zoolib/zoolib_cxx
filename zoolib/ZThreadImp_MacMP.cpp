@@ -24,6 +24,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <new> // for bad_alloc
 
+// For UpTime etc
+#if __MACH__
+//#	include <CoreServices/CoreServices.h>
+#else
+#	include <DriverServices.h>
+#endif
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -135,6 +142,17 @@ ZThreadImp_MacMP::ID ZThreadImp_MacMP::sCreate(size_t iStackSize, Proc_t iProc, 
 
 ZThreadImp_MacMP::ID ZThreadImp_MacMP::sID()
 	{ return ::MPCurrentTaskID(); }
+
+void ZThreadImp_MacMP::sSleep(double iDuration)
+	{
+	const Nanoseconds nowU = ::AbsoluteToNanoseconds(::UpTime());
+	const double targetDouble
+		= double(*reinterpret_cast<const uint64*>(&nowU)) / 1e9 + iDuration;
+	const uint64 targetU = uint64(targetDouble * 1e9);
+	AbsoluteTime targetA
+		= ::NanosecondsToAbsolute(*reinterpret_cast<const Nanoseconds*>(&targetU));
+	::MPDelayUntil(&targetA);
+	}
 
 } // namespace ZooLib
 

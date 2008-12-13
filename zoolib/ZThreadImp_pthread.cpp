@@ -25,7 +25,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_cmath.h" // for fmod
 #include "zoolib/ZDebug.h"
 
+#include <errno.h> // For errno
 #include <sys/time.h> // For gettimeofday
+#include <unistd.h> // For usleep
 
 #include <new> // for std::bad_alloc
 
@@ -131,6 +133,25 @@ void ZSemNoTimeout_pthread::Signal()
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZSem_pthread
+
+ZSem_pthread::ZSem_pthread()
+	{}
+
+ZSem_pthread::~ZSem_pthread()
+	{}
+
+void ZSem_pthread::Wait()
+	{ this->Imp_Wait(1); }
+
+bool ZSem_pthread::Wait(double iTimeout)
+	{ return this->Imp_Wait(1, iTimeout); }
+
+void ZSem_pthread::Signal()
+	{ this->Imp_Signal(1); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZThreadImp_pthread
 
 ZThreadImp_pthread::ID ZThreadImp_pthread::sCreate(size_t iStackSize, Proc_t iProc, void* iParam)
@@ -161,6 +182,9 @@ ZThreadImp_pthread::ID ZThreadImp_pthread::sCreate(size_t iStackSize, Proc_t iPr
 
 ZThreadImp_pthread::ID ZThreadImp_pthread::sID()
 	{ return ::pthread_self(); }
+
+void ZThreadImp_pthread::sSleep(double iDuration)
+	{ ::usleep(iDuration * 1e6); }
 
 } // namespace ZooLib
 

@@ -31,6 +31,16 @@ namespace ZooLib {
 
 #if 0
 
+#elif ZCONFIG_API_Enabled(ThreadImp_pthread)
+
+namespace ZTSS = ZTSS_pthread;
+namespace ZThreadImp = ZThreadImp_pthread;
+
+typedef ZMtx_pthread ZMtx;
+typedef ZCnd_pthread ZCnd;
+typedef ZSemNoTimeout_pthread ZSemNotimeout;
+typedef ZSem_pthread ZSem;
+
 #elif ZCONFIG_API_Enabled(ThreadImp_MacMP)
 
 namespace ZTSS = ZTSS_MacMP;
@@ -39,15 +49,6 @@ namespace ZThreadImp = ZThreadImp_MacMP;
 typedef ZMtx_MacMP ZMtx;
 typedef ZCnd_MacMP ZCnd;
 typedef ZSem_MacMP ZSem;
-
-#elif ZCONFIG_API_Enabled(ThreadImp_pthread)
-
-namespace ZTSS = ZTSS_pthread;
-namespace ZThreadImp = ZThreadImp_pthread;
-
-typedef ZMtx_pthread ZMtx;
-typedef ZCnd_pthread ZCnd;
-typedef ZSem_pthread ZSem;
 
 #elif ZCONFIG_API_Enabled(ThreadImp_Win)
 

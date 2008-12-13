@@ -37,10 +37,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZThreadImp_T.h"
-//#include "zoolib/ZTypes.h"
 
 #if __MACH__
-#	include <CoreServices/CoreServices.h>
+// This is tricky. We need Multiprocessing.h, but don't want to pull in other
+// stuff like OpenTransport, which has conflicts with tcp.h.
+#	if __MWERKS__
+#		include <CarbonCore/CarbonCore.h>
+#	else
+#		include <CoreServices/CoreServices.h>
+#	endif
 #else
 #	include <Multiprocessing.h>
 #endif
@@ -128,6 +133,7 @@ typedef MPTaskID ID;
 
 ID sCreate(size_t iStackSize, Proc_t iProc, void* iParam);
 ID sID();
+void sSleep(double iDuration);
 
 } // namespace ZThreadImp_MacMP
 

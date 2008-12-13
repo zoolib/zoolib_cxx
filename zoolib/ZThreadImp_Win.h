@@ -55,25 +55,24 @@ namespace ZTSS_Win {
 typedef DWORD Key;
 typedef LPVOID Value;
 
-#elif ZCONFIG_API_Enabled(ThreadImp_boost)
-
 Key sCreate();
 static void sFree(Key iKey);
 
 void sSet(Key iKey, Value iValue);
 Value sGet(Key iKey);
+
 } // namespace ZTSS_Win
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSemTimeout_Win
+#pragma mark * ZSem_Win
 
-class ZSemTimeout_Win : NonCopyable
+class ZSem_Win : NonCopyable
 	{
 public:
-	ZSemTimeout_Win();
+	ZSem_Win();
 
-	~ZSemTimeout_Win();
+	~ZSem_Win();
 
 	void Wait();
 	bool Wait(double iTimeout);
@@ -104,7 +103,7 @@ protected:
 #pragma mark -
 #pragma mark * ZCnd_Win
 
-class ZCnd_Win : ZCnd_T<ZMtx_Win, ZSemTimeout_Win>
+class ZCnd_Win : ZCnd_T<ZMtx_Win, ZSem_Win>
 	{
 public:
 	ZCnd_Win();
@@ -128,6 +127,7 @@ typedef unsigned int ID;
 
 ID sCreate(size_t iStackSize, Proc_t iProc, void* iParam);
 ID sID();
+void sSleep(double iDuration);
 
 } // namespace ZThreadImp_Win
 

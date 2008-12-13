@@ -36,7 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(ThreadImp_pthread)
 
 #include "zoolib/ZCompat_NonCopyable.h"
-//#include "zoolib/ZTypes.h"
+#include "zoolib/ZThreadImp_T.h"
 
 #include <pthread.h>
 #include <semaphore.h>
@@ -120,6 +120,21 @@ protected:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZSem_pthread
+
+class ZSem_pthread : ZSem_T<ZMtx_pthread, ZCnd_pthread>
+	{
+public:
+	ZSem_pthread();
+	~ZSem_pthread();
+
+	void Wait();
+	bool Wait(double iTimeout);
+	void Signal();
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZThreadImp_pthread
 
 namespace ZThreadImp_pthread {
@@ -129,6 +144,7 @@ typedef pthread_t ID;
 
 ID sCreate(size_t iStackSize, Proc_t iProc, void* iParam);
 ID sID();
+void sSleep(double iDuration);
 
 } // namespace ZThreadImp_pthread
 

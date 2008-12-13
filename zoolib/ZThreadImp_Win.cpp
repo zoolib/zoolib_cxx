@@ -46,21 +46,21 @@ ZTSS_Win::Value ZTSS_Win::sGet(Key iKey)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSemTimeout_Win
+#pragma mark * ZSem_Win
 
-ZSemTimeout_Win::ZSemTimeout_Win()
+ZSem_Win::ZSem_Win()
 	{ fHANDLE = ::CreateSemaphore(nil, 0, 0x7FFFFFFF, nil); }
 
-ZSemTimeout_Win::~ZSemTimeout_Win()
+ZSem_Win::~ZSem_Win()
 	{ ::CloseHandle(fHANDLE); }
 
-void ZSemTimeout_Win::Wait()
+void ZSem_Win::Wait()
 	{ ::WaitForSingleObject(fHANDLE, INFINITE); }
 
-bool ZSemTimeout_Win::Wait(double iTimeout)
+bool ZSem_Win::Wait(double iTimeout)
 	{ return WAIT_OBJECT_0 == ::WaitForSingleObject(fHANDLE, iTimeout * 1e3); }
 
-void ZSemTimeout_Win::Signal()
+void ZSem_Win::Signal()
 	{ ::ReleaseSemaphore(fHANDLE, 1, nil); }
 
 // =================================================================================================
@@ -117,6 +117,9 @@ ZThreadImp_Win::ID ZThreadImp_Win::sCreate(size_t iStackSize, Proc_t iProc, void
 
 ZThreadImp_Win::ID ZThreadImp_Win::sID()
 	{ return ::GetCurrentThreadId(); }
+
+void ZThreadImp_Win::sSleep(double iDuration)
+	{ ::Sleep(iDuration * 1e3); }
 
 } // namespace ZooLib
 

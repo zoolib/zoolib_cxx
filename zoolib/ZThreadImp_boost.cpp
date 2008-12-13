@@ -52,15 +52,15 @@ ZCnd_boost::ZCnd_boost()
 ZCnd_boost::~ZCnd_boost()
 	{}
 
-void ZCnd_boost::Wait(ZMtx_boost& iMtx)
+void ZCnd_boost::Wait(boost::mutex& iMtx)
 	{
-	ZMtx_boost::scoped_lock theLock(iMtx, boost::adopt_lock);
+	boost::mutex::scoped_lock theLock(iMtx, boost::adopt_lock);
 	condition_variable::wait(theLock);
 	}
 
-bool ZCnd_boost::Wait(ZMtx_boost& iMtx, double iTimeout)
+bool ZCnd_boost::Wait(boost::mutex& iMtx, double iTimeout)
 	{
-	ZMtx_boost::scoped_lock theLock(iMtx, boost::adopt_lock);
+	boost::mutex::scoped_lock theLock(iMtx, boost::adopt_lock);
 
 	return condition_variable::timed_wait(
 		theLock, boost::posix_time::microseconds(iTimeout * 1e6));
