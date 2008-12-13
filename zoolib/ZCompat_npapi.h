@@ -22,6 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCompat_npapi__
 #include "zconfig.h"
 
+#include "ZCONFIG_SPI.h"
+
+#if ZCONFIG_SPI_Enabled(Netscape)
+
 // Pull in ZTypes so we see its int32 definition
 #include "zoolib/ZTypes.h"
 
@@ -89,5 +93,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	inline uint32_t& sNPStringLength(NPString& iNPString)
 		{ return iNPString.utf8length; }
 #endif
+
+#endif // ZCONFIG_SPI_Enabled(Netscape)
 
 #endif // __ZCompat_npapi__
