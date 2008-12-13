@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2000 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2008 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -21,35 +21,62 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread.h"
 
 #include "zoolib/ZAtomic.h"
-#include "zoolib/ZCompat_algorithm.h" // for find, lower_bound, swap
+#include "zoolib/ZLog.h"
 #include "zoolib/ZTime.h"
 
 using namespace ZooLib;
-
-//using std::exception;
-//using std::min;
-
-ZThread::ThreadID ZThread::kThreadID_None;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * kDebug
-
-#define kDebug_Thread 1
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZThread
 
+ZThread::ThreadID kThreadID_None = 0;
+
 ZThread::ZThread(const char* iName)
+:	fStarted(false)
+	{
+	ZThreadImp::sCreate(0, reinterpret_cast<ZThreadImp::Proc_t>(spRun), this);
+	}
+
+ZThread::ZThread()
 :	fStarted(false)
 	{}
 
 void ZThread::Start()
 	{
 	ZGuard_T<ZMtx> locker(fMtx_Start);
-	while (!fStarted)
-		fCnd_Start.Wait(fMtx_Start);
+	fStarted = true;
+	fCnd_Start.Broadcast();
+	}
+
+void ZThread::pRun()
+	{
+	try
+		{
+		ZGuard_T<ZMtx> locker(fMtx_Start);
+		while (!fStarted)
+			fCnd_Start.Wait(fMtx_Start);
+
+		this->Run();
+		}
+	catch (std::exception& ex)
+		{
+		if (ZLOG(s, eNotice, "ZThread::pRun"))
+			s << "Uncaught exception: " << ex.what();
+		}
+	catch (...)
+		{
+		if (ZLOG(s, eNotice, "ZThread::pRun"))
+			s << "Uncaught exception, not derived fron std::exception";
+		}
+
+	delete this;
+	}
+
+void* ZThread::spRun(void* iParam)
+	{
+	static_cast<ZThread*>(iParam)->Run();
+	return nil;
 	}
 
 // =================================================================================================
@@ -162,25 +189,3 @@ void ZMutex::pWait(ZCnd& iCnd, double iTimeout)
 	fThreadID_Owner = ZThreadImp::sID();
 	fCount = priorCount;
 	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCondition
-
-void ZCondition::Wait(ZMutex& iMutex)
-	{ iMutex.pWait(fCnd); }
-
-void ZCondition::Wait(ZMutex& iMutex, bigtime_t iMicroseconds)
-	{ iMutex.pWait(fCnd, iMicroseconds / 1e6); }
-
-void ZCondition::Wait(ZMtx& iMtx)
-	{ fCnd.Wait(iMtx); }
-
-void ZCondition::Wait(ZMtx& iMtx, bigtime_t iMicroseconds)
-	{ fCnd.Wait(iMtx, iMicroseconds / 1e6); }
-
-void ZCondition::Signal()
-	{ fCnd.Signal(); }
-
-void ZCondition::Broadcast()
-	{ fCnd.Broadcast(); }

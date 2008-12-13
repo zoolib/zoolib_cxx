@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2000 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2008 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZThreadImp.h"
 #include "zoolib/ZThreadSafe.h"
-#include "zoolib/ZTypes.h" // For bigtime_t
+#include "zoolib/ZTypes.h" // For bigtime_t and nil
 
 // =================================================================================================
 // A macro that has proven to be useful.
@@ -56,7 +56,9 @@ public:
 	typedef ZTSS::Key TLSKey_t;
 	typedef ZTSS::Value TLSData_t;
 
-	ZThread(const char* iName = nil);
+	ZThread(const char* iName);
+	ZThread();
+
 	void Start();
 	virtual void Run() = 0;
 
@@ -71,10 +73,12 @@ public:
 	static TLSData_t sTLSGet(TLSKey_t iKey) { return ZTSS::sGet(iKey); }
 
 protected:
+	void pRun();
+	static void* spRun(void* iParam);
+
 	// State and informational variables
 	ThreadID fThreadID;
 	bool fStarted;
-	const char* fName;
 
 	ZMtx fMtx_Start;
 	ZCnd fCnd_Start;
@@ -158,24 +162,23 @@ private:
 #pragma mark -
 #pragma mark * ZCondition
 
-class ZCondition : ZooLib::NonCopyable
+class ZCondition : ZCnd
 	{
 public:
 	ZCondition() {}
 	ZCondition(const char* iName) {}
 	~ZCondition() {}
 
-	void Wait(ZMutex& iMutex);
-	void Wait(ZMutex& iMutex, bigtime_t iMicroseconds);
+	void Wait(ZMutex& iMutex)
+		{ iMutex.pWait(*this); }
+	void Wait(ZMutex& iMutex, bigtime_t iMicroseconds)
+		{ iMutex.pWait(*this, iMicroseconds / 1e6); }
 
-	void Wait(ZMtx& iMtx);
-	void Wait(ZMtx& iMtx, bigtime_t iMicroseconds);
+	void Wait(ZMtx& iMtx) { ZCnd::Wait(iMtx); }
+	void Wait(ZMtx& iMtx, bigtime_t iMicroseconds) { ZCnd::Wait(iMtx, iMicroseconds / 1e6); }
 
-	void Signal();
-	void Broadcast();
-
-private:
-	ZCnd fCnd;
+	void Signal() { ZCnd::Signal(); }
+	void Broadcast() { ZCnd::Broadcast(); }
 	};
 
 // =================================================================================================
