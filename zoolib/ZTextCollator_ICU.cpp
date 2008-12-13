@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 
+#include <stdexcept>
+
 #include "unicode/ucol.h"
 #include "unicode/usearch.h"
 
