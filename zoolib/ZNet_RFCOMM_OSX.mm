@@ -360,6 +360,7 @@ void ZNetEndpoint_RFCOMM_OSX::Imp_Write(const void* iSource, size_t iCount, size
 bool ZNetEndpoint_RFCOMM_OSX::Imp_ReceiveDisconnect(int iMilliseconds)
 	{
 	ZMutexNRLocker locker(fMutex);
+	ZTime expired = ZTime::sSystem() + iMilliseconds / 1e3;
 
 	for (;;)
 		{
@@ -369,9 +370,10 @@ bool ZNetEndpoint_RFCOMM_OSX::Imp_ReceiveDisconnect(int iMilliseconds)
 		if (!fOpen)
 			return true;
 
-		// Really want something that will track how long we waited.
-		if (ZThread::errorTimeout == fCondition.Wait(fMutex, iMilliseconds))
+		if (ZTime::sSystem() >= expired)
 			return false;
+
+		fCondition.Wait(fMutex, ZTime::sSystem() - expired);
 		}
 	}
 

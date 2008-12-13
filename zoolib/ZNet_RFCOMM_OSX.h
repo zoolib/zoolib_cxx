@@ -152,8 +152,8 @@ private:
 	Delegate_ZNetEndpoint_RFCOMM_OSX* fDelegate;
 
 	IOBluetoothRFCOMMChannel* fChannel;
-	ZooLib::ZMutexNR fMutex;
-	ZooLib::ZCondition fCondition;
+	ZooLib::ZMtx fMutex;
+	ZooLib::ZCnd fCondition;
 	std::deque<uint8> fBuffer;
 	bool fOpen;
 	};
