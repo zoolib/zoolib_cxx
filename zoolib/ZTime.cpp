@@ -115,7 +115,14 @@ int ZTime::Compare(const ZTime& iOther) const
 
 ZTime ZTime::sNow()
 	{
-#if ZCONFIG_SPI_Enabled(Carbon)
+#if 0
+#elif ZCONFIG_SPI_Enabled(POSIX)
+
+	timeval theTimeVal;
+	::gettimeofday(&theTimeVal, nil);
+	return theTimeVal.tv_sec + double(theTimeVal.tv_usec) / 1e6;
+
+#elif ZCONFIG_SPI_Enabled(Carbon)
 
 	UTCDateTime theUTCDateTime;
 	::GetUTCDateTime(&theUTCDateTime, kUTCDefaultOptions);
@@ -147,12 +154,6 @@ ZTime ZTime::sNow()
 	result -= kEpochDelta_1601_To_1970;
     return result;
 
-#elif ZCONFIG_SPI_Enabled(POSIX)
-
-	timeval theTimeVal;
-	::gettimeofday(&theTimeVal, nil);
-	return theTimeVal.tv_sec + double(theTimeVal.tv_usec) / 1e6;
-
 #else
 
 	#error Unsupported platform
@@ -162,39 +163,7 @@ ZTime ZTime::sNow()
 
 ZTime ZTime::sSystem()
 	{
-#if ZCONFIG_SPI_Enabled(Carbon) || ZCONFIG_SPI_Enabled(MacClassic)
-
-	Nanoseconds theNanoseconds = AbsoluteToNanoseconds(UpTime());
-	return double(*reinterpret_cast<uint64*>(&theNanoseconds)) / 1e9;
-
-#elif ZCONFIG_SPI_Enabled(Win)
-
-	if (ZUtil_Win::sIsWinNT())
-		{
-		// On NT we try to use the performance counter of CPU 0. Some types of CPU
-		// do not have performance counters that run in sync, so using the
-		// counter from whatever CPU on this code happens to be executed defeats
-		// the whole point of sSystem.
-		DWORD_PTR oldmask = ::SetThreadAffinityMask(::GetCurrentThread(), 1);
-
-		uint64 frequency;
-		::QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&frequency));
-		if (frequency)
-			{
-			uint64 time;
-			::QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&time));
-
-			::SetThreadAffinityMask(GetCurrentThread(), oldmask);
-
-			return double(time) / double(frequency);
-			}
-
-		::SetThreadAffinityMask(GetCurrentThread(), oldmask);
-		}
-
-	// Use GetTickCount if we're not on NT or QPC is not available.
-	return double(::GetTickCount()) / 1e3;
-
+#if 0
 #elif ZCONFIG_SPI_Enabled(POSIX)
 
 	/* AG 2003-10-26.
@@ -227,6 +196,39 @@ ZTime ZTime::sSystem()
 
 	sLast = result;
 	return result + sDelta;
+
+#elif ZCONFIG_SPI_Enabled(Carbon) || ZCONFIG_SPI_Enabled(MacClassic)
+
+	Nanoseconds theNanoseconds = AbsoluteToNanoseconds(UpTime());
+	return double(*reinterpret_cast<uint64*>(&theNanoseconds)) / 1e9;
+
+#elif ZCONFIG_SPI_Enabled(Win)
+
+	if (ZUtil_Win::sIsWinNT())
+		{
+		// On NT we try to use the performance counter of CPU 0. Some types of CPU
+		// do not have performance counters that run in sync, so using the
+		// counter from whatever CPU on this code happens to be executed defeats
+		// the whole point of sSystem.
+		DWORD_PTR oldmask = ::SetThreadAffinityMask(::GetCurrentThread(), 1);
+
+		uint64 frequency;
+		::QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&frequency));
+		if (frequency)
+			{
+			uint64 time;
+			::QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&time));
+
+			::SetThreadAffinityMask(GetCurrentThread(), oldmask);
+
+			return double(time) / double(frequency);
+			}
+
+		::SetThreadAffinityMask(GetCurrentThread(), oldmask);
+		}
+
+	// Use GetTickCount if we're not on NT or QPC is not available.
+	return double(::GetTickCount()) / 1e3;
 
 #elif ZCONFIG_SPI_Enabled(BeOS)
 
