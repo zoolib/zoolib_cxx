@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_Guest.h"
 
+#if ZCONFIG_SPI_Enabled(Netscape)
+
 namespace ZNetscape {
 
 class Guest_Std;
@@ -118,5 +120,7 @@ public:
 	};
 
 } // namespace ZNetscape
+
+#endif // ZCONFIG_SPI_Enabled(Netscape)
 
 #endif // __ZNetscape_Guest__

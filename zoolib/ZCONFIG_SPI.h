@@ -365,6 +365,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 // =================================================================================================
+#pragma mark Netscape
+#ifndef ZCONFIG_SPI_Avail__Netscape
+#	define ZCONFIG_SPI_Avail__Netscape 0
+#endif
+
+#ifndef ZCONFIG_SPI_Desired__Netscape
+#	define ZCONFIG_SPI_Desired__Netscape 1
+#endif
+
+
+// =================================================================================================
 #pragma mark openssl
 #ifndef ZCONFIG_SPI_Avail__openssl
 #	define ZCONFIG_SPI_Avail__openssl 0

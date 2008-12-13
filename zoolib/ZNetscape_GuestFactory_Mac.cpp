@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_GuestFactory_Mac.h"
 
+#if ZCONFIG_SPI_Enabled(Netscape)
+
 #include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
@@ -388,3 +390,5 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory_MacPlugin(const std::
 
 	return result;
 	}
+
+#endif // ZCONFIG_SPI_Enabled(Netscape)

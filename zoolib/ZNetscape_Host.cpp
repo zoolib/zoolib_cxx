@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_Host.h"
 
+#if ZCONFIG_SPI_Enabled(Netscape)
+
 #include "zoolib/ZCommer.h" // For sStartReaderRunner
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"
@@ -796,3 +798,5 @@ NPError Host::Guest_SetValue(NPNVariable iNPNVariable, void* iValue)
 	{ return fNPPluginFuncs.setvalue(&fNPP_t, iNPNVariable, iValue); }
 
 } // namespace ZNetscape
+
+#endif // ZCONFIG_SPI_Enabled(Netscape)

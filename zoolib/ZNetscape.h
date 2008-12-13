@@ -22,6 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNetscape__ 1
 #include "zconfig.h"
 
+#include "ZCONFIG_SPI.h"
+
+#if ZCONFIG_SPI_Enabled(Netscape)
+
 #include "zoolib/ZCompat_npapi.h"
 
 #include <string>
@@ -83,5 +87,7 @@ protected:
 	};
 
 } // namespace ZNetscape
+
+#endif // ZCONFIG_SPI_Enabled(Netscape)
 
 #endif // __ZNetscape__

@@ -18,10 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZNetscape_Guest.h"
+
+#if ZCONFIG_SPI_Enabled(Netscape)
+
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZNetscape_Guest.h"
 #include "zoolib/ZUtil_MacOSX.h"
 
 #include <string>
@@ -979,3 +982,5 @@ NPError NPP_GetValue(NPP instance, NPPVariable variable, void *value)
     return NPERR_GENERIC_ERROR;
 }
 #endif
+
+#endif // ZCONFIG_SPI_Enabled(Netscape)

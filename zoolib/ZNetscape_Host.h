@@ -22,9 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNetscape_Host__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZNetscape.h"
+
+#if ZCONFIG_SPI_Enabled(Netscape)
+
 #include "zoolib/ZGeom.h"
 #include "zoolib/ZMemoryBlock.h"
-#include "zoolib/ZNetscape.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"
 
@@ -435,5 +438,7 @@ private:
 	};
 
 } // namespace ZNetscape
+
+#endif // ZCONFIG_SPI_Enabled(Netscape)
 
 #endif // __ZNetscape_Host__

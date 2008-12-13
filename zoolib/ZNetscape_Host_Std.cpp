@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_Host_Std.h"
 
+#if ZCONFIG_SPI_Enabled(Netscape)
+
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZHTTP_Requests.h"
 #include "zoolib/ZLog.h"
@@ -35,15 +37,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-//#include "zoolib/ZStreamCopier.h"
-//#include "zoolib/ZStreamRWCon_MemoryPipe.h"
-//#include "zoolib/ZStream_Tee.h"
-//#include "zoolib/ZStreamRWPos_RAM.h"
-//#include "zoolib/ZUtil_Strim_Data.h"
 #include <vector>
 
 using std::list;
-
+using std::vector;
 
 #include "zoolib/ZCompat_string.h" // For strdup
 
@@ -931,3 +928,5 @@ void Host_Std::DoEvent(const EventRecord& iEvent)
 #endif // defined(XP_MAC) || defined(XP_MACOSX)
 
 } // namespace ZNetscape
+
+#endif // ZCONFIG_SPI_Enabled(Netscape)

@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_Host.h"
 
+#if ZCONFIG_SPI_Enabled(Netscape)
+
 #include <map>
 #include <vector>
 
@@ -211,5 +213,7 @@ private:
 	};
 
 } // namespace ZNetscape
+
+#endif // ZCONFIG_SPI_Enabled(Netscape)
 
 #endif // __ZNetscape_Host_Std__

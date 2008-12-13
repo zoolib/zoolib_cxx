@@ -19,6 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZNetscape.h"
+
+#if ZCONFIG_SPI_Enabled(Netscape)
+
 #include "zoolib/ZString.h"
 
 using std::string;
@@ -222,3 +225,5 @@ void NPVariantBase::pSetString(const std::string& iString)
 	}
 
 } // namespace ZNetscape
+
+#endif // ZCONFIG_SPI_Enabled(Netscape)
