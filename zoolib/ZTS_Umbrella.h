@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTS.h"
 
+#include "zoolib/ZMutexComposite.h"
+
 #include <map>
 
 // =================================================================================================
