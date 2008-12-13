@@ -347,7 +347,8 @@ bool Host_Std::Sender::DeliverData()
 			}
 
 		uint16 theStreamType = NP_NORMAL;
-		if (fHost->Guest_NewStream(const_cast<char*>(fMIME.c_str()), &fNPStream, false, &theStreamType))
+		if (fHost->Guest_NewStream(
+			const_cast<char*>(fMIME.c_str()), &fNPStream, false, &theStreamType))
 			{
 			// Failed -- what result should we pass?
 			fHost->Guest_URLNotify(fURL.c_str(), NPRES_NETWORK_ERR, fNotifyData);
@@ -359,8 +360,7 @@ bool Host_Std::Sender::DeliverData()
 	if (this->pDeliverData())
 		return true;
 
-	if (fNotifyData)
-		fHost->Guest_URLNotify(fURL.c_str(), NPRES_DONE, fNotifyData);
+	fHost->Guest_URLNotify(fURL.c_str(), NPRES_DONE, fNotifyData);
 
 	fHost->Guest_DestroyStream(&fNPStream, NPRES_DONE);
 
