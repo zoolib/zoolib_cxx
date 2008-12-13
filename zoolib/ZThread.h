@@ -39,10 +39,6 @@ namespace ZooLib {
 class ZThread : ZooLib::NonCopyable
 	{
 protected:
-	ZThread(bool); // Main thread constructor
-	// Our destructor is protected, so even with its pointer semantics it's illegal to
-	// simply delete a thread -- it must return from its Run method, at which point it is deleted.
-
 	virtual ~ZThread() {}
 
 public:
@@ -56,8 +52,7 @@ public:
 	typedef ZTSS::Key TLSKey_t;
 	typedef ZTSS::Value TLSData_t;
 
-	ZThread(const char* iName);
-	ZThread();
+	ZThread(const char* iName = nil);
 
 	void Start();
 	virtual void Run() = 0;
@@ -74,42 +69,16 @@ public:
 
 protected:
 	void pRun();
-	static void* spRun(void* iParam);
 
-	// State and informational variables
-	ThreadID fThreadID;
+	#if ZCONFIG_API_Enabled(ThreadImp_Win)
+		static ZThreadImp::ProcResult_t __stdcall spRun(ZThreadImp::ProcParam_t iParam);
+	#else
+		static ZThreadImp::ProcResult_t spRun(ZThreadImp::ProcParam_t iParam);
+	#endif
+
+	ZMtx* fMtx_Start;
+	ZCnd* fCnd_Start;
 	bool fStarted;
-
-	ZMtx fMtx_Start;
-	ZCnd fCnd_Start;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZSemaphore
-
-class ZSemaphore : public ZSem
-	{
-public:
-	ZSemaphore() {}
-	ZSemaphore(int32 iInitialCount);
-	ZSemaphore(int32 iInitialCount, const char* iName);
-	~ZSemaphore();
-
-	void Wait(int32 iCount);
-	bool Wait(int32 iCount, bigtime_t iMicroseconds);
-	void Signal(int32 iCount);
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZMutexNR
-
-class ZMutexNR : public ZMtx
-	{
-public:
-	ZMutexNR() {}
-	ZMutexNR(const char* iName) {}
 	};
 
 // =================================================================================================
@@ -165,29 +134,58 @@ private:
 class ZCondition : ZCnd
 	{
 public:
-	ZCondition() {}
-	ZCondition(const char* iName) {}
+	ZCondition(const char* iName = nil) {}
 	~ZCondition() {}
 
 	void Wait(ZMutex& iMutex)
 		{ iMutex.pWait(*this); }
+
 	void Wait(ZMutex& iMutex, bigtime_t iMicroseconds)
 		{ iMutex.pWait(*this, iMicroseconds / 1e6); }
 
-	void Wait(ZMtx& iMtx) { ZCnd::Wait(iMtx); }
-	void Wait(ZMtx& iMtx, bigtime_t iMicroseconds) { ZCnd::Wait(iMtx, iMicroseconds / 1e6); }
+	void Wait(ZMtx& iMtx)
+		{ ZCnd::Wait(iMtx); }
 
-	void Signal() { ZCnd::Signal(); }
-	void Broadcast() { ZCnd::Broadcast(); }
+	void Wait(ZMtx& iMtx, bigtime_t iMicroseconds)
+		{ ZCnd::Wait(iMtx, iMicroseconds / 1e6); }
+
+	void Signal()
+		{ ZCnd::Signal(); }
+
+	void Broadcast()
+		{ ZCnd::Broadcast(); }
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Lockers
+#pragma mark * ZSemaphore
+
+class ZSemaphore : protected ZSem
+	{
+public:
+	ZSemaphore() {}
+	ZSemaphore(int32 iInitialCount);
+	ZSemaphore(int32 iInitialCount, const char* iName);
+	~ZSemaphore();
+
+	void Wait(int32 iCount);
+	bool Wait(int32 iCount, bigtime_t iMicroseconds);
+	void Signal(int32 iCount);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMutexNR
+
+typedef ZMtx ZMutexNR;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Guards (aka lockers)
 
 typedef ZGuardR_T<ZMutexBase> ZLocker;
 typedef ZGuardR_T<ZMutex> ZMutexLocker;
-typedef ZGuard_T<ZMtx> ZMutexNRLocker;
+typedef ZGuardMtx ZMutexNRLocker;
 
 // =================================================================================================
 

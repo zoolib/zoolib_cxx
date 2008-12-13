@@ -57,7 +57,7 @@ ZTSS_pthread::Value ZTSS_pthread::sGet(Key iKey)
 #pragma mark -
 #pragma mark * ZMtx_pthread
 
-ZMtx_pthread::ZMtx_pthread()
+ZMtx_pthread::ZMtx_pthread(const char* iName)
 	{ ::pthread_mutex_init(&fMutex, nil); }
 
 ZMtx_pthread::~ZMtx_pthread()

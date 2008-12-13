@@ -30,32 +30,34 @@ using namespace ZooLib;
 #pragma mark -
 #pragma mark * ZThread
 
-ZThread::ThreadID kThreadID_None = 0;
+ZThread::ThreadID ZThread::kThreadID_None = 0;
 
 ZThread::ZThread(const char* iName)
 :	fStarted(false)
 	{
-	ZThreadImp::sCreate(0, reinterpret_cast<ZThreadImp::Proc_t>(spRun), this);
+	fMtx_Start = new ZMtx;
+	fCnd_Start = new ZCnd;
+	ZThreadImp::sCreate(0, spRun, this);
 	}
-
-ZThread::ZThread()
-:	fStarted(false)
-	{}
 
 void ZThread::Start()
 	{
-	ZGuard_T<ZMtx> locker(fMtx_Start);
+	ZGuard_T<ZMtx> locker(*fMtx_Start);
 	fStarted = true;
-	fCnd_Start.Broadcast();
+	fCnd_Start->Broadcast();
 	}
 
 void ZThread::pRun()
 	{
 	try
 		{
-		ZGuard_T<ZMtx> locker(fMtx_Start);
+		{
+		ZGuard_T<ZMtx> locker(*fMtx_Start);
 		while (!fStarted)
-			fCnd_Start.Wait(fMtx_Start);
+			fCnd_Start->Wait(*fMtx_Start);
+		}
+		delete fMtx_Start;
+		delete fCnd_Start;
 
 		this->Run();
 		}
@@ -73,10 +75,75 @@ void ZThread::pRun()
 	delete this;
 	}
 
-void* ZThread::spRun(void* iParam)
+ZThreadImp::ProcResult_t ZThread::spRun(ZThreadImp::ProcParam_t iParam)
 	{
-	static_cast<ZThread*>(iParam)->Run();
-	return nil;
+	static_cast<ZThread*>(iParam)->pRun();
+	return 0;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMutex
+
+ZMutex::ZMutex(const char* iName, bool iCreateAcquired)
+	{
+	if (iCreateAcquired)
+		{
+		fThreadID_Owner = ZThreadImp::sID();
+		fCount = 1;
+		fMtx.Acquire();
+		}
+	else
+		{
+		fThreadID_Owner = 0;
+		fCount = 0;
+		}
+	}
+	
+ZMutex::~ZMutex()
+	{}
+
+void ZMutex::Acquire()
+	{
+	const ZThreadImp::ID current = ZThreadImp::sID();
+	if (current != fThreadID_Owner)
+		{
+		fMtx.Acquire();
+		fThreadID_Owner = current;
+		}
+	++fCount;
+	}
+
+void ZMutex::Release()
+	{
+	if (0 == --fCount)
+		{
+		fThreadID_Owner = 0;
+		fMtx.Release();
+		}
+	}
+
+bool ZMutex::IsLocked()
+	{ return ZThreadImp::sID() == fThreadID_Owner; }
+
+void ZMutex::pWait(ZCnd& iCnd)
+	{
+	int priorCount = fCount;
+	fCount = 0;
+	fThreadID_Owner = 0;
+	iCnd.Wait(fMtx);
+	fThreadID_Owner = ZThreadImp::sID();
+	fCount = priorCount;
+	}
+
+void ZMutex::pWait(ZCnd& iCnd, double iTimeout)
+	{
+	int priorCount = fCount;
+	fCount = 0;
+	fThreadID_Owner = 0;
+	iCnd.Wait(fMtx, iTimeout);
+	fThreadID_Owner = ZThreadImp::sID();
+	fCount = priorCount;
 	}
 
 // =================================================================================================
@@ -130,62 +197,3 @@ void ZSemaphore::Signal(int32 iCount)
 		ZSem::Signal();
 	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZMutex
-
-ZMutex::ZMutex(const char* iName, bool iCreateAcquired)
-	{
-	if (iCreateAcquired)
-		{
-		fThreadID_Owner = ZThreadImp::sID();
-		fCount = 1;
-		fMtx.Acquire();
-		}
-	}
-	
-ZMutex::~ZMutex()
-	{}
-
-void ZMutex::Acquire()
-	{
-	const ZThreadImp::ID current = ZThreadImp::sID();
-	if (current != fThreadID_Owner)
-		{
-		fMtx.Acquire();
-		fThreadID_Owner = current;
-		}
-	++fCount;
-	}
-
-void ZMutex::Release()
-	{
-	if (0 == --fCount)
-		{
-		fThreadID_Owner = 0;
-		fMtx.Release();
-		}
-	}
-
-bool ZMutex::IsLocked()
-	{ return ZThreadImp::sID() == fThreadID_Owner; }
-
-void ZMutex::pWait(ZCnd& iCnd)
-	{
-	int priorCount = fCount;
-	fCount = 0;
-	fThreadID_Owner = 0;
-	iCnd.Wait(fMtx);
-	fThreadID_Owner = ZThreadImp::sID();
-	fCount = priorCount;
-	}
-
-void ZMutex::pWait(ZCnd& iCnd, double iTimeout)
-	{
-	int priorCount = fCount;
-	fCount = 0;
-	fThreadID_Owner = 0;
-	iCnd.Wait(fMtx, iTimeout);
-	fThreadID_Owner = ZThreadImp::sID();
-	fCount = priorCount;
-	}

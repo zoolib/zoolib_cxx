@@ -61,7 +61,7 @@ namespace ZooLib {
 class ZMtx_boost : public boost::mutex
 	{
 public:
-	ZMtx_boost();
+	ZMtx_boost(const char* iName = nil);
 	~ZMtx_boost();
 
 	void Acquire();

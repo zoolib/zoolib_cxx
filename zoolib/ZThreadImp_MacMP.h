@@ -95,7 +95,7 @@ protected:
 class ZMtx_MacMP : NonCopyable
 	{
 public:
-	ZMtx_MacMP();
+	ZMtx_MacMP(const char* iName = nil);
 	~ZMtx_MacMP();
 
 	void Acquire();
@@ -128,7 +128,11 @@ public:
 
 namespace ZThreadImp_MacMP {
 
+typedef OSStatus ProcResult_t;
+typedef void* ProcParam_t;
+
 typedef TaskProc Proc_t;
+
 typedef MPTaskID ID;
 
 ID sCreate(size_t iStackSize, Proc_t iProc, void* iParam);

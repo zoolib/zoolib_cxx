@@ -69,7 +69,7 @@ Value sGet(Key iKey);
 class ZMtx_pthread : NonCopyable
 	{
 public:
-	ZMtx_pthread();
+	ZMtx_pthread(const char* iName = nil);
 	~ZMtx_pthread();
 
 	void Acquire();
@@ -139,7 +139,11 @@ public:
 
 namespace ZThreadImp_pthread {
 
-typedef void* (*Proc_t)(void* iParam);
+typedef void* ProcResult_t;
+typedef void* ProcParam_t;
+
+typedef ProcResult_t (*Proc_t)(ProcParam_t iParam);
+
 typedef pthread_t ID;
 
 ID sCreate(size_t iStackSize, Proc_t iProc, void* iParam);

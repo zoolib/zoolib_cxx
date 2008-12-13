@@ -91,7 +91,7 @@ void ZSem_MacMP::Signal()
 #pragma mark -
 #pragma mark * ZMtx_MacMP
 
-ZMtx_MacMP::ZMtx_MacMP()
+ZMtx_MacMP::ZMtx_MacMP(const char* iName)
 	{ ::MPCreateCriticalRegion(&fMPCriticalRegionID); }
 
 ZMtx_MacMP::~ZMtx_MacMP()

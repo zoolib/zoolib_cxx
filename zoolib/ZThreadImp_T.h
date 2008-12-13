@@ -72,7 +72,7 @@ public:
 
 	~ZGuardR_T()
 		{
-		while (--fCount)
+		while (fCount--)
 			fMtx.Release();
 		}
 
@@ -231,7 +231,6 @@ public:
 	ZCnd_T()
 	:	fWaitingThreads(0)
 		{}
-	
 
 	~ZCnd_T() {}
 

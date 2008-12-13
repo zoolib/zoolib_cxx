@@ -89,7 +89,7 @@ protected:
 class ZMtx_Win : NonCopyable
 	{
 public:
-	ZMtx_Win();
+	ZMtx_Win(const char* iName = nil);
 	~ZMtx_Win();
 
 	void Acquire();
@@ -122,7 +122,11 @@ public:
 
 namespace ZThreadImp_Win {
 
-typedef unsigned (__stdcall* Proc_t)(void *);
+typedef unsigned ProcResult_t;
+typedef void* ProcParam_t;
+
+typedef ProcResult_t (__stdcall *Proc_t)(ProcParam_t iParam);
+
 typedef unsigned int ID;
 
 ID sCreate(size_t iStackSize, Proc_t iProc, void* iParam);

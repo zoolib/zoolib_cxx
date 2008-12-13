@@ -67,7 +67,7 @@ void ZSem_Win::Signal()
 #pragma mark -
 #pragma mark * ZMtx_Win
 
-ZMtx_Win::ZMtx_Win()
+ZMtx_Win::ZMtx_Win(const char* iName)
 	{ ::InitializeCriticalSection(&fCRITICAL_SECTION); }
 
 ZMtx_Win::~ZMtx_Win()
