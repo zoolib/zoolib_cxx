@@ -284,7 +284,7 @@ inline void ZStreamU::Unread() const
 class ZStreamRPos : public ZStreamU
 	{
 public:
-/** \name Implementation of optional ZStreamR method
+/** \name Implementation of optional ZStreamR methods
 */	//@{
 	virtual size_t Imp_CountReadable();
 	virtual bool Imp_WaitReadable(int iMilliseconds);
