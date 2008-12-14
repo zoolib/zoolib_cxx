@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h"
 
-#include ZMACINCLUDE(CoreServices,MacMemory.h)
+#include ZMACINCLUDE3(CoreServices,CarbonCore,MacMemory.h)
 
 // =================================================================================================
 #pragma mark -

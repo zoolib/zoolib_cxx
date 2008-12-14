@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_algorithm.h" // For min
 #include "zoolib/ZDebug.h"
 
-#include ZMACINCLUDE(CoreServices,Resources.h)
+#include ZMACINCLUDE3(CoreServices,CarbonCore,Resources.h)
 
 using std::min;
 

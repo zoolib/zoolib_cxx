@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
-#	include ZMACINCLUDE(Carbon,TextEdit.h)
+#	include ZMACINCLUDE3(Carbon,HIToolbox,TextEdit.h)
 #endif
 
 #if ZCONFIG_SPI_Enabled(BeOS)

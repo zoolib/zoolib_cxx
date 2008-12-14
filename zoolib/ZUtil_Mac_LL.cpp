@@ -33,7 +33,7 @@ using std::pair;
 #define kDebug_Mac 3
 
 #if ZCONFIG_SPI_Enabled(Carbon)
-#	include ZMACINCLUDE(CoreServices,Resources.h)
+#	include ZMACINCLUDE3(CoreServices,CarbonCore,Resources.h)
 #endif
 
 using std::bad_alloc;

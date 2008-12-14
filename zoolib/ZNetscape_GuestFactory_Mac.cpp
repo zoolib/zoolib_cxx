@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZUtil_MacOSX.h"
 
-#include ZMACINCLUDE(CoreFoundation,CFBundle.h)
+#include ZMACINCLUDE2(CoreFoundation,CFBundle.h)
 
 #if __MACH__
 #	include <mach-o/dyld.h> // For NSModule

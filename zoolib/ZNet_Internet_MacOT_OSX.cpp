@@ -20,6 +20,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNet_Internet_MacOT_OSX.h"
 
+#if ZCONFIG_API_Enabled(Net_Internet_MacOT_OSX)
+
+#include "zoolib/ZMemory.h" // For ZBlockZero
+
+#include ZMACINCLUDE3(CoreServices,CarbonCore,Multiprocessing.h)
+
+#ifndef kDebug_OT
+#	define kDebug_OT 1
+#endif
+
+using std::string;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZMacMP
@@ -51,8 +63,6 @@ void ZMacMP::sInvokeInMP(EntryProc iProc, void* iParam)
 
 #include "zoolib/ZAtomic.h"
 #include "zoolib/ZThreadTM.h"
-
-#include <Multiprocessing.h>
 
 static MPQueueID sQueue;
 
@@ -144,18 +154,6 @@ void ZMacMP::sInvokeInMP(EntryProc iProc, void* iParam)
 		}
 	}
 #endif // ZCONFIG(Thread_API, Mac)
-
-// =================================================================================================
-
-#if ZCONFIG_API_Enabled(Net_Internet_MacOT_OSX)
-
-#include "zoolib/ZMemory.h" // For ZBlockZero
-
-#ifndef kDebug_OT
-#	define kDebug_OT 1
-#endif
-
-using std::string;
 
 // =================================================================================================
 #pragma mark -

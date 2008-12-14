@@ -37,7 +37,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(GRgnRep_RgnHandle)
 
-#include ZMACINCLUDE(ApplicationServices,QuickDraw.h)
+#include ZMACINCLUDE3(ApplicationServices,QD,QuickDraw.h)
 
 // =================================================================================================
 #pragma mark -

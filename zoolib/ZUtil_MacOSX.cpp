@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::vector;
 
 #if ZCONFIG_SPI_Enabled(Carbon)
-#	include ZMACINCLUDE(Carbon,Carbon.h)
+#	include ZMACINCLUDE3(CoreServices,CarbonCore,OSUtils.h) // For MakeDataExecutable
 #endif
 
 // =================================================================================================

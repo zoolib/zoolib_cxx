@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h"
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
-#	include ZMACINCLUDE(ApplicationServices,Fonts.h)
+#	include ZMACINCLUDE3(ApplicationServices,QD,Fonts.h)
 #endif
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)

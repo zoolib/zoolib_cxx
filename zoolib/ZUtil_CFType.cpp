@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include ZMACINCLUDE(CoreFoundation,CFData.h)
-#include ZMACINCLUDE(CoreFoundation,CFNumber.h)
-#include ZMACINCLUDE(CoreFoundation,CFString.h)
+#include ZMACINCLUDE2(CoreFoundation,CFData.h)
+#include ZMACINCLUDE2(CoreFoundation,CFNumber.h)
+#include ZMACINCLUDE2(CoreFoundation,CFString.h)
 
 using std::vector;
 

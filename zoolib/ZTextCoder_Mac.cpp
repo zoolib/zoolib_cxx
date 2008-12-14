@@ -28,8 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept>
 
-#include ZMACINCLUDE(CoreServices,MacErrors.h)
-#include ZMACINCLUDE(CoreServices,TextEncodingConverter.h)
+#include ZMACINCLUDE3(CoreServices,CarbonCore,MacErrors.h)
+#include ZMACINCLUDE3(CoreServices,CarbonCore,TextEncodingConverter.h)
 
 ZAssertCompile(sizeof(UniChar) == sizeof(UTF16));
 

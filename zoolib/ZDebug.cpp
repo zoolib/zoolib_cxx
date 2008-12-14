@@ -113,6 +113,8 @@ static void ZDebug_HandleInitial_Generic(int inLevel, ZDebug_Action inAction,
 
 ZDebug_HandleInitial_t sDebug_HandleInitial = ZDebug_HandleInitial_Generic;
 
+ZDebug_HandleActual_t sDebug_HandleActual = nil;
+
 // =================================================================================================
 
 #if ZCONFIG_SPI_Enabled(POSIX)
@@ -131,8 +133,6 @@ static void ZDebug_HandleActual_POSIX(int inLevel, ZDebug_Action inAction, const
 		}
 	}
 
-ZDebug_HandleActual_t sDebug_HandleActual = ZDebug_HandleActual_POSIX;
-
 #endif // ZCONFIG_SPI_Enabled(POSIX)
 
 // =================================================================================================
@@ -148,8 +148,6 @@ static void ZDebug_HandleActual_Be(int inLevel, ZDebug_Action inAction, const ch
 	else
 		::fputs(inMessage, stderr);
 	}
-
-ZDebug_HandleActual_t sDebug_HandleActual = ZDebug_HandleActual_Be;
 
 #endif // ZCONFIG_SPI_Enabled(BeOS)
 

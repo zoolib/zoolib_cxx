@@ -25,8 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Carbon)
 
-#include ZMACINCLUDE(Carbon,Dialogs.h) // For DialogPtr
-#include ZMACINCLUDE(Carbon,Events.h) // For EventRecord
+#include ZMACINCLUDE3(Carbon,HIToolbox,Dialogs.h) // For DialogPtr
+#include ZMACINCLUDE3(Carbon,HIToolbox,Events.h) // For EventRecord
 
 #include "zoolib/ZDCPixmapCombo.h"
 

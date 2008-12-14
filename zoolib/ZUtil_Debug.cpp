@@ -237,10 +237,6 @@ void ZUtil_Debug::sInstall()
 	// sDebug_HandleActual is a global declared in ZDebug.h and defined in ZDebug.cpp.
 	::sDebug_HandleActual = ZUtil_Debug::sDebug_HandleActual;
 
-	#ifndef __SGThread__
-	ZThread::sSetDeadlockHandler(sDeadlockHandler);
-	#endif
-
 	ZLog::sSetLogMeister(new LogMeister);
 
 	#if ZCONFIG_SPI_Enabled(POSIX) && ZCONFIG_API_Enabled(StackCrawl)

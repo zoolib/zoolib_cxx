@@ -165,7 +165,7 @@ static BOOL CALLBACK sEnumResNameCallbackA(HMODULE iHMODULE, const char* iType, 
 //#endif
 
 #if ZCONFIG_SPI_Enabled(Carbon)
-#	include ZMACINCLUDE(Carbon, Resources.h)
+#	include ZMACINCLUDE3(CoreServices,CarbonCore, Resources.h)
 #endif
 
 // =================================================================================================

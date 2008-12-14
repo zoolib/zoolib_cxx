@@ -270,9 +270,15 @@ private:
 
 // ==================================================
 #if __MACH__
-	#define ZMACINCLUDE(a,b) <a/a.h>
+	#define ZMACINCLUDE2(a,b) <a/b>
+	#if __MWERKS__
+		#define ZMACINCLUDE3(a,b,c) <b/c>
+	#else
+		#define ZMACINCLUDE3(a,b,c) <a/../Frameworks/b.framework/Headers/c>
+	#endif
 #else
-	#define ZMACINCLUDE(a,b) <b>
+	#define ZMACINCLUDE2(a,b) <b>
+	#define ZMACINCLUDE3(a,b,c) <c>
 #endif
 
 #endif // __zconfigl__

@@ -37,11 +37,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(Net_Internet_MacOT_OSX)
 
 #if ZCONFIG_SPI_Enabled(MacOSX)
-// Uggh. OpenTransportProviders.h is now part of the
-// OSServices subframework of CoreServices.
-#	include <CoreServices/CoreServices.h>
-#else
-#	include <OpenTransportProviders.h>
+#	include ZMACINCLUDE3(CoreServices,OSServices,OpenTransportProviders.h)
 #endif
 
 // =================================================================================================
