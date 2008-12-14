@@ -52,7 +52,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 		typedef int64 bigtime_t;
 
-#	elif ZCONFIG_SPI_Enabled(MacOSX) || ZCONFIG_SPI_Enabled(MacClassic) || ZCONFIG_SPI_Enabled(Carbon)
+#	elif ZCONFIG_SPI_Enabled(MacOSX) \
+	|| ZCONFIG_SPI_Enabled(MacClassic) \
+	|| ZCONFIG_SPI_Enabled(Carbon)
 
 		// This is a bit ugly, but will do till I get the iPhone/OSX stuff figured out.
 		#if ZCONFIG_SPI_Enabled(MacOSX) && !__arm__
@@ -70,10 +72,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		typedef UInt16 uint16;
 
 		#if !defined(_INT32)
+		#define _INT32
 		typedef int32_t int32;
 		#endif
 
-		#ifndef _UINT32
+		#if !defined(_UINT32)
+		#define _UINT32
 		typedef UInt32 uint32;
 		#endif
 
