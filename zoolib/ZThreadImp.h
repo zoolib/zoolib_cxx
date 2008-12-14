@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThreadImp_boost.h"
 #include "zoolib/ZThreadImp_MacMP.h"
 #include "zoolib/ZThreadImp_pthread.h"
-#include "zoolib/ZThreadImp_T.h"
+#include "zoolib/ZThreadImp_T.h" // For ZGuard_T
 #include "zoolib/ZThreadImp_Win.h"
 
 namespace ZooLib {
@@ -62,6 +62,9 @@ namespace ZooLib {
 
 #elif ZCONFIG_API_Enabled(ThreadImp_boost)
 
+	namespace ZTSS {}
+	namespace ZThreadImp {}
+
 	typedef ZMtx_boost ZMtx;
 	typedef ZCnd_boost ZCnd;
 	typedef ZSem_boost ZSem;
@@ -77,6 +80,8 @@ typedef ZGuard_T<ZMtx> ZGuardMtx;
 	using ZooLib::ZGuardMtx;
 	using ZooLib::ZMtx;
 	using ZooLib::ZSem;
+	namespace ZTSS = ZooLib::ZTSS;
+	namespace ZThreadImp = ZooLib::ZThreadImp;
 #endif
 
 #endif // __ZThreadImp__

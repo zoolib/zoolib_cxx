@@ -75,7 +75,7 @@ void ZThread::pRun()
 	delete this;
 	}
 
-ZThreadImp::ProcResult_t ZThread::spRun(ZThreadImp::ProcParam_t iParam)
+ZooLib::ZThreadImp::ProcResult_t ZThread::spRun(ZThreadImp::ProcParam_t iParam)
 	{
 	static_cast<ZThread*>(iParam)->pRun();
 	return 0;
