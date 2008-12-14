@@ -30,7 +30,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTypes.h"
 
 // And tell the npXXX headers that we have an int32 definition
-#define _INT32 1
+#ifndef _INT32
+#	define _INT32 1
+#endif
 
 #if defined(ZProjectHeader_npapi)
 
