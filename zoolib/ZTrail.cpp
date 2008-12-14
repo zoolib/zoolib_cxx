@@ -411,3 +411,6 @@ ZTrail ZTrail::sTrailFromTo(const vector<string>& iSource, const vector<string>&
 
 	return theTrail;
 	}
+
+ZTrail operator+(const string& iPOSIXTrail, const ZTrail& iTrail)
+	{ return ZTrail(iPOSIXTrail) + iTrail; }

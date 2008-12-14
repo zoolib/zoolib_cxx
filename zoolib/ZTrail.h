@@ -118,4 +118,6 @@ private:
 	bool fValid;
 	};
 
+ZTrail operator+(const std::string& iPOSIXTrail, const ZTrail& iTrail);
+
 #endif // __ZTrail__
