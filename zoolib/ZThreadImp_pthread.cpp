@@ -133,25 +133,6 @@ void ZSemNoTimeout_pthread::Signal()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSem_pthread
-
-ZSem_pthread::ZSem_pthread()
-	{}
-
-ZSem_pthread::~ZSem_pthread()
-	{}
-
-void ZSem_pthread::Wait()
-	{ this->Imp_Wait(1); }
-
-bool ZSem_pthread::Wait(double iTimeout)
-	{ return this->Imp_Wait(1, iTimeout); }
-
-void ZSem_pthread::Signal()
-	{ this->Imp_Signal(1); }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZThreadImp_pthread
 
 ZThreadImp_pthread::ID ZThreadImp_pthread::sCreate(size_t iStackSize, Proc_t iProc, void* iParam)

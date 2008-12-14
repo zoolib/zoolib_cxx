@@ -89,16 +89,7 @@ public:
 #pragma mark -
 #pragma mark * ZSem_boost
 
-class ZSem_boost : ZSem_T<ZMtx_boost, ZCnd_boost>
-	{
-public:
-	ZSem_boost();
-	~ZSem_boost();
-
-	void Wait();
-	bool Wait(double iTimeout);
-	void Signal();
-	};
+typedef ZSem_T<ZMtx_boost, ZCnd_boost> ZSem_boost;
 
 } // namespace ZooLib
 

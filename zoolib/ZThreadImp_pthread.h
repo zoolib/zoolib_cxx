@@ -122,16 +122,7 @@ protected:
 #pragma mark -
 #pragma mark * ZSem_pthread
 
-class ZSem_pthread : ZSem_T<ZMtx_pthread, ZCnd_pthread>
-	{
-public:
-	ZSem_pthread();
-	~ZSem_pthread();
-
-	void Wait();
-	bool Wait(double iTimeout);
-	void Signal();
-	};
+typedef ZSem_T<ZMtx_pthread, ZCnd_pthread> ZSem_pthread;
 
 // =================================================================================================
 #pragma mark -

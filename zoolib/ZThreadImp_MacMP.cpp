@@ -25,11 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <new> // for bad_alloc
 
 // For UpTime etc
-#if __MACH__
-//#	include <CoreServices/CoreServices.h>
-#else
-#	include <DriverServices.h>
-#endif
+#include ZMACINCLUDE3(CoreServices,CarbonCore,DriverServices.h)
 
 namespace ZooLib {
 
@@ -102,28 +98,6 @@ void ZMtx_MacMP::Acquire()
 
 void ZMtx_MacMP::Release()
 	{ ::MPExitCriticalRegion(fMPCriticalRegionID); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCnd_MacMP
-
-ZCnd_MacMP::ZCnd_MacMP()
-	{}
-
-ZCnd_MacMP::~ZCnd_MacMP()
-	{}
-
-void ZCnd_MacMP::Wait(ZMtx_MacMP& iMtx)
-	{ this->Imp_Wait(iMtx); }
-
-void ZCnd_MacMP::Wait(ZMtx_MacMP& iMtx, double iTimeout)
-	{ this->Imp_Wait(iMtx, iTimeout); }
-
-void ZCnd_MacMP::Signal()
-	{ this->Imp_Signal(); }
-
-void ZCnd_MacMP::Broadcast()
-	{ this->Imp_Broadcast(); }
 
 // =================================================================================================
 #pragma mark -

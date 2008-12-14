@@ -38,17 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZThreadImp_T.h"
 
-#if __MACH__
-// This is tricky. We need Multiprocessing.h, but don't want to pull in other
-// stuff like OpenTransport, which has conflicts with tcp.h.
-#	if __MWERKS__
-#		include <CarbonCore/CarbonCore.h>
-#	else
-#		include <CoreServices/CoreServices.h>
-#	endif
-#else
-#	include <Multiprocessing.h>
-#endif
+#include ZMACINCLUDE3(CoreServices,CarbonCore,Multiprocessing.h)
 
 namespace ZooLib {
 
@@ -109,18 +99,7 @@ protected:
 #pragma mark -
 #pragma mark * ZCnd_MacMP
 
-class ZCnd_MacMP : ZCnd_T<ZMtx_MacMP, ZSem_MacMP>
-	{
-public:
-	ZCnd_MacMP();
-
-	~ZCnd_MacMP();
-
-	void Wait(ZMtx_MacMP& iMtx);
-	void Wait(ZMtx_MacMP& iMtx, double iTimeout);
-	void Signal();
-	void Broadcast();
-	};
+typedef ZCnd_T<ZMtx_MacMP, ZSem_MacMP> ZCnd_MacMP;
 
 // =================================================================================================
 #pragma mark -

@@ -81,28 +81,6 @@ void ZMtx_Win::Release()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCnd_Win
-
-ZCnd_Win::ZCnd_Win()
-	{}
-
-ZCnd_Win::~ZCnd_Win()
-	{}
-
-void ZCnd_Win::Wait(ZMtx_Win& iMtx)
-	{ this->Imp_Wait(iMtx); }
-
-void ZCnd_Win::Wait(ZMtx_Win& iMtx, double iTimeout)
-	{ this->Imp_Wait(iMtx, iTimeout); }
-
-void ZCnd_Win::Signal()
-	{ this->Imp_Signal(); }
-
-void ZCnd_Win::Broadcast()
-	{ this->Imp_Broadcast(); }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZThreadImp_Win
 
 ZThreadImp_Win::ID ZThreadImp_Win::sCreate(size_t iStackSize, Proc_t iProc, void* iParam)

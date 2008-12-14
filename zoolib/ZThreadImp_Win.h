@@ -44,8 +44,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace ZooLib {
 
-class ZCnd_Win;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTSS_Win
@@ -103,18 +101,7 @@ protected:
 #pragma mark -
 #pragma mark * ZCnd_Win
 
-class ZCnd_Win : ZCnd_T<ZMtx_Win, ZSem_Win>
-	{
-public:
-	ZCnd_Win();
-
-	~ZCnd_Win();
-
-	void Wait(ZMtx_Win& iMtx);
-	void Wait(ZMtx_Win& iMtx, double iTimeout);
-	void Signal();
-	void Broadcast();
-	};
+typedef ZCnd_T<ZMtx_Win, ZSem_Win> ZCnd_Win;
 
 // =================================================================================================
 #pragma mark -

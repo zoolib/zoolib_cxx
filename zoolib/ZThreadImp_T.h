@@ -126,6 +126,10 @@ public:
 
 	~ZSem_T() {}
 
+	void Wait() { this->Imp_Wait(1); }
+	bool Wait(double iTimeout) { return this->Imp_Wait(1, iTimeout); }
+	void Signal() { this->Imp_Signal(1); }
+
 	void Imp_Wait(int iCount)
 		{
 		fMtx.Acquire();
@@ -233,6 +237,11 @@ public:
 		{}
 
 	~ZCnd_T() {}
+
+	void Wait(Mtx& iMtx) { this->Imp_Wait(iMtx); }
+	void Wait(Mtx& iMtx, double iTimeout) { this->Imp_Wait(iMtx, iTimeout); }
+	void Signal() { this->Imp_Signal(); }
+	void Broadcast() { this->Imp_Broadcast(); }
 
 	void Imp_Wait(Mtx& iMtx)
 		{

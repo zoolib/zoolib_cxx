@@ -72,25 +72,6 @@ void ZCnd_boost::Signal()
 void ZCnd_boost::Broadcast()
 	{ condition_variable::notify_all(); }
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZSem_boost
-
-ZSem_boost::ZSem_boost()
-	{}
-
-ZSem_boost::~ZSem_boost()
-	{}
-
-void ZSem_boost::Wait()
-	{ this->Imp_Wait(1); }
-
-bool ZSem_boost::Wait(double iTimeout)
-	{ return this->Imp_Wait(1, iTimeout); }
-
-void ZSem_boost::Signal()
-	{ this->Imp_Signal(1); }
-
 } // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(ThreadImp_boost)
