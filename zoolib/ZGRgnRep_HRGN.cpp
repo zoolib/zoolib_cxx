@@ -90,13 +90,6 @@ HRGN sMakeHRGN(const ZRef<ZGRgnRep>& iRep)
 	return sDecomposeRepIntoHRGN(iRep);
 	}
 
-HRGN sGetHRGN(HRGN iNative, bool iAdopt)
-	{
-	if (iAdopt)
-		return iNative;
-	return sCopyHRGN(iNative);
-	}
-
 } // anonymous namespace
 
 // =================================================================================================
@@ -140,7 +133,7 @@ ZRef<ZGRgnRep_HRGN> ZGRgnRep_HRGN::sGetRep(const ZRef<ZGRgnRep>& iRep)
 	}
 
 ZGRgnRep_HRGN::ZGRgnRep_HRGN(HRGN iHRGN, bool iAdopt)
-:	fHRGN(sGetHRGN(iHRGN, iAdopt))
+:	fHRGN(iAdopt ? iHRGN : sCopyHRGN(iHRGN))
 	{}
 
 ZGRgnRep_HRGN::ZGRgnRep_HRGN(HRGN iHRGN)

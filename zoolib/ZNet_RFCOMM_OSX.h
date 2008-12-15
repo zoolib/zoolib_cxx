@@ -64,8 +64,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	@class Delegate_ZNetListener_RFCOMM_OSX;
 	@class Delegate_ZNetEndpoint_RFCOMM_OSX;
 #else
-	// Otherwise pretend it's something compatible.
 	#include <IOBluetooth/IOBluetoothUserLib.h>
+
 	typedef OpaqueIOBluetoothObjectRef IOBluetoothDevice;
 	typedef OpaqueIOBluetoothObjectRef IOBluetoothRFCOMMChannel;
 	typedef OpaqueIOBluetoothObjectRef IOBluetoothUserNotification;

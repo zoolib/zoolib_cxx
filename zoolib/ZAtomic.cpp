@@ -390,95 +390,91 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 #pragma mark -
 #pragma mark * Dumb version
 
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadImp.h"
 
-// Note that we actually use a semaphore as our locking primitive, not a ZMutexNR, which
-// is a benaphore and thus relies on calls to ZAtomic_Inc and ZAtomic_Dec -- which
-// are the very methods we're trying to implement here.
-
-static ZSemaphore sSemaphore(1);
+static ZMtx sMutex;
 
 int ZAtomic_Swap(register ZAtomic_t* iAtomic, int iParam)
 	{
-	sSemaphore.Wait(1);
+	sMutex.Acquire();
 	int priorValue = iAtomic->fValue;
 	iAtomic->fValue = iParam;
-	sSemaphore.Signal(1);
+	sMutex.Release();
 	return priorValue;
 	}
 
 bool ZAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int inNewValue)
 	{
-	sSemaphore.Wait(1);
+	sMutex.Acquire();
 	if (iAtomic->fValue == iOldValue)
 		{
 		iAtomic->fValue = inNewValue;
-		sSemaphore.Signal(1);
+		sMutex.Release();
 		return true;
 		}
 	else
 		{
-		sSemaphore.Signal(1);
+		sMutex.Release();
 		return false;
 		}
 	}
 
 int ZAtomic_Add(ZAtomic_t* iAtomic, int iParam)
 	{
-	sSemaphore.Wait(1);
+	sMutex.Acquire();
 	int priorValue = iAtomic->fValue;
 	iAtomic->fValue = priorValue + iParam;
-	sSemaphore.Signal(1);
+	sMutex.Release();
 	return priorValue;
 	}
 
 int ZAtomic_And(ZAtomic_t* iAtomic, int iParam)
 	{
-	sSemaphore.Wait(1);
+	sMutex.Acquire();
 	int priorValue = iAtomic->fValue;
 	iAtomic->fValue = priorValue & iParam;
-	sSemaphore.Signal(1);
+	sMutex.Release();
 	return priorValue;
 	}
 
 int ZAtomic_Or(ZAtomic_t* iAtomic, int iParam)
 	{
-	sSemaphore.Wait(1);
+	sMutex.Acquire();
 	int priorValue = iAtomic->fValue;
 	iAtomic->fValue = priorValue | iParam;
-	sSemaphore.Signal(1);
+	sMutex.Release();
 	return priorValue;
 	}
 
 int ZAtomic_Xor(ZAtomic_t* iAtomic, int iParam)
 	{
-	sSemaphore.Wait(1);
+	sMutex.Acquire();
 	int priorValue = iAtomic->fValue;
 	iAtomic->fValue = priorValue ^ iParam;
-	sSemaphore.Signal(1);
+	sMutex.Release();
 	return priorValue;
 	}
 
 bool ZAtomic_DecAndTest(ZAtomic_t* iAtomic)
 	{
-	sSemaphore.Wait(1);
+	sMutex.Acquire();
 	bool isZero = --iAtomic->fValue == 0;
-	sSemaphore.Signal(1);
+	sMutex.Release();
 	return isZero;
 	}
 
 void ZAtomic_Inc(ZAtomic_t* iAtomic)
 	{
-	sSemaphore.Wait(1);
+	sMutex.Acquire();
 	++iAtomic->fValue;
-	sSemaphore.Signal(1);
+	sMutex.Release();
 	}
 
 void ZAtomic_Dec(ZAtomic_t* iAtomic)
 	{
-	sSemaphore.Wait(1);
+	sMutex.Acquire();
 	--iAtomic->fValue;
-	sSemaphore.Signal(1);
+	sMutex.Release();
 	}
 
 #endif

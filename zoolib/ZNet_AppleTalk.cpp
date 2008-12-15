@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZNet_AppleTalk.h"
-#include "zoolib/ZNet_AppleTalk_MacClassic.h"
 
 using std::string;
 

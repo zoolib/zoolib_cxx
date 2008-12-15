@@ -57,7 +57,8 @@ public:
 		virtual void Added(ZRef<ZUSBDevice> iUSBDevice) = 0;
 		};
 
-	ZUSBWatcher(IONotificationPortRef iIONotificationPortRef, SInt32 iUSBVendor, SInt32 iUSBProduct);
+	ZUSBWatcher(IONotificationPortRef iIONotificationPortRef,
+		SInt32 iUSBVendor, SInt32 iUSBProduct);
 	virtual ~ZUSBWatcher();
 
 	void SetObserver(Observer* iObserver);

@@ -97,13 +97,6 @@ RgnHandle sMakeRgnHandle(const ZRef<ZGRgnRep>& iRep)
 	return sDecomposeRepIntoRgnHandle(iRep);
 	}
 
-RgnHandle sGetRgnHandle(RgnHandle iRgnHandle, bool iAdopt)
-	{
-	if (iAdopt)
-		return iRgnHandle;
-	return sCopyRgn(iRgnHandle);
-	}
-
 } // anonymous namespace
 
 // =================================================================================================
@@ -148,7 +141,7 @@ ZRef<ZGRgnRep_RgnHandle> ZGRgnRep_RgnHandle::sGetRep(const ZRef<ZGRgnRep>& iRep)
 	}
 
 ZGRgnRep_RgnHandle::ZGRgnRep_RgnHandle(RgnHandle iRgnHandle, bool iAdopt)
-:	fRgnHandle(sGetRgnHandle(iRgnHandle, iAdopt))
+:	fRgnHandle(iAdopt ? iRgnHandle : sCopyRgn(iRgnHandle))
 	{}
 
 ZGRgnRep_RgnHandle::ZGRgnRep_RgnHandle(RgnHandle iRgnHandle)

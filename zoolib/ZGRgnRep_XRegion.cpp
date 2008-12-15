@@ -84,12 +84,6 @@ Region sMakeRegion(const ZRef<ZGRgnRep>& iRep)
 	return sDecomposeRepIntoRegion(iRep);
 	}
 
-Region sGetRegion(Region iNative, bool iAdopt)
-	{
-	if (iAdopt)
-		return iNative;
-	return sCopyRegion(iNative);
-	}
 } // anonymous namespace
 
 // =================================================================================================
@@ -135,7 +129,7 @@ ZRef<ZGRgnRep_XRegion> ZGRgnRep_XRegion::sGetRep(const ZRef<ZGRgnRep>& iRep)
 	}
 
 ZGRgnRep_XRegion::ZGRgnRep_XRegion(Region iRegion, bool iAdopt)
-:	fRegion(sGetRegion(iRegion, iAdopt))
+:	fRegion(iAdopt ? iRegion : sCopyRegion(iRegion))
 	{}
 
 ZGRgnRep_XRegion::ZGRgnRep_XRegion(Region iRegion)
