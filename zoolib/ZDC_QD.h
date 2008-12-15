@@ -198,7 +198,7 @@ public:
 	virtual ZDCRgn Internal_CalcClipRgn(const ZDCState& inState);
 
 protected:
-	ZMutex fMutex;
+	ZooLib::ZMutex fMutex;
 	};
 
 // =================================================================================================
@@ -279,6 +279,7 @@ protected:
 class ZDCSetupForQD
 	{
 public:
+	typedef ZooLib::ZPoint ZPoint;
 	ZDCSetupForQD(const ZDC& inDC, bool inUsingPatterns);
 	~ZDCSetupForQD();
 	ZPoint GetOffset();

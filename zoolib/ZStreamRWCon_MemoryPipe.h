@@ -80,9 +80,9 @@ private:
 	void pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 		uint64* oCountRead, uint64* oCountWritten);
 
-	ZMutexNR fMutex;
-	ZCondition fCondition_Read;
-	ZCondition fCondition_Write;
+	ZooLib::ZMutexNR fMutex;
+	ZooLib::ZCondition fCondition_Read;
+	ZooLib::ZCondition fCondition_Write;
 
 	bool fWriteClosed;
 

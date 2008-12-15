@@ -32,6 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_PageBuffered.h"
 #include "zoolib/ZString.h" // For pascal string conversions
 
+namespace ZString = ZooLib::ZZString;
+
 using std::string;
 using std::vector;
 

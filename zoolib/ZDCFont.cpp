@@ -30,6 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include ZMACINCLUDE3(ApplicationServices,QD,Fonts.h)
 #endif
 
+namespace ZString = ZooLib::ZZString;
+
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 
 const ZDCFont ZDCFont::sApp9(applFont, ZDCFont::normal, 9);

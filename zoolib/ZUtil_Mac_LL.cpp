@@ -36,6 +36,8 @@ using std::pair;
 #	include ZMACINCLUDE3(CoreServices,CarbonCore,Resources.h)
 #endif
 
+using ZooLib::ZMutex;
+using ZooLib::ZMutexLocker;
 using std::bad_alloc;
 using std::vector;
 

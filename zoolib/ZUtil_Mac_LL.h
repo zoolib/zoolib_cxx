@@ -37,7 +37,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Carbon)
 
-//#include "zoolib/ZThreadTM.h"
 #include "zoolib/ZTypes.h"
 
 #endif // ZCONFIG_SPI_Enabled(Carbon)
@@ -50,6 +49,8 @@ namespace ZUtil_Mac_LL {
 // =================================================================================================
 
 #if ZCONFIG_SPI_Enabled(Carbon)
+
+typedef ZooLib::ZPoint ZPoint;
 
 void sSetupPixMapColor(ZPoint inSize, int32 inDepth, PixMap& oPixMap);
 void sSetupPixMapColor(size_t inRowBytes, int32 inDepth, int32 inHeight, PixMap& oPixMap);

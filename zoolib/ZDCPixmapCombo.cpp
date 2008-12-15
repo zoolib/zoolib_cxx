@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCPixmapCombo.h"
 
+using ZooLib::ZPoint;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCPixmapCombo

@@ -34,6 +34,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <ctype.h>
 #include <stdio.h> // For sprintf
 
+namespace ZString = ZooLib::ZZString;
+
 using std::max;
 using std::min;
 using std::pair;

@@ -35,6 +35,8 @@ ZAssertCompile(sizeof(UniChar) == sizeof(UTF16));
 
 static const size_t kBufSize = ZooLib::sStackBufferSize;
 
+namespace ZString = ZooLib::ZZString;
+
 using std::min;
 using std::runtime_error;
 using std::string;
