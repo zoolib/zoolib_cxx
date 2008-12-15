@@ -63,13 +63,13 @@ void ZThread::pRun()
 		}
 	catch (std::exception& ex)
 		{
-		if (ZLOG(s, eNotice, "ZThread::pRun"))
-			s << "Uncaught exception: " << ex.what();
+		if (ZLOG(s, eNotice, "ZThread"))
+			s << "pRun, uncaught exception: " << ex.what();
 		}
 	catch (...)
 		{
 		if (ZLOG(s, eNotice, "ZThread::pRun"))
-			s << "Uncaught exception, not derived fron std::exception";
+			s << "pRun, uncaught exception, not derived fron std::exception";
 		}
 
 	delete this;
