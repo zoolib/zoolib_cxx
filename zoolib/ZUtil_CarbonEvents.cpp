@@ -20,12 +20,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_CarbonEvents.h"
 
-#include "zoolib/ZThreadImp.h"
-#include "zoolib/ZTypes.h"
-
 #if ZCONFIG_SPI_Enabled(Carbon)
 
-#include ZMACINCLUDE3(Carbon,HIToolbox,CarbonEvents.h)
+#include "zoolib/ZThreadImp.h"
+#include "zoolib/ZLog.h"
+#include "zoolib/ZTypes.h"
+
+namespace ZThreadImp = ZooLib::ZThreadImp;
 
 // =================================================================================================
 #pragma mark -
@@ -137,7 +138,23 @@ EventHandlerUPP Handler::sEventHandlerUPP = NewEventHandlerUPP(sEventHandler);
 
 pascal OSStatus Handler::sEventHandler(
 	EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon)
-	{ return static_cast<Handler*>(iRefcon)->EventHandler(iCallRef, iEventRef); }
+	{
+	try
+		{
+		return static_cast<Handler*>(iRefcon)->EventHandler(iCallRef, iEventRef);
+		}
+	catch (std::exception& ex)
+		{
+		if (ZLOG(s, eNotice, "Handler"))
+			s << "sEventHandler, uncaught exception: " << ex.what();
+		}
+	catch (...)
+		{
+		if (ZLOG(s, eNotice, "ZThread::pRun"))
+			s << "sEventHandler, uncaught exception, not derived fron std::exception";
+		}
+	return noErr;
+	}
 
 OSStatus Handler::EventHandler(EventHandlerCallRef iCallRef, EventRef iEventRef)
 	{
