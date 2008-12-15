@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(TextCoder_ICU)
 
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZFactoryChain.h"
 
 #include <stdexcept>
 #include "unicode/ucnv.h"
@@ -38,8 +39,6 @@ static const size_t kBufSize = ZooLib::sStackBufferSize;
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
-
-#include "zoolib/ZFactoryChain.h"
 
 namespace ZANONYMOUS {
 

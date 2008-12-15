@@ -39,7 +39,8 @@ class ZWinService
 public:
 	static void sRunDispatcher();
 
-	ZWinService(const std::wstring& iServiceName, LPSERVICE_MAIN_FUNCTIONW iServiceMain, bool iAllowPause);
+	ZWinService(
+		const std::wstring& iServiceName, LPSERVICE_MAIN_FUNCTIONW iServiceMain, bool iAllowPause);
 
 	virtual void Run(DWORD argc, LPWSTR* argv) = 0;
 
@@ -59,7 +60,8 @@ protected:
 	void pServiceMain(DWORD argc, LPWSTR* argv);
 
 private:
-	static DWORD WINAPI sServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext);
+	static DWORD WINAPI sServiceCtrlHandlerEx(
+		DWORD dwControl, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext);
 
 	std::wstring fServiceName;
 	SERVICE_STATUS fServiceStatus;
@@ -97,7 +99,6 @@ private:
 		return sInstanceStorage;
 		}
 	};
-
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 

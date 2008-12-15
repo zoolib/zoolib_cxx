@@ -22,7 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(TextCoder_Win)
 
+#include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZThread.h"
+
 #include <map>
 
 using std::map;
@@ -38,8 +40,6 @@ static const size_t kBufSize = ZooLib::sStackBufferSize;
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
-
-#include "zoolib/ZFactoryChain.h"
 
 namespace ZANONYMOUS {
 

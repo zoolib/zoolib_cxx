@@ -55,7 +55,8 @@ void ZWinService::sRunDispatcher()
 	::StartServiceCtrlDispatcherW(&sEntries[0]);	
 	}
 
-ZWinService::ZWinService(const wstring& iServiceName, LPSERVICE_MAIN_FUNCTIONW iServiceMain, bool iAllowPause)
+ZWinService::ZWinService(
+	const wstring& iServiceName, LPSERVICE_MAIN_FUNCTIONW iServiceMain, bool iAllowPause)
 :	fServiceName(iServiceName),
 	fAllowPause(iAllowPause)
 	{
@@ -81,7 +82,10 @@ void ZWinService::Continue()
 DWORD ZWinService::ServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVOID lpEventData)
 	{
 	if (ZLOG(s, eDebug, "ZWinService"))
-		s.Writef("ZWinService::ServiceCtrlHandlerEx, dwControl=%d, dwEventType=%d", dwControl, dwEventType);
+		{
+		s.Writef("ZWinService::ServiceCtrlHandlerEx, dwControl=%d, dwEventType=%d",
+			dwControl, dwEventType);
+		}
 
 	switch (dwControl)
 		{
@@ -128,7 +132,8 @@ DWORD ZWinService::ServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVO
 		case SERVICE_CONTROL_STOP:
 			{
 			ZMutexLocker locker(fMutex_State);
-			if (fServiceStatus.dwCurrentState == SERVICE_PAUSED || fServiceStatus.dwCurrentState == SERVICE_RUNNING)
+			if (fServiceStatus.dwCurrentState == SERVICE_PAUSED
+				|| fServiceStatus.dwCurrentState == SERVICE_RUNNING)
 				{
 				fServiceStatus.dwCurrentState = SERVICE_STOP_PENDING;
 				::SetServiceStatus(fServiceStatusHandle, &fServiceStatus);
@@ -174,7 +179,8 @@ void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 	fServiceStatus.dwCheckPoint = 0;
 	fServiceStatus.dwWaitHint = 0;
 
-	fServiceStatusHandle = ::RegisterServiceCtrlHandlerExW(const_cast<wchar_t*>(fServiceName.c_str()), sServiceCtrlHandlerEx, this);
+	fServiceStatusHandle = ::RegisterServiceCtrlHandlerExW(
+		const_cast<wchar_t*>(fServiceName.c_str()), sServiceCtrlHandlerEx, this);
 	if (!fServiceStatusHandle)
 		{
 		if (ZLOG(s, eErr, "ZWinService"))
@@ -197,9 +203,11 @@ void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 	::SetServiceStatus(fServiceStatusHandle, &fServiceStatus);
 	}
 
-DWORD WINAPI ZWinService::sServiceCtrlHandlerEx(DWORD dwControl, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext)
+DWORD WINAPI ZWinService::sServiceCtrlHandlerEx(
+	DWORD dwControl, DWORD dwEventType, LPVOID lpEventData, LPVOID lpContext)
 	{
-	return static_cast<ZWinService*>(lpContext)->ServiceCtrlHandlerEx(dwControl, dwEventType, lpEventData);
+	return static_cast<ZWinService*>(lpContext)
+		->ServiceCtrlHandlerEx(dwControl, dwEventType, lpEventData);
 	}
 
 #endif // ZCONFIG_SPI_Enabled(Win)

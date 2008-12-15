@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Internet_WinSock)
 
+#include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZTime.h"
 
@@ -30,8 +31,6 @@ using std::string;
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
-
-#include "zoolib/ZFactoryChain.h"
 
 namespace ZANONYMOUS {
 

@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Internet_MacOT_OSX)
 
+#include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZMemory.h" // For ZBlockZero
 
 #include ZMACINCLUDE3(CoreServices,CarbonCore,Multiprocessing.h)
@@ -190,8 +191,6 @@ InitHelper sInitHelper;
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
-
-#include "zoolib/ZFactoryChain.h"
 
 namespace ZANONYMOUS {
 
@@ -377,9 +376,6 @@ ZRef<ZNetName> ZNetNameLookup_Internet_MacOT_OSX::CurrentName()
 	{
 	return new ZNetName_Internet(fName, fPort);
 	}
-
-//##OTClientContextPtr contentPtr
-
 
 void ZNetNameLookup_Internet_MacOT_OSX::sMP_Lookup(void* iParam)
 	{
@@ -814,8 +810,6 @@ bool ZNetEndpoint_TCP_MacOT_OSX::Imp_WaitReadable(int iMilliseconds)
 	{
 	#warning "Not done yet. We're not really timing out here"
 	return this->Imp_CountReadable();
-//	#warning AG NDY
-//	return false;
 	}
 
 struct Imp_Write_t

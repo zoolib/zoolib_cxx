@@ -19,14 +19,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZGRgn.h"
+#include "zoolib/ZFactoryChain.h"
 
 using namespace ZooLib;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
-
-#include "zoolib/ZFactoryChain.h"
 
 ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZGRgnRep>, const ZRect&);
 

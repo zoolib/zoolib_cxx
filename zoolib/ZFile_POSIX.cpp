@@ -37,8 +37,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_File_AtAPISupported 1
 #endif
 
-
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZFactoryChain.h"
 
 #include <vector>
 
@@ -59,8 +59,6 @@ using std::vector;
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
-
-#include "zoolib/ZFactoryChain.h"
 
 namespace ZANONYMOUS {
 

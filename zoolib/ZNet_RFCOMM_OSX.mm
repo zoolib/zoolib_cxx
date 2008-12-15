@@ -31,6 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import <IOBluetooth/objc/IOBluetoothRFCOMMChannel.h>
 #import <IOBluetooth/objc/IOBluetoothSDPServiceRecord.h>
 
+#include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZOBJC.h"
 
 using namespace ZooLib;
@@ -42,8 +43,6 @@ using std::runtime_error;
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
-
-#include "zoolib/ZFactoryChain.h"
 
 namespace ZANONYMOUS {
 

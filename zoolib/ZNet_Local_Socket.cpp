@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Local_Socket)
 
+#include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZMemory.h"
 
 #include <errno.h>
@@ -33,8 +34,6 @@ using std::string;
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
-
-#include "zoolib/ZFactoryChain.h"
 
 static bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Local::LookupParam_t iParam)
 	{

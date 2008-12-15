@@ -20,11 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTextCollator.h"
 
+#include "zoolib/ZFactoryChain.h"
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factories
-
-#include "zoolib/ZFactoryChain.h"
 
 ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&);
 

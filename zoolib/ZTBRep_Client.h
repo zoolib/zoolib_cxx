@@ -44,7 +44,7 @@ protected:
 public:
 // From ZTBRep
 	virtual void AllocateIDs(size_t iCount,
-					Callback_AllocateIDs_t iCallback_AllocateIDs, void* iRefcon);
+		Callback_AllocateIDs_t iCallback_AllocateIDs, void* iRefcon);
 
 	virtual ZTBRepTransaction* CreateTransaction();
 
@@ -64,27 +64,27 @@ private:
 	class TransCount_t;
 
 	void Trans_Search(Transaction* iTransaction, const ZTBQuery& iQuery,
-					ZTBRepTransaction::Callback_Search_t iCallback, void* iRefcon);
+		ZTBRepTransaction::Callback_Search_t iCallback, void* iRefcon);
 
 	void Trans_Count(Transaction* iTransaction, const ZTBQuery& iQuery,
-					ZTBRepTransaction::Callback_Count_t iCallback, void* iRefcon);
+		ZTBRepTransaction::Callback_Count_t iCallback, void* iRefcon);
 
 	void Trans_GetTuples(Transaction* iTransaction, size_t iCount, const uint64* iIDs,
-					ZTBRepTransaction::Callback_GetTuple_t iCallback, void* iRefcon);
+		ZTBRepTransaction::Callback_GetTuple_t iCallback, void* iRefcon);
 
 	void Trans_SetTuple(Transaction* iTransaction, uint64 iID, const ZTuple& iTuple);
 
 	void Trans_AbortPreValidate(Transaction* iTransaction);
 
 	void Trans_Validate(Transaction* iTransaction,
-					ZTBRepTransaction::Callback_Validate_t iCallback_Validate, void* iRefcon);
+		ZTBRepTransaction::Callback_Validate_t iCallback_Validate, void* iRefcon);
 
 	void Trans_AcceptFailure(Transaction* iTransaction);
 
 	void Trans_CancelPostValidate(Transaction* iTransaction);
 
 	void Trans_Commit(Transaction* iTransaction,
-					ZTBRepTransaction::Callback_Commit_t iCallback_Commit, void* iRefcon);
+		ZTBRepTransaction::Callback_Commit_t iCallback_Commit, void* iRefcon);
 
 	TransTuple* pGetTransTuple(Transaction* iTransaction, uint64 iID);
 

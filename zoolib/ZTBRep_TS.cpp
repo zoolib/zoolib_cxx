@@ -806,7 +806,8 @@ void ZTBRep_TS::Trans_Commit(Transaction* iTransaction)
 			storedTuples.reserve(iTransaction->fTransTuples.size());
 
 			for (MapTransTuple_t::iterator
-				iterTT = iTransaction->fTransTuples.begin(), theEnd = iTransaction->fTransTuples.end();
+				iterTT = iTransaction->fTransTuples.begin(),
+				theEnd = iTransaction->fTransTuples.end();
 				iterTT != theEnd; ++iterTT)
 				{
 				TransTuple& currentTT = (*iterTT).second;

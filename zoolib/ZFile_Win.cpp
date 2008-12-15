@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(File_Win)
 
+#include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZUtil_Win.h"
 
 #include <cctype>
@@ -40,8 +41,6 @@ If fBase is empty then fComps must also be empty and we represent the root.
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
-
-#include "zoolib/ZFactoryChain.h"
 
 namespace ZANONYMOUS {
 

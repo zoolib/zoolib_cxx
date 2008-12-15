@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(TextCoder_Mac)
 
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZUnicode.h"
 
@@ -45,8 +46,6 @@ using std::vector;
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
-
-#include "zoolib/ZFactoryChain.h"
 
 namespace ZANONYMOUS {
 

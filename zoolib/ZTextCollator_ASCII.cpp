@@ -21,14 +21,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTextCollator_ASCII.h"
 
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZFactoryChain.h"
 
 using std::min;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
-
-#include "zoolib/ZFactoryChain.h"
 
 namespace ZANONYMOUS {
 

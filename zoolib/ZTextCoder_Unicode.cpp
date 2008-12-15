@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTextCoder_Unicode.h"
 #include "zoolib/ZByteSwap.h"
+#include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZMemory.h"
 
 using std::min;
@@ -30,8 +31,6 @@ static const size_t kBufSize = ZooLib::sStackBufferSize;
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
-
-#include "zoolib/ZFactoryChain.h"
 
 namespace ZANONYMOUS {
 
