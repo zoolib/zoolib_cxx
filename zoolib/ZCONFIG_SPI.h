@@ -106,7 +106,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark Carbon
 #ifndef ZCONFIG_SPI_Avail__Carbon
-#	if __MACH__ && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+#	if __MACH__ && !__arm__
 #		define ZCONFIG_SPI_Avail__Carbon 1
 #	elif macintosh
 #		if defined(TARGET_API_MAC_CARBON) && TARGET_API_MAC_CARBON

@@ -50,17 +50,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		typedef __int64 int64;
 		typedef unsigned __int64 uint64;
 
-		typedef int64 bigtime_t;
-
 #	elif ZCONFIG_SPI_Enabled(MacOSX) \
 	|| ZCONFIG_SPI_Enabled(MacClassic) \
 	|| ZCONFIG_SPI_Enabled(Carbon)
 
-		// This is a bit ugly, but will do till I get the iPhone/OSX stuff figured out.
-		#if ZCONFIG_SPI_Enabled(MacOSX) && !__arm__
-			#include <CoreServices/../Frameworks/CarbonCore.framework/Headers/MacTypes.h>
+		#if __arm__
+		#	include <MacTypes.h>
 		#else
-			#include <MacTypes.h>
+		#	include ZMACINCLUDE3(CoreServices,CarbonCore,MacTypes.h)
 		#endif
 
 		#include <stdint.h>
@@ -72,19 +69,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		typedef UInt16 uint16;
 
 		#if !defined(_INT32)
-		#define _INT32
-		typedef int32_t int32;
+			#define _INT32
+			typedef int32_t int32;
 		#endif
 
 		#if !defined(_UINT32)
-		#define _UINT32
-		typedef UInt32 uint32;
+			#define _UINT32
+			typedef UInt32 uint32;
 		#endif
 
 		typedef int64_t int64;
 		typedef UInt64 uint64;
-
-		typedef int64 bigtime_t;
 
 #	else
 
@@ -102,10 +97,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		typedef int64_t int64;
 		typedef uint64_t uint64;
 
-		typedef int64 bigtime_t;
-
 	#endif
 
 #endif // defined(ZStdInt_ProjectHeader)
+
+typedef int64 bigtime_t;
 
 #endif // __ZStdInt__
