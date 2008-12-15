@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
+#include "zoolib/ZNetscape_Macros.h"
 #include "zoolib/ZUtil_MacOSX.h"
 
 #include <string>
@@ -378,52 +379,80 @@ NPObject* ObjectG::sAllocate(NPP npp, NPClass *aClass)
 	}
 
 void ObjectG::sDeallocate(NPObject* npobj)
-	{ delete static_cast<ObjectG*>(npobj); }
+	{
+	ZNETSCAPE_BEFORE
+		delete static_cast<ObjectG*>(npobj);
+	ZNETSCAPE_AFTER_VOID
+	}
 
 void ObjectG::sInvalidate(NPObject* npobj)
-	{ static_cast<ObjectG*>(npobj)->Imp_Invalidate(); }
+	{
+	ZNETSCAPE_BEFORE
+		static_cast<ObjectG*>(npobj)->Imp_Invalidate();
+	ZNETSCAPE_AFTER_VOID
+	}
 
 bool ObjectG::sHasMethod(NPObject* npobj, NPIdentifier name)
-	{ return static_cast<ObjectG*>(npobj)->Imp_HasMethod(sAsString(name)); }
+	{
+	ZNETSCAPE_BEFORE
+		return static_cast<ObjectG*>(npobj)->Imp_HasMethod(sAsString(name));
+	ZNETSCAPE_AFTER_RETURN_FALSE
+	}
 
 bool ObjectG::sInvoke(NPObject* npobj,
 	NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result)
 	{
-	return static_cast<ObjectG*>(npobj)->Imp_Invoke(
-		sAsString(name),
-		static_cast<const NPVariantG*>(args),
-		argCount,
-		*static_cast<NPVariantG*>(result));
+	ZNETSCAPE_BEFORE
+		return static_cast<ObjectG*>(npobj)->Imp_Invoke(
+			sAsString(name),
+			static_cast<const NPVariantG*>(args),
+			argCount,
+			*static_cast<NPVariantG*>(result));
+	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
 bool ObjectG::sInvokeDefault(NPObject* npobj,
 	const NPVariant* args, uint32_t argCount, NPVariant* result)
 	{
-	return static_cast<ObjectG*>(npobj)->Imp_InvokeDefault(
-		static_cast<const NPVariantG*>(args),
-		argCount,
-		*static_cast<NPVariantG*>(result));
+	ZNETSCAPE_BEFORE
+		return static_cast<ObjectG*>(npobj)->Imp_InvokeDefault(
+			static_cast<const NPVariantG*>(args),
+			argCount,
+			*static_cast<NPVariantG*>(result));
+	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
 bool ObjectG::sHasProperty(NPObject*  npobj, NPIdentifier name)
-	{ return static_cast<ObjectG*>(npobj)->Imp_HasProperty(sAsString(name)); }
+	{
+	ZNETSCAPE_BEFORE
+		return static_cast<ObjectG*>(npobj)->Imp_HasProperty(sAsString(name));
+	ZNETSCAPE_AFTER_RETURN_FALSE
+	}
 
 bool ObjectG::sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result)
 	{
-	return static_cast<ObjectG*>(npobj)->Imp_GetProperty(
-		sAsString(name),
-		*static_cast<NPVariantG*>(result));
+	ZNETSCAPE_BEFORE
+		return static_cast<ObjectG*>(npobj)->Imp_GetProperty(
+			sAsString(name),
+			*static_cast<NPVariantG*>(result));
+	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
 bool ObjectG::sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value)
 	{
-	return static_cast<ObjectG*>(npobj)->Imp_SetProperty(
-		sAsString(name),
-		*static_cast<const NPVariantG*>(value));
+	ZNETSCAPE_BEFORE
+		return static_cast<ObjectG*>(npobj)->Imp_SetProperty(
+			sAsString(name),
+			*static_cast<const NPVariantG*>(value));
+	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
 bool ObjectG::sRemoveProperty(NPObject* npobj, NPIdentifier name)
-	{ return static_cast<ObjectG*>(npobj)->Imp_RemoveProperty(sAsString(name)); }
+	{
+	ZNETSCAPE_BEFORE
+		return static_cast<ObjectG*>(npobj)->Imp_RemoveProperty(sAsString(name));
+	ZNETSCAPE_AFTER_RETURN_FALSE
+	}
 
 NPClass ObjectG::sNPClass =
 	{
@@ -743,47 +772,103 @@ void GuestMeister::Host_SetException(NPObject* obj, const NPUTF8* message)
 NPError GuestMeister::sNew(
 	NPMIMEType pluginType, NPP instance, uint16 mode,
 	int16 argc, char* argn[], char* argv[], NPSavedData* saved)
-	{ return sGet()->New(pluginType, instance, mode, argc, argn, argv, saved); }
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->New(pluginType, instance, mode, argc, argn, argv, saved);
+	ZNETSCAPE_AFTER_NPERROR
+	}
 
 NPError GuestMeister::sDestroy(NPP instance, NPSavedData** save)
-	{ return sGet()->Destroy(instance, save); }
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->Destroy(instance, save);
+	ZNETSCAPE_AFTER_NPERROR
+	}
 
 NPError GuestMeister::sSetWindow(NPP instance, NPWindow* window)
-	{ return sGet()->SetWindow(instance, window); }
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->SetWindow(instance, window);
+	ZNETSCAPE_AFTER_NPERROR
+	}
 
 NPError GuestMeister::sNewStream(
 	NPP instance, NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype)
-	{ return sGet()->NewStream(instance, type, stream, seekable, stype); }
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->NewStream(instance, type, stream, seekable, stype);
+	ZNETSCAPE_AFTER_NPERROR
+	}
 
 NPError GuestMeister::sDestroyStream(NPP instance, NPStream* stream, NPReason reason)
-	{ return sGet()->DestroyStream(instance, stream, reason); }
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->DestroyStream(instance, stream, reason);
+	ZNETSCAPE_AFTER_NPERROR
+	}
 
 int32 GuestMeister::sWriteReady(NPP instance, NPStream* stream)
-	{ return sGet()->WriteReady(instance, stream); }
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->WriteReady(instance, stream);
+	ZNETSCAPE_AFTER_RETURN(0)
+	}
 
 int32 GuestMeister::sWrite(NPP instance, NPStream* stream, int32_t offset, int32_t len, void* buffer)
-	{ return sGet()->Write(instance, stream, offset, len, buffer); }
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->Write(instance, stream, offset, len, buffer);
+	ZNETSCAPE_AFTER_RETURN(0)
+	}
 
 void GuestMeister::sStreamAsFile(NPP instance, NPStream* stream, const char* fname)
-	{ return sGet()->StreamAsFile(instance, stream, fname); }
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->StreamAsFile(instance, stream, fname);
+	ZNETSCAPE_AFTER_VOID
+	}
 
 void GuestMeister::sPrint(NPP instance, NPPrint* platformPrint)
-	{ return sGet()->Print(instance, platformPrint); }
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->Print(instance, platformPrint);
+	ZNETSCAPE_AFTER_VOID
+	}
 
 int16 GuestMeister::sHandleEvent(NPP instance, void* event)
-	{ return sGet()->HandleEvent(instance, event); }
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->HandleEvent(instance, event);
+	ZNETSCAPE_AFTER_RETURN(0)
+	}
 
 void GuestMeister::sURLNotify(NPP instance, const char* url, NPReason reason, void* notifyData)
-	{ return sGet()->URLNotify(instance, url, reason, notifyData); }
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->URLNotify(instance, url, reason, notifyData);
+	ZNETSCAPE_AFTER_VOID
+	}
 
 jref GuestMeister::sGetJavaClass()
-	{ return sGet()->GetJavaClass(); }
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->GetJavaClass();
+	ZNETSCAPE_AFTER_RETURN_NIL
+	}
 
 NPError GuestMeister::sGetValue(NPP instance, NPPVariable variable, void *value)
-	{ return sGet()->GetValue(instance, variable, value); }
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->GetValue(instance, variable, value);
+	ZNETSCAPE_AFTER_NPERROR
+	}
 
 NPError GuestMeister::sSetValue(NPP instance, NPNVariable variable, void *value)
-	{ return sGet()->SetValue(instance, variable, value); }
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->SetValue(instance, variable, value);
+	ZNETSCAPE_AFTER_NPERROR
+	}
 
 // =================================================================================================
 #pragma mark -
