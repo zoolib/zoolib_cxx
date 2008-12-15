@@ -42,7 +42,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <winsock.h>
 
-// ==================================================
+// =================================================================================================
 #pragma mark -
 #pragma mark * ZNet_Internet_WinSock
 
@@ -54,14 +54,15 @@ private:
 	class InitHelper__;
 	};
 
-// ==================================================
+// =================================================================================================
 #pragma mark -
 #pragma mark * ZNetNameLookup_Internet_WinSock
 
 class ZNetNameLookup_Internet_WinSock : public ZNetNameLookup
 	{
 public:
-	ZNetNameLookup_Internet_WinSock(const std::string& inName, ip_port inPort, size_t inMaxAddresses);
+	ZNetNameLookup_Internet_WinSock(
+		const std::string& inName, ip_port inPort, size_t inMaxAddresses);
 	virtual ~ZNetNameLookup_Internet_WinSock();
 
 // From ZNetNameLookup
@@ -80,7 +81,7 @@ protected:
 	std::vector<ip_addr> fAddresses;
 	};
 
-// ==================================================
+// =================================================================================================
 #pragma mark -
 #pragma mark * ZNetListener_TCP_WinSock
 
@@ -106,7 +107,7 @@ protected:
 	SOCKET fSOCKET;
 	};
 
-// ==================================================
+// =================================================================================================
 #pragma mark -
 #pragma mark * ZNetEndpoint_TCP_WinSock
 
@@ -150,28 +151,6 @@ public:
 private:
 	SOCKET fSOCKET;
 	};
-
-#if 0
-// ==================================================
-#pragma mark -
-#pragma mark * ZNetEndpointDG_UDP_WinSock
-
-class ZNetEndpointDG_UDP_WinSock : public ZNetEndpointDG_UDP
-	{
-public:
-	ZNetEndpointDG_UDP_WinSock();
-	ZNetEndpointDG_UDP_WinSock(ip_port inLocalPort);
-
-	virtual ZNet::Error Receive(void* inBuffer, size_t inBufferSize, size_t& outCountReceived, ZNetAddress*& outSourceAddress);
-	virtual ZNet::Error Send(const void* inBuffer, size_t inCount, ZNetAddress* inDestAddress);
-
-protected:
-	void InternalAllocateSocket(ip_port inLocalPort);
-
-private:
-	SOCKET fSOCKET;
-	};
-#endif
 
 #endif // ZCONFIG_API_Enabled(Net_Internet_WinSock)
 

@@ -193,7 +193,8 @@ ZFileFormat_JPEG::StreamR_Segment::StreamR_Segment(uint8& oSegmentType, const ZS
 	this->Internal_Init(oSegmentType, true);
 	}
 
-ZFileFormat_JPEG::StreamR_Segment::StreamR_Segment(uint8& oSegmentType, bool iSkipOnDestroy, const ZStreamR& iStreamR)
+ZFileFormat_JPEG::StreamR_Segment::StreamR_Segment(
+	uint8& oSegmentType, bool iSkipOnDestroy, const ZStreamR& iStreamR)
 :	fStreamR(iStreamR)
 	{
 	this->Internal_Init(oSegmentType, iSkipOnDestroy);
@@ -235,7 +236,8 @@ size_t ZFileFormat_JPEG::StreamR_Segment::Imp_CountReadable()
 bool ZFileFormat_JPEG::StreamR_Segment::Imp_WaitReadable(int iMilliseconds)
 	{ return fStreamR.WaitReadable(iMilliseconds); }
 
-void ZFileFormat_JPEG::StreamR_Segment::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten)
+void ZFileFormat_JPEG::StreamR_Segment::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
+	uint64* oCountRead, uint64* oCountWritten)
 	{
 	uint64 countRead;
 	fStreamR.CopyTo(iStreamW, min(iCount, uint64(fCountRemaining)), &countRead, oCountWritten);
@@ -244,7 +246,8 @@ void ZFileFormat_JPEG::StreamR_Segment::Imp_CopyToDispatch(const ZStreamW& iStre
 		*oCountRead = countRead;	
 	}
 
-void ZFileFormat_JPEG::StreamR_Segment::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten)
+void ZFileFormat_JPEG::StreamR_Segment::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
+	uint64* oCountRead, uint64* oCountWritten)
 	{
 	uint64 countRead;
 	fStreamR.CopyTo(iStreamW, min(iCount, uint64(fCountRemaining)), &countRead, oCountWritten);
@@ -388,7 +391,9 @@ void sDumpSegments(const ZStreamR& iStreamR, const ZStrimW& iStrimW)
 				{
 				uint64 countRead;
 				ZStreamRWPos_RAM theStream;
-				s.CopyTo(ZStreamW_Tee(theStream, ZStreamW_HexStrim(" ", "", 100, iStrimW)), 16, &countRead, nil);
+				s.CopyTo(ZStreamW_Tee(theStream,
+					ZStreamW_HexStrim(" ", "", 100, iStrimW)), 16, &countRead, nil);
+
 				if (countRead == 0)
 					break;
 				theStream.SetPosition(0);

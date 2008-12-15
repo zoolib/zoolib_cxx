@@ -124,11 +124,13 @@ ZFileFormat_IFF::StreamR_Chunk::StreamR_Chunk(uint32& oChunkType, const ZStreamR
 :	fStream(iStream)
 	{ this->Internal_Init(oChunkType, true, true, 2); }
 
-ZFileFormat_IFF::StreamR_Chunk::StreamR_Chunk(uint32& oChunkType, bool iSkipOnDestroy, const ZStreamR& iStream)
+ZFileFormat_IFF::StreamR_Chunk::StreamR_Chunk(
+	uint32& oChunkType, bool iSkipOnDestroy, const ZStreamR& iStream)
 :	fStream(iStream)
 	{ this->Internal_Init(oChunkType, iSkipOnDestroy, true, 2); }
 
-ZFileFormat_IFF::StreamR_Chunk::StreamR_Chunk(uint32& oChunkType, bool iSkipOnDestroy, bool iBigEndianSizes, size_t iPadMultiple, const ZStreamR& iStream)
+ZFileFormat_IFF::StreamR_Chunk::StreamR_Chunk(uint32& oChunkType, bool iSkipOnDestroy,
+	bool iBigEndianSizes, size_t iPadMultiple, const ZStreamR& iStream)
 :	fStream(iStream)
 	{ this->Internal_Init(oChunkType, iSkipOnDestroy, iBigEndianSizes, iPadMultiple); }
 
@@ -170,7 +172,8 @@ size_t ZFileFormat_IFF::StreamR_Chunk::Imp_CountReadable()
 bool ZFileFormat_IFF::StreamR_Chunk::Imp_WaitReadable(int iMilliseconds)
 	{ return fStream.WaitReadable(iMilliseconds); }
 
-void ZFileFormat_IFF::StreamR_Chunk::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten)
+void ZFileFormat_IFF::StreamR_Chunk::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
+	uint64* oCountRead, uint64* oCountWritten)
 	{
 	if (oCountRead)
 		*oCountRead = 0;
@@ -181,7 +184,8 @@ void ZFileFormat_IFF::StreamR_Chunk::Imp_CopyToDispatch(const ZStreamW& iStreamW
 		*oCountRead = countRead;	
 	}
 
-void ZFileFormat_IFF::StreamR_Chunk::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten)
+void ZFileFormat_IFF::StreamR_Chunk::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
+	uint64* oCountRead, uint64* oCountWritten)
 	{
 	uint64 countRead;
 	fStream.CopyTo(iStreamW, min(iCount, uint64(fCountRemaining)), &countRead, oCountWritten);
@@ -199,7 +203,8 @@ void ZFileFormat_IFF::StreamR_Chunk::Imp_Skip(uint64 iCount, uint64* oCountSkipp
 		*oCountSkipped = countSkipped;	
 	}
 
-void ZFileFormat_IFF::StreamR_Chunk::Internal_Init(uint32& oChunkType, bool iSkipOnDestroy, bool iBigEndianSizes, size_t iPadMultiple)
+void ZFileFormat_IFF::StreamR_Chunk::Internal_Init(uint32& oChunkType, bool iSkipOnDestroy,
+	bool iBigEndianSizes, size_t iPadMultiple)
 	{
 	try
 		{
@@ -230,13 +235,15 @@ ZFileFormat_IFF::StreamRPos_Chunk::StreamRPos_Chunk(uint32& oChunkType, const ZS
 	this->Internal_Init(oChunkType, true, true, 2);
 	}
 
-ZFileFormat_IFF::StreamRPos_Chunk::StreamRPos_Chunk(uint32& oChunkType, bool iSkipOnDestroy, const ZStreamRPos& iStream)
+ZFileFormat_IFF::StreamRPos_Chunk::StreamRPos_Chunk(
+	uint32& oChunkType, bool iSkipOnDestroy, const ZStreamRPos& iStream)
 :	fStream(iStream)
 	{
 	this->Internal_Init(oChunkType, iSkipOnDestroy, true, 2);
 	}
 
-ZFileFormat_IFF::StreamRPos_Chunk::StreamRPos_Chunk(uint32& oChunkType, bool iSkipOnDestroy, bool iBigEndianSizes, size_t iPadMultiple, const ZStreamRPos& iStream)
+ZFileFormat_IFF::StreamRPos_Chunk::StreamRPos_Chunk(uint32& oChunkType, bool iSkipOnDestroy,
+	bool iBigEndianSizes, size_t iPadMultiple, const ZStreamRPos& iStream)
 :	fStream(iStream)
 	{
 	this->Internal_Init(oChunkType, iSkipOnDestroy, iBigEndianSizes, iPadMultiple);
@@ -273,11 +280,19 @@ void ZFileFormat_IFF::StreamRPos_Chunk::Imp_Read(void* iDest, size_t iCount, siz
 		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
 	}
 
-void ZFileFormat_IFF::StreamRPos_Chunk::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten)
-	{ fStream.CopyTo(iStreamW, min(iCount, fStart + fSize - fStream.GetPosition()), oCountRead, oCountWritten); }
+void ZFileFormat_IFF::StreamRPos_Chunk::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
+	uint64* oCountRead, uint64* oCountWritten)
+	{
+	fStream.CopyTo(iStreamW,
+		min(iCount, fStart + fSize - fStream.GetPosition()), oCountRead, oCountWritten);
+	}
 
-void ZFileFormat_IFF::StreamRPos_Chunk::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten)
-	{ fStream.CopyTo(iStreamW, min(iCount, fStart + fSize - fStream.GetPosition()), oCountRead, oCountWritten); }
+void ZFileFormat_IFF::StreamRPos_Chunk::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
+	uint64* oCountRead, uint64* oCountWritten)
+	{
+	fStream.CopyTo(iStreamW,
+		min(iCount, fStart + fSize - fStream.GetPosition()), oCountRead, oCountWritten);
+	}
 
 void ZFileFormat_IFF::StreamRPos_Chunk::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
@@ -296,7 +311,8 @@ void ZFileFormat_IFF::StreamRPos_Chunk::Imp_SetPosition(uint64 iPosition)
 uint64 ZFileFormat_IFF::StreamRPos_Chunk::Imp_GetSize()
 	{ return min(uint64(fSize), fStream.GetSize() - fStart); }
 
-void ZFileFormat_IFF::StreamRPos_Chunk::Internal_Init(uint32& oChunkType, bool iSkipOnDestroy, bool iBigEndianSizes, size_t iPadMultiple)
+void ZFileFormat_IFF::StreamRPos_Chunk::Internal_Init(uint32& oChunkType, bool iSkipOnDestroy,
+	bool iBigEndianSizes, size_t iPadMultiple)
 	{
 	try
 		{
@@ -329,7 +345,8 @@ ZFileFormat_IFF::StreamWPos_Chunk::StreamWPos_Chunk(uint32 iChunkType, const ZSt
 	this->Internal_Init(iChunkType);
 	}
 
-ZFileFormat_IFF::StreamWPos_Chunk::StreamWPos_Chunk(uint32 iChunkType, bool iBigEndianSizes, size_t iPadMultiple, const ZStreamWPos& iStream)
+ZFileFormat_IFF::StreamWPos_Chunk::StreamWPos_Chunk(uint32 iChunkType, bool iBigEndianSizes,
+	size_t iPadMultiple, const ZStreamWPos& iStream)
 :	fStream(iStream),
 	fBigEndianSizes(iBigEndianSizes),
 	fPadMultiple(iPadMultiple)
@@ -349,13 +366,16 @@ ZFileFormat_IFF::StreamWPos_Chunk::~StreamWPos_Chunk()
 	fStream.SetPosition(position + sAligned(size, fPadMultiple));
 	}
 
-void ZFileFormat_IFF::StreamWPos_Chunk::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+void ZFileFormat_IFF::StreamWPos_Chunk::Imp_Write(
+	const void* iSource, size_t iCount, size_t* oCountWritten)
 	{ fStream.Write(iSource, iCount, oCountWritten); }
 
-void ZFileFormat_IFF::StreamWPos_Chunk::Imp_CopyFromDispatch(const ZStreamR& iStreamR, uint64 iCount, uint64* oCountRead, uint64* oCountWritten)
+void ZFileFormat_IFF::StreamWPos_Chunk::Imp_CopyFromDispatch(
+	const ZStreamR& iStreamR, uint64 iCount, uint64* oCountRead, uint64* oCountWritten)
 	{ fStream.CopyFrom(iStreamR, iCount, oCountRead, oCountWritten); }
 
-void ZFileFormat_IFF::StreamWPos_Chunk::Imp_CopyFrom(const ZStreamR& iStreamR, uint64 iCount, uint64* oCountRead, uint64* oCountWritten)
+void ZFileFormat_IFF::StreamWPos_Chunk::Imp_CopyFrom(const ZStreamR& iStreamR, uint64 iCount,
+	uint64* oCountRead, uint64* oCountWritten)
 	{ fStream.CopyFrom(iStreamR, iCount, oCountRead, oCountWritten); }
 
 uint64 ZFileFormat_IFF::StreamWPos_Chunk::Imp_GetPosition()

@@ -61,19 +61,26 @@ class StreamR_Chunk : public ZStreamR
 public:
 	StreamR_Chunk(uint32& oChunkType, const ZStreamR& iStream);
 	StreamR_Chunk(uint32& oChunkType, bool iSkipOnDestroy, const ZStreamR& iStream);
-	StreamR_Chunk(uint32& oChunkType, bool iSkipOnDestroy, bool iBigEndianSizes, size_t iPadMultiple, const ZStreamR& iStream);
+	StreamR_Chunk(uint32& oChunkType, bool iSkipOnDestroy,
+		bool iBigEndianSizes, size_t iPadMultiple, const ZStreamR& iStream);
 	~StreamR_Chunk();
 
 // From ZStreamR
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 	virtual bool Imp_WaitReadable(int iMilliseconds);
-	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten);
-	virtual void Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten);
+
+	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
+		uint64* oCountRead, uint64* oCountWritten);
+
+	virtual void Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
+		uint64* oCountRead, uint64* oCountWritten);
+
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 private:
-	void Internal_Init(uint32& oChunkType, bool iSkipOnDestroy, bool iBigEndianSizes, size_t iPadMultiple);
+	void Internal_Init(
+		uint32& oChunkType, bool iSkipOnDestroy, bool iBigEndianSizes, size_t iPadMultiple);
 
 	const ZStreamR& fStream;
 	bool fSkipOnDestroy;
@@ -90,13 +97,19 @@ class StreamRPos_Chunk : public ZStreamRPos
 public:
 	StreamRPos_Chunk(uint32& oChunkType, const ZStreamRPos& iStream);
 	StreamRPos_Chunk(uint32& oChunkType, bool iSkipOnDestroy, const ZStreamRPos& iStream);
-	StreamRPos_Chunk(uint32& oChunkType, bool iSkipOnDestroy, bool iBigEndianSizes, size_t iPadMultiple, const ZStreamRPos& iStream);
+	StreamRPos_Chunk(uint32& oChunkType, bool iSkipOnDestroy,
+		bool iBigEndianSizes, size_t iPadMultiple, const ZStreamRPos& iStream);
 	~StreamRPos_Chunk();
 
 // From ZStreamR via ZStreamRPos
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
-	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten);
-	virtual void Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten);
+
+	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
+		uint64* oCountRead, uint64* oCountWritten);
+
+	virtual void Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
+		uint64* oCountRead, uint64* oCountWritten);
+
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 // From ZStreamR via ZStreamRPos
@@ -106,7 +119,8 @@ public:
 	virtual uint64 Imp_GetSize();
 
 private:
-	void Internal_Init(uint32& oChunkType, bool iSkipOnDestroy, bool iBigEndianSizes, size_t iPadMultiple);
+	void Internal_Init(
+		uint32& oChunkType, bool iSkipOnDestroy, bool iBigEndianSizes, size_t iPadMultiple);
 
 	const ZStreamRPos& fStream;
 	bool fSkipOnDestroy;
@@ -123,13 +137,18 @@ class StreamWPos_Chunk : public ZStreamWPos
 	{
 public:
 	StreamWPos_Chunk(uint32 iChunkType, const ZStreamWPos& iStream);
-	StreamWPos_Chunk(uint32 iChunkType, bool iBigEndianSizes, size_t iPadMultiple, const ZStreamWPos& iStream);
+	StreamWPos_Chunk(uint32 iChunkType, bool iBigEndianSizes,
+		size_t iPadMultiple, const ZStreamWPos& iStream);
 	~StreamWPos_Chunk();
 
 // From ZStreamW via ZStreamWPos
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-	virtual void Imp_CopyFromDispatch(const ZStreamR& iStreamR, uint64 iCount, uint64* oCountRead, uint64* oCountWritten);
-	virtual void Imp_CopyFrom(const ZStreamR& iStreamR, uint64 iCount, uint64* oCountRead, uint64* oCountWritten);
+
+	virtual void Imp_CopyFromDispatch(const ZStreamR& iStreamR, uint64 iCount,
+		uint64* oCountRead, uint64* oCountWritten);
+
+	virtual void Imp_CopyFrom(const ZStreamR& iStreamR, uint64 iCount,
+		uint64* oCountRead, uint64* oCountWritten);
 
 // From ZStreamWPos
 	virtual uint64 Imp_GetPosition();

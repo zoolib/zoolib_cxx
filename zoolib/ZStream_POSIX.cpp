@@ -284,7 +284,8 @@ static ssize_t sReadStreamerRPos(void* iCookie, char* iDest, size_t iCount)
 
 static int sSeekStreamerRPos(void* iCookie, _IO_off64_t *iPos, int iWhence)
 	{
-	return sSeekStreamRPos(static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamRPos(), *iPos, iWhence);
+	return sSeekStreamRPos(
+		static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamRPos(), *iPos, iWhence);
 	}
 
 static ssize_t sWriteStreamerW(void* iCookie, const char* iSource, size_t iCount)
@@ -435,7 +436,8 @@ static int sReadStreamerRPos(void* iCookie, char* iDest, int iCount)
 
 static fpos_t sSeekStreamerRPos(void* iCookie, fpos_t iPos, int iWhence)
 	{
-	return sSeekStreamRPos(static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamRPos(), iPos, iWhence);
+	return sSeekStreamRPos(
+		static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamRPos(), iPos, iWhence);
 	}
 
 static int sWriteStreamerW(void* iCookie, const char* iSource, int iCount)
@@ -467,19 +469,31 @@ FILE* ZooLib::sStreamOpen(const ZStreamR& iStreamR)
 	{ return ::funopen(const_cast<ZStreamR*>(&iStreamR), sReadStreamR, nil, nil, nil); }
 
 FILE* ZooLib::sStreamOpen(const ZStreamRPos& iStreamRPos)
-	{ return ::funopen(const_cast<ZStreamRPos*>(&iStreamRPos), sReadStreamR, nil, sSeekStreamRPos, nil); }
+	{
+	return ::funopen(
+		const_cast<ZStreamRPos*>(&iStreamRPos), sReadStreamR, nil, sSeekStreamRPos, nil);
+	}
 
 FILE* ZooLib::sStreamOpen(const ZStreamW& iStreamW)
 	{ return ::funopen(const_cast<ZStreamW*>(&iStreamW), nil, sWriteStreamW, nil, nil); }
 
 FILE* ZooLib::sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
-	{ return ::funopen(new ZRef<ZStreamerR>(iStreamerR), sReadStreamerR, nil, nil, sCloseStreamerRPos); }
+	{
+	return ::funopen(
+		new ZRef<ZStreamerR>(iStreamerR), sReadStreamerR, nil, nil, sCloseStreamerRPos);
+	}
 
 FILE* ZooLib::sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
-	{ return ::funopen(new ZRef<ZStreamerRPos>(iStreamerRPos), sReadStreamerRPos, nil, sSeekStreamerRPos, sCloseStreamerRPos); }
+	{
+	return ::funopen(
+		new ZRef<ZStreamerRPos>(iStreamerRPos),
+		sReadStreamerRPos, nil, sSeekStreamerRPos, sCloseStreamerRPos);
+	}
 
 FILE* ZooLib::sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
-	{ return ::funopen(new ZRef<ZStreamerW>(iStreamerW), nil, sWriteStreamerW, nil, sCloseStreamerW); }
+	{
+	return ::funopen(new ZRef<ZStreamerW>(iStreamerW), nil, sWriteStreamerW, nil, sCloseStreamerW);
+	}
 
 #else
 

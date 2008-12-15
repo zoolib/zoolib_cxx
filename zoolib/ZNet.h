@@ -207,8 +207,11 @@ protected:
 public:
 	virtual ~ZNetEndpointDG();
 
-	virtual ZNet::Error Receive(void* iBuffer, size_t iBufferSize, size_t& oCountReceived, ZRef<ZNetAddress>& oSourceAddress) = 0;
-	virtual ZNet::Error Send(const void* iBuffer, size_t iCount, ZRef<ZNetAddress> iDestAddress) = 0;
+	virtual ZNet::Error Receive(void* iBuffer, size_t iBufferSize,
+		size_t& oCountReceived, ZRef<ZNetAddress>& oSourceAddress) = 0;
+
+	virtual ZNet::Error Send(const void* iBuffer, size_t iCount,
+		ZRef<ZNetAddress> iDestAddress) = 0;
 	};
 
 #endif // __ZNet__

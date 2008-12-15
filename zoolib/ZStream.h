@@ -30,6 +30,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZStreamR;
 class ZStreamW;
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStream
+
 namespace ZStream {
 
 /** Helper function used internally by ZStreamR and ZStreamW,

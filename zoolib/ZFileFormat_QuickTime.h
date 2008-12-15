@@ -65,8 +65,13 @@ public:
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 	virtual bool Imp_WaitReadable(int iMilliseconds);
-	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten);
-	virtual void Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten);
+
+	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
+		uint64* oCountRead, uint64* oCountWritten);
+
+	virtual void Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
+		uint64* oCountRead, uint64* oCountWritten);
+
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 private:
@@ -90,8 +95,13 @@ public:
 
 // From ZStreamR via ZStreamRPos
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
-	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten);
-	virtual void Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten);
+
+	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
+		uint64* oCountRead, uint64* oCountWritten);
+
+	virtual void Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
+		uint64* oCountRead, uint64* oCountWritten);
+
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 // From ZStreamR via ZStreamRPos
@@ -121,8 +131,12 @@ public:
 
 // From ZStreamW via ZStreamWPos
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-	virtual void Imp_CopyFromDispatch(const ZStreamR& iStreamR, uint64 iCount, uint64* oCountRead, uint64* oCountWritten);
-	virtual void Imp_CopyFrom(const ZStreamR& iStreamR, uint64 iCount, uint64* oCountRead, uint64* oCountWritten);
+
+	virtual void Imp_CopyFromDispatch(const ZStreamR& iStreamR, uint64 iCount,
+		uint64* oCountRead, uint64* oCountWritten);
+
+	virtual void Imp_CopyFrom(const ZStreamR& iStreamR, uint64 iCount,
+		uint64* oCountRead, uint64* oCountWritten);
 
 	virtual void Imp_Flush();
 

@@ -97,7 +97,9 @@ void ZStreamRWPos_RAM::Imp_Write(const void* iSource, size_t iCount, size_t* oCo
 		while (currentChunkIndex >= fVector_Chunks.size())
 			fVector_Chunks.push_back(new char[fChunkSize]);
 		size_t countToMove = min(iCount, fChunkSize - currentChunkOffset);
-		ZBlockCopy(localSource, fVector_Chunks[currentChunkIndex] + currentChunkOffset, countToMove);
+		ZBlockCopy(localSource,
+			fVector_Chunks[currentChunkIndex] + currentChunkOffset,
+			countToMove);
 		iCount -= countToMove;
 		localSource += countToMove;
 		fPosition += countToMove;

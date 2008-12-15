@@ -213,7 +213,8 @@ void ZNetListener_RFCOMM_OSX::pChannelOpened(IOBluetoothRFCOMMChannel* iChannel)
 	}
 
 // @protocol IOBluetoothRFCOMMChannelDelegate
-- (void)rfcommChannelData:(IOBluetoothRFCOMMChannel *)rfcommChannel data:(void *)dataPointer length:(size_t)dataLength
+- (void)rfcommChannelData:(IOBluetoothRFCOMMChannel *)rfcommChannel
+	data:(void *)dataPointer length:(size_t)dataLength
 	{
 	fEndpoint->pReceived(dataPointer, dataLength);
 	}
@@ -229,7 +230,8 @@ void ZNetListener_RFCOMM_OSX::pChannelOpened(IOBluetoothRFCOMMChannel* iChannel)
 
 //- (void)rfcommChannelFlowControlChanged:(IOBluetoothRFCOMMChannel*)rfcommChannel;
 
-//- (void)rfcommChannelWriteComplete:(IOBluetoothRFCOMMChannel*)rfcommChannel refcon:(void*)refcon status:(IOReturn)error;
+//- (void)rfcommChannelWriteComplete:(IOBluetoothRFCOMMChannel*)rfcommChannel
+//	refcon:(void*)refcon status:(IOReturn)error;
 
 //- (void)rfcommChannelQueueSpaceAvailable:(IOBluetoothRFCOMMChannel*)rfcommChannel;
 
@@ -245,7 +247,8 @@ ZNetEndpoint_RFCOMM_OSX::ZNetEndpoint_RFCOMM_OSX(IOBluetoothDevice* iDevice, uin
 	{
 	fDelegate = [[Delegate_ZNetEndpoint_RFCOMM_OSX alloc] initWithEndpoint:this];
 
-	if (kIOReturnSuccess != [iDevice openRFCOMMChannelSync:&fChannel withChannelID:iChannelID delegate:fDelegate])
+	if (kIOReturnSuccess
+		!= [iDevice openRFCOMMChannelSync:&fChannel withChannelID:iChannelID delegate:fDelegate])
 		{
 		[fDelegate release];
 		throw runtime_error("ZNetEndpoint_RFCOMM_OSX, couldn't connect");
@@ -345,8 +348,11 @@ void ZNetEndpoint_RFCOMM_OSX::Imp_Write(const void* iSource, size_t iCount, size
 	while (iCount)
 		{
 		const size_t countToWrite = min(size_t(theMTU), iCount);
-		if (kIOReturnSuccess != [fChannel writeSync:const_cast<char*>(localSource) length:countToWrite])
+		if (kIOReturnSuccess
+			!= [fChannel writeSync:const_cast<char*>(localSource) length:countToWrite])
+			{
 			break;
+			}
 
 		localSource += countToWrite;
 		iCount -= countToWrite;
@@ -369,10 +375,10 @@ bool ZNetEndpoint_RFCOMM_OSX::Imp_ReceiveDisconnect(int iMilliseconds)
 		if (!fOpen)
 			return true;
 
-		if (ZTime::sSystem() >= expired)
+		if (expired <= ZTime::sSystem())
 			return false;
 
-		fCondition.Wait(fMutex, ZTime::sSystem() - expired);
+		fCondition.Wait(fMutex, expired - ZTime::sSystem());
 		}
 	}
 

@@ -31,7 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZStreamerRWFactory_Retry : public ZStreamerRWFactory
 	{
 public:
-	ZStreamerRWFactory_Retry(ZRef<ZStreamerRWFactory> iStreamerRWFactory, size_t iCount, double iInterval);
+	ZStreamerRWFactory_Retry(
+		ZRef<ZStreamerRWFactory> iStreamerRWFactory, size_t iCount, double iInterval);
 	virtual ~ZStreamerRWFactory_Retry();
 
 // From ZStreamerRWFactory

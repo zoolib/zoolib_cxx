@@ -132,7 +132,8 @@ ZNet_Internet_WinSock::InitHelper__::~InitHelper__()
 #pragma mark -
 #pragma mark * ZNetNameLookup_Internet_WinSock
 
-ZNetNameLookup_Internet_WinSock::ZNetNameLookup_Internet_WinSock(const string& inName, ip_port inPort, size_t inMaxAddresses)
+ZNetNameLookup_Internet_WinSock::ZNetNameLookup_Internet_WinSock(
+	const string& inName, ip_port inPort, size_t inMaxAddresses)
 :	fName(inName),
 	fPort(inPort),
 	fStarted(false),
@@ -218,7 +219,8 @@ ZNetListener_TCP_WinSock::ZNetListener_TCP_WinSock(ip_port iLocalPort, size_t iL
 	this->pInit(INADDR_ANY, iLocalPort, iListenQueueSize);
 	}
 
-ZNetListener_TCP_WinSock::ZNetListener_TCP_WinSock(ip_addr iLocalAddress, ip_port iLocalPort, size_t iListenQueueSize)
+ZNetListener_TCP_WinSock::ZNetListener_TCP_WinSock(
+	ip_addr iLocalAddress, ip_port iLocalPort, size_t iListenQueueSize)
 	{
 	this->pInit(iLocalAddress, iLocalPort, iListenQueueSize);
 	}
@@ -276,7 +278,8 @@ ip_port ZNetListener_TCP_WinSock::GetPort()
 	return 0;
 	}
 
-void ZNetListener_TCP_WinSock::pInit(ip_addr iLocalAddress, ip_port iLocalPort, size_t iListenQueueSize)
+void ZNetListener_TCP_WinSock::pInit(
+	ip_addr iLocalAddress, ip_port iLocalPort, size_t iListenQueueSize)
 	{
 	fSOCKET = ::socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (fSOCKET == INVALID_SOCKET)
@@ -372,7 +375,10 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetRemoteAddress()
 		sockaddr_in remoteSockAddr;
 		int length = sizeof(remoteSockAddr);
 		if (::getpeername(fSOCKET, (sockaddr*)&remoteSockAddr, &length) >= 0)
-			return new ZNetAddress_Internet(ntohl(remoteSockAddr.sin_addr.s_addr), ntohs(remoteSockAddr.sin_port));
+			{
+			return new ZNetAddress_Internet(
+				ntohl(remoteSockAddr.sin_addr.s_addr), ntohs(remoteSockAddr.sin_port));
+			}
 		}
 
 	return ZRef<ZNetAddress>();
@@ -477,7 +483,8 @@ bool ZNetEndpoint_TCP_WinSock::Imp_ReceiveDisconnect(int iMilliseconds)
 
 void ZNetEndpoint_TCP_WinSock::Imp_SendDisconnect()
 	{
-	// Graceful close. See "Windows Sockets Network Programming" pp 231-232, Quinn, Shute. Addison Wesley. ISBN 0-201-63372-8
+	// Graceful close. See "Windows Sockets Network Programming"
+	// pp 231-232, Quinn, Shute. Addison Wesley. ISBN 0-201-63372-8
 	::shutdown(fSOCKET, 1);
 	}
 
@@ -492,91 +499,5 @@ void ZNetEndpoint_TCP_WinSock::Imp_Abort()
 	::closesocket(fSOCKET);
 	fSOCKET = INVALID_SOCKET;
 	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZNetEndpointDG_UDP_WinSock
-#if 0
-ZNetEndpointDG_UDP_WinSock::ZNetEndpointDG_UDP_WinSock()
-:	fSOCKET(INVALID_SOCKET)
-	{
-	this->InternalAllocateSocket(0);
-	}
-
-ZNetEndpointDG_UDP_WinSock::ZNetEndpointDG_UDP_WinSock(ip_port inLocalPort)
-:	fSOCKET(INVALID_SOCKET)
-	{
-	this->InternalAllocateSocket(inLocalPort);
-	}
-
-ZNet::Error ZNetEndpointDG_UDP_WinSock::Receive(void* inBuffer, size_t inBufferSize, size_t& outCountReceived, ZNetAddress*& outSourceAddress)
-	{
-	outCountReceived = 0;
-	outSourceAddress = nil;
-
-	if (fSOCKET == INVALID_SOCKET)
-		return ZNet::errorBadState;
-
-	sockaddr_in sourceSockAddr;
-	ZBlockSet(&sourceSockAddr, sizeof(sourceSockAddr), 0);
-	int sockAddrLen = 0;
-	int result = ::recvfrom(fSOCKET, reinterpret_cast<char*>(inBuffer), inBufferSize, 0, (sockaddr*)&sourceSockAddr, &sockAddrLen);
-	if (result == SOCKET_ERROR)
-		{
-		int err = ::WSAGetLastError();
-		return ZNet_Internet_WinSock::sTranslateError(err);
-		}
-	outCountReceived = result;
-	outSourceAddress = new ZNetAddress_Internet(ntohl(sourceSockAddr.sin_addr.s_addr), ntohs(sourceSockAddr.sin_port));
-	return ZNet::errorNone;
-	}
-
-ZNet::Error ZNetEndpointDG_UDP_WinSock::Send(const void* inBuffer, size_t inCount, ZNetAddress* inDestAddress)
-	{
-	if (fSOCKET == INVALID_SOCKET)
-		return ZNet::errorBadState;
-
-// Here's a little nastiness. We have to do a cast on inDestAddress, hopefully we
-// haven't been passed a bad address
-	ZNetAddress_Internet* theInternetAddress = dynamic_cast<ZNetAddress_Internet*>(inDestAddress);
-	ZAssertStop(2, theInternetAddress);
-
-	sockaddr_in destSockAddr;
-	ZBlockSet(&destSockAddr, sizeof(destSockAddr), 0);
-	destSockAddr.sin_family = AF_INET;
-	destSockAddr.sin_port = htons(theInternetAddress->GetPort());
-	destSockAddr.sin_addr.s_addr = htonl(theInternetAddress->GetAddress());
-	int result = ::sendto(fSOCKET, (char*)inBuffer, inCount, 0, (sockaddr*)&destSockAddr, sizeof(destSockAddr));
-	if (result == SOCKET_ERROR)
-		{
-		int err = ::WSAGetLastError();
-		return ZNet_Internet_WinSock::sTranslateError(err);
-		}
-	return ZNet::errorNone;
-	}
-
-void ZNetEndpointDG_UDP_WinSock::InternalAllocateSocket(ip_port inLocalPort)
-	{
-	SOCKET theSOCKET = ::socket(AF_INET, SOCK_DGRAM, 0);
-	if (theSOCKET == INVALID_SOCKET)
-		{
-		int err = ::WSAGetLastError();
-		throw ZNet::Ex(ZNet_Internet_WinSock::sTranslateError(err));
-		}
-
-	sockaddr_in localSockAddr;
-	ZBlockSet(&localSockAddr, sizeof(localSockAddr), 0);
-	localSockAddr.sin_family = AF_INET;
-	localSockAddr.sin_port = htons(inLocalPort);
-	localSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	if (::bind(theSOCKET, (sockaddr*)&localSockAddr, sizeof(localSockAddr)) == SOCKET_ERROR)
-		{
-		int err = ::WSAGetLastError();
-		::closesocket(theSOCKET);
-		throw ZNet::Ex(ZNet_Internet_WinSock::sTranslateError(err));
-		}
-	fSOCKET = theSOCKET;
-	}
-#endif
 
 #endif // ZCONFIG_API_Enabled(Net_Internet_WinSock)
