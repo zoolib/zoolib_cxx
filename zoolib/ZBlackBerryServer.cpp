@@ -485,7 +485,14 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 				}
 			}
 
-		ZAssert(theError != ZBlackBerry::Device::error_None);
+		if (theError == ZBlackBerry::Device::error_None)
+			{
+			if (ZLOG(s, eDebug + 1, "ZBlackBerryServer::HandleRequest"))
+				{
+				s << "Open failed, but got error_None";
+				}
+			theError = ZBlackBerry::Device::error_Generic;
+			}
 		w.WriteUInt32(theError);
 		}
 	}
