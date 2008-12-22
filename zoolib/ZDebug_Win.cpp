@@ -69,8 +69,6 @@ static void ZDebug_HandleActual_Win(int inLevel, ZDebug_Action inAction, const c
 		}
 	}
 
-ZDebug_HandleActual_t sDebug_HandleActual = ZDebug_HandleActual_Win;
-
 // ==================================================
 
 static void sDoOther(const char* inMessage)
