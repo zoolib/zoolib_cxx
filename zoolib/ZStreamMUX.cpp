@@ -820,11 +820,11 @@ void ZStreamMUX::Endpoint_Read(Endpoint* iEP,
 size_t ZStreamMUX::Endpoint_CountReadable(Endpoint* iEP)
 	{
 	ZMutexLocker locker(fMutex);
-	if (iEP->fStateEP != eStateEP_Connected
-		|| iEP->fStateReceive == eStateReceive_Closed)
-		{
-		return 0;
-		}
+//	if (iEP->fStateEP != eStateEP_Connected
+//		|| iEP->fStateReceive == eStateReceive_Closed)
+//		{
+//		return 0;
+//		}
 
 	return iEP->fBuffer_Receive.size();
 	}
