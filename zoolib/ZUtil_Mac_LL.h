@@ -121,55 +121,6 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_Mac_LL::PreserveCurrentPort
-
-#if ZCONFIG(API_Thread, Mac)
-
-class PreserveCurrentPort
-	{
-public:
-	PreserveCurrentPort();
-	~PreserveCurrentPort();
-
-protected:
-	static void sSwitchProc(bool inSwitchingIn, ZThreadTM_SwitchInfo* inSwitchInfo);
-	struct SwitchInfo : ZThreadTM_SwitchInfo
-		{
-		CGrafPtr fPreSwitch_GrafPtr;
-		GDHandle fPreSwitch_GDHandle;
-		};
-	SwitchInfo fSwitchInfo;
-	bool fPreConstruct_AllowTimeSlice;
-	};
-
-#endif // ZCONFIG(API_Thread, Mac)
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Mac_LL::PreserveResFile
-
-#if ZCONFIG(API_Thread, Mac)
-
-class PreserveResFile
-	{
-public:
-	PreserveResFile();
-	~PreserveResFile();
-
-protected:
-	static void sSwitchProc(bool inSwitchingIn, ZThreadTM_SwitchInfo* inSwitchInfo);
-	struct SwitchInfo : ZThreadTM_SwitchInfo
-		{
-		short fPreSwitch_ResFile;
-		};
-	SwitchInfo fSwitchInfo;
-	bool fPreConstruct_AllowTimeSlice;
-	};
-
-#endif // ZCONFIG(API_Thread, Mac)
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZUtil_Mac_LL::SaveRestoreResFile
 
 #if ZCONFIG_SPI_Enabled(Carbon)

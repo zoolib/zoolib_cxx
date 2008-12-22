@@ -36,8 +36,6 @@ using std::pair;
 #	include ZMACINCLUDE3(CoreServices,CarbonCore,Resources.h)
 #endif
 
-using ZooLib::ZMutex;
-using ZooLib::ZMutexLocker;
 using std::bad_alloc;
 using std::vector;
 
@@ -546,82 +544,6 @@ ZUtil_Mac_LL::SaveSetBlackWhite::~SaveSetBlackWhite()
 	}
 
 #endif // ZCONFIG_SPI_Enabled(Carbon)
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Mac_LL::PreserveCurrentPort
-
-#if ZCONFIG(API_Thread, Mac)
-
-ZUtil_Mac_LL::PreserveCurrentPort::PreserveCurrentPort()
-	{
-	fPreConstruct_AllowTimeSlice = ::ZThreadTM_SetCurrentAllowTimeSlice(false);
-
-	fSwitchInfo.fSwitchProc = sSwitchProc;
-	fSwitchInfo.fPrev = nil;
-	fSwitchInfo.fNext = nil;
-	::ZThreadTM_InstallSwitchCallback(&fSwitchInfo);
-	}
-
-ZUtil_Mac_LL::PreserveCurrentPort::~PreserveCurrentPort()
-	{
-	::ZThreadTM_RemoveSwitchCallback(&fSwitchInfo);
-
-	::ZThreadTM_SetCurrentAllowTimeSlice(fPreConstruct_AllowTimeSlice);
-	}
-
-void ZUtil_Mac_LL::PreserveCurrentPort::sSwitchProc(
-	bool inSwitchingIn, ZThreadTM_SwitchInfo* inSwitchInfo)
-	{
-	SwitchInfo* ourSwitchInfo = static_cast<SwitchInfo*>(inSwitchInfo);
-	if (inSwitchingIn)
-		::SetGWorld(ourSwitchInfo->fPreSwitch_GrafPtr, ourSwitchInfo->fPreSwitch_GDHandle);
-	else
-		::GetGWorld(&ourSwitchInfo->fPreSwitch_GrafPtr, &ourSwitchInfo->fPreSwitch_GDHandle);
-	}
-
-#endif // ZCONFIG(API_Thread, Mac)
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Mac_LL::PreserveResFile
-
-#if ZCONFIG(API_Thread, Mac)
-
-ZUtil_Mac_LL::PreserveResFile::PreserveResFile()
-	{
-	if (ZMacOSX::sIsMacOSX())
-		return;
-
-	fPreConstruct_AllowTimeSlice = ::ZThreadTM_SetCurrentAllowTimeSlice(false);
-
-	fSwitchInfo.fSwitchProc = sSwitchProc;
-	fSwitchInfo.fPrev = nil;
-	fSwitchInfo.fNext = nil;
-	::ZThreadTM_InstallSwitchCallback(&fSwitchInfo);
-	}
-
-ZUtil_Mac_LL::PreserveResFile::~PreserveResFile()
-	{
-	if (ZMacOSX::sIsMacOSX())
-		return;
-
-	::ZThreadTM_RemoveSwitchCallback(&fSwitchInfo);
-
-	::ZThreadTM_SetCurrentAllowTimeSlice(fPreConstruct_AllowTimeSlice);
-	}
-
-void ZUtil_Mac_LL::PreserveResFile::sSwitchProc(
-	bool inSwitchingIn, ZThreadTM_SwitchInfo* inSwitchInfo)
-	{
-	SwitchInfo* ourSwitchInfo = static_cast<SwitchInfo*>(inSwitchInfo);
-	if (inSwitchingIn)
-		::UseResFile(ourSwitchInfo->fPreSwitch_ResFile);
-	else
-		ourSwitchInfo->fPreSwitch_ResFile = ::CurResFile();
-	}
-
-#endif // ZCONFIG(API_Thread, Mac)
 
 // =================================================================================================
 #pragma mark -
