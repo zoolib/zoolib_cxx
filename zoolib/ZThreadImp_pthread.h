@@ -60,7 +60,7 @@ void sFree(Key iKey);
 void sSet(Key iKey, Value iValue);
 Value sGet(Key iKey);
 
-}
+} // namespace ZTSS_pthread
 
 // =================================================================================================
 #pragma mark -

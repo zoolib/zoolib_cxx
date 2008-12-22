@@ -122,7 +122,9 @@ protected:
 		};
 
 public:
-	ZSem_T() {}
+	ZSem_T()
+	:	fAvailable(0)
+		{}
 
 	~ZSem_T() {}
 
@@ -251,7 +253,7 @@ public:
 
 		fSem.Wait();
 
-		ZAtomic_Dec(&fWaitingThreads);
+//		ZAtomic_Dec(&fWaitingThreads);
 		
 		iMtx.Acquire();
 		}
@@ -262,9 +264,8 @@ public:
 
 		iMtx.Release();
 
-		fSem.Wait(iTimeout);
-
-		ZAtomic_Dec(&fWaitingThreads);
+		if (!fSem.Wait(iTimeout))
+			ZAtomic_Dec(&fWaitingThreads);
 		
 		iMtx.Acquire();
 		}
@@ -293,6 +294,7 @@ public:
 				if (!ZAtomic_CompareAndSwap(&fWaitingThreads, oldCount, 0))
 					continue;
 
+//				while (oldCount-- > 0)
 				while (oldCount--)
 					fSem.Signal();
 				}
