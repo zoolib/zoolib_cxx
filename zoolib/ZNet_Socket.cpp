@@ -49,7 +49,7 @@ using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Helper functions
+#pragma mark * ZNet_Socket
 
 // On MacOS X (and FreeBSD) and Linux a send or receive on a socket where the other end
 // has closed can cause delivery of a sigpipe. These helper functions, and the conditional
@@ -82,13 +82,13 @@ static void sSetSocketOptions(int iSocket)
 	::setsockopt(iSocket, SOL_SOCKET, SO_NOSIGPIPE, (char*)&noSigPipeFlag, sizeof(noSigPipeFlag));
 	}
 
-static int sSend(int iSocket, const char* iSource, size_t iCount)
+int ZNet_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
 	{ return ::send(iSocket, iSource, iCount, 0); }
 
-static int sReceive(int iSocket, char* iDest, size_t iCount)
+int ZNet_Socket::sReceive(int iSocket, char* iDest, size_t iCount)
 	{ return ::recv(iSocket, iDest, iCount, 0); }
 
-static bool sWaitReadable(int iSocket, int iMilliseconds)
+bool ZNet_Socket::sWaitReadable(int iSocket, int iMilliseconds)
 	{
 	fd_set readSet, exceptSet;
 	FD_ZERO(&readSet);
@@ -102,7 +102,7 @@ static bool sWaitReadable(int iSocket, int iMilliseconds)
 	return 0 < ::select(iSocket + 1, &readSet, nil, &exceptSet, &timeOut);
 	}
 
-static void sWaitWriteable(int iSocket)
+void ZNet_Socket::sWaitWriteable(int iSocket)
 	{
 	fd_set writeSet;
 	FD_ZERO(&writeSet);
@@ -139,7 +139,7 @@ static void sSetSocketOptions(int iSocket)
 static bool sCanUse_MSG_NOSIGNAL = false;
 static bool sChecked_MSG_NOSIGNAL = false;
 
-static int sSend(int iSocket, const char* iSource, size_t iCount)
+int ZNet_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
 	{
 	if (sCanUse_MSG_NOSIGNAL)
 		{
@@ -172,7 +172,7 @@ static int sSend(int iSocket, const char* iSource, size_t iCount)
 		}
 	}
 
-static int sReceive(int iSocket, char* iDest, size_t iCount)
+int ZNet_Socket::sReceive(int iSocket, char* iDest, size_t iCount)
 	{
 	if (sCanUse_MSG_NOSIGNAL)
 		{
@@ -206,7 +206,7 @@ static int sReceive(int iSocket, char* iDest, size_t iCount)
 		}
 	}
 
-static bool sWaitReadable(int iSocket, int iMilliseconds)
+bool ZNet_Socket::sWaitReadable(int iSocket, int iMilliseconds)
 	{
 	pollfd thePollFD;
 	thePollFD.fd = iSocket;
@@ -215,7 +215,7 @@ static bool sWaitReadable(int iSocket, int iMilliseconds)
 	return 0 < ::poll(&thePollFD, 1, iMilliseconds);
 	}
 
-static void sWaitWriteable(int iSocket)
+void ZNet_Socket::sWaitWriteable(int iSocket)
 	{
 	pollfd thePollFD;
 	thePollFD.fd = iSocket;
@@ -224,10 +224,6 @@ static void sWaitWriteable(int iSocket)
 	}
 
 #endif
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZNet_Socket
 
 ZNet::Error ZNet_Socket::sTranslateError(int iNativeError)
 	{
@@ -321,7 +317,7 @@ void ZNetListener_Socket::CancelListen()
 	// the blocked thread, which will drop out of its call to poll or select with
 	// an inncoccuous EINTR.
 	
-	#if ZCONFIG(API_Thread, POSIX)
+	#if ZCONFIG_SPI_Enabled(pthread)
 		if (sFastCancellationEnabled && fThreadID_Listening)
 			{
 			::pthread_kill(fThreadID_Listening, SIGALRM);
@@ -342,7 +338,7 @@ static void sDummyAction(int iSignal)
 
 void ZNetListener_Socket::sEnableFastCancellation()
 	{
-	#if ZCONFIG(API_Thread, POSIX)
+	#if ZCONFIG_SPI_Enabled(pthread)
 		struct sigaction sigaction_new;
 		sigaction_new.sa_handler = sDummyAction;
 		sigaction_new.sa_flags = 0;
@@ -383,7 +379,7 @@ void ZNetEndpoint_Socket::Imp_Read(void* iDest, size_t iCount, size_t* oCountRea
 	char* localDest = static_cast<char*>(iDest);
 	while (iCount)
 		{
-		int result = ::sReceive(fSocketFD, localDest, iCount);
+		int result = sReceive(fSocketFD, localDest, iCount);
 
 		if (result < 0)
 			{
@@ -434,7 +430,7 @@ void ZNetEndpoint_Socket::Imp_Write(const void* iSource, size_t iCount, size_t* 
 	const char* localSource = static_cast<const char*>(iSource);
 	while (iCount)
 		{
-		int result = ::sSend(fSocketFD, localSource, iCount);
+		int result = sSend(fSocketFD, localSource, iCount);
 
 		if (result < 0)
 			{
@@ -468,12 +464,12 @@ void ZNetEndpoint_Socket::Imp_Write(const void* iSource, size_t iCount, size_t* 
 
 bool ZNetEndpoint_Socket::Imp_ReceiveDisconnect(int iMilliseconds)
 	{
-	ZTime endTime = ZTime::sSystem() + double(iMilliseconds) / 1000;
+	ZTime endTime = ZTime::sSystem() + iMilliseconds / 1000.0;
 
 	bool gotIt = false;
 	for (;;)
 		{
-		int result = ::sReceive(fSocketFD, ZooLib::sGarbageBuffer, sizeof(ZooLib::sGarbageBuffer));
+		int result = sReceive(fSocketFD, ZooLib::sGarbageBuffer, sizeof(ZooLib::sGarbageBuffer));
 		if (result == 0)
 			{
 			// result is zero, indicating that the other end has sent FIN.

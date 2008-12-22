@@ -45,6 +45,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZNet_Socket
 	{
 public:
+	static int sSend(int iSocket, const char* iSource, size_t iCount);
+	static int sReceive(int iSocket, char* iDest, size_t iCount);
+	static bool sWaitReadable(int iSocket, int iMilliseconds);
+	static void sWaitWriteable(int iSocket);
 	static ZNet::Error sTranslateError(int iNativeError);
 	};
 

@@ -47,6 +47,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZNet_TCP_Socket
+
+namespace ZNet_TCP_Socket {
+
+int sListen(ip_addr iLocalAddress, ip_port iLocalPort);
+
+} // namespace ZNet_TCP_Socket
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZNetNameLookup_Internet_Socket
 
 class ZNetNameLookup_Internet_Socket : public ZNetNameLookup

@@ -89,7 +89,36 @@ ZFactoryChain_Maker_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Helper functions
+#pragma mark * ZNet_TCP_Socket
+
+int ZNet_TCP_Socket::sListen(ip_addr iLocalAddress, ip_port iLocalPort)
+	{
+	int theSocketFD = ::socket(PF_INET, SOCK_STREAM, 0);
+	if (theSocketFD < 0)
+		{
+		int err = errno;
+		throw ZNetEx(ZNet_Socket::sTranslateError(err));
+		}
+
+	// Enable SO_REUSEADDR, cause it's a real pain waiting for TIME_WAIT to expire
+	int reuseAddrFlag = 1;
+	::setsockopt(
+		theSocketFD, SOL_SOCKET, SO_REUSEADDR, (char*)&reuseAddrFlag, sizeof(reuseAddrFlag));
+
+	sockaddr_in localSockAddr;
+	ZBlockSet(&localSockAddr, sizeof(localSockAddr), 0);
+	localSockAddr.sin_family = AF_INET;
+	localSockAddr.sin_port = htons(iLocalPort);
+	localSockAddr.sin_addr.s_addr = htonl(iLocalAddress);
+
+	if (::bind(theSocketFD, (sockaddr*)&localSockAddr, sizeof(localSockAddr)) < 0)
+		{
+		int err = errno;
+		::close(theSocketFD);
+		throw ZNetEx(ZNet_Socket::sTranslateError(err));
+		}
+	return theSocketFD;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -231,43 +260,13 @@ ZNetListener_TCP_Socket::ZNetListener_TCP_Socket(
 	ZAssert(iKnowWhatImDoing);
 	}
 
-static int sListen(ip_addr iLocalAddress, ip_port iLocalPort)
-	{
-	int theSocketFD = ::socket(PF_INET, SOCK_STREAM, 0);
-	if (theSocketFD < 0)
-		{
-		int err = errno;
-		throw ZNetEx(ZNet_Socket::sTranslateError(err));
-		}
-
-	// Enable SO_REUSEADDR, cause it's a real pain waiting for TIME_WAIT to expire
-	int reuseAddrFlag = 1;
-	::setsockopt(
-		theSocketFD, SOL_SOCKET, SO_REUSEADDR, (char*)&reuseAddrFlag, sizeof(reuseAddrFlag));
-
-	sockaddr_in localSockAddr;
-	ZBlockSet(&localSockAddr, sizeof(localSockAddr), 0);
-	localSockAddr.sin_family = AF_INET;
-	localSockAddr.sin_port = htons(iLocalPort);
-	localSockAddr.sin_addr.s_addr = htonl(iLocalAddress);
-
-	if (::bind(theSocketFD, (sockaddr*)&localSockAddr, sizeof(localSockAddr)) < 0)
-		{
-		int err = errno;
-		::close(theSocketFD);
-		throw ZNetEx(ZNet_Socket::sTranslateError(err));
-		}
-	return theSocketFD;
-	}
-
-
 ZNetListener_TCP_Socket::ZNetListener_TCP_Socket(ip_port iLocalPort, size_t iListenQueueSize)
-:	ZNetListener_Socket(sListen(0, iLocalPort), iListenQueueSize)
+:	ZNetListener_Socket(ZNet_TCP_Socket::sListen(0, iLocalPort), iListenQueueSize)
 	{}
 
 ZNetListener_TCP_Socket::ZNetListener_TCP_Socket(
 	ip_addr iLocalAddress, ip_port iLocalPort, size_t iListenQueueSize)
-:	ZNetListener_Socket(sListen(iLocalAddress, iLocalPort), iListenQueueSize)
+:	ZNetListener_Socket(ZNet_TCP_Socket::sListen(iLocalAddress, iLocalPort), iListenQueueSize)
 	{}
 
 ZNetListener_TCP_Socket::~ZNetListener_TCP_Socket()
