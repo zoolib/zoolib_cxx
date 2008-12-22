@@ -36,8 +36,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZCONFIG_API_Graphics $@ZCONFIG_API_Graphics_Is_Disabled
 
 #undef ZCONFIG_API_OSWindow
-#define ZCONFIG_API_OSWindow $@ZCONFIG_API_Graphics_Is_Disabled
+#define ZCONFIG_API_OSWindow $@ZCONFIG_API_OSWindow_Is_Disabled
 
+#undef ZCONFIG_API_Thread
+#define ZCONFIG_API_Thread $@ZCONFIG_API_Thread_Is_Disabled
 
 // ==================================================
 // Compiler
@@ -97,6 +99,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	else
 #		define ZCONFIG_Endian ZCONFIG_Endian_Big
 #	endif
+#endif
+
+#ifndef ZCONFIG_Endian
+#	error "Don't know what byte order we're using."
 #endif
 
 // ==================================================
