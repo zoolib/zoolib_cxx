@@ -49,7 +49,7 @@ static short sModeLookup[] = { srcCopy, srcOr, srcXor, srcBic};
 #include ZMACINCLUDE3(CoreServices,CarbonCore,FixMath.h) // For Long2Fix
 #include ZMACINCLUDE3(CoreServices,CarbonCore,TextUtils.h) // For StyledLineBreak stuff
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_USING
 
 using std::bad_alloc;
 using std::string;
@@ -111,9 +111,6 @@ public:
 	~SetupPort();
 
 protected:
-#if ZCONFIG(API_Thread, Mac)
-	ZUtil_Mac_LL::PreserveCurrentPort fPCP;
-#endif
 	ZDCCanvas_QD* fCanvas;
 	};
 
@@ -1543,10 +1540,6 @@ void ZDCCanvas_QD::Internal_TileRegion(ZDCState& ioState, const ZDCRgn& inRgn, Z
 
 	// Preflight -- switch to our grafPort, set fore and back colors to black and white.
 
-	#if ZCONFIG(API_Thread, Mac)
-	ZUtil_Mac_LL::PreserveCurrentPort thePCP;
-	#endif
-
 	::SetGWorld(fGrafPtr, nil);
 	ZUtil_Mac_LL::SaveSetBlackWhite theSSBW;
 
@@ -1658,10 +1651,6 @@ void ZDCCanvas_QD_NonWindow::Scroll(ZDCState& ioState, const ZRect& inRect, ZCoo
 	ZDCRgn drawnRgn = srcRgn + offset;
 
 	// Now do the jiggery-pokery to actually scroll:
-	#if ZCONFIG(API_Thread, Mac)
-	ZUtil_Mac_LL::PreserveCurrentPort thePCP;
-	#endif
-
 	::SetGWorld(fGrafPtr, nil);
 	ZUtil_Mac_LL::SaveSetBlackWhite theSSBW;
 
@@ -1687,10 +1676,6 @@ void ZDCCanvas_QD_NonWindow::CopyFrom(ZDCState& ioState, const ZPoint& inDestLoc
 	ZMutexLocker locker(*fMutexToLock);
 
 	++fChangeCount_Clip;
-
-	#if ZCONFIG(API_Thread, Mac)
-	ZUtil_Mac_LL::PreserveCurrentPort thePCP;
-	#endif
 
 	::SetGWorld(fGrafPtr, nil);
 	ZUtil_Mac_LL::SaveSetBlackWhite theSSBW;
@@ -1919,10 +1904,6 @@ ZDCCanvas_QD_PICT::ZDCCanvas_QD_PICT(const ZRect& inBounds, const ZStreamW& inSt
 	catch (...)
 		{
 		}
-
-	#if ZCONFIG(API_Thread, Mac)
-	ZUtil_Mac_LL::PreserveCurrentPort fPCP;
-	#endif
 
 	// Set up the dummy GWorld
 	Rect bounds = { 0, 0, 4, 4 };

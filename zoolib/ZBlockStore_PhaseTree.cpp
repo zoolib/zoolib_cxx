@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cstdio>
 
+NAMESPACE_ZOOLIB_USING
+
 using std::lower_bound;
 using std::upper_bound;
 using std::map;

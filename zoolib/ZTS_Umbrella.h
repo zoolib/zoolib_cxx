@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <map>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTS_Umbrella
@@ -42,8 +44,8 @@ public:
 	virtual void SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples);
 	virtual void GetTuples(size_t iCount, const uint64* iIDs, ZTuple* oTuples);
 	virtual void Search(const ZTBSpec& iSpec, const std::set<uint64>& iSkipIDs, std::set<uint64>& ioIDs);
-	virtual ZooLib::ZMutexBase& GetReadLock();
-	virtual ZooLib::ZMutexBase& GetWriteLock();
+	virtual ZMutexBase& GetReadLock();
+	virtual ZMutexBase& GetWriteLock();
 
 private:
 	typedef std::map<uint64, std::pair<size_t, uint64> > GlobalToLocal_t;
@@ -66,7 +68,9 @@ private:
 
 	std::vector<Child> fChildren;
 	GlobalToLocal_t fGlobalToLocal;
-	ZooLib::ZMutexComposite fReadComposite;
+	ZMutexComposite fReadComposite;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTS_Umbrella__

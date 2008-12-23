@@ -32,6 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <IOKit/IOMessage.h>
 #include <IOKit/IOCFPlugIn.h>
 
+NAMESPACE_ZOOLIB_USING
+
 using std::exception;
 using std::min;
 using std::runtime_error;

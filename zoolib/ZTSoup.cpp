@@ -31,7 +31,7 @@ using std::set;
 using std::string;
 using std::vector;
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_USING
 
 using ZUtil_STL::sFirstOrNil;
 
@@ -50,15 +50,15 @@ using ZUtil_STL::sFirstOrNil;
 #pragma mark * PSieve
 
 class ZTSoup::DLink_PSieve_Update
-	: public ZooLib::DListLink<ZTSoup::PSieve, ZTSoup::DLink_PSieve_Update, ZTSoup::kDebug>
+	: public DListLink<ZTSoup::PSieve, ZTSoup::DLink_PSieve_Update, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::DLink_PSieve_Sync
-	: public ZooLib::DListLink<ZTSoup::PSieve, ZTSoup::DLink_PSieve_Sync, ZTSoup::kDebug>
+	: public DListLink<ZTSoup::PSieve, ZTSoup::DLink_PSieve_Sync, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::DLink_PSieve_Changed
-	: public ZooLib::DListLink<ZTSoup::PSieve, ZTSoup::DLink_PSieve_Changed, ZTSoup::kDebug>
+	: public DListLink<ZTSoup::PSieve, ZTSoup::DLink_PSieve_Changed, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::PSieve
@@ -70,7 +70,7 @@ public:
 	ZRef<ZTSoup> fTSoup;
 	ZTBQuery fTBQuery;
 
-	ZooLib::DListHead<DLink_ZTSieve_Using> fTSieves_Using;
+	DListHead<DLink_ZTSieve_Using> fTSieves_Using;
 
 	bool fWatcherKnown;
 
@@ -92,23 +92,23 @@ public:
 #pragma mark * PCrouton
 
 class ZTSoup::DLink_PCrouton_Update
-	: public ZooLib::DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Update, ZTSoup::kDebug>
+	: public DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Update, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::DLink_PCrouton_Sync
-	: public ZooLib::DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Sync, ZTSoup::kDebug>
+	: public DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Sync, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::DLink_PCrouton_Changed
-	: public ZooLib::DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Changed, ZTSoup::kDebug>
+	: public DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Changed, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::DLink_PCrouton_Syncing
-	: public ZooLib::DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Syncing, ZTSoup::kDebug>
+	: public DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Syncing, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::DLink_PCrouton_Pending
-	: public ZooLib::DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Pending, ZTSoup::kDebug>
+	: public DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Pending, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::PCrouton
@@ -122,7 +122,7 @@ public:
 	ZRef<ZTSoup> fTSoup;
 	uint64 fID;
 
-	ZooLib::DListHead<DLink_ZTCrouton_Using> fTCroutons_Using;
+	DListHead<DLink_ZTCrouton_Using> fTCroutons_Using;
 
 	bool fWatcherKnown;
 
@@ -389,7 +389,7 @@ bool ZTSoup::Sync()
 		{
 		removedIDs.reserve(fPCroutons_Sync.Size());
 		addedIDs.reserve(fPCroutons_Sync.Size());
-		for (ZooLib::DListIteratorEraseAll<PCrouton, DLink_PCrouton_Sync> iter = fPCroutons_Sync;
+		for (DListIteratorEraseAll<PCrouton, DLink_PCrouton_Sync> iter = fPCroutons_Sync;
 			iter; iter.Advance())
 			{
 			PCrouton* thePCrouton = iter.Current();
@@ -448,7 +448,7 @@ bool ZTSoup::Sync()
 	vector<int64> removedQueries;
 	vector<ZTSWatcher::AddedQueryCombo> addedQueries;
 
-	for (ZooLib::DListIteratorEraseAll<PSieve, DLink_PSieve_Sync> iter = fPSieves_Sync;
+	for (DListIteratorEraseAll<PSieve, DLink_PSieve_Sync> iter = fPSieves_Sync;
 		iter; iter.Advance())
 		{
 		PSieve* thePSieve = iter.Current();
@@ -573,7 +573,7 @@ bool ZTSoup::Sync()
 		fPSieves_Changed.InsertIfNotContains(thePSieve);
 		}
 
-	for (ZooLib::DListIteratorEraseAll<PCrouton, DLink_PCrouton_Syncing>
+	for (DListIteratorEraseAll<PCrouton, DLink_PCrouton_Syncing>
 		iter = fPCroutons_Syncing;
 		iter; iter.Advance())
 		{
@@ -614,7 +614,7 @@ void ZTSoup::Update()
 		s << "Update start";
 		}
 
-	for (ZooLib::DListIteratorEraseAll<PCrouton, DLink_PCrouton_Update> iter = fPCroutons_Update;
+	for (DListIteratorEraseAll<PCrouton, DLink_PCrouton_Update> iter = fPCroutons_Update;
 		iter; iter.Advance())
 		{
 		PCrouton* thePCrouton = iter.Current();
@@ -665,7 +665,7 @@ void ZTSoup::Update()
 			}
 		}
 
-	for (ZooLib::DListIteratorEraseAll<PSieve, DLink_PSieve_Update> iter = fPSieves_Update;
+	for (DListIteratorEraseAll<PSieve, DLink_PSieve_Update> iter = fPSieves_Update;
 		iter; iter.Advance())
 		{
 		PSieve* thePSieve = iter.Current();
@@ -696,7 +696,7 @@ void ZTSoup::Update()
 	// Pick up remotely changed croutons.
 	set<ZRef<ZTCrouton> > croutonsChanged;
 	set<ZRef<ZTCrouton> > croutonsLoaded;
-	for (ZooLib::DListIteratorEraseAll<PCrouton, DLink_PCrouton_Changed>
+	for (DListIteratorEraseAll<PCrouton, DLink_PCrouton_Changed>
 		iter = fPCroutons_Changed;
 		iter; iter.Advance())
 		{
@@ -706,7 +706,7 @@ void ZTSoup::Update()
 
 		if (thePCrouton->fHasValue)
 			{
-			for (ZooLib::DListIterator<ZTCrouton, DLink_ZTCrouton_Using>
+			for (DListIterator<ZTCrouton, DLink_ZTCrouton_Using>
 				iter = thePCrouton->fTCroutons_Using;
 				iter; iter.Advance())
 				{ croutonsChanged.insert(iter.Current()); }
@@ -714,7 +714,7 @@ void ZTSoup::Update()
 		else
 			{
 			thePCrouton->fHasValue = true;
-			for (ZooLib::DListIterator<ZTCrouton, DLink_ZTCrouton_Using>
+			for (DListIterator<ZTCrouton, DLink_ZTCrouton_Using>
 				iter = thePCrouton->fTCroutons_Using;
 				iter; iter.Advance())
 				{ croutonsLoaded.insert(iter.Current()); }
@@ -725,7 +725,7 @@ void ZTSoup::Update()
 	// Pick up remotely changed sieves
 	set<ZRef<ZTSieve> > sievesChanged;
 	set<ZRef<ZTSieve> > sievesLoaded;
-	for (ZooLib::DListIteratorEraseAll<PSieve, DLink_PSieve_Changed> iter = fPSieves_Changed;
+	for (DListIteratorEraseAll<PSieve, DLink_PSieve_Changed> iter = fPSieves_Changed;
 		iter; iter.Advance())
 		{
 		PSieve* thePSieve = iter.Current();
@@ -739,7 +739,7 @@ void ZTSoup::Update()
 		// Need to separate stuff that's just loaded from stuff that's changed.
 		if (thePSieve->fHasResults)
 			{
-			for (ZooLib::DListIterator<ZTSieve, DLink_ZTSieve_Using>
+			for (DListIterator<ZTSieve, DLink_ZTSieve_Using>
 				iter = thePSieve->fTSieves_Using;
 				iter; iter.Advance())
 				{
@@ -751,7 +751,7 @@ void ZTSoup::Update()
 		else
 			{
 			thePSieve->fHasResults = true;
-			for (ZooLib::DListIterator<ZTSieve, DLink_ZTSieve_Using>
+			for (DListIterator<ZTSieve, DLink_ZTSieve_Using>
 				iter = thePSieve->fTSieves_Using;
 				iter; iter.Advance())
 				{
@@ -767,7 +767,7 @@ void ZTSoup::Update()
 		if (ZLOG(s, eDebug + 1, "ZTSoup"))
 			s.Writef("Moving %d croutons from pending to update", fPCroutons_Pending.Size());
 
-		for (ZooLib::DListIteratorEraseAll<PCrouton, DLink_PCrouton_Pending>
+		for (DListIteratorEraseAll<PCrouton, DLink_PCrouton_Pending>
 			iter = fPCroutons_Pending;
 			iter; iter.Advance())
 			{
@@ -1106,7 +1106,7 @@ void ZTSoup::pSet(ZMutexLocker& iLocker_Structure, PCrouton* iPCrouton, const ZT
 
 	set<ZRef<ZTCrouton> > localTCroutons;
 
-	for (ZooLib::DListIterator<ZTCrouton, DLink_ZTCrouton_Using>
+	for (DListIterator<ZTCrouton, DLink_ZTCrouton_Using>
 		iter = iPCrouton->fTCroutons_Using; iter; iter.Advance())
 		{ localTCroutons.insert(iter.Current());}
 

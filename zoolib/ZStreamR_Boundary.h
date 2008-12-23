@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamR_Boundary
@@ -88,5 +90,7 @@ protected:
 // typedef ZStreamerRFT<ZStreamR_Boundary> ZStreamerR_Boundary;
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStreamR_Boundary__

@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::set;
 
+NAMESPACE_ZOOLIB_USING
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::LogOp

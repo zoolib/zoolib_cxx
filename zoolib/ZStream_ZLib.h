@@ -38,6 +38,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <zlib.h>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamR_ZLibDecode
@@ -117,6 +119,8 @@ protected:
 	};
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(Stream_ZLib)
 

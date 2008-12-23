@@ -32,11 +32,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include ZMACINCLUDE3(CoreServices,CarbonCore,MacErrors.h)
 #include ZMACINCLUDE3(CoreServices,CarbonCore,TextEncodingConverter.h)
 
+NAMESPACE_ZOOLIB_USING
+
 ZAssertCompile(sizeof(UniChar) == sizeof(UTF16));
 
-static const size_t kBufSize = ZooLib::sStackBufferSize;
-
-namespace ZString = ZooLib::ZZString;
+static const size_t kBufSize = sStackBufferSize;
 
 using std::min;
 using std::runtime_error;
@@ -351,6 +351,7 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 			0, nil, nil, nil, // Offset array stuff.
 			iDestBytes, &utf16Consumed, &destGenerated, localDest);
 
+		ZAssertStop(1, err == 0); 
 		ZAssertStopf(1, (utf16Consumed & 1) == 0, ("utf16Consumed should be even")); 
 		utf16Consumed /= 2;
 		if (utf16Generated > utf16Consumed)

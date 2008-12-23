@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTupleIndex_General
@@ -86,5 +88,7 @@ private:
 	std::string fPropNames[ZTupleIndex_General::kMaxProperties];
 	size_t fPropNameCount;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTupleIndex_General__

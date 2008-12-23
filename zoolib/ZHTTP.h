@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZHTTP {
 
 class StreamR_Chunked;
@@ -258,5 +260,7 @@ private:
 	size_t fBufferSize;
 	size_t fBufferUsed;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZHTTP__

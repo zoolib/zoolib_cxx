@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZUnicode.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZFileIterRep;
 class ZFileLoc;
 class ZFileSpec;
@@ -336,7 +338,7 @@ public:
 
 /// Base interface for stateless read access.
 
-class ZFileR : public virtual ZRefCountedWithFinalization, ZooLib::NonCopyable
+class ZFileR : public virtual ZRefCountedWithFinalization, NonCopyable
 	{
 protected:
 	ZFileR() {}
@@ -353,7 +355,7 @@ public:
 
 /// Base interface for stateless write access.
 
-class ZFileW : public virtual ZRefCountedWithFinalization, ZooLib::NonCopyable
+class ZFileW : public virtual ZRefCountedWithFinalization, NonCopyable
 	{
 protected:
 	ZFileW() {}
@@ -546,7 +548,7 @@ public:
 	virtual ZFile::Error GetSize(uint64& oSize);
 
 private:
-	ZooLib::ZMutexNR fMutex;
+	ZMutexNR fMutex;
 	ZRef<ZStreamerRPos> fStreamer;
 	const ZStreamRPos& fStream;
 	};
@@ -572,7 +574,7 @@ public:
 	virtual ZFile::Error FlushVolume();
 
 private:
-	ZooLib::ZMutexNR fMutex;
+	ZMutexNR fMutex;
 	ZRef<ZStreamerWPos> fStreamer;
 	const ZStreamWPos& fStream;
 	};
@@ -599,9 +601,11 @@ public:
 	virtual ZFile::Error FlushVolume();
 
 private:
-	ZooLib::ZMutexNR fMutex;
+	ZMutexNR fMutex;
 	ZRef<ZStreamerRWPos> fStreamer;
 	const ZStreamRWPos& fStream;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZFile__

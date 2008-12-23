@@ -25,11 +25,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::string;
 using std::vector;
 
+NAMESPACE_ZOOLIB_BEGIN
+
+namespace ZTQL {
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL
-
-namespace ZTQL {
 
 Query::Query()
 	{}
@@ -114,13 +116,9 @@ RelHead Query::GetRelHead() const
 	return RelHead();
 	}
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL, static functions
-
-namespace ZTQL {
 
 Query sAllID(const ZTName& iIDName)
 	{ return Query::sAllID(iIDName); }
@@ -159,3 +157,5 @@ Query sUnion(const Query& iQuery1, const Query& iQuery2)
 	{ return iQuery1.Union(iQuery2); }
 
 } // namespace ZTQL
+
+NAMESPACE_ZOOLIB_END

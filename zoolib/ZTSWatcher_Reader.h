@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamReader.h"
 #include "zoolib/ZTSWatcher.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTSWatcher_Reader
@@ -71,9 +73,9 @@ private:
 		const uint64* iWrittenTupleIDs, const ZTuple* iWrittenTuples, size_t iWrittenTuplesCount,
 		std::map<int64, std::vector<uint64> >& oChangedQueries);
 
-	ZooLib::ZMutex fMutex_Structure;
-	ZooLib::ZMutex fMutex_Stream;
-	ZooLib::ZCondition fCondition;
+	ZMutex fMutex_Structure;
+	ZMutex fMutex_Stream;
+	ZCondition fCondition;
 
 	ZRef<ZStreamerW> fStreamerW;
 	bool fStreamsOkay;
@@ -106,5 +108,7 @@ public:
 private:
 	ZRef<ZStreamerRWFactory> fStreamerRWFactory;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTSWatcher_Reader__

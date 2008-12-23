@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZBlackBerryServer
@@ -48,8 +50,8 @@ private:
 	virtual void Finished(ZRef<ZBlackBerry::Device> iDevice);
 
 private:
-	ZooLib::ZMutex fMutex;
-	ZooLib::ZCondition fCondition;
+	ZMutex fMutex;
+	ZCondition fCondition;
 	ZRef<ZBlackBerry::Manager> fManager;
 
 	ZRef<ZBlackBerry::Device> pGetDevice(uint64 iDeviceID);
@@ -73,5 +75,7 @@ private:
 
 	std::vector<Entry_t> fEntries;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZBlackBerry_Server__

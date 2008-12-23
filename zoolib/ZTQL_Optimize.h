@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTQL_Node.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL
@@ -33,5 +35,7 @@ namespace ZTQL {
 ZRef<Node> sOptimize(ZRef<Node> iNode);
 
 } // namespace ZTQL
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTQL_Optimize__

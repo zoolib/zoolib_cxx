@@ -24,12 +24,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::min;
 
+NAMESPACE_ZOOLIB_USING
+
 static const UTF32 sLF[] = { '\n' };
 static const UTF32 sCR[] = { '\r' };
 static const UTF32 LF = '\n';
 static const UTF32 CR = '\r';
 
-static const size_t kBufSize = ZooLib::sStackBufferSize;
+static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
 #pragma mark -

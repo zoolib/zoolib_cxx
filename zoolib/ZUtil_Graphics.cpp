@@ -30,9 +30,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include ZMACINCLUDE3(CoreServices,CarbonCore,LowMem.h) // For LMGetHiliteRGB
 #endif
 
-using namespace ZooLib;
-
 using std::vector;
+
+NAMESPACE_ZOOLIB_USING
 
 // ==================================================
 

@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamR_CFStream
@@ -124,6 +126,9 @@ CGDataConsumerRef sCGDataConsumerCreate(ZRef<ZStreamerW> iStreamer);
 
 } // ZStream_MacOSX
 
+NAMESPACE_ZOOLIB_END
+
 #endif // ZCONFIG_SPI_Enabled(CoreGraphics)
+
 
 #endif // __ZStream_MacOSX__

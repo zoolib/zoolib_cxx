@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZTime.h"
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -75,7 +75,7 @@ void ZThread::pRun()
 	delete this;
 	}
 
-ZooLib::ZThreadImp::ProcResult_t ZThread::spRun(ZThreadImp::ProcParam_t iParam)
+ZThreadImp::ProcResult_t ZThread::spRun(ZThreadImp::ProcParam_t iParam)
 	{
 	static_cast<ZThread*>(iParam)->pRun();
 	return 0;
@@ -197,3 +197,4 @@ void ZSemaphore::Signal(int32 iCount)
 		ZSem::Signal();
 	}
 
+NAMESPACE_ZOOLIB_END

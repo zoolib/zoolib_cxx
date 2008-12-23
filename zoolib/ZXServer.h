@@ -39,6 +39,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <X11/extensions/XShm.h>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZDCPixmap;
 class ZXWindow;
 
@@ -194,6 +196,8 @@ protected:
 	};
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(X11)
 

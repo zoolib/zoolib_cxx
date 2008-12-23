@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_Base64.h"
 #include "zoolib/ZYad_ZooLib.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZStrimW_ML;
 
 // =================================================================================================
@@ -164,5 +166,7 @@ ZRef<ZYadR> sMakeYadR(ZML::Reader& iReader);
 void sToStrimW_ML(const ZStrimW_ML& s, ZRef<ZYadR> iYadR);
 
 } // namespace ZYadUtil_XMLPList
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZYad_XMLPList__

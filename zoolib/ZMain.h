@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 extern int ZMain(int argc, char** argv);
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZMainNS {
 
 extern int sArgC;
@@ -44,5 +46,7 @@ void sDaemonize(bool iForceFDClose = false);
 // =================================================================================================
 
 } // namespace ZMain
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZMain__

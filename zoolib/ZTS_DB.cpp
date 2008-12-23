@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <fcntl.h> // For O_RDWR etc
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_USING
 
 using std::exception;
 using std::runtime_error;

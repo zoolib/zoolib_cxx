@@ -31,6 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // For documentation, see ZDCPixmapNS.cpp
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZDCPixmapCache;
 class ZDCPixmapRep;
 class ZDCPixmapRaster;
@@ -46,9 +48,6 @@ class ZDCPixmap
     ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZDCPixmap, operator_bool_generator_type, operator_bool_type);
 
 public:
-	typedef ZooLib::ZPoint ZPoint;
-	typedef ZooLib::ZRect ZRect;
-
 // The usual mantra: constructor, copy constructor, destructor, assignment
 	ZDCPixmap();
 	ZDCPixmap(const ZDCPixmap& other);
@@ -184,7 +183,7 @@ private:
 #pragma mark -
 #pragma mark * ZDCPixmapRaster
 
-class ZDCPixmapRaster : public ZRefCountedWithFinalization, ZooLib::NonCopyable
+class ZDCPixmapRaster : public ZRefCountedWithFinalization, NonCopyable
 	{
 protected:
 	ZDCPixmapRaster(const ZDCPixmapNS::RasterDesc& iRasterDesc);
@@ -260,19 +259,16 @@ public:
 #pragma mark -
 #pragma mark * ZDCPixmapRep
 
-class ZDCPixmapRep : public ZRefCountedWithFinalization, ZooLib::NonCopyable
+class ZDCPixmapRep : public ZRefCountedWithFinalization, NonCopyable
 	{
 protected:
 	ZDCPixmapRep();
 
 public:
-	typedef ZooLib::ZPoint ZPoint;
-	typedef ZooLib::ZRect ZRect;
-
 	static bool sCheckAccessEnabled() { return false; }
 
 // Factories
-	typedef ZMulti_T3<ZRef<ZDCPixmapRaster>, ZooLib::ZRect, ZDCPixmapNS::PixelDesc>
+	typedef ZMulti_T3<ZRef<ZDCPixmapRaster>, ZRect, ZDCPixmapNS::PixelDesc>
 		CreateRaster_t;
 
 	static ZRef<ZDCPixmapRep> sCreate(const ZRef<ZDCPixmapRaster>& iRaster,
@@ -397,17 +393,17 @@ inline const ZDCPixmapNS::RasterDesc& ZDCPixmap::GetRasterDesc() const
 inline const ZDCPixmapNS::PixelDesc& ZDCPixmap::GetPixelDesc() const
 	{ return fRep->GetPixelDesc(); }
 
-inline const ZooLib::ZRect& ZDCPixmap::GetBounds() const
+inline const ZRect& ZDCPixmap::GetBounds() const
 	{ return fRep->GetBounds(); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCPixmapRep inline definitions
 
-inline const ZooLib::ZRect& ZDCPixmapRep::GetBounds()
+inline const ZRect& ZDCPixmapRep::GetBounds()
 	{ return fBounds; }
 
-inline ZooLib::ZPoint ZDCPixmapRep::GetSize()
+inline ZPoint ZDCPixmapRep::GetSize()
 	{ return fBounds.Size(); }
 
 inline const ZDCPixmapNS::PixelDesc& ZDCPixmapRep::GetPixelDesc()
@@ -417,5 +413,7 @@ inline const ZRef<ZDCPixmapRaster>& ZDCPixmapRep::GetRaster()
 	{ return fRaster; }
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZDCPixmap__

@@ -42,6 +42,8 @@ extern "C" {
 #include <dns_sd.h>
 }
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetNameRegistered_DNSSD
@@ -105,12 +107,14 @@ private:
 		void* context);
 
 	DNSServiceRef fDNSServiceRef;
-	ZooLib::ZMutex fMutex;
+	ZMutex fMutex;
 	std::string fName;
 	std::string fRegType;
 	std::string fDomain;
 	ip_port fPort;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(NetDNSSD)
 

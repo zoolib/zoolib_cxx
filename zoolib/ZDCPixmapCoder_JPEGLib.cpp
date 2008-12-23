@@ -46,6 +46,8 @@ extern "C" {
 #include <jpeglib.h>
 } // extern "C"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::min;
 using std::vector;
 

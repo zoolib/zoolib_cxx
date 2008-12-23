@@ -26,13 +26,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-namespace ZooLib {
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZRWLock
 
-class ZRWLock : ZooLib::NonCopyable
+class ZRWLock : NonCopyable
 	{
 public:
 	ZRWLock(const char* iName = nil);
@@ -113,10 +113,6 @@ private:
 	friend class Write;
 	};
 
-} // namespace ZooLib
-
-#ifndef ZooLib_SuppressInjection
-	using ZooLib::ZRWLock;
-#endif // ZooLib_SuppressInjection
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZRWLock__

@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream.h"
 #include "zoolib/ZStrimmer.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStrimmerR_StreamR_T
@@ -54,5 +56,7 @@ public:
 private:
 	Strim_t fStrimR;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStrimmer_Stream__

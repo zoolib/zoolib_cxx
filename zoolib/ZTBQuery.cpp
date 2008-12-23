@@ -31,6 +31,8 @@ using std::set;
 using std::string;
 using std::vector;
 
+NAMESPACE_ZOOLIB_USING
+
 static ZTuple sTupleFromNode(const ZRef<ZTBQueryNode>& iNode);
 static ZRef<ZTBQueryNode> sNodeFromTuple(const ZTuple& iTuple);
 
@@ -643,7 +645,7 @@ int ZTBQueryNode_Combo::Intersection::Compare(const Intersection& iOther) const
 	if (int compare = fFilter.Compare(iOther.fFilter))
 		return compare;
 
-	return ZooLib::sCompare_T(fNodes, iOther.fNodes);
+	return sCompare_T(fNodes, iOther.fNodes);
 	}
 
 // =================================================================================================
@@ -764,10 +766,10 @@ int ZTBQueryNode_Combo::pRevCompare(ZTBQueryNode* iOther)
 
 int ZTBQueryNode_Combo::pCompare_Combo(ZTBQueryNode_Combo* iOther)
 	{
-	if (int compare = ZooLib::sCompare_T(fSort, iOther->fSort))
+	if (int compare = sCompare_T(fSort, iOther->fSort))
 		return compare;
 
-	return ZooLib::sCompare_T(fIntersections, iOther->fIntersections);
+	return sCompare_T(fIntersections, iOther->fIntersections);
 	}
 
 // =================================================================================================
@@ -928,7 +930,7 @@ int ZTBQueryNode_ID_Constant::pRevCompare(ZTBQueryNode* iOther)
 	{ return iOther->pCompare_ID_Constant(this); }
 
 int ZTBQueryNode_ID_Constant::pCompare_ID_Constant(ZTBQueryNode_ID_Constant* iOther)
-	{ return ZooLib::sCompare_T(fIDs, iOther->fIDs); }
+	{ return sCompare_T(fIDs, iOther->fIDs); }
 
 // =================================================================================================
 #pragma mark -

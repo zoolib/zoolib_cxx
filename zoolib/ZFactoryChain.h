@@ -37,6 +37,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	ZFactoryChain_T<Result, Param>* \
 	ZFactoryChain_T<Result, Param>::sHead_Normal = sHead_Normal
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZFactoryChain_T
@@ -123,5 +125,7 @@ public:
 private:
 	Maker_t fMaker;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZFactoryChain__

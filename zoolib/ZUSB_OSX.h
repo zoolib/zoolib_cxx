@@ -41,6 +41,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRefCount.h"
 #include "zoolib/ZStreamer.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZUSBDevice;
 class ZUSBInterfaceInterface;
 
@@ -148,4 +150,6 @@ private:
 	};
 
 #endif // ZCONFIG_API_Enabled(USB_OSX)
+NAMESPACE_ZOOLIB_END
+
 #endif // __ZUSB_OSX__

@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTuple.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZStrimW;
 
 // =================================================================================================
@@ -185,5 +187,7 @@ private:
 	ZTValue fDefault;
 	ZTValue fValue;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZCommandLine__

@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZFileFormat_JPEG
@@ -152,5 +154,7 @@ private:
 	};
 
 } // namespace ZFileFormat_JPEG
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZFileFormat_JPEG__

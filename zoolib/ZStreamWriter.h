@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZSleeper.h"
 #include "zoolib/ZThread.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZStreamWriterRunner;
 
 // =================================================================================================
@@ -97,11 +99,13 @@ private:
 	void pRun();
 	static void spRun(ZStreamWriterRunner_Threaded* iRunner);
 
-	ZooLib::ZMutexNR fMutex;
-	ZooLib::ZCondition fCondition;
+	ZMutexNR fMutex;
+	ZCondition fCondition;
 	ZStreamWriter* fStreamWriter;
 	ZRef<ZStreamerW> fSW;
 	ZTime fNextWake;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStreamWriter__

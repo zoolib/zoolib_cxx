@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZDebug.h" // For ZAssertCompile
 
+NAMESPACE_ZOOLIB_USING
+
 ZAssertCompile(sizeof(UTF16) == sizeof(UniChar));
 
 using std::string;

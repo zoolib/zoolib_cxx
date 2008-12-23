@@ -32,9 +32,11 @@ using std::min;
 using std::runtime_error;
 using std::string;
 
+NAMESPACE_ZOOLIB_USING
+
 ZAssertCompile(sizeof(UChar) == sizeof(UTF16));
 
-static const size_t kBufSize = ZooLib::sStackBufferSize;
+static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
 #pragma mark -

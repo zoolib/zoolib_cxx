@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE3(CoreServices,CarbonCore,Resources.h)
 
+NAMESPACE_ZOOLIB_USING
+
 using std::min;
 
 // =================================================================================================

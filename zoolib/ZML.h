@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZML
@@ -51,7 +53,7 @@ enum EToken
 // N.B. It is an implementation detail that Reader inherits
 // from ZStrimR, hence the private derivation.
 
-class Reader : private ZStrimR, ZooLib::NonCopyable
+class Reader : private ZStrimR, NonCopyable
 	{
     ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Reader, operator_bool_generator_type, operator_bool_type);
 public:
@@ -138,5 +140,7 @@ private:
 	};
 
 } // namespace ZML
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZML__

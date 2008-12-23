@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 #include <stdexcept> // For runtime_error
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZNetAddressLookup;
 class ZNetEndpoint;
 class ZNetName;
@@ -156,7 +158,7 @@ public:
 /// Subclasses of this return ZNetEndpoint instances as connections arrive.
 class ZNetListener
 :	public virtual ZStreamerRWConFactory,
-	ZooLib::NonCopyable
+	NonCopyable
 	{
 public:
 	virtual ~ZNetListener();
@@ -177,7 +179,7 @@ public:
 /// Subclasses of this provide the interface to network endpoints.
 class ZNetEndpoint
 :	public virtual ZStreamerRWCon,
-	ZooLib::NonCopyable
+	NonCopyable
 	{
 protected:
 	ZNetEndpoint();
@@ -213,5 +215,7 @@ public:
 	virtual ZNet::Error Send(const void* iBuffer, size_t iCount,
 		ZRef<ZNetAddress> iDestAddress) = 0;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZNet__

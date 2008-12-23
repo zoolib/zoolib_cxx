@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRefCount.h"
 #include "zoolib/ZUnicode.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZTextCollatorRep;
 class ZTextCollationKeyRep;
 
@@ -369,5 +371,7 @@ public:
 	virtual bool Contains(const UTF32* iPattern, size_t iPatternLength,
 		const UTF32* iTarget, size_t iTargetLength) = 0;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTextCollator__

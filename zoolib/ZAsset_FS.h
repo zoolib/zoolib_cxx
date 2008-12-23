@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAsset.h"
 #include "zoolib/ZFile.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZAssetRep_FS
@@ -70,9 +72,11 @@ protected:
 	ZFileSpec fSpec;
 	std::vector<std::string> fComps;
 	
-	ZooLib::ZMutex fMutex;
+	ZMutex fMutex;
 	char* fData;
 	size_t fDataSize;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZAsset_FS__

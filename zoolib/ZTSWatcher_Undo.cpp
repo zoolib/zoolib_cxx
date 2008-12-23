@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTSWatcher_Undo.h"
 #include "zoolib/ZUtil_STL.h"
 
+NAMESPACE_ZOOLIB_USING
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTSWatcher_Undo::PQuery

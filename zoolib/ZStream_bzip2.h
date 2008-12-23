@@ -38,6 +38,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <bzlib.h>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamR_bzip2Decode
@@ -126,6 +128,8 @@ void sAnalyze(const ZStreamR& iStreamR, vector<pair<uint64, uint32> >& oOffsets)
 
 } // namespace ZStream_bzip2
 
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(Stream_bzip2)
 

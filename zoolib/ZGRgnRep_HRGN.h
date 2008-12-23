@@ -39,6 +39,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZWinHeader.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZGRgnRep_HRGN
@@ -94,6 +96,8 @@ public:
 private:
 	HRGN fHRGN;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(GRgnRep_HRGN)
 

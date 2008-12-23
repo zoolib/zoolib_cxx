@@ -37,14 +37,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-#include <vector>
-
-using ZooLib::ZMutex;
-using ZooLib::ZMutexLocker;
-
-using std::list;
-using std::vector;
-
 #include "zoolib/ZCompat_string.h" // For strdup
 
 #ifdef NPVERS_HAS_RESPONSE_HEADERS
@@ -56,6 +48,11 @@ using std::vector;
 		};
 #endif
 
+#include <vector>
+
+NAMESPACE_ZOOLIB_BEGIN
+
+using std::list;
 using std::map;
 using std::pair;
 using std::string;
@@ -893,14 +890,14 @@ void Host_Std::DoDraw()
 	}
 
 void Host_Std::SetPortAndBounds(CGrafPtr iGrafPtr,
-	ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip)
+	ZPoint iLocation, ZPoint iSize, const ZRect& iClip)
 	{
 	fNP_Port.port = iGrafPtr;
 	this->SetBounds(iLocation, iSize, iClip);
 	}
 
 void Host_Std::SetBounds(
-	ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip)
+	ZPoint iLocation, ZPoint iSize, const ZRect& iClip)
 	{
 	fNP_Port.portx = -iLocation.h;
 	fNP_Port.porty = -iLocation.v;
@@ -931,5 +928,7 @@ void Host_Std::DoEvent(const EventRecord& iEvent)
 #endif // defined(XP_MAC) || defined(XP_MACOSX)
 
 } // namespace ZNetscape
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Netscape)

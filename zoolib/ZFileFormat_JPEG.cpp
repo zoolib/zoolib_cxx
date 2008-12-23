@@ -20,6 +20,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFileFormat_JPEG.h"
 
+#include "zoolib/ZStream_HexStrim.h"
+#include "zoolib/ZStream_Tee.h"
+#include "zoolib/ZStreamRWPos_RAM.h"
+#include "zoolib/ZStrim.h"
+
+NAMESPACE_ZOOLIB_BEGIN
+
 using std::min;
 
 static const char* const sSegmentNames[] =
@@ -353,16 +360,11 @@ void ZFileFormat_JPEG::StreamR_Segment::Internal_Init(uint8& oSegmentType, bool 
 #pragma mark -
 #pragma mark * ZFileFormat_JPEG, testing
 
-#include "zoolib/ZStream_HexStrim.h"
-#include "zoolib/ZStream_Tee.h"
-#include "zoolib/ZStreamRWPos_RAM.h"
-#include "zoolib/ZStrim.h"
-
 namespace ZFileFormat_JPEG {
+
 void sDumpSegments(const ZStreamR& iStreamR, const ZStrimW& iStrimW);
 void sDumpSegments(const ZStreamR& iStreamR, const ZStrimW& iStrimW)
 	{
-	using namespace ZFileFormat_JPEG;
 	for (;;)
 		{
 		uint8 segmentType;
@@ -420,3 +422,5 @@ void sDumpSegments(const ZStreamR& iStreamR, const ZStrimW& iStrimW)
 		}
 	}
 } // namespace ZFileFormat_JPEG
+
+NAMESPACE_ZOOLIB_END

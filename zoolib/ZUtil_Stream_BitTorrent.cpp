@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream.h"
 #include "zoolib/ZStrim_Stream.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::runtime_error;
 using std::string;
 using std::vector;

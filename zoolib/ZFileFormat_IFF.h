@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZFileFormat_IFF {
 
 // =================================================================================================
@@ -167,5 +169,7 @@ private:
 	};
 
 } // namespace ZFileFormat_IFF
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZFileFormat_IFF__

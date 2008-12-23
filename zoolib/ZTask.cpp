@@ -4,6 +4,8 @@
 
 using std::string;
 
+NAMESPACE_ZOOLIB_USING
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTask
@@ -45,7 +47,7 @@ ZTaskOwner::ZTaskOwner()
 ZTaskOwner::~ZTaskOwner()
 	{
 	ZMutexLocker locker(fMutex);
-	for (ZooLib::DListIteratorEraseAll<ZTask, ZTaskLink_Live>
+	for (DListIteratorEraseAll<ZTask, ZTaskLink_Live>
 		iter = fTasks_Live;iter; iter.Advance())
 		{
 		ZTask* theTask = iter.Current();
@@ -58,7 +60,7 @@ ZTaskOwner::~ZTaskOwner()
 void ZTaskOwner::Tell(const string& iString, void* iRefcon)
 	{
 	ZMutexLocker locker(fMutex);
-	for (ZooLib::DListIteratorEraseAll<ZTask, ZTaskLink_Live>
+	for (DListIteratorEraseAll<ZTask, ZTaskLink_Live>
 		iter = fTasks_Live;iter; iter.Advance())
 		{
 		ZTask* theTask = iter.Current();
@@ -66,7 +68,7 @@ void ZTaskOwner::Tell(const string& iString, void* iRefcon)
 		theTask->Message(iString, iRefcon);
 		}
 
-	for (ZooLib::DListIteratorEraseAll<ZTask, ZTaskLink_Processed>
+	for (DListIteratorEraseAll<ZTask, ZTaskLink_Processed>
 		iter = fTasks_Processed;iter; iter.Advance())
 		{
 		fTasks_Live.Insert(iter.Current());
@@ -76,7 +78,7 @@ void ZTaskOwner::Tell(const string& iString, void* iRefcon)
 void ZTaskOwner::StopAll()
 	{
 	ZMutexLocker locker(fMutex);
-	for (ZooLib::DListIteratorEraseAll<ZTask, ZTaskLink_Live>
+	for (DListIteratorEraseAll<ZTask, ZTaskLink_Live>
 		iter = fTasks_Live;iter; iter.Advance())
 		{
 		ZTask* theTask = iter.Current();
@@ -84,7 +86,7 @@ void ZTaskOwner::StopAll()
 		theTask->Stop();
 		}
 
-	for (ZooLib::DListIteratorEraseAll<ZTask, ZTaskLink_Processed>
+	for (DListIteratorEraseAll<ZTask, ZTaskLink_Processed>
 		iter = fTasks_Processed;iter; iter.Advance())
 		{
 		fTasks_Live.Insert(iter.Current());

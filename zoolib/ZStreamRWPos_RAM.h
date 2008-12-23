@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamRWPos_RAM
@@ -64,5 +66,7 @@ protected:
 	};
 
 //typedef ZStreamerRWPos_T<ZStreamRWPos_RAM> ZStreamerRWPos_RAM;
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStreamRWPos_RAM__

@@ -33,11 +33,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept>
 
-using namespace ZooLib;
-
 using std::max;
 using std::runtime_error;
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 
@@ -689,6 +689,8 @@ string ZUtil_Mac_HL::sGetVersionString()
 	return version;
 	}
 
+NAMESPACE_ZOOLIB_END
+
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 
 // =================================================================================================
@@ -700,6 +702,8 @@ string ZUtil_Mac_HL::sGetVersionString()
 
 #include ZMACINCLUDE3(CoreServices,CarbonCore,MacMemory.h)
 #include ZMACINCLUDE3(ApplicationServices,QD,QDOffscreen.h)
+
+NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZANONYMOUS {
 struct PixmapFromStreamPICTInfo
@@ -843,5 +847,5 @@ ZDCPixmap ZUtil_Mac_HL::sPixmapFromStreamPICT(const ZStreamR& inStream)
 	return thePixmap;
 	}
 
+NAMESPACE_ZOOLIB_END
 #endif // ZCONFIG_SPI_Enabled(QuickDraw)
-

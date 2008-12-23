@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_ZooLib.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::string;
 using std::vector;
 
@@ -1174,32 +1176,32 @@ ZRef<ZYadR> ZYadUtil_ZooLibStrim::sMakeYadR(const ZStrimU& iStrimU)
 	{ return sMakeYadR_ZooLibStrim(iStrimU); }
 
 void ZYadUtil_ZooLibStrim::sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR)
-	{ sToStrim_List(s, iYadListR, 0, ZYadOptions(), false); }
+	{ ::sToStrim_List(s, iYadListR, 0, ZYadOptions(), false); }
 
 void ZYadUtil_ZooLibStrim::sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
-	{ sToStrim_List(s, iYadListR, iInitialIndent, iOptions, false); }
+	{ ::sToStrim_List(s, iYadListR, iInitialIndent, iOptions, false); }
 
 void ZYadUtil_ZooLibStrim::sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR)
-	{ sToStrim_Map(s, iYadMapR, 0, ZYadOptions(), false); }
+	{ ::sToStrim_Map(s, iYadMapR, 0, ZYadOptions(), false); }
 
 void ZYadUtil_ZooLibStrim::sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
-	{ sToStrim_Map(s, iYadMapR, iInitialIndent, iOptions, false); }
+	{ ::sToStrim_Map(s, iYadMapR, iInitialIndent, iOptions, false); }
 
 void ZYadUtil_ZooLibStrim::sToStrim_Raw(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR)
-	{ sToStrim_Raw(s, iYadRawR->GetStreamR(), 0, ZYadOptions(), false); }
+	{ ::sToStrim_Raw(s, iYadRawR->GetStreamR(), 0, ZYadOptions(), false); }
 
 void ZYadUtil_ZooLibStrim::sToStrim_Raw(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
-	{ sToStrim_Raw(s, iYadRawR->GetStreamR(), iInitialIndent, iOptions, false); }
+	{ ::sToStrim_Raw(s, iYadRawR->GetStreamR(), iInitialIndent, iOptions, false); }
 
 void ZYadUtil_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR)
-	{ sToStrim_Yad(s, iYadR, 0, ZYadOptions(), false); }
+	{ ::sToStrim_Yad(s, iYadR, 0, ZYadOptions(), false); }
 
 void ZYadUtil_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
-	{ sToStrim_Yad(s, iYadR, iInitialIndent, iOptions, false); }
+	{ ::sToStrim_Yad(s, iYadR, iInitialIndent, iOptions, false); }
 
 static bool sContainsProblemChars(const string& iString)
 	{

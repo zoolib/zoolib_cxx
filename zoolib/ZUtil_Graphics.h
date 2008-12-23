@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZGeom.h"
 #include "zoolib/ZDCRgn.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZDC;
 class ZDCPattern;
 class ZDCPixmap;
@@ -32,9 +34,6 @@ class ZDCPixmap;
 class ZStreamNP;
 
 namespace ZUtil_Graphics {
-
-typedef ZooLib::ZPoint ZPoint;
-typedef ZooLib::ZRect ZRect;
 
 void sCalculateRgnDifferences(const ZDCRgn& inOldRgn, const ZDCRgn& inNewRgn,
 	ZDCRgn* outOldRgnToPaint, ZDCRgn* outNewRgnToPaint, ZDCRgn* outDiffRgnToPaint);
@@ -63,5 +62,7 @@ void sDrawFatLine(const ZDC& inDC, const ZDCRgn& inPenRgn,
 ZRect sCalcHandleBounds9(const ZRect& inBounds, ZCoord inHandleSize, size_t inHandleIndex);
 
 } // namespace ZUtil_Graphics
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Graphics__

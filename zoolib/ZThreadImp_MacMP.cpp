@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // For UpTime etc
 #include ZMACINCLUDE3(CoreServices,CarbonCore,DriverServices.h)
 
-namespace ZooLib {
+NAMESPACE_ZOOLIB_USING
 
 // =================================================================================================
 #pragma mark -
@@ -127,7 +127,5 @@ void ZThreadImp_MacMP::sSleep(double iDuration)
 		= ::NanosecondsToAbsolute(*reinterpret_cast<const Nanoseconds*>(&targetU));
 	::MPDelayUntil(&targetA);
 	}
-
-} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(ThreadImp_MacMP)

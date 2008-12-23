@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(ThreadImp_boost)
 
-namespace ZooLib {
+NAMESPACE_ZOOLIB_USING
 
 // =================================================================================================
 #pragma mark -
@@ -71,7 +71,5 @@ void ZCnd_boost::Signal()
 
 void ZCnd_boost::Broadcast()
 	{ condition_variable::notify_all(); }
-
-} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(ThreadImp_boost)

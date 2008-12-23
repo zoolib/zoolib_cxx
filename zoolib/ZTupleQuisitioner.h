@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZTupleQuisitioner
 	{
 public:
@@ -65,5 +67,7 @@ public:
 private:
 	ZTextCollator fTextCollators[4];
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTupleQuisitioner__

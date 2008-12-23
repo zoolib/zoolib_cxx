@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamRPos_StreamR
@@ -53,5 +55,7 @@ protected:
 	const ZStreamRWPos& fBuffer;
 	bool fCommitted;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStreamRPos_StreamR__

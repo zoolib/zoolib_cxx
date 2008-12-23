@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStrimW_Escapify.h"
 
+NAMESPACE_ZOOLIB_USING
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStrimW_Escapify::Options

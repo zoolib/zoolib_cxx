@@ -38,6 +38,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZThread.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNet_Socket
@@ -78,10 +80,10 @@ public:
 	static void sEnableFastCancellation();
 
 protected:
-	ZooLib::ZMutexNR fMutexNR;
-	ZooLib::ZCondition fCondition;
+	ZMutexNR fMutexNR;
+	ZCondition fCondition;
 	int fSocketFD;
-	ZooLib::ZThread::ThreadID fThreadID_Listening;
+	ZThread::ThreadID fThreadID_Listening;
 	};
 
 // =================================================================================================
@@ -132,6 +134,8 @@ private:
 	};
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(Net_Socket)
 

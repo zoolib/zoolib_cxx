@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTextCoder.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTextDecoder_ASCII
@@ -158,5 +160,7 @@ public:
 	virtual void Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 		void* iDest, size_t iDestBytes, size_t* oDestBytes);
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTextCoder_Std__

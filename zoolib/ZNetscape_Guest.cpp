@@ -41,15 +41,15 @@ extern "C" {
 
 NPError NP_Initialize(NPNetscapeFuncs*);
 NPError NP_Initialize(NPNetscapeFuncs* iBrowserFuncs)
-	{ return ZNetscape::GuestMeister::sGet()->Initialize(iBrowserFuncs); }
+	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->Initialize(iBrowserFuncs); }
 
 NPError NP_GetEntryPoints(NPPluginFuncs*);
 NPError NP_GetEntryPoints(NPPluginFuncs* oPluginFuncs)
-	{ return ZNetscape::GuestMeister::sGet()->GetEntryPoints(oPluginFuncs); }
+	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->GetEntryPoints(oPluginFuncs); }
 
 NPError NP_Shutdown();
 NPError NP_Shutdown()
-	{ return ZNetscape::GuestMeister::sGet()->Shutdown(); }
+	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->Shutdown(); }
 
 #if __MACH__
 #	pragma export off
@@ -60,13 +60,17 @@ NPError NP_Shutdown()
 
 int main(NPNetscapeFuncs* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc);
 int main(NPNetscapeFuncs* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
-	{ return ZNetscape::GuestMeister::sGet()->Main(iNPNF, oPluginFuncs, oShutdownFunc); }
+	{
+	return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->
+		Main(iNPNF, oPluginFuncs, oShutdownFunc);
+	}
 
 #pragma export off
 
 } // extern "C"
 
 
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -555,8 +559,8 @@ NPError GuestMeister::GetEntryPoints(NPPluginFuncs* oPluginFuncs)
     oPluginFuncs->newstream = sNewStream;
     oPluginFuncs->destroystream = sDestroyStream;
     oPluginFuncs->asfile = sStreamAsFile;
-    oPluginFuncs->writeready = sWriteReady;
-    oPluginFuncs->write = sWrite;
+    oPluginFuncs->writeready = (NPP_WriteReadyProcPtr)sWriteReady;
+    oPluginFuncs->write = (NPP_WriteProcPtr)sWrite;
     oPluginFuncs->print = sPrint;
     oPluginFuncs->event = sHandleEvent;
     oPluginFuncs->urlnotify = sURLNotify;
@@ -856,10 +860,53 @@ jref GuestMeister::sGetJavaClass()
 	ZNETSCAPE_AFTER_RETURN_NIL
 	}
 
+static bool sHostUsesOldWebKit(NPP instance)
+	{
+	// Logic and comments taken from NetscapeMoviePlugIn/main.c
+    // This check is necessary if you want your exposed NPObject to not leak in WebKit-based
+    // browsers (including Safari) released prior to Mac OS X 10.5 (Leopard).
+    // Earlier versions of WebKit retained the NPObject returned from
+    // NPP_GetValue(NPPVpluginScriptableNPObject). However, the NPRuntime API says NPObjects
+    // should be retained by the plug-in before they are returned.  WebKit versions later than
+    // 420 do not retain returned NPObjects automatically; plug-ins are required to retain them
+    // before returning from NPP_GetValue(), as in other browsers.
+
+	static bool sChecked = false;
+	static bool sUsesOldWebKit = false;
+	if (!sChecked)
+		{
+		if (const char* userAgent = GuestMeister::sGet()->Host_UserAgent(instance))
+			{
+			static const char* const prefix = " AppleWebKit/";
+			if (char* versionString = strstr(userAgent, prefix))
+				{
+				versionString += strlen(prefix);
+				int webKitVersion = atoi(versionString);
+		        if (webKitVersion && webKitVersion < 420)
+					sUsesOldWebKit = true;
+				}
+			}
+		sChecked = true;
+		}
+
+	return sUsesOldWebKit;
+	}
+
 NPError GuestMeister::sGetValue(NPP instance, NPPVariable variable, void *value)
 	{
 	ZNETSCAPE_BEFORE
-		return sGet()->GetValue(instance, variable, value);
+		NPError result = sGet()->GetValue(instance, variable, value);
+		if (NPERR_NO_ERROR == result
+			&& NPPVpluginScriptableNPObject == variable
+			&& sHostUsesOldWebKit(instance))
+			{
+			// We do not call releaseObject, because the likelihood is that the ref
+			// count is currently one, and an active release would destroy the object
+			// before our buggy caller gets a chance to increment the count.
+			NPObject* theNPO = static_cast<NPObject*>(value);
+			--theNPO->referenceCount;
+			}
+		return result;
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
@@ -1014,58 +1061,6 @@ void Guest::Host_ReleaseVariantValue(NPVariant* variant)
 
 } // namespace ZNetscape
 
-#warning look at this
-#if 0
-
-static bool shouldRetainReturnedNPObjects(NPP instance)
-{
-    // This check is necessary if you want your exposed NPObject to not leak in WebKit-based browsers (including
-    // Safari) released prior to Mac OS X 10.5 (Leopard).
-    //
-    // Earlier versions of WebKit retained the NPObject returned from NPP_GetValue(NPPVpluginScriptableNPObject).
-    // However, the NPRuntime API says NPObjects should be retained by the plug-in before they are returned.  WebKit
-    // versions later than 420 do not retain returned NPObjects automatically; plug-ins are required to retain them
-    // before returning from NPP_GetValue(), as in other browsers.
-    static const unsigned webKitVersionNumberWithRetainFix = 420;
-    static const char* const webKitVersionPrefix = " AppleWebKit/";
-    const char *userAgent = browser->uagent(instance);
-    if (userAgent) {
-        // Find " AppleWebKit/" in the user agent string
-        char *webKitVersionString = strstr(userAgent, webKitVersionPrefix);
-        if (!webKitVersionString)
-            return true; // Not WebKit
-            
-        // Skip past " AppleWebKit/"
-        webKitVersionString += strlen(webKitVersionPrefix);
-        
-        // Convert the version string into an integer.  There are some trailing junk characters after the version
-        // number, but atoi() is smart enough to handle those.
-        int webKitVersion = atoi(webKitVersionString);
-        
-        // Should not retain returned NPObjects when running in versions of WebKit earlier than 420
-        if (webKitVersion && webKitVersion < webKitVersionNumberWithRetainFix)
-            return false;
-    }
-    
-    return true;
-}
-
-NPError NPP_GetValue(NPP instance, NPPVariable variable, void *value)
-{
-    if (variable == NPPVpluginScriptableNPObject) {
-        void **v = (void **)value;
-        PluginObject *obj = instance->pdata;
-        
-        // Returned objects are expected to be retained in most browsers, but not all.
-        // See comments in shouldRetainReturnedNPObjects().
-        if (obj && shouldRetainReturnedNPObjects(instance))
-            browser->retainobject((NPObject*)obj);
-        
-        *v = obj;
-        return NPERR_NO_ERROR;
-    }
-    return NPERR_GENERIC_ERROR;
-}
-#endif
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Netscape)

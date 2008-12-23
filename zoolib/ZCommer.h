@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamReader.h"
 #include "zoolib/ZStreamWriter.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZCommer
@@ -56,8 +58,8 @@ public:
 	void WaitTillDetached();
 
 private:
-	ZooLib::ZMutexNR fMutex;
-	ZooLib::ZCondition fCondition;
+	ZMutexNR fMutex;
+	ZCondition fCondition;
 	bool fAttachedReader;
 	bool fAttachedWriter;
 	};
@@ -72,5 +74,7 @@ void sStartReaderRunner(ZStreamReader* iStreamReader, ZRef<ZStreamerR> iSR);
 void sStartWriterRunner(ZStreamWriter* iStreamWriter, ZRef<ZStreamerW> iSW);
 
 void sStartRunners(ZCommer* iCommer, ZRef<ZStreamerR> iSR, ZRef<ZStreamerW> iSW);
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZCommer__

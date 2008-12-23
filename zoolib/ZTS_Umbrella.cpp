@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_USING
 
 using std::map;
 using std::pair;

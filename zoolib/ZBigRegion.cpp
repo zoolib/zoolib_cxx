@@ -70,6 +70,8 @@ SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::max;
 using std::min;
 using std::vector;

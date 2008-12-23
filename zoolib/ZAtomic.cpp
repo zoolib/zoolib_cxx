@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAtomic.h"
 
+NAMESPACE_ZOOLIB_USING
+
 // =================================================================================================
 #if ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, PPC)
 #pragma mark -
@@ -478,18 +480,3 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 	}
 
 #endif
-
-// =================================================================================================
-static void sTestAtomic()
-	{
-	ZAtomic_t t1;
-	ZAtomic_Swap(&t1, 3);
-	int result1 = ZAtomic_Get(&t1);
-	int result2 = ZAtomic_CompareAndSwap(&t1, 3, 5);
-	int result3 = ZAtomic_Add(&t1, 10);
-	int result4 = ZAtomic_And(&t1, 0xFFFF0000);
-	ZAtomic_Inc(&t1);
-	ZAtomic_Dec(&t1);
-	if (ZAtomic_DecAndTest(&t1))
-		ZAtomic_Inc(&t1);
-	}

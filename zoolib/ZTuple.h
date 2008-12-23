@@ -36,6 +36,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_Tuple_PackedTVs 1
 #endif
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Forward and external declarations
@@ -397,12 +399,6 @@ private:
 
 inline void ZTValue::swap(ZTValue& iOther)
 	{ std::swap(fFastCopy, iOther.fFastCopy); }
-
-namespace std {
-inline void swap(ZTValue& a, ZTValue& b)
-	{ a.swap(b); }
-} // namespace std
-
 
 inline bool ZTValue::operator!=(const ZTValue& iOther) const
 	{ return !(*this == iOther); }
@@ -1943,16 +1939,6 @@ inline bool ZTuple::IsSameAs(const ZTuple& iOther) const
 inline void ZTuple::swap(ZTuple& iOther)
 	{ std::swap(fRep, iOther.fRep); }
 
-namespace std {
-inline void swap(ZTuple& a, ZTuple& b)
-	{ a.swap(b); }
-} // namespace std
-
-namespace ZooLib {
-template <> inline int sCompare_T(const ZTValue& iL, const ZTValue& iR)
-	{ return iL.Compare(iR); }
-} // namespace ZooLib
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTuple::NameTV inlines
@@ -1982,5 +1968,20 @@ inline ZTuple::NameTV::NameTV(const char* iName)
 inline ZTuple::NameTV::NameTV(const ZTName& iName)
 :	fName(iName)
 	{}
+
+template <> inline int sCompare_T(const ZTValue& iL, const ZTValue& iR)
+	{ return iL.Compare(iR); }
+
+NAMESPACE_ZOOLIB_END
+
+namespace std {
+inline void swap(ZOOLIB_PREFIX::ZTValue& a, ZOOLIB_PREFIX::ZTValue& b)
+	{ a.swap(b); }
+} // namespace std
+
+namespace std {
+inline void swap(ZOOLIB_PREFIX::ZTuple& a, ZOOLIB_PREFIX::ZTuple& b)
+	{ a.swap(b); }
+} // namespace std
 
 #endif // __ZTuple__

@@ -31,6 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define snprintf _snprintf
 #endif
 
+NAMESPACE_ZOOLIB_USING
+
 static const size_t sStringBufferSize = 1024;
 
 const char* ZDebug_FormatMessage(const char* inMessage, ...)

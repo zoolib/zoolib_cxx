@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 /*
 Bits may be packed from high-to-low (128 down to 1) or from low-to-high (1, 2, 4 ... 128) in
 a byte. The BE variant assumes that bit 0 (1) is the first bit in the stream, bit 1 (2) is
@@ -121,5 +123,7 @@ private:
 	uint8 fBuffer;
 	size_t fAvailBits;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZBitStream__

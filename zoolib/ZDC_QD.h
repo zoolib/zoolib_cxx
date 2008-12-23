@@ -42,6 +42,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE3(ApplicationServices,QD,QDOffscreen.h)
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCCanvas_QD
@@ -59,7 +61,7 @@ protected:
 // Linked list of all canvases
 	void Internal_Link(CGrafPtr inGrafPtr);
 	void Internal_Unlink();
-	static ZooLib::ZMutex sMutex_List;
+	static ZMutex sMutex_List;
 	static ZDCCanvas_QD* sCanvas_Head;
 	ZDCCanvas_QD* fCanvas_Prev;
 	ZDCCanvas_QD* fCanvas_Next;
@@ -166,8 +168,8 @@ protected:
 
 	CGrafPtr fGrafPtr;
 
-	ZooLib::ZMutex* fMutexToLock;
-	ZooLib::ZMutex* fMutexToCheck;
+	ZMutex* fMutexToLock;
+	ZMutex* fMutexToCheck;
 
 	PixPatHandle fPixPatHandle;
 
@@ -198,7 +200,7 @@ public:
 	virtual ZDCRgn Internal_CalcClipRgn(const ZDCState& inState);
 
 protected:
-	ZooLib::ZMutex fMutex;
+	ZMutex fMutex;
 	};
 
 // =================================================================================================
@@ -279,7 +281,6 @@ protected:
 class ZDCSetupForQD
 	{
 public:
-	typedef ZooLib::ZPoint ZPoint;
 	ZDCSetupForQD(const ZDC& inDC, bool inUsingPatterns);
 	~ZDCSetupForQD();
 	ZPoint GetOffset();
@@ -287,9 +288,6 @@ public:
 	CGrafPtr GetCGrafPtr();
 
 protected:
-#if ZCONFIG(API_Thread, Mac)
-	ZUtil_Mac_LL::PreserveCurrentPort fPCP;
-#endif // ZCONFIG(API_Thread, Mac)
 	ZRef<ZDCCanvas_QD> fCanvas;
 	ZPoint fOffset;
 	};
@@ -320,6 +318,8 @@ protected:
 	};
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(DC_QD)
 

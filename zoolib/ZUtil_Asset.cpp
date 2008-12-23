@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_PageBuffered.h"
 #include "zoolib/ZString.h" // For pascal string conversions
 
-namespace ZString = ZooLib::ZZString;
+NAMESPACE_ZOOLIB_USING
 
 using std::string;
 using std::vector;
@@ -167,7 +167,7 @@ static BOOL CALLBACK sEnumResNameCallbackA(HMODULE iHMODULE, const char* iType, 
 //#endif
 
 #if ZCONFIG_SPI_Enabled(Carbon)
-#	include ZMACINCLUDE3(CoreServices,CarbonCore, Resources.h)
+#	include ZMACINCLUDE3(CoreServices,CarbonCore,Resources.h)
 #endif
 
 // =================================================================================================

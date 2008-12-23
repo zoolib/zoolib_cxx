@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZGRgnRep_RgnHandle.h"
 #include "zoolib/ZGRgnRep_XRegion.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZDCPoly;
 
 // =================================================================================================
@@ -36,9 +38,6 @@ class ZDCPoly;
 class ZDCRgn
 	{
 public:
-	typedef ZooLib::ZPoint ZPoint;
-	typedef ZooLib::ZRect ZRect;
-
 	static ZDCRgn sLine(ZCoord iStartH, ZCoord iStartV,
 		ZCoord iEndH, ZCoord iEndV, ZCoord iLineWidth);
 
@@ -201,5 +200,7 @@ public:
 typedef ZAccumulator_T<ZDCRgn, ZDCRgnUnioner_t, std::vector<ZDCRgn> > ZDCRgnAccumulator;
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZDCRgn__

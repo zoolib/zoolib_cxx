@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCPoly
@@ -33,8 +35,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class ZDCPoly
 	{
 public:
-	typedef ZooLib::ZPoint ZPoint;
-
 	ZDCPoly();
 	ZDCPoly(const ZPoint& inStartPoint);
 	ZDCPoly(ZCoord inPointH, ZCoord inPointV);
@@ -105,5 +105,7 @@ private:
 	BPoint* fCachedBPoints;
 #endif
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZDCPoly__

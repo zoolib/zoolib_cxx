@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTupleIndex.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTupleIndex_T
@@ -322,5 +324,7 @@ public:
 private:
 	ZTName fPropNames[kPropCount];
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTupleIndex_T__

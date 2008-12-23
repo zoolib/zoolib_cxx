@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZThreadSimple.h"
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -148,3 +148,5 @@ void sStartRunners(ZCommer* iCommer,
 	sStartReaderRunner(iCommer, iSR);
 	sStartWriterRunner(iCommer, iSW);
 	}
+
+NAMESPACE_ZOOLIB_END

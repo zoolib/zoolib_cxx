@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRefCount.h"
 #include "zoolib/ZStream.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamerR
@@ -1197,5 +1199,7 @@ public:
 // Our protocol
 	virtual ZRef<ZStreamerRWCon> MakeStreamerRWCon() = 0;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStreamer__

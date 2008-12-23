@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZFileFormat_AppleDouble
@@ -72,5 +74,6 @@ private:
 
 } // namespace ZFileFormat_AppleDouble
 
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZFileFormat_AppleDouble__

@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream.h"
 #include "zoolib/ZTuple.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZWebDAV {
 
 bool sHandle_DELETE(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
@@ -46,5 +48,7 @@ bool sHandle_UNLOCK(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR
 //	bool sHandle_TRACE(ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
 
 } // namespace ZWebDAV
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZWebDAV__

@@ -23,8 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZUtil_STL.h"
 
-using namespace ZooLib;
-
 using std::set;
 using std::string;
 
@@ -120,6 +118,8 @@ void Sample()
 	// disconnect and dispose when they are no longer in use.
 	}
 */
+
+NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZBlackBerry {
 
@@ -414,3 +414,5 @@ size_t Channel::GetIdealSize_Write()
 	}
 
 } // namespace ZBlackBerry
+
+NAMESPACE_ZOOLIB_END

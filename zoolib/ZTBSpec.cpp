@@ -34,6 +34,8 @@ using std::set;
 using std::string;
 using std::vector;
 
+NAMESPACE_ZOOLIB_USING
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Utility functions
@@ -1085,7 +1087,7 @@ int ZTBSpec::Compare(const ZTBSpec& iOther) const
 		}
 	else
 		{
-		return ZooLib::sCompare_T(fRep->fCriterionUnion.begin(), fRep->fCriterionUnion.end(),
+		return sCompare_T(fRep->fCriterionUnion.begin(), fRep->fCriterionUnion.end(),
 			iOther.fRep->fCriterionUnion.begin(), iOther.fRep->fCriterionUnion.end());
 		}
 	}

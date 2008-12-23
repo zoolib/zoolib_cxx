@@ -25,22 +25,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::string;
 using std::vector;
 
+NAMESPACE_ZOOLIB_BEGIN
+
+namespace ZTQL {
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node
 
-namespace ZTQL {
-
 Node::Node()
 	{}
-
-} // namespace ZTQL
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_All
-
-namespace ZTQL {
 
 Node_All::Node_All(const ZTName& iIDPropName)
 :	fIDPropName(iIDPropName)
@@ -69,13 +67,9 @@ const ZTName& Node_All::GetIDPropName()
 const RelHead& Node_All::GetRelHead()
 	{ return fRelHead; }
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Difference
-
-namespace ZTQL {
 
 Node_Difference::Node_Difference(ZRef<Node> iNodeA, ZRef<Node> iNodeB)
 :	fNodeA(iNodeA),
@@ -99,13 +93,9 @@ ZRef<Node> Node_Difference::GetNodeA()
 ZRef<Node> Node_Difference::GetNodeB()
 	{ return fNodeB; }
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Explicit
-
-namespace ZTQL {
 
 Node_Explicit::Node_Explicit(const ZTuple* iTuples, size_t iCount)
 :	fTuples(iTuples, iTuples + iCount)
@@ -123,13 +113,9 @@ RelHead Node_Explicit::GetEffectiveRelHead()
 const vector<ZTuple>& Node_Explicit::GetTuples()
 	{ return fTuples; }
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Intersect
-
-namespace ZTQL {
 
 Node_Intersect::Node_Intersect(ZRef<Node> iNodeA, ZRef<Node> iNodeB)
 :	fNodeA(iNodeA),
@@ -153,13 +139,9 @@ ZRef<Node> Node_Intersect::GetNodeA()
 ZRef<Node> Node_Intersect::GetNodeB()
 	{ return fNodeB; }
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Join
-
-namespace ZTQL {
 
 Node_Join::Node_Join(ZRef<Node> iNodeA, ZRef<Node> iNodeB)
 :	fNodeA(iNodeA),
@@ -177,13 +159,9 @@ ZRef<Node> Node_Join::GetNodeA()
 ZRef<Node> Node_Join::GetNodeB()
 	{ return fNodeB; }
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Project
-
-namespace ZTQL {
 
 Node_Project::Node_Project(ZRef<Node> iNode, const RelHead& iRelHead)
 :	fNode(iNode),
@@ -201,13 +179,9 @@ ZRef<Node> Node_Project::GetNode()
 const RelHead& Node_Project::GetRelHead()
 	{ return fRelHead; }
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Rename
-
-namespace ZTQL {
 
 Node_Rename::Node_Rename(ZRef<Node> iNode, const ZTName& iOld, const ZTName& iNew)
 :	fNode(iNode),
@@ -235,13 +209,9 @@ const ZTName& Node_Rename::GetOld()
 const ZTName& Node_Rename::GetNew()
 	{ return fNew; }
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Restrict
-
-namespace ZTQL {
 
 Node_Restrict::Node_Restrict(ZRef<Node> iNode, const Condition& iCondition)
 :	fNode(iNode),
@@ -259,13 +229,9 @@ ZRef<Node> Node_Restrict::GetNode()
 const Condition& Node_Restrict::GetCondition()
 	{ return fCondition; }
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Select
-
-namespace ZTQL {
 
 Node_Select::Node_Select(ZRef<Node> iNode, ZRef<LogOp> iLogOp)
 :	fNode(iNode),
@@ -283,13 +249,9 @@ ZRef<Node> Node_Select::GetNode()
 ZRef<LogOp> Node_Select::GetLogOp()
 	{ return fLogOp; }
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Union
-
-namespace ZTQL {
 
 Node_Union::Node_Union(ZRef<Node> iNodeA, ZRef<Node> iNodeB)
 :	fNodeA(iNodeA),
@@ -312,8 +274,6 @@ ZRef<Node> Node_Union::GetNodeA()
 
 ZRef<Node> Node_Union::GetNodeB()
 	{ return fNodeB; }
-
-} // namespace ZTQL
 
 // =================================================================================================
 #pragma mark -
@@ -354,3 +314,7 @@ ZRef<ZTQL::Node> ZTQL::Node::Transformer::Transform_Select(ZRef<Node_Select> iNo
 
 ZRef<ZTQL::Node> ZTQL::Node::Transformer::Transform_Union(ZRef<Node_Union> iNode)
 	{ return iNode; }
+
+} // namespace ZTQL
+
+NAMESPACE_ZOOLIB_END

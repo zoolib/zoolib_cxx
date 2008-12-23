@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTextCollator.h"
 
-struct UCollator;
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -59,5 +59,7 @@ public:
 private:
 	int fStrength;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTextCollator_ASCII__

@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 
+NAMESPACE_ZOOLIB_USING
+
 using std::min;
 using std::string;
 

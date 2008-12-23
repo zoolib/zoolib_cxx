@@ -31,6 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRefCount.h"
 #include "zoolib/ZRGBColor.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCState
@@ -38,9 +40,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /// Holds the state in the context of which drawing should be done by a ZDC.
 struct ZDCState
 	{
-	typedef ZooLib::ZPoint ZPoint;
-	typedef ZooLib::ZRect ZRect;
-
 	long fChangeCount_Origin;
 	long fChangeCount_PatternOrigin;
 	long fChangeCount_Ink;
@@ -73,9 +72,6 @@ class ZDCCanvas;
 class ZDC
 	{
 public:
-	typedef ZooLib::ZPoint ZPoint;
-	typedef ZooLib::ZRect ZRect;
-
 /** \name The mantra (constructor, copy constructor, destructor, assignment) */
 	//@{
 	ZDC();
@@ -280,9 +276,6 @@ protected:
 	virtual ~ZDCCanvas();
 
 public:
-	typedef ZooLib::ZPoint ZPoint;
-	typedef ZooLib::ZRect ZRect;
-
 	 static inline bool sCheckAccessEnabled() { return false; }
 
 // The full mode "suite". Only three even close to defined for all platforms so far.
@@ -400,8 +393,6 @@ protected:
 	~ZDCCanvasFactory();
 
 public:
-	typedef ZooLib::ZPoint ZPoint;
-
 	static ZRef<ZDCCanvas> sCreateCanvas(ZPoint iSize,
 		bool iBigEndian, const ZDCPixmapNS::PixelDesc& iPixelDesc);
 
@@ -469,13 +460,13 @@ inline short ZDC::GetMode() const
 inline const ZDCFont& ZDC::GetFont() const
 	{ return fState.fFont; }
 
-inline ZooLib::ZPoint ZDC::GetOrigin() const
+inline ZPoint ZDC::GetOrigin() const
 	{ return fState.fOrigin + fState.fOriginComp; }
 
 inline const ZRGBColor& ZDC::GetTextColor() const
 	{ return fState.fTextColor; }
 
-inline ZooLib::ZPoint ZDC::GetPatternOrigin() const
+inline ZPoint ZDC::GetPatternOrigin() const
 	{ return fState.fPatternOrigin - fState.fOriginComp; }
 
 inline short ZDC::GetDepth() const
@@ -656,5 +647,7 @@ inline ZDCState& ZDC::GetState() const
 	{ return fState; }
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZDC__

@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNode.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::set;
 using std::string;
 using std::vector;

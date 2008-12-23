@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // For documentation, see ZDCPixmapNS.cpp
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Declarations of names in namespace ZDCPixmapNS
@@ -35,9 +37,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /// ZDCPixmapNS encompasses a suite of types and methods for working with fairly generic pixmaps.
 
 namespace ZDCPixmapNS {
-
-using ZooLib::ZPoint;
-using ZooLib::ZRect;
 
 int sCalcRowBytes(int iWidth, int iDepth, int iByteRound);
 
@@ -974,5 +973,7 @@ void sBlitRow(
 } // namespace ZDCPixmapNS
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZDCPixmapNS__

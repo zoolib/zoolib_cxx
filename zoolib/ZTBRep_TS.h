@@ -32,6 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_TBRep_TS_Debug 2
 #endif
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTBRep_TS
@@ -113,7 +115,7 @@ private:
 
 	ZRef<ZTS> fTS;
 
-	ZooLib::ZMutex fMutex_Structure;
+	ZMutex fMutex_Structure;
 	std::vector<ZRef<ZTupleIndexFactory> > fIndexFactories;
 
 	uint64 fClock;
@@ -132,7 +134,7 @@ class ZTBRep_TS::TupleInUse
 public:
 	uint64 fID;
 
-	ZooLib::DListHead<TransTupleUsing> fUsingTransTuples;
+	DListHead<TransTupleUsing> fUsingTransTuples;
 
 	Transaction* fTransaction_Writer;
 	size_t fTransaction_ReaderCount;
@@ -143,5 +145,7 @@ public:
 
 	uint64 fClock_LastWritten;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTBRep_TS__

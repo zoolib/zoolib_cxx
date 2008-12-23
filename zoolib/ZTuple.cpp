@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZMemoryBlock.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::min;
 using std::pair;
 using std::runtime_error;
@@ -1779,19 +1781,19 @@ int ZTValue::pUncheckedCompare(const ZTValue& iOther) const
 	switch (fType.fType)
 		{
 		case eZType_Null: return 0;
-		case eZType_Type: return ZooLib::sCompare_T(fData.fAs_Type, iOther.fData.fAs_Type);
-		case eZType_ID: return ZooLib::sCompare_T(fData.fAs_ID, iOther.fData.fAs_ID);
-		case eZType_Int8: return ZooLib::sCompare_T(fData.fAs_Int8, iOther.fData.fAs_Int8);
-		case eZType_Int16: return ZooLib::sCompare_T(fData.fAs_Int16, iOther.fData.fAs_Int16);
-		case eZType_Int32: return ZooLib::sCompare_T(fData.fAs_Int32, iOther.fData.fAs_Int32);
-		case eZType_Int64: return ZooLib::sCompare_T(fData.fAs_Int64, iOther.fData.fAs_Int64);
-		case eZType_Bool: return ZooLib::sCompare_T(fData.fAs_Bool, iOther.fData.fAs_Bool);
-		case eZType_Float:  return ZooLib::sCompare_T(fData.fAs_Float, iOther.fData.fAs_Float);
-		case eZType_Double: return ZooLib::sCompare_T(fData.fAs_Double, iOther.fData.fAs_Double);
-		case eZType_Time: return ZooLib::sCompare_T(fData.fAs_Time, iOther.fData.fAs_Time);
-		case eZType_Pointer: return ZooLib::sCompare_T(fData.fAs_Pointer, iOther.fData.fAs_Pointer);
-		case eZType_Rect: return ZooLib::sCompare_T(*fData.fAs_Rect, *iOther.fData.fAs_Rect);
-		case eZType_Point: return ZooLib::sCompare_T(fData.fAs_Point, iOther.fData.fAs_Point);
+		case eZType_Type: return sCompare_T(fData.fAs_Type, iOther.fData.fAs_Type);
+		case eZType_ID: return sCompare_T(fData.fAs_ID, iOther.fData.fAs_ID);
+		case eZType_Int8: return sCompare_T(fData.fAs_Int8, iOther.fData.fAs_Int8);
+		case eZType_Int16: return sCompare_T(fData.fAs_Int16, iOther.fData.fAs_Int16);
+		case eZType_Int32: return sCompare_T(fData.fAs_Int32, iOther.fData.fAs_Int32);
+		case eZType_Int64: return sCompare_T(fData.fAs_Int64, iOther.fData.fAs_Int64);
+		case eZType_Bool: return sCompare_T(fData.fAs_Bool, iOther.fData.fAs_Bool);
+		case eZType_Float:  return sCompare_T(fData.fAs_Float, iOther.fData.fAs_Float);
+		case eZType_Double: return sCompare_T(fData.fAs_Double, iOther.fData.fAs_Double);
+		case eZType_Time: return sCompare_T(fData.fAs_Time, iOther.fData.fAs_Time);
+		case eZType_Pointer: return sCompare_T(fData.fAs_Pointer, iOther.fData.fAs_Pointer);
+		case eZType_Rect: return sCompare_T(*fData.fAs_Rect, *iOther.fData.fAs_Rect);
+		case eZType_Point: return sCompare_T(fData.fAs_Point, iOther.fData.fAs_Point);
 		case eZType_String:
 			{
 			return sFetch_T<ZTupleString>(fType.fBytes)
@@ -1847,7 +1849,7 @@ int ZTValue::pUncheckedCompare(const ZTValue& iOther) const
 				// We're not empty, but iOther is, so we're greater.
 				return 1;
 				}
-			return ZooLib::sCompare_T(*fData.fAs_Vector, *iOther.fData.fAs_Vector);
+			return sCompare_T(*fData.fAs_Vector, *iOther.fData.fAs_Vector);
 			}
 		}
 	ZDebugStopf(kDebug_Tuple, ("Unknown type (%d)", fType.fType));
@@ -1872,8 +1874,8 @@ bool ZTValue::pUncheckedLess(const ZTValue& iOther) const
 		case eZType_Double: return fData.fAs_Double < iOther.fData.fAs_Double;
 		case eZType_Time: return fData.fAs_Time < iOther.fData.fAs_Time;
 		case eZType_Pointer: return fData.fAs_Pointer < iOther.fData.fAs_Pointer;
-		case eZType_Rect: return ZooLib::sCompare_T(*fData.fAs_Rect, *iOther.fData.fAs_Rect) < 0;
-		case eZType_Point: return ZooLib::sCompare_T(fData.fAs_Point, iOther.fData.fAs_Point) < 0;
+		case eZType_Rect: return sCompare_T(*fData.fAs_Rect, *iOther.fData.fAs_Rect) < 0;
+		case eZType_Point: return sCompare_T(fData.fAs_Point, iOther.fData.fAs_Point) < 0;
 
 		case eZType_String:
 			{

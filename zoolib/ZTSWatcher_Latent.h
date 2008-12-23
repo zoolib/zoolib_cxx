@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_TSWatcher_Latent_Debug 1
 #endif
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTSWatcher_Latent
@@ -78,9 +80,9 @@ private:
 	ZRef<ZTSWatcher> fTSWatcher;
 	Callback_t fCallback;
 	void* fRefcon;
-	ZooLib::ZMutex fMutex_CallSync;
-	ZooLib::ZMutex fMutex_Save;
-	ZooLib::ZCondition fCondition_Save;
+	ZMutex fMutex_CallSync;
+	ZMutex fMutex_Save;
+	ZCondition fCondition_Save;
 
 	enum { eMode_Normal, eMode_Save, eMode_Discard } fMode;
 
@@ -89,5 +91,7 @@ private:
 	std::map<int64, PQuery> fPQueries;
 	std::map<uint64, PTuple> fPTuples;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTSWatcher_Latent__

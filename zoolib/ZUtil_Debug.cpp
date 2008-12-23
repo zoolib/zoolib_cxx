@@ -34,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <csignal>
 #endif
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::min;
 using std::string;
@@ -275,3 +275,5 @@ ZLog::EPriority ZUtil_Debug::sGetLogPriority()
 		return LogMeister::sLogMeister->GetLogPriority();
 	return 0xFF;
 	}
+
+NAMESPACE_ZOOLIB_END

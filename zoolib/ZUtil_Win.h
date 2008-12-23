@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZUtil_Win {
 
 bool sIsWinNT();
@@ -34,6 +36,8 @@ bool sUseWAPI();
 void sDisallowWAPI();
 
 } // namespace ZUtil_Win
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 

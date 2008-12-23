@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTextCoder.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTextDecoder_UTF32BE
@@ -183,5 +185,7 @@ private:
 	enum EType { eFresh, eUTF8, eUTF16BE, eUTF16LE };
 	EType fType;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTextCoder_Unicode__

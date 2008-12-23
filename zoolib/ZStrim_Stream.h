@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStrim.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZStreamR;
 class ZStreamW;
 class ZTextDecoder;
@@ -268,5 +270,7 @@ private:
 	const ZStreamW& fStreamW;
 	ZTextEncoder* fEncoder;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStrim_Stream__

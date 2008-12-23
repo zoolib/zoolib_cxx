@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCPixmapNS.h"
 #include "zoolib/ZDCPixmapBlit.h" // For EOp and abbreviating typedefs
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZDCPixmapBlit {
 
 // =================================================================================================
@@ -2239,5 +2241,7 @@ void sApplyMatte_T(
 	}
 
 } // namespace ZDCPixmapBlit
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZDCPixmapBlitPriv__

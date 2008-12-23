@@ -27,6 +27,8 @@ using std::pair;
 using std::string;
 using std::vector;
 
+NAMESPACE_ZOOLIB_USING
+
 static const int kDebug = 2;
 
 // =================================================================================================
@@ -209,9 +211,9 @@ ZTName& ZTName::operator=(const ZTName& iOther)
 ZTName::ZTName(const ZStreamR& iStreamR)
 	{
 	uint32 theSize = iStreamR.ReadCount();
-	if (theSize <= ZooLib::sStackBufferSize)
+	if (theSize <= sStackBufferSize)
 		{
-		char buffer[ZooLib::sStackBufferSize];
+		char buffer[sStackBufferSize];
 		iStreamR.Read(buffer, theSize);
 		fData = sLookupAndTag(buffer, theSize);
 		if (!fData)
@@ -219,7 +221,7 @@ ZTName::ZTName(const ZStreamR& iStreamR)
 		}
 	else
 		{
-		// theSize must be > 0 (it's greater than ZooLib::sStackBufferSize).
+		// theSize must be > 0 (it's greater than sStackBufferSize).
 		vector<char> buffer(theSize);
 		iStreamR.Read(&buffer[0], theSize);
 		fData = sLookupAndTag(&buffer[0], theSize);
@@ -454,9 +456,9 @@ void ZTName::FromStream(const ZStreamR& iStreamR)
 		delete fString;
 
 	uint32 theSize = iStreamR.ReadCount();
-	if (theSize <= ZooLib::sStackBufferSize)
+	if (theSize <= sStackBufferSize)
 		{
-		char buffer[ZooLib::sStackBufferSize];
+		char buffer[sStackBufferSize];
 		iStreamR.Read(buffer, theSize);
 		fData = sLookupAndTag(buffer, theSize);
 		if (!fData)
@@ -464,7 +466,7 @@ void ZTName::FromStream(const ZStreamR& iStreamR)
 		}
 	else
 		{
-		// theSize must be > 0 (it's greater than ZooLib::sStackBufferSize).
+		// theSize must be > 0 (it's greater than sStackBufferSize).
 		vector<char> buffer(theSize);
 		iStreamR.Read(&buffer[0], theSize);
 		fData = sLookupAndTag(&buffer[0], theSize);

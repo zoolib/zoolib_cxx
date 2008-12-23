@@ -27,9 +27,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept> // For runtime_error
 
+NAMESPACE_ZOOLIB_USING
+
 using std::min;
 using std::max;
 using std::runtime_error;
+
+NAMESPACE_ZOOLIB_USING
 
 #define kDebug_ZLib 2
 

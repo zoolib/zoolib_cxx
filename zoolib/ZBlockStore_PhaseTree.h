@@ -32,10 +32,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_PhaseTree_Debug 3
 #endif
 
+NAMESPACE_ZOOLIB_BEGIN
+
 #if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
-	typedef ZooLib::ZMutex ZBlockStorePhaseTree_Mutex_t;
+	typedef ZMutex ZBlockStorePhaseTree_Mutex_t;
 #else
-	typedef ZooLib::ZMutexNR ZBlockStorePhaseTree_Mutex_t;
+	typedef ZMutexNR ZBlockStorePhaseTree_Mutex_t;
 #endif
 
 // =================================================================================================
@@ -245,7 +247,7 @@ protected:
 	ZThreadSafe_t fStreamsInstantiated;
 
 	ZBlockStorePhaseTree_Mutex_t fMutex_Flush;
-	ZooLib::ZCondition fCondition_Flush;
+	ZCondition fCondition_Flush;
 		int fCount_Writes;
 		int fCount_WaitingFlushes;
 		bool fFlushInProgress;
@@ -288,5 +290,7 @@ protected:
 
 	void ValidateSlot(Slot* iSlot, const char* iFunctionName, int iLineNumber);
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZBlockStore_PhaseTree__

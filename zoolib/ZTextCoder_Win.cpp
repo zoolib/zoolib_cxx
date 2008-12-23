@@ -33,9 +33,11 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
+NAMESPACE_ZOOLIB_USING
+
 ZAssertCompile(sizeof(WCHAR) == sizeof(UTF16));
 
-static const size_t kBufSize = ZooLib::sStackBufferSize;
+static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
 #pragma mark -

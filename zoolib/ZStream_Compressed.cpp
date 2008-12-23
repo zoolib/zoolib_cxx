@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define kDebug_StreamRWPos_Compressed 2
 
+NAMESPACE_ZOOLIB_USING
+
 using std::min;
 
 static const char sMagicText[] = "ZStream_Compressed 1.0 CRLF\r\nCR\rLF\n";

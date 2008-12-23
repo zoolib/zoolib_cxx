@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamerRWFactory_Retry
@@ -46,5 +48,7 @@ private:
 	size_t fCount;
 	double fInterval;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStreamerRWFactory_Retry__

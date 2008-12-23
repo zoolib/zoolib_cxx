@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <deque>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamRW_FIFO
@@ -57,14 +59,16 @@ public:
 	void Reset();
 
 private:
-	ZooLib::ZMutexNR fMutex;
-	ZooLib::ZCondition fCondition_UserCount;
-	ZooLib::ZCondition fCondition_Read;
-	ZooLib::ZCondition fCondition_Write;
+	ZMutexNR fMutex;
+	ZCondition fCondition_UserCount;
+	ZCondition fCondition_Read;
+	ZCondition fCondition_Write;
 	bool fClosed;
 	size_t fMaxSize;
 	std::deque<uint8> fBuffer;
 	size_t fUserCount;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStreamRW_FIFO__

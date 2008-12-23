@@ -42,7 +42,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // the definition of CRITICAL_SECTION is visible.
 #include "zoolib/ZWinHeader.h"
 
-namespace ZooLib {
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -122,7 +122,7 @@ void sSleep(double iDuration);
 
 } // namespace ZThreadImp_Win
 
-} // namespace ZooLib
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(ThreadImp_Win)
 

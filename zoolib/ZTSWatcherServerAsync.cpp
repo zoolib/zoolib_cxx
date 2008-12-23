@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define kDebug_TSWatcherServerAsync 1
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_USING
 
 using std::map;
 using std::pair;

@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZTime.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::string;
 
 // =================================================================================================
@@ -466,7 +468,7 @@ bool ZNetEndpoint_TCP_WinSock::Imp_ReceiveDisconnect(int iMilliseconds)
 	bool gotIt = false;
 	for (;;)
 		{
-		int result = ::recv(fSOCKET, ZooLib::sGarbageBuffer, sizeof(ZooLib::sGarbageBuffer), 0);
+		int result = ::recv(fSOCKET, sGarbageBuffer, sizeof(sGarbageBuffer), 0);
 		if (result == 0)
 			{
 			// result is zero, indicating that the other end has sent FIN.

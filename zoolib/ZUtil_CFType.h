@@ -32,6 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include ZMACINCLUDE2(CoreFoundation,CFBase.h)
 #include ZMACINCLUDE2(CoreFoundation,CFDictionary.h)
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_CFType
@@ -56,6 +58,8 @@ void sAsVector(CFArrayRef iCFArray, std::vector<ZTValue>& oVector);
 CFArrayRef sCreateCFArray(const std::vector<ZTValue>& iVector);
 
 } // namespace ZUtil_CFType
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 

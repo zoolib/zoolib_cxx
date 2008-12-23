@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZUtil_Stream {
 
 
@@ -45,5 +47,7 @@ private:
 
 
 } // namespace ZUtil_Stream
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Stream__

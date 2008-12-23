@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_ZooLib.h"
 #include "zoolib/ZYad_ZooLibStream.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::min;
 using std::string;
 using std::vector;
@@ -613,7 +615,7 @@ void ZYadUtil_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYad
 	else if (ZRef<ZYadRawR> theYadRawR = ZRefDynamicCast<ZYadRawR>(iYadR))
 		{
 		iStreamW.WriteUInt8(eZType_Raw);
-		sToStream(iStreamW, theYadRawR->GetStreamR());
+		::sToStream(iStreamW, theYadRawR->GetStreamR());
 		}
 	else
 		{

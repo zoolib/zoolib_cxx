@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUnicodePriv__ 1
 #include "zconfig.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZUnicode {
 
 // =================================================================================================
@@ -195,6 +197,8 @@ struct Functions_Convert_T
 
 } // namespace ZUnicode
 
+NAMESPACE_ZOOLIB_END
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * GCC workaround
@@ -339,4 +343,4 @@ inline typename std::char_traits<charT>::int_type std::char_traits<charT>::eof()
 
 #endif // defined(__GNUC__) && __GNUC__ >= 3 && __GNUC_MINOR__ >= 2
 
-#endif// __ZUnicodePriv__
+#endif // __ZUnicodePriv__

@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStrimU_StreamUTF8Buffered
@@ -51,38 +53,6 @@ protected:
 	size_t fFeedOut;
 	};
 
-#if 0
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimerR_Boundary
+NAMESPACE_ZOOLIB_END
 
-/// A read filter strimmer encapsulating a ZStrimU_StreamUTF8Buffered.
-
-class ZStrimmerR_Boundary : public ZStrimmerR
-	{
-public:
-	ZStrimmerR_Boundary(const string8& iBoundary, ZRef<ZStrimmerR> iStrimmerSource);
-
-	ZStrimmerR_Boundary(
-		const UTF8* iBoundary, size_t iBoundarySize, ZRef<ZStrimmerR> iStrimmerSource);
-
-	ZStrimmerR_Boundary(const string32& iBoundary, ZRef<ZStrimmerR> iStrimmerSource);
-
-	ZStrimmerR_Boundary(
-		const UTF32* iBoundary, size_t iBoundarySize, ZRef<ZStrimmerR> iStrimmerSource);
-
-	virtual ~ZStrimmerR_Boundary();
-
-// From ZStrimmerR
-	virtual const ZStrimR& GetStrimR();
-
-protected:
-	ZRef<ZStrimmerR> fStrimmerSource;
-	ZStrimU_StreamUTF8Buffered fStrim;
-	};
-
-// typedef ZStrimmerRFT<ZStrimR_Boundary> ZStrimmerR_Boundary;
-
-// =================================================================================================
-#endif
 #endif // __ZStrimU_StreamUTF8Buffered__

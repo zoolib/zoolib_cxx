@@ -22,15 +22,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZString.h"
 
-namespace ZString = ZooLib::ZZString;
-
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
+
+namespace ZUtil_Tuple {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Tuple
-
-namespace ZUtil_Tuple {
 
 // ----------
 
@@ -212,3 +212,5 @@ ZTuple::const_iterator sIteratorOfi(const ZTuple& iTuple, const string& iNamei)
 	}
 
 } // namespace ZUtil_Tuple
+
+NAMESPACE_ZOOLIB_END

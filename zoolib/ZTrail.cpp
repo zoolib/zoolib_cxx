@@ -29,6 +29,8 @@ using std::search;
 using std::string;
 using std::vector;
 
+NAMESPACE_ZOOLIB_USING
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Helper functions

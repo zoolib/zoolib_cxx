@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::RelHead
@@ -86,5 +88,7 @@ RelHead operator&(const ZTName& iName, const RelHead& iRelHead);
 } // namespace ZTQL
 
 ZTQL::RelHead operator|(const ZTName& iLHS, const ZTName& iRHS);
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTQL_RelHead__

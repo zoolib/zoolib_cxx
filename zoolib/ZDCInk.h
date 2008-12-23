@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRGBColor.h"
 #include "zoolib/ZTypes.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCPattern
@@ -169,5 +171,7 @@ inline bool ZDCInk::IsSameAs(const ZDCInk& inOther) const
 
 inline const ZRef<ZDCInkRep>& ZDCInk::GetRep() const
 	{ return fRep; }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZDCInk__

@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFile.h"
 #include "zoolib/ZNode.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNodeRep_FS
@@ -88,5 +90,7 @@ public:
 private:
 	ZFileIter fFileIter;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZNode_FS__

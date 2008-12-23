@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAsset.h"
 #include "zoolib/ZFile.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZAssetIterRep_Std_Directory;
 class ZAssetRep_Std_Directory;
 class ZAssetTree_Std;
@@ -130,7 +132,7 @@ protected:
 
 	std::vector<const char*> fPaths;
 
-	ZooLib::ZMutex fMutex;
+	ZMutex fMutex;
 	bool fResolved;
 	std::vector<ZRef<ZAssetRep> > fResolvedReps;
 	};
@@ -181,7 +183,7 @@ protected:
 	ZRef<ZAssetRep_Std> UseRep(ZAssetRep_Std* iRep);
 	void RepBeingFinalized(ZAssetRep_Std* iRep);
 
-	ZooLib::ZMutex fMutex;
+	ZMutex fMutex;
 
 	friend class ZAssetIterRep_Std_Directory;
 	friend class ZAssetRep_Std;
@@ -323,5 +325,7 @@ public:
 	ZAssetTree_Std_Memory_StaticData(const void* iAddress, size_t iSize);
 	virtual ~ZAssetTree_Std_Memory_StaticData();
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZAsset_Std__

@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamRW_FlushOnRead
@@ -64,7 +66,7 @@ public:
 
 protected:
 	ZThreadSafe_t fLastWasWrite;
-	ZooLib::ZMutexNR fMutex_Write;
+	ZMutexNR fMutex_Write;
 	const ZStreamR& fStreamR;
 	const ZStreamW& fStreamW;
 	};
@@ -92,5 +94,7 @@ protected:
 	ZRef<ZStreamerW> fStreamerW;
 	ZStreamRW_FlushOnRead fStream;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStreamRW_FlushOnRead__

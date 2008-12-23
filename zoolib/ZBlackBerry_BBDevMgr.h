@@ -38,6 +38,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZBlackBerryCOM.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZBlackBerry {
 
 class Device_BBDevMgr;
@@ -90,6 +92,8 @@ private:
 	};
 
 } // namespace ZBlackBerry
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(BlackBerry_BBDevMgr)
 

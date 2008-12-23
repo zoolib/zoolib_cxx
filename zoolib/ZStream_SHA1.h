@@ -27,15 +27,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_StreamSHA1_UseOpenSSL ZCONFIG_SPI_Enabled(openssl)
 #endif
 
+#if ZCONFIG_StreamSHA1_UseOpenSSL
+#	include <openssl/sha.h>
+#endif
+
 #include "zoolib/ZStream_Filter.h"
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStream_SHA1
-
-#if ZCONFIG_StreamSHA1_UseOpenSSL
-#	include <openssl/sha.h>
-#endif
 
 namespace ZStream_SHA1 {
 
@@ -119,5 +121,7 @@ protected:
 	};
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStream_SHA1__

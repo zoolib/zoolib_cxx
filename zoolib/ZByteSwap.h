@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // AG 2000-02-06. Much of the code in this file inlines. For that to work we need the various
 // compilers to see quite different code. The first section of this file is #ifed out of
 // existence, but should be considered to be the canonical API. The second section has the
@@ -872,5 +874,7 @@ inline void ZByteSwap_WriteLittle64(volatile void* iValueAddress, int64 iValue)
 #endif // ZByteSwap_EndianBig
 
 #undef ZByteSwap_EndianBig
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZByteSwap__

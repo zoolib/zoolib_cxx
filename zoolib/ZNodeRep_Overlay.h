@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNode.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNodeRep_Overlay
@@ -73,5 +75,7 @@ private:
 	std::string fName;
 	std::vector<ZRef<ZNodeRep> > fOverlays;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZNodeRep_Overlay__

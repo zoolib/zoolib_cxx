@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZSleeperRunner;
 
 // =================================================================================================
@@ -101,8 +103,8 @@ private:
 	void pRun();
 	static void spRun(ZSleeperRunner_Threaded* iRunner);
 
-	ZooLib::ZMutexNR fMutex;
-	ZooLib::ZCondition fCondition;
+	ZMutexNR fMutex;
+	ZCondition fCondition;
 	ZSleeper* fSleeper;
 	ZTime fNextWake;
 	};
@@ -120,5 +122,7 @@ public:
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZSleeperRunnerFactory_Pooled??
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZSleeper__

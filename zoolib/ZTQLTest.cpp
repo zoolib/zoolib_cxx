@@ -6,6 +6,8 @@
 #include "zoolib/ZUtil_TQLConvert.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::set;
 using std::string;
 

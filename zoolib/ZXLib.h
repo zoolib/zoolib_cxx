@@ -32,6 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <X11/Xresource.h>
 #include <X11/Xutil.h>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZXLib {
 
 extern ZMutex sMutex;
@@ -153,6 +155,8 @@ Status StringListToTextProperty(const char** a0, int a1, XTextProperty* a2);
 void SetWMProperties(Display* a0, Window a1, XTextProperty* a2, XTextProperty* a3, char** a4, int a5, XSizeHints* a6, XWMHints* a7, XClassHint* a8);
 
 } // namespace ZXLib
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(X11)
 

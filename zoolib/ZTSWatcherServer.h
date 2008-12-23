@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZTSWatcher.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZStreamR;
 class ZStreamW;
 
@@ -32,7 +34,7 @@ class ZStreamW;
 #pragma mark -
 #pragma mark * ZTSWatcherServer
 
-class ZTSWatcherServer : ZooLib::NonCopyable
+class ZTSWatcherServer : NonCopyable
 	{
 public:
 	ZTSWatcherServer(ZRef<ZTSWatcher> iWatcher);
@@ -45,5 +47,7 @@ private:
 
 	ZRef<ZTSWatcher> fWatcher;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTSWatcherServer__

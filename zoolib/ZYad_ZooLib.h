@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZTuple.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadR_TValue
@@ -151,5 +153,7 @@ ZRef<ZYadR> sMakeYadR(const ZTValue& iTV);
 ZTValue sFromYadR(ZRef<ZYadR> iYadR);
 
 } // namespace ZYadUtil_ZooLib
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZYad_ZooLib__

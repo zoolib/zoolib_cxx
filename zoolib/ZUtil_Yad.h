@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZYad.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Yad
@@ -34,5 +36,7 @@ namespace ZUtil_Yad {
 ZRef<ZYadR> sWalk(ZRef<ZYadR> iYadR, const ZTrail& iTrail);
 
 } // namespace ZUtil_Yad
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Yad__

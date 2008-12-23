@@ -22,10 +22,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMacOSX__ 1
 #include "zconfig.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZMacOSX {
 
 bool sIsMacOSX();
 
 } // namespace ZMacOSX
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZMacOSX__

@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTuple.h"
 #include "zoolib/ZTxn.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZTBRepTransaction;
 
 // =================================================================================================
@@ -36,7 +38,7 @@ class ZTBRepTransaction;
 class ZTBRep
 :	public ZRefCountedWithFinalization,
 	private ZTxnTarget,
-	ZooLib::NonCopyable
+	NonCopyable
 	{
 public:
 	virtual ~ZTBRep();
@@ -57,7 +59,7 @@ private:
 	virtual void TxnAbortPostValidate(int32 iTxnID, bool iValidationSucceeded);
 	virtual void TxnCommit(int32 iTxnID, CommitCallbackProc iCallback, void* iRefcon);
 
-	ZooLib::ZMutex fMutex_Transactions;
+	ZMutex fMutex_Transactions;
 	std::map<int32, ZTBRepTransaction*> fTransactions;
 	};
 
@@ -65,7 +67,7 @@ private:
 #pragma mark -
 #pragma mark * ZTBRepTransaction
 
-class ZTBRepTransaction : ZooLib::NonCopyable
+class ZTBRepTransaction : NonCopyable
 	{
 protected:
 	~ZTBRepTransaction() {}
@@ -98,5 +100,7 @@ public:
 	typedef void (*Callback_Commit_t)(void* iRefcon);
 	virtual void Commit(Callback_Commit_t iCallback_Commit, void* iRefcon) = 0;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTBRep__

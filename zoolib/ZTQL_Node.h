@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTQL_LogOp.h"
 #include "zoolib/ZTQL_RelHead.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node
@@ -321,5 +323,7 @@ public:
 	virtual ZRef<Node> Transform_Select(ZRef<Node_Select> iNode);
 	virtual ZRef<Node> Transform_Union(ZRef<Node_Union> iNode);
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTQL_Node__

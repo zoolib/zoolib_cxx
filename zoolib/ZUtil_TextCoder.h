@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTextCoder.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_TextCoder
@@ -35,5 +37,7 @@ ZTextDecoder* sCreateDecoder(const std::string& iCharset);
 ZTextEncoder* sCreateEncoder(const std::string& iCharset);
 
 } // namespace ZUtil_TextCoder
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_TextCoder__

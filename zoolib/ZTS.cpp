@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTS.h"
 
+NAMESPACE_ZOOLIB_USING
+
 /**
 \defgroup group_Tuplestore Tuplestore
 A tuplestore is simply a humungous array of 2^64 tuples. Each entry in the array can be

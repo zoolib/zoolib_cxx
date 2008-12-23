@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <set>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::ComparatorRep
@@ -288,5 +290,7 @@ private:
 	};
 
 } // namespace ZTQL
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTQL_Condition__

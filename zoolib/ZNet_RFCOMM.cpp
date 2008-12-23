@@ -1,3 +1,4 @@
+
 /* -------------------------------------------------------------------------------------------------
 Copyright (c) 2008 Andrew Green
 http://www.zoolib.org
@@ -20,6 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNet_RFCOMM.h"
 #include "zoolib/ZFactoryChain.h"
+
+NAMESPACE_ZOOLIB_USING
 
 // =================================================================================================
 #pragma mark -

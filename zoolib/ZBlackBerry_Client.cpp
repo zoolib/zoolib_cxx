@@ -27,6 +27,8 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZBlackBerry {
 
 // =================================================================================================
@@ -445,3 +447,5 @@ void Manager_Client::Detached()
 	}
 
 } // namespace ZBlackBerry
+
+NAMESPACE_ZOOLIB_END

@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <jni.h>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamR_JNI
@@ -49,5 +51,8 @@ private:
 	JNIEnv* fEnv;
 	};
 
+NAMESPACE_ZOOLIB_END
+
 #endif // ZCONFIG_SPI_Enabled(JNI)
+
 #endif // __ZStream_JNI__

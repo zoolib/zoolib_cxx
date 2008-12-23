@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cctype>
 
+NAMESPACE_ZOOLIB_USING
+
 using std::find;
 using std::string;
 using std::vector;

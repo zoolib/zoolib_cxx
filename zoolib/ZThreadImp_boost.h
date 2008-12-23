@@ -52,7 +52,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <boost/thread.hpp>
 
-namespace ZooLib {
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -91,7 +91,7 @@ public:
 
 typedef ZSem_T<ZMtx_boost, ZCnd_boost> ZSem_boost;
 
-} // namespace ZooLib
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(ThreadImp_boost)
 

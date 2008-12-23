@@ -74,6 +74,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	typedef void* Delegate_ZNetEndpoint_RFCOMM_OSX;
 #endif
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetListener_RFCOMM_OSX
@@ -88,6 +90,7 @@ public:
 	virtual ZRef<ZNetEndpoint> Listen();
 	virtual void CancelListen();
 
+// Called by Delegate_ZNetListener_RFCOMM_OSX
 	void pChannelOpened(IOBluetoothRFCOMMChannel* iChannel);
 
 private:
@@ -97,8 +100,8 @@ private:
 	BluetoothSDPServiceRecordHandle fHandle;
 	IOBluetoothUserNotification* fNotification;
 
-	ZooLib::ZMutexNR fMutex;
-	ZooLib::ZCondition fCondition;
+	ZMtx fMutex;
+	ZCnd fCondition;
 	std::deque<IOBluetoothRFCOMMChannel*> fQueue;
 	};
 
@@ -152,11 +155,13 @@ private:
 	Delegate_ZNetEndpoint_RFCOMM_OSX* fDelegate;
 
 	IOBluetoothRFCOMMChannel* fChannel;
-	ZooLib::ZMtx fMutex;
-	ZooLib::ZCnd fCondition;
+	ZMtx fMutex;
+	ZCnd fCondition;
 	std::deque<uint8> fBuffer;
 	bool fOpen;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(Net_RFCOMM_OSX)
 

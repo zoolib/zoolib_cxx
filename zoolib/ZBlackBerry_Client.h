@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZBlackBerry.h"
 #include "zoolib/ZCommer.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZBlackBerry {
 
 // =================================================================================================
@@ -68,5 +70,7 @@ private:
 	};
 
 } // namespace ZBlackBerry
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZBlackBerry_Client__

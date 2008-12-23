@@ -30,6 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_TSWatcherMUX_Debug 1
 #endif
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTSWatcherMUX
@@ -96,8 +98,8 @@ private:
 	void Callback();
 	static void sCallback(void* iRefcon);
 
-	ZooLib::ZMutex fMutex_Structure;
-	ZooLib::ZCondition fCondition;
+	ZMutex fMutex_Structure;
+	ZCondition fCondition;
 
 	int64 fCurrentSyncNumber;
 	int64 fNextSyncNumber;
@@ -110,13 +112,13 @@ private:
 	int64 fNextQueryRefcon;
 	std::map<ZMemoryBlock, PQuery> fMB_To_PQuery;
 	std::map<int64, PQuery*> fRefcon_To_PQuery;
-	ZooLib::DListHead<DLink_PQuery_Sync> fPQueries_Sync;
-	ZooLib::DListHead<DLink_PQuery_Cached> fPQueries_Cached;
+	DListHead<DLink_PQuery_Sync> fPQueries_Sync;
+	DListHead<DLink_PQuery_Cached> fPQueries_Cached;
 	size_t fCacheSize_Queries;
 
 	std::map<uint64, PTuple> fPTuples;
-	ZooLib::DListHead<DLink_PTuple_Sync> fPTuples_Sync;
-	ZooLib::DListHead<DLink_PTuple_Cached> fPTuples_Cached;
+	DListHead<DLink_PTuple_Sync> fPTuples_Sync;
+	DListHead<DLink_PTuple_Cached> fPTuples_Cached;
 	size_t fCacheSize_Tuples;
 
 	friend class Watcher;
@@ -138,5 +140,7 @@ private:
 	ZRef<ZTSWatcherMUX> fMUX;
 	bool fAlwaysForceSync;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTSWatcherMUX__

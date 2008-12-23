@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(JPEGLib)
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCPixmapEncoder_JPEGLib
@@ -65,6 +67,8 @@ public:
 // From ZDCPixmapDecoder
 	virtual void Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap);
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(JPEGLib)
 

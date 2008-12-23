@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZStreamR;
 class ZStreamW;
 
@@ -91,5 +93,7 @@ public:
 
 	virtual void Reset();
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTextCoder__

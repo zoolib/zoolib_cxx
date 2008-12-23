@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Netscape)
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZNetscape {
 
 class Guest_Std;
@@ -120,6 +122,8 @@ public:
 	};
 
 } // namespace ZNetscape
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Netscape)
 

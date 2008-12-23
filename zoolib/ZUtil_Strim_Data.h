@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream.h"
 #include "zoolib/ZStrim.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Strim_Data
@@ -37,5 +39,7 @@ void sDumpData(const ZStrimW& s, const void* iSource, size_t iCount);
 void sDumpData(const ZStrimW& s, const void* iSource, size_t iCount, size_t iMax);
 
 } // ZUtil_Strim_Data
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Strim_Data__

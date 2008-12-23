@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Stream_BitTorrent__ 1
 #include "zconfig.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZTValue;
 class ZStreamU;
 
@@ -32,5 +34,7 @@ bool sFromStream(const ZStreamU& iStreamU, ZTValue& oTValue);
 ZTValue sTValueFromStream(const ZStreamU& iStreamU);
 
 } // namespace ZUtil_Stream_BitTorrent
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Stream_BitTorrent__

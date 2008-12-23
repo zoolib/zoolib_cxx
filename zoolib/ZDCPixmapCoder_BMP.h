@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCPixmapCoder.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCPixmapEncoder_BMP
@@ -66,5 +68,7 @@ public:
 private:
 	bool fWithFileHeader;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZDCPixmapCoder_BMP__

@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNode.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNodeRep_Wrapper
@@ -74,5 +76,7 @@ private:
 	size_t fDepth;
 	ZRef<ZNodeRep> fNodeRep;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZNodeRep_Wrapper__

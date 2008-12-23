@@ -41,6 +41,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZDCPixmap;
 class ZDCPattern;
 
@@ -49,8 +51,6 @@ namespace ZUtil_Mac_LL {
 // =================================================================================================
 
 #if ZCONFIG_SPI_Enabled(Carbon)
-
-typedef ZooLib::ZPoint ZPoint;
 
 void sSetupPixMapColor(ZPoint inSize, int32 inDepth, PixMap& oPixMap);
 void sSetupPixMapColor(size_t inRowBytes, int32 inDepth, int32 inHeight, PixMap& oPixMap);
@@ -179,5 +179,7 @@ protected:
 // =================================================================================================
 
 } // namespace ZUtil_Mac_LL
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Mac_LL__

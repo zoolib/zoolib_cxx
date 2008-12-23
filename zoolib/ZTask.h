@@ -5,6 +5,8 @@
 #include "zoolib/ZDList.h"
 #include "zoolib/ZThread.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZTask;
 class ZTaskOwner;
 
@@ -13,11 +15,11 @@ class ZTaskOwner;
 #pragma mark * ZTask
 
 class ZTaskLink_Live :
-	public ZooLib::DListLink<ZTask, ZTaskLink_Live>
+	public DListLink<ZTask, ZTaskLink_Live>
 	{};
 
 class ZTaskLink_Processed :
-	public ZooLib::DListLink<ZTask, ZTaskLink_Processed>
+	public DListLink<ZTask, ZTaskLink_Processed>
 	{};
 
 class ZTask
@@ -90,8 +92,8 @@ private:
 	ZMutex fMutex;
 	ZCondition fCondition;
 
-	ZooLib::DListHead<ZTaskLink_Live> fTasks_Live;
-	ZooLib::DListHead<ZTaskLink_Processed> fTasks_Processed;
+	DListHead<ZTaskLink_Live> fTasks_Live;
+	DListHead<ZTaskLink_Processed> fTasks_Processed;
 	};
 
 // =================================================================================================
@@ -113,5 +115,7 @@ private:
 	static void sTaskRun(ZTask_Threaded* iTask);
 	ZThread* fThread;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTask__

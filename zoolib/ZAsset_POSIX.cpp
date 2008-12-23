@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <unistd.h>
 #include <sys/mman.h>
 
+NAMESPACE_ZOOLIB_USING
+
 using std::runtime_error;
 
 // =================================================================================================

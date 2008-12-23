@@ -32,6 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <map>
 #include <string>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamMUX
@@ -115,7 +117,7 @@ private:
 	void pFlush(const ZStreamW& iStreamW);
 	bool pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP);
 
-	ZooLib::ZMutex fMutex;
+	ZMutex fMutex;
 
 	const size_t fMaxFragmentSize;
 	const size_t fDefaultReceiveBufferSize;
@@ -156,5 +158,7 @@ public:
 	size_t fMaxFragmentSize;
 	size_t fDefaultReceiveBufferSize;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStreamMUX__

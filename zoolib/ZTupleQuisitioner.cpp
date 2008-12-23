@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define kDebug_TupleQuisitioner 2
 
+NAMESPACE_ZOOLIB_USING
+
 using std::pair;
 using std::set;
 using std::vector;

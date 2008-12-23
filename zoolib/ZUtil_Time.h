@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Time
@@ -49,5 +51,7 @@ std::string sAsString_ISO8601_us(ZTime iTime, bool iIncludeT);
 ZTime sFromString_ISO8601(const std::string& iString);
 
 } // namespace ZUtil_Time
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Time__

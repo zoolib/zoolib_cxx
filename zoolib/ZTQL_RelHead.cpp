@@ -26,11 +26,13 @@ using std::set;
 using std::string;
 using std::vector;
 
+NAMESPACE_ZOOLIB_BEGIN
+
+namespace ZTQL {
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::RelHead
-
-namespace ZTQL {
 
 RelHead::RelHead()
 	{}
@@ -227,9 +229,11 @@ RelHead operator&(const ZTName& iName, const RelHead& iRelHead)
 	return iRelHead & iName;
 	}
 
-} // namespace ZTQL
-
 ZTQL::RelHead operator|(const ZTName& iLHS, const ZTName& iRHS)
 	{
 	return ZTQL::RelHead(iLHS) | iRHS;
 	}
+
+} // namespace ZTQL
+
+NAMESPACE_ZOOLIB_END

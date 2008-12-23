@@ -38,6 +38,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZXServer.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCCanvas_X
@@ -209,6 +211,8 @@ protected:
 	ZX11Pixmap* fX11Pixmap;
 	};
 */
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(DC_X)
 

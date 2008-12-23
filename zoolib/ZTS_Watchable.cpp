@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_USING
 
 using std::lower_bound;
 using std::map;
@@ -117,7 +117,7 @@ public:
 	bool fResultsValid;
 	vector<uint64> fResults;
 
-	ZooLib::DListHead<WatcherQueryUsing> fUsingWatcherQueries;
+	DListHead<WatcherQueryUsing> fUsingWatcherQueries;
 	};
 
 // =================================================================================================
@@ -125,12 +125,12 @@ public:
 #pragma mark * ZTS_Watchable::WatcherQuery
 
 class ZTS_Watchable::WatcherQueryTripped :
-	public ZooLib::DListLink<ZTS_Watchable::WatcherQuery,
+	public DListLink<ZTS_Watchable::WatcherQuery,
 		ZTS_Watchable::WatcherQueryTripped, ZTS_Watchable::kDebug>
 	{};
 
 class ZTS_Watchable::WatcherQueryUsing :
-	public ZooLib::DListLink<ZTS_Watchable::WatcherQuery,
+	public DListLink<ZTS_Watchable::WatcherQuery,
 		ZTS_Watchable::WatcherQueryUsing, ZTS_Watchable::kDebug>
 	{};
 
@@ -185,7 +185,7 @@ public:
 	set<PTuple*> fTrippedPTuples;
 
 	map<int64, WatcherQuery*> fRefcon_To_WatcherQuery;
-	ZooLib::DListHead<WatcherQueryTripped> fTrippedWatcherQueries;
+	DListHead<WatcherQueryTripped> fTrippedWatcherQueries;
 
 	Callback_t fCallback;
 	void* fRefcon;
@@ -609,7 +609,7 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 		locker_Structure.Acquire();
 		}
 
-	for (ZooLib::DListIteratorEraseAll<WatcherQuery, WatcherQueryTripped>
+	for (DListIteratorEraseAll<WatcherQuery, WatcherQueryTripped>
 		iter = iWatcher->fTrippedWatcherQueries;iter; iter.Advance())
 		{
 		WatcherQuery* theWatcherQuery = iter.Current();
@@ -806,7 +806,7 @@ void ZTS_Watchable::pInvalidatePSpecs(const ZTuple& iOld, const ZTuple& iNew,
 		{
 		PQuery* curPQuery = *i;
 
-		for (ZooLib::DListIterator<WatcherQuery, WatcherQueryUsing>
+		for (DListIterator<WatcherQuery, WatcherQueryUsing>
 			iter = curPQuery->fUsingWatcherQueries;iter; iter.Advance())
 			{
 			WatcherQuery* curWatcherQuery = iter.Current();

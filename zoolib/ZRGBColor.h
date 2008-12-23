@@ -41,6 +41,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <GraphicsDefs.h>
 #endif
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZRGBColorPOD
@@ -794,5 +796,7 @@ public:
 	uint8 fPixval;
 	ZRGBColorPOD fColor;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZRGBColor__

@@ -44,6 +44,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <db.h>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTS_DB
@@ -61,8 +63,8 @@ public:
 	virtual void GetTuples(size_t iCount, const uint64* iIDs, ZTuple* oTuples);
 	virtual void Search(
 		const ZTBSpec& iSpec, const std::set<uint64>& iSkipIDs, std::set<uint64>& ioIDs);
-	virtual ZooLib::ZMutexBase& GetReadLock();
-	virtual ZooLib::ZMutexBase& GetWriteLock();
+	virtual ZMutexBase& GetReadLock();
+	virtual ZMutexBase& GetWriteLock();
 
 // Our protocol
 	void Flush();
@@ -80,8 +82,8 @@ private:
 	static int sBTree_Compare(const DBT* iLeft, const DBT* iRight);
 	static size_t sBTree_Prefix(const DBT* iLeft, const DBT* iRight);
 
-	ZooLib::ZMutex fMutex;
-	ZooLib::ZMutex fMutex_ID;
+	ZMutex fMutex;
+	ZMutex fMutex_ID;
 	uint64 fNextUnusedID;
 	ZFileSpec fFileSpec;
 	bool fChanged;
@@ -89,5 +91,8 @@ private:
 	std::vector<ZTupleIndex*> fIndices;
 	};
 
+NAMESPACE_ZOOLIB_END
+
 #endif // ZCONFIG_API_Enabled(TS_DB)
+
 #endif // __ZTS_DB__

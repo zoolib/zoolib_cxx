@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim_TBSpec__
 #include "zconfig.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZStrimU;
 class ZStrimW;
 class ZTBSpec;
@@ -43,5 +45,7 @@ bool sFromStrim(const ZStrimU& iStrimU, ZTBSpec& oTBSpec);
 #pragma mark * operator<< overloads
 
 const ZStrimW& operator<<(const ZStrimW& s, const ZTBSpec& iTBSpec);
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Strim_TBSpec__

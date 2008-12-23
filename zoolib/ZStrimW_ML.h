@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZTuple;
 class ZTValue;
 
@@ -38,10 +40,10 @@ class ZTValue;
 
 /// A write filter strim to help generate well-formed ML-type data (XML, HTML etc).
 
-//class ZStrimW_ML : public ZStrimW_NativeUTF8, ZooLib::NonCopyable
+//class ZStrimW_ML : public ZStrimW_NativeUTF8, NonCopyable
 class ZStrimW_ML
 :	public ZStrimW_T<ZStrimW_NativeUTF8, ZStrimW_ML>,
-	ZooLib::NonCopyable
+	NonCopyable
 	{
 public:
 	class Indenter;
@@ -203,5 +205,7 @@ protected:
 	ZRef<ZStrimmerW> fStrimmer;
 	ZStrimW_ML fStrim;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStrimW_ML__

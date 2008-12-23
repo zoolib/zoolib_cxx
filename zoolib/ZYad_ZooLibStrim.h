@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZYad_ZooLib.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadParseException_ZooLibStrim
@@ -183,5 +185,7 @@ void sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR,
 void sWrite_PropName(const ZStrimW& iStrimW, const std::string& iPropName);
 
 } // namespace ZYadUtil_ZooLibStrim
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZYad_ZooLibStrim__

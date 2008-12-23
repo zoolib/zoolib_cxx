@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTQL_Query.h"
 #include "zoolib/ZTBQuery.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_TQLConvert
@@ -34,5 +36,7 @@ namespace ZUtil_TQLConvert {
 ZTQL::Query sConvert(const ZTBQuery& iTBQuery);
 
 } // namespace ZUtil_TBSpec
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_TQLConvert__

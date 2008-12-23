@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <errno.h>
 #include <stdexcept> // for range_error
 
+NAMESPACE_ZOOLIB_USING
+
 using std::range_error;
 
 // Neither the MSL headers nor the Windows headers have fseeko or ftello.
@@ -313,7 +315,7 @@ static int sCloseStreamerW(void* iCookie)
 	return 0;
 	}
 
-FILE* ZooLib::sStreamOpen(const ZStreamR& iStreamR)
+FILE* sStreamOpen(const ZStreamR& iStreamR)
 	{
 	_IO_cookie_io_functions_t theFunctions;
 	theFunctions.read = sReadStreamR;
@@ -323,7 +325,7 @@ FILE* ZooLib::sStreamOpen(const ZStreamR& iStreamR)
 	return ::fopencookie(const_cast<ZStreamR*>(&iStreamR), "", theFunctions);
 	}
 
-FILE* ZooLib::sStreamOpen(const ZStreamRPos& iStreamRPos)
+FILE* sStreamOpen(const ZStreamRPos& iStreamRPos)
 	{
 	_IO_cookie_io_functions_t theFunctions;
 	theFunctions.read = sReadStreamR;
@@ -333,7 +335,7 @@ FILE* ZooLib::sStreamOpen(const ZStreamRPos& iStreamRPos)
 	return ::fopencookie(const_cast<ZStreamRPos*>(&iStreamRPos), "", theFunctions);
 	}
 
-FILE* ZooLib::sStreamOpen(const ZStreamW& iStreamW)
+FILE* sStreamOpen(const ZStreamW& iStreamW)
 	{
 	_IO_cookie_io_functions_t theFunctions;
 	theFunctions.read = nil;
@@ -343,7 +345,7 @@ FILE* ZooLib::sStreamOpen(const ZStreamW& iStreamW)
 	return ::fopencookie(const_cast<ZStreamW*>(&iStreamW), "", theFunctions);
 	}
 
-FILE* ZooLib::sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
+FILE* sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
 	{
 	_IO_cookie_io_functions_t theFunctions;
 	theFunctions.read = sReadStreamerR;
@@ -353,7 +355,7 @@ FILE* ZooLib::sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
 	return ::fopencookie(new ZRef<ZStreamerR>(iStreamerR), "", theFunctions);
 	}
 
-FILE* ZooLib::sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
+FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
 	{
 	_IO_cookie_io_functions_t theFunctions;
 	theFunctions.read = sReadStreamerRPos;
@@ -363,7 +365,7 @@ FILE* ZooLib::sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
 	return ::fopencookie(new ZRef<ZStreamerRPos>(iStreamerRPos), "", theFunctions);
 	}
 
-FILE* ZooLib::sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
+FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
 	{
 	_IO_cookie_io_functions_t theFunctions;
 	theFunctions.read = nil;
@@ -465,54 +467,54 @@ static int sCloseStreamerW(void* iCookie)
 	return 0;
 	}
 
-FILE* ZooLib::sStreamOpen(const ZStreamR& iStreamR)
+FILE* sStreamOpen(const ZStreamR& iStreamR)
 	{ return ::funopen(const_cast<ZStreamR*>(&iStreamR), sReadStreamR, nil, nil, nil); }
 
-FILE* ZooLib::sStreamOpen(const ZStreamRPos& iStreamRPos)
+FILE* sStreamOpen(const ZStreamRPos& iStreamRPos)
 	{
 	return ::funopen(
 		const_cast<ZStreamRPos*>(&iStreamRPos), sReadStreamR, nil, sSeekStreamRPos, nil);
 	}
 
-FILE* ZooLib::sStreamOpen(const ZStreamW& iStreamW)
+FILE* sStreamOpen(const ZStreamW& iStreamW)
 	{ return ::funopen(const_cast<ZStreamW*>(&iStreamW), nil, sWriteStreamW, nil, nil); }
 
-FILE* ZooLib::sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
+FILE* sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
 	{
 	return ::funopen(
 		new ZRef<ZStreamerR>(iStreamerR), sReadStreamerR, nil, nil, sCloseStreamerRPos);
 	}
 
-FILE* ZooLib::sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
+FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
 	{
 	return ::funopen(
 		new ZRef<ZStreamerRPos>(iStreamerRPos),
 		sReadStreamerRPos, nil, sSeekStreamerRPos, sCloseStreamerRPos);
 	}
 
-FILE* ZooLib::sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
+FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
 	{
 	return ::funopen(new ZRef<ZStreamerW>(iStreamerW), nil, sWriteStreamerW, nil, sCloseStreamerW);
 	}
 
 #else
 
-FILE* ZooLib::sStreamOpen(const ZStreamR& iStreamR)
+FILE* sStreamOpen(const ZStreamR& iStreamR)
 	{ return nil; }
 
-FILE* ZooLib::sStreamOpen(const ZStreamRPos& iStreamRPos)
+FILE* sStreamOpen(const ZStreamRPos& iStreamRPos)
 	{ return nil; }
 
-FILE* ZooLib::sStreamOpen(const ZStreamW& iStreamW)
+FILE* sStreamOpen(const ZStreamW& iStreamW)
 	{ return nil; }
 
-FILE* ZooLib::sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
+FILE* sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
 	{ return nil; }
 
-FILE* ZooLib::sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
+FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
 	{ return nil; }
 
-FILE* ZooLib::sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
+FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
 	{ return nil; }
 
 #endif

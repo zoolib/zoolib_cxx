@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZHTTP.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZHTTP
@@ -39,5 +41,7 @@ ZRef<ZStreamerR> sPost(
 	int32* oResultCode, ZTuple* oFields, ZMemoryBlock* oRawHeader);
 
 } // namespace ZHTTP
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZHTTP_Requests__

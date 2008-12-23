@@ -24,8 +24,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTypes.h"
 
+#include "zoolib/ZCompat_algorithm.h"
+
 #include <stdexcept> // For std::range_error
 #include <string>
+
+NAMESPACE_ZOOLIB_BEGIN
 
 class ZStreamR;
 class ZStreamW;
@@ -747,5 +751,7 @@ private:
 	uint64 fPosition;
 	uint64 fSize;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStream__

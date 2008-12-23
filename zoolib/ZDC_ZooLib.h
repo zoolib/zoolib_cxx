@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDC.h"
 #include "zoolib/ZDCGlyphServer.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCCanvas_ZooLib
@@ -138,5 +140,7 @@ private:
 	ZRef<ZDCPixmapRep> fRep;
 	ZRef<ZDCGlyphServer> fGlyphServer;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZDC_ZooLib__

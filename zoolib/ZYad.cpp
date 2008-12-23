@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdio.h> // For printf
 
+NAMESPACE_ZOOLIB_USING
+
 using std::min;
 using std::string;
 using std::vector;

@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <set>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::LogOp
@@ -163,5 +165,7 @@ private:
 	};
 
 } // namespace ZTQL
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTQL_LogOp__

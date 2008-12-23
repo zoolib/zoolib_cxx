@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCPixmapNS.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 
 /**
@@ -35,9 +37,6 @@ B = Bounds
 */
 
 namespace ZDCPixmapBlit {
-
-using ZooLib::ZPoint;
-using ZooLib::ZRect;
 
 typedef ZDCPixmapNS::RasterDesc RD;
 typedef ZDCPixmapNS::PixelDesc PD;
@@ -139,5 +138,7 @@ void sApplyMatte(
 	void* iDest, const RD& iDestRD, const ZRect& iDestB, const PD& iDestPD);
 
 } // namespace ZDCPixmapBlit
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZDCPixmapBlit__

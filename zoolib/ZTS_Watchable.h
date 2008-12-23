@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_TS_Watchable_Debug 0
 #endif
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTS_Watchable
@@ -49,8 +51,8 @@ public:
 	virtual void GetTuples(size_t iCount, const uint64* iIDs, ZTuple* oTuples);
 	virtual void Search(const ZTBSpec& iTBSpec,
 		const std::set<uint64>& iSkipIDs, std::set<uint64>& oIDs);
-	virtual ZooLib::ZMutexBase& GetReadLock();
-	virtual ZooLib::ZMutexBase& GetWriteLock();
+	virtual ZMutexBase& GetReadLock();
+	virtual ZMutexBase& GetWriteLock();
 
 // Our protocol
 	ZRef<ZTSWatcher> NewWatcher();
@@ -115,7 +117,7 @@ private:
 	void pUpdateQueryResults(PQuery* iPQuery);
 
 	ZRef<ZTS> fTS;
-	ZooLib::ZMutex fMutex_Structure;
+	ZMutex fMutex_Structure;
 
 	std::map<ZMemoryBlock, PQuery*> fMB_To_PQuery;
 
@@ -142,5 +144,7 @@ public:
 private:
 	ZRef<ZTS_Watchable> fTS_Watchable;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTS_Watchable__

@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZML.h"
 #include "zoolib/ZYad_ZooLib.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadParseException_ML
@@ -105,5 +107,7 @@ private:
 	bool fExhausted;
 	std::string fChildName;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZYad_ML__

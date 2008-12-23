@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_STL.h"
 
-using namespace ZooLib;
-
 using std::pair;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZBlackBerry {
 
@@ -151,3 +151,4 @@ ZRef<Device> Manager_Union::Open(uint64 iDeviceID)
 
 } // namespace ZBlackBerry
 
+NAMESPACE_ZOOLIB_END

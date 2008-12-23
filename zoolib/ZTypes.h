@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Incorporate standard int types.
 #include "zoolib/ZStdInt.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // ==================================================
 
 // Use the ZFourCC inline if possible.
@@ -100,7 +102,6 @@ enum ZType
 const char* ZTypeAsString(ZType iType);
 
 // ==================================================
-namespace ZooLib {
 
 // There are several places where we need a buffer for some other code
 // to dump data into, the content of which we don't care about. Rather
@@ -121,16 +122,15 @@ extern char sGarbageBuffer[4096];
 	static const size_t sStackBufferSize = 4096;
 #endif
 
-} // namespace ZooLib
-
 // ==================================================
 // For a discussion of the implementation of countof See section 14.3 of
 // "Imperfect C++" by Matthew Wilson, published by Addison Wesley.
-namespace ZooLib {
+
 template<typename T, int N>
 uint8 (&byte_array_of_same_dimension_as(T(&)[N]))[N];
-} // namespace ZooLib
 
-#define countof(x) sizeof(ZooLib::byte_array_of_same_dimension_as((x)))
+#define countof(x) sizeof(byte_array_of_same_dimension_as((x)))
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTypes__

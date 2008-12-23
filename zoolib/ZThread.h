@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZThread__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZThreadImp.h"
 #include "zoolib/ZThreadSafe.h"
 #include "zoolib/ZTypes.h" // For bigtime_t and nil
@@ -34,9 +35,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark -
 #pragma mark * ZThread
 
-namespace ZooLib {
+NAMESPACE_ZOOLIB_BEGIN
 
-class ZThread : ZooLib::NonCopyable
+class ZThread : NonCopyable
 	{
 protected:
 	virtual ~ZThread() {}
@@ -88,7 +89,7 @@ protected:
 // ZMutexBase is the base for ZMutex, ZMutexComposite and the read/write locks from ZRWLock.
 // ie anything that can be acquired recursively and enforces some variety of mutual exclusion.
 
-class ZMutexBase : ZooLib::NonCopyable
+class ZMutexBase : NonCopyable
 	{
 protected:
 	ZMutexBase() {}
@@ -189,18 +190,6 @@ typedef ZGuardMtx ZMutexNRLocker;
 
 // =================================================================================================
 
-} // namespace ZooLib
-
-#ifndef ZooLib_SuppressInjection
-	using ZooLib::ZCondition;
-	using ZooLib::ZLocker;
-	using ZooLib::ZMutex;
-	using ZooLib::ZMutexBase;
-	using ZooLib::ZMutexLocker;
-	using ZooLib::ZMutexNR;
-	using ZooLib::ZMutexNRLocker;
-	using ZooLib::ZSemaphore;
-	using ZooLib::ZThread;
-#endif
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZThread__

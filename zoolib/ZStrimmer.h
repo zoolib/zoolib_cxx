@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRefCount.h"
 #include "zoolib/ZStrim.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStrimmerR
@@ -282,5 +284,7 @@ protected:
 	ZRef<ZStrimmerW> fStrimmerReal;
 	Strim_t fStrim;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStrimmer__

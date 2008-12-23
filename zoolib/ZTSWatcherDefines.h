@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSWatcherDefines__
 #include "zconfig.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 enum EReq
 	{
 	eReq_Close,
@@ -36,5 +38,7 @@ enum EResp
 	eResp_SyncResults,
 	eResp_SyncSuggested
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTSWatcherDefines__

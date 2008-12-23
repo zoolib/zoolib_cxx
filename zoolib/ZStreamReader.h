@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZStreamReaderRunner;
 
 // =================================================================================================
@@ -88,5 +90,7 @@ private:
 	ZStreamReader* fStreamReader;
 	ZRef<ZStreamerR> fSR;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStreamReader__

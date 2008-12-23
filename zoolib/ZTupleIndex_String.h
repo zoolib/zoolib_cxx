@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTupleIndex.h"
 #include "zoolib/ZTextCollator.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTupleIndex_String
@@ -89,5 +91,7 @@ public:
 private:
 	std::string fPropName;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTupleIndex_String__

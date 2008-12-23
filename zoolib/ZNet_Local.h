@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetAddress_Local
@@ -98,5 +100,7 @@ public:
 
 	static ZRef<ZNetEndpoint_Local> sCreateConnected(const std::string& iPath);
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZNet_Local__

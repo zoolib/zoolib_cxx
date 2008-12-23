@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAsset_Std.h"
 #include "zoolib/ZWinHeader.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZAssetTree_Win_MemoryMapped
@@ -65,6 +67,8 @@ public:
 protected:
 	ZStreamRPos_Win_MultiResource* fStream_Resource;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 

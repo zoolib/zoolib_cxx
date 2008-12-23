@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdio.h>
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_USING
 
 #define kDebug_StrimW_ML 1
 
@@ -113,7 +113,7 @@ followed by the actual write. ZStrimW_ML::Attr trips an assertion if the strim
 is not in the correct mode.
 
 
-Note that ZStrimW_ML descends from ZooLib::NonCopyable, in order to enforce
+Note that ZStrimW_ML descends from NonCopyable, in order to enforce
 that it can't be assigned or copy constructed from another ZStrimW_ML. Nevertheless
 we declare a copy constructor and then don't define it. Why? In the words of
 <a href="http://groups.google.com/group/comp.lang.c++/tree/browse_frm/thread/

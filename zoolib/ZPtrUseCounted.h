@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZThread.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZPtrUseCounted_T
@@ -31,8 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 template <class T>
 class ZPtrUseCounted_T
 	{
-	mutable ZooLib::ZMutexNR fMutexNR;
-	mutable ZooLib::ZCondition fCondition;
+	mutable ZMutexNR fMutexNR;
+	mutable ZCondition fCondition;
 	T* fPtr;
 	mutable size_t fUseCount;
 
@@ -105,5 +107,7 @@ public:
 	T* operator->() const
 		{ return fPtr; }	
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZPtrUseCounted__

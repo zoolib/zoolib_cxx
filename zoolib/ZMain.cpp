@@ -23,8 +23,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 int ZMainNS::sArgC;
 char** ZMainNS::sArgV;
+
 
 /** sMain puts argc and argv into the globals ZMainNS::sArgC and
 ZMain::sArgV, and then invokes the application-defined ZMain, wrapping
@@ -53,6 +56,8 @@ static int sMain(int argc, char **argv)
 	return 1;
 	}
 
+NAMESPACE_ZOOLIB_END
+
 // =================================================================================================
 
 #if ZCONFIG_SPI_Enabled(MacClassic)\
@@ -60,6 +65,8 @@ static int sMain(int argc, char **argv)
 
 #include "zoolib/ZMacOSX.h"
 #include "zoolib/ZThreadSimple.h"
+
+NAMESPACE_ZOOLIB_BEGIN
 
 /*
 If WaitNextEvent is called from a thread other than the main thread then the Finder shows us as
@@ -198,6 +205,8 @@ extern "C"int main(int argc, char **argv)
 		}
 	}
  
+NAMESPACE_ZOOLIB_END
+
 // =================================================================================================
 
 #elif ZCONFIG_SPI_Enabled(Win)
@@ -210,6 +219,8 @@ extern "C"int main(int argc, char **argv)
 
 extern "C" int __argc;
 extern "C" char** __argv;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,int nShowCmd)
 	{
@@ -232,6 +243,8 @@ extern "C" int main(int argc, char** argv)
 	return sMain(argc, argv);
 	}
 
+NAMESPACE_ZOOLIB_END
+
 #else // ZCONFIG_Compiler
 
 #error Unsupported compiler
@@ -242,11 +255,15 @@ extern "C" int main(int argc, char** argv)
 
 #else
 
+NAMESPACE_ZOOLIB_BEGIN
+
 extern "C"int main(int argc, char **argv)
 	{
 	return sMain(argc, argv);
 	}
 
+
+NAMESPACE_ZOOLIB_END
 
 // =================================================================================================
 
@@ -259,6 +276,8 @@ extern "C"int main(int argc, char **argv)
 #	include <unistd.h>
 #	include <fcntl.h>
 #endif
+
+NAMESPACE_ZOOLIB_BEGIN
 
 void ZMainNS::sDaemonize(bool iForceFDClose)
 	{
@@ -301,3 +320,5 @@ void ZMainNS::sDaemonize(bool iForceFDClose)
 			}
 	#endif // ZCONFIG_SPI_Enabled(POSIX)
 	}
+
+NAMESPACE_ZOOLIB_END

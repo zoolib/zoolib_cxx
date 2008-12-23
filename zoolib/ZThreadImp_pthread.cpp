@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <new> // for std::bad_alloc
 
-namespace ZooLib {
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -167,6 +167,6 @@ ZThreadImp_pthread::ID ZThreadImp_pthread::sID()
 void ZThreadImp_pthread::sSleep(double iDuration)
 	{ ::usleep(iDuration * 1e6); }
 
-} // namespace ZooLib
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(ThreadImp_pthread)

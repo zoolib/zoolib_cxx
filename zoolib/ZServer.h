@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZServer
@@ -58,9 +60,9 @@ private:
 	static void sRunThread(ZServer* iServer);
 
 private:
-	ZooLib::ZMutex fMutex;
-	ZooLib::ZCondition fCondition;
-	ZooLib::ZSemaphore fSem;
+	ZMutex fMutex;
+	ZCondition fCondition;
+	ZSemaphore fSem;
 	std::vector<Responder*> fResponders;
 
 	ZRef<ZStreamerRWConFactory> fFactory;
@@ -90,7 +92,7 @@ protected:
 	void RunThread();
 	static void sRunThread(Responder* iResponder);
 
-	ZooLib::ZThread* fThread;
+	ZThread* fThread;
 	ZServer* fServer;
 	ZRef<ZStreamerRWCon> fStreamerRWCon;
 	};
@@ -133,5 +135,7 @@ private:
 
 	class Responder;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZServer__

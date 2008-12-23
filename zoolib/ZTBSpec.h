@@ -30,6 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTBSpec
@@ -233,11 +235,9 @@ inline bool ZTBSpec::operator==(const ZTBSpec& iOther) const
 inline bool ZTBSpec::operator<(const ZTBSpec& iOther) const
 	{ return this->Compare(iOther) < 0; }
 
-namespace ZooLib {
 template <>
 inline int sCompare_T(const ZTBSpec& iL, const ZTBSpec& iR)
 	{ return iL.Compare(iR); }
-}
 
 // =================================================================================================
 #pragma mark -
@@ -285,11 +285,9 @@ inline bool ZTBSpec::Comparator::operator<(const Comparator& iOther) const
 	return fRel < iOther.fRel || (fRel == iOther.fRel && fStrength < iOther.fStrength);
 	}
 
-namespace ZooLib {
 template <>
 inline int sCompare_T(const ZTBSpec::Comparator& iL, const ZTBSpec::Comparator& iR)
 	{ return iL.Compare(iR); }
-}
 
 // =================================================================================================
 #pragma mark -
@@ -345,11 +343,9 @@ private:
 	ZRef<Rep> fRep;
 	};
 
-namespace ZooLib {
 template <>
 inline int sCompare_T(const ZTBSpec::Criterion& iL, const ZTBSpec::Criterion& iR)
 	{ return iL.Compare(iR); }
-}
 
 // =================================================================================================
 #pragma mark -
@@ -472,5 +468,7 @@ inline const ZTBSpec::Comparator& ZTBSpec::Criterion::GetComparator() const
 
 inline const ZTValue& ZTBSpec::Criterion::GetTValue() const
 	{ return fRep->fTValue; }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTBSpec__

@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_MacOSX
@@ -52,5 +54,7 @@ void sCreateThunks_MachOCalledByCFM(void* ioFuncs, size_t iCount, std::vector<ch
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 
 } // namespace ZUtil_MacOSX
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_MacOSX__

@@ -21,10 +21,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTB.h"
 #include "zoolib/ZStream.h"
 
-using namespace ZooLib;
-
 using std::min;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 #define kDebug_TB 0
 
@@ -751,3 +751,6 @@ size_t ZTBIter::EraseAll()
 		}
 	return count;
 	}
+
+NAMESPACE_ZOOLIB_END
+

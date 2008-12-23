@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZGRgn.h"
 #include "zoolib/ZFactoryChain.h"
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_USING
 
 // =================================================================================================
 #pragma mark -

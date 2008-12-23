@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMulti_T__ 1
 #include "zconfig.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZMulti_T2
@@ -57,5 +59,7 @@ public:
 	T1 f1;
 	T2 f2;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZMulti_T__

@@ -23,13 +23,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_CarbonEvents
-
 #if ZCONFIG_SPI_Enabled(Carbon)
 
 #include ZMACINCLUDE3(Carbon,HIToolbox,CarbonEvents.h)
+
+NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZUtil_CarbonEvents
 
 namespace ZUtil_CarbonEvents {
 
@@ -68,6 +70,9 @@ void sInvokeOnMainThread(Callback_t iCallback, void* iRefcon);
 
 } // namespace ZUtil_CarbonEvents
 
+NAMESPACE_ZOOLIB_END
+
+
 #if defined(UNIVERSAL_INTERFACES_VERSION) && UNIVERSAL_INTERFACES_VERSION <= 0x0341
 // Taken from Universal Headers 3.4.2
 enum {
@@ -92,5 +97,6 @@ enum {
 #endif
 
 #endif // ZCONFIG_SPI_Enabled(Carbon)
+
 
 #endif // __ZUtil_CarbonEvents__

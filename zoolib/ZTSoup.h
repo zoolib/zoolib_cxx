@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTSWatcher.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZTCrouton;
 class ZTSieve;
 
@@ -145,17 +147,17 @@ private:
 	PCrouton* pGetPCrouton(uint64 iID);
 
 	void pSetCroutonFromTCrouton(ZTCrouton* iTCrouton, const ZTuple& iTuple);
-	void pSet(ZooLib::ZMutexLocker& iLocker_Structure, PCrouton* iPCrouton, const ZTuple& iTuple);
+	void pSet(ZMutexLocker& iLocker_Structure, PCrouton* iPCrouton, const ZTuple& iTuple);
 
 	void pTriggerUpdate();
 	void pTriggerSync();
 
 	ZRef<ZTSWatcher> fTSWatcher;
 
-	ZooLib::ZMutex fMutex_CallSync;
-	ZooLib::ZMutex fMutex_CallUpdate;
-	ZooLib::ZMutex fMutex_Structure;
-	ZooLib::ZMutex fMutex_TSWatcher;
+	ZMutex fMutex_CallSync;
+	ZMutex fMutex_CallUpdate;
+	ZMutex fMutex_Structure;
+	ZMutex fMutex_TSWatcher;
 
 	bool fCalled_UpdateNeeded;
 	Callback_UpdateNeeded_t fCallback_UpdateNeeded;
@@ -167,24 +169,24 @@ private:
 
 	std::map<ZTBQuery, PSieve> fTBQuery_To_PSieve;
 
-	ZooLib::DListHead<DLink_PSieve_Update> fPSieves_Update;
-	ZooLib::DListHead<DLink_PSieve_Sync> fPSieves_Sync;
-	ZooLib::DListHead<DLink_PSieve_Changed> fPSieves_Changed;
+	DListHead<DLink_PSieve_Update> fPSieves_Update;
+	DListHead<DLink_PSieve_Sync> fPSieves_Sync;
+	DListHead<DLink_PSieve_Changed> fPSieves_Changed;
 
 	std::map<uint64, PCrouton> fID_To_PCrouton;
 
-	ZooLib::DListHead<DLink_PCrouton_Update> fPCroutons_Update;
-	ZooLib::DListHead<DLink_PCrouton_Sync> fPCroutons_Sync;
-	ZooLib::DListHead<DLink_PCrouton_Changed> fPCroutons_Changed;
-	ZooLib::DListHead<DLink_PCrouton_Syncing> fPCroutons_Syncing;
-	ZooLib::DListHead<DLink_PCrouton_Pending> fPCroutons_Pending;
+	DListHead<DLink_PCrouton_Update> fPCroutons_Update;
+	DListHead<DLink_PCrouton_Sync> fPCroutons_Sync;
+	DListHead<DLink_PCrouton_Changed> fPCroutons_Changed;
+	DListHead<DLink_PCrouton_Syncing> fPCroutons_Syncing;
+	DListHead<DLink_PCrouton_Pending> fPCroutons_Pending;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTSieve
 
-class DLink_ZTSieve_Using : public ZooLib::DListLink<ZTSieve, DLink_ZTSieve_Using>
+class DLink_ZTSieve_Using : public DListLink<ZTSieve, DLink_ZTSieve_Using>
 	{};
 
 class ZTSieve : public ZRefCounted, public DLink_ZTSieve_Using
@@ -219,7 +221,7 @@ private:
 #pragma mark -
 #pragma mark * ZTCrouton
 
-class DLink_ZTCrouton_Using : public ZooLib::DListLink<ZTCrouton, DLink_ZTCrouton_Using>
+class DLink_ZTCrouton_Using : public DListLink<ZTCrouton, DLink_ZTCrouton_Using>
 	{};
 
 class ZTCrouton : public ZRefCounted, public DLink_ZTCrouton_Using
@@ -317,5 +319,7 @@ public:
 	virtual ZRef<ZTCrouton_Bowl> MakeCrouton()
 		{ return new Crouton_t; }
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZSoup__

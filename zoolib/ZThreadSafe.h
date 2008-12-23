@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAtomic.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZThreadSafe Macros
@@ -78,5 +80,7 @@ typedef ZAtomic_t ZThreadSafe_t;
 	#define ZThreadSafe_DecReturnOld(x) ((x).fValue--)
 
 #endif // ZCONFIG_Thread_Preemptive
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZThreadSafe__

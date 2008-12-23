@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamReader.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamCopier
@@ -45,5 +47,7 @@ private:
 	ZRef<ZStreamerW> fStreamerW;
 	size_t fChunkSize;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStreamCopier__

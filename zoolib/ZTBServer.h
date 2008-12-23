@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <set>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZStreamR;
 class ZStreamW;
 class ZTB;
@@ -88,8 +90,8 @@ private:
 
 	ZRef<ZTBRep> fTBRep;
 
-	ZooLib::ZMutex fMutex_Structure;
-	ZooLib::ZCondition fCondition_Sender;
+	ZMutex fMutex_Structure;
+	ZCondition fCondition_Sender;
 		bool fReaderExited;
 		bool fWriterExited;
 
@@ -120,5 +122,7 @@ private:
 
 	std::string fLogFacility;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTBServer__

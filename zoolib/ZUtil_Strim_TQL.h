@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZTQL_Query.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Strim_TQL
@@ -54,5 +56,7 @@ void sWrite_PropName(const ZStrimW& s, const ZTName& iTName);
 void sWrite_RelHead(const ZStrimW& s, const ZTQL::RelHead& iRelHead);
 
 } // namespace ZUtil_Strim_TQL
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Strim_TQL__

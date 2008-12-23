@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include ZMACINCLUDE3(ApplicationServices,QD,Fonts.h)
 #endif
 
-namespace ZString = ZooLib::ZZString;
+NAMESPACE_ZOOLIB_USING
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 

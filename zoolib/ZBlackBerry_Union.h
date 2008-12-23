@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZBlackBerry.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZBlackBerry {
 
 // =================================================================================================
@@ -50,7 +52,7 @@ public:
 private:
 	void pValidate();
 
-	ZooLib::ZMutex fMutex;
+	ZMutex fMutex;
 
 	struct Entry_t
 		{
@@ -63,5 +65,7 @@ private:
 	};
 
 } // namespace ZBlackBerry
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZBlackBerry_OSXUSB__

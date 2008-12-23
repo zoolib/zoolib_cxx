@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamR_Cat
@@ -69,5 +71,7 @@ protected:
 	ZStreamR_Cat fStream;
 	};
 
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStreamR_Cat__

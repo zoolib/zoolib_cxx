@@ -24,15 +24,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZString.h"
 
-namespace ZString = ZooLib::ZZString;
-
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
+
+namespace ZNetscape {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetscape
-
-namespace ZNetscape {
 
 #define CASE(a) case a: return #a
 
@@ -227,5 +227,7 @@ void NPVariantBase::pSetString(const std::string& iString)
 	}
 
 } // namespace ZNetscape
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Netscape)

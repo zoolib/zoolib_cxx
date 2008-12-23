@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamRPos_PageBuffered
@@ -152,5 +154,7 @@ protected:
 	ZRef<ZStreamerRWPos> fStreamerReal;
 	ZStreamRWPos_PageBuffered fStream;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStream_PageBuffered__

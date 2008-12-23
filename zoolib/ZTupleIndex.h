@@ -33,6 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_TupleIndex_Debug 3
 #endif
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZStrimW;
 
 // =================================================================================================
@@ -80,5 +82,7 @@ public:
 	virtual ~ZTupleIndexFactory();
 	virtual ZTupleIndex* Make() = 0;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTupleIndex__

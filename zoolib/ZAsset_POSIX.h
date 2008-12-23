@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAsset_Std.h" // For ZAssetTree_Std_Memory
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZAssetTree_POSIX_MemoryMapped
@@ -49,6 +51,8 @@ protected:
 	void* fMappedAddress;
 	size_t fMappedLength;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(POSIX)
 

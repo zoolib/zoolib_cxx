@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream_Filter.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamR_Count
@@ -114,5 +116,7 @@ protected:
 	};
 
 //typedef ZStreamerW_FT<ZStreamW_Count> ZStreamerW_Count;
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStream_Count__

@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Strim
@@ -129,5 +131,7 @@ bool sTryRead_Identifier(const ZStrimU& iStrimU, string8& oString);
 // Other methods for other kinds of identifiers? -- Java, C++, Pascal, AlphaNum etc
 
 } // namespace ZUtil_Strim
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Strim__

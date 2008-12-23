@@ -25,6 +25,8 @@ using std::min;
 using std::max;
 using std::string;
 
+NAMESPACE_ZOOLIB_USING
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamR_Boundary

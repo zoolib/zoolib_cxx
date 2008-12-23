@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-namespace ZooLib {
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -50,10 +50,6 @@ private:
 	bool fIsLocked;
 	};
 
-} // namespace ZooLib
-
-#ifndef ZooLib_SuppressInjection
-	using ZooLib::ZMutexComposite;
-#endif // ZooLib_SuppressInjection
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZRWLock__

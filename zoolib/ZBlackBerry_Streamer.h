@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCommer.h"
 #include "zoolib/ZMemoryBlock.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZBlackBerry {
 
 // =================================================================================================
@@ -92,8 +94,8 @@ private:
 	bool pSendFunky(uint16 iLength, const ZStreamW& iStreamW);
 	void pFlush(const ZStreamW& iStreamW);
 
-	ZooLib::ZMutex fMutex;
-	ZooLib::ZCondition fCondition;
+	ZMutex fMutex;
+	ZCondition fCondition;
 
 	struct GetAttribute_t
 		{
@@ -119,5 +121,7 @@ private:
 	};
 
 } // namespace ZBlackBerry
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZBlackBerry_Streamer__

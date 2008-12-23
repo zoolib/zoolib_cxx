@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <set>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZBlackBerry {
 
 struct PasswordHash
@@ -77,8 +79,8 @@ protected:
 	void pStopped();
 
 private:
-	ZooLib::ZMutex fMutex;
-	ZooLib::ZCondition fCondition;
+	ZMutex fMutex;
+	ZCondition fCondition;
 	int fStartCount;
 	std::set<Observer*> fObservers;
 	};
@@ -136,8 +138,8 @@ protected:
 	void pFinished();
 
 private:
-	ZooLib::ZMutex fMutex;
-	ZooLib::ZCondition fCondition;
+	ZMutex fMutex;
+	ZCondition fCondition;
 	int fStartCount;
 	std::set<Observer*> fObservers;
 	};
@@ -160,5 +162,7 @@ public:
 	};
 
 } // namespace ZBlackBerry
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZBlackBerry__

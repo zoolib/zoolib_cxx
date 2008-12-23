@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string> // For string
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZBlockStore
 	{
 private:
@@ -56,5 +58,7 @@ public:
 	virtual bool Delete(BlockID iBlockID) = 0;
 	virtual size_t EfficientSize() = 0;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZBlockStore__

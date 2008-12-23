@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStrimR_Boundary
@@ -92,5 +94,7 @@ protected:
 // typedef ZStrimmerRFT<ZStrimR_Boundary> ZStrimmerR_Boundary;
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStrimR_Boundary__

@@ -34,6 +34,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <list>
 #include <string>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZNetscape {
 
 class NPObjectH;
@@ -438,6 +440,8 @@ private:
 	};
 
 } // namespace ZNetscape
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Netscape)
 

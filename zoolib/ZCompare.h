@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <list>
 #include <vector>
 
-namespace ZooLib {
+NAMESPACE_ZOOLIB_BEGIN
 
 // A default implementation of sCompare_T is nice to have, but it does make
 // it hard to tell when we accidentally call operator<. So we declare but
@@ -132,6 +132,6 @@ template <class S>
 int sCompare_T(const std::list<S>& iLeft, const std::list<S>& iRight)
 	{ return sCompare_T(iLeft.begin(), iLeft.end(), iRight.begin(), iRight.end()); }
 
-} // namespace ZooLib
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZCompare__

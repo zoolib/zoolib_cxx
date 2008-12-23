@@ -23,7 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::string;
 using std::vector;
-using namespace ZooLib;
+
+NAMESPACE_ZOOLIB_USING
 
 // =================================================================================================
 #pragma mark -

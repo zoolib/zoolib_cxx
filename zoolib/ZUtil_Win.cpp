@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZWinHeader.h"
 
+NAMESPACE_ZOOLIB_USING
+
 // From Whisper 1.3
 static bool sIsWinNT_Inited;
 static bool sIsWinNT_Result;

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <math.h> // For NAN and isnan -- cmath doesn't make isnan visible on gcc/MacOSX
 
-namespace ZooLib {
+NAMESPACE_ZOOLIB_BEGIN
 
 template <>
 int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR)
@@ -82,4 +82,4 @@ int sCompare_T(const double& iL, const double& iR)
 	return 0;
 	}
 
-} // namespace ZooLib
+NAMESPACE_ZOOLIB_END

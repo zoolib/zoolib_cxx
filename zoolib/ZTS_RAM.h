@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <map>
 #include <set>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZTupleIndex;
 class ZTupleIndexFactory;
 
@@ -49,8 +51,8 @@ public:
 	virtual void SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples);
 	virtual void GetTuples(size_t iCount, const uint64* iIDs, ZTuple* oTuples);
 	virtual void Search(const ZTBSpec& iSpec, const std::set<uint64>& iSkipIDs, std::set<uint64>& ioIDs);
-	virtual ZooLib::ZMutexBase& GetReadLock();
-	virtual ZooLib::ZMutexBase& GetWriteLock();
+	virtual ZMutexBase& GetReadLock();
+	virtual ZMutexBase& GetWriteLock();
 
 // Our protocol
 	void AddIndex(ZRef<ZTupleIndexFactory> iIndexFactory);
@@ -61,12 +63,14 @@ public:
 	void GetData(uint64& oNextUnusedID, std::map<uint64, ZTuple>& oTuples);
 
 private:
-	ZooLib::ZRWLock fRWLock;
-	ZooLib::ZMutex fMutex_ID;
+	ZRWLock fRWLock;
+	ZMutex fMutex_ID;
 	uint64 fNextUnusedID;
 	std::map<uint64, ZTuple> fTuples;
 	std::vector<ZTupleIndex*> fIndices;
 	bool fChanged;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTS_RAM__

@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::string;
 
 // =================================================================================================
@@ -365,8 +367,12 @@ bool sFromStrim(const ZStrimU& iStrimU, ZTBSpec& oTBSpec)
 #pragma mark -
 #pragma mark * operator<< overloads
 
+NAMESPACE_ZOOLIB_BEGIN
+
 const ZStrimW& operator<<(const ZStrimW& s, const ZTBSpec& iTBSpec)
 	{
 	ZUtil_Strim_TBSpec::sToStrim(s, iTBSpec);
 	return s;
 	}
+
+NAMESPACE_ZOOLIB_END

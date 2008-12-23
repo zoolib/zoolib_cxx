@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTQL_Node.h"
 //#include "zoolib/ZTuple.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQLEngine
@@ -58,5 +60,7 @@ public:
 private:	
 	void pExecute(ZRef<ZTQL::Node> iNode, std::vector<ZTuple>& oResults);
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTQLEngine__

@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZUtil_Strim_OSXPList {
 
 typedef ZYadParseException_XMLPList ParseException;
@@ -36,5 +38,7 @@ bool sFromStrim(const ZStrimU& iStrimU, ZTValue& oTValue);
 bool sFromML(ZML::Reader& r, ZTValue& oTValue);
 
 } // namespace ZUtil_Strim_OSXPList
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Strim_OSXPList__

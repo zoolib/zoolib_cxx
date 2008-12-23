@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamR_Filter
@@ -180,5 +182,7 @@ public:
 protected:
 	const ZStreamRWPos& fStreamReal;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStream_Filter__

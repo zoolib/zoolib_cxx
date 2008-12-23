@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCommer.h"
 #include "zoolib/ZTSWatcher.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTSWatcherServer
@@ -46,7 +48,7 @@ private:
 	void pCallback();
 	static void spCallback(void* iRefcon);
 
-	ZooLib::ZMutex fMutex;
+	ZMutex fMutex;
 	ZRef<ZTSWatcher> fTSWatcher;
 	bool fReceivedClose;
 	bool fCallbackNeeded;
@@ -63,5 +65,7 @@ private:
 	std::vector<uint64> fWrittenTupleIDs;
 	std::vector<ZTuple> fWrittenTuples;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTSWatcherServerAsync__

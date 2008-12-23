@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZNetscape {
 
 class NPObjectG;
@@ -442,6 +444,8 @@ private:
 	};
 
 } // namespace ZNetscape
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Netscape)
 

@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::max;
 using std::min;
 
+NAMESPACE_ZOOLIB_USING
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStrimR_Tee
@@ -44,7 +46,7 @@ void ZStrimR_Tee::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 		// We have to read into a local buffer because we're going to pass
 		// what we read to fSink, and iDest could reference memory that's
 		// not safe to read (the garbage buffer, for example).
-		UTF32 buffer[ZooLib::sStackBufferSize];
+		UTF32 buffer[sStackBufferSize];
 
 		size_t countRead;
 		fSource.Read(buffer, min(countRemaining, countof(buffer)), &countRead);

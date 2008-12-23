@@ -31,6 +31,8 @@ using std::nothrow;
 using std::range_error;
 using std::string;
 
+NAMESPACE_ZOOLIB_USING
+
 #if ZCONFIG(Compiler, MSVC)
 #	define vsnprintf _vsnprintf
 #endif
@@ -92,7 +94,7 @@ pass a buffer that is at least six code units in length, and when reading UTF-16
 one that is at least two code units in length.
 */
 
-static const size_t kBufSize = ZooLib::sStackBufferSize;
+static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
 #pragma mark -
@@ -113,7 +115,7 @@ static void sCopyReadToWrite(const ZStrimR& iStrimR, const ZStrimW& iStrimW,
 	if (iCountCP == 0)
 		return;
 
-	if (iCountCP > ZooLib::sStackBufferSize)
+	if (iCountCP > sStackBufferSize)
 		{
 		// Try to allocate and use an 8K heap-based buffer.
 		if (UTF32* heapBuffer = new(nothrow) UTF32[2048])
@@ -157,12 +159,12 @@ static void sCopyReadToWrite(const ZStrimR& iStrimR, const ZStrimW& iStrimW,
 			}
 		}
 
-	UTF32 localBuffer[ZooLib::sStackBufferSize];
+	UTF32 localBuffer[sStackBufferSize];
 	size_t cpRemaining = iCountCP;
 	while (cpRemaining > 0)
 		{
 		size_t cpRead;
-		iStrimR.Read(localBuffer, min(cpRemaining, ZooLib::sStackBufferSize), &cpRead);
+		iStrimR.Read(localBuffer, min(cpRemaining, sStackBufferSize), &cpRead);
 		if (cpRead == 0)
 			break;
 		if (oCountCPRead)
@@ -563,9 +565,9 @@ void ZStrimR::Imp_Skip(size_t iCountCP, size_t* oCountCPSkipped)
 	size_t cpRemaining = iCountCP;
 	while (cpRemaining)
 		{
-		UTF32 buffer[ZooLib::sStackBufferSize];
+		UTF32 buffer[sStackBufferSize];
 		size_t cpRead;
-		this->Read(buffer, min(cpRemaining, ZooLib::sStackBufferSize), &cpRead);
+		this->Read(buffer, min(cpRemaining, sStackBufferSize), &cpRead);
 		if (cpRead == 0)
 			break;
 		cpRemaining -= cpRead;

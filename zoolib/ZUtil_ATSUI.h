@@ -41,6 +41,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE3(ApplicationServices,QD,QD.h)
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_ATSUI
@@ -81,6 +83,8 @@ private:
 	};
 
 } // namespace ZUtil_ATSUI
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(Util_ATSUI)
 

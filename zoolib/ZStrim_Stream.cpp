@@ -28,7 +28,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::pair;
 
-static const size_t kBufSize = ZooLib::sStackBufferSize;
+NAMESPACE_ZOOLIB_USING
+
+static const size_t kBufSize = sStackBufferSize;
 
 #define kDebug_Strim 2
 

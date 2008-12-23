@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // but should be considered to be the canonical API. The second section has the various versions of
 // the real code.
 
+NAMESPACE_ZOOLIB_BEGIN
+
 struct ZAtomic_t
 	{
 	ZAtomic_t() {}
@@ -521,5 +523,7 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic);
 #endif // ZCONFIG(Compiler)/ZCONFIG(Processor)
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZAtomic__

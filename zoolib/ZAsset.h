@@ -30,6 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZAsset;
 class ZAssetIterRep;
 class ZAssetRep;
@@ -110,7 +112,7 @@ private:
 
 /// Represents an entire asset tree.
 
-class ZAssetTree : public ZRefCountedWithFinalization, ZooLib::NonCopyable
+class ZAssetTree : public ZRefCountedWithFinalization, NonCopyable
 	{
 protected:
 	ZAssetTree() {}
@@ -126,7 +128,7 @@ public:
 #pragma mark -
 #pragma mark * ZAssetRep
 
-class ZAssetRep : public ZRefCountedWithFinalization, ZooLib::NonCopyable
+class ZAssetRep : public ZRefCountedWithFinalization, NonCopyable
 	{
 protected:
 	ZAssetRep() {}
@@ -278,5 +280,7 @@ inline ZAsset::operator operator_bool_type() const
 
 inline ZRef<ZAssetRep> ZAsset::GetRep() const
 	{ return fRep; }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZAsset__

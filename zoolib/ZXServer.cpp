@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
+NAMESPACE_ZOOLIB_USING
+
 using std::bad_alloc;
 using std::less;
 using std::min;

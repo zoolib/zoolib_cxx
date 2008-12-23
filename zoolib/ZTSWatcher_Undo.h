@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_TSWatcher_Undo_Debug 1
 #endif
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTSWatcher_Undo
@@ -88,6 +90,8 @@ private:
 	std::map<int64, PQuery> fPQueries;
 	std::map<uint64, PTuple> fPTuples;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTSWatcher_Undo__
 #endif

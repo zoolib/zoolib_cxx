@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZUtil_Asset {
 
 void sGetAssetTreeNamesFromExecutable(std::vector<std::string>& oAssetTreeNames);
@@ -41,5 +43,7 @@ ZAsset sGetAssetRootFromFileSpec(const ZFileSpec& iFileSpec);
 ZAsset sCreateOverlay(const std::vector<ZAsset>& iAssets, bool iLowestToHighest);
 
 } // namespace ZUtil_Asset
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Asset__

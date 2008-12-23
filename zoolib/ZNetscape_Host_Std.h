@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <map>
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZNetscape {
 
 // =================================================================================================
@@ -186,10 +188,10 @@ public:
 		void DoEvent(const EventRecord& iEvent);
 
 		void SetPortAndBounds(CGrafPtr iGrafPtr,
-			ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
+			ZPoint iLocation, ZPoint iSize, const ZRect& iClip);
 
 		void SetBounds(
-			ZooLib::ZPoint iLocation, ZooLib::ZPoint iSize, const ZooLib::ZRect& iClip);
+			ZPoint iLocation, ZPoint iSize, const ZRect& iClip);
 	#endif
 
 private:
@@ -207,12 +209,14 @@ private:
 		NP_Port fNP_Port;
 	#endif
 
-	ZooLib::ZMutex fMutex;
+	ZMutex fMutex;
 	std::vector<HTTPer*> fHTTPers;
 	std::list<Sender*> fSenders;
 	};
 
 } // namespace ZNetscape
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Netscape)
 

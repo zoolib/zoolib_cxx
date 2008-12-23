@@ -340,6 +340,8 @@ equivalent of command-line options.
 
 #include <stdio.h>
 
+NAMESPACE_ZOOLIB_USING
+
 using std::exception;
 using std::string;
 

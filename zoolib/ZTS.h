@@ -29,11 +29,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <set>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTS
 
-class ZTS : public ZRefCounted, ZooLib::NonCopyable
+class ZTS : public ZRefCounted, NonCopyable
 	{
 protected:
 	ZTS();
@@ -49,10 +51,12 @@ public:
 		const ZTBSpec& iSpec, const std::set<uint64>& iSkipIDs, std::set<uint64>& oIDs) = 0;
 
 	virtual void Flush();
-	virtual ZooLib::ZMutexBase& GetReadLock() = 0;
-	virtual ZooLib::ZMutexBase& GetWriteLock() = 0;
+	virtual ZMutexBase& GetReadLock() = 0;
+	virtual ZMutexBase& GetWriteLock() = 0;
 
 	ZTuple GetTuple(uint64 iID);
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTS__

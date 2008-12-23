@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCPixmap.h"
 #include "zoolib/ZDebug.h"
 
+NAMESPACE_ZOOLIB_USING
+
 #define kDebug_Win 2
 
 bool ZUtil_Win::sDragFullWindows()

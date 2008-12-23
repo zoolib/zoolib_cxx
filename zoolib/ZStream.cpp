@@ -28,15 +28,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string.h> // For strlen
 #include <string> // because range_error may require it
 
+#if ZCONFIG(Compiler, MSVC)
+#	define vsnprintf _vsnprintf
+#endif
+
 using std::max;
 using std::min;
 using std::nothrow;
 using std::range_error;
 using std::string;
 
-#if ZCONFIG(Compiler, MSVC)
-#	define vsnprintf _vsnprintf
-#endif
+NAMESPACE_ZOOLIB_USING
 
 #define kDebug_Stream 2
 
@@ -116,7 +118,7 @@ void ZStream::sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStream
 			{
 			try
 				{
-				sCopyReadToWrite(heapBuffer, 8192,
+				::sCopyReadToWrite(heapBuffer, 8192,
 					iStreamR, iStreamW, iCount,
 					oCountRead, oCountWritten);
 				}
@@ -137,7 +139,7 @@ void ZStream::sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStream
 	// fewer than 8 times. Previously we'd unconditionally used one of size 4096, but that's
 	// fairly large and can contribute to blowing the stack on MacOS.
 	uint8 localBuffer[1024];
-	sCopyReadToWrite(localBuffer, sizeof(localBuffer),
+	::sCopyReadToWrite(localBuffer, sizeof(localBuffer),
 		iStreamR, iStreamW, iCount,
 		oCountRead, oCountWritten);
 	}
@@ -574,8 +576,8 @@ void ZStreamR::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	while (countRemaining)
 		{
 		size_t countRead;
-		this->Read(ZooLib::sGarbageBuffer,
-			min(countRemaining, uint64(sizeof(ZooLib::sGarbageBuffer))), &countRead);
+		this->Read(sGarbageBuffer,
+			min(countRemaining, uint64(sizeof(sGarbageBuffer))), &countRead);
 
 		ZAssertStop(kDebug_Stream, countRead <= iCount);
 		if (countRead == 0)

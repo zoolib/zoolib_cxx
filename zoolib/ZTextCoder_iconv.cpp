@@ -28,11 +28,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <errno.h>
 #include <stdexcept>
 
+NAMESPACE_ZOOLIB_USING
+
 using std::runtime_error;
 using std::string;
 using std::vector;
 
-static const size_t kBufSize = ZooLib::sStackBufferSize;
+static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
 #pragma mark -

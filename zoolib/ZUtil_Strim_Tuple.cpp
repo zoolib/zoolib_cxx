@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZYad_ZooLib.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 using std::string;
 using std::vector;
 
@@ -189,3 +191,5 @@ const ZStrimW& operator<<(const ZStrimW& s, const ZUtil_Strim_Tuple::Format& iFo
 	ZUtil_Strim_Tuple::sToStrim(s, iFormat.fTValue, iFormat.fInitialIndent, iFormat.fOptions);
 	return s;
 	}
+
+NAMESPACE_ZOOLIB_END

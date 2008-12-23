@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTypes.h"
 #include <string>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZProgressWatcher
@@ -65,5 +67,7 @@ private:
 	ZProgressWatcher* fWatcher;
 	size_t fPushes;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZProgressWatcher__

@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h"
 
-namespace ZooLib {
+NAMESPACE_ZOOLIB_BEGIN
 
 // In these templates, P is Pointer and L is Link.
 
@@ -188,7 +188,7 @@ class DListIterator
 public:
 	enum { kDebug = L::kDebug };
 
-	DListIterator(const ZooLib::DListHead<L>& iDListHead)
+	DListIterator(const DListHead<L>& iDListHead)
 	:	fDListHead(iDListHead),
 		fCurrent(iDListHead.fHeadL)
 		{}
@@ -209,7 +209,7 @@ public:
 		}
 
 private:
-	const ZooLib::DListHead<L>& fDListHead;
+	const DListHead<L>& fDListHead;
 	L* fCurrent;
 	};
 
@@ -226,7 +226,7 @@ class DListIteratorEraseAll
 public:
 	enum { kDebug = L::kDebug };
 
-	DListIteratorEraseAll(ZooLib::DListHead<L>& ioDListHead)
+	DListIteratorEraseAll(DListHead<L>& ioDListHead)
 	:	fDListHead(ioDListHead),
 		fCurrent(ioDListHead.fHeadL)
 		{
@@ -279,11 +279,11 @@ public:
 		}
 
 private:
-	ZooLib::DListHead<L>& fDListHead;
+	DListHead<L>& fDListHead;
 	L* fCurrent;
 	L* fNext;
 	};
 
-} // namespace ZooLib
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZDList__

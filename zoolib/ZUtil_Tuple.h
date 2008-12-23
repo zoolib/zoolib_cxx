@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTuple.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Tuple
@@ -57,5 +59,7 @@ ZTValue sGetValuei(const ZTuple& iTuple, const std::string& iNamei);
 ZTuple::const_iterator sIteratorOfi(const ZTuple& iTuple, const std::string& iNamei);
 
 } // namespace ZUtil_Tuple
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Tuple__

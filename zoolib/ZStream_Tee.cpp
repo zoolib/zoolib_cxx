@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::max;
 using std::min;
 
+NAMESPACE_ZOOLIB_USING
+
 #define kDebug_Stream_Tee 2
 
 // =================================================================================================
@@ -52,7 +54,7 @@ void ZStreamR_Tee::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 		// We have to read into a local buffer because we're going to pass
 		// what we read to fStreamW, and iDest could reference memory that's
 		// not safe to read (the garbage buffer, for example).
-		char buffer[ZooLib::sStackBufferSize];
+		char buffer[sStackBufferSize];
 
 		size_t countRead;
 		fStreamR.Read(buffer, min(iCount, sizeof(buffer)), &countRead);

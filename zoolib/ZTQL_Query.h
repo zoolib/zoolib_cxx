@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL
@@ -101,5 +103,7 @@ Query sSelect(const Query& iQuery, const Spec& iSpec);
 Query sUnion(const Query& iQuery1, const Query& iQuery2);
 
 } // namespace ZTQL
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTQL_Query__

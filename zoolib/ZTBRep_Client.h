@@ -31,6 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTBRep_Client
@@ -94,9 +96,9 @@ private:
 	void pReader(const ZStreamR& iStream);
 	void pWriter(const ZStreamW& iStream);
 
-	ZooLib::ZMutex fMutex_Structure;
-	ZooLib::ZCondition fCondition_Sender;
-	ZooLib::ZCondition fCondition_Transaction;
+	ZMutex fMutex_Structure;
+	ZCondition fCondition_Sender;
+	ZCondition fCondition_Transaction;
 
 	bool fLive;
 	uint64 fNextFakeID;
@@ -131,5 +133,7 @@ private:
 
 	std::set<Transaction*> fTransactions_NeedWork;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTBRep_Client__

@@ -25,13 +25,30 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNet.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // Need to figure out what the accessors for all this stuff are.
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZNet_RFCOMM
+
+class ZNet_RFCOMM
+	{
+public:
+	struct DeviceAddress_t
+		{
+		uint8 fAddress[6];
+		};
+};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetName_RFCOMM
 
-class ZNetName_RFCOMM : public ZNetName
+class ZNetName_RFCOMM
+:	public ZNetName,
+	public ZNet_RFCOMM
 	{
 protected:
 	ZNetName_RFCOMM();
@@ -41,36 +58,50 @@ protected:
 #pragma mark -
 #pragma mark * ZNetAddress_RFCOMM
 
-class ZNetAddress_RFCOMM : public ZNetAddress
+class ZNetAddress_RFCOMM
+:	public ZNetAddress,
+	public ZNet_RFCOMM
 	{
 protected:
 	ZNetAddress_RFCOMM();
+
+	uint8 fAddress[6];
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetListener_RFCOMM
 
-class ZNetListener_RFCOMM : public ZNetListener
+class ZNetListener_RFCOMM
+:	public ZNetListener,
+	public ZNet_RFCOMM
 	{
 protected:
 	ZNetListener_RFCOMM();
 
 public:
 	struct MakeParam_t {};
+
+	ZRef<ZNetListener_RFCOMM> sCreate();
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZNetEndpoint_RFCOMM
 
-class ZNetEndpoint_RFCOMM : public ZNetEndpoint
+class ZNetEndpoint_RFCOMM
+:	public ZNetEndpoint,
+	public ZNet_RFCOMM
 	{
 protected:
 	ZNetEndpoint_RFCOMM();
 
 public:
 	struct MakeParam_t {};
+
+	ZRef<ZNetEndpoint_RFCOMM> sCreate(const DeviceAddress_t& iDA, int iChannelID);
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZNet_RFCOMM__

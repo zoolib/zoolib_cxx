@@ -39,7 +39,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-namespace ZString = ZooLib::ZZString;
+NAMESPACE_ZOOLIB_USING
 
 using std::pair;
 using std::runtime_error;

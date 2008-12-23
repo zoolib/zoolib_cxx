@@ -31,12 +31,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <deque>
 
-using namespace ZooLib;
-
 using std::deque;
 using std::min;
 using std::string;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZBlackBerry {
 
@@ -1509,3 +1509,5 @@ void Device_Streamer::pFlush(const ZStreamW& iStreamW)
 	}
 
 } // namespace ZBlackBerry
+
+NAMESPACE_ZOOLIB_END

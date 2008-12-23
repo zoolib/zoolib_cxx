@@ -26,7 +26,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::string;
 
-static const size_t kBufSize = ZooLib::sStackBufferSize;
+NAMESPACE_ZOOLIB_USING
+
+static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
 #pragma mark -

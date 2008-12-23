@@ -45,6 +45,8 @@ for non-debug builds we default to unchecked access.
 NB The method must be declared public, otherwise ZRef<> will not be able to access it.
 */
 
+NAMESPACE_ZOOLIB_BEGIN
+
 #ifndef ZCONFIG_RefCount_CheckAccessDefault
 #	define ZCONFIG_RefCount_CheckAccessDefault (ZCONFIG_Debug > 0)
 #endif
@@ -168,12 +170,6 @@ private:
 #pragma mark -
 #pragma mark * ZRef inline definitions
 
-namespace std {
-template <class T>
-inline void swap(ZRef<T>& a, ZRef<T>& b)
-	{ a.swap(b); }
-}
-
 template <class T>
 inline ZRef<T>::ZRef()
 :	fObject(nil)
@@ -294,5 +290,14 @@ template <class O, class T> inline O* ZRefStaticCast(const ZRef<T>& iVal)
 	{ return static_cast<O*>(iVal.GetObject()); }
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
+
+namespace std {
+template <class T>
+inline void swap(ZOOLIB_PREFIX::ZRef<T>& a, ZOOLIB_PREFIX::ZRef<T>& b)
+	{ a.swap(b); }
+}
+
 
 #endif // __ZRefCount__

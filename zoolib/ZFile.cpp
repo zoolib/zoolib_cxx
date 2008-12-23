@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFile.h"
 #include "zoolib/ZTrail.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::find;
 using std::min;
 using std::string;

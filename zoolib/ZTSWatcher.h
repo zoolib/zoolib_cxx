@@ -30,13 +30,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZMemoryBlock;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTSWatcher
 
-class ZTSWatcher : public ZRefCountedWithFinalization, ZooLib::NonCopyable
+class ZTSWatcher : public ZRefCountedWithFinalization, NonCopyable
 	{
 protected:
 	ZTSWatcher();
@@ -90,5 +92,7 @@ protected:
 public:
 	virtual ZRef<ZTSWatcher> MakeTSWatcher() = 0;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTSWatcher__

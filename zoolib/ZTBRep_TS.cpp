@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_USING
 
 using std::less;
 using std::map;
@@ -53,7 +53,7 @@ using std::vector;
 #pragma mark * ZTBRep_TS::TransTuple
 
 class ZTBRep_TS::TransTupleUsing
-:	public ZooLib::DListLink<ZTBRep_TS::TransTuple, ZTBRep_TS::TransTupleUsing, ZTBRep_TS::kDebug>
+:	public DListLink<ZTBRep_TS::TransTuple, ZTBRep_TS::TransTupleUsing, ZTBRep_TS::kDebug>
 	{};
 
 class ZTBRep_TS::TransTuple : public ZTBRep_TS::TransTupleUsing
@@ -824,7 +824,7 @@ void ZTBRep_TS::Trans_Commit(Transaction* iTransaction)
 						storedTuples.push_back(currentTIU.fValue);
 						}
 
-					for (ZooLib::DListIterator<TransTuple, TransTupleUsing>
+					for (DListIterator<TransTuple, TransTupleUsing>
 						iter = currentTIU.fUsingTransTuples;
 						iter; iter.Advance())
 						{

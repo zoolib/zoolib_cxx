@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::bad_alloc;
 using std::max;
 using std::min;

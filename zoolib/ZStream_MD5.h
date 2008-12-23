@@ -29,13 +29,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream_Filter.h"
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZStream_MD5
-
 #if ZCONFIG_StreamMD5_UseOpenSSL
 #	include <openssl/md5.h>
 #endif
+
+NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStream_MD5
 
 namespace ZStream_MD5 {
 
@@ -117,5 +119,7 @@ protected:
 	};
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStream_MD5__

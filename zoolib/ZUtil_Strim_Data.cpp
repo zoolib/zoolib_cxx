@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_HexStrim.h"
 #include "zoolib/ZStream_Memory.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::min;
 using std::string;
 

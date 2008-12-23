@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCPixmap.h"
 #include "zoolib/ZStream.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCPixmapEncoder
@@ -41,9 +43,6 @@ protected:
 	ZDCPixmapEncoder& operator=(const ZDCPixmapEncoder&);
 
 public:
-	typedef ZooLib::ZPoint ZPoint;
-	typedef ZooLib::ZRect ZRect;
-
 	virtual ~ZDCPixmapEncoder();
 
 	void Write(const ZStreamW& iStream, const ZDCPixmap& iPixmap);
@@ -76,9 +75,6 @@ protected:
 	ZDCPixmapDecoder& operator=(const ZDCPixmapDecoder&);
 
 public:
-	typedef ZooLib::ZPoint ZPoint;
-	typedef ZooLib::ZRect ZRect;
-
 	virtual ~ZDCPixmapDecoder();
 
 	ZDCPixmap Read(const ZStreamR& iStream);
@@ -88,5 +84,7 @@ public:
 
 	/** \todo. Need an API that reads into a subset only. */
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZDCPixmapCoder__

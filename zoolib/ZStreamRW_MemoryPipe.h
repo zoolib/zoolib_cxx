@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream.h"
 #include "zoolib/ZThread.h" // For ZMutexNR, ZCondition
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamRW_MemoryPipe
@@ -70,9 +72,9 @@ private:
 	void pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 		uint64* oCountRead, uint64* oCountWritten);
 
-	ZooLib::ZMutexNR fMutex;
-	ZooLib::ZCondition fCondition_Read;
-	ZooLib::ZCondition fCondition_Write;
+	ZMutexNR fMutex;
+	ZCondition fCondition_Read;
+	ZCondition fCondition_Write;
 
 	bool fWriteClosed;
 
@@ -82,5 +84,7 @@ private:
 	uint8* fDest;
 	size_t fDestCount;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStreamRW_MemoryPipe__

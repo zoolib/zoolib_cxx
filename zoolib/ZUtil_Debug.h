@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStackCrawl.h"
 #include "zoolib/ZStrimmer.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Debug
@@ -67,5 +69,7 @@ void sSetLogPriority(ZLog::EPriority iLogPriority);
 ZLog::EPriority sGetLogPriority();
 
 } // namespace ZUtil_Debug
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Debug__

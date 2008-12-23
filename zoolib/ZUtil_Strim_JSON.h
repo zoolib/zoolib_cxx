@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZTuple;
 class ZTValue;
 class ZStrimU;
@@ -47,5 +49,7 @@ void sNormalized(const ZTValue& iTV, ZTValue& oTV);
 bool sNormalized(bool iPreserveTuples, bool iPreserveVectors, const ZTValue& iTV, ZTValue& oTV);
 
 } // namespace ZUtil_Strim_JSON
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Strim_JSON__

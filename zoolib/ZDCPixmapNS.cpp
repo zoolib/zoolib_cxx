@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define kDebug_PixmapNS 2
 
+NAMESPACE_ZOOLIB_USING
+
 using namespace ZDCPixmapNS;
 
 using std::lower_bound;
@@ -2566,7 +2568,7 @@ void ZDCPixmapNS::sMunge(
 #pragma mark -
 #pragma mark * ZDCPixmapNS:sBlit variants
 
-static const size_t kBufSize = ZooLib::sStackBufferSize;
+static const size_t kBufSize = sStackBufferSize;
 
 template <class S, class D>
 static void sBlitRow_T(

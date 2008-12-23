@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <map>
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZTxnTarget;
 
 // =================================================================================================
@@ -36,7 +38,7 @@ class ZTxnTarget;
 #pragma mark * ZTxn
 
 /// Represents a transaction.
-class ZTxn : ZooLib::NonCopyable
+class ZTxn : NonCopyable
 	{
 public:
 	ZTxn();
@@ -57,7 +59,7 @@ private:
 
 	int32 fID;
 
-	ZooLib::ZMutexNR fMutex;
+	ZMutexNR fMutex;
 	mutable std::vector<ZTxnTarget*> fTargets;
 
 	friend class ZTxnTarget;
@@ -82,5 +84,7 @@ protected:
 
 	friend class ZTxn;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTxn__

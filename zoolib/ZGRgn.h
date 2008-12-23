@@ -25,7 +25,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAccumulator_T.h"
 #include "zoolib/ZGeom.h"
 #include "zoolib/ZRefCount.h"
+
 #include <vector>
+
+NAMESPACE_ZOOLIB_BEGIN
 
 class ZGRgnRep;
 
@@ -50,9 +53,6 @@ protected:
 	ZGRgnRep();
 
 public:
-	typedef ZooLib::ZPoint ZPoint;
-	typedef ZooLib::ZRect ZRect;
-
 	typedef bool (*DecomposeProc)(const ZRect& iRect, void* iRefcon);
 	virtual size_t Decompose(DecomposeProc iProc, void* iRefcon) = 0;
 
@@ -106,9 +106,6 @@ public:
 	template <typename Native>
 	static ZGRgn sFromNative(Native iNative, bool iAdopt)
 		{ return ZGRgnRepCreator_T<Native>::sCreate(iNative, iAdopt); }
-
-	typedef ZooLib::ZPoint ZPoint;
-	typedef ZooLib::ZRect ZRect;
 
 	ZGRgn();
 
@@ -313,5 +310,7 @@ public:
 	};
 
 typedef ZAccumulator_T<ZGRgn, ZGRgnUnioner_t, std::vector<ZGRgn> > ZGRgnAccumulator;
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZGRgn__

@@ -28,6 +28,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 #include <string>
 
+NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZASCompiler
+
 class ZASCompiler : public ZASParser::ParseHandler
 	{
 public:
@@ -60,5 +66,7 @@ protected:
 	std::vector<NameEntry*> fNameEntries;
 	std::vector<std::string> fNameStack;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZASCompiler__

@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZTBRep_Client.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTBRep_Client_StreamerRWFactory
@@ -47,5 +49,7 @@ public:
 private:
 	ZRef<ZStreamerRWFactory> fStreamerRWFactory;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTBRep_Client_StreamerRWFactory__

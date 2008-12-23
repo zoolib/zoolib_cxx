@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTQL_Condition.h"
 #include "zoolib/ZTQL_RelHead.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZTQL {
 
 class LogOp;
@@ -101,5 +103,7 @@ Spec operator&(const Condition& iCondition, const Spec& iSpec);
 Spec operator|(const Condition& iCondition, const Spec& iSpec);
 
 } // namespace
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTQL_Spec__

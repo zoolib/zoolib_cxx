@@ -21,9 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCGlyphServer_Asset.h"
 #include "zoolib/ZString.h"
 
-using ZooLib::ZPoint;
-using ZooLib::ZRect;
-namespace ZString = ZooLib::ZZString;
+NAMESPACE_ZOOLIB_USING
 
 using std::string;
 

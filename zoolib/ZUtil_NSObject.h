@@ -30,6 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <Foundation/Foundation.h>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_NSObject
@@ -52,6 +54,8 @@ void sAsVector(NSArray* iNSArray, std::vector<ZTValue>& oVector);
 NSArray* sCreateNSArray(const std::vector<ZTValue>& iVector);
 
 } // namespace ZUtil_NSObject
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Cocoa)
 

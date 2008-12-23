@@ -36,6 +36,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadR_CFType
@@ -160,6 +162,8 @@ ZRef<ZYadR> sMakeYadR(CFTypeRef iCFTypeRef);
 CFTypeRef sFromYadR(ZRef<ZYadR>);
 
 } // namespace ZYadUtil_CFType
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 

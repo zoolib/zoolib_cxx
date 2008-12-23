@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string.h> // for memcmp
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZMemoryBlock
@@ -72,10 +74,8 @@ private:
 	ZRef<Rep> fRep;
 	};
 
-namespace ZooLib {
 template <> inline int sCompare_T(const ZMemoryBlock& iL, const ZMemoryBlock& iR)
 	{ return iL.Compare(iR); }
-} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
@@ -257,5 +257,7 @@ private:
 	};
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZMemoryBlock__

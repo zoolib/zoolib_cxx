@@ -21,11 +21,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_RateCapped.h"
 #include "zoolib/ZThread.h"
 
+NAMESPACE_ZOOLIB_USING
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZooLib
-
-namespace ZooLib {
 
 RateLimiter::RateLimiter(double iRate, size_t iQuantum)
 :	fRate(iRate),
@@ -49,8 +49,6 @@ size_t RateLimiter::GetCount(size_t iLastCount, size_t iCount)
 	fLastTime = ZTime::sSystem();
 	return std::min(iCount, fQuantum);
 	}
-
-} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -

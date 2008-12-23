@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+NAMESPACE_ZOOLIB_USING
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Static helpers
@@ -55,7 +57,7 @@ static bool sCopy(
 
 ZStreamCopier::ZStreamCopier(ZRef<ZStreamerW> iStreamerW)
 :	fStreamerW(iStreamerW),
-	fChunkSize(ZooLib::sStackBufferSize)
+	fChunkSize(sStackBufferSize)
 	{}
 
 ZStreamCopier::ZStreamCopier(ZRef<ZStreamerW> iStreamerW, size_t iChunkSize)
@@ -68,10 +70,10 @@ ZStreamCopier::~ZStreamCopier()
 
 bool ZStreamCopier::Read(const ZStreamR& iStreamR)
 	{
-	if (fChunkSize <= ZooLib::sStackBufferSize)
+	if (fChunkSize <= sStackBufferSize)
 		{
-		char buffer[ZooLib::sStackBufferSize];
-		return sCopy(iStreamR, buffer, ZooLib::sStackBufferSize, fStreamerW->GetStreamW());
+		char buffer[sStackBufferSize];
+		return sCopy(iStreamR, buffer, sStackBufferSize, fStreamerW->GetStreamW());
 		}
 	else
 		{

@@ -30,6 +30,8 @@ in 1993, for which no copyright is claimed.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::min;
 
 // =================================================================================================

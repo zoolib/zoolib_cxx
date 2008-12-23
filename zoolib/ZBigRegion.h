@@ -75,6 +75,8 @@ SOFTWARE.
 
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZBigRegion
@@ -244,5 +246,7 @@ public:
 
 typedef ZAccumulator_T<ZBigRegion, ZBigRegionUnioner_t, std::vector<ZBigRegion> >
 	ZBigRegionAccumulator;
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZBigRegion__

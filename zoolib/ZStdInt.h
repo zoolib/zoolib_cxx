@@ -68,14 +68,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		typedef int16_t int16;
 		typedef UInt16 uint16;
 
-		#if !defined(_INT32)
-			#define _INT32
+		#ifndef _INT32
+			#define _INT32 1
 			typedef int32_t int32;
 		#endif
 
-		#if !defined(_UINT32)
-			#define _UINT32
+		#ifndef _UINT32
 			typedef UInt32 uint32;
+			#define _UINT32 1
 		#endif
 
 		typedef int64_t int64;
@@ -97,10 +97,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		typedef int64_t int64;
 		typedef uint64_t uint64;
 
-	#endif
-
+#	endif
 #endif // defined(ZStdInt_ProjectHeader)
 
+NAMESPACE_ZOOLIB_BEGIN
+
 typedef int64 bigtime_t;
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStdInt__

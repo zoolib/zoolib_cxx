@@ -54,6 +54,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_cmath.h" // For sqrt
 #include "zoolib/ZCompat_operator_bool.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZCoord
@@ -923,8 +925,6 @@ public:
 #pragma mark -
 #pragma mark * ZPoint and ZRect
 
-namespace ZooLib {
-
 typedef ZPoint_T<ZCoord> ZPoint;
 typedef ZRect_T<ZCoord> ZRect;
 
@@ -932,8 +932,6 @@ typedef ZPoint_T<float> ZPointf;
 typedef ZRect_T<float> ZRectf;
 
 typedef ZGRect_T<float> ZGRectf;
-
-} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
@@ -1141,18 +1139,6 @@ inline ZRect_T<T>::operator ZRectPOD() const
 		{ return BRect(left, top, right - 1, bottom - 1); }
 #endif
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Promote types to global namespace
-
-#ifndef ZooLib_SuppressInjection
-	using ZooLib::ZPoint;
-	using ZooLib::ZRect;
-
-	using ZooLib::ZPointf;
-	using ZooLib::ZRectf;
-
-	using ZooLib::ZGRectf;
-#endif // ZooLib_SuppressInjection
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZGeom__

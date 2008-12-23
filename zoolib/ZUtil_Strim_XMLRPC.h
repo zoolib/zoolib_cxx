@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZUtil_Strim_XMLRPC {
 
 class ParseException : public std::runtime_error
@@ -60,5 +62,7 @@ bool sResponseFromStrim(const ZStrimU& iStrimU, Result_t& oResult);
 bool sResponseFromML(ZML::Reader& r, Result_t& oResult);
 
 } // namespace ZUtil_Strim_XMLRPC
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Strim_XMLRPC__

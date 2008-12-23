@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZMemory.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::min;
 using std::pair;
 using std::string;

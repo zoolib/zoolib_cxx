@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZMIME {
 
 // Character classification.
@@ -103,5 +105,7 @@ private:
 	EState fState;
 	char fX;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZMIME__

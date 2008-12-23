@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <ctype.h> // for tolower etc
 #include <vector>
 
+NAMESPACE_ZOOLIB_USING
+
 using std::max;
 using std::string;
 using std::swap;

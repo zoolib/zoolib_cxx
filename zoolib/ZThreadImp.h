@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThreadImp_T.h" // For ZGuard_T
 #include "zoolib/ZThreadImp_Win.h"
 
-namespace ZooLib {
+NAMESPACE_ZOOLIB_BEGIN
 
 #if 0
 
@@ -73,15 +73,6 @@ namespace ZooLib {
 
 typedef ZGuard_T<ZMtx> ZGuardMtx;
 
-} // namespace ZooLib
-
-#ifndef ZooLib_SuppressInjection
-	using ZooLib::ZCnd;
-	using ZooLib::ZGuardMtx;
-	using ZooLib::ZMtx;
-	using ZooLib::ZSem;
-	namespace ZTSS = ZooLib::ZTSS;
-	namespace ZThreadImp = ZooLib::ZThreadImp;
-#endif
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZThreadImp__

@@ -29,6 +29,8 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
+NAMESPACE_ZOOLIB_USING
+
 static void sWriteCount(const ZStreamW& inStream, uint32 inCount)
 	{
 	if (inCount < 0xFF)

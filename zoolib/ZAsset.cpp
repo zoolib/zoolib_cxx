@@ -24,6 +24,8 @@ using std::set;
 using std::string;
 using std::vector;
 
+NAMESPACE_ZOOLIB_USING
+
 /**
 \defgroup group_Asset Assets
 

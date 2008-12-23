@@ -27,11 +27,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "boost/noncopyable.hpp"
 
-namespace ZooLib {
+NAMESPACE_ZOOLIB_BEGIN
 
 typedef boost::noncopyable NonCopyable;
 
-} // namespace ZooLib
+NAMESPACE_ZOOLIB_END
 
 #else
 
@@ -43,7 +43,7 @@ typedef boost::noncopyable NonCopyable;
 
 //  See http://www.boost.org/libs/utility for documentation.
 
-namespace ZooLib {
+NAMESPACE_ZOOLIB_BEGIN
 
 //  Private copy constructor and copy assignment ensure classes derived from
 //  class noncopyable cannot be copied.
@@ -67,7 +67,8 @@ namespace noncopyable_  // protection from unintended ADL
 	}
 
 typedef noncopyable_::noncopyable NonCopyable;
-} // namespace ZooLib
+
+NAMESPACE_ZOOLIB_END
 
 #endif
 

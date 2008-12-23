@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZUnicode {
 // This template and its two specializations below let us
 // determine cleanly whether wchar_t is 16 or 32 bits.
@@ -177,11 +179,11 @@ inline string8 operator+(const string8& iString, UTF32 iCP)
 	return temp += iCP;
 	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Include gnarly template stuff
+NAMESPACE_ZOOLIB_END
 
 #include "zoolib/ZUnicodePriv.h"
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -568,5 +570,7 @@ int sHexValue(UTF32 iCP);
 //@}
 
 } // namespace ZUnicode
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUnicode__

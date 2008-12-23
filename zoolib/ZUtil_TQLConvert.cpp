@@ -22,12 +22,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTQL_Spec.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using ZTQL::Query;
 using ZTQL::RelHead;
 
-#define VERBOSE 0
-
 using std::vector;
+
+#define VERBOSE 0
 
 // =================================================================================================
 #pragma mark -

@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZUtil_STL.h"
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_USING
 using ZUtil_STL::sFirstOrNil;
 
 using std::map;
@@ -41,12 +41,12 @@ enum EReg { eReg_Fresh, eReg_Pending, eReg_Done };
 #pragma mark * ZTSWatcherMUX::PQuery
 
 class ZTSWatcherMUX::DLink_PQuery_Sync
-:	public ZooLib::DListLink<ZTSWatcherMUX::PQuery,
+:	public DListLink<ZTSWatcherMUX::PQuery,
 		ZTSWatcherMUX::DLink_PQuery_Sync, ZTSWatcherMUX::kDebug>
 	{};
 
 class ZTSWatcherMUX::DLink_PQuery_Cached
-:	public ZooLib::DListLink<ZTSWatcherMUX::PQuery,
+:	public DListLink<ZTSWatcherMUX::PQuery,
 		ZTSWatcherMUX::DLink_PQuery_Cached, ZTSWatcherMUX::kDebug>
 	{};
 
@@ -66,7 +66,7 @@ public:
 	bool fPrefetch;
 	vector<uint64> fResults;
 
-	ZooLib::DListHead<DLink_WQuery_PQuery> fWQueries;
+	DListHead<DLink_WQuery_PQuery> fWQueries;
 	};
 
 ZTSWatcherMUX::PQuery::PQuery(int64 iRefcon, bool iPrefetch, const ZMemoryBlock& iMB)
@@ -82,14 +82,14 @@ ZTSWatcherMUX::PQuery::PQuery(int64 iRefcon, bool iPrefetch, const ZMemoryBlock&
 
 // Links together all the WQueries that reference a PQuery.
 class ZTSWatcherMUX::DLink_WQuery_PQuery
-:	public ZooLib::DListLink<ZTSWatcherMUX::WQuery,
+:	public DListLink<ZTSWatcherMUX::WQuery,
 		ZTSWatcherMUX::DLink_WQuery_PQuery, ZTSWatcherMUX::kDebug>
 	{};
 
 // Links together all the WQuerys in a Watcher whose PQuery has changed
 // since the watcher last called Sync.
 class ZTSWatcherMUX::DLink_WQuery_Tripped
-:	public ZooLib::DListLink<ZTSWatcherMUX::WQuery,
+:	public DListLink<ZTSWatcherMUX::WQuery,
 		ZTSWatcherMUX::DLink_WQuery_Tripped, ZTSWatcherMUX::kDebug>
 	{};
 
@@ -119,12 +119,12 @@ ZTSWatcherMUX::WQuery::WQuery(Watcher* iWatcher, PQuery* iPQuery, int64 iRefcon)
 #pragma mark * ZTSWatcherMUX::PTuple
 
 class ZTSWatcherMUX::DLink_PTuple_Sync
-:	public ZooLib::DListLink<ZTSWatcherMUX::PTuple,
+:	public DListLink<ZTSWatcherMUX::PTuple,
 		ZTSWatcherMUX::DLink_PTuple_Sync, ZTSWatcherMUX::kDebug>
 	{};
 
 class ZTSWatcherMUX::DLink_PTuple_Cached
-:	public ZooLib::DListLink<ZTSWatcherMUX::PTuple,
+:	public DListLink<ZTSWatcherMUX::PTuple,
 		ZTSWatcherMUX::DLink_PTuple_Cached, ZTSWatcherMUX::kDebug>
 	{};
 
@@ -143,7 +143,7 @@ public:
 	bool fHasValueForServer;
 	ZTuple fValue;
 
-	ZooLib::DListHead<DLink_WTuple_PTuple> fWTuples;
+	DListHead<DLink_WTuple_PTuple> fWTuples;
 	Watcher* fWrittenBy;
 	};
 
@@ -160,14 +160,14 @@ ZTSWatcherMUX::PTuple::PTuple(uint64 iID)
 
 // Links together all the WTuples that reference a PTuple.
 class ZTSWatcherMUX::DLink_WTuple_PTuple
-:	public ZooLib::DListLink<ZTSWatcherMUX::WTuple,
+:	public DListLink<ZTSWatcherMUX::WTuple,
 		ZTSWatcherMUX::DLink_WTuple_PTuple, ZTSWatcherMUX::kDebug>
 	{};
 
 // Links together all the WTuples in a Watcher whose PTuple has changed
 // since the watcher last called Sync.
 class ZTSWatcherMUX::DLink_WTuple_Tripped
-:	public ZooLib::DListLink<ZTSWatcherMUX::WTuple,
+:	public DListLink<ZTSWatcherMUX::WTuple,
 		ZTSWatcherMUX::DLink_WTuple_Tripped, ZTSWatcherMUX::kDebug>
 	{};
 
@@ -228,9 +228,9 @@ private:
 
 	map<uint64, WTuple> fWTuples;
 
-	ZooLib::DListHead<DLink_WQuery_Tripped> fWQueries_Tripped;
+	DListHead<DLink_WQuery_Tripped> fWQueries_Tripped;
 	
-	ZooLib::DListHead<DLink_WTuple_Tripped> fWTuples_Tripped;
+	DListHead<DLink_WTuple_Tripped> fWTuples_Tripped;
 
 	Callback_t fCallback;
 	void* fCallbackRefcon;
@@ -474,7 +474,7 @@ bool ZTSWatcherMUX::Watcher_Sync(Watcher* iWatcher,
 		thePTuple->fValue = iWrittenTuples[x];
 		thePTuple->fWrittenBy = iWatcher;
 		fPTuples_Sync.InsertIfNotContains(thePTuple);
-		for (ZooLib::DListIterator<WTuple, DLink_WTuple_PTuple>
+		for (DListIterator<WTuple, DLink_WTuple_PTuple>
 			iter = thePTuple->fWTuples;iter; iter.Advance())
 			{
 			WTuple* theWTuple = iter.Current();
@@ -529,7 +529,7 @@ bool ZTSWatcherMUX::Watcher_Sync(Watcher* iWatcher,
 		}
 
 	set<uint64> allResults;
-	for (ZooLib::DListIteratorEraseAll<WQuery, DLink_WQuery_Tripped>
+	for (DListIteratorEraseAll<WQuery, DLink_WQuery_Tripped>
 		iter = iWatcher->fWQueries_Tripped;iter; iter.Advance())
 		{
 		WQuery* theWQuery = iter.Current();
@@ -569,7 +569,7 @@ bool ZTSWatcherMUX::Watcher_Sync(Watcher* iWatcher,
 
 	oChangedTupleIDs.reserve(iWatcher->fWTuples_Tripped.Size());
 	oChangedTuples.reserve(iWatcher->fWTuples_Tripped.Size());
-	for (ZooLib::DListIteratorEraseAll<WTuple, DLink_WTuple_Tripped>
+	for (DListIteratorEraseAll<WTuple, DLink_WTuple_Tripped>
 		iter = iWatcher->fWTuples_Tripped;iter; iter.Advance())
 		{
 		PTuple* thePTuple = iter.Current()->fPTuple;
@@ -614,7 +614,7 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 	writtenIDs.reserve(fPTuples_Sync.Size());
 	writtenTuples.reserve(fPTuples_Sync.Size());
 
-	for (ZooLib::DListIteratorEraseAll<PTuple, DLink_PTuple_Sync>
+	for (DListIteratorEraseAll<PTuple, DLink_PTuple_Sync>
 		iter = fPTuples_Sync;iter; iter.Advance())
 		{
 		PTuple* thePTuple = iter.Current();
@@ -676,7 +676,7 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 		}
 
 	vector<ZTSWatcher::AddedQueryCombo> addedQueries;
-	for (ZooLib::DListIteratorEraseAll<PQuery, DLink_PQuery_Sync>
+	for (DListIteratorEraseAll<PQuery, DLink_PQuery_Sync>
 		iter = fPQueries_Sync;iter; iter.Advance())
 		{
 		PQuery* thePQuery = iter.Current();
@@ -860,7 +860,7 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 			if (!thePTuple->fHasValueForServer)
 				{
 				// Nothing touched this tuple whilst Sync was running.
-				for (ZooLib::DListIterator<WTuple, DLink_WTuple_PTuple>
+				for (DListIterator<WTuple, DLink_WTuple_PTuple>
 					iter = thePTuple->fWTuples;iter; iter.Advance())
 					{
 					WTuple* theWTuple = iter.Current();
@@ -881,7 +881,7 @@ bool ZTSWatcherMUX::pSyncAll(bool iWaitForSync, Watcher* iWatcher)
 			// No other thread caused this pQuery to be released whilst Sync was running.
 			ZAssertStop(kDebug, thePQuery->fReg != eReg_Fresh);
 			thePQuery->fReg = eReg_Done;
-			for (ZooLib::DListIterator<WQuery, DLink_WQuery_PQuery>
+			for (DListIterator<WQuery, DLink_WQuery_PQuery>
 				iter = thePQuery->fWQueries;iter; iter.Advance())
 				{
 				WQuery* theWQuery = iter.Current();

@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Forward declarations
@@ -171,5 +173,7 @@ inline bool ZTName::operator>=(const ZTName& iOther) const
 
 inline bool ZTName::Equals(const ZTName& iOther) const
 	{ return 0 == this->Compare(iOther); }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTName__

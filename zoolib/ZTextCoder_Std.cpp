@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFactoryChain.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::string;
 
 // =================================================================================================

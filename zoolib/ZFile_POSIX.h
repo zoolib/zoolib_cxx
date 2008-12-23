@@ -38,6 +38,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFile.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZFileLoc_POSIX
@@ -185,7 +187,7 @@ public:
 	virtual ZFile::Error GetSize(uint64& oSize);
 	
 private:
-	ZooLib::ZMutex fMutex;
+	ZMutex fMutex;
 	uint64 fPosition;
 	int fFD;
 	bool fCloseWhenFinalized;
@@ -211,7 +213,7 @@ public:
 	virtual ZFile::Error FlushVolume();
 	
 private:
-	ZooLib::ZMutex fMutex;
+	ZMutex fMutex;
 	uint64 fPosition;
 	int fFD;
 	bool fCloseWhenFinalized;
@@ -238,7 +240,7 @@ public:
 	virtual ZFile::Error FlushVolume();
 	
 private:
-	ZooLib::ZMutex fMutex;
+	ZMutex fMutex;
 	uint64 fPosition;
 	int fFD;
 	bool fCloseWhenFinalized;
@@ -384,6 +386,8 @@ public:
 private:
 	ZStreamRWPos_File_POSIX fStream;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(File_POSIX)
 

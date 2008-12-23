@@ -40,6 +40,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_Xlib.h"
 #include <X11/Xutil.h>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZGRgnRep_XRegion
@@ -95,6 +97,8 @@ public:
 private:
 	Region fRegion;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(GRgnRep_XRegion)
 

@@ -27,11 +27,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTime.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZooLib
-
-namespace ZooLib {
+#pragma mark * RateLimiter
 
 class RateLimiter
 	{
@@ -46,8 +46,6 @@ private:
 
 	ZTime fLastTime;
 	};
-
-} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
@@ -64,7 +62,7 @@ public:
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 
 protected:
-	ZooLib::RateLimiter fLimiter;
+	RateLimiter fLimiter;
 	size_t fLastCount;
 	};
 
@@ -102,7 +100,7 @@ public:
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 
 protected:
-	ZooLib::RateLimiter fLimiter;
+	RateLimiter fLimiter;
 	size_t fLastCount;
 	};
 
@@ -140,7 +138,7 @@ public:
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 
 protected:
-	ZooLib::RateLimiter fLimiter;
+	RateLimiter fLimiter;
 	size_t fLastCount;
 	};
 
@@ -178,7 +176,7 @@ public:
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
 
 protected:
-	ZooLib::RateLimiter fLimiter;
+	RateLimiter fLimiter;
 	size_t fLastCount;
 	};
 
@@ -216,7 +214,7 @@ public:
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
 
 protected:
-	ZooLib::RateLimiter fLimiter;
+	RateLimiter fLimiter;
 	size_t fLastCount;
 	};
 
@@ -238,5 +236,7 @@ protected:
 	ZRef<ZStreamerWPos> fStreamerReal;
 	ZStreamWPos_RateCapped fStream;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStream_RateCapped__

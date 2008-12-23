@@ -24,8 +24,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZThread.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 template <class T = void*>
-class ZThreadSimple : public ZooLib::ZThread
+class ZThreadSimple : public ZThread
 	{
 public:
 	typedef void (*ThreadProc)(T inArgument);
@@ -52,5 +54,7 @@ private:
 	ThreadProcNoArg fProcNoArg;
 	T fArgument;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZThreadSimple__

@@ -41,6 +41,8 @@ and on Windows,
 
 #include <boost/regex.hpp>
 
+NAMESPACE_ZOOLIB_USING
+
 using std::string;
 
 // =================================================================================================

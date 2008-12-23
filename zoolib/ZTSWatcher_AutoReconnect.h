@@ -30,6 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_ZTSWatcher_AutoReconnect_Debug 1
 #endif
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTSWatcher_AutoReconnect
@@ -94,7 +96,7 @@ private:
 	static void sCallback(void* iRefcon);
 
 private:
-	ZooLib::ZMutex fMutex;
+	ZMutex fMutex;
 	ZRef<ZTSWatcherFactory> fFactory;
 	ZRef<ZTSWatcher> fTSWatcher;
 	EStatus fStatus;
@@ -120,5 +122,7 @@ public:
 private:
 	ZRef<ZTSWatcherFactory> fFactory;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTSWatcher_AutoReconnect__

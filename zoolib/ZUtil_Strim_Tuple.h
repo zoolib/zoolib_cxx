@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 #include <vector>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZStrimR;
 class ZStrimU;
 class ZStrimW;
@@ -122,5 +124,7 @@ bool sFromString(const std::string& iString, ZTuple& oTuple);
 const ZStrimW& operator<<(const ZStrimW& s, const ZTValue& iTV);
 
 const ZStrimW& operator<<(const ZStrimW& s, const ZUtil_Strim_Tuple::Format& iFormat);
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Strim_Tuple__

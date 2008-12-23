@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_operator_bool.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTime
@@ -98,10 +100,11 @@ public:
 		= ((369LLU * 365) + 89) * 24 * 60 * 60; // == 11,644,473,600
 	};
 
-namespace ZooLib {
 template <class T> int sCompare_T(const T& iL, const T& iR);
+
 template <> inline int sCompare_T(const ZTime& iL, const ZTime& iR)
 	{ return iL.Compare(iR); }
-}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTime__

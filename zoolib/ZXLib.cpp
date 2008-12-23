@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <X11/Xproto.h> // For definitions of request codes
 
+NAMESPACE_ZOOLIB_USING
+
 ZMutex ZXLib::sMutex;
 
 // =================================================================================================

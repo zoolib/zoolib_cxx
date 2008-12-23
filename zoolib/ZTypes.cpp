@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTypes.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 /** \defgroup group_Types Types
 Although the standard library defines a range of integer types in cstdint,
 older versions of the library may not define the complete range, or 
@@ -130,4 +132,6 @@ const char* ZTypeAsString(ZType iType)
 	return "Unknown";
 	}
 
-char ZooLib::sGarbageBuffer[4096];
+char sGarbageBuffer[4096];
+
+NAMESPACE_ZOOLIB_END

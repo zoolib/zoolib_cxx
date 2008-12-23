@@ -31,6 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <string>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZNode;
 class ZNodeRep;
 class ZNodeIterRep;
@@ -292,5 +294,7 @@ public:
 	virtual ZRef<ZNodeRep> GetNodeRep(size_t iIndex) = 0;
 	virtual std::string GetName(size_t iIndex) = 0;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZNode__

@@ -202,6 +202,8 @@ by using <code>#pragma ushort_wchar_t on</code>
 
 #include <ctype.h>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 ZAssertCompile(sizeof(UTF32) == 4);
 ZAssertCompile(sizeof(UTF16) == 2);
 ZAssertCompile(sizeof(UTF8) == 1);
@@ -308,11 +310,15 @@ const uint8 sUTF8StartByteMask[7] = { 0x00, 0x00, 0x3F, 0x1F, 0x0F, 0x07, 0x03 }
 
 } // namespace ZUnicode
 
+NAMESPACE_ZOOLIB_END
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Explicit instantiations of the template code
 
 #include "zoolib/ZUnicodePrivB.h"
+
+NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZUnicode {
 
@@ -386,9 +392,13 @@ template struct Functions_Convert_T<string8::iterator>;
 
 } // namespace ZUnicode
 
+NAMESPACE_ZOOLIB_END
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Converting between different serializations
+
+NAMESPACE_ZOOLIB_BEGIN
 
 /**Read UTF32 code units from \a iSource, convert them into valid
 code points and store them as UTF8 code units starting at \a iDest. Do not read more
@@ -1108,3 +1118,5 @@ string16 ZUnicode::sAsUTF16(const string8& iString)
 	result.resize(dest - result.data());
 	return result;
 	}
+
+NAMESPACE_ZOOLIB_END

@@ -32,6 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::string;
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZNetscape {
 
 // =================================================================================================
@@ -499,7 +501,6 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs& oNPNF)
 	oNPNF.posturl = sPostURL;
 	oNPNF.requestread = sRequestRead;
 	oNPNF.newstream = sNewStream;
-	oNPNF.write = sWrite;
 	oNPNF.destroystream = sDestroyStream;
 	oNPNF.status = sStatus;
 	oNPNF.uagent = sUserAgent;
@@ -539,6 +540,8 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs& oNPNF)
 	// an NPString* or UTF8* in different versions of headers, and I
 	// haven't determined which is correct, or if it's a host-specific thing.
 	oNPNF.setexception = nil;
+
+	oNPNF.write = (NPN_WriteProcPtr)sWrite;
 
 	#if defined(NewNPN_IntFromIdentifierProc)
 		oNPNF.intfromidentifier = sIntFromIdentifier;
@@ -990,5 +993,7 @@ NPError Host::Guest_SetValue(NPNVariable iNPNVariable, void* iValue)
 	{ return fNPPluginFuncs.setvalue(&fNPP_t, iNPNVariable, iValue); }
 
 } // namespace ZNetscape
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Netscape)

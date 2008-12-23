@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream.h"
 #include "zoolib/ZYad.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadUtil_ZooLibStream
@@ -36,5 +38,7 @@ ZRef<ZYadR> sMakeYadR(const ZStreamR& iStreamR);
 void sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR);
 
 } // namespace ZYadUtil_ZooLibStream
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZYad_ZooLibStream__

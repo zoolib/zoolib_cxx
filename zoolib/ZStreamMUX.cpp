@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_STL.h"
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_USING
 
 using std::deque;
 using std::map;
@@ -138,7 +138,7 @@ static bool sIsRemote(uint32 iID)
 #pragma mark * ZStreamMUX::Endpoint
 
 class ZStreamMUX::DLink_Endpoint_Pending
-:	public ZooLib::DListLink<ZStreamMUX::Endpoint, ZStreamMUX::DLink_Endpoint_Pending, kDebug>
+:	public DListLink<ZStreamMUX::Endpoint, ZStreamMUX::DLink_Endpoint_Pending, kDebug>
 	{};
 
 class ZStreamMUX::Endpoint
@@ -383,7 +383,7 @@ private:
 	ZCondition fCondition;
 	const string fName;
 	const size_t fReceiveBufferSize;
-	ZooLib::DListHead<DLink_Endpoint_Pending> fEndpoints_Pending;
+	DListHead<DLink_Endpoint_Pending> fEndpoints_Pending;
 	bool fCancelled;
 	};
 
@@ -973,7 +973,7 @@ void ZStreamMUX::Listener_Finalize(Listener* iListener)
 	ZAssert(i != fMap_NameToListener.end());
 	fMap_NameToListener.erase(i);
 
-	for (ZooLib::DListIteratorEraseAll<Endpoint, DLink_Endpoint_Pending>
+	for (DListIteratorEraseAll<Endpoint, DLink_Endpoint_Pending>
 		i = iListener->fEndpoints_Pending; i; i.Advance())
 		{
 		Endpoint* theEndpoint = i.Current();

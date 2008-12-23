@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZNetscape {
 
 // =================================================================================================
@@ -152,5 +154,7 @@ NPError Guest_Std::Guest_SetValue(NPNVariable iNPNVariable, void* iValue)
 	{ return NPERR_GENERIC_ERROR; }
 
 } // namespace ZNetscape
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Netscape)

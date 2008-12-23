@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	endif
 #endif
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_USING
 
 using std::string;
 

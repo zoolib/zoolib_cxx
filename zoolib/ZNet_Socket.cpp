@@ -43,7 +43,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <poll.h>
 #endif
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_USING
 
 using std::string;
 
@@ -469,7 +469,7 @@ bool ZNetEndpoint_Socket::Imp_ReceiveDisconnect(int iMilliseconds)
 	bool gotIt = false;
 	for (;;)
 		{
-		int result = sReceive(fSocketFD, ZooLib::sGarbageBuffer, sizeof(ZooLib::sGarbageBuffer));
+		int result = sReceive(fSocketFD, sGarbageBuffer, sizeof(sGarbageBuffer));
 		if (result == 0)
 			{
 			// result is zero, indicating that the other end has sent FIN.

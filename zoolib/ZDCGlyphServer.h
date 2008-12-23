@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCPixmap.h"
 #include "zoolib/ZUnicode.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCGlyphServer
@@ -37,7 +39,6 @@ protected:
 	virtual ~ZDCGlyphServer();
 
 public:
-	typedef ZooLib::ZPoint ZPoint;
 	virtual bool GetGlyph(const ZDCFont& iFont, UTF32 iCP,
 		ZPoint& oOrigin, ZCoord& oEscapement, ZDCPixmap& oPixmap) = 0;
 
@@ -46,5 +47,7 @@ public:
 	virtual void GetFontInfo(const ZDCFont& iFont,
 		ZCoord& oAscent, ZCoord& oDescent, ZCoord& oLeading) = 0;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZDCGlyphServer__

@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <process.h> // For _beginthreadex
 
-namespace ZooLib {
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -99,6 +99,6 @@ ZThreadImp_Win::ID ZThreadImp_Win::sID()
 void ZThreadImp_Win::sSleep(double iDuration)
 	{ ::Sleep(iDuration * 1e3); }
 
-} // namespace ZooLib
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(ThreadImp_Win)

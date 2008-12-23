@@ -157,7 +157,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // as zero in your zconfig.h file.
 
 #ifndef ZCONFIG_NamespaceHack
-#	define ZCONFIG_NamespaceHack 1
+#	define ZCONFIG_NamespaceHack 0
 #endif
 
 #ifndef SKIPOMPARSE
@@ -170,6 +170,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Object Master doesn't parse anonymous namespaces, so we define
 // this symbol and use it instead.
 #define ZANONYMOUS
+
+#ifdef ZCONFIG_Suppress_Namespace_ZooLib
+#	define ZOOLIB_PREFIX 
+#	define NAMESPACE_ZOOLIB_BEGIN
+#	define NAMESPACE_ZOOLIB_END
+#	define NAMESPACE_ZOOLIB_USING
+#else
+#	define ZOOLIB_PREFIX ZooLib
+#	define NAMESPACE_ZOOLIB_BEGIN namespace ZooLib {
+#	define NAMESPACE_ZOOLIB_END }
+#	define NAMESPACE_ZOOLIB_USING using namespace ZooLib;
+#endif
 
 // ==================================================
 // Some extra bits to patch up some CodeWarrior issues.

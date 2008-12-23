@@ -49,6 +49,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <CoreFoundation/CFRunLoop.h> // For CFRunLoopRef
 #include <mach/mach.h> // For mach_port_t
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZBlackBerry {
 
 // =================================================================================================
@@ -80,7 +82,7 @@ public:
 	virtual void Detached(ZRef<ZUSBDevice> iUSBDevice);
 	
 private:
-	ZooLib::ZMutex fMutex;
+	ZMutex fMutex;
 
 	bool fAllowMassStorage;
 	
@@ -107,6 +109,8 @@ private:
 	};
 
 } // namespace ZBlackBerry
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(BlackBerry_OSXUSB)
 

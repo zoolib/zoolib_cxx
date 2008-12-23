@@ -24,21 +24,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMacOSX.h"
 #include "zoolib/ZMemory.h"
 
-#include <new> // for bad_alloc
-
 #include <map>
-using std::map;
-using std::pair;
-
-#define kDebug_Mac 3
+#include <new> // for bad_alloc
 
 #if ZCONFIG_SPI_Enabled(Carbon)
 #	include ZMACINCLUDE3(CoreServices,CarbonCore,Resources.h)
 #endif
 
 using std::bad_alloc;
+using std::map;
+using std::pair;
 using std::vector;
 
+NAMESPACE_ZOOLIB_USING
+
+#define kDebug_Mac 3
 // =================================================================================================
 
 #if ZCONFIG_SPI_Enabled(Carbon)

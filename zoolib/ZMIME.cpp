@@ -28,6 +28,8 @@ static const char LF = '\n';
 
 #define kDebug_MIME 2
 
+NAMESPACE_ZOOLIB_USING
+
 // =================================================================================================
 #pragma mark * ZMIME
 

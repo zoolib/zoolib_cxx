@@ -33,6 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include ZMACINCLUDE3(CoreServices,CarbonCore,MacMemory.h)
 #endif
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZHandle
@@ -107,7 +109,7 @@ private:
 #pragma mark -
 #pragma mark * ZHandle::Ref
 
-class ZHandle::Ref : ZooLib::NonCopyable
+class ZHandle::Ref : NonCopyable
 	{
 public:
 	explicit Ref(ZHandle& iHandle);
@@ -123,7 +125,7 @@ private:
 #pragma mark -
 #pragma mark * ZHandle::ConstRef
 
-class ZHandle::ConstRef : ZooLib::NonCopyable
+class ZHandle::ConstRef : NonCopyable
 	{
 public:
 	explicit ConstRef(const ZHandle& iHandle);
@@ -169,5 +171,7 @@ private:
 	uint64 fPosition;
 	size_t fSizeLogical;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZHandle__

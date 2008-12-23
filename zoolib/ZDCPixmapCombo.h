@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCPixmap.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCPixmapCombo
@@ -65,7 +67,7 @@ public:
 	void SetMask(const ZDCPixmap& iPixmap) { fMaskPixmap = iPixmap; }
 	const ZDCPixmap& GetMask() const { return fMaskPixmap; }
 
-	ZooLib::ZPoint Size() const;
+	ZPoint Size() const;
 
 // Are we valid, i.e. do we have any pixels at all?
 	operator operator_bool_type() const;
@@ -77,5 +79,7 @@ protected:
 	};
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZDCPixmapCombo__

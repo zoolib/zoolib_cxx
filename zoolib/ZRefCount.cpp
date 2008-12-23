@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZRefCount.h"
 
+NAMESPACE_ZOOLIB_USING
+
 /**
 \defgroup RefCount Reference Counting and Smart Pointers
 

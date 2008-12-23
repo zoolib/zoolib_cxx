@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamR_CRLFRemove
@@ -105,5 +107,7 @@ protected:
 	const ZStreamW& fStreamSink;
 	bool fLastWasCR;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStream_CRLF__

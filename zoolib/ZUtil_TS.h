@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <map>
 #include <stdexcept>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZTuple;
 class ZStreamR;
 class ZStreamW;
@@ -157,5 +159,7 @@ void sRead(const ZStreamRPos& iStreamRPos, uint64& oNextUnusedID, Sink& iSink);
 void sWriteMagicText(const ZStreamW& iStreamW);
 
 } // namespace ZUtil_TS
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_TS__

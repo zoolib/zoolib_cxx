@@ -31,6 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define kDebug_OT 1
 #endif
 
+NAMESPACE_ZOOLIB_USING
+
 using std::string;
 
 // =================================================================================================
@@ -890,7 +892,7 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_ReceiveDisconnect(void* iParam)
 		{
 		OTFlags theFlags = 0;
 		OTResult theResult = ::OTRcv(theStruct->fEndpointRef,
-			ZooLib::sGarbageBuffer, sizeof(ZooLib::sGarbageBuffer), &theFlags);
+			sGarbageBuffer, sizeof(sGarbageBuffer), &theFlags);
 
 		if (theResult < 0)
 			{

@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+NAMESPACE_ZOOLIB_USING
+
 using namespace ZDCPixmapNS;
 
 using std::min;
@@ -595,7 +597,7 @@ ZDCPixmapCache::~ZDCPixmapCache()
 
 ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
 	const ZRef<ZDCPixmapRaster>& iRaster,
-	const ZooLib::ZRect& iBounds,
+	const ZRect& iBounds,
 	const PixelDesc& iPixelDesc)
 	{
 	ZRef<ZDCPixmapRep> result;

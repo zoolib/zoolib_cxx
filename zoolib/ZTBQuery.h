@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <set>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTBQuery
@@ -156,10 +158,9 @@ inline ZTBQuery operator&(const ZTBSpec& iSpec, const ZTBQuery& iQuery)
 inline ZTBQuery operator|(const ZTBSpec& iSpec, const ZTBQuery& iQuery)
 	{ return iQuery | iSpec; }
 
-namespace ZooLib {
+
 template <> inline int sCompare_T(const ZTBQuery& iL, const ZTBQuery& iR)
 	{ return iL.Compare(iR); }
-}
 
 // =================================================================================================
 #pragma mark -
@@ -200,11 +201,9 @@ public:
 	int fStrength;
 	};
 
-namespace ZooLib {
 template <>
 inline int sCompare_T(const ZTBQuery::SortSpec& iL, const ZTBQuery::SortSpec& iR)
 	{ return iL.Compare(iR); }
-}
 
 // =================================================================================================
 #pragma mark -
@@ -246,11 +245,9 @@ public:
 	virtual int pCompare_Property(ZTBQueryNode_Property* iProperty) = 0;
 	};
 
-namespace ZooLib {
 template <>
 inline int sCompare_T(const ZRef<ZTBQueryNode>& iL, const ZRef<ZTBQueryNode>& iR)
 	{ return iL->Compare(iR); }
-}
 
 // =================================================================================================
 #pragma mark -
@@ -414,12 +411,10 @@ public:
 	std::vector<ZRef<ZTBQueryNode> > fNodes;
 	};
 
-namespace ZooLib {
 template <>
 inline int sCompare_T(
 	const ZTBQueryNode_Combo::Intersection& iL, const ZTBQueryNode_Combo::Intersection& iR)
 	{ return iL.Compare(iR); }
-}
 
 // =================================================================================================
 #pragma mark -
@@ -640,5 +635,7 @@ inline bool ZTBQuery::operator>(const ZTBQuery& iOther) const
 
 inline bool ZTBQuery::operator>=(const ZTBQuery& iOther) const
 	{ return !(*this < iOther); }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZTBQuery__

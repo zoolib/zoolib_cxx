@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamerRWFactory_Preconnected
@@ -41,5 +43,7 @@ private:
 	ZRef<ZStreamerRW> fSRW;
 	ZRef<ZStreamerRWFactory> fFactory;
 	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStreamerRWFactory_Preconnected__

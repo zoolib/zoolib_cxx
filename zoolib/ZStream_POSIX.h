@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdio.h>
 #include <unistd.h>
 
+NAMESPACE_ZOOLIB_BEGIN
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamR_FILE
@@ -113,7 +115,6 @@ protected:
 #pragma mark -
 #pragma mark * FILE backed by a ZStream or ZStreamer
 
-namespace ZooLib {
 
 FILE* sStreamOpen(const ZStreamR& iStreamR);
 FILE* sStreamOpen(const ZStreamRPos& iStreamRPos);
@@ -123,6 +124,6 @@ FILE* sStreamerOpen(ZRef<ZStreamerR> iStreamerR);
 FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos);
 FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW);
 
-} // namespace ZooLib
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStream_POSIX__

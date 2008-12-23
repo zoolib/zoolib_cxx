@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string.h> // For strcmp etc
 
-using namespace ZooLib;
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::find_first_of;
 using std::lower_bound;
@@ -229,7 +229,7 @@ ZRef<ZAssetRep> ZAssetRep_Std_Directory::ResolvePath(const char* iPath)
 			= find_first_of(iPath, iPath + strlen(iPath), terminators, terminators + 2);
 
 		ZAssetRep_Std** childrenEnd = fChildren + fChildrenCount;
-		ZAssetRep_Std** i = ::lower_bound(
+		ZAssetRep_Std** i = lower_bound(
 			fChildren, childrenEnd, iPath, CompareAgainstPath(pathEnd - iPath));
 
 		if (i != childrenEnd)
@@ -1260,3 +1260,5 @@ ZAssetTree_Std_Memory_StaticData::~ZAssetTree_Std_Memory_StaticData()
 	{
 	ZAssetTree_Std_Memory::ShutDown();
 	}
+
+NAMESPACE_ZOOLIB_END

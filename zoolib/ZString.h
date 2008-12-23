@@ -29,11 +29,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // ==================================================
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZStreamR;
 class ZStreamW;
 
-namespace ZooLib {
-namespace ZZString {
+namespace ZString {
 
 std::string sFormat(const char* inString, ...);
 std::string sFormat(const char* inString, va_list iArgs);
@@ -93,13 +94,8 @@ std::string sFromPString(const unsigned char* iPString);
 void sToPString(const std::string& iString, unsigned char* oPString, size_t iMaxLength);
 void sToPString(const char* iString, unsigned char* oPString, size_t iMaxLength);
 
-} // namespace ZZString
-} // namespace ZooLib
+} // namespace ZString
 
-#ifdef ZooLib_SuppressInjection
-	namespace ZooLib { namespace ZString = ZZString; }
-#else
-	namespace ZString = ZooLib::ZZString;
-#endif
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZString__

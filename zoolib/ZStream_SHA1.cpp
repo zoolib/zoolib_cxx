@@ -40,6 +40,8 @@ A million repetitions of "a"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
 
+NAMESPACE_ZOOLIB_USING
+
 using std::min;
 
 static void sCheckIt(ZStream_SHA1::Context& ioContext, const uint8 iDigest[20])

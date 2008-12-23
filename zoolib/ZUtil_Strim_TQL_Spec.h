@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTQL_Spec.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 class ZStrimW;
 
 // =================================================================================================
@@ -37,5 +39,7 @@ void sToStrim(const ZStrimW& iStrimW, const ZTQL::Spec& iSpec);
 void sToStrim(const ZStrimW& iStrimW, ZRef<ZTQL::LogOp> iLogOp);
 
 } // namespace ZUtil_Strim_TQL_Spec
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Strim_TQL_Spec__

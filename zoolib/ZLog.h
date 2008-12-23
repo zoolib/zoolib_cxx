@@ -34,6 +34,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZLOGF(s, p) const ZLog::S& s = ZLog::S(ZLog::p, __FUNCTION__)
 #define ZLOG(s, p, f) const ZLog::S& s = ZLog::S(ZLog::p, f)
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZLog {
 
 // =================================================================================================
@@ -120,5 +122,7 @@ public:
 void sSetLogMeister(LogMeister* iLogMeister);
 
 } // namespace ZLog
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZLog__
