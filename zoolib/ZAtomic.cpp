@@ -20,12 +20,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAtomic.h"
 
-NAMESPACE_ZOOLIB_USING
-
 // =================================================================================================
 #if ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, PPC)
 #pragma mark -
 #pragma mark * CodeWarrior/PPC/Not BeOS
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // We attach a register declarator to each parameter so that CW does not generate
 // code to save the values of the registers we use explicitly.
@@ -157,10 +157,14 @@ tryAgain:
 	blr
 	}
 
+NAMESPACE_ZOOLIB_END
+
 // =================================================================================================
 #elif ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, x86)
 #pragma mark -
 #pragma mark * CodeWarrior/Intel x86
+
+NAMESPACE_ZOOLIB_BEGIN
 
 int ZAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
 	{
@@ -259,10 +263,14 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 		}
 	}
 
+NAMESPACE_ZOOLIB_END
+
 // =================================================================================================
 #elif ZCONFIG(Compiler, MSVC) && ZCONFIG(Processor, x86)
 #pragma mark -
 #pragma mark * MSVC/Intel x86
+
+NAMESPACE_ZOOLIB_BEGIN
 
 int ZAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
 	{
@@ -387,12 +395,16 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 		}
 	}
 
+NAMESPACE_ZOOLIB_END
+
 // =================================================================================================
 #elif ZCONFIG_AtomicDumb
 #pragma mark -
 #pragma mark * Dumb version
 
 #include "zoolib/ZThreadImp.h"
+
+NAMESPACE_ZOOLIB_BEGIN
 
 static ZMtx sMutex;
 
@@ -478,5 +490,7 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 	--iAtomic->fValue;
 	sMutex.Release();
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif
