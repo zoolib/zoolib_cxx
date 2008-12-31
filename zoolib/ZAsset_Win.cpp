@@ -30,6 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::runtime_error;
 using std::string;
 
+NAMESPACE_ZOOLIB_USING
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZAssetTree_Win_MemoryMapped
