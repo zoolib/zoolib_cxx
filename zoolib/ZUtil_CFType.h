@@ -43,6 +43,9 @@ namespace ZUtil_CFType {
 CFStringRef sCreateCFString_UTF8(const string8& iString8);
 CFStringRef sCreateCFString_UTF16(const string16& iString16);
 
+CFMutableStringRef sCreateMutableCFString_UTF8(const string8& iString8);
+CFMutableStringRef sCreateMutableCFString_UTF16(const string16& iString16);
+
 string8 sAsUTF8(const CFStringRef& iCFString);
 string16 sAsUTF16(const CFStringRef& iCFString);
 

@@ -61,6 +61,22 @@ CFStringRef ZUtil_CFType::sCreateCFString_UTF16(const string16& iString16)
 	return sEmptyCFString;
 	}
 
+CFMutableStringRef ZUtil_CFType::sCreateMutableCFString_UTF8(const string8& iString8)
+	{
+	CFStringRef theStringRef = sCreateCFString_UTF8(iString8);
+	CFMutableStringRef theMutableStringRef = ::CFStringCreateMutableCopy(0, 0, theStringRef);
+	::CFRelease(theStringRef);
+	return theMutableStringRef;
+	}
+
+CFMutableStringRef ZUtil_CFType::sCreateMutableCFString_UTF16(const string16& iString16)
+	{
+	CFStringRef theStringRef = sCreateCFString_UTF16(iString16);
+	CFMutableStringRef theMutableStringRef = ::CFStringCreateMutableCopy(0, 0, theStringRef);
+	::CFRelease(theStringRef);
+	return theMutableStringRef;
+	}
+
 string8 ZUtil_CFType::sAsUTF8(const CFStringRef& iCFString)
 	{
 	if (const char *s = ::CFStringGetCStringPtr(iCFString, kCFStringEncodingUTF8))
