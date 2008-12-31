@@ -23,46 +23,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZTypes.h"
-#include <string>
+#include "zoolib/ZUnicodePriv.h"
 
-// =================================================================================================
+#include <string>
 
 NAMESPACE_ZOOLIB_BEGIN
 
-namespace ZUnicode {
-// This template and its two specializations below let us
-// determine cleanly whether wchar_t is 16 or 32 bits.
-template <int s> struct Types_T {};
-
-template <> struct Types_T<4>
-	{
-	typedef wchar_t utf32_t;
-	typedef uint16 utf16_t;
-	};
-
-template <> struct Types_T<2>
-	{
-	typedef uint32 utf32_t;
-	typedef wchar_t utf16_t;
-	};
-} // namespace ZUnicode
-
-// Definitions of UTF32, UTF16 and UTF8
-typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf32_t UTF32;
-typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf16_t UTF16;
-typedef char UTF8;
-
-/// A basic_string specialization that holds a sequence of UTF32 code units.
-typedef std::basic_string<UTF32> string32;
-
-/// A basic_string specialization that holds a sequence of UTF16 code units.
-typedef std::basic_string<UTF16> string16;
-
-/// A basic_string specialization that holds a sequence of UTF8 code units.
-/// It is actually the same type as std::string.
-typedef std::basic_string<UTF8> string8;
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZUnicode, code unit stuff
 
 namespace ZUnicode {
+
 /** \name Useful constants and lookup tables
 *///@{
 extern const uint8 sUTF8SequenceLength[256];
@@ -148,48 +120,10 @@ inline void sAppendContinuation(uint32& ioCP, uint8 iContinuation)
 	{
 	ioCP = (ioCP << 6) + (iContinuation & 0x3F);
 	}
-} // namespace ZUnicode
-
-// =================================================================================================
-
-/// Prepend a UTF32 code point to a UTF16 standard library string.
-string16 operator+(UTF32 iCP, const string16& iString);
-
-/// Append a UTF32 code point to a UTF16 standard library string.
-string16& operator+=(string16& ioString, UTF32 iCP);
-
-/// Append a UTF32 code point to a UTF16 standard library string.
-inline string16 operator+(const string16& iString, UTF32 iCP)
-	{
-	string16 temp = iString;
-	return temp += iCP;
-	}
-
-
-/// Prepend a UTF32 code point to a UTF8 standard library string.
-string8 operator+(UTF32 iCP, const string8& iString);
-
-/// Append a UTF32 code point to a UTF8 standard library string.
-string8& operator+=(string8& ioString, UTF32 iCP);
-
-/// Append a UTF32 code point to a UTF8 standard library string.
-inline string8 operator+(const string8& iString, UTF32 iCP)
-	{
-	string8 temp = iString;
-	return temp += iCP;
-	}
-
-NAMESPACE_ZOOLIB_END
-
-#include "zoolib/ZUnicodePriv.h"
-
-NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUnicode
-
-namespace ZUnicode {
+#pragma mark * ZUnicode, counting and iterators
 
 /* These are all template functions, they'll take anything that behaves like a string::iterator
 or a pointer. They call through to static member functions of template structs declared in
@@ -361,6 +295,9 @@ inline bool sWriteInc(I& ioDest, I iEnd, UTF32 iCP)
 	{ return Functions_Write_T<I>::sWriteInc(ioDest, iEnd, iCP); }
 //@}
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZUnicode, string conversion
 
 /** \name Converting strings to UTF32.
 *///@{
@@ -418,6 +355,7 @@ inline string16 sAsUTF16(const string16& iString)
 	{ return iString; }
 
 #if 1
+// This one has an optimized implementation in ZUnicode.cpp
 string16 sAsUTF16(const string8& iString);
 #else
 inline string16 sAsUTF16(const string8& iString)
@@ -458,76 +396,94 @@ inline string8 sAsUTF8(const string8& iString)
 	{ return iString; }
 //@}
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZUnicode, buffer conversion
 
 /** \name Converting buffers between UTF32, UTF16 and UTF8
 *///@{
-void sUTF32ToUTF8(const UTF32* iSource, size_t iSourceCount,
-						size_t* oSourceCount,
-						UTF8* iDest, size_t iDestCU,
-						size_t* oDestCU, size_t* oCountCP);
+void sUTF32ToUTF8(
+	const UTF32* iSource, size_t iSourceCount,
+	size_t* oSourceCount,
+	UTF8* iDest, size_t iDestCU,
+size_t* oDestCU, size_t* oCountCP);
 
-void sUTF32ToUTF8(const UTF32* iSource, size_t iSourceCount,
-						size_t* oSourceCount, size_t* oSourceCountSkipped,
-						UTF8* iDest, size_t iDestCU,
-						size_t* oDestCU, size_t* oCountCP);
-
-
-bool sUTF8ToUTF32(const UTF8* iSource, size_t iSourceCU,
-						size_t* oSourceCU,
-						UTF32* iDest, size_t iDestCount,
-						size_t* oDestCount);
-
-bool sUTF8ToUTF32(const UTF8* iSource, size_t iSourceCU,
-						size_t* oSourceCU, size_t* oSourceCUSkipped,
-						UTF32* iDest, size_t iDestCount,
-						size_t* oDestCount);
+void sUTF32ToUTF8(
+	const UTF32* iSource, size_t iSourceCount,
+	size_t* oSourceCount, size_t* oSourceCountSkipped,
+	UTF8* iDest, size_t iDestCU,
+	size_t* oDestCU, size_t* oCountCP);
 
 
-void sUTF32ToUTF16(const UTF32* iSource, size_t iSourceCount,
-						size_t* oSourceCount,
-						UTF16* iDest, size_t iDestCU,
-						size_t* oDestCU, size_t* oCountCP);
+bool sUTF8ToUTF32(
+	const UTF8* iSource, size_t iSourceCU,
+	size_t* oSourceCU,
+	UTF32* iDest, size_t iDestCount,
+	size_t* oDestCount);
 
-void sUTF32ToUTF16(const UTF32* iSource, size_t iSourceCount,
-						size_t* oSourceCount, size_t* oSourceCountSkipped,
-						UTF16* iDest, size_t iDestCU,
-						size_t* oDestCU, size_t* oCountCP);
-
-
-bool sUTF16ToUTF32(const UTF16* iSource, size_t iSourceCU,
-						size_t* oSourceCU,
-						UTF32* iDest, size_t iDestCount,
-						size_t* oDestCount);
-
-bool sUTF16ToUTF32(const UTF16* iSource, size_t iSourceCU,
-						size_t* oSourceCU, size_t* oSourceCUSkipped,
-						UTF32* iDest, size_t iDestCount,
-						size_t* oDestCount);
+bool sUTF8ToUTF32(
+	const UTF8* iSource, size_t iSourceCU,
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	UTF32* iDest, size_t iDestCount,
+	size_t* oDestCount);
 
 
-bool sUTF16ToUTF8(const UTF16* iSource, size_t iSourceCU,
-						size_t* oSourceCU,
-						UTF8* iDest, size_t iDestCU,
-						size_t* oDestCU, size_t iMaxCP, size_t* oCountCP);
+void sUTF32ToUTF16(
+	const UTF32* iSource, size_t iSourceCount,
+	size_t* oSourceCount,
+	UTF16* iDest, size_t iDestCU,
+	size_t* oDestCU, size_t* oCountCP);
 
-bool sUTF16ToUTF8(const UTF16* iSource, size_t iSourceCU,
-						size_t* oSourceCU, size_t* oSourceCUSkipped,
-						UTF8* iDest, size_t iDestCU,
-						size_t* oDestCU, size_t iMaxCP, size_t* oCountCP);
+void sUTF32ToUTF16(
+	const UTF32* iSource, size_t iSourceCount,
+	size_t* oSourceCount, size_t* oSourceCountSkipped,
+	UTF16* iDest, size_t iDestCU,
+	size_t* oDestCU, size_t* oCountCP);
 
 
-bool sUTF8ToUTF16(const UTF8* iSource, size_t iSourceCU,
-						size_t* oSourceCU,
-						UTF16* iDest, size_t iDestCU,
-						size_t* oDestCU, size_t iMaxCP, size_t* oCountCP);
+bool sUTF16ToUTF32(
+	const UTF16* iSource, size_t iSourceCU,
+	size_t* oSourceCU,
+	UTF32* iDest, size_t iDestCount,
+	size_t* oDestCount);
 
-bool sUTF8ToUTF16(const UTF8* iSource, size_t iSourceCU,
-						size_t* oSourceCU, size_t* oSourceCUSkipped,
-						UTF16* iDest, size_t iDestCU,
-						size_t* oDestCU, size_t iMaxCP, size_t* oCountCP);
+bool sUTF16ToUTF32(
+	const UTF16* iSource, size_t iSourceCU,
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	UTF32* iDest, size_t iDestCount,
+	size_t* oDestCount);
+
+
+bool sUTF16ToUTF8(
+	const UTF16* iSource, size_t iSourceCU,
+	size_t* oSourceCU,
+	UTF8* iDest, size_t iDestCU,
+	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP);
+
+bool sUTF16ToUTF8(
+	const UTF16* iSource, size_t iSourceCU,
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	UTF8* iDest, size_t iDestCU,
+	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP);
+
+
+bool sUTF8ToUTF16(
+	const UTF8* iSource, size_t iSourceCU,
+	size_t* oSourceCU,
+	UTF16* iDest, size_t iDestCU,
+	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP);
+
+bool sUTF8ToUTF16(
+	const UTF8* iSource, size_t iSourceCU,
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	UTF16* iDest, size_t iDestCU,
+	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP);
 //@}
 
-// ==================================================
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZUnicode, wstring conversion
+
 /** \name Converting from UTF8 in a std::string to UTFXX in a std::wstring.
 *///@{
 
@@ -546,7 +502,10 @@ inline std::wstring sAsWString(const std::string& iString)
 
 //@}
 
-// ==================================================
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZUnicode, characterization
+
 /** \name Simple characterization.
 *///@{
 bool sIsValid(UTF32 iCP);
@@ -557,7 +516,10 @@ bool sIsWhitespace(UTF32 iCP);
 bool sIsEOL(UTF32 iCP);
 //@}
 
-// ==================================================
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZUnicode, simple case conversion
+
 /** \name Case and other conversions.
 *///@{
 UTF32 sToUpper(UTF32 iCP);

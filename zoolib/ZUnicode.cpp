@@ -196,11 +196,13 @@ by using <code>#pragma ushort_wchar_t on</code>
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
+#include <ctype.h>
+
 #if ZCONFIG_SPI_Enabled(ICU)
 #	include "unicode/uchar.h"
 #endif
 
-#include <ctype.h>
+// =================================================================================================
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -406,18 +408,20 @@ than \a iSourceCount UTF32 code units, and do not store more than \a
 iDestCU UTF8 code units. Report the counts read and written in \a oSourceCount
 and \a oDestCU.
 */
-void ZUnicode::sUTF32ToUTF8(const UTF32* iSource, size_t iSourceCount,
-							size_t* oSourceCount,
-							UTF8* iDest, size_t iDestCU,
-							size_t* oDestCU, size_t* oCountCP)
+void ZUnicode::sUTF32ToUTF8(
+	const UTF32* iSource, size_t iSourceCount,
+	size_t* oSourceCount,
+	UTF8* iDest, size_t iDestCU,
+	size_t* oDestCU, size_t* oCountCP)
 	{
 	sUTF32ToUTF8(iSource, iSourceCount, oSourceCount, nil, iDest, iDestCU, oDestCU, oCountCP);
 	}
 
-void ZUnicode::sUTF32ToUTF8(const UTF32* iSource, size_t iSourceCount,
-							size_t* oSourceCount, size_t* oSourceCountSkipped,
-							UTF8* iDest, size_t iDestCU,
-							size_t* oDestCU, size_t* oCountCP)
+void ZUnicode::sUTF32ToUTF8(
+	const UTF32* iSource, size_t iSourceCount,
+	size_t* oSourceCount, size_t* oSourceCountSkipped,
+	UTF8* iDest, size_t iDestCU,
+	size_t* oDestCU, size_t* oCountCP)
 	{
 	const UTF32* localSource = iSource;
 	const UTF32* localSourceEnd = iSource + iSourceCount;
@@ -497,18 +501,20 @@ and \a oDestCount. Return false if fewer than \a iSourceCU UTF8 code units were
 read because there was a valid prefix at the end of the buffer that could
 represent a valid code point if more data were provided.
 */
-bool ZUnicode::sUTF8ToUTF32(const UTF8* iSource, size_t iSourceCU,
-							size_t* oSourceCU,
-							UTF32* iDest, size_t iDestCount,
-							size_t* oDestCount)
+bool ZUnicode::sUTF8ToUTF32(
+	const UTF8* iSource, size_t iSourceCU,
+	size_t* oSourceCU,
+	UTF32* iDest, size_t iDestCount,
+	size_t* oDestCount)
 	{
 	return sUTF8ToUTF32(iSource, iSourceCU, oSourceCU, nil, iDest, iDestCount, oDestCount);
 	}
 
-bool ZUnicode::sUTF8ToUTF32(const UTF8* iSource, size_t iSourceCU,
-							size_t* oSourceCU, size_t* oSourceCUSkipped,
-							UTF32* iDest, size_t iDestCount,
-							size_t* oDestCount)
+bool ZUnicode::sUTF8ToUTF32(
+	const UTF8* iSource, size_t iSourceCU,
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	UTF32* iDest, size_t iDestCount,
+	size_t* oDestCount)
 	{
 	const UTF8* localSource = iSource;
 	const UTF8* localSourceEnd = iSource + iSourceCU;
@@ -575,18 +581,20 @@ than \a iSourceCount UTF32 code units, and do not store more than \a iDestCU
 UTF16 code units. Report the code units read and written in \a oSourceCount
 and \a oDestCU, and the code points written in oCountCP.
 */
-void ZUnicode::sUTF32ToUTF16(const UTF32* iSource, size_t iSourceCount,
-							size_t* oSourceCount,
-							UTF16* iDest, size_t iDestCU,
-							size_t* oDestCU, size_t* oCountCP)
+void ZUnicode::sUTF32ToUTF16(
+	const UTF32* iSource, size_t iSourceCount,
+	size_t* oSourceCount,
+	UTF16* iDest, size_t iDestCU,
+	size_t* oDestCU, size_t* oCountCP)
 	{
 	sUTF32ToUTF16(iSource, iSourceCount, oSourceCount, nil, iDest, iDestCU, oDestCU, oCountCP);
 	}
 
-void ZUnicode::sUTF32ToUTF16(const UTF32* iSource, size_t iSourceCount,
-							size_t* oSourceCount, size_t* oSourceCountSkipped,
-							UTF16* iDest, size_t iDestCU,
-							size_t* oDestCU, size_t* oCountCP)
+void ZUnicode::sUTF32ToUTF16(
+	const UTF32* iSource, size_t iSourceCount,
+	size_t* oSourceCount, size_t* oSourceCountSkipped,
+	UTF16* iDest, size_t iDestCU,
+	size_t* oDestCU, size_t* oCountCP)
 	{
 	const UTF32* localSource = iSource;
 	const UTF32* localSourceEnd = iSource + iSourceCount;
@@ -650,18 +658,20 @@ and \a oDestCount. Return false if fewer than \a iSourceCU UTF8 code units were
 read because there was a valid prefix at the end of the buffer that could
 represent a valid code point if more data were provided.
 */
-bool ZUnicode::sUTF16ToUTF32(const UTF16* iSource, size_t iSourceCU,
-							size_t* oSourceCU,
-							UTF32* iDest, size_t iDestCount,
-							size_t* oDestCount)
+bool ZUnicode::sUTF16ToUTF32(
+	const UTF16* iSource, size_t iSourceCU,
+	size_t* oSourceCU,
+	UTF32* iDest, size_t iDestCount,
+	size_t* oDestCount)
 	{
 	return sUTF16ToUTF32(iSource, iSourceCU, oSourceCU, nil, iDest, iDestCount, oDestCount);
 	}
 
-bool ZUnicode::sUTF16ToUTF32(const UTF16* iSource, size_t iSourceCU,
-							size_t* oSourceCU, size_t* oSourceCUSkipped,
-							UTF32* iDest, size_t iDestCount,
-							size_t* oDestCount)
+bool ZUnicode::sUTF16ToUTF32(
+	const UTF16* iSource, size_t iSourceCU,
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	UTF32* iDest, size_t iDestCount,
+	size_t* oDestCount)
 	{
 	const UTF16* localSource = iSource;
 	const UTF16* localSourceEnd = iSource + iSourceCU;
@@ -732,20 +742,22 @@ the number of code points in \a oCountCP. Return false if fewer than \a iSourceC
 UTF16 code units were read because there was a valid prefix at the end of the buffer that could
 represent a valid code point if more data were provided.
 */
-bool ZUnicode::sUTF16ToUTF8(const UTF16* iSource, size_t iSourceCU,
-							size_t* oSourceCU,
-							UTF8* iDest, size_t iDestCU,
-							size_t* oDestCU, size_t iMaxCP, size_t* oCountCP)
+bool ZUnicode::sUTF16ToUTF8(
+	const UTF16* iSource, size_t iSourceCU,
+	size_t* oSourceCU,
+	UTF8* iDest, size_t iDestCU,
+	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP)
 	{
 	return sUTF16ToUTF8(iSource, iSourceCU, oSourceCU, nil,
 					iDest, iDestCU, oDestCU,
 					iMaxCP, oCountCP);
 	}
 
-bool ZUnicode::sUTF16ToUTF8(const UTF16* iSource, size_t iSourceCU,
-							size_t* oSourceCU, size_t* oSourceCUSkipped,
-							UTF8* iDest, size_t iDestCU,
-							size_t* oDestCU, size_t iMaxCP, size_t* oCountCP)
+bool ZUnicode::sUTF16ToUTF8(
+	const UTF16* iSource, size_t iSourceCU,
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	UTF8* iDest, size_t iDestCU,
+	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP)
 	{
 	const UTF16* localSource = iSource;
 	const UTF16* localSourceEnd = iSource + iSourceCU;
@@ -820,20 +832,22 @@ false if fewer than \a iSourceCU UTF8 code units were read because there was a v
 prefix at the end of the buffer that could represent a valid code point if more data
 were provided.
 */
-bool ZUnicode::sUTF8ToUTF16(const UTF8* iSource, size_t iSourceCU,
-							size_t* oSourceCU,
-							UTF16* iDest, size_t iDestCU,
-							size_t* oDestCU, size_t iMaxCP, size_t* oCountCP)
+bool ZUnicode::sUTF8ToUTF16(
+	const UTF8* iSource, size_t iSourceCU,
+	size_t* oSourceCU,
+	UTF16* iDest, size_t iDestCU,
+	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP)
 	{
 	return sUTF8ToUTF16(iSource, iSourceCU, oSourceCU, nil,
 			iDest, iDestCU, oDestCU,
 			iMaxCP, oCountCP);
 	}
 
-bool ZUnicode::sUTF8ToUTF16(const UTF8* iSource, size_t iSourceCU,
-							size_t* oSourceCU, size_t* oSourceCUSkipped,
-							UTF16* iDest, size_t iDestCU,
-							size_t* oDestCU, size_t iMaxCP, size_t* oCountCP)
+bool ZUnicode::sUTF8ToUTF16(
+	const UTF8* iSource, size_t iSourceCU,
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	UTF16* iDest, size_t iDestCU,
+	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP)
 	{
 	const UTF8* localSource = iSource;
 	const UTF8* localSourceEnd = iSource + iSourceCU;

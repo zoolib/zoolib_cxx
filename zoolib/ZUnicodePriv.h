@@ -22,7 +22,53 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUnicodePriv__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZTypes.h"
+
+#include <string>
+
 NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Unicode string typedefs
+
+/// A basic_string specialization that holds a sequence of UTF32 code units.
+typedef std::basic_string<UTF32> string32;
+
+/// A basic_string specialization that holds a sequence of UTF16 code units.
+typedef std::basic_string<UTF16> string16;
+
+/// A basic_string specialization that holds a sequence of UTF8 code units.
+/// It is actually the same type as std::string.
+typedef std::basic_string<UTF8> string8;
+
+
+/// Prepend a UTF32 code point to a UTF16 standard library string.
+string16 operator+(UTF32 iCP, const string16& iString);
+
+/// Append a UTF32 code point to a UTF16 standard library string.
+string16& operator+=(string16& ioString, UTF32 iCP);
+
+/// Append a UTF32 code point to a UTF16 standard library string.
+inline string16 operator+(const string16& iString, UTF32 iCP)
+	{
+	string16 temp = iString;
+	return temp += iCP;
+	}
+
+
+/// Prepend a UTF32 code point to a UTF8 standard library string.
+string8 operator+(UTF32 iCP, const string8& iString);
+
+/// Append a UTF32 code point to a UTF8 standard library string.
+string8& operator+=(string8& ioString, UTF32 iCP);
+
+/// Append a UTF32 code point to a UTF8 standard library string.
+inline string8 operator+(const string8& iString, UTF32 iCP)
+	{
+	string8 temp = iString;
+	return temp += iCP;
+	}
 
 namespace ZUnicode {
 
