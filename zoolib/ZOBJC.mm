@@ -17,28 +17,9 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLA
 OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
+#include "zoolib/ZOBJC.h"
 
-#ifndef __ZOBJC__
-#define __ZOBJC__ 1
-#include "zconfig.h"
-
-// The DESTROY macro from renaissance is useful. At some point, if we have
-// renaissance available, then we'll pull the definition from there.
-#ifndef DESTROY
-#	ifdef __OBJC__
-#		define DESTROY(a) do { if (a) {[a release]; a = 0; } } while(0)
-#	else
-#		define DESTROY(a) $ONLY_USE_IN_OBJECTIVE_C$
-#	endif
-#endif
-
-#ifdef __cplusplus
-
-#ifdef __OBJC__
-	@class NSAutoreleasePool;
-#else
-	typedef void* NSAutoreleasePool;
-#endif
+#include <Foundation/NSAutoReleasePool.h>
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -46,18 +27,14 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZAutoRelease
 
-class ZAutoRelease
+ZAutoRelease::ZAutoRelease()
 	{
-public:
-	ZAutoRelease();
-	~ZAutoRelease();
+	fPool = [[NSAutoreleasePool alloc] init];
+	}
 
-private:
-	NSAutoreleasePool* fPool;
-	};
+ZAutoRelease::~ZAutoRelease()
+	{
+	[fPool release];
+	}
 
 NAMESPACE_ZOOLIB_END
-
-#endif // __cplusplus
-
-#endif // __ZOBJC__
