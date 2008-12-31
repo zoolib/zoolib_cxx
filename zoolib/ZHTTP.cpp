@@ -39,6 +39,7 @@ NAMESPACE_ZOOLIB_USING
 using std::max;
 using std::min;
 using std::pair;
+using std::replace;
 using std::string;
 using std::vector;
 

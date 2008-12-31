@@ -64,20 +64,6 @@ size_t ZStreamR_CFStream::Imp_CountReadable()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStreamerR_CFStream
-
-ZStreamerR_CFStream::ZStreamerR_CFStream(CFReadStreamRef iCFStream)
-:	fStream(iCFStream)
-	{}
-
-ZStreamerR_CFStream::~ZStreamerR_CFStream()
-	{}
-
-const ZStreamR& ZStreamerR_CFStream::GetStreamR()
-	{ return fStream; }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZStreamW_CFStream
 
 ZStreamW_CFStream::ZStreamW_CFStream(CFWriteStreamRef iCFStream)
@@ -107,20 +93,6 @@ void ZStreamW_CFStream::Imp_Write(const void* iSource, size_t iCount, size_t* oC
 			*oCountWritten = result;
 		}
 	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerW_CFStream
-
-ZStreamerW_CFStream::ZStreamerW_CFStream(CFWriteStreamRef iCFStream)
-:	fStream(iCFStream)
-	{}
-
-ZStreamerW_CFStream::~ZStreamerW_CFStream()
-	{}
-
-const ZStreamW& ZStreamerW_CFStream::GetStreamW()
-	{ return fStream; }
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
 

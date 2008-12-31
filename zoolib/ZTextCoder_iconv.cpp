@@ -106,7 +106,7 @@ size_t static sIconv(
 	// type to which we can unconditionally cast that will then be implicitly cast to
 	// the appropriate type. So we pass iconv to the overloaded sIconvIntermediary function,
 	// the appropriate version of which will be selected by the compiler. One version
-	// simply calls the passed in function, the other does an appropriate case.
+	// simply calls the passed in function, the other does an appropriate cast.
 	// The actual code generated will generally be identical to a simple invocation of iconv.
 
 	return sIconvIntermediary(iconv, cd, inbuf, inbytesleft, outbuf, outbytesleft);

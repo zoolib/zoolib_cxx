@@ -24,9 +24,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h"
 
-NAMESPACE_ZOOLIB_USING
-
+using std::find;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -321,3 +322,5 @@ ZServer_Callback::ZServer_Callback(Callback_t iCallback, void* iRefcon)
 
 ZServer::Responder* ZServer_Callback::CreateResponder()
 	{ return new Responder(fCallback, fRefcon); }
+
+NAMESPACE_ZOOLIB_END

@@ -58,7 +58,7 @@ T* sFirstOrNil(std::vector<T> iVec)
 assumed to be unordered, so we use find to make the determination. */
 template <typename T, typename S>
 bool sContains(const std::vector<T>& iVector, S iElement)
-	{ return iVector.end() != find(iVector.begin(), iVector.end(), iElement); }
+	{ return iVector.end() != std::find(iVector.begin(), iVector.end(), iElement); }
 
 
 /** Returns true if iSet contains iElement. */
@@ -79,7 +79,7 @@ to ioVector. */
 template <typename T>
 bool sPushBackIfNotContains(std::vector<T>& ioVector, T iElement)
 	{
-	typename std::vector<T>::iterator i = find(ioVector.begin(), ioVector.end(), iElement);
+	typename std::vector<T>::iterator i = std::find(ioVector.begin(), ioVector.end(), iElement);
 	if (i != ioVector.end())
 		return false;
 	ioVector.push_back(iElement);
@@ -92,7 +92,8 @@ by iDebugLevel, that iElement is not already present in ioVector. */
 template <typename T>
 void sPushBackMustNotContain(const int iDebugLevel, std::vector<T>& ioVector, T iElement)
 	{
-	ZAssertStop(iDebugLevel, ioVector.end() == find(ioVector.begin(), ioVector.end(), iElement));
+	ZAssertStop(iDebugLevel,
+		ioVector.end() == std::find(ioVector.begin(), ioVector.end(), iElement));
 	ioVector.push_back(iElement);
 	}
 
@@ -127,7 +128,7 @@ false is returned. */
 template <typename T>
 bool sEraseIfContains(std::vector<T>& ioVector, T iElement)
 	{
-	typename std::vector<T>::iterator i = find(ioVector.begin(), ioVector.end(), iElement);
+	typename std::vector<T>::iterator i = std::find(ioVector.begin(), ioVector.end(), iElement);
 	if (i == ioVector.end())
 		return false;
 	ioVector.erase(i);
@@ -156,7 +157,7 @@ template <typename T>
 typename std::vector<T>::iterator sEraseMustContain(
 	const int iDebugLevel, std::vector<T>& ioVector, T iElement)
 	{
-	typename std::vector<T>::iterator i = find(ioVector.begin(), ioVector.end(), iElement);
+	typename std::vector<T>::iterator i = std::find(ioVector.begin(), ioVector.end(), iElement);
 	ZAssertStop(iDebugLevel, i != ioVector.end());
 	return ioVector.erase(i);
 	}

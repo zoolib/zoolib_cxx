@@ -74,8 +74,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#endif
 
 		#ifndef _UINT32
-			typedef UInt32 uint32;
 			#define _UINT32 1
+			typedef UInt32 uint32;
 		#endif
 
 		typedef int64_t int64;
@@ -98,12 +98,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		typedef uint64_t uint64;
 
 #	endif
+
 #endif // defined(ZStdInt_ProjectHeader)
 
-NAMESPACE_ZOOLIB_BEGIN
-
 typedef int64 bigtime_t;
-
-NAMESPACE_ZOOLIB_END
 
 #endif // __ZStdInt__

@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h"
 
 using std::string;
+using std::strncpy;
 
 NAMESPACE_ZOOLIB_BEGIN
 

@@ -541,7 +541,11 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs& oNPNF)
 	// haven't determined which is correct, or if it's a host-specific thing.
 	oNPNF.setexception = nil;
 
-	oNPNF.write = (NPN_WriteProcPtr)sWrite;
+	#if defined(NewNPN_WriteProc)
+		oNPNF.write = sWrite;
+	#else
+		oNPNF.write = (NPN_WriteProcPtr)sWrite;
+	#endif
 
 	#if defined(NewNPN_IntFromIdentifierProc)
 		oNPNF.intfromidentifier = sIntFromIdentifier;

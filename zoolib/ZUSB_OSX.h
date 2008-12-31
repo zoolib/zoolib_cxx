@@ -149,7 +149,8 @@ private:
 	class StreamerW;
 	};
 
-#endif // ZCONFIG_API_Enabled(USB_OSX)
 NAMESPACE_ZOOLIB_END
+
+#endif // ZCONFIG_API_Enabled(USB_OSX)
 
 #endif // __ZUSB_OSX__

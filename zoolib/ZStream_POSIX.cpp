@@ -24,10 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <errno.h>
 #include <stdexcept> // for range_error
 
-NAMESPACE_ZOOLIB_USING
-
-using std::range_error;
-
 // Neither the MSL headers nor the Windows headers have fseeko or ftello.
 
 #if defined(_MSL_USING_MW_C_HEADERS)
@@ -132,6 +128,10 @@ static uint64 sGetSize(FILE* iFILE)
 // This one's difficult to support
 //static void sSetSize(FILE* iFILE, uint64 iSize)
 
+NAMESPACE_ZOOLIB_BEGIN
+
+using std::range_error;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamR_FILE
@@ -153,7 +153,7 @@ ZStreamR_FILE::~ZStreamR_FILE()
 	}
 
 void ZStreamR_FILE::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ ::sRead(fFILE, iDest, iCount, oCountRead); }
+	{ sRead(fFILE, iDest, iCount, oCountRead); }
 
 // =================================================================================================
 #pragma mark -
@@ -176,19 +176,19 @@ ZStreamRPos_FILE::~ZStreamRPos_FILE()
 	}
 
 void ZStreamRPos_FILE::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ ::sRead(fFILE, iDest, iCount, oCountRead); }
+	{ sRead(fFILE, iDest, iCount, oCountRead); }
 
 uint64 ZStreamRPos_FILE::Imp_GetPosition()
-	{ return ::sGetPosition(fFILE); }
+	{ return sGetPosition(fFILE); }
 
 void ZStreamRPos_FILE::Imp_SetPosition(uint64 iPosition)
 	{
-	if (!::sSetPosition(fFILE, iPosition))
+	if (!sSetPosition(fFILE, iPosition))
 		throw range_error("ZStreamRPos_FILE::Imp_SetPosition");
 	}
 
 uint64 ZStreamRPos_FILE::Imp_GetSize()
-	{ return ::sGetSize(fFILE); }
+	{ return sGetSize(fFILE); }
 
 // =================================================================================================
 #pragma mark -
@@ -211,7 +211,7 @@ ZStreamW_FILE::~ZStreamW_FILE()
 	}
 
 void ZStreamW_FILE::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
-	{ ::sWrite(fFILE, iSource, iCount, oCountWritten); }
+	{ sWrite(fFILE, iSource, iCount, oCountWritten); }
 
 void ZStreamW_FILE::Imp_Flush()
 	{
@@ -518,3 +518,5 @@ FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
 	{ return nil; }
 
 #endif
+
+NAMESPACE_ZOOLIB_END

@@ -23,10 +23,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(CoreFoundation)
-#include <CoreFoundation/CFStream.h>
-
 #include "zoolib/ZStreamer.h"
+
+#if ZCONFIG_SPI_Enabled(CoreFoundation)
+
+#include <CoreFoundation/CFStream.h>
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -48,22 +49,7 @@ private:
 	CFReadStreamRef fCFStream;
 	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerR_CFStream
-
-class ZStreamerR_CFStream : public ZStreamerR
-	{
-public:
-	ZStreamerR_CFStream(CFReadStreamRef iCFStream);
-	virtual ~ZStreamerR_CFStream();
-
-// From ZStreamerR
-	virtual const ZStreamR& GetStreamR();
-
-protected:
-	ZStreamR_CFStream fStream;
-	};
+typedef ZStreamerR_T<ZStreamR_CFStream> ZStreamerR_CFStream;
 
 // =================================================================================================
 #pragma mark -
@@ -82,22 +68,7 @@ private:
 	CFWriteStreamRef fCFStream;
 	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamerW_CFStream
-
-class ZStreamerW_CFStream : public ZStreamerW
-	{
-public:
-	ZStreamerW_CFStream(CFWriteStreamRef iCFStream);
-	virtual ~ZStreamerW_CFStream();
-
-// From ZStreamerW
-	virtual const ZStreamW& GetStreamW();
-
-protected:
-	ZStreamW_CFStream fStream;
-	};
+typedef ZStreamerW_T<ZStreamW_CFStream> ZStreamerW_CFStream;
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
 
@@ -107,14 +78,8 @@ protected:
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
 
-
-// Can't pick up these headers directly in some circumstances
-//#include <CoreGraphics/CGDataProvider.h>
-//#include <CoreGraphics/CGDataConsumer.h>
-
-// So we use the encompassing framework header
-#include <ApplicationServices/ApplicationServices.h>
-
+#include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGDataProvider.h)
+#include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGDataConsumer.h)
 
 namespace ZStream_MacOSX {
 

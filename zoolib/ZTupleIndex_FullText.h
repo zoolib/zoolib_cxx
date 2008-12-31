@@ -68,10 +68,10 @@ private:
 		const UTF32 fCP2;
 		};
 
-	static void sGetCPChunks(const string& iPattern, set<CPChunk>& oCPChunks);
+	static void sGetCPChunks(const std::string& iPattern, std::set<CPChunk>& oCPChunks);
 
 	size_t fCountTuples;
-	map<CPChunk, set<uint64> > fMap;
+	std::map<CPChunk, std::set<uint64> > fMap;
 
 	ZTName fPropName;
 	};
