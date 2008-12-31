@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <oleauto.h>
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
 using std::vector;
@@ -843,5 +843,7 @@ ZRef<Device> Manager_BBDevMgr::Open(uint64 iDeviceID)
 	}
 
 } // namespace ZBlackBerry
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(BlackBerry_BBDevMgr)
