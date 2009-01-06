@@ -35,53 +35,19 @@ namespace ZNetscape {
 
 class NPObjectG;
 
-void sRetainG(NPObject* iObject);
-void sReleaseG(NPObject* iObject);
-
-void sRetain(NPObjectG* iObject);
-void sRelease(NPObjectG* iObject);
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * NPVariantG
 
-class NPVariantG : public NPVariantBase
-	{
-public:
-	NPVariantG();
-	NPVariantG(const NPVariant& iOther);
-	~NPVariantG();
-	NPVariantG& operator=(const NPVariant& iOther);
+typedef NPVariant_T<NPObjectG> NPVariantG;
 
-	NPVariantG(bool iValue);
-	NPVariantG(int32 iValue);
-	NPVariantG(double iValue);
-	NPVariantG(const std::string& iValue);
-	NPVariantG(NPObjectG* iValue);
+void sRelease(NPVariantG& iNPVariantG);
 
-	NPVariantG& operator=(bool iValue);
-	NPVariantG& operator=(int32 iValue);
-	NPVariantG& operator=(double iValue);
-	NPVariantG& operator=(const std::string& iValue);
-	NPVariantG& operator=(NPObjectG* iValue);
+// =================================================================================================
+#pragma mark -
+#pragma mark * ObjectG
 
-	void SetVoid();
-	void SetNull();
-	void SetBool(bool iValue);
-	void SetInt32(int32 iValue);
-	void SetDouble(double iValue);
-	void SetString(const std::string& iValue);
-
-	NPObjectG* GetObject() const;
-	bool GetObject(NPObjectG*& oValue) const;
-	NPObjectG* DGetObject(NPObjectG* iDefault) const;
-	void SetObject(NPObjectG* iValue);
-
-private:
-	void pRelease();
-	void pRetain(NPObject* iObject) const;
-	void pCopyFrom(const NPVariant& iOther);
-	};
+typedef Object_T<NPVariantG> ObjectG;
 
 // =================================================================================================
 #pragma mark -
@@ -94,61 +60,41 @@ protected:
 	~NPObjectG();
 
 public:
+	static bool sIsString(NPIdentifier iNPI);
+	static std::string sAsString(NPIdentifier iNPI);
+	static int32_t sAsInt(NPIdentifier iNPI);
+
+	static NPIdentifier sAsNPI(const std::string& iName);
+	static NPIdentifier sAsNPI(int32_t iInt);
+
+	void Retain();
+	void Release();
+
 	bool HasMethod(const std::string& iName);
 	bool Invoke(
 		const std::string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult);
 	bool InvokeDefault(const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult);
 
 	bool HasProperty(const std::string& iName);
+	bool HasProperty(size_t iIndex);
+
 	bool GetProperty(const std::string& iName, NPVariantG& oResult);
+	bool GetProperty(size_t iIndex, NPVariantG& oResult);
+
 	bool SetProperty(const std::string& iName, const NPVariantG& iValue);
+	bool SetProperty(size_t iIndex, const NPVariantG& iValue);
+
 	bool RemoveProperty(const std::string& iName);
+	bool RemoveProperty(size_t iIndex);
 
-	static std::string sAsString(NPIdentifier iNPI);
-	static NPIdentifier sAsNPI(const std::string& iName);
-	};
+	NPVariantG Invoke(const std::string& iName, const NPVariantG* iArgs, size_t iCount);
+	NPVariantG Invoke(const std::string& iName);
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ObjectG
+	NPVariantG InvokeDefault(const NPVariantG* iArgs, size_t iCount);
+	NPVariantG InvokeDefault();
 
-class ObjectG : public NPObjectG
-	{
-protected:
-	ObjectG();
-	virtual ~ObjectG();
-
-	virtual void Imp_Invalidate();
-
-	virtual bool Imp_HasMethod(const std::string& iName);
-	virtual bool Imp_Invoke(
-		const std::string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult);
-	virtual bool Imp_InvokeDefault(const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult);
-
-	virtual bool Imp_HasProperty(const std::string& iName);
-	virtual bool Imp_GetProperty(const std::string& iName, NPVariantG& oResult);
-	virtual bool Imp_SetProperty(const std::string& iName, const NPVariantG& iValue);
-	virtual bool Imp_RemoveProperty(const std::string& iName);
-
-private:
-	static NPObject* sAllocate(NPP npp, NPClass *aClass);
-	static void sDeallocate(NPObject* npobj);
-	static void sInvalidate(NPObject* npobj);
-
-	static bool sHasMethod(NPObject* npobj, NPIdentifier name);
-
-	static bool sInvoke(NPObject* npobj,
-		NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result);
-
-	static bool sInvokeDefault(NPObject* npobj,
-		const NPVariant* args, uint32_t argCount, NPVariant* result);
-
-	static bool sHasProperty(NPObject*  npobj, NPIdentifier name);
-	static bool sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result);
-	static bool sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value);
-	static bool sRemoveProperty(NPObject* npobj, NPIdentifier name);
-
-	static NPClass sNPClass;
+	NPVariantG GetProperty(const std::string& iName);
+	NPVariantG GetProperty(size_t iIndex);
 	};
 
 // =================================================================================================
@@ -281,7 +227,8 @@ public:
 
 	virtual int32 WriteReady(NPP instance, NPStream* stream) = 0;
 
-	virtual int32 Write(NPP instance, NPStream* stream, int32_t offset, int32_t len, void* buffer) = 0;
+	virtual int32 Write(NPP instance,
+		NPStream* stream, int32_t offset, int32_t len, void* buffer) = 0;
 
 	virtual void StreamAsFile(NPP instance, NPStream* stream, const char* fname) = 0;
 
@@ -337,7 +284,6 @@ private:
 		std::vector<char> fGlue_Shutdown;
 	#endif
 	};
-
 
 // =================================================================================================
 #pragma mark -

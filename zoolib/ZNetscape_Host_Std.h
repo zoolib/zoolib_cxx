@@ -26,12 +26,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Netscape)
 
-#include <map>
+#include <set>
 #include <vector>
 
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZNetscape {
+
+class Host_Std;
 
 // =================================================================================================
 #pragma mark -
@@ -43,6 +45,27 @@ public:
 	HostMeister_Std();
 	virtual ~HostMeister_Std();
 
+	static Host_Std* sHostFromNPP_Std(NPP npp);
+	static Host_Std* sHostFromStream_Std(NPStream* iNPStream);
+
+	virtual NPError GetURL(NPP npp, const char* URL, const char* window);
+
+	virtual NPError PostURL(NPP npp,
+		const char* URL, const char* window, uint32 len, const char* buf, NPBool file);
+
+	virtual NPError RequestRead(NPStream* stream, NPByteRange* rangeList);
+
+	virtual NPError NewStream(NPP npp,
+		NPMIMEType type, const char* window, NPStream** stream);
+
+	virtual int32 Write(NPP npp, NPStream* stream, int32 len, void* buffer);
+
+	virtual NPError DestroyStream(NPP npp, NPStream* stream, NPReason reason);
+
+	virtual void Status(NPP npp, const char* message);
+
+	virtual const char* UserAgent(NPP npp);
+
 	virtual void* MemAlloc(uint32 size);
 
 	virtual void MemFree(void* ptr);
@@ -52,6 +75,25 @@ public:
 	virtual void ReloadPlugins(NPBool reloadPages);
 
 	virtual void* GetJavaEnv();
+
+	virtual void* GetJavaPeer(NPP npp);
+
+	virtual NPError GetURLNotify(NPP npp,
+		const char* URL, const char* window, void* notifyData);
+
+	virtual NPError PostURLNotify(NPP npp,
+		const char* URL, const char* window,
+		uint32 len, const char* buf, NPBool file, void* notifyData);
+
+	virtual NPError GetValue(NPP npp, NPNVariable variable, void* ret_value);
+
+	virtual NPError SetValue(NPP npp, NPPVariable variable, void* value);
+
+	virtual void InvalidateRect(NPP npp, NPRect* rect);
+
+	virtual void InvalidateRegion(NPP npp, NPRegion region);
+
+	virtual void ForceRedraw(NPP npp);
 
 	virtual NPIdentifier GetStringIdentifier(const NPUTF8* name);
 
@@ -66,27 +108,40 @@ public:
 
 	virtual int32_t IntFromIdentifier(NPIdentifier identifier);
 
+	virtual NPObject* CreateObject(NPP npp, NPClass* aClass);
+
 	virtual NPObject* RetainObject(NPObject* obj);
 
 	virtual void ReleaseObject(NPObject* obj);
+
+	virtual bool Invoke(NPP npp,
+		NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount,
+		NPVariant* result);
+
+	virtual bool InvokeDefault(NPP npp,
+		NPObject* obj, const NPVariant* args, uint32_t argCount, NPVariant* result);
+
+	virtual bool Evaluate(NPP npp,
+		NPObject* obj, NPString* script, NPVariant* result);
+
+	virtual bool GetProperty(NPP npp,
+		NPObject* obj, NPIdentifier propertyName, NPVariant* result);
+
+	virtual bool SetProperty(NPP npp,
+		NPObject* obj, NPIdentifier propertyName, const NPVariant* value);
+
+	virtual bool RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName);
+
+	virtual bool HasProperty(NPP, NPObject* npobj, NPIdentifier propertyName);
+
+	virtual bool HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName);
 
 	virtual void ReleaseVariantValue(NPVariant* variant);
 
 	virtual void SetException(NPObject* obj, const NPUTF8* message);
 
 private:
-	struct Identifier
-		{
-		bool fIsString;
-		union
-			{
-			const char* fAsString;
-			int fAsInt;
-			};
-		};
-
-	std::map<std::string, Identifier*> fMap_Strings;
-	std::map<int, Identifier*> fMap_Ints;
+	std::set<std::string> fStrings;
 	};
 
 // =================================================================================================
@@ -137,30 +192,6 @@ public:
 
 	virtual void Host_ForceRedraw(NPP npp);
 
-	virtual NPObject* Host_CreateObject(NPP npp, NPClass* aClass);
-
-	virtual bool Host_Invoke(NPP npp,
-		NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount,
-		NPVariant* result);
-
-	virtual bool Host_InvokeDefault(NPP npp,
-		NPObject* obj, const NPVariant* args, uint32_t argCount, NPVariant* result);
-
-	virtual bool Host_Evaluate(NPP npp,
-		NPObject* obj, NPString* script, NPVariant* result);
-
-	virtual bool Host_GetProperty(NPP npp,
-		NPObject* obj, NPIdentifier propertyName, NPVariant* result);
-
-	virtual bool Host_SetProperty(NPP npp,
-		NPObject* obj, NPIdentifier propertyName, const NPVariant* value);
-
-	virtual bool Host_RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName);
-
-	virtual bool Host_HasProperty(NPP, NPObject* npobj, NPIdentifier propertyName);
-
-	virtual bool Host_HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName);
-
 // Our protocol
 	void Create(const std::string& iURL, const std::string& iMIME);
 	void Destroy();
@@ -177,7 +208,7 @@ public:
 
 	void DeliverData();
 
-	NPObjectH* GetScriptableNPObject();
+	NPObjectH* CopyScriptableNPObject();
 
 	void DoActivate(bool iActivate);
 	void DoFocus(bool iFocused);

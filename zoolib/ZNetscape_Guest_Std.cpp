@@ -144,8 +144,7 @@ int16 Guest_Std::Guest_HandleEvent(void* event)
 	}
 
 void Guest_Std::Guest_URLNotify(const char* url, NPReason reason, void* notifyData)
-	{
-	}
+	{}
 
 NPError Guest_Std::Guest_GetValue(NPPVariable iNPPVariable, void* oValue)
 	{ return NPERR_GENERIC_ERROR; }

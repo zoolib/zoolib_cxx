@@ -33,6 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::string;
 
+// =================================================================================================
+
 extern "C" {
 
 #if __MACH__
@@ -58,7 +60,7 @@ NPError NP_Shutdown()
 // For compatibility with CFM and Mozilla-type browsers
 #pragma export on
 
-int main(NPNetscapeFuncs* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc);
+int main(NPNetscapeFuncs*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
 int main(NPNetscapeFuncs* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
 	{
 	return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->
@@ -72,225 +74,26 @@ int main(NPNetscapeFuncs* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPt
 
 NAMESPACE_ZOOLIB_BEGIN
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZNetscape
-
 namespace ZNetscape {
-
-void sRetainG(NPObject* iObject)
-	{ GuestMeister::sGet()->Host_RetainObject(iObject); }
-
-void sReleaseG(NPObject* iObject)
-	{ GuestMeister::sGet()->Host_ReleaseObject(iObject); }
-
-void sRetain(NPObjectG* iObject)
-	{ sRetainG(iObject); }
-
-void sRelease(NPObjectG* iObject)
-	{ sReleaseG(iObject); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * NPVariantG
 
-void NPVariantG::pRelease()
-	{
-	GuestMeister::sGet()->Host_ReleaseVariantValue(this);
-	type = NPVariantType_Void;
-	}
+void sRelease(NPVariantG& iNPVariantG)
+	{ GuestMeister::sGet()->Host_ReleaseVariantValue(&iNPVariantG); }
 
-void NPVariantG::pRetain(NPObject* iObject) const
-	{ GuestMeister::sGet()->Host_RetainObject(iObject); }
+// =================================================================================================
+#pragma mark -
+#pragma mark * ObjectG
 
-void NPVariantG::pCopyFrom(const NPVariant& iOther)
-	{
-	switch (iOther.type)
-		{
-		case NPVariantType_Void:
-		case NPVariantType_Null:
-			break;
-		case NPVariantType_Bool:
-			{
-			value.boolValue = iOther.value.boolValue;
-			break;
-			}
-		case NPVariantType_Int32:
-			{
-			value.intValue = iOther.value.intValue;
-			break;
-			}
-		case NPVariantType_Double:
-			{
-			value.doubleValue = iOther.value.doubleValue;
-			break;
-			}
-		case NPVariantType_String:
-			{
-			this->pSetString(
-				sNPStringCharsConst(iOther.value.stringValue),
-				sNPStringLengthConst(iOther.value.stringValue));
-			break;
-			}
-		case NPVariantType_Object:
-			{
-			value.objectValue = iOther.value.objectValue;
-			this->pRetain(value.objectValue);
-			break;
-			}
-		}
-	type = iOther.type;
-	}
-
-NPVariantG::NPVariantG()
-	{}
-
-NPVariantG::NPVariantG(const NPVariant& iOther)
-	{
-	ZAssert(this != &iOther);
-	this->pCopyFrom(iOther);
-	}
-
-NPVariantG::~NPVariantG()
-	{
-	this->pRelease();
-	}
-
-NPVariantG& NPVariantG::operator=(const NPVariant& iOther)
-	{
-	if (this != &iOther)
-		{
-		this->pRelease();
-		this->pCopyFrom(iOther);
-		}
-	return *this;
-	}
-
-NPVariantG::NPVariantG(bool iValue)
-:	NPVariantBase(iValue)
-	{}
-
-NPVariantG::NPVariantG(int32 iValue)
-:	NPVariantBase(iValue)
-	{}
-
-NPVariantG::NPVariantG(double iValue)
-:	NPVariantBase(iValue)
-	{}
-
-NPVariantG::NPVariantG(const string& iValue)
-:	NPVariantBase(iValue)
-	{}
-
-NPVariantG::NPVariantG(NPObjectG* iValue)
-	{
-	type = NPVariantType_Void;
-	this->SetObject(iValue);
-	}
-
-NPVariantG& NPVariantG::operator=(bool iValue)
-	{
-	this->SetBool(iValue);
-	return *this;
-	}
-
-NPVariantG& NPVariantG::operator=(int32 iValue)
-	{
-	this->SetInt32(iValue);
-	return *this;
-	}
-
-NPVariantG& NPVariantG::operator=(double iValue)
-	{
-	this->SetDouble(iValue);
-	return *this;
-	}
-
-NPVariantG& NPVariantG::operator=(const string& iValue)
-	{
-	this->SetString(iValue);
-	return *this;
-	}
-
-NPVariantG& NPVariantG::operator=(NPObjectG* iValue)
-	{
-	this->SetObject(iValue);
-	return *this;
-	}
-
-void NPVariantG::SetVoid()
-	{
-	this->pRelease();
-	type = NPVariantType_Void;
-	}
-
-void NPVariantG::SetNull()
-	{
-	this->pRelease();
-	type = NPVariantType_Null;
-	}
-
-void NPVariantG::SetBool(bool iValue)
-	{
-	this->pRelease();
-	type = NPVariantType_Bool;
-	value.boolValue = iValue;
-	}
-
-void NPVariantG::SetInt32(int32 iValue)
-	{
-	this->pRelease();
-	type = NPVariantType_Int32;
-	value.intValue = iValue;
-	}
-
-void NPVariantG::SetDouble(double iValue)
-	{
-	this->pRelease();
-	type = NPVariantType_Double;
-	value.doubleValue = iValue;
-	}
-
-void NPVariantG::SetString(const string& iValue)
-	{
-	this->pRelease();
-	this->pSetString(iValue);
-	type = NPVariantType_String;
-	}
-
-NPObjectG* NPVariantG::GetObject() const
-	{ return this->DGetObject(nil); }
-
-bool NPVariantG::GetObject(NPObjectG*& oValue) const
-	{
-	if (type != NPVariantType_String)
-		return false;
-	oValue = static_cast<NPObjectG*>(value.objectValue);
-	this->pRetain(oValue);
-	return true;	
-	}
-
-NPObjectG* NPVariantG::DGetObject(NPObjectG* iDefault) const
-	{
-	NPObjectG* result = iDefault;
-	if (type == NPVariantType_Object)
-		result = static_cast<NPObjectG*>(value.objectValue);
-
-	this->pRetain(result);
-	return result;
-	}
-
-void NPVariantG::SetObject(NPObjectG* iValue)
-	{
-	this->pRelease();
-	value.objectValue = iValue;
-	this->pRetain(iValue);
-	type = NPVariantType_Object;	
-	}
+ZNETSCAPE_OBJECT_SETUP(NPVariantG);
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * NPObjectG
+
+static NPP fake = nil;
 
 NPObjectG::NPObjectG()
 	{}
@@ -298,7 +101,34 @@ NPObjectG::NPObjectG()
 NPObjectG::~NPObjectG()
 	{}
 
-static NPP fake = (NPP)1;
+bool NPObjectG::sIsString(NPIdentifier iNPI)
+	{ return GuestMeister::sGet()->Host_IdentifierIsString(iNPI); }
+
+string NPObjectG::sAsString(NPIdentifier iNPI)
+	{
+	string result;
+	if (NPUTF8* theString = GuestMeister::sGet()->Host_UTF8FromIdentifier(iNPI))
+		{
+		result = theString;
+		free(theString);
+		}
+	return result;
+	}
+
+int32_t NPObjectG::sAsInt(NPIdentifier iNPI)
+	{ return GuestMeister::sGet()->Host_IntFromIdentifier(iNPI); }
+
+NPIdentifier NPObjectG::sAsNPI(const string& iName)
+	{ return GuestMeister::sGet()->Host_GetStringIdentifier(iName.c_str()); }
+
+NPIdentifier NPObjectG::sAsNPI(int32_t iInt)
+	{ return GuestMeister::sGet()->Host_GetIntIdentifier(iInt); }
+
+void NPObjectG::Retain()
+	{ GuestMeister::sGet()->Host_RetainObject(this); }
+
+void NPObjectG::Release()
+	{ GuestMeister::sGet()->Host_ReleaseObject(this); }
 
 bool NPObjectG::HasMethod(const string& iName)
 	{ return GuestMeister::sGet()->Host_HasMethod(fake, this, sAsNPI(iName)); }
@@ -315,163 +145,68 @@ bool NPObjectG::InvokeDefault(const NPVariantG* iArgs, size_t iCount, NPVariantG
 bool NPObjectG::HasProperty(const string& iName)
 	{ return GuestMeister::sGet()->Host_HasProperty(fake, this, sAsNPI(iName)); }
 
+bool NPObjectG::HasProperty(size_t iIndex)
+	{ return GuestMeister::sGet()->Host_HasProperty(fake, this, sAsNPI(iIndex)); }
+
 bool NPObjectG::GetProperty(const string& iName, NPVariantG& oResult)
 	{ return GuestMeister::sGet()->Host_GetProperty(fake, this, sAsNPI(iName), &oResult); }
+
+bool NPObjectG::GetProperty(size_t iIndex, NPVariantG& oResult)
+	{ return GuestMeister::sGet()->Host_GetProperty(fake, this, sAsNPI(iIndex), &oResult); }
 
 bool NPObjectG::SetProperty(const string& iName, const NPVariantG& iValue)
 	{ return GuestMeister::sGet()->Host_SetProperty(fake, this, sAsNPI(iName), &iValue); }
 
+bool NPObjectG::SetProperty(size_t iIndex, const NPVariantG& iValue)
+	{ return GuestMeister::sGet()->Host_SetProperty(fake, this, sAsNPI(iIndex), &iValue); }
+
 bool NPObjectG::RemoveProperty(const string& iName)
 	{ return GuestMeister::sGet()->Host_RemoveProperty(fake, this, sAsNPI(iName)); }
 
-string NPObjectG::sAsString(NPIdentifier iNPI)
+bool NPObjectG::RemoveProperty(size_t iIndex)
+	{ return GuestMeister::sGet()->Host_RemoveProperty(fake, this, sAsNPI(iIndex)); }
+
+NPVariantG NPObjectG::Invoke(const std::string& iName, const NPVariantG* iArgs, size_t iCount)
 	{
-	string result;
-	if (NPUTF8* theString = GuestMeister::sGet()->Host_UTF8FromIdentifier(iNPI))
-		{
-		result = theString;
-		free(theString);
-		}
+	NPVariantG result;
+	this->Invoke(iName, iArgs, iCount, result);
 	return result;
 	}
 
-NPIdentifier NPObjectG::sAsNPI(const string& iName)
-	{ return GuestMeister::sGet()->Host_GetStringIdentifier(iName.c_str()); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ObjectG
-
-ObjectG::ObjectG()
+NPVariantG NPObjectG::Invoke(const std::string& iName)
 	{
-	_class = &sNPClass;
-	referenceCount = 1;
+	NPVariantG result;
+	this->Invoke(iName, nil, 0, result);
+	return result;
 	}
 
-ObjectG::~ObjectG()
-	{}
-
-void ObjectG::Imp_Invalidate()
-	{}
-
-bool ObjectG::Imp_HasMethod(const string& iName)
-	{ return false; }
-
-bool ObjectG::Imp_Invoke(
-	const string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
-	{ return false; }
-
-bool ObjectG::Imp_InvokeDefault(const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
-	{ return false; }
-
-bool ObjectG::Imp_HasProperty(const string& iName)
-	{ return false; }
-
-bool ObjectG::Imp_GetProperty(const string& iName, NPVariantG& oResult)
-	{ return false; }
-
-bool ObjectG::Imp_SetProperty(const string& iName, const NPVariantG& iValue)
-	{ return false; }
-
-bool ObjectG::Imp_RemoveProperty(const string& iName)
-	{ return false; }
-
-NPObject* ObjectG::sAllocate(NPP npp, NPClass *aClass)
+NPVariantG NPObjectG::InvokeDefault(const NPVariantG* iArgs, size_t iCount)
 	{
-	ZUnimplemented();
-	return nil;
+	NPVariantG result;
+	this->InvokeDefault(iArgs, iCount, result);
+	return result;
 	}
 
-void ObjectG::sDeallocate(NPObject* npobj)
+NPVariantG NPObjectG::InvokeDefault()
 	{
-	ZNETSCAPE_BEFORE
-		delete static_cast<ObjectG*>(npobj);
-	ZNETSCAPE_AFTER_VOID
+	NPVariantG result;
+	this->InvokeDefault(nil, 0, result);
+	return result;
 	}
 
-void ObjectG::sInvalidate(NPObject* npobj)
+NPVariantG NPObjectG::GetProperty(const std::string& iName)
 	{
-	ZNETSCAPE_BEFORE
-		static_cast<ObjectG*>(npobj)->Imp_Invalidate();
-	ZNETSCAPE_AFTER_VOID
+	NPVariantG result;
+	this->GetProperty(iName, result);
+	return result;
 	}
 
-bool ObjectG::sHasMethod(NPObject* npobj, NPIdentifier name)
+NPVariantG NPObjectG::GetProperty(size_t iIndex)
 	{
-	ZNETSCAPE_BEFORE
-		return static_cast<ObjectG*>(npobj)->Imp_HasMethod(sAsString(name));
-	ZNETSCAPE_AFTER_RETURN_FALSE
+	NPVariantG result;
+	this->GetProperty(iIndex, result);
+	return result;
 	}
-
-bool ObjectG::sInvoke(NPObject* npobj,
-	NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result)
-	{
-	ZNETSCAPE_BEFORE
-		return static_cast<ObjectG*>(npobj)->Imp_Invoke(
-			sAsString(name),
-			static_cast<const NPVariantG*>(args),
-			argCount,
-			*static_cast<NPVariantG*>(result));
-	ZNETSCAPE_AFTER_RETURN_FALSE
-	}
-
-bool ObjectG::sInvokeDefault(NPObject* npobj,
-	const NPVariant* args, uint32_t argCount, NPVariant* result)
-	{
-	ZNETSCAPE_BEFORE
-		return static_cast<ObjectG*>(npobj)->Imp_InvokeDefault(
-			static_cast<const NPVariantG*>(args),
-			argCount,
-			*static_cast<NPVariantG*>(result));
-	ZNETSCAPE_AFTER_RETURN_FALSE
-	}
-
-bool ObjectG::sHasProperty(NPObject*  npobj, NPIdentifier name)
-	{
-	ZNETSCAPE_BEFORE
-		return static_cast<ObjectG*>(npobj)->Imp_HasProperty(sAsString(name));
-	ZNETSCAPE_AFTER_RETURN_FALSE
-	}
-
-bool ObjectG::sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result)
-	{
-	ZNETSCAPE_BEFORE
-		return static_cast<ObjectG*>(npobj)->Imp_GetProperty(
-			sAsString(name),
-			*static_cast<NPVariantG*>(result));
-	ZNETSCAPE_AFTER_RETURN_FALSE
-	}
-
-bool ObjectG::sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value)
-	{
-	ZNETSCAPE_BEFORE
-		return static_cast<ObjectG*>(npobj)->Imp_SetProperty(
-			sAsString(name),
-			*static_cast<const NPVariantG*>(value));
-	ZNETSCAPE_AFTER_RETURN_FALSE
-	}
-
-bool ObjectG::sRemoveProperty(NPObject* npobj, NPIdentifier name)
-	{
-	ZNETSCAPE_BEFORE
-		return static_cast<ObjectG*>(npobj)->Imp_RemoveProperty(sAsString(name));
-	ZNETSCAPE_AFTER_RETURN_FALSE
-	}
-
-NPClass ObjectG::sNPClass =
-	{
-	1,
-	sAllocate,
-	sDeallocate,
-	sInvalidate,
-	sHasMethod,
-	sInvoke,
-	sInvokeDefault,
-	sHasProperty,
-	sGetProperty,
-	sSetProperty,
-	sRemoveProperty
-	};
 
 // =================================================================================================
 #pragma mark -
@@ -740,20 +475,70 @@ bool GuestMeister::Host_Evaluate(NPP iNPP, NPObject* obj, NPString* script, NPVa
 
 bool GuestMeister::Host_GetProperty(NPP iNPP,
 	NPObject* obj, NPIdentifier propertyName, NPVariant* result)
-	{ return fNPNF.getproperty(iNPP, obj, propertyName, result); }
+	{
+	if (fNPNF.getproperty)
+		return fNPNF.getproperty(iNPP, obj, propertyName, result);
+	return false;
+	}
 
 bool GuestMeister::Host_SetProperty(NPP iNPP,
 	NPObject* obj, NPIdentifier propertyName, const NPVariant* value)
-	{ return fNPNF.setproperty(iNPP, obj, propertyName, value); }
+	{
+	if (fNPNF.setproperty)
+		return fNPNF.setproperty(iNPP, obj, propertyName, value);
+	return false;
+	}
 
 bool GuestMeister::Host_RemoveProperty(NPP iNPP, NPObject* obj, NPIdentifier propertyName)
-	{ return fNPNF.removeproperty(iNPP, obj, propertyName); }
+	{
+	if (fNPNF.removeproperty)
+		return fNPNF.removeproperty(iNPP, obj, propertyName);
+	return false;
+	}
 
 bool GuestMeister::Host_HasProperty(NPP iNPP, NPObject* npobj, NPIdentifier propertyName)
-	{ return fNPNF.hasproperty(iNPP, npobj, propertyName); }
+	{
+	if (fNPNF.hasproperty)
+		{
+		return fNPNF.hasproperty(iNPP, npobj, propertyName);
+		}
+	else if (fNPNF.getproperty)
+		{
+		NPVariantG dummy;
+		if (fNPNF.getproperty(iNPP, npobj, propertyName, &dummy))
+			return !dummy.IsVoid();
+		}
+
+	return false;
+	}
 
 bool GuestMeister::Host_HasMethod(NPP iNPP, NPObject* npobj, NPIdentifier methodName)
-	{ return fNPNF.hasmethod(iNPP, npobj, methodName); }
+	{
+	if (fNPNF.hasmethod)
+		{
+		return fNPNF.hasmethod(iNPP, npobj, methodName);
+		}
+	else if (fNPNF.hasproperty)
+		{
+		return !fNPNF.hasproperty(iNPP, npobj, methodName);
+		}
+	else if (fNPNF.getproperty)
+		{
+		// We don't have hasmethod *or* hasproperty. WebKit, at least that in
+		// Safari 3.1.2, craps out if you attempt a call of a value when it's
+		// not a function. Later versions work.
+		// So, we at least distinguish between primitives and objects, and
+		// if the entity is an object then we claim that it's a method, which I
+		// suppose is better than nothing.
+		NPVariantG dummy;
+		if (fNPNF.getproperty(iNPP, npobj, methodName, &dummy))
+			{
+			if (dummy.IsObject())
+				return true;
+			}
+		}
+	return false;
+	}
 
 void GuestMeister::Host_ReleaseVariantValue(NPVariant* variant)
 	{ return fNPNF.releasevariantvalue(variant); }

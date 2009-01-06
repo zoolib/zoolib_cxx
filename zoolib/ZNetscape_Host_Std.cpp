@@ -53,8 +53,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 using std::list;
-using std::map;
-using std::pair;
+using std::set;
 using std::string;
 using std::vector;
 
@@ -69,6 +68,100 @@ HostMeister_Std::HostMeister_Std()
 
 HostMeister_Std::~HostMeister_Std()
 	{}
+
+Host_Std* HostMeister_Std::sHostFromNPP_Std(NPP npp)
+	{ return static_cast<Host_Std*>(sHostFromNPP(npp)); }
+
+Host_Std* HostMeister_Std::sHostFromStream_Std(NPStream* iNPStream)
+	{ return static_cast<Host_Std*>(sHostFromStream(iNPStream)); }
+
+NPError HostMeister_Std::GetURL(NPP npp, const char* URL, const char* window)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "GetURL";
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		return theHost->Host_GetURL(npp, URL, window);
+
+	return NPERR_GENERIC_ERROR;
+	}
+
+NPError HostMeister_Std::PostURL(NPP npp,
+	const char* URL, const char* window, uint32 len, const char* buf, NPBool file)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "PostURL";
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		return theHost->Host_PostURL(npp, URL, window, len, buf, file);
+
+	return NPERR_GENERIC_ERROR;
+	}
+
+NPError HostMeister_Std::RequestRead(NPStream* stream, NPByteRange* rangeList)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "RequestRead";
+
+	if (Host_Std* theHost = sHostFromStream_Std(stream))
+		return theHost->Host_RequestRead(stream, rangeList);
+
+	return NPERR_GENERIC_ERROR;
+	}
+
+NPError HostMeister_Std::NewStream(NPP npp,
+	NPMIMEType type, const char* window, NPStream** stream)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "NewStream";
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		return theHost->Host_NewStream(npp, type, window, stream);
+
+	return NPERR_GENERIC_ERROR;
+	}
+
+int32 HostMeister_Std::Write(NPP npp, NPStream* stream, int32 len, void* buffer)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "Write";
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		return theHost->Host_Write(npp, stream, len, buffer);
+
+	return -1;
+	}
+
+NPError HostMeister_Std::DestroyStream(NPP npp, NPStream* stream, NPReason reason)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "DestroyStream";
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		return theHost->Host_DestroyStream(npp, stream, reason);
+
+	return NPERR_GENERIC_ERROR;
+	}
+
+void HostMeister_Std::Status(NPP npp, const char* message)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "Status";
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		theHost->Host_Status(npp, message);
+	}
+
+const char* HostMeister_Std::UserAgent(NPP npp)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "UserAgent";
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		return theHost->Host_UserAgent(npp);
+
+	return nil;
+	}
 
 void* HostMeister_Std::MemAlloc(uint32 size)
 	{ return ::malloc(size); }
@@ -85,67 +178,144 @@ void HostMeister_Std::ReloadPlugins(NPBool reloadPages)
 void* HostMeister_Std::GetJavaEnv()
 	{ return nil; }
 
+void* HostMeister_Std::GetJavaPeer(NPP npp)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "GetJavaPeer";
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		return theHost->Host_GetJavaPeer(npp);
+
+	return nil;
+	}
+
+NPError HostMeister_Std::GetURLNotify(NPP npp,
+	const char* URL, const char* window, void* notifyData)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "GetURLNotify";
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		return theHost->Host_GetURLNotify(npp, URL, window, notifyData);
+
+	return NPERR_GENERIC_ERROR;
+	}
+
+NPError HostMeister_Std::PostURLNotify(NPP npp,
+	const char* URL, const char* window,
+	uint32 len, const char* buf, NPBool file, void* notifyData)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "PostURLNotify";
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		return theHost->Host_PostURLNotify(npp, URL, window, len, buf, file, notifyData);
+
+	return NPERR_GENERIC_ERROR;
+	}
+
+NPError HostMeister_Std::GetValue(NPP npp, NPNVariable variable, void* ret_value)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "GetValue";
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		return theHost->Host_GetValue(npp, variable, ret_value);
+
+	return NPERR_GENERIC_ERROR;
+	}
+
+NPError HostMeister_Std::SetValue(NPP npp, NPPVariable variable, void* value)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "SetValue";
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		return theHost->Host_SetValue(npp, variable, value);
+
+	return NPERR_GENERIC_ERROR;
+	}
+
+void HostMeister_Std::InvalidateRect(NPP npp, NPRect* rect)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "InvalidateRect";
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		theHost->Host_InvalidateRect(npp, rect);
+	}
+
+void HostMeister_Std::InvalidateRegion(NPP npp, NPRegion region)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "InvalidateRegion";
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		theHost->Host_InvalidateRegion(npp, region);
+	}
+
+void HostMeister_Std::ForceRedraw(NPP npp)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "ForceRedraw";
+
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		return theHost->Host_ForceRedraw(npp);
+	}
+
 NPIdentifier HostMeister_Std::GetStringIdentifier(const NPUTF8* name)
 	{
 	const string theName = name;
-	map<string, Identifier*>::iterator i = fMap_Strings.find(theName);
-	if (i != fMap_Strings.end())
-		return static_cast<NPIdentifier>((*i).second);
-
-	Identifier* theIdentifier = new Identifier;
-
-	theIdentifier->fIsString = true;
-	theIdentifier->fAsString = strdup(name);
-	fMap_Strings.insert(pair<string, Identifier*>(theName, theIdentifier));
-
-	return static_cast<NPIdentifier>(theIdentifier);
+	set<string>::iterator iter = fStrings.lower_bound(theName);
+	if (iter == fStrings.end() || *iter != theName)
+		iter = fStrings.insert(iter, theName);
+	return static_cast<NPIdentifier>(const_cast<string*>(&*iter));
 	}
 
 void HostMeister_Std::GetStringIdentifiers(
 	const NPUTF8* *names, int32_t nameCount, NPIdentifier* identifiers)
 	{
 	while (--nameCount)
-		{
 		*identifiers++ = this->GetStringIdentifier(*names++);
-		}
 	}
 
 NPIdentifier HostMeister_Std::GetIntIdentifier(int32_t intid)
-	{
-	map<int, Identifier*>::iterator i = fMap_Ints.find(intid);
-	if (i != fMap_Ints.end())
-		return static_cast<NPIdentifier>((*i).second);
-
-	Identifier* theIdentifier = new Identifier;
-
-	theIdentifier->fIsString = false;
-	theIdentifier->fAsInt = intid;
-	fMap_Ints.insert(pair<int, Identifier*>(intid, theIdentifier));
-
-	return static_cast<NPIdentifier>(theIdentifier);
-	}
+	{ return reinterpret_cast<NPIdentifier>((intid << 1) | 0x1); }
 
 bool HostMeister_Std::IdentifierIsString(NPIdentifier identifier)
-	{
-	return static_cast<Identifier*>(identifier)->fIsString;
-	}
+	{ return 0 == (reinterpret_cast<intptr_t>(identifier) & 0x1); }
 
 NPUTF8* HostMeister_Std::UTF8FromIdentifier(NPIdentifier identifier)
 	{
-    Identifier* theID = static_cast<Identifier*>(identifier);
-    if (!theID->fIsString || !theID->fAsString)
-        return nil;
-        
-    return (NPUTF8*)strdup(theID->fAsString);
+	if (0 == (reinterpret_cast<intptr_t>(identifier) & 0x1))
+		return (NPUTF8*)strdup(static_cast<string*>(identifier)->c_str());
+	return nil;
 	}
 
 int32_t HostMeister_Std::IntFromIdentifier(NPIdentifier identifier)
 	{
-    Identifier* theID = static_cast<Identifier*>(identifier);
-    if (theID->fIsString)
-        return 0;
-        
-    return theID->fAsInt;
+	const int32_t asInt = reinterpret_cast<intptr_t>(identifier);
+	if (asInt & 0x1)
+		return asInt >> 1;
+	return 0;
+	}
+
+NPObject* HostMeister_Std::CreateObject(NPP npp, NPClass* aClass)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s.Writef("CreateObject");
+
+	ZAssert(aClass);
+	NPObject* result;
+	if (aClass->allocate)
+		result = aClass->allocate(npp, aClass);
+	else
+		result = (NPObject*)malloc(sizeof(NPObject));
+
+	result->_class = aClass;
+	result->referenceCount = 1;
+
+	return result;
 	}
 
 NPObject* HostMeister_Std::RetainObject(NPObject* obj)
@@ -165,6 +335,96 @@ void HostMeister_Std::ReleaseObject(NPObject* obj)
 		else
 			free(obj);
 		}
+	}
+
+bool HostMeister_Std::Invoke(NPP npp,
+	NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount,
+	NPVariant* result)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "Invoke: " << this->StringFromIdentifier(methodName);
+
+	if (obj && obj->_class && obj->_class->invoke)
+		return obj->_class->invoke(obj, methodName, args, argCount, result);
+
+	return false;
+	}
+
+bool HostMeister_Std::InvokeDefault(NPP npp,
+	NPObject* obj, const NPVariant* args, uint32_t argCount, NPVariant* result)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s.Writef("InvokeDefault");
+
+	if (obj && obj->_class && obj->_class->invokeDefault)
+		return obj->_class->invokeDefault(obj, args, argCount, result);
+
+	return false;
+	}
+
+bool HostMeister_Std::Evaluate(NPP npp,
+	NPObject* obj, NPString* script, NPVariant* result)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s.Writef("Evaluate");
+	return false;
+	}
+
+bool HostMeister_Std::GetProperty(NPP npp,
+	NPObject* obj, NPIdentifier propertyName, NPVariant* result)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s << "GetProperty: " << this->StringFromIdentifier(propertyName);
+
+	if (obj && obj->_class && obj->_class->getProperty)
+		return obj->_class->getProperty(obj, propertyName, result);
+
+	return false;
+	}
+
+bool HostMeister_Std::SetProperty(NPP npp,
+	NPObject* obj, NPIdentifier propertyName, const NPVariant* value)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s.Writef("SetProperty");
+
+	if (obj && obj->_class && obj->_class->getProperty)
+		return obj->_class->setProperty(obj, propertyName, value);
+
+	return false;
+	}
+
+bool HostMeister_Std::RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s.Writef("RemoveProperty");
+
+	if (obj && obj->_class && obj->_class->removeProperty)
+		return obj->_class->removeProperty(obj, propertyName);
+
+	return false;
+	}
+
+bool HostMeister_Std::HasProperty(NPP, NPObject* obj, NPIdentifier propertyName)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s.Writef("HasProperty");
+
+	if (obj && obj->_class && obj->_class->hasProperty)
+		return obj->_class->hasProperty(obj, propertyName);
+
+	return false;
+	}
+
+bool HostMeister_Std::HasMethod(NPP npp, NPObject* obj, NPIdentifier methodName)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s.Writef("HasMethod");
+
+	if (obj && obj->_class && obj->_class->hasMethod)
+		return obj->_class->hasMethod(obj, methodName);
+
+	return false;
 	}
 
 void HostMeister_Std::ReleaseVariantValue(NPVariant* variant)
@@ -588,114 +848,6 @@ void Host_Std::Host_ForceRedraw(NPP npp)
 		s.Writef("ForceRedraw");
 	}
 
-NPObject* Host_Std::Host_CreateObject(NPP npp, NPClass* aClass)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("CreateObject");
-
-	ZAssert(aClass);
-	NPObject* result;
-	if (aClass->allocate)
-		result = aClass->allocate(npp, aClass);
-	else
-		result = (NPObject*)malloc(sizeof(NPObject));
-
-	result->_class = aClass;
-	result->referenceCount = 1;
-
-	return result;
-	}
-
-bool Host_Std::Host_Invoke(NPP npp,
-	NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount,
-	NPVariant* result)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "Invoke: " << HostMeister::sGet()->StringFromIdentifier(methodName);
-
-	if (obj && obj->_class && obj->_class->invoke)
-		return obj->_class->invoke(obj, methodName, args, argCount, result);
-
-	return false;
-	}
-
-bool Host_Std::Host_InvokeDefault(NPP npp,
-	NPObject* obj, const NPVariant* args, uint32_t argCount, NPVariant* result)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("InvokeDefault");
-
-	if (obj && obj->_class && obj->_class->invokeDefault)
-		return obj->_class->invokeDefault(obj, args, argCount, result);
-
-	return false;
-	}
-
-bool Host_Std::Host_Evaluate(NPP npp,
-	NPObject* obj, NPString* script, NPVariant* result)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("Evaluate");
-	return false;
-	}
-
-bool Host_Std::Host_GetProperty(NPP npp,
-	NPObject* obj, NPIdentifier propertyName, NPVariant* result)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "GetProperty: " << HostMeister::sGet()->StringFromIdentifier(propertyName);
-
-	if (obj && obj->_class && obj->_class->getProperty)
-		return obj->_class->getProperty(obj, propertyName, result);
-
-	return false;
-	}
-
-bool Host_Std::Host_SetProperty(NPP npp,
-	NPObject* obj, NPIdentifier propertyName, const NPVariant* value)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("SetProperty");
-
-	if (obj && obj->_class && obj->_class->getProperty)
-		return obj->_class->setProperty(obj, propertyName, value);
-
-	return false;
-	}
-
-bool Host_Std::Host_RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("RemoveProperty");
-
-	if (obj && obj->_class && obj->_class->removeProperty)
-		return obj->_class->removeProperty(obj, propertyName);
-
-	return false;
-	}
-
-bool Host_Std::Host_HasProperty(NPP, NPObject* obj, NPIdentifier propertyName)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("HasProperty");
-
-	if (obj && obj->_class && obj->_class->hasProperty)
-		return obj->_class->hasProperty(obj, propertyName);
-
-	return false;
-	}
-
-bool Host_Std::Host_HasMethod(NPP npp, NPObject* obj, NPIdentifier methodName)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("HasMethod");
-
-	if (obj && obj->_class && obj->_class->hasMethod)
-		return obj->_class->hasMethod(obj, methodName);
-
-	return false;
-	}
-
 void Host_Std::pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
 	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
 	ZRef<ZStreamerR> iStreamerR)
@@ -704,7 +856,6 @@ void Host_Std::pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
 	ZUtil_STL::sEraseMustContain(1, fHTTPers, iHTTPer);
 	this->SendDataAsync(iNotifyData, iURL, iMIME, iHeaders, iStreamerR);
 	}
-
 
 void Host_Std::Create(const string& iURL, const string& iMIME)
 	{
@@ -818,7 +969,7 @@ void Host_Std::DeliverData()
 		}
 	}
 
-NPObjectH* Host_Std::GetScriptableNPObject()
+NPObjectH* Host_Std::CopyScriptableNPObject()
 	{
 	NPObjectH* theNPObject;
 	this->Guest_GetValue(NPPVpluginScriptableNPObject, &theNPObject);
