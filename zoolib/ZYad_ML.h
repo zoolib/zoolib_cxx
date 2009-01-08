@@ -67,7 +67,7 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * YadListMapR_ML
+#pragma mark * ZYadListMapR_ML
 
 class ZYadListMapR_ML
 :	public ZYadListMapR,
