@@ -31,21 +31,61 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZWebDAV {
 
-bool sHandle_DELETE(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
-bool sHandle_GET(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
-bool sHandle_LOCK(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
-bool sHandle_MKCOL(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
-bool sHandle_MOVE(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
-bool sHandle_OPTIONS(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
-bool sHandle_PROPFIND(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
-bool sHandle_PROPPATCH(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
-bool sHandle_PUT(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
-bool sHandle_UNLOCK(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
+bool sHandle_DELETE(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
 
-//	bool sHandle_COPY(ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
-//	bool sHandle_HEAD(ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
-//	bool sHandle_POST(ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
-//	bool sHandle_TRACE(ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
+bool sHandle_GET(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
+
+bool sHandle_LOCK(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
+
+bool sHandle_MKCOL(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
+
+bool sHandle_MOVE(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
+
+bool sHandle_OPTIONS(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
+
+bool sHandle_PROPFIND(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
+
+bool sHandle_PROPPATCH(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
+
+bool sHandle_PUT(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
+
+bool sHandle_UNLOCK(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
+
+//	bool sHandle_COPY(
+//		ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+//		const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
+
+//	bool sHandle_HEAD(
+//		ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+//		const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
+
+//	bool sHandle_POST(
+//	ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+//	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
+
+//	bool sHandle_TRACE(
+//		ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+//		const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam);
 
 } // namespace ZWebDAV
 

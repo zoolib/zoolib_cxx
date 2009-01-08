@@ -886,7 +886,9 @@ static void sHandle_PROPFIND_All(
 		}
 	}
 
-bool ZWebDAV::sHandle_PROPFIND(const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW, const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
+bool ZWebDAV::sHandle_PROPFIND(
+	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
+	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
 	{
 	int depth = sGetDepth(iHeader);
 
