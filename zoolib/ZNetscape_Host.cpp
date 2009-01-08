@@ -40,7 +40,8 @@ namespace ZNetscape {
 #pragma mark -
 #pragma mark * NPVariantH
 
-void sRelease(NPVariantH& iNPVariantH)
+template <>
+void spRelease_T(NPVariantH& iNPVariantH)
 	{ HostMeister::sGet()->ReleaseVariantValue(&iNPVariantH); }
 
 // =================================================================================================
@@ -166,6 +167,23 @@ NPVariantH NPObjectH::GetProperty(size_t iIndex)
 	return result;
 	}
 
+bool NPObjectH::Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount)
+	{ return HostMeister::sGet()->Enumerate(fake, this, &oIdentifiers, &oCount); }
+
+bool NPObjectH::Enumerate(std::vector<NPIdentifier>& oIdentifiers)
+	{
+	oIdentifiers.clear();
+	NPIdentifier* theIDs = nil;
+	uint32_t theCount;
+	if (!this->Enumerate(theIDs, theCount))
+		return false;
+
+	oIdentifiers.insert(oIdentifiers.end(), theIDs, theIDs + theCount);
+	free(theIDs);
+
+	return true;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * HostMeister
@@ -191,18 +209,13 @@ Host* HostMeister::sHostFromStream(NPStream* iNPStream)
 	return nil;
 	}
 
-void HostMeister::sGetNPNF(NPNetscapeFuncs& oNPNF)
+void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
 	{
-	ZBlockZero(&oNPNF, sizeof(NPNetscapeFuncs));
+	ZBlockZero(&oNPNF, sizeof(oNPNF));
 
-	#ifdef NPVERS_HAS_RESPONSE_HEADERS
-	oNPNF.version = NPVERS_HAS_RESPONSE_HEADERS;
-	#else
-//	oNPNF.version = 17; // Urg
-	oNPNF.version = 14; // Urg
-	#endif
+	oNPNF.version = NPVERS_HAS_PLUGIN_THREAD_ASYNC_CALL;
 
-	oNPNF.size = sizeof(NPNetscapeFuncs);
+	oNPNF.size = sizeof(oNPNF);
 	
 	oNPNF.geturl = sGetURL;
 	oNPNF.posturl = sPostURL;
@@ -240,6 +253,12 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs& oNPNF)
 	oNPNF.hasproperty = sHasProperty;
 	oNPNF.hasmethod = sHasMethod;
 	oNPNF.releasevariantvalue = sReleaseVariantValue;
+
+	oNPNF.pushpopupsenabledstate = sPushPopupsEnabledState;
+	oNPNF.poppopupsenabledstate = sPopPopupsEnabledState;
+	oNPNF.enumerate = sEnumerate;
+	oNPNF.pluginthreadasynccall = sPluginThreadAsyncCall;
+	oNPNF.construct = sConstruct;
 
 	// These are problematic in one way or another.
 	
@@ -595,6 +614,44 @@ void HostMeister::sSetExceptionNPString(NPObject* obj, NPString* message)
 	ZNETSCAPE_AFTER_VOID
 	}
 
+void HostMeister::sPushPopupsEnabledState(NPP iNPP, NPBool enabled)
+	{
+	ZNETSCAPE_BEFORE
+		sGet()->PushPopupsEnabledState(iNPP, enabled);
+	ZNETSCAPE_AFTER_VOID
+	}
+
+void HostMeister::sPopPopupsEnabledState(NPP iNPP)
+	{
+	ZNETSCAPE_BEFORE
+		sGet()->PopPopupsEnabledState(iNPP);
+	ZNETSCAPE_AFTER_VOID
+	}
+
+bool HostMeister::sEnumerate
+	(NPP iNPP, NPObject *npobj, NPIdentifier **identifier, uint32_t *count)
+	{
+	ZNETSCAPE_BEFORE
+		return sGet()->Enumerate(iNPP, npobj, identifier, count);
+	ZNETSCAPE_AFTER_RETURN_FALSE
+	}
+
+void HostMeister::sPluginThreadAsyncCall
+	(NPP iNPP, void (*func)(void *), void *userData)
+	{
+	ZNETSCAPE_BEFORE
+		sGet()->sPluginThreadAsyncCall(iNPP, func, userData);
+	ZNETSCAPE_AFTER_VOID
+	}
+
+bool HostMeister::sConstruct
+	(NPP iNPP, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
+	{
+	ZNETSCAPE_BEFORE
+		sGet()->Construct(iNPP, obj, args, argCount, result);
+	ZNETSCAPE_AFTER_RETURN_FALSE
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * GuestFactory
@@ -605,7 +662,7 @@ GuestFactory::GuestFactory()
 GuestFactory::~GuestFactory()
 	{}
 
-void GuestFactory::GetNPNF(NPNetscapeFuncs& oNPNF)
+void GuestFactory::GetNPNF(NPNetscapeFuncs_Z& oNPNF)
 	{ HostMeister::sGet()->sGetNPNF(oNPNF); }
 
 // =================================================================================================

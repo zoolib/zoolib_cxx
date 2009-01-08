@@ -33,6 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::string;
 
+using ZooLib::ZNetscape::NPNetscapeFuncs_Z;
+
 // =================================================================================================
 
 extern "C" {
@@ -41,8 +43,8 @@ extern "C" {
 #	pragma export on
 #endif
 
-NPError NP_Initialize(NPNetscapeFuncs*);
-NPError NP_Initialize(NPNetscapeFuncs* iBrowserFuncs)
+NPError NP_Initialize(NPNetscapeFuncs_Z*);
+NPError NP_Initialize(NPNetscapeFuncs_Z* iBrowserFuncs)
 	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->Initialize(iBrowserFuncs); }
 
 NPError NP_GetEntryPoints(NPPluginFuncs*);
@@ -60,8 +62,8 @@ NPError NP_Shutdown()
 // For compatibility with CFM and Mozilla-type browsers
 #pragma export on
 
-int main(NPNetscapeFuncs*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
-int main(NPNetscapeFuncs* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
+int main(NPNetscapeFuncs_Z*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
+int main(NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
 	{
 	return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->
 		Main(iNPNF, oPluginFuncs, oShutdownFunc);
@@ -80,7 +82,8 @@ namespace ZNetscape {
 #pragma mark -
 #pragma mark * NPVariantG
 
-void sRelease(NPVariantG& iNPVariantG)
+template <>
+void spRelease_T(NPVariantG& iNPVariantG)
 	{ GuestMeister::sGet()->Host_ReleaseVariantValue(&iNPVariantG); }
 
 // =================================================================================================
@@ -208,6 +211,23 @@ NPVariantG NPObjectG::GetProperty(size_t iIndex)
 	return result;
 	}
 
+bool NPObjectG::Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount)
+	{ return GuestMeister::sGet()->Host_Enumerate(fake, this, &oIdentifiers, &oCount); }
+
+bool NPObjectG::Enumerate(std::vector<NPIdentifier>& oIdentifiers)
+	{
+	oIdentifiers.clear();
+	NPIdentifier* theIDs = nil;
+	uint32_t theCount;
+	if (!this->Enumerate(theIDs, theCount))
+		return false;
+
+	oIdentifiers.insert(oIdentifiers.end(), theIDs, theIDs + theCount);
+	free(theIDs);
+
+	return true;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * GuestMeister
@@ -233,10 +253,10 @@ GuestMeister* GuestMeister::sGet()
 	return sGuestMeister;
 	}
 
-NPError GuestMeister::Initialize(NPNetscapeFuncs* iBrowserFuncs)
+NPError GuestMeister::Initialize(NPNetscapeFuncs_Z* iBrowserFuncs)
 	{
 	fNPNF.version = iBrowserFuncs->version;
-	fNPNF.size = min(size_t(iBrowserFuncs->size), sizeof(NPNetscapeFuncs));
+	fNPNF.size = min(size_t(iBrowserFuncs->size), sizeof(NPNetscapeFuncs_Z));
 
 	fNPNF.geturl = iBrowserFuncs->geturl;
 	fNPNF.posturl = iBrowserFuncs->posturl;
@@ -279,7 +299,24 @@ NPError GuestMeister::Initialize(NPNetscapeFuncs* iBrowserFuncs)
 	fNPNF.hasmethod = iBrowserFuncs->hasmethod;
 	fNPNF.releasevariantvalue = iBrowserFuncs->releasevariantvalue;
 	fNPNF.setexception = iBrowserFuncs->setexception;
-	
+
+	if (fNPNF.version >= NPVERS_HAS_POPUPS_ENABLED_STATE)
+		{
+		fNPNF.pushpopupsenabledstate = iBrowserFuncs->pushpopupsenabledstate;
+		fNPNF.poppopupsenabledstate = iBrowserFuncs->poppopupsenabledstate;
+		}
+
+	if (fNPNF.version >= NPVERS_HAS_NPOBJECT_ENUM)
+		{
+		fNPNF.enumerate = iBrowserFuncs->enumerate;
+		}
+
+	if (fNPNF.version >= NPVERS_HAS_PLUGIN_THREAD_ASYNC_CALL)
+		{
+		fNPNF.pluginthreadasynccall = iBrowserFuncs->pluginthreadasynccall;
+		fNPNF.construct = iBrowserFuncs->construct;
+		}
+
     return NPERR_NO_ERROR;
 	}
 
@@ -311,7 +348,7 @@ NPError GuestMeister::Shutdown()
 	}
 
 int GuestMeister::Main(
-	NPNetscapeFuncs* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
+	NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
 	{
 	// This function is called by CFM browsers, and also by Mozilla-based code.
 	// On Intel the function pointers are just regular function pointers, on PPC they
@@ -324,14 +361,14 @@ int GuestMeister::Main(
 
 		// Take a local copy of the passed-in table, no bigger than what was
 		// passed, and no bigger than what we're expecting.
-		NPNetscapeFuncs localNPNF;
+		NPNetscapeFuncs_Z localNPNF;
 		ZBlockZero(&localNPNF, sizeof(localNPNF));
 		ZBlockCopy(iNPNF, &localNPNF, min(size_t(iNPNF->size), sizeof(localNPNF)));
 
 		// Rewrite them as CFM-callable thunks.
 		ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
 			&localNPNF.geturl,
-			(localNPNF.size - offsetof(NPNetscapeFuncs, geturl)) / sizeof(void*),
+			(localNPNF.size - offsetof(NPNetscapeFuncs_Z, geturl)) / sizeof(void*),
 			fGlue_NPNF);
 
 		// And pass the munged local structure to NP_Initialize.
@@ -360,10 +397,10 @@ int GuestMeister::Main(
 	return result;
 	}
 
-const NPNetscapeFuncs& GuestMeister::GetNPNetscapeFuncs()
+const NPNetscapeFuncs_Z& GuestMeister::GetNPNetscapeFuncs()
 	{ return fNPNF; }
 
-const NPNetscapeFuncs& GuestMeister::GetNPNF()
+const NPNetscapeFuncs_Z& GuestMeister::GetNPNF()
 	{ return fNPNF; }
 
 NPError GuestMeister::Host_GetURL(NPP iNPP, const char* url, const char* target)
@@ -557,6 +594,41 @@ void GuestMeister::Host_SetException(NPObject* obj, const NPUTF8* message)
 	#endif
 	}
 #endif
+
+void GuestMeister::Host_PushPopupsEnabledState(NPP iNPP, NPBool enabled)
+	{
+	if (fNPNF.pushpopupsenabledstate)
+		fNPNF.pushpopupsenabledstate(iNPP, enabled);
+	}
+
+void GuestMeister::Host_PopPopupsEnabledState(NPP iNPP)
+	{
+	if (fNPNF.poppopupsenabledstate)
+		fNPNF.poppopupsenabledstate(iNPP);
+	}
+
+bool GuestMeister::Host_Enumerate
+	(NPP iNPP, NPObject* npobj, NPIdentifier** identifier, uint32_t* count)
+	{
+	if (fNPNF.enumerate)
+		return fNPNF.enumerate(iNPP, npobj, identifier, count);
+	return false;
+	}
+
+void GuestMeister::Host_PluginThreadAsyncCall
+	(NPP iNPP, void (*func)(void *), void *userData)
+	{
+	if (fNPNF.pluginthreadasynccall)
+		fNPNF.pluginthreadasynccall(iNPP, func, userData);
+	}
+
+bool GuestMeister::Host_Construct
+	(NPP iNPP, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
+	{
+	if (fNPNF.construct)
+		return fNPNF.construct(iNPP, obj, args, argCount, result);
+	return false;
+	}
 
 NPError GuestMeister::sNew(
 	NPMIMEType pluginType, NPP instance, uint16 mode,

@@ -30,16 +30,85 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZDebug.h" // For ZAssert
 #include "zoolib/ZNetscape_Macros.h"
+#include "zoolib/ZUtil_STL.h"
 
 #include <string>
+#include <vector>
+
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZNetscape {
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZNetscape
+#pragma mark * NPStream_Z
 
-namespace ZNetscape {
+class NPStream_Z : public NPStream
+	{
+public:
+	#if NP_VERSION_MINOR < NPVERS_HAS_RESPONSE_HEADERS
+		const char* headers;
+	#endif
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * NPClass_Z
+
+class NPClass_Z : public NPClass
+	{
+	NPClass_Z();
+public:
+	NPClass_Z(
+		NPAllocateFunctionPtr allocate,
+		NPDeallocateFunctionPtr deallocate,
+		NPInvalidateFunctionPtr invalidate,
+		NPHasMethodFunctionPtr hasMethod,
+		NPInvokeFunctionPtr invoke,
+		NPInvokeDefaultFunctionPtr invokeDefault,
+		NPHasPropertyFunctionPtr hasProperty,
+		NPGetPropertyFunctionPtr getProperty,
+		NPSetPropertyFunctionPtr setProperty,
+		NPRemovePropertyFunctionPtr removeProperty,
+		NPEnumerationFunctionPtr enumerate);
+
+	#if NP_CLASS_STRUCT_VERSION < 2
+		NPEnumerationFunctionPtr enumerate;
+	#endif
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * NPNetscapeFuncs_Z
+
+class NPNetscapeFuncs_Z : public NPNetscapeFuncs
+	{
+public:
+	#if NP_VERSION_MINOR < NPVERS_HAS_POPUPS_ENABLED_STATE
+		NPN_PushPopupsEnabledStateProcPtr pushpopupsenabledstate;
+		NPN_PopPopupsEnabledStateProcPtr poppopupsenabledstate;
+	#endif
+
+	#if NP_VERSION_MINOR < NPVERS_HAS_NPOBJECT_ENUM
+		NPN_EnumerateProcPtr enumerate;
+	#endif
+
+	#if NP_VERSION_MINOR < NPVERS_HAS_PLUGIN_THREAD_ASYNC_CALL
+		NPN_PluginThreadAsyncCallProcPtr pluginthreadasynccall;
+		NPN_ConstructProcPtr construct;
+	#endif
+
+	#if 0
+		NPN_ScheduleTimerProcPtr scheduletimer;
+		NPN_UnscheduleTimerProcPtr unscheduletimer;
+		NPN_PopUpContextMenuProcPtr popupcontextmenu;
+	#endif
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sAsString
 
 std::string sAsString(NPNVariable iVar);
 std::string sAsString(NPPVariable iVar);
@@ -47,6 +116,9 @@ std::string sAsString(NPPVariable iVar);
 // =================================================================================================
 #pragma mark -
 #pragma mark * NPVariant_T
+
+template <class T>
+void spRelease_T(T&);
 
 template <class T>
 class NPVariant_T : public NPVariant
@@ -90,7 +162,10 @@ private:
 			}
 		type = iOther.type;		
 		}
-	
+
+	void pRelease()
+		{ spRelease_T(*this); }
+
 public:
     ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(NPVariant_T<T>,
     	operator_bool_generator_type, operator_bool_type);
@@ -116,13 +191,13 @@ public:
 		}
 
 	~NPVariant_T()
-		{ sRelease(*this); }
+		{ this->pRelease(); }
 
 	NPVariant_T& operator=(const NPVariant& iOther)
 		{
 		if (this != &iOther)
 			{
-			sRelease(*this);
+			this->pRelease();
 			this->pCopyFrom(iOther);
 			}
 		return *this;
@@ -132,7 +207,7 @@ public:
 		{
 		if (this != &iOther)
 			{
-			sRelease(*this);
+			this->pRelease();
 			this->pCopyFrom(iOther);
 			}
 		return *this;
@@ -221,40 +296,40 @@ public:
 
 	void SetVoid()
 		{
-		sRelease(*this);
+		this->pRelease();
 		type = NPVariantType_Void;
 		}
 
 	void SetNull()
 		{
-		sRelease(*this);
+		this->pRelease();
 		type = NPVariantType_Null;
 		}
 
 	void SetBool(bool iValue)
 		{
-		sRelease(*this);
+		this->pRelease();
 		value.boolValue = iValue;
 		type = NPVariantType_Bool;
 		}
 
 	void SetInt32(int32 iValue)
 		{
-		sRelease(*this);
+		this->pRelease();
 		value.intValue = iValue;
 		type = NPVariantType_Int32;
 		}
 
 	void SetDouble(double iValue)
 		{
-		sRelease(*this);
+		this->pRelease();
 		value.doubleValue = iValue;
 		type = NPVariantType_Double;
 		}
 
 	void SetString(const std::string& iValue)
 		{
-		sRelease(*this);
+		this->pRelease();
 		this->pSetString(iValue);
 		type = NPVariantType_String;
 		}
@@ -381,7 +456,7 @@ public:
 
 	void SetObject(T* iValue)
 		{
-		sRelease(*this);
+		this->pRelease();
 		value.objectValue = iValue;
 		iValue->Retain();
 		type = NPVariantType_Object;	
@@ -437,7 +512,15 @@ protected:
 		{ return false; }
 
 	virtual bool Imp_HasProperty(const std::string& iName)
-		{ return false; }
+		{
+		using std::string;
+		using std::vector;
+		vector<string> theNames;
+		if (this->Imp_Enumerate(theNames))
+			return ZUtil_STL::sContains(theNames, iName);
+		
+		return false;
+		}
 
 	virtual bool Imp_HasProperty(int32_t iInt)
 		{ return false; }
@@ -458,6 +541,26 @@ protected:
 		{ return false; }
 
 	virtual bool Imp_RemoveProperty(int32_t iInt)
+		{ return false; }
+
+	virtual bool Imp_Enumerate(NPIdentifier*& oIDs, uint32_t& oCount)
+		{
+		using std::string;
+		using std::vector;
+		vector<string> theNames;
+		if (this->Imp_Enumerate(theNames))
+			{
+			oCount = theNames.size();
+			oIDs = static_cast<NPIdentifier*>(malloc(sizeof(NPIdentifier) * theNames.size()));
+			for (size_t x = 0; x < oCount; ++x)
+				oIDs[x] = Object_t::sAsNPI(theNames[x]);
+
+			return true;
+			}
+		return false;
+		}
+
+	virtual bool Imp_Enumerate(std::vector<std::string>& oNames)
 		{ return false; }
 
 private:
@@ -563,20 +666,25 @@ private:
 		{
 		ZNETSCAPE_BEFORE
 			if (Object_t::sIsString(name))
-				return static_cast<Object_T*>(npobj)->RemoveProperty(Object_t::sAsString(name));
+				return static_cast<Object_T*>(npobj)->Imp_RemoveProperty(Object_t::sAsString(name));
 			else
-				return static_cast<Object_T*>(npobj)->RemoveProperty(Object_t::sAsInt(name));
+				return static_cast<Object_T*>(npobj)->Imp_RemoveProperty(Object_t::sAsInt(name));
 		ZNETSCAPE_AFTER_RETURN_FALSE
 		}
 
-	static NPClass sNPClass;
+	static bool sEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t* oCount)
+		{
+		ZNETSCAPE_BEFORE
+			return static_cast<Object_T*>(npobj)->Imp_Enumerate(*oIdentifiers, *oCount);
+		ZNETSCAPE_AFTER_RETURN_FALSE
+		}
+
+	static NPClass_Z sNPClass;
 	};
 
 #define ZNETSCAPE_OBJECT_SETUP(a) \
 template<> \
-NPClass Object_T<a>::sNPClass = \
-	{ \
-	1, \
+NPClass_Z Object_T<a>::sNPClass( \
 	Object_T<a>::sAllocate, \
 	Object_T<a>::sDeallocate, \
 	Object_T<a>::sInvalidate, \
@@ -586,8 +694,9 @@ NPClass Object_T<a>::sNPClass = \
 	Object_T<a>::sHasProperty, \
 	Object_T<a>::sGetProperty, \
 	Object_T<a>::sSetProperty, \
-	Object_T<a>::sRemoveProperty \
-	}
+	Object_T<a>::sRemoveProperty, \
+	Object_T<a>::sEnumerate \
+	)
 
 } // namespace ZNetscape
 

@@ -41,8 +41,6 @@ class NPObjectG;
 
 typedef NPVariant_T<NPObjectG> NPVariantG;
 
-void sRelease(NPVariantG& iNPVariantG);
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ObjectG
@@ -95,6 +93,9 @@ public:
 
 	NPVariantG GetProperty(const std::string& iName);
 	NPVariantG GetProperty(size_t iIndex);
+
+	bool Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount);
+	bool Enumerate(std::vector<NPIdentifier>& oIdentifiers);
 	};
 
 // =================================================================================================
@@ -112,15 +113,15 @@ public:
 
 	static GuestMeister* sGet();
 
-	virtual NPError Initialize(NPNetscapeFuncs* iNPNF);
+	virtual NPError Initialize(NPNetscapeFuncs_Z* iNPNF);
 	virtual NPError GetEntryPoints(NPPluginFuncs* oPluginFuncs);
 	virtual NPError Shutdown();
 
 	virtual int Main(
-		NPNetscapeFuncs* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc);
+		NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc);
 
-	const NPNetscapeFuncs& GetNPNetscapeFuncs();
-	const NPNetscapeFuncs& GetNPNF();
+	const NPNetscapeFuncs_Z& GetNPNetscapeFuncs();
+	const NPNetscapeFuncs_Z& GetNPNF();
 
 // Calls to the Host.
 	NPError Host_GetURL(NPP iNPP, const char* url, const char* target);
@@ -210,6 +211,19 @@ public:
 // Disabled till I figure out what the real signature should be
 //	void Host_SetException(NPObject* obj, const NPUTF8* message);
 
+	void Host_PushPopupsEnabledState(NPP iNPP, NPBool enabled);
+
+	void Host_PopPopupsEnabledState(NPP iNPP);
+
+	bool Host_Enumerate
+		(NPP iNPP, NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
+
+	void Host_PluginThreadAsyncCall
+		(NPP iNPP, void (*func)(void *), void *userData);
+
+	bool Host_Construct
+		(NPP iNPP, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
+
 // Calls from host to the guest meister.
 	virtual NPError New(
 		NPMIMEType pluginType, NPP instance, uint16 mode,
@@ -276,7 +290,7 @@ private:
 
 	static NPError sSetValue(NPP instance, NPNVariable variable, void *value);
 
-	NPNetscapeFuncs fNPNF;
+	NPNetscapeFuncs_Z fNPNF;
 
 	#if __MACH__ && ZCONFIG(Processor, PPC)
 		std::vector<char> fGlue_NPNF;

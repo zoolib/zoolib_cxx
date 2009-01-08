@@ -29,11 +29,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Pull in ZTypes so we see its int32 definition
 #include "zoolib/ZTypes.h"
 
-// And tell the npXXX headers that we have an int32 definition
-//#ifndef _INT32
-//#	define _INT32 1
-//#endif
-
 #if defined(ZProjectHeader_npapi)
 
 #	include ZProjectHeader_npapi
@@ -95,6 +90,79 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	inline uint32_t& sNPStringLength(NPString& iNPString)
 		{ return iNPString.utf8length; }
 #endif
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * npapi and npruntime header and macro fixups
+
+#ifndef NPVERS_HAS_XPCONNECT_SCRIPTING
+	#define NPVERS_HAS_XPCONNECT_SCRIPTING 13
+#endif
+
+#ifndef NPVERS_HAS_NPRUNTIME_SCRIPTING
+	#define NPVERS_HAS_NPRUNTIME_SCRIPTING 14
+#endif
+
+#ifndef NPVERS_HAS_FORM_VALUES
+	#define NPVERS_HAS_FORM_VALUES 15
+#endif
+
+#ifndef NPVERS_HAS_POPUPS_ENABLED_STATE
+	#define NPVERS_HAS_POPUPS_ENABLED_STATE 16
+#endif
+
+#ifndef NPVERS_HAS_RESPONSE_HEADERS
+	#define NPVERS_HAS_RESPONSE_HEADERS 17
+#endif
+
+#ifndef NPVERS_HAS_NPOBJECT_ENUM
+	#define NPVERS_HAS_NPOBJECT_ENUM 18
+#endif
+
+#ifndef NPVERS_HAS_PLUGIN_THREAD_ASYNC_CALL
+	#define NPVERS_HAS_PLUGIN_THREAD_ASYNC_CALL 19
+#endif
+
+#ifndef NPVERS_MACOSX_HAS_EVENT_MODELS
+	#define NPVERS_MACOSX_HAS_EVENT_MODELS 20
+#endif
+
+#if NP_VERSION_MINOR < NPVERS_HAS_POPUPS_ENABLED_STATE
+	typedef void (*NPN_PushPopupsEnabledStateProcPtr)(NPP instance, NPBool enabled);
+
+	typedef void (*NPN_PopPopupsEnabledStateProcPtr)(NPP instance);
+#endif
+
+#if NP_VERSION_MINOR < NPVERS_HAS_NPOBJECT_ENUM
+	typedef bool (*NPN_EnumerateProcPtr)
+		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
+#endif
+
+#if NP_VERSION_MINOR < NPVERS_HAS_PLUGIN_THREAD_ASYNC_CALL
+	typedef void (*NPN_PluginThreadAsyncCallProcPtr)
+		(NPP npp, void (*func)(void *), void *userData);
+	typedef bool (*NPN_ConstructProcPtr)
+		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);  
+#endif
+
+#if 0
+	typedef uint32 (*NPN_ScheduleTimerProcPtr)
+		(NPP npp, uint32 interval, NPBool repeat, void (*timerFunc)(NPP npp, uint32 timerID));
+
+	typedef void (*NPN_UnscheduleTimerProcPtr)
+		(NPP npp, uint32 timerID);
+
+	typedef void * NPMenu;
+	typedef NPError (*NPN_PopUpContextMenuProcPtr)(NPP instance, NPMenu* menu);
+#endif
+
+
+#if NP_CLASS_STRUCT_VERSION < 2
+	typedef bool (*NPEnumerationFunctionPtr)
+		(NPObject *npobj, NPIdentifier **value, uint32_t *count);
+#endif
+
+// =================================================================================================
 
 #endif // ZCONFIG_SPI_Enabled(Netscape)
 

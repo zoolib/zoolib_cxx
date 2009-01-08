@@ -33,6 +33,44 @@ namespace ZNetscape {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZNetscape::NPClassBase
+
+//#define ASSIGN(a) \
+//	*static_cast<intptr_t*>(static_cast<void*>(&this->a)) = reinterpret_cast<intptr_t>(a);
+
+#define ASSIGN(a) this->a = a
+
+NPClass_Z::NPClass_Z(
+	NPAllocateFunctionPtr allocate,
+	NPDeallocateFunctionPtr deallocate,
+	NPInvalidateFunctionPtr invalidate,
+	NPHasMethodFunctionPtr hasMethod,
+	NPInvokeFunctionPtr invoke,
+	NPInvokeDefaultFunctionPtr invokeDefault,
+	NPHasPropertyFunctionPtr hasProperty,
+	NPGetPropertyFunctionPtr getProperty,
+	NPSetPropertyFunctionPtr setProperty,
+	NPRemovePropertyFunctionPtr removeProperty,
+	NPEnumerationFunctionPtr enumerate)
+	{
+	structVersion = 2;
+	ASSIGN(allocate);
+	ASSIGN(deallocate);
+	ASSIGN(invalidate);
+	ASSIGN(hasMethod);
+	ASSIGN(invoke);
+	ASSIGN(invokeDefault);
+	ASSIGN(hasProperty);
+	ASSIGN(getProperty);
+	ASSIGN(setProperty);
+	ASSIGN(removeProperty);
+	ASSIGN(enumerate);
+	}
+
+#undef ASSIGN
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZNetscape
 
 #define CASE(a) case a: return #a

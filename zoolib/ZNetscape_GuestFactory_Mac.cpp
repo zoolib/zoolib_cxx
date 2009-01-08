@@ -43,6 +43,8 @@ NAMESPACE_ZOOLIB_USING
 
 using std::vector;
 
+using ZNetscape::NPNetscapeFuncs_Z;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Helper functions
@@ -104,7 +106,7 @@ P sLookup_T(CFBundleRef iBundleRef, CFStringRef iName)
 // We may well be wanting to load the plugin into an environment where it's already been loaded.
 // GuestFactory_HostMachO uses the Bundle mechanism to locate the plugin, but uses NSLinkModule
 // to load and instantiate an independent copy of the library. In this way the library's static
-// reference to NPNetscapeFuncs is independent of any other instantiation of the library.
+// reference to NPNetscapeFuncs_Z is independent of any other instantiation of the library.
 
 class GuestFactory_HostMachO : public ZNetscape::GuestFactory
 	{
@@ -134,7 +136,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(CFPlugInRef iPlugInRef)
 	::CFRetain(fPlugInRef);
 
 	// Get local copies of our host's function pointers
-	NPNetscapeFuncs localNPNF;
+	NPNetscapeFuncs_Z localNPNF;
 	GuestFactory::GetNPNF(localNPNF);
 
 	// And clean out our plugin functions struct
@@ -179,7 +181,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(CFPlugInRef iPlugInRef)
 			// Rework localNPNF as CFM-callable thunks
 			ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
 				&localNPNF.geturl,
-				(localNPNF.size - offsetof(NPNetscapeFuncs, geturl)) / sizeof(void*),
+				(localNPNF.size - offsetof(NPNetscapeFuncs_Z, geturl)) / sizeof(void*),
 				fGlue_NPNF);
 		#endif
 
@@ -230,11 +232,11 @@ void GuestFactory_HostMachO::GetEntryPoints(NPPluginFuncs& oNPPluginFuncs)
 
 #ifndef NPP_MainEntryUPP
 	extern "C" {
-	typedef NPError (*NP_InitializeFuncPtr)(NPNetscapeFuncs*);
+	typedef NPError (*NP_InitializeFuncPtr)(NPNetscapeFuncs_Z*);
 	typedef NPError (*NP_GetEntryPointsFuncPtr)(NPPluginFuncs*);
 	typedef void (*NPP_ShutdownProcPtr)();
 //	typedef void (*BP_CreatePluginMIMETypesPreferencesFuncPtr)(void);
-	typedef NPError (*MainFuncPtr)(NPNetscapeFuncs*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
+	typedef NPError (*MainFuncPtr)(NPNetscapeFuncs_Z*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
 	} // extern "C"
 #endif
 
@@ -268,7 +270,7 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(CFPlugInRef iPlugInRef)
 	::CFRetain(fPlugInRef);
 
 	// Get local copies of our host's function pointers
-	NPNetscapeFuncs localNPNF;
+	NPNetscapeFuncs_Z localNPNF;
 	GuestFactory::GetNPNF(localNPNF);
 
 	// And clean out our plugin functions struct
@@ -294,7 +296,7 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(CFPlugInRef iPlugInRef)
 			// Rework localNPNF as MachO-callable thunks.
 			ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
 				&localNPNF.geturl,
-				(localNPNF.size - offsetof(NPNetscapeFuncs, geturl)) / sizeof(void*),
+				(localNPNF.size - offsetof(NPNetscapeFuncs_Z, geturl)) / sizeof(void*),
 				fGlue_NPNF);
 		#endif
 

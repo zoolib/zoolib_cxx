@@ -39,25 +39,23 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_string.h" // For strdup
 
-#ifdef NPVERS_HAS_RESPONSE_HEADERS
-	typedef NPStream NPStream_Z;
-#else
-	struct NPStream_Z : public NPStream
-		{
-		const char* headers;
-		};
-#endif
-
 #include <vector>
-
-NAMESPACE_ZOOLIB_BEGIN
 
 using std::list;
 using std::set;
 using std::string;
 using std::vector;
 
+NAMESPACE_ZOOLIB_BEGIN
+
 namespace ZNetscape {
+
+static NPClass_Z* sGetClass(NPObject* obj)
+	{
+	if (obj)
+		return static_cast<NPClass_Z*>(obj->_class);
+	return nil;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -330,8 +328,9 @@ void HostMeister_Std::ReleaseObject(NPObject* obj)
 	ZAssert(obj && obj->referenceCount > 0);
 	if (--obj->referenceCount == 0)
 		{
-		if (obj->_class->deallocate)
-			obj->_class->deallocate(obj);
+		NPClass_Z* theClass = sGetClass(obj);
+		if (theClass && theClass->deallocate)
+			theClass->deallocate(obj);
 		else
 			free(obj);
 		}
@@ -344,8 +343,11 @@ bool HostMeister_Std::Invoke(NPP npp,
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s << "Invoke: " << this->StringFromIdentifier(methodName);
 
-	if (obj && obj->_class && obj->_class->invoke)
-		return obj->_class->invoke(obj, methodName, args, argCount, result);
+	if (NPClass_Z* theClass = sGetClass(obj))
+		{
+		if (theClass->invoke)
+			return theClass->invoke(obj, methodName, args, argCount, result);
+		}
 
 	return false;
 	}
@@ -356,8 +358,11 @@ bool HostMeister_Std::InvokeDefault(NPP npp,
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s.Writef("InvokeDefault");
 
-	if (obj && obj->_class && obj->_class->invokeDefault)
-		return obj->_class->invokeDefault(obj, args, argCount, result);
+	if (NPClass_Z* theClass = sGetClass(obj))
+		{
+		if (theClass->invokeDefault)
+			return theClass->invokeDefault(obj, args, argCount, result);
+		}
 
 	return false;
 	}
@@ -376,8 +381,11 @@ bool HostMeister_Std::GetProperty(NPP npp,
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s << "GetProperty: " << this->StringFromIdentifier(propertyName);
 
-	if (obj && obj->_class && obj->_class->getProperty)
-		return obj->_class->getProperty(obj, propertyName, result);
+	if (NPClass_Z* theClass = sGetClass(obj))
+		{
+		if (theClass->getProperty)
+			return theClass->getProperty(obj, propertyName, result);
+		}
 
 	return false;
 	}
@@ -388,8 +396,11 @@ bool HostMeister_Std::SetProperty(NPP npp,
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s.Writef("SetProperty");
 
-	if (obj && obj->_class && obj->_class->getProperty)
-		return obj->_class->setProperty(obj, propertyName, value);
+	if (NPClass_Z* theClass = sGetClass(obj))
+		{
+		if (theClass->getProperty)
+			return theClass->setProperty(obj, propertyName, value);
+		}
 
 	return false;
 	}
@@ -399,8 +410,11 @@ bool HostMeister_Std::RemoveProperty(NPP npp, NPObject* obj, NPIdentifier proper
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s.Writef("RemoveProperty");
 
-	if (obj && obj->_class && obj->_class->removeProperty)
-		return obj->_class->removeProperty(obj, propertyName);
+	if (NPClass_Z* theClass = sGetClass(obj))
+		{
+		if (theClass->removeProperty)
+			return theClass->removeProperty(obj, propertyName);
+		}
 
 	return false;
 	}
@@ -410,8 +424,11 @@ bool HostMeister_Std::HasProperty(NPP, NPObject* obj, NPIdentifier propertyName)
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s.Writef("HasProperty");
 
-	if (obj && obj->_class && obj->_class->hasProperty)
-		return obj->_class->hasProperty(obj, propertyName);
+	if (NPClass_Z* theClass = sGetClass(obj))
+		{
+		if (theClass->hasProperty)
+			return theClass->hasProperty(obj, propertyName);
+		}
 
 	return false;
 	}
@@ -421,8 +438,11 @@ bool HostMeister_Std::HasMethod(NPP npp, NPObject* obj, NPIdentifier methodName)
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s.Writef("HasMethod");
 
-	if (obj && obj->_class && obj->_class->hasMethod)
-		return obj->_class->hasMethod(obj, methodName);
+	if (NPClass_Z* theClass = sGetClass(obj))
+		{
+		if (theClass->hasMethod)
+			return theClass->hasMethod(obj, methodName);
+		}
 
 	return false;
 	}
@@ -448,6 +468,48 @@ void HostMeister_Std::ReleaseVariantValue(NPVariant* variant)
 void HostMeister_Std::SetException(NPObject* obj, const NPUTF8* message)
 	{
 	ZUnimplemented();
+	}
+
+void HostMeister_Std::PushPopupsEnabledState(NPP iNPP, NPBool enabled)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s.Writef("PushPopupsEnabledState");
+	}
+
+void HostMeister_Std::PopPopupsEnabledState(NPP iNPP)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s.Writef("PopPopupsEnabledState");
+	}
+
+bool HostMeister_Std::Enumerate
+	(NPP, NPObject* obj, NPIdentifier **identifier, uint32_t *count)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s.Writef("Enumerate");
+
+	if (NPClass_Z* theClass = sGetClass(obj))
+		{
+		if (theClass->enumerate)
+			return theClass->enumerate(obj, identifier, count);
+		}
+
+	return false;
+	}
+
+void HostMeister_Std::PluginThreadAsyncCall
+	(NPP iNPP, void (*func)(void *), void *userData)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s.Writef("PluginThreadAsyncCall");
+	}
+
+bool HostMeister_Std::Construct
+	(NPP iNPP, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
+	{
+	if (ZLOG(s, eDebug, "HostMeister_Std"))
+		s.Writef("Construct");
+	return false;
 	}
 
 // =================================================================================================

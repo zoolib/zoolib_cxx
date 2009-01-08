@@ -46,8 +46,6 @@ class NPObjectH;
 
 typedef NPVariant_T<NPObjectH> NPVariantH;
 
-void sRelease(NPVariantH& iNPVariantH);
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ObjectH
@@ -100,6 +98,9 @@ public:
 
 	NPVariantH GetProperty(const std::string& iName);
 	NPVariantH GetProperty(size_t iIndex);
+
+	bool Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount);
+	bool Enumerate(std::vector<NPIdentifier>& oIdentifiers);
 	};
 
 // =================================================================================================
@@ -115,7 +116,7 @@ public:
 
 	static Host* sHostFromNPP(NPP iNPP);
 	static Host* sHostFromStream(NPStream* iNPStream);
-	static void sGetNPNF(NPNetscapeFuncs& oNPNF);
+	static void sGetNPNF(NPNetscapeFuncs_Z& oNPNF);
 
 	HostMeister();
 	virtual ~HostMeister();
@@ -214,6 +215,19 @@ public:
 
 	virtual void SetException(NPObject* obj, const NPUTF8* message) = 0;
 
+	virtual void PushPopupsEnabledState(NPP iNPP, NPBool enabled) = 0;
+
+	virtual void PopPopupsEnabledState(NPP iNPP) = 0;
+
+	virtual bool Enumerate
+		(NPP iNPP, NPObject *npobj, NPIdentifier **identifier, uint32_t *count) = 0;
+
+	virtual void PluginThreadAsyncCall
+		(NPP iNPP, void (*func)(void *), void *userData) = 0;
+
+	virtual bool Construct
+		(NPP iNPP, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result) = 0;
+
 private:
 	static NPError sGetURL(NPP npp, const char* URL, const char* window);
 
@@ -307,6 +321,19 @@ private:
 
 	static void sSetException(NPObject* obj, const NPUTF8* message);
 	static void sSetExceptionNPString(NPObject* obj, NPString* message);
+
+	static void sPushPopupsEnabledState(NPP iNPP, NPBool enabled);
+
+	static void sPopPopupsEnabledState(NPP iNPP);
+
+	static bool sEnumerate
+		(NPP iNPP, NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
+
+	static void sPluginThreadAsyncCall
+		(NPP iNPP, void (*func)(void *), void *userData);
+
+	static bool sConstruct
+		(NPP iNPP, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
 	};
 
 // =================================================================================================
@@ -321,7 +348,7 @@ protected:
 public:
 	virtual ~GuestFactory();
 
-	void GetNPNF(NPNetscapeFuncs& oNPNF);
+	void GetNPNF(NPNetscapeFuncs_Z& oNPNF);
 
 	virtual void GetEntryPoints(NPPluginFuncs& oNPPluginFuncs) = 0;
 	};
