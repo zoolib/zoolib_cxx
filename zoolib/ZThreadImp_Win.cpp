@@ -58,7 +58,7 @@ void ZSem_Win::Wait()
 	{ ::WaitForSingleObject(fHANDLE, INFINITE); }
 
 bool ZSem_Win::Wait(double iTimeout)
-	{ return WAIT_OBJECT_0 == ::WaitForSingleObject(fHANDLE, iTimeout * 1e3); }
+	{ return WAIT_OBJECT_0 == ::WaitForSingleObject(fHANDLE, DWORD(iTimeout * 1e3)); }
 
 void ZSem_Win::Signal()
 	{ ::ReleaseSemaphore(fHANDLE, 1, nil); }
@@ -97,7 +97,7 @@ ZThreadImp_Win::ID ZThreadImp_Win::sID()
 	{ return ::GetCurrentThreadId(); }
 
 void ZThreadImp_Win::sSleep(double iDuration)
-	{ ::Sleep(iDuration * 1e3); }
+	{ ::Sleep(DWORD(iDuration * 1e3)); }
 
 NAMESPACE_ZOOLIB_END
 
