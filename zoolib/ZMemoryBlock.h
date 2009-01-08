@@ -145,48 +145,6 @@ inline ZMemoryBlock& ZMemoryBlock::operator=(const ZMemoryBlock& iOther)
 inline ZMemoryBlock::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fRep->fSize); }
 
-inline int ZMemoryBlock::Compare(const ZMemoryBlock& iOther) const
-	{
-	Rep* myRep = fRep.GetObject();
-	Rep* otherRep = iOther.fRep.GetObject();
-
-	if (myRep == otherRep)
-		return 0;
-
-	if (int result = memcmp(myRep->fData, otherRep->fData, std::min(myRep->fSize, otherRep->fSize)))
-		return result;
-
-	return int(myRep->fSize) - int(otherRep->fSize);
-	}
-
-inline bool ZMemoryBlock::operator<(const ZMemoryBlock& iOther) const
-	{
-	Rep* myRep = fRep.GetObject();
-	Rep* otherRep = iOther.fRep.GetObject();
-
-	if (myRep == otherRep)
-		return false;
-
-	if (int result = memcmp(myRep->fData, otherRep->fData, std::min(myRep->fSize, otherRep->fSize)))
-		return result < 0;
-
-	return fRep->fSize < otherRep->fSize;
-	}
-
-inline bool ZMemoryBlock::operator==(const ZMemoryBlock& iOther) const
-	{
-	Rep* myRep = fRep.GetObject();
-	Rep* otherRep = iOther.fRep.GetObject();
-
-	if (myRep == otherRep)
-		return true;
-
-	if (myRep->fSize != otherRep->fSize)
-		return false;
-
-	return 0 == memcmp(myRep->fData, otherRep->fData, myRep->fSize);
-	}
-
 inline size_t ZMemoryBlock::GetSize() const
 	{ return fRep->fSize; }
 

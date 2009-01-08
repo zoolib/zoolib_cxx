@@ -40,6 +40,48 @@ ZMemoryBlock::ZMemoryBlock(const void* iSource, size_t iSize)
 	this->CopyFrom(iSource, iSize);
 	}
 
+int ZMemoryBlock::Compare(const ZMemoryBlock& iOther) const
+	{
+	Rep* myRep = fRep.GetObject();
+	Rep* otherRep = iOther.fRep.GetObject();
+
+	if (myRep == otherRep)
+		return 0;
+
+	if (int result = memcmp(myRep->fData, otherRep->fData, std::min(myRep->fSize, otherRep->fSize)))
+		return result;
+
+	return int(myRep->fSize) - int(otherRep->fSize);
+	}
+
+bool ZMemoryBlock::operator<(const ZMemoryBlock& iOther) const
+	{
+	Rep* myRep = fRep.GetObject();
+	Rep* otherRep = iOther.fRep.GetObject();
+
+	if (myRep == otherRep)
+		return false;
+
+	if (int result = memcmp(myRep->fData, otherRep->fData, std::min(myRep->fSize, otherRep->fSize)))
+		return result < 0;
+
+	return fRep->fSize < otherRep->fSize;
+	}
+
+bool ZMemoryBlock::operator==(const ZMemoryBlock& iOther) const
+	{
+	Rep* myRep = fRep.GetObject();
+	Rep* otherRep = iOther.fRep.GetObject();
+
+	if (myRep == otherRep)
+		return true;
+
+	if (myRep->fSize != otherRep->fSize)
+		return false;
+
+	return 0 == memcmp(myRep->fData, otherRep->fData, myRep->fSize);
+	}
+
 void ZMemoryBlock::Touch()
 	{
 	if (fRep->GetRefCount() == 1)
