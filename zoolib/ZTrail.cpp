@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTrail.h"
 
+#include "zoolib/ZCompat_algorithm.h"
+
 #include <string.h> // For strlen
 
 using std::basic_string;
