@@ -209,7 +209,7 @@ NSDictionary* ZUtil_NSObject::sCreateNSDictionary(const ZTuple& iTuple)
 
 	for (ZTuple::const_iterator i = iTuple.begin(); i != iTuple.end(); ++i)
 		{
-		NSString* theKey = sCreateNSString_UTF8(iTuple.NameOf(i).AsString());
+		id theKey = sCreateNSString_UTF8(iTuple.NameOf(i).AsString());
 		id theValue = sCreateNSObject(iTuple.GetValue(i));
 
 		keys.push_back(theKey);

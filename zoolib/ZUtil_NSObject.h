@@ -25,10 +25,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
+// Urg. We need to include this before any std C++ headers when building
+// with Cocotron, otherwise va_list isn't appropriately visible to ObjC code.
+#include <Foundation/Foundation.h>
+
 #include "zoolib/ZTuple.h"
 #include "zoolib/ZUnicode.h"
-
-#include <Foundation/Foundation.h>
 
 NAMESPACE_ZOOLIB_BEGIN
 
