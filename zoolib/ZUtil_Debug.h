@@ -59,6 +59,7 @@ public:
 private:
 	ZRef<ZStrimmerW> fStrimmerW;
 	ZLog::EPriority fLogPriority;
+	size_t fExtraSpace;
 	};
 
 void sInstall();

@@ -176,8 +176,9 @@ static void sDeadlockHandler(const string& iString)
 ZUtil_Debug::LogMeister* ZUtil_Debug::LogMeister::sLogMeister;
 
 ZUtil_Debug::LogMeister::LogMeister()
+:	fLogPriority(ZLog::ePriority_Notice),
+	fExtraSpace(20)
 	{
-	fLogPriority = ZLog::ePriority_Notice;
 	sLogMeister = this;
 	}
 
@@ -198,14 +199,17 @@ void ZUtil_Debug::LogMeister::LogIt(
 
 	ZTime now = ZTime::sNow();
 
+	
+	const size_t curLength = ZUnicode::sCUToCP(iName.begin(), iName.end());
+	if (fExtraSpace < curLength)
+		fExtraSpace = curLength;
+
 	// extraSpace will ensure that the message text from multiple calls lines
 	// up, so long as iName is 20 CPs or less in length.
-	string extraSpace(20 - min(size_t(20), ZUnicode::sCUToCP(iName.begin(), iName.end())), ' ');
+	string extraSpace(fExtraSpace - min(fExtraSpace, curLength), ' ');
 	theStrimW
 			<< ZUtil_Time::sAsString_ISO8601_us(now, false)
-	#ifndef __SGThread__
 			<< " " << ZString::sFormat("0x%08X", ZThread::sCurrentID())
-	#endif
 			<< " P" << ZString::sFormat("%X", iPriority)
 			<< " " << extraSpace << iName
 			<< " - " << iMessage << "\n";
