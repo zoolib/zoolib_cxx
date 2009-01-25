@@ -40,10 +40,3 @@ template<> const ZRect_T<float> ZRect_T<float>::sZero(0, 0, 0, 0);
 
 template<> const ZPoint_T<double> ZPoint_T<double>::sZero(0, 0);
 template<> const ZRect_T<double> ZRect_T<double>::sZero(0, 0, 0, 0);
-
-const ZGRect_T<float> a;
-const ZGRect_T<float> b(1, 2, 3, 4);
-const ZGRect_T<float> c(ZPoint(1, 2), 3, 4);
-const ZGRect_T<float> d(1, 2, ZPoint(3, 4));
-const ZGRect_T<float> e(ZPoint(1, 2), ZPoint(3, 4));
-const ZGRect_T<float> f(a);

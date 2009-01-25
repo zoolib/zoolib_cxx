@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
+#include "zoolib/ZGeometry.h"
 #include "zoolib/ZTypes.h" // For ZRectPOD and ZPointPOD
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
@@ -90,6 +91,10 @@ public:
 	:	h(T(other.h)), v(T(other.v))
 		{}
 
+	template <class S> ZPoint_T(const ZGPoint_T<S>& other)
+	:	h(T(other.x)), v(T(other.y))
+		{}
+
 	template <class S> ZPoint_T& operator=(const ZPoint_T<S>& other)
 		{ h = T(other.h); v = T(other.v); return *this; }
 
@@ -105,48 +110,30 @@ public:
 
 // Conversions to & from native types
 	#if ZCONFIG_SPI_Enabled(CoreGraphics)
-		ZPoint_T(const CGPoint& pt)
-		:	h(T(pt.x)),
-			v(T(pt.y))
-			{}
+		ZPoint_T(const CGPoint& pt);
 		operator CGPoint() const;
 
-		ZPoint_T(const CGSize& iOther)
-		:	h(T(iOther.width)),
-			v(T(iOther.height))
-			{}
+		ZPoint_T(const CGSize& iOther);
 		operator CGSize() const;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(QuickDraw)
-		ZPoint_T(const Point& pt)
-		:	h(T(pt.h)),
-			v(T(pt.v))
-			{}
+		ZPoint_T(const Point& pt);
 		operator Point() const;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(GDI)
-		ZPoint_T(const POINT& pt)
-		:	h(T(pt.x)),
-			v(T(pt.y))
-			{}
+		ZPoint_T(const POINT& pt);
 		operator POINT() const;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(X11)
-		ZPoint_T(const XPoint& pt)
-		:	h(T(pt.x)),
-			v(T(pt.y))
-			{}
+		ZPoint_T(const XPoint& pt);
 		operator XPoint() const;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(BeOS)
-		ZPoint_T(const BPoint& pt)
-		:	h(T(pt.x)),
-			v(T(pt.y))
-			{}
+		ZPoint_T(const BPoint& pt);
 		operator BPoint() const;
 	#endif
 
@@ -341,56 +328,35 @@ public:
 		return *this;
 		}
 
+	template <class S>
+	operator ZGRect_T<S>() const
+		{ return ZGRect_T<S>(S(left), S(top), S(this->Width()), S(this->Height())); }
+
 	operator ZRectPOD() const;
 
 // Conversions to & from native types
 	#if ZCONFIG_SPI_Enabled(CoreGraphics)
-		ZRect_T(const CGRect& iRect)
-		:	left(T(iRect.origin.x)),
-			top(T(iRect.origin.y)),
-			right(T(iRect.origin.x + iRect.size.width)),
-			bottom(T(iRect.origin.y + iRect.size.height))
-			{}
+		ZRect_T(const CGRect& iRect);
 		operator CGRect() const;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(QuickDraw)
-		ZRect_T(const Rect& iRect)
-		:	left(T(iRect.left)),
-			top(T(iRect.top)),
-			right(T(iRect.right)),
-			bottom(T(iRect.bottom))
-			{}
+		ZRect_T(const Rect& iRect);
 		operator Rect() const;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(GDI)
-		ZRect_T(const RECT& iRect)
-		:	left(T(iRect.left)),
-			top(T(iRect.top)),
-			right(T(iRect.right)),
-			bottom(T(iRect.bottom))
-			{}
+		ZRect_T(const RECT& iRect);
 		operator RECT() const;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(X11)
-		ZRect_T(const XRectangle& iRect)
-		:	left(T(iRect.x)),
-			top(T(iRect.y)),
-			right(T(iRect.x + iRect.width)),
-			bottom(T(iRect.y + iRect.height))
-			{}
+		ZRect_T(const XRectangle& iRect);
 		operator XRectangle() const;
 	#endif
 
-	#if ZCONFIG_SPI_Enabled(Be)
-		ZRect_T(const BRect& iRect)
-		:	left(T(iRect.left)),
-			top(T(iRect.top)),
-			right(T(iRect.right + 1)),
-			bottom(T(iRect.bottom + 1))
-			{}
+	#if ZCONFIG_SPI_Enabled(BeOS)
+		ZRect_T(const BRect& iRect);
 		operator BRect() const;
 	#endif
 
@@ -738,191 +704,6 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZGRect_T
-
-template <class T>
-class ZGRect_T
-	{
-public:
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZGRect_T<T>,
-    	operator_bool_generator_type, operator_bool_type);
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(extent.h != 0 || extent.v != 0); }
-
-	ZPoint_T<T> origin;
-	ZPoint_T<T> extent;
-
-	ZGRect_T()
-		{}
-
-	ZGRect_T(const ZGRect_T<T>& iOther)
-	:	origin(iOther.origin),
-		extent(iOther.extent)
-		{}
-
-	ZGRect_T(T iWidth, T iHeight)
-	:	origin(0, 0),
-		extent(iWidth, iHeight)
-		{}
-
-	template <class U>
-	ZGRect_T(const ZPoint_T<U>& iExtent)
-	:	origin(0, 0),
-		extent(iExtent)
-		{}
-
-	ZGRect_T(T iOriginX, T iOriginY, T iWidth, T iHeight)
-	:	origin(iOriginX, iOriginY),
-		extent(iWidth, iHeight)
-		{}
-
-	template <class U, class V>
-	ZGRect_T(const ZPoint_T<U>& iOrigin, const ZPoint_T<V>& iExtent)
-	:	origin(iOrigin),
-		extent(iExtent)
-		{}
-
-	template <class U>
-	ZGRect_T(T iOriginX, T iOriginY, const ZPoint_T<U>& iExtent)
-	:	origin(iOriginX, iOriginY),
-		extent(iExtent)
-		{}
-
-	template <class U>
-	ZGRect_T(const ZPoint_T<U>& iOrigin, T iWidth, T iHeight)
-	:	origin(iOrigin),
-		extent(iWidth, iHeight)
-		{}
-
-	template <class U>
-	ZGRect_T& operator=(const ZPoint_T<U>& iExtent)
-		{
-		origin.h = T(0);
-		origin.v = T(0);
-		extent = iExtent;
-		return *this;
-		}
-
-// Conversions to & from native types
-	#if ZCONFIG_SPI_Enabled(CoreGraphics)
-		ZGRect_T(const CGSize& iSize)
-		:	origin(0),
-			extent(iSize)
-			{}
-
-		ZGRect_T(const CGRect& iRect)
-		:	origin(iRect.origin),
-			extent(iRect.size)
-			{}
-		operator CGRect() const;
-	#endif
-
-	#if ZCONFIG_SPI_Enabled(QuickDraw)
-		ZGRect_T(const Rect& iRect)
-		:	origin(T(iRect.left), T(iRect.top)),
-			extent(T(iRect.right - iRect.left), T(iRect.bottom - iRect.top))
-			{}
-		operator Rect() const;
-	#endif
-
-	#if ZCONFIG_SPI_Enabled(GDI)
-		ZGRect_T(const RECT& iRect)
-		:	origin(T(iRect.left), T(iRect.top)),
-			extent(T(iRect.right - iRect.left), T(iRect.bottom - iRect.top))
-			{}
-		operator RECT() const;
-	#endif
-
-	#if ZCONFIG_SPI_Enabled(X11)
-		ZGRect_T(const XRectangle& iRect)
-		:	origin(iRect.x, iRect.y),
-			extent(iRect.width, iRect.height)
-			{}
-		operator XRectangle() const;
-	#endif
-
-	bool operator==(const ZGRect_T& other) const
-		{ return origin == other.origin && extent == other.extent; }
-
-	bool operator!=(const ZGRect_T& other) const
-		{ return origin != other.origin || extent != other.extent; }
-
-	template <class U>
-	ZGRect_T operator+(const ZPoint_T<U>& iOffset) const
-		{ return ZGRect_T(origin + iOffset, extent); }
-
-	template <class U>
-	ZGRect_T& operator+=(const ZPoint_T<U>& iOffset)
-		{
-		origin += iOffset;
-		return *this;
-		}
-
-	template <class U>
-	ZGRect_T operator-(const ZPoint_T<U>& iOffset) const
-		{ return ZGRect_T(origin - iOffset, extent); }
-
-	template <class U>
-	ZGRect_T& operator-=(const ZPoint_T<U>& iOffset)
-		{
-		origin -= iOffset;
-		return *this;
-		}
-
-	T CenterH() const
-		{ return origin.h + extent.h / 2; }
-
-	T CenterV() const
-		{ return origin.v + extent.v / 2; }
-
-	ZPoint_T<T> Center() const
-		{ return ZPoint_T<T>(this->CenterH(), this->CenterV()); }
-
-	template <class U>
-	bool ContainsH(U iCoord) const
-		{
-		if (extent.h > 0)
-			{
-			return iCoord >= origin.h && iCoord < origin.h + extent.h;
-			}
-		else if (extent.h < 0)
-			{
-			return iCoord < origin.h && iCoord >= origin.h + extent.h;
-			}
-		else
-			{
-			return false;
-			}
-		}
-
-	template <class U>
-	bool ContainsV(U iCoord) const
-		{
-		if (extent.v > 0)
-			{
-			return iCoord >= origin.v && iCoord < origin.v + extent.v;
-			}
-		else if (extent.h < 0)
-			{
-			return iCoord < origin.v && iCoord >= origin.v + extent.v;
-			}
-		else
-			{
-			return false;
-			}
-		}
-
-	template <class U>
-	bool Contains(const ZPoint_T<U>& pt) const
-		{ return this->ContainsH(pt.h) && this->ContainsV(pt.v); }
-
-	template <class U>
-	bool Contains(U h, U v) const
-		{ return this->ContainsH(h) && this->ContainsV(v); }
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZPoint and ZRect
 
 typedef ZPoint_T<ZCoord> ZPoint;
@@ -930,8 +711,6 @@ typedef ZRect_T<ZCoord> ZRect;
 
 typedef ZPoint_T<float> ZPointf;
 typedef ZRect_T<float> ZRectf;
-
-typedef ZGRect_T<float> ZGRectf;
 
 // =================================================================================================
 #pragma mark -
@@ -959,23 +738,46 @@ inline ZRect_T<T>::operator ZRectPOD() const
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
 	template <class T>
+	inline ZPoint_T<T>::ZPoint_T(const CGPoint& pt)
+	:	h(T(pt.x)),
+		v(T(pt.y))
+		{}
+
+	template <class T>
 	inline ZPoint_T<T>::operator CGPoint() const
 		{ return ::CGPointMake(h, v); }
+
+	template <class T>
+	inline ZPoint_T<T>::ZPoint_T(const CGSize& iOther)
+	:	h(T(iOther.width)),
+		v(T(iOther.height))
+		{}
 
 	template <class T>
 	inline ZPoint_T<T>::operator CGSize() const
 		{ return ::CGSizeMake(h, v); }
 
 	template <class T>
+	inline ZRect_T<T>::ZRect_T(const CGRect& iRect)
+	:	left(T(iRect.origin.x)),
+		top(T(iRect.origin.y)),
+		right(T(iRect.origin.x + iRect.size.width)),
+		bottom(T(iRect.origin.y + iRect.size.height))
+		{}
+
+	template <class T>
 	inline ZRect_T<T>::operator CGRect() const
 		{ return CGRectMake(left, top, right - left, bottom - top); }
 
-	template <class T>
-	inline ZGRect_T<T>::operator CGRect() const
-		{ return CGRectMake(origin.h, origin.v, extent.h, extent.v); }
 #endif
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
+	template <class T>
+	inline ZPoint_T<T>::ZPoint_T(const Point& pt)
+	:	h(T(pt.h)),
+		v(T(pt.v))
+		{}
+
 	template <class T>
 	inline ZPoint_T<T>::operator Point() const
 		{
@@ -984,6 +786,14 @@ inline ZRect_T<T>::operator ZRectPOD() const
 		thePoint.v = v;
 		return thePoint;
 		}
+
+	template <class T>
+	inline ZRect_T<T>::ZRect_T(const Rect& iRect)
+	:	left(T(iRect.left)),
+		top(T(iRect.top)),
+		right(T(iRect.right)),
+		bottom(T(iRect.bottom))
+		{}
 
 	template <class T>
 	inline ZRect_T<T>::operator Rect() const
@@ -995,39 +805,15 @@ inline ZRect_T<T>::operator ZRectPOD() const
 		theRect.bottom = bottom;
 		return theRect;
 		}
-
-	template <class T>
-	inline ZGRect_T<T>::operator Rect() const
-		{
-		Rect theRect;
-
-		if (extent.h >= 0)
-			{
-			theRect.left = origin.h;
-			theRect.right = origin.h + extent.h;
-			}
-		else
-			{
-			theRect.left = origin.h + extent.h;
-			theRect.right = origin.h;
-			}
-
-		if (extent.v >= 0)
-			{
-			theRect.top = origin.v;
-			theRect.bottom = origin.v + extent.v;
-			}
-		else
-			{
-			theRect.top = origin.v + extent.v;
-			theRect.bottom = origin.v;
-			}
-
-		return theRect;
-		}
 #endif
 
 #if ZCONFIG_SPI_Enabled(GDI)
+	template <class T>
+	inline ZPoint_T<T>::ZPoint_T(const POINT& pt)
+	:	h(T(pt.x)),
+		v(T(pt.y))
+		{}
+
 	template <class T>
 	inline ZPoint_T<T>::operator POINT() const
 		{
@@ -1036,6 +822,14 @@ inline ZRect_T<T>::operator ZRectPOD() const
 		thePOINT.y = v;
 		return thePOINT;
 		}
+
+	template <class T>
+	inline ZRect_T<T>::ZRect_T(const RECT& iRect)
+	:	left(T(iRect.left)),
+		top(T(iRect.top)),
+		right(T(iRect.right)),
+		bottom(T(iRect.bottom))
+		{}
 
 	template <class T>
 	inline ZRect_T<T>::operator RECT() const
@@ -1047,39 +841,15 @@ inline ZRect_T<T>::operator ZRectPOD() const
 		theRECT.bottom = bottom;
 		return theRECT;
 		}
-
-	template <class T>
-	inline ZGRect_T<T>::operator RECT() const
-		{
-		RECT theRECT;
-
-		if (extent.h >= 0)
-			{
-			theRECT.left = origin.h;
-			theRECT.right = origin.h + extent.h;
-			}
-		else
-			{
-			theRECT.left = origin.h + extent.h;
-			theRECT.right = origin.h;
-			}
-
-		if (extent.v >= 0)
-			{
-			theRECT.top = origin.v;
-			theRECT.bottom = origin.v + extent.v;
-			}
-		else
-			{
-			theRECT.top = origin.v + extent.v;
-			theRECT.bottom = origin.v;
-			}
-
-		return theRECT;
-		}
 #endif
 
 #if ZCONFIG_SPI_Enabled(X11)
+	template <class T>
+	inline ZPoint_T<T>::ZPoint_T(const XPoint& pt)
+	:	h(T(pt.x)),
+		v(T(pt.y))
+		{}
+
 	template <class T>
 	inline ZPoint_T<T>::operator XPoint() const
 		{
@@ -1088,6 +858,14 @@ inline ZRect_T<T>::operator ZRectPOD() const
 		theXPoint.y = short(v);
 		return theXPoint;
 		}
+
+	template <class T>
+	inline ZRect_T<T>::ZRect_T(const XRectangle& iRect)
+	:	left(T(iRect.x)),
+		top(T(iRect.y)),
+		right(T(iRect.x + iRect.width)),
+		bottom(T(iRect.y + iRect.height))
+		{}
 
 	template <class T>
 	inline ZRect_T<T>::operator XRectangle() const
@@ -1099,41 +877,23 @@ inline ZRect_T<T>::operator ZRectPOD() const
 		theXRectangle.height = (unsigned short)(bottom - top);
 		return theXRectangle;
 		}
-
-	template <class T>
-	inline ZGRect_T<T>::operator XRectangle() const
-		{
-		XRectangle theXRectangle;
-
-		if (extent.h >= 0)
-			{
-			theXRectangle.x = short(origin.h);
-			theXRectangle.width = unsigned short(extent.h);
-			}
-		else
-			{
-			theXRectangle.x = short(origin.h + extent.h);
-			theXRectangle.width = unsigned short(-extent.h);
-			}
-
-		if (extent.v >= 0)
-			{
-			theXRectangle.y = short(origin.v);
-			theXRectangle.height = unsigned short(extent.v);
-			}
-		else
-			{
-			theXRectangle.y = short(origin.v + extent.v);
-			theXRectangle.height = unsigned short(-origin.v);
-			}
-
-		return theXRectangle;
-		}
 #endif
 
 #if ZCONFIG_SPI_Enabled(BeOS)
+	template <class T> inline ZPoint_T<T>::ZPoint_T(const BPoint& pt)
+	:	h(T(pt.x)),
+		v(T(pt.y))
+		{}
+
 	template <class T> inline ZPoint_T<T>::operator BPoint() const
 		{ return BPoint(h, v); }
+
+	template <class T> inline ZRect_T<T>::ZRect_T(const BRect& iRect)
+	:	left(T(iRect.left)),
+		top(T(iRect.top)),
+		right(T(iRect.right + 1)),
+		bottom(T(iRect.bottom + 1))
+		{}
 
 	template <class T> inline ZRect_T<T>::operator BRect() const
 		{ return BRect(left, top, right - 1, bottom - 1); }
