@@ -117,9 +117,6 @@ public:
 	virtual NPError GetEntryPoints(NPPluginFuncs* oPluginFuncs);
 	virtual NPError Shutdown();
 
-	virtual int Main(
-		NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc);
-
 	const NPNetscapeFuncs_Z& GetNPNetscapeFuncs();
 	const NPNetscapeFuncs_Z& GetNPNF();
 

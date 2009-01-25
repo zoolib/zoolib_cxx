@@ -26,53 +26,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZNetscape_Macros.h"
-#include "zoolib/ZUtil_MacOSX.h"
 
 #include <string>
 
 using std::min;
 using std::string;
-
-using ZooLib::ZNetscape::NPNetscapeFuncs_Z;
-
-// =================================================================================================
-
-extern "C" {
-
-#if __MACH__
-#	pragma export on
-#endif
-
-NPError NP_Initialize(NPNetscapeFuncs_Z*);
-NPError NP_Initialize(NPNetscapeFuncs_Z* iBrowserFuncs)
-	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->Initialize(iBrowserFuncs); }
-
-NPError NP_GetEntryPoints(NPPluginFuncs*);
-NPError NP_GetEntryPoints(NPPluginFuncs* oPluginFuncs)
-	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->GetEntryPoints(oPluginFuncs); }
-
-NPError NP_Shutdown();
-NPError NP_Shutdown()
-	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->Shutdown(); }
-
-#if __MACH__
-#	pragma export off
-#endif
-
-// For compatibility with CFM and Mozilla-type browsers
-#pragma export on
-
-int main(NPNetscapeFuncs_Z*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
-int main(NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
-	{
-	return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->
-		Main(iNPNF, oPluginFuncs, oShutdownFunc);
-	}
-
-#pragma export off
-
-} // extern "C"
-
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -345,56 +303,6 @@ NPError GuestMeister::GetEntryPoints(NPPluginFuncs* oPluginFuncs)
 NPError GuestMeister::Shutdown()
 	{
     return NPERR_NO_ERROR;
-	}
-
-int GuestMeister::Main(
-	NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
-	{
-	// This function is called by CFM browsers, and also by Mozilla-based code.
-	// On Intel the function pointers are just regular function pointers, on PPC they
-	// will be tvectors.
-
-	NPError result;
-	#if __MACH__ && ZCONFIG(Processor, PPC)
-		// We're MachO on PPC, but main has been called. We have to assume that
-		// the caller is expecting CFM function pointers.
-
-		// Take a local copy of the passed-in table, no bigger than what was
-		// passed, and no bigger than what we're expecting.
-		NPNetscapeFuncs_Z localNPNF;
-		ZBlockZero(&localNPNF, sizeof(localNPNF));
-		ZBlockCopy(iNPNF, &localNPNF, min(size_t(iNPNF->size), sizeof(localNPNF)));
-
-		// Rewrite them as CFM-callable thunks.
-		ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
-			&localNPNF.geturl,
-			(localNPNF.size - offsetof(NPNetscapeFuncs_Z, geturl)) / sizeof(void*),
-			fGlue_NPNF);
-
-		// And pass the munged local structure to NP_Initialize.
-		result = NP_Initialize(&localNPNF);
-
-		// Get our plugin's function pointers
-		NP_GetEntryPoints(oPluginFuncs);
-
-		// And munge them into MachO-callable thunks.
-		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
-			&oPluginFuncs->newp,
-			(oPluginFuncs->size - offsetof(NPPluginFuncs, newp)) / sizeof(void*),
-			fGlue_PluginFuncs);
-
-		*oShutdownFunc = (NPP_ShutdownProcPtr)NP_Shutdown; 	
-		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(&oShutdownFunc, 1, fGlue_Shutdown);
-		
-	#else
-		// We're something else, so raw function pointers are OK.
-		result = NP_Initialize(iNPNF);
-		NP_GetEntryPoints(oPluginFuncs);
-		*oShutdownFunc = (NPP_ShutdownProcPtr)NP_Shutdown; 	
-
-	#endif
-
-	return result;
 	}
 
 const NPNetscapeFuncs_Z& GuestMeister::GetNPNetscapeFuncs()
