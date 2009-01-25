@@ -24,13 +24,112 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/NSString.h>
 
+using std::string;
+using std::vector;
+
 NAMESPACE_ZOOLIB_USING
 
-using std::vector;
+// =================================================================================================
+
+@interface NSObject (ZTValueAdditions)
+-(ZTValue)AsZTValue;
+@end
+
+@interface NSDictionary (ZTValueAdditions)
+-(ZTValue)AsZTValue;
+@end
+
+@interface NSArray (ZTValueAdditions)
+-(ZTValue)AsZTValue;
+@end
+
+@interface NSString (ZTValueAdditions)
+-(ZTValue)AsZTValue;
+@end
+
+@interface NSNumber (ZTValueAdditions)
+-(ZTValue)AsZTValue;
+@end
+
+/*
+@interface NSData (ZTValueAdditions)
+-(ZTValue)AsZTValue;
+@end
+*/
+
+// =================================================================================================
+
+@implementation NSObject (ZTValueAdditions)
+
+-(ZTValue)AsZTValue
+	{
+	// Hmm, log and return null or what?
+	ZDebugLogf(0, ("NSObject (ZTValueAdditions) AsZTValue called"));
+	return ZTValue();
+	}
+
+@end
+
+// =================================================================================================
+
+@implementation NSDictionary (ZTValueAdditions)
+
+-(ZTValue)AsZTValue
+	{
+	ZTuple result;
+	for (id theKey, i = [self keyEnumerator]; (theKey = [i nextObject]); /*no inc*/)
+		{
+		const ZTValue theValue = [[self objectForKey:theKey] AsZTValue];
+		const string theName = ZUtil_NSObject::sAsUTF8((NSString*)theKey);
+		result.SetValue(theName, theValue);
+		}
+	return result;
+	}
+
+@end
+
+// =================================================================================================
+
+@implementation NSArray (ZTValueAdditions)
+
+-(ZTValue)AsZTValue
+	{
+	ZTValue result;
+	vector<ZTValue>& theVec = result.SetMutableVector();
+	for (id theValue, i = [self objectEnumerator]; (theValue = [i nextObject]); /*no inc*/)
+		theVec.push_back([theValue AsZTValue]);
+	return result;
+	}
+
+@end
+
+// =================================================================================================
+
+@implementation NSString (ZTValueAdditions)
+
+-(ZTValue)AsZTValue
+	{
+	return ZTValue([self UTF8String]);
+	}
+
+@end
+
+// =================================================================================================
+
+@implementation NSNumber (ZTValueAdditions)
+
+-(ZTValue)AsZTValue
+	{
+	return ZTValue([self longLongValue]);
+	}
+
+@end
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_NSObject
+
+NAMESPACE_ZOOLIB_BEGIN
 
 NSString* ZUtil_NSObject::sCreateNSString_UTF8(const string8& iString8)
 	{ return [[NSString alloc] initWithUTF8String:iString8.c_str()]; }
@@ -50,88 +149,7 @@ string16 ZUtil_NSObject::sAsUTF16(NSString* iNSString)
 
 ZTValue ZUtil_NSObject::sAsTV(id iNSObject)
 	{
-	ZUnimplemented();
-#if 0
-	if (iCFType)
-		{
-		const CFTypeID theTypeID = ::CFGetTypeID(iCFType);
-		if (theTypeID == ::CFDictionaryGetTypeID())
-			{
-			return sAsTuple(static_cast<CFDictionaryRef>(iCFType));
-			}
-		else if (theTypeID == ::CFArrayGetTypeID())
-			{
-			vector<ZTValue> theVector;
-			sAsVector(static_cast<CFArrayRef>(iCFType), theVector);
-			return theVector;
-			}
-		else if (theTypeID == ::CFStringGetTypeID())
-			{
-			return ZTValue(sAsUTF8(static_cast<CFStringRef>(iCFType)));
-			}
-		else if (theTypeID == ::CFBooleanGetTypeID())
-			{
-			return ZTValue(bool(::CFBooleanGetValue(static_cast<CFBooleanRef>(iCFType))));
-			}
-		else if (theTypeID == ::CFDataGetTypeID())
-			{
-			CFDataRef theDataRef = static_cast<CFDataRef>(iCFType);
-			size_t theLength = ::CFDataGetLength(theDataRef);
-			const void* theData = ::CFDataGetBytePtr(theDataRef);
-			return ZTValue(theData, theLength);
-			}
-		else if (theTypeID == ::CFNumberGetTypeID())
-			{
-			const CFNumberRef theNumberRef = static_cast<CFNumberRef>(iCFType);
-			switch (::CFNumberGetType(theNumberRef))
-				{
-				case kCFNumberSInt8Type:
-				case kCFNumberCharType:
-					{
-					int8 theValue;
-					::CFNumberGetValue(theNumberRef, kCFNumberSInt8Type, &theValue);
-					return ZTValue(theValue);
-					}
-				case kCFNumberSInt16Type:
-				case kCFNumberShortType:
-					{
-					int16 theValue;
-					::CFNumberGetValue(theNumberRef, kCFNumberSInt16Type, &theValue);
-					return ZTValue(theValue);
-					}
-				case kCFNumberSInt32Type:
-				case kCFNumberIntType:
-					{
-					int32 theValue;
-					::CFNumberGetValue(theNumberRef, kCFNumberSInt32Type, &theValue);
-					return ZTValue(theValue);
-					}
-				case kCFNumberSInt64Type:
-				case kCFNumberLongLongType:
-					{
-					int64 theValue;
-					::CFNumberGetValue(theNumberRef, kCFNumberSInt64Type, &theValue);
-					return ZTValue(theValue);
-					}
-				case kCFNumberFloat32Type:
-				case kCFNumberFloatType:
-					{
-					float theValue;
-					::CFNumberGetValue(theNumberRef, kCFNumberFloat32Type, &theValue);
-					return ZTValue(theValue);
-					}
-				case kCFNumberFloat64Type:
-				case kCFNumberDoubleType:
-					{
-					double theValue;
-					::CFNumberGetValue(theNumberRef, kCFNumberFloat64Type, &theValue);
-					return ZTValue(theValue);
-					}
-				}
-			}
-		}
-#endif
-	return ZTValue();
+	return [iNSObject AsZTValue];
 	}
 
 id ZUtil_NSObject::sCreateNSObject(const ZTValue& iTV)
@@ -202,17 +220,15 @@ ZTuple ZUtil_NSObject::sAsTuple(NSDictionary* iNSDictionary)
 
 NSDictionary* ZUtil_NSObject::sCreateNSDictionary(const ZTuple& iTuple)
 	{
-	// Build local vector of keys and values.
-//	vector<NSString*> keys;
 	vector<id> keys;
 	vector<id> values;
 
 	for (ZTuple::const_iterator i = iTuple.begin(); i != iTuple.end(); ++i)
 		{
 		id theKey = sCreateNSString_UTF8(iTuple.NameOf(i).AsString());
-		id theValue = sCreateNSObject(iTuple.GetValue(i));
-
 		keys.push_back(theKey);
+
+		id theValue = sCreateNSObject(iTuple.GetValue(i));
 		values.push_back(theValue);
 		}
 
@@ -238,5 +254,7 @@ NSArray* ZUtil_NSObject::sCreateNSArray(const vector<ZTValue>& iVector)
 		initWithObjects:&values[0]
 		count:values.size()];
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Cocoa)
