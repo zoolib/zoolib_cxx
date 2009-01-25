@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZString.h"
+#include "zoolib/ZThreadImp.h"
 #include "zoolib/ZUtil_Strim_Data.h"
 
 #include <CoreFoundation/CoreFoundation.h>
@@ -37,10 +39,23 @@ NAMESPACE_ZOOLIB_USING
 using std::exception;
 using std::min;
 using std::runtime_error;
+using std::string;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Other stuff
+
+static string sErrorAsString(IOReturn iError)
+	{
+	switch (iError)
+		{
+		case kIOReturnNotResponding: return "kIOReturnNotResponding";
+		case kIOReturnNoDevice: return "kIOReturnNotResponding";
+		case kIOReturnBadArgument: return "kIOReturnNotResponding";
+		case kIOReturnAborted: return "kIOReturnAborted";
+		default: return ZString::sFormat("%d", iError);
+		}
+	}
 
 static void sThrowIfErr(IOReturn iErr)
 	{
@@ -246,7 +261,8 @@ void ZUSBDevice::SetObserver(Observer* iObserver)
 IOUSBDeviceInterface182** ZUSBDevice::GetIOUSBDeviceInterface()
 	{ return fIOUSBDeviceInterface; }
 
-ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface(uint8 iProtocol)
+ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface(
+	CFRunLoopRef iRunLoopRef, uint8 iProtocol)
 	{
 	IOUSBFindInterfaceRequest request; 
 	request.bInterfaceClass = kIOUSBFindInterfaceDontCare; 
@@ -287,8 +303,8 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface(uint8 iProtoco
 			IOUSBInterfaceInterface190** theIOUSBInterfaceInterface;
 
 			if (plugInInterface[0]->QueryInterface(plugInInterface, 
-					CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID190),
-					(LPVOID*)&theIOUSBInterfaceInterface))
+				CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID190),
+				(LPVOID*)&theIOUSBInterfaceInterface))
 				{
 				theIOUSBInterfaceInterface = nil;
 				}
@@ -305,7 +321,8 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface(uint8 iProtoco
 						if (kIOReturnSuccess == theIOUSBInterfaceInterface[0]->
 							USBInterfaceOpen(theIOUSBInterfaceInterface))
 							{
-							return new ZUSBInterfaceInterface(this, theIOUSBInterfaceInterface);
+							return new ZUSBInterfaceInterface(this,
+								iRunLoopRef, theIOUSBInterfaceInterface);
 							}
 						}
 					}
@@ -375,19 +392,21 @@ void ZUSBDevice::pFetchDeviceDescriptor()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUSBInterfaceInterface::StreamerR
+#pragma mark * StreamerR_TO
 
-class ZUSBInterfaceInterface::StreamerR
+namespace ZANONYMOUS {
+
+class StreamerR_TO
 :	public ZStreamerR,
 	private ZStreamR
 	{
 public:
-	StreamerR(ZRef<ZUSBInterfaceInterface> iUSBII,
+	StreamerR_TO(ZRef<ZUSBInterfaceInterface> iUSBII,
 		IOUSBInterfaceInterface190** iIOUSBInterfaceInterface,
 		int iPipeRefR,
-		size_t iReadBufferSize);
+		size_t iBufferSize);
 
-	virtual ~StreamerR();
+	virtual ~StreamerR_TO();
 
 // From ZStreamerR via ZStreamerR
 	virtual const ZStreamR& GetStreamR();
@@ -403,45 +422,47 @@ private:
 	ZRef<ZUSBInterfaceInterface> fUSBII;
 	IOUSBInterfaceInterface190** fII;
 	int fPipeRefR;
-	const size_t fBufferRead_Size;
-	size_t fBufferRead_Offset;
-	size_t fBufferRead_End;
-	uint8* fBufferRead;
+	const size_t fSize;
+	uint8* fBuffer;
+	size_t fOffset;
+	size_t fEnd;
 	};
 
-ZUSBInterfaceInterface::StreamerR::StreamerR(ZRef<ZUSBInterfaceInterface> iUSBII,
+} // anonymous namespace
+
+StreamerR_TO::StreamerR_TO(ZRef<ZUSBInterfaceInterface> iUSBII,
 	IOUSBInterfaceInterface190** iIOUSBInterfaceInterface,
 	int iPipeRefR,
-	size_t iReadBufferSize)
+	size_t iBufferSize)
 :	fUSBII(iUSBII),
 	fII(iIOUSBInterfaceInterface),
 	fPipeRefR(iPipeRefR),
-	fBufferRead_Size(iReadBufferSize),
-	fBufferRead_Offset(0),
-	fBufferRead_End(0),
-	fBufferRead(new uint8[iReadBufferSize])
+	fSize(iBufferSize),
+	fBuffer(new uint8[iBufferSize]),
+	fOffset(0),
+	fEnd(0)
 	{}
 
-ZUSBInterfaceInterface::StreamerR::~StreamerR()
+StreamerR_TO::~StreamerR_TO()
 	{
-	delete[] fBufferRead;
+	delete[] fBuffer;
 	}
 
-const ZStreamR& ZUSBInterfaceInterface::StreamerR::GetStreamR()
+const ZStreamR& StreamerR_TO::GetStreamR()
 	{ return *this; }
 
-void ZUSBInterfaceInterface::StreamerR::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void StreamerR_TO::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
 	uint8* localDest = static_cast<uint8*>(iDest);
 
 	for (;;)
 		{
-		if (fBufferRead_End > fBufferRead_Offset)
+		if (fEnd > fOffset)
 			{
-			const size_t countToCopy = min(fBufferRead_End - fBufferRead_Offset, iCount);
-			ZBlockCopy(fBufferRead + fBufferRead_Offset, localDest, countToCopy);
+			const size_t countToCopy = min(fEnd - fOffset, iCount);
+			ZBlockCopy(fBuffer + fOffset, localDest, countToCopy);
 			localDest += countToCopy;
-			fBufferRead_Offset += countToCopy;
+			fOffset += countToCopy;
 			break;
 			}
 		else
@@ -455,32 +476,32 @@ void ZUSBInterfaceInterface::StreamerR::Imp_Read(void* iDest, size_t iCount, siz
 		*oCountRead = localDest - static_cast<uint8*>(iDest);
 	}
 
-size_t ZUSBInterfaceInterface::StreamerR::Imp_CountReadable()
-	{ return fBufferRead_End - fBufferRead_Offset; }
+size_t StreamerR_TO::Imp_CountReadable()
+	{ return fEnd - fOffset; }
 
-bool ZUSBInterfaceInterface::StreamerR::Imp_WaitReadable(int iMilliseconds)
+bool StreamerR_TO::Imp_WaitReadable(int iMilliseconds)
 	{
 	if (this->pRefill(iMilliseconds))
-		return fBufferRead_End > fBufferRead_Offset;
+		return fEnd > fOffset;
 
 	return true;
 	}
 
-bool ZUSBInterfaceInterface::StreamerR::pRefill(int iMilliseconds)
+bool StreamerR_TO::pRefill(int iMilliseconds)
 	{
-	if (fBufferRead_End > fBufferRead_Offset)
+	if (fEnd > fOffset)
 		return true;
 
-	fBufferRead_Offset = 0;
-	fBufferRead_End = 0;
-	UInt32 localCount = fBufferRead_Size;
+	fOffset = 0;
+	fEnd = 0;
+	UInt32 localCount = fSize;
 	IOReturn result = fII[0]->ReadPipeTO(
-		fII, fPipeRefR, fBufferRead, &localCount, iMilliseconds, 1000000);	
+		fII, fPipeRefR, fBuffer, &localCount, iMilliseconds, 1000000);	
 
 	if (kIOUSBTransactionTimeout == result)
 		{
 		fII[0]->ClearPipeStallBothEnds(fII, fPipeRefR);
-		if (ZLOG(s, eDebug + 2, "ZUSBInterfaceInterface::StreamerR"))
+		if (ZLOG(s, eDebug + 2, "StreamerR_TO"))
 			{
 			s << "pRefill, Timeout";
 			}
@@ -488,25 +509,20 @@ bool ZUSBInterfaceInterface::StreamerR::pRefill(int iMilliseconds)
 		}
 	else if (0 == result)
 		{
-		if (ZLOG(s, eDebug + 2, "ZUSBInterfaceInterface::StreamerR"))
+		if (ZLOG(s, eDebug + 2, "StreamerR_TO"))
 			{
 			s.Writef("pRefill, pipe: %d, ", fPipeRefR);
-			ZUtil_Strim_Data::sDumpData(s, fBufferRead, localCount);
+			ZUtil_Strim_Data::sDumpData(s, fBuffer, localCount);
 			}
-		fBufferRead_End = localCount;
+		fEnd = localCount;
 		return true;
 		}
 	else
 		{
-		if (ZLOG(s, eDebug, "ZUSBInterfaceInterface::StreamerR"))
+		if (ZLOG(s, eDebug, "StreamerR_TO"))
 			{
-			s << "pRefill, Got result: ";
+			s << "pRefill, Got result: " << sErrorAsString(result);
 
-			if (kIOReturnNotResponding == result) s << "kIOReturnNotResponding";
-			else if (kIOReturnNoDevice == result) s << "kIOReturnNoDevice";
-			else if (kIOReturnBadArgument == result) s << "kIOReturnBadArgument";
-			else if (kIOReturnAborted == result) s << "kIOReturnAborted";
-			else s.Writef("%X", result);
 			}
 		return false;
 		}
@@ -514,9 +530,165 @@ bool ZUSBInterfaceInterface::StreamerR::pRefill(int iMilliseconds)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUSBInterfaceInterface::StreamerW
+#pragma mark * StreamerR_Async
 
-class ZUSBInterfaceInterface::StreamerW
+namespace ZANONYMOUS {
+
+class StreamerR_Async
+:	public ZStreamerR,
+	private ZStreamR
+	{
+public:
+	StreamerR_Async(ZRef<ZUSBInterfaceInterface> iUSBII,
+		IOUSBInterfaceInterface190** iIOUSBInterfaceInterface,
+		int iPipeRefR,
+		size_t iBufferSize);
+
+	virtual ~StreamerR_Async();
+
+// From ZStreamerR via ZStreamerR
+	virtual const ZStreamR& GetStreamR();
+
+// From ZStreamR
+	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual size_t Imp_CountReadable();
+	virtual bool Imp_WaitReadable(int iMilliseconds);
+
+private:
+	void pTriggerRead();
+	void pCompletion(IOReturn iResult, void* iArg);
+	static void spCompletion(void* iRefcon, IOReturn iResult, void* iArg);
+
+	ZRef<ZUSBInterfaceInterface> fUSBII;
+	IOUSBInterfaceInterface190** fII;
+	int fPipeRefR;
+
+	ZMtx fMtx;
+	ZCnd fCnd;
+	uint8* fBuffer;	
+	const size_t fSize;
+	size_t fOffset;
+	size_t fEnd;
+	bool fPending;
+	bool fOpen;
+	};
+
+} // anonymous namespace
+
+StreamerR_Async::StreamerR_Async(ZRef<ZUSBInterfaceInterface> iUSBII,
+	IOUSBInterfaceInterface190** iIOUSBInterfaceInterface,
+	int iPipeRefR,
+	size_t iBufferSize)
+:	fUSBII(iUSBII),
+	fII(iIOUSBInterfaceInterface),
+	fPipeRefR(iPipeRefR),
+	fSize(iBufferSize),
+	fBuffer(new uint8[iBufferSize]),
+	fOffset(0),
+	fEnd(0),
+	fPending(false),
+	fOpen(true)
+	{}
+
+StreamerR_Async::~StreamerR_Async()
+	{
+	ZGuardMtx guard(fMtx);
+	fOpen = false;
+	if (fPending)
+		{
+		fII[0]->AbortPipe(fII, fPipeRefR);
+		while (fPending)
+			fCnd.Wait(fMtx);
+		}
+	delete[] fBuffer;
+	}
+
+const ZStreamR& StreamerR_Async::GetStreamR()
+	{ return *this; }
+
+void StreamerR_Async::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+	{
+	uint8* localDest = static_cast<uint8*>(iDest);
+
+	ZGuardMtx guard(fMtx);
+	while (fOpen)
+		{
+		if (fOffset < fEnd)
+			{
+			const size_t countToCopy = min(fEnd - fOffset, iCount);
+			ZBlockCopy(fBuffer + fOffset, localDest, countToCopy);
+			localDest += countToCopy;
+			fOffset += countToCopy;
+			break;
+			}
+		else if (!fPending)
+			{
+			this->pTriggerRead();
+			}
+		else
+			{
+			fCnd.Wait(fMtx);
+			}
+		}
+
+	if (oCountRead)
+		*oCountRead = localDest - static_cast<uint8*>(iDest);
+	}
+
+size_t StreamerR_Async::Imp_CountReadable()
+	{ return fEnd - fOffset; }
+
+bool StreamerR_Async::Imp_WaitReadable(int iMilliseconds)
+	{
+	ZGuardMtx guard(fMtx);
+
+	if (fOpen)
+		{
+		this->pTriggerRead();
+
+		if (fOffset >= fEnd)
+			fCnd.Wait(fMtx, iMilliseconds / 1e3);
+		}
+
+	return fOffset < fEnd;
+	}
+
+void StreamerR_Async::pTriggerRead()
+	{
+	if (fPending)
+		return;
+
+	ZAssert(fOffset >= fEnd);
+	fOffset = 0;
+	fEnd = 0;
+
+	IOReturn result = fII[0]->ReadPipeAsync(
+		fII, fPipeRefR, fBuffer, fSize, spCompletion, this);
+	
+	if (kIOReturnSuccess == result)
+		fPending = true;
+	}
+
+void StreamerR_Async::pCompletion(IOReturn iResult, void* iArg)
+	{
+	// We'll deadlock if completion is called as a result of ReadPipeAsync being called.
+	ZGuardMtx guard(fMtx);
+	fPending = false;
+	ZAssert(fOffset == 0 && fEnd == 0);
+	fEnd = reinterpret_cast<UInt32>(iArg);
+	fCnd.Broadcast();
+	}
+
+void StreamerR_Async::spCompletion(void* iRefcon, IOReturn iResult, void* iArg)
+	{ static_cast<StreamerR_Async*>(iRefcon)->pCompletion(iResult, iArg); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * StreamerW
+
+namespace ZANONYMOUS {
+
+class StreamerW
 :	public ZStreamerW,
 	private ZStreamW
 	{
@@ -539,7 +711,9 @@ private:
 	int fPipeRefW;
 	};
 
-ZUSBInterfaceInterface::StreamerW::StreamerW(ZRef<ZUSBInterfaceInterface> iUSBII,
+} // anonymous namespace
+
+StreamerW::StreamerW(ZRef<ZUSBInterfaceInterface> iUSBII,
 	IOUSBInterfaceInterface190** iIOUSBInterfaceInterface,
 	int iPipeRefW)
 :	fUSBII(iUSBII),
@@ -547,16 +721,17 @@ ZUSBInterfaceInterface::StreamerW::StreamerW(ZRef<ZUSBInterfaceInterface> iUSBII
 	fPipeRefW(iPipeRefW)
 	{}
 
-ZUSBInterfaceInterface::StreamerW::~StreamerW()
+StreamerW::~StreamerW()
 	{}
 
-const ZStreamW& ZUSBInterfaceInterface::StreamerW::GetStreamW()
+const ZStreamW& StreamerW::GetStreamW()
 	{ return *this; }
 
-void ZUSBInterfaceInterface::StreamerW::Imp_Write(
+void StreamerW::Imp_Write(
 	const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	if (size_t countToWrite = min(size_t(1024), iCount))
+//	if (size_t countToWrite = min(size_t(1024), iCount))
+	if (size_t countToWrite = iCount)
 		{
 		if (ZLOG(s, eDebug + 2, "ZUSBInterfaceInterface::StreamerW"))
 			{
@@ -580,19 +755,29 @@ void ZUSBInterfaceInterface::StreamerW::Imp_Write(
 #pragma mark -
 #pragma mark * ZUSBInterfaceInterface
 
-ZUSBInterfaceInterface::ZUSBInterfaceInterface(
-ZRef<ZUSBDevice> iUSBDevice, IOUSBInterfaceInterface190** iIOUSBInterfaceInterface)
+ZUSBInterfaceInterface::ZUSBInterfaceInterface(ZRef<ZUSBDevice> iUSBDevice,
+	CFRunLoopRef iRunLoopRef,
+	IOUSBInterfaceInterface190** iIOUSBInterfaceInterface)
 :	fUSBDevice(iUSBDevice),
-	fIOUSBInterfaceInterface(iIOUSBInterfaceInterface),
+	fII(iIOUSBInterfaceInterface),
+	fRunLoopRef(iRunLoopRef),
 	fOpen(true)
-	{}
+	{
+	CFRunLoopSourceRef theSource;
+	fII[0]->CreateInterfaceAsyncEventSource(fII, &theSource);
+	::CFRunLoopAddSource(fRunLoopRef, theSource, kCFRunLoopDefaultMode);
+	}
 
 ZUSBInterfaceInterface::~ZUSBInterfaceInterface()
 	{
+	CFRunLoopSourceRef theSource = fII[0]->GetInterfaceAsyncEventSource(fII);
+	::CFRunLoopRemoveSource(fRunLoopRef, theSource, kCFRunLoopDefaultMode);
+
+
 	if (fOpen)
-		fIOUSBInterfaceInterface[0]->USBInterfaceClose(fIOUSBInterfaceInterface);
-	fIOUSBInterfaceInterface[0]->Release(fIOUSBInterfaceInterface);
-	fIOUSBInterfaceInterface = nil;
+		fII[0]->USBInterfaceClose(fII);
+	fII[0]->Release(fII);
+	fII = nil;
 	}
 
 ZRef<ZUSBDevice> ZUSBInterfaceInterface::GetUSBDevice()
@@ -601,7 +786,10 @@ ZRef<ZUSBDevice> ZUSBInterfaceInterface::GetUSBDevice()
 ZRef<ZStreamerR> ZUSBInterfaceInterface::OpenR(int iPipeRefR)
 	{
 	if (fOpen)
-		return new StreamerR(this, fIOUSBInterfaceInterface, iPipeRefR, 1024);
+//		return new StreamerR_Async(this, fII, iPipeRefR, 1024);
+		return new StreamerR_TO(this, fII, iPipeRefR, 1024);
+
+
 
 	return ZRef<ZStreamerR>();
 	}
@@ -612,9 +800,9 @@ ZRef<ZStreamerW> ZUSBInterfaceInterface::OpenW(int iPipeRefW)
 		{
 		// We call ClearPipeStallBothEnds in case a previous use had not cleanly
 		// disconnected, which can leave the peripheral device stalled. Read will
-		// do this whenever it timesout, so we don't have to do it in OpenR.
-		fIOUSBInterfaceInterface[0]->ClearPipeStallBothEnds(fIOUSBInterfaceInterface, iPipeRefW);
-		return new StreamerW(this, fIOUSBInterfaceInterface, iPipeRefW);
+		// do this whenever it times out, so we don't have to do it in OpenR.
+		fII[0]->ClearPipeStallBothEnds(fII, iPipeRefW);
+		return new StreamerW(this, fII, iPipeRefW);
 		}
 	return ZRef<ZStreamerW>();
 	}
@@ -624,7 +812,7 @@ void ZUSBInterfaceInterface::Close()
 	if (fOpen)
 		{
 		fOpen = false;
-		fIOUSBInterfaceInterface[0]->USBInterfaceClose(fIOUSBInterfaceInterface);
+		fII[0]->USBInterfaceClose(fII);
 		}
 	}
 

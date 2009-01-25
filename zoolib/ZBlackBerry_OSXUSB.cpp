@@ -69,6 +69,7 @@ static bool sSetConfiguration(IOUSBDeviceInterface182** iUDI)
 		}
 	return false;
 	}
+
 static UInt8 sGetUsedPower(ZRef<ZUSBDevice> iUSBDevice)
 	{
 	if (IOUSBDeviceInterface182** theUDI = iUSBDevice->GetIOUSBDeviceInterface())
@@ -137,8 +138,9 @@ static void sChangeMode(ZRef<ZUSBDevice> iUSBDevice, bool iAllowMassStorage)
 #pragma mark -
 #pragma mark * ZBlackBerry::Manager_OSXUSB
 
-Manager_OSXUSB::Manager_OSXUSB(bool iAllowMassStorage)
-:	fAllowMassStorage(iAllowMassStorage),
+Manager_OSXUSB::Manager_OSXUSB(CFRunLoopRef iRunLoopRef, bool iAllowMassStorage)
+:	fRunLoopRef(iRunLoopRef),
+	fAllowMassStorage(iAllowMassStorage),
 	fMasterPort(0),
 	fIONotificationPortRef(nil),
 	fNextID(1)
@@ -163,11 +165,7 @@ void Manager_OSXUSB::Start()
 	if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 		s << "Start";
 
-	CFRunLoopRef theRunLoopRef = ::CFRunLoopGetCurrent();
-
 	fIONotificationPortRef = ::IONotificationPortCreate(fMasterPort);
-	::CFRunLoopAddSource(theRunLoopRef,
-		::IONotificationPortGetRunLoopSource(fIONotificationPortRef), kCFRunLoopDefaultMode);
 
 	fUSBWatcher_Trad = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 1);
 	fUSBWatcher_Trad->SetObserver(this);
@@ -187,6 +185,10 @@ void Manager_OSXUSB::Start()
 	fUSBWatcher_Dual_HS = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8004);
 	fUSBWatcher_Dual_HS->SetObserver(this);
 
+	::CFRunLoopAddSource(fRunLoopRef,
+		::IONotificationPortGetRunLoopSource(fIONotificationPortRef),
+		kCFRunLoopDefaultMode);
+
 	Manager::Start();
 	}
 
@@ -194,6 +196,10 @@ void Manager_OSXUSB::Stop()
 	{
 	if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 		s << "Stop";
+
+	::CFRunLoopRemoveSource(fRunLoopRef,
+		::IONotificationPortGetRunLoopSource(fIONotificationPortRef),
+		kCFRunLoopDefaultMode);
 
 	fUSBWatcher_Trad.Clear();
 	fUSBWatcher_Pearl.Clear();
@@ -233,7 +239,7 @@ ZRef<Device> Manager_OSXUSB::Open(uint64 iDeviceID)
 			if (ZRef<ZUSBDevice> theUSBDevice = i->fUSBDevice)
 				{
 				if (ZRef<ZUSBInterfaceInterface> theII =
-					theUSBDevice->CreateInterfaceInterface(0xFF))
+					theUSBDevice->CreateInterfaceInterface(fRunLoopRef, 0xFF))
 					{
 					if (ZRef<ZStreamerR> theSR = theII->OpenR(3))
 						{

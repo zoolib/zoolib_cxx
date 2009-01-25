@@ -95,7 +95,8 @@ public:
 
 	IOUSBDeviceInterface182** GetIOUSBDeviceInterface();
 	
-	ZRef<ZUSBInterfaceInterface> CreateInterfaceInterface(uint8 iProtocol);
+	ZRef<ZUSBInterfaceInterface> CreateInterfaceInterface(
+		CFRunLoopRef iRunLoopRef, uint8 iProtocol);
 
 	uint16 GetIDVendor();
 	uint16 GetIDProduct();
@@ -128,8 +129,9 @@ class ZUSBInterfaceInterface : public ZRefCounted
 	{
 	friend class ZUSBDevice;
 
-	ZUSBInterfaceInterface(
-		ZRef<ZUSBDevice> iUSBDevice, IOUSBInterfaceInterface190** iIOUSBInterfaceInterface);
+	ZUSBInterfaceInterface(ZRef<ZUSBDevice> iUSBDevice,
+		CFRunLoopRef iRunLoopRef,
+		IOUSBInterfaceInterface190** iIOUSBInterfaceInterface);
 
 public:
 	virtual ~ZUSBInterfaceInterface();
@@ -143,10 +145,9 @@ public:
 
 private:
 	ZRef<ZUSBDevice> fUSBDevice;
-	IOUSBInterfaceInterface190** fIOUSBInterfaceInterface;
+	IOUSBInterfaceInterface190** fII;
+	CFRunLoopRef fRunLoopRef;
 	bool fOpen;
-	class StreamerR;
-	class StreamerW;
 	};
 
 NAMESPACE_ZOOLIB_END

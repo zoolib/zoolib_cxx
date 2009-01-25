@@ -63,7 +63,7 @@ class Manager_OSXUSB
 	ZUSBDevice::Observer
 	{
 public:
-	Manager_OSXUSB(bool iAllowMassStorage);
+	Manager_OSXUSB(CFRunLoopRef iRunLoopRef, bool iAllowMassStorage);
 
 	virtual ~Manager_OSXUSB();
 
@@ -83,7 +83,7 @@ public:
 	
 private:
 	ZMutex fMutex;
-
+	CFRunLoopRef fRunLoopRef;
 	bool fAllowMassStorage;
 	
 	mach_port_t fMasterPort;
