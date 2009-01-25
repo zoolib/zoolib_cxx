@@ -32,20 +32,9 @@ namespace ZMainNS {
 extern int sArgC;
 extern char** sArgV;
 
-// =================================================================================================
-
-#if ZCONFIG_SPI_Enabled(MacClassic)\
-	|| (ZCONFIG_SPI_Enabled(Carbon) && !ZCONFIG_SPI_Enabled(MacOSX))
-
-void sInvokeAsMainThread(void (*iProc)(void*), void* iParam);
-
-#endif
-
 void sDaemonize(bool iForceFDClose = false);
 
-// =================================================================================================
-
-} // namespace ZMain
+} // namespace ZMainNS
 
 NAMESPACE_ZOOLIB_END
 
