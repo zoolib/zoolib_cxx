@@ -25,14 +25,14 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZAutoRelease
+#pragma mark * ZAutoreleasePool
 
-ZAutoRelease::ZAutoRelease()
+ZAutoreleasePool::ZAutoreleasePool()
 	{
 	fPool = [[NSAutoreleasePool alloc] init];
 	}
 
-ZAutoRelease::~ZAutoRelease()
+ZAutoreleasePool::~ZAutoreleasePool()
 	{
 	[fPool release];
 	}

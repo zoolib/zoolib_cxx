@@ -44,13 +44,13 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZAutoRelease
+#pragma mark * ZAutoreleasePool
 
-class ZAutoRelease
+class ZAutoreleasePool
 	{
 public:
-	ZAutoRelease();
-	~ZAutoRelease();
+	ZAutoreleasePool();
+	~ZAutoreleasePool();
 
 private:
 	NSAutoreleasePool* fPool;
