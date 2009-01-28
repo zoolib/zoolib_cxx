@@ -136,6 +136,7 @@ public:
 	~ZRef();
 
 	ZRef(T* iObject);
+	ZRef(bool iIncRefCount, T* iObject);
 	ZRef& operator=(T* iObject);
 	bool operator==(const T* iObject) const;
 	bool operator!=(const T* iObject) const;
@@ -189,17 +190,19 @@ inline ZRef<T>::ZRef(T* iObject)
 	}
 
 template <class T>
+inline ZRef<T>::ZRef(bool iIncRefCount, T* iObject)
+:	fObject(iObject)
+	{
+	if (iIncRefCount)
+		T::sIncRefCount(fObject);
+	}
+
+template <class T>
 inline ZRef<T>& ZRef<T>::operator=(T* iObject)
 	{
-#if 1
 	std::swap(iObject, fObject);
 	T::sIncRefCount(fObject);
 	T::sDecRefCount(iObject);	
-#else
-	T::sIncRefCount(iObject);
-	T::sDecRefCount(fObject);
-	fObject = iObject;
-#endif
 	return *this;
 	}
 
