@@ -508,7 +508,7 @@ protected:
 	Object_T()
 		{
 		this->_class = &sNPClass;
-		this->referenceCount = 1;
+		this->referenceCount = 0;
 		}
 
 	virtual ~Object_T()
