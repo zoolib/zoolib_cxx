@@ -30,6 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZDebug.h" // For ZAssert
 #include "zoolib/ZNetscape_Macros.h"
+#include "zoolib/ZRefCount.h"
 #include "zoolib/ZUtil_STL.h"
 
 #include <string>
@@ -243,6 +244,13 @@ public:
 		this->SetObject(iValue);
 		}
 
+	template <class O>
+	NPVariant_T(const ZRef<O>& iValue)
+		{
+		type = NPVariantType_Void;
+		this->SetObject(iValue.GetObject());
+		}
+
 	NPVariant_T& operator=(bool iValue)
 		{
 		this->SetBool(iValue);
@@ -270,6 +278,13 @@ public:
 	NPVariant_T& operator=(T* iValue)
 		{
 		this->SetObject(iValue);
+		return *this;
+		}
+
+	template <class O>
+	NPVariant_T& operator=(const ZRef<O>& iValue)
+		{
+		this->SetObject(iValue.GetObject());
 		return *this;
 		}
 
@@ -486,9 +501,10 @@ private:
 template <class Variant_t>
 class Object_T : public Variant_t::Object_t
 	{
-protected:
+public:
 	typedef typename Variant_t::Object_t Object_t;
 
+protected:
 	Object_T()
 		{
 		this->_class = &sNPClass;

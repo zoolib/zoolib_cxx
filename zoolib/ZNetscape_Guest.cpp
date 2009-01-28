@@ -62,6 +62,25 @@ NPObjectG::NPObjectG()
 NPObjectG::~NPObjectG()
 	{}
 
+void NPObjectG::sIncRefCount(NPObjectG* iObject)
+	{
+	if (iObject)
+		iObject->Retain();
+	}
+
+void NPObjectG::sDecRefCount(NPObjectG* iObject)
+	{
+	if (iObject)
+		iObject->Release();
+	}
+
+void NPObjectG::sCheckAccess(NPObjectG* iObject)
+	{
+	ZAssertStopf(0, iObject, ("ZRef<NPObjectG> accessed with nil object"));
+	ZAssertStopf(0,
+		iObject->referenceCount >= 0, ("ZRef<NPObjectG> accessed with invalid refcount"));
+	}
+
 bool NPObjectG::sIsString(NPIdentifier iNPI)
 	{ return GuestMeister::sGet()->Host_IdentifierIsString(iNPI); }
 

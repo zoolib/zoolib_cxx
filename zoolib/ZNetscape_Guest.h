@@ -58,6 +58,14 @@ protected:
 	~NPObjectG();
 
 public:
+	// Static methods enabling use of ZRef<NPObjectG>
+	static void sIncRefCount(NPObjectG* iObject);
+	static void sDecRefCount(NPObjectG* iObject);
+	static void sCheckAccess(NPObjectG* iObject);
+	static bool sCheckAccessEnabled()
+		{ return true; }
+
+
 	static bool sIsString(NPIdentifier iNPI);
 	static std::string sAsString(NPIdentifier iNPI);
 	static int32_t sAsInt(NPIdentifier iNPI);
