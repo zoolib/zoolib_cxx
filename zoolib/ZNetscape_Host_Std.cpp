@@ -50,13 +50,6 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZNetscape {
 
-static NPClass_Z* sGetClass(NPObject* obj)
-	{
-	if (obj)
-		return static_cast<NPClass_Z*>(obj->_class);
-	return nil;
-	}
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * HostMeister_Std
@@ -470,13 +463,13 @@ void HostMeister_Std::SetException(NPObject* obj, const NPUTF8* message)
 	ZUnimplemented();
 	}
 
-void HostMeister_Std::PushPopupsEnabledState(NPP iNPP, NPBool enabled)
+void HostMeister_Std::PushPopupsEnabledState(NPP npp, NPBool enabled)
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s.Writef("PushPopupsEnabledState");
 	}
 
-void HostMeister_Std::PopPopupsEnabledState(NPP iNPP)
+void HostMeister_Std::PopPopupsEnabledState(NPP npp)
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s.Writef("PopPopupsEnabledState");
@@ -498,14 +491,14 @@ bool HostMeister_Std::Enumerate
 	}
 
 void HostMeister_Std::PluginThreadAsyncCall
-	(NPP iNPP, void (*func)(void *), void *userData)
+	(NPP npp, void (*func)(void *), void *userData)
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s.Writef("PluginThreadAsyncCall");
 	}
 
 bool HostMeister_Std::Construct
-	(NPP iNPP, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
+	(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s.Writef("Construct");

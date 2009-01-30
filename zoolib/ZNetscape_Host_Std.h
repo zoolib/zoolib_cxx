@@ -140,18 +140,18 @@ public:
 
 	virtual void SetException(NPObject* obj, const NPUTF8* message);
 
-	virtual void PushPopupsEnabledState(NPP iNPP, NPBool enabled);
+	virtual void PushPopupsEnabledState(NPP npp, NPBool enabled);
 
-	virtual void PopPopupsEnabledState(NPP iNPP);
+	virtual void PopPopupsEnabledState(NPP npp);
 
 	virtual bool Enumerate
-		(NPP iNPP, NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
+		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
 
 	virtual void PluginThreadAsyncCall
-		(NPP iNPP, void (*func)(void *), void *userData);
+		(NPP npp, void (*func)(void *), void *userData);
 
 	virtual bool Construct
-		(NPP iNPP, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
+		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
 
 private:
 	std::set<std::string> fStrings;

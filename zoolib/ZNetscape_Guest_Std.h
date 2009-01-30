@@ -46,39 +46,39 @@ public:
 	
 // From GuestMeister
 	virtual NPError New(
-		NPMIMEType pluginType, NPP instance, uint16 mode,
+		NPMIMEType pluginType, NPP iNPP, uint16 mode,
 		int16 argc, char* argn[], char* argv[], NPSavedData* saved);
 
-	virtual NPError Destroy(NPP instance, NPSavedData** save);
+	virtual NPError Destroy(NPP iNPP, NPSavedData** save);
 
-	virtual NPError SetWindow(NPP instance, NPWindow* window);
+	virtual NPError SetWindow(NPP iNPP, NPWindow* window);
 
-	virtual NPError NewStream(NPP instance,
+	virtual NPError NewStream(NPP iNPP,
 		NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
 
-	virtual NPError DestroyStream(NPP instance, NPStream* stream, NPReason reason);
+	virtual NPError DestroyStream(NPP iNPP, NPStream* stream, NPReason reason);
 
-	virtual int32 WriteReady(NPP instance, NPStream* stream);
+	virtual int32 WriteReady(NPP iNPP, NPStream* stream);
 
-	virtual int32 Write(NPP instance, NPStream* stream, int32_t offset, int32_t len, void* buffer);
+	virtual int32 Write(NPP iNPP, NPStream* stream, int32_t offset, int32_t len, void* buffer);
 
-	virtual void StreamAsFile(NPP instance, NPStream* stream, const char* fname);
+	virtual void StreamAsFile(NPP iNPP, NPStream* stream, const char* fname);
 
-	virtual void Print(NPP instance, NPPrint* platformPrint);
+	virtual void Print(NPP iNPP, NPPrint* platformPrint);
 
-	virtual int16 HandleEvent(NPP instance, void* event);
+	virtual int16 HandleEvent(NPP iNPP, void* event);
 
-	virtual void URLNotify(NPP instance, const char* url, NPReason reason, void* notifyData);
+	virtual void URLNotify(NPP iNPP, const char* url, NPReason reason, void* notifyData);
 
 	virtual jref GetJavaClass();
 
-	virtual NPError GetValue(NPP instance, NPPVariable variable, void *value);
+	virtual NPError GetValue(NPP iNPP, NPPVariable variable, void *value);
 
-	virtual NPError SetValue(NPP instance, NPNVariable variable, void *value);
+	virtual NPError SetValue(NPP iNPP, NPNVariable variable, void *value);
 
 // Our protocol
 	virtual Guest_Std* MakeGuest(
-		NPMIMEType pluginType, NPP instance, uint16 mode,
+		NPMIMEType pluginType, NPP iNPP, uint16 mode,
 		int16 argc, char* argn[], char* argv[], NPSavedData* saved) = 0;
 	};
 

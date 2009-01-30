@@ -121,7 +121,7 @@ class HostMeister
 public:
 	static HostMeister* sGet();
 
-	static Host* sHostFromNPP(NPP iNPP);
+	static Host* sHostFromNPP(NPP npp);
 	static Host* sHostFromStream(NPStream* iNPStream);
 	static void sGetNPNF(NPNetscapeFuncs_Z& oNPNF);
 
@@ -222,18 +222,18 @@ public:
 
 	virtual void SetException(NPObject* obj, const NPUTF8* message) = 0;
 
-	virtual void PushPopupsEnabledState(NPP iNPP, NPBool enabled) = 0;
+	virtual void PushPopupsEnabledState(NPP npp, NPBool enabled) = 0;
 
-	virtual void PopPopupsEnabledState(NPP iNPP) = 0;
+	virtual void PopPopupsEnabledState(NPP npp) = 0;
 
 	virtual bool Enumerate
-		(NPP iNPP, NPObject *npobj, NPIdentifier **identifier, uint32_t *count) = 0;
+		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count) = 0;
 
 	virtual void PluginThreadAsyncCall
-		(NPP iNPP, void (*func)(void *), void *userData) = 0;
+		(NPP npp, void (*func)(void *), void *userData) = 0;
 
 	virtual bool Construct
-		(NPP iNPP, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result) = 0;
+		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result) = 0;
 
 private:
 	static NPError sGetURL(NPP npp, const char* URL, const char* window);
@@ -329,18 +329,18 @@ private:
 	static void sSetException(NPObject* obj, const NPUTF8* message);
 	static void sSetExceptionNPString(NPObject* obj, NPString* message);
 
-	static void sPushPopupsEnabledState(NPP iNPP, NPBool enabled);
+	static void sPushPopupsEnabledState(NPP npp, NPBool enabled);
 
-	static void sPopPopupsEnabledState(NPP iNPP);
+	static void sPopPopupsEnabledState(NPP npp);
 
 	static bool sEnumerate
-		(NPP iNPP, NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
+		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
 
 	static void sPluginThreadAsyncCall
-		(NPP iNPP, void (*func)(void *), void *userData);
+		(NPP npp, void (*func)(void *), void *userData);
 
 	static bool sConstruct
-		(NPP iNPP, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
+		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
 	};
 
 // =================================================================================================

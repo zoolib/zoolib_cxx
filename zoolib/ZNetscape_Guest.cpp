@@ -32,6 +32,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::string;
 
+#define ZNETSCAPE_BEFORE_GUEST(npp) \
+	NPPSetter_T<NPObjectG> theSetter(npp);\
+	try {
+
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZNetscape {
@@ -54,7 +58,8 @@ ZNETSCAPE_OBJECT_SETUP(NPVariantG);
 #pragma mark -
 #pragma mark * NPObjectG
 
-static NPP fake = nil;
+static NPP sCurrentNPP()
+	{ return NPPSetter_T<NPObjectG>::sCurrent(); }
 
 NPObjectG::NPObjectG()
 	{}
@@ -111,40 +116,43 @@ void NPObjectG::Release()
 	{ GuestMeister::sGet()->Host_ReleaseObject(this); }
 
 bool NPObjectG::HasMethod(const string& iName)
-	{ return GuestMeister::sGet()->Host_HasMethod(fake, this, sAsNPI(iName)); }
+	{ return GuestMeister::sGet()->Host_HasMethod(sCurrentNPP(), this, sAsNPI(iName)); }
 
 bool NPObjectG::Invoke(
 	const string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
 	{
-	return GuestMeister::sGet()->Host_Invoke(fake, this, sAsNPI(iName), iArgs, iCount, &oResult);
+	return GuestMeister::sGet()->Host_Invoke(
+		sCurrentNPP(), this, sAsNPI(iName), iArgs, iCount, &oResult);
 	}
 
 bool NPObjectG::InvokeDefault(const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult)
-	{ return GuestMeister::sGet()->Host_InvokeDefault(fake, this, iArgs, iCount, &oResult); }
+	{ return GuestMeister::sGet()->Host_InvokeDefault(
+		sCurrentNPP(), this, iArgs, iCount, &oResult); }
 
 bool NPObjectG::HasProperty(const string& iName)
-	{ return GuestMeister::sGet()->Host_HasProperty(fake, this, sAsNPI(iName)); }
+	{ return GuestMeister::sGet()->Host_HasProperty(sCurrentNPP(), this, sAsNPI(iName)); }
 
 bool NPObjectG::HasProperty(size_t iIndex)
-	{ return GuestMeister::sGet()->Host_HasProperty(fake, this, sAsNPI(iIndex)); }
+	{ return GuestMeister::sGet()->Host_HasProperty(sCurrentNPP(), this, sAsNPI(iIndex)); }
 
 bool NPObjectG::GetProperty(const string& iName, NPVariantG& oResult)
-	{ return GuestMeister::sGet()->Host_GetProperty(fake, this, sAsNPI(iName), &oResult); }
+	{ return GuestMeister::sGet()->Host_GetProperty(sCurrentNPP(), this, sAsNPI(iName), &oResult); }
 
 bool NPObjectG::GetProperty(size_t iIndex, NPVariantG& oResult)
-	{ return GuestMeister::sGet()->Host_GetProperty(fake, this, sAsNPI(iIndex), &oResult); }
+	{ return GuestMeister::sGet()->Host_GetProperty(
+		sCurrentNPP(), this, sAsNPI(iIndex), &oResult); }
 
 bool NPObjectG::SetProperty(const string& iName, const NPVariantG& iValue)
-	{ return GuestMeister::sGet()->Host_SetProperty(fake, this, sAsNPI(iName), &iValue); }
+	{ return GuestMeister::sGet()->Host_SetProperty(sCurrentNPP(), this, sAsNPI(iName), &iValue); }
 
 bool NPObjectG::SetProperty(size_t iIndex, const NPVariantG& iValue)
-	{ return GuestMeister::sGet()->Host_SetProperty(fake, this, sAsNPI(iIndex), &iValue); }
+	{ return GuestMeister::sGet()->Host_SetProperty(sCurrentNPP(), this, sAsNPI(iIndex), &iValue); }
 
 bool NPObjectG::RemoveProperty(const string& iName)
-	{ return GuestMeister::sGet()->Host_RemoveProperty(fake, this, sAsNPI(iName)); }
+	{ return GuestMeister::sGet()->Host_RemoveProperty(sCurrentNPP(), this, sAsNPI(iName)); }
 
 bool NPObjectG::RemoveProperty(size_t iIndex)
-	{ return GuestMeister::sGet()->Host_RemoveProperty(fake, this, sAsNPI(iIndex)); }
+	{ return GuestMeister::sGet()->Host_RemoveProperty(sCurrentNPP(), this, sAsNPI(iIndex)); }
 
 NPVariantG NPObjectG::Invoke(const std::string& iName, const NPVariantG* iArgs, size_t iCount)
 	{
@@ -158,6 +166,27 @@ NPVariantG NPObjectG::Invoke(const std::string& iName)
 	NPVariantG result;
 	this->Invoke(iName, nil, 0, result);
 	return result;
+	}
+
+NPVariantG NPObjectG::Invoke(const std::string& iName,
+	const NPVariantG& iP0)
+	{ return this->Invoke(iName, &iP0, 1); }
+
+NPVariantG NPObjectG::Invoke(const std::string& iName,
+	const NPVariantG& iP0,
+	const NPVariantG& iP1)
+	{
+	NPVariantG arr[] = { iP0, iP1};
+	return this->Invoke(iName, arr, countof(arr));
+	}
+
+NPVariantG NPObjectG::Invoke(const std::string& iName,
+	const NPVariantG& iP0,
+	const NPVariantG& iP1,
+	const NPVariantG& iP2)
+	{
+	NPVariantG arr[] = { iP0, iP1, iP2 };
+	return this->Invoke(iName, arr, countof(arr));
 	}
 
 NPVariantG NPObjectG::InvokeDefault(const NPVariantG* iArgs, size_t iCount)
@@ -174,22 +203,28 @@ NPVariantG NPObjectG::InvokeDefault()
 	return result;
 	}
 
-NPVariantG NPObjectG::GetProperty(const std::string& iName)
+NPVariantG NPObjectG::Get(const std::string& iName)
 	{
 	NPVariantG result;
 	this->GetProperty(iName, result);
 	return result;
 	}
 
-NPVariantG NPObjectG::GetProperty(size_t iIndex)
+NPVariantG NPObjectG::Get(size_t iIndex)
 	{
 	NPVariantG result;
 	this->GetProperty(iIndex, result);
 	return result;
 	}
 
+bool NPObjectG::Set(const std::string& iName, const NPVariantG& iValue)
+	{ return this->SetProperty(iName, iValue); }
+
+bool NPObjectG::Set(size_t iIndex, const NPVariantG& iValue)
+	{ return this->SetProperty(iIndex, iValue); }
+
 bool NPObjectG::Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount)
-	{ return GuestMeister::sGet()->Host_Enumerate(fake, this, &oIdentifiers, &oCount); }
+	{ return GuestMeister::sGet()->Host_Enumerate(sCurrentNPP(), this, &oIdentifiers, &oCount); }
 
 bool NPObjectG::Enumerate(std::vector<NPIdentifier>& oIdentifiers)
 	{
@@ -330,31 +365,31 @@ const NPNetscapeFuncs_Z& GuestMeister::GetNPNetscapeFuncs()
 const NPNetscapeFuncs_Z& GuestMeister::GetNPNF()
 	{ return fNPNF; }
 
-NPError GuestMeister::Host_GetURL(NPP iNPP, const char* url, const char* target)
-	{ return fNPNF.geturl(iNPP, url, target); }
+NPError GuestMeister::Host_GetURL(NPP npp, const char* url, const char* target)
+	{ return fNPNF.geturl(npp, url, target); }
 
-NPError GuestMeister::Host_PostURL(NPP iNPP,
+NPError GuestMeister::Host_PostURL(NPP npp,
 	const char* url, const char* target, uint32 len, const char* buf, NPBool file)
-	{ return fNPNF.posturl(iNPP, url, target, len, buf, file); }
+	{ return fNPNF.posturl(npp, url, target, len, buf, file); }
 
 NPError GuestMeister::Host_RequestRead(NPStream* stream, NPByteRange* rangeList)
 	{ return fNPNF.requestread(stream, rangeList); }
 
-NPError GuestMeister::Host_NewStream(NPP iNPP,
+NPError GuestMeister::Host_NewStream(NPP npp,
 	NPMIMEType type, const char* target, NPStream** stream)
-	{ return fNPNF.newstream(iNPP, type, target, stream); }
+	{ return fNPNF.newstream(npp, type, target, stream); }
 
-int32 GuestMeister::Host_Write(NPP iNPP, NPStream* stream, int32 len, void* buffer)
-	{ return fNPNF.write(iNPP, stream, len, buffer); }
+int32 GuestMeister::Host_Write(NPP npp, NPStream* stream, int32 len, void* buffer)
+	{ return fNPNF.write(npp, stream, len, buffer); }
 
-NPError GuestMeister::Host_DestroyStream(NPP iNPP, NPStream* stream, NPReason reason)
-	{ return fNPNF.destroystream(iNPP, stream, reason); }
+NPError GuestMeister::Host_DestroyStream(NPP npp, NPStream* stream, NPReason reason)
+	{ return fNPNF.destroystream(npp, stream, reason); }
 
-void GuestMeister::Host_Status(NPP iNPP, const char* message)
-	{ return fNPNF.status(iNPP, message); }
+void GuestMeister::Host_Status(NPP npp, const char* message)
+	{ return fNPNF.status(npp, message); }
 
-const char* GuestMeister::Host_UserAgent(NPP iNPP)
-	{ return fNPNF.uagent(iNPP); }
+const char* GuestMeister::Host_UserAgent(NPP npp)
+	{ return fNPNF.uagent(npp); }
 
 void* GuestMeister::Host_MemAlloc(uint32 size)
 	{ return fNPNF.memalloc(size); }
@@ -371,31 +406,31 @@ void GuestMeister::Host_ReloadPlugins(NPBool reloadPages)
 JRIEnv* GuestMeister::Host_GetJavaEnv()
 	{ return fNPNF.getJavaEnv(); }
 
-jref GuestMeister::Host_GetJavaPeer(NPP iNPP)
-	{ return fNPNF.getJavaPeer(iNPP); }
+jref GuestMeister::Host_GetJavaPeer(NPP npp)
+	{ return fNPNF.getJavaPeer(npp); }
 
-NPError GuestMeister::Host_GetURLNotify(NPP iNPP,
+NPError GuestMeister::Host_GetURLNotify(NPP npp,
 	const char* url, const char* target, void* notifyData)
-	{ return fNPNF.geturlnotify(iNPP, url, target, notifyData); }
+	{ return fNPNF.geturlnotify(npp, url, target, notifyData); }
 
-NPError GuestMeister::Host_PostURLNotify(NPP iNPP, const char* url, const char* target,
+NPError GuestMeister::Host_PostURLNotify(NPP npp, const char* url, const char* target,
 	uint32 len, const char* buf, NPBool file, void* notifyData)
-	{ return fNPNF.posturlnotify(iNPP, url, target, len, buf, file, notifyData); }
+	{ return fNPNF.posturlnotify(npp, url, target, len, buf, file, notifyData); }
 
-NPError GuestMeister::Host_GetValue(NPP iNPP, NPNVariable variable, void *value)
-	{ return fNPNF.getvalue(iNPP, variable, value); }
+NPError GuestMeister::Host_GetValue(NPP npp, NPNVariable variable, void *value)
+	{ return fNPNF.getvalue(npp, variable, value); }
 
-NPError GuestMeister::Host_SetValue(NPP iNPP, NPPVariable variable, void *value)
-	{ return fNPNF.setvalue(iNPP, variable, value); }
+NPError GuestMeister::Host_SetValue(NPP npp, NPPVariable variable, void *value)
+	{ return fNPNF.setvalue(npp, variable, value); }
 
-void GuestMeister::Host_InvalidateRect(NPP iNPP, NPRect *invalidRect)
-	{ return fNPNF.invalidaterect(iNPP, invalidRect); }
+void GuestMeister::Host_InvalidateRect(NPP npp, NPRect *invalidRect)
+	{ return fNPNF.invalidaterect(npp, invalidRect); }
 
-void GuestMeister::Host_InvalidateRegion(NPP iNPP, NPRegion invalidRegion)
-	{ return fNPNF.invalidateregion(iNPP, invalidRegion); }
+void GuestMeister::Host_InvalidateRegion(NPP npp, NPRegion invalidRegion)
+	{ return fNPNF.invalidateregion(npp, invalidRegion); }
 
-void GuestMeister::Host_ForceRedraw(NPP iNPP)
-	{ return fNPNF.forceredraw(iNPP); }
+void GuestMeister::Host_ForceRedraw(NPP npp)
+	{ return fNPNF.forceredraw(npp); }
 
 NPIdentifier GuestMeister::Host_GetStringIdentifier(const NPUTF8* name)
 	{ return fNPNF.getstringidentifier(name); }
@@ -417,8 +452,8 @@ int32_t GuestMeister::Host_IntFromIdentifier(NPIdentifier identifier)
 	{ return (int32_t)(fNPNF.intfromidentifier(identifier)); }
 //	{ return reinterpret_cast<int32_t>(fNPNF.intfromidentifier(identifier)); }
 
-NPObject* GuestMeister::Host_CreateObject(NPP iNPP, NPClass* aClass)
-	{ return fNPNF.createobject(iNPP, aClass); }
+NPObject* GuestMeister::Host_CreateObject(NPP npp, NPClass* aClass)
+	{ return fNPNF.createobject(npp, aClass); }
 
 NPObject* GuestMeister::Host_RetainObject(NPObject* obj)
 	{ return fNPNF.retainobject(obj); }
@@ -426,65 +461,65 @@ NPObject* GuestMeister::Host_RetainObject(NPObject* obj)
 void GuestMeister::Host_ReleaseObject(NPObject* obj)
 	{ return fNPNF.releaseobject(obj); }
 
-bool GuestMeister::Host_Invoke(NPP iNPP, NPObject* obj,
+bool GuestMeister::Host_Invoke(NPP npp, NPObject* obj,
 	NPIdentifier methodName, const NPVariant* args, unsigned argCount, NPVariant* result)
-	{ return fNPNF.invoke(iNPP, obj, methodName, args, argCount, result); }
+	{ return fNPNF.invoke(npp, obj, methodName, args, argCount, result); }
 
-bool GuestMeister::Host_InvokeDefault(NPP iNPP,
+bool GuestMeister::Host_InvokeDefault(NPP npp,
 	NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result)
-	{ return fNPNF.invokeDefault(iNPP, obj, args, argCount, result); }
+	{ return fNPNF.invokeDefault(npp, obj, args, argCount, result); }
 
-bool GuestMeister::Host_Evaluate(NPP iNPP, NPObject* obj, NPString* script, NPVariant* result)
-	{ return fNPNF.evaluate(iNPP, obj, script, result); }
+bool GuestMeister::Host_Evaluate(NPP npp, NPObject* obj, NPString* script, NPVariant* result)
+	{ return fNPNF.evaluate(npp, obj, script, result); }
 
-bool GuestMeister::Host_GetProperty(NPP iNPP,
+bool GuestMeister::Host_GetProperty(NPP npp,
 	NPObject* obj, NPIdentifier propertyName, NPVariant* result)
 	{
 	if (fNPNF.getproperty)
-		return fNPNF.getproperty(iNPP, obj, propertyName, result);
+		return fNPNF.getproperty(npp, obj, propertyName, result);
 	return false;
 	}
 
-bool GuestMeister::Host_SetProperty(NPP iNPP,
+bool GuestMeister::Host_SetProperty(NPP npp,
 	NPObject* obj, NPIdentifier propertyName, const NPVariant* value)
 	{
 	if (fNPNF.setproperty)
-		return fNPNF.setproperty(iNPP, obj, propertyName, value);
+		return fNPNF.setproperty(npp, obj, propertyName, value);
 	return false;
 	}
 
-bool GuestMeister::Host_RemoveProperty(NPP iNPP, NPObject* obj, NPIdentifier propertyName)
+bool GuestMeister::Host_RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName)
 	{
 	if (fNPNF.removeproperty)
-		return fNPNF.removeproperty(iNPP, obj, propertyName);
+		return fNPNF.removeproperty(npp, obj, propertyName);
 	return false;
 	}
 
-bool GuestMeister::Host_HasProperty(NPP iNPP, NPObject* npobj, NPIdentifier propertyName)
+bool GuestMeister::Host_HasProperty(NPP npp, NPObject* npobj, NPIdentifier propertyName)
 	{
 	if (fNPNF.hasproperty)
 		{
-		return fNPNF.hasproperty(iNPP, npobj, propertyName);
+		return fNPNF.hasproperty(npp, npobj, propertyName);
 		}
 	else if (fNPNF.getproperty)
 		{
 		NPVariantG dummy;
-		if (fNPNF.getproperty(iNPP, npobj, propertyName, &dummy))
+		if (fNPNF.getproperty(npp, npobj, propertyName, &dummy))
 			return !dummy.IsVoid();
 		}
 
 	return false;
 	}
 
-bool GuestMeister::Host_HasMethod(NPP iNPP, NPObject* npobj, NPIdentifier methodName)
+bool GuestMeister::Host_HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName)
 	{
 	if (fNPNF.hasmethod)
 		{
-		return fNPNF.hasmethod(iNPP, npobj, methodName);
+		return fNPNF.hasmethod(npp, npobj, methodName);
 		}
 	else if (fNPNF.hasproperty)
 		{
-		return !fNPNF.hasproperty(iNPP, npobj, methodName);
+		return !fNPNF.hasproperty(npp, npobj, methodName);
 		}
 	else if (fNPNF.getproperty)
 		{
@@ -495,7 +530,7 @@ bool GuestMeister::Host_HasMethod(NPP iNPP, NPObject* npobj, NPIdentifier method
 		// if the entity is an object then we claim that it's a method, which I
 		// suppose is better than nothing.
 		NPVariantG dummy;
-		if (fNPNF.getproperty(iNPP, npobj, methodName, &dummy))
+		if (fNPNF.getproperty(npp, npobj, methodName, &dummy))
 			{
 			if (dummy.IsObject())
 				return true;
@@ -522,118 +557,118 @@ void GuestMeister::Host_SetException(NPObject* obj, const NPUTF8* message)
 	}
 #endif
 
-void GuestMeister::Host_PushPopupsEnabledState(NPP iNPP, NPBool enabled)
+void GuestMeister::Host_PushPopupsEnabledState(NPP npp, NPBool enabled)
 	{
 	if (fNPNF.pushpopupsenabledstate)
-		fNPNF.pushpopupsenabledstate(iNPP, enabled);
+		fNPNF.pushpopupsenabledstate(npp, enabled);
 	}
 
-void GuestMeister::Host_PopPopupsEnabledState(NPP iNPP)
+void GuestMeister::Host_PopPopupsEnabledState(NPP npp)
 	{
 	if (fNPNF.poppopupsenabledstate)
-		fNPNF.poppopupsenabledstate(iNPP);
+		fNPNF.poppopupsenabledstate(npp);
 	}
 
 bool GuestMeister::Host_Enumerate
-	(NPP iNPP, NPObject* npobj, NPIdentifier** identifier, uint32_t* count)
+	(NPP npp, NPObject* npobj, NPIdentifier** identifier, uint32_t* count)
 	{
 	if (fNPNF.enumerate)
-		return fNPNF.enumerate(iNPP, npobj, identifier, count);
+		return fNPNF.enumerate(npp, npobj, identifier, count);
 	return false;
 	}
 
 void GuestMeister::Host_PluginThreadAsyncCall
-	(NPP iNPP, void (*func)(void *), void *userData)
+	(NPP npp, void (*func)(void *), void *userData)
 	{
 	if (fNPNF.pluginthreadasynccall)
-		fNPNF.pluginthreadasynccall(iNPP, func, userData);
+		fNPNF.pluginthreadasynccall(npp, func, userData);
 	}
 
 bool GuestMeister::Host_Construct
-	(NPP iNPP, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
+	(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
 	{
 	if (fNPNF.construct)
-		return fNPNF.construct(iNPP, obj, args, argCount, result);
+		return fNPNF.construct(npp, obj, args, argCount, result);
 	return false;
 	}
 
 NPError GuestMeister::sNew(
-	NPMIMEType pluginType, NPP instance, uint16 mode,
+	NPMIMEType pluginType, NPP npp, uint16 mode,
 	int16 argc, char* argn[], char* argv[], NPSavedData* saved)
 	{
-	ZNETSCAPE_BEFORE
-		return sGet()->New(pluginType, instance, mode, argc, argn, argv, saved);
+	ZNETSCAPE_BEFORE_GUEST(npp)
+		return sGet()->New(pluginType, npp, mode, argc, argn, argv, saved);
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-NPError GuestMeister::sDestroy(NPP instance, NPSavedData** save)
+NPError GuestMeister::sDestroy(NPP npp, NPSavedData** save)
 	{
-	ZNETSCAPE_BEFORE
-		return sGet()->Destroy(instance, save);
+	ZNETSCAPE_BEFORE_GUEST(npp)
+		return sGet()->Destroy(npp, save);
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-NPError GuestMeister::sSetWindow(NPP instance, NPWindow* window)
+NPError GuestMeister::sSetWindow(NPP npp, NPWindow* window)
 	{
-	ZNETSCAPE_BEFORE
-		return sGet()->SetWindow(instance, window);
+	ZNETSCAPE_BEFORE_GUEST(npp)
+		return sGet()->SetWindow(npp, window);
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
 NPError GuestMeister::sNewStream(
-	NPP instance, NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype)
+	NPP npp, NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype)
 	{
-	ZNETSCAPE_BEFORE
-		return sGet()->NewStream(instance, type, stream, seekable, stype);
+	ZNETSCAPE_BEFORE_GUEST(npp)
+		return sGet()->NewStream(npp, type, stream, seekable, stype);
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-NPError GuestMeister::sDestroyStream(NPP instance, NPStream* stream, NPReason reason)
+NPError GuestMeister::sDestroyStream(NPP npp, NPStream* stream, NPReason reason)
 	{
-	ZNETSCAPE_BEFORE
-		return sGet()->DestroyStream(instance, stream, reason);
+	ZNETSCAPE_BEFORE_GUEST(npp)
+		return sGet()->DestroyStream(npp, stream, reason);
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-int32 GuestMeister::sWriteReady(NPP instance, NPStream* stream)
+int32 GuestMeister::sWriteReady(NPP npp, NPStream* stream)
 	{
-	ZNETSCAPE_BEFORE
-		return sGet()->WriteReady(instance, stream);
+	ZNETSCAPE_BEFORE_GUEST(npp)
+		return sGet()->WriteReady(npp, stream);
 	ZNETSCAPE_AFTER_RETURN(0)
 	}
 
-int32 GuestMeister::sWrite(NPP instance, NPStream* stream, int32_t offset, int32_t len, void* buffer)
+int32 GuestMeister::sWrite(NPP npp, NPStream* stream, int32_t offset, int32_t len, void* buffer)
 	{
-	ZNETSCAPE_BEFORE
-		return sGet()->Write(instance, stream, offset, len, buffer);
+	ZNETSCAPE_BEFORE_GUEST(npp)
+		return sGet()->Write(npp, stream, offset, len, buffer);
 	ZNETSCAPE_AFTER_RETURN(0)
 	}
 
-void GuestMeister::sStreamAsFile(NPP instance, NPStream* stream, const char* fname)
+void GuestMeister::sStreamAsFile(NPP npp, NPStream* stream, const char* fname)
 	{
-	ZNETSCAPE_BEFORE
-		return sGet()->StreamAsFile(instance, stream, fname);
+	ZNETSCAPE_BEFORE_GUEST(npp)
+		return sGet()->StreamAsFile(npp, stream, fname);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-void GuestMeister::sPrint(NPP instance, NPPrint* platformPrint)
+void GuestMeister::sPrint(NPP npp, NPPrint* platformPrint)
 	{
-	ZNETSCAPE_BEFORE
-		return sGet()->Print(instance, platformPrint);
+	ZNETSCAPE_BEFORE_GUEST(npp)
+		return sGet()->Print(npp, platformPrint);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-int16 GuestMeister::sHandleEvent(NPP instance, void* event)
+int16 GuestMeister::sHandleEvent(NPP npp, void* event)
 	{
-	ZNETSCAPE_BEFORE
-		return sGet()->HandleEvent(instance, event);
+	ZNETSCAPE_BEFORE_GUEST(npp)
+		return sGet()->HandleEvent(npp, event);
 	ZNETSCAPE_AFTER_RETURN(0)
 	}
 
-void GuestMeister::sURLNotify(NPP instance, const char* url, NPReason reason, void* notifyData)
+void GuestMeister::sURLNotify(NPP npp, const char* url, NPReason reason, void* notifyData)
 	{
-	ZNETSCAPE_BEFORE
-		return sGet()->URLNotify(instance, url, reason, notifyData);
+	ZNETSCAPE_BEFORE_GUEST(npp)
+		return sGet()->URLNotify(npp, url, reason, notifyData);
 	ZNETSCAPE_AFTER_VOID
 	}
 
@@ -644,7 +679,7 @@ jref GuestMeister::sGetJavaClass()
 	ZNETSCAPE_AFTER_RETURN_NIL
 	}
 
-static bool sHostUsesOldWebKit(NPP instance)
+static bool sHostUsesOldWebKit(NPP npp)
 	{
 	// Logic and comments taken from NetscapeMoviePlugIn/main.c
     // This check is necessary if you want your exposed NPObject to not leak in WebKit-based
@@ -659,7 +694,7 @@ static bool sHostUsesOldWebKit(NPP instance)
 	static bool sUsesOldWebKit = false;
 	if (!sChecked)
 		{
-		if (const char* userAgent = GuestMeister::sGet()->Host_UserAgent(instance))
+		if (const char* userAgent = GuestMeister::sGet()->Host_UserAgent(npp))
 			{
 			static const char* const prefix = " AppleWebKit/";
 			if (char* versionString = strstr(userAgent, prefix))
@@ -676,13 +711,13 @@ static bool sHostUsesOldWebKit(NPP instance)
 	return sUsesOldWebKit;
 	}
 
-NPError GuestMeister::sGetValue(NPP instance, NPPVariable variable, void *value)
+NPError GuestMeister::sGetValue(NPP npp, NPPVariable variable, void *value)
 	{
-	ZNETSCAPE_BEFORE
-		NPError result = sGet()->GetValue(instance, variable, value);
+	ZNETSCAPE_BEFORE_GUEST(npp)
+		NPError result = sGet()->GetValue(npp, variable, value);
 		if (NPERR_NO_ERROR == result
 			&& NPPVpluginScriptableNPObject == variable
-			&& sHostUsesOldWebKit(instance))
+			&& sHostUsesOldWebKit(npp))
 			{
 			// We do not call releaseObject, because the likelihood is that the ref
 			// count is currently one, and an active release would destroy the object
@@ -694,10 +729,10 @@ NPError GuestMeister::sGetValue(NPP instance, NPPVariable variable, void *value)
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-NPError GuestMeister::sSetValue(NPP instance, NPNVariable variable, void *value)
+NPError GuestMeister::sSetValue(NPP npp, NPNVariable variable, void *value)
 	{
-	ZNETSCAPE_BEFORE
-		return sGet()->SetValue(instance, variable, value);
+	ZNETSCAPE_BEFORE_GUEST(npp)
+		return sGet()->SetValue(npp, variable, value);
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
@@ -705,8 +740,8 @@ NPError GuestMeister::sSetValue(NPP instance, NPNVariable variable, void *value)
 #pragma mark -
 #pragma mark * Guest
 
-Guest::Guest(NPP iNPP)
-:	fNPP(iNPP)
+Guest::Guest(NPP npp)
+:	fNPP(npp)
 	{}
 
 Guest::~Guest()
@@ -842,6 +877,17 @@ void Guest::Host_ReleaseVariantValue(NPVariant* variant)
 // Disabled till I figure out what the real signature should be
 //void Guest::Host_SetException(NPObject* obj, const NPUTF8* message)
 //	{ return GuestMeister::sGet()->Host_SetException(obj, message); }
+
+ZRef<NPObjectG> Guest::Host_GetWindowObject()
+	{
+	NPObjectG* theNPObject_Window;
+	if (NPERR_NO_ERROR == this->Host_GetValue(NPNVWindowNPObject, &theNPObject_Window))
+		{
+		if (theNPObject_Window)
+			return ZRef<NPObjectG>(false, theNPObject_Window);
+		}
+	return ZRef<NPObjectG>();
+	}
 
 } // namespace ZNetscape
 

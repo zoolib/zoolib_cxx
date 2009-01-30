@@ -93,14 +93,31 @@ public:
 	bool RemoveProperty(const std::string& iName);
 	bool RemoveProperty(size_t iIndex);
 
-	NPVariantG Invoke(const std::string& iName, const NPVariantG* iArgs, size_t iCount);
+	NPVariantG Invoke(const std::string& iName,
+		const NPVariantG* iArgs, size_t iCount);
+
 	NPVariantG Invoke(const std::string& iName);
+
+	NPVariantG Invoke(const std::string& iName,
+		const NPVariantG& iP0);
+
+	NPVariantG Invoke(const std::string& iName,
+		const NPVariantG& iP0,
+		const NPVariantG& iP1);
+
+	NPVariantG Invoke(const std::string& iName,
+		const NPVariantG& iP0,
+		const NPVariantG& iP1,
+		const NPVariantG& iP2);
 
 	NPVariantG InvokeDefault(const NPVariantG* iArgs, size_t iCount);
 	NPVariantG InvokeDefault();
 
-	NPVariantG GetProperty(const std::string& iName);
-	NPVariantG GetProperty(size_t iIndex);
+	NPVariantG Get(const std::string& iName);
+	NPVariantG Get(size_t iIndex);
+
+	bool Set(const std::string& iName, const NPVariantG& iValue);
+	bool Set(size_t iIndex, const NPVariantG& iValue);
 
 	bool Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount);
 	bool Enumerate(std::vector<NPIdentifier>& oIdentifiers);
@@ -129,22 +146,22 @@ public:
 	const NPNetscapeFuncs_Z& GetNPNF();
 
 // Calls to the Host.
-	NPError Host_GetURL(NPP iNPP, const char* url, const char* target);
+	NPError Host_GetURL(NPP npp, const char* url, const char* target);
 
-	NPError Host_PostURL(NPP iNPP,
+	NPError Host_PostURL(NPP npp,
 		const char* url, const char* target, uint32 len, const char* buf, NPBool file);
 
 	NPError Host_RequestRead(NPStream* stream, NPByteRange* rangeList);
 
-	NPError Host_NewStream(NPP iNPP, NPMIMEType type, const char* target, NPStream** stream);
+	NPError Host_NewStream(NPP npp, NPMIMEType type, const char* target, NPStream** stream);
 
-	int32 Host_Write(NPP iNPP, NPStream* stream, int32 len, void* buffer);
+	int32 Host_Write(NPP npp, NPStream* stream, int32 len, void* buffer);
 
-	NPError Host_DestroyStream(NPP iNPP, NPStream* stream, NPReason reason);
+	NPError Host_DestroyStream(NPP npp, NPStream* stream, NPReason reason);
 
-	void Host_Status(NPP iNPP, const char* message);
+	void Host_Status(NPP npp, const char* message);
 
-	const char* Host_UserAgent(NPP iNPP);
+	const char* Host_UserAgent(NPP npp);
 
 	void* Host_MemAlloc(uint32 size);
 
@@ -156,22 +173,22 @@ public:
 
 	JRIEnv* Host_GetJavaEnv();
 
-	jref Host_GetJavaPeer(NPP iNPP);
+	jref Host_GetJavaPeer(NPP npp);
 
-	NPError Host_GetURLNotify(NPP iNPP, const char* url, const char* target, void* notifyData);
+	NPError Host_GetURLNotify(NPP npp, const char* url, const char* target, void* notifyData);
 
-	NPError Host_PostURLNotify(NPP iNPP, const char* url, const char* target,
+	NPError Host_PostURLNotify(NPP npp, const char* url, const char* target,
 		uint32 len, const char* buf, NPBool file, void* notifyData);
 
-	NPError Host_GetValue(NPP iNPP, NPNVariable variable, void *value);
+	NPError Host_GetValue(NPP npp, NPNVariable variable, void *value);
 
-	NPError Host_SetValue(NPP iNPP, NPPVariable variable, void *value);
+	NPError Host_SetValue(NPP npp, NPPVariable variable, void *value);
 
-	void Host_InvalidateRect(NPP iNPP, NPRect *invalidRect);
+	void Host_InvalidateRect(NPP npp, NPRect *invalidRect);
 
-	void Host_InvalidateRegion(NPP iNPP, NPRegion invalidRegion);
+	void Host_InvalidateRegion(NPP npp, NPRegion invalidRegion);
 
-	void Host_ForceRedraw(NPP iNPP);
+	void Host_ForceRedraw(NPP npp);
 
 	NPIdentifier Host_GetStringIdentifier(const NPUTF8* name);
 
@@ -186,114 +203,114 @@ public:
 
 	int32_t Host_IntFromIdentifier(NPIdentifier identifier);
 
-	NPObject* Host_CreateObject(NPP iNPP, NPClass* aClass);
+	NPObject* Host_CreateObject(NPP npp, NPClass* aClass);
 
 	NPObject* Host_RetainObject(NPObject* obj);
 
 	void Host_ReleaseObject(NPObject* obj);
 
-	bool Host_Invoke(NPP iNPP, NPObject* obj,
+	bool Host_Invoke(NPP npp, NPObject* obj,
 		NPIdentifier methodName, const NPVariant* args, unsigned argCount, NPVariant* result);
 
-	bool Host_InvokeDefault(NPP iNPP,
+	bool Host_InvokeDefault(NPP npp,
 		NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result);
 
-	bool Host_Evaluate(NPP iNPP, NPObject* obj, NPString* script, NPVariant* result);
+	bool Host_Evaluate(NPP npp, NPObject* obj, NPString* script, NPVariant* result);
 
-	bool Host_GetProperty(NPP iNPP, NPObject* obj, NPIdentifier propertyName, NPVariant* result);
+	bool Host_GetProperty(NPP npp, NPObject* obj, NPIdentifier propertyName, NPVariant* result);
 
-	bool Host_SetProperty(NPP iNPP,
+	bool Host_SetProperty(NPP npp,
 		NPObject* obj, NPIdentifier propertyName, const NPVariant* value);
 
-	bool Host_RemoveProperty(NPP iNPP, NPObject* obj, NPIdentifier propertyName);
+	bool Host_RemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName);
 
-	bool Host_HasProperty(NPP iNPP, NPObject* npobj, NPIdentifier propertyName);
+	bool Host_HasProperty(NPP npp, NPObject* npobj, NPIdentifier propertyName);
 
-	bool Host_HasMethod(NPP iNPP, NPObject* npobj, NPIdentifier methodName);
+	bool Host_HasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName);
 
 	void Host_ReleaseVariantValue(NPVariant* variant);
 
 // Disabled till I figure out what the real signature should be
 //	void Host_SetException(NPObject* obj, const NPUTF8* message);
 
-	void Host_PushPopupsEnabledState(NPP iNPP, NPBool enabled);
+	void Host_PushPopupsEnabledState(NPP npp, NPBool enabled);
 
-	void Host_PopPopupsEnabledState(NPP iNPP);
+	void Host_PopPopupsEnabledState(NPP npp);
 
 	bool Host_Enumerate
-		(NPP iNPP, NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
+		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
 
 	void Host_PluginThreadAsyncCall
-		(NPP iNPP, void (*func)(void *), void *userData);
+		(NPP npp, void (*func)(void *), void *userData);
 
 	bool Host_Construct
-		(NPP iNPP, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
+		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
 
 // Calls from host to the guest meister.
 	virtual NPError New(
-		NPMIMEType pluginType, NPP instance, uint16 mode,
+		NPMIMEType pluginType, NPP npp, uint16 mode,
 		int16 argc, char* argn[], char* argv[], NPSavedData* saved) = 0;
 
 // Calls from host to a guest instance.
-	virtual NPError Destroy(NPP instance, NPSavedData** ave) = 0;
+	virtual NPError Destroy(NPP npp, NPSavedData** ave) = 0;
 
-	virtual NPError SetWindow(NPP instance, NPWindow* window) = 0;
+	virtual NPError SetWindow(NPP npp, NPWindow* window) = 0;
 
-	virtual NPError NewStream(NPP instance,
+	virtual NPError NewStream(NPP npp,
 		NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype) = 0;
 
-	virtual NPError DestroyStream(NPP instance, NPStream* stream, NPReason reason) = 0;
+	virtual NPError DestroyStream(NPP npp, NPStream* stream, NPReason reason) = 0;
 
-	virtual int32 WriteReady(NPP instance, NPStream* stream) = 0;
+	virtual int32 WriteReady(NPP npp, NPStream* stream) = 0;
 
-	virtual int32 Write(NPP instance,
+	virtual int32 Write(NPP npp,
 		NPStream* stream, int32_t offset, int32_t len, void* buffer) = 0;
 
-	virtual void StreamAsFile(NPP instance, NPStream* stream, const char* fname) = 0;
+	virtual void StreamAsFile(NPP npp, NPStream* stream, const char* fname) = 0;
 
-	virtual void Print(NPP instance, NPPrint* platformPrint) = 0;
+	virtual void Print(NPP npp, NPPrint* platformPrint) = 0;
 
-	virtual int16 HandleEvent(NPP instance, void* event) = 0;
+	virtual int16 HandleEvent(NPP npp, void* event) = 0;
 
-	virtual void URLNotify(NPP instance, const char* url, NPReason reason, void* notifyData) = 0;
+	virtual void URLNotify(NPP npp, const char* url, NPReason reason, void* notifyData) = 0;
 
 	virtual jref GetJavaClass() = 0;
 
-	virtual NPError GetValue(NPP instance, NPPVariable variable, void *value) = 0;
+	virtual NPError GetValue(NPP npp, NPPVariable variable, void *value) = 0;
 
-	virtual NPError SetValue(NPP instance, NPNVariable variable, void *value) = 0;
+	virtual NPError SetValue(NPP npp, NPNVariable variable, void *value) = 0;
 
 private:
 	static NPError sNew(
-		NPMIMEType pluginType, NPP instance, uint16 mode,
+		NPMIMEType pluginType, NPP npp, uint16 mode,
 		int16 argc, char* argn[], char* argv[], NPSavedData* saved);
 
-	static NPError sDestroy(NPP instance, NPSavedData** save);
+	static NPError sDestroy(NPP npp, NPSavedData** save);
 
-	static NPError sSetWindow(NPP instance, NPWindow* window);
+	static NPError sSetWindow(NPP npp, NPWindow* window);
 
-	static NPError sNewStream(NPP instance,
+	static NPError sNewStream(NPP npp,
 		NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
 
-	static NPError sDestroyStream(NPP instance, NPStream* stream, NPReason reason);
+	static NPError sDestroyStream(NPP npp, NPStream* stream, NPReason reason);
 
-	static int32 sWriteReady(NPP instance, NPStream* stream);
+	static int32 sWriteReady(NPP npp, NPStream* stream);
 
-	static int32 sWrite(NPP instance, NPStream* stream, int32_t offset, int32_t len, void* buffer);
+	static int32 sWrite(NPP npp, NPStream* stream, int32_t offset, int32_t len, void* buffer);
 
-	static void sStreamAsFile(NPP instance, NPStream* stream, const char* fname);
+	static void sStreamAsFile(NPP npp, NPStream* stream, const char* fname);
 
-	static void sPrint(NPP instance, NPPrint* platformPrint);
+	static void sPrint(NPP npp, NPPrint* platformPrint);
 
-	static int16 sHandleEvent(NPP instance, void* event);
+	static int16 sHandleEvent(NPP npp, void* event);
 
-	static void sURLNotify(NPP instance, const char* url, NPReason reason, void* notifyData);
+	static void sURLNotify(NPP npp, const char* url, NPReason reason, void* notifyData);
 
 	static jref sGetJavaClass();
 
-	static NPError sGetValue(NPP instance, NPPVariable variable, void *value);
+	static NPError sGetValue(NPP npp, NPPVariable variable, void *value);
 
-	static NPError sSetValue(NPP instance, NPNVariable variable, void *value);
+	static NPError sSetValue(NPP npp, NPNVariable variable, void *value);
 
 	NPNetscapeFuncs_Z fNPNF;
 
@@ -311,7 +328,7 @@ private:
 class Guest
 	{
 protected:
-	Guest(NPP iNPP);
+	Guest(NPP npp);
 
 public:
 	virtual ~Guest();
@@ -403,6 +420,8 @@ public:
 
 // Disabled till I figure out what the real signature should be
 //	void Host_SetException(NPObject* obj, const NPUTF8* message);
+
+	ZRef<NPObjectG> Host_GetWindowObject();
 
 private:
 	NPP fNPP;

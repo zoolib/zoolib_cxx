@@ -215,10 +215,10 @@ HostMeister* HostMeister::sGet()
 	return sHostMeister;
 	}
 
-Host* HostMeister::sHostFromNPP(NPP iNPP)
+Host* HostMeister::sHostFromNPP(NPP npp)
 	{
-	if (iNPP)
-		return static_cast<Host*>(iNPP->ndata);
+	if (npp)
+		return static_cast<Host*>(npp->ndata);
 	return nil;
 	}
 
@@ -633,41 +633,41 @@ void HostMeister::sSetExceptionNPString(NPObject* obj, NPString* message)
 	ZNETSCAPE_AFTER_VOID
 	}
 
-void HostMeister::sPushPopupsEnabledState(NPP iNPP, NPBool enabled)
+void HostMeister::sPushPopupsEnabledState(NPP npp, NPBool enabled)
 	{
 	ZNETSCAPE_BEFORE
-		sGet()->PushPopupsEnabledState(iNPP, enabled);
+		sGet()->PushPopupsEnabledState(npp, enabled);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-void HostMeister::sPopPopupsEnabledState(NPP iNPP)
+void HostMeister::sPopPopupsEnabledState(NPP npp)
 	{
 	ZNETSCAPE_BEFORE
-		sGet()->PopPopupsEnabledState(iNPP);
+		sGet()->PopPopupsEnabledState(npp);
 	ZNETSCAPE_AFTER_VOID
 	}
 
 bool HostMeister::sEnumerate
-	(NPP iNPP, NPObject *npobj, NPIdentifier **identifier, uint32_t *count)
+	(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count)
 	{
 	ZNETSCAPE_BEFORE
-		return sGet()->Enumerate(iNPP, npobj, identifier, count);
+		return sGet()->Enumerate(npp, npobj, identifier, count);
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
 void HostMeister::sPluginThreadAsyncCall
-	(NPP iNPP, void (*func)(void *), void *userData)
+	(NPP npp, void (*func)(void *), void *userData)
 	{
 	ZNETSCAPE_BEFORE
-		sGet()->sPluginThreadAsyncCall(iNPP, func, userData);
+		sGet()->sPluginThreadAsyncCall(npp, func, userData);
 	ZNETSCAPE_AFTER_VOID
 	}
 
 bool HostMeister::sConstruct
-	(NPP iNPP, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
+	(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
 	{
 	ZNETSCAPE_BEFORE
-		sGet()->Construct(iNPP, obj, args, argCount, result);
+		sGet()->Construct(npp, obj, args, argCount, result);
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 

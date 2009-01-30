@@ -33,7 +33,7 @@ namespace ZNetscape {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZNetscape::NPClassBase
+#pragma mark * ZNetscape::NPClass_Z
 
 //#define ASSIGN(a) \
 //	*static_cast<intptr_t*>(static_cast<void*>(&this->a)) = reinterpret_cast<intptr_t>(a);
@@ -68,6 +68,13 @@ NPClass_Z::NPClass_Z(
 	}
 
 #undef ASSIGN
+
+NPClass_Z* sGetClass(NPObject* obj)
+	{
+	if (obj)
+		return static_cast<NPClass_Z*>(obj->_class);
+	return nil;
+	}
 
 // =================================================================================================
 #pragma mark -

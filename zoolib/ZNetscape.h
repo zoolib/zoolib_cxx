@@ -37,6 +37,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 
+#define ZNETSCAPE_BEFORE_NPP(a, iObject) \
+	NPPSetter_T<typename a::Object_t> theSetter(static_cast<a*>(iObject)->GetNPP());\
+	try {
+
+
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZNetscape {
@@ -77,6 +82,25 @@ public:
 	#if NP_CLASS_STRUCT_VERSION < 2
 		NPEnumerationFunctionPtr enumerate;
 	#endif
+	};
+
+NPClass_Z* sGetClass(NPObject* obj);
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * NPPSetter_T
+
+template <class T>
+class NPPSetter_T
+	{
+private:
+	NPP fPrior;
+	static NPP sNPP;
+
+public:
+	NPPSetter_T(NPP iNPP) : fPrior(sNPP) { sNPP = iNPP; }
+	~NPPSetter_T() { sNPP = fPrior; }
+	static NPP sCurrent() { return sNPP; }
 	};
 
 // =================================================================================================
@@ -214,25 +238,31 @@ public:
 		return *this;
 		}
 
-	NPVariant_T(bool iValue)
+	explicit NPVariant_T(bool iValue)
 		{
 		type = NPVariantType_Bool;
 		value.boolValue = iValue;
 		}
 
-	NPVariant_T(int32 iValue)
+	explicit NPVariant_T(int32 iValue)
 		{
 		type = NPVariantType_Int32;
 		value.intValue = iValue;
 		}
 
-	NPVariant_T(double iValue)
+	explicit NPVariant_T(double iValue)
 		{
 		type = NPVariantType_Double;
 		value.doubleValue = iValue;
 		}
 
 	NPVariant_T(const std::string& iValue)
+		{
+		this->pSetString(iValue);
+		type = NPVariantType_String;
+		}
+
+	NPVariant_T(const char* iValue)
 		{
 		this->pSetString(iValue);
 		type = NPVariantType_String;
@@ -269,6 +299,12 @@ public:
 		return *this;
 		}
 
+	NPVariant_T& operator=(const char* iValue)
+		{
+		this->SetString(iValue);
+		return *this;
+		}
+
 	NPVariant_T& operator=(const std::string& iValue)
 		{
 		this->SetString(iValue);
@@ -287,6 +323,9 @@ public:
 		this->SetObject(iValue.GetObject());
 		return *this;
 		}
+
+	operator ZRef<T>() const
+		{ return ZRef<T>(this->GetObject()); }
 
 	bool IsVoid() const
 		{ return type == NPVariantType_Void; }
@@ -504,11 +543,16 @@ class Object_T : public Variant_t::Object_t
 public:
 	typedef typename Variant_t::Object_t Object_t;
 
+	NPP GetNPP() { return fNPP; }
+
 protected:
+	NPP fNPP;
+
 	Object_T()
 		{
 		this->_class = &sNPClass;
 		this->referenceCount = 0;
+		fNPP = NPPSetter_T<Object_t>::sCurrent();
 		}
 
 	virtual ~Object_T()
@@ -588,21 +632,21 @@ private:
 	
 	static void sDeallocate(NPObject* npobj)
 		{
-		ZNETSCAPE_BEFORE
+		ZNETSCAPE_BEFORE_NPP(Object_T, npobj)
 			delete static_cast<Object_T*>(npobj);
 		ZNETSCAPE_AFTER_VOID
 		}
 
 	static void sInvalidate(NPObject* npobj)
 		{
-		ZNETSCAPE_BEFORE
+		ZNETSCAPE_BEFORE_NPP(Object_T, npobj)
 			static_cast<Object_T*>(npobj)->Imp_Invalidate();
 		ZNETSCAPE_AFTER_VOID
 		}
 
 	static bool sHasMethod(NPObject* npobj, NPIdentifier name)
 		{
-		ZNETSCAPE_BEFORE
+		ZNETSCAPE_BEFORE_NPP(Object_T, npobj)
 			return static_cast<Object_T*>(npobj)->Imp_HasMethod(Object_t::sAsString(name));
 		ZNETSCAPE_AFTER_RETURN_FALSE
 		}
@@ -610,7 +654,7 @@ private:
 	static bool sInvoke(NPObject* npobj,
 		NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result)
 		{
-		ZNETSCAPE_BEFORE
+		ZNETSCAPE_BEFORE_NPP(Object_T, npobj)
 			return static_cast<Object_T*>(npobj)->Imp_Invoke(
 				Object_t::sAsString(name),
 				static_cast<const Variant_t*>(args),
@@ -622,7 +666,7 @@ private:
 	static bool sInvokeDefault(NPObject* npobj,
 		const NPVariant* args, uint32_t argCount, NPVariant* result)
 		{
-		ZNETSCAPE_BEFORE
+		ZNETSCAPE_BEFORE_NPP(Object_T, npobj)
 			return static_cast<Object_T*>(npobj)->Imp_InvokeDefault(
 				static_cast<const Variant_t*>(args),
 				argCount,
@@ -632,7 +676,7 @@ private:
 
 	static bool sHasProperty(NPObject* npobj, NPIdentifier name)
 		{
-		ZNETSCAPE_BEFORE
+		ZNETSCAPE_BEFORE_NPP(Object_T, npobj)
 			{
 			if (Object_t::sIsString(name))
 				return static_cast<Object_T*>(npobj)->Imp_HasProperty(Object_t::sAsString(name));
@@ -644,7 +688,7 @@ private:
 
 	static bool sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result)
 		{
-		ZNETSCAPE_BEFORE
+		ZNETSCAPE_BEFORE_NPP(Object_T, npobj)
 			if (Object_t::sIsString(name))
 				{
 				return static_cast<Object_T*>(npobj)->Imp_GetProperty(
@@ -662,7 +706,7 @@ private:
 
 	static bool sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value)
 		{
-		ZNETSCAPE_BEFORE
+		ZNETSCAPE_BEFORE_NPP(Object_T, npobj)
 			if (Object_t::sIsString(name))
 				{
 				return static_cast<Object_T*>(npobj)->Imp_SetProperty(
@@ -680,7 +724,7 @@ private:
 
 	static bool sRemoveProperty(NPObject* npobj, NPIdentifier name)
 		{
-		ZNETSCAPE_BEFORE
+		ZNETSCAPE_BEFORE_NPP(Object_T, npobj)
 			if (Object_t::sIsString(name))
 				return static_cast<Object_T*>(npobj)->Imp_RemoveProperty(Object_t::sAsString(name));
 			else
@@ -690,7 +734,7 @@ private:
 
 	static bool sEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t* oCount)
 		{
-		ZNETSCAPE_BEFORE
+		ZNETSCAPE_BEFORE_NPP(Object_T, npobj)
 			return static_cast<Object_T*>(npobj)->Imp_Enumerate(*oIdentifiers, *oCount);
 		ZNETSCAPE_AFTER_RETURN_FALSE
 		}
@@ -712,7 +756,9 @@ NPClass_Z Object_T<a>::sNPClass( \
 	Object_T<a>::sSetProperty, \
 	Object_T<a>::sRemoveProperty, \
 	Object_T<a>::sEnumerate \
-	)
+	); \
+template<> \
+NPP NPPSetter_T<a::Object_t>::sNPP = nil
 
 } // namespace ZNetscape
 
