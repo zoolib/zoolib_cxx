@@ -78,7 +78,7 @@ private:
 	ZMutex fMutex;
 	ZCondition fCondition;
 
-	IDeviceManager* fDeviceManager;
+	ZRef<IDeviceManager> fDeviceManager;
 	uint32 fCookie;
 
 	struct Entry_t

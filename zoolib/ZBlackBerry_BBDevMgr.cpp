@@ -34,6 +34,7 @@ NAMESPACE_ZOOLIB_BEGIN
 using std::string;
 using std::vector;
 using std::wstring;
+using namespace ZBlackBerryCOM;
 
 namespace ZBlackBerry {
 
@@ -55,7 +56,7 @@ public:
 	typedef ZBlackBerryCOM::ChannelParams ChannelParams;
 	typedef ZBlackBerryCOM::IChannelEvents IChannelEvents;
 
-	Channel_BBDevMgr(ZRef<Channel_BBDevMgr>& oChannel, IDevice* iDevice,
+	Channel_BBDevMgr(ZRef<Channel>& oChannel, IDevice* iDevice,
 		bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash);
 
 	virtual ~Channel_BBDevMgr();
@@ -98,17 +99,14 @@ public:
 // From ZStreamRCon and ZStreamWCon
 	virtual void Imp_Abort();
 
-// Our protocol
-	bool IsOkay();
-
 private:
-	bool pRefill(ZMutexLocker& iLocker, IChannel* iChannel, int* ioTimeout);
+	bool pRefill(ZMutexLocker& iLocker, ZRef<IChannel> iChannel, int* ioTimeout);
 	void pAbort();
-	IChannel* pUseChannel();
+	ZRef<IChannel> pUseChannel();
 
 	ZMutex fMutex;
 	ZCondition fCondition_Reader;
-	IChannel* fChannel;
+	ZRef<IChannel> fChannel;
 	ChannelParams fChannelParams;
 
 	bool fPreserveBoundaries;
@@ -122,7 +120,7 @@ private:
 	bool fClosed;
 	};
 
-Channel_BBDevMgr::Channel_BBDevMgr(ZRef<Channel_BBDevMgr>& oChannel, IDevice* iDevice,
+Channel_BBDevMgr::Channel_BBDevMgr(ZRef<Channel>& oChannel, IDevice* iDevice,
 	bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash)
 :	fChannel(nil),
 	fPreserveBoundaries(iPreserveBoundaries),
@@ -137,15 +135,18 @@ Channel_BBDevMgr::Channel_BBDevMgr(ZRef<Channel_BBDevMgr>& oChannel, IDevice* iD
 	if (iPasswordHash)
 		fPasswordHash = *iPasswordHash;
 
-	oChannel = this;
+	// The call to OpenChannel will AddRef/Release us. So keep
+	// a reference around till we return.
+	ZRef<Channel> self = this;
 	wstring wideName = ZUnicode::sAsWString(iName);
-	HRESULT theResult = iDevice->OpenChannel(wideName.c_str(), this, &fChannel);
+	HRESULT theResult = iDevice->OpenChannel(wideName.c_str(), this, (IChannel**)&fChannel);
 
 	if (SUCCEEDED(theResult) && fChannel)
 		{
 		fChannel->Params(&fChannelParams);
 		// Allow for two extra bytes, just in case we're preserving boundaries.
 		fBuffer.resize(fChannelParams.fMaxReceiveUnit + 2);
+		oChannel = self;
 		}
 	}
 
@@ -153,9 +154,6 @@ Channel_BBDevMgr::~Channel_BBDevMgr()
 	{
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 		s << "~Channel_BBDevMgr";
-
-	if (fChannel)
-		fChannel->Release();
 	}
 
 STDMETHODIMP Channel_BBDevMgr::QueryInterface(const IID& iInterfaceID, void** oObjectRef)
@@ -164,6 +162,7 @@ STDMETHODIMP Channel_BBDevMgr::QueryInterface(const IID& iInterfaceID, void** oO
 		s << "QueryInterface";
 
 	*oObjectRef = nil;
+
 	if (iInterfaceID == IID_IUnknown)
 		{
 		*oObjectRef = static_cast<IUnknown*>(this);
@@ -185,7 +184,7 @@ ULONG STDMETHODCALLTYPE Channel_BBDevMgr::AddRef()
 	{ return ZRefCountedWithFinalization::AddRef(); }
 
 ULONG STDMETHODCALLTYPE Channel_BBDevMgr::Release()
-	{ return ZRefCountedWithFinalization::Release(); }
+	{ return ZRefCountedWithFinalization::ReleaseCOM(); }
 
 STDMETHODIMP Channel_BBDevMgr::CheckClientStatus(uint16 iRHS)
 	{
@@ -277,7 +276,7 @@ void Channel_BBDevMgr::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 			}
 		else
 			{
-			IChannel* theChannel = this->pUseChannel();
+			ZRef<IChannel> theChannel = this->pUseChannel();
 			if (!theChannel)
 				break;
 
@@ -298,7 +297,7 @@ size_t Channel_BBDevMgr::Imp_CountReadable()
 	ZMutexLocker locker(fMutex);
 	if (fEnd <= fStart)
 		{
-		IChannel* theChannel = this->pUseChannel();
+		ZRef<IChannel> theChannel = this->pUseChannel();
 		if (!theChannel)
 			return 0;
 		int theTimeout = 0;
@@ -323,7 +322,7 @@ bool Channel_BBDevMgr::Imp_WaitReadable(int iMilliseconds)
 		if (fEnd > fStart)
 			return true;
 
-		IChannel* theChannel = this->pUseChannel();
+		ZRef<IChannel> theChannel = this->pUseChannel();
 		if (!theChannel)
 			return true;
 
@@ -347,7 +346,7 @@ bool Channel_BBDevMgr::Imp_ReceiveDisconnect(int iMilliseconds)
 		fEnd = 0;
 		fStart = 0;
 
-		IChannel* theChannel = this->pUseChannel();
+		ZRef<IChannel> theChannel = this->pUseChannel();
 		if (!theChannel)
 			return true;
 
@@ -365,7 +364,7 @@ void Channel_BBDevMgr::Imp_Write(const void* iSource, size_t iCount, size_t* oCo
 
 	ZMutexLocker locker(fMutex);
 
-	if (IChannel* theChannel = this->pUseChannel())
+	if (ZRef<IChannel> theChannel = this->pUseChannel())
 		{
 		locker.Release();
 		const size_t countToWrite = std::min(iCount, size_t(fChannelParams.fMaxTransmitUnit));
@@ -379,8 +378,6 @@ void Channel_BBDevMgr::Imp_Write(const void* iSource, size_t iCount, size_t* oCo
 			if (ZLOG(s, eDebug + 2, "ZBlackBerry::Channel_BBDevMgr"))
 				s.Writef("Write failed, count: %d, %d", iCount, countToWrite);
 			}
-
-		theChannel->Release();
 		}
 
 	if (oCountWritten)
@@ -403,10 +400,7 @@ void Channel_BBDevMgr::Imp_Abort()
 	this->pAbort();
 	}
 
-bool Channel_BBDevMgr::IsOkay()
-	{ return fChannel; }
-
-bool Channel_BBDevMgr::pRefill(ZMutexLocker& iLocker, IChannel* iChannel, int* ioTimeout)
+bool Channel_BBDevMgr::pRefill(ZMutexLocker& iLocker, ZRef<IChannel> iChannel, int* ioTimeout)
 	{
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 		s.Writef("pRefill");
@@ -476,37 +470,21 @@ bool Channel_BBDevMgr::pRefill(ZMutexLocker& iLocker, IChannel* iChannel, int* i
 				}
 			}
 		}
-	iLocker.Release();
-	ZAssert(!fMutex.IsLocked());
-	iChannel->Release();
-	iLocker.Acquire();
 	return result;
 	}
 
 void Channel_BBDevMgr::pAbort()
 	{
 	ZMutexLocker locker(fMutex);
-	if (fChannel)
-		{
-		fClosed = true;
-		IChannel* theChannel = fChannel;
-		fChannel = nil;
-		fCondition_Reader.Broadcast();
-		locker.Release();
-		theChannel->Release();
-		}
+	fClosed = true;
+	fChannel.Clear();
+	fCondition_Reader.Broadcast();
 	}
 
-ZBlackBerryCOM::IChannel* Channel_BBDevMgr::pUseChannel()
+ZRef<ZBlackBerryCOM::IChannel> Channel_BBDevMgr::pUseChannel()
 	{
 	ZAssert(fMutex.IsLocked());
-
-	if (IChannel* theChannel = fChannel)
-		{
-		theChannel->AddRef();
-		return theChannel;
-		}
-	return nil;
+	return fChannel;
 	}
 
 // =================================================================================================
@@ -533,24 +511,18 @@ public:
 
 private:
 	bool pGetProperty(const string16& iName, VARIANT& oValue);
-	IDevice* pUseDevice();
+	ZRef<IDevice> pUseDevice();
 
 	ZMutex fMutex;
-	IDevice* fDevice;
+	ZRef<IDevice> fDevice;
 	};
 
 Device_BBDevMgr::Device_BBDevMgr(IDevice* iDevice)
 :	fDevice(iDevice)
-	{
-	ZAssert(fDevice);
-	fDevice->AddRef();
-	}
+	{}
 
 Device_BBDevMgr::~Device_BBDevMgr()
-	{
-	if (fDevice)
-		fDevice->Release();
-	}
+	{}
 
 ZRef<Channel> Device_BBDevMgr::Open(bool iPreserveBoundaries,
 	const string& iName, const PasswordHash* iPasswordHash, Error* oError)
@@ -558,7 +530,7 @@ ZRef<Channel> Device_BBDevMgr::Open(bool iPreserveBoundaries,
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Device_BBDevMgr"))
 		s << "Open, iName: " << iName;
 
-	if (IDevice* theDevice = this->pUseDevice())
+	if (ZRef<IDevice> theDevice = this->pUseDevice())
 		{
 		// theChannel's refcount is manipulated by both COM and ZRef. When created it is zero,
 		// and in the ZRef scheme is not incremented to one until it is first assigned to a
@@ -566,17 +538,18 @@ ZRef<Channel> Device_BBDevMgr::Open(bool iPreserveBoundaries,
 		// theChannel, and it will be Finalized and thus disposed. So we pass a reference to a
 		// ZRef to the constructor, to which the constructor assigns 'this', extending the
 		// lifetime appropriately.
-		ZRef<Channel_BBDevMgr> theChannel;
+#if 1
+		ZRef<Channel> theChannel;
 		new Channel_BBDevMgr(theChannel, theDevice, iPreserveBoundaries, iName, iPasswordHash);
-		theDevice->Release();
 
-		if (theChannel->IsOkay())
+		if (theChannel)
 			return theChannel;
 
 		// FIXME. Failure may also be due to a bad/missing/expired password.
 		#warning NDY
 		if (oError)
 			*oError = error_UnknownChannel;
+#endif
 		}
 	else
 		{
@@ -615,12 +588,10 @@ uint32 Device_BBDevMgr::GetPIN()
 bool Device_BBDevMgr::Matches(IDevice* iDevice)
 	{
 	int32 result = 0;
-	if (IDevice* theDevice = this->pUseDevice())
+	if (ZRef<IDevice> theDevice = this->pUseDevice())
 		{
 		if (FAILED(theDevice->Equals(iDevice, &result)))
 			result = 0;
-
-		theDevice->Release();
 		}
 
 	return result == 1;
@@ -629,23 +600,17 @@ bool Device_BBDevMgr::Matches(IDevice* iDevice)
 void Device_BBDevMgr::pDisconnected()
 	{
 	ZMutexLocker locker(fMutex);
-	ZAssert(fDevice);
-	IDevice* theDevice = fDevice;
-	fDevice = nil;
-	locker.Release();
-
-	theDevice->Release();
-
+	fDevice.Clear();
 	this->pFinished();
 	}
 
 bool Device_BBDevMgr::pGetProperty(const string16& iName, VARIANT& oValue)
 	{
 	bool gotIt = false;
-	if (IDevice* theDevice = this->pUseDevice())
+	if (ZRef<IDevice> theDevice = this->pUseDevice())
 		{
-		ZBlackBerryCOM::IDeviceProperties* theDPs;
-		if (SUCCEEDED(theDevice->Properties(&theDPs)))
+		ZRef<ZBlackBerryCOM::IDeviceProperties> theDPs;
+		if (SUCCEEDED(theDevice->Properties((IDeviceProperties**)&theDPs)))
 			{
 			uint32 dpCount;
 			theDPs->Count(&dpCount);
@@ -654,8 +619,8 @@ bool Device_BBDevMgr::pGetProperty(const string16& iName, VARIANT& oValue)
 				VARIANT indexV;
 				indexV.vt = VT_I4;
 				indexV.lVal = x;
-				ZBlackBerryCOM::IDeviceProperty* theDP;
-				if (SUCCEEDED(theDPs->Item(indexV, &theDP)))
+				ZRef<ZBlackBerryCOM::IDeviceProperty> theDP;
+				if (SUCCEEDED(theDPs->Item(indexV, (ZBlackBerryCOM::IDeviceProperty**)&theDP)))
 					{
 					BSTR theName;
 					if (SUCCEEDED(theDP->Name(&theName)))
@@ -667,24 +632,17 @@ bool Device_BBDevMgr::pGetProperty(const string16& iName, VARIANT& oValue)
 							}	
 						::SysFreeString(theName);
 						}
-					theDP->Release();
 					}
 				}
-			theDPs->Release();
 			}
 		}
 	return gotIt;
 	}
 
-ZBlackBerryCOM::IDevice* Device_BBDevMgr::pUseDevice()
+ZRef<ZBlackBerryCOM::IDevice> Device_BBDevMgr::pUseDevice()
 	{
 	ZMutexLocker locker(fMutex);
-	if (IDevice* theDevice = fDevice)
-		{
-		theDevice->AddRef();
-		return theDevice;
-		}
-	return nil;
+	return fDevice;
 	}
 
 // =================================================================================================
@@ -709,25 +667,23 @@ Manager_BBDevMgr::Manager_BBDevMgr()
 		// Build the initial list
 		ZMutexLocker locker(fMutex);
 
-		ZBlackBerryCOM::IDevices* theDevices;
-		if (SUCCEEDED(fDeviceManager->Devices(&theDevices) && theDevices))
+		ZRef<IDevices> theDevices;
+		if (SUCCEEDED(fDeviceManager->Devices((IDevices**)&theDevices) && theDevices))
 			{
 			uint32 theCount;
 			theDevices->Count(&theCount);
 
 			for (uint32 x = 0; x < theCount; ++x)
 				{
-				ZBlackBerryCOM::IDevice* theDevice;
-				if (SUCCEEDED(theDevices->Item(x, &theDevice)))
+				ZRef<IDevice> theDevice;
+				if (SUCCEEDED(theDevices->Item(x, (IDevice**)&theDevice)))
 					{
 					Entry_t anEntry;
 					anEntry.fID = fNextID++;
 					anEntry.fDevice = new Device_BBDevMgr(theDevice);
 					fEntries.push_back(anEntry);
-					theDevice->Release();
 					}
 				}
-			theDevices->Release();
 			}
 		}	
 	}
@@ -737,10 +693,7 @@ Manager_BBDevMgr::~Manager_BBDevMgr()
 	fEntries.clear();
 
 	if (fDeviceManager)
-		{
 		fDeviceManager->Unadvise(fCookie);
-		fDeviceManager->Release();
-		}
 	}
 
 STDMETHODIMP Manager_BBDevMgr::QueryInterface(
@@ -750,6 +703,7 @@ STDMETHODIMP Manager_BBDevMgr::QueryInterface(
 		s << "QueryInterface";
 
 	*oObjectRef = nil;
+
 	if (iInterfaceID == IID_IUnknown)
 		{
 		*oObjectRef = static_cast<IUnknown*>(this);
@@ -771,7 +725,7 @@ ULONG STDMETHODCALLTYPE Manager_BBDevMgr::AddRef()
 	{ return ZRefCountedWithFinalization::AddRef(); }
 
 ULONG STDMETHODCALLTYPE Manager_BBDevMgr::Release()
-	{ return ZRefCountedWithFinalization::Release(); }
+	{ return ZRefCountedWithFinalization::ReleaseCOM(); }
 
 STDMETHODIMP Manager_BBDevMgr::DeviceConnect(IDevice* iDevice)
 	{
