@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <CoreFoundation/CFString.h>
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::min;
 using std::string;
@@ -109,10 +109,10 @@ public:
 
 ZYadR_CFType::ZYadR_CFType(CFTypeRef iCFTypeRef)
 :	fCFTypeRef(iCFTypeRef)
-	{ ::CFRetain(fCFTypeRef); }
+	{}
 
 ZYadR_CFType::~ZYadR_CFType()
-	{ ::CFRelease(fCFTypeRef); }
+	{}
 
 CFTypeRef ZYadR_CFType::GetCFTypeRef()
 	{ return fCFTypeRef; }
@@ -141,10 +141,7 @@ ZYadRawRPos_CFData::ZYadRawRPos_CFData(CFDataRef iCFDataRef)
 	{}
 
 ZYadRawRPos_CFData::~ZYadRawRPos_CFData()
-	{
-	CFDataRef theDataRef = nil;
-	::CFRetain(theDataRef);
-	}
+	{}
 
 // =================================================================================================
 #pragma mark -
@@ -274,22 +271,18 @@ ZRef<ZYadR> ZYadUtil_CFType::sMakeYadR(CFTypeRef iCFTypeRef)
 	}
 
 
-static CFDictionaryRef sReadDictionary(ZRef<ZYadMapR> iYadMapR)
+static ZRef<CFDictionaryRef> sReadDictionary(ZRef<ZYadMapR> iYadMapR)
 	{
-	CFMutableDictionaryRef result = ::CFDictionaryCreateMutable(
+	ZRef<CFMutableDictionaryRef> result(false, ::CFDictionaryCreateMutable(
 		kCFAllocatorDefault, 0,
 		&kCFCopyStringDictionaryKeyCallBacks,
-		&kCFTypeDictionaryValueCallBacks);
+		&kCFTypeDictionaryValueCallBacks));
 
 	while (iYadMapR->HasChild())
 		{
-		CFStringRef theStringRef = ZUtil_CFType::sCreateCFString_UTF8(iYadMapR->Name());
-		if (CFTypeRef theValue = ZYadUtil_CFType::sFromYadR(iYadMapR->NextChild()))
-			{
-			::CFDictionarySetValue(result, theStringRef, theValue);
-			::CFRelease(theValue);
-			}
-		::CFRelease(theStringRef);
+		ZRef<CFStringRef> theStringRef(false, ZUtil_CFType::sCreateCFString_UTF8(iYadMapR->Name()));
+		ZRef<CFTypeRef> theValue(false, ZYadUtil_CFType::sFromYadR(iYadMapR->NextChild()));
+		::CFDictionarySetValue(result, theStringRef, theValue);
 		}
 
 	return result;
@@ -302,9 +295,8 @@ static CFArrayRef sReadArray(ZRef<ZYadListR> iYadListR)
 
 	while (iYadListR->HasChild())
 		{
-		CFTypeRef theValue = ZYadUtil_CFType::sFromYadR(iYadListR->NextChild());
+		ZRef<CFTypeRef> theValue(false, ZYadUtil_CFType::sFromYadR(iYadListR->NextChild()));
 		::CFArrayAppendValue(result, theValue);
-		::CFRelease(theValue);
 		}
 
 	return result;
@@ -346,5 +338,7 @@ CFTypeRef ZYadUtil_CFType::sFromYadR(ZRef<ZYadR> iYadR)
 		return ZFactoryChain_T<CFTypeRef, ZRef<ZYadR> >::sMake(iYadR);
 		}
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(CFType)

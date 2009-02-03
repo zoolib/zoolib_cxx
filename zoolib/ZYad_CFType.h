@@ -52,7 +52,7 @@ public:
 	CFTypeRef GetCFTypeRef();
 
 private:	
-	CFTypeRef fCFTypeRef;
+	ZRef<CFTypeRef> fCFTypeRef;
 	};
 
 // =================================================================================================
@@ -111,7 +111,7 @@ public:
 	virtual void SetPosition(size_t iPosition);
 
 private:
-	CFArrayRef fCFArrayRef;
+	ZRef<CFArrayRef> fCFArrayRef;
 	size_t fPosition;
 	};
 
@@ -145,7 +145,7 @@ public:
 	virtual void SetPosition(const std::string& iName);
 
 private:
-	CFDictionaryRef fCFDictionaryRef;
+	ZRef<CFDictionaryRef> fCFDictionaryRef;
 	size_t fPosition;
 	std::vector<CFStringRef> fNames;
 	std::vector<CFTypeRef> fValues;
