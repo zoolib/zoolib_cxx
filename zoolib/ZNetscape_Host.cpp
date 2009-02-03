@@ -32,6 +32,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::string;
 
+#define ZNETSCAPE_BEFORE_OBJECT(a) \
+	try {
+
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZNetscape {
@@ -46,12 +49,6 @@ void spRelease_T(NPVariantH& iNPVariantH)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ObjectH
-
-ZNETSCAPE_OBJECT_SETUP(NPVariantH);
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * NPObjectH
 
 static NPP fake = nil;
@@ -61,26 +58,6 @@ NPObjectH::NPObjectH()
 
 NPObjectH::~NPObjectH()
 	{}
-
-void NPObjectH::sIncRefCount(NPObjectH* iObject)
-	{
-	if (iObject)
-		iObject->Retain();
-	}
-
-void NPObjectH::sDecRefCount(NPObjectH* iObject)
-	{
-	if (iObject)
-		iObject->Release();
-	}
-
-void NPObjectH::sCheckAccess(NPObjectH* iObject)
-	{
-	ZAssertStopf(0, iObject, ("ZRef<NPObjectH> accessed with nil object"));
-	ZAssertStopf(0,
-		iObject->referenceCount >= 0, ("ZRef<NPObjectH> accessed with invalid refcount"));
-	}
-
 bool NPObjectH::sIsString(NPIdentifier iNPI)
 	{ return HostMeister::sGet()->IdentifierIsString(iNPI); }
 
@@ -201,6 +178,218 @@ bool NPObjectH::Enumerate(std::vector<NPIdentifier>& oIdentifiers)
 	free(theIDs);
 
 	return true;
+	}
+
+void sRetain(NPObjectH& iOb)
+	{ iOb.Retain(); }
+
+void sRelease(NPObjectH& iOb)
+	{ iOb.Release(); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ObjectH
+
+NPClass_Z ObjectH::sNPClass(
+	sAllocate,
+	sDeallocate,
+	sInvalidate,
+	sHasMethod,
+	sInvoke,
+	sInvokeDefault,
+	sHasProperty,
+	sGetProperty,
+	sSetProperty,
+	sRemoveProperty,
+	sEnumerate);
+
+ObjectH::ObjectH()
+	{
+	this->_class = &sNPClass;
+	this->referenceCount = 0;
+	}
+
+ObjectH::~ObjectH()
+	{}
+
+void ObjectH::Imp_Invalidate()
+	{}
+
+bool ObjectH::Imp_HasMethod(const std::string& iName)
+	{ return false; }
+
+bool ObjectH::Imp_Invoke(
+	const std::string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult)
+	{ return false; }
+
+bool ObjectH::Imp_InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult)
+	{ return false; }
+
+bool ObjectH::Imp_HasProperty(const std::string& iName)
+	{
+	using std::string;
+	using std::vector;
+	vector<string> theNames;
+	if (this->Imp_Enumerate(theNames))
+		return ZUtil_STL::sContains(theNames, iName);
+	
+	return false;
+	}
+
+bool ObjectH::Imp_HasProperty(int32_t iInt)
+	{ return false; }
+
+bool ObjectH::Imp_GetProperty(const std::string& iName, NPVariantH& oResult)
+	{ return false; }
+
+bool ObjectH::Imp_GetProperty(int32_t iInt, NPVariantH& oResult)
+	{ return false; }
+
+bool ObjectH::Imp_SetProperty(const std::string& iName, const NPVariantH& iValue)
+	{ return false; }
+
+bool ObjectH::Imp_SetProperty(int32_t iInt, const NPVariantH& iValue)
+	{ return false; }
+
+bool ObjectH::Imp_RemoveProperty(const std::string& iName)
+	{ return false; }
+
+bool ObjectH::Imp_RemoveProperty(int32_t iInt)
+	{ return false; }
+
+bool ObjectH::Imp_Enumerate(NPIdentifier*& oIDs, uint32_t& oCount)
+	{
+	using std::string;
+	using std::vector;
+	vector<string> theNames;
+	if (this->Imp_Enumerate(theNames))
+		{
+		oCount = theNames.size();
+		oIDs = static_cast<NPIdentifier*>(malloc(sizeof(NPIdentifier) * theNames.size()));
+		for (size_t x = 0; x < oCount; ++x)
+			oIDs[x] = sAsNPI(theNames[x]);
+
+		return true;
+		}
+	return false;
+	}
+
+bool ObjectH::Imp_Enumerate(std::vector<std::string>& oNames)
+	{ return false; }
+
+NPObject* ObjectH::sAllocate(NPP npp, NPClass *aClass)
+	{
+	ZUnimplemented();
+	return nil;
+	}
+
+void ObjectH::sDeallocate(NPObject* npobj)
+	{
+	ZNETSCAPE_BEFORE_OBJECT(npobj)
+		delete static_cast<ObjectH*>(npobj);
+	ZNETSCAPE_AFTER_VOID
+	}
+
+void ObjectH::sInvalidate(NPObject* npobj)
+	{
+	ZNETSCAPE_BEFORE_OBJECT(npobj)
+		static_cast<ObjectH*>(npobj)->Imp_Invalidate();
+	ZNETSCAPE_AFTER_VOID
+	}
+
+bool ObjectH::sHasMethod(NPObject* npobj, NPIdentifier name)
+	{
+	ZNETSCAPE_BEFORE_OBJECT(npobj)
+		return static_cast<ObjectH*>(npobj)->Imp_HasMethod(sAsString(name));
+	ZNETSCAPE_AFTER_RETURN_FALSE
+	}
+
+bool ObjectH::sInvoke(NPObject* npobj,
+	NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result)
+	{
+	ZNETSCAPE_BEFORE_OBJECT(npobj)
+		return static_cast<ObjectH*>(npobj)->Imp_Invoke(
+			sAsString(name),
+			static_cast<const NPVariantH*>(args),
+			argCount,
+			*static_cast<NPVariantH*>(result));
+	ZNETSCAPE_AFTER_RETURN_FALSE
+	}
+
+bool ObjectH::sInvokeDefault(NPObject* npobj,
+	const NPVariant* args, uint32_t argCount, NPVariant* result)
+	{
+	ZNETSCAPE_BEFORE_OBJECT(npobj)
+		return static_cast<ObjectH*>(npobj)->Imp_InvokeDefault(
+			static_cast<const NPVariantH*>(args),
+			argCount,
+			*static_cast<NPVariantH*>(result));
+	ZNETSCAPE_AFTER_RETURN_FALSE
+	}
+
+bool ObjectH::sHasProperty(NPObject* npobj, NPIdentifier name)
+	{
+	ZNETSCAPE_BEFORE_OBJECT(npobj)
+		{
+		if (sIsString(name))
+			return static_cast<ObjectH*>(npobj)->Imp_HasProperty(sAsString(name));
+		else
+			return static_cast<ObjectH*>(npobj)->Imp_HasProperty(sAsInt(name));
+		}
+	ZNETSCAPE_AFTER_RETURN_FALSE
+	}
+
+bool ObjectH::sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result)
+	{
+	ZNETSCAPE_BEFORE_OBJECT(npobj)
+		if (sIsString(name))
+			{
+			return static_cast<ObjectH*>(npobj)->Imp_GetProperty(
+				sAsString(name),
+				*static_cast<NPVariantH*>(result));
+			}
+		else
+			{
+			return static_cast<ObjectH*>(npobj)->Imp_GetProperty(
+				sAsInt(name),
+				*static_cast<NPVariantH*>(result));
+			}
+	ZNETSCAPE_AFTER_RETURN_FALSE
+	}
+
+bool ObjectH::sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value)
+	{
+	ZNETSCAPE_BEFORE_OBJECT(npobj)
+		if (sIsString(name))
+			{
+			return static_cast<ObjectH*>(npobj)->Imp_SetProperty(
+				sAsString(name),
+				*static_cast<const NPVariantH*>(value));
+			}
+		else
+			{
+			return static_cast<ObjectH*>(npobj)->Imp_SetProperty(
+				sAsInt(name),
+				*static_cast<const NPVariantH*>(value));
+			}
+	ZNETSCAPE_AFTER_RETURN_FALSE
+	}
+
+bool ObjectH::sRemoveProperty(NPObject* npobj, NPIdentifier name)
+	{
+	ZNETSCAPE_BEFORE_OBJECT(npobj)
+		if (sIsString(name))
+			return static_cast<ObjectH*>(npobj)->Imp_RemoveProperty(sAsString(name));
+		else
+			return static_cast<ObjectH*>(npobj)->Imp_RemoveProperty(sAsInt(name));
+	ZNETSCAPE_AFTER_RETURN_FALSE
+	}
+
+bool ObjectH::sEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t* oCount)
+	{
+	ZNETSCAPE_BEFORE_OBJECT(npobj)
+		return static_cast<ObjectH*>(npobj)->Imp_Enumerate(*oIdentifiers, *oCount);
+	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
 // =================================================================================================

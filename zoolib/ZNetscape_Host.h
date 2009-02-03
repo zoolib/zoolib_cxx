@@ -48,12 +48,6 @@ typedef NPVariant_T<NPObjectH> NPVariantH;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ObjectH
-
-typedef Object_T<NPVariantH> ObjectH;
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * NPObjectH
 
 class NPObjectH : public NPObject
@@ -63,13 +57,6 @@ protected:
 	~NPObjectH();
 
 public:
-	// Static methods enabling use of ZRef<NPObjectH>
-	static void sIncRefCount(NPObjectH* iObject);
-	static void sDecRefCount(NPObjectH* iObject);
-	static void sCheckAccess(NPObjectH* iObject);
-	static bool sCheckAccessEnabled()
-		{ return true; }
-
 	static bool sIsString(NPIdentifier iNPI);
 	static std::string sAsString(NPIdentifier iNPI);
 	static int32_t sAsInt(NPIdentifier iNPI);
@@ -108,6 +95,58 @@ public:
 
 	bool Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount);
 	bool Enumerate(std::vector<NPIdentifier>& oIdentifiers);
+	};
+
+void sRetain(NPObjectH& iOb);
+void sRelease(NPObjectH& iOb);
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ObjectH
+
+class ObjectH : public NPObjectH
+	{
+protected:
+	ObjectH();
+	virtual ~ObjectH();
+	virtual void Imp_Invalidate();
+	virtual bool Imp_HasMethod(const std::string& iName);
+
+	virtual bool Imp_Invoke(
+		const std::string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+
+	virtual bool Imp_InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+
+	virtual bool Imp_HasProperty(const std::string& iName);
+	virtual bool Imp_HasProperty(int32_t iInt);
+	virtual bool Imp_GetProperty(const std::string& iName, NPVariantH& oResult);
+	virtual bool Imp_GetProperty(int32_t iInt, NPVariantH& oResult);
+	virtual bool Imp_SetProperty(const std::string& iName, const NPVariantH& iValue);
+	virtual bool Imp_SetProperty(int32_t iInt, const NPVariantH& iValue);
+	virtual bool Imp_RemoveProperty(const std::string& iName);
+	virtual bool Imp_RemoveProperty(int32_t iInt);
+	virtual bool Imp_Enumerate(NPIdentifier*& oIDs, uint32_t& oCount);
+	virtual bool Imp_Enumerate(std::vector<std::string>& oNames);
+
+private:
+	static NPObject* sAllocate(NPP npp, NPClass *aClass);	
+	static void sDeallocate(NPObject* npobj);
+	static void sInvalidate(NPObject* npobj);
+	static bool sHasMethod(NPObject* npobj, NPIdentifier name);
+
+	static bool sInvoke(NPObject* npobj,
+		NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result);
+
+	static bool sInvokeDefault(NPObject* npobj,
+		const NPVariant* args, uint32_t argCount, NPVariant* result);
+
+	static bool sHasProperty(NPObject* npobj, NPIdentifier name);
+	static bool sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result);
+	static bool sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value);
+	static bool sRemoveProperty(NPObject* npobj, NPIdentifier name);
+	static bool sEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t* oCount);
+
+	static NPClass_Z sNPClass;
 	};
 
 // =================================================================================================

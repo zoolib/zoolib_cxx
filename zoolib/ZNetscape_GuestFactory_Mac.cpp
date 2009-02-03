@@ -39,7 +39,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::vector;
 
@@ -62,7 +62,8 @@ static NSModule sLoadNSModule(CFBundleRef iBundleRef)
 	{
 	NSModule module = nil;
 
-	if (CFURLRef executableURL = ::CFBundleCopyExecutableURL(iBundleRef))
+	ZRef<CFURLRef> executableURL = ::CFBundleCopyExecutableURL(iBundleRef);
+	if (executableURL)
 		{
 		char buff[PATH_MAX];
 
@@ -78,7 +79,6 @@ static NSModule sLoadNSModule(CFBundleRef iBundleRef)
 					| NSLINKMODULE_OPTION_RETURN_ON_ERROR);
 				}
 			}
-		::CFRelease(executableURL);
 		}
 
 	return module;
@@ -117,7 +117,7 @@ public:
 	virtual void GetEntryPoints(NPPluginFuncs& oNPPluginFuncs);
 
 private:
-	CFPlugInRef fPlugInRef;
+	ZRef<CFPlugInRef> fPlugInRef;
 	NSModule fNSModule;
 	NPPluginFuncs fNPPluginFuncs;
 	NPP_ShutdownProcPtr fShutdown;
@@ -133,8 +133,6 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(CFPlugInRef iPlugInRef)
 :	fPlugInRef(iPlugInRef),
 	fNSModule(nil)
 	{
-	::CFRetain(fPlugInRef);
-
 	// Get local copies of our host's function pointers
 	NPNetscapeFuncs_Z localNPNF;
 	GuestFactory::GetNPNF(localNPNF);
@@ -144,7 +142,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(CFPlugInRef iPlugInRef)
 	fNPPluginFuncs.size = sizeof(NPPluginFuncs);
 
 
-	CFBundleRef theBundleRef = ::CFPlugInGetBundle(fPlugInRef);
+	ZRef<CFBundleRef> theBundleRef = ::CFPlugInGetBundle(fPlugInRef);
 
 	// Force the bundle to be physically loaded by asking for an entry point. If we
 	// don't do this, and unload the bundle, then any subsequent loader will
@@ -194,7 +192,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(CFPlugInRef iPlugInRef)
 
 
 		#if ZCONFIG(Processor,PPC)
-			// Rework fNPPluginFuncs and fShutDown as MachO-Callable thunks.
+			// Rework fNPPluginFuncs and fShutdown as MachO-Callable thunks.
 			ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
 				&fNPPluginFuncs.newp,
 				(fNPPluginFuncs.size - offsetof(NPPluginFuncs, newp)) / sizeof(void*),
@@ -213,8 +211,6 @@ GuestFactory_HostMachO::~GuestFactory_HostMachO()
 		// We manually loaded our own NSModule, which we need to unload.
 		::NSUnLinkModule(fNSModule, NSUNLINKMODULE_OPTION_NONE);
 		}
-
-	::CFRelease(fPlugInRef);
 	}
 
 void GuestFactory_HostMachO::GetEntryPoints(NPPluginFuncs& oNPPluginFuncs)
@@ -263,11 +259,10 @@ private:
 GuestFactory_HostCFM::GuestFactory_HostCFM(CFPlugInRef iPlugInRef)
 :	fPlugInRef(iPlugInRef)
 	{
-	::CFRetain(fPlugInRef);
 	// If the plugin contains ObjC code then unloading it will kill the
 	// host application. So (for now at least) we do an extra retain, leaving
 	// the rest of the plugin management as it should be.
-	::CFRetain(fPlugInRef);
+	::CFRetain(fPlugInRef.Get());
 
 	// Get local copies of our host's function pointers
 	NPNetscapeFuncs_Z localNPNF;
@@ -327,17 +322,7 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(CFPlugInRef iPlugInRef)
 	}
 
 GuestFactory_HostCFM::~GuestFactory_HostCFM()
-	{
-	int firstRefCount = ::CFGetRetainCount(fPlugInRef);
-
-	fShutdown();
-
-	int secondRefCount = ::CFGetRetainCount(fPlugInRef);
-
-	::CFRelease(fPlugInRef);
-
-	int thirdRefCount = ::CFGetRetainCount(fPlugInRef);
-	}
+	{ fShutdown(); }
 
 void GuestFactory_HostCFM::GetEntryPoints(NPPluginFuncs& oNPPluginFuncs)
 	{
@@ -372,21 +357,18 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory_MacPlugin(const std::
 	ZRef<ZNetscape::GuestFactory> result;
 
 	#if ZCONFIG_SPI_Enabled(CoreFoundation)
-		CFStringRef thePath = ::CFStringCreateWithCString(
-			nil, iPath.c_str(), kCFStringEncodingUTF8);
+		ZRef<CFStringRef> thePath(false, ::CFStringCreateWithCString(
+			nil, iPath.c_str(), kCFStringEncodingUTF8));
 		if (thePath)
 			{
-			CFURLRef theURL = ::CFURLCreateWithFileSystemPath(
-				nil, thePath, kCFURLPOSIXPathStyle, true);
-			::CFRelease(thePath);
+			ZRef<CFURLRef> theURL(false, ::CFURLCreateWithFileSystemPath(
+				nil, thePath, kCFURLPOSIXPathStyle, true));
 			if (theURL)
 				{
-				CFPlugInRef thePlugInRef = ::CFPlugInCreate(nil, theURL);
-				::CFRelease(theURL);
+				ZRef<CFPlugInRef> thePlugInRef(false, ::CFPlugInCreate(nil, theURL));
 				if (thePlugInRef)
 					{
 					result = sMakeGuestFactory_MacPlugin(thePlugInRef);
-					::CFRelease(thePlugInRef);
 					}
 				}
 			}
@@ -394,5 +376,7 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory_MacPlugin(const std::
 
 	return result;
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Netscape)
