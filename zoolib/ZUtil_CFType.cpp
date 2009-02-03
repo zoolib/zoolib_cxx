@@ -22,13 +22,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
+#include "zoolib/ZRefCFType.h"
+
 #include ZMACINCLUDE2(CoreFoundation,CFData.h)
 #include ZMACINCLUDE2(CoreFoundation,CFNumber.h)
 #include ZMACINCLUDE2(CoreFoundation,CFString.h)
 
-NAMESPACE_ZOOLIB_USING
-
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -63,17 +65,15 @@ CFStringRef ZUtil_CFType::sCreateCFString_UTF16(const string16& iString16)
 
 CFMutableStringRef ZUtil_CFType::sCreateMutableCFString_UTF8(const string8& iString8)
 	{
-	CFStringRef theStringRef = sCreateCFString_UTF8(iString8);
+	ZRef<CFStringRef> theStringRef(false, sCreateCFString_UTF8(iString8));
 	CFMutableStringRef theMutableStringRef = ::CFStringCreateMutableCopy(0, 0, theStringRef);
-	::CFRelease(theStringRef);
 	return theMutableStringRef;
 	}
 
 CFMutableStringRef ZUtil_CFType::sCreateMutableCFString_UTF16(const string16& iString16)
 	{
-	CFStringRef theStringRef = sCreateCFString_UTF16(iString16);
+	ZRef<CFStringRef> theStringRef(false, sCreateCFString_UTF16(iString16));
 	CFMutableStringRef theMutableStringRef = ::CFStringCreateMutableCopy(0, 0, theStringRef);
-	::CFRelease(theStringRef);
 	return theMutableStringRef;
 	}
 
@@ -351,28 +351,22 @@ ZTuple ZUtil_CFType::sAsTuple(CFDictionaryRef iCFDictionary)
 CFDictionaryRef ZUtil_CFType::sCreateCFDictionary(const ZTuple& iTuple)
 	{
 	// Build local vector of keys and values.
-	vector<CFStringRef> keys;
-	vector<CFTypeRef> values;
+	vector<ZRef<CFStringRef> > keys;
+	vector<ZRef<CFTypeRef> > values;
 
 	for (ZTuple::const_iterator i = iTuple.begin(); i != iTuple.end(); ++i)
 		{
-		CFStringRef theStringRef = sCreateCFString_UTF8(iTuple.NameOf(i).AsString());
-		CFTypeRef theTypeRef = sCreateCFType(iTuple.GetValue(i));
-
+		ZRef<CFStringRef> theStringRef(false, sCreateCFString_UTF8(iTuple.NameOf(i).AsString()));
 		keys.push_back(theStringRef);
+
+		ZRef<CFTypeRef> theTypeRef(false, sCreateCFType(iTuple.GetValue(i)));
 		values.push_back(theTypeRef);
 		}
 
 	CFDictionaryRef theDictionaryRef = ::CFDictionaryCreate(kCFAllocatorDefault,
-		(const void**)(&keys[0]), &values[0], keys.size(),
+		(CFTypeRef*)&keys[0], (CFTypeRef*)&values[0], keys.size(),
 		&kCFCopyStringDictionaryKeyCallBacks,
 		&kCFTypeDictionaryValueCallBacks);
-
-	for (vector<CFStringRef>::iterator i = keys.begin(); i != keys.end(); ++i)
-		::CFRelease(*i);
-
-	for (vector<CFTypeRef>::iterator i = values.begin(); i != values.end(); ++i)
-		::CFRelease(*i);
 
 	return theDictionaryRef;
 	}
@@ -391,19 +385,18 @@ void ZUtil_CFType::sAsVector(CFArrayRef iCFArray, vector<ZTValue>& oVector)
 
 CFArrayRef ZUtil_CFType::sCreateCFArray(const vector<ZTValue>& iVector)
 	{
-	vector<CFTypeRef> values;
+	vector<ZRef<CFTypeRef> > values;
 	for (vector<ZTValue>::const_iterator i = iVector.begin(); i != iVector.end(); ++i)
-		values.push_back(sCreateCFType(*i));
+		values.push_back(ZRef<CFTypeRef>(false, sCreateCFType(*i)));
 
 	CFArrayRef theCFArrayRef = ::CFArrayCreate(kCFAllocatorDefault,
-		&values[0], values.size(), &kCFTypeArrayCallBacks );
+		(CFTypeRef*)&values[0], values.size(), &kCFTypeArrayCallBacks );
 
 	ZAssert(values.size() == ::CFArrayGetCount(theCFArrayRef));
 
-	for (vector<CFTypeRef>::iterator i = values.begin(); i != values.end(); ++i)
-		::CFRelease(*i);
-
 	return theCFArrayRef;
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
