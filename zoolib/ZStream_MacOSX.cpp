@@ -19,10 +19,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZStream_MacOSX.h"
+#include "zoolib/ZStreamer.h"
+
+NAMESPACE_ZOOLIB_BEGIN
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
-
-NAMESPACE_ZOOLIB_USING
 
 // =================================================================================================
 #pragma mark -
@@ -30,16 +31,10 @@ NAMESPACE_ZOOLIB_USING
 
 ZStreamR_CFStream::ZStreamR_CFStream(CFReadStreamRef iCFStream)
 :	fCFStream(iCFStream)
-	{
-	if (fCFStream)
-		::CFRetain(fCFStream);
-	}
+	{}
 
 ZStreamR_CFStream::~ZStreamR_CFStream()
-	{
-	if (fCFStream)
-		::CFRelease(fCFStream);
-	}
+	{}
 
 void ZStreamR_CFStream::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
@@ -68,16 +63,10 @@ size_t ZStreamR_CFStream::Imp_CountReadable()
 
 ZStreamW_CFStream::ZStreamW_CFStream(CFWriteStreamRef iCFStream)
 :	fCFStream(iCFStream)
-	{
-	if (fCFStream)
-		::CFRetain(fCFStream);
-	}
+	{}
 
 ZStreamW_CFStream::~ZStreamW_CFStream()
-	{
-	if (fCFStream)
-		::CFRelease(fCFStream);
-	}
+	{}
 
 void ZStreamW_CFStream::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
@@ -144,8 +133,6 @@ CGDataProviderRef ZStream_MacOSX::sCGDataProviderCreate(ZRef<ZStreamerR> iStream
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStream_MacOSX::sCGDataProviderCreateRewind
-
-#include "zoolib/ZStreamer.h"
 
 namespace ZANONYMOUS {
 
@@ -218,3 +205,5 @@ CGDataConsumerRef ZStream_MacOSX::sCGDataConsumerCreate(ZRef<ZStreamerW> iStream
 	}
 
 #endif // ZCONFIG_SPI_Enabled(CoreGraphics)
+
+NAMESPACE_ZOOLIB_END

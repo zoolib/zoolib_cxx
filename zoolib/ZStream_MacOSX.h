@@ -29,6 +29,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <CoreFoundation/CFStream.h>
 
+#if ZCONFIG_SPI_Enabled(CoreGraphics)
+#	include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGDataProvider.h)
+#	include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGDataConsumer.h)
+#endif
+
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
@@ -46,7 +51,7 @@ public:
 	virtual size_t Imp_CountReadable();
 
 private:
-	CFReadStreamRef fCFStream;
+	ZRef<CFReadStreamRef> fCFStream;
 	};
 
 typedef ZStreamerR_T<ZStreamR_CFStream> ZStreamerR_CFStream;
@@ -65,7 +70,7 @@ public:
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
 
 private:
-	CFWriteStreamRef fCFStream;
+	ZRef<CFWriteStreamRef> fCFStream;
 	};
 
 typedef ZStreamerW_T<ZStreamW_CFStream> ZStreamerW_CFStream;
@@ -77,9 +82,6 @@ typedef ZStreamerW_T<ZStreamW_CFStream> ZStreamerW_CFStream;
 #pragma mark * ZStream_MacOSX
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
-
-#include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGDataProvider.h)
-#include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGDataConsumer.h)
 
 namespace ZStream_MacOSX {
 
