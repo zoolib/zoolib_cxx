@@ -20,17 +20,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZRefCount.h"
 
-NAMESPACE_ZOOLIB_USING
-
-/**
-\defgroup RefCount Reference Counting and Smart Pointers
-
-\todo Finish this
-*/
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZRefCounted
+
+ZRefCounted::ZRefCounted()
+:	fRefCount(0)
+	{}
 
 ZRefCounted::~ZRefCounted()
 	{
@@ -38,15 +36,22 @@ ZRefCounted::~ZRefCounted()
 		("Non-zero refcount at destruction, it is %d", ZThreadSafe_Get(fRefCount)));
 	}
 
-void ZRefCounted::sCheckAccess(ZRefCounted* iObject)
+void ZRefCounted::Release()
 	{
-	ZAssertStopf(0, iObject, ("ZRef accessed with nil object"));
-	ZAssertStopf(0, ZThreadSafe_Get(iObject->fRefCount) >= 0, ("ZRef accessed with invalid refcount"));
+	if (ZThreadSafe_DecAndTest(fRefCount))
+		delete this;
 	}
+
+int ZRefCounted::GetRefCount() const
+	{ return ZThreadSafe_Get(fRefCount); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZRefCountedWithFinalization
+
+ZRefCountedWithFinalization::ZRefCountedWithFinalization()
+:	fRefCount(0)
+	{}
 
 ZRefCountedWithFinalization::~ZRefCountedWithFinalization()
 	{
@@ -73,40 +78,31 @@ void ZRefCountedWithFinalization::FinalizationComplete()
 	ZThreadSafe_Dec(fRefCount);
 	}
 
-void ZRefCountedWithFinalization::sDecRefCount(ZRefCountedWithFinalization* iObject)
+void ZRefCountedWithFinalization::Retain()
 	{
-	if (!iObject)
-		return;
-
-	#if ZCONFIG_Thread_Preemptive
-
-		for (;;)
-			{
-			int oldRefCount = ZAtomic_Get(&iObject->fRefCount);
-			if (oldRefCount == 1)
-				{
-				iObject->Finalize();
-				break;
-				}
-			else
-				{
-				if (ZAtomic_CompareAndSwap(&iObject->fRefCount, oldRefCount, oldRefCount - 1))
-					break;
-				// We'll only have to loop if we were preempted between the call to
-				// ZAtomic_Get and the call to ZAtomic_CompareAndSwap, so we'll very
-				// likely succeed next time round the loop.
-				}
-			}
-	#else
-
-		if (ZThreadSafe_DecAndTest(iObject->fRefCount))
-			{
-			ZThreadSafe_Set(iObject->fRefCount, 1);
-			iObject->Finalize();
-			}
-
-	#endif
+	if (0 == ZThreadSafe_IncReturnOld(fRefCount))
+		this->Initialize();
 	}
+
+void ZRefCountedWithFinalization::Release()
+	{
+	for (;;)
+		{
+		int oldRefCount = ZAtomic_Get(&fRefCount);
+		if (oldRefCount == 1)
+			{
+			this->Finalize();
+			}
+		else
+			{
+			if (ZAtomic_CompareAndSwap(&fRefCount, oldRefCount, oldRefCount - 1))
+				break;
+			}
+		}
+	}
+
+int ZRefCountedWithFinalization::GetRefCount() const
+	{ return ZThreadSafe_Get(fRefCount); }
 
 int ZRefCountedWithFinalization::AddRef()
 	{
@@ -116,7 +112,7 @@ int ZRefCountedWithFinalization::AddRef()
 	return newCount;
 	}
 
-int ZRefCountedWithFinalization::Release()
+int ZRefCountedWithFinalization::ReleaseCOM()
 	{
 	for (;;)
 		{
@@ -124,9 +120,9 @@ int ZRefCountedWithFinalization::Release()
 		if (oldRefCount == 1)
 			{
 			this->Finalize();
-			// We return the refcount we ended up with, which may be non-zero
-			// depending on what happened in Finalize.
-			return ZAtomic_Get(&fRefCount);
+			// Hmm. At this point we cannot know if we've been destroyed.
+			// Return zero as a sensible value.
+			return 0;
 			}
 		else
 			{
@@ -136,8 +132,4 @@ int ZRefCountedWithFinalization::Release()
 		}
 	}
 
-void ZRefCountedWithFinalization::sCheckAccess(ZRefCountedWithFinalization* iObject)
-	{
-	ZAssertStopf(0, iObject, ("ZRef accessed with nil object"));
-	ZAssertStopf(0, ZThreadSafe_Get(iObject->fRefCount) >= 0, ("ZRef accessed with invalid refcount"));
-	}
+NAMESPACE_ZOOLIB_END
