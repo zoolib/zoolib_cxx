@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -150,3 +150,5 @@ const ZStreamR& ZStreamRPos_StreamR::Committed()
 	else
 		return *this;
 	}
+
+NAMESPACE_ZOOLIB_END

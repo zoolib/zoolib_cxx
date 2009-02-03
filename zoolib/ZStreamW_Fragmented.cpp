@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::max;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -48,3 +48,5 @@ void ZStreamW_Fragmented::Imp_Flush()
 	{
 	fStreamSink.Flush();
 	}
+
+NAMESPACE_ZOOLIB_END

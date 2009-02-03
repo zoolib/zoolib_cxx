@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream_Count.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -203,3 +203,5 @@ uint64 ZStreamW_Count::GetCount()
 
 void ZStreamW_Count::ZeroCount()
 	{ *fCountPtr = 0; }
+
+NAMESPACE_ZOOLIB_END

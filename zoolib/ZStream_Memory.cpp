@@ -21,10 +21,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_Memory.h"
 #include "zoolib/ZMemory.h" // For ZBlockMove & ZBlockCopy
 
-NAMESPACE_ZOOLIB_USING
-
 using std::min;
 using std::pair;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 //#define kDebug_Stream_Memory 2
 
@@ -415,3 +415,5 @@ const ZStreamWPos& ZStreamerWPos_Memory::GetStreamWPos()
 
 void* ZStreamerWPos_Memory::GetCurrentAddress()
 	{ return fStream.GetCurrentAddress(); }
+
+NAMESPACE_ZOOLIB_END

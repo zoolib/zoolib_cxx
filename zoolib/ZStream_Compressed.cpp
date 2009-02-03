@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define kDebug_StreamRWPos_Compressed 2
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::min;
 
@@ -161,5 +161,7 @@ void ZStreamRPos_Compressed::Imp_SetPosition(uint64 iPosition)
 
 uint64 ZStreamRPos_Compressed::Imp_GetSize()
 	{ return fSize; }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(Stream_ZLib)

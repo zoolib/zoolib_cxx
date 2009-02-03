@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamWriter.h"
 #include "zoolib/ZThreadSimple.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -171,3 +171,5 @@ void ZStreamWriterRunner_Threaded::pRun()
 
 void ZStreamWriterRunner_Threaded::spRun(ZStreamWriterRunner_Threaded* iRunner)
 	{ iRunner->pRun(); }
+
+NAMESPACE_ZOOLIB_END

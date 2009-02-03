@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::min;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -139,3 +139,5 @@ void ZStreamRWPos_RAM::Imp_SetSize(uint64 iSize)
 		fSize = iSize;
 		}
 	}
+
+NAMESPACE_ZOOLIB_END

@@ -24,10 +24,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 
-NAMESPACE_ZOOLIB_USING
-
 using std::min;
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -194,3 +194,5 @@ void ZStreamRWPos_String::Imp_SetSize(uint64 iSize)
 
 	fString.resize(realSize);
 	}
+
+NAMESPACE_ZOOLIB_END

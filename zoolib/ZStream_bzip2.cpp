@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept> // For runtime_error
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::min;
 using std::max;
@@ -343,5 +343,7 @@ void ZStream_bzip2::sAnalyze(const ZStreamR& iStreamR, vector<pair<uint64, uint3
 		++bitsRead;
 		}
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(Stream_bzip2)

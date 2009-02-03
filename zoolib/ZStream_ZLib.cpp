@@ -27,13 +27,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept> // For runtime_error
 
-NAMESPACE_ZOOLIB_USING
-
 using std::min;
 using std::max;
 using std::runtime_error;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 #define kDebug_ZLib 2
 
@@ -303,5 +301,7 @@ ZStreamerW_ZLibEncode::~ZStreamerW_ZLibEncode()
 
 const ZStreamW& ZStreamerW_ZLibEncode::GetStreamW()
 	{ return fStream; }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(Stream_ZLib)

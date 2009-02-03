@@ -21,9 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_Buffered.h"
 #include "zoolib/ZMemory.h" // For ZBlockMove & ZBlockCopy
 
-NAMESPACE_ZOOLIB_USING
-
 using std::min;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 #define kDebug_Stream_Buffered 2
 
@@ -525,3 +525,5 @@ ZStreamerW_DynamicBuffered::~ZStreamerW_DynamicBuffered()
 
 const ZStreamW& ZStreamerW_DynamicBuffered::GetStreamW()
 	{ return fStream; }
+
+NAMESPACE_ZOOLIB_END

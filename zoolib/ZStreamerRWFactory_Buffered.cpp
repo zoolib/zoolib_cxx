@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamerRWFactory_Buffered.h"
 #include "zoolib/ZStream_Buffered.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -60,3 +60,5 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Buffered::MakeStreamerRW()
 
 	return ZRef<ZStreamerRW>();
 	}
+
+NAMESPACE_ZOOLIB_END

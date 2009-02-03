@@ -24,10 +24,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 
-NAMESPACE_ZOOLIB_USING
-
 using std::min;
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 static char sCR[] = { '\r' };
 static char sLF[] = { '\n' };
@@ -369,3 +369,5 @@ void ZStreamW_CRLFInsert::Imp_Flush()
 	{
 	fStreamSink.Flush();
 	}
+
+NAMESPACE_ZOOLIB_END

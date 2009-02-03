@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamR_Cat.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -121,3 +121,5 @@ ZStreamerR_Cat::~ZStreamerR_Cat()
 
 const ZStreamR& ZStreamerR_Cat::GetStreamR()
 	{ return fStream; }
+
+NAMESPACE_ZOOLIB_END

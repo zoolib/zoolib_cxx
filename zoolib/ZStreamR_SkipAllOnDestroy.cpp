@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamR_SkipAllOnDestroy.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -45,3 +45,5 @@ ZStreamR_SkipAllOnDestroy::~ZStreamR_SkipAllOnDestroy()
 	catch (...)
 		{}
 	}
+
+NAMESPACE_ZOOLIB_END

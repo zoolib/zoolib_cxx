@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZUtil_Strim.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -165,3 +165,5 @@ void ZStreamW_HexStrim::Imp_Flush()
 	{
 	fStrimSink.Flush();
 	}
+
+NAMESPACE_ZOOLIB_END

@@ -30,9 +30,9 @@ in 1993, for which no copyright is claimed.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::min;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 
@@ -394,3 +394,5 @@ void ZStreamW_MD5::GetDigest(uint8 oDigest[16])
 	ZStream_MD5::Context tempContext = fContext;
 	ZStream_MD5::sFinal(tempContext, oDigest);
 	}
+
+NAMESPACE_ZOOLIB_END

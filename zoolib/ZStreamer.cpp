@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 /**
 \defgroup group_Streamer Streamers
@@ -805,3 +805,5 @@ void ZStreamerRWConFactory::Cancel()
 
 ZRef<ZStreamerRW> ZStreamerRWConFactory::MakeStreamerRW()
 	{ return this->MakeStreamerRWCon(); }
+
+NAMESPACE_ZOOLIB_END

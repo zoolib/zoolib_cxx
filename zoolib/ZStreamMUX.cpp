@@ -26,14 +26,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_STL.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::deque;
 using std::map;
 using std::min;
 using std::pair;
 using std::string;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 #define kDebug 1
 
@@ -1670,3 +1670,5 @@ bool ZStreamMUX::pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP)
 		}
 	return false;
 	}
+
+NAMESPACE_ZOOLIB_END

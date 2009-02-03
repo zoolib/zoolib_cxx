@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -84,3 +84,5 @@ bool ZStreamCopier::Read(const ZStreamR& iStreamR)
 
 void ZStreamCopier::RunnerDetached(ZStreamReaderRunner* iRunner)
 	{ delete this; }
+
+NAMESPACE_ZOOLIB_END

@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::min;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -159,3 +159,5 @@ ZStreamerRPos_Limited::~ZStreamerRPos_Limited()
 
 const ZStreamRPos& ZStreamerRPos_Limited::GetStreamRPos()
 	{ return fStream; }
+
+NAMESPACE_ZOOLIB_END

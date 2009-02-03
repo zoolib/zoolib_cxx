@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamReader.h"
 #include "zoolib/ZThreadSimple.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -130,3 +130,5 @@ void ZStreamReaderRunner_Threaded::pRun()
 
 void ZStreamReaderRunner_Threaded::spRun(ZStreamReaderRunner_Threaded* iRunner)
 	{ iRunner->pRun(); }
+
+NAMESPACE_ZOOLIB_END

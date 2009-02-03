@@ -29,12 +29,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Win.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::min;
 using std::runtime_error;
 using std::string;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -179,5 +179,7 @@ ZStreamerRPos_Win_MultiResource::~ZStreamerRPos_Win_MultiResource()
 
 const ZStreamRPos& ZStreamerRPos_Win_MultiResource::GetStreamRPos()
 	{ return fStream; }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Win)

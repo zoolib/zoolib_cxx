@@ -38,7 +38,8 @@ using std::nothrow;
 using std::range_error;
 using std::string;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
+
 
 #define kDebug_Stream 2
 
@@ -118,7 +119,7 @@ void ZStream::sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStream
 			{
 			try
 				{
-				::sCopyReadToWrite(heapBuffer, 8192,
+				sCopyReadToWrite(heapBuffer, 8192,
 					iStreamR, iStreamW, iCount,
 					oCountRead, oCountWritten);
 				}
@@ -139,7 +140,7 @@ void ZStream::sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStream
 	// fewer than 8 times. Previously we'd unconditionally used one of size 4096, but that's
 	// fairly large and can contribute to blowing the stack on MacOS.
 	uint8 localBuffer[1024];
-	::sCopyReadToWrite(localBuffer, sizeof(localBuffer),
+	sCopyReadToWrite(localBuffer, sizeof(localBuffer),
 		iStreamR, iStreamW, iCount,
 		oCountRead, oCountWritten);
 	}
@@ -1427,3 +1428,5 @@ void ZStreamWPos_Null::Internal_CopyFrom(const ZStreamR& iStreamR, uint64 iCount
 	fPosition += countSkipped;
 	fSize = max(fSize, fPosition);
 	}
+
+NAMESPACE_ZOOLIB_END

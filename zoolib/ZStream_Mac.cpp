@@ -27,9 +27,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE3(CoreServices,CarbonCore,Resources.h)
 
-NAMESPACE_ZOOLIB_USING
-
 using std::min;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -95,5 +95,7 @@ ZStreamerRPos_Mac_PartialResource::~ZStreamerRPos_Mac_PartialResource()
 
 const ZStreamRPos& ZStreamerRPos_Mac_PartialResource::GetStreamRPos()
 	{ return fStream; }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Carbon)

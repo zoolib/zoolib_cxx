@@ -25,7 +25,7 @@ using std::min;
 using std::max;
 using std::string;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -224,3 +224,5 @@ ZStreamerR_Boundary::~ZStreamerR_Boundary()
 
 const ZStreamR& ZStreamerR_Boundary::GetStreamR()
 	{ return fStream; }
+
+NAMESPACE_ZOOLIB_END

@@ -23,9 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZMemory.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::min;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -502,3 +502,5 @@ ZStreamerRWPos_PageBuffered::~ZStreamerRWPos_PageBuffered()
 
 const ZStreamRWPos& ZStreamerRWPos_PageBuffered::GetStreamRWPos()
 	{ return fStream; }
+
+NAMESPACE_ZOOLIB_END

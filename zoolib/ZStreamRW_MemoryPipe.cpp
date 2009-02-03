@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::min;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -309,3 +309,5 @@ void ZStreamRW_MemoryPipe::pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 
 	fMutex.Release();
 	}
+
+NAMESPACE_ZOOLIB_END

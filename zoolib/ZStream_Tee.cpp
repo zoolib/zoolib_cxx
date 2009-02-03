@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::max;
 using std::min;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 #define kDebug_Stream_Tee 2
 
@@ -163,3 +163,5 @@ ZStreamerW_Tee::~ZStreamerW_Tee()
 
 const ZStreamW& ZStreamerW_Tee::GetStreamW()
 	{ return fStream; }
+
+NAMESPACE_ZOOLIB_END

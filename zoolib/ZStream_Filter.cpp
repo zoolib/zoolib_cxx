@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream_Filter.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -191,3 +191,5 @@ uint64 ZStreamRWPos_Filter::Imp_GetSize()
 
 void ZStreamRWPos_Filter::Imp_SetSize(uint64 iSize)
 	{ return const_cast<ZStreamRWPos&>(fStreamReal).Imp_SetSize(iSize); }
+
+NAMESPACE_ZOOLIB_END
