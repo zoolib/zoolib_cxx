@@ -78,11 +78,9 @@ static string16 sNormalized_C_CFType(const string16& iString, ZUnicode::ENormFor
 	if (iString.empty())
 		return iString;
 
-	CFMutableStringRef srm = ZUtil_CFType::sCreateMutableCFString_UTF16(iString);
+	ZRef<CFMutableStringRef> srm = ZUtil_CFType::sCreateMutableCFString_UTF16(iString);
 	ZooLib_CFStringNormalize(srm, iNormForm);
-	const string16 result = ZUtil_CFType::sAsUTF16(srm);
-	::CFRelease(srm);
-	return result;
+	return ZUtil_CFType::sAsUTF16(srm);
 	}
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
