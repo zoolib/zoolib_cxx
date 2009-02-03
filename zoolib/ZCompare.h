@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCompare__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h"
 
 #include <string>
@@ -31,9 +32,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 // A default implementation of sCompare_T is nice to have, but it does make
-// it hard to tell when we accidentally call operator<. So we declare but
-// do not implement it.
+// it hard to tell when we accidentally call operator<.
 template <class T> int sCompare_T(const T& iL, const T& iR);
+//template <class T> int sCompare_T(const T& iL, const T& iR)
+//	{ ZAssertCompile(0); }
 
 // sCompare_T definitions for simple types. They require that int have more bits than int16.
 template <> inline int sCompare_T(const ZType& iL, const ZType& iR)
@@ -70,6 +72,11 @@ typedef void* voidstar; // Ugh.
 template <> inline int sCompare_T(const voidstar& iL, const voidstar& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
+typedef const void* constvoidstar; // Ugh.
+template <> inline int sCompare_T(const constvoidstar& iL, const constvoidstar& iR)
+	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
+
+
 // sCompare_T using string's compare function.
 template <> inline int sCompare_T(const std::string& iL, const std::string& iR)
 	{ return iL.compare(iR); }
@@ -80,6 +87,20 @@ template <> int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR);
 template <> int sCompare_T(const float& iL, const float& iR);
 template <> int sCompare_T(const double& iL, const double& iR);
 
+// Forward declaration of iterator comparison
+template <class InputIterator>
+int sCompare_T(InputIterator leftIter, InputIterator leftEnd,
+	InputIterator rightIter, InputIterator rightEnd);
+
+template <class S>
+int sCompare_T(const std::vector<S>& iLeft, const std::vector<S>& iRight)
+	{ return sCompare_T(iLeft.begin(), iLeft.end(), iRight.begin(), iRight.end()); }
+
+template <class S>
+int sCompare_T(const std::list<S>& iLeft, const std::list<S>& iRight)
+	{ return sCompare_T(iLeft.begin(), iLeft.end(), iRight.begin(), iRight.end()); }
+
+// Definition of iterator comparison
 template <class InputIterator>
 int sCompare_T(InputIterator leftIter, InputIterator leftEnd,
 	InputIterator rightIter, InputIterator rightEnd)
@@ -123,14 +144,6 @@ int sCompare_T(InputIterator leftIter, InputIterator leftEnd,
 			}
 		}
 	}
-
-template <class S>
-int sCompare_T(const std::vector<S>& iLeft, const std::vector<S>& iRight)
-	{ return sCompare_T(iLeft.begin(), iLeft.end(), iRight.begin(), iRight.end()); }
-
-template <class S>
-int sCompare_T(const std::list<S>& iLeft, const std::list<S>& iRight)
-	{ return sCompare_T(iLeft.begin(), iLeft.end(), iRight.begin(), iRight.end()); }
 
 NAMESPACE_ZOOLIB_END
 
