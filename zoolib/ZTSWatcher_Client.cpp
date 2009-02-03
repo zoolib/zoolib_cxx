@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::map;
 using std::pair;
@@ -900,3 +900,6 @@ ZRef<ZTSWatcher> ZTSWatcherFactory_Client::MakeTSWatcher()
 
 	return ZRef<ZTSWatcher>();
 	}
+
+NAMESPACE_ZOOLIB_END
+

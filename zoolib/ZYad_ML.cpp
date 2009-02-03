@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZYad_ML.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
 using std::vector;
@@ -151,3 +151,5 @@ void ZYadListMapR_ML::pMoveIfNecessary()
 			}
 		}
 	}
+
+NAMESPACE_ZOOLIB_END

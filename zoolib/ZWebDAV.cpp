@@ -39,7 +39,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::pair;
 using std::runtime_error;
@@ -1016,3 +1016,4 @@ bool ZWebDAV::sHandle_UNLOCK(
 	return true;
 	}
 
+NAMESPACE_ZOOLIB_END

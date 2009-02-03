@@ -34,9 +34,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define kDebug_ICU 1
 #endif
 
-NAMESPACE_ZOOLIB_USING
-
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -221,5 +221,7 @@ bool ZTextCollatorRep_ICU::Contains(const UTF16* iPattern, size_t iPatternLength
 
 	return sContains(fCollator, iPattern, iPatternLength, iTarget, iTargetLength);
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(TextCollator_ICU)

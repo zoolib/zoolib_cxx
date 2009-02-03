@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define kDebug_PixmapNS 2
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using namespace ZDCPixmapNS;
 
@@ -3188,3 +3188,5 @@ void ZDCPixmapNS::sBlitRow(
 	}
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END

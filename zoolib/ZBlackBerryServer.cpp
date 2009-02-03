@@ -27,10 +27,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamCopier.h"
 #include "zoolib/ZUtil_STL.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::string;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -597,3 +597,5 @@ void ZBlackBerryServer::pRemove_DeviceFinished(Handler_DeviceFinished* iHandler)
 			}
 		}
 	}
+
+NAMESPACE_ZOOLIB_END

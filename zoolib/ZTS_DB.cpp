@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <fcntl.h> // For O_RDWR etc
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::exception;
 using std::runtime_error;
@@ -942,4 +942,7 @@ int ZTS_DB::sBTree_Compare(const DBT* iLeft, const DBT* iRight)
 		}
 	return 0;
 	}
+
+NAMESPACE_ZOOLIB_END
+
 #endif // ZCONFIG_API_Enabled(TS_DB)

@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFactoryChain.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -347,5 +347,7 @@ ZRef<ZGRgnRep> ZGRgnRep_RgnHandle::Xoring(const ZRef<ZGRgnRep>& iRep)
 
 RgnHandle ZGRgnRep_RgnHandle::GetRgnHandle()
 	{ return fRgnHandle; }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(GRgnRep_RgnHandle)

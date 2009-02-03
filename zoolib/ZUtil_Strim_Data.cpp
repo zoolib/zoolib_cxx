@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_HexStrim.h"
 #include "zoolib/ZStream_Memory.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::min;
 using std::string;
@@ -103,3 +103,5 @@ void ZUtil_Strim_Data::sDumpData(const ZStrimW& s, const void* iSource, size_t i
 	if (iCount)
 		ZUtil_Strim_Data::sDumpData(ZStreamRPos_Memory(iSource, iCount), s);
 	}
+
+NAMESPACE_ZOOLIB_END

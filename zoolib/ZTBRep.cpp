@@ -20,9 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTBRep.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::map;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -90,3 +90,5 @@ void ZTBRep::TxnCommit(int32 iTxnID, CommitCallbackProc iCallback, void* iRefcon
 
 	theTBRepTransaction->Commit(iCallback, iRefcon);
 	}
+
+NAMESPACE_ZOOLIB_END

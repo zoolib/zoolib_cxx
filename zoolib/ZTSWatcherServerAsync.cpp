@@ -28,11 +28,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define kDebug_TSWatcherServerAsync 1
 
-NAMESPACE_ZOOLIB_USING
-
 using std::map;
 using std::pair;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -362,3 +362,5 @@ void ZTSWatcherServerAsync::pCallback()
 
 void ZTSWatcherServerAsync::spCallback(void* iRefcon)
 	{ static_cast<ZTSWatcherServerAsync*>(iRefcon)->pCallback(); }
+
+NAMESPACE_ZOOLIB_END

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNet_RFCOMM.h"
 #include "zoolib/ZFactoryChain.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -59,3 +59,5 @@ ZNetListener_RFCOMM::ZNetListener_RFCOMM()
 
 ZNetEndpoint_RFCOMM::ZNetEndpoint_RFCOMM()
 	{}
+
+NAMESPACE_ZOOLIB_END

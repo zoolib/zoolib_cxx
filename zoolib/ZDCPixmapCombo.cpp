@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCPixmapCombo.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -106,3 +106,5 @@ ZDCPixmapCombo::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fColorPixmap || fMonoPixmap); }
 	
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END

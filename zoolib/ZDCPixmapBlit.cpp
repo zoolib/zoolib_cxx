@@ -34,9 +34,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCPixmapBlitPriv.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::min;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 typedef ZDCPixmapNS::PixelDescRep PDRep;
 typedef ZDCPixmapNS::PixelDescRep_Indexed PDRep_Indexed;
@@ -400,3 +400,5 @@ void ZDCPixmapBlit::sApplyMatte(
 		matteStart,
 		iDestAddress, iDestRD, iDestB, iDestPD);
 	}
+
+NAMESPACE_ZOOLIB_END

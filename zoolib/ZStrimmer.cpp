@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStrimmer.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 /**
 \defgroup group_Strimmer Strimmers
@@ -39,3 +39,5 @@ the lifetime of the ZStrimmerXX that returned it.
 
 const ZStrimR& ZStrimmerU::GetStrimR()
 	{ return this->GetStrimU(); }
+
+NAMESPACE_ZOOLIB_END

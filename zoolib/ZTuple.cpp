@@ -22,8 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZMemoryBlock.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::min;
 using std::pair;
 using std::runtime_error;
@@ -31,6 +29,8 @@ using std::string;
 using std::vector;
 
 #define kDebug_Tuple 1
+
+NAMESPACE_ZOOLIB_BEGIN
 
 static string sNilString;
 static vector<ZTValue> sNilVector;
@@ -3756,3 +3756,5 @@ ZTupleAppend(Raw, const ZMemoryBlock&)
 #undef ZTupleAppendByName
 
 #endif // SKIPOMPARSE
+
+NAMESPACE_ZOOLIB_END

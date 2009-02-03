@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStrimW_Escapify.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -161,3 +161,4 @@ void ZStrimW_Escapify::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, siz
 		*oCountCU = iCountCU - localCount;
 	}
 
+NAMESPACE_ZOOLIB_END

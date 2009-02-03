@@ -23,12 +23,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFile.h"
 #include "zoolib/ZTrail.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::find;
 using std::min;
 using std::string;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 /**
 \defgroup group_File Files
@@ -1387,3 +1387,5 @@ ZFile::Error ZFileRW_StreamerRWPos::FlushVolume()
 	fMutex.Release();
 	return ZFile::errorNone;
 	}
+
+NAMESPACE_ZOOLIB_END

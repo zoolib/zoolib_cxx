@@ -34,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <ctype.h>
 #include <stdio.h> // For sprintf
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::max;
 using std::min;
@@ -1874,3 +1874,5 @@ void ZHTTP::StreamW_Chunked::Internal_Flush()
 		fStreamSink.WriteString("\r\n");
 		}
 	}
+
+NAMESPACE_ZOOLIB_END

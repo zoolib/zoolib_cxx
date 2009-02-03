@@ -32,9 +32,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <netinet/tcp.h>
 #include <sys/socket.h>
 
-NAMESPACE_ZOOLIB_USING
-
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -371,5 +371,7 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_Socket::GetRemoteAddress()
 	}
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(Net_Internet_Socket)

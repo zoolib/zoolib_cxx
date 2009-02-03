@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::min;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 static const UTF32 sLF[] = { '\n' };
 static const UTF32 sCR[] = { '\r' };
@@ -252,3 +252,5 @@ void ZStrimW_CRLFInsert::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, s
 	if (oCountCU)
 		*oCountCU = localSource - iSource;
 	}
+
+NAMESPACE_ZOOLIB_END

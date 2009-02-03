@@ -28,7 +28,7 @@ static const char LF = '\n';
 
 #define kDebug_MIME 2
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark * ZMIME
@@ -208,3 +208,5 @@ bool ZMIME::StreamR_Line::HitLF() const
 
 bool ZMIME::StreamR_Line::WasEmpty() const
 	{ return fState == eSeen_LF && fEmpty; }
+
+NAMESPACE_ZOOLIB_END

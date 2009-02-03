@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_USING
-
 using std::runtime_error;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 #ifndef BI_RGB
 #	define BI_RGB 0L
@@ -344,7 +344,7 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			{
 			thePixmap.GetRaster()->Fill(0);
 			bool destFlipped = (thePixmap.GetRasterDesc().fFlipped);
-			::sReadRLE8(iStream,
+			sReadRLE8(iStream,
 				biWidth, biHeight,
 				sourceRasterDesc.fRowBytes,
 				sourceFlipped != destFlipped,
@@ -355,7 +355,7 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			{
 			thePixmap.GetRaster()->Fill(0);
 			bool destFlipped = (thePixmap.GetRasterDesc().fFlipped);
-			::sReadRLE4(iStream,
+			sReadRLE4(iStream,
 				biWidth, biHeight,
 				sourceRasterDesc.fRowBytes,
 				destFlipped,
@@ -530,3 +530,5 @@ static void sReadRLE4(const ZStreamR& iStream,
 			}
 		}
 	}
+
+NAMESPACE_ZOOLIB_END

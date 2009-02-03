@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sys/socket.h>
 #include <sys/un.h>
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
 
@@ -250,5 +250,7 @@ ZRef<ZNetAddress> ZNetEndpoint_Local_Socket::GetRemoteAddress()
 	}
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(Net_Local_Socket)

@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept>
 
-int ZooLib::ZMainNS::sArgC;
-char** ZooLib::ZMainNS::sArgV;
+int ZOOLIB_PREFIX::ZMainNS::sArgC;
+char** ZOOLIB_PREFIX::ZMainNS::sArgV;
 
 /** sMain puts argc and argv into the globals ZMainNS::sArgC and
 ZMain::sArgV, and then invokes the application-defined ZMain, wrapping
@@ -34,7 +34,8 @@ using ZDebugLogf. */
 
 static int sMain(int argc, char **argv)
 	{
-	using namespace ZooLib;
+	NAMESPACE_ZOOLIB_USING
+
 	ZMainNS::sArgC = argc;
 	ZMainNS::sArgV = argv;
 

@@ -29,9 +29,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	endif
 #endif
 
-NAMESPACE_ZOOLIB_USING
-
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 static ZMutexNR sMutex;
 static ZLog::LogMeister* sLogMeister;
@@ -189,3 +189,5 @@ void ZLog::sSetLogMeister(LogMeister* iLogMeister)
 	sLogMeister = iLogMeister;
 	sMutex.Release();
 	}
+
+NAMESPACE_ZOOLIB_END

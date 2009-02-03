@@ -26,6 +26,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdio.h>
 #include <string.h> // For strrchr
 
+#if ZCONFIG_SPI_Enabled(POSIX)
+#	include <cstdlib> // For abort
+#endif
+
+#if ZCONFIG_SPI_Enabled(BeOS)
+#	include <kernel/OS.h>
+#endif
+
 #if ZCONFIG(Compiler, MSVC)
 #	define vsnprintf _vsnprintf
 #	define snprintf _snprintf
@@ -121,8 +129,6 @@ ZDebug_HandleActual_t sDebug_HandleActual = nil;
 
 #if ZCONFIG_SPI_Enabled(POSIX)
 
-#include <cstdlib> // For abort
-
 static void ZDebug_HandleActual_POSIX(int inLevel, ZDebug_Action inAction, const char* inMessage)
 	{
 	::fputs(inMessage, stderr);
@@ -140,8 +146,6 @@ static void ZDebug_HandleActual_POSIX(int inLevel, ZDebug_Action inAction, const
 // =================================================================================================
 
 #if ZCONFIG_SPI_Enabled(BeOS)
-
-#include <kernel/OS.h>
 
 static void ZDebug_HandleActual_Be(int inLevel, ZDebug_Action inAction, const char* inMessage)
 	{

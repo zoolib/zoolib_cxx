@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::set;
 using std::string;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -244,3 +244,5 @@ void ZTQL::Condition::GatherPropNames(set<ZTName>& ioNames) const
 	fLHS.GatherPropNames(ioNames);
 	fRHS.GatherPropNames(ioNames);
 	}
+
+NAMESPACE_ZOOLIB_END

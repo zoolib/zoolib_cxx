@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_XMLPList.h"
 #include "zoolib/ZYad_ZooLib.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
 using std::vector;
@@ -508,3 +508,5 @@ void ZYadUtil_XMLPList::sToStrimW_ML(const ZStrimW_ML& s, ZRef<ZYadR> iYadR)
 		sToStrim_SimpleTValue(s, ZYadUtil_ZooLib::sFromYadR(iYadR));
 		}	
 	}
+
+NAMESPACE_ZOOLIB_END

@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimR_Boundary.h"
 #include "zoolib/ZMemory.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -236,3 +236,5 @@ const ZStrimR& ZStrimmerR_Boundary::GetStrimR()
 	{ return fStrim; }
 
 // =================================================================================================
+
+NAMESPACE_ZOOLIB_END

@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFactoryChain.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -600,3 +600,5 @@ void ZTextEncoder_CP850::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 	if (oDestBytes)
 		*oDestBytes = localDest - static_cast<uint8*>(iDest);
 	}
+
+NAMESPACE_ZOOLIB_END

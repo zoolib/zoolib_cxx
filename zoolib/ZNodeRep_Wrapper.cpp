@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNodeRep_Wrapper.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
 
@@ -208,3 +208,5 @@ std::string ZNodeIterRep_Wrapper::CurrentName()
 
 ZRef<ZNodeIterRep> ZNodeIterRep_Wrapper::Clone()
 	{ return new ZNodeIterRep_Wrapper(fParent, fName, fDepth, fIterRep->Clone()); }
+
+NAMESPACE_ZOOLIB_END

@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include ZMACINCLUDE3(ApplicationServices,QD,Fonts.h)
 #endif
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 
@@ -227,3 +227,4 @@ void ZDCFont::FromStream(const ZStreamR& inStream)
 	fStyle = inStream.ReadInt16();
 	}
 
+NAMESPACE_ZOOLIB_END

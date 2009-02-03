@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTxn.h"
 #include "zoolib/ZUtil_STL.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -226,3 +226,5 @@ void ZTxnTarget::RegisterWithTxn(const ZTxn& iTxn)
 	{
 	iTxn.pRegisterTarget(this);
 	}
+
+NAMESPACE_ZOOLIB_END

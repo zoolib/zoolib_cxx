@@ -27,7 +27,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-NAMESPACE_ZOOLIB_USING
+#ifndef ZCONFIG_TBRep_TS_Logging
+#	define ZCONFIG_TBRep_TS_Logging 0
+#endif
+
+#if ZCONFIG_TBRep_TS_Logging
+#	include "zoolib/ZLog.h"
+#endif
 
 using std::less;
 using std::map;
@@ -37,13 +43,7 @@ using std::set;
 using std::string;
 using std::vector;
 
-#ifndef ZCONFIG_TBRep_TS_Logging
-#	define ZCONFIG_TBRep_TS_Logging 0
-#endif
-
-#if ZCONFIG_TBRep_TS_Logging
-#	include "zoolib/ZLog.h"
-#endif
+NAMESPACE_ZOOLIB_BEGIN
 
 #define ASSERTLOCKED(a) ZAssertStop(kDebug, a.IsLocked())
 #define ASSERTUNLOCKED(a) ZAssertStop(kDebug, !a.IsLocked())
@@ -1197,3 +1197,5 @@ void ZTBRep_TS::pReleaseTupleInUse(TupleInUse& iTupleInUse)
 
 	ZUtil_STL::sEraseMustContain(kDebug, fTuplesInUse, iTupleInUse.fID);
 	}
+
+NAMESPACE_ZOOLIB_END

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::vector;
 
@@ -59,3 +59,5 @@ void ZMutexComposite::Release()
 
 bool ZMutexComposite::IsLocked()
 	{ return fIsLocked; }
+
+NAMESPACE_ZOOLIB_END

@@ -27,15 +27,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h" // For sSortedEraseMustContain etc
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-NAMESPACE_ZOOLIB_USING
-
-using namespace ZUtil_STL;
-
 using std::map;
 using std::pair;
 using std::set;
 using std::string;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
+
+using namespace ZUtil_STL;
 
 #define kDebug_TBServer 1
 
@@ -880,3 +880,5 @@ void ZTBServer::TearDown()
 	// Delete committed transactions that had not been sent to the client.
 	sDeleteEraseAll(fTransactions_Commit_Acked);
 	}
+
+NAMESPACE_ZOOLIB_END

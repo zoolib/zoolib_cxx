@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream.h"
 #include "zoolib/ZStrim_Stream.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::runtime_error;
 using std::string;
@@ -192,3 +192,5 @@ ZTValue ZUtil_Stream_BitTorrent::sTValueFromStream(const ZStreamU& s)
 		}
 	return theTV;
 	}
+
+NAMESPACE_ZOOLIB_END

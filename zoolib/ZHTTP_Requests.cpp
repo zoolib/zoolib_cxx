@@ -35,7 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <ctype.h> // For isalnum
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
 
@@ -110,7 +110,7 @@ ZRef<ZStreamerR> ZHTTP::sRequest(
 
 			int32 theResponseCode;
 			ZTuple theHeaders;
-			if (!::sRequest(
+			if (!sRequest(
 				theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
 				iMethod, theHost, thePath,
 				true,
@@ -414,3 +414,5 @@ static bool sReadPOST(const ZStreamR& iStreamR, const ZTuple& iHeader, ZTValue& 
 	oTV.SetRaw(iStreamR);
 	return true;
 	}
+
+NAMESPACE_ZOOLIB_END

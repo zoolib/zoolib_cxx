@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h" // For sSortedEraseMustContain etc
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using namespace ZUtil_STL;
 
@@ -1334,3 +1334,5 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		fCondition_Sender.Wait(fMutex_Structure, 2 * 1000000);
 		}
 	}
+
+NAMESPACE_ZOOLIB_END

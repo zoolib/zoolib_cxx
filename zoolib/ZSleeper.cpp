@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZThreadSimple.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -164,3 +164,5 @@ void ZSleeperRunnerFactory_Threaded::MakeRunner(ZSleeper* iSleeper)
 	ZSleeperRunner_Threaded* theRunner = new ZSleeperRunner_Threaded(iSleeper);
 	theRunner->Start();
 	}
+
+NAMESPACE_ZOOLIB_END

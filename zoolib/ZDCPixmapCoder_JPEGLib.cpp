@@ -46,10 +46,10 @@ extern "C" {
 #include <jpeglib.h>
 } // extern "C"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::min;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -529,5 +529,7 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 
 	::jpeg_destroy_decompress(&theJDS);
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(JPEGLib)

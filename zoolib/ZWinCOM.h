@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZWinCOM__
 #define __ZWinCOM__ 1
 #include "zoolib/ZCONFIG_SPI.h"
+#include "zoolib/ZRef.h"
 
 // =================================================================================================
 
@@ -30,6 +31,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Necessary when building with Cocotron
 #include <ole2.h>
+
+
+inline void sRetain(IUnknown& iObject)
+	{ iObject.AddRef(); }
+
+inline void sRelease(IUnknown& iObject)
+	{ iObject.Release(); }
 
 #if ZCONFIG(Compiler, GCC)
 

@@ -28,13 +28,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::map;
 using std::pair;
 using std::runtime_error;
 using std::set;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 #define kDebug_TS_RAM 2
 
@@ -396,3 +396,5 @@ void ZTS_RAM::GetData(uint64& oNextUnusedID, map<uint64, ZTuple>& oTuples)
 
 	oTuples = fTuples;
 	}
+
+NAMESPACE_ZOOLIB_END

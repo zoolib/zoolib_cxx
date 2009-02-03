@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRGBColor.h"
 #include "zoolib/ZCompat_algorithm.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::min;
 using std::max;
@@ -186,3 +186,4 @@ ZRGBColorSmall ZRGBColorSmall::sFromCOLORREF(COLORREF iColorRef)
 #endif // ZCONFIG_SPI_Enabled(GDI)
 
 
+NAMESPACE_ZOOLIB_END

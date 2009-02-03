@@ -29,11 +29,82 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZOBJC.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::deque;
 using std::min;
 using std::runtime_error;
+
+NAMESPACE_ZOOLIB_USING
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Delegate_ZNetListener_RFCOMM_OSX
+
+@interface Delegate_ZNetListener_RFCOMM_OSX : NSObject
+	{
+	ZNetListener_RFCOMM_OSX* fListener;
+	}
+@end
+
+@implementation Delegate_ZNetListener_RFCOMM_OSX
+
+- initWithListener:(ZNetListener_RFCOMM_OSX*)iListener
+	{
+	self = [super init];
+	fListener = iListener;
+	return self;
+	}
+
+- (void)channelOpened:(IOBluetoothUserNotification *)iNotification
+	channel:(IOBluetoothRFCOMMChannel*)iChannel
+	{
+	fListener->pChannelOpened(iChannel);
+	}
+@end
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Delegate_ZNetEndpoint_RFCOMM_OSX
+
+@interface Delegate_ZNetEndpoint_RFCOMM_OSX : NSObject
+	{
+	ZNetEndpoint_RFCOMM_OSX* fEndpoint;
+	}
+@end
+
+@implementation Delegate_ZNetEndpoint_RFCOMM_OSX
+
+- initWithEndpoint:(ZNetEndpoint_RFCOMM_OSX*)iEndpoint
+	{
+	self = [super init];
+	fEndpoint = iEndpoint;
+	return self;
+	}
+
+// @protocol IOBluetoothRFCOMMChannelDelegate
+- (void)rfcommChannelData:(IOBluetoothRFCOMMChannel *)rfcommChannel
+	data:(void *)dataPointer length:(size_t)dataLength
+	{
+	fEndpoint->pReceived(dataPointer, dataLength);
+	}
+
+//- (void)rfcommChannelOpenComplete:(IOBluetoothRFCOMMChannel*)rfcommChannel status:(IOReturn)error;
+
+- (void)rfcommChannelClosed:(IOBluetoothRFCOMMChannel *)rfcommChannel
+	{
+	fEndpoint->pClosed();
+	}
+
+//- (void)rfcommChannelControlSignalsChanged:(IOBluetoothRFCOMMChannel*)rfcommChannel;
+
+//- (void)rfcommChannelFlowControlChanged:(IOBluetoothRFCOMMChannel*)rfcommChannel;
+
+//- (void)rfcommChannelWriteComplete:(IOBluetoothRFCOMMChannel*)rfcommChannel
+//	refcon:(void*)refcon status:(IOReturn)error;
+
+//- (void)rfcommChannelQueueSpaceAvailable:(IOBluetoothRFCOMMChannel*)rfcommChannel;
+
+
+@end
 
 // =================================================================================================
 #pragma mark -
@@ -93,31 +164,7 @@ ZFactoryChain_Maker_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
 
 } // anonymous namespace
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Delegate_ZNetListener_RFCOMM_OSX
-
-@interface Delegate_ZNetListener_RFCOMM_OSX : NSObject
-	{
-	ZNetListener_RFCOMM_OSX* fListener;
-	}
-@end
-
-@implementation Delegate_ZNetListener_RFCOMM_OSX
-
-- initWithListener:(ZNetListener_RFCOMM_OSX*)iListener
-	{
-	self = [super init];
-	fListener = iListener;
-	return self;
-	}
-
-- (void)channelOpened:(IOBluetoothUserNotification *)iNotification
-	channel:(IOBluetoothRFCOMMChannel*)iChannel
-	{
-	fListener->pChannelOpened(iChannel);
-	}
-@end
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -188,51 +235,6 @@ void ZNetListener_RFCOMM_OSX::pChannelOpened(IOBluetoothRFCOMMChannel* iChannel)
 	fQueue.push_back(iChannel);
 	fCondition.Broadcast();
 	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Delegate_ZNetEndpoint_RFCOMM_OSX
-
-@interface Delegate_ZNetEndpoint_RFCOMM_OSX : NSObject
-	{
-	ZNetEndpoint_RFCOMM_OSX* fEndpoint;
-	}
-@end
-
-@implementation Delegate_ZNetEndpoint_RFCOMM_OSX
-
-- initWithEndpoint:(ZNetEndpoint_RFCOMM_OSX*)iEndpoint
-	{
-	self = [super init];
-	fEndpoint = iEndpoint;
-	return self;
-	}
-
-// @protocol IOBluetoothRFCOMMChannelDelegate
-- (void)rfcommChannelData:(IOBluetoothRFCOMMChannel *)rfcommChannel
-	data:(void *)dataPointer length:(size_t)dataLength
-	{
-	fEndpoint->pReceived(dataPointer, dataLength);
-	}
-
-//- (void)rfcommChannelOpenComplete:(IOBluetoothRFCOMMChannel*)rfcommChannel status:(IOReturn)error;
-
-- (void)rfcommChannelClosed:(IOBluetoothRFCOMMChannel *)rfcommChannel
-	{
-	fEndpoint->pClosed();
-	}
-
-//- (void)rfcommChannelControlSignalsChanged:(IOBluetoothRFCOMMChannel*)rfcommChannel;
-
-//- (void)rfcommChannelFlowControlChanged:(IOBluetoothRFCOMMChannel*)rfcommChannel;
-
-//- (void)rfcommChannelWriteComplete:(IOBluetoothRFCOMMChannel*)rfcommChannel
-//	refcon:(void*)refcon status:(IOReturn)error;
-
-//- (void)rfcommChannelQueueSpaceAvailable:(IOBluetoothRFCOMMChannel*)rfcommChannel;
-
-
-@end
 
 // =================================================================================================
 
@@ -402,5 +404,7 @@ void ZNetEndpoint_RFCOMM_OSX::pClosed()
 	fOpen = false;
 	fCondition.Broadcast();
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(Net_RFCOMM_OSX)

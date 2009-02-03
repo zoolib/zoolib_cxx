@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::runtime_error;
 using std::string;
@@ -200,5 +200,7 @@ void ZNetNameRegistered_DNSSD::spDNSServiceRegisterReply(
 	
 	theNNR->pDNSServiceRegisterReply(flags, errorCode, name, regtype, domain);
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(NetDNSSD)

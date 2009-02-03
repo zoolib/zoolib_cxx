@@ -24,12 +24,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept>
 
-NAMESPACE_ZOOLIB_USING
 
 using std::min;
 using std::runtime_error;
 using std::string;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 #if ZCONFIG_API_Enabled(StackCrawl)
 
@@ -605,3 +606,5 @@ ZStackCrawl::Frame ZStackCrawl::At(size_t iIndex) const
 	}
 
 #endif // ZCONFIG_API_Enabled(StackCrawl)
+
+NAMESPACE_ZOOLIB_END

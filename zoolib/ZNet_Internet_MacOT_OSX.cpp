@@ -31,9 +31,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define kDebug_OT 1
 #endif
 
-NAMESPACE_ZOOLIB_USING
 
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -445,7 +446,7 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 		
 	if (theStruct->fResult == noErr)
 		{
-		theStruct->fResult = ::sSetFourByteOption(theStruct->fListener->fEndpointRef,
+		theStruct->fResult = sSetFourByteOption(theStruct->fListener->fEndpointRef,
 			INET_IP, kIP_REUSEADDR, 1);
 		}
 
@@ -489,7 +490,7 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Destructor(void* iParam)
 		::OTCloseProvider(theStruct->fEndpointRef);
 	}
 
-static OSStatus OTAcceptQ(EndpointRef listener, EndpointRef worker, TCall* call)
+static OSStatus sOTAcceptQ(EndpointRef listener, EndpointRef worker, TCall* call)
 	// My own personal wrapper around the OTAccept routine that handles 
 	// the connection attempt disappearing cleanly.
 	{
@@ -576,7 +577,7 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Listen(void* iParam)
 			{
 			theOTResult = ::OTSetBlocking(acceptedEndpointRef);
 			if (theOTResult == noErr)		
-				theOTResult = ::OTAcceptQ(
+				theOTResult = sOTAcceptQ(
 					theStruct->fListener->fEndpointRef, acceptedEndpointRef, &theTCall);
 
 			if (theOTResult == noErr)
@@ -959,5 +960,7 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Abort(void* iParam)
 	::OTCancelSynchronousCalls(theStruct->fEndpointRef, kOTCanceledErr);
 	::OTSndDisconnect(theStruct->fEndpointRef, nil);
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(Net_Internet_MacOT_OSX)

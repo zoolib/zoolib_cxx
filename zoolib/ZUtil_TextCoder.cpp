@@ -20,9 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_TextCoder.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -33,3 +33,5 @@ ZTextDecoder* ZUtil_TextCoder::sCreateDecoder(const string& iCharset)
 
 ZTextEncoder* ZUtil_TextCoder::sCreateEncoder(const string& iCharset)
 	{ return ZTextEncoder::sMake(iCharset); }
+
+NAMESPACE_ZOOLIB_END

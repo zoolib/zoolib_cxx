@@ -76,7 +76,7 @@ SOFTWARE.
 #	include ZMACINCLUDE3(CoreServices,CarbonCore,MacMemory.h) // For HLock etc.
 #endif
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::min;
 using std::max;
@@ -594,7 +594,7 @@ void ZDCPoly::sDecompose(const ZPoint* iPoints, size_t iCount, bool iEvenOdd,
 	EdgeTable theEdgeTable;
 	Edge* theEdges = new Edge[iCount];
 	ScanLineBlock* firstScanLineBlock = new ScanLineBlock;
-	::sBuildTable(iPoints, iCount, iOffsetH, iOffsetV,
+	sBuildTable(iPoints, iCount, iOffsetH, iOffsetV,
 		theEdgeTable, theEdges, firstScanLineBlock);
 
 	ZCoord* transitionCoords = new ZCoord[16];
@@ -1007,3 +1007,5 @@ static void sLinkWindingEdgeList(Edge* iFirstActiveEdge)
 		}
 	currentWindingEdge->fEdge_NextForWinding = nil;
 	}
+
+NAMESPACE_ZOOLIB_END

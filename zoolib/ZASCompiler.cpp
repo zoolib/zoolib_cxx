@@ -29,7 +29,7 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 static void sWriteCount(const ZStreamW& inStream, uint32 inCount)
 	{
@@ -415,7 +415,7 @@ void ZASCompiler::AddAsset(const vector<string>& inNameStack,
 	// Align the end of the data at the next four byte boundary. Note that we're aligned
 	// relative to where we wrote our first byte in the stream, _not_ relative to the start
 	// of whatever underlies the stream.
-	::sSkipWrite(fStreamW, ((endPosition + 3) & ~3) - endPosition);
+	sSkipWrite(fStreamW, ((endPosition + 3) & ~3) - endPosition);
 	}
 
 ZASCompiler::NameEntry* ZASCompiler::AllocateName(const string& inName)
@@ -435,3 +435,5 @@ ZASCompiler::NameEntry* ZASCompiler::AllocateName(const string& inName)
 	fNameEntries.insert(iter, theEntry);
 	return theEntry;
 	}
+
+NAMESPACE_ZOOLIB_END

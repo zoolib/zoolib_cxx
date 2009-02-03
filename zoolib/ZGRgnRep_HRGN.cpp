@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -414,5 +414,7 @@ ZRef<ZGRgnRep> ZGRgnRep_HRGN::Xoring(const ZRef<ZGRgnRep>& iRep)
 
 HRGN ZGRgnRep_HRGN::GetHRGN()
 	{ return fHRGN; }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(GRgnRep_HRGN)

@@ -32,7 +32,7 @@ using std::min;
 using std::runtime_error;
 using std::string;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 ZAssertCompile(sizeof(UChar) == sizeof(UTF16));
 
@@ -247,5 +247,7 @@ void ZTextEncoder_ICU::Reset()
 	{
 	::ucnv_resetFromUnicode(fConverter);
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(TextCoder_ICU)

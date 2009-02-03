@@ -22,11 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStrim.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::set;
 using std::string;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -187,3 +187,5 @@ ZTupleIndexFactory_String::ZTupleIndexFactory_String(const std::string& iPropNam
 
 ZTupleIndex* ZTupleIndexFactory_String::Make()
 	{ return new ZTupleIndex_String(fPropName); }
+
+NAMESPACE_ZOOLIB_END

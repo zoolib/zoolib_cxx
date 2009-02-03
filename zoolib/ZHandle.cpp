@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include "zoolib/ZWinHeader.h"
 #endif
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::bad_alloc;
 using std::max;
@@ -496,3 +496,5 @@ void ZStreamRWPos_Handle::Imp_SetSize(uint64 iSize)
 	fHandle.SetSize(realSize);
 	fSizeLogical = realSize;
 	}
+
+NAMESPACE_ZOOLIB_END

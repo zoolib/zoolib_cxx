@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdio.h>
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 #define kDebug_StrimW_ML 1
 
@@ -780,3 +780,5 @@ ZStrimmerW_ML::~ZStrimmerW_ML()
 
 const ZStrimW& ZStrimmerW_ML::GetStrimW()
 	{ return fStrim; }
+
+NAMESPACE_ZOOLIB_END

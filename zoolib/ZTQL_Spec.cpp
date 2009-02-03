@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTQL_LogOp.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::set;
 
@@ -137,3 +137,5 @@ ZTQL::Spec ZTQL::operator&(const Condition& iCondition, const Spec& iSpec)
 
 ZTQL::Spec ZTQL::operator|(const Condition& iCondition, const Spec& iSpec)
 	{ return Spec(iCondition) | iSpec; }
+
+NAMESPACE_ZOOLIB_END

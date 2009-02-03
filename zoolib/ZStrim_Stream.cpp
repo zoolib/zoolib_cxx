@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::pair;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 static const size_t kBufSize = sStackBufferSize;
 
@@ -596,3 +596,5 @@ ZTextEncoder* ZStrimW_StreamEncoder::SetEncoderReturnOld(ZTextEncoder* iEncoder)
 	fEncoder = iEncoder;
 	return prior;
 	}
+
+NAMESPACE_ZOOLIB_END

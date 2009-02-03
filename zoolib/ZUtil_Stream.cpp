@@ -27,12 +27,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <ctype.h> // for tolower etc
 #include <vector>
 
-NAMESPACE_ZOOLIB_USING
 
 using std::max;
 using std::string;
 using std::swap;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -160,3 +161,5 @@ void ZUtil_Stream::Search_BMH::FindNext(const ZStreamR& inStream, size_t* outOff
 			break;
 		}
 	}
+
+NAMESPACE_ZOOLIB_END

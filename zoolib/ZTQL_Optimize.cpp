@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTQL_Optimize.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -216,3 +216,5 @@ ZRef<ZTQL::Node> ZTQL::sOptimize(ZRef<ZTQL::Node> iNode)
 	{
 	return sBreakUpSelect(iNode);
 	}
+
+NAMESPACE_ZOOLIB_END

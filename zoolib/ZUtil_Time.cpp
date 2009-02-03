@@ -40,15 +40,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <sys/time.h>
 #endif
 
-NAMESPACE_ZOOLIB_USING
-
 using std::string;
 
-#if (__MWERKS__ && !defined(_MSL_USING_MW_C_HEADERS) || _MSL_USING_MW_C_HEADERS) || (ZCONFIG_SPI_Enabled(Win) && ZCONFIG(Compiler, GCC))
+#if (__MWERKS__ && !defined(_MSL_USING_MW_C_HEADERS) || _MSL_USING_MW_C_HEADERS) \
+	|| (ZCONFIG_SPI_Enabled(Win) && ZCONFIG(Compiler, GCC))
 #	define DO_IT_OURSELVES 1
 #else
 #	define DO_IT_OURSELVES 0
 #endif
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -477,3 +478,5 @@ string ZUtil_Time::sAsString_ISO8601_us(ZTime iTime, bool iIncludeT)
 		}
 	return ZTime();
 	}
+
+NAMESPACE_ZOOLIB_END

@@ -49,11 +49,11 @@ static short sModeLookup[] = { srcCopy, srcOr, srcXor, srcBic};
 #include ZMACINCLUDE3(CoreServices,CarbonCore,FixMath.h) // For Long2Fix
 #include ZMACINCLUDE3(CoreServices,CarbonCore,TextUtils.h) // For StyledLineBreak stuff
 
-NAMESPACE_ZOOLIB_USING
-
 using std::bad_alloc;
 using std::string;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 static inline void sUseHiliteColor()
 	{
@@ -301,7 +301,7 @@ void ZDCCanvas_QD::Line(ZDCState& ioState, ZCoord inStartH, ZCoord inStartV, ZCo
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = ::sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		if (inStartH == inEndH)
 			{
@@ -372,7 +372,7 @@ void ZDCCanvas_QD::FrameRect(ZDCState& ioState, const ZRect& inRect)
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = ::sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		if (inRect.Width() <= ioState.fPenWidth * 2 || inRect.Height() <= ioState.fPenWidth * 2)
 			this->Internal_TileRegion(ioState, inRect, thePixmapRep);
@@ -410,7 +410,7 @@ void ZDCCanvas_QD::FillRect(ZDCState& ioState, const ZRect& inRect)
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = ::sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		this->Internal_TileRegion(ioState, inRect, thePixmapRep);
 		}
@@ -471,7 +471,7 @@ void ZDCCanvas_QD::FrameRegion(ZDCState& ioState, const ZDCRgn& inRgn)
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = ::sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		this->Internal_TileRegion(ioState, inRgn - inRgn.Inset(ioState.fPenWidth, ioState.fPenWidth), thePixmapRep);
 		}
@@ -494,7 +494,7 @@ void ZDCCanvas_QD::FillRegion(ZDCState& ioState, const ZDCRgn& inRgn)
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = ::sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		this->Internal_TileRegion(ioState, inRgn, thePixmapRep);
 		}
@@ -549,7 +549,7 @@ void ZDCCanvas_QD::FrameRoundRect(ZDCState& ioState, const ZRect& inRect, const 
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = ::sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		ZDCRgn outerRgn = ZDCRgn::sRoundRect(inRect, inCornerSize);
 		ZDCRgn innerRgn = ZDCRgn::sRoundRect(inRect.left + ioState.fPenWidth, inRect.top + ioState.fPenWidth,
@@ -584,7 +584,7 @@ void ZDCCanvas_QD::FillRoundRect(ZDCState& ioState, const ZRect& inRect, const Z
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = ::sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		this->Internal_TileRegion(ioState, ZDCRgn::sRoundRect(inRect, inCornerSize), thePixmapRep);
 		}
@@ -645,7 +645,7 @@ void ZDCCanvas_QD::FrameEllipse(ZDCState& ioState, const ZRect& inBounds)
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = ::sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		ZDCRgn outerRgn = ZDCRgn::sEllipse(inBounds);
 		ZDCRgn innerRgn = ZDCRgn::sEllipse(inBounds.Inset(ioState.fPenWidth, ioState.fPenWidth));
@@ -677,7 +677,7 @@ void ZDCCanvas_QD::FillEllipse(ZDCState& ioState, const ZRect& inBounds)
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = ::sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		this->Internal_TileRegion(ioState, ZDCRgn::sEllipse(inBounds), thePixmapRep);
 		}
@@ -735,7 +735,7 @@ void ZDCCanvas_QD::FillPoly(ZDCState& ioState, const ZDCPoly& inPoly)
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = ::sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		this->Internal_TileRegion(ioState, ZDCRgn::sPoly(inPoly), thePixmapRep);
 		}
@@ -1202,12 +1202,12 @@ short ZDCCanvas_QD::GetDepth()
 		return 0;
 
 	ZMutexLocker locker(*fMutexToLock);
-	return ::sGetDepth(fGrafPtr);
+	return sGetDepth(fGrafPtr);
 	}
 
 bool ZDCCanvas_QD::IsOffScreen()
 	{
-	return ::sIsPortOffscreen(fGrafPtr);
+	return sIsPortOffscreen(fGrafPtr);
 	}
 
 bool ZDCCanvas_QD::IsPrinting()
@@ -1561,9 +1561,9 @@ void ZDCCanvas_QD::Internal_TileRegion(ZDCState& ioState, const ZDCRgn& inRgn, Z
 	theData.fRealPatternOrigin = ioState.fPatternOrigin - currentQDOrigin;
 	theData.fLocalToGlobalOffset.h = 0;
 	theData.fLocalToGlobalOffset.v = 0;
-	if (1 || ::sIsPortOffscreen(fGrafPtr))
+	if (1 || sIsPortOffscreen(fGrafPtr))
 		{
-		::sTileRegion(0, 0, 0, reinterpret_cast<long>(&theData));
+		sTileRegion(0, 0, 0, reinterpret_cast<long>(&theData));
 		}
 	else
 		{
@@ -2236,7 +2236,7 @@ static bool sCheckDesc(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect&
 static ZRef<ZDCPixmapRep_QD> sCreateRepForDesc(ZRef<ZDCPixmapRaster> inRaster, const ZRect& inBounds,
 												const ZDCPixmapNS::PixelDesc& inPixelDesc)
 	{
-	if (::sCheckDesc(inRaster->GetRasterDesc(), inBounds, inPixelDesc))
+	if (sCheckDesc(inRaster->GetRasterDesc(), inBounds, inPixelDesc))
 		return new ZDCPixmapRep_QD(inRaster, inBounds, inPixelDesc);
 
 	return ZRef<ZDCPixmapRep_QD>();
@@ -2329,7 +2329,7 @@ ZDCPixmapRep_QD::ZDCPixmapRep_QD(ZRef<ZDCPixmapRaster> inRaster,
 								const ZDCPixmapNS::PixelDesc& inPixelDesc)
 :	ZDCPixmapRep(inRaster, inBounds, inPixelDesc)
 	{
-	bool result = ::sSetupPixMap(fRaster->GetRasterDesc(), fPixelDesc, fPixMap);
+	bool result = sSetupPixMap(fRaster->GetRasterDesc(), fPixelDesc, fPixMap);
 	ZAssertStop(kDebug_QD, result);
 	fPixMap.baseAddr = reinterpret_cast<Ptr>(fRaster->GetBaseAddress());
 	fChangeCount = fPixelDesc.GetChangeCount() - 1;
@@ -2389,7 +2389,7 @@ ZDCPixmapRep_QD::ZDCPixmapRep_QD(const PixMap* inSourcePixMap, const void* inSou
 					fPixelDesc,
 					inSourceBounds);
 
-	bool result = ::sSetupPixMap(fRaster->GetRasterDesc(), fPixelDesc, fPixMap);
+	bool result = sSetupPixMap(fRaster->GetRasterDesc(), fPixelDesc, fPixMap);
 	ZAssertStop(kDebug_QD, result);
 	fPixMap.baseAddr = reinterpret_cast<Ptr>(fRaster->GetBaseAddress());
 	}
@@ -2439,7 +2439,7 @@ ZRef<ZDCPixmapRep_QD> ZDCPixmapRep_QD::sAsPixmapRep_QD(ZRef<ZDCPixmapRep> inRep)
 		ZRef<ZDCPixmapRaster> theRaster = inRep->GetRaster();
 		ZRect theBounds = inRep->GetBounds();
 		PixelDesc thePixelDesc = inRep->GetPixelDesc();
-		theRep_QD = ::sCreateRepForDesc(theRaster, theBounds, thePixelDesc);
+		theRep_QD = sCreateRepForDesc(theRaster, theBounds, thePixelDesc);
 		if (!theRep_QD)
 			{
 			EFormatStandard fallbackFormat = eFormatStandard_xRGB_32;
@@ -2520,7 +2520,7 @@ public:
 
 	virtual bool Make(Result_t& oResult, Param_t iParam)
 		{
-		oResult = ::sCreateRepForDesc(iParam.f0, iParam.f1, iParam.f2);
+		oResult = sCreateRepForDesc(iParam.f0, iParam.f1, iParam.f2);
 		return oResult;
 		}	
 	} sMaker0;
@@ -2536,7 +2536,7 @@ public:
 
 	virtual bool Make(Result_t& oResult, Param_t iParam)
 		{
-		if (::sCheckDesc(iParam.f0, iParam.f1, iParam.f2))
+		if (sCheckDesc(iParam.f0, iParam.f1, iParam.f2))
 			{
 			oResult = new ZDCPixmapRep_QD(
 				new ZDCPixmapRaster_Simple(iParam.f0), iParam.f1, iParam.f2);
@@ -2665,5 +2665,7 @@ ZRef<ZDCCanvas> ZDCCanvasFactory_QD::CreateCanvas(ZPoint iSize, bool iBigEndian,
 #endif
 	return ZRef<ZDCCanvas>();
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(DC_QD)

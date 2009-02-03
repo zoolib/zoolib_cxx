@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFactoryChain.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -1041,5 +1041,7 @@ public:
 	} sMaker2;
 
 } // anonymous namespace
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(DC_X)

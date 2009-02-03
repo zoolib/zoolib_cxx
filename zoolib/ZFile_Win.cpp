@@ -27,11 +27,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cctype>
 
-NAMESPACE_ZOOLIB_USING
-
 using std::find;
 using std::string;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 #define kDebug_File_Win 2
 /*!\file
@@ -2135,5 +2135,7 @@ ZStreamerRWPos_File_Win::~ZStreamerRWPos_File_Win()
 
 const ZStreamRWPos& ZStreamerRWPos_File_Win::GetStreamRWPos()
 	{ return fStream; }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(File_Win)

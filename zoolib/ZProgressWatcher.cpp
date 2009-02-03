@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZProgressWatcher.h"
 #include "zoolib/ZDebug.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
 
@@ -98,3 +98,5 @@ void ZProgressPusher::Pop()
 	if (fWatcher)
 		fWatcher->Pop();
 	}
+
+NAMESPACE_ZOOLIB_END

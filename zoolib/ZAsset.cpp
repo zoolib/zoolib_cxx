@@ -24,7 +24,7 @@ using std::set;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 /**
 \defgroup group_Asset Assets
@@ -816,3 +816,5 @@ ZRef<ZAssetIterRep> ZAssetIterRep_Union::Clone()
 	{
 	return new ZAssetIterRep_Union(fParent, fCurrentIterRep->Clone(), fRepsUnvisited, fNamesSeen);
 	}
+
+NAMESPACE_ZOOLIB_END

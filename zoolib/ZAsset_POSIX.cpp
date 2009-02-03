@@ -29,9 +29,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <unistd.h>
 #include <sys/mman.h>
 
-NAMESPACE_ZOOLIB_USING
-
 using std::runtime_error;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -84,5 +84,7 @@ void ZAssetTree_POSIX_MemoryMapped::LoadUp(int inFileDescriptor, size_t inStart,
 		reinterpret_cast<char*>(fMappedAddress) + inStart - realStart,
 		inLength);
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(POSIX)

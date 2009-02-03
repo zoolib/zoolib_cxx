@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZStrimR_Boundary.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -852,3 +852,5 @@ bool ZUtil_Strim::sTryRead_Identifier(const ZStrimU& iStrimU, string8& oString)
 	oString.resize(0);
 	return sTryCopy_Identifier(iStrimU, ZStrimW_String(oString));
 	}
+
+NAMESPACE_ZOOLIB_END

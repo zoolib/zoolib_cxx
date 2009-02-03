@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::map;
 using std::pair;
@@ -261,3 +261,6 @@ uint64 ZTS_Umbrella::pLocalToGlobal(size_t iChildIndex, uint64 iLocalID)
 		return globalID;
 		}
 	}
+
+NAMESPACE_ZOOLIB_END
+

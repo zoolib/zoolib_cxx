@@ -31,7 +31,7 @@ using std::nothrow;
 using std::range_error;
 using std::string;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 #if ZCONFIG(Compiler, MSVC)
 #	define vsnprintf _vsnprintf
@@ -2012,3 +2012,5 @@ void ZStrimW_Indirect::SetSink(const ZStrimW* iStrimW)
 	{
 	fSink = iStrimW;
 	}
+
+NAMESPACE_ZOOLIB_END

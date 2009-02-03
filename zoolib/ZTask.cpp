@@ -4,7 +4,7 @@
 
 using std::string;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -182,3 +182,5 @@ void ZTask_Threaded::sTaskRun(ZTask_Threaded* iTask)
 	iTask->pStopped();
 	delete iTask;
 	}
+
+NAMESPACE_ZOOLIB_END

@@ -32,16 +32,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include ZMACINCLUDE3(CoreServices,CarbonCore,MacErrors.h)
 #include ZMACINCLUDE3(CoreServices,CarbonCore,TextEncodingConverter.h)
 
-NAMESPACE_ZOOLIB_USING
-
-ZAssertCompile(sizeof(UniChar) == sizeof(UTF16));
-
-static const size_t kBufSize = sStackBufferSize;
-
 using std::min;
 using std::runtime_error;
 using std::string;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
+
+ZAssertCompile(sizeof(UniChar) == sizeof(UTF16));
+
+static const size_t kBufSize = sStackBufferSize;
 
 // =================================================================================================
 #pragma mark -
@@ -405,5 +405,7 @@ void ZTextEncoder_Mac::Init(TextEncoding iDestEncoding)
 	::SetFallbackUnicodeToText(fInfo, sUnicodeToTextFallback_NullUPP,
 		kUnicodeFallbackCustomOnly | kUnicodeFallbackInterruptSafeMask, nil);
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(TextCoder_Mac)

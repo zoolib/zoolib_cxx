@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZWinHeader.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // From Whisper 1.3
 static bool sIsWinNT_Inited;
@@ -84,5 +84,7 @@ bool ZUtil_Win::sUseWAPI()
 
 void ZUtil_Win::sDisallowWAPI()
 	{ sFlag_DisallowWAPI = true; }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Win)

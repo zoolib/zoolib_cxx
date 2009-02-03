@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFactoryChain.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -342,5 +342,7 @@ ZRef<ZGRgnRep> ZGRgnRep_XRegion::Xoring(const ZRef<ZGRgnRep>& iRep)
 
 Region ZGRgnRep_XRegion::GetRegion()
 	{ return fRegion; }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(GRgnRep_XRegion)

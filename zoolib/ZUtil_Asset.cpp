@@ -32,7 +32,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_PageBuffered.h"
 #include "zoolib/ZString.h" // For pascal string conversions
 
-NAMESPACE_ZOOLIB_USING
+#if ZCONFIG_SPI_Enabled(POSIX)
+#	include <sys/types.h> // For lseek
+#	include <fcntl.h> // For open
+#	include <unistd.h> // For lseek
+#endif
+
+#if ZCONFIG_SPI_Enabled(Win)
+#	include "zoolib/ZUnicode.h"
+#	include "zoolib/ZUtil_Win.h"
+#endif
+
+#if ZCONFIG_SPI_Enabled(Carbon)
+#	include ZMACINCLUDE3(CoreServices,CarbonCore,Resources.h)
+#endif
+
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
 using std::vector;
@@ -47,10 +62,6 @@ file or in external files.
 // =================================================================================================
 
 #if ZCONFIG_SPI_Enabled(POSIX)
-
-#include <sys/types.h> // For lseek
-#include <fcntl.h> // For open
-#include <unistd.h> // For lseek
 
 static const char sMagicText[] = "ZooLib Appended Data v1.0";
 static const size_t sMagicTextSize = sizeof(sMagicText);
@@ -127,9 +138,6 @@ static bool sGetAssetTreeInfoFromExecutable(const string& iName, int& oFD, size_
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "zoolib/ZUnicode.h"
-#include "zoolib/ZUtil_Win.h"
-
 #if defined(__MINGW32__)
 
 // MinGW screws up its headers -- callback functions for A and W have the same signatures,
@@ -159,16 +167,6 @@ static BOOL CALLBACK sEnumResNameCallbackA(HMODULE iHMODULE, const char* iType, 
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
-// =================================================================================================
-
-//#if ZCONFIG(OS, Be)
-//#	include <app/Application.h>
-//#	include <storage/Resources.h>
-//#endif
-
-#if ZCONFIG_SPI_Enabled(Carbon)
-#	include ZMACINCLUDE3(CoreServices,CarbonCore,Resources.h)
-#endif
 
 // =================================================================================================
 
@@ -538,3 +536,5 @@ ZAsset ZUtil_Asset::sCreateOverlay(const vector<ZAsset>& iAssets, bool iLowestTo
 	
 	return ZAsset(new ZAssetRep_Overlay(assetReps));
 	}
+
+NAMESPACE_ZOOLIB_END

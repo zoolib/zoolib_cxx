@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTQL_Spec.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using ZTQL::Query;
 using ZTQL::RelHead;
@@ -365,3 +365,5 @@ ZTQL::Query ZUtil_TQLConvert::sConvert(const ZTBQuery& iTBQuery)
 	{
 	return sConvert(iTBQuery.GetNode(), nil, nil);
 	}
+
+NAMESPACE_ZOOLIB_END

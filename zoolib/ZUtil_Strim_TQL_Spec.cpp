@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimW_Escapify.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using namespace ZTQL;
 
@@ -102,9 +102,9 @@ static void sToStrim(const ZStrimW& s, ZRef<ComparatorRep> iCR)
 
 void ZUtil_Strim_TQL_Spec::sToStrim(const ZStrimW& s, const Condition& iCondition)
 	{
-	::sToStrim(s, iCondition.GetLHS().GetRep());
-	::sToStrim(s, iCondition.GetComparator().GetRep());
-	::sToStrim(s, iCondition.GetRHS().GetRep());
+	sToStrim(s, iCondition.GetLHS().GetRep());
+	sToStrim(s, iCondition.GetComparator().GetRep());
+	sToStrim(s, iCondition.GetRHS().GetRep());
 	}
 
 void ZUtil_Strim_TQL_Spec::sToStrim(const ZStrimW& s, const ZTQL::Spec& iSpec)
@@ -151,3 +151,5 @@ void ZUtil_Strim_TQL_Spec::sToStrim(const ZStrimW& s, ZRef<ZTQL::LogOp> iLogOp)
 		s << "!!Unknown LogOp!!";
 		}
 	}
+
+NAMESPACE_ZOOLIB_END

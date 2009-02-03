@@ -26,7 +26,7 @@ using std::vector;
 #	include ZMACINCLUDE3(CoreServices,CarbonCore,OSUtils.h) // For MakeDataExecutable
 #endif
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -68,6 +68,8 @@ void ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
 
     ::MakeDataExecutable(&ioStorage[0], ioStorage.size());
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 

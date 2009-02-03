@@ -31,7 +31,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-NAMESPACE_ZOOLIB_USING
 
 using std::lower_bound;
 using std::map;
@@ -39,6 +38,8 @@ using std::pair;
 using std::set;
 using std::string;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 #ifdef ZCONFIG_TS_Watchable_DumpStuff
 #	define kDebug_DumpStuff ZCONFIG_TS_Watchable_DumpStuff
@@ -1015,3 +1016,5 @@ ZTSWatcherFactory_TS_Watchable::ZTSWatcherFactory_TS_Watchable(ZRef<ZTS_Watchabl
 
 ZRef<ZTSWatcher> ZTSWatcherFactory_TS_Watchable::MakeTSWatcher()
 	{ return fTS_Watchable->NewWatcher(); }
+
+NAMESPACE_ZOOLIB_END

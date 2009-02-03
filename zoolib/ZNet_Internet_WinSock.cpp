@@ -26,9 +26,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZTime.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -501,5 +501,7 @@ void ZNetEndpoint_TCP_WinSock::Imp_Abort()
 	::closesocket(fSOCKET);
 	fSOCKET = INVALID_SOCKET;
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(Net_Internet_WinSock)

@@ -340,10 +340,10 @@ equivalent of command-line options.
 
 #include <stdio.h>
 
-NAMESPACE_ZOOLIB_USING
-
 using std::exception;
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -704,3 +704,5 @@ const ZTValue& ZCommandLine::TValue::operator()() const
 		return fValue;
 	return fDefault;
 	}
+
+NAMESPACE_ZOOLIB_END

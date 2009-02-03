@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStrim.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
 using std::vector;
@@ -98,3 +98,5 @@ void ZTQLEngine::pExecute(ZRef<ZTQL::Node> iNode, vector<ZTuple>& oResults)
 		oResults = theNode_Explicit->GetTuples();
 		}
 	}
+
+NAMESPACE_ZOOLIB_END

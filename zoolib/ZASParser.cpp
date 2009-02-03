@@ -37,12 +37,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdio.h>
 
-NAMESPACE_ZOOLIB_USING
-
 using std::exception;
 using std::pair;
 using std::string;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZANONYMOUS {
 
@@ -910,3 +910,5 @@ void ZASParser::ParseHandler_Prettify::ExitCharSet(bool iWasInBlock, bool iNowIn
 	{
 	fInBlock = iNowInBlock;
 	}
+
+NAMESPACE_ZOOLIB_END

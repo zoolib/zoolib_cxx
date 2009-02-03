@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZUtil_STL.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 using ZUtil_STL::sFirstOrNil;
 
 using std::map;
@@ -1006,3 +1006,6 @@ ZTSWatcherFactory_TSWatcherMUX::ZTSWatcherFactory_TSWatcherMUX(
 
 ZRef<ZTSWatcher> ZTSWatcherFactory_TSWatcherMUX::MakeTSWatcher()
 	{ return fMUX->NewWatcher(fAlwaysForceSync); }
+
+NAMESPACE_ZOOLIB_END
+

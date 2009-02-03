@@ -27,7 +27,7 @@ using std::pair;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 static const int kDebug = 2;
 
@@ -485,3 +485,5 @@ void ZTName::String::ToStream(const ZStreamW& iStreamW) const
 	iStreamW.WriteCount(fSize);
 	iStreamW.Write(fBuffer, fSize);
 	}
+
+NAMESPACE_ZOOLIB_END

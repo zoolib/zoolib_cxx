@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZString.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
 
@@ -108,3 +108,5 @@ ZRef<ZNetEndpoint_Local> ZNetEndpoint_Local::sCreateConnected(const string& iPat
 	return ZFactoryChain_T<ZRef<ZNetEndpoint_Local>, MakeParam_t>
 		::sMake(MakeParam_t(iPath));
 	}
+
+NAMESPACE_ZOOLIB_END

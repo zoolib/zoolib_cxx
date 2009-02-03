@@ -20,9 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNet_AppleTalk.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // ==================================================
 #pragma mark -
@@ -140,3 +140,5 @@ ZRef<ZNetEndpoint_ADSP> ZNetEndpoint_ADSP::sCreateConnectedEndpoint(int16 iNet, 
 		{}
 	return ZRef<ZNetEndpoint_ADSP>();
 	}
+
+NAMESPACE_ZOOLIB_END

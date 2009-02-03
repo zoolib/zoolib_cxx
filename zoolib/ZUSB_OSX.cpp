@@ -34,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <IOKit/IOMessage.h>
 #include <IOKit/IOCFPlugIn.h>
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::exception;
 using std::min;
@@ -94,9 +94,10 @@ static IOUSBDeviceInterface182** sCreate_USBDeviceInterface(io_service_t iUSBDev
 
 static void sSetSInt32(CFMutableDictionaryRef iDict, CFStringRef iPropName, SInt32 iValue)
 	{
-	CFNumberRef numberRef = ::CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type, &iValue);
+	ZRef<CFNumberRef> numberRef
+		(false, ::CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type, &iValue));
+
 	::CFDictionarySetValue(iDict, iPropName, numberRef);
-	::CFRelease(numberRef);
 	}
 
 ZUSBWatcher::ZUSBWatcher(
@@ -815,5 +816,7 @@ void ZUSBInterfaceInterface::Close()
 		fII[0]->USBInterfaceClose(fII);
 		}
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(USB_OSX)

@@ -267,4 +267,3 @@ void sTestQL(const ZStrimW& s)
 //	s << "\n";
 	}
 
-

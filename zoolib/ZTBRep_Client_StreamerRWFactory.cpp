@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTBRep_Client_StreamerRWFactory.h"
 #include "zoolib/ZLog.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -69,3 +69,5 @@ void ZTBRep_Client_StreamerRWFactory::Notify_Failed()
 	ZTBRep_Client::Fail();
 	ZClientAsync::Notify_Failed();
 	}
+
+NAMESPACE_ZOOLIB_END

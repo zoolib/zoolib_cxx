@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "ZDebug.h" // For ZAssertCompile
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 ZAssertCompile(sizeof(UTF16) == sizeof(UniChar));
 
@@ -146,5 +146,7 @@ bool ZUtil_ATSUI::Attributes::Apply(ATSUStyle iStyle)
 	return noErr == ::ATSUSetAttributes(iStyle,
 		fTags.size(), &fTags[0], &fSizes[0], const_cast<void**>(&fValues[0]));
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(Util_ATSUI)

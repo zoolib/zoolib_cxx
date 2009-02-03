@@ -27,14 +27,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cstdio>
 
-NAMESPACE_ZOOLIB_USING
-
 using std::lower_bound;
 using std::upper_bound;
 using std::map;
 using std::min;
 using std::set;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 #ifndef kDebug_PhaseTreeFile
 #	define kDebug_PhaseTreeFile 3
@@ -3951,3 +3951,5 @@ void ZBlockStore_PhaseTree::Extent_RecursiveDeletePartial(
 		fMutex_Slots.Release();
 		}
 	}
+
+NAMESPACE_ZOOLIB_END

@@ -1,6 +1,6 @@
 #include "zoolib/ZGeometry.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 void test()
 {
@@ -8,3 +8,5 @@ void test()
 ZGPointf thePoint;
 thePoint += ZGExtentf(2, 3);
 }
+
+NAMESPACE_ZOOLIB_END

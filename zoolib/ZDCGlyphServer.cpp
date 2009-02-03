@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCGlyphServer.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -31,3 +31,5 @@ ZDCGlyphServer::ZDCGlyphServer()
 
 ZDCGlyphServer::~ZDCGlyphServer()
 	{}
+
+NAMESPACE_ZOOLIB_END

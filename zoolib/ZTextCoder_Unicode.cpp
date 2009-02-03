@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::string;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 static const size_t kBufSize = sStackBufferSize;
 
@@ -742,3 +742,5 @@ bool ZTextDecoder_Unicode_AutoDetect::Decode(
 
 void ZTextDecoder_Unicode_AutoDetect::Reset()
 	{ fType = eFresh; }
+
+NAMESPACE_ZOOLIB_END

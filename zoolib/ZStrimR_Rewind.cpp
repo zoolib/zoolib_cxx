@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define kDebug_StrimR_Rewind 1
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -84,3 +84,5 @@ void ZStrimR_Rewind::SetMark(uint64 iMark)
 	ZAssertStop(kDebug_StrimR_Rewind, iMark <= fBuffer.GetSize());
 	fBuffer.SetPosition(iMark);
 	}
+
+NAMESPACE_ZOOLIB_END

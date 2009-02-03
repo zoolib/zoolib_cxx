@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTuple.h"
 #include "zoolib/ZUtil_Strim.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
 using std::vector;
@@ -751,3 +751,5 @@ bool ZUtil_Strim_JSON::sNormalized(
 		}
 	return false;
 	}
+
+NAMESPACE_ZOOLIB_END

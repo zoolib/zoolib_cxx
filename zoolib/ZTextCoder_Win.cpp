@@ -33,7 +33,7 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 ZAssertCompile(sizeof(WCHAR) == sizeof(UTF16));
 
@@ -556,5 +556,7 @@ void ZTextEncoder_Win::Init(UINT iDestCodePage)
 		throw runtime_error("ZTextDecoder_Win, invalid code page");
 	fDestCodePage = iDestCodePage;
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(TextCoder_Win)

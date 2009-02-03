@@ -23,9 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZFactoryChain.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::min;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -201,3 +201,5 @@ bool ZTextCollatorRep_ASCII::Contains(const UTF8* iPattern, size_t iPatternLengt
 
 	return sContains(fStrength, iPattern, iPatternLength, iTarget, iTargetLength);
 	}
+
+NAMESPACE_ZOOLIB_END

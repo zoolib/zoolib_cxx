@@ -28,12 +28,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::map;
 using std::pair;
 using std::runtime_error;
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -365,3 +365,5 @@ void ZUtil_TS::sWriteMagicText(const ZStreamW& iStreamW)
 	{
 	iStreamW.Write(sMagicText, sizeof(sMagicText));
 	}
+
+NAMESPACE_ZOOLIB_END

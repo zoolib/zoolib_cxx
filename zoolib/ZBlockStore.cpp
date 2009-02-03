@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZBlockStore.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 ZBlockStore::ZBlockStore()
 	{}
@@ -42,3 +42,5 @@ ZRef<ZStreamerW> ZBlockStore::OpenW(BlockID iBlockID)
 	
 ZRef<ZStreamerWPos> ZBlockStore::OpenWPos(BlockID iBlockID)
 	{ return this->OpenRWPos(iBlockID); }
+
+NAMESPACE_ZOOLIB_END

@@ -31,7 +31,7 @@ using std::set;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using ZUtil_STL::sFirstOrNil;
 
@@ -1310,3 +1310,6 @@ void ZTBowl::CroutonChanged(ZRef<ZTCrouton> iCrouton, ZTSoup::EChanged iChanged)
 
 const vector<ZRef<ZTCrouton> >& ZTBowl::GetCroutons()
 	{ return fTCroutons; }
+
+NAMESPACE_ZOOLIB_END
+

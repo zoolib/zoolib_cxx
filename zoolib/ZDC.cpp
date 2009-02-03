@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using namespace std;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 /**
 \defgroup group_Graphics Graphics
@@ -353,7 +353,7 @@ static ZDCRgn sCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
 
 void ZDCCanvas::FloodFill(ZDCState& ioState, const ZPoint& inSeedLocation)
 	{
-	ZDCRgn theMaskRgn =::sCalcFloodFillRgn(this, ioState, inSeedLocation);
+	ZDCRgn theMaskRgn =sCalcFloodFillRgn(this, ioState, inSeedLocation);
 	this->FillRegion(ioState, theMaskRgn);
 	}
 
@@ -403,12 +403,12 @@ static ZDCRgn sCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
 		{
 		ZPoint theLocation = theStack.back();
 		theStack.pop_back();
-		if (::sCheckPixel(inCanvas, ioState, theLocation.h, theLocation.v, theSeedColor, theMaskRgn))
+		if (sCheckPixel(inCanvas, ioState, theLocation.h, theLocation.v, theSeedColor, theMaskRgn))
 			{
 			// Find left and right boundaries
 			ZCoord left = theLocation.h;
 			while ((left > theBounds.left)
-				&& ::sCheckPixel(inCanvas, ioState,
+				&& sCheckPixel(inCanvas, ioState,
 				left - 1, theLocation.v, theSeedColor, theMaskRgn))
 				{
 				--left;
@@ -416,7 +416,7 @@ static ZDCRgn sCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
 
 			ZCoord right = theLocation.h;
 			while ((right < theBounds.right)
-				&& ::sCheckPixel(inCanvas, ioState,
+				&& sCheckPixel(inCanvas, ioState,
 				right, theLocation.v, theSeedColor, theMaskRgn))
 				{
 				++right;
@@ -608,3 +608,5 @@ ZDC_OffAuto::~ZDC_OffAuto()
 		fDest.CopyFrom(sourceRect.TopLeft(), *this, sourceRect);
 		}
 	}
+
+NAMESPACE_ZOOLIB_END

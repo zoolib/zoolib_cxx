@@ -28,11 +28,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <errno.h>
 #include <stdexcept>
 
-NAMESPACE_ZOOLIB_USING
-
 using std::runtime_error;
 using std::string;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 static const size_t kBufSize = sStackBufferSize;
 
@@ -319,5 +319,7 @@ void ZTextEncoder_iconv::Reset()
 	{
 	::iconv(fConverter, nil, 0, nil, 0);
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(TextCoder_iconv)

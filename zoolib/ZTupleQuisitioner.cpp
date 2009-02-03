@@ -22,11 +22,23 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define kDebug_TupleQuisitioner 2
 
-NAMESPACE_ZOOLIB_USING
-
 using std::pair;
 using std::set;
 using std::vector;
+
+namespace std {
+
+inline void swap(
+	pair<uint64, vector<const ZOOLIB_PREFIX::ZTValue*> >& a,
+	pair<uint64, vector<const ZOOLIB_PREFIX::ZTValue*> >& b)
+	{
+	swap(a.first, b.first);
+	a.second.swap(b.second);
+	}
+
+} // namespace std
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 
@@ -132,14 +144,6 @@ inline bool CompareTuples_t::operator()(const pair<uint64, vector<const ZTValue*
 } // anonymous namespace
 
 // =================================================================================================
-
-namespace std {
-inline void swap(pair<uint64, vector<const ZTValue*> >& a, pair<uint64, vector<const ZTValue*> >& b)
-	{
-	std::swap(a.first, b.first);
-	std::swap(a.second, b.second);
-	}
-} // namespace std
 
 static void sSort(ZTextCollator ioTextCollators[], const vector<ZTBQuery::SortSpec>& iSort, const vector<ZTuple>& iTuples, vector<uint64>& ioIDs)
 	{
@@ -776,3 +780,5 @@ void ZTupleQuisitioner::Query_Intersection(const ZTBQueryNode_Combo::Intersectio
 
 	ioIDs.insert(ioIDs.end(), results.begin(), results.end());
 	}
+
+NAMESPACE_ZOOLIB_END

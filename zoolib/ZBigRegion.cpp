@@ -70,11 +70,11 @@ SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::max;
 using std::min;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 #define kDebug_BigRegion 3
 
@@ -1155,3 +1155,5 @@ int32 ZBigRegion::sInternal_Coalesce(ZBigRegion& ioRegion, int32 prevStart, int3
 		}
 	return curStart;
 	}
+
+NAMESPACE_ZOOLIB_END

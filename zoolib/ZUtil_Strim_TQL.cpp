@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim_TQL_Spec.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::set;
 using std::string;
@@ -351,3 +351,5 @@ void ZUtil_Strim_TQL::sWrite_RelHead(const ZStrimW& s, const ZTQL::RelHead& iRel
 		}
 	s << "]";
 	}
+
+NAMESPACE_ZOOLIB_END

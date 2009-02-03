@@ -21,9 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCGlyphServer_Asset.h"
 #include "zoolib/ZString.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::string;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -222,3 +222,5 @@ void ZDCGlyphServer_Asset::GetFontInfo(const ZDCFont& iFont,
 		oLeading = sReadAsset_Int16(fontAsset.GetChild("leading"));
 		}	
 	}
+
+NAMESPACE_ZOOLIB_END

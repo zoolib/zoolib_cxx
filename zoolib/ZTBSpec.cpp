@@ -34,7 +34,7 @@ using std::set;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -1302,3 +1302,5 @@ ZTBSpec::ZTBSpec(CriterionUnion& ioCriterionUnion, bool iKnowWhatIAmDoing)
 	ZAssertStop(1, iKnowWhatIAmDoing);
 	fRep->fCriterionUnion.swap(ioCriterionUnion);	
 	}
+
+NAMESPACE_ZOOLIB_END

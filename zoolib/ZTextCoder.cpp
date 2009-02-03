@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::string;
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 static const size_t kBufSize = sStackBufferSize;
 
@@ -704,3 +704,5 @@ void ZTextEncoder::Encode(const ZStreamW& iStreamW, UTF32 iCP)
 /** \brief Discard any state in preparation for a fresh sequence of source material.*/
 void ZTextEncoder::Reset()
 	{}
+
+NAMESPACE_ZOOLIB_END

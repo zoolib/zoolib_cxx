@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStrim.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::set;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -282,3 +282,5 @@ bool ZTupleIndex::sGatherMergeConstraints(const ZTName& iPropName,
 
 ZTupleIndexFactory::~ZTupleIndexFactory()
 	{}
+
+NAMESPACE_ZOOLIB_END

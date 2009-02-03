@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCPixmap.h"
 #include "zoolib/ZDebug.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // Because our static sGray, sBlack stuff are constructed before we've been able to call
 // InitGraf(), qd.white, qd.gray etc. will not have valid values, so we have our own
@@ -277,7 +277,7 @@ bool ZDCInk::Internal_IsSameAs(const ZDCInk& inOther) const
 			bool pattern1SolidBack;
 			bool pattern2SolidFore;
 			bool pattern2SolidBack;
-			::sExaminePatterns(fRep->fAsTwoColor.fPattern, inOther.fRep->fAsTwoColor.fPattern,
+			sExaminePatterns(fRep->fAsTwoColor.fPattern, inOther.fRep->fAsTwoColor.fPattern,
 				identical, identicalInverse,
 				pattern1SolidFore, pattern1SolidBack,
 				pattern2SolidFore, pattern2SolidBack);
@@ -321,7 +321,7 @@ bool ZDCInk::Internal_IsSameAs(const ZDCInk& inOther) const
 	else if (fRep->fType == eTypeSolidColor && inOther.fRep->fType == eTypeTwoColor)
 		{
 		bool solidFore, solidBack;
-		::sExaminePattern(inOther.fRep->fAsTwoColor.fPattern, solidFore, solidBack);
+		sExaminePattern(inOther.fRep->fAsTwoColor.fPattern, solidFore, solidBack);
 
 		if (solidFore
 			&& sSameColors(fRep->fAsSolidColor.fColor, inOther.fRep->fAsTwoColor.fForeColor))
@@ -338,7 +338,7 @@ bool ZDCInk::Internal_IsSameAs(const ZDCInk& inOther) const
 	else if (fRep->fType == eTypeTwoColor && inOther.fRep->fType == eTypeSolidColor)
 		{
 		bool solidFore, solidBack;
-		::sExaminePattern(fRep->fAsTwoColor.fPattern, solidFore, solidBack);
+		sExaminePattern(fRep->fAsTwoColor.fPattern, solidFore, solidBack);
 
 		if (solidFore
 			&& sSameColors(fRep->fAsTwoColor.fForeColor, inOther.fRep->fAsSolidColor.fColor))
@@ -355,3 +355,5 @@ bool ZDCInk::Internal_IsSameAs(const ZDCInk& inOther) const
 
 	return false;
 	}
+
+NAMESPACE_ZOOLIB_END

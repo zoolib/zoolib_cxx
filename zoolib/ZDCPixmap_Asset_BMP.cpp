@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAsset.h"
 #include "zoolib/ZDCPixmap.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::runtime_error;
 using std::vector;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // From wingdi.h
 #ifndef BI_RGB
@@ -236,7 +236,7 @@ ZDCPixmap ZDCPixmap_Asset_BMP::sGetPixmap(const ZAsset& iAsset)
 			{
 			thePixmap.GetRaster()->Fill(0);
 			bool destFlipped = (thePixmap.GetRasterDesc().fFlipped);
-			::sReadRLE8(theStream, biWidth, biHeight,
+			sReadRLE8(theStream, biWidth, biHeight,
 				sourceRasterDesc.fRowBytes, sourceFlipped != destFlipped,
 				reinterpret_cast<uint8*>(thePixmap.GetRaster()->GetBaseAddress()));
 			}
@@ -245,7 +245,7 @@ ZDCPixmap ZDCPixmap_Asset_BMP::sGetPixmap(const ZAsset& iAsset)
 			ZAssertStop(2, biCompression == BI_RLE4);
 			thePixmap.GetRaster()->Fill(0);
 			bool destFlipped = (thePixmap.GetRasterDesc().fFlipped);
-			::sReadRLE4(theStream, biWidth, biHeight,
+			sReadRLE4(theStream, biWidth, biHeight,
 				sourceRasterDesc.fRowBytes, destFlipped,
 				reinterpret_cast<uint8*>(thePixmap.GetRaster()->GetBaseAddress()));
 			}
@@ -413,3 +413,5 @@ static void sReadRLE4(const ZStreamR& iStream,
 			}
 		}
 	}
+
+NAMESPACE_ZOOLIB_END

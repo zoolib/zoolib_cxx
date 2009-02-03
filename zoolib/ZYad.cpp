@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdio.h> // For printf
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::min;
 using std::string;
@@ -181,3 +181,5 @@ void ZYadListMapRPos::SetPosition(size_t iPosition)
 
 void ZYadListMapRPos::SetPosition(const string& iName)
 	{ ZYadMapRPos::SetPosition(iName); }
+
+NAMESPACE_ZOOLIB_END

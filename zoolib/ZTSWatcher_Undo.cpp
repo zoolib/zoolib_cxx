@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTSWatcher_Undo.h"
 #include "zoolib/ZUtil_STL.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
@@ -567,5 +567,7 @@ void ZTSWatcher_Undo::sCallback(void* iRefcon)
 	{
 	static_cast<ZTSWatcher_Undo*>(iRefcon)->Callback();
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif

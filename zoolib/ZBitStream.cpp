@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
 
-NAMESPACE_ZOOLIB_USING
-
 using std::min;
+
+NAMESPACE_ZOOLIB_BEGIN
 
 #define kDebug_BitStream 2
 
@@ -391,3 +391,5 @@ void ZBitWriterLE::Finish(void* iDest, size_t* oCountBytesWritten)
 			*oCountBytesWritten = 0;
 		}
 	}
+
+NAMESPACE_ZOOLIB_END

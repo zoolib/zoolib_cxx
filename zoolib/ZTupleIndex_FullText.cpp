@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZUtil_STL.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::map;
 using std::pair;
@@ -320,5 +320,7 @@ ZTupleIndexFactory_FullText::ZTupleIndexFactory_FullText(const std::string& iPro
 
 ZTupleIndex* ZTupleIndexFactory_FullText::Make()
 	{ return new ZTupleIndex_FullText(fPropName); }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(ICU)

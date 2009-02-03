@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZMemory.h"
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::min;
 using std::pair;
@@ -741,3 +741,5 @@ const vector<pair<string, ZTuple> >& ZML::StrimR::All() const
 	{
 	return fTags;
 	}
+
+NAMESPACE_ZOOLIB_END
