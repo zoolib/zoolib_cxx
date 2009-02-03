@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
+#include "zoolib/ZRef.h"
+
 #include <CoreFoundation/CFData.h>
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -52,7 +54,7 @@ public:
 	virtual uint64 Imp_GetSize();
 
 private:
-	CFDataRef fDataRef;
+	ZRef<CFDataRef> fDataRef;
 	uint64 fPosition;
 	};
 
@@ -85,7 +87,7 @@ public:
 	virtual void Imp_SetSize(uint64 iSize);
 
 private:
-	CFMutableDataRef fDataRef;
+	ZRef<CFMutableDataRef> fDataRef;
 	size_t fGrowIncrement;
 	uint64 fPosition;
 	size_t fSizeLogical;

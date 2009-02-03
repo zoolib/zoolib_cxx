@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMemory.h" // For ZBlockMove & ZBlockCopy
 
-NAMESPACE_ZOOLIB_USING
+NAMESPACE_ZOOLIB_BEGIN
 
 using std::min;
 using std::max;
@@ -36,14 +36,10 @@ using std::max;
 ZStreamRPos_CFData::ZStreamRPos_CFData(CFDataRef iDataRef)
 :	fDataRef(iDataRef),
 	fPosition(0)
-	{
-	::CFRetain(fDataRef);
-	}
+	{}
 
 ZStreamRPos_CFData::~ZStreamRPos_CFData()
-	{
-	::CFRelease(fDataRef);
-	}
+	{}
 
 void ZStreamRPos_CFData::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
@@ -76,31 +72,25 @@ uint64 ZStreamRPos_CFData::Imp_GetSize()
 #pragma mark -
 #pragma mark * ZStreamRWPos_CFData
 
-ZStreamRWPos_CFData::ZStreamRWPos_CFData(
-	CFMutableDataRef iDataRef, size_t iGrowIncrement)
-:	fDataRef(iDataRef)
-	{
-	::CFRetain(fDataRef);
-	fGrowIncrement = iGrowIncrement;
-	fPosition = 0;
-	fSizeLogical = ::CFDataGetLength(fDataRef);
-	}
+ZStreamRWPos_CFData::ZStreamRWPos_CFData(CFMutableDataRef iDataRef, size_t iGrowIncrement)
+:	fDataRef(iDataRef),
+	fGrowIncrement(iGrowIncrement),
+	fPosition(0),
+	fSizeLogical(::CFDataGetLength(fDataRef))
+	{}
 
 ZStreamRWPos_CFData::ZStreamRWPos_CFData(CFMutableDataRef iDataRef)
-:	fDataRef(iDataRef)
-	{
-	::CFRetain(fDataRef);
-	fGrowIncrement = 64;
-	fPosition = 0;
-	fSizeLogical = ::CFDataGetLength(fDataRef);
-	}
+:	fDataRef(iDataRef),
+	fGrowIncrement(64),
+	fPosition(0),
+	fSizeLogical(::CFDataGetLength(iDataRef))
+	{}
 
 ZStreamRWPos_CFData::~ZStreamRWPos_CFData()
 	{
 	// Finally, make sure fDataRef is the real size, not the potentially
 	// overallocated size we've been using
 	::CFDataSetLength(fDataRef, fSizeLogical);
-	::CFRelease(fDataRef);
 	}
 
 void ZStreamRWPos_CFData::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
@@ -167,5 +157,7 @@ void ZStreamRWPos_CFData::Imp_SetSize(uint64 iSize)
 	::CFDataSetLength(fDataRef, realSize);
 	fSizeLogical = realSize;
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
