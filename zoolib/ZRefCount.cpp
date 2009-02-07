@@ -92,6 +92,7 @@ void ZRefCountedWithFinalization::Release()
 		if (oldRefCount == 1)
 			{
 			this->Finalize();
+			break;
 			}
 		else
 			{

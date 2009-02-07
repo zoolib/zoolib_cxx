@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZCompat_operator_bool.h"
 
+#include "zoolib/ZDebug.h"
+
 NAMESPACE_ZOOLIB_BEGIN
 
 template <class T> void sRetain_T(T);
@@ -38,55 +40,34 @@ template <typename T>
 class ZRef
 	{
 private:
-	typedef ZRef ThisType;
-
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ThisType,
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRef,
 		operator_bool_generator_type, operator_bool_type);
 
-	template <typename Ti>
-	struct AsPtr_T
-		{ typedef Ti* Type_t; };
-
-	template <typename Ti>
-	struct AsPtr_T<Ti*>
-		{ typedef Ti* Type_t; };
-
-	typedef typename AsPtr_T<T>::Type_t P;
-
-
-	template <typename Ti, typename P>
-	struct Retainable_T
-		{
-		static void sRetainIt(P iVal) { sRetain(*iVal); }
-		static void sReleaseIt(P iVal) { sRelease(*iVal); }
-		};
-
-	template <typename Ti, typename Pi>
-	struct Retainable_T<Ti*, Pi>
-		{
-		static void sRetainIt(Pi iVal) { sRetain_T(iVal); }
-		static void sReleaseIt(Pi iVal) { sRelease_T(iVal); }
-		};
+	typedef T* P;
 
 	static void spRetain(P iP)
 		{
 		if (iP)
-			Retainable_T<T, P>::sRetainIt(iP);
+			sRetain(*iP);
 		}
 
 	static void spRelease(P iP)
 		{
 		if (iP)
-			Retainable_T<T, P>::sReleaseIt(iP);
+			sRelease(*iP);
 		}
 
 	static void spCheck(P iP)
 		{
-//		if (sCheckAccessEnabled(Retainable_T<T, P>::sGet(iP))
-//			sCheckAccess(Retainable_T<T, P>::sGet(iP))
+		ZAssert(iP);
+//		if (sCheckAccessEnabled(Retainable_T<T>::sGet(iP))
+//			sCheckAccess(Retainable_T<T>::sGet(iP))
 		}
 
 public:
+	void swap(ZRef& iOther)
+		{ std::swap(fP, iOther.fP); }
+
 	ZRef()
 	:	fP(nil)
 		{}
@@ -128,7 +109,10 @@ public:
 
 	ZRef& operator=(const ZRef& iOther)
 		{
-		ThisType(iOther).swap(*this);
+		P theP = iOther.Get();
+		std::swap(theP, fP);
+		spRetain(fP);
+		spRelease(theP);
 		return *this;
 		}
 
@@ -146,7 +130,10 @@ public:
 	template <class O>
 	ZRef& operator=(const ZRef<O>& iOther)
 		{
-		ThisType(iOther).swap(*this);
+		P theP = iOther.Get();
+		std::swap(theP, fP);
+		spRetain(fP);
+		spRelease(theP);
 		return *this;
 		}
 
@@ -162,30 +149,24 @@ public:
 	bool operator<(const ZRef<O>& iOther) const
 		{ return fP < iOther.Get(); }
 
-	operator P()
-		{ return fP; }
+	operator operator_bool_type() const
+		{ return operator_bool_generator_type::translate(fP); }
 
-	T operator*() const
-		{ return fP; }
-
-	P operator->() const
+	T* operator->() const
 		{
 		spCheck(fP);
 		return fP;
 		}
 
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(fP); }
-
-	void Clear()
-		{
-		ThisType().swap(*this);
-		}
-
 	P Get() const { return fP; }
 	P GetObject() const { return fP; }
 
-	void swap(ZRef& iOther) { std::swap(fP, iOther.fP); }
+	void Clear()
+		{
+		P theP = nil;
+		std::swap(theP, fP);
+		spRelease(theP);
+		}
 
 private:
 	P fP;
@@ -193,16 +174,140 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRef inline definitions
+#pragma mark * ZRef partially specialized for pointer types
+
+template <typename T>
+class ZRef<T*>
+	{
+private:
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRef,
+		operator_bool_generator_type, operator_bool_type);
+
+	static void spRetain(T* iP)
+		{
+		if (iP)
+			sRetain_T(iP);
+		}
+
+	static void spRelease(T* iP)
+		{
+		if (iP)
+			sRelease_T(iP);
+		}
+
+public:
+	void swap(ZRef& iOther)
+		{ std::swap(fP, iOther.fP); }
+
+	ZRef()
+	:	fP(nil)
+		{}
+
+	~ZRef()
+		{ spRelease(fP); } 
+
+	ZRef(T* iP)
+	:	fP(iP)
+		{ spRetain(fP); }
+	
+	ZRef(bool iRetain, T* iP)
+	:	fP(iP)
+		{
+		if (iRetain)
+			spRetain(fP);
+		}
+
+	ZRef& operator=(T* iP)
+		{
+		// Important to do the retain after we've set fP,
+		// so that ZRefCountedWithFinalization's Initialize is
+		// called *after* we've taken the reference to it.
+		std::swap(iP, fP);
+		spRetain(fP);
+		spRelease(iP);	
+		return *this;
+		}
+	
+	bool operator==(const T* iP) const
+		{ return fP == iP; }
+
+	bool operator!=(const T* iP) const
+		{ return fP != iP; }
+
+	ZRef(const ZRef& iOther)
+	:	fP(iOther.Get())
+		{ spRetain(fP); }
+
+	ZRef& operator=(const ZRef& iOther)
+		{
+		T* theP = iOther.Get();
+		std::swap(theP, fP);
+		spRetain(fP);
+		spRelease(theP);
+		return *this;
+		}
+
+	bool operator==(const ZRef& iOther) const
+		{ return fP == iOther.Get(); }
+
+	bool operator!=(const ZRef& iOther) const
+		{ return fP != iOther.Get(); }
+
+	template <class O>
+	ZRef(const ZRef<O>& iOther)
+	:	fP(iOther.Get())
+		{ spRetain(fP); }
+
+	template <class O>
+	ZRef& operator=(const ZRef<O>& iOther)
+		{
+		T* theP = iOther.Get();
+		std::swap(theP, fP);
+		spRetain(fP);
+		spRelease(theP);
+		return *this;
+		}
+
+	template <class O>
+	bool operator==(const ZRef<O>& iOther) const
+		{ return fP == iOther.Get(); }
+
+	template <class O>
+	bool operator!=(const ZRef<O>& iOther) const
+		{ return fP != iOther.Get(); }
+
+	template <class O>
+	bool operator<(const ZRef<O>& iOther) const
+		{ return fP < iOther.Get(); }
+
+	operator operator_bool_type() const
+		{ return operator_bool_generator_type::translate(fP); }
+
+	operator T*()
+		{ return fP; }
+
+	T* operator*() const
+		{ return fP; }
+
+	T* Get() const { return fP; }
+
+	void Clear()
+		{
+		T* theP = nil;
+		std::swap(theP, fP);
+		spRelease(theP);
+		}
+
+private:
+	T* fP;
+	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZRef casts
 
 template <class O, class T> inline O* ZRefDynamicCast(const ZRef<T>& iVal)
-	{
-	return dynamic_cast<O*>(iVal.Get());
-	}
+	{ return dynamic_cast<O*>(iVal.Get()); }
 
 template <class O, class T> inline O* ZRefStaticCast(const ZRef<T>& iVal)
 	{ return static_cast<O*>(iVal.Get()); }
