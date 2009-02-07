@@ -271,7 +271,11 @@ ZGRgn ZGRgn::Including(const ZGRgn& iOther) const
 
 void ZGRgn::Intersect(const ZGRgn& iOther)
 	{
-	if (fRep && iOther.fRep)
+	if (!iOther.fRep)
+		{
+		fRep.Clear();
+		}
+	else if (fRep)
 		{
 		if (fRep->GetRefCount() > 1)
 			fRep = fRep->Intersecting(iOther.fRep);
