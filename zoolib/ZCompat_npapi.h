@@ -61,7 +61,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_NPStringUpperCaseFieldNames 0
 #endif
 
-
 #if ZCONFIG_NPStringUpperCaseFieldNames
 
 	inline const NPUTF8* const& sNPStringCharsConst(const NPString& iNPString)
