@@ -167,7 +167,6 @@ ZRef<ZYadR> ZYadListRPos_CFArray::NextChild()
 		CFTypeRef theValue = ::CFArrayGetValueAtIndex(fCFArrayRef, fPosition++);
 		return ZYadUtil_CFType::sMakeYadR(theValue);
 		}
-
 	return ZRef<ZYadR>();
 	}
 
