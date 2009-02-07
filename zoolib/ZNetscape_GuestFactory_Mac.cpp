@@ -245,7 +245,7 @@ public:
 	virtual void GetEntryPoints(NPPluginFuncs& oNPPluginFuncs);
 
 private:
-	CFPlugInRef fPlugInRef;
+	ZRef<CFPlugInRef> fPlugInRef;
 	NPPluginFuncs fNPPluginFuncs;
 	NPP_ShutdownProcPtr fShutdown;
 

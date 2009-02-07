@@ -299,8 +299,7 @@ public:
 	bool Host_Enumerate
 		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
 
-	void Host_PluginThreadAsyncCall
-		(NPP npp, void (*func)(void *), void *userData);
+	void Host_PluginThreadAsyncCall(NPP npp, void (*func)(void *), void *userData);
 
 	bool Host_Construct
 		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
@@ -480,7 +479,20 @@ public:
 // Disabled till I figure out what the real signature should be
 //	void Host_SetException(NPObject* obj, const NPUTF8* message);
 
+	void Host_PushPopupsEnabledState(NPBool enabled);
+
+	void Host_PopPopupsEnabledState();
+
+	bool Host_Enumerate
+		(NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
+
+	void Host_PluginThreadAsyncCall(void (*func)(void *), void *userData);
+
+	bool Host_Construct
+		(NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
+
 	ZRef<NPObjectG> Host_GetWindowObject();
+	ZRef<NPObjectG> Host_GetPluginObject();
 
 private:
 	NPP fNPP;

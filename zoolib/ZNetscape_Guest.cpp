@@ -663,8 +663,10 @@ NPUTF8* GuestMeister::Host_UTF8FromIdentifier(NPIdentifier identifier)
 	{ return fNPNF.utf8fromidentifier(identifier); }
 
 int32_t GuestMeister::Host_IntFromIdentifier(NPIdentifier identifier)
-	{ return (int32_t)(fNPNF.intfromidentifier(identifier)); }
-//	{ return reinterpret_cast<int32_t>(fNPNF.intfromidentifier(identifier)); }
+	{
+	// WebKit 10.4 header is wrong -- return type is NPIdentifier, so coerce to correct type.
+	return (int32_t)(fNPNF.intfromidentifier(identifier));
+	}
 
 NPObject* GuestMeister::Host_CreateObject(NPP npp, NPClass* aClass)
 	{ return fNPNF.createobject(npp, aClass); }
@@ -791,8 +793,7 @@ bool GuestMeister::Host_Enumerate
 	return false;
 	}
 
-void GuestMeister::Host_PluginThreadAsyncCall
-	(NPP npp, void (*func)(void *), void *userData)
+void GuestMeister::Host_PluginThreadAsyncCall(NPP npp, void (*func)(void *), void *userData)
 	{
 	if (fNPNF.pluginthreadasynccall)
 		fNPNF.pluginthreadasynccall(npp, func, userData);
@@ -1092,15 +1093,35 @@ void Guest::Host_ReleaseVariantValue(NPVariant* variant)
 //void Guest::Host_SetException(NPObject* obj, const NPUTF8* message)
 //	{ return GuestMeister::sGet()->Host_SetException(obj, message); }
 
+void Guest::Host_PushPopupsEnabledState(NPBool enabled)
+	{ return GuestMeister::sGet()->Host_PushPopupsEnabledState(fNPP, enabled); }
+
+void Guest::Host_PopPopupsEnabledState()
+	{ return GuestMeister::sGet()->Host_PopPopupsEnabledState(fNPP); }
+
+bool Guest::Host_Enumerate
+	(NPObject *npobj, NPIdentifier **identifier, uint32_t *count)
+	{ return GuestMeister::sGet()->Host_Enumerate(fNPP, npobj, identifier, count); }
+
+void Guest::Host_PluginThreadAsyncCall(void (*func)(void *), void *userData)
+	{ return GuestMeister::sGet()->Host_PluginThreadAsyncCall(fNPP, func, userData); }
+
+bool Guest::Host_Construct
+	(NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
+	{ return GuestMeister::sGet()->Host_Construct(fNPP, obj, args, argCount, result); }
+
 ZRef<NPObjectG> Guest::Host_GetWindowObject()
 	{
-	NPObjectG* theNPObject_Window;
-	if (NPERR_NO_ERROR == this->Host_GetValue(NPNVWindowNPObject, &theNPObject_Window))
-		{
-		if (theNPObject_Window)
-			return ZRef<NPObjectG>(false, theNPObject_Window);
-		}
-	return ZRef<NPObjectG>();
+	ZRef<NPObjectG> result;
+	this->Host_GetValue(NPNVWindowNPObject, &result);
+	return result;
+	}
+
+ZRef<NPObjectG> Guest::Host_GetPluginObject()
+	{
+	ZRef<NPObjectG> result;
+	this->Host_GetValue(NPNVPluginElementNPObject, &result);
+	return result;
 	}
 
 } // namespace ZNetscape

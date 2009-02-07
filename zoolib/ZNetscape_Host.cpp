@@ -429,6 +429,7 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
 	oNPNF.posturl = sPostURL;
 	oNPNF.requestread = sRequestRead;
 	oNPNF.newstream = sNewStream;
+	oNPNF.write = sWrite;
 	oNPNF.destroystream = sDestroyStream;
 	oNPNF.status = sStatus;
 	oNPNF.uagent = sUserAgent;
@@ -436,6 +437,21 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
 	oNPNF.memfree = sMemFree;
 	oNPNF.memflush = sMemFlush;
 	oNPNF.reloadplugins = sReloadPlugins;
+
+	// Mozilla return value is a JRIEnv
+	#if defined(NewNPN_GetJavaEnvProc)
+		oNPNF.getJavaEnv = (NPN_GetJavaEnvUPP)sGetJavaEnv;
+	#else
+		oNPNF.getJavaEnv = sGetJavaEnv;
+	#endif
+
+	// Mozilla return value is a jref
+	#if defined(NewNPN_GetJavaPeerProc)
+		oNPNF.getJavaPeer = (NPN_GetJavaPeerUPP)sGetJavaPeer;
+	#else
+		oNPNF.getJavaPeer = sGetJavaPeer;
+	#endif
+
 	oNPNF.geturlnotify = sGetURLNotify;
 	oNPNF.posturlnotify = sPostURLNotify;
 	oNPNF.getvalue = sGetValue;
@@ -449,6 +465,14 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
 	oNPNF.getintidentifier = sGetIntIdentifier;
 	oNPNF.identifierisstring = sIdentifierIsString;
 	oNPNF.utf8fromidentifier = sUTF8FromIdentifier;
+
+	// WebKit/10.4 return value is (incorrectly) an NPIdentifier.
+	#if defined(NewNPN_IntFromIdentifierProc)
+		oNPNF.intfromidentifier = sIntFromIdentifier;
+	#else
+		oNPNF.intfromidentifier = (NPN_IntFromIdentifierProcPtr)sIntFromIdentifier;
+	#endif
+
 	oNPNF.createobject = sCreateObject;
 	oNPNF.retainobject = sRetainObject;
 	oNPNF.releaseobject = sReleaseObject;
@@ -462,42 +486,28 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
 	oNPNF.hasmethod = sHasMethod;
 	oNPNF.releasevariantvalue = sReleaseVariantValue;
 
-	oNPNF.pushpopupsenabledstate = sPushPopupsEnabledState;
-	oNPNF.poppopupsenabledstate = sPopPopupsEnabledState;
+	// I'm disabling setexception for now -- it's defined as taking
+	// NPString* or UTF8* in different versions of headers, and I
+	// haven't determined which is correct, or indeed if it's a host-specific thing.
+	oNPNF.setexception = nil;
+
+	// Mozilla return value is a bool
+	#if defined(NewNPN_PushPopupsEnabledStateProc)
+		oNPNF.pushpopupsenabledstate = (NPN_PushPopupsEnabledStateUPP)sPushPopupsEnabledState;
+	#else
+		oNPNF.pushpopupsenabledstate = sPushPopupsEnabledState;
+	#endif
+
+	// Mozilla return value is a bool
+	#if defined(NewNPN_PopPopupsEnabledStateProc)
+		oNPNF.poppopupsenabledstate = (NPN_PopPopupsEnabledStateUPP)sPopPopupsEnabledState;
+	#else
+		oNPNF.poppopupsenabledstate = sPopPopupsEnabledState;
+	#endif
+
 	oNPNF.enumerate = sEnumerate;
 	oNPNF.pluginthreadasynccall = sPluginThreadAsyncCall;
 	oNPNF.construct = sConstruct;
-
-	// These are problematic in one way or another.
-	
-	// I'm disabling setexception for now -- it's defined as taking
-	// an NPString* or UTF8* in different versions of headers, and I
-	// haven't determined which is correct, or if it's a host-specific thing.
-	oNPNF.setexception = nil;
-
-	#if defined(NewNPN_WriteProc)
-		oNPNF.write = sWrite;
-	#else
-		oNPNF.write = (NPN_WriteProcPtr)sWrite;
-	#endif
-
-	#if defined(NewNPN_IntFromIdentifierProc)
-		oNPNF.intfromidentifier = sIntFromIdentifier;
-	#else
-		oNPNF.intfromidentifier = (NPN_IntFromIdentifierProcPtr)sIntFromIdentifier;
-	#endif
-
-	#if defined(NewNPN_GetJavaEnvProc)
-		oNPNF.getJavaEnv = (NPN_GetJavaEnvUPP)sGetJavaEnv;
-	#else
-		oNPNF.getJavaEnv = sGetJavaEnv;
-	#endif
-
-	#if defined(NewNPN_GetJavaPeerProc)
-		oNPNF.getJavaPeer = (NPN_GetJavaPeerUPP)sGetJavaPeer;
-	#else
-		oNPNF.getJavaPeer = sGetJavaPeer;
-	#endif
 	}
 
 HostMeister::HostMeister()
