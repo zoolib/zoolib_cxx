@@ -20,19 +20,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_MacOSX.h"
 
-using std::vector;
-
 #if ZCONFIG_SPI_Enabled(Carbon)
-#	include ZMACINCLUDE3(CoreServices,CarbonCore,OSUtils.h) // For MakeDataExecutable
-#endif
+
+#include ZMACINCLUDE3(CoreServices,CarbonCore,OSUtils.h) // For MakeDataExecutable
+
+using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_MacOSX
-
-#if ZCONFIG_SPI_Enabled(Carbon)
 
 void ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
 	void* ioFuncs, size_t iCount, vector<char>& ioStorage)

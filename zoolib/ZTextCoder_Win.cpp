@@ -385,7 +385,7 @@ bool ZTextDecoder_Win::Decode(
 		size_t utf16Generated;
 		if (oSourceBytesSkipped)
 			{
-			::sMBToWC_CanFail(fSourceCodePage, localSource, iSourceBytes, sourceConsumed,
+			sMBToWC_CanFail(fSourceCodePage, localSource, iSourceBytes, sourceConsumed,
 					utf16Buffer, min(iDestCU, kBufSize), utf16Generated);
 			if (sourceConsumed == 0)
 				{
@@ -398,7 +398,7 @@ bool ZTextDecoder_Win::Decode(
 			}
 		else
 			{
-			::sMBToWC(fSourceCodePage, localSource, iSourceBytes, sourceConsumed,
+			sMBToWC(fSourceCodePage, localSource, iSourceBytes, sourceConsumed,
 					utf16Buffer, min(iDestCU, kBufSize), utf16Generated);
 			}
 
@@ -525,7 +525,7 @@ void ZTextEncoder_Win::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 
 		size_t utf16Consumed;
 		size_t destGenerated;
-		::sWCToMB(fDestCodePage, utf16Buffer, utf16Generated, utf16Consumed,
+		sWCToMB(fDestCodePage, utf16Buffer, utf16Generated, utf16Consumed,
 			localDest, iDestBytes, destGenerated);
 
 		if (utf16Generated > utf16Consumed)

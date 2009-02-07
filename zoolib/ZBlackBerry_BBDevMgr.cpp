@@ -56,7 +56,7 @@ public:
 	typedef ZBlackBerryCOM::ChannelParams ChannelParams;
 	typedef ZBlackBerryCOM::IChannelEvents IChannelEvents;
 
-	Channel_BBDevMgr(ZRef<Channel>& oChannel, IDevice* iDevice,
+	Channel_BBDevMgr(ZRef<Channel>& oChannel, ZRef<IDevice> iDevice,
 		bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash);
 
 	virtual ~Channel_BBDevMgr();
@@ -120,7 +120,7 @@ private:
 	bool fClosed;
 	};
 
-Channel_BBDevMgr::Channel_BBDevMgr(ZRef<Channel>& oChannel, IDevice* iDevice,
+Channel_BBDevMgr::Channel_BBDevMgr(ZRef<Channel>& oChannel, ZRef<IDevice> iDevice,
 	bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash)
 :	fChannel(nil),
 	fPreserveBoundaries(iPreserveBoundaries),
@@ -496,7 +496,7 @@ class Device_BBDevMgr : public Device
 public:
 	typedef ZBlackBerryCOM::IDevice IDevice;
 
-	Device_BBDevMgr(IDevice* iDevice);
+	Device_BBDevMgr(ZRef<IDevice> iDevice);
 	virtual ~Device_BBDevMgr();
 
 // From ZBlackBerry::Device
@@ -517,7 +517,7 @@ private:
 	ZRef<IDevice> fDevice;
 	};
 
-Device_BBDevMgr::Device_BBDevMgr(IDevice* iDevice)
+Device_BBDevMgr::Device_BBDevMgr(ZRef<IDevice> iDevice)
 :	fDevice(iDevice)
 	{}
 

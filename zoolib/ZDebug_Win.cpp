@@ -37,7 +37,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define asm __asm
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+NAMESPACE_ZOOLIB_USING
 
 // ==================================================
 

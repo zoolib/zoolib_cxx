@@ -129,7 +129,7 @@ static HANDLE sCreate(const string& iPath, bool iOpenExisting, bool iRead, bool 
 	if (oErr)
 		{
 		if (theFileHANDLE == INVALID_HANDLE_VALUE)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		else
 			*oErr = ZFile::errorNone;
 		}
@@ -160,7 +160,7 @@ static HANDLE sCreateNT(const string16& iPath, bool iOpenExisting, bool iRead, b
 	if (oErr)
 		{
 		if (theFileHANDLE == INVALID_HANDLE_VALUE)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		else
 			*oErr = ZFile::errorNone;
 		}
@@ -194,7 +194,7 @@ static HANDLE sOpen(const string& iPath, bool iRead, bool iWrite, bool iPreventW
 	if (oErr)
 		{
 		if (theFileHANDLE == INVALID_HANDLE_VALUE)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		else
 			*oErr = ZFile::errorNone;
 		}
@@ -228,7 +228,7 @@ static HANDLE sOpenNT(const string16& iPath, bool iRead, bool iWrite, bool iPrev
 	if (oErr)
 		{
 		if (theFileHANDLE == INVALID_HANDLE_VALUE)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		else
 			*oErr = ZFile::errorNone;
 		}
@@ -252,7 +252,7 @@ static ZFile::Error sRead(HANDLE iFileHANDLE, void* iDest, size_t iCount, size_t
 
 	DWORD countRead = 0;
 	if (!::ReadFile(iFileHANDLE, iDest, iCount, &countRead, nil))
-		return ::sTranslateError(::GetLastError());
+		return sTranslateError(::GetLastError());
 
 	if (oCountRead)
 		*oCountRead = countRead;
@@ -270,7 +270,7 @@ static ZFile::Error sWrite(HANDLE iFileHANDLE, const void* iSource, size_t iCoun
 
 	DWORD countWritten = 0;
 	if (!::WriteFile(iFileHANDLE, iSource, iCount, &countWritten, nil))
-		return ::sTranslateError(::GetLastError());
+		return sTranslateError(::GetLastError());
 
 	if (oCountWritten)
 		*oCountWritten = countWritten;
@@ -294,10 +294,10 @@ static ZFile::Error sReadAt(HANDLE iFileHANDLE, uint64 iOffset, void* iDest, siz
 		{
 		int err = ::GetLastError();
 		if (err != ERROR_IO_PENDING)
-			return ::sTranslateError(err);
+			return sTranslateError(err);
 
 		if (!::GetOverlappedResult(iFileHANDLE, &theOVERLAPPED, &countRead, TRUE))
-			return ::sTranslateError(::GetLastError());
+			return sTranslateError(::GetLastError());
 		}
 
 	if (oCountRead)
@@ -322,10 +322,10 @@ static ZFile::Error sWriteAt(HANDLE iFileHANDLE, uint64 iOffset, const void* iSo
 		{
 		int err = ::GetLastError();
 		if (err != ERROR_IO_PENDING)
-			return ::sTranslateError(err);
+			return sTranslateError(err);
 
 		if (!::GetOverlappedResult(iFileHANDLE, &theOVERLAPPED, &countWritten, TRUE))
-			return ::sTranslateError(::GetLastError());
+			return sTranslateError(::GetLastError());
 		}
 
 	if (oCountWritten)
@@ -345,7 +345,7 @@ static ZFile::Error sGetPosition(HANDLE iFileHANDLE, uint64& oPosition)
 		// get an error and only return if so.
 		LONG err = ::GetLastError();
 		if (err != NO_ERROR)
-			return ::sTranslateError(err);
+			return sTranslateError(err);
 		}
 
 	oPosition = sAsUInt64(positionHigh, positionLow);
@@ -359,7 +359,7 @@ static ZFile::Error sSetPosition(HANDLE iFileHANDLE, uint64 iPosition)
 		{
 		LONG err = ::GetLastError();
 		if (err != NO_ERROR)
-			return ::sTranslateError(err);
+			return sTranslateError(err);
 		}
 	return ZFile::errorNone;
 	}
@@ -372,7 +372,7 @@ static ZFile::Error sGetSize(HANDLE iFileHANDLE, uint64& oSize)
 		{
 		LONG err = ::GetLastError();
 		if (err != NO_ERROR)
-			return ::sTranslateError(err);
+			return sTranslateError(err);
 		}
 	oSize = sAsUInt64(sizeHigh, sizeLow);
 	return ZFile::errorNone;
@@ -389,7 +389,7 @@ static ZFile::Error sSetSize(HANDLE iFileHANDLE, uint64 iSize)
 	LONG newSizeHigh = iSize >> 32;
 	::SetFilePointer(iFileHANDLE, iSize, &newSizeHigh, FILE_BEGIN);
 	if (!::SetEndOfFile(iFileHANDLE))
-		return ::sTranslateError(::GetLastError());
+		return sTranslateError(::GetLastError());
 
 	// Put our pointer back where we were, allowing for the possibility that we just truncated the file
 	if (originalPosition > iSize)
@@ -402,7 +402,7 @@ static ZFile::Error sSetSize(HANDLE iFileHANDLE, uint64 iSize)
 		{
 		LONG err = ::GetLastError();
 		if (err != NO_ERROR)
-			return ::sTranslateError(err);
+			return sTranslateError(err);
 		}
 	return ZFile::errorNone;
 	}
@@ -410,14 +410,14 @@ static ZFile::Error sSetSize(HANDLE iFileHANDLE, uint64 iSize)
 static ZFile::Error sFlush(HANDLE iFileHANDLE)
 	{
 	if (!::FlushFileBuffers(iFileHANDLE))
-		return ::sTranslateError(::GetLastError());
+		return sTranslateError(::GetLastError());
 	return ZFile::errorNone;
 	}
 
 static ZFile::Error sFlushVolume(HANDLE iFileHANDLE)
 	{
 	if (!::FlushFileBuffers(iFileHANDLE))
-		return ::sTranslateError(::GetLastError());
+		return sTranslateError(::GetLastError());
 	return ZFile::errorNone;
 	}
 
@@ -431,7 +431,7 @@ static ZRef<ZFileLoc> sGetCWD(ZFile::Error* oErr)
 		if (result <= 0)
 			{
 			if (oErr)
-				*oErr = ::sTranslateError(::GetLastError());					
+				*oErr = sTranslateError(::GetLastError());					
 			break;
 			}
 		if (result < bufSize)
@@ -451,7 +451,7 @@ static ZRef<ZFileLoc> sGetCWDNT(ZFile::Error* oErr)
 		if (result <= 0)
 			{
 			if (oErr)
-				*oErr = ::sTranslateError(::GetLastError());					
+				*oErr = sTranslateError(::GetLastError());					
 			break;
 			}
 		if (result < bufSize)
@@ -591,7 +591,7 @@ string RealRep_Win::GetName(size_t iIndex)
 #pragma mark * ZFileLoc_Win
 
 ZRef<ZFileLoc> ZFileLoc_Win::sGet_CWD()
-	{ return ::sGetCWD(nil); }
+	{ return sGetCWD(nil); }
 
 ZRef<ZFileLoc> ZFileLoc_Win::sGet_Root()
 	{ return new ZFileLoc_Win; }
@@ -830,7 +830,7 @@ ZFile::Kind ZFileLoc_Win::Kind(ZFile::Error* oErr)
 	if (result == 0) // Should be INVALID_FILE_ATTRIBUTES, but I can't find a definition for it.
 		{
 		if (oErr)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		return ZFile::kindNone;
 		}
 		
@@ -860,7 +860,7 @@ uint64 ZFileLoc_Win::Size(ZFile::Error* oErr)
 	else
 		{
 		if (oErr)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		return 0;
 		}
 	}
@@ -881,7 +881,7 @@ ZTime ZFileLoc_Win::TimeCreated(ZFile::Error* oErr)
 	else
 		{
 		if (oErr)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		return ZTime();
 		}
 	}
@@ -902,7 +902,7 @@ ZTime ZFileLoc_Win::TimeModified(ZFile::Error* oErr)
 	else
 		{
 		if (oErr)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		return ZTime();
 		}
 	}
@@ -912,7 +912,7 @@ ZRef<ZFileLoc> ZFileLoc_Win::CreateDir(ZFile::Error* oErr)
 	if (!::CreateDirectoryA(this->pGetPath().c_str(), nil))
 		{
 		if (oErr)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		return ZRef<ZFileLoc>();
 		}
 
@@ -929,7 +929,7 @@ ZRef<ZFileLoc> ZFileLoc_Win::MoveTo(ZRef<ZFileLoc> iDest, ZFile::Error* oErr)
 		if (::MoveFileA(this->pGetPath().c_str(), dest->pGetPath().c_str()))
 			return iDest;
 		if (oErr)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		return ZRef<ZFileLoc>();
 		}
 
@@ -948,7 +948,7 @@ bool ZFileLoc_Win::Delete(ZFile::Error* oErr)
 		if (!::RemoveDirectoryA(myPath.c_str()))
 			{
 			if (oErr)
-				*oErr = ::sTranslateError(::GetLastError());
+				*oErr = sTranslateError(::GetLastError());
 			return false;
 			}
 		}
@@ -959,7 +959,7 @@ bool ZFileLoc_Win::Delete(ZFile::Error* oErr)
 
 ZRef<ZStreamerRPos> ZFileLoc_Win::OpenRPos(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sOpen(this->pGetPath(), true, false, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sOpen(this->pGetPath(), true, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZStreamerRPos>();
 	return new ZStreamerRPos_File_Win(theFileHANDLE, true);
@@ -967,7 +967,7 @@ ZRef<ZStreamerRPos> ZFileLoc_Win::OpenRPos(bool iPreventWriters, ZFile::Error* o
 
 ZRef<ZStreamerWPos> ZFileLoc_Win::OpenWPos(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sOpen(this->pGetPath(), false, true, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sOpen(this->pGetPath(), false, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZStreamerWPos>();
 	return new ZStreamerWPos_File_Win(theFileHANDLE, true);
@@ -975,7 +975,7 @@ ZRef<ZStreamerWPos> ZFileLoc_Win::OpenWPos(bool iPreventWriters, ZFile::Error* o
 
 ZRef<ZStreamerRWPos> ZFileLoc_Win::OpenRWPos(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sOpen(this->pGetPath(), true, true, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sOpen(this->pGetPath(), true, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZStreamerRWPos>();
 	return new ZStreamerRWPos_File_Win(theFileHANDLE, true);
@@ -983,7 +983,7 @@ ZRef<ZStreamerRWPos> ZFileLoc_Win::OpenRWPos(bool iPreventWriters, ZFile::Error*
 
 ZRef<ZStreamerWPos> ZFileLoc_Win::CreateWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sCreate(this->pGetPath(), iOpenExisting, false, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sCreate(this->pGetPath(), iOpenExisting, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZStreamerWPos>();
 	return new ZStreamerWPos_File_Win(theFileHANDLE, true);
@@ -991,7 +991,7 @@ ZRef<ZStreamerWPos> ZFileLoc_Win::CreateWPos(bool iOpenExisting, bool iPreventWr
 
 ZRef<ZStreamerRWPos> ZFileLoc_Win::CreateRWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sCreate(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sCreate(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZStreamerRWPos>();
 	return new ZStreamerRWPos_File_Win(theFileHANDLE, true);
@@ -999,7 +999,7 @@ ZRef<ZStreamerRWPos> ZFileLoc_Win::CreateRWPos(bool iOpenExisting, bool iPrevent
 
 ZRef<ZFileR> ZFileLoc_Win::OpenFileR(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sOpen(this->pGetPath(), true, false, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sOpen(this->pGetPath(), true, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZFileR>();
 	return new ZFileR_Win(theFileHANDLE, true);
@@ -1007,7 +1007,7 @@ ZRef<ZFileR> ZFileLoc_Win::OpenFileR(bool iPreventWriters, ZFile::Error* oErr)
 
 ZRef<ZFileW> ZFileLoc_Win::OpenFileW(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sOpen(this->pGetPath(), false, true, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sOpen(this->pGetPath(), false, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZFileW>();
 	return new ZFileW_Win(theFileHANDLE, true);
@@ -1015,7 +1015,7 @@ ZRef<ZFileW> ZFileLoc_Win::OpenFileW(bool iPreventWriters, ZFile::Error* oErr)
 
 ZRef<ZFileRW> ZFileLoc_Win::OpenFileRW(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sOpen(this->pGetPath(), true, true, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sOpen(this->pGetPath(), true, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZFileRW>();
 	return new ZFileRW_Win(theFileHANDLE, true);
@@ -1023,7 +1023,7 @@ ZRef<ZFileRW> ZFileLoc_Win::OpenFileRW(bool iPreventWriters, ZFile::Error* oErr)
 
 ZRef<ZFileW> ZFileLoc_Win::CreateFileW(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sCreate(this->pGetPath(), iOpenExisting, false, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sCreate(this->pGetPath(), iOpenExisting, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZFileW>();
 	return new ZFileW_Win(theFileHANDLE, true);
@@ -1031,7 +1031,7 @@ ZRef<ZFileW> ZFileLoc_Win::CreateFileW(bool iOpenExisting, bool iPreventWriters,
 
 ZRef<ZFileRW> ZFileLoc_Win::CreateFileRW(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sCreate(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sCreate(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZFileRW>();
 	return new ZFileRW_Win(theFileHANDLE, true);
@@ -1178,7 +1178,7 @@ string RealRep_WinNT::GetName(size_t iIndex)
 #pragma mark * ZFileLoc_WinNT
 
 ZRef<ZFileLoc> ZFileLoc_WinNT::sGet_CWD()
-	{ return ::sGetCWDNT(nil); }
+	{ return sGetCWDNT(nil); }
 
 ZRef<ZFileLoc> ZFileLoc_WinNT::sGet_Root()
 	{ return new ZFileLoc_WinNT; }
@@ -1433,7 +1433,7 @@ ZFile::Kind ZFileLoc_WinNT::Kind(ZFile::Error* oErr)
 	if (result == 0 || (result == ((DWORD)-1))) // Should be INVALID_FILE_ATTRIBUTES, but I can't find a definition for it.
 		{
 		if (oErr)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		return ZFile::kindNone;
 		}
 		
@@ -1463,7 +1463,7 @@ uint64 ZFileLoc_WinNT::Size(ZFile::Error* oErr)
 	else
 		{
 		if (oErr)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		return 0;
 		}
 	}
@@ -1484,7 +1484,7 @@ ZTime ZFileLoc_WinNT::TimeCreated(ZFile::Error* oErr)
 	else
 		{
 		if (oErr)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		return ZTime();
 		}
 	}
@@ -1505,7 +1505,7 @@ ZTime ZFileLoc_WinNT::TimeModified(ZFile::Error* oErr)
 	else
 		{
 		if (oErr)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		return ZTime();
 		}
 	}
@@ -1515,7 +1515,7 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::CreateDir(ZFile::Error* oErr)
 	if (!::CreateDirectoryW(this->pGetPath().c_str(), nil))
 		{
 		if (oErr)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		return ZRef<ZFileLoc>();
 		}
 
@@ -1532,7 +1532,7 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::MoveTo(ZRef<ZFileLoc> iDest, ZFile::Error* oErr)
 		if (::MoveFileW(this->pGetPath().c_str(), dest->pGetPath().c_str()))
 			return iDest;
 		if (oErr)
-			*oErr = ::sTranslateError(::GetLastError());
+			*oErr = sTranslateError(::GetLastError());
 		return ZRef<ZFileLoc>();
 		}
 
@@ -1551,7 +1551,7 @@ bool ZFileLoc_WinNT::Delete(ZFile::Error* oErr)
 		if (!::RemoveDirectoryW(myPath.c_str()))
 			{
 			if (oErr)
-				*oErr = ::sTranslateError(::GetLastError());
+				*oErr = sTranslateError(::GetLastError());
 			return false;
 			}
 		}
@@ -1562,7 +1562,7 @@ bool ZFileLoc_WinNT::Delete(ZFile::Error* oErr)
 
 ZRef<ZStreamerRPos> ZFileLoc_WinNT::OpenRPos(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sOpenNT(this->pGetPath(), true, false, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sOpenNT(this->pGetPath(), true, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZStreamerRPos>();
 	return new ZStreamerRPos_File_Win(theFileHANDLE, true);
@@ -1570,7 +1570,7 @@ ZRef<ZStreamerRPos> ZFileLoc_WinNT::OpenRPos(bool iPreventWriters, ZFile::Error*
 
 ZRef<ZStreamerWPos> ZFileLoc_WinNT::OpenWPos(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sOpenNT(this->pGetPath(), false, true, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sOpenNT(this->pGetPath(), false, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZStreamerWPos>();
 	return new ZStreamerWPos_File_Win(theFileHANDLE, true);
@@ -1578,7 +1578,7 @@ ZRef<ZStreamerWPos> ZFileLoc_WinNT::OpenWPos(bool iPreventWriters, ZFile::Error*
 
 ZRef<ZStreamerRWPos> ZFileLoc_WinNT::OpenRWPos(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sOpenNT(this->pGetPath(), true, true, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sOpenNT(this->pGetPath(), true, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZStreamerRWPos>();
 	return new ZStreamerRWPos_File_Win(theFileHANDLE, true);
@@ -1586,7 +1586,7 @@ ZRef<ZStreamerRWPos> ZFileLoc_WinNT::OpenRWPos(bool iPreventWriters, ZFile::Erro
 
 ZRef<ZStreamerWPos> ZFileLoc_WinNT::CreateWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sCreateNT(this->pGetPath(), iOpenExisting, false, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sCreateNT(this->pGetPath(), iOpenExisting, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZStreamerWPos>();
 	return new ZStreamerWPos_File_Win(theFileHANDLE, true);
@@ -1594,7 +1594,7 @@ ZRef<ZStreamerWPos> ZFileLoc_WinNT::CreateWPos(bool iOpenExisting, bool iPrevent
 
 ZRef<ZStreamerRWPos> ZFileLoc_WinNT::CreateRWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sCreateNT(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sCreateNT(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZStreamerRWPos>();
 	return new ZStreamerRWPos_File_Win(theFileHANDLE, true);
@@ -1602,7 +1602,7 @@ ZRef<ZStreamerRWPos> ZFileLoc_WinNT::CreateRWPos(bool iOpenExisting, bool iPreve
 
 ZRef<ZFileR> ZFileLoc_WinNT::OpenFileR(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sOpenNT(this->pGetPath(), true, false, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sOpenNT(this->pGetPath(), true, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZFileR>();
 	return new ZFileR_WinNT(theFileHANDLE, true);
@@ -1610,7 +1610,7 @@ ZRef<ZFileR> ZFileLoc_WinNT::OpenFileR(bool iPreventWriters, ZFile::Error* oErr)
 
 ZRef<ZFileW> ZFileLoc_WinNT::OpenFileW(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sOpenNT(this->pGetPath(), false, true, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sOpenNT(this->pGetPath(), false, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZFileW>();
 	return new ZFileW_WinNT(theFileHANDLE, true);
@@ -1618,7 +1618,7 @@ ZRef<ZFileW> ZFileLoc_WinNT::OpenFileW(bool iPreventWriters, ZFile::Error* oErr)
 
 ZRef<ZFileRW> ZFileLoc_WinNT::OpenFileRW(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sOpenNT(this->pGetPath(), true, true, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sOpenNT(this->pGetPath(), true, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZFileRW>();
 	return new ZFileRW_WinNT(theFileHANDLE, true);
@@ -1626,7 +1626,7 @@ ZRef<ZFileRW> ZFileLoc_WinNT::OpenFileRW(bool iPreventWriters, ZFile::Error* oEr
 
 ZRef<ZFileW> ZFileLoc_WinNT::CreateFileW(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sCreateNT(this->pGetPath(), iOpenExisting, false, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sCreateNT(this->pGetPath(), iOpenExisting, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZFileW>();
 	return new ZFileW_WinNT(theFileHANDLE, true);
@@ -1634,7 +1634,7 @@ ZRef<ZFileW> ZFileLoc_WinNT::CreateFileW(bool iOpenExisting, bool iPreventWriter
 
 ZRef<ZFileRW> ZFileLoc_WinNT::CreateFileRW(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
-	HANDLE theFileHANDLE = ::sCreateNT(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
+	HANDLE theFileHANDLE = sCreateNT(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
 		return ZRef<ZFileRW>();
 	return new ZFileRW_WinNT(theFileHANDLE, true);
@@ -1676,7 +1676,7 @@ ZFileR_Win::ZFileR_Win(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 ZFileR_Win::~ZFileR_Win()
 	{
 	if (fCloseWhenFinalized)
-		::sCloseFileHANDLE(fFileHANDLE);
+		sCloseFileHANDLE(fFileHANDLE);
 	}
 
 ZFile::Error ZFileR_Win::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
@@ -1684,7 +1684,7 @@ ZFile::Error ZFileR_Win::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size
 	ZMutexLocker locker(fMutex);
 	if (fPosition != iOffset)
 		{
-		ZFile::Error err = ::sSetPosition(fFileHANDLE, iOffset);
+		ZFile::Error err = sSetPosition(fFileHANDLE, iOffset);
 		if (err != ZFile::errorNone)
 			{
 			fPosition = kInvalidPos;
@@ -1694,7 +1694,7 @@ ZFile::Error ZFileR_Win::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size
 		}
 
 	size_t countRead;
-	ZFile::Error err = ::sRead(fFileHANDLE, iDest, iCount, &countRead);
+	ZFile::Error err = sRead(fFileHANDLE, iDest, iCount, &countRead);
 	if (err != ZFile::errorNone)
 		{
 		if (oCountRead)
@@ -1710,7 +1710,7 @@ ZFile::Error ZFileR_Win::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size
 	}
 
 ZFile::Error ZFileR_Win::GetSize(uint64& oSize)
-	{ return ::sGetSize(fFileHANDLE, oSize); }
+	{ return sGetSize(fFileHANDLE, oSize); }
 
 // =================================================================================================
 #pragma mark -
@@ -1724,14 +1724,14 @@ ZFileR_WinNT::ZFileR_WinNT(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 ZFileR_WinNT::~ZFileR_WinNT()
 	{
 	if (fCloseWhenFinalized)
-		::sCloseFileHANDLE(fFileHANDLE);
+		sCloseFileHANDLE(fFileHANDLE);
 	}
 
 ZFile::Error ZFileR_WinNT::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
-	{ return ::sReadAt(fFileHANDLE, iOffset, iDest, iCount, oCountRead); }
+	{ return sReadAt(fFileHANDLE, iOffset, iDest, iCount, oCountRead); }
 
 ZFile::Error ZFileR_WinNT::GetSize(uint64& oSize)
-	{ return ::sGetSize(fFileHANDLE, oSize); }
+	{ return sGetSize(fFileHANDLE, oSize); }
 
 // =================================================================================================
 #pragma mark -
@@ -1746,7 +1746,7 @@ ZFileW_Win::ZFileW_Win(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 ZFileW_Win::~ZFileW_Win()
 	{
 	if (fCloseWhenFinalized)
-		::sCloseFileHANDLE(fFileHANDLE);
+		sCloseFileHANDLE(fFileHANDLE);
 	}
 
 ZFile::Error ZFileW_Win::WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
@@ -1754,7 +1754,7 @@ ZFile::Error ZFileW_Win::WriteAt(uint64 iOffset, const void* iSource, size_t iCo
 	ZMutexLocker locker(fMutex);
 	if (fPosition != iOffset)
 		{
-		ZFile::Error err = ::sSetPosition(fFileHANDLE, iOffset);
+		ZFile::Error err = sSetPosition(fFileHANDLE, iOffset);
 		if (err != ZFile::errorNone)
 			{
 			fPosition = kInvalidPos;
@@ -1764,7 +1764,7 @@ ZFile::Error ZFileW_Win::WriteAt(uint64 iOffset, const void* iSource, size_t iCo
 		}
 
 	size_t countWritten;
-	ZFile::Error err = ::sWrite(fFileHANDLE, iSource, iCount, &countWritten);
+	ZFile::Error err = sWrite(fFileHANDLE, iSource, iCount, &countWritten);
 	if (err != ZFile::errorNone)
 		{
 		if (oCountWritten)
@@ -1780,25 +1780,25 @@ ZFile::Error ZFileW_Win::WriteAt(uint64 iOffset, const void* iSource, size_t iCo
 	}
 
 ZFile::Error ZFileW_Win::GetSize(uint64& oSize)
-	{ return ::sGetSize(fFileHANDLE, oSize); }
+	{ return sGetSize(fFileHANDLE, oSize); }
 
 ZFile::Error ZFileW_Win::SetSize(uint64 iSize)
 	{
 	ZMutexLocker locker(fMutex);
 	fPosition = kInvalidPos;
-	return ::sSetSize(fFileHANDLE, iSize);
+	return sSetSize(fFileHANDLE, iSize);
 	}
 
 ZFile::Error ZFileW_Win::Flush()
 	{
 	ZMutexLocker locker(fMutex);
-	return ::sFlushVolume(fFileHANDLE);
+	return sFlushVolume(fFileHANDLE);
 	}
 
 ZFile::Error ZFileW_Win::FlushVolume()
 	{
 	ZMutexLocker locker(fMutex);
-	return ::sFlushVolume(fFileHANDLE);
+	return sFlushVolume(fFileHANDLE);
 	}
 
 // =================================================================================================
@@ -1813,23 +1813,23 @@ ZFileW_WinNT::ZFileW_WinNT(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 ZFileW_WinNT::~ZFileW_WinNT()
 	{
 	if (fCloseWhenFinalized)
-		::sCloseFileHANDLE(fFileHANDLE);
+		sCloseFileHANDLE(fFileHANDLE);
 	}
 
 ZFile::Error ZFileW_WinNT::WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
-	{ return ::sWriteAt(fFileHANDLE, iOffset, iSource, iCount, oCountWritten); }
+	{ return sWriteAt(fFileHANDLE, iOffset, iSource, iCount, oCountWritten); }
 
 ZFile::Error ZFileW_WinNT::GetSize(uint64& oSize)
-	{ return ::sGetSize(fFileHANDLE, oSize); }
+	{ return sGetSize(fFileHANDLE, oSize); }
 
 ZFile::Error ZFileW_WinNT::SetSize(uint64 iSize)
-	{ return ::sSetSize(fFileHANDLE, iSize); }
+	{ return sSetSize(fFileHANDLE, iSize); }
 
 ZFile::Error ZFileW_WinNT::Flush()
-	{ return ::sFlush(fFileHANDLE); }
+	{ return sFlush(fFileHANDLE); }
 
 ZFile::Error ZFileW_WinNT::FlushVolume()
-	{ return ::sFlushVolume(fFileHANDLE); }
+	{ return sFlushVolume(fFileHANDLE); }
 
 // =================================================================================================
 #pragma mark -
@@ -1844,7 +1844,7 @@ ZFileRW_Win::ZFileRW_Win(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 ZFileRW_Win::~ZFileRW_Win()
 	{
 	if (fCloseWhenFinalized)
-		::sCloseFileHANDLE(fFileHANDLE);
+		sCloseFileHANDLE(fFileHANDLE);
 	}
 
 ZFile::Error ZFileRW_Win::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
@@ -1852,7 +1852,7 @@ ZFile::Error ZFileRW_Win::ReadAt(uint64 iOffset, void* iDest, size_t iCount, siz
 	ZMutexLocker locker(fMutex);
 	if (fPosition != iOffset)
 		{
-		ZFile::Error err = ::sSetPosition(fFileHANDLE, iOffset);
+		ZFile::Error err = sSetPosition(fFileHANDLE, iOffset);
 		if (err != ZFile::errorNone)
 			{
 			fPosition = kInvalidPos;
@@ -1862,7 +1862,7 @@ ZFile::Error ZFileRW_Win::ReadAt(uint64 iOffset, void* iDest, size_t iCount, siz
 		}
 
 	size_t countRead;
-	ZFile::Error err = ::sRead(fFileHANDLE, iDest, iCount, &countRead);
+	ZFile::Error err = sRead(fFileHANDLE, iDest, iCount, &countRead);
 	if (err != ZFile::errorNone)
 		{
 		if (oCountRead)
@@ -1882,7 +1882,7 @@ ZFile::Error ZFileRW_Win::WriteAt(uint64 iOffset, const void* iSource, size_t iC
 	ZMutexLocker locker(fMutex);
 	if (fPosition != iOffset)
 		{
-		ZFile::Error err = ::sSetPosition(fFileHANDLE, iOffset);
+		ZFile::Error err = sSetPosition(fFileHANDLE, iOffset);
 		if (err != ZFile::errorNone)
 			{
 			fPosition = kInvalidPos;
@@ -1892,7 +1892,7 @@ ZFile::Error ZFileRW_Win::WriteAt(uint64 iOffset, const void* iSource, size_t iC
 		}
 
 	size_t countWritten;
-	ZFile::Error err = ::sWrite(fFileHANDLE, iSource, iCount, &countWritten);
+	ZFile::Error err = sWrite(fFileHANDLE, iSource, iCount, &countWritten);
 	if (err != ZFile::errorNone)
 		{
 		if (oCountWritten)
@@ -1908,25 +1908,25 @@ ZFile::Error ZFileRW_Win::WriteAt(uint64 iOffset, const void* iSource, size_t iC
 	}
 
 ZFile::Error ZFileRW_Win::GetSize(uint64& oSize)
-	{ return ::sGetSize(fFileHANDLE, oSize); }
+	{ return sGetSize(fFileHANDLE, oSize); }
 
 ZFile::Error ZFileRW_Win::SetSize(uint64 iSize)
 	{
 	ZMutexLocker locker(fMutex);
 	fPosition = kInvalidPos;
-	return ::sSetSize(fFileHANDLE, iSize);
+	return sSetSize(fFileHANDLE, iSize);
 	}
 
 ZFile::Error ZFileRW_Win::Flush()
 	{
 	ZMutexLocker locker(fMutex);
-	return ::sFlush(fFileHANDLE);
+	return sFlush(fFileHANDLE);
 	}
 
 ZFile::Error ZFileRW_Win::FlushVolume()
 	{
 	ZMutexLocker locker(fMutex);
-	return ::sFlushVolume(fFileHANDLE);
+	return sFlushVolume(fFileHANDLE);
 	}
 
 // =================================================================================================
@@ -1941,26 +1941,26 @@ ZFileRW_WinNT::ZFileRW_WinNT(HANDLE iFileHANDLE, bool iCloseWhenFinalized)
 ZFileRW_WinNT::~ZFileRW_WinNT()
 	{
 	if (fCloseWhenFinalized)
-		::sCloseFileHANDLE(fFileHANDLE);
+		sCloseFileHANDLE(fFileHANDLE);
 	}
 
 ZFile::Error ZFileRW_WinNT::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
-	{ return ::sReadAt(fFileHANDLE, iOffset, iDest, iCount, oCountRead); }
+	{ return sReadAt(fFileHANDLE, iOffset, iDest, iCount, oCountRead); }
 
 ZFile::Error ZFileRW_WinNT::WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
-	{ return ::sWriteAt(fFileHANDLE, iOffset, iSource, iCount, oCountWritten); }
+	{ return sWriteAt(fFileHANDLE, iOffset, iSource, iCount, oCountWritten); }
 
 ZFile::Error ZFileRW_WinNT::GetSize(uint64& oSize)
-	{ return ::sGetSize(fFileHANDLE, oSize); }
+	{ return sGetSize(fFileHANDLE, oSize); }
 
 ZFile::Error ZFileRW_WinNT::SetSize(uint64 iSize)
-	{ return ::sSetSize(fFileHANDLE, iSize); }
+	{ return sSetSize(fFileHANDLE, iSize); }
 
 ZFile::Error ZFileRW_WinNT::Flush()
-	{ return ::sFlush(fFileHANDLE); }
+	{ return sFlush(fFileHANDLE); }
 
 ZFile::Error ZFileRW_WinNT::FlushVolume()
-	{ return ::sFlushVolume(fFileHANDLE); }
+	{ return sFlushVolume(fFileHANDLE); }
 
 // =================================================================================================
 #pragma mark -
@@ -1974,27 +1974,27 @@ ZStreamRPos_File_Win::ZStreamRPos_File_Win(HANDLE iFileHANDLE, bool iCloseWhenFi
 ZStreamRPos_File_Win::~ZStreamRPos_File_Win()
 	{
 	if (fCloseWhenFinalized)
-		::sCloseFileHANDLE(fFileHANDLE);
+		sCloseFileHANDLE(fFileHANDLE);
 	}
 
 void ZStreamRPos_File_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ ::sRead(fFileHANDLE, iDest, iCount, oCountRead); }
+	{ sRead(fFileHANDLE, iDest, iCount, oCountRead); }
 
 uint64 ZStreamRPos_File_Win::Imp_GetPosition()
 	{
 	uint64 pos;
-	if (ZFile::errorNone == ::sGetPosition(fFileHANDLE, pos))
+	if (ZFile::errorNone == sGetPosition(fFileHANDLE, pos))
 		return pos;
 	return 0;
 	}
 
 void ZStreamRPos_File_Win::Imp_SetPosition(uint64 iPosition)
-	{ ::sSetPosition(fFileHANDLE, iPosition); }
+	{ sSetPosition(fFileHANDLE, iPosition); }
 
 uint64 ZStreamRPos_File_Win::Imp_GetSize()
 	{
 	uint64 theSize;
-	if (ZFile::errorNone == ::sGetSize(fFileHANDLE, theSize))
+	if (ZFile::errorNone == sGetSize(fFileHANDLE, theSize))
 		return theSize;
 	return 0;
 	}
@@ -2025,36 +2025,36 @@ ZStreamWPos_File_Win::ZStreamWPos_File_Win(HANDLE iFileHANDLE, bool iCloseWhenFi
 ZStreamWPos_File_Win::~ZStreamWPos_File_Win()
 	{
 	if (fCloseWhenFinalized)
-		::sCloseFileHANDLE(fFileHANDLE);
+		sCloseFileHANDLE(fFileHANDLE);
 	}
 
 void ZStreamWPos_File_Win::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
-	{ ::sWrite(fFileHANDLE, iSource, iCount, oCountWritten); }
+	{ sWrite(fFileHANDLE, iSource, iCount, oCountWritten); }
 
 void ZStreamWPos_File_Win::Imp_Flush()
-	{ ::sFlush(fFileHANDLE); }
+	{ sFlush(fFileHANDLE); }
 
 uint64 ZStreamWPos_File_Win::Imp_GetPosition()
 	{
 	uint64 pos;
-	if (ZFile::errorNone == ::sGetPosition(fFileHANDLE, pos))
+	if (ZFile::errorNone == sGetPosition(fFileHANDLE, pos))
 		return pos;
 	return 0;
 	}
 
 void ZStreamWPos_File_Win::Imp_SetPosition(uint64 iPosition)
-	{ ::sSetPosition(fFileHANDLE, iPosition); }
+	{ sSetPosition(fFileHANDLE, iPosition); }
 
 uint64 ZStreamWPos_File_Win::Imp_GetSize()
 	{
 	uint64 theSize;
-	if (ZFile::errorNone == ::sGetSize(fFileHANDLE, theSize))
+	if (ZFile::errorNone == sGetSize(fFileHANDLE, theSize))
 		return theSize;
 	return 0;
 	}
 
 void ZStreamWPos_File_Win::Imp_SetSize(uint64 iSize)
-	{ ::sSetSize(fFileHANDLE, iSize); }
+	{ sSetSize(fFileHANDLE, iSize); }
 
 void ZStreamWPos_File_Win::Imp_Truncate()
 	{
@@ -2088,39 +2088,39 @@ ZStreamRWPos_File_Win::ZStreamRWPos_File_Win(HANDLE iFileHANDLE, bool iCloseWhen
 ZStreamRWPos_File_Win::~ZStreamRWPos_File_Win()
 	{
 	if (fCloseWhenFinalized)
-		::sCloseFileHANDLE(fFileHANDLE);
+		sCloseFileHANDLE(fFileHANDLE);
 	}
 
 void ZStreamRWPos_File_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ ::sRead(fFileHANDLE, iDest, iCount, oCountRead); }
+	{ sRead(fFileHANDLE, iDest, iCount, oCountRead); }
 
 void ZStreamRWPos_File_Win::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
-	{ ::sWrite(fFileHANDLE, iSource, iCount, oCountWritten); }
+	{ sWrite(fFileHANDLE, iSource, iCount, oCountWritten); }
 
 void ZStreamRWPos_File_Win::Imp_Flush()
-	{ ::sFlush(fFileHANDLE); }
+	{ sFlush(fFileHANDLE); }
 
 uint64 ZStreamRWPos_File_Win::Imp_GetPosition()
 	{
 	uint64 pos;
-	if (ZFile::errorNone == ::sGetPosition(fFileHANDLE, pos))
+	if (ZFile::errorNone == sGetPosition(fFileHANDLE, pos))
 		return pos;
 	return 0;
 	}
 
 void ZStreamRWPos_File_Win::Imp_SetPosition(uint64 iPosition)
-	{ ::sSetPosition(fFileHANDLE, iPosition); }
+	{ sSetPosition(fFileHANDLE, iPosition); }
 
 uint64 ZStreamRWPos_File_Win::Imp_GetSize()
 	{
 	uint64 theSize;
-	if (ZFile::errorNone == ::sGetSize(fFileHANDLE, theSize))
+	if (ZFile::errorNone == sGetSize(fFileHANDLE, theSize))
 		return theSize;
 	return 0;
 	}
 
 void ZStreamRWPos_File_Win::Imp_SetSize(uint64 iSize)
-	{ ::sSetSize(fFileHANDLE, iSize); }
+	{ sSetSize(fFileHANDLE, iSize); }
 
 // =================================================================================================
 #pragma mark -

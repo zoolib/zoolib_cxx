@@ -107,7 +107,7 @@ int ZRefCountedWithFinalization::GetRefCount() const
 
 int ZRefCountedWithFinalization::AddRef()
 	{
-	size_t newCount = ZThreadSafe_IncReturnNew(fRefCount);
+	int newCount = ZThreadSafe_IncReturnNew(fRefCount);
 	if (newCount == 1)
 		this->Initialize();
 	return newCount;

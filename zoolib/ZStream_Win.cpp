@@ -70,7 +70,7 @@ ZStreamRPos_Win_MultiResource::ZStreamRPos_Win_MultiResource(HMODULE inHMODULE, 
 	fPosition = 0;
 
 	// Load the descriptor resource
-	if (HRSRC descHRSRC = ::sFindResource(fHMODULE, inName, inType))
+	if (HRSRC descHRSRC = sFindResource(fHMODULE, inName, inType))
 		{
 		if (HGLOBAL descHGLOBAL = ::LoadResource(fHMODULE, descHRSRC))
 			{
@@ -85,7 +85,7 @@ ZStreamRPos_Win_MultiResource::ZStreamRPos_Win_MultiResource(HMODULE inHMODULE, 
 				for (size_t x = 0; x < resourceCount; ++x)
 					{
 					string resourceName = sReadZeroTerminatedString(theSIM);
-					if (HRSRC currentHRSRC = ::sFindResource(fHMODULE, resourceName, resourceType))
+					if (HRSRC currentHRSRC = sFindResource(fHMODULE, resourceName, resourceType))
 						{
 						fVector_HRSRC.push_back(currentHRSRC);
 						accumulatedSize += ::SizeofResource(fHMODULE, currentHRSRC);
