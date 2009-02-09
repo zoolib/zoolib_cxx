@@ -26,61 +26,58 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE2(CoreFoundation,CFBase.h) // For CFRetain and CFRelease
 
-#define ZOOLIB_RETAIN_RELEASE(a) \
-NAMESPACE_ZOOLIB_BEGIN \
-template<> void sRetain_T(a iRef) { if (iRef) ::CFRetain(iRef); } \
-template<> void sRelease_T(a iRef) { if (iRef) ::CFRelease(iRef); } \
-NAMESPACE_ZOOLIB_END
-
 // =================================================================================================
 
-#define ZOOLIB_CF_RETAIN_RELEASE(a) \
-ZOOLIB_RETAIN_RELEASE(CF##a##Ref)
+#define ZOOLIB_RETAIN_RELEASE(a) \
+	NAMESPACE_ZOOLIB_BEGIN \
+	template<> void sRetain_T(a iRef) { if (iRef) ::CFRetain(iRef); } \
+	template<> void sRelease_T(a iRef) { if (iRef) ::CFRelease(iRef); } \
+	NAMESPACE_ZOOLIB_END
 
-#define ZOOLIB_CF(a) \
-typedef struct __CF##a * CF##a##Ref; \
-ZOOLIB_CF_RETAIN_RELEASE(a)
-
-#define ZOOLIB_CF_CONST(a) \
-typedef const struct __CF##a * CF##a##Ref; \
-ZOOLIB_CF_RETAIN_RELEASE(a)
-
-#define ZOOLIB_CF_WITH_MUTABLE(a) \
-typedef const struct __CF##a * CF##a##Ref; \
-typedef struct __CF##a * CFMutable##a##Ref; \
-ZOOLIB_CF_RETAIN_RELEASE(a) \
-ZOOLIB_CF_RETAIN_RELEASE(Mutable##a)
+// -------
 
 // CFTypeRef declared in CFBase.h
-ZOOLIB_CF_RETAIN_RELEASE(Type)
+ZOOLIB_RETAIN_RELEASE(CFTypeRef)
 
-ZOOLIB_CF_WITH_MUTABLE(String)
-ZOOLIB_CF_WITH_MUTABLE(Array)
-ZOOLIB_CF_WITH_MUTABLE(Dictionary)
-ZOOLIB_CF_WITH_MUTABLE(Number)
-ZOOLIB_CF_WITH_MUTABLE(Data)
-ZOOLIB_CF_WITH_MUTABLE(Boolean)
+// -------
+#define ZOOLIB_CF(a) \
+	typedef struct __CF##a * CF##a##Ref; \
+	ZOOLIB_RETAIN_RELEASE(CF##a##Ref)
 
 // Plugin and Bundle are usually the same type
-//ZOOLIB_CF(PlugIn)
+// ZOOLIB_CF(PlugIn)
 ZOOLIB_CF(Bundle)
 ZOOLIB_CF(ReadStream)
 
+// -------
+#define ZOOLIB_CF_CONST(a) \
+	typedef const struct __CF##a * CF##a##Ref; \
+	ZOOLIB_RETAIN_RELEASE(CF##a##Ref)
+
 ZOOLIB_CF_CONST(URL)
 
-// =================================================================================================
+// -------
+#define ZOOLIB_CF_WITH_MUTABLE(a) \
+	typedef const struct __CF##a * CF##a##Ref; \
+	typedef struct __CF##a * CFMutable##a##Ref; \
+	ZOOLIB_RETAIN_RELEASE(CF##a##Ref) \
+	ZOOLIB_RETAIN_RELEASE(CFMutable##a##Ref)
 
-#define ZOOLIB_CG_RETAIN_RELEASE(a) \
-ZOOLIB_RETAIN_RELEASE(CG##a##Ref)
+ZOOLIB_CF_WITH_MUTABLE(Array)
+ZOOLIB_CF_WITH_MUTABLE(Boolean)
+ZOOLIB_CF_WITH_MUTABLE(Data)
+ZOOLIB_CF_WITH_MUTABLE(Dictionary)
+ZOOLIB_CF_WITH_MUTABLE(Number)
+ZOOLIB_CF_WITH_MUTABLE(String)
 
+// -------
 #define ZOOLIB_CG(a) \
-typedef struct CG##a * CG##a##Ref; \
-ZOOLIB_CG_RETAIN_RELEASE(a)
+	typedef struct CG##a * CG##a##Ref; \
+	ZOOLIB_RETAIN_RELEASE(CG##a##Ref)
 
 ZOOLIB_CG(Image)
 ZOOLIB_CG(ColorSpace)
 ZOOLIB_CG(Context)
 ZOOLIB_CG(DataProvider)
-
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
