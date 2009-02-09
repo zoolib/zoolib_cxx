@@ -43,7 +43,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		typedef NPError (*MainFuncPtr)(NPNetscapeFuncs*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
 #	endif
 
-#	define ZCONFIG_NPStringUpperCaseFieldNames 1
+#	ifndef ZCONFIG_NPStringUpperCaseFieldNames
+#		define ZCONFIG_NPStringUpperCaseFieldNames 1
+#	endif
+
 #	define NPEventType_GetFocusEvent getFocusEvent
 #	define NPEventType_LoseFocusEvent loseFocusEvent
 #	define NPEventType_AdjustCursorEvent loseFocusEvent
@@ -53,6 +56,23 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <npupp.h>
 
 #endif
+
+#if defined(_NPFUNCTIONS_H_)
+#	define ZCONFIG_NPAPI_WebKit_10_4 1
+#elif defined(NPFUNCTIONS_H)
+#	if defined(EXPORTED_CALLBACK)
+#		define ZCONFIG_NPAPI_WebKit_Recent 1
+#	else
+#		define ZCONFIG_NPAPI_WebKit_10_5 1
+#	endif
+#elif defined(_NPUPP_H_) // defined(npfunctions_h_)
+#	if defined(_NPUPP_USE_UPP_)
+#		define ZCONFIG_NPAPI_Mozilla_Old 1
+#	else
+#		define ZCONFIG_NPAPI_Mozilla_New 1
+#	endif
+#endif
+
 
 // =================================================================================================
 // Fixup the NPString field name change
@@ -160,6 +180,48 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	typedef bool (*NPEnumerationFunctionPtr)
 		(NPObject *npobj, NPIdentifier **value, uint32_t *count);
 #endif
+
+// =================================================================================================
+// NPN and NPP variable fixups
+
+// Actually this mozilla checks is somewhat superfluous -- no XP_MACOSX in old headers.
+
+#if defined(ZCONFIG_NPAPI_WebKit_10_4) || defined(ZCONFIG_NPAPI_Mozilla_Old)
+
+#if defined(XP_MACOSX)
+
+enum
+	{
+	NPPVpluginDrawingModel = 1000
+	, NPNVpluginDrawingModel = 1000
+	, NPNVsupportsCoreGraphicsBool = 2001
+	, NPNVsupportsOpenGLBool = 2002
+	
+	#ifndef NP_NO_QUICKDRAW
+		, NPNVsupportsQuickDrawBool = 2000
+	#endif
+	};
+
+typedef enum
+	{
+	#ifndef NP_NO_QUICKDRAW
+		NPDrawingModelQuickDraw = 0,
+	#endif
+
+	NPDrawingModelCoreGraphics = 1,
+	NPDrawingModelOpenGL = 2
+	} NPDrawingModel;
+
+typedef struct NP_CGContext
+	{
+	CGContextRef context;
+	WindowRef window;
+	} NP_CGContext;
+
+#endif // defined(XP_MACOSX)
+
+#endif // ZCONFIG_NPAPI_WebKit_10_4
+
 
 // =================================================================================================
 
