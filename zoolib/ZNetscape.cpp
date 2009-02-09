@@ -103,6 +103,7 @@ std::string sAsString(NPNVariable iVar)
 		case 1000: return "NPNVpluginDrawingModel";
 		case 2000: return "NPNVsupportsQuickDrawBool";
 		case 2001: return "NPNVsupportsCoreGraphicsBool";
+		case 2002: return "NPNVsupportsOpenGLBool";
 		}
 	return ZString::sFormat("NPNVariable=%d", iVar);
 	}
