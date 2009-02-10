@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h"
 #include "zoolib/ZThread.h"
 
+#include <cstring>
+
 #if ZCONFIG(Compiler,CodeWarrior)
 #	if !defined(_MSL_USING_MW_C_HEADERS) || _MSL_USING_MW_C_HEADERS
 		// MSL doesn't include strcasecmp in the regular <strings.h>

@@ -40,6 +40,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZFactoryChain.h"
 
+#include <cstring>
 #include <vector>
 
 #define kDebug_File_POSIX 2
@@ -59,6 +60,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 
+using std::strchr;
 using std::string;
 using std::vector;
 
