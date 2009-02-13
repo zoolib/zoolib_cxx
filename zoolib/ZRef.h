@@ -79,13 +79,6 @@ public:
 	:	fP(iP)
 		{ spRetain(fP); }
 	
-	ZRef(bool iRetain, P iP)
-	:	fP(iP)
-		{
-		if (iRetain)
-			spRetain(fP);
-		}
-
 	ZRef& operator=(P iP)
 		{
 		// Important to do the retain after we've set fP,
@@ -168,13 +161,35 @@ public:
 		spRelease(theP);
 		}
 
+	// Used with COM output parameters. See sCOMPtr and sCOMVoidPtr in ZWinCOM.h
+	P& GetPtrRef() { return fP; }
+
 private:
 	P fP;
 	};
 
+template <class T>
+void sRefCopy(void* iDest, T* iP)
+	{
+	iDest = iP;
+	if (iP)
+		sRetain(*iP);
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZRef partially specialized for pointer types
+
+template <typename T>
+struct NoRetain_t
+	{
+	mutable T fP;
+	NoRetain_t(T iP) : fP(iP) {}
+	};
+
+template <typename T>
+NoRetain_t<T> NoRetain(T iP)
+	{ return NoRetain_t<T>(iP); }
 
 template <typename T>
 class ZRef<T*>
@@ -210,12 +225,9 @@ public:
 	:	fP(iP)
 		{ spRetain(fP); }
 	
-	ZRef(bool iRetain, T* iP)
-	:	fP(iP)
-		{
-		if (iRetain)
-			spRetain(fP);
-		}
+	ZRef(const NoRetain_t<T*>& iNRP)
+	:	fP(iNRP.fP)
+		{}
 
 	ZRef& operator=(T* iP)
 		{
@@ -228,6 +240,14 @@ public:
 		return *this;
 		}
 	
+	ZRef& operator=(const NoRetain_t<T*>& iNRP)
+		{
+		T* theP = iNRP.fP;
+		std::swap(theP, fP);
+		spRelease(theP);
+		return *this;
+		}
+
 	bool operator==(const T* iP) const
 		{ return fP == iP; }
 
@@ -284,9 +304,6 @@ public:
 		{ return operator_bool_generator_type::translate(fP); }
 
 	operator T*()
-		{ return fP; }
-
-	T* operator*() const
 		{ return fP; }
 
 	T* Get() const { return fP; }
