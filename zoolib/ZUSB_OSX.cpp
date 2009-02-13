@@ -95,7 +95,7 @@ static IOUSBDeviceInterface182** sCreate_USBDeviceInterface(io_service_t iUSBDev
 static void sSetSInt32(CFMutableDictionaryRef iDict, CFStringRef iPropName, SInt32 iValue)
 	{
 	ZRef<CFNumberRef> numberRef
-		(false, ::CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type, &iValue));
+		= NoRetain(::CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type, &iValue));
 
 	::CFDictionarySetValue(iDict, iPropName, numberRef);
 	}

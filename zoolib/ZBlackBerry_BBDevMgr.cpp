@@ -43,19 +43,14 @@ namespace ZBlackBerry {
 #pragma mark * ZBlackBerry::Channel_BBDevMgr
 
 class Channel_BBDevMgr
-:	private ZBlackBerryCOM::IChannelEvents,
-	public ZBlackBerry::Channel,
+:	private IChannelEvents,
+	public Channel,
 	private ZStreamRCon,
 	private ZStreamWCon
 	{
 	friend class Device_BBDevMgr;
 
 public:
-	typedef ZBlackBerryCOM::IDevice IDevice;
-	typedef ZBlackBerryCOM::IChannel IChannel;
-	typedef ZBlackBerryCOM::ChannelParams ChannelParams;
-	typedef ZBlackBerryCOM::IChannelEvents IChannelEvents;
-
 	Channel_BBDevMgr(ZRef<Channel>& oChannel, ZRef<IDevice> iDevice,
 		bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash);
 
@@ -139,7 +134,7 @@ Channel_BBDevMgr::Channel_BBDevMgr(ZRef<Channel>& oChannel, ZRef<IDevice> iDevic
 	// a reference around till we return.
 	ZRef<Channel> self = this;
 	wstring wideName = ZUnicode::sAsWString(iName);
-	HRESULT theResult = iDevice->OpenChannel(wideName.c_str(), this, (IChannel**)&fChannel);
+	HRESULT theResult = iDevice->OpenChannel(wideName.c_str(), this, sCOMPtr(fChannel));
 
 	if (SUCCEEDED(theResult) && fChannel)
 		{
@@ -164,27 +159,19 @@ STDMETHODIMP Channel_BBDevMgr::QueryInterface(const IID& iInterfaceID, void** oO
 	*oObjectRef = nil;
 
 	if (iInterfaceID == IID_IUnknown)
-		{
-		*oObjectRef = static_cast<IUnknown*>(this);
-		this->AddRef();
-		return NOERROR;
-		}
+		return sCOMCopy<IUnknown>(oObjectRef, this);
 
 	if (iInterfaceID == ZUUIDOF(IChannelEvents))
-		{
-		*oObjectRef = static_cast<IChannelEvents*>(this);
-		this->AddRef();
-		return NOERROR;
-		}
+		return sCOMCopy<IChannelEvents>(oObjectRef, this);
 
 	return E_NOINTERFACE;
 	}
 
 ULONG STDMETHODCALLTYPE Channel_BBDevMgr::AddRef()
-	{ return ZRefCountedWithFinalization::AddRef(); }
+	{ return ZRefCountedWithFinalization::pCOMAddRef(); }
 
 ULONG STDMETHODCALLTYPE Channel_BBDevMgr::Release()
-	{ return ZRefCountedWithFinalization::ReleaseCOM(); }
+	{ return ZRefCountedWithFinalization::pCOMRelease(); }
 
 STDMETHODIMP Channel_BBDevMgr::CheckClientStatus(uint16 iRHS)
 	{
@@ -481,7 +468,7 @@ void Channel_BBDevMgr::pAbort()
 	fCondition_Reader.Broadcast();
 	}
 
-ZRef<ZBlackBerryCOM::IChannel> Channel_BBDevMgr::pUseChannel()
+ZRef<IChannel> Channel_BBDevMgr::pUseChannel()
 	{
 	ZAssert(fMutex.IsLocked());
 	return fChannel;
@@ -494,8 +481,6 @@ ZRef<ZBlackBerryCOM::IChannel> Channel_BBDevMgr::pUseChannel()
 class Device_BBDevMgr : public Device
 	{
 public:
-	typedef ZBlackBerryCOM::IDevice IDevice;
-
 	Device_BBDevMgr(ZRef<IDevice> iDevice);
 	virtual ~Device_BBDevMgr();
 
@@ -538,7 +523,6 @@ ZRef<Channel> Device_BBDevMgr::Open(bool iPreserveBoundaries,
 		// theChannel, and it will be Finalized and thus disposed. So we pass a reference to a
 		// ZRef to the constructor, to which the constructor assigns 'this', extending the
 		// lifetime appropriately.
-#if 1
 		ZRef<Channel> theChannel;
 		new Channel_BBDevMgr(theChannel, theDevice, iPreserveBoundaries, iName, iPasswordHash);
 
@@ -549,7 +533,6 @@ ZRef<Channel> Device_BBDevMgr::Open(bool iPreserveBoundaries,
 		#warning NDY
 		if (oError)
 			*oError = error_UnknownChannel;
-#endif
 		}
 	else
 		{
@@ -609,8 +592,8 @@ bool Device_BBDevMgr::pGetProperty(const string16& iName, VARIANT& oValue)
 	bool gotIt = false;
 	if (ZRef<IDevice> theDevice = this->pUseDevice())
 		{
-		ZRef<ZBlackBerryCOM::IDeviceProperties> theDPs;
-		if (SUCCEEDED(theDevice->Properties((IDeviceProperties**)&theDPs)))
+		ZRef<IDeviceProperties> theDPs;
+		if (SUCCEEDED(theDevice->Properties(sCOMPtr(theDPs))))
 			{
 			uint32 dpCount;
 			theDPs->Count(&dpCount);
@@ -619,8 +602,8 @@ bool Device_BBDevMgr::pGetProperty(const string16& iName, VARIANT& oValue)
 				VARIANT indexV;
 				indexV.vt = VT_I4;
 				indexV.lVal = x;
-				ZRef<ZBlackBerryCOM::IDeviceProperty> theDP;
-				if (SUCCEEDED(theDPs->Item(indexV, (ZBlackBerryCOM::IDeviceProperty**)&theDP)))
+				ZRef<IDeviceProperty> theDP;
+				if (SUCCEEDED(theDPs->Item(indexV, sCOMPtr(theDP))))
 					{
 					BSTR theName;
 					if (SUCCEEDED(theDP->Name(&theName)))
@@ -639,7 +622,7 @@ bool Device_BBDevMgr::pGetProperty(const string16& iName, VARIANT& oValue)
 	return gotIt;
 	}
 
-ZRef<ZBlackBerryCOM::IDevice> Device_BBDevMgr::pUseDevice()
+ZRef<IDevice> Device_BBDevMgr::pUseDevice()
 	{
 	ZMutexLocker locker(fMutex);
 	return fDevice;
@@ -655,10 +638,10 @@ Manager_BBDevMgr::Manager_BBDevMgr()
 	{
 	::CoCreateInstance(
 		IDeviceManager::sCLSID,
-		(IUnknown*)0,
+		nil,
 		CLSCTX_ALL,
-		ZUUIDOF(ZBlackBerryCOM::IDeviceManager),
-		(void**)&fDeviceManager);
+		ZUUIDOF(IDeviceManager),
+		sCOMVoidPtr(fDeviceManager));
 
 	if (fDeviceManager)
 		{
@@ -668,7 +651,7 @@ Manager_BBDevMgr::Manager_BBDevMgr()
 		ZMutexLocker locker(fMutex);
 
 		ZRef<IDevices> theDevices;
-		if (SUCCEEDED(fDeviceManager->Devices((IDevices**)&theDevices) && theDevices))
+		if (SUCCEEDED(fDeviceManager->Devices(sCOMPtr(theDevices)) && theDevices))
 			{
 			uint32 theCount;
 			theDevices->Count(&theCount);
@@ -676,7 +659,7 @@ Manager_BBDevMgr::Manager_BBDevMgr()
 			for (uint32 x = 0; x < theCount; ++x)
 				{
 				ZRef<IDevice> theDevice;
-				if (SUCCEEDED(theDevices->Item(x, (IDevice**)&theDevice)))
+				if (SUCCEEDED(theDevices->Item(x, sCOMPtr(theDevice))))
 					{
 					Entry_t anEntry;
 					anEntry.fID = fNextID++;
@@ -705,27 +688,19 @@ STDMETHODIMP Manager_BBDevMgr::QueryInterface(
 	*oObjectRef = nil;
 
 	if (iInterfaceID == IID_IUnknown)
-		{
-		*oObjectRef = static_cast<IUnknown*>(this);
-		this->AddRef();
-		return NOERROR;
-		}
+		return sCOMCopy<IUnknown>(oObjectRef, this);
 
 	if (iInterfaceID == ZUUIDOF(IDeviceManagerEvents))
-		{
-		*oObjectRef = static_cast<IDeviceManagerEvents*>(this);
-		this->AddRef();
-		return NOERROR;
-		}
+		return sCOMCopy<IDeviceManagerEvents>(oObjectRef, this);
 
 	return E_NOINTERFACE;
 	}
 
 ULONG STDMETHODCALLTYPE Manager_BBDevMgr::AddRef()
-	{ return ZRefCountedWithFinalization::AddRef(); }
+	{ return ZRefCountedWithFinalization::pCOMAddRef(); }
 
 ULONG STDMETHODCALLTYPE Manager_BBDevMgr::Release()
-	{ return ZRefCountedWithFinalization::ReleaseCOM(); }
+	{ return ZRefCountedWithFinalization::pCOMRelease(); }
 
 STDMETHODIMP Manager_BBDevMgr::DeviceConnect(IDevice* iDevice)
 	{

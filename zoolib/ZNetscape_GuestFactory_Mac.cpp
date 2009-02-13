@@ -357,16 +357,13 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory_MacPlugin(const std::
 	ZRef<ZNetscape::GuestFactory> result;
 
 	#if ZCONFIG_SPI_Enabled(CoreFoundation)
-		ZRef<CFStringRef> thePath(false, ::CFStringCreateWithCString(
-			nil, iPath.c_str(), kCFStringEncodingUTF8));
-		if (thePath)
+		if (ZRef<CFStringRef> thePath = NoRetain(::CFStringCreateWithCString(
+			nil, iPath.c_str(), kCFStringEncodingUTF8)))
 			{
-			ZRef<CFURLRef> theURL(false, ::CFURLCreateWithFileSystemPath(
-				nil, thePath, kCFURLPOSIXPathStyle, true));
-			if (theURL)
+			if (ZRef<CFURLRef> theURL = NoRetain(::CFURLCreateWithFileSystemPath(
+				nil, thePath, kCFURLPOSIXPathStyle, true)))
 				{
-				ZRef<CFPlugInRef> thePlugInRef(false, ::CFPlugInCreate(nil, theURL));
-				if (thePlugInRef)
+				if (ZRef<CFPlugInRef> thePlugInRef = NoRetain(::CFPlugInCreate(nil, theURL)))
 					{
 					result = sMakeGuestFactory_MacPlugin(thePlugInRef);
 					}
