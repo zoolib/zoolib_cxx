@@ -36,6 +36,7 @@ class ZNetAddress_AppleTalk : public ZNetAddress
 	friend class ZNetName_AppleTalk;
 public:
 	ZNetAddress_AppleTalk();
+	//FIXME -- int16 or uint16? and what about iSocket?
 	ZNetAddress_AppleTalk(int16 iNet, uint8 iNode, int8 iSocket);
 	virtual ~ZNetAddress_AppleTalk();
 
