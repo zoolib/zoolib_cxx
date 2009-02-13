@@ -105,7 +105,7 @@ void ZRefCountedWithFinalization::Release()
 int ZRefCountedWithFinalization::GetRefCount() const
 	{ return ZThreadSafe_Get(fRefCount); }
 
-int ZRefCountedWithFinalization::AddRef()
+int ZRefCountedWithFinalization::pCOMAddRef()
 	{
 	int newCount = ZThreadSafe_IncReturnNew(fRefCount);
 	if (newCount == 1)
@@ -113,7 +113,7 @@ int ZRefCountedWithFinalization::AddRef()
 	return newCount;
 	}
 
-int ZRefCountedWithFinalization::ReleaseCOM()
+int ZRefCountedWithFinalization::pCOMRelease()
 	{
 	for (;;)
 		{

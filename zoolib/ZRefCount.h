@@ -45,9 +45,6 @@ private:
 	ZThreadSafe_t fRefCount;
 	};
 
-template <> void sRetain_T<ZRefCounted&>(ZRefCounted& iObject);
-template <> void sRelease_T<ZRefCounted&>(ZRefCounted& iObject);
-
 inline void sRetain(ZRefCounted& iObject)
 	{ iObject.Retain(); }
 
@@ -74,14 +71,12 @@ public:
 	int GetRefCount() const;
 
 protected:
-	int AddRef();
-	int ReleaseCOM();
+	int pCOMAddRef();
+	int pCOMRelease();
+
 private:
 	ZThreadSafe_t fRefCount;
 	};
-
-template <> void sRetain_T<ZRefCountedWithFinalization&>(ZRefCountedWithFinalization& iObject);
-template <> void sRelease_T<ZRefCountedWithFinalization&>(ZRefCountedWithFinalization& iObject);
 
 inline void sRetain(ZRefCountedWithFinalization& iObject)
 	{ iObject.Retain(); }
