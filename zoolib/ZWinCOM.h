@@ -32,13 +32,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Necessary when building with Cocotron
 #include <ole2.h>
 
-
-inline void sRetain(IUnknown& iObject)
-	{ iObject.AddRef(); }
-
-inline void sRelease(IUnknown& iObject)
-	{ iObject.Release(); }
-
 #if ZCONFIG(Compiler, GCC)
 
 	#define ZWinCOM_CLASS_(className, baseClass, l, w0, w1, b0, b1, b2, b3, b4, b5, b6, b7) \
@@ -68,6 +61,35 @@ inline void sRelease(IUnknown& iObject)
 	#define ZUUIDOF(className) __uuidof(className)
 
 #endif
+
+NAMESPACE_ZOOLIB_BEGIN
+
+inline void sRetain(IUnknown& iObject)
+	{ iObject.AddRef(); }
+
+inline void sRelease(IUnknown& iObject)
+	{ iObject.Release(); }
+
+template <class T>
+static HRESULT sCOMCopy(void** oObjectRef, T* iOb)
+	{
+	*oObjectRef = iOb;
+	sRetain(*iOb);
+	return NOERROR;
+	}
+
+template <class T>
+static T** sCOMPtr(ZRef<T>& iRef)
+	{
+	iRef.Clear();
+	return &iRef.GetPtrRef();
+	}
+
+template <class T>
+static void** sCOMVoidPtr(ZRef<T>& iRef)
+	{ return (void**)(sCOMPtr(iRef)); }
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
