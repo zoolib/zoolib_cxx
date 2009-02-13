@@ -43,11 +43,11 @@ ZUtil_Strim_Tuple::Format::Format(
 #pragma mark * ZUtil_Strim_Tuple, writing and parsing pieces
 
 void ZUtil_Strim_Tuple::sWrite_PropName(const ZStrimW& iStrimW, const ZTName& iPropName)
-	{ ZYadUtil_ZooLibStrim::sWrite_PropName(iStrimW, iPropName.AsString()); }
+	{ ZYad_ZooLibStrim::sWrite_PropName(iStrimW, iPropName.AsString()); }
 
 bool ZUtil_Strim_Tuple::sRead_Identifier(
 	const ZStrimU& iStrimU, string* oStringLC, string* oStringExact)
-	{ return ZYadUtil_ZooLibStrim::sRead_Identifier(iStrimU, oStringLC, oStringExact); }
+	{ return ZYad_ZooLibStrim::sRead_Identifier(iStrimU, oStringLC, oStringExact); }
 
 // =================================================================================================
 #pragma mark -
@@ -55,15 +55,15 @@ bool ZUtil_Strim_Tuple::sRead_Identifier(
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTValue& iTV)
 	{
-	ZRef<ZYadR> theYadR = ZYadUtil_ZooLib::sMakeYadR(iTV);
-	ZYadUtil_ZooLibStrim::sToStrim(s, theYadR, 0, ZYadOptions());
+	ZRef<ZYadR> theYadR = ZYad_ZooLib::sMakeYadR(iTV);
+	ZYad_ZooLibStrim::sToStrim(s, theYadR, 0, ZYadOptions());
 	}
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTValue& iTV,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{
-	ZYadUtil_ZooLibStrim::sToStrim(
-		s, ZYadUtil_ZooLib::sMakeYadR(iTV), iInitialIndent, iOptions);
+	ZYad_ZooLibStrim::sToStrim(
+		s, ZYad_ZooLib::sMakeYadR(iTV), iInitialIndent, iOptions);
 	}
 
 string ZUtil_Strim_Tuple::sAsString(const ZTValue& iTV)
@@ -75,9 +75,9 @@ string ZUtil_Strim_Tuple::sAsString(const ZTValue& iTV)
 
 bool ZUtil_Strim_Tuple::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV)
 	{
-	if (ZRef<ZYadR> theYadR = ZYadUtil_ZooLibStrim::sMakeYadR(iStrimU))
+	if (ZRef<ZYadR> theYadR = ZYad_ZooLibStrim::sMakeYadR(iStrimU))
 		{
-		oTV = ZYadUtil_ZooLib::sFromYadR(theYadR);
+		oTV = ZYad_ZooLib::sFromYadR(theYadR);
 		return true;
 		}
 	return false;
@@ -93,14 +93,14 @@ bool ZUtil_Strim_Tuple::sFromString(const string& iString, ZTValue& oTV)
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const vector<ZTValue>& iVector)
 	{
 	ZRef<ZYadListR> theYadListR = new ZYadListRPos_Vector(iVector);
-	ZYadUtil_ZooLibStrim::sToStrim(s, theYadListR, 0, ZYadOptions());
+	ZYad_ZooLibStrim::sToStrim(s, theYadListR, 0, ZYadOptions());
 	}
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const vector<ZTValue>& iVector,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{
 	ZRef<ZYadListR> theYadListR = new ZYadListRPos_Vector(iVector);
-	ZYadUtil_ZooLibStrim::sToStrim(s, theYadListR, iInitialIndent, iOptions);
+	ZYad_ZooLibStrim::sToStrim(s, theYadListR, iInitialIndent, iOptions);
 	}
 
 string ZUtil_Strim_Tuple::sAsString(const vector<ZTValue>& iVector)
@@ -133,14 +133,14 @@ bool ZUtil_Strim_Tuple::sFromString(const string& iString, vector<ZTValue>& oVec
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTuple& iTuple)
 	{
 	ZRef<ZYadMapR> theYadMapR = new ZYadListMapRPos_Tuple(iTuple);
-	ZYadUtil_ZooLibStrim::sToStrim(s, theYadMapR, 0, ZYadOptions());
+	ZYad_ZooLibStrim::sToStrim(s, theYadMapR, 0, ZYadOptions());
 	}
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTuple& iTuple,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{
 	ZRef<ZYadMapR> theYadMapR = new ZYadListMapRPos_Tuple(iTuple);
-	ZYadUtil_ZooLibStrim::sToStrim(s, theYadMapR, iInitialIndent, iOptions);
+	ZYad_ZooLibStrim::sToStrim(s, theYadMapR, iInitialIndent, iOptions);
 	}
 
 string ZUtil_Strim_Tuple::sAsString(const ZTuple& iTuple)

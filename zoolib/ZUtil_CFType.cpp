@@ -65,14 +65,14 @@ CFStringRef ZUtil_CFType::sCreateCFString_UTF16(const string16& iString16)
 
 CFMutableStringRef ZUtil_CFType::sCreateMutableCFString_UTF8(const string8& iString8)
 	{
-	ZRef<CFStringRef> theStringRef(false, sCreateCFString_UTF8(iString8));
+	ZRef<CFStringRef> theStringRef = NoRetain(sCreateCFString_UTF8(iString8));
 	CFMutableStringRef theMutableStringRef = ::CFStringCreateMutableCopy(0, 0, theStringRef);
 	return theMutableStringRef;
 	}
 
 CFMutableStringRef ZUtil_CFType::sCreateMutableCFString_UTF16(const string16& iString16)
 	{
-	ZRef<CFStringRef> theStringRef(false, sCreateCFString_UTF16(iString16));
+	ZRef<CFStringRef> theStringRef = NoRetain(sCreateCFString_UTF16(iString16));
 	CFMutableStringRef theMutableStringRef = ::CFStringCreateMutableCopy(0, 0, theStringRef);
 	return theMutableStringRef;
 	}
@@ -356,10 +356,11 @@ CFDictionaryRef ZUtil_CFType::sCreateCFDictionary(const ZTuple& iTuple)
 
 	for (ZTuple::const_iterator i = iTuple.begin(); i != iTuple.end(); ++i)
 		{
-		ZRef<CFStringRef> theStringRef(false, sCreateCFString_UTF8(iTuple.NameOf(i).AsString()));
+		ZRef<CFStringRef> theStringRef
+			= NoRetain(sCreateCFString_UTF8(iTuple.NameOf(i).AsString()));
 		keys.push_back(theStringRef);
 
-		ZRef<CFTypeRef> theTypeRef(false, sCreateCFType(iTuple.GetValue(i)));
+		ZRef<CFTypeRef> theTypeRef = NoRetain(sCreateCFType(iTuple.GetValue(i)));
 		values.push_back(theTypeRef);
 		}
 
@@ -387,7 +388,7 @@ CFArrayRef ZUtil_CFType::sCreateCFArray(const vector<ZTValue>& iVector)
 	{
 	vector<ZRef<CFTypeRef> > values;
 	for (vector<ZTValue>::const_iterator i = iVector.begin(); i != iVector.end(); ++i)
-		values.push_back(ZRef<CFTypeRef>(false, sCreateCFType(*i)));
+		values.push_back(ZRef<CFTypeRef>(NoRetain(sCreateCFType(*i))));
 
 	CFArrayRef theCFArrayRef = ::CFArrayCreate(kCFAllocatorDefault,
 		(CFTypeRef*)&values[0], values.size(), &kCFTypeArrayCallBacks );
