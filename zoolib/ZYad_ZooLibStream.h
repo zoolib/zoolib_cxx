@@ -29,15 +29,15 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadUtil_ZooLibStream
+#pragma mark * ZYad_ZooLibStream
 
-namespace ZYadUtil_ZooLibStream {
+namespace ZYad_ZooLibStream {
 
 ZRef<ZYadR> sMakeYadR(const ZStreamR& iStreamR);
 
 void sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR);
 
-} // namespace ZYadUtil_ZooLibStream
+} // namespace ZYad_ZooLibStream
 
 NAMESPACE_ZOOLIB_END
 

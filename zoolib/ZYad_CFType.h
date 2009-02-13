@@ -153,15 +153,15 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadUtil_CFType
+#pragma mark * ZYad_CFType
 
-namespace ZYadUtil_CFType {
+namespace ZYad_CFType {
 
 ZRef<ZYadR> sMakeYadR(CFTypeRef iCFTypeRef);
 
 CFTypeRef sFromYadR(ZRef<ZYadR>);
 
-} // namespace ZYadUtil_CFType
+} // namespace ZYad_CFType
 
 NAMESPACE_ZOOLIB_END
 

@@ -144,15 +144,15 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadUtil_ZooLib
+#pragma mark * ZYad_ZooLib
 
-namespace ZYadUtil_ZooLib {
+namespace ZYad_ZooLib {
 
 ZRef<ZYadR> sMakeYadR(const ZTValue& iTV);
 
 ZTValue sFromYadR(ZRef<ZYadR> iYadR);
 
-} // namespace ZYadUtil_ZooLib
+} // namespace ZYad_ZooLib
 
 NAMESPACE_ZOOLIB_END
 

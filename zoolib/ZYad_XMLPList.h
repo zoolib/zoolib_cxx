@@ -157,15 +157,15 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadUtil_XMLPList
+#pragma mark * ZYad_XMLPList
 
-namespace ZYadUtil_XMLPList {
+namespace ZYad_XMLPList {
 
 ZRef<ZYadR> sMakeYadR(ZML::Reader& iReader);
 
 void sToStrimW_ML(const ZStrimW_ML& s, ZRef<ZYadR> iYadR);
 
-} // namespace ZYadUtil_XMLPList
+} // namespace ZYad_XMLPList
 
 NAMESPACE_ZOOLIB_END
 

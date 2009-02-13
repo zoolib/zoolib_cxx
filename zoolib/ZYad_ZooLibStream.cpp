@@ -544,9 +544,9 @@ void ZYadMapR_ZooLibStreamOld::pMoveIfNecessary()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadUtil_ZooLibStream
+#pragma mark * ZYad_ZooLibStream
 
-using namespace ZYadUtil_ZooLibStream;
+using namespace ZYad_ZooLibStream;
 
 static void sToStream(const ZStreamW& iStreamW, ZRef<ZYadMapR> iYadMapR)
 	{
@@ -596,7 +596,7 @@ static void sToStream(const ZStreamW& iStreamW, const ZStreamR& iStreamR)
 		}
 	}
 
-void ZYadUtil_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR)
+void ZYad_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR)
 	{
 	if (!iYadR)
 		{
@@ -619,11 +619,11 @@ void ZYadUtil_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYad
 		}
 	else
 		{
-		ZYadUtil_ZooLib::sFromYadR(iYadR).ToStream(iStreamW);
+		ZYad_ZooLib::sFromYadR(iYadR).ToStream(iStreamW);
 		}
 	}
 
-ZRef<ZYadR> ZYadUtil_ZooLibStream::sMakeYadR(const ZStreamR& iStreamR)
+ZRef<ZYadR> ZYad_ZooLibStream::sMakeYadR(const ZStreamR& iStreamR)
 	{
 	return sMakeYadR_ZooLibStream(iStreamR);
 	}

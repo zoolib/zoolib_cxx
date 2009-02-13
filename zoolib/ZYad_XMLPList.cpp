@@ -386,9 +386,9 @@ void ZYadMapR_XMLPList::pMoveIfNecessary()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadUtil_XMLPList
+#pragma mark * ZYad_XMLPList
 
-ZRef<ZYadR> ZYadUtil_XMLPList::sMakeYadR(ZML::Reader& r)
+ZRef<ZYadR> ZYad_XMLPList::sMakeYadR(ZML::Reader& r)
 	{
 	for (;;)
 		{
@@ -411,7 +411,7 @@ static void sToStrim_List(const ZStrimW_ML& s, ZRef<ZYadListR> iYadListR)
 	{
 	s.Begin("array");
 	while (iYadListR->HasChild())
-		ZYadUtil_XMLPList::sToStrimW_ML(s, iYadListR->NextChild());
+		ZYad_XMLPList::sToStrimW_ML(s, iYadListR->NextChild());
 	s.End("array");
 	}
 
@@ -423,7 +423,7 @@ static void sToStrim_Map(const ZStrimW_ML& s, ZRef<ZYadMapR> iYadMapR)
 		s.Begin("key");
 			s << iYadMapR->Name();
 		s.End("key");
-		ZYadUtil_XMLPList::sToStrimW_ML(s, iYadMapR->NextChild());
+		ZYad_XMLPList::sToStrimW_ML(s, iYadMapR->NextChild());
 		}
 	s.End("dict");
 	}
@@ -485,7 +485,7 @@ static void sToStrim_SimpleTValue(const ZStrimW_ML& s, const ZTValue& iTV)
 		}
 	}
 
-void ZYadUtil_XMLPList::sToStrimW_ML(const ZStrimW_ML& s, ZRef<ZYadR> iYadR)
+void ZYad_XMLPList::sToStrimW_ML(const ZStrimW_ML& s, ZRef<ZYadR> iYadR)
 	{
 	if (!iYadR)
 		{
@@ -505,7 +505,7 @@ void ZYadUtil_XMLPList::sToStrimW_ML(const ZStrimW_ML& s, ZRef<ZYadR> iYadR)
 		}
 	else
 		{
-		sToStrim_SimpleTValue(s, ZYadUtil_ZooLib::sFromYadR(iYadR));
+		sToStrim_SimpleTValue(s, ZYad_ZooLib::sFromYadR(iYadR));
 		}	
 	}
 

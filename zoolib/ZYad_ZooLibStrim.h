@@ -153,9 +153,9 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadUtil_ZooLibStrim
+#pragma mark * ZYad_ZooLibStrim
 
-namespace ZYadUtil_ZooLibStrim {
+namespace ZYad_ZooLibStrim {
 
 bool sRead_Identifier(
 	const ZStrimU& iStrimU, std::string* oStringLC, std::string* oStringExact);
@@ -184,7 +184,7 @@ void sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR,
 
 void sWrite_PropName(const ZStrimW& iStrimW, const std::string& iPropName);
 
-} // namespace ZYadUtil_ZooLibStrim
+} // namespace ZYad_ZooLibStrim
 
 NAMESPACE_ZOOLIB_END
 

@@ -186,7 +186,7 @@ bool ZYadListRPos_Vector::HasChild()
 ZRef<ZYadR> ZYadListRPos_Vector::NextChild()
 	{
 	if (fIter < fVector.end())
-		return ZYadUtil_ZooLib::sMakeYadR(*fIter++);
+		return ZYad_ZooLib::sMakeYadR(*fIter++);
 	return ZRef<ZYadR>();
 	}
 
@@ -218,7 +218,7 @@ bool ZYadListMapRPos_Tuple::HasChild()
 ZRef<ZYadR> ZYadListMapRPos_Tuple::NextChild()
 	{
 	if (fIter < fTuple.end())
-		return ZYadUtil_ZooLib::sMakeYadR(fTuple.GetValue(fIter++));
+		return ZYad_ZooLib::sMakeYadR(fTuple.GetValue(fIter++));
 	return ZRef<ZYadR>();
 	}
 
@@ -246,9 +246,9 @@ void ZYadListMapRPos_Tuple::SetPosition(const std::string& iName)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadUtil_ZooLib
+#pragma mark * ZYad_ZooLib
 
-ZRef<ZYadR> ZYadUtil_ZooLib::sMakeYadR(const ZTValue& iTV)
+ZRef<ZYadR> ZYad_ZooLib::sMakeYadR(const ZTValue& iTV)
 	{
 	switch (iTV.TypeOf())
 		{
@@ -260,7 +260,7 @@ ZRef<ZYadR> ZYadUtil_ZooLib::sMakeYadR(const ZTValue& iTV)
 	return new ZYadPrimR_TValue(iTV);
 	}
 
-ZTValue ZYadUtil_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
+ZTValue ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
 	{
 	if (!iYadR)
 		{

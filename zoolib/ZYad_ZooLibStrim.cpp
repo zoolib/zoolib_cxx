@@ -48,7 +48,7 @@ static bool sTryRead_PropertyName(const ZStrimU& iStrimU, string& oName)
 		{
 		if (!sTryRead_EscapedString(iStrimU, '\'', oName))
 			{
-			if (!ZYadUtil_ZooLibStrim::sRead_Identifier(iStrimU, nil, &oName))
+			if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, nil, &oName))
 				return false;
 			}
 		}
@@ -267,7 +267,7 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 			{
 			if (!sTryRead_EscapedString(iStrimU, '\'', propertyName))
 				{
-				if (!ZYadUtil_ZooLibStrim::sRead_Identifier(iStrimU, nil, &propertyName))
+				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, nil, &propertyName))
 					sThrowParseException("Expected a property name after '#'");
 				}
 			}
@@ -288,7 +288,7 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 	else
 		{
 		string theTypeLC, theType;
-		if (!ZYadUtil_ZooLibStrim::sRead_Identifier(iStrimU, &theTypeLC, &theType))
+		if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &theTypeLC, &theType))
 			{
 			// We couldn't find any of the special characters, nor could
 			// we read a type designator, so we fail to read a TValue,
@@ -319,7 +319,7 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 			if (theTypeLC == "type")
 				{
 				string typeValueLC, typeValue;
-				if (!ZYadUtil_ZooLibStrim::sRead_Identifier(iStrimU, &typeValueLC, &typeValue))
+				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &typeValueLC, &typeValue))
 					sThrowParseException("Expected a type name");
 
 				if (typeValueLC == "null") oTValue.SetType(eZType_Null);
@@ -372,7 +372,7 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 			else if (theTypeLC == "bool")
 				{
 				string theBool;
-				if (!ZYadUtil_ZooLibStrim::sRead_Identifier(iStrimU, &theBool, nil))
+				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &theBool, nil))
 					sThrowParseException("Expected 'false' or 'true'");
 
 				if (theBool == "true")
@@ -856,7 +856,7 @@ static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
 		case eZType_Name:
 			{
 			s.Write("@");
-			ZYadUtil_ZooLibStrim::sWrite_PropName(s, iTV.GetName());
+			ZYad_ZooLibStrim::sWrite_PropName(s, iTV.GetName());
 			break;
 			}
 #endif
@@ -1087,7 +1087,7 @@ static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 			{
 			sWriteLFIndent(s, iLevel, iOptions);
 
-			ZYadUtil_ZooLibStrim::sWrite_PropName(s, iYadMapR->Name());
+			ZYad_ZooLibStrim::sWrite_PropName(s, iYadMapR->Name());
 
 			s << " = ";
 
@@ -1106,7 +1106,7 @@ static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 			{
 			s.Write(" ");
 
-			ZYadUtil_ZooLibStrim::sWrite_PropName(s, iYadMapR->Name());
+			ZYad_ZooLibStrim::sWrite_PropName(s, iYadMapR->Name());
 
 			s << " = ";
 
@@ -1139,15 +1139,15 @@ static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 		}
 	else
 		{
-		sToStrim_SimpleTValue(s, ZYadUtil_ZooLib::sFromYadR(iYadR), iLevel, iOptions);
+		sToStrim_SimpleTValue(s, ZYad_ZooLib::sFromYadR(iYadR), iLevel, iOptions);
 		}
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadUtil_ZooLibStrim
+#pragma mark * ZYad_ZooLibStrim
 
-bool ZYadUtil_ZooLibStrim::sRead_Identifier(
+bool ZYad_ZooLibStrim::sRead_Identifier(
 	const ZStrimU& iStrimU, string* oStringLC, string* oStringExact)
 	{
 	bool gotAny = false;
@@ -1172,34 +1172,34 @@ bool ZYadUtil_ZooLibStrim::sRead_Identifier(
 	return gotAny;
 	}
 
-ZRef<ZYadR> ZYadUtil_ZooLibStrim::sMakeYadR(const ZStrimU& iStrimU)
+ZRef<ZYadR> ZYad_ZooLibStrim::sMakeYadR(const ZStrimU& iStrimU)
 	{ return sMakeYadR_ZooLibStrim(iStrimU); }
 
-void ZYadUtil_ZooLibStrim::sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR)
+void ZYad_ZooLibStrim::sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR)
 	{ sToStrim_List(s, iYadListR, 0, ZYadOptions(), false); }
 
-void ZYadUtil_ZooLibStrim::sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
+void ZYad_ZooLibStrim::sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{ sToStrim_List(s, iYadListR, iInitialIndent, iOptions, false); }
 
-void ZYadUtil_ZooLibStrim::sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR)
+void ZYad_ZooLibStrim::sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR)
 	{ sToStrim_Map(s, iYadMapR, 0, ZYadOptions(), false); }
 
-void ZYadUtil_ZooLibStrim::sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
+void ZYad_ZooLibStrim::sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{ sToStrim_Map(s, iYadMapR, iInitialIndent, iOptions, false); }
 
-void ZYadUtil_ZooLibStrim::sToStrim_Raw(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR)
+void ZYad_ZooLibStrim::sToStrim_Raw(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR)
 	{ sToStrim_Raw(s, iYadRawR->GetStreamR(), 0, ZYadOptions(), false); }
 
-void ZYadUtil_ZooLibStrim::sToStrim_Raw(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR,
+void ZYad_ZooLibStrim::sToStrim_Raw(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{ sToStrim_Raw(s, iYadRawR->GetStreamR(), iInitialIndent, iOptions, false); }
 
-void ZYadUtil_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR)
+void ZYad_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR)
 	{ sToStrim_Yad(s, iYadR, 0, ZYadOptions(), false); }
 
-void ZYadUtil_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR,
+void ZYad_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{ sToStrim_Yad(s, iYadR, iInitialIndent, iOptions, false); }
 
@@ -1224,7 +1224,7 @@ static bool sContainsProblemChars(const string& iString)
 	return false;
 	}
 
-void ZYadUtil_ZooLibStrim::sWrite_PropName(const ZStrimW& iStrimW, const string& iPropName)
+void ZYad_ZooLibStrim::sWrite_PropName(const ZStrimW& iStrimW, const string& iPropName)
 	{
 	if (sContainsProblemChars(iPropName))
 		{
