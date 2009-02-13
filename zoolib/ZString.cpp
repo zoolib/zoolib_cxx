@@ -113,7 +113,7 @@ string ZString::sSubstitute(const string& iString,
 	const string& iS1,
 	const string& iS2)
 	{
-	string theParams[4];
+	string theParams[3];
 	theParams[0] = iS0;
 	theParams[1] = iS1;
 	theParams[2] = iS2;
@@ -221,6 +221,172 @@ bool ZString::sContainsi(const string& iTarget, const string& iCandidate)
 	return std::string::npos != ZUnicode::sToLower(iTarget).find(ZUnicode::sToLower(iCandidate));
 	}
 
+bool ZString::sInt64(const string& iString, int64& oVal)
+	{
+	if (iString.size())
+		{
+		if (sscanf(iString.c_str(), "%lld", &oVal) > 0)
+			return true;
+		}
+	return false;
+	}
+
+int64 ZString::sInt64D(const string& iString, int64 iDefault)
+	{
+	int64 result;
+	if (sInt64(iString, result))
+		return result;
+	return iDefault;
+	}
+
+int64 ZString::sInt64(const string& iString)
+	{ return sInt64D(iString, 0); }
+
+bool ZString::sUInt64(const string& iString, uint64& oVal)
+	{
+	if (iString.size())
+		{
+		if (sscanf(iString.c_str(), "%llu", &oVal) > 0)
+			return true;
+		}
+	return false;
+	}
+
+uint64 ZString::sUInt64D(const string& iString, uint64 iDefault)
+	{
+	uint64 result;
+	if (sUInt64(iString, result))
+		return result;
+	return iDefault;
+	}
+
+uint64 ZString::sUInt64(const string& iString)
+	{ return sUInt64D(iString, 0); }
+
+bool ZString::sDouble(const string& iString, double& oVal)
+	{
+	if (iString.size())
+		{
+		if (sscanf(iString.c_str(), "%lf", &oVal) > 0)
+			return true;
+		}
+	return false;
+	}
+
+double ZString::sDoubleD(const string& iString, double iDefault)
+	{
+	double result;
+	if (sDouble(iString, result))
+		return result;
+	return iDefault;
+	}
+
+double ZString::sDouble(const string& iString)
+	{ return sDoubleD(iString, 0.0); }
+
+void ZString::sToStream(const string& iString, const ZStreamW& iStream)
+	{
+	size_t theLength = iString.size();
+	iStream.WriteUInt32(theLength);
+	if (theLength > 0)
+		iStream.Write(iString.data(), theLength);
+	}
+
+void ZString::sFromStream(string& oString, const ZStreamR& iStream)
+	{
+	size_t theLength = iStream.ReadUInt32();
+	oString = string(theLength, 0);
+	if (theLength > 0)
+		iStream.Read(const_cast<char*>(oString.data()), theLength);
+	}
+
+string ZString::sFromStream(const ZStreamR& iStream)
+	{
+	string theString;
+	sFromStream(theString, iStream);
+	return theString;
+	}
+
+string ZString::sFresh(const string& iOther)
+	{
+	if (iOther.empty())
+		return string();
+	return string(iOther.data(), iOther.size());
+	}
+
+void ZString::sMakeFresh(string& ioString)
+	{
+	if (ioString.empty())
+		ioString = string();
+	else
+		ioString = string(ioString.data(), ioString.size());
+	}
+
+// =================================================================================================
+
+string ZString::sFromInt(int iInt)
+	{
+	char temp[21]; // 21 chars will work even for -ve 64 bit ints
+	sprintf(temp, "%d", iInt);
+	return temp;
+	}
+
+string ZString::sFromUInt64(uint64 iUInt64)
+	{
+	char temp[21];
+	sprintf(temp, "%llu", iUInt64);
+	return temp;
+	}
+
+string ZString::sHexFromInt(int iInt)
+	{
+	char temp[16];
+	sprintf(temp, "%X", iInt);
+	return temp;
+	}
+
+string ZString::sHexFromUInt64(uint64 iUInt64)
+	{
+	char temp[21];
+	sprintf(temp, "%llX", iUInt64);
+	return temp;
+	}
+
+static const long sStringCacheCount = 8;
+static long sStringCacheCurrent;
+
+typedef unsigned char ZStr255[256];
+static ZStr255 sStringCache[sStringCacheCount];
+
+const unsigned char* ZString::sAsPString(const string& inString)
+	{
+	size_t theLength = min(inString.size(), size_t(255));
+	sStringCacheCurrent = (sStringCacheCurrent +1) % sStringCacheCount;
+	if (theLength)
+		ZBlockCopy(inString.data(), &(sStringCache[sStringCacheCurrent][1]), theLength);
+	sStringCache[sStringCacheCurrent][0] = theLength;
+	return sStringCache[sStringCacheCurrent];
+	}
+
+string ZString::sFromPString(const unsigned char* inPString)
+	{ return string((const char*)(&(inPString[1])), (long)inPString[0]); }
+
+void ZString::sToPString(const string& inString, unsigned char* outPString, size_t inMaxLength)
+	{
+	size_t sourceLength = min(inString.size(), inMaxLength);
+	if (sourceLength)
+		ZBlockCopy(inString.data(), &(outPString[1]), sourceLength);
+	outPString[0] = sourceLength;
+	}
+
+void ZString::sToPString(const char* inString, unsigned char* outPString, size_t inMaxLength)
+	{
+	size_t sourceLength = min(strlen(inString), inMaxLength);
+	if (sourceLength)
+		ZBlockCopy(inString, &(outPString[1]), sourceLength);
+	outPString[0] = sourceLength;
+	}
+
 string ZString::sMacizeString(const string& iString)
 	{
 	string localString(iString);
@@ -258,131 +424,5 @@ string ZString::sMacizeString(const string& iString)
 	return localString;
 	}
 
-string ZString::sFromInt(int inInt)
-	{
-	char temp[21]; // 21 chars will work even for -ve 64 bit ints
-	sprintf(temp, "%d", inInt);
-	return temp;
-	}
-
-int ZString::sAsInt(const string& iString)
-	{
-	int theInt = 0;
-	if (iString.size())
-		{
-		if (sscanf(iString.c_str(), "%d", &theInt) <= 0)
-			theInt = 0;
-		}
-	return theInt;
-	}
-
-string ZString::sHexFromInt(int inInt)
-	{
-	char temp[16];
-	sprintf(temp, "%X", inInt);
-	return temp;
-	}
-
-string ZString::sHexFromUInt64(uint64 inUInt64)
-	{
-	char temp[21];
-	sprintf(temp, "%llX", inUInt64);
-	return temp;
-	}
-
-string ZString::sFromUInt64(uint64 inUInt64)
-	{
-	char temp[21];
-	sprintf(temp, "%lld", inUInt64);
-	return temp;
-	}
-
-uint64 ZString::sAsUInt64(const string& inString)
-	{
-	uint64 theUInt64 = 0;
-	if (inString.size())
-		{
-		if (sscanf(inString.c_str(), "%lld", &theUInt64) <= 0)
-			theUInt64 = 0;
-		}
-	return theUInt64;
-	}
-
-void ZString::sToStream(const string& inString, const ZStreamW& inStream)
-	{
-	size_t theLength = inString.size();
-	inStream.WriteUInt32(theLength);
-	if (theLength > 0)
-		inStream.Write(inString.data(), theLength);
-	}
-
-void ZString::sFromStream(string& outString, const ZStreamR& inStream)
-	{
-	size_t theLength = inStream.ReadUInt32();
-	if (theLength > 200000)
-		throw runtime_error("ZString::FromStream. invalid length");
-	outString = string(theLength, 0);
-	if (theLength > 0)
-		inStream.Read(const_cast<char*>(outString.data()), theLength);
-	}
-
-string ZString::sFromStream(const ZStreamR& iStream)
-	{
-	string theString;
-	sFromStream(theString, iStream);
-	return theString;
-	}
-
-string ZString::sFresh(const string& inOther)
-	{
-	if (inOther.empty())
-		return string();
-	return string(inOther.data(), inOther.size());
-	}
-
-void ZString::sMakeFresh(string& inOutString)
-	{
-	if (inOutString.empty())
-		inOutString = string();
-	else
-		inOutString = string(inOutString.data(), inOutString.size());
-	}
-
-// =================================================================================================
-
-static const long sStringCacheCount = 8;
-static long sStringCacheCurrent;
-
-typedef unsigned char ZStr255[256];
-static ZStr255 sStringCache[sStringCacheCount];
-
-const unsigned char* ZString::sAsPString(const string& inString)
-	{
-	size_t theLength = min(inString.size(), size_t(255));
-	sStringCacheCurrent = (sStringCacheCurrent +1) % sStringCacheCount;
-	if (theLength)
-		ZBlockCopy(inString.data(), &(sStringCache[sStringCacheCurrent][1]), theLength);
-	sStringCache[sStringCacheCurrent][0] = theLength;
-	return sStringCache[sStringCacheCurrent];
-	}
-
-string ZString::sFromPString(const unsigned char* inPString)
-	{ return string((const char*)(&(inPString[1])), (long)inPString[0]); }
-
-void ZString::sToPString(const string& inString, unsigned char* outPString, size_t inMaxLength)
-	{
-	size_t sourceLength = min(inString.size(), inMaxLength);
-	if (sourceLength)
-		ZBlockCopy(inString.data(), &(outPString[1]), sourceLength);
-	outPString[0] = sourceLength;
-	}
-
-void ZString::sToPString(const char* inString, unsigned char* outPString, size_t inMaxLength)
-	{
-	size_t sourceLength = min(strlen(inString), inMaxLength);
-	if (sourceLength)
-		ZBlockCopy(inString, &(outPString[1]), sourceLength);
-	outPString[0] = sourceLength;
-	}
 
 NAMESPACE_ZOOLIB_END

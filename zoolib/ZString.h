@@ -36,63 +36,86 @@ class ZStreamW;
 
 namespace ZString {
 
-std::string sFormat(const char* inString, ...);
-std::string sFormat(const char* inString, va_list iArgs);
+using std::string;
 
-std::string sSubstitute(const std::string& iString,
-	const std::string& iS0);
+string sFormat(const char* iString, ...);
+string sFormat(const char* iString, va_list iArgs);
 
-std::string sSubstitute(const std::string& iString,
-	const std::string& iS0,
-	const std::string& iS1);
+string sSubstitute(const string& iString,
+	const string& iS0);
 
-std::string sSubstitute(const std::string& iString,
-	const std::string& iS0,
-	const std::string& iS1,
-	const std::string& iS2);
+string sSubstitute(const string& iString,
+	const string& iS0,
+	const string& iS1);
 
-std::string sSubstitute(const std::string& iString,
-	const std::string& iS0,
-	const std::string& iS1,
-	const std::string& iS2,
-	const std::string& iS3);
+string sSubstitute(const string& iString,
+	const string& iS0,
+	const string& iS1,
+	const string& iS2);
 
-std::string sSubstitute(const std::string& iString,
-	const std::string& iS0,
-	const std::string& iS1,
-	const std::string& iS2,
-	const std::string& iS3,
-	const std::string& iS4);
+string sSubstitute(const string& iString,
+	const string& iS0,
+	const string& iS1,
+	const string& iS2,
+	const string& iS3);
 
-std::string sSubstitute(const std::string& iString,
-	const std::string* iParams, size_t iParamsCount);
+string sSubstitute(const string& iString,
+	const string& iS0,
+	const string& iS1,
+	const string& iS2,
+	const string& iS3,
+	const string& iS4);
 
-int sComparei(const std::string& iLeft, const std::string& iRight);
-bool sEquali(const std::string& iLeft, const std::string& iRight);
-bool sContainsi(const std::string& iTarget, const std::string& iCandidate);
+string sSubstitute(const string& iString,
+	const string* iParams, size_t iParamsCount);
 
-std::string sMacizeString(const std::string& iString);
+int sComparei(const string& iLeft, const string& iRight);
+bool sEquali(const string& iLeft, const string& iRight);
+bool sContainsi(const string& iTarget, const string& iCandidate);
 
-std::string sFromInt(int iVal);
-int sAsInt(const std::string& iString);
+// -- 
+// ZUtil_Tuple-style conversion API
 
-std::string sHexFromInt(int iVal);
-std::string sHexFromUInt64(uint64 iVal);
+bool sInt64(const string& iString, int64& oVal);
+int64 sInt64D(const string& iString, int64 iDefault);
+int64 sInt64(const string& iString);
 
-std::string sFromUInt64(uint64 iVal); // Why uint64 and not int64?
-uint64 sAsUInt64(const std::string& iString);
+bool sUInt64(const string& iString, uint64& oVal);
+uint64 sUInt64D(const string& iString, uint64 iDefault);
+uint64 sUInt64(const string& iString);
 
-void sToStream(const std::string& iString, const ZStreamW& iStream);
-void sFromStream(std::string& outString, const ZStreamR& iStream);
-std::string sFromStream(const ZStreamR& iStream);
+bool sDouble(const string& iString, double& oVal);
+double sDoubleD(const string& iString, double iDefault);
+double sDouble(const string& iString);
 
-std::string sFresh(const std::string& iOther);
-void sMakeFresh(std::string& ioString);
+// -- 
 
-const unsigned char* sAsPString(const std::string& iString);
-std::string sFromPString(const unsigned char* iPString);
-void sToPString(const std::string& iString, unsigned char* oPString, size_t iMaxLength);
+void sToStream(const string& iString, const ZStreamW& iStream);
+void sFromStream(string& outString, const ZStreamR& iStream);
+string sFromStream(const ZStreamR& iStream);
+
+string sFresh(const string& iOther);
+void sMakeFresh(string& ioString);
+
+// -- 
+
+inline int sAsInt(const string& iString)
+	{ return int(sInt64(iString)); }
+
+inline uint64 sAsUInt64(const string& iString)
+	{ return sUInt64(iString); }
+
+string sFromInt(int iVal);
+string sFromUInt64(uint64 iVal); // Why uint64 and not int64?
+string sHexFromInt(int iVal);
+string sHexFromUInt64(uint64 iVal);
+
+const unsigned char* sAsPString(const string& iString);
+string sFromPString(const unsigned char* iPString);
+void sToPString(const string& iString, unsigned char* oPString, size_t iMaxLength);
 void sToPString(const char* iString, unsigned char* oPString, size_t iMaxLength);
+
+string sMacizeString(const string& iString);
 
 } // namespace ZString
 
