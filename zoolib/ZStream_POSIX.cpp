@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_Has_fseeko (!ZCONFIG_SPI_Enabled(Win))
 #endif
 
-#if !defined(_MSL_USING_MW_C_HEADERS) || !_MSL_USING_MW_C_HEADERS
+#if !ZCONFIG_SPI_Enabled(Win) && (!defined(_MSL_USING_MW_C_HEADERS) || !_MSL_USING_MW_C_HEADERS)
 // To pick up the definition of BSD, if any. Can't do this
 // when using CW and their headers (file doesn't exist).
 #	include <sys/param.h>
