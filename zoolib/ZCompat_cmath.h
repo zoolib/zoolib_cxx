@@ -26,12 +26,24 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __USE_ISOC99 1
 #include <math.h>
 
-#if !defined(INFINITY)
-#	define INFINITY (1.0/0.0)
+#if ZCONFIG(Compiler, MSVC)
+#	include <cfloat>
+#	define isnan _isnan
+
+	static unsigned int __qnan[] = { 0x7fc00001 };
+#	define NAN (*(float *) __qnan)
+
+#else
+
+#	if !defined(INFINITY)
+#		define INFINITY (1.0/0.0)
+#	endif
+
+#	if !defined(NAN)
+#		define NAN (0.0/0.0)
+#	endif
+
 #endif
 
-#if !defined(NAN)
-#	define NAN (0.0/0.0)
-#endif
 
 #endif // __ZCompat_cmath__
