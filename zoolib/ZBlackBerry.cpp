@@ -44,12 +44,11 @@ Device represents a single connected BlackBerry. Register with the Device as an 
 be told when it has been disconnected. Device's other job is to open channels to software
 running on the BlackBerry.
 
-Channel represents the connection to a channel on a BlackBerry. As happened with ZNetEndpoint,
-we may need additional entry points and controllable attributes, so Channel is a distinct class,
-but currently it adds nothing to its parent class ZStreamerRWCon. For detailed information on
+Channel represents the connection to a channel on a BlackBerry. It's a subclass of ZStreamerRWCon,
+adding the GetIdealSize_Read and GetIdealSize_Write methods. For detailed information on
 ZStreamerRWCon see ZStreamer.cpp.
 
-You can see an example of real code in ZBlackBerryServer -- it's complicated by the
+You can see an example of real code in ZBlackBerryServer -- it's made more complex by the
 details of safely handling multiple connections simultaneously. The sample application
 zoolib_samples/BlackBerry/BBDaemon provides access to a ZBlackBerryServer over a TCP
 connection, and thus allows multiple apps to talk to multiple BlackBerrys even on OSX.
@@ -61,9 +60,8 @@ void Sample()
 	using namespace ZBlackBerry;
 
 	// Instantiate the Manager. On Windows you would create a Manager_BBDevMgr.
-	// If you're using BBDaemon you'd create a Manager_Client, passing a
-	// ZStreamerRWConFactory that will open connections to the
-	// appropriate TCP address.
+	// If you're using BBDaemon you'd create a Manager_Client, passing a ZStreamerRWConFactory
+	// that will open connections to the appropriate TCP or other address.
 	ZRef<Manager> theManager = new Manager_OSXUSB;
 
 	// Get the IDs of all BlackBerrys handled by this Manager.
