@@ -43,7 +43,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::string;
 
 #if (__MWERKS__ && !defined(_MSL_USING_MW_C_HEADERS) || _MSL_USING_MW_C_HEADERS) \
-	|| (ZCONFIG_SPI_Enabled(Win) && ZCONFIG(Compiler, GCC))
+	|| (ZCONFIG_SPI_Enabled(Win) && ZCONFIG(Compiler, GCC)) \
+	|| (ZCONFIG_SPI_Enabled(Win) && ZCONFIG(Compiler, MSVC))
 #	define DO_IT_OURSELVES 1
 #else
 #	define DO_IT_OURSELVES 0
@@ -190,7 +191,7 @@ static time_t sTMToTime(const struct tm& iTM)
 	#endif
 
 	// MSL may not use the correct epoch start
-	#warning check this
+//##	#warning check this
 	return result;
 //	return sFromSystemEpoch(result);
 	}
