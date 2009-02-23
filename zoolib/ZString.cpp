@@ -352,22 +352,6 @@ string ZString::sHexFromUInt64(uint64 iUInt64)
 	return temp;
 	}
 
-static const long sStringCacheCount = 8;
-static long sStringCacheCurrent;
-
-typedef unsigned char ZStr255[256];
-static ZStr255 sStringCache[sStringCacheCount];
-
-const unsigned char* ZString::sAsPString(const string& inString)
-	{
-	size_t theLength = min(inString.size(), size_t(255));
-	sStringCacheCurrent = (sStringCacheCurrent +1) % sStringCacheCount;
-	if (theLength)
-		ZBlockCopy(inString.data(), &(sStringCache[sStringCacheCurrent][1]), theLength);
-	sStringCache[sStringCacheCurrent][0] = theLength;
-	return sStringCache[sStringCacheCurrent];
-	}
-
 string ZString::sFromPString(const unsigned char* inPString)
 	{ return string((const char*)(&(inPString[1])), (long)inPString[0]); }
 
@@ -385,43 +369,6 @@ void ZString::sToPString(const char* inString, unsigned char* outPString, size_t
 	if (sourceLength)
 		ZBlockCopy(inString, &(outPString[1]), sourceLength);
 	outPString[0] = sourceLength;
-	}
-
-string ZString::sMacizeString(const string& iString)
-	{
-	string localString(iString);
-	ZString::sMakeFresh(localString);
-	char* thePtr = const_cast<char*>(localString.data());
-	size_t count = localString.size();
-	bool insideDoubleQuote = false;
-
-	// We don't do curly single quotes -- the logic is a bit fiddly
-	while (count--)
-		{
-		switch (*thePtr)
-			{
-			case '\n':
-				*thePtr = '\r';
-				break;
-			case '\"':
-				if (insideDoubleQuote)
-					{
-					*thePtr = 0xD3;
-					insideDoubleQuote = false;
-					}
-				else
-					{
-					*thePtr = 0xD4;
-					insideDoubleQuote = true;
-					}
-				break;
-			case '\'':
-				*thePtr = 0xD5;
-				break;
-			}
-		++thePtr;
-		}
-	return localString;
 	}
 
 

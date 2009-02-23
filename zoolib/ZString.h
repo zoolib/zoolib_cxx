@@ -110,12 +110,9 @@ string sFromUInt64(uint64 iVal); // Why uint64 and not int64?
 string sHexFromInt(int iVal);
 string sHexFromUInt64(uint64 iVal);
 
-const unsigned char* sAsPString(const string& iString);
 string sFromPString(const unsigned char* iPString);
 void sToPString(const string& iString, unsigned char* oPString, size_t iMaxLength);
 void sToPString(const char* iString, unsigned char* oPString, size_t iMaxLength);
-
-string sMacizeString(const string& iString);
 
 } // namespace ZString
 
