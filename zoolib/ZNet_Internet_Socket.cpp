@@ -108,7 +108,7 @@ int ZNet_TCP_Socket::sListen(ip_addr iLocalAddress, ip_port iLocalPort)
 		theSocketFD, SOL_SOCKET, SO_REUSEADDR, (char*)&reuseAddrFlag, sizeof(reuseAddrFlag));
 
 	sockaddr_in localSockAddr;
-	ZBlockSet(&localSockAddr, sizeof(localSockAddr), 0);
+	ZBlockZero(&localSockAddr, sizeof(localSockAddr));
 	localSockAddr.sin_family = AF_INET;
 	localSockAddr.sin_port = htons(iLocalPort);
 	localSockAddr.sin_addr.s_addr = htonl(iLocalAddress);
@@ -317,7 +317,7 @@ static int sConnect(ip_addr iRemoteHost, ip_port iRemotePort)
 		throw ZNetEx(ZNet_Socket::sTranslateError(errno));
 
 	sockaddr_in remoteSockAddr;
-	ZBlockSet(&remoteSockAddr, sizeof(remoteSockAddr), 0);
+	ZBlockZero(&remoteSockAddr, sizeof(remoteSockAddr));
 	remoteSockAddr.sin_family = AF_INET;
 	remoteSockAddr.sin_port = htons(iRemotePort);
 	remoteSockAddr.sin_addr.s_addr = htonl(iRemoteHost);
