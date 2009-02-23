@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "zoolib/ZTypes.h"
+#include "zoolib/ZStdInt.h"
 #include "zoolib/ZWinCOM.h"
 
 // winnt.h defines 'STDMETHODIMP' to be 'HRESULT STDMETHODCALLTYPE'.
