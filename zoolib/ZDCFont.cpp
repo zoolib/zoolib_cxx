@@ -147,10 +147,12 @@ TextStyle ZDCFont::GetTextStyle() const
 	{
 	TextStyle theTextStyle;
 
+	Str255 theName;
+	ZString::sToPString(fFontName, theName, 255);
 	#if ZCONFIG_SPI_Enabled(Carbon)
-		theTextStyle.tsFont = ::FMGetFontFamilyFromName(ZString::sAsPString(fFontName));
+		theTextStyle.tsFont = ::FMGetFontFamilyFromName(theName);
 	#else
-		::GetFNum(ZString::sAsPString(fFontName), &theTextStyle.tsFont);
+		::GetFNum(theName, &theTextStyle.tsFont);
 	#endif
 
 	theTextStyle.tsFace = fStyle;
@@ -163,11 +165,14 @@ TextStyle ZDCFont::GetTextStyle() const
 
 int16 ZDCFont::GetFontID() const
 	{
+	Str255 theName;
+	ZString::sToPString(fFontName, theName, 255);
+
 	#if ZCONFIG_SPI_Enabled(Carbon)
-		return ::FMGetFontFamilyFromName(ZString::sAsPString(fFontName));
+		return ::FMGetFontFamilyFromName(theName);
 	#else
 		int16 theFontID;
-		::GetFNum(ZString::sAsPString(fFontName), &theFontID);
+		::GetFNum(theName, &theFontID);
 		return theFontID;
 	#endif
 	}
