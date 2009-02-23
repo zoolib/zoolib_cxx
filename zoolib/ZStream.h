@@ -57,7 +57,7 @@ static inline size_t sClampedSize(uint64 iCount)
 	if (sizeof(size_t) < sizeof(uint64))
 		return size_t(std::min(iCount, uint64(size_t(-1))));
 	else
-		return iCount;
+		return size_t(iCount);
 	}
 
 static inline size_t sClampedSize(uint64 iSize, uint64 iPosition)
