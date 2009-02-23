@@ -171,7 +171,7 @@ private:
 template <class T>
 void sRefCopy(void* iDest, T* iP)
 	{
-	iDest = iP;
+	*static_cast<T**>(iDest) = iP;
 	if (iP)
 		sRetain(*iP);
 	}
