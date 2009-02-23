@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim_Tuple__ 1
 #include "zconfig.h"
 
-#include "ZTypes.h" // for size_t
+#include "zoolib/ZTypes.h" // for size_t
 #include "zoolib/ZYad_ZooLibStrim.h"
 
 #include <string>
