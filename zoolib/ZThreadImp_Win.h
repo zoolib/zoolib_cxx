@@ -54,7 +54,7 @@ typedef DWORD Key;
 typedef LPVOID Value;
 
 Key sCreate();
-static void sFree(Key iKey);
+void sFree(Key iKey);
 
 void sSet(Key iKey, Value iValue);
 Value sGet(Key iKey);
