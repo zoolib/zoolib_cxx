@@ -22,9 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTime__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZTypes.h"
-
 #include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZStdInt.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -97,7 +96,7 @@ public:
 		= ((70U * 365) + 17) * 24 * 60 * 60; // 2,208,988,800
 
 	static const uint64 kEpochDelta_1601_To_1970
-		= ((369LLU * 365) + 89) * 24 * 60 * 60; // == 11,644,473,600
+		= ((ZUINT64_C(369) * 365) + 89) * 24 * 60 * 60; // == 11,644,473,600
 	};
 
 template <class T> int sCompare_T(const T& iL, const T& iR);
