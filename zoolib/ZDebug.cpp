@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZCONFIG_SPI.h"
-#include "ZTypes.h"
+#include "zoolib/ZTypes.h"
 
 #include <stdarg.h>
 #include <stdio.h>
