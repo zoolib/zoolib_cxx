@@ -74,7 +74,8 @@ template <class T>
 static HRESULT sCOMCopy(void** oObjectRef, T* iOb)
 	{
 	*oObjectRef = iOb;
-	sRetain(*iOb);
+	if (iOb)
+		sRetain(*iOb);
 	return NOERROR;
 	}
 
