@@ -39,6 +39,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_string.h" // For strdup
 
+#include <stdlib.h> // For malloc/free
+
 #include <vector>
 
 using std::list;

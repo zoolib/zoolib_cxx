@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNetscape__ 1
 #include "zconfig.h"
 
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(Netscape)
 
@@ -120,6 +120,9 @@ std::string sAsString(NPPVariable iVar);
 
 template <class T>
 void spRelease_T(T&);
+
+template <class T>
+void* spMalloc_T(T&, size_t);
 
 template <class T>
 class NPVariant_T : public NPVariant
@@ -486,9 +489,9 @@ public:
 
 	void SetObject(T* iValue)
 		{
+		iValue->Retain();
 		this->pRelease();
 		value.objectValue = iValue;
-		iValue->Retain();
 		type = NPVariantType_Object;	
 		}
 
@@ -496,8 +499,9 @@ private:
 	void pSetString(const char* iChars, size_t iLength)
 		{
 		sNPStringLength(value.stringValue) = iLength;
-		sNPStringChars(value.stringValue) = static_cast<char*>(malloc(iLength));
-		strncpy(sNPStringChars(value.stringValue), iChars, iLength);
+		char* p = static_cast<char*>(spMalloc_T(*this, iLength));
+		strncpy(p, iChars, iLength);
+		sNPStringChars(value.stringValue) = p;
 		}
 
 	void pSetString(const std::string& iString)

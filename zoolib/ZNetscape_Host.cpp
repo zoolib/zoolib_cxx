@@ -29,6 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h" // For ZString::sFormat
 
 #include <stdexcept>
+#include <stdlib.h> // For free/malloc
 
 using std::string;
 
@@ -47,6 +48,10 @@ template <>
 void spRelease_T(NPVariantH& iNPVariantH)
 	{ HostMeister::sGet()->ReleaseVariantValue(&iNPVariantH); }
 
+template <>
+void* spMalloc_T(NPVariantH&, size_t iLength)
+	{ return HostMeister::sGet()->MemAlloc(iLength); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * NPObjectH
@@ -64,10 +69,11 @@ bool NPObjectH::sIsString(NPIdentifier iNPI)
 string NPObjectH::sAsString(NPIdentifier iNPI)
 	{
 	string result;
-	if (NPUTF8* theString = HostMeister::sGet()->UTF8FromIdentifier(iNPI))
+	HostMeister* theHM = HostMeister::sGet();
+	if (NPUTF8* theString = theHM->UTF8FromIdentifier(iNPI))
 		{
 		result = theString;
-		free(theString);
+		theHM->MemFree(theString);
 		}
 	return result;
 	}
@@ -175,7 +181,7 @@ bool NPObjectH::Enumerate(std::vector<NPIdentifier>& oIdentifiers)
 		return false;
 
 	oIdentifiers.insert(oIdentifiers.end(), theIDs, theIDs + theCount);
-	free(theIDs);
+	HostMeister::sGet()->MemFree(theIDs);
 
 	return true;
 	}
@@ -265,7 +271,8 @@ bool ObjectH::Imp_Enumerate(NPIdentifier*& oIDs, uint32_t& oCount)
 	if (this->Imp_Enumerate(theNames))
 		{
 		oCount = theNames.size();
-		oIDs = static_cast<NPIdentifier*>(malloc(sizeof(NPIdentifier) * theNames.size()));
+		void* p = HostMeister::sGet()->MemAlloc(sizeof(NPIdentifier) * theNames.size());
+		oIDs = static_cast<NPIdentifier*>(p);
 		for (size_t x = 0; x < oCount; ++x)
 			oIDs[x] = sAsNPI(theNames[x]);
 
@@ -442,14 +449,14 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
 	#if defined(NewNPN_GetJavaEnvProc)
 		oNPNF.getJavaEnv = (NPN_GetJavaEnvUPP)sGetJavaEnv;
 	#else
-		oNPNF.getJavaEnv = sGetJavaEnv;
+		oNPNF.getJavaEnv = (NPN_GetJavaEnvProcPtr)sGetJavaEnv;
 	#endif
 
 	// Mozilla return value is a jref
 	#if defined(NewNPN_GetJavaPeerProc)
 		oNPNF.getJavaPeer = (NPN_GetJavaPeerUPP)sGetJavaPeer;
 	#else
-		oNPNF.getJavaPeer = sGetJavaPeer;
+		oNPNF.getJavaPeer = (NPN_GetJavaPeerProcPtr)sGetJavaPeer;
 	#endif
 
 	oNPNF.geturlnotify = sGetURLNotify;
@@ -750,7 +757,7 @@ void HostMeister::sReleaseObject(NPObject* obj)
 	}
 
 bool HostMeister::sInvoke(NPP npp,
-	NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount,
+	NPObject* obj, NPIdentifier methodName, const NPVariant* args, unsigned argCount,
 	NPVariant* result)
 	{
 	ZNETSCAPE_BEFORE
@@ -759,7 +766,7 @@ bool HostMeister::sInvoke(NPP npp,
 	}
 
 bool HostMeister::sInvokeDefault(NPP npp,
-	NPObject* obj, const NPVariant* args, uint32_t argCount, NPVariant* result)
+	NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->InvokeDefault(npp, obj, args, argCount, result);

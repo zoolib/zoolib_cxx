@@ -342,11 +342,11 @@ private:
 	static void sReleaseObject(NPObject* obj);
 
 	static bool sInvoke(NPP npp,
-		NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount,
+		NPObject* obj, NPIdentifier methodName, const NPVariant* args, unsigned argCount,
 		NPVariant* result);
 
 	static bool sInvokeDefault(NPP npp,
-		NPObject* obj, const NPVariant* args, uint32_t argCount, NPVariant* result);
+		NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result);
 
 	static bool sEvaluate(NPP npp,
 		NPObject* obj, NPString* script, NPVariant* result);

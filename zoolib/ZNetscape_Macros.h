@@ -38,12 +38,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	catch (std::exception& ex) \
 		{ \
 		if (ZLOG(s, eDebug, "ZNetscape::HostMeister")) \
-			s << __FUNCTION__ << "Caught exception: " << ex.what(); \
+			s << __FUNCTION__ << ", Caught exception: " << ex.what(); \
 		} \
 	catch (...) \
 		{ \
 		if (ZLOG(s, eDebug, "ZNetscape::HostMeister")) \
-			s << __FUNCTION__ << "Caught exception not derived from std::exception"; \
+			s << __FUNCTION__ << ", Caught exception not derived from std::exception"; \
 		}
 
 #define ZNETSCAPE_AFTER_VOID \
@@ -51,7 +51,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	ZNETSCAPE_AFTER_EXCEPTION
 
 #define ZNETSCAPE_AFTER_NPERROR \
-	} \
+		} \
 	ZNETSCAPE_AFTER_NPERROR_PRE \
 	ZNETSCAPE_AFTER_EXCEPTION \
 	return NPERR_GENERIC_ERROR;

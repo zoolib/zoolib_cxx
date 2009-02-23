@@ -26,35 +26,35 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Netscape)
 
+#if defined(XP_WIN)
+#	define EXPORT_DECL(ret) extern "C" __declspec(dllexport) ret __stdcall
+#	define EXPORT_DEF(ret) ret __stdcall
+#else
+#	define EXPORT_DECL(ret) extern "C" __attribute__((visibility("default"))) ret
+#	define EXPORT_DEF(ret) ret
+#endif
+
 using ZooLib::ZNetscape::NPNetscapeFuncs_Z;
 
-extern "C" {
+//pragma comment(linker, "/TestFunc=_TestFun@8") 
 
-#if __MACH__
-#	pragma export on
-#endif
+// These should not be exported if we're doing a CFM build
+EXPORT_DECL(NPError) NP_GetEntryPoints(NPPluginFuncs*);
+EXPORT_DECL(NPError) NP_Initialize(NPNetscapeFuncs_Z*);
+EXPORT_DECL(NPError) NP_Shutdown();
+//##EXPORT_DECL(int) main(NPNetscapeFuncs_Z*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
 
-NPError NP_Initialize(NPNetscapeFuncs_Z*);
-NPError NP_Initialize(NPNetscapeFuncs_Z* iBrowserFuncs)
-	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->Initialize(iBrowserFuncs); }
-
-NPError NP_GetEntryPoints(NPPluginFuncs*);
-NPError NP_GetEntryPoints(NPPluginFuncs* oPluginFuncs)
+EXPORT_DEF(NPError) NP_GetEntryPoints(NPPluginFuncs* oPluginFuncs)
 	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->GetEntryPoints(oPluginFuncs); }
 
-NPError NP_Shutdown();
-NPError NP_Shutdown()
+EXPORT_DEF(NPError) NP_Initialize(NPNetscapeFuncs_Z* iBrowserFuncs)
+	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->Initialize(iBrowserFuncs); }
+
+EXPORT_DEF(NPError) NP_Shutdown()
 	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->Shutdown(); }
 
-#if __MACH__
-#	pragma export off
-#endif
-
-// For compatibility with CFM and Mozilla-type browsers
-#pragma export on
-
-int main(NPNetscapeFuncs_Z*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
-int main(NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
+#if 0
+EXPORT_DEF(int) main(NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
 	{
 	// This function is called by CFM browsers, and also by Mozilla-based code.
 	// On Intel the function pointers are just regular function pointers, on PPC they
@@ -105,9 +105,6 @@ int main(NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProc
 
 	return result;
 	}
-
-#pragma export off
-
-} // extern "C"
+#endif
 
 #endif // ZCONFIG_SPI_Enabled(Netscape)

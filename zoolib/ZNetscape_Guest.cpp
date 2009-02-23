@@ -68,6 +68,10 @@ template <>
 void spRelease_T(NPVariantG& iNPVariantG)
 	{ GuestMeister::sGet()->Host_ReleaseVariantValue(&iNPVariantG); }
 
+template <>
+void* spMalloc_T(NPVariantG&, size_t iLength)
+	{ return GuestMeister::sGet()->Host_MemAlloc(iLength); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * NPObjectG
@@ -84,10 +88,11 @@ bool NPObjectG::sIsString(NPIdentifier iNPI)
 string NPObjectG::sAsString(NPIdentifier iNPI)
 	{
 	string result;
-	if (NPUTF8* theString = GuestMeister::sGet()->Host_UTF8FromIdentifier(iNPI))
+	GuestMeister* theGM = GuestMeister::sGet();
+	if (NPUTF8* theString = theGM->Host_UTF8FromIdentifier(iNPI))
 		{
 		result = theString;
-		free(theString);
+		theGM->Host_MemFree(theString);
 		}
 	return result;
 	}
@@ -233,7 +238,8 @@ bool NPObjectG::Enumerate(std::vector<NPIdentifier>& oIdentifiers)
 		return false;
 
 	oIdentifiers.insert(oIdentifiers.end(), theIDs, theIDs + theCount);
-	free(theIDs);
+
+	GuestMeister::sGet()->Host_MemFree(theIDs);
 
 	return true;
 	}
@@ -327,7 +333,8 @@ bool ObjectG::Imp_Enumerate(NPIdentifier*& oIDs, uint32_t& oCount)
 	if (this->Imp_Enumerate(theNames))
 		{
 		oCount = theNames.size();
-		oIDs = static_cast<NPIdentifier*>(malloc(sizeof(NPIdentifier) * theNames.size()));
+		void* p = GuestMeister::sGet()->Host_MemAlloc(sizeof(NPIdentifier) * theNames.size());
+		oIDs = static_cast<NPIdentifier*>(p);
 		for (size_t x = 0; x < oCount; ++x)
 			oIDs[x] = sAsNPI(theNames[x]);
 
@@ -912,7 +919,7 @@ static bool sHostUsesOldWebKit(NPP npp)
 		if (const char* userAgent = GuestMeister::sGet()->Host_UserAgent(npp))
 			{
 			static const char* const prefix = " AppleWebKit/";
-			if (char* versionString = strstr(userAgent, prefix))
+			if (const char* versionString = strstr(userAgent, prefix))
 				{
 				versionString += strlen(prefix);
 				int webKitVersion = atoi(versionString);
@@ -937,7 +944,7 @@ NPError GuestMeister::sGetValue(NPP npp, NPPVariable variable, void *value)
 			// We do not call releaseObject, because the likelihood is that the ref
 			// count is currently one, and an active release would destroy the object
 			// before our buggy caller gets a chance to increment the count.
-			NPObject* theNPO = static_cast<NPObject*>(value);
+			NPObject* theNPO = *static_cast<NPObject**>(value);
 			--theNPO->referenceCount;
 			}
 		return result;
