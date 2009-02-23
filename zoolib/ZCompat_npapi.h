@@ -22,38 +22,38 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCompat_npapi__
 #include "zconfig.h"
 
-#include "ZCONFIG_SPI.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #if ZCONFIG_SPI_Enabled(Netscape)
 
-// Pull in ZTypes so we see its int32 definition
-#include "zoolib/ZTypes.h"
+// Pull in ZStdInt.h so we see its int32 definition
+#include "zoolib/ZStdInt.h"
 
 #if defined(ZProjectHeader_npapi)
 
-#	include ZProjectHeader_npapi
+	#include ZProjectHeader_npapi
 
 #elif defined(__APPLE__)
 
-#	include <WebKit/npfunctions.h>
-#	if !defined(XP_MACOSX)
+	#include <WebKit/npfunctions.h>
+	#if !defined(XP_MACOSX)
 		typedef NPError (*NP_InitializeFuncPtr)(NPNetscapeFuncs*);
 		typedef NPError (*NP_GetEntryPointsFuncPtr)(NPPluginFuncs*);
 		typedef void (*BP_CreatePluginMIMETypesPreferencesFuncPtr)(void);
 		typedef NPError (*MainFuncPtr)(NPNetscapeFuncs*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
-#	endif
+	#endif
 
-#	ifndef ZCONFIG_NPStringUpperCaseFieldNames
-#		define ZCONFIG_NPStringUpperCaseFieldNames 1
-#	endif
+	#ifndef ZCONFIG_NPStringUpperCaseFieldNames
+	#	define ZCONFIG_NPStringUpperCaseFieldNames 1
+	#endif
 
-#	define NPEventType_GetFocusEvent getFocusEvent
-#	define NPEventType_LoseFocusEvent loseFocusEvent
-#	define NPEventType_AdjustCursorEvent loseFocusEvent
+	#define NPEventType_GetFocusEvent getFocusEvent
+	#define NPEventType_LoseFocusEvent loseFocusEvent
+	#define NPEventType_AdjustCursorEvent loseFocusEvent
 
 #else
 
-#	include <npupp.h>
+	#include "zoolib/ZNetscape_API.h"
 
 #endif
 
@@ -65,7 +65,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	else
 #		define ZCONFIG_NPAPI_WebKit_10_5 1
 #	endif
-#elif defined(_NPUPP_H_) // defined(npfunctions_h_)
+#elif defined(_NPUPP_H_)
 #	if defined(_NPUPP_USE_UPP_)
 #		define ZCONFIG_NPAPI_Mozilla_Old 1
 #	else
@@ -184,7 +184,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 // NPN and NPP variable fixups
 
-// Actually this mozilla checks is somewhat superfluous -- no XP_MACOSX in old headers.
+// Actually this mozilla check is somewhat superfluous -- no XP_MACOSX in old headers.
 
 #if defined(ZCONFIG_NPAPI_WebKit_10_4) || defined(ZCONFIG_NPAPI_Mozilla_Old)
 
