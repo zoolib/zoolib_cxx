@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZCompat_cmath.h"
+#include "zoolib/ZTypes.h" // For countof
 
 #if ZCONFIG_SPI_Enabled(POSIX)
 #	include <sys/time.h> // For timeval
