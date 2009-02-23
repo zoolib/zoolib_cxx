@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <errno.h>
 #include <sys/socket.h>
+#include <sys/stat.h> // For chmod
 #include <sys/un.h>
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -157,6 +158,8 @@ ZNetListener_Local_Socket::ZNetListener_Local_Socket(
 static int sListen(const string& iPath)
 	{
 	sockaddr_un localSockAddr;
+	ZBlockZero(&localSockAddr, sizeof(localSockAddr));
+
 	if (iPath.empty() || iPath.length() >= sizeof(localSockAddr.sun_path))
 		throw ZNetEx(ZNet::errorGeneric);
 
@@ -164,7 +167,6 @@ static int sListen(const string& iPath)
 	if (theSocketFD < 0)
 		throw ZNetEx(ZNet_Socket::sTranslateError(errno));
 
-	ZBlockSet(&localSockAddr, sizeof(localSockAddr), 0);
 	localSockAddr.sun_family = AF_LOCAL;
 	strcpy(localSockAddr.sun_path, iPath.c_str());
 
@@ -176,6 +178,9 @@ static int sListen(const string& iPath)
 		::close(theSocketFD);
 		throw ZNetEx(ZNet_Socket::sTranslateError(err));
 		}
+
+	::chmod(localSockAddr.sun_path, 0666);
+
 	return theSocketFD;
 	}
 
@@ -215,7 +220,7 @@ static int sConnect(const string& iPath)
 		throw ZNetEx(ZNet_Socket::sTranslateError(errno));
 
 	sockaddr_un remoteSockAddr;
-	ZBlockSet(&remoteSockAddr, sizeof(remoteSockAddr), 0);
+	ZBlockZero(&remoteSockAddr, sizeof(remoteSockAddr));
 	remoteSockAddr.sun_family = AF_LOCAL;
 	strcpy(remoteSockAddr.sun_path, iPath.c_str());
 
