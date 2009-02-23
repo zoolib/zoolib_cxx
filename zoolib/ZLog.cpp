@@ -22,15 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h"
 #include "zoolib/ZThread.h"
 
-#include <cstring>
-
-#if ZCONFIG(Compiler,CodeWarrior)
-#	if !defined(_MSL_USING_MW_C_HEADERS) || _MSL_USING_MW_C_HEADERS
-		// MSL doesn't include strcasecmp in the regular <strings.h>
-#		include <extras.h>
-#	endif
-#endif
-
 using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -56,10 +47,9 @@ static const char* const sNames[] =
 
 ZLog::EPriority ZLog::sPriorityFromName(const string& iString)
 	{
-	const char* asCharStar = iString.c_str();
 	for (int priority = 0; priority <= eDebug; ++priority)
 		{
-		if (0 == strcasecmp(asCharStar, sNames[priority]))
+		if (0 == ZString::sEquali(iString, sNames[priority]))
 			return priority;
 		}
 	return -1;
