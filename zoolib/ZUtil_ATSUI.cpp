@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Util_ATSUI)
 
-#include "ZDebug.h" // For ZAssertCompile
+#include "zoolib/ZDebug.h" // For ZAssertCompile
 
 NAMESPACE_ZOOLIB_BEGIN
 
