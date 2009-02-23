@@ -223,6 +223,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // ==================================================
 // Some extra bits to patch up some MSVC issues.
+
 #if defined(_MSC_VER)
 
 #	if !defined(_MT)
@@ -230,21 +231,34 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	endif
 
 	// Ghastly workaround for MSVC non-compliance with C++ standard
-#	define for if (0) {} else for
+#	if _MSC_VER < 600
+#		define for if (0) {} else for
+#	endif
 
-	// Disable warning "illegal pragma" -- we use pragma mark fairly extensively
+	// "illegal pragma" -- we use pragma mark fairly extensively
 #	pragma warning(disable:4068)
 
-	// Disable warning "debug info truncated to 255 characters"
+	// "debug info truncated to 255 characters"
 	// (STL template expansion will often generate this)
 #	pragma warning(disable:4786)
 
-	// Disable warning "'this' used in base member initializer list" -- we
+	// "'this' used in base member initializer list" -- we
 	// know what we're doing when we do this.
 #	pragma warning(disable:4355)
 
-	// Disable warning "forcing value to bool 'true' or 'false'"
+	// "forcing value to bool 'true' or 'false'"
 #	pragma warning(disable:4800)
+
+	// argument "conversion from 'XX' to 'XXX', possible loss of data"
+#	pragma warning(disable:4244)
+
+	// Signed/unsigned comparison
+#	pragma warning(disable:4018)
+
+	// return "conversion from 'XX' to 'XXX', possible loss of data"
+#	pragma warning(disable:4267)
+
+#	define _CRT_SECURE_NO_DEPRECATE
 
 #endif
 
