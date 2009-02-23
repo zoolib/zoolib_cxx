@@ -22,21 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCompat_Algorithm__
 #include "zconfig.h"
 
-#if defined(_MSC_VER) && !defined(__MWERKS__)
-#	if (_MSC_VER < 1200)
-#		include <algorithm.h>
-#	else
-#		include <algorithm>
-#	endif
-
-	template <class T>
-	inline const T& min(const T& a, const T& b)
-		{ return b < a ? b : a; }
-
-	template <class T>
-	inline const T& max(const T& a, const T& b)
-		{ return a < b ? b : a; }
-
+#if !defined(__MWERKS__) && defined(_MSC_VER) && (_MSC_VER < 1200)
+#	include <algorithm.h>
 #else
 #	include <algorithm>
 #endif
