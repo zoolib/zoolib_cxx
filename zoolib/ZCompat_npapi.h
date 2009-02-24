@@ -24,8 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(Netscape)
-
 // Pull in ZStdInt.h so we see its int32 definition
 #include "zoolib/ZStdInt.h"
 
@@ -222,9 +220,6 @@ typedef struct NP_CGContext
 
 #endif // ZCONFIG_NPAPI_WebKit_10_4
 
-
 // =================================================================================================
-
-#endif // ZCONFIG_SPI_Enabled(Netscape)
 
 #endif // __ZCompat_npapi__
