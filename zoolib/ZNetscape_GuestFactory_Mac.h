@@ -24,8 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_Host.h" // For GuestFactory
 
-#if ZCONFIG_SPI_Enabled(Netscape)
-
 #include <string>
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -41,7 +39,5 @@ ZRef<GuestFactory> sMakeGuestFactory_MacPlugin(const std::string& iPath);
 } // namespace ZNetscape
 
 NAMESPACE_ZOOLIB_END
-
-#endif // ZCONFIG_SPI_Enabled(Netscape)
 
 #endif // __ZNetscape_GuestFactory_Mac__

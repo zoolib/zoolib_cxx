@@ -20,30 +20,30 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_GuestFactory_Mac.h"
 
-#if ZCONFIG_SPI_Enabled(Netscape)
-
-#include "zoolib/ZCONFIG_SPI.h"
-
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
 
-#include "zoolib/ZDebug.h"
-#include "zoolib/ZLog.h"
-#include "zoolib/ZMemory.h"
-#include "zoolib/ZUtil_MacOSX.h"
+	#include "zoolib/ZDebug.h"
+	#include "zoolib/ZLog.h"
+	#include "zoolib/ZMemory.h"
+	#include "zoolib/ZUtil_MacOSX.h"
 
-#include ZMACINCLUDE2(CoreFoundation,CFBundle.h)
+	#include ZMACINCLUDE2(CoreFoundation,CFBundle.h)
 
-#if __MACH__
-#	include <mach-o/dyld.h> // For NSModule
-#endif
+	#if __MACH__
+	#	include <mach-o/dyld.h> // For NSModule
+	#endif
 
-#include <vector>
+	#include <vector>
+
+#endif // ZCONFIG_SPI_Enabled(CoreFoundation)
 
 NAMESPACE_ZOOLIB_BEGIN
 
 using std::vector;
 
 using ZNetscape::NPNetscapeFuncs_Z;
+
+#if ZCONFIG_SPI_Enabled(CoreFoundation)
 
 // =================================================================================================
 #pragma mark -
@@ -352,6 +352,7 @@ static ZRef<ZNetscape::GuestFactory> sMakeGuestFactory_MacPlugin(CFPlugInRef iPl
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
 
+
 ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory_MacPlugin(const std::string& iPath)
 	{
 	ZRef<ZNetscape::GuestFactory> result;
@@ -375,5 +376,3 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory_MacPlugin(const std::
 	}
 
 NAMESPACE_ZOOLIB_END
-
-#endif // ZCONFIG_SPI_Enabled(Netscape)

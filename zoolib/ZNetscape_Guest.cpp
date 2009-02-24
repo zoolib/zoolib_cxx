@@ -20,8 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_Guest.h"
 
-#if ZCONFIG_SPI_Enabled(Netscape)
-
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
@@ -1134,5 +1132,3 @@ ZRef<NPObjectG> Guest::Host_GetPluginObject()
 } // namespace ZNetscape
 
 NAMESPACE_ZOOLIB_END
-
-#endif // ZCONFIG_SPI_Enabled(Netscape)

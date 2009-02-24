@@ -20,8 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape.h"
 
-#if ZCONFIG_SPI_Enabled(Netscape)
-
 #include "zoolib/ZString.h"
 
 #include <cstring>
@@ -136,5 +134,3 @@ std::string sAsString(NPPVariable iVar)
 } // namespace ZNetscape
 
 NAMESPACE_ZOOLIB_END
-
-#endif // ZCONFIG_SPI_Enabled(Netscape)

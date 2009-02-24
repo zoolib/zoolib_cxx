@@ -20,8 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_Guest_Std.h"
 
-#if ZCONFIG_SPI_Enabled(Netscape)
-
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
 
@@ -155,5 +153,3 @@ NPError Guest_Std::Guest_SetValue(NPNVariable iNPNVariable, void* iValue)
 } // namespace ZNetscape
 
 NAMESPACE_ZOOLIB_END
-
-#endif // ZCONFIG_SPI_Enabled(Netscape)

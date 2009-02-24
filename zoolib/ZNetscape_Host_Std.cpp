@@ -20,8 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_Host_Std.h"
 
-#if ZCONFIG_SPI_Enabled(Netscape)
-
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZHTTP_Requests.h"
 #include "zoolib/ZLog.h"
@@ -1138,5 +1136,3 @@ void Host_Std::DoEvent(const EventRecord& iEvent)
 } // namespace ZNetscape
 
 NAMESPACE_ZOOLIB_END
-
-#endif // ZCONFIG_SPI_Enabled(Netscape)
