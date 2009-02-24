@@ -49,24 +49,45 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG(Compiler, MSVC)
 
-	typedef __int8 int8;
-	typedef unsigned __int8 uint8;
-
-	typedef __int16 int16;
-	typedef unsigned __int16 uint16;
-
-	#ifndef _INT32
-		#define _INT32 1
-		typedef __int32 int32;
+	#ifndef _INT8_T
+		#define _INT8_T
+		typedef	__int8 int8_t;
 	#endif
 
-	#ifndef _UINT32
-		#define _UINT32 1
-		typedef unsigned __int32 uint32;
+	#ifndef _INT16_T
+		#define _INT16_T
+		typedef	__int16 int16_t;
 	#endif
 
-	typedef __int64 int64;
-	typedef unsigned __int64 uint64;
+	#ifndef _INT32_T
+		#define _INT32_T
+		typedef	__int32 int32_t;
+	#endif
+
+	#ifndef _INT64_T
+		#define _INT64_T
+		typedef	__int64 int64_t;
+	#endif
+
+	#ifndef _UINT8_T_DECLARED
+		#define _UINT8_T_DECLARED
+		typedef unsigned __int8 uint8_t;
+	#endif
+
+	#ifndef _UINT16_T_DECLARED
+		#define _UINT16_T_DECLARED
+		typedef unsigned __int16 uint16_t;
+	#endif
+
+	#ifndef _UINT32_T_DECLARED
+		#define _UINT32_T_DECLARED
+		typedef unsigned __int32 uint32_t;
+	#endif
+
+	#ifndef _UINT64_T_DECLARED
+		#define _UINT64_T_DECLARED
+		typedef unsigned __int64 uint64_t;
+	#endif
 
 	#define ZINT64_C(v) (v##i64)
 	#define ZUINT64_C(v) (v##ui64)
@@ -75,29 +96,29 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	#include <stdint.h>
 
-	typedef int8_t int8;
-	typedef uint8_t uint8;
-
-	typedef int16_t int16;
-	typedef uint16_t uint16;
-
-	#ifndef _INT32
-		#define _INT32 1
-		typedef int32_t int32;
-	#endif
-
-	#ifndef _UINT32
-		#define _UINT32 1
-		typedef uint32_t uint32;
-	#endif
-
-	typedef int64_t int64;
-	typedef uint64_t uint64;
-
 	#define ZINT64_C(v) (v##LL)
 	#define ZUINT64_C(v) (v##ULL)
 
 #endif
+
+typedef int8_t int8;
+typedef uint8_t uint8;
+
+typedef int16_t int16;
+typedef uint16_t uint16;
+
+#ifndef _INT32
+	#define _INT32 1
+	typedef int32_t int32;
+#endif
+
+#ifndef _UINT32
+	#define _UINT32 1
+	typedef uint32_t uint32;
+#endif
+
+typedef int64_t int64;
+typedef uint64_t uint64;
 
 typedef int64 bigtime_t;
 
