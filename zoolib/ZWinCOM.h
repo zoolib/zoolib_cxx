@@ -52,8 +52,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #else
 
+	#define ZWinCOM_STRINGIFY(a) #a
+
 	#define ZWinCOM_CLASS_(className, baseClass, l, w0, w1, b0, b1, b2, b3, b4, b5, b6, b7) \
-		MIDL_INTERFACE(#l"-"#w0"-"#w1"-"#b0#b1"-"#b2#b3#b4#b5#b6#b7)\
+		MIDL_INTERFACE(ZWinCOM_STRINGIFY(l##-##w0##-##w1##-##b0##b1##-##b2##b3##b4##b5##b6##b7))\
 		className : public baseClass {
 
 	#define ZWinCOM_DEFINITION(className)
