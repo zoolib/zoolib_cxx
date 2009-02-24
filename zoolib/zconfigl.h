@@ -249,16 +249,24 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// "forcing value to bool 'true' or 'false'"
 #	pragma warning(disable:4800)
 
-	// argument "conversion from 'XX' to 'XXX', possible loss of data"
+	// argument "conversion from 'XXX' to 'YYY', possible loss of data"
 #	pragma warning(disable:4244)
 
 	// Signed/unsigned comparison
 #	pragma warning(disable:4018)
 
-	// return "conversion from 'XX' to 'XXX', possible loss of data"
+	// return "conversion from 'XXX' to 'YYY', possible loss of data"
 #	pragma warning(disable:4267)
 
+	// inherits 'XXX' via dominance
+#	pragma warning(disable:4250)
+
+#	define _CRT_NONSTDC_NO_DEPRECATE
 #	define _CRT_SECURE_NO_DEPRECATE
+#	define _HAS_ITERATOR_DEBUGGING 0
+#	define _SCL_SECURE_NO_DEPRECATE
+#	define _SECURE_SCL 0
+
 
 #endif
 
