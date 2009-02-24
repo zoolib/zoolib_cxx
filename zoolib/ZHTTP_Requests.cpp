@@ -277,7 +277,7 @@ static bool sReadName(const ZStreamU& iStreamU, string& oName)
 #if 0
 static bool sReadValue(const ZStreamU& iStreamU, string& oValue)
 	{
-	#warning not done yet
+	//#warning "not done yet"
 	bool gotAny = false;
 	for (;;)
 		{
@@ -331,7 +331,7 @@ static bool sReadPOST(const ZStreamR& iStreamR, const ZTuple& iHeader, ZTValue& 
 		// It's application/x-www-url-encoded. So we're going to unpack it into a tuple.
 		ZTuple& theTuple = oTV.SetMutableTuple();
 		// yadda yadda.
-		#warning not done yet
+		//#warning "not done yet"
 		return true;
 		}
 	else if (content_type.GetString("type") == "multipart"

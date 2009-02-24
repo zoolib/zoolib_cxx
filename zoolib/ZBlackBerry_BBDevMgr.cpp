@@ -187,7 +187,7 @@ STDMETHODIMP Channel_BBDevMgr::OnChallenge(int32 iAttemptsRemaining, uint8 oPass
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 		s << "OnChallenge";
 
-	#warning not working yet
+	//#warning "not working yet"
 	if (false && fHasPasswordHash && iAttemptsRemaining > 6)
 		{
 		*reinterpret_cast<PasswordHash*>(oPasswordHash) = fPasswordHash;
@@ -530,7 +530,7 @@ ZRef<Channel> Device_BBDevMgr::Open(bool iPreserveBoundaries,
 			return theChannel;
 
 		// FIXME. Failure may also be due to a bad/missing/expired password.
-		#warning NDY
+		//#warning "NDY"
 		if (oError)
 			*oError = error_UnknownChannel;
 		}

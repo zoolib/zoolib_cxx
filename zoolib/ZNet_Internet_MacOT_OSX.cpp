@@ -811,7 +811,7 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_GetCountReadable(void* iParam)
 
 bool ZNetEndpoint_TCP_MacOT_OSX::Imp_WaitReadable(int iMilliseconds)
 	{
-	#warning "Not done yet. We're not really timing out here"
+	//#warning "Not done yet. We're not really timing out here"
 	return this->Imp_CountReadable();
 	}
 
@@ -917,7 +917,7 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_ReceiveDisconnect(void* iParam)
 			}
 		}
 	theStruct->fResult = true;
-	#warning "Not done yet. We're not really timing out here"
+	//#warning "Not done yet. We're not really timing out here"
 	}
 
 void ZNetEndpoint_TCP_MacOT_OSX::Imp_SendDisconnect()

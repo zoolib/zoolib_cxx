@@ -90,7 +90,7 @@ bool ZMIME::sReadFieldName(const ZStreamR& iStream, std::string* oName, std::str
 ZMIME::StreamR_Header::StreamR_Header(const ZStreamR& iStream)
 :	fStreamR(iStream),
 	fState(eNormal)
-#warning check this
+//#warning "check this"
 // Should we *start* in eSeen_LF, so an empty header ends up in eSeen_LF_LF? Or should
 // we have some other initial state?
 	{}

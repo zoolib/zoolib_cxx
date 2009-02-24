@@ -179,7 +179,7 @@ static time_t sTMToTime(const struct tm& iTM)
  	#elif defined(__sun__)
 
 		// Sun doesn't provide timegm, assume things are going to work.
-		#warning CHECK THIS
+		//#warning "CHECK THIS"
 		ZAssert(iTM.tm_isdst == 0);
 		result = mktime(const_cast<struct tm*>(&iTM));
 
@@ -191,7 +191,7 @@ static time_t sTMToTime(const struct tm& iTM)
 	#endif
 
 	// MSL may not use the correct epoch start
-//##	#warning check this
+	//#warning "check this"
 	return result;
 //	return sFromSystemEpoch(result);
 	}
