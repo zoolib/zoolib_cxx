@@ -35,47 +35,49 @@ using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZUtil_TS {
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_TS exceptions
 
-ZUtil_TS::Ex_Base::Ex_Base(const char* what)
+Ex_Base::Ex_Base(const char* what)
 :	runtime_error(what)
 	{}
 
-ZUtil_TS::Ex_Base::Ex_Base(const std::string& what)
+Ex_Base::Ex_Base(const std::string& what)
 :	runtime_error(what)
 	{}
 
-ZUtil_TS::Ex_MagicTextMissing::Ex_MagicTextMissing()
+Ex_MagicTextMissing::Ex_MagicTextMissing()
 :	Ex_Base("Magic Text Missing")
 	{}
 
-ZUtil_TS::Ex_IDInvalid::Ex_IDInvalid()
+Ex_IDInvalid::Ex_IDInvalid()
 :	Ex_Base("ID Invalid")
 	{}
 
-ZUtil_TS::Ex_IDOutOfSequence::Ex_IDOutOfSequence()
+Ex_IDOutOfSequence::Ex_IDOutOfSequence()
 :	Ex_Base("ID Out Of Sequence")
 	{}
 
-ZUtil_TS::Ex_IDOutOfBounds::Ex_IDOutOfBounds()
+Ex_IDOutOfBounds::Ex_IDOutOfBounds()
 :	Ex_Base("ID Out Of Bounds")
 	{}
 
-ZUtil_TS::Ex_IDDuplicate::Ex_IDDuplicate()
+Ex_IDDuplicate::Ex_IDDuplicate()
 :	Ex_Base("ID Duplicate")
 	{}
 
-ZUtil_TS::Ex_OversizedStream::Ex_OversizedStream()
+Ex_OversizedStream::Ex_OversizedStream()
 :	Ex_Base("Oversized Stream")
 	{}
 
-ZUtil_TS::Ex_MalformedText::Ex_MalformedText(const char* what)
+Ex_MalformedText::Ex_MalformedText(const char* what)
 :	Ex_Base(what)
 	{}
 
-ZUtil_TS::Ex_MalformedText::Ex_MalformedText(const std::string& what)
+Ex_MalformedText::Ex_MalformedText(const std::string& what)
 :	Ex_Base(what)
 	{}
 
@@ -83,12 +85,12 @@ ZUtil_TS::Ex_MalformedText::Ex_MalformedText(const std::string& what)
 #pragma mark -
 #pragma mark * ZUtil_TS::Source_Map
 
-ZUtil_TS::Source_Map::Source_Map(const map<uint64, ZTuple>& iMap)
+Source_Map::Source_Map(const map<uint64, ZTuple>& iMap)
 :	fIter(iMap.begin()),
 	fEnd(iMap.end())
 	{}
 
-bool ZUtil_TS::Source_Map::Get(uint64& oID, ZTuple& oTuple)
+bool Source_Map::Get(uint64& oID, ZTuple& oTuple)
 	{
 	if (fIter == fEnd)
 		return false;
@@ -103,18 +105,18 @@ bool ZUtil_TS::Source_Map::Get(uint64& oID, ZTuple& oTuple)
 #pragma mark -
 #pragma mark * ZUtil_TS::Sink_Map
 
-ZUtil_TS::Sink_Map::Sink_Map(map<uint64, ZTuple>& oMap)
+Sink_Map::Sink_Map(map<uint64, ZTuple>& oMap)
 :	fMap(oMap)
 	{}
 
-bool ZUtil_TS::Sink_Map::Set(uint64 iID, const ZTuple& iTuple)
+bool Sink_Map::Set(uint64 iID, const ZTuple& iTuple)
 	{
 	pair<map<uint64, ZTuple>::iterator, bool> result =
 		fMap.insert(map<uint64, ZTuple>::value_type(iID, iTuple.Minimized()));
 	return result.second;
 	}
 
-void ZUtil_TS::Sink_Map::Clear()
+void Sink_Map::Clear()
 	{ fMap.clear(); }
 
 // =================================================================================================
@@ -123,7 +125,7 @@ void ZUtil_TS::Sink_Map::Clear()
 
 static const char sMagicText[] = "ZTS_RAM 1.0 CRLF\r\nCR\rLF\n";
 
-void ZUtil_TS::sToStream(uint64 iNextUnusedID, Source& iSource, const ZStreamWPos& iStreamWPos)
+void sToStream(uint64 iNextUnusedID, Source& iSource, const ZStreamWPos& iStreamWPos)
 	{
 	iStreamWPos.Truncate();
 
@@ -158,7 +160,7 @@ void ZUtil_TS::sToStream(uint64 iNextUnusedID, Source& iSource, const ZStreamWPo
 	iStreamWPos.SetPosition(iStreamWPos.GetSize());
 	}
 
-void ZUtil_TS::sFromStream(Sink& iSink, uint64& oNextUnusedID, const ZStreamR& iStreamR)
+void sFromStream(Sink& iSink, uint64& oNextUnusedID, const ZStreamR& iStreamR)
 	{
 	ZStreamR_Buffered theSRB(64 * 1024, iStreamR);
 
@@ -196,7 +198,7 @@ void ZUtil_TS::sFromStream(Sink& iSink, uint64& oNextUnusedID, const ZStreamR& i
 		throw Ex_OversizedStream();
 	}
 
-void ZUtil_TS::sToStrim(uint64 iNextUnusedID, Source& iSource, const ZStrimW& iStrimW)
+void sToStrim(uint64 iNextUnusedID, Source& iSource, const ZStrimW& iStrimW)
 	{
 	iStrimW.Writef("// Version 1.0\n// Next unused ID: \n0x%llX /*%lld*/\n", iNextUnusedID, iNextUnusedID);
 
@@ -219,7 +221,7 @@ void ZUtil_TS::sToStrim(uint64 iNextUnusedID, Source& iSource, const ZStrimW& iS
 		}
 	}
 
-void ZUtil_TS::sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
+void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 	{
 	using namespace ZUtil_Strim;
 
@@ -323,15 +325,15 @@ void ZUtil_TS::sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iSt
 		}
 	}
 
-void ZUtil_TS::sRead(const ZStreamRPos& iStreamRPos, uint64& oNextUnusedID, Sink& iSink)
+void sRead(const ZStreamRPos& iStreamRPos, uint64& oNextUnusedID, Sink& iSink)
 	{
 	try
 		{
 		// First try reading it as binary
 		iStreamRPos.SetPosition(0);
-		ZUtil_TS::sFromStream(iSink, oNextUnusedID, iStreamRPos);
+		sFromStream(iSink, oNextUnusedID, iStreamRPos);
 		}
-	catch (Ex_MagicTextMissing& ex)
+	catch (Ex_MagicTextMissing& /*ex*/)
 		{
 		// Reset our stream, and toss any data that might have been put into oTuples.
 		iStreamRPos.SetPosition(0);
@@ -344,7 +346,7 @@ void ZUtil_TS::sRead(const ZStreamRPos& iStreamRPos, uint64& oNextUnusedID, Sink
 		ZUtil_Strim::StrimU_Std theStrimU(new ZTextDecoder_Unicode_AutoDetect, theSRB);
 		try
 			{
-			ZUtil_TS::sFromStrim(iSink, oNextUnusedID, theStrimU);
+			sFromStrim(iSink, oNextUnusedID, theStrimU);
 			}
 		catch (ZUtil_Strim::ParseException& ex)
 			{
@@ -361,9 +363,11 @@ void ZUtil_TS::sRead(const ZStreamRPos& iStreamRPos, uint64& oNextUnusedID, Sink
 		}
 	}
 
-void ZUtil_TS::sWriteMagicText(const ZStreamW& iStreamW)
+void sWriteMagicText(const ZStreamW& iStreamW)
 	{
 	iStreamW.Write(sMagicText, sizeof(sMagicText));
 	}
+
+} // namespace ZUtil_TS
 
 NAMESPACE_ZOOLIB_END

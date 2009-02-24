@@ -204,26 +204,15 @@ thus provides access to a ZStreamRCon and a ZStreamWCon.
 \ingroup group_Streamer
 */
 
-#if ZCONFIG(Compiler,MSVC)
-#	pragma warning(push)
-#	pragma warning(disable:4250)
-#endif
 class ZStreamerRWCon
 :	public ZStreamerRW,
 	public ZStreamerRCon,
 	public ZStreamerWCon
 	{
 public:
-// Other way to bypass warning 4250
-//	virtual const ZStreamR& GetStreamR() { return ZStreamerRCon::GetStreamR(); }
-//	virtual const ZStreamW& GetStreamW() { return ZStreamerWCon::GetStreamW(); }
 	void Disconnect();
 	void Abort();
 	};
-
-#if ZCONFIG(Compiler,MSVC)
-#	pragma warning(pop)
-#endif
 
 // =================================================================================================
 #pragma mark -

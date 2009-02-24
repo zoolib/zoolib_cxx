@@ -116,11 +116,11 @@ public:
 		}	
 	} sMaker0;
 
+} // anonymous namespace
+
 template <>
 ZRef<ZGRgnRep> ZGRgnRepCreator_T<HRGN>::sCreate(HRGN iNative, bool iAdopt)
 	{ return new ZGRgnRep_HRGN(iNative, iAdopt); }
-
-} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

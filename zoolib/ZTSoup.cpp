@@ -846,7 +846,7 @@ void ZTSoup::Updated(
 
 void ZTSoup::Loaded(const set<ZRef<ZTSieve> >& iTSieves, ELoaded iLoaded)
 	{
-	for (set<ZRef<ZTSieve> >::iterator i = iTSieves.begin(),
+	for (set<ZRef<ZTSieve> >::const_iterator i = iTSieves.begin(),
 		theEnd = iTSieves.end(); i != theEnd; ++i)
 		{
 		this->Loaded(*i, iLoaded);
@@ -855,7 +855,7 @@ void ZTSoup::Loaded(const set<ZRef<ZTSieve> >& iTSieves, ELoaded iLoaded)
 
 void ZTSoup::Changed(const set<ZRef<ZTSieve> >& iTSieves, EChanged iChanged)
 	{
-	for (set<ZRef<ZTSieve> >::iterator i = iTSieves.begin(),
+	for (set<ZRef<ZTSieve> >::const_iterator i = iTSieves.begin(),
 		theEnd = iTSieves.end(); i != theEnd; ++i)
 		{
 		this->Changed(*i, iChanged);

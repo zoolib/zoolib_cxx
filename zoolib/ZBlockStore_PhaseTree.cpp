@@ -133,7 +133,7 @@ protected:
 	uint32 fSlotNumber;
 	int fUseCount;
 	EState fState;
-	char fData[0];
+	char fData[1];
 	};
 
 ZBlockStore_PhaseTree::Slot::Slot(uint32 iSlotNumber, bool iForked)
@@ -161,7 +161,7 @@ ZBlockStore_PhaseTree::Slot::~Slot()
 
 void* ZBlockStore_PhaseTree::Slot::operator new(size_t iObjectSize, size_t iSlotSize)
 	{
-	return new char[iObjectSize + iSlotSize];
+	return new char[iObjectSize - 1 + iSlotSize];
 	}
 
 void ZBlockStore_PhaseTree::Slot::operator delete(void* iPtr, size_t iObjectSize)

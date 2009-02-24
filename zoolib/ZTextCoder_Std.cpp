@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTextCoder_Std.h"
 
+#include "zoolib/ZCompat_algorithm.h" // For lower_bound
 #include "zoolib/ZFactoryChain.h"
 
 using std::string;

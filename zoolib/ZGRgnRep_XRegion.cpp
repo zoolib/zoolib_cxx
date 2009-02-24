@@ -112,11 +112,11 @@ public:
 		}	
 	} sMaker0;
 
+} // anonymous namespace
+
 template <>
 ZRef<ZGRgnRep> ZGRgnRepCreator_T<Region>::sCreate(Region iNative, bool iAdopt)
 	{ return new ZGRgnRep_XRegion(iNative, iAdopt); }
-
-} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

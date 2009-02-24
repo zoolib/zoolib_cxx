@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompare.h"
 
-#include <math.h> // For NAN and isnan -- cmath doesn't make isnan visible on gcc/MacOSX
+#include "zoolib/ZCompat_cmath.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 

@@ -573,7 +573,7 @@ static void sToStream(const ZStreamW& iStreamW, const ZStreamR& iStreamR)
 		uint64 countRemaining = theStreamRPos->GetSize();
 		while (countRemaining)
 			{
-			size_t countToWrite = size_t(min(countRemaining, 0xFFFFFFFFLLU));
+			size_t countToWrite = size_t(min(countRemaining, ZUINT64_C(0xFFFFFFFF)));
 			iStreamW.WriteCount(countToWrite);
 			iStreamR.CopyTo(iStreamW, countToWrite);
 			countRemaining -= countToWrite;

@@ -27,21 +27,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <math.h>
 
 #if ZCONFIG(Compiler, MSVC)
-#	include <cfloat>
-#	define isnan _isnan
+
+	#include <cfloat>
+
+	#define isnan _isnan
 
 	static unsigned int __qnan[] = { 0x7fc00001 };
-#	define NAN (*(float *) __qnan)
+	#define NAN (*(float*)__qnan)
+
+	static unsigned int __infinity[] = { 0x7f800000 };
+	#define INFINITY (*(float*)__infinity)
 
 #else
 
-#	if !defined(INFINITY)
-#		define INFINITY (1.0/0.0)
-#	endif
+	#if !defined(INFINITY)
+		#define INFINITY (1.0/0.0)
+	#endif
 
-#	if !defined(NAN)
-#		define NAN (0.0/0.0)
-#	endif
+	#if !defined(NAN)
+	#	define NAN (0.0/0.0)
+	#endif
 
 #endif
 

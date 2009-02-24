@@ -78,13 +78,13 @@ public:
 		}	
 	} sMaker0;
 
+} // anonymous namespace
+
 template <>
 ZRef<ZGRgnRep> ZGRgnRepCreator_T<ZBigRegion>::sCreate(ZBigRegion iNative, bool iAdopt)
 	{
 	return new ZGRgnRep_BigRegion(iNative);
 	}
-
-} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

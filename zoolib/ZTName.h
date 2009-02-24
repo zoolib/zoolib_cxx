@@ -106,7 +106,7 @@ private:
 
 public:
 	void* operator new(size_t iObjectSize, size_t iDataSize)
-		{ return new char[iObjectSize + iDataSize]; }
+		{ return new char[iObjectSize + iDataSize - 1]; }
 
 	void operator delete(void* iPtr, size_t iObjectSize)
 		{ delete[] static_cast<char*>(iPtr); }
@@ -126,7 +126,7 @@ public:
 	std::string AsString() const;
 
 	const size_t fSize;
-	char fBuffer[0];
+	char fBuffer[1];
 	};
 
 // =================================================================================================

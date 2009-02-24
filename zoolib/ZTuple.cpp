@@ -587,10 +587,10 @@ void ZTValue::FromStreamOld(const ZStreamR& iStreamR)
 			}
 		case eZType_String:
 			{
-			uint32 theSize = sReadCount(iStreamR);
+			size_t theSize = sReadCount(iStreamR);
 			if (theSize <= kBytesSize)
 				{
-				myType = -theSize-1;
+				myType = -int(theSize)-1;
 				if (theSize)
 					iStreamR.Read(fType.fBytes, theSize);
 				}
@@ -741,7 +741,7 @@ ZTValue::ZTValue(const char* iVal)
 	size_t theSize = strlen(iVal);
 	if (theSize <= kBytesSize)
 		{
-		fType.fType = -theSize-1;
+		fType.fType = -int(theSize)-1;
 		if (theSize)
 			ZBlockCopy(iVal, fType.fBytes, theSize);
 		}
@@ -757,7 +757,7 @@ ZTValue::ZTValue(const string& iVal)
 	size_t theSize = iVal.size();
 	if (theSize <= kBytesSize)
 		{
-		fType.fType = -theSize-1;
+		fType.fType = -int(theSize)-1;
 		if (theSize)
 			ZBlockCopy(iVal.data(), fType.fBytes, theSize);
 		}
@@ -1527,7 +1527,7 @@ void ZTValue::SetString(const char* iVal)
 	size_t theSize = strlen(iVal);
 	if (theSize <= kBytesSize)
 		{
-		fType.fType = -theSize-1;
+		fType.fType = -int(theSize)-1;
 		if (theSize)
 			ZBlockCopy(iVal, fType.fBytes, theSize);
 		}
@@ -1544,7 +1544,7 @@ void ZTValue::SetString(const string& iVal)
 	size_t theSize = iVal.size();
 	if (theSize <= kBytesSize)
 		{
-		fType.fType = -theSize-1;
+		fType.fType = -int(theSize)-1;
 		if (theSize)
 			ZBlockCopy(iVal.data(), fType.fBytes, theSize);
 		}
@@ -2232,7 +2232,7 @@ void ZTValue::pFromStream(ZType iType, const ZStreamR& iStreamR)
 			uint32 theSize = sReadCount(iStreamR);
 			if (theSize <= kBytesSize)
 				{
-				iType = (ZType)(-theSize-1);
+				iType = (ZType)(-int(theSize)-1);
 				if (theSize)
 					iStreamR.Read(fType.fBytes, theSize);
 				}

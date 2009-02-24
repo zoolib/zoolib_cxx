@@ -76,6 +76,23 @@ SOFTWARE.
 #	include ZMACINCLUDE3(CoreServices,CarbonCore,MacMemory.h) // For HLock etc.
 #endif
 
+using ZooLib::ZCoord;
+
+// Linux and Be headers currently don't provide <limits>, so we have to futz around.
+#if ZCONFIG_SPI_Enabled(BeOS)
+	#include <climits>
+	static const ZCoord sCoord_Max = LONG_MAX;
+	static const ZCoord sCoord_Min = LONG_MIN;
+//#elif ZCONFIG(OS, POSIX)
+//	#include <climits>
+//	static const ZCoord sCoord_Max = SHRT_MAX;
+//	static const ZCoord sCoord_Min = SHRT_MIN;
+#else
+	#include <limits>
+	static const ZCoord sCoord_Max = std::numeric_limits<ZCoord>::max();
+	static const ZCoord sCoord_Min = std::numeric_limits<ZCoord>::min();
+#endif
+
 NAMESPACE_ZOOLIB_BEGIN
 
 using std::min;
@@ -411,21 +428,6 @@ void ZDCPoly::Decompose(bool iEvenOdd, ZCoord iOffsetH, ZCoord iOffsetV,
 		iEvenOdd, fOrigin.h + iOffsetH, fOrigin.v + iOffsetV, iDecomposeProc, iRefcon);
 		}
 	}
-
-// Linux and Be headers currently don't provide <limits>, so we have to futz around.
-#if ZCONFIG_SPI_Enabled(BeOS)
-	#include <climits>
-	static const ZCoord sCoord_Max = LONG_MAX;
-	static const ZCoord sCoord_Min = LONG_MIN;
-//#elif ZCONFIG(OS, POSIX)
-//	#include <climits>
-//	static const ZCoord sCoord_Max = SHRT_MAX;
-//	static const ZCoord sCoord_Min = SHRT_MIN;
-#else
-	#include <limits>
-	static const ZCoord sCoord_Max = std::numeric_limits<ZCoord>::max();
-	static const ZCoord sCoord_Min = std::numeric_limits<ZCoord>::min();
-#endif
 
 struct BresenhamInfo
 	{

@@ -414,7 +414,7 @@ protected:
 ZDCCanvas_GDI::SetupHFONT::SetupHFONT(ZDCCanvas_GDI* iCanvas, ZDCState& ioState)
 :	fHDC(iCanvas->fHDC)
 	{
-	HFONT theHFONT = ::sCreateHFONT(ioState.fFont);
+	HFONT theHFONT = sCreateHFONT(ioState.fFont);
 	ZAssertStop(kDebug_GDI, theHFONT);
 	fHFONT_Saved = (HFONT)::SelectObject(fHDC, theHFONT);
 	fROP2_Saved = ::SetROP2(fHDC, sModeLookup[ioState.fMode]);
@@ -779,7 +779,7 @@ void ZDCCanvas_GDI::Line(ZDCState& ioState,
 				{
 				// Some kind of diagonal
 				POINT thePOINTS[6];
-				::sBuildPolygonForLine(iStartH + ioState.fOrigin.h,
+				sBuildPolygonForLine(iStartH + ioState.fOrigin.h,
 					iStartV + ioState.fOrigin.v,
 					iEndH + ioState.fOrigin.h,
 					iEndV + ioState.fOrigin.v,
@@ -925,7 +925,7 @@ void ZDCCanvas_GDI::FrameRegion(ZDCState& ioState, const ZDCRgn& iRgn)
 		{
 		SetupDC theSetupDC(this, ioState);
 		SetupModeColor theSetupModeColor(this, ioState);
-		HBRUSH theHBRUSH = ::sCreateHBRUSH(fHDC, theRep, ioState.fPatternOrigin);
+		HBRUSH theHBRUSH = sCreateHBRUSH(fHDC, theRep, ioState.fPatternOrigin);
 		::FrameRgn(fHDC, (iRgn + ioState.fOrigin).GetHRGN(),
 			theHBRUSH, ioState.fPenWidth, ioState.fPenWidth);
 		::DeleteObject(theHBRUSH);
@@ -991,7 +991,7 @@ void ZDCCanvas_GDI::FrameRoundRect(ZDCState& ioState, const ZRect& iRect, const 
 		{
 		SetupDC theSetupDC(this, ioState);
 		SetupModeColor theSetupModeColor(this, ioState);
-		HBRUSH theHBRUSH = ::sCreateHBRUSH(fHDC, theRep, ioState.fPatternOrigin);
+		HBRUSH theHBRUSH = sCreateHBRUSH(fHDC, theRep, ioState.fPatternOrigin);
 		ZRect realBounds = iRect + (ioState.fOrigin);
 		ZDCRgn outerRgn = ZDCRgn::sRoundRect(realBounds, iCornerSize);
 		ZDCRgn innerRgn =
@@ -1026,7 +1026,7 @@ void ZDCCanvas_GDI::FillRoundRect(ZDCState& ioState, const ZRect& iRect, const Z
 		{
 		SetupDC theSetupDC(this, ioState);
 		SetupModeColor theSetupModeColor(this, ioState);
-		HBRUSH theHBRUSH = ::sCreateHBRUSH(fHDC, theRep, ioState.fPatternOrigin);
+		HBRUSH theHBRUSH = sCreateHBRUSH(fHDC, theRep, ioState.fPatternOrigin);
 		::FillRgn(fHDC,
 			ZDCRgn::sRoundRect(iRect + ioState.fOrigin, iCornerSize).GetHRGN(), theHBRUSH);
 		::DeleteObject(theHBRUSH);
@@ -2057,7 +2057,7 @@ static ZRef<ZDCPixmapRep_DIB> sCreateRepForDesc(
 	const ZRect& iBounds,
 	const ZDCPixmapNS::PixelDesc& iPixelDesc)
 	{
-	if (::sCheckDesc(iRaster->GetRasterDesc(), iBounds, iPixelDesc))
+	if (sCheckDesc(iRaster->GetRasterDesc(), iBounds, iPixelDesc))
 		return new ZDCPixmapRep_DIB(iRaster, iBounds, iPixelDesc);
 
 	return ZRef<ZDCPixmapRep_DIB>();
@@ -2160,7 +2160,7 @@ static bool sSetupDIB(
 				if (iRasterDesc.fFlipped)
 					oBITMAPINFO->bmiHeader.biHeight = iRasterDesc.fRowCount;
 				else
-					oBITMAPINFO->bmiHeader.biHeight = -iRasterDesc.fRowCount;
+					oBITMAPINFO->bmiHeader.biHeight = -int(iRasterDesc.fRowCount);
 				oBITMAPINFO->bmiHeader.biSizeImage = iRasterDesc.fRowBytes * iRasterDesc.fRowCount;
 				oBITMAPINFO->bmiHeader.biPlanes = 1;
 				oBITMAPINFO->bmiHeader.biBitCount = iRasterDesc.fPixvalDesc.fDepth;
@@ -2209,7 +2209,7 @@ static bool sSetupDIB(
 				if (iRasterDesc.fFlipped)
 					oBITMAPINFO->bmiHeader.biHeight = iRasterDesc.fRowCount;
 				else
-					oBITMAPINFO->bmiHeader.biHeight = -iRasterDesc.fRowCount;
+					oBITMAPINFO->bmiHeader.biHeight = -int(iRasterDesc.fRowCount);
 				oBITMAPINFO->bmiHeader.biSizeImage = iRasterDesc.fRowBytes * iRasterDesc.fRowCount;
 				oBITMAPINFO->bmiHeader.biPlanes = 1;
 				oBITMAPINFO->bmiHeader.biBitCount = iRasterDesc.fPixvalDesc.fDepth;
@@ -2237,7 +2237,7 @@ ZDCPixmapRep_DIB::ZDCPixmapRep_DIB(ZRef<ZDCPixmapRaster> iRaster,
 	const ZDCPixmapNS::PixelDesc& iPixelDesc)
 :	ZDCPixmapRep(iRaster, iBounds, iPixelDesc)
 	{
-	bool result = ::sSetupDIB(iRaster->GetRasterDesc(), iPixelDesc, fBITMAPINFO);
+	bool result = sSetupDIB(iRaster->GetRasterDesc(), iPixelDesc, fBITMAPINFO);
 	ZAssertStop(kDebug_GDI, result);
 	fChangeCount = fPixelDesc.GetChangeCount() - 1;
 	}
@@ -2438,7 +2438,7 @@ ZRef<ZDCPixmapRep_DIB> ZDCPixmapRep_DIB::sAsPixmapRep_DIB(ZRef<ZDCPixmapRep> iRe
 		ZRef<ZDCPixmapRaster> theRaster = iRep->GetRaster();
 		ZRect theBounds = iRep->GetBounds();
 		PixelDesc thePixelDesc = iRep->GetPixelDesc();
-		theRep_DIB = ::sCreateRepForDesc(theRaster, theBounds, thePixelDesc);
+		theRep_DIB = sCreateRepForDesc(theRaster, theBounds, thePixelDesc);
 		if (!theRep_DIB)
 			{
 			EFormatStandard fallbackFormat = eFormatStandard_BGRx_32;
@@ -2472,7 +2472,7 @@ public:
 
 	virtual bool Make(Result_t& oResult, Param_t iParam)
 		{
-		oResult = ::sCreateRepForDesc(iParam.f0, iParam.f1, iParam.f2);
+		oResult = sCreateRepForDesc(iParam.f0, iParam.f1, iParam.f2);
 		return oResult;
 		}	
 	} sMaker0;
@@ -2488,7 +2488,7 @@ public:
 
 	virtual bool Make(Result_t& oResult, Param_t iParam)
 		{
-		if (::sCheckDesc(iParam.f0, iParam.f1, iParam.f2))
+		if (sCheckDesc(iParam.f0, iParam.f1, iParam.f2))
 			{
 			oResult = new ZDCPixmapRep_DIB(
 				new ZDCPixmapRaster_Simple(iParam.f0), iParam.f1, iParam.f2);
