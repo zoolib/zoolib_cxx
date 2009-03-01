@@ -402,50 +402,26 @@ inline string8 sAsUTF8(const string8& iString)
 
 /** \name Converting buffers between UTF32, UTF16 and UTF8
 *///@{
-void sUTF32ToUTF8(
-	const UTF32* iSource, size_t iSourceCount,
-	size_t* oSourceCount,
-	UTF8* iDest, size_t iDestCU,
-size_t* oDestCU, size_t* oCountCP);
-
-void sUTF32ToUTF8(
+void sUTF32ToUTF32(
 	const UTF32* iSource, size_t iSourceCount,
 	size_t* oSourceCount, size_t* oSourceCountSkipped,
-	UTF8* iDest, size_t iDestCU,
-	size_t* oDestCU, size_t* oCountCP);
-
-
-bool sUTF8ToUTF32(
-	const UTF8* iSource, size_t iSourceCU,
-	size_t* oSourceCU,
 	UTF32* iDest, size_t iDestCount,
 	size_t* oDestCount);
-
-bool sUTF8ToUTF32(
-	const UTF8* iSource, size_t iSourceCU,
-	size_t* oSourceCU, size_t* oSourceCUSkipped,
-	UTF32* iDest, size_t iDestCount,
-	size_t* oDestCount);
-
-
-void sUTF32ToUTF16(
-	const UTF32* iSource, size_t iSourceCount,
-	size_t* oSourceCount,
-	UTF16* iDest, size_t iDestCU,
-	size_t* oDestCU, size_t* oCountCP);
 
 void sUTF32ToUTF16(
 	const UTF32* iSource, size_t iSourceCount,
 	size_t* oSourceCount, size_t* oSourceCountSkipped,
 	UTF16* iDest, size_t iDestCU,
-	size_t* oDestCU, size_t* oCountCP);
+	size_t* oDestCU,
+	size_t iMaxCP, size_t* oCountCP);
 
+void sUTF32ToUTF8(
+	const UTF32* iSource, size_t iSourceCount,
+	size_t* oSourceCount, size_t* oSourceCountSkipped,
+	UTF8* iDest, size_t iDestCU,
+	size_t* oDestCU,
+	size_t iMaxCP, size_t* oCountCP);
 
-bool sUTF16ToUTF32(
-	const UTF16* iSource, size_t iSourceCU,
-	size_t* oSourceCU,
-	UTF32* iDest, size_t iDestCount,
-	size_t* oDestCount);
 
 bool sUTF16ToUTF32(
 	const UTF16* iSource, size_t iSourceCU,
@@ -453,31 +429,41 @@ bool sUTF16ToUTF32(
 	UTF32* iDest, size_t iDestCount,
 	size_t* oDestCount);
 
-
-bool sUTF16ToUTF8(
+bool sUTF16ToUTF16(
 	const UTF16* iSource, size_t iSourceCU,
-	size_t* oSourceCU,
-	UTF8* iDest, size_t iDestCU,
-	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP);
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	UTF16* iDest, size_t iDestCU,
+	size_t* oDestCU,
+	size_t iMaxCP, size_t* oCountCP);
 
 bool sUTF16ToUTF8(
 	const UTF16* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
 	UTF8* iDest, size_t iDestCU,
-	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP);
+	size_t* oDestCU,
+	size_t iMaxCP, size_t* oCountCP);
 
 
-bool sUTF8ToUTF16(
+bool sUTF8ToUTF32(
 	const UTF8* iSource, size_t iSourceCU,
-	size_t* oSourceCU,
-	UTF16* iDest, size_t iDestCU,
-	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP);
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	UTF32* iDest, size_t iDestCount,
+	size_t* oDestCount);
 
 bool sUTF8ToUTF16(
 	const UTF8* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
 	UTF16* iDest, size_t iDestCU,
-	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP);
+	size_t* oDestCU,
+	size_t iMaxCP, size_t* oCountCP);
+
+bool sUTF8ToUTF8(
+	const UTF8* iSource, size_t iSourceCU,
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	UTF8* iDest, size_t iDestCU,
+	size_t* oDestCU,
+	size_t iMaxCP, size_t* oCountCP);
+
 //@}
 
 // =================================================================================================

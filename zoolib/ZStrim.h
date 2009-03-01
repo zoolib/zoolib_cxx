@@ -33,6 +33,20 @@ class ZStrimW;
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZStrim
+
+namespace ZStrim {
+
+class ExEndOfStrim : public std::range_error
+	{
+protected:
+	ExEndOfStrim(const char* iWhat);
+	};
+
+} // namespace ZStrim
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZStrimR
 
 class ZStrimR
@@ -140,7 +154,7 @@ but particular subclasses may have more efficient implementations available.
 #pragma mark -
 #pragma mark * ZStrimR::ExEndOfStrim
 
-class ZStrimR::ExEndOfStrim : public std::range_error
+class ZStrimR::ExEndOfStrim : public ZStrim::ExEndOfStrim
 	{
 public:
 	ExEndOfStrim();
@@ -245,7 +259,8 @@ public:
 Read code points from iStrimR and write it to this strim.
 */	//@{
 	const ZStrimW& CopyAllFrom(const ZStrimR& iStrimR) const;
-	const ZStrimW& CopyAllFrom(const ZStrimR& iStrimR, size_t* oCountCPRead, size_t* oCountCPWritten) const;
+	const ZStrimW& CopyAllFrom(const ZStrimR& iStrimR,
+		size_t* oCountCPRead, size_t* oCountCPWritten) const;
 
 	const ZStrimW& CopyFrom(const ZStrimR& iStrimR, size_t iCountCP) const;
 
@@ -326,7 +341,7 @@ inline const ZStrimW& operator<<(const ZStrimW& s, const ZStrimR& r)
 #pragma mark -
 #pragma mark * ZStrimW::ExEndOfStrim
 
-class ZStrimW::ExEndOfStrim : public std::range_error
+class ZStrimW::ExEndOfStrim : public ZStrim::ExEndOfStrim
 	{
 public:
 	ExEndOfStrim();
@@ -558,6 +573,64 @@ private:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZStrimU_String
+
+/// Provides a ZStrimU interface to a standard library string containing UTF-32 code units.
+
+class ZStrimU_String32 : public ZStrimU
+	{
+public:
+	ZStrimU_String32(const string32& iString);
+	~ZStrimU_String32();
+
+// From ZStrimR via ZStrimU
+	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+
+	virtual void Imp_ReadUTF16(UTF16* iDest,
+		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
+
+	virtual void Imp_ReadUTF8(UTF8* iDest,
+		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
+
+// From ZStrimU
+	virtual void Imp_Unread();
+
+private:
+	string32 fString;
+	size_t fPosition;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStrimU_String16
+
+/// Provides a ZStrimU interface to a standard library string containing UTF-16 code units.
+
+class ZStrimU_String16 : public ZStrimU
+	{
+public:
+	ZStrimU_String16(const string16& iString);
+	~ZStrimU_String16();
+
+// From ZStrimR via ZStrimU
+	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+
+	virtual void Imp_ReadUTF16(UTF16* iDest,
+		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
+
+	virtual void Imp_ReadUTF8(UTF8* iDest,
+		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
+
+// From ZStrimU
+	virtual void Imp_Unread();
+
+private:
+	string16 fString;
+	size_t fPosition;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZStrimU_String8
 
 /// Provides a ZStrimU interface to a standard library string containing UTF-8 code units.
@@ -586,35 +659,6 @@ private:
 	};
 
 typedef ZStrimU_String8 ZStrimU_String;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimU_String
-
-/// Provides a ZStrimU interface to a standard library string containing UTF-32 code units.
-
-class ZStrimU_String32 : public ZStrimU
-	{
-public:
-	ZStrimU_String32(const string32& iString);
-	~ZStrimU_String32();
-
-// From ZStrimR via ZStrimU
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
-
-	virtual void Imp_ReadUTF16(UTF16* iDest,
-		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
-
-	virtual void Imp_ReadUTF8(UTF8* iDest,
-		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
-
-// From ZStrimU
-	virtual void Imp_Unread();
-
-private:
-	string32 fString;
-	size_t fPosition;
-	};
 
 // =================================================================================================
 #pragma mark -

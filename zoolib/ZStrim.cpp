@@ -190,6 +190,14 @@ static void sCopyReadToWrite(const ZStrimR& iStrimR, const ZStrimW& iStrimW,
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZStrim
+
+ZStrim::ExEndOfStrim::ExEndOfStrim(const char* iWhat)
+:	range_error(iWhat)
+	{}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZStrimR
 /**
 \class ZStrimR
@@ -480,8 +488,12 @@ void ZStrimR::Imp_ReadUTF16(UTF16* iDest,
 		size_t utf32Consumed;
 		size_t utf16Generated;
 		size_t cpGenerated;
-		ZUnicode::sUTF32ToUTF16(utf32Buffer, utf32Read, &utf32Consumed,
-			localDest, iCountCU, &utf16Generated, &cpGenerated);
+		ZUnicode::sUTF32ToUTF16(
+			utf32Buffer, utf32Read,
+			&utf32Consumed, nil,
+			localDest, iCountCU,
+			&utf16Generated,
+			localCountCP, &cpGenerated);
 
 		ZAssertStop(kDebug_Strim, utf32Consumed == utf32Read);
 
@@ -513,8 +525,12 @@ void ZStrimR::Imp_ReadUTF8(UTF8* iDest,
 		size_t utf32Consumed;
 		size_t utf8Generated;
 		size_t cpGenerated;
-		ZUnicode::sUTF32ToUTF8(utf32Buffer, utf32Read, &utf32Consumed,
-			localDest, iCountCU, &utf8Generated, &cpGenerated);
+		ZUnicode::sUTF32ToUTF8(
+			utf32Buffer, utf32Read,
+			&utf32Consumed, nil,
+			localDest, iCountCU,
+			&utf8Generated,
+			localCountCP, &cpGenerated);
 
 		ZAssertStop(kDebug_Strim, utf32Consumed == utf32Read);
 
@@ -584,7 +600,7 @@ void ZStrimR::sThrowEndOfStrim()
 #pragma mark * ZStrimR::ExEndOfStrim
 
 ZStrimR::ExEndOfStrim::ExEndOfStrim()
-:	range_error("ZStrimR::ExEndOfStrim")
+:	ZStrim::ExEndOfStrim("ZStrimR::ExEndOfStrim")
 	{}
 
 // =================================================================================================
@@ -1144,7 +1160,7 @@ void ZStrimW::pWritef(const UTF8* iString, va_list iArgs) const
 #pragma mark * ZStrimW::ExEndOfStrim
 
 ZStrimW::ExEndOfStrim::ExEndOfStrim()
-:	range_error("ZStrimW::ExEndOfStrim")
+:	ZStrim::ExEndOfStrim("ZStrimW::ExEndOfStrim")
 	{}
 
 // =================================================================================================
@@ -1159,8 +1175,11 @@ void ZStrimW_NativeUTF32::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, 
 		UTF32 buffer[kBufSize];
 		size_t utf16Consumed;
 		size_t utf32Generated;
-		if (!ZUnicode::sUTF16ToUTF32(localSource, iCountCU, &utf16Consumed,
-			buffer, kBufSize, &utf32Generated))
+		if (!ZUnicode::sUTF16ToUTF32(
+			localSource, iCountCU,
+			&utf16Consumed, nil,
+			buffer, kBufSize,
+			&utf32Generated))
 			{
 			// localSource[0] to localSource[iCountCU] ends with an incomplete UTF16 sequence.
 			if (utf16Consumed == 0)
@@ -1196,8 +1215,11 @@ void ZStrimW_NativeUTF32::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, si
 		UTF32 buffer[kBufSize];
 		size_t utf8Consumed;
 		size_t utf32Generated;
-		if (!ZUnicode::sUTF8ToUTF32(localSource, iCountCU, &utf8Consumed,
-			buffer, kBufSize, &utf32Generated))
+		if (!ZUnicode::sUTF8ToUTF32(
+			localSource, iCountCU,
+			&utf8Consumed, nil,
+			buffer, kBufSize,
+			&utf32Generated))
 			{
 			// localSource[0] to localSource[iCountCU] ends with an incomplete UTF8 sequence.
 			if (utf8Consumed == 0)
@@ -1238,8 +1260,12 @@ void ZStrimW_NativeUTF16::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, 
 
 		size_t utf32Consumed;
 		size_t utf16Generated;
-		ZUnicode::sUTF32ToUTF16(localSource, iCountCU, &utf32Consumed,
-			buffer, kBufSize, &utf16Generated, nil);
+		ZUnicode::sUTF32ToUTF16(
+			localSource, iCountCU,
+			&utf32Consumed, nil,
+			buffer, kBufSize,
+			&utf16Generated,
+			kBufSize, nil);
 
 		ZAssertStop(kDebug_Strim, utf32Consumed <= iCountCU);
 		ZAssertStop(kDebug_Strim, utf16Generated <= kBufSize);
@@ -1270,8 +1296,12 @@ void ZStrimW_NativeUTF16::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, si
 		UTF16 buffer[kBufSize];
 		size_t utf8Consumed;
 		size_t utf16Generated;
-		if (!ZUnicode::sUTF8ToUTF16(localSource, iCountCU, &utf8Consumed,
-			buffer, kBufSize, &utf16Generated, iCountCU, nil))
+		if (!ZUnicode::sUTF8ToUTF16(
+			localSource, iCountCU,
+			&utf8Consumed, nil,
+			buffer, kBufSize,
+			&utf16Generated,
+			iCountCU, nil))
 			{
 			// localSource[0] to localSource[iCountCU] ends with an incomplete UTF8 sequence.
 			if (utf8Consumed == 0)
@@ -1315,8 +1345,12 @@ void ZStrimW_NativeUTF8::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, s
 
 		size_t utf32Consumed;
 		size_t utf8Generated;
-		ZUnicode::sUTF32ToUTF8(localSource, iCountCU, &utf32Consumed,
-			buffer, kBufSize, &utf8Generated, nil);
+		ZUnicode::sUTF32ToUTF8(
+			localSource, iCountCU,
+			&utf32Consumed, nil,
+			buffer, kBufSize,
+			&utf8Generated,
+			kBufSize, nil);
 
 		ZAssertStop(kDebug_Strim, utf32Consumed <= iCountCU);
 		ZAssertStop(kDebug_Strim, utf8Generated <= kBufSize);
@@ -1350,8 +1384,12 @@ void ZStrimW_NativeUTF8::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, s
 		UTF8 buffer[kBufSize];
 		size_t utf16Consumed;
 		size_t utf8Generated;
-		if (!ZUnicode::sUTF16ToUTF8(localSource, iCountCU, &utf16Consumed,
-			buffer, kBufSize, &utf8Generated, iCountCU, nil))
+		if (!ZUnicode::sUTF16ToUTF8(
+			localSource, iCountCU,
+			&utf16Consumed, nil,
+			buffer, kBufSize,
+			&utf8Generated,
+			iCountCU, nil))
 			{
 			// localSource[0] to localSource[iCountCU] ends with an incomplete UTF16 sequence.
 			if (utf16Consumed == 0)
@@ -1507,7 +1545,6 @@ void ZStrimU_Unreader::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 			if (countRead == 0)
 				break;
 			fState = eStateNormal;
-			fCP = localDest[countRead - 1];
 			localDest += countRead;
 			}
 		}
@@ -1606,7 +1643,6 @@ void ZStrimU_Unreader::Imp_ReadUTF8(UTF8* iDest,
 			if (countCURead == 0)
 				break;
 			fState = eStateNormal;
-			fCP = localDest[countCURead - 1];
 			localDest += countCURead;
 			localCountCP -= countCPRead;
 			}
@@ -1663,6 +1699,192 @@ void ZStrimU_Unreader::Imp_Unread()
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZStrimU_String32
+
+ZStrimU_String32::ZStrimU_String32(const string32& iString)
+:	fString(iString),
+	fPosition(0)
+	{}
+
+ZStrimU_String32::~ZStrimU_String32()
+	{}
+
+void ZStrimU_String32::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+	{
+	const size_t theLength = fString.length();
+	if (fPosition >= theLength)
+		{
+		if (oCount)
+			*oCount = 0;
+		}
+	else
+		{
+		size_t countConsumed;		
+		ZUnicode::sUTF32ToUTF32(
+			fString.data() + fPosition, theLength - fPosition,
+			&countConsumed, nil,
+			iDest, iCount,
+			oCount);
+		fPosition += countConsumed;
+		}
+	}
+
+void ZStrimU_String32::Imp_ReadUTF16(UTF16* iDest,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
+	{
+	const size_t theLength = fString.length();
+	if (fPosition >= theLength)
+		{
+		if (oCountCP)
+			*oCountCP = 0;
+		if (oCountCU)
+			*oCountCU = 0;
+		}
+	else
+		{
+		size_t countConsumed;		
+		ZUnicode::sUTF32ToUTF16(
+			fString.data() + fPosition, theLength - fPosition,
+			&countConsumed, nil,
+			iDest, iCountCU,
+			oCountCU,
+			iCountCP, oCountCP);
+		fPosition += countConsumed;
+		}
+	}
+
+void ZStrimU_String32::Imp_ReadUTF8(UTF8* iDest,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
+	{
+	const size_t theLength = fString.length();
+	if (fPosition >= theLength)
+		{
+		if (oCountCP)
+			*oCountCP = 0;
+		if (oCountCU)
+			*oCountCU = 0;
+		}
+	else
+		{
+		size_t countConsumed;		
+		ZUnicode::sUTF32ToUTF8(
+			fString.data() + fPosition, theLength - fPosition,
+			&countConsumed, nil,
+			iDest, iCountCU,
+			oCountCU,
+			iCountCP, oCountCP);
+		fPosition += countConsumed;
+		}
+	}
+
+void ZStrimU_String32::Imp_Unread()
+	{
+	ZAssert(fPosition);
+	--fPosition;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStrimU_String16
+
+ZStrimU_String16::ZStrimU_String16(const string16& iString)
+:	fString(iString),
+	fPosition(0)
+	{}
+
+ZStrimU_String16::~ZStrimU_String16()
+	{}
+
+void ZStrimU_String16::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+	{
+	const size_t theLength = fString.length();
+	if (fPosition >= theLength)
+		{
+		if (oCount)
+			*oCount = 0;
+		}
+	else
+		{
+		size_t countConsumed;		
+		ZUnicode::sUTF16ToUTF32(
+			fString.data() + fPosition, theLength - fPosition,
+			&countConsumed, nil,
+			iDest, iCount,
+			oCount);
+		fPosition += countConsumed;
+		}
+	}
+
+void ZStrimU_String16::Imp_ReadUTF16(UTF16* iDest,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
+	{
+	const size_t theLength = fString.length();
+	if (fPosition >= theLength)
+		{
+		if (oCountCP)
+			*oCountCP = 0;
+		if (oCountCU)
+			*oCountCU = 0;
+		}
+	else
+		{
+		size_t countConsumed;		
+		ZUnicode::sUTF16ToUTF16(
+			fString.data() + fPosition, theLength - fPosition,
+			&countConsumed, nil,
+			iDest, iCountCU,
+			oCountCU,
+			iCountCP, oCountCP);
+		fPosition += countConsumed;
+		}
+	}
+
+void ZStrimU_String16::Imp_ReadUTF8(UTF8* iDest,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
+	{
+	const size_t theLength = fString.length();
+	if (fPosition >= theLength)
+		{
+		if (oCountCP)
+			*oCountCP = 0;
+		if (oCountCU)
+			*oCountCU = 0;
+		}
+	else
+		{
+		size_t countConsumed;		
+		ZUnicode::sUTF16ToUTF8(
+			fString.data() + fPosition, theLength - fPosition,
+			&countConsumed, nil,
+			iDest, iCountCU,
+			oCountCU,
+			iCountCP, oCountCP);
+		fPosition += countConsumed;
+		}
+	}
+
+void ZStrimU_String16::Imp_Unread()
+	{
+	if (size_t stringSize = fString.size())
+		{
+		string16::const_iterator stringStart = fString.begin();
+		string16::const_iterator stringCurrent = stringStart + fPosition;
+		string16::const_iterator stringEnd = stringStart + stringSize;
+
+		if (ZUnicode::sDec(stringStart, stringCurrent, stringEnd))
+			{
+			fPosition = stringCurrent - stringStart;
+			return;
+			}
+		}
+	// Unread shouldn't have been called, as our string is empty
+	// or we're already at the beginning, and thus read could not
+	// have previously been called successfully.
+	ZUnimplemented();
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZStrimU_String8
 
 ZStrimU_String8::ZStrimU_String8(const string8& iString)
@@ -1675,65 +1897,29 @@ ZStrimU_String8::~ZStrimU_String8()
 
 void ZStrimU_String8::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 	{
-	UTF32* localDest = iDest;
-	if (!fString.empty())
+	const size_t theLength = fString.length();
+	if (fPosition >= theLength)
 		{
-		UTF32* localDestEnd = iDest + iCount;
-		string::const_iterator localSource = fString.begin() + fPosition;
-		string::const_iterator localSourceEnd = fString.end();
-		for (;;)
-			{
-			string::const_iterator priorLocalSource = localSource;
-			UTF32 theCP;
-			if (!ZUnicode::sReadInc(localSource, localSourceEnd, theCP))
-				break;
-			if (!ZUnicode::sWriteInc(localDest, localDestEnd, theCP))
-				{
-				localSource = priorLocalSource;
-				break;
-				}
-			}
-		fPosition = localSource - fString.begin();
+		if (oCount)
+			*oCount = 0;
 		}
-	if (oCount)
-		*oCount = localDest - iDest;
+	else
+		{
+		size_t countConsumed;		
+		ZUnicode::sUTF8ToUTF32(
+			fString.data() + fPosition, theLength - fPosition,
+			&countConsumed, nil,
+			iDest, iCount,
+			oCount);
+		fPosition += countConsumed;
+		}
 	}
 
 void ZStrimU_String8::Imp_ReadUTF16(UTF16* iDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
-	size_t localCountCP = iCountCP;
-	UTF16* localDest = iDest;
-	if (!fString.empty())
-		{
-		UTF16* localDestEnd = iDest + iCountCU;
-		string::const_iterator localSource = fString.begin() + fPosition;
-		string::const_iterator localSourceEnd = fString.end();
-		while (localCountCP)
-			{
-			string::const_iterator priorLocalSource = localSource;
-			UTF32 theCP;
-			if (!ZUnicode::sReadInc(localSource, localSourceEnd, theCP))
-				break;
-			if (!ZUnicode::sWriteInc(localDest, localDestEnd, theCP))
-				{
-				localSource = priorLocalSource;
-				break;
-				}
-			--localCountCP;
-			}
-		fPosition = localSource - fString.begin();
-		}
-	if (oCountCP)
-		*oCountCP = iCountCP - localCountCP;
-	if (oCountCU)
-		*oCountCU = localDest - iDest;
-	}
-
-void ZStrimU_String8::Imp_ReadUTF8(UTF8* iDest,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
-	{
-	if (fString.empty())
+	const size_t theLength = fString.length();
+	if (fPosition >= theLength)
 		{
 		if (oCountCP)
 			*oCountCP = 0;
@@ -1742,32 +1928,38 @@ void ZStrimU_String8::Imp_ReadUTF8(UTF8* iDest,
 		}
 	else
 		{
-		size_t cuToCopy = min(fString.size() - fPosition, iCountCU);
-		if (iCountCP < cuToCopy)
-			{
-			// The number of code points to transfer is less than the number of code units
-			// requested and/or available, and thus may be the limit on what gets transferred.
-			size_t actualCodePoints;
-			size_t actualCodeUnits = ZUnicode::sCPToCU(fString.data() + fPosition,
-				cuToCopy, iCountCP, &actualCodePoints);
+		size_t countConsumed;		
+		ZUnicode::sUTF8ToUTF16(
+			fString.data() + fPosition, theLength - fPosition,
+			&countConsumed, nil,
+			iDest, iCountCU,
+			oCountCU,
+			iCountCP, oCountCP);
+		fPosition += countConsumed;
+		}
+	}
 
-			ZBlockCopy(fString.data() + fPosition, iDest, actualCodeUnits);
-			fPosition += actualCodeUnits;
-			if (oCountCP)
-				*oCountCP = actualCodePoints;
-			if (oCountCU)
-				*oCountCU = actualCodeUnits;
-			}
-		else
-			{
-			// The number of code points to transfer is greater than or equal to the number of
-			// code units requested and available, and thus cannot limit the number of code units.
-			ZBlockCopy(fString.data() + fPosition, iDest, cuToCopy);
-			if (oCountCP)
-				*oCountCP = ZUnicode::sCUToCP(iDest, cuToCopy);
-			if (oCountCU)
-				*oCountCU = cuToCopy;
-			}
+void ZStrimU_String8::Imp_ReadUTF8(UTF8* iDest,
+	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
+	{
+	const size_t theLength = fString.length();
+	if (fPosition >= theLength)
+		{
+		if (oCountCP)
+			*oCountCP = 0;
+		if (oCountCU)
+			*oCountCU = 0;
+		}
+	else
+		{
+		size_t countConsumed;		
+		ZUnicode::sUTF8ToUTF8(
+			fString.data() + fPosition, theLength - fPosition,
+			&countConsumed, nil,
+			iDest, iCountCU,
+			oCountCU,
+			iCountCP, oCountCP);
+		fPosition += countConsumed;
 		}
 	}
 
@@ -1789,103 +1981,6 @@ void ZStrimU_String8::Imp_Unread()
 	// or we're already at the beginning, and thus read could not
 	// have previously been called successfully.
 	ZUnimplemented();
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimU_String3232
-
-ZStrimU_String32::ZStrimU_String32(const string32& iString)
-:	fString(iString),
-	fPosition(0)
-	{}
-
-ZStrimU_String32::~ZStrimU_String32()
-	{}
-
-void ZStrimU_String32::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
-	{
-	if (fString.empty())
-		{
-		if (oCount)
-			*oCount = 0;
-		}
-	else
-		{
-		size_t countToCopy = min(fString.size() - fPosition, iCount);
-		ZBlockCopy(fString.data() + fPosition, iDest, countToCopy * sizeof(UTF32));
-		if (oCount)
-			*oCount = countToCopy;
-		fPosition += countToCopy;
-		}
-	}
-
-void ZStrimU_String32::Imp_ReadUTF16(UTF16* iDest,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
-	{
-	size_t localCountCP = iCountCP;
-	UTF16* localDest = iDest;
-	if (!fString.empty())
-		{
-		UTF16* localDestEnd = iDest + iCountCU;
-		string32::const_iterator localSource = fString.begin() + fPosition;
-		string32::const_iterator localSourceEnd = fString.end();
-		while (localCountCP)
-			{
-			string32::const_iterator priorLocalSource = localSource;
-			UTF32 theCP;
-			if (!ZUnicode::sReadInc(localSource, localSourceEnd, theCP))
-				break;
-			if (!ZUnicode::sWriteInc(localDest, localDestEnd, theCP))
-				{
-				localSource = priorLocalSource;
-				break;
-				}
-			--localCountCP;
-			}
-		fPosition = localSource - fString.begin();
-		}
-	if (oCountCP)
-		*oCountCP = iCountCP - localCountCP;
-	if (oCountCU)
-		*oCountCU = localDest - iDest;
-	}
-
-void ZStrimU_String32::Imp_ReadUTF8(UTF8* iDest,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
-	{
-	size_t localCountCP = iCountCP;
-	UTF8* localDest = iDest;
-	if (!fString.empty())
-		{
-		UTF8* localDestEnd = iDest + iCountCU;
-		string32::const_iterator localSource = fString.begin() + fPosition;
-		string32::const_iterator localSourceEnd = fString.end();
-		while (localCountCP)
-			{
-			string32::const_iterator priorLocalSource = localSource;
-			UTF32 theCP;
-			if (!ZUnicode::sReadInc(localSource, localSourceEnd, theCP))
-				break;
-			if (!ZUnicode::sWriteInc(localDest, localDestEnd, theCP))
-				{
-				localSource = priorLocalSource;
-				break;
-				}
-			--localCountCP;
-			}
-		fPosition = localSource - fString.begin();
-		}
-	if (oCountCP)
-		*oCountCP = iCountCP - localCountCP;
-	if (oCountCU)
-		*oCountCU = localDest - iDest;
-	}
-
-void ZStrimU_String32::Imp_Unread()
-	{
-	ZAssert(fPosition);
-	--fPosition;
 	}
 
 // =================================================================================================

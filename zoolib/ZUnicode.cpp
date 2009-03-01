@@ -192,9 +192,10 @@ by using <code>#pragma ushort_wchar_t on</code>
 
 // =================================================================================================
 
-#include "zoolib/ZUnicode.h"
-#include "zoolib/ZDebug.h"
 #include "zoolib/ZCONFIG_SPI.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZUnicode.h"
+#include "zoolib/ZUnicodePrivB.h"
 
 #include <ctype.h>
 
@@ -281,11 +282,17 @@ string8& operator+=(string8& ioString, UTF32 iCP)
 	return ioString;
 	}
 
+NAMESPACE_ZOOLIB_END
+
+// =================================================================================================
+
+NAMESPACE_ZOOLIB_BEGIN
+
+namespace ZUnicode {
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Helper inlines and lookup tables
-
-namespace ZUnicode {
 
 const uint8 sUTF8SequenceLength[256] =
 	{
@@ -310,19 +317,9 @@ const uint8 sUTF8SequenceLength[256] =
 const uint8 sUTF8StartByteMark[7] = { 0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC };
 const uint8 sUTF8StartByteMask[7] = { 0x00, 0x00, 0x3F, 0x1F, 0x0F, 0x07, 0x03 };
 
-} // namespace ZUnicode
-
-NAMESPACE_ZOOLIB_END
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Explicit instantiations of the template code
-
-#include "zoolib/ZUnicodePrivB.h"
-
-NAMESPACE_ZOOLIB_BEGIN
-
-namespace ZUnicode {
 
 template struct Functions_CountCU_T<string32::const_iterator>;
 template struct Functions_CountCU_T<string16::const_iterator>;
@@ -392,537 +389,241 @@ template struct Functions_Convert_T<string32::iterator>;
 template struct Functions_Convert_T<string16::iterator>;
 template struct Functions_Convert_T<string8::iterator>;
 
-} // namespace ZUnicode
+// =================================================================================================
+#pragma mark -
+#pragma mark * Converting between different serializations, template functions
 
-NAMESPACE_ZOOLIB_END
+template <class S, class D>
+bool ConvertSToD_T(
+	S iSource, size_t iSourceCU,
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	D iDest, size_t iDestCU,
+	size_t* oDestCU,
+	size_t iMaxCP, size_t* oCountCP)
+	{
+	S localSource = iSource;
+	S localSourceEnd = iSource + iSourceCU;
+
+	D localDest = iDest;
+	D localDestEnd = iDest + iDestCU;
+
+	size_t localCP = iMaxCP;
+	bool sourceComplete = true;
+
+	if (oSourceCUSkipped)
+		{
+		*oSourceCUSkipped = 0;
+		while (localSource < localSourceEnd && localDest < localDestEnd && localCP)
+			{
+			S priorLocalSource = localSource;
+			UTF32 theCP;
+			size_t cuSkipped = 0;
+			if (!sReadInc(localSource, localSourceEnd, theCP, cuSkipped))
+				{
+				if (localSource < localSourceEnd)
+					sourceComplete = false;
+				break;
+				}
+
+			if (!sWriteInc(localDest, localDestEnd, theCP))
+				{
+				localSource = priorLocalSource;
+				break;
+				}
+			--localCP;
+			*oSourceCUSkipped += cuSkipped;
+			}
+		}
+	else
+		{
+		while (localSource < localSourceEnd && localDest < localDestEnd && localCP)
+			{
+			S priorLocalSource = localSource;
+			UTF32 theCP;
+			if (!sReadInc(localSource, localSourceEnd, theCP))
+				{
+				if (localSource < localSourceEnd)
+					sourceComplete = false;
+				break;
+				}
+
+			if (!sWriteInc(localDest, localDestEnd, theCP))
+				{
+				localSource = priorLocalSource;
+				break;
+				}
+			--localCP;
+			}
+		}
+
+	if (oSourceCU)
+		*oSourceCU = localSource - iSource;
+	if (oDestCU)
+		*oDestCU = localDest - iDest;
+	if (oCountCP)
+		*oCountCP = iMaxCP - localCP;
+
+	return sourceComplete;
+	}
+
+template <class S, class D>
+bool ConvertSToD_T(
+	S iSource, size_t iSourceCU,
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	D iDest, size_t iDestCU,
+	size_t* oDestCU)
+	{
+	return ConvertSToD_T(
+		iSource, iSourceCU,
+		oSourceCU, oSourceCUSkipped,
+		iDest, iDestCU,
+		oDestCU,
+		iSourceCU, nil);
+	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Converting between different serializations
 
-NAMESPACE_ZOOLIB_BEGIN
-
-/**Read UTF32 code units from \a iSource, convert them into valid
-code points and store them as UTF8 code units starting at \a iDest. Do not read more
-than \a iSourceCount UTF32 code units, and do not store more than \a
-iDestCU UTF8 code units. Report the counts read and written in \a oSourceCount
-and \a oDestCU.
-*/
-void ZUnicode::sUTF32ToUTF8(
-	const UTF32* iSource, size_t iSourceCount,
-	size_t* oSourceCount,
-	UTF8* iDest, size_t iDestCU,
-	size_t* oDestCU, size_t* oCountCP)
-	{
-	sUTF32ToUTF8(iSource, iSourceCount, oSourceCount, nil, iDest, iDestCU, oDestCU, oCountCP);
-	}
-
-void ZUnicode::sUTF32ToUTF8(
+void sUTF32ToUTF32(
 	const UTF32* iSource, size_t iSourceCount,
 	size_t* oSourceCount, size_t* oSourceCountSkipped,
-	UTF8* iDest, size_t iDestCU,
-	size_t* oDestCU, size_t* oCountCP)
-	{
-	const UTF32* localSource = iSource;
-	const UTF32* localSourceEnd = iSource + iSourceCount;
-
-	UTF8* localDest = iDest;
-	UTF8* localDestEnd = iDest + iDestCU;
-
-	size_t localCP = 0;
-
-	if (oSourceCountSkipped)
-		{
-		*oSourceCountSkipped = 0;
-		while (localSource < localSourceEnd && localDest < localDestEnd)
-			{
-			const UTF32* priorLocalSource = localSource;
-			UTF32 theCP;
-			size_t countSkipped = 0;
-			if (!sReadInc(localSource, localSourceEnd, theCP, countSkipped))
-				{
-				// Although we test for localSource < localSourceEnd above,
-				// it's still possible for there to be no valid UTF32 characters
-				// between localSource and localSourceEnd, in which case this is what we'll hit.
-				break;
-				}
-
-			if (!sWriteInc(localDest, localDestEnd, theCP))
-				{
-				// Insufficient space to write the CP. Restore localSource so
-				// we'll correctly report the number of CUs consumed to generate
-				// the output we were able to generate.
-				localSource = priorLocalSource;
-				break;
-				}
-			*oSourceCountSkipped += countSkipped;
-			++localCP;
-			}
-		}
-	else
-		{
-		while (localSource < localSourceEnd && localDest < localDestEnd)
-			{
-			const UTF32* priorLocalSource = localSource;
-			UTF32 theCP;
-			if (!sReadInc(localSource, localSourceEnd, theCP))
-				{
-				// Although we test for localSource < localSourceEnd above,
-				// it's still possible for there to be no valid UTF32 characters
-				// between localSource and localSourceEnd, in which case this is what we'll hit.
-				break;
-				}
-
-			if (!sWriteInc(localDest, localDestEnd, theCP))
-				{
-				// Insufficient space to write the CP. Restore localSource so
-				// we'll correctly report the number of CUs consumed to generate
-				// the output we were able to generate.
-				localSource = priorLocalSource;
-				break;
-				}
-			++localCP;
-			}
-		}
-
-	if (oSourceCount)
-		*oSourceCount = localSource - iSource;
-	if (oDestCU)
-		*oDestCU = localDest - iDest;
-	if (oCountCP)
-		*oCountCP = localCP;
-	}
-
-/**Read UTF8 code units from \a iSource, convert them into valid
-code points and store them as UTF32 code units starting at \a iDest. Do not read more
-than \a iSourceCU UTF8 code units, and do not store more than \a iDestCount
-UTF32 code units. Report the counts read and written in \a oSourceCU
-and \a oDestCount. Return false if fewer than \a iSourceCU UTF8 code units were
-read because there was a valid prefix at the end of the buffer that could
-represent a valid code point if more data were provided.
-*/
-bool ZUnicode::sUTF8ToUTF32(
-	const UTF8* iSource, size_t iSourceCU,
-	size_t* oSourceCU,
 	UTF32* iDest, size_t iDestCount,
 	size_t* oDestCount)
 	{
-	return sUTF8ToUTF32(iSource, iSourceCU, oSourceCU, nil, iDest, iDestCount, oDestCount);
+	ConvertSToD_T(
+		iSource, iSourceCount,
+		oSourceCount, oSourceCountSkipped,
+		iDest, iDestCount,
+		oDestCount);
 	}
 
-bool ZUnicode::sUTF8ToUTF32(
-	const UTF8* iSource, size_t iSourceCU,
-	size_t* oSourceCU, size_t* oSourceCUSkipped,
-	UTF32* iDest, size_t iDestCount,
-	size_t* oDestCount)
-	{
-	const UTF8* localSource = iSource;
-	const UTF8* localSourceEnd = iSource + iSourceCU;
-
-	UTF32* localDest = iDest;
-	UTF32* localDestEnd = iDest + iDestCount;
-
-	bool sourceComplete = true;
-
-	if (oSourceCUSkipped)
-		{
-		*oSourceCUSkipped = 0;
-		while (localSource < localSourceEnd && localDest < localDestEnd)
-			{
-			const UTF8* priorLocalSource = localSource;
-			UTF32 theCP;
-			size_t cuSkipped = 0;
-			if (!sReadInc(localSource, localSourceEnd, theCP, cuSkipped))
-				{
-				if (localSource < localSourceEnd)
-					sourceComplete = false;
-				break;
-				}
-
-			if (!sWriteInc(localDest, localDestEnd, theCP))
-				{
-				localSource = priorLocalSource;
-				break;
-				}
-			*oSourceCUSkipped += cuSkipped;
-			}
-		}
-	else
-		{
-		while (localSource < localSourceEnd && localDest < localDestEnd)
-			{
-			const UTF8* priorLocalSource = localSource;
-			UTF32 theCP;
-			if (!sReadInc(localSource, localSourceEnd, theCP))
-				{
-				if (localSource < localSourceEnd)
-					sourceComplete = false;
-				break;
-				}
-
-			if (!sWriteInc(localDest, localDestEnd, theCP))
-				{
-				localSource = priorLocalSource;
-				break;
-				}
-			}
-		}
-
-	if (oSourceCU)
-		*oSourceCU = localSource - iSource;
-	if (oDestCount)
-		*oDestCount = localDest - iDest;
-	return sourceComplete;
-	}
-
-/**Read UTF32 code units from \a iSource, convert them into valid
-code points and store them as UTF16 code units starting at \a iDest. Do not read more
-than \a iSourceCount UTF32 code units, and do not store more than \a iDestCU
-UTF16 code units. Report the code units read and written in \a oSourceCount
-and \a oDestCU, and the code points written in oCountCP.
-*/
-void ZUnicode::sUTF32ToUTF16(
-	const UTF32* iSource, size_t iSourceCount,
-	size_t* oSourceCount,
-	UTF16* iDest, size_t iDestCU,
-	size_t* oDestCU, size_t* oCountCP)
-	{
-	sUTF32ToUTF16(iSource, iSourceCount, oSourceCount, nil, iDest, iDestCU, oDestCU, oCountCP);
-	}
-
-void ZUnicode::sUTF32ToUTF16(
+void sUTF32ToUTF16(
 	const UTF32* iSource, size_t iSourceCount,
 	size_t* oSourceCount, size_t* oSourceCountSkipped,
 	UTF16* iDest, size_t iDestCU,
-	size_t* oDestCU, size_t* oCountCP)
+	size_t* oDestCU,
+	size_t iMaxCP, size_t* oCountCP)
 	{
-	const UTF32* localSource = iSource;
-	const UTF32* localSourceEnd = iSource + iSourceCount;
-
-	UTF16* localDest = iDest;
-	UTF16* localDestEnd = iDest + iDestCU;
-
-	size_t localCP = 0;
-
-	if (oSourceCountSkipped)
-		{
-		*oSourceCountSkipped = 0;
-		while (localSource < localSourceEnd && localDest < localDestEnd)
-			{
-			const UTF32* priorLocalSource = localSource;
-			UTF32 theCP;
-			size_t countSkipped = 0;
-			if (!sReadInc(localSource, localSourceEnd, theCP, countSkipped))
-				break;
-
-			if (!sWriteInc(localDest, localDestEnd, theCP))
-				{
-				localSource = priorLocalSource;
-				break;
-				}
-			*oSourceCountSkipped += countSkipped;
-			++localCP;
-			}
-		}
-	else
-		{
-		while (localSource < localSourceEnd && localDest < localDestEnd)
-			{
-			const UTF32* priorLocalSource = localSource;
-			UTF32 theCP;
-			if (!sReadInc(localSource, localSourceEnd, theCP))
-				break;
-
-			if (!sWriteInc(localDest, localDestEnd, theCP))
-				{
-				localSource = priorLocalSource;
-				break;
-				}
-			++localCP;
-			}
-		}
-
-	if (oSourceCount)
-		*oSourceCount = localSource - iSource;
-	if (oDestCU)
-		*oDestCU = localDest - iDest;
-	if (oCountCP)
-		*oCountCP = localCP;
+	ConvertSToD_T(
+		iSource, iSourceCount,
+		oSourceCount, oSourceCountSkipped,
+		iDest, iDestCU,
+		oDestCU,
+		iMaxCP, oCountCP);
 	}
 
-/**Read UTF16 code units from \a iSource, convert them into valid
-code points and store them as UTF32 code units starting at \a iDest. Do not read more
-than \a iSourceCU UTF16 code units, and do not store more than \a iDestCount
-UTF32 code units. Report the counts read and written in \a oSourceCU
-and \a oDestCount. Return false if fewer than \a iSourceCU UTF8 code units were
-read because there was a valid prefix at the end of the buffer that could
-represent a valid code point if more data were provided.
-*/
-bool ZUnicode::sUTF16ToUTF32(
-	const UTF16* iSource, size_t iSourceCU,
-	size_t* oSourceCU,
-	UTF32* iDest, size_t iDestCount,
-	size_t* oDestCount)
+void sUTF32ToUTF8(
+	const UTF32* iSource, size_t iSourceCount,
+	size_t* oSourceCount, size_t* oSourceCountSkipped,
+	UTF8* iDest, size_t iDestCU,
+	size_t* oDestCU,
+	size_t iMaxCP, size_t* oCountCP)
 	{
-	return sUTF16ToUTF32(iSource, iSourceCU, oSourceCU, nil, iDest, iDestCount, oDestCount);
+	ConvertSToD_T(
+		iSource, iSourceCount,
+		oSourceCount, oSourceCountSkipped,
+		iDest, iDestCU,
+		oDestCU,
+		iMaxCP, oCountCP);
 	}
 
-bool ZUnicode::sUTF16ToUTF32(
+bool sUTF16ToUTF32(
 	const UTF16* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
 	UTF32* iDest, size_t iDestCount,
 	size_t* oDestCount)
 	{
-	const UTF16* localSource = iSource;
-	const UTF16* localSourceEnd = iSource + iSourceCU;
-
-	UTF32* localDest = iDest;
-	UTF32* localDestEnd = iDest + iDestCount;
-
-	bool sourceComplete = true;
-
-	if (oSourceCUSkipped)
-		{
-		*oSourceCUSkipped = 0;
-		while (localSource < localSourceEnd && localDest < localDestEnd)
-			{
-			const UTF16* priorLocalSource = localSource;
-			UTF32 theCP;
-			size_t cuSkipped = 0;
-			if (!sReadInc(localSource, localSourceEnd, theCP, cuSkipped))
-				{
-				if (localSource < localSourceEnd)
-					sourceComplete = false;
-				break;
-				}
-
-			if (!sWriteInc(localDest, localDestEnd, theCP))
-				{
-				localSource = priorLocalSource;
-				break;
-				}
-			*oSourceCUSkipped += cuSkipped;
-			}
-		}
-	else
-		{
-		while (localSource < localSourceEnd && localDest < localDestEnd)
-			{
-			const UTF16* priorLocalSource = localSource;
-			UTF32 theCP;
-			if (!sReadInc(localSource, localSourceEnd, theCP))
-				{
-				if (localSource < localSourceEnd)
-					sourceComplete = false;
-				break;
-				}
-
-			if (!sWriteInc(localDest, localDestEnd, theCP))
-				{
-				localSource = priorLocalSource;
-				break;
-				}
-			}
-		}
-
-	if (oSourceCU)
-		*oSourceCU = localSource - iSource;
-	if (oDestCount)
-		*oDestCount = localDest - iDest;
-	return sourceComplete;
+	return ConvertSToD_T(
+		iSource, iSourceCU,
+		oSourceCU, oSourceCUSkipped,
+		iDest, iDestCount,
+		oDestCount);
 	}
 
-
-/**Read UTF16 code units from \a iSource, convert them into valid
-code points and store them as UTF8 code units starting at \a iDest. Do not read more
-than \a iSourceCU UTF16 code units, and do not store more than \a iDestCU
-UTF8 code units. Do not consume/generate more than \a iMaxCP code points.
-Report the counts read and written in \a oSourceCU and \a oDestCU, and
-the number of code points in \a oCountCP. Return false if fewer than \a iSourceCU
-UTF16 code units were read because there was a valid prefix at the end of the buffer that could
-represent a valid code point if more data were provided.
-*/
-bool ZUnicode::sUTF16ToUTF8(
+bool sUTF16ToUTF16(
 	const UTF16* iSource, size_t iSourceCU,
-	size_t* oSourceCU,
-	UTF8* iDest, size_t iDestCU,
-	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP)
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	UTF16* iDest, size_t iDestCU,
+	size_t* oDestCU,
+	size_t iMaxCP, size_t* oCountCP)
 	{
-	return sUTF16ToUTF8(iSource, iSourceCU, oSourceCU, nil,
-					iDest, iDestCU, oDestCU,
-					iMaxCP, oCountCP);
+	return ConvertSToD_T(
+		iSource, iSourceCU,
+		oSourceCU, oSourceCUSkipped,
+		iDest, iDestCU,
+		oDestCU,
+		iMaxCP, oCountCP);
 	}
 
-bool ZUnicode::sUTF16ToUTF8(
+bool sUTF16ToUTF8(
 	const UTF16* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
 	UTF8* iDest, size_t iDestCU,
-	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP)
+	size_t* oDestCU,
+	size_t iMaxCP, size_t* oCountCP)
 	{
-	const UTF16* localSource = iSource;
-	const UTF16* localSourceEnd = iSource + iSourceCU;
-
-	UTF8* localDest = iDest;
-	UTF8* localDestEnd = iDest + iDestCU;
-
-	size_t localCP = iMaxCP;
-	bool sourceComplete = true;
-
-	if (oSourceCUSkipped)
-		{
-		*oSourceCUSkipped = 0;
-		while (localSource < localSourceEnd && localDest < localDestEnd && localCP)
-			{
-			const UTF16* priorLocalSource = localSource;
-			UTF32 theCP;
-			size_t cuSkipped = 0;
-			if (!sReadInc(localSource, localSourceEnd, theCP, cuSkipped))
-				{
-				if (localSource < localSourceEnd)
-					sourceComplete = false;
-				break;
-				}
-
-			if (!sWriteInc(localDest, localDestEnd, theCP))
-				{
-				localSource = priorLocalSource;
-				break;
-				}
-			--localCP;
-			*oSourceCUSkipped += cuSkipped;
-			}
-		}
-	else
-		{
-		while (localSource < localSourceEnd && localDest < localDestEnd && localCP)
-			{
-			const UTF16* priorLocalSource = localSource;
-			UTF32 theCP;
-			if (!sReadInc(localSource, localSourceEnd, theCP))
-				{
-				if (localSource < localSourceEnd)
-					sourceComplete = false;
-				break;
-				}
-
-			if (!sWriteInc(localDest, localDestEnd, theCP))
-				{
-				localSource = priorLocalSource;
-				break;
-				}
-			--localCP;
-			}
-		}
-
-	if (oSourceCU)
-		*oSourceCU = localSource - iSource;
-	if (oDestCU)
-		*oDestCU = localDest - iDest;
-	if (oCountCP)
-		*oCountCP = iMaxCP - localCP;
-	return sourceComplete;
+	return ConvertSToD_T(
+		iSource, iSourceCU,
+		oSourceCU, oSourceCUSkipped,
+		iDest, iDestCU,
+		oDestCU,
+		iMaxCP, oCountCP);
 	}
 
-/**Read UTF8 code units from \a iSource, convert them into valid code points and store
-them as UTF16 code units starting at \a iDest. Do not read more than \a iSourceCU UTF8
-code units, and do not store more than \a iDestCU UTF16 code units. Do not
-consume/generate more than \a iMaxCP code points. Report the counts read and written
-in \a oSourceCU and \a oDestCU, and the number of code points in \a oCountCP. Return
-false if fewer than \a iSourceCU UTF8 code units were read because there was a valid
-prefix at the end of the buffer that could represent a valid code point if more data
-were provided.
-*/
-bool ZUnicode::sUTF8ToUTF16(
+bool sUTF8ToUTF32(
 	const UTF8* iSource, size_t iSourceCU,
-	size_t* oSourceCU,
-	UTF16* iDest, size_t iDestCU,
-	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP)
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	UTF32* iDest, size_t iDestCount,
+	size_t* oDestCount)
 	{
-	return sUTF8ToUTF16(iSource, iSourceCU, oSourceCU, nil,
-			iDest, iDestCU, oDestCU,
-			iMaxCP, oCountCP);
+	return ConvertSToD_T(
+		iSource, iSourceCU,
+		oSourceCU, oSourceCUSkipped,
+		iDest, iDestCount,
+		oDestCount);
 	}
 
-bool ZUnicode::sUTF8ToUTF16(
+bool sUTF8ToUTF16(
 	const UTF8* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
 	UTF16* iDest, size_t iDestCU,
-	size_t* oDestCU, size_t iMaxCP, size_t* oCountCP)
+	size_t* oDestCU,
+	size_t iMaxCP, size_t* oCountCP)
 	{
-	const UTF8* localSource = iSource;
-	const UTF8* localSourceEnd = iSource + iSourceCU;
+	return ConvertSToD_T(
+		iSource, iSourceCU,
+		oSourceCU, oSourceCUSkipped,
+		iDest, iDestCU,
+		oDestCU,
+		iMaxCP, oCountCP);
+	}
 
-	UTF16* localDest = iDest;
-	UTF16* localDestEnd = iDest + iDestCU;
-
-	size_t localCP = iMaxCP;
-	bool sourceComplete = true;
-
-	if (oSourceCUSkipped)
-		{
-		*oSourceCUSkipped = 0;
-		while (localSource < localSourceEnd && localDest < localDestEnd && localCP)
-			{
-			const UTF8* priorLocalSource = localSource;
-			UTF32 theCP;
-			size_t cuSkipped = 0;
-			if (!sReadInc(localSource, localSourceEnd, theCP, cuSkipped))
-				{
-				if (localSource < localSourceEnd)
-					sourceComplete = false;
-				break;
-				}
-
-			if (!sWriteInc(localDest, localDestEnd, theCP))
-				{
-				localSource = priorLocalSource;
-				break;
-				}
-			--localCP;
-			*oSourceCUSkipped += cuSkipped;
-			}
-		}
-	else
-		{
-		while (localSource < localSourceEnd && localDest < localDestEnd && localCP)
-			{
-			const UTF8* priorLocalSource = localSource;
-			UTF32 theCP;
-			if (!sReadInc(localSource, localSourceEnd, theCP))
-				{
-				if (localSource < localSourceEnd)
-					sourceComplete = false;
-				break;
-				}
-
-			if (!sWriteInc(localDest, localDestEnd, theCP))
-				{
-				localSource = priorLocalSource;
-				break;
-				}
-			--localCP;
-			}
-		}
-
-	if (oSourceCU)
-		*oSourceCU = localSource - iSource;
-	if (oDestCU)
-		*oDestCU = localDest - iDest;
-	if (oCountCP)
-		*oCountCP = iMaxCP - localCP;
-	return sourceComplete;
+bool sUTF8ToUTF8(
+	const UTF8* iSource, size_t iSourceCU,
+	size_t* oSourceCU, size_t* oSourceCUSkipped,
+	UTF8* iDest, size_t iDestCU,
+	size_t* oDestCU,
+	size_t iMaxCP, size_t* oCountCP)
+	{
+	return ConvertSToD_T(
+		iSource, iSourceCU,
+		oSourceCU, oSourceCUSkipped,
+		iDest, iDestCU,
+		oDestCU,
+		iMaxCP, oCountCP);
 	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Basic characterization of code points
 
-bool ZUnicode::sIsValid(UTF32 iCP)
+bool sIsValid(UTF32 iCP)
 	{
 	return sIsValidCP(iCP);
 	}
 
-bool ZUnicode::sIsAlpha(UTF32 iCP)
+bool sIsAlpha(UTF32 iCP)
 	{
 	#if ZCONFIG_SPI_Enabled(ICU)
 
@@ -935,7 +636,7 @@ bool ZUnicode::sIsAlpha(UTF32 iCP)
 	#endif
 	}
 
-bool ZUnicode::sIsDigit(UTF32 iCP)
+bool sIsDigit(UTF32 iCP)
 	{
 	#if ZCONFIG_SPI_Enabled(ICU)
 
@@ -948,7 +649,7 @@ bool ZUnicode::sIsDigit(UTF32 iCP)
 	#endif
 	}
 
-bool ZUnicode::sIsAlphaDigit(UTF32 iCP)
+bool sIsAlphaDigit(UTF32 iCP)
 	{
 	#if ZCONFIG_SPI_Enabled(ICU)
 
@@ -961,7 +662,7 @@ bool ZUnicode::sIsAlphaDigit(UTF32 iCP)
 	#endif
 	}
 
-bool ZUnicode::sIsWhitespace(UTF32 iCP)
+bool sIsWhitespace(UTF32 iCP)
 	{
 	#if ZCONFIG_SPI_Enabled(ICU)
 
@@ -974,7 +675,7 @@ bool ZUnicode::sIsWhitespace(UTF32 iCP)
 	#endif
 	}
 
-bool ZUnicode::sIsEOL(UTF32 iCP)
+bool sIsEOL(UTF32 iCP)
 	{
 	switch (iCP)
 		{
@@ -987,7 +688,7 @@ bool ZUnicode::sIsEOL(UTF32 iCP)
 	return false;
 	}
 
-UTF32 ZUnicode::sToUpper(UTF32 iCP)
+UTF32 sToUpper(UTF32 iCP)
 	{
 	#if ZCONFIG_SPI_Enabled(ICU)
 
@@ -1000,7 +701,7 @@ UTF32 ZUnicode::sToUpper(UTF32 iCP)
 	#endif
 	}
 
-UTF32 ZUnicode::sToLower(UTF32 iCP)
+UTF32 sToLower(UTF32 iCP)
 	{
 	#if ZCONFIG_SPI_Enabled(ICU)
 
@@ -1013,7 +714,7 @@ UTF32 ZUnicode::sToLower(UTF32 iCP)
 	#endif
 	}
 
-string8 ZUnicode::sToLower(const string8& iString)
+string8 sToLower(const string8& iString)
 	{
 	string8 result;
 	result.reserve(iString.size());
@@ -1030,7 +731,7 @@ string8 ZUnicode::sToLower(const string8& iString)
 	return result;
 	}
 
-string8 ZUnicode::sToUpper(const string8& iString)
+string8 sToUpper(const string8& iString)
 	{
 	string8 result;
 	result.reserve(iString.size());
@@ -1047,7 +748,7 @@ string8 ZUnicode::sToUpper(const string8& iString)
 	return result;
 	}
 
-int ZUnicode::sHexValue(UTF32 iCP)
+int sHexValue(UTF32 iCP)
 	{
 	if (iCP >= '0' && iCP <= '9')
 		return iCP - '0';
@@ -1065,7 +766,7 @@ int ZUnicode::sHexValue(UTF32 iCP)
 #pragma mark -
 #pragma mark * Optimized implementations of sAsUTFXX
 
-string16 ZUnicode::sAsUTF16(const string8& iString)
+string16 sAsUTF16(const string8& iString)
 	{
 	if (iString.empty())
 		return string16();
@@ -1132,5 +833,7 @@ string16 ZUnicode::sAsUTF16(const string8& iString)
 	result.resize(dest - result.data());
 	return result;
 	}
+
+} // namespace ZUnicode
 
 NAMESPACE_ZOOLIB_END
