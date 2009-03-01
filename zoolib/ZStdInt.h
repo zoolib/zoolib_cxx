@@ -40,9 +40,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	|| ZCONFIG_SPI_Enabled(Carbon)
 
 	#if __arm__
-	#	include <MacTypes.h>
+		#include <MacTypes.h>
 	#else
-	#	include ZMACINCLUDE3(CoreServices,CarbonCore,MacTypes.h)
+		#include ZMACINCLUDE3(CoreServices,CarbonCore,MacTypes.h)
 	#endif
 
 #endif
