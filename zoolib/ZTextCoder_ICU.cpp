@@ -143,8 +143,10 @@ bool ZTextDecoder_ICU::Decode(
 		size_t utf16Consumed;
 		size_t utf32Generated;
 		ZUnicode::sUTF16ToUTF32(
-			reinterpret_cast<const UTF16*>(utf16Buffer), utf16Generated, &utf16Consumed,
-			localDest, iDestCU, &utf32Generated);
+			reinterpret_cast<const UTF16*>(utf16Buffer), utf16Generated,
+			&utf16Consumed, nil,
+			localDest, iDestCU,
+			&utf32Generated);
 
 		localSource += sourceConsumed;
 		iSourceBytes -= sourceConsumed;
@@ -207,9 +209,12 @@ void ZTextEncoder_ICU::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 		{
 		size_t utf32Consumed;
 		size_t utf16Generated;
-		ZUnicode::sUTF32ToUTF16( localSource, iSourceCU, &utf32Consumed,
-			reinterpret_cast<UTF16*>(utf16Buffer), min(kBufSize, iDestBytes), &utf16Generated,
-			nil);
+		ZUnicode::sUTF32ToUTF16(
+			localSource, iSourceCU,
+			&utf32Consumed, nil,
+			reinterpret_cast<UTF16*>(utf16Buffer), min(kBufSize, iDestBytes),
+			&utf16Generated,
+			iSourceCU, nil);
 
 		char* tempDest = localDest;
 		const UChar* tempLocalSource = utf16Buffer;

@@ -252,8 +252,10 @@ bool ZTextDecoder_Mac::Decode(
 			size_t utf16Consumed;
 			size_t utf32Generated;
 			ZUnicode::sUTF16ToUTF32(
-				reinterpret_cast<const UTF16*>(utf16Buffer), utf16Generated, &utf16Consumed,
-				localDest, iDestCU, &utf32Generated);
+				reinterpret_cast<const UTF16*>(utf16Buffer), utf16Generated,
+				&utf16Consumed, nil,
+				localDest, iDestCU,
+				&utf32Generated);
 
 			if (utf16Generated > utf16Consumed)
 				{
@@ -340,9 +342,12 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 		{
 		size_t utf32Consumed;
 		size_t utf16Generated;
-		ZUnicode::sUTF32ToUTF16(localSource, iSourceCU, &utf32Consumed,
-						reinterpret_cast<UTF16*>(utf16Buffer), kBufSize, &utf16Generated,
-						nil);
+		ZUnicode::sUTF32ToUTF16(
+			localSource, iSourceCU,
+			&utf32Consumed, nil,
+			reinterpret_cast<UTF16*>(utf16Buffer), kBufSize,
+			&utf16Generated,
+			iSourceCU, nil);
 
 		ByteCount utf16Consumed;
 		ByteCount destGenerated;
