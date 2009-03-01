@@ -43,6 +43,7 @@ public:
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
+
 private:
 	const ZTValue fTValue;
 	};
