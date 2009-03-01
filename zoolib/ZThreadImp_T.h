@@ -225,7 +225,6 @@ public:
 		}
 	};
 
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZCnd_T
@@ -252,8 +251,6 @@ public:
 		iMtx.Release();
 
 		fSem.Wait();
-
-//		ZAtomic_Dec(&fWaitingThreads);
 		
 		iMtx.Acquire();
 		}
@@ -294,7 +291,6 @@ public:
 				if (!ZAtomic_CompareAndSwap(&fWaitingThreads, oldCount, 0))
 					continue;
 
-//				while (oldCount-- > 0)
 				while (oldCount--)
 					fSem.Signal();
 				}
