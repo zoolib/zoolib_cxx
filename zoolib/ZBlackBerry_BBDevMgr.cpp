@@ -35,6 +35,7 @@ using std::string;
 using std::vector;
 using std::wstring;
 using namespace ZBlackBerryCOM;
+using namespace ZWinCOM;
 
 namespace ZBlackBerry {
 
@@ -556,28 +557,23 @@ uint32 Device_BBDevMgr::GetPIN()
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Device_BBDevMgr"))
 		s << "GetPIN";
 
-	VARIANT theV;
-	::VariantInit(&theV);
-	uint32 thePIN = 0;
-	if (this->pGetProperty(ZUnicode::sAsUTF16("BBPIN"), theV))
-		{
-		if (VT_I4 == theV.vt)
-			thePIN = theV.lVal;
-		}
-	::VariantClear(&theV);
-	return thePIN;
+	Variant thePIN;
+	if (this->pGetProperty(ZUnicode::sAsUTF16("BBPIN"), thePIN))
+		return thePIN.GetInt32();
+
+	return 0;
 	}
 
 bool Device_BBDevMgr::Matches(IDevice* iDevice)
 	{
-	int32 result = 0;
 	if (ZRef<IDevice> theDevice = this->pUseDevice())
 		{
-		if (FAILED(theDevice->Equals(iDevice, &result)))
-			result = 0;
+		int32 result;
+		if (SUCCEEDED(theDevice->Equals(iDevice, &result)))
+			return result == 1;
 		}
 
-	return result == 1;
+	return false;
 	}
 
 void Device_BBDevMgr::pDisconnected()
@@ -589,7 +585,6 @@ void Device_BBDevMgr::pDisconnected()
 
 bool Device_BBDevMgr::pGetProperty(const string16& iName, VARIANT& oValue)
 	{
-	bool gotIt = false;
 	if (ZRef<IDevice> theDevice = this->pUseDevice())
 		{
 		ZRef<IDeviceProperties> theDPs;
@@ -597,29 +592,25 @@ bool Device_BBDevMgr::pGetProperty(const string16& iName, VARIANT& oValue)
 			{
 			uint32 dpCount;
 			theDPs->Count(&dpCount);
-			for (uint32 x = 0; x < dpCount && !gotIt; ++x)
+			for (uint32 x = 0; x < dpCount; ++x)
 				{
-				VARIANT indexV;
-				indexV.vt = VT_I4;
-				indexV.lVal = x;
 				ZRef<IDeviceProperty> theDP;
-				if (SUCCEEDED(theDPs->Item(indexV, sCOMPtr(theDP))))
+				if (SUCCEEDED(theDPs->Item(Variant(x), sCOMPtr(theDP))))
 					{
-					BSTR theName;
-					if (SUCCEEDED(theDP->Name(&theName)))
+					ZWinCOM::String theName;
+					if (SUCCEEDED(theDP->Name(sCOMPtr(theName))))
 						{
 						if (iName == theName)
 							{
 							if (SUCCEEDED(theDP->Value(&oValue)))
-								gotIt = true;
+								return true;
 							}	
-						::SysFreeString(theName);
 						}
 					}
 				}
 			}
 		}
-	return gotIt;
+	return false;
 	}
 
 ZRef<IDevice> Device_BBDevMgr::pUseDevice()
@@ -728,13 +719,16 @@ STDMETHODIMP Manager_BBDevMgr::DeviceDisconnect(IDevice* iDevice)
 
 	ZMutexLocker locker(fMutex);
 
-	for (vector<Entry_t>::iterator i = fEntries.begin(); i != fEntries.end(); ++i)
+	for (vector<Entry_t>::iterator i = fEntries.begin(); i != fEntries.end(); /*no inc*/)
 		{
-		if (i->fDevice->Matches(iDevice))
+		if (! i->fDevice->Matches(iDevice))
+			{
+			++i;
+			}
+		else
 			{
 			i->fDevice->pDisconnected();
-			fEntries.erase(i);
-			break;
+			i = fEntries.erase(i);
 			}
 		}
 
