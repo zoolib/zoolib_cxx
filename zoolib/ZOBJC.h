@@ -21,6 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZOBJC__
 #define __ZOBJC__ 1
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
+
+#if ZCONFIG_SPI_Enabled(Cocoa)
 
 // The DESTROY macro from renaissance is useful. At some point, if we have
 // renaissance available, then we'll pull the definition from there.
@@ -59,5 +62,7 @@ private:
 NAMESPACE_ZOOLIB_END
 
 #endif // __cplusplus
+
+#endif // ZCONFIG_SPI_Enabled(Cocoa)
 
 #endif // __ZOBJC__

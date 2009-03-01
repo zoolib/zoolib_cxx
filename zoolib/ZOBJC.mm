@@ -19,6 +19,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 #include "zoolib/ZOBJC.h"
 
+#if ZCONFIG_SPI_Enabled(Cocoa)
+
 #include <Foundation/NSAutoReleasePool.h>
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -38,3 +40,5 @@ ZAutoreleasePool::~ZAutoreleasePool()
 	}
 
 NAMESPACE_ZOOLIB_END
+
+#endif // ZCONFIG_SPI_Enabled(Cocoa)
