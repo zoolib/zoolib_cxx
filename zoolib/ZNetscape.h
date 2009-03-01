@@ -378,9 +378,9 @@ public:
 
 	bool DGetBool(bool iDefault) const
 		{
-		if (type == NPVariantType_Bool)
-			return value.boolValue;
-		return iDefault;
+		if (type != NPVariantType_Bool)
+			return iDefault;
+		return value.boolValue;
 		}
 
 	int32 GetInt32() const
@@ -396,9 +396,9 @@ public:
 
 	int32 DGetInt32(int32 iDefault) const
 		{
-		if (type == NPVariantType_Int32)
-			return value.intValue;
-		return iDefault;
+		if (type != NPVariantType_Int32)
+			return iDefault;
+		return value.intValue;
 		}
 
 	double GetDouble() const
@@ -414,9 +414,9 @@ public:
 
 	double DGetDouble(double iDefault) const
 		{
-		if (type == NPVariantType_Double)
-			return value.doubleValue;
-		return iDefault;
+		if (type != NPVariantType_Double)
+			return iDefault;
+		return value.doubleValue;
 		}
 
 	std::string GetString() const
@@ -479,10 +479,9 @@ public:
 
 	T* DGetObject(T* iDefault) const
 		{
-		if (type == NPVariantType_Object)
-			return static_cast<T*>(value.objectValue);
-
-		return iDefault;
+		if (type != NPVariantType_Object)
+			return iDefault;
+		return static_cast<T*>(value.objectValue);
 		}
 
 	void SetObject(T* iValue)
