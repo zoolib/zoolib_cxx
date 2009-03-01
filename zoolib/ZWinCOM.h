@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -20,51 +20,25 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZWinCOM__
 #define __ZWinCOM__ 1
+#include "zconfig.h"
+
 #include "zoolib/ZCONFIG_SPI.h"
-#include "zoolib/ZRef.h"
 
 // =================================================================================================
 
 #if ZCONFIG_SPI_Enabled(Win)
 
+#include "zoolib/ZRef.h"
+#include "zoolib/ZUnicode.h"
+#include "zoolib/ZWinCOM_Macros.h"
 #include "zoolib/ZWinHeader.h"
 
 // Necessary when building with Cocotron
 #include <ole2.h>
 
-#if ZCONFIG(Compiler, GCC)
-
-	#define ZWinCOM_CLASS_(className, baseClass, l, w0, w1, b0, b1, b2, b3, b4, b5, b6, b7) \
-		struct className : public baseClass {\
-		enum { ZIID_l=0x##l,\
-			ZIID_w0=0x##w0,ZIID_w1=0x##w1,\
-			ZIID_b0=0x##b0,ZIID_b1=0x##b1,ZIID_b2=0x##b2,ZIID_b3=0x##b3,\
-			ZIID_b4=0x##b4,ZIID_b5=0x##b5,ZIID_b6=0x##b6,ZIID_b7=0x##b7};\
-		static const IID sIID;
-
-	#define ZWinCOM_DEFINITION(className)\
-		const IID className::sIID = {ZIID_l,\
-			ZIID_w0,ZIID_w1,\
-			{ZIID_b0,ZIID_b1,ZIID_b2,ZIID_b3,\
-			ZIID_b4,ZIID_b5,ZIID_b6,ZIID_b7}};
-
-	#define ZUUIDOF(className) (className::sIID)
-
-#else
-
-	#define ZWinCOM_STRINGIFY(a) #a
-
-	#define ZWinCOM_CLASS_(className, baseClass, l, w0, w1, b0, b1, b2, b3, b4, b5, b6, b7) \
-		MIDL_INTERFACE(ZWinCOM_STRINGIFY(l##-##w0##-##w1##-##b0##b1##-##b2##b3##b4##b5##b6##b7))\
-		className : public baseClass {
-
-	#define ZWinCOM_DEFINITION(className)
-
-	#define ZUUIDOF(className) __uuidof(className)
-
-#endif
-
 NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
 
 inline void sRetain(IUnknown& iObject)
 	{ iObject.AddRef(); }
@@ -91,6 +65,130 @@ static T** sCOMPtr(ZRef<T>& iRef)
 template <class T>
 static void** sCOMVoidPtr(ZRef<T>& iRef)
 	{ return (void**)(sCOMPtr(iRef)); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWinCOM::Variant
+
+namespace ZWinCOM {
+
+class Variant : public VARIANT
+	{
+public:
+	void swap(Variant& iOther);
+
+	Variant();
+	Variant(const VARIANT& iOther);
+	~Variant();
+	Variant& operator=(const VARIANT& iOther);
+
+	Variant(bool iParam);
+	Variant(int8 iParam);
+	Variant(uint8 iParam);
+	Variant(int16 iParam);
+	Variant(uint16 iParam);
+	Variant(int32 iParam);
+	Variant(uint32 iParam);
+	Variant(int64 iParam);
+	Variant(uint64 iParam);
+	Variant(float iParam);
+	Variant(double iParam);
+	Variant(const std::string& iParam);
+	Variant(const string16& iParam);
+	Variant(ZRef<IUnknown> iParam);
+	Variant(ZRef<IDispatch> iParam);
+
+	bool GetBool() const;
+	bool GetBool(bool& oValue) const;
+	bool DGetBool(bool iDefault) const;
+
+	int8 GetInt8() const;
+	bool GetInt8(int8& oValue) const;
+	int8 DGetInt8(int8 iDefault) const;
+
+	uint8 GetUInt8() const;
+	bool GetUInt8(uint8& oValue) const;
+	uint8 DGetUInt8(uint8 iDefault) const;
+
+	int16 GetInt16() const;
+	bool GetInt16(int16& oValue) const;
+	int16 DGetInt16(int16 iDefault) const;
+
+	uint16 GetUInt16() const;
+	bool GetUInt16(uint16& oValue) const;
+	uint16 DGetUInt16(uint16 iDefault) const;
+
+	int32 GetInt32() const;
+	bool GetInt32(int32& oValue) const;
+	int32 DGetInt32(int32 iDefault) const;
+
+	uint32 GetUInt32() const;
+	bool GetUInt32(uint32& oValue) const;
+	uint32 DGetUInt32(uint32 iDefault) const;
+
+	int64 GetInt64() const;
+	bool GetInt64(int64& oValue) const;
+	int64 DGetInt64(int64 iDefault) const;
+
+	uint64 GetUInt64() const;
+	bool GetUInt64(uint64& oValue) const;
+	uint64 DGetUInt64(uint64 iDefault) const;
+
+	float GetFloat() const;
+	bool GetFloat(float& oValue) const;
+	float DGetFloat(float iDefault) const;
+
+	double GetDouble() const;
+	bool GetDouble(double& oValue) const;
+	double DGetDouble(double iDefault) const;
+
+	string16 GetString16() const;
+	bool GetString16(string16& oValue) const;
+	string16 DGetString16(const string16& iDefault) const;
+	};
+
+} // namespace ZWinCOM
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWinCOM::String
+
+namespace ZWinCOM {
+
+class String
+	{
+public:
+	String();
+	String(const String& iOther);
+	~String();
+	String& operator=(const String& iOther);
+
+	String(const BSTR& iOther);
+	String& operator=(const BSTR& iOther);
+
+	String(const string16& iOther);
+	String& operator=(const string16& iOther);
+
+	operator string16() const;
+
+	void Clear();
+
+	BSTR& GetPtrRef();
+	const BSTR& GetPtrRef() const;
+
+private:
+	BSTR fBSTR;
+	};
+
+BSTR* sCOMPtr(String& iStr);
+
+bool operator==(const BSTR& l, const string16& r);
+bool operator==(const string16& r, const BSTR& l);
+
+bool operator==(const String& l, const string16& r);
+bool operator==(const string16& l, const String& r);
+
+} // namespace ZWinCOM
 
 NAMESPACE_ZOOLIB_END
 
