@@ -96,6 +96,7 @@ private:
 	ZRef<ZUSBWatcher> fUSBWatcher_Trad_HS;
 	ZRef<ZUSBWatcher> fUSBWatcher_Pearl_HS;
 	ZRef<ZUSBWatcher> fUSBWatcher_Dual_HS;
+	ZRef<ZUSBWatcher> fUSBWatcher_Storm_HS;
 
 	struct Device_t
 		{

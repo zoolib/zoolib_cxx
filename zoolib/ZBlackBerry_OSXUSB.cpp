@@ -186,6 +186,9 @@ void Manager_OSXUSB::Start()
 	fUSBWatcher_Dual_HS = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8004);
 	fUSBWatcher_Dual_HS->SetObserver(this);
 
+	fUSBWatcher_Storm_HS = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8007);
+	fUSBWatcher_Storm_HS->SetObserver(this);
+
 	::CFRunLoopAddSource(fRunLoopRef,
 		::IONotificationPortGetRunLoopSource(fIONotificationPortRef),
 		kCFRunLoopDefaultMode);
@@ -209,6 +212,7 @@ void Manager_OSXUSB::Stop()
 	fUSBWatcher_Trad_HS.Clear();
 	fUSBWatcher_Pearl_HS.Clear();
 	fUSBWatcher_Dual_HS.Clear();
+	fUSBWatcher_Storm_HS.Clear();
 
 	if (fIONotificationPortRef)
 		{
