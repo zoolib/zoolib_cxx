@@ -692,7 +692,8 @@ bool ZUtil_Strim::sTryRead_SignedDouble(const ZStrimU& iStrimU, double& oDouble)
 	return sTryRead_Double(iStrimU, oDouble);
 	}
 
-void ZUtil_Strim::sCopy_EscapedString(const ZStrimU& iStrimU, UTF32 iTerminator, const ZStrimW& iDest)
+void ZUtil_Strim::sCopy_EscapedString(const ZStrimU& iStrimU,
+	UTF32 iTerminator, const ZStrimW& iDest)
 	{
 	for (;;)
 		{
