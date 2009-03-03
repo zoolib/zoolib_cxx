@@ -740,7 +740,7 @@ const ZStrimW& ZStrimW::Write(const UTF16* iSource, size_t iCountCU, size_t* oCo
 	}
 
 /** Write the UTF-8 string starting at \a iSource and continuing to \a iSource + \a iCountCU.
- Report the number of code units succesfully written in the optional output parameter \a oCountCU.
+Report the number of code units succesfully written in the optional output parameter \a oCountCU.
 */
 const ZStrimW& ZStrimW::Write(const UTF8* iSource, size_t iCountCU, size_t* oCountCU) const
 	{

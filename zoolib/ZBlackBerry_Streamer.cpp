@@ -185,7 +185,7 @@ bool Device_Streamer::StreamW_Chunked::Send(uint16 iChannelID, const ZStreamW& i
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZBlackBerry::Channel_Streamer
+#pragma mark * Channel_Streamer
 
 class Channel_Streamer
 :	public ZBlackBerry::Channel,
@@ -639,8 +639,8 @@ bool Device_Streamer::Write(const ZStreamW& iStreamW)
 			theChannel->fState = eState_Dead;
 			theChannel->fWaitingForSequence = false;
 			theChannel->fReceive_Buffer.clear();
-// Don't zero fSend_Data -- a pending write will need its value.
-//			theChannel->fSend_Data = nil;
+			// Don't zero fSend_Data -- a pending write will need its value.
+			// theChannel->fSend_Data = nil;
 			theChannel->fSend_Size = 0;
 			theChannel->fCondition_Receive.Broadcast();
 			theChannel->fCondition_Send.Broadcast();
