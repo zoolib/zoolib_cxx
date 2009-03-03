@@ -315,6 +315,9 @@ public:
 		spRelease(theP);
 		}
 
+	// Used with output parameters.
+	T*& GetPtrRef() { return fP; }
+
 private:
 	T* fP;
 	};
