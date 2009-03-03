@@ -44,8 +44,8 @@ ZOOLIB_RETAIN_RELEASE(CFTypeRef)
 	typedef struct __CF##a * CF##a##Ref; \
 	ZOOLIB_RETAIN_RELEASE(CF##a##Ref)
 
-// Plugin and Bundle are usually the same type
-// ZOOLIB_CF(PlugIn)
+
+// ZOOLIB_CF(PlugIn) // Plugin and Bundle are usually the same type
 ZOOLIB_CF(Bundle)
 ZOOLIB_CF(ReadStream)
 
@@ -79,5 +79,16 @@ ZOOLIB_CG(Image)
 ZOOLIB_CG(ColorSpace)
 ZOOLIB_CG(Context)
 ZOOLIB_CG(DataProvider)
+
+
+// -------
+typedef struct OpaqueSecKeychainRef *SecKeychainRef;
+ZOOLIB_RETAIN_RELEASE(SecKeychainRef)
+
+typedef struct OpaqueSecKeychainItemRef *SecKeychainItemRef;
+ZOOLIB_RETAIN_RELEASE(SecKeychainItemRef)
+
+typedef struct OpaqueSecKeychainSearchRef *SecKeychainSearchRef;
+ZOOLIB_RETAIN_RELEASE(SecKeychainSearchRef)
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
