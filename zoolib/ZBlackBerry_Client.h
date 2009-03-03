@@ -41,7 +41,7 @@ private:
 	Manager_Client();
 
 public:
-	Manager_Client(ZRef<ZStreamerRWConFactory> iFactory);
+	Manager_Client(ZRef<ZStreamerRWConFactory> iFactory, bool iAutoReconnect);
 	virtual ~Manager_Client();
 
 // From Manager
@@ -61,10 +61,13 @@ public:
 	virtual void Detached();
 
 private:
+	void pStartRunners(ZRef<ZStreamerRWCon> iSRWCon);
+
 	class Handler_ManagerChanged;
 	friend class Handler_ManagerChanged;
 
 	ZRef<ZStreamerRWConFactory> fFactory;
+	bool fAutoReconnect;
 	bool fSendNotificationRequest;
 	bool fSendClose;
 	};

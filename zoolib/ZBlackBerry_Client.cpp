@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZLog.h"
 
+using std::max;
 using std::min;
 using std::runtime_error;
 using std::string;
@@ -326,8 +327,9 @@ void Device_Client::Detached()
 Manager_Client::Manager_Client()
 	{}
 
-Manager_Client::Manager_Client(ZRef<ZStreamerRWConFactory> iFactory)
+Manager_Client::Manager_Client(ZRef<ZStreamerRWConFactory> iFactory, bool iAutoReconnect)
 :	fFactory(iFactory),
+	fAutoReconnect(iAutoReconnect),
 	fSendNotificationRequest(true),
 	fSendClose(false)
 	{}
@@ -343,14 +345,12 @@ void Manager_Client::Start()
 
 	this->pStarted();
 
-	const ZStreamW& w = theSRWCon->GetStreamW();
-	w.WriteUInt8(0);
-
-	sStartRunners(this, theSRWCon, theSRWCon);
+	this->pStartRunners(theSRWCon);
 	}
 
 void Manager_Client::Stop()
 	{
+	fAutoReconnect = false;
 	fSendClose = true;
 	this->Wake();
 	}
@@ -403,10 +403,11 @@ ZRef<Device> Manager_Client::Open(uint64 iDeviceID)
 
 void Manager_Client::RunnerDetached(ZStreamReaderRunner* iRunner)
 	{
-	ZCommer::RunnerDetached(iRunner);
 	// Force the writer to attempt to close, and thus to exit.
 	fSendClose = true;
 	this->Wake();
+
+	ZCommer::RunnerDetached(iRunner);
 	}
 
 bool Manager_Client::Read(const ZStreamR& r)
@@ -443,7 +444,39 @@ bool Manager_Client::Write(const ZStreamW& w)
 
 void Manager_Client::Detached()
 	{
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client"))
+		s << "Detached";
+
+	fSendClose = false;
+
+	while (fAutoReconnect)
+		{
+		if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client"))
+			s << "Detached, retrying";
+		ZTime nextTry = ZTime::sNow() + 2.0;
+		if (ZRef<ZStreamerRWCon> theSRWCon = fFactory->MakeStreamerRWCon())
+			{
+			this->pStartRunners(theSRWCon);
+			return;
+			}
+		if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client"))
+			s << "Detached, retry failed";
+
+		ZThreadImp::sSleep(max(0.1, nextTry - ZTime::sNow()));
+		}
+
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client"))
+		s << "Detached, not retrying";
+
 	this->pStopped();
+	}
+
+void Manager_Client::pStartRunners(ZRef<ZStreamerRWCon> iSRWCon)
+	{
+	const ZStreamW& w = iSRWCon->GetStreamW();
+	w.WriteUInt8(0);
+
+	sStartRunners(this, iSRWCon, iSRWCon);
 	}
 
 } // namespace ZBlackBerry
