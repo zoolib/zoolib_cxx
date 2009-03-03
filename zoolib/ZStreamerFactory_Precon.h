@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamerRWFactory_Preconnected__
-#define __ZStreamerRWFactory_Preconnected__ 1
+#ifndef __ZStreamerFactory_Precon__
+#define __ZStreamerFactory_Precon__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStreamer.h"
@@ -28,13 +28,13 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStreamerRWFactory_Preconnected
+#pragma mark * ZStreamerRWFactory_Precon
 
-class ZStreamerRWFactory_Preconnected : public ZStreamerRWFactory
+class ZStreamerRWFactory_Precon : public ZStreamerRWFactory
 	{
 public:
-	ZStreamerRWFactory_Preconnected(ZRef<ZStreamerRW> iSRW, ZRef<ZStreamerRWFactory> iFactory);
-	virtual ~ZStreamerRWFactory_Preconnected();
+	ZStreamerRWFactory_Precon(ZRef<ZStreamerRW> iSRW, ZRef<ZStreamerRWFactory> iFactory);
+	virtual ~ZStreamerRWFactory_Precon();
 
 // From ZStreamerRWFactory
 	virtual ZRef<ZStreamerRW> MakeStreamerRW();
@@ -44,6 +44,25 @@ private:
 	ZRef<ZStreamerRWFactory> fFactory;
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStreamerRWConFactory_Precon
+
+class ZStreamerRWConFactory_Precon : public ZStreamerRWConFactory
+	{
+public:
+	ZStreamerRWConFactory_Precon(
+		ZRef<ZStreamerRWCon> iSRWCon, ZRef<ZStreamerRWConFactory> iFactory);
+	virtual ~ZStreamerRWConFactory_Precon();
+
+// From ZStreamerRWConFactory
+	virtual ZRef<ZStreamerRWCon> MakeStreamerRWCon();
+
+private:
+	ZRef<ZStreamerRWCon> fSRWCon;
+	ZRef<ZStreamerRWConFactory> fFactory;
+	};
+
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZStreamerRWFactory_Preconnected__
+#endif // __ZStreamerFactory_Precon__

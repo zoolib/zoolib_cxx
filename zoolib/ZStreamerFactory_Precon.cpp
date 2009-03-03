@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStreamerRWFactory_Preconnected.h"
+#include "zoolib/ZStreamerFactory_Precon.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZThread.h"
 
@@ -26,18 +26,18 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStreamerRWFactory_Preconnected
+#pragma mark * ZStreamerRWFactory_Precon
 
-ZStreamerRWFactory_Preconnected::ZStreamerRWFactory_Preconnected(
+ZStreamerRWFactory_Precon::ZStreamerRWFactory_Precon(
 	ZRef<ZStreamerRW> iSRW, ZRef<ZStreamerRWFactory> iFactory)
 :	fSRW(iSRW),
 	fFactory(iFactory)
 	{}
 
-ZStreamerRWFactory_Preconnected::~ZStreamerRWFactory_Preconnected()
+ZStreamerRWFactory_Precon::~ZStreamerRWFactory_Precon()
 	{}
 
-ZRef<ZStreamerRW> ZStreamerRWFactory_Preconnected::MakeStreamerRW()
+ZRef<ZStreamerRW> ZStreamerRWFactory_Precon::MakeStreamerRW()
 	{
 	if (ZRef<ZStreamerRW> theSRW = fSRW)
 		{
@@ -49,6 +49,33 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Preconnected::MakeStreamerRW()
 		return fFactory->MakeStreamerRW();
 
 	return ZRef<ZStreamerRW>();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStreamerRWConFactory_Precon
+
+ZStreamerRWConFactory_Precon::ZStreamerRWConFactory_Precon(
+	ZRef<ZStreamerRWCon> iSRWCon, ZRef<ZStreamerRWConFactory> iFactory)
+:	fSRWCon(iSRWCon),
+	fFactory(iFactory)
+	{}
+
+ZStreamerRWConFactory_Precon::~ZStreamerRWConFactory_Precon()
+	{}
+
+ZRef<ZStreamerRWCon> ZStreamerRWConFactory_Precon::MakeStreamerRWCon()
+	{
+	if (ZRef<ZStreamerRWCon> theSRWCon = fSRWCon)
+		{
+		fSRWCon.Clear();
+		return theSRWCon;
+		}
+
+	if (fFactory)
+		return fFactory->MakeStreamerRWCon();
+
+	return ZRef<ZStreamerRWCon>();
 	}
 
 NAMESPACE_ZOOLIB_END
