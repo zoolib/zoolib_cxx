@@ -45,6 +45,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		#include ZMACINCLUDE3(CoreServices,CarbonCore,MacTypes.h)
 	#endif
 
+	// Doing this makes a lot of stuff more directly compatible on Mac.
+	#ifndef _UINT32
+		#define _UINT32 1
+		typedef UInt32 uint32;
+	#endif
+
 #endif
 
 #if ZCONFIG(Compiler, MSVC)
