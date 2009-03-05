@@ -448,6 +448,7 @@ void Manager_Client::Detached()
 		s << "Detached";
 
 	fSendClose = false;
+	fSendNotificationRequest = true;
 
 	while (fAutoReconnect)
 		{
