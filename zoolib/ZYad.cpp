@@ -30,10 +30,19 @@ using std::min;
 using std::string;
 using std::vector;
 
-
 /*
-YAD is Yet Another Data. It provides a suite of facilities for accessing data that looks like
-ZooLib ZTuple suite -- CFDictionary, NSDictionary, PList, XMLRPC, JSON, Javascript types etc.
+Yad is another neologism by Eric Cooper. As an acronym it stands for Yet Another Data, but
+interestingly it is also a hebrew word. From <http://en.wikipedia.org/wiki/Yad>:
+
+A yad (Hebrew: יד‎), literally, "hand," is a Jewish ritual pointer, used to point to the text during
+the Torah reading from the parchment Torah scrolls. It is intended to prevent anyone from touching
+the parchment, which is considered sacred; additionally, the fragile parchment can be damaged by
+the oils of the skin. While not required when chanting from the Torah, it is used frequently.
+
+An instance of ZYadR points within some data source, can be moved through that source, and can
+return further instances of ZYadR referencing substructures of that source. Basically it's a
+generic facility for accessing data that looks like ZooLib ZTuple suite -- CFDictionary,
+NSDictionary, PList, XMLRPC, JSON, Javascript types etc.
 
 The idea is that there are a Map-like and List-like entities in many APIs, and that abstracting
 access to them allows code to be applied to any of them.
