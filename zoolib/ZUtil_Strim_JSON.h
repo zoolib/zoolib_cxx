@@ -39,15 +39,6 @@ void sToStrim(const ZStrimW& iStrimW, const std::vector<ZTValue>& iVector);
 
 bool sFromStrim(const ZStrimU& iStrimU, ZTValue& oTValue);
 
-void sNormalize(ZTValue& ioTV);
-bool sNormalize(bool iPreserveTuples, bool iPreserveVectors, ZTValue& ioTV);
-
-ZTValue sNormalized(const ZTValue& iTV);
-ZTValue sNormalized(bool iPreserveTuples, bool iPreserveVectors, const ZTValue& iTV);
-
-void sNormalized(const ZTValue& iTV, ZTValue& oTV);
-bool sNormalized(bool iPreserveTuples, bool iPreserveVectors, const ZTValue& iTV, ZTValue& oTV);
-
 } // namespace ZUtil_Strim_JSON
 
 NAMESPACE_ZOOLIB_END

@@ -129,13 +129,77 @@ private:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYadListR_JSONNormalize
+
+class ZYadListR_JSONNormalize
+:	public ZYadListR,
+	public ZYadR_JSON
+	{
+public:
+	ZYadListR_JSONNormalize(ZRef<ZYadListR> iYadListR, bool iPreserveLists, bool iPreserveMaps);
+
+// From ZYadR_JSON
+	virtual void Finish();
+
+// From ZYadR via ZYadListR
+	virtual bool HasChild();
+	virtual ZRef<ZYadR> NextChild();
+
+// From ZYadListR
+	virtual size_t GetPosition();
+
+private:
+	void pMoveIfNecessary();
+
+	ZRef<ZYadListR> fYadListR;
+	bool fPreserveLists;
+	bool fPreserveMaps;
+	size_t fPosition;
+	ZRef<ZYadR_JSON> fValue_Current;
+	ZRef<ZYadR_JSON> fValue_Prior;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadMapR_JSONNormalize
+
+class ZYadMapR_JSONNormalize
+:	public ZYadMapR,
+	public ZYadR_JSON
+	{
+public:
+	ZYadMapR_JSONNormalize(ZRef<ZYadMapR> iYadMapR, bool iPreserveLists, bool iPreserveMaps);
+
+// From ZYadR_JSON
+	virtual void Finish();
+
+// From ZYadR via ZYadMapR
+	virtual bool HasChild();
+	virtual ZRef<ZYadR> NextChild();
+
+// From ZYadMapR
+	virtual std::string Name();
+
+private:
+	void pMoveIfNecessary();
+
+	ZRef<ZYadMapR> fYadMapR;
+	bool fPreserveLists;
+	bool fPreserveMaps;
+	std::string fName;
+	ZRef<ZYadR_JSON> fValue_Current;
+	ZRef<ZYadR_JSON> fValue_Prior;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYad_JSON
 
 namespace ZYad_JSON {
 
 ZRef<ZYadR> sMakeYadR(const ZStrimU& iStrimU);
 
-ZRef<ZYadR> sMakeYadR_Normalize(ZRef<ZYadR> iYadR, bool iPreserveMaps, bool iPreserveLists);
+ZRef<ZYadR> sMakeYadR_Normalize(ZRef<ZYadR> iYadR, bool iPreserveLists, bool iPreserveMaps);
 
 void sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR);
 

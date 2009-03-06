@@ -530,7 +530,7 @@ void ZYadRawR_ZooLibStrim::Finish()
 	if (fReadDelimiter)
 		{
 		sSkip_WSAndCPlusPlusComments(fStrimU);
-		if (!sTryRead_CP(fStrimU, ']'))
+		if (!sTryRead_CP(fStrimU, ')'))
 			sThrowParseException("Expected ')' to close a raw");
 		}
 	}

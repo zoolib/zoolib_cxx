@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompat_cmath.h"
+#include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZStrimW_Escapify.h"
 #include "zoolib/ZTuple.h"
 #include "zoolib/ZUtil_Strim.h"
@@ -28,6 +29,62 @@ NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
 using std::vector;
+
+/*! \namespace ZYad_JSON
+JSON is JavaScript Object Notation. See <http://www.crockford.com/JSON/index.html>.
+
+ZYad_JSON provides Yad facilities to read and write JSON source.
+
+ZTuple is isomorphic to JSON's object, vector<ZTValue> to JSON's array, and strings, booleans
+and null translate back and forth without trouble. JSON's only other primitive is
+the number, whereas ZTValue explicitly stores and retrieves integers of different sizes,
+floats and doubles, raw bytes and other composite types.
+
+ZYad_JSON writes all ZTValue number types as JSON numbers. When reading, JSON numbers
+are stored as int64s, unless the mantissa has a fractional component or exceeds 2^64,
+or if there is an exponent,in which case a double is used.
+
+The mappings are as follows:
+
+<pre>
+
+JSON          ZTValue
+----          -------
+null          null
+object        ZTuple
+array         vector<ZTValue>
+boolean       bool
+string        string
+number        int64 or double
+
+
+ZTValue          JSON
+-------          ----
+null             null
+ZTuple           object
+vector<ZTValue>  array
+bool             boolean
+string           string
+int8             number
+int16            number
+int32            number
+int64            number
+float            number
+double           number
+uint64 (ID)      number
+time             number
+
+all other types are written as nulls in maps and lists if the appropriate
+preserve flag is passed, otherwise they are skipped.
+raw              -
+refcounted       -
+rect             -
+point            -
+region           -
+type             -
+</pre>
+
+*/
 
 // =================================================================================================
 #pragma mark -
@@ -274,6 +331,54 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTV)
 	return true;
 	}
 
+static bool sNormalizeSimpleTValue(const ZTValue& iTV, ZTValue& oTV)
+	{
+	ZAssert(&iTV != &oTV);
+	switch (iTV.TypeOf())
+		{
+		case eZType_String:
+		case eZType_Int64:
+		case eZType_Double:
+		case eZType_Bool:
+		case eZType_Null:
+			{
+			oTV = iTV;
+			return true;
+			}
+		case eZType_Int8:
+			{
+			oTV.SetInt64(iTV.GetInt8());
+			return true;
+			}
+		case eZType_Int16:
+			{
+			oTV.SetInt64(iTV.GetInt16());
+			return true;
+			}
+		case eZType_Int32:
+			{
+			oTV.SetInt64(iTV.GetInt32());
+			return true;
+			}
+		case eZType_Float:
+			{
+			oTV.SetDouble(iTV.GetFloat());
+			return true;
+			}
+		case eZType_ID:
+			{
+			oTV.SetInt64(iTV.GetID());
+			return true;
+			}
+		case eZType_Time:
+			{
+			oTV.SetDouble(iTV.GetTime().fVal);
+			return true;
+			}
+		}
+	return false;
+	}
+
 static ZRef<ZYadR_JSON> sMakeYadR_JSON(const ZStrimU& iStrimU)
 	{
 	using namespace ZUtil_Strim;
@@ -293,6 +398,40 @@ static ZRef<ZYadR_JSON> sMakeYadR_JSON(const ZStrimU& iStrimU)
 		ZTValue theTV;
 		if (sFromStrim_TValue(iStrimU, theTV))
 			return new ZYadPrimR_JSON(theTV);
+		}
+
+	return ZRef<ZYadR_JSON>();
+	}
+
+static ZRef<ZYadR_JSON> sMakeYadR_JSONNormalize(
+	ZRef<ZYadR> iYadR, bool iPreserve, bool iPreserveLists, bool iPreserveMaps)
+	{
+	if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
+		{
+		return new ZYadListR_JSONNormalize(theYadListR, iPreserveLists, iPreserveMaps);
+		}
+	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
+		{
+		return new ZYadMapR_JSONNormalize(theYadMapR, iPreserveLists, iPreserveMaps);
+		}
+	else
+		{
+		ZTValue theValue;
+		if (ZFactoryChain_T<ZTValue, ZRef<ZYadR> >::sMake(theValue, iYadR))
+			{
+			// We were able to turn the value into something
+			// legitimate. Now normalize it if possible.
+			ZTValue normalized;
+			if (sNormalizeSimpleTValue(theValue, normalized))
+				return new ZYadPrimR_JSON(normalized);
+			}
+
+		if (iPreserve)
+			{
+			// We weren't able to get a ZTValue, or it couldn't normalized.
+			// We've been asked to preserve values, so return a null.
+			return new ZYadPrimR_JSON(ZTValue());
+			}
 		}
 
 	return ZRef<ZYadR_JSON>();
@@ -454,7 +593,6 @@ void ZYadMapR_JSON::pMoveIfNecessary()
 
 		if (!sTryRead_CP(fStrimU, ','))
 			return;
-//			sThrowParseException("Expected ',' after property");
 		}
 
 	sSkip_WSAndCPlusPlusComments(fStrimU);
@@ -468,6 +606,156 @@ void ZYadMapR_JSON::pMoveIfNecessary()
 		sThrowParseException("Expected ':' after a member name");
 
 	fValue_Current = sMakeYadR_JSON(fStrimU);
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadListR_JSONNormalize
+
+ZYadListR_JSONNormalize::ZYadListR_JSONNormalize(
+	ZRef<ZYadListR> iYadListR, bool iPreserveLists, bool iPreserveMaps)
+:	fYadListR(iYadListR),
+	fPreserveLists(iPreserveLists),
+	fPreserveMaps(iPreserveMaps),
+	fPosition(0)
+	{}
+
+void ZYadListR_JSONNormalize::Finish()
+	{
+	if (fValue_Current)
+		{
+		ZAssert(!fValue_Prior);
+		fValue_Current->Finish();
+		fValue_Current.Clear();
+		}
+	else if (fValue_Prior)
+		{
+		fValue_Prior->Finish();
+		fValue_Prior.Clear();
+		}
+	fYadListR->SkipAll();
+	}
+
+bool ZYadListR_JSONNormalize::HasChild()
+	{
+	this->pMoveIfNecessary();
+	return fValue_Current;
+	}
+
+ZRef<ZYadR> ZYadListR_JSONNormalize::NextChild()
+	{
+	this->pMoveIfNecessary();
+
+	if (fValue_Current)
+		{
+		fValue_Prior = fValue_Current;
+		fValue_Current.Clear();
+		++fPosition;
+		}
+
+	return fValue_Prior;
+	}
+
+size_t ZYadListR_JSONNormalize::GetPosition()
+	{ return fPosition; }
+
+void ZYadListR_JSONNormalize::pMoveIfNecessary()
+	{
+	if (fValue_Current)
+		return;
+
+	if (fValue_Prior)
+		{
+		fValue_Prior->Finish();
+		fValue_Prior.Clear();
+		}
+
+	while (fYadListR->HasChild() && !fValue_Current)
+		{
+		fValue_Current = sMakeYadR_JSONNormalize(
+			fYadListR->NextChild(), fPreserveLists, fPreserveLists, fPreserveMaps);
+		}
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadMapR_JSONNormalize
+
+ZYadMapR_JSONNormalize::ZYadMapR_JSONNormalize(
+	ZRef<ZYadMapR> iYadMapR, bool iPreserveLists, bool iPreserveMaps)
+:	fYadMapR(iYadMapR),
+	fPreserveLists(iPreserveLists),
+	fPreserveMaps(iPreserveMaps)
+	{}
+
+void ZYadMapR_JSONNormalize::Finish()
+	{
+	if (fValue_Current)
+		{
+		ZAssert(!fValue_Prior);
+		fValue_Current->Finish();
+		fValue_Current.Clear();
+		}
+	else if (fValue_Prior)
+		{
+		fValue_Prior->Finish();
+		fValue_Prior.Clear();
+		}
+	fYadMapR->SkipAll();
+	}
+
+bool ZYadMapR_JSONNormalize::HasChild()
+	{
+	this->pMoveIfNecessary();
+
+	return fValue_Current;
+	}
+
+ZRef<ZYadR> ZYadMapR_JSONNormalize::NextChild()
+	{
+	this->pMoveIfNecessary();
+
+	if (fValue_Current)
+		{
+		fValue_Prior = fValue_Current;
+		fValue_Current.Clear();
+		fName.clear();
+		}
+
+	return fValue_Prior;
+	}
+
+string ZYadMapR_JSONNormalize::Name()
+	{
+	this->pMoveIfNecessary();
+
+	return fName;
+	}
+
+void ZYadMapR_JSONNormalize::pMoveIfNecessary()
+	{
+	if (fValue_Current)
+		return;
+
+	if (fValue_Prior)
+		{
+		fValue_Prior->Finish();
+		fValue_Prior.Clear();
+		}
+
+	for (;;)
+		{
+		if (!fYadMapR->HasChild())
+			break;
+		const string theName = fYadMapR->Name();
+		fValue_Current = sMakeYadR_JSONNormalize(
+			fYadMapR->NextChild(), fPreserveMaps, fPreserveLists, fPreserveMaps);
+		if (fValue_Current)
+			{
+			fName = theName;
+			break;
+			}
+		}
 	}
 
 // =================================================================================================
@@ -500,54 +788,6 @@ static void sWriteString(
 	ZStrimW_Escapify(theOptions, s).Write(iString);
 
 	s.Write("\"");
-	}
-
-static bool sNormalizeSimpleTValue(const ZTValue& iTV, ZTValue& oTV)
-	{
-	ZAssert(&iTV != &oTV);
-	switch (iTV.TypeOf())
-		{
-		case eZType_String:
-		case eZType_Int64:
-		case eZType_Double:
-		case eZType_Bool:
-		case eZType_Null:
-			{
-			oTV = iTV;
-			return true;
-			}
-		case eZType_Int8:
-			{
-			oTV.SetInt64(iTV.GetInt8());
-			return true;
-			}
-		case eZType_Int16:
-			{
-			oTV.SetInt64(iTV.GetInt16());
-			return true;
-			}
-		case eZType_Int32:
-			{
-			oTV.SetInt64(iTV.GetInt32());
-			return true;
-			}
-		case eZType_Float:
-			{
-			oTV.SetDouble(iTV.GetFloat());
-			return true;
-			}
-		case eZType_ID:
-			{
-			oTV.SetInt64(iTV.GetID());
-			return true;
-			}
-		case eZType_Time:
-			{
-			oTV.SetDouble(iTV.GetTime().fVal);
-			return true;
-			}
-		}
-	return false;
 	}
 
 static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
@@ -744,11 +984,16 @@ static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 ZRef<ZYadR> ZYad_JSON::sMakeYadR(const ZStrimU& iStrimU)
 	{ return sMakeYadR_JSON(iStrimU); }
 
+ZRef<ZYadR> ZYad_JSON::sMakeYadR_Normalize(
+	ZRef<ZYadR> iYadR, bool iPreserveLists, bool iPreserveMaps)
+	{ return sMakeYadR_JSONNormalize(iYadR, true, iPreserveLists, iPreserveMaps); }
+
 void ZYad_JSON::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR)
 	{ sToStrim_Yad(s, iYadR, 0, ZYadOptions(), false); }
 
 void ZYad_JSON::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{ sToStrim_Yad(s, iYadR, iInitialIndent, iOptions, false); }
+
 
 NAMESPACE_ZOOLIB_END
