@@ -172,7 +172,6 @@ ZYadListRPos_Vector::ZYadListRPos_Vector(const ZTValue& iTV)
 	fVector(this->GetTValue().GetVector()),
 	fIter(fVector.begin())
 	{}
-	
 
 ZYadListRPos_Vector::ZYadListRPos_Vector(const std::vector<ZTValue>& iVector)
 :	ZYadR_TValue(iVector),

@@ -769,121 +769,6 @@ static void sWriteString(
 		}
 	}
 
-static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
-	size_t iLevel, const ZYadOptions& iOptions)
-	{
-	switch (iTV.TypeOf())
-		{
-		case eZType_Null: s.Write("Null"); break;
-		case eZType_Type:
-			{
-			s.Write("Type(");
-			s.Write(ZTypeAsString(iTV.GetType()));
-			s.Write(")");
-			break;
-			}
-		case eZType_ID:
-			{
-			s.Writef("ID(0x%0llX)", iTV.GetID());
-			if (iOptions.fIDsHaveDecimalVersionComment)
-				s.Writef(" /*%lld*/", iTV.GetID());
-			break;
-			}
-		case eZType_Int8: s.Writef("int8(%d)", iTV.GetInt8()); break;
-		case eZType_Int16: s.Writef("int16(%d)", iTV.GetInt16()); break;
-		case eZType_Int32: s.Writef("int32(%d)", iTV.GetInt32()); break;
-		case eZType_Int64: s.Writef("int64(0x%0llX)", iTV.GetInt64()); break;
-		case eZType_Bool:
-			{
-			if (iTV.GetBool())
-				s.Write("true");
-			else
-				s.Write("false");
-			break;
-			}
-		case eZType_Float:
-			{
-			// 9 decimal digits are necessary and sufficient for single precision IEEE 754.
-			// "What Every Computer Scientist Should Know About Floating Point", Goldberg, 1991.
-			// <http://docs.sun.com/source/806-3568/ncg_goldberg.html>
-			s.Writef("float(%.9g)", iTV.GetFloat());
-			break;
-			}
-		case eZType_Double:
-			{
-			// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
-			s.Writef("double(%.17g)", iTV.GetDouble());
-			break;
-			}
-		case eZType_Time:
-			{
-			// For the moment I'm just writing times as a count of seconds, putting
-			// the broken-out Gregorian version in a comment. Later we can improve
-			// the parsing of dates, and then we can write them in human readable form.
-			if (ZTime theTime = iTV.GetTime())
-				{
-				s.Writef("time(%.17g)", theTime.fVal);
-				if (iOptions.fTimesHaveUserLegibleComment)
-					s << " /*" << ZUtil_Time::sAsString_ISO8601(theTime, true) << "*/";
-				}
-			else
-				{
-				// We're now allowing empty parens to represent invalid times.
-				s.Write("time()");
-				}
-			break;
-			}
-		case eZType_Pointer: s.Writef("pointer(%08X)", iTV.GetPointer()); break;
-		case eZType_Rect:
-			{
-			const ZRectPOD& theRect = iTV.GetRect();
-			s.Writef("Rect(%d, %d, %d, %d)",
-				theRect.left,
-				theRect.top,
-				theRect.right,
-				theRect.bottom);
-			break;
-			}
-		case eZType_Point:
-			{
-			const ZPointPOD& thePoint = iTV.GetPoint();
-			s.Writef("Point(%d, %d)",
-				thePoint.h,
-				thePoint.v);
-			break;
-			}
-#if 0//##
-		case eZType_Name:
-			{
-			s.Write("@");
-			ZYad_ZooLibStrim::sWrite_PropName(s, iTV.GetName());
-			break;
-			}
-#endif
-		case eZType_String:
-			{
-			sWriteString(s, iOptions, iTV.GetString());
-			break;
-			}
-		case eZType_RefCounted:
-			s.Writef("RefCounted(%08X)", iTV.GetRefCounted().GetObject());
-			break;
-		case eZType_Raw:
-		case eZType_Tuple:
-		case eZType_Vector:
-			{
-			ZDebugStopf(0,
-				("sToStrim_SimpleTValue should only be called on simple tuple values"));
-			break;
-			}
-		default:
-			{
-			ZDebugStopf(0, ("Unrecognized type %d", iTV.TypeOf()));
-			break;
-			}
-		}
-	}
-
 static void sToStrim_Raw(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
@@ -994,6 +879,126 @@ static void sToStrim_Raw(const ZStrimW& s, const ZStreamR& iStreamR,
 		.CopyAllFrom(iStreamR);
 
 	s.Write(")");
+	}
+
+static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
+	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
+	{
+	switch (iTV.TypeOf())
+		{
+		case eZType_Null: s.Write("Null"); break;
+		case eZType_Type:
+			{
+			s.Write("Type(");
+			s.Write(ZTypeAsString(iTV.GetType()));
+			s.Write(")");
+			break;
+			}
+		case eZType_ID:
+			{
+			s.Writef("ID(0x%0llX)", iTV.GetID());
+			if (iOptions.fIDsHaveDecimalVersionComment)
+				s.Writef(" /*%lld*/", iTV.GetID());
+			break;
+			}
+		case eZType_Int8: s.Writef("int8(%d)", iTV.GetInt8()); break;
+		case eZType_Int16: s.Writef("int16(%d)", iTV.GetInt16()); break;
+		case eZType_Int32: s.Writef("int32(%d)", iTV.GetInt32()); break;
+		case eZType_Int64: s.Writef("int64(0x%0llX)", iTV.GetInt64()); break;
+		case eZType_Bool:
+			{
+			if (iTV.GetBool())
+				s.Write("true");
+			else
+				s.Write("false");
+			break;
+			}
+		case eZType_Float:
+			{
+			// 9 decimal digits are necessary and sufficient for single precision IEEE 754.
+			// "What Every Computer Scientist Should Know About Floating Point", Goldberg, 1991.
+			// <http://docs.sun.com/source/806-3568/ncg_goldberg.html>
+			s.Writef("float(%.9g)", iTV.GetFloat());
+			break;
+			}
+		case eZType_Double:
+			{
+			// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
+			s.Writef("double(%.17g)", iTV.GetDouble());
+			break;
+			}
+		case eZType_Time:
+			{
+			// For the moment I'm just writing times as a count of seconds, putting
+			// the broken-out Gregorian version in a comment. Later we can improve
+			// the parsing of dates, and then we can write them in human readable form.
+			if (ZTime theTime = iTV.GetTime())
+				{
+				s.Writef("time(%.17g)", theTime.fVal);
+				if (iOptions.fTimesHaveUserLegibleComment)
+					s << " /*" << ZUtil_Time::sAsString_ISO8601(theTime, true) << "*/";
+				}
+			else
+				{
+				// We're now allowing empty parens to represent invalid times.
+				s.Write("time()");
+				}
+			break;
+			}
+		case eZType_Pointer: s.Writef("pointer(%08X)", iTV.GetPointer()); break;
+		case eZType_Rect:
+			{
+			const ZRectPOD& theRect = iTV.GetRect();
+			s.Writef("Rect(%d, %d, %d, %d)",
+				theRect.left,
+				theRect.top,
+				theRect.right,
+				theRect.bottom);
+			break;
+			}
+		case eZType_Point:
+			{
+			const ZPointPOD& thePoint = iTV.GetPoint();
+			s.Writef("Point(%d, %d)",
+				thePoint.h,
+				thePoint.v);
+			break;
+			}
+#if 0//##
+		case eZType_Name:
+			{
+			s.Write("@");
+			ZYad_ZooLibStrim::sWrite_PropName(s, iTV.GetName());
+			break;
+			}
+#endif
+		case eZType_String:
+			{
+			sWriteString(s, iOptions, iTV.GetString());
+			break;
+			}
+		case eZType_RefCounted:
+			s.Writef("RefCounted(%08X)", iTV.GetRefCounted().GetObject());
+			break;
+		case eZType_Raw:
+			{
+			sToStrim_Raw(s,
+				ZStreamRPos_MemoryBlock(iTV.GetRaw()), iLevel, iOptions, iMayNeedInitialLF);
+			break;
+			}
+		case eZType_Tuple:
+		case eZType_Vector:
+			{
+			ZDebugStopf(0,
+				("sToStrim_SimpleTValue should only be called on simple tuple values"));
+			break;
+			}
+		default:
+			{
+			ZDebugStopf(0, ("Unrecognized type %d", iTV.TypeOf()));
+			break;
+			}
+		}
 	}
 
 static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
@@ -1139,7 +1144,8 @@ static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 		}
 	else
 		{
-		sToStrim_SimpleTValue(s, ZYad_ZooLib::sFromYadR(iYadR), iLevel, iOptions);
+		sToStrim_SimpleTValue(s,
+			ZYad_ZooLib::sFromYadR(iYadR), iLevel, iOptions, iMayNeedInitialLF);
 		}
 	}
 

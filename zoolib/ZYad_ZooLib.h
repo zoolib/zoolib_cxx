@@ -38,11 +38,11 @@ public:
 	ZYadR_TValue(ZType iType, const ZStreamR& iStreamR);
 	ZYadR_TValue(const ZTValue& iTV);
 
-// Our protocol
-	const ZTValue& GetTValue();
-
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
+
+// Our protocol
+	const ZTValue& GetTValue();
 
 private:
 	const ZTValue fTValue;
