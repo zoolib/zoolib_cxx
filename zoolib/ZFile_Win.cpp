@@ -106,7 +106,10 @@ static ZFile::Error sTranslateError(DWORD iNativeError)
 	return theErr;
 	}
 
-static HANDLE sCreate(const string& iPath, bool iOpenExisting, bool iRead, bool iPreventWriters, ZFile::Error* oErr)
+static HANDLE sCreate(
+	const string& iPath,
+	bool iOpenExisting, bool iRead, bool iPreventWriters,
+	ZFile::Error* oErr)
 	{
 	DWORD realAccess = GENERIC_WRITE;
 	DWORD realSharing = FILE_SHARE_READ;
@@ -119,12 +122,13 @@ static HANDLE sCreate(const string& iPath, bool iOpenExisting, bool iRead, bool 
 
 	DWORD realFlags = FILE_ATTRIBUTE_NORMAL;
 
-	HANDLE theFileHANDLE = ::CreateFileA(iPath.c_str(), // the path
-									realAccess, realSharing,
-									nil, // No security attributes
-									iOpenExisting ? OPEN_ALWAYS : CREATE_NEW,
-									realFlags,
-									nil);// No template file
+	HANDLE theFileHANDLE = ::CreateFileA(
+		iPath.c_str(), // the path
+		realAccess, realSharing,
+		nil, // No security attributes
+		iOpenExisting ? OPEN_ALWAYS : CREATE_NEW,
+		realFlags,
+		nil);// No template file
 
 	if (oErr)
 		{
@@ -137,7 +141,10 @@ static HANDLE sCreate(const string& iPath, bool iOpenExisting, bool iRead, bool 
 	return theFileHANDLE;
 	}
 
-static HANDLE sCreateNT(const string16& iPath, bool iOpenExisting, bool iRead, bool iPreventWriters, ZFile::Error* oErr)
+static HANDLE sCreateNT(
+	const string16& iPath,
+	bool iOpenExisting, bool iRead, bool iPreventWriters,
+	ZFile::Error* oErr)
 	{
 	DWORD realAccess = GENERIC_WRITE;
 	DWORD realSharing = FILE_SHARE_READ;
@@ -150,12 +157,13 @@ static HANDLE sCreateNT(const string16& iPath, bool iOpenExisting, bool iRead, b
 
 	DWORD realFlags = FILE_ATTRIBUTE_NORMAL;
 
-	HANDLE theFileHANDLE = ::CreateFileW(iPath.c_str(), // the path
-									realAccess, realSharing,
-									nil, // No security attributes
-									iOpenExisting ? OPEN_ALWAYS : CREATE_NEW,
-									realFlags,
-									nil);// No template file
+	HANDLE theFileHANDLE = ::CreateFileW(
+		iPath.c_str(), // the path
+		realAccess, realSharing,
+		nil, // No security attributes
+		iOpenExisting ? OPEN_ALWAYS : CREATE_NEW,
+		realFlags,
+		nil);// No template file
 
 	if (oErr)
 		{
@@ -168,7 +176,10 @@ static HANDLE sCreateNT(const string16& iPath, bool iOpenExisting, bool iRead, b
 	return theFileHANDLE;
 	}
 
-static HANDLE sOpen(const string& iPath, bool iRead, bool iWrite, bool iPreventWriters, ZFile::Error* oErr)
+static HANDLE sOpen(
+	const string& iPath,
+	bool iRead, bool iWrite, bool iPreventWriters,
+	ZFile::Error* oErr)
 	{
 	DWORD realAccess = 0;
 	DWORD realSharing = FILE_SHARE_READ;
@@ -184,12 +195,13 @@ static HANDLE sOpen(const string& iPath, bool iRead, bool iWrite, bool iPreventW
 
 	DWORD realFlags = FILE_ATTRIBUTE_NORMAL;
 
-	HANDLE theFileHANDLE = ::CreateFileA(iPath.c_str(), // the path
-									realAccess, realSharing,
-									nil, // No security attributes
-									OPEN_EXISTING, // Open the file only if it exists
-									realFlags,
-									nil);// No template file
+	HANDLE theFileHANDLE = ::CreateFileA(
+		iPath.c_str(), // the path
+		realAccess, realSharing,
+		nil, // No security attributes
+		OPEN_EXISTING, // Open the file only if it exists
+		realFlags,
+		nil);// No template file
 
 	if (oErr)
 		{
@@ -202,7 +214,10 @@ static HANDLE sOpen(const string& iPath, bool iRead, bool iWrite, bool iPreventW
 	return theFileHANDLE;
 	}
 
-static HANDLE sOpenNT(const string16& iPath, bool iRead, bool iWrite, bool iPreventWriters, ZFile::Error* oErr)
+static HANDLE sOpenNT(
+	const string16& iPath,
+	bool iRead, bool iWrite, bool iPreventWriters,
+	ZFile::Error* oErr)
 	{
 	DWORD realAccess = 0;
 	DWORD realSharing = FILE_SHARE_READ;
@@ -218,12 +233,13 @@ static HANDLE sOpenNT(const string16& iPath, bool iRead, bool iWrite, bool iPrev
 
 	DWORD realFlags = FILE_ATTRIBUTE_NORMAL;
 
-	HANDLE theFileHANDLE = ::CreateFileW(iPath.c_str(), // the path
-									realAccess, realSharing,
-									nil, // No security attributes
-									OPEN_EXISTING, // Open the file only if it exists
-									realFlags,
-									nil);// No template file
+	HANDLE theFileHANDLE = ::CreateFileW(
+		iPath.c_str(), // the path
+		realAccess, realSharing,
+		nil, // No security attributes
+		OPEN_EXISTING, // Open the file only if it exists
+		realFlags,
+		nil);// No template file
 
 	if (oErr)
 		{
@@ -260,7 +276,8 @@ static ZFile::Error sRead(HANDLE iFileHANDLE, void* iDest, size_t iCount, size_t
 	return ZFile::errorNone;
 	}
 
-static ZFile::Error sWrite(HANDLE iFileHANDLE, const void* iSource, size_t iCount, size_t* oCountWritten)
+static ZFile::Error sWrite(
+	HANDLE iFileHANDLE, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	if (oCountWritten)
 		*oCountWritten = 0;
@@ -278,7 +295,8 @@ static ZFile::Error sWrite(HANDLE iFileHANDLE, const void* iSource, size_t iCoun
 	return ZFile::errorNone;
 	}
 
-static ZFile::Error sReadAt(HANDLE iFileHANDLE, uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
+static ZFile::Error sReadAt(
+	HANDLE iFileHANDLE, uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
 	{
 	if (oCountRead)
 		*oCountRead = 0;
@@ -306,7 +324,8 @@ static ZFile::Error sReadAt(HANDLE iFileHANDLE, uint64 iOffset, void* iDest, siz
 	return ZFile::errorNone;
 	}
 
-static ZFile::Error sWriteAt(HANDLE iFileHANDLE, uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
+static ZFile::Error sWriteAt(
+	HANDLE iFileHANDLE, uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	if (oCountWritten)
 		*oCountWritten = 0;
@@ -382,7 +401,8 @@ static ZFile::Error sSetSize(HANDLE iFileHANDLE, uint64 iSize)
 	{
 	// Remember our current position
 	LONG originalPositionHigh = 0;
-	DWORD originalPositionLow = ::SetFilePointer(iFileHANDLE, 0, &originalPositionHigh, FILE_CURRENT);
+	DWORD originalPositionLow
+		= ::SetFilePointer(iFileHANDLE, 0, &originalPositionHigh, FILE_CURRENT);
 	uint64 originalPosition = sAsUInt64(originalPositionHigh, originalPositionLow);
 
 	// Put the position at the desired end of file
@@ -391,7 +411,8 @@ static ZFile::Error sSetSize(HANDLE iFileHANDLE, uint64 iSize)
 	if (!::SetEndOfFile(iFileHANDLE))
 		return sTranslateError(::GetLastError());
 
-	// Put our pointer back where we were, allowing for the possibility that we just truncated the file
+	// Put our pointer back where we were, allowing for
+	// the possibility that we just truncated the file
 	if (originalPosition > iSize)
 		{
 		originalPositionLow = iSize;
@@ -626,7 +647,9 @@ ZRef<ZFileLoc> ZFileLoc_Win::sFromFullWinPath(const char* iPath)
 		// It's a UNC path.
 		const char* nextDivider = find(iPath + 2, pathEnd, '\\');
 		vector<string> components;
-		ZTrail::sParseStringAndAppend("\\", ".", "..", nextDivider + 1, pathEnd - nextDivider, components);
+		ZTrail::sParseStringAndAppend(
+			"\\", ".", "..", nextDivider + 1, pathEnd - nextDivider, components);
+
 		return new ZFileLoc_Win(string(iPath, nextDivider - iPath), components);
 		}
 	else if (isalpha(iPath[0]) && iPath[1] == ':')
@@ -981,7 +1004,8 @@ ZRef<ZStreamerRWPos> ZFileLoc_Win::OpenRWPos(bool iPreventWriters, ZFile::Error*
 	return new ZStreamerRWPos_File_Win(theFileHANDLE, true);
 	}
 
-ZRef<ZStreamerWPos> ZFileLoc_Win::CreateWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
+ZRef<ZStreamerWPos> ZFileLoc_Win::CreateWPos(
+	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
 	HANDLE theFileHANDLE = sCreate(this->pGetPath(), iOpenExisting, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
@@ -989,7 +1013,8 @@ ZRef<ZStreamerWPos> ZFileLoc_Win::CreateWPos(bool iOpenExisting, bool iPreventWr
 	return new ZStreamerWPos_File_Win(theFileHANDLE, true);
 	}
 
-ZRef<ZStreamerRWPos> ZFileLoc_Win::CreateRWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
+ZRef<ZStreamerRWPos> ZFileLoc_Win::CreateRWPos(
+	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
 	HANDLE theFileHANDLE = sCreate(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
@@ -1029,7 +1054,8 @@ ZRef<ZFileW> ZFileLoc_Win::CreateFileW(bool iOpenExisting, bool iPreventWriters,
 	return new ZFileW_Win(theFileHANDLE, true);
 	}
 
-ZRef<ZFileRW> ZFileLoc_Win::CreateFileRW(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
+ZRef<ZFileRW> ZFileLoc_Win::CreateFileRW(
+	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
 	HANDLE theFileHANDLE = sCreate(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
@@ -1213,7 +1239,9 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::sFromFullWinPath(const UTF16* iPath)
 		// It's a UNC path.
 		const UTF16* nextDivider = find(iPath + 2, pathEnd, L'\\');
 		vector<string16> components;
-		ZTrail::sParseStringAndAppend(L"\\", L".", L"..", nextDivider + 1, pathEnd - nextDivider, components);
+		ZTrail::sParseStringAndAppend(
+			L"\\", L".", L"..", nextDivider + 1, pathEnd - nextDivider, components);
+
 		return new ZFileLoc_WinNT(string16(iPath, nextDivider - iPath), components);
 		}
 	else if (isalpha(iPath[0]) && iPath[1] == ':')
@@ -1310,7 +1338,8 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::GetParent(ZFile::Error* oErr)
 		}
 	}
 
-ZRef<ZFileLoc> ZFileLoc_WinNT::GetDescendant(const string* iComps, size_t iCount, ZFile::Error* oErr)
+ZRef<ZFileLoc> ZFileLoc_WinNT::GetDescendant(
+	const string* iComps, size_t iCount, ZFile::Error* oErr)
 	{
 	if (oErr)
 		*oErr = ZFile::errorNone;
@@ -1430,7 +1459,8 @@ ZFile::Kind ZFileLoc_WinNT::Kind(ZFile::Error* oErr)
 	{
 	DWORD result = ::GetFileAttributesW(this->pGetPath().c_str());
 
-	if (result == 0 || (result == ((DWORD)-1))) // Should be INVALID_FILE_ATTRIBUTES, but I can't find a definition for it.
+	// Should be INVALID_FILE_ATTRIBUTES, but I can't find a definition for it.
+	if (result == 0 || (result == ((DWORD)-1)))
 		{
 		if (oErr)
 			*oErr = sTranslateError(::GetLastError());
@@ -1584,7 +1614,8 @@ ZRef<ZStreamerRWPos> ZFileLoc_WinNT::OpenRWPos(bool iPreventWriters, ZFile::Erro
 	return new ZStreamerRWPos_File_Win(theFileHANDLE, true);
 	}
 
-ZRef<ZStreamerWPos> ZFileLoc_WinNT::CreateWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
+ZRef<ZStreamerWPos> ZFileLoc_WinNT::CreateWPos(
+	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
 	HANDLE theFileHANDLE = sCreateNT(this->pGetPath(), iOpenExisting, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
@@ -1592,7 +1623,8 @@ ZRef<ZStreamerWPos> ZFileLoc_WinNT::CreateWPos(bool iOpenExisting, bool iPrevent
 	return new ZStreamerWPos_File_Win(theFileHANDLE, true);
 	}
 
-ZRef<ZStreamerRWPos> ZFileLoc_WinNT::CreateRWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
+ZRef<ZStreamerRWPos> ZFileLoc_WinNT::CreateRWPos(
+	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
 	HANDLE theFileHANDLE = sCreateNT(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
@@ -1624,7 +1656,8 @@ ZRef<ZFileRW> ZFileLoc_WinNT::OpenFileRW(bool iPreventWriters, ZFile::Error* oEr
 	return new ZFileRW_WinNT(theFileHANDLE, true);
 	}
 
-ZRef<ZFileW> ZFileLoc_WinNT::CreateFileW(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
+ZRef<ZFileW> ZFileLoc_WinNT::CreateFileW(
+	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
 	HANDLE theFileHANDLE = sCreateNT(this->pGetPath(), iOpenExisting, false, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
@@ -1632,7 +1665,8 @@ ZRef<ZFileW> ZFileLoc_WinNT::CreateFileW(bool iOpenExisting, bool iPreventWriter
 	return new ZFileW_WinNT(theFileHANDLE, true);
 	}
 
-ZRef<ZFileRW> ZFileLoc_WinNT::CreateFileRW(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
+ZRef<ZFileRW> ZFileLoc_WinNT::CreateFileRW(
+	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
 	HANDLE theFileHANDLE = sCreateNT(this->pGetPath(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFileHANDLE == INVALID_HANDLE_VALUE)
@@ -1749,7 +1783,8 @@ ZFileW_Win::~ZFileW_Win()
 		sCloseFileHANDLE(fFileHANDLE);
 	}
 
-ZFile::Error ZFileW_Win::WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
+ZFile::Error ZFileW_Win::WriteAt(
+	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	ZMutexLocker locker(fMutex);
 	if (fPosition != iOffset)
@@ -1816,7 +1851,8 @@ ZFileW_WinNT::~ZFileW_WinNT()
 		sCloseFileHANDLE(fFileHANDLE);
 	}
 
-ZFile::Error ZFileW_WinNT::WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
+ZFile::Error ZFileW_WinNT::WriteAt(
+	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{ return sWriteAt(fFileHANDLE, iOffset, iSource, iCount, oCountWritten); }
 
 ZFile::Error ZFileW_WinNT::GetSize(uint64& oSize)
@@ -1877,7 +1913,8 @@ ZFile::Error ZFileRW_Win::ReadAt(uint64 iOffset, void* iDest, size_t iCount, siz
 	return ZFile::errorNone;
 	}
 
-ZFile::Error ZFileRW_Win::WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
+ZFile::Error ZFileRW_Win::WriteAt(
+	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	ZMutexLocker locker(fMutex);
 	if (fPosition != iOffset)
@@ -1947,7 +1984,8 @@ ZFileRW_WinNT::~ZFileRW_WinNT()
 ZFile::Error ZFileRW_WinNT::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
 	{ return sReadAt(fFileHANDLE, iOffset, iDest, iCount, oCountRead); }
 
-ZFile::Error ZFileRW_WinNT::WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
+ZFile::Error ZFileRW_WinNT::WriteAt(
+	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{ return sWriteAt(fFileHANDLE, iOffset, iSource, iCount, oCountWritten); }
 
 ZFile::Error ZFileRW_WinNT::GetSize(uint64& oSize)
