@@ -48,6 +48,7 @@ ZOOLIB_RETAIN_RELEASE(CFTypeRef)
 // ZOOLIB_CF(PlugIn) // Plugin and Bundle are usually the same type
 ZOOLIB_CF(Bundle)
 ZOOLIB_CF(ReadStream)
+ZOOLIB_CF(WriteStream)
 
 // -------
 #define ZOOLIB_CF_CONST(a) \
