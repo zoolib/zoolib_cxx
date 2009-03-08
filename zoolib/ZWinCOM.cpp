@@ -381,6 +381,7 @@ string16 Variant::DGetString16(const string16& iDefault) const
 	{
 	if (vt != VT_BSTR)
 		return iDefault;
+	ZUnimplemented();
 	return string16();
 	}
 
