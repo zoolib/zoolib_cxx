@@ -26,8 +26,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZGeometry.h"
 #include "zoolib/ZStrim.h"
 
+NAMESPACE_ZOOLIB_BEGIN
+
 template <class C>
-inline const ZooLib::ZStrimW& operator<<(const ZooLib::ZStrimW& s, const ZooLib::ZRect_T<C>& val)
+inline const ZStrimW& operator<<(const ZStrimW& s, const ZRect_T<C>& val)
 	{
 	return s.Writef("Rect(%g, %g, %g, %g)",
 		double(val.left), double(val.top),
@@ -35,22 +37,24 @@ inline const ZooLib::ZStrimW& operator<<(const ZooLib::ZStrimW& s, const ZooLib:
 	}
 
 template <class C>
-inline const ZooLib::ZStrimW& operator<<(const ZooLib::ZStrimW& s, const ZooLib::ZPoint_T<C>& val)
+inline const ZStrimW& operator<<(const ZStrimW& s, const ZPoint_T<C>& val)
 	{ return s.Writef("(%g, %g)", double(val.h), double(val.v)); }
 
 template <class C>
-inline const ZooLib::ZStrimW& operator<<(const ZooLib::ZStrimW& s, const ZooLib::ZGPoint_T<C>& val)
+inline const ZStrimW& operator<<(const ZStrimW& s, const ZGPoint_T<C>& val)
 	{ return s.Writef("(%g, %g)", double(val.x), double(val.y)); }
 
 template <class C>
-inline const ZooLib::ZStrimW& operator<<(const ZooLib::ZStrimW& s, const ZooLib::ZGExtent_T<C>& val)
+inline const ZStrimW& operator<<(const ZStrimW& s, const ZGExtent_T<C>& val)
 	{ return s.Writef("(%g, %g)", double(val.h), double(val.v)); }
 
 template <class C>
-inline const ZooLib::ZStrimW& operator<<(const ZooLib::ZStrimW& s, const ZooLib::ZGRect_T<C>& val)
+inline const ZStrimW& operator<<(const ZStrimW& s, const ZGRect_T<C>& val)
 	{
 	s << "(" << val.origin << ", " << val.extent << ")";
 	return s;
 	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZUtil_Strim_Geom__
