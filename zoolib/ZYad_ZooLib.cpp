@@ -170,36 +170,45 @@ ZYadRawRPos_MemoryBlock::ZYadRawRPos_MemoryBlock(const ZMemoryBlock& iMB)
 ZYadListRPos_Vector::ZYadListRPos_Vector(const ZTValue& iTV)
 :	ZYadR_TValue(iTV),
 	fVector(this->GetTValue().GetVector()),
-	fIter(fVector.begin())
+	fPosition(0)
 	{}
 
 ZYadListRPos_Vector::ZYadListRPos_Vector(const std::vector<ZTValue>& iVector)
 :	ZYadR_TValue(iVector),
 	fVector(this->GetTValue().GetVector()),
-	fIter(fVector.begin())
+	fPosition(0)
+	{}
+
+ZYadListRPos_Vector::ZYadListRPos_Vector(const std::vector<ZTValue>& iVector, uint64 iPosition)
+:	ZYadR_TValue(iVector),
+	fVector(this->GetTValue().GetVector()),
+	fPosition(iPosition)
 	{}
 
 bool ZYadListRPos_Vector::HasChild()
-	{ return fIter < fVector.end(); }
+	{ return fPosition < fVector.size(); }
 
 ZRef<ZYadR> ZYadListRPos_Vector::NextChild()
 	{
-	if (fIter < fVector.end())
-		return ZYad_ZooLib::sMakeYadR(*fIter++);
+	if (fPosition < fVector.size())
+		return ZYad_ZooLib::sMakeYadR(fVector[fPosition++]);
 	return ZRef<ZYadR>();
 	}
 
 bool ZYadListRPos_Vector::IsSimple(const ZYadOptions& iOptions)
 	{ return ZYadR_TValue::IsSimple(iOptions); }
 
-size_t ZYadListRPos_Vector::GetPosition()
-	{ return fIter - fVector.begin(); }
+uint64 ZYadListRPos_Vector::GetPosition()
+	{ return fPosition; }
 
-size_t ZYadListRPos_Vector::GetSize()
+uint64 ZYadListRPos_Vector::GetSize()
 	{ return fVector.size(); }
 
-void ZYadListRPos_Vector::SetPosition(size_t iPosition)
-	{ fIter = fVector.begin() + iPosition; }
+void ZYadListRPos_Vector::SetPosition(uint64 iPosition)
+	{ fPosition = iPosition; }
+
+ZRef<ZYadListRPos> ZYadListRPos_Vector::ListClone()
+	{ return new ZYadListRPos_Vector(fVector, fPosition); }
 
 // =================================================================================================
 #pragma mark -
@@ -208,40 +217,49 @@ void ZYadListRPos_Vector::SetPosition(size_t iPosition)
 ZYadListMapRPos_Tuple::ZYadListMapRPos_Tuple(const ZTuple& iTuple)
 :	ZYadR_TValue(iTuple),
 	fTuple(this->GetTValue().GetTuple()),
-	fIter(fTuple.begin())
+	fPosition(0)
+	{}
+
+ZYadListMapRPos_Tuple::ZYadListMapRPos_Tuple(const ZTuple& iTuple, uint64 iPosition)
+:	ZYadR_TValue(iTuple),
+	fTuple(this->GetTValue().GetTuple()),
+	fPosition(iPosition)
 	{}
 
 bool ZYadListMapRPos_Tuple::HasChild()
-	{ return fIter < fTuple.end(); }
+	{ return fPosition < fTuple.Count(); }
 
 ZRef<ZYadR> ZYadListMapRPos_Tuple::NextChild()
 	{
-	if (fIter < fTuple.end())
-		return ZYad_ZooLib::sMakeYadR(fTuple.GetValue(fIter++));
+	if (fPosition < fTuple.Count())
+		return ZYad_ZooLib::sMakeYadR(fTuple.GetValue(fTuple.begin() + fPosition));
 	return ZRef<ZYadR>();
 	}
 
 bool ZYadListMapRPos_Tuple::IsSimple(const ZYadOptions& iOptions)
 	{ return ZYadR_TValue::IsSimple(iOptions); }
 
-size_t ZYadListMapRPos_Tuple::GetPosition()
-	{ return fIter - fTuple.begin(); }
+uint64 ZYadListMapRPos_Tuple::GetPosition()
+	{ return fPosition; }
 
-size_t ZYadListMapRPos_Tuple::GetSize()
+uint64 ZYadListMapRPos_Tuple::GetSize()
 	{ return fTuple.Count(); }
 
-void ZYadListMapRPos_Tuple::SetPosition(size_t iPosition)
-	{ fIter = fTuple.begin() + iPosition; }
+void ZYadListMapRPos_Tuple::SetPosition(uint64 iPosition)
+	{ fPosition = iPosition; }
 
 std::string ZYadListMapRPos_Tuple::Name()
 	{
-	if (fIter < fTuple.end())
-		return fTuple.NameOf(fIter).AsString();
+	if (fPosition < fTuple.Count())
+		return fTuple.NameOf(fTuple.begin() + fPosition).AsString();
 	return string();
 	}
 
 void ZYadListMapRPos_Tuple::SetPosition(const std::string& iName)
-	{ fIter = fTuple.IteratorOf(iName); }
+	{ fPosition = fTuple.IteratorOf(iName) - fTuple.begin(); }
+
+ZRef<ZYadListMapRPos> ZYadListMapRPos_Tuple::ListMapClone()
+	{ return new ZYadListMapRPos_Tuple(fTuple, fPosition); }
 
 // =================================================================================================
 #pragma mark -

@@ -118,11 +118,11 @@ ZRef<ZYadR> ZYadPrimR::NextChild()
 
 bool ZYadListRPos::IsSimple(const ZYadOptions& iOptions)
 	{
-	size_t theSize = this->GetSize();
+	uint64 theSize = this->GetSize();
 	if (theSize == 0)
 		return true;
 
-	size_t thePosition = this->GetPosition();
+	uint64 thePosition = this->GetPosition();
 	if (thePosition == theSize - 1)
 		{
 		ZRef<ZYadR> theYadR = this->NextChild();
@@ -135,15 +135,15 @@ bool ZYadListRPos::IsSimple(const ZYadOptions& iOptions)
 
 void ZYadListRPos::Skip()
 	{
-	size_t theSize = this->GetSize();
-	size_t thePosition = this->GetPosition();
+	uint64 theSize = this->GetSize();
+	uint64 thePosition = this->GetPosition();
 	this->SetPosition(min(theSize, thePosition + 1));
 	}
 
 void ZYadListRPos::SkipAll()
 	{ this->SetPosition(this->GetSize()); }
 
-void ZYadListRPos::SetPosition(size_t iPosition)
+void ZYadListRPos::SetPosition(uint64 iPosition)
 	{
 	printf("ZYadListRPos::SetPosition\n");
 	}
@@ -185,10 +185,16 @@ bool ZYadListMapRPos::IsSimple(const ZYadOptions& iOptions)
 	return ZYadListRPos::IsSimple(iOptions);
 	}
 
-void ZYadListMapRPos::SetPosition(size_t iPosition)
+void ZYadListMapRPos::SetPosition(uint64 iPosition)
 	{ ZYadListRPos::SetPosition(iPosition); }
 
 void ZYadListMapRPos::SetPosition(const string& iName)
 	{ ZYadMapRPos::SetPosition(iName); }
+
+ZRef<ZYadListRPos> ZYadListMapRPos::ListClone()
+	{ return this->ListMapClone(); }
+
+ZRef<ZYadMapRPos> ZYadListMapRPos::MapClone()
+	{ return this->ListMapClone(); }
 
 NAMESPACE_ZOOLIB_END

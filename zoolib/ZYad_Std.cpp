@@ -108,7 +108,7 @@ ZRef<ZYadR> ZYadListR_Std::NextChild()
 	return fValue_Prior;
 	}
 
-size_t ZYadListR_Std::GetPosition()
+uint64 ZYadListR_Std::GetPosition()
 	{ return fPosition; }
 
 void ZYadListR_Std::pMoveIfNecessary()
@@ -244,7 +244,7 @@ ZRef<ZYadR> ZYadListMapR_Std::NextChild()
 	return fValue_Prior;
 	}
 
-size_t ZYadListMapR_Std::GetPosition()
+uint64 ZYadListMapR_Std::GetPosition()
 	{ return fPosition; }
 
 string ZYadListMapR_Std::Name()

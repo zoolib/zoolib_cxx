@@ -99,7 +99,7 @@ public:
 	virtual ZRef<ZYadR> NextChild();
 
 // From ZYadListR
-	virtual size_t GetPosition();
+	virtual uint64 GetPosition();
 
 // Our protocol
 	virtual void Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR) = 0;
@@ -107,7 +107,7 @@ public:
 private:
 	void pMoveIfNecessary();
 
-	size_t fPosition;
+	uint64 fPosition;
 	bool fStarted;
 	bool fFinished;
 	ZRef<ZYadR_Std> fValue_Current;
@@ -169,7 +169,7 @@ public:
 	virtual ZRef<ZYadR> NextChild();
 
 // From ZYadListR via ZYadListMapR
-	virtual size_t GetPosition();
+	virtual uint64 GetPosition();
 
 // From ZYadMapR via ZYadListMapR
 	virtual std::string Name();
@@ -181,7 +181,7 @@ private:
 	void pMoveIfNecessary();
 
 	std::string fName;
-	size_t fPosition;
+	uint64 fPosition;
 	bool fStarted;
 	bool fFinished;
 	ZRef<ZYadR_Std> fValue_Current;

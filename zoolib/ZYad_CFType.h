@@ -97,22 +97,23 @@ class ZYadListRPos_CFArray
 	{
 public:
 	ZYadListRPos_CFArray(CFArrayRef iCFArrayRef);
-	virtual ~ZYadListRPos_CFArray();
+	ZYadListRPos_CFArray(CFArrayRef iCFArrayRef, uint64 iPosition);
 
 // From ZYadR via ZYadListRPos
 	virtual bool HasChild();
 	virtual ZRef<ZYadR> NextChild();
 
 // From ZYadListR via ZYadListRPos
-	virtual size_t GetPosition();
+	virtual uint64 GetPosition();
 
 // From ZYadListRPos
-	virtual size_t GetSize();
-	virtual void SetPosition(size_t iPosition);
+	virtual uint64 GetSize();
+	virtual void SetPosition(uint64 iPosition);
+	virtual ZRef<ZYadListRPos> ListClone();
 
 private:
 	ZRef<CFArrayRef> fCFArrayRef;
-	size_t fPosition;
+	uint64 fPosition;
 	};
 
 // =================================================================================================
@@ -123,20 +124,24 @@ class ZYadListMapRPos_CFDictionary
 :	public virtual ZYadR_CFType,
 	public ZYadListMapRPos
 	{
+	ZYadListMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef,
+		uint64 iPosition,
+		const std::vector<CFStringRef>& iNames,
+		const std::vector<CFTypeRef>& iValues);
+
 public:
 	ZYadListMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef);
-	virtual ~ZYadListMapRPos_CFDictionary();
 
 // From ZYadR via ZYadListMapRPos
 	virtual bool HasChild();
 	virtual ZRef<ZYadR> NextChild();
 
 // From ZYadListR via ZYadListMapRPos
-	virtual size_t GetPosition();
+	virtual uint64 GetPosition();
 
 // From ZYadListRPos via ZYadListMapRPos
-	virtual size_t GetSize();
-	virtual void SetPosition(size_t iPosition);
+	virtual uint64 GetSize();
+	virtual void SetPosition(uint64 iPosition);
 
 // From ZYadMapR via ZYadListMapRPos
 	virtual std::string Name();
@@ -144,9 +149,12 @@ public:
 // From ZYadMapRPos via ZYadListMapRPos
 	virtual void SetPosition(const std::string& iName);
 
+// From ZYadListMapRPos
+	virtual ZRef<ZYadListMapRPos> ListMapClone();
+
 private:
 	ZRef<CFDictionaryRef> fCFDictionaryRef;
-	size_t fPosition;
+	uint64 fPosition;
 	std::vector<CFStringRef> fNames;
 	std::vector<CFTypeRef> fValues;
 	};

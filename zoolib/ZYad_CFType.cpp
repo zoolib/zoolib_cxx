@@ -153,7 +153,10 @@ ZYadListRPos_CFArray::ZYadListRPos_CFArray(CFArrayRef iCFArrayRef)
 	fPosition(0)
 	{}
 
-ZYadListRPos_CFArray::~ZYadListRPos_CFArray()
+ZYadListRPos_CFArray::ZYadListRPos_CFArray(CFArrayRef iCFArrayRef, uint64 iPosition)
+:	ZYadR_CFType(iCFArrayRef),
+	fCFArrayRef(iCFArrayRef),
+	fPosition(iPosition)
 	{}
 
 bool ZYadListRPos_CFArray::HasChild()
@@ -170,14 +173,17 @@ ZRef<ZYadR> ZYadListRPos_CFArray::NextChild()
 	return ZRef<ZYadR>();
 	}
 
-size_t ZYadListRPos_CFArray::GetPosition()
+uint64 ZYadListRPos_CFArray::GetPosition()
 	{ return fPosition; }
 
-size_t ZYadListRPos_CFArray::GetSize()
+uint64 ZYadListRPos_CFArray::GetSize()
 	{ return ::CFArrayGetCount(fCFArrayRef); }
 
-void ZYadListRPos_CFArray::SetPosition(size_t iPosition)
+void ZYadListRPos_CFArray::SetPosition(uint64 iPosition)
 	{ fPosition = iPosition; }
+
+ZRef<ZYadListRPos> ZYadListRPos_CFArray::ListClone()
+	{ return new ZYadListRPos_CFArray(fCFArrayRef, fPosition); }
 
 // =================================================================================================
 #pragma mark -
@@ -200,6 +206,17 @@ static void sGatherContents(const void* iKey, const void* iValue, void* iRefcon)
 
 } // anonymous namespace
 
+ZYadListMapRPos_CFDictionary::ZYadListMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef,
+	uint64 iPosition,
+	const std::vector<CFStringRef>& iNames,
+	const std::vector<CFTypeRef>& iValues)
+:	ZYadR_CFType(iCFDictionaryRef),
+	fCFDictionaryRef(iCFDictionaryRef),
+	fPosition(iPosition),
+	fNames(iNames),
+	fValues(iValues)
+	{}
+
 ZYadListMapRPos_CFDictionary::ZYadListMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef)
 :	ZYadR_CFType(iCFDictionaryRef),
 	fCFDictionaryRef(iCFDictionaryRef),
@@ -211,9 +228,6 @@ ZYadListMapRPos_CFDictionary::ZYadListMapRPos_CFDictionary(CFDictionaryRef iCFDi
 	::CFDictionaryApplyFunction(fCFDictionaryRef, sGatherContents, &theParam);
 	}
 
-ZYadListMapRPos_CFDictionary::~ZYadListMapRPos_CFDictionary()
-	{}
-
 bool ZYadListMapRPos_CFDictionary::HasChild()
 	{ return fPosition < fNames.size(); }
 
@@ -224,13 +238,13 @@ ZRef<ZYadR> ZYadListMapRPos_CFDictionary::NextChild()
 	return ZRef<ZYadR>();
 	}
 
-size_t ZYadListMapRPos_CFDictionary::GetPosition()
+uint64 ZYadListMapRPos_CFDictionary::GetPosition()
 	{ return fPosition; }
 
-size_t ZYadListMapRPos_CFDictionary::GetSize()
+uint64 ZYadListMapRPos_CFDictionary::GetSize()
 	{ return fNames.size(); }
 
-void ZYadListMapRPos_CFDictionary::SetPosition(size_t iPosition)
+void ZYadListMapRPos_CFDictionary::SetPosition(uint64 iPosition)
 	{ fPosition = iPosition; }
 
 std::string ZYadListMapRPos_CFDictionary::Name()
@@ -248,6 +262,9 @@ void ZYadListMapRPos_CFDictionary::SetPosition(const std::string& iName)
 			break;
 		}
 	}
+
+ZRef<ZYadListMapRPos> ZYadListMapRPos_CFDictionary::ListMapClone()
+	{ return new ZYadListMapRPos_CFDictionary(fCFDictionaryRef, fPosition, fNames, fValues); }
 
 // =================================================================================================
 #pragma mark -

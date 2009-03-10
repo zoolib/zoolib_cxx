@@ -228,7 +228,7 @@ public:
 	virtual ZRef<ZYadR> NextChild();
 
 // From ZYadListR
-	virtual size_t GetPosition();
+	virtual uint64 GetPosition();
 
 // From ZYadR_ZooLibStream
 	virtual void Finish();
@@ -237,7 +237,7 @@ private:
 	void pMoveIfNecessary();
 
 	const ZStreamR& fStreamR;
-	size_t fPosition;
+	uint64 fPosition;
 	ZRef<ZYadR_ZooLibStream> fValue_Current;
 	ZRef<ZYadR_ZooLibStream> fValue_Prior;
 	};
@@ -267,7 +267,7 @@ ZRef<ZYadR> ZYadListR_ZooLibStream::NextChild()
 	return fValue_Prior;
 	}
 
-size_t ZYadListR_ZooLibStream::GetPosition()
+uint64 ZYadListR_ZooLibStream::GetPosition()
 	{ return fPosition; }
 
 void ZYadListR_ZooLibStream::Finish()
@@ -305,7 +305,7 @@ public:
 	virtual ZRef<ZYadR> NextChild();
 
 // From ZYadListR
-	virtual size_t GetPosition();
+	virtual uint64 GetPosition();
 
 // From ZYadR_ZooLibStream
 	virtual void Finish();
@@ -314,8 +314,8 @@ private:
 	void pMoveIfNecessary();
 
 	const ZStreamR& fStreamR;
-	size_t fCountRemaining;
-	size_t fPosition;
+	uint64 fCountRemaining;
+	uint64 fPosition;
 	ZRef<ZYadR_ZooLibStream> fValue_Current;
 	ZRef<ZYadR_ZooLibStream> fValue_Prior;
 	};
@@ -346,7 +346,7 @@ ZRef<ZYadR> ZYadListR_ZooLibStreamOld::NextChild()
 	return fValue_Prior;
 	}
 
-size_t ZYadListR_ZooLibStreamOld::GetPosition()
+uint64 ZYadListR_ZooLibStreamOld::GetPosition()
 	{ return fPosition; }
 
 void ZYadListR_ZooLibStreamOld::Finish()
@@ -398,7 +398,7 @@ private:
 
 	const ZStreamR& fStreamR;
 	std::string fName;
-	size_t fCountRemaining;
+	uint64 fCountRemaining;
 	ZRef<ZYadR_ZooLibStream> fValue_Current;
 	ZRef<ZYadR_ZooLibStream> fValue_Prior;
 	};
