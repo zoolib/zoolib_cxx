@@ -577,7 +577,7 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(
 	ZRef<ZFileRW> iFile, size_t iSlotSize, size_t iUserHeaderSize)
 :	fUserHeaderSize(iUserHeaderSize),
 	fSlotSize(iSlotSize),
-	fMutex_Flush("fMutex_MetaRoot"),
+	fMutex_Flush("fMutex_Flush"),
 	fCondition_Flush("fCondition_Flush"),
 	fCount_Writes(0),
 	fCount_WaitingFlushes(0),
@@ -640,7 +640,7 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(
 ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(ZRef<ZFileRW> iFile, size_t iUserHeaderSize)
 :	fUserHeaderSize(iUserHeaderSize),
 	fSlotSize(0),
-	fMutex_Flush("fMutex_MetaRoot"),
+	fMutex_Flush("fMutex_Flush"),
 	fCondition_Flush("fCondition_Flush"),
 	fCount_Writes(0),
 	fCount_WaitingFlushes(0),
