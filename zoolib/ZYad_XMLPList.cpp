@@ -34,12 +34,17 @@ using std::vector;
 #pragma mark -
 #pragma mark * Static parsing functions
 
+static void sThrowParseException(const string& iMessage)
+	{
+	throw ZYadParseException_XMLPList(iMessage);
+	}
+
 static void sBegin(ZML::Reader& r, const string& iTagName)
 	{
 	sSkipText(r);
 
 	if (!sTryRead_Begin(r, iTagName))
-		throw ZYadParseException_XMLPList("Expected begin tag '" + iTagName + "'");
+		sThrowParseException("Expected begin tag '" + iTagName + "'");
 	}
 
 static void sEnd(ZML::Reader& r, const string& iTagName)
@@ -47,7 +52,7 @@ static void sEnd(ZML::Reader& r, const string& iTagName)
 	sSkipText(r);
 
 	if (!sTryRead_End(r, iTagName))
-		throw ZYadParseException_XMLPList("Expected end tag '" + iTagName + "'");
+		sThrowParseException("Expected end tag '" + iTagName + "'");
 	}
 
 static void sRead_BodyOfDict(ZML::Reader& r, ZTuple& oTuple);
@@ -90,7 +95,7 @@ static bool sTryRead_Value(ZML::Reader& r, ZTValue& oTV)
 		{
 		int64 theInteger;
 		if (!ZUtil_Strim::sTryRead_SignedDecimalInteger(ZStrimU_Unreader(r.Text()), theInteger))
-			throw ZYadParseException_XMLPList("Expected valid integer");
+			sThrowParseException("Expected valid integer");
 
 		oTV.SetInt32(theInteger);
 		}
@@ -98,7 +103,7 @@ static bool sTryRead_Value(ZML::Reader& r, ZTValue& oTV)
 		{
 		double theDouble;
 		if (!ZUtil_Strim::sTryRead_SignedDouble(ZStrimU_Unreader(r.Text()), theDouble))
-			throw ZYadParseException_XMLPList("Expected valid real");
+			sThrowParseException("Expected valid real");
 
 		oTV.SetDouble(theDouble);
 		}
@@ -131,7 +136,7 @@ static bool sTryRead_Value(ZML::Reader& r, ZTValue& oTV)
 	else
 		{
 		// Hmm. Ignore tags we don't recognize?
-		throw ZYadParseException_XMLPList("Invalid begin tag '" + tagName + "'");
+		sThrowParseException("Invalid begin tag '" + tagName + "'");
 		}
 
 	sEnd(r, tagName);
@@ -143,7 +148,7 @@ static void sRead_Value(ZML::Reader& r, ZTValue& oValue)
 	sSkipText(r);
 
 	if (!sTryRead_Value(r, oValue))
-		throw ZYadParseException_XMLPList("Expected value");
+		sThrowParseException("Expected value");
 	}
 
 static void sRead_BodyOfDict(ZML::Reader& r, ZTuple& oTuple)
@@ -186,7 +191,7 @@ static void sRead_BodyOfArray(ZML::Reader& r, vector<ZTValue>& oVector)
 		}
 	}
 
-static ZRef<ZYadR_XMLPList> sMakeYadR_XMLPList(ZML::Reader& r)
+static ZRef<ZYadR_Std> sMakeYadR_XMLPList(ZML::Reader& r)
 	{
 	sSkipText(r);
 
@@ -211,9 +216,9 @@ static ZRef<ZYadR_XMLPList> sMakeYadR_XMLPList(ZML::Reader& r)
 	
 	ZTValue theTV;
 	if (sTryRead_Value(r, theTV))
-		return new ZYadPrimR_XMLPList(theTV);
+		return new ZYadPrimR_Std(theTV);
 
-	return ZRef<ZYadR_XMLPList>();
+	return ZRef<ZYadR_Std>();
 	}
 
 // =================================================================================================
@@ -221,22 +226,11 @@ static ZRef<ZYadR_XMLPList> sMakeYadR_XMLPList(ZML::Reader& r)
 #pragma mark * ZYadParseException_XMLPList
 
 ZYadParseException_XMLPList::ZYadParseException_XMLPList(const string& iWhat)
-:	ZYadParseException(iWhat)
+:	ZYadParseException_Std(iWhat)
 	{}
 
 ZYadParseException_XMLPList::ZYadParseException_XMLPList(const char* iWhat)
-:	ZYadParseException(iWhat)
-	{}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadPrimR_XMLPList
-
-ZYadPrimR_XMLPList::ZYadPrimR_XMLPList(const ZTValue& iTV)
-:	ZYadR_TValue(iTV)
-	{}
-
-void ZYadPrimR_XMLPList::Finish()
+:	ZYadParseException_Std(iWhat)
 	{}
 
 // =================================================================================================
@@ -267,53 +261,25 @@ const ZStreamR& ZYadRawR_XMLPList::GetStreamR()
 
 ZYadListR_XMLPList::ZYadListR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
 :	fR(iReader),
-	fMustReadEndTag(iMustReadEndTag),
-	fPosition(0)
+	fMustReadEndTag(iMustReadEndTag)
 	{}
 
-void ZYadListR_XMLPList::Finish()
+void ZYadListR_XMLPList::Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 	{
-	this->SkipAll();
+	sSkipText(fR);
 
 	if (fMustReadEndTag)
-		sEnd(fR, "array");
-	}
-
-bool ZYadListR_XMLPList::HasChild()
-	{
-	this->pMoveIfNecessary();
-	return fValue_Current;
-	}
-
-ZRef<ZYadR> ZYadListR_XMLPList::NextChild()
-	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
 		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		++fPosition;
+		if (sTryRead_End(fR, "array"))
+			return;
 		}
 
-	return fValue_Prior;
-	}
-
-size_t ZYadListR_XMLPList::GetPosition()
-	{ return fPosition; }
-
-void ZYadListR_XMLPList::pMoveIfNecessary()
-	{
-	if (fValue_Current)
-		return;
-
-	if (fValue_Prior)
+	if (!(oYadR = sMakeYadR_XMLPList(fR)))
 		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
+		if (!fMustReadEndTag)
+			return;
+		sThrowParseException("Expected a value");
 		}
-
-	fValue_Current = sMakeYadR_XMLPList(fR);
 	}
 
 // =================================================================================================
@@ -325,63 +291,28 @@ ZYadMapR_XMLPList::ZYadMapR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
 	fMustReadEndTag(iMustReadEndTag)
 	{}
 	
-void ZYadMapR_XMLPList::Finish()
+void ZYadMapR_XMLPList::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
-	this->SkipAll();
+	sSkipText(fR);
 
 	if (fMustReadEndTag)
-		sEnd(fR, "dict");
-	}
-
-bool ZYadMapR_XMLPList::HasChild()
-	{
-	this->pMoveIfNecessary();
-
-	return fValue_Current;
-	}
-
-ZRef<ZYadR> ZYadMapR_XMLPList::NextChild()
-	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
 		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		fName.clear();
+		if (sTryRead_End(fR, "dict"))
+			return;
 		}
 
-	return fValue_Prior;
-	}
-
-string ZYadMapR_XMLPList::Name()
-	{
-	this->pMoveIfNecessary();
-
-	return fName;
-	}
-
-void ZYadMapR_XMLPList::pMoveIfNecessary()
-	{
-	if (fValue_Current)
-		return;
-
-	if (fValue_Prior)
+	if (!sTryRead_Begin(fR, "key"))
 		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
+		if (!fMustReadEndTag)
+			return;
+		sThrowParseException("Expected <key>");
 		}
 
+	ZStrimW_String(oName).CopyAllFrom(fR.Text());
+	sEnd(fR, "key");
 
-	fName.clear();
-
-	sSkipText(fR);
-	if (sTryRead_Begin(fR, "key"))
-		{
-		ZStrimW_String(fName).CopyAllFrom(fR.Text());
-		sEnd(fR, "key");
-		fValue_Current = sMakeYadR_XMLPList(fR);
-		}
+	if (!(oYadR = sMakeYadR_XMLPList(fR)))
+		sThrowParseException("Expected value after <key>...</key>");
 	}
 
 // =================================================================================================

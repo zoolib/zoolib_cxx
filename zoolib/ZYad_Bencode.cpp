@@ -106,14 +106,14 @@ static string sReadString(const ZStreamU& s)
 	return theString;
 	}
 
-static ZRef<ZYadR_Bencode> sReadStringish(const ZStreamU& s)
+static ZRef<ZYadR_Std> sReadStringish(const ZStreamU& s)
 	{
 	const int32 theLength = sRead_PositiveInteger(s);
 	if (!sTryRead_Byte(s, ':'))
 		sThrowParseException("Expected ':' terminator for string/binary length");
 
 	if (!theLength)
-		return new ZYadPrimR_Bencode(ZTValue());
+		return new ZYadPrimR_Std(ZTValue());
 
 	const string theString = s.ReadString(theLength);
 	string::const_iterator current = theString.begin();
@@ -124,12 +124,12 @@ static ZRef<ZYadR_Bencode> sReadStringish(const ZStreamU& s)
 		{}
 
 	if (countSkipped == 0)
-		return new ZYadPrimR_Bencode(theString);
+		return new ZYadPrimR_Std(theString);
 	else
-		return new ZYadRawR_Bencode(ZMemoryBlock(theString.data(), theLength));
+		return new ZYadRawR_Std(ZMemoryBlock(theString.data(), theLength));
 	}
 
-static ZRef<ZYadR_Bencode> sMakeYadR_Bencode(const ZStreamU& s)
+static ZRef<ZYadR_Std> sMakeYadR_Bencode(const ZStreamU& s)
 	{
 	const uint8 type = s.ReadUInt8();
 	switch (type)
@@ -149,7 +149,7 @@ static ZRef<ZYadR_Bencode> sMakeYadR_Bencode(const ZStreamU& s)
 				sThrowParseException("Expected signed decimal integer");
 			if (!sTryRead_Byte(s, 'e'))
 				sThrowParseException("Expected 'e' terminator for integer");
-			return new ZYadPrimR_Bencode(theInteger);
+			return new ZYadPrimR_Std(theInteger);
 			}
 		default:
 			{
@@ -161,7 +161,7 @@ static ZRef<ZYadR_Bencode> sMakeYadR_Bencode(const ZStreamU& s)
 			return sReadStringish(s);
 			}
 		}
-	return ZRef<ZYadR_Bencode>();
+	return ZRef<ZYadR_Std>();
 	}
 
 // =================================================================================================
@@ -169,33 +169,11 @@ static ZRef<ZYadR_Bencode> sMakeYadR_Bencode(const ZStreamU& s)
 #pragma mark * ZYadParseException_Bencode
 
 ZYadParseException_Bencode::ZYadParseException_Bencode(const string& iWhat)
-:	ZYadParseException(iWhat)
+:	ZYadParseException_Std(iWhat)
 	{}
 
 ZYadParseException_Bencode::ZYadParseException_Bencode(const char* iWhat)
-:	ZYadParseException(iWhat)
-	{}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadPrimR_Bencode
-
-ZYadPrimR_Bencode::ZYadPrimR_Bencode(const ZTValue& iTV)
-:	ZYadR_TValue(iTV)
-	{}
-
-void ZYadPrimR_Bencode::Finish()
-	{}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadRawR_Bencode
-
-ZYadRawR_Bencode::ZYadRawR_Bencode(const ZMemoryBlock& iMB)
-:	ZYadRawRPos_MemoryBlock(iMB)
-	{}
-
-void ZYadRawR_Bencode::Finish()
+:	ZYadParseException_Std(iWhat)
 	{}
 
 // =================================================================================================
@@ -203,57 +181,13 @@ void ZYadRawR_Bencode::Finish()
 #pragma mark * ZYadListR_Bencode
 
 ZYadListR_Bencode::ZYadListR_Bencode(const ZStreamU& iStreamU)
-:	fStreamU(iStreamU),
-	fPosition(0),
-	fFinished(false)
+:	fStreamU(iStreamU)
 	{}
 
-void ZYadListR_Bencode::Finish()
+void ZYadListR_Bencode::Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 	{
-	this->SkipAll();
-	}
-
-bool ZYadListR_Bencode::HasChild()
-	{
-	this->pMoveIfNecessary();
-	return fValue_Current;
-	}
-
-ZRef<ZYadR> ZYadListR_Bencode::NextChild()
-	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
-		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		++fPosition;
-		}
-
-	return fValue_Prior;
-	}
-
-size_t ZYadListR_Bencode::GetPosition()
-	{ return fPosition; }
-
-void ZYadListR_Bencode::pMoveIfNecessary()
-	{
-	if (fValue_Current)
-		return;
-
-	if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		}
-
-	if (fFinished)
-		return;
-
-	if (sTryRead_Byte(fStreamU, 'e'))
-		fFinished = true;
-	else
-		fValue_Current = sMakeYadR_Bencode(fStreamU);
+	if (!sTryRead_Byte(fStreamU, 'e'))
+		oYadR = sMakeYadR_Bencode(fStreamU);
 	}
 
 // =================================================================================================
@@ -261,65 +195,15 @@ void ZYadListR_Bencode::pMoveIfNecessary()
 #pragma mark * ZYadMapR_Bencode
 
 ZYadMapR_Bencode::ZYadMapR_Bencode(const ZStreamU& iStreamU)
-:	fStreamU(iStreamU),
-	fFinished(false)
+:	fStreamU(iStreamU)
 	{}
-	
-void ZYadMapR_Bencode::Finish()
+
+void ZYadMapR_Bencode::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
-	this->SkipAll();
-	}
-
-bool ZYadMapR_Bencode::HasChild()
-	{
-	this->pMoveIfNecessary();
-
-	return fValue_Current;
-	}
-
-ZRef<ZYadR> ZYadMapR_Bencode::NextChild()
-	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
+	if (!sTryRead_Byte(fStreamU, 'e'))
 		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		fName.clear();
-		}
-
-	return fValue_Prior;
-	}
-
-string ZYadMapR_Bencode::Name()
-	{
-	this->pMoveIfNecessary();
-
-	return fName;
-	}
-
-void ZYadMapR_Bencode::pMoveIfNecessary()
-	{
-	if (fValue_Current)
-		return;
-
-	if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		}
-
-	if (fFinished)
-		return;
-
-	if (sTryRead_Byte(fStreamU, 'e'))
-		{
-		fFinished = true;
-		}
-	else
-		{
-		fName = sReadString(fStreamU);
-		fValue_Current = sMakeYadR_Bencode(fStreamU);
+		oName = sReadString(fStreamU);
+		oYadR = sMakeYadR_Bencode(fStreamU);
 		}
 	}
 

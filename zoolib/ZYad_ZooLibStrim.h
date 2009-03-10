@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream_HexStrim.h"
 #include "zoolib/ZStrim.h"
-#include "zoolib/ZYad_ZooLib.h"
+#include "zoolib/ZYad_Std.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -32,7 +32,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZYadParseException_ZooLibStrim
 
-class ZYadParseException_ZooLibStrim : public ZYadParseException
+class ZYadParseException_ZooLibStrim : public ZYadParseException_Std
 	{
 public:
 	ZYadParseException_ZooLibStrim(const std::string& iWhat);
@@ -41,43 +41,16 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadR_ZooLibStrim
-
-class ZYadR_ZooLibStrim : public virtual ZYadR
-	{
-public:
-	// Our protocol
-	virtual void Finish() = 0;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadPrimR_ZooLibStrim
-
-class ZYadPrimR_ZooLibStrim
-:	public ZYadR_TValue,
-	public ZYadPrimR,
-	public ZYadR_ZooLibStrim
-	{
-public:
-	ZYadPrimR_ZooLibStrim(const ZTValue& iTV);
-
-// From ZYadR_ZooLibStrim
-	virtual void Finish();
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadRawR_ZooLibStrim
 
 class ZYadRawR_ZooLibStrim
 :	public ZYadRawR,
-	public ZYadR_ZooLibStrim
+	public ZYadR_Std
 	{
 public:
 	ZYadRawR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter);
 
-// From ZYadR_ZooLibStrim
+// From ZYadR_Std
 	virtual void Finish();
 
 // From ZStreamerR via ZYadRawR
@@ -93,62 +66,34 @@ private:
 #pragma mark -
 #pragma mark * ZYadListR_ZooLibStrim
 
-class ZYadListR_ZooLibStrim
-:	public ZYadListR,
-	public ZYadR_ZooLibStrim
+class ZYadListR_ZooLibStrim : public ZYadListR_Std
 	{
 public:
 	ZYadListR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter);
 
-// From ZYadR_ZooLibStrim
-	virtual void Finish();
-
-// From ZYadR via ZYadListR
-	virtual bool HasChild();
-	virtual ZRef<ZYadR> NextChild();
-
-// From ZYadListR
-	virtual size_t GetPosition();
+// From ZYadListR_Std
+	virtual void Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
 
 private:
-	void pMoveIfNecessary();
-
 	const ZStrimU& fStrimU;
 	bool fReadDelimiter;
-	size_t fPosition;
-	ZRef<ZYadR_ZooLibStrim> fValue_Current;
-	ZRef<ZYadR_ZooLibStrim> fValue_Prior;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadMapR_ZooLibStrim
 
-class ZYadMapR_ZooLibStrim
-:	public ZYadMapR,
-	public ZYadR_ZooLibStrim
+class ZYadMapR_ZooLibStrim : public ZYadMapR_Std
 	{
 public:
 	ZYadMapR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter);
 
-// From ZYadR_ZooLibStrim
-	virtual void Finish();
-
-// From ZYadR via ZYadMapR
-	virtual bool HasChild();
-	virtual ZRef<ZYadR> NextChild();
-
-// From ZYadMapR
-	virtual std::string Name();
+// From ZYadMapR_Std
+	virtual void Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
 
 private:
-	void pMoveIfNecessary();
-
 	const ZStrimU& fStrimU;
 	bool fReadDelimiter;
-	std::string fName;
-	ZRef<ZYadR_ZooLibStrim> fValue_Current;
-	ZRef<ZYadR_ZooLibStrim> fValue_Prior;
 	};
 
 // =================================================================================================

@@ -460,7 +460,7 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 	return true;
 	}
 
-static ZRef<ZYadR_ZooLibStrim> sMakeYadR_ZooLibStrim(const ZStrimU& iStrimU)
+static ZRef<ZYadR_Std> sMakeYadR_ZooLibStrim(const ZStrimU& iStrimU)
 	{
 	using namespace ZUtil_Strim;
 
@@ -482,10 +482,10 @@ static ZRef<ZYadR_ZooLibStrim> sMakeYadR_ZooLibStrim(const ZStrimU& iStrimU)
 		{
 		ZTValue theTV;
 		if (sFromStrim_TValue(iStrimU, theTV))
-			return new ZYadPrimR_ZooLibStrim(theTV);
+			return new ZYadPrimR_Std(theTV);
 		}
 
-	return ZRef<ZYadR_ZooLibStrim>();
+	return ZRef<ZYadR_Std>();
 	}
 
 // =================================================================================================
@@ -493,22 +493,11 @@ static ZRef<ZYadR_ZooLibStrim> sMakeYadR_ZooLibStrim(const ZStrimU& iStrimU)
 #pragma mark * ZYadParseException_ZooLibStrim
 
 ZYadParseException_ZooLibStrim::ZYadParseException_ZooLibStrim(const string& iWhat)
-:	ZYadParseException(iWhat)
+:	ZYadParseException_Std(iWhat)
 	{}
 
 ZYadParseException_ZooLibStrim::ZYadParseException_ZooLibStrim(const char* iWhat)
-:	ZYadParseException(iWhat)
-	{}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadPrimR_ZooLibStrim
-
-ZYadPrimR_ZooLibStrim::ZYadPrimR_ZooLibStrim(const ZTValue& iTV)
-:	ZYadR_TValue(iTV)
-	{}
-
-void ZYadPrimR_ZooLibStrim::Finish()
+:	ZYadParseException_Std(iWhat)
 	{}
 
 // =================================================================================================
@@ -544,64 +533,39 @@ const ZStreamR& ZYadRawR_ZooLibStrim::GetStreamR()
 
 ZYadListR_ZooLibStrim::ZYadListR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter)
 :	fStrimU(iStrimU),
-	fReadDelimiter(iReadDelimiter),
-	fPosition(0)
+	fReadDelimiter(iReadDelimiter)
 	{}
 
-void ZYadListR_ZooLibStrim::Finish()
+void ZYadListR_ZooLibStrim::Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
-	this->SkipAll();
+	sSkip_WSAndCPlusPlusComments(fStrimU);
+
+	bool gotSeparator = true;
+	if (!iIsFirst)
+		{
+		if (!sTryRead_CP(fStrimU, ',') && !sTryRead_CP(fStrimU, ';'))
+			gotSeparator = false;
+		else
+			sSkip_WSAndCPlusPlusComments(fStrimU);
+		}
 
 	if (fReadDelimiter)
 		{
-		sSkip_WSAndCPlusPlusComments(fStrimU);
-		if (!sTryRead_CP(fStrimU, ']'))
-			sThrowParseException("Expected ']' to close a vector");
-		}
-	}
-
-bool ZYadListR_ZooLibStrim::HasChild()
-	{
-	this->pMoveIfNecessary();
-	return fValue_Current;
-	}
-
-ZRef<ZYadR> ZYadListR_ZooLibStrim::NextChild()
-	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
-		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		++fPosition;
-		}
-
-	return fValue_Prior;
-	}
-
-size_t ZYadListR_ZooLibStrim::GetPosition()
-	{ return fPosition; }
-
-void ZYadListR_ZooLibStrim::pMoveIfNecessary()
-	{
-	using namespace ZUtil_Strim;
-
-	if (fValue_Current)
-		return;
-
-	if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		sSkip_WSAndCPlusPlusComments(fStrimU);
-		if (!sTryRead_CP(fStrimU, ',') && !sTryRead_CP(fStrimU, ';'))
+		if (sTryRead_CP(fStrimU, ']'))
 			return;
 		}
 
-	fValue_Current = sMakeYadR_ZooLibStrim(fStrimU);
+	if (!gotSeparator)
+		sThrowParseException("Expected ';' or ',' after value");
+
+	if (!(oYadR = sMakeYadR_ZooLibStrim(fStrimU)))
+		{
+		if (!fReadDelimiter)
+			return;
+		sThrowParseException("Expected a value");
+		}
 	}
 
 // =================================================================================================
@@ -613,77 +577,39 @@ ZYadMapR_ZooLibStrim::ZYadMapR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDel
 	fReadDelimiter(iReadDelimiter)
 	{}
 	
-void ZYadMapR_ZooLibStrim::Finish()
+void ZYadMapR_ZooLibStrim::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
 	using namespace ZUtil_Strim;
-
-	this->SkipAll();
-
-	if (fReadDelimiter)
-		{
-		sSkip_WSAndCPlusPlusComments(fStrimU);
-		if (!sTryRead_CP(fStrimU, '}'))
-			sThrowParseException("Expected '}' to close a tuple");
-		}
-	}
-
-bool ZYadMapR_ZooLibStrim::HasChild()
-	{
-	this->pMoveIfNecessary();
-
-	return fValue_Current;
-	}
-
-ZRef<ZYadR> ZYadMapR_ZooLibStrim::NextChild()
-	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
-		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		fName.clear();
-		}
-
-	return fValue_Prior;
-	}
-
-string ZYadMapR_ZooLibStrim::Name()
-	{
-	this->pMoveIfNecessary();
-
-	return fName;
-	}
-
-void ZYadMapR_ZooLibStrim::pMoveIfNecessary()
-	{
-	using namespace ZUtil_Strim;
-
-	if (fValue_Current)
-		return;
-
-	if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-
-		sSkip_WSAndCPlusPlusComments(fStrimU);
-
-		if (!sTryRead_CP(fStrimU, ',') && !sTryRead_CP(fStrimU, ';'))
-			sThrowParseException("Expected ';' or ',' after property");
-		}
 
 	sSkip_WSAndCPlusPlusComments(fStrimU);
 
-	if (!sTryRead_PropertyName(fStrimU, fName))
-		return;
+	if (!iIsFirst)
+		{
+		if (!sTryRead_CP(fStrimU, ',') && !sTryRead_CP(fStrimU, ';'))
+			sThrowParseException("Expected ';' or ',' after property");
+		sSkip_WSAndCPlusPlusComments(fStrimU);
+		}
+
+	if (fReadDelimiter)
+		{
+		if (sTryRead_CP(fStrimU, '}'))
+			return;
+		}
+
+	if (!sTryRead_PropertyName(fStrimU, oName))
+		{
+		if (!fReadDelimiter)
+			return;
+		sThrowParseException("Expected property name");
+		}
 
 	sSkip_WSAndCPlusPlusComments(fStrimU);
 
 	if (!sTryRead_CP(fStrimU, '='))
 		sThrowParseException("Expected '=' after property name");
 
-	fValue_Current = sMakeYadR_ZooLibStrim(fStrimU);
+	if (!(oYadR = sMakeYadR_ZooLibStrim(fStrimU)))
+		sThrowParseException("Expected value after '='");
 	}
 
 // =================================================================================================

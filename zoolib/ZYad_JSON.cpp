@@ -379,7 +379,7 @@ static bool sNormalizeSimpleTValue(const ZTValue& iTV, ZTValue& oTV)
 	return false;
 	}
 
-static ZRef<ZYadR_JSON> sMakeYadR_JSON(const ZStrimU& iStrimU)
+static ZRef<ZYadR_Std> sMakeYadR_JSON(const ZStrimU& iStrimU)
 	{
 	using namespace ZUtil_Strim;
 
@@ -387,23 +387,23 @@ static ZRef<ZYadR_JSON> sMakeYadR_JSON(const ZStrimU& iStrimU)
 	
 	if (sTryRead_CP(iStrimU, '['))
 		{
-		return new ZYadListR_JSON(iStrimU, true);
+		return new ZYadListR_JSON(iStrimU);
 		}
 	else if (sTryRead_CP(iStrimU, '{'))
 		{
-		return new ZYadMapR_JSON(iStrimU, true);
+		return new ZYadMapR_JSON(iStrimU);
 		}
 	else
 		{
 		ZTValue theTV;
 		if (sFromStrim_TValue(iStrimU, theTV))
-			return new ZYadPrimR_JSON(theTV);
+			return new ZYadPrimR_Std(theTV);
 		}
 
-	return ZRef<ZYadR_JSON>();
+	return ZRef<ZYadPrimR_Std>();
 	}
 
-static ZRef<ZYadR_JSON> sMakeYadR_JSONNormalize(
+static ZRef<ZYadR_Std> sMakeYadR_JSONNormalize(
 	ZRef<ZYadR> iYadR, bool iPreserve, bool iPreserveLists, bool iPreserveMaps)
 	{
 	if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
@@ -423,18 +423,18 @@ static ZRef<ZYadR_JSON> sMakeYadR_JSONNormalize(
 			// legitimate. Now normalize it if possible.
 			ZTValue normalized;
 			if (sNormalizeSimpleTValue(theValue, normalized))
-				return new ZYadPrimR_JSON(normalized);
+				return new ZYadPrimR_Std(normalized);
 			}
 
 		if (iPreserve)
 			{
 			// We weren't able to get a ZTValue, or it couldn't normalized.
 			// We've been asked to preserve values, so return a null.
-			return new ZYadPrimR_JSON(ZTValue());
+			return new ZYadPrimR_Std(ZTValue());
 			}
 		}
 
-	return ZRef<ZYadR_JSON>();
+	return ZRef<ZYadPrimR_Std>();
 	}
 
 // =================================================================================================
@@ -442,170 +442,83 @@ static ZRef<ZYadR_JSON> sMakeYadR_JSONNormalize(
 #pragma mark * ZYadParseException_JSON
 
 ZYadParseException_JSON::ZYadParseException_JSON(const string& iWhat)
-:	ZYadParseException(iWhat)
+:	ZYadParseException_Std(iWhat)
 	{}
 
 ZYadParseException_JSON::ZYadParseException_JSON(const char* iWhat)
-:	ZYadParseException(iWhat)
-	{}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadPrimR_JSON
-
-ZYadPrimR_JSON::ZYadPrimR_JSON(const ZTValue& iTV)
-:	ZYadR_TValue(iTV)
-	{}
-
-void ZYadPrimR_JSON::Finish()
+:	ZYadParseException_Std(iWhat)
 	{}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadListR_JSON
 
-ZYadListR_JSON::ZYadListR_JSON(const ZStrimU& iStrimU, bool iReadDelimiter)
-:	fStrimU(iStrimU),
-	fReadDelimiter(iReadDelimiter),
-	fPosition(0)
+ZYadListR_JSON::ZYadListR_JSON(const ZStrimU& iStrimU)
+:	fStrimU(iStrimU)
 	{}
 
-void ZYadListR_JSON::Finish()
+void ZYadListR_JSON::Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
-	this->SkipAll();
+	sSkip_WSAndCPlusPlusComments(fStrimU);
 
-	if (fReadDelimiter)
+	if (sTryRead_CP(fStrimU, ']'))
 		{
-		sSkip_WSAndCPlusPlusComments(fStrimU);
-		if (!sTryRead_CP(fStrimU, ']'))
-			sThrowParseException("Expected ']' to close an array");
-		}
-	}
-
-bool ZYadListR_JSON::HasChild()
-	{
-	this->pMoveIfNecessary();
-	return fValue_Current;
-	}
-
-ZRef<ZYadR> ZYadListR_JSON::NextChild()
-	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
-		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		++fPosition;
-		}
-
-	return fValue_Prior;
-	}
-
-size_t ZYadListR_JSON::GetPosition()
-	{ return fPosition; }
-
-void ZYadListR_JSON::pMoveIfNecessary()
-	{
-	using namespace ZUtil_Strim;
-
-	if (fValue_Current)
+		// Reached end.
 		return;
-
-	if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		sSkip_WSAndCPlusPlusComments(fStrimU);
-		if (!sTryRead_CP(fStrimU, ','))
-			return;
 		}
 
-	fValue_Current = sMakeYadR_JSON(fStrimU);
+	if (!iIsFirst)
+		{
+		// Must read a separator
+		if (!sTryRead_CP(fStrimU, ','))
+			sThrowParseException("Require ',' to separate array elements");
+		sSkip_WSAndCPlusPlusComments(fStrimU);
+		}
+
+	if (!(oYadR = sMakeYadR_JSON(fStrimU))
+		sThrowParseException("Expected a value");
 	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadMapR_JSON
 
-ZYadMapR_JSON::ZYadMapR_JSON(const ZStrimU& iStrimU, bool iReadDelimiter)
-:	fStrimU(iStrimU),
-	fReadDelimiter(iReadDelimiter)
+ZYadMapR_JSON::ZYadMapR_JSON(const ZStrimU& iStrimU)
+:	fStrimU(iStrimU)
 	{}
-	
-void ZYadMapR_JSON::Finish()
+
+void ZYadMapR_JSON::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
 	using namespace ZUtil_Strim;
-
-	this->SkipAll();
-
-	if (fReadDelimiter)
-		{
-		sSkip_WSAndCPlusPlusComments(fStrimU);
-		if (!sTryRead_CP(fStrimU, '}'))
-			sThrowParseException("Expected '}' to close an object");
-		}
-	}
-
-bool ZYadMapR_JSON::HasChild()
-	{
-	this->pMoveIfNecessary();
-
-	return fValue_Current;
-	}
-
-ZRef<ZYadR> ZYadMapR_JSON::NextChild()
-	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
-		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		fName.clear();
-		}
-
-	return fValue_Prior;
-	}
-
-string ZYadMapR_JSON::Name()
-	{
-	this->pMoveIfNecessary();
-
-	return fName;
-	}
-
-void ZYadMapR_JSON::pMoveIfNecessary()
-	{
-	using namespace ZUtil_Strim;
-
-	if (fValue_Current)
-		return;
-
-	if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-
-		sSkip_WSAndCPlusPlusComments(fStrimU);
-
-		if (!sTryRead_CP(fStrimU, ','))
-			return;
-		}
 
 	sSkip_WSAndCPlusPlusComments(fStrimU);
 
-	if (!sTryRead_JSONString(fStrimU, fName))
+	if (sTryRead_CP(fStrimU, '}'))
+		{
+		// Reached end.
 		return;
+		}
+
+	if (!iIsFirst)
+		{
+		// Must read a separator
+		if (!sTryRead_CP(fStrimU, ','))
+			sThrowParseException("Require ',' to separate array elements");
+		sSkip_WSAndCPlusPlusComments(fStrimU);
+		}
+
+	if (!sTryRead_JSONString(fStrimU, oName))
+		sThrowParseException("Expected a member name");
 
 	sSkip_WSAndCPlusPlusComments(fStrimU);
 
 	if (!sTryRead_CP(fStrimU, ':'))
 		sThrowParseException("Expected ':' after a member name");
 
-	fValue_Current = sMakeYadR_JSON(fStrimU);
+	if (!(oYadR = sMakeYadR_JSON(fStrimU))
+		sThrowParseException("Expected value after ':'");
 	}
 
 // =================================================================================================
@@ -616,63 +529,14 @@ ZYadListR_JSONNormalize::ZYadListR_JSONNormalize(
 	ZRef<ZYadListR> iYadListR, bool iPreserveLists, bool iPreserveMaps)
 :	fYadListR(iYadListR),
 	fPreserveLists(iPreserveLists),
-	fPreserveMaps(iPreserveMaps),
-	fPosition(0)
+	fPreserveMaps(iPreserveMaps)
 	{}
 
-void ZYadListR_JSONNormalize::Finish()
+void ZYadListR_JSONNormalize::Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 	{
-	if (fValue_Current)
+	while (fYadListR->HasChild() && !oYadR)
 		{
-		ZAssert(!fValue_Prior);
-		fValue_Current->Finish();
-		fValue_Current.Clear();
-		}
-	else if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		}
-	fYadListR->SkipAll();
-	}
-
-bool ZYadListR_JSONNormalize::HasChild()
-	{
-	this->pMoveIfNecessary();
-	return fValue_Current;
-	}
-
-ZRef<ZYadR> ZYadListR_JSONNormalize::NextChild()
-	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
-		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		++fPosition;
-		}
-
-	return fValue_Prior;
-	}
-
-size_t ZYadListR_JSONNormalize::GetPosition()
-	{ return fPosition; }
-
-void ZYadListR_JSONNormalize::pMoveIfNecessary()
-	{
-	if (fValue_Current)
-		return;
-
-	if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		}
-
-	while (fYadListR->HasChild() && !fValue_Current)
-		{
-		fValue_Current = sMakeYadR_JSONNormalize(
+		oYadR = sMakeYadR_JSONNormalize(
 			fYadListR->NextChild(), fPreserveLists, fPreserveLists, fPreserveMaps);
 		}
 	}
@@ -688,71 +552,18 @@ ZYadMapR_JSONNormalize::ZYadMapR_JSONNormalize(
 	fPreserveMaps(iPreserveMaps)
 	{}
 
-void ZYadMapR_JSONNormalize::Finish()
+void ZYadMapR_JSONNormalize::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
-	if (fValue_Current)
-		{
-		ZAssert(!fValue_Prior);
-		fValue_Current->Finish();
-		fValue_Current.Clear();
-		}
-	else if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		}
-	fYadMapR->SkipAll();
-	}
-
-bool ZYadMapR_JSONNormalize::HasChild()
-	{
-	this->pMoveIfNecessary();
-
-	return fValue_Current;
-	}
-
-ZRef<ZYadR> ZYadMapR_JSONNormalize::NextChild()
-	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
-		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		fName.clear();
-		}
-
-	return fValue_Prior;
-	}
-
-string ZYadMapR_JSONNormalize::Name()
-	{
-	this->pMoveIfNecessary();
-
-	return fName;
-	}
-
-void ZYadMapR_JSONNormalize::pMoveIfNecessary()
-	{
-	if (fValue_Current)
-		return;
-
-	if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		}
-
 	for (;;)
 		{
 		if (!fYadMapR->HasChild())
 			break;
 		const string theName = fYadMapR->Name();
-		fValue_Current = sMakeYadR_JSONNormalize(
+		oYadR = sMakeYadR_JSONNormalize(
 			fYadMapR->NextChild(), fPreserveMaps, fPreserveLists, fPreserveMaps);
-		if (fValue_Current)
+		if (oYadR)
 			{
-			fName = theName;
+			oName = theName;
 			break;
 			}
 		}

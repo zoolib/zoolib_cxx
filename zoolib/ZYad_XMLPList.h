@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZML.h"
 #include "zoolib/ZStream_ASCIIStrim.h"
 #include "zoolib/ZStream_Base64.h"
-#include "zoolib/ZYad_ZooLib.h"
+#include "zoolib/ZYad_Std.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -35,7 +35,7 @@ class ZStrimW_ML;
 #pragma mark -
 #pragma mark * ZYadParseException_XMLPList
 
-class ZYadParseException_XMLPList : public ZYadParseException
+class ZYadParseException_XMLPList : public ZYadParseException_Std
 	{
 public:
 	ZYadParseException_XMLPList(const std::string& iWhat);
@@ -44,43 +44,16 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadR_XMLPList
-
-class ZYadR_XMLPList : public virtual ZYadR
-	{
-public:
-	// Our protocol
-	virtual void Finish() = 0;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadPrimR_XMLPList
-
-class ZYadPrimR_XMLPList
-:	public ZYadR_TValue,
-	public ZYadPrimR,
-	public ZYadR_XMLPList
-	{
-public:
-	ZYadPrimR_XMLPList(const ZTValue& iTV);
-
-// From ZYadR_XMLPList
-	virtual void Finish();
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadRawR_XMLPList
 
 class ZYadRawR_XMLPList
 :	public ZYadRawR,
-	public ZYadR_XMLPList
+	public ZYadR_Std
 	{
 public:
 	ZYadRawR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
 
-// From ZYadR_XMLPList
+// From ZYadR_Std
 	virtual void Finish();
 
 // From ZStreamerR via ZYadRawR
@@ -97,62 +70,34 @@ private:
 #pragma mark -
 #pragma mark * ZYadListR_XMLPList
 
-class ZYadListR_XMLPList
-:	public ZYadListR,
-	public ZYadR_XMLPList
+class ZYadListR_XMLPList : public ZYadListR_Std
 	{
 public:
 	ZYadListR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
 
-// From ZYadR_XMLPList
-	virtual void Finish();
-
-// From ZYadR via ZYadListR
-	virtual bool HasChild();
-	virtual ZRef<ZYadR> NextChild();
-
-// From ZYadListR
-	virtual size_t GetPosition();
+// From ZYadListR_Std
+	virtual void Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
 
 private:
-	void pMoveIfNecessary();
-
 	ZML::Reader& fR;
 	bool fMustReadEndTag;
-	size_t fPosition;
-	ZRef<ZYadR_XMLPList> fValue_Current;
-	ZRef<ZYadR_XMLPList> fValue_Prior;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadMapR_XMLPList
 
-class ZYadMapR_XMLPList
-:	public ZYadMapR,
-	public ZYadR_XMLPList
+class ZYadMapR_XMLPList : public ZYadMapR_Std
 	{
 public:
 	ZYadMapR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
 
-// From ZYadR_XMLPList
-	virtual void Finish();
-
-// From ZYadR via ZYadMapR
-	virtual bool HasChild();
-	virtual ZRef<ZYadR> NextChild();
-
-// From ZYadMapR
-	virtual std::string Name();
+// From ZYadMapR_Std
+	virtual void Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
 
 private:
-	void pMoveIfNecessary();
-
 	ZML::Reader& fR;
 	bool fMustReadEndTag;
-	std::string fName;
-	ZRef<ZYadR_XMLPList> fValue_Current;
-	ZRef<ZYadR_XMLPList> fValue_Prior;
 	};
 
 // =================================================================================================

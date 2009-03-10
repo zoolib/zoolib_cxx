@@ -18,113 +18,135 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_JSON__
-#define __ZYad_JSON__ 1
+#ifndef __ZYad_Std__
+#define __ZYad_Std__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
-#include "zoolib/ZYad_Std.h"
+#include "zoolib/ZYad_ZooLib.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadParseException_JSON
+#pragma mark * ZYadParseException_Std
 
-class ZYadParseException_JSON : public ZYadParseException_Std
+class ZYadParseException_Std : public ZYadParseException
 	{
 public:
-	ZYadParseException_JSON(const std::string& iWhat);
-	ZYadParseException_JSON(const char* iWhat);
+	ZYadParseException_Std(const std::string& iWhat);
+	ZYadParseException_Std(const char* iWhat);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_JSON
+#pragma mark * ZYadR_Std
 
-class ZYadListR_JSON : public ZYadListR_Std
+class ZYadR_Std : public virtual ZYadR
 	{
 public:
-	ZYadListR_JSON(const ZStrimU& iStrimU);
+	// Our protocol
+	virtual void Finish() = 0;
+	};
 
-// From ZYadListR_Std
-	virtual void Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadPrimR_Std
+
+class ZYadPrimR_Std
+:	public ZYadR_TValue,
+	public ZYadPrimR,
+	public ZYadR_Std
+	{
+public:
+	ZYadPrimR_Std(const ZTValue& iTV);
+
+// From ZYadR_Std
+	virtual void Finish();
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadRawR_Std
+
+class ZYadRawR_Std
+:	public ZYadRawRPos_MemoryBlock,
+	public ZYadR_Std
+	{
+public:
+	ZYadRawR_Std(const ZMemoryBlock& iMB);
+
+// From ZYadR_Std
+	virtual void Finish();
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadListR_Std
+
+class ZYadListR_Std
+:	public ZYadListR,
+	public ZYadR_Std
+	{
+public:
+	ZYadListR_Std();
+
+// From ZYadR_Std
+	virtual void Finish();
+
+// From ZYadR via ZYadListR
+	virtual bool HasChild();
+	virtual ZRef<ZYadR> NextChild();
+
+// From ZYadListR
+	virtual size_t GetPosition();
+
+// Our protocol
+	virtual void Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR) = 0;
 
 private:
-	const ZStrimU& fStrimU;
-	bool fReadDelimiter;
+	void pMoveIfNecessary();
+
+	size_t fPosition;
+	bool fStarted;
+	bool fFinished;
+	ZRef<ZYadR_Std> fValue_Current;
+	ZRef<ZYadR_Std> fValue_Prior;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadMapR_JSON
+#pragma mark * ZYadMapR_Std
 
-class ZYadMapR_JSON : public ZYadMapR_Std
+class ZYadMapR_Std
+:	public ZYadMapR,
+	public ZYadR_Std
 	{
 public:
-	ZYadMapR_JSON(const ZStrimU& iStrimU);
+	ZYadMapR_Std();
 
-// From ZYadMapR_Std
-	virtual void Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
+// From ZYadR_Std
+	virtual void Finish();
 
-private:
-	const ZStrimU& fStrimU;
-	bool fReadDelimiter;
-	};
+// From ZYadR via ZYadMapR
+	virtual bool HasChild();
+	virtual ZRef<ZYadR> NextChild();
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadListR_JSONNormalize
+// From ZYadMapR
+	virtual std::string Name();
 
-class ZYadListR_JSONNormalize : public ZYadListR_Std
-	{
-public:
-	ZYadListR_JSONNormalize(ZRef<ZYadListR> iYadListR, bool iPreserveLists, bool iPreserveMaps);
-
-// From ZYadListR_Std
-	virtual void Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
+// Our protocol
+	virtual void Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR) = 0;
 
 private:
-	ZRef<ZYadListR> fYadListR;
-	bool fPreserveLists;
-	bool fPreserveMaps;
+	void pMoveIfNecessary();
+
+	std::string fName;
+	bool fStarted;
+	bool fFinished;
+	ZRef<ZYadR_Std> fValue_Current;
+	ZRef<ZYadR_Std> fValue_Prior;
 	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_JSONNormalize
-
-class ZYadMapR_JSONNormalize : public ZYadMapR_Std
-	{
-public:
-	ZYadMapR_JSONNormalize(ZRef<ZYadMapR> iYadMapR, bool iPreserveLists, bool iPreserveMaps);
-
-// From ZYadMapR_Std
-	virtual void Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
-
-private:
-	ZRef<ZYadMapR> fYadMapR;
-	bool fPreserveLists;
-	bool fPreserveMaps;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYad_JSON
-
-namespace ZYad_JSON {
-
-ZRef<ZYadR> sMakeYadR(const ZStrimU& iStrimU);
-
-ZRef<ZYadR> sMakeYadR_Normalize(ZRef<ZYadR> iYadR, bool iPreserveLists, bool iPreserveMaps);
-
-void sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR);
-
-void sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR,
-	size_t iInitialIndent, const ZYadOptions& iOptions);
-
-} // namespace ZYad_JSON
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZYad_JSON__
+#endif // __ZYad_Std__
