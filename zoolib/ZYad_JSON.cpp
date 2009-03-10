@@ -477,7 +477,7 @@ void ZYadListR_JSON::Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 		sSkip_WSAndCPlusPlusComments(fStrimU);
 		}
 
-	if (!(oYadR = sMakeYadR_JSON(fStrimU))
+	if (!(oYadR = sMakeYadR_JSON(fStrimU)))
 		sThrowParseException("Expected a value");
 	}
 
@@ -517,7 +517,7 @@ void ZYadMapR_JSON::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_St
 	if (!sTryRead_CP(fStrimU, ':'))
 		sThrowParseException("Expected ':' after a member name");
 
-	if (!(oYadR = sMakeYadR_JSON(fStrimU))
+	if (!(oYadR = sMakeYadR_JSON(fStrimU)))
 		sThrowParseException("Expected value after ':'");
 	}
 
