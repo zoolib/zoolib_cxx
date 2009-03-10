@@ -175,26 +175,4 @@ void ZYadMapRPos::SetPosition(const string& iName)
 	printf("ZYadMapRPos::SetPosition\n");
 	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadListMapRPos
-
-bool ZYadListMapRPos::IsSimple(const ZYadOptions& iOptions)
-	{
-	// Assume our list-ish implementation is more efficient
-	return ZYadListRPos::IsSimple(iOptions);
-	}
-
-void ZYadListMapRPos::SetPosition(uint64 iPosition)
-	{ ZYadListRPos::SetPosition(iPosition); }
-
-void ZYadListMapRPos::SetPosition(const string& iName)
-	{ ZYadMapRPos::SetPosition(iName); }
-
-ZRef<ZYadListRPos> ZYadListMapRPos::ListClone()
-	{ return this->ListMapClone(); }
-
-ZRef<ZYadMapRPos> ZYadListMapRPos::MapClone()
-	{ return this->ListMapClone(); }
-
 NAMESPACE_ZOOLIB_END

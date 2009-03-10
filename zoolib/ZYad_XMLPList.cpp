@@ -366,7 +366,7 @@ static void sToStrim_SimpleTValue(const ZStrimW_ML& s, const ZTValue& iTV)
 		{
 		case eZType_Tuple:
 			{
-			sToStrim_Map(s, new ZYadListMapRPos_Tuple(iTV.GetTuple()));
+			sToStrim_Map(s, new ZYadMapRPos_Tuple(iTV.GetTuple()));
 			break;
 			}
 		case eZType_Vector:

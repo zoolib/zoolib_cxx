@@ -40,22 +40,24 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListMapR_ML
+#pragma mark * ZYadMapR_ML
 
-class ZYadListMapR_ML : public ZYadListMapR_Std
+class ZYadMapR_ML : public ZYadMapR_Std
 	{
 public:
-	ZYadListMapR_ML(ZML::Reader& iR);
-	ZYadListMapR_ML(ZML::Reader& iR, const ZTuple& iAttrs);
-	ZYadListMapR_ML(ZML::Reader& iR, const std::string& iTagName, const ZTuple& iAttrs);
+	ZYadMapR_ML(ZML::Reader& iR);
+	ZYadMapR_ML(ZML::Reader& iR, const ZTuple& iAttrs);
+	ZYadMapR_ML(ZML::Reader& iR, const std::string& iTagName, const ZTuple& iAttrs);
 
-// From ZYadListMapR_Std
+// From ZYadMapR_Std
 	virtual void Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
 
 // Our protocol
 	ZTuple GetAttrs();
 
 private:
+	void pAdvance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
+
 	ZML::Reader& fR;
 
 	const std::string fTagName;

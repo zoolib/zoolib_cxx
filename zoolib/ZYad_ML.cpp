@@ -48,28 +48,28 @@ ZYadParseException_ML::ZYadParseException_ML(const char* iWhat)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListMapR_ML
+#pragma mark * ZYadMapR_ML
 
-ZYadListMapR_ML::ZYadListMapR_ML(ZML::Reader& iR)
+ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR)
 :	fR(iR)
 	{}
 
-ZYadListMapR_ML::ZYadListMapR_ML(ZML::Reader& iR, const string& iTagName, const ZTuple& iAttrs)
+ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const string& iTagName, const ZTuple& iAttrs)
 :	fR(iR),
 	fTagName(iTagName),
 	fAttrs(iAttrs)
 	{}
 
-ZYadListMapR_ML::ZYadListMapR_ML(ZML::Reader& iR, const ZTuple& iAttrs)
-:	ZYadListMapR_Std(true),
+ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const ZTuple& iAttrs)
+:	ZYadMapR_Std(true),
 	fR(iR),
 	fAttrs(iAttrs)
 	{}
 
-ZTuple ZYadListMapR_ML::GetAttrs()
+ZTuple ZYadMapR_ML::GetAttrs()
 	{ return fAttrs; }
 
-void ZYadListMapR_ML::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+void ZYadMapR_ML::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
 	if (!fTagName.empty())
 		{
@@ -85,14 +85,14 @@ void ZYadListMapR_ML::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_
 			{
 			const ZTuple theAttrs = fR.Attrs();
 			fR.Advance();
-			oYadR = new ZYadListMapR_ML(fR, oName, theAttrs);
+			oYadR = new ZYadMapR_ML(fR, oName, theAttrs);
 			break;
 			}
 		case ZML::eToken_TagEmpty:
 			{
 			const ZTuple theAttrs = fR.Attrs();
 			fR.Advance();
-			oYadR = new ZYadListMapR_ML(fR, theAttrs);
+			oYadR = new ZYadMapR_ML(fR, theAttrs);
 			break;
 			}
 		case ZML::eToken_Text:

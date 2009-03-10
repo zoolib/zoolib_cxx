@@ -129,7 +129,7 @@ public:
 // Our protocol
 	virtual uint64 GetSize() = 0;
 	virtual void SetPosition(uint64 iPosition) = 0;
-	virtual ZRef<ZYadListRPos> ListClone() = 0;
+	virtual ZRef<ZYadListRPos> Clone() = 0;
 	};
 
 // =================================================================================================
@@ -154,40 +154,7 @@ public:
 
 // Our protocol
 	virtual void SetPosition(const std::string& iName) = 0;
-	virtual ZRef<ZYadMapRPos> MapClone() = 0;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadListMapR
-
-class ZYadListMapR
-:	public virtual ZYadListR,
-	public virtual ZYadMapR
-	{
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadListMapRPos
-
-class ZYadListMapRPos
-:	public virtual ZYadListMapR,
-	public virtual ZYadListRPos,
-	public virtual ZYadMapRPos
-	{
-public:
-// Disambiguating overrides from ZYadMapRPos and ZYadListRPos
-	virtual bool IsSimple(const ZYadOptions& iOptions);
-	virtual void SetPosition(uint64 iPosition);
-	virtual void SetPosition(const std::string& iName);
-	
-// Default implementation calling through to ListMapClone
-	virtual ZRef<ZYadListRPos> ListClone();
-	virtual ZRef<ZYadMapRPos> MapClone();
-
-// Our protocol
-	virtual ZRef<ZYadListMapRPos> ListMapClone() = 0;
+	virtual ZRef<ZYadMapRPos> Clone() = 0;
 	};
 
 NAMESPACE_ZOOLIB_END

@@ -102,7 +102,7 @@ public:
 // From ZYadListRPos
 	virtual uint64 GetSize();
 	virtual void SetPosition(uint64 iPosition);
-	virtual ZRef<ZYadListRPos> ListClone();
+	virtual ZRef<ZYadListRPos> Clone();
 
 private:
 	const std::vector<ZTValue>& fVector;
@@ -113,40 +113,29 @@ private:
 #pragma mark -
 #pragma mark * ZYadListMapRPos_Tuple
 
-class ZYadListMapRPos_Tuple
+class ZYadMapRPos_Tuple
 :	public ZYadR_TValue,
-	public ZYadListMapRPos
+	public ZYadMapRPos
 	{
 public:
-	ZYadListMapRPos_Tuple(const ZTuple& iTuple);
-	ZYadListMapRPos_Tuple(const ZTuple& iTuple, uint64 iPosition);
+	ZYadMapRPos_Tuple(const ZTuple& iTuple);
+	ZYadMapRPos_Tuple(const ZTuple& iTuple, const ZTuple::const_iterator& iIter);
 
-// From ZYadR via ZYadListMapRPos
+// From ZYadR via ZYadMapRPos
 	virtual bool HasChild();
 	virtual ZRef<ZYadR> NextChild();
 
-// From ZYadR, disambiguating between ZYadR_TValue and ZYadListMapRPos
+// From ZYadR, disambiguating between ZYadR_TValue and ZYadMapRPos
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
-// From ZYadListR via ZYadListMapRPos
-	virtual uint64 GetPosition();
-
-// From ZYadListRPos via ZYadListMapRPos
-	virtual uint64 GetSize();
-	virtual void SetPosition(uint64 iPosition);
-
-// From ZYadMapR via ZYadListMapRPos
+// From ZYadMapR via ZYadMapRPos
 	virtual std::string Name();
-
-// From ZYadMapRPos via ZYadListMapRPos
 	virtual void SetPosition(const std::string& iName);
-
-// From ZYadListMapRPos
-	virtual ZRef<ZYadListMapRPos> ListMapClone();
+	virtual ZRef<ZYadMapRPos> Clone();
 
 private:
 	const ZTuple fTuple;
-	uint64 fPosition;
+	ZTuple::const_iterator fIter;
 	};
 
 // =================================================================================================

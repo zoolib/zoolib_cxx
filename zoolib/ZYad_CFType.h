@@ -109,7 +109,7 @@ public:
 // From ZYadListRPos
 	virtual uint64 GetSize();
 	virtual void SetPosition(uint64 iPosition);
-	virtual ZRef<ZYadListRPos> ListClone();
+	virtual ZRef<ZYadListRPos> Clone();
 
 private:
 	ZRef<CFArrayRef> fCFArrayRef;
@@ -118,39 +118,30 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListMapRPos_CFDictionary
+#pragma mark * ZYadMapRPos_CFDictionary
 
-class ZYadListMapRPos_CFDictionary
+class ZYadMapRPos_CFDictionary
 :	public virtual ZYadR_CFType,
-	public ZYadListMapRPos
+	public virtual ZYadMapRPos
 	{
-	ZYadListMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef,
+	ZYadMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef,
 		uint64 iPosition,
 		const std::vector<CFStringRef>& iNames,
 		const std::vector<CFTypeRef>& iValues);
 
 public:
-	ZYadListMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef);
+	ZYadMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef);
 
-// From ZYadR via ZYadListMapRPos
+// From ZYadR via ZYadMapRPos
 	virtual bool HasChild();
 	virtual ZRef<ZYadR> NextChild();
 
-// From ZYadListR via ZYadListMapRPos
-	virtual uint64 GetPosition();
-
-// From ZYadListRPos via ZYadListMapRPos
-	virtual uint64 GetSize();
-	virtual void SetPosition(uint64 iPosition);
-
-// From ZYadMapR via ZYadListMapRPos
+// From ZYadMapR via ZYadMapRPos
 	virtual std::string Name();
 
-// From ZYadMapRPos via ZYadListMapRPos
+// From ZYadMapRPos
 	virtual void SetPosition(const std::string& iName);
-
-// From ZYadListMapRPos
-	virtual ZRef<ZYadListMapRPos> ListMapClone();
+	virtual ZRef<ZYadMapRPos> Clone();
 
 private:
 	ZRef<CFDictionaryRef> fCFDictionaryRef;

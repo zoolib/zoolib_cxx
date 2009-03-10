@@ -132,14 +132,14 @@ bool ZUtil_Strim_Tuple::sFromString(const string& iString, vector<ZTValue>& oVec
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTuple& iTuple)
 	{
-	ZRef<ZYadMapR> theYadMapR = new ZYadListMapRPos_Tuple(iTuple);
+	ZRef<ZYadMapR> theYadMapR = new ZYadMapRPos_Tuple(iTuple);
 	ZYad_ZooLibStrim::sToStrim(s, theYadMapR, 0, ZYadOptions());
 	}
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTuple& iTuple,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{
-	ZRef<ZYadMapR> theYadMapR = new ZYadListMapRPos_Tuple(iTuple);
+	ZRef<ZYadMapR> theYadMapR = new ZYadMapRPos_Tuple(iTuple);
 	ZYad_ZooLibStrim::sToStrim(s, theYadMapR, iInitialIndent, iOptions);
 	}
 

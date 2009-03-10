@@ -207,59 +207,50 @@ uint64 ZYadListRPos_Vector::GetSize()
 void ZYadListRPos_Vector::SetPosition(uint64 iPosition)
 	{ fPosition = iPosition; }
 
-ZRef<ZYadListRPos> ZYadListRPos_Vector::ListClone()
+ZRef<ZYadListRPos> ZYadListRPos_Vector::Clone()
 	{ return new ZYadListRPos_Vector(fVector, fPosition); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListMapRPos_Tuple
+#pragma mark * ZYadMapRPos_Tuple
 
-ZYadListMapRPos_Tuple::ZYadListMapRPos_Tuple(const ZTuple& iTuple)
+ZYadMapRPos_Tuple::ZYadMapRPos_Tuple(const ZTuple& iTuple)
 :	ZYadR_TValue(iTuple),
 	fTuple(this->GetTValue().GetTuple()),
-	fPosition(0)
+	fIter(fTuple.begin())
 	{}
 
-ZYadListMapRPos_Tuple::ZYadListMapRPos_Tuple(const ZTuple& iTuple, uint64 iPosition)
+ZYadMapRPos_Tuple::ZYadMapRPos_Tuple(const ZTuple& iTuple, const ZTuple::const_iterator& iIter)
 :	ZYadR_TValue(iTuple),
 	fTuple(this->GetTValue().GetTuple()),
-	fPosition(iPosition)
+	fIter(iIter)
 	{}
 
-bool ZYadListMapRPos_Tuple::HasChild()
-	{ return fPosition < fTuple.Count(); }
+bool ZYadMapRPos_Tuple::HasChild()
+	{ return fIter < fTuple.end(); }
 
-ZRef<ZYadR> ZYadListMapRPos_Tuple::NextChild()
+ZRef<ZYadR> ZYadMapRPos_Tuple::NextChild()
 	{
-	if (fPosition < fTuple.Count())
-		return ZYad_ZooLib::sMakeYadR(fTuple.GetValue(fTuple.begin() + fPosition));
+	if (fIter < fTuple.end())
+		return ZYad_ZooLib::sMakeYadR(fTuple.GetValue(fIter++));
 	return ZRef<ZYadR>();
 	}
 
-bool ZYadListMapRPos_Tuple::IsSimple(const ZYadOptions& iOptions)
+bool ZYadMapRPos_Tuple::IsSimple(const ZYadOptions& iOptions)
 	{ return ZYadR_TValue::IsSimple(iOptions); }
 
-uint64 ZYadListMapRPos_Tuple::GetPosition()
-	{ return fPosition; }
-
-uint64 ZYadListMapRPos_Tuple::GetSize()
-	{ return fTuple.Count(); }
-
-void ZYadListMapRPos_Tuple::SetPosition(uint64 iPosition)
-	{ fPosition = iPosition; }
-
-std::string ZYadListMapRPos_Tuple::Name()
+std::string ZYadMapRPos_Tuple::Name()
 	{
-	if (fPosition < fTuple.Count())
-		return fTuple.NameOf(fTuple.begin() + fPosition).AsString();
+	if (fIter < fTuple.end())
+		return fTuple.NameOf(fIter).AsString();
 	return string();
 	}
 
-void ZYadListMapRPos_Tuple::SetPosition(const std::string& iName)
-	{ fPosition = fTuple.IteratorOf(iName) - fTuple.begin(); }
+void ZYadMapRPos_Tuple::SetPosition(const std::string& iName)
+	{ fIter = fTuple.IteratorOf(iName); }
 
-ZRef<ZYadListMapRPos> ZYadListMapRPos_Tuple::ListMapClone()
-	{ return new ZYadListMapRPos_Tuple(fTuple, fPosition); }
+ZRef<ZYadMapRPos> ZYadMapRPos_Tuple::Clone()
+	{ return new ZYadMapRPos_Tuple(fTuple, fIter); }
 
 // =================================================================================================
 #pragma mark -
@@ -270,7 +261,7 @@ ZRef<ZYadR> ZYad_ZooLib::sMakeYadR(const ZTValue& iTV)
 	switch (iTV.TypeOf())
 		{
 		case eZType_Vector: return new ZYadListRPos_Vector(iTV.GetVector());
-		case eZType_Tuple: return new ZYadListMapRPos_Tuple(iTV.GetTuple());
+		case eZType_Tuple: return new ZYadMapRPos_Tuple(iTV.GetTuple());
 		case eZType_Raw: return new ZYadRawRPos_MemoryBlock(iTV.GetRaw());
 		}
 

@@ -182,12 +182,12 @@ uint64 ZYadListRPos_CFArray::GetSize()
 void ZYadListRPos_CFArray::SetPosition(uint64 iPosition)
 	{ fPosition = iPosition; }
 
-ZRef<ZYadListRPos> ZYadListRPos_CFArray::ListClone()
+ZRef<ZYadListRPos> ZYadListRPos_CFArray::Clone()
 	{ return new ZYadListRPos_CFArray(fCFArrayRef, fPosition); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListMapRPos_CFDictionary
+#pragma mark * ZYadMapRPos_CFDictionary
 
 namespace ZANONYMOUS {
 
@@ -206,7 +206,7 @@ static void sGatherContents(const void* iKey, const void* iValue, void* iRefcon)
 
 } // anonymous namespace
 
-ZYadListMapRPos_CFDictionary::ZYadListMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef,
+ZYadMapRPos_CFDictionary::ZYadMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef,
 	uint64 iPosition,
 	const std::vector<CFStringRef>& iNames,
 	const std::vector<CFTypeRef>& iValues)
@@ -217,7 +217,7 @@ ZYadListMapRPos_CFDictionary::ZYadListMapRPos_CFDictionary(CFDictionaryRef iCFDi
 	fValues(iValues)
 	{}
 
-ZYadListMapRPos_CFDictionary::ZYadListMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef)
+ZYadMapRPos_CFDictionary::ZYadMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef)
 :	ZYadR_CFType(iCFDictionaryRef),
 	fCFDictionaryRef(iCFDictionaryRef),
 	fPosition(0)
@@ -228,33 +228,24 @@ ZYadListMapRPos_CFDictionary::ZYadListMapRPos_CFDictionary(CFDictionaryRef iCFDi
 	::CFDictionaryApplyFunction(fCFDictionaryRef, sGatherContents, &theParam);
 	}
 
-bool ZYadListMapRPos_CFDictionary::HasChild()
+bool ZYadMapRPos_CFDictionary::HasChild()
 	{ return fPosition < fNames.size(); }
 
-ZRef<ZYadR> ZYadListMapRPos_CFDictionary::NextChild()
+ZRef<ZYadR> ZYadMapRPos_CFDictionary::NextChild()
 	{
 	if (fPosition < fNames.size())
 		return ZYad_CFType::sMakeYadR(fValues[fPosition++]);
 	return ZRef<ZYadR>();
 	}
 
-uint64 ZYadListMapRPos_CFDictionary::GetPosition()
-	{ return fPosition; }
-
-uint64 ZYadListMapRPos_CFDictionary::GetSize()
-	{ return fNames.size(); }
-
-void ZYadListMapRPos_CFDictionary::SetPosition(uint64 iPosition)
-	{ fPosition = iPosition; }
-
-std::string ZYadListMapRPos_CFDictionary::Name()
+std::string ZYadMapRPos_CFDictionary::Name()
 	{
 	if (fPosition < fNames.size())
 		return ZUtil_CFType::sAsUTF8(fNames.at(fPosition));
 	return string();
 	}
 
-void ZYadListMapRPos_CFDictionary::SetPosition(const std::string& iName)
+void ZYadMapRPos_CFDictionary::SetPosition(const std::string& iName)
 	{
 	for (fPosition = 0; fPosition < fNames.size(); ++fPosition)
 		{
@@ -263,8 +254,8 @@ void ZYadListMapRPos_CFDictionary::SetPosition(const std::string& iName)
 		}
 	}
 
-ZRef<ZYadListMapRPos> ZYadListMapRPos_CFDictionary::ListMapClone()
-	{ return new ZYadListMapRPos_CFDictionary(fCFDictionaryRef, fPosition, fNames, fValues); }
+ZRef<ZYadMapRPos> ZYadMapRPos_CFDictionary::Clone()
+	{ return new ZYadMapRPos_CFDictionary(fCFDictionaryRef, fPosition, fNames, fValues); }
 
 // =================================================================================================
 #pragma mark -
@@ -275,7 +266,7 @@ ZRef<ZYadR> ZYad_CFType::sMakeYadR(CFTypeRef iCFTypeRef)
 	CFTypeID theTypeID = ::CFGetTypeID(iCFTypeRef);
 
 	if (theTypeID == ::CFDictionaryGetTypeID())
-		return new ZYadListMapRPos_CFDictionary(static_cast<CFDictionaryRef>(iCFTypeRef));
+		return new ZYadMapRPos_CFDictionary(static_cast<CFDictionaryRef>(iCFTypeRef));
 
 	if (theTypeID == ::CFArrayGetTypeID())
 		return new ZYadListRPos_CFArray(static_cast<CFArrayRef>(iCFTypeRef));
