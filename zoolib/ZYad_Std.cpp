@@ -77,6 +77,12 @@ ZYadListR_Std::ZYadListR_Std()
 	fStarted(false)
 	{}
 
+ZYadListR_Std::ZYadListR_Std(bool iFinished)
+:	fPosition(0),
+	fFinished(iFinished),
+	fStarted(false)
+	{}
+
 void ZYadListR_Std::Finish()
 	{
 	this->SkipAll();
@@ -135,6 +141,11 @@ ZYadMapR_Std::ZYadMapR_Std()
 	fStarted(false)
 	{}
 	
+ZYadMapR_Std::ZYadMapR_Std(bool iFinished)
+:	fFinished(iFinished),
+	fStarted(false)
+	{}
+
 void ZYadMapR_Std::Finish()
 	{
 	this->SkipAll();
@@ -172,6 +183,74 @@ string ZYadMapR_Std::Name()
 	}
 
 void ZYadMapR_Std::pMoveIfNecessary()
+	{
+	if (fValue_Current)
+		return;
+
+	if (fValue_Prior)
+		{
+		fValue_Prior->Finish();
+		fValue_Prior.Clear();
+		}
+
+	if (fFinished)
+		return;
+
+	this->Imp_Advance(!fStarted, fName, fValue_Current);
+	fStarted = true;
+
+	if (!fValue_Current)
+		fFinished = true;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadListMapR_Std
+
+ZYadListMapR_Std::ZYadListMapR_Std()
+:	fFinished(false),
+	fStarted(false)
+	{}
+
+ZYadListMapR_Std::ZYadListMapR_Std(bool iFinished)
+:	fFinished(iFinished),
+	fStarted(false)
+	{}
+
+void ZYadListMapR_Std::Finish()
+	{
+	this->SkipAll();
+	}
+
+bool ZYadListMapR_Std::HasChild()
+	{
+	this->pMoveIfNecessary();
+
+	return fValue_Current;
+	}
+
+ZRef<ZYadR> ZYadListMapR_Std::NextChild()
+	{
+	this->pMoveIfNecessary();
+
+	if (fValue_Current)
+		{
+		fValue_Prior = fValue_Current;
+		fValue_Current.Clear();
+		fName.clear();
+		++fPosition;
+		}
+
+	return fValue_Prior;
+	}
+
+size_t ZYadListMapR_Std::GetPosition()
+	{ return fPosition; }
+
+string ZYadListMapR_Std::Name()
+	{ return fName; }
+
+void ZYadListMapR_Std::pMoveIfNecessary()
 	{
 	if (fValue_Current)
 		return;

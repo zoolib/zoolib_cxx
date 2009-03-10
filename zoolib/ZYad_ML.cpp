@@ -39,22 +39,11 @@ static void sThrowParseException(const string& iMessage)
 #pragma mark * ZYadParseException_ML
 
 ZYadParseException_ML::ZYadParseException_ML(const string& iWhat)
-:	ZYadParseException(iWhat)
+:	ZYadParseException_Std(iWhat)
 	{}
 
 ZYadParseException_ML::ZYadParseException_ML(const char* iWhat)
-:	ZYadParseException(iWhat)
-	{}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadPrimR_ML
-
-ZYadPrimR_ML::ZYadPrimR_ML(const string& iString)
-:	ZYadR_TValue(iString)
-	{}
-
-void ZYadPrimR_ML::Finish()
+:	ZYadParseException_Std(iWhat)
 	{}
 
 // =================================================================================================
@@ -62,83 +51,48 @@ void ZYadPrimR_ML::Finish()
 #pragma mark * ZYadListMapR_ML
 
 ZYadListMapR_ML::ZYadListMapR_ML(ZML::Reader& iR)
-:	fR(iR),
-	fPosition(0)
+:	fR(iR)
 	{}
 
-ZYadListMapR_ML::ZYadListMapR_ML(
-	ZML::Reader& iR, const string& iTagName, const ZTuple& iAttrs)
+ZYadListMapR_ML::ZYadListMapR_ML(ZML::Reader& iR, const string& iTagName, const ZTuple& iAttrs)
 :	fR(iR),
 	fTagName(iTagName),
-	fAttrs(iAttrs),
-	fPosition(0)
+	fAttrs(iAttrs)
 	{}
 
-void ZYadListMapR_ML::Finish()
-	{
-	if (!fTagName.empty())
-		{
-		if (!sSkip(fR, fTagName))
-			sThrowParseException("Expected end tag '" + fTagName + "'");
-		fTagName.clear();
-		}
-	}
-
-bool ZYadListMapR_ML::HasChild()
-	{
-	this->pMoveIfNecessary();
-	return fValue_Current;
-	}
-
-ZRef<ZYadR> ZYadListMapR_ML::NextChild()
-	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
-		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		++fPosition;
-		}
-
-	return fValue_Prior;
-	}
-
-size_t ZYadListMapR_ML::GetPosition()
-	{ return fPosition; }
-
-string ZYadListMapR_ML::Name()
-	{ return fChildName; }
+ZYadListMapR_ML::ZYadListMapR_ML(ZML::Reader& iR, const ZTuple& iAttrs)
+:	ZYadListMapR_Std(true),
+	fR(iR),
+	fAttrs(iAttrs)
+	{}
 
 ZTuple ZYadListMapR_ML::GetAttrs()
 	{ return fAttrs; }
 
-void ZYadListMapR_ML::pMoveIfNecessary()
+void ZYadListMapR_ML::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
-	if (fValue_Current)
-		return;
-
-	if (fValue_Prior)
+	if (!fTagName.empty())
 		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
+		if (sTryRead_End(fR, fTagName))
+			return;
 		}
 
-	fChildName = fR.Name();
+	oName = fR.Name();
+
 	switch (fR.Current())
 		{
 		case ZML::eToken_TagBegin:
 			{
-			ZTuple theAttrs = fR.Attrs();
+			const ZTuple theAttrs = fR.Attrs();
 			fR.Advance();
-			fValue_Current = new ZYadListMapR_ML(fR, fChildName, theAttrs);
+			oYadR = new ZYadListMapR_ML(fR, oName, theAttrs);
 			break;
 			}
 		case ZML::eToken_TagEmpty:
 			{
-			ZTuple theAttrs = fR.Attrs();
+			const ZTuple theAttrs = fR.Attrs();
 			fR.Advance();
-			fValue_Current = new ZYadListMapR_ML(fR, "", theAttrs);
+			oYadR = new ZYadListMapR_ML(fR, theAttrs);
 			break;
 			}
 		case ZML::eToken_Text:
@@ -146,10 +100,13 @@ void ZYadListMapR_ML::pMoveIfNecessary()
 			string theString;
 			ZStrimW_String(theString).CopyAllFrom(fR.Text());
 			fR.Advance();
-			fValue_Current = new ZYadPrimR_ML(theString);
+			oYadR = new ZYadPrimR_Std(theString);
 			break;
 			}
 		}
+
+	if (!oYadR && !fTagName.empty())
+		sThrowParseException("Expected value or end tag '" + fTagName + "'");
 	}
 
 NAMESPACE_ZOOLIB_END

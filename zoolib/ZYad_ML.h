@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZML.h"
-#include "zoolib/ZYad_ZooLib.h"
+#include "zoolib/ZYad_Std.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -31,7 +31,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZYadParseException_ML
 
-class ZYadParseException_ML : public ZYadParseException
+class ZYadParseException_ML : public ZYadParseException_Std
 	{
 public:
 	ZYadParseException_ML(const std::string& iWhat);
@@ -40,72 +40,26 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadR_ML
-
-class ZYadR_ML : public virtual ZYadR
-	{
-public:
-	// Our protocol
-	virtual void Finish() = 0;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadPrimR_ML
-
-class ZYadPrimR_ML
-:	public ZYadR_TValue,
-	public ZYadPrimR,
-	public ZYadR_ML
-	{
-public:
-	ZYadPrimR_ML(const std::string& iString);
-
-// From ZYadR_ML
-	virtual void Finish();
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadListMapR_ML
 
-class ZYadListMapR_ML
-:	public ZYadListMapR,
-	public ZYadR_ML
+class ZYadListMapR_ML : public ZYadListMapR_Std
 	{
 public:
 	ZYadListMapR_ML(ZML::Reader& iR);
+	ZYadListMapR_ML(ZML::Reader& iR, const ZTuple& iAttrs);
 	ZYadListMapR_ML(ZML::Reader& iR, const std::string& iTagName, const ZTuple& iAttrs);
 
-// From ZYadR_ML
-	virtual void Finish();
-
-// From ZYadListR and ZYadMapR via ZYadListMapR
-	virtual bool HasChild();
-	virtual ZRef<ZYadR> NextChild();
-
-// From ZYadListR via ZYadListMapR
-	virtual size_t GetPosition();
-
-// From ZYadMapR via ZYadListMapR
-	virtual std::string Name();
+// From ZYadListMapR_Std
+	virtual void Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
 
 // Our protocol
 	ZTuple GetAttrs();
 
 private:
-	void pMoveIfNecessary();
-
 	ZML::Reader& fR;
 
-	ZRef<ZYadR_ML> fValue_Current;
-	ZRef<ZYadR_ML> fValue_Prior;
-
-	std::string fTagName;
-	ZTuple fAttrs;
-	size_t fPosition;
-	bool fExhausted;
-	std::string fChildName;
+	const std::string fTagName;
+	const ZTuple fAttrs;
 	};
 
 NAMESPACE_ZOOLIB_END

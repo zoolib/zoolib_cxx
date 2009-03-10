@@ -84,11 +84,12 @@ public:
 #pragma mark * ZYadListR_Std
 
 class ZYadListR_Std
-:	public ZYadListR,
+:	public virtual ZYadListR,
 	public ZYadR_Std
 	{
 public:
 	ZYadListR_Std();
+	ZYadListR_Std(bool iFinished);
 
 // From ZYadR_Std
 	virtual void Finish();
@@ -118,11 +119,12 @@ private:
 #pragma mark * ZYadMapR_Std
 
 class ZYadMapR_Std
-:	public ZYadMapR,
+:	public virtual ZYadMapR,
 	public ZYadR_Std
 	{
 public:
 	ZYadMapR_Std();
+	ZYadMapR_Std(bool iFinished);
 
 // From ZYadR_Std
 	virtual void Finish();
@@ -141,6 +143,45 @@ private:
 	void pMoveIfNecessary();
 
 	std::string fName;
+	bool fStarted;
+	bool fFinished;
+	ZRef<ZYadR_Std> fValue_Current;
+	ZRef<ZYadR_Std> fValue_Prior;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadListMapR_Std
+
+class ZYadListMapR_Std
+:	public ZYadListMapR,
+	public ZYadR_Std
+	{
+public:
+	ZYadListMapR_Std();
+	ZYadListMapR_Std(bool iFinished);
+
+// From ZYadR_Std
+	virtual void Finish();
+
+// From ZYadListR and ZYadMapR via ZYadListMapR
+	virtual bool HasChild();
+	virtual ZRef<ZYadR> NextChild();
+
+// From ZYadListR via ZYadListMapR
+	virtual size_t GetPosition();
+
+// From ZYadMapR via ZYadListMapR
+	virtual std::string Name();
+
+// Our protocol
+	virtual void Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR) = 0;
+
+private:
+	void pMoveIfNecessary();
+
+	std::string fName;
+	size_t fPosition;
 	bool fStarted;
 	bool fFinished;
 	ZRef<ZYadR_Std> fValue_Current;
