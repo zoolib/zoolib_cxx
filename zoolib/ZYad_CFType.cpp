@@ -159,10 +159,7 @@ ZYadListRPos_CFArray::ZYadListRPos_CFArray(CFArrayRef iCFArrayRef, uint64 iPosit
 	fPosition(iPosition)
 	{}
 
-bool ZYadListRPos_CFArray::HasChild()
-	{ return fPosition < ::CFArrayGetCount(fCFArrayRef); }
-
-ZRef<ZYadR> ZYadListRPos_CFArray::NextChild()
+ZRef<ZYadR> ZYadListRPos_CFArray::ReadInc()
 	{
 	CFIndex theSize = ::CFArrayGetCount(fCFArrayRef);
 	if (fPosition < theSize)
@@ -228,21 +225,14 @@ ZYadMapRPos_CFDictionary::ZYadMapRPos_CFDictionary(CFDictionaryRef iCFDictionary
 	::CFDictionaryApplyFunction(fCFDictionaryRef, sGatherContents, &theParam);
 	}
 
-bool ZYadMapRPos_CFDictionary::HasChild()
-	{ return fPosition < fNames.size(); }
-
-ZRef<ZYadR> ZYadMapRPos_CFDictionary::NextChild()
+ZRef<ZYadR> ZYadMapRPos_CFDictionary::ReadInc(string& oName)
 	{
-	if (fPosition < fNames.size())
+	if (fPosition < fNames.size())	
+		{
+		oName = ZUtil_CFType::sAsUTF8(fNames.at(fPosition));
 		return ZYad_CFType::sMakeYadR(fValues[fPosition++]);
+		}
 	return ZRef<ZYadR>();
-	}
-
-std::string ZYadMapRPos_CFDictionary::Name()
-	{
-	if (fPosition < fNames.size())
-		return ZUtil_CFType::sAsUTF8(fNames.at(fPosition));
-	return string();
 	}
 
 void ZYadMapRPos_CFDictionary::SetPosition(const std::string& iName)
@@ -285,11 +275,12 @@ static ZRef<CFDictionaryRef> sReadDictionary(ZRef<ZYadMapR> iYadMapR)
 		&kCFCopyStringDictionaryKeyCallBacks,
 		&kCFTypeDictionaryValueCallBacks));
 
-	while (iYadMapR->HasChild())
+	string theName;
+	while (ZRef<ZYadR> theYadR = iYadMapR->ReadInc(theName))
 		{
 		ZRef<CFStringRef> theStringRef
-			= NoRetain(ZUtil_CFType::sCreateCFString_UTF8(iYadMapR->Name()));
-		ZRef<CFTypeRef> theValue = NoRetain(ZYad_CFType::sFromYadR(iYadMapR->NextChild()));
+			= NoRetain(ZUtil_CFType::sCreateCFString_UTF8(theName));
+		ZRef<CFTypeRef> theValue = NoRetain(ZYad_CFType::sFromYadR(theYadR));
 		::CFDictionarySetValue(result, theStringRef, theValue);
 		}
 
@@ -301,9 +292,9 @@ static CFArrayRef sReadArray(ZRef<ZYadListR> iYadListR)
 	CFMutableArrayRef result = ::CFArrayCreateMutable(
 		kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
 
-	while (iYadListR->HasChild())
+	while (ZRef<ZYadR> theYadR = iYadListR->ReadInc())
 		{
-		ZRef<CFTypeRef> theValue = NoRetain(ZYad_CFType::sFromYadR(iYadListR->NextChild()));
+		ZRef<CFTypeRef> theValue = NoRetain(ZYad_CFType::sFromYadR(theYadR));
 		::CFArrayAppendValue(result, theValue);
 		}
 

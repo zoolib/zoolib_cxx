@@ -100,8 +100,7 @@ public:
 	ZYadListRPos_CFArray(CFArrayRef iCFArrayRef, uint64 iPosition);
 
 // From ZYadR via ZYadListRPos
-	virtual bool HasChild();
-	virtual ZRef<ZYadR> NextChild();
+	virtual ZRef<ZYadR> ReadInc();
 
 // From ZYadListR via ZYadListRPos
 	virtual uint64 GetPosition();
@@ -133,11 +132,7 @@ public:
 	ZYadMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef);
 
 // From ZYadR via ZYadMapRPos
-	virtual bool HasChild();
-	virtual ZRef<ZYadR> NextChild();
-
-// From ZYadMapR via ZYadMapRPos
-	virtual std::string Name();
+	virtual ZRef<ZYadR> ReadInc(std::string& oName);
 
 // From ZYadMapRPos
 	virtual void SetPosition(const std::string& iName);

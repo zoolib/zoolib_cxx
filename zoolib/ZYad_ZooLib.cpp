@@ -185,10 +185,7 @@ ZYadListRPos_Vector::ZYadListRPos_Vector(const std::vector<ZTValue>& iVector, ui
 	fPosition(iPosition)
 	{}
 
-bool ZYadListRPos_Vector::HasChild()
-	{ return fPosition < fVector.size(); }
-
-ZRef<ZYadR> ZYadListRPos_Vector::NextChild()
+ZRef<ZYadR> ZYadListRPos_Vector::ReadInc()
 	{
 	if (fPosition < fVector.size())
 		return ZYad_ZooLib::sMakeYadR(fVector[fPosition++]);
@@ -226,25 +223,18 @@ ZYadMapRPos_Tuple::ZYadMapRPos_Tuple(const ZTuple& iTuple, const ZTuple::const_i
 	fIter(iIter)
 	{}
 
-bool ZYadMapRPos_Tuple::HasChild()
-	{ return fIter < fTuple.end(); }
-
-ZRef<ZYadR> ZYadMapRPos_Tuple::NextChild()
+ZRef<ZYadR> ZYadMapRPos_Tuple::ReadInc(std::string& oName)
 	{
 	if (fIter < fTuple.end())
+		{
+		oName = fTuple.NameOf(fIter).AsString();
 		return ZYad_ZooLib::sMakeYadR(fTuple.GetValue(fIter++));
+		}
 	return ZRef<ZYadR>();
 	}
 
 bool ZYadMapRPos_Tuple::IsSimple(const ZYadOptions& iOptions)
 	{ return ZYadR_TValue::IsSimple(iOptions); }
-
-std::string ZYadMapRPos_Tuple::Name()
-	{
-	if (fIter < fTuple.end())
-		return fTuple.NameOf(fIter).AsString();
-	return string();
-	}
 
 void ZYadMapRPos_Tuple::SetPosition(const std::string& iName)
 	{ fIter = fTuple.IteratorOf(iName); }
@@ -277,28 +267,18 @@ ZTValue ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
 	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
 		ZTuple theTuple;
-		while (theYadMapR->HasChild())
-			{
-			string theName = theYadMapR->Name();
-			if (ZRef<ZYadR> theChild = theYadMapR->NextChild())
-				{
-				ZTValue theTV = sFromYadR(theChild);
-				theTuple.SetValue(theName, theTV);
-				}
-			}
+		string theName;
+		while (ZRef<ZYadR> theChild = theYadMapR->ReadInc(theName))
+			theTuple.SetValue(theName, sFromYadR(theChild));
+
 		return theTuple;
 		}
 	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
 		{
 		vector<ZTValue> theVector;
-		while (theYadListR->HasChild())
-			{
-			if (ZRef<ZYadR> theChild = theYadListR->NextChild())
-				{
-				ZTValue theTV = sFromYadR(theChild);
-				theVector.push_back(theTV);
-				}
-			}			
+		while (ZRef<ZYadR> theChild = theYadListR->ReadInc())
+			theVector.push_back(sFromYadR(theChild));
+
 		return theVector;	
 		}
 	else if (ZRef<ZYadRawR> theYadRawR = ZRefDynamicCast<ZYadRawR>(iYadR))

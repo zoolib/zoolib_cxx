@@ -90,8 +90,7 @@ public:
 	ZYadListRPos_Vector(const std::vector<ZTValue>& iVector, uint64 iPosition);
 
 // From ZYadR via ZYadListRPos
-	virtual bool HasChild();
-	virtual ZRef<ZYadR> NextChild();
+	virtual ZRef<ZYadR> ReadInc();
 
 // From ZYadR, disambiguating between ZYadR_TValue and ZYadListRPos
 	virtual bool IsSimple(const ZYadOptions& iOptions);
@@ -122,14 +121,12 @@ public:
 	ZYadMapRPos_Tuple(const ZTuple& iTuple, const ZTuple::const_iterator& iIter);
 
 // From ZYadR via ZYadMapRPos
-	virtual bool HasChild();
-	virtual ZRef<ZYadR> NextChild();
+	virtual ZRef<ZYadR> ReadInc(std::string& oName);
 
 // From ZYadR, disambiguating between ZYadR_TValue and ZYadMapRPos
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // From ZYadMapR via ZYadMapRPos
-	virtual std::string Name();
 	virtual void SetPosition(const std::string& iName);
 	virtual ZRef<ZYadMapRPos> Clone();
 

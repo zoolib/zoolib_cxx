@@ -87,30 +87,29 @@ ZYadParseException::ZYadParseException(const char* iWhat)
 ZYadR::ZYadR()
 	{}
 
-void ZYadR::Skip()
-	{
-	if (this->HasChild())
-		this->NextChild();
-	}
-
-void ZYadR::SkipAll()
-	{
-	while (this->HasChild())
-		this->NextChild();
-	}
-
 bool ZYadR::IsSimple(const ZYadOptions& iOptions)
-	{ return false; }
+	{ return true; }
+
+ZRef<ZYadR> ZYadR::Meta()
+	{ return ZRef<ZYadR>(); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR
+#pragma mark * ZYadListR
 
-bool ZYadPrimR::HasChild()
-	{ return false; }
+bool ZYadListR::IsSimple(const ZYadOptions& iOptions)
+	{
+	return false;
+	}
 
-ZRef<ZYadR> ZYadPrimR::NextChild()
-	{ return ZRef<ZYadR>(); }
+void ZYadListR::Skip()
+	{ this->ReadInc(); }
+
+void ZYadListR::SkipAll()
+	{
+	while (ZRef<ZYadR> cur = this->ReadInc())
+		{}
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -125,7 +124,7 @@ bool ZYadListRPos::IsSimple(const ZYadOptions& iOptions)
 	uint64 thePosition = this->GetPosition();
 	if (thePosition == theSize - 1)
 		{
-		ZRef<ZYadR> theYadR = this->NextChild();
+		ZRef<ZYadR> theYadR = this->ReadInc();
 		this->SetPosition(thePosition);
 		return theYadR->IsSimple(iOptions);
 		}
@@ -143,9 +142,24 @@ void ZYadListRPos::Skip()
 void ZYadListRPos::SkipAll()
 	{ this->SetPosition(this->GetSize()); }
 
-void ZYadListRPos::SetPosition(uint64 iPosition)
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadMapR
+
+bool ZYadMapR::IsSimple(const ZYadOptions& iOptions)
+	{ return false; }
+
+void ZYadMapR::Skip()
 	{
-	printf("ZYadListRPos::SetPosition\n");
+	string dummy;
+	this->ReadInc(dummy);
+	}
+
+void ZYadMapR::SkipAll()
+	{
+	string dummy;
+	while (ZRef<ZYadR> cur = this->ReadInc(dummy))
+		{}
 	}
 
 // =================================================================================================
@@ -154,25 +168,23 @@ void ZYadListRPos::SetPosition(uint64 iPosition)
 
 bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 	{
-	if (!this->HasChild())
-		return true;
-
-	string thePosition = this->Name();
-	ZRef<ZYadR> theYadR = this->NextChild();
-	this->SetPosition(thePosition);
-
-	if (!this->HasChild())
+	if (ZRef<ZYadMapRPos> clone = this->Clone())
 		{
-		// We've exhausted ouselves, so we had just one entry.
-		return theYadR->IsSimple(iOptions);
+		string dummy;
+		if (ZRef<ZYadR> theYadR = clone->ReadInc(dummy))
+			{
+			if (!clone->ReadInc(dummy))
+				{
+				// We've exhausted ouselves, so we had just one entry.
+				return theYadR->IsSimple(iOptions);
+				}
+			}
+		else
+			{
+			return true;
+			}
 		}
-
 	return false;
-	}
-
-void ZYadMapRPos::SetPosition(const string& iName)
-	{
-	printf("ZYadMapRPos::SetPosition\n");
 	}
 
 NAMESPACE_ZOOLIB_END

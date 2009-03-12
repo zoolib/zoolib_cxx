@@ -66,10 +66,17 @@ ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const ZTuple& iAttrs)
 	fAttrs(iAttrs)
 	{}
 
+ZRef<ZYadR> ZYadMapR_ML::Meta()
+	{
+	if (fAttrs)
+		return new ZYadMapRPos_Tuple(fAttrs);
+	return ZRef<ZYadR>();
+	}
+
 ZTuple ZYadMapR_ML::GetAttrs()
 	{ return fAttrs; }
 
-void ZYadMapR_ML::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+void ZYadMapR_ML::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
 	if (!fTagName.empty())
 		{

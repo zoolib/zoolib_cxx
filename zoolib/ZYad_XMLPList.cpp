@@ -264,7 +264,7 @@ ZYadListR_XMLPList::ZYadListR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTa
 	fMustReadEndTag(iMustReadEndTag)
 	{}
 
-void ZYadListR_XMLPList::Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+void ZYadListR_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 	{
 	sSkipText(fR);
 
@@ -291,7 +291,7 @@ ZYadMapR_XMLPList::ZYadMapR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
 	fMustReadEndTag(iMustReadEndTag)
 	{}
 	
-void ZYadMapR_XMLPList::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
 	sSkipText(fR);
 
@@ -341,20 +341,21 @@ static void sToStrim_Raw(const ZStrimW_ML& s, const ZStreamR& iStreamR)
 static void sToStrim_List(const ZStrimW_ML& s, ZRef<ZYadListR> iYadListR)
 	{
 	s.Begin("array");
-	while (iYadListR->HasChild())
-		ZYad_XMLPList::sToStrimW_ML(s, iYadListR->NextChild());
+	while (ZRef<ZYadR> theChild = iYadListR->ReadInc())
+		ZYad_XMLPList::sToStrimW_ML(s, theChild);
 	s.End("array");
 	}
 
 static void sToStrim_Map(const ZStrimW_ML& s, ZRef<ZYadMapR> iYadMapR)
 	{
 	s.Begin("dict");
-	while (iYadMapR->HasChild())
+	string theName;
+	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
 		{
 		s.Begin("key");
-			s << iYadMapR->Name();
+			s << theName;
 		s.End("key");
-		ZYad_XMLPList::sToStrimW_ML(s, iYadMapR->NextChild());
+		ZYad_XMLPList::sToStrimW_ML(s, theChild);
 		}
 	s.End("dict");
 	}

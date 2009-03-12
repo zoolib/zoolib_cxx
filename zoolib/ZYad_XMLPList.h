@@ -76,7 +76,7 @@ public:
 	ZYadListR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
 
 // From ZYadListR_Std
-	virtual void Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
 
 private:
 	ZML::Reader& fR;
@@ -93,7 +93,7 @@ public:
 	ZYadMapR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
 
 // From ZYadMapR_Std
-	virtual void Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
 
 private:
 	ZML::Reader& fR;

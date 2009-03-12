@@ -536,7 +536,7 @@ ZYadListR_ZooLibStrim::ZYadListR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadD
 	fReadDelimiter(iReadDelimiter)
 	{}
 
-void ZYadListR_ZooLibStrim::Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+void ZYadListR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
@@ -577,7 +577,7 @@ ZYadMapR_ZooLibStrim::ZYadMapR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDel
 	fReadDelimiter(iReadDelimiter)
 	{}
 	
-void ZYadMapR_ZooLibStrim::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+void ZYadMapR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
@@ -933,13 +933,6 @@ static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 static void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
-	if (!iYadListR->HasChild())
-		{
-		// We've got an empty vector.
-		s.Write("[]");
-		return;
-		}
-		
 	bool needsIndentation = false;
 	if (iOptions.DoIndentation())
 		{
@@ -962,13 +955,19 @@ static void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 			}
 
 		s.Write("[");
-		for (;;)
+		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			sWriteLFIndent(s, iLevel, iOptions);
-			sToStrim_Yad(s, iYadListR->NextChild(), iLevel, iOptions, false);
-			if (!iYadListR->HasChild())
+			if (ZRef<ZYadR> cur = iYadListR->ReadInc())
+				{
+				if (!isFirst)
+					s.Write(", ");
+				sWriteLFIndent(s, iLevel, iOptions);
+				sToStrim_Yad(s, cur, iLevel, iOptions, false);
+				}
+			else
+				{
 				break;
-			s.Write(", ");
+				}
 			}
 		sWriteLFIndent(s, iLevel, iOptions);
 		s.Write("]");
@@ -978,12 +977,18 @@ static void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 		// We're not indenting, so we can just dump everything out on
 		// one line, with just some spaces to keep things legible.
 		s.Write("[");
-		for (;;)
+		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			sToStrim_Yad(s, iYadListR->NextChild(), iLevel, iOptions, false);
-			if (!iYadListR->HasChild())
+			if (ZRef<ZYadR> cur = iYadListR->ReadInc())
+				{
+				if (!isFirst)
+					s.Write(", ");
+				sToStrim_Yad(s, cur, iLevel, iOptions, false);
+				}
+			else
+				{
 				break;
-			s.Write(", ");
+				}
 			}
 		s.Write("]");
 		}
@@ -992,13 +997,6 @@ static void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
-	if (!iYadMapR->HasChild())
-		{
-		// We've got an empty tuple.
-		s.Write("{}");
-		return;
-		}
-
 	bool needsIndentation = false;
 	if (iOptions.DoIndentation())
 		{
@@ -1013,36 +1011,45 @@ static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 			// a fresh line to have our { and contents line up.
 			sWriteLFIndent(s, iLevel, iOptions);
 			}
+
 		s.Write("{");
-		while (iYadMapR->HasChild())
+		for (;;)
 			{
-			sWriteLFIndent(s, iLevel, iOptions);
-
-			ZYad_ZooLibStrim::sWrite_PropName(s, iYadMapR->Name());
-
-			s << " = ";
-
-			sToStrim_Yad(s, iYadMapR->NextChild(), iLevel + 1, iOptions, true);
-			s.Write(";");
+			string curName;
+			if (ZRef<ZYadR> cur = iYadMapR->ReadInc(curName))
+				{
+				sWriteLFIndent(s, iLevel, iOptions);
+				ZYad_ZooLibStrim::sWrite_PropName(s, curName);
+				s << " = ";
+				sToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
+				s.Write(";");
+				}
+			else
+				{
+				break;
+				}
 			}
-
 		sWriteLFIndent(s, iLevel, iOptions);
-
 		s.Write("}");
 		}
 	else
 		{
 		s.Write("{");
-		while (iYadMapR->HasChild())
+		for (;;)
 			{
-			s.Write(" ");
-
-			ZYad_ZooLibStrim::sWrite_PropName(s, iYadMapR->Name());
-
-			s << " = ";
-
-			sToStrim_Yad(s, iYadMapR->NextChild(), iLevel + 1, iOptions, true);
-			s.Write(";");
+			string curName;
+			if (ZRef<ZYadR> cur = iYadMapR->ReadInc(curName))
+				{
+				s.Write(" ");
+				ZYad_ZooLibStrim::sWrite_PropName(s, curName);
+				s << " = ";
+				sToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
+				s.Write(";");
+				}
+			else
+				{
+				break;
+				}
 			}
 
 		s.Write(" }");

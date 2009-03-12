@@ -101,9 +101,7 @@ static string sReadString(const ZStreamU& s)
 	if (!sTryRead_Byte(s, ':'))
 		sThrowParseException("Expected ':' terminator for string length");
 
-	string theString(stringLength, 0);
-	s.Read(const_cast<char*>(theString.data()), stringLength);
-	return theString;
+	return s.ReadString(stringLength);
 	}
 
 static ZRef<ZYadR_Std> sReadStringish(const ZStreamU& s)
@@ -184,7 +182,7 @@ ZYadListR_Bencode::ZYadListR_Bencode(const ZStreamU& iStreamU)
 :	fStreamU(iStreamU)
 	{}
 
-void ZYadListR_Bencode::Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+void ZYadListR_Bencode::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 	{
 	if (!sTryRead_Byte(fStreamU, 'e'))
 		oYadR = sMakeYadR_Bencode(fStreamU);
@@ -198,7 +196,7 @@ ZYadMapR_Bencode::ZYadMapR_Bencode(const ZStreamU& iStreamU)
 :	fStreamU(iStreamU)
 	{}
 
-void ZYadMapR_Bencode::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+void ZYadMapR_Bencode::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
 	if (!sTryRead_Byte(fStreamU, 'e'))
 		{

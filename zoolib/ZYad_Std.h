@@ -95,18 +95,15 @@ public:
 	virtual void Finish();
 
 // From ZYadR via ZYadListR
-	virtual bool HasChild();
-	virtual ZRef<ZYadR> NextChild();
+	virtual ZRef<ZYadR> ReadInc();
 
 // From ZYadListR
 	virtual uint64 GetPosition();
 
 // Our protocol
-	virtual void Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR) = 0;
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR) = 0;
 
 private:
-	void pMoveIfNecessary();
-
 	uint64 fPosition;
 	bool fStarted;
 	bool fFinished;
@@ -129,23 +126,15 @@ public:
 // From ZYadR_Std
 	virtual void Finish();
 
-// From ZYadR via ZYadMapR
-	virtual bool HasChild();
-	virtual ZRef<ZYadR> NextChild();
-
-// From ZYadMapR
-	virtual std::string Name();
+// ZYadMapR
+	virtual ZRef<ZYadR> ReadInc(std::string& oName);
 
 // Our protocol
-	virtual void Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR) = 0;
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR) = 0;
 
 private:
-	void pMoveIfNecessary();
-
-	std::string fName;
 	bool fStarted;
 	bool fFinished;
-	ZRef<ZYadR_Std> fValue_Current;
 	ZRef<ZYadR_Std> fValue_Prior;
 	};
 

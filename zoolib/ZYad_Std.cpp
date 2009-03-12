@@ -88,21 +88,23 @@ void ZYadListR_Std::Finish()
 	this->SkipAll();
 	}
 
-bool ZYadListR_Std::HasChild()
+ZRef<ZYadR> ZYadListR_Std::ReadInc()
 	{
-	this->pMoveIfNecessary();
-	return fValue_Current;
-	}
-
-ZRef<ZYadR> ZYadListR_Std::NextChild()
-	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
+	if (fValue_Prior)
 		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		++fPosition;
+		fValue_Prior->Finish();
+		fValue_Prior.Clear();
+		}
+
+	if (!fFinished)
+		{
+		this->Imp_ReadInc(!fStarted, fValue_Prior);
+		fStarted = true;
+
+		if (fValue_Prior)
+			++fPosition;
+		else
+			fFinished = true;
 		}
 
 	return fValue_Prior;
@@ -110,27 +112,6 @@ ZRef<ZYadR> ZYadListR_Std::NextChild()
 
 uint64 ZYadListR_Std::GetPosition()
 	{ return fPosition; }
-
-void ZYadListR_Std::pMoveIfNecessary()
-	{
-	if (fValue_Current)
-		return;
-
-	if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		}
-
-	if (fFinished)
-		return;
-
-	this->Imp_Advance(!fStarted, fValue_Current);
-	fStarted = true;
-
-	if (!fValue_Current)
-		fFinished = true;
-	}
 
 // =================================================================================================
 #pragma mark -
@@ -151,56 +132,28 @@ void ZYadMapR_Std::Finish()
 	this->SkipAll();
 	}
 
-bool ZYadMapR_Std::HasChild()
+ZRef<ZYadR> ZYadMapR_Std::ReadInc(std::string& oName)
 	{
-	this->pMoveIfNecessary();
-
-	return fValue_Current;
-	}
-
-ZRef<ZYadR> ZYadMapR_Std::NextChild()
-	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
-		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		fName.clear();
-		}
-
-	return fValue_Prior;
-	}
-
-string ZYadMapR_Std::Name()
-	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
-		return fName;
-
-	return string();
-	}
-
-void ZYadMapR_Std::pMoveIfNecessary()
-	{
-	if (fValue_Current)
-		return;
-
 	if (fValue_Prior)
 		{
 		fValue_Prior->Finish();
 		fValue_Prior.Clear();
 		}
 
-	if (fFinished)
-		return;
+	if (!fFinished)
+		{
+		string curName;
 
-	this->Imp_Advance(!fStarted, fName, fValue_Current);
-	fStarted = true;
+		this->Imp_ReadInc(!fStarted, curName, fValue_Prior);
+		fStarted = true;
 
-	if (!fValue_Current)
-		fFinished = true;
+		if (fValue_Prior)
+			oName = curName;
+		else
+			fFinished = true;
+		}
+
+	return fValue_Prior;
 	}
 
 NAMESPACE_ZOOLIB_END

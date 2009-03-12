@@ -72,7 +72,7 @@ public:
 	ZYadListR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter);
 
 // From ZYadListR_Std
-	virtual void Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
 
 private:
 	const ZStrimU& fStrimU;
@@ -89,7 +89,7 @@ public:
 	ZYadMapR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter);
 
 // From ZYadMapR_Std
-	virtual void Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
 
 private:
 	const ZStrimU& fStrimU;

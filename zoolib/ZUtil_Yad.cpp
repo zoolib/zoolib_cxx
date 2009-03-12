@@ -50,16 +50,23 @@ static ZRef<ZYadR> sGetChild(ZRef<ZYadR> iYadR, const string& iName)
 		if (ZRef<ZYadMapRPos> theYadMapRPos = ZRefDynamicCast<ZYadMapRPos>(iYadR))
 			{
 			theYadMapRPos->SetPosition(iName);
-			if (theYadMapRPos->HasChild())
-				return theYadMapRPos->NextChild();
+			string dummy;
+			return theYadMapRPos->ReadInc(dummy);
 			}
 		else
 			{
-			while (theYadMapR->HasChild())
+			for (;;)
 				{
-				if (theYadMapR->Name() == iName)
-					return theYadMapR->NextChild();
-				theYadMapR->Skip();
+				string theName;
+				if (ZRef<ZYadR> cur = theYadMapR->ReadInc(theName))
+					{
+					if (theName == iName)
+						return cur;
+					}
+				else
+					{
+					break;
+					}
 				}
 			}
 		}
@@ -71,21 +78,26 @@ static ZRef<ZYadR> sGetChild(ZRef<ZYadR> iYadR, const string& iName)
 			if (ZRef<ZYadListRPos> theYadListPosR = ZRefDynamicCast<ZYadListRPos>(iYadR))
 				{
 				theYadListPosR->SetPosition(size_t(theIntIndex));
-				if (theYadListPosR->HasChild())
-					return theYadListPosR->NextChild();
+				return theYadListPosR->ReadInc();
 				}
 			else
 				{
-				while (theYadListR->HasChild())
+				for (;;)
 					{
-					if (0 == theIntIndex--)
-						return theYadListR->NextChild();
-					theYadListR->Skip();
+					if (ZRef<ZYadR> cur = theYadListR->ReadInc())
+						{
+						if (0 == theIntIndex--)
+							return cur;
+						}
+					else
+						{
+						break;
+						}
 					}
 				}
 			}
 		}
-	return iYadR;
+	return ZRef<ZYadR>();
 	}
 
 // =================================================================================================

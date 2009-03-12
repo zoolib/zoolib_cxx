@@ -49,8 +49,11 @@ public:
 	ZYadMapR_ML(ZML::Reader& iR, const ZTuple& iAttrs);
 	ZYadMapR_ML(ZML::Reader& iR, const std::string& iTagName, const ZTuple& iAttrs);
 
+// From ZYadR
+	virtual ZRef<ZYadR> Meta();
+
 // From ZYadMapR_Std
-	virtual void Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
 
 // Our protocol
 	ZTuple GetAttrs();

@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStreamer.h"
+#include "zoolib/ZStrimmer.h"
 
 #include <string>
 
@@ -74,13 +75,9 @@ protected:
 	ZYadR();
 
 public:
-	virtual bool HasChild() = 0;
-	virtual ZRef<ZYadR> NextChild() = 0;
-
-	virtual void Skip();
-	virtual void SkipAll();
-
 	virtual bool IsSimple(const ZYadOptions& iOptions);
+
+	virtual ZRef<ZYadR> Meta();
 	};
 
 // =================================================================================================
@@ -90,8 +87,6 @@ public:
 class ZYadPrimR : public virtual ZYadR
 	{
 public:
-	virtual bool HasChild();
-	virtual ZRef<ZYadR> NextChild();
 	};
 
 // =================================================================================================
@@ -101,8 +96,16 @@ public:
 class ZYadRawR
 :	public virtual ZYadPrimR,
 	public virtual ZStreamerR
-	{
-	};
+	{};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadRawR
+
+class ZYadStrimR
+:	public virtual ZYadR,
+	public virtual ZStrimmerR
+	{};
 
 // =================================================================================================
 #pragma mark -
@@ -111,7 +114,13 @@ class ZYadRawR
 class ZYadListR : public virtual ZYadR
 	{
 public:
-	virtual uint64 GetPosition() = 0;
+	virtual bool IsSimple(const ZYadOptions& iOptions);
+
+// Our protocol
+	virtual ZRef<ZYadR> ReadInc() = 0;
+
+	virtual void Skip();
+	virtual void SkipAll();
 	};
 
 // =================================================================================================
@@ -121,15 +130,20 @@ public:
 class ZYadListRPos : public virtual ZYadListR
 	{
 public:
-// Implementation of optional ZYadR methods
+// Default implementation of ZYadR protocol
 	virtual bool IsSimple(const ZYadOptions& iOptions);
+
+// Default implementation of ZYadListR protocol
 	virtual void Skip();
 	virtual void SkipAll();
 
 // Our protocol
-	virtual uint64 GetSize() = 0;
-	virtual void SetPosition(uint64 iPosition) = 0;
 	virtual ZRef<ZYadListRPos> Clone() = 0;
+
+	virtual uint64 GetPosition() = 0;
+	virtual void SetPosition(uint64 iPosition) = 0;
+
+	virtual uint64 GetSize() = 0;
 	};
 
 // =================================================================================================
@@ -139,7 +153,12 @@ public:
 class ZYadMapR : public virtual ZYadR
 	{
 public:
-	virtual std::string Name() = 0;
+	virtual bool IsSimple(const ZYadOptions& iOptions);
+
+// Our protocol
+	virtual ZRef<ZYadR> ReadInc(std::string& oName) = 0;
+	virtual void Skip();
+	virtual void SkipAll();
 	};
 
 // =================================================================================================
@@ -149,12 +168,13 @@ public:
 class ZYadMapRPos : public virtual ZYadMapR
 	{
 public:
-// Implementation of optional ZYadR method
+// Default implementation of ZYadR protocol
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
-	virtual void SetPosition(const std::string& iName) = 0;
 	virtual ZRef<ZYadMapRPos> Clone() = 0;
+
+	virtual void SetPosition(const std::string& iName) = 0;
 	};
 
 NAMESPACE_ZOOLIB_END

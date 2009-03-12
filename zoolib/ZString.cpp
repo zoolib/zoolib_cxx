@@ -295,16 +295,13 @@ void ZString::sToStream(const string& iString, const ZStreamW& iStream)
 void ZString::sFromStream(string& oString, const ZStreamR& iStream)
 	{
 	size_t theLength = iStream.ReadUInt32();
-	oString = string(theLength, 0);
-	if (theLength > 0)
-		iStream.Read(const_cast<char*>(oString.data()), theLength);
+	oString = iStream.ReadString(theLength);
 	}
 
 string ZString::sFromStream(const ZStreamR& iStream)
 	{
-	string theString;
-	sFromStream(theString, iStream);
-	return theString;
+	size_t theLength = iStream.ReadUInt32();
+	return iStream.ReadString(theLength);
 	}
 
 string ZString::sFresh(const string& iOther)

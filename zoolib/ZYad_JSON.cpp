@@ -457,7 +457,7 @@ ZYadListR_JSON::ZYadListR_JSON(const ZStrimU& iStrimU)
 :	fStrimU(iStrimU)
 	{}
 
-void ZYadListR_JSON::Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+void ZYadListR_JSON::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
@@ -489,7 +489,7 @@ ZYadMapR_JSON::ZYadMapR_JSON(const ZStrimU& iStrimU)
 :	fStrimU(iStrimU)
 	{}
 
-void ZYadMapR_JSON::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+void ZYadMapR_JSON::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
@@ -532,12 +532,17 @@ ZYadListR_JSONNormalize::ZYadListR_JSONNormalize(
 	fPreserveMaps(iPreserveMaps)
 	{}
 
-void ZYadListR_JSONNormalize::Imp_Advance(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+void ZYadListR_JSONNormalize::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 	{
-	while (fYadListR->HasChild() && !oYadR)
+	for (;;)
 		{
+		ZRef<ZYadR> next = fYadListR->ReadInc();
+		if (!next)
+			break;
 		oYadR = sMakeYadR_JSONNormalize(
-			fYadListR->NextChild(), fPreserveLists, fPreserveLists, fPreserveMaps);
+			next, fPreserveLists, fPreserveLists, fPreserveMaps);
+		if (oYadR)
+			break;
 		}
 	}
 
@@ -552,20 +557,17 @@ ZYadMapR_JSONNormalize::ZYadMapR_JSONNormalize(
 	fPreserveMaps(iPreserveMaps)
 	{}
 
-void ZYadMapR_JSONNormalize::Imp_Advance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+void ZYadMapR_JSONNormalize::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
 	for (;;)
 		{
-		if (!fYadMapR->HasChild())
+		ZRef<ZYadR> next = fYadMapR->ReadInc(oName);
+		if (!next)
 			break;
-		const string theName = fYadMapR->Name();
 		oYadR = sMakeYadR_JSONNormalize(
-			fYadMapR->NextChild(), fPreserveMaps, fPreserveLists, fPreserveMaps);
+			next, fPreserveMaps, fPreserveLists, fPreserveMaps);
 		if (oYadR)
-			{
-			oName = theName;
 			break;
-			}
 		}
 	}
 
@@ -649,13 +651,6 @@ static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 static void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
-	if (!iYadListR->HasChild())
-		{
-		// We've got an empty list.
-		s.Write("[]");
-		return;
-		}
-		
 	bool needsIndentation = false;
 	if (iOptions.DoIndentation())
 		{
@@ -678,13 +673,19 @@ static void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 			}
 
 		s.Write("[");
-		for (;;)
+		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			sWriteLFIndent(s, iLevel, iOptions);
-			sToStrim_Yad(s, iYadListR->NextChild(), iLevel, iOptions, false);
-			if (!iYadListR->HasChild())
+			if (ZRef<ZYadR> cur = iYadListR->ReadInc())
+				{
+				if (!isFirst)
+					s.Write(",");
+				sWriteLFIndent(s, iLevel, iOptions);
+				sToStrim_Yad(s, cur, iLevel, iOptions, false);
+				}
+			else
+				{
 				break;
-			s.Write(", ");
+				}
 			}
 		sWriteLFIndent(s, iLevel, iOptions);
 		s.Write("]");
@@ -694,12 +695,18 @@ static void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 		// We're not indenting, so we can just dump everything out on
 		// one line, with just some spaces to keep things legible.
 		s.Write("[");
-		for (;;)
+		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			sToStrim_Yad(s, iYadListR->NextChild(), iLevel, iOptions, false);
-			if (!iYadListR->HasChild())
+			if (ZRef<ZYadR> cur = iYadListR->ReadInc())
+				{
+				if (!isFirst)
+					s.Write(", ");
+				sToStrim_Yad(s, cur, iLevel, iOptions, false);
+				}
+			else
+				{
 				break;
-			s.Write(",");
+				}
 			}
 		s.Write("]");
 		}
@@ -708,13 +715,6 @@ static void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
-	if (!iYadMapR->HasChild())
-		{
-		// We've got an empty object.
-		s.Write("{}");
-		return;
-		}
-
 	bool needsIndentation = false;
 	if (iOptions.DoIndentation())
 		{
@@ -729,40 +729,48 @@ static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 			// a fresh line to have our { and contents line up.
 			sWriteLFIndent(s, iLevel, iOptions);
 			}
+
 		s.Write("{");
-		for (;;)
+		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			sWriteLFIndent(s, iLevel, iOptions);
-
-			sWriteString(s, iOptions, iYadMapR->Name());
-
-			s << " : ";
-
-			sToStrim_Yad(s, iYadMapR->NextChild(), iLevel + 1, iOptions, true);
-			if (!iYadMapR->HasChild())
+			string curName;
+			if (ZRef<ZYadR> cur = iYadMapR->ReadInc(curName))
+				{
+				sWriteLFIndent(s, iLevel, iOptions);
+				sWriteString(s, iOptions, curName);
+				s << " : ";
+				sToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
+				if (!isFirst)
+					s.Write(",");
+				}
+			else
+				{
 				break;
-			s.Write(",");
+				}
 			}
-
 		sWriteLFIndent(s, iLevel, iOptions);
-
 		s.Write("}");
 		}
 	else
 		{
 		s.Write("{");
-		for (;;)
+		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			sWriteString(s, iOptions, iYadMapR->Name());
-
-			s << ":";
-
-			sToStrim_Yad(s, iYadMapR->NextChild(), iLevel + 1, iOptions, true);
-			if (!iYadMapR->HasChild())
+			string curName;
+			if (ZRef<ZYadR> cur = iYadMapR->ReadInc(curName))
+				{
+				s.Write(" ");
+				sWriteString(s, iOptions, curName);
+				s << " : ";
+				sToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
+				if (!isFirst)
+					s.Write(",");
+				}
+			else
+				{
 				break;
-			s.Write(",");
+				}
 			}
-
 		s.Write(" }");
 		}
 	}
