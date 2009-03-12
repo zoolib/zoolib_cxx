@@ -44,8 +44,8 @@ public:
 #pragma mark * ZYadRawR_ZooLibStrim
 
 class ZYadRawR_ZooLibStrim
-:	public ZYadRawR,
-	public ZYadR_Std
+:	public ZYadR_Std,
+	public ZYadRawR
 	{
 public:
 	ZYadRawR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter);

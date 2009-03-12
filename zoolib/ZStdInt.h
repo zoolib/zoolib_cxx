@@ -114,7 +114,9 @@ typedef int16_t int16;
 typedef uint16_t uint16;
 
 #ifndef _INT32
-	#define _INT32 1
+	#ifndef _MSL_USING_MW_C_HEADERS
+		#define _INT32 1
+	#endif
 	typedef int32_t int32;
 #endif
 

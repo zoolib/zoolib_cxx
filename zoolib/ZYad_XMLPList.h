@@ -47,8 +47,8 @@ public:
 #pragma mark * ZYadRawR_XMLPList
 
 class ZYadRawR_XMLPList
-:	public ZYadRawR,
-	public ZYadR_Std
+:	public ZYadR_Std,
+	public ZYadRawR
 	{
 public:
 	ZYadRawR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);

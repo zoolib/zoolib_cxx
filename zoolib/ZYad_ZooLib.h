@@ -50,19 +50,6 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_TValue
-
-class ZYadPrimR_TValue
-:	public virtual ZYadR_TValue,
-	public virtual ZYadPrimR
-	{
-public:
-	ZYadPrimR_TValue(ZType iType, const ZStreamR& iStreamR);
-	ZYadPrimR_TValue(const ZTValue& iTV);
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadRawRPos_MemoryBlock
 
 typedef ZStreamerRPos_T<ZStreamRPos_MemoryBlock> ZStreamerRPos_MemoryBlock;
@@ -74,6 +61,9 @@ class ZYadRawRPos_MemoryBlock
 	{
 public:
 	ZYadRawRPos_MemoryBlock(const ZMemoryBlock& iMB);
+
+// From ZYadR, disambiguating between ZYadR_TValue and ZYadRawR
+	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
 // =================================================================================================

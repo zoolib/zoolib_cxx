@@ -736,12 +736,12 @@ static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 			string curName;
 			if (ZRef<ZYadR> cur = iYadMapR->ReadInc(curName))
 				{
+				if (!isFirst)
+					s.Write(",");
 				sWriteLFIndent(s, iLevel, iOptions);
 				sWriteString(s, iOptions, curName);
 				s << " : ";
 				sToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
-				if (!isFirst)
-					s.Write(",");
 				}
 			else
 				{
@@ -759,12 +759,12 @@ static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 			string curName;
 			if (ZRef<ZYadR> cur = iYadMapR->ReadInc(curName))
 				{
+				if (!isFirst)
+					s.Write(",");
 				s.Write(" ");
 				sWriteString(s, iOptions, curName);
 				s << " : ";
 				sToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
-				if (!isFirst)
-					s.Write(",");
 				}
 			else
 				{

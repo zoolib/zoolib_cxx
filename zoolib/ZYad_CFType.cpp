@@ -119,20 +119,6 @@ CFTypeRef ZYadR_CFType::GetCFTypeRef()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_CFType
-
-ZYadPrimR_CFType::ZYadPrimR_CFType(CFTypeRef iCFTypeRef)
-:	ZYadR_CFType(iCFTypeRef)
-	{}
-
-ZYadPrimR_CFType::~ZYadPrimR_CFType()
-	{}
-
-bool ZYadPrimR_CFType::IsSimple(const ZYadOptions& iOptions)
-	{ return true; }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadRawRPos_MemoryBlock
 
 ZYadRawRPos_CFData::ZYadRawRPos_CFData(CFDataRef iCFDataRef)
@@ -142,6 +128,9 @@ ZYadRawRPos_CFData::ZYadRawRPos_CFData(CFDataRef iCFDataRef)
 
 ZYadRawRPos_CFData::~ZYadRawRPos_CFData()
 	{}
+
+bool ZYadRawRPos_CFData::IsSimple(const ZYadOptions& iOptions)
+	{ return this->GetStreamRPos().GetSize() <= iOptions.fRawChunkSize; }
 
 // =================================================================================================
 #pragma mark -
@@ -264,7 +253,7 @@ ZRef<ZYadR> ZYad_CFType::sMakeYadR(CFTypeRef iCFTypeRef)
 	if (theTypeID == ::CFDataGetTypeID())
 		return new ZYadRawRPos_CFData(static_cast<CFDataRef>(iCFTypeRef));
 
-	return new ZYadPrimR_CFType(iCFTypeRef);
+	return new ZYadR_CFType(iCFTypeRef);
 	}
 
 

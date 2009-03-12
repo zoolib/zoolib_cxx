@@ -82,30 +82,29 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR
+#pragma mark * ZYadRawR
 
-class ZYadPrimR : public virtual ZYadR
+class ZYadRawR
+:	public virtual ZYadR,
+	public virtual ZStreamerR
 	{
 public:
+	// From ZYadR
+	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadRawR
+#pragma mark * ZYadStrimR
 
-class ZYadRawR
-:	public virtual ZYadPrimR,
-	public virtual ZStreamerR
-	{};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadRawR
-
+#if 0
+// This will get fleshed out soon.
 class ZYadStrimR
 :	public virtual ZYadR,
 	public virtual ZStrimmerR
 	{};
+
+#endif
 
 // =================================================================================================
 #pragma mark -
@@ -119,7 +118,7 @@ public:
 // Our protocol
 	virtual ZRef<ZYadR> ReadInc() = 0;
 
-	virtual void Skip();
+	virtual bool Skip();
 	virtual void SkipAll();
 	};
 
@@ -134,7 +133,7 @@ public:
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Default implementation of ZYadListR protocol
-	virtual void Skip();
+	virtual bool Skip();
 	virtual void SkipAll();
 
 // Our protocol
@@ -157,7 +156,7 @@ public:
 
 // Our protocol
 	virtual ZRef<ZYadR> ReadInc(std::string& oName) = 0;
-	virtual void Skip();
+	virtual bool Skip();
 	virtual void SkipAll();
 	};
 

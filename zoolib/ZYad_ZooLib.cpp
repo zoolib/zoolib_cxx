@@ -144,24 +144,15 @@ bool ZYadR_TValue::IsSimple(const ZYadOptions& iOptions)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_TValue
-
-ZYadPrimR_TValue::ZYadPrimR_TValue(ZType iType, const ZStreamR& iStreamR)
-:	ZYadR_TValue(iType, iStreamR)
-	{}
-
-ZYadPrimR_TValue::ZYadPrimR_TValue(const ZTValue& iTV)
-:	ZYadR_TValue(iTV)
-	{}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadRawRPos_MemoryBlock
 
 ZYadRawRPos_MemoryBlock::ZYadRawRPos_MemoryBlock(const ZMemoryBlock& iMB)
 :	ZYadR_TValue(iMB),
 	ZStreamerRPos_MemoryBlock(iMB)
 	{}
+
+bool ZYadRawRPos_MemoryBlock::IsSimple(const ZYadOptions& iOptions)
+	{ return this->GetStreamRPos().GetSize() <= iOptions.fRawChunkSize; }
 
 // =================================================================================================
 #pragma mark -
@@ -255,7 +246,7 @@ ZRef<ZYadR> ZYad_ZooLib::sMakeYadR(const ZTValue& iTV)
 		case eZType_Raw: return new ZYadRawRPos_MemoryBlock(iTV.GetRaw());
 		}
 
-	return new ZYadPrimR_TValue(iTV);
+	return new ZYadR_TValue(iTV);
 	}
 
 ZTValue ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)

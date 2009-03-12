@@ -53,9 +53,8 @@ public:
 #pragma mark * ZYadPrimR_Std
 
 class ZYadPrimR_Std
-:	public ZYadR_TValue,
-	public ZYadPrimR,
-	public ZYadR_Std
+:	public ZYadR_Std,
+	public ZYadR_TValue
 	{
 public:
 	ZYadPrimR_Std(const ZTValue& iTV);
@@ -69,8 +68,8 @@ public:
 #pragma mark * ZYadRawR_Std
 
 class ZYadRawR_Std
-:	public ZYadRawRPos_MemoryBlock,
-	public ZYadR_Std
+:	public ZYadR_Std,
+	public ZYadRawRPos_MemoryBlock
 	{
 public:
 	ZYadRawR_Std(const ZMemoryBlock& iMB);
@@ -84,8 +83,8 @@ public:
 #pragma mark * ZYadListR_Std
 
 class ZYadListR_Std
-:	public virtual ZYadListR,
-	public virtual ZYadR_Std
+:	public ZYadR_Std,
+	public ZYadListR
 	{
 public:
 	ZYadListR_Std();
@@ -116,8 +115,8 @@ private:
 #pragma mark * ZYadMapR_Std
 
 class ZYadMapR_Std
-:	public virtual ZYadMapR,
-	public virtual ZYadR_Std
+:	public ZYadR_Std,
+	public ZYadMapR
 	{
 public:
 	ZYadMapR_Std();

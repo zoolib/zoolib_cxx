@@ -95,19 +95,24 @@ ZRef<ZYadR> ZYadR::Meta()
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYadRawR
+
+bool ZYadRawR::IsSimple(const ZYadOptions& iOptions)
+	{ return false; }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYadListR
 
 bool ZYadListR::IsSimple(const ZYadOptions& iOptions)
-	{
-	return false;
-	}
+	{ return false; }
 
-void ZYadListR::Skip()
-	{ this->ReadInc(); }
+bool ZYadListR::Skip()
+	{ return this->ReadInc(); }
 
 void ZYadListR::SkipAll()
 	{
-	while (ZRef<ZYadR> cur = this->ReadInc())
+	while (this->Skip())
 		{}
 	}
 
@@ -132,11 +137,16 @@ bool ZYadListRPos::IsSimple(const ZYadOptions& iOptions)
 	return false;
 	}
 
-void ZYadListRPos::Skip()
+bool ZYadListRPos::Skip()
 	{
 	uint64 theSize = this->GetSize();
 	uint64 thePosition = this->GetPosition();
-	this->SetPosition(min(theSize, thePosition + 1));
+	if (thePosition < theSize)
+		{
+		this->SetPosition(thePosition + 1);
+		return true;
+		}
+	return false;
 	}
 
 void ZYadListRPos::SkipAll()
@@ -149,16 +159,15 @@ void ZYadListRPos::SkipAll()
 bool ZYadMapR::IsSimple(const ZYadOptions& iOptions)
 	{ return false; }
 
-void ZYadMapR::Skip()
+bool ZYadMapR::Skip()
 	{
 	string dummy;
-	this->ReadInc(dummy);
+	return this->ReadInc(dummy);
 	}
 
 void ZYadMapR::SkipAll()
 	{
-	string dummy;
-	while (ZRef<ZYadR> cur = this->ReadInc(dummy))
+	while (this->Skip())
 		{}
 	}
 

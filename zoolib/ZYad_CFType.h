@@ -57,34 +57,21 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_CFType
-
-class ZYadPrimR_CFType
-:	public virtual ZYadR_CFType,
-	public virtual ZYadPrimR
-	{
-public:
-	ZYadPrimR_CFType(CFTypeRef iCFTypeRef);
-	virtual ~ZYadPrimR_CFType();
-
-// From ZYadR via ZYadPrimR
-	virtual bool IsSimple(const ZYadOptions& iOptions);
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadRawRPos_CFData
 
 typedef ZStreamerRPos_T<ZStreamRPos_CFData> ZStreamerRPos_CFData;
 
 class ZYadRawRPos_CFData
-:	public virtual ZYadR_CFType,
-	public virtual ZYadRawR,
+:	public ZYadR_CFType,
+	public ZYadRawR,
 	public virtual ZStreamerRPos_CFData
 	{
 public:
 	ZYadRawRPos_CFData(CFDataRef iCFDataRef);
 	virtual ~ZYadRawRPos_CFData();
+
+// From ZYadR
+	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
 // =================================================================================================
@@ -92,8 +79,8 @@ public:
 #pragma mark * ZYadListRPos_CFArray
 
 class ZYadListRPos_CFArray
-:	public virtual ZYadR_CFType,
-	public virtual ZYadListRPos
+:	public ZYadR_CFType,
+	public ZYadListRPos
 	{
 public:
 	ZYadListRPos_CFArray(CFArrayRef iCFArrayRef);
@@ -120,8 +107,8 @@ private:
 #pragma mark * ZYadMapRPos_CFDictionary
 
 class ZYadMapRPos_CFDictionary
-:	public virtual ZYadR_CFType,
-	public virtual ZYadMapRPos
+:	public ZYadR_CFType,
+	public ZYadMapRPos
 	{
 	ZYadMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef,
 		uint64 iPosition,

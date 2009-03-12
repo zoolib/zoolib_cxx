@@ -67,9 +67,8 @@ public:
 #pragma mark * ZYadPrimR_ZooLibStream
 
 class ZYadPrimR_ZooLibStream
-:	public ZYadR_TValue,
-	public ZYadPrimR,
-	public ZYadR_ZooLibStream
+:	public ZYadR_ZooLibStream,
+	public ZYadR_TValue
 	{
 public:
 	ZYadPrimR_ZooLibStream(ZType iType, const ZStreamR& iStreamR);
@@ -90,8 +89,8 @@ void ZYadPrimR_ZooLibStream::Finish()
 #pragma mark * ZYadRawR_ZooLibStream
 
 class ZYadRawR_ZooLibStream
-:	public ZYadRawR,
-	public ZYadR_ZooLibStream,
+:	public ZYadR_ZooLibStream,
+	public ZYadRawR,
 	private ZStreamR
 	{
 public:
@@ -184,8 +183,8 @@ void ZYadRawR_ZooLibStream::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 #pragma mark * ZYadRawR_ZooLibStreamOld
 
 class ZYadRawR_ZooLibStreamOld
-:	public ZYadRawR,
-	public ZYadR_ZooLibStream
+:	public ZYadR_ZooLibStream,
+	public ZYadRawR
 	{
 public:
 	ZYadRawR_ZooLibStreamOld(const ZStreamR& iStreamR);
@@ -217,8 +216,8 @@ const ZStreamR& ZYadRawR_ZooLibStreamOld::GetStreamR()
 #pragma mark * ZYadListR_ZooLibStream
 
 class ZYadListR_ZooLibStream
-:	public ZYadListR,
-	public ZYadR_ZooLibStream
+:	public ZYadR_ZooLibStream,
+	public ZYadListR
 	{
 public:
 	ZYadListR_ZooLibStream(const ZStreamR& iStreamR);
@@ -288,8 +287,8 @@ void ZYadListR_ZooLibStream::pMoveIfNecessary()
 #pragma mark * ZYadListR_ZooLibStreamOld
 
 class ZYadListR_ZooLibStreamOld
-:	public ZYadListR,
-	public ZYadR_ZooLibStream
+:	public ZYadR_ZooLibStream,
+	public ZYadListR
 	{
 public:
 	ZYadListR_ZooLibStreamOld(const ZStreamR& iStreamR);
@@ -364,8 +363,8 @@ void ZYadListR_ZooLibStreamOld::pMoveIfNecessary()
 #pragma mark * ZYadMapR_ZooLibStream
 
 class ZYadMapR_ZooLibStream
-:	public ZYadMapR,
-	public ZYadR_ZooLibStream
+:	public ZYadR_ZooLibStream,
+	public ZYadMapR
 	{
 public:
 	ZYadMapR_ZooLibStream(const ZStreamR& iStreamR);
@@ -435,8 +434,8 @@ void ZYadMapR_ZooLibStream::pMoveIfNecessary()
 #pragma mark * ZYadMapR_ZooLibStreamOld
 
 class ZYadMapR_ZooLibStreamOld
-:	public ZYadMapR,
-	public ZYadR_ZooLibStream
+:	public ZYadR_ZooLibStream,
+	public ZYadMapR
 	{
 public:
 	ZYadMapR_ZooLibStreamOld(const ZStreamR& iStreamR);
