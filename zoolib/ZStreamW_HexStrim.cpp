@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2003 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,65 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStream_HexStrim.h"
+#include "zoolib/ZStreamW_HexStrim.h"
 #include "zoolib/ZStrim.h"
-#include "zoolib/ZUtil_Strim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamR_HexStrim
-
-ZStreamR_HexStrim::ZStreamR_HexStrim(const ZStrimU& iStrimU)
-:	fStrimU(iStrimU),
-	fAllowUnderscore(false)
-	{}
-
-ZStreamR_HexStrim::ZStreamR_HexStrim(bool iAllowUnderscore, const ZStrimU& iStrimU)
-:	fStrimU(iStrimU),
-	fAllowUnderscore(iAllowUnderscore)
-	{}
-
-ZStreamR_HexStrim::~ZStreamR_HexStrim()
-	{}
-
-void ZStreamR_HexStrim::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{
-	using namespace ZUtil_Strim;
-
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
-
-	while (iCount)
-		{
-		sSkip_WSAndCPlusPlusComments(fStrimU);
-		int firstDigit;
-		if (!sTryRead_HexDigit(fStrimU, firstDigit))
-			{
-			if (!fAllowUnderscore || !sTryRead_CP(fStrimU, '_'))
-				break;
-			firstDigit = 0;
-			}
-
-		sSkip_WSAndCPlusPlusComments(fStrimU);
-		int secondDigit;
-		if (!sTryRead_HexDigit(fStrimU, secondDigit))
-			{
-			if (!fAllowUnderscore || !sTryRead_CP(fStrimU, '_'))
-				{
-				throw ParseException("Could not read second nibble of byte");
-				break;
-				}
-			secondDigit = 0;
-			}
-
-		*localDest++ = firstDigit * 16 + secondDigit;
-		--iCount;
-		}
-
-	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
-	}
 
 // =================================================================================================
 #pragma mark -

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2003 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,11 +18,36 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_HexStrim__
-#define __ZStream_HexStrim__ 1
+#ifndef __ZStreamR_HexStrim__
+#define __ZStreamR_HexStrim__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStreamR_HexStrim.h"
-#include "zoolib/ZStreamW_HexStrim.h"
+#include "zoolib/ZStream.h"
+
+NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStreamR_HexStrim
+
+class ZStrimU;
+
+/// A read filter stream that reads byte values from a strim, where they're encoded as hex digits.
+
+class ZStreamR_HexStrim : public ZStreamR
+	{
+public:
+	ZStreamR_HexStrim(const ZStrimU& iStrimU);
+	ZStreamR_HexStrim(bool iAllowUnderscore, const ZStrimU& iStrimU);
+
+	virtual ~ZStreamR_HexStrim();
+	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+
+private:
+	const ZStrimU& fStrimU;
+	bool fAllowUnderscore;
+	};
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZStream_HexStrim__

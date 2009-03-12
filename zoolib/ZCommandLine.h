@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
+#include "zoolib/ZStrim.h"
 #include "zoolib/ZTuple.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -35,15 +36,14 @@ class ZStrimW;
 
 class ZCommandLine
 	{
+public:
 	class Opt;
 	friend class Opt;
 
-public:
 	class String;
 	class Boolean;
 	class Int64;
 	class TValue;
-	typedef TValue TupleValue;
 
 	enum EFlags
 		{
@@ -68,9 +68,9 @@ public:
 	void WriteUsageExtended(const ZStrimW& s, const std::string& iIndent) const;
 
 private:
-	bool Internal_Parse(bool iUpdateArgs, const ZStrimW* iStrimErrors, int& ioArgc, char**& ioArgv);
-	bool Internal_ParseOne(const ZStrimW* iStrimErrors, int& ioArgc, char**& ioArgv);
-	void Internal_AppendOpt(Opt* iOpt);
+	bool pParse(bool iUpdateArgs, const ZStrimW* iStrimErrors, int& ioArgc, char**& ioArgv);
+	bool pParseOne(const ZStrimW* iStrimErrors, int& ioArgc, char**& ioArgv);
+	void pAppendOpt(Opt* iOpt);
 
 	static ZCommandLine* sCommandLineCurrent;
 
@@ -92,21 +92,25 @@ class ZCommandLine::Opt
 	{
 	friend class ZCommandLine;
 protected:
-	Opt(const std::string& iName, const std::string& iDescription, EFlags iFlags);
+	Opt(const std::string& iName, const std::string& iDescription, EFlags iFlags, bool iHasDefault);
 	virtual ~Opt() { /* virtual to force allocation of vtable, so dynamic_cast works */ }
 
 public:
 	bool HasValue() const;
 
+	virtual void WriteDefault(const ZStrimW& s);
+	virtual bool Parse(const char* iLexeme, const ZStrimW* iStrimErrors) = 0;
+
 private:
 	Opt* fNext;
 
-	std::string fName;
 	std::string fDescription;
 	bool fIsRequired;
 
 protected:
+	std::string fName;
 	bool fHasValue;
+	bool fHasDefault;
 	};
 
 // =================================================================================================
@@ -121,10 +125,12 @@ public:
 	String(const std::string& iName, const std::string& iDescription, const std::string& iDefault);
 	String(const std::string& iName, const std::string& iDescription);
 
+	virtual void WriteDefault(const ZStrimW& s);
+	virtual bool Parse(const char* iLexeme, const ZStrimW* iStrimErrors);
+
 	const std::string& operator()() const;
 
 private:
-	bool fHasDefault;
 	std::string fDefault;
 	std::string fValue;
 	};
@@ -138,14 +144,10 @@ class ZCommandLine::Boolean : public ZCommandLine::Opt
 	friend class ZCommandLine;
 public:
 	Boolean(const std::string& iName, const std::string& iDescription);
-	Boolean(const std::string& iName, const std::string& iDescription, bool iDefault);
+
+	virtual bool Parse(const char* iLexeme, const ZStrimW* iStrimErrors);
 
 	bool operator()() const;
-
-private:
-	bool fHasDefault;
-	bool fDefault;
-	bool fValue;
 	};
 
 // =================================================================================================
@@ -160,32 +162,14 @@ public:
 	Int64(const std::string& iName, const std::string& iDescription, int64 iDefault);
 	Int64(const std::string& iName, const std::string& iDescription);
 
+	virtual void WriteDefault(const ZStrimW& s);
+	virtual bool Parse(const char* iLexeme, const ZStrimW* iStrimErrors);
+
 	int64 operator()() const;
 
 private:
-	bool fHasDefault;
 	int64 fDefault;
 	int64 fValue;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCommandLine::TValue
-
-class ZCommandLine::TValue : public ZCommandLine::Opt
-	{
-	friend class ZCommandLine;
-public:
-	TValue(const std::string& iName, const std::string& iDescription, EFlags iFlags);
-	TValue(const std::string& iName, const std::string& iDescription, const ZTValue& iDefault);
-	TValue(const std::string& iName, const std::string& iDescription);
-
-	const ZTValue& operator()() const;
-
-private:
-	bool fHasDefault;
-	ZTValue fDefault;
-	ZTValue fValue;
 	};
 
 NAMESPACE_ZOOLIB_END

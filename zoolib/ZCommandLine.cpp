@@ -333,10 +333,8 @@ equivalent of command-line options.
 */
 
 #include "zoolib/ZCommandLine.h"
-#include "zoolib/ZStream_Memory.h"
 #include "zoolib/ZStrim.h"
-#include "zoolib/ZStrim_Stream.h"
-#include "zoolib/ZUtil_Strim_Tuple.h"
+#include "zoolib/ZString.h"
 
 #include <stdio.h>
 
@@ -362,17 +360,17 @@ ZCommandLine::~ZCommandLine()
 	{}
 
 bool ZCommandLine::Parse(int argc, char** argv)
-	{ return this->Internal_Parse(false, nil, argc, argv); }
+	{ return this->pParse(false, nil, argc, argv); }
 
 bool ZCommandLine::Parse(const ZStrimW& iStrimErrors, int argc, char** argv)
-	{ return this->Internal_Parse(false, &iStrimErrors, argc, argv); }
+	{ return this->pParse(false, &iStrimErrors, argc, argv); }
 
 bool ZCommandLine::Parse(bool iUpdateArgs, int& ioArgc, char**& ioArgv)
-	{ return this->Internal_Parse(true, nil, ioArgc, ioArgv); }
+	{ return this->pParse(true, nil, ioArgc, ioArgv); }
 
 bool ZCommandLine::Parse(
 	bool iUpdateArgs, const ZStrimW& iStrimErrors, int& ioArgc, char**& ioArgv)
-	{ return this->Internal_Parse(true, &iStrimErrors, ioArgc, ioArgv); }
+	{ return this->pParse(true, &iStrimErrors, ioArgc, ioArgv); }
 
 void ZCommandLine::WriteUsage(const ZStrimW& s) const
 	{
@@ -407,20 +405,10 @@ void ZCommandLine::WriteUsageExtended(const ZStrimW& s, const string& iIndent) c
 
 		if (!i->fIsRequired)
 			{
-			if (String* theString = dynamic_cast<String*>(i))
+			if (i->fHasDefault)
 				{
-				if (theString->fHasDefault)
-					s << " default: \"" << theString->fDefault << "\"";
-				}
-			else if (Int64* theInt64 = dynamic_cast<Int64*>(i))
-				{
-				if (theInt64->fHasDefault)
-					s.Writef(" default: %lld", theInt64->fDefault);
-				}
-			else if (TValue* theTValue = dynamic_cast<TValue*>(i))
-				{
-				if (theTValue->fHasDefault)
-					s << " default: \"" << theTValue->fDefault << "\"";
+				s << " default: ";
+				i->WriteDefault(s);
 				}
 			}
 
@@ -428,7 +416,7 @@ void ZCommandLine::WriteUsageExtended(const ZStrimW& s, const string& iIndent) c
 		}
 	}
 
-bool ZCommandLine::Internal_Parse(
+bool ZCommandLine::pParse(
 	bool iUpdateArgs, const ZStrimW* iStrimErrors, int& ioArgc, char**& ioArgv)
 	{
 	// Assume we've been passed the line including the app name in position zero.
@@ -437,7 +425,7 @@ bool ZCommandLine::Internal_Parse(
 
 	while (localArgc)
 		{
-		if (!this->Internal_ParseOne(iStrimErrors, localArgc, localArgv))
+		if (!this->pParseOne(iStrimErrors, localArgc, localArgv))
 			return false;
 		}
 
@@ -459,7 +447,7 @@ bool ZCommandLine::Internal_Parse(
 	return true;
 	}
 	
-bool ZCommandLine::Internal_ParseOne(const ZStrimW* iStrimErrors, int& ioArgc, char**& ioArgv)
+bool ZCommandLine::pParseOne(const ZStrimW* iStrimErrors, int& ioArgc, char**& ioArgv)
 	{
 	int argLength = strlen(ioArgv[0]);
 
@@ -513,62 +501,12 @@ bool ZCommandLine::Internal_ParseOne(const ZStrimW* iStrimErrors, int& ioArgc, c
 			return false;
 			}
 
-		if (Boolean* theBool = dynamic_cast<Boolean*>(i))
-			{
-			if (lexeme)
-				{
-				if (iStrimErrors)
-					*iStrimErrors << "Unused parameter for bool option " << i->fName << "\n";
-				return false;
-				}
-			theBool->fHasValue = true;
-			theBool->fValue = true;
-			}
-		else if (String* theString = dynamic_cast<String*>(i))
-			{
-			theString->fValue = lexeme;
-			theString->fHasValue = true;
-			}
-		else if (Int64* theInt64 = dynamic_cast<Int64*>(i))
-			{			
-			if (sscanf(lexeme, "%lld", &theInt64->fValue) <= 0)
-				{
-				if (iStrimErrors)
-					*iStrimErrors << "Could not parse parameter to option " << i->fName << "\n";
-				return false;
-				}
-			theInt64->fHasValue = true;
-			}
-		else if (TValue* theTValue = dynamic_cast<TValue*>(i))
-			{
-			try
-				{
-				if (!ZUtil_Strim_Tuple::sFromStrim(
-					ZStrimU_Unreader(ZStrimR_StreamUTF8(
-					ZStreamRPos_Memory(lexeme, strlen(lexeme)))), theTValue->fValue))
-					{
-					if (iStrimErrors)
-						*iStrimErrors << "Could not parse parameter to option " << i->fName << "\n";
-					return false;
-					}
-				}
-			catch (exception& ex)
-				{
-				if (iStrimErrors)
-					{
-					*iStrimErrors << "Could not parse parameter to option " << i->fName
-						<< ", caught exception \"" << ex.what() << "\"\n";
-					}
-				return false;
-				}
-			theTValue->fHasValue = true;
-			}
-		return true;
+		return i->Parse(lexeme, iStrimErrors);
 		}
 	return false;
 	}
 
-void ZCommandLine::Internal_AppendOpt(Opt* iOpt)
+void ZCommandLine::pAppendOpt(Opt* iOpt)
 	{
 	if (fTail)
 		fTail->fNext = iOpt;
@@ -581,40 +519,51 @@ void ZCommandLine::Internal_AppendOpt(Opt* iOpt)
 #pragma mark -
 #pragma mark * ZCommandLine::Opt
 
-ZCommandLine::Opt::Opt(const string& iName, const string& iDescription, EFlags iFlags)
+ZCommandLine::Opt::Opt(const string& iName, const string& iDescription, EFlags iFlags, bool iHasDefault)
 :	fNext(nil),
 	fName(iName),
 	fDescription(iDescription),
 	fIsRequired(iFlags == eRequired),
-	fHasValue(false)
+	fHasValue(false),
+	fHasDefault(iHasDefault)
 	{
 	ZAssert(ZCommandLine::sCommandLineCurrent);
-	ZCommandLine::sCommandLineCurrent->Internal_AppendOpt(this);
+	ZCommandLine::sCommandLineCurrent->pAppendOpt(this);
 	}
 	
 bool ZCommandLine::Opt::HasValue() const
 	{ return fHasValue; }
+
+void ZCommandLine::Opt::WriteDefault(const ZStrimW& s)
+	{}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZCommandLine::String
 
 ZCommandLine::String::String(const string& iName, const string& iDescription, EFlags iFlags)
-:	Opt(iName, iDescription, iFlags),
-	fHasDefault(false)
+:	Opt(iName, iDescription, iFlags, false)
 	{}
 
 ZCommandLine::String::String(
 	const string& iName, const string& iDescription, const string& iDefault)
-:	Opt(iName, iDescription, eOptional),
-	fHasDefault(true),
+:	Opt(iName, iDescription, eOptional, true),
 	fDefault(iDefault)
 	{}
 	
 ZCommandLine::String::String(const string& iName, const string& iDescription)
-:	Opt(iName, iDescription, eOptional),
-	fHasDefault(false)
+:	Opt(iName, iDescription, eOptional, false)
 	{}
+
+void ZCommandLine::String::WriteDefault(const ZStrimW& s)
+	{ s << "\"" << fDefault << "\""; }
+
+bool ZCommandLine::String::Parse(const char* iLexeme, const ZStrimW* iStrimErrors)
+	{
+	fValue = iLexeme;
+	fHasValue = true;
+	return true;
+	}
 
 const string& ZCommandLine::String::operator()() const
 	{
@@ -628,23 +577,24 @@ const string& ZCommandLine::String::operator()() const
 #pragma mark * ZCommandLine::Boolean
 
 ZCommandLine::Boolean::Boolean(const string& iName, const string& iDescription)
-:	Opt(iName, iDescription, eRequired),
-	fHasDefault(false),
-	fValue(false)
+:	Opt(iName, iDescription, eRequired, false)
 	{}
 
-ZCommandLine::Boolean::Boolean(const string& iName, const string& iDescription, bool iDefault)
-:	Opt(iName, iDescription, eOptional),
-	fHasDefault(true),
-	fDefault(iDefault),
-	fValue(false)
-	{}
+bool ZCommandLine::Boolean::Parse(const char* iLexeme, const ZStrimW* iStrimErrors)
+	{
+	if (iLexeme)
+		{
+		if (iStrimErrors)
+			*iStrimErrors << "Unused parameter for bool option " << fName << "\n";
+		return false;
+		}
+	fHasValue = true;
+	return true;
+	}
 
 bool ZCommandLine::Boolean::operator()() const
 	{
-	if (fHasValue)
-		return fValue;
-	return fDefault;
+	return fHasValue;
 	}
 
 // =================================================================================================
@@ -652,53 +602,37 @@ bool ZCommandLine::Boolean::operator()() const
 #pragma mark * ZCommandLine::Int64
 
 ZCommandLine::Int64::Int64(const string& iName, const string& iDescription, EFlags iFlags)
-:	Opt(iName, iDescription, iFlags),
-	fHasDefault(false),
+:	Opt(iName, iDescription, iFlags, false),
 	fValue(0)
 	{}
 
 ZCommandLine::Int64::Int64(const string& iName, const string& iDescription, int64 iDefault)
-:	Opt(iName, iDescription, eOptional),
-	fHasDefault(true),
+:	Opt(iName, iDescription, eOptional, true),
 	fDefault(iDefault),
 	fValue(0)
 	{}
 
 ZCommandLine::Int64::Int64(const string& iName, const string& iDescription)
-:	Opt(iName, iDescription, eOptional),
-	fHasDefault(false),
+:	Opt(iName, iDescription, eOptional, true),
 	fValue(0)
 	{}
 
-int64 ZCommandLine::Int64::operator()() const
+void ZCommandLine::Int64::WriteDefault(const ZStrimW& s)
+	{ s.Writef("%lld", fDefault); }
+
+bool ZCommandLine::Int64::Parse(const char* iLexeme, const ZStrimW* iStrimErrors)
 	{
-	if (fHasValue)
-		return fValue;
-	return fDefault;
+	if (!ZString::sInt64(iLexeme, fValue))
+		{
+		if (iStrimErrors)
+			*iStrimErrors << "Could not parse parameter to option " << fName << "\n";
+		return false;
+		}
+	fHasValue = true;
+	return true;
 	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCommandLine::TValue
-
-ZCommandLine::TValue::TValue(const string& iName, const string& iDescription, EFlags iFlags)
-:	Opt(iName, iDescription, iFlags),
-	fHasDefault(false)
-	{}
-
-ZCommandLine::TValue::TValue(
-	const string& iName, const string& iDescription, const ZTValue& iDefault)
-:	Opt(iName, iDescription, eOptional),
-	fHasDefault(true),
-	fDefault(iDefault)
-	{}
-
-ZCommandLine::TValue::TValue(const string& iName, const string& iDescription)
-:	Opt(iName, iDescription, eOptional),
-	fHasDefault(false)
-	{}
-
-const ZTValue& ZCommandLine::TValue::operator()() const
+int64 ZCommandLine::Int64::operator()() const
 	{
 	if (fHasValue)
 		return fValue;

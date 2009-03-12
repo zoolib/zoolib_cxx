@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2003 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,11 +18,37 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_HexStrim__
-#define __ZStream_HexStrim__ 1
+#ifndef __ZCommandLine_TValue__
+#define __ZCommandLine_TValue__ 1
+
 #include "zconfig.h"
 
-#include "zoolib/ZStreamR_HexStrim.h"
-#include "zoolib/ZStreamW_HexStrim.h"
+#include "zoolib/ZCommandLine.h"
+#include "zoolib/ZTuple.h"
 
-#endif // __ZStream_HexStrim__
+NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCommandLine_TValue
+
+class ZCommandLine::TValue : public ZCommandLine::Opt
+	{
+public:
+	TValue(const std::string& iName, const std::string& iDescription, EFlags iFlags);
+	TValue(const std::string& iName, const std::string& iDescription, const ZTValue& iDefault);
+	TValue(const std::string& iName, const std::string& iDescription);
+
+	virtual void WriteDefault(const ZStrimW& s);
+	virtual bool Parse(const char* iLexeme, const ZStrimW* iStrimErrors);
+
+	const ZTValue& operator()() const;
+
+private:
+	ZTValue fDefault;
+	ZTValue fValue;
+	};
+
+NAMESPACE_ZOOLIB_END
+
+#endif // __ZCommandLine_TValue__

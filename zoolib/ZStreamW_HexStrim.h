@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2003 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,11 +18,46 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_HexStrim__
-#define __ZStream_HexStrim__ 1
+#ifndef __ZStreamW_HexStrim__
+#define __ZStreamW_HexStrim__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStreamR_HexStrim.h"
-#include "zoolib/ZStreamW_HexStrim.h"
+#include "zoolib/ZStream.h"
 
-#endif // __ZStream_HexStrim__
+NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStreamW_HexStrim
+
+class ZStrimW;
+
+/// A write filter stream that takes binary data and writes hex characters to its sink strim.
+
+class ZStreamW_HexStrim : public ZStreamW
+	{
+public:
+	ZStreamW_HexStrim(const std::string& iByteSeparator,
+		const std::string& iChunkSeparator, size_t iChunkSize, const ZStrimW& iStrimSink);
+
+	ZStreamW_HexStrim(const std::string& iByteSeparator,
+		const std::string& iChunkSeparator, size_t iChunkSize,
+		bool iUseUnderscore, const ZStrimW& iStrimSink);
+
+// From ZStreamW
+	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
+	virtual void Imp_Flush();
+
+protected:
+	const ZStrimW& fStrimSink;
+	std::string fByteSeparator;
+	std::string fChunkSeparator;
+	size_t fChunkSize;
+	size_t fCurrentChunkLength;
+	size_t fWrittenAny;
+	const char* fHexDigits;
+	};
+
+NAMESPACE_ZOOLIB_END
+
+#endif // __ZStreamW_HexStrim__

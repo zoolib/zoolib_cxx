@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim_Data.h"
 
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZStream_HexStrim.h"
+#include "zoolib/ZStreamW_HexStrim.h"
 #include "zoolib/ZStream_Memory.h"
 
 NAMESPACE_ZOOLIB_BEGIN
