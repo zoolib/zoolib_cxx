@@ -40,16 +40,17 @@ NAMESPACE_ZOOLIB_BEGIN
 class ZStreamRPos_Win_MultiResource : public ZStreamRPos
 	{
 public:
-	ZStreamRPos_Win_MultiResource(HMODULE inHMODULE, const std::string& inType, const std::string& inName);
+	ZStreamRPos_Win_MultiResource(
+		HMODULE iHMODULE, const std::string& iType, const std::string& iName);
 	~ZStreamRPos_Win_MultiResource();
 
 // From ZStreamR via ZStreamRPos
-	virtual void Imp_Read(void* inDest, size_t inCount, size_t* outCountRead);
-	virtual void Imp_Skip(uint64 inCount, uint64* outCountSkipped);
+	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 // From ZStreamRPos
 	virtual uint64 Imp_GetPosition();
-	virtual void Imp_SetPosition(uint64 inPosition);
+	virtual void Imp_SetPosition(uint64 iPosition);
 
 	virtual uint64 Imp_GetSize();
 
@@ -74,7 +75,8 @@ private:
 class ZStreamerRPos_Win_MultiResource : public ZStreamerRPos
 	{
 public:
-	ZStreamerRPos_Win_MultiResource(HMODULE inHMODULE, const std::string& inType, const std::string& inName);
+	ZStreamerRPos_Win_MultiResource(
+		HMODULE iHMODULE, const std::string& iType, const std::string& iName);
 	virtual ~ZStreamerRPos_Win_MultiResource();
 
 // From ZStreamerRPos

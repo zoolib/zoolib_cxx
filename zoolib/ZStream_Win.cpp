@@ -40,20 +40,25 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZStreamRPos_Win_MultiResource
 
-static HRSRC sFindResource(HMODULE inHMODULE, const string& inName, const string& inType)
+static HRSRC sFindResource(HMODULE iHMODULE, const string& iName, const string& iType)
 	{
 	if (ZUtil_Win::sUseWAPI())
-		return ::FindResourceW(inHMODULE, ZUnicode::sAsUTF16(inName).c_str(), ZUnicode::sAsUTF16(inType).c_str());
+		{
+		return ::FindResourceW(iHMODULE,
+			ZUnicode::sAsUTF16(iName).c_str(), ZUnicode::sAsUTF16(iType).c_str());
+		}
 	else
-		return ::FindResourceA(inHMODULE, inName.c_str(), inType.c_str());
+		{
+		return ::FindResourceA(iHMODULE, iName.c_str(), iType.c_str());
+		}
 	}
 
-static string sReadZeroTerminatedString(const ZStreamR& inStream)
+static string sReadZeroTerminatedString(const ZStreamR& iStream)
 	{
 	string theString;
 	while (true)
 		{
-		char theChar = inStream.ReadInt8();
+		char theChar = iStream.ReadInt8();
 		if (theChar == 0)
 			break;
 		theString += theChar;
@@ -61,16 +66,17 @@ static string sReadZeroTerminatedString(const ZStreamR& inStream)
 	return theString;
 	}
 
-ZStreamRPos_Win_MultiResource::ZStreamRPos_Win_MultiResource(HMODULE inHMODULE, const string& inType, const string& inName)
+ZStreamRPos_Win_MultiResource::ZStreamRPos_Win_MultiResource(
+	HMODULE iHMODULE, const string& iType, const string& iName)
 	{
-	ZAssertStop(2, inHMODULE);
-	fHMODULE = inHMODULE;
+	ZAssertStop(2, iHMODULE);
+	fHMODULE = iHMODULE;
 	fHGLOBAL_Current = nil;
 	fLPVOID_Current = nil;
 	fPosition = 0;
 
 	// Load the descriptor resource
-	if (HRSRC descHRSRC = sFindResource(fHMODULE, inName, inType))
+	if (HRSRC descHRSRC = sFindResource(fHMODULE, iName, iType))
 		{
 		if (HGLOBAL descHGLOBAL = ::LoadResource(fHMODULE, descHRSRC))
 			{
@@ -93,7 +99,8 @@ ZStreamRPos_Win_MultiResource::ZStreamRPos_Win_MultiResource(HMODULE inHMODULE, 
 						}
 					else
 						{
-						throw runtime_error("ZStreamRPos_Win_MultiResource, couldn't load resource");
+						throw runtime_error(
+							"ZStreamRPos_Win_MultiResource, couldn't load resource");
 						}
 					}
 				}
@@ -114,14 +121,16 @@ ZStreamRPos_Win_MultiResource::~ZStreamRPos_Win_MultiResource()
 		::FreeResource(fHGLOBAL_Current);
 	}
 
-void ZStreamRPos_Win_MultiResource::Imp_Read(void* inDest, size_t inCount, size_t* outCountRead)
+void ZStreamRPos_Win_MultiResource::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	char* localDest = reinterpret_cast<char*>(inDest);
-	while (inCount)
+	char* localDest = reinterpret_cast<char*>(iDest);
+	while (iCount)
 		{
-		vector<size_t>::iterator theIter = upper_bound(fVector_Ends.begin(), fVector_Ends.end(), fPosition);
+		vector<size_t>::iterator theIter
+			= upper_bound(fVector_Ends.begin(), fVector_Ends.end(), fPosition);
 		if (theIter == fVector_Ends.end())
 			break;
+
 		size_t theIndex = theIter - fVector_Ends.begin();
 		if (fIndex != theIndex)
 			{
@@ -137,31 +146,34 @@ void ZStreamRPos_Win_MultiResource::Imp_Read(void* inDest, size_t inCount, size_
 			fEnd = fVector_Ends[fIndex];
 			}
 
-		size_t countToMove = ZStream::sClampedSize(inCount, fEnd, fPosition);
+		size_t countToMove = ZStream::sClampedSize(iCount, fEnd, fPosition);
 		if (countToMove == 0)
 			break;
-		ZBlockCopy(reinterpret_cast<char*>(fLPVOID_Current) + fPosition - fBegin, localDest, countToMove);
+
+		ZBlockCopy(
+			reinterpret_cast<char*>(fLPVOID_Current) + fPosition - fBegin, localDest, countToMove);
+
 		fPosition += countToMove;
 		localDest += countToMove;
-		inCount -= countToMove;
+		iCount -= countToMove;
 		}
-	if (outCountRead)
-		*outCountRead = localDest - reinterpret_cast<char*>(inDest);
+	if (oCountRead)
+		*oCountRead = localDest - reinterpret_cast<char*>(iDest);
 	}
 
-void ZStreamRPos_Win_MultiResource::Imp_Skip(uint64 inCount, uint64* outCountSkipped)
+void ZStreamRPos_Win_MultiResource::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-	uint64 realSkip = ZStream::sClampedCount(inCount, fVector_Ends.back(), fPosition);
+	uint64 realSkip = ZStream::sClampedCount(iCount, fVector_Ends.back(), fPosition);
 	fPosition += realSkip;
-	if (outCountSkipped)
-		*outCountSkipped = realSkip;
+	if (oCountSkipped)
+		*oCountSkipped = realSkip;
 	}
 
 uint64 ZStreamRPos_Win_MultiResource::Imp_GetPosition()
 	{ return fPosition; }
 
-void ZStreamRPos_Win_MultiResource::Imp_SetPosition(uint64 inPosition)
-	{ fPosition = inPosition; }
+void ZStreamRPos_Win_MultiResource::Imp_SetPosition(uint64 iPosition)
+	{ fPosition = iPosition; }
 
 uint64 ZStreamRPos_Win_MultiResource::Imp_GetSize()
 	{ return fVector_Ends.back(); }
@@ -170,8 +182,9 @@ uint64 ZStreamRPos_Win_MultiResource::Imp_GetSize()
 #pragma mark -
 #pragma mark * ZStreamerRPos_Win_MultiResource
 
-ZStreamerRPos_Win_MultiResource::ZStreamerRPos_Win_MultiResource(HMODULE inHMODULE, const string& inType, const string& inName)
-:	fStream(inHMODULE, inType, inName)
+ZStreamerRPos_Win_MultiResource::ZStreamerRPos_Win_MultiResource(
+	HMODULE iHMODULE, const string& iType, const string& iName)
+:	fStream(iHMODULE, iType, iName)
 	{}
 
 ZStreamerRPos_Win_MultiResource::~ZStreamerRPos_Win_MultiResource()
