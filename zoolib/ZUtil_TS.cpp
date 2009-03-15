@@ -255,8 +255,12 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 			sSkip_WSAndCPlusPlusComments(iStrimU);
 
 			ZTuple theTuple;
-			if (!ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTuple))
+			ZTValue theTValue;
+			if (!ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTValue)
+				|| !theTValue.GetTuple(theTuple))
+				{
 				throw Ex_MalformedText("Expected tuple after 'tuple ID:'");
+				}
 
 			if (theID == 0)
 				throw Ex_IDInvalid();
@@ -305,8 +309,12 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 			sSkip_WSAndCPlusPlusComments(iStrimU);
 
 			ZTuple theTuple;
-			if (!ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTuple))
+			ZTValue theTValue;
+			if (!ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTValue)
+				|| !theTValue.GetTuple(theTuple))
+				{
 				throw Ex_MalformedText("Expected tuple after 'tuple ID:'");
+				}
 
 			if (theID == 0)
 				throw Ex_IDInvalid();

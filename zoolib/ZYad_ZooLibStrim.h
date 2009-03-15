@@ -158,26 +158,6 @@ bool sRead_Identifier(
 
 ZRef<ZYadR> sMakeYadR(const ZStrimU& iStrimU);
 
-void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR);
-
-void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
-	size_t iInitialIndent, const ZYadOptions& iOptions);
-
-void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR);
-
-void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
-	size_t iInitialIndent, const ZYadOptions& iOptions);
-
-void sToStrim_Stream(const ZStrimW& s, ZRef<ZYadStreamR> iYadStreamR);
-
-void sToStrim_Stream(const ZStrimW& s, ZRef<ZYadStreamR> iYadStreamR,
-	size_t iInitialIndent, const ZYadOptions& iOptions);
-
-void sToStrim_Strim(const ZStrimW& s, ZRef<ZYadStrimR> iYadStrimR);
-
-void sToStrim_Strim(const ZStrimW& s, ZRef<ZYadStrimR> iYadStrimR,
-	size_t iInitialIndent, const ZYadOptions& iOptions);
-
 void sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR);
 
 void sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR,

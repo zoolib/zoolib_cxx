@@ -22,11 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim_Tuple__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZTypes.h" // for size_t
-#include "zoolib/ZYad_ZooLibStrim.h"
+#include "zoolib/ZYad.h"
 
 #include <string>
-#include <vector>
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -35,7 +33,6 @@ class ZStrimU;
 class ZStrimW;
 
 class ZTName;
-class ZTuple;
 class ZTValue;
 
 namespace ZUtil_Strim_Tuple {
@@ -67,10 +64,6 @@ void sWrite_PropName(const ZStrimW& iStrimW, const ZTName& iPropName);
 
 bool sRead_Identifier(const ZStrimU& iStrimU, std::string* oStringLC, std::string* oStringExact);
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Strim_Tuple, TValue
-
 void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTV);
 
 void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTV,
@@ -81,39 +74,6 @@ std::string sAsString(const ZTValue& iTV);
 bool sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV);
 
 bool sFromString(const std::string& iString, ZTValue& oTV);
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Strim_Tuple, vector<ZTValue>
-
-void sToStrim(const ZStrimW& iStrimW, const std::vector<ZTValue>& iVector);
-
-void sToStrim(const ZStrimW& iStrimW, const std::vector<ZTValue>& iVector,
-	size_t iInitialIndent, const ZYadOptions& iOptions);
-
-std::string sAsString(const std::vector<ZTValue>& iVector);
-
-bool sFromStrim(const ZStrimU& iStrimU, std::vector<ZTValue>& oVector);
-
-bool sFromString(const std::string& iString, std::vector<ZTValue>& oVector);
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Strim_Tuple, ZTuple
-
-void sToStrim(const ZStrimW& iStrimW, const ZTuple& iTuple);
-
-void sToStrim(const ZStrimW& iStrimW, const ZTuple& iTuple,
-	size_t iInitialIndent, const ZYadOptions& iOptions);
-
-std::string sAsString(const ZTuple& iTuple);
-
-std::string sAsString(const ZTuple& iTuple,
-	size_t iInitialIndent, const ZYadOptions& iOptions);
-
-bool sFromStrim(const ZStrimU& iStrimU, ZTuple& oTuple);
-
-bool sFromString(const std::string& iString, ZTuple& oTuple);
 
 }  // namespace ZUtil_Strim_Tuple
 

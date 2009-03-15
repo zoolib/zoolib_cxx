@@ -1071,34 +1071,6 @@ bool ZYad_ZooLibStrim::sRead_Identifier(
 ZRef<ZYadR> ZYad_ZooLibStrim::sMakeYadR(const ZStrimU& iStrimU)
 	{ return sMakeYadR_ZooLibStrim(iStrimU); }
 
-void ZYad_ZooLibStrim::sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR)
-	{ sToStrim_List(s, iYadListR, 0, ZYadOptions(), false); }
-
-void ZYad_ZooLibStrim::sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
-	size_t iInitialIndent, const ZYadOptions& iOptions)
-	{ sToStrim_List(s, iYadListR, iInitialIndent, iOptions, false); }
-
-void ZYad_ZooLibStrim::sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR)
-	{ sToStrim_Map(s, iYadMapR, 0, ZYadOptions(), false); }
-
-void ZYad_ZooLibStrim::sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
-	size_t iInitialIndent, const ZYadOptions& iOptions)
-	{ sToStrim_Map(s, iYadMapR, iInitialIndent, iOptions, false); }
-
-void ZYad_ZooLibStrim::sToStrim_Stream(const ZStrimW& s, ZRef<ZYadStreamR> iYadStreamR)
-	{ sToStrim_Stream(s, iYadStreamR->GetStreamR(), 0, ZYadOptions(), false); }
-
-void ZYad_ZooLibStrim::sToStrim_Stream(const ZStrimW& s, ZRef<ZYadStreamR> iYadStreamR,
-	size_t iInitialIndent, const ZYadOptions& iOptions)
-	{ sToStrim_Stream(s, iYadStreamR->GetStreamR(), iInitialIndent, iOptions, false); }
-
-void sToStrim_Strim(const ZStrimW& s, ZRef<ZYadStrimR> iYadStrimR)
-	{ sToStrim_Strim(s, iYadStrimR->GetStrimR(), 0, ZYadOptions(), false); }
-
-void sToStrim_Strim(const ZStrimW& s, ZRef<ZYadStrimR> iYadStrimR,
-	size_t iInitialIndent, const ZYadOptions& iOptions)
-	{ sToStrim_Strim(s, iYadStrimR->GetStrimR(), iInitialIndent, iOptions, false); }
-
 void ZYad_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR)
 	{ sToStrim_Yad(s, iYadR, 0, ZYadOptions(), false); }
 

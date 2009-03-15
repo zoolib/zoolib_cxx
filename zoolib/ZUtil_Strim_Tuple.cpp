@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
 #include "zoolib/ZYad_ZooLib.h"
+#include "zoolib/ZYad_ZooLibStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -85,96 +86,6 @@ bool ZUtil_Strim_Tuple::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV)
 
 bool ZUtil_Strim_Tuple::sFromString(const string& iString, ZTValue& oTV)
 	{ return sFromStrim(ZStrimU_String(iString), oTV); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * vector<ZTValue>
-
-void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const vector<ZTValue>& iVector)
-	{
-	ZRef<ZYadListR> theYadListR = new ZYadListRPos_Vector(iVector);
-	ZYad_ZooLibStrim::sToStrim(s, theYadListR, 0, ZYadOptions());
-	}
-
-void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const vector<ZTValue>& iVector,
-	size_t iInitialIndent, const ZYadOptions& iOptions)
-	{
-	ZRef<ZYadListR> theYadListR = new ZYadListRPos_Vector(iVector);
-	ZYad_ZooLibStrim::sToStrim(s, theYadListR, iInitialIndent, iOptions);
-	}
-
-string ZUtil_Strim_Tuple::sAsString(const vector<ZTValue>& iVector)
-	{
-	string theString;
-	sToStrim(ZStrimW_String(theString), iVector);
-	return theString;
-	}
-
-bool ZUtil_Strim_Tuple::sFromStrim(const ZStrimU& iStrimU, vector<ZTValue>& oVector)
-	{
-	ZTValue theTV;
-	if (!sFromStrim(iStrimU, theTV))
-		return false;
-
-	if (theTV.TypeOf() != eZType_Vector)
-		return false;
-
-	theTV.GetVector(oVector);
-	return true;
-	}
-
-bool ZUtil_Strim_Tuple::sFromString(const string& iString, vector<ZTValue>& oVector)
-	{ return sFromStrim(ZStrimU_String(iString), oVector); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZTuple
-
-void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTuple& iTuple)
-	{
-	ZRef<ZYadMapR> theYadMapR = new ZYadMapRPos_Tuple(iTuple);
-	ZYad_ZooLibStrim::sToStrim(s, theYadMapR, 0, ZYadOptions());
-	}
-
-void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTuple& iTuple,
-	size_t iInitialIndent, const ZYadOptions& iOptions)
-	{
-	ZRef<ZYadMapR> theYadMapR = new ZYadMapRPos_Tuple(iTuple);
-	ZYad_ZooLibStrim::sToStrim(s, theYadMapR, iInitialIndent, iOptions);
-	}
-
-string ZUtil_Strim_Tuple::sAsString(const ZTuple& iTuple)
-	{
-	string theString;
-	sToStrim(ZStrimW_String(theString), iTuple);
-	return theString;
-	}
-
-string ZUtil_Strim_Tuple::sAsString(const ZTuple& iTuple,
-	size_t iInitialIndent, const Options& iOptions)
-	{
-	string theString;
-	sToStrim(ZStrimW_String(theString), iTuple, iInitialIndent, iOptions);
-	return theString;
-	}
-
-bool ZUtil_Strim_Tuple::sFromStrim(const ZStrimU& iStrimU, ZTuple& oTuple)
-	{
-	// Could/should use ZYadMapR_ZooLibStrim, as the caller
-	// is really asking that we read the body of a tuple.
-	ZTValue theTV;
-	if (!sFromStrim(iStrimU, theTV))
-		return false;
-
-	if (theTV.TypeOf() != eZType_Tuple)
-		return false;
-
-	oTuple = theTV.GetTuple();
-	return true;
-	}
-
-bool ZUtil_Strim_Tuple::sFromString(const string& iString, ZTuple& oTuple)
-	{ return sFromStrim(ZStrimU_String(iString), oTuple); }
 
 // =================================================================================================
 #pragma mark -
