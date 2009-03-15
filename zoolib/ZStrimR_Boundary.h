@@ -51,7 +51,7 @@ public:
 	void Reset();
 
 protected:
-	void Internal_Init();
+	void pInit();
 
 	const ZStrimR& fStrimSource;
 	string32 fBoundary;

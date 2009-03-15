@@ -58,4 +58,4 @@ protected:
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZStrimR_Boundary__
+#endif // __ZStrimR_Rewind__

@@ -30,15 +30,16 @@ NAMESPACE_ZOOLIB_BEGIN
 /**
 \class ZStrimR_Boundary
 \ingroup strim
-We use Boyer-Moore to efficiently search for the boundary sequence in the source strim. However,
-instead of discarding data that fails to match it is returned as the result of calls to Imp_ReadUTF32.
+We use Boyer-Moore to efficiently search for the boundary sequence in the
+source strim. However, instead of discarding data that fails to match it is
+returned as the result of calls to Imp_ReadUTF32.
 */
 
 ZStrimR_Boundary::ZStrimR_Boundary(const string8& iBoundary, const ZStrimR& iStrimSource)
 :	fStrimSource(iStrimSource),
 	fBoundary(ZUnicode::sAsUTF32(iBoundary))
 	{
-	this->Internal_Init();
+	this->pInit();
 	}
 
 ZStrimR_Boundary::ZStrimR_Boundary(
@@ -46,14 +47,14 @@ ZStrimR_Boundary::ZStrimR_Boundary(
 :	fStrimSource(iStrimSource),
 	fBoundary(ZUnicode::sAsUTF32(iBoundary, iBoundarySize))
 	{
-	this->Internal_Init();
+	this->pInit();
 	}
 
 ZStrimR_Boundary::ZStrimR_Boundary(const string32& iBoundary, const ZStrimR& iStrimSource)
 :	fStrimSource(iStrimSource),
 	fBoundary(iBoundary)
 	{
-	this->Internal_Init();
+	this->pInit();
 	}
 
 ZStrimR_Boundary::ZStrimR_Boundary(
@@ -61,7 +62,7 @@ ZStrimR_Boundary::ZStrimR_Boundary(
 :	fStrimSource(iStrimSource),
 	fBoundary(iBoundary, iBoundarySize)
 	{
-	this->Internal_Init();
+	this->pInit();
 	}
 
 ZStrimR_Boundary::~ZStrimR_Boundary()
@@ -168,7 +169,7 @@ void ZStrimR_Boundary::Reset()
 	fHitBoundary = false;
 	}
 
-void ZStrimR_Boundary::Internal_Init()
+void ZStrimR_Boundary::pInit()
 	{
 	fBuffer = nil;
 	try
@@ -183,8 +184,9 @@ void ZStrimR_Boundary::Internal_Init()
 			for (size_t x = 0; x < 256; ++x)
 				fSkip[x] = boundarySize;
 
-			// For each CP in the search boundary, initialize the appropriate skip to the distance
-			// from the last occurence of any CP with the same low 8 bits to the end of the boundary.
+			// For each CP in the search boundary, initialize the appropriate skip
+			// to the distance from the last occurence of any CP with the same low
+			// 8 bits to the end of the boundary.
 			for (size_t x = 0; x < boundarySize - 1; ++x)
 				fSkip[uint8(fBoundary[x])] = boundarySize - x - 1;
 			}
@@ -218,7 +220,8 @@ ZStrimmerR_Boundary::ZStrimmerR_Boundary(
 	fStrim(iBoundary, iBoundarySize, iStrimmerSource->GetStrimR())
 	{}
 
-ZStrimmerR_Boundary::ZStrimmerR_Boundary(const string32& iBoundary, ZRef<ZStrimmerR> iStrimmerSource)
+ZStrimmerR_Boundary::ZStrimmerR_Boundary(
+	const string32& iBoundary, ZRef<ZStrimmerR> iStrimmerSource)
 :	fStrimmerSource(iStrimmerSource),
 	fStrim(iBoundary, iStrimmerSource->GetStrimR())
 	{}
