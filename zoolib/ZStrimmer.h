@@ -51,7 +51,7 @@ public:
 \ingroup group_Strimmer
 */
 
-class ZStrimmerU : public ZStrimmerR
+class ZStrimmerU : public virtual ZStrimmerR
 	{
 public:
 // From ZStrimmerR
