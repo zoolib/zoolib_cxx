@@ -19,6 +19,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZStream_Limited.h"
+#include "zoolib/ZStrim_Stream.h"
+#include "zoolib/ZYad_Std.h"
 #include "zoolib/ZYad_ZooLib.h"
 #include "zoolib/ZYad_ZooLibStream.h"
 
@@ -28,9 +30,7 @@ using std::min;
 using std::string;
 using std::vector;
 
-class ZYadR_ZooLibStream;
-
-ZRef<ZYadR_ZooLibStream> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR);
+ZRef<ZYadR_Std> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR);
 
 // =================================================================================================
 #pragma mark -
@@ -53,27 +53,16 @@ static string sStringFromStream(const ZStreamR& iStreamR)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadR_ZooLibStream
-
-class ZYadR_ZooLibStream : public virtual ZYadR
-	{
-public:
-	// Our protocol
-	virtual void Finish() = 0;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadPrimR_ZooLibStream
 
 class ZYadPrimR_ZooLibStream
-:	public ZYadR_ZooLibStream,
+:	public ZYadR_Std,
 	public ZYadR_TValue
 	{
 public:
 	ZYadPrimR_ZooLibStream(ZType iType, const ZStreamR& iStreamR);
 
-// From ZYadR_ZooLibStream
+// From ZYadR_Std
 	virtual void Finish();
 	};
 
@@ -86,20 +75,20 @@ void ZYadPrimR_ZooLibStream::Finish()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadRawR_ZooLibStream
+#pragma mark * ZYadStreamR_ZooLibStreamNew
 
-class ZYadRawR_ZooLibStream
-:	public ZYadR_ZooLibStream,
-	public ZYadRawR,
+class ZYadStreamR_ZooLibStreamNew
+:	public ZYadR_Std,
+	public ZYadStreamR,
 	private ZStreamR
 	{
 public:
-	ZYadRawR_ZooLibStream(const ZStreamR& iStreamR);
+	ZYadStreamR_ZooLibStreamNew(const ZStreamR& iStreamR);
 
-// From ZYadR_ZooLibStream
+// From ZYadR_Std
 	virtual void Finish();
 
-// From ZStreamerR via ZYadRawR
+// From ZStreamerR via ZYadStreamR
 	const ZStreamR& GetStreamR();
 
 // From ZStreamR
@@ -113,21 +102,21 @@ private:
 	bool fHitEnd;
 	};
 
-ZYadRawR_ZooLibStream::ZYadRawR_ZooLibStream(const ZStreamR& iStreamR)
+ZYadStreamR_ZooLibStreamNew::ZYadStreamR_ZooLibStreamNew(const ZStreamR& iStreamR)
 :	fStreamR(iStreamR),
 	fChunkSize(0),
 	fHitEnd(false)
 	{}
 
-void ZYadRawR_ZooLibStream::Finish()
+void ZYadStreamR_ZooLibStreamNew::Finish()
 	{
 	this->GetStreamR().SkipAll();
 	}
 
-const ZStreamR& ZYadRawR_ZooLibStream::GetStreamR()
+const ZStreamR& ZYadStreamR_ZooLibStreamNew::GetStreamR()
 	{ return *this; }
 
-void ZYadRawR_ZooLibStream::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZYadStreamR_ZooLibStreamNew::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
 	uint8* localDest = reinterpret_cast<uint8*>(iDest);
 	while (iCount && !fHitEnd)
@@ -151,10 +140,10 @@ void ZYadRawR_ZooLibStream::Imp_Read(void* iDest, size_t iCount, size_t* oCountR
 		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
 	}
 
-size_t ZYadRawR_ZooLibStream::Imp_CountReadable()
+size_t ZYadStreamR_ZooLibStreamNew::Imp_CountReadable()
 	{ return min(fChunkSize, fStreamR.CountReadable()); }
 
-void ZYadRawR_ZooLibStream::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
+void ZYadStreamR_ZooLibStreamNew::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
 	uint64 countRemaining = iCount;
 	while (countRemaining && !fHitEnd)
@@ -180,385 +169,185 @@ void ZYadRawR_ZooLibStream::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadRawR_ZooLibStreamOld
+#pragma mark * ZYadStreamR_ZooLibStreamOld
 
-class ZYadRawR_ZooLibStreamOld
-:	public ZYadR_ZooLibStream,
-	public ZYadRawR
+class ZYadStreamR_ZooLibStreamOld
+:	public ZYadR_Std,
+	public ZYadStreamR
 	{
 public:
-	ZYadRawR_ZooLibStreamOld(const ZStreamR& iStreamR);
+	ZYadStreamR_ZooLibStreamOld(const ZStreamR& iStreamR);
 
-// From ZYadR_ZooLibStream
+// From ZYadR_Std
 	virtual void Finish();
 
-// From ZStreamerR via ZYadRawR
+// From ZStreamerR via ZYadStreamR
 	const ZStreamR& GetStreamR();
 
 private:
 	ZStreamR_Limited fStreamR_Limited;
 	};
 
-ZYadRawR_ZooLibStreamOld::ZYadRawR_ZooLibStreamOld(const ZStreamR& iStreamR)
+ZYadStreamR_ZooLibStreamOld::ZYadStreamR_ZooLibStreamOld(const ZStreamR& iStreamR)
 :	fStreamR_Limited(iStreamR.ReadCount(), iStreamR)
 	{}
 
-void ZYadRawR_ZooLibStreamOld::Finish()
-	{
-	fStreamR_Limited.SkipAll();
-	}
+void ZYadStreamR_ZooLibStreamOld::Finish()
+	{ fStreamR_Limited.SkipAll(); }
 
-const ZStreamR& ZYadRawR_ZooLibStreamOld::GetStreamR()
+const ZStreamR& ZYadStreamR_ZooLibStreamOld::GetStreamR()
 	{ return fStreamR_Limited; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_ZooLibStream
+#pragma mark * ZYadStrimR_ZooLibStream
 
-class ZYadListR_ZooLibStream
-:	public ZYadR_ZooLibStream,
-	public ZYadListR
+class ZYadStrimR_ZooLibStream
+:	public ZYadR_Std,
+	public ZYadStrimR
 	{
 public:
-	ZYadListR_ZooLibStream(const ZStreamR& iStreamR);
+	ZYadStrimR_ZooLibStream(const ZStreamR& iStreamR);
 
-// From ZYadR via ZYadListR
-	virtual ZRef<ZYadR> ReadInc();
-
-// From ZYadListR
-	virtual uint64 GetPosition();
-
-// From ZYadR_ZooLibStream
+// From ZYadR_Std
 	virtual void Finish();
 
-private:
-	void pMoveIfNecessary();
+// From ZStrimmerR via ZYadStrimR
+	const ZStrimR& GetStrimR();
 
-	const ZStreamR& fStreamR;
-	uint64 fPosition;
-	ZRef<ZYadR_ZooLibStream> fValue_Current;
-	ZRef<ZYadR_ZooLibStream> fValue_Prior;
+private:
+	ZStreamR_Limited fStreamR_Limited;
+	ZStrimR_StreamUTF8 fStrimR;
 	};
 
-ZYadListR_ZooLibStream::ZYadListR_ZooLibStream(const ZStreamR& iStreamR)
-:	fStreamR(iStreamR),
-	fPosition(0)
+ZYadStrimR_ZooLibStream::ZYadStrimR_ZooLibStream(const ZStreamR& iStreamR)
+:	fStreamR_Limited(iStreamR.ReadCount(), iStreamR),
+	fStrimR(fStreamR_Limited)
 	{}
 
+void ZYadStrimR_ZooLibStream::Finish()
+	{ fStreamR_Limited.SkipAll(); }
 
-ZRef<ZYadR> ZYadListR_ZooLibStream::ReadInc()
+const ZStrimR& ZYadStrimR_ZooLibStream::GetStrimR()
+	{ return fStrimR; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadListR_ZooLibStreamNew
+
+class ZYadListR_ZooLibStreamNew : public ZYadListR_Std
 	{
-	this->pMoveIfNecessary();
+public:
+	ZYadListR_ZooLibStreamNew(const ZStreamR& iStreamR);
 
-	if (fValue_Current)
-		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		++fPosition;
-		}
+// From ZYadListR_Std
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
 
-	return fValue_Prior;
-	}
+private:
+	const ZStreamR& fStreamR;
+	};
 
-uint64 ZYadListR_ZooLibStream::GetPosition()
-	{ return fPosition; }
+ZYadListR_ZooLibStreamNew::ZYadListR_ZooLibStreamNew(const ZStreamR& iStreamR)
+:	fStreamR(iStreamR)
+	{}
 
-void ZYadListR_ZooLibStream::Finish()
-	{
-	this->SkipAll();
-	}
-
-void ZYadListR_ZooLibStream::pMoveIfNecessary()
-	{
-	if (fValue_Current)
-		return;
-
-	if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		}
-
-	fValue_Current = sMakeYadR_ZooLibStream(fStreamR);
-	}
+void ZYadListR_ZooLibStreamNew::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+	{ oYadR = sMakeYadR_ZooLibStream(fStreamR); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadListR_ZooLibStreamOld
 
-class ZYadListR_ZooLibStreamOld
-:	public ZYadR_ZooLibStream,
-	public ZYadListR
+class ZYadListR_ZooLibStreamOld : public ZYadListR_Std
 	{
 public:
 	ZYadListR_ZooLibStreamOld(const ZStreamR& iStreamR);
 
-// From ZYadR via ZYadListR
-	virtual ZRef<ZYadR> ReadInc();
-
-// From ZYadListR
-	virtual uint64 GetPosition();
-
-// From ZYadR_ZooLibStream
-	virtual void Finish();
+// From ZYadListR_Std
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
 
 private:
-	void pMoveIfNecessary();
-
 	const ZStreamR& fStreamR;
 	uint64 fCountRemaining;
-	uint64 fPosition;
-	ZRef<ZYadR_ZooLibStream> fValue_Current;
-	ZRef<ZYadR_ZooLibStream> fValue_Prior;
 	};
 
 ZYadListR_ZooLibStreamOld::ZYadListR_ZooLibStreamOld(const ZStreamR& iStreamR)
 :	fStreamR(iStreamR),
-	fCountRemaining(fStreamR.ReadCount()),
-	fPosition(0)
+	fCountRemaining(fStreamR.ReadCount())
 	{}
 
-ZRef<ZYadR> ZYadListR_ZooLibStreamOld::ReadInc()
+void ZYadListR_ZooLibStreamOld::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
-		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		++fPosition;
-		}
-
-	return fValue_Prior;
-	}
-
-uint64 ZYadListR_ZooLibStreamOld::GetPosition()
-	{ return fPosition; }
-
-void ZYadListR_ZooLibStreamOld::Finish()
-	{
-	this->SkipAll();
-	}
-
-void ZYadListR_ZooLibStreamOld::pMoveIfNecessary()
-	{
-	if (fValue_Current)
-		return;
-
-	if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		}
-
 	if (fCountRemaining)
 		{
 		--fCountRemaining;
-		fValue_Current = sMakeYadR_ZooLibStream(fStreamR);
+		oYadR = sMakeYadR_ZooLibStream(fStreamR);
 		}
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadMapR_ZooLibStream
+#pragma mark * ZYadMapR_ZooLibStreamNew
 
-class ZYadMapR_ZooLibStream
-:	public ZYadR_ZooLibStream,
-	public ZYadMapR
+class ZYadMapR_ZooLibStreamNew : public ZYadMapR_Std
 	{
 public:
-	ZYadMapR_ZooLibStream(const ZStreamR& iStreamR);
+	ZYadMapR_ZooLibStreamNew(const ZStreamR& iStreamR);
 
-// From ZYadR via ZYadMapR
-	virtual ZRef<ZYadR> ReadInc(string& oName);
-
-// From ZYadR_ZooLibStream
-	virtual void Finish();
+// From ZYadMapR_Std
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
 
 private:
-	void pMoveIfNecessary();
-
 	const ZStreamR& fStreamR;
-	std::string fName;
-	uint64 fCountRemaining;
-	ZRef<ZYadR_ZooLibStream> fValue_Current;
-	ZRef<ZYadR_ZooLibStream> fValue_Prior;
 	};
 
-ZYadMapR_ZooLibStream::ZYadMapR_ZooLibStream(const ZStreamR& iStreamR)
-:	fStreamR(iStreamR),
-	fCountRemaining(fStreamR.ReadCount())
+ZYadMapR_ZooLibStreamNew::ZYadMapR_ZooLibStreamNew(const ZStreamR& iStreamR)
+:	fStreamR(iStreamR)
 	{}
-	
-ZRef<ZYadR> ZYadMapR_ZooLibStream::ReadInc(string& oName)
+
+void ZYadMapR_ZooLibStreamNew::Imp_ReadInc(
+	bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
-		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		fName.clear();
-		}
-
-	oName = fName;
-	return fValue_Prior;
-	}
-
-void ZYadMapR_ZooLibStream::Finish()
-	{
-	this->SkipAll();
-	}
-
-void ZYadMapR_ZooLibStream::pMoveIfNecessary()
-	{
-	if (fValue_Current)
-		return;
-
-	if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		}
-
-	if (fCountRemaining)
-		{
-		--fCountRemaining;
-		fName = sStringFromStream(fStreamR);
-		fValue_Current = sMakeYadR_ZooLibStream(fStreamR);
-		}
+	oName = sStringFromStream(fStreamR);
+	oYadR = sMakeYadR_ZooLibStream(fStreamR);
 	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadMapR_ZooLibStreamOld
 
-class ZYadMapR_ZooLibStreamOld
-:	public ZYadR_ZooLibStream,
-	public ZYadMapR
+class ZYadMapR_ZooLibStreamOld : public ZYadMapR_Std
 	{
 public:
 	ZYadMapR_ZooLibStreamOld(const ZStreamR& iStreamR);
 
-// From ZYadR via ZYadMapR
-	virtual bool HasChild();
-	virtual ZRef<ZYadR> NextChild();
-
-// From ZYadMapR
-	virtual ZRef<ZYadR> ReadInc(string& oName);
-
-// From ZYadR_ZooLibStream
-	virtual void Finish();
+// From ZYadMapR_Std
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
 
 private:
-	void pMoveIfNecessary();
-
 	const ZStreamR& fStreamR;
-	std::string fName;
-	ZRef<ZYadR_ZooLibStream> fValue_Current;
-	ZRef<ZYadR_ZooLibStream> fValue_Prior;
+	uint64 fCountRemaining;
 	};
 
 ZYadMapR_ZooLibStreamOld::ZYadMapR_ZooLibStreamOld(const ZStreamR& iStreamR)
-:	fStreamR(iStreamR)
+:	fStreamR(iStreamR),
+	fCountRemaining(fStreamR.ReadCount())
 	{}
-	
-bool ZYadMapR_ZooLibStreamOld::HasChild()
+
+void ZYadMapR_ZooLibStreamOld::Imp_ReadInc(
+	bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
-	this->pMoveIfNecessary();
-
-	return fValue_Current;
-	}
-
-ZRef<ZYadR> ZYadMapR_ZooLibStreamOld::ReadInc(string& oName)
-	{
-	this->pMoveIfNecessary();
-
-	if (fValue_Current)
+	if (fCountRemaining)
 		{
-		fValue_Prior = fValue_Current;
-		fValue_Current.Clear();
-		fName.clear();
+		--fCountRemaining;
+		oName = sStringFromStream(fStreamR);
+		oYadR = sMakeYadR_ZooLibStream(fStreamR);
 		}
-
-	oName = fName;
-	return fValue_Prior;
-	}
-
-void ZYadMapR_ZooLibStreamOld::Finish()
-	{
-	this->SkipAll();
-	}
-
-void ZYadMapR_ZooLibStreamOld::pMoveIfNecessary()
-	{
-	if (fValue_Current)
-		return;
-
-	if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		}
-
-	fName = sStringFromStream(fStreamR);
-	fValue_Current = sMakeYadR_ZooLibStream(fStreamR);
 	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYad_ZooLibStream
-
-using namespace ZYad_ZooLibStream;
-
-static void sToStream(const ZStreamW& iStreamW, ZRef<ZYadMapR> iYadMapR)
-	{
-	string theName;
-	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
-		{
-		sToStream(theName, iStreamW);
-		sToStream(iStreamW, theChild);
-		}
-	iStreamW.WriteByte(0); // Empty name
-	iStreamW.WriteByte(0xFF); // Terminator
-	}
-
-static void sToStream(const ZStreamW& iStreamW, ZRef<ZYadListR> iYadListR)
-	{
-	while (ZRef<ZYadR> theChild = iYadListR->ReadInc())
-		sToStream(iStreamW, theChild);
-	iStreamW.WriteByte(0xFF); // Terminator (distinct from any value in ZType)
-	}
-
-static void sToStream(const ZStreamW& iStreamW, const ZStreamR& iStreamR)
-	{
-	if (const ZStreamRPos* theStreamRPos = dynamic_cast<const ZStreamRPos*>(&iStreamR))
-		{
-		uint64 countRemaining = theStreamRPos->GetSize();
-		while (countRemaining)
-			{
-			size_t countToWrite = size_t(min(countRemaining, ZUINT64_C(0xFFFFFFFF)));
-			iStreamW.WriteCount(countToWrite);
-			iStreamR.CopyTo(iStreamW, countToWrite);
-			countRemaining -= countToWrite;
-			}
-		iStreamW.WriteCount(0); // Terminating chunk
-		}
-	else
-		{
-		const size_t chunkSize = 64 * 1024;
-		vector<uint8> buffer(chunkSize);
-		for (;;)
-			{
-			size_t countRead;
-			iStreamR.ReadAll(&buffer[0], chunkSize, &countRead);
-			iStreamW.WriteCount(countRead);
-			if (!countRead)
-				break;
-			iStreamW.Write(&buffer[0], countRead);
-			}
-		}
-	}
 
 void ZYad_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR)
 	{
@@ -569,17 +358,60 @@ void ZYad_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR)
 	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
 		iStreamW.WriteUInt8(0x80 | eZType_Tuple);
-		sToStream(iStreamW, theYadMapR);
+		string theName;
+		while (ZRef<ZYadR> theChild = theYadMapR->ReadInc(theName))
+			{
+			sToStream(theName, iStreamW);
+			sToStream(iStreamW, theChild);
+			}
+		iStreamW.WriteByte(0); // Empty name
+		iStreamW.WriteByte(0xFF); // Terminator
 		}
 	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
 		{
-		iStreamW.WriteUInt8(0x80 | eZType_Vector);
-		sToStream(iStreamW, theYadListR);
+		if (ZRef<ZYadListRPos> theYadListRPos = ZRefDynamicCast<ZYadListRPos>(iYadR))
+			{
+			iStreamW.WriteUInt8(eZType_Vector);
+			size_t theCount = theYadListRPos->GetSize() - theYadListRPos->GetPosition();
+			iStreamW.WriteCount(theCount);
+			while (--theCount)
+				sToStream(iStreamW, theYadListRPos->ReadInc());
+			}
+		else
+			{
+			iStreamW.WriteUInt8(0x80 | eZType_Vector);
+			while (ZRef<ZYadR> theChild = theYadListR->ReadInc())
+				sToStream(iStreamW, theChild);
+			iStreamW.WriteByte(0xFF); // Terminator (distinct from any value in ZType)
+			}
 		}
-	else if (ZRef<ZYadRawR> theYadRawR = ZRefDynamicCast<ZYadRawR>(iYadR))
+	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
 		{
+		if (ZRef<ZStreamerRPos> theStreamerRPos = ZRefDynamicCast<ZStreamerRPos>(theYadStreamR))
+			{
+			const ZStreamRPos& theStreamRPos = theStreamerRPos->GetStreamRPos();
+			uint64 theCount = theStreamRPos.GetSize() - theStreamRPos.GetPosition();
+			if (theCount <= ZUINT64_C(0xFFFFFFFF))
+				{
+				iStreamW.WriteUInt8(0x80 | eZType_Raw);
+				iStreamW.WriteCount(theCount);
+				iStreamW.CopyAllFrom(theStreamRPos);
+				return;
+				}
+			}
+		const ZStreamR& theStreamR = theYadStreamR->GetStreamR();
 		iStreamW.WriteUInt8(eZType_Raw);
-		sToStream(iStreamW, theYadRawR->GetStreamR());
+		const size_t chunkSize = 64 * 1024;
+		vector<uint8> buffer(chunkSize);
+		for (;;)
+			{
+			size_t countRead;
+			theStreamR.ReadAll(&buffer[0], chunkSize, &countRead);
+			iStreamW.WriteCount(countRead);
+			if (!countRead)
+				break;
+			iStreamW.Write(&buffer[0], countRead);
+			}
 		}
 	else
 		{
@@ -592,7 +424,7 @@ ZRef<ZYadR> ZYad_ZooLibStream::sMakeYadR(const ZStreamR& iStreamR)
 	return sMakeYadR_ZooLibStream(iStreamR);
 	}
 
-ZRef<ZYadR_ZooLibStream> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR)
+ZRef<ZYadR_Std> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR)
 	{
 	uint8 theType;
 	size_t countRead;
@@ -605,7 +437,7 @@ ZRef<ZYadR_ZooLibStream> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR)
 			}
 		else if (theType == (0x80 | eZType_Vector))
 			{
-			return new ZYadListR_ZooLibStream(iStreamR);
+			return new ZYadListR_ZooLibStreamNew(iStreamR);
 			}
 		else if (theType == eZType_Tuple)
 			{
@@ -613,15 +445,19 @@ ZRef<ZYadR_ZooLibStream> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR)
 			}
 		else if (theType == (0x80 | eZType_Tuple))
 			{
-			return new ZYadMapR_ZooLibStream(iStreamR);
+			return new ZYadMapR_ZooLibStreamNew(iStreamR);
 			}
 		else if (theType == eZType_Raw)
 			{
-			return new ZYadRawR_ZooLibStreamOld(iStreamR);			
+			return new ZYadStreamR_ZooLibStreamOld(iStreamR);			
 			}
 		else if (theType == (0x80 | eZType_Raw))
 			{
-			return new ZYadRawR_ZooLibStream(iStreamR);			
+			return new ZYadStreamR_ZooLibStreamNew(iStreamR);			
+			}
+		else if (theType == eZType_String)
+			{
+			return new ZYadStrimR_ZooLibStream(iStreamR);			
 			}
 		else
 			{
@@ -629,7 +465,7 @@ ZRef<ZYadR_ZooLibStream> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR)
 			}
 		}
 
-	return ZRef<ZYadR_ZooLibStream>();
+	return ZRef<ZYadR_Std>();
 	}
 
 NAMESPACE_ZOOLIB_END

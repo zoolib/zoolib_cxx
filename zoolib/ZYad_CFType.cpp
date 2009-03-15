@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZStream_CFData.h"
+#include "zoolib/ZStrim_CFString.h"
 #include "zoolib/ZUtil_CFType.h"
 
 #include <CoreFoundation/CFString.h>
@@ -119,17 +120,17 @@ CFTypeRef ZYadR_CFType::GetCFTypeRef()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadRawRPos_MemoryBlock
+#pragma mark * ZYadStreamRPos_MemoryBlock
 
-ZYadRawRPos_CFData::ZYadRawRPos_CFData(CFDataRef iCFDataRef)
+ZYadStreamRPos_CFData::ZYadStreamRPos_CFData(CFDataRef iCFDataRef)
 :	ZYadR_CFType(iCFDataRef),
 	ZStreamerRPos_CFData(iCFDataRef)
 	{}
 
-ZYadRawRPos_CFData::~ZYadRawRPos_CFData()
+ZYadStreamRPos_CFData::~ZYadStreamRPos_CFData()
 	{}
 
-bool ZYadRawRPos_CFData::IsSimple(const ZYadOptions& iOptions)
+bool ZYadStreamRPos_CFData::IsSimple(const ZYadOptions& iOptions)
 	{ return this->GetStreamRPos().GetSize() <= iOptions.fRawChunkSize; }
 
 // =================================================================================================
@@ -251,7 +252,7 @@ ZRef<ZYadR> ZYad_CFType::sMakeYadR(CFTypeRef iCFTypeRef)
 		return new ZYadListRPos_CFArray(static_cast<CFArrayRef>(iCFTypeRef));
 
 	if (theTypeID == ::CFDataGetTypeID())
-		return new ZYadRawRPos_CFData(static_cast<CFDataRef>(iCFTypeRef));
+		return new ZYadStreamRPos_CFData(static_cast<CFDataRef>(iCFTypeRef));
 
 	return new ZYadR_CFType(iCFTypeRef);
 	}
@@ -303,11 +304,24 @@ static CFDataRef sReadData(const ZStreamR& iStreamR)
 	return result;
 	}
 
+CFStringRef spReadString(const ZStrimR& iStrimR)
+	{
+	CFMutableStringRef result = ::CFStringCreateMutable(kCFAllocatorDefault, 0);
+	ZStrimW_CFString(result).CopyAllFrom(iStrimR);
+	return result;	
+	}
+
 CFTypeRef ZYad_CFType::sFromYadR(ZRef<ZYadR> iYadR)
 	{
 	if (!iYadR)
 		{
 		return nil;
+		}
+	else if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iYadR))
+		{
+		CFTypeRef result = theYadR->GetCFTypeRef();
+		::CFRetain(result);
+		return result;
 		}
 	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
@@ -317,9 +331,13 @@ CFTypeRef ZYad_CFType::sFromYadR(ZRef<ZYadR> iYadR)
 		{
 		return sReadArray(theYadListR);
 		}
-	else if (ZRef<ZYadRawR> theYadRawR = ZRefDynamicCast<ZYadRawR>(iYadR))
+	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
 		{
-		return sReadData(theYadRawR->GetStreamR());
+		return sReadData(theYadStreamR->GetStreamR());
+		}
+	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
+		{
+		return spReadString(theYadStrimR->GetStrimR());
 		}
 	else
 		{

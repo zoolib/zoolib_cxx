@@ -82,9 +82,9 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadRawR
+#pragma mark * ZYadStreamR
 
-class ZYadRawR
+class ZYadStreamR
 :	public virtual ZYadR,
 	public virtual ZStreamerR
 	{
@@ -97,14 +97,10 @@ public:
 #pragma mark -
 #pragma mark * ZYadStrimR
 
-#if 0
-// This will get fleshed out soon.
 class ZYadStrimR
 :	public virtual ZYadR,
 	public virtual ZStrimmerR
 	{};
-
-#endif
 
 // =================================================================================================
 #pragma mark -

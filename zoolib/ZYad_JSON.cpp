@@ -20,10 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_cmath.h"
 #include "zoolib/ZFactoryChain.h"
-#include "zoolib/ZStrimW_Escapify.h"
+#include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZTuple.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZYad_JSON.h"
+#include "zoolib/ZYad_StdMore.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -393,6 +394,10 @@ static ZRef<ZYadR_Std> sMakeYadR_JSON(const ZStrimU& iStrimU)
 		{
 		return new ZYadMapR_JSON(iStrimU);
 		}
+	else if (sTryRead_CP(iStrimU, '"'))
+		{
+		return new ZYadStrimR_JSON(iStrimU);
+		}
 	else
 		{
 		ZTValue theTV;
@@ -448,6 +453,26 @@ ZYadParseException_JSON::ZYadParseException_JSON(const string& iWhat)
 ZYadParseException_JSON::ZYadParseException_JSON(const char* iWhat)
 :	ZYadParseException_Std(iWhat)
 	{}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadStrimR_JSON
+
+ZYadStrimR_JSON::ZYadStrimR_JSON(const ZStrimU& iStrimU)
+:	fStrimU(iStrimU),
+	fStrimR(iStrimU, '"')
+	{}
+
+void ZYadStrimR_JSON::Finish()
+	{
+	using namespace ZUtil_Strim;
+	fStrimR.SkipAll();
+	if (!sTryRead_CP(fStrimU, '"'))
+		throw ParseException("Missing string delimiter");
+	}
+
+const ZStrimR& ZYadStrimR_JSON::GetStrimR()
+	{ return fStrimR; }
 
 // =================================================================================================
 #pragma mark -
@@ -594,11 +619,11 @@ static void sWriteString(
 	{
 	s.Write("\"");
 
-	ZStrimW_Escapify::Options theOptions;
+	ZStrimW_Escaped::Options theOptions;
 	theOptions.fQuoteQuotes = true;
 	theOptions.fEscapeHighUnicode = false;
 	
-	ZStrimW_Escapify(theOptions, s).Write(iString);
+	ZStrimW_Escaped(theOptions, s).Write(iString);
 
 	s.Write("\"");
 	}

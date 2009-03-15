@@ -72,7 +72,7 @@ static bool sIsSimpleString(const ZYadOptions& iOptions, const string& iString)
 	if (iOptions.fBreakStrings)
 		{
 		// We've been asked to break strings at line ending characters,
-		// which means (here and in ZStrimW_Escapify) LF and CR. Strictly
+		// which means (here and in ZStrimW_Escaped) LF and CR. Strictly
 		// speaking we should use ZUnicode::sIsEOL().
 		if (string::npos != iString.find_first_of("\n\r"))
 			return false;
@@ -144,15 +144,24 @@ bool ZYadR_TValue::IsSimple(const ZYadOptions& iOptions)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadRawRPos_MemoryBlock
+#pragma mark * ZYadStreamRPos_MemoryBlock
 
-ZYadRawRPos_MemoryBlock::ZYadRawRPos_MemoryBlock(const ZMemoryBlock& iMB)
+ZYadStreamRPos_MemoryBlock::ZYadStreamRPos_MemoryBlock(const ZMemoryBlock& iMB)
 :	ZYadR_TValue(iMB),
 	ZStreamerRPos_MemoryBlock(iMB)
 	{}
 
-bool ZYadRawRPos_MemoryBlock::IsSimple(const ZYadOptions& iOptions)
+bool ZYadStreamRPos_MemoryBlock::IsSimple(const ZYadOptions& iOptions)
 	{ return this->GetStreamRPos().GetSize() <= iOptions.fRawChunkSize; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadStrimU_String
+
+ZYadStrimU_String::ZYadStrimU_String(const std::string& iString)
+:	ZYadR_TValue(iString),
+	ZStrimmerU_String(this->GetTValue().GetString())
+	{}
 
 // =================================================================================================
 #pragma mark -
@@ -243,7 +252,8 @@ ZRef<ZYadR> ZYad_ZooLib::sMakeYadR(const ZTValue& iTV)
 		{
 		case eZType_Vector: return new ZYadListRPos_Vector(iTV.GetVector());
 		case eZType_Tuple: return new ZYadMapRPos_Tuple(iTV.GetTuple());
-		case eZType_Raw: return new ZYadRawRPos_MemoryBlock(iTV.GetRaw());
+		case eZType_Raw: return new ZYadStreamRPos_MemoryBlock(iTV.GetRaw());
+		case eZType_String: return new ZYadStrimU_String(iTV.GetString());
 		}
 
 	return new ZYadR_TValue(iTV);
@@ -254,6 +264,10 @@ ZTValue ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
 	if (!iYadR)
 		{
 		return ZTValue();
+		}
+	else if (ZRef<ZYadR_TValue> theYadR = ZRefDynamicCast<ZYadR_TValue>(iYadR))
+		{
+		return theYadR->GetTValue();
 		}
 	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
@@ -272,10 +286,10 @@ ZTValue ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
 
 		return theVector;	
 		}
-	else if (ZRef<ZYadRawR> theYadRawR = ZRefDynamicCast<ZYadRawR>(iYadR))
+	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
 		{
 		ZMemoryBlock theMB;
-		ZStreamRWPos_MemoryBlock(theMB).CopyAllFrom(theYadRawR->GetStreamR());
+		ZStreamRWPos_MemoryBlock(theMB).CopyAllFrom(theYadStreamR->GetStreamR());
 		return theMB;
 		}
 	else

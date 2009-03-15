@@ -47,28 +47,6 @@ ZYadParseException_Std::ZYadParseException_Std(const char* iWhat)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_Std
-
-ZYadPrimR_Std::ZYadPrimR_Std(const ZTValue& iTV)
-:	ZYadR_TValue(iTV)
-	{}
-
-void ZYadPrimR_Std::Finish()
-	{}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadRawR_Std
-
-ZYadRawR_Std::ZYadRawR_Std(const ZMemoryBlock& iMB)
-:	ZYadRawRPos_MemoryBlock(iMB)
-	{}
-
-void ZYadRawR_Std::Finish()
-	{}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadListR_Std
 
 ZYadListR_Std::ZYadListR_Std()

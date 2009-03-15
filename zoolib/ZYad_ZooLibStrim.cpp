@@ -20,9 +20,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZStrimR_Boundary.h"
-#include "zoolib/ZStrimW_Escapify.h"
+#include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
+#include "zoolib/ZYad_StdMore.h"
 #include "zoolib/ZYad_ZooLib.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
@@ -76,188 +77,14 @@ static void sMustRead_WSCommaWS(const ZStrimU& iStrimU)
 	sSkip_WSAndCPlusPlusComments(iStrimU);
 	}
 
-static void sReadQuotedString_Quote(const ZStrimU& iStrimU, ZTValue& oTValue)
-	{
-	using namespace ZUtil_Strim;
-
-	string theString;
-	theString.reserve(100);
-	ZStrimW_String theStrimW(theString);
-
-	for (;;)
-		{
-		// We've read, and could un-read, a quote mark.
-		if (sTryRead_CP(iStrimU, '"'))
-			{
-			// We've now seen a second quote, abutting the first.
-			if (sTryRead_CP(iStrimU, '"'))
-				{
-				// We have three quotes in a row, which opens a verbatim string.
-				// If the next character is an EOL then absorb it, so the verbatim
-				// text can start on a fresh line, but not be parsed as
-				// beginning with an EOL.
-				UTF32 theCP = iStrimU.ReadCP();
-				if (!ZUnicode::sIsEOL(theCP))
-					iStrimU.Unread();
-
-				// Now copy everything till we see three quotes in a row again.
-				ZStrimR_Boundary theStrimR_Boundary("\"\"\"", iStrimU);
-				theStrimW.CopyAllFrom(theStrimR_Boundary);
-				if (!theStrimR_Boundary.HitBoundary())
-					sThrowParseException("Expected \"\"\" to close a string");
-
-				if (sTryRead_CP(iStrimU, '"'))
-					{
-					// We have another quote, so there were at least four in a row,
-					// which we get with a quote in the text immediately followed
-					// by the triple quote. So emit a quote.
-					theStrimW.WriteCP('"');
-					if (sTryRead_CP(iStrimU, '"'))
-						{
-						// Same again -- five quotes in a row, which is two content
-						// quotes followed by the closing triple.
-						theStrimW.WriteCP('"');
-						// This is why it's essential that when using triple quotes
-						// you put whitespace before the opening, and after the closing
-						// triple, so we don't mistake included quotes for ones that
-						// are (say) opening a subsequent regular quoted sequence.
-						}
-					}
-				}
-			else
-				{
-				// We have two quotes in a row, followed by something else, so
-				// we had an empty string segment.
-				}
-			}
-		else
-			{
-			sCopy_EscapedString(iStrimU, '"', theStrimW);
-			if (!sTryRead_CP(iStrimU, '"'))
-				sThrowParseException("Expected \" to close a string");
-			}
-
-		sSkip_WSAndCPlusPlusComments(iStrimU);
-
-		if (!sTryRead_CP(iStrimU, '"'))
-			break;
-		}
-
-	oTValue.SetString(theString);
-	}
-
-static void sReadQuotedString_Apos(const ZStrimU& iStrimU, ZTValue& oTValue)
-	{
-	using namespace ZUtil_Strim;
-
-	string theString;
-	theString.reserve(100);
-	ZStrimW_String theStrimW(theString);
-
-	for (;;)
-		{
-		sCopy_EscapedString(iStrimU, '\'', theStrimW);
-		if (!sTryRead_CP(iStrimU, '\''))
-			sThrowParseException("Expected ' to close a string");
-
-		sSkip_WSAndCPlusPlusComments(iStrimU);
-
-		if (!sTryRead_CP(iStrimU, '\''))
-			break;
-		}
-
-	oTValue.SetString(theString);
-	}
-
-static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue);
-
-static void sFromStrim_BodyOfVector(const ZStrimU& iStrimU, vector<ZTValue>& oVector)
-	{
-	using namespace ZUtil_Strim;
-	for (;;)
-		{
-		sSkip_WSAndCPlusPlusComments(iStrimU);
-
-		oVector.push_back(ZTValue());
-		if (!sFromStrim_TValue(iStrimU, oVector.back()))
-			{
-			// Lose the unread TValue.
-			oVector.pop_back();
-			break;
-			}
-
-		sSkip_WSAndCPlusPlusComments(iStrimU);
-
-		if (!sTryRead_CP(iStrimU, ';') && !sTryRead_CP(iStrimU, ','))
-			break;
-		}
-	}
-
-static void sFromStrim_BodyOfTuple(const ZStrimU& iStrimU, ZTuple& oTuple)
-	{
-	using namespace ZUtil_Strim;
-
-	for (;;)
-		{
-		sSkip_WSAndCPlusPlusComments(iStrimU);
-
-		string propertyName;
-		if (!sTryRead_PropertyName(iStrimU, propertyName))
-			break;
-
-		sSkip_WSAndCPlusPlusComments(iStrimU);
-
-		if (!sTryRead_CP(iStrimU, '='))
-			sThrowParseException("Expected '=' after property name");
-
-		sSkip_WSAndCPlusPlusComments(iStrimU);
-
-		ZTValue& theTValue = oTuple.SetMutableNull(ZTName(propertyName));
-		if (!sFromStrim_TValue(iStrimU, theTValue))
-			sThrowParseException("Expected a property value after '='");
-
-		sSkip_WSAndCPlusPlusComments(iStrimU);
-
-		if (!sTryRead_CP(iStrimU, ';') && !sTryRead_CP(iStrimU, ','))
-			sThrowParseException("Expected a ';' or a ',' after property value");
-		}
-	}
-
 static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 	{
 	using namespace ZUtil_Strim;
 
 	sSkip_WSAndCPlusPlusComments(iStrimU);
 
-	if (sTryRead_CP(iStrimU, '['))
-		{
-		sFromStrim_BodyOfVector(iStrimU, oTValue.SetMutableVector());
-
-		sSkip_WSAndCPlusPlusComments(iStrimU);
-
-		if (!sTryRead_CP(iStrimU, ']'))
-			sThrowParseException("Expected ']' to close a vector");
-		}
-	else if (sTryRead_CP(iStrimU, '{'))
-		{
-		// It's a tuple.
-		sFromStrim_BodyOfTuple(iStrimU, oTValue.SetMutableTuple());
-
-		sSkip_WSAndCPlusPlusComments(iStrimU);
-
-		if (!sTryRead_CP(iStrimU, '}'))
-			sThrowParseException("Expected '}' to close a tuple");
-		}
-	else if (sTryRead_CP(iStrimU, '"'))
-		{
-		// It's a string, delimited by ".
-		sReadQuotedString_Quote(iStrimU, oTValue);
-		}
-	else if (sTryRead_CP(iStrimU, '\''))
-		{
-		// It's a string, delimited by '.
-		sReadQuotedString_Apos(iStrimU, oTValue);
-		}
+	if (false)
+		{}
 #if 0//##
 	else if (sTryRead_CP(iStrimU, '@'))
 		{
@@ -274,17 +101,6 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 		oTValue.SetName(propertyName);
 		}
 #endif
-	else if (sTryRead_CP(iStrimU, '('))
-		{
-		// It's a raw.
-		ZMemoryBlock theMemoryBlock;
-		ZStreamR_HexStrim(iStrimU).CopyAllTo(ZStreamRWPos_MemoryBlock(theMemoryBlock));
-		sSkip_WSAndCPlusPlusComments(iStrimU);
-
-		if (!sTryRead_CP(iStrimU, ')'))
-			sThrowParseException("Expected ')' to close a raw");
-		oTValue.SetRaw(theMemoryBlock);
-		}
 	else
 		{
 		string theTypeLC, theType;
@@ -476,7 +292,15 @@ static ZRef<ZYadR_Std> sMakeYadR_ZooLibStrim(const ZStrimU& iStrimU)
 		}
 	else if (sTryRead_CP(iStrimU, '('))
 		{
-		return new ZYadRawR_ZooLibStrim(iStrimU, true);
+		return new ZYadStreamR_ZooLibStrim(iStrimU, true);
+		}
+	else if (sTryRead_CP(iStrimU, '"'))
+		{
+		return new ZYadStrimR_ZooLibStrim_Quote(iStrimU);
+		}
+	else if (sTryRead_CP(iStrimU, '\''))
+		{
+		return new ZYadStrimR_ZooLibStrim_Apos(iStrimU);
 		}
 	else
 		{
@@ -502,15 +326,15 @@ ZYadParseException_ZooLibStrim::ZYadParseException_ZooLibStrim(const char* iWhat
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadRawR_ZooLibStrim
+#pragma mark * ZYadStreamR_ZooLibStrim
 
-ZYadRawR_ZooLibStrim::ZYadRawR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter)
+ZYadStreamR_ZooLibStrim::ZYadStreamR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter)
 :	fStrimU(iStrimU),
 	fReadDelimiter(iReadDelimiter),
 	fStreamR(iStrimU)
 	{}
 
-void ZYadRawR_ZooLibStrim::Finish()
+void ZYadStreamR_ZooLibStrim::Finish()
 	{
 	using namespace ZUtil_Strim;
 
@@ -524,8 +348,127 @@ void ZYadRawR_ZooLibStrim::Finish()
 		}
 	}
 
-const ZStreamR& ZYadRawR_ZooLibStrim::GetStreamR()
+const ZStreamR& ZYadStreamR_ZooLibStrim::GetStreamR()
 	{ return fStreamR; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadStrimR_ZooLibStrim_Apos
+
+ZYadStrimR_ZooLibStrim_Apos::ZYadStrimR_ZooLibStrim_Apos(const ZStrimU& iStrimU)
+:	fStrimU(iStrimU),
+	fStrimR(iStrimU, '\'')
+	{}
+
+void ZYadStrimR_ZooLibStrim_Apos::Finish()
+	{
+	using namespace ZUtil_Strim;
+	fStrimR.SkipAll();
+	if (!sTryRead_CP(fStrimU, '\''))
+		throw ParseException("Missing string delimiter");
+	}
+
+const ZStrimR& ZYadStrimR_ZooLibStrim_Apos::GetStrimR()
+	{ return fStrimR; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadStrimR_ZooLibStrim_Quote
+
+ZYadStrimR_ZooLibStrim_Quote::ZYadStrimR_ZooLibStrim_Quote(const ZStrimU& iStrimU)
+:	fStrimU(iStrimU),
+	fStrimR_Boundary("\"\"\"", iStrimU),
+	fQuotesSeen(1)
+	{}
+
+void ZYadStrimR_ZooLibStrim_Quote::Finish()
+	{
+	this->SkipAll();
+	}
+
+const ZStrimR& ZYadStrimR_ZooLibStrim_Quote::GetStrimR()
+	{ return *this; }
+
+void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+	{
+	using namespace ZUtil_Strim;
+
+	UTF32* localDest = iDest;
+	UTF32* localDestEnd = iDest + iCount;
+	bool exhausted = false;
+	while (localDestEnd > localDest && !exhausted)
+		{
+		switch (fQuotesSeen)
+			{
+			case 0:
+				{
+				sSkip_WSAndCPlusPlusComments(fStrimU);
+
+				if (sTryRead_CP(fStrimU, '"'))
+					fQuotesSeen = 1;
+				else
+					exhausted = true;
+				break;
+				}
+			case 1:
+				{
+				if (sTryRead_CP(fStrimU, '"'))
+					{
+					fQuotesSeen = 2;
+					}
+				else
+					{
+					size_t countRead;
+					ZStrimR_Escaped(fStrimU, '"')
+						.Read(localDest, localDestEnd - localDest, &countRead);
+					localDest += countRead;
+
+					if (sTryRead_CP(fStrimU, '"'))
+						fQuotesSeen = 0;
+					else if (countRead == 0)
+						sThrowParseException("Expected \" to close a string");
+					}
+				break;
+				}
+			case 2:
+				{
+				if (sTryRead_CP(fStrimU, '"'))
+					{
+					fQuotesSeen = 3;
+					UTF32 theCP = fStrimU.ReadCP();
+					if (!ZUnicode::sIsEOL(theCP))
+						fStrimU.Unread();
+					}
+				else
+					{
+					// We have two quotes in a row, followed by something
+					// else, so we had an empty string segment.
+					fQuotesSeen = 0;
+					}
+				break;
+				}
+			case 3:
+				{
+				// We've got three quotes in a row, and any trailing EOL
+				// has been stripped.
+				size_t countRead;
+				fStrimR_Boundary.Read(localDest, localDestEnd - localDest, &countRead);
+				localDest += countRead;
+				if (countRead == 0)
+					{
+					if (!fStrimR_Boundary.HitBoundary())
+						sThrowParseException("Expected \"\"\" to close a string");
+					fStrimR_Boundary.Reset();
+					fQuotesSeen = 0;
+					}
+				break;
+				}
+			}
+		}
+
+	if (oCount)
+		*oCount = localDest - iDest;	
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -558,7 +501,7 @@ void ZYadListR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 		}
 
 	if (!gotSeparator)
-		sThrowParseException("Expected ';' or ',' after value");
+		sThrowParseException("Expected ';' or ',' between values");
 
 	if (!(oYadR = sMakeYadR_ZooLibStrim(fStrimU)))
 		{
@@ -685,17 +628,17 @@ static void sWriteString(
 
 		s.Write(delimiter);
 
-		ZStrimW_Escapify::Options theOptions;
+		ZStrimW_Escaped::Options theOptions;
 		theOptions.fQuoteQuotes = quoteQuotes;
 		theOptions.fEscapeHighUnicode = false;
 		
-		ZStrimW_Escapify(theOptions, s).Write(iString);
+		ZStrimW_Escaped(theOptions, s).Write(iString);
 
 		s.Write(delimiter);
 		}
 	}
 
-static void sToStrim_Raw(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
+static void sToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	uint64 theSize = iStreamRPos.GetSize();
@@ -790,12 +733,12 @@ static void sToStrim_Raw(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 		}
 	}
 
-static void sToStrim_Raw(const ZStrimW& s, const ZStreamR& iStreamR,
+static void sToStrim_Stream(const ZStrimW& s, const ZStreamR& iStreamR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	if (const ZStreamRPos* theStreamRPos = dynamic_cast<const ZStreamRPos*>(&iStreamR))
 		{
-		sToStrim_Raw(s, *theStreamRPos, iLevel, iOptions, iMayNeedInitialLF);
+		sToStrim_Stream(s, *theStreamRPos, iLevel, iOptions, iMayNeedInitialLF);
 		return;
 		}
 
@@ -805,6 +748,21 @@ static void sToStrim_Raw(const ZStrimW& s, const ZStreamR& iStreamR,
 		.CopyAllFrom(iStreamR);
 
 	s.Write(")");
+	}
+
+static void sToStrim_Strim(const ZStrimW& s, const ZStrimR& iStrimR,
+	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
+	{
+	s.Write("\"");
+
+	ZStrimW_Escaped::Options theOptions;
+	theOptions.fQuoteQuotes = true;
+	theOptions.fEscapeHighUnicode = false;
+	
+	ZStrimW_Escaped(theOptions, s)
+		.CopyAllFrom(iStrimR);
+
+	s.Write("\"");
 	}
 
 static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
@@ -907,11 +865,6 @@ static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
 			s.Writef("RefCounted(%08X)", iTV.GetRefCounted().GetObject());
 			break;
 		case eZType_Raw:
-			{
-			sToStrim_Raw(s,
-				ZStreamRPos_MemoryBlock(iTV.GetRaw()), iLevel, iOptions, iMayNeedInitialLF);
-			break;
-			}
 		case eZType_Tuple:
 		case eZType_Vector:
 			{
@@ -1071,9 +1024,13 @@ static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 		{
 		sToStrim_List(s, theYadListR, iLevel, iOptions, iMayNeedInitialLF);
 		}
-	else if (ZRef<ZYadRawR> theYadRawR = ZRefDynamicCast<ZYadRawR>(iYadR))
+	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
 		{
-		sToStrim_Raw(s, theYadRawR->GetStreamR(), iLevel, iOptions, iMayNeedInitialLF);
+		sToStrim_Stream(s, theYadStreamR->GetStreamR(), iLevel, iOptions, iMayNeedInitialLF);
+		}
+	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
+		{
+		sToStrim_Strim(s, theYadStrimR->GetStrimR(), iLevel, iOptions, iMayNeedInitialLF);
 		}
 	else
 		{
@@ -1128,12 +1085,19 @@ void ZYad_ZooLibStrim::sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{ sToStrim_Map(s, iYadMapR, iInitialIndent, iOptions, false); }
 
-void ZYad_ZooLibStrim::sToStrim_Raw(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR)
-	{ sToStrim_Raw(s, iYadRawR->GetStreamR(), 0, ZYadOptions(), false); }
+void ZYad_ZooLibStrim::sToStrim_Stream(const ZStrimW& s, ZRef<ZYadStreamR> iYadStreamR)
+	{ sToStrim_Stream(s, iYadStreamR->GetStreamR(), 0, ZYadOptions(), false); }
 
-void ZYad_ZooLibStrim::sToStrim_Raw(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR,
+void ZYad_ZooLibStrim::sToStrim_Stream(const ZStrimW& s, ZRef<ZYadStreamR> iYadStreamR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
-	{ sToStrim_Raw(s, iYadRawR->GetStreamR(), iInitialIndent, iOptions, false); }
+	{ sToStrim_Stream(s, iYadStreamR->GetStreamR(), iInitialIndent, iOptions, false); }
+
+void sToStrim_Strim(const ZStrimW& s, ZRef<ZYadStrimR> iYadStrimR)
+	{ sToStrim_Strim(s, iYadStrimR->GetStrimR(), 0, ZYadOptions(), false); }
+
+void sToStrim_Strim(const ZStrimW& s, ZRef<ZYadStrimR> iYadStrimR,
+	size_t iInitialIndent, const ZYadOptions& iOptions)
+	{ sToStrim_Strim(s, iYadStrimR->GetStrimR(), iInitialIndent, iOptions, false); }
 
 void ZYad_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR)
 	{ sToStrim_Yad(s, iYadR, 0, ZYadOptions(), false); }
@@ -1168,7 +1132,7 @@ void ZYad_ZooLibStrim::sWrite_PropName(const ZStrimW& iStrimW, const string& iPr
 	if (sContainsProblemChars(iPropName))
 		{
 		iStrimW << "\"";
-		ZStrimW_Escapify(iStrimW) << iPropName;
+		ZStrimW_Escaped(iStrimW) << iPropName;
 		iStrimW << "\"";
 		}
 	else

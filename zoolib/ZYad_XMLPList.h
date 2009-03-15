@@ -44,19 +44,19 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadRawR_XMLPList
+#pragma mark * ZYadStreamR_XMLPList
 
-class ZYadRawR_XMLPList
+class ZYadStreamR_XMLPList
 :	public ZYadR_Std,
-	public ZYadRawR
+	public ZYadStreamR
 	{
 public:
-	ZYadRawR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
+	ZYadStreamR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
 
 // From ZYadR_Std
 	virtual void Finish();
 
-// From ZStreamerR via ZYadRawR
+// From ZStreamerR via ZYadStreamR
 	const ZStreamR& GetStreamR();
 
 private:
@@ -64,6 +64,28 @@ private:
 	bool fMustReadEndTag;
 	ZStreamR_ASCIIStrim fStreamR_ASCIIStrim;
 	ZStreamR_Base64Decode fStreamR_Base64Decode;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadStrimR_String
+
+class ZYadStrimR_String
+:	public ZYadR_Std,
+	public ZYadStrimR
+	{
+public:
+	ZYadStrimR_String(ZML::Reader& iReader, bool iMustReadEndTag);
+
+// From ZYadR_Std
+	virtual void Finish();
+
+// From ZStrimmerR via ZYadStrimR
+	const ZStrimR& GetStrimR();
+
+private:
+	ZML::Reader& fR;
+	bool fMustReadEndTag;
 	};
 
 // =================================================================================================

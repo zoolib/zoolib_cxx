@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream_HexStrim.h"
 #include "zoolib/ZStrim.h"
+#include "zoolib/ZStrim_Escaped.h"
+#include "zoolib/ZStrimR_Boundary.h"
 #include "zoolib/ZYad_Std.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -41,25 +43,74 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadRawR_ZooLibStrim
+#pragma mark * ZYadStreamR_ZooLibStrim
 
-class ZYadRawR_ZooLibStrim
+class ZYadStreamR_ZooLibStrim
 :	public ZYadR_Std,
-	public ZYadRawR
+	public ZYadStreamR
 	{
 public:
-	ZYadRawR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter);
+	ZYadStreamR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter);
 
 // From ZYadR_Std
 	virtual void Finish();
 
-// From ZStreamerR via ZYadRawR
+// From ZStreamerR via ZYadStreamR
 	const ZStreamR& GetStreamR();
 
 private:
 	const ZStrimU& fStrimU;
 	bool fReadDelimiter;
 	ZStreamR_HexStrim fStreamR;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadStrimR_ZooLibStrim_Apos
+
+class ZYadStrimR_ZooLibStrim_Apos
+:	public ZYadR_Std,
+	public ZYadStrimR
+	{
+public:
+	ZYadStrimR_ZooLibStrim_Apos(const ZStrimU& iStrimU);
+
+// From ZYadR_Std
+	virtual void Finish();
+
+// From ZStrimmerR via ZYadStrimR
+	const ZStrimR& GetStrimR();
+
+private:
+	const ZStrimU& fStrimU;
+	ZStrimR_Escaped fStrimR;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadStrimR_ZooLibStrim_Quote
+
+class ZYadStrimR_ZooLibStrim_Quote
+:	public ZYadR_Std,
+	public ZYadStrimR,
+	private ZStrimR
+	{
+public:
+	ZYadStrimR_ZooLibStrim_Quote(const ZStrimU& iStrimU);
+
+// From ZYadR_Std
+	virtual void Finish();
+
+// From ZStrimmerR via ZYadStrimR
+	const ZStrimR& GetStrimR();
+
+// From ZStrimR
+	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+
+private:
+	const ZStrimU& fStrimU;
+	ZStrimR_Boundary fStrimR_Boundary;
+	size_t fQuotesSeen;
 	};
 
 // =================================================================================================
@@ -117,9 +168,14 @@ void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR);
 void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 	size_t iInitialIndent, const ZYadOptions& iOptions);
 
-void sToStrim_Raw(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR);
+void sToStrim_Stream(const ZStrimW& s, ZRef<ZYadStreamR> iYadStreamR);
 
-void sToStrim_Raw(const ZStrimW& s, ZRef<ZYadRawR> iYadRawR,
+void sToStrim_Stream(const ZStrimW& s, ZRef<ZYadStreamR> iYadStreamR,
+	size_t iInitialIndent, const ZYadOptions& iOptions);
+
+void sToStrim_Strim(const ZStrimW& s, ZRef<ZYadStrimR> iYadStrimR);
+
+void sToStrim_Strim(const ZStrimW& s, ZRef<ZYadStrimR> iYadStrimR,
 	size_t iInitialIndent, const ZYadOptions& iOptions);
 
 void sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR);

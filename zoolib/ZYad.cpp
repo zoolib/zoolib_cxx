@@ -95,9 +95,9 @@ ZRef<ZYadR> ZYadR::Meta()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadRawR
+#pragma mark * ZYadStreamR
 
-bool ZYadRawR::IsSimple(const ZYadOptions& iOptions)
+bool ZYadStreamR::IsSimple(const ZYadOptions& iOptions)
 	{ return false; }
 
 // =================================================================================================

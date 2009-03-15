@@ -48,6 +48,37 @@ ZYadParseException_ML::ZYadParseException_ML(const char* iWhat)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYadStrimR_ML
+
+class ZYadStrimR_ML
+:	public ZYadR_Std,
+	public ZYadStrimR
+	{
+public:
+	ZYadStrimR_ML(ZML::Reader& iR);
+
+// From ZYadR_Std
+	virtual void Finish();
+
+// From ZStrimmerR via ZYadStrimR
+	virtual const ZStrimR& GetStrimR();
+
+private:
+	ZML::Reader& fR;
+	};
+
+ZYadStrimR_ML::ZYadStrimR_ML(ZML::Reader& iR)
+:	fR(iR)
+	{}
+
+void ZYadStrimR_ML::Finish()
+	{ fR.Advance(); }
+
+const ZStrimR& ZYadStrimR_ML::GetStrimR()
+	{ return fR.Text(); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYadMapR_ML
 
 ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR)
@@ -104,10 +135,7 @@ void ZYadMapR_ML::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>
 			}
 		case ZML::eToken_Text:
 			{
-			string theString;
-			ZStrimW_String(theString).CopyAllFrom(fR.Text());
-			fR.Advance();
-			oYadR = new ZYadPrimR_Std(theString);
+			oYadR = new ZYadStrimR_ML(fR);
 			break;
 			}
 		}

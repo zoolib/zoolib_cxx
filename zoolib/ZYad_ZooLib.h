@@ -50,20 +50,38 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadRawRPos_MemoryBlock
+#pragma mark * ZYadStreamRPos_MemoryBlock
 
 typedef ZStreamerRPos_T<ZStreamRPos_MemoryBlock> ZStreamerRPos_MemoryBlock;
 
-class ZYadRawRPos_MemoryBlock
+class ZYadStreamRPos_MemoryBlock
 :	public ZYadR_TValue,
-	public ZYadRawR,
+	public ZYadStreamR,
 	public ZStreamerRPos_MemoryBlock
 	{
 public:
-	ZYadRawRPos_MemoryBlock(const ZMemoryBlock& iMB);
+	ZYadStreamRPos_MemoryBlock(const ZMemoryBlock& iMB);
 
-// From ZYadR, disambiguating between ZYadR_TValue and ZYadRawR
+// From ZYadR, disambiguating between ZYadR_TValue and ZYadStreamR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadStrimU_String
+
+typedef ZStrimmerU_T<ZStrimU_String> ZStrimmerU_String;
+
+class ZYadStrimU_String
+:	public ZYadR_TValue,
+	public ZYadStrimR,
+	public ZStrimmerU_String
+	{
+public:
+	ZYadStrimU_String(const std::string& iString);
+
+// From ZYadR, disambiguating between ZYadR_TValue and ZYadStreamR
+//	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
 // =================================================================================================

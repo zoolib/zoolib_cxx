@@ -50,36 +50,6 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_Std
-
-class ZYadPrimR_Std
-:	public ZYadR_Std,
-	public ZYadR_TValue
-	{
-public:
-	ZYadPrimR_Std(const ZTValue& iTV);
-
-// From ZYadR_Std
-	virtual void Finish();
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadRawR_Std
-
-class ZYadRawR_Std
-:	public ZYadR_Std,
-	public ZYadRawRPos_MemoryBlock
-	{
-public:
-	ZYadRawR_Std(const ZMemoryBlock& iMB);
-
-// From ZYadR_Std
-	virtual void Finish();
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadListR_Std
 
 class ZYadListR_Std

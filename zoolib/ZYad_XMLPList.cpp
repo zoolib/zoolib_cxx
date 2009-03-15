@@ -22,8 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimW_ML.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
+#include "zoolib/ZYad_StdMore.h"
 #include "zoolib/ZYad_XMLPList.h"
-#include "zoolib/ZYad_ZooLib.h"
+//#include "zoolib/ZYad_ZooLib.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -210,7 +211,12 @@ static ZRef<ZYadR_Std> sMakeYadR_XMLPList(ZML::Reader& r)
 		else if (r.Name() == "data")
 			{
 			r.Advance();
-			return new ZYadRawR_XMLPList(r, true);
+			return new ZYadStreamR_XMLPList(r, true);
+			}
+		else if (r.Name() == "string")
+			{
+			r.Advance();
+			return new ZYadStrimR_String(r, true);
 			}
 		}
 	
@@ -235,16 +241,16 @@ ZYadParseException_XMLPList::ZYadParseException_XMLPList(const char* iWhat)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadRawR_XMLPList
+#pragma mark * ZYadStreamR_XMLPList
 
-ZYadRawR_XMLPList::ZYadRawR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
+ZYadStreamR_XMLPList::ZYadStreamR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
 :	fR(iReader),
 	fMustReadEndTag(iMustReadEndTag),
 	fStreamR_ASCIIStrim(fR.Text()),
 	fStreamR_Base64Decode(fStreamR_ASCIIStrim)
 	{}
 
-void ZYadRawR_XMLPList::Finish()
+void ZYadStreamR_XMLPList::Finish()
 	{
 	fStreamR_Base64Decode.SkipAll();
 
@@ -252,8 +258,27 @@ void ZYadRawR_XMLPList::Finish()
 		sEnd(fR, "data");
 	}
 
-const ZStreamR& ZYadRawR_XMLPList::GetStreamR()
+const ZStreamR& ZYadStreamR_XMLPList::GetStreamR()
 	{ return fStreamR_Base64Decode; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadStrimR_String
+
+ZYadStrimR_String::ZYadStrimR_String(ZML::Reader& iReader, bool iMustReadEndTag)
+:	fR(iReader),
+	fMustReadEndTag(iMustReadEndTag)
+	{}
+
+void ZYadStrimR_String::Finish()
+	{
+	fR.Advance();
+	if (fMustReadEndTag)
+		sEnd(fR, "string");
+	}
+
+const ZStrimR& ZYadStrimR_String::GetStrimR()
+	{ return fR.Text(); }
 
 // =================================================================================================
 #pragma mark -
@@ -331,11 +356,18 @@ ZRef<ZYadR> ZYad_XMLPList::sMakeYadR(ZML::Reader& r)
 	return sMakeYadR_XMLPList(r);
 	}
 
-static void sToStrim_Raw(const ZStrimW_ML& s, const ZStreamR& iStreamR)
+static void sToStrim_Stream(const ZStrimW_ML& s, const ZStreamR& iStreamR)
 	{
 	s.Begin("data");
 		iStreamR.CopyAllTo(ZStreamW_Base64Encode(ZStreamW_ASCIIStrim(s)));
 	s.End("data");	
+	}
+
+static void sToStrim_Strim(const ZStrimW_ML& s, const ZStrimR& iStrimR)
+	{
+	s.Begin("string");
+		iStrimR.CopyAllTo(s);
+	s.End("string");	
 	}
 
 static void sToStrim_List(const ZStrimW_ML& s, ZRef<ZYadListR> iYadListR)
@@ -360,7 +392,6 @@ static void sToStrim_Map(const ZStrimW_ML& s, ZRef<ZYadMapR> iYadMapR)
 	s.End("dict");
 	}
 
-
 static void sToStrim_SimpleTValue(const ZStrimW_ML& s, const ZTValue& iTV)
 	{
 	switch (iTV.TypeOf())
@@ -377,9 +408,7 @@ static void sToStrim_SimpleTValue(const ZStrimW_ML& s, const ZTValue& iTV)
 			}
 		case eZType_String:
 			{
-			s.Begin("string");
-				s.Write(iTV.GetString());
-			s.End();
+			sToStrim_Strim(s, ZStrimU_String(iTV.GetString()));
 			break;
 			}
 		case eZType_Int32:
@@ -406,7 +435,7 @@ static void sToStrim_SimpleTValue(const ZStrimW_ML& s, const ZTValue& iTV)
 			}
 		case eZType_Raw:
 			{
-			sToStrim_Raw(s, ZStreamRPos_MemoryBlock(iTV.GetRaw()));
+			sToStrim_Stream(s, ZStreamRPos_MemoryBlock(iTV.GetRaw()));
 			}
 		case eZType_Time:
 			{
@@ -431,9 +460,13 @@ void ZYad_XMLPList::sToStrimW_ML(const ZStrimW_ML& s, ZRef<ZYadR> iYadR)
 		{
 		sToStrim_List(s, theYadListR);
 		}
-	else if (ZRef<ZYadRawR> theYadRawR = ZRefDynamicCast<ZYadRawR>(iYadR))
+	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
 		{
-		sToStrim_Raw(s, theYadRawR->GetStreamR());
+		sToStrim_Stream(s, theYadStreamR->GetStreamR());
+		}
+	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
+		{
+		sToStrim_Strim(s, theYadStrimR->GetStrimR());
 		}
 	else
 		{

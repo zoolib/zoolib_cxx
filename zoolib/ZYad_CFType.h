@@ -57,18 +57,18 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadRawRPos_CFData
+#pragma mark * ZYadStreamRPos_CFData
 
 typedef ZStreamerRPos_T<ZStreamRPos_CFData> ZStreamerRPos_CFData;
 
-class ZYadRawRPos_CFData
+class ZYadStreamRPos_CFData
 :	public ZYadR_CFType,
-	public ZYadRawR,
+	public ZYadStreamR,
 	public virtual ZStreamerRPos_CFData
 	{
 public:
-	ZYadRawRPos_CFData(CFDataRef iCFDataRef);
-	virtual ~ZYadRawRPos_CFData();
+	ZYadStreamRPos_CFData(CFDataRef iCFDataRef);
+	virtual ~ZYadStreamRPos_CFData();
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);

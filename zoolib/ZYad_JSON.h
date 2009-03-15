@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStrim.h"
+#include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZYad_Std.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -40,6 +41,28 @@ public:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYadStrimR_JSON
+
+class ZYadStrimR_JSON
+:	public ZYadR_Std,
+	public ZYadStrimR
+	{
+public:
+	ZYadStrimR_JSON(const ZStrimU& iStrimU);
+
+// From ZYadR_Std
+	virtual void Finish();
+
+// From ZStrimmerR via ZYadStrimR
+	const ZStrimR& GetStrimR();
+
+private:
+	const ZStrimU& fStrimU;
+	ZStrimR_Escaped fStrimR;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYadListR_JSON
 
 class ZYadListR_JSON : public ZYadListR_Std
@@ -52,7 +75,6 @@ public:
 
 private:
 	const ZStrimU& fStrimU;
-	bool fReadDelimiter;
 	};
 
 // =================================================================================================
@@ -69,7 +91,6 @@ public:
 
 private:
 	const ZStrimU& fStrimU;
-	bool fReadDelimiter;
 	};
 
 // =================================================================================================

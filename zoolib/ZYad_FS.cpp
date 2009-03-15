@@ -116,14 +116,14 @@ void ZYadMapRPos_Dir::SetPosition(const std::string& iName)
 #pragma mark -
 #pragma mark * ZYad_FS
 
-class ZYadRawRPos_File
+class ZYadStreamRPos_File
 :	public ZYadR_FS,
-	public ZYadRawR,
+	public ZYadStreamR,
 	public virtual ZStreamerRPos
 	{
 public:
-	ZYadRawRPos_File(const ZFileSpec& iFS);
-	virtual ~ZYadRawRPos_File();
+	ZYadStreamRPos_File(const ZFileSpec& iFS);
+	virtual ~ZYadStreamRPos_File();
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
@@ -135,19 +135,19 @@ private:
 	ZRef<ZStreamerRPos> fStreamerRPos;
 	};
 
-ZYadRawRPos_File::ZYadRawRPos_File(const ZFileSpec& iFS)
+ZYadStreamRPos_File::ZYadStreamRPos_File(const ZFileSpec& iFS)
 :	ZYadR_FS(iFS)
 	{}
 
-ZYadRawRPos_File::~ZYadRawRPos_File()
+ZYadStreamRPos_File::~ZYadStreamRPos_File()
 	{}
 
-bool ZYadRawRPos_File::IsSimple(const ZYadOptions& iOptions)
+bool ZYadStreamRPos_File::IsSimple(const ZYadOptions& iOptions)
 	{
 	return false;
 	}
 
-const ZStreamRPos& ZYadRawRPos_File::GetStreamRPos()
+const ZStreamRPos& ZYadStreamRPos_File::GetStreamRPos()
 	{
 	if (!fStreamerRPos)
 		fStreamerRPos = fFS.OpenRPos();
@@ -169,7 +169,7 @@ ZRef<ZYadR> sMakeYadR(const ZFileSpec& iFS)
 		}
 	else if (iFS.IsFile())
 		{
-		return new ZYadRawRPos_File(iFS);
+		return new ZYadStreamRPos_File(iFS);
 		}
 	return ZRef<ZYadR>();
 	}

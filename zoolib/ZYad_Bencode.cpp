@@ -20,7 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_cmath.h"
 #include "zoolib/ZYad_Bencode.h"
-#include "ZUnicode.h"
+#include "zoolib/ZYad_StdMore.h"
+#include "zoolib/ZUnicode.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -122,9 +123,9 @@ static ZRef<ZYadR_Std> sReadStringish(const ZStreamU& s)
 		{}
 
 	if (countSkipped == 0)
-		return new ZYadPrimR_Std(theString);
+		return new ZYadStrimU_Std(theString);
 	else
-		return new ZYadRawR_Std(ZMemoryBlock(theString.data(), theLength));
+		return new ZYadStreamRPos_Std(ZMemoryBlock(theString.data(), theLength));
 	}
 
 static ZRef<ZYadR_Std> sMakeYadR_Bencode(const ZStreamU& s)
