@@ -89,6 +89,37 @@ type             -
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYadStrimR_JSONNormalize
+
+class ZYadStrimR_JSONNormalize
+:	public ZYadR_Std,
+	public ZYadStrimR
+	{
+public:
+	ZYadStrimR_JSONNormalize(ZRef<ZYadStrimR> iSource);
+
+// From ZYadR_Std
+	virtual void Finish();
+
+// From ZStrimmerR via ZYadStrimR
+	const ZStrimR& GetStrimR();
+
+private:
+	ZRef<ZYadStrimR> fSource;
+	};
+
+ZYadStrimR_JSONNormalize::ZYadStrimR_JSONNormalize(ZRef<ZYadStrimR> iSource)
+:	fSource(iSource)
+	{}
+
+void ZYadStrimR_JSONNormalize::Finish()
+	{}
+
+const ZStrimR& ZYadStrimR_JSONNormalize::GetStrimR()
+	{ return fSource->GetStrimR(); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Helpers
 
 static void sThrowParseException(const string& iMessage)
@@ -418,6 +449,12 @@ static ZRef<ZYadR_Std> sMakeYadR_JSONNormalize(
 	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
 		return new ZYadMapR_JSONNormalize(theYadMapR, iPreserveLists, iPreserveMaps);
+		}
+	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
+		{
+		if (ZRef<ZYadR_Std> theYadR_Std = ZRefDynamicCast<ZYadR_Std>(theYadStrimR))
+			return theYadR_Std;
+		return new ZYadStrimR_JSONNormalize(theYadStrimR);
 		}
 	else
 		{
