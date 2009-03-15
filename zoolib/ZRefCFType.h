@@ -23,7 +23,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZRef.h"
 
-#if ZCONFIG_SPI_Enabled(CFType)
-#endif // ZCONFIG_SPI_Enabled(CFType)
-
 #endif // __ZRefCFType__

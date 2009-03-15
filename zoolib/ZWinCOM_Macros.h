@@ -22,8 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZWinCOM_Macros__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCONFIG_SPI.h"
-
 #if ZCONFIG(Compiler, GCC)
 
 	#define ZWinCOM_CLASS_(className, baseClass, l, w0, w1, b0, b1, b2, b3, b4, b5, b6, b7) \
