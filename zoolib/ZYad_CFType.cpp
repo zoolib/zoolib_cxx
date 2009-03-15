@@ -135,6 +135,15 @@ bool ZYadStreamRPos_CFData::IsSimple(const ZYadOptions& iOptions)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYadStrimR_CFString
+
+ZYadStrimR_CFString::ZYadStrimR_CFString(CFStringRef iStringRef)
+:	ZYadR_CFType(iStringRef),
+	ZStrimmerR_CFString(iStringRef)
+	{}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYadListRPos_CFArray
 
 ZYadListRPos_CFArray::ZYadListRPos_CFArray(CFArrayRef iCFArrayRef)
@@ -257,13 +266,12 @@ ZRef<ZYadR> ZYad_CFType::sMakeYadR(CFTypeRef iCFTypeRef)
 	return new ZYadR_CFType(iCFTypeRef);
 	}
 
-
-static ZRef<CFDictionaryRef> sReadDictionary(ZRef<ZYadMapR> iYadMapR)
+static CFDictionaryRef sReadDictionary(ZRef<ZYadMapR> iYadMapR)
 	{
-	ZRef<CFMutableDictionaryRef> result = NoRetain(::CFDictionaryCreateMutable(
+	CFMutableDictionaryRef result = ::CFDictionaryCreateMutable(
 		kCFAllocatorDefault, 0,
 		&kCFCopyStringDictionaryKeyCallBacks,
-		&kCFTypeDictionaryValueCallBacks));
+		&kCFTypeDictionaryValueCallBacks);
 
 	string theName;
 	while (ZRef<ZYadR> theYadR = iYadMapR->ReadInc(theName))

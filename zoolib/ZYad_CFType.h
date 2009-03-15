@@ -29,6 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(CFType)
 
 #include "zoolib/ZStream_CFData.h"
+#include "zoolib/ZStrim_CFString.h"
 
 #include <CoreFoundation/CFArray.h>
 #include <CoreFoundation/CFBase.h>
@@ -72,6 +73,24 @@ public:
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadStrimR_CFString
+
+typedef ZStrimmerR_T<ZStrimR_CFString> ZStrimmerR_CFString;
+
+class ZYadStrimR_CFString
+:	public ZYadR_CFType,
+	public ZYadStrimR,
+	public ZStrimmerR_CFString
+	{
+public:
+	ZYadStrimR_CFString(CFStringRef iStringRef);
+
+// From ZYadR, disambiguating between ZYadR_TValue and ZYadStreamR
+//	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
 // =================================================================================================
@@ -148,4 +167,4 @@ NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 
-#endif // __ZYad_ZooLib__
+#endif // __ZYad_CFType__
