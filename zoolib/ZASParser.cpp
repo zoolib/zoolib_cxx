@@ -26,8 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_HexStrim.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZStrim_CRLF.h"
+#include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZStrim_Stream.h"
-#include "zoolib/ZStrimW_Escapify.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZTextCoder.h"
 #include "zoolib/ZTextCoder_Unicode.h"
@@ -700,7 +700,7 @@ static void sWriteIndent(const ZStrimW& iStrimW, int iIndent)
 
 static void sWriteEscapifiedString(const ZStrimW& iStrimW, const string& iString)
 	{
-	ZStrimW_Escapify(iStrimW).Write(iString);
+	ZStrimW_Escaped(iStrimW).Write(iString);
 	}
 
 static void sWriteEscapifiedStringIndented(
@@ -709,9 +709,9 @@ static void sWriteEscapifiedStringIndented(
 	string eol = "\"\n";
 	eol += string(iIndent, '\t');
 	eol += "\"";
-	ZStrimW_Escapify::Options theOptions;
+	ZStrimW_Escaped::Options theOptions;
 	theOptions.fEOL = eol;
-	ZStrimW_Escapify(theOptions, iStrimW).Write(iString);
+	ZStrimW_Escaped(theOptions, iStrimW).Write(iString);
 	}
 
 ZASParser::ParseHandler_Prettify::ParseHandler_Prettify(const ZStrimW& iStrimW, bool iDumpBinaries)
