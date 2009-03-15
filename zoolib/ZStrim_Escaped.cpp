@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2003 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,24 +18,140 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStrimW_Escapify.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZStrim_Escaped.h"
+#include "zoolib/ZUtil_Strim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStrimW_Escapify::Options
+#pragma mark * ZStrimR_Escaped
 
-ZStrimW_Escapify::Options::Options()
+ZStrimR_Escaped::ZStrimR_Escaped(const ZStrimU& iStrimSource, UTF32 iDelimiter)
+:	fStrimSource(iStrimSource),
+	fDelimiter(iDelimiter)
+	{}
+
+ZStrimR_Escaped::~ZStrimR_Escaped()
+	{}
+
+void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+	{
+	using namespace ZUtil_Strim;
+
+	UTF32* localDest = iDest;
+	UTF32* localDestEnd = iDest + iCount;
+	while (localDestEnd > localDest)
+		{
+		UTF32 theCP;
+		if (!fStrimSource.ReadCP(theCP))
+			throw ParseException("Unexpected end of strim whilst parsing a string");
+
+		if (theCP == fDelimiter)
+			{
+			fStrimSource.Unread();
+			break;
+			}
+
+		if (ZUnicode::sIsEOL(theCP))
+			throw ParseException("Illegal end of line whilst parsing a string");
+
+		if (theCP == '\\')
+			{
+			if (!fStrimSource.ReadCP(theCP))
+				throw ParseException("Unexpected end of strim whilst parsing a string");
+
+			switch (theCP)
+				{
+				case '\\':
+					theCP = '\\';
+					break;
+				case 't':
+					theCP = '\t';
+					break;
+				case 'n':
+					theCP = '\n';
+					break;
+				case 'r':
+					theCP = '\r';
+					break;
+				case 'b':
+					theCP = '\b';
+					break;
+				case 'f':
+					theCP = '\f';
+					break;
+				case '"':
+					theCP = '\"';
+					break;
+				case '\'':
+					theCP = '\'';
+					break;
+				case 'x':
+					{
+					int curDigit;
+					if (!sTryRead_HexDigit(fStrimSource, curDigit))
+						throw ParseException("Illegal non-hex digit following \"\\x\"");
+
+					theCP = curDigit;
+
+					if (sTryRead_HexDigit(fStrimSource, curDigit))
+						theCP = (curDigit << 4) + curDigit;
+					break;
+					}
+				case 'u':
+				case 'U':
+					{
+					int32 requiredChars = 4;
+					if (theCP == 'U')
+						requiredChars = 8;
+
+					UTF32 resultCP = 0;
+					while (requiredChars--)
+						{
+						int curDigit;
+						if (!sTryRead_HexDigit(fStrimSource, curDigit))
+							{
+							throw ParseException(string8("Illegal non-hex digit in \"\\")
+								+ char(theCP) + "\" escape sequence");
+							}
+
+						resultCP = (resultCP << 4) + curDigit;
+						}
+					theCP = resultCP;
+					break;
+					}
+				default:
+					{
+					// Gotta love escape sequences. This message
+					// has "\" (quote, backslash, quote) at the end.
+					throw ParseException("Illegal character following \"\\\"");
+					}
+				}
+			}
+
+		*localDest++ = theCP;
+		}
+
+	if (oCount)
+		*oCount = localDest - iDest;	
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStrimW_Escaped::Options
+
+ZStrimW_Escaped::Options::Options()
 :	fQuoteQuotes(true),
 	fEscapeHighUnicode(true)
 	{}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStrimW_Escapify
+#pragma mark * ZStrimW_Escaped
 
-ZStrimW_Escapify::ZStrimW_Escapify(const Options& iOptions, const ZStrimW& iStrimSink)
+ZStrimW_Escaped::ZStrimW_Escaped(const Options& iOptions, const ZStrimW& iStrimSink)
 :	fStrimSink(iStrimSink),
 	fEOL(iOptions.fEOL),
 	fQuoteQuotes(iOptions.fQuoteQuotes),
@@ -43,14 +159,14 @@ ZStrimW_Escapify::ZStrimW_Escapify(const Options& iOptions, const ZStrimW& iStri
 	fLastWasCR(false)
 	{}
 
-ZStrimW_Escapify::ZStrimW_Escapify(const ZStrimW& iStrimSink)
+ZStrimW_Escaped::ZStrimW_Escaped(const ZStrimW& iStrimSink)
 :	fStrimSink(iStrimSink),
 	fQuoteQuotes(true),
 	fEscapeHighUnicode(true),
 	fLastWasCR(false)
 	{}
 
-ZStrimW_Escapify::~ZStrimW_Escapify()
+ZStrimW_Escaped::~ZStrimW_Escaped()
 	{
 	try
 		{
@@ -71,7 +187,7 @@ static UTF32 sAsHexCP(int inInt)
 	return inInt - 10 + 'A';
 	}
 
-void ZStrimW_Escapify::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
+void ZStrimW_Escaped::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
 	{
 	size_t localCount = iCountCU + 1;
 	while (--localCount)

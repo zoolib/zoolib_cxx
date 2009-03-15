@@ -22,42 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStrimW_Escapify__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
+#include "zoolib/ZStrim_Escaped.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZStrimW_Escapify
-
-/// A write filter strim that inserts C-style escape sequences.
-
-class ZStrimW_Escapify : public ZStrimW_NativeUTF32
-	{
-public:
-	struct Options
-		{
-		Options();
-
-		string8 fEOL;
-		bool fQuoteQuotes;
-		bool fEscapeHighUnicode;
-		};
-
-	ZStrimW_Escapify(const Options& iOptions, const ZStrimW& iStrimSink);
-	ZStrimW_Escapify(const ZStrimW& iStrimSink);
-	~ZStrimW_Escapify();
-
-// From ZStrimW via ZStrimW_NativeUTF32
-	virtual void Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU);
-
-private:
-	const ZStrimW& fStrimSink;
-	string8 fEOL;
-	bool fQuoteQuotes;
-	bool fEscapeHighUnicode;
-	bool fLastWasCR;
-	};
+typedef ZStrimW_Escaped ZStrimW_Escapify;
 
 NAMESPACE_ZOOLIB_END
 
