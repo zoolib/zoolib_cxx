@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_cmath.h" // For pow, NAN and INFINITY
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZStrimR_Boundary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -692,100 +693,10 @@ bool ZUtil_Strim::sTryRead_SignedDouble(const ZStrimU& iStrimU, double& oDouble)
 	return sTryRead_Double(iStrimU, oDouble);
 	}
 
-void ZUtil_Strim::sCopy_EscapedString(const ZStrimU& iStrimU,
-	UTF32 iTerminator, const ZStrimW& iDest)
+void ZUtil_Strim::sCopy_EscapedString(
+	const ZStrimU& iStrimU, UTF32 iTerminator, const ZStrimW& iDest)
 	{
-	for (;;)
-		{
-		UTF32 theCP;
-		if (!iStrimU.ReadCP(theCP))
-			throw ParseException("Unexpected end of strim whilst parsing a string");
-
-		if (theCP == iTerminator)
-			{
-			iStrimU.Unread();
-			return;
-			}
-
-		if (ZUnicode::sIsEOL(theCP))
-			throw ParseException("Illegal end of line whilst parsing a string");
-
-		if (theCP == '\\')
-			{
-			if (!iStrimU.ReadCP(theCP))
-				throw ParseException("Unexpected end of strim whilst parsing a string");
-
-			switch (theCP)
-				{
-				case '\\':
-					theCP = '\\';
-					break;
-				case 't':
-					theCP = '\t';
-					break;
-				case 'n':
-					theCP = '\n';
-					break;
-				case 'r':
-					theCP = '\r';
-					break;
-				case 'b':
-					theCP = '\b';
-					break;
-				case 'f':
-					theCP = '\f';
-					break;
-				case '"':
-					theCP = '\"';
-					break;
-				case '\'':
-					theCP = '\'';
-					break;
-				case 'x':
-					{
-					int curDigit;
-					if (!sTryRead_HexDigit(iStrimU, curDigit))
-						throw ParseException("Illegal non-hex digit following \"\\x\"");
-
-					theCP = curDigit;
-
-					if (sTryRead_HexDigit(iStrimU, curDigit))
-						theCP = (curDigit << 4) + curDigit;
-					break;
-					}
-				case 'u':
-				case 'U':
-					{
-					int32 requiredChars = 4;
-					if (theCP == 'U')
-						requiredChars = 8;
-
-					UTF32 resultCP = 0;
-					while (requiredChars--)
-						{
-						int curDigit;
-						if (!sTryRead_HexDigit(iStrimU, curDigit))
-							{
-							throw ParseException(string8("Illegal non-hex digit in \"\\")
-								+ char(theCP) + "\" escape sequence");
-							}
-
-						resultCP = (resultCP << 4) + curDigit;
-						}
-					theCP = resultCP;
-					break;
-					}
-				default:
-					{
-					// Gotta love escape sequences. This message
-					// has "\" (quote, backslash, quote) at the end.
-					throw ParseException("Illegal character following \"\\\"");
-					}
-				}
-			}
-
-		iDest.WriteCP(theCP);
-		}
+	ZStrimR_Escaped(iStrimU, iTerminator).CopyAllTo(iDest);
 	}
 
 void ZUtil_Strim::sRead_EscapedString(const ZStrimU& iStrimU, UTF32 iTerminator, string8& oString)
