@@ -577,7 +577,7 @@ const string& ZCommandLine::String::operator()() const
 #pragma mark * ZCommandLine::Boolean
 
 ZCommandLine::Boolean::Boolean(const string& iName, const string& iDescription)
-:	Opt(iName, iDescription, eRequired, false)
+:	Opt(iName, iDescription, eOptional, false)
 	{}
 
 bool ZCommandLine::Boolean::Parse(const char* iLexeme, const ZStrimW* iStrimErrors)
