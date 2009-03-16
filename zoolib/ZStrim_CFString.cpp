@@ -54,10 +54,11 @@ void ZStrimR_CFString::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 	else
 		{
 		size_t countConsumed;
+		const size_t countAvailable = length < fPosition ? 0 : length - fPosition;
 		if (const UTF16* start = (const UTF16*)::CFStringGetCharactersPtr(fStringRef))
 			{
 			ZUnicode::sUTF16ToUTF32(
-				start + fPosition, length - fPosition,
+				start + fPosition, countAvailable,
 				&countConsumed, nil,
 				iDest, iCount,
 				oCount);
@@ -65,7 +66,7 @@ void ZStrimR_CFString::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 		else
 			{
 			UTF16 buffer[kBufSize];
-			const size_t cuToCopy = min(iCount, kBufSize);
+			const size_t cuToCopy = min(iCount, min(countAvailable, kBufSize));
 			::CFStringGetCharacters(fStringRef, CFRangeMake(fPosition, cuToCopy), (UniChar*)buffer);
 			ZUnicode::sUTF16ToUTF32(
 				buffer, cuToCopy,
@@ -91,10 +92,11 @@ void ZStrimR_CFString::Imp_ReadUTF16(UTF16* iDest,
 	else
 		{
 		size_t countConsumed;
+		const size_t countAvailable = length < fPosition ? 0 : length - fPosition;
 		if (const UTF16* start = (const UTF16*)::CFStringGetCharactersPtr(fStringRef))
 			{
 			ZUnicode::sUTF16ToUTF16(
-				start + fPosition, length - fPosition,
+				start + fPosition, countAvailable,
 				&countConsumed, nil,
 				iDest, iCountCU,
 				oCountCU,
@@ -103,7 +105,7 @@ void ZStrimR_CFString::Imp_ReadUTF16(UTF16* iDest,
 		else
 			{
 			UTF16 buffer[kBufSize];
-			const size_t cuToCopy = min(iCountCU, kBufSize);
+			const size_t cuToCopy = min(iCountCU, min(countAvailable, kBufSize));
 			::CFStringGetCharacters(fStringRef, CFRangeMake(fPosition, cuToCopy), (UniChar*)buffer);
 			ZUnicode::sUTF16ToUTF16(
 				buffer, cuToCopy,
@@ -130,6 +132,7 @@ void ZStrimR_CFString::Imp_ReadUTF8(UTF8* iDest,
 	else
 		{
 		size_t countConsumed;
+		const size_t countAvailable = length < fPosition ? 0 : length - fPosition;
 		if (const UTF16* start = (const UTF16*)::CFStringGetCharactersPtr(fStringRef))
 			{
 			ZUnicode::sUTF16ToUTF8(
@@ -142,7 +145,7 @@ void ZStrimR_CFString::Imp_ReadUTF8(UTF8* iDest,
 		else
 			{
 			UTF16 buffer[kBufSize];
-			const size_t cuToCopy = min(iCountCU, kBufSize);
+			const size_t cuToCopy = min(iCountCU, min(countAvailable, kBufSize));
 			::CFStringGetCharacters(fStringRef, CFRangeMake(fPosition, cuToCopy), (UniChar*)buffer);
 			ZUnicode::sUTF16ToUTF8(
 				buffer, cuToCopy,
