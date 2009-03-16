@@ -146,6 +146,7 @@ ZStrimW_ML::ZStrimW_ML(const ZStrimW& iStrimSink)
 :	fStrimSink(iStrimSink),
 	fTagType(eTagTypeNone),
 	fWrittenSinceLastTag(true),
+	fLastWasBegin(false),
 	fLastWasEOL(false),
 	fIndentEnabled(true),
 	fString_EOL("\n"),
@@ -156,6 +157,7 @@ ZStrimW_ML::ZStrimW_ML(bool iIndent, const ZStrimW& iStrimSink)
 :	fStrimSink(iStrimSink),
 	fTagType(eTagTypeNone),
 	fWrittenSinceLastTag(true),
+	fLastWasBegin(false),
 	fLastWasEOL(false),
 	fIndentEnabled(iIndent),
 	fString_EOL("\n"),
@@ -166,6 +168,7 @@ ZStrimW_ML::ZStrimW_ML(const string8& iEOL, const string8& iIndent, const ZStrim
 :	fStrimSink(iStrimSink),
 	fTagType(eTagTypeNone),
 	fWrittenSinceLastTag(true),
+	fLastWasBegin(false),
 	fLastWasEOL(false),
 	fIndentEnabled(true),
 	fString_EOL(iEOL),
@@ -638,6 +641,7 @@ void ZStrimW_ML::pBegin(const string8& iTag, ETagType iTagType)
 	this->pWritePending();
 	fTags.push_back(iTag);
 	fTagType = iTagType;
+	fLastWasBegin = true;
 	}
 
 void ZStrimW_ML::pPreText()
@@ -670,7 +674,17 @@ void ZStrimW_ML::pWritePending()
 
 	ZAssertStop(kDebug_StrimW_ML, !fTags.empty());
 
-	this->pPreTag();
+	if (fIndentEnabled)
+		{
+		if (!fWrittenSinceLastTag)
+			{
+			if (!fLastWasEOL)
+				fStrimSink.Write(fString_EOL);
+			sWriteIndent(fStrimSink, fString_Indent, fTags.size() - 1);
+			}
+		}
+	fWrittenSinceLastTag = false;
+	fLastWasEOL = false;
 
 	if (fTagType == eTagTypePI)
 		fStrimSink.Write("<?");
@@ -733,7 +747,18 @@ void ZStrimW_ML::pEnd()
 	{
 	ZAssertStop(kDebug_StrimW_ML, !fTags.empty());
 
-	this->pPreTag();
+	if (fIndentEnabled)
+		{
+		if (!fWrittenSinceLastTag && !fLastWasBegin)
+			{
+			if (!fLastWasEOL)
+				fStrimSink.Write(fString_EOL);
+			sWriteIndent(fStrimSink, fString_Indent, fTags.size() - 1);
+			}
+		}
+	fWrittenSinceLastTag = false;
+	fLastWasEOL = false;
+	fLastWasBegin = false;
 
 	fStrimSink.Write("</");
 	fStrimSink.Write(fTags.back());

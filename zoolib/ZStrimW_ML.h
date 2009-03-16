@@ -160,6 +160,7 @@ protected:
 	
 	ETagType fTagType;
 	bool fWrittenSinceLastTag;
+	bool fLastWasBegin;
 	bool fLastWasEOL;
 	bool fIndentEnabled;
 	string8 fString_EOL;
