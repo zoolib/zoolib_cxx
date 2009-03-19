@@ -60,10 +60,7 @@ static void* sLookup(NSModule iModule, const char* iName)
 
 static NSModule sLoadNSModule(CFBundleRef iBundleRef)
 	{
-	NSModule module = nil;
-
-	ZRef<CFURLRef> executableURL = ::CFBundleCopyExecutableURL(iBundleRef);
-	if (executableURL)
+	if (ZRef<CFURLRef> executableURL = ::CFBundleCopyExecutableURL(iBundleRef))
 		{
 		char buff[PATH_MAX];
 
@@ -72,7 +69,7 @@ static NSModule sLoadNSModule(CFBundleRef iBundleRef)
 			NSObjectFileImage image;
 			if (NSObjectFileImageSuccess == ::NSCreateObjectFileImageFromFile(buff, &image))
 				{
-				module = ::NSLinkModule(
+				return ::NSLinkModule(
 					image, buff,
 					NSLINKMODULE_OPTION_BINDNOW
 					| NSLINKMODULE_OPTION_PRIVATE
@@ -80,8 +77,7 @@ static NSModule sLoadNSModule(CFBundleRef iBundleRef)
 				}
 			}
 		}
-
-	return module;
+	return nil;
 	}
 
 template <typename P>
