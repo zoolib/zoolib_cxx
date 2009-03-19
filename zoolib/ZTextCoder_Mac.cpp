@@ -192,14 +192,18 @@ bool ZTextDecoder_Mac::Decode(
 				sInitedSourceOffsets = true;
 				}
 			size_t countToConvert = min(iSourceBytes, kBufSize);
-			err = ::ConvertFromTextToUnicode(fInfo, countToConvert, localSource, 
+			err = ::ConvertFromTextToUnicode(
+				fInfo,
+				countToConvert, localSource, 
 				flags,
 				countToConvert, sSourceOffsets, &countOffsets, offsets,
 				kBufSize * sizeof(UniChar), &sourceConsumed, &utf16Generated, utf16Buffer);
 			}
 		else
 			{
-			err = ::ConvertFromTextToUnicode(fInfo, iSourceBytes, localSource, 
+			err = ::ConvertFromTextToUnicode(
+				fInfo,
+				iSourceBytes, localSource, 
 				flags,
 				0, nil, nil, nil, // Offset array stuff.
 				kBufSize * sizeof(UniChar), &sourceConsumed, &utf16Generated, utf16Buffer);
@@ -351,7 +355,9 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 
 		ByteCount utf16Consumed;
 		ByteCount destGenerated;
-		OSStatus err = ::ConvertFromUnicodeToText(fInfo, utf16Generated * 2, utf16Buffer, 
+		OSStatus err = ::ConvertFromUnicodeToText(
+			fInfo,
+			utf16Generated * 2, utf16Buffer, 
 			flags,
 			0, nil, nil, nil, // Offset array stuff.
 			iDestBytes, &utf16Consumed, &destGenerated, localDest);
