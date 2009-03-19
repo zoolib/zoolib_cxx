@@ -22,10 +22,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYad_ZooLibStream__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStream.h"
-#include "zoolib/ZYad.h"
+#include "zoolib/ZYad_Std.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadMapR_ZooLibStreamOld
+
+class ZYadMapR_ZooLibStreamOld : public ZYadMapR_Std
+	{
+public:
+	ZYadMapR_ZooLibStreamOld(const ZStreamR& iStreamR);
+
+// From ZYadMapR_Std
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
+
+private:
+	const ZStreamR& fStreamR;
+	size_t fCountRemaining;
+	};
 
 // =================================================================================================
 #pragma mark -

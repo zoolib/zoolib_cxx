@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream_Limited.h"
 #include "zoolib/ZStrim_Stream.h"
-#include "zoolib/ZYad_Std.h"
 #include "zoolib/ZYad_ZooLib.h"
 #include "zoolib/ZYad_ZooLibStream.h"
 
@@ -268,7 +267,7 @@ public:
 
 private:
 	const ZStreamR& fStreamR;
-	uint64 fCountRemaining;
+	size_t fCountRemaining;
 	};
 
 ZYadListR_ZooLibStreamOld::ZYadListR_ZooLibStreamOld(const ZStreamR& iStreamR)
@@ -315,19 +314,6 @@ void ZYadMapR_ZooLibStreamNew::Imp_ReadInc(
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadMapR_ZooLibStreamOld
-
-class ZYadMapR_ZooLibStreamOld : public ZYadMapR_Std
-	{
-public:
-	ZYadMapR_ZooLibStreamOld(const ZStreamR& iStreamR);
-
-// From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
-
-private:
-	const ZStreamR& fStreamR;
-	uint64 fCountRemaining;
-	};
 
 ZYadMapR_ZooLibStreamOld::ZYadMapR_ZooLibStreamOld(const ZStreamR& iStreamR)
 :	fStreamR(iStreamR),
@@ -393,14 +379,14 @@ void ZYad_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR)
 			uint64 theCount = theStreamRPos.GetSize() - theStreamRPos.GetPosition();
 			if (theCount <= ZUINT64_C(0xFFFFFFFF))
 				{
-				iStreamW.WriteUInt8(0x80 | eZType_Raw);
+				iStreamW.WriteUInt8(eZType_Raw);
 				iStreamW.WriteCount(theCount);
 				iStreamW.CopyAllFrom(theStreamRPos);
 				return;
 				}
 			}
 		const ZStreamR& theStreamR = theYadStreamR->GetStreamR();
-		iStreamW.WriteUInt8(eZType_Raw);
+		iStreamW.WriteUInt8(0x80 | eZType_Raw);
 		const size_t chunkSize = 64 * 1024;
 		vector<uint8> buffer(chunkSize);
 		for (;;)
@@ -429,7 +415,7 @@ ZRef<ZYadR_Std> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR)
 	uint8 theType;
 	size_t countRead;
 	iStreamR.Read(&theType, 1, &countRead);
-	if (countRead)
+	if (countRead && theType != 0xFF)
 		{
 		if (theType == eZType_Vector)
 			{
