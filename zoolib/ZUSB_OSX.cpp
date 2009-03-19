@@ -322,6 +322,7 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface(
 						if (kIOReturnSuccess == theIOUSBInterfaceInterface[0]->
 							USBInterfaceOpen(theIOUSBInterfaceInterface))
 							{
+							::IOObjectRelease(iterator);
 							return new ZUSBInterfaceInterface(this,
 								iRunLoopRef, theIOUSBInterfaceInterface);
 							}
