@@ -24,9 +24,5 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape.h"
 
-#if ZCONFIG_SPI_Enabled(Netscape)
-
-#endif // ZCONFIG_SPI_Enabled(Netscape)
-
 
 #endif // __ZNetscape_GuestEntry__
