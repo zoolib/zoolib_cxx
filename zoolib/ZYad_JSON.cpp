@@ -651,8 +651,7 @@ static void sWriteLFIndent(const ZStrimW& iStrimW,
 	sWriteIndent(iStrimW, iCount, iOptions);
 	}
 
-static void sWriteString(
-	const ZStrimW& s, const ZYadOptions& iOptions, const string& iString)
+static void sWriteString(const ZStrimW& s, const string& iString)
 	{
 	s.Write("\"");
 
@@ -661,6 +660,19 @@ static void sWriteString(
 	theOptions.fEscapeHighUnicode = false;
 	
 	ZStrimW_Escaped(theOptions, s).Write(iString);
+
+	s.Write("\"");
+	}
+
+static void sWriteString(const ZStrimW& s, const ZStrimR& iStrimR)
+	{
+	s.Write("\"");
+
+	ZStrimW_Escaped::Options theOptions;
+	theOptions.fQuoteQuotes = true;
+	theOptions.fEscapeHighUnicode = false;
+	
+	ZStrimW_Escaped(theOptions, s).CopyAllFrom(iStrimR);
 
 	s.Write("\"");
 	}
@@ -675,17 +687,17 @@ static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
 		{
 		case eZType_String:
 			{
-			sWriteString(s, iOptions, normalized.GetString());
+			sWriteString(s, normalized.GetString());
 			break;
 			}
 		case eZType_Int64: 
 			{
-			s.Writef("%lld", iTV.GetInt64());
+			s.Writef("%lld", normalized.GetInt64());
 			break;
 			}
 		case eZType_Bool:
 			{
-			if (iTV.GetBool())
+			if (normalized.GetBool())
 				s.Write("true");
 			else
 				s.Write("false");
@@ -695,7 +707,7 @@ static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
 			{
 			// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
 			// <http://docs.sun.com/source/806-3568/ncg_goldberg.html>
-			s.Writef("%.17g", iTV.GetDouble());
+			s.Writef("%.17g", normalized.GetDouble());
 			break;
 			}
 		case eZType_Null:
@@ -801,7 +813,7 @@ static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 				if (!isFirst)
 					s.Write(",");
 				sWriteLFIndent(s, iLevel, iOptions);
-				sWriteString(s, iOptions, curName);
+				sWriteString(s, curName);
 				s << " : ";
 				sToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
 				}
@@ -824,7 +836,7 @@ static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 				if (!isFirst)
 					s.Write(",");
 				s.Write(" ");
-				sWriteString(s, iOptions, curName);
+				sWriteString(s, curName);
 				s << " : ";
 				sToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
 				}
@@ -851,6 +863,10 @@ static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
 		{
 		sToStrim_List(s, theYadListR, iLevel, iOptions, iMayNeedInitialLF);
+		}
+	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
+		{
+		sWriteString(s, theYadStrimR->GetStrimR());
 		}
 	else
 		{

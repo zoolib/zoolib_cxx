@@ -292,6 +292,12 @@ ZTValue ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
 		ZStreamRWPos_MemoryBlock(theMB).CopyAllFrom(theYadStreamR->GetStreamR());
 		return theMB;
 		}
+	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
+		{
+		string theString;
+		ZStrimW_String(theString).CopyAllFrom(theYadStrimR->GetStrimR());
+		return theString;
+		}
 	else
 		{
 		return ZFactoryChain_T<ZTValue, ZRef<ZYadR> >::sMake(iYadR);
