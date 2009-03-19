@@ -25,6 +25,14 @@ NAMESPACE_ZOOLIB_BEGIN
 using std::string;
 using std::vector;
 
+/*
+ZYad_ML provides a YadR interface to an XML/XHTML-type source. A tag's name is returned as
+the entry's name, and any attributes on a tag are accessible from entry's Meta.
+Because HTML has many tags that are not properly balanced (<P>, <BR>, <link> etc), and
+are matched without case-sensitivity this code will need some extension to be really useful
+for walking HTML.
+*/
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Static helpers
