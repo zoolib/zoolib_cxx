@@ -391,7 +391,7 @@ CFArrayRef ZUtil_CFType::sCreateCFArray(const vector<ZTValue>& iVector)
 		values.push_back(ZRef<CFTypeRef>(NoRetain(sCreateCFType(*i))));
 
 	CFArrayRef theCFArrayRef = ::CFArrayCreate(kCFAllocatorDefault,
-		(CFTypeRef*)&values[0], values.size(), &kCFTypeArrayCallBacks );
+		(CFTypeRef*)&values[0], values.size(), &kCFTypeArrayCallBacks);
 
 	ZAssert(values.size() == ::CFArrayGetCount(theCFArrayRef));
 
