@@ -182,18 +182,24 @@ bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 		string dummy;
 		if (ZRef<ZYadR> theYadR = clone->ReadInc(dummy))
 			{
-			if (!clone->ReadInc(dummy))
+			if (!clone->Skip())
 				{
-				// We've exhausted ouselves, so we had just one entry.
+				// We've exhausted ouselves, so we had just one entry, and
+				// we're simple if that entry is simple.
 				return theYadR->IsSimple(iOptions);
 				}
 			}
 		else
 			{
+			// We're empty, and thus simple.
 			return true;
 			}
 		}
-	return false;
+	else
+		{
+		// We couldn't clone, so assume we're complex.
+		return false;
+		}
 	}
 
 NAMESPACE_ZOOLIB_END
