@@ -24,8 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 
-#if ZCONFIG_SPI_Enabled(Netscape)
-
 #if defined(XP_WIN)
 #	define EXPORT_DECL(ret) extern "C" __declspec(dllexport) ret __stdcall
 #	define EXPORT_DEF(ret) ret __stdcall
@@ -106,5 +104,3 @@ EXPORT_DEF(int) main(NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_
 	return result;
 	}
 #endif
-
-#endif // ZCONFIG_SPI_Enabled(Netscape)
