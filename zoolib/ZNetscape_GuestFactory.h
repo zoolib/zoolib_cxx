@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2002 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZNetscape_GuestFactory_Mac__
-#define __ZNetscape_GuestFactory_Mac__ 1
+#ifndef __ZNetscape_GuestFactory__
+#define __ZNetscape_GuestFactory__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZNetscape_Host.h" // For GuestFactory
@@ -34,10 +34,10 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZNetscape {
 
-ZRef<GuestFactory> sMakeGuestFactory_MacPlugin(const std::string& iPath);
+ZRef<GuestFactory> sMakeGuestFactory(const std::string& iPath);
 
 } // namespace ZNetscape
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZNetscape_GuestFactory_Mac__
+#endif // __ZNetscape_GuestFactory__
