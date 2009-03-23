@@ -180,16 +180,16 @@ void sRefCopy(void* iDest, T* iP)
 #pragma mark -
 #pragma mark * ZRef partially specialized for pointer types
 
-template <typename T>
+template <typename P>
 struct NoRetain_t
 	{
-	mutable T fP;
-	NoRetain_t(T iP) : fP(iP) {}
+	mutable P fP;
+	NoRetain_t(P iP) : fP(iP) {}
 	};
 
-template <typename T>
-NoRetain_t<T> NoRetain(T iP)
-	{ return NoRetain_t<T>(iP); }
+template <typename P>
+NoRetain_t<P> NoRetain(P iP)
+	{ return NoRetain_t<P>(iP); }
 
 template <typename T>
 class ZRef<T*>
