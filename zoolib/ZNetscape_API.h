@@ -450,7 +450,7 @@ typedef struct _NPPrint
 	    uint32   lParam;
 		} NPEvent;
 
-#elif defined (XP_UNIX)
+#elif defined(XP_UNIX)
 
 	typedef XEvent NPEvent;
 
@@ -699,8 +699,10 @@ typedef struct __JRIEnv JRIEnv;
 typedef void* jref;
 
 ZMacCFM_DefineProc3(NPError, NPN_GetURL, NPP, const char*, const char*);
+
 ZMacCFM_DefineProc6
 	(NPError, NPN_PostURL, NPP, const char*, const char*, uint32, const char*, NPBool);
+
 ZMacCFM_DefineProc2(NPError, NPN_RequestRead, NPStream*, NPByteRange*);
 ZMacCFM_DefineProc4(NPError, NPN_NewStream, NPP, NPMIMEType, const char*, NPStream**);
 ZMacCFM_DefineProc4(int32, NPN_Write, NPP, NPStream*, int32, void*);
@@ -714,8 +716,10 @@ ZMacCFM_DefineProc1_Void(NPN_ReloadPlugins, NPBool);
 ZMacCFM_DefineProc0(JRIEnv*, NPN_GetJavaEnv);
 ZMacCFM_DefineProc1(jref, NPN_GetJavaPeer, NPP);
 ZMacCFM_DefineProc4(NPError, NPN_GetURLNotify, NPP, const char*, const char*, void*);
+
 ZMacCFM_DefineProc7
 	(NPError, NPN_PostURLNotify, NPP, const char*, const char*, uint32, const char*, NPBool, void*);
+
 ZMacCFM_DefineProc3(NPError, NPN_GetValue, NPP, NPNVariable, void*);
 ZMacCFM_DefineProc3(NPError, NPN_SetValue, NPP, NPPVariable, void*);
 ZMacCFM_DefineProc2_Void(NPN_InvalidateRect, NPP, NPRect*);
@@ -730,10 +734,13 @@ ZMacCFM_DefineProc1(int32_t, NPN_IntFromIdentifier, NPIdentifier);
 ZMacCFM_DefineProc2(NPObject*, NPN_CreateObject, NPP, NPClass*);
 ZMacCFM_DefineProc1(NPObject*, NPN_RetainObject, NPObject*);
 ZMacCFM_DefineProc1_Void(NPN_ReleaseObject, NPObject*);
+
 ZMacCFM_DefineProc6
 	(bool, NPN_Invoke, NPP, NPObject*, NPIdentifier, const NPVariant*, unsigned, NPVariant*);
+
 ZMacCFM_DefineProc5
 	(bool, NPN_InvokeDefault, NPP, NPObject*, const NPVariant*, unsigned, NPVariant*);
+
 ZMacCFM_DefineProc4(bool, NPN_Evaluate, NPP, NPObject*, NPString*, NPVariant*);
 ZMacCFM_DefineProc4(bool, NPN_GetProperty, NPP, NPObject*, NPIdentifier, NPVariant*);
 ZMacCFM_DefineProc4(bool, NPN_SetProperty, NPP, NPObject*, NPIdentifier, const NPVariant*);
@@ -747,13 +754,16 @@ ZMacCFM_DefineProc1_Void(NPN_PopPopupsEnabledState, NPP);
 ZMacCFM_DefineProc4(bool, NPN_Enumerate, NPP, NPObject*, NPIdentifier**, uint32_t*);
 ZMacCFM_DefineProc3_Void(NPN_PluginThreadAsyncCall, NPP, void (*)(void*), void*);
 ZMacCFM_DefineProc5(bool, NPN_Construct, NPP, NPObject*, const NPVariant*, uint32_t, NPVariant*);    
+
 ZMacCFM_DefineProc4
 	(uint32, NPN_ScheduleTimer, NPP, uint32, NPBool, void (*)(NPP npp, uint32 timerID));
+
 ZMacCFM_DefineProc2_Void(NPN_UnscheduleTimer, NPP, uint32);
 ZMacCFM_DefineProc2(NPError, NPN_PopUpContextMenu, NPP, NPMenu*);
 
 ZMacCFM_DefineProc7
 	(NPError, NPP_New, NPMIMEType, NPP, uint16, int16, char* argn[], char* argv[], NPSavedData*);
+
 ZMacCFM_DefineProc2(NPError, NPP_Destroy, NPP, NPSavedData**);
 ZMacCFM_DefineProc2(NPError, NPP_SetWindow, NPP, NPWindow*);
 ZMacCFM_DefineProc5(NPError, NPP_NewStream, NPP, NPMIMEType, NPStream*, NPBool, uint16*);
