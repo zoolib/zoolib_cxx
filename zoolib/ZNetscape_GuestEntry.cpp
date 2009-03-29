@@ -22,6 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNetscape_Guest.h"
 #include "zoolib/ZUtil_MacOSX.h"
 
+NAMESPACE_ZOOLIB_USING
+
+using ZNetscape::NPNetscapeFuncs_Z;
+
+using std::vector;
+
 // =================================================================================================
 
 #if defined(XP_WIN)
@@ -32,15 +38,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define EXPORT_DEF(ret) ret
 #endif
 
-using ZooLib::ZNetscape::NPNetscapeFuncs_Z;
-
-//pragma comment(linker, "/TestFunc=_TestFun@8") 
-
-// These should not be exported if we're doing a CFM build
-EXPORT_DECL(NPError) NP_GetEntryPoints(NPPluginFuncs*);
-EXPORT_DECL(NPError) NP_Initialize(NPNetscapeFuncs_Z*);
-EXPORT_DECL(NPError) NP_Shutdown();
-//##EXPORT_DECL(int) main(NPNetscapeFuncs_Z*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
+#if !ZCONFIG(Processor, PPC) || !__MACH__
+	// We're not building for CFM, so these entry points are exported.
+	EXPORT_DECL(NPError) NP_GetEntryPoints(NPPluginFuncs*);
+	EXPORT_DECL(NPError) NP_Initialize(NPNetscapeFuncs_Z*);
+	EXPORT_DECL(NPError) NP_Shutdown();
+#endif
 
 EXPORT_DEF(NPError) NP_GetEntryPoints(NPPluginFuncs* oPluginFuncs)
 	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->GetEntryPoints(oPluginFuncs); }
@@ -51,7 +54,8 @@ EXPORT_DEF(NPError) NP_Initialize(NPNetscapeFuncs_Z* iBrowserFuncs)
 EXPORT_DEF(NPError) NP_Shutdown()
 	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->Shutdown(); }
 
-#if 0
+EXPORT_DECL(int) main(NPNetscapeFuncs_Z*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
+
 EXPORT_DEF(int) main(NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
 	{
 	// This function is called by CFM browsers, and also by Mozilla-based code.
@@ -62,6 +66,9 @@ EXPORT_DEF(int) main(NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_
 
 	#if __MACH__ && ZCONFIG(Processor, PPC)
 
+		static vector<char> sGlue_NPNF;
+		static vector<char> sGlue_PluginFuncs;
+		static vector<char> sGlue_Shutdown;
 		// We're MachO on PPC, but main has been called. We have to assume that
 		// the caller is expecting CFM function pointers.
 
@@ -75,7 +82,7 @@ EXPORT_DEF(int) main(NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_
 		ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
 			&localNPNF.geturl,
 			(localNPNF.size - offsetof(NPNetscapeFuncs_Z, geturl)) / sizeof(void*),
-			fGlue_NPNF);
+			sGlue_NPNF);
 
 		// And pass the munged local structure to NP_Initialize.
 		result = NP_Initialize(&localNPNF);
@@ -87,10 +94,10 @@ EXPORT_DEF(int) main(NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_
 		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
 			&oPluginFuncs->newp,
 			(oPluginFuncs->size - offsetof(NPPluginFuncs, newp)) / sizeof(void*),
-			fGlue_PluginFuncs);
+			sGlue_PluginFuncs);
 
 		*oShutdownFunc = (NPP_ShutdownProcPtr)NP_Shutdown; 	
-		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(&oShutdownFunc, 1, fGlue_Shutdown);
+		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(&oShutdownFunc, 1, sGlue_Shutdown);
 		
 	#else
 
@@ -103,4 +110,3 @@ EXPORT_DEF(int) main(NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_
 
 	return result;
 	}
-#endif
