@@ -59,7 +59,7 @@ private:
 
 	int32 fID;
 
-	ZMutexNR fMutex;
+	ZMutex fMutex;
 	mutable std::vector<ZTxnTarget*> fTargets;
 
 	friend class ZTxnTarget;

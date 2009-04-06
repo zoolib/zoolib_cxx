@@ -43,7 +43,7 @@ ZTxn::ZTxn()
 
 ZTxn::~ZTxn()
 	{
-	ZMutexNRLocker locker(fMutex);
+	ZMutexLocker locker(fMutex);
 	if (!fTargets.empty())
 		{
 		try
@@ -64,19 +64,19 @@ int32 ZTxn::GetID() const
 
 bool ZTxn::Commit()
 	{
-	ZMutexNRLocker locker(fMutex);
+	ZMutexLocker locker(fMutex);
 	return this->pCommit();
 	}
 
 void ZTxn::Abort()
 	{
-	ZMutexNRLocker locker(fMutex);
+	ZMutexLocker locker(fMutex);
 	this->pAbort();	
 	}
 
 struct Waiter_Validate
 	{
-	ZMutexNR* fMutex;
+	ZMutex* fMutex;
 	ZCondition* fCondition;
 	bool fCompleted;
 	bool fOkay;
@@ -84,7 +84,7 @@ struct Waiter_Validate
 
 struct Waiter_Commit
 	{
-	ZMutexNR* fMutex;
+	ZMutex* fMutex;
 	ZCondition* fCondition;
 	bool fCompleted;
 	};
@@ -192,7 +192,7 @@ void ZTxn::pAbort()
 
 void ZTxn::pRegisterTarget(ZTxnTarget* iTarget) const
 	{
-	ZMutexNRLocker locker(fMutex);
+	ZMutexLocker locker(fMutex);
 	ZAssertStop(0, !ZUtil_STL::sContains(fTargets, iTarget));
 	fTargets.push_back(iTarget);
 	}
