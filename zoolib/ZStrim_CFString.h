@@ -52,6 +52,8 @@ public:
 	virtual void Imp_ReadUTF8(UTF8* iDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
+	virtual bool Imp_ReadCP(UTF32& oCP);
+
 private:
 	ZRef<CFStringRef> fStringRef;
 	size_t fPosition;

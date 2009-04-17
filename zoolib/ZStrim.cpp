@@ -214,26 +214,14 @@ successfully read then true is returned, otherwise false is returned
 and the value of \a oCP is undefined.
 */
 bool ZStrimR::ReadCP(UTF32& oCP) const
-	{
-	for (;;)
-		{
-		size_t countRead;
-		this->Read(&oCP, 1, &countRead);
-		if (countRead == 0)
-			return false;
-		if (ZUnicode::sIsValid(oCP))
-			return true;
-		}
-	}
+	{ return const_cast<ZStrimR*>(this)->Imp_ReadCP(oCP); }
 
 /// Read a single CP and return it, throwing end of strim if necessary.
 UTF32 ZStrimR::ReadCP() const
 	{
 	UTF32 theCP;
-	size_t countRead;
-	this->Read(&theCP, 1, &countRead);
-	if (countRead == 0)
-		sThrowEndOfStrim();		
+	if (!this->ReadCP(theCP))
+		sThrowEndOfStrim();
 	return theCP;
 	}
 
@@ -567,6 +555,19 @@ void ZStrimR::Imp_CopyTo(const ZStrimW& iStrimW,
 	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
 	{ sCopyReadToWrite(*this, iStrimW, iCountCP, oCountCPRead, oCountCPWritten); }
 
+
+bool ZStrimR::Imp_ReadCP(UTF32& oCP)
+	{
+	for (;;)
+		{
+		size_t countRead;
+		this->Read(&oCP, 1, &countRead);
+		if (countRead == 0)
+			return false;
+		if (ZUnicode::sIsValid(oCP))
+			return true;
+		}	
+	}
 
 /// Read and discard iCountCP code points.
 /**
@@ -1668,6 +1669,26 @@ void ZStrimU_Unreader::Imp_ReadUTF8(UTF8* iDest,
 		}
 	}
 
+bool ZStrimU_Unreader::Imp_ReadCP(UTF32& oCP)
+	{
+	if (fState == eStateUnread)
+		{
+		fState = eStateNormal;
+		oCP = fCP;
+		return true;
+		}
+
+	if (fStrimSource.ReadCP(fCP))
+		{
+		oCP = fCP;
+		fState = eStateNormal;
+		return true;
+		}
+
+	fState = eStateHitEnd;
+	return false;
+	}
+
 void ZStrimU_Unreader::Imp_Unread()
 	{
 	switch (fState)
@@ -1775,6 +1796,18 @@ void ZStrimU_String32::Imp_ReadUTF8(UTF8* iDest,
 			iCountCP, oCountCP);
 		fPosition += countConsumed;
 		}
+	}
+
+bool ZStrimU_String32::Imp_ReadCP(UTF32& oCP)
+	{
+	const size_t theLength = fString.length();
+	while (fPosition < theLength)
+		{
+		oCP = fString[fPosition++];
+		if (ZUnicode::sIsValidCP(oCP))
+			return true;
+		}
+	return false;
 	}
 
 void ZStrimU_String32::Imp_Unread()

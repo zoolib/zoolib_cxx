@@ -146,6 +146,8 @@ but particular subclasses may have more efficient implementations available.
 	virtual void Imp_CopyTo(const ZStrimW& iStrimW,
 		size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten);
 
+	virtual bool Imp_ReadCP(UTF32& oCP);
+
 	virtual void Imp_Skip(size_t iCountCP, size_t* oCountCPSkipped);
 	//@}
 	};
@@ -562,6 +564,8 @@ public:
 	virtual void Imp_ReadUTF8(UTF8* iDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
+	virtual bool Imp_ReadCP(UTF32& oCP);
+
 // From ZStrimU
 	virtual void Imp_Unread();
 
@@ -591,6 +595,8 @@ public:
 
 	virtual void Imp_ReadUTF8(UTF8* iDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
+
+	virtual bool Imp_ReadCP(UTF32& oCP);
 
 // From ZStrimU
 	virtual void Imp_Unread();

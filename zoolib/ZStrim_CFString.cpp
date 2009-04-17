@@ -158,6 +158,55 @@ void ZStrimR_CFString::Imp_ReadUTF8(UTF8* iDest,
 		}
 	}
 
+bool ZStrimR_CFString::Imp_ReadCP(UTF32& oCP)
+	{
+	using namespace ZUnicode;
+	const CFIndex length = ::CFStringGetLength(fStringRef);
+	for (;;)
+		{
+		if (fPosition >= length)
+			{
+			// We've run off the end.
+			return false;
+			}
+
+		const UniChar theCU = ::CFStringGetCharacterAtIndex(fStringRef, fPosition++);
+		if (sIsSmallNormal(theCU))
+			{
+			oCP = theCU;
+			return true;
+			}
+		else if (sIsSmallNormalOrHighSurrogate(theCU))
+			{
+			// Must be a high surrogate as it's not a small normal.
+			if (fPosition >= length)
+				{
+				// But we'd run off the end. Restore the value of ioCurrent to indicate this.
+				--fPosition;
+				return false;
+				}
+
+			const UniChar theCU2 = ::CFStringGetCharacterAtIndex(fStringRef, fPosition++);
+			if (sIsLowSurrogate(theCU2))
+				{
+				oCP = sUTF32FromSurrogates(theCU, theCU2);
+				return true;
+				}
+			--fPosition;
+			}
+		else if (sIsBigNormalOrBeyond(theCU))
+			{
+			oCP = theCU;
+			return true;
+			}
+		else
+			{
+			// Must be an out of order low surrogate.
+			}
+		}
+	return false;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStrimW_CFString
