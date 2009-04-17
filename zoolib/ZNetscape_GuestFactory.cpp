@@ -133,7 +133,7 @@ public:
 	GuestFactory_Win(HMODULE iHMODULE);
 	virtual ~GuestFactory_Win();
 
-	virtual void GetEntryPoints(NPPluginFuncs& oNPPluginFuncs);
+	virtual const NPPluginFuncs& GetEntryPoints();
 
 private:
 	HMODULE fHMODULE;
@@ -141,6 +141,8 @@ private:
 	NPPluginFuncs fNPPluginFuncs;
 	NPP_ShutdownProcPtr fShutdown;
 	};
+
+typedef NPError (*NP_DISABLELOCALSECURITY) (void);
 
 GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 :	fHMODULE(iHMODULE)
@@ -153,7 +155,7 @@ GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 	fNPPluginFuncs.size = sizeof(NPPluginFuncs);
 
 	fShutdown = sLookup_T<NPP_ShutdownProcPtr>(fHMODULE, "NP_Shutdown");
-
+	
 	NP_InitializeFuncPtr theInit
 		= sLookup_T<NP_InitializeFuncPtr>
 		(fHMODULE, "NP_Initialize");
@@ -165,8 +167,13 @@ GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 	if (!fShutdown || !theInit || !theEntryPoints)
 		sThrowMissingEntryPoint();
 
-	theEntryPoints(&fNPPluginFuncs);
-	theInit(&fNPNF);
+	NPError theNPError;
+	theNPError = theEntryPoints(&fNPPluginFuncs);
+
+	if (NP_DISABLELOCALSECURITY theDLS = sLookup_T<NP_DISABLELOCALSECURITY>(fHMODULE, "Flash_DisableLocalSecurity"))
+		theDLS();
+
+	theNPError = theInit(&fNPNF);
 	}
 
 GuestFactory_Win::~GuestFactory_Win()
@@ -176,9 +183,9 @@ GuestFactory_Win::~GuestFactory_Win()
 	::FreeLibrary(fHMODULE);
 	}
 
-void GuestFactory_Win::GetEntryPoints(NPPluginFuncs& oNPPluginFuncs)
+const NPPluginFuncs& GuestFactory_Win::GetEntryPoints()
 	{
-	oNPPluginFuncs = fNPPluginFuncs;
+	return fNPPluginFuncs;
 	}
 
 #endif // ZCONFIG_SPI_Enabled(Win)
@@ -200,7 +207,7 @@ public:
 	GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef);
 	virtual ~GuestFactory_HostMachO();
 
-	virtual void GetEntryPoints(NPPluginFuncs& oNPPluginFuncs);
+	virtual const NPPluginFuncs& GetEntryPoints();
 
 private:
 	ZRef<CFPlugInRef> fPlugInRef;
@@ -314,10 +321,8 @@ GuestFactory_HostMachO::~GuestFactory_HostMachO()
 		}
 	}
 
-void GuestFactory_HostMachO::GetEntryPoints(NPPluginFuncs& oNPPluginFuncs)
-	{
-	oNPPluginFuncs = fNPPluginFuncs;
-	}
+const NPPluginFuncs& GuestFactory_HostMachO::GetEntryPoints()
+	{ return fNPPluginFuncs; }
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation) && __MACH__
 
@@ -343,7 +348,7 @@ public:
 	GuestFactory_HostCFM(ZRef<CFPlugInRef> iPlugInRef);
 	virtual ~GuestFactory_HostCFM();
 
-	virtual void GetEntryPoints(NPPluginFuncs& oNPPluginFuncs);
+	virtual const NPPluginFuncs& GetEntryPoints();
 
 private:
 	ZRef<CFPlugInRef> fPlugInRef;
@@ -418,10 +423,8 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(ZRef<CFPlugInRef> iPlugInRef)
 GuestFactory_HostCFM::~GuestFactory_HostCFM()
 	{ fShutdown(); }
 
-void GuestFactory_HostCFM::GetEntryPoints(NPPluginFuncs& oNPPluginFuncs)
-	{
-	oNPPluginFuncs = fNPPluginFuncs;
-	}
+const NPPluginFuncs& GuestFactory_HostCFM::GetEntryPoints()
+	{ return fNPPluginFuncs; }
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation) && ZCONFIG(Processor,PPC) && !__MACH__
 

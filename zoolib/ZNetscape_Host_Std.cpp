@@ -148,10 +148,12 @@ const char* HostMeister_Std::UserAgent(NPP npp)
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s << "UserAgent";
 
-	if (Host_Std* theHost = sHostFromNPP_Std(npp))
-		return theHost->Host_UserAgent(npp);
+//##	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+//##		return theHost->Host_UserAgent(npp);
 
-	return nil;
+	return "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)";
+//	return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en) AppleWebKit/418.9.1 (KHTML, like Gecko) Safari/419.3";
+//	return nil;
 	}
 
 void* HostMeister_Std::MemAlloc(uint32 size)
@@ -184,7 +186,7 @@ NPError HostMeister_Std::GetURLNotify(NPP npp,
 	const char* URL, const char* window, void* notifyData)
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "GetURLNotify";
+		s << "GetURLNotify, URL:" << URL;
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_GetURLNotify(npp, URL, window, notifyData);
@@ -197,7 +199,7 @@ NPError HostMeister_Std::PostURLNotify(NPP npp,
 	uint32 len, const char* buf, NPBool file, void* notifyData)
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "PostURLNotify";
+		s << "PostURLNotify, URL:" << URL;
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_PostURLNotify(npp, URL, window, len, buf, file, notifyData);
@@ -208,7 +210,7 @@ NPError HostMeister_Std::PostURLNotify(NPP npp,
 NPError HostMeister_Std::GetValue(NPP npp, NPNVariable variable, void* ret_value)
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "GetValue";
+		s << "GetValue, " << ZNetscape::sAsString(variable);
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_GetValue(npp, variable, ret_value);
@@ -219,7 +221,7 @@ NPError HostMeister_Std::GetValue(NPP npp, NPNVariable variable, void* ret_value
 NPError HostMeister_Std::SetValue(NPP npp, NPPVariable variable, void* value)
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "SetValue";
+		s << "SetValue, " << ZNetscape::sAsString(variable);
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_SetValue(npp, variable, value);
@@ -643,7 +645,8 @@ Host_Std::Sender::Sender(Host* iHost, const NPP_t& iNPP_t,
 	fNPStream.end = 0;
 	fNPStream.lastmodified = 0;
 	fNPStream.notifyData = iNotifyData;
-	fNPStream.headers = static_cast<const char*>(fHeaders.GetData());
+	fNPStream.headers = nil;
+//	fNPStream.headers = static_cast<const char*>(fHeaders.GetData());
 	}
 
 Host_Std::Sender::~Sender()
@@ -671,11 +674,16 @@ bool Host_Std::Sender::DeliverData()
 			}
 		}
 
-
 	if (this->pDeliverData())
 		return true;
 
+	if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
+		s << "DeliverData, Calling Guest_URLNotify";
+
 	fHost->Guest_URLNotify(fURL.c_str(), NPRES_DONE, fNotifyData);
+
+	if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
+		s << "DeliverData, Calling Guest_DestroyStream";
 
 	fHost->Guest_DestroyStream(&fNPStream, NPRES_DONE);
 
@@ -747,11 +755,7 @@ bool Host_Std::Sender::pDeliverData()
 
 Host_Std::Host_Std(ZRef<GuestFactory> iGuestFactory)
 :	Host(iGuestFactory)
-	{
-	#if defined(XP_MAC) || defined(XP_MACOSX)
-		ZBlockZero(&fNP_Port, sizeof(fNP_Port));
-	#endif
-	}
+	{}
 
 Host_Std::~Host_Std()
 	{
@@ -874,7 +878,7 @@ NPError Host_Std::Host_PostURLNotify(NPP npp,
 NPError Host_Std::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value)
 	{
 	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "GetValue, " << ZNetscape::sAsString(variable) ;
+		s << "GetValue, " << ZNetscape::sAsString(variable);
 	return NPERR_GENERIC_ERROR;
 	}
 
@@ -914,15 +918,16 @@ void Host_Std::pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
 
 void Host_Std::Create(const string& iURL, const string& iMIME)
 	{
-    char* npp_argv[] =
-		{ const_cast<char*>(iURL.c_str()), const_cast<char*>(iMIME.c_str()),};
+//    char* npp_argv[] =
+//		{ const_cast<char*>(iURL.c_str()), const_cast<char*>(iMIME.c_str()),};
 
-    char* npp_argn[] =
-		{ "src", "type" };
+//    char* npp_argn[] =
+//		{ "src", "type" };
 
 	NPError theErr = this->Guest_New(
-		const_cast<char*>(iMIME.c_str()), NP_FULL,
-		countof(npp_argn), npp_argn, npp_argv, nil);
+		const_cast<char*>(iMIME.c_str()), NP_EMBED,//NP_FULL,
+		0, nil, nil, nil);
+//		countof(npp_argn), npp_argn, npp_argv, nil);
 
 	if (ZLOG(s, eDebug + 1, "Host"))
 		s.Writef("Create, theErr: %d", theErr);
@@ -1030,108 +1035,6 @@ NPObjectH* Host_Std::CopyScriptableNPObject()
 	this->Guest_GetValue(NPPVpluginScriptableNPObject, &theNPObject);
 	return theNPObject;
 	}
-
-#if defined(XP_MAC) || defined(XP_MACOSX)
-
-static void sStuffEventRecord(EventRecord& oEventRecord)
-	{
-	oEventRecord.what = nullEvent;
-	oEventRecord.message = 0;
-	oEventRecord.when = ::TickCount();
-	::GetGlobalMouse(&oEventRecord.where);
-	oEventRecord.modifiers = 0;
-	}
-
-void Host_Std::DoActivate(bool iActivate)
-	{
-	if (fNP_Port.port)
-		{
-		EventRecord theER;
-		sStuffEventRecord(theER);
-
-		theER.what = activateEvt;
-		theER.message = (UInt32)::GetWindowFromPort(fNP_Port.port);
-		if (iActivate)
-			theER.modifiers = activeFlag;
-		else
-			theER.modifiers = 0;
-		
-		this->DoEvent(theER);
-		}
-	}
-
-void Host_Std::DoFocus(bool iFocused)
-	{
-	EventRecord theER;
-	sStuffEventRecord(theER);
-
-	if (iFocused)
-		theER.what = NPEventType_GetFocusEvent;
-	else
-		theER.what = NPEventType_LoseFocusEvent;
-
-	this->DoEvent(theER);
-	}
-
-void Host_Std::DoIdle()
-	{
-	EventRecord theER;
-	sStuffEventRecord(theER);
-
-	this->DoEvent(theER);
-	}
-
-void Host_Std::DoDraw()
-	{
-	if (fNP_Port.port)
-		{
-		EventRecord theER;
-		sStuffEventRecord(theER);
-
-		theER.what = updateEvt;
-		theER.message = (UInt32)::GetWindowFromPort(fNP_Port.port);
-
-		this->DoEvent(theER);
-		}
-	}
-
-void Host_Std::SetPortAndBounds(CGrafPtr iGrafPtr,
-	ZPoint iLocation, ZPoint iSize, const ZRect& iClip)
-	{
-	fNP_Port.port = iGrafPtr;
-	this->SetBounds(iLocation, iSize, iClip);
-	}
-
-void Host_Std::SetBounds(
-	ZPoint iLocation, ZPoint iSize, const ZRect& iClip)
-	{
-	fNP_Port.portx = -iLocation.h;
-	fNP_Port.porty = -iLocation.v;
-	fNPWindow.window = &fNP_Port;
-
-	fNPWindow.type = NPWindowTypeDrawable;
-
-	fNPWindow.x = iLocation.h;
-	fNPWindow.y = iLocation.v;
-	fNPWindow.width = iSize.h;
-	fNPWindow.height = iSize.v;
-
-	fNPWindow.clipRect.left = iClip.left;
-	fNPWindow.clipRect.top = iClip.top;
-	fNPWindow.clipRect.right = iClip.right;
-	fNPWindow.clipRect.bottom = iClip.bottom;
-
-	this->Guest_SetWindow(&fNPWindow);
-	}
-
-void Host_Std::DoEvent(const EventRecord& iEvent)
-	{
-	// Hmm -- do we need to use the local?
-	EventRecord localEvent = iEvent;
-	this->Guest_HandleEvent(&localEvent);
-	}
-
-#endif // defined(XP_MAC) || defined(XP_MACOSX)
 
 } // namespace ZNetscape
 

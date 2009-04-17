@@ -221,20 +221,8 @@ public:
 
 	NPObjectH* CopyScriptableNPObject();
 
-	void DoActivate(bool iActivate);
-	void DoFocus(bool iFocused);
-	void DoIdle();
-	void DoDraw();
-
-	#if defined(XP_MAC) || defined(XP_MACOSX)
-		void DoEvent(const EventRecord& iEvent);
-
-		void SetPortAndBounds(CGrafPtr iGrafPtr,
-			ZPoint iLocation, ZPoint iSize, const ZRect& iClip);
-
-		void SetBounds(
-			ZPoint iLocation, ZPoint iSize, const ZRect& iClip);
-	#endif
+protected:
+	NPWindow fNPWindow;
 
 private:
 	class HTTPer;
@@ -246,11 +234,6 @@ private:
 		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
 		ZRef<ZStreamerR> iStreamerR);
 	
-	NPWindow fNPWindow;
-	#if defined(XP_MAC) || defined(XP_MACOSX)
-		NP_Port fNP_Port;
-	#endif
-
 	ZMutex fMutex;
 	std::vector<HTTPer*> fHTTPers;
 	std::list<Sender*> fSenders;

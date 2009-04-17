@@ -892,12 +892,10 @@ void GuestFactory::GetNPNF(NPNetscapeFuncs_Z& oNPNF)
 #pragma mark * Host
 
 Host::Host(ZRef<GuestFactory> iGuestFactory)
-:	fGuestFactory(iGuestFactory)
+:	fGuestFactory(iGuestFactory),
+	fNPPluginFuncs(fGuestFactory->GetEntryPoints())
 	{
-	ZBlockZero(&fNPPluginFuncs, sizeof(fNPPluginFuncs));
 	ZBlockZero(&fNPP_t, sizeof(fNPP_t));
-	fNPPluginFuncs.size = sizeof(fNPPluginFuncs);
-	fGuestFactory->GetEntryPoints(fNPPluginFuncs);
 	fNPP_t.ndata = this;
 	}
 

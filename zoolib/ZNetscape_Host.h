@@ -394,7 +394,7 @@ public:
 
 	void GetNPNF(NPNetscapeFuncs_Z& oNPNF);
 
-	virtual void GetEntryPoints(NPPluginFuncs& oNPPluginFuncs) = 0;
+	virtual const NPPluginFuncs& GetEntryPoints() = 0;
 	};
 
 // =================================================================================================
@@ -443,7 +443,7 @@ public:
 
 private:
 	ZRef<GuestFactory> fGuestFactory;
-	NPPluginFuncs fNPPluginFuncs;
+	const NPPluginFuncs& fNPPluginFuncs;
 	NPP_t fNPP_t;
 	};
 
