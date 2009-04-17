@@ -31,7 +31,7 @@ using std::vector;
 #pragma mark -
 #pragma mark * kDebug
 
-#define kDebug_RWLock 1
+#define kDebug_RWLock 3
 
 // =================================================================================================
 #pragma mark -

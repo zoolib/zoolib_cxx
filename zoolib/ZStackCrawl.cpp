@@ -30,7 +30,8 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+//NAMESPACE_ZOOLIB_BEGIN
+NAMESPACE_ZOOLIB_USING
 
 #if ZCONFIG_API_Enabled(StackCrawl)
 
@@ -606,5 +607,3 @@ ZStackCrawl::Frame ZStackCrawl::At(size_t iIndex) const
 	}
 
 #endif // ZCONFIG_API_Enabled(StackCrawl)
-
-NAMESPACE_ZOOLIB_END

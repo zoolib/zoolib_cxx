@@ -153,13 +153,13 @@ void ZMutex::pWait(ZCnd& iCnd, double iTimeout)
 ZSemaphore::ZSemaphore(int32 iInitialCount)
 	{
 	while (iInitialCount--)
-		ZSem::Wait();
+		ZSem::Signal();
 	}
 
 ZSemaphore::ZSemaphore(int32 iInitialCount, const char* iName)
 	{
 	while (iInitialCount--)
-		ZSem::Wait();
+		ZSem::Signal();
 	}
 
 ZSemaphore::~ZSemaphore()

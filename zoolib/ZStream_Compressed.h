@@ -49,7 +49,7 @@ private:
 	size_t fChunkSize;
 	size_t fChunkPosition;
 	char* fBuffer;
-	vector<uint64> fOffsets;
+	std::vector<uint64> fOffsets;
 	};
 
 // =================================================================================================
@@ -78,7 +78,7 @@ private:
 	size_t fChunkSize;
 	uint64 fSize;
 	uint64 fPosition;
-	vector<uint64> fOffsets;
+	std::vector<uint64> fOffsets;
 	};
 
 NAMESPACE_ZOOLIB_END

@@ -29,7 +29,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+using std::max;
 using std::min;
+using std::runtime_error;
+using std::vector;
 
 static const char sMagicText[] = "ZStream_Compressed 1.0 CRLF\r\nCR\rLF\n";
 
@@ -134,7 +137,7 @@ void ZStreamRPos_Compressed::Imp_Read(void* iDest, size_t iCount, size_t* oCount
 	ZStreamR_ZLibDecode decoder(fSource);
 	decoder.Skip(fPosition % fChunkSize);
 
-	size_t countToRead = min(iCount, sClampedR(sDiffPosR(fSize, fPosition)));
+	size_t countToRead = ZStream::sClampedCount(iCount, fSize, fPosition);
 	size_t countRead;
 	decoder.Read(iDest, countToRead, &countRead);
 	fPosition += countRead;
@@ -143,11 +146,11 @@ void ZStreamRPos_Compressed::Imp_Read(void* iDest, size_t iCount, size_t* oCount
 	}
 
 size_t ZStreamRPos_Compressed::Imp_CountReadable()
-	{ return sClampedR(sDiffPosR(fOffsets.back(), fPosition)); }
+	{ return ZStream::sClampedSize(fOffsets.back(), fPosition); }
 
 void ZStreamRPos_Compressed::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-	uint64 realSkip = min(iCount, sDiffPosR(fSize, fPosition));
+	uint64 realSkip = ZStream::sClampedCount(iCount, fSize, fPosition);
 	fPosition += realSkip;
 	if (oCountSkipped)
 		*oCountSkipped = realSkip;

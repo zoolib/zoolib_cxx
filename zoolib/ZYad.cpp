@@ -188,6 +188,11 @@ bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 				// we're simple if that entry is simple.
 				return theYadR->IsSimple(iOptions);
 				}
+			else
+				{
+				// We have at least one more entry, so we're not simple.
+				return false;
+				}
 			}
 		else
 			{

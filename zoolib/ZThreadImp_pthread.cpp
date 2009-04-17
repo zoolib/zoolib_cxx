@@ -90,7 +90,7 @@ void ZCnd_pthread::Wait(ZMtx_pthread& iMtx, double iTimeout)
 
 	timespec theTimeSpec;
 	theTimeSpec.tv_sec = time_t(wakeTime);
-	theTimeSpec.tv_nsec = fmod(wakeTime, 1.0) * 1e9;
+	theTimeSpec.tv_nsec = int(fmod(wakeTime, 1.0) * 1e9);
 
 	::pthread_cond_timedwait(&fCond, &iMtx.fMutex, &theTimeSpec);
 	}
@@ -165,7 +165,7 @@ ZThreadImp_pthread::ID ZThreadImp_pthread::sID()
 	{ return ::pthread_self(); }
 
 void ZThreadImp_pthread::sSleep(double iDuration)
-	{ ::usleep(iDuration * 1e6); }
+	{ ::usleep(useconds_t(iDuration * 1e6)); }
 
 NAMESPACE_ZOOLIB_END
 
