@@ -1034,7 +1034,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					}
 
 				const uint16 theChannelID = iStreamR.ReadUInt16LE();
-				const uint8 ignore = iStreamR.ReadUInt8();
+				/*const uint8 ignore = */iStreamR.ReadUInt8();
 
 				char nameBuf[17];
 				iStreamR.Read(nameBuf, 16);
@@ -1072,7 +1072,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 						{
 						// Nack. 
 						ZAssert(theChannelID == 0xFF);
-						uint16 theError = iStreamR.ReadUInt16LE();
+						/*uint16 theError = */iStreamR.ReadUInt16LE();
 						theChannel->fState = eState_Dead;
 						theChannel->fError = error_UnknownChannel;
 						theChannel->fCondition_Receive.Broadcast();
@@ -1088,11 +1088,11 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					}
 
 				const uint16 theChannelID = iStreamR.ReadInt16LE();
-				const uint8 ignore = iStreamR.ReadUInt8();
+				/*const uint8 ignore = */iStreamR.ReadUInt8();
 				const uint8 remainingTries = iStreamR.ReadUInt8();
 				
-				const uint8 unknown = iStreamR.ReadUInt8();
-				const uint16 param = iStreamR.ReadUInt16LE();
+				/*const uint8 unknown = */iStreamR.ReadUInt8();
+				/*const uint16 param = */iStreamR.ReadUInt16LE();
 				const uint32 challenge = iStreamR.ReadUInt32();
 
 				ZMutexLocker locker(fMutex);
@@ -1246,10 +1246,10 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				// Next byte is usually 0x01. It may be part of
 				// the channel ID, and may include some other flag.
 				// Ignore for now.
-				uint8 ignore = iStreamR.ReadUInt8();
+				/*uint8 ignore = */iStreamR.ReadUInt8();
 
 				// Usually zero. More flags?
-				uint8 flag = iStreamR.ReadUInt8();
+				/*uint8 flag = */iStreamR.ReadUInt8();
 
 				// A sequence that increments with each chunk sent
 				// for a particular channel.
