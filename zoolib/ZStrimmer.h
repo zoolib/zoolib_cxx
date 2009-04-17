@@ -80,7 +80,7 @@ public:
 #pragma mark * ZStrimmerR_T
 
 template <class Strim_t>
-class ZStrimmerR_T : public ZStrimmerR
+class ZStrimmerR_T : public virtual ZStrimmerR
 	{
 public:
 	ZStrimmerR_T() {}
@@ -108,7 +108,7 @@ protected:
 #pragma mark * ZStrimmerR_FT
 
 template <class Strim_t>
-class ZStrimmerR_FT : public ZStrimmerR
+class ZStrimmerR_FT : public virtual ZStrimmerR
 	{
 protected:
 	ZStrimmerR_FT() {}
@@ -149,7 +149,7 @@ protected:
 #pragma mark * ZStrimmerU_T
 
 template <class Strim_t>
-class ZStrimmerU_T : public ZStrimmerU
+class ZStrimmerU_T : public virtual ZStrimmerU
 	{
 public:
 	ZStrimmerU_T() {}
@@ -177,7 +177,7 @@ protected:
 #pragma mark * ZStrimmerU_FT
 
 template <class Strim_t>
-class ZStrimmerU_FT : public ZStrimmerU
+class ZStrimmerU_FT : public virtual ZStrimmerU
 	{
 protected:
 	ZStrimmerU_FT() {}
@@ -221,7 +221,7 @@ protected:
 #pragma mark * ZStrimmerW_T
 
 template <class Strim_t>
-class ZStrimmerW_T : public ZStrimmerW
+class ZStrimmerW_T : public virtual ZStrimmerW
 	{
 public:
 	ZStrimmerW_T() {}
@@ -249,7 +249,7 @@ protected:
 #pragma mark * ZStrimmerW_FT
 
 template <class Strim_t>
-class ZStrimmerW_FT : public ZStrimmerW
+class ZStrimmerW_FT : public virtual ZStrimmerW
 	{
 protected:
 	ZStrimmerW_FT() {}
