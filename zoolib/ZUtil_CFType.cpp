@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRefCFType.h"
 
 #include ZMACINCLUDE2(CoreFoundation,CFData.h)
+#include ZMACINCLUDE2(CoreFoundation,CFDate.h)
 #include ZMACINCLUDE2(CoreFoundation,CFNumber.h)
 #include ZMACINCLUDE2(CoreFoundation,CFString.h)
 
@@ -208,6 +209,11 @@ ZTValue ZUtil_CFType::sAsTV(CFTypeRef iCFType)
 			{
 			return ZTValue(bool(::CFBooleanGetValue(static_cast<CFBooleanRef>(iCFType))));
 			}
+		else if (theTypeID == ::CFDateGetTypeID())
+			{
+			return ZTValue(ZTime(kCFAbsoluteTimeIntervalSince1970
+				+ ::CFDateGetAbsoluteTime(static_cast<CFDateRef>(iCFType))));
+			}
 		else if (theTypeID == ::CFDataGetTypeID())
 			{
 			CFDataRef theDataRef = static_cast<CFDataRef>(iCFType);
@@ -298,6 +304,10 @@ CFTypeRef ZUtil_CFType::sCreateCFType(const ZTValue& iTV)
 				return kCFBooleanTrue;
 			else
 				return kCFBooleanFalse;
+			}
+		case eZType_Time:
+			{
+			return ::CFDateCreate(nil, iTV.GetTime().fVal - kCFAbsoluteTimeIntervalSince1970);
 			}
 		case eZType_Int8:
 			{
