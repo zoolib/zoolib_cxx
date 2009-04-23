@@ -23,6 +23,5 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_API_Definitions.h"
-#include "ZCONFIG_API_Choices.h"
 
 #endif // __ZCONFIG_API__

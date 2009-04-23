@@ -23,10 +23,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI_Definitions.h"
-#include "ZCONFIG_SPI_Choices.h"
 
+// Pick up Apple's config macros if they're available
 #if __MACH__
 #	include <AvailabilityMacros.h>
+#	if defined (AVAILABLE_MAC_OS_X_VERSION_10_0_AND_LATER)
+#		include <TargetConditionals.h>
+#	endif
 #endif
 
 // Although it seems that this formulation should work in this header, as it
@@ -106,8 +109,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark Carbon
 #ifndef ZCONFIG_SPI_Avail__Carbon
-#	if __MACH__ && !__arm__
-#		define ZCONFIG_SPI_Avail__Carbon 1
+#	if __MACH__
+#		if ! TARGET_IPHONE_SIMULATOR && ! TARGET_OS_IPHONE
+#			define ZCONFIG_SPI_Avail__Carbon 1
+#		endif
 #	elif macintosh
 #		if defined(TARGET_API_MAC_CARBON) && TARGET_API_MAC_CARBON
 #			define ZCONFIG_SPI_Avail__Carbon 1
