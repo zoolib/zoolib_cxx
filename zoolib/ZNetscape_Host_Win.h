@@ -38,13 +38,13 @@ namespace ZNetscape {
 
 class Host_Win
 :	public Host_Std,
-	public ZooLib::ZWNDSubClassA
+	public ZooLib::ZWNDSubClassW
 	{
 public:
 	Host_Win(ZRef<GuestFactory> iGuestFactory);
 	virtual ~Host_Win();
 
-// From ZNetscape::Host via FlashHost
+// From ZNetscape::Host via Host_Std
 	virtual NPError Host_GetValue(NPP npp, NPNVariable variable, void* ret_value);
 	virtual NPError Host_SetValue(NPP npp, NPPVariable variable, void* value);
 
@@ -55,28 +55,18 @@ public:
 	void DoIdle();
 	void DoPAINT(HWND iHWND, WPARAM iWPARAM, LPARAM iLPARAM);
 
-#if 0
-	void DoEvent(const EventRecord& iEvent);
-
-	void SetPortAndBounds(CGrafPtr iGrafPtr,
-		ZPoint iLocation, ZPoint iSize, const ZRect& iClip);
-
-	void SetBounds(
-		ZPoint iLocation, ZPoint iSize, const ZRect& iClip);
-#endif
-
 // From ZWNDSubClass
 	virtual LRESULT WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
 
 protected:
 	void pSendSetWindow();
-	void pStuffNPWindow(int iLeft, int iTop, int iWidth, int iHeight);
+	void pStuffNPWindow(int iWidth, int iHeight);
 
 	bool fIsWindowless;
 	bool fIsTransparent;
 	NPWindow fNPWindow;
 	UINT fTimerID;
-	ZWNDA* fInnerWNDA;
+	HWND fInnerWND;
 	};
 
 } // namespace ZNetscape

@@ -204,7 +204,7 @@ public:
 	virtual void Host_ForceRedraw(NPP npp);
 
 // Our protocol
-	void Create(const std::string& iURL, const std::string& iMIME);
+	void Create(const std::string& iMIME);
 	void Destroy();
 
 	void SendDataAsync(

@@ -46,13 +46,13 @@ using std::vector;
 #endif
 
 EXPORT_DEF(NPError) NP_GetEntryPoints(NPPluginFuncs* oPluginFuncs)
-	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->GetEntryPoints(oPluginFuncs); }
+	{ return ZNetscape::GuestMeister::sGet()->GetEntryPoints(oPluginFuncs); }
 
 EXPORT_DEF(NPError) NP_Initialize(NPNetscapeFuncs_Z* iBrowserFuncs)
-	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->Initialize(iBrowserFuncs); }
+	{ return ZNetscape::GuestMeister::sGet()->Initialize(iBrowserFuncs); }
 
 EXPORT_DEF(NPError) NP_Shutdown()
-	{ return ZOOLIB_PREFIX::ZNetscape::GuestMeister::sGet()->Shutdown(); }
+	{ return ZNetscape::GuestMeister::sGet()->Shutdown(); }
 
 EXPORT_DECL(int) main(NPNetscapeFuncs_Z*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
 
