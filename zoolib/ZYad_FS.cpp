@@ -24,11 +24,8 @@ NAMESPACE_ZOOLIB_BEGIN
 
 using std::min;
 using std::string;
-using std::vector;
 
 class ZYadR_FS;
-
-ZRef<ZYadR_FS> sMakeYadR_FS(const ZStreamR& iStreamR);
 
 // =================================================================================================
 #pragma mark -
@@ -114,7 +111,7 @@ void ZYadMapRPos_Dir::SetPosition(const std::string& iName)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYad_FS
+#pragma mark * ZYadStreamRPos_File
 
 class ZYadStreamRPos_File
 :	public ZYadR_FS,
