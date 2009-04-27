@@ -148,10 +148,21 @@ const char* HostMeister_Std::UserAgent(NPP npp)
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s << "UserAgent";
 
-//##	if (Host_Std* theHost = sHostFromNPP_Std(npp))
-//##		return theHost->Host_UserAgent(npp);
+	if (Host_Std* theHost = sHostFromNPP_Std(npp))
+		{
+		if (const char* theUA = theHost->Host_UserAgent(npp))
+			return theUA;
+		}
 
-	return "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)";
+	#if defined(XP_WIN)
+		return "Mozilla/5.0 (Windows; U; Windows NT 5.1)";
+	#elif ZCONFIG(Processor, PPC)
+		return "Mozilla/5.0 (Macintosh; U; PPC Mac OS X)";
+	#else
+		return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X)";
+	#endif
+//	return "RealMedia Player HelixDNAClient/10.0.0.9544 (Windows; U; WinNT; EN; rv:10.0.0.9544) Gecko/20060608";
+//	return "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)";
 //	return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en) AppleWebKit/418.9.1 (KHTML, like Gecko) Safari/419.3";
 //	return nil;
 	}
@@ -821,7 +832,7 @@ const char* Host_Std::Host_UserAgent(NPP npp)
 	if (ZLOG(s, eDebug, "Host_Std"))
 		s.Writef("UserAgent");
 
-	return "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)";
+	return nil;
 	}
 
 void* Host_Std::Host_GetJavaPeer(NPP npp)
@@ -916,18 +927,18 @@ void Host_Std::pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
 	this->SendDataAsync(iNotifyData, iURL, iMIME, iHeaders, iStreamerR);
 	}
 
-void Host_Std::Create(const string& iURL, const string& iMIME)
+void Host_Std::Create(const string& iMIME)
 	{
-//    char* npp_argv[] =
-//		{ const_cast<char*>(iURL.c_str()), const_cast<char*>(iMIME.c_str()),};
+    char* npp_argn[] =
+		{ "type" };
 
-//    char* npp_argn[] =
-//		{ "src", "type" };
+    char* npp_argv[] =
+		{ const_cast<char*>(iMIME.c_str()),};
 
 	NPError theErr = this->Guest_New(
-		const_cast<char*>(iMIME.c_str()), NP_EMBED,//NP_FULL,
-		0, nil, nil, nil);
-//		countof(npp_argn), npp_argn, npp_argv, nil);
+		const_cast<char*>(iMIME.c_str()), NP_EMBED,
+		countof(npp_argn), npp_argn, npp_argv,
+		nil);
 
 	if (ZLOG(s, eDebug + 1, "Host"))
 		s.Writef("Create, theErr: %d", theErr);
