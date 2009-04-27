@@ -224,8 +224,8 @@ void ZWNDW::sRegisterWindowClassW(const WCHAR* iWNDCLASSName, WNDPROC iWNDPROC)
 
 HWND ZWNDW::sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam)
 	{
-	static const UTF16 sClassName[] = "ZWNDW::DefWindowProc";
-	sRegisterWindowClassA(sClassName, DefWindowProcW);
+	static const UTF16 sClassName[] = L"ZWNDW::DefWindowProc";
+	sRegisterWindowClassW(sClassName, DefWindowProcW);
 
 	return ::CreateWindowExW(
 		0, // Extended attributes
@@ -260,7 +260,7 @@ void ZWNDW::Create(HWND iParent, DWORD iStyle)
 	{
 	ZAssert(!fHWND && fWNDPROC);
 
-	static const UTF16 sClassName[] = "ZWNDA::sWindowProcW";
+	static const UTF16 sClassName[] = L"ZWNDW::sWindowProcW";
 	sRegisterWindowClassW(sClassName, sWindowProcW);
 
 	HWND theHWND = ::CreateWindowExW(

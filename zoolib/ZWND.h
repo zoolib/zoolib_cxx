@@ -73,6 +73,8 @@ protected:
 class ZWNDW
 	{
 public:
+	static HWND sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam);
+
 	ZWNDW(WNDPROC iWNDPROC);
 	virtual ~ZWNDW();
 
