@@ -68,14 +68,14 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStrimR_String
+#pragma mark * ZYadStrimR_XMLPList
 
-class ZYadStrimR_String
+class ZYadStrimR_XMLPList
 :	public ZYadR_Std,
 	public ZYadStrimR
 	{
 public:
-	ZYadStrimR_String(ZML::Reader& iReader, bool iMustReadEndTag);
+	ZYadStrimR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
 
 // From ZYadR_Std
 	virtual void Finish();

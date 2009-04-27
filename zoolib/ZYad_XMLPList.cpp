@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZStrimW_ML.h"
 #include "zoolib/ZUtil_Strim.h"
@@ -28,7 +29,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
-using std::vector;
 
 // =================================================================================================
 #pragma mark -
@@ -55,10 +55,7 @@ static void sEnd(ZML::Reader& r, const string& iTagName)
 		sThrowParseException("Expected end tag '" + iTagName + "'");
 	}
 
-static void sRead_BodyOfDict(ZML::Reader& r, ZTuple& oTuple);
-static void sRead_BodyOfArray(ZML::Reader& r, vector<ZTValue>& oVector);
-
-static bool sTryRead_Value(ZML::Reader& r, ZTValue& oTV)
+static bool sTryRead_SimpleValue(ZML::Reader& r, ZTValue& oTV)
 	{
 	if (r.Current() == ZML::eToken_TagEmpty)
 		{
@@ -87,10 +84,8 @@ static bool sTryRead_Value(ZML::Reader& r, ZTValue& oTV)
 	r.Advance();
 
 	// We've read and advanced past an open tag, in tagName.
-	if (tagName == "dict")
-		{
-		sRead_BodyOfDict(r, oTV.SetMutableTuple());
-		}
+	if (false)
+		{}
 	else if (tagName == "integer")
 		{
 		int64 theInteger;
@@ -107,21 +102,6 @@ static bool sTryRead_Value(ZML::Reader& r, ZTValue& oTV)
 
 		oTV.SetDouble(theDouble);
 		}
-	else if (tagName == "string")
-		{
-		string theString;
-		ZStrimW_String(theString).CopyAllFrom(r.Text());
-
-		oTV.SetString(theString);
-		}
-	else if (tagName == "data")
-		{
-		ZMemoryBlock theMB;
-		ZStreamR_Base64Decode(ZStreamR_ASCIIStrim(r.Text()))
-			.CopyAllTo(ZStreamRWPos_MemoryBlock(theMB));
-
-		oTV.SetRaw(theMB);
-		}
 	else if (tagName == "date")
 		{
 		string theDate;
@@ -129,9 +109,21 @@ static bool sTryRead_Value(ZML::Reader& r, ZTValue& oTV)
 
 		oTV.SetTime(ZUtil_Time::sFromString_ISO8601(theDate));
 		}
+	else if (tagName == "dict")
+		{
+		ZDebugStopf(1, ("sTryRead_SimpleValue, given a dict"));
+		}
 	else if (tagName == "array")
 		{
-		sRead_BodyOfArray(r, oTV.SetMutableVector());
+		ZDebugStopf(1, ("sTryRead_SimpleValue, given an array"));
+		}
+	else if (tagName == "data")
+		{
+		ZDebugStopf(1, ("sTryRead_SimpleValue, given a data"));
+		}
+	else if (tagName == "string")
+		{
+		ZDebugStopf(1, ("sTryRead_SimpleValue, given a string"));
 		}
 	else
 		{
@@ -143,52 +135,12 @@ static bool sTryRead_Value(ZML::Reader& r, ZTValue& oTV)
 	return true;
 	}
 
-static void sRead_Value(ZML::Reader& r, ZTValue& oValue)
+static void sRead_SimpleValue(ZML::Reader& r, ZTValue& oValue)
 	{
 	sSkipText(r);
 
-	if (!sTryRead_Value(r, oValue))
+	if (!sTryRead_SimpleValue(r, oValue))
 		sThrowParseException("Expected value");
-	}
-
-static void sRead_BodyOfDict(ZML::Reader& r, ZTuple& oTuple)
-	{
-	ZRef<ZTupleRep> theRep = new ZTupleRep;
-	ZTuple::PropList& theProperties = theRep->fProperties;
-
-	// We've consumed a <dict> tag, and are pointing at any text following it.
-	for (;;)
-		{
-		sSkipText(r);
-
-		if (!sTryRead_Begin(r, "key"))
-			break;
-
-		string propertyName;
-		ZStrimW_String(propertyName).CopyAllFrom(r.Text());
-
-		sEnd(r, "key");
-
-		ZTValue theTV;
-		sRead_Value(r, theTV);
-
-		theProperties.push_back(ZTuple::NameTV(ZTName(propertyName), theTV));
-		}
-
-	oTuple = ZTuple(theRep);
-	}
-
-static void sRead_BodyOfArray(ZML::Reader& r, vector<ZTValue>& oVector)
-	{
-	for (;;)
-		{
-		sSkipText(r);
-
-		ZTValue theTV;
-		if (!sTryRead_Value(r, theTV))
-			break;
-		oVector.push_back(theTV);
-		}
 	}
 
 static ZRef<ZYadR_Std> sMakeYadR_XMLPList(ZML::Reader& r)
@@ -215,12 +167,12 @@ static ZRef<ZYadR_Std> sMakeYadR_XMLPList(ZML::Reader& r)
 		else if (r.Name() == "string")
 			{
 			r.Advance();
-			return new ZYadStrimR_String(r, true);
+			return new ZYadStrimR_XMLPList(r, true);
 			}
 		}
 	
 	ZTValue theTV;
-	if (sTryRead_Value(r, theTV))
+	if (sTryRead_SimpleValue(r, theTV))
 		return new ZYadPrimR_Std(theTV);
 
 	return ZRef<ZYadR_Std>();
@@ -262,21 +214,21 @@ const ZStreamR& ZYadStreamR_XMLPList::GetStreamR()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStrimR_String
+#pragma mark * ZYadStrimR_XMLPList
 
-ZYadStrimR_String::ZYadStrimR_String(ZML::Reader& iReader, bool iMustReadEndTag)
+ZYadStrimR_XMLPList::ZYadStrimR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
 :	fR(iReader),
 	fMustReadEndTag(iMustReadEndTag)
 	{}
 
-void ZYadStrimR_String::Finish()
+void ZYadStrimR_XMLPList::Finish()
 	{
 	fR.Advance();
 	if (fMustReadEndTag)
 		sEnd(fR, "string");
 	}
 
-const ZStrimR& ZYadStrimR_String::GetStrimR()
+const ZStrimR& ZYadStrimR_XMLPList::GetStrimR()
 	{ return fR.Text(); }
 
 // =================================================================================================
@@ -372,22 +324,22 @@ static void sToStrim_Strim(const ZStrimW_ML& s, const ZStrimR& iStrimR)
 static void sToStrim_List(const ZStrimW_ML& s, ZRef<ZYadListR> iYadListR)
 	{
 	s.Begin("array");
-	while (ZRef<ZYadR> theChild = iYadListR->ReadInc())
-		ZYad_XMLPList::sToStrimW_ML(s, theChild);
+		while (ZRef<ZYadR> theChild = iYadListR->ReadInc())
+			ZYad_XMLPList::sToStrimW_ML(s, theChild);
 	s.End("array");
 	}
 
 static void sToStrim_Map(const ZStrimW_ML& s, ZRef<ZYadMapR> iYadMapR)
 	{
 	s.Begin("dict");
-	string theName;
-	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
-		{
-		s.Begin("key");
-			s << theName;
-		s.End("key");
-		ZYad_XMLPList::sToStrimW_ML(s, theChild);
-		}
+		string theName;
+		while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
+			{
+			s.Begin("key");
+				s << theName;
+			s.End("key");
+			ZYad_XMLPList::sToStrimW_ML(s, theChild);
+			}
 	s.End("dict");
 	}
 
@@ -395,21 +347,6 @@ static void sToStrim_SimpleTValue(const ZStrimW_ML& s, const ZTValue& iTV)
 	{
 	switch (iTV.TypeOf())
 		{
-		case eZType_Tuple:
-			{
-			sToStrim_Map(s, new ZYadMapRPos_Tuple(iTV.GetTuple()));
-			break;
-			}
-		case eZType_Vector:
-			{
-			sToStrim_List(s, new ZYadListRPos_Vector(iTV.GetVector()));
-			break;
-			}
-		case eZType_String:
-			{
-			sToStrim_Strim(s, ZStrimU_String(iTV.GetString()));
-			break;
-			}
 		case eZType_Int32:
 			{
 			s.Begin("integer");
@@ -435,12 +372,33 @@ static void sToStrim_SimpleTValue(const ZStrimW_ML& s, const ZTValue& iTV)
 		case eZType_Raw:
 			{
 			sToStrim_Stream(s, ZStreamRPos_MemoryBlock(iTV.GetRaw()));
+			break;
 			}
 		case eZType_Time:
 			{
 			s.Begin("date");
 				s << ZUtil_Time::sAsString_ISO8601(iTV.GetTime(), true);
 			s.End("date");
+			break;
+			}
+		case eZType_Tuple:
+			{
+			ZDebugStopf(1, ("sToStrim_SimpleTValue, given a tuple"));
+			break;
+			}
+		case eZType_Vector:
+			{
+			ZDebugStopf(1, ("sToStrim_SimpleTValue, given a tuple"));
+			break;
+			}
+		case eZType_String:
+			{
+			ZDebugStopf(1, ("sToStrim_SimpleTValue, given a string"));
+			break;
+			}
+		default:
+			{
+			ZDebugStopf(1, ("sToStrim_SimpleTValue, given an unsupported type"));
 			}
 		}
 	}

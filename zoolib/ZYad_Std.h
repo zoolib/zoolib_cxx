@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYad_Std__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZYad_ZooLib.h"
+#include "zoolib/ZYad.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -44,7 +44,7 @@ public:
 class ZYadR_Std : public virtual ZYadR
 	{
 public:
-	// Our protocol
+// Our protocol
 	virtual void Finish() = 0;
 	};
 
