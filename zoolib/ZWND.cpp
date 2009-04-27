@@ -54,15 +54,25 @@ void ZWNDA::sRegisterWindowClassA(const CHAR* iWNDCLASSName, WNDPROC iWNDPROC)
 		}
 	}
 
-static const CHAR sWindowProcA_ClassName[] = "ZWNDA::sWindowProcA";
-
-int ZWNDA::sInit()
+HWND ZWNDA::sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam)
 	{
-	sRegisterWindowClassA(sWindowProcA_ClassName, sWindowProcA);
-	return 0;
-	}
+	static const CHAR sClassName[] = "ZWNDA::DefWindowProc";
+	sRegisterWindowClassA(sClassName, DefWindowProcA);
 
-static int sDummyForInitA = ZWNDA::sInit();
+	return ::CreateWindowExA(
+		0, // Extended attributes
+		sClassName, // window class name
+		nil, // window caption
+		iStyle, // window style
+		0, // initial x position
+		0, // initial y position
+		10, // initial x size
+		10, // initial y size
+		iParent, // Parent window
+		nil,
+		::GetModuleHandleA(nil), // program instance handle
+		iCreateParam); // creation parameters
+	}
 
 ZWNDA::ZWNDA(WNDPROC iWNDPROC)
 :	fWNDPROC(iWNDPROC),
@@ -71,16 +81,23 @@ ZWNDA::ZWNDA(WNDPROC iWNDPROC)
 	
 ZWNDA::~ZWNDA()
 	{
-	
+	if (HWND theHWND = fHWND)
+		{
+		fHWND = nil;
+		::DestroyWindow(theHWND);
+		}
 	}
 
 void ZWNDA::Create(HWND iParent, DWORD iStyle)
 	{
 	ZAssert(!fHWND && fWNDPROC);
 
+	static const CHAR sClassName[] = "ZWNDA::sWindowProcA";
+	sRegisterWindowClassA(sClassName, sWindowProcA);
+
 	HWND theHWND = ::CreateWindowExA(
 		0, // Extended attributes
-		sWindowProcA_ClassName, // window class name
+		sClassName, // window class name
 		nil, // window caption
 		iStyle, // window style
 		0, // initial x position
@@ -110,7 +127,11 @@ LRESULT ZWNDA::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPA
 		case WM_NCDESTROY:
 			{
 			WNDPROC priorWNDPROC = fWNDPROC;
-			this->HWNDDestroyed();
+			if (HWND theHWND = fHWND)
+				{
+				fHWND = nil;
+				this->HWNDDestroyed();
+				}
 			return ::CallWindowProcA(priorWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
 			break;
 			}
@@ -201,15 +222,25 @@ void ZWNDW::sRegisterWindowClassW(const WCHAR* iWNDCLASSName, WNDPROC iWNDPROC)
 		}
 	}
 
-static const UTF16 sWindowProcW_ClassName[] = L"ZWNDW::sWindowProcW";
-
-int ZWNDW::sInit()
+HWND ZWNDW::sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam)
 	{
-	sRegisterWindowClassW(sWindowProcW_ClassName, sWindowProcW);
-	return 0;
-	}
+	static const UTF16 sClassName[] = "ZWNDW::DefWindowProc";
+	sRegisterWindowClassA(sClassName, DefWindowProcW);
 
-static int sDummyForInit = ZWNDW::sInit();
+	return ::CreateWindowExW(
+		0, // Extended attributes
+		sClassName, // window class name
+		nil, // window caption
+		iStyle, // window style
+		0, // initial x position
+		0, // initial y position
+		10, // initial x size
+		10, // initial y size
+		iParent, // Parent window
+		nil,
+		::GetModuleHandleW(nil), // program instance handle
+		iCreateParam); // creation parameters
+	}
 
 ZWNDW::ZWNDW(WNDPROC iWNDPROC)
 :	fWNDPROC(iWNDPROC),
@@ -218,16 +249,23 @@ ZWNDW::ZWNDW(WNDPROC iWNDPROC)
 	
 ZWNDW::~ZWNDW()
 	{
-	
+	if (HWND theHWND = fHWND)
+		{
+		fHWND = nil;
+		::DestroyWindow(theHWND);
+		}	
 	}
 
 void ZWNDW::Create(HWND iParent, DWORD iStyle)
 	{
 	ZAssert(!fHWND && fWNDPROC);
 
+	static const UTF16 sClassName[] = "ZWNDA::sWindowProcW";
+	sRegisterWindowClassW(sClassName, sWindowProcW);
+
 	HWND theHWND = ::CreateWindowExW(
 		0, // Extended attributes
-		sWindowProcW_ClassName, // window class name
+		sClassName, // window class name
 		nil, // window caption
 		iStyle, // window style
 		0, // initial x position
@@ -257,7 +295,11 @@ LRESULT ZWNDW::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPA
 		case WM_NCDESTROY:
 			{
 			WNDPROC priorWNDPROC = fWNDPROC;
-			this->HWNDDestroyed();
+			if (HWND theHWND = fHWND)
+				{
+				fHWND = nil;
+				this->HWNDDestroyed();
+				}
 			return ::CallWindowProcW(priorWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
 			break;
 			}
@@ -348,7 +390,7 @@ void ZWNDSubClassA::Attach(HWND iHWND)
 void ZWNDSubClassA::Detach()
 	{
 	ZAssert(fHWND && fWNDPROC);
-	::SetPropA(fHWND, "ZWNDSubClassA_WNDPROC_Prior", reinterpret_cast<HANDLE>(fWNDPROC));
+	::SetPropA(fHWND, "ZWNDSubClassA_WNDPROC_Prior", (HANDLE)fWNDPROC);
 	::SetPropA(fHWND, "ZWNDSubClassA", nil);
 	fHWND = nil;
 	fWNDPROC = nil;
@@ -392,7 +434,7 @@ LRESULT CALLBACK ZWNDSubClassA::sWindowProcA(
 		}
 	else
 		{
-		WNDPROC priorWNDPROC = reinterpret_cast<WNDPROC>(::GetPropA(iHWND, "ZWNDSubClassA_WNDPROC_Prior"));
+		WNDPROC priorWNDPROC = (WNDPROC)(::GetPropA(iHWND, "ZWNDSubClassA_WNDPROC_Prior"));
 		return ::CallWindowProcA(priorWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
 		}
 	}
@@ -442,7 +484,7 @@ void ZWNDSubClassW::Attach(HWND iHWND)
 void ZWNDSubClassW::Detach()
 	{
 	ZAssert(fHWND && fWNDPROC);
-	::SetPropW(fHWND, L"ZWNDSubClassW_WNDPROC_Prior", reinterpret_cast<HANDLE>(fWNDPROC));
+	::SetPropW(fHWND, L"ZWNDSubClassW_WNDPROC_Prior", (HANDLE)fWNDPROC);
 	::SetPropW(fHWND, L"ZWNDSubClassW", nil);
 	fHWND = nil;
 	fWNDPROC = nil;
@@ -486,7 +528,7 @@ LRESULT CALLBACK ZWNDSubClassW::sWindowProcW(
 		}
 	else
 		{
-		WNDPROC priorWNDPROC = reinterpret_cast<WNDPROC>(::GetPropW(iHWND, L"ZWNDSubClassW_WNDPROC_Prior"));
+		WNDPROC priorWNDPROC = (WNDPROC)::GetPropW(iHWND, L"ZWNDSubClassW_WNDPROC_Prior");
 		return ::CallWindowProcW(priorWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
 		}
 	}

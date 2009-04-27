@@ -37,6 +37,8 @@ NAMESPACE_ZOOLIB_BEGIN
 class ZWNDA
 	{
 public:
+	static HWND sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam);
+
 	ZWNDA(WNDPROC iWNDPROC);
 	virtual ~ZWNDA();
 
