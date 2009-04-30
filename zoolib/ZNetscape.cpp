@@ -99,11 +99,12 @@ std::string sAsString(NPNVariable iVar)
 		CASE(NPNVSupportsXEmbedBool);
 		CASE(NPNVWindowNPObject);
 		CASE(NPNVPluginElementNPObject);
-		// Need to find a cleaner way to handle this portably.
-		case 1000: return "NPNVpluginDrawingModel";
-		case 2000: return "NPNVsupportsQuickDrawBool";
-		case 2001: return "NPNVsupportsCoreGraphicsBool";
-		case 2002: return "NPNVsupportsOpenGLBool";
+		CASE(NPNVSupportsWindowless);
+		#if defined(XP_MACOSX)
+			CASE(NPNVsupportsQuickDrawBool);
+			CASE(NPNVsupportsCoreGraphicsBool);
+			CASE(NPNVsupportsOpenGLBool);
+		#endif
 		}
 	return ZString::sFormat("NPNVariable=%d", iVar);
 	}
@@ -125,6 +126,9 @@ std::string sAsString(NPPVariable iVar)
 		CASE(NPPVpluginKeepLibraryInMemory);
 		CASE(NPPVpluginNeedsXEmbed);
 		CASE(NPPVpluginScriptableNPObject);
+		#if defined(XP_MACOSX)
+			CASE(NPPVpluginDrawingModel);
+		#endif
 		}
 	return ZString::sFormat("NPPVariable=%d", iVar);
 	}
