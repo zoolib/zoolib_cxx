@@ -45,8 +45,8 @@ void ZWNDA::sRegisterWindowClassA(const CHAR* iWNDCLASSName, WNDPROC iWNDPROC)
 		windowClass.cbWndExtra = 0;
 		windowClass.hInstance = ::GetModuleHandleA(nil);
 		windowClass.hIcon = nil;
-		windowClass.hCursor = nil;
-		windowClass.hbrBackground = nil;
+		windowClass.hCursor = ::LoadCursorA(nil, MAKEINTRESOURCEA(IDC_ARROW));
+		windowClass.hbrBackground = 0;//(HBRUSH)COLOR_WINDOW;
 		windowClass.lpszMenuName = nil;
 		windowClass.lpszClassName = iWNDCLASSName;
 		ATOM theResult = ::RegisterClassA(&windowClass);
@@ -213,8 +213,8 @@ void ZWNDW::sRegisterWindowClassW(const WCHAR* iWNDCLASSName, WNDPROC iWNDPROC)
 		windowClass.cbWndExtra = 0;
 		windowClass.hInstance = ::GetModuleHandleW(nil);
 		windowClass.hIcon = nil;
-		windowClass.hCursor = nil;
-		windowClass.hbrBackground = nil;
+		windowClass.hCursor = ::LoadCursorW(nil, MAKEINTRESOURCEW(IDC_ARROW));
+		windowClass.hbrBackground = 0;//(HBRUSH)COLOR_WINDOW;
 		windowClass.lpszMenuName = nil;
 		windowClass.lpszClassName = iWNDCLASSName;
 		ATOM theResult = ::RegisterClassW(&windowClass);
