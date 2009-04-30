@@ -71,6 +71,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	endif
 #endif
 
+#if defined(XP_MAC)
+#	include <Carbon/Carbon.h>
+#endif
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Windows headers
@@ -504,7 +508,7 @@ typedef struct _NPPrint
 		#if defined(NP_NO_CARBON)
 	    	NPNSWindow* window;
 		#else
-	    	void *window;
+	    	void* window;
 		#endif
 		} NP_CGContext;
 
@@ -881,11 +885,12 @@ typedef struct _NPPluginFuncs
 
 typedef ZNetscape_API_EXPORTED_CALLBACK(NPError, NP_GetEntryPointsFuncPtr)(NPPluginFuncs*);
 typedef ZNetscape_API_EXPORTED_CALLBACK(void, NPP_ShutdownProcPtr)(void);    
-
+ 
 #if defined(XP_MACOSX)
 	typedef void (*BP_CreatePluginMIMETypesPreferencesFuncPtr)(void);
 	typedef NPError (*MainFuncPtr)(NPNetscapeFuncs*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
 #endif
+
 
 #if defined(XP_UNIX)
 	typedef ZNetscape_API_EXPORTED_CALLBACK(NPError, NP_InitializeFuncPtr)
