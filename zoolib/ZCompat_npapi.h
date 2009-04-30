@@ -37,8 +37,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#if !defined(XP_MACOSX)
 		typedef NPError (*NP_InitializeFuncPtr)(NPNetscapeFuncs*);
 		typedef NPError (*NP_GetEntryPointsFuncPtr)(NPPluginFuncs*);
-		typedef void (*BP_CreatePluginMIMETypesPreferencesFuncPtr)(void);
-		typedef NPError (*MainFuncPtr)(NPNetscapeFuncs*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
 	#endif
 
 	#ifndef ZCONFIG_NPStringUpperCaseFieldNames
@@ -173,6 +171,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	typedef NPError (*NPN_PopUpContextMenuProcPtr)(NPP instance, NPMenu* menu);
 #endif
 
+#if !defined(XP_MACOSX)
+	typedef void (*BP_CreatePluginMIMETypesPreferencesFuncPtr)(void);
+	typedef NPError (*MainFuncPtr)(NPNetscapeFuncs*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
+#endif
 
 #if NP_CLASS_STRUCT_VERSION < 2
 	typedef bool (*NPEnumerationFunctionPtr)
@@ -198,6 +200,7 @@ enum
 	#ifndef NP_NO_QUICKDRAW
 		, NPNVsupportsQuickDrawBool = 2000
 	#endif
+	, NPNVSupportsWindowless = 17
 	};
 
 typedef enum
