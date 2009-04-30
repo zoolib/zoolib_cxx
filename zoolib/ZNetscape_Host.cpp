@@ -913,7 +913,16 @@ NPError Host::Guest_New(NPMIMEType pluginType, uint16 mode,
 	{ return fNPPluginFuncs.newp(pluginType, &fNPP_t, mode, argc, argn, argv, saved); }
 
 NPError Host::Guest_Destroy(NPSavedData** save)
-	{ return fNPPluginFuncs.destroy(&fNPP_t, save); }
+	{
+	NPError result = NPERR_GENERIC_ERROR;
+	*save = nil;
+	if (fNPP_t.pdata)
+		{
+		result = fNPPluginFuncs.destroy(&fNPP_t, save);
+		fNPP_t.pdata = nil;
+		}
+	return result;
+	}
 
 NPError Host::Guest_SetWindow(NPWindow* window)
 	{ return fNPPluginFuncs.setwindow(&fNPP_t, window); }

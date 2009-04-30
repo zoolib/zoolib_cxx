@@ -204,7 +204,11 @@ public:
 	virtual void Host_ForceRedraw(NPP npp);
 
 // Our protocol
-	void Create(const std::string& iMIME);
+	typedef std::pair<std::string, std::string> Param_t;
+	void CreateAndLoad(
+		const std::string& iURL, const std::string& iMIME,
+		const Param_t* iParams, size_t iCount);
+	virtual void PostCreateAndLoad();
 	void Destroy();
 
 	void SendDataAsync(
@@ -223,6 +227,7 @@ public:
 
 protected:
 	NPWindow fNPWindow;
+	std::string fURL;
 
 private:
 	class HTTPer;

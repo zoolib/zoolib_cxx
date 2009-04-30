@@ -197,7 +197,11 @@ NPError HostMeister_Std::GetURLNotify(NPP npp,
 	const char* URL, const char* window, void* notifyData)
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "GetURLNotify, URL:" << URL;
+		{
+		s << "GetURLNotify: " << URL;
+		if (window)
+			s << " target: " << window;
+		}
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_GetURLNotify(npp, URL, window, notifyData);
@@ -210,7 +214,11 @@ NPError HostMeister_Std::PostURLNotify(NPP npp,
 	uint32 len, const char* buf, NPBool file, void* notifyData)
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "PostURLNotify, URL:" << URL;
+		{
+		s << "PostURLNotify: " << URL;
+		if (window)
+			s << " target: " << window;
+		}
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_PostURLNotify(npp, URL, window, len, buf, file, notifyData);
@@ -242,8 +250,8 @@ NPError HostMeister_Std::SetValue(NPP npp, NPPVariable variable, void* value)
 
 void HostMeister_Std::InvalidateRect(NPP npp, NPRect* rect)
 	{
-	if (ZLOG(s, eDebug, "HostMeister_Std"))
-		s << "InvalidateRect";
+	if (ZLOG(s, eDebug + 1, "HostMeister_Std"))
+		s.Writef("InvalidateRect, (%u, %u, %u, %u)", rect->left, rect->top, rect->right, rect->bottom);
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		theHost->Host_InvalidateRect(npp, rect);
@@ -775,83 +783,60 @@ Host_Std::~Host_Std()
 		{
 		(*i)->Cancel();
 		}
+
+	fHTTPers.clear();
+
+	this->Destroy();
 	}
 
 NPError Host_Std::Host_GetURL(NPP npp, const char* URL, const char* window)
 	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "GetURL: " << URL;
 	return NPERR_INVALID_URL;
 	}
 
 NPError Host_Std::Host_PostURL(NPP npp,
 	const char* URL, const char* window, uint32 len, const char* buf, NPBool file)
 	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "PostURL: " << URL;
 	return NPERR_INVALID_URL;
 	}
 
 NPError Host_Std::Host_RequestRead(NPStream* stream, NPByteRange* rangeList)
 	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("RequestRead");
 	return NPERR_GENERIC_ERROR;
 	}
 
 NPError Host_Std::Host_NewStream(NPP npp,
 	NPMIMEType type, const char* window, NPStream** stream)
 	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("NewStream");
 	return NPERR_GENERIC_ERROR;
 	}
 
 int32 Host_Std::Host_Write(NPP npp, NPStream* stream, int32 len, void* buffer)
 	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("Write");
 	return -1;
 	}
 
 NPError Host_Std::Host_DestroyStream(NPP npp, NPStream* stream, NPReason reason)
 	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("DestroyStream");
 	return NPERR_GENERIC_ERROR;
 	}
 
 void Host_Std::Host_Status(NPP npp, const char* message)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("Status");
-	}
+	{}
 
 const char* Host_Std::Host_UserAgent(NPP npp)
 	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("UserAgent");
-
 	return nil;
 	}
 
 void* Host_Std::Host_GetJavaPeer(NPP npp)
 	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("GetJavaPeer");
 	return nil;
 	}
 
 NPError Host_Std::Host_GetURLNotify(NPP npp,
 	const char* URL, const char* window, void* notifyData)
 	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		{
-		s << "GetURLNotify: " << URL;
-		if (window)
-			s << " target: " << window;
-		}
-
 	if (URL == strstr(URL, "http:"))
 		{
 		HTTPer* theG = new HTTPer(this, URL, nil, notifyData);
@@ -869,9 +854,6 @@ NPError Host_Std::Host_PostURLNotify(NPP npp,
 	const char* URL, const char* window,
 	uint32 len, const char* buf, NPBool file, void* notifyData)
 	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "PostURLNotify: " << URL;
-
 	if (URL == strstr(URL, "http:"))
 		{
 		ZMemoryBlock theData(buf, len);
@@ -888,35 +870,22 @@ NPError Host_Std::Host_PostURLNotify(NPP npp,
 
 NPError Host_Std::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value)
 	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "GetValue, " << ZNetscape::sAsString(variable);
 	return NPERR_GENERIC_ERROR;
 	}
 
 NPError Host_Std::Host_SetValue(NPP npp, NPPVariable variable, void* value)
 	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s << "SetValue, " << ZNetscape::sAsString(variable) ;
 	return NPERR_GENERIC_ERROR;
 	}
 
 void Host_Std::Host_InvalidateRect(NPP npp, NPRect* rect)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("InvalidateRect");
-	}
+	{}
 
 void Host_Std::Host_InvalidateRegion(NPP npp, NPRegion region)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("InvalidateRegion");
-	}
+	{}
 
 void Host_Std::Host_ForceRedraw(NPP npp)
-	{
-	if (ZLOG(s, eDebug, "Host_Std"))
-		s.Writef("ForceRedraw");
-	}
+	{}
 
 void Host_Std::pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
 	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
@@ -927,27 +896,43 @@ void Host_Std::pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
 	this->SendDataAsync(iNotifyData, iURL, iMIME, iHeaders, iStreamerR);
 	}
 
-void Host_Std::Create(const string& iMIME)
+void Host_Std::CreateAndLoad(
+		const std::string& iURL, const std::string& iMIME,
+		const Param_t* iParams, size_t iCount)
 	{
-    char* npp_argn[] =
-		{ "type" };
+	fURL = iURL;
 
-    char* npp_argv[] =
-		{ const_cast<char*>(iMIME.c_str()),};
+	vector<char*> names;
+	vector<char*> values;
+	for (size_t x = 0; x < iCount; ++x)
+		{
+		names.push_back(const_cast<char*>(iParams[x].first.c_str()));
+		values.push_back(const_cast<char*>(iParams[x].second.c_str()));
+		}
 
-	NPError theErr = this->Guest_New(
+	this->Guest_New(
 		const_cast<char*>(iMIME.c_str()), NP_EMBED,
-		countof(npp_argn), npp_argn, npp_argv,
+		iCount, ZUtil_STL::sFirstOrNil(names), ZUtil_STL::sFirstOrNil(values),
 		nil);
 
-	if (ZLOG(s, eDebug + 1, "Host"))
-		s.Writef("Create, theErr: %d", theErr);
+	this->Host_GetURLNotify(nil, fURL.c_str(), nil, nil);
+	this->PostCreateAndLoad();
+	}
+
+void Host_Std::PostCreateAndLoad()
+	{
 	}
 
 void Host_Std::Destroy()
 	{
 	NPSavedData* theSavedData;
 	this->Guest_Destroy(&theSavedData);
+	if (theSavedData)
+		{
+		if (theSavedData->buf)
+			HostMeister::sGet()->MemFree(theSavedData->buf);
+		HostMeister::sGet()->MemFree(theSavedData);
+		}
 	}
 
 void Host_Std::SendDataAsync(

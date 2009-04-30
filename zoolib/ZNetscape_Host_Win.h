@@ -41,28 +41,29 @@ class Host_Win
 	public ZooLib::ZWNDSubClassW
 	{
 public:
-	Host_Win(ZRef<GuestFactory> iGuestFactory);
+	Host_Win(ZRef<GuestFactory> iGuestFactory, HWND iHWND);
 	virtual ~Host_Win();
 
-// From ZNetscape::Host via Host_Std
+// From Host_Std
 	virtual NPError Host_GetValue(NPP npp, NPNVariable variable, void* ret_value);
 	virtual NPError Host_SetValue(NPP npp, NPPVariable variable, void* value);
+	virtual void Host_InvalidateRect(NPP npp, NPRect* rect);
+
+// From Host_Std
+	virtual void PostCreateAndLoad();
 
 // Our protocol
-	void AttachHWND(HWND iHWND);
-	void DoActivate(bool iActivate);
-	void DoFocus(bool iFocused);
-	void DoIdle();
-	void DoPAINT(HWND iHWND, WPARAM iWPARAM, LPARAM iLPARAM);
+	virtual void PaintBackground(HDC iHDC, const PAINTSTRUCT& iPS);
 
 // From ZWNDSubClass
 	virtual LRESULT WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
 
 protected:
-	void pSendSetWindow();
+	void pPaint(HWND iHWND, WPARAM iWPARAM, LPARAM iLPARAM);
 	void pStuffNPWindow(int iWidth, int iHeight);
 
-	bool fIsWindowless;
+	HWND fWND;
+	bool fIsWindowed;
 	bool fIsTransparent;
 	NPWindow fNPWindow;
 	UINT fTimerID;

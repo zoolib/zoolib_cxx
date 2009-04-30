@@ -40,26 +40,75 @@ public:
 	Host_Mac(ZRef<GuestFactory> iGuestFactory);
 	virtual ~Host_Mac();
 
+// From Host via Host_Std
+	virtual NPError Host_GetValue(NPP npp, NPNVariable variable, void* ret_value);
+	virtual NPError Host_SetValue(NPP npp, NPPVariable variable, void* value);
+
 // Our protocol
 	void DoActivate(bool iActivate);
 	void DoFocus(bool iFocused);
 	void DoIdle();
-	void DoDraw();
+	void DoDraw(WindowRef iWindowRef);
 
 	void DoEvent(const EventRecord& iEvent);
 
-	void SetPortAndBounds(CGrafPtr iGrafPtr,
-		ZPoint iLocation, ZPoint iSize, const ZRect& iClip);
-
-	void SetBounds(
-		ZPoint iLocation, ZPoint iSize, const ZRect& iClip);
+// Our protocol
+	void UpdateWindowRef(WindowRef iWindowRef);
 
 protected:
 	#if defined(XP_MACOSX)
 		NP_CGContext fNP_CGContext;
+		bool fUseCoreGraphics;
 	#endif
 
 	NP_Port fNP_Port;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Host_Mac_EventLoop
+
+class Host_Mac_EventLoop : public Host_Mac
+	{
+public:
+	Host_Mac_EventLoop(ZooLib::ZRef<ZooLib::ZNetscape::GuestFactory> iGF);
+	virtual ~Host_Mac_EventLoop();
+
+protected:
+	bool pDeliverEvent(EventRef iEventRef);
+
+private:
+	static EventLoopTimerUPP sEventLoopTimerUPP_Idle;
+	static pascal void sEventLoopTimer_Idle(EventLoopTimerRef iTimer, void* iRefcon);
+	void EventLoopTimer_Idle(EventLoopTimerRef iTimer);
+
+    EventLoopTimerRef fEventLoopTimerRef_Idle;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Host_WindowRef
+
+class Host_WindowRef : public Host_Mac_EventLoop
+	{
+public:
+	Host_WindowRef(ZooLib::ZRef<ZooLib::ZNetscape::GuestFactory> iGF, WindowRef iWindowRef);
+	virtual ~Host_WindowRef();
+
+// From Host_Std
+	virtual void Host_InvalidateRect(NPP npp, NPRect* rect);
+	virtual void PostCreateAndLoad();
+
+private:
+	static EventHandlerUPP sEventHandlerUPP_Window;
+	static pascal OSStatus sEventHandler_Window(
+		EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon);
+	OSStatus EventHandler_Window(EventHandlerCallRef iCallRef, EventRef iEventRef);
+
+	WindowRef fWindowRef;
+
+	EventTargetRef fEventTargetRef_Window;
+	EventHandlerRef fEventHandlerRef_Window;
 	};
 
 } // namespace ZNetscape

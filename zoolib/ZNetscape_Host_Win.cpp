@@ -27,23 +27,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cstdio>
 
-#include "FlashHost.h"
-
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZNetscape {
+
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Host_Win
 
-Host_Win::Host_Win(ZRef<GuestFactory> iGuestFactory)
+Host_Win::Host_Win(ZRef<GuestFactory> iGuestFactory, HWND iHWND)
 :	Host_Std(iGuestFactory),
-	fIsWindowless(false),
+	fWND(iHWND),
+	fIsWindowed(true),
 	fIsTransparent(false),
+	fTimerID(0),
 	fInnerWND(nil)
 	{
 	ZBlockZero(&fNPWindow, sizeof(fNPWindow));
+	this->Attach(fWND);
+	fTimerID = ::SetTimer(fWND, 1, 50, nil);
 	}
 
 Host_Win::~Host_Win()
@@ -55,8 +58,16 @@ NPError Host_Win::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value)
 		{
 		case NPNVnetscapeWindow:
 			{
-			*static_cast<HWND*>(ret_value) = fInnerWND;
+			if (fIsWindowed)
+				*static_cast<HWND*>(ret_value) = fInnerWND;
+			else
+				*static_cast<HWND*>(ret_value) = fWND;
 			return NPERR_NO_ERROR;
+			}
+		case NPNVSupportsWindowless:
+			{
+			*static_cast<NPBool*>(ret_value) = TRUE;
+            return NPERR_NO_ERROR;
 			}
 		}
 
@@ -69,12 +80,16 @@ NPError Host_Win::Host_SetValue(NPP npp, NPPVariable variable, void* value)
 		{
 		case NPPVpluginWindowBool:
 			{
-			fIsWindowless = (value == 0);
+			if (ZLOG(s, eDebug, "Host_Win"))
+				s << "Host_SetValue, NPPVpluginWindowBool: " << (value ? "true" : "false");
+			fIsWindowed = value;
 			return NPERR_NO_ERROR;
 			}
 		case NPPVpluginTransparentBool:
 			{
-			fIsTransparent = (value != 0);
+			if (ZLOG(s, eDebug, "Host_Win"))
+				s << "Host_SetValue, NPPVpluginTransparentBool: " << (value ? "true" : "false");
+			fIsTransparent = value;
 			return NPERR_NO_ERROR;
 			}
 		}
@@ -82,123 +97,87 @@ NPError Host_Win::Host_SetValue(NPP npp, NPPVariable variable, void* value)
 	return Host_Std::Host_SetValue(npp, variable, value);
 	}
 
-void Host_Win::AttachHWND(HWND iHWND)
+void Host_Win::Host_InvalidateRect(NPP npp, NPRect* rect)
 	{
-	if (ZLOG(s, eDebug, "Host_Win"))
-		s << "AttachHWND";
-
-	this->Attach(iHWND);
-	fTimerID = ::SetTimer(iHWND, 1, 50, nil);
-
-	RECT theCR;
-	::GetClientRect(iHWND, &theCR);
-
-	fInnerWND = ZWNDA::sCreateDefault(iHWND, WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN, nil);
-	::SetWindowPos(fInnerWND, nil,
-		0, 0,
-		theCR.right - theCR.left, theCR.bottom - theCR.top,
-		SWP_NOZORDER | SWP_SHOWWINDOW);
-	}
-
-void Host_Win::DoActivate(bool iActivate)
-	{
-	}
-
-void Host_Win::DoFocus(bool iFocused)
-	{
-	}
-
-void Host_Win::DoIdle()
-	{
-	}
-
-void Host_Win::pSendSetWindow()
-	{
-	RECT theCR;
-	::GetClientRect(fHWND, &theCR);
-	this->pStuffNPWindow(theCR.right - theCR.left, theCR.bottom - theCR.top);	
-	}
-
-void Host_Win::pStuffNPWindow(int iWidth, int iHeight)
-	{
-	if (fIsWindowless)
+	if (!fIsWindowed)
 		{
-		fNPWindow.type = NPWindowTypeDrawable;
+		RECT theRECT = { rect->left, rect->top, rect->right, rect->bottom };
+		::InvalidateRect(fWND, &theRECT, false);
 		}
-	else
+	}
+
+void Host_Win::PostCreateAndLoad()
+	{
+	RECT theCR;
+	::GetClientRect(fWND, &theCR);
+	const int theWidth = theCR.right - theCR.left;
+	const int theHeight = theCR.bottom - theCR.top;
+
+	if (fIsWindowed)
 		{
+
+		fInnerWND = ZWNDA::sCreateDefault(fWND, WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN, nil);
+		::SetWindowPos(fInnerWND, nil,
+			0, 0,
+			theWidth, theHeight,
+			SWP_NOZORDER | SWP_SHOWWINDOW);
+
 		fNPWindow.type = NPWindowTypeWindow;
 		fNPWindow.window = fInnerWND;
 		}
-
-	fNPWindow.x = 0;
-	fNPWindow.y = 0;
-	fNPWindow.width = iWidth;
-	fNPWindow.height = iHeight;
-	fNPWindow.clipRect.left = 0;
-	fNPWindow.clipRect.top = 0;
-	fNPWindow.clipRect.right = iWidth;
-	fNPWindow.clipRect.bottom = iHeight;
-
-	this->Guest_SetWindow(&fNPWindow);
-	}
-
-void Host_Win::DoPAINT(HWND iHWND, WPARAM iWPARAM, LPARAM iLPARAM)
-	{
-	PAINTSTRUCT thePS;
-	HDC theHDC = ::BeginPaint(iHWND, &thePS);
-	RECT theCR;
-	::GetClientRect(iHWND, &theCR);
-	::FillRect(theHDC, &theCR, (HBRUSH) ::GetStockObject(GRAY_BRUSH));
-
-	if (fIsWindowless)
+	else
 		{
-		fNPWindow.window = theHDC;
-		this->pStuffNPWindow(theCR.right - theCR.left, theCR.bottom - theCR.top);
-
-		NPRect paintRect;
-		paintRect.left = theCR.left;
-		paintRect.top = theCR.top;
-		paintRect.right = theCR.right;
-		paintRect.bottom = theCR.bottom;
-
-		NPEvent theNPEvent;
-		theNPEvent.event = WM_PAINT;
-		theNPEvent.wParam = iWPARAM;
-		theNPEvent.lParam = (LPARAM) &paintRect;
-
-		this->Guest_HandleEvent(&theNPEvent);
+		fNPWindow.type = NPWindowTypeDrawable;
+		fNPWindow.window = fInnerWND;
 		}
 
-	::EndPaint(iHWND, &thePS);
+	this->pStuffNPWindow(theWidth, theHeight);
 	}
 
-static ZTime start = ZTime::sNow();
-static bool started = false;
+void Host_Win::PaintBackground(HDC iHDC, const PAINTSTRUCT& iPS)
+	{}
 
 LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
+	// From WebCore's PluginViewWin.cpp
 	switch (iMessage)
 		{
-//		case WM_CLOSE:
-//			{
-//			::DestroyWindow(this->GetHWND());
-//			delete this;
-//			return 0;
-//			}
+		case WM_LBUTTONDOWN:
+		case WM_MBUTTONDOWN:
+		case WM_RBUTTONDOWN:
+			{
+			::SetCapture(iHWND);
+			break;
+			}
+		case WM_LBUTTONUP:
+		case WM_MBUTTONUP:
+		case WM_RBUTTONUP:
+			{
+			::ReleaseCapture();
+			break;
+			}
+		}
+
+//--
+
+	switch (iMessage)
+		{
 		case WM_TIMER:
 			{
-			if (!started && ZTime::sNow() > start + 30)
-				{
-				started = true;
-//				static_cast<FlashHost*>(this)->LoadSWF("http://surfer.em.net/Transitions.swf");
-				}
 			this->DeliverData();
+			if (!fIsWindowed)
+				{
+				NPEvent theNPEvent;
+				theNPEvent.event = iMessage;
+				theNPEvent.wParam = iWPARAM;
+				theNPEvent.lParam = iLPARAM;
+				this->Guest_HandleEvent(&theNPEvent);
+				}
 			return 0;
 			}
 		case WM_PAINT:
 			{
-			this->DoPAINT(iHWND, iWPARAM, iLPARAM);
+			this->pPaint(iHWND, iWPARAM, iLPARAM);
 			return 0;
 			}
 		case WM_WINDOWPOSCHANGED:
@@ -216,10 +195,15 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 						0, 0, theWPOS->cx, theWPOS->cy,
 						SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
 					}
+				else
+					{
+					RECT theCR;
+					::GetClientRect(iHWND, &theCR);
+					::InvalidateRect(fHWND, &theCR, false);
+					}
 				}			
 			break;
 			}
-#if 1
 		case WM_LBUTTONDOWN:
 		case WM_LBUTTONDBLCLK:
 		case WM_RBUTTONDBLCLK:
@@ -239,20 +223,65 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 		case WM_SETFOCUS:
 		case WM_KILLFOCUS:
 			{
-			if (fIsWindowless)
+			if (!fIsWindowed)
 				{
 				NPEvent theNPEvent;
 				theNPEvent.event = iMessage;
 				theNPEvent.wParam = iWPARAM;
 				theNPEvent.lParam = iLPARAM;
-				return this->Guest_HandleEvent(&theNPEvent);
-//				return 0;				
+				this->Guest_HandleEvent(&theNPEvent);
+				return 0;				
 				}
 			break;
 			}
-#endif
 		}
+
 	return ZWNDSubClassW::WindowProc(iHWND, iMessage, iWPARAM, iLPARAM);
+	}
+
+void Host_Win::pPaint(HWND iHWND, WPARAM iWPARAM, LPARAM iLPARAM)
+	{
+	if (ZLOG(s, eDebug, "Host_Win"))
+		s << "+DoPAINT";
+
+	PAINTSTRUCT thePS;
+	HDC theHDC = ::BeginPaint(iHWND, &thePS);
+	RECT theCR;
+	::GetClientRect(iHWND, &theCR);
+
+	this->PaintBackground(theHDC, thePS);
+
+	if (!fIsWindowed)
+		{
+		fNPWindow.window = theHDC;
+		this->pStuffNPWindow(theCR.right - theCR.left, theCR.bottom - theCR.top);
+
+		NPEvent theNPEvent;
+		theNPEvent.event = WM_PAINT;
+		theNPEvent.wParam = iWPARAM;
+		theNPEvent.lParam = 0;
+
+		this->Guest_HandleEvent(&theNPEvent);
+		}
+
+	::EndPaint(iHWND, &thePS);
+
+	if (ZLOG(s, eDebug, "Host_Win"))
+		s << "-DoPAINT";
+	}
+
+void Host_Win::pStuffNPWindow(int iWidth, int iHeight)
+	{
+	fNPWindow.x = 0;
+	fNPWindow.y = 0;
+	fNPWindow.width = iWidth;
+	fNPWindow.height = iHeight;
+	fNPWindow.clipRect.left = 0;
+	fNPWindow.clipRect.top = 0;
+	fNPWindow.clipRect.right = iWidth;
+	fNPWindow.clipRect.bottom = iHeight;
+
+	this->Guest_SetWindow(&fNPWindow);
 	}
 
 } // namespace ZNetscape
