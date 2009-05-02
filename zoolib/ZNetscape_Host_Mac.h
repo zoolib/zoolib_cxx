@@ -24,8 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_Host_Std.h"
 
-#if defined(XP_MAC) || defined(XP_MACOSX)
-
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZNetscape {
@@ -33,6 +31,8 @@ namespace ZNetscape {
 // =================================================================================================
 #pragma mark -
 #pragma mark * Host_Mac
+
+#if defined(XP_MAC) || defined(XP_MACOSX)
 
 class Host_Mac : public Host_Std
 	{
@@ -50,12 +50,22 @@ public:
 	void DoIdle();
 	void DoDraw(WindowRef iWindowRef);
 
+	void DoEvent(EventKind iWhat, uint32 iMessage);
+
 	void DoEvent(const EventRecord& iEvent);
 
 // Our protocol
-	void UpdateWindowRef(WindowRef iWindowRef);
+	void UpdateWindowRef(WindowRef iWindowRef, CGContextRef iContextRef);
 
 protected:
+	bool pDeliverEvent(EventRef iEventRef);
+
+	static EventLoopTimerUPP sEventLoopTimerUPP_Idle;
+	static pascal void sEventLoopTimer_Idle(EventLoopTimerRef iTimer, void* iRefcon);
+	void EventLoopTimer_Idle(EventLoopTimerRef iTimer);
+
+    EventLoopTimerRef fEventLoopTimerRef_Idle;
+
 	#if defined(XP_MACOSX)
 		NP_CGContext fNP_CGContext;
 		bool fUseCoreGraphics;
@@ -64,32 +74,15 @@ protected:
 	NP_Port fNP_Port;
 	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Host_Mac_EventLoop
-
-class Host_Mac_EventLoop : public Host_Mac
-	{
-public:
-	Host_Mac_EventLoop(ZooLib::ZRef<ZooLib::ZNetscape::GuestFactory> iGF);
-	virtual ~Host_Mac_EventLoop();
-
-protected:
-	bool pDeliverEvent(EventRef iEventRef);
-
-private:
-	static EventLoopTimerUPP sEventLoopTimerUPP_Idle;
-	static pascal void sEventLoopTimer_Idle(EventLoopTimerRef iTimer, void* iRefcon);
-	void EventLoopTimer_Idle(EventLoopTimerRef iTimer);
-
-    EventLoopTimerRef fEventLoopTimerRef_Idle;
-	};
+#endif // defined(XP_MAC) || defined(XP_MACOSX)
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Host_WindowRef
 
-class Host_WindowRef : public Host_Mac_EventLoop
+#if defined(XP_MAC) || defined(XP_MACOSX)
+
+class Host_WindowRef : public Host_Mac
 	{
 public:
 	Host_WindowRef(ZooLib::ZRef<ZooLib::ZNetscape::GuestFactory> iGF, WindowRef iWindowRef);
@@ -111,10 +104,43 @@ private:
 	EventHandlerRef fEventHandlerRef_Window;
 	};
 
+#endif // defined(XP_MAC) || defined(XP_MACOSX)
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Host_HIViewRef
+
+#if defined(XP_MACOSX)
+
+class Host_HIViewRef : public Host_Mac
+	{
+public:
+	Host_HIViewRef(ZooLib::ZRef<ZooLib::ZNetscape::GuestFactory> iGF, HIViewRef iHIViewRef);
+	virtual ~Host_HIViewRef();
+
+// From Host_Std
+	virtual void Host_InvalidateRect(NPP npp, NPRect* rect);
+	virtual void PostCreateAndLoad();
+
+// Our protocol
+	void DoSetWindow(int iX, int iY, int iWidth, int iHeight);
+
+private:
+	static EventHandlerUPP sEventHandlerUPP_View;
+	static pascal OSStatus sEventHandler_View(
+		EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon);
+	OSStatus EventHandler_View(EventHandlerCallRef iCallRef, EventRef iEventRef);
+
+	HIViewRef fHIViewRef;
+
+	EventTargetRef fEventTargetRef_View;
+	EventHandlerRef fEventHandlerRef_View;
+	};
+
+#endif // defined(XP_MACOSX)
+
 } // namespace ZNetscape
 
 NAMESPACE_ZOOLIB_END
-
-#endif // defined(XP_MAC) || defined(XP_MACOSX)
 
 #endif // __ZNetscape_Host_Mac__

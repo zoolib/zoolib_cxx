@@ -20,16 +20,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_Host_Mac.h"
 
-#if defined(XP_MAC) || defined(XP_MACOSX)
-
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZStream_String.h"
 #include "zoolib/ZUtil_CarbonEvents.h"
+#include "zoolib/ZUtil_Strim_Geom.h"
+
+#if defined(XP_MAC) || defined(XP_MACOSX)
 
 #if UNIVERSAL_INTERFACES_VERSION <= 0x0341
 enum
 	{
+	kEventMouseDragged = 6,
 	kEventMouseEntered = 8,
 	kEventMouseExited = 9
 	};
@@ -37,10 +39,12 @@ enum
 
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+using ZooLib::ZUtil_CarbonEvents::sGetParam_T;
+using ZooLib::ZUtil_CarbonEvents::sSetParam_T;
 
-using ZUtil_CarbonEvents::sGetParam_T;
-using ZUtil_CarbonEvents::sSetParam_T;
+#endif // defined(XP_MAC) || defined(XP_MACOSX)
+
+NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZNetscape {
 
@@ -48,8 +52,11 @@ namespace ZNetscape {
 #pragma mark -
 #pragma mark * Host_Mac
 
+#if defined(XP_MAC) || defined(XP_MACOSX)
+
 Host_Mac::Host_Mac(ZRef<GuestFactory> iGuestFactory)
-:	Host_Std(iGuestFactory)
+:	Host_Std(iGuestFactory),
+	fEventLoopTimerRef_Idle(nil)
 	{
 	#if defined(XP_MACOSX)
 		fUseCoreGraphics = false;
@@ -60,10 +67,16 @@ Host_Mac::Host_Mac(ZRef<GuestFactory> iGuestFactory)
 	ZBlockZero(&fNP_Port, sizeof(fNP_Port));
 
 	fNPWindow.type = NPWindowTypeDrawable;
+
+	::InstallEventLoopTimer(::GetMainEventLoop(), 0.02, 0.02,
+		sEventLoopTimerUPP_Idle, this, &fEventLoopTimerRef_Idle);
 	}
 
 Host_Mac::~Host_Mac()
 	{
+	if (fEventLoopTimerRef_Idle)
+		::RemoveEventLoopTimer(fEventLoopTimerRef_Idle);
+	fEventLoopTimerRef_Idle = nil;
 	}
 
 NPError Host_Mac::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value)
@@ -135,27 +148,17 @@ void Host_Mac::DoActivate(bool iActivate)
 
 void Host_Mac::DoFocus(bool iFocused)
 	{
-	EventRecord theER;
-	sStuffEventRecord(theER);
-
-	if (iFocused)
-		theER.what = NPEventType_GetFocusEvent;
-	else
-		theER.what = NPEventType_LoseFocusEvent;
-
-	this->DoEvent(theER);
+	this->DoEvent(iFocused ? NPEventType_GetFocusEvent : NPEventType_LoseFocusEvent, 0);
 	}
 
 void Host_Mac::DoIdle()
 	{
-	EventRecord theER;
-	sStuffEventRecord(theER);
-
-	this->DoEvent(theER);
+	this->DoEvent(nullEvent, 0);
 	}
 
 void Host_Mac::DoDraw(WindowRef iWindowRef)
 	{
+#if 0
 	this->UpdateWindowRef(iWindowRef);
 
 	EventRecord theER;
@@ -163,6 +166,18 @@ void Host_Mac::DoDraw(WindowRef iWindowRef)
 
 	theER.what = updateEvt;
 	theER.message = (UInt32)iWindowRef;
+
+	this->DoEvent(theER);
+#endif
+	}
+
+void Host_Mac::DoEvent(EventKind iWhat, uint32 iMessage)
+	{
+	EventRecord theER;
+	sStuffEventRecord(theER);
+
+	theER.what = iWhat;
+	theER.message = iMessage;
 
 	this->DoEvent(theER);
 	}
@@ -174,7 +189,7 @@ void Host_Mac::DoEvent(const EventRecord& iEvent)
 	this->Guest_HandleEvent(&localEvent);
 	}
 
-void Host_Mac::UpdateWindowRef(WindowRef iWindowRef)
+void Host_Mac::UpdateWindowRef(WindowRef iWindowRef, CGContextRef iContextRef)
 	{
 	ZPoint theLocation(0, 0);
 	ZPoint theSize;
@@ -189,6 +204,7 @@ void Host_Mac::UpdateWindowRef(WindowRef iWindowRef)
 	else if (fUseCoreGraphics)
 		{
 		fNPWindow.window = &fNP_CGContext;
+		fNP_CGContext.window = iWindowRef;
 		}
 	#endif // defined(XP_MACOSX)
 	else
@@ -213,26 +229,7 @@ void Host_Mac::UpdateWindowRef(WindowRef iWindowRef)
 	this->Guest_SetWindow(&fNPWindow);
 	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Host_Mac_EventLoop
-
-Host_Mac_EventLoop::Host_Mac_EventLoop(ZRef<ZNetscape::GuestFactory> iGF)
-:	Host_Mac(iGF),
-	fEventLoopTimerRef_Idle(nil)
-	{
-	::InstallEventLoopTimer(::GetMainEventLoop(), 0.02, 0.02,
-		sEventLoopTimerUPP_Idle, this, &fEventLoopTimerRef_Idle);
-	}
-
-Host_Mac_EventLoop::~Host_Mac_EventLoop()
-	{
-	if (fEventLoopTimerRef_Idle)
-		::RemoveEventLoopTimer(fEventLoopTimerRef_Idle);
-	fEventLoopTimerRef_Idle = nil;
-	}
-
-bool Host_Mac_EventLoop::pDeliverEvent(EventRef iEventRef)
+bool Host_Mac::pDeliverEvent(EventRef iEventRef)
 	{
 	EventRecord theEventRecord;
 	if (::ConvertEventRefToEventRecord(iEventRef, &theEventRecord))
@@ -243,24 +240,28 @@ bool Host_Mac_EventLoop::pDeliverEvent(EventRef iEventRef)
 	return false;
 	}
 
-EventLoopTimerUPP Host_Mac_EventLoop::sEventLoopTimerUPP_Idle
+EventLoopTimerUPP Host_Mac::sEventLoopTimerUPP_Idle
 	= NewEventLoopTimerUPP(sEventLoopTimer_Idle);
 
-pascal void Host_Mac_EventLoop::sEventLoopTimer_Idle(EventLoopTimerRef iTimer, void* iRefcon)
-	{ static_cast<Host_Mac_EventLoop*>(iRefcon)->EventLoopTimer_Idle(iTimer); }
+pascal void Host_Mac::sEventLoopTimer_Idle(EventLoopTimerRef iTimer, void* iRefcon)
+	{ static_cast<Host_Mac*>(iRefcon)->EventLoopTimer_Idle(iTimer); }
 
-void Host_Mac_EventLoop::EventLoopTimer_Idle(EventLoopTimerRef iTimer)
+void Host_Mac::EventLoopTimer_Idle(EventLoopTimerRef iTimer)
 	{
 	Host_Mac::DeliverData();
 	Host_Mac::DoIdle();
 	}
 
+#endif // defined(XP_MAC) || defined(XP_MACOSX)
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Host_WindowRef
 
+#if defined(XP_MAC) || defined(XP_MACOSX)
+
 Host_WindowRef::Host_WindowRef(ZRef<ZNetscape::GuestFactory> iGF, WindowRef iWindowRef)
-:	Host_Mac_EventLoop(iGF),
+:	Host_Mac(iGF),
 	fWindowRef(iWindowRef),
 	fEventTargetRef_Window(nil),
 	fEventHandlerRef_Window(nil)
@@ -269,7 +270,7 @@ Host_WindowRef::Host_WindowRef(ZRef<ZNetscape::GuestFactory> iGF, WindowRef iWin
 
 	#if defined(XP_MACOSX)
 		fNP_CGContext.window = fWindowRef;
-		#if 1
+		#if 0
 		CGContextRef theCGContextRef;
 		CGrafPtr thePort = ::GetWindowPort(fWindowRef);
 		::CreateCGContextForPort(thePort, &theCGContextRef);
@@ -296,7 +297,7 @@ Host_WindowRef::Host_WindowRef(ZRef<ZNetscape::GuestFactory> iGF, WindowRef iWin
 		{ kEventClassMouse, kEventMouseDown },
 		{ kEventClassMouse, kEventMouseUp },
 		{ kEventClassMouse, kEventMouseMoved },
-//		{ kEventClassMouse, kEventMouseDragged },
+		{ kEventClassMouse, kEventMouseDragged },
 		{ kEventClassMouse, 11 }, // MightyMouse wheels
 		{ kEventClassMouse, kEventMouseWheelMoved },
 		{ kEventClassMouse, kEventMouseEntered },
@@ -334,7 +335,7 @@ void Host_WindowRef::Host_InvalidateRect(NPP npp, NPRect* rect)
 
 void Host_WindowRef::PostCreateAndLoad()
 	{
-	this->UpdateWindowRef(fWindowRef);
+//##	this->UpdateWindowRef(fWindowRef);
 	}
 
 EventHandlerUPP Host_WindowRef::sEventHandlerUPP_Window
@@ -391,11 +392,7 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 					}
 				case kEventWindowDrawContent:
 					{
-					if (true)//!fUseCoreGraphics)
-						{
-						Host_Mac::DoDraw(fWindowRef);
-						}
-					else
+					if (fUseCoreGraphics)
 						{
 						CGrafPtr qdPort;
 						GDHandle currentGDevice;
@@ -410,6 +407,10 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 						::CGContextSynchronize(cg);
 
 						::QDEndCGContext(qdPort, &cg);
+						}
+					else
+						{
+						Host_Mac::DoDraw(fWindowRef);
 						}
 
 //					return noErr;
@@ -437,7 +438,7 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 					}
 				case kEventWindowBoundsChanged:
 					{
-					this->UpdateWindowRef(fWindowRef);
+//##					this->UpdateWindowRef(fWindowRef);
 					break;
 					}
 				}
@@ -448,8 +449,264 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 	return err;
 	}
 
+#endif // defined(XP_MAC) || defined(XP_MACOSX)
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Host_HIViewRef
+
+#if defined(XP_MACOSX)
+
+Host_HIViewRef::Host_HIViewRef(ZRef<ZNetscape::GuestFactory> iGF, HIViewRef iHIViewRef)
+:	Host_Mac(iGF),
+	fHIViewRef(iHIViewRef),
+	fEventTargetRef_View(nil),
+	fEventHandlerRef_View(nil)
+	{
+	fEventTargetRef_View = ::GetControlEventTarget(fHIViewRef);
+
+	static const EventTypeSpec sEvents_View[] =
+		{
+		{ kEventClassKeyboard, kEventRawKeyDown },
+		{ kEventClassKeyboard, kEventRawKeyRepeat },
+		{ kEventClassKeyboard, kEventRawKeyUp },
+		{ kEventClassKeyboard, kEventRawKeyModifiersChanged },
+
+		{ kEventClassControl, kEventControlHitTest },
+		{ kEventClassControl, kEventControlSimulateHit },
+		{ kEventClassControl, kEventControlHitTest },
+		{ kEventClassControl, kEventControlDraw },
+		{ kEventClassControl, kEventControlApplyBackground },
+		{ kEventClassControl, kEventControlApplyTextColor },
+		{ kEventClassControl, kEventControlSetFocusPart },
+		{ kEventClassControl, kEventControlGetFocusPart },
+		{ kEventClassControl, kEventControlActivate },
+		{ kEventClassControl, kEventControlDeactivate },
+		{ kEventClassControl, kEventControlSetCursor },
+		{ kEventClassControl, kEventControlContextualMenuClick },
+		{ kEventClassControl, kEventControlClick },
+		{ kEventClassControl, kEventControlGetNextFocusCandidate },
+		{ kEventClassControl, kEventControlGetAutoToggleValue },
+		{ kEventClassControl, kEventControlInterceptSubviewClick },
+		{ kEventClassControl, kEventControlGetClickActivation },
+		{ kEventClassControl, kEventControlDragEnter },
+		{ kEventClassControl, kEventControlDragWithin },
+		{ kEventClassControl, kEventControlDragLeave },
+		{ kEventClassControl, kEventControlDragReceive },
+		{ kEventClassControl, kEventControlInvalidateForSizeChange },
+		{ kEventClassControl, kEventControlTrackingAreaEntered },
+		{ kEventClassControl, kEventControlTrackingAreaExited },
+
+
+		{ kEventClassControl, kEventControlTrack },
+
+		{ kEventClassControl, kEventControlBoundsChanged },
+		
+
+		{ kEventClassMouse, kEventMouseDown },
+		{ kEventClassMouse, kEventMouseUp },
+		{ kEventClassMouse, kEventMouseMoved },
+		{ kEventClassMouse, kEventMouseDragged },
+		{ kEventClassMouse, 11 }, // MightyMouse wheels
+		{ kEventClassMouse, kEventMouseWheelMoved },
+		{ kEventClassMouse, kEventMouseEntered },
+		{ kEventClassMouse, kEventMouseExited },
+		};
+
+	::InstallEventHandler(fEventTargetRef_View, sEventHandlerUPP_View,
+		countof(sEvents_View), sEvents_View,
+		this, &fEventHandlerRef_View);
+	}
+
+Host_HIViewRef::~Host_HIViewRef()
+	{
+	if (fEventHandlerRef_View)
+		::RemoveEventHandler(fEventHandlerRef_View);
+	fEventHandlerRef_View = nil;
+
+	fEventTargetRef_View = nil;
+	}
+
+void Host_HIViewRef::Host_InvalidateRect(NPP npp, NPRect* rect)
+	{
+	HIRect theHIRect;
+	theHIRect.origin.x = rect->left;
+	theHIRect.origin.y = rect->top;
+	theHIRect.size.width = rect->right - rect->left;
+	theHIRect.size.height = rect->bottom - rect->top;
+	::HIViewSetNeedsDisplayInRect(fHIViewRef, &theHIRect, true);
+	}
+
+void Host_HIViewRef::PostCreateAndLoad()
+	{
+	}
+
+EventHandlerUPP Host_HIViewRef::sEventHandlerUPP_View = NewEventHandlerUPP(sEventHandler_View);
+
+pascal OSStatus Host_HIViewRef::sEventHandler_View(
+	EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon)
+	{ return static_cast<Host_HIViewRef*>(iRefcon)->EventHandler_View(iCallRef, iEventRef); }
+
+void Host_HIViewRef::DoSetWindow(int iX, int iY, int iWidth, int iHeight)
+	{
+	// This is spurious if we're doing CoreGraphics
+	fNP_Port.portx = -iX;
+	fNP_Port.porty = -iY;
+
+	fNPWindow.x = iX;
+	fNPWindow.y = iY;
+	fNPWindow.width = iWidth;
+	fNPWindow.height = iHeight;
+
+	fNPWindow.clipRect.left = iX;
+	fNPWindow.clipRect.top = iY;
+	fNPWindow.clipRect.right = iX + iWidth;
+	fNPWindow.clipRect.bottom = iY + iHeight;
+
+	this->Guest_SetWindow(&fNPWindow);
+	}
+
+OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRef iEventRef)
+	{
+	if (ZLOG(s, eDebug, "Host_HIViewRef"))
+		{
+		s << ZUtil_CarbonEvents::sEventAsString(
+			::GetEventClass(iEventRef), ::GetEventKind(iEventRef));
+		}
+
+	OSStatus err = eventNotHandledErr;
+
+	switch (::GetEventClass(iEventRef))
+		{
+        case kEventClassMouse:
+		case kEventClassKeyboard:
+			{
+			if (this->pDeliverEvent(iEventRef))
+				return noErr;
+			break;
+			}
+
+		case kEventClassControl:
+			{
+			switch (::GetEventKind(iEventRef))
+				{
+				case kEventControlActivate:
+					{
+					this->DoActivate(true);
+					break;
+					}
+				case kEventControlDeactivate:
+					{
+					this->DoActivate(false);
+					break;
+					}
+				case kEventControlSetFocusPart:
+					{
+					return noErr;
+					}
+				case kEventControlClick:
+					{
+					::SetKeyboardFocus(::HIViewGetWindow(fHIViewRef), fHIViewRef, kControlIndicatorPart);
+//					if (this->pDeliverEvent(iEventRef))
+//						return noErr;
+					break;
+					}
+				case kEventControlTrack:
+					{
+//					if (this->pDeliverEvent(iEventRef))
+//						return noErr;
+					break;
+					}
+				case kEventControlHitTest:
+					{
+					ControlPartCode theCode = kControlIndicatorPart;
+					sSetParam_T(iEventRef, kEventParamControlPart, typeControlPartCode, theCode);
+					return noErr;
+					}
+				case kEventControlDraw:
+					{
+					::CallNextEventHandler(iCallRef, iEventRef);
+					HIRect theBounds;
+					::HIViewGetBounds(fHIViewRef, &theBounds);
+
+					if (ZLOG(s, eDebug, "Host_HIViewRef"))
+						s << ZGRectf(theBounds);
+
+					WindowRef theWindowRef = ::HIViewGetWindow(fHIViewRef);
+
+					if (fUseCoreGraphics)
+						{
+						if (CGContextRef theCG = sGetParam_T<CGContextRef>(iEventRef,
+							kEventParamCGContextRef, typeCGContextRef))
+							{
+							fNP_CGContext.context = theCG;
+							fNP_CGContext.window = theWindowRef;
+
+							fNPWindow.window = &fNP_CGContext;
+
+							::CGContextSaveGState(theCG);
+
+							this->DoSetWindow(theBounds.origin.x, theBounds.origin.y,
+								theBounds.size.width, theBounds.size.height);
+
+							this->DoEvent(updateEvt, (UInt32)theWindowRef);
+
+							::CGContextRestoreGState(theCG);
+							fNP_CGContext.context = nil;
+							}
+						}
+					else if (0)
+						{
+						if (CGrafPtr theCGrafPtr = sGetParam_T<CGrafPtr>(iEventRef,
+							kEventParamGrafPort, typeGrafPtr))
+							{
+//							fNP_Port.port = ::GetWindowPort(theWindowRef);
+							fNP_Port.port = theCGrafPtr;
+							fNPWindow.window = &fNP_Port;
+							this->DoSetWindow(0, 0, theBounds.size.width, theBounds.size.height);
+							this->DoEvent(updateEvt, (UInt32)theWindowRef);
+//							fNP_Port.port = nil;
+							}
+						}
+					err = noErr;
+					break;
+					}
+				case kEventControlBoundsChanged:
+					{
+					ZGRectf newBounds = sGetParam_T<Rect>(iEventRef,
+						kEventParamCurrentBounds, typeQDRectangle);
+//					newBounds.origin = 0;
+//					newBounds -= newBounds.origin;
+
+					if (ZLOG(s, eDebug, "Host_HIViewRef"))
+						s << newBounds;
+
+					WindowRef theWindowRef = ::HIViewGetWindow(fHIViewRef);
+					if (fUseCoreGraphics)
+						{
+						fNP_CGContext.window = theWindowRef;
+						}
+					else if (0)
+						{
+						fNP_Port.port = ::GetWindowPort(theWindowRef);
+						}
+
+					this->DoSetWindow(newBounds.origin.x,
+						newBounds.origin.y,
+						newBounds.extent.h,
+						newBounds.extent.v);
+					break;
+					}
+				}
+			break;
+			}
+		}
+
+	return err;
+	}
+
+#endif // defined(XP_MACOSX)
+
 } // namespace ZNetscape
 
 NAMESPACE_ZOOLIB_END
-
-#endif // defined(XP_MAC) || defined(XP_MACOSX)
