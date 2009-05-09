@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE3(Carbon,HIToolbox,CarbonEvents.h)
 
+#include <string>
+
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
@@ -67,6 +69,8 @@ void sSetParam_T(EventRef iEventRef, EventParamName iName, EventParamType iType,
 typedef void (*Callback_t)(void* iRefcon);
 
 void sInvokeOnMainThread(Callback_t iCallback, void* iRefcon);
+
+std::string sEventAsString(EventClass iEC, EventKind iEK);
 
 } // namespace ZUtil_CarbonEvents
 

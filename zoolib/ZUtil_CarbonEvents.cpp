@@ -22,11 +22,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Carbon)
 
-#include "zoolib/ZThreadImp.h"
+#include "zoolib/ZByteSwap.h"
 #include "zoolib/ZLog.h"
+#include "zoolib/ZString.h"
+#include "zoolib/ZThreadImp.h"
 #include "zoolib/ZTypes.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+
+using std::string;
 
 // =================================================================================================
 #pragma mark -
@@ -185,6 +189,273 @@ Handler sHandler;
 void ZUtil_CarbonEvents::sInvokeOnMainThread(Callback_t iCallback, void* iRefcon)
 	{
 	sHandler.InvokeOnMainThread(iCallback, iRefcon);
+	}
+
+#define CLASS(a) case a: theClass = #a
+#define KIND(a) case a: return #a
+
+string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
+	{
+	string theClass;
+	string theKind;
+	switch (iEC)
+		{
+		CLASS(kEventClassTextInput); break;
+		CLASS(kEventClassAppleEvent); break;
+		CLASS(kEventClassTablet); break;
+		CLASS(kEventClassVolume); break;
+		CLASS(kEventClassAppearance); break;
+		CLASS(kEventClassService); break;
+		CLASS(kEventClassToolbar); break;
+		CLASS(kEventClassToolbarItem); break;
+		CLASS(kEventClassToolbarItemView); break;
+		CLASS(kEventClassAccessibility); break;
+		CLASS(kEventClassSystem); break;
+		CLASS(kEventClassInk); break;
+		CLASS(kEventClassTSMDocumentAccess); break;
+
+		CLASS(kEventClassMouse);
+		switch (iEK)
+			{
+			KIND(kEventMouseDown);
+			KIND(kEventMouseUp);
+			KIND(kEventMouseMoved);
+			KIND(kEventMouseDragged);
+			KIND(kEventMouseEntered);
+			KIND(kEventMouseExited);
+			KIND(kEventMouseWheelMoved);
+			break;
+			}
+
+		CLASS(kEventClassKeyboard);
+		switch (iEK)
+			{
+			KIND(kEventRawKeyDown);
+			KIND(kEventRawKeyRepeat);
+			KIND(kEventRawKeyUp);
+			KIND(kEventRawKeyModifiersChanged);
+			KIND(kEventHotKeyPressed);
+			KIND(kEventHotKeyReleased);
+			break;
+			}
+
+		CLASS(kEventClassApplication);
+		switch (iEK)
+			{
+			KIND(kEventAppActivated);
+			KIND(kEventAppDeactivated);
+			KIND(kEventAppQuit);
+			KIND(kEventAppLaunchNotification);
+			KIND(kEventAppLaunched);
+			KIND(kEventAppTerminated);
+			KIND(kEventAppFrontSwitched);
+			KIND(kEventAppFocusMenuBar);
+			KIND(kEventAppFocusNextDocumentWindow);
+			KIND(kEventAppFocusNextFloatingWindow);
+			KIND(kEventAppFocusToolbar);
+			KIND(kEventAppFocusDrawer);
+			KIND(kEventAppGetDockTileMenu);
+			KIND(kEventAppIsEventInInstantMouser);
+			KIND(kEventAppHidden);
+			KIND(kEventAppShown);
+			KIND(kEventAppSystemUIModeChanged);
+			KIND(kEventAppAvailableWindowBoundsChanged);
+			KIND(kEventAppActiveWindowChanged);
+			break;
+			}
+
+		CLASS(kEventClassWindow);
+		switch (iEK)
+			{
+			KIND(kEventWindowUpdate);
+			KIND(kEventWindowDrawContent);
+			KIND(kEventWindowActivated);
+			KIND(kEventWindowDeactivated);
+			KIND(kEventWindowHandleActivate);
+			KIND(kEventWindowHandleDeactivate);
+			KIND(kEventWindowGetClickActivation);
+			KIND(kEventWindowGetClickModality);
+			KIND(kEventWindowShowing);
+			KIND(kEventWindowHiding);
+			KIND(kEventWindowShown);
+			KIND(kEventWindowHidden);
+			KIND(kEventWindowCollapsing);
+			KIND(kEventWindowCollapsed);
+			KIND(kEventWindowExpanding);
+			KIND(kEventWindowExpanded);
+			KIND(kEventWindowZoomed);
+			KIND(kEventWindowBoundsChanging);
+			KIND(kEventWindowBoundsChanged);
+			KIND(kEventWindowResizeStarted);
+			KIND(kEventWindowResizeCompleted);
+			KIND(kEventWindowDragStarted);
+			KIND(kEventWindowDragCompleted);
+			KIND(kEventWindowClosed);
+			KIND(kEventWindowTransitionStarted);
+			KIND(kEventWindowTransitionCompleted);
+			KIND(kEventWindowClickDragRgn);
+			KIND(kEventWindowClickResizeRgn);
+			KIND(kEventWindowClickCollapseRgn);
+			KIND(kEventWindowClickCloseRgn);
+			KIND(kEventWindowClickZoomRgn);
+			KIND(kEventWindowClickContentRgn);
+			KIND(kEventWindowClickProxyIconRgn);
+			KIND(kEventWindowClickToolbarButtonRgn);
+			KIND(kEventWindowClickStructureRgn);
+			KIND(kEventWindowCursorChange);
+			KIND(kEventWindowCollapse);
+			KIND(kEventWindowCollapseAll);
+			KIND(kEventWindowExpand);
+			KIND(kEventWindowExpandAll);
+			KIND(kEventWindowClose);
+			KIND(kEventWindowCloseAll);
+			KIND(kEventWindowZoom);
+			KIND(kEventWindowZoomAll);
+			KIND(kEventWindowContextualMenuSelect);
+			KIND(kEventWindowPathSelect);
+			KIND(kEventWindowGetIdealSize);
+			KIND(kEventWindowGetMinimumSize);
+			KIND(kEventWindowGetMaximumSize);
+			KIND(kEventWindowConstrain);
+			KIND(kEventWindowHandleContentClick);
+			KIND(kEventWindowGetDockTileMenu);
+			KIND(kEventWindowProxyBeginDrag);
+			KIND(kEventWindowProxyEndDrag);
+			KIND(kEventWindowToolbarSwitchMode);
+			KIND(kEventWindowFocusAcquired);
+			KIND(kEventWindowFocusRelinquish);
+			KIND(kEventWindowFocusContent);
+			KIND(kEventWindowFocusToolbar);
+			KIND(kEventWindowFocusDrawer);
+			KIND(kEventWindowSheetOpening);
+			KIND(kEventWindowSheetOpened);
+			KIND(kEventWindowSheetClosing);
+			KIND(kEventWindowSheetClosed);
+			KIND(kEventWindowDrawerOpening);
+			KIND(kEventWindowDrawerOpened);
+			KIND(kEventWindowDrawerClosing);
+			KIND(kEventWindowDrawerClosed);
+			KIND(kEventWindowDrawFrame);
+			KIND(kEventWindowDrawPart);
+			KIND(kEventWindowGetRegion);
+			KIND(kEventWindowHitTest);
+			KIND(kEventWindowInit);
+			KIND(kEventWindowDispose);
+			KIND(kEventWindowDragHilite);
+			KIND(kEventWindowModified);
+			KIND(kEventWindowSetupProxyDragImage);
+			KIND(kEventWindowStateChanged);
+			KIND(kEventWindowMeasureTitle);
+			KIND(kEventWindowDrawGrowBox);
+			KIND(kEventWindowGetGrowImageRegion);
+			KIND(kEventWindowPaint);
+			KIND(kEventWindowAttributesChanged);
+			KIND(kEventWindowTitleChanged);
+			break;
+			}
+
+		CLASS(kEventClassMenu);
+		switch (iEK)
+			{
+			KIND(kEventMenuBeginTracking);
+			KIND(kEventMenuEndTracking);
+			KIND(kEventMenuChangeTrackingMode);
+			KIND(kEventMenuOpening);
+			KIND(kEventMenuClosed);
+			KIND(kEventMenuTargetItem);
+			KIND(kEventMenuMatchKey);
+			KIND(kEventMenuEnableItems);
+			KIND(kEventMenuPopulate);
+			KIND(kEventMenuMeasureItemWidth);
+			KIND(kEventMenuMeasureItemHeight);
+			KIND(kEventMenuDrawItem);
+			KIND(kEventMenuDrawItemContent);
+			KIND(kEventMenuDispose);
+			KIND(kEventMenuCalculateSize);
+			KIND(kEventMenuCreateFrameView);
+			KIND(kEventMenuGetFrameBounds);
+			KIND(kEventMenuBecomeScrollable);
+			KIND(kEventMenuCeaseToBeScrollable);
+			KIND(kEventMenuBarShown);
+			KIND(kEventMenuBarHidden);
+			break;
+			}
+
+		CLASS(kEventClassCommand);
+		switch (iEK)
+			{
+			KIND(kEventCommandProcess);
+			KIND(kEventCommandUpdateStatus);
+			break;
+			}
+
+		CLASS(kEventClassControl);
+		switch (iEK)
+			{
+			KIND(kEventControlInitialize);
+			KIND(kEventControlDispose);
+			KIND(kEventControlGetOptimalBounds);
+			KIND(kEventControlHit);
+			KIND(kEventControlSimulateHit);
+			KIND(kEventControlHitTest);
+			KIND(kEventControlDraw);
+			KIND(kEventControlApplyBackground);
+			KIND(kEventControlApplyTextColor);
+			KIND(kEventControlSetFocusPart);
+			KIND(kEventControlGetFocusPart);
+			KIND(kEventControlActivate);
+			KIND(kEventControlDeactivate);
+			KIND(kEventControlSetCursor);
+			KIND(kEventControlContextualMenuClick);
+			KIND(kEventControlClick);
+			KIND(kEventControlGetNextFocusCandidate);
+			KIND(kEventControlGetAutoToggleValue);
+			KIND(kEventControlInterceptSubviewClick);
+			KIND(kEventControlGetClickActivation);
+			KIND(kEventControlDragEnter);
+			KIND(kEventControlDragWithin);
+			KIND(kEventControlDragLeave);
+			KIND(kEventControlDragReceive);
+			KIND(kEventControlInvalidateForSizeChange);
+//			KIND(kEventControlTrackingAreaEntered); // In HIView.h
+//			KIND(kEventControlTrackingAreaExited); // In HIView.h
+			KIND(kEventControlTrack);
+			KIND(kEventControlGetScrollToHereStartPoint);
+			KIND(kEventControlGetIndicatorDragConstraint);
+			KIND(kEventControlIndicatorMoved);
+			KIND(kEventControlGhostingFinished);
+			KIND(kEventControlGetActionProcPart);
+			KIND(kEventControlGetPartRegion);
+			KIND(kEventControlGetPartBounds);
+			KIND(kEventControlSetData);
+			KIND(kEventControlGetData);
+			KIND(kEventControlGetSizeConstraints);
+			KIND(kEventControlGetFrameMetrics);
+			KIND(kEventControlValueFieldChanged);
+			KIND(kEventControlAddedSubControl);
+			KIND(kEventControlRemovingSubControl);
+			KIND(kEventControlBoundsChanged);
+			KIND(kEventControlVisibilityChanged);
+			KIND(kEventControlTitleChanged);
+			KIND(kEventControlOwningWindowChanged);
+			KIND(kEventControlHiliteChanged);
+			KIND(kEventControlEnabledStateChanged);
+			KIND(kEventControlLayoutInfoChanged);
+			KIND(kEventControlArbitraryMessage);
+			break;
+			}
+		}
+
+	if (theClass.empty())
+		{
+		uint32 asBE = ZByteSwap_HostToBig32(iEC);
+		theClass = string((char*)&asBE, 4);
+		}
+
+	if (theKind.empty())
+		theKind = ZString::sFormat("%u", theKind);
+
+	return theClass + "/" + theKind;
 	}
 
 NAMESPACE_ZOOLIB_END
