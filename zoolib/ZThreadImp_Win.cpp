@@ -90,6 +90,8 @@ ZThreadImp_Win::ID ZThreadImp_Win::sCreate(size_t iStackSize, Proc_t iProc, void
 	if (!theThreadHANDLE)
 		throw std::bad_alloc();
 
+	::CloseHandle(theThreadHANDLE);
+
 	return theID;
 	}
 
