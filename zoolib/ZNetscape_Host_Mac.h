@@ -37,7 +37,7 @@ namespace ZNetscape {
 class Host_Mac : public Host_Std
 	{
 public:
-	Host_Mac(ZRef<GuestFactory> iGuestFactory);
+	Host_Mac(ZRef<GuestFactory> iGuestFactory, bool iAllowCG);
 	virtual ~Host_Mac();
 
 // From Host via Host_Std
@@ -48,15 +48,19 @@ public:
 	void DoActivate(bool iActivate);
 	void DoFocus(bool iFocused);
 	void DoIdle();
-	void DoDraw(WindowRef iWindowRef);
 
 	void DoEvent(EventKind iWhat, uint32 iMessage);
 
-	void DoEvent(const EventRecord& iEvent);
+	virtual void DoEvent(const EventRecord& iEvent);
 
 // Our protocol
-	void UpdateWindowRef(WindowRef iWindowRef, CGContextRef iContextRef);
+//	void UpdateWindowRef(WindowRef iWindowRef, CGContextRef iContextRef);
 
+// Our protocol
+	void DoSetWindow(const ZGRectf& iWinFrame);
+	void DoSetWindow(int iX, int iY, int iWidth, int iHeight);
+
+	void pApplyInsets(ZGRectf& ioRect);
 protected:
 	bool pDeliverEvent(EventRef iEventRef);
 
@@ -64,6 +68,7 @@ protected:
 	static pascal void sEventLoopTimer_Idle(EventLoopTimerRef iTimer, void* iRefcon);
 	void EventLoopTimer_Idle(EventLoopTimerRef iTimer);
 
+	bool fAllowCG;
     EventLoopTimerRef fEventLoopTimerRef_Idle;
 
 	#if defined(XP_MACOSX)
@@ -72,6 +77,11 @@ protected:
 	#endif
 
 	NP_Port fNP_Port;
+	float fLeft;
+	float fTop;
+	float fRight;
+	float fBottom;
+
 	};
 
 #endif // defined(XP_MAC) || defined(XP_MACOSX)
@@ -85,12 +95,17 @@ protected:
 class Host_WindowRef : public Host_Mac
 	{
 public:
-	Host_WindowRef(ZooLib::ZRef<ZooLib::ZNetscape::GuestFactory> iGF, WindowRef iWindowRef);
+	Host_WindowRef(
+		ZooLib::ZRef<ZooLib::ZNetscape::GuestFactory> iGF, bool iAllowCG, WindowRef iWindowRef);
 	virtual ~Host_WindowRef();
 
 // From Host_Std
 	virtual void Host_InvalidateRect(NPP npp, NPRect* rect);
 	virtual void PostCreateAndLoad();
+
+// From Host_Mac
+	using Host_Mac::DoEvent;
+	virtual void DoEvent(const EventRecord& iEvent);
 
 private:
 	static EventHandlerUPP sEventHandlerUPP_Window;
@@ -98,10 +113,10 @@ private:
 		EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon);
 	OSStatus EventHandler_Window(EventHandlerCallRef iCallRef, EventRef iEventRef);
 
-	WindowRef fWindowRef;
 
 	EventTargetRef fEventTargetRef_Window;
 	EventHandlerRef fEventHandlerRef_Window;
+	WindowRef fWindowRef;
 	};
 
 #endif // defined(XP_MAC) || defined(XP_MACOSX)
@@ -115,15 +130,13 @@ private:
 class Host_HIViewRef : public Host_Mac
 	{
 public:
-	Host_HIViewRef(ZooLib::ZRef<ZooLib::ZNetscape::GuestFactory> iGF, HIViewRef iHIViewRef);
+	Host_HIViewRef(
+		ZooLib::ZRef<ZooLib::ZNetscape::GuestFactory> iGF, bool iAllowCG, HIViewRef iHIViewRef);
 	virtual ~Host_HIViewRef();
 
 // From Host_Std
 	virtual void Host_InvalidateRect(NPP npp, NPRect* rect);
 	virtual void PostCreateAndLoad();
-
-// Our protocol
-	void DoSetWindow(int iX, int iY, int iWidth, int iHeight);
 
 private:
 	static EventHandlerUPP sEventHandlerUPP_View;
