@@ -546,35 +546,74 @@ ZGRect_T<T>& operator-=(ZGRect_T<T>& l, const ZGExtent_T<T>& r)
 	{ l.origin -= r; return l; }
 
 
-template <class T>
-ZGRect_T<T> operator&(const ZGRect_T<T>& l, const ZGRect_T<T>& r)
+template <class T, class U>
+ZGRect_T<T> operator&(const ZGRect_T<T>& l, const ZGRect_T<U>& r)
 	{
 	using std::min;
 	using std::max;
 
-	T ox = max(l.MinX(), r.MinX());
-	T eh = min(l.MaxX(), r.MaxX());
+	T ox = max(l.MinX(), T(r.MinX()));
+	T eh = min(l.MaxX(), T(r.MaxX()));
 	eh = eh > ox ? eh - ox : 0;
 	
-	T oy = max(l.MinY(), r.MinY());
-	T ev = min(l.MaxY(), r.MaxY());
+	T oy = max(l.MinY(), T(r.MinY()));
+	T ev = min(l.MaxY(), T(r.MaxY()));
 	ev = ev > oy ? ev - oy : 0;
 
 	return ZGRect_T<T>(ox, oy, eh, ev);
 	}
 
-template <class T>
-ZGRect_T<T>& operator&=(ZGRect_T<T>& l, const ZGRect_T<T>& r)
+template <class T, class U>
+ZGRect_T<T>& operator&=(ZGRect_T<T>& l, const ZGRect_T<U>& r)
 	{
 	using std::min;
 	using std::max;
 
-	T ox = max(l.MinX(), r.MinX());
-	T eh = min(l.MaxX(), r.MaxX());
+	T ox = max(l.MinX(), T(r.MinX()));
+	T eh = min(l.MaxX(), T(r.MaxX()));
 	eh = eh > ox ? eh - ox : 0;
 	
-	T oy = max(l.MinY(), r.MinY());
-	T ev = min(l.MaxY(), r.MaxY());
+	T oy = max(l.MinY(), T(r.MinY()));
+	T ev = min(l.MaxY(), T(r.MaxY()));
+	ev = ev > oy ? ev - oy : 0;
+
+	l.origin.x = ox;
+	l.origin.y = oy;
+	l.extent.h = eh;
+	l.extent.v = ev;
+
+	return l;
+	}
+
+template <class T, class U>
+ZGRect_T<T> operator|(const ZGRect_T<T>& l, const ZGRect_T<U>& r)
+	{
+	using std::min;
+	using std::max;
+
+	T ox = min(l.MinX(), T(r.MinX()));
+	T eh = max(l.MaxX(), T(r.MaxX()));
+	eh = eh > ox ? eh - ox : 0;
+	
+	T oy = min(l.MinY(), T(r.MinY()));
+	T ev = max(l.MaxY(), T(r.MaxY()));
+	ev = ev > oy ? ev - oy : 0;
+
+	return ZGRect_T<T>(ox, oy, eh, ev);
+	}
+
+template <class T, class U>
+ZGRect_T<T>& operator|=(ZGRect_T<T>& l, const ZGRect_T<U>& r)
+	{
+	using std::min;
+	using std::max;
+
+	T ox = min(l.MinX(), T(r.MinX()));
+	T eh = max(l.MaxX(), T(r.MaxX()));
+	eh = eh > ox ? eh - ox : 0;
+	
+	T oy = min(l.MinY(), T(r.MinY()));
+	T ev = max(l.MaxY(), T(r.MaxY()));
 	ev = ev > oy ? ev - oy : 0;
 
 	l.origin.x = ox;
