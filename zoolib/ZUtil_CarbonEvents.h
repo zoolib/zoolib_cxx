@@ -27,6 +27,30 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE3(Carbon,HIToolbox,CarbonEvents.h)
 
+#if defined(UNIVERSAL_INTERFACES_VERSION) && UNIVERSAL_INTERFACES_VERSION <= 0x0341
+// Taken from Universal Headers 3.4.2
+	typedef UInt32 EventClass;
+enum {
+
+  /*
+   * This event parameter may be added to any event that is posted to
+   * the main event queue. When the event is removed from the queue and
+   * sent to the event dispatcher, the dispatcher will retrieve the
+   * EventTargetRef contained in this parameter and send the event
+   * directly to that event target. If this parameter is not available
+   * in the event, the dispatcher will send the event to a suitable
+   * target, or to the application target if no more specific target is
+   * appropriate. Available in CarbonLib 1.3.1 and later, and Mac OS X.
+   */
+  kEventParamPostTarget         = FOUR_CHAR_CODE('ptrg'), /* typeEventTargetRef*/
+
+  /*
+   * Indicates an event parameter of type EventTargetRef.
+   */
+  typeEventTargetRef            = FOUR_CHAR_CODE('etrg') /* EventTargetRef*/
+};
+#endif
+
 #include <string>
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -49,12 +73,18 @@ bool sGetParam_T(EventRef iEventRef, EventParamName iName, EventParamType iType,
 	}
 
 template <typename T>
-T sGetParam_T(EventRef iEventRef, EventParamName iName, EventParamType iType)
+T sDGetParam_T(EventRef iEventRef, EventParamName iName, EventParamType iType, const T& iDefault)
 	{
 	T theT;
 	if (sGetParam(iEventRef, iName, iType, sizeof(theT), &theT))
 		return theT;
-	return T();
+	return iDefault;
+	}
+
+template <typename T>
+T sGetParam_T(EventRef iEventRef, EventParamName iName, EventParamType iType)
+	{
+	return sDGetParam_T(iEventRef, iName, iType, T());
 	}
 
 void sSetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
@@ -77,30 +107,6 @@ std::string sEventTypeAsString(UInt16 iEventType);
 } // namespace ZUtil_CarbonEvents
 
 NAMESPACE_ZOOLIB_END
-
-
-#if defined(UNIVERSAL_INTERFACES_VERSION) && UNIVERSAL_INTERFACES_VERSION <= 0x0341
-// Taken from Universal Headers 3.4.2
-enum {
-
-  /*
-   * This event parameter may be added to any event that is posted to
-   * the main event queue. When the event is removed from the queue and
-   * sent to the event dispatcher, the dispatcher will retrieve the
-   * EventTargetRef contained in this parameter and send the event
-   * directly to that event target. If this parameter is not available
-   * in the event, the dispatcher will send the event to a suitable
-   * target, or to the application target if no more specific target is
-   * appropriate. Available in CarbonLib 1.3.1 and later, and Mac OS X.
-   */
-  kEventParamPostTarget         = FOUR_CHAR_CODE('ptrg'), /* typeEventTargetRef*/
-
-  /*
-   * Indicates an event parameter of type EventTargetRef.
-   */
-  typeEventTargetRef            = FOUR_CHAR_CODE('etrg') /* EventTargetRef*/
-};
-#endif
 
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 
