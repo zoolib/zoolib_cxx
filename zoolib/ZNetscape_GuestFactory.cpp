@@ -282,7 +282,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 			// Rework fNPNF as CFM-callable thunks
 			ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
 				&fNPNF.geturl,
-				(fNPNF.size - offsetof(NPNetscapeFuncs_Z, geturl)) / sizeof(void*),
+				(fNPNF.size - offsetof(NPNetscapeFuncs, geturl)) / sizeof(void*),
 				fGlue_NPNF);
 		#endif
 
