@@ -47,7 +47,8 @@ class StreamR_Line;
 #pragma mark -
 #pragma mark * ZMIME::StreamR_Header
 
-/// Takes a source stream and reads until it sees an LFLF sequence, at which point it appears to be empty.
+/// Takes a source stream and reads until it sees an LFLF sequence, at which
+/// point it appears to be empty.
 /** RFC822 mandates the use of CRLF as the line terminating sequence and allows
 bare LF and CR sequences within lines. However I'm unclear on how useful or important this is.
 So this class completely strips CRs from the source stream. It also unfolds LF LWS sequences,
