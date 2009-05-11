@@ -72,6 +72,8 @@ void sInvokeOnMainThread(Callback_t iCallback, void* iRefcon);
 
 std::string sEventAsString(EventClass iEC, EventKind iEK);
 
+std::string sEventTypeAsString(UInt16 iEventType);
+
 } // namespace ZUtil_CarbonEvents
 
 NAMESPACE_ZOOLIB_END

@@ -191,8 +191,9 @@ void ZUtil_CarbonEvents::sInvokeOnMainThread(Callback_t iCallback, void* iRefcon
 	sHandler.InvokeOnMainThread(iCallback, iRefcon);
 	}
 
+#define CLASSONLY(a) case a: theClass = #a; break
 #define CLASS(a) case a: theClass = #a
-#define KIND(a) case a: return #a
+#define KIND(a) case a: theKind = #a; break
 
 string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 	{
@@ -200,19 +201,19 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 	string theKind;
 	switch (iEC)
 		{
-		CLASS(kEventClassTextInput); break;
-		CLASS(kEventClassAppleEvent); break;
-		CLASS(kEventClassTablet); break;
-		CLASS(kEventClassVolume); break;
-		CLASS(kEventClassAppearance); break;
-		CLASS(kEventClassService); break;
-		CLASS(kEventClassToolbar); break;
-		CLASS(kEventClassToolbarItem); break;
-		CLASS(kEventClassToolbarItemView); break;
-		CLASS(kEventClassAccessibility); break;
-		CLASS(kEventClassSystem); break;
-		CLASS(kEventClassInk); break;
-		CLASS(kEventClassTSMDocumentAccess); break;
+		CLASSONLY(kEventClassTextInput);
+		CLASSONLY(kEventClassAppleEvent);
+		CLASSONLY(kEventClassTablet);
+		CLASSONLY(kEventClassVolume);
+		CLASSONLY(kEventClassAppearance);
+		CLASSONLY(kEventClassService);
+		CLASSONLY(kEventClassToolbar);
+		CLASSONLY(kEventClassToolbarItem);
+		CLASSONLY(kEventClassToolbarItemView);
+		CLASSONLY(kEventClassAccessibility);
+		CLASSONLY(kEventClassSystem);
+		CLASSONLY(kEventClassInk);
+		CLASSONLY(kEventClassTSMDocumentAccess);
 
 		CLASS(kEventClassMouse);
 		switch (iEK)
@@ -224,8 +225,8 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventMouseEntered);
 			KIND(kEventMouseExited);
 			KIND(kEventMouseWheelMoved);
-			break;
 			}
+		break;
 
 		CLASS(kEventClassKeyboard);
 		switch (iEK)
@@ -236,8 +237,8 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventRawKeyModifiersChanged);
 			KIND(kEventHotKeyPressed);
 			KIND(kEventHotKeyReleased);
-			break;
 			}
+		break;
 
 		CLASS(kEventClassApplication);
 		switch (iEK)
@@ -261,8 +262,8 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventAppSystemUIModeChanged);
 			KIND(kEventAppAvailableWindowBoundsChanged);
 			KIND(kEventAppActiveWindowChanged);
-			break;
 			}
+		break;
 
 		CLASS(kEventClassWindow);
 		switch (iEK)
@@ -351,8 +352,8 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventWindowPaint);
 			KIND(kEventWindowAttributesChanged);
 			KIND(kEventWindowTitleChanged);
-			break;
 			}
+		break;
 
 		CLASS(kEventClassMenu);
 		switch (iEK)
@@ -378,16 +379,16 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventMenuCeaseToBeScrollable);
 			KIND(kEventMenuBarShown);
 			KIND(kEventMenuBarHidden);
-			break;
 			}
+		break;
 
 		CLASS(kEventClassCommand);
 		switch (iEK)
 			{
 			KIND(kEventCommandProcess);
 			KIND(kEventCommandUpdateStatus);
-			break;
 			}
+		break;
 
 		CLASS(kEventClassControl);
 		switch (iEK)
@@ -442,8 +443,8 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventControlEnabledStateChanged);
 			KIND(kEventControlLayoutInfoChanged);
 			KIND(kEventControlArbitraryMessage);
-			break;
 			}
+		break;
 		}
 
 	if (theClass.empty())
@@ -453,11 +454,32 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 		}
 
 	if (theKind.empty())
-		theKind = ZString::sFormat("%u", theKind);
+		theKind = ZString::sFormat("%u", iEK);
 
 	return theClass + "/" + theKind;
 	}
 
+#define EVENT(a) case a: return #a
+
+string ZUtil_CarbonEvents::sEventTypeAsString(UInt16 iEventType)
+	{
+	switch (iEventType)
+		{
+		EVENT(nullEvent);
+		EVENT(mouseDown);
+		EVENT(mouseUp);
+		EVENT(keyDown);
+		EVENT(keyUp);
+		EVENT(autoKey);
+		EVENT(updateEvt);
+		EVENT(diskEvt);
+		EVENT(activateEvt);
+		EVENT(osEvt);
+		EVENT(kHighLevelEvent);
+		}
+	return ZString::sFormat("%u", iEventType);
+	}
+		
 NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Carbon)
