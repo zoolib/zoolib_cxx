@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if UNIVERSAL_INTERFACES_VERSION <= 0x0341
 enum
 	{
-	kEventMouseDragged = 6,
+//	kEventMouseDragged = 6,
 	kEventMouseEntered = 8,
 	kEventMouseExited = 9
 	};
@@ -41,6 +41,7 @@ enum
 using std::string;
 
 using ZooLib::ZUtil_CarbonEvents::sGetParam_T;
+using ZooLib::ZUtil_CarbonEvents::sDGetParam_T;
 using ZooLib::ZUtil_CarbonEvents::sSetParam_T;
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -56,6 +57,8 @@ static void sWriteEvent(const ZStrimW&s, const EventRecord& iER)
 	s.Writef("message: %u, when: %u, where: (%d, %d), modifiers: %u",
 		iER.message, iER.when, iER.where.h, iER.where.v, iER.modifiers);
 	}
+
+#if defined(XP_MACOSX)
 
 static void sSetFill(CGContextRef iCG, const ZRGBColor& iColor)
 	{
@@ -90,6 +93,8 @@ static HIPoint& sHI(ZGPointf& iP)
 
 static const HIPoint& sHI(const ZGPointf& iP)
 	{ return *((const HIPoint*)&iP); }
+
+#endif // defined(XP_MACOSX)
 
 // =================================================================================================
 #pragma mark -
@@ -298,24 +303,25 @@ Host_WindowRef::Host_WindowRef(
 	fEventTargetRef_Window(nil),
 	fEventHandlerRef_Window(nil)
 	{
-	WindowAttributes theWA;
-	::GetWindowAttributes(fWindowRef, &theWA);
+	#if defined(XP_MACOSX)
+		WindowAttributes theWA;
+		::GetWindowAttributes(fWindowRef, &theWA);
 
-	// This is a compositing window, you should use a Host_HIView.
-	ZAssertStop(0, 0 == (theWA & kWindowCompositingAttribute));
+		// This is a compositing window, you should use a Host_HIView.
+		ZAssertStop(0, 0 == (theWA & kWindowCompositingAttribute));
+	#endif
 
 	fEventTargetRef_Window = ::GetWindowEventTarget(fWindowRef);
 
 	static const EventTypeSpec sEvents_Window[] =
 		{
-		{ kEventClassCommand, kEventCommandProcess },
-
 		{ kEventClassWindow, kEventWindowActivated },
 		{ kEventClassWindow, kEventWindowDeactivated },
+		{ kEventClassWindow, kEventWindowFocusAcquired },
+		{ kEventClassWindow, kEventWindowFocusRelinquish },
 		{ kEventClassWindow, kEventWindowBoundsChanged },
 		{ kEventClassWindow, kEventWindowHandleContentClick },
 		{ kEventClassWindow, kEventWindowDrawContent },
-//		{ kEventClassWindow, kEventWindowUpdate },
 
 		{ kEventClassKeyboard, kEventRawKeyDown },
 		{ kEventClassKeyboard, kEventRawKeyRepeat },
@@ -385,16 +391,18 @@ void Host_WindowRef::DoEvent(const EventRecord& iEvent)
 	{
 	EventRecord theER = iEvent;
 
-	if (fUseCoreGraphics)
-		{
-		Rect contentRect;
-		::GetWindowBounds(fWindowRef, kWindowContentRgn, &contentRect);
-		Rect structureRect;
-		::GetWindowBounds(fWindowRef, kWindowStructureRgn, &structureRect);
+	#if defined(XP_MACOSX)
+		if (fUseCoreGraphics)
+			{
+			Rect contentRect;
+			::GetWindowBounds(fWindowRef, kWindowContentRgn, &contentRect);
+			Rect structureRect;
+			::GetWindowBounds(fWindowRef, kWindowStructureRgn, &structureRect);
 
-		theER.where.h += structureRect.left - contentRect.left;
-		theER.where.v += structureRect.top - contentRect.top;
-		}
+			theER.where.h += structureRect.left - contentRect.left;
+			theER.where.v += structureRect.top - contentRect.top;
+			}
+	#endif
 
 	Host_Mac::DoEvent(theER);
 	}
@@ -413,20 +421,21 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 		{
         case kEventClassMouse:
 			{
-			WindowPartCode theWPC = sGetParam_T<WindowPartCode>(
-				iEventRef, kEventParamWindowPartCode, typeWindowPartCode);
+			#if defined(XP_MACOSX)
+				if (::GetEventKind(iEventRef) == kEventMouseDown)
+					{
+					if (inContent == sDGetParam_T<WindowPartCode>(iEventRef,
+						kEventParamWindowPartCode, typeWindowPartCode, 0))
+						{
+						this->pDeliverEvent(iEventRef);
+						// Absorb the mousedown, so that the standard handler
+						// does not absorb the mouseUp.
+						return noErr;
+						}
+					}
+			#endif
 
-			if (::GetEventKind(iEventRef) == kEventMouseDown && theWPC == inContent)
-				{
-				this->pDeliverEvent(iEventRef);
-				// Absorb the mousedown, so that the standard handler
-				// does not absorb the mouseUp.
-				return noErr;
-				}
-			else
-				{
-				this->pDeliverEvent(iEventRef);
-				}
+			this->pDeliverEvent(iEventRef);
 			break;
 			}
 		case kEventClassKeyboard:
@@ -444,11 +453,6 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 					// Claim we handled the event, to allow
 					// raw mouseUp/mouseDowns to be delivered.
 					return noErr;
-					}
-				case kEventWindowUpdate:
-					{
-					return eventNotHandledErr;
-					break;
 					}
 				case kEventWindowDrawContent:
 					{
@@ -524,24 +528,26 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 					}
 				case kEventWindowBoundsChanged:
 					{
-					if (!fUseCoreGraphics)
-						{
-						ZGRectf newFrame = sGetParam_T<Rect>(iEventRef,
-							kEventParamCurrentBounds, typeQDRectangle);
+					#if defined(XP_MACOSX)
+						if (!fUseCoreGraphics)
+							{
+							ZGRectf newFrame = sGetParam_T<Rect>(iEventRef,
+								kEventParamCurrentBounds, typeQDRectangle);
 
-						if (ZLOG(s, eDebug + 1, "Host_WindowRef"))
-							s << "kEventWindowBoundsChanged"
-							<< ", newFrame: " << newFrame;
+							if (ZLOG(s, eDebug + 1, "Host_WindowRef"))
+								s << "kEventWindowBoundsChanged"
+								<< ", newFrame: " << newFrame;
 
-						newFrame.origin = 0;
+							newFrame.origin = 0;
 
-						Rect qdRect = newFrame;
-						::InvalWindowRect(fWindowRef, &qdRect);
+							Rect qdRect = newFrame;
+							::InvalWindowRect(fWindowRef, &qdRect);
 
-						this->pApplyInsets(newFrame);
+							this->pApplyInsets(newFrame);
 
-						this->DoSetWindow(newFrame);
-						}
+							this->DoSetWindow(newFrame);
+							}
+					#endif
 					break;
 					}
 				}
@@ -583,33 +589,14 @@ Host_HIViewRef::Host_HIViewRef(
 		{ kEventClassKeyboard, kEventRawKeyModifiersChanged },
 
 		{ kEventClassControl, kEventControlHitTest },
-		{ kEventClassControl, kEventControlSimulateHit },
-		{ kEventClassControl, kEventControlHitTest },
 		{ kEventClassControl, kEventControlDraw },
-		{ kEventClassControl, kEventControlApplyBackground },
-		{ kEventClassControl, kEventControlApplyTextColor },
 		{ kEventClassControl, kEventControlSetFocusPart },
 		{ kEventClassControl, kEventControlGetFocusPart },
 		{ kEventClassControl, kEventControlActivate },
 		{ kEventClassControl, kEventControlDeactivate },
 		{ kEventClassControl, kEventControlSetCursor },
-		{ kEventClassControl, kEventControlContextualMenuClick },
 		{ kEventClassControl, kEventControlClick },
-		{ kEventClassControl, kEventControlGetNextFocusCandidate },
-		{ kEventClassControl, kEventControlGetAutoToggleValue },
-		{ kEventClassControl, kEventControlInterceptSubviewClick },
-		{ kEventClassControl, kEventControlGetClickActivation },
-		{ kEventClassControl, kEventControlDragEnter },
-		{ kEventClassControl, kEventControlDragWithin },
-		{ kEventClassControl, kEventControlDragLeave },
-		{ kEventClassControl, kEventControlDragReceive },
-		{ kEventClassControl, kEventControlInvalidateForSizeChange },
-		{ kEventClassControl, kEventControlTrackingAreaEntered },
-		{ kEventClassControl, kEventControlTrackingAreaExited },
-
-
 		{ kEventClassControl, kEventControlTrack },
-
 		{ kEventClassControl, kEventControlBoundsChanged },
 		
 
@@ -712,12 +699,12 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					}
 				case kEventControlSetFocusPart:
 					{
-					ControlFocusPart thePart = sGetParam_T<ControlFocusPart>
-						(iEventRef, kEventParamControlPart, typeControlPartCode);
-					if (thePart == kControlFocusNoPart)
-						Host_Mac::DoFocus(false);
-					else
-						Host_Mac::DoFocus(true);
+					bool isFocused =
+						kControlFocusNoPart != sDGetParam_T<ControlFocusPart>(iEventRef,
+						kEventParamControlPart, typeControlPartCode, kControlFocusNoPart);
+
+					Host_Mac::DoFocus(isFocused);
+
 					return noErr;
 					}
 				case kEventControlClick:
@@ -730,8 +717,8 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					{
 					WindowRef theWindowRef = ::HIViewGetWindow(fHIViewRef);
 
-					ZGPointf startPoint = sGetParam_T<Point>
-						(iEventRef, kEventParamMouseLocation, typeQDPoint);
+					ZGPointf startPoint = sGetParam_T<Point>(iEventRef,
+						kEventParamMouseLocation, typeQDPoint);
 
 					::HIPointConvert(&sHI(startPoint),
 						kHICoordSpaceView, fHIViewRef, kHICoordSpace72DPIGlobal, theWindowRef);
@@ -741,8 +728,8 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					theER.message = 0;
 					theER.when = ::EventTimeToTicks(::GetCurrentEventTime());
 					theER.where = startPoint;
-					theER.modifiers = sGetParam_T<UInt32>
-						(iEventRef, kEventParamKeyModifiers, typeUInt32);
+					theER.modifiers = sGetParam_T<UInt32>(iEventRef,
+						kEventParamKeyModifiers, typeUInt32);
 
 					if (ZLOG(s, eDebug + 1, "Host_ViewRef"))
 						{
@@ -800,6 +787,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 						{
 						::HIRectConvert(&sHI(winFrame),
 							kHICoordSpaceView, fHIViewRef, kHICoordSpaceWindow, theWindowRef);
+
 						if (CGContextRef theCG = sGetParam_T<CGContextRef>(iEventRef,
 							kEventParamCGContextRef, typeCGContextRef))
 							{
