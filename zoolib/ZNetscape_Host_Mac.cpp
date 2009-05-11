@@ -20,14 +20,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_Host_Mac.h"
 
+#if defined(XP_MAC) || defined(XP_MACOSX)
+
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZRGBColor.h"
 #include "zoolib/ZStream_String.h"
 #include "zoolib/ZUtil_CarbonEvents.h"
 #include "zoolib/ZUtil_Strim_Geom.h"
-
-#if defined(XP_MAC) || defined(XP_MACOSX)
 
 #if UNIVERSAL_INTERFACES_VERSION <= 0x0341
 enum
@@ -43,8 +43,6 @@ using std::string;
 using ZooLib::ZUtil_CarbonEvents::sGetParam_T;
 using ZooLib::ZUtil_CarbonEvents::sSetParam_T;
 
-#endif // defined(XP_MAC) || defined(XP_MACOSX)
-
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZNetscape {
@@ -53,8 +51,10 @@ namespace ZNetscape {
 
 static void sWriteEvent(const ZStrimW&s, const EventRecord& iER)
 	{
-	s.Writef("what: %u, message: %u, when: %u, where: (%d, %d), modifiers: %u",
-		iER.what, iER.message, iER.when, iER.where.h, iER.where.v, iER.modifiers);
+	s << "what: " << ZUtil_CarbonEvents::sEventTypeAsString(iER.what) << ", ";
+
+	s.Writef("message: %u, when: %u, where: (%d, %d), modifiers: %u",
+		iER.message, iER.when, iER.where.h, iER.where.v, iER.modifiers);
 	}
 
 static void sSetFill(CGContextRef iCG, const ZRGBColor& iColor)
@@ -101,7 +101,6 @@ Host_Mac::Host_Mac(ZRef<GuestFactory> iGuestFactory, bool iAllowCG)
 :	Host_Std(iGuestFactory),
 	fAllowCG(iAllowCG),
 	fEventLoopTimerRef_Idle(nil),
-//	fLeft(7), fTop(100), fRight(17), fBottom(50)
 	fLeft(0), fTop(0), fRight(0), fBottom(0)
 	{
 	#if defined(XP_MACOSX)
@@ -224,8 +223,11 @@ void Host_Mac::DoEvent(const EventRecord& iEvent)
 	EventRecord theER = iEvent;
 	if (theER.what != nullEvent)
 		{
-		if (ZLOG(s, eDebug, "Host_Mac::DoEvent"))
+		if (ZLOG(s, eDebug + 1, "Host_Mac"))
+			{
+			s << "DoEvent, ";
 			sWriteEvent(s, theER);
+			}
 		}
 	this->Guest_HandleEvent(&theER);
 	}
@@ -238,7 +240,7 @@ void Host_Mac::DoSetWindow(const ZGRectf& iWinFrame)
 
 void Host_Mac::DoSetWindow(int iX, int iY, int iWidth, int iHeight)
 	{
-	if (ZLOG(s, eDebug, "Host_Mac"))
+	if (ZLOG(s, eDebug + 1, "Host_Mac"))
 		s.Writef("DoSetWindow, (%d, %d, %d, %d)", iX, iY, iX + iWidth, iY + iHeight);
 
 	// This is spurious if we're doing CoreGraphics
@@ -368,15 +370,15 @@ void Host_WindowRef::PostCreateAndLoad()
 		{
 		fNP_Port.port = ::GetWindowPort(fWindowRef);
 		fNPWindow.window = &fNP_Port;
-
-		Rect winFrameRect;
-		::GetWindowBounds(fWindowRef, kWindowGlobalPortRgn, &winFrameRect);
-		winFrameRect.right -= winFrameRect.left;
-		winFrameRect.bottom -= winFrameRect.top;
-		winFrameRect.left = 0;
-		winFrameRect.top = 0;
-		::InvalWindowRect(fWindowRef, &winFrameRect);
 		}
+
+	Rect winFrameRect;
+	::GetWindowBounds(fWindowRef, kWindowGlobalPortRgn, &winFrameRect);
+	winFrameRect.right -= winFrameRect.left;
+	winFrameRect.bottom -= winFrameRect.top;
+	winFrameRect.left = 0;
+	winFrameRect.top = 0;
+	::InvalWindowRect(fWindowRef, &winFrameRect);
 	}
 
 void Host_WindowRef::DoEvent(const EventRecord& iEvent)
@@ -385,7 +387,13 @@ void Host_WindowRef::DoEvent(const EventRecord& iEvent)
 
 	if (fUseCoreGraphics)
 		{
-		theER.where.v -= 22;
+		Rect contentRect;
+		::GetWindowBounds(fWindowRef, kWindowContentRgn, &contentRect);
+		Rect structureRect;
+		::GetWindowBounds(fWindowRef, kWindowStructureRgn, &structureRect);
+
+		theER.where.h += structureRect.left - contentRect.left;
+		theER.where.v += structureRect.top - contentRect.top;
 		}
 
 	Host_Mac::DoEvent(theER);
@@ -401,8 +409,6 @@ pascal OSStatus Host_WindowRef::sEventHandler_Window(
 
 OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, EventRef iEventRef)
 	{
-	OSStatus err = eventNotHandledErr;
-
 	switch (::GetEventClass(iEventRef))
 		{
         case kEventClassMouse:
@@ -410,14 +416,12 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 			WindowPartCode theWPC = sGetParam_T<WindowPartCode>(
 				iEventRef, kEventParamWindowPartCode, typeWindowPartCode);
 
-			if (true && ::GetEventKind(iEventRef) == kEventMouseDown && theWPC == inContent)
+			if (::GetEventKind(iEventRef) == kEventMouseDown && theWPC == inContent)
 				{
 				this->pDeliverEvent(iEventRef);
+				// Absorb the mousedown, so that the standard handler
+				// does not absorb the mouseUp.
 				return noErr;
-				}
-			else if (::GetEventKind(iEventRef) == kEventMouseUp)
-				{
-				this->pDeliverEvent(iEventRef);
 				}
 			else
 				{
@@ -455,7 +459,7 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 					ZGRectf winFrame(winFrameRect.right - winFrameRect.left,
 						winFrameRect.bottom - winFrameRect.top);
 
-					if (ZLOG(s, eDebug, "Host_WindowRef"))
+					if (ZLOG(s, eDebug + 1, "Host_WindowRef"))
 						{
 						s << "kEventWindowDrawContent: " << winFrame;
 						}
@@ -465,14 +469,14 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 
 					this->pApplyInsets(winFrame);
 
-					CGrafPtr qdPort;
-					GDHandle currentGDevice;
-					::GetGWorld(&qdPort, &currentGDevice);
-
 					if (false) {}
 					#if defined(XP_MACOSX)
 					else if (fUseCoreGraphics)
 						{
+						CGrafPtr qdPort;
+						GDHandle currentGDevice;
+						::GetGWorld(&qdPort, &currentGDevice);
+
 						CGContextRef cg;
 						::QDBeginCGContext(qdPort, &cg);
 						::CGContextSaveGState(cg);
@@ -485,8 +489,6 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 						this->DoEvent(updateEvt, (UInt32)fWindowRef);
 						::CGContextRestoreGState(cg);
 
-						sFillRectf(cg, winFrame, ZRGBColor(.5, .0, .0, .5));
-
 						::CGContextSynchronize(cg);
 
 						::QDEndCGContext(qdPort, &cg);
@@ -498,8 +500,7 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 						this->DoEvent(updateEvt, (UInt32)fWindowRef);
 						}
 
-					err = noErr;
-					break;
+					return noErr;
 					}
 				case kEventWindowActivated:
 					{
@@ -528,7 +529,7 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 						ZGRectf newFrame = sGetParam_T<Rect>(iEventRef,
 							kEventParamCurrentBounds, typeQDRectangle);
 
-						if (ZLOG(s, eDebug, "Host_WindowRef"))
+						if (ZLOG(s, eDebug + 1, "Host_WindowRef"))
 							s << "kEventWindowBoundsChanged"
 							<< ", newFrame: " << newFrame;
 
@@ -548,7 +549,7 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 			}
 		}
 
-	return err;
+	return eventNotHandledErr;
 	}
 
 #endif // defined(XP_MAC) || defined(XP_MACOSX)
@@ -663,12 +664,12 @@ void Host_HIViewRef::PostCreateAndLoad()
 		{
 		fNP_Port.port = ::GetWindowPort(theWindowRef);
 		fNPWindow.window = &fNP_Port;
-
-		ZGRectf theFrame;
-		::HIViewGetBounds(fHIViewRef, &sHI(theFrame));
-		this->pApplyInsets(theFrame);
-		::HIViewSetNeedsDisplayInRect(fHIViewRef, &sHI(theFrame), true);
 		}
+
+	ZGRectf theFrame;
+	::HIViewGetBounds(fHIViewRef, &sHI(theFrame));
+	this->pApplyInsets(theFrame);
+	::HIViewSetNeedsDisplayInRect(fHIViewRef, &sHI(theFrame), true);
 	}
 
 EventHandlerUPP Host_HIViewRef::sEventHandlerUPP_View = NewEventHandlerUPP(sEventHandler_View);
@@ -679,13 +680,11 @@ pascal OSStatus Host_HIViewRef::sEventHandler_View(
 
 OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRef iEventRef)
 	{
-	if (ZLOG(s, eDebug, "Host_HIViewRef"))
+	if (ZLOG(s, eDebug + 1, "Host_HIViewRef"))
 		{
 		s << ZUtil_CarbonEvents::sEventAsString(
 			::GetEventClass(iEventRef), ::GetEventKind(iEventRef));
 		}
-
-	OSStatus err = eventNotHandledErr;
 
 	switch (::GetEventClass(iEventRef))
 		{
@@ -704,18 +703,21 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 				case kEventControlActivate:
 					{
 					this->DoActivate(true);
-					return noErr;
 					break;
 					}
 				case kEventControlDeactivate:
 					{
 					this->DoActivate(false);
-					return noErr;
 					break;
 					}
 				case kEventControlSetFocusPart:
 					{
-					Host_Mac::DoFocus(true);
+					ControlFocusPart thePart = sGetParam_T<ControlFocusPart>
+						(iEventRef, kEventParamControlPart, typeControlPartCode);
+					if (thePart == kControlFocusNoPart)
+						Host_Mac::DoFocus(false);
+					else
+						Host_Mac::DoFocus(true);
 					return noErr;
 					}
 				case kEventControlClick:
@@ -737,25 +739,25 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					EventRecord theER;
 					theER.what = mouseDown;
 					theER.message = 0;
-					theER.when = ::TickCount();
+					theER.when = ::EventTimeToTicks(::GetCurrentEventTime());
 					theER.where = startPoint;
 					theER.modifiers = sGetParam_T<UInt32>
 						(iEventRef, kEventParamKeyModifiers, typeUInt32);
-					if (ZLOG(s, eDebug, "Host_ViewRef"))
+
+					if (ZLOG(s, eDebug + 1, "Host_ViewRef"))
 						{
 						sWriteEvent(s, theER);
 						}
 					this->Guest_HandleEvent(&theER);
+
 					for (;true;)
 						{
 						MouseTrackingResult	theResult;
 						UInt32 theModifiers;
 						::TrackMouseLocationWithOptions(
-							(CGrafPtr)-1, kTrackMouseLocationOptionDontConsumeMouseUp, .1, &theER.where, &theModifiers, &theResult);
-						::SetPort(::GetWindowPort(theWindowRef));
-						theER.when = ::GetCurrentEventTime();
-						theER.when = ::TickCount();
-						ZLOG(s, eDebug, "Host_ViewRef");
+							(CGrafPtr)-1, 0, 0.02, &theER.where, &theModifiers, &theResult);
+						theER.when = ::EventTimeToTicks(::GetCurrentEventTime());
+						ZLOG(s, eDebug + 1, "Host_ViewRef");
 						if (theResult == kMouseTrackingMouseReleased)
 							{
 							theER.what = mouseUp;
@@ -791,7 +793,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 
 					ZGRectf winFrame = theFrame;
 
-					if (ZLOG(s, eDebug, "Host_HIViewRef"))
+					if (ZLOG(s, eDebug + 1, "Host_HIViewRef"))
 						s << "draw, winFrame: " << winFrame;
 
 					if (fUseCoreGraphics)
@@ -812,8 +814,6 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 
 							::CGContextRestoreGState(theCG);
 
-							sFillRectf(theCG, theFrame, ZRGBColor(.5, .0, .0, .5));
-
 							fNP_CGContext.context = nil;
 							}
 						}
@@ -822,8 +822,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 						this->DoSetWindow(winFrame);
 						this->DoEvent(updateEvt, (UInt32)theWindowRef);
 						}
-					err = noErr;
-					break;
+					return noErr;
 					}
 				case kEventControlBoundsChanged:
 					{
@@ -832,7 +831,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					ZGRectf newFrame = sGetParam_T<Rect>(iEventRef,
 						kEventParamCurrentBounds, typeQDRectangle);
 
-					if (ZLOG(s, eDebug, "Host_HIViewRef"))
+					if (ZLOG(s, eDebug + 1, "Host_HIViewRef"))
 						s << "kEventControlBoundsChanged"
 						<< ", newFrame: " << newFrame;
 
@@ -851,7 +850,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					this->pApplyInsets(newFrame);
 						
 
-					if (ZLOG(s, eDebug, "Host_HIViewRef"))
+					if (ZLOG(s, eDebug + 1, "Host_HIViewRef"))
 						s << "kEventControlBoundsChanged, winFrame: " << newFrame;
 
 					this->DoSetWindow(newFrame);
@@ -862,7 +861,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 			}
 		}
 
-	return err;
+	return eventNotHandledErr;
 	}
 
 #endif // defined(XP_MACOSX)
@@ -870,3 +869,5 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 } // namespace ZNetscape
 
 NAMESPACE_ZOOLIB_END
+
+#endif // defined(XP_MAC) || defined(XP_MACOSX)
