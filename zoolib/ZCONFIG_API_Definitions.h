@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZCONFIG_API_Avail(facility) (ZCONFIG_API_Avail__##facility)
 #define ZCONFIG_API_Desired(facility) (ZCONFIG_API_Desired__##facility)
 
-#define ZCONFIG_API_Enabled(facility) (ZCONFIG_API_Avail(facility) && ZCONFIG_API_Desired(facility))
+#define ZCONFIG_API_Enabled(facility) \
+	(ZCONFIG_API_Avail__##facility && ZCONFIG_API_Desired__##facility)
 
 
 #endif // __ZCONFIG_API_Definitions__
