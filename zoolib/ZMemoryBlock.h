@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompare.h"
-#include "zoolib/ZRefCount.h"
+#include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZStream.h"
 
 #include <string.h> // for memcmp

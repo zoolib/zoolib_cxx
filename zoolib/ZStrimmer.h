@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
-#include "zoolib/ZRefCount.h"
+#include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN

@@ -26,33 +26,52 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-template <class T = void*>
+class ZThreadSimpleVoid_t;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZThreadSimple
+
+template <class T = ZThreadSimpleVoid_t>
 class ZThreadSimple : public ZThread
 	{
 public:
 	typedef void (*ThreadProc)(T inArgument);
 	ZThreadSimple(ThreadProc iProc, T iArgument, const char* iName = nil)
-	:	ZThread(iName), fProc(iProc), fProcNoArg(nil), fArgument(iArgument)
-		{}
-
-	typedef void (*ThreadProcNoArg)();
-	ZThreadSimple(ThreadProcNoArg iProc, const char* iName = nil)
-	:	ZThread(iName), fProc(nil), fProcNoArg(iProc)
+	:	ZThread(iName),
+		fProc(iProc),
+		fArgument(iArgument)
 		{}
 
 protected:
 	virtual void Run()
-		{
-		if (fProc)
-			fProc(fArgument);
-		else
-			fProcNoArg();
-		}
+		{ fProc(fArgument); }
 
 private:
 	ThreadProc fProc;
-	ThreadProcNoArg fProcNoArg;
 	T fArgument;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZThreadSimple, dummy
+
+template <>
+class ZThreadSimple<ZThreadSimpleVoid_t> : public ZThread
+	{
+public:
+	typedef void (*ThreadProcNoArg)();
+	ZThreadSimple(ThreadProcNoArg iProc, const char* iName = nil)
+	:	ZThread(iName),
+		fProcNoArg(iProc)
+		{}
+
+protected:
+	virtual void Run()
+		{ fProcNoArg(); }
+
+private:
+	ThreadProcNoArg fProcNoArg;
 	};
 
 NAMESPACE_ZOOLIB_END

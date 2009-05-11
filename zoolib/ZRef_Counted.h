@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2000 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRefCount__
-#define __ZRefCount__ 1
+#ifndef __ZRef_Counted__
+#define __ZRef_Counted__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZRef.h"
@@ -86,4 +86,4 @@ inline void sRelease(ZRefCountedWithFinalization& iObject)
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZRefCount__
+#endif // __ZRef_Counted__

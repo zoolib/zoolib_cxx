@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/ZRefCount.h"
+#include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZStreamer.h"
 
 #include <cstddef> // For size_t

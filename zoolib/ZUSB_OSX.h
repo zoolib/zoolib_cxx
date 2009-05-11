@@ -38,7 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <IOKit/IOKitLib.h> // For IONotificationPortRef
 #include <IOKit/usb/IOUSBLib.h>
 
-#include "zoolib/ZRefCount.h"
+#include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZStreamer.h"
 
 NAMESPACE_ZOOLIB_BEGIN

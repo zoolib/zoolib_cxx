@@ -17,10 +17,10 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLA
 OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
-#ifndef __ZRefCFType__
-#define __ZRefCFType__ 1
+#ifndef __ZRef_CFType__
+#define __ZRef_CFType__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZRef.h"
 
-#endif // __ZRefCFType__
+#endif // __ZRef_CFType__

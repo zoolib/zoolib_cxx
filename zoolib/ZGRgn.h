@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAccumulator_T.h"
 #include "zoolib/ZGeom.h"
-#include "zoolib/ZRefCount.h"
+#include "zoolib/ZRef_Counted.h"
 
 #include <vector>
 

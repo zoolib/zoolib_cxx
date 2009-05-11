@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCPixmapNS.h"
 #include "zoolib/ZGeom.h"
 #include "zoolib/ZMulti_T.h"
-#include "zoolib/ZRefCount.h"
+#include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZRGBColor.h"
 
 // For documentation, see ZDCPixmapNS.cpp

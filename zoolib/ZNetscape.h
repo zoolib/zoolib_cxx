@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_npapi.h"
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZDebug.h" // For ZAssert
-#include "zoolib/ZRefCount.h"
+#include "zoolib/ZRef.h"
 #include "zoolib/ZUtil_STL.h"
 
 #include <string>

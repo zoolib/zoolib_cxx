@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTBServer__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZRefCount.h"
+#include "zoolib/ZRef.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTuple.h"
 

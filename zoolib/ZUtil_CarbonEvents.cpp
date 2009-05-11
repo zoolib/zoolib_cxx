@@ -32,6 +32,12 @@ NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
 
+#if defined(UNIVERSAL_INTERFACES_VERSION) && UNIVERSAL_INTERFACES_VERSION <= 0x0341
+	#define USING_ANCIENT_HEADERS 1
+#else
+	#define USING_ANCIENT_HEADERS 0
+#endif
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_CarbonEvents
@@ -205,6 +211,8 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 		CLASSONLY(kEventClassAppleEvent);
 		CLASSONLY(kEventClassTablet);
 		CLASSONLY(kEventClassVolume);
+
+		#if !USING_ANCIENT_HEADERS
 		CLASSONLY(kEventClassAppearance);
 		CLASSONLY(kEventClassService);
 		CLASSONLY(kEventClassToolbar);
@@ -214,6 +222,7 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 		CLASSONLY(kEventClassSystem);
 		CLASSONLY(kEventClassInk);
 		CLASSONLY(kEventClassTSMDocumentAccess);
+		#endif // !USING_ANCIENT_HEADERS
 
 		CLASS(kEventClassMouse);
 		switch (iEK)
@@ -222,9 +231,12 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventMouseUp);
 			KIND(kEventMouseMoved);
 			KIND(kEventMouseDragged);
+			KIND(kEventMouseWheelMoved);
+
+			#if !USING_ANCIENT_HEADERS
 			KIND(kEventMouseEntered);
 			KIND(kEventMouseExited);
-			KIND(kEventMouseWheelMoved);
+			#endif // !USING_ANCIENT_HEADERS
 			}
 		break;
 
@@ -250,6 +262,8 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventAppLaunched);
 			KIND(kEventAppTerminated);
 			KIND(kEventAppFrontSwitched);
+
+			#if !USING_ANCIENT_HEADERS
 			KIND(kEventAppFocusMenuBar);
 			KIND(kEventAppFocusNextDocumentWindow);
 			KIND(kEventAppFocusNextFloatingWindow);
@@ -262,6 +276,7 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventAppSystemUIModeChanged);
 			KIND(kEventAppAvailableWindowBoundsChanged);
 			KIND(kEventAppActiveWindowChanged);
+			#endif // !USING_ANCIENT_HEADERS
 			}
 		break;
 
@@ -272,17 +287,12 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventWindowDrawContent);
 			KIND(kEventWindowActivated);
 			KIND(kEventWindowDeactivated);
-			KIND(kEventWindowHandleActivate);
-			KIND(kEventWindowHandleDeactivate);
 			KIND(kEventWindowGetClickActivation);
-			KIND(kEventWindowGetClickModality);
 			KIND(kEventWindowShowing);
 			KIND(kEventWindowHiding);
 			KIND(kEventWindowShown);
 			KIND(kEventWindowHidden);
-			KIND(kEventWindowCollapsing);
 			KIND(kEventWindowCollapsed);
-			KIND(kEventWindowExpanding);
 			KIND(kEventWindowExpanded);
 			KIND(kEventWindowZoomed);
 			KIND(kEventWindowBoundsChanging);
@@ -292,8 +302,6 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventWindowDragStarted);
 			KIND(kEventWindowDragCompleted);
 			KIND(kEventWindowClosed);
-			KIND(kEventWindowTransitionStarted);
-			KIND(kEventWindowTransitionCompleted);
 			KIND(kEventWindowClickDragRgn);
 			KIND(kEventWindowClickResizeRgn);
 			KIND(kEventWindowClickCollapseRgn);
@@ -301,8 +309,6 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventWindowClickZoomRgn);
 			KIND(kEventWindowClickContentRgn);
 			KIND(kEventWindowClickProxyIconRgn);
-			KIND(kEventWindowClickToolbarButtonRgn);
-			KIND(kEventWindowClickStructureRgn);
 			KIND(kEventWindowCursorChange);
 			KIND(kEventWindowCollapse);
 			KIND(kEventWindowCollapseAll);
@@ -319,23 +325,10 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventWindowGetMaximumSize);
 			KIND(kEventWindowConstrain);
 			KIND(kEventWindowHandleContentClick);
-			KIND(kEventWindowGetDockTileMenu);
 			KIND(kEventWindowProxyBeginDrag);
 			KIND(kEventWindowProxyEndDrag);
-			KIND(kEventWindowToolbarSwitchMode);
 			KIND(kEventWindowFocusAcquired);
 			KIND(kEventWindowFocusRelinquish);
-			KIND(kEventWindowFocusContent);
-			KIND(kEventWindowFocusToolbar);
-			KIND(kEventWindowFocusDrawer);
-			KIND(kEventWindowSheetOpening);
-			KIND(kEventWindowSheetOpened);
-			KIND(kEventWindowSheetClosing);
-			KIND(kEventWindowSheetClosed);
-			KIND(kEventWindowDrawerOpening);
-			KIND(kEventWindowDrawerOpened);
-			KIND(kEventWindowDrawerClosing);
-			KIND(kEventWindowDrawerClosed);
 			KIND(kEventWindowDrawFrame);
 			KIND(kEventWindowDrawPart);
 			KIND(kEventWindowGetRegion);
@@ -350,8 +343,33 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventWindowDrawGrowBox);
 			KIND(kEventWindowGetGrowImageRegion);
 			KIND(kEventWindowPaint);
+
+			#if !USING_ANCIENT_HEADERS
+			KIND(kEventWindowHandleActivate);
+			KIND(kEventWindowHandleDeactivate);
+			KIND(kEventWindowGetClickModality);
+			KIND(kEventWindowCollapsing);
+			KIND(kEventWindowExpanding);
+			KIND(kEventWindowTransitionStarted);
+			KIND(kEventWindowTransitionCompleted);
+			KIND(kEventWindowClickToolbarButtonRgn);
+			KIND(kEventWindowClickStructureRgn);
+			KIND(kEventWindowFocusDrawer);
+			KIND(kEventWindowGetDockTileMenu);
+			KIND(kEventWindowToolbarSwitchMode);
+			KIND(kEventWindowFocusContent);
+			KIND(kEventWindowFocusToolbar);
 			KIND(kEventWindowAttributesChanged);
+			KIND(kEventWindowSheetOpening);
+			KIND(kEventWindowSheetOpened);
+			KIND(kEventWindowSheetClosing);
+			KIND(kEventWindowSheetClosed);
+			KIND(kEventWindowDrawerOpening);
+			KIND(kEventWindowDrawerOpened);
+			KIND(kEventWindowDrawerClosing);
+			KIND(kEventWindowDrawerClosed);
 			KIND(kEventWindowTitleChanged);
+			#endif // !USING_ANCIENT_HEADERS
 			}
 		break;
 
@@ -366,12 +384,14 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventMenuTargetItem);
 			KIND(kEventMenuMatchKey);
 			KIND(kEventMenuEnableItems);
+			KIND(kEventMenuDispose);
+
+			#if !USING_ANCIENT_HEADERS
 			KIND(kEventMenuPopulate);
 			KIND(kEventMenuMeasureItemWidth);
 			KIND(kEventMenuMeasureItemHeight);
 			KIND(kEventMenuDrawItem);
 			KIND(kEventMenuDrawItemContent);
-			KIND(kEventMenuDispose);
 			KIND(kEventMenuCalculateSize);
 			KIND(kEventMenuCreateFrameView);
 			KIND(kEventMenuGetFrameBounds);
@@ -379,6 +399,7 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventMenuCeaseToBeScrollable);
 			KIND(kEventMenuBarShown);
 			KIND(kEventMenuBarHidden);
+			#endif // !USING_ANCIENT_HEADERS
 			}
 		break;
 
@@ -409,15 +430,6 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventControlSetCursor);
 			KIND(kEventControlContextualMenuClick);
 			KIND(kEventControlClick);
-			KIND(kEventControlGetNextFocusCandidate);
-			KIND(kEventControlGetAutoToggleValue);
-			KIND(kEventControlInterceptSubviewClick);
-			KIND(kEventControlGetClickActivation);
-			KIND(kEventControlDragEnter);
-			KIND(kEventControlDragWithin);
-			KIND(kEventControlDragLeave);
-			KIND(kEventControlDragReceive);
-			KIND(kEventControlInvalidateForSizeChange);
 //			KIND(kEventControlTrackingAreaEntered); // In HIView.h
 //			KIND(kEventControlTrackingAreaExited); // In HIView.h
 			KIND(kEventControlTrack);
@@ -430,19 +442,31 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventControlGetPartBounds);
 			KIND(kEventControlSetData);
 			KIND(kEventControlGetData);
-			KIND(kEventControlGetSizeConstraints);
-			KIND(kEventControlGetFrameMetrics);
 			KIND(kEventControlValueFieldChanged);
 			KIND(kEventControlAddedSubControl);
 			KIND(kEventControlRemovingSubControl);
 			KIND(kEventControlBoundsChanged);
+			KIND(kEventControlOwningWindowChanged);
+			KIND(kEventControlArbitraryMessage);
+
+			#if !USING_ANCIENT_HEADERS
+			KIND(kEventControlGetNextFocusCandidate);
+			KIND(kEventControlGetAutoToggleValue);
+			KIND(kEventControlInterceptSubviewClick);
+			KIND(kEventControlGetClickActivation);
+			KIND(kEventControlDragEnter);
+			KIND(kEventControlDragWithin);
+			KIND(kEventControlDragLeave);
+			KIND(kEventControlDragReceive);
+			KIND(kEventControlInvalidateForSizeChange);
+			KIND(kEventControlGetSizeConstraints);
+			KIND(kEventControlGetFrameMetrics);
 			KIND(kEventControlVisibilityChanged);
 			KIND(kEventControlTitleChanged);
-			KIND(kEventControlOwningWindowChanged);
 			KIND(kEventControlHiliteChanged);
 			KIND(kEventControlEnabledStateChanged);
 			KIND(kEventControlLayoutInfoChanged);
-			KIND(kEventControlArbitraryMessage);
+			#endif // !USING_ANCIENT_HEADERS
 			}
 		break;
 		}
