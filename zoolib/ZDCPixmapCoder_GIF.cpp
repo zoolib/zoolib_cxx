@@ -377,12 +377,12 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 	
 		uint8 strmFlags = iStream.ReadUInt8();
 			bool strmHasGlobalColorTable = (strmFlags & 0x80) != 0;
-			uint8 strmColorResolution = (strmFlags & 0x7) >> 4;
-			bool strmSortFlag = (strmFlags & 0x08) != 0;
+			//uint8 strmColorResolution = (strmFlags & 0x7) >> 4;
+			//bool strmSortFlag = (strmFlags & 0x08) != 0;
 			uint8 strmGlobalColorTableSize = (strmFlags & 0x7);
 	
 		uint8 strmBackgroundColorIndex = iStream.ReadUInt8();
-		uint8 strmPixelAspectRatio = iStream.ReadUInt8();
+		/*uint8 strmPixelAspectRatio = */iStream.ReadUInt8();
 	
 		if (strmHasGlobalColorTable)
 			{
@@ -450,7 +450,7 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			uint8 strmFlags = iStream.ReadUInt8();
 				bool strmHasLocalColorTable = (strmFlags & 0x80) != 0;
 				bool strmIsInterlaced = (strmFlags & 0x40) != 0;
-				bool strmSortFlag = (strmFlags & 0x20) != 0;
+				//bool strmSortFlag = (strmFlags & 0x20) != 0;
 				uint8 strmLocalColorTableSize = (strmFlags & 0x7);
 
 			ZDCPixmapNS::PixelDesc thePixelDesc = fPixelDesc;

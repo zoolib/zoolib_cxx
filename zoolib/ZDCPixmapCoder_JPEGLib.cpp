@@ -350,8 +350,7 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 
 		ZRef<ZDCPixmapNS::PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
 
-		if (ZDCPixmapNS::PixelDescRep_Gray* thePixelDescRep_Gray
-			= ZRefDynamicCast<ZDCPixmapNS::PixelDescRep_Gray>(thePixelDescRep))
+		if (ZRefDynamicCast<ZDCPixmapNS::PixelDescRep_Gray>(thePixelDescRep))
 			{
 			theJCS.input_components = 1;
 			theJCS.in_color_space = JCS_GRAYSCALE;
@@ -464,7 +463,7 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 	try
 		{
 		theEM.BeforeCall();
-		int result = ::jpeg_read_header(&theJDS, TRUE);
+		/*int result = */::jpeg_read_header(&theJDS, TRUE);
 
 		::jpeg_start_decompress(&theJDS);
 
