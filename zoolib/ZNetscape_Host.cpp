@@ -138,6 +138,27 @@ NPVariantH NPObjectH::Invoke(const std::string& iName)
 	return result;
 	}
 
+NPVariantH NPObjectH::Invoke(const std::string& iName,
+	const NPVariantH& iP0)
+	{ return this->Invoke(iName, &iP0, 1); }
+
+NPVariantH NPObjectH::Invoke(const std::string& iName,
+	const NPVariantH& iP0,
+	const NPVariantH& iP1)
+	{
+	NPVariantH arr[] = { iP0, iP1};
+	return this->Invoke(iName, arr, countof(arr));
+	}
+
+NPVariantH NPObjectH::Invoke(const std::string& iName,
+	const NPVariantH& iP0,
+	const NPVariantH& iP1,
+	const NPVariantH& iP2)
+	{
+	NPVariantH arr[] = { iP0, iP1, iP2 };
+	return this->Invoke(iName, arr, countof(arr));
+	}
+
 NPVariantH NPObjectH::InvokeDefault(const NPVariantH* iArgs, size_t iCount)
 	{
 	NPVariantH result;
@@ -152,19 +173,25 @@ NPVariantH NPObjectH::InvokeDefault()
 	return result;
 	}
 
-NPVariantH NPObjectH::GetProperty(const std::string& iName)
+NPVariantH NPObjectH::Get(const std::string& iName)
 	{
 	NPVariantH result;
 	this->GetProperty(iName, result);
 	return result;
 	}
 
-NPVariantH NPObjectH::GetProperty(size_t iIndex)
+NPVariantH NPObjectH::Get(size_t iIndex)
 	{
 	NPVariantH result;
 	this->GetProperty(iIndex, result);
 	return result;
 	}
+
+bool NPObjectH::Set(const std::string& iName, const NPVariantH& iValue)
+	{ return this->SetProperty(iName, iValue); }
+
+bool NPObjectH::Set(size_t iIndex, const NPVariantH& iValue)
+	{ return this->SetProperty(iIndex, iValue); }
 
 bool NPObjectH::Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount)
 	{ return HostMeister::sGet()->Enumerate(fake, this, &oIdentifiers, &oCount); }

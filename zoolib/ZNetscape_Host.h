@@ -82,14 +82,31 @@ public:
 	bool RemoveProperty(const std::string& iName);
 	bool RemoveProperty(size_t iIndex);
 
-	NPVariantH Invoke(const std::string& iName, const NPVariantH* iArgs, size_t iCount);
+	NPVariantH Invoke(const std::string& iName,
+		const NPVariantH* iArgs, size_t iCount);
+
 	NPVariantH Invoke(const std::string& iName);
+
+	NPVariantH Invoke(const std::string& iName,
+		const NPVariantH& iP0);
+
+	NPVariantH Invoke(const std::string& iName,
+		const NPVariantH& iP0,
+		const NPVariantH& iP1);
+
+	NPVariantH Invoke(const std::string& iName,
+		const NPVariantH& iP0,
+		const NPVariantH& iP1,
+		const NPVariantH& iP2);
 
 	NPVariantH InvokeDefault(const NPVariantH* iArgs, size_t iCount);
 	NPVariantH InvokeDefault();
 
-	NPVariantH GetProperty(const std::string& iName);
-	NPVariantH GetProperty(size_t iIndex);
+	NPVariantH Get(const std::string& iName);
+	NPVariantH Get(size_t iIndex);
+
+	bool Set(const std::string& iName, const NPVariantH& iValue);
+	bool Set(size_t iIndex, const NPVariantH& iValue);
 
 	bool Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount);
 	bool Enumerate(std::vector<NPIdentifier>& oIdentifiers);
