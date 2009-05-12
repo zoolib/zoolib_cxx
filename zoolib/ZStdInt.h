@@ -22,6 +22,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStdInt__
 #include "zconfig.h"
 
+// Macros for explicit 64 bit integers
+
+#if ZCONFIG(Compiler, MSVC)
+	#define ZINT64_C(v) (v##i64)
+	#define ZUINT64_C(v) (v##ui64)
+#else
+	#define ZINT64_C(v) (v##LL)
+	#define ZUINT64_C(v) (v##ULL)
+#endif
+
 // The usual suite of types with known sizes and signedness.
 
 #if defined(ZProjectHeader_StdInt)
@@ -95,15 +105,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		typedef unsigned __int64 uint64_t;
 	#endif
 
-	#define ZINT64_C(v) (v##i64)
-	#define ZUINT64_C(v) (v##ui64)
-
 #else
 
 	#include <stdint.h>
-
-	#define ZINT64_C(v) (v##LL)
-	#define ZUINT64_C(v) (v##ULL)
 
 #endif
 
