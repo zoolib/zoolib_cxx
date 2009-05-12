@@ -366,8 +366,15 @@ ZTuple ZML::Reader::Attrs() const
 	return ZTuple();
 	}
 
-const ZStrimR& ZML::Reader::Text()
+const ZStrimR& ZML::Reader::TextStrim()
 	{ return *this; }
+
+std::string ZML::Reader::TextString()
+	{
+	string theString;
+	ZStrimW_String(theString).CopyAllFrom(this->TextStrim());
+	return theString;
+	}
 
 void ZML::Reader::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 	{
@@ -671,7 +678,7 @@ void ZML::StrimR::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 		if (fReader.Current() == ZML::eToken_Text)
 			{
 			size_t countRead;
-			fReader.Text().Read(localDest, iCount, &countRead);
+			fReader.TextStrim().Read(localDest, iCount, &countRead);
 			if (countRead == 0)
 				{
 				fReader.Advance();

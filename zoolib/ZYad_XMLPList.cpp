@@ -89,7 +89,7 @@ static bool sTryRead_SimpleValue(ZML::Reader& r, ZTValue& oTV)
 	else if (tagName == "integer")
 		{
 		int64 theInteger;
-		if (!ZUtil_Strim::sTryRead_SignedDecimalInteger(ZStrimU_Unreader(r.Text()), theInteger))
+		if (!ZUtil_Strim::sTryRead_SignedDecimalInteger(ZStrimU_Unreader(r.TextStrim()), theInteger))
 			sThrowParseException("Expected valid integer");
 
 		oTV.SetInt32(theInteger);
@@ -97,15 +97,14 @@ static bool sTryRead_SimpleValue(ZML::Reader& r, ZTValue& oTV)
 	else if (tagName == "real")
 		{
 		double theDouble;
-		if (!ZUtil_Strim::sTryRead_SignedDouble(ZStrimU_Unreader(r.Text()), theDouble))
+		if (!ZUtil_Strim::sTryRead_SignedDouble(ZStrimU_Unreader(r.TextStrim()), theDouble))
 			sThrowParseException("Expected valid real");
 
 		oTV.SetDouble(theDouble);
 		}
 	else if (tagName == "date")
 		{
-		string theDate;
-		ZStrimW_String(theDate).CopyAllFrom(r.Text());
+		const string theDate = r.TextString();
 
 		oTV.SetTime(ZUtil_Time::sFromString_ISO8601(theDate));
 		}
@@ -197,7 +196,7 @@ ZYadParseException_XMLPList::ZYadParseException_XMLPList(const char* iWhat)
 ZYadStreamR_XMLPList::ZYadStreamR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
 :	fR(iReader),
 	fMustReadEndTag(iMustReadEndTag),
-	fStreamR_ASCIIStrim(fR.Text()),
+	fStreamR_ASCIIStrim(fR.TextStrim()),
 	fStreamR_Base64Decode(fStreamR_ASCIIStrim)
 	{}
 
@@ -229,7 +228,7 @@ void ZYadStrimR_XMLPList::Finish()
 	}
 
 const ZStrimR& ZYadStrimR_XMLPList::GetStrimR()
-	{ return fR.Text(); }
+	{ return fR.TextStrim(); }
 
 // =================================================================================================
 #pragma mark -
@@ -284,7 +283,8 @@ void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYad
 		sThrowParseException("Expected <key>");
 		}
 
-	ZStrimW_String(oName).CopyAllFrom(fR.Text());
+	oName = fR.TextString();
+
 	sEnd(fR, "key");
 
 	if (!(oYadR = sMakeYadR_XMLPList(fR)))

@@ -74,7 +74,8 @@ public:
 	const std::string& TagName() const { return this->Name(); }
 	ZTuple TagAttributes() const { return this->Attrs(); }
 
-	const ZStrimR& Text();
+	const ZStrimR& TextStrim();
+	std::string TextString();
 
 private:
 // From ZStrimR, to support ZML::Text()'s return of a ZStrimR reference.

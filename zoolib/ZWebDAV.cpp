@@ -192,8 +192,7 @@ static ZTValue sReadTV(ZML::Reader& ml, const string& iName)
 	// text, suck it into a string and move on.
 	if (ml.Current() == ZML::eToken_Text)
 		{
-		string allText;
-		ZStrimW_String(allText).CopyAllFrom(ml.Text());
+		const string allText = ml.TextString();
 		ml.Advance();
 		if (ml.Current() == ZML::eToken_TagEnd)
 			{
