@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYad_ZooLibStrim__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStream_HexStrim.h"
+#include "zoolib/ZStreamR_HexStrim.h"
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZStrimR_Boundary.h"

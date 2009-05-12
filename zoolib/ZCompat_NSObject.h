@@ -23,9 +23,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #ifdef __OBJC__
+
+	#import <objc/objc.h>
 	@class NSObject;
+
 #else
-	typedef struct Opaque_NSObject NSObject;
+	typedef struct objc_class *Class;
+	typedef struct objc_object
+		{
+		Class isa;
+		} *id;
+	typedef struct objc_NSObject NSObject;
 #endif
 
 #endif // __ZCompat_NSObject__

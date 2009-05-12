@@ -35,7 +35,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	NAMESPACE_ZOOLIB_END
 
 // -------
-
 // CFTypeRef declared in CFBase.h
 ZOOLIB_RETAIN_RELEASE(CFTypeRef)
 
@@ -81,7 +80,6 @@ ZOOLIB_CG(ColorSpace)
 ZOOLIB_CG(Context)
 ZOOLIB_CG(DataProvider)
 
-
 // -------
 typedef struct OpaqueSecKeychainRef *SecKeychainRef;
 ZOOLIB_RETAIN_RELEASE(SecKeychainRef)
@@ -91,5 +89,9 @@ ZOOLIB_RETAIN_RELEASE(SecKeychainItemRef)
 
 typedef struct OpaqueSecKeychainSearchRef *SecKeychainSearchRef;
 ZOOLIB_RETAIN_RELEASE(SecKeychainSearchRef)
+
+// -------
+typedef const struct __AXUIElement *AXUIElementRef;
+ZOOLIB_RETAIN_RELEASE(AXUIElementRef)
 
 #endif // ZCONFIG_SPI_Enabled(CFType)

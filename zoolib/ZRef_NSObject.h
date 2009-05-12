@@ -31,7 +31,10 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * NSObject sRetain and sRelease
+#pragma mark * id and NSObject, sRetain and sRelease
+
+void sRetain(struct objc_object& iOb);
+void sRelease(struct objc_object& iOb);
 
 void sRetain(NSObject& iNSObject);
 void sRelease(NSObject& iNSObject);
