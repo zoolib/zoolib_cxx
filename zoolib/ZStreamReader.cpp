@@ -28,7 +28,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZStreamReader
 
 ZStreamReader::ZStreamReader()
-:	fRunner(nil)
+:	fRunner(nullptr)
 	{}
 
 ZStreamReader::~ZStreamReader()
@@ -69,7 +69,7 @@ void ZStreamReaderRunner::pDetachStreamReader(ZStreamReader* iStreamReader)
 	ZAssert(iStreamReader);
 	ZAssert(iStreamReader->fRunner = this);
 
-	iStreamReader->fRunner = nil;
+	iStreamReader->fRunner = nullptr;
 
 	iStreamReader->RunnerDetached(this);
 	}

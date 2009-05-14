@@ -196,7 +196,7 @@ void ZXLib::ErrorTrap::Release()
 	ZAssertStop(0, (sMutex.IsLocked()));
 	ZAssertStop(0, (sCurrent == this));
 	sCurrent = fPrev;
-	fPrev = nil;
+	fPrev = nullptr;
 	}
 
 int ZXLib::ErrorTrap::sErrorHandler(Display* inDisplay, XErrorEvent* inErrorEvent)
@@ -375,12 +375,12 @@ int ZXLib::ResizeWindow(Display* a0, Window a1, int a2, int a3)
 
 	XSizeHints *sizeHints = ::XAllocSizeHints();
 
-	// We could return BadAlloc if sizeHints is nil, but in most cases we
+	// We could return BadAlloc if sizeHints is nullptr, but in most cases we
 	// would still be able to resize the window, so we don't.  If the window is
 	// not resizable, XResizeWindow will return BadRequest, so there will still be
 	// an error result.
 	
-	if ( sizeHints != nil ){
+	if ( sizeHints != nullptr ){
 	
 		long flags;
 		
@@ -419,7 +419,7 @@ int ZXLib::ResizeWindow(Display* a0, Window a1, int a2, int a3)
 	
 	int result = ::XResizeWindow(a0, a1, a2, a3);
 	
-	ZAssertStop( 2, ( result == Success ) || ( sizeHints == nil ) );
+	ZAssertStop( 2, ( result == Success ) || ( sizeHints == nullptr ) );
 
 	return result;
 	}

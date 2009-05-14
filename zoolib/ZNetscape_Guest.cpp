@@ -164,7 +164,7 @@ NPVariantG NPObjectG::Invoke(const std::string& iName, const NPVariantG* iArgs, 
 NPVariantG NPObjectG::Invoke(const std::string& iName)
 	{
 	NPVariantG result;
-	this->Invoke(iName, nil, 0, result);
+	this->Invoke(iName, nullptr, 0, result);
 	return result;
 	}
 
@@ -199,7 +199,7 @@ NPVariantG NPObjectG::InvokeDefault(const NPVariantG* iArgs, size_t iCount)
 NPVariantG NPObjectG::InvokeDefault()
 	{
 	NPVariantG result;
-	this->InvokeDefault(nil, 0, result);
+	this->InvokeDefault(nullptr, 0, result);
 	return result;
 	}
 
@@ -230,7 +230,7 @@ bool NPObjectG::Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount)
 bool NPObjectG::Enumerate(std::vector<NPIdentifier>& oIdentifiers)
 	{
 	oIdentifiers.clear();
-	NPIdentifier* theIDs = nil;
+	NPIdentifier* theIDs = nullptr;
 	uint32_t theCount;
 	if (!this->Enumerate(theIDs, theCount))
 		return false;
@@ -347,7 +347,7 @@ bool ObjectG::Imp_Enumerate(std::vector<std::string>& oNames)
 NPObject* ObjectG::sAllocate(NPP npp, NPClass *aClass)
 	{
 	ZUnimplemented();
-	return nil;
+	return nullptr;
 	}
 
 void ObjectG::sDeallocate(NPObject* npobj)
@@ -475,7 +475,7 @@ GuestMeister::GuestMeister()
 GuestMeister::~GuestMeister()
 	{
 	ZAssert(sGuestMeister == this);
-	sGuestMeister = nil;
+	sGuestMeister = nullptr;
 	}
 
 GuestMeister* GuestMeister::sGet()

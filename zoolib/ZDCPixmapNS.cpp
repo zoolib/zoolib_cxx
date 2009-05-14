@@ -1805,9 +1805,9 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iCol
 	{
 	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
 
-	MapPixvalToRGB_Indexed::fPixvals = nil;
-	MapRGBToPixval_Indexed::fPixvals = nil;
-	fReverseLookup = nil;
+	MapPixvalToRGB_Indexed::fPixvals = nullptr;
+	MapRGBToPixval_Indexed::fPixvals = nullptr;
+	fReverseLookup = nullptr;
 
 	fCount = iCount;
 	fColors = new ZRGBColorPOD[iCount];
@@ -1823,9 +1823,9 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iCol
 
 	ZAssertStopf(1, iStripAlpha, ("This constructor is only used when stripping alpha"));
 
-	MapPixvalToRGB_Indexed::fPixvals = nil;
-	MapRGBToPixval_Indexed::fPixvals = nil;
-	fReverseLookup = nil;
+	MapPixvalToRGB_Indexed::fPixvals = nullptr;
+	MapRGBToPixval_Indexed::fPixvals = nullptr;
+	fReverseLookup = nullptr;
 
 	fCount = iCount;
 	fColors = new ZRGBColorPOD[iCount];
@@ -1842,9 +1842,9 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iCol
 	{
 	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
 
-	MapPixvalToRGB_Indexed::fPixvals = nil;
-	MapRGBToPixval_Indexed::fPixvals = nil;
-	fReverseLookup = nil;
+	MapPixvalToRGB_Indexed::fPixvals = nullptr;
+	MapRGBToPixval_Indexed::fPixvals = nullptr;
+	fReverseLookup = nullptr;
 
 	vector<ZRGBColorPOD> vectorColors;
 	vector<uint32> vectorPixvals;
@@ -1885,9 +1885,9 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iCol
 
 	ZAssertStopf(1, iStripAlpha, ("This constructor is only used when stripping alpha"));
 
-	MapPixvalToRGB_Indexed::fPixvals = nil;
-	MapRGBToPixval_Indexed::fPixvals = nil;
-	fReverseLookup = nil;
+	MapPixvalToRGB_Indexed::fPixvals = nullptr;
+	MapRGBToPixval_Indexed::fPixvals = nullptr;
+	fReverseLookup = nullptr;
 
 	vector<ZRGBColorPOD> vectorColors;
 	vector<uint32> vectorPixvals;
@@ -1929,9 +1929,9 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorSmallPOD*
 	{
 	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
 
-	MapPixvalToRGB_Indexed::fPixvals = nil;
-	MapRGBToPixval_Indexed::fPixvals = nil;
-	fReverseLookup = nil;
+	MapPixvalToRGB_Indexed::fPixvals = nullptr;
+	MapRGBToPixval_Indexed::fPixvals = nullptr;
+	fReverseLookup = nullptr;
 
 	fCount = iCount;
 	fColors = new ZRGBColorPOD[iCount];
@@ -1945,9 +1945,9 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorSmallPOD*
 	{
 	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
 
-	MapPixvalToRGB_Indexed::fPixvals = nil;
-	MapRGBToPixval_Indexed::fPixvals = nil;
-	fReverseLookup = nil;
+	MapPixvalToRGB_Indexed::fPixvals = nullptr;
+	MapRGBToPixval_Indexed::fPixvals = nullptr;
+	fReverseLookup = nullptr;
 
 	vector<ZRGBColorPOD> vectorColors;
 	vector<uint32> vectorPixvals;
@@ -1986,9 +1986,9 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(
 	{
 	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
 
-	MapPixvalToRGB_Indexed::fPixvals = nil;
-	MapRGBToPixval_Indexed::fPixvals = nil;
-	fReverseLookup = nil;
+	MapPixvalToRGB_Indexed::fPixvals = nullptr;
+	MapRGBToPixval_Indexed::fPixvals = nullptr;
+	fReverseLookup = nullptr;
 
 	fCount = 256;
 	fColors = new ZRGBColorPOD[256];

@@ -84,7 +84,7 @@ void ZYadStrimR_ML::Finish()
 	{ fR.Advance(); }
 
 const ZStrimR& ZYadStrimR_ML::GetStrimR()
-	{ return fR.Text(); }
+	{ return fR.TextStrim(); }
 
 // =================================================================================================
 #pragma mark -

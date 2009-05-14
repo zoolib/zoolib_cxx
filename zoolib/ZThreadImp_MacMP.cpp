@@ -109,7 +109,7 @@ ZThreadImp_MacMP::ID ZThreadImp_MacMP::sCreate(size_t iStackSize, Proc_t iProc, 
 		iStackSize = 1024 * 1024;
 
 	ID theID;
-	if (noErr != ::MPCreateTask(iProc, iParam, iStackSize, 0, nil, nil, 0, &theID))
+	if (noErr != ::MPCreateTask(iProc, iParam, iStackSize, 0, nullptr, nullptr, 0, &theID))
 		throw std::bad_alloc();
 	return theID;
 	}

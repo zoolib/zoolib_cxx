@@ -269,7 +269,7 @@ ZRef<ZNodeRep> ZNodeRep_Overlay::pGetNodeRep()
 	{
 	for (vector<ZRef<ZNodeRep> >::iterator i = fOverlays.begin(); i != fOverlays.end(); ++i)
 		{
-		if ((*i)->Exists(nil))
+		if ((*i)->Exists(nullptr))
 			return *i;
 		}
 	return ZRef<ZNodeRep>();
@@ -362,7 +362,7 @@ ZRef<ZNodeRep> ZNodeIterRep_Overlay::Current()
 		for (vector<ZRef<ZNodeRep> >::iterator i = fRepsUnvisited.begin();
 			i != fRepsUnvisited.end(); ++i)
 			{
-			if (ZRef<ZNodeRep> theChild = (*i)->GetDescendant(&currentName, 1, nil))
+			if (ZRef<ZNodeRep> theChild = (*i)->GetDescendant(&currentName, 1, nullptr))
 				newOverlays.push_back(theChild);
 			}
 		if (newOverlays.empty())

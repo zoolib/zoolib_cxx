@@ -171,7 +171,7 @@ void ZStrimR_Boundary::Reset()
 
 void ZStrimR_Boundary::pInit()
 	{
-	fBuffer = nil;
+	fBuffer = nullptr;
 	try
 		{
 		if (const size_t boundarySize = fBoundary.size())
@@ -192,7 +192,7 @@ void ZStrimR_Boundary::pInit()
 			}
 		else
 			{
-			fBuffer = nil;
+			fBuffer = nullptr;
 			fStart = 0;
 			fEnd = 0;
 			}

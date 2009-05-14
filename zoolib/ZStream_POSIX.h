@@ -46,7 +46,7 @@ public:
 
 // Our protocol
 	FILE* GetFILE() { return fFILE; }
-	FILE* OrphanFILE() { FILE* theFILE = fFILE; fFILE = nil; return theFILE; }
+	FILE* OrphanFILE() { FILE* theFILE = fFILE; fFILE = nullptr; return theFILE; }
 
 protected:
 	FILE* fFILE;
@@ -77,7 +77,7 @@ public:
 
 // Our protocol
 	FILE* GetFILE() { return fFILE; }
-	FILE* OrphanFILE() { FILE* theFILE = fFILE; fFILE = nil; return theFILE; }
+	FILE* OrphanFILE() { FILE* theFILE = fFILE; fFILE = nullptr; return theFILE; }
 
 protected:
 	FILE* fFILE;
@@ -103,7 +103,7 @@ public:
 
 // Our protocol
 	FILE* GetFILE() { return fFILE; }
-	FILE* OrphanFILE() { FILE* theFILE = fFILE; fFILE = nil; return theFILE; }
+	FILE* OrphanFILE() { FILE* theFILE = fFILE; fFILE = nullptr; return theFILE; }
 
 protected:
 	FILE* fFILE;

@@ -71,8 +71,8 @@ ZStreamRPos_Win_MultiResource::ZStreamRPos_Win_MultiResource(
 	{
 	ZAssertStop(2, iHMODULE);
 	fHMODULE = iHMODULE;
-	fHGLOBAL_Current = nil;
-	fLPVOID_Current = nil;
+	fHGLOBAL_Current = nullptr;
+	fLPVOID_Current = nullptr;
 	fPosition = 0;
 
 	// Load the descriptor resource

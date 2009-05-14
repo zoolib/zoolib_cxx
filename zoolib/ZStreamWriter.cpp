@@ -28,7 +28,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZStreamWriter
 
 ZStreamWriter::ZStreamWriter()
-:	fRunner(nil)
+:	fRunner(nullptr)
 	{}
 
 ZStreamWriter::~ZStreamWriter()
@@ -81,7 +81,7 @@ void ZStreamWriterRunner::pDetachStreamWriter(ZStreamWriter* iStreamWriter)
 	ZAssert(iStreamWriter);
 	ZAssert(iStreamWriter->fRunner = this);
 
-	iStreamWriter->fRunner = nil;
+	iStreamWriter->fRunner = nullptr;
 
 	iStreamWriter->RunnerDetached(this);
 	}
@@ -164,7 +164,7 @@ void ZStreamWriterRunner_Threaded::pRun()
 	this->pFailed(fStreamWriter);
 
 	this->pDetachStreamWriter(fStreamWriter);
-	fStreamWriter = nil;
+	fStreamWriter = nullptr;
 
 	delete this;
 	}

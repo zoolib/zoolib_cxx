@@ -125,10 +125,10 @@ static HANDLE sCreate(
 	HANDLE theFileHANDLE = ::CreateFileA(
 		iPath.c_str(), // the path
 		realAccess, realSharing,
-		nil, // No security attributes
+		nullptr, // No security attributes
 		iOpenExisting ? OPEN_ALWAYS : CREATE_NEW,
 		realFlags,
-		nil);// No template file
+		nullptr);// No template file
 
 	if (oErr)
 		{
@@ -160,10 +160,10 @@ static HANDLE sCreateNT(
 	HANDLE theFileHANDLE = ::CreateFileW(
 		iPath.c_str(), // the path
 		realAccess, realSharing,
-		nil, // No security attributes
+		nullptr, // No security attributes
 		iOpenExisting ? OPEN_ALWAYS : CREATE_NEW,
 		realFlags,
-		nil);// No template file
+		nullptr);// No template file
 
 	if (oErr)
 		{
@@ -198,10 +198,10 @@ static HANDLE sOpen(
 	HANDLE theFileHANDLE = ::CreateFileA(
 		iPath.c_str(), // the path
 		realAccess, realSharing,
-		nil, // No security attributes
+		nullptr, // No security attributes
 		OPEN_EXISTING, // Open the file only if it exists
 		realFlags,
-		nil);// No template file
+		nullptr);// No template file
 
 	if (oErr)
 		{
@@ -236,10 +236,10 @@ static HANDLE sOpenNT(
 	HANDLE theFileHANDLE = ::CreateFileW(
 		iPath.c_str(), // the path
 		realAccess, realSharing,
-		nil, // No security attributes
+		nullptr, // No security attributes
 		OPEN_EXISTING, // Open the file only if it exists
 		realFlags,
-		nil);// No template file
+		nullptr);// No template file
 
 	if (oErr)
 		{
@@ -267,7 +267,7 @@ static ZFile::Error sRead(HANDLE iFileHANDLE, void* iDest, size_t iCount, size_t
 		return ZFile::errorNone;
 
 	DWORD countRead = 0;
-	if (!::ReadFile(iFileHANDLE, iDest, iCount, &countRead, nil))
+	if (!::ReadFile(iFileHANDLE, iDest, iCount, &countRead, nullptr))
 		return sTranslateError(::GetLastError());
 
 	if (oCountRead)
@@ -286,7 +286,7 @@ static ZFile::Error sWrite(
 		return ZFile::errorNone;
 
 	DWORD countWritten = 0;
-	if (!::WriteFile(iFileHANDLE, iSource, iCount, &countWritten, nil))
+	if (!::WriteFile(iFileHANDLE, iSource, iCount, &countWritten, nullptr))
 		return sTranslateError(::GetLastError());
 
 	if (oCountWritten)
@@ -612,7 +612,7 @@ string RealRep_Win::GetName(size_t iIndex)
 #pragma mark * ZFileLoc_Win
 
 ZRef<ZFileLoc> ZFileLoc_Win::sGet_CWD()
-	{ return sGetCWD(nil); }
+	{ return sGetCWD(nullptr); }
 
 ZRef<ZFileLoc> ZFileLoc_Win::sGet_Root()
 	{ return new ZFileLoc_Win; }
@@ -623,7 +623,7 @@ ZRef<ZFileLoc> ZFileLoc_Win::sGet_App()
 	while (bufSize < 16384)
 		{
 		vector<char> buffer(bufSize);
-		DWORD result = ::GetModuleFileNameA(::GetModuleHandleA(nil), &buffer[0], bufSize);
+		DWORD result = ::GetModuleFileNameA(::GetModuleHandleA(nullptr), &buffer[0], bufSize);
 		if (result < 0)
 			break;
 		if (result < bufSize)
@@ -932,7 +932,7 @@ ZTime ZFileLoc_Win::TimeModified(ZFile::Error* oErr)
 
 ZRef<ZFileLoc> ZFileLoc_Win::CreateDir(ZFile::Error* oErr)
 	{
-	if (!::CreateDirectoryA(this->pGetPath().c_str(), nil))
+	if (!::CreateDirectoryA(this->pGetPath().c_str(), nullptr))
 		{
 		if (oErr)
 			*oErr = sTranslateError(::GetLastError());
@@ -1204,7 +1204,7 @@ string RealRep_WinNT::GetName(size_t iIndex)
 #pragma mark * ZFileLoc_WinNT
 
 ZRef<ZFileLoc> ZFileLoc_WinNT::sGet_CWD()
-	{ return sGetCWDNT(nil); }
+	{ return sGetCWDNT(nullptr); }
 
 ZRef<ZFileLoc> ZFileLoc_WinNT::sGet_Root()
 	{ return new ZFileLoc_WinNT; }
@@ -1215,7 +1215,7 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::sGet_App()
 	while (bufSize < 16384)
 		{
 		vector<UTF16> buffer(bufSize);
-		DWORD result = ::GetModuleFileNameW(::GetModuleHandleW(nil), &buffer[0], bufSize);
+		DWORD result = ::GetModuleFileNameW(::GetModuleHandleW(nullptr), &buffer[0], bufSize);
 		if (result < 0)
 			break;
 		if (result < bufSize)
@@ -1542,7 +1542,7 @@ ZTime ZFileLoc_WinNT::TimeModified(ZFile::Error* oErr)
 
 ZRef<ZFileLoc> ZFileLoc_WinNT::CreateDir(ZFile::Error* oErr)
 	{
-	if (!::CreateDirectoryW(this->pGetPath().c_str(), nil))
+	if (!::CreateDirectoryW(this->pGetPath().c_str(), nullptr))
 		{
 		if (oErr)
 			*oErr = sTranslateError(::GetLastError());

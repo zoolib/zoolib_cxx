@@ -80,10 +80,10 @@ ZTSWatcher_Latent::PTuple::PTuple(uint64 iID)
 
 ZTSWatcher_Latent::ZTSWatcher_Latent(ZRef<ZTSWatcher> iTSWatcher)
 :	fTSWatcher(iTSWatcher),
-	fCallback(nil),
-	fRefcon(nil),
+	fCallback(nullptr),
+	fRefcon(nullptr),
 	fMode(eMode_Normal),
-	fHasChangesPtr(nil)
+	fHasChangesPtr(nullptr)
 	{
 	fTSWatcher->SetCallback(sCallback, this);
 	}
@@ -91,7 +91,7 @@ ZTSWatcher_Latent::ZTSWatcher_Latent(ZRef<ZTSWatcher> iTSWatcher)
 ZTSWatcher_Latent::~ZTSWatcher_Latent()
 	{
 	if (fTSWatcher && fCallback)
-		fTSWatcher->SetCallback(nil, nil);
+		fTSWatcher->SetCallback(nullptr, nullptr);
 	}
 
 bool ZTSWatcher_Latent::AllocateIDs(size_t iCount, uint64& oBaseID, size_t& oCountIssued)
@@ -307,7 +307,7 @@ bool ZTSWatcher_Latent::Sync(
 	if (fHasChangesPtr)
 		{
 		*fHasChangesPtr = hasChanges;
-		fHasChangesPtr = nil;
+		fHasChangesPtr = nullptr;
 		}
 
 	fCondition_Save.Broadcast();
@@ -528,7 +528,7 @@ ZTSWatcher_Latent::PTuple* ZTSWatcher_Latent::pGetPTupleExtant(uint64 iID)
 	map<uint64, PTuple>::iterator i = fPTuples.lower_bound(iID);
 	if (i != fPTuples.end() && i->first == iID)
 		return &i->second;
-	return nil;
+	return nullptr;
 	}
 
 void ZTSWatcher_Latent::pRegisterAQC(AddedQueryCombo& ioAQC)

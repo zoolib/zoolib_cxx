@@ -414,7 +414,7 @@ void ZAsset::GetData(const void** oData, size_t* oSize) const
 	else
 		{
 		if (oData)
-			*oData = nil;
+			*oData = nullptr;
 		if (oSize)
 			*oSize = 0;
 		}
@@ -556,7 +556,7 @@ string ZAssetIter::CurrentName() const
 
 ZRef<ZAssetRep> ZAssetRep::ResolvePath(const char* iPath)
 	{
-	if (iPath == nil || iPath[0] == 0)
+	if (iPath == nullptr || iPath[0] == 0)
 		{
 		// An empty path means us.
 		return this;
@@ -589,7 +589,7 @@ ZRef<ZAssetRep> ZAssetRep::ResolvePath(const char* iPath)
 void ZAssetRep::GetData(const void** oData, size_t* oSize)
 	{
 	if (oData)
-		*oData = nil;
+		*oData = nullptr;
 	if (oSize)
 		*oSize = 0;
 	}

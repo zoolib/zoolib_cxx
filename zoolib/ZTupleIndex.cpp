@@ -62,13 +62,13 @@ bool ZTupleIndex::sMatchIndices(const ZTBSpec::CriterionUnion& iCriterionUnion,
 		critIter != iCriterionUnion.end(); ++critIter)
 		{
 		size_t bestWeight = 0;
-		ZTupleIndex* bestIndex = nil;
+		ZTupleIndex* bestIndex = nullptr;
 		for (vector<ZTupleIndex*>::const_iterator indIter = iIndices.begin();
 			indIter != iIndices.end(); ++indIter)
 			{
 			if (size_t weight = (*indIter)->CanHandle(*critIter))
 				{
-				if (bestIndex == nil || bestWeight > weight)
+				if (bestIndex == nullptr || bestWeight > weight)
 					{
 					bestWeight = weight;
 					bestIndex = *indIter;
@@ -88,11 +88,11 @@ bool ZTupleIndex::sGatherMergeConstraints(const ZTName& iPropName,
 	const ZTValue*& oBestValueLess, const ZTValue*& oBestValueLessEqual,
 	const ZTValue*& oBestValueGreater, const ZTValue*& oBestValueGreaterEqual)
 	{
-	oValueEqual = nil;
-	oBestValueLess = nil;
-	oBestValueLessEqual = nil;
-	oBestValueGreater = nil;
-	oBestValueGreaterEqual = nil;
+	oValueEqual = nullptr;
+	oBestValueLess = nullptr;
+	oBestValueLessEqual = nullptr;
+	oBestValueGreater = nullptr;
+	oBestValueGreaterEqual = nullptr;
 
 	for (vector<const ZTBSpec::Criterion*>::iterator critIter = ioCriteria.begin();
 		critIter != ioCriteria.end();
@@ -126,7 +126,7 @@ bool ZTupleIndex::sGatherMergeConstraints(const ZTName& iPropName,
 					ZAssert(!oBestValueLess);
 					if (*currentValue <= *oBestValueLessEqual)
 						{
-						oBestValueLessEqual = nil;
+						oBestValueLessEqual = nullptr;
 						oBestValueLess = currentValue;
 						}
 					}
@@ -143,7 +143,7 @@ bool ZTupleIndex::sGatherMergeConstraints(const ZTName& iPropName,
 					ZAssert(!oBestValueLessEqual);
 					if (*currentValue < *oBestValueLess)
 						{
-						oBestValueLess = nil;
+						oBestValueLess = nullptr;
 						oBestValueLessEqual = currentValue;
 						}
 					}
@@ -160,7 +160,7 @@ bool ZTupleIndex::sGatherMergeConstraints(const ZTName& iPropName,
 					ZAssert(!oBestValueGreater);
 					if (*currentValue >= *oBestValueGreater)
 						{
-						oBestValueGreaterEqual = nil;
+						oBestValueGreaterEqual = nullptr;
 						oBestValueGreater = currentValue;
 						}
 					}
@@ -177,7 +177,7 @@ bool ZTupleIndex::sGatherMergeConstraints(const ZTName& iPropName,
 					ZAssert(!oBestValueGreaterEqual);
 					if (*currentValue > *oBestValueGreater)
 						{
-						oBestValueGreater = nil;
+						oBestValueGreater = nullptr;
 						oBestValueGreaterEqual = currentValue;
 						}
 					}
@@ -206,13 +206,13 @@ bool ZTupleIndex::sGatherMergeConstraints(const ZTName& iPropName,
 			ZAssert(!oBestValueLessEqual);
 			if (*oBestValueLess <= *oValueEqual)
 				return false;
-			oBestValueLess = nil;
+			oBestValueLess = nullptr;
 			}
 		else if (oBestValueLessEqual)
 			{
 			if (*oBestValueLessEqual < *oValueEqual)
 				return false;
-			oBestValueLessEqual = nil;
+			oBestValueLessEqual = nullptr;
 			}
 
 		if (oBestValueGreater)
@@ -220,13 +220,13 @@ bool ZTupleIndex::sGatherMergeConstraints(const ZTName& iPropName,
 			ZAssert(!oBestValueGreaterEqual);
 			if (*oBestValueGreater >= *oValueEqual)
 				return false;
-			oBestValueGreater = nil;
+			oBestValueGreater = nullptr;
 			}
 		else if (oBestValueGreaterEqual)
 			{
 			if (*oBestValueGreaterEqual > *oValueEqual)
 				return false;
-			oBestValueGreaterEqual = nil;
+			oBestValueGreaterEqual = nullptr;
 			}
 		}
 	else
@@ -268,8 +268,8 @@ bool ZTupleIndex::sGatherMergeConstraints(const ZTName& iPropName,
 			&& *oBestValueLessEqual == *oBestValueGreaterEqual)
 			{
 			oValueEqual = oBestValueLessEqual;
-			oBestValueLessEqual = nil;
-			oBestValueGreaterEqual = nil;
+			oBestValueLessEqual = nullptr;
+			oBestValueGreaterEqual = nullptr;
 			}
 		}
 

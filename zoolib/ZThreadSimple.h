@@ -37,7 +37,7 @@ class ZThreadSimple : public ZThread
 	{
 public:
 	typedef void (*ThreadProc)(T inArgument);
-	ZThreadSimple(ThreadProc iProc, T iArgument, const char* iName = nil)
+	ZThreadSimple(ThreadProc iProc, T iArgument, const char* iName = nullptr)
 	:	ZThread(iName),
 		fProc(iProc),
 		fArgument(iArgument)
@@ -61,7 +61,7 @@ class ZThreadSimple<ZThreadSimpleVoid_t> : public ZThread
 	{
 public:
 	typedef void (*ThreadProcNoArg)();
-	ZThreadSimple(ThreadProcNoArg iProc, const char* iName = nil)
+	ZThreadSimple(ThreadProcNoArg iProc, const char* iName = nullptr)
 	:	ZThread(iName),
 		fProcNoArg(iProc)
 		{}

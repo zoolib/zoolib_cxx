@@ -69,7 +69,7 @@ Value sGet(Key iKey);
 class ZMtx_pthread : NonCopyable
 	{
 public:
-	ZMtx_pthread(const char* iName = nil);
+	ZMtx_pthread(const char* iName = nullptr);
 	~ZMtx_pthread();
 
 	void Acquire();

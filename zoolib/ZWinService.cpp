@@ -49,7 +49,7 @@ void ZWinService::sRunDispatcher()
 		return;
 		}
 
-	SERVICE_TABLE_ENTRYW nullEntry = { nil, nil };
+	SERVICE_TABLE_ENTRYW nullEntry = { nullptr, nullptr };
 	sEntries.push_back(nullEntry);
 
 	if (ZLOG(s, eDebug, "ZWinService"))

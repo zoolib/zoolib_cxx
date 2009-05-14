@@ -444,7 +444,7 @@ public:
 		}
 
 	T* CopyObject() const
-		{ return this->DCopyObject(nil); }
+		{ return this->DCopyObject(nullptr); }
 
 	bool CopyObject(T*& oValue) const
 		{
@@ -467,7 +467,7 @@ public:
 		}
 
 	T* GetObject() const
-		{ return this->DGetObject(nil); }
+		{ return this->DGetObject(nullptr); }
 
 	bool GetObject(T*& oValue) const
 		{
@@ -496,7 +496,7 @@ private:
 	void pSetString(const char* iChars, size_t iLength)
 		{
 		sNPStringLength(value.stringValue) = iLength;
-		char* p = static_cast<char*>(spMalloc_T(*this, iLength));
+		char* p = static_cast<char*>(spMalloc_T(*this, iLength + 1));
 		strncpy(p, iChars, iLength);
 		sNPStringChars(value.stringValue) = p;
 		}
@@ -506,7 +506,7 @@ private:
 		if (size_t theLength = iString.length())
 			this->pSetString(iString.data(), theLength);
 		else
-			this->pSetString(nil, 0);
+			this->pSetString(nullptr, 0);
 		}
 	};
 

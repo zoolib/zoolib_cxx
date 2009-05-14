@@ -221,7 +221,7 @@ void ZStrimW_ML::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCo
 	for (;;)
 		{
 		// Walk forward through the source till we find a entity CP.
-		const Entity_t* entity = nil;
+		const Entity_t* entity = nullptr;
 		const UTF8* current = localSource;
 		const UTF8* priorToEntity;
 		while (!entity)
@@ -385,14 +385,14 @@ const ZStrimW_ML& ZStrimW_ML::Tag(const string8& iTag) const
 
 const ZStrimW_ML& ZStrimW_ML::Attr(const string8& iName) const
 	{
-	const_cast<ZStrimW_ML*>(this)->pAttr(iName, nil);
+	const_cast<ZStrimW_ML*>(this)->pAttr(iName, nullptr);
 
 	return *this;
 	}
 
 const ZStrimW_ML& ZStrimW_ML::Attr(const string8& iName, const string8& iValue) const
 	{
-	string8* newValue = nil;
+	string8* newValue = nullptr;
 	if (iValue.empty())
 		{
 		newValue = new string8;
@@ -508,7 +508,7 @@ const ZStrimW_ML& ZStrimW_ML::Attr(const string8& iName, const ZTValue& iValue) 
 	// that need entity encoding, and so we call pAttr directly.
 	// String and the default case could contain anything, so we
 	// call Attr(const string8&, const string8&) and return from the switch.
-	string8* theString = nil;
+	string8* theString = nullptr;
 	switch (iValue.TypeOf())
 		{
 		case eZType_Null:

@@ -41,9 +41,9 @@ using std::min;
 ZHandle::Rep::Rep()
 	{
 	#if ZCONFIG_SPI_Enabled(Carbon)
-		fMacHandle = nil;
+		fMacHandle = nullptr;
 	#else
-		fData = nil;
+		fData = nullptr;
 		fSize = 0;
 	#endif
 
@@ -55,30 +55,30 @@ ZHandle::Rep::Rep(size_t iSize)
 	#if ZCONFIG_SPI_Enabled(Carbon)
 		// May need toolbox lock.
 		fMacHandle = ::NewHandle(iSize);
-		if (fMacHandle == nil)
+		if (fMacHandle == nullptr)
 			throw bad_alloc();
 	#elif ZCONFIG_SPI_Enabled(Win)
 		if (iSize)
 			{
 			fData = reinterpret_cast<char*>(::GlobalAlloc(GMEM_FIXED, iSize));
-			if (fData == nil)
+			if (fData == nullptr)
 				throw bad_alloc();
 			}
 		else
 			{
-			fData = nil;
+			fData = nullptr;
 			}
 		fSize = iSize;
 	#else
 		if (iSize)
 			{
 			fData = reinterpret_cast<char*>(malloc(iSize));
-			if (fData == nil)
+			if (fData == nullptr)
 				throw bad_alloc();
 			}
 		else
 			{
-			fData = nil;
+			fData = nullptr;
 			}
 		fSize = iSize;
 	#endif
@@ -156,13 +156,13 @@ void ZHandle::SetSize(size_t iSize)
 	#if ZCONFIG_SPI_Enabled(Carbon)
 		if (iSize == 0)
 			{
-			if (fRep->fMacHandle == nil)
+			if (fRep->fMacHandle == nullptr)
 				return;
 			fRep = new Rep;
 			}
 		else
 			{
-			if (fRep->fMacHandle == nil)
+			if (fRep->fMacHandle == nullptr)
 				{
 				fRep = new Rep(iSize);
 				}
@@ -191,13 +191,13 @@ void ZHandle::SetSize(size_t iSize)
 	#else // ZCONFIG_SPI_Enabled(Carbon)
 		if (iSize == 0)
 			{
-			if (fRep->fData == nil)
+			if (fRep->fData == nullptr)
 				return;
 			fRep = new Rep;
 			}
 		else
 			{
-			if (fRep->fData == nil)
+			if (fRep->fData == nullptr)
 				{
 				fRep = new Rep(iSize);
 				}
@@ -217,7 +217,7 @@ void ZHandle::SetSize(size_t iSize)
 								::realloc(fRep->fData, iSize));
 						#endif
 	
-						if (newData == nil)
+						if (newData == nullptr)
 							throw bad_alloc();
 						fRep->fData = newData;
 						fRep->fSize = iSize;
@@ -275,7 +275,7 @@ void ZHandle::Touch()
 			// May need toolbox lock.
 			newRep->fMacHandle = fRep->fMacHandle;
 			::HandToHand(&newRep->fMacHandle);
-			if (newRep->fMacHandle == nil)
+			if (newRep->fMacHandle == nullptr)
 				throw bad_alloc();
 			}
 		fRep = newRep;
@@ -331,7 +331,7 @@ void* ZHandle::Ref::GetData()
 	#if ZCONFIG_SPI_Enabled(Carbon)
 		if (fHandle.fRep->fMacHandle)
 			return fHandle.fRep->fMacHandle[0];
-		return nil;
+		return nullptr;
 	#else
 		return fHandle.fRep->fData;
 	#endif
@@ -388,7 +388,7 @@ const void* ZHandle::ConstRef::GetData()
 	#if ZCONFIG_SPI_Enabled(Carbon)
 		if (fHandle.fRep->fMacHandle)
 			return fHandle.fRep->fMacHandle[0];
-		return nil;
+		return nullptr;
 	#else
 		return fHandle.fRep->fData;
 	#endif

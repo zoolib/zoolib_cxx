@@ -48,7 +48,7 @@ ATSUStyle ZUtil_ATSUI::sAsATSUStyle(const ZDCFont& iFont, float iFontSize)
 		kFontFullName, kFontMacintoshPlatform,
 		kFontRomanScript, kFontNoLanguageCode, &theATSUFontID))
 		{
-		return nil;
+		return nullptr;
 		}
 
 	const Boolean trueV = true;
@@ -73,12 +73,12 @@ ATSUStyle ZUtil_ATSUI::sAsATSUStyle(const ZDCFont& iFont, float iFontSize)
 
 	ATSUStyle localStyle;
 	if (noErr != ::ATSUCreateStyle(&localStyle))
-		return nil;
+		return nullptr;
 
 	if (!theAttributes.Apply(localStyle))
 		{
 		::ATSUDisposeStyle(localStyle);
-		return nil;
+		return nullptr;
 		}
 		
 	return localStyle;
@@ -88,22 +88,22 @@ ATSUTextLayout ZUtil_ATSUI::sCreateLayout(
 	const UTF16* iText, UniCharCount iTextLength, ATSUStyle iStyle, bool iUseFallbacks)
 	{
 	if (!iStyle)
-		return nil;
+		return nullptr;
 
   	if (!iTextLength)
-  		return nil;
+  		return nullptr;
 
-  	ATSUTextLayout theLayout = nil;
+  	ATSUTextLayout theLayout = nullptr;
 	::ATSUCreateTextLayoutWithTextPtr((ConstUniCharArrayPtr)iText, 0, iTextLength, iTextLength,
 		1, &iTextLength, &iStyle, &theLayout);
 
 	if (iUseFallbacks)
 		{
-		ATSUFontFallbacks theFontFallbacks = nil;
+		ATSUFontFallbacks theFontFallbacks = nullptr;
 		if (noErr == ::ATSUCreateFontFallbacks(&theFontFallbacks))
 			{
 			if (noErr == ::ATSUSetObjFontFallbacks(
-				theFontFallbacks, 0, nil, kATSUDefaultFontFallbacks))
+				theFontFallbacks, 0, nullptr, kATSUDefaultFontFallbacks))
 				{
 				Attributes theAttributes;
 				theAttributes.Add_T(kATSULineFontFallbacksTag, theFontFallbacks);

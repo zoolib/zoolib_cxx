@@ -49,13 +49,13 @@ void sDeleteAll(InputIterator begin, InputIterator end)
 template <class T>
 T* sFirstOrNil(std::vector<T>& iVec)
 	{
-	return iVec.empty() ? nil : &iVec[0];
+	return iVec.empty() ? nullptr : &iVec[0];
 	}
 
 template <class T>
 const T* sFirstOrNil(const std::vector<T>& iVec)
 	{
-	return iVec.empty() ? nil : &iVec[0];
+	return iVec.empty() ? nullptr : &iVec[0];
 	}
 
 // ==================================================

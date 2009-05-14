@@ -164,7 +164,7 @@ const char* HostMeister_Std::UserAgent(NPP npp)
 //	return "RealMedia Player HelixDNAClient/10.0.0.9544 (Windows; U; WinNT; EN; rv:10.0.0.9544) Gecko/20060608";
 //	return "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)";
 //	return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en) AppleWebKit/418.9.1 (KHTML, like Gecko) Safari/419.3";
-//	return nil;
+//	return nullptr;
 	}
 
 void* HostMeister_Std::MemAlloc(uint32 size)
@@ -180,7 +180,7 @@ void HostMeister_Std::ReloadPlugins(NPBool reloadPages)
 	{}
 
 void* HostMeister_Std::GetJavaEnv()
-	{ return nil; }
+	{ return nullptr; }
 
 void* HostMeister_Std::GetJavaPeer(NPP npp)
 	{
@@ -190,7 +190,7 @@ void* HostMeister_Std::GetJavaPeer(NPP npp)
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		return theHost->Host_GetJavaPeer(npp);
 
-	return nil;
+	return nullptr;
 	}
 
 NPError HostMeister_Std::GetURLNotify(NPP npp,
@@ -301,7 +301,7 @@ NPUTF8* HostMeister_Std::UTF8FromIdentifier(NPIdentifier identifier)
 	{
 	if (0 == (reinterpret_cast<intptr_t>(identifier) & 0x1))
 		return (NPUTF8*)strdup(static_cast<string*>(identifier)->c_str());
-	return nil;
+	return nullptr;
 	}
 
 int32_t HostMeister_Std::IntFromIdentifier(NPIdentifier identifier)
@@ -468,12 +468,12 @@ void HostMeister_Std::ReleaseVariantValue(NPVariant* variant)
 	if (variant->type == NPVariantType_Object)
 		{
 		this->ReleaseObject(variant->value.objectValue);
-		variant->value.objectValue = nil;
+		variant->value.objectValue = nullptr;
 		}
 	else if (variant->type == NPVariantType_String)
 		{
 		free((void*)sNPStringChars(variant->value.stringValue));
-		sNPStringChars(variant->value.stringValue) = nil;
+		sNPStringChars(variant->value.stringValue) = nullptr;
 		sNPStringLength(variant->value.stringValue) = 0;
 		}
 	variant->type = NPVariantType_Void;
@@ -570,7 +570,7 @@ void Host_Std::HTTPer::Start()
 
 void Host_Std::HTTPer::Cancel()
 	{
-	fHost = nil;
+	fHost = nullptr;
 	}
 
 void Host_Std::HTTPer::pRun()
@@ -584,11 +584,11 @@ void Host_Std::HTTPer::pRun()
 		if (fIsPOST)
 			{
 			theStreamerR = ZHTTP::sPost(
-				theURL, ZStreamRWPos_MemoryBlock(fMB), nil, &theHeaders, &theRawHeaders);
+				theURL, ZStreamRWPos_MemoryBlock(fMB), nullptr, &theHeaders, &theRawHeaders);
 			}
 		else
 			{
-			theStreamerR = ZHTTP::sRequest("GET", theURL, nil, &theHeaders, &theRawHeaders);
+			theStreamerR = ZHTTP::sRequest("GET", theURL, nullptr, &theHeaders, &theRawHeaders);
 			}
 
 		if (theStreamerR && fHost)
@@ -664,7 +664,7 @@ Host_Std::Sender::Sender(Host* iHost, const NPP_t& iNPP_t,
 	fNPStream.end = 0;
 	fNPStream.lastmodified = 0;
 	fNPStream.notifyData = iNotifyData;
-	fNPStream.headers = nil;
+	fNPStream.headers = nullptr;
 //	fNPStream.headers = static_cast<const char*>(fHeaders.GetData());
 	}
 
@@ -826,12 +826,12 @@ void Host_Std::Host_Status(NPP npp, const char* message)
 
 const char* Host_Std::Host_UserAgent(NPP npp)
 	{
-	return nil;
+	return nullptr;
 	}
 
 void* Host_Std::Host_GetJavaPeer(NPP npp)
 	{
-	return nil;
+	return nullptr;
 	}
 
 NPError Host_Std::Host_GetURLNotify(NPP npp,
@@ -839,7 +839,7 @@ NPError Host_Std::Host_GetURLNotify(NPP npp,
 	{
 	if (URL == strstr(URL, "http:"))
 		{
-		HTTPer* theG = new HTTPer(this, URL, nil, notifyData);
+		HTTPer* theG = new HTTPer(this, URL, nullptr, notifyData);
 
 		ZMutexLocker locker(fMutex);
 		fHTTPers.push_back(theG);
@@ -913,9 +913,9 @@ void Host_Std::CreateAndLoad(
 	this->Guest_New(
 		const_cast<char*>(iMIME.c_str()), NP_EMBED,
 		iCount, ZUtil_STL::sFirstOrNil(names), ZUtil_STL::sFirstOrNil(values),
-		nil);
+		nullptr);
 
-	this->Host_GetURLNotify(nil, fURL.c_str(), nil, nil);
+	this->Host_GetURLNotify(nullptr, fURL.c_str(), nullptr, nullptr);
 	this->PostCreateAndLoad();
 	}
 
@@ -958,7 +958,7 @@ void Host_Std::SendDataSync(
 	theNPStream.end = iStreamR.CountReadable();
 	theNPStream.lastmodified = 0;
 	theNPStream.notifyData = iNotifyData;
-	theNPStream.headers = nil;
+	theNPStream.headers = nullptr;
 
 	uint16 theStreamType = NP_NORMAL;
 

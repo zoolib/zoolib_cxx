@@ -62,7 +62,7 @@ void ZUtil_Win::sPixmapsFromHICON(HICON iHICON, ZDCPixmap* oColorPixmap, ZDCPixm
 	ICONINFO theICONINFO;
 	::GetIconInfo(iHICON, &theICONINFO);
 
-	HDC dummyHDC = ::GetDC(nil);
+	HDC dummyHDC = ::GetDC(nullptr);
 
 	ZDCPixmap monoPixmap(new ZDCPixmapRep_DIB(dummyHDC, theICONINFO.hbmMask));
 
@@ -75,7 +75,7 @@ void ZUtil_Win::sPixmapsFromHICON(HICON iHICON, ZDCPixmap* oColorPixmap, ZDCPixm
 		}
 	else
 		{
-		// theICONINFO.hbmColor is nil, so theICONINFO.hbmMask (and thus monoPixmap) contains
+		// theICONINFO.hbmColor is nullptr, so theICONINFO.hbmMask (and thus monoPixmap) contains
 		// the mono pixmap and the mask stacked on top of each other.
 		ZPoint monoSize = monoPixmap.Size();
 		if (oMonoPixmap)
@@ -85,14 +85,14 @@ void ZUtil_Win::sPixmapsFromHICON(HICON iHICON, ZDCPixmap* oColorPixmap, ZDCPixm
 		}
 
 	if (oMaskPixmap)
-		oMaskPixmap->Munge(sMungeProc_Invert, nil);
+		oMaskPixmap->Munge(sMungeProc_Invert, nullptr);
 
 	if (theICONINFO.hbmMask)
 		::DeleteObject(theICONINFO.hbmMask);
 	if (theICONINFO.hbmMask)
 		::DeleteObject(theICONINFO.hbmColor);
 
-	::ReleaseDC(nil, dummyHDC);
+	::ReleaseDC(nullptr, dummyHDC);
 	}
 
 static HINSTANCE sGetAppModuleHandle()
@@ -106,7 +106,7 @@ static HINSTANCE sGetAppModuleHandle()
 HBITMAP ZUtil_Win::sLoadBitmapID(bool iFromApp, int iResourceID)
 	{
 	ZAssertStop(kDebug_Win, (iResourceID & 0xFFFF0000) == 0);
-	HINSTANCE theHINSTANCE = nil;
+	HINSTANCE theHINSTANCE = nullptr;
 	if (iFromApp)
 		theHINSTANCE = sGetAppModuleHandle();
 
@@ -120,7 +120,7 @@ HICON ZUtil_Win::sLoadIconID(bool iFromApp, int iResourceID)
 	{
 	ZAssertStop(kDebug_Win, (iResourceID & 0xFFFF0000) == 0);
 
-	HINSTANCE theHINSTANCE = nil;
+	HINSTANCE theHINSTANCE = nullptr;
 	if (iFromApp)
 		theHINSTANCE = sGetAppModuleHandle();
 

@@ -49,7 +49,7 @@ static void sUTF8ToUTF32(
 	{
 	ZUnicode::sUTF8ToUTF32(
 		iStart, iCountCU,
-		nil, nil,
+		nullptr, nullptr,
 		iDest, iDestCount,
 		&oDestCount);
 	}

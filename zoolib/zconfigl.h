@@ -267,7 +267,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define _SCL_SECURE_NO_DEPRECATE
 #	define _SECURE_SCL 0
 
-
 #endif
 
 // ==================================================
@@ -277,34 +276,25 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // ==================================================
-/* We use the macro 'nil' extensively in ZooLib. It's something of a historical accident,
-basically the result of an early collaborator (Cyrus Ghalambor) having previously worked in
-a pascal-centric environment. NULL might more normally be expected, but its official C
-definition makes it problematic as a subsitute for a null pointer. And there's a problem
-with having nil be simply zero, in that it then cannot be distinguished from a zero integer.
-Herb Sutter's column in "C/C++ User's Journal", May 2004 discusses 'nullptr', which will likely
-end up part of C++ in the next standardization cycle. In the meantime I'm re-defining nil from
-being zero to something like nullptr. */
+// Previously we've used 'nil' for the null pointer. With our increasing use of
+// Objective C we're switching to use the soon-to-be standardized nullptr.
 
 #ifdef __cplusplus
-class nil_t
+const 
+class nullptr_t
 	{
 public:
 	template <class T> operator T*() const { return 0; }
-// CW doesn't like this templated member function pointer conversion. And
-// we don't really use member function pointers currently.
-//	template <class C, class T> operator T C::*() const { return 0; }
+	#ifndef __MWERKS__
+		template <class C, class T> operator T C::*() const { return 0; }
+	#endif
 private:
 	void operator&() const;
-	};
+	} nullptr = {};
 
-#	ifdef nil
-#		undef nil
-#	endif
-#	define nil nil_t()
 #else
-#	ifndef nil
-#		define nil 0
+#	ifndef nullptr
+#		define nullptr 0
 #	endif
 #endif
 

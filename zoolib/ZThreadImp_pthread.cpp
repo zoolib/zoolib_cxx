@@ -40,7 +40,7 @@ NAMESPACE_ZOOLIB_BEGIN
 ZTSS_pthread::Key ZTSS_pthread::sCreate()
 	{
 	Key theKey;
-	::pthread_key_create(&theKey, nil);
+	::pthread_key_create(&theKey, nullptr);
 	return theKey;
 	}
 
@@ -58,7 +58,7 @@ ZTSS_pthread::Value ZTSS_pthread::sGet(Key iKey)
 #pragma mark * ZMtx_pthread
 
 ZMtx_pthread::ZMtx_pthread(const char* iName)
-	{ ::pthread_mutex_init(&fMutex, nil); }
+	{ ::pthread_mutex_init(&fMutex, nullptr); }
 
 ZMtx_pthread::~ZMtx_pthread()
 	{ ::pthread_mutex_destroy(&fMutex); }
@@ -74,7 +74,7 @@ void ZMtx_pthread::Release()
 #pragma mark * ZCnd_pthread
 
 ZCnd_pthread::ZCnd_pthread()
-	{ ::pthread_cond_init(&fCond, nil); }
+	{ ::pthread_cond_init(&fCond, nullptr); }
 
 ZCnd_pthread::~ZCnd_pthread()
 	{ ::pthread_cond_destroy(&fCond); }
@@ -85,7 +85,7 @@ void ZCnd_pthread::Wait(ZMtx_pthread& iMtx)
 void ZCnd_pthread::Wait(ZMtx_pthread& iMtx, double iTimeout)
 	{
 	timeval theTimeVal;
-	::gettimeofday(&theTimeVal, nil);
+	::gettimeofday(&theTimeVal, nullptr);
 	double wakeTime = theTimeVal.tv_sec + theTimeVal.tv_usec / 1e6 + iTimeout;
 
 	timespec theTimeSpec;

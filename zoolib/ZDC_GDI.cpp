@@ -64,7 +64,7 @@ static HBITMAP sHBITMAP_AllBitsSet = ::CreateBitmap(8, 8, 1, 1, &sAllBitsSet[0])
 
 static HBRUSH sCreateHBRUSH(HDC iHDC, const ZRef<ZDCInk::Rep>& iRep, ZPoint iRealPatternOrigin)
 	{
-	HBRUSH theHBRUSH = nil;
+	HBRUSH theHBRUSH = nullptr;
 	if (iRep->fType == ZDCInk::eTypeSolidColor)
 		{
 		theHBRUSH = ::CreatePatternBrush(sHBITMAP_AllBitsSet);
@@ -154,7 +154,7 @@ ZDCCanvas_GDI::SetupDC::SetupDC(ZDCCanvas_GDI* iCanvas, const ZDCState& iState)
 :	fCanvas(iCanvas)
 	{
 	fState = &iState;
-	ZAssertStop(kDebug_GDI, fCanvas->fMutexToCheck == nil || fCanvas->fMutexToCheck->IsLocked());
+	ZAssertStop(kDebug_GDI, fCanvas->fMutexToCheck == nullptr || fCanvas->fMutexToCheck->IsLocked());
 	fCanvas->fMutexToLock->Acquire();
 	if (!fCanvas->fOriginValid)
 		{
@@ -164,15 +164,15 @@ ZDCCanvas_GDI::SetupDC::SetupDC(ZDCCanvas_GDI* iCanvas, const ZDCState& iState)
 			::SetMapMode(iCanvas->fHDC, MM_ANISOTROPIC);
 			int deviceHRes = ::GetDeviceCaps(iCanvas->fHDC, LOGPIXELSX);
 			int deviceVRes = ::GetDeviceCaps(iCanvas->fHDC, LOGPIXELSY);
-			::SetViewportExtEx(iCanvas->fHDC, deviceHRes, deviceVRes, nil);
-			::SetWindowExtEx(iCanvas->fHDC, 72, 72, nil);
+			::SetViewportExtEx(iCanvas->fHDC, deviceHRes, deviceVRes, nullptr);
+			::SetWindowExtEx(iCanvas->fHDC, 72, 72, nullptr);
 			}
 		else
 			{
 			::SetMapMode(iCanvas->fHDC, MM_TEXT);
 			}
 
-		::SetWindowOrgEx(iCanvas->fHDC, 0, 0, nil);
+		::SetWindowOrgEx(iCanvas->fHDC, 0, 0, nullptr);
 		}
 
 	if (iState.fChangeCount_Clip != fCanvas->fChangeCount_Clip)
@@ -451,7 +451,7 @@ ZDCCanvas_GDI_Native::ZDCCanvas_GDI_Native(HDC iHDC)
 
 ZDCCanvas_GDI_Native::~ZDCCanvas_GDI_Native()
 	{
-	fHDC = nil;
+	fHDC = nullptr;
 	}
 
 // =================================================================================================
@@ -478,16 +478,16 @@ ZRef<ZDCCanvas_GDI> ZDCCanvas_GDI::sFindCanvasOrCreateNative(HDC iHDC)
 
 ZDCCanvas_GDI::ZDCCanvas_GDI()
 	{
-	fCanvas_Prev = nil;
-	fCanvas_Next = nil;
+	fCanvas_Prev = nullptr;
+	fCanvas_Next = nullptr;
 
 	fOriginValid = false;
 	fChangeCount_Clip = 1;
 
-	fHDC = nil;
+	fHDC = nullptr;
 
-	fMutexToLock = nil;
-	fMutexToCheck = nil;
+	fMutexToLock = nullptr;
+	fMutexToCheck = nullptr;
 	}
 
 
@@ -495,17 +495,17 @@ ZDCCanvas_GDI::~ZDCCanvas_GDI()
 	{
 	// Subclasses must unlink themselves and detach/destroy
 	// grafports before this destructor is called.
-	ZAssertStop(kDebug_GDI, fCanvas_Prev == nil);
-	ZAssertStop(kDebug_GDI, fCanvas_Next == nil);
-	ZAssertStop(kDebug_GDI, fHDC == nil);
-	ZAssertStop(kDebug_GDI, fMutexToLock == nil);
-	ZAssertStop(kDebug_GDI, fMutexToCheck == nil);
+	ZAssertStop(kDebug_GDI, fCanvas_Prev == nullptr);
+	ZAssertStop(kDebug_GDI, fCanvas_Next == nullptr);
+	ZAssertStop(kDebug_GDI, fHDC == nullptr);
+	ZAssertStop(kDebug_GDI, fMutexToLock == nullptr);
+	ZAssertStop(kDebug_GDI, fMutexToCheck == nullptr);
 	}
 
 void ZDCCanvas_GDI::Internal_Link()
 	{
 	ZAssertStop(kDebug_GDI, sMutex_List.IsLocked());
-	fCanvas_Prev = nil;
+	fCanvas_Prev = nullptr;
 	if (sCanvas_Head)
 		sCanvas_Head->fCanvas_Prev = this;
 	fCanvas_Next = sCanvas_Head;
@@ -521,8 +521,8 @@ void ZDCCanvas_GDI::Internal_Unlink()
 		fCanvas_Next->fCanvas_Prev = fCanvas_Prev;
 	if (sCanvas_Head == this)
 		sCanvas_Head = fCanvas_Next;
-	fCanvas_Prev = nil;
-	fCanvas_Next = nil;
+	fCanvas_Prev = nullptr;
+	fCanvas_Next = nullptr;
 	}
 
 // =================================================================================================
@@ -1175,7 +1175,7 @@ void ZDCCanvas_GDI::FillPixmap(ZDCState& ioState, const ZPoint& iLocation, const
 void ZDCCanvas_GDI::DrawPixmap(ZDCState& ioState,
 	const ZPoint& iLocation, const ZDCPixmap& iSourcePixmap, const ZDCPixmap* iMaskPixmap)
 	{
-	if (fHDC == nil)
+	if (fHDC == nullptr)
 		return;
 
 	if (!iSourcePixmap)
@@ -1275,7 +1275,7 @@ void ZDCCanvas_GDI::DrawText(ZDCState& ioState,
 		string16 theString16 = ZUnicode::sAsUTF16(iText, iTextLength);
 		::ExtTextOutW(fHDC,
 			iLocation.h + ioState.fOrigin.h,
-			iLocation.v + ioState.fOrigin.v, 0, nil, theString16.data(), theString16.size(), nil);
+			iLocation.v + ioState.fOrigin.v, 0, nullptr, theString16.data(), theString16.size(), nullptr);
 		}
 	else
 		{
@@ -1390,16 +1390,16 @@ void ZDCCanvas_GDI::BreakLine(ZDCState& ioState,
 		SIZE dummySIZE;
 		int brokenLength = 0;
 		::GetTextExtentExPointW(fHDC, theString.data(), theString.size(),
-			iTargetWidth, &brokenLength, nil, &dummySIZE);
+			iTargetWidth, &brokenLength, nullptr, &dummySIZE);
 		size_t codePointOffset = ZUnicode::sCUToCP(theString.data(), brokenLength);
-		oNextLineDelta = ZUnicode::sCPToCU(iLineStart, iRemainingTextLength, codePointOffset, nil);
+		oNextLineDelta = ZUnicode::sCPToCU(iLineStart, iRemainingTextLength, codePointOffset, nullptr);
 		}
 	else
 		{
 		SIZE dummySIZE;
 		int brokenLength = 0;
 		::GetTextExtentExPointA(fHDC, iLineStart, iRemainingTextLength,
-			iTargetWidth, &brokenLength, nil, &dummySIZE);
+			iTargetWidth, &brokenLength, nullptr, &dummySIZE);
 		oNextLineDelta = brokenLength;
 		}
 
@@ -1512,7 +1512,7 @@ ZPoint ZDCCanvas_GDI::Internal_GDIStart(ZDCState& ioState, bool iZeroOrigin)
 	ZPoint theOffset = ZPoint::sZero;
 	if (!iZeroOrigin)
 		theOffset = ioState.fOrigin;
-	::SetWindowOrgEx(fHDC, -theOffset.h, -theOffset.v, nil);
+	::SetWindowOrgEx(fHDC, -theOffset.h, -theOffset.v, nullptr);
 
 	return theOffset;
 	}
@@ -1531,7 +1531,7 @@ void ZDCCanvas_GDI::Internal_TileRegion(
 		{
 		fOriginValid = true;
 		::SetMapMode(fHDC, MM_TEXT);
-		::SetWindowOrgEx(fHDC, 0, 0, nil);
+		::SetWindowOrgEx(fHDC, 0, 0, nullptr);
 		}
 
 	ZDCRgn realRgn = (iRgn + ioState.fOrigin) & this->Internal_CalcClipRgn(ioState);
@@ -1582,8 +1582,8 @@ ZDCCanvas_GDI_NonWindow::ZDCCanvas_GDI_NonWindow()
 
 ZDCCanvas_GDI_NonWindow::~ZDCCanvas_GDI_NonWindow()
 	{
-	ZAssertStop(kDebug_GDI, fHDC == nil);
-	fMutexToLock = nil;
+	ZAssertStop(kDebug_GDI, fHDC == nullptr);
+	fMutexToLock = nullptr;
 	}
 
 void ZDCCanvas_GDI_NonWindow::Finalize()
@@ -1613,7 +1613,7 @@ void ZDCCanvas_GDI_NonWindow::Scroll(ZDCState& ioState,
 
 	SetupDC theSetupDC(this, ioState);
 	RECT realRECT = iRect + ioState.fOrigin;
-	::ScrollDC(fHDC, iDeltaH, iDeltaV, &realRECT, &realRECT, nil, nil);
+	::ScrollDC(fHDC, iDeltaH, iDeltaV, &realRECT, &realRECT, nullptr, nullptr);
 	}
 
 void ZDCCanvas_GDI_NonWindow::CopyFrom(ZDCState& ioState, const ZPoint& iDestLocation,
@@ -1623,7 +1623,7 @@ void ZDCCanvas_GDI_NonWindow::CopyFrom(ZDCState& ioState, const ZPoint& iDestLoc
 
 	ZAssertStop(kDebug_GDI, sourceCanvasGDI);
 
-	if (fHDC == nil || sourceCanvasGDI->Internal_GetHDC() == nil)
+	if (fHDC == nullptr || sourceCanvasGDI->Internal_GetHDC() == nullptr)
 		return;
 
 	SetupDC theSetupDC(this, ioState);
@@ -1644,7 +1644,7 @@ ZDCRgn ZDCCanvas_GDI_NonWindow::Internal_CalcClipRgn(const ZDCState& iState)
 #pragma mark -
 #pragma mark * ZDCCanvas_GDI_OffScreen
 
-static HPALETTE sHPALETTE_Offscreen = ::CreateHalftonePalette(nil);
+static HPALETTE sHPALETTE_Offscreen = ::CreateHalftonePalette(nullptr);
 
 ZDCCanvas_GDI_OffScreen::ZDCCanvas_GDI_OffScreen(HDC iOther, const ZRect& iGlobalRect)
 	{
@@ -1713,7 +1713,7 @@ ZDCCanvas_GDI_OffScreen::ZDCCanvas_GDI_OffScreen(
 	theBITMAPINFO.bmiHeader.biClrImportant = 0;
 
 	void* thePixelStorage;
-	fHBITMAP = ::CreateDIBSection(iOther, &theBITMAPINFO, DIB_RGB_COLORS, &thePixelStorage, nil, 0);
+	fHBITMAP = ::CreateDIBSection(iOther, &theBITMAPINFO, DIB_RGB_COLORS, &thePixelStorage, nullptr, 0);
 	fHDC = ::CreateCompatibleDC(iOther);
 	HBITMAP theOriginalHBITMAP = (HBITMAP)::SelectObject(fHDC, fHBITMAP);
 	::DeleteObject(theOriginalHBITMAP);
@@ -1731,7 +1731,7 @@ ZDCCanvas_GDI_OffScreen::~ZDCCanvas_GDI_OffScreen()
 	{
 	if (fHDC)
 		::DeleteDC(fHDC);
-	fHDC = nil;
+	fHDC = nullptr;
 	if (fHBITMAP)
 		::DeleteObject(fHBITMAP);
 	}
@@ -1769,7 +1769,7 @@ void ZDCCanvas_GDI_OffScreen::FloodFill(ZDCState& ioState, const ZPoint& iSeedLo
 		// pixel's color is set to white, and all other pixels are set to black.
 		HDC theHDC1 = ::CreateCompatibleDC(fHDC);
 		::DeleteObject(::SelectObject(theHDC1,
-			::CreateBitmap(clipBounds.Width(), clipBounds.Height(), 1, 1, nil)));
+			::CreateBitmap(clipBounds.Width(), clipBounds.Height(), 1, 1, nullptr)));
 
 		// Set our back color to the seed color, so the StretchBlt
 		// knows which color should be mapped to white
@@ -1781,7 +1781,7 @@ void ZDCCanvas_GDI_OffScreen::FloodFill(ZDCState& ioState, const ZPoint& iSeedLo
 		// Create a second HDC with a copy of the 1 bit HDC
 		HDC theHDC2 = ::CreateCompatibleDC(fHDC);
 		::DeleteObject(::SelectObject(theHDC2,
-			::CreateBitmap(clipBounds.Width(), clipBounds.Height(), 1, 1, nil)));
+			::CreateBitmap(clipBounds.Width(), clipBounds.Height(), 1, 1, nullptr)));
 		::BitBlt(theHDC2, 0, 0, clipBounds.Width(), clipBounds.Height(),
 			theHDC1, 0, 0, SRCCOPY);
 
@@ -1870,7 +1870,7 @@ void ZDCCanvas_GDI_OffScreen::FloodFill(ZDCState& ioState, const ZPoint& iSeedLo
 
 ZDCPixmap ZDCCanvas_GDI_OffScreen::GetPixmap(ZDCState& ioState, const ZRect& iBounds)
 	{
-	if (fHDC == nil || iBounds.IsEmpty())
+	if (fHDC == nullptr || iBounds.IsEmpty())
 		return ZDCPixmap();
 
 	SetupDC theSetupDC(this, ioState);
@@ -1902,9 +1902,9 @@ bool ZDCCanvas_GDI_OffScreen::IsOffScreen()
 ZDCCanvas_GDI_IC::ZDCCanvas_GDI_IC()
 	{
 	if (ZUtil_Win::sUseWAPI())
-		fHDC = ::CreateICW(L"DISPLAY", nil, nil, nil);
+		fHDC = ::CreateICW(L"DISPLAY", nullptr, nullptr, nullptr);
 	else
-		fHDC = ::CreateICA("DISPLAY", nil, nil, nil);
+		fHDC = ::CreateICA("DISPLAY", nullptr, nullptr, nullptr);
 
 	ZMutexLocker locker(sMutex_List);
 	this->Internal_Link();
@@ -1913,7 +1913,7 @@ ZDCCanvas_GDI_IC::ZDCCanvas_GDI_IC()
 ZDCCanvas_GDI_IC::~ZDCCanvas_GDI_IC()
 	{
 	::DeleteDC(fHDC);
-	fHDC = nil;
+	fHDC = nullptr;
 	}
 
 // =================================================================================================
@@ -2395,7 +2395,7 @@ ZDCPixmapRep_DIB::ZDCPixmapRep_DIB(HDC iHDC, HBITMAP iHBITMAP, bool iForce32BPP)
 ZDCPixmapRep_DIB::~ZDCPixmapRep_DIB()
 	{
 	delete[] reinterpret_cast<char*>(fBITMAPINFO);
-	fBITMAPINFO = nil;
+	fBITMAPINFO = nullptr;
 	}
 
 void ZDCPixmapRep_DIB::GetDIBStuff(BITMAPINFO*& oBITMAPINFO, char*& oBits, ZRect* oBounds)

@@ -279,7 +279,7 @@ void ZStream_SHA1::sFinal(ZStream_SHA1::Context& ioContext, uint8 oDigest[20])
 ZStreamR_SHA1::ZStreamR_SHA1(const ZStreamR& iStreamSource)
 :	ZStreamR_Filter(iStreamSource),
 	fStreamSource(iStreamSource),
-	fDigest(nil)
+	fDigest(nullptr)
 	{
 	ZStream_SHA1::sInit(fContext);
 	}
@@ -337,7 +337,7 @@ void ZStreamR_SHA1::GetDigest(uint8 oDigest[20])
 
 ZStreamW_SHA1::ZStreamW_SHA1(const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink),
-	fDigest(nil)
+	fDigest(nullptr)
 	{ ZStream_SHA1::sInit(fContext); }
 
 /// Constructor for use inline.

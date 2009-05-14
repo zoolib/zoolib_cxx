@@ -240,7 +240,7 @@ ZRef<ZNetEndpoint> ZNetListener_TCP_WinSock::Listen()
 	struct timeval timeOut;
 	timeOut.tv_sec = 1;
 	timeOut.tv_usec = 0;
-	int result = ::select(0, &readSet, nil, nil, &timeOut);
+	int result = ::select(0, &readSet, nullptr, nullptr, &timeOut);
 	if (result > 0)
 		{
 		// We got one.
@@ -411,7 +411,7 @@ size_t ZNetEndpoint_TCP_WinSock::Imp_CountReadable()
 	struct timeval timeOut;
 	timeOut.tv_sec = 0;
 	timeOut.tv_usec = 0;
-	int result = ::select(0, &readSet, nil, nil, &timeOut);
+	int result = ::select(0, &readSet, nullptr, nullptr, &timeOut);
 	if (result <= 0)
 		return 0;
 
@@ -433,7 +433,7 @@ static bool sWaitReadable(SOCKET iSOCKET, int iMilliseconds)
 	struct timeval timeOut;
 	timeOut.tv_sec = iMilliseconds / 1000;
 	timeOut.tv_usec = (iMilliseconds % 1000) * 1000;
-	return 0 < ::select(iSOCKET + 1, &readSet, nil, &exceptSet, &timeOut);
+	return 0 < ::select(iSOCKET + 1, &readSet, nullptr, &exceptSet, &timeOut);
 	}
 
 bool ZNetEndpoint_TCP_WinSock::Imp_WaitReadable(int iMilliseconds)

@@ -205,7 +205,7 @@ bool ZTextDecoder_Mac::Decode(
 				fInfo,
 				iSourceBytes, localSource, 
 				flags,
-				0, nil, nil, nil, // Offset array stuff.
+				0, nullptr, nullptr, nullptr, // Offset array stuff.
 				kBufSize * sizeof(UniChar), &sourceConsumed, &utf16Generated, utf16Buffer);
 			}
 
@@ -257,7 +257,7 @@ bool ZTextDecoder_Mac::Decode(
 			size_t utf32Generated;
 			ZUnicode::sUTF16ToUTF32(
 				reinterpret_cast<const UTF16*>(utf16Buffer), utf16Generated,
-				&utf16Consumed, nil,
+				&utf16Consumed, nullptr,
 				localDest, iDestCU,
 				&utf32Generated);
 
@@ -348,10 +348,10 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 		size_t utf16Generated;
 		ZUnicode::sUTF32ToUTF16(
 			localSource, iSourceCU,
-			&utf32Consumed, nil,
+			&utf32Consumed, nullptr,
 			reinterpret_cast<UTF16*>(utf16Buffer), kBufSize,
 			&utf16Generated,
-			iSourceCU, nil);
+			iSourceCU, nullptr);
 
 		ByteCount utf16Consumed;
 		ByteCount destGenerated;
@@ -359,7 +359,7 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 			fInfo,
 			utf16Generated * 2, utf16Buffer, 
 			flags,
-			0, nil, nil, nil, // Offset array stuff.
+			0, nullptr, nullptr, nullptr, // Offset array stuff.
 			iDestBytes, &utf16Consumed, &destGenerated, localDest);
 
 		ZAssertStop(1, err == 0); 
@@ -414,7 +414,7 @@ void ZTextEncoder_Mac::Init(TextEncoding iDestEncoding)
 		throw runtime_error("ZTextDecoder_Mac, couldn't create converter");
 
 	::SetFallbackUnicodeToText(fInfo, sUnicodeToTextFallback_NullUPP,
-		kUnicodeFallbackCustomOnly | kUnicodeFallbackInterruptSafeMask, nil);
+		kUnicodeFallbackCustomOnly | kUnicodeFallbackInterruptSafeMask, nullptr);
 	}
 
 NAMESPACE_ZOOLIB_END

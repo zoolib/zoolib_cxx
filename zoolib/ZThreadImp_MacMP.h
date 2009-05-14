@@ -85,7 +85,7 @@ protected:
 class ZMtx_MacMP : NonCopyable
 	{
 public:
-	ZMtx_MacMP(const char* iName = nil);
+	ZMtx_MacMP(const char* iName = nullptr);
 	~ZMtx_MacMP();
 
 	void Acquire();

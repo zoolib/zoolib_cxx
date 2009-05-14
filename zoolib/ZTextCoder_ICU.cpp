@@ -96,7 +96,7 @@ ZTextDecoder_ICU::ZTextDecoder_ICU(const string& iSourceName)
 	fConverter = ::ucnv_open(iSourceName.c_str(), &status);
 	if (!fConverter)
 		throw runtime_error("Couldn't open converter");
-	::ucnv_setToUCallBack(fConverter, sCallbackCount, &fCountSkipped, nil, nil, &status);
+	::ucnv_setToUCallBack(fConverter, sCallbackCount, &fCountSkipped, nullptr, nullptr, &status);
 	}
 
 ZTextDecoder_ICU::ZTextDecoder_ICU(const char* iSourceName)
@@ -105,7 +105,7 @@ ZTextDecoder_ICU::ZTextDecoder_ICU(const char* iSourceName)
 	fConverter = ::ucnv_open(iSourceName, &status);
 	if (!fConverter)
 		throw runtime_error("Couldn't open converter");
-	::ucnv_setToUCallBack(fConverter, sCallbackCount, &fCountSkipped, nil, nil, &status);
+	::ucnv_setToUCallBack(fConverter, sCallbackCount, &fCountSkipped, nullptr, nullptr, &status);
 	}
 
 ZTextDecoder_ICU::~ZTextDecoder_ICU()
@@ -135,7 +135,7 @@ bool ZTextDecoder_ICU::Decode(
 		::ucnv_toUnicode(fConverter,
 			&tempDest, tempDest + min(kBufSize, iDestCU),
 			&tempLocalSource, tempLocalSource + iSourceBytes,
-			nil, false, &status);
+			nullptr, false, &status);
 
 		size_t sourceConsumed = tempLocalSource - localSource;
 		size_t utf16Generated = tempDest - utf16Buffer;
@@ -144,7 +144,7 @@ bool ZTextDecoder_ICU::Decode(
 		size_t utf32Generated;
 		ZUnicode::sUTF16ToUTF32(
 			reinterpret_cast<const UTF16*>(utf16Buffer), utf16Generated,
-			&utf16Consumed, nil,
+			&utf16Consumed, nullptr,
 			localDest, iDestCU,
 			&utf32Generated);
 
@@ -178,7 +178,7 @@ ZTextEncoder_ICU::ZTextEncoder_ICU(const string& iDestName)
 	fConverter = ::ucnv_open(iDestName.c_str(), &status);
 	if (!fConverter)
 		throw runtime_error("Couldn't open converter");
-	::ucnv_setFromUCallBack(fConverter, UCNV_FROM_U_CALLBACK_SKIP, nil, nil, nil, &status);
+	::ucnv_setFromUCallBack(fConverter, UCNV_FROM_U_CALLBACK_SKIP, nullptr, nullptr, nullptr, &status);
 	}
 
 ZTextEncoder_ICU::ZTextEncoder_ICU(const char* iDestName)
@@ -187,7 +187,7 @@ ZTextEncoder_ICU::ZTextEncoder_ICU(const char* iDestName)
 	fConverter = ::ucnv_open(iDestName, &status);
 	if (!fConverter)
 		throw runtime_error("Couldn't open converter");
-	::ucnv_setFromUCallBack(fConverter, UCNV_FROM_U_CALLBACK_SKIP, nil, nil, nil, &status);
+	::ucnv_setFromUCallBack(fConverter, UCNV_FROM_U_CALLBACK_SKIP, nullptr, nullptr, nullptr, &status);
 	}
 
 ZTextEncoder_ICU::~ZTextEncoder_ICU()
@@ -211,17 +211,17 @@ void ZTextEncoder_ICU::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 		size_t utf16Generated;
 		ZUnicode::sUTF32ToUTF16(
 			localSource, iSourceCU,
-			&utf32Consumed, nil,
+			&utf32Consumed, nullptr,
 			reinterpret_cast<UTF16*>(utf16Buffer), min(kBufSize, iDestBytes),
 			&utf16Generated,
-			iSourceCU, nil);
+			iSourceCU, nullptr);
 
 		char* tempDest = localDest;
 		const UChar* tempLocalSource = utf16Buffer;
 		::ucnv_fromUnicode(fConverter,
 			&tempDest, tempDest + iDestBytes,
 			&tempLocalSource, tempLocalSource + utf16Generated,
-			nil, false, &status);
+			nullptr, false, &status);
 
 		size_t utf16Consumed = tempLocalSource - utf16Buffer;
 		size_t destGenerated = tempDest - localDest;

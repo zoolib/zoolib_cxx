@@ -186,8 +186,8 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 	{ // Scope theSC.
 	StreamW_Chunk theSC(iStream);
 
-	ZStreamW_LZWEncode* theSLZW = nil;
-	ZStreamW_LZWEncodeNoPatent* theSLZWNP = nil;
+	ZStreamW_LZWEncode* theSLZW = nullptr;
+	ZStreamW_LZWEncodeNoPatent* theSLZWNP = nullptr;
 
 	ZStreamW* theStream;
 	if (fNoPatent)

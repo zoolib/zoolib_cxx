@@ -72,7 +72,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if defined(XP_MAC)
-#	include <Carbon/Carbon.h>
+#	include ZMACINCLUDE2(Carbon,Carbon.h)
 #endif
 
 // =================================================================================================

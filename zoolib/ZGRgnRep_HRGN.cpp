@@ -37,7 +37,7 @@ namespace ZANONYMOUS {
 HRGN sCopyHRGN(HRGN iSource)
 	{
 	HRGN result = ::CreateRectRgn(0,0,0,0);
-	::CombineRgn(result, iSource, nil, RGN_COPY);
+	::CombineRgn(result, iSource, nullptr, RGN_COPY);
 	return result;
 	}
 
@@ -158,7 +158,7 @@ size_t ZGRgnRep_HRGN::Decompose(DecomposeProc iProc, void* iRefcon)
 		}
 	if (regionType == COMPLEXREGION)
 		{
-		size_t regionLength = ::GetRegionData(fHRGN, 0, nil);
+		size_t regionLength = ::GetRegionData(fHRGN, 0, nullptr);
 		std::vector<char> rawStorage(regionLength);
 		RGNDATA* regionData = reinterpret_cast<RGNDATA*>(&rawStorage[0]);
 		::GetRegionData(fHRGN, regionLength, regionData);
@@ -213,7 +213,7 @@ namespace ZANONYMOUS {
 void sCompressHRGN(HRGN ioTarget, HRGN ioTemp1, HRGN ioTemp2,
 	ZCoord iDelta, bool iHorizontal, bool iGrow)
 	{
-	::CombineRgn(ioTemp1, ioTarget, nil, RGN_COPY);
+	::CombineRgn(ioTemp1, ioTarget, nullptr, RGN_COPY);
 
 	const int combineOperation = iGrow ? RGN_OR : RGN_AND;
 	ZCoord shift = 1;
@@ -230,7 +230,7 @@ void sCompressHRGN(HRGN ioTarget, HRGN ioTemp1, HRGN ioTemp2,
 			if (iDelta == 0)
 				break;
 			}
-		::CombineRgn(ioTemp2, ioTemp1, nil, RGN_COPY);
+		::CombineRgn(ioTemp2, ioTemp1, nullptr, RGN_COPY);
 		if (iHorizontal)
 			::OffsetRgn(ioTemp1, -shift, 0);
 		else

@@ -394,7 +394,7 @@ static bool sDecodeUTF16Swapped(
 				size_t countGenerated;
 				sourceComplete = ZUnicode::sUTF16ToUTF32(
 					buffer, countToMove,
-					&countConsumed, nil,
+					&countConsumed, nullptr,
 					localDest, iDestCU,
 					&countGenerated);
 				
@@ -423,10 +423,10 @@ static void sEncodeUTF16(const UTF32* iSource, size_t iSourceCU, size_t* oSource
 	{
 	ZUnicode::sUTF32ToUTF16(
 		iSource, iSourceCU,
-		oSourceCU, nil,
+		oSourceCU, nullptr,
 		static_cast<UTF16*>(iDest), iDestBytes / 2,
 		oDestBytes,
-		iSourceCU, nil);
+		iSourceCU, nullptr);
 
 	if (oDestBytes)
 		{
@@ -442,10 +442,10 @@ static void sEncodeUTF16Swapped(const UTF32* iSource, size_t iSourceCU, size_t* 
 	size_t countGenerated;
 	ZUnicode::sUTF32ToUTF16(
 		iSource, iSourceCU,
-		oSourceCU, nil,
+		oSourceCU, nullptr,
 		static_cast<UTF16*>(iDest), iDestBytes / 2,
 		&countGenerated,
-		iSourceCU, nil);
+		iSourceCU, nullptr);
 
 	if (oDestBytes)
 		*oDestBytes = countGenerated * 2;
@@ -474,10 +474,10 @@ static void sEncodeUTF8(const UTF32* iSource, size_t iSourceCU, size_t* oSourceC
 	{
 	ZUnicode::sUTF32ToUTF8(
 		iSource, iSourceCU,
-		oSourceCU, nil,
+		oSourceCU, nullptr,
 		static_cast<UTF8*>(iDest), iDestBytes,
 		oDestBytes,
-		iSourceCU, nil);
+		iSourceCU, nullptr);
 	}
 
 // =================================================================================================

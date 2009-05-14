@@ -677,8 +677,7 @@ static void sWriteString(const ZStrimW& s, const ZStrimR& iStrimR)
 	s.Write("\"");
 	}
 
-static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
-	size_t iLevel, const ZYadOptions& iOptions)
+static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV)
 	{
 	ZTValue normalized;
 	sNormalizeSimpleTValue(iTV, normalized);
@@ -719,159 +718,190 @@ static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
 		}
 	}
 
-static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
-	size_t iInitialIndent, const ZYadOptions& iOptions, bool iMayNeedInitialLF);
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadVisitor_JSONWriter::SaveState
 
-static void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
-	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
+class ZYadVisitor_JSONWriter::SaveState
+	{
+public:
+	SaveState(ZYadVisitor_JSONWriter* iVisitor);
+	~SaveState();
+
+	ZYadVisitor_JSONWriter* fVisitor;
+	size_t fIndent;
+	bool fMayNeedInitialLF;
+	};
+
+ZYadVisitor_JSONWriter::SaveState::SaveState(ZYadVisitor_JSONWriter* iVisitor)
+:	fVisitor(iVisitor),
+	fIndent(fVisitor->fIndent),
+	fMayNeedInitialLF(fVisitor->fMayNeedInitialLF)
+	{}
+
+ZYadVisitor_JSONWriter::SaveState::~SaveState()
+	{
+	fVisitor->fIndent = fIndent;
+	fVisitor->fMayNeedInitialLF = fMayNeedInitialLF;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadVisitor_JSONWriter
+
+ZYadVisitor_JSONWriter::ZYadVisitor_JSONWriter(const ZStrimW& iStrimW,
+	size_t iIndent, const ZYadOptions& iOptions)
+:	fStrimW(iStrimW),
+	fIndent(iIndent),
+	fOptions(iOptions),
+	fMayNeedInitialLF(false)
+	{}
+
+bool ZYadVisitor_JSONWriter::Visit_YadR(ZRef<ZYadR> iYadR)
+	{
+	sToStrim_SimpleTValue(fStrimW, ZYad_ZooLib::sFromYadR(iYadR));
+	return true;
+	}
+
+bool ZYadVisitor_JSONWriter::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+	{
+	sWriteString(fStrimW, iYadStrimR->GetStrimR());
+	return true;
+	}
+
+bool ZYadVisitor_JSONWriter::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 	{
 	bool needsIndentation = false;
-	if (iOptions.DoIndentation())
+	if (fOptions.DoIndentation())
 		{
 		// We're supposed to be indenting if we're complex, ie if any element is:
 		// 1. A non-empty vector.
 		// 2. A non-empty tuple.
 		// or if iOptions.fBreakStrings is true, any element is a string with embedded
 		// line breaks or more than iOptions.fStringLineLength characters.
-		needsIndentation = !iYadListR->IsSimple(iOptions);
+		needsIndentation = !iYadListR->IsSimple(fOptions);
 		}
 
 	if (needsIndentation)
 		{
 		// We need to indent.
-		if (iMayNeedInitialLF)
+		if (fMayNeedInitialLF)
 			{
 			// We were invoked by a tuple which has already issued the property
 			// name and equals sign, so we need to start a fresh line.
-			sWriteLFIndent(s, iLevel, iOptions);
+			sWriteLFIndent(fStrimW, fIndent, fOptions);
 			}
 
-		s.Write("[");
+		fStrimW.Write("[");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
 			if (ZRef<ZYadR> cur = iYadListR->ReadInc())
 				{
 				if (!isFirst)
-					s.Write(",");
-				sWriteLFIndent(s, iLevel, iOptions);
-				sToStrim_Yad(s, cur, iLevel, iOptions, false);
+					fStrimW.Write(",");
+				sWriteLFIndent(fStrimW, fIndent, fOptions);
+				cur->Accept(*this);
 				}
 			else
 				{
 				break;
 				}
 			}
-		sWriteLFIndent(s, iLevel, iOptions);
-		s.Write("]");
+		sWriteLFIndent(fStrimW, fIndent, fOptions);
+		fStrimW.Write("]");
 		}
 	else
 		{
 		// We're not indenting, so we can just dump everything out on
 		// one line, with just some spaces to keep things legible.
-		s.Write("[");
+		fStrimW.Write("[");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
 			if (ZRef<ZYadR> cur = iYadListR->ReadInc())
 				{
 				if (!isFirst)
-					s.Write(", ");
-				sToStrim_Yad(s, cur, iLevel, iOptions, false);
+					fStrimW.Write(", ");
+				cur->Accept(*this);
 				}
 			else
 				{
 				break;
 				}
 			}
-		s.Write("]");
+		fStrimW.Write("]");
 		}
+	return true;
 	}
 
-static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
-	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
+bool ZYadVisitor_JSONWriter::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	{
 	bool needsIndentation = false;
-	if (iOptions.DoIndentation())
+	if (fOptions.DoIndentation())
 		{
-		needsIndentation = ! iYadMapR->IsSimple(iOptions);
+		needsIndentation = ! iYadMapR->IsSimple(fOptions);
 		}
 
 	if (needsIndentation)
 		{
-		if (iMayNeedInitialLF)
+		if (fMayNeedInitialLF)
 			{
 			// We're going to be indenting, but need to start
 			// a fresh line to have our { and contents line up.
-			sWriteLFIndent(s, iLevel, iOptions);
+			sWriteLFIndent(fStrimW, fIndent, fOptions);
 			}
 
-		s.Write("{");
+		fStrimW.Write("{");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
 			string curName;
 			if (ZRef<ZYadR> cur = iYadMapR->ReadInc(curName))
 				{
 				if (!isFirst)
-					s.Write(",");
-				sWriteLFIndent(s, iLevel, iOptions);
-				sWriteString(s, curName);
-				s << " : ";
-				sToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
+					fStrimW.Write(",");
+				sWriteLFIndent(fStrimW, fIndent, fOptions);
+				sWriteString(fStrimW, curName);
+				fStrimW << " : ";
+
+				SaveState save(this);
+				fIndent = fIndent + 1;
+				fMayNeedInitialLF = true;
+				cur->Accept(*this);
 				}
 			else
 				{
 				break;
 				}
 			}
-		sWriteLFIndent(s, iLevel, iOptions);
-		s.Write("}");
+		sWriteLFIndent(fStrimW, fIndent, fOptions);
+		fStrimW.Write("}");
 		}
 	else
 		{
-		s.Write("{");
+		fStrimW.Write("{");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
 			string curName;
 			if (ZRef<ZYadR> cur = iYadMapR->ReadInc(curName))
 				{
 				if (!isFirst)
-					s.Write(",");
-				s.Write(" ");
-				sWriteString(s, curName);
-				s << " : ";
-				sToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
+					fStrimW.Write(",");
+				fStrimW.Write(" ");
+				sWriteString(fStrimW, curName);
+				fStrimW << " : ";
+
+				SaveState save(this);
+				fIndent = fIndent + 1;
+				fMayNeedInitialLF = true;
+				cur->Accept(*this);
 				}
 			else
 				{
 				break;
 				}
 			}
-		s.Write(" }");
+		fStrimW.Write(" }");
 		}
-	}
-
-static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
-	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
-	{
-	if (!iYadR)
-		{
-		return;
-		}
-	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
-		{
-		sToStrim_Map(s, theYadMapR, iLevel, iOptions, iMayNeedInitialLF);
-		}
-	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
-		{
-		sToStrim_List(s, theYadListR, iLevel, iOptions, iMayNeedInitialLF);
-		}
-	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
-		{
-		sWriteString(s, theYadStrimR->GetStrimR());
-		}
-	else
-		{
-		sToStrim_SimpleTValue(s, ZYad_ZooLib::sFromYadR(iYadR), iLevel, iOptions);
-		}
+	return true;
 	}
 
 // =================================================================================================
@@ -886,11 +916,15 @@ ZRef<ZYadR> ZYad_JSON::sMakeYadR_Normalize(
 	{ return sMakeYadR_JSONNormalize(iYadR, true, iPreserveLists, iPreserveMaps); }
 
 void ZYad_JSON::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR)
-	{ sToStrim_Yad(s, iYadR, 0, ZYadOptions(), false); }
+	{
+	sToStrim(s, iYadR, 0, ZYadOptions());
+	}
 
 void ZYad_JSON::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
-	{ sToStrim_Yad(s, iYadR, iInitialIndent, iOptions, false); }
-
+	{
+	ZYadVisitor_JSONWriter theWriter(s, iInitialIndent, iOptions);
+	iYadR->Accept(theWriter);
+	}
 
 NAMESPACE_ZOOLIB_END

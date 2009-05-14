@@ -23,7 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFile.h"
 #include "zoolib/ZStreamRWPos_RAM.h"
 #include "zoolib/ZStream_Buffered.h"
-#include "zoolib/ZStream_HexStrim.h"
+#include "zoolib/ZStreamR_HexStrim.h"
+#include "zoolib/ZStreamW_HexStrim.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZStrim_CRLF.h"
 #include "zoolib/ZStrim_Escaped.h"
@@ -163,7 +164,7 @@ Parser::Parser(ZASParser::ParseHandler& iParseHandler,
 			const ZASParser::StreamProvider& iStreamProvider,
 			const ZASParser::ErrorHandler& iErrorHandler,
 			ZASParser::IncludeHandler* iIncludeHandler)
-:	fStrimU(nil),
+:	fStrimU(nullptr),
 	fCumulativeLineCount(0),
 	fInBlock(false),
 	fParseHandler(iParseHandler),
@@ -488,7 +489,7 @@ void Parser::ParseCharSet()
 		throw ParseException("Expected a quoted string for charset");
 
 	ZTextDecoder* theTextDecoder = ZUtil_TextCoder::sCreateDecoder(charSetName);
-	if (theTextDecoder == nil)
+	if (theTextDecoder == nullptr)
 		throw ParseException("Unsupported charset \"" + charSetName + "\"");
 
 	DecoderSetter theSetter(*fStrimU, theTextDecoder);
@@ -640,7 +641,7 @@ void ZASParser::ParseHandler::ParsedStringTable(const vector<string>& iValues)
 void ZASParser::ParseHandler::ParsedBinary(const ZStreamR& iStream)
 	{
 	// Just suck up and ignore the data
-	iStream.SkipAll(nil);
+	iStream.SkipAll(nullptr);
 	}
 
 void ZASParser::ParseHandler::ParsedUnion(const vector<string>& iNames)
@@ -819,7 +820,7 @@ void ZASParser::ParseHandler_Prettify::ParsedBinary(const ZStreamR& iStream)
 			{
 			// We've got 16 or fewer bytes, emit them on the same line.
 			fStrimW.Write("binary { ");	
-			ZStreamW_HexStrim(" ", "", 16, fStrimW).CopyAllFrom(theStream, nil, nil);	
+			ZStreamW_HexStrim(" ", "", 16, fStrimW).CopyAllFrom(theStream, nullptr, nullptr);	
 			fStrimW.Write(" }\n");
 			}
 		else
@@ -832,7 +833,7 @@ void ZASParser::ParseHandler_Prettify::ParsedBinary(const ZStreamR& iStream)
 	
 			uint64 size;
 			string chunkSeparator = "\n" + string(fIndent + 1, '\t');
-			ZStreamW_HexStrim(" ", chunkSeparator, 16, fStrimW).CopyAllFrom(theStream, &size, nil);	
+			ZStreamW_HexStrim(" ", chunkSeparator, 16, fStrimW).CopyAllFrom(theStream, &size, nullptr);	
 	
 			fStrimW.Write("\n");
 			sWriteIndent(fStrimW, fIndent + 1);

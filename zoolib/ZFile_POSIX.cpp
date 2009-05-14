@@ -584,7 +584,7 @@ RealRep_POSIX::RealRep_POSIX(ZRef<ZFileLoc_POSIX> iFileLoc)
 	if (fFileLoc)
 		fDIR = ::opendir(fFileLoc->pGetPath().c_str());
 	else
-		fDIR = nil;
+		fDIR = nullptr;
 	}
 
 RealRep_POSIX::~RealRep_POSIX()
@@ -609,10 +609,10 @@ bool RealRep_POSIX::HasValue(size_t iIndex)
 			dirent* theDirEnt = ::readdir(fDIR);
 		#endif
 
-		if (theDirEnt == nil)
+		if (theDirEnt == nullptr)
 			{
 			::closedir(fDIR);
-			fDIR = nil;
+			fDIR = nullptr;
 			}
 		else
 			{
@@ -704,7 +704,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 		uint32_t theSize = 0;
 	#endif
 
-	::_NSGetExecutablePath(nil, &theSize);
+	::_NSGetExecutablePath(nullptr, &theSize);
 
 	vector<char> buffer(theSize);
 	if (0 == ::_NSGetExecutablePath(&buffer[0], &theSize))

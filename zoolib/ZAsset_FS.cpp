@@ -97,14 +97,14 @@ ZRef<ZAssetIterRep> ZAssetIterRep_FS::Clone()
 
 ZAssetRep_FS::ZAssetRep_FS(const ZFileSpec& iSpec)
 :	fSpec(iSpec),
-	fData(nil),
+	fData(nullptr),
 	fDataSize(0)
 	{}
 
 ZAssetRep_FS::ZAssetRep_FS(const ZFileSpec& iSpec, const vector<string>& iComps)
 :	fSpec(iSpec),
 	fComps(iComps),
-	fData(nil),
+	fData(nullptr),
 	fDataSize(0)
 	{}
 
@@ -112,7 +112,7 @@ ZAssetRep_FS::ZAssetRep_FS(const ZFileSpec& iSpec,
 	const vector<string>::iterator& iBegin, const vector<string>::iterator& iEnd)
 :	fSpec(iSpec),
 	fComps(iBegin, iEnd),
-	fData(nil),
+	fData(nullptr),
 	fDataSize(0)
 	{}
 
@@ -151,7 +151,7 @@ ZRef<ZAssetRep> ZAssetRep_FS::ResolvePath(const char* iPath)
 	{
 	const char* pathStart = iPath;
 
-	if (pathStart == nil || pathStart[0] == 0)
+	if (pathStart == nullptr || pathStart[0] == 0)
 		{
 		// An empty path means us.
 		return this;

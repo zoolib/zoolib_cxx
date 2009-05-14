@@ -53,7 +53,7 @@ public:
 	typedef ZTSS::Key TLSKey_t;
 	typedef ZTSS::Value TLSData_t;
 
-	ZThread(const char* iName = nil);
+	ZThread(const char* iName = nullptr);
 
 	void Start();
 	virtual void Run() = 0;
@@ -108,7 +108,7 @@ public:
 class ZMutex : public ZMutexBase
 	{
 public:
-	ZMutex(const char* iName = nil, bool iCreateAcquired = false);
+	ZMutex(const char* iName = nullptr, bool iCreateAcquired = false);
 	~ZMutex();
 
 // From ZMutexBase
@@ -135,7 +135,7 @@ private:
 class ZCondition : ZCnd
 	{
 public:
-	ZCondition(const char* iName = nil) {}
+	ZCondition(const char* iName = nullptr) {}
 	~ZCondition() {}
 
 	void Wait(ZMutex& iMutex)

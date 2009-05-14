@@ -254,7 +254,7 @@ bool ZHTTP::sReadRequest(const ZStreamR& iStreamR, string* oMethod, string* oURL
 	if (oError)
 		oError->resize(0);
 
-	if (!sReadToken(theStreamU, nil, oMethod))
+	if (!sReadToken(theStreamU, nullptr, oMethod))
 		{
 		if (oError)
 			*oError = "Failed to read method";
@@ -334,7 +334,7 @@ bool ZHTTP::sReadHeaderNoParsing(const ZStreamR& iStream, ZTuple* oFields)
 bool ZHTTP::sReadHeaderLineNoParsing(const ZStreamU& iStream, ZTuple* ioFields)
 	{
 	string fieldNameExact;
-	if (!ZHTTP::sReadFieldName(iStream, nil, &fieldNameExact))
+	if (!ZHTTP::sReadFieldName(iStream, nullptr, &fieldNameExact))
 		return false;
 
 	if (!fieldNameExact.size())
@@ -368,7 +368,7 @@ bool ZHTTP::sReadHeader(const ZStreamR& iStream, ZTuple* oFields)
 bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 	{
 	string fieldName;
-	if (!ZHTTP::sReadFieldName(iStream, &fieldName, nil))
+	if (!ZHTTP::sReadFieldName(iStream, &fieldName, nullptr))
 		return false;
 
 	if (fieldName.empty())
@@ -386,7 +386,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 			sSkipLWS(iStream);
 
 			string charset;
-			if (!sReadToken(iStream, &charset, nil))
+			if (!sReadToken(iStream, &charset, nullptr))
 				break;
 
 			if (ioFields)
@@ -405,7 +405,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 			sSkipLWS(iStream);
 
 			string encoding;
-			if (!sReadToken(iStream, &encoding, nil))
+			if (!sReadToken(iStream, &encoding, nullptr))
 				break;
 
 			if (ioFields)
@@ -436,7 +436,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 		for (;;)
 			{
 			string cookieName, cookieValue;
-			if (!sReadParameter_Cookie(iStream, nil, &cookieValue, &cookieName))
+			if (!sReadParameter_Cookie(iStream, nullptr, &cookieValue, &cookieName))
 				break;
 
 			if (ioFields)
@@ -469,7 +469,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 		{
 		sSkipLWS(iStream);
 		string body;
-		if (sReadToken(iStream, &body, nil))
+		if (sReadToken(iStream, &body, nullptr))
 			{
 			if (ioFields)
 				ioFields->SetString("connection", body);
@@ -487,7 +487,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 			sSkipLWS(iStream);
 
 			string encoding;
-			if (!sReadToken(iStream, &encoding, nil))
+			if (!sReadToken(iStream, &encoding, nullptr))
 				break;
 
 			if (ioFields)
@@ -506,7 +506,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 			sSkipLWS(iStream);
 
 			string language;
-			if (!sReadToken(iStream, &language, nil))
+			if (!sReadToken(iStream, &language, nullptr))
 				break;
 
 			if (ioFields)
@@ -810,7 +810,7 @@ bool ZHTTP::sRead_accept(const ZStreamU& iStream, ZTuple* ioFields)
 		{
 		ZTuple parameters;
 		string type, subtype;
-		if (!sReadMediaType(iStream, &type, &subtype, &parameters, nil, nil))
+		if (!sReadMediaType(iStream, &type, &subtype, &parameters, nullptr, nullptr))
 			break;
 		ZTuple temp;
 		temp.SetString("type", type);
@@ -853,7 +853,7 @@ bool ZHTTP::sRead_accept_language(const ZStreamU& iStream, ZTuple* ioFields)
 				break;
 	
 			string name, value;
-			if (!sReadParameter(iStream, &name, &value, nil))
+			if (!sReadParameter(iStream, &name, &value, nullptr))
 				break;
 			parameters.SetString(ZTName(name), value); 
 			}
@@ -971,7 +971,7 @@ bool ZHTTP::sRead_transfer_encoding(const ZStreamU& iStream, string& oEncoding)
 	{
 	sSkipLWS(iStream);
 
-	if (!sReadToken(iStream, &oEncoding, nil))
+	if (!sReadToken(iStream, &oEncoding, nullptr))
 		return false;
 
 	return true;
@@ -997,7 +997,7 @@ bool ZHTTP::sRead_content_disposition(const ZStreamU& iStream, ZTuple& oTuple)
 	sSkipLWS(iStream);
 
 	string disposition;
-	if (sReadToken(iStream, &disposition, nil))
+	if (sReadToken(iStream, &disposition, nullptr))
 		{
 		ZTuple dispositionTuple;
 		oTuple.SetString("value", disposition);
@@ -1011,7 +1011,7 @@ bool ZHTTP::sRead_content_disposition(const ZStreamU& iStream, ZTuple& oTuple)
 				break;
 	
 			string name, value;
-			if (!sReadParameter(iStream, &name, &value, nil))
+			if (!sReadParameter(iStream, &name, &value, nullptr))
 				break;
 			parameters.SetString(ZTName(name), value);
 			}
@@ -1125,7 +1125,7 @@ bool ZHTTP::sRead_content_type(const ZStreamU& iStream, ZTuple* ioFields)
 bool ZHTTP::sRead_content_type(const ZStreamU& iStream,
 	string& oType, string& oSubType, ZTuple& oParameters)
 	{
-	if (!sReadMediaType(iStream, &oType, &oSubType, &oParameters, nil, nil))
+	if (!sReadMediaType(iStream, &oType, &oSubType, &oParameters, nullptr, nullptr))
 		return false;
 	return true;
 	}
@@ -1213,9 +1213,9 @@ bool ZHTTP::sReadParameter(const ZStreamU& iStream,
 
 	sSkipLWS(iStream);
 
-	if (sReadToken(iStream, nil, oValue))
+	if (sReadToken(iStream, nullptr, oValue))
 		return true;
-	else if (sReadQuotedString(iStream, nil, oValue))
+	else if (sReadQuotedString(iStream, nullptr, oValue))
 		return true;
 
 	return false;
@@ -1243,9 +1243,9 @@ bool ZHTTP::sReadParameter_Cookie(const ZStreamU& iStream,
 
 	sSkipLWS(iStream);
 
-	if (sReadToken_Cookie(iStream, nil, oValue))
+	if (sReadToken_Cookie(iStream, nullptr, oValue))
 		return true;
-	else if (sReadQuotedString(iStream, nil, oValue))
+	else if (sReadQuotedString(iStream, nullptr, oValue))
 		return true;
 
 	return false;
@@ -1289,7 +1289,7 @@ bool ZHTTP::sReadMediaType(const ZStreamU& iStream,
 			break;
 
 		string name, value;
-		if (!sReadParameter(iStream, &name, &value, nil))
+		if (!sReadParameter(iStream, &name, &value, nullptr))
 			break;
 		if (oParameters)
 			oParameters->SetString(ZTName(name), value);

@@ -108,8 +108,8 @@ private:
 ZASCompiler::Node::Node(NameEntry* inNameEntry)
 	{
 	fNameEntry = inNameEntry;
-	fChild = nil;
-	fSibling = nil;
+	fChild = nullptr;
+	fSibling = nullptr;
 	fDataOffset = 0;
 	fDataSize = 0;
 	}
@@ -135,7 +135,7 @@ void ZASCompiler::Node::FindOrAllocate(
 		return;
 		}
 
-	Node* priorNode = nil;
+	Node* priorNode = nullptr;
 	Node* currentNode = fChild;
 	while (currentNode)
 		{
@@ -172,7 +172,7 @@ void ZASCompiler::Node::FindOrAllocate(
 		return;
 		}
 
-	Node* priorNode = nil;
+	Node* priorNode = nullptr;
 	Node* currentNode = fChild;
 	while (currentNode)
 		{
@@ -266,7 +266,7 @@ void ZASCompiler::Node::WriteTo(const ZStreamW& inStream)
 ZASCompiler::ZASCompiler(const ZStreamW& inStream)
 :	fStreamW(inStream)
 	{
-	fRoot = nil;
+	fRoot = nullptr;
 	}
 
 ZASCompiler::~ZASCompiler()
@@ -278,8 +278,8 @@ ZASCompiler::~ZASCompiler()
 
 void ZASCompiler::StartParse()
 	{
-	ZAssert(fRoot == nil);
-	fRoot = new Node(nil);
+	ZAssert(fRoot == nullptr);
+	fRoot = new Node(nullptr);
 	}
 
 static const char sMagicText[] = "ZAO v1.0";
@@ -338,7 +338,7 @@ void ZASCompiler::EndParse()
 	fStreamW.Write(sMagicText, sMagicTextSize);
 
 	delete fRoot;
-	fRoot = nil;
+	fRoot = nullptr;
 	for (vector<NameEntry*>::iterator i = fNameEntries.begin(); i != fNameEntries.end(); ++i)
 		delete *i;
 	fNameEntries.clear();

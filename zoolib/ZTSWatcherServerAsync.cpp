@@ -52,7 +52,7 @@ ZTSWatcherServerAsync::ZTSWatcherServerAsync(ZRef<ZTSWatcher> iTSWatcher)
 
 ZTSWatcherServerAsync::~ZTSWatcherServerAsync()
 	{
-	fTSWatcher->SetCallback(nil, nil);
+	fTSWatcher->SetCallback(nullptr, nullptr);
 	}
 
 static void sSort(vector<uint64>& ioWrittenTupleIDs, vector<ZTuple>& ioWrittenTuples)

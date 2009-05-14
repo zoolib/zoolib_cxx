@@ -433,7 +433,7 @@ void ZTupleQuisitioner::Query_Unordered(const ZRef<ZTBQueryNode>& iNode, const Z
 	else if (ZTBQueryNode_ID_FromSource* theNode_ID_FromSource = ZRefDynamicCast<ZTBQueryNode_ID_FromSource>(iNode))
 		{
 		set<uint64> sourceIDSet;
-		this->Query_Unordered(theNode_ID_FromSource->GetSourceNode(), nil, sourceIDSet);
+		this->Query_Unordered(theNode_ID_FromSource->GetSourceNode(), nullptr, sourceIDSet);
 
 		if (iFilter)
 			{
@@ -461,7 +461,7 @@ void ZTupleQuisitioner::Query_Unordered(const ZRef<ZTBQueryNode>& iNode, const Z
 	else if (ZTBQueryNode_Property* theNode_Property = ZRefDynamicCast<ZTBQueryNode_Property>(iNode))
 		{
 		set<uint64> sourceIDSet;
-		this->Query_Unordered(theNode_Property->GetSourceNode(), nil, sourceIDSet);
+		this->Query_Unordered(theNode_Property->GetSourceNode(), nullptr, sourceIDSet);
 
 		for (set<uint64>::iterator i = sourceIDSet.begin(); i != sourceIDSet.end(); ++i)
 			{
@@ -536,7 +536,7 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iF
 	else if (ZTBQueryNode_ID_FromSource* theNode_ID_FromSource = ZRefDynamicCast<ZTBQueryNode_ID_FromSource>(iNode))
 		{
 		vector<uint64> sourceIDs;
-		this->Query(theNode_ID_FromSource->GetSourceNode(), nil, sourceIDs);
+		this->Query(theNode_ID_FromSource->GetSourceNode(), nullptr, sourceIDs);
 		vector<ZTuple> sourceTuples(sourceIDs.size(), ZTuple());
 		this->FetchTuples(sourceIDs.size(), &sourceIDs[0], &sourceTuples[0]);
 
@@ -565,7 +565,7 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iF
 	else if (ZTBQueryNode_Property* theNode_Property = ZRefDynamicCast<ZTBQueryNode_Property>(iNode))
 		{
 		vector<uint64> sourceIDs;
-		this->Query(theNode_Property->GetSourceNode(), nil, sourceIDs);
+		this->Query(theNode_Property->GetSourceNode(), nullptr, sourceIDs);
 		//##
 		// At this point we can probably walk sourceIDs and remove duplicates.
 
@@ -685,7 +685,7 @@ void ZTupleQuisitioner::Query_Combo_First(const ZTName& iFirst, const vector<ZTB
 	vector<uint64> results;
 	if (iIntersections.size() == 1)
 		{
-		this->Query_Intersection(iIntersections.front(), nil, results);
+		this->Query_Intersection(iIntersections.front(), nullptr, results);
 		}
 	else
 		{
@@ -695,7 +695,7 @@ void ZTupleQuisitioner::Query_Combo_First(const ZTName& iFirst, const vector<ZTB
 			iterSect = iIntersections.begin(), theEnd = iIntersections.end();
 			iterSect != theEnd; ++iterSect)
 			{
-			this->Query_Intersection_Unordered(*iterSect, nil, curResults);
+			this->Query_Intersection_Unordered(*iterSect, nullptr, curResults);
 			}
 		results.insert(results.end(), curResults.begin(), curResults.end());
 		}

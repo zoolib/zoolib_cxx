@@ -447,7 +447,7 @@ ZRef<ZNodeRep> ZNode::pPhysicalNodeRep() const
 	if (!fNodeRep || fComps.empty())
 		return fNodeRep;
 
-	return fNodeRep->GetDescendant(&fComps[0], fComps.size(), nil);
+	return fNodeRep->GetDescendant(&fComps[0], fComps.size(), nullptr);
 	}
 
 // =================================================================================================

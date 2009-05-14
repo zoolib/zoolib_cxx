@@ -643,7 +643,7 @@ void ZBigRegion::sIntersection(const ZBigRegion& iSource1, const ZBigRegion& iSo
 		}
 
 	sInternal_RegionOp(oDestination, iSource1, iSource2,
-		sInternal_IntersectionOverlapping, nil, nil);
+		sInternal_IntersectionOverlapping, nullptr, nullptr);
 
 	// Can't alter oDestination's extents before we call sInternal_RegionOp because
 	// it might be one of the source regions and sInternal_RegionOp depends
@@ -721,7 +721,7 @@ void ZBigRegion::sDifference(const ZBigRegion& iSource1, const ZBigRegion& iSour
 		}
 
 	sInternal_RegionOp(oDestination, iSource1, iSource2,
-		sInternal_DifferenceOverlapping, sInternal_DifferenceNonOverlapping, nil);
+		sInternal_DifferenceOverlapping, sInternal_DifferenceNonOverlapping, nullptr);
 
 	// Can't alter destination's extents before we call sInternal_RegionOp because
 	// it might be one of the source regions and sInternal_RegionOp depends

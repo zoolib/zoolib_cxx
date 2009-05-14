@@ -117,10 +117,10 @@ protected:
 ZDCCanvas_QD::SetupPort::SetupPort(ZDCCanvas_QD* inCanvas, ZDCState& ioState)
 	{
 	fCanvas = inCanvas;
-	ZAssertStop(kDebug_QD, fCanvas->fMutexToCheck == nil || fCanvas->fMutexToCheck->IsLocked());
+	ZAssertStop(kDebug_QD, fCanvas->fMutexToCheck == nullptr || fCanvas->fMutexToCheck->IsLocked());
 	fCanvas->fMutexToLock->Acquire();
 
-	::SetGWorld(fCanvas->fGrafPtr, nil);
+	::SetGWorld(fCanvas->fGrafPtr, nullptr);
 	if (ioState.fChangeCount_Origin != inCanvas->fChangeCount_Origin ||
 		ioState.fChangeCount_PatternOrigin != inCanvas->fChangeCount_PatternOrigin ||
 		ioState.fChangeCount_Clip != inCanvas->fChangeCount_Clip)
@@ -189,7 +189,7 @@ ZDCCanvas_QD_Native::ZDCCanvas_QD_Native(CGrafPtr inGrafPtr)
 
 ZDCCanvas_QD_Native::~ZDCCanvas_QD_Native()
 	{
-	fGrafPtr = nil;
+	fGrafPtr = nullptr;
 	}
 
 // =================================================================================================
@@ -216,12 +216,12 @@ ZRef<ZDCCanvas_QD> ZDCCanvas_QD::sFindCanvasOrCreateNative(CGrafPtr inGrafPtr)
 
 void ZDCCanvas_QD::Internal_Link(CGrafPtr inGrafPtr)
 	{
-	ZAssertStop(kDebug_QD, fGrafPtr == nil);
+	ZAssertStop(kDebug_QD, fGrafPtr == nullptr);
 	ZMutexLocker locker(sMutex_List);
 
 	fGrafPtr = inGrafPtr;
 
-	fCanvas_Prev = nil;
+	fCanvas_Prev = nullptr;
 	if (sCanvas_Head)
 		sCanvas_Head->fCanvas_Prev = this;
 	fCanvas_Next = sCanvas_Head;
@@ -237,16 +237,16 @@ void ZDCCanvas_QD::Internal_Unlink()
 		fCanvas_Next->fCanvas_Prev = fCanvas_Prev;
 	if (sCanvas_Head == this)
 		sCanvas_Head = fCanvas_Next;
-	fCanvas_Prev = nil;
-	fCanvas_Next = nil;
+	fCanvas_Prev = nullptr;
+	fCanvas_Next = nullptr;
 	}
 
 // =================================================================================================
 
 ZDCCanvas_QD::ZDCCanvas_QD()
 	{
-	fCanvas_Prev = nil;
-	fCanvas_Next = nil;
+	fCanvas_Prev = nullptr;
+	fCanvas_Next = nullptr;
 
 	fChangeCount_Origin = 1;
 	fChangeCount_PatternOrigin = 1;
@@ -256,22 +256,22 @@ ZDCCanvas_QD::ZDCCanvas_QD()
 	fChangeCount_Clip = 1;
 	fChangeCount_Font = 1;
 
-	fGrafPtr = nil;
+	fGrafPtr = nullptr;
 
-	fMutexToLock = nil;
-	fMutexToCheck = nil;
+	fMutexToLock = nullptr;
+	fMutexToCheck = nullptr;
 
-	fPixPatHandle = nil;
+	fPixPatHandle = nullptr;
 	}
 
 ZDCCanvas_QD::~ZDCCanvas_QD()
 	{
 // Subclasses must unlink themselves and detach/destroy grafports before this destructor is called.
-	ZAssertStop(kDebug_QD, fCanvas_Prev == nil);
-	ZAssertStop(kDebug_QD, fCanvas_Next == nil);
-	ZAssertStop(kDebug_QD, fGrafPtr == nil);
-	ZAssertStop(kDebug_QD, fMutexToLock == nil);
-	ZAssertStop(kDebug_QD, fMutexToCheck == nil);
+	ZAssertStop(kDebug_QD, fCanvas_Prev == nullptr);
+	ZAssertStop(kDebug_QD, fCanvas_Next == nullptr);
+	ZAssertStop(kDebug_QD, fGrafPtr == nullptr);
+	ZAssertStop(kDebug_QD, fMutexToLock == nullptr);
+	ZAssertStop(kDebug_QD, fMutexToCheck == nullptr);
 	if (fPixPatHandle)
 		::DisposePixPat(fPixPatHandle);
 	}
@@ -825,7 +825,7 @@ static void sDrawPixmap(CGrafPtr iGrafPtr, const ZPoint& iLocation, const ZDCPix
 			Rect qdMaskBounds = maskRep->GetBounds();
 
 			::CopyDeepMask((BitMap*)&sourcePixMap, (BitMap*)&maskPixMap, sGetPortBitMapForCopyBits(iGrafPtr),
-				&qdSourceRect, &qdMaskBounds, &qdDestRect, srcCopy, nil);
+				&qdSourceRect, &qdMaskBounds, &qdDestRect, srcCopy, nullptr);
 
 			doneIt = true;
 			}
@@ -842,7 +842,7 @@ static void sDrawPixmap(CGrafPtr iGrafPtr, const ZPoint& iLocation, const ZDCPix
 		Rect qdSourceRect = localSourceBounds;
 		Rect qdDestRect = localSourceBounds - localSourceBounds.TopLeft() + iLocation;
 
-		::CopyBits((BitMap*)&sourcePixMap, sGetPortBitMapForCopyBits(iGrafPtr), &qdSourceRect, &qdDestRect, srcCopy, nil);
+		::CopyBits((BitMap*)&sourcePixMap, sGetPortBitMapForCopyBits(iGrafPtr), &qdSourceRect, &qdDestRect, srcCopy, nullptr);
 		}
 	}
 
@@ -931,7 +931,7 @@ void ZDCCanvas_QD::FloodFill(ZDCState& ioState, const ZPoint& inSeedLocation)
 	tempBitmap.baseAddr = &tempMaskVector[0];
 
 	Rect qdRect = theBounds;
-	::SeedCFill(sGetPortBitMapForCopyBits(fGrafPtr), &tempBitmap, &qdRect, &qdRect, realSeedLocation.h, realSeedLocation.v, nil, 0);
+	::SeedCFill(sGetPortBitMapForCopyBits(fGrafPtr), &tempBitmap, &qdRect, &qdRect, realSeedLocation.h, realSeedLocation.v, nullptr, 0);
 	ZDCRgn theFillRgn;
 	::BitMapToRegion(theFillRgn.GetRgnHandle(), &tempBitmap);
 	theFillRgn -= (ioState.fOrigin + ioState.fPatternOrigin);
@@ -1098,7 +1098,7 @@ void ZDCCanvas_QD::BreakLine(ZDCState& ioState, const char* iLineStart, size_t i
 				UniCharArrayOffset theEnd;
 				::ATSUBreakLine(theLayout, kATSUFromTextBeginning, FixRatio(iTargetWidth, 1), false, &theEnd);
 				size_t cp16 = ZUnicode::sCUToCP(theTextAsUTF16.begin(), theEnd);
-				oNextLineDelta = ZUnicode::sCPToCU(iLineStart, iRemainingTextLength, cp16, nil);
+				oNextLineDelta = ZUnicode::sCPToCU(iLineStart, iRemainingTextLength, cp16, nullptr);
 				::ATSUDisposeTextLayout(theLayout);
 				}
 			::ATSUDisposeStyle(theStyle);
@@ -1163,11 +1163,11 @@ void ZDCCanvas_QD::Sync()
 	if (!fGrafPtr)
 		return;
 
-	ZAssertStop(kDebug_QD, fMutexToCheck == nil || fMutexToCheck->IsLocked());
+	ZAssertStop(kDebug_QD, fMutexToCheck == nullptr || fMutexToCheck->IsLocked());
 	ZMutexLocker locker(*fMutexToLock);
 
 	#if TARGET_API_MAC_CARBON
-		::QDFlushPortBuffer(fGrafPtr, nil);
+		::QDFlushPortBuffer(fGrafPtr, nullptr);
 	#endif
 	}
 
@@ -1176,17 +1176,17 @@ void ZDCCanvas_QD::Flush()
 	if (!fGrafPtr)
 		return;
 
-	ZAssertStop(kDebug_QD, fMutexToCheck == nil || fMutexToCheck->IsLocked());
+	ZAssertStop(kDebug_QD, fMutexToCheck == nullptr || fMutexToCheck->IsLocked());
 	ZMutexLocker locker(*fMutexToLock);
 
 	#if TARGET_API_MAC_CARBON
-		::QDFlushPortBuffer(fGrafPtr, nil);
+		::QDFlushPortBuffer(fGrafPtr, nullptr);
 	#endif
 	}
 
 static short sGetDepth(CGrafPtr inGrafPtr)
 	{
-	::SetGWorld(inGrafPtr, nil);
+	::SetGWorld(inGrafPtr, nullptr);
 	CGrafPtr ourGrafPtr;
 	GDHandle ourGDHandle;
 	::GetGWorld(&ourGrafPtr, &ourGDHandle);
@@ -1220,7 +1220,7 @@ ZRef<ZDCCanvas> ZDCCanvas_QD::CreateOffScreen(const ZRect& inCanvasRect)
 
 ZRef<ZDCCanvas> ZDCCanvas_QD::CreateOffScreen(ZPoint inDimensions, ZDCPixmapNS::EFormatEfficient iFormat)
 	{
-	ZAssertStop(kDebug_QD, fMutexToCheck == nil || fMutexToCheck->IsLocked());
+	ZAssertStop(kDebug_QD, fMutexToCheck == nullptr || fMutexToCheck->IsLocked());
 	ZMutexLocker locker(*fMutexToLock);
 
 	return new ZDCCanvas_QD_OffScreen(inDimensions, iFormat);
@@ -1231,13 +1231,13 @@ ZRef<ZDCCanvas> ZDCCanvas_QD::CreateOffScreen(ZPoint inDimensions, ZDCPixmapNS::
 
 ZPoint ZDCCanvas_QD::Internal_QDStart(ZDCState& ioState, bool inUsingPatterns)
 	{
-	ZAssertStop(kDebug_QD, fMutexToCheck == nil || fMutexToCheck->IsLocked());
+	ZAssertStop(kDebug_QD, fMutexToCheck == nullptr || fMutexToCheck->IsLocked());
 	ZAssertLocked(kDebug_QD, *fMutexToLock);
 
 	// Make sure we get our location and clip setup correctly, as we're using the QD stuff
 	++fChangeCount_Origin;
 	++fChangeCount_Clip;
-	::SetGWorld(fGrafPtr, nil);
+	::SetGWorld(fGrafPtr, nullptr);
 	this->Internal_SetupPortReal(ioState, inUsingPatterns);
 	this->Internal_SetupInk(ioState);
 	this->Internal_SetupText(ioState);
@@ -1248,7 +1248,7 @@ ZPoint ZDCCanvas_QD::Internal_QDStart(ZDCState& ioState, bool inUsingPatterns)
 
 void ZDCCanvas_QD::Internal_QDEnd()
 	{
-	ZAssertStop(kDebug_QD, fMutexToCheck == nil || fMutexToCheck->IsLocked());
+	ZAssertStop(kDebug_QD, fMutexToCheck == nullptr || fMutexToCheck->IsLocked());
 	ZAssertLocked(kDebug_QD, *fMutexToLock);
 	this->InvalCache();
 	}
@@ -1301,7 +1301,7 @@ void ZDCCanvas_QD::Internal_SetupInk(ZDCState& ioState)
 		ioState.fChangeCount_Ink = ++fChangeCount_Ink;
 
 		PixPatHandle oldPixPatHandle = fPixPatHandle;
-		fPixPatHandle = nil;
+		fPixPatHandle = nullptr;
 
 		ZRef<ZDCInk::Rep> theInkRep = ioState.fInk.GetRep();
 		if (!theInkRep)
@@ -1319,7 +1319,7 @@ void ZDCCanvas_QD::Internal_SetupInk(ZDCState& ioState)
 			CGrafPtr ourPort;
 			GDHandle ourGDevice;
 			::GetGWorld(&ourPort, &ourGDevice);
-			if (ourGDevice == nil || GETPIXMAPPIXELFORMAT(ourGDevice[0]->gdPMap[0]) < 4)
+			if (ourGDevice == nullptr || GETPIXMAPPIXELFORMAT(ourGDevice[0]->gdPMap[0]) < 4)
 				{
 				if (theInkRep->fAsSolidColor.fColor.Luminance() < (0xFFFFL/2))
 					{
@@ -1430,8 +1430,8 @@ static DEFINE_API(void) sTileRegion(short inDepth, short inDeviceFlags, GDHandle
 
 	// sourceBitMap will hold a pointer to either the actual PixMap,
 	// or to a temporary GWorld.
-	const BitMap* sourceBitMap = nil;
-	GWorldPtr theGWorldPtr = nil;
+	const BitMap* sourceBitMap = nullptr;
+	GWorldPtr theGWorldPtr = nullptr;
 
 	if (drawnBounds.Width() > pixmapSize.h || drawnBounds.Height() > pixmapSize.v)
 		{
@@ -1452,24 +1452,24 @@ static DEFINE_API(void) sTileRegion(short inDepth, short inDeviceFlags, GDHandle
 			tempRect.right = tempRect.left + pixmapSize.h;
 			tempRect.bottom = tempRect.top + pixmapSize.v;
 
-			QDErr theQDErr = ::NewGWorld(&theGWorldPtr, 0, &tempRect, nil, nil, 0);
-			if (theQDErr != noErr || theGWorldPtr == nil)
-				theQDErr= ::NewGWorld(&theGWorldPtr, 0, &tempRect, nil, nil, useTempMem);
-			if (theQDErr == noErr && theGWorldPtr != nil)
+			QDErr theQDErr = ::NewGWorld(&theGWorldPtr, 0, &tempRect, nullptr, nullptr, 0);
+			if (theQDErr != noErr || theGWorldPtr == nullptr)
+				theQDErr= ::NewGWorld(&theGWorldPtr, 0, &tempRect, nullptr, nullptr, useTempMem);
+			if (theQDErr == noErr && theGWorldPtr != nullptr)
 				{
 				::LockPixels(::GetGWorldPixMap(theGWorldPtr));
-				SetGWorld(theGWorldPtr, nil);
+				SetGWorld(theGWorldPtr, nullptr);
 				sourceBitMap = sGetPortBitMapForCopyBits(theGWorldPtr);
 				tempRect.left = 0;
 				tempRect.top = 0;
 				tempRect.right = pixmapSize.h;
 				tempRect.bottom = pixmapSize.v;
-				::CopyBits((BitMap*)theData->fPixMap, sourceBitMap, &theData->fQDSourceRect, &tempRect, srcCopy, nil);
+				::CopyBits((BitMap*)theData->fPixMap, sourceBitMap, &theData->fQDSourceRect, &tempRect, srcCopy, nullptr);
 				}
 			}
 		}
 
-	if (sourceBitMap == nil)
+	if (sourceBitMap == nullptr)
 		{
 		// We didn't need to set up a temporary GWorld, so the
 		// source is the PixMap itself.
@@ -1508,7 +1508,7 @@ static DEFINE_API(void) sTileRegion(short inDepth, short inDeviceFlags, GDHandle
 					{
 					qdDestRect.left = x;
 					qdDestRect.right = x + pixmapSize.h;
-					::CopyBits(sourceBitMap, destBitMap, &theData->fQDSourceRect, &qdDestRect, srcCopy, nil);
+					::CopyBits(sourceBitMap, destBitMap, &theData->fQDSourceRect, &qdDestRect, srcCopy, nullptr);
 					}
 				}
 			else
@@ -1521,7 +1521,7 @@ static DEFINE_API(void) sTileRegion(short inDepth, short inDeviceFlags, GDHandle
 					if (!currentRect.IsEmpty())
 						{
 						::SetClip(currentRect.GetRgnHandle());
-						::CopyBits(sourceBitMap, destBitMap, &theData->fQDSourceRect, &qdDestRect, srcCopy, nil);
+						::CopyBits(sourceBitMap, destBitMap, &theData->fQDSourceRect, &qdDestRect, srcCopy, nullptr);
 						}
 					}
 				}
@@ -1540,7 +1540,7 @@ void ZDCCanvas_QD::Internal_TileRegion(ZDCState& ioState, const ZDCRgn& inRgn, Z
 
 	// Preflight -- switch to our grafPort, set fore and back colors to black and white.
 
-	::SetGWorld(fGrafPtr, nil);
+	::SetGWorld(fGrafPtr, nullptr);
 	ZUtil_Mac_LL::SaveSetBlackWhite theSSBW;
 
 	// Get the current QD origin
@@ -1585,8 +1585,8 @@ ZDCCanvas_QD_NonWindow::ZDCCanvas_QD_NonWindow()
 
 ZDCCanvas_QD_NonWindow::~ZDCCanvas_QD_NonWindow()
 	{
-	ZAssertStop(kDebug_QD, fGrafPtr == nil);
-	fMutexToLock = nil;
+	ZAssertStop(kDebug_QD, fGrafPtr == nullptr);
+	fMutexToLock = nullptr;
 	}
 
 void ZDCCanvas_QD_NonWindow::Finalize()
@@ -1614,7 +1614,7 @@ void ZDCCanvas_QD_NonWindow::Scroll(ZDCState& ioState, const ZRect& inRect, ZCoo
 	if (!fGrafPtr)
 		return;
 
-	ZAssertStop(kDebug_QD, fMutexToCheck == nil || fMutexToCheck->IsLocked());
+	ZAssertStop(kDebug_QD, fMutexToCheck == nullptr || fMutexToCheck->IsLocked());
 
 	ZMutexLocker locker(*fMutexToLock);
 
@@ -1651,7 +1651,7 @@ void ZDCCanvas_QD_NonWindow::Scroll(ZDCState& ioState, const ZRect& inRect, ZCoo
 	ZDCRgn drawnRgn = srcRgn + offset;
 
 	// Now do the jiggery-pokery to actually scroll:
-	::SetGWorld(fGrafPtr, nil);
+	::SetGWorld(fGrafPtr, nullptr);
 	ZUtil_Mac_LL::SaveSetBlackWhite theSSBW;
 
 	// And set the clip (drawnRgn)
@@ -1659,7 +1659,7 @@ void ZDCCanvas_QD_NonWindow::Scroll(ZDCState& ioState, const ZRect& inRect, ZCoo
 
 	Rect qdSourceRect = drawnRgn.Bounds() + currentQDOrigin - offset;
 	Rect qdDestRect = drawnRgn.Bounds() + currentQDOrigin;
-	::CopyBits(sGetPortBitMapForCopyBits(fGrafPtr), sGetPortBitMapForCopyBits(fGrafPtr), &qdSourceRect, &qdDestRect, srcCopy, nil);
+	::CopyBits(sGetPortBitMapForCopyBits(fGrafPtr), sGetPortBitMapForCopyBits(fGrafPtr), &qdSourceRect, &qdDestRect, srcCopy, nullptr);
 	}
 
 void ZDCCanvas_QD_NonWindow::CopyFrom(ZDCState& ioState, const ZPoint& inDestLocation, ZRef<ZDCCanvas> inSourceCanvas, const ZDCState& inSourceState, const ZRect& inSourceRect)
@@ -1668,16 +1668,16 @@ void ZDCCanvas_QD_NonWindow::CopyFrom(ZDCState& ioState, const ZPoint& inDestLoc
 	ZAssertStop(kDebug_QD, sourceCanvasQD);
 
 	CGrafPtr sourceGrafPtr = sourceCanvasQD->Internal_GetGrafPtr();
-	if (fGrafPtr == nil || sourceGrafPtr == nil)
+	if (fGrafPtr == nullptr || sourceGrafPtr == nullptr)
 		return;
 
-	ZAssertStop(kDebug_QD, fMutexToCheck == nil || fMutexToCheck->IsLocked());
+	ZAssertStop(kDebug_QD, fMutexToCheck == nullptr || fMutexToCheck->IsLocked());
 
 	ZMutexLocker locker(*fMutexToLock);
 
 	++fChangeCount_Clip;
 
-	::SetGWorld(fGrafPtr, nil);
+	::SetGWorld(fGrafPtr, nullptr);
 	ZUtil_Mac_LL::SaveSetBlackWhite theSSBW;
 
 	ZPoint currentDestQDOrigin = sGetPortOrigin(fGrafPtr);
@@ -1687,7 +1687,7 @@ void ZDCCanvas_QD_NonWindow::CopyFrom(ZDCState& ioState, const ZPoint& inDestLoc
 
 	Rect qdSourceRect = inSourceRect + (inSourceState.fOrigin + currentSourceQDOrigin);
 	Rect qdDestRect = inSourceRect + (inDestLocation - inSourceRect.TopLeft() + ioState.fOrigin + currentDestQDOrigin);
-	::CopyBits(sGetPortBitMapForCopyBits(sourceGrafPtr), sGetPortBitMapForCopyBits(fGrafPtr), &qdSourceRect, &qdDestRect, srcCopy, nil);
+	::CopyBits(sGetPortBitMapForCopyBits(sourceGrafPtr), sGetPortBitMapForCopyBits(fGrafPtr), &qdSourceRect, &qdDestRect, srcCopy, nullptr);
 	}
 
 ZDCRgn ZDCCanvas_QD_NonWindow::Internal_CalcClipRgn(const ZDCState& inState)
@@ -1701,14 +1701,14 @@ ZDCRgn ZDCCanvas_QD_NonWindow::Internal_CalcClipRgn(const ZDCState& inState)
 
 ZDCCanvas_QD_OffScreen::ZDCCanvas_QD_OffScreen(const ZRect& inGlobalRect)
 	{
-	fGWorldPtr = nil;
+	fGWorldPtr = nullptr;
 
 	Rect tempRect = inGlobalRect;
 
-	QDErr theQDErr = ::NewGWorld(&fGWorldPtr, 0, &tempRect, nil, nil, 0);
-	if (theQDErr != noErr || fGWorldPtr == nil)
-		theQDErr= ::NewGWorld(&fGWorldPtr, 0, &tempRect, nil, nil, useTempMem);
-	if (theQDErr != noErr || fGWorldPtr == nil)
+	QDErr theQDErr = ::NewGWorld(&fGWorldPtr, 0, &tempRect, nullptr, nullptr, 0);
+	if (theQDErr != noErr || fGWorldPtr == nullptr)
+		theQDErr= ::NewGWorld(&fGWorldPtr, 0, &tempRect, nullptr, nullptr, useTempMem);
+	if (theQDErr != noErr || fGWorldPtr == nullptr)
 		throw bad_alloc();
 	::LockPixels(::GetGWorldPixMap(fGWorldPtr));
 
@@ -1738,7 +1738,7 @@ ZDCCanvas_QD_OffScreen::ZDCCanvas_QD_OffScreen(ZPoint inDimensions, ZDCPixmapNS:
 	{
 	ZAssertStop(kDebug_QD, inDimensions.h > 0 && inDimensions.v > 0);
 
-	fGWorldPtr = nil;
+	fGWorldPtr = nullptr;
 	Rect bounds = ZRect(inDimensions);
 
 	QDErr theQDErr;
@@ -1746,30 +1746,30 @@ ZDCCanvas_QD_OffScreen::ZDCCanvas_QD_OffScreen(ZPoint inDimensions, ZDCPixmapNS:
 		{
 		case ZDCPixmapNS::eFormatEfficient_Gray_1:
 			{
-			theQDErr = ::NewGWorld(&fGWorldPtr, 1, &bounds, ::GetCTable(33), nil, 0);
+			theQDErr = ::NewGWorld(&fGWorldPtr, 1, &bounds, ::GetCTable(33), nullptr, 0);
 			break;
 			}
 		case ZDCPixmapNS::eFormatEfficient_Gray_8:
 			{
-			theQDErr = ::NewGWorld(&fGWorldPtr, 8, &bounds, ::GetCTable(40), nil, 0);
+			theQDErr = ::NewGWorld(&fGWorldPtr, 8, &bounds, ::GetCTable(40), nullptr, 0);
 			break;
 			}
 		case ZDCPixmapNS::eFormatEfficient_Color_16:
 			{
-			theQDErr = ::NewGWorld(&fGWorldPtr, 16, &bounds, nil, nil, 0);
+			theQDErr = ::NewGWorld(&fGWorldPtr, 16, &bounds, nullptr, nullptr, 0);
 			break;
 			}
 		case ZDCPixmapNS::eFormatEfficient_Color_24:
 			{
 			#if ZCONFIG_SPI_Enabled(Win)
 				// Mac doesn't support 24 bit, although QD does on Windows
-				theQDErr = ::NewGWorld(&fGWorldPtr, 24, &bounds, nil, nil, 0);
+				theQDErr = ::NewGWorld(&fGWorldPtr, 24, &bounds, nullptr, nullptr, 0);
 				break;
 			#endif
 			}
 		case ZDCPixmapNS::eFormatEfficient_Color_32:
 			{
-			theQDErr = ::NewGWorld(&fGWorldPtr, 32, &bounds, nil, nil, 0);
+			theQDErr = ::NewGWorld(&fGWorldPtr, 32, &bounds, nullptr, nullptr, 0);
 			break;
 			}
 		default:
@@ -1795,9 +1795,9 @@ ZDCCanvas_QD_OffScreen::~ZDCCanvas_QD_OffScreen()
 		if (fGWorldPtr == currentPort)
 			ZUtil_Mac_LL::sSetWindowManagerPort();
 		::DisposeGWorld(fGWorldPtr);
-		fGWorldPtr = nil;
+		fGWorldPtr = nullptr;
 		}
-	fGrafPtr = nil;
+	fGrafPtr = nullptr;
 	}
 
 ZRGBColor ZDCCanvas_QD_OffScreen::GetPixel(ZDCState& ioState, ZCoord inLocationH, ZCoord inLocationV)
@@ -1826,7 +1826,7 @@ ZRGBColor ZDCCanvas_QD_OffScreen::GetPixel(ZDCState& ioState, ZCoord inLocationH
 
 ZDCPixmap ZDCCanvas_QD_OffScreen::GetPixmap(ZDCState& ioState, const ZRect& inBounds)
 	{
-	if (fGrafPtr == nil || inBounds.IsEmpty())
+	if (fGrafPtr == nullptr || inBounds.IsEmpty())
 		return ZDCPixmap();
 
 	PixMapHandle thePixMapHandle = ::GetGWorldPixMap(fGWorldPtr);
@@ -1849,7 +1849,7 @@ ZDCCanvas_QD_Print::ZDCCanvas_QD_Print(GrafPtr inGrafPtr)
 
 ZDCCanvas_QD_Print::~ZDCCanvas_QD_Print()
 	{
-	fGrafPtr = nil;
+	fGrafPtr = nullptr;
 	}
 
 bool ZDCCanvas_QD_Print::IsPrinting()
@@ -1887,9 +1887,9 @@ protected:
 ZDCCanvas_QD_PICT::ZDCCanvas_QD_PICT(const ZRect& inBounds, const ZStreamW& inStream)
 :	fStream(inStream)
 	{
-	fCQDProcs_Old = nil;
-	fPicHandle = nil;
-	fGWorldPtr = nil;
+	fCQDProcs_Old = nullptr;
+	fPicHandle = nullptr;
+	fGWorldPtr = nullptr;
 	fStreamOkay = true;
 
 	// Write out the picture header
@@ -1907,10 +1907,10 @@ ZDCCanvas_QD_PICT::ZDCCanvas_QD_PICT(const ZRect& inBounds, const ZStreamW& inSt
 
 	// Set up the dummy GWorld
 	Rect bounds = { 0, 0, 4, 4 };
-	QDErr theQDErr= ::NewGWorld(&fGWorldPtr, 32, &bounds, nil, nil, 0);
-	if (theQDErr != noErr || fGWorldPtr == nil)
-		theQDErr= ::NewGWorld(&fGWorldPtr, 32, &bounds, nil, nil, useTempMem);
-	if (theQDErr != noErr || fGWorldPtr == nil)
+	QDErr theQDErr= ::NewGWorld(&fGWorldPtr, 32, &bounds, nullptr, nullptr, 0);
+	if (theQDErr != noErr || fGWorldPtr == nullptr)
+		theQDErr= ::NewGWorld(&fGWorldPtr, 32, &bounds, nullptr, nullptr, useTempMem);
+	if (theQDErr != noErr || fGWorldPtr == nullptr)
 		throw bad_alloc();
 
 	::LockPixels(::GetGWorldPixMap(fGWorldPtr));
@@ -1919,7 +1919,7 @@ ZDCCanvas_QD_PICT::ZDCCanvas_QD_PICT(const ZRect& inBounds, const ZStreamW& inSt
 
 	// Put ourselves on the list of PICT canvases
 	sMutex_List.Acquire();
-	fPrev = nil;
+	fPrev = nullptr;
 	fNext = sHead;
 	if (sHead)
 		sHead->fPrev = this;
@@ -1927,7 +1927,7 @@ ZDCCanvas_QD_PICT::ZDCCanvas_QD_PICT(const ZRect& inBounds, const ZStreamW& inSt
 	sMutex_List.Release();
 
 	// Attach our pic save proc
-	::SetGWorld(fGWorldPtr, nil);
+	::SetGWorld(fGWorldPtr, nullptr);
 	::SetStdCProcs(&fCQDProcs);
 	fCQDProcs.putPicProc = sPutPicProcUPP;
 
@@ -1957,7 +1957,7 @@ ZDCCanvas_QD_PICT::~ZDCCanvas_QD_PICT()
 	{
 	if (fGWorldPtr)
 		{
-		::SetGWorld(fGWorldPtr, nil);
+		::SetGWorld(fGWorldPtr, nullptr);
 		::ClosePicture();
 
 		#if ACCESSOR_CALLS_ARE_FUNCTIONS
@@ -1978,11 +1978,11 @@ ZDCCanvas_QD_PICT::~ZDCCanvas_QD_PICT()
 		sMutex_List.Release();
 
 		::DisposeGWorld(fGWorldPtr);
-		fGWorldPtr = nil;
+		fGWorldPtr = nullptr;
 
 		::DisposeHandle((Handle)fPicHandle);
 		}
-	fGrafPtr = nil;
+	fGrafPtr = nullptr;
 	}
 
 void ZDCCanvas_QD_PICT::PutPicProc(const void* dataPtr, short byteCount)
@@ -2021,12 +2021,12 @@ DEFINE_API(void) ZDCCanvas_QD_PICT::sPutPicProc(const void* dataPtr, short byteC
 	while (current && current->fGWorldPtr != currentPort)
 		current = current->fNext;
 	sMutex_List.Release();
-	ZAssertStop(0, current != nil);
+	ZAssertStop(0, current != nullptr);
 	current->PutPicProc(dataPtr, byteCount);
 	}
 
 QDPutPicUPP ZDCCanvas_QD_PICT::sPutPicProcUPP = NewQDPutPicUPP(sPutPicProc);
-ZDCCanvas_QD_PICT* ZDCCanvas_QD_PICT::sHead = nil;
+ZDCCanvas_QD_PICT* ZDCCanvas_QD_PICT::sHead = nullptr;
 
 // =================================================================================================
 #pragma mark -
@@ -2048,14 +2048,14 @@ ZDC_PICT::~ZDC_PICT()
 ZDC_NativeQD::ZDC_NativeQD(CGrafPtr inGrafPtr)
 	{
 	::GetGWorld(&fSavedGrafPtr, &fSavedGDHandle);
-	if (inGrafPtr == nil)
+	if (inGrafPtr == nullptr)
 		fGrafPtr = fSavedGrafPtr;
 	else
 		fGrafPtr = inGrafPtr;
 
 	fCanvas = ZDCCanvas_QD::sFindCanvasOrCreateNative(fGrafPtr);
 
-	::SetGWorld(fGrafPtr, nil);
+	::SetGWorld(fGrafPtr, nullptr);
 	::GetClip(fOldClip.GetRgnHandle());
 
 	Rect portBounds;
@@ -2105,7 +2105,7 @@ ZDC_NativeQD::~ZDC_NativeQD()
 	fCanvas->InvalCache();
 
 	// Copy back the state we saved in our constructor
-	::SetGWorld(fGrafPtr, nil);
+	::SetGWorld(fGrafPtr, nullptr);
 	::RGBForeColor(&fOldForeColor);
 	::RGBBackColor(&fOldBackColor);
 	::SetPenState(&fOldState);
@@ -2128,7 +2128,7 @@ ZDC_NativeQD::~ZDC_NativeQD()
 ZDCSetupForQD::ZDCSetupForQD(const ZDC& inDC, bool inUsingPatterns)
 :	fCanvas(ZRefDynamicCast<ZDCCanvas_QD>(inDC.GetCanvas()))
 	{
-	ZAssertStop(kDebug_QD, fCanvas->fMutexToCheck == nil || fCanvas->fMutexToCheck->IsLocked());
+	ZAssertStop(kDebug_QD, fCanvas->fMutexToCheck == nullptr || fCanvas->fMutexToCheck->IsLocked());
 	ZMutexLocker locker(*fCanvas->fMutexToLock);
 
 	fOffset = fCanvas->Internal_QDStart(inDC.GetState(), inUsingPatterns);
@@ -2136,7 +2136,7 @@ ZDCSetupForQD::ZDCSetupForQD(const ZDC& inDC, bool inUsingPatterns)
 
 ZDCSetupForQD::~ZDCSetupForQD()
 	{
-	ZAssertStop(kDebug_QD, fCanvas->fMutexToCheck == nil || fCanvas->fMutexToCheck->IsLocked());
+	ZAssertStop(kDebug_QD, fCanvas->fMutexToCheck == nullptr || fCanvas->fMutexToCheck->IsLocked());
 	ZMutexLocker locker(*fCanvas->fMutexToLock);
 
 	fCanvas->Internal_QDEnd();

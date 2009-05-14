@@ -49,7 +49,7 @@ bool sMake_Collator(ZRef<ZTextCollatorRep>& oResult, const ZTextCollatorRep::Par
 	try
 		{
 		if (iParam.fLocaleName.empty())
-			oResult = new ZTextCollatorRep_ICU(nil, iParam.fStrength);
+			oResult = new ZTextCollatorRep_ICU(nullptr, iParam.fStrength);
 		else
 			oResult = new ZTextCollatorRep_ICU(iParam.fLocaleName.c_str(), iParam.fStrength);
 		return true;		
@@ -118,7 +118,7 @@ ZTextCollatorRep_ICU::~ZTextCollatorRep_ICU()
 ZRef<ZTextCollatorRep> ZTextCollatorRep_ICU::Clone()
 	{
 	UErrorCode status = U_ZERO_ERROR;
-	UCollator* clonedColl = ::ucol_safeClone(fCollator, nil, 0, &status);
+	UCollator* clonedColl = ::ucol_safeClone(fCollator, nullptr, 0, &status);
 	if (U_FAILURE(status))
 		throw std::runtime_error("Couldn't clone collator");
 	return new ZTextCollatorRep_ICU(clonedColl);
@@ -184,7 +184,7 @@ static bool sContains(UCollator* iCollator, const UTF16* iPattern, size_t iPatte
 	{
 	UErrorCode status = U_ZERO_ERROR;
 	UStringSearch* theSearch = ::usearch_openFromCollator(iPattern, iPatternLength,
-		iTarget, iTargetLength, iCollator, nil, &status);
+		iTarget, iTargetLength, iCollator, nullptr, &status);
 
 	if (U_FAILURE(status))
 		return false;

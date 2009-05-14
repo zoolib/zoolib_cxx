@@ -40,7 +40,7 @@ struct DListHead
     ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
     	DListHead, operator_bool_generator_type, operator_bool_type);
 
-	DListHead() : fHeadL(nil), fSize(0) {}
+	DListHead() : fHeadL(nullptr), fSize(0) {}
 
 	operator operator_bool_type() const { return operator_bool_generator_type::translate(fHeadL); }
 
@@ -99,7 +99,7 @@ struct DListHead
 			ZAssertStop(L::kDebug, iL->fNext == iL);
 			ZAssertStop(L::kDebug, fHeadL == iL);
 			ZAssertStop(L::kDebug, fSize == 1);
-			fHeadL = nil;
+			fHeadL = nullptr;
 			fSize = 0;
 			}
 		else
@@ -111,8 +111,8 @@ struct DListHead
 			iL->fNext->fPrev = iL->fPrev;
 			iL->fPrev->fNext = iL->fNext;
 			}
-		iL->fNext = nil;
-		iL->fPrev = nil;
+		iL->fNext = nullptr;
+		iL->fPrev = nullptr;
 		}
 
 	void RemoveIfContains(L* iL)
@@ -167,9 +167,9 @@ public:
 public:
 	enum { kDebug = kDebug_T };
 
-	DListLink() : fPrev(nil), fNext(nil) {}
+	DListLink() : fPrev(nullptr), fNext(nullptr) {}
 	~DListLink() { ZAssertStop(kDebug, !fPrev && !fNext); }
-	void Clear() { fPrev = nil; fNext = nil; }
+	void Clear() { fPrev = nullptr; fNext = nullptr; }
 
 	L* fPrev;
 	L* fNext;
@@ -205,7 +205,7 @@ public:
 		ZAssertStop(kDebug, fCurrent->fNext);
 		fCurrent = fCurrent->fNext;
 		if (fCurrent == fDListHead.fHeadL)
-			fCurrent = nil;
+			fCurrent = nullptr;
 		}
 
 private:
@@ -235,18 +235,18 @@ public:
 			ZAssertStop(kDebug, fCurrent->fNext);
 			ZAssertStop(kDebug, fCurrent->fPrev);
 			fNext = fCurrent->fNext;
-			fCurrent->fNext = nil;
-			fCurrent->fPrev = nil;
+			fCurrent->fNext = nullptr;
+			fCurrent->fPrev = nullptr;
 			}
 		else
 			{
-			fNext = nil;
+			fNext = nullptr;
 			}
 		}
 
 	~DListIteratorEraseAll()
 		{
-		fDListHead.fHeadL = nil;
+		fDListHead.fHeadL = nullptr;
 		fDListHead.fSize = 0;
 		}
 
@@ -265,16 +265,16 @@ public:
 		ZAssertStop(kDebug, fNext);
 		if (fNext == fDListHead.fHeadL)
 			{
-			fCurrent = nil;
-			fNext = nil;
+			fCurrent = nullptr;
+			fNext = nullptr;
 			}
 		else
 			{
 			ZAssertStop(kDebug, fNext->fNext);
 			fCurrent = fNext;
 			fNext = fNext->fNext;
-			fCurrent->fNext = nil;
-			fCurrent->fPrev = nil;
+			fCurrent->fNext = nullptr;
+			fCurrent->fPrev = nullptr;
 			}
 		}
 

@@ -194,8 +194,8 @@ public:
 
 ZTS_Watchable::Watcher::Watcher(ZRef<ZTS_Watchable> iTS_Watchable)
 :	fTS_Watchable(iTS_Watchable),
-	fCallback(nil),
-	fRefcon(nil)
+	fCallback(nullptr),
+	fRefcon(nullptr)
 	{}
 
 void ZTS_Watchable::Watcher::Finalize()
@@ -981,7 +981,7 @@ void ZTS_Watchable::pUpdateQueryResults(PQuery* iPQuery)
 
 		ASSERTUNLOCKED(fMutex_Structure);
 
-		Quisitioner(this, iPQuery).Query(theNode, nil, iPQuery->fResults);
+		Quisitioner(this, iPQuery).Query(theNode, nullptr, iPQuery->fResults);
 
 		fMutex_Structure.Acquire();
 

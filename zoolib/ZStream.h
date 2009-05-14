@@ -220,7 +220,7 @@ inline void ZStreamR::Skip(uint64 iCount, uint64* oCountSkipped) const
 
 /** Skip bytes until the end of the stream is reached. */
 inline void ZStreamR::SkipAll() const
-	{ this->SkipAll(nil); }
+	{ this->SkipAll(nullptr); }
 
 /** Return the number of bytes guaranteed to be readable without blocking. */
 inline size_t ZStreamR::CountReadable() const

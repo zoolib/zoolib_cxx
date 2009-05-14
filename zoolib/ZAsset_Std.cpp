@@ -137,7 +137,7 @@ ZAssetRep_Std_Directory::ZAssetRep_Std_Directory(
 	fChildrenCount = sReadCount(iStream);
 	if (fChildrenCount == 0)
 		{
-		fChildren = nil;
+		fChildren = nullptr;
 		}
 	else if (fChildrenCount == 1)
 		{
@@ -483,7 +483,7 @@ ZAssetRep_Std* ZAssetTree_Std::LoadAssetRep(
 			}
 		}
 	ZUnimplemented();
-	return nil;
+	return nullptr;
 	}
 
 ZRef<ZAssetRep_Std> ZAssetTree_Std::UseRep(ZAssetRep_Std* iRep)
@@ -587,7 +587,7 @@ ZAssetRep_Std_Data_Stream::ZAssetRep_Std_Data_Stream(
 	fDataSize = sReadCount(iStream);
 	if (fDataSize)
 		fDataOffset = iStream.ReadUInt32();
-	fData = nil;
+	fData = nullptr;
 	}
 
 ZAssetRep_Std_Data_Stream::~ZAssetRep_Std_Data_Stream()
@@ -633,7 +633,7 @@ void ZAssetRep_Std_Data_Stream::DoInitialization()
 void ZAssetRep_Std_Data_Stream::DoFinalization()
 	{
 	delete[] fData;
-	fData = nil;
+	fData = nullptr;
 	}
 
 // =================================================================================================
@@ -709,17 +709,17 @@ uint64 ZAssetTree_Std_Stream::StreamerRPos::Imp_GetSize()
 
 ZAssetTree_Std_Stream::ZAssetTree_Std_Stream()
 	{
-	fStream = nil;
-	fNameTable = nil;
-	fRoot = nil;
+	fStream = nullptr;
+	fNameTable = nullptr;
+	fRoot = nullptr;
 	}
 
 ZAssetTree_Std_Stream::ZAssetTree_Std_Stream(
 	const ZStreamRPos& iStream, size_t iOffset, size_t iSize)
 	{
-	fStream = nil;
-	fNameTable = nil;
-	fRoot = nil;
+	fStream = nullptr;
+	fNameTable = nullptr;
+	fRoot = nullptr;
 	this->LoadUp(&iStream, iOffset, iSize);
 	}
 
@@ -780,7 +780,7 @@ void ZAssetTree_Std_Stream::LoadUp(const ZStreamRPos* iStream, size_t iOffset, s
 		fStream->Read(fNameTable, nameTableSize);
 
 		// Pull in the tree
-		fRoot = this->LoadAssetRep(nil, sEmptyString, 0, *fStream, fNameTable, &nameOffsets[0]);
+		fRoot = this->LoadAssetRep(nullptr, sEmptyString, 0, *fStream, fNameTable, &nameOffsets[0]);
 
 		// Remember where the start of the data is
 		fDataOffset = iOffset;
@@ -788,10 +788,10 @@ void ZAssetTree_Std_Stream::LoadUp(const ZStreamRPos* iStream, size_t iOffset, s
 	catch (...)
 		{
 		delete[] fNameTable;
-		fNameTable = nil;
+		fNameTable = nullptr;
 		delete fRoot;
-		fRoot = nil;
-		fStream = nil;
+		fRoot = nullptr;
+		fStream = nullptr;
 		throw;
 		}
 	}
@@ -800,10 +800,10 @@ void ZAssetTree_Std_Stream::ShutDown()
 	{
 	ZAssertStop(2, fStream && fRoot && fNameTable);
 	delete fRoot;
-	fRoot = nil;
+	fRoot = nullptr;
 	delete[] fNameTable;
-	fNameTable = nil;
-	fStream = nil;
+	fNameTable = nullptr;
+	fStream = nullptr;
 	}
 
 ZRef<ZStreamerRPos> ZAssetTree_Std_Stream::OpenRPos(size_t iOffset, size_t iSize)
@@ -884,7 +884,7 @@ ZAssetRep_Std_Data_File::ZAssetRep_Std_Data_File(
 	fDataSize = sReadCount(iStream);
 	if (fDataSize)
 		fDataOffset = iStream.ReadUInt32();
-	fData = nil;
+	fData = nullptr;
 	}
 
 ZAssetRep_Std_Data_File::~ZAssetRep_Std_Data_File()
@@ -930,7 +930,7 @@ void ZAssetRep_Std_Data_File::DoInitialization()
 void ZAssetRep_Std_Data_File::DoFinalization()
 	{
 	delete[] fData;
-	fData = nil;
+	fData = nullptr;
 	}
 
 
@@ -1008,8 +1008,8 @@ uint64 ZAssetTree_Std_File::StreamerRPos::Imp_GetSize()
 
 ZAssetTree_Std_File::ZAssetTree_Std_File(ZRef<ZFileR> iFile, uint64 iOffset, size_t iSize)
 	{
-	fNameTable = nil;
-	fRoot = nil;
+	fNameTable = nullptr;
+	fRoot = nullptr;
 
 	ZAssertStop(1, iSize != 0); // Minimal sanity check on size
 
@@ -1051,7 +1051,7 @@ ZAssetTree_Std_File::ZAssetTree_Std_File(ZRef<ZFileR> iFile, uint64 iOffset, siz
 		theStream.Read(fNameTable, nameTableSize);
 
 		// Pull in the tree
-		fRoot = this->LoadAssetRep(nil, sEmptyString, 0, theStream, fNameTable, &nameOffsets[0]);
+		fRoot = this->LoadAssetRep(nullptr, sEmptyString, 0, theStream, fNameTable, &nameOffsets[0]);
 
 		// Remember where the start of the data is
 		fDataOffset = iOffset;
@@ -1059,9 +1059,9 @@ ZAssetTree_Std_File::ZAssetTree_Std_File(ZRef<ZFileR> iFile, uint64 iOffset, siz
 	catch (...)
 		{
 		delete[] fNameTable;
-		fNameTable = nil;
+		fNameTable = nullptr;
 		delete fRoot;
-		fRoot = nil;
+		fRoot = nullptr;
 		throw;
 		}
 	}
@@ -1070,9 +1070,9 @@ ZAssetTree_Std_File::~ZAssetTree_Std_File()
 	{
 	ZAssertStop(2, (fRoot && fNameTable) || (!fRoot && !fNameTable));
 	delete fRoot;
-	fRoot = nil;
+	fRoot = nullptr;
 	delete[] fNameTable;
-	fNameTable = nil;
+	fNameTable = nullptr;
 	}
 
 ZRef<ZAssetRep> ZAssetTree_Std_File::GetRoot()
@@ -1088,7 +1088,7 @@ ZRef<ZStreamerRPos> ZAssetTree_Std_File::OpenRPos(uint64 iOffset, size_t iSize)
 	{ return new StreamerRPos(fFile, iOffset, iSize); }
 
 void ZAssetTree_Std_File::ReadData(uint64 iOffset, size_t iSize, void* oData)
-	{ fFile->ReadAt(iOffset, oData, iSize, nil); }
+	{ fFile->ReadAt(iOffset, oData, iSize, nullptr); }
 
 // =================================================================================================
 #pragma mark -
@@ -1123,7 +1123,7 @@ ZAssetRep_Std_Data_Memory::ZAssetRep_Std_Data_Memory(
 	if (fDataSize)
 		fDataAddress = iBaseAddress + iStream.ReadUInt32();
 	else
-		fDataAddress = nil;
+		fDataAddress = nullptr;
 	}
 
 ZAssetRep_Std_Data_Memory::~ZAssetRep_Std_Data_Memory()
@@ -1152,14 +1152,14 @@ void ZAssetRep_Std_Data_Memory::DoFinalization()
 
 ZAssetTree_Std_Memory::ZAssetTree_Std_Memory()
 	{
-	fAddress = nil;
-	fRoot = nil;
+	fAddress = nullptr;
+	fRoot = nullptr;
 	}
 
 ZAssetTree_Std_Memory::ZAssetTree_Std_Memory(const void* iAddress, size_t iSize)
 	{
-	fAddress = nil;
-	fRoot = nil;
+	fAddress = nullptr;
+	fRoot = nullptr;
 	this->LoadUp(iAddress, iSize);
 	}
 
@@ -1227,13 +1227,13 @@ void ZAssetTree_Std_Memory::LoadUp(const void* iAddress, size_t iSize)
 		theSIM.Skip(ZByteSwap_ReadBig32(nameOffsets + nameCount));
 
 		// Pull in the tree
-		fRoot = this->LoadAssetRep(nil, sEmptyString, 0, theSIM, nameTable, &nameOffsets[0]);
+		fRoot = this->LoadAssetRep(nullptr, sEmptyString, 0, theSIM, nameTable, &nameOffsets[0]);
 		}
 	catch (...)
 		{
 		delete fRoot;
-		fAddress = nil;
-		fRoot = nil;
+		fAddress = nullptr;
+		fRoot = nullptr;
 		throw;
 		}
 	}
@@ -1242,8 +1242,8 @@ void ZAssetTree_Std_Memory::ShutDown()
 	{
 	ZAssertStop(2, fAddress && fRoot);
 	delete fRoot;
-	fAddress = nil;
-	fRoot = nil;
+	fAddress = nullptr;
+	fRoot = nullptr;
 	}
 
 // =================================================================================================

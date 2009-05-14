@@ -222,7 +222,7 @@ ZDCInkRep::~ZDCInkRep()
 #pragma mark * ZDCInk
 
 ZDCInk::ZDCInk(const ZDCPixmap& inPixmap)
-:	fRep(inPixmap ? new ZDCInkRep(inPixmap) : nil)
+:	fRep(inPixmap ? new ZDCInkRep(inPixmap) : nullptr)
 	{}
 
 static void sExaminePattern(const ZDCPattern& inPattern, bool& outSolidFore, bool& outSolidBack)
@@ -258,7 +258,7 @@ bool ZDCInk::Internal_IsSameAs(const ZDCInk& inOther) const
 	{
 	if (!fRep || !inOther.fRep)
 		{
-		// The easy case. One or other of the reps is nil, and thus they can't be equivalent.
+		// The easy case. One or other of the reps is nullptr, and thus they can't be equivalent.
 		return false;
 		}
 

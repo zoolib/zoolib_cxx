@@ -106,22 +106,22 @@ ZDCPoly::ZDCPoly()
 	{
 	fOrigin = ZPoint::sZero;
 
-	fCachedPoints = nil;
+	fCachedPoints = nullptr;
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
-	fCachedPolyHandle = nil;
+	fCachedPolyHandle = nullptr;
 #endif
 
 #if ZCONFIG_SPI_Enabled(GDI)
-	fCachedPOINTs = nil;
+	fCachedPOINTs = nullptr;
 #endif
 
 #if ZCONFIG_SPI_Enabled(X11)
-	fCachedXPoints = nil;
+	fCachedXPoints = nullptr;
 #endif
 
 #if ZCONFIG_SPI_Enabled(BeOS)
-	fCachedBPoints = nil;
+	fCachedBPoints = nullptr;
 #endif
 	}
 
@@ -130,22 +130,22 @@ ZDCPoly::ZDCPoly(const ZPoint& iStartPoint)
 	fOrigin = ZPoint::sZero;
 	fPoints.push_back(iStartPoint);
 
-	fCachedPoints = nil;
+	fCachedPoints = nullptr;
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
-	fCachedPolyHandle = nil;
+	fCachedPolyHandle = nullptr;
 #endif
 
 #if ZCONFIG_SPI_Enabled(GDI)
-	fCachedPOINTs = nil;
+	fCachedPOINTs = nullptr;
 #endif
 
 #if ZCONFIG_SPI_Enabled(X11)
-	fCachedXPoints = nil;
+	fCachedXPoints = nullptr;
 #endif
 
 #if ZCONFIG_SPI_Enabled(BeOS)
-	fCachedBPoints = nil;
+	fCachedBPoints = nullptr;
 #endif
 	}
 
@@ -154,22 +154,22 @@ ZDCPoly::ZDCPoly(ZCoord iPointH, ZCoord iPointV)
 	fOrigin = ZPoint::sZero;
 	fPoints.push_back(ZPoint(iPointH, iPointV));
 
-	fCachedPoints = nil;
+	fCachedPoints = nullptr;
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
-	fCachedPolyHandle = nil;
+	fCachedPolyHandle = nullptr;
 #endif
 
 #if ZCONFIG_SPI_Enabled(GDI)
-	fCachedPOINTs = nil;
+	fCachedPOINTs = nullptr;
 #endif
 
 #if ZCONFIG_SPI_Enabled(X11)
-	fCachedXPoints = nil;
+	fCachedXPoints = nullptr;
 #endif
 
 #if ZCONFIG_SPI_Enabled(BeOS)
-	fCachedBPoints = nil;
+	fCachedBPoints = nullptr;
 #endif
 	}
 
@@ -177,22 +177,22 @@ ZDCPoly::ZDCPoly(const ZDCPoly& iOther)
 :	fPoints(iOther.fPoints),
 	fOrigin(iOther.fOrigin)
 	{
-	fCachedPoints = nil;
+	fCachedPoints = nullptr;
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
-	fCachedPolyHandle = nil;
+	fCachedPolyHandle = nullptr;
 #endif
 
 #if ZCONFIG_SPI_Enabled(GDI)
-	fCachedPOINTs = nil;
+	fCachedPOINTs = nullptr;
 #endif
 
 #if ZCONFIG_SPI_Enabled(X11)
-	fCachedXPoints = nil;
+	fCachedXPoints = nullptr;
 #endif
 
 #if ZCONFIG_SPI_Enabled(BeOS)
-	fCachedBPoints = nil;
+	fCachedBPoints = nullptr;
 #endif
 	}
 
@@ -243,12 +243,12 @@ void ZDCPoly::GetPoints(const ZPoint& iOrigin, ZPoint*& oPoints, size_t& oCount)
 	{
 	ZDCPoly* nonConstThis = const_cast<ZDCPoly*>(this);
 	ZPoint localOrigin = fOrigin + iOrigin;
-	if (fCachedPoints == nil || fCachedOrigin != localOrigin)
+	if (fCachedPoints == nullptr || fCachedOrigin != localOrigin)
 		{
 		if (fPoints.size() > 0)
 			{
 			ZPoint* thePoints = fCachedPoints;
-			if (thePoints == nil)
+			if (thePoints == nullptr)
 				thePoints = new ZPoint[fPoints.size()];
 			for (size_t x = 0; x < fPoints.size(); ++x)
 				thePoints[x] = fPoints[x] + localOrigin;
@@ -265,7 +265,7 @@ PolyHandle ZDCPoly::GetPolyHandle(const ZPoint& iOrigin) const
 	{
 	ZDCPoly* nonConstThis = const_cast<ZDCPoly*>(this);
 	ZPoint localOrigin = fOrigin + iOrigin;
-	if (fCachedPolyHandle == nil || fCachedOrigin != localOrigin)
+	if (fCachedPolyHandle == nullptr || fCachedOrigin != localOrigin)
 		{
 		if (fPoints.size() > 0)
 			{
@@ -279,7 +279,7 @@ PolyHandle ZDCPoly::GetPolyHandle(const ZPoint& iOrigin) const
 				isOpen = false;
 				}
 
-			if (thePolyHandle == nil)
+			if (thePolyHandle == nullptr)
 				{
 				size_t theSize = sizeof(short) + sizeof(Rect) + sizeof(Point) * pointsCount;
 				if (isOpen)
@@ -327,12 +327,12 @@ void ZDCPoly::GetPOINTs(const ZPoint& iOrigin, POINT*& oPOINTs, size_t& oCount) 
 	{
 	ZDCPoly* nonConstThis = const_cast<ZDCPoly*>(this);
 	ZPoint localOrigin = fOrigin + iOrigin;
-	if (fCachedPOINTs == nil || fCachedOrigin != localOrigin)
+	if (fCachedPOINTs == nullptr || fCachedOrigin != localOrigin)
 		{
 		if (fPoints.size() > 0)
 			{
 			POINT* thePOINTs = fCachedPOINTs;
-			if (thePOINTs == nil)
+			if (thePOINTs == nullptr)
 				thePOINTs = new POINT[fPoints.size()];
 			for (size_t x = 0; x < fPoints.size(); ++x)
 				thePOINTs[x] = fPoints[x] + localOrigin;
@@ -350,12 +350,12 @@ void ZDCPoly::GetXPoints(const ZPoint& iOrigin, XPoint*& oXPoints, size_t& oCoun
 	{
 	ZDCPoly* nonConstThis = const_cast<ZDCPoly*>(this);
 	ZPoint localOrigin = fOrigin + iOrigin;
-	if (fCachedXPoints == nil || fCachedOrigin != localOrigin)
+	if (fCachedXPoints == nullptr || fCachedOrigin != localOrigin)
 		{
 		if (fPoints.size() > 0)
 			{
 			XPoint* theXPoints = fCachedXPoints;
-			if (theXPoints == nil)
+			if (theXPoints == nullptr)
 				theXPoints = new XPoint[fPoints.size()];
 			for (size_t x = 0; x < fPoints.size(); ++x)
 				theXPoints[x] = fPoints[x] + localOrigin;
@@ -373,12 +373,12 @@ void ZDCPoly::GetBPoints(const ZPoint& iOrigin, BPoint*& oBPoints, size_t& oCoun
 	{
 	ZDCPoly* nonConstThis = const_cast<ZDCPoly*>(this);
 	ZPoint localOrigin = fOrigin + iOrigin;
-	if (fCachedBPoints == nil || fCachedOrigin != localOrigin)
+	if (fCachedBPoints == nullptr || fCachedOrigin != localOrigin)
 		{
 		if (fPoints.size() > 0)
 			{
 			BPoint* theBPoints = fCachedBPoints;
-			if (theBPoints == nil)
+			if (theBPoints == nullptr)
 				theBPoints = new BPoint[fPoints.size()];
 			for (size_t x = 0; x < fPoints.size(); ++x)
 				theBPoints[x] = fPoints[x]+localOrigin;
@@ -394,26 +394,26 @@ void ZDCPoly::GetBPoints(const ZPoint& iOrigin, BPoint*& oBPoints, size_t& oCoun
 void ZDCPoly::pEmptyCache()
 	{
 	delete[] fCachedPoints;
-	fCachedPoints = nil;
+	fCachedPoints = nullptr;
 	#if ZCONFIG_SPI_Enabled(QuickDraw)
 		if (fCachedPolyHandle)
 			::KillPoly(fCachedPolyHandle);
-		fCachedPolyHandle = nil;
+		fCachedPolyHandle = nullptr;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(GDI)
 		delete[] fCachedPOINTs;
-		fCachedPOINTs = nil;
+		fCachedPOINTs = nullptr;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(X11)
 		delete[] fCachedXPoints;
-		fCachedXPoints = nil;
+		fCachedXPoints = nullptr;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(BeOS)
 		delete[] fCachedBPoints;
-		fCachedBPoints = nil;
+		fCachedBPoints = nullptr;
 	#endif
 	}
 
@@ -588,7 +588,7 @@ void ZDCPoly::sDecompose(const ZPoint* iPoints, size_t iCount, bool iEvenOdd,
 			// And once with no data. This is needed for some client
 			// code that builds data structures that track the deltas
 			// rather than an absolute list of rectangles (ie QD regions).
-			iDecomposeProc(bottom, bottom, nil, 0, iRefcon);
+			iDecomposeProc(bottom, bottom, nullptr, 0, iRefcon);
 			return;
 			}
 		}
@@ -607,15 +607,15 @@ void ZDCPoly::sDecompose(const ZPoint* iPoints, size_t iCount, bool iEvenOdd,
 		{
 		// EvenOdd Rule
 		Edge dummyEdge;
-		dummyEdge.fEdge_Next = nil;
-		dummyEdge.fEdge_Back = nil;
+		dummyEdge.fEdge_Next = nullptr;
+		dummyEdge.fEdge_Back = nullptr;
 		dummyEdge.fBresenhamInfo.fMinorAxis = sCoord_Min;
 		ScanLine* currentScanLine = theEdgeTable.fScanLine_First;
 		for (ZCoord currentVCoord = theEdgeTable.fMinV;
 			currentVCoord < theEdgeTable.fMaxV; ++currentVCoord)
 			{
 			// Have we reached the v coord corresponding to the next ScanLine object?
-			if (currentScanLine != nil && currentVCoord == currentScanLine->fVCoord)
+			if (currentScanLine != nullptr && currentVCoord == currentScanLine->fVCoord)
 				{
 				// If so, augment the list of active edges
 				// with the edges attached to this ScanLine.
@@ -683,15 +683,15 @@ void ZDCPoly::sDecompose(const ZPoint* iPoints, size_t iCount, bool iEvenOdd,
 		{
 		// Winding Rule
 		Edge dummyEdge;
-		dummyEdge.fEdge_Next = nil;
-		dummyEdge.fEdge_Back = nil;
+		dummyEdge.fEdge_Next = nullptr;
+		dummyEdge.fEdge_Back = nullptr;
 		dummyEdge.fBresenhamInfo.fMinorAxis = sCoord_Min;
 		ScanLine* currentScanLine = theEdgeTable.fScanLine_First;
 		for (ZCoord currentVCoord = theEdgeTable.fMinV;
 			currentVCoord < theEdgeTable.fMaxV; ++currentVCoord)
 			{
 			// Have we reached the v coord corresponding to the next ScanLine object?
-			if (currentScanLine != nil && currentVCoord == currentScanLine->fVCoord)
+			if (currentScanLine != nullptr && currentVCoord == currentScanLine->fVCoord)
 				{
 				// If so, augment the list of active edges
 				// with the edges attached to this ScanLine
@@ -774,7 +774,7 @@ void ZDCPoly::sDecompose(const ZPoint* iPoints, size_t iCount, bool iEvenOdd,
 	delete[] transitionCoords;
 	// Make the final callback with no data.
 	if (!aborted)
-		iDecomposeProc(theEdgeTable.fMaxV, theEdgeTable.fMaxV, nil, 0, iRefcon);
+		iDecomposeProc(theEdgeTable.fMaxV, theEdgeTable.fMaxV, nullptr, 0, iRefcon);
 
 	// Free the ScanLineBlocks
 	while (firstScanLineBlock)
@@ -792,13 +792,13 @@ static void sBuildTable(const ZPoint* iPoints, size_t iCount,
 	EdgeTable& ioEdgeTable, Edge* iEdges, ScanLineBlock* iFirstScanLineBlock)
 	{
 	// Initialize the Edge Table.
-	ioEdgeTable.fScanLine_First = nil;
+	ioEdgeTable.fScanLine_First = nullptr;
 	ioEdgeTable.fMaxV = sCoord_Min;
 	ioEdgeTable.fMinV = sCoord_Max;
 
 	ScanLineBlock* currentScanLineBlock = iFirstScanLineBlock;
 	// Ensure the ScanLineBlock's next pointer is nil
-	currentScanLineBlock->fNextAllocatedBlock = nil;
+	currentScanLineBlock->fNextAllocatedBlock = nullptr;
 
 	// Set up the index of which entry in the current ScanLineBlock is to be used
 	size_t indexInCurrentScanLineBlock = 0;
@@ -838,9 +838,9 @@ static void sBuildTable(const ZPoint* iPoints, size_t iCount,
 				}
 			currentEdge->fBresenhamInfo.Init(bottomPoint.v - topPoint.v, topPoint.h, bottomPoint.h);
 			currentEdge->fExitV = bottomPoint.v - 1;
-			currentEdge->fEdge_Next = nil;
-			currentEdge->fEdge_Back = nil;
-			currentEdge->fEdge_NextForWinding = nil;
+			currentEdge->fEdge_Next = nullptr;
+			currentEdge->fEdge_Back = nullptr;
+			currentEdge->fEdge_NextForWinding = nullptr;
 
 			// Hook this edge onto the appropriate scanline
 			sInsertEdge(ioEdgeTable, currentEdge, topPoint.v,
@@ -862,7 +862,7 @@ static void sBuildTable(const ZPoint* iPoints, size_t iCount,
 static void sUpdateActiveEdgeTable(Edge* iFirstActiveEdge, Edge* iEdgesToAdd)
 	{
 	// This is a merge sort, and thus assumes that iEdgesToAdd are sorted by fMinorAxis.
-	Edge* previousActiveEdge = nil;
+	Edge* previousActiveEdge = nullptr;
 	Edge* currentActiveEdge = iFirstActiveEdge;
 
 	Edge* currentEdgeToAdd = iEdgesToAdd;
@@ -899,7 +899,7 @@ static void sInsertEdge(EdgeTable& ioEdgeTable, Edge* iEdgeToInsert,
 	ZCoord iVCoord, ScanLineBlock*& ioScanLineBlock, size_t& ioIndexInCurrentScanLineBlock)
 	{
 	// Find the ScanLine to which the edge should be attached
-	ScanLine* previousScanLine = nil;
+	ScanLine* previousScanLine = nullptr;
 	ScanLine* currentScanLine = ioEdgeTable.fScanLine_First;
 	while (currentScanLine && currentScanLine->fVCoord < iVCoord)
 		{
@@ -907,19 +907,19 @@ static void sInsertEdge(EdgeTable& ioEdgeTable, Edge* iEdgeToInsert,
 		currentScanLine = currentScanLine->fScanLine_Next;
 		}
 
-	if (currentScanLine == nil || currentScanLine->fVCoord > iVCoord)
+	if (currentScanLine == nullptr || currentScanLine->fVCoord > iVCoord)
 		{
 		if (ioIndexInCurrentScanLineBlock >= sSLLsPerBlock)
 			{
 			ScanLineBlock* newBlock = new ScanLineBlock;
-			newBlock->fNextAllocatedBlock = nil;
+			newBlock->fNextAllocatedBlock = nullptr;
 			ioScanLineBlock->fNextAllocatedBlock = newBlock;
 			ioScanLineBlock = newBlock;
 			ioIndexInCurrentScanLineBlock = 0;
 			}
 		currentScanLine = &ioScanLineBlock->fScanLines[ioIndexInCurrentScanLineBlock];
 		++ioIndexInCurrentScanLineBlock;
-		currentScanLine->fEdge_First = nil;
+		currentScanLine->fEdge_First = nullptr;
 		currentScanLine->fVCoord = iVCoord;
 	
 		if (previousScanLine)
@@ -934,7 +934,7 @@ static void sInsertEdge(EdgeTable& ioEdgeTable, Edge* iEdgeToInsert,
 			}
 		}
 
-	Edge* previousEdge = nil;
+	Edge* previousEdge = nullptr;
 	Edge* currentEdge = currentScanLine->fEdge_First;
 
 	while (currentEdge
@@ -989,7 +989,7 @@ static void sLinkWindingEdgeList(Edge* iFirstActiveEdge)
 	bool inside = true;
 	int isInsideCount = 0;
 
-	iFirstActiveEdge->fEdge_NextForWinding = nil;
+	iFirstActiveEdge->fEdge_NextForWinding = nullptr;
 	Edge* currentWindingEdge = iFirstActiveEdge;
 	Edge* currentActiveEdge = iFirstActiveEdge->fEdge_Next;
 	while (currentActiveEdge) 
@@ -1007,7 +1007,7 @@ static void sLinkWindingEdgeList(Edge* iFirstActiveEdge)
 			}
 		currentActiveEdge = currentActiveEdge->fEdge_Next;
 		}
-	currentWindingEdge->fEdge_NextForWinding = nil;
+	currentWindingEdge->fEdge_NextForWinding = nullptr;
 	}
 
 NAMESPACE_ZOOLIB_END

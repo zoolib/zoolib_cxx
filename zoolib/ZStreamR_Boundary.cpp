@@ -171,7 +171,7 @@ void ZStreamR_Boundary::Reset()
 
 void ZStreamR_Boundary::Internal_Init()
 	{
-	fBuffer = nil;
+	fBuffer = nullptr;
 	try
 		{
 		if (const size_t boundarySize = fBoundary.size())
@@ -191,7 +191,7 @@ void ZStreamR_Boundary::Internal_Init()
 			}
 		else
 			{
-			fBuffer = nil;
+			fBuffer = nullptr;
 			fDataStart = 0;
 			fDataEnd = 0;
 			}

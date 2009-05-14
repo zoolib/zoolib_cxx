@@ -87,6 +87,9 @@ ZYadParseException::ZYadParseException(const char* iWhat)
 ZYadR::ZYadR()
 	{}
 
+bool ZYadR::Accept(ZYadVisitor& iVisitor)
+	{ return iVisitor.Visit_YadR(this); }
+
 bool ZYadR::IsSimple(const ZYadOptions& iOptions)
 	{ return true; }
 
@@ -97,12 +100,25 @@ ZRef<ZYadR> ZYadR::Meta()
 #pragma mark -
 #pragma mark * ZYadStreamR
 
+bool ZYadStreamR::Accept(ZYadVisitor& iVisitor)
+	{ return iVisitor.Visit_YadStreamR(this); }
+
 bool ZYadStreamR::IsSimple(const ZYadOptions& iOptions)
 	{ return false; }
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYadStrimR
+
+bool ZYadStrimR::Accept(ZYadVisitor& iVisitor)
+	{ return iVisitor.Visit_YadStrimR(this); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYadListR
+
+bool ZYadListR::Accept(ZYadVisitor& iVisitor)
+	{ return iVisitor.Visit_YadListR(this); }
 
 bool ZYadListR::IsSimple(const ZYadOptions& iOptions)
 	{ return false; }
@@ -119,6 +135,9 @@ void ZYadListR::SkipAll()
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadListRPos
+
+bool ZYadListRPos::Accept(ZYadVisitor& iVisitor)
+	{ return iVisitor.Visit_YadListRPos(this); }
 
 bool ZYadListRPos::IsSimple(const ZYadOptions& iOptions)
 	{
@@ -156,6 +175,9 @@ void ZYadListRPos::SkipAll()
 #pragma mark -
 #pragma mark * ZYadMapR
 
+bool ZYadMapR::Accept(ZYadVisitor& iVisitor)
+	{ return iVisitor.Visit_YadMapR(this); }
+
 bool ZYadMapR::IsSimple(const ZYadOptions& iOptions)
 	{ return false; }
 
@@ -174,6 +196,9 @@ void ZYadMapR::SkipAll()
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadMapRPos
+
+bool ZYadMapRPos::Accept(ZYadVisitor& iVisitor)
+	{ return iVisitor.Visit_YadMapRPos(this); }
 
 bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 	{
@@ -206,5 +231,36 @@ bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 		return false;
 		}
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadVisitor
+
+ZYadVisitor::ZYadVisitor()
+	{}
+
+ZYadVisitor::~ZYadVisitor()
+	{}
+
+bool ZYadVisitor::Visit_YadR(ZRef<ZYadR> iYadR)
+	{ return false; }
+
+bool ZYadVisitor::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+	{ return this->Visit_YadR(iYadStreamR); }
+
+bool ZYadVisitor::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+	{ return this->Visit_YadR(iYadStrimR); }
+
+bool ZYadVisitor::Visit_YadListR(ZRef<ZYadListR> iYadListR)
+	{ return this->Visit_YadR(iYadListR); }
+
+bool ZYadVisitor::Visit_YadListRPos(ZRef<ZYadListRPos> iYadListRPos)
+	{ return this->Visit_YadListR(iYadListRPos); }
+
+bool ZYadVisitor::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+	{ return this->Visit_YadR(iYadMapR); }
+
+bool ZYadVisitor::Visit_YadMapRPos(ZRef<ZYadMapRPos> iYadMapRPos)
+	{ return this->Visit_YadMapR(iYadMapRPos); }
 
 NAMESPACE_ZOOLIB_END

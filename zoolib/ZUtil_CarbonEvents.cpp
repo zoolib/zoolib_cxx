@@ -45,14 +45,14 @@ using std::string;
 bool ZUtil_CarbonEvents::sGetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
 	size_t iBufferSize, void* iBuffer)
 	{
-	return noErr == ::GetEventParameter(iEventRef, iName, iType, nil, iBufferSize, nil, iBuffer);
+	return noErr == ::GetEventParameter(iEventRef, iName, iType, nullptr, iBufferSize, nullptr, iBuffer);
 	}
 
 size_t ZUtil_CarbonEvents::sGetParamLength(
 	EventRef iEventRef, EventParamName iName, EventParamType iType)
 	{
 	UInt32 theLength;
-	if (noErr == ::GetEventParameter(iEventRef, iName, iType, nil, 0, &theLength, nil))
+	if (noErr == ::GetEventParameter(iEventRef, iName, iType, nullptr, 0, &theLength, nullptr))
 		return theLength;
 	return 0;
 	}
@@ -117,9 +117,9 @@ Handler::~Handler()
 	{
 	if (fEventHandlerRef)
 		::RemoveEventHandler(fEventHandlerRef);
-	fEventHandlerRef = nil;
+	fEventHandlerRef = nullptr;
 
-	fEventQueueRef = nil;
+	fEventQueueRef = nullptr;
 	}
 
 void Handler::InvokeOnMainThread(Callback_t iCallback, void* iRefcon)
@@ -131,7 +131,7 @@ void Handler::InvokeOnMainThread(Callback_t iCallback, void* iRefcon)
 	else
 		{
 		EventRef theEventRef;
-		::MacCreateEvent(nil, kEventClassID_ZooLib, kEventKindID_Call,
+		::MacCreateEvent(nullptr, kEventClassID_ZooLib, kEventKindID_Call,
 			::GetCurrentEventTime(), kEventAttributeNone, &theEventRef);
 
 		Context_t theContext;

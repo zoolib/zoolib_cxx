@@ -87,7 +87,7 @@ void ZStreamRPos_StreamR::Imp_Read(void* iDest, size_t iCount, size_t* oCountRea
 				{
 				// Try topping up our buffer.
 				uint64 countCopied;
-				fBuffer.CopyFrom(fSource, iCount, nil, &countCopied);
+				fBuffer.CopyFrom(fSource, iCount, nullptr, &countCopied);
 				if (countCopied == 0)
 					break;
 				fBuffer.SetPosition(fBuffer.GetPosition() - countCopied);
@@ -123,7 +123,7 @@ void ZStreamRPos_StreamR::Imp_SetPosition(uint64 iPosition)
 		fBuffer.SetPosition(curSize);
 
 		// And suck in enough data from fSource so its size (and position) is iPosition bytes
-		fBuffer.CopyFrom(fSource, iPosition - curSize, nil, nil);
+		fBuffer.CopyFrom(fSource, iPosition - curSize, nullptr, nullptr);
 		}
 	fBuffer.SetPosition(iPosition);
 	}
@@ -137,7 +137,7 @@ uint64 ZStreamRPos_StreamR::Imp_GetSize()
 
 	uint64 curPosition = fBuffer.GetPosition();
 	fBuffer.SetPosition(fBuffer.GetSize());
-	fBuffer.CopyAllFrom(fSource, nil, nil);
+	fBuffer.CopyAllFrom(fSource, nullptr, nullptr);
 	fBuffer.SetPosition(curPosition);
 	return fBuffer.GetSize();
 	}

@@ -71,7 +71,6 @@ private:
 	size_t fBufferUsed;
 	};
 
-
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZStream_Chunked__

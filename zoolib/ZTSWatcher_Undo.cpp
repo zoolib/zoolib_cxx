@@ -76,16 +76,16 @@ ZTSWatcher_Undo::PTuple::PTuple(uint64 iID)
 
 ZTSWatcher_Undo::ZTSWatcher_Undo(ZRef<ZTSWatcher> iWatcher)
 :	fWatcher(iWatcher),
-	fCallback(nil),
-	fRefcon(nil),
+	fCallback(nullptr),
+	fRefcon(nullptr),
 	fMode(eMode_Normal),
-	fHasChangesPtr(nil)
+	fHasChangesPtr(nullptr)
 	{}
 
 ZTSWatcher_Undo::~ZTSWatcher_Undo()
 	{
 	if (fCallback)
-		fWatcher->SetCallback(nil, nil);
+		fWatcher->SetCallback(nullptr, nullptr);
 	}
 
 void ZTSWatcher_Undo::AllocateIDs(size_t iCount, uint64& oBaseID, size_t& oCountIssued)
@@ -292,7 +292,7 @@ void ZTSWatcher_Undo::DoIt(
 	if (fHasChangesPtr)
 		{
 		*fHasChangesPtr = hasChanges;
-		fHasChangesPtr = nil;
+		fHasChangesPtr = nullptr;
 		}
 
 	fCondition_Save.Broadcast();
@@ -427,7 +427,7 @@ void ZTSWatcher_Undo::SetCallback(Callback_t iCallback, void* iRefcon)
 	if (fCallback && !priorCallback)
 		fWatcher->SetCallback(sCallback, this);
 	else if (priorCallback && !fCallback)
-		fWatcher->SetCallback(nil, nil);
+		fWatcher->SetCallback(nullptr, nullptr);
 
 	fMutex_Save.Release();
 	}
@@ -513,7 +513,7 @@ ZTSWatcher_Undo::PTuple* ZTSWatcher_Undo::pGetPTupleExtant(uint64 iID)
 	map<uint64, PTuple>::iterator i = fPTuples.lower_bound(iID);
 	if (i != fPTuples.end() && i->first == iID)
 		return &i->second;
-	return nil;
+	return nullptr;
 	}
 
 void ZTSWatcher_Undo::pRegisterAQC(AddedQueryCombo& ioAQC)

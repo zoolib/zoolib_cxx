@@ -42,14 +42,14 @@ ZTSWatcher_Reader::ZTSWatcher_Reader(ZRef<ZStreamerW> iStreamerW)
 :	fStreamerW(iStreamerW),
 	fStreamsOkay(true),
 	fSentClose(false),
-	fBaseID(nil),
-	fCountIssued(nil),
-	fWatcherAddedIDs(nil),
-	fChangedTupleIDs(nil),
-	fChangedTuples(nil),
-	fChangedQueries(nil),
-	fCallback(nil),
-	fRefcon(nil)
+	fBaseID(nullptr),
+	fCountIssued(nullptr),
+	fWatcherAddedIDs(nullptr),
+	fChangedTupleIDs(nullptr),
+	fChangedTuples(nullptr),
+	fChangedQueries(nullptr),
+	fCallback(nullptr),
+	fRefcon(nullptr)
 	{}
 
 ZTSWatcher_Reader::~ZTSWatcher_Reader()
@@ -280,8 +280,8 @@ bool ZTSWatcher_Reader::Read(const ZStreamR& iStreamR)
 			ZAssert(fBaseID);
 			*fBaseID = theBaseID;
 			*fCountIssued = theCountIssued;
-			fBaseID = nil;
-			fCountIssued = nil;
+			fBaseID = nullptr;
+			fCountIssued = nullptr;
 			fCondition.Broadcast();
 			break;
 			}
@@ -331,16 +331,16 @@ bool ZTSWatcher_Reader::Read(const ZStreamR& iStreamR)
 			ZAssert(fWatcherAddedIDs);
 
 			fWatcherAddedIDs->swap(watcherAddedIDs);
-			fWatcherAddedIDs = nil;
+			fWatcherAddedIDs = nullptr;
 
 			fChangedTupleIDs->swap(changedTupleIDs);
-			fChangedTupleIDs = nil;
+			fChangedTupleIDs = nullptr;
 
 			fChangedTuples->swap(changedTuples);
-			fChangedTuples = nil;
+			fChangedTuples = nullptr;
 
 			fChangedQueries->swap(changedQueries);
-			fChangedQueries = nil;
+			fChangedQueries = nullptr;
 
 			fCondition.Broadcast();
 			break;

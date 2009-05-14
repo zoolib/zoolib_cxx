@@ -215,7 +215,7 @@ ZStreamMUX::Endpoint::Endpoint(ZStreamMUX* iMUX, uint32 iEPID, size_t iReceiveBu
 	fEPID(iEPID),
 	fReceiveBufferSize(iReceiveBufferSize),
 	fListener(iListener),
-	fOpenName(nil),
+	fOpenName(nullptr),
 	fStateEP(eStateEP_Accepted),
 	fStateReceive(eStateReceive_Open),
 	fStateSend(eStateSend_Open),
@@ -233,7 +233,7 @@ ZStreamMUX::Endpoint::Endpoint(ZStreamMUX* iMUX, uint32 iEPID, size_t iReceiveBu
 :	fPUC_MUX(iMUX),
 	fEPID(iEPID),
 	fReceiveBufferSize(iReceiveBufferSize),
-	fListener(nil),
+	fListener(nullptr),
 	fOpenName(iOpenName),
 	fStateEP(eStateEP_ConnectPending),
 	fStateReceive(eStateReceive_Open),
@@ -631,7 +631,7 @@ bool ZStreamMUX::Write(const ZStreamW& iStreamW)
 			if (theEP->fListener)
 				{
 				theEP->fListener->fEndpoints_Pending.Remove(theEP);
-				theEP->fListener = nil;
+				theEP->fListener = nullptr;
 				}
 			localEPs.push_back(theEP);
 			}
@@ -977,7 +977,7 @@ void ZStreamMUX::Listener_Finalize(Listener* iListener)
 		{
 		Endpoint* theEndpoint = i.Current();
 		this->Endpoint_Abort(theEndpoint);
-		theEndpoint->fListener = nil;
+		theEndpoint->fListener = nullptr;
 		}
 	}
 
@@ -992,7 +992,7 @@ ZRef<ZStreamerRWCon> ZStreamMUX::Listener_Listen(Listener* iListener)
 		return ZRef<ZStreamerRWCon>();
 
 	Endpoint* theEndpoint = iListener->fEndpoints_Pending.PopFront<Endpoint>();
-	theEndpoint->fListener = nil;
+	theEndpoint->fListener = nullptr;
 	return theEndpoint;
 	}
 
@@ -1035,7 +1035,7 @@ ZStreamMUX::Endpoint* ZStreamMUX::pGetEndpointNilOkay(uint32 iGlobalID)
 	map<uint32, Endpoint*>::iterator i = fMap_IDToEndpoint.find(iGlobalID);
 	if (i != fMap_IDToEndpoint.end())
 		return i->second;
-	return nil;
+	return nullptr;
 	}
 
 ZStreamMUX::Endpoint* ZStreamMUX::pGetEndpoint(uint32 iGlobalID)
@@ -1089,7 +1089,7 @@ void ZStreamMUX::pAbort(Endpoint* iEP)
 		if (iEP->fListener)
 			{
 			iEP->fListener->fEndpoints_Pending.Remove(iEP);
-			iEP->fListener = nil;
+			iEP->fListener = nullptr;
 			}
 		}
 

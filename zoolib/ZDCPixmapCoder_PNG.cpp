@@ -81,8 +81,8 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 	const ZDCPixmapNS::PixelDesc& iPixelDesc,
 	const ZRect& iBounds)
 	{
-	png_structp write_ptr = ::png_create_write_struct(PNG_LIBPNG_VER_STRING, nil, nil, nil);
-	png_infop info_ptr = nil;
+	png_structp write_ptr = ::png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+	png_infop info_ptr = nullptr;
 
 	vector<uint8> theRowBufferVector;
 
@@ -223,8 +223,8 @@ ZDCPixmapDecoder_PNG::~ZDCPixmapDecoder_PNG()
 
 void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 	{
-	png_structp read_ptr = ::png_create_read_struct(PNG_LIBPNG_VER_STRING, nil, nil, nil);
-	png_infop info_ptr = nil;
+	png_structp read_ptr = ::png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+	png_infop info_ptr = nullptr;
 
 	try
 		{
@@ -334,12 +334,12 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 	catch (...)
 		{
 		if (read_ptr)
-			::png_destroy_read_struct(&read_ptr, &info_ptr, nil);
+			::png_destroy_read_struct(&read_ptr, &info_ptr, nullptr);
 		throw;
 		}
 
 	if (read_ptr)
-		::png_destroy_read_struct(&read_ptr, &info_ptr, nil);
+		::png_destroy_read_struct(&read_ptr, &info_ptr, nullptr);
 	}
 
 NAMESPACE_ZOOLIB_END

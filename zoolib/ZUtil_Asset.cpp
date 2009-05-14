@@ -334,9 +334,9 @@ ZRef<ZAssetTree> ZUtil_Asset::sGetAssetTreeFromExecutable(const string& iAssetTr
 
 	HINSTANCE theHINSTANCE;
 	if (ZUtil_Win::sUseWAPI())
-		theHINSTANCE = ::GetModuleHandleW(nil);
+		theHINSTANCE = ::GetModuleHandleW(nullptr);
 	else
-		theHINSTANCE = ::GetModuleHandleA(nil);
+		theHINSTANCE = ::GetModuleHandleA(nullptr);
 
 	return new ZAssetTree_Win_MultiResource(theHINSTANCE, "ZAO_", iAssetTreeName);
 
@@ -350,7 +350,7 @@ ZRef<ZAssetTree> ZUtil_Asset::sGetAssetTreeFromExecutable(const string& iAssetTr
 #elif ZCONFIG_SPI_Enabled(BeOS)
 
 	// AG 2000-01-28. I know, I know, this is not thread safe.
-	static BResources* sBResources = nil;
+	static BResources* sBResources = nullptr;
 	if (!sBResources)
 		{
 		app_info info;
@@ -429,19 +429,19 @@ ZRef<ZAssetTree> ZUtil_Asset::sGetAssetTreeFromFileSpec(const ZFileSpec& iFileSp
 			{
 			theFileHANDLE = ::CreateFileW(ZUnicode::sAsUTF16(thePath).c_str(), // the path
 											GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
-											nil, // No security attributes
+											nullptr, // No security attributes
 											OPEN_EXISTING, // Open the file only if it exists
 											FILE_ATTRIBUTE_NORMAL, // No special attributes
-											nil);// No template file
+											nullptr);// No template file
 			}
 		else
 			{
 			theFileHANDLE = ::CreateFileA(thePath.c_str(), // the path
 											GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
-											nil, // No security attributes
+											nullptr, // No security attributes
 											OPEN_EXISTING, // Open the file only if it exists
 											FILE_ATTRIBUTE_NORMAL, // No special attributes
-											nil);// No template file
+											nullptr);// No template file
 			}
 
 		if (theFileHANDLE != INVALID_HANDLE_VALUE)

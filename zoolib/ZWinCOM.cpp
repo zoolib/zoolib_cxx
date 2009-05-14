@@ -390,11 +390,11 @@ string16 Variant::DGetString16(const string16& iDefault) const
 #pragma mark * String
 
 String::String()
-:	fBSTR(nil)
+:	fBSTR(nullptr)
 	{}
 
 String::String(const String& iOther)
-:	fBSTR(nil)
+:	fBSTR(nullptr)
 	{
 	if (iOther.fBSTR)
 		{
@@ -411,7 +411,7 @@ String::~String()
 
 String& String::operator=(const String& iOther)
 	{
-	BSTR newBSTR = nil;
+	BSTR newBSTR = nullptr;
 	if (iOther.fBSTR)
 		{
 		if (size_t sourceLength = ::SysStringLen(iOther.fBSTR))
@@ -426,7 +426,7 @@ String& String::operator=(const String& iOther)
 	}
 
 String::String(const BSTR& iOther)
-:	fBSTR(nil)
+:	fBSTR(nullptr)
 	{
 	if (iOther)
 		{
@@ -437,7 +437,7 @@ String::String(const BSTR& iOther)
 
 String& String::operator=(const BSTR& iOther)
 	{
-	BSTR newBSTR = nil;
+	BSTR newBSTR = nullptr;
 	if (iOther)
 		{
 		if (size_t sourceLength = ::SysStringLen(iOther))
@@ -452,7 +452,7 @@ String& String::operator=(const BSTR& iOther)
 	}
 
 String::String(const string16& iOther)
-:	fBSTR(nil)
+:	fBSTR(nullptr)
 	{
 	if (size_t sourceLength = iOther.length())
 		fBSTR = ::SysAllocStringLen(iOther.data(), sourceLength);
@@ -460,7 +460,7 @@ String::String(const string16& iOther)
 
 String& String::operator=(const string16& iOther)
 	{
-	BSTR newBSTR = nil;
+	BSTR newBSTR = nullptr;
 	if (size_t sourceLength = iOther.length())
 		newBSTR = ::SysAllocStringLen(iOther.data(), sourceLength);
 
@@ -482,7 +482,7 @@ void String::Clear()
 	{
 	if (fBSTR)
 		::SysFreeString(fBSTR);
-	fBSTR = nil;
+	fBSTR = nullptr;
 	}
 
 BSTR& String::GetPtrRef()

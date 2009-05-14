@@ -29,7 +29,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZSleeper
 
 ZSleeper::ZSleeper()
-:	fRunner(nil)
+:	fRunner(nullptr)
 	{}
 
 ZSleeper::~ZSleeper()
@@ -76,7 +76,7 @@ void ZSleeperRunner::pDetachSleeper(ZSleeper* iSleeper)
 	ZAssert(iSleeper);
 	ZAssert(iSleeper->fRunner = this);
 
-	iSleeper->fRunner = nil;
+	iSleeper->fRunner = nullptr;
 
 	iSleeper->RunnerDetached(this);
 	}
@@ -147,7 +147,7 @@ void ZSleeperRunner_Threaded::pRun()
 
 	this->pDetachSleeper(fSleeper);
 
-	fSleeper = nil;
+	fSleeper = nullptr;
 
 	delete this;
 	}

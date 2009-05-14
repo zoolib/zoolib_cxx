@@ -216,7 +216,7 @@ bool ZTextDecoder_iconv::Decode(
 
 void ZTextDecoder_iconv::Reset()
 	{
-	::iconv(fConverter, nil, 0, nil, 0);
+	::iconv(fConverter, nullptr, 0, nullptr, 0);
 	}
 
 // =================================================================================================
@@ -317,7 +317,7 @@ void ZTextEncoder_iconv::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 
 void ZTextEncoder_iconv::Reset()
 	{
-	::iconv(fConverter, nil, 0, nil, 0);
+	::iconv(fConverter, nullptr, 0, nullptr, 0);
 	}
 
 NAMESPACE_ZOOLIB_END

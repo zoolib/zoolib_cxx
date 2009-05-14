@@ -149,7 +149,7 @@ void ZMacMP::sInvokeInMP(EntryProc iProc, void* iParam)
 			{
 			ZAtomic_Add(&sMPTaskCount, 1);
 			MPTaskID theTaskID;
-			OSStatus err = ::MPCreateTask(sMPTaskEntry, nil, 64 * 1024, 0, 0, 0, 0, &theTaskID);
+			OSStatus err = ::MPCreateTask(sMPTaskEntry, nullptr, 64 * 1024, 0, 0, 0, 0, &theTaskID);
 			ZAssertStop(1, err == noErr);
 			}
 
@@ -439,7 +439,7 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 
 	theStruct->fListener->fEndpointRef = ::OTOpenEndpointInContext(
 		::OTCreateConfiguration("tilisten, tcp"),
-		0, nil, &theStruct->fResult, sOTClientContextPtr);
+		0, nullptr, &theStruct->fResult, sOTClientContextPtr);
 
 	if (theStruct->fResult == noErr)
 		theStruct->fResult = ::OTSetBlocking(theStruct->fListener->fEndpointRef);
@@ -459,14 +459,14 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 		bindReq.addr.len = sizeof(theInetAddress);
 		bindReq.qlen = theStruct->fListenQueueSize;
 		theStruct->fResult
-			= ::OTBind(theStruct->fListener->fEndpointRef, &bindReq, nil);
+			= ::OTBind(theStruct->fListener->fEndpointRef, &bindReq, nullptr);
 		}
 
 	if (theStruct->fResult != noErr)
 		{
 		if (theStruct->fListener->fEndpointRef)
 			::OTCloseProvider(theStruct->fListener->fEndpointRef);
-		theStruct->fListener->fEndpointRef = nil;
+		theStruct->fListener->fEndpointRef = nullptr;
 		}
 	}
 
@@ -480,7 +480,7 @@ ZNetListener_TCP_MacOT_OSX::~ZNetListener_TCP_MacOT_OSX()
 	ListenerGeneric_t theStruct;
 	theStruct.fEndpointRef = fEndpointRef;
 	ZMacMP::sInvokeInMP(sMP_Destructor, &theStruct);
-	fEndpointRef = nil;
+	fEndpointRef = nullptr;
  	}
 
 void ZNetListener_TCP_MacOT_OSX::sMP_Destructor(void* iParam)
@@ -571,7 +571,7 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Listen(void* iParam)
 		{
 		EndpointRef acceptedEndpointRef = ::OTOpenEndpointInContext(
 			::OTCreateConfiguration("tcp"),
-			0, nil, &theOTResult, sOTClientContextPtr);
+			0, nullptr, &theOTResult, sOTClientContextPtr);
 
 		if (acceptedEndpointRef)
 			{
@@ -595,7 +595,7 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Listen(void* iParam)
 		if (theOTResult)
 			::OTSndDisconnect(theStruct->fListener->fEndpointRef, &theTCall);
 		}
-	theStruct->fAcceptedEndpointRef = nil;
+	theStruct->fAcceptedEndpointRef = nullptr;
 	}
 
 void ZNetListener_TCP_MacOT_OSX::CancelListen()
@@ -636,7 +636,7 @@ struct EndpointConstruct_t
 
 ZNetEndpoint_TCP_MacOT_OSX::ZNetEndpoint_TCP_MacOT_OSX(ip_addr iRemoteHost, ip_port iRemotePort)
 	{
-	fEndpointRef = nil;
+	fEndpointRef = nullptr;
 	fRemoteHost = iRemoteHost;
 	fRemotePort = iRemotePort;
 
@@ -656,7 +656,7 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 
 	theStruct->fEndpoint->fEndpointRef = ::OTOpenEndpointInContext(
 		::OTCreateConfiguration(kTCPName),
-		0, nil, &theStruct->fResult, sOTClientContextPtr);
+		0, nullptr, &theStruct->fResult, sOTClientContextPtr);
 
 	if (theStruct->fResult == noErr)
 		{
@@ -665,7 +665,7 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 		}
 
 	if (theStruct->fResult == noErr)
-		theStruct->fResult = ::OTBind(theStruct->fEndpoint->fEndpointRef, nil, nil);
+		theStruct->fResult = ::OTBind(theStruct->fEndpoint->fEndpointRef, nullptr, nullptr);
 
 	if (theStruct->fResult == noErr)
 		{
@@ -679,19 +679,19 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 		theSndCall.addr.len = sizeof(InetAddress);
 		theSndCall.addr.maxlen = sizeof(InetAddress);
 
-		theSndCall.opt.buf = nil; // no connection options
+		theSndCall.opt.buf = nullptr; // no connection options
 		theSndCall.opt.len = 0;
 		theSndCall.opt.maxlen = 0;
 
-		theSndCall.udata.buf = nil; // no connection data
+		theSndCall.udata.buf = nullptr; // no connection data
 		theSndCall.udata.len = 0;
 		theSndCall.udata.maxlen = 0;
 
 		OTResult theResult = ::OTConnect(
-			theStruct->fEndpoint->fEndpointRef, &theSndCall, nil);
+			theStruct->fEndpoint->fEndpointRef, &theSndCall, nullptr);
 		if (theResult == T_DISCONNECT)
 			{
-			::OTRcvDisconnect(theStruct->fEndpoint->fEndpointRef, nil);
+			::OTRcvDisconnect(theStruct->fEndpoint->fEndpointRef, nullptr);
 			theStruct->fResult = kEAGAINErr; //??
 			}
 		}
@@ -700,7 +700,7 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 		{
 		if (theStruct->fEndpoint->fEndpointRef)
 			::OTCloseProvider(theStruct->fEndpoint->fEndpointRef);
-		theStruct->fEndpoint->fEndpointRef = nil;
+		theStruct->fEndpoint->fEndpointRef = nullptr;
 		}
 	}
 
@@ -779,7 +779,7 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Imp_Read(void* iParam)
 				break;
 			OTResult lookResult = ::OTLook(theStruct->fEndpointRef);
 			if (lookResult == T_DISCONNECT)
-				::OTRcvDisconnect(theStruct->fEndpointRef, nil);
+				::OTRcvDisconnect(theStruct->fEndpointRef, nullptr);
 			else if (lookResult == T_ORDREL)
 				::OTRcvOrderlyDisconnect(theStruct->fEndpointRef);
 			else
@@ -860,7 +860,7 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Imp_Write(void* iParam)
 				break;
 			OTResult lookResult = ::OTLook(theStruct->fEndpointRef);
 			if (lookResult == T_DISCONNECT)
-				::OTRcvDisconnect(theStruct->fEndpointRef, nil);
+				::OTRcvDisconnect(theStruct->fEndpointRef, nullptr);
 			else if (lookResult == T_ORDREL)
 				::OTRcvOrderlyDisconnect(theStruct->fEndpointRef);
 			else
@@ -902,7 +902,7 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_ReceiveDisconnect(void* iParam)
 			OTResult lookResult = ::OTLook(theStruct->fEndpointRef);
 			if (lookResult == T_DISCONNECT)
 				{
-				::OTRcvDisconnect(theStruct->fEndpointRef, nil);
+				::OTRcvDisconnect(theStruct->fEndpointRef, nullptr);
 				break;
 				}
 			else if (lookResult == T_ORDREL)
@@ -939,7 +939,7 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_SendDisconnect(void* iParam)
 
 		OTResult lookResult = ::OTLook(theStruct->fEndpointRef);
 		if (lookResult == T_DISCONNECT)
-			::OTRcvDisconnect(theStruct->fEndpointRef, nil);
+			::OTRcvDisconnect(theStruct->fEndpointRef, nullptr);
 		else if (lookResult == T_ORDREL)
 			::OTRcvOrderlyDisconnect(theStruct->fEndpointRef);
 		else
@@ -958,7 +958,7 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Abort(void* iParam)
 	{
 	EndpointGeneric_t* theStruct = static_cast<EndpointGeneric_t*>(iParam);
 	::OTCancelSynchronousCalls(theStruct->fEndpointRef, kOTCanceledErr);
-	::OTSndDisconnect(theStruct->fEndpointRef, nil);
+	::OTSndDisconnect(theStruct->fEndpointRef, nullptr);
 	}
 
 NAMESPACE_ZOOLIB_END

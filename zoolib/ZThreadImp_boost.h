@@ -61,7 +61,7 @@ NAMESPACE_ZOOLIB_BEGIN
 class ZMtx_boost : public boost::mutex
 	{
 public:
-	ZMtx_boost(const char* iName = nil);
+	ZMtx_boost(const char* iName = nullptr);
 	~ZMtx_boost();
 
 	void Acquire();

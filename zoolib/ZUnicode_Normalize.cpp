@@ -126,7 +126,7 @@ static string16 sNormalized_C_ICU(const string16& iString, ZUnicode::ENormForm i
 		UErrorCode status = U_ZERO_ERROR;
 		size_t neededSize = ::unorm_normalize(
 			iString.data(), sourceSize, theMode, 0,
-			nil, 0, &status);
+			nullptr, 0, &status);
 
 		if (!status)
 			{

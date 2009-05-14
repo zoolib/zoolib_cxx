@@ -78,8 +78,8 @@ ZTBRep_Client::TransTuple::TransTuple(uint64 iID)
 	fWritten = false;
 	fWriteSent = false;
 
-	fCallback_GetTuple = nil;
-	fRefcon = nil;
+	fCallback_GetTuple = nullptr;
+	fRefcon = nullptr;
 	}
 
 // =================================================================================================
@@ -789,8 +789,8 @@ void ZTBRep_Client::pDoStuff()
 							ZTBRepTransaction::Callback_GetTuple_t theCallback
 								= theTransTuple->fCallback_GetTuple;
 							void* theRefcon = theTransTuple->fRefcon;
-							theTransTuple->fCallback_GetTuple = nil;
-							theTransTuple->fRefcon = nil;
+							theTransTuple->fCallback_GetTuple = nullptr;
+							theTransTuple->fRefcon = nullptr;
 							const uint64 theID = theTransTuple->fID;
 							const ZTuple theValue = theTransTuple->fValue;
 							theCallback(theRefcon, 1, &theID, &theValue);
@@ -982,8 +982,8 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 						ZTBRepTransaction::Callback_GetTuple_t theCallback
 							= theTransTuple->fCallback_GetTuple;
 						void* theRefcon = theTransTuple->fRefcon;
-						theTransTuple->fCallback_GetTuple = nil;
-						theTransTuple->fRefcon = nil;
+						theTransTuple->fCallback_GetTuple = nullptr;
+						theTransTuple->fRefcon = nullptr;
 						ZTuple theValue = theTransTuple->fValue;
 						theCallback(theRefcon, 1, &theID, &theValue);
 						}

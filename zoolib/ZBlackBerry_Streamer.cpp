@@ -265,7 +265,7 @@ Channel_Streamer::Channel_Streamer(Device_Streamer* iDevice_Streamer,
 	fWaitingForSequence(true),
 	fReceive_ChunkSize(0),
 	fSend_ChunkSize(0),
-	fSend_Data(nil),
+	fSend_Data(nullptr),
 	fSend_Size(0)
 	{
 	if (iPasswordHash)
@@ -389,7 +389,7 @@ void Channel_Streamer::Imp_Abort()
 Device_Streamer::Device_Streamer()
 :	fMutex("ZBlackBerry::Device_Streamer::fMutex"),
 	fGetAttributeSent(false),
-	fGetAttribute(nil),
+	fGetAttribute(nullptr),
 	fLifecycle(eLifecycle_Running)
 	{}
 
@@ -640,7 +640,7 @@ bool Device_Streamer::Write(const ZStreamW& iStreamW)
 			theChannel->fWaitingForSequence = false;
 			theChannel->fReceive_Buffer.clear();
 			// Don't zero fSend_Data -- a pending write will need its value.
-			// theChannel->fSend_Data = nil;
+			// theChannel->fSend_Data = nullptr;
 			theChannel->fSend_Size = 0;
 			theChannel->fCondition_Receive.Broadcast();
 			theChannel->fCondition_Send.Broadcast();
@@ -683,7 +683,7 @@ bool Device_Streamer::Write(const ZStreamW& iStreamW)
 		{
 		fGetAttribute->fFinished = true;
 		fGetAttribute->fResult = ZMemoryBlock();
-		fGetAttribute = nil;
+		fGetAttribute = nullptr;
 		fGetAttributeSent = false;
 		fCondition.Broadcast();
 		}
@@ -849,7 +849,7 @@ void Device_Streamer::Channel_Write(
 		if (oCountWritten)
 			*oCountWritten = iChannel->fSend_Data - localSource;
 
-		iChannel->fSend_Data = nil;
+		iChannel->fSend_Data = nullptr;
 		iChannel->fCondition_Send.Broadcast();
 		}
 	else
@@ -1017,7 +1017,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				ZAssert(fGetAttribute);
 				fGetAttribute->fFinished = true;
 				fGetAttribute->fResult = theMB;
-				fGetAttribute = nil;
+				fGetAttribute = nullptr;
 				fGetAttributeSent = false;
 				fCondition.Broadcast();
 				break;

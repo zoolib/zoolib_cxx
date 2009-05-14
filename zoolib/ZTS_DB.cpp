@@ -574,7 +574,7 @@ ZTS_DB::ZTS_DB(const ZFileSpec& iFileSpec)
 	if (ZCONFIG_TS_DB_UsePrefix)
 		theBTI.prefix = sBTree_Prefix;
 	else
-		theBTI.prefix = nil;
+		theBTI.prefix = nullptr;
 
 	theBTI.lorder = 0; // use default
 	fDB = ::dbopen(dbfile.c_str(), O_RDWR, 0, DB_BTREE, &theBTI);
@@ -630,7 +630,7 @@ ZTS_DB::ZTS_DB(const ZFileSpec& iFileSpec, const vector<vector<string> >& iIndex
 	if (ZCONFIG_TS_DB_UsePrefix)
 		theBTI.prefix = sBTree_Prefix;
 	else
-		theBTI.prefix = nil;
+		theBTI.prefix = nullptr;
 
 	theBTI.lorder = 0; // use default
 	fDB = ::dbopen(dbfile.c_str(), O_RDWR | O_CREAT, 0644, DB_BTREE, &theBTI);

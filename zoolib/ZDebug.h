@@ -36,7 +36,7 @@ void ZDebug_DisplayMessageSimple(const char* message, ...);
 
 const char* ZDebug_FormatMessage(const char* iMessage, ...);
 
-inline const char* ZDebug_FormatMessage() { return nil; }
+inline const char* ZDebug_FormatMessage() { return nullptr; }
 
 // The actual macros that get used in source code. The funkiness of these macros (should)
 // generate minimal inline code, so that an assertion that's active at level 2 will
@@ -74,11 +74,11 @@ inline const char* ZDebug_FormatMessage() { return nil; }
 
 #define ZAssertLog(a, b) \
 	((a) <= ZCONFIG_Debug && sDebug_HandleInitial && !(b) ? \
-	sDebug_HandleInitial(a, eDebug_ActionContinue, __FILE__, __LINE__, #b, nil), false : true)
+	sDebug_HandleInitial(a, eDebug_ActionContinue, __FILE__, __LINE__, #b, nullptr), false : true)
 
 #define ZAssertStop(a, b) \
 	((a)<=ZCONFIG_Debug && sDebug_HandleInitial && !(b) ? \
-	sDebug_HandleInitial(a, eDebug_ActionStop, __FILE__, __LINE__, #b, nil), false : true)
+	sDebug_HandleInitial(a, eDebug_ActionStop, __FILE__, __LINE__, #b, nullptr), false : true)
 
 
 // ZAssertCompile can be used to enforce a constraint at compile time, (for example that a

@@ -40,10 +40,10 @@ ZStreamRPos_Mac_PartialResource::ZStreamRPos_Mac_PartialResource(Handle inResour
 	fResourceHandle = inResourceHandle;
 
 	// We must have a non-nil resource.
-	ZAssertStop(2, inResourceHandle != nil);
+	ZAssertStop(2, inResourceHandle != nullptr);
 
 	// And it must be unloaded.
-	ZAssertStop(2, *inResourceHandle == nil);
+	ZAssertStop(2, *inResourceHandle == nullptr);
 
 	fAdopted = inAdopt;
 	fPosition = 0;

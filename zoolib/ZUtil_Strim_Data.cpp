@@ -60,7 +60,7 @@ void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& 
 			
 		uint64 countCopied;
 		ZStreamW_HexStrim(byteSeparator, "", 0, s)
-			.CopyFrom(iStreamRPos, countToCopy, &countCopied, nil);
+			.CopyFrom(iStreamRPos, countToCopy, &countCopied, nullptr);
 
 		if (countCopied == 0)
 			break;

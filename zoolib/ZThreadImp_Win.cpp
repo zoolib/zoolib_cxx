@@ -49,7 +49,7 @@ ZTSS_Win::Value ZTSS_Win::sGet(Key iKey)
 #pragma mark * ZSem_Win
 
 ZSem_Win::ZSem_Win()
-	{ fHANDLE = ::CreateSemaphore(nil, 0, 0x7FFFFFFF, nil); }
+	{ fHANDLE = ::CreateSemaphore(nullptr, 0, 0x7FFFFFFF, nullptr); }
 
 ZSem_Win::~ZSem_Win()
 	{ ::CloseHandle(fHANDLE); }
@@ -61,7 +61,7 @@ bool ZSem_Win::Wait(double iTimeout)
 	{ return WAIT_OBJECT_0 == ::WaitForSingleObject(fHANDLE, DWORD(iTimeout * 1e3)); }
 
 void ZSem_Win::Signal()
-	{ ::ReleaseSemaphore(fHANDLE, 1, nil); }
+	{ ::ReleaseSemaphore(fHANDLE, 1, nullptr); }
 
 // =================================================================================================
 #pragma mark -
@@ -86,7 +86,7 @@ void ZMtx_Win::Release()
 ZThreadImp_Win::ID ZThreadImp_Win::sCreate(size_t iStackSize, Proc_t iProc, void* iParam)
 	{
 	ID theID;
-	HANDLE theThreadHANDLE = (HANDLE) ::_beginthreadex(nil, 0, iProc, iParam, 0, &theID);
+	HANDLE theThreadHANDLE = (HANDLE) ::_beginthreadex(nullptr, 0, iProc, iParam, 0, &theID);
 	if (!theThreadHANDLE)
 		throw std::bad_alloc();
 

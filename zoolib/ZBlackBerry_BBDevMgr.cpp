@@ -118,7 +118,7 @@ private:
 
 Channel_BBDevMgr::Channel_BBDevMgr(ZRef<Channel>& oChannel, ZRef<IDevice> iDevice,
 	bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash)
-:	fChannel(nil),
+:	fChannel(nullptr),
 	fPreserveBoundaries(iPreserveBoundaries),
 	fStart(0),
 	fEnd(0),
@@ -157,7 +157,7 @@ STDMETHODIMP Channel_BBDevMgr::QueryInterface(const IID& iInterfaceID, void** oO
 	if (ZLOG(s, eDebug + 4, "ZBlackBerry::Channel_BBDevMgr"))
 		s << "QueryInterface";
 
-	*oObjectRef = nil;
+	*oObjectRef = nullptr;
 
 	if (iInterfaceID == IID_IUnknown)
 		return sCOMCopy<IUnknown>(oObjectRef, this);
@@ -268,7 +268,7 @@ void Channel_BBDevMgr::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 			if (!theChannel)
 				break;
 
-			if (!this->pRefill(locker, theChannel, nil))
+			if (!this->pRefill(locker, theChannel, nullptr))
 				break;
 			}
 		}
@@ -629,7 +629,7 @@ Manager_BBDevMgr::Manager_BBDevMgr()
 	{
 	::CoCreateInstance(
 		IDeviceManager::sCLSID,
-		nil,
+		nullptr,
 		CLSCTX_ALL,
 		ZUUIDOF(IDeviceManager),
 		sCOMVoidPtr(fDeviceManager));
@@ -676,7 +676,7 @@ STDMETHODIMP Manager_BBDevMgr::QueryInterface(
 	if (ZLOG(s, eDebug + 4, "ZBlackBerry::Manager_BBDevMgr"))
 		s << "QueryInterface";
 
-	*oObjectRef = nil;
+	*oObjectRef = nullptr;
 
 	if (iInterfaceID == IID_IUnknown)
 		return sCOMCopy<IUnknown>(oObjectRef, this);

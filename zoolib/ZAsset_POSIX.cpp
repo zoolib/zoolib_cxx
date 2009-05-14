@@ -74,7 +74,7 @@ void ZAssetTree_POSIX_MemoryMapped::LoadUp(int inFileDescriptor, size_t inStart,
 
 	// inLength must be extended to compensate for any change in the start offset
 	fMappedLength = inLength + inStart - realStart;
-	fMappedAddress = ::mmap(nil, fMappedLength,
+	fMappedAddress = ::mmap(nullptr, fMappedLength,
 		PROT_READ, MAP_PRIVATE, inFileDescriptor, realStart);
 
 	if (fMappedAddress == MAP_FAILED)

@@ -87,7 +87,7 @@ protected:
 class ZMtx_Win : NonCopyable
 	{
 public:
-	ZMtx_Win(const char* iName = nil);
+	ZMtx_Win(const char* iName = nullptr);
 	~ZMtx_Win();
 
 	void Acquire();

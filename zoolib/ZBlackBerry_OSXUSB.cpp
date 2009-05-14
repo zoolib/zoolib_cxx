@@ -143,7 +143,7 @@ Manager_OSXUSB::Manager_OSXUSB(CFRunLoopRef iRunLoopRef, bool iAllowMassStorage)
 :	fRunLoopRef(iRunLoopRef),
 	fAllowMassStorage(iAllowMassStorage),
 	fMasterPort(0),
-	fIONotificationPortRef(nil),
+	fIONotificationPortRef(nullptr),
 	fNextID(1)
 	{
 	kern_return_t kr = ::IOMasterPort(MACH_PORT_NULL, &fMasterPort);
@@ -217,7 +217,7 @@ void Manager_OSXUSB::Stop()
 	if (fIONotificationPortRef)
 		{
 		::IONotificationPortDestroy(fIONotificationPortRef);
-		fIONotificationPortRef = nil;
+		fIONotificationPortRef = nullptr;
 		}
 	Manager::Stop();
 	}

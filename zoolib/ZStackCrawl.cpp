@@ -98,9 +98,9 @@ void ZStackCrawl::sPopulateStackFrames(vector<ZStackCrawl::pFrame_t>& oFrames)
 		if (IsBadWritePtr(theNSF,
 			sizeof(NativeStackFrame) + sizeof(uint32) * ZStackCrawl::kMaxCountParams))
 			{
-			// Use 0, not nil, because MingGW gcc 3.4.5 chokes with nil.
+			// Use 0, not nullptr, because MingGW gcc 3.4.5 chokes with nil.
 			theNSF = 0;
-//			theNSF = nil;
+//			theNSF = nullptr;
 			}
 
 		++frameNumber;
@@ -173,16 +173,16 @@ static void sGetSymNameAndOffset(const void* iAddress, string& oSymName, size_t&
 	HANDLE currentProcess = ::GetCurrentProcess();
 	if (!sInited)
 		{
-		bool inited1 = ::SymInitialize(currentProcess, nil, false);
+		bool inited1 = ::SymInitialize(currentProcess, nullptr, false);
 
 		char moduleFileName[MAX_PATH];
-		::GetModuleFileNameA(::GetModuleHandleA(nil), moduleFileName, sizeof(moduleFileName));
+		::GetModuleFileNameA(::GetModuleHandleA(nullptr), moduleFileName, sizeof(moduleFileName));
 
 		bool inited2 = ::SymLoadModule(
 						currentProcess, // process handle
-						nil,            // file handle
+						nullptr,            // file handle
 						moduleFileName, // path to exe
-						nil,            // module name
+						nullptr,            // module name
 						0,              // load address
 						0);             // module size
 		sInited = true;
@@ -290,7 +290,7 @@ static bool sVerifyELF(const Elf32_Ehdr& iHdr)
 	}
 
 Symbols::Symbols(const char* iFileName, size_t iBaseAddr)
-:	fStringTable(nil)
+:	fStringTable(nullptr)
 	{
 	int theFD = open(iFileName, O_RDONLY);
 
@@ -454,8 +454,8 @@ ZStackCrawl::AllSymbols::~AllSymbols()
 bool ZStackCrawl::AllSymbols::GetSymNameAndOffset(const void* iAddress,
 	string& oSymName, size_t& oOffset) const
 	{
-	const Elf32_Sym* foundSym = nil;
-	const Symbols* foundTable = nil;
+	const Elf32_Sym* foundSym = nullptr;
+	const Symbols* foundTable = nullptr;
 	size_t addressAsInt = reinterpret_cast<size_t>(iAddress);
 	for (vector<Symbols*>::const_iterator i = fSymbols.begin(); i != fSymbols.end(); ++i)
 		{
@@ -546,7 +546,7 @@ ZStackCrawl::ZStackCrawl()
 	fFrames.reserve(32);
 
 	#if defined(linux) && ZCONFIG(Processor, x86)
-		fAllSymbols = nil;
+		fAllSymbols = nullptr;
 		sPopulateStackFrames(fFrames);
 	#endif
 

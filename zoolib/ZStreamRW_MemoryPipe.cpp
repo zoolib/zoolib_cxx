@@ -33,17 +33,17 @@ ZStreamRW_MemoryPipe::ZStreamRW_MemoryPipe()
 	{
 	fWriteClosed = false;
 
-	fSource = nil;
-	fSourceEnd = nil;
+	fSource = nullptr;
+	fSourceEnd = nullptr;
 
-	fDest = nil;
+	fDest = nullptr;
 	fDestCount = 0;
 	}
 
 ZStreamRW_MemoryPipe::~ZStreamRW_MemoryPipe()
 	{
 	fMutex.Acquire();
-	ZAssertStop(2, fSource == nil && fDest == nil);
+	ZAssertStop(2, fSource == nullptr && fDest == nullptr);
 	}
 
 void ZStreamRW_MemoryPipe::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
@@ -68,13 +68,13 @@ void ZStreamRW_MemoryPipe::Imp_Read(void* iDest, size_t iCount, size_t* oCountRe
 			// Register ourselves as waiting for data.
 			if (fWriteClosed)
 				break;
-			ZAssertStop(2, fDest == nil && fDestCount == 0);
+			ZAssertStop(2, fDest == nullptr && fDestCount == 0);
 			fDest = localDest;
 			fDestCount = localEnd - localDest;
 			fCondition_Write.Broadcast();
 			fCondition_Read.Wait(fMutex);
 			localDest = fDest;
-			fDest = nil;
+			fDest = nullptr;
 			fDestCount = 0;
 			}
 
@@ -129,7 +129,7 @@ void ZStreamRW_MemoryPipe::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 			// Register ourselves as waiting for data.
 			if (fWriteClosed)
 				break;
-			ZAssertStop(2, fDest == nil && fDestCount == 0);
+			ZAssertStop(2, fDest == nullptr && fDestCount == 0);
 			fDestCount = countRemaining;
 			fCondition_Write.Broadcast();
 			fCondition_Read.Wait(fMutex);
@@ -168,14 +168,14 @@ void ZStreamRW_MemoryPipe::Imp_Write(const void* iSource, size_t iCount, size_t*
 		else
 			{
 			// Register ourselves as having data to provide.
-			ZAssertStop(2, fSource == nil && fSourceEnd == nil);
+			ZAssertStop(2, fSource == nullptr && fSourceEnd == nullptr);
 			fSource = localSource;
 			fSourceEnd = localEnd;
 			fCondition_Read.Broadcast();
 			fCondition_Write.Wait(fMutex);
 			localSource = fSource;
-			fSource = nil;
-			fSourceEnd = nil;
+			fSource = nullptr;
+			fSourceEnd = nullptr;
 			}
 		
 		if (localSource != static_cast<const uint8*>(iSource))
@@ -301,7 +301,7 @@ void ZStreamRW_MemoryPipe::pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 		else
 			{
 			// Wait till we get read from.
-			ZAssertStop(2, fSource == nil && fSourceEnd == nil);
+			ZAssertStop(2, fSource == nullptr && fSourceEnd == nullptr);
 			fCondition_Read.Broadcast();
 			fCondition_Write.Wait(fMutex);
 			}

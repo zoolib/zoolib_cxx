@@ -50,7 +50,7 @@ static bool sTryRead_PropertyName(const ZStrimU& iStrimU, string& oName)
 		{
 		if (!sTryRead_EscapedString(iStrimU, '\'', oName))
 			{
-			if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, nil, &oName))
+			if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, nullptr, &oName))
 				return false;
 			}
 		}
@@ -95,7 +95,7 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 			{
 			if (!sTryRead_EscapedString(iStrimU, '\'', propertyName))
 				{
-				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, nil, &propertyName))
+				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, nullptr, &propertyName))
 					sThrowParseException("Expected a property name after '#'");
 				}
 			}
@@ -189,7 +189,7 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 			else if (theTypeLC == "bool")
 				{
 				string theBool;
-				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &theBool, nil))
+				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &theBool, nullptr))
 					sThrowParseException("Expected 'false' or 'true'");
 
 				if (theBool == "true")
@@ -664,7 +664,7 @@ static void sToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 					uint64 lastPos = iStreamRPos.GetPosition();
 					uint64 countCopied;
 					ZStreamW_HexStrim(iOptions.fRawByteSeparator, "", 0, s)
-						.CopyFrom(iStreamRPos, iOptions.fRawChunkSize, &countCopied, nil);
+						.CopyFrom(iStreamRPos, iOptions.fRawChunkSize, &countCopied, nullptr);
 
 					if (countCopied == 0)
 						break;

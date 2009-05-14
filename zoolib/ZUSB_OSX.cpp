@@ -65,7 +65,7 @@ static void sThrowIfErr(IOReturn iErr)
 
 static IOCFPlugInInterface** sCreatePluginInterface(io_service_t iService)
 	{
-	IOCFPlugInInterface** plugInInterface = nil;
+	IOCFPlugInInterface** plugInInterface = nullptr;
 	SInt32 theScore;
 	::IOCreatePlugInInterfaceForService(iService,
 		kIOUSBDeviceUserClientTypeID, kIOCFPlugInInterfaceID, &plugInInterface, &theScore);
@@ -74,13 +74,13 @@ static IOCFPlugInInterface** sCreatePluginInterface(io_service_t iService)
 
 static IOUSBDeviceInterface182** sCreate_USBDeviceInterface(io_service_t iUSBDevice)
 	{
-	IOUSBDeviceInterface182** theIOUSBDeviceInterface = nil;
+	IOUSBDeviceInterface182** theIOUSBDeviceInterface = nullptr;
 	if (IOCFPlugInInterface** plugInInterface = sCreatePluginInterface(iUSBDevice))
 		{
 		if (0 != plugInInterface[0]->QueryInterface(plugInInterface,
 			CFUUIDGetUUIDBytes(kIOUSBDeviceInterfaceID182), (LPVOID*)&theIOUSBDeviceInterface))
 			{
-			theIOUSBDeviceInterface = nil;
+			theIOUSBDeviceInterface = nullptr;
 			}
 		::IODestroyPlugInInterface(plugInInterface);
 		}
@@ -102,7 +102,7 @@ static void sSetSInt32(CFMutableDictionaryRef iDict, CFStringRef iPropName, SInt
 
 ZUSBWatcher::ZUSBWatcher(
 	IONotificationPortRef iIONotificationPortRef, SInt32 iUSBVendor, SInt32 iUSBProduct)
-:	fObserver(nil),
+:	fObserver(nullptr),
 	fIONotificationPortRef(iIONotificationPortRef),
 	fNotification(0)
 	{
@@ -160,10 +160,10 @@ void ZUSBWatcher::spDeviceAdded(void* iRefcon, io_iterator_t iIterator)
 #pragma mark * ZUSBDevice
 
 ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_t iUSBDevice)
-:	fIOUSBDeviceInterface(nil),
+:	fIOUSBDeviceInterface(nullptr),
 	fNotification(0),
 	fLocationID(0),
-	fObserver(nil),
+	fObserver(nullptr),
 	fDetached(false),
 	fHasIOUSBDeviceDescriptor(false)
 	{
@@ -227,7 +227,7 @@ ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_
 			{
 			fIOUSBDeviceInterface[0]->USBDeviceClose(fIOUSBDeviceInterface);
 			fIOUSBDeviceInterface[0]->Release(fIOUSBDeviceInterface);
-			fIOUSBDeviceInterface = nil;
+			fIOUSBDeviceInterface = nullptr;
 			}
 		throw;
 		}
@@ -245,7 +245,7 @@ ZUSBDevice::~ZUSBDevice()
 		{
 		fIOUSBDeviceInterface[0]->USBDeviceClose(fIOUSBDeviceInterface);
 		fIOUSBDeviceInterface[0]->Release(fIOUSBDeviceInterface);
-		fIOUSBDeviceInterface = nil;
+		fIOUSBDeviceInterface = nullptr;
 		}
 	}
 
@@ -295,7 +295,7 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface(
 			kIOCFPlugInInterfaceID, 
 			&plugInInterface, &score))
 			{
-			plugInInterface = nil;
+			plugInInterface = nullptr;
 			}
 		::IOObjectRelease(usbInterface);
 
@@ -307,7 +307,7 @@ ZRef<ZUSBInterfaceInterface> ZUSBDevice::CreateInterfaceInterface(
 				CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID190),
 				(LPVOID*)&theIOUSBInterfaceInterface))
 				{
-				theIOUSBInterfaceInterface = nil;
+				theIOUSBInterfaceInterface = nullptr;
 				}
 			::IODestroyPlugInInterface(plugInInterface);
 
@@ -779,7 +779,7 @@ ZUSBInterfaceInterface::~ZUSBInterfaceInterface()
 	if (fOpen)
 		fII[0]->USBInterfaceClose(fII);
 	fII[0]->Release(fII);
-	fII = nil;
+	fII = nullptr;
 	}
 
 ZRef<ZUSBDevice> ZUSBInterfaceInterface::GetUSBDevice()

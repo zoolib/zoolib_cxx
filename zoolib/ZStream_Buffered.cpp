@@ -500,7 +500,7 @@ void ZStreamW_DynamicBuffered::Imp_Flush()
 		{
 		fStreamBuffer.SetPosition(0);
 		uint64 countWritten;
-		fStreamBuffer.CopyTo(fStreamSink, countToWrite, nil, &countWritten);
+		fStreamBuffer.CopyTo(fStreamSink, countToWrite, nullptr, &countWritten);
 		fStreamBuffer.SetPosition(0);
 		fStreamBuffer.Truncate();
 		if (countWritten < countToWrite)

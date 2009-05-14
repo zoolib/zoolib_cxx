@@ -84,7 +84,7 @@ void Sample()
 			// password hash parameter, indicating that we do not know the device's
 			// password. We're passing nil for the oError output parameter, indicating
 			// that we don't care to know the precise reason for a failure.
-			if (ZRef<Channel> theChannel = theDevice->Open("MyAppChannel", nil, nil))
+			if (ZRef<Channel> theChannel = theDevice->Open("MyAppChannel", nullptr, nullptr))
 				{
 				// We can now send and receive data over theChannel. As with any other
 				// streamer we can take a local reference to the stream(s) it encapsulates.				

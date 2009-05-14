@@ -58,13 +58,13 @@ void ZNetNameRegistered_DNSSD::pInit(ip_port iPort,
 		&fDNSServiceRef, // output service ref
 		0, // flags
 		0, // default interface index
-		iName, // name, nil for default
+		iName, // name, nullptr for default
 		iRegType.c_str(),
-		iDomain, // domain, nil for default
-		nil, // host, we presume the current host
+		iDomain, // domain, nullptr for default
+		nullptr, // host, we presume the current host
 		iPort,
 		theTXTData.size(),
-		theTXTData.empty() ? nil : &theTXTData[0],
+		theTXTData.empty() ? nullptr : &theTXTData[0],
 		spDNSServiceRegisterReply, // our callback
 		this); // pointer to self as refcon
 
@@ -84,9 +84,9 @@ ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
 	ConstPString* iTXT, size_t iTXTCount)
 	{
 	this->pInit(iPort,
-		iName.empty() ? nil : iName.c_str(),
+		iName.empty() ? nullptr : iName.c_str(),
 		iRegType.c_str(),
-		iDomain.empty() ? nil : iDomain.c_str(),
+		iDomain.empty() ? nullptr : iDomain.c_str(),
 		iTXT, iTXTCount);
 	}
 
@@ -95,9 +95,9 @@ ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
 	ConstPString* iTXT, size_t iTXTCount)
 	{
 	this->pInit(iPort,
-		iName.empty() ? nil : iName.c_str(),
+		iName.empty() ? nullptr : iName.c_str(),
 		iRegType.c_str(),
-		nil,
+		nullptr,
 		iTXT, iTXTCount);
 	}
 
@@ -105,10 +105,10 @@ ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
 	const string& iName, const string& iRegType)
 	{
 	this->pInit(iPort,
-		iName.empty() ? nil : iName.c_str(),
+		iName.empty() ? nullptr : iName.c_str(),
 		iRegType.c_str(),
-		nil,
-		nil, 0);
+		nullptr,
+		nullptr, 0);
 	}
 
 ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
@@ -116,9 +116,9 @@ ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
 	ConstPString* iTXT, size_t iTXTCount)
 	{
 	this->pInit(iPort,
-		nil,
+		nullptr,
 		iRegType.c_str(),
-		nil,
+		nullptr,
 		iTXT, iTXTCount);
 	}
 
@@ -126,10 +126,10 @@ ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
 	const string& iRegType)
 	{
 	this->pInit(iPort,
-		nil,
+		nullptr,
 		iRegType.c_str(),
-		nil,
-		nil, 0);
+		nullptr,
+		nullptr, 0);
 	}
 
 ZNetNameRegistered_DNSSD::~ZNetNameRegistered_DNSSD()

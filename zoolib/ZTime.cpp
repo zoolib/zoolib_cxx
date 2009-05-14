@@ -122,7 +122,7 @@ ZTime ZTime::sNow()
 #elif ZCONFIG_SPI_Enabled(POSIX)
 
 	timeval theTimeVal;
-	::gettimeofday(&theTimeVal, nil);
+	::gettimeofday(&theTimeVal, nullptr);
 	return theTimeVal.tv_sec + double(theTimeVal.tv_usec) / 1e6;
 
 #elif ZCONFIG_SPI_Enabled(Carbon)
@@ -187,7 +187,7 @@ ZTime ZTime::sSystem()
 	static volatile double sDelta = 0;
 
 	struct timeval theTimeVal;
-	::gettimeofday(&theTimeVal, nil);
+	::gettimeofday(&theTimeVal, nullptr);
 	double result = theTimeVal.tv_sec + double(theTimeVal.tv_usec) / 1e6;
 
 	// I know that this is not threadsafe. However, we'd need to have two
@@ -251,7 +251,7 @@ ZTime ZTime::sBoot()
 	int theMIB[] = { CTL_KERN, KERN_BOOTTIME };
 	struct timeval theTimeVal;
 	size_t theLen = sizeof(theTimeVal);
-	if (0 == ::sysctl(theMIB, countof(theMIB), &theTimeVal, &theLen, nil, 0))
+	if (0 == ::sysctl(theMIB, countof(theMIB), &theTimeVal, &theLen, nullptr, 0))
 		{
 		if (theLen == sizeof(theTimeVal))
 			return theTimeVal.tv_sec + double(theTimeVal.tv_usec) / 1e6;

@@ -204,7 +204,7 @@ id ZUtil_NSObject::sCreateNSObject(const ZTValue& iTV)
 			return [[NSNumber alloc] initWithDouble:iTV.GetDouble()];
 			}
 		}
-	return nil;
+	return nullptr;
 	}
 
 ZTuple ZUtil_NSObject::sAsTuple(NSDictionary* iNSDictionary)

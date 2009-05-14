@@ -189,20 +189,20 @@ private:
 		{
 		Key theKey;
 
-		theKey.fValues[0] = nil;
+		theKey.fValues[0] = nullptr;
 
 		if (kPropCount > 1)
-			theKey.fValues[1] = nil;
+			theKey.fValues[1] = nullptr;
 		if (kPropCount > 2)
-			theKey.fValues[2] = nil;
+			theKey.fValues[2] = nullptr;
 		if (kPropCount > 3)
-			theKey.fValues[3] = nil;
+			theKey.fValues[3] = nullptr;
 		if (kPropCount > 4)
-			theKey.fValues[4] = nil;
+			theKey.fValues[4] = nullptr;
 		if (kPropCount > 5)
 			{
 			for (size_t x = 5; x < kPropCount; ++x)
-				theKey.fValues[x] = nil;
+				theKey.fValues[x] = nullptr;
 			}
 
 		size_t keyPropCount = 0;
@@ -240,14 +240,14 @@ private:
 			theKey.fID = kMaxID;
 			theKey.fValues[keyPropCount] = bestValueGreater;
 			oLowerBound = fSet.upper_bound(theKey);
-			theKey.fValues[keyPropCount] = nil;
+			theKey.fValues[keyPropCount] = nullptr;
 			}
 		else if (bestValueGreaterEqual)
 			{
 			theKey.fID = 0;
 			theKey.fValues[keyPropCount] = bestValueGreaterEqual;
 			oLowerBound = fSet.lower_bound(theKey);
-			theKey.fValues[keyPropCount] = nil;
+			theKey.fValues[keyPropCount] = nullptr;
 			}
 		else
 			{

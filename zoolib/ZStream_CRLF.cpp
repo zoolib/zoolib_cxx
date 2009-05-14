@@ -285,7 +285,7 @@ ZStreamW_CRLFInsert::~ZStreamW_CRLFInsert()
 	{
 	if (fLastWasCR)
 		{
-		fStreamSink.Write(sLF, 1, nil);
+		fStreamSink.Write(sLF, 1, nullptr);
 		fLastWasCR = false;
 		}
 	}

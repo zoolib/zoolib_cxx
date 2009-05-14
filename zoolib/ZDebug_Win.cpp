@@ -75,7 +75,7 @@ static void ZDebug_HandleActual_Win(int inLevel, ZDebug_Action inAction, const c
 
 static void sDoOther(const char* inMessage)
 	{
-	int result = ::MessageBoxA(nil, inMessage, "DebugBreak -- Application will exit", MB_SETFOREGROUND | MB_SYSTEMMODAL | MB_ICONHAND | MB_OK);
+	int result = ::MessageBoxA(nullptr, inMessage, "DebugBreak -- Application will exit", MB_SETFOREGROUND | MB_SYSTEMMODAL | MB_ICONHAND | MB_OK);
 	::ExitProcess(0);
 	}
 

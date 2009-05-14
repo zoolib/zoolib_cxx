@@ -148,9 +148,9 @@ ZStreamR_LZWDecode::ZStreamR_LZWDecode(int iCodeSize_Alphabet, const ZStreamR& i
 	fCode_Last = -1;
 	fCode_ABCABCA = -1;
 
-	fStack = nil;
-	fPrefix = nil;
-	fSuffix = nil;
+	fStack = nullptr;
+	fPrefix = nullptr;
+	fSuffix = nullptr;
 	try
 		{
 		fStack = new uint8[4096];
@@ -277,9 +277,9 @@ ZStreamW_LZWEncode::ZStreamW_LZWEncode(int iCodeSize_Alphabet, const ZStreamW& i
 	fCode_FIN = (1 << fCodeSize_Alphabet) + 1;
 	fCode_FirstAvailable = (1 << fCodeSize_Alphabet) + 2;
 
-	fCodes_Suffix = nil;
-	fCodes_Prefix = nil;
-	fChild = nil;
+	fCodes_Suffix = nullptr;
+	fCodes_Prefix = nullptr;
+	fChild = nullptr;
 
 	try
 		{
@@ -486,9 +486,9 @@ ZStreamW_LZWDecode::ZStreamW_LZWDecode(int iCodeSize_Alphabet, const ZStreamW& i
 	fCode_Last = -1;
 	fCode_ABCABCA = -1;
 
-	fStack = nil;
-	fPrefix = nil;
-	fSuffix = nil;
+	fStack = nullptr;
+	fPrefix = nullptr;
+	fSuffix = nullptr;
 	try
 		{
 		fStack = new uint8[4096];

@@ -319,9 +319,9 @@ FILE* sStreamOpen(const ZStreamR& iStreamR)
 	{
 	_IO_cookie_io_functions_t theFunctions;
 	theFunctions.read = sReadStreamR;
-	theFunctions.write = nil;
-	theFunctions.seek = nil;
-	theFunctions.close = nil;
+	theFunctions.write = nullptr;
+	theFunctions.seek = nullptr;
+	theFunctions.close = nullptr;
 	return ::fopencookie(const_cast<ZStreamR*>(&iStreamR), "", theFunctions);
 	}
 
@@ -329,19 +329,19 @@ FILE* sStreamOpen(const ZStreamRPos& iStreamRPos)
 	{
 	_IO_cookie_io_functions_t theFunctions;
 	theFunctions.read = sReadStreamR;
-	theFunctions.write = nil;
+	theFunctions.write = nullptr;
 	theFunctions.seek = sSeekStreamRPos;
-	theFunctions.close = nil;
+	theFunctions.close = nullptr;
 	return ::fopencookie(const_cast<ZStreamRPos*>(&iStreamRPos), "", theFunctions);
 	}
 
 FILE* sStreamOpen(const ZStreamW& iStreamW)
 	{
 	_IO_cookie_io_functions_t theFunctions;
-	theFunctions.read = nil;
+	theFunctions.read = nullptr;
 	theFunctions.write = sWriteStreamW;
-	theFunctions.seek = nil;
-	theFunctions.close = nil;
+	theFunctions.seek = nullptr;
+	theFunctions.close = nullptr;
 	return ::fopencookie(const_cast<ZStreamW*>(&iStreamW), "", theFunctions);
 	}
 
@@ -349,8 +349,8 @@ FILE* sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
 	{
 	_IO_cookie_io_functions_t theFunctions;
 	theFunctions.read = sReadStreamerR;
-	theFunctions.write = nil;
-	theFunctions.seek = nil;
+	theFunctions.write = nullptr;
+	theFunctions.seek = nullptr;
 	theFunctions.close = sCloseStreamerR;
 	return ::fopencookie(new ZRef<ZStreamerR>(iStreamerR), "", theFunctions);
 	}
@@ -359,7 +359,7 @@ FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
 	{
 	_IO_cookie_io_functions_t theFunctions;
 	theFunctions.read = sReadStreamerRPos;
-	theFunctions.write = nil;
+	theFunctions.write = nullptr;
 	theFunctions.seek = sSeekStreamerRPos;
 	theFunctions.close = sCloseStreamerRPos;
 	return ::fopencookie(new ZRef<ZStreamerRPos>(iStreamerRPos), "", theFunctions);
@@ -368,9 +368,9 @@ FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
 FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
 	{
 	_IO_cookie_io_functions_t theFunctions;
-	theFunctions.read = nil;
+	theFunctions.read = nullptr;
 	theFunctions.write = sWriteStreamerW;
-	theFunctions.seek = nil;
+	theFunctions.seek = nullptr;
 	theFunctions.close = sCloseStreamerW;
 	return ::fopencookie(new ZRef<ZStreamerW>(iStreamerW), "", theFunctions);
 	}
@@ -468,54 +468,54 @@ static int sCloseStreamerW(void* iCookie)
 	}
 
 FILE* sStreamOpen(const ZStreamR& iStreamR)
-	{ return ::funopen(const_cast<ZStreamR*>(&iStreamR), sReadStreamR, nil, nil, nil); }
+	{ return ::funopen(const_cast<ZStreamR*>(&iStreamR), sReadStreamR, nullptr, nullptr, nullptr); }
 
 FILE* sStreamOpen(const ZStreamRPos& iStreamRPos)
 	{
 	return ::funopen(
-		const_cast<ZStreamRPos*>(&iStreamRPos), sReadStreamR, nil, sSeekStreamRPos, nil);
+		const_cast<ZStreamRPos*>(&iStreamRPos), sReadStreamR, nullptr, sSeekStreamRPos, nullptr);
 	}
 
 FILE* sStreamOpen(const ZStreamW& iStreamW)
-	{ return ::funopen(const_cast<ZStreamW*>(&iStreamW), nil, sWriteStreamW, nil, nil); }
+	{ return ::funopen(const_cast<ZStreamW*>(&iStreamW), nullptr, sWriteStreamW, nullptr, nullptr); }
 
 FILE* sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
 	{
 	return ::funopen(
-		new ZRef<ZStreamerR>(iStreamerR), sReadStreamerR, nil, nil, sCloseStreamerRPos);
+		new ZRef<ZStreamerR>(iStreamerR), sReadStreamerR, nullptr, nullptr, sCloseStreamerRPos);
 	}
 
 FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
 	{
 	return ::funopen(
 		new ZRef<ZStreamerRPos>(iStreamerRPos),
-		sReadStreamerRPos, nil, sSeekStreamerRPos, sCloseStreamerRPos);
+		sReadStreamerRPos, nullptr, sSeekStreamerRPos, sCloseStreamerRPos);
 	}
 
 FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
 	{
-	return ::funopen(new ZRef<ZStreamerW>(iStreamerW), nil, sWriteStreamerW, nil, sCloseStreamerW);
+	return ::funopen(new ZRef<ZStreamerW>(iStreamerW), nullptr, sWriteStreamerW, nullptr, sCloseStreamerW);
 	}
 
 #else
 
 FILE* sStreamOpen(const ZStreamR& iStreamR)
-	{ return nil; }
+	{ return nullptr; }
 
 FILE* sStreamOpen(const ZStreamRPos& iStreamRPos)
-	{ return nil; }
+	{ return nullptr; }
 
 FILE* sStreamOpen(const ZStreamW& iStreamW)
-	{ return nil; }
+	{ return nullptr; }
 
 FILE* sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
-	{ return nil; }
+	{ return nullptr; }
 
 FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
-	{ return nil; }
+	{ return nullptr; }
 
 FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
-	{ return nil; }
+	{ return nullptr; }
 
 #endif
 

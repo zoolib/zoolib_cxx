@@ -93,14 +93,14 @@ static NSModule sLoadNSModule(CFBundleRef iBundleRef)
 				}
 			}
 		}
-	return nil;
+	return nullptr;
 	}
 
 static void* sLookup(NSModule iModule, const char* iName)
 	{
 	if (NSSymbol theSymbol = ::NSLookupSymbolInModule(iModule, iName))
 		return ::NSAddressOfSymbol(theSymbol);
-	return nil;
+	return nullptr;
 	}
 
 template <typename P>
@@ -225,7 +225,7 @@ private:
 
 GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 :	fPlugInRef(iPlugInRef),
-	fNSModule(nil)
+	fNSModule(nullptr)
 	{
 	// If the plugin contains ObjC code then unloading it will kill the
 	// host application. So (for now at least) we do an extra retain, leaving
@@ -451,12 +451,12 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory(const std::string& iP
 
 	#if ZCONFIG_SPI_Enabled(CoreFoundation)
 		if (ZRef<CFStringRef> thePath = NoRetain(::CFStringCreateWithCString(
-			nil, iPath.c_str(), kCFStringEncodingUTF8)))
+			nullptr, iPath.c_str(), kCFStringEncodingUTF8)))
 			{
 			if (ZRef<CFURLRef> theURL = NoRetain(::CFURLCreateWithFileSystemPath(
-				nil, thePath, kCFURLPOSIXPathStyle, true)))
+				nullptr, thePath, kCFURLPOSIXPathStyle, true)))
 				{
-				if (ZRef<CFPlugInRef> thePlugInRef = NoRetain(::CFPlugInCreate(nil, theURL)))
+				if (ZRef<CFPlugInRef> thePlugInRef = NoRetain(::CFPlugInCreate(nullptr, theURL)))
 					{
 					try
 						{

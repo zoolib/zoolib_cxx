@@ -478,7 +478,7 @@ bool ConvertSToD_T(
 		oSourceCU, oSourceCUSkipped,
 		iDest, iDestCU,
 		oDestCU,
-		iSourceCU, nil);
+		iSourceCU, nullptr);
 	}
 
 // =================================================================================================

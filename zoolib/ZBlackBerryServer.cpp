@@ -467,7 +467,7 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 		if (ZRef<ZBlackBerry::Device> theDevice = this->pGetDevice(deviceID))
 			{
 			if (ZRef<ZBlackBerry::Channel> deviceCon = theDevice->Open(preserveBoundaries,
-				channelName, gotHash ? &thePasswordHash : nil, &theError))
+				channelName, gotHash ? &thePasswordHash : nullptr, &theError))
 				{
 				const size_t readSize = deviceCon->GetIdealSize_Read();
 				const size_t writeSize = deviceCon->GetIdealSize_Write();

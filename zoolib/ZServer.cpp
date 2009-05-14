@@ -191,13 +191,13 @@ void ZServer::sRunThread(ZServer* iServer)
 #pragma mark * ZServer::Responder
 
 ZServer::Responder::Responder()
-:	fServer(nil),
-	fThread(nil)
+:	fServer(nullptr),
+	fThread(nullptr)
 	{}
 
 ZServer::Responder::~Responder()
 	{
-	ZAssert(fThread == nil);
+	ZAssert(fThread == nullptr);
 	}
 
 void ZServer::Responder::HandleConnection(ZServer* iServer, ZRef<ZStreamerRWCon> iStreamerRWCon)
@@ -218,7 +218,7 @@ void ZServer::Responder::HandleConnection(ZServer* iServer, ZRef<ZStreamerRWCon>
 void ZServer::Responder::ServerDeleted(ZServer* iServer)
 	{
 	ZAssert(iServer == fServer);
-	fServer = nil;
+	fServer = nullptr;
 	}
 
 void ZServer::Responder::KillConnection()
@@ -245,7 +245,7 @@ void ZServer::Responder::RunThread()
 	if (fServer)
 		fServer->ResponderFinished(this);
 
-	fThread = nil;
+	fThread = nullptr;
 
 	delete this;
 	}

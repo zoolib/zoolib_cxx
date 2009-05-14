@@ -62,7 +62,7 @@ PixmapRaster_Asset::PixmapRaster_Asset(const ZAsset& iAsset,
 
 PixmapRaster_Asset::~PixmapRaster_Asset()
 	{
-	fBaseAddress = nil;
+	fBaseAddress = nullptr;
 	}
 
 } // anonymous namespace

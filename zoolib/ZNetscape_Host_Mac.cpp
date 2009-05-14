@@ -105,13 +105,13 @@ static const HIPoint& sHI(const ZGPointf& iP)
 Host_Mac::Host_Mac(ZRef<GuestFactory> iGuestFactory, bool iAllowCG)
 :	Host_Std(iGuestFactory),
 	fAllowCG(iAllowCG),
-	fEventLoopTimerRef_Idle(nil),
+	fEventLoopTimerRef_Idle(nullptr),
 	fLeft(0), fTop(0), fRight(0), fBottom(0)
 	{
 	#if defined(XP_MACOSX)
 		fUseCoreGraphics = false;
-		fNP_CGContext.context = nil;
-		fNP_CGContext.window = nil;
+		fNP_CGContext.context = nullptr;
+		fNP_CGContext.window = nullptr;
 	#endif
 
 	ZBlockZero(&fNP_Port, sizeof(fNP_Port));
@@ -126,7 +126,7 @@ Host_Mac::~Host_Mac()
 	{
 	if (fEventLoopTimerRef_Idle)
 		::RemoveEventLoopTimer(fEventLoopTimerRef_Idle);
-	fEventLoopTimerRef_Idle = nil;
+	fEventLoopTimerRef_Idle = nullptr;
 	}
 
 NPError Host_Mac::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value)
@@ -300,8 +300,8 @@ Host_WindowRef::Host_WindowRef(
 	ZRef<ZNetscape::GuestFactory> iGF, bool iAllowCG, WindowRef iWindowRef)
 :	Host_Mac(iGF, iAllowCG),
 	fWindowRef(iWindowRef),
-	fEventTargetRef_Window(nil),
-	fEventHandlerRef_Window(nil)
+	fEventTargetRef_Window(nullptr),
+	fEventHandlerRef_Window(nullptr)
 	{
 	#if defined(XP_MACOSX)
 		WindowAttributes theWA;
@@ -347,9 +347,9 @@ Host_WindowRef::~Host_WindowRef()
 	{
 	if (fEventHandlerRef_Window)
 		::RemoveEventHandler(fEventHandlerRef_Window);
-	fEventHandlerRef_Window = nil;
+	fEventHandlerRef_Window = nullptr;
 
-	fEventTargetRef_Window = nil;
+	fEventTargetRef_Window = nullptr;
 	}
 
 void Host_WindowRef::Host_InvalidateRect(NPP npp, NPRect* rect)
@@ -570,8 +570,8 @@ Host_HIViewRef::Host_HIViewRef(
 	ZRef<ZNetscape::GuestFactory> iGF, bool iAllowCG, HIViewRef iHIViewRef)
 :	Host_Mac(iGF, iAllowCG),
 	fHIViewRef(iHIViewRef),
-	fEventTargetRef_View(nil),
-	fEventHandlerRef_View(nil)
+	fEventTargetRef_View(nullptr),
+	fEventHandlerRef_View(nullptr)
 	{
 	WindowAttributes theWA;
 	::GetWindowAttributes(::HIViewGetWindow(fHIViewRef), &theWA);
@@ -619,9 +619,9 @@ Host_HIViewRef::~Host_HIViewRef()
 	{
 	if (fEventHandlerRef_View)
 		::RemoveEventHandler(fEventHandlerRef_View);
-	fEventHandlerRef_View = nil;
+	fEventHandlerRef_View = nullptr;
 
-	fEventTargetRef_View = nil;
+	fEventTargetRef_View = nullptr;
 	}
 
 void Host_HIViewRef::Host_InvalidateRect(NPP npp, NPRect* rect)
@@ -802,7 +802,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 
 							::CGContextRestoreGState(theCG);
 
-							fNP_CGContext.context = nil;
+							fNP_CGContext.context = nullptr;
 							}
 						}
 					else

@@ -308,7 +308,7 @@ void ZStreamW_Base64Decode::Imp_Write(const void* iSource, size_t iCount, size_t
 			sinkBuf[0] = uint8(fSource >> 16);
 			sinkBuf[1] = uint8(fSource >> 8);
 			sinkBuf[2] = uint8(fSource);
-			fStreamSink.Write(sinkBuf, 3, nil);
+			fStreamSink.Write(sinkBuf, 3, nullptr);
 			fSource = 0;
 			fSourceCount = 0;
 			}

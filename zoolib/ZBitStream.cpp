@@ -270,7 +270,7 @@ void ZBitWriterBE::WriteBits(
 void ZBitWriterBE::Finish(const ZStreamW& iStream)
 	{
 	if (fAvailBits != 8)
-		iStream.Write(&fBuffer, 1, nil);
+		iStream.Write(&fBuffer, 1, nullptr);
 	}
 
 /// Flush the buffer by writing pending bits to \a iDest.
@@ -369,7 +369,7 @@ void ZBitWriterLE::WriteBits(
 void ZBitWriterLE::Finish(const ZStreamW& iStream)
 	{
 	if (fAvailBits != 8)
-		iStream.Write(&fBuffer, 1, nil);
+		iStream.Write(&fBuffer, 1, nullptr);
 	}
 
 /// Flush the buffer by writing pending bits to \a iDest.

@@ -42,11 +42,11 @@ Host_Win::Host_Win(ZRef<GuestFactory> iGuestFactory, HWND iHWND)
 	fIsWindowed(true),
 	fIsTransparent(false),
 	fTimerID(0),
-	fInnerWND(nil)
+	fInnerWND(nullptr)
 	{
 	ZBlockZero(&fNPWindow, sizeof(fNPWindow));
 	this->Attach(fWND);
-	fTimerID = ::SetTimer(fWND, 1, 50, nil);
+	fTimerID = ::SetTimer(fWND, 1, 50, nullptr);
 	}
 
 Host_Win::~Host_Win()
@@ -115,8 +115,8 @@ void Host_Win::PostCreateAndLoad()
 
 	if (fIsWindowed)
 		{
-		fInnerWND = ZWNDA::sCreateDefault(fWND, WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN, nil);
-		::SetWindowPos(fInnerWND, nil,
+		fInnerWND = ZWNDA::sCreateDefault(fWND, WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN, nullptr);
+		::SetWindowPos(fInnerWND, nullptr,
 			0, 0,
 			theWidth, theHeight,
 			SWP_NOZORDER | SWP_SHOWWINDOW);
@@ -190,7 +190,7 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 
 				if (fInnerWND)
 					{
-					::SetWindowPos(fInnerWND, nil,
+					::SetWindowPos(fInnerWND, nullptr,
 						0, 0, theWPOS->cx, theWPOS->cy,
 						SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
 					}

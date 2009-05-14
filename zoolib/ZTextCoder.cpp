@@ -441,7 +441,7 @@ static const CharsetEntry_t sCharsetTable[] =
 
 void ZTextCoder::sGetAliases(const std::string& iName, std::vector<std::string>& oAliases)
 	{	
-	const CharsetEntry_t* found = nil;
+	const CharsetEntry_t* found = nullptr;
 	for (const CharsetEntry_t* current = sCharsetTable; current->fName && !found; ++current)
 		{
 		if (iName == current->fName)
@@ -573,7 +573,7 @@ void ZTextDecoder::Decode(const ZStreamR& iStreamR, UTF32* iDest, size_t iDestCU
 
 		size_t countConsumed;
 		size_t utf32Generated;
-		this->Decode(buffer, bufferUsed, &countConsumed, nil, localDest, iDestCU, &utf32Generated);
+		this->Decode(buffer, bufferUsed, &countConsumed, nullptr, localDest, iDestCU, &utf32Generated);
 
 		// Remove the consumed code units from the buffer by reducing bufferUsed
 		// and moving any remaining data to the front of the buffer.
@@ -699,7 +699,7 @@ void ZTextEncoder::Encode(
 \param iCP The code point to write.
 */
 void ZTextEncoder::Encode(const ZStreamW& iStreamW, UTF32 iCP)
-	{ this->Encode(iStreamW, &iCP, 1, nil); }
+	{ this->Encode(iStreamW, &iCP, 1, nullptr); }
 
 /** \brief Discard any state in preparation for a fresh sequence of source material.*/
 void ZTextEncoder::Reset()

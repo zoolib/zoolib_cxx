@@ -29,6 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+class ZYadVisitor;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadOptions
@@ -75,8 +77,9 @@ protected:
 	ZYadR();
 
 public:
+// Our protocol
+	virtual bool Accept(ZYadVisitor& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
-
 	virtual ZRef<ZYadR> Meta();
 	};
 
@@ -89,7 +92,8 @@ class ZYadStreamR
 	public virtual ZStreamerR
 	{
 public:
-	// From ZYadR
+// From ZYadR
+	virtual bool Accept(ZYadVisitor& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
@@ -100,7 +104,10 @@ public:
 class ZYadStrimR
 :	public virtual ZYadR,
 	public virtual ZStrimmerR
-	{};
+	{
+// From ZYadR
+	virtual bool Accept(ZYadVisitor& iVisitor);
+	};
 
 // =================================================================================================
 #pragma mark -
@@ -109,6 +116,8 @@ class ZYadStrimR
 class ZYadListR : public virtual ZYadR
 	{
 public:
+// From ZYadR
+	virtual bool Accept(ZYadVisitor& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
@@ -125,7 +134,8 @@ public:
 class ZYadListRPos : public virtual ZYadListR
 	{
 public:
-// Default implementation of ZYadR protocol
+// From ZYadR
+	virtual bool Accept(ZYadVisitor& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Default implementation of ZYadListR protocol
@@ -148,6 +158,8 @@ public:
 class ZYadMapR : public virtual ZYadR
 	{
 public:
+// From ZYadR
+	virtual bool Accept(ZYadVisitor& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
@@ -163,13 +175,34 @@ public:
 class ZYadMapRPos : public virtual ZYadMapR
 	{
 public:
-// Default implementation of ZYadR protocol
+// From ZYadR
+	virtual bool Accept(ZYadVisitor& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
 	virtual ZRef<ZYadMapRPos> Clone() = 0;
 
 	virtual void SetPosition(const std::string& iName) = 0;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadVisitor
+
+class ZYadVisitor
+	{
+protected:
+	ZYadVisitor();
+	~ZYadVisitor();
+
+public:
+	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
+	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
+	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
+	virtual bool Visit_YadListR(ZRef<ZYadListR> iYadListR);
+	virtual bool Visit_YadListRPos(ZRef<ZYadListRPos> iYadListRPos);
+	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
+	virtual bool Visit_YadMapRPos(ZRef<ZYadMapRPos> iYadMapRPos);
 	};
 
 NAMESPACE_ZOOLIB_END

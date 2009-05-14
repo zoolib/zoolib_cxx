@@ -51,8 +51,8 @@ void ZUtil_Mac_LL::sSetupPixMapColor(ZPoint inSize, int32 inDepth, PixMap& oPixM
 		ZAssert(inDepth != 24);
 	#endif
 
-	oPixMap.baseAddr = nil;
-	oPixMap.pmTable = nil;
+	oPixMap.baseAddr = nullptr;
+	oPixMap.pmTable = nullptr;
 
 	oPixMap.rowBytes = (((inSize.h * inDepth + 31) / 32) * 4) | 0x8000;
 
@@ -69,7 +69,7 @@ void ZUtil_Mac_LL::sSetupPixMapColor(ZPoint inSize, int32 inDepth, PixMap& oPixM
 	oPixMap.pixelType = RGBDirect;
 	oPixMap.cmpCount = 3;
 	oPixMap.pmTable = reinterpret_cast<CTabHandle>(::NewHandle(sizeof(ColorTable)));
-	if (oPixMap.pmTable == nil)
+	if (oPixMap.pmTable == nullptr)
 		throw bad_alloc();
 	oPixMap.pmTable[0]->ctFlags = 0;
 	oPixMap.pmTable[0]->ctSize = 0;
@@ -79,7 +79,7 @@ void ZUtil_Mac_LL::sSetupPixMapColor(ZPoint inSize, int32 inDepth, PixMap& oPixM
 	oPixMap.pmReserved = 0;
 #else // OLDPIXMAPSTRUCT
 	oPixMap.pixelFormat = inDepth;
-	oPixMap.pmExt = nil;
+	oPixMap.pmExt = nullptr;
 #endif // OLDPIXMAPSTRUCT
 	switch (inDepth)
 		{
@@ -113,8 +113,8 @@ void ZUtil_Mac_LL::sSetupPixMapColor(
 		ZAssert(inDepth != 24);
 	#endif
 
-	oPixMap.baseAddr = nil;
-	oPixMap.pmTable = nil;
+	oPixMap.baseAddr = nullptr;
+	oPixMap.pmTable = nullptr;
 
 	oPixMap.rowBytes = inRowBytes | 0x8000;
 
@@ -131,7 +131,7 @@ void ZUtil_Mac_LL::sSetupPixMapColor(
 	oPixMap.pixelType = RGBDirect;
 	oPixMap.cmpCount = 3;
 	oPixMap.pmTable = reinterpret_cast<CTabHandle>(::NewHandle(sizeof(ColorTable)));
-	if (oPixMap.pmTable == nil)
+	if (oPixMap.pmTable == nullptr)
 		throw bad_alloc();
 	oPixMap.pmTable[0]->ctFlags = 0;
 	oPixMap.pmTable[0]->ctSize = 0;
@@ -141,7 +141,7 @@ void ZUtil_Mac_LL::sSetupPixMapColor(
 	oPixMap.pmReserved = 0;
 #else // OLDPIXMAPSTRUCT
 	oPixMap.pixelFormat = inDepth;
-	oPixMap.pmExt = nil;
+	oPixMap.pmExt = nullptr;
 #endif // OLDPIXMAPSTRUCT
 	switch (inDepth)
 		{
@@ -211,8 +211,8 @@ void ZUtil_Mac_LL::sSetupPixMapGray(ZPoint inSize, int32 inDepth, PixMap& oPixMa
 	{
 	ZAssert(inDepth == 1 || inDepth == 2 || inDepth == 4 || inDepth == 8);
 
-	oPixMap.baseAddr = nil;
-	oPixMap.pmTable = nil;
+	oPixMap.baseAddr = nullptr;
+	oPixMap.pmTable = nullptr;
 
 	oPixMap.rowBytes = (((inSize.h * inDepth + 31) / 32) * 4) | 0x8000;
 
@@ -236,7 +236,7 @@ void ZUtil_Mac_LL::sSetupPixMapGray(ZPoint inSize, int32 inDepth, PixMap& oPixMa
 	oPixMap.pmReserved = 0;
 #else // OLDPIXMAPSTRUCT
 	oPixMap.pixelFormat = inDepth;
-	oPixMap.pmExt = nil;
+	oPixMap.pmExt = nullptr;
 #endif // OLDPIXMAPSTRUCT
 	}
 
@@ -245,8 +245,8 @@ void ZUtil_Mac_LL::sSetupPixMapGray(
 	{
 	ZAssert(inDepth == 1 || inDepth == 2 || inDepth == 4 || inDepth == 8);
 
-	oPixMap.baseAddr = nil;
-	oPixMap.pmTable = nil;
+	oPixMap.baseAddr = nullptr;
+	oPixMap.pmTable = nullptr;
 
 	oPixMap.rowBytes = inRowBytes | 0x8000;
 
@@ -270,7 +270,7 @@ void ZUtil_Mac_LL::sSetupPixMapGray(
 	oPixMap.pmReserved = 0;
 #else // OLDPIXMAPSTRUCT
 	oPixMap.pixelFormat = inDepth;
-	oPixMap.pmExt = nil;
+	oPixMap.pmExt = nullptr;
 #endif // OLDPIXMAPSTRUCT
 	}
 
@@ -280,8 +280,8 @@ void ZUtil_Mac_LL::sSetupPixMapIndexed(ZPoint inSize, int32 inDepth, PixMap& oPi
 	{
 	ZAssert(inDepth == 1 || inDepth == 2 || inDepth == 4 || inDepth == 8);
 
-	oPixMap.baseAddr = nil;
-	oPixMap.pmTable = nil;
+	oPixMap.baseAddr = nullptr;
+	oPixMap.pmTable = nullptr;
 
 	oPixMap.rowBytes = (((inSize.h * inDepth + 31) / 32) * 4) | 0x8000;
 
@@ -305,7 +305,7 @@ void ZUtil_Mac_LL::sSetupPixMapIndexed(ZPoint inSize, int32 inDepth, PixMap& oPi
 	oPixMap.pmReserved = 0;
 #else // OLDPIXMAPSTRUCT
 	oPixMap.pixelFormat = inDepth;
-	oPixMap.pmExt = nil;
+	oPixMap.pmExt = nullptr;
 #endif // OLDPIXMAPSTRUCT
 	}
 
@@ -314,8 +314,8 @@ void ZUtil_Mac_LL::sSetupPixMapIndexed(
 	{
 	ZAssert(inDepth == 1 || inDepth == 2 || inDepth == 4 || inDepth == 8);
 
-	oPixMap.baseAddr = nil;
-	oPixMap.pmTable = nil;
+	oPixMap.baseAddr = nullptr;
+	oPixMap.pmTable = nullptr;
 
 	oPixMap.rowBytes = inRowBytes | 0x8000;
 
@@ -339,7 +339,7 @@ void ZUtil_Mac_LL::sSetupPixMapIndexed(
 	oPixMap.pmReserved = 0;
 #else // OLDPIXMAPSTRUCT
 	oPixMap.pixelFormat = inDepth;
-	oPixMap.pmExt = nil;
+	oPixMap.pmExt = nullptr;
 #endif // OLDPIXMAPSTRUCT
 	}
 
@@ -443,29 +443,29 @@ void ZUtil_Mac_LL::sSetWindowManagerPort()
 
 		CGrafPtr windowManagerPort;
 		::GetCWMgrPort(&windowManagerPort);
-		::SetGWorld(windowManagerPort, nil);
+		::SetGWorld(windowManagerPort, nullptr);
 
 	#elif ZCONFIG_SPI_Enabled(Carbon)
 
 		if (ZMacOSX::sIsMacOSX())
 			{
-			::SetPort(nil);
+			::SetPort(nullptr);
 			}
 		else
 			{
 			typedef pascal void (*GetCWMgrPortProcPtr) (CGrafPtr * wMgrCPort);
 
-			static GetCWMgrPortProcPtr sGetCWMgrPortProcPtr = nil;
+			static GetCWMgrPortProcPtr sGetCWMgrPortProcPtr = nullptr;
 			static bool sChecked = false;
 
 			if (!sChecked)
 				{
 				CFragConnectionID connID = kInvalidID;
 				if (noErr == ::GetSharedLibrary("\pInterfaceLib",
-					kCompiledCFragArch, kReferenceCFrag, &connID, nil, nil))
+					kCompiledCFragArch, kReferenceCFrag, &connID, nullptr, nullptr))
 					{
 					::FindSymbol(connID, "\pGetCWMgrPort",
-						reinterpret_cast<Ptr*>(&sGetCWMgrPortProcPtr), nil);
+						reinterpret_cast<Ptr*>(&sGetCWMgrPortProcPtr), nullptr);
 					}
 				sChecked = true;
 				}
@@ -474,7 +474,7 @@ void ZUtil_Mac_LL::sSetWindowManagerPort()
 				{
 				CGrafPtr windowManagerPort;
 				sGetCWMgrPortProcPtr(&windowManagerPort);
-				::SetGWorld(windowManagerPort, nil);
+				::SetGWorld(windowManagerPort, nullptr);
 				}
 			}
 

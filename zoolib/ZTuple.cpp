@@ -811,7 +811,7 @@ ZTValue::ZTValue(const vector<ZTValue>& iVal)
 	{
 	fType.fType = eZType_Vector;
 	if (iVal.empty())
-		fData.fAs_Vector = nil;
+		fData.fAs_Vector = nullptr;
 	else
 		fData.fAs_Vector = new vector<ZTValue>(iVal);
 	}
@@ -1647,7 +1647,7 @@ void ZTValue::SetVector(const vector<ZTValue>& iVal)
 	this->pRelease();
 	fType.fType = eZType_Vector;
 	if (iVal.empty())
-		fData.fAs_Vector= nil;
+		fData.fAs_Vector= nullptr;
 	else
 		fData.fAs_Vector = new vector<ZTValue>(iVal);
 	}
@@ -1698,7 +1698,7 @@ vector<ZTValue>& ZTValue::EnsureMutableVector()
 		{
 		this->pRelease();
 		fType.fType = eZType_Vector;
-		fData.fAs_Vector = nil;
+		fData.fAs_Vector = nullptr;
 		fData.fAs_Vector = new vector<ZTValue>;
 		}
 	return *fData.fAs_Vector;	
@@ -1735,7 +1735,7 @@ vector<ZTValue>& ZTValue::SetMutableVector()
 		{
 		this->pRelease();
 		fType.fType = eZType_Vector;
-		fData.fAs_Vector = nil;
+		fData.fAs_Vector = nullptr;
 		fData.fAs_Vector = new vector<ZTValue>;
 		}
 	return *fData.fAs_Vector;
@@ -2119,7 +2119,7 @@ void ZTValue::pCopy(const ZTValue& iOther)
 				break;
 			case eZType_Vector:
 				if (!iOther.fData.fAs_Vector || iOther.fData.fAs_Vector->empty())
-					fData.fAs_Vector = nil;
+					fData.fAs_Vector = nullptr;
 				else
 					fData.fAs_Vector = new vector<ZTValue>(*iOther.fData.fAs_Vector);
 				break;
@@ -2299,7 +2299,7 @@ void ZTValue::pFromStream(ZType iType, const ZStreamR& iStreamR)
 				}
 			else
 				{
-				fData.fAs_Vector = nil;
+				fData.fAs_Vector = nullptr;
 				}
 			break;
 			}
@@ -3318,7 +3318,7 @@ const ZTValue* ZTuple::pLookupAddressConst(const_iterator iPropIter) const
 	{
 	if (fRep && iPropIter != fRep->fProperties.end())
 		return &(*iPropIter).fTV;
-	return nil;
+	return nullptr;
 	}
 
 const ZTValue* ZTuple::pLookupAddressConst(const char* iPropName) const
@@ -3334,7 +3334,7 @@ const ZTValue* ZTuple::pLookupAddressConst(const char* iPropName) const
 				return &(*i).fTV;
 			}
 		}
-	return nil;
+	return nullptr;
 	}
 
 const ZTValue* ZTuple::pLookupAddressConst(const ZTName& iPropName) const
@@ -3349,7 +3349,7 @@ const ZTValue* ZTuple::pLookupAddressConst(const ZTName& iPropName) const
 				return &(*i).fTV;
 			}
 		}
-	return nil;
+	return nullptr;
 	}
 
 ZTValue* ZTuple::pLookupAddress(const_iterator iPropIter)
@@ -3360,7 +3360,7 @@ ZTValue* ZTuple::pLookupAddress(const_iterator iPropIter)
 
 	if (fRep && iPropIter != fRep->fProperties.end())
 		return &(*iPropIter).fTV;
-	return nil;
+	return nullptr;
 	}
 
 ZTValue* ZTuple::pLookupAddress(const char* iPropName)
@@ -3375,7 +3375,7 @@ ZTValue* ZTuple::pLookupAddress(const char* iPropName)
 		if ((*i).fName.Equals(iPropName, propNameLength))
 			return &(*i).fTV;
 		}
-	return nil;
+	return nullptr;
 	}
 
 ZTValue* ZTuple::pLookupAddress(const ZTName& iPropName)
@@ -3389,7 +3389,7 @@ ZTValue* ZTuple::pLookupAddress(const ZTName& iPropName)
 		if ((*i).fName.Equals(iPropName))
 			return &(*i).fTV;
 		}
-	return nil;
+	return nullptr;
 	}
 
 const ZTValue& ZTuple::pLookupConst(const_iterator iPropIter) const

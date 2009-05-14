@@ -486,7 +486,7 @@ void ZDCPixmap::pTouch()
 ZDCPixmapRaster::ZDCPixmapRaster(const RasterDesc& iRasterDesc)
 :	fRasterDesc(iRasterDesc),
 	fCanModify(false),
-	fBaseAddress(nil)
+	fBaseAddress(nullptr)
 	{}
 
 ZDCPixmapRaster::~ZDCPixmapRaster()
@@ -494,7 +494,7 @@ ZDCPixmapRaster::~ZDCPixmapRaster()
 	// Sanity check. Subclasses are required to nil out our fBaseAddress field.
 	// This helps to ensure that they have a proper constructor by effectively
 	// requiring that they have a destructor.
-	ZAssertStop(kDebug_Pixmap, fBaseAddress == nil);
+	ZAssertStop(kDebug_Pixmap, fBaseAddress == nullptr);
 	}
 
 uint32 ZDCPixmapRaster::GetPixval(ZCoord iLocationH, ZCoord iLocationV)
@@ -542,7 +542,7 @@ ZDCPixmapRaster_Simple::ZDCPixmapRaster_Simple(ZRef<ZDCPixmapRaster> iOther)
 ZDCPixmapRaster_Simple::~ZDCPixmapRaster_Simple()
 	{
 	delete[] fBuffer;
-	fBaseAddress = nil;
+	fBaseAddress = nullptr;
 	}
 
 // =================================================================================================
@@ -572,7 +572,7 @@ ZDCPixmapRaster_StaticData::ZDCPixmapRaster_StaticData(const char* iBaseAddress,
 
 ZDCPixmapRaster_StaticData::~ZDCPixmapRaster_StaticData()
 	{
-	fBaseAddress = nil;
+	fBaseAddress = nullptr;
 	}
 
 // =================================================================================================

@@ -131,6 +131,32 @@ private:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYadVisitor_JSONWriter
+
+class ZYadVisitor_JSONWriter : public ZYadVisitor
+	{
+public:
+	ZYadVisitor_JSONWriter(const ZStrimW& iStrimW,
+		size_t iIndent, const ZYadOptions& iOptions);
+
+// From ZYadVisitor
+	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
+	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
+	virtual bool Visit_YadListR(ZRef<ZYadListR> iYadListR);
+	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
+
+private:
+	class SaveState;
+	friend class SaveState;
+
+	const ZStrimW& fStrimW;
+	size_t fIndent;
+	ZYadOptions fOptions;
+	bool fMayNeedInitialLF;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYad_JSON
 
 namespace ZYad_JSON {

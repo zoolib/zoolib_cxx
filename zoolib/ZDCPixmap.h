@@ -77,7 +77,7 @@ public:
 	/** This constructor is a shorthand for creating a pixmap that has a known pixel layout, where
 	that layout is specified by the EFormatStandard enum that is passed in. The pixmap *may* be the
 	same as what the 'efficient' would create, but that will depend entirely on which platform the
-	code executes on. If iFillColor is non-nil, the pixmap's contents will be initialized to that
+	code executes on. If iFillColor is non-nullptr, the pixmap's contents will be initialized to that
 	color, otherwise its contents will be undefined. */
 	ZDCPixmap(ZPoint iSize, ZDCPixmapNS::EFormatStandard iFormat);
 

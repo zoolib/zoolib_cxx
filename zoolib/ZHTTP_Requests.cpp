@@ -49,7 +49,7 @@ static bool sReadResponse(const ZStreamR& r, int32* oResponseCode, ZTuple* oHead
 
 	string serverResultMessage;
 	if (!ZHTTP::sReadResponse(ZStreamU_Unreader(theSIH_Server),
-		oResponseCode, nil))
+		oResponseCode, nullptr))
 		{
 		return false;
 		}
@@ -101,7 +101,7 @@ ZRef<ZStreamerR> ZHTTP::sRequest(
 		string theHost;
 		ip_port thePort = 80;
 		string thePath;
-		if (sParseURL(ioURL, nil, &theHost, &thePort, &thePath))
+		if (sParseURL(ioURL, nullptr, &theHost, &thePort, &thePath))
 			{
 			ZRef<ZNetName_Internet> theNN = new ZNetName_Internet(theHost, thePort);
 			ZRef<ZNetEndpoint> theEndpoint = theNN->Connect(10);
@@ -208,7 +208,7 @@ ZRef<ZStreamerR> ZHTTP::sPost(
 	string theHost;
 	ip_port thePort;
 	string thePath;
-	if (sParseURL(iURL, nil, &theHost, &thePort, &thePath))
+	if (sParseURL(iURL, nullptr, &theHost, &thePort, &thePath))
 		{
 		ZRef<ZNetName_Internet> theNN = new ZNetName_Internet(theHost, thePort);
 		if (ZRef<ZNetEndpoint> theEndpoint = theNN->Connect(10))

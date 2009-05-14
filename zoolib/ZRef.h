@@ -69,7 +69,7 @@ public:
 		{ std::swap(fP, iOther.fP); }
 
 	ZRef()
-	:	fP(nil)
+	:	fP(nullptr)
 		{}
 
 	~ZRef()
@@ -156,7 +156,7 @@ public:
 
 	void Clear()
 		{
-		P theP = nil;
+		P theP = nullptr;
 		std::swap(theP, fP);
 		spRelease(theP);
 		}
@@ -215,7 +215,7 @@ public:
 		{ std::swap(fP, iOther.fP); }
 
 	ZRef()
-	:	fP(nil)
+	:	fP(nullptr)
 		{}
 
 	~ZRef()
@@ -310,7 +310,7 @@ public:
 
 	void Clear()
 		{
-		T* theP = nil;
+		T* theP = nullptr;
 		std::swap(theP, fP);
 		spRelease(theP);
 		}

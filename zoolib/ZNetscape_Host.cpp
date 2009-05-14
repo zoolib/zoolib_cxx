@@ -53,7 +53,7 @@ void* spMalloc_T(NPVariantH&, size_t iLength)
 #pragma mark -
 #pragma mark * NPObjectH
 
-static NPP fake = nil;
+static NPP fake = nullptr;
 
 NPObjectH::NPObjectH()
 	{}
@@ -134,7 +134,7 @@ NPVariantH NPObjectH::Invoke(const std::string& iName, const NPVariantH* iArgs, 
 NPVariantH NPObjectH::Invoke(const std::string& iName)
 	{
 	NPVariantH result;
-	this->Invoke(iName, nil, 0, result);
+	this->Invoke(iName, nullptr, 0, result);
 	return result;
 	}
 
@@ -169,7 +169,7 @@ NPVariantH NPObjectH::InvokeDefault(const NPVariantH* iArgs, size_t iCount)
 NPVariantH NPObjectH::InvokeDefault()
 	{
 	NPVariantH result;
-	this->InvokeDefault(nil, 0, result);
+	this->InvokeDefault(nullptr, 0, result);
 	return result;
 	}
 
@@ -199,7 +199,7 @@ bool NPObjectH::Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount)
 bool NPObjectH::Enumerate(std::vector<NPIdentifier>& oIdentifiers)
 	{
 	oIdentifiers.clear();
-	NPIdentifier* theIDs = nil;
+	NPIdentifier* theIDs = nullptr;
 	uint32_t theCount;
 	if (!this->Enumerate(theIDs, theCount))
 		return false;
@@ -311,7 +311,7 @@ bool ObjectH::Imp_Enumerate(std::vector<std::string>& oNames)
 NPObject* ObjectH::sAllocate(NPP npp, NPClass *aClass)
 	{
 	ZUnimplemented();
-	return nil;
+	return nullptr;
 	}
 
 void ObjectH::sDeallocate(NPObject* npobj)
@@ -439,13 +439,13 @@ Host* HostMeister::sHostFromNPP(NPP npp)
 	{
 	if (npp)
 		return static_cast<Host*>(npp->ndata);
-	return nil;
+	return nullptr;
 	}
 
 Host* HostMeister::sHostFromStream(NPStream* iNPStream)
 	{
 	ZUnimplemented();
-	return nil;
+	return nullptr;
 	}
 
 void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
@@ -520,7 +520,7 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
 	// I'm disabling setexception for now -- it's defined as taking
 	// NPString* or UTF8* in different versions of headers, and I
 	// haven't determined which is correct, or indeed if it's a host-specific thing.
-	oNPNF.setexception = nil;
+	oNPNF.setexception = nullptr;
 
 	// Mozilla return value is a bool
 	#if defined(NewNPN_PushPopupsEnabledStateProc)
@@ -550,7 +550,7 @@ HostMeister::HostMeister()
 HostMeister::~HostMeister()
 	{
 	ZAssert(sHostMeister == this);
-	sHostMeister = nil;
+	sHostMeister = nullptr;
 	}
 
 string HostMeister::StringFromIdentifier(NPIdentifier identifier)
@@ -942,11 +942,11 @@ NPError Host::Guest_New(NPMIMEType pluginType, uint16 mode,
 NPError Host::Guest_Destroy(NPSavedData** save)
 	{
 	NPError result = NPERR_GENERIC_ERROR;
-	*save = nil;
+	*save = nullptr;
 	if (fNPP_t.pdata)
 		{
 		result = fNPPluginFuncs.destroy(&fNPP_t, save);
-		fNPP_t.pdata = nil;
+		fNPP_t.pdata = nullptr;
 		}
 	return result;
 	}

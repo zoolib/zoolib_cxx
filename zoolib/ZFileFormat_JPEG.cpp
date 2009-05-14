@@ -20,9 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFileFormat_JPEG.h"
 
-#include "zoolib/ZStream_HexStrim.h"
 #include "zoolib/ZStream_Tee.h"
 #include "zoolib/ZStreamRWPos_RAM.h"
+#include "zoolib/ZStreamW_HexStrim.h"
 #include "zoolib/ZStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -394,7 +394,7 @@ void sDumpSegments(const ZStreamR& iStreamR, const ZStrimW& iStrimW)
 				uint64 countRead;
 				ZStreamRWPos_RAM theStream;
 				s.CopyTo(ZStreamW_Tee(theStream,
-					ZStreamW_HexStrim(" ", "", 100, iStrimW)), 16, &countRead, nil);
+					ZStreamW_HexStrim(" ", "", 100, iStrimW)), 16, &countRead, nullptr);
 
 				if (countRead == 0)
 					break;

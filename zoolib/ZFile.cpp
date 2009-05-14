@@ -291,7 +291,7 @@ string ZFileSpec::AsString() const
 	if (fLoc)
 		{
 		if (fComps.empty())
-			return fLoc->AsString_POSIX(nil, 0);
+			return fLoc->AsString_POSIX(nullptr, 0);
 		return fLoc->AsString_POSIX(&fComps[0], fComps.size());
 		}
 	return string();
@@ -308,7 +308,7 @@ string ZFileSpec::AsString_Native() const
 	if (fLoc)
 		{
 		if (fComps.empty())
-			return fLoc->AsString_Native(nil, 0);
+			return fLoc->AsString_Native(nullptr, 0);
 		return fLoc->AsString_Native(&fComps[0], fComps.size());
 		}
 	return string();
@@ -734,7 +734,7 @@ ZRef<ZFileLoc> ZFileSpec::pPhysicalLoc() const
 		{
 		if (fComps.empty())
 			return fLoc;
-		return fLoc->GetDescendant(&fComps[0], fComps.size(), nil);
+		return fLoc->GetDescendant(&fComps[0], fComps.size(), nullptr);
 		}
 	return ZRef<ZFileLoc>();
 	}

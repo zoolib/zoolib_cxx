@@ -184,7 +184,7 @@ void ZNetNameLookup_Internet_Socket::Start()
 	result = ::gethostbyname_r(fName.c_str(), &resultBuf, buffer, 4096, &herrno);
 #else
 	if (0 != ::gethostbyname_r(fName.c_str(), &resultBuf, buffer, 4096, &result, &herrno))
-		result = nil;
+		result = nullptr;
 #endif
 
 	if (result)

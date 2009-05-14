@@ -73,7 +73,7 @@ public:
 		fMutexNR.Acquire();
 		while (fUseCount)
 			fCondition.Wait(fMutexNR);
-		fPtr = nil;
+		fPtr = nullptr;
 		fMutexNR.Release();
 		}
 	};

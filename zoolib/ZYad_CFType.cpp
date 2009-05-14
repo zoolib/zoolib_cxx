@@ -323,7 +323,7 @@ CFTypeRef ZYad_CFType::sFromYadR(ZRef<ZYadR> iYadR)
 	{
 	if (!iYadR)
 		{
-		return nil;
+		return nullptr;
 		}
 	else if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iYadR))
 		{

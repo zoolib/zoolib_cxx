@@ -39,7 +39,7 @@ NAMESPACE_ZOOLIB_BEGIN
 ZAssetTree_Win_MemoryMapped::ZAssetTree_Win_MemoryMapped(
 	HANDLE iFileHandle, bool iAdopt, size_t iStart, size_t iLength)
 	{
-	ZAssertStop(1, iFileHandle != nil && iFileHandle != INVALID_HANDLE_VALUE);
+	ZAssertStop(1, iFileHandle != nullptr && iFileHandle != INVALID_HANDLE_VALUE);
 	fHANDLE_File = iFileHandle;
 	fAdopted = iAdopt;
 	try
@@ -60,11 +60,11 @@ ZAssetTree_Win_MemoryMapped::~ZAssetTree_Win_MemoryMapped()
 
 	if (fMappedAddress)
 		::UnmapViewOfFile(fMappedAddress);
-	fMappedAddress = nil;
+	fMappedAddress = nullptr;
 
 	if (fHANDLE_FileMapping)
 		::CloseHandle(fHANDLE_FileMapping);
-	fHANDLE_FileMapping = nil;
+	fHANDLE_FileMapping = nullptr;
 
 	if (fAdopted)
 		{
@@ -75,8 +75,8 @@ ZAssetTree_Win_MemoryMapped::~ZAssetTree_Win_MemoryMapped()
 
 void ZAssetTree_Win_MemoryMapped::LoadUp(HANDLE iFileHandle, size_t iStart, size_t iLength)
 	{
-	fHANDLE_FileMapping = nil;
-	fMappedAddress = nil;
+	fHANDLE_FileMapping = nullptr;
+	fMappedAddress = nullptr;
 
 	SYSTEM_INFO theSYSTEM_INFO;
 	::GetSystemInfo(&theSYSTEM_INFO);
@@ -88,25 +88,25 @@ void ZAssetTree_Win_MemoryMapped::LoadUp(HANDLE iFileHandle, size_t iStart, size
 
 	try
 		{
-		fHANDLE_FileMapping = ::CreateFileMapping(iFileHandle, nil, PAGE_READONLY, 0, 0, nil);
+		fHANDLE_FileMapping = ::CreateFileMapping(iFileHandle, nullptr, PAGE_READONLY, 0, 0, nullptr);
 
-		if (fHANDLE_FileMapping == nil)
+		if (fHANDLE_FileMapping == nullptr)
 			throw runtime_error("ZAssetTree_Win_MemoryMapped, CreateFileMapping failed");
 
 		fMappedAddress = ::MapViewOfFile(
 			fHANDLE_FileMapping, FILE_MAP_READ, 0, realStart, mappedLength);
 
-		if (fMappedAddress == nil)
+		if (fMappedAddress == nullptr)
 			throw runtime_error("ZAssetTree_Win_MemoryMapped, MapViewOfFile failed");
 		}
 	catch (...)
 		{
 		if (fMappedAddress)
 			::UnmapViewOfFile(fMappedAddress);
-		fMappedAddress = nil;
+		fMappedAddress = nullptr;
 		if (fHANDLE_FileMapping)
 			::CloseHandle(fHANDLE_FileMapping);
-		fHANDLE_FileMapping = nil;
+		fHANDLE_FileMapping = nullptr;
 		throw;
 		}
 

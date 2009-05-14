@@ -286,7 +286,7 @@ void ZStream_MD5::sFinal(ZStream_MD5::Context& ioContext, uint8 oDigest[16])
 ZStreamR_MD5::ZStreamR_MD5(const ZStreamR& iStreamSource)
 :	ZStreamR_Filter(iStreamSource),
 	fStreamSource(iStreamSource),
-	fDigest(nil)
+	fDigest(nullptr)
 	{
 	ZStream_MD5::sInit(fContext);
 	}
@@ -340,7 +340,7 @@ void ZStreamR_MD5::GetDigest(uint8 oDigest[16])
 
 ZStreamW_MD5::ZStreamW_MD5(const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink),
-	fDigest(nil)
+	fDigest(nullptr)
 	{ ZStream_MD5::sInit(fContext); }
 
 /// Constructor for use inline.

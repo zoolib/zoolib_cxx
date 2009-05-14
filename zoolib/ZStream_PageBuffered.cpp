@@ -43,8 +43,8 @@ ZStreamRPos_PageBuffered::ZStreamRPos_PageBuffered(
 	size_t iBufferCount, size_t iBufferSize, const ZStreamRPos& iStreamReal)
 :	fStreamReal(iStreamReal)
 	{
-	fBuffer_Head = nil;
-	fBuffer_Tail = nil;
+	fBuffer_Head = nullptr;
+	fBuffer_Tail = nullptr;
 
 	fBufferSize = iBufferSize;
 
@@ -56,14 +56,14 @@ ZStreamRPos_PageBuffered::ZStreamRPos_PageBuffered(
 		while (iBufferCount--)
 			{
 			Buffer* aBuffer = new Buffer;
-			aBuffer->fData = nil;
+			aBuffer->fData = nullptr;
 			// By marking the start position as covering the last fBufferSize
 			// bytes of the 64 bit address space we don't need to carry
 			// a loaded flag. The weakness is if the user needs to read
 			// that part of the address space before all the buffers have
 			// been used for other portions. This is unlikely, but possible.
 			aBuffer->fStartPosition = 0 - fBufferSize;
-			aBuffer->fPrev = nil;
+			aBuffer->fPrev = nullptr;
 			aBuffer->fNext = fBuffer_Head;
 			if (fBuffer_Head)
 				{
@@ -122,12 +122,12 @@ void ZStreamRPos_PageBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCou
 			buffer_Found = buffer_Found->fNext;
 			}
 
-		if (buffer_Found == nil)
+		if (buffer_Found == nullptr)
 			{
 			buffer_Found = fBuffer_Tail;
 			buffer_Found->fStartPosition = fPosition - (fPosition % fBufferSize);
 			fStreamReal.SetPosition(buffer_Found->fStartPosition);
-			fStreamReal.Read(buffer_Found->fData, fBufferSize, nil);
+			fStreamReal.Read(buffer_Found->fData, fBufferSize, nullptr);
 			}
 
 		size_t offsetInBuffer = fPosition % fBufferSize;
@@ -150,7 +150,7 @@ void ZStreamRPos_PageBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCou
 				fBuffer_Tail = buffer_Found->fPrev;
 
 			// and inserting it
-			buffer_Found->fPrev = nil;
+			buffer_Found->fPrev = nullptr;
 			buffer_Found->fNext = fBuffer_Head;
 			fBuffer_Head->fPrev = buffer_Found;
 			fBuffer_Head = buffer_Found;
@@ -213,8 +213,8 @@ ZStreamRWPos_PageBuffered::ZStreamRWPos_PageBuffered(
 	size_t iBufferCount, size_t iBufferSize, const ZStreamRWPos& iStreamReal)
 :	fStreamReal(iStreamReal)
 	{
-	fBuffer_Head = nil;
-	fBuffer_Tail = nil;
+	fBuffer_Head = nullptr;
+	fBuffer_Tail = nullptr;
 
 	fBufferSize = iBufferSize;
 
@@ -226,7 +226,7 @@ ZStreamRWPos_PageBuffered::ZStreamRWPos_PageBuffered(
 		while (iBufferCount--)
 			{
 			Buffer* aBuffer = new Buffer;
-			aBuffer->fData = nil;
+			aBuffer->fData = nullptr;
 			aBuffer->fDirty = false;
 			// By marking the start position as covering the last fBufferSize
 			// bytes of the 64 bit address space we don't need to carry
@@ -235,7 +235,7 @@ ZStreamRWPos_PageBuffered::ZStreamRWPos_PageBuffered(
 			// been used for other portions. This is basically impossible,
 			// 2^64 bytes is 16 exabytes.
 			aBuffer->fStartPosition = 0 - fBufferSize;
-			aBuffer->fPrev = nil;
+			aBuffer->fPrev = nullptr;
 			aBuffer->fNext = fBuffer_Head;
 			if (fBuffer_Head)
 				{
@@ -278,7 +278,7 @@ ZStreamRWPos_PageBuffered::~ZStreamRWPos_PageBuffered()
 			size_t flushSize = min(uint64(fBufferSize),
 				fStreamReal.GetSize() - buffer_Current->fStartPosition);
 
-			fStreamReal.Write(buffer_Current->fData, flushSize, nil);
+			fStreamReal.Write(buffer_Current->fData, flushSize, nullptr);
 			}
 		Buffer* nextBuffer = buffer_Current->fNext;
 		delete[] buffer_Current->fData;
@@ -308,7 +308,7 @@ void ZStreamRWPos_PageBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCo
 
 		size_t offsetInBuffer = fPosition % fBufferSize;
 
-		if (buffer_Found == nil)
+		if (buffer_Found == nullptr)
 			{
 			// We didn't find a buffer encompassing the position
 			if (fBuffer_Tail->fDirty)
@@ -320,7 +320,7 @@ void ZStreamRWPos_PageBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCo
 			buffer_Found = fBuffer_Tail;
 			buffer_Found->fStartPosition = fPosition - offsetInBuffer;
 			fStreamReal.SetPosition(buffer_Found->fStartPosition);
-			fStreamReal.Read(buffer_Found->fData, fBufferSize, nil);
+			fStreamReal.Read(buffer_Found->fData, fBufferSize, nullptr);
 			buffer_Found->fDirty = false;
 			}
 
@@ -343,7 +343,7 @@ void ZStreamRWPos_PageBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCo
 				fBuffer_Tail = buffer_Found->fPrev;
 
 			// and inserting it
-			buffer_Found->fPrev = nil;
+			buffer_Found->fPrev = nullptr;
 			buffer_Found->fNext = fBuffer_Head;
 			fBuffer_Head->fPrev = buffer_Found;
 			fBuffer_Head = buffer_Found;
@@ -371,7 +371,7 @@ void ZStreamRWPos_PageBuffered::Imp_Write(const void* iSource, size_t iCount, si
 			}
 
 		size_t offsetInBuffer = fPosition % fBufferSize;
-		if (buffer_Found == nil)
+		if (buffer_Found == nullptr)
 			{
 			// We didn't find a buffer encompassing the position
 			if (fBuffer_Tail->fDirty)
@@ -418,7 +418,7 @@ void ZStreamRWPos_PageBuffered::Imp_Write(const void* iSource, size_t iCount, si
 				fBuffer_Tail = buffer_Found->fPrev;
 
 			// and inserting it
-			buffer_Found->fPrev = nil;
+			buffer_Found->fPrev = nullptr;
 			buffer_Found->fNext = fBuffer_Head;
 			fBuffer_Head->fPrev = buffer_Found;
 			fBuffer_Head = buffer_Found;

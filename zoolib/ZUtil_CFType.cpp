@@ -43,7 +43,7 @@ CFStringRef ZUtil_CFType::sCreateCFString_UTF8(const string8& iString8)
 	{
 	if (CFIndex sourceSize = iString8.size())
 		{
-		return ::CFStringCreateWithBytes(nil,
+		return ::CFStringCreateWithBytes(nullptr,
 			reinterpret_cast<const UInt8*>(iString8.data()), sourceSize,
 			kCFStringEncodingUTF8, false);
 		}
@@ -56,7 +56,7 @@ CFStringRef ZUtil_CFType::sCreateCFString_UTF16(const string16& iString16)
 	{
 	if (CFIndex sourceSize = iString16.size())
 		{
-		return ::CFStringCreateWithCharacters(nil,
+		return ::CFStringCreateWithCharacters(nullptr,
 				reinterpret_cast<const UniChar*>(iString16.data()), sourceSize);
 		}
 
@@ -140,6 +140,10 @@ ZType ZUtil_CFType::sTypeOf(CFTypeRef iCFType)
 		else if (theTypeID == ::CFBooleanGetTypeID())
 			{
 			return eZType_Bool;
+			}
+		else if (theTypeID == ::CFDateGetTypeID())
+			{
+			return eZType_Time;
 			}
 		else if (theTypeID == ::CFDataGetTypeID())
 			{
@@ -296,7 +300,7 @@ CFTypeRef ZUtil_CFType::sCreateCFType(const ZTValue& iTV)
 			const void* theAddress;
 			size_t theSize;
 			iTV.GetRawAttributes(&theAddress, &theSize);
-			return ::CFDataCreate(nil, static_cast<const UInt8*>(theAddress), theSize);
+			return ::CFDataCreate(nullptr, static_cast<const UInt8*>(theAddress), theSize);
 			}
 		case eZType_Bool:
 			{
@@ -307,40 +311,40 @@ CFTypeRef ZUtil_CFType::sCreateCFType(const ZTValue& iTV)
 			}
 		case eZType_Time:
 			{
-			return ::CFDateCreate(nil, iTV.GetTime().fVal - kCFAbsoluteTimeIntervalSince1970);
+			return ::CFDateCreate(nullptr, iTV.GetTime().fVal - kCFAbsoluteTimeIntervalSince1970);
 			}
 		case eZType_Int8:
 			{
 			const int8 theValue = iTV.GetInt8();
-			return ::CFNumberCreate(nil, kCFNumberSInt8Type, &theValue);
+			return ::CFNumberCreate(nullptr, kCFNumberSInt8Type, &theValue);
 			}
 		case eZType_Int16:
 			{
 			const int16 theValue = iTV.GetInt16();
-			return ::CFNumberCreate(nil, kCFNumberSInt16Type, &theValue);
+			return ::CFNumberCreate(nullptr, kCFNumberSInt16Type, &theValue);
 			}
 		case eZType_Int32:
 			{
 			const int32 theValue = iTV.GetInt32();
-			return ::CFNumberCreate(nil, kCFNumberSInt32Type, &theValue);
+			return ::CFNumberCreate(nullptr, kCFNumberSInt32Type, &theValue);
 			}
 		case eZType_Int64:
 			{
 			const int64 theValue = iTV.GetInt64();
-			return ::CFNumberCreate(nil, kCFNumberSInt64Type, &theValue);
+			return ::CFNumberCreate(nullptr, kCFNumberSInt64Type, &theValue);
 			}
 		case eZType_Float:
 			{
 			const float theValue = iTV.GetFloat();
-			return ::CFNumberCreate(nil, kCFNumberFloatType, &theValue);
+			return ::CFNumberCreate(nullptr, kCFNumberFloatType, &theValue);
 			}
 		case eZType_Double:
 			{
 			const double theValue = iTV.GetDouble();
-			return ::CFNumberCreate(nil, kCFNumberDoubleType, &theValue);
+			return ::CFNumberCreate(nullptr, kCFNumberDoubleType, &theValue);
 			}
 		}
-	return nil;
+	return nullptr;
 	}
 
 static void sApplier(const void* iKey, const void* iValue, void* iRefcon)

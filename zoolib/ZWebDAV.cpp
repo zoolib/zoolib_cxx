@@ -73,8 +73,8 @@ private:
 
 DAVIter::DAVIter(const ZNode& iNode, int iDepth)
 :	iRoot(iNode),
-	fNodeIter(nil),
-	fNodeTreeIter(nil)
+	fNodeIter(nullptr),
+	fNodeTreeIter(nullptr)
 	{
 	if (iDepth == 0)
 		{}

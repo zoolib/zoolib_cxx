@@ -59,7 +59,7 @@ void ZStrimR_CFString::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 			{
 			ZUnicode::sUTF16ToUTF32(
 				start + fPosition, countAvailable,
-				&countConsumed, nil,
+				&countConsumed, nullptr,
 				iDest, iCount,
 				oCount);
 			}
@@ -70,7 +70,7 @@ void ZStrimR_CFString::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 			::CFStringGetCharacters(fStringRef, CFRangeMake(fPosition, cuToCopy), (UniChar*)buffer);
 			ZUnicode::sUTF16ToUTF32(
 				buffer, cuToCopy,
-				&countConsumed, nil,
+				&countConsumed, nullptr,
 				iDest, iCount,
 				oCount);
 			}
@@ -97,7 +97,7 @@ void ZStrimR_CFString::Imp_ReadUTF16(UTF16* iDest,
 			{
 			ZUnicode::sUTF16ToUTF16(
 				start + fPosition, countAvailable,
-				&countConsumed, nil,
+				&countConsumed, nullptr,
 				iDest, iCountCU,
 				oCountCU,
 				iCountCP, oCountCP);
@@ -109,7 +109,7 @@ void ZStrimR_CFString::Imp_ReadUTF16(UTF16* iDest,
 			::CFStringGetCharacters(fStringRef, CFRangeMake(fPosition, cuToCopy), (UniChar*)buffer);
 			ZUnicode::sUTF16ToUTF16(
 				buffer, cuToCopy,
-				&countConsumed, nil,
+				&countConsumed, nullptr,
 				iDest, iCountCU,
 				oCountCU,
 				iCountCP, oCountCP);
@@ -137,7 +137,7 @@ void ZStrimR_CFString::Imp_ReadUTF8(UTF8* iDest,
 			{
 			ZUnicode::sUTF16ToUTF8(
 				start + fPosition, length - fPosition,
-				&countConsumed, nil,
+				&countConsumed, nullptr,
 				iDest, iCountCU,
 				oCountCU,
 				iCountCP, oCountCP);
@@ -149,7 +149,7 @@ void ZStrimR_CFString::Imp_ReadUTF8(UTF8* iDest,
 			::CFStringGetCharacters(fStringRef, CFRangeMake(fPosition, cuToCopy), (UniChar*)buffer);
 			ZUnicode::sUTF16ToUTF8(
 				buffer, cuToCopy,
-				&countConsumed, nil,
+				&countConsumed, nullptr,
 				iDest, iCountCU,
 				oCountCU,
 				iCountCP, oCountCP);

@@ -43,7 +43,7 @@ static short sModeLookup[] = { GXcopy, GXor, GXxor };
 ZDCCanvas_X::SetupLock::SetupLock(ZDCCanvas_X* inCanvas)
 	{
 	fCanvas = inCanvas;
-	ZAssertStop(kDebug_X, fCanvas->fMutexToCheck == nil || fCanvas->fMutexToCheck->IsLocked());
+	ZAssertStop(kDebug_X, fCanvas->fMutexToCheck == nullptr || fCanvas->fMutexToCheck->IsLocked());
 	fCanvas->fMutexToLock->Acquire();
 	}
 
@@ -226,21 +226,21 @@ ZDCCanvas_X::ZDCCanvas_X()
 	fChangeCount_TextColor = 1;
 
 	fDrawable = 0;
-	fGC = nil;
+	fGC = nullptr;
 
 	fCachedInkPixmap = NULL;
 
-	fMutexToLock = nil;
-	fMutexToCheck = nil;
+	fMutexToLock = nullptr;
+	fMutexToCheck = nullptr;
 	}
 
 ZDCCanvas_X::~ZDCCanvas_X()
 	{
 	// Subclasses must unlink themselves and detach/destroy grafports before this destructor is called.
 	ZAssertStop(kDebug_X, !fDrawable);
-	ZAssertStop(kDebug_X, fGC == nil);
-	ZAssertStop(kDebug_X, fMutexToLock == nil);
-	ZAssertStop(kDebug_X, fMutexToCheck == nil);
+	ZAssertStop(kDebug_X, fGC == nullptr);
+	ZAssertStop(kDebug_X, fMutexToLock == nullptr);
+	ZAssertStop(kDebug_X, fMutexToCheck == nullptr);
 	if (fCachedInkPixmap)
 		fXServer->FreePixmap(fCachedInkPixmap);
 	}
@@ -848,7 +848,7 @@ ZDCCanvas_X_NonWindow::~ZDCCanvas_X_NonWindow()
 	{
 	ZAssertStop(kDebug_X, !fDrawable);
 	ZAssertStop(kDebug_X, !fGC);
-	fMutexToLock = nil;
+	fMutexToLock = nullptr;
 	}
 
 void ZDCCanvas_X_NonWindow::Finalize()
@@ -910,7 +910,7 @@ void ZDCCanvas_X_NonWindow::Scroll(ZDCState& ioState, const ZRect& inRect, ZCoor
 void ZDCCanvas_X_NonWindow::CopyFrom(ZDCState& ioState, const ZPoint& inDestLocation, ZRef<ZDCCanvas> inSourceCanvas, const ZDCState& inSourceState, const ZRect& inSourceRect)
 	{
 	ZRef<ZDCCanvas_X> sourceCanvasX = ZRefDynamicCast<ZDCCanvas_X>(inSourceCanvas);
-	ZAssertStop(kDebug_X, sourceCanvasX != nil);
+	ZAssertStop(kDebug_X, sourceCanvasX != nullptr);
 
 	if (!fDrawable || !sourceCanvasX->Internal_GetDrawable())
 		return;
@@ -966,7 +966,7 @@ ZDCCanvas_X_OffScreen::~ZDCCanvas_X_OffScreen()
 	fXServer->FreePixmap(fDrawable);
 	fDrawable = 0;
 	fXServer->FreeGC(fGC);
-	fGC = nil;
+	fGC = nullptr;
 	}
 
 bool ZDCCanvas_X_OffScreen::IsOffScreen()

@@ -167,7 +167,7 @@ protected:
 		{
 		if (fHandle)
 			::HSetState(fHandle, fOldState);
-		fHandle = nil;
+		fHandle = nullptr;
 		}
 
 	Handle fHandle;

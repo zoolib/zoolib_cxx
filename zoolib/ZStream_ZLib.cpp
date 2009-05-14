@@ -116,14 +116,14 @@ void ZStreamR_ZLibDecode::Internal_Init(size_t iBufferSize)
 	fBufferSize = max(size_t(1024), iBufferSize);
 	fBuffer = new Bytef[fBufferSize];
 
-	fState.zalloc = nil;
-	fState.zfree = nil;
-	fState.opaque = nil;
+	fState.zalloc = nullptr;
+	fState.zfree = nullptr;
+	fState.opaque = nullptr;
 
 	fState.next_in = fBuffer;
 	fState.avail_in = 0;
 
-	fState.next_out = nil;
+	fState.next_out = nullptr;
 	fState.avail_out = 0;
 
 	if (Z_OK != ::inflateInit(&fState))
@@ -241,11 +241,11 @@ void ZStreamW_ZLibEncode::Internal_Init(int iCompressionLevel, size_t iBufferSiz
 	fBufferSize = max(size_t(1024), iBufferSize);
 	fBuffer = new Bytef[fBufferSize];
 
-	fState.zalloc = nil;
-	fState.zfree = nil;
-	fState.opaque = nil;
+	fState.zalloc = nullptr;
+	fState.zfree = nullptr;
+	fState.opaque = nullptr;
 
-	fState.next_in = nil;
+	fState.next_in = nullptr;
 	fState.avail_in = 0;
 
 	fState.next_out = fBuffer;

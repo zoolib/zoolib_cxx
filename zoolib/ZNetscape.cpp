@@ -73,7 +73,7 @@ NPClass_Z* sGetClass(NPObject* obj)
 	{
 	if (obj)
 		return static_cast<NPClass_Z*>(obj->_class);
-	return nil;
+	return nullptr;
 	}
 
 // =================================================================================================

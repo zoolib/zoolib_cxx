@@ -347,11 +347,11 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZCommandLine
 
-ZCommandLine* ZCommandLine::sCommandLineCurrent = nil;
+ZCommandLine* ZCommandLine::sCommandLineCurrent = nullptr;
 
 ZCommandLine::ZCommandLine()
-:	fHead(nil),
-	fTail(nil)
+:	fHead(nullptr),
+	fTail(nullptr)
 	{
 	sCommandLineCurrent = this;	
 	}
@@ -360,13 +360,13 @@ ZCommandLine::~ZCommandLine()
 	{}
 
 bool ZCommandLine::Parse(int argc, char** argv)
-	{ return this->pParse(false, nil, argc, argv); }
+	{ return this->pParse(false, nullptr, argc, argv); }
 
 bool ZCommandLine::Parse(const ZStrimW& iStrimErrors, int argc, char** argv)
 	{ return this->pParse(false, &iStrimErrors, argc, argv); }
 
 bool ZCommandLine::Parse(bool iUpdateArgs, int& ioArgc, char**& ioArgv)
-	{ return this->pParse(true, nil, ioArgc, ioArgv); }
+	{ return this->pParse(true, nullptr, ioArgc, ioArgv); }
 
 bool ZCommandLine::Parse(
 	bool iUpdateArgs, const ZStrimW& iStrimErrors, int& ioArgc, char**& ioArgv)
@@ -461,7 +461,7 @@ bool ZCommandLine::pParseOne(const ZStrimW* iStrimErrors, int& ioArgc, char**& i
 		if (match != 0)
 			continue;
 
-		const char* lexeme = nil;
+		const char* lexeme = nullptr;
 		if (argLength > optLength)
 			{
 			if (ioArgv[0][optLength] != '=')
@@ -520,7 +520,7 @@ void ZCommandLine::pAppendOpt(Opt* iOpt)
 #pragma mark * ZCommandLine::Opt
 
 ZCommandLine::Opt::Opt(const string& iName, const string& iDescription, EFlags iFlags, bool iHasDefault)
-:	fNext(nil),
+:	fNext(nullptr),
 	fName(iName),
 	fDescription(iDescription),
 	fIsRequired(iFlags == eRequired),

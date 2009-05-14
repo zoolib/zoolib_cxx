@@ -130,13 +130,13 @@ ZStreamW_Count::ZStreamW_Count(uint64& oCount, const ZStreamW& iStreamSink)
 	}
 
 ZStreamW_Count::ZStreamW_Count()
-:	fStreamSink(nil),
+:	fStreamSink(nullptr),
 	fCount(0),
 	fCountPtr(&fCount)
 	{}
 
 ZStreamW_Count::ZStreamW_Count(uint64& oCount)
-:	fStreamSink(nil),
+:	fStreamSink(nullptr),
 	fCount(0xDEADBEEF),
 	fCountPtr(&oCount)
 	{

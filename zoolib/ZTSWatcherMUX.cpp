@@ -151,7 +151,7 @@ ZTSWatcherMUX::PTuple::PTuple(uint64 iID)
 :	fID(iID),
 	fReg(eReg_Fresh),
 	fHasValueForServer(false),
-	fWrittenBy(nil)
+	fWrittenBy(nullptr)
 	{}
 
 // =================================================================================================
@@ -301,7 +301,7 @@ ZTSWatcherMUX::~ZTSWatcherMUX()
 	{
 	ZAssertStop(kDebug, fWatchers.empty());
 	if (fTSWatcher)
-		fTSWatcher->SetCallback(nil, nil);
+		fTSWatcher->SetCallback(nullptr, nullptr);
 
 	// Purge the caches, so the list destructors' assertions don't trip.
 	while (fPQueries_Cached)
@@ -575,7 +575,7 @@ bool ZTSWatcherMUX::Watcher_Sync(Watcher* iWatcher,
 		PTuple* thePTuple = iter.Current()->fPTuple;
 		if (thePTuple->fWrittenBy == iWatcher)
 			{
-			thePTuple->fWrittenBy = nil;
+			thePTuple->fWrittenBy = nullptr;
 			}
 		else
 			{
@@ -934,7 +934,7 @@ ZTSWatcherMUX::PQuery* ZTSWatcherMUX::pGetPQueryIfExtant(int64 iRefcon)
 	map<int64, PQuery*>::iterator i = fRefcon_To_PQuery.find(iRefcon);
 	if (i != fRefcon_To_PQuery.end())
 		return i->second;
-	return nil;
+	return nullptr;
 	}
 
 ZTSWatcherMUX::PTuple* ZTSWatcherMUX::pGetPTuple(uint64 iID)
@@ -962,7 +962,7 @@ ZTSWatcherMUX::PTuple* ZTSWatcherMUX::pGetPTupleIfExtant(uint64 iID)
 	map<uint64, PTuple>::iterator i = fPTuples.find(iID);
 	if (i != fPTuples.end())
 		return &i->second;
-	return nil;
+	return nullptr;
 	}
 
 void ZTSWatcherMUX::Callback()

@@ -71,7 +71,7 @@ Established --> Failed
 ZTSWatcher_AutoReconnect::ZTSWatcher_AutoReconnect(ZRef<ZTSWatcherFactory> iFactory)
 :	fFactory(iFactory),
 	fConnectionFailed(false),
-	fCallback(nil)
+	fCallback(nullptr)
 	{}
 
 ZTSWatcher_AutoReconnect::~ZTSWatcher_AutoReconnect()
@@ -130,9 +130,9 @@ bool ZTSWatcher_AutoReconnect::Sync(
 			oChangedTuples.clear();
 			oChangedQueries.clear();
 
-			if (this->pSync(nil, 0,
+			if (this->pSync(nullptr, 0,
 					sFirstOrNil(addedIDs), addedIDs.size(),
-					nil, 0,
+					nullptr, 0,
 					sFirstOrNil(addedQueries), addedQueries.size(),
 					oAddedIDs,
 					oChangedTupleIDs, oChangedTuples,

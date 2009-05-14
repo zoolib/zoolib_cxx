@@ -407,7 +407,7 @@ bool ZTextDecoder_Win::Decode(
 		size_t utf32Generated;
 		ZUnicode::sUTF16ToUTF32(
 			reinterpret_cast<const UTF16*>(utf16Buffer), utf16Generated,
-			&utf16Consumed, nil, 
+			&utf16Consumed, nullptr, 
 			localDest, iDestCU,
 			&utf32Generated);
 
@@ -471,7 +471,7 @@ static void sWCToMB(UINT iDestCodePage, const WCHAR* iSource, size_t iSourceCU, 
 		for (;;)
 			{
 			int result = ::WideCharToMultiByte(
-				iDestCodePage, 0, iSource, iSourceCU, iDest, 0, nil, nil);
+				iDestCodePage, 0, iSource, iSourceCU, iDest, 0, nullptr, nullptr);
 
 			if (result <= iDestCU)
 				break;
@@ -484,7 +484,7 @@ static void sWCToMB(UINT iDestCodePage, const WCHAR* iSource, size_t iSourceCU, 
 	for (;;)
 		{
 		if (int result = ::WideCharToMultiByte(
-			iDestCodePage, 0, iSource, iSourceCU, iDest, iDestCU, nil, nil))
+			iDestCodePage, 0, iSource, iSourceCU, iDest, iDestCU, nullptr, nullptr))
 			{
 			oSourceCU = iSourceCU;
 			oDestCU = result;
@@ -524,10 +524,10 @@ void ZTextEncoder_Win::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 		size_t utf16Generated;
 		ZUnicode::sUTF32ToUTF16(
 			localSource, iSourceCU,
-			&utf32Consumed, nil,
+			&utf32Consumed, nullptr,
 			reinterpret_cast<UTF16*>(utf16Buffer), kBufSize,
 			&utf16Generated, 
-			iSourceCU, nil);
+			iSourceCU, nullptr);
 
 		size_t utf16Consumed;
 		size_t destGenerated;

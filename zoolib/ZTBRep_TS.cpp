@@ -335,13 +335,13 @@ ZTuple ZTBRep_TS::Transaction::TupleQuisitioner::FetchTuple(uint64 iID)
 ZTBRep_TS::Transaction::Transaction(
 	ZRef<ZTBRep_TS> iTBRep, const vector<ZRef<ZTupleIndexFactory> >& iFactories)
 :	fTBRep(iTBRep),
-	fWaiting_Prev(nil),
-	fWaiting_Next(nil),
-	fWaiting_NextReader(nil),
+	fWaiting_Prev(nullptr),
+	fWaiting_Next(nullptr),
+	fWaiting_NextReader(nullptr),
 	fTransTuples(less<uint64>(), MapTransTuple_t::allocator_type(fRealAllocator)),
 	fValidateCalled(false),
-	fCallback_Validate(nil),
-	fRefcon(nil)
+	fCallback_Validate(nullptr),
+	fRefcon(nullptr)
 	{
 	for (vector<ZRef<ZTupleIndexFactory> >::const_iterator factIter = iFactories.begin();
 		factIter != iFactories.end(); ++factIter)
@@ -374,7 +374,7 @@ void ZTBRep_TS::Transaction::Search(
 
 	vector<uint64> vectorResults;
 	if (ZRef<ZTBQueryNode> theNode = iQuery.GetNode())
-		TupleQuisitioner(this).Query(theNode, nil, vectorResults);
+		TupleQuisitioner(this).Query(theNode, nullptr, vectorResults);
 
 	iCallback(iRefcon, vectorResults);
 	}
@@ -384,7 +384,7 @@ void ZTBRep_TS::Transaction::Count(
 	{
 	set<uint64> setResults;
 	if (ZRef<ZTBQueryNode> theNode = iQuery.GetNode())
-		TupleQuisitioner(this).Query_Unordered(theNode, nil, setResults);
+		TupleQuisitioner(this).Query_Unordered(theNode, nullptr, setResults);
 
 	iCallback(iRefcon, setResults.size());
 	}
@@ -402,13 +402,13 @@ void ZTBRep_TS::Transaction::GetTuples(size_t iCount, const uint64* iIDs,
 			}
 		else
 			{
-			fTBRep->Trans_FetchTuples(this, iCount, iIDs, nil);
+			fTBRep->Trans_FetchTuples(this, iCount, iIDs, nullptr);
 			}
 		}
 	else
 		{
 		if (iCallback)
-			iCallback(iRefcon, 0, nil, nil);
+			iCallback(iRefcon, 0, nullptr, nullptr);
 		}
 	}
 
@@ -1026,13 +1026,13 @@ void ZTBRep_TS::pReleaseLock(Transaction* iTransaction, TupleInUse& iTIU, bool i
 		// Release the write lock
 		ZAssertStop(kDebug, iTIU.fTransaction_Writer == iTransaction);
 		ZAssertStop(kDebug, iTIU.fTransaction_ReaderCount == 0);
-		iTIU.fTransaction_Writer = nil;
+		iTIU.fTransaction_Writer = nullptr;
 		releaseWaiting = true;
 		}
 	else
 		{
 		// Release the write lock
-		ZAssertStop(kDebug, iTIU.fTransaction_Writer == nil);
+		ZAssertStop(kDebug, iTIU.fTransaction_Writer == nullptr);
 		ZAssertStop(kDebug, iTIU.fTransaction_ReaderCount != 0);
 		if (--iTIU.fTransaction_ReaderCount == 0)
 			releaseWaiting = true;
@@ -1040,7 +1040,7 @@ void ZTBRep_TS::pReleaseLock(Transaction* iTransaction, TupleInUse& iTIU, bool i
 
 	if (releaseWaiting)
 		{
-		ZAssertStop(kDebug, iTIU.fTransaction_Writer == nil);
+		ZAssertStop(kDebug, iTIU.fTransaction_Writer == nullptr);
 		ZAssertStop(kDebug, iTIU.fTransaction_ReaderCount == 0);
 
 		if (Transaction* waitingTransaction = iTIU.fTransaction_Waiting)
@@ -1049,7 +1049,7 @@ void ZTBRep_TS::pReleaseLock(Transaction* iTransaction, TupleInUse& iTIU, bool i
 			if (nextWaitingTransaction == waitingTransaction)
 				{
 				// This is the last in the list.
-				iTIU.fTransaction_Waiting = nil;
+				iTIU.fTransaction_Waiting = nullptr;
 				}
 			else
 				{
@@ -1059,8 +1059,8 @@ void ZTBRep_TS::pReleaseLock(Transaction* iTransaction, TupleInUse& iTIU, bool i
 				iTIU.fTransaction_Waiting = nextWaitingTransaction;
 				}
 
-			waitingTransaction->fWaiting_Prev = nil;
-			waitingTransaction->fWaiting_Next = nil;
+			waitingTransaction->fWaiting_Prev = nullptr;
+			waitingTransaction->fWaiting_Next = nullptr;
 
 			// Look at the TransTuple that waitingTransaction is using to lock iTIU.
 			TransTuple& waitingTT = (*waitingTransaction->fIter_Validate).second;
@@ -1092,7 +1092,7 @@ void ZTBRep_TS::pReleaseLock(Transaction* iTransaction, TupleInUse& iTIU, bool i
 
 					// Remember the next reader, and unlink from it.
 					Transaction* nextWaitingReader = waitingTransaction->fWaiting_NextReader;
-					waitingTransaction->fWaiting_NextReader = nil;
+					waitingTransaction->fWaiting_NextReader = nullptr;
 
 					// Try to finish waitingTransaction's validation.
 					this->pTryValidation(waitingTransaction);
@@ -1176,9 +1176,9 @@ ZTBRep_TS::TupleInUse& ZTBRep_TS::pGetTupleInUse(uint64 iID)
 			(position, MapTupleInUse_t::value_type(iID, TupleInUse()))->second;
 
 		theTIU.fID = iID;
-		theTIU.fTransaction_Writer = nil;
+		theTIU.fTransaction_Writer = nullptr;
 		theTIU.fTransaction_ReaderCount = 0;
-		theTIU.fTransaction_Waiting = nil;
+		theTIU.fTransaction_Waiting = nullptr;
 		// A zero value for fClock_LastWritten indicates that theTIU.fValue
 		// is invalid -- it will have to be initialized from the TS if anything
 		// ever needs to read it.

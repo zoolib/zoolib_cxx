@@ -250,7 +250,7 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const ZTName* iName, ZTQL::Spec*
 		const ZTName sourcePropName = theNode_ID_FromSource->GetSourcePropName();
 
 		// Get the source tuples' sourcePropName
-		Query theQ = sConvert(sourceNode, &sourcePropName, nil);
+		Query theQ = sConvert(sourceNode, &sourcePropName, nullptr);
 
 		// Rename it to sIDName.
 		theQ = theQ.Rename(sourcePropName, sIDName);
@@ -302,7 +302,7 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const ZTName* iName, ZTQL::Spec*
 		const ZTName thePropName = theNode_Property->GetPropName();
 
 		// Get the source tuples' IDs.
-		Query theQ = sConvert(sourceNode, nil, nil);
+		Query theQ = sConvert(sourceNode, nullptr, nullptr);
 
 		// Renamed to thePropName;
 		theQ = theQ.Rename(sIDName, thePropName);
@@ -363,7 +363,7 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const ZTName* iName, ZTQL::Spec*
 
 ZTQL::Query ZUtil_TQLConvert::sConvert(const ZTBQuery& iTBQuery)
 	{
-	return sConvert(iTBQuery.GetNode(), nil, nil);
+	return sConvert(iTBQuery.GetNode(), nullptr, nullptr);
 	}
 
 NAMESPACE_ZOOLIB_END

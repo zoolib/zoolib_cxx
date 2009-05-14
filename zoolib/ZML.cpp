@@ -288,7 +288,7 @@ static bool sReadMLAttributeValue(
 
 ZML::Reader::Reader(const ZStrimU& iStrim)
 :	fStrim(iStrim),
-	fCallback(nil),
+	fCallback(nullptr),
 	fBufferStart(0),
 	fToken(eToken_Exhausted),
 	fRecognizeEntitiesInAttributeValues(false)
@@ -298,7 +298,7 @@ ZML::Reader::Reader(const ZStrimU& iStrim)
 
 ZML::Reader::Reader(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues)
 :	fStrim(iStrim),
-	fCallback(nil),
+	fCallback(nullptr),
 	fBufferStart(0),
 	fToken(eToken_Exhausted),
 	fRecognizeEntitiesInAttributeValues(iRecognizeEntitiesInAttributeValues)

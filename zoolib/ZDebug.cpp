@@ -123,7 +123,7 @@ static void ZDebug_HandleInitial_Generic(int inLevel, ZDebug_Action inAction,
 
 ZDebug_HandleInitial_t sDebug_HandleInitial = ZDebug_HandleInitial_Generic;
 
-ZDebug_HandleActual_t sDebug_HandleActual = nil;
+ZDebug_HandleActual_t sDebug_HandleActual = nullptr;
 
 // =================================================================================================
 

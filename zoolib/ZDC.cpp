@@ -489,7 +489,7 @@ static ZDCRgn sCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
 #pragma mark -
 #pragma mark * ZDCCanvasFactory
 
-ZDCCanvasFactory* ZDCCanvasFactory::sHead = nil;
+ZDCCanvasFactory* ZDCCanvasFactory::sHead = nullptr;
 
 ZDCCanvasFactory::ZDCCanvasFactory()
 	{

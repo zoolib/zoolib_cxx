@@ -82,13 +82,13 @@ static const PNRep* sLookupAndTag(const char* iName, size_t iLength)
 		return reinterpret_cast<const PNRep*>(1);
 
 	if (!sNames)
-		return nil;
+		return nullptr;
 
 	vector<const PNRep*>::iterator theIter =
 		lower_bound(sNames->begin(), sNames->end(), Key(iName, iLength), Compare_PNRep_Key_t());
 
 	if (theIter == sNames->end() || sDifferent(*theIter, iName, iLength))
-		return nil;
+		return nullptr;
 
 	return reinterpret_cast<const PNRep*>(reinterpret_cast<intptr_t>(*theIter) | 1);
 	}
@@ -99,14 +99,14 @@ static const PNRep* sLookupAndTag(const string& iName)
 		return reinterpret_cast<const PNRep*>(1);
 
 	if (!sNames)
-		return nil;
+		return nullptr;
 
 	vector<const PNRep*>::iterator theIter = lower_bound(
 		sNames->begin(), sNames->end(), Key(iName.data(), iName.length()),
 		Compare_PNRep_Key_t());
 
 	if (theIter == sNames->end() || sDifferent(*theIter, iName.data(), iName.length()))
-		return nil;
+		return nullptr;
 
 	return reinterpret_cast<const PNRep*>(reinterpret_cast<intptr_t>(*theIter) | 1);
 	}

@@ -201,7 +201,7 @@ ZNetListener_RFCOMM_OSX::~ZNetListener_RFCOMM_OSX()
 	{
 	if (fNotification)
 		[fNotification unregister];
-	fNotification = nil;
+	fNotification = nullptr;
 
 	DESTROY(fDelegate);
 	}
@@ -239,8 +239,8 @@ void ZNetListener_RFCOMM_OSX::pChannelOpened(IOBluetoothRFCOMMChannel* iChannel)
 // =================================================================================================
 
 ZNetEndpoint_RFCOMM_OSX::ZNetEndpoint_RFCOMM_OSX(IOBluetoothDevice* iDevice, uint8 iChannelID)
-:	fDelegate(nil),
-	fChannel(nil),
+:	fDelegate(nullptr),
+	fChannel(nullptr),
 	fOpen(true)
 	{
 	fDelegate = [[Delegate_ZNetEndpoint_RFCOMM_OSX alloc] initWithEndpoint:this];
@@ -256,7 +256,7 @@ ZNetEndpoint_RFCOMM_OSX::ZNetEndpoint_RFCOMM_OSX(IOBluetoothDevice* iDevice, uin
 	}
 
 ZNetEndpoint_RFCOMM_OSX::ZNetEndpoint_RFCOMM_OSX(IOBluetoothRFCOMMChannel* iChannel)
-:	fDelegate(nil),
+:	fDelegate(nullptr),
 	fChannel(iChannel),
 	fOpen(true)
 	{

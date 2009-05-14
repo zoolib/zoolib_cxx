@@ -117,14 +117,14 @@ void ZStreamR_bzip2Decode::Internal_Init(size_t iBufferSize)
 	fBufferSize = max(size_t(1024), iBufferSize);
 	fBuffer = new char[fBufferSize];
 
-	fState.bzalloc = nil;
-	fState.bzfree = nil;
-	fState.opaque = nil;
+	fState.bzalloc = nullptr;
+	fState.bzfree = nullptr;
+	fState.opaque = nullptr;
 
 	fState.next_in = fBuffer;
 	fState.avail_in = 0;
 
-	fState.next_out = nil;
+	fState.next_out = nullptr;
 	fState.avail_out = 0;
 
 	if (BZ_OK != ::BZ2_bzDecompressInit(&fState, 0, 0))
@@ -240,11 +240,11 @@ void ZStreamW_bzip2Encode::Internal_Init(int iBlockSize100K, size_t iBufferSize)
 	fBufferSize = max(size_t(1024), iBufferSize);
 	fBuffer = new char[fBufferSize];
 
-	fState.bzalloc = nil;
-	fState.bzfree = nil;
-	fState.opaque = nil;
+	fState.bzalloc = nullptr;
+	fState.bzfree = nullptr;
+	fState.opaque = nullptr;
 
-	fState.next_in = nil;
+	fState.next_in = nullptr;
 	fState.avail_in = 0;
 
 	fState.next_out = fBuffer;

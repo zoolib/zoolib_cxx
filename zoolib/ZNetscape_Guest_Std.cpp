@@ -89,7 +89,7 @@ void GuestMeister_Std::URLNotify(NPP iNPP, const char* url, NPReason reason, voi
 	{ return sGuest(iNPP)->Guest_URLNotify(url, reason, notifyData); }
 
 jref GuestMeister_Std::GetJavaClass()
-	{ return nil; }
+	{ return nullptr; }
 
 NPError GuestMeister_Std::GetValue(NPP iNPP, NPPVariable variable, void *value)
 	{ return sGuest(iNPP)->Guest_GetValue(variable, value); }

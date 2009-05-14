@@ -99,7 +99,7 @@ bool ZNet_Socket::sWaitReadable(int iSocket, int iMilliseconds)
 	struct timeval timeOut;
 	timeOut.tv_sec = iMilliseconds / 1000;
 	timeOut.tv_usec = (iMilliseconds % 1000) * 1000;
-	return 0 < ::select(iSocket + 1, &readSet, nil, &exceptSet, &timeOut);
+	return 0 < ::select(iSocket + 1, &readSet, nullptr, &exceptSet, &timeOut);
 	}
 
 void ZNet_Socket::sWaitWriteable(int iSocket)
@@ -112,7 +112,7 @@ void ZNet_Socket::sWaitWriteable(int iSocket)
 	timeOut.tv_sec = 1;
 	timeOut.tv_usec = 0;
 
-	::select(iSocket + 1, nil, &writeSet, nil, &timeOut);
+	::select(iSocket + 1, nullptr, &writeSet, nullptr, &timeOut);
 	}
 
 #elif defined(linux) || defined(__sun__)
@@ -343,7 +343,7 @@ void ZNetListener_Socket::sEnableFastCancellation()
 		sigaction_new.sa_handler = sDummyAction;
 		sigaction_new.sa_flags = 0;
 		sigemptyset(&sigaction_new.sa_mask);
-		::sigaction(SIGALRM, &sigaction_new, nil);
+		::sigaction(SIGALRM, &sigaction_new, nullptr);
 		sFastCancellationEnabled = true;
 	#endif
 	}

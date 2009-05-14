@@ -137,16 +137,16 @@ protected:
 	};
 
 ZBlockStore_PhaseTree::Slot::Slot(uint32 iSlotNumber, bool iForked)
-:	fCached_Prev(nil),
-	fCached_Next(nil),
+:	fCached_Prev(nullptr),
+	fCached_Next(nullptr),
 	fSlotNumber(iSlotNumber),
 	fUseCount(1),
 	fState(iForked ? eStateForked : eStateClean)
 	{}
 
 ZBlockStore_PhaseTree::Slot::Slot(uint32 iSlotNumber)
-:	fCached_Prev(nil),
-	fCached_Next(nil),
+:	fCached_Prev(nullptr),
+	fCached_Next(nullptr),
 	fSlotNumber(iSlotNumber),
 	fUseCount(1),
 	fState(eStateDirty)
@@ -155,8 +155,8 @@ ZBlockStore_PhaseTree::Slot::Slot(uint32 iSlotNumber)
 ZBlockStore_PhaseTree::Slot::~Slot()
 	{
 	ZAssertStop(ZCONFIG_PhaseTree_Debug, fUseCount == 0);
-	ZAssertStop(ZCONFIG_PhaseTree_Debug, fCached_Prev == nil);
-	ZAssertStop(ZCONFIG_PhaseTree_Debug, fCached_Next == nil);
+	ZAssertStop(ZCONFIG_PhaseTree_Debug, fCached_Prev == nullptr);
+	ZAssertStop(ZCONFIG_PhaseTree_Debug, fCached_Next == nullptr);
 	}
 
 void* ZBlockStore_PhaseTree::Slot::operator new(size_t iObjectSize, size_t iSlotSize)
@@ -587,8 +587,8 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(
 	fRootSlotNumber(0),
 	fHeight(0),
 	fMutex_Slots("fMutex_Slots"),
-	fCached_Head(nil),
-	fCached_Tail(nil),
+	fCached_Head(nullptr),
+	fCached_Tail(nullptr),
 	fHighWater(1),
 	fAllocatedSpace(1),
 	fUseRequests(0),
@@ -650,8 +650,8 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(ZRef<ZFileRW> iFile, size_t iUserHe
 	fRootSlotNumber(0),
 	fHeight(0),
 	fMutex_Slots("fMutex_Slots"),
-	fCached_Head(nil),
-	fCached_Tail(nil),
+	fCached_Head(nullptr),
+	fCached_Tail(nullptr),
 	fHighWater(0),
 	fAllocatedSpace(0),
 	fUseRequests(0),
@@ -741,8 +741,8 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(ZRef<ZFileR> iFile, size_t iUserHea
 	fRootSlotNumber(0),
 	fHeight(0),
 	fMutex_Slots("fMutex_Slots"),
-	fCached_Head(nil),
-	fCached_Tail(nil),
+	fCached_Head(nullptr),
+	fCached_Tail(nullptr),
 	fHighWater(0),
 	fAllocatedSpace(0),
 	fUseRequests(0),
@@ -825,8 +825,8 @@ ZBlockStore_PhaseTree::~ZBlockStore_PhaseTree()
 	for (map<uint32, Slot*>::iterator i = fSlots_Cached.begin(); i != fSlots_Cached.end(); ++i)
 		{
 		Slot* theSlot = (*i).second;
-		theSlot->fCached_Prev = nil;
-		theSlot->fCached_Next = nil;
+		theSlot->fCached_Prev = nullptr;
+		theSlot->fCached_Next = nullptr;
 		delete theSlot;
 		}
 	}
@@ -979,7 +979,7 @@ any write start until we reset fFlushInFirstStages.
 	for (vector<Slot*>::iterator i = dirtySlots.begin(); i != dirtySlots.end(); ++i)
 		{
 		err = fFileRW->WriteAt(fUserHeaderSize + uint64((*i)->fSlotNumber) * fSlotSize,
-			(*i)->fData, fSlotSize, nil);
+			(*i)->fData, fSlotSize, nullptr);
 		ZAssertStop(kDebug_PhaseTreeFile, err == ZFile::errorNone);
 		}
 
@@ -1124,7 +1124,7 @@ Write out the linked list of pages, filling them with slot numbers from released
 			}
 
 		err = fFileRW->WriteAt(fUserHeaderSize + uint64(currentPage) * fSlotSize,
-			&buffer[0], fSlotSize, nil);
+			&buffer[0], fSlotSize, nullptr);
 
 		ZAssertStop(kDebug_PhaseTreeFile, err == ZFile::errorNone);
 		}
@@ -1156,7 +1156,7 @@ failure -- it must write completely or not at all.
 		bufferStream.WriteUInt32(0);
 		}
 
-	err = fFileRW->WriteAt(fUserHeaderSize, &buffer[0], fSlotSize, nil);
+	err = fFileRW->WriteAt(fUserHeaderSize, &buffer[0], fSlotSize, nullptr);
 	ZAssertStop(kDebug_PhaseTreeFile, err == ZFile::errorNone);
 	fFileRW->FlushVolume();
 
@@ -1529,7 +1529,7 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::FindBlockSlot(BlockID iBlock
 	fMutex_MetaRoot.Release();
 
 	if (!parentSlot)
-		return nil;
+		return nullptr;
 
 	while (true)
 		{
@@ -1540,7 +1540,7 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::FindBlockSlot(BlockID iBlock
 			{
 			ZAssertStop(ZCONFIG_PhaseTree_Debug, isLeafNode);
 			this->UnuseSlot(parentSlot);
-			return nil;
+			return nullptr;
 			}
 
 		this->UnuseSlot(parentSlot);
@@ -1563,7 +1563,7 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::FindBlockSlotForWrite(BlockI
 	fMutex_MetaRoot.Release();
 
 	if (!parentSlot)
-		return nil;
+		return nullptr;
 
 	while (true)
 		{
@@ -1577,7 +1577,7 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::FindBlockSlotForWrite(BlockI
 			{
 			ZAssertStop(ZCONFIG_PhaseTree_Debug, isLeafNode);
 			this->UnuseSlot(parentSlot);
-			return nil;
+			return nullptr;
 			}
 
 		if (newChildSlotNumber)
@@ -1927,7 +1927,7 @@ bool ZBlockStore_PhaseTree::DeleteBlockRecurse(
 			if (this->Index_GetCount(iParentSlot) == 1)
 				{
 				ZAssertStop(ZCONFIG_PhaseTree_Debug, oNewRoot);
-				*oNewRoot = nil;
+				*oNewRoot = nullptr;
 				this->ReleaseAndUnuseSlot(iParentSlot);
 				}
 			else
@@ -1954,7 +1954,7 @@ bool ZBlockStore_PhaseTree::DeleteBlockRecurse(
 			this->Index_SetChild(iParentSlot, false, offset, newChildSlotNumber);
 			}
 
-		if (!this->DeleteBlockRecurse(childSlot, iHeight - 1, iBlockID, oBlockSlot, nil))
+		if (!this->DeleteBlockRecurse(childSlot, iHeight - 1, iBlockID, oBlockSlot, nullptr))
 			{
 			this->UnuseSlot(childSlot);
 			return false;
@@ -2250,7 +2250,7 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseRootSlot()
 
 	if (fRootSlotNumber)
 		return this->UseSlot(fRootSlotNumber);
-	return nil;
+	return nullptr;
 	}
 
 ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseRootSlotReal(bool iDirtied)
@@ -2295,7 +2295,7 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlot(uint32 iSlotNumber)
 	// is already loaded then there may be contention on acquiring _its_ lock.
 
 	// The use count of a slot is manipulated under the protection of fMutex_Slots.
-	Slot* theSlot = nil;
+	Slot* theSlot = nullptr;
 	fMutex_Slots.Acquire();
 
 	ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlotNumber < fHighWater);
@@ -2333,7 +2333,7 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlot(uint32 iSlotNumber)
 
 			fMutex_Slots.Release();
 			ZFile::Error err = fFileR->ReadAt(fUserHeaderSize + uint64(iSlotNumber) * fSlotSize,
-				theSlot->fData, fSlotSize, nil);
+				theSlot->fData, fSlotSize, nullptr);
 
 			ZAssertStop(kDebug_PhaseTreeFile, err == ZFile::errorNone);
 			}
@@ -2356,8 +2356,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlot(uint32 iSlotNumber)
 			if (fCached_Tail == theSlot)
 				fCached_Tail = theSlot->fCached_Prev;
 
-			theSlot->fCached_Prev = nil;
-			theSlot->fCached_Next = nil;
+			theSlot->fCached_Prev = nullptr;
+			theSlot->fCached_Next = nullptr;
 
 			fSlots_Loaded[iSlotNumber] = theSlot;
 			++theSlot->fUseCount;
@@ -2395,7 +2395,7 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal(
 	// is already loaded then there may be contention on acquiring _its_ lock.
 
 	// The use count of a slot is manipulated under the protection of fMutex_Slots.
-	Slot* theSlot = nil;
+	Slot* theSlot = nullptr;
 	fMutex_Slots.Acquire();
 
 	ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlotNumber < fHighWater);
@@ -2442,7 +2442,7 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal(
 				{
 				ZFile::Error err = fFileRW->ReadAt(
 					fUserHeaderSize + uint64(iSlotNumber) * fSlotSize,
-					theSlot->fData, fSlotSize, nil);
+					theSlot->fData, fSlotSize, nullptr);
 
 				ZAssertStop(kDebug_PhaseTreeFile, err == ZFile::errorNone);
 				}
@@ -2465,8 +2465,8 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::UseSlotReal(
 			if (fCached_Tail == existingSlot)
 				fCached_Tail = existingSlot->fCached_Prev;
 
-			existingSlot->fCached_Prev = nil;
-			existingSlot->fCached_Next = nil;
+			existingSlot->fCached_Prev = nullptr;
+			existingSlot->fCached_Next = nullptr;
 
 			fSlots_Loaded[iSlotNumber] = existingSlot;
 			++existingSlot->fUseCount;
@@ -2560,7 +2560,7 @@ void ZBlockStore_PhaseTree::UnuseSlot(Slot* iSlot, bool iPurge)
 		iSlot->fState = eStateForked;
 		fMutex_Slots.Release();
 		ZFile::Error err = fFileRW->WriteAt(
-			fUserHeaderSize + uint64(iSlot->fSlotNumber) * fSlotSize, iSlot->fData, fSlotSize, nil);
+			fUserHeaderSize + uint64(iSlot->fSlotNumber) * fSlotSize, iSlot->fData, fSlotSize, nullptr);
 		ZAssertStop(kDebug_PhaseTreeFile, err == ZFile::errorNone);
 		fMutex_Slots.Acquire();
 		ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlot->fSlotNumber);
@@ -2617,9 +2617,9 @@ void ZBlockStore_PhaseTree::UnuseSlot(Slot* iSlot, bool iPurge)
 							Slot* theSlot = fCached_Head;
 							fCached_Head = theSlot->fCached_Next;
 							if (fCached_Head)
-								fCached_Head->fCached_Prev = nil;
+								fCached_Head->fCached_Prev = nullptr;
 							else
-								fCached_Tail = nil;
+								fCached_Tail = nullptr;
 
 							ZAssertStop(ZCONFIG_PhaseTree_Debug, theSlot->fSlotNumber);
 
@@ -2633,8 +2633,8 @@ void ZBlockStore_PhaseTree::UnuseSlot(Slot* iSlot, bool iPurge)
 
 							if (theSlot->fState == eStateForked)
 								fSlots_Forked.insert(theSlot->fSlotNumber);
-							theSlot->fCached_Next = nil;
-							theSlot->fCached_Prev = nil;
+							theSlot->fCached_Next = nullptr;
+							theSlot->fCached_Prev = nullptr;
 							delete theSlot;
 							}
 						}
@@ -2777,8 +2777,8 @@ void ZBlockStore_PhaseTree::ReleaseSlotNumber(uint32 iSlotNumber)
 		if (fCached_Tail == theSlot)
 			fCached_Tail = theSlot->fCached_Prev;
 
-		theSlot->fCached_Prev = nil;
-		theSlot->fCached_Next = nil;
+		theSlot->fCached_Prev = nullptr;
+		theSlot->fCached_Next = nullptr;
 		delete theSlot;
 		}
 
@@ -2915,7 +2915,7 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_FindChild(
 	if (iIsLeaf)
 		{
 		if (oOffset >= count || ZByteSwap_BigToHost32(*i) != iBlockID)
-			return nil;
+			return nullptr;
 		}
 
 	uint32 theSlotNumber = this->Index_GetChild(iSlot, iIsLeaf, oOffset);
@@ -2933,7 +2933,7 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::Index_FindChildForked(
 	if (iIsLeaf)
 		{
 		if (oOffset >= count || ZByteSwap_BigToHost32(*i) != iBlockID)
-			return nil;
+			return nullptr;
 		}
 
 	uint32 theSlotNumber = this->Index_GetChild(iSlot, iIsLeaf, oOffset);

@@ -94,7 +94,7 @@ ZXServer::ZXServer(const char* inDisplayName)
 		sXContext_Window = ZXLib::UniqueContext();
 
 	fDisplay = ZXLib::OpenDisplay(inDisplayName);
-	if (fDisplay == nil)
+	if (fDisplay == nullptr)
 		throw runtime_error("Couldn't connect to display");
 
 	fFont = ZXLib::LoadQueryFont(fDisplay, "fixed");
@@ -104,13 +104,13 @@ ZXServer::ZXServer(const char* inDisplayName)
 
 ZXServer::~ZXServer()
 	{
-	ZAssertStop(2, fDisplay == nil);
+	ZAssertStop(2, fDisplay == nullptr);
 	}
 
 void ZXServer::Close()
 	{
 	ZXLib::CloseDisplay(fDisplay);
-	fDisplay = nil;
+	fDisplay = nullptr;
 	}
 
 bool ZXServer::Pending()
@@ -1111,18 +1111,18 @@ void ZXServer::InitGraphics()
 				}
 			for (size_t x = 0; x < 10 && allOkay; ++x)
 				{
-				XShmSegmentInfo* theXShmSegmentInfo = nil;
-				XImage* theSHMXImage = nil;
+				XShmSegmentInfo* theXShmSegmentInfo = nullptr;
+				XImage* theSHMXImage = nullptr;
 				try
 					{
 					theXShmSegmentInfo = new XShmSegmentInfo;
 					theXShmSegmentInfo->shmseg = 0;
 					theXShmSegmentInfo->shmid = -1;
-					theXShmSegmentInfo->shmaddr = nil;
+					theXShmSegmentInfo->shmaddr = nullptr;
 					theXShmSegmentInfo->readOnly = False;
 
-					theSHMXImage = ::XShmCreateImage(fDisplay, fVisualInfo.visual, fVisualInfo.depth, ZPixmap, nil, theXShmSegmentInfo, fImageWidth, fImageHeight);
-					if (theSHMXImage == nil)
+					theSHMXImage = ::XShmCreateImage(fDisplay, fVisualInfo.visual, fVisualInfo.depth, ZPixmap, nullptr, theXShmSegmentInfo, fImageWidth, fImageHeight);
+					if (theSHMXImage == nullptr)
 						throw runtime_error("XShmCreateImage failed");
 
 					theXShmSegmentInfo->shmid = ::shmget(IPC_PRIVATE, theSHMXImage->bytes_per_line * theSHMXImage->height, IPC_CREAT | 0777);
@@ -1147,10 +1147,10 @@ void ZXServer::InitGraphics()
 					allOkay = false;
 					if (theXShmSegmentInfo)
 						{
-						if (theXShmSegmentInfo->shmaddr != nil && theXShmSegmentInfo->shmaddr != reinterpret_cast<char*>(-1))
+						if (theXShmSegmentInfo->shmaddr != nullptr && theXShmSegmentInfo->shmaddr != reinterpret_cast<char*>(-1))
 							{
 							::shmdt(theXShmSegmentInfo->shmaddr);
-							theXShmSegmentInfo->shmaddr = nil;
+							theXShmSegmentInfo->shmaddr = nullptr;
 							}
 						if (theXShmSegmentInfo->shmid != -1)
 							::shmctl(theXShmSegmentInfo->shmid, IPC_RMID, 0);
@@ -1193,16 +1193,16 @@ void ZXServer::InitGraphics()
 		allOkay = true;
 		for (size_t x = 0; x < 10 && allOkay; ++x)
 			{
-			XImage* theXImage = nil;
+			XImage* theXImage = nullptr;
 			try
 				{
-				theXImage = ::XCreateImage(fDisplay, fVisualInfo.visual, fVisualInfo.depth, ZPixmap, 0, nil, fImageWidth, fImageHeight, 32, 0);
+				theXImage = ::XCreateImage(fDisplay, fVisualInfo.visual, fVisualInfo.depth, ZPixmap, 0, nullptr, fImageWidth, fImageHeight, 32, 0);
 				if (!theXImage)
 					throw runtime_error("XCreateImage failed");
 				theXImage->data = reinterpret_cast<char*>(malloc(theXImage->bytes_per_line * theXImage->height));
-				if (theXImage->data == nil)
+				if (theXImage->data == nullptr)
 					throw bad_alloc();
-				fImages.push_back(pair<XImage*, XShmSegmentInfo*>(theXImage, nil));
+				fImages.push_back(pair<XImage*, XShmSegmentInfo*>(theXImage, nullptr));
 				}
 			catch (...)
 				{
@@ -1267,17 +1267,17 @@ ZXWindow* ZXWindow::sFromDisplayAndWindow(Display* inDisplay, Window inWindow)
 	ZMutexLocker locker(ZXLib::sMutex);
 	ZAssertStop(2, inDisplay && inWindow);
 
-	ZXWindow* theXWindow = nil;
+	ZXWindow* theXWindow = nullptr;
 	int result = ZXLib::FindContext(inDisplay, inWindow, sXContext_Window, reinterpret_cast<XPointer*>(&theXWindow));
 	ZAssertStop(2, result == 0);
-	ZAssertStop(2, theXWindow != nil);
+	ZAssertStop(2, theXWindow != nullptr);
 	ZAssertStop(2, theXWindow->fXServer->GetDisplay() == inDisplay && theXWindow->fWindow == inWindow);
 	return theXWindow;
 	}
 
 ZXWindow* ZXWindow::sFromDisplayAndWindowNilOkay(Display* inDisplay, Window inWindow)
 	{
-	ZXWindow* theXWindow = nil;
+	ZXWindow* theXWindow = nullptr;
 	if (inWindow)
 		int result = ZXLib::FindContext(inDisplay, inWindow, sXContext_Window, reinterpret_cast<XPointer*>(&theXWindow));
 	return theXWindow;

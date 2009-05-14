@@ -35,7 +35,7 @@ NAMESPACE_ZOOLIB_BEGIN
 class ZRWLock : NonCopyable
 	{
 public:
-	ZRWLock(const char* iName = nil);
+	ZRWLock(const char* iName = nullptr);
 	~ZRWLock();
 
 	ZMutexBase& GetRead() { return fRead; }

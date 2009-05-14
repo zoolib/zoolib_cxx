@@ -121,7 +121,7 @@ CIconHandle ZUtil_Mac_HL::sCIconHandleFromPixmaps(const ZDCPixmap& inColorPixmap
 	theRasterDesc.fFlipped = false;
 	thePixelDesc = ZDCPixmapNS::PixelDesc(1, 0);
 
-	theCIconHandle[0]->iconBMap.baseAddr = nil;
+	theCIconHandle[0]->iconBMap.baseAddr = nullptr;
 	theCIconHandle[0]->iconBMap.rowBytes = monoRowBytes;
 	theCIconHandle[0]->iconBMap.bounds.left = 0;
 	theCIconHandle[0]->iconBMap.bounds.top = 0;
@@ -134,7 +134,7 @@ CIconHandle ZUtil_Mac_HL::sCIconHandleFromPixmaps(const ZDCPixmap& inColorPixmap
 	else
 		inColorPixmap.CopyTo(ZPoint(0, 0), tempAddress, theRasterDesc, thePixelDesc, ZRect(theSize));
 
-	theCIconHandle[0]->iconMask.baseAddr = nil;
+	theCIconHandle[0]->iconMask.baseAddr = nullptr;
 	theCIconHandle[0]->iconMask.rowBytes = monoRowBytes;
 	theCIconHandle[0]->iconMask.bounds.left = 0;
 	theCIconHandle[0]->iconMask.bounds.top = 0;
@@ -143,7 +143,7 @@ CIconHandle ZUtil_Mac_HL::sCIconHandleFromPixmaps(const ZDCPixmap& inColorPixmap
 
 	inMaskPixmap.CopyTo(ZPoint(0, 0), theCIconHandle[0]->iconMaskData, theRasterDesc, thePixelDesc, ZRect(theSize));
 
-	theCIconHandle[0]->iconMask.baseAddr = nil;
+	theCIconHandle[0]->iconMask.baseAddr = nullptr;
 
 	return theCIconHandle;
 	}
@@ -470,7 +470,7 @@ ZDCPixmap ZUtil_Mac_HL::sPixmapFromIconSuite(IconSuiteRef inIconSuite, IconSize 
 	if (theResType == 0)
 		return theDCPixmap;
 
-	Handle theIconDataHandle = nil;
+	Handle theIconDataHandle = nullptr;
 	if (noErr == ::GetIconFromSuite(&theIconDataHandle, inIconSuite, theResType))
 		theDCPixmap = sPixmapFromIconDataHandle(theIconDataHandle, inIconSize, inIconKind);
 
@@ -594,7 +594,7 @@ IconRef ZUtil_Mac_HL::sIconRefFromPixmaps(const ZDCPixmap& inColorPixmap, const 
 	if (inMaskPixmap)
 		sAddPixmapToIconFamily(inMaskPixmap, eMask1, theIconFamilyHandle);
 
-	IconRef theIconRef = nil;
+	IconRef theIconRef = nullptr;
 
 	static uint32 fakeType = rand();
 	if (noErr == ::RegisterIconRefFromIconFamily('ZLIB', ++fakeType, theIconFamilyHandle, &theIconRef))
@@ -618,7 +618,7 @@ IconRef ZUtil_Mac_HL::sIconRefFromPixmaps(const ZDCPixmap& inColorPixmap, const 
 
 	return theIconRef;
 #else // ZCONFIG(Processor, PPC)
-	return nil;
+	return nullptr;
 #endif // ZCONFIG(Processor, PPC)
 	}
 
@@ -643,7 +643,7 @@ static AEIdleUPP sAEIdleUPP = NewAEIdleUPP(sAppleEventIdleProc);
 
 bool ZUtil_Mac_HL::sInteractWithUser()
 	{
-	OSErr result = ::AEInteractWithUser(kNoTimeOut, nil, sAEIdleUPP);
+	OSErr result = ::AEInteractWithUser(kNoTimeOut, nullptr, sAEIdleUPP);
 	if (result == noErr)
 		return true;
 	return false;
@@ -716,12 +716,12 @@ struct PixmapFromStreamPICTInfo
 	};
 } // anonymous namespace
 
-static PixmapFromStreamPICTInfo* sPixmapFromStreamPICTInfo_Head = nil;
+static PixmapFromStreamPICTInfo* sPixmapFromStreamPICTInfo_Head = nullptr;
 static ZMutex sPixmapFromStreamPICT_Mutex;
 
 static DEFINE_API(void) sPixmapFromStreamPICT_GetPicProc(void* dataPtr, short byteCount)
 	{
-	PixmapFromStreamPICTInfo* current = nil;
+	PixmapFromStreamPICTInfo* current = nullptr;
 	try
 		{
 		CGrafPtr currentPort;
@@ -733,7 +733,7 @@ static DEFINE_API(void) sPixmapFromStreamPICT_GetPicProc(void* dataPtr, short by
 			current = current->fNext;
 		sPixmapFromStreamPICT_Mutex.Release();
 
-		ZAssertStop(0, current != nil);
+		ZAssertStop(0, current != nullptr);
 
 		current->fStream->Read(dataPtr, byteCount);
 		}
@@ -755,7 +755,7 @@ static QDGetPicUPP sPixmapFromStreamPICT_GetPicProcUPP = NewQDGetPicUPP(sPixmapF
 ZDCPixmap ZUtil_Mac_HL::sPixmapFromStreamPICT(const ZStreamR& inStream)
 	{
 	ZDCPixmap thePixmap;
-	PicHandle thePicHandle = nil;
+	PicHandle thePicHandle = nullptr;
 	try
 		{
 		// Create the dummy PicHandle
@@ -800,7 +800,7 @@ ZDCPixmap ZUtil_Mac_HL::sPixmapFromStreamPICT(const ZStreamR& inStream)
 
 		// Link theInfo onto the global list
 		sPixmapFromStreamPICT_Mutex.Acquire();
-		theInfo.fPrev = nil;
+		theInfo.fPrev = nullptr;
 		theInfo.fNext = sPixmapFromStreamPICTInfo_Head;
 		if (sPixmapFromStreamPICTInfo_Head)
 			sPixmapFromStreamPICTInfo_Head->fPrev = &theInfo;
@@ -830,7 +830,7 @@ ZDCPixmap ZUtil_Mac_HL::sPixmapFromStreamPICT(const ZStreamR& inStream)
 
 		::DisposeHandle((Handle)thePicHandle);
 
-		thePicHandle = nil;
+		thePicHandle = nullptr;
 
 		if (!theInfo.fStreamOkay)
 			throw runtime_error("ZGraphicsUtil::sPixmapFromStreamPICT, there was a problem of some kind");

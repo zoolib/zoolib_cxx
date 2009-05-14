@@ -119,7 +119,7 @@ PixmapRaster_Asset::PixmapRaster_Asset(const ZAsset& iAsset,
 
 PixmapRaster_Asset::~PixmapRaster_Asset()
 	{
-	fBaseAddress = nil;
+	fBaseAddress = nullptr;
 	}
 
 } // anonymous namespace
@@ -176,7 +176,7 @@ bool ZDCGlyphServer_Asset::GetGlyph(const ZDCFont& iFont, UTF32 iCP,
 				if (ZAsset strikeDataAsset = strikeAsset.GetChild("data|!binary"))
 					{
 					const void* assetData;
-					strikeDataAsset.GetData(&assetData, nil);
+					strikeDataAsset.GetData(&assetData, nullptr);
 
 					ZRef<ZDCPixmapRaster> theRaster
 						= new PixmapRaster_Asset(strikeDataAsset, assetData, theRasterDesc);
