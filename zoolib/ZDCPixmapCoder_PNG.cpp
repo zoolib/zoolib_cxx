@@ -39,9 +39,17 @@ static void sThrowToStream()
 	throw runtime_error("ZDCPixmapCoder_PNG, to stream");
 	}
 
-static void sPNG_Write(png_structp png_ptr, png_bytep inDestAddress, png_size_t inSize)
+static void sPNG_Write(png_structp png_ptr, png_bytep iDestAddress, png_size_t iSize)
 	{
-	static_cast<ZStreamW*>(png_ptr->io_ptr)->Write(inDestAddress, inSize);
+	try
+		{
+		static_cast<ZStreamW*>(png_ptr->io_ptr)->Write(iDestAddress, iSize);
+		return;
+		}
+	catch (...)
+		{}
+
+	longjmp(png_ptr->jmpbuf, 1);
 	}
 
 static void sPNG_Write_Flush(png_structp png_ptr)
@@ -54,9 +62,17 @@ static void sThrowFromStream()
 	throw runtime_error("ZDCPixmapCoder_PNG, from stream");
 	}
 
-static void sPNG_Read(png_structp png_ptr, png_bytep inDestAddress, png_size_t inSize)
+static void sPNG_Read(png_structp png_ptr, png_bytep iDestAddress, png_size_t iSize)
 	{
-	static_cast<ZStreamR*>(png_ptr->io_ptr)->Read(inDestAddress, inSize);
+	try
+		{
+		static_cast<ZStreamR*>(png_ptr->io_ptr)->Read(iDestAddress, iSize);
+		return;
+		}
+	catch (...)
+		{}
+
+	longjmp(png_ptr->jmpbuf, 1);
 	}
 
 // =================================================================================================
@@ -81,7 +97,8 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 	const ZDCPixmapNS::PixelDesc& iPixelDesc,
 	const ZRect& iBounds)
 	{
-	png_structp write_ptr = ::png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+	png_structp write_ptr
+		= ::png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	png_infop info_ptr = nullptr;
 
 	vector<uint8> theRowBufferVector;
@@ -223,7 +240,8 @@ ZDCPixmapDecoder_PNG::~ZDCPixmapDecoder_PNG()
 
 void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 	{
-	png_structp read_ptr = ::png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+	png_structp read_ptr
+		= ::png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	png_infop info_ptr = nullptr;
 
 	try
