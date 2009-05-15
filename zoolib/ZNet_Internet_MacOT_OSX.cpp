@@ -391,7 +391,7 @@ void ZNetNameLookup_Internet_MacOT_OSX::sMP_Lookup(void* iParam)
 	if (noErr != theErr)
 		return;
 
-	OTResult theResult = ::OTInetStringToAddress(
+	/*OTResult theResult = */::OTInetStringToAddress(
 		theInetSvcRef, theStruct->fName, theStruct->fInetHostInfo);
 
 	::OTCloseProvider(theInetSvcRef);
