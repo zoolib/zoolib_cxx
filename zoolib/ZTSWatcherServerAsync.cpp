@@ -43,9 +43,7 @@ ZTSWatcherServerAsync::ZTSWatcherServerAsync(ZRef<ZTSWatcher> iTSWatcher)
 	fReceivedClose(false),
 	fCallbackNeeded(false),
 	fSyncNeeded(false),
-	fIDsNeeded(0),
-	fDetachedReader(false),
-	fDetachedSleeper(false)
+	fIDsNeeded(0)
 	{
 	fTSWatcher->SetCallback(spCallback, this);
 	}

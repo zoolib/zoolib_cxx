@@ -55,9 +55,6 @@ private:
 	bool fSyncNeeded;
 	size_t fIDsNeeded;
 
-	bool fDetachedReader;
-	bool fDetachedSleeper;
-
 	std::vector<uint64> fRemovedIDs;
 	std::vector<uint64> fAddedIDs;
 	std::vector<int64> fRemovedQueries;
