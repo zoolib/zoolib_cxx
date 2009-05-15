@@ -57,7 +57,7 @@ static inline int sCompare(const void* iLeft, size_t iLeftLength,
 	if (int compare = memcmp(iLeft, iRight, min(iLeftLength, iRightLength)))
 		return compare;
 	// Strictly speaking the rules of two's complement mean that we
-	// not need the casts, but let's be clear about what we're doing.
+	// don't need the casts, but let's be clear about what we're doing.
 	return int(iLeftLength) - int(iRightLength);
 	}
 
