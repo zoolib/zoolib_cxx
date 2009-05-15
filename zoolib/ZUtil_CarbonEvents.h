@@ -110,5 +110,4 @@ NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 
-
 #endif // __ZUtil_CarbonEvents__
