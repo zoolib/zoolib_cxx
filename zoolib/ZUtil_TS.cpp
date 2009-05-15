@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZStream_Buffered.h"
 #include "zoolib/ZTextCoder_Unicode.h"
+#include "zoolib/ZStrimU_Std.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZTuple.h"
 #include "zoolib/ZUtil_Strim.h"
@@ -351,7 +352,7 @@ void sRead(const ZStreamRPos& iStreamRPos, uint64& oNextUnusedID, Sink& iSink)
 		// access to theStrimU in the catch clauses below.
 
 		ZStreamR_Buffered theSRB(64 * 1024, iStreamRPos);
-		ZUtil_Strim::StrimU_Std theStrimU(new ZTextDecoder_Unicode_AutoDetect, theSRB);
+		ZStrimU_Std theStrimU(new ZTextDecoder_Unicode_AutoDetect, theSRB);
 		try
 			{
 			sFromStrim(iSink, oNextUnusedID, theStrimU);

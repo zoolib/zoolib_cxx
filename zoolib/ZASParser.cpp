@@ -29,6 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim_CRLF.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZStrim_Stream.h"
+#include "zoolib/ZStrimU_Std.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZTextCoder.h"
 #include "zoolib/ZTextCoder_Unicode.h"
@@ -67,15 +68,15 @@ static bool sAtEnd(ZStrimU& iStrimU)
 class DecoderSetter
 	{
 public:
-	DecoderSetter(ZUtil_Strim::StrimU_Std& iStrim, ZTextDecoder* iDecoder);
+	DecoderSetter(ZStrimU_Std& iStrim, ZTextDecoder* iDecoder);
 	~DecoderSetter();
 
 private:
-	ZUtil_Strim::StrimU_Std& fStrim;
+	ZStrimU_Std& fStrim;
 	ZTextDecoder* fPrior;
 	};
 
-DecoderSetter::DecoderSetter(ZUtil_Strim::StrimU_Std& iStrim, ZTextDecoder* iDecoder)
+DecoderSetter::DecoderSetter(ZStrimU_Std& iStrim, ZTextDecoder* iDecoder)
 :	fStrim(iStrim)
 	{
 	fPrior = fStrim.SetDecoderReturnOld(iDecoder);
@@ -149,7 +150,7 @@ public:
 	bool TryParseStringBody(string& oString);
 
 protected:
-	ZUtil_Strim::StrimU_Std* fStrimU;
+	ZStrimU_Std* fStrimU;
 	ZFileSpec fFileSpec;
 	int fCumulativeLineCount;
 	bool fInBlock;
@@ -185,9 +186,9 @@ void Parser::Parse(const ZFileSpec& iFileSpec, const ZStreamR& iStream)
 	// treat the stream as being UTF8, at least until a charset statement
 	// is encountered specifying something else.
 
-	StrimU_Std theStrimU(new ZTextDecoder_Unicode_AutoDetect, iStream);
+	ZStrimU_Std theStrimU(new ZTextDecoder_Unicode_AutoDetect, iStream);
 
-	StrimU_Std* priorStrimU = fStrimU;
+	ZStrimU_Std* priorStrimU = fStrimU;
 	fStrimU = &theStrimU;
 
 	ZFileSpec priorFileSpec = fFileSpec;
