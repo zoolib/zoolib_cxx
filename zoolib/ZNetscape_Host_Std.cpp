@@ -161,10 +161,6 @@ const char* HostMeister_Std::UserAgent(NPP npp)
 	#else
 		return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X)";
 	#endif
-//	return "RealMedia Player HelixDNAClient/10.0.0.9544 (Windows; U; WinNT; EN; rv:10.0.0.9544) Gecko/20060608";
-//	return "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)";
-//	return "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en) AppleWebKit/418.9.1 (KHTML, like Gecko) Safari/419.3";
-//	return nullptr;
 	}
 
 void* HostMeister_Std::MemAlloc(uint32 size)
