@@ -26,15 +26,17 @@ NAMESPACE_ZOOLIB_BEGIN
 
 using std::set;
 
+namespace ZTQL {
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Comparand derivatives
 
-ZTQL::CName::CName(const ZTName& iName)
+CName::CName(const ZTName& iName)
 :	Comparand(new ComparandRep_Name(iName))
 	{}
 
-ZTQL::CValue::CValue(const ZTValue& iValue)
+CValue::CValue(const ZTValue& iValue)
 :	Comparand(new ComparandRep_Value(iValue))
 	{}
 
@@ -42,38 +44,38 @@ ZTQL::CValue::CValue(const ZTValue& iValue)
 #pragma mark -
 #pragma mark * ZTQL::Spec
 
-ZTQL::Spec::Spec()
+Spec::Spec()
 	{}
 
-ZTQL::Spec::Spec(const Spec& iOther)
+Spec::Spec(const Spec& iOther)
 :	fLogOp(iOther.fLogOp)
 	{}
 
-ZTQL::Spec::Spec(ZRef<LogOp> iLogOp)
+Spec::Spec(ZRef<LogOp> iLogOp)
 :	fLogOp(iLogOp)
 	{}
 
-ZTQL::Spec::Spec(const Condition& iCondition)
+Spec::Spec(const Condition& iCondition)
 :	fLogOp(new LogOp_Condition(iCondition))
 	{}
 
-ZTQL::Spec& ZTQL::Spec::operator=(const Spec& iOther)
+Spec& Spec::operator=(const Spec& iOther)
 	{
 	fLogOp = iOther.fLogOp;
 	return *this;
 	}
 
-ZTQL::Spec::~Spec()
+Spec::~Spec()
 	{}
 
-bool ZTQL::Spec::Matches(const ZTuple& iTuple) const
+bool Spec::Matches(const ZTuple& iTuple) const
 	{
 	if (fLogOp)
 		return fLogOp->Matches(iTuple);
 	return false;
 	}
 
-ZTQL::RelHead ZTQL::Spec::GetRelHead() const
+RelHead Spec::GetRelHead() const
 	{
 	set<ZTName> theNames;
 	if (fLogOp)
@@ -81,7 +83,7 @@ ZTQL::RelHead ZTQL::Spec::GetRelHead() const
 	return theNames;
 	}
 
-ZTQL::Spec ZTQL::Spec::operator&(const Spec& iOther) const
+Spec Spec::operator&(const Spec& iOther) const
 	{
 	if (fLogOp && iOther.fLogOp)
 		return Spec(new LogOp_And(fLogOp, iOther.fLogOp));
@@ -89,7 +91,7 @@ ZTQL::Spec ZTQL::Spec::operator&(const Spec& iOther) const
 	return Spec();
 	}
 
-ZTQL::Spec& ZTQL::Spec::operator&=(const Spec& iOther)
+Spec& Spec::operator&=(const Spec& iOther)
 	{
 	if (fLogOp && iOther.fLogOp)
 		fLogOp = new LogOp_And(fLogOp, iOther.fLogOp);
@@ -99,7 +101,7 @@ ZTQL::Spec& ZTQL::Spec::operator&=(const Spec& iOther)
 	return *this;
 	}
 
-ZTQL::Spec ZTQL::Spec::operator|(const Spec& iOther) const
+Spec Spec::operator|(const Spec& iOther) const
 	{
 	if (fLogOp)
 		{
@@ -114,7 +116,7 @@ ZTQL::Spec ZTQL::Spec::operator|(const Spec& iOther) const
 		}
 	}
 
-ZTQL::Spec& ZTQL::Spec::operator|=(const Spec& iOther)
+Spec& Spec::operator|=(const Spec& iOther)
 	{
 	if (fLogOp)
 		{
@@ -129,13 +131,15 @@ ZTQL::Spec& ZTQL::Spec::operator|=(const Spec& iOther)
 	return *this;
 	}
 
-ZRef<ZTQL::LogOp> ZTQL::Spec::GetLogOp() const
+ZRef<LogOp> Spec::GetLogOp() const
 	{ return fLogOp; }
 
-ZTQL::Spec ZTQL::operator&(const Condition& iCondition, const Spec& iSpec)
+Spec operator&(const Condition& iCondition, const Spec& iSpec)
 	{ return Spec(iCondition) & iSpec; }
 
-ZTQL::Spec ZTQL::operator|(const Condition& iCondition, const Spec& iSpec)
+Spec operator|(const Condition& iCondition, const Spec& iSpec)
 	{ return Spec(iCondition) | iSpec; }
+
+} // namespace ZTQL
 
 NAMESPACE_ZOOLIB_END

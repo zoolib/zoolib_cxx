@@ -31,11 +31,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZTQL {
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::LogOp
-
-namespace ZTQL {
 
 class LogOp : public ZRefCounted
 	{
@@ -49,13 +49,9 @@ public:
 	virtual void GatherPropNames(std::set<ZTName>& ioNames);
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::LogOp_True
-
-namespace ZTQL {
 
 class LogOp_True : public LogOp
 	{
@@ -67,13 +63,9 @@ public:
 	virtual bool Matches(const ZTuple& iTuple);
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::LogOp_False
-
-namespace ZTQL {
 
 class LogOp_False : public LogOp
 	{
@@ -85,13 +77,9 @@ public:
 	virtual bool Matches(const ZTuple& iTuple);
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::LogOp_And
-
-namespace ZTQL {
 
 class LogOp_And : public LogOp
 	{
@@ -112,13 +100,9 @@ private:
 	ZRef<LogOp> fRHS;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::LogOp_Or
-
-namespace ZTQL {
 
 class LogOp_Or : public LogOp
 	{
@@ -139,13 +123,9 @@ private:
 	ZRef<LogOp> fRHS;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::LogOp_Condition
-
-namespace ZTQL {
 
 class LogOp_Condition : public LogOp
 	{

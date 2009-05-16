@@ -25,25 +25,27 @@ using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZTQL {
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::ComparatorRep
 
-ZTQL::ComparatorRep::ComparatorRep()
+ComparatorRep::ComparatorRep()
 	{}
 
-ZTQL::ComparatorRep::~ComparatorRep()
+ComparatorRep::~ComparatorRep()
 	{}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::ComparatorRep_Simple
 
-ZTQL::ComparatorRep_Simple::ComparatorRep_Simple(EComparator iEComparator)
+ComparatorRep_Simple::ComparatorRep_Simple(EComparator iEComparator)
 :	fEComparator(iEComparator)
 	{}
 
-bool ZTQL::ComparatorRep_Simple::Matches(const ZTValue& iLHS, const ZTValue& iRHS)
+bool ComparatorRep_Simple::Matches(const ZTValue& iLHS, const ZTValue& iRHS)
 	{	
 	switch (fEComparator)
 		{
@@ -57,24 +59,24 @@ bool ZTQL::ComparatorRep_Simple::Matches(const ZTValue& iLHS, const ZTValue& iRH
 	return iLHS < iRHS;
 	}
 
-ZTQL::ComparatorRep_Simple::EComparator ZTQL::ComparatorRep_Simple::GetEComparator()
+ComparatorRep_Simple::EComparator ComparatorRep_Simple::GetEComparator()
 	{ return fEComparator; }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Comparator
 
-ZTQL::Comparator::Comparator()
+Comparator::Comparator()
 	{}
 
-ZTQL::Comparator::Comparator(ZRef<ComparatorRep> iRep)
+Comparator::Comparator(ZRef<ComparatorRep> iRep)
 :	fRep(iRep)
 	{}
 
-ZRef<ZTQL::ComparatorRep> ZTQL::Comparator::GetRep() const
+ZRef<ComparatorRep> Comparator::GetRep() const
 	{ return fRep; }
 
-bool ZTQL::Comparator::Matches(const ZTValue& iLHS, const ZTValue& iRHS) const
+bool Comparator::Matches(const ZTValue& iLHS, const ZTValue& iRHS) const
 	{
 	if (fRep)
 		return fRep->Matches(iLHS, iRHS);
@@ -86,76 +88,76 @@ bool ZTQL::Comparator::Matches(const ZTValue& iLHS, const ZTValue& iRHS) const
 #pragma mark -
 #pragma mark * ZTQL::ComparandRep
 
-ZTQL::ComparandRep::ComparandRep()
+ComparandRep::ComparandRep()
 	{}
 
-ZTQL::ComparandRep::~ComparandRep()
+ComparandRep::~ComparandRep()
 	{}
 
-void ZTQL::ComparandRep::GatherPropNames(set<ZTName>& ioNames)
+void ComparandRep::GatherPropNames(set<ZTName>& ioNames)
 	{}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::ComparandRep_Name
 
-ZTQL::ComparandRep_Name::ComparandRep_Name(const ZTName& iName)
+ComparandRep_Name::ComparandRep_Name(const ZTName& iName)
 :	fName(iName)
 	{}
 
-const ZTValue& ZTQL::ComparandRep_Name::Imp_GetValue(const ZTuple& iTuple)
+const ZTValue& ComparandRep_Name::Imp_GetValue(const ZTuple& iTuple)
 	{ return iTuple.GetValue(fName); }
 
-void ZTQL::ComparandRep_Name::GatherPropNames(set<ZTName>& ioNames)
+void ComparandRep_Name::GatherPropNames(set<ZTName>& ioNames)
 	{ ioNames.insert(fName); }
 
-const ZTName& ZTQL::ComparandRep_Name::GetName()
+const ZTName& ComparandRep_Name::GetName()
 	{ return fName; }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::ComparandRep_Value
 
-ZTQL::ComparandRep_Value::ComparandRep_Value(const ZTValue& iValue)
+ComparandRep_Value::ComparandRep_Value(const ZTValue& iValue)
 :	fValue(iValue)
 	{}
 
-const ZTValue& ZTQL::ComparandRep_Value::Imp_GetValue(const ZTuple& iTuple)
+const ZTValue& ComparandRep_Value::Imp_GetValue(const ZTuple& iTuple)
 	{ return fValue; }
 
-const ZTValue& ZTQL::ComparandRep_Value::GetValue()
+const ZTValue& ComparandRep_Value::GetValue()
 	{ return fValue; }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Comparand
 
-ZTQL::Comparand::Comparand()
+Comparand::Comparand()
 	{}
 
-ZTQL::Comparand::Comparand(const Comparand& iOther)
+Comparand::Comparand(const Comparand& iOther)
 :	fRep(iOther.fRep)
 	{}
 
-ZTQL::Comparand::Comparand(ZRef<ComparandRep> iRep)
+Comparand::Comparand(ZRef<ComparandRep> iRep)
 :	fRep(iRep)
 	{}
 
-ZTQL::Comparand::~Comparand()
+Comparand::~Comparand()
 	{}
 
-ZTQL::Comparand& ZTQL::Comparand::operator=(const Comparand& iOther)
+Comparand& Comparand::operator=(const Comparand& iOther)
 	{
 	fRep = iOther.fRep;
 	return *this;
 	}
 
-ZRef<ZTQL::ComparandRep> ZTQL::Comparand::GetRep() const
+ZRef<ComparandRep> Comparand::GetRep() const
 	{ return fRep; }
 
 static ZTValue sEmptyValue;
 
-const ZTValue& ZTQL::Comparand::GetValue(const ZTuple& iTuple) const
+const ZTValue& Comparand::GetValue(const ZTuple& iTuple) const
 	{
 	if (fRep)
 		return fRep->Imp_GetValue(iTuple);
@@ -163,13 +165,13 @@ const ZTValue& ZTQL::Comparand::GetValue(const ZTuple& iTuple) const
 	return sEmptyValue;
 	}
 
-void ZTQL::Comparand::GatherPropNames(set<ZTName>& ioNames) const
+void Comparand::GatherPropNames(set<ZTName>& ioNames) const
 	{
 	if (fRep)
 		fRep->GatherPropNames(ioNames);
 	}
 
-ZTQL::Condition ZTQL::Comparand::LT(const Comparand& iRHS) const
+Condition Comparand::LT(const Comparand& iRHS) const
 	{
 	return Condition(
 		fRep,
@@ -177,7 +179,7 @@ ZTQL::Condition ZTQL::Comparand::LT(const Comparand& iRHS) const
 		iRHS.fRep);
 	}
 
-ZTQL::Condition ZTQL::Comparand::LE(const Comparand& iRHS) const
+Condition Comparand::LE(const Comparand& iRHS) const
 	{
 	return Condition(
 		fRep,
@@ -185,7 +187,7 @@ ZTQL::Condition ZTQL::Comparand::LE(const Comparand& iRHS) const
 		iRHS.fRep);
 	}
 
-ZTQL::Condition ZTQL::Comparand::EQ(const Comparand& iRHS) const
+Condition Comparand::EQ(const Comparand& iRHS) const
 	{
 	return Condition(
 		fRep,
@@ -193,7 +195,7 @@ ZTQL::Condition ZTQL::Comparand::EQ(const Comparand& iRHS) const
 		iRHS.fRep);
 	}
 
-ZTQL::Condition ZTQL::Comparand::GE(const Comparand& iRHS) const
+Condition Comparand::GE(const Comparand& iRHS) const
 	{
 	return Condition(
 		fRep,
@@ -201,7 +203,7 @@ ZTQL::Condition ZTQL::Comparand::GE(const Comparand& iRHS) const
 		iRHS.fRep);
 	}
 
-ZTQL::Condition ZTQL::Comparand::GT(const Comparand& iRHS) const
+Condition Comparand::GT(const Comparand& iRHS) const
 	{
 	return Condition(
 		fRep,
@@ -213,36 +215,38 @@ ZTQL::Condition ZTQL::Comparand::GT(const Comparand& iRHS) const
 #pragma mark -
 #pragma mark * ZTQL::Condition
 
-ZTQL::Condition::Condition(
+Condition::Condition(
 	ZRef<ComparandRep> iLHS, ZRef<ComparatorRep> iComparator, ZRef<ComparandRep> iRHS)
 :	fLHS(iLHS),
 	fComparator(iComparator),
 	fRHS(iRHS)
 	{}
 
-ZTQL::Condition::Condition(
+Condition::Condition(
 	const Comparand& iLHS, const Comparator& iComparator, const Comparand& iRHS)
 :	fLHS(iLHS),
 	fComparator(iComparator),
 	fRHS(iRHS)
 	{}
 
-const ZTQL::Comparand& ZTQL::Condition::GetLHS() const
+const Comparand& Condition::GetLHS() const
 	{ return fLHS; }
 
-const ZTQL::Comparator& ZTQL::Condition::GetComparator() const
+const Comparator& Condition::GetComparator() const
 	{ return fComparator; }
 
-const ZTQL::Comparand& ZTQL::Condition::GetRHS() const
+const Comparand& Condition::GetRHS() const
 	{ return fRHS; }
 
-bool ZTQL::Condition::Matches(const ZTuple& iTuple) const
+bool Condition::Matches(const ZTuple& iTuple) const
 	{ return fComparator.Matches(fLHS.GetValue(iTuple), fRHS.GetValue(iTuple)); }
 
-void ZTQL::Condition::GatherPropNames(set<ZTName>& ioNames) const
+void Condition::GatherPropNames(set<ZTName>& ioNames) const
 	{
 	fLHS.GatherPropNames(ioNames);
 	fRHS.GatherPropNames(ioNames);
 	}
+
+} // namespace ZTQL
 
 NAMESPACE_ZOOLIB_END

@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTQL_Query__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZTQL_RelHead.h"
 #include "zoolib/ZTQL_Node.h"
+#include "zoolib/ZTQL_RelHead.h"
 #include "zoolib/ZTQL_Spec.h"
 
 #include <set>
@@ -31,11 +31,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZTQL {
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL
-
-namespace ZTQL {
+#pragma mark * ZTQL::Query
 
 class Query
 	{

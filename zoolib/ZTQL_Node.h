@@ -27,11 +27,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZTQL {
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node
-
-namespace ZTQL {
 
 class Node : public ZRefCounted
 	{
@@ -46,13 +46,9 @@ public:
 	virtual RelHead GetEffectiveRelHead() = 0;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_All
-
-namespace ZTQL {
 
 class Node_All : public Node
 	{
@@ -73,13 +69,9 @@ private:
 	RelHead fRelHead;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Difference
-
-namespace ZTQL {
 
 class Node_Difference : public Node
 	{
@@ -98,13 +90,9 @@ private:
 	ZRef<Node> fNodeB;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Explicit
-
-namespace ZTQL {
 
 class Node_Explicit : public Node
 	{
@@ -122,13 +110,9 @@ private:
 	std::vector<ZTuple> fTuples;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Intersect
-
-namespace ZTQL {
 
 class Node_Intersect : public Node
 	{
@@ -147,13 +131,9 @@ private:
 	ZRef<Node> fNodeB;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Join
-
-namespace ZTQL {
 
 class Node_Join : public Node
 	{
@@ -172,13 +152,9 @@ private:
 	ZRef<Node> fNodeB;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Project
-
-namespace ZTQL {
 
 class Node_Project : public Node
 	{
@@ -197,13 +173,9 @@ private:
 	RelHead fRelHead;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Rename
-
-namespace ZTQL {
 
 class Node_Rename : public Node
 	{
@@ -224,13 +196,9 @@ private:
 	ZTName fNew;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Restrict
-
-namespace ZTQL {
 
 class Node_Restrict : public Node
 	{
@@ -249,13 +217,9 @@ private:
 	Condition fCondition;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Select
-
-namespace ZTQL {
 
 class Node_Select : public Node
 	{
@@ -274,13 +238,9 @@ private:
 	ZRef<LogOp> fLogOp;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Node_Union
-
-namespace ZTQL {
 
 class Node_Union : public Node
 	{

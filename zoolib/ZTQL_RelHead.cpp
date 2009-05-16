@@ -229,11 +229,11 @@ RelHead operator&(const ZTName& iName, const RelHead& iRelHead)
 	return iRelHead & iName;
 	}
 
+} // namespace ZTQL
+
 ZTQL::RelHead operator|(const ZTName& iLHS, const ZTName& iRHS)
 	{
 	return ZTQL::RelHead(iLHS) | iRHS;
 	}
-
-} // namespace ZTQL
 
 NAMESPACE_ZOOLIB_END

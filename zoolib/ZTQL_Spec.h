@@ -32,13 +32,9 @@ namespace ZTQL {
 
 class LogOp;
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Comparand derivatives
-
-namespace ZTQL {
 
 class CName : public Comparand
 	{
@@ -52,14 +48,9 @@ public:
 	CValue(const ZTValue& iValue);
 	};
 
-} // namespace ZTQL
-
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Spec
-
-namespace ZTQL {
 
 class Spec
 	{
@@ -102,7 +93,7 @@ Spec operator&(const Condition& iCondition, const Spec& iSpec);
 
 Spec operator|(const Condition& iCondition, const Spec& iSpec);
 
-} // namespace
+} // namespace ZTQL
 
 NAMESPACE_ZOOLIB_END
 

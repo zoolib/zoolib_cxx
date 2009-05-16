@@ -30,11 +30,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZTQL {
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::ComparatorRep
-
-namespace ZTQL {
 
 class ComparatorRep : public ZRefCounted
 	{
@@ -47,13 +47,9 @@ public:
 	virtual bool Matches(const ZTValue& iLHS, const ZTValue& iRHS) = 0;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::ComparatorRep_Simple
-
-namespace ZTQL {
 
 class ComparatorRep_Simple : public ComparatorRep
 	{
@@ -79,13 +75,9 @@ private:
 	EComparator fEComparator;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::ComparatorRep_StringContains
-
-namespace ZTQL {
 
 class ComparatorRep_StringContains : public ComparatorRep
 	{
@@ -99,13 +91,9 @@ private:
 	int fStrength;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::ComparatorRep_VectorContains
-
-namespace ZTQL {
 
 class ComparatorRep_VectorContains : public ComparatorRep
 	{
@@ -118,13 +106,9 @@ public:
 private:
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::ComparatorRep_Regex
-
-namespace ZTQL {
 
 class ComparatorRep_Regex : public ComparatorRep
 	{
@@ -139,13 +123,9 @@ private:
 	int fStrength;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Comparator
-
-namespace ZTQL {
 
 class Comparator
 	{
@@ -161,13 +141,9 @@ private:
 	ZRef<ComparatorRep> fRep;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::ComparandRep
-
-namespace ZTQL {
 
 class ComparandRep : public ZRefCounted
 	{
@@ -181,13 +157,9 @@ public:
 	virtual void GatherPropNames(std::set<ZTName>& ioNames);
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::ComparandRep_Name
-
-namespace ZTQL {
 
 class ComparandRep_Name : public ComparandRep
 	{
@@ -205,13 +177,9 @@ private:
 	ZTName fName;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::ComparandRep_Value
-
-namespace ZTQL {
 
 class ComparandRep_Value : public ComparandRep
 	{
@@ -228,13 +196,9 @@ private:
 	ZTValue fValue;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Comparand
-
-namespace ZTQL {
 
 class Condition;
 
@@ -262,13 +226,9 @@ private:
 	ZRef<ComparandRep> fRep;
 	};
 
-} // namespace ZTQL
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::Condition
-
-namespace ZTQL {
 
 class Condition
 	{

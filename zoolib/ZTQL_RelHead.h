@@ -22,18 +22,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTQL_RelHead__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZTName.h" // For ZTName
+#include "zoolib/ZTName.h"
 
 #include <set>
 #include <vector>
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZTQL {
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL::RelHead
-
-namespace ZTQL {
 
 class RelHead
 	{
