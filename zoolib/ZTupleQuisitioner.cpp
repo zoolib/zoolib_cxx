@@ -373,7 +373,7 @@ static void sFirst_Filter(ZTextCollator* ioTextCollators, const ZTBSpec& iFilter
 
 void ZTupleQuisitioner::Query_Unordered(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iFilter, set<uint64>& ioIDs)
 	{
-	if (ZTBQueryNode_All* theNode_All = ZRefDynamicCast<ZTBQueryNode_All>(iNode))
+	if (ZRefDynamicCast<ZTBQueryNode_All>(iNode))
 		{
 		// We must have a filter, it's not possible to construct a ZTBQueryNode_All
 		// except as a clause in a combo with a filter.
@@ -481,7 +481,7 @@ void ZTupleQuisitioner::Query_Unordered(const ZRef<ZTBQueryNode>& iNode, const Z
 
 void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iFilter, vector<uint64>& ioIDs)
 	{
-	if (ZTBQueryNode_All* theNode_All = ZRefDynamicCast<ZTBQueryNode_All>(iNode))
+	if (ZRefDynamicCast<ZTBQueryNode_All>(iNode))
 		{
 		// We must have a filter, it's not possible to construct a ZTBQueryNode_All
 		// except as a clause in a combo with a filter.

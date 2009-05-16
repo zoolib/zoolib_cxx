@@ -557,8 +557,7 @@ void ZTSWatcher_Latent::pRegisterAQC(AddedQueryCombo& ioAQC)
 				if (theIntersection.fNodes.size() == 1)
 					{
 					const ZRef<ZTBQueryNode>& theNode = theIntersection.fNodes.back();
-					if (ZTBQueryNode_All* theNode_All =
-						ZRefDynamicCast<ZTBQueryNode_All>(theNode))
+					if (ZRefDynamicCast<ZTBQueryNode_All>(theNode))
 						{
 						fPQueries.insert(
 							pair<int64, PQuery>(
