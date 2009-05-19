@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCommandLine_TValue.h"
 #include "zoolib/ZStream_Memory.h"
-//#include "zoolib/ZStrim.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
