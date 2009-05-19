@@ -34,7 +34,7 @@ namespace ZTQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::ComparatorRep
+#pragma mark * ComparatorRep
 
 class ComparatorRep : public ZRefCounted
 	{
@@ -49,7 +49,7 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::ComparatorRep_Simple
+#pragma mark * ComparatorRep_Simple
 
 class ComparatorRep_Simple : public ComparatorRep
 	{
@@ -72,12 +72,12 @@ public:
 	EComparator GetEComparator();
 
 private:
-	EComparator fEComparator;
+	const EComparator fEComparator;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::ComparatorRep_StringContains
+#pragma mark * ComparatorRep_StringContains
 
 class ComparatorRep_StringContains : public ComparatorRep
 	{
@@ -88,12 +88,12 @@ public:
 	virtual bool Matches(const ZTValue& iLHS, const ZTValue& iRHS);
 
 private:
-	int fStrength;
+	const int fStrength;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::ComparatorRep_VectorContains
+#pragma mark * ComparatorRep_VectorContains
 
 class ComparatorRep_VectorContains : public ComparatorRep
 	{
@@ -102,13 +102,11 @@ public:
 
 // From ComparatorRep
 	virtual bool Matches(const ZTValue& iLHS, const ZTValue& iRHS);
-
-private:
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::ComparatorRep_Regex
+#pragma mark * ComparatorRep_Regex
 
 class ComparatorRep_Regex : public ComparatorRep
 	{
@@ -119,13 +117,13 @@ public:
 	virtual bool Matches(const ZTValue& iLHS, const ZTValue& iRHS);
 
 private:
-	std::string fPattern;
-	int fStrength;
+	const std::string fPattern;
+	const int fStrength;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Comparator
+#pragma mark * Comparator
 
 class Comparator
 	{
@@ -143,7 +141,7 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::ComparandRep
+#pragma mark * ComparandRep
 
 class ComparandRep : public ZRefCounted
 	{
@@ -159,7 +157,7 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::ComparandRep_Name
+#pragma mark * ComparandRep_Name
 
 class ComparandRep_Name : public ComparandRep
 	{
@@ -174,12 +172,12 @@ public:
 	const ZTName& GetName();
 
 private:
-	ZTName fName;
+	const ZTName fName;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::ComparandRep_Value
+#pragma mark * ComparandRep_Value
 
 class ComparandRep_Value : public ComparandRep
 	{
@@ -193,12 +191,12 @@ public:
 	const ZTValue& GetValue();
 
 private:
-	ZTValue fValue;
+	const ZTValue fValue;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Comparand
+#pragma mark * Comparand
 
 class Condition;
 
@@ -228,13 +226,17 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Condition
+#pragma mark * Condition
 
 class Condition
 	{
 public:
+	Condition();
+	Condition(const Condition& iOther);
 	Condition(ZRef<ComparandRep> iLHS, ZRef<ComparatorRep> iComparator, ZRef<ComparandRep> iRHS);
 	Condition(const Comparand& iLHS, const Comparator& iComparator, const Comparand& iRHS);
+	~Condition();
+	Condition& operator=(const Condition& iOther);
 
 	const Comparand& GetLHS() const;
 	const Comparator& GetComparator() const;

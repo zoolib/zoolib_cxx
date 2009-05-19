@@ -35,7 +35,7 @@ namespace ZTQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Query
+#pragma mark * Query
 
 class Query
 	{
@@ -94,11 +94,11 @@ Query sIntersect(const Query& iQuery1, const Query& iQuery2);
 
 Query sJoin(const Query& iQuery1, const Query& iQuery2);
 
-Query sProject(const Query& iQuery, const RelHead& iRelHead);
+Query sProject(const RelHead& iRelHead, const Query& iQuery);
 
-Query sRename(const Query& iQuery, const ZTName& iOldPropName, const ZTName& iNewPropName);
+Query sRename(const ZTName& iOldPropName, const ZTName& iNewPropName, const Query& iQuery);
 
-Query sSelect(const Query& iQuery, const Spec& iSpec);
+Query sSelect(const Spec& iSpec, const Query& iQuery);
 
 Query sUnion(const Query& iQuery1, const Query& iQuery2);
 

@@ -32,7 +32,7 @@ namespace ZTQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::RelHead
+#pragma mark * RelHead
 
 RelHead::RelHead()
 	{}

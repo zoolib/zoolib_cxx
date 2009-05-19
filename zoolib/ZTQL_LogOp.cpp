@@ -28,7 +28,7 @@ namespace ZTQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::LogOp
+#pragma mark * LogOp
 
 LogOp::LogOp()
 	{}
@@ -41,7 +41,7 @@ void LogOp::GatherPropNames(set<ZTName>& ioNames)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::LogOp_True
+#pragma mark * LogOp_True
 
 LogOp_True::LogOp_True()
 	{}
@@ -49,12 +49,15 @@ LogOp_True::LogOp_True()
 LogOp_True::~LogOp_True()
 	{}
 
+bool LogOp_True::Accept(LogOpVisitor& iVisitor)
+	{ return iVisitor.Visit_True(this); }
+
 bool LogOp_True::Matches(const ZTuple& iTuple)
 	{ return true; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::LogOp_False
+#pragma mark * LogOp_False
 
 LogOp_False::LogOp_False()
 	{}
@@ -62,12 +65,15 @@ LogOp_False::LogOp_False()
 LogOp_False::~LogOp_False()
 	{}
 
+bool LogOp_False::Accept(LogOpVisitor& iVisitor)
+	{ return iVisitor.Visit_False(this); }
+
 bool LogOp_False::Matches(const ZTuple& iTuple)
 	{ return false; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::LogOp_And
+#pragma mark * LogOp_And
 
 LogOp_And::LogOp_And(ZRef<LogOp> iLHS, ZRef<LogOp> iRHS)
 :	fLHS(iLHS),
@@ -76,6 +82,9 @@ LogOp_And::LogOp_And(ZRef<LogOp> iLHS, ZRef<LogOp> iRHS)
 
 LogOp_And::~LogOp_And()
 	{}
+
+bool LogOp_And::Accept(LogOpVisitor& iVisitor)
+	{ return iVisitor.Visit_And(this); }
 
 bool LogOp_And::Matches(const ZTuple& iTuple)
 	{
@@ -103,7 +112,7 @@ ZRef<LogOp> LogOp_And::GetRHS()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::LogOp_Or
+#pragma mark * LogOp_Or
 
 LogOp_Or::LogOp_Or(ZRef<LogOp> iLHS, ZRef<LogOp> iRHS)
 :	fLHS(iLHS),
@@ -112,6 +121,9 @@ LogOp_Or::LogOp_Or(ZRef<LogOp> iLHS, ZRef<LogOp> iRHS)
 
 LogOp_Or::~LogOp_Or()
 	{}
+
+bool LogOp_Or::Accept(LogOpVisitor& iVisitor)
+	{ return iVisitor.Visit_Or(this); }
 
 bool LogOp_Or::Matches(const ZTuple& iTuple)
 	{
@@ -145,7 +157,7 @@ ZRef<LogOp> LogOp_Or::GetRHS()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::LogOp_Condition
+#pragma mark * LogOp_Condition
 
 LogOp_Condition::LogOp_Condition(const Condition& iCondition)
 :	fCondition(iCondition)
@@ -154,14 +166,42 @@ LogOp_Condition::LogOp_Condition(const Condition& iCondition)
 LogOp_Condition::~LogOp_Condition()
 	{}
 
+bool LogOp_Condition::Accept(LogOpVisitor& iVisitor)
+	{ return iVisitor.Visit_Condition(this); }
+
 bool LogOp_Condition::Matches(const ZTuple& iTuple)
 	{ return fCondition.Matches(iTuple); }
 
 void LogOp_Condition::GatherPropNames(set<ZTName>& ioNames)
 	{ fCondition.GatherPropNames(ioNames); }
 
-const Condition& ZTQL::LogOp_Condition::GetCondition()
+const Condition& LogOp_Condition::GetCondition()
 	{ return fCondition; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * LogOpVisitor
+
+LogOpVisitor::LogOpVisitor()
+	{}
+
+LogOpVisitor::~LogOpVisitor()
+	{}
+
+bool LogOpVisitor::Visit_True(ZRef<LogOp_True> iLogOp)
+	{ return true; }
+
+bool LogOpVisitor::Visit_False(ZRef<LogOp_False> iLogOp)
+	{ return true; }
+
+bool LogOpVisitor::Visit_And(ZRef<LogOp_And> iLogOp)
+	{ return true; }
+
+bool LogOpVisitor::Visit_Or(ZRef<LogOp_Or> iLogOp)
+	{ return true; }
+
+bool LogOpVisitor::Visit_Condition(ZRef<LogOp_Condition> iLogOp)
+	{ return true; }
 
 } // namespace ZTQL
 

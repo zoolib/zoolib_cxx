@@ -29,9 +29,11 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZTQL {
 
+class NodeVisitor;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Node
+#pragma mark * Node
 
 class Node : public ZRefCounted
 	{
@@ -39,16 +41,32 @@ protected:
 	Node();
 
 public:
-	class Transformer;
-
-//	virtual ZRef<Node> Transform(Transformer& iTransformer) = 0;
-
+	virtual bool Accept(NodeVisitor& iVisitor) = 0;
 	virtual RelHead GetEffectiveRelHead() = 0;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Node_All
+#pragma mark * Node_Dyadic
+
+class Node_Dyadic : public Node
+	{
+protected:
+	Node_Dyadic(ZRef<Node> iNodeA, ZRef<Node> iNodeB);
+
+public:
+// Our protocol
+	ZRef<Node> GetNodeA();
+	ZRef<Node> GetNodeB();
+
+protected:
+	ZRef<Node> fNodeA;
+	ZRef<Node> fNodeB;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Node_All
 
 class Node_All : public Node
 	{
@@ -58,6 +76,7 @@ public:
 	Node_All(const ZTName& iIDPropName, const RelHead& iRelHead);
 
 // From Node
+	virtual bool Accept(NodeVisitor& iVisitor);
 	virtual RelHead GetEffectiveRelHead();
 
 // Our protocol
@@ -71,28 +90,21 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Node_Difference
+#pragma mark * Node_Difference
 
-class Node_Difference : public Node
+class Node_Difference : public Node_Dyadic
 	{
 public:
 	Node_Difference(ZRef<Node> iNodeA, ZRef<Node> iNodeB);
 
-// From Node
+// From Node via Node_Dyadic
+	virtual bool Accept(NodeVisitor& iVisitor);
 	virtual RelHead GetEffectiveRelHead();
-
-// Our protocol
-	ZRef<Node> GetNodeA();
-	ZRef<Node> GetNodeB();
-
-private:
-	ZRef<Node> fNodeA;
-	ZRef<Node> fNodeB;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Node_Explicit
+#pragma mark * Node_Explicit
 
 class Node_Explicit : public Node
 	{
@@ -101,6 +113,7 @@ public:
 	Node_Explicit(const std::vector<ZTuple>& iTuples);
 
 // From Node
+	virtual bool Accept(NodeVisitor& iVisitor);
 	virtual RelHead GetEffectiveRelHead();
 
 // Our protocol
@@ -112,49 +125,35 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Node_Intersect
+#pragma mark * Node_Intersect
 
-class Node_Intersect : public Node
+class Node_Intersect : public Node_Dyadic
 	{
 public:
 	Node_Intersect(ZRef<Node> iNodeA, ZRef<Node> iNodeB);
 
-// From Node
+// From Node via Node_Dyadic
+	virtual bool Accept(NodeVisitor& iVisitor);
 	virtual RelHead GetEffectiveRelHead();
-
-// Our protocol
-	ZRef<Node> GetNodeA();
-	ZRef<Node> GetNodeB();
-
-private:
-	ZRef<Node> fNodeA;
-	ZRef<Node> fNodeB;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Node_Join
+#pragma mark * Node_Join
 
-class Node_Join : public Node
+class Node_Join : public Node_Dyadic
 	{
 public:
 	Node_Join(ZRef<Node> iNodeA, ZRef<Node> iNodeB);
 
-// From Node
+// From Node via Node_Dyadic
+	virtual bool Accept(NodeVisitor& iVisitor);
 	virtual RelHead GetEffectiveRelHead();
-
-// Our protocol
-	ZRef<Node> GetNodeA();
-	ZRef<Node> GetNodeB();
-
-private:
-	ZRef<Node> fNodeA;
-	ZRef<Node> fNodeB;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Node_Project
+#pragma mark * Node_Project
 
 class Node_Project : public Node
 	{
@@ -162,6 +161,7 @@ public:
 	Node_Project(ZRef<Node> iNode, const RelHead& iRelHead);
 
 // From Node
+	virtual bool Accept(NodeVisitor& iVisitor);
 	virtual RelHead GetEffectiveRelHead();
 
 // Our protocol
@@ -175,7 +175,7 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Node_Rename
+#pragma mark * Node_Rename
 
 class Node_Rename : public Node
 	{
@@ -183,6 +183,7 @@ public:
 	Node_Rename(ZRef<Node> iNode, const ZTName& iOld, const ZTName& iNew);
 
 // From Node
+	virtual bool Accept(NodeVisitor& iVisitor);
 	virtual RelHead GetEffectiveRelHead();
 
 // Our protocol
@@ -198,7 +199,7 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Node_Restrict
+#pragma mark * Node_Restrict
 
 class Node_Restrict : public Node
 	{
@@ -206,6 +207,7 @@ public:
 	Node_Restrict(ZRef<Node> iNode, const Condition& iCondition);
 
 // From Node
+	virtual bool Accept(NodeVisitor& iVisitor);
 	virtual RelHead GetEffectiveRelHead();
 
 // Our protocol
@@ -219,7 +221,7 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Node_Select
+#pragma mark * Node_Select
 
 class Node_Select : public Node
 	{
@@ -227,6 +229,7 @@ public:
 	Node_Select(ZRef<Node> iNode, ZRef<LogOp> iLogOp);
 
 // From Node
+	virtual bool Accept(NodeVisitor& iVisitor);
 	virtual RelHead GetEffectiveRelHead();
 
 // Our protocol
@@ -240,38 +243,65 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Node_Union
+#pragma mark * Node_Union
 
-class Node_Union : public Node
+class Node_Union : public Node_Dyadic
 	{
 public:
 	Node_Union(ZRef<Node> iNodeA, ZRef<Node> iNodeB);
 
-// From Node
+// From Node via Node_Dyadic
+	virtual bool Accept(NodeVisitor& iVisitor);
 	virtual RelHead GetEffectiveRelHead();
-
-// Our protocol
-	ZRef<Node> GetNodeA();
-	ZRef<Node> GetNodeB();
-
-private:
-	ZRef<Node> fNodeA;
-	ZRef<Node> fNodeB;
 	};
-
-} // namespace ZTQL
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Node::Transformer
+#pragma mark * NodeVisitor
 
-class ZTQL::Node::Transformer
+class NodeVisitor
 	{
-protected:
-	Transformer();
-	~Transformer();
-
 public:
+	NodeVisitor();
+	~NodeVisitor();
+
+	virtual bool Visit_All(ZRef<Node_All> iNode);
+	virtual bool Visit_Difference(ZRef<Node_Difference> iNode);
+	virtual bool Visit_Explicit(ZRef<Node_Explicit> iNode);
+	virtual bool Visit_Intersect(ZRef<Node_Intersect> iNode);
+	virtual bool Visit_Join(ZRef<Node_Join> iNode);
+	virtual bool Visit_Project(ZRef<Node_Project> iNode);
+	virtual bool Visit_Rename(ZRef<Node_Rename> iNode);
+	virtual bool Visit_Restrict(ZRef<Node_Restrict> iNode);
+	virtual bool Visit_Select(ZRef<Node_Select> iNode);
+	virtual bool Visit_Union(ZRef<Node_Union> iNode);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * NodeTransformer
+
+class NodeTransformer : public NodeVisitor
+	{
+public:
+	NodeTransformer();
+	~NodeTransformer();
+
+// From NodeVisitor
+	virtual bool Visit_All(ZRef<Node_All> iNode);
+	virtual bool Visit_Difference(ZRef<Node_Difference> iNode);
+	virtual bool Visit_Explicit(ZRef<Node_Explicit> iNode);
+	virtual bool Visit_Intersect(ZRef<Node_Intersect> iNode);
+	virtual bool Visit_Join(ZRef<Node_Join> iNode);
+	virtual bool Visit_Project(ZRef<Node_Project> iNode);
+	virtual bool Visit_Rename(ZRef<Node_Rename> iNode);
+	virtual bool Visit_Restrict(ZRef<Node_Restrict> iNode);
+	virtual bool Visit_Select(ZRef<Node_Select> iNode);
+	virtual bool Visit_Union(ZRef<Node_Union> iNode);
+
+// Our protocol
+	ZRef<Node> Transform(ZRef<Node> iNode);
+
 	virtual ZRef<Node> Transform_All(ZRef<Node_All> iNode);
 	virtual ZRef<Node> Transform_Difference(ZRef<Node_Difference> iNode);
 	virtual ZRef<Node> Transform_Explicit(ZRef<Node_Explicit> iNode);
@@ -282,7 +312,12 @@ public:
 	virtual ZRef<Node> Transform_Restrict(ZRef<Node_Restrict> iNode);
 	virtual ZRef<Node> Transform_Select(ZRef<Node_Select> iNode);
 	virtual ZRef<Node> Transform_Union(ZRef<Node_Union> iNode);
+
+private:
+	ZRef<Node> fResult;
 	};
+
+} // namespace ZTQL
 
 NAMESPACE_ZOOLIB_END
 

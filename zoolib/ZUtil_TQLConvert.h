@@ -27,15 +27,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZUtil_TQLConvert {
+
+using namespace ZTQL;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_TQLConvert
 
-namespace ZUtil_TQLConvert {
+Query sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
 
-ZTQL::Query sConvert(const ZTBQuery& iTBQuery);
-
-} // namespace ZUtil_TBSpec
+} // namespace ZUtil_TQLConvert
 
 NAMESPACE_ZOOLIB_END
 

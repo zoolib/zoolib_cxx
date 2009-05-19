@@ -22,15 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+using namespace ZTQL;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL, sConvertSelect
 
 // Turns a Node_Select into a tree of Node_Restrict and Node_Union.
-
-using ZTQL::Condition;
-using ZTQL::LogOp;
-using ZTQL::RelHead;
 
 using std::vector;
 
@@ -54,12 +52,6 @@ static void sCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight, Cond
 
 static void sGather(ZRef<LogOp> iLogOp, CondUnion& oResult)
 	{
-	using ZTQL::LogOp_True;
-	using ZTQL::LogOp_False;
-	using ZTQL::LogOp_And;
-	using ZTQL::LogOp_Or;
-	using ZTQL::LogOp_Condition;
-
 	ZAssert(oResult.empty());
 
 	if (ZRef<LogOp_And> lo = ZRefDynamicCast<LogOp_And>(iLogOp))
@@ -103,12 +95,8 @@ static void sGather(ZRef<LogOp> iLogOp, CondUnion& oResult)
 		}
 	}
 
-static ZRef<ZTQL::Node> sConvertSelect(ZRef<ZTQL::Node> iNode, ZRef<LogOp> iLogOp)
+static ZRef<Node> sConvertSelect(ZRef<Node> iNode, ZRef<LogOp> iLogOp)
 	{
-	using ZTQL::Node;
-	using ZTQL::Node_Restrict;
-	using ZTQL::Node_Union;
-
 	if (!iNode)
 		return ZRef<Node>();
 
@@ -138,83 +126,25 @@ static ZRef<ZTQL::Node> sConvertSelect(ZRef<ZTQL::Node> iNode, ZRef<LogOp> iLogO
 #pragma mark -
 #pragma mark * ZTQL
 
-static ZRef<ZTQL::Node> sBreakUpSelect(ZRef<ZTQL::Node> iNode)
+namespace ZANONYMOUS {
+
+class Optimize : public NodeTransformer
 	{
-	if (ZRef<ZTQL::Node_All> theNode =
-		ZRefDynamicCast<ZTQL::Node_All>(iNode))
-		{
-		return theNode;
-		}
-	else if (ZRef<ZTQL::Node_Difference> theNode =
-		ZRefDynamicCast<ZTQL::Node_Difference>(iNode))
-		{
-		return new ZTQL::Node_Difference(
-			ZTQL::sOptimize(theNode->GetNodeA()),
-			ZTQL::sOptimize(theNode->GetNodeB()));
-		}
-	else if (ZRef<ZTQL::Node_Explicit> theNode =
-		ZRefDynamicCast<ZTQL::Node_Explicit>(iNode))
-		{
-		return theNode;
-		}
-	else if (ZRef<ZTQL::Node_Intersect> theNode =
-		ZRefDynamicCast<ZTQL::Node_Intersect>(iNode))
-		{
-		return new ZTQL::Node_Intersect(
-			ZTQL::sOptimize(theNode->GetNodeA()),
-			ZTQL::sOptimize(theNode->GetNodeB()));
-		}
-	else if (ZRef<ZTQL::Node_Join> theNode =
-		ZRefDynamicCast<ZTQL::Node_Join>(iNode))
-		{
-		return new ZTQL::Node_Join(
-			ZTQL::sOptimize(theNode->GetNodeA()),
-			ZTQL::sOptimize(theNode->GetNodeB()));
-		}
-	else if (ZRef<ZTQL::Node_Project> theNode =
-		ZRefDynamicCast<ZTQL::Node_Project>(iNode))
-		{
-		return new ZTQL::Node_Project(
-			ZTQL::sOptimize(theNode->GetNode()),
-			theNode->GetRelHead());
-		}
-	else if (ZRef<ZTQL::Node_Rename> theNode =
-		ZRefDynamicCast<ZTQL::Node_Rename>(iNode))
-		{
-		return new ZTQL::Node_Rename(
-			ZTQL::sOptimize(theNode->GetNode()),
-			theNode->GetOld(), theNode->GetNew());
-		}
-	else if (ZRef<ZTQL::Node_Restrict> theNode =
-		ZRefDynamicCast<ZTQL::Node_Restrict>(iNode))
-		{
-		return new ZTQL::Node_Restrict(
-			ZTQL::sOptimize(theNode->GetNode()),
-			theNode->GetCondition());
-		}
-	else if (ZRef<ZTQL::Node_Select> theNode =
-		ZRefDynamicCast<ZTQL::Node_Select>(iNode))
-		{
-		return sConvertSelect(
-			ZTQL::sOptimize(theNode->GetNode()),
-			theNode->GetLogOp());
-		}
-	else if (ZRef<ZTQL::Node_Union> theNode =
-		ZRefDynamicCast<ZTQL::Node_Union>(iNode))
-		{
-		return new ZTQL::Node_Union(
-			ZTQL::sOptimize(theNode->GetNodeA()),
-			ZTQL::sOptimize(theNode->GetNodeB()));
-		}
-	else
-		{
-		return theNode;
-		}
+public:
+	virtual ZRef<Node> Transform_Select(ZRef<Node_Select> iNode);
+	};
+
+ZRef<Node> Optimize::Transform_Select(ZRef<Node_Select> iNode)
+	{
+	ZRef<Node> newNode = this->Transform(iNode->GetNode());
+	return sConvertSelect(newNode, iNode->GetLogOp());
 	}
 
-ZRef<ZTQL::Node> ZTQL::sOptimize(ZRef<ZTQL::Node> iNode)
+} // anonymous namespace
+
+ZRef<Node> ZTQL::sOptimize(ZRef<Node> iNode)
 	{
-	return sBreakUpSelect(iNode);
+	return Optimize().Transform(iNode);
 	}
 
 NAMESPACE_ZOOLIB_END

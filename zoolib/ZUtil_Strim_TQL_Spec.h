@@ -28,15 +28,17 @@ NAMESPACE_ZOOLIB_BEGIN
 
 class ZStrimW;
 
+namespace ZUtil_Strim_TQL_Spec {
+
+using namespace ZTQL;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Strim_TQL_Spec
 
-namespace ZUtil_Strim_TQL_Spec {
-
-void sToStrim(const ZStrimW& iStrimW, const ZTQL::Condition& iCondition);
-void sToStrim(const ZStrimW& iStrimW, const ZTQL::Spec& iSpec);
-void sToStrim(const ZStrimW& iStrimW, ZRef<ZTQL::LogOp> iLogOp);
+void sToStrim(const ZStrimW& iStrimW, const Condition& iCondition);
+void sToStrim(const ZStrimW& iStrimW, const Spec& iSpec);
+void sToStrim(const ZStrimW& iStrimW, ZRef<LogOp> iLogOp);
 
 } // namespace ZUtil_Strim_TQL_Spec
 

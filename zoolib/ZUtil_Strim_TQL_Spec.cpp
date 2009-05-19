@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-using namespace ZTQL;
+namespace ZUtil_Strim_TQL_Spec {
 
 // =================================================================================================
 #pragma mark -
@@ -97,58 +97,98 @@ static void sToStrim(const ZStrimW& s, ZRef<ComparatorRep> iCR)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Writer
+
+namespace ZANONYMOUS {
+
+class Writer : public LogOpVisitor
+	{
+public:
+	Writer(const ZStrimW& iStrimW);
+
+	virtual bool Visit_True(ZRef<LogOp_True> iLogOp);
+	virtual bool Visit_False(ZRef<LogOp_False> iLogOp);
+	virtual bool Visit_And(ZRef<LogOp_And> iLogOp);
+	virtual bool Visit_Or(ZRef<LogOp_Or> iLogOp);
+	virtual bool Visit_Condition(ZRef<LogOp_Condition> iLogOp);
+
+private:
+	const ZStrimW& fStrimW;
+	};
+
+} // anonymous namespace
+
+Writer::Writer(const ZStrimW& iStrimW)
+:	fStrimW(iStrimW)
+	{}
+
+bool Writer::Visit_True(ZRef<LogOp_True> iLogOp)
+	{
+	fStrimW << "any";
+	return true;
+	}
+
+bool Writer::Visit_False(ZRef<LogOp_False> iLogOp)
+	{
+	fStrimW << "none";
+	return true;
+	}
+
+bool Writer::Visit_And(ZRef<LogOp_And> iLogOp)
+	{
+	fStrimW << "(";
+	sToStrim(fStrimW, iLogOp->GetLHS());
+	fStrimW << " & ";
+	sToStrim(fStrimW, iLogOp->GetRHS());
+	fStrimW << ")";
+	return true;
+	}
+
+bool Writer::Visit_Or(ZRef<LogOp_Or> iLogOp)
+	{
+	fStrimW << "(";
+	sToStrim(fStrimW, iLogOp->GetLHS());
+	fStrimW << " | ";
+	sToStrim(fStrimW, iLogOp->GetRHS());
+	fStrimW << ")";
+	return true;
+	}
+
+bool Writer::Visit_Condition(ZRef<LogOp_Condition> iLogOp)
+	{
+	ZUtil_Strim_TQL_Spec::sToStrim(fStrimW, iLogOp->GetCondition());
+	return true;
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZUtil_Strim_TQL_Spec
 
-void ZUtil_Strim_TQL_Spec::sToStrim(const ZStrimW& s, const Condition& iCondition)
+void sToStrim(const ZStrimW& s, const Condition& iCondition)
 	{
 	sToStrim(s, iCondition.GetLHS().GetRep());
 	sToStrim(s, iCondition.GetComparator().GetRep());
 	sToStrim(s, iCondition.GetRHS().GetRep());
 	}
 
-void ZUtil_Strim_TQL_Spec::sToStrim(const ZStrimW& s, const ZTQL::Spec& iSpec)
+void sToStrim(const ZStrimW& s, const Spec& iSpec)
 	{
 	sToStrim(s, iSpec.GetLogOp());
 	}
 
-void ZUtil_Strim_TQL_Spec::sToStrim(const ZStrimW& s, ZRef<ZTQL::LogOp> iLogOp)
+void sToStrim(const ZStrimW& s, ZRef<LogOp> iLogOp)
 	{
-	if (!iLogOp)
+	if (iLogOp)
 		{
-		s << "none";
+		Writer theWriter(s);
+		iLogOp->Accept(theWriter);
 		}
-	else if (ZRef<LogOp_True> lo = ZRefDynamicCast<LogOp_True>(iLogOp))
-		{
-		s << "any";
-		}
-	else if (ZRef<LogOp_False> lo = ZRefDynamicCast<LogOp_False>(iLogOp))
-		{
-		s << "none";
-		}
-	else if (ZRef<LogOp_And> lo = ZRefDynamicCast<LogOp_And>(iLogOp))
-		{
-		s << "(";
-		sToStrim(s, lo->GetLHS());
-		s << " & ";
-		sToStrim(s, lo->GetRHS());
-		s << ")";
-		}
-	else if (ZRef<LogOp_Or> lo = ZRefDynamicCast<LogOp_Or>(iLogOp))
-		{
-		s << "(";
-		sToStrim(s, lo->GetLHS());
-		s << " | ";
-		sToStrim(s, lo->GetRHS());
-		s << ")";
-		}
-	else if (ZRef<LogOp_Condition> lo = ZRefDynamicCast<LogOp_Condition>(iLogOp))
-		{
-		ZUtil_Strim_TQL_Spec::sToStrim(s, lo->GetCondition());
-		}	
 	else
 		{
-		s << "!!Unknown LogOp!!";
+		s << "none";
 		}
 	}
+
+} // namespace ZUtil_Strim_TQL_Spec
 
 NAMESPACE_ZOOLIB_END

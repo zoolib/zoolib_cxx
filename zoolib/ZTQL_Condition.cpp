@@ -29,7 +29,7 @@ namespace ZTQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::ComparatorRep
+#pragma mark * ComparatorRep
 
 ComparatorRep::ComparatorRep()
 	{}
@@ -39,7 +39,7 @@ ComparatorRep::~ComparatorRep()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::ComparatorRep_Simple
+#pragma mark * ComparatorRep_Simple
 
 ComparatorRep_Simple::ComparatorRep_Simple(EComparator iEComparator)
 :	fEComparator(iEComparator)
@@ -64,7 +64,7 @@ ComparatorRep_Simple::EComparator ComparatorRep_Simple::GetEComparator()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Comparator
+#pragma mark * Comparator
 
 Comparator::Comparator()
 	{}
@@ -86,7 +86,7 @@ bool Comparator::Matches(const ZTValue& iLHS, const ZTValue& iRHS) const
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::ComparandRep
+#pragma mark * ComparandRep
 
 ComparandRep::ComparandRep()
 	{}
@@ -99,7 +99,7 @@ void ComparandRep::GatherPropNames(set<ZTName>& ioNames)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::ComparandRep_Name
+#pragma mark * ComparandRep_Name
 
 ComparandRep_Name::ComparandRep_Name(const ZTName& iName)
 :	fName(iName)
@@ -116,7 +116,7 @@ const ZTName& ComparandRep_Name::GetName()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::ComparandRep_Value
+#pragma mark * ComparandRep_Value
 
 ComparandRep_Value::ComparandRep_Value(const ZTValue& iValue)
 :	fValue(iValue)
@@ -130,7 +130,7 @@ const ZTValue& ComparandRep_Value::GetValue()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Comparand
+#pragma mark * Comparand
 
 Comparand::Comparand()
 	{}
@@ -213,7 +213,16 @@ Condition Comparand::GT(const Comparand& iRHS) const
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Condition
+#pragma mark * Condition
+
+Condition::Condition()
+	{}
+
+Condition::Condition(const Condition& iOther)
+:	fLHS(iOther.fLHS),
+	fComparator(iOther.fComparator),
+	fRHS(iOther.fRHS)
+	{}
 
 Condition::Condition(
 	ZRef<ComparandRep> iLHS, ZRef<ComparatorRep> iComparator, ZRef<ComparandRep> iRHS)
@@ -222,12 +231,22 @@ Condition::Condition(
 	fRHS(iRHS)
 	{}
 
-Condition::Condition(
-	const Comparand& iLHS, const Comparator& iComparator, const Comparand& iRHS)
+Condition::Condition(const Comparand& iLHS, const Comparator& iComparator, const Comparand& iRHS)
 :	fLHS(iLHS),
 	fComparator(iComparator),
 	fRHS(iRHS)
 	{}
+
+Condition::~Condition()
+	{}
+
+Condition& Condition::operator=(const Condition& iOther)
+	{
+	fLHS = iOther.fLHS;
+	fComparator = iOther.fComparator;
+	fRHS = iOther.fRHS;
+	return *this;
+	}
 
 const Comparand& Condition::GetLHS() const
 	{ return fLHS; }

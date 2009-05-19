@@ -33,9 +33,11 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZTQL {
 
+class LogOpVisitor;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::LogOp
+#pragma mark * LogOp
 
 class LogOp : public ZRefCounted
 	{
@@ -45,13 +47,14 @@ protected:
 public:
 	virtual ~LogOp();
 
+	virtual bool Accept(LogOpVisitor& iVisitor) = 0;
 	virtual bool Matches(const ZTuple& iTuple) = 0;
 	virtual void GatherPropNames(std::set<ZTName>& ioNames);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::LogOp_True
+#pragma mark * LogOp_True
 
 class LogOp_True : public LogOp
 	{
@@ -60,12 +63,13 @@ public:
 	virtual ~LogOp_True();
 
 // From LogOp
+	virtual bool Accept(LogOpVisitor& iVisitor);
 	virtual bool Matches(const ZTuple& iTuple);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::LogOp_False
+#pragma mark * LogOp_False
 
 class LogOp_False : public LogOp
 	{
@@ -74,12 +78,13 @@ public:
 	virtual ~LogOp_False();
 
 // From LogOp
+	virtual bool Accept(LogOpVisitor& iVisitor);
 	virtual bool Matches(const ZTuple& iTuple);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::LogOp_And
+#pragma mark * LogOp_And
 
 class LogOp_And : public LogOp
 	{
@@ -88,6 +93,7 @@ public:
 	virtual ~LogOp_And();
 
 // From LogOp
+	virtual bool Accept(LogOpVisitor& iVisitor);
 	virtual bool Matches(const ZTuple& iTuple);
 	virtual void GatherPropNames(std::set<ZTName>& ioNames);
 
@@ -102,7 +108,7 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::LogOp_Or
+#pragma mark * LogOp_Or
 
 class LogOp_Or : public LogOp
 	{
@@ -111,6 +117,7 @@ public:
 	virtual ~LogOp_Or();
 
 // From LogOp
+	virtual bool Accept(LogOpVisitor& iVisitor);
 	virtual bool Matches(const ZTuple& iTuple);
 	virtual void GatherPropNames(std::set<ZTName>& ioNames);
 
@@ -125,7 +132,7 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::LogOp_Condition
+#pragma mark * LogOp_Condition
 
 class LogOp_Condition : public LogOp
 	{
@@ -134,6 +141,7 @@ public:
 	virtual ~LogOp_Condition();
 
 // From LogOp
+	virtual bool Accept(LogOpVisitor& iVisitor);
 	virtual bool Matches(const ZTuple& iTuple);
 	virtual void GatherPropNames(std::set<ZTName>& ioNames);
 
@@ -142,6 +150,23 @@ public:
 
 private:
 	Condition fCondition;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * LogOpVisitor
+
+class LogOpVisitor
+	{
+public:
+	LogOpVisitor();
+	~LogOpVisitor();
+
+	virtual bool Visit_True(ZRef<LogOp_True> iLogOp);
+	virtual bool Visit_False(ZRef<LogOp_False> iLogOp);
+	virtual bool Visit_And(ZRef<LogOp_And> iLogOp);
+	virtual bool Visit_Or(ZRef<LogOp_Or> iLogOp);
+	virtual bool Visit_Condition(ZRef<LogOp_Condition> iLogOp);
 	};
 
 } // namespace ZTQL

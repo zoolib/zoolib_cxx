@@ -34,7 +34,7 @@ class LogOp;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Comparand derivatives
+#pragma mark * Comparand derivatives
 
 class CName : public Comparand
 	{
@@ -61,7 +61,9 @@ public:
 
 	Spec(const Spec& iOther);
 
-	Spec(ZRef<ZTQL::LogOp> iLogOp);
+	Spec(ZRef<LogOp> iLogOp);
+
+	Spec(bool iBool);
 
 	Spec(const Condition& iCondition);
 
@@ -73,7 +75,7 @@ public:
 
 	bool Matches(const ZTuple& iTuple) const;
 
-	ZTQL::RelHead GetRelHead() const;
+	RelHead GetRelHead() const;
 
 	Spec operator&(const Spec& iOther) const;
 
@@ -83,10 +85,10 @@ public:
 
 	Spec& operator|=(const Spec& iOther);
 
-	ZRef<ZTQL::LogOp> GetLogOp() const;
+	ZRef<LogOp> GetLogOp() const;
 
 private:
-	ZRef<ZTQL::LogOp> fLogOp;
+	ZRef<LogOp> fLogOp;
 	};
 
 Spec operator&(const Condition& iCondition, const Spec& iSpec);

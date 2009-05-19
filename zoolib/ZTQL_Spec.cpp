@@ -30,7 +30,7 @@ namespace ZTQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Comparand derivatives
+#pragma mark * Comparand derivatives
 
 CName::CName(const ZTName& iName)
 :	Comparand(new ComparandRep_Name(iName))
@@ -42,7 +42,7 @@ CValue::CValue(const ZTValue& iValue)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL::Spec
+#pragma mark * Spec
 
 Spec::Spec()
 	{}
@@ -54,6 +54,12 @@ Spec::Spec(const Spec& iOther)
 Spec::Spec(ZRef<LogOp> iLogOp)
 :	fLogOp(iLogOp)
 	{}
+
+Spec::Spec(bool iBool)
+	{
+	if (iBool)
+		fLogOp = new LogOp_True;
+	}
 
 Spec::Spec(const Condition& iCondition)
 :	fLogOp(new LogOp_Condition(iCondition))
@@ -107,13 +113,12 @@ Spec Spec::operator|(const Spec& iOther) const
 		{
 		if (iOther.fLogOp)
 			return Spec(new LogOp_Or(fLogOp, iOther.fLogOp));
-		else
-			return fLogOp;
 		}
 	else
 		{
-		return iOther.fLogOp;
+		return iOther;
 		}
+	return *this;
 	}
 
 Spec& Spec::operator|=(const Spec& iOther)

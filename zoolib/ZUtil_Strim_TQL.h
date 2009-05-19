@@ -27,11 +27,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZUtil_Strim_TQL {
+
+using namespace ZTQL;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Strim_TQL
-
-namespace ZUtil_Strim_TQL {
 
 struct Options
 	{
@@ -41,19 +43,19 @@ struct Options
 	std::string fIndentString;
 	};
 
-void sToStrim(const ZStrimW& iStrimW, const ZTQL::Query& iQuery);
-void sToStrim(const ZStrimW& iStrimW, ZRef<ZTQL::Node> iNode);
+void sToStrim(const ZStrimW& iStrimW, const Query& iQuery);
+void sToStrim(const ZStrimW& iStrimW, ZRef<Node> iNode);
 
 void sToStrim(const ZStrimW& iStrimW,
 	size_t iInitialIndent, const Options& iOptions,
-	const ZTQL::Query& iQuery);
+	const Query& iQuery);
 
 void sToStrim(const ZStrimW& iStrimW,
 	size_t iInitialIndent, const Options& iOptions,
-	ZRef<ZTQL::Node> iNode);
+	ZRef<Node> iNode);
 
 void sWrite_PropName(const ZStrimW& s, const ZTName& iTName);
-void sWrite_RelHead(const ZStrimW& s, const ZTQL::RelHead& iRelHead);
+void sWrite_RelHead(const ZStrimW& s, const RelHead& iRelHead);
 
 } // namespace ZUtil_Strim_TQL
 

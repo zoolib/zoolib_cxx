@@ -144,13 +144,13 @@ Query sIntersect(const Query& iQuery1, const Query& iQuery2)
 Query sJoin(const Query& iQuery1, const Query& iQuery2)
 	{ return iQuery1.Join(iQuery2); }
 
-Query sProject(const Query& iQuery, const RelHead& iRelHead)
+Query sProject(const RelHead& iRelHead, const Query& iQuery)
 	{ return iQuery.Project(iRelHead); }
 
-Query sRename(const Query& iQuery, const ZTName& iOldPropName, const ZTName& iNewPropName)
+Query sRename(const ZTName& iOldPropName, const ZTName& iNewPropName, const Query& iQuery)
 	{ return iQuery.Rename(iOldPropName, iNewPropName); }
 
-Query sSelect(const Query& iQuery, const Spec& iSpec)
+Query sSelect(const Spec& iSpec, const Query& iQuery)
 	{ return iQuery.Select(iSpec); }
 
 Query sUnion(const Query& iQuery1, const Query& iQuery2)
