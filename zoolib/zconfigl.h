@@ -280,22 +280,29 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Objective C we're switching to use the soon-to-be standardized nullptr.
 
 #ifdef __cplusplus
-const 
-class nullptr_t
-	{
-public:
-	template <class T> operator T*() const { return 0; }
 	#ifndef __MWERKS__
-		template <class C, class T> operator T C::*() const { return 0; }
+		const class nullptr_t
+			{
+		public:
+			template <class T> operator T*() const { return 0; }
+			template <class C, class T> operator T C::*() const { return 0; }
+		private:
+			void operator&() const;
+			} nullptr = {};
+	#else
+		class nullptr_t
+			{
+		public:
+			template <class T> operator T*() const { return 0; }
+		private:
+			void operator&() const;
+			};
+		#define nullptr nullptr_t()
 	#endif
-private:
-	void operator&() const;
-	} nullptr = {};
-
 #else
-#	ifndef nullptr
-#		define nullptr 0
-#	endif
+	#ifndef nullptr
+		#define nullptr 0
+	#endif
 #endif
 
 // ==================================================
