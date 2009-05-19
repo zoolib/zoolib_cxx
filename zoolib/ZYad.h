@@ -191,11 +191,10 @@ public:
 
 class ZYadVisitor
 	{
-protected:
+public:
 	ZYadVisitor();
 	~ZYadVisitor();
 
-public:
 	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
 	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
