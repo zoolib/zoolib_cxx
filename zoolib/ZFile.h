@@ -338,7 +338,9 @@ public:
 
 /// Base interface for stateless read access.
 
-class ZFileR : public virtual ZRefCountedWithFinalization, NonCopyable
+class ZFileR
+:	public ZRefCountedWithFinalize,
+	NonCopyable
 	{
 protected:
 	ZFileR() {}
@@ -355,7 +357,9 @@ public:
 
 /// Base interface for stateless write access.
 
-class ZFileW : public virtual ZRefCountedWithFinalization, NonCopyable
+class ZFileW
+:	public ZRefCountedWithFinalize,
+	NonCopyable
 	{
 protected:
 	ZFileW() {}

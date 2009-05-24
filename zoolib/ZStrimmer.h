@@ -37,7 +37,7 @@ NAMESPACE_ZOOLIB_BEGIN
 \ingroup group_Strimmer
 */
 
-class ZStrimmerR : public virtual ZRefCountedWithFinalization
+class ZStrimmerR : public virtual ZRefCountedWithFinalize
 	{
 public:
 	virtual const ZStrimR& GetStrimR() = 0;
@@ -69,7 +69,7 @@ public:
 \ingroup group_Strimmer
 */
 
-class ZStrimmerW : public virtual ZRefCountedWithFinalization
+class ZStrimmerW : public virtual ZRefCountedWithFinalize
 	{
 public:
 	virtual const ZStrimW& GetStrimW() = 0;

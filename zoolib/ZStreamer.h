@@ -35,7 +35,7 @@ NAMESPACE_ZOOLIB_BEGIN
 \ingroup group_Streamer
 */
 
-class ZStreamerR : public virtual ZRefCountedWithFinalization
+class ZStreamerR : public ZRefCountedWithFinalize
 	{
 public:
 	virtual const ZStreamR& GetStreamR() = 0;
@@ -106,7 +106,7 @@ public:
 \ingroup group_Streamer
 */
 
-class ZStreamerW : public virtual ZRefCountedWithFinalization
+class ZStreamerW : public ZRefCountedWithFinalize
 	{
 public:
 	virtual const ZStreamW& GetStreamW() = 0;
@@ -1072,7 +1072,7 @@ protected:
 #pragma mark -
 #pragma mark * ZStreamerRFactory
 
-class ZStreamerRFactory : public virtual ZRefCountedWithFinalization
+class ZStreamerRFactory : public ZRefCountedWithFinalize
 	{
 protected:
 	ZStreamerRFactory();
@@ -1105,7 +1105,7 @@ public:
 #pragma mark -
 #pragma mark * ZStreamerWFactory
 
-class ZStreamerWFactory : public virtual ZRefCountedWithFinalization
+class ZStreamerWFactory : public ZRefCountedWithFinalize
 	{
 protected:
 	ZStreamerWFactory();

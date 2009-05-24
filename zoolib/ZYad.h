@@ -71,7 +71,7 @@ public:
 #pragma mark -
 #pragma mark * ZYadR
 
-class ZYadR : public virtual ZRefCountedWithFinalization
+class ZYadR : public ZRefCountedWithFinalize
 	{
 protected:
 	ZYadR();
