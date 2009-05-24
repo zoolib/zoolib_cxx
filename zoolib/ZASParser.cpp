@@ -34,7 +34,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTextCoder.h"
 #include "zoolib/ZTextCoder_Unicode.h"
 #include "zoolib/ZUtil_Strim.h"
-#include "zoolib/ZUtil_TextCoder.h"
 #include "zoolib/ZUnicode.h"
 
 #include <stdio.h>
@@ -489,7 +488,7 @@ void Parser::ParseCharSet()
 	if (!sTryRead_EscapedString(*fStrimU, '"', charSetName))
 		throw ParseException("Expected a quoted string for charset");
 
-	ZTextDecoder* theTextDecoder = ZUtil_TextCoder::sCreateDecoder(charSetName);
+	ZTextDecoder* theTextDecoder = ZTextDecoder::sMake(charSetName);
 	if (theTextDecoder == nullptr)
 		throw ParseException("Unsupported charset \"" + charSetName + "\"");
 
