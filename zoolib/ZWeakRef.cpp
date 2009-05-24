@@ -41,7 +41,7 @@ public:
 private:
 	void pDetachReferee(ZWeakReferee* iReferee);
 
-	ZWeakReferee* pLockGet();
+	ZWeakReferee* pLockUse();
 	void pUnlock();
 
 	ZMtx fMtx;
@@ -85,7 +85,7 @@ void ZWeakRefereeProxy::pDetachReferee(ZWeakReferee* iReferee)
 		}
 	}
 
-ZWeakReferee* ZWeakRefereeProxy::pLockGet()
+ZWeakReferee* ZWeakRefereeProxy::pLockUse()
 	{
 	fMtx.Acquire();
 	if (fReferee)
@@ -108,7 +108,8 @@ ZWeakReferee::ZWeakReferee()
 ZWeakReferee::~ZWeakReferee()
 	{
 	// Finalize must have called pDetachProxy.
-	ZAssert(!fWRP);
+	this->pDetachProxy();
+//	ZAssert(!fWRP);
 	}
 
 void ZWeakReferee::pDetachProxy()
@@ -161,77 +162,14 @@ void ZWeakRefBase::AssignFrom(ZWeakReferee* iWeakReferee)
 void ZWeakRefBase::Clear()
 	{ fWRP.Clear(); }
 
-ZWeakReferee* ZWeakRefBase::LockGet() const
+ZWeakReferee* ZWeakRefBase::LockUse() const
 	{
 	if (fWRP)
-		return fWRP->pLockGet();
+		return fWRP->pLockUse();
 	return nullptr;
 	}
 
 void ZWeakRefBase::Unlock() const
 	{ fWRP->pUnlock(); }
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * test
-
-class Test1 : public ZRefCountedWithFinalize, public ZWeakReferee
-	{};
-
-class Test2 : public ZRefCountedWithFinalize, public ZWeakReferee
-	{};
-
-static void sTest(ZRef<Test1> iRef1, ZRef<Test2> iRef2, ZRef<Test1> iWeak1)
-	{
-	ZRef<Test1> theRef1;
-	theRef1 = iWeak1;
-
-	ZWeakRef<Test1> theWeak1 = iRef1;
-	theWeak1 = theRef1;
-	theRef1 = theWeak1;
-	theWeak1 = theWeak1;
-//	theWeak1 = iRef1;
-//	theWeak1 = iRef2;
-	ZWeakRef<Test2> theWeak2;
-//	theWeak2 = iRef1;
-//	theWeak2 = iRef2;
-
-#if 0
-	ZWeak<Test1> oWeak1_1 = theWeak2;
-	oWeak1_1 = theWeak1;
-//	oWeak1_1 = theWeak2;
-#endif
-	}
-
 NAMESPACE_ZOOLIB_END
-#if 0
-class A
-	{
-	int dummy;
-	};
-
-class B : public virtual A
-	{
-	int dummy;
-	};
-
-class C1 : public B
-	{};
-
-class C2 : public B
-	{};
-
-class C3 : public B
-	{};
-
-class D : public C1, public C2, public C3
-	{};
-
-
-static void sTest(A* iThing)
-	{
-	B* theB = static_cast<B*>(iThing);
-//	D* thing = static_cast<D*>(iThing);
-//	D* thing = static_cast<D*>(iThing);
-	}
-#endif

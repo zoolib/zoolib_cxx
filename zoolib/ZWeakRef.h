@@ -65,7 +65,7 @@ protected:
 
 	void Clear();
 
-	ZWeakReferee* LockGet() const;
+	ZWeakReferee* LockUse() const;
 	void Unlock() const;
 
 	ZRef<ZWeakRefereeProxy> fWRP;
@@ -128,10 +128,10 @@ public:
 	void Clear()
 		{ ZWeakRefBase::Clear(); }
 
-	operator ZRef<T>() const
+	ZRef<T> Use() const
 		{
 		ZRef<T> result;
-		if (ZWeakReferee* theWeakReferee = ZWeakRefBase::LockGet())
+		if (ZWeakReferee* theWeakReferee = ZWeakRefBase::LockUse())
 			{
 			result = static_cast<T*>(theWeakReferee);
 			ZWeakRefBase::Unlock();
