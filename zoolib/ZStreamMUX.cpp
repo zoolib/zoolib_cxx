@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamMUX.h"
 
 #include "zoolib/ZLog.h"
-#include "zoolib/ZPtrUseCounted.h"
+//#include "zoolib/ZPtrUseCounted.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_STL.h"
 
@@ -149,10 +149,10 @@ class ZStreamMUX::Endpoint
 public:
 	friend class ZStreamMUX;
 
-	Endpoint(ZStreamMUX* iMUX, uint32 iEPID, size_t iReceiveBufferSize,
+	Endpoint(ZRef<ZStreamMUX> iMUX, uint32 iEPID, size_t iReceiveBufferSize,
 		Listener* iListener, size_t iCreditLimit);
 
-	Endpoint(ZStreamMUX* iMUX, uint32 iEPID, size_t iReceiveBufferSize,
+	Endpoint(ZRef<ZStreamMUX> iMUX, uint32 iEPID, size_t iReceiveBufferSize,
 		const string* iOpenName);
 
 	virtual ~Endpoint();
@@ -184,7 +184,7 @@ public:
 	virtual void Imp_Abort();
 
 private:
-	ZPtrUseCounted_T<ZStreamMUX> fPUC_MUX;
+	ZWeakRef<ZStreamMUX> fMUX;
 
 	ZCondition fCondition_Receive;
 	ZCondition fCondition_Send;
@@ -209,9 +209,9 @@ private:
 	};
 
 // Called by ZStreamMUX when accepting a connection.
-ZStreamMUX::Endpoint::Endpoint(ZStreamMUX* iMUX, uint32 iEPID, size_t iReceiveBufferSize,
+ZStreamMUX::Endpoint::Endpoint(ZRef<ZStreamMUX> iMUX, uint32 iEPID, size_t iReceiveBufferSize,
 	Listener* iListener, size_t iCreditLimit)
-:	fPUC_MUX(iMUX),
+:	fMUX(iMUX),
 	fEPID(iEPID),
 	fReceiveBufferSize(iReceiveBufferSize),
 	fListener(iListener),
@@ -228,9 +228,9 @@ ZStreamMUX::Endpoint::Endpoint(ZStreamMUX* iMUX, uint32 iEPID, size_t iReceiveBu
 	}
 	
 // Called by ZStreamMUX when opening a connection
-ZStreamMUX::Endpoint::Endpoint(ZStreamMUX* iMUX, uint32 iEPID, size_t iReceiveBufferSize,
+ZStreamMUX::Endpoint::Endpoint(ZRef<ZStreamMUX> iMUX, uint32 iEPID, size_t iReceiveBufferSize,
 	const string* iOpenName)
-:	fPUC_MUX(iMUX),
+:	fMUX(iMUX),
 	fEPID(iEPID),
 	fReceiveBufferSize(iReceiveBufferSize),
 	fListener(nullptr),
@@ -261,7 +261,7 @@ void ZStreamMUX::Endpoint::Finalize()
 	bool hasMUX = false;
 	bool needsDelete = false;
 
-	if (ZUsedPtr_T<ZStreamMUX> theMUX = fPUC_MUX)
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		{
 		hasMUX = true;
 		// Endpoint_Finalize calls our FinalizationComplete, we don't do it here.
@@ -270,8 +270,6 @@ void ZStreamMUX::Endpoint::Finalize()
 			needsDelete = true;
 			}
 		}
-
-	// Do not do else if here -- keeps theMUX in scope, and keeps use count non-zero.
 
 	if (hasMUX)
 		{
@@ -299,7 +297,7 @@ const ZStreamWCon& ZStreamMUX::Endpoint::GetStreamWCon()
 
 void ZStreamMUX::Endpoint::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	if (ZUsedPtr_T<ZStreamMUX> theMUX = fPUC_MUX)
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		{
 		theMUX->Endpoint_Read(this, iDest, iCount, oCountRead);
 		}
@@ -312,7 +310,7 @@ void ZStreamMUX::Endpoint::Imp_Read(void* iDest, size_t iCount, size_t* oCountRe
 
 size_t ZStreamMUX::Endpoint::Imp_CountReadable()
 	{
-	if (ZUsedPtr_T<ZStreamMUX> theMUX = fPUC_MUX)
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		return theMUX->Endpoint_CountReadable(this);
 	else
 		return 0;
@@ -320,14 +318,14 @@ size_t ZStreamMUX::Endpoint::Imp_CountReadable()
 
 bool ZStreamMUX::Endpoint::Imp_WaitReadable(int iMilliseconds)
 	{
-	if (ZUsedPtr_T<ZStreamMUX> theMUX = fPUC_MUX)
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		return theMUX->Endpoint_WaitReadable(this, iMilliseconds);
 	return true;
 	}
 
 void ZStreamMUX::Endpoint::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	if (ZUsedPtr_T<ZStreamMUX> theMUX = fPUC_MUX)
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		{
 		theMUX->Endpoint_Write(this, iSource, iCount, oCountWritten);
 		}
@@ -340,20 +338,20 @@ void ZStreamMUX::Endpoint::Imp_Write(const void* iSource, size_t iCount, size_t*
 
 bool ZStreamMUX::Endpoint::Imp_ReceiveDisconnect(int iMilliseconds)
 	{
-	if (ZUsedPtr_T<ZStreamMUX> theMUX = fPUC_MUX)
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		theMUX->Endpoint_ReceiveDisconnect(this, iMilliseconds);
 	return true;
 	}
 
 void ZStreamMUX::Endpoint::Imp_SendDisconnect()
 	{
-	if (ZUsedPtr_T<ZStreamMUX> theMUX = fPUC_MUX)
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		theMUX->Endpoint_SendDisconnect(this);
 	}
 
 void ZStreamMUX::Endpoint::Imp_Abort()
 	{
-	if (ZUsedPtr_T<ZStreamMUX> theMUX = fPUC_MUX)
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		theMUX->Endpoint_Abort(this);
 	}
 
@@ -367,7 +365,7 @@ class ZStreamMUX::Listener : public ZStreamerRWConFactory
 public:
 	friend class ZStreamMUX;
 
-	Listener(ZStreamMUX* iMUX, const string& iName, size_t iReceiveBufferSize);
+	Listener(ZRef<ZStreamMUX> iMUX, const string& iName, size_t iReceiveBufferSize);
 	virtual ~Listener();
 
 // From ZRefCountedWithFinalization via ZStreamerRWConFactory
@@ -378,7 +376,7 @@ public:
 	virtual void Cancel();
 
 private:
-	ZPtrUseCounted_T<ZStreamMUX> fPUC_MUX;
+	ZWeakRef<ZStreamMUX> fMUX;
 	ZCondition fCondition;
 	const string fName;
 	const size_t fReceiveBufferSize;
@@ -386,9 +384,9 @@ private:
 	bool fCancelled;
 	};
 
-ZStreamMUX::Listener::Listener(ZStreamMUX* iMUX,
+ZStreamMUX::Listener::Listener(ZRef<ZStreamMUX> iMUX,
 	const string& iName, size_t iReceiveBufferSize)
-:	fPUC_MUX(iMUX),
+:	fMUX(iMUX),
 	fName(iName),
 	fReceiveBufferSize(iReceiveBufferSize),
 	fCancelled(false)
@@ -403,7 +401,7 @@ ZStreamMUX::Listener::~Listener()
 
 void ZStreamMUX::Listener::Finalize()
 	{
-	if (ZUsedPtr_T<ZStreamMUX> theMUX = fPUC_MUX)
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		{
 		theMUX->Listener_Finalize(this);
 		return;
@@ -415,7 +413,7 @@ void ZStreamMUX::Listener::Finalize()
 
 ZRef<ZStreamerRWCon> ZStreamMUX::Listener::MakeStreamerRWCon()
 	{
-	if (ZUsedPtr_T<ZStreamMUX> theMUX = fPUC_MUX)
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		return theMUX->Listener_Listen(this);
 	else
 		return ZRef<ZStreamerRWCon>();
@@ -423,7 +421,7 @@ ZRef<ZStreamerRWCon> ZStreamMUX::Listener::MakeStreamerRWCon()
 
 void ZStreamMUX::Listener::Cancel()
 	{
-	if (ZUsedPtr_T<ZStreamMUX> theMUX = fPUC_MUX)
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		theMUX->Listener_Cancel(this);
 	}
 
@@ -471,45 +469,46 @@ ZStreamMUX::~ZStreamMUX()
 	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 		s.Writef("~ZStreamMUX, this: %08X", this);
 
-	// Ensure that Run has returned.
-	this->Stop();
+	ZAssert(fMap_IDToEndpoint.empty());
+	ZAssert(fMap_NameToListener.empty());
 
 	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
-		s.Writef("~ZStreamMUX, this: %08X, Stop returned", this);
+		s.Writef("~ZStreamMUX, this: %08X, Exiting", this);
+	}
 
-	ZAssert(fMap_IDToEndpoint.empty());
-
-	// Disconnect any listeners.
+void ZStreamMUX::Finalize()
+	{
 	ZMutexLocker locker(fMutex);
+	if (this->GetRefCount() != 1)
+		{
+		this->FinalizationComplete();
+		return;
+		}
 
-	vector<ZRef<Listener> > localListeners;
+	ZWeakReferee::pDetachProxy();
+
 	for (map<string, Listener*>::iterator i = fMap_NameToListener.begin();
 		i != fMap_NameToListener.end(); ++i)
 		{
 		Listener* theListener = i->second;
 		theListener->fCancelled = true;
 		theListener->fCondition.Broadcast();
-		localListeners.push_back(theListener);
 		}
+	fMap_NameToListener.clear();
 
+	this->Stop();
+	this->WaitTillDetached();
+
+	fMap_IDToEndpoint.clear();
+
+	if (this->GetRefCount() != 1)
+		{
+		this->FinalizationComplete();
+		return;
+		}
+	this->FinalizationComplete();
 	locker.Release();
-
-	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
-		s.Writef("~ZStreamMUX, this: %08X, Listeners terminated", this);
-
-	for (vector<ZRef<Listener> >::iterator i = localListeners.begin();
-		i != localListeners.end(); ++i)
-		{ (*i)->fPUC_MUX.Clear(); }
-
-	locker.Acquire();
-
-	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
-		s.Writef("~ZStreamMUX, this: %08X, Exiting", this);
-	}
-
-void ZStreamMUX::Wake()
-	{
-	this->WakeAt(ZTime::sSystem());
+	delete this;
 	}
 
 bool ZStreamMUX::Read(const ZStreamR& iStreamR)
@@ -618,7 +617,7 @@ bool ZStreamMUX::Write(const ZStreamW& iStreamW)
 
 	if (fLifecycle == eLifecycle_StreamsDead || eLifecycle_ReadDead)
 		{
-		vector<ZRef<Endpoint> > localEPs;
+//		vector<ZRef<Endpoint> > localEPs;
 		for (map<uint32, Endpoint*>::iterator i = fMap_IDToEndpoint.begin();
 			i != fMap_IDToEndpoint.end(); ++i)
 			{
@@ -633,16 +632,16 @@ bool ZStreamMUX::Write(const ZStreamW& iStreamW)
 				theEP->fListener->fEndpoints_Pending.Remove(theEP);
 				theEP->fListener = nullptr;
 				}
-			localEPs.push_back(theEP);
+//			localEPs.push_back(theEP);
 			}
 		fMap_IDToEndpoint.clear();
 
 		locker.Release();
 
 		// Clear their references to us.
-		for (vector<ZRef<Endpoint> >::iterator i = localEPs.begin();
-			i != localEPs.end(); ++i)
-			{ (*i)->fPUC_MUX.Clear(); }
+//		for (vector<ZRef<Endpoint> >::iterator i = localEPs.begin();
+//			i != localEPs.end(); ++i)
+//			{ (*i)->fPUC_MUX.Clear(); }
 
 		locker.Acquire();
 		}

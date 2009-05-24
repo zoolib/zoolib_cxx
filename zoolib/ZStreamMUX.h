@@ -22,11 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStreamMUX__ 1
 
 #include "zconfig.h"
+#include "zoolib/ZCommer.h"
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZDList.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
+#include "zoolib/ZWeakRef.h"
 
 #include <deque>
 #include <map>
@@ -39,6 +41,9 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZStreamMUX
 
 class ZStreamMUX
+:	public ZCommer,
+	public ZRefCountedWithFinalize,
+	public ZWeakReferee
 	{
 public:
 	class Options;
@@ -47,11 +52,12 @@ public:
 	ZStreamMUX(const Options& iOptions);
 	~ZStreamMUX();
 
-	void Wake();
-	virtual void WakeAt(ZTime iSystemTime) = 0;
+// From ZRefCountedWithFinalize
+	virtual void Finalize();
 
-	bool Read(const ZStreamR& iStreamR);
-	bool Write(const ZStreamW& iStreamW);
+// From ZCommer
+	virtual bool Read(const ZStreamR& iStreamR);
+	virtual bool Write(const ZStreamW& iStreamW);
 
 	void Stop();
 
