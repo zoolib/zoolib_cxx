@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZThreadImp.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -47,25 +48,25 @@ int ZRefCounted::GetRefCount() const
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRefCountedWithFinalization
+#pragma mark * ZRefCountedWithFinalizeBase
 
-ZRefCountedWithFinalization::ZRefCountedWithFinalization()
+ZRefCountedWithFinalizeBase::ZRefCountedWithFinalizeBase()
 :	fRefCount(0)
 	{}
 
-ZRefCountedWithFinalization::~ZRefCountedWithFinalization()
+ZRefCountedWithFinalizeBase::~ZRefCountedWithFinalizeBase()
 	{
 	ZAssertStopf(1, 0 == ZThreadSafe_Get(fRefCount),
 		("Non-zero refcount at destruction, it is %d", ZThreadSafe_Get(fRefCount)));
 	}
 
-void ZRefCountedWithFinalization::Initialize()
+void ZRefCountedWithFinalizeBase::Initialize()
 	{
 	ZAssertStopf(1, 1 == ZThreadSafe_Get(fRefCount),
 		("Refcount is not 1, it is %d", ZThreadSafe_Get(fRefCount)));
 	}
 
-void ZRefCountedWithFinalization::Finalize()
+void ZRefCountedWithFinalizeBase::Finalize()
 	{
 	ZAssertStopf(1, 1 == ZThreadSafe_Get(fRefCount),
 		("Refcount is not 1, it is %d", ZThreadSafe_Get(fRefCount)));
@@ -73,18 +74,18 @@ void ZRefCountedWithFinalization::Finalize()
 	delete this;
 	}
 
-void ZRefCountedWithFinalization::FinalizationComplete()
+void ZRefCountedWithFinalizeBase::FinalizationComplete()
 	{
 	ZThreadSafe_Dec(fRefCount);
 	}
 
-void ZRefCountedWithFinalization::Retain()
+void ZRefCountedWithFinalizeBase::Retain()
 	{
 	if (0 == ZThreadSafe_IncReturnOld(fRefCount))
 		this->Initialize();
 	}
 
-void ZRefCountedWithFinalization::Release()
+void ZRefCountedWithFinalizeBase::Release()
 	{
 	for (;;)
 		{
@@ -102,10 +103,10 @@ void ZRefCountedWithFinalization::Release()
 		}
 	}
 
-int ZRefCountedWithFinalization::GetRefCount() const
+int ZRefCountedWithFinalizeBase::GetRefCount() const
 	{ return ZThreadSafe_Get(fRefCount); }
 
-int ZRefCountedWithFinalization::pCOMAddRef()
+int ZRefCountedWithFinalizeBase::pCOMAddRef()
 	{
 	int newCount = ZThreadSafe_IncReturnNew(fRefCount);
 	if (newCount == 1)
@@ -113,7 +114,7 @@ int ZRefCountedWithFinalization::pCOMAddRef()
 	return newCount;
 	}
 
-int ZRefCountedWithFinalization::pCOMRelease()
+int ZRefCountedWithFinalizeBase::pCOMRelease()
 	{
 	for (;;)
 		{
@@ -132,5 +133,15 @@ int ZRefCountedWithFinalization::pCOMRelease()
 			}
 		}
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWeakBase
+
+ZRefCountedWithFinalize::ZRefCountedWithFinalize()
+	{}
+
+ZRefCountedWithFinalize::~ZRefCountedWithFinalize()
+	{}
 
 NAMESPACE_ZOOLIB_END

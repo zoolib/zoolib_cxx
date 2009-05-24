@@ -53,13 +53,13 @@ inline void sRelease(ZRefCounted& iObject)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRefCountedWithFinalization
+#pragma mark * ZRefCountedWithFinalize
 
-class ZRefCountedWithFinalization
+class ZRefCountedWithFinalizeBase
 	{
 public:
-	ZRefCountedWithFinalization();
-	virtual ~ZRefCountedWithFinalization();
+	ZRefCountedWithFinalizeBase();
+	virtual ~ZRefCountedWithFinalizeBase();
 
 	virtual void Initialize();
 	virtual void Finalize();
@@ -75,14 +75,27 @@ protected:
 	int pCOMRelease();
 
 private:
-	ZThreadSafe_t fRefCount;
+	ZAtomic_t fRefCount;
 	};
 
-inline void sRetain(ZRefCountedWithFinalization& iObject)
+inline void sRetain(ZRefCountedWithFinalizeBase& iObject)
 	{ iObject.Retain(); }
 
-inline void sRelease(ZRefCountedWithFinalization& iObject)
+inline void sRelease(ZRefCountedWithFinalizeBase& iObject)
 	{ iObject.Release(); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZRefCountedWithFinalize
+
+class ZRefCountedWithFinalize : public virtual ZRefCountedWithFinalizeBase
+	{
+public:
+	ZRefCountedWithFinalize();
+	virtual ~ZRefCountedWithFinalize();
+	};
+
+typedef ZRefCountedWithFinalize ZRefCountedWithFinalization;
 
 NAMESPACE_ZOOLIB_END
 
