@@ -99,7 +99,7 @@ public:
 	ZTValue(const std::string& iVal);
 //##	ZTValue(const ZTName& iVal);
 	ZTValue(const ZTuple& iVal);
-	ZTValue(const ZRef<ZRefCountedWithFinalization>& iVal);
+	ZTValue(const ZRef<ZRefCountedWithFinalize>& iVal);
 	ZTValue(const ZMemoryBlock& iVal);
 	ZTValue(const void* iSource, size_t iSize);
 	ZTValue(const ZStreamR& iStreamR, size_t iSize);
@@ -205,8 +205,8 @@ public:
 	bool GetTuple(ZTuple& oVal) const;
 	const ZTuple& GetTuple() const;
 
-	bool GetRefCounted(ZRef<ZRefCountedWithFinalization>& oVal) const;
-	ZRef<ZRefCountedWithFinalization> GetRefCounted() const;
+	bool GetRefCounted(ZRef<ZRefCountedWithFinalize>& oVal) const;
+	ZRef<ZRefCountedWithFinalize> GetRefCounted() const;
 
 	bool GetRaw(ZMemoryBlock& oVal) const;
 	ZMemoryBlock GetRaw() const;
@@ -272,7 +272,7 @@ public:
 //##	void SetName(const std::string& iVal);
 //##	void SetName(const ZTName& iVal);
 	void SetTuple(const ZTuple& iVal);
-	void SetRefCounted(const ZRef<ZRefCountedWithFinalization>& iVal);
+	void SetRefCounted(const ZRef<ZRefCountedWithFinalize>& iVal);
 	void SetRaw(const ZMemoryBlock& iVal);
 	void SetRaw(const void* iSource, size_t iSize);
 	void SetRaw(const ZStreamR& iStreamR, size_t iSize);
@@ -868,13 +868,13 @@ public:
 	const ZTuple& GetTuple(const ZTName& iPropName) const;
 
 
-	bool GetRefCounted(const_iterator iPropIter, ZRef<ZRefCountedWithFinalization>& oVal) const;
-	bool GetRefCounted(const char* iPropName, ZRef<ZRefCountedWithFinalization>& oVal) const;
-	bool GetRefCounted(const ZTName& iPropName, ZRef<ZRefCountedWithFinalization>& oVal) const;
+	bool GetRefCounted(const_iterator iPropIter, ZRef<ZRefCountedWithFinalize>& oVal) const;
+	bool GetRefCounted(const char* iPropName, ZRef<ZRefCountedWithFinalize>& oVal) const;
+	bool GetRefCounted(const ZTName& iPropName, ZRef<ZRefCountedWithFinalize>& oVal) const;
 
-	ZRef<ZRefCountedWithFinalization> GetRefCounted(const_iterator iPropIter) const;
-	ZRef<ZRefCountedWithFinalization> GetRefCounted(const char* iPropName) const;
-	ZRef<ZRefCountedWithFinalization> GetRefCounted(const ZTName& iPropName) const;
+	ZRef<ZRefCountedWithFinalize> GetRefCounted(const_iterator iPropIter) const;
+	ZRef<ZRefCountedWithFinalize> GetRefCounted(const char* iPropName) const;
+	ZRef<ZRefCountedWithFinalize> GetRefCounted(const ZTName& iPropName) const;
 
 
 	bool GetRaw(const_iterator iPropIter, ZMemoryBlock& oVal) const;
@@ -1114,10 +1114,10 @@ public:
 	ZTuple& SetTuple(const char* iPropName, const ZTuple& iVal);
 	ZTuple& SetTuple(const ZTName& iPropName, const ZTuple& iVal);
 
-	bool SetRefCounted(const_iterator iPropIter, const ZRef<ZRefCountedWithFinalization>& iVal);
-	ZTuple& SetRefCounted(const char* iPropName, const ZRef<ZRefCountedWithFinalization>& iVal);
+	bool SetRefCounted(const_iterator iPropIter, const ZRef<ZRefCountedWithFinalize>& iVal);
+	ZTuple& SetRefCounted(const char* iPropName, const ZRef<ZRefCountedWithFinalize>& iVal);
 	ZTuple& SetRefCounted(const ZTName& iPropName,
-		const ZRef<ZRefCountedWithFinalization>& iVal);
+		const ZRef<ZRefCountedWithFinalize>& iVal);
 
 
 	bool SetRaw(const_iterator iPropIter, const ZMemoryBlock& iVal);
@@ -1296,9 +1296,9 @@ public:
 	void AppendTuple(const ZTName& iPropName, const ZTuple& iVal);
 
 
-	void AppendRefCounted(const char* iPropName, const ZRef<ZRefCountedWithFinalization>& iVal);
+	void AppendRefCounted(const char* iPropName, const ZRef<ZRefCountedWithFinalize>& iVal);
 	void AppendRefCounted(const ZTName& iPropName,
-		const ZRef<ZRefCountedWithFinalization>& iVal);
+		const ZRef<ZRefCountedWithFinalize>& iVal);
 
 
 	void AppendRaw(const char* iPropName, const ZMemoryBlock& iVal);

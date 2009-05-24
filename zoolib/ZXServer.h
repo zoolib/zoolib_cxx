@@ -48,7 +48,7 @@ class ZXWindow;
 #pragma mark -
 #pragma mark * ZXServer
 
-class ZXServer : public ZRefCountedWithFinalization
+class ZXServer : public ZRefCountedWithFinalize
 	{
 public:
 	ZXServer(const char* inDisplayName);

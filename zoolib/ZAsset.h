@@ -112,7 +112,7 @@ private:
 
 /// Represents an entire asset tree.
 
-class ZAssetTree : public ZRefCountedWithFinalization, NonCopyable
+class ZAssetTree : public ZRefCountedWithFinalize, NonCopyable
 	{
 protected:
 	ZAssetTree() {}
@@ -128,7 +128,7 @@ public:
 #pragma mark -
 #pragma mark * ZAssetRep
 
-class ZAssetRep : public ZRefCountedWithFinalization, NonCopyable
+class ZAssetRep : public ZRefCountedWithFinalize, NonCopyable
 	{
 protected:
 	ZAssetRep() {}

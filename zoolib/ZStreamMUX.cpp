@@ -157,7 +157,7 @@ public:
 
 	virtual ~Endpoint();
 
-// From ZRefCountedWithFinalization via ZStreamerRWCon
+// From ZRefCountedWithFinalize via ZStreamerRWCon
 	virtual void Finalize();
 
 // From ZStreamerRCon via ZStreamerRWCon
@@ -368,7 +368,7 @@ public:
 	Listener(ZRef<ZStreamMUX> iMUX, const string& iName, size_t iReceiveBufferSize);
 	virtual ~Listener();
 
-// From ZRefCountedWithFinalization via ZStreamerRWConFactory
+// From ZRefCountedWithFinalize via ZStreamerRWConFactory
 	virtual void Finalize();
 
 // From ZStreamerRWConFactory

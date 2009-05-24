@@ -169,10 +169,10 @@ STDMETHODIMP Channel_BBDevMgr::QueryInterface(const IID& iInterfaceID, void** oO
 	}
 
 ULONG STDMETHODCALLTYPE Channel_BBDevMgr::AddRef()
-	{ return ZRefCountedWithFinalization::pCOMAddRef(); }
+	{ return ZRefCountedWithFinalize::pCOMAddRef(); }
 
 ULONG STDMETHODCALLTYPE Channel_BBDevMgr::Release()
-	{ return ZRefCountedWithFinalization::pCOMRelease(); }
+	{ return ZRefCountedWithFinalize::pCOMRelease(); }
 
 STDMETHODIMP Channel_BBDevMgr::CheckClientStatus(uint16 iRHS)
 	{
@@ -688,10 +688,10 @@ STDMETHODIMP Manager_BBDevMgr::QueryInterface(
 	}
 
 ULONG STDMETHODCALLTYPE Manager_BBDevMgr::AddRef()
-	{ return ZRefCountedWithFinalization::pCOMAddRef(); }
+	{ return ZRefCountedWithFinalize::pCOMAddRef(); }
 
 ULONG STDMETHODCALLTYPE Manager_BBDevMgr::Release()
-	{ return ZRefCountedWithFinalization::pCOMRelease(); }
+	{ return ZRefCountedWithFinalize::pCOMRelease(); }
 
 STDMETHODIMP Manager_BBDevMgr::DeviceConnect(IDevice* iDevice)
 	{

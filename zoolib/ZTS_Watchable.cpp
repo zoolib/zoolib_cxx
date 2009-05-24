@@ -162,7 +162,7 @@ class ZTS_Watchable::Watcher : public ZTSWatcher
 public:
 	Watcher(ZRef<ZTS_Watchable> iTS_Watchable);
 
-// From ZRefCountedWithFinalization via ZTSWatcher
+// From ZRefCountedWithFinalize via ZTSWatcher
 	virtual void Finalize();
 
 // From ZTSWatcher

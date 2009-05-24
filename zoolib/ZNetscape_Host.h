@@ -401,7 +401,7 @@ private:
 #pragma mark -
 #pragma mark * GuestFactory
 
-class GuestFactory : public ZRefCountedWithFinalization
+class GuestFactory : public ZRefCountedWithFinalize
 	{
 protected:
 	GuestFactory();

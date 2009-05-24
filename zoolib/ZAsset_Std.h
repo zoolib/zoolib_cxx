@@ -41,7 +41,7 @@ public:
 	ZAssetRep_Std(ZAssetRep_Std_Directory* iParent, const char* iName, size_t iNameLength);
 	virtual ~ZAssetRep_Std();
 
-// From ZRefCountedWithFinalization via ZAssetRep
+// From ZRefCountedWithFinalize via ZAssetRep
 	virtual void Finalize();
 
 // From ZAssetRep

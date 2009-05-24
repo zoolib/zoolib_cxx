@@ -191,7 +191,7 @@ private:
 #pragma mark -
 #pragma mark * ZNodeRep
 
-class ZNodeRep : public ZRefCountedWithFinalization
+class ZNodeRep : public ZRefCountedWithFinalize
 	{
 protected:
 	ZNodeRep();
@@ -239,7 +239,7 @@ public:
 #pragma mark -
 #pragma mark * ZNodeIterRep
 
-class ZNodeIterRep : public ZRefCountedWithFinalization
+class ZNodeIterRep : public ZRefCountedWithFinalize
 	{
 protected:
 	ZNodeIterRep();
@@ -284,7 +284,7 @@ private:
 #pragma mark -
 #pragma mark * ZNodeIterRep_Std::RealRep
 
-class ZNodeIterRep_Std::RealRep : public ZRefCountedWithFinalization
+class ZNodeIterRep_Std::RealRep : public ZRefCountedWithFinalize
 	{
 protected:
 	RealRep() {};

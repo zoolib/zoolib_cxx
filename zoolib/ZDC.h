@@ -269,7 +269,7 @@ Exposing our canvas and state -- DO NOT MISUSE!!! */
 #pragma mark -
 #pragma mark * ZDCCanvas
 
-class ZDCCanvas : public ZRefCountedWithFinalization
+class ZDCCanvas : public ZRefCountedWithFinalize
 	{
 protected:
 	ZDCCanvas();

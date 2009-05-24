@@ -199,7 +199,7 @@ class Channel_Streamer
 public:
 	virtual ~Channel_Streamer();
 
-// From ZRefCountedWithFinalization via ZStreamerRW
+// From ZRefCountedWithFinalize via ZStreamerRW
 	virtual void Finalize();
 
 // From ZBlackBerry::Channel

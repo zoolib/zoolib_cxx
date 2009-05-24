@@ -183,7 +183,7 @@ private:
 #pragma mark -
 #pragma mark * ZDCPixmapRaster
 
-class ZDCPixmapRaster : public ZRefCountedWithFinalization, NonCopyable
+class ZDCPixmapRaster : public ZRefCountedWithFinalize, NonCopyable
 	{
 protected:
 	ZDCPixmapRaster(const ZDCPixmapNS::RasterDesc& iRasterDesc);
@@ -244,7 +244,7 @@ public:
 #pragma mark -
 #pragma mark * ZDCPixmapCache
 
-class ZDCPixmapCache : public ZRefCountedWithFinalization
+class ZDCPixmapCache : public ZRefCountedWithFinalize
 	{
 protected:
 	ZDCPixmapCache();
@@ -259,7 +259,7 @@ public:
 #pragma mark -
 #pragma mark * ZDCPixmapRep
 
-class ZDCPixmapRep : public ZRefCountedWithFinalization, NonCopyable
+class ZDCPixmapRep : public ZRefCountedWithFinalize, NonCopyable
 	{
 protected:
 	ZDCPixmapRep();

@@ -32,7 +32,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZDCGlyphServer
 
-class ZDCGlyphServer : public ZRefCountedWithFinalization
+class ZDCGlyphServer : public ZRefCountedWithFinalize
 	{
 protected:
 	ZDCGlyphServer();

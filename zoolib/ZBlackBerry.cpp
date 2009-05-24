@@ -31,7 +31,7 @@ These are some brief notes to get you started. If anything is unclear, drop me a
 
 The BlackBerry code is all in the namespace ZBlackBerry.
 
-Most entities in this API suite are ultimately derived from ZRefCountedWithFinalization, and thus
+Most entities in this API suite are ultimately derived from ZRefCountedWithFinalize, and thus
 we use refcounted pointers of the form ZRef<XXX> rather than using unadorned XXX*.
 
 There are three entities with which you'll be working: Manager, Device and Channel.

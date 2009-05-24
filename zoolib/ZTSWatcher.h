@@ -38,7 +38,7 @@ class ZMemoryBlock;
 #pragma mark -
 #pragma mark * ZTSWatcher
 
-class ZTSWatcher : public ZRefCountedWithFinalization, NonCopyable
+class ZTSWatcher : public ZRefCountedWithFinalize, NonCopyable
 	{
 protected:
 	ZTSWatcher();
@@ -83,7 +83,7 @@ public:
 #pragma mark -
 #pragma mark * ZTSWatcherFactory
 
-class ZTSWatcherFactory : public ZRefCountedWithFinalization
+class ZTSWatcherFactory : public ZRefCountedWithFinalize
 	{
 protected:
 	ZTSWatcherFactory();

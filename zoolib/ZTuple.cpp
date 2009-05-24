@@ -619,7 +619,7 @@ void ZTValue::FromStreamOld(const ZStreamR& iStreamR)
 		case eZType_RefCounted:
 			{
 			// Construct a nil refcounted.
-			sConstruct_T<ZRef<ZRefCountedWithFinalization> >(fType.fBytes);
+			sConstruct_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes);
 			break;
 			}
 		case eZType_Raw:
@@ -782,7 +782,7 @@ ZTValue::ZTValue(const ZTuple& iVal)
 	sConstruct_T(fType.fBytes, iVal);
 	}
 
-ZTValue::ZTValue(const ZRef<ZRefCountedWithFinalization>& iVal)
+ZTValue::ZTValue(const ZRef<ZRefCountedWithFinalize>& iVal)
 	{
 	fType.fType = eZType_RefCounted;
 	sConstruct_T(fType.fBytes, iVal);
@@ -1232,21 +1232,21 @@ const ZTuple& ZTValue::GetTuple() const
 	return sNilTuple;
 	}
 
-bool ZTValue::GetRefCounted(ZRef<ZRefCountedWithFinalization>& oVal) const
+bool ZTValue::GetRefCounted(ZRef<ZRefCountedWithFinalize>& oVal) const
 	{
 	if (fType.fType == eZType_RefCounted)
 		{
-		oVal = *sFetch_T<ZRef<ZRefCountedWithFinalization> >(fType.fBytes);
+		oVal = *sFetch_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes);
 		return true;
 		}
 	return false;
 	}
 
-ZRef<ZRefCountedWithFinalization> ZTValue::GetRefCounted() const
+ZRef<ZRefCountedWithFinalize> ZTValue::GetRefCounted() const
 	{
 	if (fType.fType == eZType_RefCounted)
-		return *sFetch_T<ZRef<ZRefCountedWithFinalization> >(fType.fBytes);
-	return ZRef<ZRefCountedWithFinalization>();
+		return *sFetch_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes);
+	return ZRef<ZRefCountedWithFinalize>();
 	}
 
 bool ZTValue::GetRaw(ZMemoryBlock& oVal) const
@@ -1587,7 +1587,7 @@ void ZTValue::SetTuple(const ZTuple& iVal)
 	sConstruct_T(fType.fBytes, iVal);
 	}
 
-void ZTValue::SetRefCounted(const ZRef<ZRefCountedWithFinalization>& iVal)
+void ZTValue::SetRefCounted(const ZRef<ZRefCountedWithFinalize>& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_RefCounted;
@@ -1811,11 +1811,11 @@ int ZTValue::pUncheckedCompare(const ZTValue& iOther) const
 			}
 		case eZType_RefCounted:
 			{
-			const ZRef<ZRefCountedWithFinalization>* thisZRef
-				= sFetch_T<ZRef<ZRefCountedWithFinalization> >(fType.fBytes);
+			const ZRef<ZRefCountedWithFinalize>* thisZRef
+				= sFetch_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes);
 
-			const ZRef<ZRefCountedWithFinalization>* otherZRef
-				= sFetch_T<ZRef<ZRefCountedWithFinalization> >(iOther.fType.fBytes);
+			const ZRef<ZRefCountedWithFinalize>* otherZRef
+				= sFetch_T<ZRef<ZRefCountedWithFinalize> >(iOther.fType.fBytes);
 			
 			if (*thisZRef < *otherZRef)
 				return -1;
@@ -1894,8 +1894,8 @@ bool ZTValue::pUncheckedLess(const ZTValue& iOther) const
 			}
 		case eZType_RefCounted:
 			{
-			return *sFetch_T<ZRef<ZRefCountedWithFinalization> >(fType.fBytes)
-				< *sFetch_T<ZRef<ZRefCountedWithFinalization> >(iOther.fType.fBytes);
+			return *sFetch_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes)
+				< *sFetch_T<ZRef<ZRefCountedWithFinalize> >(iOther.fType.fBytes);
 			}
 		case eZType_Raw:
 			{
@@ -1972,8 +1972,8 @@ bool ZTValue::pUncheckedEqual(const ZTValue& iOther) const
 			}
 		case eZType_RefCounted:
 			{
-			return *sFetch_T<ZRef<ZRefCountedWithFinalization> >(fType.fBytes)
-				== *sFetch_T<ZRef<ZRefCountedWithFinalization> >(iOther.fType.fBytes);
+			return *sFetch_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes)
+				== *sFetch_T<ZRef<ZRefCountedWithFinalize> >(iOther.fType.fBytes);
 			}
 		case eZType_Raw:
 			{
@@ -2033,7 +2033,7 @@ void ZTValue::pRelease()
 		case eZType_Tuple: sDestroy_T<ZTuple>(fType.fBytes); break;
 		case eZType_RefCounted:
 			{
-			sDestroy_T<ZRef<ZRefCountedWithFinalization> >(fType.fBytes);
+			sDestroy_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes);
 			break;
 			}
 		case eZType_Raw: sDestroy_T<ZMemoryBlock>(fType.fBytes); break;
@@ -2111,7 +2111,7 @@ void ZTValue::pCopy(const ZTValue& iOther)
 				sCopyConstruct_T<ZTuple>(iOther.fType.fBytes, fType.fBytes);
 				break;
 			case eZType_RefCounted:
-				sCopyConstruct_T<ZRef<ZRefCountedWithFinalization> >
+				sCopyConstruct_T<ZRef<ZRefCountedWithFinalize> >
 					(iOther.fType.fBytes, fType.fBytes);				
 				break;
 			case eZType_Raw:
@@ -2257,7 +2257,7 @@ void ZTValue::pFromStream(ZType iType, const ZStreamR& iStreamR)
 		case eZType_RefCounted:
 			{
 			// Construct a nil refcounted.
-			sConstruct_T<ZRef<ZRefCountedWithFinalization> >(fType.fBytes);
+			sConstruct_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes);
 			break;
 			}
 		case eZType_Raw:
@@ -3606,7 +3606,7 @@ ZTupleGetRet(Rect, ZRectPOD, const ZRectPOD&)
 ZTupleGetRet(Point, ZPointPOD, const ZPointPOD&)
 ZTupleGet(String, string)
 //##ZTupleGet(Name, ZTName)
-ZTupleGet(RefCounted, ZRef<ZRefCountedWithFinalization>)
+ZTupleGet(RefCounted, ZRef<ZRefCountedWithFinalize>)
 ZTupleGet(Raw, ZMemoryBlock)
 
 #undef ZTupleGet
@@ -3699,7 +3699,7 @@ ZTupleSet(String, const char*)
 ZTupleSet(String, const string&)
 //##ZTupleSet(Name, const ZTName&)
 ZTupleSet(Tuple, const ZTuple&)
-ZTupleSet(RefCounted, const ZRef<ZRefCountedWithFinalization>&)
+ZTupleSet(RefCounted, const ZRef<ZRefCountedWithFinalize>&)
 ZTupleSet(Raw, const ZMemoryBlock&)
 ZTupleSet(Vector, const vector<ZTValue>&)
 
@@ -3749,7 +3749,7 @@ ZTupleAppend(String, const char*)
 ZTupleAppend(String, const string&)
 //##ZTupleAppend(Name, const ZTName&)
 ZTupleAppend(Tuple, const ZTuple&)
-ZTupleAppend(RefCounted, const ZRef<ZRefCountedWithFinalization>&)
+ZTupleAppend(RefCounted, const ZRef<ZRefCountedWithFinalize>&)
 ZTupleAppend(Raw, const ZMemoryBlock&)
 
 #undef ZTupleAppend

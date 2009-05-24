@@ -78,7 +78,7 @@ protected:
 
 // Do we even need this? And it should not return a SleeperRunner
 
-class ZSleeperRunnerFactory : public ZRefCountedWithFinalization
+class ZSleeperRunnerFactory : public ZRefCountedWithFinalize
 	{
 public:
 	virtual void MakeRunner(ZSleeper* iSleeper) = 0;

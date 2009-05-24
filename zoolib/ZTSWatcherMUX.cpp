@@ -201,7 +201,7 @@ private:
 	Watcher(ZRef<ZTSWatcherMUX> iMUX, bool iAlwaysForceSync);
 	virtual ~Watcher();
 
-// From ZRefCountedWithFinalization via ZTSWatcher
+// From ZRefCountedWithFinalize via ZTSWatcher
 	virtual void Finalize();
 
 // From ZTSWatcher

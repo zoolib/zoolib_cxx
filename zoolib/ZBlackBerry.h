@@ -44,7 +44,7 @@ class Channel;
 #pragma mark -
 #pragma mark * ZBlackBerry::Manager
 
-class Manager : public ZRefCountedWithFinalization
+class Manager : public ZRefCountedWithFinalize
 	{
 protected:
 	Manager();
@@ -52,7 +52,7 @@ protected:
 public:
 	virtual ~Manager();
 
-// From ZRefCountedWithFinalization
+// From ZRefCountedWithFinalize
 	virtual void Initialize();
 	virtual void Finalize();
 
@@ -89,7 +89,7 @@ private:
 #pragma mark -
 #pragma mark * ZBlackBerry::Device
 
-class Device : public ZRefCountedWithFinalization
+class Device : public ZRefCountedWithFinalize
 	{
 protected:
 	Device();
@@ -97,7 +97,7 @@ protected:
 public:
 	virtual ~Device();
 
-// From ZRefCountedWithFinalization
+// From ZRefCountedWithFinalize
 	virtual void Initialize();
 	virtual void Finalize();
 

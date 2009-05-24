@@ -222,7 +222,7 @@ private:
 #pragma mark -
 #pragma mark * ZFileLoc
 
-class ZFileLoc : public ZRefCountedWithFinalization
+class ZFileLoc : public ZRefCountedWithFinalize
 	{
 protected:
 	ZFileLoc();
@@ -276,7 +276,7 @@ public:
 #pragma mark -
 #pragma mark * ZFileIterRep
 
-class ZFileIterRep : public ZRefCountedWithFinalization
+class ZFileIterRep : public ZRefCountedWithFinalize
 	{
 protected:
 	ZFileIterRep();
@@ -321,7 +321,7 @@ private:
 #pragma mark -
 #pragma mark * ZFileIterRep_Std::RealRep
 
-class ZFileIterRep_Std::RealRep : public ZRefCountedWithFinalization
+class ZFileIterRep_Std::RealRep : public ZRefCountedWithFinalize
 	{
 protected:
 	RealRep() {};

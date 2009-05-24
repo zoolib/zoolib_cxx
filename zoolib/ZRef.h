@@ -82,7 +82,7 @@ public:
 	ZRef& operator=(P iP)
 		{
 		// Important to do the retain after we've set fP,
-		// so that ZRefCountedWithFinalization's Initialize is
+		// so that ZRefCountedWithFinalize's Initialize is
 		// called *after* we've taken the reference to it.
 		std::swap(iP, fP);
 		spRetain(fP);
@@ -232,7 +232,7 @@ public:
 	ZRef& operator=(T* iP)
 		{
 		// Important to do the retain after we've set fP,
-		// so that ZRefCountedWithFinalization's Initialize is
+		// so that ZRefCountedWithFinalize's Initialize is
 		// called *after* we've taken the reference to it.
 		std::swap(iP, fP);
 		spRetain(fP);
