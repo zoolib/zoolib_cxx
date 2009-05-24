@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZBlackBerry.h"
 #include "zoolib/ZCommer.h"
 #include "zoolib/ZMemoryBlock.h"
+#include "zoolib/ZWeakRef.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -36,7 +37,10 @@ namespace ZBlackBerry {
 
 class Channel_Streamer;
 
-class Device_Streamer : public Device, public ZCommer
+class Device_Streamer
+:	public Device,
+	public ZCommer,
+	public ZWeakReferee
 	{
 	friend class Channel_Streamer;
 

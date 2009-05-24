@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h" // For ZBlockCopy
-#include "zoolib/ZPtrUseCounted.h"
 #include "zoolib/ZStream_Limited.h"
 #include "zoolib/ZStream_SHA1.h"
 #include "zoolib/ZThreadSimple.h"
@@ -193,7 +192,7 @@ class Channel_Streamer
 	private ZStreamWCon
 	{
 	friend class Device_Streamer;
-	Channel_Streamer(Device_Streamer* iDevice_Streamer,
+	Channel_Streamer(ZRef<Device_Streamer> iDevice_Streamer,
 		bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash);
 
 public:
@@ -230,7 +229,7 @@ public:
 	virtual void Imp_Abort();
 
 private:
-	ZPtrUseCounted_T<Device_Streamer> fPUC_Device_Streamer;
+	ZWeakRef<Device_Streamer> fDevice_Streamer;
 	EState fState;
 	Device::Error fError;
 	bool fPreserveBoundaries;
@@ -252,9 +251,9 @@ private:
 	size_t fSend_Size;
 	};
 
-Channel_Streamer::Channel_Streamer(Device_Streamer* iDevice_Streamer,
+Channel_Streamer::Channel_Streamer(ZRef<Device_Streamer> iDevice_Streamer,
 	bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash)
-:	fPUC_Device_Streamer(iDevice_Streamer),
+:	fDevice_Streamer(iDevice_Streamer),
 	fState(eState_Dead),
 	fError(Device::error_None),
 	fPreserveBoundaries(iPreserveBoundaries),
@@ -283,7 +282,7 @@ void Channel_Streamer::Finalize()
 	bool hasDevice_Streamer = false;
 	bool needsDelete = false;
 
-	if (ZUsedPtr_T<Device_Streamer> theDevice_Streamer = fPUC_Device_Streamer)
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		{
 		hasDevice_Streamer = true;
 		// Channel_Finalize calls our FinalizationComplete, we don't do it here.
@@ -324,7 +323,7 @@ const ZStreamWCon& Channel_Streamer::GetStreamWCon()
 
 void Channel_Streamer::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	if (ZUsedPtr_T<Device_Streamer> theDevice_Streamer = fPUC_Device_Streamer)
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		{
 		theDevice_Streamer->Channel_Read(this, iDest, iCount, oCountRead);
 		return;
@@ -336,7 +335,7 @@ void Channel_Streamer::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 
 size_t Channel_Streamer::Imp_CountReadable()
 	{
-	if (ZUsedPtr_T<Device_Streamer> theDevice_Streamer = fPUC_Device_Streamer)
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		return theDevice_Streamer->Channel_CountReadable(this);
 
 	return 0;
@@ -344,7 +343,7 @@ size_t Channel_Streamer::Imp_CountReadable()
 
 bool Channel_Streamer::Imp_WaitReadable(int iMilliseconds)
 	{
-	if (ZUsedPtr_T<Device_Streamer> theDevice_Streamer = fPUC_Device_Streamer)
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		return theDevice_Streamer->Channel_WaitReadable(this, iMilliseconds);
 
 	return true;
@@ -352,7 +351,7 @@ bool Channel_Streamer::Imp_WaitReadable(int iMilliseconds)
 
 bool Channel_Streamer::Imp_ReceiveDisconnect(int iMilliseconds)
 	{
-	if (ZUsedPtr_T<Device_Streamer> theDevice_Streamer = fPUC_Device_Streamer)
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		return theDevice_Streamer->Channel_ReceiveDisconnect(this, iMilliseconds);
 
 	return true;
@@ -360,7 +359,7 @@ bool Channel_Streamer::Imp_ReceiveDisconnect(int iMilliseconds)
 
 void Channel_Streamer::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	if (ZUsedPtr_T<Device_Streamer> theDevice_Streamer = fPUC_Device_Streamer)
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		{
 		theDevice_Streamer->Channel_Write(this, iSource, iCount, oCountWritten);
 		return;
@@ -372,13 +371,13 @@ void Channel_Streamer::Imp_Write(const void* iSource, size_t iCount, size_t* oCo
 
 void Channel_Streamer::Imp_SendDisconnect()
 	{
-	if (ZUsedPtr_T<Device_Streamer> theDevice_Streamer = fPUC_Device_Streamer)
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		theDevice_Streamer->Channel_SendDisconnect(this);
 	}
 
 void Channel_Streamer::Imp_Abort()
 	{
-	if (ZUsedPtr_T<Device_Streamer> theDevice_Streamer = fPUC_Device_Streamer)
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		theDevice_Streamer->Channel_Abort(this);
 	}
 
@@ -653,7 +652,7 @@ bool Device_Streamer::Write(const ZStreamW& iStreamW)
 		// Clear their references to us.
 		for (vector<ZRef<Channel_Streamer> >::iterator i = localChannels.begin();
 			i != localChannels.end(); ++i)
-			{ (*i)->fPUC_Device_Streamer.Clear(); }
+			{ (*i)->fDevice_Streamer.Clear(); }
 
 		locker.Acquire();
 		}
