@@ -194,9 +194,10 @@ NPError HostMeister_Std::GetURLNotify(NPP npp,
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		{
-		s << "GetURLNotify: " << URL;
+		s << "GetURLNotify, iRelativeURL: " << URL;
 		if (window)
-			s << " target: " << window;
+			s << ", target: " << window;
+		s.Writef(", notifyData: %08X", notifyData);
 		}
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
@@ -213,7 +214,8 @@ NPError HostMeister_Std::PostURLNotify(NPP npp,
 		{
 		s << "PostURLNotify: " << URL;
 		if (window)
-			s << " target: " << window;
+			s << ", target: " << window;
+		s.Writef(", notifyData: %08X", notifyData);
 		}
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
@@ -693,7 +695,9 @@ bool Host_Std::Sender::DeliverData()
 		return true;
 
 	if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
-		s << "DeliverData, Calling Guest_URLNotify";
+		{
+		s << "DeliverData, Calling Guest_URLNotify on " << fURL;
+		}
 
 	fHost->Guest_URLNotify(fURL.c_str(), NPRES_DONE, fNotifyData);
 
@@ -752,7 +756,10 @@ bool Host_Std::Sender::pDeliverData()
 			int countWritten = fHost->Guest_Write(&fNPStream, 0, countRead - start, &buffer[start]);
 
 			if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
-				s.Writef("countWritten = %d", countWritten);
+				{
+				s.Writef("countWritten = %d, to ", countWritten);
+				s << fURL;
+				}
 
 			if (countWritten < 0)
 				return false;
@@ -833,15 +840,54 @@ void* Host_Std::Host_GetJavaPeer(NPP npp)
 NPError Host_Std::Host_GetURLNotify(NPP npp,
 	const char* URL, const char* window, void* notifyData)
 	{
-	if (URL == strstr(URL, "http:"))
+	string finalURL = URL;
+	string theScheme;
+	string theHost;
+	ip_port thePort = 80;
+	string thePath;
+	if (!ZHTTP::sParseURL(finalURL, &theScheme, &theHost, &thePort, &thePath))
+		return NPERR_INVALID_URL;
+
+	if (theScheme.empty())
 		{
-		HTTPer* theG = new HTTPer(this, URL, nullptr, notifyData);
+		string baseScheme;
+		string baseHost;
+		ip_port basePort = 80;
+		string basePath;
+		if (ZHTTP::sParseURL(fURL, &baseScheme, &baseHost, &basePort, &basePath))
+			{
+			finalURL = baseScheme + "://" + baseHost + ZString::sFormat(":%d", basePort);
+			if (thePath.substr(0, 1) == "/")
+				{
+				finalURL += thePath;
+				}
+			else
+				{
+				ZTrail baseDir = ZTrail(basePath).Branch();
+				ZTrail result = baseDir + ZTrail(thePath);
+				result.Normalize();
+				if (result.Count() && result.At(0).empty())
+					{
+					// We've got leading bounces.
+					return NPERR_INVALID_URL;
+					}					
+				finalURL += "/" + result.AsString();
+				}
+			}
+		}
+
+	if (finalURL.substr(0, 5) == "http:")
+		{
+		HTTPer* theG = new HTTPer(this, finalURL, nullptr, notifyData);
 
 		ZMutexLocker locker(fMutex);
 		fHTTPers.push_back(theG);
 		theG->Start();
 		return NPERR_NO_ERROR;
 		}
+
+	if (ZLOG(s, eDebug, "Host_Std"))
+		s << "Host_GetURLNotify, invalid URL";
 
 	return NPERR_INVALID_URL;
 	}
