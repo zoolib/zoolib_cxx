@@ -1345,7 +1345,13 @@ bool ZHTTP::sParseURL(const string& iURL,
 	size_t start = 0;
 	const char schemeDivider[] = "://";
 	const size_t dividerOffset = iURL.find(schemeDivider);
-	if (string::npos != dividerOffset)
+	if (string::npos == dividerOffset)
+		{
+		if (oPath)
+			*oPath = iURL;
+		return true;
+		}
+	else
 		{
 		start = dividerOffset + strlen(schemeDivider);
 		if (ioScheme)
