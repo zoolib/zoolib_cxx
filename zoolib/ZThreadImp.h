@@ -39,7 +39,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 	typedef ZMtx_pthread ZMtx;
 	typedef ZCnd_pthread ZCnd;
-	typedef ZSemNoTimeout_pthread ZSemNotimeout;
+	typedef ZSemNoTimeout_pthread ZSemNoTimeout;
 	typedef ZSem_pthread ZSem;
 
 #elif ZCONFIG_API_Enabled(ThreadImp_MacMP)
