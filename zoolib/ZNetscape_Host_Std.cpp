@@ -581,7 +581,7 @@ void Host_Std::HTTPer::pRun()
 		ZRef<ZStreamerR> theStreamerR;
 		if (fIsPOST)
 			{
-			theStreamerR = ZHTTP::sPost(
+			theStreamerR = ZHTTP::sPostRaw(
 				theURL, ZStreamRWPos_MemoryBlock(fMB), nullptr, &theHeaders, &theRawHeaders);
 			}
 		else
@@ -837,48 +837,57 @@ void* Host_Std::Host_GetJavaPeer(NPP npp)
 	return nullptr;
 	}
 
-NPError Host_Std::Host_GetURLNotify(NPP npp,
-	const char* URL, const char* window, void* notifyData)
+static string sFixURL(const string& iBaseURL, const string& iRelativeURL)
 	{
-	string finalURL = URL;
-	string theScheme;
-	string theHost;
-	ip_port thePort = 80;
-	string thePath;
-	if (!ZHTTP::sParseURL(finalURL, &theScheme, &theHost, &thePort, &thePath))
-		return NPERR_INVALID_URL;
+	string relScheme;
+	string relHost;
+	ip_port relPort = 80;
+	string relPath;
+	if (!ZHTTP::sParseURL(iRelativeURL, &relScheme, &relHost, &relPort, &relPath))
+		return string();
 
-	if (theScheme.empty())
+	if (!relScheme.empty())
+		{
+		return iRelativeURL;
+		}
+	else
 		{
 		string baseScheme;
 		string baseHost;
-		ip_port basePort = 80;
+		ip_port basePort = relPort;
 		string basePath;
-		if (ZHTTP::sParseURL(fURL, &baseScheme, &baseHost, &basePort, &basePath))
+		if (!ZHTTP::sParseURL(iBaseURL, &baseScheme, &baseHost, &basePort, &basePath))
+			return string();
+
+		const string resultURL = baseScheme + "://" + baseHost + ZString::sFormat(":%d", basePort);
+		if (relPath.substr(0, 1) == "/")
 			{
-			finalURL = baseScheme + "://" + baseHost + ZString::sFormat(":%d", basePort);
-			if (thePath.substr(0, 1) == "/")
+			return resultURL + relPath;
+			}
+		else
+			{
+			const ZTrail baseDir = ZTrail(basePath).Branch();
+			const ZTrail resultTrail = (baseDir + ZTrail(relPath)).Normalized();
+			if (resultTrail.Count() && resultTrail.At(0).empty())
 				{
-				finalURL += thePath;
+				// We've got leading bounces.
+				return string();
 				}
-			else
-				{
-				ZTrail baseDir = ZTrail(basePath).Branch();
-				ZTrail result = baseDir + ZTrail(thePath);
-				result.Normalize();
-				if (result.Count() && result.At(0).empty())
-					{
-					// We've got leading bounces.
-					return NPERR_INVALID_URL;
-					}					
-				finalURL += "/" + result.AsString();
-				}
+			return resultURL + "/" + resultTrail.AsString();
 			}
 		}
+	}
 
-	if (finalURL.substr(0, 5) == "http:")
+NPError Host_Std::Host_GetURLNotify(NPP npp,
+	const char* URL, const char* window, void* notifyData)
+	{
+	const string theURL = sFixURL(fURL, URL);
+	if (theURL.empty())
+		return NPERR_INVALID_URL;
+
+	if (theURL.substr(0, 5) == "http:")
 		{
-		HTTPer* theG = new HTTPer(this, finalURL, nullptr, notifyData);
+		HTTPer* theG = new HTTPer(this, theURL, nullptr, notifyData);
 
 		ZMutexLocker locker(fMutex);
 		fHTTPers.push_back(theG);
@@ -896,10 +905,14 @@ NPError Host_Std::Host_PostURLNotify(NPP npp,
 	const char* URL, const char* window,
 	uint32 len, const char* buf, NPBool file, void* notifyData)
 	{
-	if (URL == strstr(URL, "http:"))
+	const string theURL = sFixURL(fURL, URL);
+	if (theURL.empty())
+		return NPERR_INVALID_URL;
+
+	if (theURL.substr(0, 5) == "http:")
 		{
 		ZMemoryBlock theData(buf, len);
-		HTTPer* theG = new HTTPer(this, URL, &theData, notifyData);
+		HTTPer* theG = new HTTPer(this, theURL, &theData, notifyData);
 
 		ZMutexLocker locker(fMutex);
 		fHTTPers.push_back(theG);

@@ -158,11 +158,8 @@ ZRef<ZStreamerR> ZHTTP::sRequest(
 	return ZRef<ZStreamerR>();
 	}
 
-static bool sRequestPOST(const ZStreamW& w, const ZStreamR& r,
-	const string& iHost, const string& iPath,
-	bool iSendConnectionClose,
-	const ZStreamR& iBody,
-	int32* oResponseCode, ZTuple* oHeader, ZMemoryBlock* oRawHeader)
+static void sPOSTPrefix(const ZStreamW& w,
+	const string& iHost, const string& iPath, bool iSendConnectionClose)
 	{
 	w.WriteString("POST ");
 	w.WriteString(iPath);
@@ -172,23 +169,11 @@ static bool sRequestPOST(const ZStreamW& w, const ZStreamR& r,
 	w.WriteString("\r\n");
 	if (iSendConnectionClose)
 		w.WriteString("Connection: close\r\n");
+	}
 
-	if (const ZStreamRPos* bodyRPos = dynamic_cast<const ZStreamRPos*>(&iBody))
-		{
-		const uint64 theLength = bodyRPos->GetSize() - bodyRPos->GetPosition();
-		w.Writef("Content-Length: %lld\r\n", theLength);
-		w.WriteString("\r\n");
-
-		w.CopyFrom(*bodyRPos, theLength);
-		}
-	else
-		{
-		w.WriteString("Transfer-Encoding: chunked\r\n");
-		w.WriteString("\r\n");
-		ZHTTP::StreamW_Chunked(16 *1024, w).CopyAllFrom(iBody);
-		}
-	w.Flush();
-
+static bool sPOSTSuffix(const ZStreamR& r,
+	int32* oResponseCode, ZTuple* oHeader, ZMemoryBlock* oRawHeader)
+	{
 	if (oRawHeader)
 		{
 		ZStreamRWPos_MemoryBlock theSRWP_MB(*oRawHeader);
@@ -202,7 +187,7 @@ static bool sRequestPOST(const ZStreamW& w, const ZStreamR& r,
 	}
 
 ZRef<ZStreamerR> ZHTTP::sPost(
-	const std::string& iURL, const ZStreamR& iStreamR,
+	const std::string& iURL, const ZStreamR& iBody,
 	int32* oResultCode, ZTuple* oFields, ZMemoryBlock* oRawHeader)
 	{
 	string theHost;
@@ -213,13 +198,72 @@ ZRef<ZStreamerR> ZHTTP::sPost(
 		ZRef<ZNetName_Internet> theNN = new ZNetName_Internet(theHost, thePort);
 		if (ZRef<ZNetEndpoint> theEndpoint = theNN->Connect(10))
 			{
+			const ZStreamR& r = theEndpoint->GetStreamR();
+			const ZStreamW& w = theEndpoint->GetStreamW();
+
+			sPOSTPrefix(w, theHost, thePath, true);
+
+			if (const ZStreamRPos* bodyRPos = dynamic_cast<const ZStreamRPos*>(&iBody))
+				{
+				const uint64 theLength = bodyRPos->GetSize() - bodyRPos->GetPosition();
+				w.Writef("Content-Length: %lld\r\n", theLength);
+				w.WriteString("\r\n");
+
+				w.CopyFrom(*bodyRPos, theLength);
+				}
+			else
+				{
+				w.WriteString("Transfer-Encoding: chunked\r\n");
+				w.WriteString("\r\n");
+				ZHTTP::StreamW_Chunked(16 *1024, w).CopyAllFrom(iBody);
+				}
+			w.Flush();
+
 			int32 theResponseCode;
 			ZTuple theHeaders;
-			if (sRequestPOST(theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
-				theHost, thePath,
-				true,
-				iStreamR,
-				&theResponseCode, &theHeaders, oRawHeader))
+			if (sPOSTSuffix(r, &theResponseCode, &theHeaders, oRawHeader))
+				{
+				if (200 == theResponseCode)
+					{
+					if (oFields)
+						*oFields = theHeaders;
+
+					ZRef<ZStreamerR> theStreamerR
+						= ZHTTP::sMakeContentStreamer(theHeaders, theEndpoint);
+
+					if (!theStreamerR)
+						theStreamerR = theEndpoint;
+
+					return theStreamerR;
+					}
+				}
+			}
+		}
+	return ZRef<ZStreamerR>();
+	}
+
+ZRef<ZStreamerR> ZHTTP::sPostRaw(
+	const std::string& iURL, const ZStreamR& iBody,
+	int32* oResultCode, ZTuple* oFields, ZMemoryBlock* oRawHeader)
+	{
+	string theHost;
+	ip_port thePort;
+	string thePath;
+	if (sParseURL(iURL, nullptr, &theHost, &thePort, &thePath))
+		{
+		ZRef<ZNetName_Internet> theNN = new ZNetName_Internet(theHost, thePort);
+		if (ZRef<ZNetEndpoint> theEndpoint = theNN->Connect(10))
+			{
+			const ZStreamR& r = theEndpoint->GetStreamR();
+			const ZStreamW& w = theEndpoint->GetStreamW();
+
+			sPOSTPrefix(w, theHost, thePath, true);
+			w.CopyAllFrom(iBody);
+			w.Flush();
+
+			int32 theResponseCode;
+			ZTuple theHeaders;
+			if (sPOSTSuffix(r, &theResponseCode, &theHeaders, oRawHeader))
 				{
 				if (200 == theResponseCode)
 					{

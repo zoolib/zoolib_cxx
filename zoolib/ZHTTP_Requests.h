@@ -37,7 +37,11 @@ ZRef<ZStreamerR> sRequest(
 	int32* oResultCode, ZTuple* oFields, ZMemoryBlock* oRawHeader);
 
 ZRef<ZStreamerR> sPost(
-	const std::string& iURL, const ZStreamR& iStreamR,
+	const std::string& iURL, const ZStreamR& iBody,
+	int32* oResultCode, ZTuple* oFields, ZMemoryBlock* oRawHeader);
+
+ZRef<ZStreamerR> sPostRaw(
+	const std::string& iURL, const ZStreamR& iBody,
 	int32* oResultCode, ZTuple* oFields, ZMemoryBlock* oRawHeader);
 
 } // namespace ZHTTP
