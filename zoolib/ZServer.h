@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2000 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,12 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZServer__
-#define __ZServer__ 1
+#ifndef __NewServer__
+#define __NewServer__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZSafeSet.h"
 #include "zoolib/ZStreamer.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZTask.h"
+#include "zoolib/ZWaiter.h"
 
 #include <vector>
 
@@ -33,7 +35,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZServer
 
-class ZServer
+class ZServer : public ZTaskOwner
 	{
 public:
 	class Responder;
@@ -42,59 +44,48 @@ public:
 	ZServer();
 	virtual ~ZServer();
 
-	void StartWaitingForConnections(ZRef<ZStreamerRWConFactory> iFactory);
-	void StopWaitingForConnections();
-	void KillAllConnections();
-	void KillAllNoWait();
+// From ZRefCountedWithFinalize
+	virtual void Finalize();
 
-	void SetMaxResponders(size_t iCount);
-	ZRef<ZStreamerRWConFactory> GetFactory();
+// From ZTaskOwner
+	virtual void Task_Finished(ZRef<ZTask> iTask);
 
-protected:
-	void ResponderFinished(Responder* iResponder);
+// Our protocol
+	virtual ZRef<Responder> MakeResponder() = 0;
 
-	virtual Responder* CreateResponder() = 0;
+	void StartListener(ZRef<ZStreamerRWFactory> iFactory);
+	void StopListener();
+
+	void KillResponders();
+	
+	ZRef<ZStreamerRWFactory> GetFactory();
+
+	void GetResponders(std::vector<ZRef<Responder> >& oResponders);
 
 private:
-	void RunThread();
-	static void sRunThread(ZServer* iServer);
+	class StreamerListener;
+	friend class StreamerListener;
 
-private:
-	ZMutex fMutex;
-	ZCondition fCondition;
-	ZSemaphore fSem;
-	std::vector<Responder*> fResponders;
+// Called by StreamerListener
+	void pConnected(ZRef<ZStreamerRW> iStreamer);
 
-	ZRef<ZStreamerRWConFactory> fFactory;
-	size_t fMaxResponders;
-	size_t fAcceptedCount;
+	ZRef<StreamerListener> fStreamerListener;
+	ZSafeSet<ZRef<Responder> > fResponders;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZServer::Responder
 
-class ZServer::Responder
+class ZServer::Responder : public ZTask
 	{
 public:
-	Responder();
+	Responder(ZRef<ZServer> iServer);
 	virtual ~Responder();
 
-	void KillConnection();
+	virtual void Handle(ZRef<ZStreamerRW> iStreamerRW) = 0;
 
-	virtual void DoRun(ZRef<ZStreamerRWCon> iStreamerRWCon) = 0;
-
-protected:
-	friend class ZServer;
-	void HandleConnection(ZServer* iServer, ZRef<ZStreamerRWCon> iStreamerRWCon);
-	void ServerDeleted(ZServer* iServer);
-
-	void RunThread();
-	static void sRunThread(Responder* iResponder);
-
-	ZThread* fThread;
-	ZServer* fServer;
-	ZRef<ZStreamerRWCon> fStreamerRWCon;
+	ZRef<ZServer> GetServer();
 	};
 
 // =================================================================================================
@@ -107,35 +98,15 @@ public:
 	ZServer_Simple();
 
 // From ZServer
-	virtual Responder* CreateResponder();
+	virtual ZRef<Responder> MakeResponder();
 
 // Our protocol
-	virtual void DoRun(ZRef<ZStreamerRWCon> iConnection) = 0;
+	virtual void Handle(ZRef<ZStreamerRW> iStreamerRW);
 
 private:
-	class Responder;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZServer_Callback
-
-class ZServer_Callback : public ZServer
-	{
-public:
-	typedef void (*Callback_t)(void* iRefcon, ZRef<ZStreamerRWCon> iConnection);
-	ZServer_Callback(Callback_t iCallback, void* iRefcon);
-
-// From ZServer
-	virtual Responder* CreateResponder();
-
-private:
-	Callback_t fCallback;
-	void* fRefcon;
-
 	class Responder;
 	};
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZServer__
+#endif // __NewServer__

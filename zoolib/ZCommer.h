@@ -22,10 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCommer__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStreamer.h"
-
-#include "zoolib/ZStreamReader.h"
-#include "zoolib/ZStreamWriter.h"
+#include "zoolib/ZStreamerReader.h"
+#include "zoolib/ZStreamerWriter.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -33,47 +31,43 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZCommer
 
-class ZCommer : public ZStreamReader, public ZStreamWriter
+class ZCommer
+:	public ZStreamerReader,
+	public ZStreamerWriter
 	{
-protected:
-	ZCommer();
-	~ZCommer();
-
 public:
-// From ZStreamReader
-	virtual void RunnerAttached(ZStreamReaderRunner* iRunner);
-	virtual void RunnerDetached(ZStreamReaderRunner* iRunner);
-	virtual bool Read(const ZStreamR& iStreamR) = 0;
+	ZCommer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
+	virtual ~ZCommer();
 
-// From ZStreamWriter
-	virtual void RunnerAttached(ZStreamWriterRunner* iRunner);
-	virtual void RunnerDetached(ZStreamWriterRunner* iRunner);
-	virtual bool Write(const ZStreamW& iStreamW) = 0;
+// From ZStreamerReader
+	virtual void ReadStarted();
+	virtual void ReadFinished();
+
+// From ZStreamerWriter
+	virtual void WriteStarted();
+	virtual void WriteFinished();
 
 // Our protocol
-	virtual void Attached();
-	virtual void Detached();
+	void Wake() { ZStreamerWriter::Wake(); }
+	void WakeAt(ZTime iSystemTime) { ZStreamerWriter::WakeAt(iSystemTime); }
 
-	void Wake();
-	void WaitTillDetached();
+	virtual void Started();
+	virtual void Finished();
+
+	void WaitTillFinished();
 
 private:
-	ZMutexNR fMutex;
-	ZCondition fCondition;
-	bool fAttachedReader;
-	bool fAttachedWriter;
+	ZMtx fMtx;
+	ZCnd fCnd;
+	bool fReadStarted;
+	bool fWriteStarted;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZCommer utility methods
 
-// Here for now till I find a better home.
-void sStartReaderRunner(ZStreamReader* iStreamReader, ZRef<ZStreamerR> iSR);
-
-void sStartWriterRunner(ZStreamWriter* iStreamWriter, ZRef<ZStreamerW> iSW);
-
-void sStartRunners(ZCommer* iCommer, ZRef<ZStreamerR> iSR, ZRef<ZStreamerW> iSW);
+void sStartCommerRunners(ZRef<ZCommer> iCommer);
 
 NAMESPACE_ZOOLIB_END
 

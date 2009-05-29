@@ -29,124 +29,111 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZCommer
 
-ZCommer::ZCommer()
-:	fMutex("ZCommer::fMutex"),
-	fAttachedReader(false),
-	fAttachedWriter(false)
+ZCommer::ZCommer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+:	ZStreamerReader(iStreamerR),
+	ZStreamerWriter(iStreamerW),
+	fReadStarted(false),
+	fWriteStarted(false)
 	{}
 
 ZCommer::~ZCommer()
+	{ ZAssert(!fReadStarted && !fWriteStarted); }
+
+void ZCommer::ReadStarted()
+	{
+	ZStreamerReader::ReadStarted();
+
+	bool callStarted = false;
+	{
+	ZGuardMtx locker(fMtx);
+	ZAssert(!fReadStarted);
+	fReadStarted = true;
+	fCnd.Broadcast();
+	if (fReadStarted && fWriteStarted)
+		callStarted = true;
+	}
+
+	if (callStarted)
+		this->Started();
+	}
+
+void ZCommer::ReadFinished()
+	{
+	bool callFinished = false;
+
+	{
+	ZGuardMtx locker(fMtx);
+	ZAssert(fReadStarted);
+	fReadStarted = false;
+	fCnd.Broadcast();
+	if (!fReadStarted && !fWriteStarted)
+		callFinished = true;
+	}
+
+	if (callFinished)
+		this->Finished();
+
+	ZStreamerReader::ReadFinished();
+	}
+
+void ZCommer::WriteStarted()
+	{
+	ZStreamerWriter::WriteStarted();
+
+	bool callStarted = false;
+	{
+	ZGuardMtx locker(fMtx);
+	ZAssert(!fWriteStarted);
+	fWriteStarted = true;
+	fCnd.Broadcast();
+	if (fReadStarted && fWriteStarted)
+		callStarted = true;
+	}
+
+	if (callStarted)
+		this->Started();
+	}
+
+void ZCommer::WriteFinished()
+	{
+	bool callFinished = false;
+
+	{
+	ZGuardMtx locker(fMtx);
+	ZAssert(fWriteStarted);
+	fWriteStarted = false;
+	fCnd.Broadcast();
+	if (!fReadStarted && !fWriteStarted)
+		callFinished = true;
+	}
+
+	if (callFinished)
+		this->Finished();
+
+	ZStreamerWriter::WriteFinished();
+	}
+
+void ZCommer::Started()
 	{}
 
-void ZCommer::RunnerAttached(ZStreamReaderRunner* iRunner)
-	{
-	ZStreamReader::RunnerAttached(iRunner);
-
-	ZMutexNRLocker locker(fMutex);
-	ZAssert(!fAttachedReader);
-	fAttachedReader = true;
-	fCondition.Broadcast();
-
-	if (fAttachedWriter && fAttachedReader)
-		this->Attached();
-	}
-
-void ZCommer::RunnerDetached(ZStreamReaderRunner* iRunner)
-	{
-	ZStreamReader::RunnerDetached(iRunner);
-
-	bool callDetached = false;
-	{
-	ZMutexNRLocker locker(fMutex);
-	ZAssert(fAttachedReader);
-	fAttachedReader = false;
-	fCondition.Broadcast();
-
-	if (!fAttachedWriter && !fAttachedReader)
-		callDetached = true;
-	}
-
-	if (callDetached)
-		this->Detached();
-	}
-
-void ZCommer::RunnerAttached(ZStreamWriterRunner* iRunner)
-	{
-	ZStreamWriter::RunnerAttached(iRunner);
-
-	bool callAttached = false;
-	{
-	ZMutexNRLocker locker(fMutex);
-	ZAssert(!fAttachedWriter);
-	fAttachedWriter = true;
-	fCondition.Broadcast();
-
-	if (fAttachedWriter && fAttachedReader)
-		callAttached = true;
-	}
-
-	if (callAttached)
-		this->Attached();
-	}
-
-void ZCommer::RunnerDetached(ZStreamWriterRunner* iRunner)
-	{
-	ZStreamWriter::RunnerDetached(iRunner);
-
-	bool callDetached = false;
-	{
-	ZMutexNRLocker locker(fMutex);
-	ZAssert(fAttachedWriter);
-	fAttachedWriter = false;
-	fCondition.Broadcast();
-
-	if (!fAttachedWriter && !fAttachedReader)
-		callDetached = true;
-	}
-
-	if (callDetached)
-		this->Detached();
-	}
-
-void ZCommer::Attached()
+void ZCommer::Finished()
 	{}
 
-void ZCommer::Detached()
-	{}
-
-void ZCommer::Wake()
+void ZCommer::WaitTillFinished()
 	{
-	ZStreamWriter::Wake();
-	}
-
-void ZCommer::WaitTillDetached()
-	{
-	ZMutexNRLocker locker(fMutex);
-	while (fAttachedWriter || fAttachedReader)
-		fCondition.Wait(fMutex);
+	ZGuardMtx locker(fMtx);
+	while (fReadStarted || fWriteStarted)
+		fCnd.Wait(fMtx);
 	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZCommer utility methods
 
-void sStartReaderRunner(ZStreamReader* iStreamReader, ZRef<ZStreamerR> iSR)
+void sStartCommerRunners(ZRef<ZCommer> iCommer)
 	{
-	ZStreamReaderRunner_Threaded* theRR = new ZStreamReaderRunner_Threaded(iStreamReader, iSR);
-	theRR->Start();
-	}
-
-void sStartWriterRunner(ZStreamWriter* iStreamWriter, ZRef<ZStreamerW> iSW)
-	{
-	ZStreamWriterRunner_Threaded* theWR = new ZStreamWriterRunner_Threaded(iStreamWriter, iSW);
-	theWR->Start();
-	}
-
-void sStartRunners(ZCommer* iCommer,
-	ZRef<ZStreamerR> iSR, ZRef<ZStreamerW> iSW)
-	{
-	sStartReaderRunner(iCommer, iSR);
-	sStartWriterRunner(iCommer, iSW);
+	sStartWaiterRunner(ZRefStaticCast<ZStreamerReader>(iCommer));
+	sStartWaiterRunner(ZRefStaticCast<ZStreamerWriter>(iCommer));
 	}
 
 NAMESPACE_ZOOLIB_END
