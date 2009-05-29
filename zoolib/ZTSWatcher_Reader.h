@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSWatcher_Reader__
 #include "zconfig.h"
 
-#include "zoolib/ZStreamReader.h"
+#include "zoolib/ZStreamerReader.h"
+#include "zoolib/ZThread.h"
 #include "zoolib/ZTSWatcher.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -33,10 +34,10 @@ NAMESPACE_ZOOLIB_BEGIN
 
 class ZTSWatcher_Reader
 :	public ZTSWatcher,
-	public ZStreamReader
+	public ZStreamerReader
 	{
 public:
-	ZTSWatcher_Reader(ZRef<ZStreamerW> iStreamerW);
+	ZTSWatcher_Reader(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 
 	virtual ~ZTSWatcher_Reader();
 

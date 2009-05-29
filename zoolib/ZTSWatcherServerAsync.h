@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCommer.h"
+#include "zoolib/ZThread.h"
 #include "zoolib/ZTSWatcher.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -34,8 +35,9 @@ NAMESPACE_ZOOLIB_BEGIN
 class ZTSWatcherServerAsync : public ZCommer
 	{
 public:
-	ZTSWatcherServerAsync(ZRef<ZTSWatcher> iTSWatcher);
-	~ZTSWatcherServerAsync();
+	ZTSWatcherServerAsync(
+		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW, ZRef<ZTSWatcher> iTSWatcher);
+	virtual ~ZTSWatcherServerAsync();
 
 // From ZCommer
 	virtual bool Read(const ZStreamR& iStreamR);

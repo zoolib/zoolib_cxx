@@ -38,8 +38,10 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZTSWatcherServerAsync
 
-ZTSWatcherServerAsync::ZTSWatcherServerAsync(ZRef<ZTSWatcher> iTSWatcher)
-:	fTSWatcher(iTSWatcher),
+ZTSWatcherServerAsync::ZTSWatcherServerAsync(
+	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW, ZRef<ZTSWatcher> iTSWatcher)
+:	ZCommer(iStreamerR, iStreamerW),
+	fTSWatcher(iTSWatcher),
 	fReceivedClose(false),
 	fCallbackNeeded(false),
 	fSyncNeeded(false),

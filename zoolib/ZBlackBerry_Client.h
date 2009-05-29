@@ -35,7 +35,7 @@ namespace ZBlackBerry {
 
 class Manager_Client
 :	public Manager,
-	private ZCommer
+	public ZWeakReferee
 	{
 private:
 	Manager_Client();
@@ -52,24 +52,17 @@ public:
 
 	virtual ZRef<Device> Open(uint64 iDeviceID);
 
-// From ZStreamReader via ZCommer
-	virtual void RunnerDetached(ZStreamReaderRunner* iRunner);
-
-// From ZCommer
-	virtual bool Read(const ZStreamR& r);
-	virtual bool Write(const ZStreamW& w);
-	virtual void Detached();
-
 private:
-	void pStartRunners(ZRef<ZStreamerRWCon> iSRWCon);
+	class Commer_Changed;
+	friend class Commer_Changed;
 
-	class Handler_ManagerChanged;
-	friend class Handler_ManagerChanged;
+	void pDetached(ZRef<Commer_Changed> iCommer);
+	void pStartCommer(ZRef<ZStreamerRWCon> iSRWCon);
+
+	ZRef<Commer_Changed> fCommer_Changed;
 
 	ZRef<ZStreamerRWConFactory> fFactory;
 	bool fAutoReconnect;
-	bool fSendNotificationRequest;
-	bool fSendClose;
 	};
 
 } // namespace ZBlackBerry

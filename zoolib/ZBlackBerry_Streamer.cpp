@@ -385,8 +385,9 @@ void Channel_Streamer::Imp_Abort()
 #pragma mark -
 #pragma mark * Device_Streamer
 
-Device_Streamer::Device_Streamer()
-:	fMutex("ZBlackBerry::Device_Streamer::fMutex"),
+Device_Streamer::Device_Streamer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+:	ZCommer(iStreamerR, iStreamerW),
+	fMutex("ZBlackBerry::Device_Streamer::fMutex"),
 	fGetAttributeSent(false),
 	fGetAttribute(nullptr),
 	fLifecycle(eLifecycle_Running)
@@ -394,7 +395,6 @@ Device_Streamer::Device_Streamer()
 
 Device_Streamer::~Device_Streamer()
 	{
-//##	ZWeakReferee::pDetachProxy();
 	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 		s << "~Device_Streamer";
 	}
@@ -692,9 +692,9 @@ bool Device_Streamer::Write(const ZStreamW& iStreamW)
 	return false;
 	}
 
-void Device_Streamer::Detached()
+void Device_Streamer::Finished()
 	{
-	this->pFinished();
+	Device::pFinished();
 	}
 
 bool Device_Streamer::Channel_Finalize(Channel_Streamer* iChannel)

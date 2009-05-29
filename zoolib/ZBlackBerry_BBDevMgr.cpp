@@ -169,10 +169,10 @@ STDMETHODIMP Channel_BBDevMgr::QueryInterface(const IID& iInterfaceID, void** oO
 	}
 
 ULONG STDMETHODCALLTYPE Channel_BBDevMgr::AddRef()
-	{ return ZRefCountedWithFinalize::pCOMAddRef(); }
+	{ return this->pCOMAddRef(); }
 
 ULONG STDMETHODCALLTYPE Channel_BBDevMgr::Release()
-	{ return ZRefCountedWithFinalize::pCOMRelease(); }
+	{ return this->pCOMRelease(); }
 
 STDMETHODIMP Channel_BBDevMgr::CheckClientStatus(uint16 iRHS)
 	{

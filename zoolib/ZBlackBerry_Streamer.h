@@ -45,7 +45,7 @@ class Device_Streamer
 	friend class Channel_Streamer;
 
 public:
-	Device_Streamer();
+	Device_Streamer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 	virtual ~Device_Streamer();
 
 // From ZBlackBerry::Device
@@ -65,7 +65,7 @@ public:
 	virtual bool Write(const ZStreamW& iStreamW);
 
 // From ZCommer
-	virtual void Detached();
+	virtual void Finished();
 
 private:
 	bool Channel_Finalize(Channel_Streamer* iChannel);

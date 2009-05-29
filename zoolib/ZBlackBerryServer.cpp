@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZMemoryBlock.h"
-#include "zoolib/ZStreamCopier.h"
+#include "zoolib/ZStreamerCopier.h"
 #include "zoolib/ZUtil_STL.h"
 
 using std::string;
@@ -36,11 +36,11 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZBlackBerryServer::Handler_ManagerChanged
 
-class ZBlackBerryServer::Handler_ManagerChanged
-:	public ZCommer
+class ZBlackBerryServer::Handler_ManagerChanged : public ZCommer
 	{
 public:
-	Handler_ManagerChanged(ZBlackBerryServer* iServer);
+	Handler_ManagerChanged(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
+		ZBlackBerryServer* iServer);
 	virtual ~Handler_ManagerChanged();
 
 // From ZCommer
@@ -60,8 +60,11 @@ private:
 	EState fState;
 	};
 
-ZBlackBerryServer::Handler_ManagerChanged::Handler_ManagerChanged(ZBlackBerryServer* iServer)
-:	fServer(iServer),
+ZBlackBerryServer::Handler_ManagerChanged::Handler_ManagerChanged(
+	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
+	ZBlackBerryServer* iServer)
+:	ZCommer(iStreamerR, iStreamerW),
+	fServer(iServer),
 	fMutex("ZBlackBerryServer::Handler_ManagerChanged::fMutex"),
 	fState(eState_Quiet)
 	{}
@@ -162,7 +165,8 @@ class ZBlackBerryServer::Handler_DeviceFinished
 :	public ZCommer
 	{
 public:
-	Handler_DeviceFinished(ZBlackBerryServer* iServer);
+	Handler_DeviceFinished(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
+		ZBlackBerryServer* iServer);
 	virtual ~Handler_DeviceFinished();
 
 // From ZCommer
@@ -180,8 +184,11 @@ private:
 	bool fRunning;
 	};
 
-ZBlackBerryServer::Handler_DeviceFinished::Handler_DeviceFinished(ZBlackBerryServer* iServer)
-:	fServer(iServer),
+ZBlackBerryServer::Handler_DeviceFinished::Handler_DeviceFinished(
+	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
+	ZBlackBerryServer* iServer)
+:	ZCommer(iStreamerR, iStreamerW),
+	fServer(iServer),
 	fClientOpen(true),
 	fRunning(true)
 	{}
@@ -264,30 +271,32 @@ void ZBlackBerryServer::Handler_DeviceFinished::TripIt()
 
 namespace ZANONYMOUS {
 
-class StreamCopier_Chunked : public ZStreamReader
+class StreamerCopier_Chunked : public ZStreamerReader
 	{
 public:
-	StreamCopier_Chunked(ZRef<ZStreamerWCon> iStreamerWCon);
+	StreamerCopier_Chunked(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerWCon> iStreamerWCon);
 
-	~StreamCopier_Chunked();
+	~StreamerCopier_Chunked();
 
-// From ZStreamReader
+// From ZStreamerReader
 	virtual bool Read(const ZStreamR& iStreamR);
 
-	virtual void RunnerDetached(ZStreamReaderRunner* iRunner);
+	virtual void ReadFinished();
 
 private:
 	ZRef<ZStreamerWCon> fStreamerWCon;
 	};
 
-StreamCopier_Chunked::StreamCopier_Chunked(ZRef<ZStreamerWCon> iStreamerWCon)
-:	fStreamerWCon(iStreamerWCon)
+StreamerCopier_Chunked::StreamerCopier_Chunked(
+	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerWCon> iStreamerWCon)
+:	ZStreamerReader(iStreamerR),
+	fStreamerWCon(iStreamerWCon)
 	{}
 
-StreamCopier_Chunked::~StreamCopier_Chunked()
+StreamerCopier_Chunked::~StreamerCopier_Chunked()
 	{}
 
-bool StreamCopier_Chunked::Read(const ZStreamR& iStreamR)
+bool StreamerCopier_Chunked::Read(const ZStreamR& iStreamR)
 	{
 	const ZStreamWCon& w = fStreamerWCon->GetStreamWCon();
 
@@ -318,10 +327,9 @@ bool StreamCopier_Chunked::Read(const ZStreamR& iStreamR)
 		}
 	}
 
-void StreamCopier_Chunked::RunnerDetached(ZStreamReaderRunner* iRunner)
+void StreamerCopier_Chunked::ReadFinished()
 	{
 	fStreamerWCon->GetStreamWCon().SendDisconnect();
-	delete this;
 	}
 
 } // anonymous namespace
@@ -364,11 +372,11 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 		{		
 		// Async changed notifications
 		ZMutexLocker locker(fMutex);
-		Handler_ManagerChanged* theHandler = new Handler_ManagerChanged(this);
+		Handler_ManagerChanged* theHandler = new Handler_ManagerChanged(iSRWCon, iSRWCon, this);
 		fHandlers_ManagerChanged.push_back(theHandler);
 		locker.Release();
 
-		sStartRunners(theHandler, iSRWCon, iSRWCon);
+		sStartCommerRunners(theHandler);
 		}
 	else if (req == 1)
 		{
@@ -399,12 +407,13 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 			{
 			if (i->fLive && i->fID == deviceID)
 				{
-				Handler_DeviceFinished* theHandler = new Handler_DeviceFinished(this);
+				Handler_DeviceFinished* theHandler
+					= new Handler_DeviceFinished(iSRWCon, iSRWCon, this);
 				i->fHandlers.push_back(theHandler);
 				locker.Release();
 
 				w.WriteBool(true);
-				sStartRunners(theHandler, iSRWCon, iSRWCon);
+				sStartCommerRunners(theHandler);
 				gotIt = true;
 				}
 			}
@@ -476,10 +485,10 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 				w.WriteUInt32(writeSize);
 				w.Flush();
 				// Use a standard copier for the device-->client direction
-				sStartReaderRunner(new ZStreamCopier(iSRWCon, readSize), deviceCon);
+				sStartWaiterRunner(new ZStreamerCopier(deviceCon, iSRWCon, readSize));
 
 				// And our specialized copier for the client-->device direction.
-				sStartReaderRunner(new StreamCopier_Chunked(deviceCon), iSRWCon);
+				sStartWaiterRunner(new StreamerCopier_Chunked(iSRWCon, deviceCon));
 
 				return;
 				}

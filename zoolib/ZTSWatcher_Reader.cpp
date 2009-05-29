@@ -38,8 +38,9 @@ using std::vector;
 #pragma mark -
 #pragma mark * ZTSWatcher_Reader
 
-ZTSWatcher_Reader::ZTSWatcher_Reader(ZRef<ZStreamerW> iStreamerW)
-:	fStreamerW(iStreamerW),
+ZTSWatcher_Reader::ZTSWatcher_Reader(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+:	ZStreamerReader(iStreamerR),
+	fStreamerW(iStreamerW),
 	fStreamsOkay(true),
 	fSentClose(false),
 	fBaseID(nullptr),
@@ -381,8 +382,8 @@ ZRef<ZTSWatcher> ZTSWatcherFactory_Reader::MakeTSWatcher()
 		{
 		if (ZRef<ZStreamerRW> theSRW = fStreamerRWFactory->MakeStreamerRW())
 			{
-			ZRef<ZTSWatcher_Reader> theTSWR = new ZTSWatcher_Reader(theSRW);
-			(new ZStreamReaderRunner_Threaded(theTSWR.GetObject(), theSRW))->Start();
+			ZRef<ZTSWatcher_Reader> theTSWR = new ZTSWatcher_Reader(theSRW, theSRW);
+			sStartWaiterRunner(theTSWR);
 			return theTSWR;
 			}
 		}
