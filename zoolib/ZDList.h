@@ -169,7 +169,6 @@ public:
 
 	DListLink() : fPrev(nullptr), fNext(nullptr) {}
 	~DListLink() { ZAssertStop(kDebug, !fPrev && !fNext); }
-	void Clear() { fPrev = nullptr; fNext = nullptr; }
 
 	L* fPrev;
 	L* fNext;
