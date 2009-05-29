@@ -104,8 +104,6 @@ public:
 protected:
 	void pInit(ip_addr iLocalAddress, ip_port iLocalPort, size_t iListenQueueSize);
 
-	ZMutex fListenMutex;
-	ZMutex fAccessMutex;
 	SOCKET fSOCKET;
 	};
 
