@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "zoolib/ZThread.h" // For ZMutex
+#include "zoolib/ZThreadImp.h"
 #include "zoolib/ZWinHeader.h"
 
 #include <string>
@@ -69,7 +69,7 @@ private:
 	SERVICE_STATUS fServiceStatus;
 	SERVICE_STATUS_HANDLE fServiceStatusHandle;
 	bool fAllowPause;
-	ZMutex fMutex_State;
+	ZMtx fMutex_State;
 	};
 
 // =================================================================================================

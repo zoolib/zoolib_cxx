@@ -125,7 +125,7 @@ public:
 protected:
 	friend class ZBlockStore_PhaseTree;
 
-	ZBlockStorePhaseTree_Mutex_t fMutex;
+	ZMtx fMutex;
 
 	Slot* fCached_Prev;
 	Slot* fCached_Next;
@@ -577,16 +577,12 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(
 	ZRef<ZFileRW> iFile, size_t iSlotSize, size_t iUserHeaderSize)
 :	fUserHeaderSize(iUserHeaderSize),
 	fSlotSize(iSlotSize),
-	fMutex_Flush("fMutex_Flush"),
-	fCondition_Flush("fCondition_Flush"),
 	fCount_Writes(0),
 	fCount_WaitingFlushes(0),
 	fFlushInProgress(false),
 	fFlushInFirstStages(false),
-	fMutex_MetaRoot("fMutex_MetaRoot"),
 	fRootSlotNumber(0),
 	fHeight(0),
-	fMutex_Slots("fMutex_Slots"),
 	fCached_Head(nullptr),
 	fCached_Tail(nullptr),
 	fHighWater(1),
@@ -640,16 +636,12 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(
 ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(ZRef<ZFileRW> iFile, size_t iUserHeaderSize)
 :	fUserHeaderSize(iUserHeaderSize),
 	fSlotSize(0),
-	fMutex_Flush("fMutex_Flush"),
-	fCondition_Flush("fCondition_Flush"),
 	fCount_Writes(0),
 	fCount_WaitingFlushes(0),
 	fFlushInProgress(false),
 	fFlushInFirstStages(false),
-	fMutex_MetaRoot("fMutex_MetaRoot"),
 	fRootSlotNumber(0),
 	fHeight(0),
-	fMutex_Slots("fMutex_Slots"),
 	fCached_Head(nullptr),
 	fCached_Tail(nullptr),
 	fHighWater(0),
@@ -731,16 +723,12 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(ZRef<ZFileRW> iFile, size_t iUserHe
 ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(ZRef<ZFileR> iFile, size_t iUserHeaderSize)
 :	fUserHeaderSize(iUserHeaderSize),
 	fSlotSize(0),
-	fMutex_Flush("fMutex_MetaRoot"),
-	fCondition_Flush("fCondition_Flush"),
 	fCount_Writes(0),
 	fCount_WaitingFlushes(0),
 	fFlushInProgress(false),
 	fFlushInFirstStages(false),
-	fMutex_MetaRoot("fMutex_MetaRoot"),
 	fRootSlotNumber(0),
 	fHeight(0),
-	fMutex_Slots("fMutex_Slots"),
 	fCached_Head(nullptr),
 	fCached_Tail(nullptr),
 	fHighWater(0),

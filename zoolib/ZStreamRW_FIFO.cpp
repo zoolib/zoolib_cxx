@@ -44,7 +44,7 @@ ZStreamRW_FIFO::ZStreamRW_FIFO(size_t iMaxSize)
 
 ZStreamRW_FIFO::~ZStreamRW_FIFO()
 	{
-	ZMutexNRLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 
 	fClosed = true;
 	fCondition_Read.Broadcast();
@@ -56,7 +56,7 @@ ZStreamRW_FIFO::~ZStreamRW_FIFO()
 
 void ZStreamRW_FIFO::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	ZMutexNRLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	++fUserCount;
 	uint8* localDest = static_cast<uint8*>(iDest);
 	while (iCount)
@@ -87,13 +87,13 @@ void ZStreamRW_FIFO::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 
 size_t ZStreamRW_FIFO::Imp_CountReadable()
 	{
-	ZMutexNRLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	return fBuffer.size();
 	}
 
 bool ZStreamRW_FIFO::Imp_WaitReadable(int iMilliseconds)
 	{
-	ZMutexNRLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	if (!fBuffer.size())
 		fCondition_Read.Wait(fMutex, iMilliseconds * 1000);
 
@@ -102,7 +102,7 @@ bool ZStreamRW_FIFO::Imp_WaitReadable(int iMilliseconds)
 
 void ZStreamRW_FIFO::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	ZMutexNRLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	++fUserCount;
 	const uint8* localSource = static_cast<const uint8*>(iSource);
 	while (iCount && !fClosed)
@@ -137,7 +137,7 @@ void ZStreamRW_FIFO::Imp_Write(const void* iSource, size_t iCount, size_t* oCoun
 
 void ZStreamRW_FIFO::Close()
 	{
-	ZMutexNRLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 // Hmmm.
 //	ZAssert(!fClosed);
 	fClosed = true;
@@ -147,13 +147,13 @@ void ZStreamRW_FIFO::Close()
 
 bool ZStreamRW_FIFO::IsClosed()
 	{
-	ZMutexNRLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	return fClosed;
 	}
 
 void ZStreamRW_FIFO::Reset()
 	{
-	ZMutexNRLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	fBuffer.clear();
 	fClosed = false;
 	fCondition_Read.Broadcast();

@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(TextCoder_Win)
 
 #include "zoolib/ZFactoryChain.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadImp.h"
 
 #include <map>
 #include <stdexcept>
@@ -216,7 +216,7 @@ static string sCanonicalName(const string& iName)
 	}
 
 static bool sBuilt_NameToCodePage = false;
-ZMutexNR sMutex_NameToCodePage;
+ZMtx sMutex_NameToCodePage;
 static map<string, UINT> sMap_NameToCodePage;
 
 static UINT sLookupName(const string& iName)

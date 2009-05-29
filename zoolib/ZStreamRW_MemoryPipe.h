@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
-#include "zoolib/ZThread.h" // For ZMutexNR, ZCondition
+#include "zoolib/ZThreadImp.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -72,9 +72,9 @@ private:
 	void pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 		uint64* oCountRead, uint64* oCountWritten);
 
-	ZMutexNR fMutex;
-	ZCondition fCondition_Read;
-	ZCondition fCondition_Write;
+	ZMtx fMutex;
+	ZCnd fCondition_Read;
+	ZCnd fCondition_Write;
 
 	bool fWriteClosed;
 

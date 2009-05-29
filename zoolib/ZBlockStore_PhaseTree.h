@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZBlockStore.h"
 #include "zoolib/ZFile.h"
+#include "zoolib/ZThreadImp.h"
 
 #include <set>
 #include <map>
@@ -33,12 +34,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 NAMESPACE_ZOOLIB_BEGIN
-
-#if ZCONFIG_Debug >= ZCONFIG_PhaseTree_Debug
-	typedef ZMutex ZBlockStorePhaseTree_Mutex_t;
-#else
-	typedef ZMutexNR ZBlockStorePhaseTree_Mutex_t;
-#endif
 
 // =================================================================================================
 // A grotesque hack so that this file can be checked into HEAD and a couple of branches
@@ -246,8 +241,8 @@ protected:
 
 	ZThreadSafe_t fStreamsInstantiated;
 
-	ZBlockStorePhaseTree_Mutex_t fMutex_Flush;
-	ZCondition fCondition_Flush;
+	ZMtx fMutex_Flush;
+	ZCnd fCondition_Flush;
 		int fCount_Writes;
 		int fCount_WaitingFlushes;
 		bool fFlushInProgress;
@@ -256,7 +251,7 @@ protected:
 	// Mutexes are listed in the order in which they must be acquired. Following
 	// each mutex are the instance variables protected by that mutex.
 
-	ZBlockStorePhaseTree_Mutex_t fMutex_MetaRoot;
+	ZMtx fMutex_MetaRoot;
 		uint32 fRootSlotNumber;
 		uint32 fHeight;
 
@@ -266,7 +261,7 @@ protected:
 	// to release a parent's mutex after acquiring a child's, but we cannot go back up
 	// the tree, the code is organized such that it's never necessary to backtrack.
 
-	ZBlockStorePhaseTree_Mutex_t fMutex_Slots;
+	ZMtx fMutex_Slots;
 		std::set<uint32> fSlots_Forked;
 		std::set<uint32> fSlots_ReleasedClean;
 		std::set<uint32> fSlots_ReleasedForked;

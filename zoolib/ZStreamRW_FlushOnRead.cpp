@@ -45,18 +45,6 @@ against weirdness (that took me a couple of hours to track down) we track the la
 operation with a thread safe variable, and all write calls are protected by a mutex.
 */
 
-namespace ZANONYMOUS {
-class Locker
-	{
-public:
-	Locker(ZMutexNR& iMutex) : fMutex(iMutex) { fMutex.Acquire(); }
-	~Locker() { fMutex.Release(); }
-
-private:
-	ZMutexNR& fMutex;
-	};
-} // anonymous namespace
-
 ZStreamRW_FlushOnRead::ZStreamRW_FlushOnRead(const ZStreamR& iStreamR, const ZStreamW& iStreamW)
 :	fStreamR(iStreamR),
 	fStreamW(iStreamW)
@@ -71,7 +59,7 @@ void ZStreamRW_FlushOnRead::Imp_Read(void* iDest, size_t iCount, size_t* oCountR
 	{
 	if (ZThreadSafe_Swap(fLastWasWrite, 0) == 1)
 		{
-		Locker locker_Write(fMutex_Write);
+		ZGuardMtx locker_Write(fMutex_Write);
 		fStreamW.Flush();
 		}
 
@@ -82,7 +70,7 @@ size_t ZStreamRW_FlushOnRead::Imp_CountReadable()
 	{
 	if (ZThreadSafe_Swap(fLastWasWrite, 0) == 1)
 		{
-		Locker locker_Write(fMutex_Write);
+		ZGuardMtx locker_Write(fMutex_Write);
 		fStreamW.Flush();
 		}
 
@@ -93,7 +81,7 @@ bool ZStreamRW_FlushOnRead::Imp_WaitReadable(int iMilliseconds)
 	{
 	if (ZThreadSafe_Swap(fLastWasWrite, 0) == 1)
 		{
-		Locker locker_Write(fMutex_Write);
+		ZGuardMtx locker_Write(fMutex_Write);
 		fStreamW.Flush();
 		}
 
@@ -105,7 +93,7 @@ void ZStreamRW_FlushOnRead::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 
 	{
 	if (ZThreadSafe_Swap(fLastWasWrite, 0) == 1)
 		{
-		Locker locker_Write(fMutex_Write);
+		ZGuardMtx locker_Write(fMutex_Write);
 		fStreamW.Flush();
 		}
 
@@ -117,7 +105,7 @@ void ZStreamRW_FlushOnRead::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
 	{
 	if (ZThreadSafe_Swap(fLastWasWrite, 0) == 1)
 		{
-		Locker locker_Write(fMutex_Write);
+		ZGuardMtx locker_Write(fMutex_Write);
 		fStreamW.Flush();
 		}
 
@@ -128,7 +116,7 @@ void ZStreamRW_FlushOnRead::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
 	if (ZThreadSafe_Swap(fLastWasWrite, 0) == 1)
 		{
-		Locker locker_Write(fMutex_Write);
+		ZGuardMtx locker_Write(fMutex_Write);
 		fStreamW.Flush();
 		}
 
@@ -138,7 +126,7 @@ void ZStreamRW_FlushOnRead::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 void ZStreamRW_FlushOnRead::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	ZThreadSafe_Set(fLastWasWrite, 1);
-	Locker locker_Write(fMutex_Write);
+	ZGuardMtx locker_Write(fMutex_Write);
 	fStreamW.Write(iSource, iCount, oCountWritten);
 	}
 
@@ -146,7 +134,7 @@ void ZStreamRW_FlushOnRead::Imp_CopyFromDispatch(const ZStreamR& iStreamR, uint6
 	uint64* oCountRead, uint64* oCountWritten)
 	{
 	ZThreadSafe_Set(fLastWasWrite, 1);
-	Locker locker_Write(fMutex_Write);
+	ZGuardMtx locker_Write(fMutex_Write);
 	fStreamW.CopyFrom(iStreamR, iCount, oCountRead, oCountWritten);
 	}
 
@@ -154,14 +142,14 @@ void ZStreamRW_FlushOnRead::Imp_CopyFrom(const ZStreamR& iStreamR, uint64 iCount
 	uint64* oCountRead, uint64* oCountWritten)
 	{
 	ZThreadSafe_Set(fLastWasWrite, 1);
-	Locker locker_Write(fMutex_Write);
+	ZGuardMtx locker_Write(fMutex_Write);
 	fStreamW.CopyFrom(iStreamR, iCount, oCountRead, oCountWritten);
 	}
 
 void ZStreamRW_FlushOnRead::Imp_Flush()
 	{
 	ZThreadSafe_Set(fLastWasWrite, 0);
-	Locker locker_Write(fMutex_Write);
+	ZGuardMtx locker_Write(fMutex_Write);
 	fStreamW.Flush();
 	}
 

@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadImp.h"
 
 #include <deque>
 
@@ -59,10 +59,10 @@ public:
 	void Reset();
 
 private:
-	ZMutexNR fMutex;
-	ZCondition fCondition_UserCount;
-	ZCondition fCondition_Read;
-	ZCondition fCondition_Write;
+	ZMtx fMutex;
+	ZCnd fCondition_UserCount;
+	ZCnd fCondition_Read;
+	ZCnd fCondition_Write;
 	bool fClosed;
 	size_t fMaxSize;
 	std::deque<uint8> fBuffer;

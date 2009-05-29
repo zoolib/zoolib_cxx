@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAsset.h"
 #include "zoolib/ZFile.h"
+#include "zoolib/ZThread.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 

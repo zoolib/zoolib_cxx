@@ -79,9 +79,9 @@ private:
 	ZRef<ZTSWatcher> fWatcher;
 	Callback_t fCallback;
 	void* fRefcon;
-	ZMutexNR fMutex_CallDoIt;
-	ZMutexNR fMutex_Save;
-	ZCondition fCondition_Save;
+	ZMtx fMutex_CallDoIt;
+	ZMtx fMutex_Save;
+	ZCnd fCondition_Save;
 
 	enum { eMode_Normal, eMode_Save, eMode_Discard } fMode;
 

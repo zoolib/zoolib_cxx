@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStreamer.h" // For ZStreamerRWPos
-#include "zoolib/ZThread.h" // For ZMutex
 
 #include <string> // For string
 

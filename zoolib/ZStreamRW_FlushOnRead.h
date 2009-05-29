@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStreamer.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadImp.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -66,7 +66,7 @@ public:
 
 protected:
 	ZThreadSafe_t fLastWasWrite;
-	ZMutexNR fMutex_Write;
+	ZMtx fMutex_Write;
 	const ZStreamR& fStreamR;
 	const ZStreamW& fStreamW;
 	};

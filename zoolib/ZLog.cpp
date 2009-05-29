@@ -20,13 +20,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZLog.h"
 #include "zoolib/ZString.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadImp.h"
 
 using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 
-static ZMutexNR sMutex;
+static ZMtx sMutex;
 static ZLog::LogMeister* sLogMeister;
 
 // =================================================================================================

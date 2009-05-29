@@ -511,7 +511,7 @@ public:
 	string GetName(size_t iIndex);
 
 private:
-	ZMutex fMutex;
+	ZMtx fMutex;
 	ZRef<ZFileLoc_Win> fFileLoc;
 	HANDLE fHANDLE;
 	vector<string> fNames;
@@ -572,7 +572,7 @@ RealRep_Win::~RealRep_Win()
 
 bool RealRep_Win::HasValue(size_t iIndex)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	while (fHANDLE != INVALID_HANDLE_VALUE && iIndex >= fNames.size())
 		{
 		WIN32_FIND_DATAA theWFD;
@@ -593,14 +593,14 @@ bool RealRep_Win::HasValue(size_t iIndex)
 
 ZFileSpec RealRep_Win::GetSpec(size_t iIndex)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	ZAssertStop(kDebug_File_Win, iIndex < fNames.size());
 	return ZFileSpec(fFileLoc, fNames[iIndex]);
 	}
 
 string RealRep_Win::GetName(size_t iIndex)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	ZAssertStop(kDebug_File_Win, iIndex < fNames.size());
 	return fNames[iIndex];
 	}
@@ -1103,7 +1103,7 @@ public:
 	string GetName(size_t iIndex);
 
 private:
-	ZMutex fMutex;
+	ZMtx fMutex;
 	ZRef<ZFileLoc_WinNT> fFileLoc;
 	HANDLE fHANDLE;
 	vector<string16> fNames;
@@ -1164,7 +1164,7 @@ RealRep_WinNT::~RealRep_WinNT()
 
 bool RealRep_WinNT::HasValue(size_t iIndex)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	while (fHANDLE != INVALID_HANDLE_VALUE && iIndex >= fNames.size())
 		{
 		WIN32_FIND_DATAW theWFD;
@@ -1185,14 +1185,14 @@ bool RealRep_WinNT::HasValue(size_t iIndex)
 
 ZFileSpec RealRep_WinNT::GetSpec(size_t iIndex)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	ZAssertStop(kDebug_File_Win, iIndex < fNames.size());
 	return ZFileSpec(fFileLoc, ZUnicode::sAsUTF8(fNames[iIndex]));
 	}
 
 string RealRep_WinNT::GetName(size_t iIndex)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	ZAssertStop(kDebug_File_Win, iIndex < fNames.size());
 	return ZUnicode::sAsUTF8(fNames[iIndex]);
 	}
@@ -1715,7 +1715,7 @@ ZFileR_Win::~ZFileR_Win()
 
 ZFile::Error ZFileR_Win::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	if (fPosition != iOffset)
 		{
 		ZFile::Error err = sSetPosition(fFileHANDLE, iOffset);
@@ -1786,7 +1786,7 @@ ZFileW_Win::~ZFileW_Win()
 ZFile::Error ZFileW_Win::WriteAt(
 	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	if (fPosition != iOffset)
 		{
 		ZFile::Error err = sSetPosition(fFileHANDLE, iOffset);
@@ -1819,20 +1819,20 @@ ZFile::Error ZFileW_Win::GetSize(uint64& oSize)
 
 ZFile::Error ZFileW_Win::SetSize(uint64 iSize)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	fPosition = kInvalidPos;
 	return sSetSize(fFileHANDLE, iSize);
 	}
 
 ZFile::Error ZFileW_Win::Flush()
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	return sFlushVolume(fFileHANDLE);
 	}
 
 ZFile::Error ZFileW_Win::FlushVolume()
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	return sFlushVolume(fFileHANDLE);
 	}
 
@@ -1885,7 +1885,7 @@ ZFileRW_Win::~ZFileRW_Win()
 
 ZFile::Error ZFileRW_Win::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	if (fPosition != iOffset)
 		{
 		ZFile::Error err = sSetPosition(fFileHANDLE, iOffset);
@@ -1916,7 +1916,7 @@ ZFile::Error ZFileRW_Win::ReadAt(uint64 iOffset, void* iDest, size_t iCount, siz
 ZFile::Error ZFileRW_Win::WriteAt(
 	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	if (fPosition != iOffset)
 		{
 		ZFile::Error err = sSetPosition(fFileHANDLE, iOffset);
@@ -1949,20 +1949,20 @@ ZFile::Error ZFileRW_Win::GetSize(uint64& oSize)
 
 ZFile::Error ZFileRW_Win::SetSize(uint64 iSize)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	fPosition = kInvalidPos;
 	return sSetSize(fFileHANDLE, iSize);
 	}
 
 ZFile::Error ZFileRW_Win::Flush()
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	return sFlush(fFileHANDLE);
 	}
 
 ZFile::Error ZFileRW_Win::FlushVolume()
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardMtx locker(fMutex);
 	return sFlushVolume(fFileHANDLE);
 	}
 

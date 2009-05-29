@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZStreamer.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadImp.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZUnicode.h"
@@ -552,7 +552,7 @@ public:
 	virtual ZFile::Error GetSize(uint64& oSize);
 
 private:
-	ZMutexNR fMutex;
+	ZMtx fMutex;
 	ZRef<ZStreamerRPos> fStreamer;
 	const ZStreamRPos& fStream;
 	};
@@ -578,7 +578,7 @@ public:
 	virtual ZFile::Error FlushVolume();
 
 private:
-	ZMutexNR fMutex;
+	ZMtx fMutex;
 	ZRef<ZStreamerWPos> fStreamer;
 	const ZStreamWPos& fStream;
 	};
@@ -605,7 +605,7 @@ public:
 	virtual ZFile::Error FlushVolume();
 
 private:
-	ZMutexNR fMutex;
+	ZMtx fMutex;
 	ZRef<ZStreamerRWPos> fStreamer;
 	const ZStreamRWPos& fStream;
 	};
