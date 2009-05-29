@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStreamMUX__ 1
 
 #include "zconfig.h"
-#include "zoolib/ZCommer.h"
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZDList.h"
 #include "zoolib/ZStreamer.h"
@@ -41,8 +40,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZStreamMUX
 
 class ZStreamMUX
-:	public ZCommer,
-	public ZRefCountedWithFinalize,
+:	public ZRefCountedWithFinalization,
 	public ZWeakReferee
 	{
 public:
@@ -55,9 +53,10 @@ public:
 // From ZRefCountedWithFinalize
 	virtual void Finalize();
 
-// From ZCommer
-	virtual bool Read(const ZStreamR& iStreamR);
-	virtual bool Write(const ZStreamW& iStreamW);
+// Our protocol
+	virtual void Finished();
+
+	void Start(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 
 	void Stop();
 
@@ -72,6 +71,12 @@ public:
 	void SetPingInterval(double iInterval);
 
 private:
+	class Commer;
+	friend class Commer;
+	ZRef<Commer> fCommer;
+	bool pRead(const ZStreamR& iStreamR);
+	bool pWrite(const ZStreamW& iStreamW);
+
 	class DLink_Endpoint_Pending;
 	class Endpoint;
 	friend class Endpoint;
