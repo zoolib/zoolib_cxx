@@ -50,15 +50,15 @@ using ZUtil_STL::sFirstOrNil;
 #pragma mark * PSieve
 
 class ZTSoup::DLink_PSieve_Update
-	: public DListLink<ZTSoup::PSieve, ZTSoup::DLink_PSieve_Update, ZTSoup::kDebug>
+:	public DListLink<ZTSoup::PSieve, ZTSoup::DLink_PSieve_Update, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::DLink_PSieve_Sync
-	: public DListLink<ZTSoup::PSieve, ZTSoup::DLink_PSieve_Sync, ZTSoup::kDebug>
+:	public DListLink<ZTSoup::PSieve, ZTSoup::DLink_PSieve_Sync, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::DLink_PSieve_Changed
-	: public DListLink<ZTSoup::PSieve, ZTSoup::DLink_PSieve_Changed, ZTSoup::kDebug>
+:	public DListLink<ZTSoup::PSieve, ZTSoup::DLink_PSieve_Changed, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::PSieve
@@ -92,23 +92,23 @@ public:
 #pragma mark * PCrouton
 
 class ZTSoup::DLink_PCrouton_Update
-	: public DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Update, ZTSoup::kDebug>
+:	public DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Update, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::DLink_PCrouton_Sync
-	: public DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Sync, ZTSoup::kDebug>
+:	public DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Sync, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::DLink_PCrouton_Changed
-	: public DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Changed, ZTSoup::kDebug>
+:	public DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Changed, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::DLink_PCrouton_Syncing
-	: public DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Syncing, ZTSoup::kDebug>
+:	public DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Syncing, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::DLink_PCrouton_Pending
-	: public DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Pending, ZTSoup::kDebug>
+:	public DListLink<ZTSoup::PCrouton, ZTSoup::DLink_PCrouton_Pending, ZTSoup::kDebug>
 	{};
 
 class ZTSoup::PCrouton
