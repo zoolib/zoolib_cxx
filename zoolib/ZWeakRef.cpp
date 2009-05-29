@@ -63,7 +63,7 @@ void ZWeakRefereeProxy::Finalize()
 	{
 	fMtx.Acquire();
 	this->FinalizationComplete();
-	bool inUse = fReferee || this->GetRefCount();
+	const bool inUse = fReferee || this->GetRefCount();
 	fMtx.Release();
 	if (!inUse)
 		delete this;
@@ -74,15 +74,10 @@ void ZWeakRefereeProxy::pDetachReferee(ZWeakReferee* iReferee)
 	fMtx.Acquire();
 	ZAssert(iReferee == fReferee);
 	fReferee = nullptr;
-	if (this->GetRefCount())
-		{
-		fMtx.Release();
-		}
-	else
-		{
-		fMtx.Release();
+	const bool inUse = fReferee || this->GetRefCount();
+	fMtx.Release();
+	if (!inUse)
 		delete this;
-		}
 	}
 
 ZWeakReferee* ZWeakRefereeProxy::pLockUse()
@@ -107,9 +102,7 @@ ZWeakReferee::ZWeakReferee()
 
 ZWeakReferee::~ZWeakReferee()
 	{
-	// Finalize must have called pDetachProxy.
 	this->pDetachProxy();
-//	ZAssert(!fWRP);
 	}
 
 void ZWeakReferee::pDetachProxy()
