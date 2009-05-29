@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,71 +18,63 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStreamCopier.h"
+#ifndef __ZTask__
+#define __ZTask__ 1
+#include "zconfig.h"
 
-#include <vector>
+#include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZWeakRef.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Static helpers
-
-static bool sCopy(
-	const ZStreamR& iStreamR, void* iBuffer, size_t iBufferSize, const ZStreamW& iStreamW)
-	{
-	size_t countRead;
-	iStreamR.Read(iBuffer, iBufferSize, &countRead);
-
-	if (countRead == 0)
-		{
-		if (const ZStreamRCon* theSRC = dynamic_cast<const ZStreamRCon*>(&iStreamR))
-			theSRC->ReceiveDisconnect(-1);
-
-		if (const ZStreamWCon* theSWC = dynamic_cast<const ZStreamWCon*>(&iStreamW))
-			theSWC->SendDisconnect();
-
-		return false;
-		}
-
-	size_t countWritten;
-	iStreamW.Write(iBuffer, countRead, &countWritten);
-
-	return countWritten == countRead;	
-	}
+class ZTask;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStreamCopier
+#pragma mark * ZTaskOwner
 
-ZStreamCopier::ZStreamCopier(ZRef<ZStreamerW> iStreamerW)
-:	fStreamerW(iStreamerW),
-	fChunkSize(sStackBufferSize)
-	{}
-
-ZStreamCopier::ZStreamCopier(ZRef<ZStreamerW> iStreamerW, size_t iChunkSize)
-:	fStreamerW(iStreamerW),
-	fChunkSize(iChunkSize)
-	{}
-
-ZStreamCopier::~ZStreamCopier()
-	{}
-
-bool ZStreamCopier::Read(const ZStreamR& iStreamR)
+class ZTaskOwner
+:	public ZRefCountedWithFinalize,
+	public ZWeakReferee
 	{
-	if (fChunkSize <= sStackBufferSize)
-		{
-		char buffer[sStackBufferSize];
-		return sCopy(iStreamR, buffer, sStackBufferSize, fStreamerW->GetStreamW());
-		}
-	else
-		{
-		std::vector<char> buffer(fChunkSize);
-		return sCopy(iStreamR, &buffer[0], fChunkSize, fStreamerW->GetStreamW());
-		}
-	}
+public:
+	ZTaskOwner();
+	virtual ~ZTaskOwner();
 
-void ZStreamCopier::RunnerDetached(ZStreamReaderRunner* iRunner)
-	{ delete this; }
+	virtual void Task_Finished(ZRef<ZTask> iTask);
+
+protected:
+	void pDetachTask(ZRef<ZTask> iTask);
+
+private:
+	void pTask_Finished(ZRef<ZTask> iTask);
+	friend class ZTask;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZTask
+
+class ZTask : public ZRefCountedWithFinalize
+	{
+public:
+	ZTask(ZRef<ZTaskOwner> iTaskOwner);
+	virtual ~ZTask();
+
+	ZRef<ZTaskOwner> GetOwner();
+
+	virtual void TaskOwner_Detached(ZRef<ZTaskOwner> iTaskOwner);
+
+	virtual void Kill();
+
+protected:
+	void pFinished();
+
+private:
+	ZWeakRef<ZTaskOwner> fTaskOwner;
+	friend class ZTaskOwner;
+	};
 
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZTask__

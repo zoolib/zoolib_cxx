@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,111 +18,99 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZSleeper__
-#define __ZSleeper__ 1
+#ifndef __ZWaiter__
+#define __ZWaiter__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadImp.h"
 #include "zoolib/ZTime.h"
+#include "zoolib/ZWeakRef.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZSleeperRunner;
+class ZWaiter;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSleeper
+#pragma mark * ZWaiterRunner
 
-class ZSleeper
+class ZWaiterRunner
+:	public ZRefCountedWithFinalize,
+	public ZWeakReferee
 	{
-	friend class ZSleeperRunner;
-
-protected:
-	ZSleeper();
-	virtual ~ZSleeper();
-
 public:
-// Our protocol
-	virtual bool Execute() = 0;
+	ZWaiterRunner();
+	virtual ~ZWaiterRunner();
 
-	virtual void RunnerAttached(ZSleeperRunner* iRunner);
-	virtual void RunnerDetached(ZSleeperRunner* iRunner);
-
-	void Wake();
-	void WakeAt(ZTime iSystemTime);
-
-private:
-	ZSleeperRunner* fRunner;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZSleeperRunner
-
-class ZSleeperRunner
-	{
-	friend class ZSleeper;
 protected:
 // Called by subclasses
-	void pAttachSleeper(ZSleeper* iSleeper);
-	void pDetachSleeper(ZSleeper* iSleeper);
+	void pAttachWaiter(ZRef<ZWaiter> iWaiter);
+	void pDetachWaiter(ZRef<ZWaiter> iWaiter);
 
-// Called by ZSleeper instances.
-	virtual void WakeAt(ZSleeper* iSleeper, ZTime iSystemTime) = 0;
+// Called by ZWaiter instances.
+	virtual void WakeAt(ZRef<ZWaiter> iWaiter, ZTime iSystemTime) = 0;
+
+	friend class ZWaiter;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSleeperRunnerFactory
+#pragma mark * ZWaiterRunner_Threaded
 
-// Do we even need this? And it should not return a SleeperRunner
-
-class ZSleeperRunnerFactory : public ZRefCountedWithFinalize
+class ZWaiterRunner_Threaded : public ZWaiterRunner
 	{
 public:
-	virtual void MakeRunner(ZSleeper* iSleeper) = 0;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZSleeperRunner_Threaded
-
-class ZSleeperRunner_Threaded : public ZSleeperRunner
-	{
-public:
-	ZSleeperRunner_Threaded(ZSleeper* iSleeper);
-	~ZSleeperRunner_Threaded();
+	ZWaiterRunner_Threaded(ZRef<ZWaiter> iWaiter);
+	virtual ~ZWaiterRunner_Threaded();
 
 	void Start();
 
-// From ZSleeperRunner
-	virtual void WakeAt(ZSleeper* iSleeper, ZTime iSystemTime);
+// From ZWaiterRunner
+	virtual void WakeAt(ZRef<ZWaiter> iWaiter, ZTime iSystemTime);
 
 private:
 	void pRun();
-	static void spRun(ZSleeperRunner_Threaded* iRunner);
+	static void spRun(ZRef<ZWaiterRunner_Threaded> iRunner);
 
-	ZMutexNR fMutex;
-	ZCondition fCondition;
-	ZSleeper* fSleeper;
+	ZMtx fMtx;
+	ZCnd fCnd;
+	ZRef<ZWaiter> fWaiter;
 	ZTime fNextWake;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSleeperRunnerFactory_Threaded
+#pragma mark * ZWaiter
 
-class ZSleeperRunnerFactory_Threaded : public ZSleeperRunnerFactory
+class ZWaiter : public ZRefCountedWithFinalize
 	{
 public:
-	virtual void MakeRunner(ZSleeper* iSleeper);
+	ZWaiter();
+
+	virtual void RunnerAttached();
+	virtual void RunnerDetached();
+
+	virtual bool Execute() = 0;
+
+	void Wake();
+	void WakeAt(ZTime iSystemTime);
+
+private:
+	void pRunnerAttached();
+	void pRunnerDetached();
+
+	ZWeakRef<ZWaiterRunner> fRunner;
+	friend class ZWaiterRunner;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSleeperRunnerFactory_Pooled??
+#pragma mark * Utility methods
+
+// Here for now till I find a better home.
+void sStartWaiterRunner(ZRef<ZWaiter> iWaiter);
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZSleeper__
+#endif // __ZWaiter__

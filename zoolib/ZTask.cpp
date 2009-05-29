@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,36 +18,58 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamCopier__
-#define __ZStreamCopier__
-#include "zconfig.h"
-
-#include "zoolib/ZStreamReader.h"
+#include "zoolib/ZTask.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStreamCopier
+#pragma mark * ZTaskOwner
 
-class ZStreamCopier : public ZStreamReader
+ZTaskOwner::ZTaskOwner()
+	{}
+
+ZTaskOwner::~ZTaskOwner()
+	{}
+
+void ZTaskOwner::Task_Finished(ZRef<ZTask> iTask)
+	{}
+
+void ZTaskOwner::pDetachTask(ZRef<ZTask> iTask)
 	{
-public:
-	ZStreamCopier(ZRef<ZStreamerW> iStreamerW);
-	ZStreamCopier(ZRef<ZStreamerW> iStreamerW, size_t iChunkSize);
+	iTask->TaskOwner_Detached(this);
+	iTask->fTaskOwner.Clear();
+	}
 
-	~ZStreamCopier();
+void ZTaskOwner::pTask_Finished(ZRef<ZTask> iTask)
+	{
+	this->Task_Finished(iTask);
+	}
 
-// From ZStreamReader
-	virtual bool Read(const ZStreamR& iStreamR);
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZTask
 
-	virtual void RunnerDetached(ZStreamReaderRunner* iRunner);
+ZTask::ZTask(ZRef<ZTaskOwner> iTaskOwner)
+:	fTaskOwner(iTaskOwner)
+	{}
 
-private:
-	ZRef<ZStreamerW> fStreamerW;
-	size_t fChunkSize;
-	};
+ZTask::~ZTask()
+	{}
+
+ZRef<ZTaskOwner> ZTask::GetOwner()
+	{ return fTaskOwner.Use(); }
+
+void ZTask::TaskOwner_Detached(ZRef<ZTaskOwner> iTaskOwner)
+	{}
+
+void ZTask::Kill()
+	{}
+
+void ZTask::pFinished()
+	{
+	if (ZRef<ZTaskOwner> theTaskOwner = fTaskOwner.Use())
+		theTaskOwner->pTask_Finished(this);
+	}
 
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZStreamCopier__
