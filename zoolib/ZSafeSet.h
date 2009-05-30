@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZSafeSet__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZDList.h"
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZThreadImp.h"
