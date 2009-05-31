@@ -271,42 +271,44 @@ void ZBlackBerryServer::Handler_DeviceFinished::TripIt()
 
 namespace ZANONYMOUS {
 
-class StreamerCopier_Chunked : public ZStreamerReader
+class StreamerCopier_Chunked : public ZWaiter
 	{
 public:
-	StreamerCopier_Chunked(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerWCon> iStreamerWCon);
+	StreamerCopier_Chunked(ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon);
 
 	~StreamerCopier_Chunked();
 
-// From ZStreamerReader
-	virtual bool Read(const ZStreamR& iStreamR);
-
-	virtual void ReadFinished();
+// From ZWaiter
+	virtual bool Execute();
 
 private:
+	ZRef<ZStreamerRCon> fStreamerRCon;
 	ZRef<ZStreamerWCon> fStreamerWCon;
 	};
 
 StreamerCopier_Chunked::StreamerCopier_Chunked(
-	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerWCon> iStreamerWCon)
-:	ZStreamerReader(iStreamerR),
+	ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon)
+:	fStreamerRCon(iStreamerRCon),
 	fStreamerWCon(iStreamerWCon)
 	{}
 
 StreamerCopier_Chunked::~StreamerCopier_Chunked()
 	{}
 
-bool StreamerCopier_Chunked::Read(const ZStreamR& iStreamR)
+bool StreamerCopier_Chunked::Execute()
 	{
+	ZWaiter::Wake();//##
+	const ZStreamRCon& r = fStreamerRCon->GetStreamRCon();
 	const ZStreamWCon& w = fStreamerWCon->GetStreamWCon();
 
 	try
 		{
-		const size_t theSize = iStreamR.ReadUInt16LE();
+		const size_t theSize = r.ReadUInt16LE();
 
 		if (theSize == 0)
 			{
 			// End of stream
+			r.ReceiveDisconnect(-1);
 			w.SendDisconnect();
 			return false;
 			}
@@ -314,7 +316,7 @@ bool StreamerCopier_Chunked::Read(const ZStreamR& iStreamR)
 			{
 			std::vector<char> buffer(theSize);
 
-			iStreamR.Read(&buffer[0], theSize);
+			r.Read(&buffer[0], theSize);
 			w.Write(&buffer[0], theSize);
 
 			return true;
@@ -322,14 +324,10 @@ bool StreamerCopier_Chunked::Read(const ZStreamR& iStreamR)
 		}
 	catch (...)
 		{
-		w.SendDisconnect();
+		r.Abort();
+		w.Abort();
 		throw;
 		}
-	}
-
-void StreamerCopier_Chunked::ReadFinished()
-	{
-	fStreamerWCon->GetStreamWCon().SendDisconnect();
 	}
 
 } // anonymous namespace
@@ -485,10 +483,14 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 				w.WriteUInt32(writeSize);
 				w.Flush();
 				// Use a standard copier for the device-->client direction
-				sStartWaiterRunner(new ZStreamerCopier(deviceCon, iSRWCon, readSize));
+				ZRef<ZWaiter> deviceToClient
+					= new ZStreamerCopier(ZRef<ZTaskOwner>(), deviceCon, iSRWCon, readSize);
+				sStartWaiterRunner(deviceToClient);
 
 				// And our specialized copier for the client-->device direction.
-				sStartWaiterRunner(new StreamerCopier_Chunked(iSRWCon, deviceCon));
+				ZRef<ZWaiter> clientToDevice
+					= new StreamerCopier_Chunked(iSRWCon, deviceCon);
+				sStartWaiterRunner(clientToDevice);
 
 				return;
 				}
