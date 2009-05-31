@@ -55,6 +55,31 @@ protected:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZStreamRCon_Filter
+
+class ZStreamRCon_Filter : public ZStreamRCon
+	{
+public:
+	ZStreamRCon_Filter(const ZStreamRCon& iStreamReal);
+
+	~ZStreamRCon_Filter();
+
+// From ZStreamR via ZStreamRCon
+	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual size_t Imp_CountReadable();
+	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
+
+// From ZStreamRCon
+	virtual bool Imp_ReceiveDisconnect(int iMilliseconds);
+	virtual void Imp_Abort();
+
+protected:
+	const ZStreamRCon& fStreamReal;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZStreamU_Filter
 
 class ZStreamU_Filter : public ZStreamU
@@ -124,6 +149,29 @@ protected:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZStreamWCon_Filter
+
+class ZStreamWCon_Filter : public ZStreamWCon
+	{
+public:
+	ZStreamWCon_Filter(const ZStreamWCon& iStreamReal);
+
+	~ZStreamWCon_Filter();
+
+// From ZStreamW via ZStreamRWCon
+	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
+	virtual void Imp_Flush();
+
+// From ZStreamWCon
+	virtual void Imp_SendDisconnect();
+	virtual void Imp_Abort();
+
+protected:
+	const ZStreamWCon& fStreamReal;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZStreamWPos_Filter
 
 class ZStreamWPos_Filter : public ZStreamWPos
@@ -142,8 +190,6 @@ public:
 	virtual void Imp_SetPosition(uint64 iPosition);
 
 	virtual uint64 Imp_GetSize();
-
-// From ZStreamWPos via ZStreamRWPos
 	virtual void Imp_SetSize(uint64 iSize);
 
 protected:

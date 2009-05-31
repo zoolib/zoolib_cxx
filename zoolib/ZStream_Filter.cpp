@@ -47,11 +47,43 @@ void ZStreamR_Filter::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 
 void ZStreamR_Filter::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
-	{ const_cast<ZStreamR&>(fStreamReal).Imp_CopyToDispatch(iStreamW, iCount, oCountRead, oCountWritten); }
+	{
+	const_cast<ZStreamR&>(fStreamReal).Imp_CopyToDispatch(
+		iStreamW, iCount, oCountRead, oCountWritten);
+	}
 
 void ZStreamR_Filter::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
 	{ const_cast<ZStreamR&>(fStreamReal).Imp_CopyTo(iStreamW, iCount, oCountRead, oCountWritten); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStreamRCon_Filter
+
+ZStreamRCon_Filter::ZStreamRCon_Filter(const ZStreamRCon& iStreamReal)
+:	fStreamReal(iStreamReal)
+	{}
+
+ZStreamRCon_Filter::~ZStreamRCon_Filter()
+	{}
+
+void ZStreamRCon_Filter::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+	{ const_cast<ZStreamRCon&>(fStreamReal).Imp_Read(iDest, iCount, oCountRead); }
+
+size_t ZStreamRCon_Filter::Imp_CountReadable()
+	{ return const_cast<ZStreamRCon&>(fStreamReal).Imp_CountReadable(); }
+
+bool ZStreamRCon_Filter::Imp_WaitReadable(int iMilliseconds)
+	{ return const_cast<ZStreamRCon&>(fStreamReal).Imp_WaitReadable(iMilliseconds); }
+
+void ZStreamRCon_Filter::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
+	{ const_cast<ZStreamRCon&>(fStreamReal).Imp_Skip(iCount, oCountSkipped); }
+
+bool ZStreamRCon_Filter::Imp_ReceiveDisconnect(int iMilliseconds)
+	{ return const_cast<ZStreamRCon&>(fStreamReal).Imp_ReceiveDisconnect(iMilliseconds); }
+
+void ZStreamRCon_Filter::Imp_Abort()
+	{ const_cast<ZStreamRCon&>(fStreamReal).Imp_Abort(); }
 
 // =================================================================================================
 #pragma mark -
@@ -124,6 +156,29 @@ void ZStreamW_Filter::Imp_Write(const void* iSource, size_t iCount, size_t* oCou
 
 void ZStreamW_Filter::Imp_Flush()
 	{ const_cast<ZStreamW&>(fStreamReal).Imp_Flush(); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStreamWCon_Filter
+
+ZStreamWCon_Filter::ZStreamWCon_Filter(const ZStreamWCon& iStreamReal)
+:	fStreamReal(iStreamReal)
+	{}
+
+ZStreamWCon_Filter::~ZStreamWCon_Filter()
+	{}
+
+void ZStreamWCon_Filter::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+	{ const_cast<ZStreamWCon&>(fStreamReal).Imp_Write(iSource, iCount, oCountWritten); }
+
+void ZStreamWCon_Filter::Imp_Flush()
+	{ const_cast<ZStreamWCon&>(fStreamReal).Imp_Flush(); }
+
+void ZStreamWCon_Filter::Imp_SendDisconnect()
+	{ const_cast<ZStreamWCon&>(fStreamReal).Imp_SendDisconnect(); }
+
+void ZStreamWCon_Filter::Imp_Abort()
+	{ const_cast<ZStreamWCon&>(fStreamReal).Imp_Abort(); }
 
 // =================================================================================================
 #pragma mark -
