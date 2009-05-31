@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __NewServer__
-#define __NewServer__ 1
+#ifndef __ZServer__
+#define __ZServer__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZSafeSet.h"
@@ -90,23 +90,23 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZServer_Simple
+#pragma mark * ZServer_T
 
-class ZServer_Simple : public ZServer
+template <class R, class P>
+class ZServer_T : public ZServer
 	{
 public:
-	ZServer_Simple();
-
+	ZServer_T() {}
+	ZServer_T(const P& iParam) : fParam(iParam) {}
+	
 // From ZServer
-	virtual ZRef<Responder> MakeResponder();
-
-// Our protocol
-	virtual void Handle(ZRef<ZStreamerRW> iStreamerRW);
+	virtual ZRef<Responder> MakeResponder()
+		{ return new R(this, fParam); }
 
 private:
-	class Responder;
+	P fParam;
 	};
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __NewServer__
+#endif // __ZServer__
