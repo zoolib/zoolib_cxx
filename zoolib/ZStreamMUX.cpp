@@ -665,7 +665,8 @@ void ZStreamMUX::SetPingInterval(double iInterval)
 	{
 	ZMutexLocker locker(fMutex);
 	fPingInterval = iInterval;
-	fCommer->Wake();
+	if (fCommer)
+		fCommer->Wake();
 	}
 
 bool ZStreamMUX::pRead(const ZStreamR& iStreamR)
