@@ -595,6 +595,83 @@ protected:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZStreamerWCon_T
+
+template <class Stream_t>
+class ZStreamerWCon_T : public ZStreamerWCon
+	{
+public:
+	ZStreamerWCon_T() {}
+
+	virtual ~ZStreamerWCon_T() {}
+
+	template <class P>
+	ZStreamerWCon_T(P& iParam) : fStream(iParam) {}
+
+	template <class P>
+	ZStreamerWCon_T(const P& iParam) : fStream(iParam) {}
+
+// From ZStreamerW via ZStreamerWCon
+	virtual const ZStreamW& GetStreamW() { return fStream; }
+
+// From ZStreamerWCon
+	virtual const ZStreamWCon& GetStreamWCon() { return fStream; }
+
+// Our protocol
+	Stream_t& GetStream() { return fStream; }
+
+protected:
+	Stream_t fStream;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStreamerWCon_FT
+
+template <class Stream_t>
+class ZStreamerWCon_FT : public ZStreamerWCon
+	{
+protected:
+	ZStreamerWCon_FT() {}
+
+public:
+	virtual ~ZStreamerWCon_FT() {}
+
+	template <class P>
+	ZStreamerWCon_FT(P& iParam, ZRef<ZStreamerWCon> iStreamer)
+	:	fStreamerReal(iStreamer),
+		fStream(iParam, iStreamer->GetStreamWCon())
+		{}
+
+	template <class P>
+	ZStreamerWCon_FT(const P& iParam, ZRef<ZStreamerWCon> iStreamer)
+	:	fStreamerReal(iStreamer),
+		fStream(iParam, iStreamer->GetStreamWCon())
+		{}
+
+	ZStreamerWCon_FT(ZRef<ZStreamerWCon> iStreamer)
+	:	fStreamerReal(iStreamer),
+		fStream(iStreamer->GetStreamWCon())
+		{}
+
+// From ZStreamerW via ZStreamerWCon
+	virtual const ZStreamW& GetStreamW() { return fStream; }
+
+// From ZStreamerWCon
+	virtual const ZStreamWCon& GetStreamWCon() { return fStream; }
+
+// Our protocol
+	ZRef<ZStreamerWCon> GetStreamerWCon() { return fStreamerReal; }
+
+	Stream_t& GetStream() { return fStream; }
+
+protected:
+	ZRef<ZStreamerWCon> fStreamerReal;
+	Stream_t fStream;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZStreamerWPos_T
 
 template <class Stream_t>
