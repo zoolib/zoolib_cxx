@@ -56,31 +56,6 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWaiterRunner_Threaded
-
-class ZWaiterRunner_Threaded : public ZWaiterRunner
-	{
-public:
-	ZWaiterRunner_Threaded(ZRef<ZWaiter> iWaiter);
-	virtual ~ZWaiterRunner_Threaded();
-
-	void Start();
-
-// From ZWaiterRunner
-	virtual void WakeAt(ZRef<ZWaiter> iWaiter, ZTime iSystemTime);
-
-private:
-	void pRun();
-	static void spRun(ZRef<ZWaiterRunner_Threaded> iRunner);
-
-	ZMtx fMtx;
-	ZCnd fCnd;
-	ZRef<ZWaiter> fWaiter;
-	ZTime fNextWake;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZWaiter
 
 class ZWaiter : public ZRefCountedWithFinalize

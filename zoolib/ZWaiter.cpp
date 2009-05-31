@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZWaiter.h"
-#include "zoolib/ZThreadSimple.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -57,6 +56,28 @@ void ZWaiterRunner::pDetachWaiter(ZRef<ZWaiter> iWaiter)
 #pragma mark -
 #pragma mark * ZWaiterRunner_Threaded
 
+class ZWaiterRunner_Threaded : public ZWaiterRunner
+	{
+public:
+	ZWaiterRunner_Threaded(ZRef<ZWaiter> iWaiter);
+	virtual ~ZWaiterRunner_Threaded();
+
+	void Start();
+
+// From ZWaiterRunner
+	virtual void WakeAt(ZRef<ZWaiter> iWaiter, ZTime iSystemTime);
+
+private:
+	void pRun();
+	static ZThreadImp::ProcResult_t spRun(void* iRefcon);
+
+	ZMtx fMtx;
+	ZCnd fCnd;
+	ZRef<ZWaiter> fWaiter;
+	ZTime fNextWake;
+	ZRef<ZWaiterRunner_Threaded> fSelf;
+	};
+
 ZWaiterRunner_Threaded::ZWaiterRunner_Threaded(ZRef<ZWaiter> iWaiter)
 :	fWaiter(iWaiter),
 	fNextWake(ZTime::sSystem())
@@ -67,9 +88,10 @@ ZWaiterRunner_Threaded::~ZWaiterRunner_Threaded()
 
 void ZWaiterRunner_Threaded::Start()
 	{
+	fSelf = this;
 	ZRef<ZWaiterRunner_Threaded> self = this;
 	this->pAttachWaiter(fWaiter);
-	(new ZThreadSimple<ZRef<ZWaiterRunner_Threaded> >(spRun, self))->Start();
+	ZThreadImp::sCreate(0, spRun, this);
 	}
 
 void ZWaiterRunner_Threaded::WakeAt(ZRef<ZWaiter> iWaiter, ZTime iSystemTime)
@@ -115,10 +137,14 @@ void ZWaiterRunner_Threaded::pRun()
 
 	this->pDetachWaiter(fWaiter);
 	fWaiter.Clear();
+	fSelf.Clear();
 	}
 
-void ZWaiterRunner_Threaded::spRun(ZRef<ZWaiterRunner_Threaded> iRunner)
-	{ iRunner->pRun(); }
+ZThreadImp::ProcResult_t ZWaiterRunner_Threaded::spRun(void* iRefcon)
+	{
+	static_cast<ZWaiterRunner_Threaded*>(iRefcon)->pRun();
+	return ZThreadImp::ProcResult_t();
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -142,7 +168,7 @@ void ZWaiter::Wake()
 void ZWaiter::WakeAt(ZTime iSystemTime)
 	{
 	if (ZRef<ZWaiterRunner> theRunner = fRunner.Use())
-		theRunner->WakeAt(this, ZTime::sSystem());
+		theRunner->WakeAt(this, iSystemTime);
 	}
 
 void ZWaiter::pRunnerAttached()
