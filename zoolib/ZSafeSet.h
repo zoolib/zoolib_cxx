@@ -137,6 +137,24 @@ private:
 
 	bool pErase(const T& iT);
 
+	void pClear()
+		{
+		ZGuardMtx guard(fMtx);
+		// Invalidate all iterators referencing entries.
+		for (typename EntryList::iterator listIter = fList.begin();
+			listIter != fList.end(); ++listIter)
+			{
+			for (DListIteratorEraseAll<ZSafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
+				i = (*listIter).fIters; i; i.Advance())
+				{
+				ZSafeSetIterConst<T>* theIter = i.Current();
+				theIter->fRep.Clear();
+				}
+			}
+		fList.clear();
+		fMap.clear();
+		}
+
 	void pInit(ZRef<ZSafeSetRep> iSelf,
 		ZSafeSetIterConst<T>& ioIter)
 		{
@@ -219,6 +237,9 @@ public:
 
 	bool Erase(const T& iT)
 		{ return fRep->pErase(iT); }
+
+	void Clear()
+		{ fRep->pClear(); }
 
 	ZRef<ZSafeSetRep<T> > GetRep() const
 		{ return fRep; }
