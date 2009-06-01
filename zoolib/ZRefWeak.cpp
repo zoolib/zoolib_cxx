@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZThreadImp.h"
-#include "zoolib/ZWeakRef.h"
+#include "zoolib/ZRefWeak.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -47,7 +47,7 @@ private:
 	ZMtx fMtx;
 	ZWeakReferee* fReferee;
 	friend class ZWeakReferee;
-	friend class ZWeakRefBase;
+	friend class ZRefWeakBase;
 	};
 
 ZWeakRefereeProxy::ZWeakRefereeProxy(ZWeakReferee* iReferee)
@@ -123,28 +123,28 @@ ZWeakRefereeProxy* ZWeakReferee::pGetWeakRefereeProxy()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWeakRefBase
+#pragma mark * ZRefWeakBase
 
-ZWeakRefBase::ZWeakRefBase()
+ZRefWeakBase::ZRefWeakBase()
 	{}
 
-ZWeakRefBase::ZWeakRefBase(const ZWeakRefBase& iOther)
+ZRefWeakBase::ZRefWeakBase(const ZRefWeakBase& iOther)
 :	fWRP(iOther.fWRP)
 	{}
 
-ZWeakRefBase::ZWeakRefBase(ZWeakReferee* iWeakReferee)
+ZRefWeakBase::ZRefWeakBase(ZWeakReferee* iWeakReferee)
 	{
 	if (iWeakReferee)
 		fWRP = iWeakReferee->pGetWeakRefereeProxy();
 	}
 
-ZWeakRefBase::~ZWeakRefBase()
+ZRefWeakBase::~ZRefWeakBase()
 	{}
 
-void ZWeakRefBase::AssignFrom(const ZWeakRefBase& iOther)
+void ZRefWeakBase::AssignFrom(const ZRefWeakBase& iOther)
 	{ fWRP = iOther.fWRP; }
 
-void ZWeakRefBase::AssignFrom(ZWeakReferee* iWeakReferee)
+void ZRefWeakBase::AssignFrom(ZWeakReferee* iWeakReferee)
 	{
 	if (iWeakReferee)
 		fWRP = iWeakReferee->pGetWeakRefereeProxy();
@@ -152,17 +152,17 @@ void ZWeakRefBase::AssignFrom(ZWeakReferee* iWeakReferee)
 		fWRP.Clear();
 	}
 
-void ZWeakRefBase::Clear()
+void ZRefWeakBase::Clear()
 	{ fWRP.Clear(); }
 
-ZWeakReferee* ZWeakRefBase::LockUse() const
+ZWeakReferee* ZRefWeakBase::LockUse() const
 	{
 	if (fWRP)
 		return fWRP->pLockUse();
 	return nullptr;
 	}
 
-void ZWeakRefBase::Unlock() const
+void ZRefWeakBase::Unlock() const
 	{ fWRP->pUnlock(); }
 
 NAMESPACE_ZOOLIB_END
