@@ -20,22 +20,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape_Host_Std.h"
 
+#include "zoolib/ZCompat_string.h" // For strdup
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZHTTP_Requests.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZMIME.h"
 #include "zoolib/ZNet_Internet.h"
-#include "zoolib/ZNetscape.h"
-#include "zoolib/ZStreamRWPos_RAM.h"
-#include "zoolib/ZStream_CRLF.h"
-#include "zoolib/ZStream_Tee.h"
 #include "zoolib/ZString.h"
-#include "zoolib/ZThreadSimple.h"
 #include "zoolib/ZTuple.h"
-#include "zoolib/ZUtil_STL.h"
-#include "zoolib/ZUtil_Strim_Tuple.h"
-
-#include "zoolib/ZCompat_string.h" // For strdup
+#include "zoolib/ZWaiter.h"
 
 #include <stdlib.h> // For malloc/free
 
@@ -528,18 +520,18 @@ bool HostMeister_Std::Construct
 #pragma mark -
 #pragma mark * Host_Std::HTTPer
 
-class Host_Std::HTTPer
+class Host_Std::HTTPFetcher
+:	public ZWaiter
 	{
 public:
-	HTTPer(Host_Std* iHost, const string& iURL, ZMemoryBlock* iMB, void* iNotifyData);
+	HTTPFetcher(Host_Std* iHost, const string& iURL, ZMemoryBlock* iMB, void* iNotifyData);
 
-	void Start();
+// From ZWaiter
+	virtual bool Execute();
+
 	void Cancel();
 
 private:
-	void pRun();
-	static void spRun(HTTPer* iHTTPer);
-
 	const string fURL;
 	void* fNotifyData;
 	Host_Std* fHost;
@@ -547,7 +539,7 @@ private:
 	bool fIsPOST;
 	};
 
-Host_Std::HTTPer::HTTPer(Host_Std* iHost, const string& iURL, ZMemoryBlock* iMB, void* iNotifyData)
+Host_Std::HTTPFetcher::HTTPFetcher(Host_Std* iHost, const string& iURL, ZMemoryBlock* iMB, void* iNotifyData)
 :	fHost(iHost),
 	fURL(iURL),
 	fNotifyData(iNotifyData)
@@ -563,15 +555,7 @@ Host_Std::HTTPer::HTTPer(Host_Std* iHost, const string& iURL, ZMemoryBlock* iMB,
 		}
 	}
 
-void Host_Std::HTTPer::Start()
-	{ (new ZThreadSimple<HTTPer*>(spRun, this))->Start(); }
-
-void Host_Std::HTTPer::Cancel()
-	{
-	fHost = nullptr;
-	}
-
-void Host_Std::HTTPer::pRun()
+bool Host_Std::HTTPFetcher::Execute()
 	{
 	try
 		{
@@ -596,7 +580,7 @@ void Host_Std::HTTPer::pRun()
 
 			fHost->pHTTPerFinished(
 				this, fNotifyData, theURL, theMIME, theRawHeaders, theStreamerR);
-			return;
+			return false;
 			}
 		}
 	catch (...)
@@ -608,12 +592,13 @@ void Host_Std::HTTPer::pRun()
 		fHost->pHTTPerFinished(
 			this, fNotifyData, fURL, "", ZMemoryBlock(), ZRef<ZStreamerR>());
 		}
+
+	return false;
 	}
 
-void Host_Std::HTTPer::spRun(HTTPer* iHTTPer)
+void Host_Std::HTTPFetcher::Cancel()
 	{
-	iHTTPer->pRun();
-	delete iHTTPer;
+	fHost = nil;
 	}
 
 // =================================================================================================
@@ -781,13 +766,26 @@ Host_Std::Host_Std(ZRef<GuestFactory> iGuestFactory)
 
 Host_Std::~Host_Std()
 	{
-	ZMutexLocker locker(fMutex);
-	for (vector<HTTPer*>::iterator i = fHTTPers.begin(); i != fHTTPers.end(); ++i)
+	for (ZSafeSetIterConst<ZRef<HTTPFetcher> > i = fHTTPFetchers;;)
 		{
-		(*i)->Cancel();
+		if (ZRef<HTTPFetcher> current = i.ReadInc())
+			{
+//##			current->Cancel();
+			}
+		else
+			{
+			break;
+			}
 		}
+	fHTTPFetchers.Clear();
 
-	fHTTPers.clear();
+	for (ZSafeSetIterConst<Sender* > i = fSenders;;)
+		{
+		if (Sender* current = i.ReadInc())
+			delete current;
+		else
+			break;
+		}
 
 	this->Destroy();
 	}
@@ -887,11 +885,9 @@ NPError Host_Std::Host_GetURLNotify(NPP npp,
 
 	if (theURL.substr(0, 5) == "http:")
 		{
-		HTTPer* theG = new HTTPer(this, theURL, nullptr, notifyData);
-
-		ZMutexLocker locker(fMutex);
-		fHTTPers.push_back(theG);
-		theG->Start();
+		ZRef<HTTPFetcher> theFetcher = new HTTPFetcher(this, theURL, nullptr, notifyData);
+		fHTTPFetchers.Add(theFetcher);
+		sStartWaiterRunner(theFetcher);
 		return NPERR_NO_ERROR;
 		}
 
@@ -912,11 +908,9 @@ NPError Host_Std::Host_PostURLNotify(NPP npp,
 	if (theURL.substr(0, 5) == "http:")
 		{
 		ZMemoryBlock theData(buf, len);
-		HTTPer* theG = new HTTPer(this, theURL, &theData, notifyData);
-
-		ZMutexLocker locker(fMutex);
-		fHTTPers.push_back(theG);
-		theG->Start();
+		ZRef<HTTPFetcher> theFetcher = new HTTPFetcher(this, theURL, &theData, notifyData);
+		fHTTPFetchers.Add(theFetcher);
+		sStartWaiterRunner(theFetcher);
 		return NPERR_NO_ERROR;
 		}
 
@@ -942,12 +936,11 @@ void Host_Std::Host_InvalidateRegion(NPP npp, NPRegion region)
 void Host_Std::Host_ForceRedraw(NPP npp)
 	{}
 
-void Host_Std::pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
+void Host_Std::pHTTPerFinished(ZRef<HTTPFetcher> iHTTPFetcher, void* iNotifyData,
 	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
 	ZRef<ZStreamerR> iStreamerR)
 	{
-	ZMutexLocker locker(fMutex);
-	ZUtil_STL::sEraseMustContain(1, fHTTPers, iHTTPer);
+	fHTTPFetchers.Erase(iHTTPFetcher);
 	this->SendDataAsync(iNotifyData, iURL, iMIME, iHeaders, iStreamerR);
 	}
 
@@ -995,10 +988,9 @@ void Host_Std::SendDataAsync(
 	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
 	ZRef<ZStreamerR> iStreamerR)
 	{
-	ZMutexLocker locker(fMutex);
 	Sender* theSender = new Sender(this, this->GetNPP(),
 		iNotifyData, iURL, iMIME, iHeaders, iStreamerR);
-	fSenders.push_back(theSender);
+	fSenders.Add(theSender);
 	}
 
 void Host_Std::SendDataSync(
@@ -1065,17 +1057,19 @@ void Host_Std::SendDataSync(
 
 void Host_Std::DeliverData()
 	{
-	ZMutexLocker locker(fMutex);
-	for (list<Sender*>::iterator i = fSenders.begin(); i != fSenders.end(); /*no inc*/)
+	for (ZSafeSetIterConst<Sender* > i = fSenders;;)
 		{
-		if ((*i)->DeliverData())
+		if (Sender* current = i.ReadInc())
 			{
-			++i;
+			if (!current->DeliverData())
+				{
+				fSenders.Erase(current);
+				delete current;
+				}
 			}
 		else
 			{
-			delete *i;
-			i = fSenders.erase(i);
+			break;
 			}
 		}
 	}

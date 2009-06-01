@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZNetscape_Host.h"
+#include "zoolib/ZSafeSet.h"
 
 #include <set>
 #include <vector>
@@ -230,18 +231,17 @@ protected:
 	std::string fURL;
 
 private:
-	class HTTPer;
-	friend class HTTPer;
-	class Sender;
-	friend class Sender;
+	class HTTPFetcher;
+	friend class HTTPFetcher;
 
-	void pHTTPerFinished(HTTPer* iHTTPer, void* iNotifyData,
+	void pHTTPerFinished(ZRef<HTTPFetcher> iHTTPFetcher, void* iNotifyData,
 		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
 		ZRef<ZStreamerR> iStreamerR);
 	
-	ZMutex fMutex;
-	std::vector<HTTPer*> fHTTPers;
-	std::list<Sender*> fSenders;
+	ZSafeSet<ZRef<HTTPFetcher> > fHTTPFetchers;
+
+	class Sender;
+	ZSafeSet<Sender*> fSenders;
 	};
 
 } // namespace ZNetscape
