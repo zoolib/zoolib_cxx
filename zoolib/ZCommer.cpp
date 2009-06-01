@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCommer.h"
 
 #include "zoolib/ZLog.h"
-#include "zoolib/ZThreadSimple.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
