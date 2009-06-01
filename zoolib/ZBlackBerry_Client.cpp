@@ -339,7 +339,7 @@ public:
 	virtual void Detached();
 
 private:
-	ZWeakRef<Manager_Client> fManager;
+	ZRefWeak<Manager_Client> fManager;
 	bool fSendNotificationRequest;
 	bool fSendClose;
 

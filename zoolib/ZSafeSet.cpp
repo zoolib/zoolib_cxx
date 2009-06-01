@@ -19,13 +19,3 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZSafeSet.h"
-
-
-NAMESPACE_ZOOLIB_BEGIN
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Head
-
-
-NAMESPACE_ZOOLIB_END

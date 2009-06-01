@@ -24,10 +24,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZDList.h"
+#include "zoolib/ZRefWeak.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
-#include "zoolib/ZWeakRef.h"
 
 #include <deque>
 #include <map>

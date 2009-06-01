@@ -152,7 +152,7 @@ public:
 	virtual void Finished();
 
 private:
-	ZWeakRef<ZStreamMUX> fStreamMUX;
+	ZRefWeak<ZStreamMUX> fStreamMUX;
 	};
 
 ZStreamMUX::Commer::Commer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
@@ -236,7 +236,7 @@ public:
 	virtual void Imp_Abort();
 
 private:
-	ZWeakRef<ZStreamMUX> fMUX;
+	ZRefWeak<ZStreamMUX> fMUX;
 
 	ZCondition fCondition_Receive;
 	ZCondition fCondition_Send;
@@ -428,7 +428,7 @@ public:
 	virtual void Cancel();
 
 private:
-	ZWeakRef<ZStreamMUX> fMUX;
+	ZRefWeak<ZStreamMUX> fMUX;
 	ZCondition fCondition;
 	const string fName;
 	const size_t fReceiveBufferSize;

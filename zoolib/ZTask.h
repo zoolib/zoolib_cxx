@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZWeakRef.h"
+#include "zoolib/ZRefWeak.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -71,7 +71,7 @@ protected:
 	void pFinished();
 
 private:
-	ZWeakRef<ZTaskOwner> fTaskOwner;
+	ZRefWeak<ZTaskOwner> fTaskOwner;
 	friend class ZTaskOwner;
 	};
 

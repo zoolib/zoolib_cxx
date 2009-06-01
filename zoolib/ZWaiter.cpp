@@ -65,7 +65,7 @@ public:
 	void Start();
 
 // From ZWaiterRunner
-	virtual void WakeAt(ZRef<ZWaiter> iWaiter, ZTime iSystemTime);
+	virtual void Waiter_WakeAt(ZRef<ZWaiter> iWaiter, ZTime iSystemTime);
 
 private:
 	void pRun();
@@ -94,7 +94,7 @@ void ZWaiterRunner_Threaded::Start()
 	ZThreadImp::sCreate(0, spRun, this);
 	}
 
-void ZWaiterRunner_Threaded::WakeAt(ZRef<ZWaiter> iWaiter, ZTime iSystemTime)
+void ZWaiterRunner_Threaded::Waiter_WakeAt(ZRef<ZWaiter> iWaiter, ZTime iSystemTime)
 	{
 	ZGuardMtx locker(fMtx);
 	ZAssert(iWaiter == fWaiter);
@@ -162,13 +162,13 @@ void ZWaiter::RunnerDetached()
 void ZWaiter::Wake()
 	{
 	if (ZRef<ZWaiterRunner> theRunner = fRunner.Use())
-		theRunner->WakeAt(this, ZTime::sSystem());
+		theRunner->Waiter_WakeAt(this, ZTime::sSystem());
 	}
 
 void ZWaiter::WakeAt(ZTime iSystemTime)
 	{
 	if (ZRef<ZWaiterRunner> theRunner = fRunner.Use())
-		theRunner->WakeAt(this, iSystemTime);
+		theRunner->Waiter_WakeAt(this, iSystemTime);
 	}
 
 void ZWaiter::pRunnerAttached()

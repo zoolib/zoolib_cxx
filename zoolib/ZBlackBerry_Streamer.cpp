@@ -229,7 +229,7 @@ public:
 	virtual void Imp_Abort();
 
 private:
-	ZWeakRef<Device_Streamer> fDevice_Streamer;
+	ZRefWeak<Device_Streamer> fDevice_Streamer;
 	EState fState;
 	Device::Error fError;
 	bool fPreserveBoundaries;

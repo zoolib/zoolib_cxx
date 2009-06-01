@@ -24,10 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDList.h"
 #include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZRefWeak.h"
 #include "zoolib/ZThreadImp.h"
-#include "zoolib/ZWeakRef.h"
-
-#include "zoolib/ZDebug.h"
 
 #include <list>
 #include <map>
@@ -296,7 +294,7 @@ public:
 		}
 
 protected:
-	ZWeakRef<ZSafeSetRep<T> > fRep;
+	ZRefWeak<ZSafeSetRep<T> > fRep;
 
 private:
 	typename ZSafeSetRep<T>::EntryList::iterator fNextEntry;

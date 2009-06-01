@@ -41,7 +41,7 @@ public:
 private:
 	void pStop();
 
-	ZWeakRef<ZServer> fServer;
+	ZRefWeak<ZServer> fServer;
 	friend class ZServer;
 	};
 
