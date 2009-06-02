@@ -53,14 +53,11 @@ public:
 
 	virtual void DoEvent(const EventRecord& iEvent);
 
-// Our protocol
-//	void UpdateWindowRef(WindowRef iWindowRef, CGContextRef iContextRef);
-
-// Our protocol
 	void DoSetWindow(const ZGRectf& iWinFrame);
 	void DoSetWindow(int iX, int iY, int iWidth, int iHeight);
 
 	void pApplyInsets(ZGRectf& ioRect);
+
 protected:
 	bool pDeliverEvent(EventRef iEventRef);
 
@@ -73,6 +70,7 @@ protected:
 
 	#if defined(XP_MACOSX)
 		NP_CGContext fNP_CGContext;
+		NP_CGContext fNP_CGContext_Prior;
 		bool fUseCoreGraphics;
 	#endif
 
@@ -82,6 +80,7 @@ protected:
 	float fRight;
 	float fBottom;
 
+	NPWindow fNPWindow_Prior;
 	};
 
 #endif // defined(XP_MAC) || defined(XP_MACOSX)
@@ -107,16 +106,17 @@ public:
 	using Host_Mac::DoEvent;
 	virtual void DoEvent(const EventRecord& iEvent);
 
+protected:
+	WindowRef fWindowRef;
+
 private:
 	static EventHandlerUPP sEventHandlerUPP_Window;
 	static pascal OSStatus sEventHandler_Window(
 		EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon);
 	OSStatus EventHandler_Window(EventHandlerCallRef iCallRef, EventRef iEventRef);
 
-
 	EventTargetRef fEventTargetRef_Window;
 	EventHandlerRef fEventHandlerRef_Window;
-	WindowRef fWindowRef;
 	};
 
 #endif // defined(XP_MAC) || defined(XP_MACOSX)
@@ -138,13 +138,14 @@ public:
 	virtual void Host_InvalidateRect(NPP npp, NPRect* rect);
 	virtual void PostCreateAndLoad();
 
+protected:
+	HIViewRef fHIViewRef;
+
 private:
 	static EventHandlerUPP sEventHandlerUPP_View;
 	static pascal OSStatus sEventHandler_View(
 		EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon);
 	OSStatus EventHandler_View(EventHandlerCallRef iCallRef, EventRef iEventRef);
-
-	HIViewRef fHIViewRef;
 
 	EventTargetRef fEventTargetRef_View;
 	EventHandlerRef fEventHandlerRef_View;

@@ -264,7 +264,37 @@ void Host_Mac::DoSetWindow(int iX, int iY, int iWidth, int iHeight)
 	fNPWindow.clipRect.right = iX + iWidth;
 	fNPWindow.clipRect.bottom = iY + iHeight;
 
-	this->Guest_SetWindow(&fNPWindow);
+	#define CHECKIT(a) if (fNPWindow_Prior.a != fNPWindow.a) callIt = true;
+	bool callIt = false;
+	CHECKIT(window);
+	CHECKIT(x);
+	CHECKIT(y);
+	CHECKIT(width);
+	CHECKIT(height);
+	CHECKIT(clipRect.top);
+	CHECKIT(clipRect.left);
+	CHECKIT(clipRect.bottom);
+	CHECKIT(clipRect.right);
+	#undef CHECKIT
+	fNPWindow_Prior = fNPWindow;
+
+	#if defined(XP_MACOSX)
+		if (fUseCoreGraphics)
+			{
+			if (fNP_CGContext_Prior.context != fNP_CGContext.context)
+				callIt = true;
+			if (fNP_CGContext_Prior.window != fNP_CGContext.window)
+				callIt = true;
+			fNP_CGContext_Prior = fNP_CGContext;
+			}
+
+	#endif
+
+	if (callIt)
+		{
+		this->Guest_SetWindow(&fNPWindow);
+		fNPWindow_Prior = fNPWindow;
+		}
 	}
 
 bool Host_Mac::pDeliverEvent(EventRef iEventRef)
@@ -491,8 +521,10 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 						::CGContextTranslateCTM(cg, winFrame.origin.x, winFrame.origin.y);
 
 						fNP_CGContext.context = cg;
+
 						this->DoSetWindow(winFrame);
 						this->DoEvent(updateEvt, (UInt32)fWindowRef);
+
 						::CGContextRestoreGState(cg);
 
 						::CGContextSynchronize(cg);
