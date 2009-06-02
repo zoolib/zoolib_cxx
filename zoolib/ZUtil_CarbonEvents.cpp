@@ -160,7 +160,7 @@ pascal OSStatus Handler::sEventHandler(
 		}
 	catch (...)
 		{
-		if (ZLOG(s, eNotice, "ZThread::pRun"))
+		if (ZLOG(s, eNotice, "Handler"))
 			s << "sEventHandler, uncaught exception, not derived fron std::exception";
 		}
 	return noErr;
