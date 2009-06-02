@@ -30,7 +30,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // p == priority
 // f == facility
 
-#define ZLOGPF(s, p) const ZLog::S& s = ZLog::S(ZLog::p, __PRETTY_FUNCTION__)
+#if ZCONFIG(Compiler, GCC)
+#	define ZLOGPF(s, p) const ZLog::S& s = ZLog::S(ZLog::p, __PRETTY_FUNCTION__)
+#elif ZCONFIG(Compiler, MSVC)
+#	define ZLOGPF(s, p) const ZLog::S& s = ZLog::S(ZLog::p, __FUNCDNAME__)
+#else
+#	define ZLOGPF(s, p) const ZLog::S& s = ZLog::S(ZLog::p, __FUNCTION__)
+#endif
+
 #define ZLOGF(s, p) const ZLog::S& s = ZLog::S(ZLog::p, __FUNCTION__)
 #define ZLOG(s, p, f) const ZLog::S& s = ZLog::S(ZLog::p, f)
 
