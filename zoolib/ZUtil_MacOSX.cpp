@@ -32,6 +32,8 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZUtil_MacOSX
 
+#if ZCONFIG_SPI_Enabled(Carbon) && ZCONFIG(Processor, PPC)
+
 void ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
 	void* ioFuncs, size_t iCount, vector<char>& ioStorage)
 	{
@@ -66,6 +68,8 @@ void ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
 
     ::MakeDataExecutable(&ioStorage[0], ioStorage.size());
 	}
+
+#endif // ZCONFIG_SPI_Enabled(Carbon) && ZCONFIG(Processor, PPC)
 
 NAMESPACE_ZOOLIB_END
 

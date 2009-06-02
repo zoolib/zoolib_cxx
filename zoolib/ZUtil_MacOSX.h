@@ -35,7 +35,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZUtil_MacOSX {
 
-#if ZCONFIG_SPI_Enabled(Carbon)
+#if ZCONFIG_SPI_Enabled(Carbon) && ZCONFIG(Processor, PPC)
 
 struct Thunk_CFMCalledByMachO
 	{
@@ -51,7 +51,7 @@ struct Thunk_MachOCalledByCFM
 
 void sCreateThunks_MachOCalledByCFM(void* ioFuncs, size_t iCount, std::vector<char>& ioStorage);
 
-#endif // ZCONFIG_SPI_Enabled(Carbon)
+#endif // ZCONFIG_SPI_Enabled(Carbon) && ZCONFIG(Processor, PPC)
 
 } // namespace ZUtil_MacOSX
 
