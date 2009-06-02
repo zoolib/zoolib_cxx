@@ -1130,7 +1130,8 @@ void ZStrimW::pWritef(const UTF8* iString, va_list iArgs) const
 	string8 buffer(512, ' ');
 	for (;;)
 		{
-		va_list args = iArgs;
+		va_list args;
+		va_copy(args, iArgs);
 
 		int count = vsnprintf(const_cast<char*>(buffer.data()), buffer.size(), iString, args);
 
