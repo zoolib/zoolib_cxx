@@ -981,10 +981,18 @@ void Host::Guest_URLNotify(const char* URL, NPReason reason, void* notifyData)
 // JRIGlobalRef
 
 NPError Host::Guest_GetValue(NPPVariable iNPPVariable, void* oValue)
-	{ return fNPPluginFuncs.getvalue(&fNPP_t, iNPPVariable, oValue); }
+	{
+	if (fNPPluginFuncs.getvalue)
+		return fNPPluginFuncs.getvalue(&fNPP_t, iNPPVariable, oValue);
+	return NPERR_GENERIC_ERROR;
+	}
 
 NPError Host::Guest_SetValue(NPNVariable iNPNVariable, void* iValue)
-	{ return fNPPluginFuncs.setvalue(&fNPP_t, iNPNVariable, iValue); }
+	{
+	if (fNPPluginFuncs.setvalue)
+		return fNPPluginFuncs.setvalue(&fNPP_t, iNPNVariable, iValue);
+	return NPERR_GENERIC_ERROR;
+	}
 
 } // namespace ZNetscape
 

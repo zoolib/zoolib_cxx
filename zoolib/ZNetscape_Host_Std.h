@@ -224,7 +224,10 @@ public:
 
 	void DeliverData();
 
-	NPObjectH* CopyScriptableNPObject();
+	virtual ZRef<NPObjectH> Host_GetWindowObject();
+	virtual ZRef<NPObjectH> Host_GetPluginObject();
+
+	ZRef<NPObjectH> Guest_GetNPObject();
 
 protected:
 	NPWindow fNPWindow;
@@ -234,7 +237,7 @@ private:
 	class HTTPFetcher;
 	friend class HTTPFetcher;
 
-	void pHTTPerFinished(ZRef<HTTPFetcher> iHTTPFetcher, void* iNotifyData,
+	void pHTTPFetcher(ZRef<HTTPFetcher> iHTTPFetcher, void* iNotifyData,
 		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
 		ZRef<ZStreamerR> iStreamerR);
 	

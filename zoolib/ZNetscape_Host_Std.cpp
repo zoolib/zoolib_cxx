@@ -578,7 +578,7 @@ bool Host_Std::HTTPFetcher::Execute()
 			const ZTuple theCT = theHeaders.GetTuple("content-type");
 			const string theMIME = theCT.GetString("type") + "/" + theCT.GetString("subtype");
 
-			fHost->pHTTPerFinished(
+			fHost->pHTTPFetcher(
 				this, fNotifyData, theURL, theMIME, theRawHeaders, theStreamerR);
 			return false;
 			}
@@ -589,7 +589,7 @@ bool Host_Std::HTTPFetcher::Execute()
 	// This causes async delivery of an error.
 	if (fHost)
 		{
-		fHost->pHTTPerFinished(
+		fHost->pHTTPFetcher(
 			this, fNotifyData, fURL, "", ZMemoryBlock(), ZRef<ZStreamerR>());
 		}
 
@@ -769,13 +769,9 @@ Host_Std::~Host_Std()
 	for (ZSafeSetIterConst<ZRef<HTTPFetcher> > i = fHTTPFetchers;;)
 		{
 		if (ZRef<HTTPFetcher> current = i.ReadInc())
-			{
-//##			current->Cancel();
-			}
+			current->Cancel();
 		else
-			{
 			break;
-			}
 		}
 	fHTTPFetchers.Clear();
 
@@ -919,6 +915,27 @@ NPError Host_Std::Host_PostURLNotify(NPP npp,
 
 NPError Host_Std::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value)
 	{
+	switch (variable)
+		{
+		case NPNVWindowNPObject:
+			{
+			if (ZRef<NPObjectH> theObject = this->Host_GetWindowObject())
+				{
+				*static_cast<ZRef<NPObjectH>*>(ret_value) = theObject;
+				return NPERR_NO_ERROR;
+				}
+			break;
+			}
+		case NPNVPluginElementNPObject:
+			{
+			if (ZRef<NPObjectH> theObject = this->Host_GetPluginObject())
+				{
+				*static_cast<ZRef<NPObjectH>*>(ret_value) = theObject;
+				return NPERR_NO_ERROR;
+				}
+			break;
+			}
+		}
 	return NPERR_GENERIC_ERROR;
 	}
 
@@ -936,7 +953,7 @@ void Host_Std::Host_InvalidateRegion(NPP npp, NPRegion region)
 void Host_Std::Host_ForceRedraw(NPP npp)
 	{}
 
-void Host_Std::pHTTPerFinished(ZRef<HTTPFetcher> iHTTPFetcher, void* iNotifyData,
+void Host_Std::pHTTPFetcher(ZRef<HTTPFetcher> iHTTPFetcher, void* iNotifyData,
 	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
 	ZRef<ZStreamerR> iStreamerR)
 	{
@@ -1074,9 +1091,15 @@ void Host_Std::DeliverData()
 		}
 	}
 
-NPObjectH* Host_Std::CopyScriptableNPObject()
+ZRef<NPObjectH> Host_Std::Host_GetWindowObject()
+	{ return ZRef<NPObjectH>(); }
+
+ZRef<NPObjectH> Host_Std::Host_GetPluginObject()
+	{ return ZRef<NPObjectH>(); }
+
+ZRef<NPObjectH> Host_Std::Guest_GetNPObject()
 	{
-	NPObjectH* theNPObject;
+	ZRef<NPObjectH> theNPObject;
 	this->Guest_GetValue(NPPVpluginScriptableNPObject, &theNPObject);
 	return theNPObject;
 	}
