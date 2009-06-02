@@ -377,7 +377,10 @@ void ZTValue::ToStream(const ZStreamW& iStreamW) const
 			}
 		case eZType_Pointer:
 			{
-			iStreamW.WriteUInt32(reinterpret_cast<uint32>(fData.fAs_Pointer));
+			if (sizeof(intptr_t) != sizeof(uint32))
+				ZUnimplemented();
+			else
+				iStreamW.WriteUInt32(reinterpret_cast<intptr_t>(fData.fAs_Pointer));
 			break;
 			}
 		case eZType_Rect:
