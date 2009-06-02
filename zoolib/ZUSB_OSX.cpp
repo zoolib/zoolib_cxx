@@ -677,7 +677,7 @@ void StreamerR_Async::pCompletion(IOReturn iResult, void* iArg)
 	ZGuardMtx guard(fMtx);
 	fPending = false;
 	ZAssert(fOffset == 0 && fEnd == 0);
-	fEnd = reinterpret_cast<UInt32>(iArg);
+	fEnd = reinterpret_cast<size_t>(iArg);
 	fCnd.Broadcast();
 	}
 

@@ -1188,7 +1188,7 @@ void ZAssetTree_Std_Memory::LoadUp(const void* iAddress, size_t iSize)
 	try
 		{
 		// Ensure that the address is aligned at a 32 bit boundary
-		ZAssertStop(2, (reinterpret_cast<uint32>(fAddress) & 3) == 0);
+		ZAssertStop(2, (reinterpret_cast<intptr_t>(fAddress) & 3) == 0);
 
 		// We use a stream to parse some of the header info in memory, and to make it easier
 		// to determine the address of the various table boundaries.

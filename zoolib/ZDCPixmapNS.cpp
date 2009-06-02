@@ -800,7 +800,7 @@ void ZDCPixmapNS::PixvalAccessor::GetPixvals(const void* iRowAddress,
 			{
 			localSource8 = static_cast<const uint8*>(iRowAddress) + (iStartH * 3);
 			localCount = iCount;
-			while ((reinterpret_cast<uint32>(localSource8) & 0x03) && localCount)
+			while ((reinterpret_cast<intptr_t>(localSource8) & 0x03) && localCount)
 				{
 				--localCount;
 				value = localSource8[0] << 16;
@@ -845,7 +845,7 @@ void ZDCPixmapNS::PixvalAccessor::GetPixvals(const void* iRowAddress,
 			{
 			localSource8 = static_cast<const uint8*>(iRowAddress) + (iStartH * 3);
 			localCount = iCount;
-			while ((reinterpret_cast<uint32>(localSource8) & 0x03) && localCount)
+			while ((reinterpret_cast<intptr_t>(localSource8) & 0x03) && localCount)
 				{
 				--localCount;
 				value = localSource8[0] << 16;
@@ -889,7 +889,7 @@ void ZDCPixmapNS::PixvalAccessor::GetPixvals(const void* iRowAddress,
 			{
 			localSource8 = static_cast<const uint8*>(iRowAddress) + (iStartH * 3);
 			localCount = iCount;
-			while ((reinterpret_cast<uint32>(localSource8) & 0x03) && localCount)
+			while ((reinterpret_cast<intptr_t>(localSource8) & 0x03) && localCount)
 				{
 				--localCount;
 				value = localSource8[0];
@@ -943,7 +943,7 @@ void ZDCPixmapNS::PixvalAccessor::GetPixvals(const void* iRowAddress,
 			{
 			localSource8 = static_cast<const uint8*>(iRowAddress) + (iStartH * 3);
 			localCount = iCount;
-			while ((reinterpret_cast<uint32>(localSource8) & 0x03) && localCount)
+			while ((reinterpret_cast<intptr_t>(localSource8) & 0x03) && localCount)
 				{
 				--localCount;
 				value = localSource8[0];
@@ -1314,7 +1314,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 			{
 			localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH * 3);
 			localCount = iCount;
-			while ((reinterpret_cast<uint32>(localDest8) & 0x03) && localCount)
+			while ((reinterpret_cast<intptr_t>(localDest8) & 0x03) && localCount)
 				{
 				--localCount;
 				value = *iPixvals++;
@@ -1358,7 +1358,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 			{
 			localCount = iCount;
 			localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH * 3);
-			while ((reinterpret_cast<uint32>(localDest8) & 0x03) && localCount)
+			while ((reinterpret_cast<intptr_t>(localDest8) & 0x03) && localCount)
 				{
 				--localCount;
 				value = *iPixvals++;
@@ -1401,7 +1401,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 			{
 			localCount = iCount;
 			localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH * 3);
-			while ((reinterpret_cast<uint32>(localDest8) & 0x03) && localCount)
+			while ((reinterpret_cast<intptr_t>(localDest8) & 0x03) && localCount)
 				{
 				--localCount;
 				value = *iPixvals++;
@@ -1450,7 +1450,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 			{
 			localCount = iCount;
 			localDest8 = static_cast<uint8*>(iRowAddress) + (iStartH * 3);
-			while ((reinterpret_cast<uint32>(localDest8) & 0x03) && localCount)
+			while ((reinterpret_cast<intptr_t>(localDest8) & 0x03) && localCount)
 				{
 				--localCount;
 				value = *iPixvals++;
