@@ -215,19 +215,19 @@ public:
 		return *this;
 		}
 
-	explicit NPVariant_T(bool iValue)
+	/*explicit*/ NPVariant_T(bool iValue)
 		{
 		type = NPVariantType_Bool;
 		value.boolValue = iValue;
 		}
 
-	explicit NPVariant_T(int32 iValue)
+	/*explicit*/ NPVariant_T(int32 iValue)
 		{
 		type = NPVariantType_Int32;
 		value.intValue = iValue;
 		}
 
-	explicit NPVariant_T(double iValue)
+	/*explicit*/ NPVariant_T(double iValue)
 		{
 		type = NPVariantType_Double;
 		value.doubleValue = iValue;
