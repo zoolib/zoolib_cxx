@@ -72,7 +72,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #			define ZCONFIG_Processor ZCONFIG_Processor_x86
 #		endif
 #	elif defined(__GNUC__)
-#		if defined(__i386__)
+#		if defined(__i386__) || defined(__x86_64__)
 #			define ZCONFIG_Processor ZCONFIG_Processor_x86
 #		elif defined(__ppc__)
 #			define ZCONFIG_Processor ZCONFIG_Processor_PPC
