@@ -64,7 +64,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef ZCONFIG_Processor
 #	if 0
 #	elif defined(__MWERKS__)
-#		if __POWERPC__
+#		if 0
+#		elif __POWERPC__
 #			define ZCONFIG_Processor ZCONFIG_Processor_PPC
 #		elif __MC68K__
 #			define ZCONFIG_Processor ZCONFIG_Processor_68K
@@ -72,17 +73,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #			define ZCONFIG_Processor ZCONFIG_Processor_x86
 #		endif
 #	elif defined(__GNUC__)
-#		if defined(__i386__)
+#		if 0
+#		elif defined(__i386__)
 #			define ZCONFIG_Processor ZCONFIG_Processor_x86
 #		elif defined(__x86_64__)
 #			define ZCONFIG_Processor ZCONFIG_Processor_x86_64
 #		elif defined(__ppc__)
 #			define ZCONFIG_Processor ZCONFIG_Processor_PPC
+#		elif defined(__ppc64__)
+#			define ZCONFIG_Processor ZCONFIG_Processor_PPC_64
 #		elif defined(__arm__)
 #			define ZCONFIG_Processor ZCONFIG_Processor_ARM
 #		endif
 #	elif defined(_MSC_VER)
-#		if defined(_M_X64)
+#		if 0
+#		elif defined(_M_X64)
 #			define ZCONFIG_Processor ZCONFIG_Processor_x86_64
 #		elif defined(_M_IX86)
 #			define ZCONFIG_Processor ZCONFIG_Processor_x86
@@ -98,7 +103,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Byte order
 
 #ifndef ZCONFIG_Endian
-#	if (ZCONFIG_Processor == ZCONFIG_Processor_PPC)
+#	if 0
+#	elif (ZCONFIG_Processor == ZCONFIG_Processor_PPC)
+#		define ZCONFIG_Endian ZCONFIG_Endian_Big
+#	elif (ZCONFIG_Processor == ZCONFIG_Processor_PPC_64)
 #		define ZCONFIG_Endian ZCONFIG_Endian_Big
 #	elif (ZCONFIG_Processor == ZCONFIG_Processor_68K)
 #		define ZCONFIG_Endian ZCONFIG_Endian_Big
