@@ -145,10 +145,28 @@ void Guest_Std::Guest_URLNotify(const char* url, NPReason reason, void* notifyDa
 	{}
 
 NPError Guest_Std::Guest_GetValue(NPPVariable iNPPVariable, void* oValue)
-	{ return NPERR_GENERIC_ERROR; }
+	{
+	switch (iNPPVariable)
+		{
+		case NPPVpluginScriptableNPObject:
+			{
+			if (ZRef<NPObjectG> theObject = this->Guest_GetNPObject())
+				{
+				*static_cast<ZRef<NPObjectG>*>(oValue) = theObject;
+				return NPERR_NO_ERROR;
+				}
+			break;
+			}
+		}
+
+	return NPERR_GENERIC_ERROR;
+	}
 
 NPError Guest_Std::Guest_SetValue(NPNVariable iNPNVariable, void* iValue)
 	{ return NPERR_GENERIC_ERROR; }
+
+ZRef<NPObjectG> Guest_Std::Guest_GetNPObject()
+	{ return ZRef<NPObjectG>(); }
 
 } // namespace ZNetscape
 

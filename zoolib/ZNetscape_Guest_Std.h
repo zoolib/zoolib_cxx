@@ -117,6 +117,8 @@ public:
 	virtual NPError Guest_GetValue(NPPVariable iNPPVariable, void* oValue);
 
 	virtual NPError Guest_SetValue(NPNVariable iNPNVariable, void* iValue);
+
+	virtual ZRef<NPObjectG> Guest_GetNPObject();
 	};
 
 } // namespace ZNetscape
