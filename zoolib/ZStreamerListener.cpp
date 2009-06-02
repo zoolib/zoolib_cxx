@@ -28,7 +28,9 @@ NAMESPACE_ZOOLIB_BEGIN
 
 ZStreamerListener::ZStreamerListener(ZRef<ZStreamerRWFactory> iFactory)
 :	fFactory(iFactory)
-	{}
+	{
+	ZAssert(fFactory);
+	}
 
 ZStreamerListener::~ZStreamerListener()
 	{}
