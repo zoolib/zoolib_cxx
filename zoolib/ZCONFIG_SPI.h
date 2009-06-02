@@ -110,7 +110,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark Carbon
 #ifndef ZCONFIG_SPI_Avail__Carbon
 #	if __MACH__
-#		if ! TARGET_IPHONE_SIMULATOR && ! TARGET_OS_IPHONE
+#		if ! TARGET_IPHONE_SIMULATOR && ! TARGET_OS_IPHONE && ! defined(__LP64__)
 #			define ZCONFIG_SPI_Avail__Carbon 1
 #		endif
 #	elif macintosh
