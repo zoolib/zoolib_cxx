@@ -952,7 +952,7 @@ bool ZWebDAV::sHandle_PROPPATCH(
 	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
 	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
 	{
-	int depth = sGetDepth(iHeader);
+//	int depth = sGetDepth(iHeader);
 
 	ZRef<ZStrimmerR> theStrimmerR = sMakeStrimmer(iHeader, iStreamR);
 	const ZStrimR& theStrimR = theStrimmerR->GetStrimR();
