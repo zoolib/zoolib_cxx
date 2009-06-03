@@ -47,10 +47,9 @@ operation with a thread safe variable, and all write calls are protected by a mu
 
 ZStreamRW_FlushOnRead::ZStreamRW_FlushOnRead(const ZStreamR& iStreamR, const ZStreamW& iStreamW)
 :	fStreamR(iStreamR),
-	fStreamW(iStreamW)
-	{
-	ZThreadSafe_Set(fLastWasWrite, 0);
-	}
+	fStreamW(iStreamW),
+	fLastWasWrite(0)
+	{}
 
 ZStreamRW_FlushOnRead::~ZStreamRW_FlushOnRead()
 	{}

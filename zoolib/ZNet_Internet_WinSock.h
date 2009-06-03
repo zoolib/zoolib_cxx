@@ -36,8 +36,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Internet_WinSock)
 
-#include "zoolib/ZThread.h"
-
 #include <vector>
 
 #include <winsock.h>

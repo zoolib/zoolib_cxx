@@ -172,6 +172,7 @@ void ZWinService::Continued()
 
 void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 	{
+	{
 	ZGuardMtx locker(fMutex_State);
 	fServiceStatus.dwServiceType = SERVICE_WIN32;
 	fServiceStatus.dwCurrentState = SERVICE_START_PENDING;
@@ -189,8 +190,7 @@ void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 			s << "ZWinService::pServiceMain, RegisterServiceCtrlHandlerExW failed";
 		return;
 		}
-
-	locker.Release();
+	}
 
 	try
 		{
@@ -199,7 +199,7 @@ void ZWinService::pServiceMain(DWORD argc, LPWSTR* argv)
 	catch (...)
 		{}
 
-	locker.Acquire();
+	ZGuardMtx locker(fMutex_State);
 
 	fServiceStatus.dwCurrentState = SERVICE_STOPPED;
 	::SetServiceStatus(fServiceStatusHandle, &fServiceStatus);
