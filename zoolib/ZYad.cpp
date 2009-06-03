@@ -34,10 +34,11 @@ using std::vector;
 Yad is another neologism by Eric Cooper. As an acronym it stands for Yet Another Data, but
 interestingly it is also a hebrew word. From <http://en.wikipedia.org/wiki/Yad>:
 
-A yad (Hebrew: יד‎), literally, "hand," is a Jewish ritual pointer, used to point to the text during
-the Torah reading from the parchment Torah scrolls. It is intended to prevent anyone from touching
-the parchment, which is considered sacred; additionally, the fragile parchment can be damaged by
-the oils of the skin. While not required when chanting from the Torah, it is used frequently.
+	A yad (Hebrew: יד‎), literally, "hand," is a Jewish ritual pointer, used to point to the text
+	during the Torah reading from the parchment Torah scrolls. It is intended to prevent anyone
+	from touching the parchment, which is considered sacred; additionally, the fragile parchment
+	can be damaged by the oils of the skin. While not required when chanting from the Torah, it
+	is used frequently.
 
 An instance of ZYadR points within some data source, can be moved through that source, and can
 return further instances of ZYadR referencing substructures of that source. Basically it's a
