@@ -186,9 +186,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Actually this mozilla check is somewhat superfluous -- no XP_MACOSX in old headers.
 
-#if defined(ZCONFIG_NPAPI_WebKit_10_4) || defined(ZCONFIG_NPAPI_Mozilla_Old)
-
 #if defined(XP_MACOSX)
+
+#if defined(ZCONFIG_NPAPI_WebKit_10_4) || defined(ZCONFIG_NPAPI_Mozilla_Old)
 
 enum
 	{
@@ -219,9 +219,21 @@ typedef struct NP_CGContext
 	WindowRef window;
 	} NP_CGContext;
 
-#endif // defined(XP_MACOSX)
 
 #endif // ZCONFIG_NPAPI_WebKit_10_4
+
+#if defined(ZCONFIG_NPAPI_WebKit_10_5)
+
+enum
+	{
+	NPPVpluginDrawingModel = 1000,
+	NPNVSupportsWindowless = 17
+	};
+
+#endif // defined(ZCONFIG_NPAPI_WebKit_10_5)
+
+#endif // defined(XP_MACOSX)
+
 
 // =================================================================================================
 
