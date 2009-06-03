@@ -37,18 +37,18 @@ NAMESPACE_ZOOLIB_BEGIN
 	namespace ZTSS = ZTSS_pthread;
 	namespace ZThreadImp = ZThreadImp_pthread;
 
-	typedef ZMtx_pthread ZMtx;
 	typedef ZCnd_pthread ZCnd;
-	typedef ZSemNoTimeout_pthread ZSemNoTimeout;
+	typedef ZMtx_pthread ZMtx;
 	typedef ZSem_pthread ZSem;
+	typedef ZSemNoTimeout_pthread ZSemNoTimeout;
 
 #elif ZCONFIG_API_Enabled(ThreadImp_MacMP)
 
 	namespace ZTSS = ZTSS_MacMP;
 	namespace ZThreadImp = ZThreadImp_MacMP;
 
-	typedef ZMtx_MacMP ZMtx;
 	typedef ZCnd_MacMP ZCnd;
+	typedef ZMtx_MacMP ZMtx;
 	typedef ZSem_MacMP ZSem;
 
 #elif ZCONFIG_API_Enabled(ThreadImp_Win)
@@ -56,8 +56,8 @@ NAMESPACE_ZOOLIB_BEGIN
 	namespace ZTSS = ZTSS_Win;
 	namespace ZThreadImp = ZThreadImp_Win;
 
-	typedef ZMtx_Win ZMtx;
 	typedef ZCnd_Win ZCnd;
+	typedef ZMtx_Win ZMtx;
 	typedef ZSem_Win ZSem;
 
 #elif ZCONFIG_API_Enabled(ThreadImp_boost)
@@ -65,8 +65,8 @@ NAMESPACE_ZOOLIB_BEGIN
 	namespace ZTSS {}
 	namespace ZThreadImp {}
 
-	typedef ZMtx_boost ZMtx;
 	typedef ZCnd_boost ZCnd;
+	typedef ZMtx_boost ZMtx;
 	typedef ZSem_boost ZSem;
 
 #endif
