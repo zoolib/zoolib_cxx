@@ -531,6 +531,9 @@ ZCommandLine::Opt::Opt(const string& iName, const string& iDescription, EFlags i
 	ZCommandLine::sCommandLineCurrent->pAppendOpt(this);
 	}
 	
+ZCommandLine::Opt::~Opt()
+	{}
+
 bool ZCommandLine::Opt::HasValue() const
 	{ return fHasValue; }
 

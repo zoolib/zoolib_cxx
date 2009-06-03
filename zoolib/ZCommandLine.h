@@ -93,7 +93,7 @@ class ZCommandLine::Opt
 	friend class ZCommandLine;
 protected:
 	Opt(const std::string& iName, const std::string& iDescription, EFlags iFlags, bool iHasDefault);
-	virtual ~Opt() { /* virtual to force allocation of vtable, so dynamic_cast works */ }
+	virtual ~Opt();
 
 public:
 	bool HasValue() const;
