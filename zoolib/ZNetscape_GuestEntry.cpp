@@ -18,14 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZNetscape_GuestEntry.h"
+#include "zoolib/ZMemory.h"
 #include "zoolib/ZNetscape_Guest.h"
+#include "zoolib/ZNetscape_GuestEntry.h"
 #include "zoolib/ZUtil_MacOSX.h"
 
 NAMESPACE_ZOOLIB_USING
 
 using ZNetscape::NPNetscapeFuncs_Z;
 
+using std::min;
 using std::vector;
 
 // =================================================================================================
@@ -81,7 +83,7 @@ EXPORT_DEF(int) main(NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_
 		// Rewrite them as CFM-callable thunks.
 		ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
 			&localNPNF.geturl,
-			(localNPNF.size - offsetof(NPNetscapeFuncs_Z, geturl)) / sizeof(void*),
+			(localNPNF.size - offsetof(NPNetscapeFuncs, geturl)) / sizeof(void*),
 			sGlue_NPNF);
 
 		// And pass the munged local structure to NP_Initialize.
