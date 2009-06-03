@@ -36,6 +36,9 @@ NAMESPACE_ZOOLIB_BEGIN
 template <class Mtx>
 class ZGuard_T : NonCopyable
 	{
+private:
+	Mtx& fMtx;
+
 public:
 	ZGuard_T(Mtx& iMtx)
 	:	fMtx(iMtx)
@@ -47,9 +50,6 @@ public:
 
 	~ZGuard_T()
 		{ fMtx.Release(); }
-
-protected:
-	Mtx& fMtx;
 	};
 
 // =================================================================================================
@@ -59,6 +59,10 @@ protected:
 template <class Mtx>
 class ZGuardR_T : NonCopyable
 	{
+private:
+	Mtx& fMtx;
+	int fCount;
+
 public:
 	ZGuardR_T(Mtx& iMtx)
 	:	fMtx(iMtx),
@@ -87,10 +91,108 @@ public:
 		fMtx.Acquire();
 		++fCount;
 		}
+	};
 
-protected:
-	Mtx& fMtx;
-	int fCount;
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCnd_T
+
+template <class Mtx, class Sem>
+class ZCnd_T : NonCopyable
+	{
+private:
+	Sem fSem;
+	ZAtomic_t fWaitingThreads;
+
+public:
+	ZCnd_T()
+	:	fWaitingThreads(0)
+		{}
+
+	~ZCnd_T() {}
+
+	void Wait(Mtx& iMtx) { this->Imp_Wait(iMtx); }
+	void Wait(Mtx& iMtx, double iTimeout) { this->Imp_Wait(iMtx, iTimeout); }
+	void Signal() { this->Imp_Signal(); }
+	void Broadcast() { this->Imp_Broadcast(); }
+
+	void Imp_Wait(Mtx& iMtx)
+		{
+		ZAtomic_Inc(&fWaitingThreads);
+
+		iMtx.Release();
+
+		fSem.Wait();
+		
+		iMtx.Acquire();
+		}
+
+	void Imp_Wait(Mtx& iMtx, double iTimeout)
+		{
+		ZAtomic_Inc(&fWaitingThreads);
+
+		iMtx.Release();
+
+		if (!fSem.Wait(iTimeout))
+			ZAtomic_Dec(&fWaitingThreads);
+		
+		iMtx.Acquire();
+		}
+
+	void Imp_Signal()
+		{
+		for (;;)
+			{
+			if (int oldCount = ZAtomic_Get(&fWaitingThreads))
+				{
+				if (!ZAtomic_CompareAndSwap(&fWaitingThreads, oldCount, oldCount - 1))
+					continue;
+
+				fSem.Signal();
+				}
+			break;
+			}
+		}
+
+	void Imp_Broadcast()
+		{
+		for (;;)
+			{
+			if (int oldCount = ZAtomic_Get(&fWaitingThreads))
+				{
+				if (!ZAtomic_CompareAndSwap(&fWaitingThreads, oldCount, 0))
+					continue;
+
+				while (oldCount--)
+					fSem.Signal();
+				}
+			break;
+			}
+		}
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMtx_Win
+
+template <class Sem>
+class ZMtx_T : NonCopyable
+	{
+private:
+	Sem fSem;
+
+public:
+	ZMtx_T(const char* iName = nullptr)
+		{ fSem.Signal(); }
+
+	~ZMtx_T()
+		{}
+
+	void Acquire()
+		{ fSem.Wait(); }
+
+	void Release()
+		{ fSem.Signal(); }
 	};
 
 // =================================================================================================
@@ -98,9 +200,9 @@ protected:
 #pragma mark * ZSem_T
 
 template <class Mtx, class Cnd>
-class ZSem_T
+class ZSem_T : NonCopyable
 	{
-protected:
+private:
 	Mtx fMtx;
 	Cnd fCnd;
 
@@ -223,84 +325,6 @@ public:
 			fCnd.Broadcast();
 			}
 		}
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCnd_T
-
-template <class Mtx, class Sem>
-class ZCnd_T
-	{
-public:
-	ZCnd_T()
-	:	fWaitingThreads(0)
-		{}
-
-	~ZCnd_T() {}
-
-	void Wait(Mtx& iMtx) { this->Imp_Wait(iMtx); }
-	void Wait(Mtx& iMtx, double iTimeout) { this->Imp_Wait(iMtx, iTimeout); }
-	void Signal() { this->Imp_Signal(); }
-	void Broadcast() { this->Imp_Broadcast(); }
-
-	void Imp_Wait(Mtx& iMtx)
-		{
-		ZAtomic_Inc(&fWaitingThreads);
-
-		iMtx.Release();
-
-		fSem.Wait();
-		
-		iMtx.Acquire();
-		}
-
-	void Imp_Wait(Mtx& iMtx, double iTimeout)
-		{
-		ZAtomic_Inc(&fWaitingThreads);
-
-		iMtx.Release();
-
-		if (!fSem.Wait(iTimeout))
-			ZAtomic_Dec(&fWaitingThreads);
-		
-		iMtx.Acquire();
-		}
-
-	void Imp_Signal()
-		{
-		for (;;)
-			{
-			if (int oldCount = ZAtomic_Get(&fWaitingThreads))
-				{
-				if (!ZAtomic_CompareAndSwap(&fWaitingThreads, oldCount, oldCount - 1))
-					continue;
-
-				fSem.Signal();
-				}
-			break;
-			}
-		}
-
-	void Imp_Broadcast()
-		{
-		for (;;)
-			{
-			if (int oldCount = ZAtomic_Get(&fWaitingThreads))
-				{
-				if (!ZAtomic_CompareAndSwap(&fWaitingThreads, oldCount, 0))
-					continue;
-
-				while (oldCount--)
-					fSem.Signal();
-				}
-			break;
-			}
-		}
-
-protected:
-	Sem fSem;
-	ZAtomic_t fWaitingThreads;
 	};
 
 NAMESPACE_ZOOLIB_END

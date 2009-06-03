@@ -26,24 +26,6 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZMtx_boost
-
-ZMtx_boost::ZMtx_boost(const char* iName)
-	{}
-
-ZMtx_boost::~ZMtx_boost()
-	{}
-
-void ZMtx_boost::Acquire()
-	{ mutex::lock(); }
-
-void ZMtx_boost::Release()
-	{ mutex::unlock(); }
-
-//bool IsLocked(); // ??
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZCnd_boost
 
 ZCnd_boost::ZCnd_boost()
@@ -71,6 +53,24 @@ void ZCnd_boost::Signal()
 
 void ZCnd_boost::Broadcast()
 	{ condition_variable::notify_all(); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMtx_boost
+
+ZMtx_boost::ZMtx_boost(const char* iName)
+	{}
+
+ZMtx_boost::~ZMtx_boost()
+	{}
+
+void ZMtx_boost::Acquire()
+	{ mutex::lock(); }
+
+void ZMtx_boost::Release()
+	{ mutex::unlock(); }
+
+//bool IsLocked(); // ??
 
 NAMESPACE_ZOOLIB_END
 

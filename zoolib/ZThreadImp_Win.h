@@ -44,6 +44,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+class ZMtx_Win;
+class ZSem_Win;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTSS_Win
@@ -63,22 +66,9 @@ Value sGet(Key iKey);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSem_Win
+#pragma mark * ZCnd_Win
 
-class ZSem_Win : NonCopyable
-	{
-public:
-	ZSem_Win();
-
-	~ZSem_Win();
-
-	void Wait();
-	bool Wait(double iTimeout);
-	void Signal();
-
-protected:
-	HANDLE fHANDLE;
-	};
+typedef ZCnd_T<ZMtx_Win, ZSem_Win> ZCnd_Win;
 
 // =================================================================================================
 #pragma mark -
@@ -99,9 +89,22 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCnd_Win
+#pragma mark * ZSem_Win
 
-typedef ZCnd_T<ZMtx_Win, ZSem_Win> ZCnd_Win;
+class ZSem_Win : NonCopyable
+	{
+public:
+	ZSem_Win();
+
+	~ZSem_Win();
+
+	void Wait();
+	bool Wait(double iTimeout);
+	void Signal();
+
+protected:
+	HANDLE fHANDLE;
+	};
 
 // =================================================================================================
 #pragma mark -

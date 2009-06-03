@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(ThreadImp_Win)
 
 #include <new> // For std::bad_alloc
-
 #include <process.h> // For _beginthreadex
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -46,6 +45,22 @@ ZTSS_Win::Value ZTSS_Win::sGet(Key iKey)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZMtx_Win
+
+ZMtx_Win::ZMtx_Win(const char* iName)
+	{ ::InitializeCriticalSection(&fCRITICAL_SECTION); }
+
+ZMtx_Win::~ZMtx_Win()
+	{ ::DeleteCriticalSection(&fCRITICAL_SECTION); }
+
+void ZMtx_Win::Acquire()
+	{ ::EnterCriticalSection(&fCRITICAL_SECTION); }
+
+void ZMtx_Win::Release()
+	{ ::LeaveCriticalSection(&fCRITICAL_SECTION); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZSem_Win
 
 ZSem_Win::ZSem_Win()
@@ -62,22 +77,6 @@ bool ZSem_Win::Wait(double iTimeout)
 
 void ZSem_Win::Signal()
 	{ ::ReleaseSemaphore(fHANDLE, 1, nullptr); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZMtx_Win
-
-ZMtx_Win::ZMtx_Win(const char* iName)
-	{ ::InitializeCriticalSection(&fCRITICAL_SECTION); }
-
-ZMtx_Win::~ZMtx_Win()
-	{ ::DeleteCriticalSection(&fCRITICAL_SECTION); }
-
-void ZMtx_Win::Acquire()
-	{ ::EnterCriticalSection(&fCRITICAL_SECTION); }
-
-void ZMtx_Win::Release()
-	{ ::LeaveCriticalSection(&fCRITICAL_SECTION); }
 
 // =================================================================================================
 #pragma mark -

@@ -55,22 +55,6 @@ ZTSS_pthread::Value ZTSS_pthread::sGet(Key iKey)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZMtx_pthread
-
-ZMtx_pthread::ZMtx_pthread(const char* iName)
-	{ ::pthread_mutex_init(&fMutex, nullptr); }
-
-ZMtx_pthread::~ZMtx_pthread()
-	{ ::pthread_mutex_destroy(&fMutex); }
-
-void ZMtx_pthread::Acquire()
-	{ ::pthread_mutex_lock(&fMutex); }
-
-void ZMtx_pthread::Release()
-	{ ::pthread_mutex_unlock(&fMutex); }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZCnd_pthread
 
 ZCnd_pthread::ZCnd_pthread()
@@ -100,6 +84,22 @@ void ZCnd_pthread::Signal()
 
 void ZCnd_pthread::Broadcast()
 	{ ::pthread_cond_broadcast(&fCond); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMtx_pthread
+
+ZMtx_pthread::ZMtx_pthread(const char* iName)
+	{ ::pthread_mutex_init(&fMutex, nullptr); }
+
+ZMtx_pthread::~ZMtx_pthread()
+	{ ::pthread_mutex_destroy(&fMutex); }
+
+void ZMtx_pthread::Acquire()
+	{ ::pthread_mutex_lock(&fMutex); }
+
+void ZMtx_pthread::Release()
+	{ ::pthread_mutex_unlock(&fMutex); }
 
 // =================================================================================================
 #pragma mark -

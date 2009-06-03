@@ -44,6 +44,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 class ZCnd_pthread;
+class ZMtx_pthread;
 
 // =================================================================================================
 #pragma mark -
@@ -61,24 +62,6 @@ void sSet(Key iKey, Value iValue);
 Value sGet(Key iKey);
 
 } // namespace ZTSS_pthread
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZMtx_pthread
-
-class ZMtx_pthread : NonCopyable
-	{
-public:
-	ZMtx_pthread(const char* iName = nullptr);
-	~ZMtx_pthread();
-
-	void Acquire();
-	void Release();
-
-protected:
-	pthread_mutex_t fMutex;
-	friend class ZCnd_pthread;
-	};
 
 // =================================================================================================
 #pragma mark -
@@ -102,6 +85,30 @@ protected:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZMtx_pthread
+
+class ZMtx_pthread : NonCopyable
+	{
+public:
+	ZMtx_pthread(const char* iName = nullptr);
+	~ZMtx_pthread();
+
+	void Acquire();
+	void Release();
+
+protected:
+	pthread_mutex_t fMutex;
+	friend class ZCnd_pthread;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZSem_pthread
+
+typedef ZSem_T<ZMtx_pthread, ZCnd_pthread> ZSem_pthread;
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZSemNoTimeout_pthread
 
 class ZSemNoTimeout_pthread : NonCopyable
@@ -117,12 +124,6 @@ public:
 protected:
 	sem_t fSem;
 	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZSem_pthread
-
-typedef ZSem_T<ZMtx_pthread, ZCnd_pthread> ZSem_pthread;
 
 // =================================================================================================
 #pragma mark -

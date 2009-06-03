@@ -56,20 +56,6 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZMtx_boost
-
-class ZMtx_boost : public boost::mutex
-	{
-public:
-	ZMtx_boost(const char* iName = nullptr);
-	~ZMtx_boost();
-
-	void Acquire();
-	void Release();
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZCnd_boost
 
 class ZCnd_boost : public boost::condition_variable
@@ -83,6 +69,20 @@ public:
 
 	void Signal();
 	void Broadcast();
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMtx_boost
+
+class ZMtx_boost : public boost::mutex
+	{
+public:
+	ZMtx_boost(const char* iName = nullptr);
+	~ZMtx_boost();
+
+	void Acquire();
+	void Release();
 	};
 
 // =================================================================================================

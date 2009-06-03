@@ -42,6 +42,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+class ZMtx_MacMP;
+class ZSem_MacMP;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTSS_MacMP
@@ -61,22 +64,9 @@ Value sGet(Key iKey);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSem_MacMP
+#pragma mark * ZCnd_MacMP
 
-class ZSem_MacMP : NonCopyable
-	{
-public:
-	ZSem_MacMP();
-
-	~ZSem_MacMP();
-
-	void Wait();
-	bool Wait(double iTimeout);
-	void Signal();
-
-protected:
-	MPSemaphoreID fMPSemaphoreID;
-	};
+typedef ZCnd_T<ZMtx_MacMP, ZSem_MacMP> ZCnd_MacMP;
 
 // =================================================================================================
 #pragma mark -
@@ -97,9 +87,22 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCnd_MacMP
+#pragma mark * ZSem_MacMP
 
-typedef ZCnd_T<ZMtx_MacMP, ZSem_MacMP> ZCnd_MacMP;
+class ZSem_MacMP : NonCopyable
+	{
+public:
+	ZSem_MacMP();
+
+	~ZSem_MacMP();
+
+	void Wait();
+	bool Wait(double iTimeout);
+	void Signal();
+
+protected:
+	MPSemaphoreID fMPSemaphoreID;
+	};
 
 // =================================================================================================
 #pragma mark -

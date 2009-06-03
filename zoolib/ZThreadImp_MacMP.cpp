@@ -51,6 +51,22 @@ ZTSS_MacMP::Value ZTSS_MacMP::sGet(Key iKey)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZMtx_MacMP
+
+ZMtx_MacMP::ZMtx_MacMP(const char* iName)
+	{ ::MPCreateCriticalRegion(&fMPCriticalRegionID); }
+
+ZMtx_MacMP::~ZMtx_MacMP()
+	{ ::MPDeleteCriticalRegion(fMPCriticalRegionID); }
+
+void ZMtx_MacMP::Acquire()
+	{ ::MPEnterCriticalRegion(fMPCriticalRegionID, kDurationForever); }
+
+void ZMtx_MacMP::Release()
+	{ ::MPExitCriticalRegion(fMPCriticalRegionID); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZSem_MacMP
 
 ZSem_MacMP::ZSem_MacMP()
@@ -82,22 +98,6 @@ bool ZSem_MacMP::Wait(double iTimeout)
 
 void ZSem_MacMP::Signal()
 	{ ::MPSignalSemaphore(fMPSemaphoreID); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZMtx_MacMP
-
-ZMtx_MacMP::ZMtx_MacMP(const char* iName)
-	{ ::MPCreateCriticalRegion(&fMPCriticalRegionID); }
-
-ZMtx_MacMP::~ZMtx_MacMP()
-	{ ::MPDeleteCriticalRegion(fMPCriticalRegionID); }
-
-void ZMtx_MacMP::Acquire()
-	{ ::MPEnterCriticalRegion(fMPCriticalRegionID, kDurationForever); }
-
-void ZMtx_MacMP::Release()
-	{ ::MPExitCriticalRegion(fMPCriticalRegionID); }
 
 // =================================================================================================
 #pragma mark -
