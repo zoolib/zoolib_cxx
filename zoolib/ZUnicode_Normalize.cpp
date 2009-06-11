@@ -78,7 +78,7 @@ static string16 sNormalized_C_CFType(const string16& iString, ZUnicode::ENormFor
 	if (iString.empty())
 		return iString;
 
-	ZRef<CFMutableStringRef> srm = ZUtil_CFType::sCreateMutableCFString_UTF16(iString);
+	ZRef<CFMutableStringRef> srm = ZUtil_CFType::sStringMutable(iString);
 	ZooLib_CFStringNormalize(srm, iNormForm);
 	return ZUtil_CFType::sAsUTF16(srm);
 	}
