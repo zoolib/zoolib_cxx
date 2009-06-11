@@ -97,6 +97,16 @@ public:
 #pragma mark -
 #pragma mark * ZCnd_T
 
+/*
+"Implementing Condition Variables with Semaphores",
+Andrew D. Birrell
+<http://research.microsoft.com/apps/pubs/default.aspx?id=64242>
+
+"Strategies for Implementing POSIX Condition Variables on Win32",
+Douglas C. Schmidt and Irfan Pyarali
+http://www.cse.wustl.edu/~schmidt/win32-cv-1.html
+*/
+
 template <class Mtx, class Sem>
 class ZCnd_T : NonCopyable
 	{
