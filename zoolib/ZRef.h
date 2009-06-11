@@ -303,8 +303,9 @@ public:
 	operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(fP); }
 
-	operator T*()
-		{ return fP; }
+	operator T*() { return fP; }
+
+	operator T*() const { return fP; }
 
 	T* Get() const { return fP; }
 
