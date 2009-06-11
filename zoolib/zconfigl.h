@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Ensure our definitions have been set up
 #include "zoolib/zconfigd.h"
 
-// ==================================================
+// =================================================================================================
 #define ZCONFIG(a, b)\
 	((ZCONFIG_##a##_##b) && (((ZCONFIG_##a) & (ZCONFIG_##a##_##b))==(ZCONFIG_##a##_##b)))
 
@@ -41,7 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #undef ZCONFIG_API_Thread
 #define ZCONFIG_API_Thread $@ZCONFIG_API_Thread_Is_Disabled
 
-// ==================================================
+// =================================================================================================
 // Compiler
 
 #ifndef ZCONFIG_Compiler
@@ -54,11 +54,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #		define ZCONFIG_Compiler ZCONFIG_Compiler_MSVC
 #	endif
 #endif
+
 #ifndef ZCONFIG_Compiler
 #	error "Don't know what compiler we're using."
 #endif
 
-// ==================================================
+// =================================================================================================
 // Which processor?
 
 #ifndef ZCONFIG_Processor
@@ -99,7 +100,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	error "Don't know what processor we're using."
 #endif
 
-// ==================================================
+// =================================================================================================
 // Byte order
 
 #ifndef ZCONFIG_Endian
@@ -123,7 +124,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	error "Don't know what byte order we're using."
 #endif
 
-// ==================================================
+// =================================================================================================
 // We have two different defines for debugging. ZCONFIG_DebugLevel is what type of debugging
 // is wanted for a debug build (one with SYM information being generated). 0 generally means
 // almost no debug code will be generated, although it's legal to have assertions that are always
@@ -168,7 +169,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	error "Can't figure out if we're debugging."
 #endif
 
-// ==================================================
+// =================================================================================================
 // Declare namespace std and use it -- injecting all std names into global
 // namespace. A necessary hack until we've gone through all source and done this on
 // a case by case basis. This can be switched *off* by defining ZCONFIG_NamespaceHack
@@ -201,8 +202,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define NAMESPACE_ZOOLIB_USING using namespace ZooLib;
 #endif
 
-// ==================================================
+// =================================================================================================
 // Some extra bits to patch up some CodeWarrior issues.
+
 #if defined(__MWERKS__)
 
 #	if __option(precompile)
@@ -239,7 +241,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #endif
 
-// ==================================================
+// =================================================================================================
 // Some extra bits to patch up some MSVC issues.
 
 #if defined(_MSC_VER)
@@ -287,13 +289,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #endif
 
-// ==================================================
+// =================================================================================================
 // Define _REENTRANT for all platforms, although it's only significant for POSIX.
+
 #ifndef _REENTRANT
 #	define _REENTRANT
 #endif
 
-// ==================================================
+// =================================================================================================
 // Previously we've used 'nil' for the null pointer. With our increasing use of
 // Objective C we're switching to use the soon-to-be standardized nullptr.
 
@@ -323,7 +326,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#endif
 #endif
 
-// ==================================================
+// =================================================================================================
 #if __MACH__
 	#define ZMACINCLUDE2(a,b) <a/b>
 	#if __MWERKS__
