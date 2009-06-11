@@ -159,6 +159,8 @@ class ZDCPixmapNS::PixvalDesc
 	{
 public:
 	PixvalDesc() {}
+	PixvalDesc(EFormatStandard iFormat);
+
 	PixvalDesc(int32 iDepth, bool iBigEndian)
 	:	fDepth(iDepth), fBigEndian(iBigEndian)
 		{}

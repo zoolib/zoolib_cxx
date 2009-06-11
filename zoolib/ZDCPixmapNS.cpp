@@ -338,6 +338,35 @@ EFormatStandard ZDCPixmapNS::sMapEfficientToStandard(EFormatEfficient iFormat)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZDCPixmapNS::PixvalDesc
+
+ZDCPixmapNS::PixvalDesc::PixvalDesc(EFormatStandard iFormat)
+	{
+	for (size_t x = 0; x < countof(sStandardToInfoColor); ++x)
+		{
+		if (sStandardToInfoColor[x].fFormat == iFormat)
+			{
+			fDepth = sStandardToInfoColor[x].fDepth;
+			fBigEndian = sStandardToInfoColor[x].fBigEndian;
+			return;
+			}
+		}
+
+	for (size_t x = 0; x < countof(sStandardToInfoGray); ++x)
+		{
+		if (sStandardToInfoGray[x].fFormat == iFormat)
+			{
+			fDepth = sStandardToInfoGray[x].fDepth;
+			fBigEndian = sStandardToInfoGray[x].fBigEndian;
+			return;
+			}
+		}
+
+	ZUnimplemented();
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZDCPixmapNS::RasterDesc
 
 ZDCPixmapNS::RasterDesc::RasterDesc(ZPoint iSize, EFormatStandard iFormat, bool iFlipped)
