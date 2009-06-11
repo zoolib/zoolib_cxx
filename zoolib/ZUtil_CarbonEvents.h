@@ -29,7 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if defined(UNIVERSAL_INTERFACES_VERSION) && UNIVERSAL_INTERFACES_VERSION <= 0x0341
 // Taken from Universal Headers 3.4.2
-	typedef UInt32 EventClass;
+typedef UInt32 EventClass;
+
 enum {
 
   /*
@@ -49,7 +50,7 @@ enum {
    */
   typeEventTargetRef            = FOUR_CHAR_CODE('etrg') /* EventTargetRef*/
 };
-#endif
+#endif // defined(UNIVERSAL_INTERFACES_VERSION) && UNIVERSAL_INTERFACES_VERSION <= 0x0341
 
 #include <string>
 
