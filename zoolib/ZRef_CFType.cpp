@@ -34,29 +34,28 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	template<> void sRelease_T(a iRef) { if (iRef) ::CFRelease(iRef); } \
 	NAMESPACE_ZOOLIB_END
 
-// -------
+// =================================================================================================
 // CFTypeRef declared in CFBase.h
 ZOOLIB_RETAIN_RELEASE(CFTypeRef)
 
-// -------
+// =================================================================================================
 #define ZOOLIB_CF(a) \
 	typedef struct __CF##a * CF##a##Ref; \
 	ZOOLIB_RETAIN_RELEASE(CF##a##Ref)
 
 
-// ZOOLIB_CF(PlugIn) // Plugin and Bundle are usually the same type
 ZOOLIB_CF(Bundle)
 ZOOLIB_CF(ReadStream)
 ZOOLIB_CF(WriteStream)
 
-// -------
+// =================================================================================================
 #define ZOOLIB_CF_CONST(a) \
 	typedef const struct __CF##a * CF##a##Ref; \
 	ZOOLIB_RETAIN_RELEASE(CF##a##Ref)
 
 ZOOLIB_CF_CONST(URL)
 
-// -------
+// =================================================================================================
 #define ZOOLIB_CF_WITH_MUTABLE(a) \
 	typedef const struct __CF##a * CF##a##Ref; \
 	typedef struct __CF##a * CFMutable##a##Ref; \
@@ -70,7 +69,7 @@ ZOOLIB_CF_WITH_MUTABLE(Dictionary)
 ZOOLIB_CF_WITH_MUTABLE(Number)
 ZOOLIB_CF_WITH_MUTABLE(String)
 
-// -------
+// =================================================================================================
 #define ZOOLIB_CG(a) \
 	typedef struct CG##a * CG##a##Ref; \
 	ZOOLIB_RETAIN_RELEASE(CG##a##Ref)
@@ -80,7 +79,7 @@ ZOOLIB_CG(ColorSpace)
 ZOOLIB_CG(Context)
 ZOOLIB_CG(DataProvider)
 
-// -------
+// =================================================================================================
 typedef struct OpaqueSecKeychainRef *SecKeychainRef;
 ZOOLIB_RETAIN_RELEASE(SecKeychainRef)
 
@@ -90,8 +89,12 @@ ZOOLIB_RETAIN_RELEASE(SecKeychainItemRef)
 typedef struct OpaqueSecKeychainSearchRef *SecKeychainSearchRef;
 ZOOLIB_RETAIN_RELEASE(SecKeychainSearchRef)
 
-// -------
+// =================================================================================================
 typedef const struct __AXUIElement *AXUIElementRef;
 ZOOLIB_RETAIN_RELEASE(AXUIElementRef)
+
+// =================================================================================================
+typedef struct __CVBuffer *CVBufferRef;
+ZOOLIB_RETAIN_RELEASE(CVBufferRef)
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
