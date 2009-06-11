@@ -85,11 +85,11 @@ void ZStreamW_CFStream::Imp_Write(const void* iSource, size_t iCount, size_t* oC
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
 
-#if ZCONFIG_SPI_Enabled(CoreGraphics)
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStream_MacOSX::sCGDataProviderCreate
+
+#if ZCONFIG_SPI_Enabled(CoreGraphics)
 
 namespace ZANONYMOUS {
 
