@@ -46,11 +46,11 @@ NAMESPACE_ZOOLIB_BEGIN
 class ZYadR_CFType : public virtual ZYadR
 	{
 public:
-	ZYadR_CFType(CFTypeRef iCFTypeRef);
+	ZYadR_CFType(ZRef<CFTypeRef> iCFTypeRef);
 	virtual ~ZYadR_CFType();
 
 // Our protocol
-	CFTypeRef GetCFTypeRef();
+	ZRef<CFTypeRef> GetCFTypeRef();
 
 private:	
 	ZRef<CFTypeRef> fCFTypeRef;
@@ -68,7 +68,7 @@ class ZYadStreamRPos_CFData
 	public virtual ZStreamerRPos_CFData
 	{
 public:
-	ZYadStreamRPos_CFData(CFDataRef iCFDataRef);
+	ZYadStreamRPos_CFData(ZRef<CFDataRef> iCFDataRef);
 	virtual ~ZYadStreamRPos_CFData();
 
 // From ZYadR
@@ -87,7 +87,7 @@ class ZYadStrimR_CFString
 	public ZStrimmerR_CFString
 	{
 public:
-	ZYadStrimR_CFString(CFStringRef iStringRef);
+	ZYadStrimR_CFString(ZRef<CFStringRef> iStringRef);
 
 // From ZYadR, disambiguating between ZYadR_TValue and ZYadStreamR
 //	virtual bool IsSimple(const ZYadOptions& iOptions);
@@ -102,8 +102,8 @@ class ZYadListRPos_CFArray
 	public ZYadListRPos
 	{
 public:
-	ZYadListRPos_CFArray(CFArrayRef iCFArrayRef);
-	ZYadListRPos_CFArray(CFArrayRef iCFArrayRef, uint64 iPosition);
+	ZYadListRPos_CFArray(ZRef<CFArrayRef> iCFArrayRef);
+	ZYadListRPos_CFArray(ZRef<CFArrayRef> iCFArrayRef, uint64 iPosition);
 
 // From ZYadR via ZYadListRPos
 	virtual ZRef<ZYadR> ReadInc();
@@ -129,13 +129,13 @@ class ZYadMapRPos_CFDictionary
 :	public ZYadR_CFType,
 	public ZYadMapRPos
 	{
-	ZYadMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef,
+	ZYadMapRPos_CFDictionary(ZRef<CFDictionaryRef> iCFDictionaryRef,
 		uint64 iPosition,
 		const std::vector<CFStringRef>& iNames,
 		const std::vector<CFTypeRef>& iValues);
 
 public:
-	ZYadMapRPos_CFDictionary(CFDictionaryRef iCFDictionaryRef);
+	ZYadMapRPos_CFDictionary(ZRef<CFDictionaryRef> iCFDictionaryRef);
 
 // From ZYadR via ZYadMapRPos
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);
@@ -157,9 +157,9 @@ private:
 
 namespace ZYad_CFType {
 
-ZRef<ZYadR> sMakeYadR(CFTypeRef iCFTypeRef);
+ZRef<ZYadR> sMakeYadR(ZRef<CFTypeRef> iCFTypeRef);
 
-CFTypeRef sFromYadR(ZRef<ZYadR>);
+ZRef<CFTypeRef> sFromYadR(ZRef<ZYadR>);
 
 } // namespace ZYad_CFType
 

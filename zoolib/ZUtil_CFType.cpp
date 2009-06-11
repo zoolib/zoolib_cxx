@@ -33,94 +33,56 @@ using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZUtil_CFType {
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_CFType
 
-static CFStringRef sEmptyCFString = CFSTR("");
+CFStringRef sEmptyCFString = CFSTR("");
 
-CFStringRef ZUtil_CFType::sCreateCFString_UTF8(const string8& iString8)
+ZRef<CFStringRef> sString(const string8& iString8)
+	{ return NoRetain(sCreateCFString_UTF8(iString8)); }
+
+ZRef<CFStringRef> sString(const string16& iString16)
+	{ return NoRetain(sCreateCFString_UTF16(iString16)); }
+
+ZRef<CFMutableStringRef> sStringMutable()
+	{ return NoRetain(::CFStringCreateMutable(kCFAllocatorDefault, 0)); }
+
+ZRef<CFMutableStringRef> sStringMutable(const string8& iString8)
+	{ return sStringMutable(sString(iString8)); }
+
+ZRef<CFMutableStringRef> sStringMutable(const string16& iString16)
+	{ return sStringMutable(sString(iString16)); }
+
+ZRef<CFMutableStringRef> sStringMutable(const ZRef<CFStringRef>& iCFString)
+	{ return NoRetain(::CFStringCreateMutableCopy(kCFAllocatorDefault, 0, iCFString)); }
+
+ZRef<CFDictionaryRef> sDictionary(const ZTuple& iTuple)
+	{ return NoRetain(sCreateCFDictionary(iTuple)); }
+
+ZRef<CFMutableDictionaryRef> sDictionaryMutable()
 	{
-	if (CFIndex sourceSize = iString8.size())
-		{
-		return ::CFStringCreateWithBytes(nullptr,
-			reinterpret_cast<const UInt8*>(iString8.data()), sourceSize,
-			kCFStringEncodingUTF8, false);
-		}
-
-	::CFRetain(sEmptyCFString);
-	return sEmptyCFString;
+	return NoRetain(::CFDictionaryCreateMutable(kCFAllocatorDefault, 1,
+		&kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks));
 	}
+ZRef<CFMutableDictionaryRef> sDictionaryMutable(const ZRef<CFDictionaryRef>& iCFDictionary)
+	{ return NoRetain(::CFDictionaryCreateMutableCopy(kCFAllocatorDefault, 0, iCFDictionary)); }
 
-CFStringRef ZUtil_CFType::sCreateCFString_UTF16(const string16& iString16)
-	{
-	if (CFIndex sourceSize = iString16.size())
-		{
-		return ::CFStringCreateWithCharacters(nullptr,
-				reinterpret_cast<const UniChar*>(iString16.data()), sourceSize);
-		}
+ZRef<CFArrayRef> sArray(const std::vector<ZTValue>& iVector)
+	{ return NoRetain(sCreateCFArray(iVector)); }
 
-	::CFRetain(sEmptyCFString);
-	return sEmptyCFString;
-	}
+ZRef<CFMutableArrayRef> sArrayMutable()
+	{ return NoRetain(::CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks)); }
 
-CFMutableStringRef ZUtil_CFType::sCreateMutableCFString_UTF8(const string8& iString8)
-	{
-	ZRef<CFStringRef> theStringRef = NoRetain(sCreateCFString_UTF8(iString8));
-	CFMutableStringRef theMutableStringRef = ::CFStringCreateMutableCopy(0, 0, theStringRef);
-	return theMutableStringRef;
-	}
+ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray)
+	{ return NoRetain(::CFArrayCreateMutableCopy(kCFAllocatorDefault, 0, iCFArray)); }
 
-CFMutableStringRef ZUtil_CFType::sCreateMutableCFString_UTF16(const string16& iString16)
-	{
-	ZRef<CFStringRef> theStringRef = NoRetain(sCreateCFString_UTF16(iString16));
-	CFMutableStringRef theMutableStringRef = ::CFStringCreateMutableCopy(0, 0, theStringRef);
-	return theMutableStringRef;
-	}
+ZRef<CFTypeRef> sType(const ZTValue& iTV)
+	{ return NoRetain(sCreateCFType(iTV)); }
 
-string8 ZUtil_CFType::sAsUTF8(const CFStringRef& iCFString)
-	{
-	if (const char *s = ::CFStringGetCStringPtr(iCFString, kCFStringEncodingUTF8))
-		return string8(s);
-
-	const CFIndex sourceCU = ::CFStringGetLength(iCFString);
-	if (sourceCU == 0)
-		return string8();
-
-	// Worst case is six bytes per code unit.
-	const size_t bufferSize = sourceCU * 6;
-	string8 result(bufferSize, 0);
-
-	UInt8* buffer = reinterpret_cast<UInt8*>(const_cast<char*>(result.data()));
-
-	CFIndex bufferUsed;
-	::CFStringGetBytes(iCFString, CFRangeMake(0, sourceCU),
-		kCFStringEncodingUTF8, 1, false,
-		buffer, bufferSize, &bufferUsed);
-
-	result.resize(bufferUsed);
-
-	return result;
-	}
-
-string16 ZUtil_CFType::sAsUTF16(const CFStringRef& iCFString)
-	{
-	const CFIndex sourceCU = ::CFStringGetLength(iCFString);
-	if (sourceCU == 0)
-		return string16();
-
-	if (const UniChar* s = ::CFStringGetCharactersPtr(iCFString))
-		return string16(reinterpret_cast<const UTF16*>(s), sourceCU);
-
-	string16 result(sourceCU, 0);
-
-	UniChar* buffer = reinterpret_cast<UniChar*>(const_cast<UTF16*>(result.data()));
-
-	::CFStringGetCharacters(iCFString, CFRangeMake(0, sourceCU), buffer);
-	return result;
-	}
-
-ZType ZUtil_CFType::sTypeOf(CFTypeRef iCFType)
+ZType sTypeOf(CFTypeRef iCFType)
 	{
 	if (iCFType)
 		{
@@ -190,7 +152,76 @@ ZType ZUtil_CFType::sTypeOf(CFTypeRef iCFType)
 	return eZType_Null;
 	}
 
-ZTValue ZUtil_CFType::sAsTV(CFTypeRef iCFType)
+string8 sAsUTF8(CFStringRef iCFString)
+	{
+	if (const char *s = ::CFStringGetCStringPtr(iCFString, kCFStringEncodingUTF8))
+		return string8(s);
+
+	const CFIndex sourceCU = ::CFStringGetLength(iCFString);
+	if (sourceCU == 0)
+		return string8();
+
+	// Worst case is six bytes per code unit.
+	const size_t bufferSize = sourceCU * 6;
+	string8 result(bufferSize, 0);
+
+	UInt8* buffer = reinterpret_cast<UInt8*>(const_cast<char*>(result.data()));
+
+	CFIndex bufferUsed;
+	::CFStringGetBytes(iCFString, CFRangeMake(0, sourceCU),
+		kCFStringEncodingUTF8, 1, false,
+		buffer, bufferSize, &bufferUsed);
+
+	result.resize(bufferUsed);
+
+	return result;
+	}
+
+string16 sAsUTF16(CFStringRef iCFString)
+	{
+	const CFIndex sourceCU = ::CFStringGetLength(iCFString);
+	if (sourceCU == 0)
+		return string16();
+
+	if (const UniChar* s = ::CFStringGetCharactersPtr(iCFString))
+		return string16(reinterpret_cast<const UTF16*>(s), sourceCU);
+
+	string16 result(sourceCU, 0);
+
+	UniChar* buffer = reinterpret_cast<UniChar*>(const_cast<UTF16*>(result.data()));
+
+	::CFStringGetCharacters(iCFString, CFRangeMake(0, sourceCU), buffer);
+	return result;
+	}
+
+static void sApplier(const void* iKey, const void* iValue, void* iRefcon)
+	{
+	// This could be dodgy if iKey or iValue are not CF types.
+	static_cast<ZTuple*>(iRefcon)->SetValue(
+		ZTName(sAsUTF8(static_cast<CFStringRef>(iKey))),
+		sAsTV(static_cast<CFTypeRef>(iValue)));
+	}
+
+ZTuple sAsTuple(CFDictionaryRef iCFDictionary)
+	{
+	ZTuple result;
+	::CFDictionaryApplyFunction(iCFDictionary, sApplier, &result);
+	return result;
+	}
+
+static void sApplier(const void* iValue, void* iRefcon)
+	{
+	static_cast<vector<ZTValue>*>(iRefcon)->push_back(
+		sAsTV(static_cast<CFTypeRef>(iValue)));
+	}
+
+void sAsVector(CFArrayRef iCFArray, vector<ZTValue>& oVector)
+	{
+	const CFRange theRange = { 0, ::CFArrayGetCount(iCFArray)};
+	::CFArrayApplyFunction(iCFArray, theRange, sApplier, &oVector);	
+	}
+
+ZTValue sAsTV(CFTypeRef iCFType)
 	{
 	if (iCFType)
 		{
@@ -279,7 +310,66 @@ ZTValue ZUtil_CFType::sAsTV(CFTypeRef iCFType)
 	return ZTValue();
 	}
 
-CFTypeRef ZUtil_CFType::sCreateCFType(const ZTValue& iTV)
+CFStringRef sCreateCFString_UTF8(const string8& iString8)
+	{
+	if (CFIndex sourceSize = iString8.size())
+		{
+		return ::CFStringCreateWithBytes(nullptr,
+			reinterpret_cast<const UInt8*>(iString8.data()), sourceSize,
+			kCFStringEncodingUTF8, false);
+		}
+
+	::CFRetain(sEmptyCFString);
+	return sEmptyCFString;
+	}
+
+CFStringRef sCreateCFString_UTF16(const string16& iString16)
+	{
+	if (CFIndex sourceSize = iString16.size())
+		{
+		return ::CFStringCreateWithCharacters(nullptr,
+			reinterpret_cast<const UniChar*>(iString16.data()), sourceSize);
+		}
+
+	::CFRetain(sEmptyCFString);
+	return sEmptyCFString;
+	}
+
+CFDictionaryRef sCreateCFDictionary(const ZTuple& iTuple)
+	{
+	// Build local vector of keys and values.
+	vector<ZRef<CFStringRef> > keys;
+	vector<ZRef<CFTypeRef> > values;
+
+	for (ZTuple::const_iterator i = iTuple.begin(); i != iTuple.end(); ++i)
+		{
+		keys.push_back(sString(iTuple.NameOf(i).AsString()));
+		values.push_back(sType(iTuple.GetValue(i)));
+		}
+
+	CFDictionaryRef theDictionaryRef = ::CFDictionaryCreate(kCFAllocatorDefault,
+		(CFTypeRef*)&keys[0], (CFTypeRef*)&values[0], keys.size(),
+		&kCFCopyStringDictionaryKeyCallBacks,
+		&kCFTypeDictionaryValueCallBacks);
+
+	return theDictionaryRef;
+	}
+
+CFArrayRef sCreateCFArray(const vector<ZTValue>& iVector)
+	{
+	vector<ZRef<CFTypeRef> > values;
+	for (vector<ZTValue>::const_iterator i = iVector.begin(); i != iVector.end(); ++i)
+		values.push_back(sType(*i));
+
+	CFArrayRef theCFArrayRef = ::CFArrayCreate(kCFAllocatorDefault,
+		(CFTypeRef*)&values[0], values.size(), &kCFTypeArrayCallBacks);
+
+	ZAssert(values.size() == ::CFArrayGetCount(theCFArrayRef));
+
+	return theCFArrayRef;
+	}
+
+CFTypeRef sCreateCFType(const ZTValue& iTV)
 	{
 	switch (iTV.TypeOf())
 		{
@@ -347,70 +437,7 @@ CFTypeRef ZUtil_CFType::sCreateCFType(const ZTValue& iTV)
 	return nullptr;
 	}
 
-static void sApplier(const void* iKey, const void* iValue, void* iRefcon)
-	{
-	// This could be dodgy if iKey or iValue are not CF types.
-	static_cast<ZTuple*>(iRefcon)->SetValue(
-		ZTName(ZUtil_CFType::sAsUTF8(static_cast<CFStringRef>(iKey))),
-		ZUtil_CFType::sAsTV(static_cast<CFTypeRef>(iValue)));
-	}
-
-ZTuple ZUtil_CFType::sAsTuple(CFDictionaryRef iCFDictionary)
-	{
-	ZTuple result;
-	::CFDictionaryApplyFunction(iCFDictionary, sApplier, &result);
-	return result;
-	}
-
-CFDictionaryRef ZUtil_CFType::sCreateCFDictionary(const ZTuple& iTuple)
-	{
-	// Build local vector of keys and values.
-	vector<ZRef<CFStringRef> > keys;
-	vector<ZRef<CFTypeRef> > values;
-
-	for (ZTuple::const_iterator i = iTuple.begin(); i != iTuple.end(); ++i)
-		{
-		ZRef<CFStringRef> theStringRef
-			= NoRetain(sCreateCFString_UTF8(iTuple.NameOf(i).AsString()));
-		keys.push_back(theStringRef);
-
-		ZRef<CFTypeRef> theTypeRef = NoRetain(sCreateCFType(iTuple.GetValue(i)));
-		values.push_back(theTypeRef);
-		}
-
-	CFDictionaryRef theDictionaryRef = ::CFDictionaryCreate(kCFAllocatorDefault,
-		(CFTypeRef*)&keys[0], (CFTypeRef*)&values[0], keys.size(),
-		&kCFCopyStringDictionaryKeyCallBacks,
-		&kCFTypeDictionaryValueCallBacks);
-
-	return theDictionaryRef;
-	}
-
-static void sApplier(const void* iValue, void* iRefcon)
-	{
-	static_cast<vector<ZTValue>*>(iRefcon)->push_back(
-		ZUtil_CFType::sAsTV(static_cast<CFTypeRef>(iValue)));
-	}
-
-void ZUtil_CFType::sAsVector(CFArrayRef iCFArray, vector<ZTValue>& oVector)
-	{
-	const CFRange theRange = { 0, ::CFArrayGetCount(iCFArray)};
-	::CFArrayApplyFunction(iCFArray, theRange, sApplier, &oVector);	
-	}
-
-CFArrayRef ZUtil_CFType::sCreateCFArray(const vector<ZTValue>& iVector)
-	{
-	vector<ZRef<CFTypeRef> > values;
-	for (vector<ZTValue>::const_iterator i = iVector.begin(); i != iVector.end(); ++i)
-		values.push_back(NoRetain(sCreateCFType(*i)));
-
-	CFArrayRef theCFArrayRef = ::CFArrayCreate(kCFAllocatorDefault,
-		(CFTypeRef*)&values[0], values.size(), &kCFTypeArrayCallBacks);
-
-	ZAssert(values.size() == ::CFArrayGetCount(theCFArrayRef));
-
-	return theCFArrayRef;
-	}
+} // namespace ZUtil_CFType
 
 NAMESPACE_ZOOLIB_END
 

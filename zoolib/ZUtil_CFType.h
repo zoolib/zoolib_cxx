@@ -40,25 +40,48 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZUtil_CFType {
 
+// Std --> CFType
+ZRef<CFStringRef> sString(const string8& iString8);
+ZRef<CFStringRef> sString(const string16& iString16);
+
+ZRef<CFMutableStringRef> sStringMutable();
+ZRef<CFMutableStringRef> sStringMutable(const string8& iString8);
+ZRef<CFMutableStringRef> sStringMutable(const string16& iString16);
+ZRef<CFMutableStringRef> sStringMutable(const ZRef<CFStringRef>& iCFString);
+
+ZRef<CFDictionaryRef> sDictionary(const ZTuple& iTuple);
+ZRef<CFMutableDictionaryRef> sDictionaryMutable();
+ZRef<CFMutableDictionaryRef> sDictionaryMutable(const ZRef<CFDictionaryRef>& iCFDictionary);
+
+ZRef<CFArrayRef> sArray(const std::vector<ZTValue>& iVector);
+ZRef<CFMutableArrayRef> sArrayMutable();
+ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray);
+
+ZRef<CFTypeRef> sType(const ZTValue& iTV);
+
+
+// CFType --> Std
+ZType sTypeOf(CFTypeRef iCFType);
+
+string8 sAsUTF8(CFStringRef iCFString);
+string16 sAsUTF16(CFStringRef iCFString);
+
+ZTuple sAsTuple(CFDictionaryRef iCFDictionary);
+
+void sAsVector(CFArrayRef iCFArray, std::vector<ZTValue>& oVector);
+
+ZTValue sAsTV(CFTypeRef iCFType);
+
+
+// Std --> CFType, primitive
 CFStringRef sCreateCFString_UTF8(const string8& iString8);
 CFStringRef sCreateCFString_UTF16(const string16& iString16);
 
-CFMutableStringRef sCreateMutableCFString_UTF8(const string8& iString8);
-CFMutableStringRef sCreateMutableCFString_UTF16(const string16& iString16);
-
-string8 sAsUTF8(const CFStringRef& iCFString);
-string16 sAsUTF16(const CFStringRef& iCFString);
-
-ZType sTypeOf(CFTypeRef iCFType);
-
-ZTValue sAsTV(CFTypeRef iCFType);
-CFTypeRef sCreateCFType(const ZTValue& iTV);
-
-ZTuple sAsTuple(CFDictionaryRef iCFDictionary);
 CFDictionaryRef sCreateCFDictionary(const ZTuple& iTuple);
 
-void sAsVector(CFArrayRef iCFArray, std::vector<ZTValue>& oVector);
 CFArrayRef sCreateCFArray(const std::vector<ZTValue>& iVector);
+
+CFTypeRef sCreateCFType(const ZTValue& iTV);
 
 } // namespace ZUtil_CFType
 
