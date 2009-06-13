@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZThreadImp.h"
+#include "zoolib/ZThread.h"
 #include "zoolib/ZRefWeak.h"
 
 NAMESPACE_ZOOLIB_BEGIN

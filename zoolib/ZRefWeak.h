@@ -128,12 +128,13 @@ public:
 	void Clear()
 		{ ZRefWeakBase::Clear(); }
 
-	ZRef<T> Use() const
+	template <class O>
+	operator ZRef<O>() const
 		{
-		ZRef<T> result;
+		ZRef<O> result;
 		if (ZWeakReferee* theWeakReferee = ZRefWeakBase::LockUse())
 			{
-			result = static_cast<T*>(theWeakReferee);
+			result = static_cast<O*>(theWeakReferee);
 			ZRefWeakBase::Unlock();
 			}
 		return result;

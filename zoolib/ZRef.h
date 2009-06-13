@@ -22,15 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRef__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompat_algorithm.h"
+#include "zoolib/ZCompat_algorithm.h" // For std::swap
 #include "zoolib/ZCompat_operator_bool.h"
 
 #include "zoolib/ZDebug.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-
-template <class T> void sRetain_T(T);
-template <class T> void sRelease_T(T);
 
 // =================================================================================================
 #pragma mark -
@@ -81,9 +78,6 @@ public:
 	
 	ZRef& operator=(P iP)
 		{
-		// Important to do the retain after we've set fP,
-		// so that ZRefCountedWithFinalize's Initialize is
-		// called *after* we've taken the reference to it.
 		std::swap(iP, fP);
 		spRetain(fP);
 		spRelease(iP);	
@@ -180,6 +174,9 @@ void sRefCopy(void* iDest, T* iP)
 #pragma mark -
 #pragma mark * ZRef partially specialized for pointer types
 
+template <class T> void sRetain_T(T);
+template <class T> void sRelease_T(T);
+
 template <typename P>
 struct NoRetain_t
 	{
@@ -231,9 +228,6 @@ public:
 
 	ZRef& operator=(T* iP)
 		{
-		// Important to do the retain after we've set fP,
-		// so that ZRefCountedWithFinalize's Initialize is
-		// called *after* we've taken the reference to it.
 		std::swap(iP, fP);
 		spRetain(fP);
 		spRelease(iP);	
