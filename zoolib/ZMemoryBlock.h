@@ -94,7 +94,7 @@ public:
 
 private:
 	size_t fSize;
-	char fData[1];	// MDC was fData[0], but zero-length arrays are a GCC extension, incompatible with CW
+	char fData[1];
 
 	friend class ZMemoryBlock;
 	};
