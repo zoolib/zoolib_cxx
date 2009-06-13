@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCommandLine_TValue.h"
 #include "zoolib/ZStream_Memory.h"
+#include "zoolib/ZStrimU_Unreader.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
@@ -58,8 +59,10 @@ bool ZCommandLine::TValue::Parse(const char* iLexeme, const ZStrimW* iStrimError
 	try
 		{
 		if (!ZUtil_Strim_Tuple::sFromStrim(
-			ZStrimU_Unreader(ZStrimR_StreamUTF8(
-			ZStreamRPos_Memory(iLexeme, strlen(iLexeme)))), fValue))
+			ZStrimU_Unreader(
+			ZStrimR_StreamUTF8(
+			ZStreamRPos_Memory(iLexeme, strlen(iLexeme)))),
+			fValue))
 			{
 			if (iStrimErrors)
 				*iStrimErrors << "Could not parse parameter to option " << fName << "\n";
