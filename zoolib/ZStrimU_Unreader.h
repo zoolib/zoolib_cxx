@@ -32,8 +32,6 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZStrimU_Unreader
 
-/// Implements Imp_Unread by buffering a single CP from a source ZStrimR.
-
 class ZStrimU_Unreader : public ZStrimU
 	{
 public:
