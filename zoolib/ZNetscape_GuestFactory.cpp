@@ -168,6 +168,8 @@ GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 	NPError theNPError;
 	theNPError = theEntryPoints(&fNPPluginFuncs);
 
+	// Hmm -- why am I doing this here? Leave it for now, but it's
+	// obviously flash-specific.
 	typedef NPError (*NP_DISABLELOCALSECURITY)();
 	if (NP_DISABLELOCALSECURITY theDLS
 		= sLookup_T<NP_DISABLELOCALSECURITY>(fHMODULE, "Flash_DisableLocalSecurity"))
