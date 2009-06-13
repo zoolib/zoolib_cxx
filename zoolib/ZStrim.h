@@ -169,13 +169,12 @@ public:
 class ZStrimU : public ZStrimR
 	{
 public:
-	void Unread() const;
+	void Unread(UTF32 iCP) const;
+	size_t UnreadableLimit() const;
 
-	virtual void Imp_Unread() = 0;
+	virtual void Imp_Unread(UTF32 iCP) = 0;
+	virtual size_t Imp_UnreadableLimit() = 0;
 	};
-
-inline void ZStrimU::Unread() const
-	{ const_cast<ZStrimU*>(this)->Imp_Unread(); }
 
 // =================================================================================================
 #pragma mark -
@@ -546,37 +545,6 @@ typedef ZStrimW_Null ZStrimW_Sink; // Old name.
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStrimU_Unreader
-
-/// Implements Imp_Unread by buffering a single CP from a source ZStrimR.
-
-class ZStrimU_Unreader : public ZStrimU
-	{
-public:
-	ZStrimU_Unreader(const ZStrimR& iStrimSource);
-
-// From ZStrimR via ZStrimU 
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
-
-	virtual void Imp_ReadUTF16(UTF16* iDest,
-		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
-
-	virtual void Imp_ReadUTF8(UTF8* iDest,
-		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
-
-	virtual bool Imp_ReadCP(UTF32& oCP);
-
-// From ZStrimU
-	virtual void Imp_Unread();
-
-private:
-	const ZStrimR& fStrimSource;
-	enum { eStateFresh, eStateNormal, eStateUnread, eStateHitEnd } fState;
-	UTF32 fCP;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZStrimU_String
 
 /// Provides a ZStrimU interface to a standard library string containing UTF-32 code units.
@@ -599,7 +567,8 @@ public:
 	virtual bool Imp_ReadCP(UTF32& oCP);
 
 // From ZStrimU
-	virtual void Imp_Unread();
+	virtual void Imp_Unread(UTF32 iCP);
+	virtual size_t Imp_UnreadableLimit();
 
 private:
 	string32 fString;
@@ -628,7 +597,8 @@ public:
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
 // From ZStrimU
-	virtual void Imp_Unread();
+	virtual void Imp_Unread(UTF32 iCP);
+	virtual size_t Imp_UnreadableLimit();
 
 private:
 	string16 fString;
@@ -657,7 +627,8 @@ public:
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
 // From ZStrimU
-	virtual void Imp_Unread();
+	virtual void Imp_Unread(UTF32 iCP);
+	virtual size_t Imp_UnreadableLimit();
 
 private:
 	string8 fString;

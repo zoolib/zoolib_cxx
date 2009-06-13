@@ -18,66 +18,41 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZDebug.h"
-#include "zoolib/ZStrimU_Std.h"
+#ifndef __ZStrimU_Unreader__
+#define __ZStrimU_Unreader__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZStrim.h"
+
+#include <vector>
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStrimU_Std
+#pragma mark * ZStrimU_Unreader
 
-ZStrimU_Std::ZStrimU_Std(ZTextDecoder* iDecoder, const ZStreamR& iStreamR)
-:	fStrimR_StreamDecoder(iDecoder, iStreamR),
-	fStrimR_CRLFRemove(fStrimR_StreamDecoder),
-	fLineCount(0)
-	{}
+/// Implements Imp_Unread by buffering a single CP from a source ZStrimR.
 
-void ZStrimU_Std::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+class ZStrimU_Unreader : public ZStrimU
 	{
-	UTF32* localDest = iDest;
-	UTF32* localDestEnd = iDest + iCount;
-	while (localDest < localDestEnd)
-		{
-		UTF32 theCP;
-		if (fStack.empty())
-			{
-			UTF32 theCP;
-			if (!fStrimR_CRLFRemove.ReadCP(theCP))
-				break;
-			}
-		else
-			{
-			theCP = fStack.back();
-			fStack.pop_back();
-			}
+public:
+	ZStrimU_Unreader(const ZStrimR& iStrimSource);
 
-		if (theCP == '\n')
-			++fLineCount;
-		*localDest++ = theCP;
-		}
+// From ZStrimR via ZStrimU 
+	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
 
-	if (oCount)
-		*oCount = localDest - iDest;
-	}
+	virtual bool Imp_ReadCP(UTF32& oCP);
 
-void ZStrimU_Std::Imp_Unread(UTF32 iCP)
-	{
-	if (iCP == '\n')
-		--fLineCount;
-	fStack.push_back(iCP);
-	}
+// From ZStrimU
+	virtual void Imp_Unread(UTF32 iCP);
+	virtual size_t Imp_UnreadableLimit();
 
-size_t ZStrimU_Std::Imp_UnreadableLimit()
-	{ return size_t(-1); }
-
-void ZStrimU_Std::SetDecoder(ZTextDecoder* iDecoder)
-	{ fStrimR_StreamDecoder.SetDecoder(iDecoder); }
-
-ZTextDecoder* ZStrimU_Std::SetDecoderReturnOld(ZTextDecoder* iDecoder)
-	{ return fStrimR_StreamDecoder.SetDecoderReturnOld(iDecoder); }
-
-size_t ZStrimU_Std::GetLineCount()
-	{ return fLineCount; }
+private:
+	const ZStrimR& fStrimSource;
+	std::vector<UTF32> fStack;
+	};
 
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZStrimU_Unreader__

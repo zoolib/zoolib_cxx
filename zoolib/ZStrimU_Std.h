@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim_CRLF.h" // For ZStrimR_CRLFRemove
 #include "zoolib/ZStrim_Stream.h" // For ZStrimR_StreamDecoder
 
+#include <vector>
+
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
@@ -39,27 +41,20 @@ public:
 // From ZStrimR via ZStrimU 
 	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
 
-	virtual void Imp_ReadUTF16(UTF16* iDest,
-		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
-
-	virtual void Imp_ReadUTF8(UTF8* iDest,
-		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
-
 // From ZStrimU
-	virtual void Imp_Unread();
+	virtual void Imp_Unread(UTF32 iCP);
+	virtual size_t Imp_UnreadableLimit();
 
 // Our protocol
 	void SetDecoder(ZTextDecoder* iDecoder);
 	ZTextDecoder* SetDecoderReturnOld(ZTextDecoder* iDecoder);
 
 	size_t GetLineCount();
-	void ResetLineCount();
 
 private:
 	ZStrimR_StreamDecoder fStrimR_StreamDecoder;
 	ZStrimR_CRLFRemove fStrimR_CRLFRemove;
-	enum { eStateFresh, eStateNormal, eStateUnread, eStateHitEnd } fState;
-	UTF32 fCP;
+	std::vector<UTF32> fStack;
 	size_t fLineCount;
 	};
 

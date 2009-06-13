@@ -619,6 +619,12 @@ A ZStrimU is a read strim with the addition of an Unread method. Unread causes t
 read to be returned as the first code point in any subsequent read request. Think \c ungetc.
 */
 
+void ZStrimU::Unread(UTF32 iCP) const
+	{ const_cast<ZStrimU*>(this)->Imp_Unread(iCP); }
+
+size_t ZStrimU::UnreadableLimit() const
+	{ return const_cast<ZStrimU*>(this)->Imp_UnreadableLimit(); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStrimW
@@ -1522,205 +1528,6 @@ void ZStrimW_Null::Imp_CopyFrom(const ZStrimR& iStrimR,
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStrimU_Unreader
-
-ZStrimU_Unreader::ZStrimU_Unreader(const ZStrimR& iStrimSource)
-:	fStrimSource(iStrimSource),
-	fState(eStateFresh)
-	{}
-
-void ZStrimU_Unreader::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
-	{
-	UTF32* localDest = iDest;
-	UTF32* localDestEnd = iDest + iCount;
-	while (localDest < localDestEnd)
-		{
-		if (fState == eStateUnread)
-			{
-			if (ZUnicode::sWriteInc(localDest, localDestEnd, fCP))
-				fState = eStateNormal;
-			}
-		else
-			{
-			size_t countRead;
-			fStrimSource.Read(localDest, localDestEnd - localDest, &countRead);
-			if (countRead == 0)
-				break;
-			fState = eStateNormal;
-			localDest += countRead;
-			}
-		}
-
-	if (oCount)
-		*oCount = localDest - iDest;
-
-	if (iCount)
-		{
-		if (localDest == iDest)
-			{
-			fState = eStateHitEnd;
-			}
-		else
-			{
-			fState = eStateNormal;
-			const UTF32* temp = localDest;
-			fCP = ZUnicode::sDecRead(temp);
-			}
-		}
-	}
-
-void ZStrimU_Unreader::Imp_ReadUTF16(UTF16* iDest,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
-	{
-	UTF16* localDest = iDest;
-	UTF16* localDestEnd = iDest + iCountCU;
-	size_t localCountCP = iCountCP;
-	while (localDest + 1 < localDestEnd && localCountCP)
-		{
-		if (fState == eStateUnread)
-			{
-			if (ZUnicode::sWriteInc(localDest, localDestEnd, fCP))
-				{
-				--localCountCP;
-				fState = eStateNormal;
-				}
-			}
-		else
-			{
-			size_t countCURead;
-			size_t countCPRead;
-			fStrimSource.Read(localDest,
-				localDestEnd - localDest, &countCURead, localCountCP, &countCPRead);
-
-			if (countCURead == 0)
-				break;
-			localDest += countCURead;
-			localCountCP -= countCPRead;
-			}
-		}
-
-	if (oCountCP)
-		*oCountCP = iCountCP - localCountCP;
-	if (oCountCU)
-		*oCountCU = localDest - iDest;
-
-	if (iCountCP)
-		{
-		if (localDest == iDest)
-			{
-			fState = eStateHitEnd;
-			}
-		else
-			{
-			fState = eStateNormal;
-			const UTF16* temp = localDest;
-			fCP = ZUnicode::sDecRead(temp);
-			}
-		}
-	}
-
-void ZStrimU_Unreader::Imp_ReadUTF8(UTF8* iDest,
-	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
-	{
-	UTF8* localDest = iDest;
-	UTF8* localDestEnd = iDest + iCountCU;
-	size_t localCountCP = iCountCP;
-	while (localDest + 5 < localDestEnd && localCountCP)
-		{
-		if (fState == eStateUnread)
-			{
-			if (ZUnicode::sWriteInc(localDest, localDestEnd, fCP))
-				{
-				--localCountCP;
-				fState = eStateNormal;
-				}
-			}
-		else
-			{
-			size_t countCURead;
-			size_t countCPRead;
-			fStrimSource.Read(localDest,
-				localDestEnd - localDest, &countCURead, localCountCP, &countCPRead);
-
-			if (countCURead == 0)
-				break;
-			fState = eStateNormal;
-			localDest += countCURead;
-			localCountCP -= countCPRead;
-			}
-		}
-
-	if (oCountCP)
-		*oCountCP = iCountCP - localCountCP;
-	if (oCountCU)
-		*oCountCU = localDest - iDest;
-
-	if (iCountCP)
-		{
-		if (localDest == iDest)
-			{
-			fState = eStateHitEnd;
-			}
-		else
-			{
-			fState = eStateNormal;
-			const UTF8* temp = localDest;
-			fCP = ZUnicode::sDecRead(temp);
-			}
-		}
-	}
-
-bool ZStrimU_Unreader::Imp_ReadCP(UTF32& oCP)
-	{
-	if (fState == eStateUnread)
-		{
-		fState = eStateNormal;
-		oCP = fCP;
-		return true;
-		}
-
-	if (fStrimSource.ReadCP(fCP))
-		{
-		oCP = fCP;
-		fState = eStateNormal;
-		return true;
-		}
-
-	fState = eStateHitEnd;
-	return false;
-	}
-
-void ZStrimU_Unreader::Imp_Unread()
-	{
-	switch (fState)
-		{
-		case eStateFresh:
-			{
-			ZDebugStopf(2,
-				("You called ZStrimU_Unreader::Imp_Unread without having read anything."));
-			break;
-			}
-		case eStateNormal:
-			{
-			fState = eStateUnread;
-			break;
-			}
-		case eStateUnread:
-			{
-			ZDebugStopf(2, ("You called ZStrimU_Unreader::Imp_Unread twice consecutively."));
-			break;
-			}
-		case eStateHitEnd:
-			{
-			ZDebugStopf(2,
-				("You called ZStrimU_Unreader::Imp_Unread when end of strim has been seen."));
-			break;
-			}
-		}	
-	}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZStrimU_String32
 
 ZStrimU_String32::ZStrimU_String32(const string32& iString)
@@ -1811,11 +1618,14 @@ bool ZStrimU_String32::Imp_ReadCP(UTF32& oCP)
 	return false;
 	}
 
-void ZStrimU_String32::Imp_Unread()
+void ZStrimU_String32::Imp_Unread(UTF32 iCP)
 	{
 	ZAssert(fPosition);
 	--fPosition;
 	}
+
+size_t ZStrimU_String32::Imp_UnreadableLimit()
+	{ return size_t(-1); }
 
 // =================================================================================================
 #pragma mark -
@@ -1897,7 +1707,7 @@ void ZStrimU_String16::Imp_ReadUTF8(UTF8* iDest,
 		}
 	}
 
-void ZStrimU_String16::Imp_Unread()
+void ZStrimU_String16::Imp_Unread(UTF32 iCP)
 	{
 	if (size_t stringSize = fString.size())
 		{
@@ -1916,6 +1726,9 @@ void ZStrimU_String16::Imp_Unread()
 	// have previously been called successfully.
 	ZUnimplemented();
 	}
+
+size_t ZStrimU_String16::Imp_UnreadableLimit()
+	{ return size_t(-1); }
 
 // =================================================================================================
 #pragma mark -
@@ -1997,7 +1810,7 @@ void ZStrimU_String8::Imp_ReadUTF8(UTF8* iDest,
 		}
 	}
 
-void ZStrimU_String8::Imp_Unread()
+void ZStrimU_String8::Imp_Unread(UTF32 iCP)
 	{
 	if (size_t stringSize = fString.size())
 		{
@@ -2016,6 +1829,9 @@ void ZStrimU_String8::Imp_Unread()
 	// have previously been called successfully.
 	ZUnimplemented();
 	}
+
+size_t ZStrimU_String8::Imp_UnreadableLimit()
+	{ return size_t(-1); }
 
 // =================================================================================================
 #pragma mark -

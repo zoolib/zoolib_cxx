@@ -18,66 +18,62 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZDebug.h"
-#include "zoolib/ZStrimU_Std.h"
+#include "zoolib/ZStrimU_Unreader.h"
+
+using std::min;
+using std::nothrow;
+using std::range_error;
+using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStrimU_Std
+#pragma mark * ZStrimU_Unreader
 
-ZStrimU_Std::ZStrimU_Std(ZTextDecoder* iDecoder, const ZStreamR& iStreamR)
-:	fStrimR_StreamDecoder(iDecoder, iStreamR),
-	fStrimR_CRLFRemove(fStrimR_StreamDecoder),
-	fLineCount(0)
+ZStrimU_Unreader::ZStrimU_Unreader(const ZStrimR& iStrimSource)
+:	fStrimSource(iStrimSource)
 	{}
 
-void ZStrimU_Std::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimU_Unreader::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 	{
 	UTF32* localDest = iDest;
 	UTF32* localDestEnd = iDest + iCount;
 	while (localDest < localDestEnd)
 		{
-		UTF32 theCP;
 		if (fStack.empty())
 			{
-			UTF32 theCP;
-			if (!fStrimR_CRLFRemove.ReadCP(theCP))
+			size_t countRead;
+			fStrimSource.Read(localDest, localDestEnd - localDest, &countRead);
+			if (countRead == 0)
 				break;
+			localDest += countRead;
 			}
 		else
 			{
-			theCP = fStack.back();
+			*localDest++ = fStack.back();
 			fStack.pop_back();
 			}
-
-		if (theCP == '\n')
-			++fLineCount;
-		*localDest++ = theCP;
 		}
 
 	if (oCount)
 		*oCount = localDest - iDest;
 	}
 
-void ZStrimU_Std::Imp_Unread(UTF32 iCP)
+bool ZStrimU_Unreader::Imp_ReadCP(UTF32& oCP)
 	{
-	if (iCP == '\n')
-		--fLineCount;
-	fStack.push_back(iCP);
+	if (fStack.empty())
+		return fStrimSource.ReadCP(oCP);
+
+	oCP = fStack.back();
+	fStack.pop_back();
+	return true;
 	}
 
-size_t ZStrimU_Std::Imp_UnreadableLimit()
+void ZStrimU_Unreader::Imp_Unread(UTF32 iCP)
+	{ fStack.push_back(iCP); }
+
+size_t ZStrimU_Unreader::Imp_UnreadableLimit()
 	{ return size_t(-1); }
-
-void ZStrimU_Std::SetDecoder(ZTextDecoder* iDecoder)
-	{ fStrimR_StreamDecoder.SetDecoder(iDecoder); }
-
-ZTextDecoder* ZStrimU_Std::SetDecoderReturnOld(ZTextDecoder* iDecoder)
-	{ return fStrimR_StreamDecoder.SetDecoderReturnOld(iDecoder); }
-
-size_t ZStrimU_Std::GetLineCount()
-	{ return fLineCount; }
 
 NAMESPACE_ZOOLIB_END
