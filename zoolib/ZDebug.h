@@ -84,7 +84,10 @@ inline const char* ZDebug_FormatMessage() { return nullptr; }
 // ZAssertCompile can be used to enforce a constraint at compile time, (for example that a
 // struct obeys necessary alignment rules). It either drops out completely or generates an
 // error, depending on whether the expression evaulates true or false.
-#define ZAssertCompile(a) extern int sCompileTimeAssertionViolated[(a) ? 1 : 0]
+template <bool> struct ZCompileTimeAssertion {};
+template<> struct ZCompileTimeAssertion<true> { typedef bool IsValid; };
+
+#define ZAssertCompile(a) typedef ZCompileTimeAssertion<(a)>::IsValid ZCompileTimeAssertionValid
 
 // I'd like to formalize ZUnimplemented a little more sometime. Perhaps it should
 // throw an exception in production code.
