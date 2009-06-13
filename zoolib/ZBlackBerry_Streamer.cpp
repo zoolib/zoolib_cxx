@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 #include "zoolib/ZStream_Limited.h"
 #include "zoolib/ZStream_SHA1.h"
-#include "zoolib/ZThreadSimple.h"
 #include "zoolib/ZUtil_STL.h"
 
 #include <deque>
@@ -282,7 +281,7 @@ void Channel_Streamer::Finalize()
 	bool hasDevice_Streamer = false;
 	bool needsDelete = false;
 
-	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer.Use())
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		{
 		hasDevice_Streamer = true;
 		// Channel_Finalize calls our FinalizationComplete, we don't do it here.
@@ -323,7 +322,7 @@ const ZStreamWCon& Channel_Streamer::GetStreamWCon()
 
 void Channel_Streamer::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer.Use())
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		{
 		theDevice_Streamer->Channel_Read(this, iDest, iCount, oCountRead);
 		return;
@@ -335,7 +334,7 @@ void Channel_Streamer::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 
 size_t Channel_Streamer::Imp_CountReadable()
 	{
-	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer.Use())
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		return theDevice_Streamer->Channel_CountReadable(this);
 
 	return 0;
@@ -343,7 +342,7 @@ size_t Channel_Streamer::Imp_CountReadable()
 
 bool Channel_Streamer::Imp_WaitReadable(int iMilliseconds)
 	{
-	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer.Use())
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		return theDevice_Streamer->Channel_WaitReadable(this, iMilliseconds);
 
 	return true;
@@ -351,7 +350,7 @@ bool Channel_Streamer::Imp_WaitReadable(int iMilliseconds)
 
 bool Channel_Streamer::Imp_ReceiveDisconnect(int iMilliseconds)
 	{
-	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer.Use())
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		return theDevice_Streamer->Channel_ReceiveDisconnect(this, iMilliseconds);
 
 	return true;
@@ -359,7 +358,7 @@ bool Channel_Streamer::Imp_ReceiveDisconnect(int iMilliseconds)
 
 void Channel_Streamer::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer.Use())
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		{
 		theDevice_Streamer->Channel_Write(this, iSource, iCount, oCountWritten);
 		return;
@@ -371,13 +370,13 @@ void Channel_Streamer::Imp_Write(const void* iSource, size_t iCount, size_t* oCo
 
 void Channel_Streamer::Imp_SendDisconnect()
 	{
-	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer.Use())
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		theDevice_Streamer->Channel_SendDisconnect(this);
 	}
 
 void Channel_Streamer::Imp_Abort()
 	{
-	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer.Use())
+	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		theDevice_Streamer->Channel_Abort(this);
 	}
 

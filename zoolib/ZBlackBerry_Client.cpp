@@ -368,10 +368,9 @@ bool Manager_Client::Commer_Changed::Read(const ZStreamR& r)
 	const bool req = r.ReadBool();
 	if (req)
 		{
-		if (ZRef<Manager_Client> theManager = fManager.Use())
-			{
+		if (ZRef<Manager_Client> theManager = fManager)
 			theManager->pNotifyObservers();
-			}
+
 		fSendNotificationRequest = true;
 		this->Wake();
 		return true;		
@@ -403,7 +402,7 @@ void Manager_Client::Commer_Changed::Detached()
 	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client::Commer_Changed"))
 		s << "Detached";
 
-	if (ZRef<Manager_Client> theManager = fManager.Use())
+	if (ZRef<Manager_Client> theManager = fManager)
 		theManager->pDetached(this);
 	}
 
@@ -446,7 +445,7 @@ void Manager_Client::pDetached(ZRef<Commer_Changed> iCommer)
 		if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client"))
 			s << "Detached, retry failed";
 
-		ZThreadImp::sSleep(max(0.1, nextTry - ZTime::sNow()));
+		ZThread::sSleep(max(0.1, nextTry - ZTime::sNow()));
 		}
 
 	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client"))
