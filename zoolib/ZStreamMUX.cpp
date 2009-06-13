@@ -163,14 +163,14 @@ ZStreamMUX::Commer::Commer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStream
 
 bool ZStreamMUX::Commer::Read(const ZStreamR& iStreamR)
 	{
-	if (ZRef<ZStreamMUX> theStreamMUX = fStreamMUX.Use())
+	if (ZRef<ZStreamMUX> theStreamMUX = fStreamMUX)
 		return theStreamMUX->pRead(iStreamR);
 	return false;
 	}
 
 bool ZStreamMUX::Commer::Write(const ZStreamW& iStreamW)
 	{
-	if (ZRef<ZStreamMUX> theStreamMUX = fStreamMUX.Use())
+	if (ZRef<ZStreamMUX> theStreamMUX = fStreamMUX)
 		return theStreamMUX->pWrite(iStreamW);
 	return false;
 	}
@@ -180,7 +180,7 @@ void ZStreamMUX::Commer::Started()
 
 void ZStreamMUX::Commer::Finished()
 	{
-	if (ZRef<ZStreamMUX> theStreamMUX = fStreamMUX.Use())
+	if (ZRef<ZStreamMUX> theStreamMUX = fStreamMUX)
 		theStreamMUX->Finished();
 	}
 
@@ -313,7 +313,7 @@ void ZStreamMUX::Endpoint::Finalize()
 	bool hasMUX = false;
 	bool needsDelete = false;
 
-	if (ZRef<ZStreamMUX> theMUX = fMUX.Use())
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		{
 		hasMUX = true;
 		// Endpoint_Finalize calls our FinalizationComplete, we don't do it here.
@@ -349,7 +349,7 @@ const ZStreamWCon& ZStreamMUX::Endpoint::GetStreamWCon()
 
 void ZStreamMUX::Endpoint::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	if (ZRef<ZStreamMUX> theMUX = fMUX.Use())
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		{
 		theMUX->Endpoint_Read(this, iDest, iCount, oCountRead);
 		}
@@ -362,7 +362,7 @@ void ZStreamMUX::Endpoint::Imp_Read(void* iDest, size_t iCount, size_t* oCountRe
 
 size_t ZStreamMUX::Endpoint::Imp_CountReadable()
 	{
-	if (ZRef<ZStreamMUX> theMUX = fMUX.Use())
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		return theMUX->Endpoint_CountReadable(this);
 	else
 		return 0;
@@ -370,14 +370,14 @@ size_t ZStreamMUX::Endpoint::Imp_CountReadable()
 
 bool ZStreamMUX::Endpoint::Imp_WaitReadable(int iMilliseconds)
 	{
-	if (ZRef<ZStreamMUX> theMUX = fMUX.Use())
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		return theMUX->Endpoint_WaitReadable(this, iMilliseconds);
 	return true;
 	}
 
 void ZStreamMUX::Endpoint::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	if (ZRef<ZStreamMUX> theMUX = fMUX.Use())
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		{
 		theMUX->Endpoint_Write(this, iSource, iCount, oCountWritten);
 		}
@@ -390,23 +390,22 @@ void ZStreamMUX::Endpoint::Imp_Write(const void* iSource, size_t iCount, size_t*
 
 bool ZStreamMUX::Endpoint::Imp_ReceiveDisconnect(int iMilliseconds)
 	{
-	if (ZRef<ZStreamMUX> theMUX = fMUX.Use())
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		theMUX->Endpoint_ReceiveDisconnect(this, iMilliseconds);
 	return true;
 	}
 
 void ZStreamMUX::Endpoint::Imp_SendDisconnect()
 	{
-	if (ZRef<ZStreamMUX> theMUX = fMUX.Use())
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		theMUX->Endpoint_SendDisconnect(this);
 	}
 
 void ZStreamMUX::Endpoint::Imp_Abort()
 	{
-	if (ZRef<ZStreamMUX> theMUX = fMUX.Use())
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		theMUX->Endpoint_Abort(this);
 	}
-
 
 // =================================================================================================
 #pragma mark -
@@ -453,7 +452,7 @@ ZStreamMUX::Listener::~Listener()
 
 void ZStreamMUX::Listener::Finalize()
 	{
-	if (ZRef<ZStreamMUX> theMUX = fMUX.Use())
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		{
 		theMUX->Listener_Finalize(this);
 		return;
@@ -465,7 +464,7 @@ void ZStreamMUX::Listener::Finalize()
 
 ZRef<ZStreamerRWCon> ZStreamMUX::Listener::MakeStreamerRWCon()
 	{
-	if (ZRef<ZStreamMUX> theMUX = fMUX.Use())
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		return theMUX->Listener_Listen(this);
 	else
 		return ZRef<ZStreamerRWCon>();
@@ -473,7 +472,7 @@ ZRef<ZStreamerRWCon> ZStreamMUX::Listener::MakeStreamerRWCon()
 
 void ZStreamMUX::Listener::Cancel()
 	{
-	if (ZRef<ZStreamMUX> theMUX = fMUX.Use())
+	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		theMUX->Listener_Cancel(this);
 	}
 

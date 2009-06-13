@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZRef.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadOld.h"
 #include "zoolib/ZTuple.h"
 
 #include <set>

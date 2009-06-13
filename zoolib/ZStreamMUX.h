@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDList.h"
 #include "zoolib/ZRefWeak.h"
 #include "zoolib/ZStreamer.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadOld.h"
 #include "zoolib/ZTime.h"
 
 #include <deque>

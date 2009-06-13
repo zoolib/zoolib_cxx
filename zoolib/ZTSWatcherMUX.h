@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZDList.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadOld.h"
 #include "zoolib/ZTSWatcher.h"
 
 #ifndef ZCONFIG_TSWatcherMUX_Debug

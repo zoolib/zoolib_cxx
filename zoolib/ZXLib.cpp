@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #if ZCONFIG_SPI_Enabled(X11)
 
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadOld.h"
 
 #include <X11/Xproto.h> // For definitions of request codes
 

@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTSWatcherServerAsync.h"
 
 #include "zoolib/ZTSWatcherDefines.h"
-#include "zoolib/ZThreadSimple.h"
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"

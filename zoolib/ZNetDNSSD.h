@@ -36,7 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(NetDNSSD)
 
 #include "zoolib/ZNet_Internet.h" // For ip_port
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadOld.h"
 
 extern "C" {
 #include <dns_sd.h>

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRWLock__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadOld.h"
 
 #include <vector>
 
@@ -66,14 +66,14 @@ private:
 
 	// Writers holding the lock (the same writer recursively, of course)
 	int32 fCount_CurrentWriter;
-	ZThread::ThreadID fThreadID_CurrentWriter;
+	ZThread::ID fThreadID_CurrentWriter;
 
 	// Readers waiting for the lock
 	int32 fCount_WaitingReaders;
 
 	// Readers holding the lock (to allow recursive calls to AcquireRead)
 	int32 fCount_CurrentReaders;
-	std::vector<ZThread::ThreadID> fVector_CurrentReaders;
+	std::vector<ZThread::ID> fVector_CurrentReaders;
 
 	class Read : public ZMutexBase
 		{

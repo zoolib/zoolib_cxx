@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZGeom.h"
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZRGBColor.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadOld.h"
 
 #include "zoolib/ZXLib.h"
 

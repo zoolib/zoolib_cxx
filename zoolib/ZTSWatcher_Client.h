@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTSWatcher.h"
 #include "zoolib/ZStreamer.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadOld.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 

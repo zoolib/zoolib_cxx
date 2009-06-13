@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZTBSpec.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZThreadOld.h"
 #include "zoolib/ZTuple.h"
 
 #include <set>
