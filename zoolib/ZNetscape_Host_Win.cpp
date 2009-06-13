@@ -31,7 +31,6 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZNetscape {
 
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Host_Win

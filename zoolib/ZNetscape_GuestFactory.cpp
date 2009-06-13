@@ -142,8 +142,6 @@ private:
 	NPP_ShutdownProcPtr fShutdown;
 	};
 
-typedef NPError (*NP_DISABLELOCALSECURITY) (void);
-
 GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 :	fHMODULE(iHMODULE)
 	{
@@ -170,8 +168,12 @@ GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 	NPError theNPError;
 	theNPError = theEntryPoints(&fNPPluginFuncs);
 
-	if (NP_DISABLELOCALSECURITY theDLS = sLookup_T<NP_DISABLELOCALSECURITY>(fHMODULE, "Flash_DisableLocalSecurity"))
+	typedef NPError (*NP_DISABLELOCALSECURITY)();
+	if (NP_DISABLELOCALSECURITY theDLS
+		= sLookup_T<NP_DISABLELOCALSECURITY>(fHMODULE, "Flash_DisableLocalSecurity"))
+		{
 		theDLS();
+		}
 
 	theNPError = theInit(&fNPNF);
 	}

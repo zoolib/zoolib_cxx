@@ -58,7 +58,8 @@ EXPORT_DEF(NPError) NP_Shutdown()
 
 EXPORT_DECL(int) main(NPNetscapeFuncs_Z*, NPPluginFuncs*, NPP_ShutdownProcPtr*);
 
-EXPORT_DEF(int) main(NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
+EXPORT_DEF(int) main(
+	NPNetscapeFuncs_Z* iNPNF, NPPluginFuncs* oPluginFuncs, NPP_ShutdownProcPtr* oShutdownFunc)
 	{
 	// This function is called by CFM browsers, and also by Mozilla-based code.
 	// On Intel the function pointers are just regular function pointers, on PPC they
