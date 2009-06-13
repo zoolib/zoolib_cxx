@@ -56,7 +56,7 @@ ZServer::StreamerListener::~StreamerListener()
 
 bool ZServer::StreamerListener::Connected(ZRef<ZStreamerRW> iStreamerRW)
 	{
-	if (ZRef<ZServer> theServer = fServer.Use())
+	if (ZRef<ZServer> theServer = fServer)
 		{
 		theServer->pConnected(iStreamerRW);
 		return true;

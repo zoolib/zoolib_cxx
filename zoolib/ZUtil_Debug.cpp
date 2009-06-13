@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Debug.h"
 
 #include "zoolib/ZString.h"
-#include "zoolib/ZThreadImp.h"
+#include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZUtil_Time.h"
@@ -209,7 +209,7 @@ void ZUtil_Debug::LogMeister::LogIt(
 	string extraSpace(fExtraSpace - min(fExtraSpace, curLength), ' ');
 	theStrimW
 			<< ZUtil_Time::sAsString_ISO8601_us(now, false)
-			<< " " << ZString::sFormat("0x%08X", ZThreadImp::sID())
+			<< " " << ZString::sFormat("0x%08X", ZThread::sID())
 			<< " P" << ZString::sFormat("%X", iPriority)
 			<< " " << extraSpace << iName
 			<< " - " << iMessage << "\n";

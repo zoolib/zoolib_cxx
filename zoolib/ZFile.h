@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZStreamer.h"
-#include "zoolib/ZThreadImp.h"
+#include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZUnicode.h"

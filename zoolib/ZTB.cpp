@@ -377,7 +377,7 @@ curious.
 
 struct Callback_AllocateID_t
 	{
-	ZSemaphore fSem;
+	ZSem fSem;
 	uint64 fID;
 	};
 
@@ -385,12 +385,12 @@ static void sCallback_AllocateID(void* iRefcon, uint64 iBaseID, size_t iCount)
 	{
 	ZAssert(iCount == 1);
 	static_cast<Callback_AllocateID_t*>(iRefcon)->fID = iBaseID;
-	static_cast<Callback_AllocateID_t*>(iRefcon)->fSem.Signal(1);
+	static_cast<Callback_AllocateID_t*>(iRefcon)->fSem.Signal();
 	}
 
 struct Callback_GetTuple_t
 	{
-	ZSemaphore fSem;
+	ZSem fSem;
 	ZTuple fTuple;
 	};
 
@@ -398,7 +398,7 @@ static void sCallback_GetTuple(void* iRefcon, size_t iCount, const uint64* iIDs,
 	{
 	ZAssert(iCount == 1);
 	static_cast<Callback_GetTuple_t*>(iRefcon)->fTuple = iTuples[0];
-	static_cast<Callback_GetTuple_t*>(iRefcon)->fSem.Signal(1);
+	static_cast<Callback_GetTuple_t*>(iRefcon)->fSem.Signal();
 	}
 
 static ZTuple sGetTuple(ZTBRepTransaction* iTBRepTransaction, uint64 iID)
@@ -412,14 +412,14 @@ static ZTuple sGetTuple(ZTBRepTransaction* iTBRepTransaction, uint64 iID)
 
 struct Callback_Count_t
 	{
-	ZSemaphore fSem;
+	ZSem fSem;
 	size_t fResult;
 	};
 
 static void sCallback_Count(void* iRefcon, size_t iResult)
 	{
 	static_cast<Callback_Count_t*>(iRefcon)->fResult = iResult;
-	static_cast<Callback_Count_t*>(iRefcon)->fSem.Signal(1);
+	static_cast<Callback_Count_t*>(iRefcon)->fSem.Signal();
 	}
 
 static size_t sCount(ZTBRepTransaction* iTBRepTransaction, const ZTBQuery& iQuery)
@@ -587,14 +587,14 @@ public:
 struct Callback_Search_Struct
 	{
 	ZTBIterRep* fRep;
-	ZSemaphore fSem;
+	ZSem fSem;
 	};
 
 static void sCallback_Search(void* iRefcon, vector<uint64>& ioResults)
 	{
 	Callback_Search_Struct* theStruct = static_cast<Callback_Search_Struct*>(iRefcon);
 	theStruct->fRep->fIDs.swap(ioResults);
-	theStruct->fSem.Signal(1);
+	theStruct->fSem.Signal();
 	}
 
 ZTBIterRep::ZTBIterRep(ZTBRepTransaction* iTransaction, const ZTBQuery& iQuery)

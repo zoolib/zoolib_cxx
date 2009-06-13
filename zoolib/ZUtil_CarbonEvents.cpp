@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZString.h"
-#include "zoolib/ZThreadImp.h"
+#include "zoolib/ZThread.h"
 #include "zoolib/ZTypes.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -88,7 +88,7 @@ public:
 
 	EventQueueRef fEventQueueRef;
 	EventHandlerRef fEventHandlerRef;
-	ZThreadImp::ID fMainID;
+	ZThread::ID fMainID;
 	};
 
 struct Context_t
@@ -99,7 +99,7 @@ struct Context_t
 
 Handler::Handler()
 	{
-	fMainID = ZThreadImp::sID();
+	fMainID = ZThread::sID();
 
 	fEventQueueRef = ::GetMainEventQueue();
 
@@ -124,7 +124,7 @@ Handler::~Handler()
 
 void Handler::InvokeOnMainThread(Callback_t iCallback, void* iRefcon)
 	{
-	if (fMainID == ZThreadImp::sID())
+	if (fMainID == ZThread::sID())
 		{
 		iCallback(iRefcon);
 		}

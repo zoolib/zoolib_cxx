@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(TextCoder_Win)
 
 #include "zoolib/ZFactoryChain.h"
-#include "zoolib/ZThreadImp.h"
+#include "zoolib/ZThread.h"
 
 #include <map>
 #include <stdexcept>

@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDList.h"
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZRefWeak.h"
-#include "zoolib/ZThreadImp.h"
+#include "zoolib/ZThread.h"
 
 #include <list>
 #include <map>
@@ -267,13 +267,13 @@ public:
 
 	ZSafeSetIterConst(const ZSafeSetIterConst& iOther)
 		{
-		if (ZRef<ZSafeSetRep<T> > theRep = iOther.fRep.Use())
+		if (ZRef<ZSafeSetRep<T> > theRep = iOther.fRep)
 			theRep->pInitFrom(theRep, *this, iOther);
 		}
 
 	~ZSafeSetIterConst()
 		{
-		if (ZRef<ZSafeSetRep<T> > theRep = fRep.Use())
+		if (ZRef<ZSafeSetRep<T> > theRep = fRep)
 			theRep->pDestroy(*this);
 		}
 
@@ -281,10 +281,10 @@ public:
 		{
 		if (this != &iOther)
 			{
-			if (ZRef<ZSafeSetRep<T> > theRep = fRep.Use())
+			if (ZRef<ZSafeSetRep<T> > theRep = fRep)
 				theRep->pDestroy(*this);
 
-			if (ZRef<ZSafeSetRep<T> > theRep = iOther.fRep.Use())
+			if (ZRef<ZSafeSetRep<T> > theRep = iOther.fRep)
 				theRep->pInitFrom(theRep, *this, iOther);
 			}
 		return *this;
@@ -292,7 +292,7 @@ public:
 	
 	ZSafeSetIterConst& operator=(const ZSafeSet<T>& iSafeSet)
 		{
-		if (ZRef<ZSafeSetRep<T> > theRep = fRep.Use())
+		if (ZRef<ZSafeSetRep<T> > theRep = fRep)
 			theRep->pDestroy(*this);
 
 		if (ZRef<ZSafeSetRep<T> > theRep = iSafeSet.GetRep())
@@ -301,7 +301,7 @@ public:
 
 	bool ReadInc(T& oValue)
 		{
-		if (ZRef<ZSafeSetRep<T> > theRep = fRep.Use())
+		if (ZRef<ZSafeSetRep<T> > theRep = fRep)
 			return theRep->pReadInc(*this, oValue);
 		return false;
 		}
@@ -350,7 +350,7 @@ public:
 	bool ReadErase(T& oValue)
 		{
 		// Hmm, don't know why I need to qualify the reference to fRep.
-		if (ZRef<ZSafeSetRep<T> > theRep = ZSafeSetIterConst<T>::fRep.Use())
+		if (ZRef<ZSafeSetRep<T> > theRep = ZSafeSetIterConst<T>::fRep)
 			return theRep->pReadErase(*this, oValue);
 		return false;
 		}

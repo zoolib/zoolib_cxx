@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZBlockStore.h"
 #include "zoolib/ZFile.h"
-#include "zoolib/ZThreadImp.h"
+#include "zoolib/ZThread.h"
 
 #include <set>
 #include <map>

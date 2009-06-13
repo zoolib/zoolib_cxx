@@ -598,7 +598,7 @@ bool Host_Std::HTTPFetcher::Execute()
 
 void Host_Std::HTTPFetcher::Cancel()
 	{
-	fHost = nil;
+	fHost = nullptr;
 	}
 
 // =================================================================================================

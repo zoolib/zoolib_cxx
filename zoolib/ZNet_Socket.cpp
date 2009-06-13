@@ -271,7 +271,7 @@ ZRef<ZNetEndpoint> ZNetListener_Socket::Listen()
 	fMutexNR.Acquire();
 	while (fThreadID_Listening)
 		fCondition.Wait(fMutexNR);
-	fThreadID_Listening = ZThreadImp::sID();
+	fThreadID_Listening = ZThread::sID();
 
 	int sleepTime;
 	if (sFastCancellationEnabled)

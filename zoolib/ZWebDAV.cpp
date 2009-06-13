@@ -31,6 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZStrim_Stream.h"
+#include "zoolib/ZStrimU_Unreader.h"
 #include "zoolib/ZStrimW_ML.h"
 #include "zoolib/ZStrimmer.h"
 #include "zoolib/ZStrimmer_Streamer.h"

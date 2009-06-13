@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTBRep_Client.h"
 
 #include "zoolib/ZLog.h"
-#include "zoolib/ZThreadSimple.h"
 #include "zoolib/ZTupleIndex.h"
 #include "zoolib/ZUtil_STL.h" // For sSortedEraseMustContain etc
 #include "zoolib/ZUtil_Strim_Tuple.h"

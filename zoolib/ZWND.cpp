@@ -36,18 +36,18 @@ NAMESPACE_ZOOLIB_BEGIN
 void ZWNDA::sRegisterWindowClassA(const CHAR* iWNDCLASSName, WNDPROC iWNDPROC)
 	{
 	WNDCLASSA windowClass;
-	if (!::GetClassInfoA(::GetModuleHandleA(nil), iWNDCLASSName, &windowClass) &&
-		!::GetClassInfoA(nil, iWNDCLASSName, &windowClass))
+	if (!::GetClassInfoA(::GetModuleHandleA(nullptr), iWNDCLASSName, &windowClass) &&
+		!::GetClassInfoA(nullptr, iWNDCLASSName, &windowClass))
 		{
 		windowClass.style = 0;
 		windowClass.lpfnWndProc = iWNDPROC;
 		windowClass.cbClsExtra = 0;
 		windowClass.cbWndExtra = 0;
-		windowClass.hInstance = ::GetModuleHandleA(nil);
-		windowClass.hIcon = nil;
-		windowClass.hCursor = ::LoadCursorA(nil, MAKEINTRESOURCEA(IDC_ARROW));
+		windowClass.hInstance = ::GetModuleHandleA(nullptr);
+		windowClass.hIcon = nullptr;
+		windowClass.hCursor = ::LoadCursorA(nullptr, MAKEINTRESOURCEA(IDC_ARROW));
 		windowClass.hbrBackground = 0;//(HBRUSH)COLOR_WINDOW;
-		windowClass.lpszMenuName = nil;
+		windowClass.lpszMenuName = nullptr;
 		windowClass.lpszClassName = iWNDCLASSName;
 		ATOM theResult = ::RegisterClassA(&windowClass);
 //		ZAssertStop(kDebug_Win, theResult != 0);
@@ -62,28 +62,28 @@ HWND ZWNDA::sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam)
 	return ::CreateWindowExA(
 		0, // Extended attributes
 		sClassName, // window class name
-		nil, // window caption
+		nullptr, // window caption
 		iStyle, // window style
 		0, // initial x position
 		0, // initial y position
 		10, // initial x size
 		10, // initial y size
 		iParent, // Parent window
-		nil,
-		::GetModuleHandleA(nil), // program instance handle
+		nullptr,
+		::GetModuleHandleA(nullptr), // program instance handle
 		iCreateParam); // creation parameters
 	}
 
 ZWNDA::ZWNDA(WNDPROC iWNDPROC)
 :	fWNDPROC(iWNDPROC),
-	fHWND(nil)
+	fHWND(nullptr)
 	{}
 	
 ZWNDA::~ZWNDA()
 	{
 	if (HWND theHWND = fHWND)
 		{
-		fHWND = nil;
+		fHWND = nullptr;
 		::DestroyWindow(theHWND);
 		}
 	}
@@ -98,15 +98,15 @@ void ZWNDA::Create(HWND iParent, DWORD iStyle)
 	HWND theHWND = ::CreateWindowExA(
 		0, // Extended attributes
 		sClassName, // window class name
-		nil, // window caption
+		nullptr, // window caption
 		iStyle, // window style
 		0, // initial x position
 		0, // initial y position
 		10, // initial x size
 		10, // initial y size
 		iParent, // Parent window
-		nil,
-		::GetModuleHandleA(nil), // program instance handle
+		nullptr,
+		::GetModuleHandleA(nullptr), // program instance handle
 		this); // creation parameters
 	}
 
@@ -129,7 +129,7 @@ LRESULT ZWNDA::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPA
 			WNDPROC priorWNDPROC = fWNDPROC;
 			if (HWND theHWND = fHWND)
 				{
-				fHWND = nil;
+				fHWND = nullptr;
 				this->HWNDDestroyed();
 				}
 			return ::CallWindowProcA(priorWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
@@ -169,7 +169,7 @@ LRESULT ZWNDA::sWindowProcA(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iL
 			}
 		}
 
-	ZAssertStop(0, theZWNDA != nil);
+	ZAssertStop(0, theZWNDA);
 	return theZWNDA->WindowProc(iHWND, iMessage, iWPARAM, iLPARAM);	
 	}
 
@@ -194,7 +194,7 @@ ZWNDA* ZWNDA::sFromHWNDNilOkayA(HWND iHWND)
 				}
 			}
 		}
-	return nil;
+	return nullptr;
 	}
 
 // =================================================================================================
@@ -204,18 +204,18 @@ ZWNDA* ZWNDA::sFromHWNDNilOkayA(HWND iHWND)
 void ZWNDW::sRegisterWindowClassW(const WCHAR* iWNDCLASSName, WNDPROC iWNDPROC)
 	{
 	WNDCLASSW windowClass;
-	if (!::GetClassInfoW(::GetModuleHandleW(nil), iWNDCLASSName, &windowClass) &&
-		!::GetClassInfoW(nil, iWNDCLASSName, &windowClass))
+	if (!::GetClassInfoW(::GetModuleHandleW(nullptr), iWNDCLASSName, &windowClass) &&
+		!::GetClassInfoW(nullptr, iWNDCLASSName, &windowClass))
 		{
 		windowClass.style = 0;
 		windowClass.lpfnWndProc = iWNDPROC;
 		windowClass.cbClsExtra = 0;
 		windowClass.cbWndExtra = 0;
-		windowClass.hInstance = ::GetModuleHandleW(nil);
-		windowClass.hIcon = nil;
-		windowClass.hCursor = ::LoadCursorW(nil, MAKEINTRESOURCEW(IDC_ARROW));
+		windowClass.hInstance = ::GetModuleHandleW(nullptr);
+		windowClass.hIcon = nullptr;
+		windowClass.hCursor = ::LoadCursorW(nullptr, MAKEINTRESOURCEW(IDC_ARROW));
 		windowClass.hbrBackground = 0;//(HBRUSH)COLOR_WINDOW;
-		windowClass.lpszMenuName = nil;
+		windowClass.lpszMenuName = nullptr;
 		windowClass.lpszClassName = iWNDCLASSName;
 		ATOM theResult = ::RegisterClassW(&windowClass);
 //		ZAssertStop(kDebug_Win, theResult != 0);
@@ -230,28 +230,28 @@ HWND ZWNDW::sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam)
 	return ::CreateWindowExW(
 		0, // Extended attributes
 		sClassName, // window class name
-		nil, // window caption
+		nullptr, // window caption
 		iStyle, // window style
 		0, // initial x position
 		0, // initial y position
 		10, // initial x size
 		10, // initial y size
 		iParent, // Parent window
-		nil,
-		::GetModuleHandleW(nil), // program instance handle
+		nullptr,
+		::GetModuleHandleW(nullptr), // program instance handle
 		iCreateParam); // creation parameters
 	}
 
 ZWNDW::ZWNDW(WNDPROC iWNDPROC)
 :	fWNDPROC(iWNDPROC),
-	fHWND(nil)
+	fHWND(nullptr)
 	{}
 	
 ZWNDW::~ZWNDW()
 	{
 	if (HWND theHWND = fHWND)
 		{
-		fHWND = nil;
+		fHWND = nullptr;
 		::DestroyWindow(theHWND);
 		}	
 	}
@@ -266,15 +266,15 @@ void ZWNDW::Create(HWND iParent, DWORD iStyle)
 	HWND theHWND = ::CreateWindowExW(
 		0, // Extended attributes
 		sClassName, // window class name
-		nil, // window caption
+		nullptr, // window caption
 		iStyle, // window style
 		0, // initial x position
 		0, // initial y position
 		10, // initial x size
 		10, // initial y size
 		iParent, // Parent window
-		nil,
-		::GetModuleHandleW(nil), // program instance handle
+		nullptr,
+		::GetModuleHandleW(nullptr), // program instance handle
 		this); // creation parameters
 	}
 
@@ -297,7 +297,7 @@ LRESULT ZWNDW::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPA
 			WNDPROC priorWNDPROC = fWNDPROC;
 			if (HWND theHWND = fHWND)
 				{
-				fHWND = nil;
+				fHWND = nullptr;
 				this->HWNDDestroyed();
 				}
 			return ::CallWindowProcW(priorWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
@@ -337,7 +337,7 @@ LRESULT ZWNDW::sWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iL
 			}
 		}
 
-	ZAssertStop(0, theZWNDW != nil);
+	ZAssertStop(0, theZWNDW);
 	return theZWNDW->WindowProc(iHWND, iMessage, iWPARAM, iLPARAM);	
 	}
 
@@ -362,7 +362,7 @@ ZWNDW* ZWNDW::sFromHWNDNilOkayW(HWND iHWND)
 				}
 			}
 		}
-	return nil;
+	return nullptr;
 	}
 
 // =================================================================================================
@@ -370,8 +370,8 @@ ZWNDW* ZWNDW::sFromHWNDNilOkayW(HWND iHWND)
 #pragma mark * ZWNDSubClassA
 
 ZWNDSubClassA::ZWNDSubClassA()
-:	fHWND(nil),
-	fWNDPROC(nil)
+:	fHWND(nullptr),
+	fWNDPROC(nullptr)
 	{}
 
 ZWNDSubClassA::~ZWNDSubClassA()
@@ -391,9 +391,9 @@ void ZWNDSubClassA::Detach()
 	{
 	ZAssert(fHWND && fWNDPROC);
 	::SetPropA(fHWND, "ZWNDSubClassA_WNDPROC_Prior", (HANDLE)fWNDPROC);
-	::SetPropA(fHWND, "ZWNDSubClassA", nil);
-	fHWND = nil;
-	fWNDPROC = nil;
+	::SetPropA(fHWND, "ZWNDSubClassA", nullptr);
+	fHWND = nullptr;
+	fWNDPROC = nullptr;
 	}
 
 HWND ZWNDSubClassA::GetHWND()
@@ -456,7 +456,7 @@ ZWNDSubClassA* ZWNDSubClassA::sFromHWNDNilOkayA(HWND iHWND)
 			return theZWND;
 			}
 		}
-	return nil;
+	return nullptr;
 	}
 
 // =================================================================================================
@@ -464,8 +464,8 @@ ZWNDSubClassA* ZWNDSubClassA::sFromHWNDNilOkayA(HWND iHWND)
 #pragma mark * ZWNDSubClassW
 
 ZWNDSubClassW::ZWNDSubClassW()
-:	fHWND(nil),
-	fWNDPROC(nil)
+:	fHWND(nullptr),
+	fWNDPROC(nullptr)
 	{}
 
 ZWNDSubClassW::~ZWNDSubClassW()
@@ -485,9 +485,9 @@ void ZWNDSubClassW::Detach()
 	{
 	ZAssert(fHWND && fWNDPROC);
 	::SetPropW(fHWND, L"ZWNDSubClassW_WNDPROC_Prior", (HANDLE)fWNDPROC);
-	::SetPropW(fHWND, L"ZWNDSubClassW", nil);
-	fHWND = nil;
-	fWNDPROC = nil;
+	::SetPropW(fHWND, L"ZWNDSubClassW", nullptr);
+	fHWND = nullptr;
+	fWNDPROC = nullptr;
 	}
 
 HWND ZWNDSubClassW::GetHWND()
@@ -550,7 +550,7 @@ ZWNDSubClassW* ZWNDSubClassW::sFromHWNDNilOkayW(HWND iHWND)
 			return theZWND;
 			}
 		}
-	return nil;
+	return nullptr;
 	}
 
 NAMESPACE_ZOOLIB_END

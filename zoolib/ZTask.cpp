@@ -58,7 +58,7 @@ ZTask::~ZTask()
 	{}
 
 ZRef<ZTaskOwner> ZTask::GetOwner()
-	{ return fTaskOwner.Use(); }
+	{ return fTaskOwner; }
 
 void ZTask::TaskOwner_Detached(ZRef<ZTaskOwner> iTaskOwner)
 	{}
@@ -68,7 +68,7 @@ void ZTask::Kill()
 
 void ZTask::pFinished()
 	{
-	if (ZRef<ZTaskOwner> theTaskOwner = fTaskOwner.Use())
+	if (ZRef<ZTaskOwner> theTaskOwner = fTaskOwner)
 		theTaskOwner->pTask_Finished(this);
 	}
 

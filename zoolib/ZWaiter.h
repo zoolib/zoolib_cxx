@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZRefWeak.h"
-#include "zoolib/ZThreadImp.h"
 #include "zoolib/ZTime.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -50,6 +49,7 @@ protected:
 
 // Called by ZWaiter instances.
 	virtual void Waiter_WakeAt(ZRef<ZWaiter> iWaiter, ZTime iSystemTime) = 0;
+	virtual void Waiter_WakeIn(ZRef<ZWaiter> iWaiter, double iInterval) = 0;
 
 	friend class ZWaiter;
 	};
@@ -70,6 +70,7 @@ public:
 
 	void Wake();
 	void WakeAt(ZTime iSystemTime);
+	void WakeIn(double iInterval);
 
 private:
 	void pRunnerAttached();

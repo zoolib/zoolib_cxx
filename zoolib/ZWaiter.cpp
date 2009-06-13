@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZThread.h"
 #include "zoolib/ZWaiter.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -35,7 +36,7 @@ ZWaiterRunner::~ZWaiterRunner()
 void ZWaiterRunner::pAttachWaiter(ZRef<ZWaiter> iWaiter)
 	{
 	ZAssert(iWaiter);
-	ZAssert(!iWaiter->fRunner.Use());
+	ZAssert(!ZRef<ZWaiterRunner>(iWaiter->fRunner));
 
 	iWaiter->fRunner = ZRef<ZWaiterRunner>(this);
 
@@ -45,7 +46,7 @@ void ZWaiterRunner::pAttachWaiter(ZRef<ZWaiter> iWaiter)
 void ZWaiterRunner::pDetachWaiter(ZRef<ZWaiter> iWaiter)
 	{
 	ZAssert(iWaiter);
-	ZAssert(iWaiter->fRunner.Use() == this);
+	ZAssert(ZRef<ZWaiterRunner>(iWaiter->fRunner) == this);
 
 	iWaiter->fRunner.Clear();
 
@@ -66,16 +67,16 @@ public:
 
 // From ZWaiterRunner
 	virtual void Waiter_WakeAt(ZRef<ZWaiter> iWaiter, ZTime iSystemTime);
+	virtual void Waiter_WakeIn(ZRef<ZWaiter> iWaiter, double iInterval) ;
 
 private:
 	void pRun();
-	static ZThreadImp::ProcResult_t spRun(void* iRefcon);
+	static void spRun(ZRef<ZWaiterRunner_Threaded> iParam);
 
 	ZMtx fMtx;
 	ZCnd fCnd;
 	ZRef<ZWaiter> fWaiter;
 	ZTime fNextWake;
-	ZRef<ZWaiterRunner_Threaded> fSelf;
 	};
 
 ZWaiterRunner_Threaded::ZWaiterRunner_Threaded(ZRef<ZWaiter> iWaiter)
@@ -88,10 +89,8 @@ ZWaiterRunner_Threaded::~ZWaiterRunner_Threaded()
 
 void ZWaiterRunner_Threaded::Start()
 	{
-	fSelf = this;
-	ZRef<ZWaiterRunner_Threaded> self = this;
 	this->pAttachWaiter(fWaiter);
-	ZThreadImp::sCreate(0, spRun, this);
+	ZThread::sCreate_T<ZRef<ZWaiterRunner_Threaded> >(spRun, this);
 	}
 
 void ZWaiterRunner_Threaded::Waiter_WakeAt(ZRef<ZWaiter> iWaiter, ZTime iSystemTime)
@@ -101,6 +100,18 @@ void ZWaiterRunner_Threaded::Waiter_WakeAt(ZRef<ZWaiter> iWaiter, ZTime iSystemT
 	if (fNextWake > iSystemTime)
 		{
 		fNextWake = iSystemTime;
+		fCnd.Broadcast();
+		}
+	}
+
+void ZWaiterRunner_Threaded::Waiter_WakeIn(ZRef<ZWaiter> iWaiter, double iInterval)
+	{
+	ZGuardMtx locker(fMtx);
+	ZAssert(iWaiter == fWaiter);
+	ZTime newWake = ZTime::sSystem() + iInterval;
+	if (fNextWake > newWake)
+		{
+		fNextWake = newWake;
 		fCnd.Broadcast();
 		}
 	}
@@ -137,14 +148,10 @@ void ZWaiterRunner_Threaded::pRun()
 
 	this->pDetachWaiter(fWaiter);
 	fWaiter.Clear();
-	fSelf.Clear();
 	}
 
-ZThreadImp::ProcResult_t ZWaiterRunner_Threaded::spRun(void* iRefcon)
-	{
-	static_cast<ZWaiterRunner_Threaded*>(iRefcon)->pRun();
-	return ZThreadImp::ProcResult_t();
-	}
+void ZWaiterRunner_Threaded::spRun(ZRef<ZWaiterRunner_Threaded> iParam)
+	{ iParam->pRun(); }
 
 // =================================================================================================
 #pragma mark -
@@ -161,13 +168,19 @@ void ZWaiter::RunnerDetached()
 
 void ZWaiter::Wake()
 	{
-	if (ZRef<ZWaiterRunner> theRunner = fRunner.Use())
+	if (ZRef<ZWaiterRunner> theRunner = fRunner)
 		theRunner->Waiter_WakeAt(this, ZTime::sSystem());
+	}
+
+void ZWaiter::WakeIn(double iInterval)
+	{
+	if (ZRef<ZWaiterRunner> theRunner = fRunner)
+		theRunner->Waiter_WakeIn(this, iInterval);
 	}
 
 void ZWaiter::WakeAt(ZTime iSystemTime)
 	{
-	if (ZRef<ZWaiterRunner> theRunner = fRunner.Use())
+	if (ZRef<ZWaiterRunner> theRunner = fRunner)
 		theRunner->Waiter_WakeAt(this, iSystemTime);
 	}
 

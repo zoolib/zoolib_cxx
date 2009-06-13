@@ -36,7 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Socket)
 
-#include "zoolib/ZThreadImp.h"
+#include "zoolib/ZThread.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -83,7 +83,7 @@ protected:
 	ZMtx fMutexNR;
 	ZCnd fCondition;
 	int fSocketFD;
-	ZThreadImp::ID fThreadID_Listening;
+	ZThread::ID fThreadID_Listening;
 	};
 
 // =================================================================================================
