@@ -20,181 +20,35 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZThread.h"
 
-#include "zoolib/ZAtomic.h"
-#include "zoolib/ZLog.h"
-#include "zoolib/ZTime.h"
-
 NAMESPACE_ZOOLIB_BEGIN
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZThread
+namespace ZThread {
 
-ZThread::ThreadID ZThread::kThreadID_None = 0;
+ZAssertCompile(sizeof(void*) == sizeof(ProcVoid_t));
 
-ZThread::ZThread(const char* iName)
-:	fStarted(false)
+#if ZCONFIG_API_Enabled(ThreadImp_Win)
+	static ProcResult_t __stdcall sEntryVoid(ProcVoid_t iProc)
+#else
+	static ProcResult_t sEntryVoid(ProcVoid_t iProc)
+#endif
 	{
-	fMtx_Start = new ZMtx;
-	fCnd_Start = new ZCnd;
-	ZThreadImp::sCreate(0, spRun, this);
-	}
-
-void ZThread::Start()
-	{
-	ZGuard_T<ZMtx> locker(*fMtx_Start);
-	fStarted = true;
-	fCnd_Start->Broadcast();
-	}
-
-void ZThread::pRun()
-	{
-	try
-		{
-		{
-		ZGuard_T<ZMtx> locker(*fMtx_Start);
-		while (!fStarted)
-			fCnd_Start->Wait(*fMtx_Start);
-		}
-		delete fMtx_Start;
-		delete fCnd_Start;
-
-		this->Run();
-		}
-	catch (std::exception& ex)
-		{
-		if (ZLOG(s, eNotice, "ZThread"))
-			s << "pRun, uncaught exception: " << ex.what();
-		}
-	catch (...)
-		{
-		if (ZLOG(s, eNotice, "ZThread::pRun"))
-			s << "pRun, uncaught exception, not derived fron std::exception";
-		}
-
-	delete this;
-	}
-
-ZThreadImp::ProcResult_t ZThread::spRun(ZThreadImp::ProcParam_t iParam)
-	{
-	static_cast<ZThread*>(iParam)->pRun();
+	iProc();
 	return 0;
 	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZMutex
-
-ZMutex::ZMutex(const char* iName, bool iCreateAcquired)
+void sCreateVoid(ProcVoid_t iProcVoid)
 	{
-	if (iCreateAcquired)
+	union Converter_t
 		{
-		fThreadID_Owner = ZThreadImp::sID();
-		fCount = 1;
-		fMtx.Acquire();
-		}
-	else
-		{
-		fThreadID_Owner = 0;
-		fCount = 0;
-		}
+		void* fAsPointer;
+		ProcVoid_t fAsProc;
+		} theConverter;
+
+	theConverter.fAsProc = iProcVoid;
+
+	sCreateRaw(0, (ProcRaw_t)sEntryVoid, theConverter.fAsPointer);
 	}
+
+} // namespace ZThread
 	
-ZMutex::~ZMutex()
-	{}
-
-void ZMutex::Acquire()
-	{
-	const ZThreadImp::ID current = ZThreadImp::sID();
-	if (current != fThreadID_Owner)
-		{
-		fMtx.Acquire();
-		fThreadID_Owner = current;
-		}
-	++fCount;
-	}
-
-void ZMutex::Release()
-	{
-	if (0 == --fCount)
-		{
-		fThreadID_Owner = 0;
-		fMtx.Release();
-		}
-	}
-
-bool ZMutex::IsLocked()
-	{ return ZThreadImp::sID() == fThreadID_Owner; }
-
-void ZMutex::pWait(ZCnd& iCnd)
-	{
-	int priorCount = fCount;
-	fCount = 0;
-	fThreadID_Owner = 0;
-	iCnd.Wait(fMtx);
-	fThreadID_Owner = ZThreadImp::sID();
-	fCount = priorCount;
-	}
-
-void ZMutex::pWait(ZCnd& iCnd, double iTimeout)
-	{
-	int priorCount = fCount;
-	fCount = 0;
-	fThreadID_Owner = 0;
-	iCnd.Wait(fMtx, iTimeout);
-	fThreadID_Owner = ZThreadImp::sID();
-	fCount = priorCount;
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZSemaphore
-
-ZSemaphore::ZSemaphore(int32 iInitialCount)
-	{
-	while (iInitialCount--)
-		ZSem::Signal();
-	}
-
-ZSemaphore::ZSemaphore(int32 iInitialCount, const char* iName)
-	{
-	while (iInitialCount--)
-		ZSem::Signal();
-	}
-
-ZSemaphore::~ZSemaphore()
-	{}
-
-void ZSemaphore::Wait(int32 iCount)
-	{
-	while (iCount--)
-		ZSem::Wait();
-	}
-
-bool ZSemaphore::Wait(int32 iCount, bigtime_t iMicroseconds)
-	{
-	ZTime expired = ZTime::sSystem() + iMicroseconds / 1e6;
-	int32 acquired = 0;
-	while (iCount)
-		{
-		if (!ZSem::Wait(expired - ZTime::sSystem()))
-			{
-			this->Signal(acquired);
-			return false;
-			}
-		else
-			{
-			--iCount;
-			++acquired;
-			}
-		}
-	return true;
-	}
-
-void ZSemaphore::Signal(int32 iCount)
-	{
-	while (iCount--)
-		ZSem::Signal();
-	}
-
 NAMESPACE_ZOOLIB_END

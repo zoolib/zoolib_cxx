@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZThreadImp_Win.h"
+#include "zoolib/ZThread_Win.h"
 
-#if ZCONFIG_API_Enabled(ThreadImp_Win)
+#if ZCONFIG_API_Enabled(Thread_Win)
 
 #include <new> // For std::bad_alloc
 #include <process.h> // For _beginthreadex
@@ -80,26 +80,27 @@ void ZSem_Win::Signal()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZThreadImp_Win
+#pragma mark * ZThread_Win
 
-ZThreadImp_Win::ID ZThreadImp_Win::sCreate(size_t iStackSize, Proc_t iProc, void* iParam)
+namespace ZThread_Win {
+
+void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
 	{
 	ID theID;
 	HANDLE theThreadHANDLE = (HANDLE) ::_beginthreadex(nullptr, 0, iProc, iParam, 0, &theID);
-	if (!theThreadHANDLE)
+	if (!theThreadHANDLE || theThreadHANDLE == (HANDLE)-1)
 		throw std::bad_alloc();
-
 	::CloseHandle(theThreadHANDLE);
-
-	return theID;
 	}
 
-ZThreadImp_Win::ID ZThreadImp_Win::sID()
+ID sID()
 	{ return ::GetCurrentThreadId(); }
 
-void ZThreadImp_Win::sSleep(double iDuration)
+void sSleep(double iDuration)
 	{ ::Sleep(DWORD(iDuration * 1e3)); }
+
+} // namespace ZThread_Win
 
 NAMESPACE_ZOOLIB_END
 
-#endif // ZCONFIG_API_Enabled(ThreadImp_Win)
+#endif // ZCONFIG_API_Enabled(Thread_Win)

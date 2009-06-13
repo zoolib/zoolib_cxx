@@ -22,173 +22,110 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZThread__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/ZThreadImp.h"
-#include "zoolib/ZThreadSafe.h"
-#include "zoolib/ZTypes.h" // For bigtime_t and nil
+#include "zoolib/ZThread_boost.h"
+#include "zoolib/ZThread_MacMP.h"
+#include "zoolib/ZThread_pthread.h"
+#include "zoolib/ZThread_T.h" // For ZGuard_T
+#include "zoolib/ZThread_Win.h"
+
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
-// A macro that has proven to be useful.
-#define ZAssertLocked(a, b) ZAssertStop(a, (b).IsLocked())
+#pragma mark -
+#pragma mark * ZThread, ZTSS etc.
+
+#if 0
+
+#elif ZCONFIG_API_Enabled(Thread_pthread)
+
+	namespace ZThread { using namespace ZThread_pthread; }
+	namespace ZTSS = ZTSS_pthread;
+
+	typedef ZCnd_pthread ZCnd;
+	typedef ZMtx_pthread ZMtx;
+	typedef ZSem_pthread ZSem;
+	typedef ZSemNoTimeout_pthread ZSemNoTimeout;
+
+#elif ZCONFIG_API_Enabled(Thread_MacMP)
+
+	namespace ZThread { using namespace ZThread_MacMP; }
+	namespace ZTSS = ZTSS_MacMP;
+
+	typedef ZCnd_MacMP ZCnd;
+	typedef ZMtx_MacMP ZMtx;
+	typedef ZSem_MacMP ZSem;
+
+#elif ZCONFIG_API_Enabled(Thread_Win)
+
+	namespace ZThread { using namespace ZThread_Win; }
+	namespace ZTSS = ZTSS_Win;
+
+	typedef ZCnd_Win ZCnd;
+	typedef ZMtx_Win ZMtx;
+	typedef ZSem_Win ZSem;
+
+#elif ZCONFIG_API_Enabled(Thread_boost)
+
+	namespace ZThread {}
+	namespace ZTSS {}
+
+	typedef ZCnd_boost ZCnd;
+	typedef ZMtx_boost ZMtx;
+	typedef ZSem_boost ZSem;
+
+#endif
+
+typedef ZGuard_T<ZMtx> ZGuardMtx;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZThread
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZThread {
 
-class ZThread : NonCopyable
+template <class T>
+class Starter_T
 	{
-protected:
-	virtual ~ZThread() {}
-
 public:
-	typedef bool Error;
-	static const Error errorNone = true;
-	static const Error errorTimeout = false;
+	typedef void (*Proc)(T);
 
-	typedef ZThreadImp::ID ThreadID;
-	static ThreadID kThreadID_None;
+	struct ProxyParam
+		{
+		Proc fProc;
+		T fParam;
 
-	typedef ZTSS::Key TLSKey_t;
-	typedef ZTSS::Value TLSData_t;
+		ProxyParam(Proc iProc, T iParam)
+		:	fProc(iProc), fParam(iParam)
+			{}
+		};
 
-	ZThread(const char* iName = nullptr);
-
-	void Start();
-	virtual void Run() = 0;
-
-	static ZThread::ThreadID sCurrentID() { return ZThreadImp::sID(); }
-
-	static void sSleepMicro(bigtime_t iMicroseconds) { ZThreadImp::sSleep(iMicroseconds / 1e6); }
-	static void sSleep(int32 iMilliseconds) { ZThreadImp::sSleep(iMilliseconds / 1e3); }
-
-	static TLSKey_t sTLSAllocate() { return ZTSS::sCreate(); }
-	static void sTLSFree(TLSKey_t iKey) { ZTSS::sFree(iKey); }
-	static void sTLSSet(TLSKey_t iKey, TLSData_t iValue) { ZTSS::sSet(iKey, iValue); }
-	static TLSData_t sTLSGet(TLSKey_t iKey) { return ZTSS::sGet(iKey); }
-
-protected:
-	void pRun();
-
-	#if ZCONFIG_API_Enabled(ThreadImp_Win)
-		static ZThreadImp::ProcResult_t __stdcall spRun(ZThreadImp::ProcParam_t iParam);
+	#if ZCONFIG_API_Enabled(Thread_Win)
+		static ProcResult_t __stdcall sEntry(ProxyParam* iProxyParam)
 	#else
-		static ZThreadImp::ProcResult_t spRun(ZThreadImp::ProcParam_t iParam);
+		static ProcResult_t sEntry(ProxyParam* iProxyParam)
 	#endif
+		{
+		ProxyParam localProxyParam = *iProxyParam;
 
-	ZMtx* fMtx_Start;
-	ZCnd* fCnd_Start;
-	bool fStarted;
+		delete iProxyParam;
+
+		localProxyParam.fProc(localProxyParam.fParam);
+
+		return 0;
+		}
+
+	static void sCreate(Proc iProc, T iParam)
+		{ sCreateRaw(0, (ProcRaw_t)sEntry, new ProxyParam(iProc, iParam)); }
 	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZMutexBase
+template <class T>
+void sCreate_T(typename Starter_T<T>::Proc iProc, T iParam)
+	{ Starter_T<T>::sCreate(iProc, iParam); }
 
-// ZMutexBase is the base for ZMutex, ZMutexComposite and the read/write locks from ZRWLock.
-// ie anything that can be acquired recursively and enforces some variety of mutual exclusion.
+typedef void (*ProcVoid_t)();
+void sCreateVoid(ProcVoid_t iProcVoid);
 
-class ZMutexBase : NonCopyable
-	{
-protected:
-	ZMutexBase() {}
-	~ZMutexBase() {}
-
-public:
-	virtual void Acquire() = 0;
-	virtual void Release() = 0;
-	virtual bool IsLocked() = 0;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZMutex
-
-class ZMutex : public ZMutexBase
-	{
-public:
-	ZMutex(const char* iName = nullptr, bool iCreateAcquired = false);
-	~ZMutex();
-
-// From ZMutexBase
-	virtual void Acquire();
-	virtual void Release();
-
-	virtual bool IsLocked();
-
-private:
-	void pWait(ZCnd& iCnd);
-	void pWait(ZCnd& iCnd, double iTimeout);
-
-	ZThread::ThreadID fThreadID_Owner;
-	ZMtx fMtx;
-	int fCount;
-
-	friend class ZCondition;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCondition
-
-class ZCondition : ZCnd
-	{
-public:
-	ZCondition(const char* iName = nullptr) {}
-	~ZCondition() {}
-
-	void Wait(ZMutex& iMutex)
-		{ iMutex.pWait(*this); }
-
-	void Wait(ZMutex& iMutex, bigtime_t iMicroseconds)
-		{ iMutex.pWait(*this, iMicroseconds / 1e6); }
-
-	void Wait(ZMtx& iMtx)
-		{ ZCnd::Wait(iMtx); }
-
-	void Wait(ZMtx& iMtx, bigtime_t iMicroseconds)
-		{ ZCnd::Wait(iMtx, iMicroseconds / 1e6); }
-
-	void Signal()
-		{ ZCnd::Signal(); }
-
-	void Broadcast()
-		{ ZCnd::Broadcast(); }
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZSemaphore
-
-class ZSemaphore : protected ZSem
-	{
-public:
-	ZSemaphore() {}
-	ZSemaphore(int32 iInitialCount);
-	ZSemaphore(int32 iInitialCount, const char* iName);
-	~ZSemaphore();
-
-	void Wait(int32 iCount);
-	bool Wait(int32 iCount, bigtime_t iMicroseconds);
-	void Signal(int32 iCount);
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZMutexNR
-
-typedef ZMtx ZMutexNR;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Guards (aka lockers)
-
-typedef ZGuardR_T<ZMutexBase> ZLocker;
-typedef ZGuardR_T<ZMutex> ZMutexLocker;
-typedef ZGuardMtx ZMutexNRLocker;
-
-// =================================================================================================
+} // namespace ZThread
 
 NAMESPACE_ZOOLIB_END
 

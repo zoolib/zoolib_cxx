@@ -18,25 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZThreadImp_Win__
-#define __ZThreadImp_Win__ 1
+#ifndef __ZThread_Win__
+#define __ZThread_Win__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#ifndef ZCONFIG_API_Avail__ThreadImp_Win
-#	define ZCONFIG_API_Avail__ThreadImp_Win ZCONFIG_SPI_Enabled(Win)
+#ifndef ZCONFIG_API_Avail__Thread_Win
+#	define ZCONFIG_API_Avail__Thread_Win ZCONFIG_SPI_Enabled(Win)
 #endif
 
-#ifndef ZCONFIG_API_Desired__ThreadImp_Win
-#	define ZCONFIG_API_Desired__ThreadImp_Win 1
+#ifndef ZCONFIG_API_Desired__Thread_Win
+#	define ZCONFIG_API_Desired__Thread_Win 1
 #endif
 
-#if ZCONFIG_API_Enabled(ThreadImp_Win)
+#if ZCONFIG_API_Enabled(Thread_Win)
 
 #include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/ZThreadImp_T.h"
+#include "zoolib/ZThread_T.h"
 
 // Unfortunately we need to pull in the Windows headers so
 // the definition of CRITICAL_SECTION is visible.
@@ -108,25 +108,25 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZThreadImp_Win
+#pragma mark * ZThread_Win
 
-namespace ZThreadImp_Win {
+namespace ZThread_Win {
 
 typedef unsigned ProcResult_t;
 typedef void* ProcParam_t;
 
-typedef ProcResult_t (__stdcall *Proc_t)(ProcParam_t iParam);
+typedef ProcResult_t (__stdcall *ProcRaw_t)(ProcParam_t iParam);
 
 typedef unsigned int ID;
 
-ID sCreate(size_t iStackSize, Proc_t iProc, void* iParam);
+void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam);
 ID sID();
 void sSleep(double iDuration);
 
-} // namespace ZThreadImp_Win
+} // namespace ZThread_Win
 
 NAMESPACE_ZOOLIB_END
 
-#endif // ZCONFIG_API_Enabled(ThreadImp_Win)
+#endif // ZCONFIG_API_Enabled(Thread_Win)
 
-#endif // __ZThreadImp_Win__
+#endif // __ZThread_Win__

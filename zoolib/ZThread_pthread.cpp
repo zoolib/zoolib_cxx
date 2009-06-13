@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZThreadImp_pthread.h"
+#include "zoolib/ZThread_pthread.h"
 
-#if ZCONFIG_API_Enabled(ThreadImp_pthread)
+#if ZCONFIG_API_Enabled(Thread_pthread)
 
 #include "zoolib/ZCompat_cmath.h" // for fmod
 #include "zoolib/ZDebug.h"
@@ -133,9 +133,11 @@ void ZSemNoTimeout_pthread::Signal()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZThreadImp_pthread
+#pragma mark * ZThread_pthread
 
-ZThreadImp_pthread::ID ZThreadImp_pthread::sCreate(size_t iStackSize, Proc_t iProc, void* iParam)
+namespace ZThread_pthread {
+
+void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
 	{
 	pthread_attr_t threadAttr;
 	::pthread_attr_init(&threadAttr);
@@ -157,16 +159,23 @@ ZThreadImp_pthread::ID ZThreadImp_pthread::sCreate(size_t iStackSize, Proc_t iPr
 
 	if (result != 0)
 		throw std::bad_alloc();
-
-	return theID;
 	}
 
-ZThreadImp_pthread::ID ZThreadImp_pthread::sID()
+ID sID()
 	{ return ::pthread_self(); }
 
-void ZThreadImp_pthread::sSleep(double iDuration)
-	{ ::usleep(useconds_t(iDuration * 1e6)); }
+void sSleep(double iDuration)
+	{
+	if (iDuration < 0)
+		::usleep(0);
+	else if (iDuration < 1000)
+		::usleep(useconds_t(iDuration * 1e6));
+	else
+		::usleep(1000000000);
+	}
+
+} // namespace ZThread_pthread
 
 NAMESPACE_ZOOLIB_END
 
-#endif // ZCONFIG_API_Enabled(ThreadImp_pthread)
+#endif // ZCONFIG_API_Enabled(Thread_pthread)

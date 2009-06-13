@@ -18,41 +18,42 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZThreadImp_MacMP__
-#define __ZThreadImp_MacMP__ 1
+#ifndef __ZThread_pthread__
+#define __ZThread_pthread__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCONFIG_API.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#ifndef ZCONFIG_API_Avail__ThreadImp_MacMP
-#	define ZCONFIG_API_Avail__ThreadImp_MacMP ZCONFIG_SPI_Enabled(MacMP)
+#ifndef ZCONFIG_API_Avail__Thread_pthread
+#	define ZCONFIG_API_Avail__Thread_pthread ZCONFIG_SPI_Enabled(pthread)
 #endif
 
-#ifndef ZCONFIG_API_Desired__ThreadImp_MacMP
-#	define ZCONFIG_API_Desired__ThreadImp_MacMP 1
+#ifndef ZCONFIG_API_Desired__Thread_pthread
+#	define ZCONFIG_API_Desired__Thread_pthread 1
 #endif
 
-#if ZCONFIG_API_Enabled(ThreadImp_MacMP)
+#if ZCONFIG_API_Enabled(Thread_pthread)
 
 #include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/ZThreadImp_T.h"
+#include "zoolib/ZThread_T.h"
 
-#include ZMACINCLUDE3(CoreServices,CarbonCore,Multiprocessing.h)
+#include <pthread.h>
+#include <semaphore.h>
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZMtx_MacMP;
-class ZSem_MacMP;
+class ZCnd_pthread;
+class ZMtx_pthread;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTSS_MacMP
+#pragma mark * ZTSS_pthread
 
-namespace ZTSS_MacMP {
+namespace ZTSS_pthread {
 
-typedef TaskStorageIndex Key;
-typedef TaskStorageValue Value;
+typedef pthread_key_t Key;
+typedef void* Value;
 
 Key sCreate();
 void sFree(Key iKey);
@@ -60,71 +61,91 @@ void sFree(Key iKey);
 void sSet(Key iKey, Value iValue);
 Value sGet(Key iKey);
 
-} // namespace ZTSS_MacMP
+} // namespace ZTSS_pthread
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCnd_MacMP
+#pragma mark * ZCnd_pthread
 
-typedef ZCnd_T<ZMtx_MacMP, ZSem_MacMP> ZCnd_MacMP;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZMtx_MacMP
-
-class ZMtx_MacMP : NonCopyable
+class ZCnd_pthread : NonCopyable
 	{
 public:
-	ZMtx_MacMP(const char* iName = nullptr);
-	~ZMtx_MacMP();
+	ZCnd_pthread();
+
+	~ZCnd_pthread();
+
+	void Wait(ZMtx_pthread& iMtx);
+	void Wait(ZMtx_pthread& iMtx, double iTimeout);
+	void Signal();
+	void Broadcast();
+
+protected:
+	pthread_cond_t fCond;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMtx_pthread
+
+class ZMtx_pthread : NonCopyable
+	{
+public:
+	ZMtx_pthread(const char* iName = nullptr);
+	~ZMtx_pthread();
 
 	void Acquire();
 	void Release();
 
 protected:
-	MPCriticalRegionID fMPCriticalRegionID;
+	pthread_mutex_t fMutex;
+	friend class ZCnd_pthread;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSem_MacMP
+#pragma mark * ZSem_pthread
 
-class ZSem_MacMP : NonCopyable
+typedef ZSem_T<ZMtx_pthread, ZCnd_pthread> ZSem_pthread;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZSemNoTimeout_pthread
+
+class ZSemNoTimeout_pthread : NonCopyable
 	{
 public:
-	ZSem_MacMP();
-
-	~ZSem_MacMP();
+	ZSemNoTimeout_pthread();
+	~ZSemNoTimeout_pthread();
 
 	void Wait();
-	bool Wait(double iTimeout);
+	bool TryWait();
 	void Signal();
 
 protected:
-	MPSemaphoreID fMPSemaphoreID;
+	sem_t fSem;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZThreadImp_MacMP
+#pragma mark * ZThread_pthread
 
-namespace ZThreadImp_MacMP {
+namespace ZThread_pthread {
 
-typedef OSStatus ProcResult_t;
+typedef void* ProcResult_t;
 typedef void* ProcParam_t;
 
-typedef TaskProc Proc_t;
+typedef ProcResult_t (*ProcRaw_t)(ProcParam_t iParam);
 
-typedef MPTaskID ID;
+typedef pthread_t ID;
 
-ID sCreate(size_t iStackSize, Proc_t iProc, void* iParam);
+void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam);
 ID sID();
 void sSleep(double iDuration);
 
-} // namespace ZThreadImp_MacMP
+} // namespace ZThread_pthread
 
 NAMESPACE_ZOOLIB_END
 
-#endif // ZCONFIG_API_Enabled(ThreadImp_MacMP)
+#endif // ZCONFIG_API_Enabled(Thread_pthread)
 
-#endif // __ZThreadImp_MacMP__
+#endif // __ZThread_pthread__

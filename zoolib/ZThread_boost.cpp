@@ -18,4 +18,60 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZThreadImp.h"
+#include "zoolib/ZThread_boost.h"
+
+#if ZCONFIG_API_Enabled(Thread_boost)
+
+NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCnd_boost
+
+ZCnd_boost::ZCnd_boost()
+	{}
+
+ZCnd_boost::~ZCnd_boost()
+	{}
+
+void ZCnd_boost::Wait(boost::mutex& iMtx)
+	{
+	boost::mutex::scoped_lock theLock(iMtx, boost::adopt_lock);
+	condition_variable::wait(theLock);
+	}
+
+bool ZCnd_boost::Wait(boost::mutex& iMtx, double iTimeout)
+	{
+	boost::mutex::scoped_lock theLock(iMtx, boost::adopt_lock);
+
+	return condition_variable::timed_wait(
+		theLock, boost::posix_time::microseconds(iTimeout * 1e6));
+	}
+
+void ZCnd_boost::Signal()
+	{ condition_variable::notify_one(); }
+
+void ZCnd_boost::Broadcast()
+	{ condition_variable::notify_all(); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMtx_boost
+
+ZMtx_boost::ZMtx_boost(const char* iName)
+	{}
+
+ZMtx_boost::~ZMtx_boost()
+	{}
+
+void ZMtx_boost::Acquire()
+	{ mutex::lock(); }
+
+void ZMtx_boost::Release()
+	{ mutex::unlock(); }
+
+//bool IsLocked(); // ??
+
+NAMESPACE_ZOOLIB_END
+
+#endif // ZCONFIG_API_Enabled(Thread_boost)

@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZThreadImp_MacMP.h"
+#include "zoolib/ZThread_MacMP.h"
 
-#if ZCONFIG_API_Enabled(ThreadImp_MacMP)
+#if ZCONFIG_API_Enabled(Thread_MacMP)
 
 #include <new> // for bad_alloc
 
@@ -101,9 +101,11 @@ void ZSem_MacMP::Signal()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZThreadImp_MacMP
+#pragma mark * ZThread_MacMP
 
-ZThreadImp_MacMP::ID ZThreadImp_MacMP::sCreate(size_t iStackSize, Proc_t iProc, void* iParam)
+namespace ZThread_MacMP {
+
+void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
 	{
 	if (iStackSize == 0)
 		iStackSize = 1024 * 1024;
@@ -111,13 +113,12 @@ ZThreadImp_MacMP::ID ZThreadImp_MacMP::sCreate(size_t iStackSize, Proc_t iProc, 
 	ID theID;
 	if (noErr != ::MPCreateTask(iProc, iParam, iStackSize, 0, nullptr, nullptr, 0, &theID))
 		throw std::bad_alloc();
-	return theID;
 	}
 
-ZThreadImp_MacMP::ID ZThreadImp_MacMP::sID()
+ID sID()
 	{ return ::MPCurrentTaskID(); }
 
-void ZThreadImp_MacMP::sSleep(double iDuration)
+void sSleep(double iDuration)
 	{
 	const Nanoseconds nowU = ::AbsoluteToNanoseconds(::UpTime());
 	const double targetDouble
@@ -128,6 +129,8 @@ void ZThreadImp_MacMP::sSleep(double iDuration)
 	::MPDelayUntil(&targetA);
 	}
 
+} // namespace ZThread_MacMP
+
 NAMESPACE_ZOOLIB_END
 
-#endif // ZCONFIG_API_Enabled(ThreadImp_MacMP)
+#endif // ZCONFIG_API_Enabled(Thread_MacMP)

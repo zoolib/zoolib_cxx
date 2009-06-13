@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2000 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2008 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,62 +18,81 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZThreadSimple__
-#define __ZThreadSimple__ 1
+#ifndef __ZThread_boost__
+#define __ZThread_boost__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZThread.h"
+#include "zoolib/ZCONFIG_API.h"
+#include "zoolib/ZCONFIG_SPI.h"
+
+#ifndef ZCONFIG_API_Avail__Thread_boost
+#	if ZCONFIG_SPI_Enabled(boost)
+#		include <boost/version.hpp>
+#		if !defined(__MWERKS__)
+#			if defined(BOOST_VERSION) && BOOST_VERSION >= 103500
+#				define ZCONFIG_API_Avail__Thread_boost 1
+#			endif
+#		endif
+#	endif
+#endif
+
+#ifndef ZCONFIG_API_Avail__Thread_boost
+#	define ZCONFIG_API_Avail__Thread_boost 0
+#endif
+
+#ifndef ZCONFIG_API_Desired__Thread_boost
+#	define ZCONFIG_API_Desired__Thread_boost 1
+#endif
+
+#if ZCONFIG_API_Enabled(Thread_boost)
+
+#include "zoolib/ZDList.h"
+#include "zoolib/ZThread_T.h"
+#include "zoolib/ZTypes.h"
+
+#include <boost/thread.hpp>
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZThreadSimpleVoid_t;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZThreadSimple
+#pragma mark * ZCnd_boost
 
-template <class T = ZThreadSimpleVoid_t>
-class ZThreadSimple : public ZThread
+class ZCnd_boost : public boost::condition_variable
 	{
 public:
-	typedef void (*ThreadProc)(T inArgument);
-	ZThreadSimple(ThreadProc iProc, T iArgument, const char* iName = nullptr)
-	:	ZThread(iName),
-		fProc(iProc),
-		fArgument(iArgument)
-		{}
+	ZCnd_boost();
+	~ZCnd_boost();
 
-protected:
-	virtual void Run()
-		{ fProc(fArgument); }
+	void Wait(boost::mutex& iMtx);
+	bool Wait(boost::mutex& iMtx, double iTimeout);
 
-private:
-	ThreadProc fProc;
-	T fArgument;
+	void Signal();
+	void Broadcast();
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZThreadSimple, dummy
+#pragma mark * ZMtx_boost
 
-template <>
-class ZThreadSimple<ZThreadSimpleVoid_t> : public ZThread
+class ZMtx_boost : public boost::mutex
 	{
 public:
-	typedef void (*ThreadProcNoArg)();
-	ZThreadSimple(ThreadProcNoArg iProc, const char* iName = nullptr)
-	:	ZThread(iName),
-		fProcNoArg(iProc)
-		{}
+	ZMtx_boost(const char* iName = nullptr);
+	~ZMtx_boost();
 
-protected:
-	virtual void Run()
-		{ fProcNoArg(); }
-
-private:
-	ThreadProcNoArg fProcNoArg;
+	void Acquire();
+	void Release();
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZSem_boost
+
+typedef ZSem_T<ZMtx_boost, ZCnd_boost> ZSem_boost;
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZThreadSimple__
+#endif // ZCONFIG_API_Enabled(Thread_boost)
+
+#endif // __ZThread_boost__
