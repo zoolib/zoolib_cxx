@@ -185,7 +185,7 @@ static bool sTryRead_NumberOrKeyword(const ZStrimU& s, string& oString)
 			&& theCP != '.'
 			&& theCP != '-')
 			{
-			s.Unread();
+			s.Unread(theCP);
 			return gotAny;
 			}
 		oString += theCP;
@@ -229,12 +229,12 @@ static bool sTryRead_Mantissa(const ZStrimU& s,
 
 	for (bool gotAny = false; /*no test*/; gotAny = true)
 		{
-		UTF32 curCP;
-		if (!s.ReadCP(curCP) || curCP == '.' || !ZUnicode::sIsDigit(curCP))
+		UTF32 theCP;
+		if (!s.ReadCP(theCP) || theCP == '.' || !ZUnicode::sIsDigit(theCP))
 			{
-			if (curCP == '.')
+			if (theCP == '.')
 				{
-				s.Unread();
+				s.Unread(theCP);
 				oIsDouble = true;
 				return true;
 				}
@@ -257,7 +257,7 @@ static bool sTryRead_Mantissa(const ZStrimU& s,
 				}
 			}
 
-		int digit = curCP - '0';
+		int digit = theCP - '0';
 		if (!oIsDouble)
 			{
 			int64 priorInt64 = oInt64;
@@ -290,12 +290,12 @@ static bool sTryRead_Number(const ZStrimU& s, ZTValue& oTV)
 		double divisor = 1.0;
 		for (;;)
 			{
-			UTF32 curCP;
-			if (!s.ReadCP(curCP))
+			UTF32 theCP;
+			if (!s.ReadCP(theCP))
 				break;
 			divisor *= 10;
 			fracPart *= 10;
-			fracPart += (curCP - '0');
+			fracPart += (theCP - '0');
 			}
 		asDouble += fracPart / divisor;
 		}

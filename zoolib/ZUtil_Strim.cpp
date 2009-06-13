@@ -40,7 +40,7 @@ void ZUtil_Strim::sCopy_WS(const ZStrimU& iStrimU, const ZStrimW& iDest)
 			break;
 		if (!ZUnicode::sIsWhitespace(theCP))
 			{
-			iStrimU.Unread();
+			iStrimU.Unread(theCP);
 			break;
 			}
 		iDest.WriteCP(theCP);
@@ -56,7 +56,7 @@ void ZUtil_Strim::sSkip_WS(const ZStrimU& iStrimU)
 			break;
 		if (!ZUnicode::sIsWhitespace(theCP))
 			{
-			iStrimU.Unread();
+			iStrimU.Unread(theCP);
 			break;
 			}
 		}
@@ -66,7 +66,8 @@ void ZUtil_Strim::sSkip_WS(const ZStrimU& iStrimU)
 
 void ZUtil_Strim::sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZStrimW& iDest)
 	{
-	// There is a weakness in this code -- it will cause any standalone '/' to be absorbed.
+	ZAssert(iStrimU.UnreadableLimit() >= 2);
+
 	for (;;)
 		{
 		UTF32 theCP;
@@ -81,12 +82,15 @@ void ZUtil_Strim::sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZSt
 			{
 			if (theCP != '/')
 				{
-				iStrimU.Unread();
+				iStrimU.Unread(theCP);
 				break;
 				}
 
 			if (!iStrimU.ReadCP(theCP))
+				{
+				iStrimU.Unread(theCP);
 				break;
+				}
 
 			if (theCP == '/')
 				{
@@ -102,6 +106,7 @@ void ZUtil_Strim::sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZSt
 				}
 			else
 				{
+				iStrimU.Unread(theCP);
 				break;
 				}
 			}
@@ -196,51 +201,51 @@ bool ZUtil_Strim::sTryRead_CP(const ZStrimU& iStrimU, UTF32 iCP)
 	if (theCP == iCP)
 		return true;
 		
-	iStrimU.Unread();
+	iStrimU.Unread(theCP);
 	return false;
 	}
 
 bool ZUtil_Strim::sTryRead_Digit(const ZStrimU& iStrimU, int& oDigit)
 	{
-	UTF32 curCP;
-	if (!iStrimU.ReadCP(curCP))
+	UTF32 theCP;
+	if (!iStrimU.ReadCP(theCP))
 		return false;
 
-	if (curCP >= '0' && curCP <= '9')
+	if (theCP >= '0' && theCP <= '9')
 		{
-		oDigit = curCP - '0';
+		oDigit = theCP - '0';
 		return true;
 		}
 
-	iStrimU.Unread();
+	iStrimU.Unread(theCP);
 	return false;
 	}
 
 bool ZUtil_Strim::sTryRead_HexDigit(const ZStrimU& iStrimU, int& oDigit)
 	{
-	UTF32 curCP;
-	if (!iStrimU.ReadCP(curCP))
+	UTF32 theCP;
+	if (!iStrimU.ReadCP(theCP))
 		return false;
 
-	if (curCP >= '0' && curCP <= '9')
+	if (theCP >= '0' && theCP <= '9')
 		{
-		oDigit = curCP - '0';
+		oDigit = theCP - '0';
 		return true;
 		}
 
-	if (curCP >= 'a' && curCP <= 'f')
+	if (theCP >= 'a' && theCP <= 'f')
 		{
-		oDigit = curCP - 'a' + 10;
+		oDigit = theCP - 'a' + 10;
 		return true;
 		}
 
-	if (curCP >= 'A' && curCP <= 'F')
+	if (theCP >= 'A' && theCP <= 'F')
 		{
-		oDigit = curCP - 'A' + 10;
+		oDigit = theCP - 'A' + 10;
 		return true;
 		}
 		
-	iStrimU.Unread();
+	iStrimU.Unread(theCP);
 	return false;
 	}
 
@@ -304,7 +309,7 @@ bool ZUtil_Strim::sTryRead_GenericInteger(const ZStrimU& iStrimU, int64& oIntege
 			throw ParseException("Expected a valid hex integer after '0x' prefix");
 			}
 		
-		iStrimU.Unread();
+		iStrimU.Unread(theCP);
 		if (!ZUnicode::sIsDigit(theCP))
 			{
 			oInteger = 0;
@@ -340,11 +345,11 @@ bool ZUtil_Strim::sTryRead_GenericInteger(const ZStrimU& iStrimU, int64& oIntege
 
 bool ZUtil_Strim::sTryRead_Double(const ZStrimU& iStrimU, double& oDouble)
 	{
-	UTF32 curCP;
-	if (!iStrimU.ReadCP(curCP))
+	UTF32 theCP;
+	if (!iStrimU.ReadCP(theCP))
 		return false;
 
-	if (curCP == 'n' || curCP == 'N')
+	if (theCP == 'n' || theCP == 'N')
 		{
 		if (sTryRead_CP(iStrimU, 'a') || sTryRead_CP(iStrimU, 'A'))
 			{
@@ -357,7 +362,7 @@ bool ZUtil_Strim::sTryRead_Double(const ZStrimU& iStrimU, double& oDouble)
 			}
 		throw ParseException("Illegal character when trying to read a double");
 		}
-	else if (curCP == 'i' || curCP == 'I')
+	else if (theCP == 'i' || theCP == 'I')
 		{
 		if (sTryRead_CP(iStrimU, 'n') || sTryRead_CP(iStrimU, 'F'))
 			{
@@ -370,40 +375,40 @@ bool ZUtil_Strim::sTryRead_Double(const ZStrimU& iStrimU, double& oDouble)
 			}
 		throw ParseException("Illegal character when trying to read a double");
 		}
-	else if (!ZUnicode::sIsDigit(curCP) && curCP != '.')
+	else if (!ZUnicode::sIsDigit(theCP) && theCP != '.')
 		{
-		iStrimU.Unread();
+		iStrimU.Unread(theCP);
 		return false;
 		}
 
 	oDouble = 0.0;
-	while (ZUnicode::sIsDigit(curCP))
+	while (ZUnicode::sIsDigit(theCP))
 		{
 		oDouble *= 10;
-		oDouble += (curCP - '0');
-		if (!iStrimU.ReadCP(curCP))
+		oDouble += (theCP - '0');
+		if (!iStrimU.ReadCP(theCP))
 			return true;
 		}
 
-	if (curCP != '.')
+	if (theCP != '.')
 		{
-		iStrimU.Unread();
+		iStrimU.Unread(theCP);
 		return true;
 		}
 
-	if (!iStrimU.ReadCP(curCP))
+	if (!iStrimU.ReadCP(theCP))
 		return true;
 
-	if (ZUnicode::sIsDigit(curCP))
+	if (ZUnicode::sIsDigit(theCP))
 		{
 		double fracPart = 0.0;
 		double divisor = 1;
-		while (ZUnicode::sIsDigit(curCP))
+		while (ZUnicode::sIsDigit(theCP))
 			{
 			divisor *= 10;
 			fracPart *= 10;
-			fracPart += (curCP - '0');
-			if (!iStrimU.ReadCP(curCP))
+			fracPart += (theCP - '0');
+			if (!iStrimU.ReadCP(theCP))
 				{
 				oDouble += fracPart / divisor;
 				return true;
@@ -412,9 +417,9 @@ bool ZUtil_Strim::sTryRead_Double(const ZStrimU& iStrimU, double& oDouble)
 		oDouble += fracPart / divisor;
 		}
 
-	if (curCP != 'e' && curCP != 'E')
+	if (theCP != 'e' && theCP != 'E')
 		{
-		iStrimU.Unread();
+		iStrimU.Unread(theCP);
 		return true;
 		}
 
@@ -509,30 +514,30 @@ bool ZUtil_Strim::sTryRead_EscapedString(const ZStrimU& iStrimU, UTF32 iDelimite
 
 bool ZUtil_Strim::sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& iDest)
 	{
-	UTF32 curCP;
-	if (!iStrimU.ReadCP(curCP))
+	UTF32 theCP;
+	if (!iStrimU.ReadCP(theCP))
 		return false;
 
-	if (!ZUnicode::sIsAlpha(curCP) && curCP != '_')
+	if (!ZUnicode::sIsAlpha(theCP) && theCP != '_')
 		{
-		iStrimU.Unread();
+		iStrimU.Unread(theCP);
 		return false;
 		}
 
-	iDest.WriteCP(curCP);
+	iDest.WriteCP(theCP);
 
 	for (;;)
 		{
-		UTF32 curCP;
-		if (!iStrimU.ReadCP(curCP))
+		UTF32 theCP;
+		if (!iStrimU.ReadCP(theCP))
 			break;
 
-		if (!ZUnicode::sIsAlphaDigit(curCP) && curCP != '_')
+		if (!ZUnicode::sIsAlphaDigit(theCP) && theCP != '_')
 			{
-			iStrimU.Unread();
+			iStrimU.Unread(theCP);
 			break;
 			}
-		iDest.WriteCP(curCP);
+		iDest.WriteCP(theCP);
 		}
 
 	return true;

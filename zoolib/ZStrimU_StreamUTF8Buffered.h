@@ -44,7 +44,8 @@ public:
 	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
 
 // From ZStrimU
-	virtual void Imp_Unread();
+	virtual void Imp_Unread(UTF32 iCP);
+	virtual size_t Imp_UnreadableLimit();
 
 protected:
 	const ZStreamR& fStreamR;

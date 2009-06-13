@@ -111,7 +111,7 @@ static bool sReadMLIdentifier(const ZStrimU& s, string& oText)
 
 	if (!ZUnicode::sIsAlpha(curCP) && curCP != '_' && curCP != '?' && curCP != '!')
 		{
-		s.Unread();
+		s.Unread(curCP);
 		return false;
 		}
 		
@@ -125,7 +125,7 @@ static bool sReadMLIdentifier(const ZStrimU& s, string& oText)
 			}
 		else if (!ZUnicode::sIsAlphaDigit(curCP) && curCP != '_' && curCP != '-' && curCP != ':')
 			{
-			s.Unread();
+			s.Unread(curCP);
 			break;
 			}
 		else
@@ -203,7 +203,7 @@ static bool sReadMLAttributeName(const ZStrimU& s, string& oName)
 		{
 		if (!ZUnicode::sIsAlpha(curCP) && curCP != '_' && curCP != '?' && curCP != '!')
 			{
-			s.Unread();
+			s.Unread(curCP);
 			return false;
 			}
 
@@ -215,7 +215,7 @@ static bool sReadMLAttributeName(const ZStrimU& s, string& oName)
 
 			if (!ZUnicode::sIsAlphaDigit(curCP) && curCP != '_' && curCP != '-' && curCP != ':')
 				{
-				s.Unread();
+				s.Unread(curCP);
 				break;
 				}
 				
@@ -249,7 +249,7 @@ static bool sReadMLAttributeValue(
 		}
 	else
 		{
-		s.Unread();
+		s.Unread(curCP);
 
 		ZUtil_Strim::sSkip_WS(s);
 
@@ -261,7 +261,7 @@ static bool sReadMLAttributeValue(
 				}
 			else if (curCP == '>')
 				{
-				s.Unread();
+				s.Unread(curCP);
 				break;
 				}
 			else if (ZUnicode::sIsWhitespace(curCP))
@@ -341,7 +341,7 @@ ZML::Reader& ZML::Reader::Advance()
 				}
 			else if (theCP == '<')
 				{
-				fStrim.Unread();
+				fStrim.Unread(theCP);
 				break;
 				}
 			}
@@ -406,7 +406,7 @@ void ZML::Reader::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 					}
 				else if (theCP == '<')
 					{
-					fStrim.Unread();
+					fStrim.Unread(theCP);
 					break;
 					}
 				else if (theCP == '&')
@@ -473,7 +473,7 @@ void ZML::Reader::pAdvance()
 
 		if (theCP != '<')
 			{
-			fStrim.Unread();
+			fStrim.Unread(theCP);
 			fToken = eToken_Text;
 			return;
 			}
@@ -545,7 +545,7 @@ void ZML::Reader::pAdvance()
 				}
 			default:
 				{
-				fStrim.Unread();
+				fStrim.Unread(theCP);
 
 				if (!sReadMLIdentifier(fStrim, fTagName))
 					{

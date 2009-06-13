@@ -438,7 +438,7 @@ void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* iDest, size_t iCount, si
 					fQuotesSeen = 3;
 					UTF32 theCP = fStrimU.ReadCP();
 					if (!ZUnicode::sIsEOL(theCP))
-						fStrimU.Unread();
+						fStrimU.Unread(theCP);
 					}
 				else
 					{
@@ -1055,7 +1055,7 @@ bool ZYad_ZooLibStrim::sRead_Identifier(
 			break;
 		if (!ZUnicode::sIsAlphaDigit(theCP) && theCP != '_')
 			{
-			iStrimU.Unread();
+			iStrimU.Unread(theCP);
 			break;
 			}
 

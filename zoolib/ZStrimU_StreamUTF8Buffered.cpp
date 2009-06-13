@@ -117,10 +117,13 @@ void ZStrimU_StreamUTF8Buffered::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size
 		*oCount = localDest - iDest;
 	}
 
-void ZStrimU_StreamUTF8Buffered::Imp_Unread()
+void ZStrimU_StreamUTF8Buffered::Imp_Unread(UTF32 iCP)
 	{
 	ZAssert(fFeedOut);
 	--fFeedOut;
 	}
+
+size_t ZStrimU_StreamUTF8Buffered::Imp_UnreadableLimit()
+	{ return fBuffer.size(); }
 
 NAMESPACE_ZOOLIB_END

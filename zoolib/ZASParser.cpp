@@ -53,10 +53,10 @@ namespace ZANONYMOUS {
 
 static bool sAtEnd(ZStrimU& iStrimU)
 	{
-	UTF32 dummy;
-	if (!iStrimU.ReadCP(dummy))
+	UTF32 theCP;
+	if (!iStrimU.ReadCP(theCP))
 		return true;
-	iStrimU.Unread();
+	iStrimU.Unread(theCP);
 	return false;
 	}
 

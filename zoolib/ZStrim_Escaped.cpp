@@ -50,7 +50,7 @@ void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 
 		if (theCP == fDelimiter)
 			{
-			fStrimSource.Unread();
+			fStrimSource.Unread(theCP);
 			break;
 			}
 
