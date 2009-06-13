@@ -40,7 +40,7 @@ NAMESPACE_ZOOLIB_BEGIN
 class ZStreamRPos_CFData : public ZStreamRPos
 	{
 public:
-	ZStreamRPos_CFData(CFDataRef iDataRef);
+	ZStreamRPos_CFData(ZRef<CFDataRef> iDataRef);
 	~ZStreamRPos_CFData();
 
 // From ZStreamR via ZStreamRPos
@@ -65,8 +65,8 @@ private:
 class ZStreamRWPos_CFData : public ZStreamRWPos
 	{
 public:
-	ZStreamRWPos_CFData(CFMutableDataRef iDataRef, size_t iGrowIncrement);
-	ZStreamRWPos_CFData(CFMutableDataRef iDataRef);
+	ZStreamRWPos_CFData(ZRef<CFMutableDataRef> iDataRef, size_t iGrowIncrement);
+	ZStreamRWPos_CFData(ZRef<CFMutableDataRef> iDataRef);
 	~ZStreamRWPos_CFData();
 
 // From ZStreamR via ZStreamRWPos

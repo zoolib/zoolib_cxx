@@ -33,7 +33,7 @@ using std::max;
 #pragma mark -
 #pragma mark * ZStreamRPos_CFData
 
-ZStreamRPos_CFData::ZStreamRPos_CFData(CFDataRef iDataRef)
+ZStreamRPos_CFData::ZStreamRPos_CFData(ZRef<CFDataRef> iDataRef)
 :	fDataRef(iDataRef),
 	fPosition(0)
 	{}
@@ -72,14 +72,14 @@ uint64 ZStreamRPos_CFData::Imp_GetSize()
 #pragma mark -
 #pragma mark * ZStreamRWPos_CFData
 
-ZStreamRWPos_CFData::ZStreamRWPos_CFData(CFMutableDataRef iDataRef, size_t iGrowIncrement)
+ZStreamRWPos_CFData::ZStreamRWPos_CFData(ZRef<CFMutableDataRef> iDataRef, size_t iGrowIncrement)
 :	fDataRef(iDataRef),
 	fGrowIncrement(iGrowIncrement),
 	fPosition(0),
 	fSizeLogical(::CFDataGetLength(fDataRef))
 	{}
 
-ZStreamRWPos_CFData::ZStreamRWPos_CFData(CFMutableDataRef iDataRef)
+ZStreamRWPos_CFData::ZStreamRWPos_CFData(ZRef<CFMutableDataRef> iDataRef)
 :	fDataRef(iDataRef),
 	fGrowIncrement(64),
 	fPosition(0),

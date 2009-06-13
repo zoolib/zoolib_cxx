@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamerRWFactory_Retry.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZThreadImp.h"
+#include "zoolib/ZThread.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -72,7 +72,7 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Retry::MakeStreamerRW()
 					fInterval);
 				}
 
-			ZThreadImp::sSleep(fInterval);
+			ZThread::sSleep(fInterval);
 			}
 		else
 			{

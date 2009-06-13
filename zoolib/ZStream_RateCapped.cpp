@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZStream_RateCapped.h"
-#include "zoolib/ZThreadImp.h"
+#include "zoolib/ZThread.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -43,7 +43,7 @@ size_t RateLimiter::GetCount(size_t iLastCount, size_t iCount)
 	if (iLastCount > lastConsumed)
 		{
 		const double remaining = double(iLastCount) - lastConsumed;
-		ZThreadImp::sSleep(remaining / fRate);
+		ZThread::sSleep(remaining / fRate);
 		}
 
 	fLastTime = ZTime::sSystem();
