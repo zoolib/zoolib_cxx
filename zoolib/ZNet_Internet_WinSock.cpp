@@ -433,7 +433,7 @@ static bool sWaitReadable(SOCKET iSOCKET, int iMilliseconds)
 	struct timeval timeOut;
 	timeOut.tv_sec = iMilliseconds / 1000;
 	timeOut.tv_usec = (iMilliseconds % 1000) * 1000;
-	return 0 < ::select(iSOCKET + 1, &readSet, nullptr, &exceptSet, &timeOut);
+	return 0 < ::select(0, &readSet, nullptr, &exceptSet, &timeOut);
 	}
 
 bool ZNetEndpoint_TCP_WinSock::Imp_WaitReadable(int iMilliseconds)
@@ -498,8 +498,7 @@ void ZNetEndpoint_TCP_WinSock::Imp_Abort()
 	theLinger.l_onoff = 1;
 	theLinger.l_linger = 1;
 	::setsockopt(fSOCKET, SOL_SOCKET, SO_LINGER, (char*)&theLinger, sizeof(theLinger));
-	::closesocket(fSOCKET);
-	fSOCKET = INVALID_SOCKET;
+	::shutdown(fSOCKET, 2);
 	}
 
 NAMESPACE_ZOOLIB_END
