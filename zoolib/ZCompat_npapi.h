@@ -69,7 +69,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	endif
 #endif
 
-
 // =================================================================================================
 // Fixup the NPString field name change
 
@@ -104,6 +103,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	inline uint32_t& sNPStringLength(NPString& iNPString)
 		{ return iNPString.utf8length; }
+
 #endif
 
 // =================================================================================================
@@ -192,15 +192,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 enum
 	{
-	NPPVpluginDrawingModel = 1000
-	, NPNVpluginDrawingModel = 1000
-	, NPNVsupportsCoreGraphicsBool = 2001
-	, NPNVsupportsOpenGLBool = 2002
+	NPPVpluginDrawingModel = 1000,
+	NPNVpluginDrawingModel = 1000,
+	NPNVsupportsCoreGraphicsBool = 2001,
+	NPNVsupportsOpenGLBool = 2002,
 	
 	#ifndef NP_NO_QUICKDRAW
-		, NPNVsupportsQuickDrawBool = 2000
+		NPNVsupportsQuickDrawBool = 2000,
 	#endif
-	, NPNVSupportsWindowless = 17
+	NPNVSupportsWindowless = 17
 	};
 
 typedef enum
@@ -219,7 +219,6 @@ typedef struct NP_CGContext
 	WindowRef window;
 	} NP_CGContext;
 
-
 #endif // ZCONFIG_NPAPI_WebKit_10_4
 
 #if defined(ZCONFIG_NPAPI_WebKit_10_5)
@@ -233,7 +232,6 @@ enum
 #endif // defined(ZCONFIG_NPAPI_WebKit_10_5)
 
 #endif // defined(XP_MACOSX)
-
 
 // =================================================================================================
 
