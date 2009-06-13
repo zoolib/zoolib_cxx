@@ -36,7 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(NetDNSSD)
 
 #include "zoolib/ZNet_Internet.h" // For ip_port
-#include "zoolib/ZThreadOld.h"
+#include "zoolib/ZThread.h"
 
 extern "C" {
 #include <dns_sd.h>
@@ -107,7 +107,7 @@ private:
 		void* context);
 
 	DNSServiceRef fDNSServiceRef;
-	ZMutex fMutex;
+	ZMtx fMutex;
 	std::string fName;
 	std::string fRegType;
 	std::string fDomain;

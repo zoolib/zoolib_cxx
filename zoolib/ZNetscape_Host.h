@@ -27,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZGeom.h"
 #include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZStreamer.h"
-#include "zoolib/ZThreadOld.h"
 
 #include <list>
 #include <string>

@@ -48,7 +48,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_RFCOMM_OSX)
 
-#include "zoolib/ZThreadOld.h"
+#include "zoolib/ZThread.h"
 
 #include <deque>
 
