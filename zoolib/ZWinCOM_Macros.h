@@ -22,7 +22,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZWinCOM_Macros__ 1
 #include "zconfig.h"
 
-#if ZCONFIG(Compiler, GCC)
+#if ZCONFIG(Compiler, MSVC) || ZCONFIG(Compiler, CodeWarrior)
+
+	#define ZWinCOM_STRINGIFY(a) #a
+
+	#define ZWinCOM_CLASS_(className, baseClass, l, w0, w1, b0, b1, b2, b3, b4, b5, b6, b7) \
+		MIDL_INTERFACE(ZWinCOM_STRINGIFY(l##-##w0##-##w1##-##b0##b1##-##b2##b3##b4##b5##b6##b7))\
+		className : public baseClass {
+
+	#define ZWinCOM_DEFINITION(className)
+
+	#define ZUUIDOF(className) __uuidof(className)
+
+#else
 
 	#define ZWinCOM_CLASS_(className, baseClass, l, w0, w1, b0, b1, b2, b3, b4, b5, b6, b7) \
 		struct className : public baseClass {\
@@ -39,18 +51,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			ZIID_b4,ZIID_b5,ZIID_b6,ZIID_b7}};
 
 	#define ZUUIDOF(className) (className::sIID)
-
-#else
-
-	#define ZWinCOM_STRINGIFY(a) #a
-
-	#define ZWinCOM_CLASS_(className, baseClass, l, w0, w1, b0, b1, b2, b3, b4, b5, b6, b7) \
-		MIDL_INTERFACE(ZWinCOM_STRINGIFY(l##-##w0##-##w1##-##b0##b1##-##b2##b3##b4##b5##b6##b7))\
-		className : public baseClass {
-
-	#define ZWinCOM_DEFINITION(className)
-
-	#define ZUUIDOF(className) __uuidof(className)
 
 #endif
 
