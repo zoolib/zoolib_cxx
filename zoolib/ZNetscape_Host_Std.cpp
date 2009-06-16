@@ -282,7 +282,7 @@ void HostMeister_Std::GetStringIdentifiers(
 	}
 
 NPIdentifier HostMeister_Std::GetIntIdentifier(int32_t intid)
-	{ return reinterpret_cast<NPIdentifier>((intid << 1) | 0x1); }
+	{ return reinterpret_cast<NPIdentifier>((intptr_t(intid) << 1) | 0x1); }
 
 bool HostMeister_Std::IdentifierIsString(NPIdentifier identifier)
 	{ return 0 == (reinterpret_cast<intptr_t>(identifier) & 0x1); }
