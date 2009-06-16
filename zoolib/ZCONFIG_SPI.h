@@ -261,6 +261,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 // =================================================================================================
+#pragma mark imagehlp
+#ifndef ZCONFIG_SPI_Avail__imagehlp
+#	define ZCONFIG_SPI_Avail__imagehlp 0
+#endif
+
+#ifndef ZCONFIG_SPI_Desired__imagehlp
+#	define ZCONFIG_SPI_Desired__imagehlp 1
+#endif
+
+
+// =================================================================================================
 #pragma mark iPhone
 #ifndef ZCONFIG_SPI_Avail__iPhone
 #	if __MACH__ && defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
@@ -274,17 +285,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef ZCONFIG_SPI_Desired__iPhone
 #	define ZCONFIG_SPI_Desired__iPhone 1
-#endif
-
-
-// =================================================================================================
-#pragma mark imagehlp
-#ifndef ZCONFIG_SPI_Avail__imagehlp
-#	define ZCONFIG_SPI_Avail__imagehlp 0
-#endif
-
-#ifndef ZCONFIG_SPI_Desired__imagehlp
-#	define ZCONFIG_SPI_Desired__imagehlp 1
 #endif
 
 
@@ -465,9 +465,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark Win
 #ifndef ZCONFIG_SPI_Avail__Win
-#	if defined(WIN32)
-#		define ZCONFIG_SPI_Avail__Win 1
-#	elif defined(WINDOWS)
+#	if defined(WIN32) || defined(_WIN32) || defined(WINDOWS)
 #		define ZCONFIG_SPI_Avail__Win 1
 #	elif __MWERKS__ && __INTEL__
 #		define ZCONFIG_SPI_Avail__Win 1
