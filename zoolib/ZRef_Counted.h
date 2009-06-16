@@ -22,8 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRef_Counted__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZRef.h"
+#include "zoolib/ZAtomic.h"
 #include "zoolib/ZThreadSafe.h"
+
+// ZRef_Counted does not itself use the definitions in
+// ZRef.h, but most/all users of ZRef_Counted do.
+#include "zoolib/ZRef.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -53,7 +57,7 @@ inline void sRelease(ZRefCounted& iObject)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRefCountedWithFinalize
+#pragma mark * ZRefCountedWithFinalizeBase
 
 class ZRefCountedWithFinalizeBase
 	{

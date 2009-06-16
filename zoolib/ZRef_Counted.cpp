@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZThread.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -56,32 +56,32 @@ ZRefCountedWithFinalizeBase::ZRefCountedWithFinalizeBase()
 
 ZRefCountedWithFinalizeBase::~ZRefCountedWithFinalizeBase()
 	{
-	ZAssertStopf(1, 0 == ZThreadSafe_Get(fRefCount),
-		("Non-zero refcount at destruction, it is %d", ZThreadSafe_Get(fRefCount)));
+	ZAssertStopf(1, 0 == ZAtomic_Get(&fRefCount),
+		("Non-zero refcount at destruction, it is %d", ZAtomic_Get(&fRefCount)));
 	}
 
 void ZRefCountedWithFinalizeBase::Initialize()
 	{
-	ZAssertStopf(1, 1 == ZThreadSafe_Get(fRefCount),
-		("Refcount is not 1, it is %d", ZThreadSafe_Get(fRefCount)));
+	ZAssertStopf(1, 1 == ZAtomic_Get(&fRefCount),
+		("Refcount is not 1, it is %d", ZAtomic_Get(&fRefCount)));
 	}
 
 void ZRefCountedWithFinalizeBase::Finalize()
 	{
-	ZAssertStopf(1, 1 == ZThreadSafe_Get(fRefCount),
-		("Refcount is not 1, it is %d", ZThreadSafe_Get(fRefCount)));
+	ZAssertStopf(1, 1 == ZAtomic_Get(&fRefCount),
+		("Refcount is not 1, it is %d", ZAtomic_Get(&fRefCount)));
 	this->FinalizationComplete();
 	delete this;
 	}
 
 void ZRefCountedWithFinalizeBase::FinalizationComplete()
 	{
-	ZThreadSafe_Dec(fRefCount);
+	ZAtomic_Dec(&fRefCount);
 	}
 
 void ZRefCountedWithFinalizeBase::Retain()
 	{
-	if (0 == ZThreadSafe_IncReturnOld(fRefCount))
+	if (0 == ZAtomic_Add(&fRefCount, 1))
 		this->Initialize();
 	}
 
@@ -104,11 +104,11 @@ void ZRefCountedWithFinalizeBase::Release()
 	}
 
 int ZRefCountedWithFinalizeBase::GetRefCount() const
-	{ return ZThreadSafe_Get(fRefCount); }
+	{ return ZAtomic_Get(&fRefCount); }
 
 int ZRefCountedWithFinalizeBase::pCOMAddRef()
 	{
-	int newCount = ZThreadSafe_IncReturnNew(fRefCount);
+	int newCount = ZAtomic_Add(&fRefCount, 1);
 	if (newCount == 1)
 		this->Initialize();
 	return newCount;
@@ -136,7 +136,7 @@ int ZRefCountedWithFinalizeBase::pCOMRelease()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWeakBase
+#pragma mark * ZRefCountedWithFinalize
 
 ZRefCountedWithFinalize::ZRefCountedWithFinalize()
 	{}
