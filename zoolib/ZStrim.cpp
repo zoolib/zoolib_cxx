@@ -35,6 +35,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 #if ZCONFIG(Compiler, MSVC)
 #	define vsnprintf _vsnprintf
+#	define va_copy(dest,src) (dest)=(src)
 #endif
 
 #define kDebug_Strim 2
