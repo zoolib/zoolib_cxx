@@ -83,6 +83,8 @@ typedef ZGuard_T<ZMtx> ZGuardMtx;
 
 namespace ZThread {
 
+// The Starter_T class is used to provide a scope for the Proc typedef
+// and the ProxyParam struct, without which the code is pretty imprenetrable.
 template <class T>
 class Starter_T
 	{

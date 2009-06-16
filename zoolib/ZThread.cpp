@@ -18,10 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZThread.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZThread
 namespace ZThread {
 
 ZAssertCompile(sizeof(void*) == sizeof(ProcVoid_t));
