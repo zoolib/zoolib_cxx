@@ -56,7 +56,7 @@ ZStreamRW_FlushOnRead::~ZStreamRW_FlushOnRead()
 
 void ZStreamRW_FlushOnRead::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	if (ZThreadSafe_Swap(fLastWasWrite, 0) == 1)
+	if (ZThreadSafe_Swap(fLastWasWrite, 0))
 		{
 		ZGuardMtx locker_Write(fMutex_Write);
 		fStreamW.Flush();
@@ -67,7 +67,7 @@ void ZStreamRW_FlushOnRead::Imp_Read(void* iDest, size_t iCount, size_t* oCountR
 
 size_t ZStreamRW_FlushOnRead::Imp_CountReadable()
 	{
-	if (ZThreadSafe_Swap(fLastWasWrite, 0) == 1)
+	if (ZThreadSafe_Swap(fLastWasWrite, 0))
 		{
 		ZGuardMtx locker_Write(fMutex_Write);
 		fStreamW.Flush();
@@ -78,7 +78,7 @@ size_t ZStreamRW_FlushOnRead::Imp_CountReadable()
 
 bool ZStreamRW_FlushOnRead::Imp_WaitReadable(int iMilliseconds)
 	{
-	if (ZThreadSafe_Swap(fLastWasWrite, 0) == 1)
+	if (ZThreadSafe_Swap(fLastWasWrite, 0))
 		{
 		ZGuardMtx locker_Write(fMutex_Write);
 		fStreamW.Flush();
@@ -90,7 +90,7 @@ bool ZStreamRW_FlushOnRead::Imp_WaitReadable(int iMilliseconds)
 void ZStreamRW_FlushOnRead::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
 	{
-	if (ZThreadSafe_Swap(fLastWasWrite, 0) == 1)
+	if (ZThreadSafe_Swap(fLastWasWrite, 0))
 		{
 		ZGuardMtx locker_Write(fMutex_Write);
 		fStreamW.Flush();
@@ -102,7 +102,7 @@ void ZStreamRW_FlushOnRead::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 
 void ZStreamRW_FlushOnRead::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
 	{
-	if (ZThreadSafe_Swap(fLastWasWrite, 0) == 1)
+	if (ZThreadSafe_Swap(fLastWasWrite, 0))
 		{
 		ZGuardMtx locker_Write(fMutex_Write);
 		fStreamW.Flush();
@@ -113,7 +113,7 @@ void ZStreamRW_FlushOnRead::Imp_CopyTo(const ZStreamW& iStreamW, uint64 iCount,
 
 void ZStreamRW_FlushOnRead::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-	if (ZThreadSafe_Swap(fLastWasWrite, 0) == 1)
+	if (ZThreadSafe_Swap(fLastWasWrite, 0))
 		{
 		ZGuardMtx locker_Write(fMutex_Write);
 		fStreamW.Flush();
