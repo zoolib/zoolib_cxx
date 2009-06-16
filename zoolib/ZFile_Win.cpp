@@ -263,7 +263,7 @@ static ZFile::Error sRead(HANDLE iFileHANDLE, void* iDest, size_t iCount, size_t
 	if (oCountRead)
 		*oCountRead = 0;
 
-	if (iCount == 0) // Avoid Win32 null read
+	if (iCount == 0) // Avoid null read
 		return ZFile::errorNone;
 
 	DWORD countRead = 0;
@@ -282,7 +282,7 @@ static ZFile::Error sWrite(
 	if (oCountWritten)
 		*oCountWritten = 0;
 
-	if (iCount == 0)	// Avoid Win32 null write
+	if (iCount == 0) // Avoid null write
 		return ZFile::errorNone;
 
 	DWORD countWritten = 0;
