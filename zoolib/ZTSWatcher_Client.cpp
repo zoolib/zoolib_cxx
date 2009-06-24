@@ -201,15 +201,21 @@ void ZTSWatcher_Client::pSync1(
 	ZTuple request;
 
 	if (iRemovedIDsCount)
-		request.SetVector_T("removedIDs", iRemovedIDs, iRemovedIDs + iRemovedIDsCount, uint64());
+		{
+		std::copy(iRemovedIDs, iRemovedIDs + iRemovedIDsCount,
+			back_inserter(request.SetMutableVector("removedIDs")));
+		}
 
 	if (iAddedIDsCount)
-		request.SetVector_T("addedIDs", iAddedIDs, iAddedIDs + iAddedIDsCount, uint64());
+		{
+		std::copy(iAddedIDs, iAddedIDs + iAddedIDsCount,
+			back_inserter(request.SetMutableVector("addedIDs")));
+		}
 
 	if (iRemovedQueriesCount)
 		{
-		request.SetVector_T("removedQueries",
-			iRemovedQueries, iRemovedQueries + iRemovedQueriesCount, int64());
+		std::copy(iRemovedQueries, iRemovedQueries + iRemovedQueriesCount,
+			back_inserter(request.SetMutableVector("removedQueries")));
 		}
 
 
@@ -295,7 +301,7 @@ void ZTSWatcher_Client::pSync1(
 		}
 
 	oAddedIDs.clear();
-	response.GetVector_T("addedTuples", back_inserter(oAddedIDs), uint64());
+	response.Get("addedTuples").GetVector_T(back_inserter(oAddedIDs), uint64());
 
 
 	oChangedTupleIDs.clear();
@@ -340,7 +346,7 @@ void ZTSWatcher_Client::pSync1(
 				oChangedQueries.insert(pair<int64, vector<uint64> >(theRefcon, vector<uint64>()));
 			vector<uint64>& theIDs = (*pos.first).second;
 			theIDs.reserve(entry.GetVector("IDs").size());
-			entry.GetVector_T("IDs", back_inserter(theIDs), uint64());
+			entry.Get("IDs").GetVector_T(back_inserter(theIDs), uint64());
 			}
 		}
 

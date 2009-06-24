@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRegex.h"
 #include "zoolib/ZStream.h"
 #include "zoolib/ZTextCollator.h"
+#include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_STL.h"
 
 #include <vector>

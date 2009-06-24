@@ -141,15 +141,15 @@ static bool sSync1(
 
 	
 	vector<uint64> removedIDs;
-	iReq.GetVector_T("removedIDs", back_inserter(removedIDs), uint64());
+	iReq.Get("removedIDs").GetVector_T(back_inserter(removedIDs), uint64());
 
 
 	vector<uint64> addedIDs;
-	iReq.GetVector_T("addedIDs", back_inserter(addedIDs), uint64());
+	iReq.Get("addedIDs").GetVector_T(back_inserter(addedIDs), uint64());
 
 
 	vector<int64> removedQueries;
-	iReq.GetVector_T("removedQueries", back_inserter(removedQueries), int64());
+	iReq.Get("removedQueries").GetVector_T(back_inserter(removedQueries), uint64());
 
 
 	vector<ZTSWatcher::AddedQueryCombo> addedQueries;
@@ -244,8 +244,8 @@ static bool sSync1(
 
 	if (!watcherAddedIDs.empty())
 		{
-		response.SetVector_T("addedTuples",
-			watcherAddedIDs.begin(), watcherAddedIDs.end(), uint64());
+		std::copy(watcherAddedIDs.begin(), watcherAddedIDs.end(),
+			back_inserter(response.SetMutableVector("addedTuples")));
 		}
 
 	if (size_t theCount = changedTupleIDs.size())
@@ -277,7 +277,10 @@ static bool sSync1(
 			i != theEnd; ++i)
 			{
 			temp.SetInt64("refcon", (*i).first);
-			temp.SetVector_T("IDs", (*i).second.begin(), (*i).second.end());
+
+			std::copy((*i).second.begin(), (*i).second.end(),
+				back_inserter(temp.SetMutableVector("IDs")));
+
 			changedQueriesV.push_back(temp);
 			}
 		}

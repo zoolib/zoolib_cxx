@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(Win)
 
 #include "zoolib/ZRef.h"
-#include "zoolib/ZUnicode.h"
+#include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZWinCOM_Macros.h"
 #include "zoolib/ZWinHeader.h"
 

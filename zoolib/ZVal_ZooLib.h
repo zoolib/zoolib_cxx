@@ -203,6 +203,9 @@ public:
 	//@}
 
 
+	template <typename OutputIterator, typename T>
+	void GetVector_T(OutputIterator iIter, const T& iDummy) const;
+
 private:
 	int pUncheckedCompare(const ZVal_ZooLib& iOther) const;
 	bool pUncheckedLess(const ZVal_ZooLib& iOther) const;
@@ -300,6 +303,17 @@ public:
 template <> inline int sCompare_T(const ZVal_ZooLib& iL, const ZVal_ZooLib& iR)
 	{ return iL.Compare(iR); }
 
+template <typename OutputIterator, typename T>
+inline void ZVal_ZooLib::GetVector_T(OutputIterator iIter, const T& iDummy) const
+	{
+	const std::vector<ZVal_ZooLib>& theVector = this->GetVector();
+	for (std::vector<ZVal_ZooLib>::const_iterator i = theVector.begin(), theEnd = theVector.end();
+		i != theEnd; ++i)
+		{
+		*iIter++ = (*i).Get_T<T>();
+		}
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValList_ZooLib
@@ -375,6 +389,7 @@ typedef std::vector<NameTV> PropList;
 	void Set##TYPENAME(Name_t iName, const TYPE& iVal); \
 
 #define ZMACRO_ZValMapAccessors_Decl_Std(T, Name_t) \
+	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, ID, uint64) \
 	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, Int8, int8) \
 	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, Int16, int16) \
 	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, Int32, int32) \
@@ -398,13 +413,13 @@ class ZValMap_ZooLib
 	class Rep;
 
 public:
-	ZMACRO_ZValMapAccessors_Using(ZValMap_ZooLib, const char*, ZVal_ZooLib);
-	ZMACRO_ZValMapAccessors_Using(ZValMap_ZooLib, const ZTName&, ZVal_ZooLib);
-	ZMACRO_ZValMapAccessors_Using(ZValMap_ZooLib, PropList::iterator, ZVal_ZooLib);
+	ZMACRO_ZValMapAccessors_Using(ZValMap_ZooLib, const char*, ZVal_ZooLib)
+	ZMACRO_ZValMapAccessors_Using(ZValMap_ZooLib, const ZTName&, ZVal_ZooLib)
+	ZMACRO_ZValMapAccessors_Using(ZValMap_ZooLib, PropList::iterator, ZVal_ZooLib)
 
-	ZMACRO_ZValMapAccessors_Decl_Std(ZValMap_ZooLib, const char*);
-	ZMACRO_ZValMapAccessors_Decl_Std(ZValMap_ZooLib, const ZTName&);
-	ZMACRO_ZValMapAccessors_Decl_Std(ZValMap_ZooLib, PropList::iterator);
+	ZMACRO_ZValMapAccessors_Decl_Std(ZValMap_ZooLib, const char*)
+	ZMACRO_ZValMapAccessors_Decl_Std(ZValMap_ZooLib, const ZTName&)
+	ZMACRO_ZValMapAccessors_Decl_Std(ZValMap_ZooLib, PropList::iterator)
 
 	typedef std::vector<NameTV> PropList;
 
@@ -506,9 +521,9 @@ public:
 
 /** \name Getting
 */	//@{
-	template <class Name_t>
-	ZVal_ZooLib GetValue(Name_t iName) const
-		{ return this->Get(iName); }
+	ZVal_ZooLib GetValue(const_iterator iPropIter) const;
+	ZVal_ZooLib GetValue(const char* iPropName) const;
+	ZVal_ZooLib GetValue(const ZTName& iPropName) const;
 
 	template <class Name_t>
 	bool QGet(Name_t iName, ZVal_ZooLib& oVal) const;

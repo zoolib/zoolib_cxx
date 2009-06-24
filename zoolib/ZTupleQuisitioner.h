@@ -54,7 +54,7 @@ public:
 					const std::vector<ZTBQueryNode_Combo::Intersection>& iIntersections,
 					const ZTBSpec* iFilter, std::vector<uint64>& ioIDs);
 
-	void Query_Combo_First(const ZTuplePropName& iFirst, const std::vector<ZTBQuery::SortSpec>& iSort,
+	void Query_Combo_First(const ZTName& iFirst, const std::vector<ZTBQuery::SortSpec>& iSort,
 					const std::vector<ZTBQueryNode_Combo::Intersection>& iIntersections,
 					const ZTBSpec* iFilter, std::vector<uint64>& ioIDs);
 

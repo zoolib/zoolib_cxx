@@ -405,9 +405,9 @@ static void sGetProperties(
  	for (vector<string>::const_iterator i = iPropNames.begin(); i != iPropNames.end(); ++i)
  		{
  		if (ZTuple propT = sGetProp(iNode, *i))
-			oGoodT.AppendTuple("D:prop", propT);
+			oGoodT.EnsureMutableVector("D:prop").Append(propT);
  		else
- 			oBadT.AppendTuple("D:prop", ZTuple().SetNull(*i));
+ 			oBadT.EnsureMutableVector("D:prop").Append(ZTuple().SetNull(*i));
  		}
 	}
 
@@ -463,7 +463,7 @@ static bool sDelete(const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& iNod
 		ZTuple responseT;
 		responseT.SetString("D:href", sMakeHREF(iPrefix, iRoot, iNode));
 		responseT.SetString("D:status", "HTTP/1.1 404");
-		ioT.AppendTuple("D:response", responseT);
+		ioT.EnsureMutableVector("D:response").Append(responseT);
 		}
 	return false;
 	}
@@ -840,16 +840,16 @@ static void sHandle_PROPFIND_Some(
 			if (goodT)
 				{
 				goodT.SetString("D:status", "HTTP/1.1 200 OK");
-				responseT.AppendTuple("D:propstat", goodT);
+				responseT.EnsureMutableVector("D:propstat").Append(goodT);
 				}
 
 			if (badT)
 				{
 				badT.SetString("D:status", "HTTP/1.1 404 Not Found");
-				responseT.AppendTuple("D:propstat", badT);
+				responseT.EnsureMutableVector("D:propstat").Append(badT);
 				}
 			
-			ioTuple.AppendTuple("D:response", responseT);
+			ioTuple.EnsureMutableVector("D:response").Append(responseT);
 			}
 		}
 	}
@@ -878,10 +878,10 @@ static void sHandle_PROPFIND_All(
 			if (goodT)
 				{
 				goodT.SetString("D:status", "HTTP/1.1 200 OK");
-				responseT.AppendTuple("D:propstat", goodT);
+				responseT.EnsureMutableVector("D:propstat").Append(goodT);
 				}
 			
-			ioTuple.AppendTuple("D:response", responseT);
+			ioTuple.EnsureMutableVector("D:response").Append(responseT);
 			}
 		}
 	}

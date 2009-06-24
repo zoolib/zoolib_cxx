@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZStream.h"
 #include "zoolib/ZTextCoder.h"
+#include "zoolib/ZUnicode.h"
 
 using std::min;
 using std::string;

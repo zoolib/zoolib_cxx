@@ -33,8 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h"
 #include "zoolib/ZTextCoder.h"
 #include "zoolib/ZTextCoder_Unicode.h"
-#include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUnicode.h"
+#include "zoolib/ZUtil_Strim.h"
 
 #include <stdio.h>
 

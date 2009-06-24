@@ -30,6 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZMacOSX.h"
 #include "zoolib/ZStream.h"
+#include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_ATSUI.h"
 #include "zoolib/ZUtil_Mac_LL.h"
 

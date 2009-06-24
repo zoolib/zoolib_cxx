@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZLog.h"
+#include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Time.h"
 
 #include <cmath> // For fmod

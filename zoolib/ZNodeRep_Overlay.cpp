@@ -73,7 +73,7 @@ ZRef<ZNodeIterRep> ZNodeRep_Overlay::CreateIterRep()
 	return new ZNodeIterRep_Overlay(this, fOverlays);
 	}
 
-bool ZNodeRep_Overlay::GetProp(const string& iPropName, ZTupleValue& oTV, Error* oError)
+bool ZNodeRep_Overlay::GetProp(const string& iPropName, ZTValue& oTV, Error* oError)
 	{
 	return this->pGetNodeRep()->GetProp(iPropName, oTV, oError);
 	}

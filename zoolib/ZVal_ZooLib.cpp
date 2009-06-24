@@ -1307,7 +1307,8 @@ int ZVal_ZooLib::pUncheckedCompare(const ZVal_ZooLib& iOther) const
 #endif//##
 		case eZType_Tuple:
 			{
-			return sFetch_T<ZValMap_ZooLib>(fType.fBytes)->Compare(*sFetch_T<ZValMap_ZooLib>(iOther.fType.fBytes));
+			return sFetch_T<ZValMap_ZooLib>(fType.fBytes)->
+				Compare(*sFetch_T<ZValMap_ZooLib>(iOther.fType.fBytes));
 			}
 		case eZType_RefCounted:
 			{
@@ -1349,7 +1350,10 @@ int ZVal_ZooLib::pUncheckedCompare(const ZVal_ZooLib& iOther) const
 				// We're not empty, but iOther is, so we're greater.
 				return 1;
 				}
-			return sCompare_T(*fData.fAs_Vector, *iOther.fData.fAs_Vector);
+			return sCompare_T(fData.fAs_Vector->begin(), fData.fAs_Vector->end(),
+				iOther.fData.fAs_Vector->begin(), iOther.fData.fAs_Vector->end());
+//			return sCompare_T<std::vector<ZVal_ZooLib> >
+//				(*fData.fAs_Vector, *iOther.fData.fAs_Vector);
 			}
 		}
 	ZDebugStopf(kDebug_Tuple, ("Unknown type (%d)", fType.fType));
@@ -2244,6 +2248,36 @@ void ZValMap_ZooLib::Clear()
 	fRep.Clear();
 	}
 
+// Do this explicitly here, otherwise CW7 chokes.
+ZVal_ZooLib ZValMap_ZooLib::GetValue(const_iterator iPropIter) const
+	{
+	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropIter))
+		return *theValue;
+	return ZVal_ZooLib();
+	}
+
+ZVal_ZooLib ZValMap_ZooLib::GetValue(const char* iPropName) const
+	{
+	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropName))
+		return *theValue;
+	return ZVal_ZooLib();
+	}
+
+ZVal_ZooLib ZValMap_ZooLib::GetValue(const ZTName& iPropName) const
+	{
+	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropName))
+		return *theValue;
+	return ZVal_ZooLib();
+	}
+
+template <class S, class Name_t>
+bool ZValMap_ZooLib::QGet_T(Name_t iName, S& oVal) const
+	{
+	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iName))
+		return theValue->QGet_T(oVal);
+	return false;	
+	}
+
 bool ZValMap_ZooLib::SetNull(const_iterator iPropIter)
 	{
 	if (fRep && iPropIter != fRep->fProperties.end())
@@ -2277,14 +2311,6 @@ ZValMap_ZooLib& ZValMap_ZooLib::SetValue(const char* iPropName, const ZVal_ZooLi
 
 ZValMap_ZooLib& ZValMap_ZooLib::SetValue(const ZTName& iPropName, const ZVal_ZooLib& iVal)
 	{ return this->pSet(iPropName, iVal); }
-
-template <class S, class Name_t>
-bool ZValMap_ZooLib::QGet_T(Name_t iName, S& oVal) const
-	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iName))
-		return theValue->QGet_T(oVal);
-	return false;	
-	}
 
 // =================================================================================================
 #pragma mark -
@@ -2520,6 +2546,7 @@ ZValMap_ZooLib ZValMap_ZooLib::Minimized() const
 		{ return this->Set_T<>(iName, iVal); } \
 
 #define ZMACRO_ZValMapAccessors_Def_Std(T, Name_t) \
+	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, ID, uint64) \
 	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, Int8, int8) \
 	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, Int16, int16) \
 	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, Int32, int32) \

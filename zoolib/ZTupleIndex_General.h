@@ -58,7 +58,7 @@ private:
 		bool operator<(const Key& iOther) const;
 
 		uint64 fID;
-		const ZTupleValue* fValues[kMaxProperties];
+		const ZTValue* fValues[kMaxProperties];
 		size_t fPropCount;
 		};
 
@@ -69,7 +69,7 @@ private:
 
 	bool pKeyFromTuple(uint64 iID, const ZTuple* iTuple, Key& oKey);
 
-	ZTuplePropName fPropNames[kMaxProperties];
+	ZTName fPropNames[kMaxProperties];
 	size_t fPropNameCount;
 	std::set<Key> fSet;
 	};

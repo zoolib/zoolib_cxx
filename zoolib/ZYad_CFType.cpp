@@ -57,7 +57,6 @@ public:
 		if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iParam))
 			{
 			oResult = theYadR->GetCFTypeRef();
-			::CFRetain(oResult);
 			return true;
 			}
 		return false;

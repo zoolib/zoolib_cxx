@@ -67,7 +67,7 @@ ZRef<ZNodeIterRep> ZNodeRep_FS::CreateIterRep()
 	return new ZNodeIterRep_FS(ZFileIter(fFileSpec));
 	}
 
-bool ZNodeRep_FS::GetProp(const string& iPropName, ZTupleValue& oTV, ZNode::Error* oError)
+bool ZNodeRep_FS::GetProp(const string& iPropName, ZTValue& oTV, ZNode::Error* oError)
 	{
 	if (iPropName == "ContentLength")
 		{

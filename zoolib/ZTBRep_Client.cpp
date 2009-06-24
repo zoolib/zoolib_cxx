@@ -1003,7 +1003,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 			theTransaction->fSearches_Waiting.erase(theSearch);
 			
 			vector<uint64> vectorResultIDs;
-			theSearchTuple.GetVector_T("Results", back_inserter(vectorResultIDs), uint64());
+			theSearchTuple.Get("Results").GetVector_T(back_inserter(vectorResultIDs), uint64());
 
 			theSearch->fCallback(theSearch->fRefcon, vectorResultIDs);
 			delete theSearch;

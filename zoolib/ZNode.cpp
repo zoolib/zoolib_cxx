@@ -71,7 +71,7 @@ ZNode& ZNode::operator=(const ZRef<ZNodeRep>& iNodeRep)
 ZNode::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fNodeRep && true); }
 
-bool ZNode::GetProp(const string& iPropName, ZTupleValue& oTV, Error* oError) const
+bool ZNode::GetProp(const string& iPropName, ZTValue& oTV, Error* oError) const
 	{
 	if (fNodeRep)
 		{
@@ -577,7 +577,7 @@ ZNodeRep::~ZNodeRep()
 ZRef<ZNodeIterRep> ZNodeRep::CreateIterRep()
 	{ return ZRef<ZNodeIterRep>(); }
 
-bool ZNodeRep::GetProp(const string& iPropName, ZTupleValue& oTV, Error* oError)
+bool ZNodeRep::GetProp(const string& iPropName, ZTValue& oTV, Error* oError)
 	{
 	if (oError)
 		*oError = ZNode::errorNone;

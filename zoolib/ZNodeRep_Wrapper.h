@@ -39,7 +39,7 @@ public:
 // From ZNodeRep
 	virtual ZRef<ZNodeIterRep> CreateIterRep();
 
-	virtual bool GetProp(const std::string& iPropName, ZTupleValue& oTV, Error* oError);
+	virtual bool GetProp(const std::string& iPropName, ZTValue& oTV, Error* oError);
 	virtual bool CanHaveChildren(Error* oError);
 
 	virtual std::string GetName(Error* oError);

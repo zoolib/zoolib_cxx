@@ -429,7 +429,8 @@ void ZTBServer::Handle_Actions(const ZTuple& iReq)
 	Transaction* theTransaction = reinterpret_cast<Transaction*>(iReq.GetInt64("ServerID"));
 
 	vector<uint64> vectorGets;
-	iReq.GetVector_T("Gets", back_inserter(vectorGets), uint64());
+	iReq.Get("Gets").GetVector_T(back_inserter(vectorGets), uint64());
+
 	theTransaction->fTBRepTransaction->GetTuples(
 		vectorGets.size(), &vectorGets[0], sCallback_GetTuple, theTransaction);
 
@@ -706,8 +707,8 @@ void ZTBServer::Writer(const ZStreamW& iStream)
 				Search_t* theSearch = *i;
 				ZTuple theTuple;
 				theTuple.SetInt64("SearchID", theSearch->fClientSearchID);
-				theTuple.SetVector_T("Results",
-					theSearch->fResults.begin(), theSearch->fResults.end());
+				std::copy(theSearch->fResults.begin(), theSearch->fResults.end(),
+					back_inserter(theTuple.SetMutableVector("Results")));
 
 				vectorSearches.push_back(theTuple);
 				delete theSearch;

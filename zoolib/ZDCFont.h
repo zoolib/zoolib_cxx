@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZTypes.h"
-#include "zoolib/ZUnicode.h"
+#include "zoolib/ZUnicodeString.h"
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 #	include ZMACINCLUDE3(Carbon,HIToolbox,TextEdit.h)

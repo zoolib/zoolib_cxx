@@ -22,14 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim_JSON__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZStrim.h"
+#include "zoolib/ZTuple.h"
+
 #include <vector>
 
 NAMESPACE_ZOOLIB_BEGIN
-
-class ZTuple;
-class ZTValue;
-class ZStrimU;
-class ZStrimW;
 
 namespace ZUtil_Strim_JSON {
 

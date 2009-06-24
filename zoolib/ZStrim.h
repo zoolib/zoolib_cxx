@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStrim__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZUnicode.h"
+#include "zoolib/ZUnicodeString.h"
 
 #include <stdarg.h> // For va_list
 #include <stdexcept> // For range_error

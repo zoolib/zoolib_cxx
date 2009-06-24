@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZTrail.h"
-
 #include "zoolib/ZCompat_algorithm.h"
+#include "zoolib/ZTrail.h"
+#include "zoolib/ZUnicode.h"
 
 #include <string.h> // For strlen
 

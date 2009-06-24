@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZStream.h"
 #include "zoolib/ZString.h"
+#include "zoolib/ZUnicode.h"
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 #	include ZMACINCLUDE3(ApplicationServices,QD,Fonts.h)

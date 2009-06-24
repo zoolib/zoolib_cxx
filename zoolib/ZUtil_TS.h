@@ -23,13 +23,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZTypes.h"
+#include "zoolib/ZTuple.h"
 
 #include <map>
 #include <stdexcept>
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZTuple;
 class ZStreamR;
 class ZStreamW;
 class ZStreamRPos;

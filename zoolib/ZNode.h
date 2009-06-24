@@ -90,7 +90,7 @@ public:
 
 	operator operator_bool_type() const;
 
-	bool GetProp(const std::string& iPropName, ZTupleValue& oTV, Error* oError = 0) const;
+	bool GetProp(const std::string& iPropName, ZTValue& oTV, Error* oError = 0) const;
 
 	bool CanHaveChildren(Error* oError = 0) const;
 
@@ -203,7 +203,7 @@ public:
 
 	virtual ZRef<ZNodeIterRep> CreateIterRep();
 
-	virtual bool GetProp(const std::string& iPropName, ZTupleValue& oTV, Error* oError);
+	virtual bool GetProp(const std::string& iPropName, ZTValue& oTV, Error* oError);
 	virtual bool CanHaveChildren(Error* oError);
 
 	virtual std::string GetName(Error* oError) = 0;

@@ -911,7 +911,9 @@ ZTuple ZTBQueryNode_ID_Constant::AsTuple()
 	{
 	ZTuple theTuple;
 	theTuple.SetString("Kind", "ID_Constant");
-	theTuple.SetVector_T("IDs", fIDs.begin(), fIDs.end());
+
+	std::copy(fIDs.begin(), fIDs.end(), back_inserter(theTuple.SetMutableVector("IDs")));
+
 	return theTuple;
 	}
 
@@ -1077,7 +1079,7 @@ static ZRef<ZTBQueryNode> sNodeFromTuple(const ZTuple& iTuple)
 	else if (nodeKind == "ID_Constant")
 		{
 		vector<uint64> theIDs;
-		iTuple.GetVector_T("IDs", back_inserter(theIDs), uint64());
+		iTuple.Get("IDs").GetVector_T(back_inserter(theIDs), uint64());
 		return new ZTBQueryNode_ID_Constant(theIDs, true);
 		}
 	else if (nodeKind == "ID_FromSource")

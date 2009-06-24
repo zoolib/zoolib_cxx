@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCFont.h"
 #include "zoolib/ZDCPixmap.h"
-#include "zoolib/ZUnicode.h"
+#include "zoolib/ZTypes.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 

@@ -64,7 +64,7 @@ ZNodeRep_Wrapper::ZNodeRep_Wrapper(ZRef<ZNodeRep> iParent, const std::string& iN
 ZRef<ZNodeIterRep> ZNodeRep_Wrapper::CreateIterRep()
 	{ return new ZNodeIterRep_Wrapper(fParent, fName, fDepth, fNodeRep->CreateIterRep()); }
 
-bool ZNodeRep_Wrapper::GetProp(const string& iPropName, ZTupleValue& oTV, Error* oError)
+bool ZNodeRep_Wrapper::GetProp(const string& iPropName, ZTValue& oTV, Error* oError)
 	{ return fNodeRep->GetProp(iPropName, oTV, oError); }
 
 bool ZNodeRep_Wrapper::CanHaveChildren(Error* oError)

@@ -22,6 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h" // For lower_bound
 #include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZUnicode.h"
+
+#include <string>
 
 using std::string;
 

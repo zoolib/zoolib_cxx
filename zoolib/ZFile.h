@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZTrail.h"
-#include "zoolib/ZUnicode.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 

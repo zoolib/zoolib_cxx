@@ -151,7 +151,7 @@ size_t ZTupleIndex_General::CanHandle(const ZTBSpec::CriterionSect& iCriterionSe
 
 	// Walk through our properties, looking for and removing entries in
 	// remainingCriteria where where the effective constraint is equivalence.
-	for (const ZTuplePropName* propNameIter = fPropNames;
+	for (const ZTName* propNameIter = fPropNames;
 		propertyCount < fPropNameCount; ++propertyCount)
 		{
 		if (!sGatherMergeConstraints(*propNameIter++, remainingCriteria,
@@ -214,7 +214,7 @@ bool ZTupleIndex_General::pSetupIterators(vector<const ZTBSpec::Criterion*>& ioC
 
 	// Walk through our properties, looking for and removing entries in
 	// ioCriteria where where the effective constraint is equivalence.
-	for (const ZTuplePropName* propNameIter = fPropNames;
+	for (const ZTName* propNameIter = fPropNames;
 		theKey.fPropCount < fPropNameCount; ++propNameIter)
 		{
 		if (!sGatherMergeConstraints(*propNameIter, ioCriteria,

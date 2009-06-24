@@ -19,8 +19,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZDC_ZooLib.h"
-
 #include "zoolib/ZDCPixmapBlit.h"
+#include "zoolib/ZUnicode.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 

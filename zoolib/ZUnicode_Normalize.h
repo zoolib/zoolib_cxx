@@ -34,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_API_Desired__Unicode_Normalize 1
 #endif
 
-#include "zoolib/ZUnicode.h"
+#include "zoolib/ZUnicodeString.h"
 
 #if ZCONFIG_API_Enabled(Unicode_Normalize)
 

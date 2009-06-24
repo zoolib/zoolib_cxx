@@ -29,7 +29,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-static CFStringRef sEmptyCFString = CFSTR("");
+// =================================================================================================
+#pragma mark -
+#pragma mark * Helpers
+
+namespace ZANONYMOUS {
+
+CFStringRef sEmptyCFString = CFSTR("");
 
 ZRef<CFStringRef> sCFString(const string8& iString8)
 	{
@@ -58,7 +64,7 @@ ZRef<CFMutableArrayRef> sArrayMutable()
 ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray)
 	{ return NoRetain(::CFArrayCreateMutableCopy(kCFAllocatorDefault, 0, iCFArray)); }
 
-static ZRef<CFMutableDictionaryRef> sDictionaryMutable()
+ZRef<CFMutableDictionaryRef> sDictionaryMutable()
 	{
 	return NoRetain(::CFDictionaryCreateMutable(kCFAllocatorDefault, 1,
 		&kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks));
@@ -85,6 +91,8 @@ bool sGetNumber_T(CFTypeRef iTypeRef, CFNumberType iNumberType, S& oVal)
 template <class S>
 ZRef<CFTypeRef> sNumber_T(CFNumberType iNumberType, const S& iVal)
 	{ return NoRetain(CFTypeRef(::CFNumberCreate(kCFAllocatorDefault, iNumberType, &iVal))); }
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

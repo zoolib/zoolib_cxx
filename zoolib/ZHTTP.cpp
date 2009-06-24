@@ -344,7 +344,7 @@ bool ZHTTP::sReadHeaderLineNoParsing(const ZStreamU& iStream, ZTuple* ioFields)
 	string fieldBody;
 	iStream.CopyAllTo(ZStreamWPos_String(fieldBody));
 	if (ioFields)
-		ioFields->EnsureMutableVector(ZTName(fieldNameExact)).push_back(fieldBody);
+		ioFields->EnsureMutableVector(fieldNameExact).Append(fieldBody);
 
 	return true;
 	}
