@@ -46,11 +46,7 @@ const ZDCInk ZDCInk::sGray(sLocalWhite, sLocalBlack, ZDCPattern::sGray);
 const ZDCInk ZDCInk::sDkGray(sLocalWhite, sLocalBlack, ZDCPattern::sDkGray);
 const ZDCInk ZDCInk::sLtGray(sLocalWhite, sLocalBlack, ZDCPattern::sLtGray);
 
-#if ZCONFIG(Compiler, MSVC)
-#	define ALLONES 0xFFFFFFFFFFFFFFFFi64
-#else
-#	define ALLONES 0xFFFFFFFFFFFFFFFFULL
-#endif
+#define ALLONES ZUINT64_C(0xFFFFFFFFFFFFFFFF)
 
 // =================================================================================================
 #pragma mark -
