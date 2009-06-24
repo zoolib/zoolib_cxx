@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim_Tuple__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZTuple.h"
 #include "zoolib/ZYad.h"
 
 #include <string>
@@ -31,9 +32,6 @@ NAMESPACE_ZOOLIB_BEGIN
 class ZStrimR;
 class ZStrimU;
 class ZStrimW;
-
-class ZTName;
-class ZTValue;
 
 namespace ZUtil_Strim_Tuple {
 
