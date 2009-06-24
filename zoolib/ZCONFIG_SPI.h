@@ -39,6 +39,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //#define ZCONFIG_SPI_Avail__pthread (ZCONFIG_SPI_Avail__POSIX && ZCONFIG_SPI_Desired__POSIX)
 
 // =================================================================================================
+#pragma mark AppleEvent
+#ifndef ZCONFIG_SPI_Avail__AppleEvent
+#	define ZCONFIG_SPI_Avail__AppleEvent (ZCONFIG_SPI_Avail__Carbon && ZCONFIG_SPI_Desired__Carbon)
+#endif
+
+#ifndef ZCONFIG_SPI_Desired__AppleEvent
+#	define ZCONFIG_SPI_Desired__AppleEvent 1
+#endif
+
+
+// =================================================================================================
 #pragma mark BeOS
 #ifndef ZCONFIG_SPI_Avail__BeOS
 #	define ZCONFIG_SPI_Avail__BeOS 0
