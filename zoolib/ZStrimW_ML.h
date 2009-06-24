@@ -26,13 +26,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZStrimmer.h"
+#include "zoolib/ZTuple.h"
 
 #include <vector>
 
 NAMESPACE_ZOOLIB_BEGIN
-
-class ZTuple;
-class ZTValue;
 
 // =================================================================================================
 #pragma mark -
