@@ -39,7 +39,7 @@ namespace ZUtil_CFType {
 #pragma mark -
 #pragma mark * ZUtil_CFType
 
-CFStringRef sEmptyCFString = CFSTR("");
+static CFStringRef sEmptyCFString = CFSTR("");
 
 ZRef<CFStringRef> sString(const string8& iString8)
 	{ return NoRetain(sCreateCFString_UTF8(iString8)); }
@@ -387,10 +387,9 @@ CFTypeRef sCreateCFType(const ZTValue& iTV)
 			}
 		case eZType_Raw:
 			{
-			const void* theAddress;
-			size_t theSize;
-			iTV.GetRawAttributes(&theAddress, &theSize);
-			return ::CFDataCreate(nullptr, static_cast<const UInt8*>(theAddress), theSize);
+			const ZMemoryBlock theMB = iTV.GetRaw();
+			return ::CFDataCreate(kCFAllocatorDefault,
+				static_cast<const UInt8*>(theMB.GetData()), theMB.GetSize());
 			}
 		case eZType_Bool:
 			{
@@ -401,37 +400,44 @@ CFTypeRef sCreateCFType(const ZTValue& iTV)
 			}
 		case eZType_Time:
 			{
-			return ::CFDateCreate(nullptr, iTV.GetTime().fVal - kCFAbsoluteTimeIntervalSince1970);
+			return ::CFDateCreate(kCFAllocatorDefault,
+				iTV.GetTime().fVal - kCFAbsoluteTimeIntervalSince1970);
 			}
 		case eZType_Int8:
 			{
 			const int8 theValue = iTV.GetInt8();
-			return ::CFNumberCreate(nullptr, kCFNumberSInt8Type, &theValue);
+			return ::CFNumberCreate(kCFAllocatorDefault,
+				kCFNumberSInt8Type, &theValue);
 			}
 		case eZType_Int16:
 			{
 			const int16 theValue = iTV.GetInt16();
-			return ::CFNumberCreate(nullptr, kCFNumberSInt16Type, &theValue);
+			return ::CFNumberCreate(kCFAllocatorDefault,
+				kCFNumberSInt16Type, &theValue);
 			}
 		case eZType_Int32:
 			{
 			const int32 theValue = iTV.GetInt32();
-			return ::CFNumberCreate(nullptr, kCFNumberSInt32Type, &theValue);
+			return ::CFNumberCreate(kCFAllocatorDefault,
+				kCFNumberSInt32Type, &theValue);
 			}
 		case eZType_Int64:
 			{
 			const int64 theValue = iTV.GetInt64();
-			return ::CFNumberCreate(nullptr, kCFNumberSInt64Type, &theValue);
+			return ::CFNumberCreate(kCFAllocatorDefault,
+				kCFNumberSInt64Type, &theValue);
 			}
 		case eZType_Float:
 			{
 			const float theValue = iTV.GetFloat();
-			return ::CFNumberCreate(nullptr, kCFNumberFloatType, &theValue);
+			return ::CFNumberCreate(kCFAllocatorDefault,
+				kCFNumberFloatType, &theValue);
 			}
 		case eZType_Double:
 			{
 			const double theValue = iTV.GetDouble();
-			return ::CFNumberCreate(nullptr, kCFNumberDoubleType, &theValue);
+			return ::CFNumberCreate(kCFAllocatorDefault,
+				kCFNumberDoubleType, &theValue);
 			}
 		}
 	return nullptr;

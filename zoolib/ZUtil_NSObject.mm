@@ -170,10 +170,8 @@ id ZUtil_NSObject::sCreateNSObject(const ZTValue& iTV)
 			}
 		case eZType_Raw:
 			{
-			const void* theAddress;
-			size_t theSize;
-			iTV.GetRawAttributes(&theAddress, &theSize);
-			return [[NSData alloc] initWithBytes:theAddress length:theSize];
+			const ZMemoryBlock theMB = iTV.GetRaw();
+			return [[NSData alloc] initWithBytes:theMB.GetData() length:theMB.GetSize()];
 			}
 		case eZType_Bool:
 			{
