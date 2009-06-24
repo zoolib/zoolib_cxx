@@ -513,11 +513,7 @@ ZRef<ZDCCanvas> ZDCCanvas_ZooLib::CreateOffScreen(ZPoint iDimensions, EFormatEff
 
 // =================================================================================================
 
-#if ZCONFIG(Compiler, MSVC)
-#	define ALLONES 0xFFFFFFFFFFFFFFFFi64
-#else
-#	define ALLONES 0xFFFFFFFFFFFFFFFFULL
-#endif
+#define ALLONES ZUINT64_C(0xFFFFFFFFFFFFFFFF)
 
 void ZDCCanvas_ZooLib::pFillRegion(const ZDCRgn& iRgn,
 	const ZRef<ZDCInk::Rep>& iRep, ZPoint iPatternOrigin, short iMode)
