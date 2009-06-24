@@ -113,6 +113,8 @@ can be enabled later if necessary. */
 
 #if 0
 #	define ZAtomic_PPC405_ERR77(rA,rB) "dcbt " #ra "," #rb "\n" 
+#else
+#	define ZAtomic_PPC405_ERR77(rA,rB)
 #endif
 
 NAMESPACE_ZOOLIB_BEGIN

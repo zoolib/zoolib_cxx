@@ -33,6 +33,8 @@ ZAssertCompile(sizeof(ZooLib::ZAtomic_t) == sizeof(int));
 
 #if 0
 #	define ZAtomic_PPC405_ERR77(rA,rB) dcbt rA , rB;
+#else
+#	define ZAtomic_PPC405_ERR77(rA,rB)
 #endif
 
 // We attach a register declarator to each parameter so that CW does not generate
