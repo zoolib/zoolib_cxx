@@ -20,8 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZYad_StdMore.h"
 
-using std::string;
-
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
@@ -50,7 +48,7 @@ void ZYadStreamRPos_Std::Finish()
 #pragma mark -
 #pragma mark * ZYadStrimU_Std
 
-ZYadStrimU_Std::ZYadStrimU_Std(const string& iString)
+ZYadStrimU_Std::ZYadStrimU_Std(const std::string& iString)
 :	ZYadStrimU_String(iString)
 	{}
 

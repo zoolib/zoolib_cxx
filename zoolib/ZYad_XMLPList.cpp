@@ -384,22 +384,22 @@ static void sToStrim_SimpleTValue(const ZStrimW_ML& s, const ZTValue& iTV)
 			}
 		case eZType_Tuple:
 			{
-			ZDebugStopf(1, ("sToStrim_SimpleTValue, given a tuple"));
+			ZDebugStopf(0, ("sToStrim_SimpleTValue, given a tuple"));
 			break;
 			}
 		case eZType_Vector:
 			{
-			ZDebugStopf(1, ("sToStrim_SimpleTValue, given a tuple"));
+			ZDebugStopf(0, ("sToStrim_SimpleTValue, given a tuple"));
 			break;
 			}
 		case eZType_String:
 			{
-			ZDebugStopf(1, ("sToStrim_SimpleTValue, given a string"));
+			ZDebugStopf(0, ("sToStrim_SimpleTValue, given a string"));
 			break;
 			}
 		default:
 			{
-			ZDebugStopf(1, ("sToStrim_SimpleTValue, given an unsupported type"));
+			ZDebugStopf(0, ("sToStrim_SimpleTValue, given an unsupported type"));
 			}
 		}
 	}

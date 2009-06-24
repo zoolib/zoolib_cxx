@@ -62,7 +62,7 @@ static int64 sMustRead_GenericInteger(const ZStrimU& iStrimU)
 	{
 	using namespace ZUtil_Strim;
 	int64 theInteger;
-	if (!sTryRead_GenericInteger(iStrimU, theInteger))
+	if (!sTryRead_SignedGenericInteger(iStrimU, theInteger))
 		sThrowParseException("Expected an integer");
 	return theInteger;
 	}

@@ -87,9 +87,7 @@ static bool sIsSimple(const ZYadOptions& iOptions, const ZTValue& iTV)
 		{
 		case eZType_Raw:
 			{
-			size_t theSize;
-			iTV.GetRawAttributes(nullptr, &theSize);
-			return theSize <= iOptions.fRawChunkSize;
+			return iTV.GetRaw().GetSize() <= iOptions.fRawChunkSize;
 			}
 		case eZType_Vector:
 			{
