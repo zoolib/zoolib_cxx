@@ -344,7 +344,7 @@ bool ZHTTP::sReadHeaderLineNoParsing(const ZStreamU& iStream, ZTuple* ioFields)
 	string fieldBody;
 	iStream.CopyAllTo(ZStreamWPos_String(fieldBody));
 	if (ioFields)
-		ioFields->AppendString(ZTName(fieldNameExact), fieldBody);
+		ioFields->EnsureMutableVector(ZTName(fieldNameExact)).push_back(fieldBody);
 
 	return true;
 	}
@@ -390,7 +390,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 				break;
 
 			if (ioFields)
-				ioFields->AppendString("accept-charset", charset);
+				ioFields->EnsureMutableVector("accept-charset").Append(charset);
 
 			sSkipLWS(iStream);
 
@@ -409,7 +409,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 				break;
 
 			if (ioFields)
-				ioFields->AppendString("accept-encoding", encoding);
+				ioFields->EnsureMutableVector("accept-encoding").Append(encoding);
 
 			sSkipLWS(iStream);
 
@@ -491,7 +491,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 				break;
 
 			if (ioFields)
-				ioFields->AppendString("content-encoding", encoding);
+				ioFields->EnsureMutableVector("content-encoding").Append(encoding);
 
 			sSkipLWS(iStream);
 
@@ -510,7 +510,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 				break;
 
 			if (ioFields)
-				ioFields->AppendString("content-language", language);
+				ioFields->EnsureMutableVector("content-language").Append(language);
 
 			sSkipLWS(iStream);
 
@@ -534,7 +534,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 		string fieldBody;
 		iStream.CopyAllTo(ZStreamWPos_String(fieldBody));
 		if (ioFields)
-			ioFields->AppendString(ZTName(fieldName), fieldBody);
+			ioFields->EnsureMutableVector(fieldName).Append(fieldBody);
 		}
 
 	return true;
@@ -818,7 +818,7 @@ bool ZHTTP::sRead_accept(const ZStreamU& iStream, ZTuple* ioFields)
 		if (parameters)
 			temp.SetTuple("parameters", parameters);
 		if (ioFields)
-			ioFields->AppendTuple("accept", temp);
+			ioFields->EnsureMutableVector("accept").Append(temp);
 
 		sSkipLWS(iStream);
 
@@ -862,7 +862,7 @@ bool ZHTTP::sRead_accept_language(const ZStreamU& iStream, ZTuple* ioFields)
 			temp.SetTuple("parameters", parameters);
 
 		if (ioFields)
-			ioFields->AppendTuple("accept-language", temp);
+			ioFields->EnsureMutableVector("accept-language").Append(temp);
 
 		sSkipLWS(iStream);
 
