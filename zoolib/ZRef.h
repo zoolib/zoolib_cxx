@@ -187,13 +187,24 @@ template <typename P>
 NoRetain_t<P> NoRetain(P iP)
 	{ return NoRetain_t<P>(iP); }
 
+
+template <typename P>
+struct Adopt_t
+	{
+	mutable P fP;
+	Adopt_t(P iP) : fP(iP) {}
+	};
+
+template <typename P>
+Adopt_t<P> Adopt(P iP)
+	{ return Adopt_t<P>(iP); }
+
+
+
 template <typename T>
 class ZRef<T*>
 	{
 private:
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRef,
-		operator_bool_generator_type, operator_bool_type);
-
 	static void spRetain(T* iP)
 		{
 		if (iP)
@@ -225,6 +236,10 @@ public:
 	:	fP(iNRP.fP)
 		{}
 
+	ZRef(const Adopt_t<T*>& iNRP)
+	:	fP(iNRP.fP)
+		{}
+
 	ZRef& operator=(T* iP)
 		{
 		std::swap(iP, fP);
@@ -234,6 +249,14 @@ public:
 		}
 	
 	ZRef& operator=(const NoRetain_t<T*>& iNRP)
+		{
+		T* theP = iNRP.fP;
+		std::swap(theP, fP);
+		spRelease(theP);
+		return *this;
+		}
+
+	ZRef& operator=(const Adopt_t<T*>& iNRP)
 		{
 		T* theP = iNRP.fP;
 		std::swap(theP, fP);
@@ -292,9 +315,6 @@ public:
 	template <class O>
 	bool operator<(const ZRef<O>& iOther) const
 		{ return fP < iOther.Get(); }
-
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(fP); }
 
 	operator T*() { return fP; }
 
