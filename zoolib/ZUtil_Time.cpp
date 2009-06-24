@@ -315,7 +315,7 @@ static int sUTCToLocalDelta()
 
 		struct timezone zone;
 
-		if (::gettimeofday(NULL, &zone) == -1)
+		if (::gettimeofday(nullptr, &zone) == -1)
 			return 0;
 
 		// tz_minuteswest is the number of minutes to be added to local

@@ -284,12 +284,12 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 		// case we can do our more generic parsing, where IDs are generic
 		// integers. If they're hex they'll be prefixed with 0x, otherwise
 		// they're decimal, or some other format that may eventually be
-		// supported by ZUtil_Strim::sTryRead_GenericInteger
+		// supported by ZUtil_Strim::sTryRead_SignedGenericInteger
 
 		sSkip_WSAndCPlusPlusComments(iStrimU);
 
 		int64 signedID;
-		if (!sTryRead_GenericInteger(iStrimU, signedID))
+		if (!sTryRead_SignedGenericInteger(iStrimU, signedID))
 			throw Ex_MalformedText("Expected next unused ID");
 		oNextUnusedID = signedID;
 
@@ -298,7 +298,7 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 			{
 			sSkip_WSAndCPlusPlusComments(iStrimU);
 
-			if (!sTryRead_GenericInteger(iStrimU, signedID))
+			if (!sTryRead_SignedGenericInteger(iStrimU, signedID))
 				break;
 			uint64 theID = signedID;
 
