@@ -24,8 +24,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Enable DCOM features
 #define _WIN32_DCOM 1
 
-// Enable post-Windows 95 features
-#define _WIN32_WINDOWS 0x0500
+// If not otherwise specified, require Windows 2K.
+#ifndef _WIN32_WINNT
+#	define _WIN32_WINNT 0x0500
+#endif
 
 #ifndef NOMINMAX
 #	define NOMINMAX
