@@ -142,14 +142,9 @@ void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
 	pthread_attr_t threadAttr;
 	::pthread_attr_init(&threadAttr);
 
-	if (iStackSize == 0)
-		{
-		size_t defaultSize;
-		::pthread_attr_getstacksize(&threadAttr, &defaultSize);
-		iStackSize = defaultSize;
-		}
+	if (iStackSize != 0)
+		::pthread_attr_setstacksize(&threadAttr, iStackSize);
 
-	::pthread_attr_setstacksize(&threadAttr, iStackSize);
 	::pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_DETACHED);
 
 	ID theID;

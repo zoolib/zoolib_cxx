@@ -26,6 +26,7 @@ NAMESPACE_ZOOLIB_BEGIN
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZThread
+
 namespace ZThread {
 
 ZAssertCompile(sizeof(void*) == sizeof(ProcVoid_t));

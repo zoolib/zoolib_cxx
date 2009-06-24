@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Thread_MacMP)
 
+#include "zoolib/ZCompat_algorithm.h" // For min
+
 #include <new> // for bad_alloc
 
 // For UpTime etc
@@ -91,8 +93,8 @@ bool ZSem_MacMP::Wait(double iTimeout)
 		}
 	else
 		{
-		// Otherwise do a millisecond wait.
-		return noErr == ::MPWaitOnSemaphore(fMPSemaphoreID, iTimeout * 1e3);
+		// Otherwise do a millisecond wait, staying well short of the SInt32 limit.
+		return noErr == ::MPWaitOnSemaphore(fMPSemaphoreID, std::min(1e9, iTimeout * 1e3));
 		}
 	}
 
