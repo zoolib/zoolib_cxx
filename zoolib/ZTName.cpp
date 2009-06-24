@@ -43,7 +43,7 @@ static inline int sCompare(const void* iLeft, size_t iLeftLength,
 		{
 		return compare;
 		}
-	// Strictly speaking the rules of two's complement mean that we
+	// Strictly speaking the rules of two's complement mean that we do
 	// not need the casts, but let's be clear about what we're doing.
 	return int(iLeftLength) - int(iRightLength);
 	}
