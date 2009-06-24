@@ -305,9 +305,9 @@ const ZStreamW& ZStreamerW_bzip2Encode::GetStreamW()
 #pragma mark -
 #pragma mark * ZStream_bzip2
 
-static const uint64 BLOCK_HEADER = 0x314159265359ULL;
-static const uint64 BLOCK_ENDMARK = 0x177245385090ULL;
-static const uint64 BLOCK_MASK = 0xFFFFFFFFFFFFULL;
+static const uint64 BLOCK_HEADER = ZUINT64_C(0x314159265359);
+static const uint64 BLOCK_ENDMARK = ZUINT64_C(0x177245385090);
+static const uint64 BLOCK_MASK = ZUINT64_C(0xFFFFFFFFFFFF);
 
 void ZStream_bzip2::sAnalyze(const ZStreamR& iStreamR, vector<pair<uint64, uint32> >& oOffsets)
 	{
