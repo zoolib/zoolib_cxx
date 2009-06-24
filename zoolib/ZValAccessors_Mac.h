@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2000 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,17 +18,27 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTuple__
-#define __ZTuple__ 1
+#ifndef __ZValAccessors_Mac__
+#define __ZValAccessors_Mac__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZVal_ZooLib.h"
+#include "zoolib/ZValAccessors.h"
+
+#include ZMACINCLUDE3(CoreServices,CarbonCore,Files.h)
 
 NAMESPACE_ZOOLIB_BEGIN
 
-typedef ZVal_ZooLib ZTValue;
-typedef ZValMap_ZooLib ZTuple;
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZValAccessors_Mac
+
+#define ZMACRO_ZValAccessors_Decl_Mac(T) \
+	ZMACRO_ZValAccessors_Decl_Entry(FSRef, FSRef) \
+
+
+#define ZMACRO_ZValAccessors_Def_Mac(T) \
+	ZMACRO_ZValAccessors_Def_Entry(T, FSRef, FSRef) \
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZTuple__
+#endif // __ZValAccessors_Mac__
