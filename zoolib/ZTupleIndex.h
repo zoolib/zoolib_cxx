@@ -44,7 +44,7 @@ class ZStrimW;
 class ZTupleIndex
 	{
 public:
-	static const uint64 kMaxID = 0xFFFFFFFFFFFFFFFFULL;
+	static const uint64 kMaxID = ZUINT64_C(0xFFFFFFFFFFFFFFFF);
 
 	virtual ~ZTupleIndex();
 
