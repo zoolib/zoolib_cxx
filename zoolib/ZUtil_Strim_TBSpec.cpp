@@ -146,7 +146,7 @@ static bool sRead_Comparator(const ZStrimU& iStrimU, ZTBSpec::Comparator& oCompa
 		return false;
 
 	int64 theInteger;
-	if (!ZUtil_Strim::sTryRead_GenericInteger(iStrimU, theInteger))
+	if (!ZUtil_Strim::sTryRead_SignedGenericInteger(iStrimU, theInteger))
 		oComparator.fStrength = 0;
 	else
 		oComparator.fStrength = theInteger;

@@ -25,170 +25,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZStrimR_Boundary.h"
 
+#include <vector>
+
 NAMESPACE_ZOOLIB_BEGIN
+
+namespace ZUtil_Strim {
+
+static void sThrowParseException(const std::string& iWhat)
+	{ throw ParseException(iWhat); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Strim
 
-void ZUtil_Strim::sCopy_WS(const ZStrimU& iStrimU, const ZStrimW& iDest)
-	{
-	for (;;)
-		{
-		UTF32 theCP;
-		if (!iStrimU.ReadCP(theCP))
-			break;
-		if (!ZUnicode::sIsWhitespace(theCP))
-			{
-			iStrimU.Unread(theCP);
-			break;
-			}
-		iDest.WriteCP(theCP);
-		}
-	}
-
-void ZUtil_Strim::sSkip_WS(const ZStrimU& iStrimU)
-	{
-	for (;;)
-		{
-		UTF32 theCP;
-		if (!iStrimU.ReadCP(theCP))
-			break;
-		if (!ZUnicode::sIsWhitespace(theCP))
-			{
-			iStrimU.Unread(theCP);
-			break;
-			}
-		}
-	}
-
-// ----------
-
-void ZUtil_Strim::sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZStrimW& iDest)
-	{
-	ZAssert(iStrimU.UnreadableLimit() >= 2);
-
-	for (;;)
-		{
-		UTF32 theCP;
-		if (!iStrimU.ReadCP(theCP))
-			break;
-
-		if (ZUnicode::sIsWhitespace(theCP))
-			{
-			iDest.WriteCP(theCP);
-			}
-		else
-			{
-			if (theCP != '/')
-				{
-				iStrimU.Unread(theCP);
-				break;
-				}
-
-			if (!iStrimU.ReadCP(theCP))
-				{
-				iStrimU.Unread(theCP);
-				break;
-				}
-
-			if (theCP == '/')
-				{
-				iDest.Write("//");
-				sCopy_Line(iStrimU, iDest);
-				}
-			else if (theCP == '*')
-				{
-				iDest.Write("/*");
-				if (!sCopy_Until(iStrimU, "*/", iDest))
-					throw ParseException("Unexpected end of data whilst parsing a /**/ comment");
-				iDest.Write("*/");
-				}
-			else
-				{
-				iStrimU.Unread(theCP);
-				break;
-				}
-			}
-		}
-	}
-
-void ZUtil_Strim::sSkip_WSAndCPlusPlusComments(const ZStrimU& iStrimU)
-	{ sCopy_WSAndCPlusPlusComments(iStrimU, ZStrimW_Null()); }
-
-// ----------
-
-void ZUtil_Strim::sCopy_Line(const ZStrimR& iStrimR, const ZStrimW& iDest)
-	{
-	for (;;)
-		{
-		UTF32 theCP;
-		if (!iStrimR.ReadCP(theCP))
-			break;
-		if (ZUnicode::sIsEOL(theCP))
-			break;
-		iDest.WriteCP(theCP);
-		}	
-	}
-
-void ZUtil_Strim::sSkip_Line(const ZStrimR& iStrimR)
-	{ sCopy_Line(iStrimR, ZStrimW_Null()); }
-
-string8 ZUtil_Strim::sRead_Line(const ZStrimR& iStrimR)
-	{
-	string8 result;
-	sCopy_Line(iStrimR, ZStrimW_String(result));
-	return result;
-	}
-
-// ----------
-
-bool ZUtil_Strim::sCopy_Until(const ZStrimR& iStrimR, UTF32 iTerminator, const ZStrimW& iDest)
-	{
-	for (;;)
-		{
-		UTF32 theCP;
-		if (!iStrimR.ReadCP(theCP))
-			return false;
-		if (theCP == iTerminator)
-			return true;
-		iDest.WriteCP(theCP);
-		}		
-	}
-
-bool ZUtil_Strim::sSkip_Until(const ZStrimR& iStrimR, UTF32 iTerminator)
-	{ return sCopy_Until(iStrimR, iTerminator, ZStrimW_Null()); }
-
-string8 ZUtil_Strim::sRead_Until(const ZStrimR& iStrimR, UTF32 iTerminator)
-	{
-	string8 result;
-	sCopy_Until(iStrimR, iTerminator, ZStrimW_String(result));
-	return result;
-	}
-
-// ----------
-
-bool ZUtil_Strim::sCopy_Until(const ZStrimR& iStrimR,
-	const string8& iTerminator, const ZStrimW& iDest)
-	{
-	ZStrimR_Boundary theStrimBoundary(iTerminator, iStrimR);
-	theStrimBoundary.CopyAllTo(iDest);
-	return theStrimBoundary.HitBoundary();
-	}
-
-bool ZUtil_Strim::sSkip_Until(const ZStrimR& iStrimR, const string8& iTerminator)
-	{ return sCopy_Until(iStrimR, iTerminator, ZStrimW_Null()); }
-
-string8 ZUtil_Strim::sRead_Until(const ZStrimR& iStrimR, const string8& iTerminator)
-	{
-	string8 result;
-	sCopy_Until(iStrimR, iTerminator, ZStrimW_String(result));
-	return result;
-	}
-
-// ----------
-
-bool ZUtil_Strim::sTryRead_CP(const ZStrimU& iStrimU, UTF32 iCP)
+bool sTryRead_CP(const ZStrimU& iStrimU, UTF32 iCP)
 	{
 	// Ensure that we only try to read a valid CP, one that
 	// can actually be returned by ReadCP.
@@ -205,7 +55,49 @@ bool ZUtil_Strim::sTryRead_CP(const ZStrimU& iStrimU, UTF32 iCP)
 	return false;
 	}
 
-bool ZUtil_Strim::sTryRead_Digit(const ZStrimU& iStrimU, int& oDigit)
+// ----------
+
+bool sTryRead_CaselessString(const ZStrimU& iStrimU, const string8& iTarget)
+	{
+	string8::const_iterator targetIter = iTarget.begin();
+	string8::const_iterator targetEnd = iTarget.end();
+
+	std::vector<UTF32> stack;
+	for (;;)
+		{
+		UTF32 targetCP;
+		if (!ZUnicode::sReadInc(targetIter, targetEnd, targetCP))
+			{
+			// Exhausted target, and thus successful.
+			return true;
+			}
+
+		UTF32 candidateCP;
+		if (!iStrimU.ReadCP(candidateCP))
+			{
+			// Exhausted strim.
+			break;
+			}
+		stack.push_back(candidateCP);
+
+		if (ZUnicode::sToLower(targetCP) != ZUnicode::sToLower(candidateCP))
+			{
+			// Mismatched code points.
+			break;
+			}
+		}
+
+	while (!stack.empty())
+		{
+		iStrimU.Unread(stack.back());
+		stack.pop_back();
+		}
+	return false;
+	}
+
+// ----------
+
+bool sTryRead_Digit(const ZStrimU& iStrimU, int& oDigit)
 	{
 	UTF32 theCP;
 	if (!iStrimU.ReadCP(theCP))
@@ -221,7 +113,7 @@ bool ZUtil_Strim::sTryRead_Digit(const ZStrimU& iStrimU, int& oDigit)
 	return false;
 	}
 
-bool ZUtil_Strim::sTryRead_HexDigit(const ZStrimU& iStrimU, int& oDigit)
+bool sTryRead_HexDigit(const ZStrimU& iStrimU, int& oDigit)
 	{
 	UTF32 theCP;
 	if (!iStrimU.ReadCP(theCP))
@@ -249,85 +141,50 @@ bool ZUtil_Strim::sTryRead_HexDigit(const ZStrimU& iStrimU, int& oDigit)
 	return false;
 	}
 
-bool ZUtil_Strim::sTryRead_DecimalInteger(const ZStrimU& iStrimU, int64& oInteger)
+bool sTryRead_SignedGenericInteger(const ZStrimU& iStrimU, int64& oInt64)
 	{
-	oInteger = 0;
-	bool isValid = false;
-	for (;;)
-		{
-		int curDigit;
-		if (!sTryRead_Digit(iStrimU, curDigit))
-			return isValid;
-		isValid = true;
-		oInteger *= 10;
-		oInteger += curDigit;
-		}
-	}
-
-bool ZUtil_Strim::sTryRead_HexInteger(const ZStrimU& iStrimU, int64& oInteger)
-	{
-	oInteger = 0;
-	bool isValid = false;
-	for (;;)
-		{
-		int curDigit;
-		if (!sTryRead_HexDigit(iStrimU, curDigit))
-			return isValid;
-		isValid = true;
-		oInteger *= 16;
-		oInteger += curDigit;
-		}
-	}
-
-bool ZUtil_Strim::sTryRead_GenericInteger(const ZStrimU& iStrimU, int64& oInteger)
-	{
-	bool hadPrefix = true;
 	bool isNegative = false;
-
-	if (sTryRead_CP(iStrimU, '-'))
-		isNegative = true;
-	else if (!sTryRead_CP(iStrimU, '+'))
-		hadPrefix = false;
+	bool hadPrefix = sTryRead_Sign(iStrimU, isNegative);
 
 	if (sTryRead_CP(iStrimU, '0'))
 		{
 		UTF32 theCP;
 		if (!iStrimU.ReadCP(theCP))
 			{
-			oInteger = 0;
+			oInt64 = 0;
 			return true;
 			}
 
 		if (theCP == 'X' || theCP == 'x')
 			{
-			if (sTryRead_HexInteger(iStrimU, oInteger))
+			if (sTryRead_HexInteger(iStrimU, oInt64))
 				{
 				if (isNegative)
-					oInteger = -oInteger;
+					oInt64 = -oInt64;
 				return true;
 				}
-			throw ParseException("Expected a valid hex integer after '0x' prefix");
+			sThrowParseException("Expected a valid hex integer after '0x' prefix");
 			}
 		
 		iStrimU.Unread(theCP);
 		if (!ZUnicode::sIsDigit(theCP))
 			{
-			oInteger = 0;
+			oInt64 = 0;
 			return true;
 			}
 
-		bool readDecimal = sTryRead_DecimalInteger(iStrimU, oInteger);
+		bool readDecimal = sTryRead_DecimalInteger(iStrimU, oInt64);
 		// We know that the first CP to be read is a digit, so sTryRead_DecimalInteger can't fail.
 		ZAssertStop(2, readDecimal);
 		if (isNegative)
-			oInteger = -oInteger;
+			oInt64 = -oInt64;
 		return true;
 		}
 
-	if (sTryRead_DecimalInteger(iStrimU, oInteger))
+	if (sTryRead_DecimalInteger(iStrimU, oInt64))
 		{
 		if (isNegative)
-			oInteger = -oInteger;
+			oInt64 = -oInt64;
 		return true;
 		}
 
@@ -335,163 +192,352 @@ bool ZUtil_Strim::sTryRead_GenericInteger(const ZStrimU& iStrimU, int64& oIntege
 		{
 		// We've already absorbed a plus or minus sign, hence we have a parse exception.
 		if (isNegative)
-			throw ParseException("Expected a valid integer after '-' prefix");
+			sThrowParseException("Expected a valid integer after '-' prefix");
 		else
-			throw ParseException("Expected a valid integer after '+' prefix");
+			sThrowParseException("Expected a valid integer after '+' prefix");
 		}
 
 	return false;
 	}
 
-bool ZUtil_Strim::sTryRead_Double(const ZStrimU& iStrimU, double& oDouble)
+bool sTryRead_HexInteger(const ZStrimU& iStrimU, int64& oInt64)
 	{
-	UTF32 theCP;
-	if (!iStrimU.ReadCP(theCP))
-		return false;
-
-	if (theCP == 'n' || theCP == 'N')
+	oInt64 = 0;
+	for (bool gotAny = false; /*no test*/; gotAny = true)
 		{
-		if (sTryRead_CP(iStrimU, 'a') || sTryRead_CP(iStrimU, 'A'))
+		int curDigit;
+		if (!sTryRead_HexDigit(iStrimU, curDigit))
+			return gotAny;
+		oInt64 *= 16;
+		oInt64 += curDigit;
+		}
+	}
+
+bool sTryRead_Sign(const ZStrimU& iStrimU, bool& oIsNegative)
+	{
+	if (sTryRead_CP(iStrimU, '-'))
+		{
+		oIsNegative = true;
+		return true;
+		}
+	else if (sTryRead_CP(iStrimU, '+'))
+		{
+		oIsNegative = false;
+		return true;
+		return true;
+		}
+	return false;
+	}
+
+bool sTryRead_Mantissa(const ZStrimU& iStrimU, int64& oInt64, double& oDouble, bool& oIsDouble)
+	{
+	using namespace ZUtil_Strim;
+
+	oInt64 = 0;
+	oDouble = 0;
+	oIsDouble = false;
+
+	for (bool gotAny = false; /*no test*/; gotAny = true)
+		{
+		int curDigit;
+		if (!sTryRead_Digit(iStrimU, curDigit))
+			return gotAny;
+
+		if (!oIsDouble)
 			{
-			if (sTryRead_CP(iStrimU, 'n') || sTryRead_CP(iStrimU, 'N'))
+			int64 priorInt64 = oInt64;
+			oInt64 *= 10;
+			oInt64 += curDigit;
+			if (oInt64 < priorInt64)
 				{
-				// It's a nan
-				oDouble = NAN;
-				return true;
+				// We've overflowed.
+				oIsDouble = true;
 				}
 			}
-		throw ParseException("Illegal character when trying to read a double");
-		}
-	else if (theCP == 'i' || theCP == 'I')
-		{
-		if (sTryRead_CP(iStrimU, 'n') || sTryRead_CP(iStrimU, 'F'))
-			{
-			if (sTryRead_CP(iStrimU, 'f') || sTryRead_CP(iStrimU, 'F'))
-				{
-				// It's an inf
-				oDouble = INFINITY;
-				return true;
-				}
-			}
-		throw ParseException("Illegal character when trying to read a double");
-		}
-	else if (!ZUnicode::sIsDigit(theCP) && theCP != '.')
-		{
-		iStrimU.Unread(theCP);
-		return false;
-		}
-
-	oDouble = 0.0;
-	while (ZUnicode::sIsDigit(theCP))
-		{
 		oDouble *= 10;
-		oDouble += (theCP - '0');
-		if (!iStrimU.ReadCP(theCP))
-			return true;
+		oDouble += curDigit;
 		}
+	}
 
-	if (theCP != '.')
+bool sTryRead_DecimalInteger(const ZStrimU& iStrimU, int64& oInt64)
+	{
+	oInt64 = 0;
+	for (bool gotAny = false; /*no test*/; gotAny = true)
 		{
-		iStrimU.Unread(theCP);
+		int curDigit;
+		if (!sTryRead_Digit(iStrimU, curDigit))
+			return gotAny;
+		oInt64 *= 10;
+		oInt64 += curDigit;
+		}
+	}
+
+bool sTryRead_SignedDecimalInteger(const ZStrimU& iStrimU, int64& oInt64)
+	{
+	bool isNegative = false;
+	bool hadSign = sTryRead_Sign(iStrimU, isNegative);
+	if (sTryRead_DecimalInteger(iStrimU, oInt64))
+		{
+		if (isNegative)
+			oInt64 = -oInt64;
 		return true;
 		}
 
-	if (!iStrimU.ReadCP(theCP))
-		return true;
+	if (hadSign)
+		sThrowParseException("Expected a valid integer after sign prefix");
 
-	if (ZUnicode::sIsDigit(theCP))
+	return false;
+	}
+
+bool sTryRead_DecimalNumber(const ZStrimU& iStrimU, int64& oInt64, double& oDouble, bool& oIsDouble)
+	{
+	using namespace ZUtil_Strim;
+
+	if (sTryRead_CaselessString(iStrimU, "nan"))
 		{
+		oIsDouble = true;
+		oDouble = NAN;
+		return true;
+		}
+
+	if (sTryRead_CaselessString(iStrimU, "inf"))
+		{
+		oIsDouble = true;
+		oDouble = INFINITY;
+		return true;
+		}
+
+	if (!sTryRead_Mantissa(iStrimU, oInt64, oDouble, oIsDouble))
+		return false;
+
+	if (sTryRead_CP(iStrimU, '.'))
+		{
+		oIsDouble = true;
 		double fracPart = 0.0;
-		double divisor = 1;
-		while (ZUnicode::sIsDigit(theCP))
+		double divisor = 1.0;
+
+		for (;;)
 			{
+			int curDigit;
+			if (!sTryRead_Digit(iStrimU, curDigit))
+				break;
 			divisor *= 10;
 			fracPart *= 10;
-			fracPart += (theCP - '0');
-			if (!iStrimU.ReadCP(theCP))
-				{
-				oDouble += fracPart / divisor;
-				return true;
-				}
+			fracPart += curDigit;
 			}
 		oDouble += fracPart / divisor;
 		}
 
-	if (theCP != 'e' && theCP != 'E')
+	if (sTryRead_CP(iStrimU, 'e') || sTryRead_CP(iStrimU, 'E'))
 		{
-		iStrimU.Unread(theCP);
-		return true;
-		}
-
-	bool isNegativeExponent = false;
-
-	if (sTryRead_CP(iStrimU, '-'))
-		isNegativeExponent = true;
-	else if (sTryRead_CP(iStrimU, '+'))
-		isNegativeExponent = false;
-
-	int64 theExponent;
-	if (sTryRead_DecimalInteger(iStrimU, theExponent))
-		{
-		if (isNegativeExponent)
-			oDouble = oDouble * pow(10.0, int(-theExponent));
-		else
-			oDouble = oDouble * pow(10.0, int(theExponent));
+		oIsDouble = true;
+		int64 exponent;
+		if (!sTryRead_SignedDecimalInteger(iStrimU, exponent))
+			sThrowParseException("Expected a valid exponent after 'e'");
+		oDouble = oDouble * pow(10.0, int(exponent));
 		}
 
 	return true;
 	}
 
-bool ZUtil_Strim::sTryRead_SignedDecimalInteger(const ZStrimU& iStrimU, int64& oInteger)
+bool sTryRead_SignedDecimalNumber(const ZStrimU& iStrimU,
+	int64& oInt64, double& oDouble, bool& oIsDouble)
 	{
-	if (sTryRead_CP(iStrimU, '-'))
+	bool isNegative = false;
+	bool hadSign = sTryRead_Sign(iStrimU, isNegative);
+	if (sTryRead_DecimalNumber(iStrimU, oInt64, oDouble, oIsDouble))
 		{
-		if (!sTryRead_DecimalInteger(iStrimU, oInteger))
-			throw ParseException("Expected a valid integer after '-' prefix");
-		oInteger = -oInteger;
+		if (isNegative)
+			{
+			oInt64 = -oInt64;
+			oDouble = -oDouble;
+			}
 		return true;
 		}
-	else if (sTryRead_CP(iStrimU, '+'))
-		{
-		if (!sTryRead_DecimalInteger(iStrimU, oInteger))
-			throw ParseException("Expected a valid integer after '+' prefix");
-		return true;
-		}
-	return sTryRead_DecimalInteger(iStrimU, oInteger);
+
+	if (hadSign)
+		sThrowParseException("Expected a valid number after sign prefix");
+
+	return false;
 	}
 
-bool ZUtil_Strim::sTryRead_SignedDouble(const ZStrimU& iStrimU, double& oDouble)
+bool sTryRead_Double(const ZStrimU& iStrimU, double& oDouble)
 	{
-	if (sTryRead_CP(iStrimU, '-'))
-		{
-		if (!sTryRead_Double(iStrimU, oDouble))
-			throw ParseException("Expected a valid double after '-' prefix");
-		oDouble = -oDouble;
-		return true;
-		}
-	else if (sTryRead_CP(iStrimU, '+'))
-		{
-		if (!sTryRead_Double(iStrimU, oDouble))
-			throw ParseException("Expected a valid double after '+' prefix");
-		return true;
-		}
-	return sTryRead_Double(iStrimU, oDouble);
+	int64 dummyInt64;
+	bool isDouble;
+	return sTryRead_DecimalNumber(iStrimU, dummyInt64, oDouble, isDouble);
 	}
 
-void ZUtil_Strim::sCopy_EscapedString(
+bool sTryRead_SignedDouble(const ZStrimU& iStrimU, double& oDouble)
+	{
+	int64 dummyInt64;
+	bool isDouble;
+	return sTryRead_SignedDecimalNumber(iStrimU, dummyInt64, oDouble, isDouble);
+	}
+
+// ----------
+
+void sCopy_WS(const ZStrimU& iStrimU, const ZStrimW& iDest)
+	{
+	for (;;)
+		{
+		UTF32 theCP;
+		if (!iStrimU.ReadCP(theCP))
+			break;
+		if (!ZUnicode::sIsWhitespace(theCP))
+			{
+			iStrimU.Unread(theCP);
+			break;
+			}
+		iDest.WriteCP(theCP);
+		}
+	}
+
+void sSkip_WS(const ZStrimU& iStrimU)
+	{
+	for (;;)
+		{
+		UTF32 theCP;
+		if (!iStrimU.ReadCP(theCP))
+			break;
+		if (!ZUnicode::sIsWhitespace(theCP))
+			{
+			iStrimU.Unread(theCP);
+			break;
+			}
+		}
+	}
+
+// ----------
+
+void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZStrimW& iDest)
+	{
+	ZAssert(iStrimU.UnreadableLimit() >= 2);
+
+	for (;;)
+		{
+		UTF32 firstCP;
+		if (iStrimU.ReadCP(firstCP))
+			{
+			if (ZUnicode::sIsWhitespace(firstCP))
+				{
+				iDest.WriteCP(firstCP);
+				continue;
+				}
+			else if (firstCP == '/')
+				{
+				if (sTryRead_CP(iStrimU, '/'))
+					{
+					iDest.Write("//");
+					sCopy_Line(iStrimU, iDest);
+					continue;
+					}
+				else if (sTryRead_CP(iStrimU, '*'))
+					{
+					iDest.Write("/*");
+					if (!sCopy_Until(iStrimU, "*/", iDest))
+						sThrowParseException("Unexpected end of data while parsing a /**/ comment");
+					iDest.Write("*/");
+					continue;
+					}
+				}
+			iStrimU.Unread(firstCP);
+			}
+		break;
+		}
+	}
+
+void sSkip_WSAndCPlusPlusComments(const ZStrimU& iStrimU)
+	{ sCopy_WSAndCPlusPlusComments(iStrimU, ZStrimW_Null()); }
+
+// ----------
+
+void sCopy_Line(const ZStrimR& iStrimR, const ZStrimW& iDest)
+	{
+	for (;;)
+		{
+		UTF32 theCP;
+		if (!iStrimR.ReadCP(theCP))
+			break;
+		if (ZUnicode::sIsEOL(theCP))
+			break;
+		iDest.WriteCP(theCP);
+		}	
+	}
+
+void sSkip_Line(const ZStrimR& iStrimR)
+	{ sCopy_Line(iStrimR, ZStrimW_Null()); }
+
+string8 sRead_Line(const ZStrimR& iStrimR)
+	{
+	string8 result;
+	sCopy_Line(iStrimR, ZStrimW_String(result));
+	return result;
+	}
+
+// ----------
+
+bool sCopy_Until(const ZStrimR& iStrimR, UTF32 iTerminator, const ZStrimW& iDest)
+	{
+	for (;;)
+		{
+		UTF32 theCP;
+		if (!iStrimR.ReadCP(theCP))
+			return false;
+		if (theCP == iTerminator)
+			return true;
+		iDest.WriteCP(theCP);
+		}		
+	}
+
+bool sSkip_Until(const ZStrimR& iStrimR, UTF32 iTerminator)
+	{ return sCopy_Until(iStrimR, iTerminator, ZStrimW_Null()); }
+
+string8 sRead_Until(const ZStrimR& iStrimR, UTF32 iTerminator)
+	{
+	string8 result;
+	sCopy_Until(iStrimR, iTerminator, ZStrimW_String(result));
+	return result;
+	}
+
+// ----------
+
+bool sCopy_Until(const ZStrimR& iStrimR,
+	const string8& iTerminator, const ZStrimW& iDest)
+	{
+	ZStrimR_Boundary theStrimBoundary(iTerminator, iStrimR);
+	theStrimBoundary.CopyAllTo(iDest);
+	return theStrimBoundary.HitBoundary();
+	}
+
+bool sSkip_Until(const ZStrimR& iStrimR, const string8& iTerminator)
+	{ return sCopy_Until(iStrimR, iTerminator, ZStrimW_Null()); }
+
+string8 sRead_Until(const ZStrimR& iStrimR, const string8& iTerminator)
+	{
+	string8 result;
+	sCopy_Until(iStrimR, iTerminator, ZStrimW_String(result));
+	return result;
+	}
+
+// ----------
+
+void sCopy_EscapedString(
 	const ZStrimU& iStrimU, UTF32 iTerminator, const ZStrimW& iDest)
 	{
 	ZStrimR_Escaped(iStrimU, iTerminator).CopyAllTo(iDest);
 	}
 
-void ZUtil_Strim::sRead_EscapedString(const ZStrimU& iStrimU, UTF32 iTerminator, string8& oString)
+void sRead_EscapedString(const ZStrimU& iStrimU, UTF32 iTerminator, string8& oString)
 	{
 	// Resize, rather than clear, so we don't discard any space reserved by our caller.
 	oString.resize(0);
 	sCopy_EscapedString(iStrimU, iTerminator, ZStrimW_String(oString));
 	}
 
-bool ZUtil_Strim::sTryCopy_EscapedString(const ZStrimU& iStrimU,
+// ----------
+
+bool sTryCopy_EscapedString(const ZStrimU& iStrimU,
 	UTF32 iDelimiter, const ZStrimW& iDest)
 	{
 	if (!sTryRead_CP(iStrimU, iDelimiter))
@@ -500,19 +546,21 @@ bool ZUtil_Strim::sTryCopy_EscapedString(const ZStrimU& iStrimU,
 	sCopy_EscapedString(iStrimU, iDelimiter, iDest);
 
 	if (!sTryRead_CP(iStrimU, iDelimiter))
-		throw ParseException("Missing string delimiter");
+		sThrowParseException("Missing string delimiter");
 
 	return true;
 	}
 
-bool ZUtil_Strim::sTryRead_EscapedString(const ZStrimU& iStrimU, UTF32 iDelimiter, string8& oString)
+bool sTryRead_EscapedString(const ZStrimU& iStrimU, UTF32 iDelimiter, string8& oString)
 	{
 	// Resize, rather than clear, so we don't discard any space reserved by our caller.
 	oString.resize(0);
 	return sTryCopy_EscapedString(iStrimU, iDelimiter, ZStrimW_String(oString));
 	}
 
-bool ZUtil_Strim::sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& iDest)
+// ----------
+
+bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& iDest)
 	{
 	UTF32 theCP;
 	if (!iStrimU.ReadCP(theCP))
@@ -543,11 +591,13 @@ bool ZUtil_Strim::sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& iDe
 	return true;
 	}
 
-bool ZUtil_Strim::sTryRead_Identifier(const ZStrimU& iStrimU, string8& oString)
+bool sTryRead_Identifier(const ZStrimU& iStrimU, string8& oString)
 	{
 	// Resize, rather than clear, so we don't discard any space reserved by our caller.
 	oString.resize(0);
 	return sTryCopy_Identifier(iStrimU, ZStrimW_String(oString));
 	}
+
+} // namespace ZUtil_Strim
 
 NAMESPACE_ZOOLIB_END

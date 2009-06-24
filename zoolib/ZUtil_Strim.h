@@ -43,6 +43,33 @@ public:
 
 // =================================================================================================
 
+bool sTryRead_CP(const ZStrimU& iStrimU, UTF32 iCP);
+
+bool sTryRead_CaselessString(const ZStrimU& iStrimU, const string8& iTarget);
+
+bool sTryRead_Digit(const ZStrimU& iStrimU, int& oDigit);
+bool sTryRead_HexDigit(const ZStrimU& iStrimU, int& oDigit);
+
+bool sTryRead_SignedGenericInteger(const ZStrimU& iStrimU, int64& oInt64);
+
+bool sTryRead_HexInteger(const ZStrimU& iStrimU, int64& oInt64);
+
+bool sTryRead_Sign(const ZStrimU& iStrimU, bool& oIsNegative);
+bool sTryRead_Mantissa(const ZStrimU& iStrimU, int64& oInt64, double& oDouble, bool& oIsDouble);
+
+bool sTryRead_DecimalInteger(const ZStrimU& iStrimU, int64& oInt64);
+bool sTryRead_SignedDecimalInteger(const ZStrimU& iStrimU, int64& oInt64);
+
+bool sTryRead_DecimalNumber(const ZStrimU& iStrimU,
+	int64& oInt64, double& oDouble, bool& oIsDouble);
+bool sTryRead_SignedDecimalNumber(const ZStrimU& iStrimU,
+	int64& oInt64, double& oDouble, bool& oIsDouble);
+
+bool sTryRead_Double(const ZStrimU& iStrimU, double& oDouble);
+bool sTryRead_SignedDouble(const ZStrimU& iStrimU, double& oDouble);
+
+
+
 void sCopy_WS(const ZStrimU& iStrimU, const ZStrimW& iDest);
 void sSkip_WS(const ZStrimU& iStrimU);
 
@@ -66,22 +93,6 @@ bool sSkip_Until(const ZStrimR& iStrimR, const string8& iTerminator);
 string8 sRead_Until(const ZStrimR& iStrimR, const string8& iTerminator);
 
 
-bool sTryRead_CP(const ZStrimU& iStrimU, UTF32 iCP);
-
-
-bool sTryRead_Digit(const ZStrimU& iStrimU, int& oDigit);
-bool sTryRead_HexDigit(const ZStrimU& iStrimU, int& oDigit);
-
-
-bool sTryRead_DecimalInteger(const ZStrimU& iStrimU, int64& oInteger);
-bool sTryRead_HexInteger(const ZStrimU& iStrimU, int64& oInteger);
-bool sTryRead_GenericInteger(const ZStrimU& iStrimU, int64& oInteger);
-bool sTryRead_Double(const ZStrimU& iStrimU, double& oDouble);
-
-bool sTryRead_SignedDecimalInteger(const ZStrimU& iStrimU, int64& oInteger);
-bool sTryRead_SignedDouble(const ZStrimU& iStrimU, double& oDouble);
-
-
 void sCopy_EscapedString(const ZStrimU& iStrimU, UTF32 iTerminator, const ZStrimW& iDest);
 void sRead_EscapedString(const ZStrimU& iStrimU, UTF32 iTerminator, string8& oString);
 
@@ -93,6 +104,7 @@ bool sTryRead_EscapedString(const ZStrimU& iStrimU, UTF32 iDelimiter, string8& o
 bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& iDest);
 bool sTryRead_Identifier(const ZStrimU& iStrimU, string8& oString);
 // Other methods for other kinds of identifiers? -- Java, C++, Pascal, AlphaNum etc
+
 
 } // namespace ZUtil_Strim
 

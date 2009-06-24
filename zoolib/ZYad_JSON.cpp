@@ -173,193 +173,44 @@ static bool sTryRead_JSONString(const ZStrimU& s, string& oString)
 	return false;
 	}
 
-static bool sTryRead_NumberOrKeyword(const ZStrimU& s, string& oString)
-	{
-	for (bool gotAny = false; /*no test*/; gotAny = true)
-		{
-		UTF32 theCP;
-		if (!s.ReadCP(theCP))
-			return gotAny;
-
-		if (!ZUnicode::sIsAlphaDigit(theCP)
-			&& theCP != '.'
-			&& theCP != '-')
-			{
-			s.Unread(theCP);
-			return gotAny;
-			}
-		oString += theCP;
-		}
-	}
-
-// Read the mantissa, putting it into oInt64 and oDouble and setting oIsDouble if
-// it won't fit in 64 bits or is an inf. We consume any sign and set oIsNegative appropriately.
-static bool sTryRead_Mantissa(const ZStrimU& s,
-	int64& oInt64, double& oDouble, bool& oIsNegative, bool& oIsDouble)
+static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTV)
 	{
 	using namespace ZUtil_Strim;
 
-	oInt64 = 0;
-	oDouble = 0;
-	oIsNegative = false;
-	oIsDouble = false;
-
-	bool hadPrefix = true;
-	if (sTryRead_CP(s, '-'))
-		oIsNegative = true;
-	else if (!sTryRead_CP(s, '+'))
-		hadPrefix = false;
-
-	// Unlike ZUtil_Strim, we don't read nan here. The first char of nan is the same
-	// as that of null, and so we'd throw a parse error. Instead we handle it in sFromStrim.
-	if (sTryRead_CP(s, 'i') || sTryRead_CP(s, 'I'))
-		{
-		if (sTryRead_CP(s, 'n') || sTryRead_CP(s, 'F'))
-			{
-			if (sTryRead_CP(s, 'f') || sTryRead_CP(s, 'F'))
-				{
-				// It's an inf
-				oIsDouble = true;
-				oDouble = INFINITY;
-				return true;
-				}
-			}
-		throw ParseException("Illegal character when trying to read a double");
-		}
-
-	for (bool gotAny = false; /*no test*/; gotAny = true)
-		{
-		UTF32 theCP;
-		if (!s.ReadCP(theCP) || theCP == '.' || !ZUnicode::sIsDigit(theCP))
-			{
-			if (theCP == '.')
-				{
-				s.Unread(theCP);
-				oIsDouble = true;
-				return true;
-				}
-
-			if (gotAny)
-				{	
-				return true;
-				}
-			else
-				{
-				if (hadPrefix)
-					{
-					// We've already absorbed a plus or minus sign, hence we have a parse exception.
-					if (oIsNegative)
-						throw ParseException("Expected a valid number after '-' prefix");
-					else
-						throw ParseException("Expected a valid number after '+' prefix");
-					}
-				return false;
-				}
-			}
-
-		int digit = theCP - '0';
-		if (!oIsDouble)
-			{
-			int64 priorInt64 = oInt64;
-			oInt64 *= 10;
-			oInt64 += digit;
-			if (oInt64 < priorInt64)
-				oIsDouble = true;
-			}
-		oDouble *= 10;
-		oDouble += digit;
-		}
-	}
-
-static bool sTryRead_Number(const ZStrimU& s, ZTValue& oTV)
-	{
-	using namespace ZUtil_Strim;
+	string theString;
 
 	int64 asInt64;
 	double asDouble;
-	bool isNegative;
 	bool isDouble;
-	if (!sTryRead_Mantissa(s, asInt64, asDouble, isNegative, isDouble))
-		return false;
 
-	if (sTryRead_CP(s, '.'))
-		{
-		// sTryRead_Mantissa must have already set isDouble.
-		ZAssert(isDouble);
-		double fracPart = 0.0;
-		double divisor = 1.0;
-		for (;;)
-			{
-			UTF32 theCP;
-			if (!s.ReadCP(theCP))
-				break;
-			divisor *= 10;
-			fracPart *= 10;
-			fracPart += (theCP - '0');
-			}
-		asDouble += fracPart / divisor;
-		}
-
-	if (isNegative)
-		{
-		asInt64 = -asInt64;
-		asDouble = -asDouble;
-		}
-
-	if (sTryRead_CP(s, 'e') || sTryRead_CP(s, 'E'))
-		{
-		isDouble = true;
-		int64 exponent;
-		if (!sTryRead_SignedDecimalInteger(s, exponent))
-			throw ParseException("Expected a valid exponent after 'e'");
-		asDouble = asDouble * pow(10.0, int(exponent));
-		}
-
-	if (isDouble)
-		oTV.SetDouble(asDouble);
-	else
-		oTV.SetInt64(asInt64);
-
-	return true;
-	}
-
-static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTV)
-	{
-	string theString;
 	if (sTryRead_JSONString(iStrimU, theString))
 		{
 		oTV.SetString(theString);
 		}
+	else if (sTryRead_SignedDecimalNumber(iStrimU, asInt64, asDouble, isDouble))
+		{
+		if (isDouble)
+			oTV.SetDouble(asDouble);
+		else
+			oTV.SetInt64(asInt64);
+		}
+	else if (sTryRead_CaselessString(iStrimU, "null"))
+		{
+		oTV.SetNull();
+		}
+	else if (sTryRead_CaselessString(iStrimU, "false"))
+		{
+		oTV.SetBool(false);
+		}
+	else if (sTryRead_CaselessString(iStrimU, "true"))
+		{
+		oTV.SetBool(true);
+		}
 	else
 		{
-		if (!sTryRead_NumberOrKeyword(iStrimU, theString))
-			return false;
-
-		if (!sTryRead_Number(ZStrimU_String(theString), oTV))
-			{
-			string lowerString = ZUnicode::sToLower(theString);
-			if (lowerString == "nan")
-				{
-				oTV.SetDouble(NAN);
-				}
-			else if (lowerString == "null")
-				{
-				oTV.SetNull();
-				}
-			else if (lowerString == "false")
-				{
-				oTV.SetBool(false);
-				}
-			else if (lowerString == "true")
-				{
-				oTV.SetBool(true);
-				}
-			else
-				{
-				sThrowParseException("Unknown keyword " + theString);
-				}
-			}
+		sThrowParseException("Expected number, string or keyword");
 		}
+
 	return true;
 	}
 
@@ -779,7 +630,7 @@ bool ZYadVisitor_JSONWriter::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 		// 2. A non-empty tuple.
 		// or if iOptions.fBreakStrings is true, any element is a string with embedded
 		// line breaks or more than iOptions.fStringLineLength characters.
-		needsIndentation = !iYadListR->IsSimple(fOptions);
+		needsIndentation = ! iYadListR->IsSimple(fOptions);
 		}
 
 	if (needsIndentation)
@@ -791,6 +642,9 @@ bool ZYadVisitor_JSONWriter::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 			// name and equals sign, so we need to start a fresh line.
 			sWriteLFIndent(fStrimW, fIndent, fOptions);
 			}
+
+		SaveState save(this);
+		fMayNeedInitialLF = false;
 
 		fStrimW.Write("[");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
