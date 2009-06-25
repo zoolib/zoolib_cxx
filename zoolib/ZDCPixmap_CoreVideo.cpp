@@ -70,7 +70,7 @@ EFormatStandard sAsFormatStandard(OSType iOSType)
 		{
 		case CVPIXELFORMAT(16BE555): return eFormatStandard_xRGB_16_BE;
 		case CVPIXELFORMAT(16LE555): return eFormatStandard_xRGB_16_LE;
-		case CVPIXELFORMAT(16LE5551): return eFormatStandard_ARGB_16_BE;
+		case CVPIXELFORMAT(16LE5551): return eFormatStandard_RGBA_16_LE;
 		case CVPIXELFORMAT(16BE565): return eFormatStandard_RGB_16_BE;
 		case CVPIXELFORMAT(16LE565): return eFormatStandard_RGB_16_LE;
 

@@ -129,7 +129,7 @@ StandardToInfoGray_t sStandardToInfoGray[] =
 	{ eFormatStandard_Gray_4, 0xF, 0x0, 4, true },
 	{ eFormatStandard_Gray_8, 0xFF, 0x00, 8, true },
 
-#if 1 || ZCONFIG(Endian, Big)
+#if ZCONFIG(Endian, Big)
 
 	{ eFormatStandard_GA_16, 0xFF00, 0x00FF, 16, true },
 	{ eFormatStandard_AG_16, 0x00FF, 0xFF00, 16, true }
@@ -157,13 +157,15 @@ StandardToInfoColor_t sStandardToInfoColor[] =
 	{
 	{ eFormatStandard_xRGB_16_BE, 0x7C00, 0x03E0, 0x001F, 0x0000, 16, true },
 	{ eFormatStandard_ARGB_16_BE, 0x7C00, 0x03E0, 0x001F, 0x8000, 16, true },
+	{ eFormatStandard_RGBA_16_BE, 0xF800, 0x07C0, 0x003E, 0x0001, 16, true },
 	{ eFormatStandard_RGB_16_BE, 0xF800, 0x07E0, 0x001F, 0x0000, 16, true },
 
 	{ eFormatStandard_xRGB_16_LE, 0x7C00, 0x03E0, 0x001F, 0x0000, 16, false },
 	{ eFormatStandard_ARGB_16_LE, 0x7C00, 0x03E0, 0x001F, 0x8000, 16, false },
+	{ eFormatStandard_RGBA_16_LE, 0xF800, 0x07C0, 0x003E, 0x0001, 16, false },
 	{ eFormatStandard_RGB_16_LE, 0xF800, 0x07E0, 0x001F, 0x0000, 16, false },
 
-#if 1 || ZCONFIG(Endian, Big)
+#if ZCONFIG(Endian, Big)
 
 	{ eFormatStandard_RGB_24, 0x00FF0000, 0x0000FF00, 0x000000FF, 0x00000000, 24, true },
 	{ eFormatStandard_BGR_24, 0x000000FF, 0x0000FF00, 0x00FF0000, 0x00000000, 24, true },
@@ -1503,6 +1505,7 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 					localDest32[0] = a0b0c0 | (a1b1c1 << 24);
 					localDest32[1] = (a1b1c1 >> 8) | (a2b2c2 << 16);
 					localDest32[2] = (a2b2c2 >> 16) | (a3b3c3 << 8);
+					localDest32 += 3;
 					}
 				localDest8 = reinterpret_cast<uint8*>(localDest32);
 				}

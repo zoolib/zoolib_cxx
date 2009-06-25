@@ -118,10 +118,12 @@ enum EFormatStandard
 
 	eFormatStandard_xRGB_16_BE,
 	eFormatStandard_ARGB_16_BE,
+	eFormatStandard_RGBA_16_BE,
 	eFormatStandard_RGB_16_BE,
 
 	eFormatStandard_xRGB_16_LE,
 	eFormatStandard_ARGB_16_LE,
+	eFormatStandard_RGBA_16_LE,
 	eFormatStandard_RGB_16_LE,
 
 	eFormatStandard_RGB_24,
