@@ -33,6 +33,33 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Helper functions
+
+static AEKeyword sAsAEKeyword(const string& iName)
+	{
+	AEKeyword result = 0;
+	const size_t theSize = iName.size();
+	if (theSize > 0)
+		{
+		result |= uint8(iName[0]) << 24;
+		if (theSize > 1)
+			{
+			result |= uint8(iName[1]) << 16;
+			if (theSize > 2)
+				{
+				result |= uint8(iName[2]) << 8;
+				if (theSize > 3)
+					{
+					result |= uint8(iName[3]);
+					}
+				}
+			}
+		}
+	return result;
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZVal_AppleEvent
 
 ZVal_AppleEvent::operator operator_bool_type() const
@@ -356,11 +383,24 @@ bool ZValMap_AppleEvent::QGet(AEKeyword iName, ZVal_AppleEvent& oVal) const
 	return false;
 	}
 
+bool ZValMap_AppleEvent::QGet(const string& iName, ZVal_AppleEvent& oVal) const
+	{
+	if (noErr == ::AEGetKeyDesc(this, sAsAEKeyword(iName), typeWildCard, oVal.ParamO()))
+		return true;
+	return false;
+	}
+
 void ZValMap_AppleEvent::Set(AEKeyword iName, const AEDesc& iVal)
 	{ ::AEPutKeyDesc(this, iName, &iVal); }
 
+void ZValMap_AppleEvent::Set(const string& iName, const AEDesc& iVal)
+	{ ::AEPutKeyDesc(this, sAsAEKeyword(iName), &iVal); }
+
 void ZValMap_AppleEvent::Erase(AEKeyword iName)
 	{ ::AEDeleteKeyDesc(this, iName); }
+
+void ZValMap_AppleEvent::Erase(const string& iName)
+	{ ::AEDeleteKeyDesc(this, sAsAEKeyword(iName)); }
 
 NAMESPACE_ZOOLIB_END
 

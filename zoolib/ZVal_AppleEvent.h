@@ -152,11 +152,15 @@ public:
 class ZValMap_AppleEvent
 :	public AERecord
 ,	public ZValMapR_T<ZValMap_AppleEvent, AEKeyword, ZVal_AppleEvent>
+,	public ZValMapR_T<ZValMap_AppleEvent, const std::string&, ZVal_AppleEvent>
 	{
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZValMap_AppleEvent,
 		operator_bool_generator_type, operator_bool_type);
 
 public:
+	ZMACRO_ZValMapAccessors_Using(ZValMap_AppleEvent, AEKeyword, ZVal_AppleEvent);
+	ZMACRO_ZValMapAccessors_Using(ZValMap_AppleEvent, const std::string&, ZVal_AppleEvent);
+
 	ZValMap_AppleEvent();
 	ZValMap_AppleEvent(const ZValMap_AppleEvent& iOther);
 	~ZValMap_AppleEvent();
@@ -170,10 +174,13 @@ public:
 	void Clear();
 
 	bool QGet(AEKeyword iName, ZVal_AppleEvent& oVal) const;
+	bool QGet(const std::string& iName, ZVal_AppleEvent& oVal) const;
 
 	void Set(AEKeyword iName, const AEDesc& iVal);
+	void Set(const std::string& iName, const AEDesc& iVal);
 
 	void Erase(AEKeyword iName);
+	void Erase(const std::string& iName);
 	};
 
 NAMESPACE_ZOOLIB_END
