@@ -403,7 +403,7 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			8, // 7
 			};
 		int rowBytes
-			= ZDCPixmapNS::sCalcRowBytes(sPhysicalDepths[strmGlobalColorTableSize], fSize.h, 1);
+			= ZDCPixmapNS::sCalcRowBytes(sPhysicalDepths[strmGlobalColorTableSize], fSize.h, 4);
 
 		ZDCPixmapNS::RasterDesc theRasterDesc(
 			ZDCPixmapNS::PixvalDesc(strmGlobalColorTableSize + 1, true),
