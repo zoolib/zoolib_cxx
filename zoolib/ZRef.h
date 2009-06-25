@@ -179,7 +179,7 @@ template <class T> void sRelease_T(T);
 template <typename P>
 struct NoRetain_t
 	{
-	mutable P fP;
+	P fP;
 	NoRetain_t(P iP) : fP(iP) {}
 	};
 
@@ -187,11 +187,10 @@ template <typename P>
 NoRetain_t<P> NoRetain(P iP)
 	{ return NoRetain_t<P>(iP); }
 
-
 template <typename P>
 struct Adopt_t
 	{
-	mutable P fP;
+	P fP;
 	Adopt_t(P iP) : fP(iP) {}
 	};
 
