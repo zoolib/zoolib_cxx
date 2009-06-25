@@ -47,7 +47,6 @@ typedef void* VoidStar_t;
 	ZMACRO_ZValAccessors_Decl_Entry(Bool, bool) \
 	ZMACRO_ZValAccessors_Decl_Entry(Float, float) \
 	ZMACRO_ZValAccessors_Decl_Entry(Double, double) \
-	ZMACRO_ZValAccessors_Decl_Entry(Pointer, VoidStar_t) \
 	ZMACRO_ZValAccessors_Decl_Entry(String, std::string) \
 
 #define ZMACRO_ZValAccessors_Def_Std(T) \
@@ -58,7 +57,6 @@ typedef void* VoidStar_t;
 	ZMACRO_ZValAccessors_Def_Entry(T, Bool, bool) \
 	ZMACRO_ZValAccessors_Def_Entry(T, Float, float) \
 	ZMACRO_ZValAccessors_Def_Entry(T, Double, double) \
-	ZMACRO_ZValAccessors_Def_Entry(T, Pointer, VoidStar_t) \
 	ZMACRO_ZValAccessors_Def_Entry(T, String, std::string) \
 
 

@@ -113,7 +113,7 @@ public:
 	ZValList_CFType(const ZRef<CFMutableArrayRef>& iOther);
 	ZValList_CFType(const ZRef<CFArrayRef>& iOther);
 
-	ZRef<CFArrayRef> GetCFArray() const;
+	operator CFArrayRef() const;
 
 	size_t Count() const;
 
@@ -161,7 +161,7 @@ public:
 	ZValMap_CFType(const ZRef<CFMutableDictionaryRef>& iOther);
 	ZValMap_CFType(const ZRef<CFDictionaryRef>& iOther);
 
-	ZRef<CFDictionaryRef> GetCFDictionary() const;
+	operator CFDictionaryRef() const;
 
 	void Clear();
 

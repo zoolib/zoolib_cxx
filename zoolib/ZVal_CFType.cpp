@@ -37,6 +37,48 @@ namespace ZANONYMOUS {
 
 CFStringRef sEmptyCFString = CFSTR("");
 
+string8 sAsUTF8(CFStringRef iCFString)
+	{
+	if (const char *s = ::CFStringGetCStringPtr(iCFString, kCFStringEncodingUTF8))
+		return string8(s);
+
+	const CFIndex sourceCU = ::CFStringGetLength(iCFString);
+	if (sourceCU == 0)
+		return string8();
+
+	// Worst case is six bytes per code unit.
+	const size_t bufferSize = sourceCU * 6;
+	string8 result(bufferSize, 0);
+
+	UInt8* buffer = reinterpret_cast<UInt8*>(const_cast<char*>(result.data()));
+
+	CFIndex bufferUsed;
+	::CFStringGetBytes(iCFString, CFRangeMake(0, sourceCU),
+		kCFStringEncodingUTF8, 1, false,
+		buffer, bufferSize, &bufferUsed);
+
+	result.resize(bufferUsed);
+
+	return result;
+	}
+
+string16 sAsUTF16(CFStringRef iCFString)
+	{
+	const CFIndex sourceCU = ::CFStringGetLength(iCFString);
+	if (sourceCU == 0)
+		return string16();
+
+	if (const UniChar* s = ::CFStringGetCharactersPtr(iCFString))
+		return string16(reinterpret_cast<const UTF16*>(s), sourceCU);
+
+	string16 result(sourceCU, 0);
+
+	UniChar* buffer = reinterpret_cast<UniChar*>(const_cast<UTF16*>(result.data()));
+
+	::CFStringGetCharacters(iCFString, CFRangeMake(0, sourceCU), buffer);
+	return result;
+	}
+
 ZRef<CFStringRef> sCFString(const string8& iString8)
 	{
 	if (CFIndex sourceSize = iString8.size())
@@ -164,11 +206,11 @@ ZVal_CFType::ZVal_CFType(const string16& iVal)
 	{}
 
 ZVal_CFType::ZVal_CFType(const ZValList_CFType& iVal)
-:	fCFTypeRef(iVal.GetCFArray())
+:	fCFTypeRef(iVal)
 	{}
 
 ZVal_CFType::ZVal_CFType(const ZValMap_CFType& iVal)
-:	fCFTypeRef(iVal.GetCFDictionary())
+:	fCFTypeRef(iVal)
 	{}
 
 ZVal_CFType::operator CFTypeRef() const
@@ -254,6 +296,17 @@ bool ZVal_CFType::QGet_T<double>(double& oVal) const
 	}
 
 template <>
+bool ZVal_CFType::QGet_T<string8>(string8& oVal) const
+	{
+	if (::CFGetTypeID(fCFTypeRef) == ::CFStringGetTypeID())
+		{
+		oVal = sAsUTF8(static_cast<CFStringRef>(CFTypeRef(fCFTypeRef)));
+		return true;
+		}
+	return false;
+	}
+
+template <>
 void ZVal_CFType::Set_T<int8>(const int8& iVal)
 	{ fCFTypeRef = sNumber_T(kCFNumberSInt8Type, iVal); }
 
@@ -280,6 +333,10 @@ void ZVal_CFType::Set_T<float>(const float& iVal)
 template <>
 void ZVal_CFType::Set_T<double>(const double& iVal)
 	{ fCFTypeRef = sNumber_T(kCFNumberFloat64Type, iVal); }
+
+template <>
+void ZVal_CFType::Set_T<string8>(const string8& iVal)
+	{ fCFTypeRef = sCFString(iVal); }
 
 ZMACRO_ZValAccessors_Def_Std(ZVal_CFType)
 
@@ -318,7 +375,7 @@ ZValList_CFType::ZValList_CFType(const ZRef<CFArrayRef>& iOther)
 :	fCFArrayRef(iOther)
 	{}
 
-ZRef<CFArrayRef> ZValList_CFType::GetCFArray() const
+ZValList_CFType::operator CFArrayRef() const
 	{
 	if (fCFMutableArrayRef)
 		return fCFMutableArrayRef;
@@ -455,7 +512,7 @@ ZValMap_CFType::ZValMap_CFType(const ZRef<CFMutableDictionaryRef>& iOther)
 :	fCFMutableDictionaryRef(iOther)
 	{}
 
-ZRef<CFDictionaryRef> ZValMap_CFType::GetCFDictionary() const
+ZValMap_CFType::operator CFDictionaryRef() const
 	{
 	if (fCFMutableDictionaryRef)
 		return fCFMutableDictionaryRef;

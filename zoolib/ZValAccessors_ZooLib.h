@@ -45,6 +45,7 @@ class ZValMap_ZooLib;
 	ZMACRO_ZValAccessors_Decl_Entry(Vector, std::vector<T>) \
 	ZMACRO_ZValAccessors_Decl_Entry(Tuple, ZValMap_ZooLib) \
 	ZMACRO_ZValAccessors_Decl_Entry(RefCounted, ZRef<ZRefCountedWithFinalize>) \
+	ZMACRO_ZValAccessors_Decl_Entry(Pointer, VoidStar_t) \
 
 #define ZMACRO_ZValAccessors_Def_ZooLib(T) \
 	ZMACRO_ZValAccessors_Def_Entry(T, ID, uint64) \
@@ -56,6 +57,7 @@ class ZValMap_ZooLib;
 	ZMACRO_ZValAccessors_Def_Entry(T, Vector, std::vector<T>) \
 	ZMACRO_ZValAccessors_Def_Entry(T, Tuple, ZValMap_ZooLib) \
 	ZMACRO_ZValAccessors_Def_Entry(T, RefCounted, ZRef<ZRefCountedWithFinalize>) \
+	ZMACRO_ZValAccessors_Def_Entry(T, Pointer, VoidStar_t) \
 
 NAMESPACE_ZOOLIB_END
 
