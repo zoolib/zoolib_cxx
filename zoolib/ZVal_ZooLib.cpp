@@ -947,6 +947,19 @@ bool ZVal_ZooLib::QGet_T<ZValMap_ZooLib >(ZValMap_ZooLib& oVal) const
 	return false;
 	}
 
+template <>
+bool ZVal_ZooLib::QGet_T<ZValList_ZooLib >(ZValList_ZooLib& oVal) const
+	{
+	if (fType.fType == eZType_Vector)
+		{
+		if (fData.fAs_Vector)
+			oVal = *fData.fAs_Vector;
+		else
+			oVal.clear();
+		return true;
+		}
+	return false;
+	}
 
 template <>
 void ZVal_ZooLib::Set_T<ZType>(const ZType& iVal)
@@ -1109,11 +1122,10 @@ template <>
 void ZVal_ZooLib::Set_T<vector<ZVal_ZooLib> >(const vector<ZVal_ZooLib>& iVal)
 	{
 	this->pRelease();
-	fType.fType = eZType_Tuple;
 	sConstruct_T(fType.fBytes, iVal);
 	fType.fType = eZType_Vector;
 	if (iVal.empty())
-		fData.fAs_Vector= nullptr;
+		fData.fAs_Vector = nullptr;
 	else
 		fData.fAs_Vector = new ZValList_ZooLib(iVal);
 	}
@@ -1126,6 +1138,17 @@ void ZVal_ZooLib::Set_T<ZValMap_ZooLib>(const ZValMap_ZooLib& iVal)
 	sConstruct_T(fType.fBytes, iVal);
 	}
 
+template <>
+void ZVal_ZooLib::Set_T<ZValList_ZooLib>(const ZValList_ZooLib& iVal)
+	{
+	this->pRelease();
+	sConstruct_T(fType.fBytes, iVal);
+	fType.fType = eZType_Vector;
+	if (iVal.empty())
+		fData.fAs_Vector = nullptr;
+	else
+		fData.fAs_Vector = new ZValList_ZooLib(iVal);
+	}
 
 void ZVal_ZooLib::SetNull()
 	{
@@ -1269,6 +1292,8 @@ ZValList_ZooLib& ZVal_ZooLib::EnsureMutableVector()
 
 ZMACRO_ZValAccessors_Def_Std(ZVal_ZooLib)
 ZMACRO_ZValAccessors_Def_ZooLib(ZVal_ZooLib)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, List, ZValList_ZooLib)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Map, ZValMap_ZooLib)
 
 // =================================================================================================
 #pragma mark -
@@ -2277,6 +2302,15 @@ bool ZValMap_ZooLib::QGet_T(Name_t iName, S& oVal) const
 		return theValue->QGet_T(oVal);
 	return false;	
 	}
+
+void ZValMap_ZooLib::Set(const_iterator iPropIter, const ZVal_ZooLib& iVal)
+	{ this->pSet(iPropIter, iVal); }
+
+void ZValMap_ZooLib::Set(const char* iPropName, const ZVal_ZooLib& iVal)
+	{ this->pSet(iPropName, iVal); }
+
+void ZValMap_ZooLib::Set(const ZTName& iPropName, const ZVal_ZooLib& iVal)
+	{ this->pSet(iPropName, iVal); }
 
 bool ZValMap_ZooLib::SetNull(const_iterator iPropIter)
 	{

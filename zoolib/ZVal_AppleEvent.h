@@ -31,6 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZValAccessors.h"
 #include "zoolib/ZValAccessors_Mac.h"
 
+#include <string>
+
 NAMESPACE_ZOOLIB_BEGIN
 
 class ZVal_AppleEvent;
@@ -53,22 +55,30 @@ class ZVal_AppleEvent
 		operator_bool_generator_type, operator_bool_type);
 
 public:
-	ZMACRO_ZValAccessors_Decl_Entry(Int16, int16)
-	ZMACRO_ZValAccessors_Decl_Entry(Int32, int32)
-	ZMACRO_ZValAccessors_Decl_Entry(Int64, int64)
-	ZMACRO_ZValAccessors_Decl_Entry(Float, float)
-	ZMACRO_ZValAccessors_Decl_Entry(Double, double)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Int16, int16)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Int32, int32)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Int64, int64)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Bool, bool)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Float, float)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Double, double)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, String, std::string)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, List, ZValList_AppleEvent)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Map, ZValMap_AppleEvent)
 
 	ZMACRO_ZValAccessors_Decl_Mac(ZVal_AppleEvent)
 
 	operator operator_bool_type() const;
 
 	ZVal_AppleEvent();
-	ZVal_AppleEvent(const AEDesc& iOther);
+	ZVal_AppleEvent(const ZVal_AppleEvent& iOther);
 	~ZVal_AppleEvent();
+	ZVal_AppleEvent& operator=(const ZVal_AppleEvent& iOther);
+
+	ZVal_AppleEvent(const AEDesc& iOther);
 	ZVal_AppleEvent& operator=(const AEDesc& iOther);
 
 	ZVal_AppleEvent(const bool& iVal);
+	ZVal_AppleEvent(const std::string& iVal);
 
 	AEDesc* ParamO();
 
@@ -110,8 +120,11 @@ class ZValList_AppleEvent
 
 public:
 	ZValList_AppleEvent();
-	ZValList_AppleEvent(const AEDescList& iOther);
+	ZValList_AppleEvent(const ZValList_AppleEvent& iOther);
 	~ZValList_AppleEvent();
+	ZValList_AppleEvent& operator=(const ZValList_AppleEvent& iOther);
+
+	ZValList_AppleEvent(const AEDescList& iOther);
 	ZValList_AppleEvent& operator=(const AEDescList& iOther);
 
 	operator operator_bool_type() const;
@@ -129,6 +142,7 @@ public:
 	void Insert(size_t iIndex, const AEDesc& iVal);
 
 	void Append(const AEDesc& iVal);
+	void Append(const ZVal_AppleEvent& iVal);
 	};
 
 // =================================================================================================
@@ -144,8 +158,11 @@ class ZValMap_AppleEvent
 
 public:
 	ZValMap_AppleEvent();
-	ZValMap_AppleEvent(const AERecord& iOther);
+	ZValMap_AppleEvent(const ZValMap_AppleEvent& iOther);
 	~ZValMap_AppleEvent();
+	ZValMap_AppleEvent& operator=(const ZValMap_AppleEvent& iOther);
+
+	ZValMap_AppleEvent(const AERecord& iOther);
 	ZValMap_AppleEvent& operator=(const AERecord& iOther);
 
 	operator operator_bool_type() const;

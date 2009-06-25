@@ -33,7 +33,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZValAccessors_Mac
 
 #define ZMACRO_ZValAccessors_Decl_Mac(T) \
-	ZMACRO_ZValAccessors_Decl_Entry(FSRef, FSRef) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, FSRef, FSRef) \
 
 
 #define ZMACRO_ZValAccessors_Def_Mac(T) \

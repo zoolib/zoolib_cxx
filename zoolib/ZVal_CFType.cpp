@@ -307,6 +307,28 @@ bool ZVal_CFType::QGet_T<string8>(string8& oVal) const
 	}
 
 template <>
+bool ZVal_CFType::QGet_T<ZValList_CFType>(ZValList_CFType& oVal) const
+	{
+	if (::CFGetTypeID(fCFTypeRef) == ::CFArrayGetTypeID())
+		{
+		oVal = (static_cast<CFArrayRef>(CFTypeRef(fCFTypeRef)));
+		return true;
+		}
+	return false;
+	}
+
+template <>
+bool ZVal_CFType::QGet_T<ZValMap_CFType>(ZValMap_CFType& oVal) const
+	{
+	if (::CFGetTypeID(fCFTypeRef) == ::CFDictionaryGetTypeID())
+		{
+		oVal = (static_cast<CFDictionaryRef>(CFTypeRef(fCFTypeRef)));
+		return true;
+		}
+	return false;
+	}
+
+template <>
 void ZVal_CFType::Set_T<int8>(const int8& iVal)
 	{ fCFTypeRef = sNumber_T(kCFNumberSInt8Type, iVal); }
 
@@ -338,7 +360,17 @@ template <>
 void ZVal_CFType::Set_T<string8>(const string8& iVal)
 	{ fCFTypeRef = sCFString(iVal); }
 
+template <>
+void ZVal_CFType::Set_T<ZValList_CFType>(const ZValList_CFType& iVal)
+	{ fCFTypeRef = iVal; }
+
+template <>
+void ZVal_CFType::Set_T<ZValMap_CFType>(const ZValMap_CFType& iVal)
+	{ fCFTypeRef = iVal; }
+
 ZMACRO_ZValAccessors_Def_Std(ZVal_CFType)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, List, ZValList_CFType)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Map, ZValMap_CFType)
 
 // =================================================================================================
 #pragma mark -
@@ -374,6 +406,20 @@ ZValList_CFType::ZValList_CFType(const ZRef<CFMutableArrayRef>& iOther)
 ZValList_CFType::ZValList_CFType(const ZRef<CFArrayRef>& iOther)
 :	fCFArrayRef(iOther)
 	{}
+
+ZValList_CFType& ZValList_CFType::operator=(const ZRef<CFMutableArrayRef>& iOther)
+	{
+	fCFMutableArrayRef = iOther;
+	fCFArrayRef.Clear();
+	return *this;
+	}
+
+ZValList_CFType& ZValList_CFType::operator=(const ZRef<CFArrayRef>& iOther)
+	{
+	fCFMutableArrayRef.Clear();
+	fCFArrayRef = iOther;
+	return *this;
+	}
 
 ZValList_CFType::operator CFArrayRef() const
 	{
@@ -511,6 +557,20 @@ ZValMap_CFType::ZValMap_CFType(const ZRef<CFDictionaryRef>& iOther)
 ZValMap_CFType::ZValMap_CFType(const ZRef<CFMutableDictionaryRef>& iOther)
 :	fCFMutableDictionaryRef(iOther)
 	{}
+
+ZValMap_CFType& ZValMap_CFType::operator=(const ZRef<CFMutableDictionaryRef>& iOther)
+	{
+	fCFMutableDictionaryRef = iOther;
+	fCFDictionaryRef.Clear();
+	return *this;
+	}
+
+ZValMap_CFType& ZValMap_CFType::operator=(const ZRef<CFDictionaryRef>& iOther)
+	{
+	fCFMutableDictionaryRef.Clear();
+	fCFDictionaryRef = iOther;
+	return *this;
+	}
 
 ZValMap_CFType::operator CFDictionaryRef() const
 	{

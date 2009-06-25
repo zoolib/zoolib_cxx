@@ -57,6 +57,8 @@ class ZVal_CFType
 
 public:
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_CFType)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, List, ZValList_CFType)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Map, ZValMap_CFType)
 
 	operator operator_bool_type() const;
 
@@ -113,6 +115,9 @@ public:
 	ZValList_CFType(const ZRef<CFMutableArrayRef>& iOther);
 	ZValList_CFType(const ZRef<CFArrayRef>& iOther);
 
+	ZValList_CFType& operator=(const ZRef<CFMutableArrayRef>& iOther);
+	ZValList_CFType& operator=(const ZRef<CFArrayRef>& iOther);
+
 	operator CFArrayRef() const;
 
 	size_t Count() const;
@@ -160,6 +165,9 @@ public:
 
 	ZValMap_CFType(const ZRef<CFMutableDictionaryRef>& iOther);
 	ZValMap_CFType(const ZRef<CFDictionaryRef>& iOther);
+
+	ZValMap_CFType& operator=(const ZRef<CFMutableDictionaryRef>& iOther);
+	ZValMap_CFType& operator=(const ZRef<CFDictionaryRef>& iOther);
 
 	operator CFDictionaryRef() const;
 

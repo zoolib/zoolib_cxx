@@ -40,14 +40,14 @@ NAMESPACE_ZOOLIB_END
 typedef void* VoidStar_t;
 
 #define ZMACRO_ZValAccessors_Decl_Std(T) \
-	ZMACRO_ZValAccessors_Decl_Entry(Int8, int8) \
-	ZMACRO_ZValAccessors_Decl_Entry(Int16, int16) \
-	ZMACRO_ZValAccessors_Decl_Entry(Int32, int32) \
-	ZMACRO_ZValAccessors_Decl_Entry(Int64, int64) \
-	ZMACRO_ZValAccessors_Decl_Entry(Bool, bool) \
-	ZMACRO_ZValAccessors_Decl_Entry(Float, float) \
-	ZMACRO_ZValAccessors_Decl_Entry(Double, double) \
-	ZMACRO_ZValAccessors_Decl_Entry(String, std::string) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, Int8, int8) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, Int16, int16) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, Int32, int32) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, Int64, int64) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, Bool, bool) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, Float, float) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, Double, double) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, String, std::string) \
 
 #define ZMACRO_ZValAccessors_Def_Std(T) \
 	ZMACRO_ZValAccessors_Def_Entry(T, Int8, int8) \

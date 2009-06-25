@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark -
 #pragma mark * ZMACRO_ZValAccessors
 
-#define ZMACRO_ZValAccessors_Decl_Entry(TYPENAME, TYPE) \
+#define ZMACRO_ZValAccessors_Decl_Entry(T, TYPENAME, TYPE) \
 	bool Get##TYPENAME(TYPE& oVal) const; \
 	bool QGet##TYPENAME(TYPE& oVal) const; \
 	TYPE DGet##TYPENAME(const TYPE& iDefault) const; \

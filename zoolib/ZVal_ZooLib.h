@@ -75,6 +75,8 @@ class ZVal_ZooLib
 public:
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_ZooLib)
 	ZMACRO_ZValAccessors_Decl_ZooLib(ZVal_ZooLib)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, List, ZValList_ZooLib)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Map, ZValMap_ZooLib)
 
 	class Ex_IllegalType;
 	
@@ -534,6 +536,10 @@ public:
 
 /** \name Setting
 */	//@{
+	void Set(const_iterator iPropIter, const ZVal_ZooLib& iVal);
+	void Set(const char* iPropName, const ZVal_ZooLib& iVal);
+	void Set(const ZTName& iPropName, const ZVal_ZooLib& iVal);
+
 	bool SetNull(const_iterator iPropIter);
 	ZValMap_ZooLib& SetNull(const char* iPropName);
 	ZValMap_ZooLib& SetNull(const ZTName& iPropName);

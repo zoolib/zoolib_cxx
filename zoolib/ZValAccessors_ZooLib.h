@@ -36,16 +36,16 @@ class ZValMap_ZooLib;
 #pragma mark * ZValAccessors_ZooLib
 
 #define ZMACRO_ZValAccessors_Decl_ZooLib(T) \
-	ZMACRO_ZValAccessors_Decl_Entry(ID, uint64) \
-	ZMACRO_ZValAccessors_Decl_Entry(Type, ZType) \
-	ZMACRO_ZValAccessors_Decl_Entry(Time, ZTime) \
-	ZMACRO_ZValAccessors_Decl_Entry(Rect, ZRectPOD) \
-	ZMACRO_ZValAccessors_Decl_Entry(Point, ZPointPOD) \
-	ZMACRO_ZValAccessors_Decl_Entry(Raw, ZMemoryBlock) \
-	ZMACRO_ZValAccessors_Decl_Entry(Vector, std::vector<T>) \
-	ZMACRO_ZValAccessors_Decl_Entry(Tuple, ZValMap_ZooLib) \
-	ZMACRO_ZValAccessors_Decl_Entry(RefCounted, ZRef<ZRefCountedWithFinalize>) \
-	ZMACRO_ZValAccessors_Decl_Entry(Pointer, VoidStar_t) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, ID, uint64) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, Type, ZType) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, Time, ZTime) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, Rect, ZRectPOD) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, Point, ZPointPOD) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, Raw, ZMemoryBlock) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, Vector, std::vector<T>) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, Tuple, ZValMap_ZooLib) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, RefCounted, ZRef<ZRefCountedWithFinalize>) \
+	ZMACRO_ZValAccessors_Decl_Entry(T, Pointer, VoidStar_t) \
 
 #define ZMACRO_ZValAccessors_Def_ZooLib(T) \
 	ZMACRO_ZValAccessors_Def_Entry(T, ID, uint64) \
