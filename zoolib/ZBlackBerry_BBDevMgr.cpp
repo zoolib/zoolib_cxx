@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 #include "zoolib/ZTime.h"
+#include "zoolib/ZUnicode.h"
 
 #include <oleauto.h>
 

@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(File_Win)
 
 #include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Win.h"
 
 #include <cctype>
