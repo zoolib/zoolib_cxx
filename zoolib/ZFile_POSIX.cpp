@@ -59,8 +59,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include "zoolib/ZMain.h" // For ZMainNS::sArgV
 #endif
 
-
+#if (!__MWERKS__)
 using std::strchr;
+#endif
 using std::string;
 using std::vector;
 
