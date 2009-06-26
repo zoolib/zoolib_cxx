@@ -64,7 +64,6 @@ public:
 	replaced with a more general composition API ASAP. */
 	ZDCPixmap(const ZDCPixmap& iSource1, const ZDCPixmap& iSource2, const ZDCPixmap& iMask);
 
-
 	/** Generally this constructor is the best to use. It takes an EFormatEfficient enum that
 	specifies the depth and type of pixmap that's required, but makes no comment on the layout
 	of the pixmap. Platform specific code does the work of interpreting what 'efficient'
