@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 
 using std::min;
+using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -35,14 +36,28 @@ namespace ZWinCOM {
 #pragma mark -
 #pragma mark * Variant
 
+Variant::operator operator_bool_type() const
+	{ return operator_bool_generator_type::translate(VT_NULL != vt); }
+
 void Variant::swap(Variant& iOther)
-	{
-	std::swap(static_cast<VARIANT&>(*this), static_cast<VARIANT&>(iOther));
-	}
+	{ std::swap(static_cast<Variant&>(*this), static_cast<Variant&>(iOther)); }
 
 Variant::Variant()
+	{ ::VariantInit(this); }
+
+Variant::Variant(const Variant& iOther)
 	{
 	::VariantInit(this);
+	::VariantCopy(this, const_cast<Variant*>(&iOther));
+	}
+
+Variant::~Variant()
+	{ ::VariantClear(this); }
+
+Variant& Variant::operator=(const Variant& iOther)
+	{
+	Variant(iOther).swap(*this);
+	return *this;
 	}
 
 Variant::Variant(const VARIANT& iOther)
@@ -51,340 +66,426 @@ Variant::Variant(const VARIANT& iOther)
 	::VariantCopy(this, const_cast<VARIANT*>(&iOther));
 	}
 
-Variant::~Variant()
-	{
-	::VariantClear(this);
-	}
-
 Variant& Variant::operator=(const VARIANT& iOther)
 	{
 	Variant(iOther).swap(*this);
 	return *this;
 	}
 
-Variant::Variant(bool iParam)
-	{
-	::VariantInit(this);
-	vt = VT_BOOL;
-	boolVal = iParam ? VARIANT_TRUE : VARIANT_FALSE;
-	}
-
-Variant::Variant(int8 iParam)
+Variant::Variant(int8 iVal)
 	{
 	::VariantInit(this);
 	vt = VT_I1;
-	cVal = iParam;
+	cVal = iVal;
 	}
 
-Variant::Variant(uint8 iParam)
+Variant::Variant(uint8 iVal)
 	{
 	::VariantInit(this);
 	vt = VT_UI1;
-	bVal = iParam;
+	bVal = iVal;
 	}
 
-Variant::Variant(int16 iParam)
+Variant::Variant(int16 iVal)
 	{
 	::VariantInit(this);
 	vt = VT_I2;
-	iVal = iParam;
+	iVal = iVal;
 	}
 
-Variant::Variant(uint16 iParam)
+Variant::Variant(uint16 iVal)
 	{
 	::VariantInit(this);
 	vt = VT_UI2;
-	uiVal = iParam;
+	uiVal = iVal;
 	}
 
-Variant::Variant(int32 iParam)
+Variant::Variant(int32 iVal)
 	{
 	::VariantInit(this);
 	vt = VT_I4;
-	lVal = iParam;
+	lVal = iVal;
 	}
 
-Variant::Variant(uint32 iParam)
+Variant::Variant(uint32 iVal)
 	{
 	::VariantInit(this);
 	vt = VT_UI4;
-	ulVal = iParam;
+	ulVal = iVal;
 	}
 
-Variant::Variant(int64 iParam)
+Variant::Variant(int64 iVal)
 	{
 	::VariantInit(this);
 	vt = VT_I8;
-	llVal = iParam;
+	llVal = iVal;
 	}
 
-Variant::Variant(uint64 iParam)
+Variant::Variant(uint64 iVal)
 	{
 	::VariantInit(this);
 	vt = VT_UI8;
-	ullVal = iParam;
+	ullVal = iVal;
 	}
 
-Variant::Variant(float iParam)
+Variant::Variant(bool iVal)
+	{
+	::VariantInit(this);
+	vt = VT_BOOL;
+	boolVal = iVal ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+Variant::Variant(float iVal)
 	{
 	::VariantInit(this);
 	vt = VT_R4;
-	fltVal = iParam;
+	fltVal = iVal;
 	}
 
-Variant::Variant(double iParam)
+Variant::Variant(double iVal)
 	{
 	::VariantInit(this);
 	vt = VT_R8;
-	dblVal = iParam;
+	dblVal = iVal;
 	}
 
-Variant::Variant(const std::string& iParam)
+Variant::Variant(const std::string& iVal)
 	{
 	::VariantInit(this);
 	vt = VT_BSTR;
-	const string16 asUTF16 = ZUnicode::sAsUTF16(iParam);
+	const string16 asUTF16 = ZUnicode::sAsUTF16(iVal);
 	bstrVal = ::SysAllocStringLen(asUTF16.c_str(), asUTF16.length());
 	}
 
-Variant::Variant(const string16& iParam)
+Variant::Variant(const string16& iVal)
 	{
 	::VariantInit(this);
 	vt = VT_BSTR;
-	bstrVal = ::SysAllocStringLen(iParam.c_str(), iParam.length());
+	bstrVal = ::SysAllocStringLen(iVal.c_str(), iVal.length());
 	}
 
-Variant::Variant(ZRef<IUnknown> iParam)
+Variant::Variant(ZRef<IUnknown> iVal)
 	{
 	::VariantInit(this);
 	vt = VT_UNKNOWN;
-	sRefCopy(&punkVal, iParam.Get());
+	sRefCopy(&punkVal, iVal.Get());
 	}
 
-Variant::Variant(ZRef<IDispatch> iParam)
+Variant::Variant(ZRef<IDispatch> iVal)
 	{
 	::VariantInit(this);
 	vt = VT_DISPATCH;
-	sRefCopy(&pdispVal, iParam.Get());
+	sRefCopy(&pdispVal, iVal.Get());
 	}
 
-bool Variant::GetBool() const
-	{ return this->DGetBool(false); }
-
-bool Variant::GetBool(bool& oValue) const
+VARIANT* Variant::ParamO()
 	{
-	if (vt != VT_BOOL)
-		return false;
-	oValue = boolVal;
-	return true;
+	::VariantClear(this);
+	return this;
 	}
 
-bool Variant::DGetBool(bool iDefault) const
+template <>
+bool Variant::QGet_T<int8>(int8& oVal) const
 	{
-	if (vt != VT_BOOL)
-		return iDefault;
-	return boolVal;
+	if (VT_I1 == vt)
+		{
+		oVal = cVal;
+		return true;
+		}
+	return false;
 	}
 
-int8 Variant::GetInt8() const
-	{ return this->DGetInt8(0); }
-
-bool Variant::GetInt8(int8& oValue) const
+template <>
+bool Variant::QGet_T<uint8>(uint8& oVal) const
 	{
-	if (vt != VT_I1)
-		return false;
-	oValue = cVal;
-	return true;
+	if (VT_UI1 == vt)
+		{
+		oVal = bVal;
+		return true;
+		}
+	return false;
 	}
 
-int8 Variant::DGetInt8(int8 iDefault) const
+template <>
+bool Variant::QGet_T<int16>(int16& oVal) const
 	{
-	if (vt != VT_I1)
-		return iDefault;
-	return cVal;
+	if (VT_I2 == vt)
+		{
+		oVal = iVal;
+		return true;
+		}
+	return false;
 	}
 
-uint8 Variant::GetUInt8() const
-	{ return this->DGetUInt8(0); }
-
-bool Variant::GetUInt8(uint8& oValue) const
+template <>
+bool Variant::QGet_T<uint16>(uint16& oVal) const
 	{
-	if (vt != VT_UI1)
-		return false;
-	oValue = bVal;
-	return true;
+	if (VT_UI2 == vt)
+		{
+		oVal = uiVal;
+		return true;
+		}
+	return false;
 	}
 
-uint8 Variant::DGetUInt8(uint8 iDefault) const
+template <>
+bool Variant::QGet_T<int32>(int32& oVal) const
 	{
-	if (vt != VT_UI1)
-		return iDefault;
-	return bVal;
+	if (VT_I4 == vt)
+		{
+		oVal = lVal;
+		return true;
+		}
+	return false;
 	}
 
-int16 Variant::GetInt16() const
-	{ return this->DGetInt16(0); }
-
-bool Variant::GetInt16(int16& oValue) const
+template <>
+bool Variant::QGet_T<uint32>(uint32& oVal) const
 	{
-	if (vt != VT_I2)
-		return false;
-	oValue = iVal;
-	return true;
+	if (VT_UI4 == vt)
+		{
+		oVal = ulVal;
+		return true;
+		}
+	return false;
 	}
 
-int16 Variant::DGetInt16(int16 iDefault) const
+template <>
+bool Variant::QGet_T<int64>(int64& oVal) const
 	{
-	if (vt != VT_I2)
-		return iDefault;
-	return iVal;
+	if (VT_I8 == vt)
+		{
+		oVal = llVal;
+		return true;
+		}
+	return false;
 	}
 
-uint16 Variant::GetUInt16() const
-	{ return this->DGetUInt16(0); }
-
-bool Variant::GetUInt16(uint16& oValue) const
+template <>
+bool Variant::QGet_T<uint64>(uint64& oVal) const
 	{
-	if (vt != VT_UI2)
-		return false;
-	oValue = uiVal;
-	return true;
+	if (VT_UI8 == vt)
+		{
+		oVal = ullVal;
+		return true;
+		}
+	return false;
 	}
 
-uint16 Variant::DGetUInt16(uint16 iDefault) const
+template <>
+bool Variant::QGet_T<bool>(bool& oVal) const
 	{
-	if (vt != VT_UI2)
-		return iDefault;
-	return iVal;
+	if (VT_BOOL == vt)
+		{
+		oVal = boolVal;
+		return true;
+		}
+	return false;
 	}
 
-int32 Variant::GetInt32() const
-	{ return this->DGetInt32(0); }
-
-bool Variant::GetInt32(int32& oValue) const
+template <>
+bool Variant::QGet_T<float>(float& oVal) const
 	{
-	if (vt != VT_I4)
-		return false;
-	oValue = lVal;
-	return true;
+	if (VT_R4 == vt)
+		{
+		oVal = fltVal;
+		return true;
+		}
+	return false;
 	}
 
-int32 Variant::DGetInt32(int32 iDefault) const
+template <>
+bool Variant::QGet_T<double>(double& oVal) const
 	{
-	if (vt != VT_I4)
-		return iDefault;
-	return lVal;
+	if (VT_R8 == vt)
+		{
+		oVal = dblVal;
+		return true;
+		}
+	return false;
 	}
 
-uint32 Variant::GetUInt32() const
-	{ return this->DGetUInt32(0); }
-
-bool Variant::GetUInt32(uint32& oValue) const
+template <>
+bool Variant::QGet_T<string>(string& oVal) const
 	{
-	if (vt != VT_UI4)
-		return false;
-	oValue = ulVal;
-	return true;
+	if (VT_BSTR == vt)
+		{
+		oVal = ZUnicode::sAsUTF8(bstrVal, ::SysStringLen(bstrVal));
+		return true;
+		}
+	return false;
 	}
 
-uint32 Variant::DGetUInt32(uint32 iDefault) const
+template <>
+bool Variant::QGet_T<string16>(string16& oVal) const
 	{
-	if (vt != VT_UI4)
-		return iDefault;
-	return ulVal;
+	if (VT_BSTR == vt)
+		{
+		oVal = string16(bstrVal, ::SysStringLen(bstrVal));
+		return true;
+		}
+	return false;
 	}
 
-int64 Variant::GetInt64() const
-	{ return this->DGetInt64(0); }
-
-bool Variant::GetInt64(int64& oValue) const
+template <>
+bool Variant::QGet_T<ZRef<IUnknown> >(ZRef<IUnknown>& oVal) const
 	{
-	if (vt != VT_I8)
-		return false;
-	oValue = llVal;
-	return true;
+	if (VT_UNKNOWN == vt)
+		{
+		oVal = punkVal;
+		return true;
+		}
+	return false;
 	}
 
-int64 Variant::DGetInt64(int64 iDefault) const
+template <>
+bool Variant::QGet_T<ZRef<IDispatch> >(ZRef<IDispatch>& oVal) const
 	{
-	if (vt != VT_I8)
-		return iDefault;
-	return llVal;
+	if (VT_DISPATCH == vt)
+		{
+		oVal = pdispVal;
+		return true;
+		}
+	return false;
 	}
 
-uint64 Variant::GetUInt64() const
-	{ return this->DGetUInt64(0); }
-
-bool Variant::GetUInt64(uint64& oValue) const
+template <>
+void Variant::Set_T<int8>(const int8& iVal)
 	{
-	if (vt != VT_UI8)
-		return false;
-	oValue = ullVal;
-	return true;
+	::VariantClear(this);
+	vt = VT_I1;
+	cVal = iVal;
 	}
 
-uint64 Variant::DGetUInt64(uint64 iDefault) const
+template <>
+void Variant::Set_T<uint8>(const uint8& iVal)
 	{
-	if (vt != VT_UI8)
-		return iDefault;
-	return ullVal;
+	::VariantClear(this);
+	vt = VT_UI1;
+	bVal = iVal;
 	}
 
-float Variant::GetFloat() const
-	{ return this->DGetFloat(0); }
-	
-bool Variant::GetFloat(float& oValue) const
+template <>
+void Variant::Set_T<int16>(const int16& iVal)
 	{
-	if (vt != VT_R4)
-		return false;
-	oValue = fltVal;
-	return true;
+	::VariantClear(this);
+	vt = VT_I2;
+	this->iVal = iVal;
 	}
 
-float Variant::DGetFloat(float iDefault) const
+template <>
+void Variant::Set_T<uint16>(const uint16& iVal)
 	{
-	if (vt != VT_R4)
-		return iDefault;
-	return fltVal;
+	::VariantClear(this);
+	vt = VT_UI2;
+	uiVal = iVal;
 	}
 
-double Variant::GetDouble() const
-	{ return this->DGetDouble(0); }
-	
-bool Variant::GetDouble(double& oValue) const
+template <>
+void Variant::Set_T<int32>(const int32& iVal)
 	{
-	if (vt != VT_R8)
-		return false;
-	oValue = dblVal;
-	return true;
+	::VariantClear(this);
+	vt = VT_I4;
+	lVal = iVal;
 	}
 
-double Variant::DGetDouble(double iDefault) const
+template <>
+void Variant::Set_T<uint32>(const uint32& iVal)
 	{
-	if (vt != VT_R8)
-		return iDefault;
-	return dblVal;
+	::VariantClear(this);
+	vt = VT_UI4;
+	ulVal = iVal;
 	}
 
-string16 Variant::GetString16() const
-	{ return this->DGetString16(string16()); }
-
-bool Variant::GetString16(string16& oValue) const
+template <>
+void Variant::Set_T<int64>(const int64& iVal)
 	{
-	if (vt != VT_BSTR)
-		return false;
-	oValue = string16();
-	ZUnimplemented();
-	return true;
+	::VariantClear(this);
+	vt = VT_I8;
+	llVal = iVal;
 	}
 
-string16 Variant::DGetString16(const string16& iDefault) const
+template <>
+void Variant::Set_T<uint64>(const uint64& iVal)
 	{
-	if (vt != VT_BSTR)
-		return iDefault;
-	ZUnimplemented();
-	return string16();
+	::VariantClear(this);
+	vt = VT_UI8;
+	ullVal = iVal;
 	}
+
+template <>
+void Variant::Set_T<bool>(const bool& iVal)
+	{
+	::VariantClear(this);
+	vt = VT_BOOL;
+	boolVal = iVal ? VARIANT_TRUE : VARIANT_FALSE;
+	}
+
+template <>
+void Variant::Set_T<float>(const float& iVal)
+	{
+	::VariantClear(this);
+	vt = VT_R4;
+	fltVal = iVal;
+	}
+
+template <>
+void Variant::Set_T<double>(const double& iVal)
+	{
+	::VariantClear(this);
+	vt = VT_R8;
+	dblVal = iVal;
+	}
+
+template <>
+void Variant::Set_T<string>(const string& iVal)
+	{
+	::VariantClear(this);
+	vt = VT_BSTR;
+	const string16 asUTF16 = ZUnicode::sAsUTF16(iVal);
+	bstrVal = ::SysAllocStringLen(asUTF16.c_str(), asUTF16.length());
+	}
+
+template <>
+void Variant::Set_T<string16>(const string16& iVal)
+	{
+	::VariantClear(this);
+	vt = VT_BSTR;
+	bstrVal = ::SysAllocStringLen(iVal.c_str(), iVal.length());
+	}
+
+template <>
+void Variant::Set_T<ZRef<IUnknown> >(const ZRef<IUnknown>& iVal)
+	{
+	::VariantClear(this);
+	vt = VT_UNKNOWN;
+	sRefCopy(&punkVal, iVal.Get());
+	}
+
+template <>
+void Variant::Set_T<ZRef<IDispatch> >(const ZRef<IDispatch>& iVal)
+	{
+	::VariantClear(this);
+	vt = VT_DISPATCH;
+	sRefCopy(&pdispVal, iVal.Get());
+	}
+
+ZMACRO_ZValAccessors_Def_Entry(Variant, Int8, int8)
+ZMACRO_ZValAccessors_Def_Entry(Variant, UInt, uint8)
+ZMACRO_ZValAccessors_Def_Entry(Variant, Int16, int16)
+ZMACRO_ZValAccessors_Def_Entry(Variant, UInt16, uint16)
+ZMACRO_ZValAccessors_Def_Entry(Variant, Int32, int32)
+ZMACRO_ZValAccessors_Def_Entry(Variant, UInt32, uint32)
+ZMACRO_ZValAccessors_Def_Entry(Variant, Int64, int64)
+ZMACRO_ZValAccessors_Def_Entry(Variant, UInt64, uint64)
+ZMACRO_ZValAccessors_Def_Entry(Variant, Bool, bool)
+ZMACRO_ZValAccessors_Def_Entry(Variant, Float, float)
+ZMACRO_ZValAccessors_Def_Entry(Variant, Double, double)
+ZMACRO_ZValAccessors_Def_Entry(Variant, String, string8)
+ZMACRO_ZValAccessors_Def_Entry(Variant, String8, string8)
+ZMACRO_ZValAccessors_Def_Entry(Variant, String16, string16)
+ZMACRO_ZValAccessors_Def_Entry(Variant, Unknown, ZRef<IUnknown>)
+ZMACRO_ZValAccessors_Def_Entry(Variant, Dispatch, ZRef<IDispatch>)
 
 // =================================================================================================
 #pragma mark -

@@ -30,6 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZRef.h"
 #include "zoolib/ZUnicodeString.h"
+#include "zoolib/ZVal_T.h"
+#include "zoolib/ZValAccessors.h"
 #include "zoolib/ZWinCOM_Macros.h"
 #include "zoolib/ZWinHeader.h"
 
@@ -72,79 +74,66 @@ static void** sCOMVoidPtr(ZRef<T>& iRef)
 
 namespace ZWinCOM {
 
-class Variant : public VARIANT
+class Variant
+:	public VARIANT
+,	public ZValR_T<Variant>
 	{
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Variant,
+		operator_bool_generator_type, operator_bool_type);
+
 public:
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int8, int8)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt, uint8)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int16, int16)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt16, uint16)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int32, int32)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt32, uint32)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int64, int64)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt64, uint64)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Bool, bool)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Float, float)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Double, double)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, String, string8)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, String8, string8)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, String16, string16)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Unknown, ZRef<IUnknown>)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Dispatch, ZRef<IDispatch>)
+
+	operator operator_bool_type() const;
+
 	void swap(Variant& iOther);
 
 	Variant();
-	Variant(const VARIANT& iOther);
+	Variant(const Variant& iOther);
 	~Variant();
+	Variant& operator=(const Variant& iOther);
+
+	Variant(const VARIANT& iOther);
 	Variant& operator=(const VARIANT& iOther);
 
-	Variant(bool iParam);
-	Variant(int8 iParam);
-	Variant(uint8 iParam);
-	Variant(int16 iParam);
-	Variant(uint16 iParam);
-	Variant(int32 iParam);
-	Variant(uint32 iParam);
-	Variant(int64 iParam);
-	Variant(uint64 iParam);
-	Variant(float iParam);
-	Variant(double iParam);
-	Variant(const std::string& iParam);
-	Variant(const string16& iParam);
-	Variant(ZRef<IUnknown> iParam);
-	Variant(ZRef<IDispatch> iParam);
+	Variant(int8 iVal);
+	Variant(uint8 iVal);
+	Variant(int16 iVal);
+	Variant(uint16 iVal);
+	Variant(int32 iVal);
+	Variant(uint32 iVal);
+	Variant(int64 iVal);
+	Variant(uint64 iVal);
+	Variant(bool iVal);
+	Variant(float iVal);
+	Variant(double iVal);
+	Variant(const std::string& iVal);
+	Variant(const string16& iVal);
+	Variant(ZRef<IUnknown> iVal);
+	Variant(ZRef<IDispatch> iVal);
 
-	bool GetBool() const;
-	bool GetBool(bool& oValue) const;
-	bool DGetBool(bool iDefault) const;
+	VARIANT* ParamO();
 
-	int8 GetInt8() const;
-	bool GetInt8(int8& oValue) const;
-	int8 DGetInt8(int8 iDefault) const;
+	template <class S>
+	bool QGet_T(S& oVal) const;
 
-	uint8 GetUInt8() const;
-	bool GetUInt8(uint8& oValue) const;
-	uint8 DGetUInt8(uint8 iDefault) const;
-
-	int16 GetInt16() const;
-	bool GetInt16(int16& oValue) const;
-	int16 DGetInt16(int16 iDefault) const;
-
-	uint16 GetUInt16() const;
-	bool GetUInt16(uint16& oValue) const;
-	uint16 DGetUInt16(uint16 iDefault) const;
-
-	int32 GetInt32() const;
-	bool GetInt32(int32& oValue) const;
-	int32 DGetInt32(int32 iDefault) const;
-
-	uint32 GetUInt32() const;
-	bool GetUInt32(uint32& oValue) const;
-	uint32 DGetUInt32(uint32 iDefault) const;
-
-	int64 GetInt64() const;
-	bool GetInt64(int64& oValue) const;
-	int64 DGetInt64(int64 iDefault) const;
-
-	uint64 GetUInt64() const;
-	bool GetUInt64(uint64& oValue) const;
-	uint64 DGetUInt64(uint64 iDefault) const;
-
-	float GetFloat() const;
-	bool GetFloat(float& oValue) const;
-	float DGetFloat(float iDefault) const;
-
-	double GetDouble() const;
-	bool GetDouble(double& oValue) const;
-	double DGetDouble(double iDefault) const;
-
-	string16 GetString16() const;
-	bool GetString16(string16& oValue) const;
-	string16 DGetString16(const string16& iDefault) const;
+	template <class S>
+	void Set_T(const S& iVal);
 	};
 
 } // namespace ZWinCOM
