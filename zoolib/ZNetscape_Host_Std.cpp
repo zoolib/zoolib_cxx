@@ -27,13 +27,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNet_Internet.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZTuple.h"
+#include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZWaiter.h"
 
 #include <stdlib.h> // For malloc/free
 
 #include <vector>
 
-using std::list;
 using std::set;
 using std::string;
 using std::vector;

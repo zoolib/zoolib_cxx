@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZNetscape_Macros.h"
+#include "zoolib/ZUtil_STL.h"
 
 #include <string>
 
@@ -62,13 +63,258 @@ NPP NPPSetter::sCurrent()
 #pragma mark -
 #pragma mark * NPVariantG
 
-template <>
-void spRelease_T(NPVariantG& iNPVariantG)
-	{ GuestMeister::sGet()->Host_ReleaseVariantValue(&iNPVariantG); }
+NPVariantG::operator operator_bool_type() const
+	{ return operator_bool_generator_type::translate(type != NPVariantType_Void); }
+
+NPVariantG::NPVariantG()
+	{ type = NPVariantType_Void; }
+
+NPVariantG::NPVariantG(const NPVariantG& iOther)
+	{
+	ZAssert(this != &iOther);
+	this->pCopyFrom(iOther);
+	}
+
+NPVariantG::~NPVariantG()
+	{ this->pRelease(); }
+
+NPVariantG& NPVariantG::operator=(const NPVariantG& iOther)
+	{
+	if (this != &iOther)
+		{
+		this->pRelease();
+		this->pCopyFrom(iOther);
+		}
+	return *this;
+	}
+
+NPVariantG::NPVariantG(const NPVariant& iOther)
+	{
+	ZAssert(this != &iOther);
+	this->pCopyFrom(iOther);
+	}
+
+NPVariantG& NPVariantG::operator=(const NPVariant& iOther)
+	{
+	if (this != &iOther)
+		{
+		this->pRelease();
+		this->pCopyFrom(iOther);
+		}
+	return *this;
+	}
+
+NPVariantG::NPVariantG(bool iValue)
+	{
+	type = NPVariantType_Bool;
+	value.boolValue = iValue;
+	}
+
+NPVariantG::NPVariantG(int32 iValue)
+	{
+	type = NPVariantType_Int32;
+	value.intValue = iValue;
+	}
+
+NPVariantG::NPVariantG(double iValue)
+	{
+	type = NPVariantType_Double;
+	value.doubleValue = iValue;
+	}
+
+NPVariantG::NPVariantG(const std::string& iValue)
+	{
+	this->pSetString(iValue);
+	type = NPVariantType_String;
+	}
+
+NPVariantG::NPVariantG(const char* iValue)
+	{
+	this->pSetString(iValue);
+	type = NPVariantType_String;
+	}
+
+NPVariantG::NPVariantG(NPObjectG* iValue)
+	{
+	type = NPVariantType_Void;
+	this->SetObject(iValue);
+	}
+
+NPVariantG::NPVariantG(const ZRef<NPObjectG>& iValue)
+	{
+	type = NPVariantType_Void;
+	this->SetObject(iValue.GetObject());
+	}
+
+NPVariantG::operator ZRef<NPObjectG>() const
+	{ return this->GetObject(); }
+
+void NPVariantG::SetVoid()
+	{
+	this->pRelease();
+	type = NPVariantType_Void;
+	}
+
+void NPVariantG::SetNull()
+	{
+	this->pRelease();
+	type = NPVariantType_Null;
+	}
 
 template <>
-void* spMalloc_T(NPVariantG&, size_t iLength)
+bool NPVariantG::QGet_T<bool>(bool& oVal) const
+	{
+	if (type != NPVariantType_Bool)
+		return false;
+	oVal = value.boolValue;
+	return true;
+	}
+
+template <>
+bool NPVariantG::QGet_T<int32>(int32& oVal) const
+	{
+	if (type != NPVariantType_Int32)
+		return false;
+	oVal = value.intValue;
+	return true;
+	}
+
+template <>
+bool NPVariantG::QGet_T<double>(double& oVal) const
+	{
+	if (type != NPVariantType_Double)
+		return false;
+	oVal = value.doubleValue;
+	return true;
+	}
+
+template <>
+bool NPVariantG::QGet_T<string>(string& oVal) const
+	{
+	if (type != NPVariantType_String)
+		return false;
+	oVal = std::string(
+		sNPStringCharsConst(value.stringValue),
+		sNPStringLengthConst(value.stringValue));
+	return true;
+	}
+
+template <>
+bool NPVariantG::QGet_T<ZRef<NPObjectG> >(ZRef<NPObjectG>& oVal) const
+	{
+	if (type != NPVariantType_Object)
+		return false;
+	oVal = static_cast<NPObjectG*>(const_cast<NPObject*>(value.objectValue));
+	return true;
+	}
+
+template <>
+void NPVariantG::Set_T<bool>(const bool& iValue)
+	{
+	this->pRelease();
+	value.boolValue = iValue;
+	type = NPVariantType_Bool;
+	}
+
+template <>
+void NPVariantG::Set_T<int32>(const int32& iValue)
+	{
+	this->pRelease();
+	value.intValue = iValue;
+	type = NPVariantType_Int32;
+	}
+
+template <>
+void NPVariantG::Set_T<double>(const double& iValue)
+	{
+	this->pRelease();
+	value.doubleValue = iValue;
+	type = NPVariantType_Double;
+	}
+
+template <>
+void NPVariantG::Set_T<string>(const string& iValue)
+	{
+	this->pRelease();
+	this->pSetString(iValue);
+	type = NPVariantType_String;
+	}
+
+template <>
+void NPVariantG::Set_T<ZRef<NPObjectG> >(const ZRef<NPObjectG>& iValue)
+	{
+	iValue->Retain();
+	this->pRelease();
+	value.objectValue = iValue.GetObject();
+	type = NPVariantType_Object;	
+	}
+
+static void* spMallocG(size_t iLength)
 	{ return GuestMeister::sGet()->Host_MemAlloc(iLength); }
+
+void NPVariantG::pSetString(const char* iChars, size_t iLength)
+	{
+	sNPStringLength(value.stringValue) = iLength;
+	char* p = static_cast<char*>(spMallocG(iLength + 1));
+	strncpy(p, iChars, iLength);
+	sNPStringChars(value.stringValue) = p;
+	}
+
+void NPVariantG::pSetString(const std::string& iString)
+	{
+	if (size_t theLength = iString.length())
+		this->pSetString(iString.data(), theLength);
+	else
+		this->pSetString(nullptr, 0);
+	}
+
+void NPVariantG::pCopyFrom(const NPVariant& iOther)
+	{
+	switch (iOther.type)
+		{
+		case NPVariantType_Void:
+		case NPVariantType_Null:
+			break;
+		case NPVariantType_Bool:
+			{
+			value.boolValue = iOther.value.boolValue;
+			break;
+			}
+		case NPVariantType_Int32:
+			{
+			value.intValue = iOther.value.intValue;
+			break;
+			}
+		case NPVariantType_Double:
+			{
+			value.doubleValue = iOther.value.doubleValue;
+			break;
+			}
+		case NPVariantType_String:
+			{
+			this->pSetString(
+				sNPStringCharsConst(iOther.value.stringValue),
+				sNPStringLengthConst(iOther.value.stringValue));
+			break;
+			}
+		case NPVariantType_Object:
+			{
+			value.objectValue = iOther.value.objectValue;
+			static_cast<NPObjectG*>(value.objectValue)->Retain();
+			break;
+			}
+		}
+	type = iOther.type;		
+	}
+
+void NPVariantG::pRelease()
+	{ GuestMeister::sGet()->Host_ReleaseVariantValue(this); }
+
+ZMACRO_ZValAccessors_Def_Entry(NPVariantG, Bool, bool)
+ZMACRO_ZValAccessors_Def_Entry(NPVariantG, Int32, int32)
+ZMACRO_ZValAccessors_Def_Entry(NPVariantG, Double, double)
+ZMACRO_ZValAccessors_Def_Entry(NPVariantG, String, string)
+ZMACRO_ZValAccessors_Def_Entry(NPVariantG, Object, ZRef<NPObjectG>)
 
 // =================================================================================================
 #pragma mark -

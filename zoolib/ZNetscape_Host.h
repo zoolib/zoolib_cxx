@@ -24,11 +24,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape.h"
 
-#include "zoolib/ZGeom.h"
-#include "zoolib/ZMemoryBlock.h"
-#include "zoolib/ZStreamer.h"
+#include "zoolib/ZDebug.h" // For ZAssert
+#include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZValAccessors.h"
+#include "zoolib/ZVal_T.h"
 
-#include <list>
 #include <string>
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -41,7 +41,55 @@ class NPObjectH;
 #pragma mark -
 #pragma mark * NPVariantH
 
-typedef NPVariant_T<NPObjectH> NPVariantH;
+class NPVariantH
+:	public NPVariantBase
+,	public ZValR_T<NPVariantH>
+	{
+public:
+    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(NPVariantH,
+    	operator_bool_generator_type, operator_bool_type);
+
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Bool, bool)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Int32, int32)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Double, double)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, String, std::string)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Object, ZRef<NPObjectH>)
+
+	operator operator_bool_type() const;
+
+	NPVariantH();
+	NPVariantH(const NPVariantH& iOther);
+	~NPVariantH();
+	NPVariantH& operator=(const NPVariantH& iOther);
+
+	NPVariantH(const NPVariant& iOther);
+	NPVariantH& operator=(const NPVariant& iOther);
+
+	NPVariantH(bool iValue);
+	NPVariantH(int32 iValue);
+	NPVariantH(double iValue);
+	NPVariantH(const std::string& iValue);
+	NPVariantH(const char* iValue);
+	NPVariantH(NPObjectH* iValue);
+	NPVariantH(const ZRef<NPObjectH>& iValue);
+
+	operator ZRef<NPObjectH>() const;
+
+	void SetVoid();
+	void SetNull();
+
+	template <class S>
+	bool QGet_T(S& oVal) const;
+
+	template <class S>
+	void Set_T(const S& iVal);
+
+private:
+	void pSetString(const char* iChars, size_t iLength);
+	void pSetString(const std::string& iString);
+	void pCopyFrom(const NPVariant& iOther);
+	void pRelease();
+	};
 
 // =================================================================================================
 #pragma mark -

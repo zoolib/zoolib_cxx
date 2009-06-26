@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNetscape_Host_Mac__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZGeometry.h"
 #include "zoolib/ZNetscape_Host_Std.h"
 
 NAMESPACE_ZOOLIB_BEGIN

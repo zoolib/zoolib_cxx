@@ -23,6 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZNetscape.h"
+#include "zoolib/ZRef.h"
+#include "zoolib/ZValAccessors.h"
+#include "zoolib/ZVal_T.h"
 
 #include <string>
 #include <vector>
@@ -53,7 +56,55 @@ public:
 #pragma mark -
 #pragma mark * NPVariantG
 
-typedef NPVariant_T<NPObjectG> NPVariantG;
+class NPVariantG
+:	public NPVariantBase
+,	public ZValR_T<NPVariantG>
+	{
+public:
+    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(NPVariantG,
+    	operator_bool_generator_type, operator_bool_type);
+
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Bool, bool)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Int32, int32)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Double, double)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, String, std::string)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Object, ZRef<NPObjectG>)
+
+	operator operator_bool_type() const;
+
+	NPVariantG();
+	NPVariantG(const NPVariantG& iOther);
+	~NPVariantG();
+	NPVariantG& operator=(const NPVariantG& iOther);
+
+	NPVariantG(const NPVariant& iOther);
+	NPVariantG& operator=(const NPVariant& iOther);
+
+	NPVariantG(bool iValue);
+	NPVariantG(int32 iValue);
+	NPVariantG(double iValue);
+	NPVariantG(const std::string& iValue);
+	NPVariantG(const char* iValue);
+	NPVariantG(NPObjectG* iValue);
+	NPVariantG(const ZRef<NPObjectG>& iValue);
+
+	operator ZRef<NPObjectG>() const;
+
+	void SetVoid();
+	void SetNull();
+
+	template <class S>
+	bool QGet_T(S& oVal) const;
+
+	template <class S>
+	void Set_T(const S& iVal);
+
+private:
+	void pSetString(const char* iChars, size_t iLength);
+	void pSetString(const std::string& iString);
+	void pCopyFrom(const NPVariant& iOther);
+	void pRelease();
+	};
 
 // =================================================================================================
 #pragma mark -
