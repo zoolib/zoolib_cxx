@@ -65,14 +65,6 @@ public:
 	void Add_T(const ATSUAttributeTag& iTag, const T& iValue)
 		{ this->Add(iTag, sizeof(iValue), &iValue); }
 
-//	template <typename T>
-//	void Add_T(const ATSUAttributeTag& iTag, T* iValue)
-//		{ this->Add(iTag, sizeof (T*), iValue); }
-
-//	template <typename T>
-//	void Add_T(const ATSUAttributeTag& iTag, const T* iValue)
-//		{ this->Add(iTag, sizeof (const T*), iValue); }
-
 	bool Apply(ATSUTextLayout iLayout);
 	bool Apply(ATSUStyle iStyle);
 
