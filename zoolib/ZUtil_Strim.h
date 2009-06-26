@@ -69,7 +69,6 @@ bool sTryRead_Double(const ZStrimU& iStrimU, double& oDouble);
 bool sTryRead_SignedDouble(const ZStrimU& iStrimU, double& oDouble);
 
 
-
 void sCopy_WS(const ZStrimU& iStrimU, const ZStrimW& iDest);
 void sSkip_WS(const ZStrimU& iStrimU);
 
@@ -104,7 +103,6 @@ bool sTryRead_EscapedString(const ZStrimU& iStrimU, UTF32 iDelimiter, string8& o
 bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& iDest);
 bool sTryRead_Identifier(const ZStrimU& iStrimU, string8& oString);
 // Other methods for other kinds of identifiers? -- Java, C++, Pascal, AlphaNum etc
-
 
 } // namespace ZUtil_Strim
 
