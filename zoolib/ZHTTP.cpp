@@ -736,7 +736,7 @@ string ZHTTP::sEncodeTrail(const ZTrail& iTrail)
 string ZHTTP::sGetString0(const ZTValue& iTV)
 	{
 	string result;
-	if (iTV.GetString(result))
+	if (iTV.QGetString(result))
 		return result;
 
 	const vector<ZTValue>& asVector = iTV.GetVector();
