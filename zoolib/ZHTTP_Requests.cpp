@@ -372,7 +372,7 @@ static bool sReadPOST(const ZStreamR& iStreamR, const ZTuple& iHeader, ZTValue& 
 		&& content_type.GetString("subtype") == "x-www-url-encoded")
 		{
 		// It's application/x-www-url-encoded. So we're going to unpack it into a tuple.
-		ZTuple& theTuple = oTV.SetMutableTuple();
+		// ZTuple& theTuple = oTV.SetMutableTuple();
 		// yadda yadda.
 		//#warning "not done yet"
 		return true;
