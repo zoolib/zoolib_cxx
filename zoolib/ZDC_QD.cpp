@@ -2219,7 +2219,7 @@ static bool sCheckDesc(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect&
 				}
 			}
 		}
-	else if (PixelDescRep_Indexed* thePixelDescRep_Indexed = ZRefDynamicCast<PixelDescRep_Indexed>(inPixelDesc.GetRep()))
+	else if (ZRefDynamicCast<PixelDescRep_Indexed>(inPixelDesc.GetRep()))
 		{
 		switch (inRasterDesc.fPixvalDesc.fDepth)
 			{
@@ -2309,7 +2309,7 @@ static bool sSetupPixMap(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZDCP
 				}
 			}
 		}
-	else if (PixelDescRep_Indexed* thePixelDescRep_Indexed = ZRefDynamicCast<PixelDescRep_Indexed>(thePixelDescRep))
+	else if (ZRefDynamicCast<PixelDescRep_Indexed>(thePixelDescRep))
 		{
 		switch (inRasterDesc.fPixvalDesc.fDepth)
 			{

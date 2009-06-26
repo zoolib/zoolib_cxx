@@ -412,7 +412,7 @@ void ZUtil_Mac_HL::sAddPixmapToIconFamily(const ZDCPixmap& inPixmap, IconKind in
 	if (needsInvert)
 		sInvert(destAddress, destRowBytes * theCroppedWidthHeight);
 
-	OSErr err = ::SetIconFamilyData(inIconFamilyHandle, theResType, theDataHandle);
+	::SetIconFamilyData(inIconFamilyHandle, theResType, theDataHandle);
 	theDataHandleLocker.Orphan();
 	::DisposeHandle(theDataHandle);
 	}
