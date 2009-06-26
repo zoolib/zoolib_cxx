@@ -59,5 +59,4 @@ typedef void* VoidStar_t;
 	ZMACRO_ZValAccessors_Def_Entry(T, Double, double) \
 	ZMACRO_ZValAccessors_Def_Entry(T, String, std::string) \
 
-
 #endif // __ZValAccessors_Std__

@@ -153,8 +153,8 @@ class ZValMap_CFType
 		operator_bool_generator_type, operator_bool_type);
 
 public:
-	ZMACRO_ZValMapAccessors_Using(ZValMap_CFType, const string8&, ZVal_CFType);
-	ZMACRO_ZValMapAccessors_Using(ZValMap_CFType, CFStringRef, ZVal_CFType);
+	ZMACRO_ZValMapAccessors_Using(ZValMap_CFType, const string8&, ZVal_CFType)
+	ZMACRO_ZValMapAccessors_Using(ZValMap_CFType, CFStringRef, ZVal_CFType)
 
 	operator operator_bool_type() const;
 

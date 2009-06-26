@@ -35,7 +35,6 @@ NAMESPACE_ZOOLIB_BEGIN
 #define ZMACRO_ZValAccessors_Decl_Mac(T) \
 	ZMACRO_ZValAccessors_Decl_Entry(T, FSRef, FSRef) \
 
-
 #define ZMACRO_ZValAccessors_Def_Mac(T) \
 	ZMACRO_ZValAccessors_Def_Entry(T, FSRef, FSRef) \
 

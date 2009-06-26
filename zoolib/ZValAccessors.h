@@ -27,15 +27,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark * ZMACRO_ZValAccessors
 
 #define ZMACRO_ZValAccessors_Decl_Entry(T, TYPENAME, TYPE) \
-	bool Get##TYPENAME(TYPE& oVal) const; \
 	bool QGet##TYPENAME(TYPE& oVal) const; \
 	TYPE DGet##TYPENAME(const TYPE& iDefault) const; \
 	TYPE Get##TYPENAME() const; \
 	void Set##TYPENAME(const TYPE& iVal); \
 
 #define ZMACRO_ZValAccessors_Def_Entry(T, TYPENAME, TYPE) \
-	bool T::Get##TYPENAME(TYPE& oVal) const \
-		{ return this->QGet_T<>(oVal); } \
 	bool T::QGet##TYPENAME(TYPE& oVal) const \
 		{ return this->QGet_T<>(oVal); } \
 	TYPE T::DGet##TYPENAME(const TYPE& iDefault) const \

@@ -31,6 +31,8 @@ using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 
+// TODO look at TN2046 "AEStream and friends"
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Helper functions
@@ -56,6 +58,23 @@ static AEKeyword sAsAEKeyword(const string& iName)
 			}
 		}
 	return result;
+	}
+
+static string sAsString(AEKeyword iKeyword)
+	{
+	if (ZCONFIG(Endian, Big))
+		{
+		return string((char*)&iKeyword, 4);
+		}
+	else
+		{
+		string result;
+		result += char((iKeyword >> 24) & 0xFF);
+		result += char((iKeyword >> 16) & 0xFF);
+		result += char((iKeyword >> 8) & 0xFF);
+		result += char((iKeyword) & 0xFF);
+		return result;
+		}
 	}
 
 // =================================================================================================
@@ -112,6 +131,7 @@ AEDesc* ZVal_AppleEvent::ParamO()
 template <>
 bool ZVal_AppleEvent::QGet_T<bool>(bool& oVal) const
 	{
+	// What about typeBoolean?
 	if (typeTrue == descriptorType)
 		{
 		oVal = true;
@@ -157,7 +177,7 @@ bool ZVal_AppleEvent::QGet_T<ZValList_AppleEvent>(ZValList_AppleEvent& oVal) con
 template <>
 bool ZVal_AppleEvent::QGet_T<ZValMap_AppleEvent>(ZValMap_AppleEvent& oVal) const
 	{
-	if (typeAERecord == descriptorType)
+	if (typeAERecord == descriptorType || typeAppleEvent == descriptorType)
 		{
 		oVal = *static_cast<const AERecord*>(this);
 		return true;
@@ -253,8 +273,10 @@ ZValList_AppleEvent& ZValList_AppleEvent::operator=(const ZValList_AppleEvent& i
 
 ZValList_AppleEvent::ZValList_AppleEvent(const AEDescList& iOther)
 	{
-	ZAssert(typeAEList == iOther.descriptorType);
-	::AEDuplicateDesc(&iOther, this);
+	if (typeAEList == iOther.descriptorType)
+		::AEDuplicateDesc(&iOther, this);
+	else
+		::AECreateList(nullptr, 0, false, this);
 	}
 
 ZValList_AppleEvent& ZValList_AppleEvent::operator=(const AEDescList& iOther)
@@ -262,7 +284,7 @@ ZValList_AppleEvent& ZValList_AppleEvent::operator=(const AEDescList& iOther)
 	if (this != &iOther)
 		{
 		::AEDisposeDesc(this);
-		ZAssert(typeAERecord == iOther.descriptorType);
+		ZAssert(typeAEList == iOther.descriptorType);
 		::AEDuplicateDesc(&iOther, this);
 		}
 	return *this;	
@@ -321,6 +343,46 @@ void ZValList_AppleEvent::Append(const ZVal_AppleEvent& iVal)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZValIterator
+
+ZValIterator::ZValIterator()
+:	fVal(0)
+	{}
+
+ZValIterator::ZValIterator(const ZValIterator& iOther)
+:	fVal(iOther.fVal)
+	{}
+
+ZValIterator::~ZValIterator()
+	{}
+
+ZValIterator& ZValIterator::operator=(const ZValIterator& iOther)
+	{
+	fVal = iOther.fVal;
+	return *this;
+	}
+
+ZValIterator::ZValIterator(size_t iVal)
+:	fVal(iVal)
+	{}
+
+ZValIterator& ZValIterator::operator++()
+	{
+	++fVal;
+	return *this;
+	}
+
+bool ZValIterator::operator==(const ZValIterator& iOther) const
+	{ return fVal == iOther.fVal; }
+
+bool ZValIterator::operator!=(const ZValIterator& iOther) const
+	{ return fVal != iOther.fVal; }
+
+size_t ZValIterator::GetIndex() const
+	{ return fVal; }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZValMap_AppleEvent
 
 ZValMap_AppleEvent::ZValMap_AppleEvent()
@@ -328,7 +390,7 @@ ZValMap_AppleEvent::ZValMap_AppleEvent()
 
 ZValMap_AppleEvent::ZValMap_AppleEvent(const ZValMap_AppleEvent& iOther)
 	{
-	ZAssert(typeAERecord == iOther.descriptorType);
+	ZAssert(typeAERecord == iOther.descriptorType || typeAppleEvent == iOther.descriptorType);
 	::AEDuplicateDesc(&iOther, this);
 	}
 
@@ -340,7 +402,7 @@ ZValMap_AppleEvent& ZValMap_AppleEvent::operator=(const ZValMap_AppleEvent& iOth
 	if (this != &iOther)
 		{
 		::AEDisposeDesc(this);
-		ZAssert(typeAERecord == iOther.descriptorType);
+		ZAssert(typeAERecord == iOther.descriptorType || typeAppleEvent == iOther.descriptorType);
 		::AEDuplicateDesc(&iOther, this);
 		}
 	return *this;	
@@ -348,8 +410,10 @@ ZValMap_AppleEvent& ZValMap_AppleEvent::operator=(const ZValMap_AppleEvent& iOth
 
 ZValMap_AppleEvent::ZValMap_AppleEvent(const AERecord& iOther)
 	{
-	ZAssert(typeAERecord == iOther.descriptorType);
-	::AEDuplicateDesc(&iOther, this);
+	if (typeAERecord == iOther.descriptorType || typeAppleEvent == iOther.descriptorType)
+		::AEDuplicateDesc(&iOther, this);
+	else
+		::AECreateList(nullptr, 0, true, this);
 	}
 
 ZValMap_AppleEvent& ZValMap_AppleEvent::operator=(const AERecord& iOther)
@@ -357,7 +421,7 @@ ZValMap_AppleEvent& ZValMap_AppleEvent::operator=(const AERecord& iOther)
 	if (this != &iOther)
 		{
 		::AEDisposeDesc(this);
-		ZAssert(typeAERecord == iOther.descriptorType);
+		ZAssert(typeAERecord == iOther.descriptorType || typeAppleEvent == iOther.descriptorType);
 		::AEDuplicateDesc(&iOther, this);
 		}
 	return *this;	
@@ -368,6 +432,39 @@ ZValMap_AppleEvent::operator operator_bool_type() const
 	long result;
 	return operator_bool_generator_type::translate
 		(noErr == ::AECountItems(this, &result) && result);
+	}
+
+ZValMap_AppleEvent::const_iterator ZValMap_AppleEvent::begin()
+	{ return 0; }
+
+ZValMap_AppleEvent::const_iterator ZValMap_AppleEvent::end()
+	{
+	long theCount;
+	if (noErr == ::AECountItems(this, &theCount))
+		return size_t(theCount);
+	return 0;
+	}
+
+AEKeyword ZValMap_AppleEvent::KeyOf(const_iterator iPropIter)
+	{
+	AEKeyword theKey;
+	if (noErr == ::AEGetNthPtr(this, iPropIter.GetIndex() + 1, typeWildCard, &theKey,
+		nullptr, nullptr, 0, nullptr))
+		{
+		return theKey;
+		}
+	return 0;
+	}
+
+string ZValMap_AppleEvent::NameOf(const_iterator iPropIter)
+	{
+	AEKeyword theKey;
+	if (noErr == ::AEGetNthPtr(this, iPropIter.GetIndex() + 1, typeWildCard, &theKey,
+		nullptr, nullptr, 0, nullptr))
+		{
+		return sAsString(theKey);
+		}
+	return string();
 	}
 
 void ZValMap_AppleEvent::Clear()
@@ -390,17 +487,51 @@ bool ZValMap_AppleEvent::QGet(const string& iName, ZVal_AppleEvent& oVal) const
 	return false;
 	}
 
+bool ZValMap_AppleEvent::QGet(const_iterator iPropIter, ZVal_AppleEvent& oVal) const
+	{
+	if (noErr == ::AEGetNthDesc(this, iPropIter.GetIndex() + 1, typeWildCard, nullptr, oVal.ParamO()))
+		return true;
+	return false;
+	}
+
 void ZValMap_AppleEvent::Set(AEKeyword iName, const AEDesc& iVal)
 	{ ::AEPutKeyDesc(this, iName, &iVal); }
 
 void ZValMap_AppleEvent::Set(const string& iName, const AEDesc& iVal)
 	{ ::AEPutKeyDesc(this, sAsAEKeyword(iName), &iVal); }
 
+void ZValMap_AppleEvent::Set(const_iterator iPropIter, const AEDesc& iVal)
+	{ ::AEPutDesc(this, iPropIter.GetIndex() + 1, &iVal); }
+
 void ZValMap_AppleEvent::Erase(AEKeyword iName)
 	{ ::AEDeleteKeyDesc(this, iName); }
 
 void ZValMap_AppleEvent::Erase(const string& iName)
 	{ ::AEDeleteKeyDesc(this, sAsAEKeyword(iName)); }
+
+void ZValMap_AppleEvent::Erase(const_iterator iPropIter)
+	{  ::AEDeleteItem(this, iPropIter.GetIndex() + 1); }
+
+bool ZValMap_AppleEvent::QGetAttr(AEKeyword iName, ZVal_AppleEvent& oVal) const
+	{
+	if (noErr == ::AEGetAttributeDesc(this, iName, typeWildCard, oVal.ParamO()))
+		return true;
+	return false;
+	}
+
+ZVal_AppleEvent ZValMap_AppleEvent::DGetAttr(AEKeyword iName, const ZVal_AppleEvent& iDefault) const
+	{
+	ZVal_AppleEvent theVal;
+	if (this->QGetAttr(iName, theVal))
+		return theVal;
+	return iDefault;
+	}
+
+ZVal_AppleEvent ZValMap_AppleEvent::GetAttr(AEKeyword iName) const
+	{ return this->DGetAttr(iName, ZVal_AppleEvent()); }
+
+void ZValMap_AppleEvent::SetAttr(AEKeyword iName, const AEDesc& iVal)
+	{ ::AEPutAttributeDesc(this, iName, &iVal); }
 
 NAMESPACE_ZOOLIB_END
 

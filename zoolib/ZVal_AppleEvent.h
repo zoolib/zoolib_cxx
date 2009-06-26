@@ -147,19 +147,48 @@ public:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZValIterator
+
+class ZValIterator
+	{
+public:
+	ZValIterator();
+	ZValIterator(const ZValIterator& iOther);
+	~ZValIterator();
+	ZValIterator& operator=(const ZValIterator& iOther);
+
+	ZValIterator(size_t iVal);
+
+	ZValIterator& operator++();
+
+	bool operator==(const ZValIterator& iOther) const;
+	bool operator!=(const ZValIterator& iOther) const;
+
+	size_t GetIndex() const;
+
+private:
+	size_t fVal;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZValMap_AppleEvent
 
 class ZValMap_AppleEvent
 :	public AERecord
 ,	public ZValMapR_T<ZValMap_AppleEvent, AEKeyword, ZVal_AppleEvent>
 ,	public ZValMapR_T<ZValMap_AppleEvent, const std::string&, ZVal_AppleEvent>
+,	public ZValMapR_T<ZValMap_AppleEvent, ZValIterator, ZVal_AppleEvent>
 	{
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZValMap_AppleEvent,
 		operator_bool_generator_type, operator_bool_type);
 
 public:
-	ZMACRO_ZValMapAccessors_Using(ZValMap_AppleEvent, AEKeyword, ZVal_AppleEvent);
-	ZMACRO_ZValMapAccessors_Using(ZValMap_AppleEvent, const std::string&, ZVal_AppleEvent);
+	ZMACRO_ZValMapAccessors_Using(ZValMap_AppleEvent, AEKeyword, ZVal_AppleEvent)
+	ZMACRO_ZValMapAccessors_Using(ZValMap_AppleEvent, const std::string&, ZVal_AppleEvent)
+	ZMACRO_ZValMapAccessors_Using(ZValMap_AppleEvent, ZValIterator, ZVal_AppleEvent)
+
+	typedef ZValIterator const_iterator;
 
 	ZValMap_AppleEvent();
 	ZValMap_AppleEvent(const ZValMap_AppleEvent& iOther);
@@ -171,16 +200,30 @@ public:
 
 	operator operator_bool_type() const;
 
+	const_iterator begin();
+	const_iterator end();
+
+	AEKeyword KeyOf(const_iterator iPropIter);
+	std::string NameOf(const_iterator iPropIter);
+
 	void Clear();
 
 	bool QGet(AEKeyword iName, ZVal_AppleEvent& oVal) const;
 	bool QGet(const std::string& iName, ZVal_AppleEvent& oVal) const;
+	bool QGet(const_iterator iPropIter, ZVal_AppleEvent& oVal) const;
 
 	void Set(AEKeyword iName, const AEDesc& iVal);
 	void Set(const std::string& iName, const AEDesc& iVal);
+	void Set(const_iterator iPropIter, const AEDesc& iVal);
 
 	void Erase(AEKeyword iName);
 	void Erase(const std::string& iName);
+	void Erase(const_iterator iPropIter);
+
+	bool QGetAttr(AEKeyword iName, ZVal_AppleEvent& oVal) const;
+	ZVal_AppleEvent DGetAttr(AEKeyword iName, const ZVal_AppleEvent& iDefault) const;
+	ZVal_AppleEvent GetAttr(AEKeyword iName) const;
+	void SetAttr(AEKeyword iName, const AEDesc& iVal);
 	};
 
 NAMESPACE_ZOOLIB_END

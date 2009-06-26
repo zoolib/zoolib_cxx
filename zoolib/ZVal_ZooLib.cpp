@@ -664,7 +664,6 @@ int ZVal_ZooLib::Compare(const ZVal_ZooLib& iOther) const
 			}
 		}
 
-
 	if (fType.fType < iOther.fType.fType)
 		return -1;
 
@@ -1847,7 +1846,6 @@ void ZVal_ZooLib::pFromStream(ZType iType, const ZStreamR& iStreamR)
 ZValList_ZooLib::operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(!this->empty()); }
 
-
 ZValList_ZooLib::ZValList_ZooLib()
 	{}
 
@@ -2088,7 +2086,6 @@ bool ZValMap_ZooLib::Contains(const ZValMap_ZooLib& iOther) const
 		// we don't have a rep so we can't contain other.
 		return false;
 		}
-
 
 	if (fRep->fProperties.size() < iOther.fRep->fProperties.size())
 		{
@@ -2566,36 +2563,40 @@ ZValMap_ZooLib ZValMap_ZooLib::Minimized() const
 #pragma mark -
 #pragma mark * ZValMap_ZooLib macros
 
-
-#define ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, TYPENAME, TYPE) \
-	bool T::Get##TYPENAME(Name_t iName, TYPE& oVal) const \
-		{ return this->QGet_T<>(iName, oVal); } \
-	bool T::QGet##TYPENAME(Name_t iName, TYPE& oVal) const \
-		{ return this->QGet_T<>(iName, oVal); } \
-	TYPE T::DGet##TYPENAME(Name_t iName, const TYPE& iDefault) const \
+#define ZMACRO_ZValMapAccessors_Def_Entry(Name_t, TYPENAME, TYPE) \
+	bool ZValMap_ZooLib::Get##TYPENAME(Name_t iName, TYPE& oVal) const \
+		{ return this->QGet##TYPENAME(iName, oVal); } \
+	bool ZValMap_ZooLib::QGet##TYPENAME(Name_t iName, TYPE& oVal) const \
+		{ \
+		ZVal_ZooLib theVal; \
+		if (this->QGet(iName, theVal)) \
+			return theVal.QGet_T<TYPE>(oVal); \
+		return false; \
+		} \
+	TYPE ZValMap_ZooLib::DGet##TYPENAME(Name_t iName, const TYPE& iDefault) const \
 		{ return this->DGet_T<>(iName, iDefault); } \
-	TYPE T::Get##TYPENAME(Name_t iName) const \
+	TYPE ZValMap_ZooLib::Get##TYPENAME(Name_t iName) const \
 		{ return this->Get_T<TYPE>(iName); } \
-	void T::Set##TYPENAME(Name_t iName, const TYPE& iVal) \
+	void ZValMap_ZooLib::Set##TYPENAME(Name_t iName, const TYPE& iVal) \
 		{ return this->Set_T<>(iName, iVal); } \
 
-#define ZMACRO_ZValMapAccessors_Def_Std(T, Name_t) \
-	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, ID, uint64) \
-	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, Int8, int8) \
-	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, Int16, int16) \
-	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, Int32, int32) \
-	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, Int64, int64) \
-	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, Bool, bool) \
-	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, Float, float) \
-	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, Double, double) \
-	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, Pointer, VoidStar_t) \
-	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, String, std::string) \
-	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, Tuple, ZValMap_ZooLib) \
-	ZMACRO_ZValMapAccessors_Def_Entry(T, Name_t, Vector, vector<ZVal_ZooLib>) \
+#define ZMACRO_ZValMapAccessors_Def_Std(Name_t) \
+	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, ID, uint64) \
+	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Int8, int8) \
+	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Int16, int16) \
+	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Int32, int32) \
+	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Int64, int64) \
+	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Bool, bool) \
+	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Float, float) \
+	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Double, double) \
+	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Pointer, VoidStar_t) \
+	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, String, std::string) \
+	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Tuple, ZValMap_ZooLib) \
+	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Vector, vector<ZVal_ZooLib>) \
 
-ZMACRO_ZValMapAccessors_Def_Std(ZValMap_ZooLib, const char*);
-ZMACRO_ZValMapAccessors_Def_Std(ZValMap_ZooLib, const ZTName&);
-ZMACRO_ZValMapAccessors_Def_Std(ZValMap_ZooLib, PropList::iterator);
+ZMACRO_ZValMapAccessors_Def_Std(const char*)
+ZMACRO_ZValMapAccessors_Def_Std(const ZTName&)
+ZMACRO_ZValMapAccessors_Def_Std(PropList::iterator)
 
 // =================================================================================================
 #pragma mark -

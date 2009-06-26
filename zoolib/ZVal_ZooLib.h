@@ -383,7 +383,7 @@ typedef std::vector<NameTV> PropList;
 
 /// Associative array mapping names to ZVal_ZooLibs.
 
-#define ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, TYPENAME, TYPE) \
+#define ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, TYPENAME, TYPE) \
 	bool Get##TYPENAME(Name_t iName, TYPE& oVal) const; \
 	bool QGet##TYPENAME(Name_t iName, TYPE& oVal) const; \
 	TYPE DGet##TYPENAME(Name_t iName, const TYPE& iDefault) const; \
@@ -391,18 +391,18 @@ typedef std::vector<NameTV> PropList;
 	void Set##TYPENAME(Name_t iName, const TYPE& iVal); \
 
 #define ZMACRO_ZValMapAccessors_Decl_Std(T, Name_t) \
-	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, ID, uint64) \
-	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, Int8, int8) \
-	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, Int16, int16) \
-	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, Int32, int32) \
-	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, Int64, int64) \
-	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, Bool, bool) \
-	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, Float, float) \
-	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, Double, double) \
-	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, Pointer, VoidStar_t) \
-	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, String, std::string) \
-	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, Tuple, ZValMap_ZooLib) \
-	ZMACRO_ZValMapAccessors_Decl_Entry(Name_t, Vector, std::vector<ZVal_ZooLib>) \
+	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, ID, uint64) \
+	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Int8, int8) \
+	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Int16, int16) \
+	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Int32, int32) \
+	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Int64, int64) \
+	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Bool, bool) \
+	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Float, float) \
+	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Double, double) \
+	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Pointer, VoidStar_t) \
+	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, String, std::string) \
+	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Tuple, ZValMap_ZooLib) \
+	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Vector, std::vector<ZVal_ZooLib>) \
 
 class ZValMap_ZooLib
 :	public ZValMapR_T<ZValMap_ZooLib, const char*, ZVal_ZooLib>
