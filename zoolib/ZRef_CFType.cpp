@@ -43,7 +43,6 @@ ZOOLIB_RETAIN_RELEASE(CFTypeRef)
 	typedef struct __CF##a * CF##a##Ref; \
 	ZOOLIB_RETAIN_RELEASE(CF##a##Ref)
 
-
 ZOOLIB_CF(Bundle)
 ZOOLIB_CF(ReadStream)
 ZOOLIB_CF(WriteStream)

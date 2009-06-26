@@ -114,7 +114,6 @@ protected:
 #pragma mark -
 #pragma mark * FILE backed by a ZStream or ZStreamer
 
-
 FILE* sStreamOpen(const ZStreamR& iStreamR);
 FILE* sStreamOpen(const ZStreamRPos& iStreamRPos);
 FILE* sStreamOpen(const ZStreamW& iStreamW);

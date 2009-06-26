@@ -132,7 +132,6 @@ protected:
 	ZStreamRPos_Limited fStream;
 	};
 
-
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZStream_Limited__

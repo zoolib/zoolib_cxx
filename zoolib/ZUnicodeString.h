@@ -38,7 +38,6 @@ typedef std::basic_string<UTF16> string16;
 /// It is actually the same type as std::string.
 typedef std::basic_string<UTF8> string8;
 
-
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZUnicodeString__

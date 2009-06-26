@@ -32,7 +32,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_Has_fseeko 1
 #endif
 
-
 #if ZCONFIG_Has_fseeko
 // To pick up the definition of BSD, if any. Can't do this
 // when using CW and their headers (file doesn't exist).

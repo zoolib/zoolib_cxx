@@ -325,7 +325,6 @@ ZStreamWPos_Memory::ZStreamWPos_Memory(void* iAddress, size_t iSize, size_t iCap
 	fPosition(0)
 	{}
 
-
 void ZStreamWPos_Memory::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	size_t countToCopy = ZStream::sClampedSize(iCount, fCapacity, fPosition);

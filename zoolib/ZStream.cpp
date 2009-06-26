@@ -40,7 +40,6 @@ using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 
-
 #define kDebug_Stream 2
 
 /**
@@ -190,7 +189,6 @@ void ZStreamR::Read(void* iDest, size_t iCount) const
 		localDest += countRead;
 		}
 	}
-
 
 void ZStreamR::ReadAll(void* iDest, size_t iCount, size_t* oCountRead) const
 	{

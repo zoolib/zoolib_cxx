@@ -368,5 +368,4 @@ void ZString::sToPString(const char* inString, unsigned char* outPString, size_t
 	outPString[0] = sourceLength;
 	}
 
-
 NAMESPACE_ZOOLIB_END
