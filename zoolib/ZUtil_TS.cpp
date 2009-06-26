@@ -258,7 +258,7 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 			ZTuple theTuple;
 			ZTValue theTValue;
 			if (!ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTValue)
-				|| !theTValue.GetTuple(theTuple))
+				|| !theTValue.QGetTuple(theTuple))
 				{
 				throw Ex_MalformedText("Expected tuple after 'tuple ID:'");
 				}
@@ -312,7 +312,7 @@ void sFromStrim(Sink& iSink, uint64& oNextUnusedID, const ZStrimU& iStrimU)
 			ZTuple theTuple;
 			ZTValue theTValue;
 			if (!ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTValue)
-				|| !theTValue.GetTuple(theTuple))
+				|| !theTValue.QGetTuple(theTuple))
 				{
 				throw Ex_MalformedText("Expected tuple after 'tuple ID:'");
 				}
