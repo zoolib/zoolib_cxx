@@ -523,9 +523,9 @@ public:
 
 /** \name Getting
 */	//@{
-	ZVal_ZooLib GetValue(const_iterator iPropIter) const;
-	ZVal_ZooLib GetValue(const char* iPropName) const;
-	ZVal_ZooLib GetValue(const ZTName& iPropName) const;
+	const ZVal_ZooLib& GetValue(const_iterator iPropIter) const;
+	const ZVal_ZooLib& GetValue(const char* iPropName) const;
+	const ZVal_ZooLib& GetValue(const ZTName& iPropName) const;
 
 	template <class Name_t>
 	bool QGet(Name_t iName, ZVal_ZooLib& oVal) const;

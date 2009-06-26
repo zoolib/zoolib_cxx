@@ -2271,25 +2271,25 @@ void ZValMap_ZooLib::Clear()
 	}
 
 // Do this explicitly here, otherwise CW7 chokes.
-ZVal_ZooLib ZValMap_ZooLib::GetValue(const_iterator iPropIter) const
+const ZVal_ZooLib& ZValMap_ZooLib::GetValue(const_iterator iPropIter) const
 	{
 	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropIter))
 		return *theValue;
-	return ZVal_ZooLib();
+	return sNilValue;
 	}
 
-ZVal_ZooLib ZValMap_ZooLib::GetValue(const char* iPropName) const
+const ZVal_ZooLib& ZValMap_ZooLib::GetValue(const char* iPropName) const
 	{
 	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropName))
 		return *theValue;
-	return ZVal_ZooLib();
+	return sNilValue;
 	}
 
-ZVal_ZooLib ZValMap_ZooLib::GetValue(const ZTName& iPropName) const
+const ZVal_ZooLib& ZValMap_ZooLib::GetValue(const ZTName& iPropName) const
 	{
 	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropName))
 		return *theValue;
-	return ZVal_ZooLib();
+	return sNilValue;
 	}
 
 template <class S, class Name_t>
