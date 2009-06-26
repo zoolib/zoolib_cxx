@@ -193,7 +193,7 @@ NAMESPACE_ZOOLIB_END
 #pragma mark -
 #pragma mark * Mach (OSX/iPhone)
 
-#if defined(__MACH__)
+#if defined(__MACH__) && ! ZCONFIG(Compiler, CodeWarrior)
 
 #include <libkern/OSAtomic.h>
 
