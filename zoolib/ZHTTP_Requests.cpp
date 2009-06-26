@@ -298,7 +298,6 @@ static ZRef<ZStrimmerR> sCreateStrimmerR(const ZTuple& iHeader, const ZStreamR& 
 		return new ZStrimmerR_StreamR_T<ZStrimR_StreamUTF8>(iStreamR);
 	}
 
-
 static bool sReadName(const ZStreamU& iStreamU, string& oName)
 	{
 	bool gotAny = false;

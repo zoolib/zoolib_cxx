@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZString.h"
 
-
 using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
