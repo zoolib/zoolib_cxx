@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
+#include "zoolib/ZRef.h"
 #include "zoolib/ZTuple.h"
 #include "zoolib/ZUnicodeString.h"
 
