@@ -403,7 +403,6 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 				}
 			}
 
-
 		if (!done)
 			{
 			JSAMPROW rowPtr[1];

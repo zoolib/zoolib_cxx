@@ -367,7 +367,6 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 	oPixmap = thePixmap;
 	}
 
-
 static void sReadRLE8(const ZStreamR& iStream,
 	ZCoord iWidth, ZCoord iHeight, size_t iRowBytes, bool iFlip, uint8* iBuffer)
 	{
