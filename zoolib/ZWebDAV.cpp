@@ -328,7 +328,7 @@ static bool sGetStringAt(const ZTuple& iTuple, const string& iName, string& oStr
 
 	const vector<ZTValue>& theVector = iTuple.GetVector(iName);
 	if (!theVector.empty())
-		return theVector[0].GetString(oString);
+		return theVector[0].QGetString(oString);
 
 	return false;
 	}
@@ -363,7 +363,7 @@ static ZTuple sGetProp(const ZNode& iNode, const string& iPropName)
 		if (iNode.GetProp("MIMEType", theValue))
 			{
 			string theMIMEType;
-			if (theValue.GetString(theMIMEType))
+			if (theValue.QGetString(theMIMEType))
 				propT.SetString(iPropName, theMIMEType);
 			}
 		}
@@ -391,7 +391,7 @@ static ZTuple sGetProp(const ZNode& iNode, const string& iPropName)
 		if (iNode.GetProp("ContentLength", theValue))
 			{
 			int64 theLength;
-			if (theValue.GetInt64(theLength))
+			if (theValue.QGetInt64(theLength))
 	 			propT.SetString(iPropName, ZString::sFromUInt64(theLength));
 			}
 		}
@@ -624,7 +624,7 @@ bool ZWebDAV::sHandle_GET(
 			if (theNode.GetProp("MIMEType", theMIMEValue))
 				{
 				string asString;
-				if (theMIMEValue.GetString(asString))
+				if (theMIMEValue.QGetString(asString))
 					theMIMEType = asString;
 				}
 			r.Set("Content-Type", theMIMEType);
