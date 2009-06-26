@@ -168,7 +168,6 @@ ZRGBColorSmallPOD& ZRGBColorSmallPOD::operator-=(const ZRGBColorSmallPOD& other)
 	return *this;
 	}
 
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZRGBColorSmall
@@ -184,6 +183,5 @@ ZRGBColorSmall ZRGBColorSmall::sFromCOLORREF(COLORREF iColorRef)
 	return theColor;
 	}
 #endif // ZCONFIG_SPI_Enabled(GDI)
-
 
 NAMESPACE_ZOOLIB_END
