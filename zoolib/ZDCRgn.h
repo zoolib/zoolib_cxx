@@ -96,7 +96,6 @@ public:
 	ZDCRgn& operator=(const ZDCRgn& iOther);
 	~ZDCRgn();
 
-
 	ZDCRgn(const ZGRgn& iGRgn);
 
 	ZDCRgn(const ZRect& iRect);
