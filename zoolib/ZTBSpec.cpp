@@ -692,7 +692,7 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 			{
 			#if 1
 				string pattern;
-				if (!this->GetTValue().GetString(pattern) || pattern.empty())
+				if (!this->GetTValue().QGetString(pattern) || pattern.empty())
 					return true;
 
 				string target;

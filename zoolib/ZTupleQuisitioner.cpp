@@ -545,7 +545,7 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iF
 		for (vector<ZTuple>::iterator i = sourceTuples.begin(); i != sourceTuples.end(); ++i)
 			{
 			uint64 theID;
-			if ((*i).GetValue(sourcePropName).GetID(theID))
+			if ((*i).GetValue(sourcePropName).QGetID(theID))
 				destIDs.push_back(theID);
 			}
 
