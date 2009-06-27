@@ -119,6 +119,8 @@ class ZValList_AppleEvent
 		operator_bool_generator_type, operator_bool_type);
 
 public:
+	operator operator_bool_type() const;
+
 	ZValList_AppleEvent();
 	ZValList_AppleEvent(const ZValList_AppleEvent& iOther);
 	~ZValList_AppleEvent();
@@ -126,8 +128,6 @@ public:
 
 	ZValList_AppleEvent(const AEDescList& iOther);
 	ZValList_AppleEvent& operator=(const AEDescList& iOther);
-
-	operator operator_bool_type() const;
 
 	size_t Count() const;
 
@@ -147,38 +147,13 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValIterator
-
-class ZValIterator
-	{
-public:
-	ZValIterator();
-	ZValIterator(const ZValIterator& iOther);
-	~ZValIterator();
-	ZValIterator& operator=(const ZValIterator& iOther);
-
-	ZValIterator(size_t iVal);
-
-	ZValIterator& operator++();
-
-	bool operator==(const ZValIterator& iOther) const;
-	bool operator!=(const ZValIterator& iOther) const;
-
-	size_t GetIndex() const;
-
-private:
-	size_t fVal;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZValMap_AppleEvent
 
 class ZValMap_AppleEvent
 :	public AERecord
 ,	public ZValMapR_T<ZValMap_AppleEvent, AEKeyword, ZVal_AppleEvent>
 ,	public ZValMapR_T<ZValMap_AppleEvent, const std::string&, ZVal_AppleEvent>
-,	public ZValMapR_T<ZValMap_AppleEvent, ZValIterator, ZVal_AppleEvent>
+,	public ZValMapR_T<ZValMap_AppleEvent, ZValMapIterator, ZVal_AppleEvent>
 	{
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZValMap_AppleEvent,
 		operator_bool_generator_type, operator_bool_type);
@@ -186,9 +161,11 @@ class ZValMap_AppleEvent
 public:
 	ZMACRO_ZValMapAccessors_Using(ZValMap_AppleEvent, AEKeyword, ZVal_AppleEvent)
 	ZMACRO_ZValMapAccessors_Using(ZValMap_AppleEvent, const std::string&, ZVal_AppleEvent)
-	ZMACRO_ZValMapAccessors_Using(ZValMap_AppleEvent, ZValIterator, ZVal_AppleEvent)
+	ZMACRO_ZValMapAccessors_Using(ZValMap_AppleEvent, ZValMapIterator, ZVal_AppleEvent)
 
-	typedef ZValIterator const_iterator;
+	typedef ZValMapIterator const_iterator;
+
+	operator operator_bool_type() const;
 
 	ZValMap_AppleEvent();
 	ZValMap_AppleEvent(const ZValMap_AppleEvent& iOther);
@@ -198,13 +175,11 @@ public:
 	ZValMap_AppleEvent(const AERecord& iOther);
 	ZValMap_AppleEvent& operator=(const AERecord& iOther);
 
-	operator operator_bool_type() const;
-
 	const_iterator begin();
 	const_iterator end();
 
-	AEKeyword KeyOf(const_iterator iPropIter);
-	std::string NameOf(const_iterator iPropIter);
+	AEKeyword KeyOf(const_iterator iPropIter) const;
+	std::string NameOf(const_iterator iPropIter) const;
 
 	void Clear();
 

@@ -82,6 +82,39 @@ public:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZValMapIterator
+
+class ZValMapIterator
+	{
+public:
+	ZValMapIterator() : fVal(0) {}
+	ZValMapIterator(const ZValMapIterator& iOther) : fVal(iOther.fVal) {}
+	~ZValMapIterator() {}
+	ZValMapIterator& operator=(const ZValMapIterator& iOther)
+		{
+		fVal = iOther.fVal;
+		return *this;
+		}
+
+	ZValMapIterator(size_t iVal) : fVal(iVal) {}
+
+	ZValMapIterator& operator++()
+		{
+		++fVal;
+		return *this;
+		}
+
+	bool operator==(const ZValMapIterator& iOther) const { return fVal == iOther.fVal; }
+	bool operator!=(const ZValMapIterator& iOther) const { return fVal != iOther.fVal; }
+
+	size_t GetIndex() const { return fVal; }
+
+private:
+	size_t fVal;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZValMapR_T
 
 template <class T, class Name_t, class Val_t>

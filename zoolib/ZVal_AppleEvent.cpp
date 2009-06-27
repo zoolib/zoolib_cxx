@@ -343,46 +343,6 @@ void ZValList_AppleEvent::Append(const ZVal_AppleEvent& iVal)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValIterator
-
-ZValIterator::ZValIterator()
-:	fVal(0)
-	{}
-
-ZValIterator::ZValIterator(const ZValIterator& iOther)
-:	fVal(iOther.fVal)
-	{}
-
-ZValIterator::~ZValIterator()
-	{}
-
-ZValIterator& ZValIterator::operator=(const ZValIterator& iOther)
-	{
-	fVal = iOther.fVal;
-	return *this;
-	}
-
-ZValIterator::ZValIterator(size_t iVal)
-:	fVal(iVal)
-	{}
-
-ZValIterator& ZValIterator::operator++()
-	{
-	++fVal;
-	return *this;
-	}
-
-bool ZValIterator::operator==(const ZValIterator& iOther) const
-	{ return fVal == iOther.fVal; }
-
-bool ZValIterator::operator!=(const ZValIterator& iOther) const
-	{ return fVal != iOther.fVal; }
-
-size_t ZValIterator::GetIndex() const
-	{ return fVal; }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZValMap_AppleEvent
 
 ZValMap_AppleEvent::ZValMap_AppleEvent()
@@ -445,7 +405,7 @@ ZValMap_AppleEvent::const_iterator ZValMap_AppleEvent::end()
 	return 0;
 	}
 
-AEKeyword ZValMap_AppleEvent::KeyOf(const_iterator iPropIter)
+AEKeyword ZValMap_AppleEvent::KeyOf(const_iterator iPropIter) const
 	{
 	AEKeyword theKey;
 	if (noErr == ::AEGetNthPtr(this, iPropIter.GetIndex() + 1, typeWildCard, &theKey,
@@ -456,7 +416,7 @@ AEKeyword ZValMap_AppleEvent::KeyOf(const_iterator iPropIter)
 	return 0;
 	}
 
-string ZValMap_AppleEvent::NameOf(const_iterator iPropIter)
+string ZValMap_AppleEvent::NameOf(const_iterator iPropIter) const
 	{
 	AEKeyword theKey;
 	if (noErr == ::AEGetNthPtr(this, iPropIter.GetIndex() + 1, typeWildCard, &theKey,

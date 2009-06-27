@@ -75,6 +75,8 @@ class ZVal_ZooLib
 public:
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_ZooLib)
 	ZMACRO_ZValAccessors_Decl_ZooLib(ZVal_ZooLib)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Vector, std::vector<ZVal_ZooLib>)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Tuple, ZValMap_ZooLib)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, List, ZValList_ZooLib)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Map, ZValMap_ZooLib)
 

@@ -1291,6 +1291,8 @@ ZValList_ZooLib& ZVal_ZooLib::EnsureMutableVector()
 
 ZMACRO_ZValAccessors_Def_Std(ZVal_ZooLib)
 ZMACRO_ZValAccessors_Def_ZooLib(ZVal_ZooLib)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Vector, std::vector<ZVal_ZooLib>)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Tuple, ZValMap_ZooLib)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, List, ZValList_ZooLib)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Map, ZValMap_ZooLib)
 
