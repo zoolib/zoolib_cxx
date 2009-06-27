@@ -250,7 +250,6 @@ void Host_Mac::DoSetWindow(int iX, int iY, int iWidth, int iHeight)
 	if (ZLOG(s, eDebug + 1, "Host_Mac"))
 		s.Writef("DoSetWindow, (%d, %d, %d, %d)", iX, iY, iX + iWidth, iY + iHeight);
 
-	// This is spurious if we're doing CoreGraphics
 	fNP_Port.portx = -iX;
 	fNP_Port.porty = -iY;
 
@@ -259,10 +258,10 @@ void Host_Mac::DoSetWindow(int iX, int iY, int iWidth, int iHeight)
 	fNPWindow.width = iWidth;
 	fNPWindow.height = iHeight;
 
-	fNPWindow.clipRect.left = iX;
-	fNPWindow.clipRect.top = iY;
-	fNPWindow.clipRect.right = iX + iWidth;
-	fNPWindow.clipRect.bottom = iY + iHeight;
+	fNPWindow.clipRect.left = 0;
+	fNPWindow.clipRect.top = 0;
+	fNPWindow.clipRect.right = iWidth;
+	fNPWindow.clipRect.bottom = iHeight;
 
 	#define CHECKIT(a) if (fNPWindow_Prior.a != fNPWindow.a) callIt = true;
 	bool callIt = false;
@@ -431,8 +430,8 @@ void Host_WindowRef::DoEvent(const EventRecord& iEvent)
 			Rect structureRect;
 			::GetWindowBounds(fWindowRef, kWindowStructureRgn, &structureRect);
 
-			theER.where.h += structureRect.left - contentRect.left;
-			theER.where.v += structureRect.top - contentRect.top;
+//			theER.where.h -= structureRect.left - contentRect.left;
+//			theER.where.v -= structureRect.top - contentRect.top;
 			}
 	#endif
 
@@ -522,6 +521,14 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 
 						fNP_CGContext.context = cg;
 
+						Rect contentRect;
+						::GetWindowBounds(fWindowRef, kWindowContentRgn, &contentRect);
+						Rect structureRect;
+						::GetWindowBounds(fWindowRef, kWindowStructureRgn, &structureRect);
+
+						winFrame.origin.x += contentRect.left - structureRect.left;
+						winFrame.origin.y += contentRect.top - structureRect.top;
+
 						this->DoSetWindow(winFrame);
 						this->DoEvent(updateEvt, (UInt32)fWindowRef);
 
@@ -563,22 +570,21 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 				case kEventWindowBoundsChanged:
 					{
 					#if defined(XP_MACOSX)
+						ZGRectf newFrame = sGetParam_T<Rect>(iEventRef,
+							kEventParamCurrentBounds, typeQDRectangle);
+
+						if (ZLOG(s, eDebug + 1, "Host_WindowRef"))
+							s << "kEventWindowBoundsChanged"
+							<< ", newFrame: " << newFrame;
+
+						newFrame.origin = 0;
+
+						Rect qdRect = newFrame;
+						::InvalWindowRect(fWindowRef, &qdRect);
+
 						if (!fUseCoreGraphics)
 							{
-							ZGRectf newFrame = sGetParam_T<Rect>(iEventRef,
-								kEventParamCurrentBounds, typeQDRectangle);
-
-							if (ZLOG(s, eDebug + 1, "Host_WindowRef"))
-								s << "kEventWindowBoundsChanged"
-								<< ", newFrame: " << newFrame;
-
-							newFrame.origin = 0;
-
-							Rect qdRect = newFrame;
-							::InvalWindowRect(fWindowRef, &qdRect);
-
 							this->pApplyInsets(newFrame);
-
 							this->DoSetWindow(newFrame);
 							}
 					#endif
@@ -855,17 +861,10 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 
 					if (ZLOG(s, eDebug + 1, "Host_HIViewRef"))
 						s << "kEventControlBoundsChanged"
-						<< ", newFrame: " << newFrame;
+						<< ", newFrame1: " << newFrame;
 
-					if (fUseCoreGraphics)
-						{
-						::HIRectConvert(&sHI(newFrame),
-							kHICoordSpaceView, fHIViewRef, kHICoordSpaceWindow, theWindowRef);
-						}
-					else
-						{
+					if (!fUseCoreGraphics)
 						newFrame.origin = 0;
-						}
 
 					::HIViewSetNeedsDisplayInRect(fHIViewRef, &sHI(ZGRectf(newFrame.extent)), true);
 
@@ -873,7 +872,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 						
 
 					if (ZLOG(s, eDebug + 1, "Host_HIViewRef"))
-						s << "kEventControlBoundsChanged, winFrame: " << newFrame;
+						s << "kEventControlBoundsChanged, newFrame2: " << newFrame;
 
 					this->DoSetWindow(newFrame);
 					break;
