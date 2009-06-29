@@ -357,8 +357,7 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 			rowBufferVector.resize(iBounds.Width());
 
 			destPixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_Gray_8);
-			destPixvalDesc.fDepth = 8;
-			destPixvalDesc.fBigEndian = true;
+			destPixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_Gray_8);
 			}
 		else
 			{
@@ -367,8 +366,7 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 			rowBufferVector.resize(3 * iBounds.Width());
 
 			destPixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_RGB_24);
-			destPixvalDesc.fDepth = 24;
-			destPixvalDesc.fBigEndian = true;
+			destPixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_RGB_24);
 			}
 
 		theEM.BeforeCall();
@@ -472,10 +470,8 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 		if (theJDS.out_color_space == JCS_GRAYSCALE)
 			{
 			sourcePixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_Gray_8);
+			sourcePixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_Gray_8);
 			rowBufferVector.resize(theJDS.image_width);
-
-			sourcePixvalDesc.fDepth = 8;
-			sourcePixvalDesc.fBigEndian = true;
 
 			oPixmap = ZDCPixmap(ZPoint(theJDS.image_width, theJDS.image_height),
 				ZDCPixmapNS::eFormatEfficient_Gray_8);
@@ -483,10 +479,8 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 		else if (theJDS.out_color_space == JCS_RGB)
 			{
 			sourcePixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_RGB_24);
+			sourcePixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_RGB_24);
 			rowBufferVector.resize(3 * theJDS.image_width);
-
-			sourcePixvalDesc.fDepth = 24;
-			sourcePixvalDesc.fBigEndian = true;
 
 			oPixmap = ZDCPixmap(ZPoint(theJDS.image_width, theJDS.image_height),
 				ZDCPixmapNS::eFormatEfficient_Color_24);

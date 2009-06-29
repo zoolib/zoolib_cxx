@@ -113,7 +113,6 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 
 		ZDCPixmapNS::PixvalDesc destPixvalDesc;
 		ZDCPixmapNS::PixelDesc destPixelDesc;
-		destPixvalDesc.fBigEndian = true;
 
 		// This vector has to persist until png_write_info is called.
 		vector<png_color> thePNGPaletteVector;
@@ -142,6 +141,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 
 			destPixelDesc = iPixelDesc;
 			destPixvalDesc.fDepth = 8;
+			destPixvalDesc.fBigEndian = true;
 			}
 		else if (ZRefDynamicCast<ZDCPixmapNS::PixelDescRep_Color>(thePixelDescRep))
 			{
@@ -150,13 +150,13 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 				{
 				colorType = PNG_COLOR_TYPE_RGB_ALPHA;
 				destPixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_RGBA_32);
-				destPixvalDesc.fDepth = 32;
+				destPixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_RGBA_32);
 				}
 			else
 				{
 				colorType = PNG_COLOR_TYPE_RGB;
 				destPixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_RGB_24);
-				destPixvalDesc.fDepth = 24;
+				destPixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_RGB_24);
 				}
 			::png_set_IHDR(write_ptr, info_ptr, iBounds.Width(), iBounds.Height(), 8,
 				colorType, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
@@ -168,13 +168,13 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 				{
 				colorType = PNG_COLOR_TYPE_GRAY_ALPHA;
 				destPixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_GA_16);
-				destPixvalDesc.fDepth = 16;
+				destPixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_GA_16);
 				}
 			else
 				{
 				colorType = PNG_COLOR_TYPE_GRAY;
 				destPixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_Gray_8);
-				destPixvalDesc.fDepth = 8;
+				destPixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_Gray_8);
 				}
 			::png_set_IHDR(write_ptr, info_ptr, iBounds.Width(), iBounds.Height(), 8,
 				colorType, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
