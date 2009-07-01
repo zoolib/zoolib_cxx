@@ -140,8 +140,8 @@ ZRef<CFTypeRef> sNumber_T(CFNumberType iNumberType, const S& iVal)
 #pragma mark -
 #pragma mark * ZVal_CFType
 
-ZVal_CFType::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(fCFTypeRef); }
+ZVal_CFType::operator bool() const
+	{ return fCFTypeRef; }
 
 ZVal_CFType::ZVal_CFType()
 	{}
@@ -376,8 +376,8 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Map, ZValMap_CFType)
 #pragma mark -
 #pragma mark * ZValList_CFType
 
-ZValList_CFType::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(this->Count()); }
+ZValList_CFType::operator bool() const
+	{ return this->Count(); }
 
 ZValList_CFType::ZValList_CFType()
 :	fCFMutableArrayRef(sArrayMutable())
@@ -520,14 +520,12 @@ void ZValList_CFType::pTouch()
 #pragma mark -
 #pragma mark * ZValMap_CFType
 
-ZValMap_CFType::operator operator_bool_type() const
+ZValMap_CFType::operator bool() const
 	{
 	if (fCFMutableDictionaryRef)
-		{
-		return operator_bool_generator_type::translate(
-			::CFDictionaryGetCount(fCFMutableDictionaryRef));
-		}
-	return operator_bool_generator_type::translate(::CFDictionaryGetCount(fCFDictionaryRef));
+		return ::CFDictionaryGetCount(fCFMutableDictionaryRef);
+
+	return ::CFDictionaryGetCount(fCFDictionaryRef);
 	}
 
 ZValMap_CFType::ZValMap_CFType()

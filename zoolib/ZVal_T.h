@@ -28,6 +28,57 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Placement construction/destruction
+
+template <class T>
+inline T* sConstruct_T(void* iBytes)
+	{
+	new(iBytes) T();
+	return static_cast<T*>(iBytes);
+	}
+
+template <class T>
+inline T* sConstruct_T(void* iBytes, const T& iOther)
+	{
+	new(iBytes) T(iOther);
+	return static_cast<T*>(iBytes);
+	}
+
+template <class T, class P0>
+inline T* sConstruct_T(void* iBytes, const P0& iP0)
+	{
+	new(iBytes) T(iP0);
+	return static_cast<T*>(iBytes);
+	}
+
+template <class T, class P0, class P1>
+inline T* sConstruct_T(void* iBytes, const P0& iP0, const P1& iP1)
+	{
+	new(iBytes) T(iP0, iP1);
+	return static_cast<T*>(iBytes);
+	}
+
+template <class T>
+inline T* sCopyConstruct_T(const void* iSource, void* iBytes)
+	{
+	new(iBytes) T(*static_cast<const T*>(iSource));
+	return static_cast<T*>(iBytes);
+	}
+
+template <class T>
+inline void sDestroy_T(void* iBytes)
+	{ static_cast<T*>(iBytes)->~T(); }
+
+template <class T>
+inline const T* sFetch_T(const void* iBytes)
+	{ return static_cast<const T*>(iBytes); }
+
+template <class T>
+inline T* sFetch_T(void* iBytes)
+	{ return static_cast<T*>(iBytes); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZValR_T
 
 template <class T>
@@ -96,7 +147,7 @@ public:
 		return *this;
 		}
 
-	ZValMapIterator(size_t iVal) : fVal(iVal) {}
+	explicit ZValMapIterator(size_t iVal) : fVal(iVal) {}
 
 	ZValMapIterator& operator++()
 		{

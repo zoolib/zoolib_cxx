@@ -47,10 +47,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark * ZMACRO_ZValMapAccessors
 
 #define ZMACRO_ZValMapAccessors_Using(Map_t, Name_t, Val_t) \
+	using ZValMapR_T<Map_t, Name_t, Val_t>::DGet; \
+	using ZValMapR_T<Map_t, Name_t, Val_t>::Get; \
 	using ZValMapR_T<Map_t, Name_t, Val_t>::QGet_T; \
 	using ZValMapR_T<Map_t, Name_t, Val_t>::DGet_T; \
 	using ZValMapR_T<Map_t, Name_t, Val_t>::Get_T; \
-	using ZValMapR_T<Map_t, Name_t, Val_t>::DGet; \
-	using ZValMapR_T<Map_t, Name_t, Val_t>::Get;
 
 #endif // __ZValAccessors__

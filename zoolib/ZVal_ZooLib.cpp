@@ -173,67 +173,6 @@ void ValString::ToString(string& oString) const
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Placement-new
-
-namespace ZANONYMOUS {
-
-template <class T>
-inline T* sConstruct_T(void* iBytes)
-	{
-	new(iBytes) T();
-	return static_cast<T*>(iBytes);
-	}
-
-template <class T>
-inline T* sConstruct_T(void* iBytes, const T& iOther)
-	{
-	new(iBytes) T(iOther);
-	return static_cast<T*>(iBytes);
-	}
-
-template <class T, typename P0>
-inline T* sConstruct_T(void* iBytes, const P0& iP0)
-	{
-	new(iBytes) T(iP0);
-	return static_cast<T*>(iBytes);
-	}
-
-template <class T, typename P0, typename P1>
-inline T* sConstruct_T(void* iBytes, const P0& iP0, const P1& iP1)
-	{
-	new(iBytes) T(iP0, iP1);
-	return static_cast<T*>(iBytes);
-	}
-
-template <class T>
-inline T* sCopyConstruct_T(const void* iSource, void* iBytes)
-	{
-	new(iBytes) T(*static_cast<const T*>(iSource));
-	return static_cast<T*>(iBytes);
-	}
-
-template <class T>
-inline void sDestroy_T(void* iBytes)
-	{
-	static_cast<T*>(iBytes)->~T();
-	}
-
-template <class T>
-inline const T* sFetch_T(const void* iBytes)
-	{
-	return static_cast<const T*>(iBytes);
-	}
-
-template <class T>
-inline T* sFetch_T(void* iBytes)
-	{
-	return static_cast<T*>(iBytes);
-	}
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZVal_ZooLib::Ex_IllegalType
 
 ZVal_ZooLib::Ex_IllegalType::Ex_IllegalType(int iType)

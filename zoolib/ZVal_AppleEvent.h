@@ -64,6 +64,7 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, String, std::string)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, List, ZValList_AppleEvent)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Map, ZValMap_AppleEvent)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, FSSpec, FSSpec)
 
 	ZMACRO_ZValAccessors_Decl_Mac(ZVal_AppleEvent)
 
@@ -174,6 +175,8 @@ public:
 
 	ZValMap_AppleEvent(const AERecord& iOther);
 	ZValMap_AppleEvent& operator=(const AERecord& iOther);
+
+	AERecord* ParamO();
 
 	const_iterator begin();
 	const_iterator end();

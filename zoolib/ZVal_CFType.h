@@ -52,15 +52,12 @@ typedef ZValMap_CFType ZValMap_CF;
 class ZVal_CFType
 :	public ZValR_T<ZVal_CFType>
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZVal_CFType,
-		operator_bool_generator_type, operator_bool_type);
-
 public:
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_CFType)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, List, ZValList_CFType)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Map, ZValMap_CFType)
 
-	operator operator_bool_type() const;
+	operator bool() const;
 
 	ZVal_CFType();
 	ZVal_CFType(const ZVal_CFType& iOther);
@@ -101,11 +98,8 @@ private:
 class ZValList_CFType
 :	public ZValListR_T<ZValList_CFType, ZVal_CFType>
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZValList_CFType,
-		operator_bool_generator_type, operator_bool_type);
-
 public:
-	operator operator_bool_type() const;
+	operator bool() const;
 
 	ZValList_CFType();
 	ZValList_CFType(const ZValList_CFType& iOther);
@@ -149,14 +143,11 @@ class ZValMap_CFType
 :	public ZValMapR_T<ZValMap_CFType, const string8&, ZVal_CFType>
 ,	public ZValMapR_T<ZValMap_CFType, CFStringRef, ZVal_CFType>
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZValMap_CFType,
-		operator_bool_generator_type, operator_bool_type);
-
 public:
 	ZMACRO_ZValMapAccessors_Using(ZValMap_CFType, const string8&, ZVal_CFType)
 	ZMACRO_ZValMapAccessors_Using(ZValMap_CFType, CFStringRef, ZVal_CFType)
 
-	operator operator_bool_type() const;
+	operator bool() const;
 
 	ZValMap_CFType();
 	ZValMap_CFType(const ZValMap_CFType& iOther);

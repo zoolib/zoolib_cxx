@@ -29,6 +29,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::string;
 
+#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
+#	define ZCONFIG_Has_typeUTF8Text 1
+#else
+#	define ZCONFIG_Has_typeUTF8Text 0
+#endif
+
 NAMESPACE_ZOOLIB_BEGIN
 
 // TODO look at TN2046 "AEStream and friends"
@@ -85,7 +91,11 @@ ZVal_AppleEvent::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(descriptorType != typeNull); }
 
 ZVal_AppleEvent::ZVal_AppleEvent()
-	{ ::AEInitializeDesc(this); }
+	{
+	// AEInitializeDesc doesn't exist in older CarbonLibs, although it's
+	// in the headers. Use AEInitializeDescInline instead.
+	::AEInitializeDescInline(this);
+	}
 
 ZVal_AppleEvent::ZVal_AppleEvent(const ZVal_AppleEvent& iOther)
 	{ ::AEDuplicateDesc(&iOther, this); }
@@ -120,7 +130,13 @@ ZVal_AppleEvent::ZVal_AppleEvent(const bool& iVal)
 	{ ::AECreateDesc(iVal ? typeTrue : typeFalse, nullptr, 0, this); }
 
 ZVal_AppleEvent::ZVal_AppleEvent(const std::string& iVal)
-	{ ::AECreateDesc(typeUTF8Text, iVal.data(), iVal.size(), this); }
+	{
+	#if ZCONFIG_Has_typeUTF8Text
+		::AECreateDesc(typeUTF8Text, iVal.data(), iVal.size(), this);
+	#else
+		::AECreateDesc(typeChar, iVal.data(), iVal.size(), this);
+	#endif
+	}
 
 AEDesc* ZVal_AppleEvent::ParamO()
 	{
@@ -148,8 +164,10 @@ bool ZVal_AppleEvent::QGet_T<bool>(bool& oVal) const
 template <>
 bool ZVal_AppleEvent::QGet_T<string>(string& oVal) const
 	{
-#if !__MWERKS__
-	if (typeUTF8Text == descriptorType)
+	if (false)
+		{}
+	#if ZCONFIG_Has_typeUTF8Text
+	else if (typeUTF8Text == descriptorType)
 		{
 		const size_t theSize = ::AEGetDescDataSize(this);
 		oVal.resize(theSize);
@@ -159,7 +177,17 @@ bool ZVal_AppleEvent::QGet_T<string>(string& oVal) const
 			return true;
 			}
 		}
-#endif
+	#endif
+	else if (typeChar == descriptorType)
+		{
+		const size_t theSize = ::AEGetDescDataSize(this);
+		oVal.resize(theSize);
+		if (theSize)
+			{
+			::AEGetDescData(this, const_cast<char*>(oVal.data()), theSize);
+			return true;
+			}
+		}
 	return false;
 	}
 
@@ -206,9 +234,11 @@ void ZVal_AppleEvent::Set_T<bool>(const bool& iVal)
 template <>
 void ZVal_AppleEvent::Set_T<std::string>(const std::string& iVal)
 	{
-#if !__MWERKS__
-	::AEReplaceDescData(typeUTF8Text, iVal.data(), iVal.size(), this);
-#endif
+	#if ZCONFIG_Has_typeUTF8Text
+		::AEReplaceDescData(typeUTF8Text, iVal.data(), iVal.size(), this);
+	#else
+		::AEReplaceDescData(typeChar, iVal.data(), iVal.size(), this);
+	#endif
 	}
 
 template <>
@@ -241,12 +271,16 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Double, double)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, String, std::string)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, List, ZValList_AppleEvent)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Map, ZValMap_AppleEvent)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, FSSpec, FSSpec)
 
 ZMACRO_ZValAccessors_Def_Mac(ZVal_AppleEvent)
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValList_AppleEvent
+
+ZValList_AppleEvent::operator operator_bool_type() const
+	{ return operator_bool_generator_type::translate(this->Count()); }
 
 ZValList_AppleEvent::ZValList_AppleEvent()
 	{ ::AECreateList(nullptr, 0, false, this); }
@@ -289,9 +323,6 @@ ZValList_AppleEvent& ZValList_AppleEvent::operator=(const AEDescList& iOther)
 		}
 	return *this;	
 	}
-
-ZValList_AppleEvent::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(this->Count()); }
 
 size_t ZValList_AppleEvent::Count() const
 	{
@@ -345,6 +376,13 @@ void ZValList_AppleEvent::Append(const ZVal_AppleEvent& iVal)
 #pragma mark -
 #pragma mark * ZValMap_AppleEvent
 
+ZValMap_AppleEvent::operator operator_bool_type() const
+	{
+	long result;
+	return operator_bool_generator_type::translate
+		(noErr == ::AECountItems(this, &result) && result);
+	}
+
 ZValMap_AppleEvent::ZValMap_AppleEvent()
 	{ ::AECreateList(nullptr, 0, true, this); }
 
@@ -387,22 +425,21 @@ ZValMap_AppleEvent& ZValMap_AppleEvent::operator=(const AERecord& iOther)
 	return *this;	
 	}
 
-ZValMap_AppleEvent::operator operator_bool_type() const
+AEDesc* ZValMap_AppleEvent::ParamO()
 	{
-	long result;
-	return operator_bool_generator_type::translate
-		(noErr == ::AECountItems(this, &result) && result);
+	::AEDisposeDesc(this);
+	return this;
 	}
 
 ZValMap_AppleEvent::const_iterator ZValMap_AppleEvent::begin()
-	{ return 0; }
+	{ return const_iterator(0); }
 
 ZValMap_AppleEvent::const_iterator ZValMap_AppleEvent::end()
 	{
 	long theCount;
 	if (noErr == ::AECountItems(this, &theCount))
-		return size_t(theCount);
-	return 0;
+		return const_iterator(theCount);
+	return const_iterator(0);
 	}
 
 AEKeyword ZValMap_AppleEvent::KeyOf(const_iterator iPropIter) const
