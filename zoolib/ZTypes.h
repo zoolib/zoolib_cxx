@@ -145,6 +145,21 @@ uint8 (&byte_array_of_same_dimension_as(T(&)[N]))[N];
 
 #define countof(x) sizeof(ZOOLIB_PREFIX::byte_array_of_same_dimension_as((x)))
 
+// ==================================================
+
+template <typename P>
+class Adopt_t
+	{
+	P fP;
+public:
+	Adopt_t(P iP) : fP(iP) {}
+	P Get() const { return fP; }
+	};
+
+template <typename P>
+Adopt_t<P> Adopt(P iP)
+	{ return Adopt_t<P>(iP); }
+
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZTypes__

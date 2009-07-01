@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_algorithm.h" // For std::swap
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZTypes.h" // For Adopt_T
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -171,34 +172,27 @@ void sRefCopy(void* iDest, T* iP)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRef partially specialized for pointer types
-
-template <class T> void sRetain_T(T);
-template <class T> void sRelease_T(T);
+#pragma mark * NoRetain wrapper
 
 template <typename P>
-struct NoRetain_t
+class NoRetain_t
 	{
 	P fP;
+public:
 	NoRetain_t(P iP) : fP(iP) {}
+	P Get() const { return fP; }
 	};
 
 template <typename P>
 NoRetain_t<P> NoRetain(P iP)
 	{ return NoRetain_t<P>(iP); }
 
-template <typename P>
-struct Adopt_t
-	{
-	P fP;
-	Adopt_t(P iP) : fP(iP) {}
-	};
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZRef partially specialized for pointer types
 
-template <typename P>
-Adopt_t<P> Adopt(P iP)
-	{ return Adopt_t<P>(iP); }
-
-
+template <class T> void sRetain_T(T);
+template <class T> void sRelease_T(T);
 
 template <typename T>
 class ZRef<T*>
@@ -232,11 +226,11 @@ public:
 		{ spRetain(fP); }
 	
 	ZRef(const NoRetain_t<T*>& iNRP)
-	:	fP(iNRP.fP)
+	:	fP(iNRP.Get())
 		{}
 
 	ZRef(const Adopt_t<T*>& iNRP)
-	:	fP(iNRP.fP)
+	:	fP(iNRP.Get())
 		{}
 
 	ZRef& operator=(T* iP)
@@ -249,7 +243,7 @@ public:
 	
 	ZRef& operator=(const NoRetain_t<T*>& iNRP)
 		{
-		T* theP = iNRP.fP;
+		T* theP = iNRP.Get();
 		std::swap(theP, fP);
 		spRelease(theP);
 		return *this;
@@ -257,7 +251,7 @@ public:
 
 	ZRef& operator=(const Adopt_t<T*>& iNRP)
 		{
-		T* theP = iNRP.fP;
+		T* theP = iNRP.Get();
 		std::swap(theP, fP);
 		spRelease(theP);
 		return *this;
