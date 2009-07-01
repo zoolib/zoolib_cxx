@@ -112,7 +112,7 @@ public:
 
 	template <class O>
 	ZRefWeak(const ZRef<O>& iRef)
-	:	ZRefWeakBase(iRef.GetObject())
+	:	ZRefWeakBase(iRef.Get())
 		{
 		static_cast<T*>(static_cast<O*>(0)); // Ensure that T is a supertype of O
 		}
@@ -121,7 +121,7 @@ public:
 	ZRefWeak& operator=(const ZRef<O>& iRef)
 		{
 		static_cast<T*>(static_cast<O*>(0)); // Ensure that T is a supertype of O
-		ZRefWeakBase::AssignFrom(iRef.GetObject());
+		ZRefWeakBase::AssignFrom(iRef.Get());
 		return *this;
 		}
 
