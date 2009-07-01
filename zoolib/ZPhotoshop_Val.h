@@ -39,14 +39,18 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZPhotoshop {
 
-class Value;
 class List;
 class Map;
 class Spec;
+class Val;
 
 typedef DescriptorClassID ClassID;
-typedef DescriptorKeyID KeyID;
+typedef DescriptorEnumID EnumID;
+typedef DescriptorEnumTypeID EnumTypeID;
 typedef DescriptorFormID FormID;
+typedef DescriptorKeyID KeyID;
+typedef DescriptorTypeID TypeID;
+typedef DescriptorUnitID UnitID;
 
 // =================================================================================================
 #pragma mark -
@@ -55,12 +59,12 @@ typedef DescriptorFormID FormID;
 struct UnitFloat
 	{
 	UnitFloat() {}
-	UnitFloat(DescriptorUnitID iUnitID, double iValue)
+	UnitFloat(UnitID iUnitID, double iValue)
 	:	fUnitID(iUnitID),
 		fValue(iValue)
 		{}
 
-	DescriptorUnitID fUnitID;
+	UnitID fUnitID;
 	double fValue;
 	};
 
@@ -71,179 +75,13 @@ struct UnitFloat
 struct Enumerated
 	{
 	Enumerated() {}
-	Enumerated(DescriptorEnumTypeID iEnumType, DescriptorEnumID iValue)
+	Enumerated(EnumTypeID iEnumType, EnumID iValue)
 	:	fEnumType(iEnumType),
 		fValue(iValue)
 		{}
 
-	DescriptorEnumTypeID fEnumType;
-	DescriptorEnumID fValue;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Value
-
-class Value
-:	public ZValR_T<Value>
-	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Value,
-		operator_bool_generator_type, operator_bool_type);
-
-public:
-	ZMACRO_ZValAccessors_Decl_Entry(Value, Int32, int32)
-	ZMACRO_ZValAccessors_Decl_Entry(Value, Double, double)
-	ZMACRO_ZValAccessors_Decl_Entry(Value, Bool, bool)
-	ZMACRO_ZValAccessors_Decl_Entry(Value, String, string8)
-	ZMACRO_ZValAccessors_Decl_Entry(Value, Raw, ZMemoryBlock)
-	ZMACRO_ZValAccessors_Decl_Entry(Value, UnitFloat, UnitFloat)
-	ZMACRO_ZValAccessors_Decl_Entry(Value, Enumerated, Enumerated)
-	ZMACRO_ZValAccessors_Decl_Entry(Value, List, List)
-	ZMACRO_ZValAccessors_Decl_Entry(Value, Map, Map)
-	ZMACRO_ZValAccessors_Decl_Entry(Value, Spec, Spec)
-
-	operator operator_bool_type() const;
-
-	Value();
-	Value(const Value& iOther);
-	~Value();
-	Value& operator=(const Value& iOther);
-
-	Value(int32 iVal);
-	Value(double iVal);
-	Value(bool iVal);
-	Value(const string8& iVal);
-	Value(const ZMemoryBlock& iVal);
-	Value(UnitFloat iVal);
-	Value(Enumerated iVal);
-	Value(ClassID iType, const ZHandle_T<AliasHandle>& iHandle);
-	Value(const List& iVal);
-	Value(const Map& iVal);
-	Value(const Spec& iVal);
-
-	template <class S>
-	bool QGet_T(S& oVal) const;
-
-	template <class S>
-	void Set_T(const S& iVal);
-
-private:
-	void pRelease();
-	void pCopy(const Value& iOther);
-
-	union
-		{
-		bool fAsBool;
-		int32 fAsInt32;
-		double fAsDouble;
-		ClassID fAsClassID;
-
-		char fBytes[sizeof(string8)];
-		} fData;
-
-	KeyID fType;
-
-	friend class List;
-	friend class Map;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * List
-
-class List
-:	public ZValListR_T<List, Value>
-	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(List,
-		operator_bool_generator_type, operator_bool_type);
-
-public:
-	operator operator_bool_type() const;
-
-	List();
-	List(const List& iOther);
-	~List();
-	List& operator=(const List& iOther);
-
-	List(PIActionList iOther);
-	List(Adopt_t<PIActionList> iOther);
-
-	List& operator=(PIActionList iOther);
-	List& operator=(Adopt_t<PIActionList> iOther);
-
-	size_t Count() const;
-
-	void Clear();
-
-	bool QGet(size_t iIndex, Value& oVal) const;
-
-	void Append(const Value& iVal);
-
-	PIActionList GetActionList() const;
-
-private:
-	PIActionList fAL;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Map
-
-class Map
-:	public ZValMapR_T<Map, KeyID, Value>
-,	public ZValMapR_T<Map, const string8&, Value>
-,	public ZValMapR_T<Map, ZValMapIterator, Value>
-	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Map,
-		operator_bool_generator_type, operator_bool_type);
-public:
-	ZMACRO_ZValMapAccessors_Using(Map, KeyID, Value)
-	ZMACRO_ZValMapAccessors_Using(Map, const string8&, Value)
-	ZMACRO_ZValMapAccessors_Using(Map, ZValMapIterator, Value)
-
-	typedef ZValMapIterator const_iterator;
-
-	operator operator_bool_type() const;
-
-	Map();
-	Map(const Map& iOther);
-	~Map();
-	Map& operator=(const Map& iOther);
-
-	Map(PIActionDescriptor iOther);
-	Map(Adopt_t<PIActionDescriptor> iOther);
-
-	Map& operator=(PIActionDescriptor iOther);
-	Map& operator=(Adopt_t<PIActionDescriptor> iOther);
-
-	PIActionDescriptor* ParamO();
-
-	const_iterator begin();
-	const_iterator end();
-
-	KeyID KeyOf(const_iterator iPropIter) const;
-	std::string NameOf(const_iterator iPropIter) const;
-
-	void Clear();
-
-	bool QGet(KeyID iName, Value& oVal) const;
-	bool QGet(const string8& iName, Value& oVal) const;
-	bool QGet(const_iterator iName, Value& iVal);
-
-	void Set(KeyID iName, const Value& iVal);
-	void Set(const string8& iName, const Value& iVal);
-	void Set(const_iterator iName, const Value& iVal);
-
-	void Erase(KeyID iName);
-	void Erase(const string8& iName);
-	void Erase(const_iterator iName);
-
-	PIActionDescriptor GetActionDescriptor() const;
-
-private:
-	size_t pCount() const;
-
-	PIActionDescriptor fAD;
+	EnumTypeID fEnumType;
+	EnumID fValue;
 	};
 
 // =================================================================================================
@@ -256,7 +94,7 @@ class Spec
 
 public:
 	static Spec sClass(ClassID iClassID);
-	static Spec sEnum(ClassID iClassID, DescriptorEnumTypeID iEnumType, DescriptorEnumID iValue);
+	static Spec sEnum(ClassID iClassID, EnumTypeID iEnumType, EnumID iValue);
 	static Spec sEnum(ClassID iClassID, const Enumerated& iEnum);
 	static Spec sIdentifier(ClassID iClassID, uint32 iIdentifier);
 	static Spec sIndex(ClassID iClassID, uint32 iIndex);
@@ -286,7 +124,8 @@ public:
 	PIActionReference MakeRef() const;
 
 private:
-	void pConvert(PIActionReference iRef, std::vector<Entry>& oEntries);
+	static void spConvert(PIActionReference iRef, std::vector<Entry>& oEntries);
+
 	struct Entry
 		{
 		Entry();
@@ -315,11 +154,188 @@ private:
 			uint32 fAsIdentifier;
 			int32 fAsOffset;
 			KeyID fAsProperty;
-			char fBytes[sizeof(string8)];
+			char fBytes[1];
+			// dummy fields to ensure the union is large enough.
+			char spacer1[sizeof(Enumerated)];
+			char spacer2[sizeof(string8)];
 			} fData;
 		};
 
 	std::vector<Entry> fEntries;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Val
+
+class Val
+:	public ZValR_T<Val>
+	{
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Val,
+		operator_bool_generator_type, operator_bool_type);
+
+public:
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Int32, int32)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Double, double)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Bool, bool)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, String, string8)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Raw, ZMemoryBlock)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, UnitFloat, UnitFloat)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Enumerated, Enumerated)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, List, List)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Map, Map)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Spec, Spec)
+
+	operator operator_bool_type() const;
+
+	Val();
+	Val(const Val& iOther);
+	~Val();
+	Val& operator=(const Val& iOther);
+
+	Val(int32 iVal);
+	Val(double iVal);
+	Val(bool iVal);
+	Val(const string8& iVal);
+	Val(const ZMemoryBlock& iVal);
+	Val(UnitFloat iVal);
+	Val(Enumerated iVal);
+	#if ZCONFIG_SPI_Enabled(Carbon)
+		Val(ClassID iType, const ZHandle_T<AliasHandle>& iHandle);
+	#endif
+	Val(const List& iVal);
+	Val(const Map& iVal);
+	Val(const Spec& iVal);
+
+	template <class S>
+	bool QGet_T(S& oVal) const;
+
+	template <class S>
+	void Set_T(const S& iVal);
+
+private:
+	void pRelease();
+	void pCopy(const Val& iOther);
+
+	union
+		{
+		bool fAsBool;
+		int32 fAsInt32;
+		double fAsDouble;
+		ClassID fAsClassID;
+
+		char fBytes[1];
+
+		char spacer1[sizeof(string8)];
+		char spacer2[sizeof(ZMemoryBlock)];
+		char spacer3[sizeof(UnitFloat)];
+		char spacer4[sizeof(Enumerated)];
+		char spacer5[sizeof(Spec)];
+		} fData;
+
+	KeyID fType;
+
+	friend class List;
+	friend class Map;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * List
+
+class List
+:	public ZValListR_T<List, Val>
+	{
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(List,
+		operator_bool_generator_type, operator_bool_type);
+
+public:
+	operator operator_bool_type() const;
+
+	List();
+	List(const List& iOther);
+	~List();
+	List& operator=(const List& iOther);
+
+	List(PIActionList iOther);
+	List(Adopt_t<PIActionList> iOther);
+
+	List& operator=(PIActionList iOther);
+	List& operator=(Adopt_t<PIActionList> iOther);
+
+	size_t Count() const;
+
+	void Clear();
+
+	bool QGet(size_t iIndex, Val& oVal) const;
+
+	void Append(const Val& iVal);
+
+	PIActionList GetActionList() const;
+
+private:
+	PIActionList fAL;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Map
+
+class Map
+:	public ZValMapR_T<Map, KeyID, Val>
+,	public ZValMapR_T<Map, const string8&, Val>
+,	public ZValMapR_T<Map, ZValMapIterator, Val>
+	{
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Map,
+		operator_bool_generator_type, operator_bool_type);
+public:
+	ZMACRO_ZValMapAccessors_Using(Map, KeyID, Val)
+	ZMACRO_ZValMapAccessors_Using(Map, const string8&, Val)
+	ZMACRO_ZValMapAccessors_Using(Map, ZValMapIterator, Val)
+
+	typedef ZValMapIterator const_iterator;
+
+	operator operator_bool_type() const;
+
+	Map();
+	Map(const Map& iOther);
+	~Map();
+	Map& operator=(const Map& iOther);
+
+	Map(PIActionDescriptor iOther);
+	Map(Adopt_t<PIActionDescriptor> iOther);
+
+	Map& operator=(PIActionDescriptor iOther);
+	Map& operator=(Adopt_t<PIActionDescriptor> iOther);
+
+	PIActionDescriptor* ParamO();
+
+	const_iterator begin();
+	const_iterator end();
+
+	KeyID KeyOf(const_iterator iPropIter) const;
+	std::string NameOf(const_iterator iPropIter) const;
+
+	void Clear();
+
+	bool QGet(KeyID iName, Val& oVal) const;
+	bool QGet(const string8& iName, Val& oVal) const;
+	bool QGet(const_iterator iName, Val& iVal);
+
+	void Set(KeyID iName, const Val& iVal);
+	void Set(const string8& iName, const Val& iVal);
+	void Set(const_iterator iName, const Val& iVal);
+
+	void Erase(KeyID iName);
+	void Erase(const string8& iName);
+	void Erase(const_iterator iName);
+
+	PIActionDescriptor GetActionDescriptor() const;
+
+private:
+	size_t pCount() const;
+
+	PIActionDescriptor fAD;
 	};
 
 } // namespace ZPhotoshop

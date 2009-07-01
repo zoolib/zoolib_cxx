@@ -88,7 +88,7 @@ static PIActionDescriptor sDuplicate(PIActionDescriptor iSource)
 
 	sPSActionList->PutObject(dummy, typeObject, iSource);
 
-	DescriptorClassID theType;
+	ClassID theType;
 	PIActionDescriptor result;
 	sPSActionList->GetObject(dummy, 0, &theType, &result);
 
@@ -125,9 +125,9 @@ static ZRef<ASZString> sAsASZString(const string16& iString)
 	return ZRef<ASZString>();
 	}
 
-static DescriptorKeyID sAsDescriptorKeyID(const string8& iName)
+static KeyID sAsKeyID(const string8& iName)
 	{
-	DescriptorKeyID result = 0;
+	KeyID result = 0;
 	const size_t theSize = iName.size();
 	if (theSize > 0)
 		{
@@ -148,798 +148,30 @@ static DescriptorKeyID sAsDescriptorKeyID(const string8& iName)
 	return result;
 	}
 
-static string8 sAsString(DescriptorKeyID iDescID)
+static string8 sAsString(KeyID iKeyID)
 	{
 	if (ZCONFIG(Endian, Big))
 		{
-		return string8((char*)&iDescID, 4);
+		return string8((char*)&iKeyID, 4);
 		}
 	else
 		{
 		string8 result;
-		result += char((iDescID >> 24) & 0xFF);
-		result += char((iDescID >> 16) & 0xFF);
-		result += char((iDescID >> 8) & 0xFF);
-		result += char((iDescID) & 0xFF);
+		result += char((iKeyID >> 24) & 0xFF);
+		result += char((iKeyID >> 16) & 0xFF);
+		result += char((iKeyID >> 8) & 0xFF);
+		result += char((iKeyID) & 0xFF);
 		return result;
 		}
 	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Value
-
-Value::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(fType); }
-
-Value::Value()
-:	fType(0)
-	{}
-
-Value::Value(const Value& iOther)
-	{ this->pCopy(iOther); }
-
-Value::~Value()
-	{ this->pRelease(); }
-
-Value& Value::operator=(const Value& iOther)
-	{
-	if (this != &iOther)
-		{
-		this->pRelease();
-		this->pCopy(iOther);
-		}
-	return *this;
-	}
-
-Value::Value(int32 iVal)
-	{
-	fData.fAsInt32 = iVal;
-	fType = typeInteger;
-	}
-
-Value::Value(double iVal)
-	{
-	fData.fAsDouble = iVal;
-	fType = typeFloat;
-	}
-
-Value::Value(bool iVal)
-	{
-	fData.fAsBool = iVal;
-	fType = typeBoolean;
-	}
-
-Value::Value(const string8& iVal)
-	{
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeChar;
-	}
-
-Value::Value(const ZMemoryBlock& iVal)
-	{
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeRawData;
-	}
-
-Value::Value(UnitFloat iVal)
-	{
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeUnitFloat;
-	}
-
-Value::Value(Enumerated iVal)
-	{
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeEnumerated;
-	}
-
-Value::Value(ClassID iType, const ZHandle_T<AliasHandle>& iHandle)
-	{
-	sConstruct_T(fData.fBytes, iHandle);
-	fType = typePath;
-	}
-
-Value::Value(const List& iVal)
-	{
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeValueList;
-	}
-
-Value::Value(const Map& iVal)
-	{
-	sConstruct_T<>(fData.fBytes, iVal);
-	fType = typeObject;
-	}
-
-Value::Value(const Spec& iVal)
-	{
-	sConstruct_T<>(fData.fBytes, iVal);
-	fType = typeObjectSpecifier;
-	}
-
-template <>
-bool Value::QGet_T<int32>(int32& oVal) const
-	{
-	if (typeInteger == fType)
-		{
-		oVal = fData.fAsInt32;
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Value::QGet_T<double>(double& oVal) const
-	{
-	if (typeFloat == fType)
-		{
-		oVal = fData.fAsDouble;
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Value::QGet_T<bool>(bool& oVal) const
-	{
-	if (typeBoolean == fType)
-		{
-		oVal = fData.fAsBool;
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Value::QGet_T<string8>(string8& oVal) const
-	{
-	if (typeUnitFloat == fType)
-		{
-		oVal = *sFetch_T<string8>(fData.fBytes);
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Value::QGet_T<ZMemoryBlock>(ZMemoryBlock& oVal) const
-	{
-	if (typeRawData == fType)
-		{
-		oVal = *sFetch_T<ZMemoryBlock>(fData.fBytes);
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Value::QGet_T<UnitFloat>(UnitFloat& oVal) const
-	{
-	if (typeUnitFloat == fType)
-		{
-		oVal = *sFetch_T<UnitFloat>(fData.fBytes);
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Value::QGet_T<Enumerated>(Enumerated& oVal) const
-	{
-	if (typeEnumerated == fType)
-		{
-		oVal = *sFetch_T<Enumerated>(fData.fBytes);
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Value::QGet_T<List>(List& oVal) const
-	{
-	if (typeValueList == fType)
-		{
-		oVal = *sFetch_T<List>(fData.fBytes);
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Value::QGet_T<Map>(Map& oVal) const
-	{
-	if (typeObject == fType || typeGlobalObject == fType)
-		{
-		oVal = *sFetch_T<Map>(fData.fBytes);
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Value::QGet_T<Spec>(Spec& oVal) const
-	{
-	if (typeObjectSpecifier == fType)
-		{
-		oVal = *sFetch_T<Spec>(fData.fBytes);
-		return true;
-		}
-	return false;
-	}
-
-template <>
-void Value::Set_T<int32>(const int32& iVal)
-	{
-	this->pRelease();
-	fData.fAsInt32 = iVal;
-	fType = typeInteger;
-	}
-
-template <>
-void Value::Set_T<bool>(const bool& iVal)
-	{
-	this->pRelease();
-	fData.fAsBool = iVal;
-	fType = typeBoolean;
-	}
-
-template <>
-void Value::Set_T<double>(const double& iVal)
-	{
-	this->pRelease();
-	fData.fAsDouble = iVal;
-	fType = typeFloat;
-	}
-
-template <>
-void Value::Set_T<string8>(const string8& iVal)
-	{
-	this->pRelease();
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeChar;
-	}
-
-template <>
-void Value::Set_T<ZMemoryBlock>(const ZMemoryBlock& iVal)
-	{
-	this->pRelease();
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeRawData;
-	}
-
-template <>
-void Value::Set_T<UnitFloat>(const UnitFloat& iVal)
-	{
-	this->pRelease();
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeUnitFloat;
-	}
-
-template <>
-void Value::Set_T<Enumerated>(const Enumerated& iVal)
-	{
-	this->pRelease();
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeEnumerated;
-	}
-
-template <>
-void Value::Set_T<List>(const List& iVal)
-	{
-	this->pRelease();
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeValueList;
-	}
-
-template <>
-void Value::Set_T<Map>(const Map& iVal)
-	{
-	this->pRelease();
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeObject;
-	}
-
-template <>
-void Value::Set_T<Spec>(const Spec& iVal)
-	{
-	this->pRelease();
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeObjectSpecifier;
-	}
-
-void Value::pRelease()
-	{
-	const DescriptorKeyID theType = fType;
-	fType = 0;
-	switch (theType)
-		{
-		case typeChar:
-			{
-			sDestroy_T<string8>(fData.fBytes);
-			break;
-			}
-		case typeRawData:
-			{
-			sDestroy_T<ZMemoryBlock>(fData.fBytes);
-			break;
-			}
-		case typePath:
-		case typeAlias:
-			{
-			sDestroy_T<ZHandle_T<AliasHandle> >(fData.fBytes);
-			break;
-			}
-		case typeObject:
-		case typeGlobalObject:
-			{
-			sDestroy_T<Map>(fData.fBytes);
-			break;
-			}
-		case typeValueList:
-			{
-			sDestroy_T<List>(fData.fBytes);
-			break;
-			}
-		case typeObjectSpecifier:
-			{
-			sDestroy_T<Spec>(fData.fBytes);
-			break;
-			}
-		}
-	}
-
-void Value::pCopy(const Value& iOther)
-	{
-	switch (iOther.fType)
-		{
-		case typeInteger:
-			{
-			fData.fAsInt32 = iOther.fData.fAsInt32;
-			break;
-			}
-		case typeFloat:
-			{
-			fData.fAsDouble = iOther.fData.fAsDouble;
-			break;
-			}
-		case typeBoolean:
-			{
-			fData.fAsBool = iOther.fData.fAsBool;
-			break;
-			}
-		case typeUnitFloat:
-			{
-			sCopyConstruct_T<UnitFloat>(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		case typeEnumerated:
-			{
-			sCopyConstruct_T<Enumerated>(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		case typeType:
-		case typeGlobalClass:
-			{
-			fData.fAsClassID = iOther.fData.fAsClassID;
-			break;
-			}
-		case typeChar:
-			{
-			sCopyConstruct_T<string8>(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		case typeRawData:
-			{
-			sCopyConstruct_T<ZMemoryBlock>(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		case typePath:
-		case typeAlias:
-			{
-			sCopyConstruct_T<ZHandle_T<AliasHandle> >(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		case typeObject:
-		case typeGlobalObject:
-			{
-			sCopyConstruct_T<Map>(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		case typeValueList:
-			{
-			sCopyConstruct_T<List>(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		case typeObjectSpecifier:
-			{
-			sCopyConstruct_T<Spec>(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		}
-	fType = iOther.fType;
-	}
-
-ZMACRO_ZValAccessors_Def_Entry(Value, Int32, int32)
-ZMACRO_ZValAccessors_Def_Entry(Value, Double, double)
-ZMACRO_ZValAccessors_Def_Entry(Value, Bool, bool)
-ZMACRO_ZValAccessors_Def_Entry(Value, String, string8)
-ZMACRO_ZValAccessors_Def_Entry(Value, Raw, ZMemoryBlock)
-ZMACRO_ZValAccessors_Def_Entry(Value, UnitFloat, UnitFloat)
-ZMACRO_ZValAccessors_Def_Entry(Value, Enumerated, Enumerated)
-ZMACRO_ZValAccessors_Def_Entry(Value, List, List)
-ZMACRO_ZValAccessors_Def_Entry(Value, Map, Map)
-ZMACRO_ZValAccessors_Def_Entry(Value, Spec, Spec)
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * List
-
-List::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(this->Count()); }
-
-List::List()
-	{ sPSActionList->Make(&fAL); }
-
-List::List(const List& iOther)
-:	fAL(sDuplicate(iOther.fAL))
-	{}
-
-List::~List()
-	{ sPSActionList->Free(fAL); }
-
-List& List::operator=(const List& iOther)
-	{
-	if (this != &iOther)
-		{
-		sPSActionList->Free(fAL);
-		fAL = sDuplicate(iOther.fAL);
-		}
-	return *this;
-	}
-
-List::List(PIActionList iOther)
-:	fAL(sDuplicate(iOther))
-	{}
-
-List::List(Adopt_t<PIActionList> iOther)
-:	fAL(iOther.Get())
-	{}
-
-List& List::operator=(PIActionList iOther)
-	{
-	sPSActionList->Free(fAL);
-	fAL = sDuplicate(iOther);
-	return *this;
-	}
-
-List& List::operator=(Adopt_t<PIActionList> iOther)
-	{
-	sPSActionList->Free(fAL);
-	fAL = iOther.Get();
-	return *this;
-	}
-
-size_t List::Count() const
-	{
-	uint32 result;
-	if (noErr == sPSActionList->GetCount(fAL, &result))
-		return result;
-	return 0;
-	}
-
-void List::Clear()
-	{
-	sPSActionList->Free(fAL);
-	sPSActionList->Make(&fAL);	
-	}
-
-#define COMMA ,
-
-#define GETTERCASES(SUITE, PARAM) \
-	case typeInteger: { int32 theVal; \
-		if (noErr == SUITE->GetInteger(PARAM, &theVal)) { oVal = theVal; return true; } \
-		break; } \
-	case typeFloat: { double theVal; \
-		if (noErr == SUITE->GetFloat(PARAM, &theVal)) { oVal = theVal; return true; } \
-		break; } \
-	case typeBoolean: { Boolean theVal; \
-		if (noErr == SUITE->GetBoolean(PARAM, &theVal)) \
-			{ oVal = bool(theVal); return true; } \
-		break; } \
-	case typeChar: \
-		{ \
-		uint32 theLength; \
-		if (noErr == SUITE->GetStringLength(PARAM, &theLength)) \
-			{ \
-			string8 result('\0', theLength); \
-			if (0 == theLength || noErr == SUITE->GetString(PARAM, &result[0], theLength)) \
-				{ \
-				oVal = result; \
-				return true; \
-				} \
-			} \
-		break; \
-		} \
-	case typeUnitFloat: { UnitFloat theVal; \
-		if (noErr == SUITE->GetUnitFloat(PARAM, &theVal.fUnitID, &theVal.fValue)) \
-			{ oVal = theVal; return true; } \
-		break; } \
-	case typeEnumerated: { Enumerated theVal; \
-		if (noErr == SUITE->GetEnumerated(PARAM, &theVal.fEnumType, &theVal.fValue)) \
-			{ oVal = theVal; return true; } \
-		break; } \
-	case typePath: \
-		{ \
-		ZUnimplemented(); \
-		} \
-	case typeValueList: { PIActionList theVal; \
-		if (noErr == SUITE->GetList(PARAM, &theVal)) \
-			{ oVal = List(Adopt(theVal)); return true; } \
-		break; } \
-	case typeObject: { \
-		DescriptorClassID theDCID; \
-		PIActionDescriptor theVal; \
-		if (noErr == SUITE->GetObject(PARAM, &theDCID, &theVal)) \
-			{ oVal = Map(Adopt(theVal)); return true; } \
-		break; } \
-	case typeObjectSpecifier: \
-		{ \
-		PIActionReference theVal; \
-		if (noErr == SUITE->GetReference(PARAM, &theVal)) \
-			{ \
-			oVal = Spec(Adopt(theVal)); \
-			return true; \
-			} \
-		break; \
-		} \
-
-
-#define SETTERCASES(SUITE, PARAM) \
-	case typeInteger: { SUITE->PutInteger(PARAM, iVal.fData.fAsInt32); return; } \
-	case typeFloat: { SUITE->PutFloat(PARAM, iVal.fData.fAsDouble); return; } \
-	case typeBoolean: { SUITE->PutBoolean(PARAM, iVal.fData.fAsBool); return; } \
-	case typeChar: \
-		{ \
-		SUITE->PutString(PARAM, \
-			const_cast<char*>(sFetch_T<string8>(iVal.fData.fBytes)->c_str())); \
-		return; \
-		} \
-	case typeRawData: \
-		{ \
-		ZUnimplemented(); \
-		} \
-	case typeUnitFloat: \
-		{ \
-		SUITE->PutUnitFloat(PARAM, \
-			sFetch_T<UnitFloat>(iVal.fData.fBytes)->fUnitID, \
-			sFetch_T<UnitFloat>(iVal.fData.fBytes)->fValue); \
-		return; \
-		} \
-	case typeEnumerated: \
-		{ \
-		SUITE->PutEnumerated(PARAM, \
-			sFetch_T<Enumerated>(iVal.fData.fBytes)->fEnumType, \
-			sFetch_T<Enumerated>(iVal.fData.fBytes)->fValue); \
-		return; \
-		} \
-	case typePath: \
-		{ \
-		ZUnimplemented(); \
-		} \
-	case typeValueList: \
-		{ \
-		SUITE->PutList(PARAM, \
-			sFetch_T<List>(iVal.fData.fBytes)->GetActionList()); \
-		return; \
-		} \
-	case typeObject: \
-		{ \
-		SUITE->PutObject(PARAM, \
-			typeObject, \
-			sFetch_T<Map>(iVal.fData.fBytes)->GetActionDescriptor()); \
-		return; \
-		} \
-	case typeObjectSpecifier: \
-		{ \
-		PIActionReference tempRef = sFetch_T<Spec>(iVal.fData.fBytes)->MakeRef(); \
-		SUITE->PutReference(PARAM, tempRef); \
-		sPSActionReference->Free(tempRef); \
-		return; \
-		} \
-
-bool List::QGet(size_t iIndex, Value& oVal) const
-	{
-	if (iIndex >= this->Count())
-		return false;
-
-	DescriptorTypeID theType;
-	if (noErr != sPSActionList->GetType(fAL, iIndex, &theType))
-		return false;
-
-	switch (theType)
-		{
-		GETTERCASES(sPSActionList, fAL COMMA iIndex)
-		default:
-			ZUnimplemented();
-		}
-	return false;
-	}
-
-void List::Append(const Value& iVal)
-	{
-	switch (iVal.fType)
-		{
-		SETTERCASES(sPSActionList, fAL)
-		default:
-			ZUnimplemented();
-		}
-	}
-
-PIActionList List::GetActionList() const
-	{ return fAL; }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Map
-
-Map::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(this->pCount()); }
-
-Map::Map()
-	{ sPSActionDescriptor->Make(&fAD); }
-
-Map::Map(const Map& iOther)
-:	fAD(sDuplicate(iOther.fAD))
-	{}
-
-Map::~Map()
-	{
-	if (fAD)
-		sPSActionDescriptor->Free(fAD);
-	}
-
-Map& Map::operator=(const Map& iOther)
-	{
-	if (this != &iOther)
-		{
-		sPSActionDescriptor->Free(fAD);
-		fAD = sDuplicate(iOther.fAD);
-		}
-	return *this;
-	}
-
-Map::Map(PIActionDescriptor iOther)
-:	fAD(sDuplicate(iOther))
-	{}
-
-Map::Map(Adopt_t<PIActionDescriptor> iOther)
-:	fAD(iOther.Get())
-	{}
-
-Map& Map::operator=(PIActionDescriptor iOther)
-	{
-	if (fAD)
-		sPSActionDescriptor->Free(fAD);
-	fAD = sDuplicate(iOther);
-	return *this;
-	}
-	
-Map& Map::operator=(Adopt_t<PIActionDescriptor> iOther)
-	{
-	if (fAD)
-		sPSActionDescriptor->Free(fAD);
-	fAD = iOther.Get();
-	return *this;
-	}
-
-PIActionDescriptor* Map::ParamO()
-	{
-	if (fAD)
-		sPSActionDescriptor->Free(fAD);
-	fAD = nullptr;
-	return &fAD;
-	}
-
-Map::const_iterator Map::begin()
-	{ return const_iterator(0); }
-
-Map::const_iterator Map::end()
-	{ return const_iterator(this->pCount()); }
-
-DescriptorKeyID Map::KeyOf(const_iterator iPropIter) const
-	{
-	if (iPropIter.GetIndex() < this->pCount())
-		{
-		DescriptorKeyID result;
-		if (noErr == sPSActionDescriptor->GetKey(fAD, iPropIter.GetIndex(), &result))
-			return result;
-		}
-	return 0;	
-	}
-
-std::string Map::NameOf(const_iterator iPropIter) const
-	{
-	if (iPropIter.GetIndex() < this->pCount())
-		{
-		DescriptorKeyID result;
-		if (noErr == sPSActionDescriptor->GetKey(fAD, iPropIter.GetIndex(), &result))
-			return sAsString(result);
-		}
-	return string8();
-	}
-
-void Map::Clear()
-	{ sPSActionDescriptor->Clear(fAD); }
-
-bool Map::QGet(DescriptorKeyID iName, Value& oVal) const
-	{
-	if (!fAD)
-		return false;
-
-	DescriptorTypeID theType;
-	if (noErr != sPSActionDescriptor->GetType(fAD, iName, &theType))
-		return false;
-
-	switch (theType)
-		{
-		GETTERCASES(sPSActionDescriptor, fAD COMMA iName)
-		default:
-			ZUnimplemented();
-		}
-	return false;
-	}
-
-bool Map::QGet(const string8& iName, Value& oVal) const
-	{ return this->QGet(sAsDescriptorKeyID(iName), oVal); }
-
-bool Map::QGet(const_iterator iName, Value& oVal)
-	{ return this->QGet(this->KeyOf(iName), oVal); }
-
-void Map::Set(DescriptorKeyID iName, const Value& iVal)
-	{
-	switch (iVal.fType)
-		{
-		SETTERCASES(sPSActionDescriptor, fAD COMMA iName)
-		default:
-			ZUnimplemented();//?
-		}
-	}
-
-void Map::Set(const string8& iName, const Value& iVal)
-	{ this->Set(sAsDescriptorKeyID(iName), iVal); }
-
-void Map::Set(const_iterator iName, const Value& iVal)
-	{ this->Set(this->KeyOf(iName), iVal); }
-
-void Map::Erase(DescriptorKeyID iName)
-	{ sPSActionDescriptor->Erase(fAD, iName); }
-
-void Map::Erase(const string8& iName)
-	{ this->Erase(sAsDescriptorKeyID(iName)); }
-
-void Map::Erase(const_iterator iName)
-	{ this->Erase(this->KeyOf(iName)); }
-
-PIActionDescriptor Map::GetActionDescriptor() const
-	{ return fAD; }
-
-size_t Map::pCount() const
-	{
-	uint32 result;
-	if (noErr == sPSActionDescriptor->GetCount(fAD, &result))
-		return result;
-	return 0;
-	}
-
-#undef COMMA
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Spec
 
 Spec::Entry::Entry()
-:	fFormID(0)
+:	fClassID(0),
+	fFormID(0)
 	{}
 
 Spec::Entry::Entry(const Entry& iOther)
@@ -1094,6 +326,7 @@ void Spec::Entry::pCopyFrom(const Entry& iOther)
 			break;
 			}
 		}
+	fClassID = iOther.fClassID;
 	fFormID = iOther.fFormID;
 	}
 
@@ -1104,7 +337,7 @@ void Spec::Entry::pCopyFrom(const Entry& iOther)
 Spec Spec::sClass(ClassID iClassID)
 	{ return Entry::sClass(iClassID); }
 
-Spec Spec::sEnum(ClassID iClassID, DescriptorEnumTypeID iEnumType, DescriptorEnumID iValue)
+Spec Spec::sEnum(ClassID iClassID, EnumTypeID iEnumType, EnumID iValue)
 	{ return Entry::sEnum(iClassID, Enumerated(iEnumType, iValue)); }
 
 Spec Spec::sEnum(ClassID iClassID, const Enumerated& iEnum)
@@ -1149,15 +382,15 @@ Spec::Spec(const Entry& iEntry)
 	{}
 
 Spec::Spec(PIActionReference iOther)
-	{ pConvert(iOther, fEntries); }
+	{ spConvert(iOther, fEntries); }
 
 Spec::Spec(Adopt_t<PIActionReference> iOther)
-	{ pConvert(iOther.Get(), fEntries); }
+	{ spConvert(iOther.Get(), fEntries); }
 
 Spec& Spec::operator=(PIActionReference iOther)
 	{
 	vector<Entry> newEntries;
-	pConvert(iOther, newEntries);
+	spConvert(iOther, newEntries);
 	std::swap(fEntries, newEntries);
 	return *this;
 	}
@@ -1165,7 +398,7 @@ Spec& Spec::operator=(PIActionReference iOther)
 Spec& Spec::operator=(Adopt_t<PIActionReference> iOther)
 	{
 	vector<Entry> newEntries;
-	pConvert(iOther.Get(), newEntries);
+	spConvert(iOther.Get(), newEntries);
 	std::swap(fEntries, newEntries);
 	sPSActionReference->Free(iOther.Get());
 	return *this;
@@ -1185,7 +418,8 @@ Map Spec::Get() const
 	Map result;
 	if (PIActionReference theRef = this->MakeRef())
 		{
-		if (noErr != sPSActionControl->Get(result.ParamO(), theRef))
+		OSErr theErr = sPSActionControl->Get(result.ParamO(), theRef);
+		if (noErr != theErr)
 			result.Clear();
 		sPSActionReference->Free(theRef);
 		}
@@ -1213,8 +447,7 @@ PIActionReference Spec::MakeRef() const
 					}
 				case formEnumerated:
 					{
-					if (noErr != sPSActionReference->PutEnumerated(theRef,
-						theEntry.fClassID,
+					if (noErr != sPSActionReference->PutEnumerated(theRef, theEntry.fClassID,
 						sFetch_T<Enumerated>(theEntry.fData.fBytes)->fEnumType,
 						sFetch_T<Enumerated>(theEntry.fData.fBytes)->fValue))
 						{ allOK = false; }
@@ -1222,8 +455,8 @@ PIActionReference Spec::MakeRef() const
 					}
 				case formIdentifier:
 					{
-					if (noErr != sPSActionReference->PutIdentifier(theRef,
-						theEntry.fClassID, theEntry.fData.fAsIdentifier))
+					if (noErr != sPSActionReference->PutIdentifier(theRef, theEntry.fClassID,
+						theEntry.fData.fAsIdentifier))
 						{ allOK = false; }
 					break;
 					}
@@ -1237,22 +470,22 @@ PIActionReference Spec::MakeRef() const
 				case formName:
 					{
 					const string8& theName = *sFetch_T<string8>(theEntry.fData.fBytes);
-					if (noErr != sPSActionReference->PutName(theRef,
-						theEntry.fClassID, const_cast<char*>(theName.c_str())))
+					if (noErr != sPSActionReference->PutName(theRef, theEntry.fClassID,
+						const_cast<char*>(theName.c_str())))
 						{ allOK = false; }
 					break;
 					}
 				case formOffset:
 					{
-					if (noErr != sPSActionReference->PutOffset(theRef,
-						theEntry.fClassID, theEntry.fData.fAsOffset))
+					if (noErr != sPSActionReference->PutOffset(theRef, theEntry.fClassID,
+						theEntry.fData.fAsOffset))
 						{ allOK = false; }
 					break;
 					}
 				case formProperty:
 					{
-					if (noErr != sPSActionReference->PutProperty(theRef,
-						theEntry.fClassID, theEntry.fData.fAsProperty))
+					if (noErr != sPSActionReference->PutProperty(theRef, theEntry.fClassID,
+						theEntry.fData.fAsProperty))
 						{ allOK = false; }
 					break;
 					}
@@ -1263,12 +496,14 @@ PIActionReference Spec::MakeRef() const
 	return theRef;
 	}
 
-void Spec::pConvert(PIActionReference iRef, vector<Entry>& oEntries)
+void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 	{
+	// TODO Check this
+	bool freeRef = false;
 	bool allOK = true;
 	while (iRef && allOK)
 		{
-		DescriptorFormID theFormID;
+		FormID theFormID;
 		if (noErr != sPSActionReference->GetForm(iRef, &theFormID))
 			break;
 
@@ -1364,8 +599,790 @@ void Spec::pConvert(PIActionReference iRef, vector<Entry>& oEntries)
 				break;
 				}
 			}
+		PIActionReference container;
+		if (noErr != sPSActionReference->GetContainer(iRef, &container))
+			container = nullptr;
+		if (freeRef)
+			sPSActionReference->Free(iRef);
+		iRef = container;
+		freeRef = true;
 		}
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Val
+
+Val::operator operator_bool_type() const
+	{ return operator_bool_generator_type::translate(fType); }
+
+Val::Val()
+:	fType(0)
+	{}
+
+Val::Val(const Val& iOther)
+	{ this->pCopy(iOther); }
+
+Val::~Val()
+	{ this->pRelease(); }
+
+Val& Val::operator=(const Val& iOther)
+	{
+	if (this != &iOther)
+		{
+		this->pRelease();
+		this->pCopy(iOther);
+		}
+	return *this;
+	}
+
+Val::Val(int32 iVal)
+	{
+	fData.fAsInt32 = iVal;
+	fType = typeInteger;
+	}
+
+Val::Val(double iVal)
+	{
+	fData.fAsDouble = iVal;
+	fType = typeFloat;
+	}
+
+Val::Val(bool iVal)
+	{
+	fData.fAsBool = iVal;
+	fType = typeBoolean;
+	}
+
+Val::Val(const string8& iVal)
+	{
+	sConstruct_T(fData.fBytes, iVal);
+	fType = typeChar;
+	}
+
+Val::Val(const ZMemoryBlock& iVal)
+	{
+	sConstruct_T(fData.fBytes, iVal);
+	fType = typeRawData;
+	}
+
+Val::Val(UnitFloat iVal)
+	{
+	sConstruct_T(fData.fBytes, iVal);
+	fType = typeUnitFloat;
+	}
+
+Val::Val(Enumerated iVal)
+	{
+	sConstruct_T(fData.fBytes, iVal);
+	fType = typeEnumerated;
+	}
+
+#if ZCONFIG_SPI_Enabled(Carbon)
+Val::Val(ClassID iType, const ZHandle_T<AliasHandle>& iHandle)
+	{
+	sConstruct_T(fData.fBytes, iHandle);
+	fType = typePath;
+	}
+#endif // ZCONFIG_SPI_Enabled(Carbon)
+
+Val::Val(const List& iVal)
+	{
+	sConstruct_T(fData.fBytes, iVal);
+	fType = typeValueList;
+	}
+
+Val::Val(const Map& iVal)
+	{
+	sConstruct_T<>(fData.fBytes, iVal);
+	fType = typeObject;
+	}
+
+Val::Val(const Spec& iVal)
+	{
+	sConstruct_T<>(fData.fBytes, iVal);
+	fType = typeObjectSpecifier;
+	}
+
+template <>
+bool Val::QGet_T<int32>(int32& oVal) const
+	{
+	if (typeInteger == fType)
+		{
+		oVal = fData.fAsInt32;
+		return true;
+		}
+	return false;
+	}
+
+template <>
+bool Val::QGet_T<double>(double& oVal) const
+	{
+	if (typeFloat == fType)
+		{
+		oVal = fData.fAsDouble;
+		return true;
+		}
+	return false;
+	}
+
+template <>
+bool Val::QGet_T<bool>(bool& oVal) const
+	{
+	if (typeBoolean == fType)
+		{
+		oVal = fData.fAsBool;
+		return true;
+		}
+	return false;
+	}
+
+template <>
+bool Val::QGet_T<string8>(string8& oVal) const
+	{
+	if (typeUnitFloat == fType)
+		{
+		oVal = *sFetch_T<string8>(fData.fBytes);
+		return true;
+		}
+	return false;
+	}
+
+template <>
+bool Val::QGet_T<ZMemoryBlock>(ZMemoryBlock& oVal) const
+	{
+	if (typeRawData == fType)
+		{
+		oVal = *sFetch_T<ZMemoryBlock>(fData.fBytes);
+		return true;
+		}
+	return false;
+	}
+
+template <>
+bool Val::QGet_T<UnitFloat>(UnitFloat& oVal) const
+	{
+	if (typeUnitFloat == fType)
+		{
+		oVal = *sFetch_T<UnitFloat>(fData.fBytes);
+		return true;
+		}
+	return false;
+	}
+
+template <>
+bool Val::QGet_T<Enumerated>(Enumerated& oVal) const
+	{
+	if (typeEnumerated == fType)
+		{
+		oVal = *sFetch_T<Enumerated>(fData.fBytes);
+		return true;
+		}
+	return false;
+	}
+
+template <>
+bool Val::QGet_T<List>(List& oVal) const
+	{
+	if (typeValueList == fType)
+		{
+		oVal = *sFetch_T<List>(fData.fBytes);
+		return true;
+		}
+	return false;
+	}
+
+template <>
+bool Val::QGet_T<Map>(Map& oVal) const
+	{
+	if (typeObject == fType || typeGlobalObject == fType)
+		{
+		oVal = *sFetch_T<Map>(fData.fBytes);
+		return true;
+		}
+	return false;
+	}
+
+template <>
+bool Val::QGet_T<Spec>(Spec& oVal) const
+	{
+	if (typeObjectSpecifier == fType)
+		{
+		oVal = *sFetch_T<Spec>(fData.fBytes);
+		return true;
+		}
+	return false;
+	}
+
+template <>
+void Val::Set_T<int32>(const int32& iVal)
+	{
+	this->pRelease();
+	fData.fAsInt32 = iVal;
+	fType = typeInteger;
+	}
+
+template <>
+void Val::Set_T<bool>(const bool& iVal)
+	{
+	this->pRelease();
+	fData.fAsBool = iVal;
+	fType = typeBoolean;
+	}
+
+template <>
+void Val::Set_T<double>(const double& iVal)
+	{
+	this->pRelease();
+	fData.fAsDouble = iVal;
+	fType = typeFloat;
+	}
+
+template <>
+void Val::Set_T<string8>(const string8& iVal)
+	{
+	this->pRelease();
+	sConstruct_T(fData.fBytes, iVal);
+	fType = typeChar;
+	}
+
+template <>
+void Val::Set_T<ZMemoryBlock>(const ZMemoryBlock& iVal)
+	{
+	this->pRelease();
+	sConstruct_T(fData.fBytes, iVal);
+	fType = typeRawData;
+	}
+
+template <>
+void Val::Set_T<UnitFloat>(const UnitFloat& iVal)
+	{
+	this->pRelease();
+	sConstruct_T(fData.fBytes, iVal);
+	fType = typeUnitFloat;
+	}
+
+template <>
+void Val::Set_T<Enumerated>(const Enumerated& iVal)
+	{
+	this->pRelease();
+	sConstruct_T(fData.fBytes, iVal);
+	fType = typeEnumerated;
+	}
+
+template <>
+void Val::Set_T<List>(const List& iVal)
+	{
+	this->pRelease();
+	sConstruct_T(fData.fBytes, iVal);
+	fType = typeValueList;
+	}
+
+template <>
+void Val::Set_T<Map>(const Map& iVal)
+	{
+	this->pRelease();
+	sConstruct_T(fData.fBytes, iVal);
+	fType = typeObject;
+	}
+
+template <>
+void Val::Set_T<Spec>(const Spec& iVal)
+	{
+	this->pRelease();
+	sConstruct_T(fData.fBytes, iVal);
+	fType = typeObjectSpecifier;
+	}
+
+void Val::pRelease()
+	{
+	const KeyID theType = fType;
+	fType = 0;
+	switch (theType)
+		{
+		case typeChar:
+			{
+			sDestroy_T<string8>(fData.fBytes);
+			break;
+			}
+		case typeRawData:
+			{
+			sDestroy_T<ZMemoryBlock>(fData.fBytes);
+			break;
+			}
+		case typePath:
+		case typeAlias:
+			{
+			#ifdef __PIMac__
+			sDestroy_T<ZHandle_T<AliasHandle> >(fData.fBytes);
+			#endif
+			break;
+			}
+		case typeObject:
+		case typeGlobalObject:
+			{
+			sDestroy_T<Map>(fData.fBytes);
+			break;
+			}
+		case typeValueList:
+			{
+			sDestroy_T<List>(fData.fBytes);
+			break;
+			}
+		case typeObjectSpecifier:
+			{
+			sDestroy_T<Spec>(fData.fBytes);
+			break;
+			}
+		}
+	}
+
+void Val::pCopy(const Val& iOther)
+	{
+	switch (iOther.fType)
+		{
+		case typeInteger:
+			{
+			fData.fAsInt32 = iOther.fData.fAsInt32;
+			break;
+			}
+		case typeFloat:
+			{
+			fData.fAsDouble = iOther.fData.fAsDouble;
+			break;
+			}
+		case typeBoolean:
+			{
+			fData.fAsBool = iOther.fData.fAsBool;
+			break;
+			}
+		case typeUnitFloat:
+			{
+			sCopyConstruct_T<UnitFloat>(iOther.fData.fBytes, fData.fBytes);
+			break;
+			}
+		case typeEnumerated:
+			{
+			sCopyConstruct_T<Enumerated>(iOther.fData.fBytes, fData.fBytes);
+			break;
+			}
+		case typeType:
+		case typeGlobalClass:
+			{
+			fData.fAsClassID = iOther.fData.fAsClassID;
+			break;
+			}
+		case typeChar:
+			{
+			sCopyConstruct_T<string8>(iOther.fData.fBytes, fData.fBytes);
+			break;
+			}
+		case typeRawData:
+			{
+			sCopyConstruct_T<ZMemoryBlock>(iOther.fData.fBytes, fData.fBytes);
+			break;
+			}
+		case typePath:
+		case typeAlias:
+			{
+			#ifdef __PIMac__
+				sCopyConstruct_T<ZHandle_T<AliasHandle> >(iOther.fData.fBytes, fData.fBytes);
+			#endif
+			break;
+			}
+		case typeObject:
+		case typeGlobalObject:
+			{
+			sCopyConstruct_T<Map>(iOther.fData.fBytes, fData.fBytes);
+			break;
+			}
+		case typeValueList:
+			{
+			sCopyConstruct_T<List>(iOther.fData.fBytes, fData.fBytes);
+			break;
+			}
+		case typeObjectSpecifier:
+			{
+			sCopyConstruct_T<Spec>(iOther.fData.fBytes, fData.fBytes);
+			break;
+			}
+		}
+	fType = iOther.fType;
+	}
+
+ZMACRO_ZValAccessors_Def_Entry(Val, Int32, int32)
+ZMACRO_ZValAccessors_Def_Entry(Val, Double, double)
+ZMACRO_ZValAccessors_Def_Entry(Val, Bool, bool)
+ZMACRO_ZValAccessors_Def_Entry(Val, String, string8)
+ZMACRO_ZValAccessors_Def_Entry(Val, Raw, ZMemoryBlock)
+ZMACRO_ZValAccessors_Def_Entry(Val, UnitFloat, UnitFloat)
+ZMACRO_ZValAccessors_Def_Entry(Val, Enumerated, Enumerated)
+ZMACRO_ZValAccessors_Def_Entry(Val, List, List)
+ZMACRO_ZValAccessors_Def_Entry(Val, Map, Map)
+ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * List
+
+List::operator operator_bool_type() const
+	{ return operator_bool_generator_type::translate(this->Count()); }
+
+List::List()
+	{ sPSActionList->Make(&fAL); }
+
+List::List(const List& iOther)
+:	fAL(sDuplicate(iOther.fAL))
+	{}
+
+List::~List()
+	{ sPSActionList->Free(fAL); }
+
+List& List::operator=(const List& iOther)
+	{
+	if (this != &iOther)
+		{
+		sPSActionList->Free(fAL);
+		fAL = sDuplicate(iOther.fAL);
+		}
+	return *this;
+	}
+
+List::List(PIActionList iOther)
+:	fAL(sDuplicate(iOther))
+	{}
+
+List::List(Adopt_t<PIActionList> iOther)
+:	fAL(iOther.Get())
+	{}
+
+List& List::operator=(PIActionList iOther)
+	{
+	sPSActionList->Free(fAL);
+	fAL = sDuplicate(iOther);
+	return *this;
+	}
+
+List& List::operator=(Adopt_t<PIActionList> iOther)
+	{
+	sPSActionList->Free(fAL);
+	fAL = iOther.Get();
+	return *this;
+	}
+
+size_t List::Count() const
+	{
+	uint32 result;
+	if (noErr == sPSActionList->GetCount(fAL, &result))
+		return result;
+	return 0;
+	}
+
+void List::Clear()
+	{
+	sPSActionList->Free(fAL);
+	sPSActionList->Make(&fAL);	
+	}
+
+#define COMMA ,
+
+#define GETTERCASES(SUITE, PARAM) \
+	case typeInteger: { int32 theVal; \
+		if (noErr == SUITE->GetInteger(PARAM, &theVal)) { oVal = theVal; return true; } \
+		break; } \
+	case typeFloat: { double theVal; \
+		if (noErr == SUITE->GetFloat(PARAM, &theVal)) { oVal = theVal; return true; } \
+		break; } \
+	case typeBoolean: { Boolean theVal; \
+		if (noErr == SUITE->GetBoolean(PARAM, &theVal)) \
+			{ oVal = bool(theVal); return true; } \
+		break; } \
+	case typeChar: \
+		{ \
+		uint32 theLength; \
+		if (noErr == SUITE->GetStringLength(PARAM, &theLength)) \
+			{ \
+			string8 result('\0', size_t(theLength)); \
+			if (0 == theLength || noErr == SUITE->GetString(PARAM, &result[0], theLength)) \
+				{ \
+				oVal = result; \
+				return true; \
+				} \
+			} \
+		break; \
+		} \
+	case typeUnitFloat: { UnitFloat theVal; \
+		if (noErr == SUITE->GetUnitFloat(PARAM, &theVal.fUnitID, &theVal.fValue)) \
+			{ oVal = theVal; return true; } \
+		break; } \
+	case typeEnumerated: { Enumerated theVal; \
+		if (noErr == SUITE->GetEnumerated(PARAM, &theVal.fEnumType, &theVal.fValue)) \
+			{ oVal = theVal; return true; } \
+		break; } \
+	case typePath: \
+		{ \
+		ZUnimplemented(); \
+		} \
+	case typeValueList: { PIActionList theVal; \
+		if (noErr == SUITE->GetList(PARAM, &theVal)) \
+			{ oVal = List(Adopt(theVal)); return true; } \
+		break; } \
+	case typeObject: { \
+		ClassID theDCID; \
+		PIActionDescriptor theVal; \
+		if (noErr == SUITE->GetObject(PARAM, &theDCID, &theVal)) \
+			{ oVal = Map(Adopt(theVal)); return true; } \
+		break; } \
+	case typeObjectSpecifier: \
+		{ \
+		PIActionReference theVal; \
+		if (noErr == SUITE->GetReference(PARAM, &theVal)) \
+			{ \
+			oVal = Spec(Adopt(theVal)); \
+			return true; \
+			} \
+		break; \
+		} \
+
+
+#define SETTERCASES(SUITE, PARAM) \
+	case typeInteger: { SUITE->PutInteger(PARAM, iVal.fData.fAsInt32); return; } \
+	case typeFloat: { SUITE->PutFloat(PARAM, iVal.fData.fAsDouble); return; } \
+	case typeBoolean: { SUITE->PutBoolean(PARAM, iVal.fData.fAsBool); return; } \
+	case typeChar: \
+		{ \
+		SUITE->PutString(PARAM, \
+			const_cast<char*>(sFetch_T<string8>(iVal.fData.fBytes)->c_str())); \
+		return; \
+		} \
+	case typeRawData: \
+		{ \
+		ZUnimplemented(); \
+		} \
+	case typeUnitFloat: \
+		{ \
+		SUITE->PutUnitFloat(PARAM, \
+			sFetch_T<UnitFloat>(iVal.fData.fBytes)->fUnitID, \
+			sFetch_T<UnitFloat>(iVal.fData.fBytes)->fValue); \
+		return; \
+		} \
+	case typeEnumerated: \
+		{ \
+		SUITE->PutEnumerated(PARAM, \
+			sFetch_T<Enumerated>(iVal.fData.fBytes)->fEnumType, \
+			sFetch_T<Enumerated>(iVal.fData.fBytes)->fValue); \
+		return; \
+		} \
+	case typePath: \
+		{ \
+		ZUnimplemented(); \
+		} \
+	case typeValueList: \
+		{ \
+		SUITE->PutList(PARAM, \
+			sFetch_T<List>(iVal.fData.fBytes)->GetActionList()); \
+		return; \
+		} \
+	case typeObject: \
+		{ \
+		SUITE->PutObject(PARAM, \
+			typeObject, \
+			sFetch_T<Map>(iVal.fData.fBytes)->GetActionDescriptor()); \
+		return; \
+		} \
+	case typeObjectSpecifier: \
+		{ \
+		PIActionReference tempRef = sFetch_T<Spec>(iVal.fData.fBytes)->MakeRef(); \
+		SUITE->PutReference(PARAM, tempRef); \
+		sPSActionReference->Free(tempRef); \
+		return; \
+		} \
+
+bool List::QGet(size_t iIndex, Val& oVal) const
+	{
+	if (iIndex >= this->Count())
+		return false;
+
+	TypeID theType;
+	if (noErr != sPSActionList->GetType(fAL, iIndex, &theType))
+		return false;
+
+	switch (theType)
+		{
+		GETTERCASES(sPSActionList, fAL COMMA iIndex)
+		default:
+			ZUnimplemented();
+		}
+	return false;
+	}
+
+void List::Append(const Val& iVal)
+	{
+	switch (iVal.fType)
+		{
+		SETTERCASES(sPSActionList, fAL)
+		default:
+			ZUnimplemented();
+		}
+	}
+
+PIActionList List::GetActionList() const
+	{ return fAL; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Map
+
+Map::operator operator_bool_type() const
+	{ return operator_bool_generator_type::translate(this->pCount()); }
+
+Map::Map()
+	{ sPSActionDescriptor->Make(&fAD); }
+
+Map::Map(const Map& iOther)
+:	fAD(sDuplicate(iOther.fAD))
+	{}
+
+Map::~Map()
+	{
+	if (fAD)
+		sPSActionDescriptor->Free(fAD);
+	}
+
+Map& Map::operator=(const Map& iOther)
+	{
+	if (this != &iOther)
+		{
+		sPSActionDescriptor->Free(fAD);
+		fAD = sDuplicate(iOther.fAD);
+		}
+	return *this;
+	}
+
+Map::Map(PIActionDescriptor iOther)
+:	fAD(sDuplicate(iOther))
+	{}
+
+Map::Map(Adopt_t<PIActionDescriptor> iOther)
+:	fAD(iOther.Get())
+	{}
+
+Map& Map::operator=(PIActionDescriptor iOther)
+	{
+	if (fAD)
+		sPSActionDescriptor->Free(fAD);
+	fAD = sDuplicate(iOther);
+	return *this;
+	}
+	
+Map& Map::operator=(Adopt_t<PIActionDescriptor> iOther)
+	{
+	if (fAD)
+		sPSActionDescriptor->Free(fAD);
+	fAD = iOther.Get();
+	return *this;
+	}
+
+PIActionDescriptor* Map::ParamO()
+	{
+	if (fAD)
+		sPSActionDescriptor->Free(fAD);
+	fAD = nullptr;
+	return &fAD;
+	}
+
+Map::const_iterator Map::begin()
+	{ return const_iterator(0); }
+
+Map::const_iterator Map::end()
+	{ return const_iterator(this->pCount()); }
+
+KeyID Map::KeyOf(const_iterator iPropIter) const
+	{
+	if (iPropIter.GetIndex() < this->pCount())
+		{
+		KeyID result;
+		if (noErr == sPSActionDescriptor->GetKey(fAD, iPropIter.GetIndex(), &result))
+			return result;
+		}
+	return 0;	
+	}
+
+std::string Map::NameOf(const_iterator iPropIter) const
+	{
+	if (iPropIter.GetIndex() < this->pCount())
+		{
+		KeyID result;
+		if (noErr == sPSActionDescriptor->GetKey(fAD, iPropIter.GetIndex(), &result))
+			return sAsString(result);
+		}
+	return string8();
+	}
+
+void Map::Clear()
+	{ sPSActionDescriptor->Clear(fAD); }
+
+bool Map::QGet(KeyID iName, Val& oVal) const
+	{
+	if (!fAD)
+		return false;
+
+	TypeID theType;
+	if (noErr != sPSActionDescriptor->GetType(fAD, iName, &theType))
+		return false;
+
+	switch (theType)
+		{
+		GETTERCASES(sPSActionDescriptor, fAD COMMA iName)
+		default:
+			ZUnimplemented();
+		}
+	return false;
+	}
+
+bool Map::QGet(const string8& iName, Val& oVal) const
+	{ return this->QGet(sAsKeyID(iName), oVal); }
+
+bool Map::QGet(const_iterator iName, Val& oVal)
+	{ return this->QGet(this->KeyOf(iName), oVal); }
+
+void Map::Set(KeyID iName, const Val& iVal)
+	{
+	switch (iVal.fType)
+		{
+		SETTERCASES(sPSActionDescriptor, fAD COMMA iName)
+		default:
+			ZUnimplemented();//?
+		}
+	}
+
+void Map::Set(const string8& iName, const Val& iVal)
+	{ this->Set(sAsKeyID(iName), iVal); }
+
+void Map::Set(const_iterator iName, const Val& iVal)
+	{ this->Set(this->KeyOf(iName), iVal); }
+
+void Map::Erase(KeyID iName)
+	{ sPSActionDescriptor->Erase(fAD, iName); }
+
+void Map::Erase(const string8& iName)
+	{ this->Erase(sAsKeyID(iName)); }
+
+void Map::Erase(const_iterator iName)
+	{ this->Erase(this->KeyOf(iName)); }
+
+PIActionDescriptor Map::GetActionDescriptor() const
+	{ return fAD; }
+
+size_t Map::pCount() const
+	{
+	uint32 result;
+	if (noErr == sPSActionDescriptor->GetCount(fAD, &result))
+		return result;
+	return 0;
+	}
+
+#undef COMMA
 
 } // namespace ZPhotoshop
 
