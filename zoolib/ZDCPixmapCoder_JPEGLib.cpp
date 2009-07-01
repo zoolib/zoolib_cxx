@@ -51,6 +51,8 @@ using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
 
+using namespace ZDCPixmapNS;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * JPEGErrorMgr
@@ -325,8 +327,8 @@ ZDCPixmapEncoder_JPEGLib::~ZDCPixmapEncoder_JPEGLib()
 
 void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 	const void* iBaseAddress,
-	const ZDCPixmapNS::RasterDesc& iRasterDesc,
-	const ZDCPixmapNS::PixelDesc& iPixelDesc,
+	const RasterDesc& iRasterDesc,
+	const PixelDesc& iPixelDesc,
 	const ZRect& iBounds)
 	{
 	jpeg_compress_struct theJCS;
@@ -345,19 +347,19 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 	vector<uint8> rowBufferVector;
 	try
 		{
-		ZDCPixmapNS::PixvalDesc destPixvalDesc;
-		ZDCPixmapNS::PixelDesc destPixelDesc;
+		PixvalDesc destPixvalDesc;
+		PixelDesc destPixelDesc;
 
-		ZRef<ZDCPixmapNS::PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
+		ZRef<PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
 
-		if (ZRefDynamicCast<ZDCPixmapNS::PixelDescRep_Gray>(thePixelDescRep))
+		if (ZRefDynamicCast<PixelDescRep_Gray>(thePixelDescRep))
 			{
 			theJCS.input_components = 1;
 			theJCS.in_color_space = JCS_GRAYSCALE;
 			rowBufferVector.resize(iBounds.Width());
 
-			destPixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_Gray_8);
-			destPixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_Gray_8);
+			destPixelDesc = PixelDesc(eFormatStandard_Gray_8);
+			destPixvalDesc = PixvalDesc(eFormatStandard_Gray_8);
 			}
 		else
 			{
@@ -365,8 +367,8 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 			theJCS.in_color_space = JCS_RGB;
 			rowBufferVector.resize(3 * iBounds.Width());
 
-			destPixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_RGB_24);
-			destPixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_RGB_24);
+			destPixelDesc = PixelDesc(eFormatStandard_RGB_24);
+			destPixvalDesc = PixvalDesc(eFormatStandard_RGB_24);
 			}
 
 		theEM.BeforeCall();
@@ -378,11 +380,11 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 
 		// Special-case RGB sources.
 		bool done = false;
-		if (ZDCPixmapNS::PixelDescRep_Color* thePixelDescRep_Color
-			= ZRefDynamicCast<ZDCPixmapNS::PixelDescRep_Color>(thePixelDescRep))
+		if (PixelDescRep_Color* thePixelDescRep_Color
+			= ZRefDynamicCast<PixelDescRep_Color>(thePixelDescRep))
 			{
-			ZDCPixmapNS::PixelDescRep_Color* destPDR
-				= ZRefDynamicCast<ZDCPixmapNS::PixelDescRep_Color>(destPixelDesc.GetRep());
+			PixelDescRep_Color* destPDR
+				= ZRefDynamicCast<PixelDescRep_Color>(destPixelDesc.GetRep());
 
 			if (false && thePixelDescRep_Color->Matches(destPDR))
 				{
@@ -409,7 +411,7 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 				{
 				const void* sourceRowAddress = iRasterDesc.CalcRowAddress(iBaseAddress, y);
 
-				ZDCPixmapNS::sBlitRow(
+				sBlitRow(
 					sourceRowAddress, iRasterDesc.fPixvalDesc, iPixelDesc, iBounds.left,
 					rowPtr[0], destPixvalDesc, destPixelDesc, 0,
 					iBounds.Width());
@@ -464,26 +466,26 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 
 		::jpeg_start_decompress(&theJDS);
 
-		ZDCPixmapNS::PixelDesc sourcePixelDesc;
-		ZDCPixmapNS::PixvalDesc sourcePixvalDesc;
+		PixelDesc sourcePixelDesc;
+		PixvalDesc sourcePixvalDesc;
 		vector<uint8> rowBufferVector;
 		if (theJDS.out_color_space == JCS_GRAYSCALE)
 			{
-			sourcePixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_Gray_8);
-			sourcePixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_Gray_8);
+			sourcePixelDesc = PixelDesc(eFormatStandard_Gray_8);
+			sourcePixvalDesc = PixvalDesc(eFormatStandard_Gray_8);
 			rowBufferVector.resize(theJDS.image_width);
 
 			oPixmap = ZDCPixmap(ZPoint(theJDS.image_width, theJDS.image_height),
-				ZDCPixmapNS::eFormatEfficient_Gray_8);
+				eFormatEfficient_Gray_8);
 			}
 		else if (theJDS.out_color_space == JCS_RGB)
 			{
-			sourcePixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_RGB_24);
-			sourcePixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_RGB_24);
+			sourcePixelDesc = PixelDesc(eFormatStandard_RGB_24);
+			sourcePixvalDesc = PixvalDesc(eFormatStandard_RGB_24);
 			rowBufferVector.resize(3 * theJDS.image_width);
 
 			oPixmap = ZDCPixmap(ZPoint(theJDS.image_width, theJDS.image_height),
-				ZDCPixmapNS::eFormatEfficient_Color_24);
+				eFormatEfficient_Color_24);
 			}
 		else
 			{
@@ -491,8 +493,8 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 			ZUnimplemented();
 			}
 
-		const ZDCPixmapNS::PixelDesc& destPixelDesc = oPixmap.GetPixelDesc();
-		const ZDCPixmapNS::RasterDesc& destRasterDesc = oPixmap.GetRasterDesc();
+		const PixelDesc& destPixelDesc = oPixmap.GetPixelDesc();
+		const RasterDesc& destRasterDesc = oPixmap.GetRasterDesc();
 		void* destBaseAddress = oPixmap.GetBaseAddress();
 
 		JSAMPROW rowPtr[1];
@@ -506,7 +508,7 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 			void* destRowAddress
 				= destRasterDesc.CalcRowAddressDest(destBaseAddress, theJDS.output_scanline - 1);
 
-			ZDCPixmapNS::sBlitRow(
+			sBlitRow(
 				rowPtr[0], sourcePixvalDesc, sourcePixelDesc, 0,
 				destRowAddress, destRasterDesc.fPixvalDesc, destPixelDesc, 0,
 				theJDS.image_width);

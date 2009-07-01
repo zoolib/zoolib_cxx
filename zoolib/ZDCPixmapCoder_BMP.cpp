@@ -27,6 +27,8 @@ using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
 
+using namespace ZDCPixmapNS;
+
 #ifndef BI_RGB
 #	define BI_RGB 0L
 #	define BI_RLE8 1L
@@ -64,8 +66,8 @@ static int sNearestIndexedDepth(int iDepth)
 
 void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 	const void* iBaseAddress,
-	const ZDCPixmapNS::RasterDesc& iRasterDesc,
-	const ZDCPixmapNS::PixelDesc& iPixelDesc,
+	const RasterDesc& iRasterDesc,
+	const PixelDesc& iPixelDesc,
 	const ZRect& iBounds)
 	{
 	if (fWithFileHeader)
@@ -84,17 +86,17 @@ void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 	iStream.WriteUInt32LE(theSize.v); // biHeight
 	iStream.WriteUInt16LE(1); // biPlanes
 
-	ZDCPixmapNS::PixvalDesc destPixvalDesc(0, true);
+	PixvalDesc destPixvalDesc(0, true);
 	// Depth is worked out below.
 
-	ZDCPixmapNS::PixelDesc destPixelDesc;
+	PixelDesc destPixelDesc;
 
 	const ZRGBColorPOD* theColors;
 	size_t theColorsCount = 0;
 
-	ZRef<ZDCPixmapNS::PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
-	if (ZDCPixmapNS::PixelDescRep_Indexed* thePixelDescRep_Indexed
-		= ZRefDynamicCast<ZDCPixmapNS::PixelDescRep_Indexed>(thePixelDescRep))
+	ZRef<PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
+	if (PixelDescRep_Indexed* thePixelDescRep_Indexed
+		= ZRefDynamicCast<PixelDescRep_Indexed>(thePixelDescRep))
 		{
 		destPixvalDesc.fDepth = sNearestIndexedDepth(iRasterDesc.fPixvalDesc.fDepth);
 		destPixelDesc = thePixelDescRep_Indexed;
@@ -103,7 +105,7 @@ void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 	else
 		{
 		destPixvalDesc.fDepth = 24;
-		destPixelDesc = ZDCPixmapNS::PixelDesc(0x000000FF, 0x0000FF00, 0x00FF0000, 0x00000000);
+		destPixelDesc = PixelDesc(0x000000FF, 0x0000FF00, 0x00FF0000, 0x00000000);
 		}
 
 	iStream.WriteUInt16LE(destPixvalDesc.fDepth); // biBitCount
@@ -151,7 +153,7 @@ void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 		iStream.Write(&tempColorsVector[0], tempColorsVector.size());
 		}
 #endif
-	size_t rowBytes = ZDCPixmapNS::sCalcRowBytes(theSize.h, destPixvalDesc.fDepth, 1);
+	size_t rowBytes = sCalcRowBytes(theSize.h, destPixvalDesc.fDepth, 1);
 	vector<uint8> theRowBufferVector(rowBytes);
 
 	void* theRowBuffer = &theRowBufferVector[0];
@@ -159,7 +161,7 @@ void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 	for (size_t y = iBounds.bottom; y > iBounds.top; --y)
 		{
 		const void* sourceRowAddress = iRasterDesc.CalcRowAddress(iBaseAddress, y - 1);
-		ZDCPixmapNS::sBlitRow(
+		sBlitRow(
 			sourceRowAddress, iRasterDesc.fPixvalDesc, iPixelDesc, iBounds.left,
 			theRowBuffer, destPixvalDesc, destPixelDesc, 0,
 			iBounds.Width());
@@ -267,14 +269,14 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 	if (bfOffBits)
 		iStream.Skip(bfOffBits - (biClrUsed * 4));
 
-	ZDCPixmapNS::RasterDesc sourceRasterDesc;
+	RasterDesc sourceRasterDesc;
 	sourceRasterDesc.fPixvalDesc.fDepth = biBitCount;
 	sourceRasterDesc.fPixvalDesc.fBigEndian = true;
 	sourceRasterDesc.fRowBytes = ((biWidth * biBitCount + 31) / 32) * 4;
 	sourceRasterDesc.fRowCount = biHeight;
 	sourceRasterDesc.fFlipped = false;
 
-	ZDCPixmapNS::PixelDesc sourcePixelDesc;
+	PixelDesc sourcePixelDesc;
 
 	ZDCPixmap thePixmap;
 	// For shallow/indexed/RLE images we create a rep that exactly matches the source format
@@ -286,32 +288,32 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 		case 8:
 			{
 			sourcePixelDesc
-				= ZDCPixmapNS::PixelDesc(&sourceColorVector[0], sourceColorVector.size());
+				= PixelDesc(&sourceColorVector[0], sourceColorVector.size());
 			thePixmap = ZDCPixmap(sourceRasterDesc, ZPoint(biWidth, biHeight), sourcePixelDesc);
 			break;
 			}
 		case 16:
 			{
-			sourcePixelDesc = ZDCPixmapNS::PixelDesc(0x7C00, 0x03E0, 0x001F, 0);
+			sourcePixelDesc = PixelDesc(0x7C00, 0x03E0, 0x001F, 0);
 			sourceRasterDesc.fPixvalDesc.fBigEndian = false;
 			thePixmap
-				= ZDCPixmap(ZPoint(biWidth, biHeight), ZDCPixmapNS::eFormatEfficient_Color_16);
+				= ZDCPixmap(ZPoint(biWidth, biHeight), eFormatEfficient_Color_16);
 			break;
 			}
 		case 24:
 			{
 			sourcePixelDesc
-				= ZDCPixmapNS::PixelDesc(0x000000FF, 0x0000FF00, 0x00FF0000, 0x00000000);
+				= PixelDesc(0x000000FF, 0x0000FF00, 0x00FF0000, 0x00000000);
 			thePixmap
-				= ZDCPixmap(ZPoint(biWidth, biHeight), ZDCPixmapNS::eFormatEfficient_Color_24);
+				= ZDCPixmap(ZPoint(biWidth, biHeight), eFormatEfficient_Color_24);
 			break;
 			}
 		case 32:
 			{
 			sourcePixelDesc
-				= ZDCPixmapNS::PixelDesc(0x0000FF00, 0x00FF0000, 0xFF000000, 0x00000000);
+				= PixelDesc(0x0000FF00, 0x00FF0000, 0xFF000000, 0x00000000);
 			thePixmap
-				= ZDCPixmap(ZPoint(biWidth, biHeight), ZDCPixmapNS::eFormatEfficient_Color_32);
+				= ZDCPixmap(ZPoint(biWidth, biHeight), eFormatEfficient_Color_32);
 			break;
 			}
 		}

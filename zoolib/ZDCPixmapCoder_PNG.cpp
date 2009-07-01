@@ -30,6 +30,8 @@ using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
 
+using namespace ZDCPixmapNS;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Static functions
@@ -93,8 +95,8 @@ ZDCPixmapEncoder_PNG::~ZDCPixmapEncoder_PNG()
 
 void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 	const void* iBaseAddress,
-	const ZDCPixmapNS::RasterDesc& iRasterDesc,
-	const ZDCPixmapNS::PixelDesc& iPixelDesc,
+	const RasterDesc& iRasterDesc,
+	const PixelDesc& iPixelDesc,
 	const ZRect& iBounds)
 	{
 	png_structp write_ptr
@@ -109,18 +111,18 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 		::png_set_write_fn(write_ptr,
 			&const_cast<ZStreamW&>(iStream), sPNG_Write, sPNG_Write_Flush);
 
-		ZDCPixmapNS::PixvalDesc sourcePixvalDesc = iRasterDesc.fPixvalDesc;
+		PixvalDesc sourcePixvalDesc = iRasterDesc.fPixvalDesc;
 
-		ZDCPixmapNS::PixvalDesc destPixvalDesc;
-		ZDCPixmapNS::PixelDesc destPixelDesc;
+		PixvalDesc destPixvalDesc;
+		PixelDesc destPixelDesc;
 
 		// This vector has to persist until png_write_info is called.
 		vector<png_color> thePNGPaletteVector;
 
-		ZRef<ZDCPixmapNS::PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
+		ZRef<PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
 
-		if (ZDCPixmapNS::PixelDescRep_Indexed* thePixelDescRep_Indexed
-			= ZRefDynamicCast<ZDCPixmapNS::PixelDescRep_Indexed>(thePixelDescRep))
+		if (PixelDescRep_Indexed* thePixelDescRep_Indexed
+			= ZRefDynamicCast<PixelDescRep_Indexed>(thePixelDescRep))
 			{
 			::png_set_IHDR(write_ptr, info_ptr, iBounds.Width(), iBounds.Height(), 8,
 				PNG_COLOR_TYPE_PALETTE, PNG_INTERLACE_NONE,
@@ -143,38 +145,38 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 			destPixvalDesc.fDepth = 8;
 			destPixvalDesc.fBigEndian = true;
 			}
-		else if (ZRefDynamicCast<ZDCPixmapNS::PixelDescRep_Color>(thePixelDescRep))
+		else if (ZRefDynamicCast<PixelDescRep_Color>(thePixelDescRep))
 			{
 			int colorType;
 			if (thePixelDescRep->HasAlpha())
 				{
 				colorType = PNG_COLOR_TYPE_RGB_ALPHA;
-				destPixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_RGBA_32);
-				destPixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_RGBA_32);
+				destPixelDesc = PixelDesc(eFormatStandard_RGBA_32);
+				destPixvalDesc = PixvalDesc(eFormatStandard_RGBA_32);
 				}
 			else
 				{
 				colorType = PNG_COLOR_TYPE_RGB;
-				destPixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_RGB_24);
-				destPixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_RGB_24);
+				destPixelDesc = PixelDesc(eFormatStandard_RGB_24);
+				destPixvalDesc = PixvalDesc(eFormatStandard_RGB_24);
 				}
 			::png_set_IHDR(write_ptr, info_ptr, iBounds.Width(), iBounds.Height(), 8,
 				colorType, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 			}
-		else if (ZRefDynamicCast<ZDCPixmapNS::PixelDescRep_Gray>(thePixelDescRep))
+		else if (ZRefDynamicCast<PixelDescRep_Gray>(thePixelDescRep))
 			{
 			int colorType;
 			if (thePixelDescRep->HasAlpha())
 				{
 				colorType = PNG_COLOR_TYPE_GRAY_ALPHA;
-				destPixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_GA_16);
-				destPixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_GA_16);
+				destPixelDesc = PixelDesc(eFormatStandard_GA_16);
+				destPixvalDesc = PixvalDesc(eFormatStandard_GA_16);
 				}
 			else
 				{
 				colorType = PNG_COLOR_TYPE_GRAY;
-				destPixelDesc = ZDCPixmapNS::PixelDesc(ZDCPixmapNS::eFormatStandard_Gray_8);
-				destPixvalDesc = ZDCPixmapNS::PixvalDesc(ZDCPixmapNS::eFormatStandard_Gray_8);
+				destPixelDesc = PixelDesc(eFormatStandard_Gray_8);
+				destPixvalDesc = PixvalDesc(eFormatStandard_Gray_8);
 				}
 			::png_set_IHDR(write_ptr, info_ptr, iBounds.Width(), iBounds.Height(), 8,
 				colorType, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
@@ -197,7 +199,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 			for (size_t y = iBounds.top; y < iBounds.bottom; ++y)
 				{
 				const void* sourceRowAddress = iRasterDesc.CalcRowAddress(iBaseAddress, y);
-				ZDCPixmapNS::sBlitRow(
+				sBlitRow(
 					sourceRowAddress, sourcePixvalDesc, iPixelDesc, iBounds.left,
 					theRowBuffer, destPixvalDesc, destPixelDesc, 0,
 					iBounds.Width());
@@ -260,7 +262,7 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 		png_uint_32 thePNGWidth = ::png_get_image_width(read_ptr, info_ptr);
 		png_uint_32 thePNGHeight = ::png_get_image_height(read_ptr, info_ptr);
 
-		ZDCPixmapNS::PixelDesc thePixelDesc;
+		PixelDesc thePixelDesc;
 		int32 realDepth;
 
 		switch (thePNGColorType)
@@ -276,7 +278,7 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 					theColorTable[x].blue = info_ptr->palette[x].blue * 0x101;
 					theColorTable[x].alpha = 0xFFFF;
 					}
-				thePixelDesc = ZDCPixmapNS::PixelDesc(&theColorTable[0], theColorTable.size());
+				thePixelDesc = PixelDesc(&theColorTable[0], theColorTable.size());
 				realDepth = thePNGDepth;
 				break;
 				}
@@ -297,7 +299,7 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 					maskGray = (1 << thePNGDepth) - 1;
 					realDepth = thePNGDepth;
 					}
-				thePixelDesc = ZDCPixmapNS::PixelDesc(maskGray, maskAlpha);
+				thePixelDesc = PixelDesc(maskGray, maskAlpha);
 				break;
 				}
 			case PNG_COLOR_TYPE_RGB:
@@ -322,16 +324,16 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 					}
 				uint32 maskGreen = maskBlue << thePNGDepth;
 				uint32 maskRed = maskGreen << thePNGDepth;
-				thePixelDesc = ZDCPixmapNS::PixelDesc(maskRed, maskGreen, maskBlue, maskAlpha);
+				thePixelDesc = PixelDesc(maskRed, maskGreen, maskBlue, maskAlpha);
 				break;
 				}
 			}
 		::png_read_update_info(read_ptr, info_ptr);
 
-		ZDCPixmapNS::RasterDesc theRasterDesc;
+		RasterDesc theRasterDesc;
 		theRasterDesc.fPixvalDesc.fDepth = realDepth;
 		theRasterDesc.fPixvalDesc.fBigEndian = true;
-		theRasterDesc.fRowBytes = ZDCPixmapNS::sCalcRowBytes(thePNGWidth, realDepth, 4);
+		theRasterDesc.fRowBytes = sCalcRowBytes(thePNGWidth, realDepth, 4);
 		theRasterDesc.fRowCount = thePNGHeight;
 		theRasterDesc.fFlipped = false;
 

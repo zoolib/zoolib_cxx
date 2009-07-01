@@ -31,6 +31,8 @@ using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
 
+using namespace ZDCPixmapNS;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Stream_Chunk
@@ -118,12 +120,12 @@ static void sWriteColorTable(const ZStreamW& iStream,
 
 void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 	const void* iBaseAddress,
-	const ZDCPixmapNS::RasterDesc& iRasterDesc,
-	const ZDCPixmapNS::PixelDesc& iPixelDesc,
+	const RasterDesc& iRasterDesc,
+	const PixelDesc& iPixelDesc,
 	const ZRect& iBounds)
 	{
-	ZRef<ZDCPixmapNS::PixelDescRep_Indexed> thePixelDescRep_Indexed
-		= ZRefDynamicCast<ZDCPixmapNS::PixelDescRep_Indexed>(iPixelDesc.GetRep());
+	ZRef<PixelDescRep_Indexed> thePixelDescRep_Indexed
+		= ZRefDynamicCast<PixelDescRep_Indexed>(iPixelDesc.GetRep());
 	ZAssertStop(2, thePixelDescRep_Indexed);
 
 	if (fTransparent)
@@ -201,7 +203,7 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 		theStream = theSLZW;
 		}
 
-	ZDCPixmapNS::PixvalDesc destPixvalDesc(8, true);
+	PixvalDesc destPixvalDesc(8, true);
 
 	vector<uint8> theRowBufferVector(iBounds.Width());
 	void* theRowBuffer = &theRowBufferVector[0];
@@ -218,7 +220,7 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 					const void* sourceRowAddress
 						= iRasterDesc.CalcRowAddress(iBaseAddress, currentY);
 
-					ZDCPixmapNS::sBlitRowPixvals(
+					sBlitRowPixvals(
 						sourceRowAddress, iRasterDesc.fPixvalDesc, iBounds.left,
 						theRowBuffer, destPixvalDesc, 0,
 						iBounds.Width());
@@ -234,7 +236,7 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 				const void* sourceRowAddress
 					= iRasterDesc.CalcRowAddress(iBaseAddress, currentY);
 
-				ZDCPixmapNS::sBlitRowPixvals(
+				sBlitRowPixvals(
 					sourceRowAddress, iRasterDesc.fPixvalDesc, iBounds.left,
 					theRowBuffer, destPixvalDesc, 0,
 					iBounds.Width());
@@ -288,11 +290,11 @@ static void sReadImageData(const ZStreamR& iStream,
 	StreamR_Chunk theSIC(iStream);
 	ZStreamR_LZWDecode theSILZW(initialCodeSize, theSIC);
 
-	ZDCPixmapNS::PixvalDesc sourcePixvalDesc(8, true);
+	PixvalDesc sourcePixvalDesc(8, true);
 
 	void* destBaseAddress = ioRaster->GetBaseAddress();
 
-	ZDCPixmapNS::RasterDesc destRasterDesc = ioRaster->GetRasterDesc();
+	RasterDesc destRasterDesc = ioRaster->GetRasterDesc();
 
 	vector<uint8> theRowBufferVector(iBounds.Width());
 	void* theRowBuffer = &theRowBufferVector[0];
@@ -307,7 +309,7 @@ static void sReadImageData(const ZStreamR& iStream,
 				theSILZW.Read(theRowBuffer, iBounds.Width());
 				void* destRowAddress = destRasterDesc.CalcRowAddressDest(destBaseAddress, currentY);
 
-				ZDCPixmapNS::sBlitRowPixvals(theRowBuffer, sourcePixvalDesc, 0,
+				sBlitRowPixvals(theRowBuffer, sourcePixvalDesc, 0,
 					destRowAddress, destRasterDesc.fPixvalDesc, iBounds.left,
 					iBounds.Width());
 				}
@@ -320,7 +322,7 @@ static void sReadImageData(const ZStreamR& iStream,
 			theSILZW.Read(theRowBuffer, iBounds.Width());
 			void* destRowAddress = destRasterDesc.CalcRowAddressDest(destBaseAddress, currentY);
 
-			ZDCPixmapNS::sBlitRowPixvals(theRowBuffer, sourcePixvalDesc, 0,
+			sBlitRowPixvals(theRowBuffer, sourcePixvalDesc, 0,
 				destRowAddress, destRasterDesc.fPixvalDesc, iBounds.left,
 				iBounds.Width());
 			}
@@ -388,7 +390,7 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			{
 			vector<ZRGBColorPOD> theColors;
 			sReadColorTable(iStream, 1 << (strmGlobalColorTableSize + 1), theColors);
-			fPixelDesc = ZDCPixmapNS::PixelDesc(&theColors[0], theColors.size());
+			fPixelDesc = PixelDesc(&theColors[0], theColors.size());
 			}
 
 		static int sPhysicalDepths[] =
@@ -403,10 +405,10 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			8, // 7
 			};
 		int rowBytes
-			= ZDCPixmapNS::sCalcRowBytes(sPhysicalDepths[strmGlobalColorTableSize], fSize.h, 4);
+			= sCalcRowBytes(sPhysicalDepths[strmGlobalColorTableSize], fSize.h, 4);
 
-		ZDCPixmapNS::RasterDesc theRasterDesc(
-			ZDCPixmapNS::PixvalDesc(strmGlobalColorTableSize + 1, true),
+		RasterDesc theRasterDesc(
+			PixvalDesc(strmGlobalColorTableSize + 1, true),
 			rowBytes, fSize.v, false);
 
 		fRaster = new ZDCPixmapRaster_Simple(theRasterDesc);
@@ -453,12 +455,12 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 				//bool strmSortFlag = (strmFlags & 0x20) != 0;
 				uint8 strmLocalColorTableSize = (strmFlags & 0x7);
 
-			ZDCPixmapNS::PixelDesc thePixelDesc = fPixelDesc;
+			PixelDesc thePixelDesc = fPixelDesc;
 			if (strmHasLocalColorTable)
 				{
 				vector<ZRGBColorPOD> theColors;
 				sReadColorTable(iStream, 1 << (strmLocalColorTableSize + 1), theColors);
-				thePixelDesc = ZDCPixmapNS::PixelDesc(&theColors[0], theColors.size());
+				thePixelDesc = PixelDesc(&theColors[0], theColors.size());
 				}
 
 			sReadImageData(iStream, strmIsInterlaced, curBounds, fRaster);
