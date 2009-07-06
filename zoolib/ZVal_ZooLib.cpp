@@ -994,9 +994,13 @@ void ZVal_ZooLib::ToStream(const ZStreamW& iStreamW) const
 
 ZMACRO_ZValAccessors_Def_Std(ZVal_ZooLib)
 ZMACRO_ZValAccessors_Def_ZooLib(ZVal_ZooLib)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Tuple, ZValMap_ZooLib)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Data, ZValData_ZooLib)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, List, ZValList_ZooLib)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Map, ZValMap_ZooLib)
+
+// Backwards compatibility
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Raw, ZValData_ZooLib)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Tuple, ZValMap_ZooLib)
 
 // =================================================================================================
 #pragma mark -
