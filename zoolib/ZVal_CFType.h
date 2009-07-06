@@ -33,11 +33,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE2(CoreFoundation,CFArray.h)
 #include ZMACINCLUDE2(CoreFoundation,CFBase.h)
+#include ZMACINCLUDE2(CoreFoundation,CFData.h)
 #include ZMACINCLUDE2(CoreFoundation,CFDictionary.h)
 
 NAMESPACE_ZOOLIB_BEGIN
 
 class ZVal_CFType;
+class ZValData_CFType;
 class ZValList_CFType;
 class ZValMap_CFType;
 
@@ -70,6 +72,7 @@ public:
 	ZVal_CFType(double iVal);
 	ZVal_CFType(const string8& iVal);
 	ZVal_CFType(const string16& iVal);
+	ZVal_CFType(const ZValData_CFType& iVal);
 	ZVal_CFType(const ZValList_CFType& iVal);
 	ZVal_CFType(const ZValMap_CFType& iVal);
 	
@@ -89,11 +92,60 @@ public:
 
 // Typename accessors
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_CFType)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Data, ZValData_CFType)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, List, ZValList_CFType)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Map, ZValMap_CFType)
 
 private:
 	ZRef<CFTypeRef> fCFTypeRef;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZValData_CFType
+
+class ZValData_CFType
+	{
+	class Rep;
+
+public:
+	operator bool() const;
+
+	ZValData_CFType();
+	ZValData_CFType(const ZValData_CFType& iOther);
+	~ZValData_CFType();
+	ZValData_CFType& operator=(const ZValData_CFType& iOther);
+
+	ZValData_CFType(const ZRef<CFMutableDataRef>& iOther);
+	ZValData_CFType(const ZRef<CFDataRef>& iOther);
+
+	ZValData_CFType& operator=(const ZRef<CFMutableDataRef>& iOther);
+	ZValData_CFType& operator=(const ZRef<CFDataRef>& iOther);
+
+	ZValData_CFType(size_t iSize);
+	ZValData_CFType(const void* iSourceData, size_t iSize);
+
+// ZValData protocol
+	size_t GetSize() const;
+	void SetSize(size_t iSize);
+
+	const void* GetData() const;
+	void* GetData();
+
+	void CopyFrom(size_t iOffset, const void* iSource, size_t iCount);
+	void CopyFrom(const void* iSource, size_t iCount);
+
+	void CopyTo(size_t iOffset, void* iDest, size_t iCount) const;
+	void CopyTo(void* iDest, size_t iCount) const;
+
+// Our protocol
+	operator CFDataRef() const;
+
+private:
+	void pTouch();
+
+	ZRef<CFMutableDataRef> fCFMutableDataRef;
+	ZRef<CFDataRef> fCFDataRef;
 	};
 
 // =================================================================================================

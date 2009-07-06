@@ -100,6 +100,19 @@ ZRef<CFStringRef> sCFString(const string16& iString16)
 	return sEmptyCFString;
 	}
 
+ZRef<CFMutableDataRef> sDataMutable()
+	{ return NoRetain(::CFDataCreateMutable(kCFAllocatorDefault, 0)); }
+
+ZRef<CFMutableDataRef> sDataMutable(size_t iSize)
+	{
+	ZRef<CFMutableDataRef> theData = NoRetain(::CFDataCreateMutable(kCFAllocatorDefault, iSize));
+	::CFDataSetLength(theData, iSize);
+	return theData;
+	}
+
+ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData)
+	{ return NoRetain(::CFDataCreateMutableCopy(kCFAllocatorDefault, 0, iCFData)); }
+
 ZRef<CFMutableArrayRef> sArrayMutable()
 	{ return NoRetain(::CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks)); }
 
@@ -301,6 +314,17 @@ bool ZVal_CFType::QGet_T<string8>(string8& oVal) const
 	}
 
 template <>
+bool ZVal_CFType::QGet_T<ZValData_CFType>(ZValData_CFType& oVal) const
+	{
+	if (::CFGetTypeID(fCFTypeRef) == ::CFDataGetTypeID())
+		{
+		oVal = (static_cast<CFDataRef>(CFTypeRef(fCFTypeRef)));
+		return true;
+		}
+	return false;
+	}
+
+template <>
 bool ZVal_CFType::QGet_T<ZValList_CFType>(ZValList_CFType& oVal) const
 	{
 	if (::CFGetTypeID(fCFTypeRef) == ::CFArrayGetTypeID())
@@ -355,6 +379,10 @@ void ZVal_CFType::Set_T<string8>(const string8& iVal)
 	{ fCFTypeRef = sCFString(iVal); }
 
 template <>
+void ZVal_CFType::Set_T<ZValData_CFType>(const ZValData_CFType& iVal)
+	{ fCFTypeRef = iVal; }
+
+template <>
 void ZVal_CFType::Set_T<ZValList_CFType>(const ZValList_CFType& iVal)
 	{ fCFTypeRef = iVal; }
 
@@ -372,8 +400,143 @@ ZVal_CFType::operator CFTypeRef() const
 	{ return fCFTypeRef; }
 
 ZMACRO_ZValAccessors_Def_Std(ZVal_CFType)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Data, ZValData_CFType)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, List, ZValList_CFType)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Map, ZValMap_CFType)
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZValData_CFType
+
+ZValData_CFType::operator bool() const
+	{ return this->GetSize(); }
+
+ZValData_CFType::ZValData_CFType()
+:	fCFMutableDataRef(sDataMutable())
+	{}
+
+ZValData_CFType::ZValData_CFType(const ZValData_CFType& iOther)
+:	fCFMutableDataRef(iOther.fCFMutableDataRef)
+,	fCFDataRef(iOther.fCFDataRef)
+	{}
+
+ZValData_CFType::~ZValData_CFType()
+	{}
+
+ZValData_CFType& ZValData_CFType::operator=(const ZValData_CFType& iOther)
+	{
+	fCFMutableDataRef = iOther.fCFMutableDataRef;
+	fCFDataRef = iOther.fCFDataRef;
+	ZAssert(!fCFMutableDataRef || !fCFDataRef);
+	return *this;
+	}
+
+ZValData_CFType::ZValData_CFType(const ZRef<CFMutableDataRef>& iOther)
+:	fCFMutableDataRef(iOther)
+	{}
+
+ZValData_CFType::ZValData_CFType(const ZRef<CFDataRef>& iOther)
+:	fCFDataRef(iOther)
+	{}
+
+ZValData_CFType& ZValData_CFType::operator=(const ZRef<CFMutableDataRef>& iOther)
+	{
+	fCFMutableDataRef = iOther;
+	fCFDataRef.Clear();
+	return *this;
+	}
+
+ZValData_CFType& ZValData_CFType::operator=(const ZRef<CFDataRef>& iOther)
+	{
+	fCFMutableDataRef.Clear();
+	fCFDataRef = iOther;
+	return *this;
+	}
+
+ZValData_CFType::ZValData_CFType(size_t iSize)
+:	fCFMutableDataRef(sDataMutable(iSize))
+	{}
+
+ZValData_CFType::ZValData_CFType(const void* iSourceData, size_t iSize)
+:	fCFDataRef(NoRetain(::CFDataCreate(
+		kCFAllocatorDefault, static_cast<const UInt8*>(iSourceData), iSize)))
+	{}
+
+size_t ZValData_CFType::GetSize() const
+	{
+	if (fCFMutableDataRef)
+		return ::CFDataGetLength(fCFMutableDataRef);
+	return ::CFDataGetLength(fCFDataRef);
+	}
+
+void ZValData_CFType::SetSize(size_t iSize)
+	{
+	this->pTouch();
+	::CFDataSetLength(fCFMutableDataRef, iSize);
+	}
+
+const void* ZValData_CFType::GetData() const
+	{
+	if (fCFMutableDataRef)
+		return ::CFDataGetBytePtr(fCFMutableDataRef);
+	return ::CFDataGetBytePtr(fCFDataRef);
+	}
+
+void* ZValData_CFType::GetData()
+	{
+	this->pTouch();
+	return ::CFDataGetMutableBytePtr(fCFMutableDataRef);
+	}
+
+void ZValData_CFType::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
+	{
+	if (iCount)
+		{
+		this->pTouch();
+		const CFRange theRange = { iOffset, iCount };
+		::CFDataReplaceBytes(fCFMutableDataRef, theRange, static_cast<const UInt8*>(iSource), iCount);
+		}
+	}
+
+void ZValData_CFType::CopyFrom(const void* iSource, size_t iCount)
+	{ this->CopyFrom(0, iSource, iCount); }
+
+void ZValData_CFType::CopyTo(size_t iOffset, void* iDest, size_t iCount) const
+	{
+	const CFRange theRange = { iOffset, iCount };
+	if (fCFMutableDataRef)
+		::CFDataGetBytes(fCFMutableDataRef, theRange, static_cast<UInt8*>(iDest));
+	else
+		::CFDataGetBytes(fCFDataRef, theRange, static_cast<UInt8*>(iDest));
+	}
+
+void ZValData_CFType::CopyTo(void* iDest, size_t iCount) const
+	{ this->CopyTo(0, iDest, iCount); }
+
+ZValData_CFType::operator CFDataRef() const
+	{
+	if (fCFMutableDataRef)
+		return fCFMutableDataRef;
+	return fCFDataRef;
+	}
+
+void ZValData_CFType::pTouch()
+	{
+	if (!fCFMutableDataRef || ::CFGetRetainCount(fCFMutableDataRef) > 1)
+		{
+		if (fCFMutableDataRef)
+			{
+			fCFMutableDataRef = sDataMutable(fCFMutableDataRef);
+			}
+		else
+			{
+			ZAssert(fCFDataRef);
+			fCFMutableDataRef = sDataMutable(fCFDataRef);
+			fCFDataRef.Clear();
+			}
+		}
+	ZAssert(!fCFDataRef);
+	}
 
 // =================================================================================================
 #pragma mark -

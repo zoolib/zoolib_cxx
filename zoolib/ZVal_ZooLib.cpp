@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZVal_ZooLib.h"
 #include "zoolib/ZMemory.h"
+#include "zoolib/ZStream_Data_T.h"
 
 using std::min;
 using std::string;
@@ -34,7 +35,6 @@ static ZValMap_ZooLib::PropList sEmptyProperties;
 static ZVal_ZooLib sNilVal;
 static ZValList_ZooLib sNilList;
 static vector<ZVal_ZooLib> sNilVector;
-//static ZValMap_ZooLib sNilMap;
 
 // =================================================================================================
 #pragma mark -
@@ -350,7 +350,7 @@ ZVal_ZooLib::ZVal_ZooLib(const string& iVal)
 		}
 	}
 
-ZVal_ZooLib::ZVal_ZooLib(const ZMemoryBlock& iVal)
+ZVal_ZooLib::ZVal_ZooLib(const ZValData_ZooLib& iVal)
 	{
 	fType.fType = eZType_Raw;
 	sConstruct_T(fType.fBytes, iVal);
@@ -377,14 +377,14 @@ ZVal_ZooLib::ZVal_ZooLib(const ZRef<ZRefCountedWithFinalize>& iVal)
 ZVal_ZooLib::ZVal_ZooLib(const void* iSource, size_t iSize)
 	{
 	fType.fType = eZType_Raw;
-	sConstruct_T<ZMemoryBlock>(fType.fBytes, iSource, iSize);
+	sConstruct_T<ZValData_ZooLib>(fType.fBytes, iSource, iSize);
 	}
 
 ZVal_ZooLib::ZVal_ZooLib(const ZStreamR& iStreamR, size_t iSize)
 	{
 	fType.fType = eZType_Raw;
-	ZMemoryBlock* theRaw = sConstruct_T<ZMemoryBlock>(fType.fBytes);
-	ZStreamRWPos_MemoryBlock(*theRaw).CopyFrom(iStreamR, iSize);
+	ZValData_ZooLib* theRaw = sConstruct_T<ZValData_ZooLib>(fType.fBytes);
+	sRead_T(*theRaw, iStreamR, iSize);
 	}
 
 void ZVal_ZooLib::Clear()
@@ -553,11 +553,11 @@ bool ZVal_ZooLib::QGet_T<string>(string& oVal) const
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<ZMemoryBlock>(ZMemoryBlock& oVal) const
+bool ZVal_ZooLib::QGet_T<ZValData_ZooLib>(ZValData_ZooLib& oVal) const
 	{
 	if (fType.fType == eZType_Raw)
 		{
-		oVal = *sFetch_T<ZMemoryBlock>(fType.fBytes);
+		oVal = *sFetch_T<ZValData_ZooLib>(fType.fBytes);
 		return true;
 		}
 	return false;
@@ -738,7 +738,7 @@ void ZVal_ZooLib::Set_T<string>(const string& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<ZMemoryBlock>(const ZMemoryBlock& iVal)
+void ZVal_ZooLib::Set_T<ZValData_ZooLib>(const ZValData_ZooLib& iVal)
 	{
 	this->pRelease();
 	sConstruct_T(fType.fBytes, iVal);
@@ -970,7 +970,7 @@ void ZVal_ZooLib::ToStream(const ZStreamW& iStreamW) const
 			}
 		case eZType_Raw:
 			{
-			const ZMemoryBlock* theMemoryBlock = sFetch_T<ZMemoryBlock>(fType.fBytes);
+			const ZValData_ZooLib* theMemoryBlock = sFetch_T<ZValData_ZooLib>(fType.fBytes);
 			iStreamW.WriteCount(theMemoryBlock->GetSize());
 			if (theMemoryBlock->GetSize())
 				iStreamW.Write(theMemoryBlock->GetData(), theMemoryBlock->GetSize());
@@ -1054,8 +1054,8 @@ int ZVal_ZooLib::pUncheckedCompare(const ZVal_ZooLib& iOther) const
 			}
 		case eZType_Raw:
 			{
-			return sFetch_T<ZMemoryBlock>(fType.fBytes)
-				->Compare(*sFetch_T<ZMemoryBlock>(iOther.fType.fBytes));
+			return sFetch_T<ZValData_ZooLib>(fType.fBytes)
+				->Compare(*sFetch_T<ZValData_ZooLib>(iOther.fType.fBytes));
 			}
 		case eZType_Vector:
 			{
@@ -1110,8 +1110,8 @@ bool ZVal_ZooLib::pUncheckedLess(const ZVal_ZooLib& iOther) const
 			}
 		case eZType_Raw:
 			{
-			return *sFetch_T<ZMemoryBlock>(fType.fBytes)
-				< *sFetch_T<ZMemoryBlock>(iOther.fType.fBytes);
+			return *sFetch_T<ZValData_ZooLib>(fType.fBytes)
+				< *sFetch_T<ZValData_ZooLib>(iOther.fType.fBytes);
 			}
 		case eZType_Vector:
 			{
@@ -1171,8 +1171,8 @@ bool ZVal_ZooLib::pUncheckedEqual(const ZVal_ZooLib& iOther) const
 			}
 		case eZType_Raw:
 			{
-			return *sFetch_T<ZMemoryBlock>(fType.fBytes)
-				== *sFetch_T<ZMemoryBlock>(iOther.fType.fBytes);
+			return *sFetch_T<ZValData_ZooLib>(fType.fBytes)
+				== *sFetch_T<ZValData_ZooLib>(iOther.fType.fBytes);
 			}
 		case eZType_Vector:
 			{
@@ -1212,7 +1212,7 @@ void ZVal_ZooLib::pRelease()
 			sDestroy_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes);
 			break;
 			}
-		case eZType_Raw: sDestroy_T<ZMemoryBlock>(fType.fBytes); break;
+		case eZType_Raw: sDestroy_T<ZValData_ZooLib>(fType.fBytes); break;
 		case eZType_Vector: sDestroy_T<ZValList_ZooLib>(fType.fBytes); break;
 		default:
 			{
@@ -1291,7 +1291,7 @@ void ZVal_ZooLib::pCopy(const ZVal_ZooLib& iOther)
 					(iOther.fType.fBytes, fType.fBytes);				
 				break;
 			case eZType_Raw:
-				sCopyConstruct_T<ZMemoryBlock>(iOther.fType.fBytes, fType.fBytes);
+				sCopyConstruct_T<ZValData_ZooLib>(iOther.fType.fBytes, fType.fBytes);
 				break;
 			case eZType_Vector:
 				sCopyConstruct_T<ZValList_ZooLib>(iOther.fType.fBytes, fType.fBytes);
@@ -1426,7 +1426,7 @@ void ZVal_ZooLib::pFromStream(ZType iType, const ZStreamR& iStreamR)
 		case eZType_Raw:
 			{
 			uint32 size = iStreamR.ReadCount();
-			ZMemoryBlock* theRaw = sConstruct_T<ZMemoryBlock>(fType.fBytes, size);
+			ZValData_ZooLib* theRaw = sConstruct_T<ZValData_ZooLib>(fType.fBytes, size);
 			if (size)
 				{
 				try

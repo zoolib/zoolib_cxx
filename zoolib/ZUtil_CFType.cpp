@@ -387,9 +387,9 @@ CFTypeRef sCreateCFType(const ZTValue& iTV)
 			}
 		case eZType_Raw:
 			{
-			const ZMemoryBlock theMB = iTV.GetRaw();
+			const ZValData_ZooLib theData = iTV.GetData();
 			return ::CFDataCreate(kCFAllocatorDefault,
-				static_cast<const UInt8*>(theMB.GetData()), theMB.GetSize());
+				static_cast<const UInt8*>(theData.GetData()), theData.GetSize());
 			}
 		case eZType_Bool:
 			{

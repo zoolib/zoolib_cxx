@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZVal_ZooLib__ 1
 
 #include "zoolib/ZCompare.h"
-#include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZTName.h"
@@ -30,6 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVal_T.h"
 #include "zoolib/ZValAccessors_Std.h"
 #include "zoolib/ZValAccessors_ZooLib.h"
+#include "zoolib/ZValData_ZooLib.h"
 
 #include <stdexcept> // For runtime_error
 #include <string>
@@ -53,6 +53,7 @@ class ZValList_ZooLib;
 class ZValMap_ZooLib;
 
 typedef ZVal_ZooLib ZVal_Z;
+typedef ZValData_ZooLib ZValData_Z;
 typedef ZValList_ZooLib ZValList_Z;
 typedef ZValMap_ZooLib ZValMap_Z;
 
@@ -102,7 +103,7 @@ public:
 	ZVal_ZooLib(const ZPointPOD& iVal);
 	ZVal_ZooLib(const char* iVal);
 	ZVal_ZooLib(const std::string& iVal);
-	ZVal_ZooLib(const ZMemoryBlock& iVal);
+	ZVal_ZooLib(const ZValData_ZooLib& iVal);
 	ZVal_ZooLib(const ZValList_ZooLib& iVal);
 	ZVal_ZooLib(const ZValMap_ZooLib& iVal);
 	ZVal_ZooLib(const ZRef<ZRefCountedWithFinalize>& iVal);
@@ -134,10 +135,12 @@ public:
 // Typename accessors
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_ZooLib)
 	ZMACRO_ZValAccessors_Decl_ZooLib(ZVal_ZooLib)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Data, ZValData_ZooLib)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, List, ZValList_ZooLib)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Map, ZValMap_ZooLib)
 
 // Backwards compatibility
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Raw, ZValData_ZooLib)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Tuple, ZValMap_ZooLib)
 
 private:
@@ -154,13 +157,9 @@ private:
 	// Data is stored in one of several ways.
 	// * For POD data <= 8 bytes in length, we simply store the
 	// data directly, using named fields of fData.
-	// * For ZRectPOD and vector<ZVal_ZooLib> in fData we store a
-	// pointer to a heap-allocated object, because they're 16 bytes
-	// and probably 12 bytes in size, respectively.
-	// * For ZValMap_ZooLib, ZRef and ZMemoryBlock we use placement-new and
-	// explicit destructor invocation on fType.fBytes -- they're
-	// all 4 bytes in size, but have constructors/destructors, so
-	// we can't declare them in the union.
+	// * For ZRectPOD fData we store a pointer to a heap-allocated object,
+	// * For most other types use placement-new and explicit destructor
+	// invocation on fType.fBytes.
 
 	// Finally, strings are funky. For short (<= 11 bytes) string
 	// instances, we put the characters in fType.fBytes, and
