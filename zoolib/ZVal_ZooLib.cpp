@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZVal_ZooLib.h"
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZStream_Data_T.h"
+#include "zoolib/ZStream_ValData_T.h"
 
 using std::min;
 using std::string;

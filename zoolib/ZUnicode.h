@@ -58,7 +58,7 @@ static const UTF32 kCPReplacement = 0xFFFDul;
 
 /// UTF-16 surrogate pair ranges.
 static const UTF32 kCPSurrogateHighBegin = 0xD800ul;
-static const UTF32 kCPSurrogateHighEnd	= 0xDC00ul;
+static const UTF32 kCPSurrogateHighEnd = 0xDC00ul;
 static const UTF32 kCPSurrogateLowBegin = 0xDC00ul;
 static const UTF32 kCPSurrogateLowEnd = 0xE000ul;
 //@}

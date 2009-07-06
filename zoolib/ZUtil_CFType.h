@@ -25,13 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZRef.h"
-#include "zoolib/ZTuple.h"
+#include "zoolib/ZRef_CFType.h"
 #include "zoolib/ZUnicodeString.h"
-
-#include ZMACINCLUDE2(CoreFoundation,CFArray.h)
-#include ZMACINCLUDE2(CoreFoundation,CFBase.h)
-#include ZMACINCLUDE2(CoreFoundation,CFDictionary.h)
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -41,48 +36,33 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZUtil_CFType {
 
-// Std --> CFType
+ZRef<CFStringRef> sString();
 ZRef<CFStringRef> sString(const string8& iString8);
 ZRef<CFStringRef> sString(const string16& iString16);
+
 
 ZRef<CFMutableStringRef> sStringMutable();
 ZRef<CFMutableStringRef> sStringMutable(const string8& iString8);
 ZRef<CFMutableStringRef> sStringMutable(const string16& iString16);
 ZRef<CFMutableStringRef> sStringMutable(const ZRef<CFStringRef>& iCFString);
 
-ZRef<CFDictionaryRef> sDictionary(const ZTuple& iTuple);
-ZRef<CFMutableDictionaryRef> sDictionaryMutable();
-ZRef<CFMutableDictionaryRef> sDictionaryMutable(const ZRef<CFDictionaryRef>& iCFDictionary);
-
-ZRef<CFArrayRef> sArray(const std::vector<ZTValue>& iVector);
-ZRef<CFMutableArrayRef> sArrayMutable();
-ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray);
-
-ZRef<CFTypeRef> sType(const ZTValue& iTV);
-
-
-// CFType --> Std
-ZType sTypeOf(CFTypeRef iCFType);
 
 string8 sAsUTF8(CFStringRef iCFString);
 string16 sAsUTF16(CFStringRef iCFString);
 
-ZTuple sAsTuple(CFDictionaryRef iCFDictionary);
 
-void sAsVector(CFArrayRef iCFArray, std::vector<ZTValue>& oVector);
-
-ZTValue sAsTV(CFTypeRef iCFType);
+ZRef<CFDictionaryRef> sDictionary();
 
 
-// Std --> CFType, primitive
-CFStringRef sCreateCFString_UTF8(const string8& iString8);
-CFStringRef sCreateCFString_UTF16(const string16& iString16);
+ZRef<CFMutableDictionaryRef> sDictionaryMutable();
+ZRef<CFMutableDictionaryRef> sDictionaryMutable(const ZRef<CFDictionaryRef>& iCFDictionary);
 
-CFDictionaryRef sCreateCFDictionary(const ZTuple& iTuple);
 
-CFArrayRef sCreateCFArray(const std::vector<ZTValue>& iVector);
+ZRef<CFArrayRef> sArray();
 
-CFTypeRef sCreateCFType(const ZTValue& iTV);
+
+ZRef<CFMutableArrayRef> sArrayMutable();
+ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray);
 
 } // namespace ZUtil_CFType
 

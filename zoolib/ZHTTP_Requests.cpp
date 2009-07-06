@@ -24,9 +24,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNet_Internet.h"
 #include "zoolib/ZStreamR_Boundary.h"
 #include "zoolib/ZStreamR_SkipAllOnDestroy.h"
-#include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZStream_String.h"
 #include "zoolib/ZStream_Tee.h"
+#include "zoolib/ZStream_ValData_T.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStrimmer.h"
 #include "zoolib/ZStrimmer_Stream.h"
@@ -81,8 +81,8 @@ static bool sRequest(const ZStreamW& w, const ZStreamR& r,
 
 	if (oRawHeader)
 		{
-		ZStreamRWPos_Data_T<ValData> theSRWP_Data(*oRawHeader);
-		ZStreamR_Tee theStream_Tee(r, theSRWP_Data);
+		ZStreamRWPos_ValData_T<ValData> theSRWP_ValData(*oRawHeader);
+		ZStreamR_Tee theStream_Tee(r, theSRWP_ValData);
 		return sReadResponse(theStream_Tee, oResponseCode, oHeader);
 		}
 	else
@@ -178,8 +178,8 @@ static bool sPOSTSuffix(const ZStreamR& r,
 	{
 	if (oRawHeader)
 		{
-		ZStreamRWPos_Data_T<ValData> theSRWP_Data(*oRawHeader);
-		ZStreamR_Tee theStream_Tee(r, theSRWP_Data);
+		ZStreamRWPos_ValData_T<ValData> theSRWP_ValData(*oRawHeader);
+		ZStreamR_Tee theStream_Tee(r, theSRWP_ValData);
 		return sReadResponse(theStream_Tee, oResponseCode, oHeader);
 		}
 	else

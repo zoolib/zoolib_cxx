@@ -23,82 +23,25 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(CFType)
 
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZUtil_CFType.h"
 
+#include ZMACINCLUDE2(CoreFoundation,CFArray.h)
+#include ZMACINCLUDE2(CoreFoundation,CFData.h)
+#include ZMACINCLUDE2(CoreFoundation,CFDictionary.h)
 #include ZMACINCLUDE2(CoreFoundation,CFNumber.h)
 #include ZMACINCLUDE2(CoreFoundation,CFString.h)
 
 NAMESPACE_ZOOLIB_BEGIN
 
+using ZUtil_CFType::sAsUTF8;
+using ZUtil_CFType::sString;
+using ZUtil_CFType::sStringMutable;
+using ZUtil_CFType::sArrayMutable;
+using ZUtil_CFType::sDictionaryMutable;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Helpers
-
-namespace ZANONYMOUS {
-
-CFStringRef sEmptyCFString = CFSTR("");
-
-string8 sAsUTF8(CFStringRef iCFString)
-	{
-	if (const char *s = ::CFStringGetCStringPtr(iCFString, kCFStringEncodingUTF8))
-		return string8(s);
-
-	const CFIndex sourceCU = ::CFStringGetLength(iCFString);
-	if (sourceCU == 0)
-		return string8();
-
-	// Worst case is six bytes per code unit.
-	const size_t bufferSize = sourceCU * 6;
-	string8 result(bufferSize, 0);
-
-	UInt8* buffer = reinterpret_cast<UInt8*>(const_cast<char*>(result.data()));
-
-	CFIndex bufferUsed;
-	::CFStringGetBytes(iCFString, CFRangeMake(0, sourceCU),
-		kCFStringEncodingUTF8, 1, false,
-		buffer, bufferSize, &bufferUsed);
-
-	result.resize(bufferUsed);
-
-	return result;
-	}
-
-string16 sAsUTF16(CFStringRef iCFString)
-	{
-	const CFIndex sourceCU = ::CFStringGetLength(iCFString);
-	if (sourceCU == 0)
-		return string16();
-
-	if (const UniChar* s = ::CFStringGetCharactersPtr(iCFString))
-		return string16(reinterpret_cast<const UTF16*>(s), sourceCU);
-
-	string16 result(sourceCU, 0);
-
-	UniChar* buffer = reinterpret_cast<UniChar*>(const_cast<UTF16*>(result.data()));
-
-	::CFStringGetCharacters(iCFString, CFRangeMake(0, sourceCU), buffer);
-	return result;
-	}
-
-ZRef<CFStringRef> sCFString(const string8& iString8)
-	{
-	if (CFIndex sourceSize = iString8.size())
-		{
-		return NoRetain(::CFStringCreateWithBytes(nullptr,
-			reinterpret_cast<const UInt8*>(iString8.data()), sourceSize,
-			kCFStringEncodingUTF8, false));
-		}
-	return sEmptyCFString;
-	}
-
-ZRef<CFStringRef> sCFString(const string16& iString16)
-	{
-	if (CFIndex sourceSize = iString16.size())
-		{
-		return NoRetain(::CFStringCreateWithCharacters(nullptr,
-			reinterpret_cast<const UniChar*>(iString16.data()), sourceSize));
-		}
-	return sEmptyCFString;
-	}
 
 ZRef<CFMutableDataRef> sDataMutable()
 	{ return NoRetain(::CFDataCreateMutable(kCFAllocatorDefault, 0)); }
@@ -112,21 +55,6 @@ ZRef<CFMutableDataRef> sDataMutable(size_t iSize)
 
 ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData)
 	{ return NoRetain(::CFDataCreateMutableCopy(kCFAllocatorDefault, 0, iCFData)); }
-
-ZRef<CFMutableArrayRef> sArrayMutable()
-	{ return NoRetain(::CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks)); }
-
-ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray)
-	{ return NoRetain(::CFArrayCreateMutableCopy(kCFAllocatorDefault, 0, iCFArray)); }
-
-ZRef<CFMutableDictionaryRef> sDictionaryMutable()
-	{
-	return NoRetain(::CFDictionaryCreateMutable(kCFAllocatorDefault, 1,
-		&kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks));
-	}
-
-ZRef<CFMutableDictionaryRef> sDictionaryMutable(const ZRef<CFDictionaryRef>& iCFDictionary)
-	{ return NoRetain(::CFDictionaryCreateMutableCopy(kCFAllocatorDefault, 0, iCFDictionary)); }
 
 template <class S>
 bool sGetNumber_T(CFTypeRef iTypeRef, CFNumberType iNumberType, S& oVal)
@@ -146,8 +74,6 @@ bool sGetNumber_T(CFTypeRef iTypeRef, CFNumberType iNumberType, S& oVal)
 template <class S>
 ZRef<CFTypeRef> sNumber_T(CFNumberType iNumberType, const S& iVal)
 	{ return NoRetain(CFTypeRef(::CFNumberCreate(kCFAllocatorDefault, iNumberType, &iVal))); }
-
-} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
@@ -211,11 +137,11 @@ ZVal_CFType::ZVal_CFType(double iVal)
 	{}
 
 ZVal_CFType::ZVal_CFType(const string8& iVal)
-:	fCFTypeRef(sCFString(iVal))
+:	fCFTypeRef(sString(iVal))
 	{}
 
 ZVal_CFType::ZVal_CFType(const string16& iVal)
-:	fCFTypeRef(sCFString(iVal))
+:	fCFTypeRef(sString(iVal))
 	{}
 
 ZVal_CFType::ZVal_CFType(const ZValList_CFType& iVal)
@@ -376,7 +302,7 @@ void ZVal_CFType::Set_T<double>(const double& iVal)
 
 template <>
 void ZVal_CFType::Set_T<string8>(const string8& iVal)
-	{ fCFTypeRef = sCFString(iVal); }
+	{ fCFTypeRef = sString(iVal); }
 
 template <>
 void ZVal_CFType::Set_T<ZValData_CFType>(const ZValData_CFType& iVal)
@@ -755,7 +681,7 @@ void ZValMap_CFType::Clear()
 
 bool ZValMap_CFType::QGet(const string8& iName, ZVal_CFType& oVal) const
 	{
-	ZRef<CFStringRef> theName = sCFString(iName);
+	ZRef<CFStringRef> theName = sString(iName);
 	if (fCFMutableDictionaryRef)
 		{
 		if (CFTypeRef theVal = ::CFDictionaryGetValue(fCFMutableDictionaryRef, theName))
@@ -822,7 +748,7 @@ ZVal_CFType ZValMap_CFType::Get(CFStringRef iName) const
 void ZValMap_CFType::Set(const string8& iName, const ZVal_CFType& iVal)
 	{
 	this->pTouch();
-	::CFDictionarySetValue(fCFMutableDictionaryRef, sCFString(iName), iVal);
+	::CFDictionarySetValue(fCFMutableDictionaryRef, sString(iName), iVal);
 	}
 
 void ZValMap_CFType::Set(CFStringRef iName, const ZVal_CFType& iVal)
@@ -834,7 +760,7 @@ void ZValMap_CFType::Set(CFStringRef iName, const ZVal_CFType& iVal)
 void ZValMap_CFType::Erase(const string8& iName)
 	{
 	this->pTouch();
-	::CFDictionaryRemoveValue(fCFMutableDictionaryRef, sCFString(iName));
+	::CFDictionaryRemoveValue(fCFMutableDictionaryRef, sString(iName));
 	}
 
 void ZValMap_CFType::Erase(CFStringRef iName)

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_Data_T__
-#define __ZStream_Data_T__ 1
+#ifndef __ZStream_ValData_T__
+#define __ZStream_ValData_T__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
@@ -28,18 +28,18 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStreamRPos_Data_T
+#pragma mark * ZStreamRPos_ValData_T
 
 template <class T>
-class ZStreamRPos_Data_T : public ZStreamRPos
+class ZStreamRPos_ValData_T : public ZStreamRPos
 	{
 public:
-	ZStreamRPos_Data_T(const T& iData)
+	ZStreamRPos_ValData_T(const T& iData)
 	:	fData(iData),
 		fPosition(0)
 		{}
 	
-	~ZStreamRPos_Data_T()
+	~ZStreamRPos_ValData_T()
 		{}
 
 // From ZStreamR via ZStreamRPos
@@ -78,13 +78,13 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStreamRWPos_Data_T
+#pragma mark * ZStreamRWPos_ValData_T
 
 template <class T>
-class ZStreamRWPos_Data_T : public ZStreamRWPos
+class ZStreamRWPos_ValData_T : public ZStreamRWPos
 	{
 public:
-	ZStreamRWPos_Data_T(T& iData, size_t iGrowIncrement)
+	ZStreamRWPos_ValData_T(T& iData, size_t iGrowIncrement)
 	:	fData(iData)
 		{
 		fGrowIncrement = iGrowIncrement;
@@ -92,7 +92,7 @@ public:
 		fSizeLogical = fData.GetSize();
 		}
 	
-	ZStreamRWPos_Data_T(T& iData)
+	ZStreamRWPos_ValData_T(T& iData)
 	:	fData(iData)
 		{
 		fGrowIncrement = 64;
@@ -100,7 +100,7 @@ public:
 		fSizeLogical = fData.GetSize();
 		}
 
-	~ZStreamRWPos_Data_T()
+	~ZStreamRWPos_ValData_T()
 		{
 		// Finally, make sure the Data is the real size, not the potentially
 		// overallocated size we've been using
@@ -187,11 +187,11 @@ private:
 
 template <class T>
 void sReadAll_T(T& ioData, const ZStreamR& iStreamR)
-	{ ZStreamRWPos_Data_T<T>(ioData).CopyAllFrom(iStreamR); }
+	{ ZStreamRWPos_ValData_T<T>(ioData).CopyAllFrom(iStreamR); }
 
 template <class T>
 void sRead_T(T& ioData, const ZStreamR& iStreamR, size_t iSize)
-	{ ZStreamRWPos_Data_T<T>(ioData).CopyFrom(iStreamR, iSize); }
+	{ ZStreamRWPos_ValData_T<T>(ioData).CopyFrom(iStreamR, iSize); }
 
 template <class T>
 T sReadAll_T(const ZStreamR& iStreamR)
@@ -211,4 +211,4 @@ T sReadAll(const ZStreamR& iStreamR, size_t iSize)
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZStream_Data_T__
+#endif // __ZStream_ValData_T__

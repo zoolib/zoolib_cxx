@@ -87,9 +87,7 @@ ZValData_ZooLib::ZValData_ZooLib(size_t iSize)
 
 ZValData_ZooLib::ZValData_ZooLib(const void* iSource, size_t iSize)
 :	fRep(new (iSize) ZValData_ZooLib::Rep(iSize))
-	{
-	this->CopyFrom(iSource, iSize);
-	}
+	{ ZBlockCopy(iSource, fRep->fData, iSize); }
 
 int ZValData_ZooLib::Compare(const ZValData_ZooLib& iOther) const
 	{

@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZHTTP_Requests.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZNet_Internet.h"
-#include "zoolib/ZStream_Data_T.h"
+#include "zoolib/ZStream_ValData_T.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZWaiter.h"
@@ -570,7 +570,7 @@ bool Host_Std::HTTPFetcher::Execute()
 		if (fIsPOST)
 			{
 			theStreamerR = ZHTTP::sPostRaw(
-				theURL, ZStreamRPos_Data_T<ZHTTP::ValData>(fData), nullptr,
+				theURL, ZStreamRPos_ValData_T<ZHTTP::ValData>(fData), nullptr,
 				&theHeaders, &theRawHeaders);
 			}
 		else

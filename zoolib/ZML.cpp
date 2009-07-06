@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
+#include <stdio.h> // For sprintf
+
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZML {

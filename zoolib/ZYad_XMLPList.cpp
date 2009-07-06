@@ -370,7 +370,7 @@ static void sToStrim_SimpleValue(const ZML::StrimW& s, const ZVal_ZooLib& iVal)
 			}
 		case eZType_Raw:
 			{
-			sToStrim_Stream(s, ZStreamRPos_Data_T<ZValData_ZooLib>(iVal.GetData()));
+			sToStrim_Stream(s, ZStreamRPos_ValData_T<ZValData_ZooLib>(iVal.GetData()));
 			break;
 			}
 		case eZType_Time:

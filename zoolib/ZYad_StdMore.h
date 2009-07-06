@@ -48,7 +48,7 @@ public:
 
 class ZYadStreamRPos_Std
 :	public ZYadR_Std,
-	public ZYadStreamRPos_Data
+	public ZYadStreamRPos_ValData
 	{
 public:
 	ZYadStreamRPos_Std(const ZValData_ZooLib& iData);

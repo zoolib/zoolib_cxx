@@ -26,15 +26,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(CFType)
 
 #include "zoolib/ZCompat_operator_bool.h"
-#include "zoolib/ZRef.h"
+#include "zoolib/ZRef_CFType.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal_T.h"
 #include "zoolib/ZValAccessors_Std.h"
-
-#include ZMACINCLUDE2(CoreFoundation,CFArray.h)
-#include ZMACINCLUDE2(CoreFoundation,CFBase.h)
-#include ZMACINCLUDE2(CoreFoundation,CFData.h)
-#include ZMACINCLUDE2(CoreFoundation,CFDictionary.h)
 
 NAMESPACE_ZOOLIB_BEGIN
 

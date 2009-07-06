@@ -63,6 +63,9 @@ public:
 		}	
 	} sMaker0;
 
+#warning NDY
+
+#if 0
 // ZRef<CFTypeRef> <-- ZRef<ZYadR>
 class Maker1
 :	public ZFactoryChain_T<ZRef<CFTypeRef>, ZRef<ZYadR> >
@@ -103,6 +106,8 @@ public:
 		return false;
 		}	
 	} sMaker2;
+
+#endif
 
 } // anonymous namespace
 

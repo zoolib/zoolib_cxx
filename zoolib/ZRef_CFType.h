@@ -20,7 +20,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZRef_CFType__
 #define __ZRef_CFType__ 1
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
+
+#if ZCONFIG_SPI_Enabled(CFType)
 
 #include "zoolib/ZRef.h"
+
+typedef const void * CFTypeRef;
+
+typedef const struct __CFArray * CFArrayRef;
+typedef struct __CFArray * CFMutableArrayRef;
+
+typedef const struct __CFData * CFDataRef;
+typedef struct __CFData * CFMutableDataRef;
+
+typedef const struct __CFDictionary * CFDictionaryRef;
+typedef struct __CFDictionary * CFMutableDictionaryRef;
+
+typedef const struct __CFString * CFStringRef;
+typedef struct __CFString * CFMutableStringRef;
+
+#endif // ZCONFIG_SPI_Enabled(CFType)
 
 #endif // __ZRef_CFType__

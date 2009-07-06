@@ -145,14 +145,14 @@ bool ZYadR_ZooLib::IsSimple(const ZYadOptions& iOptions)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStreamRPos_Data
+#pragma mark * ZYadStreamRPos_ValData
 
-ZYadStreamRPos_Data::ZYadStreamRPos_Data(const ZValData_ZooLib& iData)
+ZYadStreamRPos_ValData::ZYadStreamRPos_ValData(const ZValData_ZooLib& iData)
 :	ZYadR_ZooLib(iData),
-	ZStreamerRPos_Data_ZooLib(iData)
+	ZStreamerRPos_ValData_ZooLib(iData)
 	{}
 
-bool ZYadStreamRPos_Data::IsSimple(const ZYadOptions& iOptions)
+bool ZYadStreamRPos_ValData::IsSimple(const ZYadOptions& iOptions)
 	{ return this->GetStreamRPos().GetSize() <= iOptions.fRawChunkSize; }
 
 // =================================================================================================
@@ -247,7 +247,7 @@ ZRef<ZYadR> ZYad_ZooLib::sMakeYadR(const ZVal_ZooLib& iVal)
 		{
 		case eZType_Vector: return new ZYadListRPos_ZooLib(iVal.GetList());
 		case eZType_Tuple: return new ZYadMapRPos_ZooLib(iVal.GetMap());
-		case eZType_Raw: return new ZYadStreamRPos_Data(iVal.GetData());
+		case eZType_Raw: return new ZYadStreamRPos_ValData(iVal.GetData());
 		case eZType_String: return new ZYadStrimU_String(iVal.GetString());
 		}
 
@@ -284,7 +284,7 @@ ZVal_ZooLib ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
 	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
 		{
 		ZValData_ZooLib theData;
-		ZStreamRWPos_Data_T<ZValData_ZooLib>(theData).CopyAllFrom(theYadStreamR->GetStreamR());
+		ZStreamRWPos_ValData_T<ZValData_ZooLib>(theData).CopyAllFrom(theYadStreamR->GetStreamR());
 		return theData;
 		}
 	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
