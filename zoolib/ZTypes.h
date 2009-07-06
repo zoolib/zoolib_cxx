@@ -140,14 +140,14 @@ extern char sGarbageBuffer[4096];
 // For a discussion of the implementation of countof See section 14.3 of
 // "Imperfect C++" by Matthew Wilson, published by Addison Wesley.
 
-template<typename T, int N>
+template<class T, int N>
 uint8 (&byte_array_of_same_dimension_as(T(&)[N]))[N];
 
 #define countof(x) sizeof(ZOOLIB_PREFIX::byte_array_of_same_dimension_as((x)))
 
 // ==================================================
 
-template <typename P>
+template <class P>
 class Adopt_t
 	{
 	P fP;
@@ -156,7 +156,7 @@ public:
 	P Get() const { return fP; }
 	};
 
-template <typename P>
+template <class P>
 Adopt_t<P> Adopt(P iP)
 	{ return Adopt_t<P>(iP); }
 

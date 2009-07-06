@@ -93,7 +93,7 @@ difficulties because of its ctor/dtor (in unions, mainly.).
 /** \typedef ZType
 \ingroup group_Types
 ZType is a numeric representation of a range of basic types,
-used most commonly in ZTuple and ZTValue.
+used most commonly in ZVal_ZooLib.
 */
 
 /**
