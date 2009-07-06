@@ -74,19 +74,19 @@ public:
 
 	virtual bool Make(Result_t& oResult, Param_t iParam)
 		{
-		ZTValue theTValue;
-		if (ZFactoryChain_T<ZTValue, ZRef<ZYadR> >::sMake(theTValue, iParam))
+		ZVal_ZooLib theVal;
+		if (ZFactoryChain_T<ZVal_ZooLib, ZRef<ZYadR> >::sMake(theVal, iParam))
 			{
-			oResult = ZUtil_CFType::sType(theTValue);
+			oResult = ZUtil_CFType::sType(theVal);
 			return true;
 			}
 		return false;
 		}	
 	} sMaker1;
 
-// ZTValue <-- ZRef<ZYadR>
+// ZVal_ZooLib <-- ZRef<ZYadR>
 class Maker2
-:	public ZFactoryChain_T<ZTValue, ZRef<ZYadR> >
+:	public ZFactoryChain_T<ZVal_ZooLib, ZRef<ZYadR> >
 	{
 public:
 	Maker2()

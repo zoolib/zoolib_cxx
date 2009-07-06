@@ -32,10 +32,11 @@ NAMESPACE_ZOOLIB_BEGIN
 
 class ZYadPrimR_Std
 :	public ZYadR_Std,
-	public ZYadR_TValue
+	public ZYadR_ZooLib
 	{
 public:
-	ZYadPrimR_Std(const ZTValue& iTV);
+	ZYadPrimR_Std();
+	ZYadPrimR_Std(const ZVal_ZooLib& iVal);
 
 // From ZYadR_Std
 	virtual void Finish();

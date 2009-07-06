@@ -56,20 +56,20 @@ static void sEnd(ZML::Reader& r, const string& iTagName)
 		sThrowParseException("Expected end tag '" + iTagName + "'");
 	}
 
-static bool sTryRead_SimpleValue(ZML::Reader& r, ZTValue& oTV)
+static bool sTryRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
 	{
 	if (r.Current() == ZML::eToken_TagEmpty)
 		{
 		if (r.Name() == "true")
 			{
-			oTV.SetBool(true);
+			oVal.SetBool(true);
 			r.Advance();
 			return true;
 			}
 
 		if (r.Name() == "false")
 			{
-			oTV.SetBool(false);
+			oVal.SetBool(false);
 			r.Advance();
 			return true;
 			}
@@ -93,7 +93,7 @@ static bool sTryRead_SimpleValue(ZML::Reader& r, ZTValue& oTV)
 		if (!ZUtil_Strim::sTryRead_SignedDecimalInteger(ZStrimU_Unreader(r.TextStrim()), theInteger))
 			sThrowParseException("Expected valid integer");
 
-		oTV.SetInt32(theInteger);
+		oVal.SetInt32(theInteger);
 		}
 	else if (tagName == "real")
 		{
@@ -101,13 +101,13 @@ static bool sTryRead_SimpleValue(ZML::Reader& r, ZTValue& oTV)
 		if (!ZUtil_Strim::sTryRead_SignedDouble(ZStrimU_Unreader(r.TextStrim()), theDouble))
 			sThrowParseException("Expected valid real");
 
-		oTV.SetDouble(theDouble);
+		oVal.SetDouble(theDouble);
 		}
 	else if (tagName == "date")
 		{
 		const string theDate = r.TextString();
 
-		oTV.SetTime(ZUtil_Time::sFromString_ISO8601(theDate));
+		oVal.SetTime(ZUtil_Time::sFromString_ISO8601(theDate));
 		}
 	else if (tagName == "dict")
 		{
@@ -135,11 +135,11 @@ static bool sTryRead_SimpleValue(ZML::Reader& r, ZTValue& oTV)
 	return true;
 	}
 
-static void sRead_SimpleValue(ZML::Reader& r, ZTValue& oValue)
+static void sRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
 	{
 	sSkipText(r);
 
-	if (!sTryRead_SimpleValue(r, oValue))
+	if (!sTryRead_SimpleValue(r, oVal))
 		sThrowParseException("Expected value");
 	}
 
@@ -171,9 +171,9 @@ static ZRef<ZYadR_Std> sMakeYadR_XMLPList(ZML::Reader& r)
 			}
 		}
 	
-	ZTValue theTV;
-	if (sTryRead_SimpleValue(r, theTV))
-		return new ZYadPrimR_Std(theTV);
+	ZVal_ZooLib theVal;
+	if (sTryRead_SimpleValue(r, theVal))
+		return new ZYadPrimR_Std(theVal);
 
 	return ZRef<ZYadR_Std>();
 	}
@@ -344,27 +344,27 @@ static void sToStrim_Map(const ZStrimW_ML& s, ZRef<ZYadMapR> iYadMapR)
 	s.End("dict");
 	}
 
-static void sToStrim_SimpleTValue(const ZStrimW_ML& s, const ZTValue& iTV)
+static void sToStrim_SimpleValue(const ZStrimW_ML& s, const ZVal_ZooLib& iVal)
 	{
-	switch (iTV.TypeOf())
+	switch (iVal.TypeOf())
 		{
 		case eZType_Int32:
 			{
 			s.Begin("integer");
-				s.Writef("%d", iTV.GetInt32());
+				s.Writef("%d", iVal.GetInt32());
 			s.End("integer");
 			break;
 			}
 		case eZType_Double:
 			{
 			s.Begin("real");
-				s.Writef("%.17g", iTV.GetDouble());
+				s.Writef("%.17g", iVal.GetDouble());
 			s.End("real");
 			break;
 			}
 		case eZType_Bool:
 			{
-			if (iTV.GetBool())
+			if (iVal.GetBool())
 				s.Empty("true");
 			else
 				s.Empty("false");
@@ -372,34 +372,34 @@ static void sToStrim_SimpleTValue(const ZStrimW_ML& s, const ZTValue& iTV)
 			}
 		case eZType_Raw:
 			{
-			sToStrim_Stream(s, ZStreamRPos_MemoryBlock(iTV.GetRaw()));
+			sToStrim_Stream(s, ZStreamRPos_MemoryBlock(iVal.GetRaw()));
 			break;
 			}
 		case eZType_Time:
 			{
 			s.Begin("date");
-				s << ZUtil_Time::sAsString_ISO8601(iTV.GetTime(), true);
+				s << ZUtil_Time::sAsString_ISO8601(iVal.GetTime(), true);
 			s.End("date");
 			break;
 			}
 		case eZType_Tuple:
 			{
-			ZDebugStopf(0, ("sToStrim_SimpleTValue, given a tuple"));
+			ZDebugStopf(0, ("sToStrim_SimpleValue, given a tuple"));
 			break;
 			}
 		case eZType_Vector:
 			{
-			ZDebugStopf(0, ("sToStrim_SimpleTValue, given a tuple"));
+			ZDebugStopf(0, ("sToStrim_SimpleValue, given a vector"));
 			break;
 			}
 		case eZType_String:
 			{
-			ZDebugStopf(0, ("sToStrim_SimpleTValue, given a string"));
+			ZDebugStopf(0, ("sToStrim_SimpleValue, given a string"));
 			break;
 			}
 		default:
 			{
-			ZDebugStopf(0, ("sToStrim_SimpleTValue, given an unsupported type"));
+			ZDebugStopf(0, ("sToStrim_SimpleValue, given an unsupported type"));
 			}
 		}
 	}
@@ -428,7 +428,7 @@ void ZYad_XMLPList::sToStrimW_ML(const ZStrimW_ML& s, ZRef<ZYadR> iYadR)
 		}
 	else
 		{
-		sToStrim_SimpleTValue(s, ZYad_ZooLib::sFromYadR(iYadR));
+		sToStrim_SimpleValue(s, ZYad_ZooLib::sFromYadR(iYadR));
 		}	
 	}
 

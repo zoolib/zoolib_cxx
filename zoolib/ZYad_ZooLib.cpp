@@ -26,7 +26,7 @@ NAMESPACE_ZOOLIB_BEGIN
 using std::string;
 using std::vector;
 
-ZOOLIB_FACTORYCHAIN_HEAD(ZTValue, ZRef<ZYadR>);
+ZOOLIB_FACTORYCHAIN_HEAD(ZVal_ZooLib, ZRef<ZYadR>);
 
 // =================================================================================================
 #pragma mark -
@@ -35,7 +35,7 @@ ZOOLIB_FACTORYCHAIN_HEAD(ZTValue, ZRef<ZYadR>);
 namespace ZANONYMOUS {
 
 class Maker0
-:	public ZFactoryChain_T<ZTValue, ZRef<ZYadR> >
+:	public ZFactoryChain_T<ZVal_ZooLib, ZRef<ZYadR> >
 	{
 public:
 	Maker0()
@@ -44,9 +44,9 @@ public:
 
 	virtual bool Make(Result_t& oResult, Param_t iParam)
 		{
-		if (ZRef<ZYadR_TValue> theYadR = ZRefDynamicCast<ZYadR_TValue>(iParam))
+		if (ZRef<ZYadR_ZooLib> theYadR = ZRefDynamicCast<ZYadR_ZooLib>(iParam))
 			{
-			oResult = theYadR->GetTValue();
+			oResult = theYadR->GetVal();
 			return true;
 			}
 		return false;
@@ -81,39 +81,39 @@ static bool sIsSimpleString(const ZYadOptions& iOptions, const string& iString)
 	return true;
 	}
 
-static bool sIsSimple(const ZYadOptions& iOptions, const ZTValue& iTV)
+static bool sIsSimple(const ZYadOptions& iOptions, const ZVal_ZooLib& iVal)
 	{
-	switch (iTV.TypeOf())
+	switch (iVal.TypeOf())
 		{
 		case eZType_Raw:
 			{
-			return iTV.GetRaw().GetSize() <= iOptions.fRawChunkSize;
+			return iVal.GetRaw().GetSize() <= iOptions.fRawChunkSize;
 			}
 		case eZType_Vector:
 			{
-			const vector<ZTValue>& theVector = iTV.GetVector();
-			if (theVector.empty())
+			const ZValList_ZooLib& theList = iVal.GetList();
+			if (!theList.Count())
 				return true;
 
-			if (theVector.size() == 1)
-				return sIsSimple(iOptions, theVector.at(0));
+			if (theList.Count() == 1)
+				return sIsSimple(iOptions, theList.Get(0));
 
 			return false;
 			}
 		case eZType_Tuple:
 			{
-			const ZTuple& theTuple = iTV.GetTuple();
-			if (theTuple.Empty())
+			const ZValMap_ZooLib& theMap = iVal.GetMap();
+			if (theMap.Empty())
 				return true;
 
-			if (theTuple.Count() == 1)
-				return sIsSimple(iOptions, theTuple.GetValue(theTuple.begin()));
+			if (theMap.Count() == 1)
+				return sIsSimple(iOptions, theMap.RGet(theMap.begin()));
 
 			return false;
 			}
 		case eZType_String:
 			{
-			return sIsSimpleString(iOptions, iTV.GetString());
+			return sIsSimpleString(iOptions, iVal.GetString());
 			}
 		default:
 			{
@@ -124,28 +124,31 @@ static bool sIsSimple(const ZYadOptions& iOptions, const ZTValue& iTV)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadR_TValue
+#pragma mark * ZYadR_ZooLib
 
-ZYadR_TValue::ZYadR_TValue(ZType iType, const ZStreamR& iStreamR)
-:	fTValue(iType, iStreamR)
+ZYadR_ZooLib::ZYadR_ZooLib()
 	{}
 
-ZYadR_TValue::ZYadR_TValue(const ZTValue& iTV)
-:	fTValue(iTV)
+ZYadR_ZooLib::ZYadR_ZooLib(ZType iType, const ZStreamR& iStreamR)
+:	fVal(iType, iStreamR)
 	{}
 
-const ZTValue& ZYadR_TValue::GetTValue()
-	{ return fTValue; }
+ZYadR_ZooLib::ZYadR_ZooLib(const ZVal_ZooLib& iVal)
+:	fVal(iVal)
+	{}
 
-bool ZYadR_TValue::IsSimple(const ZYadOptions& iOptions)
-	{ return sIsSimple(iOptions, fTValue); }
+const ZVal_ZooLib& ZYadR_ZooLib::GetVal()
+	{ return fVal; }
+
+bool ZYadR_ZooLib::IsSimple(const ZYadOptions& iOptions)
+	{ return sIsSimple(iOptions, fVal); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadStreamRPos_MemoryBlock
 
 ZYadStreamRPos_MemoryBlock::ZYadStreamRPos_MemoryBlock(const ZMemoryBlock& iMB)
-:	ZYadR_TValue(iMB),
+:	ZYadR_ZooLib(iMB),
 	ZStreamerRPos_MemoryBlock(iMB)
 	{}
 
@@ -157,132 +160,126 @@ bool ZYadStreamRPos_MemoryBlock::IsSimple(const ZYadOptions& iOptions)
 #pragma mark * ZYadStrimU_String
 
 ZYadStrimU_String::ZYadStrimU_String(const std::string& iString)
-:	ZYadR_TValue(iString),
-	ZStrimmerU_String(this->GetTValue().GetString())
+:	ZYadR_ZooLib(iString),
+	ZStrimmerU_String(this->GetVal().GetString())
 	{}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListRPos_Vector
+#pragma mark * ZYadListRPos_ZooLib
 
-ZYadListRPos_Vector::ZYadListRPos_Vector(const ZTValue& iTV)
-:	ZYadR_TValue(iTV),
-	fVector(this->GetTValue().GetVector()),
+ZYadListRPos_ZooLib::ZYadListRPos_ZooLib(const ZValList_ZooLib& iList)
+:	ZYadR_ZooLib(iList),
+	fList(this->GetVal().GetList()),
 	fPosition(0)
 	{}
 
-ZYadListRPos_Vector::ZYadListRPos_Vector(const std::vector<ZTValue>& iVector)
-:	ZYadR_TValue(iVector),
-	fVector(this->GetTValue().GetVector()),
-	fPosition(0)
-	{}
-
-ZYadListRPos_Vector::ZYadListRPos_Vector(const std::vector<ZTValue>& iVector, uint64 iPosition)
-:	ZYadR_TValue(iVector),
-	fVector(this->GetTValue().GetVector()),
+ZYadListRPos_ZooLib::ZYadListRPos_ZooLib(const ZValList_ZooLib& iList, uint64 iPosition)
+:	ZYadR_ZooLib(iList),
+	fList(this->GetVal().GetList()),
 	fPosition(iPosition)
 	{}
 
-ZRef<ZYadR> ZYadListRPos_Vector::ReadInc()
+ZRef<ZYadR> ZYadListRPos_ZooLib::ReadInc()
 	{
-	if (fPosition < fVector.size())
-		return ZYad_ZooLib::sMakeYadR(fVector[fPosition++]);
+	if (fPosition < fList.Count())
+		return ZYad_ZooLib::sMakeYadR(fList.Get(fPosition++));
 	return ZRef<ZYadR>();
 	}
 
-bool ZYadListRPos_Vector::IsSimple(const ZYadOptions& iOptions)
-	{ return ZYadR_TValue::IsSimple(iOptions); }
+bool ZYadListRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
+	{ return ZYadR_ZooLib::IsSimple(iOptions); }
 
-uint64 ZYadListRPos_Vector::GetPosition()
+uint64 ZYadListRPos_ZooLib::GetPosition()
 	{ return fPosition; }
 
-uint64 ZYadListRPos_Vector::GetSize()
-	{ return fVector.size(); }
+uint64 ZYadListRPos_ZooLib::GetSize()
+	{ return fList.Count(); }
 
-void ZYadListRPos_Vector::SetPosition(uint64 iPosition)
+void ZYadListRPos_ZooLib::SetPosition(uint64 iPosition)
 	{ fPosition = iPosition; }
 
-ZRef<ZYadListRPos> ZYadListRPos_Vector::Clone()
-	{ return new ZYadListRPos_Vector(fVector, fPosition); }
+ZRef<ZYadListRPos> ZYadListRPos_ZooLib::Clone()
+	{ return new ZYadListRPos_ZooLib(fList, fPosition); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadMapRPos_Tuple
+#pragma mark * ZYadMapRPos_ZooLib
 
-ZYadMapRPos_Tuple::ZYadMapRPos_Tuple(const ZTuple& iTuple)
-:	ZYadR_TValue(iTuple),
-	fTuple(this->GetTValue().GetTuple()),
-	fIter(fTuple.begin())
+ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap)
+:	ZYadR_ZooLib(iMap),
+	fMap(this->GetVal().GetMap()),
+	fIter(fMap.begin())
 	{}
 
-ZYadMapRPos_Tuple::ZYadMapRPos_Tuple(const ZTuple& iTuple, const ZTuple::const_iterator& iIter)
-:	ZYadR_TValue(iTuple),
-	fTuple(this->GetTValue().GetTuple()),
+ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap, const ZValMap_ZooLib::const_iterator& iIter)
+:	ZYadR_ZooLib(iMap),
+	fMap(this->GetVal().GetMap()),
 	fIter(iIter)
 	{}
 
-ZRef<ZYadR> ZYadMapRPos_Tuple::ReadInc(std::string& oName)
+ZRef<ZYadR> ZYadMapRPos_ZooLib::ReadInc(std::string& oName)
 	{
-	if (fIter < fTuple.end())
+	if (fIter < fMap.end())
 		{
-		oName = fTuple.NameOf(fIter).AsString();
-		return ZYad_ZooLib::sMakeYadR(fTuple.GetValue(fIter++));
+		oName = fMap.NameOf(fIter).AsString();
+		return ZYad_ZooLib::sMakeYadR(fMap.Get(fIter++));
 		}
 	return ZRef<ZYadR>();
 	}
 
-bool ZYadMapRPos_Tuple::IsSimple(const ZYadOptions& iOptions)
-	{ return ZYadR_TValue::IsSimple(iOptions); }
+bool ZYadMapRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
+	{ return ZYadR_ZooLib::IsSimple(iOptions); }
 
-void ZYadMapRPos_Tuple::SetPosition(const std::string& iName)
-	{ fIter = fTuple.IteratorOf(iName); }
+void ZYadMapRPos_ZooLib::SetPosition(const std::string& iName)
+	{ fIter = fMap.IteratorOf(iName); }
 
-ZRef<ZYadMapRPos> ZYadMapRPos_Tuple::Clone()
-	{ return new ZYadMapRPos_Tuple(fTuple, fIter); }
+ZRef<ZYadMapRPos> ZYadMapRPos_ZooLib::Clone()
+	{ return new ZYadMapRPos_ZooLib(fMap, fIter); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYad_ZooLib
 
-ZRef<ZYadR> ZYad_ZooLib::sMakeYadR(const ZTValue& iTV)
+ZRef<ZYadR> ZYad_ZooLib::sMakeYadR(const ZVal_ZooLib& iVal)
 	{
-	switch (iTV.TypeOf())
+	switch (iVal.TypeOf())
 		{
-		case eZType_Vector: return new ZYadListRPos_Vector(iTV.GetVector());
-		case eZType_Tuple: return new ZYadMapRPos_Tuple(iTV.GetTuple());
-		case eZType_Raw: return new ZYadStreamRPos_MemoryBlock(iTV.GetRaw());
-		case eZType_String: return new ZYadStrimU_String(iTV.GetString());
+		case eZType_Vector: return new ZYadListRPos_ZooLib(iVal.GetList());
+		case eZType_Tuple: return new ZYadMapRPos_ZooLib(iVal.GetMap());
+		case eZType_Raw: return new ZYadStreamRPos_MemoryBlock(iVal.GetRaw());
+		case eZType_String: return new ZYadStrimU_String(iVal.GetString());
 		}
 
-	return new ZYadR_TValue(iTV);
+	return new ZYadR_ZooLib(iVal);
 	}
 
-ZTValue ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
+ZVal_ZooLib ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
 	{
 	if (!iYadR)
 		{
-		return ZTValue();
+		return ZVal_ZooLib();
 		}
-	else if (ZRef<ZYadR_TValue> theYadR = ZRefDynamicCast<ZYadR_TValue>(iYadR))
+	else if (ZRef<ZYadR_ZooLib> theYadR = ZRefDynamicCast<ZYadR_ZooLib>(iYadR))
 		{
-		return theYadR->GetTValue();
+		return theYadR->GetVal();
 		}
 	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
-		ZTuple theTuple;
+		ZValMap_ZooLib theMap;
 		string theName;
 		while (ZRef<ZYadR> theChild = theYadMapR->ReadInc(theName))
-			theTuple.SetValue(theName, sFromYadR(theChild));
+			theMap.Set(theName, sFromYadR(theChild));
 
-		return theTuple;
+		return theMap;
 		}
 	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
 		{
-		vector<ZTValue> theVector;
+		ZValList_ZooLib theList;
 		while (ZRef<ZYadR> theChild = theYadListR->ReadInc())
-			theVector.push_back(sFromYadR(theChild));
+			theList.Append(sFromYadR(theChild));
 
-		return theVector;	
+		return theList;	
 		}
 	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
 		{
@@ -298,7 +295,7 @@ ZTValue ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
 		}
 	else
 		{
-		return ZFactoryChain_T<ZTValue, ZRef<ZYadR> >::sMake(iYadR);
+		return ZFactoryChain_T<ZVal_ZooLib, ZRef<ZYadR> >::sMake(iYadR);
 		}
 	}
 

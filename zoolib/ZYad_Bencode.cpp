@@ -112,7 +112,7 @@ static ZRef<ZYadR_Std> sReadStringish(const ZStreamU& s)
 		sThrowParseException("Expected ':' terminator for string/binary length");
 
 	if (!theLength)
-		return new ZYadPrimR_Std(ZTValue());
+		return new ZYadPrimR_Std;
 
 	const string theString = s.ReadString(theLength);
 	string::const_iterator current = theString.begin();

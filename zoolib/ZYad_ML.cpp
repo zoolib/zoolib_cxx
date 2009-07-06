@@ -94,13 +94,13 @@ ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR)
 :	fR(iR)
 	{}
 
-ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const string& iTagName, const ZTuple& iAttrs)
+ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const string& iTagName, const ZValMap_ZooLib& iAttrs)
 :	fR(iR),
 	fTagName(iTagName),
 	fAttrs(iAttrs)
 	{}
 
-ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const ZTuple& iAttrs)
+ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const ZValMap_ZooLib& iAttrs)
 :	ZYadMapR_Std(true),
 	fR(iR),
 	fAttrs(iAttrs)
@@ -109,11 +109,11 @@ ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const ZTuple& iAttrs)
 ZRef<ZYadR> ZYadMapR_ML::Meta()
 	{
 	if (fAttrs)
-		return new ZYadMapRPos_Tuple(fAttrs);
+		return new ZYadMapRPos_ZooLib(fAttrs);
 	return ZRef<ZYadR>();
 	}
 
-ZTuple ZYadMapR_ML::GetAttrs()
+ZValMap_ZooLib ZYadMapR_ML::GetAttrs()
 	{ return fAttrs; }
 
 void ZYadMapR_ML::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
@@ -130,14 +130,14 @@ void ZYadMapR_ML::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>
 		{
 		case ZML::eToken_TagBegin:
 			{
-			const ZTuple theAttrs = fR.Attrs();
+			const ZValMap_ZooLib theAttrs = fR.Attrs();
 			fR.Advance();
 			oYadR = new ZYadMapR_ML(fR, oName, theAttrs);
 			break;
 			}
 		case ZML::eToken_TagEmpty:
 			{
-			const ZTuple theAttrs = fR.Attrs();
+			const ZValMap_ZooLib theAttrs = fR.Attrs();
 			fR.Advance();
 			oYadR = new ZYadMapR_ML(fR, theAttrs);
 			break;

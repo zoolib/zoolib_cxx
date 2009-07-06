@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_cmath.h"
 #include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZStrim_Escaped.h"
-#include "zoolib/ZTuple.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZYad_JSON.h"
 #include "zoolib/ZYad_StdMore.h"
@@ -36,12 +35,12 @@ JSON is JavaScript Object Notation. See <http://www.crockford.com/JSON/index.htm
 
 ZYad_JSON provides Yad facilities to read and write JSON source.
 
-ZTuple is isomorphic to JSON's object, vector<ZTValue> to JSON's array, and strings, booleans
+ZValMap is isomorphic to JSON's object, ZValList to JSON's array, and strings, booleans
 and null translate back and forth without trouble. JSON's only other primitive is
-the number, whereas ZTValue explicitly stores and retrieves integers of different sizes,
+the number, whereas ZVal_ZooLib explicitly stores and retrieves integers of different sizes,
 floats and doubles, raw bytes and other composite types.
 
-ZYad_JSON writes all ZTValue number types as JSON numbers. When reading, JSON numbers
+ZYad_JSON writes all ZVal_ZooLib number types as JSON numbers. When reading, JSON numbers
 are stored as int64s, unless the mantissa has a fractional component or exceeds 2^64,
 or if there is an exponent,in which case a double is used.
 
@@ -49,21 +48,21 @@ The mappings are as follows:
 
 <pre>
 
-JSON          ZTValue
+JSON          ZVal_ZooLib
 ----          -------
 null          null
-object        ZTuple
-array         vector<ZTValue>
+object        ZValMap_ZooLib
+array         ZValList_ZooLib
 boolean       bool
 string        string
 number        int64 or double
 
 
-ZTValue          JSON
+ZVal_ZooLib          JSON
 -------          ----
 null             null
-ZTuple           object
-vector<ZTValue>  array
+ZValMap_ZooLib   object
+ZValList_ZooLib  array
 bool             boolean
 string           string
 int8             number
@@ -173,7 +172,7 @@ static bool sTryRead_JSONString(const ZStrimU& s, string& oString)
 	return false;
 	}
 
-static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTV)
+static bool sFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 	{
 	using namespace ZUtil_Strim;
 
@@ -185,26 +184,26 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTV)
 
 	if (sTryRead_JSONString(iStrimU, theString))
 		{
-		oTV.SetString(theString);
+		oVal.SetString(theString);
 		}
 	else if (sTryRead_SignedDecimalNumber(iStrimU, asInt64, asDouble, isDouble))
 		{
 		if (isDouble)
-			oTV.SetDouble(asDouble);
+			oVal.SetDouble(asDouble);
 		else
-			oTV.SetInt64(asInt64);
+			oVal.SetInt64(asInt64);
 		}
 	else if (sTryRead_CaselessString(iStrimU, "null"))
 		{
-		oTV.SetNull();
+		oVal = ZVal_ZooLib();
 		}
 	else if (sTryRead_CaselessString(iStrimU, "false"))
 		{
-		oTV.SetBool(false);
+		oVal.SetBool(false);
 		}
 	else if (sTryRead_CaselessString(iStrimU, "true"))
 		{
-		oTV.SetBool(true);
+		oVal.SetBool(true);
 		}
 	else
 		{
@@ -214,10 +213,10 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTV)
 	return true;
 	}
 
-static bool sNormalizeSimpleTValue(const ZTValue& iTV, ZTValue& oTV)
+static bool sNormalizeSimpleValue(const ZVal_ZooLib& iVal, ZVal_ZooLib& oVal)
 	{
-	ZAssert(&iTV != &oTV);
-	switch (iTV.TypeOf())
+	ZAssert(&iVal != &oVal);
+	switch (iVal.TypeOf())
 		{
 		case eZType_String:
 		case eZType_Int64:
@@ -225,37 +224,37 @@ static bool sNormalizeSimpleTValue(const ZTValue& iTV, ZTValue& oTV)
 		case eZType_Bool:
 		case eZType_Null:
 			{
-			oTV = iTV;
+			oVal = iVal;
 			return true;
 			}
 		case eZType_Int8:
 			{
-			oTV.SetInt64(iTV.GetInt8());
+			oVal.SetInt64(iVal.GetInt8());
 			return true;
 			}
 		case eZType_Int16:
 			{
-			oTV.SetInt64(iTV.GetInt16());
+			oVal.SetInt64(iVal.GetInt16());
 			return true;
 			}
 		case eZType_Int32:
 			{
-			oTV.SetInt64(iTV.GetInt32());
+			oVal.SetInt64(iVal.GetInt32());
 			return true;
 			}
 		case eZType_Float:
 			{
-			oTV.SetDouble(iTV.GetFloat());
+			oVal.SetDouble(iVal.GetFloat());
 			return true;
 			}
 		case eZType_ID:
 			{
-			oTV.SetInt64(iTV.GetID());
+			oVal.SetInt64(iVal.GetID());
 			return true;
 			}
 		case eZType_Time:
 			{
-			oTV.SetDouble(iTV.GetTime().fVal);
+			oVal.SetDouble(iVal.GetTime().fVal);
 			return true;
 			}
 		}
@@ -282,9 +281,9 @@ static ZRef<ZYadR_Std> sMakeYadR_JSON(const ZStrimU& iStrimU)
 		}
 	else
 		{
-		ZTValue theTV;
-		if (sFromStrim_TValue(iStrimU, theTV))
-			return new ZYadPrimR_Std(theTV);
+		ZVal_ZooLib theVal;
+		if (sFromStrim_Value(iStrimU, theVal))
+			return new ZYadPrimR_Std(theVal);
 		}
 
 	return ZRef<ZYadPrimR_Std>();
@@ -309,21 +308,21 @@ static ZRef<ZYadR_Std> sMakeYadR_JSONNormalize(
 		}
 	else
 		{
-		ZTValue theValue;
-		if (ZFactoryChain_T<ZTValue, ZRef<ZYadR> >::sMake(theValue, iYadR))
+		ZVal_ZooLib theValue;
+		if (ZFactoryChain_T<ZVal_ZooLib, ZRef<ZYadR> >::sMake(theValue, iYadR))
 			{
 			// We were able to turn the value into something
 			// legitimate. Now normalize it if possible.
-			ZTValue normalized;
-			if (sNormalizeSimpleTValue(theValue, normalized))
+			ZVal_ZooLib normalized;
+			if (sNormalizeSimpleValue(theValue, normalized))
 				return new ZYadPrimR_Std(normalized);
 			}
 
 		if (iPreserve)
 			{
-			// We weren't able to get a ZTValue, or it couldn't normalized.
+			// We weren't able to get a ZVal_ZooLib, or it couldn't normalized.
 			// We've been asked to preserve values, so return a null.
-			return new ZYadPrimR_Std(ZTValue());
+			return new ZYadPrimR_Std(ZVal_ZooLib());
 			}
 		}
 
@@ -528,10 +527,10 @@ static void sWriteString(const ZStrimW& s, const ZStrimR& iStrimR)
 	s.Write("\"");
 	}
 
-static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV)
+static void sToStrim_SimpleValue(const ZStrimW& s, const ZVal_ZooLib& iVal)
 	{
-	ZTValue normalized;
-	sNormalizeSimpleTValue(iTV, normalized);
+	ZVal_ZooLib normalized;
+	sNormalizeSimpleValue(iVal, normalized);
 
 	switch (normalized.TypeOf())
 		{
@@ -610,7 +609,7 @@ ZYadVisitor_JSONWriter::ZYadVisitor_JSONWriter(const ZStrimW& iStrimW,
 
 bool ZYadVisitor_JSONWriter::Visit_YadR(ZRef<ZYadR> iYadR)
 	{
-	sToStrim_SimpleTValue(fStrimW, ZYad_ZooLib::sFromYadR(iYadR));
+	sToStrim_SimpleValue(fStrimW, ZYad_ZooLib::sFromYadR(iYadR));
 	return true;
 	}
 

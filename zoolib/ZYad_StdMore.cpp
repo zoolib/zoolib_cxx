@@ -26,8 +26,11 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZYadPrimR_Std
 
-ZYadPrimR_Std::ZYadPrimR_Std(const ZTValue& iTV)
-:	ZYadR_TValue(iTV)
+ZYadPrimR_Std::ZYadPrimR_Std()
+	{}
+
+ZYadPrimR_Std::ZYadPrimR_Std(const ZVal_ZooLib& iVal)
+:	ZYadR_ZooLib(iVal)
 	{}
 
 void ZYadPrimR_Std::Finish()

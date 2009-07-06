@@ -22,30 +22,30 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYad_ZooLib__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZVal_ZooLib.h"
 #include "zoolib/ZYad.h"
-#include "zoolib/ZMemoryBlock.h"
-#include "zoolib/ZTuple.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadR_TValue
+#pragma mark * ZYadR_ZooLib
 
-class ZYadR_TValue : public virtual ZYadR
+class ZYadR_ZooLib : public virtual ZYadR
 	{
 public:
-	ZYadR_TValue(ZType iType, const ZStreamR& iStreamR);
-	ZYadR_TValue(const ZTValue& iTV);
+	ZYadR_ZooLib();
+	ZYadR_ZooLib(ZType iType, const ZStreamR& iStreamR);
+	ZYadR_ZooLib(const ZVal_ZooLib& iTV);
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
-	const ZTValue& GetTValue();
+	const ZVal_ZooLib& GetVal();
 
 private:
-	const ZTValue fTValue;
+	const ZVal_ZooLib fVal;
 	};
 
 // =================================================================================================
@@ -55,14 +55,14 @@ private:
 typedef ZStreamerRPos_T<ZStreamRPos_MemoryBlock> ZStreamerRPos_MemoryBlock;
 
 class ZYadStreamRPos_MemoryBlock
-:	public ZYadR_TValue,
+:	public ZYadR_ZooLib,
 	public ZYadStreamR,
 	public ZStreamerRPos_MemoryBlock
 	{
 public:
 	ZYadStreamRPos_MemoryBlock(const ZMemoryBlock& iMB);
 
-// From ZYadR, disambiguating between ZYadR_TValue and ZYadStreamR
+// From ZYadR, disambiguating between ZYadR_ZooLib and ZYadStreamR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
@@ -73,34 +73,33 @@ public:
 typedef ZStrimmerU_T<ZStrimU_String> ZStrimmerU_String;
 
 class ZYadStrimU_String
-:	public ZYadR_TValue,
+:	public ZYadR_ZooLib,
 	public ZYadStrimR,
 	public ZStrimmerU_String
 	{
 public:
 	ZYadStrimU_String(const std::string& iString);
 
-// From ZYadR, disambiguating between ZYadR_TValue and ZYadStreamR
+// From ZYadR, disambiguating between ZYadR_ZooLib and ZYadStreamR
 //	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListRPos_Vector
+#pragma mark * ZYadListRPos_ZooLib
 
-class ZYadListRPos_Vector
-:	public ZYadR_TValue,
+class ZYadListRPos_ZooLib
+:	public ZYadR_ZooLib,
 	public ZYadListRPos
 	{
 public:
-	ZYadListRPos_Vector(const ZTValue& iTV);
-	ZYadListRPos_Vector(const std::vector<ZTValue>& iVector);
-	ZYadListRPos_Vector(const std::vector<ZTValue>& iVector, uint64 iPosition);
+	ZYadListRPos_ZooLib(const ZValList_ZooLib& iList);
+	ZYadListRPos_ZooLib(const ZValList_ZooLib& iList, uint64 iPosition);
 
 // From ZYadR via ZYadListRPos
 	virtual ZRef<ZYadR> ReadInc();
 
-// From ZYadR, disambiguating between ZYadR_TValue and ZYadListRPos
+// From ZYadR, disambiguating between ZYadR_ZooLib and ZYadListRPos
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // From ZYadListR via ZYadListRPos
@@ -112,26 +111,26 @@ public:
 	virtual ZRef<ZYadListRPos> Clone();
 
 private:
-	const std::vector<ZTValue>& fVector;
+	const ZValList_ZooLib fList;
 	uint64 fPosition;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListMapRPos_Tuple
+#pragma mark * ZYadListMapRPos_ZooLib
 
-class ZYadMapRPos_Tuple
-:	public ZYadR_TValue,
+class ZYadMapRPos_ZooLib
+:	public ZYadR_ZooLib,
 	public ZYadMapRPos
 	{
 public:
-	ZYadMapRPos_Tuple(const ZTuple& iTuple);
-	ZYadMapRPos_Tuple(const ZTuple& iTuple, const ZTuple::const_iterator& iIter);
+	ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap);
+	ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap, const ZValMap_ZooLib::const_iterator& iIter);
 
 // From ZYadR via ZYadMapRPos
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);
 
-// From ZYadR, disambiguating between ZYadR_TValue and ZYadMapRPos
+// From ZYadR, disambiguating between ZYadR_ZooLib and ZYadMapRPos
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // From ZYadMapR via ZYadMapRPos
@@ -139,8 +138,8 @@ public:
 	virtual ZRef<ZYadMapRPos> Clone();
 
 private:
-	const ZTuple fTuple;
-	ZTuple::const_iterator fIter;
+	const ZValMap_ZooLib fMap;
+	ZValMap_ZooLib::const_iterator fIter;
 	};
 
 // =================================================================================================
@@ -149,9 +148,9 @@ private:
 
 namespace ZYad_ZooLib {
 
-ZRef<ZYadR> sMakeYadR(const ZTValue& iTV);
+ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iTV);
 
-ZTValue sFromYadR(ZRef<ZYadR> iYadR);
+ZVal_ZooLib sFromYadR(ZRef<ZYadR> iYadR);
 
 } // namespace ZYad_ZooLib
 

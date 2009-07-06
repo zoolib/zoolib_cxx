@@ -56,7 +56,7 @@ static string sStringFromStream(const ZStreamR& iStreamR)
 
 class ZYadPrimR_ZooLibStream
 :	public ZYadR_Std,
-	public ZYadR_TValue
+	public ZYadR_ZooLib
 	{
 public:
 	ZYadPrimR_ZooLibStream(ZType iType, const ZStreamR& iStreamR);
@@ -66,7 +66,7 @@ public:
 	};
 
 ZYadPrimR_ZooLibStream::ZYadPrimR_ZooLibStream(ZType iType, const ZStreamR& iStreamR)
-:	ZYadR_TValue(iType, iStreamR)
+:	ZYadR_ZooLib(iType, iStreamR)
 	{}
 
 void ZYadPrimR_ZooLibStream::Finish()

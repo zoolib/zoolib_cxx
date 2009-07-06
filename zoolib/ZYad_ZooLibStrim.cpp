@@ -79,7 +79,7 @@ static void sMustRead_WSCommaWS(const ZStrimU& iStrimU)
 	sSkip_WSAndCPlusPlusComments(iStrimU);
 	}
 
-static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
+static bool sFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 	{
 	using namespace ZUtil_Strim;
 
@@ -100,7 +100,7 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 					sThrowParseException("Expected a property name after '#'");
 				}
 			}
-		oTValue.SetName(propertyName);
+		oVal.SetName(propertyName);
 		}
 #endif
 	else
@@ -109,22 +109,22 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 		if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &theTypeLC, &theType))
 			{
 			// We couldn't find any of the special characters, nor could
-			// we read a type designator, so we fail to read a TValue,
+			// we read a type designator, so we fail to read a value,
 			// which is not a parse error at this stage -- it might be for our caller.
 			return false;
 			}
 
 		if (theTypeLC == "null")
 			{
-			oTValue.SetNull();
+			oVal = ZVal_ZooLib();
 			}
 		else if (theTypeLC == "false")
 			{
-			oTValue.SetBool(false);
+			oVal.SetBool(false);
 			}
 		else if (theTypeLC == "true")
 			{
-			oTValue.SetBool(true);
+			oVal.SetBool(true);
 			}
 		else
 			{
@@ -140,52 +140,52 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &typeValueLC, &typeValue))
 					sThrowParseException("Expected a type name");
 
-				if (typeValueLC == "null") oTValue.SetType(eZType_Null);
-				else if (typeValueLC == "string") oTValue.SetType(eZType_String);
+				if (typeValueLC == "null") oVal.SetType(eZType_Null);
+				else if (typeValueLC == "string") oVal.SetType(eZType_String);
 // AG 2007-08-06. cstring has never been used. Not even sure what it's point was.
-//				else if (typeValueLC == "cstring") oTValue.SetType(eZType_CString);
-				else if (typeValueLC == "int8") oTValue.SetType(eZType_Int8);
-				else if (typeValueLC == "int16") oTValue.SetType(eZType_Int16);
-				else if (typeValueLC == "int32") oTValue.SetType(eZType_Int32);
-				else if (typeValueLC == "int64") oTValue.SetType(eZType_Int64);
-				else if (typeValueLC == "float") oTValue.SetType(eZType_Float);
-				else if (typeValueLC == "double") oTValue.SetType(eZType_Double);
-				else if (typeValueLC == "time") oTValue.SetType(eZType_Time);
-				else if (typeValueLC == "bool") oTValue.SetType(eZType_Bool);
-				else if (typeValueLC == "pointer") oTValue.SetType(eZType_Pointer);
-				else if (typeValueLC == "raw") oTValue.SetType(eZType_Raw);
-				else if (typeValueLC == "tuple") oTValue.SetType(eZType_Tuple);
-				else if (typeValueLC == "refcounted") oTValue.SetType(eZType_RefCounted);
-				else if (typeValueLC == "rect") oTValue.SetType(eZType_Rect);
-				else if (typeValueLC == "point") oTValue.SetType(eZType_Point);
-				else if (typeValueLC == "region") oTValue.SetType(eZType_Region);
-				else if (typeValueLC == "id") oTValue.SetType(eZType_ID);
-				else if (typeValueLC == "vector") oTValue.SetType(eZType_Vector);
-				else if (typeValueLC == "type") oTValue.SetType(eZType_Type);
-				else if (typeValueLC == "time") oTValue.SetType(eZType_Time);
-//##				else if (typeValueLC == "name") oTValue.SetType(eZType_Name);
+//				else if (typeValueLC == "cstring") oVal.SetType(eZType_CString);
+				else if (typeValueLC == "int8") oVal.SetType(eZType_Int8);
+				else if (typeValueLC == "int16") oVal.SetType(eZType_Int16);
+				else if (typeValueLC == "int32") oVal.SetType(eZType_Int32);
+				else if (typeValueLC == "int64") oVal.SetType(eZType_Int64);
+				else if (typeValueLC == "float") oVal.SetType(eZType_Float);
+				else if (typeValueLC == "double") oVal.SetType(eZType_Double);
+				else if (typeValueLC == "time") oVal.SetType(eZType_Time);
+				else if (typeValueLC == "bool") oVal.SetType(eZType_Bool);
+				else if (typeValueLC == "pointer") oVal.SetType(eZType_Pointer);
+				else if (typeValueLC == "raw") oVal.SetType(eZType_Raw);
+				else if (typeValueLC == "tuple") oVal.SetType(eZType_Tuple);
+				else if (typeValueLC == "refcounted") oVal.SetType(eZType_RefCounted);
+				else if (typeValueLC == "rect") oVal.SetType(eZType_Rect);
+				else if (typeValueLC == "point") oVal.SetType(eZType_Point);
+				else if (typeValueLC == "region") oVal.SetType(eZType_Region);
+				else if (typeValueLC == "id") oVal.SetType(eZType_ID);
+				else if (typeValueLC == "vector") oVal.SetType(eZType_Vector);
+				else if (typeValueLC == "type") oVal.SetType(eZType_Type);
+				else if (typeValueLC == "time") oVal.SetType(eZType_Time);
+//##				else if (typeValueLC == "name") oVal.SetType(eZType_Name);
 				else
 					sThrowParseException("Unknown type name '" + typeValue + "'");
 				}
 			else if (theTypeLC == "id")
 				{
-				oTValue.SetID(sMustRead_GenericInteger(iStrimU));
+				oVal.SetID(sMustRead_GenericInteger(iStrimU));
 				}
 			else if (theTypeLC == "int8")
 				{
-				oTValue.SetInt8(sMustRead_GenericInteger(iStrimU));
+				oVal.SetInt8(sMustRead_GenericInteger(iStrimU));
 				}
 			else if (theTypeLC == "int16")
 				{
-				oTValue.SetInt16(sMustRead_GenericInteger(iStrimU));
+				oVal.SetInt16(sMustRead_GenericInteger(iStrimU));
 				}
 			else if (theTypeLC == "int32")
 				{
-				oTValue.SetInt32(sMustRead_GenericInteger(iStrimU));
+				oVal.SetInt32(sMustRead_GenericInteger(iStrimU));
 				}
 			else if (theTypeLC == "int64")
 				{
-				oTValue.SetInt64(sMustRead_GenericInteger(iStrimU));
+				oVal.SetInt64(sMustRead_GenericInteger(iStrimU));
 				}
 			else if (theTypeLC == "bool")
 				{
@@ -194,9 +194,9 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 					sThrowParseException("Expected 'false' or 'true'");
 
 				if (theBool == "true")
-					oTValue.SetBool(true);
+					oVal.SetBool(true);
 				else if (theBool == "false")
-					oTValue.SetBool(false);
+					oVal.SetBool(false);
 				else
 					sThrowParseException("Expected 'false' or 'true'");
 				}
@@ -205,21 +205,21 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 				double theDouble;
 				if (!sTryRead_SignedDouble(iStrimU, theDouble))
 					sThrowParseException("Expected a floating point number");
-				oTValue.SetFloat(theDouble);
+				oVal.SetFloat(theDouble);
 				}
 			else if (theTypeLC == "double")
 				{
 				double theDouble;
 				if (!sTryRead_SignedDouble(iStrimU, theDouble))
 					sThrowParseException("Expected a floating point number");
-				oTValue.SetDouble(theDouble);
+				oVal.SetDouble(theDouble);
 				}
 			else if (theTypeLC == "time")
 				{
 				if (sTryRead_CP(iStrimU, ')'))
 					{
 					// It's a time with no content, hence an invalid time.
-					oTValue.SetTime(ZTime());
+					oVal.SetTime(ZTime());
 					
 					// We'll take an early exit so the normal code that
 					// looks for a closing parenthesis doesn't choke.
@@ -230,7 +230,7 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 				double theDouble;
 				if (!sTryRead_SignedDouble(iStrimU, theDouble))
 					sThrowParseException("Expected a floating point time");
-				oTValue.SetTime(theDouble);
+				oVal.SetTime(theDouble);
 				}
 			else if (theTypeLC == "rect")
 				{
@@ -250,7 +250,7 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 
 				theRect.bottom = sMustRead_GenericInteger(iStrimU);
 
-				oTValue.SetRect(theRect);
+				oVal.SetRect(theRect);
 				}
 			else if (theTypeLC == "point")
 				{
@@ -262,7 +262,7 @@ static bool sFromStrim_TValue(const ZStrimU& iStrimU, ZTValue& oTValue)
 
 				thePoint.v = sMustRead_GenericInteger(iStrimU);
 
-				oTValue.SetPoint(thePoint);
+				oVal.SetPoint(thePoint);
 				}
 			else
 				{
@@ -306,9 +306,9 @@ static ZRef<ZYadR_Std> sMakeYadR_ZooLibStrim(const ZStrimU& iStrimU)
 		}
 	else
 		{
-		ZTValue theTV;
-		if (sFromStrim_TValue(iStrimU, theTV))
-			return new ZYadPrimR_Std(theTV);
+		ZVal_ZooLib theVal;
+		if (sFromStrim_Value(iStrimU, theVal))
+			return new ZYadPrimR_Std(theVal);
 		}
 
 	return ZRef<ZYadR_Std>();
@@ -767,33 +767,33 @@ static void sToStrim_Strim(const ZStrimW& s, const ZStrimR& iStrimR,
 	s.Write("\"");
 	}
 
-static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
+static void sToStrim_SimpleValue(const ZStrimW& s, const ZVal_ZooLib& iVal,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
-	switch (iTV.TypeOf())
+	switch (iVal.TypeOf())
 		{
 		case eZType_Null: s.Write("Null"); break;
 		case eZType_Type:
 			{
 			s.Write("Type(");
-			s.Write(ZTypeAsString(iTV.GetType()));
+			s.Write(ZTypeAsString(iVal.GetType()));
 			s.Write(")");
 			break;
 			}
 		case eZType_ID:
 			{
-			s.Writef("ID(0x%0llX)", iTV.GetID());
+			s.Writef("ID(0x%0llX)", iVal.GetID());
 			if (iOptions.fIDsHaveDecimalVersionComment)
-				s.Writef(" /*%lld*/", iTV.GetID());
+				s.Writef(" /*%lld*/", iVal.GetID());
 			break;
 			}
-		case eZType_Int8: s.Writef("int8(%d)", iTV.GetInt8()); break;
-		case eZType_Int16: s.Writef("int16(%d)", iTV.GetInt16()); break;
-		case eZType_Int32: s.Writef("int32(%d)", iTV.GetInt32()); break;
-		case eZType_Int64: s.Writef("int64(0x%0llX)", iTV.GetInt64()); break;
+		case eZType_Int8: s.Writef("int8(%d)", iVal.GetInt8()); break;
+		case eZType_Int16: s.Writef("int16(%d)", iVal.GetInt16()); break;
+		case eZType_Int32: s.Writef("int32(%d)", iVal.GetInt32()); break;
+		case eZType_Int64: s.Writef("int64(0x%0llX)", iVal.GetInt64()); break;
 		case eZType_Bool:
 			{
-			if (iTV.GetBool())
+			if (iVal.GetBool())
 				s.Write("true");
 			else
 				s.Write("false");
@@ -804,13 +804,13 @@ static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
 			// 9 decimal digits are necessary and sufficient for single precision IEEE 754.
 			// "What Every Computer Scientist Should Know About Floating Point", Goldberg, 1991.
 			// <http://docs.sun.com/source/806-3568/ncg_goldberg.html>
-			s.Writef("float(%.9g)", iTV.GetFloat());
+			s.Writef("float(%.9g)", iVal.GetFloat());
 			break;
 			}
 		case eZType_Double:
 			{
 			// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
-			s.Writef("double(%.17g)", iTV.GetDouble());
+			s.Writef("double(%.17g)", iVal.GetDouble());
 			break;
 			}
 		case eZType_Time:
@@ -818,7 +818,7 @@ static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
 			// For the moment I'm just writing times as a count of seconds, putting
 			// the broken-out Gregorian version in a comment. Later we can improve
 			// the parsing of dates, and then we can write them in human readable form.
-			if (ZTime theTime = iTV.GetTime())
+			if (ZTime theTime = iVal.GetTime())
 				{
 				s.Writef("time(%.17g)", theTime.fVal);
 				if (iOptions.fTimesHaveUserLegibleComment)
@@ -831,10 +831,10 @@ static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
 				}
 			break;
 			}
-		case eZType_Pointer: s.Writef("pointer(%08X)", iTV.GetPointer()); break;
+		case eZType_Pointer: s.Writef("pointer(%08X)", iVal.GetPointer()); break;
 		case eZType_Rect:
 			{
-			const ZRectPOD& theRect = iTV.GetRect();
+			const ZRectPOD& theRect = iVal.GetRect();
 			s.Writef("Rect(%d, %d, %d, %d)",
 				theRect.left,
 				theRect.top,
@@ -844,7 +844,7 @@ static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
 			}
 		case eZType_Point:
 			{
-			const ZPointPOD& thePoint = iTV.GetPoint();
+			const ZPointPOD& thePoint = iVal.GetPoint();
 			s.Writef("Point(%d, %d)",
 				thePoint.h,
 				thePoint.v);
@@ -854,29 +854,29 @@ static void sToStrim_SimpleTValue(const ZStrimW& s, const ZTValue& iTV,
 		case eZType_Name:
 			{
 			s.Write("@");
-			ZYad_ZooLibStrim::sWrite_PropName(s, iTV.GetName());
+			ZYad_ZooLibStrim::sWrite_PropName(s, iVal.GetName());
 			break;
 			}
 #endif
 		case eZType_String:
 			{
-			sWriteString(s, iOptions, iTV.GetString());
+			sWriteString(s, iOptions, iVal.GetString());
 			break;
 			}
 		case eZType_RefCounted:
-			s.Writef("RefCounted(%08X)", iTV.GetRefCounted().GetObject());
+			s.Writef("RefCounted(%08X)", iVal.GetRefCounted().GetObject());
 			break;
 		case eZType_Raw:
 		case eZType_Tuple:
 		case eZType_Vector:
 			{
 			ZDebugStopf(0,
-				("sToStrim_SimpleTValue should only be called on simple tuple values"));
+				("sToStrim_SimpleValue should only be called on simple tuple values"));
 			break;
 			}
 		default:
 			{
-			ZDebugStopf(0, ("Unrecognized type %d", iTV.TypeOf()));
+			ZDebugStopf(0, ("Unrecognized type %d", iVal.TypeOf()));
 			break;
 			}
 		}
@@ -1036,7 +1036,7 @@ static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 		}
 	else
 		{
-		sToStrim_SimpleTValue(s,
+		sToStrim_SimpleValue(s,
 			ZYad_ZooLib::sFromYadR(iYadR), iLevel, iOptions, iMayNeedInitialLF);
 		}
 	}
