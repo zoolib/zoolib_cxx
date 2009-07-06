@@ -165,7 +165,7 @@ LRESULT ZWNDA::sWindowProcA(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iL
 			// Attach the marker property
 			::SetPropA(iHWND, "ZWNDA", reinterpret_cast<HANDLE>(theZWNDA));
 			// And set the user data
-			::SetWindowLongA(iHWND, GWL_USERDATA, reinterpret_cast<LONG>(theZWNDA));
+			::SetWindowLongPtrA(iHWND, GWLP_USERDATA, reinterpret_cast<LPARAM>(theZWNDA));
 			}
 		}
 
@@ -187,7 +187,7 @@ ZWNDA* ZWNDA::sFromHWNDNilOkayA(HWND iHWND)
 		if (::GetPropA(iHWND, "ZWNDA"))
 			{
 			if (ZWNDA* theZWNDA
-				= reinterpret_cast<ZWNDA*>(::GetWindowLongA(iHWND, GWL_USERDATA)))
+				= reinterpret_cast<ZWNDA*>((LONG_PTR)::GetWindowLongPtrA(iHWND, GWLP_USERDATA)))
 				{
 				ZAssertStop(0, theZWNDA->fHWND == iHWND);
 				return theZWNDA;
@@ -333,7 +333,7 @@ LRESULT ZWNDW::sWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iL
 			// Attach the marker property
 			::SetPropW(iHWND, L"ZWNDW", reinterpret_cast<HANDLE>(theZWNDW));
 			// And set the user data
-			::SetWindowLongW(iHWND, GWL_USERDATA, reinterpret_cast<LONG>(theZWNDW));
+			::SetWindowLongPtrW(iHWND, GWLP_USERDATA, reinterpret_cast<LPARAM>(theZWNDW));
 			}
 		}
 
@@ -355,7 +355,7 @@ ZWNDW* ZWNDW::sFromHWNDNilOkayW(HWND iHWND)
 		if (::GetPropW(iHWND, L"ZWNDW"))
 			{
 			if (ZWNDW* theZWNDW
-				= reinterpret_cast<ZWNDW*>(::GetWindowLongW(iHWND, GWL_USERDATA)))
+				= reinterpret_cast<ZWNDW*>((LONG_PTR)::GetWindowLongPtrW(iHWND, GWLP_USERDATA)))
 				{
 				ZAssertStop(0, theZWNDW->fHWND == iHWND);
 				return theZWNDW;
@@ -384,7 +384,7 @@ void ZWNDSubClassA::Attach(HWND iHWND)
 	ZAssert(!fHWND && !fWNDPROC);
 	fHWND = iHWND;
 	::SetPropA(iHWND, "ZWNDSubClassA", reinterpret_cast<HANDLE>(this));
-	fWNDPROC = (WNDPROC)::SetWindowLongA(fHWND, GWL_WNDPROC, (LPARAM)sWindowProcA);
+	fWNDPROC = (WNDPROC)(LPARAM)::SetWindowLongPtrA(fHWND, GWLP_WNDPROC, (LPARAM)sWindowProcA);
 	}
 
 void ZWNDSubClassA::Detach()
@@ -478,7 +478,7 @@ void ZWNDSubClassW::Attach(HWND iHWND)
 	ZAssert(!fHWND && !fWNDPROC);
 	fHWND = iHWND;
 	::SetPropW(iHWND, L"ZWNDSubClassW", reinterpret_cast<HANDLE>(this));
-	fWNDPROC = (WNDPROC)::SetWindowLongW(fHWND, GWL_WNDPROC, (LPARAM)sWindowProcW);
+	fWNDPROC = (WNDPROC)(LPARAM)::SetWindowLongPtrW(fHWND, GWLP_WNDPROC, (LPARAM)sWindowProcW);
 	}
 
 void ZWNDSubClassW::Detach()
