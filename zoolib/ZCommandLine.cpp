@@ -333,10 +333,12 @@ equivalent of command-line options.
 */
 
 #include "zoolib/ZCommandLine.h"
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZString.h"
 
 #include <stdio.h>
+#include <string.h> // For strlen
 
 using std::exception;
 using std::string;

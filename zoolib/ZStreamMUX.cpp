@@ -610,7 +610,7 @@ ZRef<ZStreamerRWConFactory> ZStreamMUX::Listen(
 	if (i == fMap_NameToListener.end())
 		{
 		ZRef<Listener> theListener = new Listener(this, iName, iReceiveBufferSize);
-		fMap_NameToListener.insert(pair<string, Listener*>(iName, theListener.GetObject()));
+		fMap_NameToListener.insert(pair<string, Listener*>(iName, theListener.Get()));
 		return theListener;
 		}
 	return ZRef<ZStreamerRWConFactory>();
@@ -634,7 +634,7 @@ ZRef<ZStreamerRWCon> ZStreamMUX::Connect(const std::string& iName, size_t iRecei
 				this, theEPID, theEndpoint->fStateEP);
 			}
 
-		fMap_IDToEndpoint.insert(pair<uint32, Endpoint*>(theEPID, theEndpoint.GetObject()));
+		fMap_IDToEndpoint.insert(pair<uint32, Endpoint*>(theEPID, theEndpoint.Get()));
 		fCommer->Wake();
 
 		while (theEndpoint->fStateEP != eStateEP_Connected)

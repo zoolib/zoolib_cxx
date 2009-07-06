@@ -217,14 +217,14 @@ static ZTValue sReadTV(ZML::Reader& ml, const string& iName)
 			string name = ml.Name();
 			ml.Advance();
 			ZTValue theTV = sReadTV(ml, name);
-			result.SetValue(name, theTV);
+			result.Set(name, theTV);
 			}
 		else if (ml.Current() == ZML::eToken_TagEmpty)
 			{
 			// We have a nested empty tag -- we represent them as null values.
 			string name = ml.Name();
 			ml.Advance();
-			result.SetValue(name, ZTValue());
+			result.Set(name, ZTValue());
 			}
 		else if (ml.Current() == ZML::eToken_Text)
 			{
@@ -283,7 +283,7 @@ static void sWriteAsXML(const ZStrimW_ML& s, const string& iName, const ZTValue&
 static void sWriteAsXML(const ZStrimW_ML& s, const ZTuple& iTuple)
 	{
 	for (ZTuple::const_iterator i = iTuple.begin(); i != iTuple.end(); ++i)
-		sWriteAsXML(s, iTuple.NameOf(i).AsString(), iTuple.GetValue(i));
+		sWriteAsXML(s, iTuple.NameOf(i).AsString(), iTuple.Get(i));
 	}
 
 static void sWriteAsXML(const ZStrimW_ML& s, const string& iName, const ZTValue& iTV)
@@ -292,7 +292,7 @@ static void sWriteAsXML(const ZStrimW_ML& s, const string& iName, const ZTValue&
 		{
 		case eZType_Vector:
 			{
-			const vector<ZTValue>& v = iTV.GetVector();
+			const vector<ZTValue>& v = iTV.GetList().GetVector();
 			for (vector<ZTValue>::const_iterator i = v.begin(); i != v.end(); ++i)
 				sWriteAsXML(s, iName, *i);
 			break;
@@ -323,10 +323,10 @@ static void sWriteAsXML(const ZStrimW_ML& s, const string& iName, const ZTValue&
 
 static bool sGetStringAt(const ZTuple& iTuple, const string& iName, string& oString)
 	{
-	if (iTuple.GetString(iName, oString))
+	if (iTuple.QGetString(iName, oString))
 		return true;
 
-	const vector<ZTValue>& theVector = iTuple.GetVector(iName);
+	const vector<ZTValue>& theVector = iTuple.Get(iName).GetList().GetVector();
 	if (!theVector.empty())
 		return theVector[0].QGetString(oString);
 
@@ -353,7 +353,7 @@ static ZTuple sGetProp(const ZNode& iNode, const string& iPropName)
 	if (iPropName == "D:resourcetype")
 		{
 		if (iNode.CanHaveChildren())
-			propT.SetTuple(iPropName, ZTuple().SetNull("D:collection"));
+			propT.Set(iPropName, ZTuple().SetNull("D:collection"));
 		else
 			propT.SetNull(iPropName);
 		}
@@ -405,9 +405,9 @@ static void sGetProperties(
  	for (vector<string>::const_iterator i = iPropNames.begin(); i != iPropNames.end(); ++i)
  		{
  		if (ZTuple propT = sGetProp(iNode, *i))
-			oGoodT.EnsureMutableVector("D:prop").Append(propT);
+			oGoodT.Mutable("D:prop").MutableList().Append(propT);
  		else
- 			oBadT.EnsureMutableVector("D:prop").Append(ZTuple().SetNull(*i));
+ 			oBadT.Mutable("D:prop").MutableList().Append(ZTuple().SetNull(*i));
  		}
 	}
 
@@ -463,7 +463,7 @@ static bool sDelete(const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& iNod
 		ZTuple responseT;
 		responseT.SetString("D:href", sMakeHREF(iPrefix, iRoot, iNode));
 		responseT.SetString("D:status", "HTTP/1.1 404");
-		ioT.EnsureMutableVector("D:response").Append(responseT);
+		ioT.Mutable("D:response").MutableList().Append(responseT);
 		}
 	return false;
 	}
@@ -597,7 +597,7 @@ bool ZWebDAV::sHandle_GET(
 			const ZStreamRPos& theStreamRPos = theStreamer->GetStreamRPos();
 			uint64 sentSize = theStreamRPos.GetSize();
 
-			if (ZTValue rangeParam = iHeader.GetValue("range"))
+			if (ZTValue rangeParam = iHeader.Get("range"))
 				{
 				vector<pair<size_t, size_t> > ranges;
 				if (!ZHTTP::sOrganizeRanges(sentSize, rangeParam, ranges))
@@ -759,7 +759,7 @@ bool ZWebDAV::sHandle_MOVE(
 		}
 	else
 		{
-		string thePath = sGetPathFromURL(ZHTTP::sGetString0(iHeader.GetValue("destination")));
+		string thePath = sGetPathFromURL(ZHTTP::sGetString0(iHeader.Get("destination")));
 		ZTrail theTrail = sStripPrefix(iPrefix, ZHTTP::sDecodeTrail(thePath));
 		ZNode theDestNode = iRoot.Trail(theTrail);
 
@@ -840,16 +840,16 @@ static void sHandle_PROPFIND_Some(
 			if (goodT)
 				{
 				goodT.SetString("D:status", "HTTP/1.1 200 OK");
-				responseT.EnsureMutableVector("D:propstat").Append(goodT);
+				responseT.Mutable("D:propstat").MutableList().Append(goodT);
 				}
 
 			if (badT)
 				{
 				badT.SetString("D:status", "HTTP/1.1 404 Not Found");
-				responseT.EnsureMutableVector("D:propstat").Append(badT);
+				responseT.Mutable("D:propstat").MutableList().Append(badT);
 				}
 			
-			ioTuple.EnsureMutableVector("D:response").Append(responseT);
+			ioTuple.Mutable("D:response").MutableList().Append(responseT);
 			}
 		}
 	}
@@ -878,10 +878,10 @@ static void sHandle_PROPFIND_All(
 			if (goodT)
 				{
 				goodT.SetString("D:status", "HTTP/1.1 200 OK");
-				responseT.EnsureMutableVector("D:propstat").Append(goodT);
+				responseT.Mutable("D:propstat").MutableList().Append(goodT);
 				}
 			
-			ioTuple.EnsureMutableVector("D:response").Append(responseT);
+			ioTuple.Mutable("D:response").MutableList().Append(responseT);
 			}
 		}
 	}

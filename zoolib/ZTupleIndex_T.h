@@ -291,10 +291,10 @@ private:
 			return false;
 			}
 
-		oKey.fValues[0] = &iTuple->GetValue(tupleIter);
+		oKey.fValues[0] = &iTuple->RGet(tupleIter);
 		
 		for (size_t x = 1; x < kPropCount; ++x)
-			oKey.fValues[x] = &iTuple->GetValue(fPropNames[x]);
+			oKey.fValues[x] = &iTuple->RGet(fPropNames[x]);
 
 		oKey.fID = iID;
 		return true;

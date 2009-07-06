@@ -613,7 +613,7 @@ ZTBQueryNode_Combo::Intersection::Intersection(const ZStreamR& iStreamR)
 ZTBQueryNode_Combo::Intersection::Intersection(const ZTuple& iTuple)
 	{
 	fFilter = ZTBSpec(iTuple.GetTuple("Filter"));
-	const vector<ZTValue>& nodes = iTuple.GetVector("Nodes");
+	const vector<ZTValue>& nodes = iTuple.Get("Nodes").GetList().GetVector();
 	for (vector<ZTValue>::const_iterator i = nodes.begin(); i != nodes.end(); ++i)
 		{
 		if (ZRef<ZTBQueryNode> aNode = sNodeFromTuple((*i).GetTuple()))
@@ -1049,7 +1049,7 @@ static ZRef<ZTBQueryNode> sNodeFromTuple(const ZTuple& iTuple)
 	else if (nodeKind == "Combo")
 		{
 		vector<ZTBQuery::SortSpec> theSort;
-		const vector<ZTValue>& vectorSort = iTuple.GetVector("Sort");
+		const vector<ZTValue>& vectorSort = iTuple.Get("Sort").GetList().GetVector();
 		for (vector<ZTValue>::const_iterator i = vectorSort.begin(); i != vectorSort.end(); ++i)
 			{
 			const ZTuple& temp = (*i).GetTuple();
@@ -1057,7 +1057,7 @@ static ZRef<ZTBQueryNode> sNodeFromTuple(const ZTuple& iTuple)
 				ZTName(temp.GetString("PropName")), temp.GetBool("Ascending"), temp.GetInt32("Strength")));
 			}
 
-		const vector<ZTValue>& sourceSect = iTuple.GetVector("Intersections");
+		const vector<ZTValue>& sourceSect = iTuple.Get("Intersections").GetList().GetVector();
 		vector<ZTBQueryNode_Combo::Intersection> theIntersections;
 		for (vector<ZTValue>::const_iterator i = sourceSect.begin(); i != sourceSect.end(); ++i)
 			theIntersections.push_back(ZTBQueryNode_Combo::Intersection((*i).GetTuple()));
@@ -1079,7 +1079,7 @@ static ZRef<ZTBQueryNode> sNodeFromTuple(const ZTuple& iTuple)
 	else if (nodeKind == "ID_Constant")
 		{
 		vector<uint64> theIDs;
-		iTuple.Get("IDs").GetVector_T(back_inserter(theIDs), uint64());
+		iTuple.Get("IDs").GetList().GetVector_T(back_inserter(theIDs), uint64());
 		return new ZTBQueryNode_ID_Constant(theIDs, true);
 		}
 	else if (nodeKind == "ID_FromSource")

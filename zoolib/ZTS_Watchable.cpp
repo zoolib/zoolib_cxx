@@ -760,8 +760,8 @@ void ZTS_Watchable::pInvalidatePSpecs(const ZTuple& iOld, const ZTuple& iNew,
 		iter != theEnd; ++iter)
 		{
 		const ZTName& theName = (*iter).first;
-		const ZTValue& theOld = iOld.GetValue(theName);
-		const ZTValue& theNew = iNew.GetValue(theName);
+		const ZTValue& theOld = iOld.Get(theName);
+		const ZTValue& theNew = iNew.Get(theName);
 		if (theOld != theNew)
 			{
 			#if kDebug_CountInvalidations

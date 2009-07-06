@@ -106,7 +106,7 @@ ComparandRep_Name::ComparandRep_Name(const ZTName& iName)
 	{}
 
 const ZTValue& ComparandRep_Name::Imp_GetValue(const ZTuple& iTuple)
-	{ return iTuple.GetValue(fName); }
+	{ return iTuple.RGet(fName); }
 
 void ComparandRep_Name::GatherPropNames(set<ZTName>& ioNames)
 	{ ioNames.insert(fName); }

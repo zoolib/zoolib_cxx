@@ -141,20 +141,20 @@ static bool sSync1(
 
 	
 	vector<uint64> removedIDs;
-	iReq.Get("removedIDs").GetVector_T(back_inserter(removedIDs), uint64());
+	iReq.Get("removedIDs").GetList().GetVector_T(back_inserter(removedIDs), uint64());
 
 
 	vector<uint64> addedIDs;
-	iReq.Get("addedIDs").GetVector_T(back_inserter(addedIDs), uint64());
+	iReq.Get("addedIDs").GetList().GetVector_T(back_inserter(addedIDs), uint64());
 
 
 	vector<int64> removedQueries;
-	iReq.Get("removedQueries").GetVector_T(back_inserter(removedQueries), uint64());
+	iReq.Get("removedQueries").GetList().GetVector_T(back_inserter(removedQueries), uint64());
 
 
 	vector<ZTSWatcher::AddedQueryCombo> addedQueries;
 	{
-	const vector<ZTValue>& addedQueriesV = iReq.GetVector("addedQueries");
+	const vector<ZTValue>& addedQueriesV = iReq.Get("addedQueries").GetList().GetVector();
 	if (size_t theCount = addedQueriesV.size())
 		{
 		addedQueries.reserve(theCount);
@@ -164,10 +164,10 @@ static bool sSync1(
 			{
 			const ZTuple& entry = (*i).GetTuple();
 			int64 theRefcon;
-			if (entry.GetInt64("refcon", theRefcon))
+			if (entry.QGetInt64("refcon", theRefcon))
 				{
 				ZTuple queryAsTuple;
-				if (entry.GetTuple("query", queryAsTuple))
+				if (entry.QGetTuple("query", queryAsTuple))
 					{
 					ZTSWatcher::AddedQueryCombo theCombo;
 					theCombo.fRefcon = theRefcon;
@@ -186,7 +186,7 @@ static bool sSync1(
 	vector<ZTuple> writtenTuples;
 	bool writeNeededSort = false;
 	{
-	const vector<ZTValue>& writtenTuplesV = iReq.GetVector("writtenTuples");
+	const vector<ZTValue>& writtenTuplesV = iReq.Get("writtenTuples").GetList().GetVector();
 	if (size_t theCount = writtenTuplesV.size())
 		{
 		writtenTupleIDs.reserve(theCount);
@@ -198,10 +198,10 @@ static bool sSync1(
 			{
 			const ZTuple& entry = (*i).GetTuple();
 			uint64 theID;
-			if (entry.GetID("ID", theID))
+			if (entry.QGetID("ID", theID))
 				{
 				ZTuple theTuple;
-				if (entry.GetTuple("tuple", theTuple))
+				if (entry.QGetTuple("tuple", theTuple))
 					{
 					if (lastID >= theID)
 						writeNeededSort = true;
@@ -869,7 +869,7 @@ void ZTSWatcherServer::Run(const ZStreamR& iStreamR, const ZStreamW& iStreamW)
 		sDumpRequest(fWatcher, theReq);
 
 		string theWhat;
-		if (theReq.GetString("What", theWhat))
+		if (theReq.QGetString("What", theWhat))
 			{
 			if ("AllocateIDs" == theWhat)
 				{

@@ -60,8 +60,8 @@ private:
 	uint64 pAllocateID();
 	uint64 pAllocateID(ZRef<ZTS> iTS);
 
-	void pTranslate_GlobalToLocal(size_t iChildIndex, ZTuple& ioTuple);
-	void pTranslate_LocalToGlobal(size_t iChildIndex, ZTuple& ioTuple);
+	void pTranslate_GlobalToLocal(size_t iChildIndex, ZValMap_ZooLib& ioTuple);
+	void pTranslate_LocalToGlobal(size_t iChildIndex, ZValMap_ZooLib& ioTuple);
 
 	uint64 pGlobalToLocal(size_t iChildIndex, uint64 iGlobalID);
 	uint64 pLocalToGlobal(size_t iChildIndex, uint64 iLocalID);

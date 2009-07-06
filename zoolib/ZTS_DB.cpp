@@ -546,9 +546,9 @@ ZMemoryBlock ZTS_DB::Index::pKeyFromTuple(uint64 iID, const ZTuple& iTuple)
 		{
 		ZStreamRWPos_MemoryBlock theStream(theMB, 1024);
 		theStream.WriteUInt8(fIndexID);
-		tupleIter->fTV.ToStream(theStream);
+		tupleIter->fVal.ToStream(theStream);
 		while (nameIter != fPropNames.end())
-			iTuple.GetValue(*nameIter++).ToStream(theStream);
+			iTuple.Get(*nameIter++).ToStream(theStream);
 		theStream.WriteUInt64LE(iID);
 		}
 	return theMB;

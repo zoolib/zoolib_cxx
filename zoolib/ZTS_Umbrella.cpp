@@ -158,32 +158,32 @@ uint64 ZTS_Umbrella::pAllocateID(ZRef<ZTS> iTS)
 		}
 	}
 
-void ZTS_Umbrella::pTranslate_GlobalToLocal(size_t iChildIndex, ZTuple& ioTuple)
+void ZTS_Umbrella::pTranslate_GlobalToLocal(size_t iChildIndex, ZValMap_ZooLib& ioTuple)
 	{
 	for (ZTuple::const_iterator i = ioTuple.begin(), theEnd = ioTuple.end();
 		i != theEnd; ++i)
 		{
-		switch (ioTuple.TypeOf(i))
+		switch (ioTuple.RGet(i).TypeOf())
 			{
 			case eZType_ID:
 				{
-				uint64 localID = this->pGlobalToLocal(iChildIndex, ioTuple.GetID(i));
-				ioTuple.SetID(i, localID);
+				uint64 localID = this->pGlobalToLocal(iChildIndex, ioTuple.Get(i).GetID());
+				ioTuple.Set(i, localID);
 				break;
 				}
 			case eZType_Tuple:
 				{
-				this->pTranslate_GlobalToLocal(iChildIndex, ioTuple.GetMutableTuple(i));
+				this->pTranslate_GlobalToLocal(iChildIndex, ioTuple.Mutable(i).MutableMap());
 				break;
 				}
 			case eZType_Vector:
 				{
-				vector<ZTValue>& theVector = ioTuple.GetMutableVector(i);
+				vector<ZTValue>& theVector = ioTuple.Mutable(i).MutableList().MutableVector();
 				for (vector<ZTValue>::iterator j = theVector.begin(); j != theVector.end(); ++j)
 					{
 					if (eZType_ID == (*j).TypeOf())
 						{
-						uint64 localID = this->pGlobalToLocal(iChildIndex, ioTuple.GetID(i));
+						uint64 localID = this->pGlobalToLocal(iChildIndex, ioTuple.Get(i).GetID());
 						(*j).SetID(localID);
 						}
 					}
@@ -192,32 +192,32 @@ void ZTS_Umbrella::pTranslate_GlobalToLocal(size_t iChildIndex, ZTuple& ioTuple)
 		}
 	}
 
-void ZTS_Umbrella::pTranslate_LocalToGlobal(size_t iChildIndex, ZTuple& ioTuple)
+void ZTS_Umbrella::pTranslate_LocalToGlobal(size_t iChildIndex, ZValMap_ZooLib& ioTuple)
 	{
 	for (ZTuple::const_iterator i = ioTuple.begin(), theEnd = ioTuple.end();
 		i != theEnd; ++i)
 		{
-		switch (ioTuple.TypeOf(i))
+		switch (ioTuple.RGet(i).TypeOf())
 			{
 			case eZType_ID:
 				{
-				uint64 globalID = this->pLocalToGlobal(iChildIndex, ioTuple.GetID(i));
-				ioTuple.SetID(i, globalID);
+				uint64 globalID = this->pLocalToGlobal(iChildIndex, ioTuple.Get(i).GetID());
+				ioTuple.Set(i, globalID);
 				break;
 				}
 			case eZType_Tuple:
 				{
-				this->pTranslate_LocalToGlobal(iChildIndex, ioTuple.GetMutableTuple(i));
+				this->pTranslate_LocalToGlobal(iChildIndex, ioTuple.Mutable(i).MutableMap());
 				break;
 				}
 			case eZType_Vector:
 				{
-				vector<ZTValue>& theVector = ioTuple.GetMutableVector(i);
+				vector<ZTValue>& theVector = ioTuple.Mutable(i).MutableList().MutableVector();
 				for (vector<ZTValue>::iterator j = theVector.begin(); j != theVector.end(); ++j)
 					{
 					if (eZType_ID == (*j).TypeOf())
 						{
-						uint64 globalID = this->pLocalToGlobal(iChildIndex, ioTuple.GetID(i));
+						uint64 globalID = this->pLocalToGlobal(iChildIndex, ioTuple.Get(i).GetID());
 						(*j).SetID(globalID);
 						}
 					}

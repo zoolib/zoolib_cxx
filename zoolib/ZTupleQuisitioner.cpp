@@ -97,7 +97,7 @@ static void sExtractProps(const vector<ZTBQuery::SortSpec>& iSort, const ZTuple&
 	for (vector<ZTBQuery::SortSpec>::const_iterator i = iSort.begin(), theEnd = iSort.end();
 		i != theEnd; ++i)
 		{
-		oProps.push_back(&iTuple.GetValue((*i).fPropName));
+		oProps.push_back(&iTuple.RGet((*i).fPropName));
 		}
 	}
 
@@ -439,7 +439,7 @@ void ZTupleQuisitioner::Query_Unordered(const ZRef<ZTBQueryNode>& iNode, const Z
 			{
 			for (set<uint64>::iterator i = sourceIDSet.begin(); i != sourceIDSet.end(); ++i)
 				{
-				if (uint64 theID = this->FetchTuple(*i).GetValue(theNode_ID_FromSource->GetSourcePropName()).GetID())
+				if (uint64 theID = this->FetchTuple(*i).Get(theNode_ID_FromSource->GetSourcePropName()).GetID())
 					{
 					if (ioIDs.end() == ioIDs.find(theID))
 						{
@@ -453,7 +453,7 @@ void ZTupleQuisitioner::Query_Unordered(const ZRef<ZTBQueryNode>& iNode, const Z
 			{
 			for (set<uint64>::iterator i = sourceIDSet.begin(); i != sourceIDSet.end(); ++i)
 				{
-				if (uint64 theID = this->FetchTuple(*i).GetValue(theNode_ID_FromSource->GetSourcePropName()).GetID())
+				if (uint64 theID = this->FetchTuple(*i).Get(theNode_ID_FromSource->GetSourcePropName()).GetID())
 					ioIDs.insert(theID);
 				}
 			}
@@ -545,7 +545,7 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iF
 		for (vector<ZTuple>::iterator i = sourceTuples.begin(); i != sourceTuples.end(); ++i)
 			{
 			uint64 theID;
-			if ((*i).GetValue(sourcePropName).QGetID(theID))
+			if ((*i).Get(sourcePropName).QGetID(theID))
 				destIDs.push_back(theID);
 			}
 

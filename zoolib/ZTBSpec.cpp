@@ -84,7 +84,7 @@ static ZTBSpec::ERel sRelFromString(const std::string& iString)
 static void sCriterionUnionFromTuple(
 	const ZTuple& iTuple, ZTBSpec::CriterionUnion& ioCriterionUnion)
 	{
-	const vector<ZTValue>& outerVector = iTuple.GetVector("Criteria");
+	const vector<ZTValue>& outerVector = iTuple.Get("Criteria").GetList().GetVector();
 
 	ioCriterionUnion.resize(outerVector.size());
 	ZTBSpec::CriterionUnion::iterator critListIter = ioCriterionUnion.begin();
@@ -92,7 +92,8 @@ static void sCriterionUnionFromTuple(
 	for (vector<ZTValue>::const_iterator outerIter = outerVector.begin();
 		outerIter != outerVector.end(); ++outerIter, ++critListIter)
 		{
-		const vector<ZTValue>& innerVector = (*outerIter).GetVector();
+		const ZValList_ZooLib theList = (*outerIter).GetList();
+		const vector<ZTValue>& innerVector = theList.GetVector();
 		for (vector<ZTValue>::const_iterator inner = innerVector.begin();
 			inner != innerVector.end(); ++inner)
 			{
@@ -115,7 +116,7 @@ static ZTuple sCriterionUnionToTuple(const ZTBSpec::CriterionUnion& iCriterionUn
 		critListIter != critListEnd;
 		++critListIter, ++outerIter)
 		{
-		vector<ZTValue>& innerVector = (*outerIter).SetMutableVector();
+		vector<ZTValue>& innerVector = (*outerIter).MutableList().MutableVector();
 		for (ZTBSpec::CriterionSect::const_iterator i = (*critListIter).begin(),
 			theEnd = (*critListIter).end();
 			i != theEnd; ++i)
@@ -536,7 +537,7 @@ ZTBSpec::Criterion::Rep::Rep(const ZStreamR& iStreamR)
 ZTBSpec::Criterion::Rep::Rep(const ZTuple& iTuple)
 :	fPropName(iTuple.GetString("PropName")),
 	fComparator(sRelFromString(iTuple.GetString("Rel")), iTuple.GetInt32("Strength")),
-	fTValue(iTuple.GetValue("Value"))
+	fTValue(iTuple.Get("Value"))
 	{}
 
 ZTBSpec::Criterion::Rep::Rep(
@@ -578,7 +579,7 @@ ZTuple ZTBSpec::Criterion::Rep::AsTuple() const
 	if (fComparator.fStrength)
 		result.SetInt32("Strength", fComparator.fStrength);
 	if (fTValue)
-		result.SetValue("Value", fTValue);
+		result.Set("Value", fTValue);
 	return result;
 	}
 
@@ -655,7 +656,7 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 			}
 		case eRel_HasOfType:
 			{
-			return iTuple.TypeOf(propIter) == this->GetTValue().GetType();
+			return iTuple.RGet(propIter).TypeOf() == this->GetTValue().GetType();
 			}
 		case eRel_Lacks:
 			{
@@ -665,26 +666,20 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 			}
 		case eRel_LacksOfType:
 			{
-			return iTuple.TypeOf(propIter) != this->GetTValue().GetType();			
+			return iTuple.RGet(propIter).TypeOf() != this->GetTValue().GetType();			
 			}
 		case eRel_VectorContains:
 			{
-			if (iTuple.TypeOf(propIter) != eZType_Vector)
-				return false;
-
-			const vector<ZTValue>& theVector = iTuple.GetVector(propIter);
-			for (vector<ZTValue>::const_iterator i = theVector.begin();
-				i != theVector.end(); ++i)
+			ZValList_ZooLib theList;
+			if (iTuple.Get(propIter).QGetList(theList))
 				{
-				if (*i == this->GetTValue())
-					return true;
-#if 0 //##
-				if ((*i).TypeOf() == this->GetTValue().TypeOf())
+				const vector<ZTValue>& theVector = theList.GetVector();
+				for (vector<ZTValue>::const_iterator i = theVector.begin();
+					i != theVector.end(); ++i)
 					{
-					if ((*i).UncheckedEqual(this->GetTValue()))
+					if (*i == this->GetTValue())
 						return true;
 					}
-#endif
 				}
 			return false;			
 			}
@@ -696,7 +691,7 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 					return true;
 
 				string target;
-				if (!iTuple.GetString(propIter, target) || target.empty())
+				if (!iTuple.QGetString(propIter, target) || target.empty())
 					return false;
 
 				if (!fRep->fTextCollator)
@@ -759,7 +754,7 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 			}
 		default:
 			{
-			const ZTValue& leftValue = iTuple.GetValue(propIter);
+			const ZTValue& leftValue = iTuple.Get(propIter);
 			ZType leftType = leftValue.TypeOf();
 			ZType rightType = this->GetTValue().TypeOf();
 			if (this->GetComparator().fRel == eRel_Equal)
