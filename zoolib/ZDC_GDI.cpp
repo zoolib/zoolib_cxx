@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_algorithm.h" // For min
 #include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZMemory.h"
+#include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Win.h"
 
 #include <string.h> // For memcpy
