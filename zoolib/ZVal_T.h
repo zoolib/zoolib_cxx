@@ -107,32 +107,6 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValListR_T
-
-template <class T, class Val_t>
-class ZValListR_T
-	{
-protected:
-	ZValListR_T() {}
-	ZValListR_T(const ZValListR_T&) {}
-	~ZValListR_T() {}
-	ZValListR_T& operator=(ZValListR_T&) { return *this; }
-	
-public:
-	Val_t DGet(size_t iIndex, const Val_t& iDefault) const
-		{
-		Val_t theVal;
-		if (static_cast<const T*>(this)->QGet(iIndex, theVal))
-			return theVal;
-		return iDefault;
-		}
-
-	Val_t Get(size_t iIndex) const
-		{ return this->DGet(iIndex, Val_t()); }
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZValMapIterator
 
 class ZValMapIterator
@@ -162,54 +136,6 @@ public:
 
 private:
 	size_t fVal;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZValMapR_T
-
-template <class T, class Name_t, class Val_t>
-class ZValMapR_T
-	{
-protected:
-	ZValMapR_T() {}
-	ZValMapR_T(const ZValMapR_T&) {}
-	~ZValMapR_T() {}
-	ZValMapR_T& operator=(ZValMapR_T&) { return *this; }
-	
-public:
-	Val_t DGet(Name_t iName, const Val_t& iDefault) const
-		{
-		Val_t theVal;
-		if (static_cast<const T*>(this)->QGet(iName, theVal))
-			return theVal;
-		return iDefault;
-		}
-
-	Val_t Get(Name_t iName) const
-		{ return this->DGet(iName, Val_t()); }
-
-	template <class S>
-	bool QGet_T(Name_t iName, S& oVal) const
-		{
-		Val_t theVal;
-		if (static_cast<const T*>(this)->QGet(iName, theVal))
-			return theVal.QGet_T<S>(oVal);
-		return false;
-		}
-
-	template <class S>
-	S DGet_T(Name_t iName, const S& iDefault) const
-		{
-		Val_t theVal;
-		if (static_cast<const T*>(this)->QGet(iName, theVal))
-			return theVal.DGet_T(iDefault);
-		return iDefault;
-		}
-
-	template <class S>
-	S Get_T(Name_t iName) const
-		{ return static_cast<const T*>(this)->DGet_T(iName, S()); }
 	};
 
 NAMESPACE_ZOOLIB_END

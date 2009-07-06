@@ -53,10 +53,6 @@ class ZVal_CFType
 :	public ZValR_T<ZVal_CFType>
 	{
 public:
-	ZMACRO_ZValAccessors_Decl_Std(ZVal_CFType)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, List, ZValList_CFType)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Map, ZValMap_CFType)
-
 	operator bool() const;
 
 	ZVal_CFType();
@@ -77,15 +73,24 @@ public:
 	ZVal_CFType(const ZValList_CFType& iVal);
 	ZVal_CFType(const ZValMap_CFType& iVal);
 	
-	operator CFTypeRef() const;
-
-	CFTypeRef* ParamO();
+// ZVal protocol
+	void Clear();
 
 	template <class S>
 	bool QGet_T(S& oVal) const;
 
 	template <class S>
 	void Set_T(const S& iVal);
+
+// Our protocol
+	CFTypeRef& OParam();
+
+	operator CFTypeRef() const;
+
+// Typename accessors
+	ZMACRO_ZValAccessors_Decl_Std(ZVal_CFType)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, List, ZValList_CFType)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Map, ZValMap_CFType)
 
 private:
 	ZRef<CFTypeRef> fCFTypeRef;
@@ -96,7 +101,6 @@ private:
 #pragma mark * ZValList_CFType
 
 class ZValList_CFType
-:	public ZValListR_T<ZValList_CFType, ZVal_CFType>
 	{
 public:
 	operator bool() const;
@@ -112,13 +116,14 @@ public:
 	ZValList_CFType& operator=(const ZRef<CFMutableArrayRef>& iOther);
 	ZValList_CFType& operator=(const ZRef<CFArrayRef>& iOther);
 
-	operator CFArrayRef() const;
-
+// ZValList protocol
 	size_t Count() const;
 
 	void Clear();
 
 	bool QGet(size_t iIndex, ZVal_CFType& oVal) const;
+	ZVal_CFType DGet(size_t iIndex, const ZVal_CFType& iDefault) const;
+	ZVal_CFType Get(size_t iIndex) const;
 
 	void Set(size_t iIndex, const ZVal_CFType& iVal);
 
@@ -127,6 +132,9 @@ public:
 	void Insert(size_t iIndex, const ZVal_CFType& iVal);
 
 	void Append(const ZVal_CFType& iVal);
+
+// Our protocol
+	operator CFArrayRef() const;
 
 private:
 	void pTouch();
@@ -140,13 +148,8 @@ private:
 #pragma mark * ZValMap_CFType
 
 class ZValMap_CFType
-:	public ZValMapR_T<ZValMap_CFType, const string8&, ZVal_CFType>
-,	public ZValMapR_T<ZValMap_CFType, CFStringRef, ZVal_CFType>
 	{
 public:
-	ZMACRO_ZValMapAccessors_Using(ZValMap_CFType, const string8&, ZVal_CFType)
-	ZMACRO_ZValMapAccessors_Using(ZValMap_CFType, CFStringRef, ZVal_CFType)
-
 	operator bool() const;
 
 	ZValMap_CFType();
@@ -160,18 +163,26 @@ public:
 	ZValMap_CFType& operator=(const ZRef<CFMutableDictionaryRef>& iOther);
 	ZValMap_CFType& operator=(const ZRef<CFDictionaryRef>& iOther);
 
-	operator CFDictionaryRef() const;
-
+// ZValMap protocol
 	void Clear();
 
 	bool QGet(const string8& iName, ZVal_CFType& oVal) const;
 	bool QGet(CFStringRef iName, ZVal_CFType& oVal) const;
+
+	ZVal_CFType DGet(const string8& iName, const ZVal_CFType& iDefault) const;
+	ZVal_CFType DGet(CFStringRef iName, const ZVal_CFType& iDefault) const;
+
+	ZVal_CFType Get(const string8& iName) const;
+	ZVal_CFType Get(CFStringRef iName) const;
 
 	void Set(const string8& iName, const ZVal_CFType& iVal);
 	void Set(CFStringRef iName, const ZVal_CFType& iVal);
 
 	void Erase(const string8& iName);
 	void Erase(CFStringRef iName);
+
+// Our protocol
+	operator CFDictionaryRef() const;
 
 private:
 	void pTouch();

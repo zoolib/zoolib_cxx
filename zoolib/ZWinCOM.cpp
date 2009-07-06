@@ -178,12 +178,6 @@ Variant::Variant(ZRef<IDispatch> iVal)
 	sRefCopy(&pdispVal, iVal.Get());
 	}
 
-VARIANT* Variant::ParamO()
-	{
-	::VariantClear(this);
-	return this;
-	}
-
 template <>
 bool Variant::QGet_T<int8>(int8& oVal) const
 	{
@@ -468,6 +462,12 @@ void Variant::Set_T<ZRef<IDispatch> >(const ZRef<IDispatch>& iVal)
 	::VariantClear(this);
 	vt = VT_DISPATCH;
 	sRefCopy(&pdispVal, iVal.Get());
+	}
+
+VARIANT& Variant::OParam()
+	{
+	::VariantClear(this);
+	return *this;
 	}
 
 ZMACRO_ZValAccessors_Def_Entry(Variant, Int8, int8)

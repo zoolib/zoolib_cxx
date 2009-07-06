@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
-#include "zoolib/ZHandle_T.h"
 #include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZUnicodeString.h"
@@ -74,14 +73,57 @@ struct UnitFloat
 
 struct Enumerated
 	{
-	Enumerated() {}
+	Enumerated()
+	:	fEnumType(0),
+		fValue(0)
+		{}
+
 	Enumerated(EnumTypeID iEnumType, EnumID iValue)
 	:	fEnumType(iEnumType),
 		fValue(iValue)
 		{}
 
+	Enumerated(EnumTypeID iEnumType, const string8& iValue);
+
+	Enumerated(const string8& iEnumType, EnumID iValue);
+
+	Enumerated(const string8& iEnumType, const string8& iValue);
+
 	EnumTypeID fEnumType;
 	EnumID fValue;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * PSAlias
+
+class PSAlias
+	{
+public:
+	PSAlias();
+	PSAlias(const PSAlias& iOther);
+
+	~PSAlias();
+	
+	PSAlias& operator=(const PSAlias& iOther);
+
+	PSAlias(Handle iHandle);
+	PSAlias(Adopt_t<Handle> iHandle);
+
+	PSAlias& operator=(Handle iHandle);
+	PSAlias& operator=(Adopt_t<Handle> iHandle);
+
+	Handle Get() const;
+	Handle Orphan();
+	Handle& OParam();
+
+	size_t Size() const;
+
+//	void Lock() const;
+//	void Unlock() const;
+
+private:
+	Handle fHandle;
 	};
 
 // =================================================================================================
@@ -182,6 +224,7 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Raw, ZMemoryBlock)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, UnitFloat, UnitFloat)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Enumerated, Enumerated)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Alias, PSAlias)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, List, List)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Map, Map)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Spec, Spec)
@@ -200,9 +243,7 @@ public:
 	Val(const ZMemoryBlock& iVal);
 	Val(UnitFloat iVal);
 	Val(Enumerated iVal);
-	#if ZCONFIG_SPI_Enabled(Carbon)
-		Val(ClassID iType, const ZHandle_T<AliasHandle>& iHandle);
-	#endif
+	Val(const PSAlias& iVal);
 	Val(const List& iVal);
 	Val(const Map& iVal);
 	Val(const Spec& iVal);
@@ -244,7 +285,6 @@ private:
 #pragma mark * List
 
 class List
-:	public ZValListR_T<List, Val>
 	{
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(List,
 		operator_bool_generator_type, operator_bool_type);
@@ -268,6 +308,8 @@ public:
 	void Clear();
 
 	bool QGet(size_t iIndex, Val& oVal) const;
+	Val DGet(size_t iIndex, const Val& iDefault) const;
+	Val Get(size_t iIndex) const;
 
 	void Append(const Val& iVal);
 
@@ -282,17 +324,10 @@ private:
 #pragma mark * Map
 
 class Map
-:	public ZValMapR_T<Map, KeyID, Val>
-,	public ZValMapR_T<Map, const string8&, Val>
-,	public ZValMapR_T<Map, ZValMapIterator, Val>
 	{
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Map,
 		operator_bool_generator_type, operator_bool_type);
 public:
-	ZMACRO_ZValMapAccessors_Using(Map, KeyID, Val)
-	ZMACRO_ZValMapAccessors_Using(Map, const string8&, Val)
-	ZMACRO_ZValMapAccessors_Using(Map, ZValMapIterator, Val)
-
 	typedef ZValMapIterator const_iterator;
 
 	operator operator_bool_type() const;
@@ -302,25 +337,33 @@ public:
 	~Map();
 	Map& operator=(const Map& iOther);
 
-	Map(PIActionDescriptor iOther);
-	Map(Adopt_t<PIActionDescriptor> iOther);
+	Map(KeyID iType, PIActionDescriptor iOther);
+	Map(const string8& iType, PIActionDescriptor iOther);
 
-	Map& operator=(PIActionDescriptor iOther);
-	Map& operator=(Adopt_t<PIActionDescriptor> iOther);
+	Map(KeyID iType, Adopt_t<PIActionDescriptor> iOther);
+	Map(const string8& iType, Adopt_t<PIActionDescriptor> iOther);
 
-	PIActionDescriptor* ParamO();
+	PIActionDescriptor& OParam();
+	PIActionDescriptor IParam() const;
 
 	const_iterator begin();
 	const_iterator end();
 
 	KeyID KeyOf(const_iterator iPropIter) const;
-	std::string NameOf(const_iterator iPropIter) const;
 
 	void Clear();
 
 	bool QGet(KeyID iName, Val& oVal) const;
 	bool QGet(const string8& iName, Val& oVal) const;
-	bool QGet(const_iterator iName, Val& iVal);
+	bool QGet(const_iterator iName, Val& iVal) const;
+
+	Val DGet(KeyID iName, const Val& iDefault) const;
+	Val DGet(const string8& iName, const Val& iDefault) const;
+	Val DGet(const_iterator iName, const Val& iDefault) const;
+
+	Val Get(KeyID iName) const;
+	Val Get(const string8& iName) const;
+	Val Get(const_iterator iName) const;
 
 	void Set(KeyID iName, const Val& iVal);
 	void Set(const string8& iName, const Val& iVal);
@@ -330,11 +373,14 @@ public:
 	void Erase(const string8& iName);
 	void Erase(const_iterator iName);
 
-	PIActionDescriptor GetActionDescriptor() const;
+	KeyID GetType() const;
+
+	PIActionDescriptor Orphan();
 
 private:
 	size_t pCount() const;
 
+	KeyID fType;
 	PIActionDescriptor fAD;
 	};
 

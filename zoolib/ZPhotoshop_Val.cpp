@@ -21,11 +21,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZPhotoshop_Val.h"
 
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZMemory.h"
 #include "zoolib/ZUnicode.h"
 
 #include "ASZStringSuite.h"
 #include "PITerminology.h"
 #include "PIUSuites.h"
+#include "PIHandleSuite.h"
 
 using std::vector;
 
@@ -45,6 +47,9 @@ static AutoSuite<PSActionListProcs>
 
 static AutoSuite<ASZStringSuite>
 	sASZString(kASZStringSuite, kASZStringSuiteVersion1);
+
+static AutoSuite<PSHandleSuite2>
+	sPSHandle(kPSHandleSuite, kPSHandleSuiteVersion2);
 
 template <>
 void sRetain_T(ASZByteRun* iString)
@@ -125,49 +130,156 @@ static ZRef<ASZString> sAsASZString(const string16& iString)
 	return ZRef<ASZString>();
 	}
 
-static KeyID sAsKeyID(const string8& iName)
+static TypeID sAsRuntimeTypeID(const string8& iString)
 	{
-	KeyID result = 0;
-	const size_t theSize = iName.size();
-	if (theSize > 0)
-		{
-		result |= uint8(iName[0]) << 24;
-		if (theSize > 1)
-			{
-			result |= uint8(iName[1]) << 16;
-			if (theSize > 2)
-				{
-				result |= uint8(iName[2]) << 8;
-				if (theSize > 3)
-					{
-					result |= uint8(iName[3]);
-					}
-				}
-			}
-		}
-	return result;
+	TypeID theTypeID;
+	if (noErr == sPSActionControl->StringIDToTypeID(const_cast<char*>(iString.c_str()), &theTypeID))
+		return theTypeID;
+	return 0;
 	}
 
-static string8 sAsString(KeyID iKeyID)
+static string8 sFromRuntimeTypeID(TypeID iTypeID)
 	{
-	if (ZCONFIG(Endian, Big))
-		{
-		return string8((char*)&iKeyID, 4);
-		}
-	else
-		{
-		string8 result;
-		result += char((iKeyID >> 24) & 0xFF);
-		result += char((iKeyID >> 16) & 0xFF);
-		result += char((iKeyID >> 8) & 0xFF);
-		result += char((iKeyID) & 0xFF);
-		return result;
-		}
+	char buf[1024];
+	if (noErr == sPSActionControl->TypeIDToStringID(iTypeID, buf, sizeof(buf)-1))
+		return buf;
+	return string8();
 	}
+
+static KeyID sAsKeyID(const string8& iName)
+	{ return sAsRuntimeTypeID(iName); }
+
+static string8 sAsString(KeyID iKeyID)
+	{ return sFromRuntimeTypeID(iKeyID); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Spec
+#pragma mark * Enumerated
+
+Enumerated::Enumerated(EnumTypeID iEnumType, const string8& iValue)
+:	fEnumType(iEnumType),
+	fValue(sAsRuntimeTypeID(iValue))
+	{}
+
+Enumerated::Enumerated(const string8& iEnumType, EnumID iValue)
+:	fEnumType(sAsRuntimeTypeID(iEnumType)),
+	fValue(iValue)
+	{}
+
+Enumerated::Enumerated(const string8& iEnumType, const string8& iValue)
+:	fEnumType(sAsRuntimeTypeID(iEnumType)),
+	fValue(sAsRuntimeTypeID(iValue))
+	{}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * PSAlias
+
+static Handle sHandleDuplicate(Handle iHandle)
+	{
+	if (!iHandle)
+		return nullptr;
+
+	size_t theSize = sPSHandle->GetSize(iHandle);
+	Handle result = sPSHandle->New(theSize);
+	ZBlockCopy(iHandle[0], result[0], theSize);
+	return result;
+	}
+
+static void sHandleDispose(Handle iHandle)
+	{
+	if (iHandle)
+		sPSHandle->Dispose(iHandle);
+	}
+
+PSAlias::PSAlias()
+:	fHandle(nullptr)
+	{}
+
+PSAlias::PSAlias(const PSAlias& iOther)
+:	fHandle(sHandleDuplicate(iOther.fHandle))
+	{}
+
+PSAlias::~PSAlias()
+	{ sHandleDispose(fHandle); }
+
+PSAlias& PSAlias::operator=(const PSAlias& iOther)
+	{
+	if (this != &iOther)
+		{
+		sHandleDispose(fHandle);
+		fHandle = sHandleDuplicate(iOther.fHandle);
+		}
+	return *this;
+	}
+
+PSAlias::PSAlias(Handle iHandle)
+:	fHandle(sHandleDuplicate(iHandle))
+	{}
+
+PSAlias::PSAlias(Adopt_t<Handle> iOther)
+:	fHandle(iOther.Get())
+	{}
+
+PSAlias& PSAlias::operator=(Handle iHandle)
+	{
+	sHandleDispose(fHandle);
+	fHandle = sHandleDuplicate(iHandle);
+	return *this;
+	}
+
+PSAlias& PSAlias::operator=(Adopt_t<Handle> iOther)
+	{
+	sHandleDispose(fHandle);
+	fHandle = iOther.Get();
+	return *this;
+	}
+
+Handle PSAlias::Get() const
+	{ return fHandle; }
+
+Handle PSAlias::Orphan()
+	{
+	Handle result = fHandle;
+	fHandle = 0;
+	return result;
+	}
+
+Handle& PSAlias::OParam()
+	{
+	sHandleDispose(fHandle);
+	fHandle = nullptr;
+	return fHandle;
+	}
+
+#if 0
+size_t PSAlias::Size() const
+	{
+	if (fHandle)
+		return sPSHandle->GetSize(fHandle);
+	return 0;
+	}
+
+void PSAlias::Lock() const
+	{
+	if (fHandle)
+		{
+		Boolean priorLock;
+		Ptr dummy;
+		sPSHandle->SetLock(fHandle, true, &dummy, &priorLock);
+		}
+	}
+
+void PSAlias::Unlock() const
+	{
+	Boolean priorLock;
+	Ptr dummy;
+	sPSHandle->SetLock(fHandle, false, &dummy, &priorLock);
+	}
+#endif
+// =================================================================================================
+#pragma mark -
+#pragma mark * Spec::Entry
 
 Spec::Entry::Entry()
 :	fClassID(0),
@@ -418,7 +530,7 @@ Map Spec::Get() const
 	Map result;
 	if (PIActionReference theRef = this->MakeRef())
 		{
-		OSErr theErr = sPSActionControl->Get(result.ParamO(), theRef);
+		OSErr theErr = sPSActionControl->Get(&result.OParam(), theRef);
 		if (noErr != theErr)
 			result.Clear();
 		sPSActionReference->Free(theRef);
@@ -678,13 +790,11 @@ Val::Val(Enumerated iVal)
 	fType = typeEnumerated;
 	}
 
-#if ZCONFIG_SPI_Enabled(Carbon)
-Val::Val(ClassID iType, const ZHandle_T<AliasHandle>& iHandle)
+Val::Val(const PSAlias& iPSAlias)
 	{
-	sConstruct_T(fData.fBytes, iHandle);
-	fType = typePath;
+	sConstruct_T(fData.fBytes, iPSAlias);
+	fType = typePlatformFilePath;
 	}
-#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 Val::Val(const List& iVal)
 	{
@@ -782,6 +892,17 @@ bool Val::QGet_T<Enumerated>(Enumerated& oVal) const
 	}
 
 template <>
+bool Val::QGet_T<PSAlias>(PSAlias& oVal) const
+	{
+	if (typePath == fType || typeAlias == fType)
+		{
+		oVal = *sFetch_T<PSAlias>(fData.fBytes);
+		return true;
+		}
+	return false;
+	}
+
+template <>
 bool Val::QGet_T<List>(List& oVal) const
 	{
 	if (typeValueList == fType)
@@ -871,6 +992,14 @@ void Val::Set_T<Enumerated>(const Enumerated& iVal)
 	}
 
 template <>
+void Val::Set_T<PSAlias>(const PSAlias& iVal)
+	{
+	this->pRelease();
+	sConstruct_T(fData.fBytes, iVal);
+	fType = typePlatformFilePath;
+	}
+
+template <>
 void Val::Set_T<List>(const List& iVal)
 	{
 	this->pRelease();
@@ -913,9 +1042,7 @@ void Val::pRelease()
 		case typePath:
 		case typeAlias:
 			{
-			#ifdef __PIMac__
-			sDestroy_T<ZHandle_T<AliasHandle> >(fData.fBytes);
-			#endif
+			sDestroy_T<PSAlias>(fData.fBytes);
 			break;
 			}
 		case typeObject:
@@ -985,9 +1112,7 @@ void Val::pCopy(const Val& iOther)
 		case typePath:
 		case typeAlias:
 			{
-			#ifdef __PIMac__
-				sCopyConstruct_T<ZHandle_T<AliasHandle> >(iOther.fData.fBytes, fData.fBytes);
-			#endif
+			sCopyConstruct_T<PSAlias>(iOther.fData.fBytes, fData.fBytes);
 			break;
 			}
 		case typeObject:
@@ -1017,9 +1142,128 @@ ZMACRO_ZValAccessors_Def_Entry(Val, String, string8)
 ZMACRO_ZValAccessors_Def_Entry(Val, Raw, ZMemoryBlock)
 ZMACRO_ZValAccessors_Def_Entry(Val, UnitFloat, UnitFloat)
 ZMACRO_ZValAccessors_Def_Entry(Val, Enumerated, Enumerated)
+ZMACRO_ZValAccessors_Def_Entry(Val, Alias, PSAlias)
 ZMACRO_ZValAccessors_Def_Entry(Val, List, List)
 ZMACRO_ZValAccessors_Def_Entry(Val, Map, Map)
 ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * List and Map Getter/Setter stuff.
+
+#define COMMA ,
+
+#define GETTERCASES(SUITE, PARAM) \
+	case typeInteger: { int32 theVal; \
+		if (noErr == SUITE->GetInteger(PARAM, &theVal)) { oVal = theVal; return true; } \
+		break; } \
+	case typeFloat: { double theVal; \
+		if (noErr == SUITE->GetFloat(PARAM, &theVal)) { oVal = theVal; return true; } \
+		break; } \
+	case typeBoolean: { Boolean theVal; \
+		if (noErr == SUITE->GetBoolean(PARAM, &theVal)) \
+			{ oVal = bool(theVal); return true; } \
+		break; } \
+	case typeChar: \
+		{ \
+		uint32 theLength; \
+		if (noErr == SUITE->GetStringLength(PARAM, &theLength)) \
+			{ \
+			string8 result('\0', size_t(theLength)); \
+			if (0 == theLength || noErr == SUITE->GetString(PARAM, &result[0], theLength)) \
+				{ \
+				oVal = result; \
+				return true; \
+				} \
+			} \
+		break; \
+		} \
+	case typeUnitFloat: { UnitFloat theVal; \
+		if (noErr == SUITE->GetUnitFloat(PARAM, &theVal.fUnitID, &theVal.fValue)) \
+			{ oVal = theVal; return true; } \
+		break; } \
+	case typeEnumerated: { Enumerated theVal; \
+		if (noErr == SUITE->GetEnumerated(PARAM, &theVal.fEnumType, &theVal.fValue)) \
+			{ oVal = theVal; return true; } \
+		break; } \
+	case typePath: \
+		{ \
+		ZUnimplemented(); \
+		} \
+	case typeValueList: { PIActionList theVal; \
+		if (noErr == SUITE->GetList(PARAM, &theVal)) \
+			{ oVal = List(Adopt(theVal)); return true; } \
+		break; } \
+	case typeObject: { \
+		ClassID theDCID; \
+		PIActionDescriptor theVal; \
+		if (noErr == SUITE->GetObject(PARAM, &theDCID, &theVal)) \
+			{ oVal = Map(theDCID, Adopt(theVal)); return true; } \
+		break; } \
+	case typeObjectSpecifier: \
+		{ \
+		PIActionReference theVal; \
+		if (noErr == SUITE->GetReference(PARAM, &theVal)) \
+			{ \
+			oVal = Spec(Adopt(theVal)); \
+			return true; \
+			} \
+		break; \
+		} \
+
+
+#define SETTERCASES(SUITE, PARAM) \
+	case typeInteger: { SUITE->PutInteger(PARAM, iVal.fData.fAsInt32); return; } \
+	case typeFloat: { SUITE->PutFloat(PARAM, iVal.fData.fAsDouble); return; } \
+	case typeBoolean: { SUITE->PutBoolean(PARAM, iVal.fData.fAsBool); return; } \
+	case typeChar: \
+		{ \
+		SUITE->PutString(PARAM, \
+			const_cast<char*>(sFetch_T<string8>(iVal.fData.fBytes)->c_str())); \
+		return; \
+		} \
+	case typeRawData: \
+		{ \
+		ZUnimplemented(); \
+		} \
+	case typeUnitFloat: \
+		{ \
+		SUITE->PutUnitFloat(PARAM, \
+			sFetch_T<UnitFloat>(iVal.fData.fBytes)->fUnitID, \
+			sFetch_T<UnitFloat>(iVal.fData.fBytes)->fValue); \
+		return; \
+		} \
+	case typeEnumerated: \
+		{ \
+		SUITE->PutEnumerated(PARAM, \
+			sFetch_T<Enumerated>(iVal.fData.fBytes)->fEnumType, \
+			sFetch_T<Enumerated>(iVal.fData.fBytes)->fValue); \
+		return; \
+		} \
+	case typePath: \
+		{ \
+		ZUnimplemented(); \
+		} \
+	case typeValueList: \
+		{ \
+		SUITE->PutList(PARAM, \
+			sFetch_T<List>(iVal.fData.fBytes)->GetActionList()); \
+		return; \
+		} \
+	case typeObject: \
+		{ \
+		SUITE->PutObject(PARAM, \
+			sFetch_T<Map>(iVal.fData.fBytes)->GetType(), \
+			sFetch_T<Map>(iVal.fData.fBytes)->IParam()); \
+		return; \
+		} \
+	case typeObjectSpecifier: \
+		{ \
+		PIActionReference tempRef = sFetch_T<Spec>(iVal.fData.fBytes)->MakeRef(); \
+		SUITE->PutReference(PARAM, tempRef); \
+		sPSActionReference->Free(tempRef); \
+		return; \
+		} \
 
 // =================================================================================================
 #pragma mark -
@@ -1084,120 +1328,6 @@ void List::Clear()
 	sPSActionList->Make(&fAL);	
 	}
 
-#define COMMA ,
-
-#define GETTERCASES(SUITE, PARAM) \
-	case typeInteger: { int32 theVal; \
-		if (noErr == SUITE->GetInteger(PARAM, &theVal)) { oVal = theVal; return true; } \
-		break; } \
-	case typeFloat: { double theVal; \
-		if (noErr == SUITE->GetFloat(PARAM, &theVal)) { oVal = theVal; return true; } \
-		break; } \
-	case typeBoolean: { Boolean theVal; \
-		if (noErr == SUITE->GetBoolean(PARAM, &theVal)) \
-			{ oVal = bool(theVal); return true; } \
-		break; } \
-	case typeChar: \
-		{ \
-		uint32 theLength; \
-		if (noErr == SUITE->GetStringLength(PARAM, &theLength)) \
-			{ \
-			string8 result('\0', size_t(theLength)); \
-			if (0 == theLength || noErr == SUITE->GetString(PARAM, &result[0], theLength)) \
-				{ \
-				oVal = result; \
-				return true; \
-				} \
-			} \
-		break; \
-		} \
-	case typeUnitFloat: { UnitFloat theVal; \
-		if (noErr == SUITE->GetUnitFloat(PARAM, &theVal.fUnitID, &theVal.fValue)) \
-			{ oVal = theVal; return true; } \
-		break; } \
-	case typeEnumerated: { Enumerated theVal; \
-		if (noErr == SUITE->GetEnumerated(PARAM, &theVal.fEnumType, &theVal.fValue)) \
-			{ oVal = theVal; return true; } \
-		break; } \
-	case typePath: \
-		{ \
-		ZUnimplemented(); \
-		} \
-	case typeValueList: { PIActionList theVal; \
-		if (noErr == SUITE->GetList(PARAM, &theVal)) \
-			{ oVal = List(Adopt(theVal)); return true; } \
-		break; } \
-	case typeObject: { \
-		ClassID theDCID; \
-		PIActionDescriptor theVal; \
-		if (noErr == SUITE->GetObject(PARAM, &theDCID, &theVal)) \
-			{ oVal = Map(Adopt(theVal)); return true; } \
-		break; } \
-	case typeObjectSpecifier: \
-		{ \
-		PIActionReference theVal; \
-		if (noErr == SUITE->GetReference(PARAM, &theVal)) \
-			{ \
-			oVal = Spec(Adopt(theVal)); \
-			return true; \
-			} \
-		break; \
-		} \
-
-
-#define SETTERCASES(SUITE, PARAM) \
-	case typeInteger: { SUITE->PutInteger(PARAM, iVal.fData.fAsInt32); return; } \
-	case typeFloat: { SUITE->PutFloat(PARAM, iVal.fData.fAsDouble); return; } \
-	case typeBoolean: { SUITE->PutBoolean(PARAM, iVal.fData.fAsBool); return; } \
-	case typeChar: \
-		{ \
-		SUITE->PutString(PARAM, \
-			const_cast<char*>(sFetch_T<string8>(iVal.fData.fBytes)->c_str())); \
-		return; \
-		} \
-	case typeRawData: \
-		{ \
-		ZUnimplemented(); \
-		} \
-	case typeUnitFloat: \
-		{ \
-		SUITE->PutUnitFloat(PARAM, \
-			sFetch_T<UnitFloat>(iVal.fData.fBytes)->fUnitID, \
-			sFetch_T<UnitFloat>(iVal.fData.fBytes)->fValue); \
-		return; \
-		} \
-	case typeEnumerated: \
-		{ \
-		SUITE->PutEnumerated(PARAM, \
-			sFetch_T<Enumerated>(iVal.fData.fBytes)->fEnumType, \
-			sFetch_T<Enumerated>(iVal.fData.fBytes)->fValue); \
-		return; \
-		} \
-	case typePath: \
-		{ \
-		ZUnimplemented(); \
-		} \
-	case typeValueList: \
-		{ \
-		SUITE->PutList(PARAM, \
-			sFetch_T<List>(iVal.fData.fBytes)->GetActionList()); \
-		return; \
-		} \
-	case typeObject: \
-		{ \
-		SUITE->PutObject(PARAM, \
-			typeObject, \
-			sFetch_T<Map>(iVal.fData.fBytes)->GetActionDescriptor()); \
-		return; \
-		} \
-	case typeObjectSpecifier: \
-		{ \
-		PIActionReference tempRef = sFetch_T<Spec>(iVal.fData.fBytes)->MakeRef(); \
-		SUITE->PutReference(PARAM, tempRef); \
-		sPSActionReference->Free(tempRef); \
-		return; \
-		} \
-
 bool List::QGet(size_t iIndex, Val& oVal) const
 	{
 	if (iIndex >= this->Count())
@@ -1215,6 +1345,17 @@ bool List::QGet(size_t iIndex, Val& oVal) const
 		}
 	return false;
 	}
+
+Val List::DGet(size_t iIndex, const Val& iDefault) const
+	{
+	Val result;
+	if (this->QGet(iIndex, result))
+		return result;
+	return iDefault;
+	}
+
+Val List::Get(size_t iIndex) const
+	{ return this->DGet(iIndex, Val()); }
 
 void List::Append(const Val& iVal)
 	{
@@ -1237,10 +1378,12 @@ Map::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->pCount()); }
 
 Map::Map()
+:	fType(typeObject)
 	{ sPSActionDescriptor->Make(&fAD); }
 
 Map::Map(const Map& iOther)
-:	fAD(sDuplicate(iOther.fAD))
+:	fType(iOther.fType)
+,	fAD(sDuplicate(iOther.fAD))
 	{}
 
 Map::~Map()
@@ -1254,42 +1397,42 @@ Map& Map::operator=(const Map& iOther)
 	if (this != &iOther)
 		{
 		sPSActionDescriptor->Free(fAD);
+		fType = iOther.fType;
 		fAD = sDuplicate(iOther.fAD);
 		}
 	return *this;
 	}
 
-Map::Map(PIActionDescriptor iOther)
-:	fAD(sDuplicate(iOther))
+Map::Map(KeyID iType, PIActionDescriptor iOther)
+:	fType(iType)
+,	fAD(sDuplicate(iOther))
 	{}
 
-Map::Map(Adopt_t<PIActionDescriptor> iOther)
-:	fAD(iOther.Get())
+Map::Map(const string8& iType, PIActionDescriptor iOther)
+:	fType(sAsKeyID(iType))
+,	fAD(sDuplicate(iOther))
 	{}
 
-Map& Map::operator=(PIActionDescriptor iOther)
-	{
-	if (fAD)
-		sPSActionDescriptor->Free(fAD);
-	fAD = sDuplicate(iOther);
-	return *this;
-	}
-	
-Map& Map::operator=(Adopt_t<PIActionDescriptor> iOther)
-	{
-	if (fAD)
-		sPSActionDescriptor->Free(fAD);
-	fAD = iOther.Get();
-	return *this;
-	}
+Map::Map(KeyID iType, Adopt_t<PIActionDescriptor> iOther)
+:	fType(iType),
+	fAD(iOther.Get())
+	{}
 
-PIActionDescriptor* Map::ParamO()
+Map::Map(const string8& iType, Adopt_t<PIActionDescriptor> iOther)
+:	fType(sAsKeyID(iType))
+,	fAD(iOther.Get())
+	{}
+
+PIActionDescriptor& Map::OParam()
 	{
 	if (fAD)
 		sPSActionDescriptor->Free(fAD);
 	fAD = nullptr;
-	return &fAD;
+	return fAD;
 	}
+
+PIActionDescriptor Map::IParam() const
+	{ return fAD; }
 
 Map::const_iterator Map::begin()
 	{ return const_iterator(0); }
@@ -1306,17 +1449,6 @@ KeyID Map::KeyOf(const_iterator iPropIter) const
 			return result;
 		}
 	return 0;	
-	}
-
-std::string Map::NameOf(const_iterator iPropIter) const
-	{
-	if (iPropIter.GetIndex() < this->pCount())
-		{
-		KeyID result;
-		if (noErr == sPSActionDescriptor->GetKey(fAD, iPropIter.GetIndex(), &result))
-			return sAsString(result);
-		}
-	return string8();
 	}
 
 void Map::Clear()
@@ -1343,8 +1475,41 @@ bool Map::QGet(KeyID iName, Val& oVal) const
 bool Map::QGet(const string8& iName, Val& oVal) const
 	{ return this->QGet(sAsKeyID(iName), oVal); }
 
-bool Map::QGet(const_iterator iName, Val& oVal)
+bool Map::QGet(const_iterator iName, Val& oVal) const
 	{ return this->QGet(this->KeyOf(iName), oVal); }
+
+Val Map::DGet(KeyID iName, const Val& iDefault) const
+	{
+	Val result;
+	if (this->QGet(iName, result))
+		return result;
+	return iDefault;
+	}
+
+Val Map::DGet(const string8& iName, const Val& iDefault) const
+	{
+	Val result;
+	if (this->QGet(iName, result))
+		return result;
+	return iDefault;
+	}
+
+Val Map::DGet(const_iterator iName, const Val& iDefault) const
+	{
+	Val result;
+	if (this->QGet(iName, result))
+		return result;
+	return iDefault;
+	}
+
+Val Map::Get(KeyID iName) const
+	{ return this->DGet(iName, Val()); }
+
+Val Map::Get(const string8& iName) const
+	{ return this->DGet(iName, Val()); }
+
+Val Map::Get(const_iterator iName) const
+	{ return this->DGet(iName, Val()); }
 
 void Map::Set(KeyID iName, const Val& iVal)
 	{
@@ -1371,8 +1536,15 @@ void Map::Erase(const string8& iName)
 void Map::Erase(const_iterator iName)
 	{ this->Erase(this->KeyOf(iName)); }
 
-PIActionDescriptor Map::GetActionDescriptor() const
-	{ return fAD; }
+KeyID Map::GetType() const
+	{ return fType; }
+
+PIActionDescriptor Map::Orphan()
+	{
+	PIActionDescriptor result = fAD;
+	fAD = nullptr;
+	return result;
+	}
 
 size_t Map::pCount() const
 	{

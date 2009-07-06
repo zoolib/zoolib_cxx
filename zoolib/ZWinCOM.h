@@ -82,23 +82,6 @@ class Variant
 		operator_bool_generator_type, operator_bool_type);
 
 public:
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int8, int8)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt, uint8)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int16, int16)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt16, uint16)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int32, int32)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt32, uint32)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int64, int64)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt64, uint64)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Bool, bool)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Float, float)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Double, double)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, String, string8)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, String8, string8)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, String16, string16)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Unknown, ZRef<IUnknown>)
-	ZMACRO_ZValAccessors_Decl_Entry(Variant, Dispatch, ZRef<IDispatch>)
-
 	operator operator_bool_type() const;
 
 	void swap(Variant& iOther);
@@ -127,13 +110,33 @@ public:
 	Variant(ZRef<IUnknown> iVal);
 	Variant(ZRef<IDispatch> iVal);
 
-	VARIANT* ParamO();
-
+// ZVal protocol
 	template <class S>
 	bool QGet_T(S& oVal) const;
 
 	template <class S>
 	void Set_T(const S& iVal);
+
+// Our protocol
+	VARIANT& OParam();
+
+// Typename accessors
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int8, int8)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt, uint8)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int16, int16)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt16, uint16)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int32, int32)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt32, uint32)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int64, int64)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt64, uint64)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Bool, bool)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Float, float)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Double, double)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, String, string8)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, String8, string8)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, String16, string16)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Unknown, ZRef<IUnknown>)
+	ZMACRO_ZValAccessors_Decl_Entry(Variant, Dispatch, ZRef<IDispatch>)
 	};
 
 } // namespace ZWinCOM

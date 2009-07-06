@@ -138,11 +138,8 @@ ZVal_AppleEvent::ZVal_AppleEvent(const std::string& iVal)
 	#endif
 	}
 
-AEDesc* ZVal_AppleEvent::ParamO()
-	{
-	::AEDisposeDesc(this);
-	return this;
-	}
+void ZVal_AppleEvent::Clear()
+	{ ::AEDisposeDesc(this); }
 
 template <>
 bool ZVal_AppleEvent::QGet_T<bool>(bool& oVal) const
@@ -262,6 +259,12 @@ void ZVal_AppleEvent::Set_T(const S& iVal)
 	::AEReplaceDescData(theValRef.sDescType, theValRef.Ptr(), theValRef.Size(), this);
 	}
 
+AEDesc& ZVal_AppleEvent::OParam()
+	{
+	::AEDisposeDesc(this);
+	return *this;
+	}
+
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Int16, int16)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Int32, int32)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Int64, int64)
@@ -338,11 +341,23 @@ void ZValList_AppleEvent::Clear()
 	::AECreateList(nullptr, 0, false, this);
 	}
 
-bool ZValList_AppleEvent::QGet(size_t iIndex, ZVal_AppleEvent& oVal) const
+bool ZValList_AppleEvent::ZValList_AppleEvent::QGet(size_t iIndex, ZVal_AppleEvent& oVal) const
+	{ return noErr == ::AEGetNthDesc(this, iIndex + 1, typeWildCard, nullptr, &oVal.OParam()); }
+
+ZVal_AppleEvent ZValList_AppleEvent::DGet(size_t iIndex, const ZVal_AppleEvent& iDefault) const
 	{
-	if (noErr == ::AEGetNthDesc(this, iIndex + 1, typeWildCard, nullptr, oVal.ParamO()))
-		return true;
-	return false;
+	ZVal_AppleEvent result;
+	if (noErr == ::AEGetNthDesc(this, iIndex + 1, typeWildCard, nullptr, &result.OParam()))
+		return result;
+	return iDefault;
+	}
+
+ZVal_AppleEvent ZValList_AppleEvent::Get(size_t iIndex) const
+	{
+	ZVal_AppleEvent result;
+	if (noErr == ::AEGetNthDesc(this, iIndex + 1, typeWildCard, nullptr, &result.OParam()))
+		return result;
+	return ZVal_AppleEvent();
 	}
 
 void ZValList_AppleEvent::Erase(size_t iIndex)
@@ -425,11 +440,97 @@ ZValMap_AppleEvent& ZValMap_AppleEvent::operator=(const AERecord& iOther)
 	return *this;	
 	}
 
-AEDesc* ZValMap_AppleEvent::ParamO()
+void ZValMap_AppleEvent::Clear()
 	{
 	::AEDisposeDesc(this);
-	return this;
+	::AECreateList(nullptr, 0, true, this);
 	}
+
+bool ZValMap_AppleEvent::QGet(AEKeyword iName, ZVal_AppleEvent& oVal) const
+	{ return noErr ==::AEGetKeyDesc(this, iName, typeWildCard, &oVal.OParam()); }
+
+bool ZValMap_AppleEvent::QGet(const string& iName, ZVal_AppleEvent& oVal) const
+	{ return noErr == ::AEGetKeyDesc(this, sAsAEKeyword(iName), typeWildCard, &oVal.OParam()); }
+
+bool ZValMap_AppleEvent::QGet(const_iterator iPropIter, ZVal_AppleEvent& oVal) const
+	{
+	return noErr == ::AEGetNthDesc(this, iPropIter.GetIndex() + 1, typeWildCard,
+		nullptr, &oVal.OParam());
+	}
+
+ZVal_AppleEvent ZValMap_AppleEvent::DGet(AEKeyword iName, const ZVal_AppleEvent& iDefault) const
+	{
+	ZVal_AppleEvent result;
+	if (this->QGet(iName, result))
+		return result;
+	return iDefault;
+	}
+
+ZVal_AppleEvent ZValMap_AppleEvent::DGet(const std::string& iName, const ZVal_AppleEvent& iDefault) const
+	{
+	ZVal_AppleEvent result;
+	if (this->QGet(iName, result))
+		return result;
+	return iDefault;
+	}
+
+ZVal_AppleEvent ZValMap_AppleEvent::DGet(const_iterator iPropIter, const ZVal_AppleEvent& iDefault) const
+	{
+	ZVal_AppleEvent result;
+	if (this->QGet(iPropIter, result))
+		return result;
+	return iDefault;
+	}
+
+ZVal_AppleEvent ZValMap_AppleEvent::Get(AEKeyword iName) const
+	{ return this->DGet(iName, ZVal_AppleEvent()); }
+	
+ZVal_AppleEvent ZValMap_AppleEvent::Get(const std::string& iName) const
+	{ return this->DGet(iName, ZVal_AppleEvent()); }
+
+ZVal_AppleEvent ZValMap_AppleEvent::Get(const_iterator iPropIter) const
+	{ return this->DGet(iPropIter, ZVal_AppleEvent()); }
+
+void ZValMap_AppleEvent::Set(AEKeyword iName, const AEDesc& iVal)
+	{ ::AEPutKeyDesc(this, iName, &iVal); }
+
+void ZValMap_AppleEvent::Set(const string& iName, const AEDesc& iVal)
+	{ ::AEPutKeyDesc(this, sAsAEKeyword(iName), &iVal); }
+
+void ZValMap_AppleEvent::Set(const_iterator iPropIter, const AEDesc& iVal)
+	{ ::AEPutDesc(this, iPropIter.GetIndex() + 1, &iVal); }
+
+void ZValMap_AppleEvent::Erase(AEKeyword iName)
+	{ ::AEDeleteKeyDesc(this, iName); }
+
+void ZValMap_AppleEvent::Erase(const string& iName)
+	{ ::AEDeleteKeyDesc(this, sAsAEKeyword(iName)); }
+
+void ZValMap_AppleEvent::Erase(const_iterator iPropIter)
+	{  ::AEDeleteItem(this, iPropIter.GetIndex() + 1); }
+
+AEDesc& ZValMap_AppleEvent::OParam()
+	{
+	::AEDisposeDesc(this);
+	return *this;
+	}
+
+bool ZValMap_AppleEvent::QGetAttr(AEKeyword iName, ZVal_AppleEvent& oVal) const
+	{ return noErr == ::AEGetAttributeDesc(this, iName, typeWildCard, &oVal.OParam()); }
+
+ZVal_AppleEvent ZValMap_AppleEvent::DGetAttr(AEKeyword iName, const ZVal_AppleEvent& iDefault) const
+	{
+	ZVal_AppleEvent theVal;
+	if (this->QGetAttr(iName, theVal))
+		return theVal;
+	return iDefault;
+	}
+
+ZVal_AppleEvent ZValMap_AppleEvent::GetAttr(AEKeyword iName) const
+	{ return this->DGetAttr(iName, ZVal_AppleEvent()); }
+
+void ZValMap_AppleEvent::SetAttr(AEKeyword iName, const AEDesc& iVal)
+	{ ::AEPutAttributeDesc(this, iName, &iVal); }
 
 ZValMap_AppleEvent::const_iterator ZValMap_AppleEvent::begin()
 	{ return const_iterator(0); }
@@ -463,72 +564,6 @@ string ZValMap_AppleEvent::NameOf(const_iterator iPropIter) const
 		}
 	return string();
 	}
-
-void ZValMap_AppleEvent::Clear()
-	{
-	::AEDisposeDesc(this);
-	::AECreateList(nullptr, 0, true, this);
-	}
-
-bool ZValMap_AppleEvent::QGet(AEKeyword iName, ZVal_AppleEvent& oVal) const
-	{
-	if (noErr == ::AEGetKeyDesc(this, iName, typeWildCard, oVal.ParamO()))
-		return true;
-	return false;
-	}
-
-bool ZValMap_AppleEvent::QGet(const string& iName, ZVal_AppleEvent& oVal) const
-	{
-	if (noErr == ::AEGetKeyDesc(this, sAsAEKeyword(iName), typeWildCard, oVal.ParamO()))
-		return true;
-	return false;
-	}
-
-bool ZValMap_AppleEvent::QGet(const_iterator iPropIter, ZVal_AppleEvent& oVal) const
-	{
-	if (noErr == ::AEGetNthDesc(this, iPropIter.GetIndex() + 1, typeWildCard, nullptr, oVal.ParamO()))
-		return true;
-	return false;
-	}
-
-void ZValMap_AppleEvent::Set(AEKeyword iName, const AEDesc& iVal)
-	{ ::AEPutKeyDesc(this, iName, &iVal); }
-
-void ZValMap_AppleEvent::Set(const string& iName, const AEDesc& iVal)
-	{ ::AEPutKeyDesc(this, sAsAEKeyword(iName), &iVal); }
-
-void ZValMap_AppleEvent::Set(const_iterator iPropIter, const AEDesc& iVal)
-	{ ::AEPutDesc(this, iPropIter.GetIndex() + 1, &iVal); }
-
-void ZValMap_AppleEvent::Erase(AEKeyword iName)
-	{ ::AEDeleteKeyDesc(this, iName); }
-
-void ZValMap_AppleEvent::Erase(const string& iName)
-	{ ::AEDeleteKeyDesc(this, sAsAEKeyword(iName)); }
-
-void ZValMap_AppleEvent::Erase(const_iterator iPropIter)
-	{  ::AEDeleteItem(this, iPropIter.GetIndex() + 1); }
-
-bool ZValMap_AppleEvent::QGetAttr(AEKeyword iName, ZVal_AppleEvent& oVal) const
-	{
-	if (noErr == ::AEGetAttributeDesc(this, iName, typeWildCard, oVal.ParamO()))
-		return true;
-	return false;
-	}
-
-ZVal_AppleEvent ZValMap_AppleEvent::DGetAttr(AEKeyword iName, const ZVal_AppleEvent& iDefault) const
-	{
-	ZVal_AppleEvent theVal;
-	if (this->QGetAttr(iName, theVal))
-		return theVal;
-	return iDefault;
-	}
-
-ZVal_AppleEvent ZValMap_AppleEvent::GetAttr(AEKeyword iName) const
-	{ return this->DGetAttr(iName, ZVal_AppleEvent()); }
-
-void ZValMap_AppleEvent::SetAttr(AEKeyword iName, const AEDesc& iVal)
-	{ ::AEPutAttributeDesc(this, iName, &iVal); }
 
 NAMESPACE_ZOOLIB_END
 
