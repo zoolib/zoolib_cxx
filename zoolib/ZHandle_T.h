@@ -40,12 +40,15 @@ class ZHandle_T
 	{
 public:
 	ZHandle_T()
-	:	fHandle(0)
+	:	fHandle(nullptr)
 		{}
 
 	ZHandle_T(const ZHandle_T& iOther)
 	:	fHandle(iOther.fHandle)
-		{ ::HandToHand((Handle*)fHandle); }
+		{
+		if (fHandle)
+			::HandToHand((Handle*)fHandle);
+		}
 
 	~ZHandle_T()
 		{
@@ -57,16 +60,21 @@ public:
 		{
 		if (this != iOther)
 			{
-			::DisposeHandle((Handle)fHandle);
+			if (fHandle)
+				::DisposeHandle((Handle)fHandle);
 			fHandle = iOther.fHandle;
-			::HandToHand((Handle*)fHandle);
+			if (fHandle)
+				::HandToHand((Handle*)fHandle);
 			}
 		return *this;
 		}
 
 	ZHandle_T(T iOther)
 	:	fHandle(iOther)
-		{ ::HandToHand((Handle*)fHandle); }
+		{
+		if (fHandle)
+			::HandToHand((Handle*)fHandle);
+		}
 
 	ZHandle_T(Adopt_t<T> iOther)
 	:	fHandle(iOther)
@@ -74,23 +82,24 @@ public:
 
 	ZHandle_T& operator=(T iOther)
 		{
-		::DisposeHandle((Handle)fHandle);
+		if (fHandle)
+			::DisposeHandle((Handle)fHandle);
 		fHandle = iOther;
-		::HandToHand((Handle*)fHandle);
+		if (fHandle)
+			::HandToHand((Handle*)fHandle);
 		return *this;
 		}
 
 	ZHandle_T& operator=(Adopt_t<T> iOther)
 		{
-		::DisposeHandle((Handle)fHandle);
+		if (fHandle)
+			::DisposeHandle((Handle)fHandle);
 		fHandle = iOther;
 		return *this;
 		}
 
 	T Get() const
-		{
-		return fHandle;
-		}
+		{ return fHandle; }
 
 	T Orphan()
 		{
@@ -99,10 +108,38 @@ public:
 		return result;
 		}
 
+	T& OParam()
+		{
+		if (fHandle)
+			{
+			::DisposeHandle((Handle)fHandle);
+			fHandle = nullptr;
+			}
+		return fHandle;
+		}
+
+	size_t Size() const
+		{
+		if (fHandle)
+			return ::GetHandleSize((Handle)fHandle);
+		return 0;
+		}
+
+	void Lock() const
+		{
+		if (fHandle)
+			::HLock((Handle)fHandle);
+		}
+
+	void Unlock() const
+		{
+		if (fHandle)
+			::HUnlock((Handle)fHandle);
+		}
+
 private:
 	T fHandle;
 	};
-
 
 NAMESPACE_ZOOLIB_END
 
