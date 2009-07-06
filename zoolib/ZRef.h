@@ -33,7 +33,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZRef
 
-template <typename T>
+template <class T>
 class ZRef
 	{
 private:
@@ -174,7 +174,7 @@ void sRefCopy(void* iDest, T* iP)
 #pragma mark -
 #pragma mark * NoRetain wrapper
 
-template <typename P>
+template <class P>
 class NoRetain_t
 	{
 	P fP;
@@ -183,7 +183,7 @@ public:
 	P Get() const { return fP; }
 	};
 
-template <typename P>
+template <class P>
 NoRetain_t<P> NoRetain(P iP)
 	{ return NoRetain_t<P>(iP); }
 
@@ -194,7 +194,7 @@ NoRetain_t<P> NoRetain(P iP)
 template <class T> void sRetain_T(T);
 template <class T> void sRelease_T(T);
 
-template <typename T>
+template <class T>
 class ZRef<T*>
 	{
 private:
@@ -320,6 +320,13 @@ public:
 		T* theP = nullptr;
 		std::swap(theP, fP);
 		spRelease(theP);
+		}
+
+	T* Orphan()
+		{
+		T* theP = nullptr;
+		std::swap(theP, fP);
+		return theP;
 		}
 
 	// Used with output parameters.
