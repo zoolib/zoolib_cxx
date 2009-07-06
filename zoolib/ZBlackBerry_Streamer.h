@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZBlackBerry.h"
 #include "zoolib/ZCommer.h"
-#include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZRefWeak.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -54,7 +53,7 @@ public:
 	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError);
 
-	virtual ZMemoryBlock GetAttribute(uint16 iObject, uint16 iAttribute);
+	virtual ValData GetAttribute(uint16 iObject, uint16 iAttribute);
 
 	virtual uint32 GetPIN();
 
@@ -106,7 +105,7 @@ private:
 		uint16 fObject;
 		uint16 fAttribute;
 		bool fFinished;
-		ZMemoryBlock fResult;
+		ValData fResult;
 		};
 	bool fGetAttributeSent;
 	GetAttribute_t* fGetAttribute;

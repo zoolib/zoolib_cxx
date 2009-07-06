@@ -20,11 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZHTTP_Requests.h"
 
-#include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZMIME.h"
 #include "zoolib/ZNet_Internet.h"
 #include "zoolib/ZStreamR_Boundary.h"
 #include "zoolib/ZStreamR_SkipAllOnDestroy.h"
+#include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZStream_String.h"
 #include "zoolib/ZStream_Tee.h"
 #include "zoolib/ZStrim_Stream.h"
@@ -65,7 +65,7 @@ static bool sReadResponse(const ZStreamR& r, int32* oResponseCode, ValMap* oHead
 static bool sRequest(const ZStreamW& w, const ZStreamR& r,
 	const string& iMethod, const string& iHost, const string& iPath,
 	bool iSendConnectionClose,
-	int32* oResponseCode, ValMap* oHeader, ZMemoryBlock* oRawHeader)
+	int32* oResponseCode, ValMap* oHeader, ValData* oRawHeader)
 	{
 	w.WriteString(iMethod);
 	w.WriteString(" ");
@@ -81,8 +81,8 @@ static bool sRequest(const ZStreamW& w, const ZStreamR& r,
 
 	if (oRawHeader)
 		{
-		ZStreamRWPos_MemoryBlock theSRWP_MB(*oRawHeader);
-		ZStreamR_Tee theStream_Tee(r, theSRWP_MB);
+		ZStreamRWPos_Data_T<ValData> theSRWP_Data(*oRawHeader);
+		ZStreamR_Tee theStream_Tee(r, theSRWP_Data);
 		return sReadResponse(theStream_Tee, oResponseCode, oHeader);
 		}
 	else
@@ -93,7 +93,7 @@ static bool sRequest(const ZStreamW& w, const ZStreamR& r,
 
 ZRef<ZStreamerR> sRequest(
 	const string& iMethod, string& ioURL,
-	int32* oResultCode, ValMap* oFields, ZMemoryBlock* oRawHeader)
+	int32* oResultCode, ValMap* oFields, ValData* oRawHeader)
 	{
 	for (bool keepGoing = true; keepGoing; /*no inc*/)
 		{
@@ -174,12 +174,12 @@ static void sPOSTPrefix(const ZStreamW& w,
 	}
 
 static bool sPOSTSuffix(const ZStreamR& r,
-	int32* oResponseCode, ValMap* oHeader, ZMemoryBlock* oRawHeader)
+	int32* oResponseCode, ValMap* oHeader, ValData* oRawHeader)
 	{
 	if (oRawHeader)
 		{
-		ZStreamRWPos_MemoryBlock theSRWP_MB(*oRawHeader);
-		ZStreamR_Tee theStream_Tee(r, theSRWP_MB);
+		ZStreamRWPos_Data_T<ValData> theSRWP_Data(*oRawHeader);
+		ZStreamR_Tee theStream_Tee(r, theSRWP_Data);
 		return sReadResponse(theStream_Tee, oResponseCode, oHeader);
 		}
 	else
@@ -190,7 +190,7 @@ static bool sPOSTSuffix(const ZStreamR& r,
 
 ZRef<ZStreamerR> sPost(
 	const std::string& iURL, const ZStreamR& iBody,
-	int32* oResultCode, ValMap* oFields, ZMemoryBlock* oRawHeader)
+	int32* oResultCode, ValMap* oFields, ValData* oRawHeader)
 	{
 	string theHost;
 	ip_port thePort;
@@ -246,7 +246,7 @@ ZRef<ZStreamerR> sPost(
 
 ZRef<ZStreamerR> sPostRaw(
 	const std::string& iURL, const ZStreamR& iBody,
-	int32* oResultCode, ValMap* oFields, ZMemoryBlock* oRawHeader)
+	int32* oResultCode, ValMap* oFields, ValData* oRawHeader)
 	{
 	string theHost;
 	ip_port thePort;
@@ -409,9 +409,7 @@ static bool sReadPOST(const ZStreamR& iStreamR, const ValMap& iHeader, Val& oVal
 		}
 
 	// It's some other kind of content. Put it into a raw.
-	ZMemoryBlock theMB;
-	ZStreamRWPos_MemoryBlock(theMB).CopyAllFrom(iStreamR);
-	oVal = theMB;
+	oVal = sReadAll_T<ValData>(iStreamR);
 	return true;
 	}
 

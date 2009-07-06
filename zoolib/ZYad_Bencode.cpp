@@ -125,7 +125,7 @@ static ZRef<ZYadR_Std> sReadStringish(const ZStreamU& s)
 	if (countSkipped == 0)
 		return new ZYadStrimU_Std(theString);
 	else
-		return new ZYadStreamRPos_Std(ZMemoryBlock(theString.data(), theLength));
+		return new ZYadStreamRPos_Std(ZValData_ZooLib(theString.data(), theLength));
 	}
 
 static ZRef<ZYadR_Std> sMakeYadR_Bencode(const ZStreamU& s)

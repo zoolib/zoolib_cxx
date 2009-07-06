@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTBSpec.h"
 
 #include "zoolib/ZCompare.h"
-#include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZRegex.h"
 #include "zoolib/ZStream.h"
 #include "zoolib/ZTextCollator.h"
@@ -685,51 +684,24 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 			}
 		case eRel_StringContains:
 			{
-			#if 1
-				string pattern;
-				if (!this->GetTValue().QGetString(pattern) || pattern.empty())
-					return true;
+			string pattern;
+			if (!this->GetTValue().QGetString(pattern) || pattern.empty())
+				return true;
 
-				string target;
-				if (!iTuple.QGetString(propIter, target) || target.empty())
-					return false;
+			string target;
+			if (!iTuple.QGetString(propIter, target) || target.empty())
+				return false;
 
-				if (!fRep->fTextCollator)
-					{
-					fRep->fTextCollator =
-						ZTextCollator(this->GetComparator().fStrength);
-					}
-				// Assume our collator is NativeUTF16 and do the conversion here
-				// to isolate its effects for profiling.
-				const string16 pattern16 = ZUnicode::sAsUTF16(pattern);
-				const string16 target16 = ZUnicode::sAsUTF16(target);
-				return fRep->fTextCollator.Contains(pattern16.data(), pattern16.size(), target16.data(), target16.size());
-			#else
-				ZMemoryBlock patternMB = this->GetTValue().GetRaw();
-				if (!patternMB)
-					{
-					string pattern;
-					if (!this->GetTValue().GetString(pattern) || pattern.empty())
-						return true;
-					const string16 pattern16 = ZUnicode::sAsUTF16(pattern);
-					patternMB.SetSize(pattern16.size());
-					patternMB.CopyFrom(0, pattern16.data(), pattern16.size());
-					const_cast<Criterion*>(this)->fRep = new Rep(fRep->fPropName, fRep->fComparator, patternMB);
-					}
-
-				string target;
-				if (!iTuple.GetString(propIter, target) || target.empty())
-					return false;
-
-				if (!fRep->fTextCollator)
-					{
-					fRep->fTextCollator =
-						ZTextCollator(this->GetComparator().fStrength);
-					}
-
-				const string16 target16 = ZUnicode::sAsUTF16(target);
-				return fRep->fTextCollator.Contains(static_cast<const UTF16*>(patternMB.GetData()), patternMB.GetSize(), target16.data(), target16.size());
-			#endif
+			if (!fRep->fTextCollator)
+				{
+				fRep->fTextCollator =
+					ZTextCollator(this->GetComparator().fStrength);
+				}
+			// Assume our collator is NativeUTF16 and do the conversion here
+			// to isolate its effects for profiling.
+			const string16 pattern16 = ZUnicode::sAsUTF16(pattern);
+			const string16 target16 = ZUnicode::sAsUTF16(target);
+			return fRep->fTextCollator.Contains(pattern16.data(), pattern16.size(), target16.data(), target16.size());
 			}
 		case eRel_Regex:
 			{

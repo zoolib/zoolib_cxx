@@ -40,8 +40,8 @@ void ZYadPrimR_Std::Finish()
 #pragma mark -
 #pragma mark * ZYadStreamRPos_Std
 
-ZYadStreamRPos_Std::ZYadStreamRPos_Std(const ZMemoryBlock& iMB)
-:	ZYadStreamRPos_MemoryBlock(iMB)
+ZYadStreamRPos_Std::ZYadStreamRPos_Std(const ZValData_ZooLib& iData)
+:	ZYadStreamRPos_Data(iData)
 	{}
 
 void ZYadStreamRPos_Std::Finish()

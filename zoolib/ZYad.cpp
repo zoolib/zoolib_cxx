@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFactoryChain.h"
 #include "zoolib/ZYad.h"
-#include "zoolib/ZMemoryBlock.h"
 
 #include <stdio.h> // For printf
 
@@ -28,7 +27,6 @@ NAMESPACE_ZOOLIB_BEGIN
 
 using std::min;
 using std::string;
-using std::vector;
 
 /*
 Yad is another neologism by Eric Cooper. As an acronym it stands for Yet Another Data, but

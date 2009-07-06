@@ -48,10 +48,10 @@ public:
 
 class ZYadStreamRPos_Std
 :	public ZYadR_Std,
-	public ZYadStreamRPos_MemoryBlock
+	public ZYadStreamRPos_Data
 	{
 public:
-	ZYadStreamRPos_Std(const ZMemoryBlock& iMB);
+	ZYadStreamRPos_Std(const ZValData_ZooLib& iData);
 
 // From ZYadR_Std
 	virtual void Finish();

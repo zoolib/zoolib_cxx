@@ -41,7 +41,6 @@ class ZValMap_ZooLib;
 	ZMACRO_ZValAccessors_Decl_Entry(T, Time, ZTime) \
 	ZMACRO_ZValAccessors_Decl_Entry(T, Rect, ZRectPOD) \
 	ZMACRO_ZValAccessors_Decl_Entry(T, Point, ZPointPOD) \
-	ZMACRO_ZValAccessors_Decl_Entry(T, Raw, ZMemoryBlock) \
 	ZMACRO_ZValAccessors_Decl_Entry(T, RefCounted, ZRef<ZRefCountedWithFinalize>) \
 	ZMACRO_ZValAccessors_Decl_Entry(T, Pointer, VoidStar_t) \
 
@@ -51,7 +50,6 @@ class ZValMap_ZooLib;
 	ZMACRO_ZValAccessors_Def_Entry(T, Time, ZTime) \
 	ZMACRO_ZValAccessors_Def_Entry(T, Rect, ZRectPOD) \
 	ZMACRO_ZValAccessors_Def_Entry(T, Point, ZPointPOD) \
-	ZMACRO_ZValAccessors_Def_Entry(T, Raw, ZMemoryBlock) \
 	ZMACRO_ZValAccessors_Def_Entry(T, RefCounted, ZRef<ZRefCountedWithFinalize>) \
 	ZMACRO_ZValAccessors_Def_Entry(T, Pointer, VoidStar_t) \
 

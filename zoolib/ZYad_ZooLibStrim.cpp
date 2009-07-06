@@ -18,7 +18,6 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZStreamW_HexStrim.h"
 #include "zoolib/ZStrimR_Boundary.h"
 #include "zoolib/ZStrim_Escaped.h"

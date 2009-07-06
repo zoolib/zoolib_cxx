@@ -35,8 +35,6 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZTS_Watchable
 
-class ZMemoryBlock;
-
 class ZTS_Watchable : public ZTS
 	{
 public:

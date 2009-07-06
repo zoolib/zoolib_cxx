@@ -32,8 +32,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZMemoryBlock;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTSWatcher

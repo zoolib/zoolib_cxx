@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYad_ZooLib__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZVal_ZooLib.h"
 #include "zoolib/ZYad.h"
 
@@ -50,17 +51,17 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStreamRPos_MemoryBlock
+#pragma mark * ZYadStreamRPos_Data
 
-typedef ZStreamerRPos_T<ZStreamRPos_MemoryBlock> ZStreamerRPos_MemoryBlock;
+typedef ZStreamerRPos_T<ZStreamRPos_Data_T<ZValData_ZooLib> > ZStreamerRPos_Data_ZooLib;
 
-class ZYadStreamRPos_MemoryBlock
+class ZYadStreamRPos_Data
 :	public ZYadR_ZooLib,
 	public ZYadStreamR,
-	public ZStreamerRPos_MemoryBlock
+	public ZStreamerRPos_Data_ZooLib
 	{
 public:
-	ZYadStreamRPos_MemoryBlock(const ZMemoryBlock& iMB);
+	ZYadStreamRPos_Data(const ZValData_ZooLib& iData);
 
 // From ZYadR, disambiguating between ZYadR_ZooLib and ZYadStreamR
 	virtual bool IsSimple(const ZYadOptions& iOptions);

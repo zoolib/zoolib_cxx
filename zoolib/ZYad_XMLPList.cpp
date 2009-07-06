@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZStrimU_Unreader.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
@@ -371,7 +370,7 @@ static void sToStrim_SimpleValue(const ZML::StrimW& s, const ZVal_ZooLib& iVal)
 			}
 		case eZType_Raw:
 			{
-			sToStrim_Stream(s, ZStreamRPos_MemoryBlock(iVal.GetRaw()));
+			sToStrim_Stream(s, ZStreamRPos_Data_T<ZValData_ZooLib>(iVal.GetData()));
 			break;
 			}
 		case eZType_Time:

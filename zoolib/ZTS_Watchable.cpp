@@ -23,8 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZDList.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZMemoryBlock.h"
-#include "zoolib/ZStream_Memory.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZTSWatcher.h"
 #include "zoolib/ZTupleQuisitioner.h"
@@ -480,7 +478,7 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 			if (!theTBQueryRef)
 				{
 				ZMemoryBlock& theMBRef = i->fMemoryBlock;
-				theTBQueryRef = ZTBQuery(ZStreamRPos_Memory(theMBRef.GetData(), theMBRef.GetSize()));
+				theTBQueryRef = ZTBQuery(ZStreamRPos_MemoryBlock(theMBRef));
 				}
 			}
 

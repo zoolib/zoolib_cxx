@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZHTTP_Requests.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZNet_Internet.h"
+#include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZWaiter.h"
@@ -526,7 +527,7 @@ class Host_Std::HTTPFetcher
 :	public ZWaiter
 	{
 public:
-	HTTPFetcher(Host_Std* iHost, const string& iURL, ZMemoryBlock* iMB, void* iNotifyData);
+	HTTPFetcher(Host_Std* iHost, const string& iURL, ZHTTP::ValData* iData, void* iNotifyData);
 
 // From ZWaiter
 	virtual bool Execute();
@@ -537,19 +538,19 @@ private:
 	const string fURL;
 	void* fNotifyData;
 	Host_Std* fHost;
-	ZMemoryBlock fMB;
+	ZHTTP::ValData fData;
 	bool fIsPOST;
 	};
 
 Host_Std::HTTPFetcher::HTTPFetcher(
-	Host_Std* iHost, const string& iURL, ZMemoryBlock* iMB, void* iNotifyData)
+	Host_Std* iHost, const string& iURL, ZHTTP::ValData* iData, void* iNotifyData)
 :	fHost(iHost),
 	fURL(iURL),
 	fNotifyData(iNotifyData)
 	{
-	if (iMB)
+	if (fData)
 		{
-		fMB = *iMB;
+		fData = *iData;
 		fIsPOST = true;
 		}
 	else
@@ -564,12 +565,13 @@ bool Host_Std::HTTPFetcher::Execute()
 		{
 		string theURL = fURL;
 		ZHTTP::ValMap theHeaders;
-		ZMemoryBlock theRawHeaders;	
+		ZHTTP::ValData theRawHeaders;	
 		ZRef<ZStreamerR> theStreamerR;
 		if (fIsPOST)
 			{
 			theStreamerR = ZHTTP::sPostRaw(
-				theURL, ZStreamRWPos_MemoryBlock(fMB), nullptr, &theHeaders, &theRawHeaders);
+				theURL, ZStreamRPos_Data_T<ZHTTP::ValData>(fData), nullptr,
+				&theHeaders, &theRawHeaders);
 			}
 		else
 			{
@@ -594,7 +596,7 @@ bool Host_Std::HTTPFetcher::Execute()
 	if (fHost)
 		{
 		fHost->pHTTPFetcher(
-			this, fNotifyData, fURL, "", ZMemoryBlock(), ZRef<ZStreamerR>());
+			this, fNotifyData, fURL, "", ZHTTP::ValData(), ZRef<ZStreamerR>());
 		}
 
 	return false;
@@ -614,7 +616,7 @@ class Host_Std::Sender
 public:
 	Sender(Host* iHost, const NPP_t& iNPP_t,
 		void* iNotifyData,
-		const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
+		const std::string& iURL, const std::string& iMIME, const ZHTTP::ValData& iHeaders,
 		ZRef<ZStreamerR> iStreamerR);
 	~Sender();
 
@@ -628,14 +630,14 @@ private:
 	void* fNotifyData;
 	const string fURL;
 	const string fMIME;
-	const ZMemoryBlock fHeaders;
+	const ZHTTP::ValData fHeaders;
 	NPStream_Z fNPStream;
 	ZRef<ZStreamerR> fStreamerR;
 	};
 
 Host_Std::Sender::Sender(Host* iHost, const NPP_t& iNPP_t,
 	void* iNotifyData,
-	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
+	const std::string& iURL, const std::string& iMIME, const ZHTTP::ValData& iHeaders,
 	ZRef<ZStreamerR> iStreamerR)
 :	fSentNew(false),
 	fHost(iHost),
@@ -907,7 +909,7 @@ NPError Host_Std::Host_PostURLNotify(NPP npp,
 
 	if (theURL.substr(0, 5) == "http:")
 		{
-		ZMemoryBlock theData(buf, len);
+		ZHTTP::ValData theData(buf, len);
 		ZRef<HTTPFetcher> theFetcher = new HTTPFetcher(this, theURL, &theData, notifyData);
 		fHTTPFetchers.Add(theFetcher);
 		sStartWaiterRunner(theFetcher);
@@ -958,7 +960,7 @@ void Host_Std::Host_ForceRedraw(NPP npp)
 	{}
 
 void Host_Std::pHTTPFetcher(ZRef<HTTPFetcher> iHTTPFetcher, void* iNotifyData,
-	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
+	const std::string& iURL, const std::string& iMIME, const ZHTTP::ValData& iHeaders,
 	ZRef<ZStreamerR> iStreamerR)
 	{
 	fHTTPFetchers.Erase(iHTTPFetcher);
@@ -1006,7 +1008,7 @@ void Host_Std::Destroy()
 
 void Host_Std::SendDataAsync(
 	void* iNotifyData,
-	const std::string& iURL, const std::string& iMIME, const ZMemoryBlock& iHeaders,
+	const std::string& iURL, const std::string& iMIME, const ZHTTP::ValData& iHeaders,
 	ZRef<ZStreamerR> iStreamerR)
 	{
 	Sender* theSender = new Sender(this, this->GetNPP(),

@@ -489,7 +489,7 @@ public:
 // From ZBlackBerry::Device
 	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const string& iName, const PasswordHash* iPasswordHash, Error* oError);
-	virtual ZMemoryBlock GetAttribute(uint16 iObject, uint16 iAttribute);
+	virtual ValData GetAttribute(uint16 iObject, uint16 iAttribute);
 	virtual uint32 GetPIN();
 
 // Called by Manager_BBDevMgr
@@ -545,12 +545,12 @@ ZRef<Channel> Device_BBDevMgr::Open(bool iPreserveBoundaries,
 	return ZRef<Channel>();
 	}
 
-ZMemoryBlock Device_BBDevMgr::GetAttribute(uint16 iObject, uint16 iAttribute)
+ValData Device_BBDevMgr::GetAttribute(uint16 iObject, uint16 iAttribute)
 	{
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Device_BBDevMgr"))
 		s << "GetAttribute";
 
-	return ZMemoryBlock();
+	return ValData();
 	}
 
 uint32 Device_BBDevMgr::GetPIN()

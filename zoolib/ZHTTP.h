@@ -34,6 +34,7 @@ NAMESPACE_ZOOLIB_BEGIN
 namespace ZHTTP {
 
 typedef ZVal_ZooLib Val;
+typedef ZValData_ZooLib ValData;
 typedef ZValList_ZooLib ValList;
 typedef ZValMap_ZooLib ValMap;
 

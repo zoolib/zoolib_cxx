@@ -22,15 +22,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZBlackBerry__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThreadOld.h"
+#include "zoolib/ZValData_ZooLib.h"
 
 #include <set>
 
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZBlackBerry {
+
+typedef ZValData_ZooLib ValData;
 
 struct PasswordHash
 	{
@@ -122,7 +124,7 @@ public:
 	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError) = 0;
 
-	virtual ZMemoryBlock GetAttribute(uint16 iObject, uint16 iAttribute) = 0;
+	virtual ValData GetAttribute(uint16 iObject, uint16 iAttribute) = 0;
 	virtual uint32 GetPIN();
 
 	class Observer

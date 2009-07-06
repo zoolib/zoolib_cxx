@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZMIME.h"
 #include "zoolib/ZStreamR_Boundary.h"
 #include "zoolib/ZStream_Limited.h"

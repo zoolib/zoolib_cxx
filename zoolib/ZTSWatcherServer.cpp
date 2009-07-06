@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZStream_Count.h"
 #include "zoolib/ZStream_Tee.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
