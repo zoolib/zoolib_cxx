@@ -24,7 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZStrim.h"
-#include "zoolib/ZTuple.h"
+#include "zoolib/ZStrimmer.h"
+#include "zoolib/ZVal_ZooLib.h"
 
 #include <string>
 #include <vector>
@@ -45,6 +46,9 @@ enum EToken
 	eToken_Text,
 	eToken_Exhausted
 	};
+
+typedef ZVal_ZooLib Val;
+typedef ZValMap_ZooLib ValMap;
 
 // =================================================================================================
 #pragma mark -
@@ -69,10 +73,7 @@ public:
 	ZML::Reader& Advance();
 
 	const std::string& Name() const;
-	ZTuple Attrs() const;
-
-	const std::string& TagName() const { return this->Name(); }
-	ZTuple TagAttributes() const { return this->Attrs(); }
+	ValMap Attrs() const;
 
 	const ZStrimR& TextStrim();
 	std::string TextString();
@@ -96,7 +97,7 @@ private:
 	EToken fToken;
 
 	std::string fTagName;
-	ZTuple fTagAttributes;
+	ValMap fTagAttributes;
 	};
 
 // =================================================================================================
@@ -128,16 +129,188 @@ public:
 
 // Our protocol
 	std::string BackName() const;
-	ZTuple BackAttr() const;
+	ValMap BackAttr() const;
 
 	void AllNames(std::vector<std::string>& oNames) const;
-	void AllAttrs(std::vector<ZTuple>& oAttrs) const;
+	void AllAttrs(std::vector<ValMap>& oAttrs) const;
 
-	const std::vector<std::pair<std::string, ZTuple> >& All() const;
+	const std::vector<std::pair<std::string, ValMap> >& All() const;
 
 private:
 	Reader& fReader;
-	std::vector<std::pair<std::string, ZTuple> > fTags;
+	std::vector<std::pair<std::string, ValMap> > fTags;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZML::StrimW
+
+/// A write filter strim to help generate well-formed ML-type data (XML, HTML etc).
+
+class StrimW
+:	public ZStrimW_T<ZStrimW_NativeUTF8, StrimW>,
+	NonCopyable
+	{
+public:
+	class Indenter;
+
+	// The copy constructor is deliberately not implemented. See docs for reason.
+	StrimW(const StrimW&);
+
+	explicit StrimW(const ZStrimW& iStrimSink);
+
+	StrimW(bool iIndent, const ZStrimW& iStrimSink);
+	StrimW(const string8& iEOL, const string8& iIndent, const ZStrimW& iStrimSink);
+	~StrimW();
+
+// From ZStrimW
+	virtual void Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU);
+
+	virtual void Imp_Flush();
+
+// Our protocol
+
+	/// Close off any pending tag and return the sink stream.
+	const ZStrimW& Raw() const;
+
+	/// Write an nbsp entity.
+	const StrimW& WriteNBSP() const;
+	void NBSP() const { this->WriteNBSP(); }
+
+	/// Write an arbitrary entity.
+	const StrimW& WriteEntity(const string8& iEntity) const;
+	const StrimW& WriteEntity(const UTF8* iEntity) const;
+
+	/// Add a normal begin tag to the top of the stack.
+	const StrimW& Begin(const string8& iTag) const;
+
+	/** \brief Check that the tag on the top of the stack matches iTag,
+	and emit the end tag in form </XXX>. */
+	const StrimW& End(const string8& iTag) const;
+
+	/** \brief If the stack is empty trip an error. Otherwise emit
+	the tag on the top of the stack in the form </XXX>. */
+	const StrimW& End() const;
+
+	/// Write a tag of the form <XXX a1="xxx" a2="xxx"/>.
+	const StrimW& Empty(const string8& iTag) const;
+
+	/// Write a tag of the form <?XXX a1="xxx" a2="xxx"?>.
+	const StrimW& PI(const string8& iTag) const;
+
+	/** \brief Write a tag of the form <XXX a1="xxx" a2="xxx">, without
+	requiring that an end tag be subsequently written. */
+	const StrimW& Tag(const string8& iTag) const;
+
+	/// Add a boolean attribute (one with no value) to the currently pending tag.
+	const StrimW& Attr(const string8& iValue) const;
+
+	/// Add an attribute with the name \a iName and the value \a iValue to the pending tag.
+	const StrimW& Attr(const string8& iName, const string8& iValue) const;
+
+	/// Add an attribute with the name \a iName and the value \a iValue to the pending tag.
+	const StrimW& Attr(const string8& iName, const UTF8* iValue) const;
+
+	/** Add an attribute named \a iName to the currently pending tag. The value
+	will be a string containing the base 10 digits of the integer \a iValue. */
+	const StrimW& Attr(const string8& iName, int iValue) const;
+
+	/** Add an attribute with the name \a iName and the printf-formatted
+	string iValue etc to the currently pending tag. */
+	const StrimW& Attrf(const string8& iName, const UTF8* iValue, ...) const;
+
+	/** Add an attribute named \a iName to the currently pending tag. The value
+	will be a string containing a sensible textual version of \a iValue. */
+	const StrimW& Attr(const string8& iName, const Val& iValue) const;
+
+	/** Add attributes to the currently pending tag, taking the names and values from
+	properties of iTuple. String values are added as you would expect, null values
+	are added as boolean attributes. This convention is compatible with that
+	used by ZML::Reader. */
+	const StrimW& Attrs(const ValMap& iMap) const;
+
+	/// Set indent enable, and return previous value.
+	bool Indent(bool iIndent) const;
+
+	/// Toss any pending tag and its attributes, and clear the stack.
+	void Abandon();
+
+	/// Close off any pending tag, emit end tags for everything on the stack and empty the stack.
+	const StrimW& EndAll();
+
+	/// Close off all tags until \a iTag is reached in the stack, or the stack is emptied.
+	const StrimW& EndAll(const string8& iTag);
+
+	/** Close off all tags until \a iTag is reached in the
+	stack, but only if \a iTag is in the stack. */
+	const StrimW& EndAllIfPresent(const string8& iTag);
+
+	/** If Begin, Empty, PI or Tag has been called, and no call to Write or End
+	has been made, then the tag has not actually been written out as we're
+	still allowing attributes to be added. Write any such pending tag, and
+	switch to the same state we'd be if we'd called Write. */
+	const StrimW& WritePending();
+
+protected:
+	enum ETagType
+		{ eTagTypeNone, eTagTypeNormal, eTagTypeEmpty, eTagTypePI, eTagTypeNoEnd };
+
+	void pBegin(const string8& iTag, ETagType iTagType);
+	void pPreText();
+	void pPreTag();
+	void pWritePending();
+	void pAttr(const string8& iName, string8* iValue);
+	void pEnd();
+
+	const ZStrimW& fStrimSink;
+	
+	ETagType fTagType;
+	bool fWrittenSinceLastTag;
+	bool fLastWasBegin;
+	bool fLastWasEOL;
+	bool fIndentEnabled;
+	string8 fString_EOL;
+	string8 fString_Indent;
+	std::vector<string8> fTags;
+	std::vector<string8> fAttributeNames;
+	std::vector<string8*> fAttributeValues;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZML::StrimW::Indenter
+
+class StrimW::Indenter
+	{
+public:
+	Indenter(StrimW& iStrimW, bool iIndent);
+	~Indenter();
+
+private:
+	StrimW& fStrimW;
+	bool fPriorIndent;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZML::StrimmerW
+
+/// A write filter strimmer encapsulating a StrimW.
+
+class StrimmerW : public ZStrimmerW
+	{
+public:
+	StrimmerW(ZRef<ZStrimmerW> iStrimmerW);
+	StrimmerW(bool iIndent, ZRef<ZStrimmerW> iStrimmerW);
+	StrimmerW(const string8& iEOL, const string8& iIndent, ZRef<ZStrimmerW> iStrimmerW);
+	virtual ~StrimmerW();
+
+// From ZStrimmerW
+	virtual const ZStrimW& GetStrimW();
+
+protected:
+	ZRef<ZStrimmerW> fStrimmerW;
+	StrimW fStrimW;
 	};
 
 } // namespace ZML
