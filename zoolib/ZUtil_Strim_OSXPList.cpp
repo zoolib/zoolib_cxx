@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_Strim_OSXPList.h"
 
-#include "zoolib/ZStrimW_ML.h"
+#include "zoolib/ZML.h"
 #include "zoolib/ZYad_ZooLib.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -29,22 +29,22 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZUtil_Strim_OSXPList
 
-void ZUtil_Strim_OSXPList::sToStrim(const ZStrimW& iStrimW, const ZTValue& iTValue)
+void ZUtil_Strim_OSXPList::sToStrim(const ZStrimW& iStrimW, const ZVal_ZooLib& iVal)
 	{
-	ZYad_XMLPList::sToStrimW_ML(ZStrimW_ML(iStrimW), ZYad_ZooLib::sMakeYadR(iTValue));
+	ZYad_XMLPList::sToStrimW_ML(ZML::StrimW(iStrimW), ZYad_ZooLib::sMakeYadR(iVal));
 	}
 
-bool ZUtil_Strim_OSXPList::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTValue)
+bool ZUtil_Strim_OSXPList::sFromStrim(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 	{
 	ZML::Reader r(iStrimU);
-	return sFromML(r, oTValue);
+	return sFromML(r, oVal);
 	}
 
-bool ZUtil_Strim_OSXPList::sFromML(ZML::Reader& r, ZTValue& oTValue)
+bool ZUtil_Strim_OSXPList::sFromML(ZML::Reader& r, ZVal_ZooLib& oVal)
 	{
 	if (ZRef<ZYadR> theYadR = ZYad_XMLPList::sMakeYadR(r))
 		{
-		oTValue = ZYad_ZooLib::sFromYadR(theYadR);
+		oVal = ZYad_ZooLib::sFromYadR(theYadR);
 		return true;
 		}
 	return false;

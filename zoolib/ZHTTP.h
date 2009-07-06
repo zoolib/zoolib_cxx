@@ -25,13 +25,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZTrail.h"
-#include "zoolib/ZTuple.h"
+#include "zoolib/ZVal_ZooLib.h"
 
 #include <vector>
 
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZHTTP {
+
+typedef ZVal_ZooLib Val;
+typedef ZValList_ZooLib ValList;
+typedef ZValMap_ZooLib ValMap;
 
 class StreamR_Chunked;
 class StreamW_Chunked;
@@ -68,24 +72,24 @@ private:
 // Higher level parsing
 
 bool sOrganizeRanges(size_t iSourceSize,
-	const ZTValue& iRangeParam, std::vector<std::pair<size_t, size_t> >& oRanges);
+	const Val& iRangeParam, std::vector<std::pair<size_t, size_t> >& oRanges);
 
 bool sReadRequest(
 	const ZStreamR& iStreamR, std::string* oMethod, std::string* oURL, std::string* oErrorString);
 
 bool sReadResponse(const ZStreamU& iStream, int32* oResultCode, std::string* oResultMessage);
 
-bool sReadHeaderNoParsing(const ZStreamR& iStream, ZTuple* oFields);
-bool sReadHeaderLineNoParsing(const ZStreamU& iStream, ZTuple* ioFields);
+bool sReadHeaderNoParsing(const ZStreamR& iStream, ValMap* oFields);
+bool sReadHeaderLineNoParsing(const ZStreamU& iStream, ValMap* ioFields);
 
-bool sReadHeader(const ZStreamR& iStream, ZTuple* oFields);
-bool sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields);
+bool sReadHeader(const ZStreamR& iStream, ValMap* oFields);
+bool sReadHeaderLine(const ZStreamU& iStream, ValMap* ioFields);
 
 // Temporary home for this.
-void sParseParam(const std::string& iString, ZTuple& oParam);
+void sParseParam(const std::string& iString, ValMap& oParam);
 
-bool sParseQuery(const std::string& iString, ZTuple& oTuple);
-bool sParseQuery(const ZStreamU& iStream, ZTuple& oTuple);
+bool sParseQuery(const std::string& iString, ValMap& oTuple);
+bool sParseQuery(const ZStreamU& iStream, ValMap& oTuple);
 
 bool sDecodeComponent(const ZStreamU& s, std::string& oComponent);
 ZTrail sDecodeTrail(const ZStreamU& s);
@@ -94,59 +98,59 @@ ZTrail sDecodeTrail(const std::string& iURL);
 std::string sEncodeComponent(const std::string& iString);
 std::string sEncodeTrail(const ZTrail& iTrail);
 
-std::string sGetString0(const ZTValue& iTV);
+std::string sGetString0(const Val& iVal);
 
-ZRef<ZStreamerR> sMakeContentStreamer(const ZTuple& iHeader, ZRef<ZStreamerR> iStreamerR);
-ZRef<ZStreamerR> sMakeContentStreamer(const ZTuple& iHeader, const ZStreamR& iStreamR);
+ZRef<ZStreamerR> sMakeContentStreamer(const ValMap& iHeader, ZRef<ZStreamerR> iStreamerR);
+ZRef<ZStreamerR> sMakeContentStreamer(const ValMap& iHeader, const ZStreamR& iStreamR);
 
 // =================================================================================================
 // Request headers
 
-bool sRead_accept(const ZStreamU& iStream, ZTuple* ioFields);
-//bool sRead_accept_charset(const ZStreamU& iStream, ZTuple* ioFields); // Not done
-//bool sRead_accept_encoding(const ZStreamU& iStream, ZTuple* ioFields); // Not done
-bool sRead_accept_language(const ZStreamU& iStream, ZTuple* ioFields);
-//bool sRead_authorization(const ZStreamU& iStream, ZTuple* ioFields); // Not done
-//bool sRead_from(const ZStreamU& iStream, ZTuple* ioFields); // Not done
-//bool sRead_host(const ZStreamU& iStream, ZTuple* ioFields); // Not done
+bool sRead_accept(const ZStreamU& iStream, ValMap* ioFields);
+//bool sRead_accept_charset(const ZStreamU& iStream, ValMap* ioFields); // Not done
+//bool sRead_accept_encoding(const ZStreamU& iStream, ValMap* ioFields); // Not done
+bool sRead_accept_language(const ZStreamU& iStream, ValMap* ioFields);
+//bool sRead_authorization(const ZStreamU& iStream, ValMap* ioFields); // Not done
+//bool sRead_from(const ZStreamU& iStream, ValMap* ioFields); // Not done
+//bool sRead_host(const ZStreamU& iStream, ValMap* ioFields); // Not done
 
-bool sRead_range(const ZStreamU& iStream, ZTuple* ioFields);
-bool sRead_range(const ZStreamU& iStream, ZTuple& oRange);
+bool sRead_range(const ZStreamU& iStream, ValMap* ioFields);
+bool sRead_range(const ZStreamU& iStream, ValMap& oRange);
 
-//bool sRead_referer(const ZStreamU& iStream, ZTuple* ioFields); // Not done
+//bool sRead_referer(const ZStreamU& iStream, ValMap* ioFields); // Not done
 
 // =================================================================================================
 // Response headers
 
-bool sRead_www_authenticate(const ZStreamU& iStream, ZTuple* ioFields); // Not done
+bool sRead_www_authenticate(const ZStreamU& iStream, ValMap* ioFields); // Not done
 
 // =================================================================================================
 // Request or response headers
 
-bool sRead_transfer_encoding(const ZStreamU& iStream, ZTuple* ioFields);
+bool sRead_transfer_encoding(const ZStreamU& iStream, ValMap* ioFields);
 bool sRead_transfer_encoding(const ZStreamU& iStream, std::string& oEncoding);
 
 // =================================================================================================
 // Entity headers
 
-bool sRead_content_disposition(const ZStreamU& iStream, ZTuple* ioFields);
-bool sRead_content_disposition(const ZStreamU& iStream, ZTuple& oTuple);
+bool sRead_content_disposition(const ZStreamU& iStream, ValMap* ioFields);
+bool sRead_content_disposition(const ZStreamU& iStream, ValMap& oTuple);
 
-bool sRead_content_encoding(const ZStreamU& iStream, ZTuple* ioFields); // Not done
-bool sRead_content_language(const ZStreamU& iStream, ZTuple* ioFields); // Not done
+bool sRead_content_encoding(const ZStreamU& iStream, ValMap* ioFields); // Not done
+bool sRead_content_language(const ZStreamU& iStream, ValMap* ioFields); // Not done
 
-bool sRead_content_length(const ZStreamU& iStream, ZTuple* ioFields);
+bool sRead_content_length(const ZStreamU& iStream, ValMap* ioFields);
 bool sRead_content_length(const ZStreamU& iStream, int64& oLength);
 
-bool sRead_content_location(const ZStreamU& iStream, ZTuple* ioFields); // Not done
-bool sRead_content_md5(const ZStreamU& iStream, ZTuple* ioFields); // Not done
+bool sRead_content_location(const ZStreamU& iStream, ValMap* ioFields); // Not done
+bool sRead_content_md5(const ZStreamU& iStream, ValMap* ioFields); // Not done
 
-bool sRead_content_range(const ZStreamU& iStream, ZTuple* ioFields);
+bool sRead_content_range(const ZStreamU& iStream, ValMap* ioFields);
 bool sRead_content_range(const ZStreamU& iStream, int64& oBegin, int64& oEnd, int64& oMaxLength);
 
-bool sRead_content_type(const ZStreamU& iStream, ZTuple* ioFields);
+bool sRead_content_type(const ZStreamU& iStream, ValMap* ioFields);
 bool sRead_content_type(
-	const ZStreamU& iStream, std::string& oType, std::string& oSubType, ZTuple& oParameters);
+	const ZStreamU& iStream, std::string& oType, std::string& oSubType, ValMap& oParameters);
 
 // =================================================================================================
 
@@ -163,7 +167,7 @@ bool sReadParameter_Cookie(
 	const ZStreamU& iStream, std::string* oName, std::string* oValue, std::string* oNameExact);
 
 bool sReadMediaType(const ZStreamU& iStream,
-	std::string* oType, std::string* oSubtype, ZTuple* oParameters,
+	std::string* oType, std::string* oSubtype, ValMap* oParameters,
 	std::string* oTypeExact, std::string* oSubtypeExact);
 
 bool sReadLanguageTag(const ZStreamU& iStream, std::string* oLanguageTag);

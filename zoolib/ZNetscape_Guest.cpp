@@ -146,19 +146,10 @@ NPVariantG::NPVariantG(const ZRef<NPObjectG>& iValue)
 	this->SetObject(iValue.GetObject());
 	}
 
-NPVariantG::operator ZRef<NPObjectG>() const
-	{ return this->GetObject(); }
-
-void NPVariantG::SetVoid()
+void NPVariantG::Clear()
 	{
 	this->pRelease();
 	type = NPVariantType_Void;
-	}
-
-void NPVariantG::SetNull()
-	{
-	this->pRelease();
-	type = NPVariantType_Null;
 	}
 
 template <>
@@ -247,6 +238,21 @@ void NPVariantG::Set_T<ZRef<NPObjectG> >(const ZRef<NPObjectG>& iValue)
 	this->pRelease();
 	value.objectValue = iValue.GetObject();
 	type = NPVariantType_Object;	
+	}
+
+NPVariantG::operator ZRef<NPObjectG>() const
+	{ return this->GetObject(); }
+
+void NPVariantG::SetVoid()
+	{
+	this->pRelease();
+	type = NPVariantType_Void;
+	}
+
+void NPVariantG::SetNull()
+	{
+	this->pRelease();
+	type = NPVariantType_Null;
 	}
 
 static void* spMallocG(size_t iLength)

@@ -83,7 +83,7 @@ NAMESPACE_ZOOLIB_USING
 		{
 		const ZTValue theValue = [[self objectForKey:theKey] AsZTValue];
 		const string theName = ZUtil_NSObject::sAsUTF8((NSString*)theKey);
-		result.SetValue(theName, theValue);
+		result.Set(theName, theValue);
 		}
 	return result;
 	}
@@ -97,7 +97,7 @@ NAMESPACE_ZOOLIB_USING
 -(ZTValue)AsZTValue
 	{
 	ZTValue result;
-	vector<ZTValue>& theVec = result.SetMutableVector();
+	vector<ZTValue>& theVec = result.MutableList().MutableVector();
 	for (id theValue, i = [self objectEnumerator]; (theValue = [i nextObject]); /*no inc*/)
 		theVec.push_back([theValue AsZTValue]);
 	return result;
@@ -168,7 +168,7 @@ id ZUtil_NSObject::sCreateNSObject(const ZTValue& iTV)
 			}
 		case eZType_Vector:
 			{
-			return sCreateNSArray(iTV.GetVector());
+			return sCreateNSArray(iTV.GetList().GetVector());
 			}
 		case eZType_Raw:
 			{
@@ -213,7 +213,7 @@ ZTuple ZUtil_NSObject::sAsTuple(NSDictionary* iNSDictionary)
 	for (id theKey, i = [iNSDictionary keyEnumerator]; (theKey = [i nextObject]); /*no inc*/)
 		{
 		const ZTValue theValue = sAsTV([iNSDictionary objectForKey:theKey]);
-		result.SetValue(sAsUTF8((NSString*)theKey), theValue);
+		result.Set(sAsUTF8((NSString*)theKey), theValue);
 		}
 	return result;
 	}
@@ -228,7 +228,7 @@ NSDictionary* ZUtil_NSObject::sCreateNSDictionary(const ZTuple& iTuple)
 		id theKey = sCreateNSString_UTF8(iTuple.NameOf(i).AsString());
 		keys.push_back(theKey);
 
-		id theValue = sCreateNSObject(iTuple.GetValue(i));
+		id theValue = sCreateNSObject(iTuple.Get(i));
 		values.push_back(theValue);
 		}
 

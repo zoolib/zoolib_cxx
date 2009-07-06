@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(AppleEvent)
 
+#include "zoolib/ZHandle_T.h"
 #include "zoolib/ZTypes.h"
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
@@ -55,6 +56,7 @@ ZMACRO_AETypeMap(double, typeIEEE64BitFloatingPoint);
 ZMACRO_AETypeMap(FSRef, typeFSRef);
 ZMACRO_AETypeMap(FSSpec, typeFSS);
 ZMACRO_AETypeMap(AliasHandle, typeAlias);
+ZMACRO_AETypeMap(ZHandle_T<AliasHandle>, typeAlias);
 
 // =================================================================================================
 #pragma mark -
@@ -67,10 +69,15 @@ public:
 	enum { sDescType = D };
 	const T& fVal;
 
-	ZAEValRef_T(const T& iVal) : fVal(iVal) {}
+	ZAEValRef_T(const T& iVal)
+	:	fVal(iVal)
+		{}
 
-	const void* Ptr() const { return &fVal; }
-	size_t Size() const { return sizeof(fVal); }
+	const void* Ptr() const
+		{ return &fVal; }
+
+	size_t Size() const
+		{ return sizeof(fVal); }
 	};
 
 // =================================================================================================
@@ -90,12 +97,47 @@ class ZAEValRef_T<T**, D>
 	{
 public:
 	enum { sDescType = D };
-	Handle fHandle;
-	ZAEValRef_T(T** iHandle) : fHandle((Handle)iHandle) { ::HLock(fHandle); }
-	~ZAEValRef_T() { ::HUnlock(fHandle); }
 
-	const void* Ptr() const { return fHandle[0]; }
-	size_t Size() const { return ::GetHandleSize(fHandle); }
+	Handle fHandle;
+
+	ZAEValRef_T(T** iHandle)
+	:	fHandle((Handle)iHandle)
+		{ ::HLock(fHandle); }
+
+	~ZAEValRef_T()
+		{ ::HUnlock(fHandle); }
+
+	const void* Ptr() const
+		{ return fHandle[0]; }
+
+	size_t Size() const
+		{ return ::GetHandleSize(fHandle); }
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZAEValRef_T, specialized for ZHandle_T
+
+template <class T, int D>
+class ZAEValRef_T<ZHandle_T<T>, D>
+	{
+public:
+	enum { sDescType = D };
+
+	const ZHandle_T<T>& fHandle;
+
+	ZAEValRef_T(const ZHandle_T<T>& iHandle)
+	:	fHandle(iHandle)
+		{ fHandle.Lock(); }
+
+	~ZAEValRef_T()
+		{ fHandle.Unlock(); }
+
+	const void* Ptr() const
+		{ return fHandle.Get()[0]; }
+
+	size_t Size() const
+		{ return fHandle.Size(); }
 	};
 
 NAMESPACE_ZOOLIB_END

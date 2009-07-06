@@ -113,7 +113,7 @@ Sink_Map::Sink_Map(map<uint64, ZTuple>& oMap)
 bool Sink_Map::Set(uint64 iID, const ZTuple& iTuple)
 	{
 	pair<map<uint64, ZTuple>::iterator, bool> result =
-		fMap.insert(map<uint64, ZTuple>::value_type(iID, iTuple.Minimized()));
+		fMap.insert(map<uint64, ZTuple>::value_type(iID, iTuple));
 	return result.second;
 	}
 

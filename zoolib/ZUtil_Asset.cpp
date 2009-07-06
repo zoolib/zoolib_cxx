@@ -149,7 +149,7 @@ typedef ENUMRESNAMEPROC ENUMRESNAMEPROCW;
 
 #endif //  defined(__MINGW32__)
 
-static BOOL CALLBACK sEnumResNameCallbackW(HMODULE iHMODULE, const UTF16* iType, UTF16* iName, LONG iParam)
+static BOOL CALLBACK sEnumResNameCallbackW(HMODULE iHMODULE, const UTF16* iType, UTF16* iName, LONG_PTR iParam)
 	{
 	if (iName[0])
 		reinterpret_cast<vector<string>*>(iParam)->push_back(ZUnicode::sAsUTF8(iName));
@@ -157,7 +157,7 @@ static BOOL CALLBACK sEnumResNameCallbackW(HMODULE iHMODULE, const UTF16* iType,
 	return TRUE;
 	}
 
-static BOOL CALLBACK sEnumResNameCallbackA(HMODULE iHMODULE, const char* iType, char* iName, LONG iParam)
+static BOOL CALLBACK sEnumResNameCallbackA(HMODULE iHMODULE, const char* iType, char* iName, LONG_PTR iParam)
 	{
 	if (iName[0])
 		reinterpret_cast<vector<string>*>(iParam)->push_back(iName);
@@ -235,12 +235,12 @@ void ZUtil_Asset::sGetAssetTreeNamesFromExecutable(vector<string>& oAssetTreeNam
 	if (ZUtil_Win::sUseWAPI())
 		{
 		::EnumResourceNamesW(::GetModuleHandleW(0), L"ZAO_",
-			(ENUMRESNAMEPROCW)sEnumResNameCallbackW, reinterpret_cast<LONG>(&oAssetTreeNames));
+			(ENUMRESNAMEPROCW)sEnumResNameCallbackW, reinterpret_cast<LONG_PTR>(&oAssetTreeNames));
 		}
 	else
 		{
 		::EnumResourceNamesA(::GetModuleHandleA(0), "ZAO_",
-			(ENUMRESNAMEPROCA)sEnumResNameCallbackA, reinterpret_cast<LONG>(&oAssetTreeNames));
+			(ENUMRESNAMEPROCA)sEnumResNameCallbackA, reinterpret_cast<LONG_PTR>(&oAssetTreeNames));
 		}
 
 #elif ZCONFIG_SPI_Enabled(POSIX)

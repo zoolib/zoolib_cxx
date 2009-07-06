@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZNet_Internet.h"
 #include "zoolib/ZString.h"
-#include "zoolib/ZTuple.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZWaiter.h"
 
@@ -241,7 +240,10 @@ NPError HostMeister_Std::SetValue(NPP npp, NPPVariable variable, void* value)
 void HostMeister_Std::InvalidateRect(NPP npp, NPRect* rect)
 	{
 	if (ZLOG(s, eDebug + 1, "HostMeister_Std"))
-		s.Writef("InvalidateRect, (%u, %u, %u, %u)", rect->left, rect->top, rect->right, rect->bottom);
+		{
+		s.Writef("InvalidateRect, (%u, %u, %u, %u)",
+			rect->left, rect->top, rect->right, rect->bottom);
+		}
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
 		theHost->Host_InvalidateRect(npp, rect);
@@ -539,7 +541,8 @@ private:
 	bool fIsPOST;
 	};
 
-Host_Std::HTTPFetcher::HTTPFetcher(Host_Std* iHost, const string& iURL, ZMemoryBlock* iMB, void* iNotifyData)
+Host_Std::HTTPFetcher::HTTPFetcher(
+	Host_Std* iHost, const string& iURL, ZMemoryBlock* iMB, void* iNotifyData)
 :	fHost(iHost),
 	fURL(iURL),
 	fNotifyData(iNotifyData)
@@ -560,7 +563,7 @@ bool Host_Std::HTTPFetcher::Execute()
 	try
 		{
 		string theURL = fURL;
-		ZTuple theHeaders;
+		ZHTTP::ValMap theHeaders;
 		ZMemoryBlock theRawHeaders;	
 		ZRef<ZStreamerR> theStreamerR;
 		if (fIsPOST)
@@ -575,8 +578,9 @@ bool Host_Std::HTTPFetcher::Execute()
 
 		if (theStreamerR && fHost)
 			{
-			const ZTuple theCT = theHeaders.GetTuple("content-type");
-			const string theMIME = theCT.GetString("type") + "/" + theCT.GetString("subtype");
+			const ZHTTP::ValMap theCT = theHeaders.Get("content-type").GetMap();
+			const string theMIME = theCT.Get("type").GetString()
+				+ "/" + theCT.Get("subtype").GetString();
 
 			fHost->pHTTPFetcher(
 				this, fNotifyData, theURL, theMIME, theRawHeaders, theStreamerR);

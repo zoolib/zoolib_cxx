@@ -197,7 +197,7 @@ string16 sAsUTF16(CFStringRef iCFString)
 static void sApplier(const void* iKey, const void* iValue, void* iRefcon)
 	{
 	// This could be dodgy if iKey or iValue are not CF types.
-	static_cast<ZTuple*>(iRefcon)->SetValue(
+	static_cast<ZTuple*>(iRefcon)->Set(
 		ZTName(sAsUTF8(static_cast<CFStringRef>(iKey))),
 		sAsTV(static_cast<CFTypeRef>(iValue)));
 	}
@@ -232,9 +232,9 @@ ZTValue sAsTV(CFTypeRef iCFType)
 			}
 		else if (theTypeID == ::CFArrayGetTypeID())
 			{
-			vector<ZTValue> theVector;
-			sAsVector(static_cast<CFArrayRef>(iCFType), theVector);
-			return theVector;
+			ZTValue result;
+			sAsVector(static_cast<CFArrayRef>(iCFType), result.MutableList().MutableVector());
+			return result;
 			}
 		else if (theTypeID == ::CFStringGetTypeID())
 			{
@@ -344,7 +344,7 @@ CFDictionaryRef sCreateCFDictionary(const ZTuple& iTuple)
 	for (ZTuple::const_iterator i = iTuple.begin(); i != iTuple.end(); ++i)
 		{
 		keys.push_back(sString(iTuple.NameOf(i).AsString()));
-		values.push_back(sType(iTuple.GetValue(i)));
+		values.push_back(sType(iTuple.Get(i)));
 		}
 
 	CFDictionaryRef theDictionaryRef = ::CFDictionaryCreate(kCFAllocatorDefault,
@@ -383,7 +383,7 @@ CFTypeRef sCreateCFType(const ZTValue& iTV)
 			}
 		case eZType_Vector:
 			{
-			return sCreateCFArray(iTV.GetVector());
+			return sCreateCFArray(iTV.GetList().GetVector());
 			}
 		case eZType_Raw:
 			{

@@ -37,24 +37,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZHTTP {
+
 using std::string;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZHTTP
 
-static bool sReadResponse(const ZStreamR& r, int32* oResponseCode, ZTuple* oHeader)
+static bool sReadResponse(const ZStreamR& r, int32* oResponseCode, ValMap* oHeader)
 	{
 	ZMIME::StreamR_Header theSIH_Server(r);
 
 	string serverResultMessage;
-	if (!ZHTTP::sReadResponse(ZStreamU_Unreader(theSIH_Server),
+	if (!sReadResponse(ZStreamU_Unreader(theSIH_Server),
 		oResponseCode, nullptr))
 		{
 		return false;
 		}
 
-	if (!ZHTTP::sReadHeader(theSIH_Server, oHeader))
+	if (!sReadHeader(theSIH_Server, oHeader))
 		return false;
 
 	return true;
@@ -63,7 +65,7 @@ static bool sReadResponse(const ZStreamR& r, int32* oResponseCode, ZTuple* oHead
 static bool sRequest(const ZStreamW& w, const ZStreamR& r,
 	const string& iMethod, const string& iHost, const string& iPath,
 	bool iSendConnectionClose,
-	int32* oResponseCode, ZTuple* oHeader, ZMemoryBlock* oRawHeader)
+	int32* oResponseCode, ValMap* oHeader, ZMemoryBlock* oRawHeader)
 	{
 	w.WriteString(iMethod);
 	w.WriteString(" ");
@@ -89,9 +91,9 @@ static bool sRequest(const ZStreamW& w, const ZStreamR& r,
 		}
 	}
 
-ZRef<ZStreamerR> ZHTTP::sRequest(
+ZRef<ZStreamerR> sRequest(
 	const string& iMethod, string& ioURL,
-	int32* oResultCode, ZTuple* oFields, ZMemoryBlock* oRawHeader)
+	int32* oResultCode, ValMap* oFields, ZMemoryBlock* oRawHeader)
 	{
 	for (bool keepGoing = true; keepGoing; /*no inc*/)
 		{
@@ -109,7 +111,7 @@ ZRef<ZStreamerR> ZHTTP::sRequest(
 				break;
 
 			int32 theResponseCode;
-			ZTuple theHeaders;
+			ValMap theHeaders;
 			if (!sRequest(
 				theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
 				iMethod, theHost, thePath,
@@ -133,7 +135,7 @@ ZRef<ZStreamerR> ZHTTP::sRequest(
 						return new ZStreamerR_T<ZStreamR_Null>();
 
 					ZRef<ZStreamerR> theStreamerR
-						= ZHTTP::sMakeContentStreamer(theHeaders, theEndpoint);
+						= sMakeContentStreamer(theHeaders, theEndpoint);
 
 					if (!theStreamerR)
 						theStreamerR = theEndpoint;
@@ -144,7 +146,7 @@ ZRef<ZStreamerR> ZHTTP::sRequest(
 				case 302:
 				case 303:
 					{
-					ioURL = ZHTTP::sGetString0(theHeaders.GetValue("location"));
+					ioURL = sGetString0(theHeaders.Get("location"));
 					break;
 					}
 				default:
@@ -172,7 +174,7 @@ static void sPOSTPrefix(const ZStreamW& w,
 	}
 
 static bool sPOSTSuffix(const ZStreamR& r,
-	int32* oResponseCode, ZTuple* oHeader, ZMemoryBlock* oRawHeader)
+	int32* oResponseCode, ValMap* oHeader, ZMemoryBlock* oRawHeader)
 	{
 	if (oRawHeader)
 		{
@@ -186,9 +188,9 @@ static bool sPOSTSuffix(const ZStreamR& r,
 		}
 	}
 
-ZRef<ZStreamerR> ZHTTP::sPost(
+ZRef<ZStreamerR> sPost(
 	const std::string& iURL, const ZStreamR& iBody,
-	int32* oResultCode, ZTuple* oFields, ZMemoryBlock* oRawHeader)
+	int32* oResultCode, ValMap* oFields, ZMemoryBlock* oRawHeader)
 	{
 	string theHost;
 	ip_port thePort;
@@ -215,12 +217,12 @@ ZRef<ZStreamerR> ZHTTP::sPost(
 				{
 				w.WriteString("Transfer-Encoding: chunked\r\n");
 				w.WriteString("\r\n");
-				ZHTTP::StreamW_Chunked(16 *1024, w).CopyAllFrom(iBody);
+				StreamW_Chunked(16 *1024, w).CopyAllFrom(iBody);
 				}
 			w.Flush();
 
 			int32 theResponseCode;
-			ZTuple theHeaders;
+			ValMap theHeaders;
 			if (sPOSTSuffix(r, &theResponseCode, &theHeaders, oRawHeader))
 				{
 				if (200 == theResponseCode)
@@ -229,7 +231,7 @@ ZRef<ZStreamerR> ZHTTP::sPost(
 						*oFields = theHeaders;
 
 					ZRef<ZStreamerR> theStreamerR
-						= ZHTTP::sMakeContentStreamer(theHeaders, theEndpoint);
+						= sMakeContentStreamer(theHeaders, theEndpoint);
 
 					if (!theStreamerR)
 						theStreamerR = theEndpoint;
@@ -242,9 +244,9 @@ ZRef<ZStreamerR> ZHTTP::sPost(
 	return ZRef<ZStreamerR>();
 	}
 
-ZRef<ZStreamerR> ZHTTP::sPostRaw(
+ZRef<ZStreamerR> sPostRaw(
 	const std::string& iURL, const ZStreamR& iBody,
-	int32* oResultCode, ZTuple* oFields, ZMemoryBlock* oRawHeader)
+	int32* oResultCode, ValMap* oFields, ZMemoryBlock* oRawHeader)
 	{
 	string theHost;
 	ip_port thePort;
@@ -262,7 +264,7 @@ ZRef<ZStreamerR> ZHTTP::sPostRaw(
 			w.Flush();
 
 			int32 theResponseCode;
-			ZTuple theHeaders;
+			ValMap theHeaders;
 			if (sPOSTSuffix(r, &theResponseCode, &theHeaders, oRawHeader))
 				{
 				if (200 == theResponseCode)
@@ -271,7 +273,7 @@ ZRef<ZStreamerR> ZHTTP::sPostRaw(
 						*oFields = theHeaders;
 
 					ZRef<ZStreamerR> theStreamerR
-						= ZHTTP::sMakeContentStreamer(theHeaders, theEndpoint);
+						= sMakeContentStreamer(theHeaders, theEndpoint);
 
 					if (!theStreamerR)
 						theStreamerR = theEndpoint;
@@ -286,11 +288,11 @@ ZRef<ZStreamerR> ZHTTP::sPostRaw(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZHTTP, read a POST into a tuple
+#pragma mark * ZHTTP, read a POST into a ValMap
 
-static ZRef<ZStrimmerR> sCreateStrimmerR(const ZTuple& iHeader, const ZStreamR& iStreamR)
+static ZRef<ZStrimmerR> sCreateStrimmerR(const ValMap& iHeader, const ZStreamR& iStreamR)
 	{
-	string charset = iHeader.GetTuple("content-type").GetTuple("parameters").GetString("charset");
+	const string charset = iHeader.Get("content-type").GetMap().Get("parameters").GetMap().Get("charset").GetString();
 
 	if (ZTextDecoder* theDecoder = ZTextDecoder::sMake(charset))
 		return new ZStrimmerR_StreamR_T<ZStrimR_StreamDecoder>(theDecoder, iStreamR);
@@ -317,77 +319,28 @@ static bool sReadName(const ZStreamU& iStreamU, string& oName)
 	return gotAny;
 	}
 
-#if 0
-static bool sReadValue(const ZStreamU& iStreamU, string& oValue)
+static bool sReadPOST(const ZStreamR& iStreamR, const ValMap& iHeader, Val& oVal)
 	{
-	//#warning "not done yet"
-	bool gotAny = false;
-	for (;;)
+	const ValMap content_type = iHeader.Get("content-type").GetMap();
+	if (content_type.Get("type").GetString() == "application"
+		&& content_type.Get("subtype").GetString() == "x-www-url-encoded")
 		{
-		char curChar;
-		if (!iStreamU.ReadChar(curChar))
-			break;
-
-		if (curChar == '%')
-			{
-			
-			}
-		else
-			{
-			oValue += curChar;
-			}
-		gotAny = true;
-		}
-	return gotAny;
-	}
-
-static void sReadParams(const ZStreamU& iStreamU, ZTuple& ioTuple)
-	{
-	for (;;)
-		{
-		string name;
-		if (!sReadName(iStreamU, name))
-			break;
-
-		if (!ZHTTP::sReadChar(iStreamU, '='))
-			{
-			// It's a param with no value.
-			ioTuple.SetNull(name);
-			}
-		else
-			{
-			string value;
-			if (!sReadValue(iStreamU, value))
-				break;
-			ioTuple.SetString(name, value);
-			}
-		}
-	}
-#endif
-
-static bool sReadPOST(const ZStreamR& iStreamR, const ZTuple& iHeader, ZTValue& oTV)
-	{
-	ZTuple content_type = iHeader.GetTuple("content-type");
-	if (content_type.GetString("type") == "application"
-		&& content_type.GetString("subtype") == "x-www-url-encoded")
-		{
-		// It's application/x-www-url-encoded. So we're going to unpack it into a tuple.
-		// ZTuple& theTuple = oTV.SetMutableTuple();
+		// It's application/x-www-url-encoded. So we're going to unpack it into a ValMap.
+		// ValMap& theTuple = oVal.SetMutableTuple();
 		// yadda yadda.
 		//#warning "not done yet"
 		return true;
 		}
-	else if (content_type.GetString("type") == "multipart"
-		&& content_type.GetString("subtype") == "form-data")
+	else if (content_type.Get("type").GetString() == "multipart"
+		&& content_type.Get("subtype").GetString() == "form-data")
 		{
-		ZTuple& theTuple = oTV.SetMutableTuple();
-
-		const string baseBoundary = content_type.GetTuple("parameters").GetString("boundary");
+		const string baseBoundary = content_type.Get("parameters").GetMap().Get("boundary").GetString();
 
 		// Skip optional unheadered data section before the first boundary.
 		ZStreamR_Boundary(baseBoundary, iStreamR).SkipAll();
 
 		const string boundary = "\r\n--" + baseBoundary;
+		ValMap theMap;
 		for (;;)
 			{
 			bool done = false;
@@ -416,32 +369,34 @@ static bool sReadPOST(const ZStreamR& iStreamR, const ZTuple& iHeader, ZTValue& 
 			// We're now sitting at the beginning of the part's header.
 			ZStreamR_Boundary streamPart(boundary, iStreamR);
 
-			// We parse it into the tuple called 'header'.
-			ZTuple header;
-			ZHTTP::sReadHeader(
+			// We parse it into the ValMap called 'header'.
+			ValMap header;
+			sReadHeader(
 				ZStreamR_SkipAllOnDestroy(ZMIME::StreamR_Header(streamPart)), &header);
 
-			ZTuple contentDisposition = header.GetTuple("content-disposition");
-			if (contentDisposition.GetString("value") == "form-data")
+			ValMap contentDisposition = header.Get("content-disposition").GetMap();
+			if (contentDisposition.Get("value").GetString() == "form-data")
 				{
-				ZTuple parameters = contentDisposition.GetTuple("parameters");
-				ZTName name(parameters.GetString("name"));
-				if (!name.Empty())
+				const ValMap parameters = contentDisposition.Get("parameters").GetMap();
+				const string name = parameters.Get("name").GetString();
+				if (!name.empty())
 					{
-					if (!sReadPOST(streamPart, header, theTuple.SetMutableNull(name)))
-						theTuple.Erase(name);
+					Val theVal;
+					if (sReadPOST(streamPart, header, theVal))
+						theMap.Set(name, theVal);
 					}
 				}
 			streamPart.SkipAll();
 			}
+		oVal = theMap;
 		}
-	else if (content_type.GetString("type") == "text")
+	else if (content_type.Get("type").GetString() == "text")
 		{
 		// It's explicitly some kind of text. Use sCreateStrimmerR to create an appropriate
 		// strimmer, which it does by examining values in iHeader.
 		string theString;
 		sCreateStrimmerR(iHeader, iStreamR)->GetStrimR().CopyAllTo(ZStrimW_String(theString));
-		oTV.SetString(theString);
+		oVal.SetString(theString);
 		return true;		
 		}
 	else if (!content_type)
@@ -449,13 +404,17 @@ static bool sReadPOST(const ZStreamR& iStreamR, const ZTuple& iHeader, ZTValue& 
 		// There was no content type specified, so assume text.
 		string theString;
 		ZStreamWPos_String(theString).CopyAllFrom(iStreamR);
-		oTV.SetString(theString);
+		oVal.SetString(theString);
 		return true;
 		}
 
 	// It's some other kind of content. Put it into a raw.
-	oTV.SetRaw(iStreamR);
+	ZMemoryBlock theMB;
+	ZStreamRWPos_MemoryBlock(theMB).CopyAllFrom(iStreamR);
+	oVal = theMB;
 	return true;
 	}
+
+} // namespace ZHTTP
 
 NAMESPACE_ZOOLIB_END

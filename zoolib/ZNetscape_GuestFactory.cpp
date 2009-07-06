@@ -454,13 +454,13 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory(const std::string& iP
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(CoreFoundation)
-		if (ZRef<CFStringRef> thePath = NoRetain(::CFStringCreateWithCString(
+		if (ZRef<CFStringRef> thePath = Adopt(::CFStringCreateWithCString(
 			nullptr, iPath.c_str(), kCFStringEncodingUTF8)))
 			{
-			if (ZRef<CFURLRef> theURL = NoRetain(::CFURLCreateWithFileSystemPath(
+			if (ZRef<CFURLRef> theURL = Adopt(::CFURLCreateWithFileSystemPath(
 				nullptr, thePath, kCFURLPOSIXPathStyle, true)))
 				{
-				if (ZRef<CFPlugInRef> thePlugInRef = NoRetain(::CFPlugInCreate(nullptr, theURL)))
+				if (ZRef<CFPlugInRef> thePlugInRef = Adopt(::CFPlugInCreate(nullptr, theURL)))
 					{
 					try
 						{

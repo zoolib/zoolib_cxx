@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZHTTP.h"
+#include "zoolib/ZMemoryBlock.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -34,15 +35,15 @@ namespace ZHTTP {
 
 ZRef<ZStreamerR> sRequest(
 	const std::string& iMethod, std::string& ioURL,
-	int32* oResultCode, ZTuple* oFields, ZMemoryBlock* oRawHeader);
+	int32* oResultCode, ValMap* oFields, ZMemoryBlock* oRawHeader);
 
 ZRef<ZStreamerR> sPost(
 	const std::string& iURL, const ZStreamR& iBody,
-	int32* oResultCode, ZTuple* oFields, ZMemoryBlock* oRawHeader);
+	int32* oResultCode, ValMap* oFields, ZMemoryBlock* oRawHeader);
 
 ZRef<ZStreamerR> sPostRaw(
 	const std::string& iURL, const ZStreamR& iBody,
-	int32* oResultCode, ZTuple* oFields, ZMemoryBlock* oRawHeader);
+	int32* oResultCode, ValMap* oFields, ZMemoryBlock* oRawHeader);
 
 } // namespace ZHTTP
 

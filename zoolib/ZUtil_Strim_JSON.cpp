@@ -33,26 +33,26 @@ using std::vector;
 
 namespace ZUtil_Strim_JSON {
 
-void sToStrim(const ZStrimW& s, const ZTValue& iTV)
+void sToStrim(const ZStrimW& s, const ZVal_ZooLib& iVal)
 	{
-	ZYad_JSON::sToStrim(s, ZYad_ZooLib::sMakeYadR(iTV));
+	ZYad_JSON::sToStrim(s, ZYad_ZooLib::sMakeYadR(iVal));
 	}
 
-void sToStrim(const ZStrimW& s, const ZTuple& iTuple)
+void sToStrim(const ZStrimW& s, const ZValMap_ZooLib& iMap)
 	{
-	ZYad_JSON::sToStrim(s, ZYad_ZooLib::sMakeYadR(iTuple));
+	ZYad_JSON::sToStrim(s, ZYad_ZooLib::sMakeYadR(iMap));
 	}
 
-void sToStrim(const ZStrimW& s, const vector<ZTValue>& iVector)
+void sToStrim(const ZStrimW& s, const ZValList_ZooLib& iList)
 	{
-	ZYad_JSON::sToStrim(s, ZYad_ZooLib::sMakeYadR(iVector));
+	ZYad_JSON::sToStrim(s, ZYad_ZooLib::sMakeYadR(iList));
 	}
 
-bool sFromStrim(const ZStrimU& s, ZTValue& oTV)
+bool sFromStrim(const ZStrimU& s, ZVal_ZooLib& oVal)
 	{
 	if (ZRef<ZYadR> theYadR = ZYad_JSON::sMakeYadR(s))
 		{
-		oTV = ZYad_ZooLib::sFromYadR(theYadR);
+		oVal = ZYad_ZooLib::sFromYadR(theYadR);
 		return true;
 		}
 	return false;

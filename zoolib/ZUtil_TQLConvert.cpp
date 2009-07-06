@@ -104,8 +104,7 @@ case the RelHead is [*iName]. The tuples returned have been filtered by iFilter,
 
 static Query sConvert(ZRef<ZTBQueryNode> iNode, const ZTName* iName, Spec* iFilter, bool iVerbose)
 	{
-	if (ZTBQueryNode_All* theNode_All =
-		ZRefDynamicCast<ZTBQueryNode_All>(iNode))
+	if (ZRefDynamicCast<ZTBQueryNode_All>(iNode))
 		{
 		// We must have a filter, it's not possible to construct a ZTBQueryNode_All
 		// except as a clause in a combo with a filter.
@@ -132,8 +131,7 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const ZTName* iName, Spec* iFilt
 			}
 		return theQ;
 		}
-	else if (ZTBQueryNode_First* theNode_First =
-		ZRefDynamicCast<ZTBQueryNode_First>(iNode))
+	else if (ZRefDynamicCast<ZTBQueryNode_First>(iNode))
 		{
 		ZDebugStop(0);
 		// Don't support first, yet, if ever.

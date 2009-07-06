@@ -34,7 +34,7 @@ namespace ZUtil_Tuple {
 
 // ----------
 
-bool sInt64(const ZTValue& iTV, int64& oVal)
+bool sInt64Q(const ZTValue& iTV, int64& oVal)
 	{
 	switch (iTV.TypeOf())
 		{
@@ -53,7 +53,7 @@ bool sInt64(const ZTValue& iTV, int64& oVal)
 int64 sInt64D(const ZTValue& iTV, int64 iDefault)
 	{
 	int64 result;
-	if (sInt64(iTV, result))
+	if (sInt64Q(iTV, result))
 		return result;
 	return iDefault;
 	}
@@ -63,7 +63,7 @@ int64 sInt64(const ZTValue& iTV)
 
 // ----------
 
-bool sUInt64(const ZTValue& iTV, uint64& oVal)
+bool sUInt64Q(const ZTValue& iTV, uint64& oVal)
 	{
 	switch (iTV.TypeOf())
 		{
@@ -82,7 +82,7 @@ bool sUInt64(const ZTValue& iTV, uint64& oVal)
 uint64 sUInt64D(const ZTValue& iTV, uint64 iDefault)
 	{
 	uint64 result;
-	if (sUInt64(iTV, result))
+	if (sUInt64Q(iTV, result))
 		return result;
 	return iDefault;
 	}
@@ -92,7 +92,7 @@ uint64 sUInt64(const ZTValue& iTV)
 
 // ----------
 
-bool sDouble(const ZTValue& iTV, double& oVal)
+bool sDoubleQ(const ZTValue& iTV, double& oVal)
 	{
 	switch (iTV.TypeOf())
 		{
@@ -111,7 +111,7 @@ bool sDouble(const ZTValue& iTV, double& oVal)
 double sDoubleD(const ZTValue& iTV, double iDefault)
 	{
 	double result;
-	if (sDouble(iTV, result))
+	if (sDoubleQ(iTV, result))
 		return result;
 	return iDefault;
 	}
@@ -121,7 +121,7 @@ double sDouble(const ZTValue& iTV)
 
 // ----------
 
-bool sUDouble(const ZTValue& iTV, double& oVal)
+bool sUDoubleQ(const ZTValue& iTV, double& oVal)
 	{
 	switch (iTV.TypeOf())
 		{
@@ -140,7 +140,7 @@ bool sUDouble(const ZTValue& iTV, double& oVal)
 double sUDoubleD(const ZTValue& iTV, double iDefault)
 	{
 	double result;
-	if (sUDouble(iTV, result))
+	if (sUDoubleQ(iTV, result))
 		return result;
 	return iDefault;
 	}
@@ -150,7 +150,7 @@ double sUDouble(const ZTValue& iTV)
 
 // ----------
 
-bool sBool(const ZTValue& iTV, bool& oVal)
+bool sBoolQ(const ZTValue& iTV, bool& oVal)
 	{
 	switch (iTV.TypeOf())
 		{
@@ -169,7 +169,7 @@ bool sBool(const ZTValue& iTV, bool& oVal)
 bool sBoolD(const ZTValue& iTV, bool iDefault)
 	{
 	bool result;
-	if (sBool(iTV, result))
+	if (sBoolQ(iTV, result))
 		return result;
 	return iDefault;
 	}
@@ -182,9 +182,9 @@ bool sBool(const ZTValue& iTV)
 bool sGetValuei(const ZTuple& iTuple, const string& iNamei, ZTValue& oTV)
 	{
 	ZTuple::const_iterator i = sIteratorOfi(iTuple, iNamei);
-	if (i !=  iTuple.end())
+	if (i != iTuple.end())
 		{
-		oTV = iTuple.GetValue(i);
+		oTV = iTuple.Get(i);
 		return true;
 		}
 	return false;

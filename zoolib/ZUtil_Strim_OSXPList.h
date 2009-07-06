@@ -32,10 +32,10 @@ namespace ZUtil_Strim_OSXPList {
 
 typedef ZYadParseException_XMLPList ParseException;
 
-void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTValue);
+void sToStrim(const ZStrimW& iStrimW, const ZVal_ZooLib& iVal);
 
-bool sFromStrim(const ZStrimU& iStrimU, ZTValue& oTValue);
-bool sFromML(ZML::Reader& r, ZTValue& oTValue);
+bool sFromStrim(const ZStrimU& iStrimU, ZVal_ZooLib& oVal);
+bool sFromML(ZML::Reader& r, ZVal_ZooLib& oVal);
 
 } // namespace ZUtil_Strim_OSXPList
 

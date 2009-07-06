@@ -73,16 +73,20 @@ public:
 	NPVariantH(NPObjectH* iValue);
 	NPVariantH(const ZRef<NPObjectH>& iValue);
 
-	operator ZRef<NPObjectH>() const;
-
-	void SetVoid();
-	void SetNull();
+// ZVal protocol
+	void Clear();
 
 	template <class S>
 	bool QGet_T(S& oVal) const;
 
 	template <class S>
 	void Set_T(const S& iVal);
+
+// Our protocol
+	operator ZRef<NPObjectH>() const;
+
+	void SetVoid();
+	void SetNull();
 
 private:
 	void pSetString(const char* iChars, size_t iLength);

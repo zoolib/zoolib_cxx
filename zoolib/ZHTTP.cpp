@@ -45,6 +45,8 @@ using std::vector;
 
 #define kDebug_HTTP 2
 
+namespace ZHTTP {
+
 static const char CR = '\r';
 static const char LF = '\n';
 
@@ -52,7 +54,8 @@ static const char LF = '\n';
 #pragma mark -
 #pragma mark * Utility stuff
 
-namespace ZANONYMOUS {
+static void sAppend(ValMap& ioFields, const string& iName, const Val& iValue)
+	{ ioFields.Mutable(iName).MutableList().Append(iValue); }
 
 static uint32 sHexCharToUInt(char iChar)
 	{
@@ -124,59 +127,57 @@ static bool sReadInt64(const ZStreamU& iStream, int64* oInt64)
 	return true;
 	}
 
-} // anonymous namespace
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZHTTP::Response
 
-ZHTTP::Response::Response()
+Response::Response()
 	{
 	fResult = 0;
 	fIsVersion11 = true;
 	}
 
-void ZHTTP::Response::Clear()
+void Response::Clear()
 	{
 	fHeaders.clear();
 	fResult = 0;
 	fMessage.clear();
 	}
 
-void ZHTTP::Response::SetVersion10()
+void Response::SetVersion10()
 	{
 	fIsVersion11 = false;
 	}
 
-void ZHTTP::Response::SetResult(int iResult)
+void Response::SetResult(int iResult)
 	{
 	ZAssert(iResult >= 100 && iResult <= 999);
 	fResult = iResult;
 	}
 
-void ZHTTP::Response::SetResult(int iResult, const string& iMessage)
+void Response::SetResult(int iResult, const string& iMessage)
 	{
 	ZAssert(iResult >= 100 && iResult <= 999);
 	fResult = iResult;
 	fMessage = iMessage;
 	}
 
-void ZHTTP::Response::Set(const string& iName, const string& iValue)
+void Response::Set(const string& iName, const string& iValue)
 	{
 	fHeaders.push_back(pair<string, string>(iName, iValue));
 	}
 
-void ZHTTP::Response::Set(const string& iName, int iValue)
+void Response::Set(const string& iName, int iValue)
 	{
 	fHeaders.push_back(pair<string, string>(iName, ZString::sFormat("%d", iValue)));
 	}
 
-void ZHTTP::Response::Set(const string& iName, uint64 iValue)
+void Response::Set(const string& iName, uint64 iValue)
 	{
 	fHeaders.push_back(pair<string, string>(iName, ZString::sFormat("%lld", iValue)));
 	}
 
-void ZHTTP::Response::Send(const ZStreamW& s) const
+void Response::Send(const ZStreamW& s) const
 	{
 	ZAssert(fResult >= 100 && fResult <= 999);
 	if (fIsVersion11)
@@ -208,15 +209,15 @@ void ZHTTP::Response::Send(const ZStreamW& s) const
 // This method should look at all the range entries in iRangeParam
 // and turn them into a list of ascending, non overlapping start/finish
 // pairs in oRanges.
-bool ZHTTP::sOrganizeRanges(size_t iSourceSize, const ZTValue& iRangeParam,
+bool sOrganizeRanges(size_t iSourceSize, const Val& iRangeParam,
 	vector<pair<size_t, size_t> >& oRanges)
 	{
-	ZTuple asTuple = iRangeParam.GetTuple();
+	ValMap asMap = iRangeParam.GetMap();
 	int64 reqBegin;
-	if (asTuple.GetInt64("begin", reqBegin))
+	if (asMap.Get("begin").QGetInt64(reqBegin))
 		{
 		int64 reqEnd;
-		if (asTuple.GetInt64("end", reqEnd))
+		if (asMap.Get("end").QGetInt64(reqEnd))
 			{
 			if (reqEnd < reqBegin)
 				return false;
@@ -231,7 +232,7 @@ bool ZHTTP::sOrganizeRanges(size_t iSourceSize, const ZTValue& iRangeParam,
 	else
 		{
 		int64 reqLast;
-		if (asTuple.GetInt64("last", reqLast))
+		if (asMap.Get("last").QGetInt64(reqLast))
 			{
 			if (reqLast > iSourceSize)
 				return false;
@@ -242,7 +243,7 @@ bool ZHTTP::sOrganizeRanges(size_t iSourceSize, const ZTValue& iRangeParam,
 	return false;
 	}
 
-bool ZHTTP::sReadRequest(const ZStreamR& iStreamR, string* oMethod, string* oURL, string* oError)
+bool sReadRequest(const ZStreamR& iStreamR, string* oMethod, string* oURL, string* oError)
 	{
 	ZMIME::StreamR_Line theSIL(iStreamR);
 	ZStreamU_Unreader theStreamU(theSIL);
@@ -284,7 +285,7 @@ bool ZHTTP::sReadRequest(const ZStreamR& iStreamR, string* oMethod, string* oURL
 	return true;
 	}
 
-bool ZHTTP::sReadResponse(const ZStreamU& iStream, int32* oResultCode, string* oResultMessage)
+bool sReadResponse(const ZStreamU& iStream, int32* oResultCode, string* oResultMessage)
 	{
 	if (oResultMessage)
 		oResultMessage->resize(0);
@@ -315,10 +316,10 @@ bool ZHTTP::sReadResponse(const ZStreamU& iStream, int32* oResultCode, string* o
 	return true;
 	}
 
-bool ZHTTP::sReadHeaderNoParsing(const ZStreamR& iStream, ZTuple* oFields)
+bool sReadHeaderNoParsing(const ZStreamR& iStream, ValMap* oFields)
 	{
 	if (oFields)
-		*oFields = ZTuple();
+		oFields->Clear();
 
 	for (;;)
 		{
@@ -331,10 +332,10 @@ bool ZHTTP::sReadHeaderNoParsing(const ZStreamR& iStream, ZTuple* oFields)
 		}
 	}
 
-bool ZHTTP::sReadHeaderLineNoParsing(const ZStreamU& iStream, ZTuple* ioFields)
+bool sReadHeaderLineNoParsing(const ZStreamU& iStream, ValMap* ioFields)
 	{
 	string fieldNameExact;
-	if (!ZHTTP::sReadFieldName(iStream, nullptr, &fieldNameExact))
+	if (!sReadFieldName(iStream, nullptr, &fieldNameExact))
 		return false;
 
 	if (!fieldNameExact.size())
@@ -344,15 +345,15 @@ bool ZHTTP::sReadHeaderLineNoParsing(const ZStreamU& iStream, ZTuple* ioFields)
 	string fieldBody;
 	iStream.CopyAllTo(ZStreamWPos_String(fieldBody));
 	if (ioFields)
-		ioFields->EnsureMutableVector(fieldNameExact).Append(fieldBody);
+		sAppend(*ioFields, fieldNameExact, fieldBody);
 
 	return true;
 	}
 
-bool ZHTTP::sReadHeader(const ZStreamR& iStream, ZTuple* oFields)
+bool sReadHeader(const ZStreamR& iStream, ValMap* oFields)
 	{
 	if (oFields)
-		*oFields = ZTuple();
+		oFields->Clear();
 
 	for (;;)
 		{
@@ -365,10 +366,10 @@ bool ZHTTP::sReadHeader(const ZStreamR& iStream, ZTuple* oFields)
 		}
 	}
 
-bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
+bool sReadHeaderLine(const ZStreamU& iStream, ValMap* ioFields)
 	{
 	string fieldName;
-	if (!ZHTTP::sReadFieldName(iStream, &fieldName, nullptr))
+	if (!sReadFieldName(iStream, &fieldName, nullptr))
 		return false;
 
 	if (fieldName.empty())
@@ -390,11 +391,11 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 				break;
 
 			if (ioFields)
-				ioFields->EnsureMutableVector("accept-charset").Append(charset);
+				sAppend(*ioFields, "accept-charset", charset);
 
 			sSkipLWS(iStream);
 
-			if (!ZHTTP::sReadChar(iStream, ','))
+			if (!sReadChar(iStream, ','))
 				break;
 			}
 		}
@@ -409,7 +410,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 				break;
 
 			if (ioFields)
-				ioFields->EnsureMutableVector("accept-encoding").Append(encoding);
+				sAppend(*ioFields, "accept-encoding", encoding);
 
 			sSkipLWS(iStream);
 
@@ -441,9 +442,9 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 
 			if (ioFields)
 				{
-				ZTuple cookieTuple = ioFields->GetTuple("cookie");
-				cookieTuple.SetString(ZTName(cookieName), cookieValue);
-				ioFields->SetTuple("cookie", cookieTuple);
+				ValMap cookieMap = ioFields->Get("cookie").GetMap();
+				cookieMap.Set(cookieName, cookieValue);
+				ioFields->Set("cookie", cookieMap);
 				}
 
 			sSkipLWS(iStream);
@@ -472,7 +473,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 		if (sReadToken(iStream, &body, nullptr))
 			{
 			if (ioFields)
-				ioFields->SetString("connection", body);
+				ioFields->Set("connection", body);
 			}
 		}
 //	else if (fieldName == "transfer-encoding")
@@ -491,7 +492,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 				break;
 
 			if (ioFields)
-				ioFields->EnsureMutableVector("content-encoding").Append(encoding);
+				sAppend(*ioFields, "content-encoding", encoding);
 
 			sSkipLWS(iStream);
 
@@ -510,7 +511,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 				break;
 
 			if (ioFields)
-				ioFields->EnsureMutableVector("content-language").Append(language);
+				sAppend(*ioFields, "content-language", language);
 
 			sSkipLWS(iStream);
 
@@ -534,7 +535,7 @@ bool ZHTTP::sReadHeaderLine(const ZStreamU& iStream, ZTuple* ioFields)
 		string fieldBody;
 		iStream.CopyAllTo(ZStreamWPos_String(fieldBody));
 		if (ioFields)
-			ioFields->EnsureMutableVector(fieldName).Append(fieldBody);
+			sAppend(*ioFields, fieldName, fieldBody);
 		}
 
 	return true;
@@ -563,7 +564,7 @@ static string sDecode_URI(const string& iString)
 	return result;
 	}
 
-void ZHTTP::sParseParam(const string& iString, ZTuple& oParam)
+void sParseParam(const string& iString, ValMap& oParam)
 	{
 	string::size_type prevPos = 0;
 	string::size_type pos;
@@ -574,7 +575,7 @@ void ZHTTP::sParseParam(const string& iString, ZTuple& oParam)
 		string::size_type epos = theData.find_first_of('=');
 		if (epos != string::npos)
 			{
-			oParam.SetString(ZTName(theData.substr(0, epos)),
+			oParam.Set(theData.substr(0, epos),
 				sDecode_URI(theData.substr(epos + 1, pos - epos - 1)));
 			}
 		prevPos = ++pos;
@@ -585,15 +586,15 @@ void ZHTTP::sParseParam(const string& iString, ZTuple& oParam)
 	string::size_type epos = theData.find_first_of('=');
 	if (epos != string::npos)
 		{
-		oParam.SetString(ZTName(theData.substr(0, epos)),
+		oParam.Set(theData.substr(0, epos),
 			sDecode_URI(theData.substr(epos + 1, pos - epos - 1)));
 		}
 	}
 
-bool ZHTTP::sParseQuery(const string& iString, ZTuple& oTuple)
+bool sParseQuery(const string& iString, ValMap& oTuple)
 	{ return sParseQuery(ZStreamRPos_String(iString), oTuple); }
 
-bool ZHTTP::sParseQuery(const ZStreamU& iStream, ZTuple& oTuple)
+bool sParseQuery(const ZStreamU& iStream, ValMap& oTuple)
 	{
 	for (;;)
 		{
@@ -628,14 +629,14 @@ bool ZHTTP::sParseQuery(const ZStreamU& iStream, ZTuple& oTuple)
 				}
 			value.append(1, readChar);
 			}
-		oTuple.SetString(ZTName(name), value);
+		oTuple.Set(name, value);
 		if (!sReadChar(iStream, '&'))
 			break;
 		}
 	return true;
 	}
 
-bool ZHTTP::sDecodeComponent(const ZStreamU& s, string& oComponent)
+bool sDecodeComponent(const ZStreamU& s, string& oComponent)
 	{
 	bool gotAny = false;
 	for (;;)
@@ -649,7 +650,7 @@ bool ZHTTP::sDecodeComponent(const ZStreamU& s, string& oComponent)
 		if (readChar == '%')
 			{
 			string decodedChars;
-			if (!ZHTTP::sReadDecodedChars(s, oComponent))
+			if (!sReadDecodedChars(s, oComponent))
 				break;
 			}
 		else
@@ -660,7 +661,7 @@ bool ZHTTP::sDecodeComponent(const ZStreamU& s, string& oComponent)
 	return gotAny;
 	}
 
-ZTrail ZHTTP::sDecodeTrail(const ZStreamU& s)
+ZTrail sDecodeTrail(const ZStreamU& s)
 	{
 	ZTrail result;
 	for (;;)
@@ -685,10 +686,10 @@ ZTrail ZHTTP::sDecodeTrail(const ZStreamU& s)
 	return result;
 	}
 
-ZTrail ZHTTP::sDecodeTrail(const string& iURL)
+ZTrail sDecodeTrail(const string& iURL)
 	{ return sDecodeTrail(ZStreamRPos_String(iURL)); }
 
-string ZHTTP::sEncodeComponent(const string& iString)
+string sEncodeComponent(const string& iString)
 	{
 	static const char sValidChars[]
 		= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -722,7 +723,7 @@ string ZHTTP::sEncodeComponent(const string& iString)
 	return result;
 	}
 
-string ZHTTP::sEncodeTrail(const ZTrail& iTrail)
+string sEncodeTrail(const ZTrail& iTrail)
 	{
 	string result;
 	for (size_t x = 0; x < iTrail.Count(); ++x)
@@ -733,32 +734,32 @@ string ZHTTP::sEncodeTrail(const ZTrail& iTrail)
 	return result;
 	}
 
-string ZHTTP::sGetString0(const ZTValue& iTV)
+string sGetString0(const Val& iVal)
 	{
 	string result;
-	if (iTV.QGetString(result))
+	if (iVal.QGetString(result))
 		return result;
 
-	const vector<ZTValue>& asVector = iTV.GetVector();
-	if (!asVector.empty())
-		return asVector[0].GetString();
+	const ValList& theList = iVal.GetList();
+	if (theList.Count())
+		return theList.Get(0).GetString();
 
 	return string();
 	}
 
 static ZRef<ZStreamerR> sMakeStreamer_Transfer(
-	const ZTuple& iHeader, ZRef<ZStreamerR> iStreamerR)
+	const ValMap& iHeader, ZRef<ZStreamerR> iStreamerR)
 	{
 	// According to the spec, if content is chunked, content-length must be ignored.
 	// I've seen some pages being returned with transfer-encoding "chunked, chunked", which
 	// is either a mistake, or is nested chunking. I'm assuming the former for now.
-	if (ZString::sContainsi(ZHTTP::sGetString0(iHeader.GetValue("transfer-encoding")), "chunked"))
+	if (ZString::sContainsi(sGetString0(iHeader.Get("transfer-encoding")), "chunked"))
 		{
-		return new ZStreamerR_FT<ZHTTP::StreamR_Chunked>(iStreamerR);
+		return new ZStreamerR_FT<StreamR_Chunked>(iStreamerR);
 		}
 
 	int64 contentLength;
-	if (iHeader.GetInt64("content-length", contentLength))
+	if (iHeader.Get("content-length").QGetInt64(contentLength))
 		{
 		return new ZStreamerR_FT<ZStreamR_Limited>(contentLength, iStreamerR);
 		}
@@ -766,7 +767,7 @@ static ZRef<ZStreamerR> sMakeStreamer_Transfer(
 	return iStreamerR;
 	}
 
-ZRef<ZStreamerR> ZHTTP::sMakeContentStreamer(const ZTuple& iHeader, ZRef<ZStreamerR> iStreamerR)
+ZRef<ZStreamerR> sMakeContentStreamer(const ValMap& iHeader, ZRef<ZStreamerR> iStreamerR)
 	{
 	iStreamerR = sMakeStreamer_Transfer(iHeader, iStreamerR);
 
@@ -775,7 +776,7 @@ ZRef<ZStreamerR> ZHTTP::sMakeContentStreamer(const ZTuple& iHeader, ZRef<ZStream
 	return iStreamerR;
 	}
 
-ZRef<ZStreamerR> ZHTTP::sMakeContentStreamer(const ZTuple& iHeader, const ZStreamR& iStreamR)
+ZRef<ZStreamerR> sMakeContentStreamer(const ValMap& iHeader, const ZStreamR& iStreamR)
 	{
 	return sMakeContentStreamer(iHeader, new ZStreamerR_Stream(iStreamR));
 	}
@@ -804,21 +805,21 @@ parameters = {
 }
 <\endcode>
 */
-bool ZHTTP::sRead_accept(const ZStreamU& iStream, ZTuple* ioFields)
+bool sRead_accept(const ZStreamU& iStream, ValMap* ioFields)
 	{
 	for (;;)
 		{
-		ZTuple parameters;
+		ValMap parameters;
 		string type, subtype;
 		if (!sReadMediaType(iStream, &type, &subtype, &parameters, nullptr, nullptr))
 			break;
-		ZTuple temp;
-		temp.SetString("type", type);
-		temp.SetString("subtype", subtype);
+		ValMap temp;
+		temp.Set("type", type);
+		temp.Set("subtype", subtype);
 		if (parameters)
-			temp.SetTuple("parameters", parameters);
+			temp.Set("parameters", parameters);
 		if (ioFields)
-			ioFields->EnsureMutableVector("accept").Append(temp);
+			sAppend(*ioFields, "accept", temp);
 
 		sSkipLWS(iStream);
 
@@ -828,10 +829,10 @@ bool ZHTTP::sRead_accept(const ZStreamU& iStream, ZTuple* ioFields)
 	return true;
 	}
 
-//bool ZHTTP::sRead_accept_charset(const ZStreamU& iStream, ZTuple* ioFields);
-//bool ZHTTP::sRead_accept_encoding(const ZStreamU& iStream, ZTuple* ioFields);
+//bool sRead_accept_charset(const ZStreamU& iStream, ValMap* ioFields);
+//bool sRead_accept_encoding(const ZStreamU& iStream, ValMap* ioFields);
 
-bool ZHTTP::sRead_accept_language(const ZStreamU& iStream, ZTuple* ioFields)
+bool sRead_accept_language(const ZStreamU& iStream, ValMap* ioFields)
 	{
 	for (;;)
 		{
@@ -841,10 +842,10 @@ bool ZHTTP::sRead_accept_language(const ZStreamU& iStream, ZTuple* ioFields)
 		if (!sReadLanguageTag(iStream, &languageTag))
 			break;
 
-		ZTuple temp;
-		temp.SetString("tag", languageTag);
+		ValMap temp;
+		temp.Set("tag", languageTag);
 		
-		ZTuple parameters;
+		ValMap parameters;
 		for (;;)
 			{
 			sSkipLWS(iStream);
@@ -855,14 +856,14 @@ bool ZHTTP::sRead_accept_language(const ZStreamU& iStream, ZTuple* ioFields)
 			string name, value;
 			if (!sReadParameter(iStream, &name, &value, nullptr))
 				break;
-			parameters.SetString(ZTName(name), value); 
+			parameters.Set(name, value); 
 			}
 	
 		if (parameters)
-			temp.SetTuple("parameters", parameters);
+			temp.Set("parameters", parameters);
 
 		if (ioFields)
-			ioFields->EnsureMutableVector("accept-language").Append(temp);
+			sAppend(*ioFields, "accept-language", temp);
 
 		sSkipLWS(iStream);
 
@@ -872,18 +873,18 @@ bool ZHTTP::sRead_accept_language(const ZStreamU& iStream, ZTuple* ioFields)
 	return true;
 	}
 
-//bool ZHTTP::sRead_authorization(const ZStreamU& iStream, ZTuple* ioFields);
-//bool ZHTTP::sRead_from(const ZStreamU& iStream, ZTuple* ioFields);
-//bool ZHTTP::sRead_host(const ZStreamU& iStream, ZTuple* ioFields);
+//bool sRead_authorization(const ZStreamU& iStream, ValMap* ioFields);
+//bool sRead_from(const ZStreamU& iStream, ValMap* ioFields);
+//bool sRead_host(const ZStreamU& iStream, ValMap* ioFields);
 
-bool ZHTTP::sRead_range(const ZStreamU& iStream, ZTuple* ioFields)
+bool sRead_range(const ZStreamU& iStream, ValMap* ioFields)
 	{
-	ZTuple theRange;
+	ValMap theRange;
 	if (!sRead_range(iStream, theRange))
 		return false;
 
 	if (ioFields)
-		ioFields->SetTuple("range", theRange);
+		ioFields->Set("range", theRange);
 
 	return true;
 	}
@@ -895,7 +896,7 @@ bytes=x-y	{ begin = int64(x);  end = int64(y); } // (x to y inclusive)
 bytes=x-	{ begin = int64(x); } // (x to the end)
 bytes=-y	{ last = int64(y); } // (last y)
 */
-bool ZHTTP::sRead_range(const ZStreamU& iStream, ZTuple& oRange)
+bool sRead_range(const ZStreamU& iStream, ValMap& oRange)
 	{
 	sSkipLWS(iStream);
 
@@ -916,7 +917,7 @@ bool ZHTTP::sRead_range(const ZStreamU& iStream, ZTuple& oRange)
 		int64 lastBytes;
 		if (!sReadInt64(iStream, &lastBytes))
 			return false;
-		oRange.SetInt64("last", lastBytes);
+		oRange.Set("last", lastBytes);
 		return true;
 		}
 	else
@@ -929,7 +930,7 @@ bool ZHTTP::sRead_range(const ZStreamU& iStream, ZTuple& oRange)
 
 		sSkipLWS(iStream);
 
-		oRange.SetInt64("begin", begin);
+		oRange.Set("begin", begin);
 
 		if (!sReadChar(iStream, '-'))
 			return false;
@@ -938,36 +939,36 @@ bool ZHTTP::sRead_range(const ZStreamU& iStream, ZTuple& oRange)
 
 		int64 end;
 		if (sReadInt64(iStream, &end))
-			oRange.SetInt64("end", end);
+			oRange.Set("end", end);
 		return true;
 		}
 	}
 
-//bool ZHTTP::sRead_referer(const ZStreamU& iStream, ZTuple* ioFields);
+//bool sRead_referer(const ZStreamU& iStream, ValMap* ioFields);
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZHTTP, response headers
 
-bool ZHTTP::sRead_www_authenticate(const ZStreamU& iStream, ZTuple* ioFields);
+bool sRead_www_authenticate(const ZStreamU& iStream, ValMap* ioFields);
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZHTTP, request or response headers
 
-bool ZHTTP::sRead_transfer_encoding(const ZStreamU& iStream, ZTuple* ioFields)
+bool sRead_transfer_encoding(const ZStreamU& iStream, ValMap* ioFields)
 	{
 	string encoding;
 	if (!sRead_transfer_encoding(iStream, encoding))
 		return false;
 	
 	if (ioFields)
-		ioFields->SetString("transfer-encoding", encoding);
+		ioFields->Set("transfer-encoding", encoding);
 
 	return true;
 	}
 
-bool ZHTTP::sRead_transfer_encoding(const ZStreamU& iStream, string& oEncoding)
+bool sRead_transfer_encoding(const ZStreamU& iStream, string& oEncoding)
 	{
 	sSkipLWS(iStream);
 
@@ -981,28 +982,28 @@ bool ZHTTP::sRead_transfer_encoding(const ZStreamU& iStream, string& oEncoding)
 #pragma mark -
 #pragma mark * ZHTTP, entity headers
 
-bool ZHTTP::sRead_content_disposition(const ZStreamU& iStream, ZTuple* ioFields)
+bool sRead_content_disposition(const ZStreamU& iStream, ValMap* ioFields)
 	{
-	ZTuple dispositionTuple;
+	ValMap dispositionTuple;
 	if (!sRead_content_disposition(iStream, dispositionTuple))
 		return false;
 
 	if (ioFields)
-		ioFields->SetTuple("content-disposition", dispositionTuple);
+		ioFields->Set("content-disposition", dispositionTuple);
 	return true;
 	}
 
-bool ZHTTP::sRead_content_disposition(const ZStreamU& iStream, ZTuple& oTuple)
+bool sRead_content_disposition(const ZStreamU& iStream, ValMap& oTuple)
 	{
 	sSkipLWS(iStream);
 
 	string disposition;
 	if (sReadToken(iStream, &disposition, nullptr))
 		{
-		ZTuple dispositionTuple;
-		oTuple.SetString("value", disposition);
+		ValMap dispositionTuple;
+		oTuple.Set("value", disposition);
 
-		ZTuple parameters;
+		ValMap parameters;
 		for (;;)
 			{
 			sSkipLWS(iStream);
@@ -1013,43 +1014,43 @@ bool ZHTTP::sRead_content_disposition(const ZStreamU& iStream, ZTuple& oTuple)
 			string name, value;
 			if (!sReadParameter(iStream, &name, &value, nullptr))
 				break;
-			parameters.SetString(ZTName(name), value);
+			parameters.Set(name, value);
 			}
 
 		sSkipLWS(iStream);
 
 		if (parameters)
-			oTuple.SetTuple("parameters", parameters);
+			oTuple.Set("parameters", parameters);
 		return true;
 		}
 	return false;
 	}
 
-bool ZHTTP::sRead_content_encoding(const ZStreamU& iStream, ZTuple* ioFields);
-bool ZHTTP::sRead_content_language(const ZStreamU& iStream, ZTuple* ioFields);
+bool sRead_content_encoding(const ZStreamU& iStream, ValMap* ioFields);
+bool sRead_content_language(const ZStreamU& iStream, ValMap* ioFields);
 
-bool ZHTTP::sRead_content_length(const ZStreamU& iStream, ZTuple* ioFields)
+bool sRead_content_length(const ZStreamU& iStream, ValMap* ioFields)
 	{
 	int64 theLength;
 	if (sRead_content_length(iStream, theLength))
 		{
 		if (ioFields)
-			ioFields->SetInt64("content-length", theLength);
+			ioFields->Set("content-length", theLength);
 		return true;
 		}
 	return false;
 	}
 
-bool ZHTTP::sRead_content_length(const ZStreamU& iStream, int64& oLength)
+bool sRead_content_length(const ZStreamU& iStream, int64& oLength)
 	{
 	sSkipLWS(iStream);
 	return sReadInt64(iStream, &oLength);
 	}
 
-bool ZHTTP::sRead_content_location(const ZStreamU& iStream, ZTuple* ioFields);
-bool ZHTTP::sRead_content_md5(const ZStreamU& iStream, ZTuple* ioFields);
+bool sRead_content_location(const ZStreamU& iStream, ValMap* ioFields);
+bool sRead_content_md5(const ZStreamU& iStream, ValMap* ioFields);
 
-bool ZHTTP::sRead_content_range(const ZStreamU& iStream, ZTuple* ioFields)
+bool sRead_content_range(const ZStreamU& iStream, ValMap* ioFields)
 	{
 	int64 begin, end, maxLength;
 	if (!sRead_content_range(iStream, begin, end, maxLength))
@@ -1057,17 +1058,17 @@ bool ZHTTP::sRead_content_range(const ZStreamU& iStream, ZTuple* ioFields)
 
 	if (ioFields)
 		{
-		ZTuple temp;
-		temp.SetInt64("begin", begin);
-		temp.SetInt64("end", end);
-		temp.SetInt64("maxlength", maxLength);
-		ioFields->SetTuple("content-range", temp);
+		ValMap temp;
+		temp.Set("begin", begin);
+		temp.Set("end", end);
+		temp.Set("maxlength", maxLength);
+		ioFields->Set("content-range", temp);
 		}
 
 	return true;
 	}
 
-bool ZHTTP::sRead_content_range(const ZStreamU& iStream,
+bool sRead_content_range(const ZStreamU& iStream,
 	int64& oBegin, int64& oEnd, int64& oMaxLength)
 	{
 	sSkipLWS(iStream);
@@ -1103,27 +1104,27 @@ bool ZHTTP::sRead_content_range(const ZStreamU& iStream,
 	return true;
 	}
 
-bool ZHTTP::sRead_content_type(const ZStreamU& iStream, ZTuple* ioFields)
+bool sRead_content_type(const ZStreamU& iStream, ValMap* ioFields)
 	{
 	string type, subType;
-	ZTuple parameters;
+	ValMap parameters;
 	if (!sRead_content_type(iStream, type, subType, parameters))
 		return false;
 
 	if (ioFields)
 		{
-		ZTuple temp;
-		temp.SetString("type", type);
-		temp.SetString("subtype", subType);
+		ValMap temp;
+		temp.Set("type", type);
+		temp.Set("subtype", subType);
 		if (parameters)
-			temp.SetTuple("parameters", parameters);
-		ioFields->SetTuple("content-type", temp);
+			temp.Set("parameters", parameters);
+		ioFields->Set("content-type", temp);
 		}
 	return true;
 	}
 
-bool ZHTTP::sRead_content_type(const ZStreamU& iStream,
-	string& oType, string& oSubType, ZTuple& oParameters)
+bool sRead_content_type(const ZStreamU& iStream,
+	string& oType, string& oSubType, ValMap& oParameters)
 	{
 	if (!sReadMediaType(iStream, &oType, &oSubType, &oParameters, nullptr, nullptr))
 		return false;
@@ -1132,7 +1133,7 @@ bool ZHTTP::sRead_content_type(const ZStreamU& iStream,
 
 // =================================================================================================
 
-bool ZHTTP::sReadHTTPVersion(const ZStreamU& iStream, int32* oVersionMajor, int32* oVersionMinor)
+bool sReadHTTPVersion(const ZStreamU& iStream, int32* oVersionMajor, int32* oVersionMinor)
 	{
 	if (!sReadChars(iStream, "HTTP/"))
 		return false;
@@ -1148,7 +1149,7 @@ bool ZHTTP::sReadHTTPVersion(const ZStreamU& iStream, int32* oVersionMajor, int3
 	return true;
 	}
 
-bool ZHTTP::sReadURI(const ZStreamU& iStream, string* oURI)
+bool sReadURI(const ZStreamU& iStream, string* oURI)
 	{
 	if (oURI)
 		oURI->resize(0);
@@ -1171,7 +1172,7 @@ bool ZHTTP::sReadURI(const ZStreamU& iStream, string* oURI)
 	return true;
 	}
 
-bool ZHTTP::sReadFieldName(const ZStreamU& iStream, string* oName, string* oNameExact)
+bool sReadFieldName(const ZStreamU& iStream, string* oName, string* oNameExact)
 	{
 	if (oName)
 		oName->resize(0);
@@ -1191,7 +1192,7 @@ bool ZHTTP::sReadFieldName(const ZStreamU& iStream, string* oName, string* oName
 	return true;
 	}
 
-bool ZHTTP::sReadParameter(const ZStreamU& iStream,
+bool sReadParameter(const ZStreamU& iStream,
 	string* oName, string* oValue, string* oNameExact)
 	{
 	if (oName)
@@ -1221,7 +1222,7 @@ bool ZHTTP::sReadParameter(const ZStreamU& iStream,
 	return false;
 	}
 
-bool ZHTTP::sReadParameter_Cookie(const ZStreamU& iStream,
+bool sReadParameter_Cookie(const ZStreamU& iStream,
 	string* oName, string* oValue, string* oNameExact)
 	{
 	if (oName)
@@ -1251,8 +1252,8 @@ bool ZHTTP::sReadParameter_Cookie(const ZStreamU& iStream,
 	return false;
 	}
 
-bool ZHTTP::sReadMediaType(const ZStreamU& iStream,
-	string* oType, string* oSubtype, ZTuple* oParameters,
+bool sReadMediaType(const ZStreamU& iStream,
+	string* oType, string* oSubtype, ValMap* oParameters,
 	string* oTypeExact, string* oSubtypeExact)
 	{
 	if (oType)
@@ -1292,13 +1293,13 @@ bool ZHTTP::sReadMediaType(const ZStreamU& iStream,
 		if (!sReadParameter(iStream, &name, &value, nullptr))
 			break;
 		if (oParameters)
-			oParameters->SetString(ZTName(name), value);
+			oParameters->Set(name, value);
 		}
 
 	return true;
 	}
 
-bool ZHTTP::sReadLanguageTag(const ZStreamU& iStream, string* oLanguageTag)
+bool sReadLanguageTag(const ZStreamU& iStream, string* oLanguageTag)
 	{
 	if (oLanguageTag)
 		oLanguageTag->resize(0);
@@ -1336,7 +1337,7 @@ bool ZHTTP::sReadLanguageTag(const ZStreamU& iStream, string* oLanguageTag)
 #pragma mark -
 #pragma mark * ZHTTP, Lower level parsing
 
-bool ZHTTP::sParseURL(const string& iURL,
+bool sParseURL(const string& iURL,
 	string* ioScheme, string* ioHost, uint16* ioPort, string* oPath)
 	{
 	if (oPath)
@@ -1391,7 +1392,7 @@ bool ZHTTP::sParseURL(const string& iURL,
 	return true;
 	}
 
-bool ZHTTP::sReadToken(const ZStreamU& iStream, string* oTokenLC, string* oTokenExact)
+bool sReadToken(const ZStreamU& iStream, string* oTokenLC, string* oTokenExact)
 	{
 	if (oTokenLC)
 		oTokenLC->resize(0);
@@ -1439,7 +1440,7 @@ bool ZHTTP::sReadToken(const ZStreamU& iStream, string* oTokenLC, string* oToken
 	return gotAny;
 	}
 
-bool ZHTTP::sReadToken_Cookie(const ZStreamU& iStream, string* oTokenLC, string* oTokenExact)
+bool sReadToken_Cookie(const ZStreamU& iStream, string* oTokenLC, string* oTokenExact)
 	{
 	if (oTokenLC)
 		oTokenLC->resize(0);
@@ -1495,7 +1496,7 @@ bool ZHTTP::sReadToken_Cookie(const ZStreamU& iStream, string* oTokenLC, string*
 	return gotAny;
 	}
 
-bool ZHTTP::sReadQuotedString(const ZStreamU& iStream, string* oString, string* oStringExact)
+bool sReadQuotedString(const ZStreamU& iStream, string* oString, string* oStringExact)
 	{
 	if (oString)
 		oString->resize(0);
@@ -1529,7 +1530,7 @@ bool ZHTTP::sReadQuotedString(const ZStreamU& iStream, string* oString, string* 
 	return true;
 	}
 
-bool ZHTTP::sReadChar(const ZStreamU& iStream, char iChar)
+bool sReadChar(const ZStreamU& iStream, char iChar)
 	{
 	char readChar;
 	if (!iStream.ReadChar(readChar))
@@ -1544,7 +1545,7 @@ bool ZHTTP::sReadChar(const ZStreamU& iStream, char iChar)
 	return true;
 	}
 
-bool ZHTTP::sReadChars(const ZStreamU& iStream, const char* iString)
+bool sReadChars(const ZStreamU& iStream, const char* iString)
 	{
 	while (*iString)
 		{
@@ -1558,7 +1559,7 @@ bool ZHTTP::sReadChars(const ZStreamU& iStream, const char* iString)
 	return true;
 	}
 
-void ZHTTP::sSkipLWS(const ZStreamU& iStream)
+void sSkipLWS(const ZStreamU& iStream)
 	{
 	for (;;)
 		{
@@ -1574,7 +1575,7 @@ void ZHTTP::sSkipLWS(const ZStreamU& iStream)
 		}
 	}
 
-bool ZHTTP::sReadDecodedChars(const ZStreamU& iStream, string& ioString)
+bool sReadDecodedChars(const ZStreamU& iStream, string& ioString)
 	{
 	char readChar;
 	if (!iStream.ReadChar(readChar))
@@ -1610,7 +1611,7 @@ bool ZHTTP::sReadDecodedChars(const ZStreamU& iStream, string& ioString)
 #pragma mark -
 #pragma mark * ZHTTP, Lexical classification
 
-bool ZHTTP::sIs_CHAR(char iChar)
+bool sIs_CHAR(char iChar)
 	{
 	// The following line:
 	// return iChar >= 0 && iChar <= 127;
@@ -1622,19 +1623,19 @@ bool ZHTTP::sIs_CHAR(char iChar)
 	return 0 == (iChar & 0x80);
 	}
 
-bool ZHTTP::sIs_UPALPHA(char iChar)
+bool sIs_UPALPHA(char iChar)
 	{ return iChar >= 'A' && iChar <= 'Z'; }
 
-bool ZHTTP::sIs_LOALPHA(char iChar)
+bool sIs_LOALPHA(char iChar)
 	{ return iChar >= 'a' && iChar <= 'z'; }
 
-bool ZHTTP::sIs_ALPHA(char iChar)
+bool sIs_ALPHA(char iChar)
 	{ return sIs_LOALPHA(iChar) || sIs_UPALPHA(iChar); }
 
-bool ZHTTP::sIs_DIGIT(char iChar)
+bool sIs_DIGIT(char iChar)
 	{ return iChar >= '0' && iChar <= '9'; }
 
-bool ZHTTP::sIs_CTL(char iChar)
+bool sIs_CTL(char iChar)
 	{
 	if (iChar >= 0 && iChar <= 31)
 		return true;
@@ -1643,30 +1644,30 @@ bool ZHTTP::sIs_CTL(char iChar)
 	return false;
 	}
 
-bool ZHTTP::sIs_CR(char iChar)
+bool sIs_CR(char iChar)
 	{ return iChar == '\r'; }
 
-bool ZHTTP::sIs_LF(char iChar)
+bool sIs_LF(char iChar)
 	{ return iChar == '\n'; }
 
-bool ZHTTP::sIs_SP(char iChar)
+bool sIs_SP(char iChar)
 	{ return iChar == ' '; }
 
-bool ZHTTP::sIs_HT(char iChar)
+bool sIs_HT(char iChar)
 	{ return iChar == '\t'; }
 
-bool ZHTTP::sIs_QUOTE(char iChar)
+bool sIs_QUOTE(char iChar)
 	{ return iChar == '\"'; }
 
-bool ZHTTP::sIs_LWS(char iChar)
+bool sIs_LWS(char iChar)
 	{
 	return sIs_HT(iChar) || sIs_SP(iChar);
 	}
 
-bool ZHTTP::sIs_TEXT(char iChar)
+bool sIs_TEXT(char iChar)
 	{ return !sIs_CTL(iChar); }
 
-bool ZHTTP::sIs_HEX(char iChar)
+bool sIs_HEX(char iChar)
 	{
 	if (sIs_DIGIT(iChar))
 		return true;
@@ -1677,7 +1678,7 @@ bool ZHTTP::sIs_HEX(char iChar)
 	return false;
 	}
 
-bool ZHTTP::sIs_tspecials(char iChar)
+bool sIs_tspecials(char iChar)
 	{
 	switch (iChar)
 		{
@@ -1690,17 +1691,17 @@ bool ZHTTP::sIs_tspecials(char iChar)
 	return false;
 	}
 
-bool ZHTTP::sIs_token(char iChar)
+bool sIs_token(char iChar)
 	{
 	return !sIs_CTL(iChar) && !sIs_tspecials(iChar);
 	}
 
-bool ZHTTP::sIs_ctext(char iChar)
+bool sIs_ctext(char iChar)
 	{
 	return sIs_TEXT(iChar) && iChar != '(' && iChar != ')';
 	}
 
-bool ZHTTP::sIs_qdtext(char iChar)
+bool sIs_qdtext(char iChar)
 	{
 	return sIs_TEXT(iChar) && iChar != '\"';	
 	}
@@ -1746,17 +1747,17 @@ static uint64 pReadChunkSize(const ZStreamR& s)
 	return result;
 	}
 
-ZHTTP::StreamR_Chunked::StreamR_Chunked(const ZStreamR& iStreamSource)
+StreamR_Chunked::StreamR_Chunked(const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource)
 	{
 	fChunkSize = pReadChunkSize(fStreamSource);
 	fHitEnd = fChunkSize == 0;
 	}
 
-ZHTTP::StreamR_Chunked::~StreamR_Chunked()
+StreamR_Chunked::~StreamR_Chunked()
 	{}
 
-void ZHTTP::StreamR_Chunked::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void StreamR_Chunked::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
 	uint8* localDest = reinterpret_cast<uint8*>(iDest);
 	while (iCount && !fHitEnd)
@@ -1788,17 +1789,17 @@ void ZHTTP::StreamR_Chunked::Imp_Read(void* iDest, size_t iCount, size_t* oCount
 		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
 	}
 
-size_t ZHTTP::StreamR_Chunked::Imp_CountReadable()
+size_t StreamR_Chunked::Imp_CountReadable()
 	{ return min(ZStream::sClampedSize(fChunkSize), fStreamSource.CountReadable()); }
 
-bool ZHTTP::StreamR_Chunked::Imp_WaitReadable(int iMilliseconds)
+bool StreamR_Chunked::Imp_WaitReadable(int iMilliseconds)
 	{ return fStreamSource.WaitReadable(iMilliseconds); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZHTTP::StreamW_Chunked
 
-ZHTTP::StreamW_Chunked::StreamW_Chunked(size_t iBufferSize, const ZStreamW& iStreamSink)
+StreamW_Chunked::StreamW_Chunked(size_t iBufferSize, const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink),
 	fBufferSize(max(size_t(64), iBufferSize))
 	{
@@ -1806,7 +1807,7 @@ ZHTTP::StreamW_Chunked::StreamW_Chunked(size_t iBufferSize, const ZStreamW& iStr
 	fBufferUsed = 0;
 	}
 
-ZHTTP::StreamW_Chunked::StreamW_Chunked(const ZStreamW& iStreamSink)
+StreamW_Chunked::StreamW_Chunked(const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink),
 	fBufferSize(1024)
 	{
@@ -1814,7 +1815,7 @@ ZHTTP::StreamW_Chunked::StreamW_Chunked(const ZStreamW& iStreamSink)
 	fBufferUsed = 0;
 	}
 
-ZHTTP::StreamW_Chunked::~StreamW_Chunked()
+StreamW_Chunked::~StreamW_Chunked()
 	{
 	try
 		{
@@ -1833,7 +1834,7 @@ ZHTTP::StreamW_Chunked::~StreamW_Chunked()
 	delete[] fBuffer;
 	}
 
-void ZHTTP::StreamW_Chunked::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+void StreamW_Chunked::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	const uint8* localSource = reinterpret_cast<const uint8*>(iSource);
 	while (iCount)
@@ -1864,13 +1865,13 @@ void ZHTTP::StreamW_Chunked::Imp_Write(const void* iSource, size_t iCount, size_
 		*oCountWritten = localSource - reinterpret_cast<const uint8*>(iSource);
 	}
 
-void ZHTTP::StreamW_Chunked::Imp_Flush()
+void StreamW_Chunked::Imp_Flush()
 	{
 	this->Internal_Flush();
 	fStreamSink.Flush();
 	}
 
-void ZHTTP::StreamW_Chunked::Internal_Flush()
+void StreamW_Chunked::Internal_Flush()
 	{
 	if (const size_t bufferUsed = fBufferUsed)
 		{
@@ -1880,5 +1881,7 @@ void ZHTTP::StreamW_Chunked::Internal_Flush()
 		fStreamSink.WriteString("\r\n");
 		}
 	}
+
+} // namespace ZHTTP
 
 NAMESPACE_ZOOLIB_END

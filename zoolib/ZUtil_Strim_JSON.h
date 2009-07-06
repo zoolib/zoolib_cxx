@@ -31,11 +31,11 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZUtil_Strim_JSON {
 
-void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTV);
-void sToStrim(const ZStrimW& iStrimW, const ZTuple& iTuple);
-void sToStrim(const ZStrimW& iStrimW, const std::vector<ZTValue>& iVector);
+void sToStrim(const ZStrimW& iStrimW, const ZVal_ZooLib& iVal);
+void sToStrim(const ZStrimW& iStrimW, const ZValMap_ZooLib& iMap);
+void sToStrim(const ZStrimW& iStrimW, const ZValList_ZooLib& iList);
 
-bool sFromStrim(const ZStrimU& iStrimU, ZTValue& oTValue);
+bool sFromStrim(const ZStrimU& iStrimU, ZVal_ZooLib& oVal);
 
 } // namespace ZUtil_Strim_JSON
 
