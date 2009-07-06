@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZStrimU_Unreader.h"
-#include "zoolib/ZStrimW_ML.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZYad_StdMore.h"
@@ -308,21 +307,21 @@ ZRef<ZYadR> ZYad_XMLPList::sMakeYadR(ZML::Reader& r)
 	return sMakeYadR_XMLPList(r);
 	}
 
-static void sToStrim_Stream(const ZStrimW_ML& s, const ZStreamR& iStreamR)
+static void sToStrim_Stream(const ZML::StrimW& s, const ZStreamR& iStreamR)
 	{
 	s.Begin("data");
 		iStreamR.CopyAllTo(ZStreamW_Base64Encode(ZStreamW_ASCIIStrim(s)));
 	s.End("data");	
 	}
 
-static void sToStrim_Strim(const ZStrimW_ML& s, const ZStrimR& iStrimR)
+static void sToStrim_Strim(const ZML::StrimW& s, const ZStrimR& iStrimR)
 	{
 	s.Begin("string");
 		iStrimR.CopyAllTo(s);
 	s.End("string");	
 	}
 
-static void sToStrim_List(const ZStrimW_ML& s, ZRef<ZYadListR> iYadListR)
+static void sToStrim_List(const ZML::StrimW& s, ZRef<ZYadListR> iYadListR)
 	{
 	s.Begin("array");
 		while (ZRef<ZYadR> theChild = iYadListR->ReadInc())
@@ -330,7 +329,7 @@ static void sToStrim_List(const ZStrimW_ML& s, ZRef<ZYadListR> iYadListR)
 	s.End("array");
 	}
 
-static void sToStrim_Map(const ZStrimW_ML& s, ZRef<ZYadMapR> iYadMapR)
+static void sToStrim_Map(const ZML::StrimW& s, ZRef<ZYadMapR> iYadMapR)
 	{
 	s.Begin("dict");
 		string theName;
@@ -344,7 +343,7 @@ static void sToStrim_Map(const ZStrimW_ML& s, ZRef<ZYadMapR> iYadMapR)
 	s.End("dict");
 	}
 
-static void sToStrim_SimpleValue(const ZStrimW_ML& s, const ZVal_ZooLib& iVal)
+static void sToStrim_SimpleValue(const ZML::StrimW& s, const ZVal_ZooLib& iVal)
 	{
 	switch (iVal.TypeOf())
 		{
@@ -404,7 +403,7 @@ static void sToStrim_SimpleValue(const ZStrimW_ML& s, const ZVal_ZooLib& iVal)
 		}
 	}
 
-void ZYad_XMLPList::sToStrimW_ML(const ZStrimW_ML& s, ZRef<ZYadR> iYadR)
+void ZYad_XMLPList::sToStrimW_ML(const ZML::StrimW& s, ZRef<ZYadR> iYadR)
 	{
 	if (!iYadR)
 		{

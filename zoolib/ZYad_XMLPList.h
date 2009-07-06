@@ -29,8 +29,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZStrimW_ML;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadParseException_XMLPList
@@ -130,7 +128,7 @@ namespace ZYad_XMLPList {
 
 ZRef<ZYadR> sMakeYadR(ZML::Reader& iReader);
 
-void sToStrimW_ML(const ZStrimW_ML& s, ZRef<ZYadR> iYadR);
+void sToStrimW_ML(const ZML::StrimW& s, ZRef<ZYadR> iYadR);
 
 } // namespace ZYad_XMLPList
 
