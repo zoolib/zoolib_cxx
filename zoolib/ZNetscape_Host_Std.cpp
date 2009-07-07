@@ -186,10 +186,11 @@ NPError HostMeister_Std::GetURLNotify(NPP npp,
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		{
-		s << "GetURLNotify, iRelativeURL: " << URL;
+		s << "GetURLNotify: ";
+		s.Writef(" notifyData: %08X", notifyData);
+		s << ", iRelativeURL: " << URL;
 		if (window)
 			s << ", target: " << window;
-		s.Writef(", notifyData: %08X", notifyData);
 		}
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))
@@ -205,9 +206,10 @@ NPError HostMeister_Std::PostURLNotify(NPP npp,
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		{
 		s << "PostURLNotify: " << URL;
+		s.Writef(" notifyData: %08X", notifyData);
+		s << ", URL: " << URL;
 		if (window)
 			s << ", target: " << window;
-		s.Writef(", notifyData: %08X", notifyData);
 		}
 
 	if (Host_Std* theHost = sHostFromNPP_Std(npp))

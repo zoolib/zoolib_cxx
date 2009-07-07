@@ -691,6 +691,10 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 
 		OTResult theResult = ::OTConnect(
 			theStruct->fEndpoint->fEndpointRef, &theSndCall, nullptr);
+
+		if (theResult == kOTLookErr)
+			theResult = ::OTLook(theStruct->fEndpoint->fEndpointRef);
+
 		if (theResult == T_DISCONNECT)
 			{
 			::OTRcvDisconnect(theStruct->fEndpoint->fEndpointRef, nullptr);
