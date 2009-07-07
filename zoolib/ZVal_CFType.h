@@ -47,7 +47,8 @@ typedef ZValMap_CFType ZValMap_CF;
 #pragma mark * ZVal_CFType
 
 class ZVal_CFType
-:	public ZValR_T<ZVal_CFType>
+:	public ZRef<CFTypeRef>
+,	public ZValR_T<ZVal_CFType>
 	{
 public:
 	operator bool() const;
@@ -57,7 +58,7 @@ public:
 	~ZVal_CFType();
 	ZVal_CFType& operator=(const ZVal_CFType& iOther);
 
-	ZVal_CFType(ZRef<CFTypeRef> iCFTypeRef);
+	ZVal_CFType(const ZRef<CFTypeRef>& iVal);
 	ZVal_CFType(int8 iVal);
 	ZVal_CFType(int16 iVal);
 	ZVal_CFType(int32 iVal);
@@ -67,10 +68,14 @@ public:
 	ZVal_CFType(double iVal);
 	ZVal_CFType(const string8& iVal);
 	ZVal_CFType(const string16& iVal);
-	ZVal_CFType(const ZValData_CFType& iVal);
-	ZVal_CFType(const ZValList_CFType& iVal);
-	ZVal_CFType(const ZValMap_CFType& iVal);
-	
+
+#if 0
+	ZVal_CFType(const ZRef<CFStringRef>& iVal);
+	ZVal_CFType(const ZRef<CFDataRef>& iVal);
+	ZVal_CFType(const ZRef<CFArrayRef>& iVal);
+	ZVal_CFType(const ZRef<CFDictionaryRef>& iVal);
+#endif
+
 // ZVal protocol
 	void Clear();
 
@@ -83,16 +88,12 @@ public:
 // Our protocol
 	CFTypeRef& OParam();
 
-	operator CFTypeRef() const;
-
 // Typename accessors
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_CFType)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, CFString, ZRef<CFStringRef>)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Data, ZValData_CFType)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, List, ZValList_CFType)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Map, ZValMap_CFType)
-
-private:
-	ZRef<CFTypeRef> fCFTypeRef;
 	};
 
 // =================================================================================================
@@ -100,6 +101,7 @@ private:
 #pragma mark * ZValList_CFType
 
 class ZValList_CFType
+:	public ZRef<CFArrayRef>
 	{
 public:
 	operator bool() const;
@@ -135,14 +137,10 @@ public:
 // Our protocol
 	CFArrayRef& OParam();
 
-	operator CFTypeRef() const;
-	operator CFArrayRef() const;
-
 private:
-	void pTouch();
-
-	ZRef<CFMutableArrayRef> fCFMutableArrayRef;
-	ZRef<CFArrayRef> fCFArrayRef;
+	CFArrayRef pArray() const;
+	CFMutableArrayRef pTouch();
+	bool fMutable;
 	};
 
 // =================================================================================================
@@ -150,6 +148,7 @@ private:
 #pragma mark * ZValMap_CFType
 
 class ZValMap_CFType
+:	public ZRef<CFDictionaryRef>
 	{
 public:
 	operator bool() const;
@@ -186,14 +185,10 @@ public:
 // Our protocol
 	CFDictionaryRef& OParam();
 
-	operator CFTypeRef() const;
-	operator CFDictionaryRef() const;
-
 private:
-	void pTouch();
-
-	ZRef<CFMutableDictionaryRef> fCFMutableDictionaryRef;
-	ZRef<CFDictionaryRef> fCFDictionaryRef;
+	CFDictionaryRef pDictionary() const;
+	CFMutableDictionaryRef pTouch();
+	bool fMutable;
 	};
 
 NAMESPACE_ZOOLIB_END

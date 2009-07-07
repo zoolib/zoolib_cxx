@@ -34,6 +34,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZValData_CFType
 
 class ZValData_CFType
+:	public ZRef<CFDataRef>
 	{
 	class Rep;
 
@@ -68,14 +69,13 @@ public:
 	void CopyTo(void* iDest, size_t iCount) const;
 
 // Our protocol
-	operator CFTypeRef() const;
-	operator CFDataRef() const;
+	ZRef<CFDataRef> Data() const;
+	ZRef<CFMutableDataRef> DataMutable();
 
 private:
-	void pTouch();
-
-	ZRef<CFMutableDataRef> fCFMutableDataRef;
-	ZRef<CFDataRef> fCFDataRef;
+	CFDataRef pData() const;
+	CFMutableDataRef pTouch();
+	bool fMutable;
 	};
 
 NAMESPACE_ZOOLIB_END

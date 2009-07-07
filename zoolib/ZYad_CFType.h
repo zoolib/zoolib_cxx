@@ -28,9 +28,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZStream_ValData_T.h"
+#include "zoolib/ZStream_CFData.h"
 #include "zoolib/ZStrim_CFString.h"
-#include "zoolib/ZValData_CFType.h"
+#include "zoolib/ZVal_CFType.h"
 
 #include <vector>
 
@@ -47,25 +47,25 @@ public:
 	virtual ~ZYadR_CFType();
 
 // Our protocol
-	ZRef<CFTypeRef> GetCFTypeRef();
+	const ZRef<CFTypeRef>& GetVal();
 
-private:	
-	ZRef<CFTypeRef> fCFTypeRef;
+private:
+	const ZRef<CFTypeRef> fVal;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadStreamRPos_CFType
 
-typedef ZStreamerRPos_T<ZStreamRPos_ValData_T<ZValData_CFType> > ZStreamerRPos_ValData_CFType;
+typedef ZStreamerRPos_T<ZStreamRPos_CFData> ZStreamerRPos_CFType;
 
 class ZYadStreamRPos_CFType
 :	public ZYadR_CFType,
 	public ZYadStreamR,
-	public ZStreamerRPos_ValData_CFType
+	public ZStreamerRPos_CFType
 	{
 public:
-	ZYadStreamRPos_CFType(ZRef<CFDataRef> iDataRef);
+	ZYadStreamRPos_CFType(const ZRef<CFDataRef>& iData);
 	virtual ~ZYadStreamRPos_CFType();
 
 // From ZYadR
@@ -99,8 +99,8 @@ class ZYadListRPos_CFType
 	public ZYadListRPos
 	{
 public:
-	ZYadListRPos_CFType(ZRef<CFArrayRef> iCFArrayRef);
-	ZYadListRPos_CFType(ZRef<CFArrayRef> iCFArrayRef, uint64 iPosition);
+	ZYadListRPos_CFType(const ZRef<CFArrayRef>& iArray);
+	ZYadListRPos_CFType(const ZRef<CFArrayRef>& iArray, uint64 iPosition);
 
 // From ZYadR via ZYadListRPos
 	virtual ZRef<ZYadR> ReadInc();
@@ -114,7 +114,7 @@ public:
 	virtual ZRef<ZYadListRPos> Clone();
 
 private:
-	ZRef<CFArrayRef> fCFArrayRef;
+	const ZValList_CFType fList;
 	uint64 fPosition;
 	};
 
@@ -126,13 +126,13 @@ class ZYadMapRPos_CFType
 :	public ZYadR_CFType,
 	public ZYadMapRPos
 	{
-	ZYadMapRPos_CFType(ZRef<CFDictionaryRef> iCFDictionaryRef,
+	ZYadMapRPos_CFType(const ZRef<CFDictionaryRef>& iDictionary,
 		uint64 iPosition,
 		const std::vector<CFStringRef>& iNames,
 		const std::vector<CFTypeRef>& iValues);
 
 public:
-	ZYadMapRPos_CFType(ZRef<CFDictionaryRef> iCFDictionaryRef);
+	ZYadMapRPos_CFType(const ZRef<CFDictionaryRef>& iDictionary);
 
 // From ZYadR via ZYadMapRPos
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);
@@ -142,7 +142,7 @@ public:
 	virtual ZRef<ZYadMapRPos> Clone();
 
 private:
-	ZRef<CFDictionaryRef> fCFDictionaryRef;
+	const ZRef<CFDictionaryRef> fDictionary;
 	uint64 fPosition;
 	std::vector<CFStringRef> fNames;
 	std::vector<CFTypeRef> fValues;
@@ -154,7 +154,7 @@ private:
 
 namespace ZYad_CFType {
 
-ZRef<ZYadR> sMakeYadR(ZRef<CFTypeRef> iCFTypeRef);
+ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal);
 
 ZRef<CFTypeRef> sFromYadR(ZRef<ZYadR>);
 
