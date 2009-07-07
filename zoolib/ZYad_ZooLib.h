@@ -51,17 +51,17 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStreamRPos_ValData
+#pragma mark * ZYadStreamRPos_ZooLib
 
 typedef ZStreamerRPos_T<ZStreamRPos_ValData_T<ZValData_ZooLib> > ZStreamerRPos_ValData_ZooLib;
 
-class ZYadStreamRPos_ValData
+class ZYadStreamRPos_ZooLib
 :	public ZYadR_ZooLib,
 	public ZYadStreamR,
 	public ZStreamerRPos_ValData_ZooLib
 	{
 public:
-	ZYadStreamRPos_ValData(const ZValData_ZooLib& iData);
+	ZYadStreamRPos_ZooLib(const ZValData_ZooLib& iValData);
 
 // From ZYadR, disambiguating between ZYadR_ZooLib and ZYadStreamR
 	virtual bool IsSimple(const ZYadOptions& iOptions);

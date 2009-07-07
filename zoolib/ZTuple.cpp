@@ -88,6 +88,12 @@ vector<ZVal_ZooLib>& ZTuple::SetMutableVector(const ZTName& iPropName)
 	return this->pFindOrAllocate(iPropName)->MutableList().MutableVector();
 	}
 
+ZTuple ZTuple::GetTuple(const ZTName& iPropName) const
+	{ return this->Get(iPropName).GetMap(); }
+
+void ZTuple::SetTuple(const ZTName& iName, const ZTuple& iTuple)
+	{ this->Set(iName, iTuple); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValMap_ZooLib typename accessors
@@ -122,7 +128,6 @@ vector<ZVal_ZooLib>& ZTuple::SetMutableVector(const ZTName& iPropName)
 	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Float, float) \
 	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Double, double) \
 	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, String, std::string) \
-	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Tuple, ZTuple) \
 
 ZMACRO_ZValMapAccessors_Def(const char*)
 ZMACRO_ZValMapAccessors_Def(const ZTName&)

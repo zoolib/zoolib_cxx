@@ -28,12 +28,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZStream_CFData.h"
+#include "zoolib/ZStream_ValData_T.h"
 #include "zoolib/ZStrim_CFString.h"
-
-#include <CoreFoundation/CFArray.h>
-#include <CoreFoundation/CFBase.h>
-#include <CoreFoundation/CFDictionary.h>
+#include "zoolib/ZValData_CFType.h"
 
 #include <vector>
 
@@ -58,18 +55,18 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStreamRPos_CFData
+#pragma mark * ZYadStreamRPos_CFType
 
-typedef ZStreamerRPos_T<ZStreamRPos_CFData> ZStreamerRPos_CFData;
+typedef ZStreamerRPos_T<ZStreamRPos_ValData_T<ZValData_CFType> > ZStreamerRPos_ValData_CFType;
 
-class ZYadStreamRPos_CFData
+class ZYadStreamRPos_CFType
 :	public ZYadR_CFType,
 	public ZYadStreamR,
-	public virtual ZStreamerRPos_CFData
+	public ZStreamerRPos_ValData_CFType
 	{
 public:
-	ZYadStreamRPos_CFData(ZRef<CFDataRef> iCFDataRef);
-	virtual ~ZYadStreamRPos_CFData();
+	ZYadStreamRPos_CFType(ZRef<CFDataRef> iDataRef);
+	virtual ~ZYadStreamRPos_CFType();
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
@@ -77,17 +74,17 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStrimR_CFString
+#pragma mark * ZYadStrimR_CFType
 
 typedef ZStrimmerR_T<ZStrimR_CFString> ZStrimmerR_CFString;
 
-class ZYadStrimR_CFString
+class ZYadStrimR_CFType
 :	public ZYadR_CFType,
 	public ZYadStrimR,
 	public ZStrimmerR_CFString
 	{
 public:
-	ZYadStrimR_CFString(ZRef<CFStringRef> iStringRef);
+	ZYadStrimR_CFType(ZRef<CFStringRef> iStringRef);
 
 // From ZYadR, disambiguating between ZYadR_TValue and ZYadStreamR
 //	virtual bool IsSimple(const ZYadOptions& iOptions);
@@ -95,15 +92,15 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListRPos_CFArray
+#pragma mark * ZYadListRPos_CFType
 
-class ZYadListRPos_CFArray
+class ZYadListRPos_CFType
 :	public ZYadR_CFType,
 	public ZYadListRPos
 	{
 public:
-	ZYadListRPos_CFArray(ZRef<CFArrayRef> iCFArrayRef);
-	ZYadListRPos_CFArray(ZRef<CFArrayRef> iCFArrayRef, uint64 iPosition);
+	ZYadListRPos_CFType(ZRef<CFArrayRef> iCFArrayRef);
+	ZYadListRPos_CFType(ZRef<CFArrayRef> iCFArrayRef, uint64 iPosition);
 
 // From ZYadR via ZYadListRPos
 	virtual ZRef<ZYadR> ReadInc();
@@ -123,19 +120,19 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadMapRPos_CFDictionary
+#pragma mark * ZYadMapRPos_CFType
 
-class ZYadMapRPos_CFDictionary
+class ZYadMapRPos_CFType
 :	public ZYadR_CFType,
 	public ZYadMapRPos
 	{
-	ZYadMapRPos_CFDictionary(ZRef<CFDictionaryRef> iCFDictionaryRef,
+	ZYadMapRPos_CFType(ZRef<CFDictionaryRef> iCFDictionaryRef,
 		uint64 iPosition,
 		const std::vector<CFStringRef>& iNames,
 		const std::vector<CFTypeRef>& iValues);
 
 public:
-	ZYadMapRPos_CFDictionary(ZRef<CFDictionaryRef> iCFDictionaryRef);
+	ZYadMapRPos_CFType(ZRef<CFDictionaryRef> iCFDictionaryRef);
 
 // From ZYadR via ZYadMapRPos
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);

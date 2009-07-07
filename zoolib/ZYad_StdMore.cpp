@@ -41,7 +41,7 @@ void ZYadPrimR_Std::Finish()
 #pragma mark * ZYadStreamRPos_Std
 
 ZYadStreamRPos_Std::ZYadStreamRPos_Std(const ZValData_ZooLib& iData)
-:	ZYadStreamRPos_ValData(iData)
+:	ZYadStreamRPos_ZooLib(iData)
 	{}
 
 void ZYadStreamRPos_Std::Finish()

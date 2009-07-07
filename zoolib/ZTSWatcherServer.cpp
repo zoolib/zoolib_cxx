@@ -166,7 +166,7 @@ static bool sSync1(
 			if (entry.QGetInt64("refcon", theRefcon))
 				{
 				ZTuple queryAsTuple;
-				if (entry.QGetTuple("query", queryAsTuple))
+				if (entry.Get("query").QGetTuple(queryAsTuple))
 					{
 					ZTSWatcher::AddedQueryCombo theCombo;
 					theCombo.fRefcon = theRefcon;
@@ -200,7 +200,7 @@ static bool sSync1(
 			if (entry.QGetID("ID", theID))
 				{
 				ZTuple theTuple;
-				if (entry.QGetTuple("tuple", theTuple))
+				if (entry.Get("tuple").QGetTuple(theTuple))
 					{
 					if (lastID >= theID)
 						writeNeededSort = true;

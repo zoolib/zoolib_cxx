@@ -18,60 +18,68 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_StdMore__
-#define __ZYad_StdMore__ 1
+#ifndef __ZValData_CFType__
+#define __ZValData_CFType__ 1
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZYad_Std.h"
-#include "zoolib/ZYad_ZooLib.h"
+#if ZCONFIG_SPI_Enabled(CFType)
+
+#include "zoolib/ZRef_CFType.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadPrimR_Std
-
-class ZYadPrimR_Std
-:	public ZYadR_Std,
-	public ZYadR_ZooLib
-	{
-public:
-	ZYadPrimR_Std();
-	ZYadPrimR_Std(const ZVal_ZooLib& iVal);
-
-// From ZYadR_Std
-	virtual void Finish();
-	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStreamRPos_Std
+#pragma mark * ZValData_CFType
 
-class ZYadStreamRPos_Std
-:	public ZYadR_Std,
-	public ZYadStreamRPos_ZooLib
+class ZValData_CFType
 	{
+	class Rep;
+
 public:
-	ZYadStreamRPos_Std(const ZValData_ZooLib& iData);
+	operator bool() const;
 
-// From ZYadR_Std
-	virtual void Finish();
-	};
+	ZValData_CFType();
+	ZValData_CFType(const ZValData_CFType& iOther);
+	~ZValData_CFType();
+	ZValData_CFType& operator=(const ZValData_CFType& iOther);
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimU_Std
+	ZValData_CFType(const ZRef<CFMutableDataRef>& iOther);
+	ZValData_CFType(const ZRef<CFDataRef>& iOther);
 
-class ZYadStrimU_Std
-:	public ZYadR_Std,
-	public ZYadStrimU_String
-	{
-public:
-	ZYadStrimU_Std(const std::string& iString);
+	ZValData_CFType& operator=(const ZRef<CFMutableDataRef>& iOther);
+	ZValData_CFType& operator=(const ZRef<CFDataRef>& iOther);
 
-// From ZYadR_Std
-	virtual void Finish();
+	ZValData_CFType(size_t iSize);
+	ZValData_CFType(const void* iSourceData, size_t iSize);
+
+// ZValData protocol
+	size_t GetSize() const;
+	void SetSize(size_t iSize);
+
+	const void* GetData() const;
+	void* GetData();
+
+	void CopyFrom(size_t iOffset, const void* iSource, size_t iCount);
+	void CopyFrom(const void* iSource, size_t iCount);
+
+	void CopyTo(size_t iOffset, void* iDest, size_t iCount) const;
+	void CopyTo(void* iDest, size_t iCount) const;
+
+// Our protocol
+	operator CFTypeRef() const;
+	operator CFDataRef() const;
+
+private:
+	void pTouch();
+
+	ZRef<CFMutableDataRef> fCFMutableDataRef;
+	ZRef<CFDataRef> fCFDataRef;
 	};
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZYad_StdMore__
+#endif // ZCONFIG_SPI_Enabled(CFType)
+
+#endif // __ZValData_CFType__

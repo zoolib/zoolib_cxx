@@ -320,7 +320,7 @@ void ZTSWatcher_Client::pSync1(
 			if (entry.QGetID("ID", theID))
 				{
 				ZTuple theTuple;
-				if (entry.QGetTuple("tuple", theTuple))
+				if (entry.Get("tuple").QGetTuple(theTuple))
 					{
 					oChangedTupleIDs.push_back(theID);
 					oChangedTuples.push_back(theTuple);

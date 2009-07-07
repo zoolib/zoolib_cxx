@@ -23,9 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(CFType)
 
 #include "zoolib/ZFactoryChain.h"
-#include "zoolib/ZStream_CFData.h"
 #include "zoolib/ZStrim_CFString.h"
 #include "zoolib/ZUtil_CFType.h"
+#include "zoolib/ZVal_CFType.h"
 
 #include <CoreFoundation/CFString.h>
 
@@ -127,45 +127,45 @@ ZRef<CFTypeRef> ZYadR_CFType::GetCFTypeRef()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStreamRPos_MemoryBlock
+#pragma mark * ZYadStreamRPos_CFType
 
-ZYadStreamRPos_CFData::ZYadStreamRPos_CFData(ZRef<CFDataRef> iCFDataRef)
-:	ZYadR_CFType(iCFDataRef),
-	ZStreamerRPos_CFData(iCFDataRef)
+ZYadStreamRPos_CFType::ZYadStreamRPos_CFType(ZRef<CFDataRef> iDataRef)
+:	ZYadR_CFType(iDataRef),
+	ZStreamerRPos_ValData_CFType(iDataRef)
 	{}
 
-ZYadStreamRPos_CFData::~ZYadStreamRPos_CFData()
+ZYadStreamRPos_CFType::~ZYadStreamRPos_CFType()
 	{}
 
-bool ZYadStreamRPos_CFData::IsSimple(const ZYadOptions& iOptions)
+bool ZYadStreamRPos_CFType::IsSimple(const ZYadOptions& iOptions)
 	{ return this->GetStreamRPos().GetSize() <= iOptions.fRawChunkSize; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStrimR_CFString
+#pragma mark * ZYadStrimR_CFType
 
-ZYadStrimR_CFString::ZYadStrimR_CFString(ZRef<CFStringRef> iStringRef)
+ZYadStrimR_CFType::ZYadStrimR_CFType(ZRef<CFStringRef> iStringRef)
 :	ZYadR_CFType(iStringRef),
 	ZStrimmerR_CFString(iStringRef)
 	{}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListRPos_CFArray
+#pragma mark * ZYadListRPos_CFType
 
-ZYadListRPos_CFArray::ZYadListRPos_CFArray(ZRef<CFArrayRef> iCFArrayRef)
+ZYadListRPos_CFType::ZYadListRPos_CFType(ZRef<CFArrayRef> iCFArrayRef)
 :	ZYadR_CFType(iCFArrayRef),
 	fCFArrayRef(iCFArrayRef),
 	fPosition(0)
 	{}
 
-ZYadListRPos_CFArray::ZYadListRPos_CFArray(ZRef<CFArrayRef> iCFArrayRef, uint64 iPosition)
+ZYadListRPos_CFType::ZYadListRPos_CFType(ZRef<CFArrayRef> iCFArrayRef, uint64 iPosition)
 :	ZYadR_CFType(iCFArrayRef),
 	fCFArrayRef(iCFArrayRef),
 	fPosition(iPosition)
 	{}
 
-ZRef<ZYadR> ZYadListRPos_CFArray::ReadInc()
+ZRef<ZYadR> ZYadListRPos_CFType::ReadInc()
 	{
 	CFIndex theSize = ::CFArrayGetCount(fCFArrayRef);
 	if (fPosition < theSize)
@@ -176,21 +176,21 @@ ZRef<ZYadR> ZYadListRPos_CFArray::ReadInc()
 	return ZRef<ZYadR>();
 	}
 
-uint64 ZYadListRPos_CFArray::GetPosition()
+uint64 ZYadListRPos_CFType::GetPosition()
 	{ return fPosition; }
 
-uint64 ZYadListRPos_CFArray::GetSize()
+uint64 ZYadListRPos_CFType::GetSize()
 	{ return ::CFArrayGetCount(fCFArrayRef); }
 
-void ZYadListRPos_CFArray::SetPosition(uint64 iPosition)
+void ZYadListRPos_CFType::SetPosition(uint64 iPosition)
 	{ fPosition = iPosition; }
 
-ZRef<ZYadListRPos> ZYadListRPos_CFArray::Clone()
-	{ return new ZYadListRPos_CFArray(fCFArrayRef, fPosition); }
+ZRef<ZYadListRPos> ZYadListRPos_CFType::Clone()
+	{ return new ZYadListRPos_CFType(fCFArrayRef, fPosition); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadMapRPos_CFDictionary
+#pragma mark * ZYadMapRPos_CFType
 
 namespace ZANONYMOUS {
 
@@ -209,7 +209,7 @@ static void sGatherContents(const void* iKey, const void* iValue, void* iRefcon)
 
 } // anonymous namespace
 
-ZYadMapRPos_CFDictionary::ZYadMapRPos_CFDictionary(ZRef<CFDictionaryRef> iCFDictionaryRef,
+ZYadMapRPos_CFType::ZYadMapRPos_CFType(ZRef<CFDictionaryRef> iCFDictionaryRef,
 	uint64 iPosition,
 	const std::vector<CFStringRef>& iNames,
 	const std::vector<CFTypeRef>& iValues)
@@ -220,7 +220,7 @@ ZYadMapRPos_CFDictionary::ZYadMapRPos_CFDictionary(ZRef<CFDictionaryRef> iCFDict
 	fValues(iValues)
 	{}
 
-ZYadMapRPos_CFDictionary::ZYadMapRPos_CFDictionary(ZRef<CFDictionaryRef> iCFDictionaryRef)
+ZYadMapRPos_CFType::ZYadMapRPos_CFType(ZRef<CFDictionaryRef> iCFDictionaryRef)
 :	ZYadR_CFType(iCFDictionaryRef),
 	fCFDictionaryRef(iCFDictionaryRef),
 	fPosition(0)
@@ -231,7 +231,7 @@ ZYadMapRPos_CFDictionary::ZYadMapRPos_CFDictionary(ZRef<CFDictionaryRef> iCFDict
 	::CFDictionaryApplyFunction(fCFDictionaryRef, sGatherContents, &theParam);
 	}
 
-ZRef<ZYadR> ZYadMapRPos_CFDictionary::ReadInc(string& oName)
+ZRef<ZYadR> ZYadMapRPos_CFType::ReadInc(string& oName)
 	{
 	if (fPosition < fNames.size())	
 		{
@@ -241,7 +241,7 @@ ZRef<ZYadR> ZYadMapRPos_CFDictionary::ReadInc(string& oName)
 	return ZRef<ZYadR>();
 	}
 
-void ZYadMapRPos_CFDictionary::SetPosition(const std::string& iName)
+void ZYadMapRPos_CFType::SetPosition(const std::string& iName)
 	{
 	for (fPosition = 0; fPosition < fNames.size(); ++fPosition)
 		{
@@ -250,8 +250,8 @@ void ZYadMapRPos_CFDictionary::SetPosition(const std::string& iName)
 		}
 	}
 
-ZRef<ZYadMapRPos> ZYadMapRPos_CFDictionary::Clone()
-	{ return new ZYadMapRPos_CFDictionary(fCFDictionaryRef, fPosition, fNames, fValues); }
+ZRef<ZYadMapRPos> ZYadMapRPos_CFType::Clone()
+	{ return new ZYadMapRPos_CFType(fCFDictionaryRef, fPosition, fNames, fValues); }
 
 // =================================================================================================
 #pragma mark -
@@ -262,63 +262,15 @@ ZRef<ZYadR> ZYad_CFType::sMakeYadR(ZRef<CFTypeRef> iCFTypeRef)
 	CFTypeID theTypeID = ::CFGetTypeID(iCFTypeRef);
 
 	if (theTypeID == ::CFDictionaryGetTypeID())
-		return new ZYadMapRPos_CFDictionary(static_cast<CFDictionaryRef>(iCFTypeRef.Get()));
+		return new ZYadMapRPos_CFType(static_cast<CFDictionaryRef>(iCFTypeRef.Get()));
 
 	if (theTypeID == ::CFArrayGetTypeID())
-		return new ZYadListRPos_CFArray(static_cast<CFArrayRef>(iCFTypeRef.Get()));
+		return new ZYadListRPos_CFType(static_cast<CFArrayRef>(iCFTypeRef.Get()));
 
 	if (theTypeID == ::CFDataGetTypeID())
-		return new ZYadStreamRPos_CFData(static_cast<CFDataRef>(iCFTypeRef.Get()));
+		return new ZYadStreamRPos_CFType(static_cast<CFDataRef>(iCFTypeRef.Get()));
 
 	return new ZYadR_CFType(iCFTypeRef);
-	}
-
-static CFDictionaryRef sReadDictionary(ZRef<ZYadMapR> iYadMapR)
-	{
-	CFMutableDictionaryRef result = ::CFDictionaryCreateMutable(
-		kCFAllocatorDefault, 0,
-		&kCFCopyStringDictionaryKeyCallBacks,
-		&kCFTypeDictionaryValueCallBacks);
-
-	string theName;
-	while (ZRef<ZYadR> theYadR = iYadMapR->ReadInc(theName))
-		{
-		ZRef<CFStringRef> theStringRef = ZUtil_CFType::sString(theName);
-		ZRef<CFTypeRef> theValue = ZYad_CFType::sFromYadR(theYadR);
-		::CFDictionarySetValue(result, theStringRef, theValue);
-		}
-
-	return result;
-	}
-
-static ZRef<CFArrayRef> sReadArray(ZRef<ZYadListR> iYadListR)
-	{
-	ZRef<CFMutableArrayRef> result = ZUtil_CFType::sArrayMutable();
-
-	while (ZRef<ZYadR> theYadR = iYadListR->ReadInc())
-		::CFArrayAppendValue(result, ZYad_CFType::sFromYadR(theYadR));
-
-	return result;
-	}
-
-static CFDataRef sReadData(const ZStreamR& iStreamR)
-	{
-	size_t expectedSize = 0;
-	if (const ZStreamRPos* theStreamRPos = dynamic_cast<const ZStreamRPos*>(&iStreamR))
-		expectedSize = theStreamRPos->GetSize();
-
-	CFMutableDataRef result = ::CFDataCreateMutable(kCFAllocatorDefault, expectedSize);
-	ZStreamRWPos_CFData w(result);
-	w.CopyAllFrom(iStreamR);
-	w.Truncate();
-	return result;
-	}
-
-ZRef<CFStringRef> spReadString(const ZStrimR& iStrimR)
-	{
-	ZRef<CFMutableStringRef> result = ZUtil_CFType::sStringMutable();
-	ZStrimW_CFString(result).CopyAllFrom(iStrimR);
-	return result;	
 	}
 
 ZRef<CFTypeRef> ZYad_CFType::sFromYadR(ZRef<ZYadR> iYadR)
@@ -329,25 +281,36 @@ ZRef<CFTypeRef> ZYad_CFType::sFromYadR(ZRef<ZYadR> iYadR)
 		}
 	else if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iYadR))
 		{
-		CFTypeRef result = theYadR->GetCFTypeRef();
-		::CFRetain(result);
-		return result;
+		return theYadR->GetCFTypeRef();
 		}
 	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
-		return sReadDictionary(theYadMapR);
+		ZValMap_CFType theMap;
+
+		string theName;
+		while (ZRef<ZYadR> theYadR = theYadMapR->ReadInc(theName))
+			theMap.Set(theName, ZYad_CFType::sFromYadR(theYadR));
+
+		return ZRef<CFTypeRef>(theMap);
 		}
 	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
 		{
-		return sReadArray(theYadListR);
+		ZValList_CFType theList;
+
+		while (ZRef<ZYadR> theYadR = theYadListR->ReadInc())
+			theList.Append(ZYad_CFType::sFromYadR(theYadR));
+
+		return ZRef<CFArrayRef>(theList);
 		}
 	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
 		{
-		return sReadData(theYadStreamR->GetStreamR());
+		return ZRef<CFDataRef>(sReadAll_T<ZValData_CFType>(theYadStreamR->GetStreamR()));
 		}
 	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
 		{
-		return spReadString(theYadStrimR->GetStrimR());
+		ZRef<CFMutableStringRef> result = ZUtil_CFType::sStringMutable();
+		ZStrimW_CFString(result).CopyAllFrom(theYadStrimR->GetStrimR());
+		return result;	
 		}
 	else
 		{

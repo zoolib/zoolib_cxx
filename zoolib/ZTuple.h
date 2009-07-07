@@ -48,7 +48,6 @@ typedef ZVal_ZooLib ZTValue;
 	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Float, float) \
 	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Double, double) \
 	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, String, std::string) \
-	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Tuple, ZTuple) \
 
 class ZTuple : public ZValMap_ZooLib
 	{
@@ -66,6 +65,9 @@ public:
 // Backwards compatibility
 	ZTuple Over(const ZTuple& iUnder) const;
 	ZTuple Under(const ZTuple& iOver) const;
+
+	ZTuple GetTuple(const ZTName& iName) const;
+	void SetTuple(const ZTName& iName, const ZTuple& iTuple);
 
 	ZValMap_ZooLib& SetNull(const ZTName& iPropName);
 	std::vector<ZVal_ZooLib>& SetMutableVector(const ZTName& iPropName);
