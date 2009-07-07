@@ -119,9 +119,6 @@ public:
 
 	size_t Size() const;
 
-//	void Lock() const;
-//	void Unlock() const;
-
 private:
 	Handle fHandle;
 	};

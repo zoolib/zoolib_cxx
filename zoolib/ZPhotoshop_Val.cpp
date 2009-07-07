@@ -252,31 +252,6 @@ Handle& PSAlias::OParam()
 	return fHandle;
 	}
 
-#if 0
-size_t PSAlias::Size() const
-	{
-	if (fHandle)
-		return sPSHandle->GetSize(fHandle);
-	return 0;
-	}
-
-void PSAlias::Lock() const
-	{
-	if (fHandle)
-		{
-		Boolean priorLock;
-		Ptr dummy;
-		sPSHandle->SetLock(fHandle, true, &dummy, &priorLock);
-		}
-	}
-
-void PSAlias::Unlock() const
-	{
-	Boolean priorLock;
-	Ptr dummy;
-	sPSHandle->SetLock(fHandle, false, &dummy, &priorLock);
-	}
-#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Spec::Entry
