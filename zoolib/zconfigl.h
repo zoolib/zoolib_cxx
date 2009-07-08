@@ -281,22 +281,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	// inherits 'XXX' via dominance
 #	pragma warning(disable:4250)
 
-#	ifndef _CRT_NONSTDC_NO_DEPRECATE
-#		define _CRT_NONSTDC_NO_DEPRECATE
-#	endif
-#	ifndef _CRT_SECURE_NO_DEPRECATE
-#		define _CRT_SECURE_NO_DEPRECATE
-#	endif
-#	ifndef _HAS_ITERATOR_DEBUGGING
-#		define _HAS_ITERATOR_DEBUGGING 0
-#	endif
-#	ifndef _SCL_SECURE_NO_DEPRECATE
-#		define _SCL_SECURE_NO_DEPRECATE
-#	endif
-#	ifndef _SECURE_SCL
-#		define _SECURE_SCL 0
-#	endif
-
 #endif
 
 // =================================================================================================
