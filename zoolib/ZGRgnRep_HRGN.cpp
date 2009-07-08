@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(GRgnRep_HRGN)
 
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 
 #include <vector>
 
@@ -101,14 +101,9 @@ HRGN sMakeHRGN(const ZRef<ZGRgnRep>& iRep)
 namespace ZANONYMOUS {
 
 class Make_Rect
-:	public ZFactoryChain_T<ZRef<ZGRgnRep>, const ZRect&>
+:	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRect&>
 	{
-public:
-	Make_Rect()
-	:	ZFactoryChain_T<Result_t, Param_t>(true)
-		{}
-
-	virtual bool Make(Result_t& oResult, Param_t iParam)
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		HRGN theHRGN = ::CreateRectRgn(iParam.left, iParam.top, iParam.right, iParam.bottom);
 		oResult = new ZGRgnRep_HRGN(theHRGN);

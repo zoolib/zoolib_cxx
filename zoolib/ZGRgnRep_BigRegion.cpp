@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZGRgnRep_BigRegion.h"
 
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -64,14 +64,12 @@ ZGRgnRep_BigRegion* sMakeRep(const ZRef<ZGRgnRep>& iRep)
 namespace ZANONYMOUS {
 
 class Make_Rect
-:	public ZFactoryChain_T<ZRef<ZGRgnRep>, const ZRect&>
+:	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRect&>
 	{
 public:
-	Make_Rect()
-	:	ZFactoryChain_T<Result_t, Param_t>(false)
-		{}
+	Make_Rect() : Base_t(false) {}
 
-	virtual bool Make(Result_t& oResult, Param_t iParam)
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		oResult = new ZGRgnRep_BigRegion(ZBigRegion(iParam));
 		return true;

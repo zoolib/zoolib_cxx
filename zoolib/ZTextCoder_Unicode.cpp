@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTextCoder_Unicode.h"
 #include "zoolib/ZByteSwap.h"
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZUnicode.h"
 
@@ -39,113 +39,115 @@ static const size_t kBufSize = sStackBufferSize;
 
 namespace ZANONYMOUS {
 
-bool sMake_Decoder(ZTextDecoder*& oResult, const string& iParam)
+class Make_Decoder
+:	public ZFunctionChain_T<ZTextDecoder*, const string&>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		if (iParam == "utf-8" || iParam == "utf8")
+		try
 			{
-			oResult = new ZTextDecoder_UTF8;
-			return true;
-			}
-		else if (iParam == "ucs-4" || iParam == "ucs4" || iParam == "utf-32" || iParam == "utf32")
-			{
-			if (ZCONFIG(Endian, Big))
+			if (iParam == "utf-8" || iParam == "utf8")
+				{
+				oResult = new ZTextDecoder_UTF8;
+				return true;
+				}
+			else if (iParam == "ucs-4" || iParam == "ucs4" || iParam == "utf-32" || iParam == "utf32")
+				{
+				if (ZCONFIG(Endian, Big))
+					oResult = new ZTextDecoder_UTF32BE;
+				else
+					oResult = new ZTextDecoder_UTF32LE;
+				return true;
+				}
+			else if (iParam == "utf-16" || iParam == "utf16")
+				{
+				if (ZCONFIG(Endian, Big))
+					oResult = new ZTextDecoder_UTF16BE;
+				else
+					oResult = new ZTextDecoder_UTF16LE;
+				return true;
+				}
+			else if (iParam == "ucs-4be" || iParam == "ucs4be" || iParam == "utf-32be" || iParam == "utf32be")
+				{
 				oResult = new ZTextDecoder_UTF32BE;
-			else
+				return true;
+				}
+			else if (iParam == "ucs-4le" || iParam == "ucs4le" || iParam == "utf-32le" || iParam == "utf32le")
+				{
 				oResult = new ZTextDecoder_UTF32LE;
-			return true;
-			}
-		else if (iParam == "utf-16" || iParam == "utf16")
-			{
-			if (ZCONFIG(Endian, Big))
+				return true;
+				}
+			else if (iParam == "utf-16be" || iParam == "utf16be")
+				{
 				oResult = new ZTextDecoder_UTF16BE;
-			else
+				return true;
+				}
+			else if (iParam == "utf-16le" || iParam == "utf16le")
+				{
 				oResult = new ZTextDecoder_UTF16LE;
-			return true;
+				return true;
+				}
 			}
-		else if (iParam == "ucs-4be" || iParam == "ucs4be" || iParam == "utf-32be" || iParam == "utf32be")
-			{
-			oResult = new ZTextDecoder_UTF32BE;
-			return true;
-			}
-		else if (iParam == "ucs-4le" || iParam == "ucs4le" || iParam == "utf-32le" || iParam == "utf32le")
-			{
-			oResult = new ZTextDecoder_UTF32LE;
-			return true;
-			}
-		else if (iParam == "utf-16be" || iParam == "utf16be")
-			{
-			oResult = new ZTextDecoder_UTF16BE;
-			return true;
-			}
-		else if (iParam == "utf-16le" || iParam == "utf16le")
-			{
-			oResult = new ZTextDecoder_UTF16LE;
-			return true;
-			}
-		}
-	catch (...)
-		{}
-	return false;
-	}
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker0;
 
-ZFactoryChain_Maker_T<ZTextDecoder*, const string&>
-	sMaker_Decoder(sMake_Decoder);
-
-bool sMake_Encoder(ZTextEncoder*& oResult, const string& iParam)
+class Make_Encoder
+:	public ZFunctionChain_T<ZTextEncoder*, const string&>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		if (iParam == "utf-8" || iParam == "utf8")
+		try
 			{
-			oResult = new ZTextEncoder_UTF8;
-			return true;
-			}
-		else if (iParam == "ucs-4" || iParam == "ucs4" || iParam == "utf-32" || iParam == "utf32")
-			{
-			if (ZCONFIG(Endian, Big))
+			if (iParam == "utf-8" || iParam == "utf8")
+				{
+				oResult = new ZTextEncoder_UTF8;
+				return true;
+				}
+			else if (iParam == "ucs-4" || iParam == "ucs4" || iParam == "utf-32" || iParam == "utf32")
+				{
+				if (ZCONFIG(Endian, Big))
+					oResult = new ZTextEncoder_UTF32BE;
+				else
+					oResult = new ZTextEncoder_UTF32LE;
+				return true;
+				}
+			else if (iParam == "utf-16" || iParam == "utf16")
+				{
+				if (ZCONFIG(Endian, Big))
+					oResult = new ZTextEncoder_UTF16BE;
+				else
+					oResult = new ZTextEncoder_UTF16LE;
+				return true;
+				}
+			else if (iParam == "ucs-4be" || iParam == "ucs4be" || iParam == "utf-32be" || iParam == "utf32be")
+				{
 				oResult = new ZTextEncoder_UTF32BE;
-			else
+				return true;
+				}
+			else if (iParam == "ucs-4le" || iParam == "ucs4le" || iParam == "utf-32le" || iParam == "utf32le")
+				{
 				oResult = new ZTextEncoder_UTF32LE;
-			return true;
-			}
-		else if (iParam == "utf-16" || iParam == "utf16")
-			{
-			if (ZCONFIG(Endian, Big))
+				return true;
+				}
+			else if (iParam == "utf-16be" || iParam == "utf16be")
+				{
 				oResult = new ZTextEncoder_UTF16BE;
-			else
+				return true;
+				}
+			else if (iParam == "utf-16le" || iParam == "utf16le")
+				{
 				oResult = new ZTextEncoder_UTF16LE;
-			return true;
+				return true;
+				}
 			}
-		else if (iParam == "ucs-4be" || iParam == "ucs4be" || iParam == "utf-32be" || iParam == "utf32be")
-			{
-			oResult = new ZTextEncoder_UTF32BE;
-			return true;
-			}
-		else if (iParam == "ucs-4le" || iParam == "ucs4le" || iParam == "utf-32le" || iParam == "utf32le")
-			{
-			oResult = new ZTextEncoder_UTF32LE;
-			return true;
-			}
-		else if (iParam == "utf-16be" || iParam == "utf16be")
-			{
-			oResult = new ZTextEncoder_UTF16BE;
-			return true;
-			}
-		else if (iParam == "utf-16le" || iParam == "utf16le")
-			{
-			oResult = new ZTextEncoder_UTF16LE;
-			return true;
-			}
-		}
-	catch (...)
-		{}
-	return false;
-	}
-
-ZFactoryChain_Maker_T<ZTextEncoder*, const string&>
-	sMaker_Encoder(sMake_Encoder);
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker1;
 
 } // anonymous namespace
 

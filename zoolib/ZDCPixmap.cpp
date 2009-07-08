@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZDCPixmap.h"
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 #include "zoolib/ZStream.h"
 
@@ -51,13 +51,6 @@ clear the cache.
 #pragma mark * kDebug
 
 #define kDebug_Pixmap 1
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Factories
-
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRaster_t&);
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRasterDesc_t&);
 
 // =================================================================================================
 #pragma mark -
@@ -601,8 +594,8 @@ ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
 	const PixelDesc& iPixelDesc)
 	{
 	ZRef<ZDCPixmapRep> result;
-	if (ZFactoryChain_T<ZRef<ZDCPixmapRep>, const CreateRaster_t&>		
-		::sMake(result, CreateRaster_t(iRaster, iBounds, iPixelDesc)))
+	if (ZFunctionChain_T<ZRef<ZDCPixmapRep>, const CreateRaster_t&>		
+		::sInvoke(result, CreateRaster_t(iRaster, iBounds, iPixelDesc)))
 		{
 		return result;
 		}
@@ -615,8 +608,8 @@ ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
 	const PixelDesc& iPixelDesc)
 	{
 	ZRef<ZDCPixmapRep> result;
-	if (ZFactoryChain_T<ZRef<ZDCPixmapRep>, const CreateRasterDesc_t&>		
-		::sMake(result, CreateRasterDesc_t(iRasterDesc, iBounds, iPixelDesc)))
+	if (ZFunctionChain_T<ZRef<ZDCPixmapRep>, const CreateRasterDesc_t&>		
+		::sInvoke(result, CreateRasterDesc_t(iRasterDesc, iBounds, iPixelDesc)))
 		{
 		return result;
 		}

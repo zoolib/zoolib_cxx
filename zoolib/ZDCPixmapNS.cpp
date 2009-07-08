@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCPixmapNS.h"
 #include "zoolib/ZByteSwap.h"
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 
 #include <vector>
@@ -102,12 +102,6 @@ class ZDCPixmap. This complicated the declaration of ZDCPixmap enormously, it is
 smart pointer. So we have a namespace ZDCPixmapNS to scope those entities that are referenced by
 different parts of the ZDCPixmap suite.
 */
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Factories
-
-ZOOLIB_FACTORYCHAIN_HEAD(ZDCPixmapNS::EFormatStandard, ZDCPixmapNS::EFormatEfficient);
 
 // =================================================================================================
 
@@ -320,7 +314,7 @@ int ZDCPixmapNS::sCalcRowBytes(int iWidth, int iDepth, int iByteRound)
 EFormatStandard ZDCPixmapNS::sMapEfficientToStandard(EFormatEfficient iFormat)
 	{
 	EFormatStandard result;
-	if (ZFactoryChain_T<EFormatStandard, EFormatEfficient>::sMake(result, iFormat))
+	if (ZFunctionChain_T<EFormatStandard, EFormatEfficient>::sInvoke(result, iFormat))
 		{
 		return result;
 		}

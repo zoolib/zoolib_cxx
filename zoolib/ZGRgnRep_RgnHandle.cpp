@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(GRgnRep_RgnHandle)
 
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -108,14 +108,9 @@ RgnHandle sMakeRgnHandle(const ZRef<ZGRgnRep>& iRep)
 namespace ZANONYMOUS {
 
 class Make_Rect
-:	public ZFactoryChain_T<ZRef<ZGRgnRep>, const ZRect&>
+:	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRect&>
 	{
-public:
-	Make_Rect()
-	:	ZFactoryChain_T<Result_t, Param_t>(true)
-		{}
-
-	virtual bool Make(Result_t& oResult, Param_t iParam)
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		RgnHandle theRgnHandle = ::NewRgn();
 		::MacSetRectRgn(theRgnHandle, iParam.left, iParam.top, iParam.right, iParam.bottom);

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(File_Win)
 
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Win.h"
 
@@ -47,36 +47,37 @@ If fBase is empty then fComps must also be empty and we represent the root.
 
 namespace ZANONYMOUS {
 
-bool sMake_FileLoc(ZRef<ZFileLoc>& oResult, ZFileLoc::ELoc iParam)
+class Make_FileLoc
+:	public ZFunctionChain_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		if (ZUtil_Win::sUseWAPI())
+		try
 			{
-			switch (iParam)
+			if (ZUtil_Win::sUseWAPI())
 				{
-				case ZFileLoc::eLoc_Root: oResult = ZFileLoc_WinNT::sGet_Root(); return true;
-				case ZFileLoc::eLoc_CWD: oResult = ZFileLoc_WinNT::sGet_CWD(); return true;
-				case ZFileLoc::eLoc_App: oResult = ZFileLoc_WinNT::sGet_App(); return true;
+				switch (iParam)
+					{
+					case ZFileLoc::eLoc_Root: oResult = ZFileLoc_WinNT::sGet_Root(); return true;
+					case ZFileLoc::eLoc_CWD: oResult = ZFileLoc_WinNT::sGet_CWD(); return true;
+					case ZFileLoc::eLoc_App: oResult = ZFileLoc_WinNT::sGet_App(); return true;
+					}
+				}
+			else
+				{
+				switch (iParam)
+					{
+					case ZFileLoc::eLoc_Root: oResult = ZFileLoc_Win::sGet_Root(); return true;
+					case ZFileLoc::eLoc_CWD: oResult = ZFileLoc_Win::sGet_CWD(); return true;
+					case ZFileLoc::eLoc_App: oResult = ZFileLoc_Win::sGet_App(); return true;
+					}
 				}
 			}
-		else
-			{
-			switch (iParam)
-				{
-				case ZFileLoc::eLoc_Root: oResult = ZFileLoc_Win::sGet_Root(); return true;
-				case ZFileLoc::eLoc_CWD: oResult = ZFileLoc_Win::sGet_CWD(); return true;
-				case ZFileLoc::eLoc_App: oResult = ZFileLoc_Win::sGet_App(); return true;
-				}
-			}
-		}
-	catch (...)
-		{}
-	return false;
-	}
-
-ZFactoryChain_Maker_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>
-	sMaker1(sMake_FileLoc);
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker0;
 
 } // anonymous namespace
 

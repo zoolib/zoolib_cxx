@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZStream_ValData_T.h"
 #include "zoolib/ZStrim_CFString.h"
 #include "zoolib/ZUtil_CFType.h"
@@ -36,8 +36,6 @@ using std::min;
 using std::string;
 using std::vector;
 
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<CFTypeRef>, ZRef<ZYadR>);
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory
@@ -46,14 +44,9 @@ namespace ZANONYMOUS {
 
 // ZRef<CFTypeRef> <-- ZRef<ZYadR>
 class Maker0
-:	public ZFactoryChain_T<ZRef<CFTypeRef>, ZRef<ZYadR> >
+:	public ZFunctionChain_T<ZRef<CFTypeRef>, ZRef<ZYadR> >
 	{
-public:
-	Maker0()
-	:	ZFactoryChain_T<Result_t, Param_t>(true)
-		{}
-
-	virtual bool Make(Result_t& oResult, Param_t iParam)
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iParam))
 			{
@@ -69,17 +62,15 @@ public:
 #if 0
 // ZRef<CFTypeRef> <-- ZRef<ZYadR>
 class Maker1
-:	public ZFactoryChain_T<ZRef<CFTypeRef>, ZRef<ZYadR> >
+:	public ZFunctionChain_T<ZRef<CFTypeRef>, ZRef<ZYadR> >
 	{
 public:
-	Maker1()
-	:	ZFactoryChain_T<Result_t, Param_t>(false)
-		{}
+	Maker1() : Base_t(false) {}
 
-	virtual bool Make(Result_t& oResult, Param_t iParam)
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		ZVal_ZooLib theVal;
-		if (ZFactoryChain_T<ZVal_ZooLib, ZRef<ZYadR> >::sMake(theVal, iParam))
+		if (ZFunctionChain_T<ZVal_ZooLib, ZRef<ZYadR> >::sInvoke(theVal, iParam))
 			{
 			oResult = ZUtil_CFType::sType(theVal);
 			return true;
@@ -90,14 +81,12 @@ public:
 
 // ZVal_ZooLib <-- ZRef<ZYadR>
 class Maker2
-:	public ZFactoryChain_T<ZVal_ZooLib, ZRef<ZYadR> >
+:	public ZFunctionChain_T<ZVal_ZooLib, ZRef<ZYadR> >
 	{
 public:
-	Maker2()
-	:	ZFactoryChain_T<Result_t, Param_t>(false)
-		{}
+	Maker2() : Base_t(false) {}
 
-	virtual bool Make(Result_t& oResult, Param_t iParam)
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iParam))
 			{
@@ -319,7 +308,7 @@ ZRef<CFTypeRef> ZYad_CFType::sFromYadR(ZRef<ZYadR> iYadR)
 		}
 	else
 		{
-		return ZFactoryChain_T<ZRef<CFTypeRef>, ZRef<ZYadR> >::sMake(iYadR);
+		return ZFunctionChain_T<ZRef<CFTypeRef>, ZRef<ZYadR> >::sInvoke(iYadR);
 		}
 	}
 

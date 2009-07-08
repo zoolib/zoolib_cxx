@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTextCollator_ASCII.h"
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZUnicode.h"
 
 using std::min;
@@ -34,23 +34,24 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZANONYMOUS {
 
-bool sMake_Collator(ZRef<ZTextCollatorRep>& oResult, const ZTextCollatorRep::Param_t& iParam)
+class Make_Collator
+:	public ZFunctionChain_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		if (iParam.fLocaleName.empty())
+		try
 			{
-			oResult = new ZTextCollatorRep_ASCII(iParam.fStrength);
-			return true;
+			if (iParam.fLocaleName.empty())
+				{
+				oResult = new ZTextCollatorRep_ASCII(iParam.fStrength);
+				return true;
+				}
 			}
-		}
-	catch (...)
-		{}
-	return false;
-	}
-
-ZFactoryChain_Maker_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>
-	sMaker_Collator(sMake_Collator);
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker0;
 
 } // anonymous namespace
 

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(DC_X)
 
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -979,14 +979,9 @@ bool ZDCCanvas_X_OffScreen::IsOffScreen()
 namespace ZANONYMOUS {
 
 class Make_CreateRaster
-:	public ZFactoryChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRaster_t&>
+:	public ZFunctionChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRaster_t&>
 	{
-public:
-	Make_CreateRaster()
-	:	ZFactoryChain_T<Result_t, Param_t>(true)
-		{}
-
-	virtual bool Make(Result_t& oResult, Param_t iParam)
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		return false;
 		}	
@@ -994,14 +989,9 @@ public:
 
 
 class Make_CreateRasterDesc
-:	public ZFactoryChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRasterDesc_t&>
+:	public ZFunctionChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRasterDesc_t&>
 	{
-public:
-	Make_CreateRasterDesc()
-	:	ZFactoryChain_T<Result_t, Param_t>(true)
-		{}
-
-	virtual bool Make(Result_t& oResult, Param_t iParam)
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		return false;
 		}	
@@ -1009,14 +999,9 @@ public:
 
 
 class Make_EfficientToStandard
-:	public ZFactoryChain_T<ZDCPixmapNS::EFormatStandard, ZDCPixmapNS::EFormatEfficient>
+:	public ZFunctionChain_T<ZDCPixmapNS::EFormatStandard, ZDCPixmapNS::EFormatEfficient>
 	{
-public:
-	Make_EfficientToStandard()
-	:	ZFactoryChain_T<Result_t, Param_t>(true)
-		{}
-
-	virtual bool Make(Result_t& oResult, Param_t iParam)
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		using namespace ZDCPixmapNS;
 

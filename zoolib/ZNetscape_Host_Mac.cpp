@@ -854,7 +854,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					}
 				case kEventControlBoundsChanged:
 					{
-					WindowRef theWindowRef = ::HIViewGetWindow(fHIViewRef);
+					// WindowRef theWindowRef = ::HIViewGetWindow(fHIViewRef);
 
 					ZGRectf newFrame = sGetParam_T<Rect>(iEventRef,
 						kEventParamCurrentBounds, typeQDRectangle);

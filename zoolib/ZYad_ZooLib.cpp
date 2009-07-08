@@ -18,15 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZYad_ZooLib.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
 using std::vector;
-
-ZOOLIB_FACTORYCHAIN_HEAD(ZVal_ZooLib, ZRef<ZYadR>);
 
 // =================================================================================================
 #pragma mark -
@@ -35,14 +33,9 @@ ZOOLIB_FACTORYCHAIN_HEAD(ZVal_ZooLib, ZRef<ZYadR>);
 namespace ZANONYMOUS {
 
 class Maker0
-:	public ZFactoryChain_T<ZVal_ZooLib, ZRef<ZYadR> >
+:	public ZFunctionChain_T<ZVal_ZooLib, ZRef<ZYadR> >
 	{
-public:
-	Maker0()
-	:	ZFactoryChain_T<Result_t, Param_t>(true)
-		{}
-
-	virtual bool Make(Result_t& oResult, Param_t iParam)
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		if (ZRef<ZYadR_ZooLib> theYadR = ZRefDynamicCast<ZYadR_ZooLib>(iParam))
 			{
@@ -293,7 +286,7 @@ ZVal_ZooLib ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
 		}
 	else
 		{
-		return ZFactoryChain_T<ZVal_ZooLib, ZRef<ZYadR> >::sMake(iYadR);
+		return ZFunctionChain_T<ZVal_ZooLib, ZRef<ZYadR> >::sInvoke(iYadR);
 		}
 	}
 

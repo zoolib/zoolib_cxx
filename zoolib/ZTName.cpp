@@ -78,6 +78,10 @@ static inline bool sDifferent(const PNRep* iPNRep, const char* iName, size_t iLe
 
 static const PNRep* sLookupAndTag(const char* iName, size_t iLength)
 	{
+#if ZCONFIG(Compiler,MSVC)
+	return nullptr;
+#else
+#warning NDY
 	if (!iLength)
 		return reinterpret_cast<const PNRep*>(1);
 
@@ -91,10 +95,15 @@ static const PNRep* sLookupAndTag(const char* iName, size_t iLength)
 		return nullptr;
 
 	return reinterpret_cast<const PNRep*>(reinterpret_cast<intptr_t>(*theIter) | 1);
-	}
+#endif
+}
 
 static const PNRep* sLookupAndTag(const string& iName)
 	{
+#if ZCONFIG(Compiler,MSVC)
+	return nullptr;
+#else
+#warning NDY
 	if (iName.empty())
 		return reinterpret_cast<const PNRep*>(1);
 
@@ -109,7 +118,8 @@ static const PNRep* sLookupAndTag(const string& iName)
 		return nullptr;
 
 	return reinterpret_cast<const PNRep*>(reinterpret_cast<intptr_t>(*theIter) | 1);
-	}
+#endif
+}
 
 static inline const PNRep* sGetPNRep(const void* iData)
 	{ return reinterpret_cast<const PNRep*>(reinterpret_cast<intptr_t>(iData) & ~1); }
@@ -159,6 +169,10 @@ inline string ZTName::String::AsString() const
 
 int ZTName::sPreRegister(const char* const* iNames, size_t iCount)
 	{
+#if ZCONFIG(Compiler,MSVC)
+	return 0;
+#else
+#warning NDY
 	if (!sNames)
 		sNames = new vector<const PNRep*>;
 
@@ -190,7 +204,8 @@ int ZTName::sPreRegister(const char* const* iNames, size_t iCount)
 			}
 		}
 	return 0;
-	}
+#endif
+}
 
 ZTName& ZTName::operator=(const ZTName& iOther)
 	{

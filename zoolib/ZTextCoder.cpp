@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZStream.h"
 #include "zoolib/ZTextCoder.h"
 #include "zoolib/ZUnicode.h"
@@ -30,13 +30,6 @@ using std::string;
 NAMESPACE_ZOOLIB_BEGIN
 
 static const size_t kBufSize = sStackBufferSize;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Factories
-
-ZOOLIB_FACTORYCHAIN_HEAD(ZTextDecoder*, const std::string&);
-ZOOLIB_FACTORYCHAIN_HEAD(ZTextEncoder*, const std::string&);
 
 // =================================================================================================
 #pragma mark -
@@ -488,7 +481,7 @@ state when first created, and can be returned to that state by calling ZTextDeco
 ZTextDecoder* ZTextDecoder::sMake(const std::string& iCharset)
 	{
 	const string charsetLC = ZUnicode::sToLower(iCharset);
-	return ZFactoryChain_T<ZTextDecoder*, const string&>::sMake(charsetLC);
+	return ZFunctionChain_T<ZTextDecoder*, const string&>::sInvoke(charsetLC);
 	}
 
 /**
@@ -633,7 +626,7 @@ UTF-32 code units and thus there is no need to deal with truncated source.
 ZTextEncoder* ZTextEncoder::sMake(const std::string& iCharset)
 	{
 	const string charsetLC = ZUnicode::sToLower(iCharset);
-	return ZFactoryChain_T<ZTextEncoder*, const string&>::sMake(charsetLC);
+	return ZFunctionChain_T<ZTextEncoder*, const string&>::sInvoke(charsetLC);
 	}
 
 /**

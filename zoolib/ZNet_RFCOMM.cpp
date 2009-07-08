@@ -20,17 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZNet_RFCOMM.h"
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Factories
-
-//ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t);
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetListener_RFCOMM>, ZNetListener_RFCOMM::MakeParam_t);
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetEndpoint_RFCOMM>, ZNetEndpoint_RFCOMM::MakeParam_t);
 
 // =================================================================================================
 #pragma mark -

@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZGRgn.h"
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -27,12 +27,10 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * Factory functions
 
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZGRgnRep>, const ZRect&);
-
 static ZRef<ZGRgnRep> sMake(const ZRect& iBounds)
 	{
-	return ZFactoryChain_T<ZRef<ZGRgnRep>, const ZRect&>
-		::sMake(iBounds);
+	return ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRect&>
+		::sInvoke(iBounds);
 	}
 
 // =================================================================================================

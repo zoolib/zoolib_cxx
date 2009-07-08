@@ -19,20 +19,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZNet_Local.h"
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZString.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 using std::string;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Factories
-
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetNameLookup>, ZNetName_Local::LookupParam_t);
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetListener_Local>, ZNetListener_Local::MakeParam_t);
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetEndpoint_Local>, ZNetEndpoint_Local::MakeParam_t);
 
 // =================================================================================================
 #pragma mark -
@@ -81,8 +73,8 @@ string ZNetName_Local::AsString() const
 
 ZRef<ZNetNameLookup> ZNetName_Local::CreateLookup(size_t iMaxAddresses) const
 	{
-	return ZFactoryChain_T<ZRef<ZNetNameLookup>, LookupParam_t>
-		::sMake(LookupParam_t(fPath, iMaxAddresses));
+	return ZFunctionChain_T<ZRef<ZNetNameLookup>, LookupParam_t>
+		::sInvoke(LookupParam_t(fPath, iMaxAddresses));
 	}
 
 const string& ZNetName_Local::GetPath() const
@@ -95,8 +87,8 @@ const string& ZNetName_Local::GetPath() const
 ZRef<ZNetListener_Local> ZNetListener_Local::sCreate(
 	const string& iPath, size_t iListenQueueSize)
 	{
-	return ZFactoryChain_T<ZRef<ZNetListener_Local>, MakeParam_t>
-		::sMake(MakeParam_t(iPath, iListenQueueSize));
+	return ZFunctionChain_T<ZRef<ZNetListener_Local>, MakeParam_t>
+		::sInvoke(MakeParam_t(iPath, iListenQueueSize));
 	}
 
 // =================================================================================================
@@ -105,8 +97,8 @@ ZRef<ZNetListener_Local> ZNetListener_Local::sCreate(
 
 ZRef<ZNetEndpoint_Local> ZNetEndpoint_Local::sCreateConnected(const string& iPath)
 	{
-	return ZFactoryChain_T<ZRef<ZNetEndpoint_Local>, MakeParam_t>
-		::sMake(MakeParam_t(iPath));
+	return ZFunctionChain_T<ZRef<ZNetEndpoint_Local>, MakeParam_t>
+		::sInvoke(MakeParam_t(iPath));
 	}
 
 NAMESPACE_ZOOLIB_END

@@ -37,15 +37,16 @@ namespace ZNetscape {
 
 Host_Win::Host_Win(ZRef<GuestFactory> iGuestFactory, HWND iHWND)
 :	Host_Std(iGuestFactory),
-	fWND(iHWND),
+//	fWND(iHWND),
 	fIsWindowed(true),
 	fIsTransparent(false),
 	fTimerID(0),
 	fInnerWND(nullptr)
 	{
 	ZBlockZero(&fNPWindow, sizeof(fNPWindow));
-	this->Attach(fWND);
-	fTimerID = ::SetTimer(fWND, 1, 50, nullptr);
+	this->Attach(iHWND);
+//	this->Attach(fWND);
+	fTimerID = ::SetTimer(iHWND, 1, 50, nullptr);
 	}
 
 Host_Win::~Host_Win()
@@ -60,7 +61,7 @@ NPError Host_Win::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value)
 			if (fIsWindowed)
 				*static_cast<HWND*>(ret_value) = fInnerWND;
 			else
-				*static_cast<HWND*>(ret_value) = fWND;
+				*static_cast<HWND*>(ret_value) = this->GetHWND();
 			return NPERR_NO_ERROR;
 			}
 		case NPNVSupportsWindowless:
@@ -101,20 +102,20 @@ void Host_Win::Host_InvalidateRect(NPP npp, NPRect* rect)
 	if (!fIsWindowed)
 		{
 		RECT theRECT = { rect->left, rect->top, rect->right, rect->bottom };
-		::InvalidateRect(fWND, &theRECT, false);
+		::InvalidateRect(this->GetHWND(), &theRECT, false);
 		}
 	}
 
 void Host_Win::PostCreateAndLoad()
 	{
 	RECT theCR;
-	::GetClientRect(fWND, &theCR);
+	::GetClientRect(this->GetHWND(), &theCR);
 	const int theWidth = theCR.right - theCR.left;
 	const int theHeight = theCR.bottom - theCR.top;
 
 	if (fIsWindowed)
 		{
-		fInnerWND = ZWNDA::sCreateDefault(fWND, WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN, nullptr);
+		fInnerWND = ZWNDA::sCreateDefault(this->GetHWND(), WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN, nullptr);
 		::SetWindowPos(fInnerWND, nullptr,
 			0, 0,
 			theWidth, theHeight,

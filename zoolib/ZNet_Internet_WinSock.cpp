@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Internet_WinSock)
 
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZTime.h"
 
@@ -36,50 +36,55 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZANONYMOUS {
 
-bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Internet::LookupParam_t iParam)
+class Make_NameLookup
+:	public ZFunctionChain_T<ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZNetNameLookup_Internet_WinSock(iParam.f0, iParam.f1, iParam.f2);
-		return true;
-		}
-	catch (...)
-		{}
-	return false;
-	}
+		try
+			{
+			oResult = new ZNetNameLookup_Internet_WinSock(iParam.f0, iParam.f1, iParam.f2);
+			return true;
+			}
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker0;
 
-ZFactoryChain_Maker_T<ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t>
-	sMaker1(sMake_NameLookup);
 
-bool sMake_Listener(ZRef<ZNetListener_TCP>& oResult, ZNetListener_TCP::MakeParam_t iParam)
+class Make_Listener
+:	public ZFunctionChain_T<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam_t>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZNetListener_TCP_WinSock(iParam.f0, iParam.f1, iParam.f2);
-		return true;
-		}
-	catch (...)
-		{}
-	return false;
-	}
+		try
+			{
+			oResult = new ZNetListener_TCP_WinSock(iParam.f0, iParam.f1, iParam.f2);
+			return true;
+			}
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker1;
 
-ZFactoryChain_Maker_T<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam_t>
-	sMaker2(sMake_Listener);
 
-bool sMake_Endpoint(ZRef<ZNetEndpoint_TCP>& oResult, ZNetEndpoint_TCP::MakeParam_t iParam)
+class Make_Endpoint
+:	public ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZNetEndpoint_TCP_WinSock(iParam.f0, iParam.f1);
-		return true;
-		}
-	catch (...)
-		{}
-	return false;
-	}
-
-ZFactoryChain_Maker_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
-	sMaker3(sMake_Endpoint);
+		try
+			{
+			oResult = new ZNetEndpoint_TCP_WinSock(iParam.f0, iParam.f1);
+			return true;
+			}
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker2;
 
 } // anonymous namespace
 

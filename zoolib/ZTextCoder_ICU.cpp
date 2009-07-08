@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(TextCoder_ICU)
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZUnicode.h"
 
 #include <stdexcept>
@@ -45,35 +45,37 @@ static const size_t kBufSize = sStackBufferSize;
 
 namespace ZANONYMOUS {
 
-bool sMake_Decoder(ZTextDecoder*& oResult, const string& iParam)
+class Make_Decoder
+:	public ZFunctionChain_T<ZTextDecoder*, const string&>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZTextDecoder_ICU(iParam);
-		return true;		
-		}
-	catch (...)
-		{}
-	return false;
-	}
+		try
+			{
+			oResult = new ZTextDecoder_ICU(iParam);
+			return true;		
+			}
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker0;
 
-ZFactoryChain_Maker_T<ZTextDecoder*, const string&>
-	sMaker_Decoder(sMake_Decoder);
-
-bool sMake_Encoder(ZTextEncoder*& oResult, const string& iParam)
+class Make_Encoder
+:	public ZFunctionChain_T<ZTextEncoder*, const string&>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZTextEncoder_ICU(iParam);
-		return true;
-		}
-	catch (...)
-		{}
-	return false;
-	}
-
-ZFactoryChain_Maker_T<ZTextEncoder*, const string&>
-	sMaker_Encoder(sMake_Encoder);
+		try
+			{
+			oResult = new ZTextEncoder_ICU(iParam);
+			return true;		
+			}
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker1;
 
 } // anonymous namespace
 

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Local_Socket)
 
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZMemory.h"
 
 #include <errno.h>
@@ -38,50 +38,59 @@ using std::string;
 #pragma mark -
 #pragma mark * Factory functions
 
-static bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Local::LookupParam_t iParam)
+namespace ZANONYMOUS {
+
+class Make_NameLookup
+:	public ZFunctionChain_T<ZRef<ZNetNameLookup>, ZNetName_Local::LookupParam_t>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZNetNameLookup_Local_Socket(iParam);
-		return true;
-		}
-	catch (...)
-		{}
-	return false;
-	}
+		try
+			{
+			oResult = new ZNetNameLookup_Local_Socket(iParam);
+			return true;
+			}
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker0;
 
-static ZFactoryChain_Maker_T<ZRef<ZNetNameLookup>, ZNetName_Local::LookupParam_t>
-	sMaker1(sMake_NameLookup);
 
-static bool sMake_Listener(ZRef<ZNetListener_Local>& oResult, ZNetListener_Local::MakeParam_t iParam)
+class Make_Listener
+:	public ZFunctionChain_T<ZRef<ZNetListener_Local>, ZNetListener_Local::MakeParam_t>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZNetListener_Local_Socket(iParam.f0, iParam.f1);
-		return true;
-		}
-	catch (...)
-		{}
-	return false;
-	}
+		try
+			{
+			oResult = new ZNetListener_Local_Socket(iParam.f0, iParam.f1);
+			return true;
+			}
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker1;
 
-static ZFactoryChain_Maker_T<ZRef<ZNetListener_Local>, ZNetListener_Local::MakeParam_t>
-	sMaker2(sMake_Listener);
 
-static bool sMake_Endpoint(ZRef<ZNetEndpoint_Local>& oResult, ZNetEndpoint_Local::MakeParam_t iParam)
+class Make_Endpoint
+:	public ZFunctionChain_T<ZRef<ZNetEndpoint_Local>, ZNetEndpoint_Local::MakeParam_t>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = new ZNetEndpoint_Local_Socket(iParam);
-		return true;
-		}
-	catch (...)
-		{}
-	return false;
-	}
+		try
+			{
+			oResult = new ZNetEndpoint_Local_Socket(iParam);
+			return true;
+			}
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker2;
 
-static ZFactoryChain_Maker_T<ZRef<ZNetEndpoint_Local>, ZNetEndpoint_Local::MakeParam_t>
-	sMaker3(sMake_Endpoint);
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

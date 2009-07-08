@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(TextCollator_ICU)
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 
 #include <stdexcept>
 
@@ -44,23 +44,24 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZANONYMOUS {
 
-bool sMake_Collator(ZRef<ZTextCollatorRep>& oResult, const ZTextCollatorRep::Param_t& iParam)
+class Make_Collator
+:	public ZFunctionChain_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		if (iParam.fLocaleName.empty())
-			oResult = new ZTextCollatorRep_ICU(nullptr, iParam.fStrength);
-		else
-			oResult = new ZTextCollatorRep_ICU(iParam.fLocaleName.c_str(), iParam.fStrength);
-		return true;		
-		}
-	catch (...)
-		{}
-	return false;
-	}
-
-ZFactoryChain_Maker_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>
-	sMaker_Collator(sMake_Collator);
+		try
+			{
+			if (iParam.fLocaleName.empty())
+				oResult = new ZTextCollatorRep_ICU(nullptr, iParam.fStrength);
+			else
+				oResult = new ZTextCollatorRep_ICU(iParam.fLocaleName.c_str(), iParam.fStrength);
+			return true;		
+			}
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker0;
 
 } // anonymous namespace
 

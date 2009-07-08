@@ -38,7 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 
 #include <cstring>
 #include <vector>
@@ -73,24 +73,25 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZANONYMOUS {
 
-bool sMake_FileLoc(ZRef<ZFileLoc>& oResult, ZFileLoc::ELoc iParam)
+class Make_FileLoc
+:	public ZFunctionChain_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		switch (iParam)
+		try
 			{
-			case ZFileLoc::eLoc_Root: oResult = ZFileLoc_POSIX::sGet_Root(); return true;
-			case ZFileLoc::eLoc_CWD: oResult = ZFileLoc_POSIX::sGet_CWD(); return true;
-			case ZFileLoc::eLoc_App: oResult = ZFileLoc_POSIX::sGet_App(); return true;
+			switch (iParam)
+				{
+				case ZFileLoc::eLoc_Root: oResult = ZFileLoc_POSIX::sGet_Root(); return true;
+				case ZFileLoc::eLoc_CWD: oResult = ZFileLoc_POSIX::sGet_CWD(); return true;
+				case ZFileLoc::eLoc_App: oResult = ZFileLoc_POSIX::sGet_App(); return true;
+				}
 			}
-		}
-	catch (...)
-		{}
-	return false;
-	}
-
-ZFactoryChain_Maker_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>
-	sMaker1(sMake_FileLoc);
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker0;
 
 } // anonymous namespace
 

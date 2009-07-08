@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import <IOBluetooth/objc/IOBluetoothRFCOMMChannel.h>
 #import <IOBluetooth/objc/IOBluetoothSDPServiceRecord.h>
 
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZOBJC.h"
 
 using std::deque;
@@ -111,56 +111,6 @@ NAMESPACE_ZOOLIB_USING
 #pragma mark * Factory functions
 
 namespace ZANONYMOUS {
-
-/*
-
-bool sMake_NameLookup(ZRef<ZNetNameLookup>& oResult, ZNetName_Internet::LookupParam_t iParam)
-	{
-	try
-		{
-		oResult = new ZNetNameLookup_Internet_Socket(iParam.f0, iParam.f1, iParam.f2);
-		return true;
-		}
-	catch (...)
-		{}
-	return false;
-	}
-
-ZFactoryChain_Maker_T<ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t>
-	sMaker1(sMake_NameLookup);
-*/
-/*
-bool sMake_Listener(ZRef<ZNetListener_RFCOMM>& oResult, ZNetListener_RFCOMM::MakeParam_t iParam)
-	{
-	try
-		{
-		oResult = new ZNetListener_RFCOMM_OSX(iParam.f0, iParam.f1, iParam.f2);
-		return true;
-		}
-	catch (...)
-		{}
-	return false;
-	}
-
-ZFactoryChain_Maker_T<ZRef<ZNetListener_RFCOMM>, ZNetListener_RFCOMM::MakeParam_t>
-	sMaker2(sMake_Listener);
-
-bool sMake_Endpoint(ZRef<ZNetEndpoint_RFCOMM>& oResult, ZNetEndpoint_RFCOMM::MakeParam_t iParam)
-	{
-	try
-		{
-		oResult = new ZNetEndpoint_RFCOMM_OSX(iParam.f0, iParam.f1);
-		return true;
-		}
-	catch (...)
-		{}
-	return false;
-	}
-
-ZFactoryChain_Maker_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
-	sMaker3(sMake_Endpoint);
-
-*/
 
 } // anonymous namespace
 

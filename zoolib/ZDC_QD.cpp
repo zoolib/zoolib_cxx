@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCInk.h"
 #include "zoolib/ZDCPixmapBlit.h"
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZMacOSX.h"
 #include "zoolib/ZStream.h"
 #include "zoolib/ZUnicode.h"
@@ -2514,14 +2514,9 @@ static ZRef<ZDCPixmapRep_QD> sGetPixmapRep_QDIfComplex(const ZRef<ZDCInk::Rep>& 
 namespace ZANONYMOUS {
 
 class Make_CreateRaster
-:	public ZFactoryChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRaster_t&>
+:	public ZFunctionChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRaster_t&>
 	{
-public:
-	Make_CreateRaster()
-	:	ZFactoryChain_T<Result_t, Param_t>(true)
-		{}
-
-	virtual bool Make(Result_t& oResult, Param_t iParam)
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		oResult = sCreateRepForDesc(iParam.f0, iParam.f1, iParam.f2);
 		return oResult;
@@ -2530,14 +2525,9 @@ public:
 	
 
 class Make_CreateRasterDesc
-:	public ZFactoryChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRasterDesc_t&>
+:	public ZFunctionChain_T<ZRef<ZDCPixmapRep>, const ZDCPixmapRep::CreateRasterDesc_t&>
 	{
-public:
-	Make_CreateRasterDesc()
-	:	ZFactoryChain_T<Result_t, Param_t>(true)
-		{}
-
-	virtual bool Make(Result_t& oResult, Param_t iParam)
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		if (sCheckDesc(iParam.f0, iParam.f1, iParam.f2))
 			{
@@ -2552,14 +2542,9 @@ public:
 
 
 class Make_EfficientToStandard
-:	public ZFactoryChain_T<ZDCPixmapNS::EFormatStandard, ZDCPixmapNS::EFormatEfficient>
+:	public ZFunctionChain_T<ZDCPixmapNS::EFormatStandard, ZDCPixmapNS::EFormatEfficient>
 	{
-public:
-	Make_EfficientToStandard()
-	:	ZFactoryChain_T<Result_t, Param_t>(true)
-		{}
-
-	virtual bool Make(Result_t& oResult, Param_t iParam)
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		using namespace ZDCPixmapNS;
 

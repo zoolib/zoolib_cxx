@@ -62,7 +62,7 @@ protected:
 	void pPaint(HWND iHWND, WPARAM iWPARAM, LPARAM iLPARAM);
 	void pStuffNPWindow(int iWidth, int iHeight);
 
-	HWND fWND;
+//	HWND fWND;
 	bool fIsWindowed;
 	bool fIsTransparent;
 	NPWindow fNPWindow;

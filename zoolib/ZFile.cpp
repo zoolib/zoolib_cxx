@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompat_algorithm.h" // For std::find
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZFile.h"
 #include "zoolib/ZTrail.h"
 
@@ -42,12 +42,6 @@ file with write access it may still succeed. This could be handled in
 ZooLib by maintaining internal locks keyed off device/inode numbers, but
 that's more than I want to do right now.
 */
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Factories
-
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZFileLoc>, ZFileLoc::ELoc);
 
 // =================================================================================================
 #pragma mark -
@@ -114,14 +108,16 @@ what it considers to be the current working directory.
 */
 ZFileSpec ZFileSpec::sCWD()
 	{
-	ZRef<ZFileLoc> theLoc = ZFactoryChain_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>::sMake(ZFileLoc::eLoc_CWD);
+	ZRef<ZFileLoc> theLoc =
+		ZFunctionChain_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>::sInvoke(ZFileLoc::eLoc_CWD);
 	return ZFileSpec(theLoc);
 	}
 
 /// Returns a file spec representing the root of the file system tree.
 ZFileSpec ZFileSpec::sRoot()
 	{
-	ZRef<ZFileLoc> theLoc = ZFactoryChain_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>::sMake(ZFileLoc::eLoc_Root);
+	ZRef<ZFileLoc> theLoc =
+		ZFunctionChain_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>::sInvoke(ZFileLoc::eLoc_Root);
 	return ZFileSpec(theLoc);
 	}
 
@@ -133,7 +129,8 @@ of the application that's hosting the plugin.
 */
 ZFileSpec ZFileSpec::sApp()
 	{
-	ZRef<ZFileLoc> theLoc = ZFactoryChain_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>::sMake(ZFileLoc::eLoc_App);
+	ZRef<ZFileLoc> theLoc =
+		ZFunctionChain_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>::sInvoke(ZFileLoc::eLoc_App);
 	return ZFileSpec(theLoc);
 	}
 

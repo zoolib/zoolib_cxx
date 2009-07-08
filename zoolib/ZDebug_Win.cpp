@@ -57,10 +57,10 @@ static void ZDebug_HandleActual_Win(int inLevel, ZDebug_Action inAction, const c
 			{
 			// We invoke the debugger using int 3 so the debugger breaks right here
 			// rather than inside DebugBreak.
-			#if ZCONFIG(Compiler, GCC)
-				::DebugBreak();
-			#else
+			#if ZCONFIG(Processor, x86) && !ZCONFIG(Compiler, GCC)
 				asm { int 3 }
+			#else
+				::DebugBreak();
 			#endif
 			}
 		else
@@ -75,7 +75,9 @@ static void ZDebug_HandleActual_Win(int inLevel, ZDebug_Action inAction, const c
 
 static void sDoOther(const char* inMessage)
 	{
-	int result = ::MessageBoxA(nullptr, inMessage, "DebugBreak -- Application will exit", MB_SETFOREGROUND | MB_SYSTEMMODAL | MB_ICONHAND | MB_OK);
+	int result = ::MessageBoxA(nullptr, inMessage, "DebugBreak -- Application will exit",
+		MB_SETFOREGROUND | MB_SYSTEMMODAL | MB_ICONHAND | MB_OK);
+
 	::ExitProcess(0);
 	}
 
@@ -91,10 +93,14 @@ static bool sIsDebuggerPresent()
 		// is in headers for Win 95 also. We must manually locate it in Kernel32 and
 		// manually invoke it, if found.
 		typedef BOOL (WINAPI *IsDebuggerPresentProc)();
-		if (IsDebuggerPresentProc proc = (IsDebuggerPresentProc) ::GetProcAddress(kernelH, "IsDebuggerPresent"))
+		if (IsDebuggerPresentProc proc =
+			(IsDebuggerPresentProc) ::GetProcAddress(kernelH, "IsDebuggerPresent"))
+			{
 			return proc() != 0;
+			}
 		}
-	#if ! ZCONFIG(Compiler, GCC)
+
+	#if ZCONFIG(Processor, x86) && !ZCONFIG(Compiler, GCC)
 		const uint32 kDebuggerPresentFlag = 0x000000001;
 		const uint32 kProcessDatabaseBytes = 190;
 		const uint32 kOffsetFlags = 8;
@@ -120,7 +126,7 @@ static bool sIsDebuggerPresent()
 			uint32 flags = processDatabase[kOffsetFlags];
 			return (flags & kDebuggerPresentFlag) != 0;
 			}
-	#endif // ! ZCONFIG(Compiler, GCC)
+	#endif
 
 	return false;
 	}

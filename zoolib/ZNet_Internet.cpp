@@ -19,20 +19,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZNet_Internet.h"
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZString.h"
 
 using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Factories
-
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t);
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam_t);
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t);
 
 // =================================================================================================
 #pragma mark -
@@ -89,8 +81,8 @@ string ZNetName_Internet::AsString() const
 
 ZRef<ZNetNameLookup> ZNetName_Internet::CreateLookup(size_t iMaxAddresses) const
 	{
-	return ZFactoryChain_T<ZRef<ZNetNameLookup>, LookupParam_t>
-		::sMake(LookupParam_t(fName, fPort, iMaxAddresses));
+	return ZFunctionChain_T<ZRef<ZNetNameLookup>, LookupParam_t>
+		::sInvoke(LookupParam_t(fName, fPort, iMaxAddresses));
 	}
 
 const string& ZNetName_Internet::GetName() const
@@ -105,28 +97,28 @@ ip_port ZNetName_Internet::GetPort() const
 
 ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(ip_port iPort, size_t iListenQueueSize)
 	{
-	return ZFactoryChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
-		::sMake(MakeParam_t(0, iPort, iListenQueueSize));
+	return ZFunctionChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
+		::sInvoke(MakeParam_t(0, iPort, iListenQueueSize));
 	}
 
 ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreate(
 	ip_addr iAddress, ip_port iPort, size_t iListenQueueSize)
 	{
-	return ZFactoryChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
-		::sMake(MakeParam_t(iAddress, iPort, iListenQueueSize));
+	return ZFunctionChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
+		::sInvoke(MakeParam_t(iAddress, iPort, iListenQueueSize));
 	}
 
 ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreateListener(ip_port iPort, size_t iListenQueueSize)
 	{
-	return ZFactoryChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
-		::sMake(MakeParam_t(0, iPort, iListenQueueSize));
+	return ZFunctionChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
+		::sInvoke(MakeParam_t(0, iPort, iListenQueueSize));
 	}
 
 ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreateListener(
 	ip_addr iAddress, ip_port iPort, size_t iListenQueueSize)
 	{
-	return ZFactoryChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
-		::sMake(MakeParam_t(iAddress, iPort, iListenQueueSize));
+	return ZFunctionChain_T<ZRef<ZNetListener_TCP>, MakeParam_t>
+		::sInvoke(MakeParam_t(iAddress, iPort, iListenQueueSize));
 	}
 
 // =================================================================================================
@@ -136,15 +128,15 @@ ZRef<ZNetListener_TCP> ZNetListener_TCP::sCreateListener(
 ZRef<ZNetEndpoint_TCP> ZNetEndpoint_TCP::sCreateConnected(
 	ip_addr iRemoteHost, ip_port iRemotePort)
 	{
-	return ZFactoryChain_T<ZRef<ZNetEndpoint_TCP>, MakeParam_t>
-		::sMake(MakeParam_t(iRemoteHost, iRemotePort));
+	return ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, MakeParam_t>
+		::sInvoke(MakeParam_t(iRemoteHost, iRemotePort));
 	}
 
 ZRef<ZNetEndpoint_TCP> ZNetEndpoint_TCP::sCreateConnectedEndpoint(
 	ip_addr iRemoteHost, ip_port iRemotePort)
 	{
-	return ZFactoryChain_T<ZRef<ZNetEndpoint_TCP>, MakeParam_t>
-		::sMake(MakeParam_t(iRemoteHost, iRemotePort));
+	return ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, MakeParam_t>
+		::sInvoke(MakeParam_t(iRemoteHost, iRemotePort));
 	}
 
 NAMESPACE_ZOOLIB_END

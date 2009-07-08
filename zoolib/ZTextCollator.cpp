@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZTextCollator.h"
 #include "zoolib/ZUnicode.h"
 
@@ -28,9 +28,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * Factories
 
-ZOOLIB_FACTORYCHAIN_HEAD(ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&);
-
-typedef ZFactoryChain_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&> Factory_t;
+typedef ZFunctionChain_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&> Factory_t;
 
 // =================================================================================================
 /**
@@ -108,7 +106,7 @@ ZTextCollator::ZTextCollator(int iStrength)
 	{
 	ZTextCollatorRep::Param_t theParam;
 	theParam.fStrength = iStrength;
-	fRep = Factory_t::sMake(theParam);
+	fRep = Factory_t::sInvoke(theParam);
 	}
 
 ZTextCollator::ZTextCollator(const string8& iLocaleName, int iStrength)
@@ -116,7 +114,7 @@ ZTextCollator::ZTextCollator(const string8& iLocaleName, int iStrength)
 	ZTextCollatorRep::Param_t theParam;
 	theParam.fLocaleName = iLocaleName;
 	theParam.fStrength = iStrength;
-	fRep = Factory_t::sMake(theParam);
+	fRep = Factory_t::sInvoke(theParam);
 	}
 
 ZTextCollator::ZTextCollator(const char* iLocaleName, int iStrength)
@@ -124,7 +122,7 @@ ZTextCollator::ZTextCollator(const char* iLocaleName, int iStrength)
 	ZTextCollatorRep::Param_t theParam;
 	theParam.fLocaleName = iLocaleName;
 	theParam.fStrength = iStrength;
-	fRep = Factory_t::sMake(theParam);
+	fRep = Factory_t::sInvoke(theParam);
 	}
 
 bool ZTextCollator::Equals(const string8& iLeft, const string8& iRight) const

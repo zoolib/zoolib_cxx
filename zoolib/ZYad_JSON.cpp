@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompat_cmath.h"
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZYad_JSON.h"
@@ -309,7 +309,7 @@ static ZRef<ZYadR_Std> sMakeYadR_JSONNormalize(
 	else
 		{
 		ZVal_ZooLib theValue;
-		if (ZFactoryChain_T<ZVal_ZooLib, ZRef<ZYadR> >::sMake(theValue, iYadR))
+		if (ZFunctionChain_T<ZVal_ZooLib, ZRef<ZYadR> >::sInvoke(theValue, iYadR))
 			{
 			// We were able to turn the value into something
 			// legitimate. Now normalize it if possible.

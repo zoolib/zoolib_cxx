@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTextCoder_Std.h"
 
 #include "zoolib/ZCompat_algorithm.h" // For lower_bound
-#include "zoolib/ZFactoryChain.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZUnicode.h"
 
 #include <string>
@@ -36,81 +36,83 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZANONYMOUS {
 
-bool sMake_Decoder(ZTextDecoder*& oResult, const string& iParam)
+class Make_Decoder
+:	public ZFunctionChain_T<ZTextDecoder*, const string&>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		if (iParam == "ascii")
+		try
 			{
-			oResult = new ZTextDecoder_ASCII;
-			return true;
+			if (iParam == "ascii")
+				{
+				oResult = new ZTextDecoder_ASCII;
+				return true;
+				}
+			else if (iParam == "cp1252")
+				{
+				oResult = new ZTextDecoder_CP1252;
+				return true;
+				}
+			else if (iParam == "cp850")
+				{
+				oResult = new ZTextDecoder_CP850;
+				return true;
+				}
+			else if (iParam == "iso_8859-1" || iParam == "iso-8859-1")
+				{
+				oResult = new ZTextDecoder_ISO8859_1;
+				return true;
+				}
+			else if (iParam == "macroman")
+				{
+				oResult = new ZTextDecoder_MacRoman;
+				return true;
+				}
 			}
-		else if (iParam == "cp1252")
-			{
-			oResult = new ZTextDecoder_CP1252;
-			return true;
-			}
-		else if (iParam == "cp850")
-			{
-			oResult = new ZTextDecoder_CP850;
-			return true;
-			}
-		else if (iParam == "iso_8859-1" || iParam == "iso-8859-1")
-			{
-			oResult = new ZTextDecoder_ISO8859_1;
-			return true;
-			}
-		else if (iParam == "macroman")
-			{
-			oResult = new ZTextDecoder_MacRoman;
-			return true;
-			}
-		}
-	catch (...)
-		{}
-	return false;
-	}
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker0;
 
-ZFactoryChain_Maker_T<ZTextDecoder*, const string&>
-	sMaker_Decoder(sMake_Decoder);
-
-bool sMake_Encoder(ZTextEncoder*& oResult, const string& iParam)
+class Make_Encoder
+:	public ZFunctionChain_T<ZTextEncoder*, const string&>
 	{
-	try
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		if (iParam == "ascii")
+		try
 			{
-			oResult = new ZTextEncoder_ASCII;
-			return true;
+			if (iParam == "ascii")
+				{
+				oResult = new ZTextEncoder_ASCII;
+				return true;
+				}
+			else if (iParam == "cp1252")
+				{
+				oResult = new ZTextEncoder_CP1252;
+				return true;
+				}
+			else if (iParam == "cp850")
+				{
+				oResult = new ZTextEncoder_CP850;
+				return true;
+				}
+			else if (iParam == "iso_8859-1" || iParam == "iso-8859-1")
+				{
+				oResult = new ZTextEncoder_ISO8859_1;
+				return true;
+				}
+			else if (iParam == "macroman")
+				{
+				oResult = new ZTextEncoder_MacRoman;
+				return true;
+				}
 			}
-		else if (iParam == "cp1252")
-			{
-			oResult = new ZTextEncoder_CP1252;
-			return true;
-			}
-		else if (iParam == "cp850")
-			{
-			oResult = new ZTextEncoder_CP850;
-			return true;
-			}
-		else if (iParam == "iso_8859-1" || iParam == "iso-8859-1")
-			{
-			oResult = new ZTextEncoder_ISO8859_1;
-			return true;
-			}
-		else if (iParam == "macroman")
-			{
-			oResult = new ZTextEncoder_MacRoman;
-			return true;
-			}
-		}
-	catch (...)
-		{}
-	return false;
-	}
-
-ZFactoryChain_Maker_T<ZTextEncoder*, const string&>
-	sMaker_Encoder(sMake_Encoder);
+		catch (...)
+			{}
+		return false;
+		}	
+	} sMaker1;
 
 } // anonymous namespace
 
