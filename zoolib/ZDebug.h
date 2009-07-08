@@ -22,72 +22,74 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDebug__ 1
 #include "zconfig.h"
 
-enum ZDebug_Action { eDebug_ActionContinue, eDebug_ActionStop };
+#include <stddef.h> // for size_t
 
-typedef void (*ZDebug_HandleInitial_t)(int inLevel, ZDebug_Action inAction, const char* inFilename,
-	int inLine, const char* inAssertionMessage, const char* inUserMessage);
+#include <stdarg.h> // For va_list
 
-typedef void (*ZDebug_HandleActual_t)(int inLevel, ZDebug_Action inAction, const char* inMessage);
+NAMESPACE_ZOOLIB_BEGIN
 
-extern ZDebug_HandleInitial_t sDebug_HandleInitial;
-extern ZDebug_HandleActual_t sDebug_HandleActual;
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZDebug
 
-void ZDebug_DisplayMessageSimple(const char* message, ...);
+namespace ZDebug {
 
-const char* ZDebug_FormatMessage(const char* iMessage, ...);
+struct Params_t
+	{
+	int fLevel;
+	bool fStop;
+	const char* fFileName;
+	const char* fFunctionName;
+	int fLine;
+	const char* fConditionMessage;
+	const char* fUserMessage;
+	};
 
-inline const char* ZDebug_FormatMessage() { return nullptr; }
+typedef void (*Function_t)(const Params_t& iParams, va_list iArgs);
 
-// The actual macros that get used in source code. The funkiness of these macros (should)
-// generate minimal inline code, so that an assertion that's active at level 2 will
-// generate *no code* at level 1 or 0. This does rely on the compiler optimizing away
-// statements/expressions with no effect.
-#define ZDebugPrintf(a, b) ((a)<=ZCONFIG_Debug ? ZDebug_DisplayMessageSimple b : ((void)0))
+extern void sInvoke(int iLevel, bool iStop,
+	const char* iFileName, const char* iFunctionName, int iLine,
+	const char* iConditionMessage, const char* iUserMessage, ...);
 
-#define ZDebugLogf(a, b) \
-	((a) <= ZCONFIG_Debug && sDebug_HandleInitial ? \
-	sDebug_HandleInitial(a, eDebug_ActionContinue, __FILE__, __LINE__, 0, ZDebug_FormatMessage b) \
-	: ((void)0))
+size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams);
 
-#define ZDebugStopf(a, b) \
-	((a) <= ZCONFIG_Debug && sDebug_HandleInitial ? \
-	sDebug_HandleInitial(a, eDebug_ActionStop, __FILE__, __LINE__, 0, ZDebug_FormatMessage b) \
-	: ((void)0))
+#if ZCONFIG(Compiler,GCC)
+#	define ZMACRO_Unwrap(b...) b
+#else
+#	define ZMACRO_Unwrap(...) __VA_ARGS__
+#endif
 
-#define ZDebugLog(a) \
-	((a) <= ZCONFIG_Debug && sDebug_HandleInitial ? \
-	sDebug_HandleInitial(a, eDebug_ActionContinue, __FILE__, __LINE__, 0, 0) : ((void)0))
+#define ZMACRO_Debug(level, stop, message) \
+	do { if (level <= ZCONFIG_Debug) \
+		ZooLib::ZDebug::sInvoke(level, stop, \
+		__FILE__, __FUNCTION__, __LINE__, 0, ZMACRO_Unwrap message); } while (0)
 
-#define ZDebugStop(a) \
-	((a)<=ZCONFIG_Debug && sDebug_HandleInitial ? \
-	sDebug_HandleInitial(a, eDebug_ActionStop, __FILE__, __LINE__, 0, 0): ((void)0))
+#define ZMACRO_Assert(level, stop, condition, message) \
+	do { if (level <= ZCONFIG_Debug && !(condition)) \
+		ZooLib::ZDebug::sInvoke(level, stop, \
+		__FILE__, __FUNCTION__, __LINE__, #condition, ZMACRO_Unwrap message); } while (0)
 
-#define ZAssertLogf(a, b, c) \
-	((a) <= ZCONFIG_Debug && sDebug_HandleInitial && !(b) ? \
-	sDebug_HandleInitial(a, eDebug_ActionContinue, __FILE__, __LINE__, #b, \
-	ZDebug_FormatMessage c), false : true)
 
-#define ZAssertStopf(a, b, c) \
-	((a) <= ZCONFIG_Debug && sDebug_HandleInitial && !(b) ? \
-	sDebug_HandleInitial(a, eDebug_ActionStop, __FILE__, __LINE__, #b, \
-	ZDebug_FormatMessage c), false : true)
+#define ZDebugLog(level) ZMACRO_Debug(level, false, (0))
+#define ZDebugLogf(level, message) ZMACRO_Debug(level, false, message)
 
-#define ZAssertLog(a, b) \
-	((a) <= ZCONFIG_Debug && sDebug_HandleInitial && !(b) ? \
-	sDebug_HandleInitial(a, eDebug_ActionContinue, __FILE__, __LINE__, #b, nullptr), false : true)
+#define ZDebugStop(level) ZMACRO_Debug(level, true, (0))
+#define ZDebugStopf(level, message) ZMACRO_Debug(level, true, message)
 
-#define ZAssertStop(a, b) \
-	((a)<=ZCONFIG_Debug && sDebug_HandleInitial && !(b) ? \
-	sDebug_HandleInitial(a, eDebug_ActionStop, __FILE__, __LINE__, #b, nullptr), false : true)
+#define ZAssertLog(level, condition) ZMACRO_Assert(level, false, condition, (0))
+#define ZAssertLogf(level, condition, message) ZMACRO_Assert(level, false, condition, message)
+
+#define ZAssertStop(level, condition) ZMACRO_Assert(level, true, condition, (0))
+#define ZAssertStopf(level, condition, message) ZMACRO_Assert(level, true, condition, message)
 
 
 // ZAssertCompile can be used to enforce a constraint at compile time, (for example that a
 // struct obeys necessary alignment rules). It either drops out completely or generates an
 // error, depending on whether the expression evaulates true or false.
-template <bool> struct ZCompileTimeAssertion {};
-template<> struct ZCompileTimeAssertion<true> { typedef bool IsValid; };
+template <bool> struct AC_T {};
+template<> struct AC_T<true> { typedef bool IsValid; };
 
-#define ZAssertCompile(a) typedef ZCompileTimeAssertion<(a)>::IsValid ZCompileTimeAssertionValid
+#define ZAssertCompile(a) typedef ZooLib::ZDebug::AC_T<(a)>::IsValid ZAssertCompileValid
 
 // I'd like to formalize ZUnimplemented a little more sometime. Perhaps it should
 // throw an exception in production code.
@@ -96,13 +98,8 @@ template<> struct ZCompileTimeAssertion<true> { typedef bool IsValid; };
 // There are still quite a lot of places where plain old ZAssert is used.
 #define ZAssert(a) ZAssertStop(1, a)
 
-// =================================================================================================
-// These defines could go into a private header, but I'd rather not add yet
-// another file. Perhaps later.
+} // namespace ZDebug
 
-#define ZDebug_Message_AssertionAndUser "Assertion failed: %s. %s, %s:%d"
-#define ZDebug_Message_AssertionOnly "Assertion failed: %s, %s:%d"
-#define ZDebug_Message_UserOnly "%s, %s:%d"
-#define ZDebug_Message_None "%s:%d"
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZDebug__

@@ -19,19 +19,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZCONFIG_SPI.h"
 #include "zoolib/ZTypes.h"
 
-#include <stdarg.h>
 #include <stdio.h>
-#include <string.h> // For strrchr
+#include <string.h>
 
-#if ZCONFIG_SPI_Enabled(POSIX)
-#	include <cstdlib> // For abort
-#endif
-
-#if ZCONFIG_SPI_Enabled(BeOS)
-#	include <kernel/OS.h>
+#if ZCONFIG_SPI_Enabled(Win)
+	#include "zoolib/ZWinHeader.h"
 #endif
 
 #if ZCONFIG(Compiler, MSVC)
@@ -39,28 +35,37 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define snprintf _snprintf
 #endif
 
-NAMESPACE_ZOOLIB_USING
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZDebug
 
-static const size_t sStringBufferSize = 1024;
+NAMESPACE_ZOOLIB_BEGIN
 
-const char* ZDebug_FormatMessage(const char* inMessage, ...)
+namespace ZDebug {
+
+Function_t thing;
+
+extern void sInvoke(int iLevel, bool iStop,
+	const char* iFileName, const char* iFunctionName, int iLine,
+	const char* iConditionMessage, const char* iUserMessage, ...)
 	{
-	static char sDebugMessageString[sStringBufferSize];
-	va_list args;
-	va_start(args, inMessage);
-	/*int count =*/ vsnprintf(sDebugMessageString, sStringBufferSize, inMessage, args);
-	va_end(args);
-	return sDebugMessageString;
-	}
+	Params_t theParams;
+	theParams.fLevel = iLevel;
+	theParams.fStop = iStop;
+	theParams.fFileName = iFileName;
+	theParams.fFunctionName = iFunctionName;
+	theParams.fLine = iLine;
+	theParams.fConditionMessage = iConditionMessage;
+	theParams.fUserMessage = iUserMessage;
 
-void ZDebug_DisplayMessageSimple(const char* inMessage, ...)
-	{
-	char buffer[sStringBufferSize];
-	va_list args;
-	va_start(args, inMessage);
-	/*int count =*/ vsnprintf(buffer, sStringBufferSize, inMessage, args);
-	va_end(args);
-	fputs(buffer, stderr);
+	Function_t theFunction;
+	if (ZFunctionChain_T<Function_t, const Params_t&>::sInvoke(theFunction, theParams))
+		{
+		va_list args;
+		va_start(args, iUserMessage);
+		theFunction(theParams, args);
+		va_end(args);
+		}
 	}
 
 static const char* sTruncateFileName(const char* inFilename)
@@ -70,91 +75,158 @@ static const char* sTruncateFileName(const char* inFilename)
 	return inFilename;
 	}
 
-static void ZDebug_HandleInitial_Generic(int inLevel, ZDebug_Action inAction,
-	const char* inFilename, int inLine, const char* inAssertionMessage, const char* inUserMessage)
+size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams)
 	{
-	if (sDebug_HandleActual)
+	if (iParams.fConditionMessage)
 		{
-		static const size_t sStringBufferSize = 2048;
-	
-		char realDebugMessageString[sStringBufferSize];
-	
-		if (inAssertionMessage)
-			{
-			if (inUserMessage)
-				{
-				::snprintf(realDebugMessageString, sStringBufferSize,
-					ZDebug_Message_AssertionAndUser"\n",
-					inAssertionMessage,
-					inUserMessage,
-					sTruncateFileName(inFilename),
-					inLine);
-				}
-			else
-				{
-				::snprintf(realDebugMessageString, sStringBufferSize,
-					ZDebug_Message_AssertionOnly"\n",
-					inAssertionMessage,
-					sTruncateFileName(inFilename),
-					inLine);
-				}
-			}
-		else
-			{
-			if (inUserMessage)
-				{
-				::snprintf(realDebugMessageString, sStringBufferSize,
-					ZDebug_Message_UserOnly"\n",
-					inUserMessage,
-					sTruncateFileName(inFilename),
-					inLine);
-				}
-			else
-				{
-				::snprintf(realDebugMessageString, sStringBufferSize,
-					ZDebug_Message_None"\n",
-					sTruncateFileName(inFilename),
-					inLine);
-				}
-			}
-		sDebug_HandleActual(inLevel, inAction, realDebugMessageString);
+		return snprintf(iBuf, iBufSize,
+			"Assertion failed: %s, %s:%d",
+			iParams.fConditionMessage,
+			sTruncateFileName(iParams.fFileName),
+			iParams.fLine);
+		}
+	else
+		{
+		return snprintf(iBuf, iBufSize,
+			"%s:%d",
+			sTruncateFileName(iParams.fFileName),
+			iParams.fLine);
 		}
 	}
 
-ZDebug_HandleInitial_t sDebug_HandleInitial = ZDebug_HandleInitial_Generic;
-
-ZDebug_HandleActual_t sDebug_HandleActual = nullptr;
-
 // =================================================================================================
+#pragma mark -
+#pragma mark * POSIX
 
 #if ZCONFIG_SPI_Enabled(POSIX)
 
-static void ZDebug_HandleActual_POSIX(int inLevel, ZDebug_Action inAction, const char* inMessage)
+static void sHandleDebug_POSIX(const Params_t& iParams, va_list iArgs)
 	{
-	::fputs(inMessage, stderr);
-
-	if (inAction == eDebug_ActionStop)
+	char theBuf[4096];
+	sFormatStandardMessage(theBuf, sizeof(theBuf), iParams);
+	::fputs(theBuf, stderr);
+	::vfprintf(stderr, iParams.fUserMessage, iArgs);
+	if (iParams.fStop)
 		{
 		// Force a segfault
 		*reinterpret_cast<double*>(1) = 0;
 //		abort();
-		}
+		}		
 	}
+
+class DebugFunction_POSIX
+:	public ZFunctionChain_T<Function_t, const Params_t&>
+	{
+public:
+	DebugFunction_POSIX() : Base_t(false) {}
+
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
+		{
+		oResult = sHandleDebug_POSIX;
+		return true;
+		}
+	} sDebugFunction_POSIX;
 
 #endif // ZCONFIG_SPI_Enabled(POSIX)
 
 // =================================================================================================
+#pragma mark -
+#pragma mark * Win
 
-#if ZCONFIG_SPI_Enabled(BeOS)
+#if ZCONFIG_SPI_Enabled(Win)
 
-static void ZDebug_HandleActual_Be(int inLevel, ZDebug_Action inAction, const char* inMessage)
+// sIsDebuggerPresent was taken from Whisper 1.3, which was adpated
+// from code in Windows Developer Journal, March 1999.
+
+static bool sIsDebuggerPresent()
 	{
-	if (inAction == eDebug_ActionStop)
-		::debugger(inMessage);
-	else
-		::fputs(inMessage, stderr);
+	#if ZCONFIG(Processor, x86) && !ZCONFIG(Compiler, GCC)
+
+	if (HINSTANCE kernelH = LoadLibraryA("KERNEL32.DLL"))
+		{
+		// IsDebuggerPresent only exists in NT and Win 98, although its prototype
+		// is in headers for Win 95 also. We must manually locate it in Kernel32 and
+		// manually invoke it, if found.
+		typedef BOOL (WINAPI *IsDebuggerPresentProc)();
+		if (IsDebuggerPresentProc proc =
+			(IsDebuggerPresentProc) ::GetProcAddress(kernelH, "IsDebuggerPresent"))
+			{
+			return proc() != 0;
+			}
+		}
+
+		const uint32 kDebuggerPresentFlag = 0x000000001;
+		const uint32 kProcessDatabaseBytes = 190;
+		const uint32 kOffsetFlags = 8;
+
+		uint32 threadID = GetCurrentThreadId();
+		uint32 processID = GetCurrentProcessId();
+		uint32 obfuscator = 0;
+
+		asm
+			{
+			mov	ax, fs
+			mov	es, ax
+			mov	eax, 0x18
+			mov	eax, es:[eax]
+			sub	eax, 0x10
+			xor	eax, [threadID]
+			mov	[obfuscator], eax
+			}
+
+		const uint32* processDatabase = reinterpret_cast<const uint32*>(processID ^ obfuscator);
+		if (!IsBadReadPtr(processDatabase, kProcessDatabaseBytes)) 
+			{
+			uint32 flags = processDatabase[kOffsetFlags];
+			return (flags & kDebuggerPresentFlag) != 0;
+			}
+
+	#endif // ZCONFIG(Processor, x86) && !ZCONFIG(Compiler, GCC)
+
+	return false;
 	}
 
-#endif // ZCONFIG_SPI_Enabled(BeOS)
+static void sHandleDebug_Win(const Params_t& iParams, va_list iArgs)
+	{
+	char theBuf[4096];
+	size_t theLength = sFormatStandardMessage(theBuf, sizeof(theBuf), iParams);
+	::vsnprintf(theBuf + theLength, sizeof(theBuf) - theLength, iParams.fUserMessage, iArgs);
+	if (iParams.fStop)
+		{
+		if (sIsDebuggerPresent())
+			{
+			#if ZCONFIG(Processor, x86) && !ZCONFIG(Compiler, GCC)
+				asm { int 3 }
+			#else
+				::DebugBreak();
+			#endif
+			}
+		else
+			{
+			int result = ::MessageBoxA(nullptr, theBuf, "DebugBreak -- Application will exit",
+				MB_SETFOREGROUND | MB_SYSTEMMODAL | MB_ICONHAND | MB_OK);
 
-// =================================================================================================
+			::ExitProcess(0);
+			}
+		}		
+	}
+
+class DebugFunction_Win
+:	public ZFunctionChain_T<Function_t, const Params_t&>
+	{
+public:
+	DebugFunction_Win() : Base_t(false) {}
+
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
+		{
+		oResult = sHandleDebug_Win;
+		return true;
+		}
+	} sDebugFunction_Win;
+
+#endif // ZCONFIG_SPI_Enabled(POSIX)
+
+} // namespace ZDebug
+
+NAMESPACE_ZOOLIB_END
+
