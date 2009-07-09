@@ -252,7 +252,9 @@ public:
 /** \name Formatted strings
 */	//@{
 	const ZStrimW& Writef(const UTF8* iString, ...) const;
-	const ZStrimW& Writef(size_t& oWritten, const UTF8* iString, ...) const;//??
+	const ZStrimW& Writef(size_t& oWritten, const UTF8* iString, ...) const;
+	const ZStrimW& Writev(const UTF8* iString, va_list iArgs) const;
+	const ZStrimW& Writev(size_t& oWritten, const UTF8* iString, va_list iArgs) const;
 	//@}
 
 
@@ -314,7 +316,7 @@ protected:
 	void pWrite(const UTF16* iSource, size_t iCountCU, size_t* oCountCU) const;
 	void pWrite(const UTF8* iSource, size_t iCountCU, size_t* oCountCU) const;
 
-	void pWritef(const UTF8* iString, va_list iArgs) const;
+	void pWritev(size_t& oWritten, const UTF8* iString, va_list iArgs) const;
 	};
 
 inline const ZStrimW& operator<<(const ZStrimW& s, const string32& iString)
@@ -490,7 +492,30 @@ public:
 		{
 		va_list args;
 		va_start(args, iString);
-		this->pWritef(iString, args);
+		size_t count;
+		this->pWritev(count, iString, args);
+		return static_cast<const Self_t&>(*this);
+		}
+
+	const Self_t& Writef(size_t& oWritten, const UTF8* iString, ...) const
+		{
+		va_list args;
+		va_start(args, iString);
+		this->pWritev(oWritten, iString, args);
+		return static_cast<const Self_t&>(*this);
+		}
+
+	const Self_t& Writev(const UTF8* iString, va_list iArgs) const
+		{
+		size_t count;
+		this->pWritev(count, iString, iArgs);
+		return static_cast<const Self_t&>(*this);
+		}
+
+	const Self_t& Writev(size_t& oWritten, const UTF8* iString, va_list iArgs) const
+		{
+		size_t count;
+		this->pWritev(oWritten, iString, iArgs);
 		return static_cast<const Self_t&>(*this);
 		}
 	};

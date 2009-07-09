@@ -881,7 +881,8 @@ const ZStrimW& ZStrimW::Writef(const UTF8* iString, ...) const
 	{
 	va_list args;
 	va_start(args, iString);
-	this->pWritef(iString, args);
+	size_t count;
+	this->pWritev(count, iString, args);
 	return *this;
 	}
 
@@ -891,34 +892,24 @@ successfully written is returned in \a oCount.
 */
 const ZStrimW& ZStrimW::Writef(size_t& oCount, const UTF8* iString, ...) const
 	{
-	string8 buffer(512, ' ');
-	for (;;)
-		{
-		va_list args;
-		va_start(args, iString);
+	va_list args;
+	va_start(args, iString);
+	this->pWritev(oCount, iString, args);
+	va_end(args);
+	return *this;
+	}
 
-		int count = vsnprintf(const_cast<char*>(buffer.data()), buffer.size(), iString, args);
+const ZStrimW& ZStrimW::Writev(const UTF8* iString, va_list iArgs) const
+	{
+	size_t count;
+	this->pWritev(count, iString, iArgs);
+	return *this;	
+	}
 
-		va_end(args);
-
-		if (count < 0)
-			{
-			// Handle -ve result from glibc prior to version 2.1 by growing the string.
-			buffer.resize(buffer.size() * 2);
-			}
-		else if (count > buffer.size())
-			{
-			// Handle C99 standard, where count indicates how much space would have been needed.
-			buffer.resize(count);
-			}
-		else
-			{
-			// The string fitted, we can now write it out.
-			buffer.resize(count);
-			oCount = count;
-			return this->Write(buffer);
-			}
-		}
+const ZStrimW& ZStrimW::Writev(size_t& oWritten, const UTF8* iString, va_list iArgs) const
+	{
+	this->pWritev(oWritten, iString, iArgs);
+	return *this;
 	}
 
 const ZStrimW& ZStrimW::CopyAllFrom(const ZStrimR& iStrimR) const
@@ -1133,7 +1124,7 @@ void ZStrimW::pWrite(const UTF8* iSource, size_t iCountCU, size_t* oCountCU) con
 	const_cast<ZStrimW*>(this)->Imp_WriteUTF8(iSource, iCountCU, oCountCU);
 	}
 
-void ZStrimW::pWritef(const UTF8* iString, va_list iArgs) const
+void ZStrimW::pWritev(size_t& oWritten, const UTF8* iString, va_list iArgs) const
 	{
 	string8 buffer(512, ' ');
 	for (;;)
@@ -1142,8 +1133,6 @@ void ZStrimW::pWritef(const UTF8* iString, va_list iArgs) const
 		va_copy(args, iArgs);
 
 		int count = vsnprintf(const_cast<char*>(buffer.data()), buffer.size(), iString, args);
-
-		va_end(args);
 
 		if (count < 0)
 			{
@@ -1159,7 +1148,7 @@ void ZStrimW::pWritef(const UTF8* iString, va_list iArgs) const
 			{
 			// The string fitted, we can now write it out.
 			buffer.resize(count);
-			this->pWrite(buffer);
+			oWritten = count;
 			break;
 			}
 		}
