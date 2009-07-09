@@ -59,15 +59,23 @@ size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams)
 #	define ZMACRO_Unwrap(...) __VA_ARGS__
 #endif
 
+#if ZCONFIG(Compiler, GCC)
+#	define ZMACRO_FunctionName __PRETTY_FUNCTION__
+#elif ZCONFIG(Compiler, MSVC)
+#	define ZMACRO_FunctionName __FUNCDNAME__
+#else
+#	define ZMACRO_FunctionName __FUNCTION__
+#endif
+
 #define ZMACRO_Debug(level, stop, message) \
 	do { if (level <= ZCONFIG_Debug) \
 		ZooLib::ZDebug::sInvoke(level, stop, \
-		__FILE__, __FUNCTION__, __LINE__, 0, ZMACRO_Unwrap message); } while (0)
+		__FILE__, ZMACRO_FunctionName, __LINE__, 0, ZMACRO_Unwrap message); } while (0)
 
 #define ZMACRO_Assert(level, stop, condition, message) \
 	do { if (level <= ZCONFIG_Debug && !(condition)) \
 		ZooLib::ZDebug::sInvoke(level, stop, \
-		__FILE__, __FUNCTION__, __LINE__, #condition, ZMACRO_Unwrap message); } while (0)
+		__FILE__, ZMACRO_FunctionName, __LINE__, #condition, ZMACRO_Unwrap message); } while (0)
 
 
 #define ZDebugLog(level) ZMACRO_Debug(level, false, (0))

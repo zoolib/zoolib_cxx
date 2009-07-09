@@ -20,10 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_Debug.h"
 
+#include "zoolib/ZFunctionChain.h"
+#include "zoolib/ZLog.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTime.h"
-#include "zoolib/ZLog.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Time.h"
 
@@ -37,6 +38,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZUtil_Debug {
+
 using std::min;
 using std::string;
 
@@ -46,7 +49,7 @@ using std::string;
 
 #if ZCONFIG_API_Enabled(StackCrawl)
 
-void ZUtil_Debug::sDumpStackCrawl(const ZStackCrawl& iCrawl, const ZStrimW& s)
+void sDumpStackCrawl(const ZStackCrawl& iCrawl, const ZStrimW& s)
 	{
 	for (size_t x = 0; x < iCrawl.Count(); ++x)
 		{
@@ -108,7 +111,7 @@ static void sHandleSignal_Sync(int inSignal)
 
 				s << " in frame #4 below:\n";
 				ZStackCrawl theCrawl;
-				ZUtil_Debug::sDumpStackCrawl(theCrawl, s);
+				sDumpStackCrawl(theCrawl, s);
 				}
 			abort();
 			}
@@ -121,15 +124,24 @@ static void sHandleSignal_Sync(int inSignal)
 #pragma mark -
 #pragma mark * ZDebug and ZAssert handler
 
-namespace ZUtil_Debug {
-
-static void sDebug_HandleActual(int inLevel, ZDebug_Action inAction, const char* inMessage)
+static void sHandleDebug(const ZDebug::Params_t& iParams, va_list iArgs)
 	{
-	if (inAction == eDebug_ActionStop)
-		{
-		ZLog::S s(ZLog::eErr, "ZUtil_Debug");
-		s << "STOP: " << inMessage << "\n";
+	char theBuf[4096];
+	sFormatStandardMessage(theBuf, sizeof(theBuf), iParams);
 
+	ZLog::S s(ZLog::eErr, "ZUtil_Debug");
+	if (iParams.fStop)
+		s << "STOP: ";
+	else
+		s << "DEBUG: ";
+
+	s << theBuf;
+
+	if (iParams.fUserMessage)
+		s.Writev(iParams.fUserMessage, iArgs);
+
+	if (iParams.fStop)
+		{
 		#if ZCONFIG_API_Enabled(StackCrawl)
 			ZStackCrawl theCrawl;
 			sDumpStackCrawl(theCrawl, s);
@@ -152,41 +164,36 @@ static void sDebug_HandleActual(int inLevel, ZDebug_Action inAction, const char*
 			*reinterpret_cast<double*>(1) = 0;
 			}
 		}
-	else
-		{
-		ZLog::S s(ZLog::eErr, "ZUtil_Debug");
-		s << "DEBUG: " << inMessage;
-		}
 	}
 
-} // namespace ZUtil_Debug
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Deadlock handler
-
-static void sDeadlockHandler(const string& iString)
+class DebugFunction
+:	public ZFunctionChain_T<ZDebug::Function_t, const ZDebug::Params_t&>
 	{
-	ZDebugStopf(0, ("DEADLOCK DETECTED: %s", iString.c_str()));
-	}
+public:
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
+		{
+		oResult = sHandleDebug;
+		return true;
+		}
+	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Debug::LogMeister
 
-ZUtil_Debug::LogMeister* ZUtil_Debug::LogMeister::sLogMeister;
+LogMeister* LogMeister::sLogMeister;
 
-ZUtil_Debug::LogMeister::LogMeister()
+LogMeister::LogMeister()
 :	fLogPriority(ZLog::ePriority_Notice),
 	fExtraSpace(20)
 	{
 	sLogMeister = this;
 	}
 
-bool ZUtil_Debug::LogMeister::Enabled(ZLog::EPriority iPriority, const string& iName)
+bool LogMeister::Enabled(ZLog::EPriority iPriority, const string& iName)
 	{ return iPriority <= fLogPriority; }
 
-void ZUtil_Debug::LogMeister::LogIt(
+void LogMeister::LogIt(
 	ZLog::EPriority iPriority, const string& iName, const string& iMessage)
 	{
 	if (iPriority > fLogPriority)
@@ -200,7 +207,6 @@ void ZUtil_Debug::LogMeister::LogIt(
 
 	ZTime now = ZTime::sNow();
 
-	
 	const size_t curLength = ZUnicode::sCUToCP(iName.begin(), iName.end());
 	if (fExtraSpace < curLength)
 		fExtraSpace = curLength;
@@ -218,17 +224,17 @@ void ZUtil_Debug::LogMeister::LogIt(
 	theStrimW.Flush();
 	}
 
-void ZUtil_Debug::LogMeister::SetStrimmer(ZRef<ZStrimmerW> iStrimmerW)
+void LogMeister::SetStrimmer(ZRef<ZStrimmerW> iStrimmerW)
 	{
 	fStrimmerW = iStrimmerW;
 	}
 
-void ZUtil_Debug::LogMeister::SetLogPriority(ZLog::EPriority iLogPriority)
+void LogMeister::SetLogPriority(ZLog::EPriority iLogPriority)
 	{
 	fLogPriority = iLogPriority;
 	}
 
-ZLog::EPriority ZUtil_Debug::LogMeister::GetLogPriority()
+ZLog::EPriority LogMeister::GetLogPriority()
 	{
 	return fLogPriority;
 	}
@@ -237,10 +243,9 @@ ZLog::EPriority ZUtil_Debug::LogMeister::GetLogPriority()
 #pragma mark -
 #pragma mark * ZUtil_Debug
 
-void ZUtil_Debug::sInstall()
+void sInstall()
 	{
-	// sDebug_HandleActual is a global declared in ZDebug.h and defined in ZDebug.cpp.
-	::sDebug_HandleActual = ZUtil_Debug::sDebug_HandleActual;
+	static DebugFunction theDF;
 
 	ZLog::sSetLogMeister(new LogMeister);
 
@@ -262,23 +267,25 @@ void ZUtil_Debug::sInstall()
 	#endif
 	}
 
-void ZUtil_Debug::sSetStrimmer(ZRef<ZStrimmerW> iStrimmerW)
+void sSetStrimmer(ZRef<ZStrimmerW> iStrimmerW)
 	{
 	if (LogMeister::sLogMeister)
 		LogMeister::sLogMeister->SetStrimmer(iStrimmerW);
 	}
 
-void ZUtil_Debug::sSetLogPriority(ZLog::EPriority iLogPriority)
+void sSetLogPriority(ZLog::EPriority iLogPriority)
 	{
 	if (LogMeister::sLogMeister)
 		LogMeister::sLogMeister->SetLogPriority(iLogPriority);
 	}
 
-ZLog::EPriority ZUtil_Debug::sGetLogPriority()
+ZLog::EPriority sGetLogPriority()
 	{
 	if (LogMeister::sLogMeister)
 		return LogMeister::sLogMeister->GetLogPriority();
 	return 0xFF;
 	}
+
+} // namespace ZUtil_Debug
 
 NAMESPACE_ZOOLIB_END

@@ -80,15 +80,17 @@ size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams)
 	if (iParams.fConditionMessage)
 		{
 		return snprintf(iBuf, iBufSize,
-			"Assertion failed: %s, %s:%d",
+			"Assertion failed: (%s), in %s[%s:%d]",
 			iParams.fConditionMessage,
+			iParams.fFunctionName,
 			sTruncateFileName(iParams.fFileName),
 			iParams.fLine);
 		}
 	else
 		{
 		return snprintf(iBuf, iBufSize,
-			"%s:%d",
+			"%s[%s:%d]",
+			iParams.fFunctionName,
 			sTruncateFileName(iParams.fFileName),
 			iParams.fLine);
 		}
@@ -104,8 +106,12 @@ static void sHandleDebug_POSIX(const Params_t& iParams, va_list iArgs)
 	{
 	char theBuf[4096];
 	sFormatStandardMessage(theBuf, sizeof(theBuf), iParams);
+	fputs("  *", stderr);
 	::fputs(theBuf, stderr);
+	::fputs("\n", stderr);
+	fputs("  *", stderr);
 	::vfprintf(stderr, iParams.fUserMessage, iArgs);
+	::fputs("\n", stderr);
 	if (iParams.fStop)
 		{
 		// Force a segfault
@@ -135,6 +141,10 @@ public:
 
 #if ZCONFIG_SPI_Enabled(Win)
 
+#if ZCONFIG(Compiler, CodeWarrior)
+#	define __asm asm
+#endif
+
 // sIsDebuggerPresent was taken from Whisper 1.3, which was adpated
 // from code in Windows Developer Journal, March 1999.
 
@@ -142,48 +152,52 @@ static bool sIsDebuggerPresent()
 	{
 	#if ZCONFIG(Processor, x86) && !ZCONFIG(Compiler, GCC)
 
-	if (HINSTANCE kernelH = LoadLibraryA("KERNEL32.DLL"))
-		{
-		// IsDebuggerPresent only exists in NT and Win 98, although its prototype
-		// is in headers for Win 95 also. We must manually locate it in Kernel32 and
-		// manually invoke it, if found.
-		typedef BOOL (WINAPI *IsDebuggerPresentProc)();
-		if (IsDebuggerPresentProc proc =
-			(IsDebuggerPresentProc) ::GetProcAddress(kernelH, "IsDebuggerPresent"))
+		if (HINSTANCE kernelH = LoadLibraryA("KERNEL32.DLL"))
 			{
-			return proc() != 0;
-			}
-		}
-
-		const uint32 kDebuggerPresentFlag = 0x000000001;
-		const uint32 kProcessDatabaseBytes = 190;
-		const uint32 kOffsetFlags = 8;
-
-		uint32 threadID = GetCurrentThreadId();
-		uint32 processID = GetCurrentProcessId();
-		uint32 obfuscator = 0;
-
-		asm
-			{
-			mov	ax, fs
-			mov	es, ax
-			mov	eax, 0x18
-			mov	eax, es:[eax]
-			sub	eax, 0x10
-			xor	eax, [threadID]
-			mov	[obfuscator], eax
+			// IsDebuggerPresent only exists in NT and Win 98, although its prototype
+			// is in headers for Win 95 also. We must manually locate it in Kernel32 and
+			// manually invoke it, if found.
+			typedef BOOL (WINAPI *IsDebuggerPresentProc)();
+			if (IsDebuggerPresentProc proc =
+				(IsDebuggerPresentProc) ::GetProcAddress(kernelH, "IsDebuggerPresent"))
+				{
+				return proc() != 0;
+				}
 			}
 
-		const uint32* processDatabase = reinterpret_cast<const uint32*>(processID ^ obfuscator);
-		if (!IsBadReadPtr(processDatabase, kProcessDatabaseBytes)) 
-			{
-			uint32 flags = processDatabase[kOffsetFlags];
-			return (flags & kDebuggerPresentFlag) != 0;
-			}
+			const uint32 kDebuggerPresentFlag = 0x000000001;
+			const uint32 kProcessDatabaseBytes = 190;
+			const uint32 kOffsetFlags = 8;
 
-	#endif // ZCONFIG(Processor, x86) && !ZCONFIG(Compiler, GCC)
+			uint32 threadID = GetCurrentThreadId();
+			uint32 processID = GetCurrentProcessId();
+			uint32 obfuscator = 0;
 
-	return false;
+			__asm
+				{
+				mov	ax, fs
+				mov	es, ax
+				mov	eax, 0x18
+				mov	eax, es:[eax]
+				sub	eax, 0x10
+				xor	eax, [threadID]
+				mov	[obfuscator], eax
+				}
+
+			const uint32* processDatabase = reinterpret_cast<const uint32*>(processID ^ obfuscator);
+			if (!IsBadReadPtr(processDatabase, kProcessDatabaseBytes)) 
+				{
+				uint32 flags = processDatabase[kOffsetFlags];
+				return (flags & kDebuggerPresentFlag) != 0;
+				}
+
+			return false;
+
+	#else
+
+		return ::IsDebuggerPresent();
+
+	#endif
 	}
 
 static void sHandleDebug_Win(const Params_t& iParams, va_list iArgs)
@@ -195,8 +209,9 @@ static void sHandleDebug_Win(const Params_t& iParams, va_list iArgs)
 		{
 		if (sIsDebuggerPresent())
 			{
+			::OutputDebugStringA(theBuf);
 			#if ZCONFIG(Processor, x86) && !ZCONFIG(Compiler, GCC)
-				asm { int 3 }
+				__asm { int 3 }
 			#else
 				::DebugBreak();
 			#endif
