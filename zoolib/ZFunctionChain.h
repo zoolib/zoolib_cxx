@@ -38,19 +38,22 @@ public:
 
 	static bool sInvoke(Result& oResult, Param iParam)
 		{
-		// Try preferred factories first
-		for (ZFunctionChain_T* iter = sHead(); iter; iter = iter->fNext)
+		ZFunctionChain_T* head = sHead();
+
+		// Try preferred first
+		for (ZFunctionChain_T* iter = head; iter; iter = iter->fNext)
 			{
 			if (iter->Invoke(true, oResult, iParam))
 				return true;
 			}
 
-		// Then non-preferred
-		for (ZFunctionChain_T* iter = sHead(); iter; iter = iter->fNext)
+		// then non-preferred
+		for (ZFunctionChain_T* iter = head; iter; iter = iter->fNext)
 			{
 			if (iter->Invoke(false, oResult, iParam))
 				return true;
 			}
+
 		return false;
 		}
 
@@ -92,7 +95,7 @@ protected:
 private:
 	static ZFunctionChain_T*& sHead()
 		{
-		static ZFunctionChain_T* sHead = nullptr;
+		static ZFunctionChain_T* sHead;
 		return sHead;
 		}
 
