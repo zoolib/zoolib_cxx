@@ -61,9 +61,6 @@ ZValData_ZooLib::Rep::Rep(size_t iSize)
 ZValData_ZooLib::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fRep->fSize); }
 
-void ZValData_ZooLib::swap(ZValData_ZooLib& iOther)
-	{ std::swap(fRep, iOther.fRep); }
-
 ZValData_ZooLib::ZValData_ZooLib()
 :	fRep(new (0) Rep)
 	{}

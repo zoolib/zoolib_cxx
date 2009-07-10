@@ -21,8 +21,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZValAccessors_Mac__
 #define __ZValAccessors_Mac__ 1
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZValAccessors.h"
+
+#if ZCONFIG_SPI_Enabled(Carbon)
 
 #include ZMACINCLUDE3(CoreServices,CarbonCore,Files.h)
 
@@ -39,5 +42,7 @@ NAMESPACE_ZOOLIB_BEGIN
 	ZMACRO_ZValAccessors_Def_Entry(T, FSRef, FSRef) \
 
 NAMESPACE_ZOOLIB_END
+
+#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 #endif // __ZValAccessors_Mac__

@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZUnicodeString.h"
-#include "zoolib/ZVal_T.h"
+#include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors_Std.h"
 
 #include <vector>
@@ -35,6 +35,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "PIActions.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZPhotoshop
 
 namespace ZPhotoshop {
 
@@ -129,9 +133,16 @@ private:
 
 class Spec
 	{
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Spec,
+		operator_bool_generator_type, operator_bool_type);
+
 	struct Entry;
 
 public:
+	operator operator_bool_type() const;
+
+	void swap(Spec& iOther);
+
 	static Spec sClass(ClassID iClassID);
 	static Spec sEnum(ClassID iClassID, EnumTypeID iEnumType, EnumID iValue);
 	static Spec sEnum(ClassID iClassID, const Enumerated& iEnum);
@@ -214,19 +225,9 @@ class Val
 		operator_bool_generator_type, operator_bool_type);
 
 public:
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Int32, int32)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Double, double)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Bool, bool)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, String, string8)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Raw, ZMemoryBlock)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, UnitFloat, UnitFloat)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Enumerated, Enumerated)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Alias, PSAlias)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, List, List)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Map, Map)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Spec, Spec)
-
 	operator operator_bool_type() const;
+
+	void swap(Val& iOther);
 
 	Val();
 	Val(const Val& iOther);
@@ -250,6 +251,19 @@ public:
 
 	template <class S>
 	void Set_T(const S& iVal);
+
+// Typename accessors
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Int32, int32)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Double, double)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Bool, bool)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, String, string8)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Raw, ZMemoryBlock)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, UnitFloat, UnitFloat)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Enumerated, Enumerated)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Alias, PSAlias)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, List, List)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Map, Map)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Spec, Spec)
 
 private:
 	void pRelease();
@@ -289,6 +303,8 @@ class List
 public:
 	operator operator_bool_type() const;
 
+	void swap(List& iOther);
+
 	List();
 	List(const List& iOther);
 	~List();
@@ -325,9 +341,11 @@ class Map
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Map,
 		operator_bool_generator_type, operator_bool_type);
 public:
-	typedef ZValMapIterator const_iterator;
+	typedef ZValMapIterator_T<Map> const_iterator;
 
 	operator operator_bool_type() const;
+
+	void swap(Map& iOther);
 
 	Map();
 	Map(const Map& iOther);
@@ -384,5 +402,25 @@ private:
 } // namespace ZPhotoshop
 
 NAMESPACE_ZOOLIB_END
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * std::swap
+
+namespace std {
+
+inline void swap(ZOOLIB_PREFIX::ZPhotoshop::Spec& a, ZOOLIB_PREFIX::ZPhotoshop::Spec& b)
+	{ a.swap(b); }
+
+inline void swap(ZOOLIB_PREFIX::ZPhotoshop::Val& a, ZOOLIB_PREFIX::ZPhotoshop::Val& b)
+	{ a.swap(b); }
+
+inline void swap(ZOOLIB_PREFIX::ZPhotoshop::List& a, ZOOLIB_PREFIX::ZPhotoshop::List& b)
+	{ a.swap(b); }
+
+inline void swap(ZOOLIB_PREFIX::ZPhotoshop::Map& a, ZOOLIB_PREFIX::ZPhotoshop::Map& b)
+	{ a.swap(b); }
+
+} // namespace std
 
 #endif // __ZPhotoshop_Val__

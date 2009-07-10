@@ -31,9 +31,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZStreamR;
-class ZStreamW;
-
 namespace ZString {
 
 using std::string;
@@ -76,23 +73,19 @@ bool sContainsi(const string& iTarget, const string& iCandidate);
 // -- 
 // ZUtil_Tuple-style conversion API
 
-bool sInt64(const string& iString, int64& oVal);
+bool sInt64Q(const string& iString, int64& oVal);
 int64 sInt64D(const string& iString, int64 iDefault);
 int64 sInt64(const string& iString);
 
-bool sUInt64(const string& iString, uint64& oVal);
+bool sUInt64Q(const string& iString, uint64& oVal);
 uint64 sUInt64D(const string& iString, uint64 iDefault);
 uint64 sUInt64(const string& iString);
 
-bool sDouble(const string& iString, double& oVal);
+bool sDoubleQ(const string& iString, double& oVal);
 double sDoubleD(const string& iString, double iDefault);
 double sDouble(const string& iString);
 
 // -- 
-
-void sToStream(const string& iString, const ZStreamW& iStream);
-void sFromStream(string& outString, const ZStreamR& iStream);
-string sFromStream(const ZStreamR& iStream);
 
 string sFresh(const string& iOther);
 void sMakeFresh(string& ioString);

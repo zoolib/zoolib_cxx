@@ -36,8 +36,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZStreamR;
-class ZStreamW;
+//class ZStreamR;
+//class ZStreamW;
 
 class ZDCFont
 	{
@@ -91,8 +91,8 @@ public:
 	string8 GetName() const;
 	void SetName(const string8& inFontName);
 
-	void ToStream(const ZStreamW& inStream) const;
-	void FromStream(const ZStreamR& inStream);
+//	void ToStream(const ZStreamW& inStream) const;
+//	void FromStream(const ZStreamR& inStream);
 
 // AG 98-07-15. The ZDCFont constants are deprecated. Please use ZUIAttributeFactory (which
 // may need expanding). These constants are here to make life a bit easier till

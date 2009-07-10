@@ -35,7 +35,7 @@ ZRef<CFMutableDataRef> sDataMutable()
 
 ZRef<CFMutableDataRef> sDataMutable(size_t iSize)
 	{
-	ZRef<CFMutableDataRef> theData = NoRetain(::CFDataCreateMutable(kCFAllocatorDefault, iSize));
+	ZRef<CFMutableDataRef> theData = NoRetain(::CFDataCreateMutable(kCFAllocatorDefault, 0));
 	::CFDataSetLength(theData, iSize);
 	return theData;
 	}

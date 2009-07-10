@@ -73,7 +73,7 @@ static ZRef<ZYadR> sGetChild(ZRef<ZYadR> iYadR, const string& iName)
 	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
 		{
 		int64 theIntIndex;
-		if (ZString::sInt64(iName, theIntIndex) && theIntIndex >= 0)
+		if (ZString::sInt64Q(iName, theIntIndex) && theIntIndex >= 0)
 			{
 			if (ZRef<ZYadListRPos> theYadListPosR = ZRefDynamicCast<ZYadListRPos>(iYadR))
 				{

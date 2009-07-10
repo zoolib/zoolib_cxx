@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZStream.h"
+//#include "zoolib/ZStream.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZUnicode.h"
 
@@ -221,6 +221,7 @@ string8 ZDCFont::GetName() const
 void ZDCFont::SetName(const string8& inFontName)
 	{ fFontName = inFontName; }
 
+#if 0
 void ZDCFont::ToStream(const ZStreamW& inStream) const
 	{
 	ZString::sToStream(fFontName, inStream);
@@ -234,5 +235,6 @@ void ZDCFont::FromStream(const ZStreamR& inStream)
 	fSize = inStream.ReadInt16();
 	fStyle = inStream.ReadInt16();
 	}
+#endif
 
 NAMESPACE_ZOOLIB_END

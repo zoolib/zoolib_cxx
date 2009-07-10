@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZRef_CFType.h"
 #include "zoolib/ZUnicodeString.h"
-#include "zoolib/ZVal_T.h"
+#include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors_Std.h"
 #include "zoolib/ZValData_CFType.h"
 
@@ -69,12 +69,10 @@ public:
 	ZVal_CFType(const string8& iVal);
 	ZVal_CFType(const string16& iVal);
 
-#if 0
-	ZVal_CFType(const ZRef<CFStringRef>& iVal);
-	ZVal_CFType(const ZRef<CFDataRef>& iVal);
-	ZVal_CFType(const ZRef<CFArrayRef>& iVal);
-	ZVal_CFType(const ZRef<CFDictionaryRef>& iVal);
-#endif
+	ZVal_CFType(CFStringRef iVal);
+	ZVal_CFType(CFDataRef iVal);
+	ZVal_CFType(CFArrayRef iVal);
+	ZVal_CFType(CFDictionaryRef iVal);
 
 // ZVal protocol
 	void Clear();

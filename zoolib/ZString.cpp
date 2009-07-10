@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h" // For min
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZStream.h"
+//#include "zoolib/ZStream.h"
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 #include "zoolib/ZUnicode.h"
 
@@ -221,7 +221,7 @@ bool ZString::sContainsi(const string& iTarget, const string& iCandidate)
 	return std::string::npos != ZUnicode::sToLower(iTarget).find(ZUnicode::sToLower(iCandidate));
 	}
 
-bool ZString::sInt64(const string& iString, int64& oVal)
+bool ZString::sInt64Q(const string& iString, int64& oVal)
 	{
 	if (iString.size())
 		{
@@ -234,7 +234,7 @@ bool ZString::sInt64(const string& iString, int64& oVal)
 int64 ZString::sInt64D(const string& iString, int64 iDefault)
 	{
 	int64 result;
-	if (sInt64(iString, result))
+	if (sInt64Q(iString, result))
 		return result;
 	return iDefault;
 	}
@@ -242,7 +242,7 @@ int64 ZString::sInt64D(const string& iString, int64 iDefault)
 int64 ZString::sInt64(const string& iString)
 	{ return sInt64D(iString, 0); }
 
-bool ZString::sUInt64(const string& iString, uint64& oVal)
+bool ZString::sUInt64Q(const string& iString, uint64& oVal)
 	{
 	if (iString.size())
 		{
@@ -255,7 +255,7 @@ bool ZString::sUInt64(const string& iString, uint64& oVal)
 uint64 ZString::sUInt64D(const string& iString, uint64 iDefault)
 	{
 	uint64 result;
-	if (sUInt64(iString, result))
+	if (sUInt64Q(iString, result))
 		return result;
 	return iDefault;
 	}
@@ -263,7 +263,7 @@ uint64 ZString::sUInt64D(const string& iString, uint64 iDefault)
 uint64 ZString::sUInt64(const string& iString)
 	{ return sUInt64D(iString, 0); }
 
-bool ZString::sDouble(const string& iString, double& oVal)
+bool ZString::sDoubleQ(const string& iString, double& oVal)
 	{
 	if (iString.size())
 		{
@@ -276,33 +276,13 @@ bool ZString::sDouble(const string& iString, double& oVal)
 double ZString::sDoubleD(const string& iString, double iDefault)
 	{
 	double result;
-	if (sDouble(iString, result))
+	if (sDoubleQ(iString, result))
 		return result;
 	return iDefault;
 	}
 
 double ZString::sDouble(const string& iString)
 	{ return sDoubleD(iString, 0.0); }
-
-void ZString::sToStream(const string& iString, const ZStreamW& iStream)
-	{
-	size_t theLength = iString.size();
-	iStream.WriteUInt32(theLength);
-	if (theLength > 0)
-		iStream.Write(iString.data(), theLength);
-	}
-
-void ZString::sFromStream(string& oString, const ZStreamR& iStream)
-	{
-	size_t theLength = iStream.ReadUInt32();
-	oString = iStream.ReadString(theLength);
-	}
-
-string ZString::sFromStream(const ZStreamR& iStream)
-	{
-	size_t theLength = iStream.ReadUInt32();
-	return iStream.ReadString(theLength);
-	}
 
 string ZString::sFresh(const string& iOther)
 	{

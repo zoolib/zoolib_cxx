@@ -26,8 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h" // For ZAssert
 #include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors.h"
-#include "zoolib/ZVal_T.h"
 
 #include <string>
 
@@ -45,16 +45,10 @@ class NPVariantH
 :	public NPVariantBase
 ,	public ZValR_T<NPVariantH>
 	{
-public:
     ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(NPVariantH,
     	operator_bool_generator_type, operator_bool_type);
 
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Bool, bool)
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Int32, int32)
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Double, double)
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, String, std::string)
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Object, ZRef<NPObjectH>)
-
+public:
 	operator operator_bool_type() const;
 
 	NPVariantH();
@@ -87,6 +81,13 @@ public:
 
 	void SetVoid();
 	void SetNull();
+
+// Typename accessors
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Bool, bool)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Int32, int32)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Double, double)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, String, std::string)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Object, ZRef<NPObjectH>)
 
 private:
 	void pSetString(const char* iChars, size_t iLength);

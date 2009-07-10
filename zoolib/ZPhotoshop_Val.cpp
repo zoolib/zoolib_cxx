@@ -33,6 +33,30 @@ using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZRef support
+
+template <>
+void sRetain_T(ASZByteRun* iString)
+	{
+	if (iString)
+		sASZString->AddRef(iString);
+	}
+
+template <>
+void sRelease_T(ASZByteRun* iString)
+	{
+	if (iString)
+		sASZString->Release(iString);
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZPhotoshop suites
+
+namespace ZPhotoshop {
+
 static AutoSuite<PSActionDescriptorProcs>
 	sPSActionDescriptor(kPSActionDescriptorSuite, kPSActionDescriptorSuiteVersion);
 
@@ -50,22 +74,6 @@ static AutoSuite<ASZStringSuite>
 
 static AutoSuite<PSHandleSuite2>
 	sPSHandle(kPSHandleSuite, kPSHandleSuiteVersion2);
-
-template <>
-void sRetain_T(ASZByteRun* iString)
-	{
-	if (iString)
-		sASZString->AddRef(iString);
-	}
-
-template <>
-void sRelease_T(ASZByteRun* iString)
-	{
-	if (iString)
-		sASZString->Release(iString);
-	}
-
-namespace ZPhotoshop {
 
 // =================================================================================================
 #pragma mark -
@@ -448,6 +456,12 @@ Spec Spec::sOffset(ClassID iClassID, int32 iOffset)
 Spec Spec::sProperty(ClassID iClassID, KeyID iKeyID)
 	{ return Entry::sProperty(iClassID, iKeyID); }
 
+Spec::operator operator_bool_type() const
+	{ return operator_bool_generator_type::translate(!fEntries.empty()); }
+
+void Spec::swap(Spec& iOther)
+	{ fEntries.swap(iOther.fEntries); }
+
 Spec::Spec()
 	{}
 
@@ -702,6 +716,18 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 
 Val::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fType); }
+
+void Val::swap(Val& iOther)
+	{
+	struct dummy { char bytes[sizeof(Val::fData)]; };
+
+	dummy& self = *(dummy*)(fData.fBytes);
+	dummy& other = *(dummy*)(iOther.fData.fBytes);
+
+	dummy temp = self;
+	self = other;
+	other = temp;
+	}
 
 Val::Val()
 :	fType(0)
@@ -1110,6 +1136,10 @@ void Val::pCopy(const Val& iOther)
 	fType = iOther.fType;
 	}
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Val typename accessors
+
 ZMACRO_ZValAccessors_Def_Entry(Val, Int32, int32)
 ZMACRO_ZValAccessors_Def_Entry(Val, Double, double)
 ZMACRO_ZValAccessors_Def_Entry(Val, Bool, bool)
@@ -1247,6 +1277,9 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 List::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->Count()); }
 
+void List::swap(List& iOther)
+	{ std::swap(fAL, iOther.fAL); }
+
 List::List()
 	{ sPSActionList->Make(&fAL); }
 
@@ -1351,6 +1384,9 @@ PIActionList List::GetActionList() const
 
 Map::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->pCount()); }
+
+void Map::swap(Map& iOther)
+	{ std::swap(fAD, iOther.fAD); }
 
 Map::Map()
 :	fType(typeObject)

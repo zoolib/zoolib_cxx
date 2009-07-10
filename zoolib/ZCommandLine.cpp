@@ -627,7 +627,7 @@ void ZCommandLine::Int64::WriteDefault(const ZStrimW& s)
 
 bool ZCommandLine::Int64::Parse(const char* iLexeme, const ZStrimW* iStrimErrors)
 	{
-	if (!ZString::sInt64(iLexeme, fValue))
+	if (!ZString::sInt64Q(iLexeme, fValue))
 		{
 		if (iStrimErrors)
 			*iStrimErrors << "Could not parse parameter to option " << fName << "\n";

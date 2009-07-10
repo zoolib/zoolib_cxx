@@ -295,6 +295,10 @@ void NPVariantH::pCopyFrom(const NPVariant& iOther)
 void NPVariantH::pRelease()
 	{ HostMeister::sGet()->ReleaseVariantValue(this); }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * NPVariantH typename accessors
+
 ZMACRO_ZValAccessors_Def_Entry(NPVariantH, Bool, bool)
 ZMACRO_ZValAccessors_Def_Entry(NPVariantH, Int32, int32)
 ZMACRO_ZValAccessors_Def_Entry(NPVariantH, Double, double)

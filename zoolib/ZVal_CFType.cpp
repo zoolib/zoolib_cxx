@@ -129,23 +129,21 @@ ZVal_CFType::ZVal_CFType(const string16& iVal)
 :	ZRef<CFTypeRef>(sString(iVal))
 	{}
 
-#if 0
-ZVal_CFType::ZVal_CFType(const ZRef<CFStringRef>& iVal)
+ZVal_CFType::ZVal_CFType(CFStringRef iVal)
 :	ZRef<CFTypeRef>(iVal)
 	{}
 
-ZVal_CFType::ZVal_CFType(const ZRef<CFDataRef>& iVal)
+ZVal_CFType::ZVal_CFType(CFDataRef iVal)
 :	ZRef<CFTypeRef>(iVal)
 	{}
 
-ZVal_CFType::ZVal_CFType(const ZRef<CFArrayRef>& iVal)
+ZVal_CFType::ZVal_CFType(CFArrayRef iVal)
 :	ZRef<CFTypeRef>(iVal)
 	{}
 
-ZVal_CFType::ZVal_CFType(const ZRef<CFDictionaryRef>& iVal)
+ZVal_CFType::ZVal_CFType(CFDictionaryRef iVal)
 :	ZRef<CFTypeRef>(iVal)
 	{}
-#endif
 
 void ZVal_CFType::Clear()
 	{ ZRef<CFTypeRef>::Clear(); }
@@ -177,7 +175,7 @@ bool ZVal_CFType::QGet_T<int32>(int32& oVal) const
 		return true;
 	if (sGetNumber_T(*this, kCFNumberIntType, oVal))
 		return true;
-	if (sGetNumber_T(*this, kCFNumberLongType, oVal))
+	if (sGetNumber_T(*this, kCFNumberLongType, oVal)) //?? Even on ppc64/x86_64??
 		return true;
 	return false;
 	}
@@ -332,6 +330,10 @@ CFTypeRef& ZVal_CFType::OParam()
 	return this->GetPtrRef();
 	}
 	
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVal_CFType typename accessors
+
 ZMACRO_ZValAccessors_Def_Std(ZVal_CFType)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, CFString, ZRef<CFStringRef>)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Data, ZValData_CFType)

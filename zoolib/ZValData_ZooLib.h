@@ -38,7 +38,6 @@ class ZValData_ZooLib
 
 public:
 	operator operator_bool_type() const;
-	void swap(ZValData_ZooLib& iOther);
 
 	ZValData_ZooLib();
 	ZValData_ZooLib(const ZValData_ZooLib& iOther);
@@ -74,16 +73,5 @@ template <> inline int sCompare_T(const ZValData_ZooLib& iL, const ZValData_ZooL
 	{ return iL.Compare(iR); }
 
 NAMESPACE_ZOOLIB_END
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * std::swap
-
-namespace std {
-
-inline void swap(ZOOLIB_PREFIX::ZValData_ZooLib& a, ZOOLIB_PREFIX::ZValData_ZooLib& b)
-	{ a.swap(b); }
-
-} // namespace std
 
 #endif // __ZValData_ZooLib__

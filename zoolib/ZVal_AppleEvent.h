@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZUtil_AppleEvent.h"
-#include "zoolib/ZVal_T.h"
+#include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors.h"
 #include "zoolib/ZValAccessors_Mac.h"
 
@@ -164,7 +164,7 @@ class ZValMap_AppleEvent
 		operator_bool_generator_type, operator_bool_type);
 
 public:
-	typedef ZValMapIterator const_iterator;
+	typedef ZValMapIterator_T<ZValMap_AppleEvent> const_iterator;
 
 	operator operator_bool_type() const;
 

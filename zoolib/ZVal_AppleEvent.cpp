@@ -265,6 +265,10 @@ AEDesc& ZVal_AppleEvent::OParam()
 	return *this;
 	}
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVal_AppleEvent typename accessors
+
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Int16, int16)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Int32, int32)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Int64, int64)

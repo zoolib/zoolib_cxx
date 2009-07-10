@@ -78,6 +78,9 @@ public:
 	ZMACRO_ZValMapAccessors_Decl(ZValMap_ZooLib, const_iterator)
 	};
 
+#undef ZMACRO_ZValMapAccessors_Decl_Entry
+#undef ZMACRO_ZValMapAccessors_Decl
+
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZTuple__

@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVal_T__
-#define __ZVal_T__ 1
+#ifndef __ZVal__
+#define __ZVal__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZTypes.h"
@@ -107,30 +107,31 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValMapIterator
+#pragma mark * ZValMapIterator_T
 
-class ZValMapIterator
+template <class T>
+class ZValMapIterator_T
 	{
 public:
-	ZValMapIterator() : fVal(0) {}
-	ZValMapIterator(const ZValMapIterator& iOther) : fVal(iOther.fVal) {}
-	~ZValMapIterator() {}
-	ZValMapIterator& operator=(const ZValMapIterator& iOther)
+	ZValMapIterator_T() : fVal(0) {}
+	ZValMapIterator_T(const ZValMapIterator_T& iOther) : fVal(iOther.fVal) {}
+	~ZValMapIterator_T() {}
+	ZValMapIterator_T& operator=(const ZValMapIterator_T& iOther)
 		{
 		fVal = iOther.fVal;
 		return *this;
 		}
 
-	explicit ZValMapIterator(size_t iVal) : fVal(iVal) {}
+	explicit ZValMapIterator_T(size_t iVal) : fVal(iVal) {}
 
-	ZValMapIterator& operator++()
+	ZValMapIterator_T& operator++()
 		{
 		++fVal;
 		return *this;
 		}
 
-	bool operator==(const ZValMapIterator& iOther) const { return fVal == iOther.fVal; }
-	bool operator!=(const ZValMapIterator& iOther) const { return fVal != iOther.fVal; }
+	bool operator==(const ZValMapIterator_T& iOther) const { return fVal == iOther.fVal; }
+	bool operator!=(const ZValMapIterator_T& iOther) const { return fVal != iOther.fVal; }
 
 	size_t GetIndex() const { return fVal; }
 
@@ -140,4 +141,4 @@ private:
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZVal_T__
+#endif // __ZVal__

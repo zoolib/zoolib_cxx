@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTime.h"
 #include "zoolib/ZTName.h"
 #include "zoolib/ZTypes.h"
-#include "zoolib/ZVal_T.h"
+#include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors_Std.h"
 #include "zoolib/ZValAccessors_ZooLib.h"
 #include "zoolib/ZValData_ZooLib.h"
@@ -254,8 +254,6 @@ class ZValList_ZooLib
 public:
 	operator operator_bool_type() const;
 
-	void swap(ZValList_ZooLib& iOther);
-
 	ZValList_ZooLib();
 	ZValList_ZooLib(const ZValList_ZooLib& iOther);
 	~ZValList_ZooLib();
@@ -342,6 +340,7 @@ inline void ZValList_ZooLib::GetVector_T(OutputIterator iIter, const T& iDummy) 
 #pragma mark * NameVal
 
 /// The type used to store name/property pairs.
+
 struct NameVal
 	{
 	NameVal();
@@ -380,8 +379,6 @@ public:
 	typedef PropList::iterator const_iterator;
 
 	operator operator_bool_type() const;
-
-	void swap(ZValMap_ZooLib& iOther);
 
 	ZValMap_ZooLib();
 	ZValMap_ZooLib(const ZValMap_ZooLib& iOther);
@@ -465,9 +462,6 @@ protected:
 	ZRef<Rep> fRep;
 	};
 
-#undef ZMACRO_ZValMapAccessors_Decl_Entry
-#undef ZMACRO_ZValMapAccessors_Decl
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValMap_ZooLib inlines
@@ -496,12 +490,6 @@ NAMESPACE_ZOOLIB_END
 namespace std {
 
 inline void swap(ZOOLIB_PREFIX::ZVal_ZooLib& a, ZOOLIB_PREFIX::ZVal_ZooLib& b)
-	{ a.swap(b); }
-
-inline void swap(ZOOLIB_PREFIX::ZValList_ZooLib& a, ZOOLIB_PREFIX::ZValList_ZooLib& b)
-	{ a.swap(b); }
-
-inline void swap(ZOOLIB_PREFIX::ZValMap_ZooLib& a, ZOOLIB_PREFIX::ZValMap_ZooLib& b)
 	{ a.swap(b); }
 
 } // namespace std

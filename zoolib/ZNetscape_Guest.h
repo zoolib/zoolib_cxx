@@ -24,8 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNetscape.h"
 #include "zoolib/ZRef.h"
+#include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors.h"
-#include "zoolib/ZVal_T.h"
 
 #include <string>
 #include <vector>
@@ -60,16 +60,10 @@ class NPVariantG
 :	public NPVariantBase
 ,	public ZValR_T<NPVariantG>
 	{
-public:
     ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(NPVariantG,
     	operator_bool_generator_type, operator_bool_type);
 
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Bool, bool)
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Int32, int32)
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Double, double)
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, String, std::string)
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Object, ZRef<NPObjectG>)
-
+public:
 	operator operator_bool_type() const;
 
 	NPVariantG();
@@ -102,6 +96,13 @@ public:
 
 	void SetVoid();
 	void SetNull();
+
+// Typename accessors
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Bool, bool)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Int32, int32)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Double, double)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, String, std::string)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Object, ZRef<NPObjectG>)
 
 private:
 	void pSetString(const char* iChars, size_t iLength);

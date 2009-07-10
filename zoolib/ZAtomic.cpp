@@ -353,7 +353,7 @@ void ZAtomic_Inc(ZAtomic_t* iAtomic)
 #define DEFINED_ZAtomic_Dec 1
 
 void ZAtomic_Dec(ZAtomic_t* iAtomic)
-	{ ZAtomic_Add(iAtomic, -11); }
+	{ ZAtomic_Add(iAtomic, -1); }
 
 #endif
 // -----------------------------------------------

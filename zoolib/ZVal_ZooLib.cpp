@@ -1489,9 +1489,6 @@ ZValList_ZooLib::Rep::~Rep()
 ZValList_ZooLib::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fRep && !fRep->fVector.empty()); }
 
-void ZValList_ZooLib::swap(ZValList_ZooLib& iOther)
-	{ std::swap(fRep, iOther.fRep); }
-
 ZValList_ZooLib::ZValList_ZooLib()
 	{}
 
@@ -1746,9 +1743,6 @@ ZValMap_ZooLib::Rep::~Rep()
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValMap_ZooLib
-
-void ZValMap_ZooLib::swap(ZValMap_ZooLib& iOther)
-	{ std::swap(fRep, iOther.fRep); }
 
 ZValMap_ZooLib::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fRep && !fRep->fProperties.empty()); }
