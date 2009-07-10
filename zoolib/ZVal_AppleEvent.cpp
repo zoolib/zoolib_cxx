@@ -90,6 +90,9 @@ static string sAsString(AEKeyword iKeyword)
 ZVal_AppleEvent::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(descriptorType != typeNull); }
 
+void ZVal_AppleEvent::swap(ZVal_AppleEvent& iOther)
+	{ std::swap(static_cast<AEDesc&>(*this), static_cast<AEDesc&>(iOther)); }
+
 ZVal_AppleEvent::ZVal_AppleEvent()
 	{
 	// AEInitializeDesc doesn't exist in older CarbonLibs, although it's
@@ -289,6 +292,9 @@ ZMACRO_ZValAccessors_Def_Mac(ZVal_AppleEvent)
 ZValList_AppleEvent::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->Count()); }
 
+void ZValList_AppleEvent::swap(ZValList_AppleEvent& iOther)
+	{ std::swap(static_cast<AEDesc&>(*this), static_cast<AEDesc&>(iOther)); }
+
 ZValList_AppleEvent::ZValList_AppleEvent()
 	{ ::AECreateList(nullptr, 0, false, this); }
 
@@ -401,6 +407,9 @@ ZValMap_AppleEvent::operator operator_bool_type() const
 	return operator_bool_generator_type::translate
 		(noErr == ::AECountItems(this, &result) && result);
 	}
+
+void ZValMap_AppleEvent::swap(ZValMap_AppleEvent& iOther)
+	{ std::swap(static_cast<AEDesc&>(*this), static_cast<AEDesc&>(iOther)); }
 
 ZValMap_AppleEvent::ZValMap_AppleEvent()
 	{ ::AECreateList(nullptr, 0, true, this); }

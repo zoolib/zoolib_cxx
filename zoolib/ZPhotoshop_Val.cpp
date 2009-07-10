@@ -773,7 +773,7 @@ Val::Val(const string8& iVal)
 	fType = typeChar;
 	}
 
-Val::Val(const ZMemoryBlock& iVal)
+Val::Val(const ZValData_ZooLib& iVal)
 	{
 	sConstruct_T(fData.fBytes, iVal);
 	fType = typeRawData;
@@ -813,6 +813,12 @@ Val::Val(const Spec& iVal)
 	{
 	sConstruct_T<>(fData.fBytes, iVal);
 	fType = typeObjectSpecifier;
+	}
+
+void Val::Clear()
+	{
+	this->pRelease();
+	fType = 0;
 	}
 
 template <>
@@ -860,11 +866,11 @@ bool Val::QGet_T<string8>(string8& oVal) const
 	}
 
 template <>
-bool Val::QGet_T<ZMemoryBlock>(ZMemoryBlock& oVal) const
+bool Val::QGet_T<ZValData_ZooLib>(ZValData_ZooLib& oVal) const
 	{
 	if (typeRawData == fType)
 		{
-		oVal = *sFetch_T<ZMemoryBlock>(fData.fBytes);
+		oVal = *sFetch_T<ZValData_ZooLib>(fData.fBytes);
 		return true;
 		}
 	return false;
@@ -969,7 +975,7 @@ void Val::Set_T<string8>(const string8& iVal)
 	}
 
 template <>
-void Val::Set_T<ZMemoryBlock>(const ZMemoryBlock& iVal)
+void Val::Set_T<ZValData_ZooLib>(const ZValData_ZooLib& iVal)
 	{
 	this->pRelease();
 	sConstruct_T(fData.fBytes, iVal);
@@ -1037,7 +1043,7 @@ void Val::pRelease()
 			}
 		case typeRawData:
 			{
-			sDestroy_T<ZMemoryBlock>(fData.fBytes);
+			sDestroy_T<ZValData_ZooLib>(fData.fBytes);
 			break;
 			}
 		case typePath:
@@ -1107,7 +1113,7 @@ void Val::pCopy(const Val& iOther)
 			}
 		case typeRawData:
 			{
-			sCopyConstruct_T<ZMemoryBlock>(iOther.fData.fBytes, fData.fBytes);
+			sCopyConstruct_T<ZValData_ZooLib>(iOther.fData.fBytes, fData.fBytes);
 			break;
 			}
 		case typePath:
@@ -1144,7 +1150,7 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Int32, int32)
 ZMACRO_ZValAccessors_Def_Entry(Val, Double, double)
 ZMACRO_ZValAccessors_Def_Entry(Val, Bool, bool)
 ZMACRO_ZValAccessors_Def_Entry(Val, String, string8)
-ZMACRO_ZValAccessors_Def_Entry(Val, Raw, ZMemoryBlock)
+ZMACRO_ZValAccessors_Def_Entry(Val, Data, ZValData_ZooLib)
 ZMACRO_ZValAccessors_Def_Entry(Val, UnitFloat, UnitFloat)
 ZMACRO_ZValAccessors_Def_Entry(Val, Enumerated, Enumerated)
 ZMACRO_ZValAccessors_Def_Entry(Val, Alias, PSAlias)
@@ -1154,9 +1160,9 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * List and Map Getter/Setter stuff.
+#pragma mark * List and Map Getter/Setter stuff
 
-#define COMMA ,
+#define COMMA() ,
 
 #define GETTERCASES(SUITE, PARAM) \
 	case typeInteger: { int32 theVal; \
@@ -1165,9 +1171,9 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 	case typeFloat: { double theVal; \
 		if (noErr == SUITE->GetFloat(PARAM, &theVal)) { oVal = theVal; return true; } \
 		break; } \
-	case typeBoolean: { Boolean theVal; \
-		if (noErr == SUITE->GetBoolean(PARAM, &theVal)) \
-			{ oVal = bool(theVal); return true; } \
+	case typeUnitFloat: { UnitFloat theVal; \
+		if (noErr == SUITE->GetUnitFloat(PARAM, &theVal.fUnitID, &theVal.fValue)) \
+			{ oVal = theVal; return true; } \
 		break; } \
 	case typeChar: \
 		{ \
@@ -1183,18 +1189,10 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 			} \
 		break; \
 		} \
-	case typeUnitFloat: { UnitFloat theVal; \
-		if (noErr == SUITE->GetUnitFloat(PARAM, &theVal.fUnitID, &theVal.fValue)) \
-			{ oVal = theVal; return true; } \
+	case typeBoolean: { Boolean theVal; \
+		if (noErr == SUITE->GetBoolean(PARAM, &theVal)) \
+			{ oVal = bool(theVal); return true; } \
 		break; } \
-	case typeEnumerated: { Enumerated theVal; \
-		if (noErr == SUITE->GetEnumerated(PARAM, &theVal.fEnumType, &theVal.fValue)) \
-			{ oVal = theVal; return true; } \
-		break; } \
-	case typePath: \
-		{ \
-		ZUnimplemented(); \
-		} \
 	case typeValueList: { PIActionList theVal; \
 		if (noErr == SUITE->GetList(PARAM, &theVal)) \
 			{ oVal = List(Adopt(theVal)); return true; } \
@@ -1204,6 +1202,11 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 		PIActionDescriptor theVal; \
 		if (noErr == SUITE->GetObject(PARAM, &theDCID, &theVal)) \
 			{ oVal = Map(theDCID, Adopt(theVal)); return true; } \
+		break; } \
+	/* global object? */ \
+	case typeEnumerated: { Enumerated theVal; \
+		if (noErr == SUITE->GetEnumerated(PARAM, &theVal.fEnumType, &theVal.fValue)) \
+			{ oVal = theVal; return true; } \
 		break; } \
 	case typeObjectSpecifier: \
 		{ \
@@ -1215,22 +1218,36 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 			} \
 		break; \
 		} \
+	case typeClass: \
+		{ \
+		ZUnimplemented(); \
+		break; \
+		} \
+	/* global class? */ \
+	case typeAlias: \
+	case typePath: { PSAlias theVal; \
+		if (noErr == SUITE->GetAlias(PARAM, &theVal.OParam())) \
+			{ oVal = theVal; return true; } \
+		break; } \
+	case typeRawData: \
+		{ \
+		int32 theLength; \
+		if (noErr == SUITE->GetDataLength(PARAM, &theLength)) \
+			{ \
+			Data result(theLength); \
+			if (0 == theLength || noErr == SUITE->GetData(PARAM, result.GetData())) \
+				{ \
+				oVal = result; \
+				return true; \
+				} \
+			} \
+		break; \
+		} \
 
 
 #define SETTERCASES(SUITE, PARAM) \
 	case typeInteger: { SUITE->PutInteger(PARAM, iVal.fData.fAsInt32); return; } \
 	case typeFloat: { SUITE->PutFloat(PARAM, iVal.fData.fAsDouble); return; } \
-	case typeBoolean: { SUITE->PutBoolean(PARAM, iVal.fData.fAsBool); return; } \
-	case typeChar: \
-		{ \
-		SUITE->PutString(PARAM, \
-			const_cast<char*>(sFetch_T<string8>(iVal.fData.fBytes)->c_str())); \
-		return; \
-		} \
-	case typeRawData: \
-		{ \
-		ZUnimplemented(); \
-		} \
 	case typeUnitFloat: \
 		{ \
 		SUITE->PutUnitFloat(PARAM, \
@@ -1238,17 +1255,13 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 			sFetch_T<UnitFloat>(iVal.fData.fBytes)->fValue); \
 		return; \
 		} \
-	case typeEnumerated: \
+	case typeChar: \
 		{ \
-		SUITE->PutEnumerated(PARAM, \
-			sFetch_T<Enumerated>(iVal.fData.fBytes)->fEnumType, \
-			sFetch_T<Enumerated>(iVal.fData.fBytes)->fValue); \
+		SUITE->PutString(PARAM, \
+			const_cast<char*>(sFetch_T<string8>(iVal.fData.fBytes)->c_str())); \
 		return; \
 		} \
-	case typePath: \
-		{ \
-		ZUnimplemented(); \
-		} \
+	case typeBoolean: { SUITE->PutBoolean(PARAM, iVal.fData.fAsBool); return; } \
 	case typeValueList: \
 		{ \
 		SUITE->PutList(PARAM, \
@@ -1262,11 +1275,38 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 			sFetch_T<Map>(iVal.fData.fBytes)->IParam()); \
 		return; \
 		} \
+	/* global object? */ \
+	case typeEnumerated: \
+		{ \
+		SUITE->PutEnumerated(PARAM, \
+			sFetch_T<Enumerated>(iVal.fData.fBytes)->fEnumType, \
+			sFetch_T<Enumerated>(iVal.fData.fBytes)->fValue); \
+		return; \
+		} \
 	case typeObjectSpecifier: \
 		{ \
 		PIActionReference tempRef = sFetch_T<Spec>(iVal.fData.fBytes)->MakeRef(); \
 		SUITE->PutReference(PARAM, tempRef); \
 		sPSActionReference->Free(tempRef); \
+		return; \
+		} \
+	case typeClass: \
+		{ \
+		ZUnimplemented(); \
+		break; \
+		} \
+	/* global class? */ \
+	case typePath: \
+		{ \
+		SUITE->PutAlias(PARAM, \
+			sFetch_T<PSAlias>(iVal.fData.fBytes)->Get()); \
+		return; \
+		} \
+	case typeRawData: \
+		{ \
+		SUITE->PutData(PARAM, \
+			sFetch_T<Data>(iVal.fData.fBytes)->GetSize(), \
+			const_cast<void*>(sFetch_T<Data>(iVal.fData.fBytes)->GetData())); \
 		return; \
 		} \
 
@@ -1347,7 +1387,7 @@ bool List::QGet(size_t iIndex, Val& oVal) const
 
 	switch (theType)
 		{
-		GETTERCASES(sPSActionList, fAL COMMA iIndex)
+		GETTERCASES(sPSActionList, fAL COMMA() iIndex)
 		default:
 			ZUnimplemented();
 		}
@@ -1434,34 +1474,6 @@ Map::Map(const string8& iType, Adopt_t<PIActionDescriptor> iOther)
 ,	fAD(iOther.Get())
 	{}
 
-PIActionDescriptor& Map::OParam()
-	{
-	if (fAD)
-		sPSActionDescriptor->Free(fAD);
-	fAD = nullptr;
-	return fAD;
-	}
-
-PIActionDescriptor Map::IParam() const
-	{ return fAD; }
-
-Map::const_iterator Map::begin()
-	{ return const_iterator(0); }
-
-Map::const_iterator Map::end()
-	{ return const_iterator(this->pCount()); }
-
-KeyID Map::KeyOf(const_iterator iPropIter) const
-	{
-	if (iPropIter.GetIndex() < this->pCount())
-		{
-		KeyID result;
-		if (noErr == sPSActionDescriptor->GetKey(fAD, iPropIter.GetIndex(), &result))
-			return result;
-		}
-	return 0;	
-	}
-
 void Map::Clear()
 	{ sPSActionDescriptor->Clear(fAD); }
 
@@ -1476,7 +1488,7 @@ bool Map::QGet(KeyID iName, Val& oVal) const
 
 	switch (theType)
 		{
-		GETTERCASES(sPSActionDescriptor, fAD COMMA iName)
+		GETTERCASES(sPSActionDescriptor, fAD COMMA() iName)
 		default:
 			ZUnimplemented();
 		}
@@ -1526,7 +1538,7 @@ void Map::Set(KeyID iName, const Val& iVal)
 	{
 	switch (iVal.fType)
 		{
-		SETTERCASES(sPSActionDescriptor, fAD COMMA iName)
+		SETTERCASES(sPSActionDescriptor, fAD COMMA() iName)
 		default:
 			ZUnimplemented();//?
 		}
@@ -1546,6 +1558,34 @@ void Map::Erase(const string8& iName)
 
 void Map::Erase(const_iterator iName)
 	{ this->Erase(this->KeyOf(iName)); }
+
+PIActionDescriptor& Map::OParam()
+	{
+	if (fAD)
+		sPSActionDescriptor->Free(fAD);
+	fAD = nullptr;
+	return fAD;
+	}
+
+PIActionDescriptor Map::IParam() const
+	{ return fAD; }
+
+Map::const_iterator Map::begin()
+	{ return const_iterator(0); }
+
+Map::const_iterator Map::end()
+	{ return const_iterator(this->pCount()); }
+
+KeyID Map::KeyOf(const_iterator iPropIter) const
+	{
+	if (iPropIter.GetIndex() < this->pCount())
+		{
+		KeyID result;
+		if (noErr == sPSActionDescriptor->GetKey(fAD, iPropIter.GetIndex(), &result))
+			return result;
+		}
+	return 0;	
+	}
 
 KeyID Map::GetType() const
 	{ return fType; }

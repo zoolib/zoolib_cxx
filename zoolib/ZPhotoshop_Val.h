@@ -24,11 +24,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
-#include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors_Std.h"
+#include "zoolib/ZValData_ZooLib.h"
 
 #include <vector>
 
@@ -41,6 +41,8 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZPhotoshop
 
 namespace ZPhotoshop {
+
+typedef ZValData_ZooLib Data;
 
 class List;
 class Map;
@@ -238,13 +240,16 @@ public:
 	Val(double iVal);
 	Val(bool iVal);
 	Val(const string8& iVal);
-	Val(const ZMemoryBlock& iVal);
+	Val(const Data& iVal);
 	Val(UnitFloat iVal);
 	Val(Enumerated iVal);
 	Val(const PSAlias& iVal);
 	Val(const List& iVal);
 	Val(const Map& iVal);
 	Val(const Spec& iVal);
+
+// ZVal protocol
+	void Clear();
 
 	template <class S>
 	bool QGet_T(S& oVal) const;
@@ -257,7 +262,7 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Double, double)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Bool, bool)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, String, string8)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Raw, ZMemoryBlock)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Data, Data)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, UnitFloat, UnitFloat)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Enumerated, Enumerated)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Alias, PSAlias)
@@ -279,7 +284,7 @@ private:
 		char fBytes[1];
 
 		char spacer1[sizeof(string8)];
-		char spacer2[sizeof(ZMemoryBlock)];
+		char spacer2[sizeof(Data)];
 		char spacer3[sizeof(UnitFloat)];
 		char spacer4[sizeof(Enumerated)];
 		char spacer5[sizeof(Spec)];
@@ -316,6 +321,7 @@ public:
 	List& operator=(PIActionList iOther);
 	List& operator=(Adopt_t<PIActionList> iOther);
 
+// ZValList protocol
 	size_t Count() const;
 
 	void Clear();
@@ -326,6 +332,7 @@ public:
 
 	void Append(const Val& iVal);
 
+// Our protocol
 	PIActionList GetActionList() const;
 
 private:
@@ -358,14 +365,7 @@ public:
 	Map(KeyID iType, Adopt_t<PIActionDescriptor> iOther);
 	Map(const string8& iType, Adopt_t<PIActionDescriptor> iOther);
 
-	PIActionDescriptor& OParam();
-	PIActionDescriptor IParam() const;
-
-	const_iterator begin();
-	const_iterator end();
-
-	KeyID KeyOf(const_iterator iPropIter) const;
-
+// ZValMap protocol
 	void Clear();
 
 	bool QGet(KeyID iName, Val& oVal) const;
@@ -387,6 +387,15 @@ public:
 	void Erase(KeyID iName);
 	void Erase(const string8& iName);
 	void Erase(const_iterator iName);
+
+// Our protocol
+	PIActionDescriptor& OParam();
+	PIActionDescriptor IParam() const;
+
+	const_iterator begin();
+	const_iterator end();
+
+	KeyID KeyOf(const_iterator iPropIter) const;
 
 	KeyID GetType() const;
 

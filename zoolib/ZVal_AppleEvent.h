@@ -57,6 +57,8 @@ class ZVal_AppleEvent
 public:
 	operator operator_bool_type() const;
 
+	void swap(ZVal_AppleEvent& iOther);
+
 	ZVal_AppleEvent();
 	ZVal_AppleEvent(const ZVal_AppleEvent& iOther);
 	~ZVal_AppleEvent();
@@ -126,6 +128,8 @@ class ZValList_AppleEvent
 public:
 	operator operator_bool_type() const;
 
+	void swap(ZValList_AppleEvent& iOther);
+
 	ZValList_AppleEvent();
 	ZValList_AppleEvent(const ZValList_AppleEvent& iOther);
 	~ZValList_AppleEvent();
@@ -167,6 +171,8 @@ public:
 	typedef ZValMapIterator_T<ZValMap_AppleEvent> const_iterator;
 
 	operator operator_bool_type() const;
+
+	void swap(ZValMap_AppleEvent& iOther);
 
 	ZValMap_AppleEvent();
 	ZValMap_AppleEvent(const ZValMap_AppleEvent& iOther);
@@ -215,6 +221,23 @@ public:
 	};
 
 NAMESPACE_ZOOLIB_END
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * std::swap
+
+namespace std {
+
+inline void swap(ZOOLIB_PREFIX::ZVal_AppleEvent& a, ZOOLIB_PREFIX::ZVal_AppleEvent& b)
+	{ a.swap(b); }
+
+inline void swap(ZOOLIB_PREFIX::ZValList_AppleEvent& a, ZOOLIB_PREFIX::ZValList_AppleEvent& b)
+	{ a.swap(b); }
+
+inline void swap(ZOOLIB_PREFIX::ZValMap_AppleEvent& a, ZOOLIB_PREFIX::ZValMap_AppleEvent& b)
+	{ a.swap(b); }
+
+} // namespace std
 
 #endif // ZCONFIG_SPI_Enabled(AppleEvent)
 

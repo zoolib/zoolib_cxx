@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZRef.h"
 #include "zoolib/ZUnicodeString.h"
-#include "zoolib/ZVal_T.h"
+#include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors.h"
 #include "zoolib/ZWinCOM_Macros.h"
 #include "zoolib/ZWinHeader.h"
@@ -68,11 +68,11 @@ template <class T>
 static void** sCOMVoidPtr(ZRef<T>& iRef)
 	{ return (void**)(sCOMPtr(iRef)); }
 
+namespace ZWinCOM {
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWinCOM::Variant
-
-namespace ZWinCOM {
 
 class Variant
 :	public VARIANT
@@ -139,13 +139,9 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(Variant, Dispatch, ZRef<IDispatch>)
 	};
 
-} // namespace ZWinCOM
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWinCOM::String
-
-namespace ZWinCOM {
 
 class String
 	{
@@ -183,6 +179,17 @@ bool operator==(const string16& l, const String& r);
 } // namespace ZWinCOM
 
 NAMESPACE_ZOOLIB_END
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * std::swap
+
+namespace std {
+
+inline void swap(ZOOLIB_PREFIX::ZWinCOM::Variant& a, ZOOLIB_PREFIX::ZWinCOM::Variant& b)
+	{ a.swap(b); }
+
+} // namespace std
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
