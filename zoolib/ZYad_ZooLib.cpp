@@ -152,7 +152,7 @@ bool ZYadStreamRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
 #pragma mark -
 #pragma mark * ZYadStrimU_String
 
-ZYadStrimU_String::ZYadStrimU_String(const std::string& iString)
+ZYadStrimU_String::ZYadStrimU_String(const string& iString)
 :	ZYadR_ZooLib(iString),
 	ZStrimmerU_String(this->GetVal().GetString())
 	{}
@@ -211,7 +211,7 @@ ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap, const ZValMap
 	fIter(iIter)
 	{}
 
-ZRef<ZYadR> ZYadMapRPos_ZooLib::ReadInc(std::string& oName)
+ZRef<ZYadR> ZYadMapRPos_ZooLib::ReadInc(string& oName)
 	{
 	if (fIter < fMap.end())
 		{
@@ -224,7 +224,7 @@ ZRef<ZYadR> ZYadMapRPos_ZooLib::ReadInc(std::string& oName)
 bool ZYadMapRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
 	{ return ZYadR_ZooLib::IsSimple(iOptions); }
 
-void ZYadMapRPos_ZooLib::SetPosition(const std::string& iName)
+void ZYadMapRPos_ZooLib::SetPosition(const string& iName)
 	{ fIter = fMap.IteratorOf(iName); }
 
 ZRef<ZYadMapRPos> ZYadMapRPos_ZooLib::Clone()
