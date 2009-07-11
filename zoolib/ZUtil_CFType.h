@@ -30,6 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+class ZVal_ZooLib;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_CFType
@@ -63,6 +65,10 @@ ZRef<CFArrayRef> sArray();
 
 ZRef<CFMutableArrayRef> sArrayMutable();
 ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray);
+
+
+ZVal_ZooLib sAsVal_ZooLib(ZRef<CFTypeRef> iVal);
+ZRef<CFTypeRef> sAsCFType(const ZVal_ZooLib& iVal);
 
 } // namespace ZUtil_CFType
 

@@ -22,10 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZValAccessors_ZooLib__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZValAccessors.h"
 #include "zoolib/ZRef_Counted.h"
-
-#include <vector>
+#include "zoolib/ZTypes.h"
+#include "zoolib/ZValAccessors.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 

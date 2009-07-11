@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_AppleEvent.h"
 #include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors.h"
-#include "zoolib/ZValAccessors_Mac.h"
+//#include "zoolib/ZValAccessors_Mac.h"
 
 #include <string>
 
@@ -111,8 +111,7 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, List, ZValList_AppleEvent)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Map, ZValMap_AppleEvent)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, FSSpec, FSSpec)
-
-	ZMACRO_ZValAccessors_Decl_Mac(ZVal_AppleEvent)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, FSRef, FSRef)
 	};
 
 // =================================================================================================

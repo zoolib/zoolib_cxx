@@ -282,8 +282,7 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, String, std::string)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, List, ZValList_AppleEvent)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Map, ZValMap_AppleEvent)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, FSSpec, FSSpec)
-
-ZMACRO_ZValAccessors_Def_Mac(ZVal_AppleEvent)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, FSRef, FSRef)
 
 // =================================================================================================
 #pragma mark -
