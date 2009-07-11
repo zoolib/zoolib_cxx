@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim_CFString.h"
 #include "zoolib/ZUtil_CFType.h"
 #include "zoolib/ZVal_CFType.h"
+#include "zoolib/ZVal_ZooLib.h"
 
 #include <CoreFoundation/CFString.h>
 
@@ -50,16 +51,13 @@ class Maker0
 		{
 		if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iParam))
 			{
-			oResult = theYadR->GetVal();
+			oResult = theYadR->GetCFType();
 			return true;
 			}
 		return false;
 		}	
 	} sMaker0;
 
-#warning NDY
-
-#if 0
 // ZRef<CFTypeRef> <-- ZRef<ZYadR>
 class Maker1
 :	public ZFunctionChain_T<ZRef<CFTypeRef>, ZRef<ZYadR> >
@@ -72,7 +70,7 @@ public:
 		ZVal_ZooLib theVal;
 		if (ZFunctionChain_T<ZVal_ZooLib, ZRef<ZYadR> >::sInvoke(theVal, iParam))
 			{
-			oResult = ZUtil_CFType::sType(theVal);
+			oResult = ZUtil_CFType::sAsCFType(theVal);
 			return true;
 			}
 		return false;
@@ -90,14 +88,12 @@ public:
 		{
 		if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iParam))
 			{
-			oResult = ZUtil_CFType::sAsTV(theYadR->GetCFTypeRef());
+			oResult = ZUtil_CFType::sAsVal_ZooLib(theYadR->GetCFType());
 			return true;
 			}
 		return false;
 		}	
 	} sMaker2;
-
-#endif
 
 } // anonymous namespace
 
@@ -112,7 +108,7 @@ ZYadR_CFType::ZYadR_CFType(ZRef<CFTypeRef> iCFTypeRef)
 ZYadR_CFType::~ZYadR_CFType()
 	{}
 
-const ZRef<CFTypeRef>& ZYadR_CFType::GetVal()
+const ZRef<CFTypeRef>& ZYadR_CFType::GetCFType()
 	{ return fVal; }
 
 // =================================================================================================
@@ -275,7 +271,7 @@ ZRef<CFTypeRef> ZYad_CFType::sFromYadR(ZRef<ZYadR> iYadR)
 		}
 	else if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iYadR))
 		{
-		return theYadR->GetVal();
+		return theYadR->GetCFType();
 		}
 	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{

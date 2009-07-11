@@ -47,7 +47,7 @@ public:
 	virtual ~ZYadR_CFType();
 
 // Our protocol
-	const ZRef<CFTypeRef>& GetVal();
+	const ZRef<CFTypeRef>& GetCFType();
 
 private:
 	const ZRef<CFTypeRef> fVal;
