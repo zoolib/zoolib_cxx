@@ -146,6 +146,19 @@ ZRef<CFMutableArrayRef> sArrayMutable()
 ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray)
 	{ return NoRetain(::CFArrayCreateMutableCopy(kCFAllocatorDefault, 0, iCFArray)); }
 
+ZRef<CFMutableDataRef> sDataMutable()
+	{ return NoRetain(::CFDataCreateMutable(kCFAllocatorDefault, 0)); }
+
+ZRef<CFMutableDataRef> sDataMutable(size_t iSize)
+	{
+	ZRef<CFMutableDataRef> theData = NoRetain(::CFDataCreateMutable(kCFAllocatorDefault, 0));
+	::CFDataSetLength(theData, iSize);
+	return theData;
+	}
+
+ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData)
+	{ return NoRetain(::CFDataCreateMutableCopy(kCFAllocatorDefault, 0, iCFData)); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_CFType

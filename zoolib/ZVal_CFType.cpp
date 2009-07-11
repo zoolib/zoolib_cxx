@@ -133,6 +133,18 @@ ZVal_CFType::ZVal_CFType(CFStringRef iVal)
 :	ZRef<CFTypeRef>(iVal)
 	{}
 
+ZVal_CFType::ZVal_CFType(const ZValData_CFType& iVal)
+:	ZRef<CFTypeRef>(iVal)
+	{}
+
+ZVal_CFType::ZVal_CFType(const ZValList_CFType& iVal)
+:	ZRef<CFTypeRef>(iVal)
+	{}
+
+ZVal_CFType::ZVal_CFType(const ZValMap_CFType& iVal)
+:	ZRef<CFTypeRef>(iVal)
+	{}
+
 ZVal_CFType::ZVal_CFType(CFDataRef iVal)
 :	ZRef<CFTypeRef>(iVal)
 	{}

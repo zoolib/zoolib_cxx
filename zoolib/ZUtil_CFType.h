@@ -67,6 +67,11 @@ ZRef<CFMutableArrayRef> sArrayMutable();
 ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray);
 
 
+ZRef<CFMutableDataRef> sDataMutable();
+ZRef<CFMutableDataRef> sDataMutable(size_t iSize);
+ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData);
+
+
 ZVal_ZooLib sAsVal_ZooLib(ZRef<CFTypeRef> iVal);
 ZRef<CFTypeRef> sAsCFType(const ZVal_ZooLib& iVal);
 

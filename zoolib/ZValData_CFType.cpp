@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZValData_CFType.h"
+#include "zoolib/ZUtil_CFType.h"
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
@@ -26,22 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Helpers
-
-ZRef<CFMutableDataRef> sDataMutable()
-	{ return NoRetain(::CFDataCreateMutable(kCFAllocatorDefault, 0)); }
-
-ZRef<CFMutableDataRef> sDataMutable(size_t iSize)
-	{
-	ZRef<CFMutableDataRef> theData = NoRetain(::CFDataCreateMutable(kCFAllocatorDefault, 0));
-	::CFDataSetLength(theData, iSize);
-	return theData;
-	}
-
-ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData)
-	{ return NoRetain(::CFDataCreateMutableCopy(kCFAllocatorDefault, 0, iCFData)); }
+using ZUtil_CFType::sDataMutable;
 
 // =================================================================================================
 #pragma mark -

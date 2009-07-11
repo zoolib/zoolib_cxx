@@ -68,8 +68,12 @@ public:
 	ZVal_CFType(double iVal);
 	ZVal_CFType(const string8& iVal);
 	ZVal_CFType(const string16& iVal);
-
 	ZVal_CFType(CFStringRef iVal);
+
+	ZVal_CFType(const ZValData_CFType& iVal);
+	ZVal_CFType(const ZValList_CFType& iVal);
+	ZVal_CFType(const ZValMap_CFType& iVal);
+
 	ZVal_CFType(CFDataRef iVal);
 	ZVal_CFType(CFArrayRef iVal);
 	ZVal_CFType(CFDictionaryRef iVal);
