@@ -123,9 +123,14 @@ static ZRef<ZYadR_Std> sReadStringish(const ZStreamU& s)
 		{}
 
 	if (countSkipped == 0)
+		{
+		// We skipped no code units, so theString is valid UTF8.
 		return new ZYadStrimU_Std(theString);
+		}
 	else
+		{
 		return new ZYadStreamRPos_Std(ZValData_ZooLib(theString.data(), theLength));
+		}
 	}
 
 static ZRef<ZYadR_Std> sMakeYadR_Bencode(const ZStreamU& s)

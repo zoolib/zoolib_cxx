@@ -279,7 +279,7 @@ ZRef<CFTypeRef> ZYad_CFType::sFromYadR(ZRef<ZYadR> iYadR)
 
 		string theName;
 		while (ZRef<ZYadR> theYadR = theYadMapR->ReadInc(theName))
-			theMap.Set(theName, ZYad_CFType::sFromYadR(theYadR));
+			theMap.Set(theName, sFromYadR(theYadR));
 
 		return theMap;
 		}

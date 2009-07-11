@@ -163,13 +163,13 @@ ZYadStrimU_String::ZYadStrimU_String(const string& iString)
 
 ZYadListRPos_ZooLib::ZYadListRPos_ZooLib(const ZValList_ZooLib& iList)
 :	ZYadR_ZooLib(iList),
-	fList(this->GetVal().GetList()),
+	fList(iList),
 	fPosition(0)
 	{}
 
 ZYadListRPos_ZooLib::ZYadListRPos_ZooLib(const ZValList_ZooLib& iList, uint64 iPosition)
 :	ZYadR_ZooLib(iList),
-	fList(this->GetVal().GetList()),
+	fList(iList),
 	fPosition(iPosition)
 	{}
 
@@ -201,13 +201,15 @@ ZRef<ZYadListRPos> ZYadListRPos_ZooLib::Clone()
 
 ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap)
 :	ZYadR_ZooLib(iMap),
-	fMap(this->GetVal().GetMap()),
+	fMap(iMap),
 	fIter(fMap.begin())
 	{}
 
-ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap, const ZValMap_ZooLib::const_iterator& iIter)
+ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(
+	const ZValMap_ZooLib& iMap,
+	const ZValMap_ZooLib::const_iterator& iIter)
 :	ZYadR_ZooLib(iMap),
-	fMap(this->GetVal().GetMap()),
+	fMap(iMap),
 	fIter(iIter)
 	{}
 
@@ -260,6 +262,7 @@ ZVal_ZooLib ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
 	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
 		ZValMap_ZooLib theMap;
+
 		string theName;
 		while (ZRef<ZYadR> theChild = theYadMapR->ReadInc(theName))
 			theMap.Set(theName, sFromYadR(theChild));
@@ -269,6 +272,7 @@ ZVal_ZooLib ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
 	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
 		{
 		ZValList_ZooLib theList;
+
 		while (ZRef<ZYadR> theChild = theYadListR->ReadInc())
 			theList.Append(sFromYadR(theChild));
 
