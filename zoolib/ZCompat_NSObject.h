@@ -28,12 +28,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	@class NSObject;
 
 #else
-	typedef struct objc_class *Class;
-	typedef struct objc_object
-		{
-		Class isa;
-		} *id;
+
+	#include <objc/objc.h>
 	typedef struct objc_NSObject NSObject;
+
 #endif
 
 #endif // __ZCompat_NSObject__
