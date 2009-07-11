@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,29 +18,70 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUnicode_Normalize.h"
+#include "zoolib/ZUnicode_Normalize_ICU.h"
+#include "zoolib/ZCONFIG_SPI.h"
+
+#if ZCONFIG_SPI_Enabled(ICU)
+
 #include "zoolib/ZFunctionChain.h"
 
+#include "unicode/unorm.h"
+
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZUnicode {
+namesapce ZUnicode {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUnicode, normalization -- very incomplete for now
+#pragma mark * ZUnicode, normalization, ICU
 
-bool sNormalized(string16& oResult, const Param_Normalize& iParam)
-	{ return ZFunctionChain_T<string16, Param_Normalize>::sInvoke(oResult, iParam); }
-
-bool sNormalized(const string16& iString, ENormForm iNormForm, string16& oResult)
-	{ return sNormalized(oResult, Param_Normalize(iString, iNormForm)); }
+namespace ZANONYMOUS {
 
 string16 sNormalized(const string16& iString, ENormForm iNormForm)
 	{
-	string16 result;
-	if (sNormalized(result, Param_Normalize(iString, iNormForm)))
-		return result;
+	using namespace ZUnicode;
+
+	UNormalizationMode theMode = UNORM_DEFAULT;
+	switch (iNormForm)
+		{
+		case eNormForm_D: theMode = UNORM_NFD; break;
+		case eNormForm_KD: theMode = UNORM_NFKD; break;
+		case eNormForm_C: theMode = UNORM_NFC; break;
+		case eNormForm_KC: theMode = UNORM_NFKC; break;
+		}
+
+	if (size_t sourceSize = iString.size())
+		{
+		UErrorCode status = U_ZERO_ERROR;
+		size_t neededSize = ::unorm_normalize(
+			iString.data(), sourceSize, theMode, 0,
+			nullptr, 0, &status);
+
+		if (!status)
+			{
+			string16 result(neededSize, UTF16());
+			::unorm_normalize(
+				iString.data(), sourceSize, theMode, 0,
+				const_cast<UTF16*>(result.data()), result.size(), &status);
+			if (!status)
+				return result;
+			}
+		}
 	return iString;
 	}
 
+class Function
+:	public ZFunctionChain_T<string16, const Param_Normalize&>
+	{
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
+		{
+		oResult = sNormalized(iParam.fString, iParam.fNormForm);
+		return true;		
+		}	
+	} sFunction0;
+
+} // namespace ZANONYMOUS
+
 } // namespace ZUnicode
 NAMESPACE_ZOOLIB_END
+
+#endif // ZCONFIG_SPI_Enabled(ICU)

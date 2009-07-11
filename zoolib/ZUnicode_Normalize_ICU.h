@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,29 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUnicode_Normalize.h"
-#include "zoolib/ZFunctionChain.h"
+#ifndef __ZUnicode_Normalize_ICU__
+#define __ZUnicode_Normalize_ICU__ 1
+#include "zconfig.h"
+#include "ZUnicode_Normalize.h"
 
-NAMESPACE_ZOOLIB_BEGIN
-namespace ZUnicode {
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZUnicode, normalization -- very incomplete for now
-
-bool sNormalized(string16& oResult, const Param_Normalize& iParam)
-	{ return ZFunctionChain_T<string16, Param_Normalize>::sInvoke(oResult, iParam); }
-
-bool sNormalized(const string16& iString, ENormForm iNormForm, string16& oResult)
-	{ return sNormalized(oResult, Param_Normalize(iString, iNormForm)); }
-
-string16 sNormalized(const string16& iString, ENormForm iNormForm)
-	{
-	string16 result;
-	if (sNormalized(result, Param_Normalize(iString, iNormForm)))
-		return result;
-	return iString;
-	}
-
-} // namespace ZUnicode
-NAMESPACE_ZOOLIB_END
+#endif // __ZUnicode_Normalize_ICU__

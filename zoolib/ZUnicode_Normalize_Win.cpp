@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,29 +18,48 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUnicode_Normalize.h"
+#include "zoolib/ZUnicode_Normalize_Win.h"
+
+#if 0 && ZCONFIG_SPI_Enabled(Win)
+
 #include "zoolib/ZFunctionChain.h"
+#include "zoolib/ZWinHeader.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZUnicode {
+namesapce ZUnicode {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUnicode, normalization -- very incomplete for now
+#pragma mark * ZUnicode, normalization, Win
 
-bool sNormalized(string16& oResult, const Param_Normalize& iParam)
-	{ return ZFunctionChain_T<string16, Param_Normalize>::sInvoke(oResult, iParam); }
+namespace ZANONYMOUS {
 
-bool sNormalized(const string16& iString, ENormForm iNormForm, string16& oResult)
-	{ return sNormalized(oResult, Param_Normalize(iString, iNormForm)); }
-
-string16 sNormalized(const string16& iString, ENormForm iNormForm)
+static string16 sNormalized_C_Win(const string16& iString, ENormForm iNormForm)
 	{
-	string16 result;
-	if (sNormalized(result, Param_Normalize(iString, iNormForm)))
-		return result;
-	return iString;
+	// See FoldString with these flags:
+	// FormC      MAP_PRECOMPOSED
+	// FormD      MAP_COMPOSITE
+	// FormKC     MAP_PRECOMPOSED | MAP_FOLDCZONE
+	// FormKD     MAP_COMPOSITE | MAP_FOLDCZONE 
+	// That said, FoldString uses old tables which do not match the
+	// unicode standard behavior.
+
+	// Vista has NormalizeString, which is what we should really use.
 	}
+
+class Function
+:	public ZFunctionChain_T<string16, const Param_Normalize&>
+	{
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
+		{
+		oResult = sNormalized_C_Win(iParam.fString, iParam.fNormForm);
+		return true;		
+		}	
+	} sFunction0;
+
+} // namespace ZANONYMOUS
 
 } // namespace ZUnicode
 NAMESPACE_ZOOLIB_END
+
+#endif // ZCONFIG_SPI_Enabled(ICU)

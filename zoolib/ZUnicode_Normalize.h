@@ -22,29 +22,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUnicode_Normalize__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCONFIG_API.h"
-#include "zoolib/ZCONFIG_SPI.h"
-
-#ifndef ZCONFIG_API_Avail__Unicode_Normalize
-#	define ZCONFIG_API_Avail__Unicode_Normalize \
-	(ZCONFIG_SPI_Enabled(CFType) || ZCONFIG_SPI_Enabled(ICU))
-#endif
-
-#ifndef ZCONFIG_API_Desired__Unicode_Normalize
-#	define ZCONFIG_API_Desired__Unicode_Normalize 1
-#endif
-
 #include "zoolib/ZUnicodeString.h"
 
-#if ZCONFIG_API_Enabled(Unicode_Normalize)
-
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZUnicode {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUnicode, normalization -- very incomplete for now
-
-namespace ZUnicode {
+#pragma mark * ZUnicode, normalization
 
 enum ENormForm
 	{
@@ -61,13 +46,24 @@ enum ENormForm
 	eNormForm_KC
 	};
 
+struct Param_Normalize
+	{
+	Param_Normalize(const string16& iString, ENormForm iNormForm)
+	:	fString(iString)
+	,	fNormForm(iNormForm)
+		{}
+
+	const string16& fString;
+	ENormForm fNormForm;
+	};
+
+bool sNormalized(string16& oResult, const Param_Normalize& iParam);
+
+bool sNormalized(const string16& iString, ENormForm iNormForm, string16& oResult);
+
 string16 sNormalized(const string16& iString, ENormForm iNormForm);
 
 } // namespace ZUnicode
-
-
 NAMESPACE_ZOOLIB_END
-
-#endif // ZCONFIG_API_Enabled(Unicode_Normalize)
 
 #endif // __ZUnicode_Normalize__
