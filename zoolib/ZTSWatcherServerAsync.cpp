@@ -38,8 +38,11 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZTSWatcherServerAsync
 
 ZTSWatcherServerAsync::ZTSWatcherServerAsync(
-	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW, ZRef<ZTSWatcher> iTSWatcher)
-:	ZCommer(iStreamerR, iStreamerW),
+	ZRef<ZTaskOwner> iTaskOwner,
+	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
+	ZRef<ZTSWatcher> iTSWatcher)
+:	ZTask(iTaskOwner),
+	ZCommer(iStreamerR, iStreamerW),
 	fTSWatcher(iTSWatcher),
 	fReceivedClose(false),
 	fCallbackNeeded(false),
@@ -51,7 +54,6 @@ ZTSWatcherServerAsync::ZTSWatcherServerAsync(
 
 ZTSWatcherServerAsync::~ZTSWatcherServerAsync()
 	{
-	fTSWatcher->SetCallback(nullptr, nullptr);
 	}
 
 static void sSort(vector<uint64>& ioWrittenTupleIDs, vector<ZTuple>& ioWrittenTuples)
@@ -346,7 +348,8 @@ void ZTSWatcherServerAsync::Attached()
 
 void ZTSWatcherServerAsync::Detached()
 	{
-	delete this;
+	fTSWatcher->SetCallback(nullptr, nullptr);
+	ZTask::pFinished();
 	}
 
 void ZTSWatcherServerAsync::pCallback()

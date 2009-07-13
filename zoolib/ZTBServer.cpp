@@ -50,6 +50,34 @@ using namespace ZUtil_STL;
 // data transfer -- the KBBLOBStream stuff.
 
 // =================================================================================================
+
+static void sDumpRequest(const string& iLogFacility, ZTBServer* iServer, const ZTuple& iTuple)
+	{
+#if kDebug_ShowCommsTuples
+	if (ZLOG(s, eDebug, iLogFacility))
+		{
+		s.Writef("<< Server: %08X ", iServer);
+		ZUtil_Strim_Tuple::sToStrim(s, iTuple);
+		}
+#endif
+	}
+
+static void sSend(void* iConnection, const string& iLogFacility,
+	ZMutexLocker& locker, const ZStreamW& iStream, const ZTuple& iTuple)
+	{
+#if kDebug_ShowCommsTuples
+	if (ZLOG(s, eDebug, iLogFacility))
+		{
+		s.Writef(">> Server: %08X ", iConnection);
+		ZUtil_Strim_Tuple::sToStrim(s, iTuple);
+		}
+#endif
+	locker.Release();
+	iTuple.ToStream(iStream);
+	locker.Acquire();
+	}
+
+// =================================================================================================
 #pragma mark -
 #pragma mark * ZTBServer
 
@@ -81,76 +109,348 @@ public:
 	size_t fResult;
 	};
 
-ZTBServer::ZTBServer(ZTB iTB)
-:	fTBRep(iTB.GetTBRep()),
-	fReaderExited(false),
-	fWriterExited(false),
-	fPingRequested(false),
-	fPingSent(false),
-	fLogFacility("ZTBServer")
-	{}
-
-ZTBServer::ZTBServer(ZTB iTB, const string& iLogFacility)
-:	fTBRep(iTB.GetTBRep()),
-	fReaderExited(false),
-	fWriterExited(false),
+ZTBServer::ZTBServer(
+	ZRef<ZTaskOwner> iTaskOwner,
+	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
+	ZRef<ZTBRep> iTBRep, const std::string& iLogFacility)
+:	ZTask(iTaskOwner),
+	ZCommer(iStreamerR, iStreamerW),
+	fTBRep(iTBRep),
 	fPingRequested(false),
 	fPingSent(false),
 	fLogFacility(iLogFacility)
 	{}
 
 ZTBServer::~ZTBServer()
+	{}
+
+bool ZTBServer::Read(const ZStreamR& iStream)
 	{
-	fMutex_Structure.Acquire();
-	while (!fWriterExited ||!fReaderExited)
-		fCondition_Sender.Wait(fMutex_Structure);
+	ZTuple req(iStream);
+	
+	sDumpRequest(fLogFacility, this, req);
 
-	ZAssertStop(kDebug_TBServer, fTransactions_Create_Unsent.empty());
-	ZAssertStop(kDebug_TBServer, fTransactions_Created.empty());
+	ZMutexLocker locker(fMutex_Structure);
+	fTime_LastRead = ZTime::sSystem();
+	locker.Release();
 
-	ZAssertStop(kDebug_TBServer, fTransactions_Validate_Waiting.empty());
-	ZAssertStop(kDebug_TBServer, fTransactions_Validate_Succeeded.empty());
-	ZAssertStop(kDebug_TBServer, fTransactions_Validate_Failed.empty());
-	ZAssertStop(kDebug_TBServer, fTransactions_Validated.empty());
+	string theWhat = req.GetString("What");
 
-	ZAssertStop(kDebug_TBServer, fTransactions_Commit_Waiting.empty());
-	ZAssertStop(kDebug_TBServer, fTransactions_Commit_Acked.empty());
+	if (false) {}
+	else if (theWhat == "AllocateIDs") this->Handle_AllocateIDs(req);
+	else if (theWhat == "Create") this->Handle_Create(req);
+	else if (theWhat == "Validate") this->Handle_Validate(req);
+	else if (theWhat == "Abort") this->Handle_Abort(req);
+	else if (theWhat == "Commit") this->Handle_Commit(req);
+	else if (theWhat == "Actions") this->Handle_Actions(req);
+	else if (theWhat == "Search") this->Handle_Search(req);
+	else if (theWhat == "Count") this->Handle_Count(req);
+
+	else if (theWhat == "Ping")
+		{
+		fPingRequested = true;
+		this->Wake();
+		}
+	else if (theWhat == "Pong")
+		{
+		fPingSent = false;
+		}
+	else
+		{
+		if (ZLOG(s, eErr, fLogFacility))
+			s << "Unrecognized request: " << theWhat;
+		}
+	return true;
 	}
 
-void ZTBServer::RunReader(const ZStreamR& iStream)
+bool ZTBServer::Write(const ZStreamW& iStream)
 	{
-	try
+	ZMutexLocker locker(fMutex_Structure);
+
+	bool didAnything = false;
+
+	if (fPingRequested)
 		{
-		this->Reader(iStream);
+		fPingRequested = false;
+		ZTuple response;
+		response.SetString("What", "Pong");
+		sSend(this, fLogFacility, locker, iStream, response);
+		didAnything = true;
 		}
-	catch (...)
-		{}
 
-	fMutex_Structure.Acquire();
-	if (fWriterExited)
-		this->TearDown();
 
-	fReaderExited = true;
-	fCondition_Sender.Broadcast();
-	fMutex_Structure.Release();
+	if (!fPingSent && fTime_LastRead + 10.0 < ZTime::sSystem())
+		{
+		fPingSent = true;
+		ZTuple response;
+		response.SetString("What", "Ping");
+		sSend(this, fLogFacility, locker, iStream, response);
+		didAnything = true;
+		}
+
+
+	if (!fIDs.empty())
+		{
+		pair<uint64, size_t> thePair = fIDs.back();
+		fIDs.pop_back();
+
+		ZTuple response;
+		response.SetString("What", "AllocateIDs_Ack");
+		response.SetInt64("BaseID", thePair.first);
+		response.SetInt32("Count", thePair.second);
+		sSend(this, fLogFacility, locker, iStream, response);
+		didAnything = true;
+		}
+
+
+	if (!fTransactions_Create_Unsent.empty())
+		{
+		ZTuple response;
+		response.SetString("What", "Create_Ack");
+
+		vector<ZTValue>& vectorIDs = response.SetMutableVector("IDs");
+		for (vector<Transaction*>::iterator i = fTransactions_Create_Unsent.begin();
+			i != fTransactions_Create_Unsent.end(); ++i)
+			{
+			Transaction* theTransaction = *i;
+			ZTuple theTuple;
+			theTuple.SetInt64("ClientID", theTransaction->fClientID);
+			theTuple.SetInt64("ServerID", reinterpret_cast<int64>(theTransaction));
+			vectorIDs.push_back(theTuple);
+			sSortedInsertMustNotContain(kDebug_TBServer,
+				fTransactions_Created, theTransaction);
+			}
+		fTransactions_Create_Unsent.clear();
+
+		sSend(this, fLogFacility, locker, iStream, response);
+		didAnything = true;
+		}
+
+
+	if (!fTransactions_Validate_Succeeded.empty())
+		{
+		ZTuple response;
+		response.SetString("What", "Validate_Succeeded");
+
+		vector<ZTValue>& vectorClientIDs = response.SetMutableVector("ClientIDs");
+		for (vector<Transaction*>::iterator i = fTransactions_Validate_Succeeded.begin();
+			i != fTransactions_Validate_Succeeded.end(); ++i)
+			{
+			Transaction* theTransaction = *i;
+			vectorClientIDs.push_back(int64(theTransaction->fClientID));
+			sSortedInsertMustNotContain(kDebug_TBServer,
+				fTransactions_Validated, theTransaction);
+			}
+		fTransactions_Validate_Succeeded.clear();
+
+		sSend(this, fLogFacility, locker, iStream, response);
+		didAnything = true;
+		}
+
+
+	if (!fTransactions_Validate_Failed.empty())
+		{
+		ZTuple response;
+		response.SetString("What", "Validate_Failed");
+
+		vector<ZTValue>& vectorClientIDs = response.SetMutableVector("ClientIDs");
+		for (vector<Transaction*>::iterator i = fTransactions_Validate_Failed.begin();
+			i != fTransactions_Validate_Failed.end(); ++i)
+			{
+			Transaction* theTransaction = *i;
+			vectorClientIDs.push_back(int64(theTransaction->fClientID));
+			fTransactions_HaveTuplesToSend.erase(theTransaction);
+			theTransaction->fTBRepTransaction->AcceptFailure();
+			// AcceptFailure deletes ZTBRepTransaction
+			}
+		fTransactions_Validate_Failed.clear();
+
+		sSend(this, fLogFacility, locker, iStream, response);
+		didAnything = true;
+		}
+
+
+	if (!fTransactions_Commit_Acked.empty())
+		{
+		ZTuple response;
+		response.SetString("What", "Commit_Ack");
+
+		vector<ZTValue>& vectorClientIDs = response.SetMutableVector("ClientIDs");
+		for (vector<Transaction*>::iterator i = fTransactions_Commit_Acked.begin();
+			i != fTransactions_Commit_Acked.end(); ++i)
+			{
+			Transaction* theTransaction = *i;
+			vectorClientIDs.push_back(int64(theTransaction->fClientID));
+			fTransactions_HaveTuplesToSend.erase(theTransaction);
+			delete theTransaction;
+			}
+		fTransactions_Commit_Acked.clear();
+
+		sSend(this, fLogFacility, locker, iStream, response);
+		didAnything = true;
+		}
+
+
+	if (!fTransactions_HaveTuplesToSend.empty())
+		{
+		// Do the high priority ones first.
+		ZTuple response;
+		response.SetString("What", "GetTuples_Ack");
+		
+		bool allEmptied = true;
+		bool sentAny = false;
+		vector<ZTValue>& vectorTransactionTuples
+			= response.SetMutableVector("Transactions");
+
+		for (set<Transaction*>::iterator i = fTransactions_HaveTuplesToSend.begin();
+			i != fTransactions_HaveTuplesToSend.end(); ++i)
+			{
+			Transaction* theTransaction = *i;
+			if (!theTransaction->fTuplesToSend_HighPriority.empty())
+				{
+				ZTuple theTransactionTuple;
+				theTransactionTuple.SetInt64("ClientID", theTransaction->fClientID);
+				vector<ZTValue>& vectorTuples =
+					theTransactionTuple.SetMutableVector("IDValues");
+
+				for (map<uint64, ZTuple>::iterator
+					j = theTransaction->fTuplesToSend_HighPriority.begin();
+					j != theTransaction->fTuplesToSend_HighPriority.end(); ++j)
+					{
+					ZTuple aTuple;
+					aTuple.SetID("ID", (*j).first);
+					aTuple.SetTuple("Value", (*j).second);
+					vectorTuples.push_back(aTuple);
+
+					// Remove it from our low priority list too
+					// Actually, this shouldn't be necessary. fTuplesSent should
+					// stop this from happening. Probably should make this an assertion.
+					ZUtil_STL::sEraseIfContains(
+						theTransaction->fTuplesToSend_LowPriority, (*j).first);
+					}
+				theTransaction->fTuplesToSend_HighPriority.clear();
+				vectorTransactionTuples.push_back(theTransactionTuple);
+				sentAny = true;
+				}
+			if (!theTransaction->fTuplesToSend_LowPriority.empty())
+				allEmptied = false;
+			}
+		if (allEmptied)
+			fTransactions_HaveTuplesToSend.clear();
+
+		if (sentAny)
+			{
+			sSend(this, fLogFacility, locker, iStream, response);
+			didAnything = true;
+			}
+		}
+
+
+	if (!fSearches_Unsent.empty())
+		{
+		ZTuple response;
+		response.SetString("What", "Search_Ack");
+
+		vector<ZTValue>& vectorSearches = response.SetMutableVector("Searches");
+		for (vector<Search_t*>::iterator i = fSearches_Unsent.begin();
+			i != fSearches_Unsent.end(); ++i)
+			{
+			Search_t* theSearch = *i;
+			ZTuple theTuple;
+			theTuple.SetInt64("SearchID", theSearch->fClientSearchID);
+			std::copy(theSearch->fResults.begin(), theSearch->fResults.end(),
+				back_inserter(theTuple.SetMutableVector("Results")));
+
+			vectorSearches.push_back(theTuple);
+			delete theSearch;
+			}
+		fSearches_Unsent.clear();
+
+		sSend(this, fLogFacility, locker, iStream, response);
+		didAnything = true;
+		}
+
+
+	if (!fCounts_Unsent.empty())
+		{
+		ZTuple response;
+		response.SetString("What", "Count_Ack");
+
+		vector<ZTValue>& vectorCounts = response.SetMutableVector("Counts");
+		for (vector<Count_t*>::iterator i = fCounts_Unsent.begin();
+			i != fCounts_Unsent.end(); ++i)
+			{
+			Count_t* theCount = *i;
+			ZTuple theTuple;
+			theTuple.SetInt64("CountID", theCount->fClientCountID);
+			theTuple.SetInt64("Result", theCount->fResult);
+			vectorCounts.push_back(theTuple);
+			delete theCount;
+			}
+		fCounts_Unsent.clear();
+
+		sSend(this, fLogFacility, locker, iStream, response);
+		didAnything = true;
+		}
+
+
+	if (!didAnything && !fTransactions_HaveTuplesToSend.empty())
+		{
+		// We didn't do anything else on this loop, and we may have
+		// low priority tuples to send.
+		ZTuple response;
+		response.SetString("What", "GetTuples_Ack");
+		response.SetString("extra", "low priority");
+		
+		bool allEmptied = true;
+		vector<ZTValue>& vectorTransactionTuples
+			= response.SetMutableVector("Transactions");
+
+		for (set<Transaction*>::iterator i = fTransactions_HaveTuplesToSend.begin();
+			i != fTransactions_HaveTuplesToSend.end(); ++i)
+			{
+			Transaction* theTransaction = *i;
+			if (!theTransaction->fTuplesToSend_LowPriority.empty())
+				{
+				ZTuple theTransactionTuple;
+				theTransactionTuple.SetInt64("ClientID", theTransaction->fClientID);
+				vector<ZTValue>& vectorTuples =
+					theTransactionTuple.SetMutableVector("IDValues");
+
+				for (map<uint64, ZTuple>::iterator
+					i = theTransaction->fTuplesToSend_LowPriority.begin();
+					i != theTransaction->fTuplesToSend_LowPriority.end(); ++i)
+					{
+					ZTuple aTuple;
+					aTuple.SetID("ID", (*i).first);
+					aTuple.SetTuple("Value", (*i).second);
+					vectorTuples.push_back(aTuple);
+					}
+				theTransaction->fTuplesToSend_LowPriority.clear();
+				vectorTransactionTuples.push_back(theTransactionTuple);
+				}
+			if (!theTransaction->fTuplesToSend_HighPriority.empty())
+				allEmptied = false;
+			}
+		if (allEmptied)
+			fTransactions_HaveTuplesToSend.clear();
+
+		sSend(this, fLogFacility, locker, iStream, response);
+		didAnything = true;
+		}
+
+	if (!didAnything)
+		iStream.Flush();
+	else
+		this->Wake();
 	}
 
-void ZTBServer::RunWriter(const ZStreamW& iStreamW)
+void ZTBServer::Attached()
+	{}
+
+void ZTBServer::Detached()
 	{
-	try
-		{
-		this->Writer(iStreamW);
-		}
-	catch (...)
-		{}
-
-	fMutex_Structure.Acquire();
-	if (fReaderExited)
-		this->TearDown();
-
-	fWriterExited = true;
-	fCondition_Sender.Broadcast();
-	fMutex_Structure.Release();
+	ZTask::pFinished();
 	}
 
 void ZTBServer::sCallback_AllocateIDs(void* iRefcon, uint64 iBaseID, size_t iCount)
@@ -158,7 +458,7 @@ void ZTBServer::sCallback_AllocateIDs(void* iRefcon, uint64 iBaseID, size_t iCou
 	ZTBServer* theServer = static_cast<ZTBServer*>(iRefcon);
 	ZMutexLocker locker(theServer->fMutex_Structure);
 	theServer->fIDs.push_back(pair<uint64, size_t>(iBaseID, iCount));
-	theServer->fCondition_Sender.Broadcast();
+	theServer->Wake();
 	}
 
 void ZTBServer::Handle_AllocateIDs(const ZTuple& iReq)
@@ -185,7 +485,7 @@ void ZTBServer::Handle_Create(const ZTuple& iReq)
 
 		sSortedInsertMustNotContain(kDebug_TBServer, fTransactions_Create_Unsent, theTransaction);
 
-		fCondition_Sender.Broadcast();
+		this->Wake();
 		}
 	}
 
@@ -210,7 +510,7 @@ void ZTBServer::sCallback_GetTupleForSearch(
 			}
 
 		theTransaction->fServer->fTransactions_HaveTuplesToSend.insert(theTransaction);
-		theTransaction->fServer->fCondition_Sender.Broadcast();
+		theTransaction->fServer->Wake();
 		}
 	}
 
@@ -228,7 +528,7 @@ void ZTBServer::sCallback_Search(void* iRefcon, vector<uint64>& ioResults)
 	sSortedEraseMustContain(kDebug_TBServer, theTransaction->fServer->fSearches_Waiting, theSearch);
 	sSortedInsertMustNotContain(kDebug_TBServer,
 		theTransaction->fServer->fSearches_Unsent, theSearch);
-	theTransaction->fServer->fCondition_Sender.Broadcast();
+	theTransaction->fServer->Wake();
 
 	locker.Release();
 
@@ -272,7 +572,7 @@ void ZTBServer::sCallback_Count(void* iRefcon, size_t iResult)
 
 	sSortedEraseMustContain(kDebug_TBServer, theTransaction->fServer->fCounts_Waiting, theCount);
 	sSortedInsertMustNotContain(kDebug_TBServer, theTransaction->fServer->fCounts_Unsent, theCount);
-	theTransaction->fServer->fCondition_Sender.Broadcast();
+	theTransaction->fServer->Wake();
 
 	locker.Release();
 	}
@@ -317,7 +617,7 @@ void ZTBServer::sCallback_Validate(bool iSucceeded, void* iRefcon)
 			theTransaction->fServer->fTransactions_Validate_Failed, theTransaction);
 		}
 
-	theTransaction->fServer->fCondition_Sender.Broadcast();
+	theTransaction->fServer->Wake();
 	}
 
 void ZTBServer::Handle_Validate(const ZTuple& iReq)
@@ -379,7 +679,7 @@ void ZTBServer::sCallback_Commit(void* iRefcon)
 	sSortedInsertMustNotContain(kDebug_TBServer,
 		theTransaction->fServer->fTransactions_Commit_Acked, theTransaction);
 
-	theTransaction->fServer->fCondition_Sender.Broadcast();
+	theTransaction->fServer->Wake();
 	}
 
 void ZTBServer::Handle_Commit(const ZTuple& iReq)
@@ -420,7 +720,7 @@ void ZTBServer::sCallback_GetTuple(
 			}
 
 		theTransaction->fServer->fTransactions_HaveTuplesToSend.insert(theTransaction);
-		theTransaction->fServer->fCondition_Sender.Broadcast();
+		theTransaction->fServer->Wake();
 		}
 	}
 
@@ -439,360 +739,6 @@ void ZTBServer::Handle_Actions(const ZTuple& iReq)
 		{
 		const ZTuple& t = (*i).GetTuple();
 		theTransaction->fTBRepTransaction->SetTuple(t.GetID("ID"), t.GetTuple("Value"));
-		}
-	}
-
-static void sDumpRequest(const string& iLogFacility, ZTBServer* iServer, const ZTuple& iTuple)
-	{
-#if kDebug_ShowCommsTuples
-	if (ZLOG(s, eDebug, iLogFacility))
-		{
-		s.Writef("<< Server: %08X ", iServer);
-		ZUtil_Strim_Tuple::sToStrim(s, iTuple);
-		}
-#endif
-	}
-
-void ZTBServer::Reader(const ZStreamR& iStream)
-	{
-	for (;;)
-		{
-		ZTuple req(iStream);
-		
-		sDumpRequest(fLogFacility, this, req);
-
-		ZMutexLocker locker(fMutex_Structure);
-		fTime_LastRead = ZTime::sSystem();
-		locker.Release();
-
-		string theWhat = req.GetString("What");
-
-		if (false) {}
-		else if (theWhat == "AllocateIDs") this->Handle_AllocateIDs(req);
-		else if (theWhat == "Create") this->Handle_Create(req);
-		else if (theWhat == "Validate") this->Handle_Validate(req);
-		else if (theWhat == "Abort") this->Handle_Abort(req);
-		else if (theWhat == "Commit") this->Handle_Commit(req);
-		else if (theWhat == "Actions") this->Handle_Actions(req);
-		else if (theWhat == "Search") this->Handle_Search(req);
-		else if (theWhat == "Count") this->Handle_Count(req);
-
-		else if (theWhat == "Ping")
-			{
-			fPingRequested = true;
-			fCondition_Sender.Broadcast();
-			}
-		else if (theWhat == "Pong")
-			{
-			fPingSent = false;
-			}
-		else
-			{
-			if (ZLOG(s, eErr, fLogFacility))
-				s << "Unrecognized request: " << theWhat;
-			return;
-			}
-		}
-	}
-
-static void sSend(void* iConnection, const string& iLogFacility,
-	ZMutexLocker& locker, const ZStreamW& iStream, const ZTuple& iTuple)
-	{
-#if kDebug_ShowCommsTuples
-	if (ZLOG(s, eDebug, iLogFacility))
-		{
-		s.Writef(">> Server: %08X ", iConnection);
-		ZUtil_Strim_Tuple::sToStrim(s, iTuple);
-		}
-#endif
-	locker.Release();
-	iTuple.ToStream(iStream);
-	locker.Acquire();
-	}
-
-void ZTBServer::Writer(const ZStreamW& iStream)
-	{
-	ZMutexLocker locker(fMutex_Structure);
-
-	while (!fReaderExited)
-		{
-		bool didAnything = false;
-
-		if (fPingRequested)
-			{
-			fPingRequested = false;
-			ZTuple response;
-			response.SetString("What", "Pong");
-			sSend(this, fLogFacility, locker, iStream, response);
-			didAnything = true;
-			}
-
-
-		if (!fPingSent && fTime_LastRead + 10.0 < ZTime::sSystem())
-			{
-			fPingSent = true;
-			ZTuple response;
-			response.SetString("What", "Ping");
-			sSend(this, fLogFacility, locker, iStream, response);
-			didAnything = true;
-			}
-
-
-		if (!fIDs.empty())
-			{
-			pair<uint64, size_t> thePair = fIDs.back();
-			fIDs.pop_back();
-
-			ZTuple response;
-			response.SetString("What", "AllocateIDs_Ack");
-			response.SetInt64("BaseID", thePair.first);
-			response.SetInt32("Count", thePair.second);
-			sSend(this, fLogFacility, locker, iStream, response);
-			didAnything = true;
-			}
-
-
-		if (!fTransactions_Create_Unsent.empty())
-			{
-			ZTuple response;
-			response.SetString("What", "Create_Ack");
-	
-			vector<ZTValue>& vectorIDs = response.SetMutableVector("IDs");
-			for (vector<Transaction*>::iterator i = fTransactions_Create_Unsent.begin();
-				i != fTransactions_Create_Unsent.end(); ++i)
-				{
-				Transaction* theTransaction = *i;
-				ZTuple theTuple;
-				theTuple.SetInt64("ClientID", theTransaction->fClientID);
-				theTuple.SetInt64("ServerID", reinterpret_cast<int64>(theTransaction));
-				vectorIDs.push_back(theTuple);
-				sSortedInsertMustNotContain(kDebug_TBServer,
-					fTransactions_Created, theTransaction);
-				}
-			fTransactions_Create_Unsent.clear();
-	
-			sSend(this, fLogFacility, locker, iStream, response);
-			didAnything = true;
-			}
-
-
-		if (!fTransactions_Validate_Succeeded.empty())
-			{
-			ZTuple response;
-			response.SetString("What", "Validate_Succeeded");
-	
-			vector<ZTValue>& vectorClientIDs = response.SetMutableVector("ClientIDs");
-			for (vector<Transaction*>::iterator i = fTransactions_Validate_Succeeded.begin();
-				i != fTransactions_Validate_Succeeded.end(); ++i)
-				{
-				Transaction* theTransaction = *i;
-				vectorClientIDs.push_back(int64(theTransaction->fClientID));
-				sSortedInsertMustNotContain(kDebug_TBServer,
-					fTransactions_Validated, theTransaction);
-				}
-			fTransactions_Validate_Succeeded.clear();
-
-			sSend(this, fLogFacility, locker, iStream, response);
-			didAnything = true;
-			}
-
-
-		if (!fTransactions_Validate_Failed.empty())
-			{
-			ZTuple response;
-			response.SetString("What", "Validate_Failed");
-	
-			vector<ZTValue>& vectorClientIDs = response.SetMutableVector("ClientIDs");
-			for (vector<Transaction*>::iterator i = fTransactions_Validate_Failed.begin();
-				i != fTransactions_Validate_Failed.end(); ++i)
-				{
-				Transaction* theTransaction = *i;
-				vectorClientIDs.push_back(int64(theTransaction->fClientID));
-				fTransactions_HaveTuplesToSend.erase(theTransaction);
-				theTransaction->fTBRepTransaction->AcceptFailure();
-				// AcceptFailure deletes ZTBRepTransaction
-				}
-			fTransactions_Validate_Failed.clear();
-
-			sSend(this, fLogFacility, locker, iStream, response);
-			didAnything = true;
-			}
-
-
-		if (!fTransactions_Commit_Acked.empty())
-			{
-			ZTuple response;
-			response.SetString("What", "Commit_Ack");
-	
-			vector<ZTValue>& vectorClientIDs = response.SetMutableVector("ClientIDs");
-			for (vector<Transaction*>::iterator i = fTransactions_Commit_Acked.begin();
-				i != fTransactions_Commit_Acked.end(); ++i)
-				{
-				Transaction* theTransaction = *i;
-				vectorClientIDs.push_back(int64(theTransaction->fClientID));
-				fTransactions_HaveTuplesToSend.erase(theTransaction);
-				delete theTransaction;
-				}
-			fTransactions_Commit_Acked.clear();
-
-			sSend(this, fLogFacility, locker, iStream, response);
-			didAnything = true;
-			}
-
-
-		if (!fTransactions_HaveTuplesToSend.empty())
-			{
-			// Do the high priority ones first.
-			ZTuple response;
-			response.SetString("What", "GetTuples_Ack");
-			
-			bool allEmptied = true;
-			bool sentAny = false;
-			vector<ZTValue>& vectorTransactionTuples
-				= response.SetMutableVector("Transactions");
-
-			for (set<Transaction*>::iterator i = fTransactions_HaveTuplesToSend.begin();
-				i != fTransactions_HaveTuplesToSend.end(); ++i)
-				{
-				Transaction* theTransaction = *i;
-				if (!theTransaction->fTuplesToSend_HighPriority.empty())
-					{
-					ZTuple theTransactionTuple;
-					theTransactionTuple.SetInt64("ClientID", theTransaction->fClientID);
-					vector<ZTValue>& vectorTuples =
-						theTransactionTuple.SetMutableVector("IDValues");
-
-					for (map<uint64, ZTuple>::iterator
-						j = theTransaction->fTuplesToSend_HighPriority.begin();
-						j != theTransaction->fTuplesToSend_HighPriority.end(); ++j)
-						{
-						ZTuple aTuple;
-						aTuple.SetID("ID", (*j).first);
-						aTuple.SetTuple("Value", (*j).second);
-						vectorTuples.push_back(aTuple);
-
-						// Remove it from our low priority list too
-						// Actually, this shouldn't be necessary. fTuplesSent should
-						// stop this from happening. Probably should make this an assertion.
-						ZUtil_STL::sEraseIfContains(
-							theTransaction->fTuplesToSend_LowPriority, (*j).first);
-						}
-					theTransaction->fTuplesToSend_HighPriority.clear();
-					vectorTransactionTuples.push_back(theTransactionTuple);
-					sentAny = true;
-					}
-				if (!theTransaction->fTuplesToSend_LowPriority.empty())
-					allEmptied = false;
-				}
-			if (allEmptied)
-				fTransactions_HaveTuplesToSend.clear();
-
-			if (sentAny)
-				{
-				sSend(this, fLogFacility, locker, iStream, response);
-				didAnything = true;
-				}
-			}
-
-
-		if (!fSearches_Unsent.empty())
-			{
-			ZTuple response;
-			response.SetString("What", "Search_Ack");
-	
-			vector<ZTValue>& vectorSearches = response.SetMutableVector("Searches");
-			for (vector<Search_t*>::iterator i = fSearches_Unsent.begin();
-				i != fSearches_Unsent.end(); ++i)
-				{
-				Search_t* theSearch = *i;
-				ZTuple theTuple;
-				theTuple.SetInt64("SearchID", theSearch->fClientSearchID);
-				std::copy(theSearch->fResults.begin(), theSearch->fResults.end(),
-					back_inserter(theTuple.SetMutableVector("Results")));
-
-				vectorSearches.push_back(theTuple);
-				delete theSearch;
-				}
-			fSearches_Unsent.clear();
-
-			sSend(this, fLogFacility, locker, iStream, response);
-			didAnything = true;
-			}
-
-
-		if (!fCounts_Unsent.empty())
-			{
-			ZTuple response;
-			response.SetString("What", "Count_Ack");
-	
-			vector<ZTValue>& vectorCounts = response.SetMutableVector("Counts");
-			for (vector<Count_t*>::iterator i = fCounts_Unsent.begin();
-				i != fCounts_Unsent.end(); ++i)
-				{
-				Count_t* theCount = *i;
-				ZTuple theTuple;
-				theTuple.SetInt64("CountID", theCount->fClientCountID);
-				theTuple.SetInt64("Result", theCount->fResult);
-				vectorCounts.push_back(theTuple);
-				delete theCount;
-				}
-			fCounts_Unsent.clear();
-
-			sSend(this, fLogFacility, locker, iStream, response);
-			didAnything = true;
-			}
-
-
-		if (!didAnything && !fTransactions_HaveTuplesToSend.empty())
-			{
-			// We didn't do anything else on this loop, and we may have
-			// low priority tuples to send.
-			ZTuple response;
-			response.SetString("What", "GetTuples_Ack");
-			response.SetString("extra", "low priority");
-			
-			bool allEmptied = true;
-			vector<ZTValue>& vectorTransactionTuples
-				= response.SetMutableVector("Transactions");
-
-			for (set<Transaction*>::iterator i = fTransactions_HaveTuplesToSend.begin();
-				i != fTransactions_HaveTuplesToSend.end(); ++i)
-				{
-				Transaction* theTransaction = *i;
-				if (!theTransaction->fTuplesToSend_LowPriority.empty())
-					{
-					ZTuple theTransactionTuple;
-					theTransactionTuple.SetInt64("ClientID", theTransaction->fClientID);
-					vector<ZTValue>& vectorTuples =
-						theTransactionTuple.SetMutableVector("IDValues");
-
-					for (map<uint64, ZTuple>::iterator
-						i = theTransaction->fTuplesToSend_LowPriority.begin();
-						i != theTransaction->fTuplesToSend_LowPriority.end(); ++i)
-						{
-						ZTuple aTuple;
-						aTuple.SetID("ID", (*i).first);
-						aTuple.SetTuple("Value", (*i).second);
-						vectorTuples.push_back(aTuple);
-						}
-					theTransaction->fTuplesToSend_LowPriority.clear();
-					vectorTransactionTuples.push_back(theTransactionTuple);
-					}
-				if (!theTransaction->fTuplesToSend_HighPriority.empty())
-					allEmptied = false;
-				}
-			if (allEmptied)
-				fTransactions_HaveTuplesToSend.clear();
-
-			sSend(this, fLogFacility, locker, iStream, response);
-			didAnything = true;
-			}
-
-		if (!didAnything)
-			{
-			iStream.Flush();
-			fCondition_Sender.Wait(fMutex_Structure, 1000000);
-			}
 		}
 	}
 

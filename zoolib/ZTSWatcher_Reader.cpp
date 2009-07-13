@@ -75,14 +75,14 @@ ZTSWatcher_Reader::~ZTSWatcher_Reader()
 //	this->WaitForDetach();
 	}
 
-void ZTSWatcher_Reader::StreamEstablished()
+void ZTSWatcher_Reader::ReadStarted()
 	{
 	ZMutexLocker locker(fMutex_Structure);
 	fStreamsOkay = true;
 	fCondition.Broadcast();
 	}
 
-void ZTSWatcher_Reader::StreamFailed()
+void ZTSWatcher_Reader::ReadFinished()
 	{
 	ZMutexLocker locker(fMutex_Structure);
 	fStreamsOkay = false;

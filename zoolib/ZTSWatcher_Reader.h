@@ -59,8 +59,8 @@ public:
 // From ZStreamReader
 	virtual bool Read(const ZStreamR& iStreamR);
 
-	virtual void StreamEstablished();
-	virtual void StreamFailed();
+	virtual void ReadStarted();
+	virtual void ReadFinished();
 
 private:
 	bool pAllocateIDs(size_t iCount, uint64& oBaseID, size_t& oCountIssued);

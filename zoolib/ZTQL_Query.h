@@ -42,15 +42,16 @@ class Query
 public:
 	Query();
 	Query(const Query& iOther);
-	Query(ZRef<Node> iNode);
-	Query& operator=(const Query& iOther);
 	~Query();
+	Query& operator=(const Query& iOther);
 
-	ZRef<Node> GetNode() const;
+	Query(ZRef<Node> iNode);
 
 	Query(const ZTuple* iTuples, size_t iCount);
 
 	Query(const std::vector<ZTuple>& iTuples);
+
+	ZRef<Node> GetNode() const;
 
 	static Query sAll(const RelHead& iRelHead);
 

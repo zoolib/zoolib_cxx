@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCommer.h"
+#include "zoolib/ZTask.h"
 #include "zoolib/ZThreadOld.h"
 #include "zoolib/ZTSWatcher.h"
 
@@ -32,11 +33,16 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZTSWatcherServer
 
-class ZTSWatcherServerAsync : public ZCommer
+class ZTSWatcherServerAsync
+:	public ZTask
+,	public ZCommer
 	{
 public:
 	ZTSWatcherServerAsync(
-		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW, ZRef<ZTSWatcher> iTSWatcher);
+		ZRef<ZTaskOwner> iTaskOwner,
+		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
+		ZRef<ZTSWatcher> iTSWatcher);
+
 	virtual ~ZTSWatcherServerAsync();
 
 // From ZCommer

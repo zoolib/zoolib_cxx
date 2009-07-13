@@ -51,6 +51,15 @@ Spec::Spec(const Spec& iOther)
 :	fLogOp(iOther.fLogOp)
 	{}
 
+Spec::~Spec()
+	{}
+
+Spec& Spec::operator=(const Spec& iOther)
+	{
+	fLogOp = iOther.fLogOp;
+	return *this;
+	}
+
 Spec::Spec(ZRef<LogOp> iLogOp)
 :	fLogOp(iLogOp)
 	{}
@@ -63,15 +72,6 @@ Spec::Spec(bool iBool)
 
 Spec::Spec(const Condition& iCondition)
 :	fLogOp(new LogOp_Condition(iCondition))
-	{}
-
-Spec& Spec::operator=(const Spec& iOther)
-	{
-	fLogOp = iOther.fLogOp;
-	return *this;
-	}
-
-Spec::~Spec()
 	{}
 
 bool Spec::Matches(const ZTuple& iTuple) const

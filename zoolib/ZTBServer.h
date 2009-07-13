@@ -22,7 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTBServer__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZRef.h"
+#include "zoolib/ZCommer.h"
+#include "zoolib/ZTask.h"
 #include "zoolib/ZThreadOld.h"
 #include "zoolib/ZTuple.h"
 
@@ -40,6 +41,8 @@ class ZTBRep;
 #pragma mark * ZTBServer
 
 class ZTBServer
+:	public ZTask
+,	public ZCommer
 	{
 private:
 	class Transaction;
@@ -47,13 +50,19 @@ private:
 	class Count_t;
 
 public:
-	ZTBServer(ZTB iTB);
-	ZTBServer(ZTB iTB, const std::string& iLogFacility);
+	ZTBServer(
+		ZRef<ZTaskOwner> iTaskOwner,
+		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
+		ZRef<ZTBRep> iTBRep, const std::string& iLogFacility);
 
 	~ZTBServer();
 
-	void RunReader(const ZStreamR& iStream);
-	void RunWriter(const ZStreamW& iStream);
+// From ZCommer
+	virtual bool Read(const ZStreamR& iStreamR);
+	virtual bool Write(const ZStreamW& iStreamW);
+
+	virtual void Attached();
+	virtual void Detached();
 
 private:
 	static void sCallback_AllocateIDs(void* iRefcon, uint64 iBaseID, size_t iCount);
@@ -92,9 +101,6 @@ private:
 
 	ZMutex fMutex_Structure;
 	ZCondition fCondition_Sender;
-		bool fReaderExited;
-		bool fWriterExited;
-
 		ZTime fTime_LastRead;
 		bool fPingRequested;
 		bool fPingSent;

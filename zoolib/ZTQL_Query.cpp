@@ -40,8 +40,7 @@ Query::Query(const Query& iOther)
 :	fNode(iOther.fNode)
 	{}
 
-Query::Query(ZRef<Node> iNode)
-:	fNode(iNode)
+Query::~Query()
 	{}
 
 Query& Query::operator=(const Query& iOther)
@@ -50,11 +49,9 @@ Query& Query::operator=(const Query& iOther)
 	return *this;
 	}
 
-Query::~Query()
+Query::Query(ZRef<Node> iNode)
+:	fNode(iNode)
 	{}
-
-ZRef<Node> Query::GetNode() const
-	{ return fNode; }
 
 Query::Query(const ZTuple* iTuples, size_t iCount)
 :	fNode(new Node_Explicit(iTuples, iCount))
@@ -63,6 +60,9 @@ Query::Query(const ZTuple* iTuples, size_t iCount)
 Query::Query(const std::vector<ZTuple>& iTuples)
 :	fNode(new Node_Explicit(iTuples))
 	{}
+
+ZRef<Node> Query::GetNode() const
+	{ return fNode; }
 
 Query Query::sAllID(const ZTName& iIDPropName)
 	{

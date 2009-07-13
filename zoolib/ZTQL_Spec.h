@@ -55,34 +55,27 @@ public:
 class Spec
 	{
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Spec, operator_bool_generator_type, operator_bool_type);
+
 public:
+	operator operator_bool_type() const;
 
 	Spec();
-
 	Spec(const Spec& iOther);
-
-	Spec(ZRef<LogOp> iLogOp);
-
-	Spec(bool iBool);
-
-	Spec(const Condition& iCondition);
-
+	~Spec();
 	Spec& operator=(const Spec& iOther);
 
-	~Spec();
-
-	operator operator_bool_type() const;
+	Spec(ZRef<LogOp> iLogOp);
+	Spec(bool iBool);
+	Spec(const Condition& iCondition);
 
 	bool Matches(const ZTuple& iTuple) const;
 
 	RelHead GetRelHead() const;
 
 	Spec operator&(const Spec& iOther) const;
-
 	Spec& operator&=(const Spec& iOther);
 
 	Spec operator|(const Spec& iOther) const;
-
 	Spec& operator|=(const Spec& iOther);
 
 	ZRef<LogOp> GetLogOp() const;
