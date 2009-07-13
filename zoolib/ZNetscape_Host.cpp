@@ -29,8 +29,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdexcept>
 #include <stdlib.h> // For free/malloc
 
-using std::string;
-
 #define ZNETSCAPE_BEFORE_OBJECT(a) \
 	try {
 
@@ -101,7 +99,7 @@ NPVariantH::NPVariantH(double iValue)
 	value.doubleValue = iValue;
 	}
 
-NPVariantH::NPVariantH(const std::string& iValue)
+NPVariantH::NPVariantH(const string& iValue)
 	{
 	this->pSetString(iValue);
 	type = NPVariantType_String;
@@ -163,7 +161,7 @@ bool NPVariantH::QGet_T<string>(string& oVal) const
 	{
 	if (type != NPVariantType_String)
 		return false;
-	oVal = std::string(
+	oVal = string(
 		sNPStringCharsConst(value.stringValue),
 		sNPStringLengthConst(value.stringValue));
 	return true;
@@ -245,7 +243,7 @@ void NPVariantH::pSetString(const char* iChars, size_t iLength)
 	sNPStringChars(value.stringValue) = p;
 	}
 
-void NPVariantH::pSetString(const std::string& iString)
+void NPVariantH::pSetString(const string& iString)
 	{
 	if (size_t theLength = iString.length())
 		this->pSetString(iString.data(), theLength);
@@ -380,25 +378,25 @@ bool NPObjectH::RemoveProperty(const string& iName)
 bool NPObjectH::RemoveProperty(size_t iIndex)
 	{ return HostMeister::sGet()->RemoveProperty(fake, this, sAsNPI(iIndex)); }
 
-NPVariantH NPObjectH::Invoke(const std::string& iName, const NPVariantH* iArgs, size_t iCount)
+NPVariantH NPObjectH::Invoke(const string& iName, const NPVariantH* iArgs, size_t iCount)
 	{
 	NPVariantH result;
 	this->Invoke(iName, iArgs, iCount, result);
 	return result;
 	}
 
-NPVariantH NPObjectH::Invoke(const std::string& iName)
+NPVariantH NPObjectH::Invoke(const string& iName)
 	{
 	NPVariantH result;
 	this->Invoke(iName, nullptr, 0, result);
 	return result;
 	}
 
-NPVariantH NPObjectH::Invoke(const std::string& iName,
+NPVariantH NPObjectH::Invoke(const string& iName,
 	const NPVariantH& iP0)
 	{ return this->Invoke(iName, &iP0, 1); }
 
-NPVariantH NPObjectH::Invoke(const std::string& iName,
+NPVariantH NPObjectH::Invoke(const string& iName,
 	const NPVariantH& iP0,
 	const NPVariantH& iP1)
 	{
@@ -406,7 +404,7 @@ NPVariantH NPObjectH::Invoke(const std::string& iName,
 	return this->Invoke(iName, arr, countof(arr));
 	}
 
-NPVariantH NPObjectH::Invoke(const std::string& iName,
+NPVariantH NPObjectH::Invoke(const string& iName,
 	const NPVariantH& iP0,
 	const NPVariantH& iP1,
 	const NPVariantH& iP2)
@@ -429,7 +427,7 @@ NPVariantH NPObjectH::InvokeDefault()
 	return result;
 	}
 
-NPVariantH NPObjectH::Get(const std::string& iName)
+NPVariantH NPObjectH::Get(const string& iName)
 	{
 	NPVariantH result;
 	this->GetProperty(iName, result);
@@ -443,7 +441,7 @@ NPVariantH NPObjectH::Get(size_t iIndex)
 	return result;
 	}
 
-bool NPObjectH::Set(const std::string& iName, const NPVariantH& iValue)
+bool NPObjectH::Set(const string& iName, const NPVariantH& iValue)
 	{ return this->SetProperty(iName, iValue); }
 
 bool NPObjectH::Set(size_t iIndex, const NPVariantH& iValue)
@@ -501,19 +499,18 @@ ObjectH::~ObjectH()
 void ObjectH::Imp_Invalidate()
 	{}
 
-bool ObjectH::Imp_HasMethod(const std::string& iName)
+bool ObjectH::Imp_HasMethod(const string& iName)
 	{ return false; }
 
 bool ObjectH::Imp_Invoke(
-	const std::string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult)
+	const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult)
 	{ return false; }
 
 bool ObjectH::Imp_InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult)
 	{ return false; }
 
-bool ObjectH::Imp_HasProperty(const std::string& iName)
+bool ObjectH::Imp_HasProperty(const string& iName)
 	{
-	using std::string;
 	using std::vector;
 	vector<string> theNames;
 	if (this->Imp_Enumerate(theNames))
@@ -525,19 +522,19 @@ bool ObjectH::Imp_HasProperty(const std::string& iName)
 bool ObjectH::Imp_HasProperty(int32_t iInt)
 	{ return false; }
 
-bool ObjectH::Imp_GetProperty(const std::string& iName, NPVariantH& oResult)
+bool ObjectH::Imp_GetProperty(const string& iName, NPVariantH& oResult)
 	{ return false; }
 
 bool ObjectH::Imp_GetProperty(int32_t iInt, NPVariantH& oResult)
 	{ return false; }
 
-bool ObjectH::Imp_SetProperty(const std::string& iName, const NPVariantH& iValue)
+bool ObjectH::Imp_SetProperty(const string& iName, const NPVariantH& iValue)
 	{ return false; }
 
 bool ObjectH::Imp_SetProperty(int32_t iInt, const NPVariantH& iValue)
 	{ return false; }
 
-bool ObjectH::Imp_RemoveProperty(const std::string& iName)
+bool ObjectH::Imp_RemoveProperty(const string& iName)
 	{ return false; }
 
 bool ObjectH::Imp_RemoveProperty(int32_t iInt)
@@ -545,7 +542,6 @@ bool ObjectH::Imp_RemoveProperty(int32_t iInt)
 
 bool ObjectH::Imp_Enumerate(NPIdentifier*& oIDs, uint32_t& oCount)
 	{
-	using std::string;
 	using std::vector;
 	vector<string> theNames;
 	if (this->Imp_Enumerate(theNames))
@@ -561,7 +557,7 @@ bool ObjectH::Imp_Enumerate(NPIdentifier*& oIDs, uint32_t& oCount)
 	return false;
 	}
 
-bool ObjectH::Imp_Enumerate(std::vector<std::string>& oNames)
+bool ObjectH::Imp_Enumerate(std::vector<string>& oNames)
 	{ return false; }
 
 NPObject* ObjectH::sAllocate(NPP npp, NPClass *aClass)

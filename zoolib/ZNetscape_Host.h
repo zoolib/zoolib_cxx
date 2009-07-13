@@ -35,6 +35,8 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZNetscape {
 
+using std::string;
+
 class NPObjectH;
 
 // =================================================================================================
@@ -62,7 +64,7 @@ public:
 	NPVariantH(bool iValue);
 	NPVariantH(int32 iValue);
 	NPVariantH(double iValue);
-	NPVariantH(const std::string& iValue);
+	NPVariantH(const string& iValue);
 	NPVariantH(const char* iValue);
 	NPVariantH(NPObjectH* iValue);
 	NPVariantH(const ZRef<NPObjectH>& iValue);
@@ -86,12 +88,12 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Bool, bool)
 	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Int32, int32)
 	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Double, double)
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, String, std::string)
+	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, String, string)
 	ZMACRO_ZValAccessors_Decl_Entry(NPVariantH, Object, ZRef<NPObjectH>)
 
 private:
 	void pSetString(const char* iChars, size_t iLength);
-	void pSetString(const std::string& iString);
+	void pSetString(const string& iString);
 	void pCopyFrom(const NPVariant& iOther);
 	void pRelease();
 	};
@@ -108,45 +110,45 @@ protected:
 
 public:
 	static bool sIsString(NPIdentifier iNPI);
-	static std::string sAsString(NPIdentifier iNPI);
+	static string sAsString(NPIdentifier iNPI);
 	static int32_t sAsInt(NPIdentifier iNPI);
 
-	static NPIdentifier sAsNPI(const std::string& iName);
+	static NPIdentifier sAsNPI(const string& iName);
 	static NPIdentifier sAsNPI(int32_t iInt);
 
 	void Retain();
 	void Release();
 
-	bool HasMethod(const std::string& iName);
+	bool HasMethod(const string& iName);
 	bool Invoke(
-		const std::string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+		const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
 	bool InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
 
-	bool HasProperty(const std::string& iName);
+	bool HasProperty(const string& iName);
 	bool HasProperty(size_t iIndex);
 
-	bool GetProperty(const std::string& iName, NPVariantH& oResult);
+	bool GetProperty(const string& iName, NPVariantH& oResult);
 	bool GetProperty(size_t iIndex, NPVariantH& oResult);
 
-	bool SetProperty(const std::string& iName, const NPVariantH& iValue);
+	bool SetProperty(const string& iName, const NPVariantH& iValue);
 	bool SetProperty(size_t iIndex, const NPVariantH& iValue);
 
-	bool RemoveProperty(const std::string& iName);
+	bool RemoveProperty(const string& iName);
 	bool RemoveProperty(size_t iIndex);
 
-	NPVariantH Invoke(const std::string& iName,
+	NPVariantH Invoke(const string& iName,
 		const NPVariantH* iArgs, size_t iCount);
 
-	NPVariantH Invoke(const std::string& iName);
+	NPVariantH Invoke(const string& iName);
 
-	NPVariantH Invoke(const std::string& iName,
+	NPVariantH Invoke(const string& iName,
 		const NPVariantH& iP0);
 
-	NPVariantH Invoke(const std::string& iName,
+	NPVariantH Invoke(const string& iName,
 		const NPVariantH& iP0,
 		const NPVariantH& iP1);
 
-	NPVariantH Invoke(const std::string& iName,
+	NPVariantH Invoke(const string& iName,
 		const NPVariantH& iP0,
 		const NPVariantH& iP1,
 		const NPVariantH& iP2);
@@ -154,10 +156,10 @@ public:
 	NPVariantH InvokeDefault(const NPVariantH* iArgs, size_t iCount);
 	NPVariantH InvokeDefault();
 
-	NPVariantH Get(const std::string& iName);
+	NPVariantH Get(const string& iName);
 	NPVariantH Get(size_t iIndex);
 
-	bool Set(const std::string& iName, const NPVariantH& iValue);
+	bool Set(const string& iName, const NPVariantH& iValue);
 	bool Set(size_t iIndex, const NPVariantH& iValue);
 
 	bool Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount);
@@ -169,6 +171,34 @@ void sRelease(NPObjectH& iOb);
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ValMapH
+
+// Sketch of API -- value semantics is an issue.
+
+typedef NPVariantH ValH;
+
+class ValMapH
+:	public ZRef<NPObjectH>
+	{
+public:
+	ValMapH();
+	ValMapH(const ValMapH& iOther);
+	~ValMapH();
+	ValMapH& operator=(const ValMapH& iOther);
+
+	ValMapH(const ZRef<NPObjectH>& iOther);
+	ValMapH& operator=(const ZRef<NPObjectH>& iOther);
+
+// ValMap protocol
+	bool QGet(const string& iName, ValH& oVal) const;
+	ValH DGet(const string& iName, const ValH& iDefault) const;
+	ValH Get(const string& iName) const;
+	void Set(const string& iName, const ValH& iVal);
+	void Erase(const string& iName);
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ObjectH
 
 class ObjectH : public NPObjectH
@@ -177,23 +207,23 @@ protected:
 	ObjectH();
 	virtual ~ObjectH();
 	virtual void Imp_Invalidate();
-	virtual bool Imp_HasMethod(const std::string& iName);
+	virtual bool Imp_HasMethod(const string& iName);
 
 	virtual bool Imp_Invoke(
-		const std::string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+		const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
 
 	virtual bool Imp_InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
 
-	virtual bool Imp_HasProperty(const std::string& iName);
+	virtual bool Imp_HasProperty(const string& iName);
 	virtual bool Imp_HasProperty(int32_t iInt);
-	virtual bool Imp_GetProperty(const std::string& iName, NPVariantH& oResult);
+	virtual bool Imp_GetProperty(const string& iName, NPVariantH& oResult);
 	virtual bool Imp_GetProperty(int32_t iInt, NPVariantH& oResult);
-	virtual bool Imp_SetProperty(const std::string& iName, const NPVariantH& iValue);
+	virtual bool Imp_SetProperty(const string& iName, const NPVariantH& iValue);
 	virtual bool Imp_SetProperty(int32_t iInt, const NPVariantH& iValue);
-	virtual bool Imp_RemoveProperty(const std::string& iName);
+	virtual bool Imp_RemoveProperty(const string& iName);
 	virtual bool Imp_RemoveProperty(int32_t iInt);
 	virtual bool Imp_Enumerate(NPIdentifier*& oIDs, uint32_t& oCount);
-	virtual bool Imp_Enumerate(std::vector<std::string>& oNames);
+	virtual bool Imp_Enumerate(std::vector<string>& oNames);
 
 private:
 	static NPObject* sAllocate(NPP npp, NPClass *aClass);	
@@ -234,7 +264,7 @@ public:
 	HostMeister();
 	virtual ~HostMeister();
 
-	std::string StringFromIdentifier(NPIdentifier identifier);
+	string StringFromIdentifier(NPIdentifier identifier);
 
 	virtual NPError GetURL(NPP npp, const char* URL, const char* window) = 0;
 
