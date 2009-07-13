@@ -97,7 +97,13 @@ int ZValData_ZooLib::Compare(const ZValData_ZooLib& iOther) const
 	if (int result = memcmp(myRep->fData, otherRep->fData, std::min(myRep->fSize, otherRep->fSize)))
 		return result;
 
-	return int(myRep->fSize) - int(otherRep->fSize);
+	if (myRep->fSize > otherRep->fSize)
+		return 1;
+
+	if (myRep->fSize < otherRep->fSize)
+		return -1;
+
+	return 0;	
 	}
 
 bool ZValData_ZooLib::operator<(const ZValData_ZooLib& iOther) const
