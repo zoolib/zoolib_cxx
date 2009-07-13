@@ -106,6 +106,8 @@ void ZWNDA::Create(HWND iParent, DWORD iStyle)
 		nullptr,
 		::GetModuleHandleA(nullptr), // program instance handle
 		this); // creation parameters
+
+	ZAssert(fHWND == theHWND);
 	}
 
 HWND ZWNDA::GetHWND()
@@ -274,6 +276,8 @@ void ZWNDW::Create(HWND iParent, DWORD iStyle)
 		nullptr,
 		::GetModuleHandleW(nullptr), // program instance handle
 		this); // creation parameters
+
+	ZAssert(fHWND == theHWND);
 	}
 
 HWND ZWNDW::GetHWND()
