@@ -790,6 +790,7 @@ Host_Std::~Host_Std()
 		else
 			break;
 		}
+	fSenders.Clear();
 
 	this->Destroy();
 	}

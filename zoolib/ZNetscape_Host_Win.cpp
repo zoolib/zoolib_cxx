@@ -37,7 +37,6 @@ namespace ZNetscape {
 
 Host_Win::Host_Win(ZRef<GuestFactory> iGuestFactory, HWND iHWND)
 :	Host_Std(iGuestFactory),
-//	fWND(iHWND),
 	fIsWindowed(true),
 	fIsTransparent(false),
 	fTimerID(0),
@@ -45,12 +44,11 @@ Host_Win::Host_Win(ZRef<GuestFactory> iGuestFactory, HWND iHWND)
 	{
 	ZBlockZero(&fNPWindow, sizeof(fNPWindow));
 	this->Attach(iHWND);
-//	this->Attach(fWND);
 	fTimerID = ::SetTimer(iHWND, 1, 50, nullptr);
 	}
 
 Host_Win::~Host_Win()
-	{}
+	{ this->Detach(); }
 
 NPError Host_Win::Host_GetValue(NPP npp, NPNVariable variable, void* ret_value)
 	{
@@ -241,7 +239,7 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 void Host_Win::pPaint(HWND iHWND, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
 	if (ZLOG(s, eDebug, "Host_Win"))
-		s << "+DoPAINT";
+		s << "+pPaint";
 
 	PAINTSTRUCT thePS;
 	HDC theHDC = ::BeginPaint(iHWND, &thePS);
@@ -266,7 +264,7 @@ void Host_Win::pPaint(HWND iHWND, WPARAM iWPARAM, LPARAM iLPARAM)
 	::EndPaint(iHWND, &thePS);
 
 	if (ZLOG(s, eDebug, "Host_Win"))
-		s << "-DoPAINT";
+		s << "-pPaint";
 	}
 
 void Host_Win::pStuffNPWindow(int iWidth, int iHeight)
