@@ -719,7 +719,9 @@ Val::operator operator_bool_type() const
 
 void Val::swap(Val& iOther)
 	{
-	struct dummy { char bytes[sizeof(Val::fData)]; };
+	const size_t theSize = sizeof(fData);
+
+	struct dummy { char bytes[theSize]; };
 
 	dummy& self = *(dummy*)(fData.fBytes);
 	dummy& other = *(dummy*)(iOther.fData.fBytes);
