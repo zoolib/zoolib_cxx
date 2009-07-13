@@ -151,8 +151,8 @@ private:
 				theIter->fRep.Clear();
 				}
 			}
-		fList.clear();
 		fMap.clear();
+		fList.clear();
 		}
 
 	void pInit(ZRef<ZSafeSetRep> iSelf,
