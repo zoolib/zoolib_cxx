@@ -62,40 +62,34 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZUtil_CarbonEvents {
 
-bool sGetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
+bool sQGetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
 	size_t iBufferSize, void* iBuffer);
   
 size_t sGetParamLength(EventRef iEventRef, EventParamName iName, EventParamType iType);
 
 template <typename T>
 bool sGetParam_T(EventRef iEventRef, EventParamName iName, EventParamType iType, T& oT)
-	{
-	return sGetParam(iEventRef, iName, iType, sizeof(oT), &oT);
-	}
+	{ return sQGetParam(iEventRef, iName, iType, sizeof(oT), &oT); }
 
 template <typename T>
 T sDGetParam_T(EventRef iEventRef, EventParamName iName, EventParamType iType, const T& iDefault)
 	{
 	T theT;
-	if (sGetParam(iEventRef, iName, iType, sizeof(theT), &theT))
+	if (sQGetParam(iEventRef, iName, iType, sizeof(theT), &theT))
 		return theT;
 	return iDefault;
 	}
 
 template <typename T>
 T sGetParam_T(EventRef iEventRef, EventParamName iName, EventParamType iType)
-	{
-	return sDGetParam_T(iEventRef, iName, iType, T());
-	}
+	{ return sDGetParam_T(iEventRef, iName, iType, T()); }
 
 void sSetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
 	size_t iBufferSize, const void* iBuffer);
 
 template <typename T>
 void sSetParam_T(EventRef iEventRef, EventParamName iName, EventParamType iType, const T& iParam)
-	{
-	sSetParam(iEventRef, iName, iType, sizeof(T), &iParam);
-	}
+	{ sSetParam(iEventRef, iName, iType, sizeof(T), &iParam); }
 
 typedef void (*Callback_t)(void* iRefcon);
 

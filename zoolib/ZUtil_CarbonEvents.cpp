@@ -42,10 +42,11 @@ using std::string;
 #pragma mark -
 #pragma mark * ZUtil_CarbonEvents
 
-bool ZUtil_CarbonEvents::sGetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
+bool ZUtil_CarbonEvents::sQGetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
 	size_t iBufferSize, void* iBuffer)
 	{
-	return noErr == ::GetEventParameter(iEventRef, iName, iType, nullptr, iBufferSize, nullptr, iBuffer);
+	return noErr == ::GetEventParameter(
+		iEventRef, iName, iType, nullptr, iBufferSize, nullptr, iBuffer);
 	}
 
 size_t ZUtil_CarbonEvents::sGetParamLength(
@@ -83,7 +84,8 @@ public:
 	void InvokeOnMainThread(Callback_t iCallback, void* iRefcon);
 
 	static EventHandlerUPP sEventHandlerUPP;
-	static pascal OSStatus sEventHandler(EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon);
+	static pascal OSStatus sEventHandler(
+		EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon);
 	OSStatus EventHandler(EventHandlerCallRef iCallRef, EventRef iEventRef);
 
 	EventQueueRef fEventQueueRef;
