@@ -128,6 +128,7 @@ void ZTuple::SetTuple(const ZTName& iName, const ZTuple& iTuple)
 	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Float, float) \
 	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Double, double) \
 	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, String, std::string) \
+	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Time, ZTime) \
 
 ZMACRO_ZValMapAccessors_Def(const char*)
 ZMACRO_ZValMapAccessors_Def(const ZTName&)

@@ -48,6 +48,7 @@ typedef ZVal_ZooLib ZTValue;
 	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Float, float) \
 	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Double, double) \
 	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, String, std::string) \
+	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Time, ZTime) \
 
 class ZTuple : public ZValMap_ZooLib
 	{
