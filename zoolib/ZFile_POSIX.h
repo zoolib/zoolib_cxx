@@ -64,7 +64,8 @@ public:
 	virtual ZTrail TrailTo(ZRef<ZFileLoc> iDest, ZFile::Error* oErr) const;
 
 	virtual ZRef<ZFileLoc> GetParent(ZFile::Error* oErr);
-	virtual ZRef<ZFileLoc> GetDescendant(const std::string* iComps, size_t iCount, ZFile::Error* oErr);
+	virtual ZRef<ZFileLoc> GetDescendant(
+		const std::string* iComps, size_t iCount, ZFile::Error* oErr);
 
 	virtual bool IsRoot();
 
@@ -85,15 +86,18 @@ public:
 	virtual ZRef<ZStreamerWPos> OpenWPos(bool iPreventWriters, ZFile::Error* oErr);
 	virtual ZRef<ZStreamerRWPos> OpenRWPos(bool iPreventWriters, ZFile::Error* oErr);
 
-	virtual ZRef<ZStreamerWPos> CreateWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr);
-	virtual ZRef<ZStreamerRWPos> CreateRWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr);
+	virtual ZRef<ZStreamerWPos> CreateWPos(
+		bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr);
+	virtual ZRef<ZStreamerRWPos> CreateRWPos(
+		bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr);
 
 	virtual ZRef<ZFileR> OpenFileR(bool iPreventWriters, ZFile::Error* oErr);
 	virtual ZRef<ZFileW> OpenFileW(bool iPreventWriters, ZFile::Error* oErr);
 	virtual ZRef<ZFileRW> OpenFileRW(bool iPreventWriters, ZFile::Error* oErr);
 
 	virtual ZRef<ZFileW> CreateFileW(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr);
-	virtual ZRef<ZFileRW> CreateFileRW(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr);
+	virtual ZRef<ZFileRW> CreateFileRW(
+		bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr);
 
 	std::string pGetPath();
 
@@ -133,7 +137,8 @@ public:
 	virtual ~ZFileW_POSIX();
 
 // From ZFileW
-	virtual ZFile::Error WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
+	virtual ZFile::Error WriteAt(
+		uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
 
 	virtual ZFile::Error GetSize(uint64& oSize);
 	virtual ZFile::Error SetSize(uint64 iSize);
@@ -157,8 +162,10 @@ public:
 	virtual ~ZFileRW_POSIX();
 
 // From ZFileRW
-	virtual ZFile::Error ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead);
-	virtual ZFile::Error WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
+	virtual ZFile::Error ReadAt(
+		uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead);
+	virtual ZFile::Error WriteAt(
+		uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
 
 	virtual ZFile::Error GetSize(uint64& oSize);
 	virtual ZFile::Error SetSize(uint64 iSize);
@@ -204,7 +211,8 @@ public:
 	virtual ~ZFileW_POSIXMutex();
 
 // From ZFileW
-	virtual ZFile::Error WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
+	virtual ZFile::Error WriteAt(
+		uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
 
 	virtual ZFile::Error GetSize(uint64& oSize);
 	virtual ZFile::Error SetSize(uint64 iSize);
@@ -231,7 +239,8 @@ public:
 
 // From ZFileRW
 	virtual ZFile::Error ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead);
-	virtual ZFile::Error WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
+	virtual ZFile::Error WriteAt(
+		uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
 
 	virtual ZFile::Error GetSize(uint64& oSize);
 	virtual ZFile::Error SetSize(uint64 iSize);
