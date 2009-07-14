@@ -25,9 +25,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 
 #include "ASZStringSuite.h"
+
+#include "PIHandleSuite.h"
 #include "PITerminology.h"
 #include "PIUSuites.h"
-#include "PIHandleSuite.h"
 
 using std::vector;
 
@@ -141,16 +142,16 @@ static ZRef<ASZString> sAsASZString(const string16& iString)
 static TypeID sAsRuntimeTypeID(const string8& iString)
 	{
 	TypeID theTypeID;
-	if (noErr == sPSActionControl->StringIDToTypeID(const_cast<char*>(iString.c_str()), &theTypeID))
+	if (sAsRuntimeTypeID(iString, theTypeID))
 		return theTypeID;
 	return 0;
 	}
 
 static string8 sFromRuntimeTypeID(TypeID iTypeID)
 	{
-	char buf[1024];
-	if (noErr == sPSActionControl->TypeIDToStringID(iTypeID, buf, sizeof(buf)-1))
-		return buf;
+	string8 result;
+	if (sFromRuntimeTypeID(iTypeID, result))
+		return result;
 	return string8();
 	}
 
@@ -159,6 +160,28 @@ static KeyID sAsKeyID(const string8& iName)
 
 static string8 sAsString(KeyID iKeyID)
 	{ return sFromRuntimeTypeID(iKeyID); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Public utilities
+
+bool sAsRuntimeTypeID(const string8& iString, TypeID& oTypeID)
+	{
+	if (noErr == sPSActionControl->StringIDToTypeID(const_cast<char*>(iString.c_str()), &oTypeID))
+		return true;
+	return false;
+	}
+
+bool sFromRuntimeTypeID(TypeID iTypeID, string8& oString)
+	{
+	char buf[1024];
+	if (noErr == sPSActionControl->TypeIDToStringID(iTypeID, buf, sizeof(buf)-1))
+		{
+		oString = buf;
+		return true;
+		}
+	return false;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -258,6 +281,45 @@ Handle& PSAlias::OParam()
 	sHandleDispose(fHandle);
 	fHandle = nullptr;
 	return fHandle;
+	}
+
+string8 PSAlias::AsString() const
+	{
+	// PIUFile.h causes compilation problems when using VC++. They could probably be fixed
+	// by #including zoolib/ZWinHeader.h. That said, it's cleaner to just do the work here.
+	// If PS ever updates their alias handle stuff we'll need to fix this code.
+
+	string8 result;
+
+	#ifdef __PIMac__
+
+		FSRef theFSRef;
+		Boolean wasChanged = false;
+		if (noErr == ::FSResolveAlias(nullptr, (AliasHandle)fHandle, &theFSRef, &wasChanged))
+			{
+			char pathBuf[1024];
+			if (noErr == ::FSRefMakePath(&theFSRef, (unsigned char*)pathBuf, sizeof(pathBuf)))
+				result = pathBuf;
+			}
+
+	#elif defined(__PIWin__)
+
+		if (size_t theSize = sPSHandle->GetSize(fHandle))
+			{
+			Ptr pointer;
+			Boolean oldLock;
+			sPSHandle->SetLock(fHandle, true, &pointer, &oldLock);
+			if (pointer)
+				result = (char*)pointer;
+			sPSHandle->SetLock(fHandle, oldLock, &pointer, &oldLock);
+			}
+	#else
+
+		#error Unsupported platform
+
+	#endif
+
+	return result;
 	}
 
 // =================================================================================================
@@ -455,6 +517,9 @@ Spec Spec::sOffset(ClassID iClassID, int32 iOffset)
 
 Spec Spec::sProperty(ClassID iClassID, KeyID iKeyID)
 	{ return Entry::sProperty(iClassID, iKeyID); }
+
+Spec Spec::sProperty(ClassID iClassID, const string8& iName)
+	{ return Entry::sProperty(iClassID, sAsRuntimeTypeID(iName)); }
 
 Spec::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(!fEntries.empty()); }
@@ -859,7 +924,7 @@ bool Val::QGet_T<bool>(bool& oVal) const
 template <>
 bool Val::QGet_T<string8>(string8& oVal) const
 	{
-	if (typeUnitFloat == fType)
+	if (typeChar == fType)
 		{
 		oVal = *sFetch_T<string8>(fData.fBytes);
 		return true;
@@ -1182,10 +1247,10 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 		uint32 theLength; \
 		if (noErr == SUITE->GetStringLength(PARAM, &theLength)) \
 			{ \
-			string8 result('\0', size_t(theLength)); \
-			if (0 == theLength || noErr == SUITE->GetString(PARAM, &result[0], theLength)) \
+			string8 result(size_t(theLength + 1), ' '); \
+			if (0 == theLength || noErr == SUITE->GetString(PARAM, &result[0], theLength + 1)) \
 				{ \
-				oVal = result; \
+				oVal = result.substr(0, theLength); \
 				return true; \
 				} \
 			} \
@@ -1479,18 +1544,18 @@ Map::Map(const string8& iType, Adopt_t<PIActionDescriptor> iOther)
 void Map::Clear()
 	{ sPSActionDescriptor->Clear(fAD); }
 
-bool Map::QGet(KeyID iName, Val& oVal) const
+bool Map::QGet(KeyID iKey, Val& oVal) const
 	{
 	if (!fAD)
 		return false;
 
 	TypeID theType;
-	if (noErr != sPSActionDescriptor->GetType(fAD, iName, &theType))
+	if (noErr != sPSActionDescriptor->GetType(fAD, iKey, &theType))
 		return false;
 
 	switch (theType)
 		{
-		GETTERCASES(sPSActionDescriptor, fAD COMMA() iName)
+		GETTERCASES(sPSActionDescriptor, fAD COMMA() iKey)
 		default:
 			ZUnimplemented();
 		}
@@ -1500,13 +1565,13 @@ bool Map::QGet(KeyID iName, Val& oVal) const
 bool Map::QGet(const string8& iName, Val& oVal) const
 	{ return this->QGet(sAsKeyID(iName), oVal); }
 
-bool Map::QGet(const_iterator iName, Val& oVal) const
-	{ return this->QGet(this->KeyOf(iName), oVal); }
+bool Map::QGet(Index_t iIndex, Val& oVal) const
+	{ return this->QGet(this->KeyOf(iIndex), oVal); }
 
-Val Map::DGet(KeyID iName, const Val& iDefault) const
+Val Map::DGet(KeyID iKey, const Val& iDefault) const
 	{
 	Val result;
-	if (this->QGet(iName, result))
+	if (this->QGet(iKey, result))
 		return result;
 	return iDefault;
 	}
@@ -1519,28 +1584,28 @@ Val Map::DGet(const string8& iName, const Val& iDefault) const
 	return iDefault;
 	}
 
-Val Map::DGet(const_iterator iName, const Val& iDefault) const
+Val Map::DGet(Index_t iIndex, const Val& iDefault) const
 	{
 	Val result;
-	if (this->QGet(iName, result))
+	if (this->QGet(iIndex, result))
 		return result;
 	return iDefault;
 	}
 
-Val Map::Get(KeyID iName) const
-	{ return this->DGet(iName, Val()); }
+Val Map::Get(KeyID iKey) const
+	{ return this->DGet(iKey, Val()); }
 
 Val Map::Get(const string8& iName) const
 	{ return this->DGet(iName, Val()); }
 
-Val Map::Get(const_iterator iName) const
-	{ return this->DGet(iName, Val()); }
+Val Map::Get(Index_t iIndex) const
+	{ return this->DGet(iIndex, Val()); }
 
-void Map::Set(KeyID iName, const Val& iVal)
+void Map::Set(KeyID iKey, const Val& iVal)
 	{
 	switch (iVal.fType)
 		{
-		SETTERCASES(sPSActionDescriptor, fAD COMMA() iName)
+		SETTERCASES(sPSActionDescriptor, fAD COMMA() iKey)
 		default:
 			ZUnimplemented();//?
 		}
@@ -1549,17 +1614,17 @@ void Map::Set(KeyID iName, const Val& iVal)
 void Map::Set(const string8& iName, const Val& iVal)
 	{ this->Set(sAsKeyID(iName), iVal); }
 
-void Map::Set(const_iterator iName, const Val& iVal)
-	{ this->Set(this->KeyOf(iName), iVal); }
+void Map::Set(Index_t iIndex, const Val& iVal)
+	{ this->Set(this->KeyOf(iIndex), iVal); }
 
-void Map::Erase(KeyID iName)
-	{ sPSActionDescriptor->Erase(fAD, iName); }
+void Map::Erase(KeyID iKey)
+	{ sPSActionDescriptor->Erase(fAD, iKey); }
 
 void Map::Erase(const string8& iName)
 	{ this->Erase(sAsKeyID(iName)); }
 
-void Map::Erase(const_iterator iName)
-	{ this->Erase(this->KeyOf(iName)); }
+void Map::Erase(Index_t iIndex)
+	{ this->Erase(this->KeyOf(iIndex)); }
 
 PIActionDescriptor& Map::OParam()
 	{
@@ -1572,22 +1637,47 @@ PIActionDescriptor& Map::OParam()
 PIActionDescriptor Map::IParam() const
 	{ return fAD; }
 
-Map::const_iterator Map::begin()
-	{ return const_iterator(0); }
+Map::Index_t Map::begin() const
+	{ return Index_t(0); }
 
-Map::const_iterator Map::end()
-	{ return const_iterator(this->pCount()); }
+Map::Index_t Map::end() const
+	{ return Index_t(this->pCount()); }
 
-KeyID Map::KeyOf(const_iterator iPropIter) const
+KeyID Map::KeyOf(Index_t iIndex) const
 	{
-	if (iPropIter.GetIndex() < this->pCount())
+	if (iIndex.GetIndex() < this->pCount())
 		{
 		KeyID result;
-		if (noErr == sPSActionDescriptor->GetKey(fAD, iPropIter.GetIndex(), &result))
+		if (noErr == sPSActionDescriptor->GetKey(fAD, iIndex.GetIndex(), &result))
 			return result;
 		}
 	return 0;	
 	}
+
+string8 Map::NameOf(Index_t iIndex) const
+	{
+	if (KeyID theKey = this->KeyOf(iIndex))
+		return sAsString(theKey);
+	return string8();
+	}
+
+Map::Index_t Map::IndexOf(KeyID iKey) const
+	{
+	size_t count = this->pCount();
+	for (size_t x = 0; x < count; ++x)
+		{
+		KeyID theKey;
+		if (noErr == sPSActionDescriptor->GetKey(fAD, x, &theKey))
+			{
+			if (theKey == iKey)
+				return Index_t(x);
+			}
+		}
+	return Index_t(count);
+	}
+
+Map::Index_t Map::IndexOf(const string8& iName) const
+	{ return this->IndexOf(sAsKeyID(iName)); }
 
 KeyID Map::GetType() const
 	{ return fType; }

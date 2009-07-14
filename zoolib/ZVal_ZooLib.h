@@ -376,7 +376,7 @@ class ZValMap_ZooLib
 
 public:
 	typedef std::vector<NameVal> PropList;
-	typedef PropList::iterator const_iterator;
+	typedef PropList::iterator Index_t;
 
 	operator operator_bool_type() const;
 
@@ -391,27 +391,27 @@ public:
 // ZValMap protocol
 	void Clear();
 
-	bool QGet(const_iterator iPropIter, ZVal_ZooLib& oVal) const;
+	bool QGet(Index_t iIndex, ZVal_ZooLib& oVal) const;
 	bool QGet(const char* iPropName, ZVal_ZooLib& oVal) const;
 	bool QGet(const ZTName& iPropName, ZVal_ZooLib& oVal) const;
 
-	ZVal_ZooLib DGet(const_iterator iPropIter, const ZVal_ZooLib& iDefault) const;
+	ZVal_ZooLib DGet(Index_t iIndex, const ZVal_ZooLib& iDefault) const;
 	ZVal_ZooLib DGet(const char* iPropName, const ZVal_ZooLib& iDefault) const;
 	ZVal_ZooLib DGet(const ZTName& iPropName, const ZVal_ZooLib& iDefault) const;
 
-	ZVal_ZooLib Get(const_iterator iPropIter) const;
+	ZVal_ZooLib Get(Index_t iIndex) const;
 	ZVal_ZooLib Get(const char* iPropName) const;
 	ZVal_ZooLib Get(const ZTName& iPropName) const;
 
-	const ZVal_ZooLib& RGet(const_iterator iPropIter) const;
+	const ZVal_ZooLib& RGet(Index_t iIndex) const;
 	const ZVal_ZooLib& RGet(const char* iPropName) const;
 	const ZVal_ZooLib& RGet(const ZTName& iPropName) const;
 
-	void Set(const_iterator iPropIter, const ZVal_ZooLib& iVal);
+	void Set(Index_t iIndex, const ZVal_ZooLib& iVal);
 	void Set(const char* iPropName, const ZVal_ZooLib& iVal);
 	void Set(const ZTName& iPropName, const ZVal_ZooLib& iVal);
 
-	void Erase(const_iterator iPropIter);
+	void Erase(Index_t iIndex);
 	void Erase(const char* iPropName);
 	void Erase(const ZTName& iPropName);
 
@@ -421,20 +421,20 @@ public:
 	bool operator<(const ZValMap_ZooLib& iOther) const;
 
 // Our protocol
-	ZVal_ZooLib& Mutable(const_iterator iPropIter);
+	ZVal_ZooLib& Mutable(Index_t iIndex);
 	ZVal_ZooLib& Mutable(const char* iPropName);
 	ZVal_ZooLib& Mutable(const ZTName& iPropName);
 
-	const_iterator begin() const;
-	const_iterator end() const;
+	Index_t begin() const;
+	Index_t end() const;
 
 	bool Empty() const;
 	size_t Count() const;
 
-	const ZTName& NameOf(const_iterator iPropIter) const;
+	const ZTName& NameOf(Index_t iIndex) const;
 
-	const_iterator IteratorOf(const char* iPropName) const;
-	const_iterator IteratorOf(const ZTName& iPropName) const;
+	Index_t IndexOf(const char* iPropName) const;
+	Index_t IndexOf(const ZTName& iPropName) const;
 
 	bool Has(const char* iPropName) const;
 	bool Has(const ZTName& iPropName) const;
@@ -442,20 +442,20 @@ public:
 	void ToStream(const ZStreamW& iStreamW) const;
 
 protected:
-	void pSet(const_iterator iPropIter, const ZVal_ZooLib& iVal);
+	void pSet(Index_t iIndex, const ZVal_ZooLib& iVal);
 	void pSet(const char* iPropName, const ZVal_ZooLib& iVal);
 	void pSet(const ZTName& iPropName, const ZVal_ZooLib& iVal);
 
 	ZVal_ZooLib* pFindOrAllocate(const char* iPropName);
 	ZVal_ZooLib* pFindOrAllocate(const ZTName& iPropName);
 
-	const ZVal_ZooLib* pLookupAddressConst(const_iterator iPropIter) const;
+	const ZVal_ZooLib* pLookupAddressConst(Index_t iIndex) const;
 	const ZVal_ZooLib* pLookupAddressConst(const char* iPropName) const;
 	const ZVal_ZooLib* pLookupAddressConst(const ZTName& iPropName) const;
 
-	void pErase(const_iterator iPropIter);
+	void pErase(Index_t iIndex);
 	void pTouch();
-	const_iterator pTouch(const_iterator iPropIter);
+	Index_t pTouch(Index_t iIndex);
 
 	static ZRef<Rep> sRepFromStream(const ZStreamR& iStreamR);
 

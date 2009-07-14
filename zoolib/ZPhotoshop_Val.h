@@ -42,6 +42,8 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZPhotoshop {
 
+using std::string;
+
 typedef ZValData_ZooLib Data;
 
 class List;
@@ -56,6 +58,14 @@ typedef DescriptorFormID FormID;
 typedef DescriptorKeyID KeyID;
 typedef DescriptorTypeID TypeID;
 typedef DescriptorUnitID UnitID;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Public utilities
+
+bool sAsRuntimeTypeID(const string8& iString, TypeID& oTypeID);
+
+bool sFromRuntimeTypeID(TypeID iTypeID, string8& oString);
 
 // =================================================================================================
 #pragma mark -
@@ -125,6 +135,8 @@ public:
 
 	size_t Size() const;
 
+	string8 AsString() const;
+
 private:
 	Handle fHandle;
 	};
@@ -154,6 +166,7 @@ public:
 	static Spec sName(ClassID iClassID, const ZRef<ASZString>& iName);
 	static Spec sOffset(ClassID iClassID, int32 iOffset);
 	static Spec sProperty(ClassID iClassID, KeyID iKeyID);
+	static Spec sProperty(ClassID iClassID, const string8& iName);
 
 	Spec();
 	Spec(const Spec& iOther);
@@ -348,7 +361,7 @@ class Map
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Map,
 		operator_bool_generator_type, operator_bool_type);
 public:
-	typedef ZValMapIterator_T<Map> const_iterator;
+	typedef ZValMapIndex_T<Map> Index_t;
 
 	operator operator_bool_type() const;
 
@@ -368,34 +381,38 @@ public:
 // ZValMap protocol
 	void Clear();
 
-	bool QGet(KeyID iName, Val& oVal) const;
+	bool QGet(KeyID iKey, Val& oVal) const;
 	bool QGet(const string8& iName, Val& oVal) const;
-	bool QGet(const_iterator iName, Val& iVal) const;
+	bool QGet(Index_t iIndex, Val& iVal) const;
 
-	Val DGet(KeyID iName, const Val& iDefault) const;
+	Val DGet(KeyID iKey, const Val& iDefault) const;
 	Val DGet(const string8& iName, const Val& iDefault) const;
-	Val DGet(const_iterator iName, const Val& iDefault) const;
+	Val DGet(Index_t iIndex, const Val& iDefault) const;
 
-	Val Get(KeyID iName) const;
+	Val Get(KeyID iKey) const;
 	Val Get(const string8& iName) const;
-	Val Get(const_iterator iName) const;
+	Val Get(Index_t iIndex) const;
 
-	void Set(KeyID iName, const Val& iVal);
+	void Set(KeyID iKey, const Val& iVal);
 	void Set(const string8& iName, const Val& iVal);
-	void Set(const_iterator iName, const Val& iVal);
+	void Set(Index_t iIndex, const Val& iVal);
 
-	void Erase(KeyID iName);
+	void Erase(KeyID iKey);
 	void Erase(const string8& iName);
-	void Erase(const_iterator iName);
+	void Erase(Index_t iIndex);
 
 // Our protocol
 	PIActionDescriptor& OParam();
 	PIActionDescriptor IParam() const;
 
-	const_iterator begin();
-	const_iterator end();
+	Index_t begin() const;
+	Index_t end() const;
 
-	KeyID KeyOf(const_iterator iPropIter) const;
+	KeyID KeyOf(Index_t iIndex) const;
+	string8 NameOf(Index_t iIndex) const;
+
+	Index_t IndexOf(KeyID iKey) const;
+	Index_t IndexOf(const string8& iName) const;
 
 	KeyID GetType() const;
 

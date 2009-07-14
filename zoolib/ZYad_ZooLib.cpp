@@ -202,23 +202,23 @@ ZRef<ZYadListRPos> ZYadListRPos_ZooLib::Clone()
 ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap)
 :	ZYadR_ZooLib(iMap),
 	fMap(iMap),
-	fIter(fMap.begin())
+	fIndex(fMap.begin())
 	{}
 
 ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(
 	const ZValMap_ZooLib& iMap,
-	const ZValMap_ZooLib::const_iterator& iIter)
+	const ZValMap_ZooLib::Index_t& iIndex)
 :	ZYadR_ZooLib(iMap),
 	fMap(iMap),
-	fIter(iIter)
+	fIndex(iIndex)
 	{}
 
 ZRef<ZYadR> ZYadMapRPos_ZooLib::ReadInc(string& oName)
 	{
-	if (fIter < fMap.end())
+	if (fIndex != fMap.end())
 		{
-		oName = fMap.NameOf(fIter).AsString();
-		return ZYad_ZooLib::sMakeYadR(fMap.Get(fIter++));
+		oName = fMap.NameOf(fIndex).AsString();
+		return ZYad_ZooLib::sMakeYadR(fMap.Get(fIndex++));
 		}
 	return ZRef<ZYadR>();
 	}
@@ -227,10 +227,10 @@ bool ZYadMapRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
 	{ return ZYadR_ZooLib::IsSimple(iOptions); }
 
 void ZYadMapRPos_ZooLib::SetPosition(const string& iName)
-	{ fIter = fMap.IteratorOf(iName); }
+	{ fIndex = fMap.IndexOf(iName); }
 
 ZRef<ZYadMapRPos> ZYadMapRPos_ZooLib::Clone()
-	{ return new ZYadMapRPos_ZooLib(fMap, fIter); }
+	{ return new ZYadMapRPos_ZooLib(fMap, fIndex); }
 
 // =================================================================================================
 #pragma mark -

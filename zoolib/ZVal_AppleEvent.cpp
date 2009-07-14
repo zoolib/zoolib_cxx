@@ -464,9 +464,9 @@ bool ZValMap_AppleEvent::QGet(AEKeyword iName, ZVal_AppleEvent& oVal) const
 bool ZValMap_AppleEvent::QGet(const string& iName, ZVal_AppleEvent& oVal) const
 	{ return noErr == ::AEGetKeyDesc(this, sAsAEKeyword(iName), typeWildCard, &oVal.OParam()); }
 
-bool ZValMap_AppleEvent::QGet(const_iterator iPropIter, ZVal_AppleEvent& oVal) const
+bool ZValMap_AppleEvent::QGet(Index_t iIndex, ZVal_AppleEvent& oVal) const
 	{
-	return noErr == ::AEGetNthDesc(this, iPropIter.GetIndex() + 1, typeWildCard,
+	return noErr == ::AEGetNthDesc(this, iIndex.GetIndex() + 1, typeWildCard,
 		nullptr, &oVal.OParam());
 	}
 
@@ -486,10 +486,10 @@ ZVal_AppleEvent ZValMap_AppleEvent::DGet(const std::string& iName, const ZVal_Ap
 	return iDefault;
 	}
 
-ZVal_AppleEvent ZValMap_AppleEvent::DGet(const_iterator iPropIter, const ZVal_AppleEvent& iDefault) const
+ZVal_AppleEvent ZValMap_AppleEvent::DGet(Index_t iIndex, const ZVal_AppleEvent& iDefault) const
 	{
 	ZVal_AppleEvent result;
-	if (this->QGet(iPropIter, result))
+	if (this->QGet(iIndex, result))
 		return result;
 	return iDefault;
 	}
@@ -500,8 +500,8 @@ ZVal_AppleEvent ZValMap_AppleEvent::Get(AEKeyword iName) const
 ZVal_AppleEvent ZValMap_AppleEvent::Get(const std::string& iName) const
 	{ return this->DGet(iName, ZVal_AppleEvent()); }
 
-ZVal_AppleEvent ZValMap_AppleEvent::Get(const_iterator iPropIter) const
-	{ return this->DGet(iPropIter, ZVal_AppleEvent()); }
+ZVal_AppleEvent ZValMap_AppleEvent::Get(Index_t iIndex) const
+	{ return this->DGet(iIndex, ZVal_AppleEvent()); }
 
 void ZValMap_AppleEvent::Set(AEKeyword iName, const AEDesc& iVal)
 	{ ::AEPutKeyDesc(this, iName, &iVal); }
@@ -509,8 +509,8 @@ void ZValMap_AppleEvent::Set(AEKeyword iName, const AEDesc& iVal)
 void ZValMap_AppleEvent::Set(const string& iName, const AEDesc& iVal)
 	{ ::AEPutKeyDesc(this, sAsAEKeyword(iName), &iVal); }
 
-void ZValMap_AppleEvent::Set(const_iterator iPropIter, const AEDesc& iVal)
-	{ ::AEPutDesc(this, iPropIter.GetIndex() + 1, &iVal); }
+void ZValMap_AppleEvent::Set(Index_t iIndex, const AEDesc& iVal)
+	{ ::AEPutDesc(this, iIndex.GetIndex() + 1, &iVal); }
 
 void ZValMap_AppleEvent::Erase(AEKeyword iName)
 	{ ::AEDeleteKeyDesc(this, iName); }
@@ -518,8 +518,8 @@ void ZValMap_AppleEvent::Erase(AEKeyword iName)
 void ZValMap_AppleEvent::Erase(const string& iName)
 	{ ::AEDeleteKeyDesc(this, sAsAEKeyword(iName)); }
 
-void ZValMap_AppleEvent::Erase(const_iterator iPropIter)
-	{  ::AEDeleteItem(this, iPropIter.GetIndex() + 1); }
+void ZValMap_AppleEvent::Erase(Index_t iIndex)
+	{  ::AEDeleteItem(this, iIndex.GetIndex() + 1); }
 
 AEDesc& ZValMap_AppleEvent::OParam()
 	{
@@ -544,21 +544,21 @@ ZVal_AppleEvent ZValMap_AppleEvent::GetAttr(AEKeyword iName) const
 void ZValMap_AppleEvent::SetAttr(AEKeyword iName, const AEDesc& iVal)
 	{ ::AEPutAttributeDesc(this, iName, &iVal); }
 
-ZValMap_AppleEvent::const_iterator ZValMap_AppleEvent::begin()
-	{ return const_iterator(0); }
+ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::begin() const
+	{ return Index_t(0); }
 
-ZValMap_AppleEvent::const_iterator ZValMap_AppleEvent::end()
+ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::end() const
 	{
 	long theCount;
 	if (noErr == ::AECountItems(this, &theCount))
-		return const_iterator(theCount);
-	return const_iterator(0);
+		return Index_t(theCount);
+	return Index_t(0);
 	}
 
-AEKeyword ZValMap_AppleEvent::KeyOf(const_iterator iPropIter) const
+AEKeyword ZValMap_AppleEvent::KeyOf(Index_t iIndex) const
 	{
 	AEKeyword theKey;
-	if (noErr == ::AEGetNthPtr(this, iPropIter.GetIndex() + 1, typeWildCard, &theKey,
+	if (noErr == ::AEGetNthPtr(this, iIndex.GetIndex() + 1, typeWildCard, &theKey,
 		nullptr, nullptr, 0, nullptr))
 		{
 		return theKey;
@@ -566,10 +566,10 @@ AEKeyword ZValMap_AppleEvent::KeyOf(const_iterator iPropIter) const
 	return 0;
 	}
 
-string ZValMap_AppleEvent::NameOf(const_iterator iPropIter) const
+string ZValMap_AppleEvent::NameOf(Index_t iIndex) const
 	{
 	AEKeyword theKey;
-	if (noErr == ::AEGetNthPtr(this, iPropIter.GetIndex() + 1, typeWildCard, &theKey,
+	if (noErr == ::AEGetNthPtr(this, iIndex.GetIndex() + 1, typeWildCard, &theKey,
 		nullptr, nullptr, 0, nullptr))
 		{
 		return sAsString(theKey);

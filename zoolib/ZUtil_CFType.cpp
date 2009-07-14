@@ -163,150 +163,199 @@ ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData)
 #pragma mark -
 #pragma mark * ZUtil_CFType
 
-ZVal_ZooLib sAsVal_ZooLib(ZRef<CFTypeRef> iVal)
+bool sQAsVal_ZooLib(ZRef<CFTypeRef> iVal, ZVal_ZooLib& oVal)
 	{
-	if (CFTypeRef theCFTypeRef = iVal)
+	CFTypeRef theCFTypeRef = iVal;
+	if (!theCFTypeRef)
 		{
-		const CFTypeID theTypeID = ::CFGetTypeID(theCFTypeRef);
-		if (false)
-			{}
-		else if (theTypeID == ::CFStringGetTypeID())
+		oVal.Clear();
+		return true;
+		}
+
+	const CFTypeID theTypeID = ::CFGetTypeID(theCFTypeRef);
+
+	if (theTypeID == ::CFStringGetTypeID())
+		{
+		oVal = ZVal_ZooLib(sAsUTF8(static_cast<CFStringRef>(theCFTypeRef)));
+		return true;
+		}
+
+	if (theTypeID == ::CFBooleanGetTypeID())
+		{
+		oVal = ZVal_ZooLib(bool(::CFBooleanGetValue(static_cast<CFBooleanRef>(theCFTypeRef))));
+		return true;
+		}
+	
+	if (theTypeID == ::CFDateGetTypeID())
+		{
+		oVal = ZVal_ZooLib(ZTime(kCFAbsoluteTimeIntervalSince1970
+			+ ::CFDateGetAbsoluteTime(static_cast<CFDateRef>(theCFTypeRef))));
+		return true;
+		}
+	
+	if (theTypeID == ::CFDataGetTypeID())
+		{
+		CFDataRef theDataRef = static_cast<CFDataRef>(theCFTypeRef);
+		size_t theLength = ::CFDataGetLength(theDataRef);
+		const void* theData = ::CFDataGetBytePtr(theDataRef);
+		oVal = ZVal_ZooLib(theData, theLength);
+		return true;
+		}
+	
+	if (theTypeID == ::CFNumberGetTypeID())
+		{
+		const CFNumberRef theNumberRef = static_cast<CFNumberRef>(theCFTypeRef);
+		switch (::CFNumberGetType(theNumberRef))
 			{
-			return ZVal_ZooLib(sAsUTF8(static_cast<CFStringRef>(theCFTypeRef)));
-			}
-		else if (theTypeID == ::CFBooleanGetTypeID())
-			{
-			return ZVal_ZooLib(bool(::CFBooleanGetValue(static_cast<CFBooleanRef>(theCFTypeRef))));
-			}
-		else if (theTypeID == ::CFDateGetTypeID())
-			{
-			return ZVal_ZooLib(ZTime(kCFAbsoluteTimeIntervalSince1970
-				+ ::CFDateGetAbsoluteTime(static_cast<CFDateRef>(theCFTypeRef))));
-			}
-		else if (theTypeID == ::CFDataGetTypeID())
-			{
-			CFDataRef theDataRef = static_cast<CFDataRef>(theCFTypeRef);
-			size_t theLength = ::CFDataGetLength(theDataRef);
-			const void* theData = ::CFDataGetBytePtr(theDataRef);
-			return ZVal_ZooLib(theData, theLength);
-			}
-		else if (theTypeID == ::CFNumberGetTypeID())
-			{
-			const CFNumberRef theNumberRef = static_cast<CFNumberRef>(theCFTypeRef);
-			switch (::CFNumberGetType(theNumberRef))
+			case kCFNumberSInt8Type:
+			case kCFNumberCharType:
 				{
-				case kCFNumberSInt8Type:
-				case kCFNumberCharType:
-					{
-					int8 theValue;
-					::CFNumberGetValue(theNumberRef, kCFNumberSInt8Type, &theValue);
-					return ZVal_ZooLib(theValue);
-					}
-				case kCFNumberSInt16Type:
-				case kCFNumberShortType:
-					{
-					int16 theValue;
-					::CFNumberGetValue(theNumberRef, kCFNumberSInt16Type, &theValue);
-					return ZVal_ZooLib(theValue);
-					}
-				case kCFNumberSInt32Type:
-				case kCFNumberIntType:
-					{
-					int32 theValue;
-					::CFNumberGetValue(theNumberRef, kCFNumberSInt32Type, &theValue);
-					return ZVal_ZooLib(theValue);
-					}
-				case kCFNumberSInt64Type:
-				case kCFNumberLongLongType:
-					{
-					int64 theValue;
-					::CFNumberGetValue(theNumberRef, kCFNumberSInt64Type, &theValue);
-					return ZVal_ZooLib(theValue);
-					}
-				case kCFNumberFloat32Type:
-				case kCFNumberFloatType:
-					{
-					float theValue;
-					::CFNumberGetValue(theNumberRef, kCFNumberFloat32Type, &theValue);
-					return ZVal_ZooLib(theValue);
-					}
-				case kCFNumberFloat64Type:
-				case kCFNumberDoubleType:
-					{
-					double theValue;
-					::CFNumberGetValue(theNumberRef, kCFNumberFloat64Type, &theValue);
-					return ZVal_ZooLib(theValue);
-					}
+				int8 theValue;
+				::CFNumberGetValue(theNumberRef, kCFNumberSInt8Type, &theValue);
+				oVal = ZVal_ZooLib(theValue);
+				return true;
+				}
+			case kCFNumberSInt16Type:
+			case kCFNumberShortType:
+				{
+				int16 theValue;
+				::CFNumberGetValue(theNumberRef, kCFNumberSInt16Type, &theValue);
+				oVal = ZVal_ZooLib(theValue);
+				return true;
+				}
+			case kCFNumberSInt32Type:
+			case kCFNumberIntType:
+				{
+				int32 theValue;
+				::CFNumberGetValue(theNumberRef, kCFNumberSInt32Type, &theValue);
+				oVal = ZVal_ZooLib(theValue);
+				return true;
+				}
+			case kCFNumberSInt64Type:
+			case kCFNumberLongLongType:
+				{
+				int64 theValue;
+				::CFNumberGetValue(theNumberRef, kCFNumberSInt64Type, &theValue);
+				oVal = ZVal_ZooLib(theValue);
+				return true;
+				}
+			case kCFNumberFloat32Type:
+			case kCFNumberFloatType:
+				{
+				float theValue;
+				::CFNumberGetValue(theNumberRef, kCFNumberFloat32Type, &theValue);
+				oVal = ZVal_ZooLib(theValue);
+				return true;
+				}
+			case kCFNumberFloat64Type:
+			case kCFNumberDoubleType:
+				{
+				double theValue;
+				::CFNumberGetValue(theNumberRef, kCFNumberFloat64Type, &theValue);
+				oVal = ZVal_ZooLib(theValue);
+				return true;
 				}
 			}
 		}
 
+	return false;
+	}
+
+ZVal_ZooLib sAsVal_ZooLib(ZRef<CFTypeRef> iVal)
+	{
+	ZVal_ZooLib result;
+	if (sQAsVal_ZooLib(iVal, result))
+		return result;
 	return ZVal_ZooLib();
 	}
 
-static CFTypeRef sAsCFTypeRef(const ZVal_ZooLib& iVal)
+bool sQAsCFType(const ZVal_ZooLib& iVal, ZRef<CFTypeRef>& oVal)
 	{
 	switch (iVal.TypeOf())
 		{
+		case eZType_Null:
+			{
+			oVal.Clear();
+			return true;
+			}
 		case eZType_String:
 			{
-			return sString(iVal.GetString());
+			oVal = sString(iVal.GetString());
+			return true;
 			}
 		case eZType_Raw:
 			{
 			const ZValData_ZooLib& theData = iVal.GetData();
-			return ::CFDataCreate(kCFAllocatorDefault,
-				static_cast<const UInt8*>(theData.GetData()), theData.GetSize());
+			oVal = Adopt<CFTypeRef>(::CFDataCreate(kCFAllocatorDefault,
+				static_cast<const UInt8*>(theData.GetData()), theData.GetSize()));
+			return true;
 			}
 		case eZType_Bool:
 			{
 			if (iVal.GetBool())
-				return ::CFRetain(kCFBooleanTrue);
+				oVal = kCFBooleanTrue;
 			else
-				return ::CFRetain(kCFBooleanFalse);
+				oVal = kCFBooleanFalse;
+			return true;
 			}
 		case eZType_Time:
 			{
-			return ::CFDateCreate(kCFAllocatorDefault, iVal.GetTime().fVal - kCFAbsoluteTimeIntervalSince1970);
+			oVal = Adopt<CFTypeRef>(::CFDateCreate(kCFAllocatorDefault,
+				iVal.GetTime().fVal - kCFAbsoluteTimeIntervalSince1970));
+			return true;
 			}
 		case eZType_Int8:
 			{
 			const int8 theValue = iVal.GetInt8();
-			return ::CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt8Type, &theValue);
+			oVal = Adopt<CFTypeRef>(::CFNumberCreate(
+				kCFAllocatorDefault, kCFNumberSInt8Type, &theValue));
+			return true;
 			}
 		case eZType_Int16:
 			{
 			const int16 theValue = iVal.GetInt16();
-			return ::CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt16Type, &theValue);
+			oVal = Adopt<CFTypeRef>(::CFNumberCreate(
+				kCFAllocatorDefault, kCFNumberSInt16Type, &theValue));
+			return true;
 			}
 		case eZType_Int32:
 			{
 			const int32 theValue = iVal.GetInt32();
-			return ::CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type, &theValue);
+			oVal = Adopt<CFTypeRef>(::CFNumberCreate(
+				kCFAllocatorDefault, kCFNumberSInt32Type, &theValue));
+			return true;
 			}
 		case eZType_Int64:
 			{
 			const int64 theValue = iVal.GetInt64();
-			return ::CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt64Type, &theValue);
+			oVal = Adopt<CFTypeRef>(::CFNumberCreate(
+				kCFAllocatorDefault, kCFNumberSInt64Type, &theValue));
+			return true;
 			}
 		case eZType_Float:
 			{
 			const float theValue = iVal.GetFloat();
-			return ::CFNumberCreate(kCFAllocatorDefault, kCFNumberFloatType, &theValue);
+			oVal = Adopt<CFTypeRef>(::CFNumberCreate(
+				kCFAllocatorDefault, kCFNumberFloatType, &theValue));
+			return true;
 			}
 		case eZType_Double:
 			{
 			const double theValue = iVal.GetDouble();
-			return ::CFNumberCreate(kCFAllocatorDefault, kCFNumberDoubleType, &theValue);
+			oVal = Adopt<CFTypeRef>(::CFNumberCreate(
+				kCFAllocatorDefault, kCFNumberDoubleType, &theValue));
+			return true;
 			}
 		}
-	return nullptr;
+	return false;
 	}
 
 ZRef<CFTypeRef> sAsCFType(const ZVal_ZooLib& iVal)
 	{
-	if (CFTypeRef theTypeRef = sAsCFTypeRef(iVal))
-		return NoRetain(theTypeRef);
+	ZRef<CFTypeRef> result;
+	if (sQAsCFType(iVal, result))
+		return result;
+
 	return ZRef<CFTypeRef>();
 	}
 

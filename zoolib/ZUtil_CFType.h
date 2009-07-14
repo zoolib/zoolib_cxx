@@ -72,7 +72,10 @@ ZRef<CFMutableDataRef> sDataMutable(size_t iSize);
 ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData);
 
 
+bool sQAsVal_ZooLib(ZRef<CFTypeRef> iVal, ZVal_ZooLib& oVal);
 ZVal_ZooLib sAsVal_ZooLib(ZRef<CFTypeRef> iVal);
+
+bool sQAsCFType(const ZVal_ZooLib& iVal, ZRef<CFTypeRef>& oVal);
 ZRef<CFTypeRef> sAsCFType(const ZVal_ZooLib& iVal);
 
 } // namespace ZUtil_CFType

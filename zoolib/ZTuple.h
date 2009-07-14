@@ -73,6 +73,11 @@ public:
 	ZValMap_ZooLib& SetNull(const ZTName& iPropName);
 	std::vector<ZVal_ZooLib>& SetMutableVector(const ZTName& iPropName);
 
+	typedef Index_t const_iterator;
+
+	const_iterator IteratorOf(const char* iPropName) const;
+	const_iterator IteratorOf(const ZTName& iPropName) const;
+
 // Typename accessors
 	ZMACRO_ZValMapAccessors_Decl(ZValMap_ZooLib, const char*)
 	ZMACRO_ZValMapAccessors_Decl(ZValMap_ZooLib, const ZTName&)

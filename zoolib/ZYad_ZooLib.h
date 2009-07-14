@@ -126,7 +126,7 @@ class ZYadMapRPos_ZooLib
 	{
 public:
 	ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap);
-	ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap, const ZValMap_ZooLib::const_iterator& iIter);
+	ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap, const ZValMap_ZooLib::Index_t& iIndex);
 
 // From ZYadR via ZYadMapRPos
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);
@@ -140,7 +140,7 @@ public:
 
 private:
 	const ZValMap_ZooLib fMap;
-	ZValMap_ZooLib::const_iterator fIter;
+	ZValMap_ZooLib::Index_t fIndex;
 	};
 
 // =================================================================================================

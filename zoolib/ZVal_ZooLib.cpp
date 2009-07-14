@@ -1775,9 +1775,9 @@ void ZValMap_ZooLib::Clear()
 	{ fRep.Clear(); }
 
 
-bool ZValMap_ZooLib::QGet(const_iterator iPropIter, ZVal_ZooLib& oVal) const
+bool ZValMap_ZooLib::QGet(Index_t iIndex, ZVal_ZooLib& oVal) const
 	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropIter))
+	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iIndex))
 		{
 		oVal = *theValue;
 		return true;
@@ -1805,9 +1805,9 @@ bool ZValMap_ZooLib::QGet(const ZTName& iPropName, ZVal_ZooLib& oVal) const
 	return false;
 	}
 
-ZVal_ZooLib ZValMap_ZooLib::DGet(const_iterator iPropIter, const ZVal_ZooLib& iDefault) const
+ZVal_ZooLib ZValMap_ZooLib::DGet(Index_t iIndex, const ZVal_ZooLib& iDefault) const
 	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropIter))
+	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iIndex))
 		return *theValue;
 	return iDefault;
 	}
@@ -1826,9 +1826,9 @@ ZVal_ZooLib ZValMap_ZooLib::DGet(const ZTName& iPropName, const ZVal_ZooLib& iDe
 	return iDefault;
 	}
 
-ZVal_ZooLib ZValMap_ZooLib::Get(const_iterator iPropIter) const
+ZVal_ZooLib ZValMap_ZooLib::Get(Index_t iIndex) const
 	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropIter))
+	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iIndex))
 		return *theValue;
 	return sNilVal;
 	}
@@ -1847,9 +1847,9 @@ ZVal_ZooLib ZValMap_ZooLib::Get(const ZTName& iPropName) const
 	return sNilVal;
 	}
 
-const ZVal_ZooLib& ZValMap_ZooLib::RGet(const_iterator iPropIter) const
+const ZVal_ZooLib& ZValMap_ZooLib::RGet(Index_t iIndex) const
 	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropIter))
+	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iIndex))
 		return *theValue;
 	return sNilVal;
 	}
@@ -1868,8 +1868,8 @@ const ZVal_ZooLib& ZValMap_ZooLib::RGet(const ZTName& iPropName) const
 	return sNilVal;
 	}
 
-void ZValMap_ZooLib::Set(const_iterator iPropIter, const ZVal_ZooLib& iVal)
-	{ this->pSet(iPropIter, iVal); }
+void ZValMap_ZooLib::Set(Index_t iIndex, const ZVal_ZooLib& iVal)
+	{ this->pSet(iIndex, iVal); }
 
 void ZValMap_ZooLib::Set(const char* iPropName, const ZVal_ZooLib& iVal)
 	{ this->pSet(iPropName, iVal); }
@@ -1877,22 +1877,22 @@ void ZValMap_ZooLib::Set(const char* iPropName, const ZVal_ZooLib& iVal)
 void ZValMap_ZooLib::Set(const ZTName& iPropName, const ZVal_ZooLib& iVal)
 	{ this->pSet(iPropName, iVal); }
 
-void ZValMap_ZooLib::Erase(const_iterator iPropIter)
+void ZValMap_ZooLib::Erase(Index_t iIndex)
 	{
 	if (fRep)
-		this->pErase(iPropIter);
+		this->pErase(iIndex);
 	}
 
 void ZValMap_ZooLib::Erase(const char* iPropName)
 	{
 	if (fRep)
-		this->pErase(this->IteratorOf(iPropName));
+		this->pErase(this->IndexOf(iPropName));
 	}
 
 void ZValMap_ZooLib::Erase(const ZTName& iPropName)
 	{
 	if (fRep)
-		this->pErase(this->IteratorOf(iPropName));
+		this->pErase(this->IndexOf(iPropName));
 	}
 
 int ZValMap_ZooLib::Compare(const ZValMap_ZooLib& iOther) const
@@ -1987,11 +1987,11 @@ bool ZValMap_ZooLib::operator==(const ZValMap_ZooLib& iOther) const
 bool ZValMap_ZooLib::operator<(const ZValMap_ZooLib& iOther) const
 	{ return this->Compare(iOther) < 0; }
 
-ZVal_ZooLib& ZValMap_ZooLib::Mutable(const_iterator iPropIter)
+ZVal_ZooLib& ZValMap_ZooLib::Mutable(Index_t iIndex)
 	{
-	ZAssert(fRep && iPropIter != fRep->fProperties.end());
-	iPropIter = this->pTouch(iPropIter);
-	return (*iPropIter).fVal;
+	ZAssert(fRep && iIndex != fRep->fProperties.end());
+	iIndex = this->pTouch(iIndex);
+	return (*iIndex).fVal;
 	}
 
 ZVal_ZooLib& ZValMap_ZooLib::Mutable(const char* iPropName)
@@ -2006,14 +2006,14 @@ ZVal_ZooLib& ZValMap_ZooLib::Mutable(const ZTName& iPropName)
 	return *this->pFindOrAllocate(iPropName);
 	}
 
-ZValMap_ZooLib::const_iterator ZValMap_ZooLib::begin() const
+ZValMap_ZooLib::Index_t ZValMap_ZooLib::begin() const
 	{
 	if (fRep)
 		return fRep->fProperties.begin();
 	return sEmptyProperties.end();
 	}
 
-ZValMap_ZooLib::const_iterator ZValMap_ZooLib::end() const
+ZValMap_ZooLib::Index_t ZValMap_ZooLib::end() const
 	{
 	if (fRep)
 		return fRep->fProperties.end();
@@ -2030,20 +2030,20 @@ size_t ZValMap_ZooLib::Count() const
 	return 0;
 	}
 
-const ZTName& ZValMap_ZooLib::NameOf(const_iterator iPropIter) const
+const ZTName& ZValMap_ZooLib::NameOf(Index_t iIndex) const
 	{
-	if (fRep && iPropIter != fRep->fProperties.end())
-		return (*iPropIter).fName;
+	if (fRep && iIndex != fRep->fProperties.end())
+		return (*iIndex).fName;
 	return sNilName;
 	}
 
-ZValMap_ZooLib::const_iterator ZValMap_ZooLib::IteratorOf(const char* iPropName) const
+ZValMap_ZooLib::Index_t ZValMap_ZooLib::IndexOf(const char* iPropName) const
 	{
 	if (fRep)
 		{
 		size_t propNameLength = strlen(iPropName);
-		const_iterator end = fRep->fProperties.end();
-		for (const_iterator i = fRep->fProperties.begin(); i != end; ++i)
+		Index_t end = fRep->fProperties.end();
+		for (Index_t i = fRep->fProperties.begin(); i != end; ++i)
 			{
 			if ((*i).fName.Equals(iPropName, propNameLength))
 				return i;
@@ -2053,12 +2053,12 @@ ZValMap_ZooLib::const_iterator ZValMap_ZooLib::IteratorOf(const char* iPropName)
 	return sEmptyProperties.end();
 	}
 
-ZValMap_ZooLib::const_iterator ZValMap_ZooLib::IteratorOf(const ZTName& iPropName) const
+ZValMap_ZooLib::Index_t ZValMap_ZooLib::IndexOf(const ZTName& iPropName) const
 	{
 	if (fRep)
 		{
-		const_iterator end = fRep->fProperties.end();
-		for (const_iterator i = fRep->fProperties.begin(); i != end; ++i)
+		Index_t end = fRep->fProperties.end();
+		for (Index_t i = fRep->fProperties.begin(); i != end; ++i)
 			{
 			if ((*i).fName.Equals(iPropName))
 				return i;
@@ -2093,12 +2093,12 @@ void ZValMap_ZooLib::ToStream(const ZStreamW& iStreamW) const
 #pragma mark -
 #pragma mark * ZValMap_ZooLib internal implementation
 
-void ZValMap_ZooLib::pSet(const_iterator iPropIter, const ZVal_ZooLib& iVal)
+void ZValMap_ZooLib::pSet(Index_t iIndex, const ZVal_ZooLib& iVal)
 	{
-	if (fRep && iPropIter != fRep->fProperties.end())
+	if (fRep && iIndex != fRep->fProperties.end())
 		{
-		iPropIter = this->pTouch(iPropIter);
-		(*iPropIter).fVal = iVal;
+		iIndex = this->pTouch(iIndex);
+		(*iIndex).fVal = iVal;
 		}
 	}
 
@@ -2145,10 +2145,10 @@ ZVal_ZooLib* ZValMap_ZooLib::pFindOrAllocate(const ZTName& iPropName)
 	return &fRep->fProperties.back().fVal;
 	}
 
-const ZVal_ZooLib* ZValMap_ZooLib::pLookupAddressConst(const_iterator iPropIter) const
+const ZVal_ZooLib* ZValMap_ZooLib::pLookupAddressConst(Index_t iIndex) const
 	{
-	if (fRep && iPropIter != fRep->fProperties.end())
-		return &(*iPropIter).fVal;
+	if (fRep && iIndex != fRep->fProperties.end())
+		return &(*iIndex).fVal;
 	return nullptr;
 	}
 
@@ -2183,14 +2183,14 @@ const ZVal_ZooLib* ZValMap_ZooLib::pLookupAddressConst(const ZTName& iPropName) 
 	return nullptr;
 	}
 
-void ZValMap_ZooLib::pErase(const_iterator iPropIter)
+void ZValMap_ZooLib::pErase(Index_t iIndex)
 	{
-	if (iPropIter == fRep->fProperties.end())
+	if (iIndex == fRep->fProperties.end())
 		return;
 
 	if (fRep->GetRefCount() == 1)
 		{
-		fRep->fProperties.erase(iPropIter);
+		fRep->fProperties.erase(iIndex);
 		}
 	else
 		{
@@ -2198,8 +2198,8 @@ void ZValMap_ZooLib::pErase(const_iterator iPropIter)
 		fRep = new Rep;
 
 		fRep->fProperties.reserve(oldRep->fProperties.size() - 1);
-		copy(oldRep->fProperties.begin(), iPropIter, back_inserter(fRep->fProperties));
-		copy(++iPropIter, oldRep->fProperties.end(), back_inserter(fRep->fProperties));
+		copy(oldRep->fProperties.begin(), iIndex, back_inserter(fRep->fProperties));
+		copy(++iIndex, oldRep->fProperties.end(), back_inserter(fRep->fProperties));
 		}
 	}
 
@@ -2216,14 +2216,14 @@ void ZValMap_ZooLib::pTouch()
 		}
 	}
 
-ZValMap_ZooLib::const_iterator ZValMap_ZooLib::pTouch(const_iterator iPropIter)
+ZValMap_ZooLib::Index_t ZValMap_ZooLib::pTouch(Index_t iIndex)
 	{
 	ZAssertStop(kDebug_Tuple, fRep);
 
 	if (fRep->GetRefCount() == 1)
-		return iPropIter;
+		return iIndex;
 
-	size_t index = iPropIter - fRep->fProperties.begin();
+	size_t index = iIndex - fRep->fProperties.begin();
 	fRep = new Rep(fRep->fProperties);
 	return fRep->fProperties.begin() + index;
 	}

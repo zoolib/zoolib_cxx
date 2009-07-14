@@ -167,7 +167,7 @@ class ZValMap_AppleEvent
 		operator_bool_generator_type, operator_bool_type);
 
 public:
-	typedef ZValMapIterator_T<ZValMap_AppleEvent> const_iterator;
+	typedef ZValMapIndex_T<ZValMap_AppleEvent> Index_t;
 
 	operator operator_bool_type() const;
 
@@ -186,23 +186,23 @@ public:
 
 	bool QGet(AEKeyword iName, ZVal_AppleEvent& oVal) const;
 	bool QGet(const std::string& iName, ZVal_AppleEvent& oVal) const;
-	bool QGet(const_iterator iPropIter, ZVal_AppleEvent& oVal) const;
+	bool QGet(Index_t iPropIter, ZVal_AppleEvent& oVal) const;
 
 	ZVal_AppleEvent DGet(AEKeyword iName, const ZVal_AppleEvent& iDefault) const;
 	ZVal_AppleEvent DGet(const std::string& iName, const ZVal_AppleEvent& iDefault) const;
-	ZVal_AppleEvent DGet(const_iterator iPropIter, const ZVal_AppleEvent& iDefault) const;
+	ZVal_AppleEvent DGet(Index_t iIndex, const ZVal_AppleEvent& iDefault) const;
 
 	ZVal_AppleEvent Get(AEKeyword iName) const;
 	ZVal_AppleEvent Get(const std::string& iName) const;
-	ZVal_AppleEvent Get(const_iterator iPropIter) const;
+	ZVal_AppleEvent Get(Index_t iIndex) const;
 
 	void Set(AEKeyword iName, const AEDesc& iVal);
 	void Set(const std::string& iName, const AEDesc& iVal);
-	void Set(const_iterator iPropIter, const AEDesc& iVal);
+	void Set(Index_t iIndex, const AEDesc& iVal);
 
 	void Erase(AEKeyword iName);
 	void Erase(const std::string& iName);
-	void Erase(const_iterator iPropIter);
+	void Erase(Index_t iIndex);
 
 // Our protocol
 	AERecord& OParam();
@@ -212,11 +212,11 @@ public:
 	ZVal_AppleEvent GetAttr(AEKeyword iName) const;
 	void SetAttr(AEKeyword iName, const AEDesc& iVal);
 
-	const_iterator begin();
-	const_iterator end();
+	Index_t begin() const;
+	Index_t end() const;
 
-	AEKeyword KeyOf(const_iterator iPropIter) const;
-	std::string NameOf(const_iterator iPropIter) const;
+	AEKeyword KeyOf(Index_t iIndex) const;
+	std::string NameOf(Index_t iIndex) const;
 	};
 
 NAMESPACE_ZOOLIB_END
