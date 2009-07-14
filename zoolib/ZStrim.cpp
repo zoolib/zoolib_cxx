@@ -1147,7 +1147,8 @@ void ZStrimW::pWritev(size_t& oWritten, const UTF8* iString, va_list iArgs) cons
 		else
 			{
 			// The string fitted, we can now write it out.
-			buffer.resize(count);
+			if (count)
+				this->Write(buffer.data(), count, nullptr);
 			oWritten = count;
 			break;
 			}
