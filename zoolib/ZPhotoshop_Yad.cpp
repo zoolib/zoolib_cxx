@@ -29,6 +29,10 @@ namespace ZPhotoshop {
 
 using std::string;
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Helper functions
+
 bool sAppendIfASCII(char iChar, string& ioString)
 	{
 	if (iChar < 32 || iChar > 126)
@@ -113,12 +117,13 @@ static bool sAsVal_ZooLib(const Val& iVal, ZVal_ZooLib& oVal)
 		return true;
 		}
 
-	PSAlias asAlias;
-	if (iVal.QGetAlias(asAlias))
+	FileRef asFileRef;
+	if (iVal.QGetFileRef(asFileRef))
 		{
 		ZValMap_ZooLib theMap;
-		theMap.Set("!Type", "Alias");
-		theMap.Set("Path", asAlias.AsString());
+		theMap.Set("!Type", "FileRef");
+		theMap.Set("PathPOSIX", asFileRef.AsPathPOSIX());
+		theMap.Set("PathNative", asFileRef.AsPathNative());
 		oVal = theMap;
 		return true;
 		}

@@ -34,6 +34,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
+#if ZCONFIG(Compiler, MSVC)
+	#define strdup _strdup
+#endif
+
 using std::set;
 using std::string;
 using std::vector;

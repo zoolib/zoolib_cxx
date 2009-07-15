@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZFile.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal.h"
@@ -67,6 +68,9 @@ bool sAsRuntimeTypeID(const string8& iString, TypeID& oTypeID);
 
 bool sFromRuntimeTypeID(TypeID iTypeID, string8& oString);
 
+string8 sWinToPOSIX(const string8& iWin);
+string8 sPOSIXToWin(const string8& iPOSIX);
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * UnitFloat
@@ -78,6 +82,9 @@ struct UnitFloat
 	:	fUnitID(iUnitID),
 		fValue(iValue)
 		{}
+
+	UnitID GetUnitID() const { return fUnitID; }
+	double GetValue() const { return fValue; }
 
 	UnitID fUnitID;
 	double fValue;
@@ -111,33 +118,33 @@ struct Enumerated
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * PSAlias
+#pragma mark * FileRef
 
-class PSAlias
+class FileRef
 	{
 public:
-	PSAlias();
-	PSAlias(const PSAlias& iOther);
+	FileRef();
+	FileRef(const FileRef& iOther);
+	~FileRef();
+	FileRef& operator=(const FileRef& iOther);
 
-	~PSAlias();
-	
-	PSAlias& operator=(const PSAlias& iOther);
+	FileRef(Handle iHandle);
+	FileRef(Adopt_T<Handle> iHandle);
 
-	PSAlias(Handle iHandle);
-	PSAlias(Adopt_t<Handle> iHandle);
+	FileRef& operator=(Handle iHandle);
+	FileRef& operator=(Adopt_T<Handle> iHandle);
 
-	PSAlias& operator=(Handle iHandle);
-	PSAlias& operator=(Adopt_t<Handle> iHandle);
+	FileRef(const string8& iPathPOSIX);
 
 	Handle Get() const;
 	Handle Orphan();
 	Handle& OParam();
 
-	size_t Size() const;
-
-	string8 AsString() const;
+	string8 AsPathPOSIX() const;
+	string8 AsPathNative() const;
 
 private:
+	string8 pAsString() const;
 	Handle fHandle;
 	};
 
@@ -176,10 +183,10 @@ public:
 	Spec(const Entry& iEntry);
 
 	Spec(PIActionReference iOther);
-	Spec(Adopt_t<PIActionReference> iOther);
+	Spec(Adopt_T<PIActionReference> iOther);
 
 	Spec& operator=(PIActionReference iOther);
-	Spec& operator=(Adopt_t<PIActionReference> iOther);
+	Spec& operator=(Adopt_T<PIActionReference> iOther);
 
 	Spec operator+(const Spec& iOther);
 	Spec& operator+=(const Spec& iOther);
@@ -256,7 +263,7 @@ public:
 	Val(const Data& iVal);
 	Val(UnitFloat iVal);
 	Val(Enumerated iVal);
-	Val(const PSAlias& iVal);
+	Val(const FileRef& iVal);
 	Val(const List& iVal);
 	Val(const Map& iVal);
 	Val(const Spec& iVal);
@@ -278,7 +285,7 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Data, Data)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, UnitFloat, UnitFloat)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Enumerated, Enumerated)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, Alias, PSAlias)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, FileRef, FileRef)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, List, List)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Map, Map)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Spec, Spec)
@@ -329,10 +336,10 @@ public:
 	List& operator=(const List& iOther);
 
 	List(PIActionList iOther);
-	List(Adopt_t<PIActionList> iOther);
+	List(Adopt_T<PIActionList> iOther);
 
 	List& operator=(PIActionList iOther);
-	List& operator=(Adopt_t<PIActionList> iOther);
+	List& operator=(Adopt_T<PIActionList> iOther);
 
 // ZValList protocol
 	size_t Count() const;
@@ -375,8 +382,8 @@ public:
 	Map(KeyID iType, PIActionDescriptor iOther);
 	Map(const string8& iType, PIActionDescriptor iOther);
 
-	Map(KeyID iType, Adopt_t<PIActionDescriptor> iOther);
-	Map(const string8& iType, Adopt_t<PIActionDescriptor> iOther);
+	Map(KeyID iType, Adopt_T<PIActionDescriptor> iOther);
+	Map(const string8& iType, Adopt_T<PIActionDescriptor> iOther);
 
 // ZValMap protocol
 	void Clear();

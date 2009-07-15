@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
+#include "zoolib/ZTrail.h"
 #include "zoolib/ZUnicode.h"
 
 #include "ASZStringSuite.h"
@@ -33,6 +34,33 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZPhotoshop suites
+
+static AutoSuite<PSActionDescriptorProcs>
+	sPSActionDescriptor(kPSActionDescriptorSuite, kPSActionDescriptorSuiteVersion);
+
+static AutoSuite<PSActionControlProcs>
+	sPSActionControl(kPSActionControlSuite, kPSActionControlSuitePrevVersion);
+
+static AutoSuite<PSActionReferenceProcs>
+	sPSActionReference(kPSActionReferenceSuite, kPSActionReferenceSuiteVersion);
+
+static AutoSuite<PSActionListProcs>
+	sPSActionList(kPSActionListSuite, kPSActionListSuiteVersion);
+
+#ifdef kPSAliasSuite
+	static AutoSuite<PSAliasSuite>
+		sPSAlias(kPSAliasSuite, kPSAliasSuiteVersion1);
+#endif
+
+static AutoSuite<ASZStringSuite>
+	sASZString(kASZStringSuite, kASZStringSuiteVersion1);
+
+static AutoSuite<PSHandleSuite2>
+	sPSHandle(kPSHandleSuite, kPSHandleSuiteVersion2);
 
 // =================================================================================================
 #pragma mark -
@@ -54,27 +82,9 @@ void sRelease_T(ASZByteRun* iString)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZPhotoshop suites
+#pragma mark * ZPhotoshop
 
 namespace ZPhotoshop {
-
-static AutoSuite<PSActionDescriptorProcs>
-	sPSActionDescriptor(kPSActionDescriptorSuite, kPSActionDescriptorSuiteVersion);
-
-static AutoSuite<PSActionControlProcs>
-	sPSActionControl(kPSActionControlSuite, kPSActionControlSuitePrevVersion);
-
-static AutoSuite<PSActionReferenceProcs>
-	sPSActionReference(kPSActionReferenceSuite, kPSActionReferenceSuiteVersion);
-
-static AutoSuite<PSActionListProcs>
-	sPSActionList(kPSActionListSuite, kPSActionListSuiteVersion);
-
-static AutoSuite<ASZStringSuite>
-	sASZString(kASZStringSuite, kASZStringSuiteVersion1);
-
-static AutoSuite<PSHandleSuite2>
-	sPSHandle(kPSHandleSuite, kPSHandleSuiteVersion2);
 
 // =================================================================================================
 #pragma mark -
@@ -161,6 +171,32 @@ static KeyID sAsKeyID(const string8& iName)
 static string8 sAsString(KeyID iKeyID)
 	{ return sFromRuntimeTypeID(iKeyID); }
 
+string8 sWinToPOSIX(const string8& iWin)
+	{
+	ZTrail theTrail("\\", "", "", iWin);
+	string8 result;
+	if (theTrail.Count() > 0)
+		{
+		result += "/" + theTrail.At(0).substr(0, 1) + "/";
+		if (theTrail.Count() > 1)
+			result += theTrail.SubTrail(1).AsString();
+		}
+	return result;
+	}
+
+string8 sPOSIXToWin(const string8& iPOSIX)
+	{
+	ZTrail theTrail = iPOSIX;
+	string8 result;
+	if (theTrail.Count() > 0)
+		{
+		result = theTrail.At(0) + ":\\";
+		if (theTrail.Count() > 1)
+			result += theTrail.SubTrail(1).AsString("\\", "");
+		}
+	return result;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Public utilities
@@ -204,7 +240,7 @@ Enumerated::Enumerated(const string8& iEnumType, const string8& iValue)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * PSAlias
+#pragma mark * FileRef
 
 static Handle sHandleDuplicate(Handle iHandle)
 	{
@@ -223,18 +259,18 @@ static void sHandleDispose(Handle iHandle)
 		sPSHandle->Dispose(iHandle);
 	}
 
-PSAlias::PSAlias()
+FileRef::FileRef()
 :	fHandle(nullptr)
 	{}
 
-PSAlias::PSAlias(const PSAlias& iOther)
+FileRef::FileRef(const FileRef& iOther)
 :	fHandle(sHandleDuplicate(iOther.fHandle))
 	{}
 
-PSAlias::~PSAlias()
+FileRef::~FileRef()
 	{ sHandleDispose(fHandle); }
 
-PSAlias& PSAlias::operator=(const PSAlias& iOther)
+FileRef& FileRef::operator=(const FileRef& iOther)
 	{
 	if (this != &iOther)
 		{
@@ -244,53 +280,94 @@ PSAlias& PSAlias::operator=(const PSAlias& iOther)
 	return *this;
 	}
 
-PSAlias::PSAlias(Handle iHandle)
+FileRef::FileRef(Handle iHandle)
 :	fHandle(sHandleDuplicate(iHandle))
 	{}
 
-PSAlias::PSAlias(Adopt_t<Handle> iOther)
+FileRef::FileRef(Adopt_T<Handle> iOther)
 :	fHandle(iOther.Get())
 	{}
 
-PSAlias& PSAlias::operator=(Handle iHandle)
+FileRef& FileRef::operator=(Handle iHandle)
 	{
 	sHandleDispose(fHandle);
 	fHandle = sHandleDuplicate(iHandle);
 	return *this;
 	}
 
-PSAlias& PSAlias::operator=(Adopt_t<Handle> iOther)
+FileRef& FileRef::operator=(Adopt_T<Handle> iOther)
 	{
 	sHandleDispose(fHandle);
 	fHandle = iOther.Get();
 	return *this;
 	}
 
-Handle PSAlias::Get() const
+FileRef::FileRef(const string8& iPathPOSIX)
+:	fHandle(nullptr)
+	{
+	#ifndef kPSAliasSuite
+		// We didn't pick up kPSAliasSuite from the include of PIUSuites.h,
+		// so we must be on the old SDK.
+		
+		FSRef theFSRef;
+		Boolean isDir;
+		if (noErr == ::FSPathMakeRef((const UInt8*)iPathPOSIX.c_str(), &theFSRef, &isDir))
+			::FSNewAliasMinimal(&theFSRef, (AliasHandle*)&fHandle);
+		
+	#else
+		#ifdef __PIMac__
+
+			sPSAlias->MacNewAliasFromCString(iPathPOSIX.c_str(), (AliasHandle*)&fHandle);
+
+		#elif defined(__PIWin__)
+
+			string16 asWin = ZUnicode::sAsUTF16(sPOSIXToWin(iPathPOSIX));
+			
+			sPSAlias->WinNewAliasFromWidePath((uint16*)asWin.c_str(), &fHandle);		
+
+		#else
+
+			#error Unsupported platform
+
+		#endif
+	#endif
+	}
+
+Handle FileRef::Get() const
 	{ return fHandle; }
 
-Handle PSAlias::Orphan()
+Handle FileRef::Orphan()
 	{
 	Handle result = fHandle;
 	fHandle = 0;
 	return result;
 	}
 
-Handle& PSAlias::OParam()
+Handle& FileRef::OParam()
 	{
 	sHandleDispose(fHandle);
 	fHandle = nullptr;
 	return fHandle;
 	}
 
-string8 PSAlias::AsString() const
+string8 FileRef::AsPathPOSIX() const
 	{
-	// PIUFile.h causes compilation problems when using VC++. They could probably be fixed
-	// by #including zoolib/ZWinHeader.h. That said, it's cleaner to just do the work here.
-	// If PS ever updates their alias handle stuff we'll need to fix this code.
+	string8 thePath = this->pAsString();
 
-	string8 result;
+	#if defined(__PIWin__)
+		thePath = sWinToPOSIX(thePath);
+	#endif
 
+	return thePath;
+	}
+
+string8 FileRef::AsPathNative() const
+	{
+	return this->pAsString();
+	}
+
+string8 FileRef::pAsString()  const
+	{
 	#ifdef __PIMac__
 
 		FSRef theFSRef;
@@ -298,8 +375,8 @@ string8 PSAlias::AsString() const
 		if (noErr == ::FSResolveAlias(nullptr, (AliasHandle)fHandle, &theFSRef, &wasChanged))
 			{
 			char pathBuf[1024];
-			if (noErr == ::FSRefMakePath(&theFSRef, (unsigned char*)pathBuf, sizeof(pathBuf)))
-				result = pathBuf;
+			if (noErr == ::FSRefMakePath(&theFSRef, (UInt8*)pathBuf, sizeof(pathBuf)))
+				return pathBuf;
 			}
 
 	#elif defined(__PIWin__)
@@ -309,17 +386,22 @@ string8 PSAlias::AsString() const
 			Ptr pointer;
 			Boolean oldLock;
 			sPSHandle->SetLock(fHandle, true, &pointer, &oldLock);
+
+			string8 result;
 			if (pointer)
 				result = (char*)pointer;
+
 			sPSHandle->SetLock(fHandle, oldLock, &pointer, &oldLock);
+			return result;
 			}
+	
 	#else
 
 		#error Unsupported platform
 
 	#endif
 
-	return result;
+	return string8();
 	}
 
 // =================================================================================================
@@ -550,7 +632,7 @@ Spec::Spec(const Entry& iEntry)
 Spec::Spec(PIActionReference iOther)
 	{ spConvert(iOther, fEntries); }
 
-Spec::Spec(Adopt_t<PIActionReference> iOther)
+Spec::Spec(Adopt_T<PIActionReference> iOther)
 	{ spConvert(iOther.Get(), fEntries); }
 
 Spec& Spec::operator=(PIActionReference iOther)
@@ -561,7 +643,7 @@ Spec& Spec::operator=(PIActionReference iOther)
 	return *this;
 	}
 
-Spec& Spec::operator=(Adopt_t<PIActionReference> iOther)
+Spec& Spec::operator=(Adopt_T<PIActionReference> iOther)
 	{
 	vector<Entry> newEntries;
 	spConvert(iOther.Get(), newEntries);
@@ -732,15 +814,16 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 						}
 					else
 						{
-						string8 theName(0, theLength);
+						string8 theName(0, theLength + 1);
 						if (noErr != sPSActionReference->GetName(iRef,
-							const_cast<char*>(theName.data()), theLength))
+							const_cast<char*>(theName.data()), theLength + 1))
 							{
 							allOK = false;
 							}
 						else
 							{
-							oEntries.push_back(Entry::sName(theClassID, theName));
+							oEntries.push_back(
+								Entry::sName(theClassID, theName.substr(0, theLength)));
 							}
 						}
 				#endif
@@ -858,9 +941,9 @@ Val::Val(Enumerated iVal)
 	fType = typeEnumerated;
 	}
 
-Val::Val(const PSAlias& iPSAlias)
+Val::Val(const FileRef& iFileRef)
 	{
-	sConstruct_T(fData.fBytes, iPSAlias);
+	sConstruct_T(fData.fBytes, iFileRef);
 	fType = typePlatformFilePath;
 	}
 
@@ -966,11 +1049,11 @@ bool Val::QGet_T<Enumerated>(Enumerated& oVal) const
 	}
 
 template <>
-bool Val::QGet_T<PSAlias>(PSAlias& oVal) const
+bool Val::QGet_T<FileRef>(FileRef& oVal) const
 	{
 	if (typePath == fType || typeAlias == fType)
 		{
-		oVal = *sFetch_T<PSAlias>(fData.fBytes);
+		oVal = *sFetch_T<FileRef>(fData.fBytes);
 		return true;
 		}
 	return false;
@@ -1066,7 +1149,7 @@ void Val::Set_T<Enumerated>(const Enumerated& iVal)
 	}
 
 template <>
-void Val::Set_T<PSAlias>(const PSAlias& iVal)
+void Val::Set_T<FileRef>(const FileRef& iVal)
 	{
 	this->pRelease();
 	sConstruct_T(fData.fBytes, iVal);
@@ -1116,7 +1199,7 @@ void Val::pRelease()
 		case typePath:
 		case typeAlias:
 			{
-			sDestroy_T<PSAlias>(fData.fBytes);
+			sDestroy_T<FileRef>(fData.fBytes);
 			break;
 			}
 		case typeObject:
@@ -1186,7 +1269,7 @@ void Val::pCopy(const Val& iOther)
 		case typePath:
 		case typeAlias:
 			{
-			sCopyConstruct_T<PSAlias>(iOther.fData.fBytes, fData.fBytes);
+			sCopyConstruct_T<FileRef>(iOther.fData.fBytes, fData.fBytes);
 			break;
 			}
 		case typeObject:
@@ -1220,7 +1303,7 @@ ZMACRO_ZValAccessors_Def_Entry(Val, String, string8)
 ZMACRO_ZValAccessors_Def_Entry(Val, Data, ZValData_ZooLib)
 ZMACRO_ZValAccessors_Def_Entry(Val, UnitFloat, UnitFloat)
 ZMACRO_ZValAccessors_Def_Entry(Val, Enumerated, Enumerated)
-ZMACRO_ZValAccessors_Def_Entry(Val, Alias, PSAlias)
+ZMACRO_ZValAccessors_Def_Entry(Val, FileRef, FileRef)
 ZMACRO_ZValAccessors_Def_Entry(Val, List, List)
 ZMACRO_ZValAccessors_Def_Entry(Val, Map, Map)
 ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
@@ -1292,7 +1375,7 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 		} \
 	/* global class? */ \
 	case typeAlias: \
-	case typePath: { PSAlias theVal; \
+	case typePath: { FileRef theVal; \
 		if (noErr == SUITE->GetAlias(PARAM, &theVal.OParam())) \
 			{ oVal = theVal; return true; } \
 		break; } \
@@ -1366,7 +1449,7 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 	case typePath: \
 		{ \
 		SUITE->PutAlias(PARAM, \
-			sFetch_T<PSAlias>(iVal.fData.fBytes)->Get()); \
+			sFetch_T<FileRef>(iVal.fData.fBytes)->Get()); \
 		return; \
 		} \
 	case typeRawData: \
@@ -1411,7 +1494,7 @@ List::List(PIActionList iOther)
 :	fAL(sDuplicate(iOther))
 	{}
 
-List::List(Adopt_t<PIActionList> iOther)
+List::List(Adopt_T<PIActionList> iOther)
 :	fAL(iOther.Get())
 	{}
 
@@ -1422,7 +1505,7 @@ List& List::operator=(PIActionList iOther)
 	return *this;
 	}
 
-List& List::operator=(Adopt_t<PIActionList> iOther)
+List& List::operator=(Adopt_T<PIActionList> iOther)
 	{
 	sPSActionList->Free(fAL);
 	fAL = iOther.Get();
@@ -1531,12 +1614,12 @@ Map::Map(const string8& iType, PIActionDescriptor iOther)
 ,	fAD(sDuplicate(iOther))
 	{}
 
-Map::Map(KeyID iType, Adopt_t<PIActionDescriptor> iOther)
+Map::Map(KeyID iType, Adopt_T<PIActionDescriptor> iOther)
 :	fType(iType),
 	fAD(iOther.Get())
 	{}
 
-Map::Map(const string8& iType, Adopt_t<PIActionDescriptor> iOther)
+Map::Map(const string8& iType, Adopt_T<PIActionDescriptor> iOther)
 :	fType(sAsKeyID(iType))
 ,	fAD(iOther.Get())
 	{}
