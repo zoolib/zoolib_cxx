@@ -443,6 +443,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		iStream.Flush();
 	else
 		this->Wake();
+	ZAssertCompile(false);
 	}
 
 void ZTBServer::Attached()
