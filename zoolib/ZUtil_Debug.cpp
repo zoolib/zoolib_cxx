@@ -245,7 +245,10 @@ ZLog::EPriority LogMeister::GetLogPriority()
 
 void sInstall()
 	{
-	static DebugFunction theDF;
+	if (!ZCONFIG_SPI_Enabled(Win))
+		{
+		static DebugFunction theDF;
+		}
 
 	ZLog::sSetLogMeister(new LogMeister);
 
