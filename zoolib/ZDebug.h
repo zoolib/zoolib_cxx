@@ -94,10 +94,10 @@ size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams)
 // ZAssertCompile can be used to enforce a constraint at compile time, (for example that a
 // struct obeys necessary alignment rules). It either drops out completely or generates an
 // error, depending on whether the expression evaulates true or false.
-template <bool> struct AC_T {};
-template<> struct AC_T<true> { typedef bool IsValid; };
+template <bool> struct AssertCompile {};
+template<> struct AssertCompile<true> { typedef bool IsValid; };
 
-#define ZAssertCompile(a) typedef ZooLib::ZDebug::AC_T<(a)>::IsValid ZAssertCompileValid
+#define ZAssertCompile(a) typedef ZooLib::ZDebug::AssertCompile<(a)>::IsValid ZAssertCompileValid
 
 // I'd like to formalize ZUnimplemented a little more sometime. Perhaps it should
 // throw an exception in production code.

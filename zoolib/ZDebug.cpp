@@ -204,7 +204,8 @@ static void sHandleDebug_Win(const Params_t& iParams, va_list iArgs)
 	{
 	char theBuf[4096];
 	size_t theLength = sFormatStandardMessage(theBuf, sizeof(theBuf), iParams);
-	::vsnprintf(theBuf + theLength, sizeof(theBuf) - theLength, iParams.fUserMessage, iArgs);
+	if (iParams.fUserMessage)
+		::vsnprintf(theBuf + theLength, sizeof(theBuf) - theLength, iParams.fUserMessage, iArgs);
 	if (iParams.fStop)
 		{
 		if (sIsDebuggerPresent())
