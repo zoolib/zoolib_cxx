@@ -85,11 +85,7 @@ class Make_FileLoc
 #pragma mark -
 #pragma mark * Shared implementation details
 
-#if ZCONFIG(Compiler, MSVC)
-	static const uint64 kInvalidPos = 0xFFFFFFFFFFFFFFFFui64;
-#else
-	static const uint64 kInvalidPos = 0xFFFFFFFFFFFFFFFFULL;
-#endif
+static const uint64 kInvalidPos = ZUINT64_C(0xFFFFFFFFFFFFFFFF);
 
 static uint64 sAsUInt64(uint32 iHigh, uint32 iLow)
 	{
