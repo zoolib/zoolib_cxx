@@ -1297,7 +1297,7 @@ const StrimW& StrimW::Attr(const string8& iName, const Val& iValue) const
 
 const StrimW& StrimW::Attrs(const ValMap& iMap) const
 	{
-	for (ValMap::const_iterator i = iMap.begin(); i != iMap.end(); ++i)
+	for (ValMap::Index_t i = iMap.begin(); i != iMap.end(); ++i)
 		this->Attr(iMap.NameOf(i).AsString(), iMap.Get(i));
 
 	return *this;
