@@ -148,17 +148,17 @@ uint8 (&byte_array_of_same_dimension_as(T(&)[N]))[N];
 // ==================================================
 
 template <class P>
-class Adopt_t
+class Adopt_T
 	{
 	P fP;
 public:
-	Adopt_t(P iP) : fP(iP) {}
+	Adopt_T(P iP) : fP(iP) {}
 	P Get() const { return fP; }
 	};
 
 template <class P>
-Adopt_t<P> Adopt(P iP)
-	{ return Adopt_t<P>(iP); }
+Adopt_T<P> Adopt(P iP)
+	{ return Adopt_T<P>(iP); }
 
 NAMESPACE_ZOOLIB_END
 

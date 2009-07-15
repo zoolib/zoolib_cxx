@@ -175,17 +175,8 @@ void sRefCopy(void* iDest, T* iP)
 #pragma mark * NoRetain wrapper
 
 template <class P>
-class NoRetain_t
-	{
-	P fP;
-public:
-	NoRetain_t(P iP) : fP(iP) {}
-	P Get() const { return fP; }
-	};
-
-template <class P>
-NoRetain_t<P> NoRetain(P iP)
-	{ return NoRetain_t<P>(iP); }
+Adopt_T<P> NoRetain(P iP)
+	{ return Adopt_T<P>(iP); }
 
 // =================================================================================================
 #pragma mark -
@@ -225,11 +216,7 @@ public:
 	:	fP(iP)
 		{ spRetain(fP); }
 	
-	ZRef(const NoRetain_t<T*>& iNRP)
-	:	fP(iNRP.Get())
-		{}
-
-	ZRef(const Adopt_t<T*>& iNRP)
+	ZRef(const Adopt_T<T*>& iNRP)
 	:	fP(iNRP.Get())
 		{}
 
@@ -241,15 +228,7 @@ public:
 		return *this;
 		}
 	
-	ZRef& operator=(const NoRetain_t<T*>& iNRP)
-		{
-		T* theP = iNRP.Get();
-		std::swap(theP, fP);
-		spRelease(theP);
-		return *this;
-		}
-
-	ZRef& operator=(const Adopt_t<T*>& iNRP)
+	ZRef& operator=(const Adopt_T<T*>& iNRP)
 		{
 		T* theP = iNRP.Get();
 		std::swap(theP, fP);

@@ -76,7 +76,7 @@ public:
 			::HandToHand((Handle*)fHandle);
 		}
 
-	ZHandle_T(Adopt_t<T> iOther)
+	ZHandle_T(Adopt_T<T> iOther)
 	:	fHandle(iOther)
 		{}
 
@@ -90,7 +90,7 @@ public:
 		return *this;
 		}
 
-	ZHandle_T& operator=(Adopt_t<T> iOther)
+	ZHandle_T& operator=(Adopt_T<T> iOther)
 		{
 		if (fHandle)
 			::DisposeHandle((Handle)fHandle);
