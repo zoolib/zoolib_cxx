@@ -443,6 +443,9 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		iStream.Flush();
 	else
 		this->Wake();
+
+	// We're not handling a disconnect, and so I don't know
+	// how to return an appropriate value here.
 	ZAssertCompile(false);
 	}
 
