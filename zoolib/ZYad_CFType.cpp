@@ -69,10 +69,7 @@ public:
 		{
 		ZVal_ZooLib theVal;
 		if (ZFunctionChain_T<ZVal_ZooLib, ZRef<ZYadR> >::sInvoke(theVal, iParam))
-			{
-			oResult = ZUtil_CFType::sAsCFType(theVal);
-			return true;
-			}
+			return ZUtil_CFType::sQAsCFType(theVal, oResult);
 		return false;
 		}	
 	} sMaker1;
@@ -87,10 +84,7 @@ public:
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iParam))
-			{
-			oResult = ZUtil_CFType::sAsVal_ZooLib(theYadR->GetVal());
-			return true;
-			}
+			return ZUtil_CFType::sQAsVal_ZooLib(theYadR->GetVal(), oResult);
 		return false;
 		}	
 	} sMaker2;

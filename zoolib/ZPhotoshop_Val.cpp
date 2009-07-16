@@ -197,6 +197,14 @@ string8 sPOSIXToWin(const string8& iPOSIX)
 	return result;
 	}
 
+string8 sHFSToPOSIX(const string8& iHFS)
+	{
+	ZTrail theTrail(":", "", "", iHFS);
+	theTrail = "Volumes" + theTrail;
+	return "/" + theTrail.AsString();
+	}
+
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Public utilities

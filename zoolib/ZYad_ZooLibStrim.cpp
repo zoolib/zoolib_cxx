@@ -863,14 +863,25 @@ static void sToStrim_SimpleValue(const ZStrimW& s, const ZVal_ZooLib& iVal,
 			break;
 			}
 		case eZType_RefCounted:
+			{
 			s.Writef("RefCounted(%08X)", iVal.GetRefCounted().GetObject());
 			break;
+			}
 		case eZType_Raw:
+			{
+			ZYad_ZooLibStrim::sToStrim(s, new ZYadStreamRPos_ZooLib(iVal.GetData()),
+				iLevel, iOptions);
+			break;
+			}
 		case eZType_Tuple:
+			{
+			ZYad_ZooLibStrim::sToStrim(s, new ZYadMapRPos_ZooLib(iVal.GetMap()), iLevel, iOptions);
+			break;
+			}
 		case eZType_Vector:
 			{
-			ZDebugStopf(0,
-				("sToStrim_SimpleValue should only be called on simple tuple values"));
+			ZYad_ZooLibStrim::sToStrim(s, new ZYadListRPos_ZooLib(iVal.GetList()),
+				iLevel, iOptions);
 			break;
 			}
 		default:

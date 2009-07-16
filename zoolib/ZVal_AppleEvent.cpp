@@ -43,7 +43,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * Helper functions
 
-static AEKeyword sAsAEKeyword(const string& iName)
+static AEKeyword spAsAEKeyword(const string& iName)
 	{
 	AEKeyword result = 0;
 	const size_t theSize = iName.size();
@@ -66,7 +66,7 @@ static AEKeyword sAsAEKeyword(const string& iName)
 	return result;
 	}
 
-static string sAsString(AEKeyword iKeyword)
+std::string sAEKeywordAsString(AEKeyword iKeyword)
 	{
 	if (ZCONFIG(Endian, Big))
 		{
@@ -82,7 +82,6 @@ static string sAsString(AEKeyword iKeyword)
 		return result;
 		}
 	}
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVal_AppleEvent
@@ -140,6 +139,12 @@ ZVal_AppleEvent::ZVal_AppleEvent(const std::string& iVal)
 		::AECreateDesc(typeChar, iVal.data(), iVal.size(), this);
 	#endif
 	}
+
+ZVal_AppleEvent::ZVal_AppleEvent(const ZValList_AppleEvent& iVal)
+	{ ::AEDuplicateDesc(&iVal, this); }
+
+ZVal_AppleEvent::ZVal_AppleEvent(const ZValMap_AppleEvent& iVal)
+	{ ::AEDuplicateDesc(&iVal, this); }
 
 void ZVal_AppleEvent::Clear()
 	{ ::AEDisposeDesc(this); }
@@ -267,6 +272,9 @@ AEDesc& ZVal_AppleEvent::OParam()
 	::AEDisposeDesc(this);
 	return *this;
 	}
+
+const AEDesc& ZVal_AppleEvent::IParam() const
+	{ return *this; }
 
 // =================================================================================================
 #pragma mark -
@@ -458,7 +466,7 @@ bool ZValMap_AppleEvent::QGet(AEKeyword iName, ZVal_AppleEvent& oVal) const
 	{ return noErr ==::AEGetKeyDesc(this, iName, typeWildCard, &oVal.OParam()); }
 
 bool ZValMap_AppleEvent::QGet(const string& iName, ZVal_AppleEvent& oVal) const
-	{ return noErr == ::AEGetKeyDesc(this, sAsAEKeyword(iName), typeWildCard, &oVal.OParam()); }
+	{ return noErr == ::AEGetKeyDesc(this, spAsAEKeyword(iName), typeWildCard, &oVal.OParam()); }
 
 bool ZValMap_AppleEvent::QGet(Index_t iIndex, ZVal_AppleEvent& oVal) const
 	{
@@ -503,7 +511,7 @@ void ZValMap_AppleEvent::Set(AEKeyword iName, const AEDesc& iVal)
 	{ ::AEPutKeyDesc(this, iName, &iVal); }
 
 void ZValMap_AppleEvent::Set(const string& iName, const AEDesc& iVal)
-	{ ::AEPutKeyDesc(this, sAsAEKeyword(iName), &iVal); }
+	{ ::AEPutKeyDesc(this, spAsAEKeyword(iName), &iVal); }
 
 void ZValMap_AppleEvent::Set(Index_t iIndex, const AEDesc& iVal)
 	{ ::AEPutDesc(this, iIndex.GetIndex() + 1, &iVal); }
@@ -512,7 +520,7 @@ void ZValMap_AppleEvent::Erase(AEKeyword iName)
 	{ ::AEDeleteKeyDesc(this, iName); }
 
 void ZValMap_AppleEvent::Erase(const string& iName)
-	{ ::AEDeleteKeyDesc(this, sAsAEKeyword(iName)); }
+	{ ::AEDeleteKeyDesc(this, spAsAEKeyword(iName)); }
 
 void ZValMap_AppleEvent::Erase(Index_t iIndex)
 	{  ::AEDeleteItem(this, iIndex.GetIndex() + 1); }
@@ -563,7 +571,7 @@ string ZValMap_AppleEvent::NameOf(Index_t iIndex) const
 	if (noErr == ::AEGetNthPtr(this, iIndex.GetIndex() + 1, typeWildCard, &theKey,
 		nullptr, nullptr, 0, nullptr))
 		{
-		return sAsString(theKey);
+		return sAEKeywordAsString(theKey);
 		}
 	return string();
 	}
@@ -579,7 +587,7 @@ ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::IndexOf(AEKeyword iName) const
 	}
 
 ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::IndexOf(const std::string& iName) const
-	{ return this->IndexOf(sAsAEKeyword(iName)); }
+	{ return this->IndexOf(spAsAEKeyword(iName)); }
 
 size_t ZValMap_AppleEvent::pCount() const
 	{

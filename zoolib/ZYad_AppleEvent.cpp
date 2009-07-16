@@ -17,8 +17,13 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLA
 OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
-
 #include "zoolib/ZYad_AppleEvent.h"
+
+#if ZCONFIG_SPI_Enabled(AppleEvent)
+
+#include "zoolib/ZFunctionChain.h"
+#include "zoolib/ZVal_ZooLib.h"
+#include "zoolib/ZYad_ZooLib.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -26,16 +31,61 @@ using std::string;
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Helpers
+
+static ZValMap_ZooLib spAsMap(const AEDesc& iAEDesc)
+	{
+	ZValMap_ZooLib theMap;
+	theMap.Set("AEType", sAEKeywordAsString(iAEDesc.descriptorType));
+
+	const size_t theSize = ::AEGetDescDataSize(&iAEDesc);
+	ZValData_ZooLib theData(theSize);
+	::AEGetDescData(&iAEDesc, theData.GetData(), theSize);
+
+	theMap.Set("Value", theData);
+
+	return theMap;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Factory
+
+namespace ZANONYMOUS {
+
+// ZVal_ZooLib <-- ZRef<ZYadR>
+class Maker2
+:	public ZFunctionChain_T<ZVal_ZooLib, ZRef<ZYadR> >
+	{
+public:
+	Maker2() : Base_t(false) {}
+
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
+		{
+		if (ZRef<ZYadR_AppleEvent> theYadR = ZRefDynamicCast<ZYadR_AppleEvent>(iParam))
+			{
+			oResult = spAsMap(theYadR->GetVal());
+
+			return true;
+			}
+		return false;
+		}	
+	} sMaker2;
+
+} // anonymous namespace
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYadListRPos_AppleEvent
 
 ZYadListRPos_AppleEvent::ZYadListRPos_AppleEvent(const ZValList_AppleEvent& iList)
-:	ZYadR_AppleEvent(static_cast<const AEDesc&>(iList))
+:	ZYadR_AppleEvent(iList)
 ,	YadListBase_t(iList)
 	{}
 
 ZYadListRPos_AppleEvent::ZYadListRPos_AppleEvent(
 	const ZValList_AppleEvent& iList, uint64 iPosition)
-:	ZYadR_AppleEvent(static_cast<const AEDesc&>(iList))
+:	ZYadR_AppleEvent(iList)
 ,	YadListBase_t(iList, iPosition)
 	{}
 
@@ -44,12 +94,12 @@ ZYadListRPos_AppleEvent::ZYadListRPos_AppleEvent(
 #pragma mark * ZYadMapRPos_AppleEvent
 
 ZYadMapRPos_AppleEvent::ZYadMapRPos_AppleEvent(const ZValMap_AppleEvent& iMap)
-:	ZYadR_AppleEvent(static_cast<const AEDesc&>(iMap))
+:	ZYadR_AppleEvent(iMap)
 ,	YadMapBase_t(iMap, iMap.begin())
 	{}
 
 ZYadMapRPos_AppleEvent::ZYadMapRPos_AppleEvent(const ZValMap_AppleEvent& iMap, const Index_t& iIndex)
-:	ZYadR_AppleEvent(static_cast<const AEDesc&>(iMap))
+:	ZYadR_AppleEvent(iMap)
 ,	YadMapBase_t(iMap, iIndex)
 	{}
 
@@ -88,7 +138,11 @@ ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal)
 //	if (iVal.QGetCFString(asCFString))
 //		return new ZYadStrimR_AppleEvent(asCFString);
 
-	return new ZYadR_AppleEvent(iVal);
+	return new ZYadMapRPos_ZooLib(spAsMap(iVal));
+
+//	return new ZYadR_AppleEvent(iVal);
 	}
 
 NAMESPACE_ZOOLIB_END
+
+#endif // ZCONFIG_SPI_Enabled(AppleEvent)

@@ -42,6 +42,8 @@ typedef ZVal_AppleEvent ZVal_AE;
 typedef ZValList_AppleEvent ZValList_AE;
 typedef ZValMap_AppleEvent ZValMap_AE;
 
+std::string sAEKeywordAsString(AEKeyword iKeyword);
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVal_AppleEvent
@@ -68,6 +70,8 @@ public:
 
 	ZVal_AppleEvent(const bool& iVal);
 	ZVal_AppleEvent(const std::string& iVal);
+	ZVal_AppleEvent(const ZValList_AppleEvent& iVal);
+	ZVal_AppleEvent(const ZValMap_AppleEvent& iVal);
 
 	template <class T>
 	ZVal_AppleEvent(const T& iVal)
@@ -98,6 +102,8 @@ public:
 
 // Our protocol
 	AEDesc& OParam();
+
+	const AEDesc& IParam() const;
 
 // Typename accessors
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Int16, int16)

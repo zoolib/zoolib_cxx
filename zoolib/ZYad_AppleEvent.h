@@ -21,6 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZYad_AppleEvent__
 #define __ZYad_AppleEvent__ 1
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
+
+#if ZCONFIG_SPI_Enabled(AppleEvent)
 
 #include "zoolib/ZVal_AppleEvent.h"
 #include "zoolib/ZYad_Val_T.h"
@@ -72,5 +75,7 @@ public:
 ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal);
 
 NAMESPACE_ZOOLIB_END
+
+#endif // ZCONFIG_SPI_Enabled(AppleEvent)
 
 #endif // __ZYad_AppleEvent__

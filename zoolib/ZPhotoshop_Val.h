@@ -71,6 +71,8 @@ bool sFromRuntimeTypeID(TypeID iTypeID, string8& oString);
 string8 sWinToPOSIX(const string8& iWin);
 string8 sPOSIXToWin(const string8& iPOSIX);
 
+string8 sHFSToPOSIX(const string8& iHFS);
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * UnitFloat
