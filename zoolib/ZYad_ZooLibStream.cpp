@@ -417,37 +417,24 @@ ZRef<ZYadR_Std> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR)
 	iStreamR.Read(&theType, 1, &countRead);
 	if (countRead && theType != 0xFF)
 		{
-		if (theType == eZType_Vector)
+		switch (theType)
 			{
-			return new ZYadListR_ZooLibStreamOld(iStreamR);
-			}
-		else if (theType == (0x80 | eZType_Vector))
-			{
-			return new ZYadListR_ZooLibStreamNew(iStreamR);
-			}
-		else if (theType == eZType_Tuple)
-			{
-			return new ZYadMapR_ZooLibStreamOld(iStreamR);
-			}
-		else if (theType == (0x80 | eZType_Tuple))
-			{
-			return new ZYadMapR_ZooLibStreamNew(iStreamR);
-			}
-		else if (theType == eZType_Raw)
-			{
-			return new ZYadStreamR_ZooLibStreamOld(iStreamR);			
-			}
-		else if (theType == (0x80 | eZType_Raw))
-			{
-			return new ZYadStreamR_ZooLibStreamNew(iStreamR);			
-			}
-		else if (theType == eZType_String)
-			{
-			return new ZYadStrimR_ZooLibStream(iStreamR);			
-			}
-		else
-			{
-			return new ZYadPrimR_ZooLibStream(ZType(theType), iStreamR);
+			case eZType_Vector:
+				return new ZYadListR_ZooLibStreamOld(iStreamR);
+			case 0x80 | eZType_Vector:
+				return new ZYadListR_ZooLibStreamNew(iStreamR);
+			case eZType_Tuple:
+				return new ZYadMapR_ZooLibStreamOld(iStreamR);
+			case 0x80 | eZType_Tuple:
+				return new ZYadMapR_ZooLibStreamNew(iStreamR);
+			case eZType_Raw:
+				return new ZYadStreamR_ZooLibStreamOld(iStreamR);			
+			case 0x80 | eZType_Raw:
+				return new ZYadStreamR_ZooLibStreamNew(iStreamR);			
+			case eZType_String:
+				return new ZYadStrimR_ZooLibStream(iStreamR);			
+			default:
+				return new ZYadPrimR_ZooLibStream(ZType(theType), iStreamR);
 			}
 		}
 

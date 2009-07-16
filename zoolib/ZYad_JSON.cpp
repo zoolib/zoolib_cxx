@@ -560,9 +560,13 @@ static void sToStrim_SimpleValue(const ZStrimW& s, const ZVal_ZooLib& iVal)
 			break;
 			}
 		case eZType_Null:
-		default:
 			{
 			s.Write("null");
+			break;
+			}
+		default:
+			{
+			s << "!!Unhandled Type==" << ZTypeAsString(normalized.TypeOf()) << "!!";
 			break;
 			}
 		}

@@ -225,50 +225,72 @@ ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal)
 #pragma mark -
 #pragma mark * sFromYadR_T
 
+namespace ZANONYMOUS {
+
+class YadVisitor_GetValZooLib : public ZYadVisitor
+	{
+public:
+// From ZYadVisitor
+	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
+	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
+	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
+	virtual bool Visit_YadListR(ZRef<ZYadListR> iYadListR);
+	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
+
+	ZRef<CFTypeRef> fOutput;
+	};
+
+} // anonymous namespace
+
 template <>
 ZRef<CFTypeRef> sFromYadR_T<ZRef<CFTypeRef> >(ZRef<ZYadR> iYadR)
 	{
-	if (!iYadR)
-		{
-		return ZRef<CFTypeRef>();
-		}
-	else if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iYadR))
-		{
-		return theYadR->GetVal();
-		}
-	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
-		{
-		ZValMap_CFType theMap;
+	YadVisitor_GetValZooLib theVisitor;
+	iYadR->Accept(theVisitor);
+	return theVisitor.fOutput;
+	}
 
-		string theName;
-		while (ZRef<ZYadR> theYadR = theYadMapR->ReadInc(theName))
-			theMap.Set(theName, sFromYadR_T<ZRef<CFTypeRef> >(theYadR));
+bool YadVisitor_GetValZooLib::Visit_YadR(ZRef<ZYadR> iYadR)
+	{
+	fOutput = ZFunctionChain_T<ZRef<CFTypeRef>, ZRef<ZYadR> >::sInvoke(iYadR);
+	return true;
+	}
 
-		return theMap;
-		}
-	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
-		{
-		ZValList_CFType theList;
+bool YadVisitor_GetValZooLib::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+	{
+	fOutput = sReadAll_T<ZValData_CFType>(iYadStreamR->GetStreamR());
+	return true;
+	}
 
-		while (ZRef<ZYadR> theYadR = theYadListR->ReadInc())
-			theList.Append(sFromYadR_T<ZRef<CFTypeRef> >(theYadR));
+bool YadVisitor_GetValZooLib::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+	{
+	ZRef<CFMutableStringRef> result = ZUtil_CFType::sStringMutable();
+	ZStrimW_CFString(result).CopyAllFrom(iYadStrimR->GetStrimR());
+	fOutput = result;
+	return true;
+	}
 
-		return theList;
-		}
-	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
-		{
-		return sReadAll_T<ZValData_CFType>(theYadStreamR->GetStreamR());
-		}
-	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
-		{
-		ZRef<CFMutableStringRef> result = ZUtil_CFType::sStringMutable();
-		ZStrimW_CFString(result).CopyAllFrom(theYadStrimR->GetStrimR());
-		return ZRef<CFTypeRef>(result);
-		}
-	else
-		{
-		return ZFunctionChain_T<ZRef<CFTypeRef>, ZRef<ZYadR> >::sInvoke(iYadR);
-		}
+bool YadVisitor_GetValZooLib::Visit_YadListR(ZRef<ZYadListR> iYadListR)
+	{
+	ZValList_CFType theList;
+
+	while (ZRef<ZYadR> theChild = iYadListR->ReadInc())
+		theList.Append(sFromYadR_T<ZRef<CFTypeRef> >(theChild));
+
+	fOutput = theList;
+	return true;
+	}
+
+bool YadVisitor_GetValZooLib::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+	{
+	ZValMap_CFType theMap;
+
+	string theName;
+	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
+		theMap.Set(theName, sFromYadR_T<ZRef<CFTypeRef> >(theChild));
+
+	fOutput = theMap;
+	return true;
 	}
 
 NAMESPACE_ZOOLIB_END
