@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVal_ZooLib.h"
 
 #include ZMACINCLUDE2(CoreFoundation,CFArray.h)
-#include ZMACINCLUDE2(CoreFoundation,CFBase.h)
 #include ZMACINCLUDE2(CoreFoundation,CFData.h)
 #include ZMACINCLUDE2(CoreFoundation,CFDate.h)
 #include ZMACINCLUDE2(CoreFoundation,CFDictionary.h)
@@ -135,7 +134,10 @@ ZRef<CFMutableDictionaryRef> sDictionaryMutable()
 	}
 
 ZRef<CFMutableDictionaryRef> sDictionaryMutable(const ZRef<CFDictionaryRef>& iCFDictionary)
-	{ return NoRetain(::CFDictionaryCreateMutableCopy(kCFAllocatorDefault, 0, iCFDictionary)); }
+	{
+	return NoRetain(::CFDictionaryCreateMutableCopy(kCFAllocatorDefault,
+		::CFDictionaryGetCount(iCFDictionary), iCFDictionary));
+	}
 
 ZRef<CFArrayRef> sArray()
 	{ return NoRetain(::CFArrayCreate(kCFAllocatorDefault, nullptr, 0, &kCFTypeArrayCallBacks)); }
@@ -144,7 +146,10 @@ ZRef<CFMutableArrayRef> sArrayMutable()
 	{ return NoRetain(::CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks)); }
 
 ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray)
-	{ return NoRetain(::CFArrayCreateMutableCopy(kCFAllocatorDefault, 0, iCFArray)); }
+	{
+	return NoRetain(::CFArrayCreateMutableCopy(kCFAllocatorDefault,
+		::CFArrayGetCount(iCFArray), iCFArray));
+	}
 
 ZRef<CFMutableDataRef> sDataMutable()
 	{ return NoRetain(::CFDataCreateMutable(kCFAllocatorDefault, 0)); }
@@ -286,7 +291,7 @@ bool sQAsCFType(const ZVal_ZooLib& iVal, ZRef<CFTypeRef>& oVal)
 		case eZType_Raw:
 			{
 			const ZValData_ZooLib& theData = iVal.GetData();
-			oVal = Adopt<CFTypeRef>(::CFDataCreate(kCFAllocatorDefault,
+			oVal = Adopt_T<CFTypeRef>(::CFDataCreate(kCFAllocatorDefault,
 				static_cast<const UInt8*>(theData.GetData()), theData.GetSize()));
 			return true;
 			}
@@ -300,49 +305,49 @@ bool sQAsCFType(const ZVal_ZooLib& iVal, ZRef<CFTypeRef>& oVal)
 			}
 		case eZType_Time:
 			{
-			oVal = Adopt<CFTypeRef>(::CFDateCreate(kCFAllocatorDefault,
+			oVal = Adopt_T<CFTypeRef>(::CFDateCreate(kCFAllocatorDefault,
 				iVal.GetTime().fVal - kCFAbsoluteTimeIntervalSince1970));
 			return true;
 			}
 		case eZType_Int8:
 			{
 			const int8 theValue = iVal.GetInt8();
-			oVal = Adopt<CFTypeRef>(::CFNumberCreate(
+			oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
 				kCFAllocatorDefault, kCFNumberSInt8Type, &theValue));
 			return true;
 			}
 		case eZType_Int16:
 			{
 			const int16 theValue = iVal.GetInt16();
-			oVal = Adopt<CFTypeRef>(::CFNumberCreate(
+			oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
 				kCFAllocatorDefault, kCFNumberSInt16Type, &theValue));
 			return true;
 			}
 		case eZType_Int32:
 			{
 			const int32 theValue = iVal.GetInt32();
-			oVal = Adopt<CFTypeRef>(::CFNumberCreate(
+			oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
 				kCFAllocatorDefault, kCFNumberSInt32Type, &theValue));
 			return true;
 			}
 		case eZType_Int64:
 			{
 			const int64 theValue = iVal.GetInt64();
-			oVal = Adopt<CFTypeRef>(::CFNumberCreate(
+			oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
 				kCFAllocatorDefault, kCFNumberSInt64Type, &theValue));
 			return true;
 			}
 		case eZType_Float:
 			{
 			const float theValue = iVal.GetFloat();
-			oVal = Adopt<CFTypeRef>(::CFNumberCreate(
+			oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
 				kCFAllocatorDefault, kCFNumberFloatType, &theValue));
 			return true;
 			}
 		case eZType_Double:
 			{
 			const double theValue = iVal.GetDouble();
-			oVal = Adopt<CFTypeRef>(::CFNumberCreate(
+			oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
 				kCFAllocatorDefault, kCFNumberDoubleType, &theValue));
 			return true;
 			}
