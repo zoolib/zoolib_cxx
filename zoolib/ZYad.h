@@ -204,6 +204,13 @@ public:
 	virtual bool Visit_YadMapRPos(ZRef<ZYadMapRPos> iYadMapRPos);
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * sFromYadR_T
+
+template <class T>
+T sFromYadR_T(ZRef<ZYadR> iYadR);
+
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZYad__

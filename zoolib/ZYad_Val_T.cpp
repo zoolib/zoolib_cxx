@@ -18,31 +18,4 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZPhotoshop_Yad__
-#define __ZPhotoshop_Yad__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZPhotoshop_Val.h"
 #include "zoolib/ZYad_Val_T.h"
-
-NAMESPACE_ZOOLIB_BEGIN
-
-namespace ZPhotoshop {
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * YadR
-
-typedef ZYadR_Val_T<Val> YadR;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZPhotoshop::MakeYadR
-
-ZRef<ZYadR> sMakeYadR(const Val& iVal);
-
-} // namespace ZPhotoshop
-
-NAMESPACE_ZOOLIB_END
-
-#endif // __ZPhotoshop_Yad__

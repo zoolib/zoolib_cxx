@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZYad_Std.h"
+#include "zoolib/ZYad_AppleEvent.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -26,112 +26,69 @@ using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Helpers
+#pragma mark * ZYadListRPos_AppleEvent
 
-static void sThrowParseException(const string& iMessage)
-	{
-	throw ZYadParseException_Std(iMessage);
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadParseException_Std
-
-ZYadParseException_Std::ZYadParseException_Std(const string& iWhat)
-:	ZYadParseException(iWhat)
+ZYadListRPos_AppleEvent::ZYadListRPos_AppleEvent(const ZValList_AppleEvent& iList)
+:	ZYadR_AppleEvent(static_cast<const AEDesc&>(iList))
+,	YadListBase_t(iList)
 	{}
 
-ZYadParseException_Std::ZYadParseException_Std(const char* iWhat)
-:	ZYadParseException(iWhat)
+ZYadListRPos_AppleEvent::ZYadListRPos_AppleEvent(
+	const ZValList_AppleEvent& iList, uint64 iPosition)
+:	ZYadR_AppleEvent(static_cast<const AEDesc&>(iList))
+,	YadListBase_t(iList, iPosition)
 	{}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_Std
+#pragma mark * ZYadMapRPos_AppleEvent
 
-ZYadListR_Std::ZYadListR_Std()
-:	fPosition(0),
-	fFinished(false),
-	fStarted(false)
+ZYadMapRPos_AppleEvent::ZYadMapRPos_AppleEvent(const ZValMap_AppleEvent& iMap)
+:	ZYadR_AppleEvent(static_cast<const AEDesc&>(iMap))
+,	YadMapBase_t(iMap, iMap.begin())
 	{}
 
-ZYadListR_Std::ZYadListR_Std(bool iFinished)
-:	fPosition(0),
-	fFinished(iFinished),
-	fStarted(false)
+ZYadMapRPos_AppleEvent::ZYadMapRPos_AppleEvent(const ZValMap_AppleEvent& iMap, const Index_t& iIndex)
+:	ZYadR_AppleEvent(static_cast<const AEDesc&>(iMap))
+,	YadMapBase_t(iMap, iIndex)
 	{}
 
-void ZYadListR_Std::Finish()
+ZRef<ZYadR> ZYadMapRPos_AppleEvent::ReadInc(string& oName)
 	{
-	this->SkipAll();
+	if (fIndex != fMap.end())
+		{
+		oName = fMap.NameOf(fIndex);
+		return sMakeYadR(fMap.Get(fIndex++));
+		}
+	return ZRef<ZYadR>();
 	}
 
-ZRef<ZYadR> ZYadListR_Std::ReadInc()
-	{
-	if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		}
-
-	if (!fFinished)
-		{
-		this->Imp_ReadInc(!fStarted, fValue_Prior);
-		fStarted = true;
-
-		if (fValue_Prior)
-			++fPosition;
-		else
-			fFinished = true;
-		}
-
-	return fValue_Prior;
-	}
-
-//uint64 ZYadListR_Std::GetPosition()
-//	{ return fPosition; }
+void ZYadMapRPos_AppleEvent::SetPosition(const std::string& iName)
+	{ fIndex = fMap.IndexOf(iName); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadMapR_Std
+#pragma mark * sMakeYadR
 
-ZYadMapR_Std::ZYadMapR_Std()
-:	fFinished(false),
-	fStarted(false)
-	{}
-	
-ZYadMapR_Std::ZYadMapR_Std(bool iFinished)
-:	fFinished(iFinished),
-	fStarted(false)
-	{}
-
-void ZYadMapR_Std::Finish()
+ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal)
 	{
-	this->SkipAll();
-	}
+	ZValMap_AppleEvent asMap;
+	if (iVal.QGetMap(asMap))
+		return new ZYadMapRPos_AppleEvent(asMap);
+		
+	ZValList_AppleEvent asList;
+	if (iVal.QGetList(asList))
+		return new ZYadListRPos_AppleEvent(asList);
+		
+//	ZValData_AppleEvent asData;
+//	if (iVal.QGetData(asData))
+//		return new ZYadStreamRPos_AppleEvent(asData);
 
-ZRef<ZYadR> ZYadMapR_Std::ReadInc(std::string& oName)
-	{
-	if (fValue_Prior)
-		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		}
+//	ZRef<CFStringRef> asCFString;
+//	if (iVal.QGetCFString(asCFString))
+//		return new ZYadStrimR_AppleEvent(asCFString);
 
-	if (!fFinished)
-		{
-		string curName;
-
-		this->Imp_ReadInc(!fStarted, curName, fValue_Prior);
-		fStarted = true;
-
-		if (fValue_Prior)
-			oName = curName;
-		else
-			fFinished = true;
-		}
-
-	return fValue_Prior;
+	return new ZYadR_AppleEvent(iVal);
 	}
 
 NAMESPACE_ZOOLIB_END

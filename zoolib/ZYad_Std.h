@@ -63,11 +63,10 @@ public:
 // From ZYadR_Std
 	virtual void Finish();
 
-// From ZYadR via ZYadListR
+// From ZYadListR
 	virtual ZRef<ZYadR> ReadInc();
 
-// From ZYadListR
-	virtual uint64 GetPosition();
+//	virtual uint64 GetPosition();
 
 // Our protocol
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR) = 0;

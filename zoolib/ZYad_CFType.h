@@ -24,13 +24,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZYad.h"
+//#include "zoolib/ZYad.h"
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
 #include "zoolib/ZStream_CFData.h"
 #include "zoolib/ZStrim_CFString.h"
 #include "zoolib/ZVal_CFType.h"
+#include "zoolib/ZYad_Val_T.h"
 
 #include <vector>
 
@@ -40,18 +41,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZYadR_CFType
 
-class ZYadR_CFType : public virtual ZYadR
-	{
-public:
-	ZYadR_CFType(ZRef<CFTypeRef> iCFTypeRef);
-	virtual ~ZYadR_CFType();
-
-// Our protocol
-	const ZRef<CFTypeRef>& GetCFType();
-
-private:
-	const ZRef<CFTypeRef> fVal;
-	};
+typedef ZYadR_Val_T<ZRef<CFTypeRef> > ZYadR_CFType;
 
 // =================================================================================================
 #pragma mark -
@@ -85,9 +75,6 @@ class ZYadStrimR_CFType
 	{
 public:
 	ZYadStrimR_CFType(ZRef<CFStringRef> iStringRef);
-
-// From ZYadR, disambiguating between ZYadR_TValue and ZYadStreamR
-//	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
 // =================================================================================================
@@ -95,27 +82,12 @@ public:
 #pragma mark * ZYadListRPos_CFType
 
 class ZYadListRPos_CFType
-:	public ZYadR_CFType,
-	public ZYadListRPos
+:	public ZYadR_CFType
+,	public ZYadListRPos_Val_T<ZYadListRPos_CFType, ZValList_CFType>
 	{
 public:
 	ZYadListRPos_CFType(const ZRef<CFArrayRef>& iArray);
 	ZYadListRPos_CFType(const ZRef<CFArrayRef>& iArray, uint64 iPosition);
-
-// From ZYadR via ZYadListRPos
-	virtual ZRef<ZYadR> ReadInc();
-
-// From ZYadListR via ZYadListRPos
-	virtual uint64 GetPosition();
-
-// From ZYadListRPos
-	virtual uint64 GetSize();
-	virtual void SetPosition(uint64 iPosition);
-	virtual ZRef<ZYadListRPos> Clone();
-
-private:
-	const ZValList_CFType fList;
-	uint64 fPosition;
 	};
 
 // =================================================================================================
@@ -134,12 +106,13 @@ class ZYadMapRPos_CFType
 public:
 	ZYadMapRPos_CFType(const ZRef<CFDictionaryRef>& iDictionary);
 
-// From ZYadR via ZYadMapRPos
+// From ZYadMapR via ZYadMapRPos
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);
 
 // From ZYadMapRPos
-	virtual void SetPosition(const std::string& iName);
 	virtual ZRef<ZYadMapRPos> Clone();
+
+	virtual void SetPosition(const std::string& iName);
 
 private:
 	const ZRef<CFDictionaryRef> fDictionary;
@@ -150,15 +123,9 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYad_CFType
-
-namespace ZYad_CFType {
+#pragma mark * sMakeYadR
 
 ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal);
-
-ZRef<CFTypeRef> sFromYadR(ZRef<ZYadR>);
-
-} // namespace ZYad_CFType
 
 NAMESPACE_ZOOLIB_END
 

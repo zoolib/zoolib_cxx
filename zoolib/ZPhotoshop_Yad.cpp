@@ -20,18 +20,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZPhotoshop_Yad.h"
-#include "zoolib/ZStream_ValData_T.h"
 #include "zoolib/ZYad_ZooLib.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZPhotoshop {
 
-using std::string;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * Helper functions
+#pragma mark * Helpers
 
 bool sAppendIfASCII(char iChar, string& ioString)
 	{
@@ -49,12 +46,16 @@ static ZVal_ZooLib sIntAsVal(int32 iInt)
 
 	if (!sAppendIfASCII(iInt >> 24, theString))
 		return iInt;
+
 	if (!sAppendIfASCII(iInt >> 16, theString))
 		return iInt;
+
 	if (!sAppendIfASCII(iInt >> 8, theString))
 		return iInt;
+
 	if (!sAppendIfASCII(iInt, theString))
 		return iInt;
+
 	return theString;
 	}
 
@@ -154,145 +155,68 @@ class Maker0
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * YadR
-
-YadR::YadR(const Val& iVal)
-:	fVal(iVal)
-	{}
-
-bool YadR::IsSimple(const ZYadOptions& iOptions)
-	{
-	return ZYadR::IsSimple(iOptions);
-	}
-
-const Val& YadR::GetVal()
-	{ return fVal; }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * YadListRPos
 
 class YadListRPos
-:	public YadR,
-	public ZYadListRPos
+:	public YadR
+,	public ZYadListRPos_Val_T<YadListRPos, List>
 	{
 public:
 	YadListRPos(const List& iList);
 	YadListRPos(const List& iList, uint64 iPosition);
-
-// From ZYadR via ZYadListRPos
-	virtual ZRef<ZYadR> ReadInc();
-
-// From ZYadR, disambiguating between YadR and ZYadListRPos
-	virtual bool IsSimple(const ZYadOptions& iOptions);
-
-// From ZYadListR via ZYadListRPos
-	virtual uint64 GetPosition();
-
-// From ZYadListRPos
-	virtual uint64 GetSize();
-	virtual void SetPosition(uint64 iPosition);
-	virtual ZRef<ZYadListRPos> Clone();
-
-private:
-	const List& fList;
-	uint64 fPosition;
 	};
 
-
 YadListRPos::YadListRPos(const List& iList)
-:	YadR(iList),
-	fList(iList),
-	fPosition(0)
+:	YadR(iList)
+,	YadListBase_t(iList)
 	{}
 
 YadListRPos::YadListRPos(const List& iList, uint64 iPosition)
-:	YadR(iList),
-	fList(iList),
-	fPosition(iPosition)
+:	YadR(iList)
+,	YadListBase_t(iList, iPosition)
 	{}
-
-ZRef<ZYadR> YadListRPos::ReadInc()
-	{
-	if (fPosition < fList.Count())
-		return sMakeYadR(fList.Get(fPosition++));
-	return ZRef<ZYadR>();
-	}
-
-bool YadListRPos::IsSimple(const ZYadOptions& iOptions)
-	{ return ZYadListRPos::IsSimple(iOptions); }
-
-uint64 YadListRPos::GetPosition()
-	{ return fPosition; }
-
-uint64 YadListRPos::GetSize()
-	{ return fList.Count(); }
-
-void YadListRPos::SetPosition(uint64 iPosition)
-	{ fPosition = iPosition; }
-
-ZRef<ZYadListRPos> YadListRPos::Clone()
-	{ return new YadListRPos(fList, fPosition); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * YadMapRPos
 
 class YadMapRPos
-:	public YadR,
-	public ZYadMapRPos
+:	public YadR
+,	public ZYadMapRPos_Val_T<YadMapRPos, Map>
 	{
 public:
 	YadMapRPos(const Map& iMap);
-	YadMapRPos(const Map& iMap, const Map::Index_t& iIter);
+	YadMapRPos(const Map& iMap, const Index_t& iIndex);
 
-// From ZYadR via ZYadMapRPos
+// From ZYadR via ZYadMapRPos_Val_T
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);
 
-// From ZYadR, disambiguating between YadR and ZYadMapRPos
-	virtual bool IsSimple(const ZYadOptions& iOptions);
-
-// From ZYadMapR via ZYadMapRPos
+// From ZYadMapR via ZYadMapRPos_Val_T
 	virtual void SetPosition(const std::string& iName);
-	virtual ZRef<ZYadMapRPos> Clone();
-
-private:
-	const Map fMap;
-	Map::Index_t fIter;
 	};
 
 YadMapRPos::YadMapRPos(const Map& iMap)
-:	YadR(iMap),
-	fMap(iMap),
-	fIter(fMap.begin())
+:	YadR(iMap)
+,	YadMapBase_t(iMap, iMap.begin())
 	{}
 
-YadMapRPos::YadMapRPos(
-	const Map& iMap,
-	const Map::Index_t& iIter)
-:	YadR(iMap),
-	fMap(iMap),
-	fIter(iIter)
+YadMapRPos::YadMapRPos(const Map& iMap, const Index_t& iIndex)
+:	YadR(iMap)
+,	YadMapBase_t(iMap, iIndex)
 	{}
 
 ZRef<ZYadR> YadMapRPos::ReadInc(string& oName)
 	{
-	if (fIter != fMap.end())
+	if (fIndex != fMap.end())
 		{
-		oName = fMap.NameOf(fIter);
-		return sMakeYadR(fMap.Get(fIter++));
+		oName = fMap.NameOf(fIndex);
+		return sMakeYadR(fMap.Get(fIndex++));
 		}
 	return ZRef<ZYadR>();
 	}
 
-bool YadMapRPos::IsSimple(const ZYadOptions& iOptions)
-	{ return ZYadMapRPos::IsSimple(iOptions); }
-
 void YadMapRPos::SetPosition(const string& iName)
-	{ fIter = fMap.IndexOf(iName); }
-
-ZRef<ZYadMapRPos> YadMapRPos::Clone()
-	{ return new YadMapRPos(fMap, fIter); }
+	{ fIndex = fMap.IndexOf(iName); }
 
 // =================================================================================================
 #pragma mark -
@@ -310,7 +234,7 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 
 	ZVal_ZooLib theVal_Z;
 	if (sAsVal_ZooLib(iVal, theVal_Z))
-		return ZYad_ZooLib::sMakeYadR(theVal_Z);
+		return sMakeYadR(theVal_Z);
 
 	return ZRef<ZYadR>();
 	}

@@ -51,7 +51,7 @@ class Maker0
 		{
 		if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iParam))
 			{
-			oResult = theYadR->GetCFType();
+			oResult = theYadR->GetVal();
 			return true;
 			}
 		return false;
@@ -88,7 +88,7 @@ public:
 		{
 		if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iParam))
 			{
-			oResult = ZUtil_CFType::sAsVal_ZooLib(theYadR->GetCFType());
+			oResult = ZUtil_CFType::sAsVal_ZooLib(theYadR->GetVal());
 			return true;
 			}
 		return false;
@@ -96,20 +96,6 @@ public:
 	} sMaker2;
 
 } // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadR_CFType
-
-ZYadR_CFType::ZYadR_CFType(ZRef<CFTypeRef> iCFTypeRef)
-:	fVal(iCFTypeRef)
-	{}
-
-ZYadR_CFType::~ZYadR_CFType()
-	{}
-
-const ZRef<CFTypeRef>& ZYadR_CFType::GetCFType()
-	{ return fVal; }
 
 // =================================================================================================
 #pragma mark -
@@ -140,36 +126,14 @@ ZYadStrimR_CFType::ZYadStrimR_CFType(ZRef<CFStringRef> iStringRef)
 #pragma mark * ZYadListRPos_CFType
 
 ZYadListRPos_CFType::ZYadListRPos_CFType(const ZRef<CFArrayRef>& iArray)
-:	ZYadR_CFType(iArray),
-	fList(iArray),
-	fPosition(0)
+:	ZYadR_CFType(iArray)
+,	YadListBase_t(iArray)
 	{}
 
 ZYadListRPos_CFType::ZYadListRPos_CFType(const ZRef<CFArrayRef>& iArray, uint64 iPosition)
-:	ZYadR_CFType(iArray),
-	fList(iArray),
-	fPosition(iPosition)
+:	ZYadR_CFType(iArray)
+,	YadListBase_t(iArray, iPosition)
 	{}
-
-ZRef<ZYadR> ZYadListRPos_CFType::ReadInc()
-	{
-	if (fPosition < fList.Count())
-		return ZYad_CFType::sMakeYadR(fList.Get(fPosition++));
-
-	return ZRef<ZYadR>();
-	}
-
-uint64 ZYadListRPos_CFType::GetPosition()
-	{ return fPosition; }
-
-uint64 ZYadListRPos_CFType::GetSize()
-	{ return fList.Count(); }
-
-void ZYadListRPos_CFType::SetPosition(uint64 iPosition)
-	{ fPosition = iPosition; }
-
-ZRef<ZYadListRPos> ZYadListRPos_CFType::Clone()
-	{ return new ZYadListRPos_CFType(fList, fPosition); }
 
 // =================================================================================================
 #pragma mark -
@@ -219,10 +183,13 @@ ZRef<ZYadR> ZYadMapRPos_CFType::ReadInc(string& oName)
 	if (fPosition < fNames.size())	
 		{
 		oName = ZUtil_CFType::sAsUTF8(fNames.at(fPosition));
-		return ZYad_CFType::sMakeYadR(fValues[fPosition++]);
+		return sMakeYadR(fValues[fPosition++]);
 		}
 	return ZRef<ZYadR>();
 	}
+
+ZRef<ZYadMapRPos> ZYadMapRPos_CFType::Clone()
+	{ return new ZYadMapRPos_CFType(fDictionary, fPosition, fNames, fValues); }
 
 void ZYadMapRPos_CFType::SetPosition(const std::string& iName)
 	{
@@ -233,14 +200,11 @@ void ZYadMapRPos_CFType::SetPosition(const std::string& iName)
 		}
 	}
 
-ZRef<ZYadMapRPos> ZYadMapRPos_CFType::Clone()
-	{ return new ZYadMapRPos_CFType(fDictionary, fPosition, fNames, fValues); }
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYad_CFType
+#pragma mark * sMakeYadR
 
-ZRef<ZYadR> ZYad_CFType::sMakeYadR(const ZRef<CFTypeRef>& iVal)
+ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal)
 	{
 	const ZVal_CFType theVal = iVal;
 
@@ -263,7 +227,12 @@ ZRef<ZYadR> ZYad_CFType::sMakeYadR(const ZRef<CFTypeRef>& iVal)
 	return new ZYadR_CFType(iVal);
 	}
 
-ZRef<CFTypeRef> ZYad_CFType::sFromYadR(ZRef<ZYadR> iYadR)
+// =================================================================================================
+#pragma mark -
+#pragma mark * sFromYadR_T
+
+template <>
+ZRef<CFTypeRef> sFromYadR_T<ZRef<CFTypeRef> >(ZRef<ZYadR> iYadR)
 	{
 	if (!iYadR)
 		{
@@ -271,7 +240,7 @@ ZRef<CFTypeRef> ZYad_CFType::sFromYadR(ZRef<ZYadR> iYadR)
 		}
 	else if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iYadR))
 		{
-		return theYadR->GetCFType();
+		return theYadR->GetVal();
 		}
 	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
@@ -279,7 +248,7 @@ ZRef<CFTypeRef> ZYad_CFType::sFromYadR(ZRef<ZYadR> iYadR)
 
 		string theName;
 		while (ZRef<ZYadR> theYadR = theYadMapR->ReadInc(theName))
-			theMap.Set(theName, sFromYadR(theYadR));
+			theMap.Set(theName, sFromYadR_T<ZRef<CFTypeRef> >(theYadR));
 
 		return theMap;
 		}
@@ -288,7 +257,7 @@ ZRef<CFTypeRef> ZYad_CFType::sFromYadR(ZRef<ZYadR> iYadR)
 		ZValList_CFType theList;
 
 		while (ZRef<ZYadR> theYadR = theYadListR->ReadInc())
-			theList.Append(ZYad_CFType::sFromYadR(theYadR));
+			theList.Append(sFromYadR_T<ZRef<CFTypeRef> >(theYadR));
 
 		return theList;
 		}

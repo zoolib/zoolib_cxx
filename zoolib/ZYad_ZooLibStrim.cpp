@@ -1035,8 +1035,8 @@ static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 		}
 	else
 		{
-		sToStrim_SimpleValue(s,
-			ZYad_ZooLib::sFromYadR(iYadR), iLevel, iOptions, iMayNeedInitialLF);
+		sToStrim_SimpleValue(s, sFromYadR_T<ZVal_ZooLib>(iYadR),
+			iLevel, iOptions, iMayNeedInitialLF);
 		}
 	}
 

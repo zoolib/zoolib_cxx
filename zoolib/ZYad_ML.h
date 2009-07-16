@@ -46,8 +46,8 @@ class ZYadMapR_ML : public ZYadMapR_Std
 	{
 public:
 	ZYadMapR_ML(ZML::Reader& iR);
-	ZYadMapR_ML(ZML::Reader& iR, const ZValMap_ZooLib& iAttrs);
-	ZYadMapR_ML(ZML::Reader& iR, const std::string& iTagName, const ZValMap_ZooLib& iAttrs);
+	ZYadMapR_ML(ZML::Reader& iR, const ZML::ValMap& iAttrs);
+	ZYadMapR_ML(ZML::Reader& iR, const std::string& iTagName, const ZML::ValMap& iAttrs);
 
 // From ZYadR
 	virtual ZRef<ZYadR> Meta();
@@ -56,7 +56,7 @@ public:
 	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
 
 // Our protocol
-	ZValMap_ZooLib GetAttrs();
+	ZML::ValMap GetAttrs();
 
 private:
 	void pAdvance(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
@@ -64,7 +64,7 @@ private:
 	ZML::Reader& fR;
 
 	const std::string fTagName;
-	const ZValMap_ZooLib fAttrs;
+	const ZML::ValMap fAttrs;
 	};
 
 NAMESPACE_ZOOLIB_END

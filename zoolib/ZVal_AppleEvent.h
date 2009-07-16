@@ -216,6 +216,13 @@ public:
 
 	AEKeyword KeyOf(Index_t iIndex) const;
 	std::string NameOf(Index_t iIndex) const;
+
+	Index_t IndexOf(AEKeyword iName) const;
+	Index_t IndexOf(const std::string& iName) const;
+
+private:
+	size_t pCount() const;
+	AEKeyword pKeyOf(size_t iIndex) const;
 	};
 
 NAMESPACE_ZOOLIB_END

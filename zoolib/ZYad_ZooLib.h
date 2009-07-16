@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream_ValData_T.h"
 #include "zoolib/ZVal_ZooLib.h"
-#include "zoolib/ZYad.h"
+#include "zoolib/ZYad_Val_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -32,21 +32,16 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZYadR_ZooLib
 
-class ZYadR_ZooLib : public virtual ZYadR
+class ZYadR_ZooLib
+:	public ZYadR_Val_T<ZVal_ZooLib>
 	{
 public:
 	ZYadR_ZooLib();
+	ZYadR_ZooLib(const ZVal_ZooLib& iVal);
 	ZYadR_ZooLib(ZType iType, const ZStreamR& iStreamR);
-	ZYadR_ZooLib(const ZVal_ZooLib& iTV);
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
-
-// Our protocol
-	const ZVal_ZooLib& GetVal();
-
-private:
-	const ZVal_ZooLib fVal;
 	};
 
 // =================================================================================================
@@ -90,70 +85,44 @@ public:
 #pragma mark * ZYadListRPos_ZooLib
 
 class ZYadListRPos_ZooLib
-:	public ZYadR_ZooLib,
-	public ZYadListRPos
+:	public ZYadR_ZooLib
+,	public ZYadListRPos_Val_T<ZYadListRPos_ZooLib, ZValList_ZooLib>
 	{
 public:
 	ZYadListRPos_ZooLib(const ZValList_ZooLib& iList);
 	ZYadListRPos_ZooLib(const ZValList_ZooLib& iList, uint64 iPosition);
 
-// From ZYadR via ZYadListRPos
-	virtual ZRef<ZYadR> ReadInc();
-
 // From ZYadR, disambiguating between ZYadR_ZooLib and ZYadListRPos
 	virtual bool IsSimple(const ZYadOptions& iOptions);
-
-// From ZYadListR via ZYadListRPos
-	virtual uint64 GetPosition();
-
-// From ZYadListRPos
-	virtual uint64 GetSize();
-	virtual void SetPosition(uint64 iPosition);
-	virtual ZRef<ZYadListRPos> Clone();
-
-private:
-	const ZValList_ZooLib fList;
-	uint64 fPosition;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListMapRPos_ZooLib
+#pragma mark * ZYadMapRPos_ZooLib
 
 class ZYadMapRPos_ZooLib
-:	public ZYadR_ZooLib,
-	public ZYadMapRPos
+:	public ZYadR_ZooLib
+,	public ZYadMapRPos_Val_T<ZYadMapRPos_ZooLib, ZValMap_ZooLib>
 	{
 public:
 	ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap);
-	ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap, const ZValMap_ZooLib::Index_t& iIndex);
-
-// From ZYadR via ZYadMapRPos
-	virtual ZRef<ZYadR> ReadInc(std::string& oName);
+	ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap, const Index_t& iPosition);
 
 // From ZYadR, disambiguating between ZYadR_ZooLib and ZYadMapRPos
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
-// From ZYadMapR via ZYadMapRPos
-	virtual void SetPosition(const std::string& iName);
-	virtual ZRef<ZYadMapRPos> Clone();
+// From ZYadMapR via ZYadMapRPos_Val_T
+	virtual ZRef<ZYadR> ReadInc(std::string& oName);
 
-private:
-	const ZValMap_ZooLib fMap;
-	ZValMap_ZooLib::Index_t fIndex;
+// From ZYadMapRPos via ZYadMapRPos_Val_T
+	virtual void SetPosition(const std::string& iName);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYad_ZooLib
+#pragma mark * sMakeYadR
 
-namespace ZYad_ZooLib {
-
-ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iTV);
-
-ZVal_ZooLib sFromYadR(ZRef<ZYadR> iYadR);
-
-} // namespace ZYad_ZooLib
+ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal);
 
 NAMESPACE_ZOOLIB_END
 

@@ -154,11 +154,9 @@ const ZStreamRPos& ZYadStreamRPos_File::GetStreamRPos()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYad_FS
+#pragma mark * ZYad_FS::sMakeYadR
 
-namespace ZYad_FS {
-
-ZRef<ZYadR> sMakeYadR(const ZFileSpec& iFS)
+ZRef<ZYadR> ZYad_FS::sMakeYadR(const ZFileSpec& iFS)
 	{
 	if (iFS.IsDir())
 		{
@@ -170,7 +168,5 @@ ZRef<ZYadR> sMakeYadR(const ZFileSpec& iFS)
 		}
 	return ZRef<ZYadR>();
 	}
-
-} // namespace ZYad_FS
 
 NAMESPACE_ZOOLIB_END

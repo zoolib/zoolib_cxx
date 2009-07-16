@@ -609,7 +609,7 @@ ZYadVisitor_JSONWriter::ZYadVisitor_JSONWriter(const ZStrimW& iStrimW,
 
 bool ZYadVisitor_JSONWriter::Visit_YadR(ZRef<ZYadR> iYadR)
 	{
-	sToStrim_SimpleValue(fStrimW, ZYad_ZooLib::sFromYadR(iYadR));
+	sToStrim_SimpleValue(fStrimW, sFromYadR_T<ZVal_ZooLib>(iYadR));
 	return true;
 	}
 

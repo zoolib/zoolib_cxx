@@ -401,11 +401,7 @@ void ZValList_AppleEvent::Append(const ZVal_AppleEvent& iVal)
 #pragma mark * ZValMap_AppleEvent
 
 ZValMap_AppleEvent::operator operator_bool_type() const
-	{
-	long result;
-	return operator_bool_generator_type::translate
-		(noErr == ::AECountItems(this, &result) && result);
-	}
+	{ return operator_bool_generator_type::translate(this->pCount()); }
 
 void ZValMap_AppleEvent::swap(ZValMap_AppleEvent& iOther)
 	{ std::swap(static_cast<AEDesc&>(*this), static_cast<AEDesc&>(iOther)); }
@@ -548,12 +544,7 @@ ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::begin() const
 	{ return Index_t(0); }
 
 ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::end() const
-	{
-	long theCount;
-	if (noErr == ::AECountItems(this, &theCount))
-		return Index_t(theCount);
-	return Index_t(0);
-	}
+	{ return Index_t(this->pCount()); }
 
 AEKeyword ZValMap_AppleEvent::KeyOf(Index_t iIndex) const
 	{
@@ -575,6 +566,38 @@ string ZValMap_AppleEvent::NameOf(Index_t iIndex) const
 		return sAsString(theKey);
 		}
 	return string();
+	}
+
+ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::IndexOf(AEKeyword iName) const
+	{
+	for (size_t x = 0, count = this->pCount(); x < count; ++x)
+		{
+		if (iName == this->pKeyOf(x))
+			return Index_t(x);
+		}
+	return Index_t(this->pCount());
+	}
+
+ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::IndexOf(const std::string& iName) const
+	{ return this->IndexOf(sAsAEKeyword(iName)); }
+
+size_t ZValMap_AppleEvent::pCount() const
+	{
+	long theCount;
+	if (noErr == ::AECountItems(this, &theCount))
+		return theCount;
+	return 0;
+	}
+
+AEKeyword ZValMap_AppleEvent::pKeyOf(size_t iIndex) const
+	{
+	AEKeyword theKey;
+	if (noErr == ::AEGetNthPtr(this, iIndex + 1, typeWildCard, &theKey,
+		nullptr, nullptr, 0, nullptr))
+		{
+		return theKey;
+		}
+	return 0;
 	}
 
 NAMESPACE_ZOOLIB_END

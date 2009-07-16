@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+using std::pair;
 using std::string;
 using std::vector;
 
@@ -122,16 +123,13 @@ static bool sIsSimple(const ZYadOptions& iOptions, const ZVal_ZooLib& iVal)
 ZYadR_ZooLib::ZYadR_ZooLib()
 	{}
 
-ZYadR_ZooLib::ZYadR_ZooLib(ZType iType, const ZStreamR& iStreamR)
-:	fVal(iType, iStreamR)
-	{}
-
 ZYadR_ZooLib::ZYadR_ZooLib(const ZVal_ZooLib& iVal)
-:	fVal(iVal)
+:	YadBase_t(iVal)
 	{}
 
-const ZVal_ZooLib& ZYadR_ZooLib::GetVal()
-	{ return fVal; }
+ZYadR_ZooLib::ZYadR_ZooLib(ZType iType, const ZStreamR& iStreamR)
+:	YadBase_t(iType, iStreamR)
+	{}
 
 bool ZYadR_ZooLib::IsSimple(const ZYadOptions& iOptions)
 	{ return sIsSimple(iOptions, fVal); }
@@ -162,81 +160,53 @@ ZYadStrimU_String::ZYadStrimU_String(const string& iString)
 #pragma mark * ZYadListRPos_ZooLib
 
 ZYadListRPos_ZooLib::ZYadListRPos_ZooLib(const ZValList_ZooLib& iList)
-:	ZYadR_ZooLib(iList),
-	fList(iList),
-	fPosition(0)
+:	ZYadR_ZooLib(iList)
+,	YadListBase_t(iList)
 	{}
 
 ZYadListRPos_ZooLib::ZYadListRPos_ZooLib(const ZValList_ZooLib& iList, uint64 iPosition)
-:	ZYadR_ZooLib(iList),
-	fList(iList),
-	fPosition(iPosition)
+:	ZYadR_ZooLib(iList)
+,	YadListBase_t(iList, iPosition)
 	{}
-
-ZRef<ZYadR> ZYadListRPos_ZooLib::ReadInc()
-	{
-	if (fPosition < fList.Count())
-		return ZYad_ZooLib::sMakeYadR(fList.Get(fPosition++));
-	return ZRef<ZYadR>();
-	}
 
 bool ZYadListRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
 	{ return ZYadR_ZooLib::IsSimple(iOptions); }
-
-uint64 ZYadListRPos_ZooLib::GetPosition()
-	{ return fPosition; }
-
-uint64 ZYadListRPos_ZooLib::GetSize()
-	{ return fList.Count(); }
-
-void ZYadListRPos_ZooLib::SetPosition(uint64 iPosition)
-	{ fPosition = iPosition; }
-
-ZRef<ZYadListRPos> ZYadListRPos_ZooLib::Clone()
-	{ return new ZYadListRPos_ZooLib(fList, fPosition); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadMapRPos_ZooLib
 
 ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap)
-:	ZYadR_ZooLib(iMap),
-	fMap(iMap),
-	fIndex(fMap.begin())
+:	ZYadR_ZooLib(iMap)
+,	YadMapBase_t(iMap, iMap.begin())
 	{}
 
-ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(
-	const ZValMap_ZooLib& iMap,
-	const ZValMap_ZooLib::Index_t& iIndex)
-:	ZYadR_ZooLib(iMap),
-	fMap(iMap),
-	fIndex(iIndex)
+ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap, const Index_t& iIndex)
+:	ZYadR_ZooLib(iMap)
+,	YadMapBase_t(iMap, iIndex)
 	{}
+
+bool ZYadMapRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
+	{ return ZYadR_ZooLib::IsSimple(iOptions); }
 
 ZRef<ZYadR> ZYadMapRPos_ZooLib::ReadInc(string& oName)
 	{
 	if (fIndex != fMap.end())
 		{
 		oName = fMap.NameOf(fIndex).AsString();
-		return ZYad_ZooLib::sMakeYadR(fMap.Get(fIndex++));
+		return sMakeYadR(fMap.Get(fIndex++));
 		}
 	return ZRef<ZYadR>();
 	}
 
-bool ZYadMapRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
-	{ return ZYadR_ZooLib::IsSimple(iOptions); }
-
-void ZYadMapRPos_ZooLib::SetPosition(const string& iName)
+void ZYadMapRPos_ZooLib::SetPosition(const std::string& iName)
 	{ fIndex = fMap.IndexOf(iName); }
-
-ZRef<ZYadMapRPos> ZYadMapRPos_ZooLib::Clone()
-	{ return new ZYadMapRPos_ZooLib(fMap, fIndex); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYad_ZooLib
+#pragma mark * sMakeYadR
 
-ZRef<ZYadR> ZYad_ZooLib::sMakeYadR(const ZVal_ZooLib& iVal)
+ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal)
 	{
 	switch (iVal.TypeOf())
 		{
@@ -249,7 +219,12 @@ ZRef<ZYadR> ZYad_ZooLib::sMakeYadR(const ZVal_ZooLib& iVal)
 	return new ZYadR_ZooLib(iVal);
 	}
 
-ZVal_ZooLib ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
+// =================================================================================================
+#pragma mark -
+#pragma mark * sFromYadR_T
+
+template <>
+ZVal_ZooLib sFromYadR_T<ZVal_ZooLib>(ZRef<ZYadR> iYadR)
 	{
 	if (!iYadR)
 		{
@@ -265,7 +240,7 @@ ZVal_ZooLib ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
 
 		string theName;
 		while (ZRef<ZYadR> theChild = theYadMapR->ReadInc(theName))
-			theMap.Set(theName, sFromYadR(theChild));
+			theMap.Set(theName, sFromYadR_T<ZVal_ZooLib>(theChild));
 
 		return theMap;
 		}
@@ -274,7 +249,7 @@ ZVal_ZooLib ZYad_ZooLib::sFromYadR(ZRef<ZYadR> iYadR)
 		ZValList_ZooLib theList;
 
 		while (ZRef<ZYadR> theChild = theYadListR->ReadInc())
-			theList.Append(sFromYadR(theChild));
+			theList.Append(sFromYadR_T<ZVal_ZooLib>(theChild));
 
 		return theList;	
 		}

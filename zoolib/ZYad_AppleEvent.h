@@ -18,31 +18,59 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZPhotoshop_Yad__
-#define __ZPhotoshop_Yad__ 1
+#ifndef __ZYad_AppleEvent__
+#define __ZYad_AppleEvent__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZPhotoshop_Val.h"
+#include "zoolib/ZVal_AppleEvent.h"
 #include "zoolib/ZYad_Val_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-namespace ZPhotoshop {
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadR_AppleEvent
+
+typedef ZYadR_Val_T<ZVal_AppleEvent> ZYadR_AppleEvent;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * YadR
+#pragma mark * ZYadListRPos_AppleEvent
 
-typedef ZYadR_Val_T<Val> YadR;
+class ZYadListRPos_AppleEvent
+:	public ZYadR_AppleEvent
+,	public ZYadListRPos_Val_T<ZYadListRPos_AppleEvent, ZValList_AppleEvent>
+	{
+public:
+	ZYadListRPos_AppleEvent(const ZValList_AppleEvent& iList);
+	ZYadListRPos_AppleEvent(const ZValList_AppleEvent& iList, uint64 iPosition);
+	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZPhotoshop::MakeYadR
+#pragma mark * ZYadMapRPos_AppleEvent
 
-ZRef<ZYadR> sMakeYadR(const Val& iVal);
+class ZYadMapRPos_AppleEvent
+:	public ZYadR_AppleEvent
+,	public ZYadMapRPos_Val_T<ZYadMapRPos_AppleEvent, ZValMap_AppleEvent>
+	{
+public:
+	ZYadMapRPos_AppleEvent(const ZValMap_AppleEvent& iMap);
+	ZYadMapRPos_AppleEvent(const ZValMap_AppleEvent& iMap, const Index_t& iPosition);
 
-} // namespace ZPhotoshop
+// From ZYadMapR via ZYadMapRPos_Val_T
+	virtual ZRef<ZYadR> ReadInc(std::string& oName);
+
+// From ZYadMapRPos via ZYadMapRPos_Val_T
+	virtual void SetPosition(const std::string& iName);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sMakeYadR
+
+ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal);
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZPhotoshop_Yad__
+#endif // __ZYad_AppleEvent__

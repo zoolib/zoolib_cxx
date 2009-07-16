@@ -426,7 +426,7 @@ void ZYad_XMLPList::sToStrimW_ML(const ZML::StrimW& s, ZRef<ZYadR> iYadR)
 		}
 	else
 		{
-		sToStrim_SimpleValue(s, ZYad_ZooLib::sFromYadR(iYadR));
+		sToStrim_SimpleValue(s, sFromYadR_T<ZVal_ZooLib>(iYadR));
 		}	
 	}
 

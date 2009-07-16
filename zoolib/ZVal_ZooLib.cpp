@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_ValData_T.h"
 
 using std::min;
+using std::pair;
 using std::string;
 using std::vector;
 
