@@ -64,9 +64,6 @@ ZRef<CFTypeRef> sNumber_T(CFNumberType iNumberType, const S& iVal)
 #pragma mark -
 #pragma mark * ZVal_CFType
 
-//ZVal_CFType::operator bool() const
-//	{ return fCFTypeRef; }
-
 ZVal_CFType::ZVal_CFType()
 	{}
 
@@ -156,6 +153,12 @@ ZVal_CFType::ZVal_CFType(CFArrayRef iVal)
 ZVal_CFType::ZVal_CFType(CFDictionaryRef iVal)
 :	ZRef<CFTypeRef>(iVal)
 	{}
+
+ZVal_CFType& ZVal_CFType::operator=(CFTypeRef iVal)
+	{
+	ZRef<CFTypeRef>::operator=(iVal);
+	return *this;
+	}
 
 void ZVal_CFType::Clear()
 	{ ZRef<CFTypeRef>::Clear(); }
@@ -481,7 +484,7 @@ CFArrayRef ZValList_CFType::pArray() const
 
 CFMutableArrayRef ZValList_CFType::pTouch()
 	{
-	CFMutableArrayRef theMutableArray;
+	ZRef<CFMutableArrayRef> theMutableArray;
 	if (CFArrayRef theArray = this->pArray())
 		{
 		if (!fMutable || ::CFGetRetainCount(theArray) > 1)
@@ -644,7 +647,7 @@ CFDictionaryRef ZValMap_CFType::pDictionary() const
 
 CFMutableDictionaryRef ZValMap_CFType::pTouch()
 	{
-	CFMutableDictionaryRef theMutableDictionary;
+	ZRef<CFMutableDictionaryRef> theMutableDictionary;
 	if (CFDictionaryRef theDictionary = this->pDictionary())
 		{
 		if (!fMutable || ::CFGetRetainCount(theDictionary) > 1)

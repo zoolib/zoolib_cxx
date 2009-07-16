@@ -74,9 +74,12 @@ public:
 	ZVal_CFType(const ZValList_CFType& iVal);
 	ZVal_CFType(const ZValMap_CFType& iVal);
 
-	ZVal_CFType(CFDataRef iVal);
-	ZVal_CFType(CFArrayRef iVal);
-	ZVal_CFType(CFDictionaryRef iVal);
+	explicit ZVal_CFType(CFTypeRef iVal);
+	explicit ZVal_CFType(CFDataRef iVal);
+	explicit ZVal_CFType(CFArrayRef iVal);
+	explicit ZVal_CFType(CFDictionaryRef iVal);
+
+	ZVal_CFType& operator=(CFTypeRef iVal);
 
 // ZVal protocol
 	void Clear();
