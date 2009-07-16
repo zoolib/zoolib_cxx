@@ -273,9 +273,6 @@ AEDesc& ZVal_AppleEvent::OParam()
 	return *this;
 	}
 
-const AEDesc& ZVal_AppleEvent::IParam() const
-	{ return *this; }
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVal_AppleEvent typename accessors

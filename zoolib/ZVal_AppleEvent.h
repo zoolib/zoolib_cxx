@@ -103,8 +103,6 @@ public:
 // Our protocol
 	AEDesc& OParam();
 
-	const AEDesc& IParam() const;
-
 // Typename accessors
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Int16, int16)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Int32, int32)

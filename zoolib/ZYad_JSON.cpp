@@ -599,8 +599,8 @@ ZYadVisitor_JSONWriter::SaveState::~SaveState()
 #pragma mark -
 #pragma mark * ZYadVisitor_JSONWriter
 
-ZYadVisitor_JSONWriter::ZYadVisitor_JSONWriter(const ZStrimW& iStrimW,
-	size_t iIndent, const ZYadOptions& iOptions)
+ZYadVisitor_JSONWriter::ZYadVisitor_JSONWriter(
+	const ZStrimW& iStrimW, size_t iIndent, const ZYadOptions& iOptions)
 :	fStrimW(iStrimW),
 	fIndent(iIndent),
 	fOptions(iOptions),

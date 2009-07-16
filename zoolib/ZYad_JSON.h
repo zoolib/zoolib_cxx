@@ -136,8 +136,8 @@ private:
 class ZYadVisitor_JSONWriter : public ZYadVisitor
 	{
 public:
-	ZYadVisitor_JSONWriter(const ZStrimW& iStrimW,
-		size_t iIndent, const ZYadOptions& iOptions);
+	ZYadVisitor_JSONWriter(
+		const ZStrimW& iStrimW, size_t iIndent, const ZYadOptions& iOptions);
 
 // From ZYadVisitor
 	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
