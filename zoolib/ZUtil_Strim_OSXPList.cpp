@@ -31,7 +31,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 void ZUtil_Strim_OSXPList::sToStrim(const ZStrimW& iStrimW, const ZVal_ZooLib& iVal)
 	{
-	ZYad_XMLPList::sToStrimW_ML(ZML::StrimW(iStrimW), ZYad_ZooLib::sMakeYadR(iVal));
+	ZYad_XMLPList::sToStrimW_ML(ZML::StrimW(iStrimW), sMakeYadR(iVal));
 	}
 
 bool ZUtil_Strim_OSXPList::sFromStrim(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
@@ -44,7 +44,7 @@ bool ZUtil_Strim_OSXPList::sFromML(ZML::Reader& r, ZVal_ZooLib& oVal)
 	{
 	if (ZRef<ZYadR> theYadR = ZYad_XMLPList::sMakeYadR(r))
 		{
-		oVal = ZYad_ZooLib::sFromYadR(theYadR);
+		oVal = sFromYadR_T<ZVal_ZooLib>(theYadR);
 		return true;
 		}
 	return false;

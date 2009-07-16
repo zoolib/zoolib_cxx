@@ -56,15 +56,14 @@ bool ZUtil_Strim_Tuple::sRead_Identifier(
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTValue& iTV)
 	{
-	ZRef<ZYadR> theYadR = ZYad_ZooLib::sMakeYadR(iTV);
+	ZRef<ZYadR> theYadR = sMakeYadR(iTV);
 	ZYad_ZooLibStrim::sToStrim(s, theYadR, 0, ZYadOptions());
 	}
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTValue& iTV,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{
-	ZYad_ZooLibStrim::sToStrim(
-		s, ZYad_ZooLib::sMakeYadR(iTV), iInitialIndent, iOptions);
+	ZYad_ZooLibStrim::sToStrim(s, sMakeYadR(iTV), iInitialIndent, iOptions);
 	}
 
 string ZUtil_Strim_Tuple::sAsString(const ZTValue& iTV)
@@ -78,7 +77,7 @@ bool ZUtil_Strim_Tuple::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV)
 	{
 	if (ZRef<ZYadR> theYadR = ZYad_ZooLibStrim::sMakeYadR(iStrimU))
 		{
-		oTV = ZYad_ZooLib::sFromYadR(theYadR);
+		oTV = sFromYadR_T<ZTValue>(theYadR);
 		return true;
 		}
 	return false;

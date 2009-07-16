@@ -35,24 +35,24 @@ namespace ZUtil_Strim_JSON {
 
 void sToStrim(const ZStrimW& s, const ZVal_ZooLib& iVal)
 	{
-	ZYad_JSON::sToStrim(s, ZYad_ZooLib::sMakeYadR(iVal));
+	ZYad_JSON::sToStrim(s, sMakeYadR(iVal));
 	}
 
 void sToStrim(const ZStrimW& s, const ZValMap_ZooLib& iMap)
 	{
-	ZYad_JSON::sToStrim(s, ZYad_ZooLib::sMakeYadR(iMap));
+	ZYad_JSON::sToStrim(s, sMakeYadR(iMap));
 	}
 
 void sToStrim(const ZStrimW& s, const ZValList_ZooLib& iList)
 	{
-	ZYad_JSON::sToStrim(s, ZYad_ZooLib::sMakeYadR(iList));
+	ZYad_JSON::sToStrim(s, sMakeYadR(iList));
 	}
 
 bool sFromStrim(const ZStrimU& s, ZVal_ZooLib& oVal)
 	{
 	if (ZRef<ZYadR> theYadR = ZYad_JSON::sMakeYadR(s))
 		{
-		oVal = ZYad_ZooLib::sFromYadR(theYadR);
+		oVal = sFromYadR_T<ZVal_ZooLib>(theYadR);
 		return true;
 		}
 	return false;
