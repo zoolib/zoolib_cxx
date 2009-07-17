@@ -205,133 +205,126 @@ bool ZTSWatcherServerAsync::Write(const ZStreamW& iStreamW)
 	{
 	bool wroteAnything = false;
 
-	for (;;)
+	ZMutexLocker locker(fMutex);
+	if (fReceivedClose)
 		{
-		ZMutexLocker locker(fMutex);
-		if (fReceivedClose)
+		iStreamW.WriteUInt8(eResp_Close);
+		return false;
+		}
+	else if (fIDsNeeded)
+		{
+		if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))
+			s << "Write, sending IDs";
+		const size_t countNeeded = fIDsNeeded;
+		fIDsNeeded = 0;
+		locker.Release();
+
+		uint64 theBaseID;
+		size_t countIssued;
+
+		bool success = fTSWatcher->AllocateIDs(countNeeded, theBaseID, countIssued);
+
+		if (!success)
 			{
 			iStreamW.WriteUInt8(eResp_Close);
 			return false;
 			}
-		else if (fIDsNeeded)
+
+		iStreamW.WriteUInt8(eResp_IDs);
+		iStreamW.WriteUInt64(theBaseID);
+		iStreamW.WriteCount(countIssued);
+
+		wroteAnything = true;
+
+		if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))
+			s << "Write, sent IDs";
+		}
+	else if (fSyncNeeded)
+		{
+		if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))
+			s << "Write, sync";
+		fSyncNeeded = false;
+
+		vector<uint64> removedIDs;
+		vector<uint64> addedIDs;
+		vector<int64> removedQueries;
+		vector<ZTSWatcher::AddedQueryCombo> addedQueries;
+		vector<uint64> writtenTupleIDs;
+		vector<ZTuple> writtenTuples;
+
+		fRemovedIDs.swap(removedIDs);
+		fAddedIDs.swap(addedIDs);
+		fRemovedQueries.swap(removedQueries);
+		fAddedQueries.swap(addedQueries);
+		fWrittenTupleIDs.swap(writtenTupleIDs);
+		fWrittenTuples.swap(writtenTuples);
+
+		locker.Release();
+
+		vector<uint64> watcherAddedIDs;
+		vector<uint64> changedTupleIDs;
+		vector<ZTuple> changedTuples;
+		map<int64, vector<uint64> > changedQueries;
+
+		bool success = fTSWatcher->Sync(
+			&removedIDs[0], removedIDs.size(),
+			&addedIDs[0], addedIDs.size(),
+			&removedQueries[0], removedQueries.size(),
+			&addedQueries[0], addedQueries.size(),
+			watcherAddedIDs,
+			changedTupleIDs, changedTuples,
+			&writtenTupleIDs[0], &writtenTuples[0], writtenTupleIDs.size(),
+			changedQueries);
+
+		if (!success)
 			{
-			if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))
-				s << "Write, sending IDs";
-			const size_t countNeeded = fIDsNeeded;
-			fIDsNeeded = 0;
-			locker.Release();
-
-			uint64 theBaseID;
-			size_t countIssued;
-
-			bool success = fTSWatcher->AllocateIDs(countNeeded, theBaseID, countIssued);
-
-			if (!success)
-				{
-				iStreamW.WriteUInt8(eResp_Close);
-				return false;
-				}
-
-			iStreamW.WriteUInt8(eResp_IDs);
-			iStreamW.WriteUInt64(theBaseID);
-			iStreamW.WriteCount(countIssued);
-
-			wroteAnything = true;
-
-			if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))
-				s << "Write, sent IDs";
+			iStreamW.WriteUInt8(eResp_Close);
+			return false;
 			}
-		else if (fSyncNeeded)
+		
+		iStreamW.WriteUInt8(eResp_SyncResults);
+
+		iStreamW.WriteCount(watcherAddedIDs.size());
+		for (vector<uint64>::const_iterator
+			i = watcherAddedIDs.begin(), theEnd = watcherAddedIDs.end();
+			i != theEnd; ++i)
 			{
-			if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))
-				s << "Write, sync";
-			fSyncNeeded = false;
-
-			vector<uint64> removedIDs;
-			vector<uint64> addedIDs;
-			vector<int64> removedQueries;
-			vector<ZTSWatcher::AddedQueryCombo> addedQueries;
-			vector<uint64> writtenTupleIDs;
-			vector<ZTuple> writtenTuples;
-
-			fRemovedIDs.swap(removedIDs);
-			fAddedIDs.swap(addedIDs);
-			fRemovedQueries.swap(removedQueries);
-			fAddedQueries.swap(addedQueries);
-			fWrittenTupleIDs.swap(writtenTupleIDs);
-			fWrittenTuples.swap(writtenTuples);
-
-			locker.Release();
-
-			vector<uint64> watcherAddedIDs;
-			vector<uint64> changedTupleIDs;
-			vector<ZTuple> changedTuples;
-			map<int64, vector<uint64> > changedQueries;
-
-			bool success = fTSWatcher->Sync(
-				&removedIDs[0], removedIDs.size(),
-				&addedIDs[0], addedIDs.size(),
-				&removedQueries[0], removedQueries.size(),
-				&addedQueries[0], addedQueries.size(),
-				watcherAddedIDs,
-				changedTupleIDs, changedTuples,
-				&writtenTupleIDs[0], &writtenTuples[0], writtenTupleIDs.size(),
-				changedQueries);
-
-			if (!success)
-				{
-				iStreamW.WriteUInt8(eResp_Close);
-				return false;
-				}
-			
-			iStreamW.WriteUInt8(eResp_SyncResults);
-
-			iStreamW.WriteCount(watcherAddedIDs.size());
-			for (vector<uint64>::const_iterator
-				i = watcherAddedIDs.begin(), theEnd = watcherAddedIDs.end();
-				i != theEnd; ++i)
-				{
-				iStreamW.WriteUInt64(*i);
-				}
-
-			iStreamW.WriteCount(changedTupleIDs.size());
-			vector<ZTuple>::const_iterator iterCT = changedTuples.begin();
-			for (vector<uint64>::const_iterator
-				i = changedTupleIDs.begin(), theEnd = changedTupleIDs.end();
-				i != theEnd; ++i, ++iterCT)
-				{
-				iStreamW.WriteUInt64(*i);
-				(*iterCT).ToStream(iStreamW);
-				}
-			
-			iStreamW.WriteCount(changedQueries.size());
-			for (map<int64, vector<uint64> >::const_iterator
-				i = changedQueries.begin(), theEnd = changedQueries.end();
-				i != theEnd; ++i)
-				{
-				iStreamW.WriteInt64((*i).first);
-				const vector<uint64>& theVector = (*i).second;
-				iStreamW.WriteCount(theVector.size());
-				for (vector<uint64>::const_iterator j = theVector.begin(); j != theVector.end(); ++j)
-					iStreamW.WriteUInt64(*j);
-				}
-
-			wroteAnything = true;
+			iStreamW.WriteUInt64(*i);
 			}
-		else if (fCallbackNeeded)
+
+		iStreamW.WriteCount(changedTupleIDs.size());
+		vector<ZTuple>::const_iterator iterCT = changedTuples.begin();
+		for (vector<uint64>::const_iterator
+			i = changedTupleIDs.begin(), theEnd = changedTupleIDs.end();
+			i != theEnd; ++i, ++iterCT)
 			{
-			if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))
-				s << "Write, callback";
-			fCallbackNeeded = false;
-			locker.Release();
-			iStreamW.WriteUInt8(eResp_SyncSuggested);
-
-			wroteAnything = true;
+			iStreamW.WriteUInt64(*i);
+			(*iterCT).ToStream(iStreamW);
 			}
-		else
+		
+		iStreamW.WriteCount(changedQueries.size());
+		for (map<int64, vector<uint64> >::const_iterator
+			i = changedQueries.begin(), theEnd = changedQueries.end();
+			i != theEnd; ++i)
 			{
-			break;
+			iStreamW.WriteInt64((*i).first);
+			const vector<uint64>& theVector = (*i).second;
+			iStreamW.WriteCount(theVector.size());
+			for (vector<uint64>::const_iterator j = theVector.begin(); j != theVector.end(); ++j)
+				iStreamW.WriteUInt64(*j);
 			}
+
+		wroteAnything = true;
+		}
+	else if (fCallbackNeeded)
+		{
+		if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))
+			s << "Write, callback";
+		fCallbackNeeded = false;
+		locker.Release();
+		iStreamW.WriteUInt8(eResp_SyncSuggested);
+
+		wroteAnything = true;
 		}
 
 	if (wroteAnything)
@@ -342,11 +335,7 @@ bool ZTSWatcherServerAsync::Write(const ZStreamW& iStreamW)
 	return true;
 	}
 
-void ZTSWatcherServerAsync::Attached()
-	{
-	}
-
-void ZTSWatcherServerAsync::Detached()
+void ZTSWatcherServerAsync::Finished()
 	{
 	fTSWatcher->SetCallback(nullptr, nullptr);
 	ZTask::pFinished();

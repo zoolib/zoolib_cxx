@@ -153,7 +153,7 @@ public:
 	virtual bool Read(const ZStreamR& r);
 	virtual bool Write(const ZStreamW& w);
 
-	virtual void Detached();
+	virtual void Finished();
 
 private:
 	ZRef<ZStreamerRWConFactory> fFactory;
@@ -314,10 +314,10 @@ bool Device_Client::Write(const ZStreamW& w)
 	return true;
 	}
 
-void Device_Client::Detached()
+void Device_Client::Finished()
 	{
 	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device_Client"))
-		s << "Detached";
+		s << "Finished";
 	this->pFinished();
 	}
 
@@ -336,7 +336,7 @@ public:
 // From ZCommer
 	virtual bool Read(const ZStreamR& r);
 	virtual bool Write(const ZStreamW& w);
-	virtual void Detached();
+	virtual void Finished();
 
 private:
 	ZRefWeak<Manager_Client> fManager;
@@ -397,10 +397,10 @@ bool Manager_Client::Commer_Changed::Write(const ZStreamW& w)
 	return true;
 	}
 
-void Manager_Client::Commer_Changed::Detached()
+void Manager_Client::Commer_Changed::Finished()
 	{
 	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client::Commer_Changed"))
-		s << "Detached";
+		s << "Finished";
 
 	if (ZRef<Manager_Client> theManager = fManager)
 		theManager->pDetached(this);

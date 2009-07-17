@@ -449,10 +449,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 	ZAssertCompile(false);
 	}
 
-void ZTBServer::Attached()
-	{}
-
-void ZTBServer::Detached()
+void ZTBServer::Finished()
 	{
 	ZTask::pFinished();
 	}

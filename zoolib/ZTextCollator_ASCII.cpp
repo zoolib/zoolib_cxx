@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZFunctionChain.h"
-#include "zoolib/ZUnicode.h"
 
 using std::min;
 
@@ -79,7 +78,7 @@ static int sCompare_CaseInsensitive(const UTF8* iLeft, size_t iLeftLength,
 	{
 	for (size_t count = min(iLeftLength, iRightLength); count; --count)
 		{
-		if (int compare = int(ZUnicode::sToLower(*iLeft++)) - int(ZUnicode::sToLower(*iRight++)))
+		if (int compare = int(tolower(*iLeft++)) - int(tolower(*iRight++)))
 			return compare;
 		}
 	if (iLeftLength < iRightLength)

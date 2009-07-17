@@ -45,12 +45,14 @@ public:
 
 	virtual ~ZTSWatcherServerAsync();
 
+// From ZTask
+	virtual void Kill();
+
 // From ZCommer
 	virtual bool Read(const ZStreamR& iStreamR);
 	virtual bool Write(const ZStreamW& iStreamW);
 
-	virtual void Attached();
-	virtual void Detached();
+	virtual void Finished();
 
 private:
 	void pCallback();

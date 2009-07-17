@@ -57,12 +57,14 @@ public:
 
 	~ZTBServer();
 
+// From ZTask
+	virtual void Kill();
+
 // From ZCommer
 	virtual bool Read(const ZStreamR& iStreamR);
 	virtual bool Write(const ZStreamW& iStreamW);
 
-	virtual void Attached();
-	virtual void Detached();
+	virtual void Finished();
 
 private:
 	static void sCallback_AllocateIDs(void* iRefcon, uint64 iBaseID, size_t iCount);
