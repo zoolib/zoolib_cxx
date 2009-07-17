@@ -37,9 +37,6 @@ class ZYadPrimR_Std
 public:
 	ZYadPrimR_Std();
 	ZYadPrimR_Std(const ZVal_ZooLib& iVal);
-
-// From ZYadR_Std
-	virtual void Finish();
 	};
 
 // =================================================================================================
@@ -52,9 +49,6 @@ class ZYadStreamRPos_Std
 	{
 public:
 	ZYadStreamRPos_Std(const ZValData_ZooLib& iData);
-
-// From ZYadR_Std
-	virtual void Finish();
 	};
 
 // =================================================================================================
@@ -67,9 +61,6 @@ class ZYadStrimU_Std
 	{
 public:
 	ZYadStrimU_Std(const std::string& iString);
-
-// From ZYadR_Std
-	virtual void Finish();
 	};
 
 NAMESPACE_ZOOLIB_END

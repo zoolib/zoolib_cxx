@@ -68,7 +68,7 @@ public:
 	ZVal_AppleEvent(const AEDesc& iOther);
 	ZVal_AppleEvent& operator=(const AEDesc& iOther);
 
-	ZVal_AppleEvent(const bool& iVal);
+	ZVal_AppleEvent(bool iVal);
 	ZVal_AppleEvent(const std::string& iVal);
 	ZVal_AppleEvent(const ZValList_AppleEvent& iVal);
 	ZVal_AppleEvent(const ZValMap_AppleEvent& iVal);

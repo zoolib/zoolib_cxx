@@ -383,9 +383,7 @@ ZYadStrimR_ZooLibStrim_Quote::ZYadStrimR_ZooLibStrim_Quote(const ZStrimU& iStrim
 	{}
 
 void ZYadStrimR_ZooLibStrim_Quote::Finish()
-	{
-	this->SkipAll();
-	}
+	{ this->SkipAll(); }
 
 const ZStrimR& ZYadStrimR_ZooLibStrim_Quote::GetStrimR()
 	{ return *this; }

@@ -66,7 +66,7 @@ static AEKeyword spAsAEKeyword(const string& iName)
 	return result;
 	}
 
-std::string sAEKeywordAsString(AEKeyword iKeyword)
+string sAEKeywordAsString(AEKeyword iKeyword)
 	{
 	if (ZCONFIG(Endian, Big))
 		{
@@ -128,7 +128,7 @@ ZVal_AppleEvent& ZVal_AppleEvent::operator=(const AEDesc& iOther)
 	return *this;
 	}
 
-ZVal_AppleEvent::ZVal_AppleEvent(const bool& iVal)
+ZVal_AppleEvent::ZVal_AppleEvent(bool iVal)
 	{ ::AECreateDesc(iVal ? typeTrue : typeFalse, nullptr, 0, this); }
 
 ZVal_AppleEvent::ZVal_AppleEvent(const std::string& iVal)
@@ -161,6 +161,13 @@ bool ZVal_AppleEvent::QGet_T<bool>(bool& oVal) const
 	else if (typeFalse == descriptorType)
 		{
 		oVal = false;
+		return true;
+		}
+	else if (typeBoolean == descriptorType)
+		{
+		Boolean theFlag;
+		::AEGetDescData(this, &theFlag, sizeof(theFlag));
+		oVal = theFlag;
 		return true;
 		}
 	return false;
@@ -210,7 +217,7 @@ bool ZVal_AppleEvent::QGet_T<ZValList_AppleEvent>(ZValList_AppleEvent& oVal) con
 template <>
 bool ZVal_AppleEvent::QGet_T<ZValMap_AppleEvent>(ZValMap_AppleEvent& oVal) const
 	{
-	if (typeAERecord == descriptorType || typeAppleEvent == descriptorType)
+	if (::AECheckIsRecord(this))
 		{
 		oVal = *static_cast<const AERecord*>(this);
 		return true;
@@ -416,7 +423,7 @@ ZValMap_AppleEvent::ZValMap_AppleEvent()
 
 ZValMap_AppleEvent::ZValMap_AppleEvent(const ZValMap_AppleEvent& iOther)
 	{
-	ZAssert(typeAERecord == iOther.descriptorType || typeAppleEvent == iOther.descriptorType);
+	ZAssert(::AECheckIsRecord(&iOther));
 	::AEDuplicateDesc(&iOther, this);
 	}
 
@@ -428,7 +435,7 @@ ZValMap_AppleEvent& ZValMap_AppleEvent::operator=(const ZValMap_AppleEvent& iOth
 	if (this != &iOther)
 		{
 		::AEDisposeDesc(this);
-		ZAssert(typeAERecord == iOther.descriptorType || typeAppleEvent == iOther.descriptorType);
+		ZAssert(::AECheckIsRecord(&iOther));
 		::AEDuplicateDesc(&iOther, this);
 		}
 	return *this;	
@@ -436,7 +443,7 @@ ZValMap_AppleEvent& ZValMap_AppleEvent::operator=(const ZValMap_AppleEvent& iOth
 
 ZValMap_AppleEvent::ZValMap_AppleEvent(const AERecord& iOther)
 	{
-	if (typeAERecord == iOther.descriptorType || typeAppleEvent == iOther.descriptorType)
+	if (::AECheckIsRecord(&iOther))
 		::AEDuplicateDesc(&iOther, this);
 	else
 		::AECreateList(nullptr, 0, true, this);
@@ -447,7 +454,7 @@ ZValMap_AppleEvent& ZValMap_AppleEvent::operator=(const AERecord& iOther)
 	if (this != &iOther)
 		{
 		::AEDisposeDesc(this);
-		ZAssert(typeAERecord == iOther.descriptorType || typeAppleEvent == iOther.descriptorType);
+		ZAssert(::AECheckIsRecord(&iOther));
 		::AEDuplicateDesc(&iOther, this);
 		}
 	return *this;	

@@ -97,9 +97,6 @@ class ZYadStrimR_JSONNormalize
 public:
 	ZYadStrimR_JSONNormalize(ZRef<ZYadStrimR> iSource);
 
-// From ZYadR_Std
-	virtual void Finish();
-
 // From ZStrimmerR via ZYadStrimR
 	const ZStrimR& GetStrimR();
 
@@ -109,9 +106,6 @@ private:
 
 ZYadStrimR_JSONNormalize::ZYadStrimR_JSONNormalize(ZRef<ZYadStrimR> iSource)
 :	fSource(iSource)
-	{}
-
-void ZYadStrimR_JSONNormalize::Finish()
 	{}
 
 const ZStrimR& ZYadStrimR_JSONNormalize::GetStrimR()

@@ -45,7 +45,7 @@ class ZYadR_Std : public virtual ZYadR
 	{
 public:
 // Our protocol
-	virtual void Finish() = 0;
+	virtual void Finish();
 	};
 
 // =================================================================================================
@@ -66,17 +66,12 @@ public:
 // From ZYadListR
 	virtual ZRef<ZYadR> ReadInc();
 
-//	virtual uint64 GetPosition();
-
 // Our protocol
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR) = 0;
 
 private:
-	uint64 fPosition;
 	bool fStarted;
-	bool fFinished;
-	ZRef<ZYadR_Std> fValue_Current;
-	ZRef<ZYadR_Std> fValue_Prior;
+	ZRef<ZYadR_Std> fValue;
 	};
 
 // =================================================================================================
@@ -94,7 +89,7 @@ public:
 // From ZYadR_Std
 	virtual void Finish();
 
-// ZYadMapR
+// From ZYadMapR
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);
 
 // Our protocol
@@ -102,8 +97,7 @@ public:
 
 private:
 	bool fStarted;
-	bool fFinished;
-	ZRef<ZYadR_Std> fValue_Prior;
+	ZRef<ZYadR_Std> fValue;
 	};
 
 NAMESPACE_ZOOLIB_END

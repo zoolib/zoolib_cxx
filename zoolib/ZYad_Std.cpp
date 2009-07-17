@@ -47,91 +47,73 @@ ZYadParseException_Std::ZYadParseException_Std(const char* iWhat)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYadR_Std
+
+void ZYadR_Std::Finish()
+	{}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYadListR_Std
 
 ZYadListR_Std::ZYadListR_Std()
-:	fPosition(0),
-	fFinished(false),
-	fStarted(false)
+:	fStarted(false)
 	{}
 
 ZYadListR_Std::ZYadListR_Std(bool iFinished)
-:	fPosition(0),
-	fFinished(iFinished),
-	fStarted(false)
+:	fStarted(iFinished)
 	{}
 
 void ZYadListR_Std::Finish()
-	{
-	this->SkipAll();
-	}
+	{ this->SkipAll(); }
 
 ZRef<ZYadR> ZYadListR_Std::ReadInc()
 	{
-	if (fValue_Prior)
+	if (!fStarted)
 		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		}
-
-	if (!fFinished)
-		{
-		this->Imp_ReadInc(!fStarted, fValue_Prior);
 		fStarted = true;
-
-		if (fValue_Prior)
-			++fPosition;
-		else
-			fFinished = true;
+		this->Imp_ReadInc(true, fValue);
+		}
+	else if (fValue)
+		{
+		fValue->Finish();
+		fValue.Clear();
+		this->Imp_ReadInc(false, fValue);
 		}
 
-	return fValue_Prior;
+	return fValue;
 	}
-
-//uint64 ZYadListR_Std::GetPosition()
-//	{ return fPosition; }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadMapR_Std
 
 ZYadMapR_Std::ZYadMapR_Std()
-:	fFinished(false),
-	fStarted(false)
+:	fStarted(false)
 	{}
 	
 ZYadMapR_Std::ZYadMapR_Std(bool iFinished)
-:	fFinished(iFinished),
-	fStarted(false)
+:	fStarted(iFinished)
 	{}
 
 void ZYadMapR_Std::Finish()
-	{
-	this->SkipAll();
-	}
+	{ this->SkipAll(); }
 
 ZRef<ZYadR> ZYadMapR_Std::ReadInc(std::string& oName)
 	{
-	if (fValue_Prior)
+	if (!fStarted)
 		{
-		fValue_Prior->Finish();
-		fValue_Prior.Clear();
-		}
-
-	if (!fFinished)
-		{
-		string curName;
-
-		this->Imp_ReadInc(!fStarted, curName, fValue_Prior);
 		fStarted = true;
-
-		if (fValue_Prior)
-			oName = curName;
-		else
-			fFinished = true;
+		this->Imp_ReadInc(true, oName, fValue);
+		}
+	else if (fValue)
+		{
+		fValue->Finish();
+		fValue.Clear();
+		this->Imp_ReadInc(false, oName, fValue);		
 		}
 
-	return fValue_Prior;
+	return fValue;
 	}
 
 NAMESPACE_ZOOLIB_END

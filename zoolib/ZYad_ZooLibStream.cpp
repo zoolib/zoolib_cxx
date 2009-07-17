@@ -60,16 +60,10 @@ class ZYadPrimR_ZooLibStream
 	{
 public:
 	ZYadPrimR_ZooLibStream(ZType iType, const ZStreamR& iStreamR);
-
-// From ZYadR_Std
-	virtual void Finish();
 	};
 
 ZYadPrimR_ZooLibStream::ZYadPrimR_ZooLibStream(ZType iType, const ZStreamR& iStreamR)
 :	ZYadR_ZooLib(iType, iStreamR)
-	{}
-
-void ZYadPrimR_ZooLibStream::Finish()
 	{}
 
 // =================================================================================================
@@ -108,9 +102,7 @@ ZYadStreamR_ZooLibStreamNew::ZYadStreamR_ZooLibStreamNew(const ZStreamR& iStream
 	{}
 
 void ZYadStreamR_ZooLibStreamNew::Finish()
-	{
-	this->GetStreamR().SkipAll();
-	}
+	{ this->GetStreamR().SkipAll(); }
 
 const ZStreamR& ZYadStreamR_ZooLibStreamNew::GetStreamR()
 	{ return *this; }

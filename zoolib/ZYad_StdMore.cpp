@@ -33,9 +33,6 @@ ZYadPrimR_Std::ZYadPrimR_Std(const ZVal_ZooLib& iVal)
 :	ZYadR_ZooLib(iVal)
 	{}
 
-void ZYadPrimR_Std::Finish()
-	{}
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadStreamRPos_Std
@@ -44,18 +41,12 @@ ZYadStreamRPos_Std::ZYadStreamRPos_Std(const ZValData_ZooLib& iData)
 :	ZYadStreamRPos_ZooLib(iData)
 	{}
 
-void ZYadStreamRPos_Std::Finish()
-	{}
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadStrimU_Std
 
 ZYadStrimU_Std::ZYadStrimU_Std(const std::string& iString)
 :	ZYadStrimU_String(iString)
-	{}
-
-void ZYadStrimU_Std::Finish()
 	{}
 
 NAMESPACE_ZOOLIB_END
