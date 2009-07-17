@@ -66,8 +66,8 @@ bool ZServer::StreamerListener::Connected(ZRef<ZStreamerRW> iStreamerRW)
 
 void ZServer::StreamerListener::pStop()
 	{
-	fFactory->Cancel();
 	fServer.Clear();
+	fFactory->Cancel();
 	ZWaiter::Wake();
 	}
 
