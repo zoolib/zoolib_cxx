@@ -75,8 +75,11 @@ public:
 
 	typedef Index_t const_iterator;
 
-	const_iterator IteratorOf(const char* iPropName) const;
-	const_iterator IteratorOf(const ZTName& iPropName) const;
+	const_iterator IteratorOf(const char* iPropName) const
+		{ return this->IndexOf(iPropName); }
+
+	const_iterator IteratorOf(const ZTName& iPropName) const
+		{ return this->IndexOf(iPropName); }
 
 // Typename accessors
 	ZMACRO_ZValMapAccessors_Decl(ZValMap_ZooLib, const char*)
