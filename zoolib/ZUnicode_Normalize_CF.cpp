@@ -37,29 +37,33 @@ namespace ZUnicode {
 
 namespace ZANONYMOUS {
 
-void ZooLib_CFStringNormalize(CFMutableStringRef theString, ENormForm theForm);
-
 #if defined(kCFCoreFoundationVersionNumber10_2)
 
-	void ZooLib_CFStringNormalize(CFMutableStringRef theString, ENormForm theForm)
-		{
-		::CFStringNormalize(theString, (CFStringNormalizationForm)theForm);
-		}
+	void spCFStringNormalize(CFMutableStringRef iString, CFStringNormalizationForm iNF)
+		{ ::CFStringNormalize(iString, iNF); }
 
 #else
 
-	typedef enum {} CFStringNormalizationForm;
+	typedef enum
+		{
+		kCFStringNormalizationFormD = 0,
+		kCFStringNormalizationFormKD,
+		kCFStringNormalizationFormC,
+		kCFStringNormalizationFormKC
+		} CFStringNormalizationForm;
 
 	extern "C" typedef
 		void (*CFStringNormalize_Ptr)(CFMutableStringRef, CFStringNormalizationForm);
 
-	void ZooLib_CFStringNormalize(
-		CFMutableStringRef theString, ENormForm theForm)
+	void spCFStringNormalize(
+		CFMutableStringRef iString, CFStringNormalizationForm iNF)
 		{
 		CFBundleRef bundleRef = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.CoreFoundation"));
-		CFStringNormalize_Ptr theProc = (CFStringNormalize_Ptr)
-			CFBundleGetFunctionPointerForName(bundleRef, CFSTR("CFStringNormalize"));
-		theProc(theString, (CFStringNormalizationForm)theForm);
+		if (CFStringNormalize_Ptr theProc = (CFStringNormalize_Ptr)
+			CFBundleGetFunctionPointerForName(bundleRef, CFSTR("CFStringNormalize")))
+			{
+			theProc(iString, iNF);
+			}
 		}
 
 #endif
@@ -75,8 +79,17 @@ class Function
 			}
 		else
 			{
+			CFStringNormalizationForm theNF;
+			switch (iParam.fNormForm)
+				{
+				case eNormForm_D: theNF = kCFStringNormalizationFormD; break;
+				case eNormForm_KD: theNF = kCFStringNormalizationFormKD; break;
+				case eNormForm_C: theNF = kCFStringNormalizationFormC; break;
+				case eNormForm_KC: theNF = kCFStringNormalizationFormKC; break;
+				}
+
 			ZRef<CFMutableStringRef> srm = ZUtil_CFType::sStringMutable(iParam.fString);
-			ZooLib_CFStringNormalize(srm, iParam.fNormForm);
+			spCFStringNormalize(srm, theNF);
 			oResult = ZUtil_CFType::sAsUTF16(srm);
 			}
 		return true;		

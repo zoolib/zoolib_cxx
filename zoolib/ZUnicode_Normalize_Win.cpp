@@ -20,13 +20,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUnicode_Normalize_Win.h"
 
-#if 0 && ZCONFIG_SPI_Enabled(Win)
+#if ZCONFIG_SPI_Enabled(Win)
 
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZWinHeader.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namesapce ZUnicode {
+namespace ZUnicode {
 
 // =================================================================================================
 #pragma mark -
@@ -34,18 +34,90 @@ namesapce ZUnicode {
 
 namespace ZANONYMOUS {
 
+#if WINVER >= 0x0600
+
 static string16 sNormalized_C_Win(const string16& iString, ENormForm iNormForm)
 	{
-	// See FoldString with these flags:
-	// FormC      MAP_PRECOMPOSED
-	// FormD      MAP_COMPOSITE
-	// FormKC     MAP_PRECOMPOSED | MAP_FOLDCZONE
-	// FormKD     MAP_COMPOSITE | MAP_FOLDCZONE 
-	// That said, FoldString uses old tables which do not match the
-	// unicode standard behavior.
+	string16 result = iString;
+	if (!iString.empty())
+		{
+		NORM_FORM theNF;
+		switch (iNormForm)
+			{
+			case eNormForm_D: theNF = NormalizationD; break;
+			case eNormForm_KD: theNF = NormalizationKD; break;
+			case eNormForm_C: theNF = NormalizationC; break;
+			case eNormForm_KC: theNF = NormalizationKC; break;
+			}
+		
+		for (;;)
+			{
+			int reqEstimate = ::NormalizeString(theNF,
+				iString.data(), iString.size(),
+				const_cast<UTF16*>(result.data()), result.size());
 
-	// Vista has NormalizeString, which is what we should really use.
+			if (reqEstimate > 0)
+				{
+				result.resize(reqEstimate);
+				break;
+				}
+
+			DWORD err = ::GetLastError();
+			if (err != ERROR_INSUFFICIENT_BUFFER)
+				{
+				result.clear();
+				break;
+				}
+			result.resize(size_t(-1.2 * reqEstimate));
+			}
+		}
+	return result;
 	}
+
+#elif WINVER >= 0x0500 || _WIN32_WINNT >= 0x0500
+
+static string16 sNormalized_C_Win(const string16& iString, ENormForm iNormForm)
+	{
+	// Note that FoldString uses old tables which do not match the unicode standard behavior.
+	string16 result = iString;
+	if (!iString.empty())
+		{
+		DWORD theFlags;
+		switch (iNormForm)
+			{
+			case eNormForm_D: theFlags = MAP_COMPOSITE; break;
+			case eNormForm_KD: theFlags = MAP_COMPOSITE | MAP_FOLDCZONE; break;
+			case eNormForm_C: theFlags = MAP_PRECOMPOSED; break;
+			case eNormForm_KC: theFlags = MAP_PRECOMPOSED | MAP_FOLDCZONE; break;
+			}
+		
+		for (;;)
+			{
+			int reqEstimate = ::FoldStringW(theFlags,
+				iString.data(), iString.size(),
+				const_cast<UTF16*>(result.data()), result.size());
+
+			if (reqEstimate > 0)
+				{
+				result.resize(reqEstimate);
+				break;
+				}
+
+			DWORD err = ::GetLastError();
+			if (err != ERROR_INSUFFICIENT_BUFFER)
+				{
+				result.clear();
+				break;
+				}
+			result.resize(size_t(-1.2 * reqEstimate));
+			}
+		}
+	return result;
+	}
+
+#endif // WINVER
+
+#if WINVER >= 0x0500 || _WIN32_WINNT >= 0x0500
 
 class Function
 :	public ZFunctionChain_T<string16, const Param_Normalize&>
@@ -57,9 +129,11 @@ class Function
 		}	
 	} sFunction0;
 
+#endif // WINVER >= 0x0500
+
 } // namespace ZANONYMOUS
 
 } // namespace ZUnicode
 NAMESPACE_ZOOLIB_END
 
-#endif // ZCONFIG_SPI_Enabled(ICU)
+#endif // ZCONFIG_SPI_Enabled(Win)

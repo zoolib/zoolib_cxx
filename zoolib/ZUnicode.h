@@ -42,25 +42,25 @@ extern const uint8 sUTF8StartByteMark[7];
 extern const uint8 sUTF8StartByteMask[7];
 
 /// In-band indication of an end of stream. Not actually used by ZUnicode.
-static const UTF32 kCPEOF = UTF32(-1);
+const UTF32 kCPEOF = UTF32(-1);
 
 /// The maximum CP that's valid and representable in UCS-2.
-static const UTF32 kCPMaxUCS2 = 0xFFFFul;
+const UTF32 kCPMaxUCS2 = 0xFFFFul;
 
 /// The maximum CP that's valid and representable in UTF-32, UTF-16 and UTF-8.
-static const UTF32 kCPMaxUTF = 0x10FFFFul;
+const UTF32 kCPMaxUTF = 0x10FFFFul;
 
 /// The maximum CP that's representable in UCS-4 and UTF-8.
-static const UTF32 kCPMaxUCS4 = 0x7FFFFFFFul;
+const UTF32 kCPMaxUCS4 = 0x7FFFFFFFul;
 
 /// The CP to be emitted by a decoder when Unicode cannot represent the source CP.
-static const UTF32 kCPReplacement = 0xFFFDul;
+const UTF32 kCPReplacement = 0xFFFDul;
 
 /// UTF-16 surrogate pair ranges.
-static const UTF32 kCPSurrogateHighBegin = 0xD800ul;
-static const UTF32 kCPSurrogateHighEnd = 0xDC00ul;
-static const UTF32 kCPSurrogateLowBegin = 0xDC00ul;
-static const UTF32 kCPSurrogateLowEnd = 0xE000ul;
+const UTF32 kCPSurrogateHighBegin = 0xD800u;
+const UTF32 kCPSurrogateHighEnd = 0xDC00u;
+const UTF32 kCPSurrogateLowBegin = 0xDC00u;
+const UTF32 kCPSurrogateLowEnd = 0xE000u;
 //@}
 
 /*
@@ -78,48 +78,34 @@ from smaller sources.
 */
 
 inline bool sIsValidCP(uint32 iCP)
-	{
-	return iCP < kCPSurrogateHighBegin || (iCP >= kCPSurrogateLowEnd && iCP <= kCPMaxUTF);
-	}
+	{ return iCP < kCPSurrogateHighBegin || (iCP >= kCPSurrogateLowEnd && iCP <= kCPMaxUTF); }
 
 inline UTF32 sUTF32FromSurrogates(uint32 hi, uint32 lo)
 	{
-	static const int kSurrogateShift = 10;
-	static const uint32 kSurrogateBase = 0x10000ul;
+	const int kSurrogateShift = 10;
+	const uint32 kSurrogateBase = 0x10000ul;
 	return kSurrogateBase
 		+ ((hi - uint32(kCPSurrogateHighBegin)) << kSurrogateShift)
 		+ (lo - uint32(kCPSurrogateLowBegin));
 	}
 
 inline bool sIsLowSurrogate(uint32 iCU)
-	{
-	return iCU >= uint32(kCPSurrogateLowBegin) && iCU < uint32(kCPSurrogateLowEnd);
-	}
+	{ return iCU >= uint32(kCPSurrogateLowBegin) && iCU < uint32(kCPSurrogateLowEnd); }
 
 inline bool sIsSmallNormal(uint32 iCU)
-	{
-	return iCU < uint32(kCPSurrogateHighBegin);
-	}
+	{ return iCU < uint32(kCPSurrogateHighBegin); }
 
 inline bool sIsSmallNormalOrHighSurrogate(uint32 iCU)
-	{
-	return iCU < uint32(kCPSurrogateLowBegin);
-	}
+	{ return iCU < uint32(kCPSurrogateLowBegin); }
 
 inline bool sIsBigNormalOrBeyond(uint32 iCU)
-	{
-	return iCU >= uint32(kCPSurrogateLowEnd);
-	}
+	{ return iCU >= uint32(kCPSurrogateLowEnd); }
 
 inline bool sIsContinuation(uint8 iCU)
-	{
-	return (iCU & 0xC0) == 0x80;
-	}
+	{ return (iCU & 0xC0) == 0x80; }
 
 inline void sAppendContinuation(uint32& ioCP, uint8 iContinuation)
-	{
-	ioCP = (ioCP << 6) + (iContinuation & 0x3F);
-	}
+	{ ioCP = (ioCP << 6) + (iContinuation & 0x3F); }
 
 // =================================================================================================
 #pragma mark -
@@ -511,8 +497,8 @@ bool sIsEOL(UTF32 iCP);
 UTF32 sToUpper(UTF32 iCP);
 UTF32 sToLower(UTF32 iCP);
 
-string8 sToLower(const string8& iString);
 string8 sToUpper(const string8& iString);
+string8 sToLower(const string8& iString);
 
 int sHexValue(UTF32 iCP);
 //@}

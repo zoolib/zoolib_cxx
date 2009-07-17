@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "unicode/unorm.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namesapce ZUnicode {
+namespace ZUnicode {
 
 // =================================================================================================
 #pragma mark -
