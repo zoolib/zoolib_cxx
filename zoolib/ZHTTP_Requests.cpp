@@ -292,7 +292,10 @@ ZRef<ZStreamerR> sPostRaw(
 
 static ZRef<ZStrimmerR> sCreateStrimmerR(const ValMap& iHeader, const ZStreamR& iStreamR)
 	{
-	const string charset = iHeader.Get("content-type").GetMap().Get("parameters").GetMap().Get("charset").GetString();
+	const string charset = iHeader
+		.Get("content-type").GetMap()
+		.Get("parameters").GetMap()
+		.Get("charset").GetString();
 
 	if (ZTextDecoder* theDecoder = ZTextDecoder::sMake(charset))
 		return new ZStrimmerR_StreamR_T<ZStrimR_StreamDecoder>(theDecoder, iStreamR);
@@ -334,7 +337,9 @@ static bool sReadPOST(const ZStreamR& iStreamR, const ValMap& iHeader, Val& oVal
 	else if (content_type.Get("type").GetString() == "multipart"
 		&& content_type.Get("subtype").GetString() == "form-data")
 		{
-		const string baseBoundary = content_type.Get("parameters").GetMap().Get("boundary").GetString();
+		const string baseBoundary = content_type
+			.Get("parameters").GetMap()
+			.Get("boundary").GetString();
 
 		// Skip optional unheadered data section before the first boundary.
 		ZStreamR_Boundary(baseBoundary, iStreamR).SkipAll();
