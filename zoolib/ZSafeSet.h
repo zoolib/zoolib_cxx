@@ -87,6 +87,7 @@ private:
 	// From ZRefCountedWithFinalize
 	virtual void Finalize()
 		{
+		{ // Scope for guard
 		ZGuardMtx guard(fMtx);
 		if (this->GetRefCount() != 1)
 			{
@@ -107,6 +108,7 @@ private:
 			}
 
 		this->FinalizationComplete();
+		}
 		delete this;
 		}
 
