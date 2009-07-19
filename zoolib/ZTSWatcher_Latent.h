@@ -74,8 +74,8 @@ private:
 
 	void pRegisterAQC(AddedQueryCombo& ioAQC);
 
-	void Callback();
-	static void sCallback(void* iRefcon);
+	void pCallback();
+	static void spCallback(void* iRefcon);
 
 	ZRef<ZTSWatcher> fTSWatcher;
 	Callback_t fCallback;

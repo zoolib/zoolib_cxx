@@ -146,7 +146,7 @@ public:
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 private:
-	void Internal_Init(uint8& oSegmentType, bool iSkipOnDestroy);
+	void pInit(uint8& oSegmentType, bool iSkipOnDestroy);
 
 	const ZStreamR& fStreamR;
 	bool fSkipOnDestroy;

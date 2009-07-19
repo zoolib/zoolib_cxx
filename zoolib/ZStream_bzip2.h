@@ -59,7 +59,7 @@ public:
 	virtual bool Imp_WaitReadable(int iMilliseconds);
 
 protected:
-	void Internal_Init(size_t iBufferSize);
+	void pInit(size_t iBufferSize);
 
 	const ZStreamR& fStreamSource;
 	bz_stream fState;
@@ -87,8 +87,8 @@ public:
 	virtual void Imp_Flush();
 
 protected:
-	void Internal_Init(int iBlockSize100K, size_t iBufferSize);
-	void Internal_Flush();
+	void pInit(int iBlockSize100K, size_t iBufferSize);
+	void pFlush();
 
 	const ZStreamW& fStreamSink;
 	bz_stream fState;

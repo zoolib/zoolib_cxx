@@ -1818,7 +1818,7 @@ StreamW_Chunked::~StreamW_Chunked()
 	{
 	try
 		{
-		this->Internal_Flush();
+		this->pFlush();
 
 		// Terminating zero-length chunk
 		fStreamSink.WriteString("0\r\n");
@@ -1866,11 +1866,11 @@ void StreamW_Chunked::Imp_Write(const void* iSource, size_t iCount, size_t* oCou
 
 void StreamW_Chunked::Imp_Flush()
 	{
-	this->Internal_Flush();
+	this->pFlush();
 	fStreamSink.Flush();
 	}
 
-void StreamW_Chunked::Internal_Flush()
+void StreamW_Chunked::pFlush()
 	{
 	if (const size_t bufferUsed = fBufferUsed)
 		{

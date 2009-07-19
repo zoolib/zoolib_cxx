@@ -77,7 +77,7 @@ public:
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 private:
-	void Internal_Init(uint32& oChunkType, bool iSkipOnDestroy);
+	void pInit(uint32& oChunkType, bool iSkipOnDestroy);
 
 	const ZStreamR& fStream;
 	bool fSkipOnDestroy;
@@ -113,7 +113,7 @@ public:
 	virtual uint64 Imp_GetSize();
 
 private:
-	void Internal_Init(uint32& oChunkType, bool iSkipOnDestroy);
+	void pInit(uint32& oChunkType, bool iSkipOnDestroy);
 
 	const ZStreamRPos& fStream;
 	bool fSkipOnDestroy;

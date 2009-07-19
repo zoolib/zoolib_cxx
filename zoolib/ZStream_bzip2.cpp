@@ -51,7 +51,7 @@ using std::runtime_error;
 ZStreamR_bzip2Decode::ZStreamR_bzip2Decode(const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource)
 	{
-	this->Internal_Init(1024);
+	this->pInit(1024);
 	}
 
 /**
@@ -63,7 +63,7 @@ your source stream has poor latency then use a larger value or interpose a ZStre
 ZStreamR_bzip2Decode::ZStreamR_bzip2Decode(size_t iBufferSize, const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource)
 	{
-	this->Internal_Init(iBufferSize);
+	this->pInit(iBufferSize);
 	}
 
 ZStreamR_bzip2Decode::~ZStreamR_bzip2Decode()
@@ -112,7 +112,7 @@ size_t ZStreamR_bzip2Decode::Imp_CountReadable()
 	return fState.avail_out;
 	}
 
-void ZStreamR_bzip2Decode::Internal_Init(size_t iBufferSize)
+void ZStreamR_bzip2Decode::pInit(size_t iBufferSize)
 	{
 	fBufferSize = max(size_t(1024), iBufferSize);
 	fBuffer = new char[fBufferSize];
@@ -147,7 +147,7 @@ void ZStreamR_bzip2Decode::Internal_Init(size_t iBufferSize)
 ZStreamW_bzip2Encode::ZStreamW_bzip2Encode(int iBlockSize100K, const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink)
 	{
-	this->Internal_Init(iBlockSize100K, 1024);
+	this->pInit(iBlockSize100K, 1024);
 	}
 
 /**
@@ -162,7 +162,7 @@ ZStreamW_bzip2Encode::ZStreamW_bzip2Encode(
 	int iBlockSize100K, size_t iBufferSize, const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink)
 	{
-	this->Internal_Init(iBlockSize100K, iBufferSize);
+	this->pInit(iBlockSize100K, iBufferSize);
 	}
 
 ZStreamW_bzip2Encode::~ZStreamW_bzip2Encode()
@@ -171,7 +171,7 @@ ZStreamW_bzip2Encode::~ZStreamW_bzip2Encode()
 		{
 		try
 			{
-			this->Internal_Flush();
+			this->pFlush();
 			}
 		catch (...)
 			{}
@@ -231,11 +231,11 @@ void ZStreamW_bzip2Encode::Imp_Flush()
 	{
 	if (!fBufferSize)
 		return;
-	this->Internal_Flush();
+	this->pFlush();
 	fStreamSink.Flush();
 	}
 
-void ZStreamW_bzip2Encode::Internal_Init(int iBlockSize100K, size_t iBufferSize)
+void ZStreamW_bzip2Encode::pInit(int iBlockSize100K, size_t iBufferSize)
 	{
 	fBufferSize = max(size_t(1024), iBufferSize);
 	fBuffer = new char[fBufferSize];
@@ -254,7 +254,7 @@ void ZStreamW_bzip2Encode::Internal_Init(int iBlockSize100K, size_t iBufferSize)
 		throw runtime_error("ZStreamW_bzip2Encode problem");
 	}
 
-void ZStreamW_bzip2Encode::Internal_Flush()
+void ZStreamW_bzip2Encode::pFlush()
 	{
 	ZAssertStop(kDebug_bzip2, fState.avail_in == 0);
 

@@ -1670,21 +1670,21 @@ void ZDCPixmapNS::MapPixvalToRGB_Indexed::AsRGBColors(const uint32* iPixvals,
 		}
 	}
 
-void ZDCPixmapNS::MapPixvalToRGB_Indexed::Internal_AsRGBColor(uint32 iPixval,
+void ZDCPixmapNS::MapPixvalToRGB_Indexed::pAsRGBColor(uint32 iPixval,
 	ZRGBColorPOD& oColor) const
 	{
 	uint32* iter = lower_bound(fPixvals, fPixvals + fCount, iPixval);
 	oColor = fColors[iter - fPixvals];
 	}
 
-void ZDCPixmapNS::MapPixvalToRGB_Indexed::Internal_AsRGBColorSmall(uint32 iPixval,
+void ZDCPixmapNS::MapPixvalToRGB_Indexed::pAsRGBColorSmall(uint32 iPixval,
 	ZRGBColorSmallPOD& oColor) const
 	{
 	uint32* iter = lower_bound(fPixvals, fPixvals + fCount, iPixval);
 	oColor = ZRGBColorSmall(fColors[iter - fPixvals]);
 	}
 
-uint16 ZDCPixmapNS::MapPixvalToRGB_Indexed::Internal_AsAlpha(uint32 iPixval) const
+uint16 ZDCPixmapNS::MapPixvalToRGB_Indexed::pAsAlpha(uint32 iPixval) const
 	{
 	uint32* iter = lower_bound(fPixvals, fPixvals + fCount, iPixval);
 	return fColors[iter - fPixvals].alpha;

@@ -64,7 +64,7 @@ public:
 	virtual void Imp_Flush();
 
 private:
-	void Internal_Flush();
+	void pFlush();
 
 	const ZStreamW& fStreamSink;
 	uint8* fBuffer;

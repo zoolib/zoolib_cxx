@@ -109,7 +109,7 @@ ZStreamW_Chunked::~ZStreamW_Chunked()
 	{
 	try
 		{
-		this->Internal_Flush();
+		this->pFlush();
 		fStreamSink.WriteUInt8(0); // Terminating zero-length chunk.
 		}
 	catch (...)
@@ -124,7 +124,7 @@ void ZStreamW_Chunked::Imp_Write(const void* iSource, size_t iCount, size_t* oCo
 	while (iCount)
 		{
 		if (fBufferUsed == 255)
-			this->Internal_Flush();
+			this->pFlush();
 		size_t countToCopy = min(iCount, size_t(255 - fBufferUsed));
 		ZBlockCopy(localSource, fBuffer + fBufferUsed, countToCopy);
 		fBufferUsed += countToCopy;
@@ -137,11 +137,11 @@ void ZStreamW_Chunked::Imp_Write(const void* iSource, size_t iCount, size_t* oCo
 
 void ZStreamW_Chunked::Imp_Flush()
 	{
-	this->Internal_Flush();
+	this->pFlush();
 	fStreamSink.Flush();
 	}
 
-void ZStreamW_Chunked::Internal_Flush()
+void ZStreamW_Chunked::pFlush()
 	{
 	if (const size_t bufferUsed = fBufferUsed)
 		{

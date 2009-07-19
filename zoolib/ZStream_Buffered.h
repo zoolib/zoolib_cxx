@@ -78,7 +78,7 @@ public:
 	void Abandon();
 
 protected:
-	void Internal_Flush();
+	void pFlush();
 
 	const ZStreamW& fStreamSink;
 	uint8* fBuffer;
@@ -165,7 +165,7 @@ public:
 	virtual void Imp_Flush();
 
 protected:
-	void Internal_Flush();
+	void pFlush();
 
 	const ZStreamW& fStreamSink;
 	const ZStreamRWPos& fStreamBuffer;

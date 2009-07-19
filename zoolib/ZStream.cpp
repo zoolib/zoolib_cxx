@@ -1348,16 +1348,16 @@ void ZStreamW_Null::Imp_Write(const void* iSource, size_t iCount, size_t* oCount
 void ZStreamW_Null::Imp_CopyFromDispatch(const ZStreamR& iStreamR, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
 	{
-	this->Internal_CopyFrom(iStreamR, iCount, oCountRead, oCountWritten);
+	this->pCopyFrom(iStreamR, iCount, oCountRead, oCountWritten);
 	}
 
 void ZStreamW_Null::Imp_CopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
 	{
-	this->Internal_CopyFrom(iStreamR, iCount, oCountRead, oCountWritten);
+	this->pCopyFrom(iStreamR, iCount, oCountRead, oCountWritten);
 	}
 
-void ZStreamW_Null::Internal_CopyFrom(const ZStreamR& iStreamR, uint64 iCount,
+void ZStreamW_Null::pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
 	{
 	uint64 countSkipped;
@@ -1394,11 +1394,11 @@ void ZStreamWPos_Null::Imp_Write(const void* iSource, size_t iCount, size_t* oCo
 
 void ZStreamWPos_Null::Imp_CopyFromDispatch(const ZStreamR& iStreamR, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
-	{ this->Internal_CopyFrom(iStreamR, iCount, oCountRead, oCountWritten); }
+	{ this->pCopyFrom(iStreamR, iCount, oCountRead, oCountWritten); }
 
 void ZStreamWPos_Null::Imp_CopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
-	{ this->Internal_CopyFrom(iStreamR, iCount, oCountRead, oCountWritten); }
+	{ this->pCopyFrom(iStreamR, iCount, oCountRead, oCountWritten); }
 
 uint64 ZStreamWPos_Null::Imp_GetPosition()
 	{ return fPosition; }
@@ -1412,7 +1412,7 @@ uint64 ZStreamWPos_Null::Imp_GetSize()
 void ZStreamWPos_Null::Imp_SetSize(uint64 iSize)
 	{ fSize = iSize; }
 
-void ZStreamWPos_Null::Internal_CopyFrom(const ZStreamR& iStreamR, uint64 iCount,
+void ZStreamWPos_Null::pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
 	{
 	uint64 countSkipped;

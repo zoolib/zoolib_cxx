@@ -50,7 +50,7 @@ NAMESPACE_ZOOLIB_BEGIN
 ZStreamR_ZLibDecode::ZStreamR_ZLibDecode(const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource)
 	{
-	this->Internal_Init(1024);
+	this->pInit(1024);
 	}
 
 /**
@@ -62,7 +62,7 @@ your source stream has poor latency then use a larger value or interpose a ZStre
 ZStreamR_ZLibDecode::ZStreamR_ZLibDecode(size_t iBufferSize, const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource)
 	{
-	this->Internal_Init(iBufferSize);
+	this->pInit(iBufferSize);
 	}
 
 ZStreamR_ZLibDecode::~ZStreamR_ZLibDecode()
@@ -111,7 +111,7 @@ size_t ZStreamR_ZLibDecode::Imp_CountReadable()
 	return fState.avail_out;
 	}
 
-void ZStreamR_ZLibDecode::Internal_Init(size_t iBufferSize)
+void ZStreamR_ZLibDecode::pInit(size_t iBufferSize)
 	{
 	fBufferSize = max(size_t(1024), iBufferSize);
 	fBuffer = new Bytef[fBufferSize];
@@ -147,7 +147,7 @@ range from 1 to 9. 3 is a good tradeoff between CPU time and compression ratio.
 ZStreamW_ZLibEncode::ZStreamW_ZLibEncode(int iCompressionLevel, const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink)
 	{
-	this->Internal_Init(iCompressionLevel, 1024);
+	this->pInit(iCompressionLevel, 1024);
 	}
 
 /**
@@ -163,7 +163,7 @@ ZStreamW_ZLibEncode::ZStreamW_ZLibEncode(
 	int iCompressionLevel, size_t iBufferSize, const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink)
 	{
-	this->Internal_Init(iCompressionLevel, iBufferSize);
+	this->pInit(iCompressionLevel, iBufferSize);
 	}
 
 ZStreamW_ZLibEncode::~ZStreamW_ZLibEncode()
@@ -172,7 +172,7 @@ ZStreamW_ZLibEncode::~ZStreamW_ZLibEncode()
 		{
 		try
 			{
-			this->Internal_Flush();
+			this->pFlush();
 			}
 		catch (...)
 			{}
@@ -232,11 +232,11 @@ void ZStreamW_ZLibEncode::Imp_Flush()
 	{
 	if (!fBufferSize)
 		return;
-	this->Internal_Flush();
+	this->pFlush();
 	fStreamSink.Flush();
 	}
 
-void ZStreamW_ZLibEncode::Internal_Init(int iCompressionLevel, size_t iBufferSize)
+void ZStreamW_ZLibEncode::pInit(int iCompressionLevel, size_t iBufferSize)
 	{
 	fBufferSize = max(size_t(1024), iBufferSize);
 	fBuffer = new Bytef[fBufferSize];
@@ -255,7 +255,7 @@ void ZStreamW_ZLibEncode::Internal_Init(int iCompressionLevel, size_t iBufferSiz
 		throw runtime_error("ZStreamW_ZLibEncode problem");
 	}
 
-void ZStreamW_ZLibEncode::Internal_Flush()
+void ZStreamW_ZLibEncode::pFlush()
 	{
 	ZAssertStop(kDebug_ZLib, fState.avail_in == 0);
 

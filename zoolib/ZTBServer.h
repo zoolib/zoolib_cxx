@@ -104,6 +104,7 @@ private:
 	ZMutex fMutex_Structure;
 	ZCondition fCondition_Sender;
 		ZTime fTime_LastRead;
+		bool fSendClose;
 		bool fPingRequested;
 		bool fPingSent;
 

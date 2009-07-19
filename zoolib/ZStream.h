@@ -711,7 +711,7 @@ public:
 		uint64* oCountRead, uint64* oCountWritten);
 
 // Our protocol
-	void Internal_CopyFrom(const ZStreamR& iStreamR, uint64 iCount,
+	void pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 		uint64* oCountRead, uint64* oCountWritten);
 	};
 
@@ -744,7 +744,7 @@ public:
 	virtual void Imp_SetSize(uint64 iSize);
 
 // Our protocol
-	void Internal_CopyFrom(const ZStreamR& iStreamR, uint64 iCount,
+	void pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 		uint64* oCountRead, uint64* oCountWritten);
 
 private:

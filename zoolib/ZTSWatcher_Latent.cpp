@@ -85,7 +85,7 @@ ZTSWatcher_Latent::ZTSWatcher_Latent(ZRef<ZTSWatcher> iTSWatcher)
 	fMode(eMode_Normal),
 	fHasChangesPtr(nullptr)
 	{
-	fTSWatcher->SetCallback(sCallback, this);
+	fTSWatcher->SetCallback(spCallback, this);
 	}
 
 ZTSWatcher_Latent::~ZTSWatcher_Latent()
@@ -569,17 +569,15 @@ void ZTSWatcher_Latent::pRegisterAQC(AddedQueryCombo& ioAQC)
 		}
 	}
 
-void ZTSWatcher_Latent::Callback()
+void ZTSWatcher_Latent::pCallback()
 	{
 	ZMutexLocker locker(fMutex_Save);
 	if (fCallback)
 		fCallback(fRefcon);
 	}
 
-void ZTSWatcher_Latent::sCallback(void* iRefcon)
-	{
-	static_cast<ZTSWatcher_Latent*>(iRefcon)->Callback();
-	}
+void ZTSWatcher_Latent::spCallback(void* iRefcon)
+	{ static_cast<ZTSWatcher_Latent*>(iRefcon)->pCallback(); }
 
 NAMESPACE_ZOOLIB_END
 

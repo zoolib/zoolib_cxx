@@ -191,7 +191,7 @@ ZStreamW_Buffered::~ZStreamW_Buffered()
 	{
 	try
 		{
-		this->Internal_Flush();
+		this->pFlush();
 		}
 	catch (...)
 		{
@@ -228,7 +228,7 @@ void ZStreamW_Buffered::Imp_Write(const void* iSource, size_t iCount, size_t* oC
 			if (fBufferOffset == fBufferSize)
 				{
 				// The buffer's completely full.
-				this->Internal_Flush();
+				this->pFlush();
 				}
 			}
 		}
@@ -238,7 +238,7 @@ void ZStreamW_Buffered::Imp_Write(const void* iSource, size_t iCount, size_t* oC
 
 void ZStreamW_Buffered::Imp_Flush()
 	{
-	this->Internal_Flush();
+	this->pFlush();
 	fStreamSink.Flush();
 	}
 
@@ -247,7 +247,7 @@ void ZStreamW_Buffered::Abandon()
 	fBufferOffset = 0;
 	}
 
-void ZStreamW_Buffered::Internal_Flush()
+void ZStreamW_Buffered::pFlush()
 	{
 	if (const size_t bufferUsed = fBufferOffset)
 		{

@@ -56,7 +56,7 @@ public:
 
 	virtual void SetCallback(Callback_t iCallback, void* iRefcon);
 
-// From ZStreamReader
+// From ZStreamerReader
 	virtual bool Read(const ZStreamR& iStreamR);
 
 	virtual void ReadStarted();

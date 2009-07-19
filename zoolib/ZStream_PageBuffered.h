@@ -54,7 +54,7 @@ public:
 	virtual uint64 Imp_GetSize();
 
 protected:
-	void Internal_Init(size_t iBufferCount, size_t iBufferSize);
+	void pInit(size_t iBufferCount, size_t iBufferSize);
 
 	const ZStreamRPos& fStreamReal;
 	struct Buffer;
@@ -121,7 +121,7 @@ public:
 	virtual void Imp_SetSize(uint64 iSize);
 
 protected:
-	void Internal_Init(size_t iBufferCount, size_t iBufferSize);
+	void pInit(size_t iBufferCount, size_t iBufferSize);
 
 	const ZStreamRWPos& fStreamReal;
 	struct Buffer;

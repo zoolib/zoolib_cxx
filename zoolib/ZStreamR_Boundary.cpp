@@ -42,7 +42,7 @@ ZStreamR_Boundary::ZStreamR_Boundary(const string& iBoundary, const ZStreamR& iS
 :	fStreamSource(iStreamSource),
 	fBoundary(iBoundary)
 	{
-	this->Internal_Init();
+	this->pInit();
 	}
 
 ZStreamR_Boundary::ZStreamR_Boundary(const void* iBoundary, size_t iBoundarySize,
@@ -50,7 +50,7 @@ ZStreamR_Boundary::ZStreamR_Boundary(const void* iBoundary, size_t iBoundarySize
 :	fStreamSource(iStreamSource),
 	fBoundary(reinterpret_cast<const char*>(iBoundary), iBoundarySize)
 	{
-	this->Internal_Init();
+	this->pInit();
 	}
 
 ZStreamR_Boundary::~ZStreamR_Boundary()
@@ -169,7 +169,7 @@ void ZStreamR_Boundary::Reset()
 	fHitBoundary = false;
 	}
 
-void ZStreamR_Boundary::Internal_Init()
+void ZStreamR_Boundary::pInit()
 	{
 	fBuffer = nullptr;
 	try

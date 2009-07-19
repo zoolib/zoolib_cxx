@@ -116,6 +116,7 @@ ZTBServer::ZTBServer(
 :	ZTask(iTaskOwner),
 	ZCommer(iStreamerR, iStreamerW),
 	fTBRep(iTBRep),
+	fSendClose(false),
 	fPingRequested(false),
 	fPingSent(false),
 	fLogFacility(iLogFacility)
@@ -154,6 +155,11 @@ bool ZTBServer::Read(const ZStreamR& iStream)
 	else if (theWhat == "Pong")
 		{
 		fPingSent = false;
+		}
+	else if (theWhat == "Close")
+		{
+		fSendClose = true;
+		this->Wake();
 		}
 	else
 		{
@@ -439,14 +445,20 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		didAnything = true;
 		}
 
+	if (fSendClose)
+		{
+		ZTuple response;
+		response.SetString("What", "Close");
+		sSend(this, fLogFacility, locker, iStream, response);
+		}
+
+
 	if (!didAnything)
 		iStream.Flush();
 	else
 		this->Wake();
 
-	// We're not handling a disconnect, and so I don't know
-	// how to return an appropriate value here.
-	ZAssertCompile(false);
+	return !fSendClose;
 	}
 
 void ZTBServer::Finished()

@@ -197,14 +197,14 @@ sequence can be found then \a oSegmentType will be set to zero.
 ZFileFormat_JPEG::StreamR_Segment::StreamR_Segment(uint8& oSegmentType, const ZStreamR& iStreamR)
 :	fStreamR(iStreamR)
 	{
-	this->Internal_Init(oSegmentType, true);
+	this->pInit(oSegmentType, true);
 	}
 
 ZFileFormat_JPEG::StreamR_Segment::StreamR_Segment(
 	uint8& oSegmentType, bool iSkipOnDestroy, const ZStreamR& iStreamR)
 :	fStreamR(iStreamR)
 	{
-	this->Internal_Init(oSegmentType, iSkipOnDestroy);
+	this->pInit(oSegmentType, iSkipOnDestroy);
 	}
 
 ZFileFormat_JPEG::StreamR_Segment::~StreamR_Segment()
@@ -272,7 +272,7 @@ void ZFileFormat_JPEG::StreamR_Segment::Imp_Skip(uint64 iCount, uint64* oCountSk
 		*oCountSkipped = countSkipped;	
 	}
 
-void ZFileFormat_JPEG::StreamR_Segment::Internal_Init(uint8& oSegmentType, bool iSkipOnDestroy)
+void ZFileFormat_JPEG::StreamR_Segment::pInit(uint8& oSegmentType, bool iSkipOnDestroy)
 	{
 	fSkipOnDestroy = iSkipOnDestroy;
 	fCountRemaining = 0;

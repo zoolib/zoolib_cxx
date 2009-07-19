@@ -339,7 +339,7 @@ public:
 	void AsRGBColor(uint32 iPixval, ZRGBColorPOD& oColor) const
 		{
 		if (fPixvals)
-			this->Internal_AsRGBColor(iPixval, oColor);
+			this->pAsRGBColor(iPixval, oColor);
 		else
 			oColor = fColors[iPixval];
 		}
@@ -348,7 +348,7 @@ public:
 		{
 		if (fPixvals)
 			{
-			this->Internal_AsRGBColorSmall(iPixval, oColor);
+			this->pAsRGBColorSmall(iPixval, oColor);
 			}
 		else
 			{
@@ -362,7 +362,7 @@ public:
 	uint16 AsAlpha(uint32 iPixval) const
 		{
 		if (fPixvals)
-			return this->Internal_AsAlpha(iPixval);
+			return this->pAsAlpha(iPixval);
 		else
 			return fColors[iPixval].alpha;
 		}
@@ -370,9 +370,9 @@ public:
 	void AsRGBColors(const uint32* iPixvals, size_t iCount, ZRGBColorPOD* oColors) const;
 
 protected:
-	void Internal_AsRGBColor(uint32 iPixval, ZRGBColorPOD& oColor) const;
-	void Internal_AsRGBColorSmall(uint32 iPixval, ZRGBColorSmallPOD& oColor) const;
-	uint16 Internal_AsAlpha(uint32 iPixval) const;
+	void pAsRGBColor(uint32 iPixval, ZRGBColorPOD& oColor) const;
+	void pAsRGBColorSmall(uint32 iPixval, ZRGBColorSmallPOD& oColor) const;
+	uint16 pAsAlpha(uint32 iPixval) const;
 
 	ZRGBColorPOD* fColors;
 	size_t fCount;

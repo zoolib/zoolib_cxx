@@ -44,7 +44,7 @@ ZTSWatcherServerAsync::ZTSWatcherServerAsync(
 :	ZTask(iTaskOwner),
 	ZCommer(iStreamerR, iStreamerW),
 	fTSWatcher(iTSWatcher),
-	fReceivedClose(false),
+	fSendClose(false),
 	fCallbackNeeded(false),
 	fSyncNeeded(false),
 	fIDsNeeded(0)
@@ -87,7 +87,7 @@ bool ZTSWatcherServerAsync::Read(const ZStreamR& iStreamR)
 		case eReq_Close:
 			{
 			ZMutexLocker locker(fMutex);
-			fReceivedClose = true;
+			fSendClose = true;
 			locker.Release();
 			this->Wake();
 			return false;
@@ -206,7 +206,7 @@ bool ZTSWatcherServerAsync::Write(const ZStreamW& iStreamW)
 	bool wroteAnything = false;
 
 	ZMutexLocker locker(fMutex);
-	if (fReceivedClose)
+	if (fSendClose)
 		{
 		iStreamW.WriteUInt8(eResp_Close);
 		return false;

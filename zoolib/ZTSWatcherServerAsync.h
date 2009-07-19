@@ -60,7 +60,7 @@ private:
 
 	ZMutex fMutex;
 	ZRef<ZTSWatcher> fTSWatcher;
-	bool fReceivedClose;
+	bool fSendClose;
 	bool fCallbackNeeded;
 	bool fSyncNeeded;
 	size_t fIDsNeeded;

@@ -93,12 +93,12 @@ void ZFileFormat_QuickTime::Writer::End(const ZStreamWPos& iStream, const char* 
 
 ZFileFormat_QuickTime::StreamR_Chunk::StreamR_Chunk(uint32& oChunkType, const ZStreamR& iStream)
 :	fStream(iStream)
-	{ this->Internal_Init(oChunkType, true); }
+	{ this->pInit(oChunkType, true); }
 
 ZFileFormat_QuickTime::StreamR_Chunk::StreamR_Chunk(
 	uint32& oChunkType, bool iSkipOnDestroy, const ZStreamR& iStream)
 :	fStream(iStream)
-	{ this->Internal_Init(oChunkType, iSkipOnDestroy); }
+	{ this->pInit(oChunkType, iSkipOnDestroy); }
 
 ZFileFormat_QuickTime::StreamR_Chunk::~StreamR_Chunk()
 	{
@@ -167,7 +167,7 @@ void ZFileFormat_QuickTime::StreamR_Chunk::Imp_Skip(uint64 iCount, uint64* oCoun
 		*oCountSkipped = countSkipped;	
 	}
 
-void ZFileFormat_QuickTime::StreamR_Chunk::Internal_Init(uint32& oChunkType, bool iSkipOnDestroy)
+void ZFileFormat_QuickTime::StreamR_Chunk::pInit(uint32& oChunkType, bool iSkipOnDestroy)
 	{
 	try
 		{
@@ -190,12 +190,12 @@ void ZFileFormat_QuickTime::StreamR_Chunk::Internal_Init(uint32& oChunkType, boo
 ZFileFormat_QuickTime::StreamRPos_Chunk::StreamRPos_Chunk(
 	uint32& oChunkType, const ZStreamRPos& iStream)
 :	fStream(iStream)
-	{ this->Internal_Init(oChunkType, true); }
+	{ this->pInit(oChunkType, true); }
 
 ZFileFormat_QuickTime::StreamRPos_Chunk::StreamRPos_Chunk(
 	uint32& oChunkType, bool iSkipOnDestroy, const ZStreamRPos& iStream)
 :	fStream(iStream)
-	{ this->Internal_Init(oChunkType, iSkipOnDestroy); }
+	{ this->pInit(oChunkType, iSkipOnDestroy); }
 
 ZFileFormat_QuickTime::StreamRPos_Chunk::~StreamRPos_Chunk()
 	{
@@ -260,7 +260,7 @@ void ZFileFormat_QuickTime::StreamRPos_Chunk::Imp_SetPosition(uint64 iPosition)
 uint64 ZFileFormat_QuickTime::StreamRPos_Chunk::Imp_GetSize()
 	{ return min(uint64(fSize), fStream.GetSize() - fStart); }
 
-void ZFileFormat_QuickTime::StreamRPos_Chunk::Internal_Init(uint32& oChunkType, bool iSkipOnDestroy)
+void ZFileFormat_QuickTime::StreamRPos_Chunk::pInit(uint32& oChunkType, bool iSkipOnDestroy)
 	{
 	try
 		{

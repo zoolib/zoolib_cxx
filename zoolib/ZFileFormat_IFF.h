@@ -81,7 +81,7 @@ public:
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 private:
-	void Internal_Init(
+	void pInit(
 		uint32& oChunkType, bool iSkipOnDestroy, bool iBigEndianSizes, size_t iPadMultiple);
 
 	const ZStreamR& fStream;
@@ -121,7 +121,7 @@ public:
 	virtual uint64 Imp_GetSize();
 
 private:
-	void Internal_Init(
+	void pInit(
 		uint32& oChunkType, bool iSkipOnDestroy, bool iBigEndianSizes, size_t iPadMultiple);
 
 	const ZStreamRPos& fStream;
@@ -160,7 +160,7 @@ public:
 	virtual void Imp_SetSize(uint64 iSize);
 
 private:
-	void Internal_Init(uint32 iChunkType);
+	void pInit(uint32 iChunkType);
 
 	const ZStreamWPos& fStream;
 	bool fBigEndianSizes;
