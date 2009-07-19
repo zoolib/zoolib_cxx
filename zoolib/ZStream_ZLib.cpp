@@ -78,7 +78,7 @@ void ZStreamR_ZLibDecode::Imp_Read(void* iDest, size_t iCount, size_t* oCountRea
 	fState.next_out = reinterpret_cast<Bytef*>(iDest);
 	for (;;)
 		{
-		int result = ::inflate(&fState, Z_NO_FLUSH);
+		/*int result = */::inflate(&fState, Z_NO_FLUSH);
 		if (fState.avail_out == 0)
 			{
 			break;
@@ -198,7 +198,7 @@ void ZStreamW_ZLibEncode::Imp_Write(const void* iSource, size_t iCount, size_t* 
 	fState.next_in = const_cast<Bytef*>(reinterpret_cast<const Bytef*>(iSource));
 	for (;;)
 		{
-		int result = ::deflate(&fState, Z_NO_FLUSH);
+		/*int result = */::deflate(&fState, Z_NO_FLUSH);
 		if (size_t countToWrite = fBufferSize - fState.avail_out)
 			{
 			size_t countWritten;
@@ -261,7 +261,7 @@ void ZStreamW_ZLibEncode::Internal_Flush()
 
 	for (;;)
 		{
-		int result = ::deflate(&fState, Z_SYNC_FLUSH);
+		/*int result = */::deflate(&fState, Z_SYNC_FLUSH);
 		if (size_t countToWrite = fBufferSize - fState.avail_out)
 			{
 			size_t countWritten;
