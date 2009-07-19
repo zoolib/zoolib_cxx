@@ -407,7 +407,7 @@ ZBigRegion& ZBigRegion::operator^=(const ZBigRegion& iOther)
 
 // =================================================================================================
 
-void ZBigRegion::sInternal_Reallocate(ZBigRegion& ioRegion, ZRect_T<int32>*& oRect)
+void ZBigRegion::spReallocate(ZBigRegion& ioRegion, ZRect_T<int32>*& oRect)
 	{
 	ZRect_T<int32>* newArray = new ZRect_T<int32>[2 * ioRegion.fNumRectsAllocated];
 	ZBlockCopy(ioRegion.fRects, newArray, ioRegion.fNumRectsAllocated * sizeof(ZRect_T<int32>));
@@ -417,13 +417,13 @@ void ZBigRegion::sInternal_Reallocate(ZBigRegion& ioRegion, ZRect_T<int32>*& oRe
 	oRect = &ioRegion.fRects[ioRegion.fNumRects];
 	}
 
-inline void ZBigRegion::sInternal_SpaceCheck(ZBigRegion& ioRegion, ZRect_T<int32>*& oRect)
+inline void ZBigRegion::spSpaceCheck(ZBigRegion& ioRegion, ZRect_T<int32>*& oRect)
 	{
 	if (ioRegion.fNumRects >= ioRegion.fNumRectsAllocated - 1)
-		sInternal_Reallocate(ioRegion, oRect);
+		spReallocate(ioRegion, oRect);
 	}
 
-void ZBigRegion::sInternal_Copy(const ZBigRegion& iSource, ZBigRegion& oDestination)
+void ZBigRegion::spCopy(const ZBigRegion& iSource, ZBigRegion& oDestination)
 	{
 	if (&iSource == &oDestination)
 		return;
@@ -443,7 +443,7 @@ void ZBigRegion::sInternal_Copy(const ZBigRegion& iSource, ZBigRegion& oDestinat
 		oDestination.fNumRects * sizeof(ZRect_T<int32>));
 	}
 
-void ZBigRegion::sInternal_SetExtents(ZBigRegion& ioRegion)
+void ZBigRegion::spSetExtents(ZBigRegion& ioRegion)
 	{
 	if (ioRegion.fNumRects == 0)
 		{
@@ -491,7 +491,7 @@ void ZBigRegion::sUnion(const ZBigRegion& iSource1, const ZBigRegion& iSource2,
 		{
 		// iSource1 and iSource2 are the same, or iSource1 is empty
 		if (&iSource2 != &oDestination)
-			sInternal_Copy(iSource2, oDestination);
+			spCopy(iSource2, oDestination);
 		return;
 		}
 
@@ -499,7 +499,7 @@ void ZBigRegion::sUnion(const ZBigRegion& iSource1, const ZBigRegion& iSource2,
 		{
 		// iSource2 is empty
 		if (&iSource1 != &oDestination)
-			sInternal_Copy(iSource1, oDestination);
+			spCopy(iSource1, oDestination);
 		return;
 		}
 
@@ -511,7 +511,7 @@ void ZBigRegion::sUnion(const ZBigRegion& iSource1, const ZBigRegion& iSource2,
 		{
 		// iSource1 is rectangular and completely subsumes iSource2
 		if (&iSource1 != &oDestination)
-			sInternal_Copy(iSource1, oDestination);
+			spCopy(iSource1, oDestination);
 		return;
 		}
 
@@ -523,15 +523,15 @@ void ZBigRegion::sUnion(const ZBigRegion& iSource1, const ZBigRegion& iSource2,
 		{
 		// iSource2 is rectangular and completely subsumes iSource1
 		if (&iSource2 != &oDestination)
-			sInternal_Copy(iSource2, oDestination);
+			spCopy(iSource2, oDestination);
 		return;
 		}
 
 	// Gotta do some real work
-	sInternal_RegionOp(oDestination, iSource1, iSource2,
-		sInternal_UnionOverlapping,
-		sInternal_UnionNonOverlapping,
-		sInternal_UnionNonOverlapping);
+	spRegionOp(oDestination, iSource1, iSource2,
+		spUnionOverlapping,
+		spUnionNonOverlapping,
+		spUnionNonOverlapping);
 
 	oDestination.fExtent.left = min(iSource1.fExtent.left, iSource2.fExtent.left);
 	oDestination.fExtent.top = min(iSource1.fExtent.top, iSource2.fExtent.top);
@@ -539,7 +539,7 @@ void ZBigRegion::sUnion(const ZBigRegion& iSource1, const ZBigRegion& iSource2,
 	oDestination.fExtent.bottom = max(iSource1.fExtent.bottom, iSource2.fExtent.bottom);
 	}
 
-void ZBigRegion::sInternal_UnionNonOverlapping(ZBigRegion& ioRegion,
+void ZBigRegion::spUnionNonOverlapping(ZBigRegion& ioRegion,
 	ZRect_T<int32>* r, ZRect_T<int32>* rEnd, int32 y1, int32 y2)
 	{
 	ZRect_T<int32>* pNextRect = &ioRegion.fRects[ioRegion.fNumRects];
@@ -549,7 +549,7 @@ void ZBigRegion::sInternal_UnionNonOverlapping(ZBigRegion& ioRegion,
 	while (r != rEnd)
 		{
 		ZAssertStop(kDebug_BigRegion, r->left < r->right);
-		sInternal_SpaceCheck(ioRegion, pNextRect);
+		spSpaceCheck(ioRegion, pNextRect);
 		pNextRect->left = r->left;
 		pNextRect->top = y1;
 		pNextRect->right = r->right;
@@ -562,7 +562,7 @@ void ZBigRegion::sInternal_UnionNonOverlapping(ZBigRegion& ioRegion,
 		}
 	}
 
-void ZBigRegion::sInternal_UnionOverlapping(ZBigRegion& ioRegion,
+void ZBigRegion::spUnionOverlapping(ZBigRegion& ioRegion,
 	ZRect_T<int32>* r1, ZRect_T<int32>* r1End,
 	ZRect_T<int32>* r2, ZRect_T<int32>* r2End,
 	int32 y1, int32 y2)
@@ -583,7 +583,7 @@ void ZBigRegion::sInternal_UnionOverlapping(ZBigRegion& ioRegion,
 		} \
 	else \
 		{ \
-		sInternal_SpaceCheck(ioRegion, pNextRect);\
+		spSpaceCheck(ioRegion, pNextRect);\
 		pNextRect->top = y1; \
 		pNextRect->bottom = y2; \
 		pNextRect->left = r->left; \
@@ -642,18 +642,18 @@ void ZBigRegion::sIntersection(const ZBigRegion& iSource1, const ZBigRegion& iSo
 		return;
 		}
 
-	sInternal_RegionOp(oDestination, iSource1, iSource2,
-		sInternal_IntersectionOverlapping, nullptr, nullptr);
+	spRegionOp(oDestination, iSource1, iSource2,
+		spIntersectionOverlapping, nullptr, nullptr);
 
-	// Can't alter oDestination's extents before we call sInternal_RegionOp because
-	// it might be one of the source regions and sInternal_RegionOp depends
+	// Can't alter oDestination's extents before we call spRegionOp because
+	// it might be one of the source regions and spRegionOp depends
 	// on the extents of those regions being the same. Besides, this
 	// way there's no checking against rectangles that will be nuked
 	// due to coalescing, so we have to examine fewer rectangles.
-	sInternal_SetExtents(oDestination);
+	spSetExtents(oDestination);
 	}
 
-void ZBigRegion::sInternal_IntersectionOverlapping(ZBigRegion& ioRegion,
+void ZBigRegion::spIntersectionOverlapping(ZBigRegion& ioRegion,
 	ZRect_T<int32>* r1, ZRect_T<int32>* r1End,
 	ZRect_T<int32>* r2, ZRect_T<int32>* r2End,
 	int32 y1, int32 y2)
@@ -674,7 +674,7 @@ void ZBigRegion::sInternal_IntersectionOverlapping(ZBigRegion& ioRegion,
 			{
 			ZAssertStop(kDebug_BigRegion, y1< y2);
 
-			sInternal_SpaceCheck(ioRegion, pNextRect);
+			spSpaceCheck(ioRegion, pNextRect);
 			pNextRect->left = x1;
 			pNextRect->top = y1;
 			pNextRect->right = x2;
@@ -716,22 +716,22 @@ void ZBigRegion::sDifference(const ZBigRegion& iSource1, const ZBigRegion& iSour
 		|| iSource1.fExtent.top >= iSource2.fExtent.bottom)
 		{
 		// One or other source regions are completely empty, or there's no overlap.
-		sInternal_Copy(iSource1, oDestination);
+		spCopy(iSource1, oDestination);
 		return;
 		}
 
-	sInternal_RegionOp(oDestination, iSource1, iSource2,
-		sInternal_DifferenceOverlapping, sInternal_DifferenceNonOverlapping, nullptr);
+	spRegionOp(oDestination, iSource1, iSource2,
+		spDifferenceOverlapping, spDifferenceNonOverlapping, nullptr);
 
-	// Can't alter destination's extents before we call sInternal_RegionOp because
-	// it might be one of the source regions and sInternal_RegionOp depends
+	// Can't alter destination's extents before we call spRegionOp because
+	// it might be one of the source regions and spRegionOp depends
 	// on the extents of those regions being the same. Besides, this
 	// way there's no checking against rectangles that will be nuked
 	// due to coalescing, so we have to examine fewer rectangles.
-	sInternal_SetExtents(oDestination);
+	spSetExtents(oDestination);
 	}
 
-void ZBigRegion::sInternal_DifferenceNonOverlapping(ZBigRegion& ioRegion,
+void ZBigRegion::spDifferenceNonOverlapping(ZBigRegion& ioRegion,
 	ZRect_T<int32>* r, ZRect_T<int32>* rEnd,
 	int32 y1, int32 y2)
 	{
@@ -742,7 +742,7 @@ void ZBigRegion::sInternal_DifferenceNonOverlapping(ZBigRegion& ioRegion,
 	while (r != rEnd)
 		{
 		ZAssertStop(kDebug_BigRegion, r->left<r->right);
-		sInternal_SpaceCheck(ioRegion, pNextRect);
+		spSpaceCheck(ioRegion, pNextRect);
 		pNextRect->left = r->left;
 		pNextRect->top = y1;
 		pNextRect->right = r->right;
@@ -756,7 +756,7 @@ void ZBigRegion::sInternal_DifferenceNonOverlapping(ZBigRegion& ioRegion,
 		}
 	}
 
-void ZBigRegion::sInternal_DifferenceOverlapping(ZBigRegion& ioRegion,
+void ZBigRegion::spDifferenceOverlapping(ZBigRegion& ioRegion,
 	ZRect_T<int32>* r1, ZRect_T<int32>* r1End,
 	ZRect_T<int32>* r2, ZRect_T<int32>* r2End,
 	int32 y1, int32 y2)
@@ -797,7 +797,7 @@ void ZBigRegion::sInternal_DifferenceOverlapping(ZBigRegion& ioRegion,
 			// Left part of subtrahend covers part of minuend: add uncovered
 			// part of minuend to region and skip to next subtrahend.
 			ZAssertStop(kDebug_BigRegion, x1<r2->left);
-			sInternal_SpaceCheck(ioRegion, pNextRect);
+			spSpaceCheck(ioRegion, pNextRect);
 			pNextRect->left = x1;
 			pNextRect->top = y1;
 			pNextRect->right = r2->left;
@@ -826,7 +826,7 @@ void ZBigRegion::sInternal_DifferenceOverlapping(ZBigRegion& ioRegion,
 			// Minuend used up: add any remaining piece before advancing.
 			if (r1->right > x1)
 				{
-				sInternal_SpaceCheck(ioRegion, pNextRect);
+				spSpaceCheck(ioRegion, pNextRect);
 				pNextRect->left = x1;
 				pNextRect->top = y1;
 				pNextRect->right = r1->right;
@@ -844,7 +844,7 @@ void ZBigRegion::sInternal_DifferenceOverlapping(ZBigRegion& ioRegion,
 	while (r1 != r1End)
 		{
 		ZAssertStop(kDebug_BigRegion, x1<r1->right);
-		sInternal_SpaceCheck(ioRegion, pNextRect);
+		spSpaceCheck(ioRegion, pNextRect);
 		pNextRect->left = x1;
 		pNextRect->top = y1;
 		pNextRect->right = r1->right;
@@ -875,7 +875,7 @@ void ZBigRegion::sExclusiveOr(const ZBigRegion& iSource1, const ZBigRegion& iSou
 
 // ==================================================
 
-void ZBigRegion::sInternal_RegionOp(ZBigRegion& ioNewRegion,
+void ZBigRegion::spRegionOp(ZBigRegion& ioNewRegion,
 	const ZBigRegion& iRegion1, const ZBigRegion& iRegion2,
 	OverlappingFuncPtr iOverlapFunc,
 	NonOverlappingFuncPtr iNonOverlapFunc1,
@@ -989,7 +989,7 @@ void ZBigRegion::sInternal_RegionOp(ZBigRegion& ioNewRegion,
 		// inconsiderable cost for function calls, so...
 
 		if (ioNewRegion.fNumRects != curBand)
-			prevBand = sInternal_Coalesce(ioNewRegion, prevBand, curBand);
+			prevBand = spCoalesce(ioNewRegion, prevBand, curBand);
 
 
 		// Now see if we've hit an intersecting band. The two bands only
@@ -1001,7 +1001,7 @@ void ZBigRegion::sInternal_RegionOp(ZBigRegion& ioNewRegion,
 			iOverlapFunc(ioNewRegion, r1, r1BandEnd, r2, r2BandEnd, ytop, ybot);
 
 		if (ioNewRegion.fNumRects != curBand)
-			prevBand = sInternal_Coalesce(ioNewRegion, prevBand, curBand);
+			prevBand = spCoalesce(ioNewRegion, prevBand, curBand);
 
 		// If we've finished with a band (y2 == ybot) we skip forward
 		// in the region to the next band.
@@ -1044,7 +1044,7 @@ void ZBigRegion::sInternal_RegionOp(ZBigRegion& ioNewRegion,
 		}
 
 	if (ioNewRegion.fNumRects != curBand)
-		sInternal_Coalesce(ioNewRegion, prevBand, curBand);
+		spCoalesce(ioNewRegion, prevBand, curBand);
 
 
 	// A bit of cleanup. To keep regions from growing without bound,
@@ -1066,14 +1066,14 @@ void ZBigRegion::sInternal_RegionOp(ZBigRegion& ioNewRegion,
 	delete[] oldRects;
 	}
 
-int32 ZBigRegion::sInternal_Coalesce(ZBigRegion& ioRegion, int32 prevStart, int32 curStart)
+int32 ZBigRegion::spCoalesce(ZBigRegion& ioRegion, int32 prevStart, int32 curStart)
 	{
 	ZRect_T<int32>* pRegEnd = &ioRegion.fRects[ioRegion.fNumRects];
 	ZRect_T<int32>* pPrevBox = &ioRegion.fRects[prevStart];
 	int32 prevNumRects = curStart - prevStart;
 
 	// Figure out how many rectangles are in the current band. Have to do
-	// this because multiple bands could have been added in sInternal_RegionOp
+	// this because multiple bands could have been added in spRegionOp
 	// at the end when one region has been exhausted.
 	ZRect_T<int32>* pCurBox = &ioRegion.fRects[curStart];
 	int32 bandY1 = pCurBox->top;

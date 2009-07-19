@@ -184,29 +184,29 @@ public:
 		ZBigRegion& oDestination);
 
 protected:
-	static void sInternal_SpaceCheck(ZBigRegion& ioRegion, ZRect_T<int32>*& oRect);
-	static void sInternal_Reallocate(ZBigRegion& ioRegion, ZRect_T<int32>*& oRect);
-	static void sInternal_Copy(const ZBigRegion& iSource, ZBigRegion& oDestination);
-	static void sInternal_SetExtents(ZBigRegion& ioRegion);
+	static void spSpaceCheck(ZBigRegion& ioRegion, ZRect_T<int32>*& oRect);
+	static void spReallocate(ZBigRegion& ioRegion, ZRect_T<int32>*& oRect);
+	static void spCopy(const ZBigRegion& iSource, ZBigRegion& oDestination);
+	static void spSetExtents(ZBigRegion& ioRegion);
 
-	static void sInternal_UnionNonOverlapping(ZBigRegion& ioRegion,
+	static void spUnionNonOverlapping(ZBigRegion& ioRegion,
 		ZRect_T<int32>* r, ZRect_T<int32>* rEnd, int32 y1, int32 y2);
 
-	static void sInternal_UnionOverlapping(ZBigRegion& ioRegion,
+	static void spUnionOverlapping(ZBigRegion& ioRegion,
 		ZRect_T<int32>* r1, ZRect_T<int32>* r1End,
 		ZRect_T<int32>* r2, ZRect_T<int32>* r2End,
 		int32 y1, int32 y2);
 
-	static void sInternal_IntersectionOverlapping(ZBigRegion& ioRegion,
+	static void spIntersectionOverlapping(ZBigRegion& ioRegion,
 		ZRect_T<int32>* r1, ZRect_T<int32>* r1End,
 		ZRect_T<int32>* r2, ZRect_T<int32>* r2End,
 		int32 y1, int32 y2);
 
-	static void sInternal_DifferenceNonOverlapping(ZBigRegion& ioRegion,
+	static void spDifferenceNonOverlapping(ZBigRegion& ioRegion,
 		ZRect_T<int32>* r, ZRect_T<int32>* rEnd,
 		int32 y1, int32 y2);
 
-	static void sInternal_DifferenceOverlapping(ZBigRegion& ioRegion,
+	static void spDifferenceOverlapping(ZBigRegion& ioRegion,
 		ZRect_T<int32>* r1, ZRect_T<int32>* r1End,
 		ZRect_T<int32>* r2, ZRect_T<int32>* r2End,
 		int32 y1, int32 y2);
@@ -219,13 +219,13 @@ protected:
 		ZRect_T<int32>* r2, ZRect_T<int32>* r2End,
 		int32 y1, int32 y2);
 
-	static void sInternal_RegionOp(ZBigRegion& ioNewRegion,
+	static void spRegionOp(ZBigRegion& ioNewRegion,
 		const ZBigRegion& iRegion1, const ZBigRegion& iRegion2,
 		OverlappingFuncPtr iOverlapFunc,
 		NonOverlappingFuncPtr iNonOverlapFunc1,
 		NonOverlappingFuncPtr iNonOverlapFunc2);
 
-	static int32 sInternal_Coalesce(ZBigRegion& ioRegion, int32 prevStart, int32 curStart);
+	static int32 spCoalesce(ZBigRegion& ioRegion, int32 prevStart, int32 curStart);
 
 	ZRect_T<int32>* fRects;
 	size_t fNumRectsAllocated;
