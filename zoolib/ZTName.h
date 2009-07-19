@@ -78,7 +78,6 @@ public:
 	bool Equals(const char* iString, size_t iLength) const;
 
 	void ToStream(const ZStreamW& iStreamW) const;
-	void FromStream(const ZStreamR& iStreamR);
 
 	bool Empty() const;
 

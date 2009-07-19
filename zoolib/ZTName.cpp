@@ -465,31 +465,6 @@ void ZTName::ToStream(const ZStreamW& iStreamW) const
 		}
 	}
 
-void ZTName::FromStream(const ZStreamR& iStreamR)
-	{
-	if (!sIsPNRep(fData))
-		delete fString;
-
-	uint32 theSize = iStreamR.ReadCount();
-	if (theSize <= sStackBufferSize)
-		{
-		char buffer[sStackBufferSize];
-		iStreamR.Read(buffer, theSize);
-		fData = sLookupAndTag(buffer, theSize);
-		if (!fData)
-			fString = new (theSize) String(buffer, theSize);
-		}
-	else
-		{
-		// theSize must be > 0 (it's greater than sStackBufferSize).
-		vector<char> buffer(theSize);
-		iStreamR.Read(&buffer[0], theSize);
-		fData = sLookupAndTag(&buffer[0], theSize);
-		if (!fData)
-			fString = new (theSize) String(&buffer[0], theSize);
-		}
-	}
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTName::String
