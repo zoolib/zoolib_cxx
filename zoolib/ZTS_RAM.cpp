@@ -115,7 +115,10 @@ void ZTS_RAM::SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples
 		if (0 == theID || fNextUnusedID <= theID)
 			{
 			if (ZLOG(s, eErr, "ZTS_RAM::SetTuples"))
-				s.Writef("Ignoring ID %X, which is zero or lies beyond the allocated range (%X)", theID, fNextUnusedID);
+				{
+				s.Writef("Ignoring ID %X, which is zero or lies beyond the allocated range (%X)",
+					theID, fNextUnusedID);
+				}
 			continue;
 			}
 
@@ -141,7 +144,8 @@ void ZTS_RAM::SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples
 			else
 				{
 				// The old tuple was unstored, but we know where it should be placed.
-				position = fTuples.insert(position, map<uint64, ZTuple>::value_type(theID, newTuple));
+				position =
+					fTuples.insert(position, map<uint64, ZTuple>::value_type(theID, newTuple));
 				}
 			// Enter the tuple in our indices.
 			const ZTuple* storedTuple = &position->second;
@@ -189,7 +193,10 @@ void ZTS_RAM::Search(const ZTBSpec& iSpec, const set<uint64>& iSkipIDs, set<uint
 		if (ZCONFIG_TS_RAM_WarnWhenScanningAllTuples)
 			{
 			if (ZLOG(s, eWarning, "ZTS_RAM::Search"))
-				s << "In the spec:\n" << iSpec.AsTuple() << "\nat least one clause does not have a usable index";
+				{
+				s << "In the spec:\n" << iSpec.AsTuple()
+					<< "\nat least one clause does not have a usable index";
+				}
 			}
 
 		#if ZCONFIG_TS_RAM_Logging
@@ -198,7 +205,8 @@ void ZTS_RAM::Search(const ZTBSpec& iSpec, const set<uint64>& iSkipIDs, set<uint
 
 		if (iSpec.IsAny())
 			{
-			ZDebugLogf(0, ("ZTS_RAM::Search was passed an 'any' ZTBSpec, which would produce 2^64 IDs. Returning none instead"));
+			ZDebugLogf(0, ("ZTS_RAM::Search was passed an 'any' ZTBSpec, "
+				"which would produce 2^64 IDs. Returning none instead"));
 			return;
 			}
 
@@ -289,14 +297,21 @@ void ZTS_RAM::Search(const ZTBSpec& iSpec, const set<uint64>& iSkipIDs, set<uint
 			else
 				{
 				#if ZCONFIG_TS_RAM_Logging
-					s.Writef("\nInitial result size: %d, Unchecked criteria: ", currentResults.size());
-					for (vector<const ZTBSpec::Criterion*>::iterator i = uncheckedCriteria.begin(); i != uncheckedCriteria.end(); ++i)
+					s.Writef("\nInitial result size: %d, Unchecked criteria: ",
+						currentResults.size());
+					for (vector<const ZTBSpec::Criterion*>::iterator i = uncheckedCriteria.begin();
+						i != uncheckedCriteria.end(); ++i)
+						{
 						s << (*i)->AsTuple() << " ";
+						}
 					size_t finalResultSize = 0;
 				#endif
 
-				vector<const ZTBSpec::Criterion*>::const_iterator critBegin = uncheckedCriteria.begin();
-				vector<const ZTBSpec::Criterion*>::const_iterator critEnd = uncheckedCriteria.end();
+				vector<const ZTBSpec::Criterion*>::const_iterator critBegin =
+					uncheckedCriteria.begin();
+				vector<const ZTBSpec::Criterion*>::const_iterator critEnd =
+					uncheckedCriteria.end();
+
 				for (vector<uint64>::iterator resultIter = currentResults.begin();
 					resultIter != currentResults.end(); /*no increment*/)
 					{

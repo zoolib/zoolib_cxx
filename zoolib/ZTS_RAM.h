@@ -42,15 +42,18 @@ class ZTS_RAM : public ZTS
 public:
 	ZTS_RAM();
 	ZTS_RAM(const std::vector<ZRef<ZTupleIndexFactory> >& iIndexFactories);
-	ZTS_RAM(const std::vector<ZRef<ZTupleIndexFactory> >& iIndexFactories, uint64 iNextUnusedID, const std::map<uint64, ZTuple>& iTuples);
-	ZTS_RAM(const std::vector<ZRef<ZTupleIndexFactory> >& iIndexFactories, uint64 iNextUnusedID, std::map<uint64, ZTuple>& ioTuples, bool iKnowWhatImDoing);
+	ZTS_RAM(const std::vector<ZRef<ZTupleIndexFactory> >& iIndexFactories,
+		uint64 iNextUnusedID, const std::map<uint64, ZTuple>& iTuples);
+	ZTS_RAM(const std::vector<ZRef<ZTupleIndexFactory> >& iIndexFactories,
+		uint64 iNextUnusedID, std::map<uint64, ZTuple>& ioTuples, bool iKnowWhatImDoing);
 	virtual ~ZTS_RAM();
 
 // From ZTS
 	virtual void AllocateIDs(size_t iCount, uint64& oBaseID, size_t& oCount);
 	virtual void SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples);
 	virtual void GetTuples(size_t iCount, const uint64* iIDs, ZTuple* oTuples);
-	virtual void Search(const ZTBSpec& iSpec, const std::set<uint64>& iSkipIDs, std::set<uint64>& ioIDs);
+	virtual void Search(const ZTBSpec& iSpec,
+		const std::set<uint64>& iSkipIDs, std::set<uint64>& ioIDs);
 	virtual ZMutexBase& GetReadLock();
 	virtual ZMutexBase& GetWriteLock();
 
