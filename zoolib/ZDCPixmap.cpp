@@ -594,7 +594,7 @@ ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
 	const PixelDesc& iPixelDesc)
 	{
 	ZRef<ZDCPixmapRep> result;
-	if (ZFunctionChain_T<ZRef<ZDCPixmapRep>, const CreateRaster_t&>		
+	if (ZFunctionChain_T<ZRef<ZDCPixmapRep>, const CreateRaster_t&>
 		::sInvoke(result, CreateRaster_t(iRaster, iBounds, iPixelDesc)))
 		{
 		return result;
@@ -608,7 +608,7 @@ ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
 	const PixelDesc& iPixelDesc)
 	{
 	ZRef<ZDCPixmapRep> result;
-	if (ZFunctionChain_T<ZRef<ZDCPixmapRep>, const CreateRasterDesc_t&>		
+	if (ZFunctionChain_T<ZRef<ZDCPixmapRep>, const CreateRasterDesc_t&>
 		::sInvoke(result, CreateRasterDesc_t(iRasterDesc, iBounds, iPixelDesc)))
 		{
 		return result;
