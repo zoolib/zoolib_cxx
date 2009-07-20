@@ -521,7 +521,8 @@ void ZCommandLine::pAppendOpt(Opt* iOpt)
 #pragma mark -
 #pragma mark * ZCommandLine::Opt
 
-ZCommandLine::Opt::Opt(const string& iName, const string& iDescription, EFlags iFlags, bool iHasDefault)
+ZCommandLine::Opt::Opt(
+	const string& iName, const string& iDescription, EFlags iFlags, bool iHasDefault)
 :	fNext(nullptr),
 	fName(iName),
 	fDescription(iDescription),

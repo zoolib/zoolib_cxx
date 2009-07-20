@@ -42,27 +42,29 @@ public:
 
 
 	void Query(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iFilter, std::vector<uint64>& ioIDs);
-	void Query_Unordered(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iFilter, std::set<uint64>& ioIDs);
+
+	void Query_Unordered(const ZRef<ZTBQueryNode>& iNode,
+		const ZTBSpec* iFilter, std::set<uint64>& ioIDs);
 
 	void Query_Combo_Unordered(const std::vector<ZTBQueryNode_Combo::Intersection>& iIntersections,
-					const ZTBSpec* iFilter, std::set<uint64>& ioIDs);
+		const ZTBSpec* iFilter, std::set<uint64>& ioIDs);
 
 	void Query_Combo(const std::vector<ZTBQueryNode_Combo::Intersection>& iIntersections,
-					const ZTBSpec* iFilter, std::vector<uint64>& ioIDs);
+		const ZTBSpec* iFilter, std::vector<uint64>& ioIDs);
 
 	void Query_Combo_Sorted(const std::vector<ZTBQuery::SortSpec>& iSort,
-					const std::vector<ZTBQueryNode_Combo::Intersection>& iIntersections,
-					const ZTBSpec* iFilter, std::vector<uint64>& ioIDs);
+		const std::vector<ZTBQueryNode_Combo::Intersection>& iIntersections,
+		const ZTBSpec* iFilter, std::vector<uint64>& ioIDs);
 
 	void Query_Combo_First(const ZTName& iFirst, const std::vector<ZTBQuery::SortSpec>& iSort,
-					const std::vector<ZTBQueryNode_Combo::Intersection>& iIntersections,
-					const ZTBSpec* iFilter, std::vector<uint64>& ioIDs);
+		const std::vector<ZTBQueryNode_Combo::Intersection>& iIntersections,
+		const ZTBSpec* iFilter, std::vector<uint64>& ioIDs);
 
 	void Query_Intersection_Unordered(const ZTBQueryNode_Combo::Intersection& iIntersection,
-					const ZTBSpec* iFilter, std::set<uint64>& ioIDs);
+		const ZTBSpec* iFilter, std::set<uint64>& ioIDs);
 
 	void Query_Intersection(const ZTBQueryNode_Combo::Intersection& iIntersection,
-					const ZTBSpec* iFilter, std::vector<uint64>& oIDs);
+		const ZTBSpec* iFilter, std::vector<uint64>& oIDs);
 
 private:
 	ZTextCollator fTextCollators[4];

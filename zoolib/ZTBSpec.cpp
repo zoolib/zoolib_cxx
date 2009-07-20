@@ -701,7 +701,8 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 			// to isolate its effects for profiling.
 			const string16 pattern16 = ZUnicode::sAsUTF16(pattern);
 			const string16 target16 = ZUnicode::sAsUTF16(target);
-			return fRep->fTextCollator.Contains(pattern16.data(), pattern16.size(), target16.data(), target16.size());
+			return fRep->fTextCollator.Contains(pattern16.data(), pattern16.size(),
+				target16.data(), target16.size());
 			}
 		case eRel_Regex:
 			{

@@ -321,13 +321,16 @@ int ZXLib::FindContext(Display* a0, XID a1, XContext a2, XPointer* a3)
 	return ::XFindContext(a0, a1, a2, a3);
 	}
 
-Window ZXLib::CreateSimpleWindow(Display* a0, Window a1, int a2, int a3, unsigned int a4, unsigned int a5, unsigned int a6, unsigned long a7, unsigned long a8)
+Window ZXLib::CreateSimpleWindow(Display* a0, Window a1, int a2, int a3, unsigned int a4,
+	unsigned int a5, unsigned int a6, unsigned long a7, unsigned long a8)
 	{
 	ZMutexLocker locker(sMutex);
 	return ::XCreateSimpleWindow(a0, a1, a2, a3, a4, a5, a6, a7, a8);
 	}
 
-Window ZXLib::CreateWindow(Display* a0, Window a1, int a2, int a3, unsigned int a4, unsigned int a5, unsigned int a6, int a7, unsigned int a8, Visual* a9, unsigned long a10, XSetWindowAttributes* a11)
+Window ZXLib::CreateWindow(Display* a0, Window a1, int a2, int a3, unsigned int a4,
+	unsigned int a5, unsigned int a6, int a7, unsigned int a8, Visual* a9,
+		unsigned long a10, XSetWindowAttributes* a11)
 	{
 	ZMutexLocker locker(sMutex);
 	return ::XCreateWindow(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11);
@@ -478,7 +481,8 @@ ZooLib_X11_Cursor ZXLib::CreateFontCursor(Display* a0, unsigned int a1)
 	return ::XCreateFontCursor(a0, a1);
 	}
 
-ZooLib_X11_Cursor ZXLib::CreatePixmapCursor(Display* a0, Pixmap a1, Pixmap a2, XColor* a3, XColor* a4, unsigned int a5, unsigned int a6)
+ZooLib_X11_Cursor ZXLib::CreatePixmapCursor(Display* a0, Pixmap a1, Pixmap a2, XColor* a3,
+	XColor* a4, unsigned int a5, unsigned int a6)
 	{
 	ZMutexLocker locker(sMutex);
 	return ::XCreatePixmapCursor(a0, a1, a2, a3, a4, a5, a6);
@@ -496,7 +500,8 @@ int ZXLib::DefineCursor(Display* a0, Window a1, ZooLib_X11_Cursor a2)
 	return ::XDefineCursor(a0, a1, a2);
 	}
 
-int ZXLib::GrabPointer(Display* a0, Window a1, Bool a2, unsigned int a3, int a4, int a5, Window a6, ZooLib_X11_Cursor a7, Time a8)
+int ZXLib::GrabPointer(Display* a0, Window a1, Bool a2, unsigned int a3, int a4, int a5,
+	Window a6, ZooLib_X11_Cursor a7, Time a8)
 	{
 	ZMutexLocker locker(sMutex);
 	return ::XGrabPointer(a0, a1, a2, a3, a4, a5, a6, a7, a8);
@@ -574,7 +579,8 @@ int ZXLib::SetFillStyle(Display* a0, GC a1, int a2)
 	return ::XSetFillStyle(a0, a1, a2);
 	}
 
-int ZXLib::CopyArea(Display* a0, Drawable a1, Drawable a2, GC a3, int a4, int a5, unsigned int a6, unsigned int a7, int a8, int a9)
+int ZXLib::CopyArea(Display* a0, Drawable a1, Drawable a2, GC a3, int a4, int a5,
+	unsigned int a6, unsigned int a7, int a8, int a9)
 	{
 	ZMutexLocker locker(sMutex);
 	return ::XCopyArea(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
@@ -592,13 +598,15 @@ int ZXLib::DrawLine(Display* a0, Drawable a1, GC a2, int a3, int a4, int a5, int
 	return ::XDrawLine(a0, a1, a2, a3, a4, a5, a6);
 	}
 
-int ZXLib::FillRectangle(Display* a0, Drawable a1, GC a2, int a3, int a4, unsigned int a5, unsigned int a6)
+int ZXLib::FillRectangle(Display* a0, Drawable a1, GC a2, int a3, int a4,
+	unsigned int a5, unsigned int a6)
 	{
 	ZMutexLocker locker(sMutex);
 	return ::XFillRectangle(a0, a1, a2, a3, a4, a5, a6);
 	}
 
-int ZXLib::DrawRectangle(Display* a0, Drawable a1, GC a2, int a3, int a4, unsigned int a5, unsigned int a6)
+int ZXLib::DrawRectangle(Display* a0, Drawable a1, GC a2, int a3, int a4,
+	unsigned int a5, unsigned int a6)
 	{
 	ZMutexLocker locker(sMutex);
 	return ::XDrawRectangle(a0, a1, a2, a3, a4, a5, a6);
@@ -610,13 +618,15 @@ int ZXLib::FillPolygon(Display* a0, Drawable a1, GC a2, XPoint* a3, int a4, int 
 	return ::XFillPolygon(a0, a1, a2, a3, a4, a5, a6);
 	}
 
-int ZXLib::DrawArc(Display* a0, Drawable a1, GC a2, int a3, int a4, unsigned int a5, unsigned int a6, int a7, int a8)
+int ZXLib::DrawArc(Display* a0, Drawable a1, GC a2, int a3, int a4, unsigned int a5,
+	unsigned int a6, int a7, int a8)
 	{
 	ZMutexLocker locker(sMutex);
 	return ::XDrawArc(a0, a1, a2, a3, a4, a5, a6, a7, a8);
 	}
 
-int ZXLib::FillArc(Display* a0, Drawable a1, GC a2, int a3, int a4, unsigned int a5, unsigned int a6, int a7, int a8)
+int ZXLib::FillArc(Display* a0, Drawable a1, GC a2, int a3, int a4, unsigned int a5,
+	unsigned int a6, int a7, int a8)
 	{
 	ZMutexLocker locker(sMutex);
 	return ::XFillArc(a0, a1, a2, a3, a4, a5, a6, a7, a8);
@@ -670,7 +680,8 @@ int ZXLib::SelectInput(Display* a0, Window a1, long a2)
 	return ::XSelectInput(a0, a1, a2);
 	}
 
-Pixmap ZXLib::CreateBitmapFromData(Display* a0, Drawable a1, _Xconst char* a2, unsigned int a3, unsigned int a4)
+Pixmap ZXLib::CreateBitmapFromData(Display* a0, Drawable a1, _Xconst char* a2,
+	unsigned int a3, unsigned int a4)
 	{
 	ZMutexLocker locker(sMutex);
 	return ::XCreateBitmapFromData(a0, a1, a2, a3, a4);
@@ -724,7 +735,8 @@ Status ZXLib::StringListToTextProperty(const char** a0, int a1, XTextProperty* a
 	return ::XStringListToTextProperty(const_cast<char**>(a0), a1, a2);
 	}
 
-void ZXLib::SetWMProperties(Display* a0, Window a1, XTextProperty* a2, XTextProperty* a3, char** a4, int a5, XSizeHints* a6, XWMHints* a7, XClassHint* a8)
+void ZXLib::SetWMProperties(Display* a0, Window a1, XTextProperty* a2,
+	XTextProperty* a3, char** a4, int a5, XSizeHints* a6, XWMHints* a7, XClassHint* a8)
 	{
 	ZMutexLocker locker(sMutex);
 	::XSetWMProperties(a0, a1, a2, a3, a4, a5, a6, a7, a8);

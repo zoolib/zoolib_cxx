@@ -741,7 +741,8 @@ void ZTS_DB::Search(const ZTBSpec& iSpec, const set<uint64>& iSkipIDs, set<uint6
 		{
 		if (iSpec.IsAny())
 			{
-			ZDebugLogf(0, ("ZTS_DB::Search was passed an 'any' ZTBSpec, which would produce 2^64 IDs. Returning none instead"));
+			ZDebugLogf(0, ("ZTS_DB::Search was passed an 'any' ZTBSpec, "
+				"which would produce 2^64 IDs. Returning none instead"));
 			return;
 			}
 

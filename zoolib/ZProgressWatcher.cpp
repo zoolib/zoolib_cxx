@@ -29,7 +29,8 @@ using std::string;
 #pragma mark -
 #pragma mark * ZProgressPusher
 
-ZProgressPusher::ZProgressPusher(ZProgressWatcher* iProgressWatcher, const string& iDescription, int32 iMax)
+ZProgressPusher::ZProgressPusher(
+	ZProgressWatcher* iProgressWatcher, const string& iDescription, int32 iMax)
 	{
 	fWatcher = iProgressWatcher;
 	fPushes = 1;
@@ -45,7 +46,8 @@ ZProgressPusher::ZProgressPusher(ZProgressWatcher* iProgressWatcher, int32 iMax)
 		fWatcher->Push(string(), iMax);
 	}
 
-ZProgressPusher::ZProgressPusher(ZProgressPusher& iOtherPusher, const string& iDescription, int32 iMax)
+ZProgressPusher::ZProgressPusher(
+	ZProgressPusher& iOtherPusher, const string& iDescription, int32 iMax)
 	{
 	fWatcher = iOtherPusher.fWatcher;
 	fPushes = 1;

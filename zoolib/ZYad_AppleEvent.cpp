@@ -98,7 +98,8 @@ ZYadMapRPos_AppleEvent::ZYadMapRPos_AppleEvent(const ZValMap_AppleEvent& iMap)
 ,	YadMapBase_t(iMap, iMap.begin())
 	{}
 
-ZYadMapRPos_AppleEvent::ZYadMapRPos_AppleEvent(const ZValMap_AppleEvent& iMap, const Index_t& iIndex)
+ZYadMapRPos_AppleEvent::ZYadMapRPos_AppleEvent(
+	const ZValMap_AppleEvent& iMap, const Index_t& iIndex)
 :	ZYadR_AppleEvent(iMap)
 ,	YadMapBase_t(iMap, iIndex)
 	{}

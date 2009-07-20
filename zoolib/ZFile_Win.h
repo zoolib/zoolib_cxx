@@ -233,7 +233,8 @@ public:
 	virtual ~ZFileW_Win();
 
 // From ZFileW
-	virtual ZFile::Error WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
+	virtual ZFile::Error WriteAt(
+		uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
 
 	virtual ZFile::Error GetSize(uint64& oSize);
 	virtual ZFile::Error SetSize(uint64 iSize);

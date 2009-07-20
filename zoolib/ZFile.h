@@ -92,7 +92,8 @@ public:
 		{}
 
 	template <class I>
-	ZFileSpec(const ZRef<ZFileLoc>& iLoc, const I& iBegin, const I& iEnd, const std::string& iAdditional)
+	ZFileSpec(const ZRef<ZFileLoc>& iLoc,
+		const I& iBegin, const I& iEnd, const std::string& iAdditional)
 	:	fLoc(iLoc),
 		fComps(iBegin, iEnd)
 		{ fComps.push_back(iAdditional); }
@@ -145,16 +146,20 @@ public:
 	ZRef<ZStreamerWPos> OpenWPos(bool iPreventWriters = true, Error* oError = 0) const;
 	ZRef<ZStreamerRWPos> OpenRWPos(bool iPreventWriters = true, Error* oError = 0) const;
 
-	ZRef<ZStreamerWPos> CreateWPos(bool iOpenExisting, bool iPreventWriters = true, Error* oError = 0) const;
-	ZRef<ZStreamerRWPos> CreateRWPos(bool iOpenExisting, bool iPreventWriters = true, Error* oError = 0) const;
+	ZRef<ZStreamerWPos> CreateWPos(
+		bool iOpenExisting, bool iPreventWriters = true, Error* oError = 0) const;
+	ZRef<ZStreamerRWPos> CreateRWPos(
+		bool iOpenExisting, bool iPreventWriters = true, Error* oError = 0) const;
 
 	// Open/create stateless.
 	ZRef<ZFileR> OpenFileR(bool iPreventWriters = false, Error* oError = 0) const;
 	ZRef<ZFileW> OpenFileW(bool iPreventWriters = true, Error* oError = 0) const;
 	ZRef<ZFileRW> OpenFileRW(bool iPreventWriters = true, Error* oError = 0) const;
 
-	ZRef<ZFileW> CreateFileW(bool iOpenExisting, bool iPreventWriters = true, Error* oError = 0) const;
-	ZRef<ZFileRW> CreateFileRW(bool iOpenExisting, bool iPreventWriters = true, Error* oError = 0) const;
+	ZRef<ZFileW> CreateFileW(
+		bool iOpenExisting, bool iPreventWriters = true, Error* oError = 0) const;
+	ZRef<ZFileRW> CreateFileRW(
+		bool iOpenExisting, bool iPreventWriters = true, Error* oError = 0) const;
 
 	// As ever, do not abuse...
 	ZRef<ZFileLoc> GetFileLoc() const;
@@ -199,7 +204,8 @@ private:
 
 class ZFileTreeIter
 	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZFileTreeIter, operator_bool_generator_type, operator_bool_type);
+    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(
+		ZFileTreeIter, operator_bool_generator_type, operator_bool_type);
 public:
 	ZFileTreeIter();
 	ZFileTreeIter(const ZFileTreeIter& iOther);
@@ -238,7 +244,8 @@ public:
 
 	virtual ZRef<ZFileLoc> GetAncestor(size_t iCount, ZFile::Error* oError);
 	virtual ZRef<ZFileLoc> GetParent(ZFile::Error* oError) = 0;
-	virtual ZRef<ZFileLoc> GetDescendant(const std::string* iComps, size_t iCount, ZFile::Error* oError) = 0;
+	virtual ZRef<ZFileLoc> GetDescendant(
+		const std::string* iComps, size_t iCount, ZFile::Error* oError) = 0;
 	virtual bool IsRoot() = 0;
 
 	virtual std::string AsString_POSIX(const std::string* iComps, size_t iCount) = 0;
@@ -260,15 +267,19 @@ public:
 	virtual ZRef<ZStreamerWPos> OpenWPos(bool iPreventWriters, ZFile::Error* oError);
 	virtual ZRef<ZStreamerRWPos> OpenRWPos(bool iPreventWriters, ZFile::Error* oError);
 
-	virtual ZRef<ZStreamerWPos> CreateWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError);
-	virtual ZRef<ZStreamerRWPos> CreateRWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError);
+	virtual ZRef<ZStreamerWPos> CreateWPos(
+		bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError);
+	virtual ZRef<ZStreamerRWPos> CreateRWPos(
+		bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError);
 
 	virtual ZRef<ZFileR> OpenFileR(bool iPreventWriters, ZFile::Error* oError);
 	virtual ZRef<ZFileW> OpenFileW(bool iPreventWriters, ZFile::Error* oError);
 	virtual ZRef<ZFileRW> OpenFileRW(bool iPreventWriters, ZFile::Error* oError);
 
-	virtual ZRef<ZFileW> CreateFileW(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError);
-	virtual ZRef<ZFileRW> CreateFileRW(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError);
+	virtual ZRef<ZFileW> CreateFileW(
+		bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError);
+	virtual ZRef<ZFileRW> CreateFileRW(
+		bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError);
 	};
 
 // =================================================================================================
@@ -364,7 +375,8 @@ protected:
 	ZFileW() {}
 
 public:
-	virtual ZFile::Error WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten) = 0;
+	virtual ZFile::Error WriteAt(
+		uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten) = 0;
 
 	virtual ZFile::Error GetSize(uint64& oSize) = 0;
 	virtual ZFile::Error SetSize(uint64 iSize) = 0;
@@ -387,7 +399,8 @@ protected:
 public:
 // From ZFileR/ZFileW. Re-declared here for disambiguation.
 	virtual ZFile::Error ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead) = 0;
-	virtual ZFile::Error WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten) = 0;
+	virtual ZFile::Error WriteAt(
+		uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten) = 0;
 
 	virtual ZFile::Error GetSize(uint64& oSize) = 0;
 	virtual ZFile::Error SetSize(uint64 iSize) = 0;
@@ -568,7 +581,8 @@ public:
 	ZFileW_StreamerWPos(ZRef<ZStreamerWPos> iStreamer);
 
 // From ZFileW
-	virtual ZFile::Error WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
+	virtual ZFile::Error WriteAt(
+		uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
 
 	virtual ZFile::Error GetSize(uint64& oSize);
 	virtual ZFile::Error SetSize(uint64 iSize);
@@ -595,7 +609,8 @@ public:
 
 // From ZFileR/ZFileW via ZFileRW.
 	virtual ZFile::Error ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead);
-	virtual ZFile::Error WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
+	virtual ZFile::Error WriteAt(
+		uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
 
 	virtual ZFile::Error GetSize(uint64& oSize);
 	virtual ZFile::Error SetSize(uint64 iSize);

@@ -52,7 +52,8 @@ that's more than I want to do right now.
 \sa group_File
 */
 
-/// Constructs a file spec that is invalid, ie that represents no current or potential node in the file system.
+/** \brief Constructs a file spec that is invalid, ie that represents
+no current or potential node in the file system. */
 ZFileSpec::ZFileSpec()
 	{}
 
@@ -96,7 +97,8 @@ ZFileSpec::ZFileSpec(const string& iPath)
 		*this = sCWD().Trail(iPath);
 	}
 
-/// Returns true if the file spec is valid, that is if it represents an extant or potentially extant node in the file system.
+/** \brief Returns true if the file spec is valid, that is if it represents
+an extant or potentially extant node in the file system. */
 ZFileSpec::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fLoc && true); }
 
@@ -227,7 +229,9 @@ ZFileSpec ZFileSpec::Trail(const ZTrail& iTrail, ZFile::Error* oError) const
 	if (fLoc)
 		{
 		vector<string> originalComps = fComps;
-		originalComps.insert(originalComps.end(), iTrail.GetComps().begin(), iTrail.GetComps().end());
+		originalComps.insert(originalComps.end(),
+			iTrail.GetComps().begin(), iTrail.GetComps().end());
+
 		vector<string> realComps;
 		size_t bounces = ZTrail::sNormalize_ReturnLeadingBounces(originalComps, realComps);
 
@@ -282,7 +286,8 @@ ZFileSpec ZFileSpec::Descendant(const std::string* iComps, size_t iCount, Error*
 	return ZFileSpec();
 	}
 
-/// Return a POSIX syntax textual representation of the path that would be passed to the file system to access this node.
+/** \brief Return a POSIX syntax textual representation of the path
+that would be passed to the file system to access this node. */
 string ZFileSpec::AsString() const
 	{
 	if (fLoc)
@@ -294,7 +299,8 @@ string ZFileSpec::AsString() const
 	return string();
 	}
 
-/// Return a native textual representation of the path that would be passed to the file system to access this node.
+/** \brief  Return a native textual representation of the path that would
+be passed to the file system to access this node. */
 /**
 The representation will be in the syntax used by the underlying API.
 eg <tt>C:\path\to\node</tt> on Windows,
@@ -492,7 +498,8 @@ ZFileSpec ZFileSpec::CreateDir(ZFile::Error* oError) const
 	return ZFileSpec();
 	}
 
-/// Move the entity in the file system referenced by the file spec to the location referenced by \a iDest.
+/** \brief  Move the entity in the file system referenced by
+the file spec to the location referenced by \a iDest. */
 ZFileSpec ZFileSpec::MoveTo(const ZFileSpec& iDest, ZFile::Error* oError) const
 	{
 	if (fLoc && iDest.fLoc)
@@ -599,11 +606,12 @@ ZRef<ZStreamerRWPos> ZFileSpec::OpenRWPos(bool iPreventWriters, ZFile::Error* oE
 
 /// Create a new file in the file system and return a ZStreamerWPos that provides access to it.
 /**
-\param iOpenExisting If the file already exists and \a iOpenExisting is true then it will be opened
-(if it is accessible). If the file already exists and \a iOpenExisiting is false then an invalid ZStreamerWPos
-is returned.
+\param iOpenExisting If the file already exists and \a iOpenExisting is true then it will
+be opened (if it is accessible). If the file already exists and \a iOpenExisiting is false
+then an invalid ZStreamerWPos is returned.
 */
-ZRef<ZStreamerWPos> ZFileSpec::CreateWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError) const
+ZRef<ZStreamerWPos> ZFileSpec::CreateWPos(
+	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError) const
 	{
 	if (fLoc)
 		{
@@ -620,7 +628,8 @@ ZRef<ZStreamerWPos> ZFileSpec::CreateWPos(bool iOpenExisting, bool iPreventWrite
 	return ZRef<ZStreamerWPos>();
 	}
 
-ZRef<ZStreamerRWPos> ZFileSpec::CreateRWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError) const
+ZRef<ZStreamerRWPos> ZFileSpec::CreateRWPos(
+	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError) const
 	{
 	if (fLoc)
 		{
@@ -688,7 +697,8 @@ ZRef<ZFileRW> ZFileSpec::OpenFileRW(bool iPreventWriters, ZFile::Error* oError) 
 	return ZRef<ZFileRW>();
 	}
 
-ZRef<ZFileW> ZFileSpec::CreateFileW(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError) const
+ZRef<ZFileW> ZFileSpec::CreateFileW(
+	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError) const
 	{
 	if (fLoc)
 		{
@@ -705,7 +715,8 @@ ZRef<ZFileW> ZFileSpec::CreateFileW(bool iOpenExisting, bool iPreventWriters, ZF
 	return ZRef<ZFileW>();
 	}
 
-ZRef<ZFileRW> ZFileSpec::CreateFileRW(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError) const
+ZRef<ZFileRW> ZFileSpec::CreateFileRW(
+	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError) const
 	{
 	if (fLoc)
 		{
@@ -954,14 +965,16 @@ ZRef<ZStreamerRWPos> ZFileLoc::OpenRWPos(bool iPreventWriters, ZFile::Error* oEr
 	return ZRef<ZStreamerRWPos>();
 	}
 
-ZRef<ZStreamerWPos> ZFileLoc::CreateWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError)
+ZRef<ZStreamerWPos> ZFileLoc::CreateWPos(
+	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError)
 	{
 	if (oError)
 		*oError = ZFile::errorGeneric;
 	return ZRef<ZStreamerWPos>();
 	}
 
-ZRef<ZStreamerRWPos> ZFileLoc::CreateRWPos(bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError)
+ZRef<ZStreamerRWPos> ZFileLoc::CreateRWPos(
+	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oError)
 	{
 	if (oError)
 		*oError = ZFile::errorGeneric;
@@ -1259,7 +1272,8 @@ ZFileR_StreamerRPos::ZFileR_StreamerRPos(ZRef<ZStreamerRPos> iStreamer)
 	fStream(iStreamer->GetStreamRPos())
 	{}
 
-ZFile::Error ZFileR_StreamerRPos::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
+ZFile::Error ZFileR_StreamerRPos::ReadAt(
+	uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
 	{
 	fMutex.Acquire();
 	fStream.SetPosition(iOffset);
@@ -1285,7 +1299,8 @@ ZFileW_StreamerWPos::ZFileW_StreamerWPos(ZRef<ZStreamerWPos> iStreamer)
 	fStream(iStreamer->GetStreamWPos())
 	{}
 
-ZFile::Error ZFileW_StreamerWPos::WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
+ZFile::Error ZFileW_StreamerWPos::WriteAt(
+	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	fMutex.Acquire();
 	fStream.SetPosition(iOffset);
@@ -1335,7 +1350,8 @@ ZFileRW_StreamerRWPos::ZFileRW_StreamerRWPos(ZRef<ZStreamerRWPos> iStreamer)
 	fStream(iStreamer->GetStreamRWPos())
 	{}
 
-ZFile::Error ZFileRW_StreamerRWPos::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
+ZFile::Error ZFileRW_StreamerRWPos::ReadAt(
+	uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
 	{
 	fMutex.Acquire();
 	fStream.SetPosition(iOffset);
@@ -1344,7 +1360,8 @@ ZFile::Error ZFileRW_StreamerRWPos::ReadAt(uint64 iOffset, void* iDest, size_t i
 	return ZFile::errorNone;
 	}
 
-ZFile::Error ZFileRW_StreamerRWPos::WriteAt(uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
+ZFile::Error ZFileRW_StreamerRWPos::WriteAt(
+	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	fMutex.Acquire();
 	fStream.SetPosition(iOffset);

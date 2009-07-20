@@ -36,11 +36,13 @@ bool ZUtil_Win::sDragFullWindows()
 	{
 	bool dragFullWindows = false;
 	HKEY keyDragFullWindows;
-	if (ERROR_SUCCESS == ::RegOpenKeyExA(HKEY_CURRENT_USER, "Control Panel\\Desktop", 0, KEY_QUERY_VALUE, &keyDragFullWindows))
+	if (ERROR_SUCCESS == ::RegOpenKeyExA(HKEY_CURRENT_USER,
+		"Control Panel\\Desktop", 0, KEY_QUERY_VALUE, &keyDragFullWindows))
 		{
 		BYTE buffer[100];
 		DWORD bufferSize = 100;
-		if (ERROR_SUCCESS == ::RegQueryValueExA(keyDragFullWindows, "DragFullWindows", NULL, NULL, buffer, &bufferSize))
+		if (ERROR_SUCCESS == ::RegQueryValueExA(keyDragFullWindows,
+			"DragFullWindows", NULL, NULL, buffer, &bufferSize))
 			{
 			if (buffer[0] == '1')
 				dragFullWindows = true;
@@ -56,7 +58,8 @@ static bool sMungeProc_Invert(ZCoord hCoord, ZCoord vCoord, ZRGBColorPOD& ioColo
 	return true;
 	}
 
-void ZUtil_Win::sPixmapsFromHICON(HICON iHICON, ZDCPixmap* oColorPixmap, ZDCPixmap* oMonoPixmap, ZDCPixmap* oMaskPixmap)
+void ZUtil_Win::sPixmapsFromHICON(HICON iHICON,
+	ZDCPixmap* oColorPixmap, ZDCPixmap* oMonoPixmap, ZDCPixmap* oMaskPixmap)
 	{
 	ZAssertStop(2, iHICON);
 	ICONINFO theICONINFO;

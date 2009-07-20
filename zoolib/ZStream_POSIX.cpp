@@ -494,7 +494,8 @@ FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
 
 FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
 	{
-	return ::funopen(new ZRef<ZStreamerW>(iStreamerW), nullptr, sWriteStreamerW, nullptr, sCloseStreamerW);
+	return ::funopen(new ZRef<ZStreamerW>(iStreamerW),
+		nullptr, sWriteStreamerW, nullptr, sCloseStreamerW);
 	}
 
 #else

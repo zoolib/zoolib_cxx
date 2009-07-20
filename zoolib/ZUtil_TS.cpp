@@ -201,7 +201,8 @@ void sFromStream(Sink& iSink, uint64& oNextUnusedID, const ZStreamR& iStreamR)
 
 void sToStrim(uint64 iNextUnusedID, Source& iSource, const ZStrimW& iStrimW)
 	{
-	iStrimW.Writef("// Version 1.0\n// Next unused ID: \n0x%llX /*%lld*/\n", iNextUnusedID, iNextUnusedID);
+	iStrimW.Writef("// Version 1.0\n// Next unused ID: \n0x%llX /*%lld*/\n",
+		iNextUnusedID, iNextUnusedID);
 
 	ZUtil_Strim_Tuple::Options theOptions;
 	theOptions.fEOLString = "\n\t";

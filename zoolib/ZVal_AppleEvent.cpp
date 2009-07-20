@@ -486,7 +486,8 @@ ZVal_AppleEvent ZValMap_AppleEvent::DGet(AEKeyword iName, const ZVal_AppleEvent&
 	return iDefault;
 	}
 
-ZVal_AppleEvent ZValMap_AppleEvent::DGet(const std::string& iName, const ZVal_AppleEvent& iDefault) const
+ZVal_AppleEvent ZValMap_AppleEvent::DGet(
+	const std::string& iName, const ZVal_AppleEvent& iDefault) const
 	{
 	ZVal_AppleEvent result;
 	if (this->QGet(iName, result))

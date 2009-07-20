@@ -58,7 +58,8 @@ ZNetName_AppleTalk::ZNetName_AppleTalk(const string& iName, const string& iType)
 	fType(iType)
 	{}
 
-ZNetName_AppleTalk::ZNetName_AppleTalk(const string& iName, const string& iType, const string& iZone)
+ZNetName_AppleTalk::ZNetName_AppleTalk(
+	const string& iName, const string& iType, const string& iZone)
 :	fName(iName),
 	fType(iType),
 	fZone(iZone)
@@ -88,7 +89,8 @@ string ZNetName_AppleTalk::GetZone() const
 ZRef<ZNetNameRegistered_AppleTalk> ZNetName_AppleTalk::RegisterSocket(uint8 iSocket) const
 	{
 #if ZCONFIG(API_Net, MacClassic)
-	ZRef<ZNetNameRegistered_AppleTalk_MacClassic> theNN = new ZNetNameRegistered_AppleTalk_MacClassic(fName, fType, fZone, iSocket);
+	ZRef<ZNetNameRegistered_AppleTalk_MacClassic> theNN =
+		new ZNetNameRegistered_AppleTalk_MacClassic(fName, fType, fZone, iSocket);
 	if (theNN->IsRegistrationGood())
 		return theNN;
 #endif // ZCONFIG(API_Net, MacClassic)
@@ -128,7 +130,8 @@ ZRef<ZNetListener_ADSP> ZNetListener_ADSP::sCreateListener()
 #pragma mark -
 #pragma mark * ZNetEndpoint_ADSP
 
-ZRef<ZNetEndpoint_ADSP> ZNetEndpoint_ADSP::sCreateConnectedEndpoint(int16 iNet, uint8 iNode, int8 iSocket)
+ZRef<ZNetEndpoint_ADSP> ZNetEndpoint_ADSP::sCreateConnectedEndpoint(
+	int16 iNet, uint8 iNode, int8 iSocket)
 	{
 	try
 		{

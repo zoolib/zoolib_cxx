@@ -113,7 +113,8 @@ void Host_Win::PostCreateAndLoad()
 
 	if (fIsWindowed)
 		{
-		fInnerWND = ZWNDA::sCreateDefault(this->GetHWND(), WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN, nullptr);
+		fInnerWND = ZWNDA::sCreateDefault(this->GetHWND(),
+			WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN, nullptr);
 		::SetWindowPos(fInnerWND, nullptr,
 			0, 0,
 			theWidth, theHeight,

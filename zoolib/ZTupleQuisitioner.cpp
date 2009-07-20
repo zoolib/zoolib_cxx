@@ -42,7 +42,8 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 
-static int sTupleValueComp(ZTextCollator* ioTextCollators, int iStrength, const ZTValue& iLeft, const ZTValue& iRight)
+static int sTupleValueComp(ZTextCollator* ioTextCollators, int iStrength,
+	const ZTValue& iLeft, const ZTValue& iRight)
 	{
 	ZType leftType = iLeft.TypeOf();
 	ZType rightType = iRight.TypeOf();
@@ -91,7 +92,8 @@ static void sFilter(const ZTBSpec& iFilter, const vector<ZTuple>& iTuples, vecto
 	}
 
 /*! For each property listed in iSort, put the corresponding value in oProps. */
-static void sExtractProps(const vector<ZTBQuery::SortSpec>& iSort, const ZTuple& iTuple, vector<const ZTValue*>& oProps)
+static void sExtractProps(const vector<ZTBQuery::SortSpec>& iSort, const ZTuple& iTuple,
+	vector<const ZTValue*>& oProps)
 	{
 	oProps.reserve(iSort.size());
 	for (vector<ZTBQuery::SortSpec>::const_iterator i = iSort.begin(), theEnd = iSort.end();
@@ -108,7 +110,8 @@ struct CompareTuples_t
 	{
 	CompareTuples_t(ZTextCollator* ioTextCollators, const vector<ZTBQuery::SortSpec>& iSort);
 	
-	bool operator()(const pair<uint64, vector<const ZTValue*> >& iLeft, const pair<uint64, vector<const ZTValue*> >& iRight) const;
+	bool operator()(const pair<uint64, vector<const ZTValue*> >& iLeft,
+		const pair<uint64, vector<const ZTValue*> >& iRight) const;
 		
 	const vector<ZTBQuery::SortSpec>& fSort;
 
@@ -118,19 +121,22 @@ struct CompareTuples_t
 	ZTextCollator* fTextCollators;
 	};
 
-CompareTuples_t::CompareTuples_t(ZTextCollator* ioTextCollators, const vector<ZTBQuery::SortSpec>& iSort)
+CompareTuples_t::CompareTuples_t(
+	ZTextCollator* ioTextCollators, const vector<ZTBQuery::SortSpec>& iSort)
 :	fSort(iSort),
 	fTextCollators(ioTextCollators)
 	{}
 
-inline bool CompareTuples_t::operator()(const pair<uint64, vector<const ZTValue*> >& iLeft, const pair<uint64, vector<const ZTValue*> >& iRight) const
+inline bool CompareTuples_t::operator()(const pair<uint64, vector<const ZTValue*> >& iLeft,
+	const pair<uint64, vector<const ZTValue*> >& iRight) const
 	{
 	vector<const ZTValue*>::const_iterator leftIter = iLeft.second.begin();
 	vector<const ZTValue*>::const_iterator rightIter = iRight.second.begin();
 	size_t count = fSort.size();
 	for (size_t x = 0; x < count; ++x)
 		{
-		if (int compare = sTupleValueComp(fTextCollators, fSort[x].fStrength, *(*leftIter++), *(*rightIter++)))
+		if (int compare = sTupleValueComp(fTextCollators, fSort[x].fStrength,
+			*(*leftIter++), *(*rightIter++)))
 			{
 			if (fSort[x].fAscending)
 				return compare < 0;
@@ -145,15 +151,17 @@ inline bool CompareTuples_t::operator()(const pair<uint64, vector<const ZTValue*
 
 // =================================================================================================
 
-static void sSort(ZTextCollator ioTextCollators[], const vector<ZTBQuery::SortSpec>& iSort, const vector<ZTuple>& iTuples, vector<uint64>& ioIDs)
+static void sSort(ZTextCollator ioTextCollators[], const vector<ZTBQuery::SortSpec>& iSort,
+	const vector<ZTuple>& iTuples, vector<uint64>& ioIDs)
 	{
-	// This is ugly, but simple. We extract the values of properties we care about into a local vector,
-	// sort that and then put the IDs back into ioIDs.
+	// This is ugly, but simple. We extract the values of properties we care
+	// about into a local vector, sort that and then put the IDs back into ioIDs.
 	vector<pair<uint64, vector<const ZTValue*> > > theArray;
 	theArray.reserve(iTuples.size());
 	for (size_t x = 0; x < iTuples.size(); ++x)
 		{
-		theArray.push_back(pair<uint64, vector<const ZTValue*> >(ioIDs[x], vector<const ZTValue*>()));
+		theArray.push_back(pair<uint64, vector<const ZTValue*> >
+			(ioIDs[x], vector<const ZTValue*>()));
 		sExtractProps(iSort, iTuples[x], theArray.back().second);
 		}
 
@@ -169,14 +177,16 @@ static void sSort(ZTextCollator ioTextCollators[], const vector<ZTBQuery::SortSp
 
 /*! Compare the first \a iOffset entries in \a iLeft and \a iRight
 using the strength/ascending values from \a iSort. */
-static int sComparePrefix(ZTextCollator* ioTextCollators, size_t iOffset, const vector<ZTBQuery::SortSpec>& iSort,
-				const vector<const ZTValue*>& iLeft, const vector<const ZTValue*>& iRight)
+static int sComparePrefix(ZTextCollator* ioTextCollators, size_t iOffset,
+	const vector<ZTBQuery::SortSpec>& iSort,
+	const vector<const ZTValue*>& iLeft, const vector<const ZTValue*>& iRight)
 	{
 	vector<const ZTValue*>::const_iterator leftIter = iLeft.begin();
 	vector<const ZTValue*>::const_iterator rightIter = iRight.begin();
 	for (size_t index = 0; index < iOffset; ++index)
 		{
-		if (int compare = sTupleValueComp(ioTextCollators, iSort[index].fStrength, *(*leftIter++), *(*rightIter++)))
+		if (int compare = sTupleValueComp(ioTextCollators, iSort[index].fStrength,
+			*(*leftIter++), *(*rightIter++)))
 			{
 			if (iSort[index].fAscending)
 				return compare;
@@ -189,15 +199,17 @@ static int sComparePrefix(ZTextCollator* ioTextCollators, size_t iOffset, const 
 
 /*! Compare the entries in \a iLeft and \a iRight from \a iOffset to
 the end using the strength/ascending values from \a iSort. */
-static int sCompareSuffix(ZTextCollator* ioTextCollators, size_t iOffset, const vector<ZTBQuery::SortSpec>& iSort,
-				const vector<const ZTValue*>& iLeft, const vector<const ZTValue*>& iRight)
+static int sCompareSuffix(ZTextCollator* ioTextCollators, size_t iOffset,
+	const vector<ZTBQuery::SortSpec>& iSort,
+	const vector<const ZTValue*>& iLeft, const vector<const ZTValue*>& iRight)
 	{
 	vector<const ZTValue*>::const_iterator leftIter = iLeft.begin() + iOffset;
 	vector<const ZTValue*>::const_iterator rightIter = iRight.begin() + iOffset;
 	size_t count = iLeft.size();
 	for (size_t index = iOffset; index < count; ++index)
 		{
-		if (int compare = sTupleValueComp(ioTextCollators, iSort[index].fStrength, *(*leftIter++), *(*rightIter++)))
+		if (int compare = sTupleValueComp(ioTextCollators, iSort[index].fStrength,
+			*(*leftIter++), *(*rightIter++)))
 			{
 			if (iSort[index].fAscending)
 				return compare;
@@ -213,9 +225,11 @@ static int sCompareSuffix(ZTextCollator* ioTextCollators, size_t iOffset, const 
 namespace ZANONYMOUS {
 struct ComparePrefix_t
 	{
-	ComparePrefix_t(ZTextCollator* ioTextCollators, size_t iOffset, const vector<ZTBQuery::SortSpec>& iSort);
+	ComparePrefix_t(ZTextCollator* ioTextCollators, size_t iOffset,
+		const vector<ZTBQuery::SortSpec>& iSort);
 	
-	bool operator()(const vector<const ZTValue*>& iLeft, const vector<const ZTValue*>& iRight) const;
+	bool operator()(const vector<const ZTValue*>& iLeft,
+		const vector<const ZTValue*>& iRight) const;
 		
 	size_t fOffset;
 	const vector<ZTBQuery::SortSpec>& fSort;
@@ -226,13 +240,15 @@ struct ComparePrefix_t
 	ZTextCollator* fTextCollators;
 	};
 
-ComparePrefix_t::ComparePrefix_t(ZTextCollator* ioTextCollators, size_t iOffset, const vector<ZTBQuery::SortSpec>& iSort)
+ComparePrefix_t::ComparePrefix_t(ZTextCollator* ioTextCollators, size_t iOffset,
+	const vector<ZTBQuery::SortSpec>& iSort)
 :	fOffset(iOffset),
 	fSort(iSort),
 	fTextCollators(ioTextCollators)
 	{}
 
-inline bool ComparePrefix_t::operator()(const vector<const ZTValue*>& iLeft, const vector<const ZTValue*>& iRight) const
+inline bool ComparePrefix_t::operator()(const vector<const ZTValue*>& iLeft,
+	const vector<const ZTValue*>& iRight) const
 	{
 	return -1 == sComparePrefix(fTextCollators, fOffset, fSort, iLeft, iRight);
 	}
@@ -244,7 +260,8 @@ inline bool ComparePrefix_t::operator()(const vector<const ZTValue*>& iLeft, con
 their IDs. We effectively sort the tuples using iSort, and for entries which have
 the same values to the left of the property named iFirst (the sequence coming from
 iSort) we preserve only the smallest. */
-static void sFirst(ZTextCollator* ioTextCollators, const ZTName& iFirst, const vector<ZTBQuery::SortSpec>& iSort,
+static void sFirst(ZTextCollator* ioTextCollators, const ZTName& iFirst,
+	const vector<ZTBQuery::SortSpec>& iSort,
 	const vector<ZTuple>& iTuples, vector<uint64>& ioIDs)
 	{
 	ZAssertStop(kDebug_TupleQuisitioner, iTuples.size() == ioIDs.size());
@@ -265,7 +282,8 @@ static void sFirst(ZTextCollator* ioTextCollators, const ZTName& iFirst, const v
 		vector<const ZTValue*> curProps;
 		sExtractProps(iSort, iTuples[x], curProps);
 
-		// Find the entry in sortedProps which is greater than or equal to curProps, comparing as far as firstOffset.
+		// Find the entry in sortedProps which is greater than or
+		// equal to curProps, comparing as far as firstOffset.
 		vector<vector<const ZTValue*> >::iterator foundIter =
 						lower_bound(sortedProps.begin(), sortedProps.end(),
 						curProps, theComparePrefix_t);
@@ -305,7 +323,8 @@ static void sFirst(ZTextCollator* ioTextCollators, const ZTName& iFirst, const v
 
 /*! Does the same job as sFirst, except that it then removes all
 the resulting tuples that do not match iFilter.*/
-static void sFirst_Filter(ZTextCollator* ioTextCollators, const ZTBSpec& iFilter, const ZTName& iFirst, const vector<ZTBQuery::SortSpec>& iSort,
+static void sFirst_Filter(ZTextCollator* ioTextCollators, const ZTBSpec& iFilter,
+	const ZTName& iFirst, const vector<ZTBQuery::SortSpec>& iSort,
 	const vector<ZTuple>& iTuples, vector<uint64>& ioIDs)
 	{
 	ZAssertStop(kDebug_TupleQuisitioner, iTuples.size() == ioIDs.size());
@@ -329,7 +348,8 @@ static void sFirst_Filter(ZTextCollator* ioTextCollators, const ZTBSpec& iFilter
 		ZTuple curTuple = iTuples[x];
 		sExtractProps(iSort, curTuple, curProps);
 
-		// Find the entry in sortedProps which is greater than or equal to curProps, comparing as far as firstOffset.
+		// Find the entry in sortedProps which is greater than or equal
+		// to curProps, comparing as far as firstOffset.
 		vector<vector<const ZTValue*> >::iterator foundIter =
 						lower_bound(sortedProps.begin(), sortedProps.end(),
 						curProps, theComparePrefix_t);
@@ -371,7 +391,8 @@ static void sFirst_Filter(ZTextCollator* ioTextCollators, const ZTBSpec& iFilter
 
 // =================================================================================================
 
-void ZTupleQuisitioner::Query_Unordered(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iFilter, set<uint64>& ioIDs)
+void ZTupleQuisitioner::Query_Unordered(
+	const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iFilter, set<uint64>& ioIDs)
 	{
 	if (ZRefDynamicCast<ZTBQueryNode_All>(iNode))
 		{
@@ -384,7 +405,8 @@ void ZTupleQuisitioner::Query_Unordered(const ZRef<ZTBQueryNode>& iNode, const Z
 		{
 		if (ZRef<ZTBQueryNode> firstSource = theNode_First->GetSourceNode())
 			{
-			if (ZTBQueryNode_Combo* theNode_Combo = ZRefDynamicCast<ZTBQueryNode_Combo>(firstSource))
+			if (ZTBQueryNode_Combo* theNode_Combo
+				= ZRefDynamicCast<ZTBQueryNode_Combo>(firstSource))
 				{
 				// The source is a combo, so we can apply a first to it.
 				const ZTName& theFirst = theNode_First->GetPropName();
@@ -398,7 +420,8 @@ void ZTupleQuisitioner::Query_Unordered(const ZRef<ZTBQueryNode>& iNode, const Z
 				else
 					{
 					vector<uint64> theIDs;
-					this->Query_Combo_First(theFirst, theSort, theNode_Combo->GetIntersections(), iFilter, theIDs);
+					this->Query_Combo_First(theFirst, theSort,
+						theNode_Combo->GetIntersections(), iFilter, theIDs);
 					ioIDs.insert(theIDs.begin(), theIDs.end());
 					}
 				}
@@ -414,7 +437,8 @@ void ZTupleQuisitioner::Query_Unordered(const ZRef<ZTBQueryNode>& iNode, const Z
 		// We're returning a set of results, so any sort will have no effect.
 		this->Query_Combo_Unordered(theNode_Combo->GetIntersections(), iFilter, ioIDs);
 		}
-	else if (ZTBQueryNode_ID_Constant* theNode_ID_Constant = ZRefDynamicCast<ZTBQueryNode_ID_Constant>(iNode))
+	else if (ZTBQueryNode_ID_Constant* theNode_ID_Constant
+		= ZRefDynamicCast<ZTBQueryNode_ID_Constant>(iNode))
 		{
 		if (iFilter)
 			{
@@ -430,7 +454,8 @@ void ZTupleQuisitioner::Query_Unordered(const ZRef<ZTBQueryNode>& iNode, const Z
 			ioIDs.insert(theIDs.begin(), theIDs.end());
 			}
 		}
-	else if (ZTBQueryNode_ID_FromSource* theNode_ID_FromSource = ZRefDynamicCast<ZTBQueryNode_ID_FromSource>(iNode))
+	else if (ZTBQueryNode_ID_FromSource* theNode_ID_FromSource
+		= ZRefDynamicCast<ZTBQueryNode_ID_FromSource>(iNode))
 		{
 		set<uint64> sourceIDSet;
 		this->Query_Unordered(theNode_ID_FromSource->GetSourceNode(), nullptr, sourceIDSet);
@@ -439,7 +464,8 @@ void ZTupleQuisitioner::Query_Unordered(const ZRef<ZTBQueryNode>& iNode, const Z
 			{
 			for (set<uint64>::iterator i = sourceIDSet.begin(); i != sourceIDSet.end(); ++i)
 				{
-				if (uint64 theID = this->FetchTuple(*i).Get(theNode_ID_FromSource->GetSourcePropName()).GetID())
+				if (uint64 theID
+					= this->FetchTuple(*i).Get(theNode_ID_FromSource->GetSourcePropName()).GetID())
 					{
 					if (ioIDs.end() == ioIDs.find(theID))
 						{
@@ -453,12 +479,16 @@ void ZTupleQuisitioner::Query_Unordered(const ZRef<ZTBQueryNode>& iNode, const Z
 			{
 			for (set<uint64>::iterator i = sourceIDSet.begin(); i != sourceIDSet.end(); ++i)
 				{
-				if (uint64 theID = this->FetchTuple(*i).Get(theNode_ID_FromSource->GetSourcePropName()).GetID())
+				if (uint64 theID
+					= this->FetchTuple(*i).Get(theNode_ID_FromSource->GetSourcePropName()).GetID())
+					{
 					ioIDs.insert(theID);
+					}
 				}
 			}
 		}
-	else if (ZTBQueryNode_Property* theNode_Property = ZRefDynamicCast<ZTBQueryNode_Property>(iNode))
+	else if (ZTBQueryNode_Property* theNode_Property
+		= ZRefDynamicCast<ZTBQueryNode_Property>(iNode))
 		{
 		set<uint64> sourceIDSet;
 		this->Query_Unordered(theNode_Property->GetSourceNode(), nullptr, sourceIDSet);
@@ -479,7 +509,8 @@ void ZTupleQuisitioner::Query_Unordered(const ZRef<ZTBQueryNode>& iNode, const Z
 
 // =================================================================================================
 
-void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iFilter, vector<uint64>& ioIDs)
+void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode,
+	const ZTBSpec* iFilter, vector<uint64>& ioIDs)
 	{
 	if (ZRefDynamicCast<ZTBQueryNode_All>(iNode))
 		{
@@ -494,14 +525,20 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iF
 		{
 		if (ZRef<ZTBQueryNode> firstSource = theNode_First->GetSourceNode())
 			{
-			if (ZTBQueryNode_Combo* theNode_Combo = ZRefDynamicCast<ZTBQueryNode_Combo>(firstSource))
+			if (ZTBQueryNode_Combo* theNode_Combo
+				= ZRefDynamicCast<ZTBQueryNode_Combo>(firstSource))
 				{
 				const ZTName& theFirst = theNode_First->GetPropName();
 				const vector<ZTBQuery::SortSpec>& theSort = theNode_Combo->GetSort();
 				if (theSort.empty())
+					{
 					this->Query_Combo(theNode_Combo->GetIntersections(), iFilter, ioIDs);
+					}
 				else
-					this->Query_Combo_First(theFirst, theSort, theNode_Combo->GetIntersections(), iFilter, ioIDs);
+					{
+					this->Query_Combo_First(theFirst, theSort,
+						theNode_Combo->GetIntersections(), iFilter, ioIDs);
+					}
 				}
 			else
 				{
@@ -517,7 +554,8 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iF
 		else
 			this->Query_Combo_Sorted(theSort, theNode_Combo->GetIntersections(), iFilter, ioIDs);
 		}
-	else if (ZTBQueryNode_ID_Constant* theNode_ID_Constant = ZRefDynamicCast<ZTBQueryNode_ID_Constant>(iNode))
+	else if (ZTBQueryNode_ID_Constant* theNode_ID_Constant
+		= ZRefDynamicCast<ZTBQueryNode_ID_Constant>(iNode))
 		{
 		if (iFilter)
 			{
@@ -533,7 +571,8 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iF
 			ioIDs.insert(ioIDs.end(), theIDs.begin(), theIDs.end());
 			}
 		}
-	else if (ZTBQueryNode_ID_FromSource* theNode_ID_FromSource = ZRefDynamicCast<ZTBQueryNode_ID_FromSource>(iNode))
+	else if (ZTBQueryNode_ID_FromSource* theNode_ID_FromSource
+		= ZRefDynamicCast<ZTBQueryNode_ID_FromSource>(iNode))
 		{
 		vector<uint64> sourceIDs;
 		this->Query(theNode_ID_FromSource->GetSourceNode(), nullptr, sourceIDs);
@@ -562,7 +601,8 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iF
 			ioIDs.insert(ioIDs.end(), destIDs.begin(), destIDs.end());
 			}
 		}
-	else if (ZTBQueryNode_Property* theNode_Property = ZRefDynamicCast<ZTBQueryNode_Property>(iNode))
+	else if (ZTBQueryNode_Property* theNode_Property
+		= ZRefDynamicCast<ZTBQueryNode_Property>(iNode))
 		{
 		vector<uint64> sourceIDs;
 		this->Query(theNode_Property->GetSourceNode(), nullptr, sourceIDs);
@@ -587,8 +627,9 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode, const ZTBSpec* iF
 
 // =================================================================================================
 
-void ZTupleQuisitioner::Query_Combo_Unordered(const vector<ZTBQueryNode_Combo::Intersection>& iIntersections,
-				const ZTBSpec* iFilter, set<uint64>& ioIDs)
+void ZTupleQuisitioner::Query_Combo_Unordered(
+	const vector<ZTBQueryNode_Combo::Intersection>& iIntersections,
+	const ZTBSpec* iFilter, set<uint64>& ioIDs)
 	{
 	if (iIntersections.empty())
 		return;
@@ -617,12 +658,14 @@ void ZTupleQuisitioner::Query_Combo(const vector<ZTBQueryNode_Combo::Intersectio
 
 	if (iIntersections.size() == 1)
 		{
-		// If there's only a single intersection we may be able to preserve the order of the sources. Or not.
+		// If there's only a single intersection we may
+		// be able to preserve the order of the sources. Or not.
 		this->Query_Intersection(iIntersections.front(), iFilter, ioIDs);
 		return;
 		}
 
-	// There's more than one intersection to union together. We can't easily or sensibly preserve an order.
+	// There's more than one intersection to union together.
+	// We can't easily or sensibly preserve an order.
 	set<uint64> results;
 	for (vector<ZTBQueryNode_Combo::Intersection>::const_iterator
 		iterSect = iIntersections.begin(), theEnd = iIntersections.end();
@@ -650,7 +693,8 @@ void ZTupleQuisitioner::Query_Combo_Sorted(const vector<ZTBQuery::SortSpec>& iSo
 		}
 	else
 		{
-		// There's more than one intersection to union together. We can't easily or sensibly preserve an order.
+		// There's more than one intersection to union together.
+		// We can't easily or sensibly preserve an order.
 		set<uint64> results;
 		for (vector<ZTBQueryNode_Combo::Intersection>::const_iterator
 			iterSect = iIntersections.begin(), theEnd = iIntersections.end();
@@ -674,8 +718,10 @@ void ZTupleQuisitioner::Query_Combo_Sorted(const vector<ZTBQuery::SortSpec>& iSo
 
 // =================================================================================================
 
-void ZTupleQuisitioner::Query_Combo_First(const ZTName& iFirst, const vector<ZTBQuery::SortSpec>& iSort,
-				const vector<ZTBQueryNode_Combo::Intersection>& iIntersections, const ZTBSpec* iFilter, vector<uint64>& ioIDs)
+void ZTupleQuisitioner::Query_Combo_First(const ZTName& iFirst,
+	const vector<ZTBQuery::SortSpec>& iSort,
+	const vector<ZTBQueryNode_Combo::Intersection>& iIntersections,
+	const ZTBSpec* iFilter, vector<uint64>& ioIDs)
 	{
 	ZAssertStop(kDebug_TupleQuisitioner, !iFirst.Empty());
 
@@ -689,7 +735,8 @@ void ZTupleQuisitioner::Query_Combo_First(const ZTName& iFirst, const vector<ZTB
 		}
 	else
 		{
-		// There's more than one intersection to union together. We can't easily or sensibly preserve an order.
+		// There's more than one intersection to union together.
+		// We can't easily or sensibly preserve an order.
 		set<uint64> curResults;
 		for (vector<ZTBQueryNode_Combo::Intersection>::const_iterator
 			iterSect = iIntersections.begin(), theEnd = iIntersections.end();
@@ -713,8 +760,9 @@ void ZTupleQuisitioner::Query_Combo_First(const ZTName& iFirst, const vector<ZTB
 
 // =================================================================================================
 
-void ZTupleQuisitioner::Query_Intersection_Unordered(const ZTBQueryNode_Combo::Intersection& iIntersection,
-				const ZTBSpec* iFilter, set<uint64>& ioIDs)
+void ZTupleQuisitioner::Query_Intersection_Unordered(
+	const ZTBQueryNode_Combo::Intersection& iIntersection,
+	const ZTBSpec* iFilter, set<uint64>& ioIDs)
 	{
 	if (iIntersection.fNodes.empty())
 		return;
@@ -739,7 +787,9 @@ void ZTupleQuisitioner::Query_Intersection_Unordered(const ZTBQueryNode_Combo::I
 		set<uint64> curResults;
 		this->Query_Unordered(*iterNodes, &theFilter, curResults);
 		set<uint64> sectSet;
-		set_intersection(results.begin(), results.end(), curResults.begin(), curResults.end(), inserter(sectSet, sectSet.begin()));
+		set_intersection(results.begin(), results.end(),
+			curResults.begin(), curResults.end(),
+			inserter(sectSet, sectSet.begin()));
 		results.swap(sectSet);
 		}
 
@@ -749,7 +799,7 @@ void ZTupleQuisitioner::Query_Intersection_Unordered(const ZTBQueryNode_Combo::I
 // =================================================================================================
 
 void ZTupleQuisitioner::Query_Intersection(const ZTBQueryNode_Combo::Intersection& iIntersection,
-				const ZTBSpec* iFilter, vector<uint64>& ioIDs)
+	const ZTBSpec* iFilter, vector<uint64>& ioIDs)
 	{
 	if (iIntersection.fNodes.empty())
 		return;
@@ -774,7 +824,9 @@ void ZTupleQuisitioner::Query_Intersection(const ZTBQueryNode_Combo::Intersectio
 		set<uint64> curResults;
 		this->Query_Unordered(*iterNodes, &theFilter, curResults);
 		set<uint64> sectSet;
-		set_intersection(results.begin(), results.end(), curResults.begin(), curResults.end(), inserter(sectSet, sectSet.begin()));
+		set_intersection(results.begin(), results.end(),
+			curResults.begin(), curResults.end(),
+			inserter(sectSet, sectSet.begin()));
 		results.swap(sectSet);
 		}
 

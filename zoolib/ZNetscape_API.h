@@ -757,7 +757,7 @@ ZMacCFM_DefineProc2_Void(NPN_PushPopupsEnabledState, NPP, NPBool);
 ZMacCFM_DefineProc1_Void(NPN_PopPopupsEnabledState, NPP);
 ZMacCFM_DefineProc4(bool, NPN_Enumerate, NPP, NPObject*, NPIdentifier**, uint32_t*);
 ZMacCFM_DefineProc3_Void(NPN_PluginThreadAsyncCall, NPP, void (*)(void*), void*);
-ZMacCFM_DefineProc5(bool, NPN_Construct, NPP, NPObject*, const NPVariant*, uint32_t, NPVariant*);    
+ZMacCFM_DefineProc5(bool, NPN_Construct, NPP, NPObject*, const NPVariant*, uint32_t, NPVariant*);
 
 ZMacCFM_DefineProc4
 	(uint32, NPN_ScheduleTimer, NPP, uint32, NPBool, void (*)(NPP npp, uint32 timerID));

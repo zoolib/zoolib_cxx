@@ -77,14 +77,19 @@ public:
 
 	void MoveWindow(Window inWindow, int inLocationH, int inLocationV);
 	void ResizeWindow(Window inWindow, unsigned int inSizeH, unsigned int inSizeV);
-	void MoveResizeWindow(Window inWindow, int inLocationH, int inLocationV, unsigned int inSizeH, unsigned int inSizeV);
+	void MoveResizeWindow(Window inWindow, int inLocationH, int inLocationV,
+		unsigned int inSizeH, unsigned int inSizeV);
 	ZooLib_X11_Cursor CreateFontCursor(int inCursorShape);
-	ZooLib_X11_Cursor CreateCursorFromDCPixmaps(Drawable inDrawable, const ZDCPixmap& inPixmap, const ZDCPixmap& inMask, ZPoint inHotPoint);
+	ZooLib_X11_Cursor CreateCursorFromDCPixmaps(Drawable inDrawable,
+		const ZDCPixmap& inPixmap, const ZDCPixmap& inMask, ZPoint inHotPoint);
 	void FreeCursor(ZooLib_X11_Cursor inCursor);
 	void DefineCursor(Window inWindow, ZooLib_X11_Cursor inCursor);
-	int GrabPointer(Window inWindow, Bool inOwnerEvents, unsigned int inEventMask, int inPointerMode, int inKeyboardMode, Window inConfineTo, ZooLib_X11_Cursor inCursor, Time inTime);
+	int GrabPointer(Window inWindow, Bool inOwnerEvents,
+		unsigned int inEventMask, int inPointerMode, int inKeyboardMode,
+		Window inConfineTo, ZooLib_X11_Cursor inCursor, Time inTime);
 	int UngrabPointer(Time inTime);
-	int GrabKeyboard(Window inWindow, Bool inOwnerEvents, int inPointerMode, int inKeyboardMode, Time inTime);
+	int GrabKeyboard(Window inWindow, Bool inOwnerEvents,
+		int inPointerMode, int inKeyboardMode, Time inTime);
 	int UngrabKeyboard(Time inTime);
 	void SetForeground(GC inGC, const ZRGBColor& inColor);
 	void SetForeground(GC inGC, uint32 inPixVal);
@@ -95,42 +100,57 @@ public:
 	void SetClipOrigin(GC inGC, int inOriginH, int inOriginV);
 	void SetFunction(GC inGC, int inFunction);
 	void SetTSOrigin(GC inGC, int inOriginH, int inOriginV);
-	void SetLineAttributes(GC inGC, unsigned int inLineWidth, int inLineStyle, int inCapStyle, int inJoinStyle);
+	void SetLineAttributes(GC inGC, unsigned int inLineWidth, int inLineStyle,
+		int inCapStyle, int inJoinStyle);
 	void SetFillStyle(GC inGC, int inFillStyle);
 	void CopyArea(Drawable inSourceDrawable, Drawable inDestDrawable, GC inGC,
-				int inSourceLocationH, int inSourceLocationV, unsigned int inSizeH, unsigned int inSizeV, int inDestLocationH, int inDestLocationV);
+		int inSourceLocationH, int inSourceLocationV,
+		unsigned int inSizeH, unsigned int inSizeV, int inDestLocationH, int inDestLocationV);
 	void DrawPoint(Drawable inDrawable, GC inGC, int inLocationH, int inLocationV);
 	void DrawLine(Drawable inDrawable, GC inGC, int inStartH, int inStartV, int inEndH, int EndV);
-	void FillRectangle(Drawable inDrawable, GC inGC, int inLocationH, int inLocationV, unsigned int inSizeH, unsigned int inSizeV);
-	void DrawRectangle(Drawable inDrawable, GC inGC, int inLocationH, int inLocationV, unsigned int inSizeH, unsigned int inSizeV);
-	void FillPolygon(Drawable inDrawable, GC inGC, XPoint* inPoints, size_t inCount, int inShape, int inMode);
-	void DrawArc(Drawable inDrawable, GC inGC, int inLocationH, int inLocationV, unsigned int inSizeH, unsigned int inSizeV, int inAngle1, int inAngle2);
-	void FillArc(Drawable inDrawable, GC inGC, int inLocationH, int inLocationV, unsigned int inSizeH, unsigned int inSizeV, int inAngle1, int inAngle2);
+	void FillRectangle(Drawable inDrawable, GC inGC, int inLocationH, int inLocationV,
+		unsigned int inSizeH, unsigned int inSizeV);
+	void DrawRectangle(Drawable inDrawable, GC inGC, int inLocationH, int inLocationV,
+		unsigned int inSizeH, unsigned int inSizeV);
+	void FillPolygon(Drawable inDrawable, GC inGC, XPoint* inPoints, size_t inCount,
+		int inShape, int inMode);
+	void DrawArc(Drawable inDrawable, GC inGC, int inLocationH, int inLocationV,
+		unsigned int inSizeH, unsigned int inSizeV, int inAngle1, int inAngle2);
+	void FillArc(Drawable inDrawable, GC inGC, int inLocationH, int inLocationV,
+		unsigned int inSizeH, unsigned int inSizeV, int inAngle1, int inAngle2);
 	void Sync(bool inDiscard);
 	void Flush();
 	void SetStipple(GC inGC, Pixmap inStipple);
 	void SetTile(GC inGC, Pixmap inStipple);
 	void SetFont(GC inGC, const ZDCFont& inFont);
-	void DrawString(Drawable inDrawable, GC inGC, int inLocationH, int inLocationV, const char* inText, size_t inTextLength);
+	void DrawString(Drawable inDrawable, GC inGC, int inLocationH, int inLocationV,
+		const char* inText, size_t inTextLength);
 	int TextWidth(const ZDCFont& inFont, const char* inText, size_t inTextLength);
 	void GetFontInfo(const ZDCFont& inFont, short& outAscent, short& outDescent, short& outLeading);
-	Window CreateWindow(Window inParent, int inLocationH, int inLocationV, unsigned int inSizeH, unsigned int inSizeV,unsigned int inBorderWidth,
-						int inDepth, unsigned int inClass, Visual* inVisual, unsigned long inValueMask, XSetWindowAttributes* inAttributes);
-	Window CreateSimpleWindow(Window inParent, int inLocationH, int inLocationV, unsigned int inSizeH, unsigned int inSizeV,
-						unsigned int inBorderWidth, unsigned long inBorderPixel, unsigned long inBackgroundPixel);
+	Window CreateWindow(Window inParent, int inLocationH, int inLocationV,
+		unsigned int inSizeH, unsigned int inSizeV,unsigned int inBorderWidth,
+		int inDepth, unsigned int inClass, Visual* inVisual, unsigned long inValueMask,
+		XSetWindowAttributes* inAttributes);
+	Window CreateSimpleWindow(Window inParent, int inLocationH, int inLocationV,
+		unsigned int inSizeH, unsigned int inSizeV, unsigned int inBorderWidth,
+			unsigned long inBorderPixel, unsigned long inBackgroundPixel);
 	void SelectInput(Window inWindow, long inEventMask);
 	Pixmap CreateBitmapFromData(Drawable inDrawable, char* inData, int inSizeH, int inSizeV);
-	Pixmap CreatePixmap(Drawable inDrawable, unsigned int inSizeH, unsigned int inSizeV, unsigned int inDepth);
+	Pixmap CreatePixmap(Drawable inDrawable,
+		unsigned int inSizeH, unsigned int inSizeV, unsigned int inDepth);
 	Pixmap CreatePixmapFromDCPixmap(Drawable inDrawable, const ZDCPixmap& inDCPixmap);
-	Pixmap CreateBitmapFromDCPixmap(Drawable inDrawable, const ZDCPixmap& inDCPixmap, const ZRect& inSourceBounds, bool inInvert);
+	Pixmap CreateBitmapFromDCPixmap(Drawable inDrawable, const ZDCPixmap& inDCPixmap,
+		const ZRect& inSourceBounds, bool inInvert);
 	void FreePixmap(Pixmap inPixmap);
 
-	void DrawDCPixmap(Drawable inDrawable, GC inGC, ZPoint inLocation, const ZDCPixmap& inSourcePixmap, const ZRect& inSourceBounds);
+	void DrawDCPixmap(Drawable inDrawable, GC inGC, ZPoint inLocation,
+		const ZDCPixmap& inSourcePixmap, const ZRect& inSourceBounds);
 
 	GC CreateGC(Drawable inDrawable, unsigned long inValueMask, XGCValues* inValues);
 	void FreeGC(GC inGC);
 
-	void SetWMProperties(Window a1, XTextProperty* a2, XTextProperty* a3, char** a4, int a5, XSizeHints* a6, XWMHints* a7, XClassHint* a8);
+	void SetWMProperties(Window a1, XTextProperty* a2, XTextProperty* a3,
+		char** a4, int a5, XSizeHints* a6, XWMHints* a7, XClassHint* a8);
 
 protected:
 	size_t pGetNextImage();

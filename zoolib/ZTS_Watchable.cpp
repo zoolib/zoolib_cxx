@@ -414,7 +414,8 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 		const uint64* iWrittenTupleIDs, const ZTuple* iWrittenTuples, size_t iWrittenTuplesCount,
 		map<int64, vector<uint64> >& oChangedQueries)
 	{
-	vector<ZTSWatcher::AddedQueryCombo> local_AddedQueries(iAddedQueries, iAddedQueries + iAddedQueriesCount);
+	vector<ZTSWatcher::AddedQueryCombo> local_AddedQueries(
+		iAddedQueries, iAddedQueries + iAddedQueriesCount);
 
 	// Go through and ensure that the local data structures have ZTBQueries and
 	// real ZMemoryBlocks. We do it here to simplify code that calls us.

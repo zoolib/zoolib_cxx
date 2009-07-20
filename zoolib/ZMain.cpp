@@ -76,7 +76,8 @@ extern "C" int main(int argc, char **argv)
 extern "C" int __argc;
 extern "C" char** __argv;
 
-extern "C" int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,int nShowCmd)
+extern "C" int APIENTRY WinMain(
+	HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,int nShowCmd)
 	{
 	// There are several places where we need not only to be running on Win95 or later, but also
 	// require that our executable is *marked* as needing to run on Win95 or later, so that the

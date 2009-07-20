@@ -436,7 +436,8 @@ ZStreamW_LZWEncodeNoPatent::~ZStreamW_LZWEncodeNoPatent()
 		{}
 	}
 
-void ZStreamW_LZWEncodeNoPatent::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
+void ZStreamW_LZWEncodeNoPatent::Imp_Write(
+	const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	const uint8* localSource = reinterpret_cast<const uint8*>(iSource);
 	while (iCount)

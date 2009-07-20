@@ -134,7 +134,8 @@ ZRef<ZNetName> ZNetNameLookup_Local_Socket::CurrentName()
 #pragma mark -
 #pragma mark * ZNetListener_Local_Socket
 
-ZRef<ZNetListener_Local_Socket> ZNetListener_Local_Socket::sCreateWithFD(int iFD, size_t iListenQueueSize)
+ZRef<ZNetListener_Local_Socket> ZNetListener_Local_Socket::sCreateWithFD(
+	int iFD, size_t iListenQueueSize)
 	{
 	try
 		{
@@ -193,7 +194,8 @@ static int sListen(const string& iPath)
 	return theSocketFD;
 	}
 
-ZNetListener_Local_Socket::ZNetListener_Local_Socket(const std::string& iPath, size_t iListenQueueSize)
+ZNetListener_Local_Socket::ZNetListener_Local_Socket(
+	const std::string& iPath, size_t iListenQueueSize)
 :	ZNetListener_Socket(sListen(iPath), iListenQueueSize),
 	fPath(iPath)
 	{}

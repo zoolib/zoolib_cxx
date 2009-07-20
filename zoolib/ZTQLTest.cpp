@@ -152,7 +152,8 @@ static Query sPrefix(const ZTName& iPrefix, const RelHead& iIgnore, Query iQuery
 	return iQuery;
 	}
 
-static Query sSuperJoin(const ZTName& iPrefix1, Query iQuery1, const RelHead& iJoinOn, Query iQuery2, const ZTName& iPrefix2)
+static Query sSuperJoin(const ZTName& iPrefix1,
+	Query iQuery1, const RelHead& iJoinOn, Query iQuery2, const ZTName& iPrefix2)
 	{
 	Query newQuery1 = sPrefix(iPrefix1, iJoinOn, iQuery1);
 	Query newQuery2 = sPrefix(iPrefix2, iJoinOn, iQuery2);
@@ -270,13 +271,15 @@ void sTestQL(const ZStrimW& s)
 //	sDumpQuery(s, badPassword());
 	return;
 	
-	const ZTBQuery allViews = ZTBSpec::sEquals("Object", "view") & ZTBSpec::sEquals("titl", "something");
+	const ZTBQuery allViews
+		= ZTBSpec::sEquals("Object", "view") & ZTBSpec::sEquals("titl", "something");
 	sTestOne("allviews", s, allViews);
 
 	const ZTBQuery allContains = ZTBSpec::sEquals("Link", "contains");
 //	sTestOne("allContains", s, allContains);
 
-	const ZTBQuery allNotes = ZTBSpec::sEquals("Object", "note") | ZTBSpec::sEquals("Object", "attachment");
+	const ZTBQuery allNotes
+		= ZTBSpec::sEquals("Object", "note") | ZTBSpec::sEquals("Object", "attachment");
 //	sTestOne("allNotes", s, allNotes);
 
 	const ZTBQuery partial1 = ZTBQuery("from", allViews);

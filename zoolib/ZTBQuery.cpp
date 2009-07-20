@@ -91,8 +91,9 @@ of ID/tuple pairs, as discussed in \ref group_Tuplestore. As such it probably ou
 ZTupleQuery or ZTQuery.
 
 Whereas ZTBSpec is a predicate against which \em any tuple can be checked for satisfaction,
-a ZTBQuery represents the selection of tuples from a \link group_Tuplestore set of ID/tuple pairs\endlink,
-and potentially the use of values from the discovered tuples to execute further selection.
+a ZTBQuery represents the selection of tuples from a
+\link group_Tuplestore set of ID/tuple pairs\endlink, and potentially the use of values from
+the discovered tuples to execute further selection.
 
 The simplest ZTBQuery is also the most rare; a ZTBQuery initialized with a list of IDs. Its
 extension is simply the appropriate ID/tuple pairs.
@@ -1186,7 +1187,8 @@ int ZTBQueryNode_GT_ID_Constant::pCompare_ID_Constant(ZTBQueryNode_ID_Constant* 
 #pragma mark -
 #pragma mark * ZTBQueryNode_GT_ID_FromSource
 
-int ZTBQueryNode_GT_ID_FromSource::pCompare_ID_FromSource(ZTBQueryNode_ID_FromSource* iID_FromSource)
+int ZTBQueryNode_GT_ID_FromSource::pCompare_ID_FromSource(
+	ZTBQueryNode_ID_FromSource* iID_FromSource)
 	{ return 1; }
 
 // =================================================================================================

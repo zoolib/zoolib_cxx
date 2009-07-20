@@ -185,7 +185,8 @@ public:
 
 private:
 	bool pSetupIterators(std::vector<const ZTBSpec::Criterion*>& ioCriteria,
-		typename std::set<Key>::const_iterator& oLowerBound, typename std::set<Key>::const_iterator& oUpperBound)
+		typename std::set<Key>::const_iterator& oLowerBound,
+		typename std::set<Key>::const_iterator& oUpperBound)
 		{
 		Key theKey;
 
