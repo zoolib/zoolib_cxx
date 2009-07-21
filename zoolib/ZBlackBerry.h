@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZValData_ZooLib.h"
 
 #include <set>
+#include <vector>
 
 NAMESPACE_ZOOLIB_BEGIN
 

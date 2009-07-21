@@ -20,8 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZVal_ZooLib__
 #define __ZVal_ZooLib__ 1
+#include "zconfig.h"
 
-#include "zoolib/ZCompare.h"
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZTName.h"

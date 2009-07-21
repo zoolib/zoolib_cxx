@@ -20,9 +20,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZValData_ZooLib__
 #define __ZValData_ZooLib__ 1
+#include "zconfig.h"
 
 #include "zoolib/ZCompare.h"
-#include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZRef.h"
+#include "zoolib/ZTypes.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 

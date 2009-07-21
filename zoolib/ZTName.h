@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTName__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompare.h"
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 
 #include <string>

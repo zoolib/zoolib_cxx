@@ -22,22 +22,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCompare__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h"
 
 #include <string>
-#include <list>
-#include <vector>
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // A default implementation of sCompare_T is nice to have, but it does make
 // it hard to tell when we accidentally call operator<.
 template <class T> int sCompare_T(const T& iL, const T& iR);
-//template <class T> int sCompare_T(const T& iL, const T& iR)
-//	{ ZAssertCompile(0); }
 
-// sCompare_T definitions for simple types. They require that int have more bits than int16.
+// sCompare_T definitions for simple types. They require that int has more bits than int16.
 template <> inline int sCompare_T(const ZType& iL, const ZType& iR)
 	{ return int(iL) - int(iR); }
 
@@ -68,12 +63,10 @@ template <> inline int sCompare_T(const uint32& iL, const uint32& iR)
 template <> inline int sCompare_T(const uint64& iL, const uint64& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
-typedef void* voidstar; // Ugh.
-template <> inline int sCompare_T(const voidstar& iL, const voidstar& iR)
+template <> inline int sCompare_T(const VoidStar_t& iL, const VoidStar_t& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
-typedef const void* constvoidstar; // Ugh.
-template <> inline int sCompare_T(const constvoidstar& iL, const constvoidstar& iR)
+template <> inline int sCompare_T(const ConstVoidStar_t& iL, const ConstVoidStar_t& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 
@@ -92,12 +85,9 @@ template <class InputIterator>
 int sCompare_T(InputIterator leftIter, InputIterator leftEnd,
 	InputIterator rightIter, InputIterator rightEnd);
 
-template <class S>
-int sCompare_T(const std::vector<S>& iLeft, const std::vector<S>& iRight)
-	{ return sCompare_T(iLeft.begin(), iLeft.end(), iRight.begin(), iRight.end()); }
-
-template <class S>
-int sCompare_T(const std::list<S>& iLeft, const std::list<S>& iRight)
+// Template template to match containers
+template <typename S, template <typename> class C>
+int sCompare_T(const C<S>& iLeft, const C<S>& iRight)
 	{ return sCompare_T(iLeft.begin(), iLeft.end(), iRight.begin(), iRight.end()); }
 
 // Definition of iterator comparison

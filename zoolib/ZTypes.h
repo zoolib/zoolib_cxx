@@ -160,6 +160,9 @@ template <class P>
 Adopt_T<P> Adopt(P iP)
 	{ return Adopt_T<P>(iP); }
 
+typedef void* VoidStar_t;
+typedef const void* ConstVoidStar_t;
+
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZTypes__

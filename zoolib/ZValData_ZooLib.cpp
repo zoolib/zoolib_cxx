@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZValData_ZooLib.h"
 #include "zoolib/ZMemory.h"
+#include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZValData_ZooLib.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
