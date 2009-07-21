@@ -50,6 +50,7 @@ class ZVal_CFType
 :	public ZRef<CFTypeRef>
 ,	public ZValR_T<ZVal_CFType>
 	{
+	typedef ZRef<CFTypeRef> inherited;
 public:
 	operator bool() const;
 
@@ -108,6 +109,7 @@ public:
 class ZValList_CFType
 :	public ZRef<CFArrayRef>
 	{
+	typedef ZRef<CFArrayRef> inherited;
 public:
 	operator bool() const;
 
@@ -155,6 +157,7 @@ private:
 class ZValMap_CFType
 :	public ZRef<CFDictionaryRef>
 	{
+	typedef ZRef<CFDictionaryRef> inherited;
 public:
 	operator bool() const;
 
