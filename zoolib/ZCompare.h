@@ -86,8 +86,8 @@ int sCompare_T(InputIterator leftIter, InputIterator leftEnd,
 	InputIterator rightIter, InputIterator rightEnd);
 
 // Template template to match containers
-template <typename S, template <typename> class C>
-int sCompare_T(const C<S>& iLeft, const C<S>& iRight)
+template <class T, template <class> class C>
+int sCompare_T(const C<T>& iLeft, const C<T>& iRight)
 	{ return sCompare_T(iLeft.begin(), iLeft.end(), iRight.begin(), iRight.end()); }
 
 // Definition of iterator comparison
