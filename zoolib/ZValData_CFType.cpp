@@ -37,11 +37,11 @@ ZValData_CFType::operator bool() const
 	{ return this->GetSize(); }
 
 ZValData_CFType::ZValData_CFType()
-:	ZRef<CFDataRef>(sDataMutable())
+:	inherited(sDataMutable())
 	{}
 
 ZValData_CFType::ZValData_CFType(const ZValData_CFType& iOther)
-:	ZRef<CFDataRef>(iOther)
+:	inherited(iOther)
 ,	fMutable(iOther.fMutable)
 	{}
 
@@ -50,42 +50,42 @@ ZValData_CFType::~ZValData_CFType()
 
 ZValData_CFType& ZValData_CFType::operator=(const ZValData_CFType& iOther)
 	{
-	ZRef<CFDataRef>::operator=(iOther);
+	inherited::operator=(iOther);
 	fMutable = iOther.fMutable;
 	return *this;
 	}
 
 ZValData_CFType::ZValData_CFType(const ZRef<CFMutableDataRef>& iOther)
-:	ZRef<CFDataRef>(iOther)
+:	inherited(iOther)
 ,	fMutable(true)
 	{}
 
 ZValData_CFType::ZValData_CFType(const ZRef<CFDataRef>& iOther)
-:	ZRef<CFDataRef>(iOther)
+:	inherited(iOther)
 ,	fMutable(false)
 	{}
 
 ZValData_CFType& ZValData_CFType::operator=(const ZRef<CFMutableDataRef>& iOther)
 	{
-	ZRef<CFDataRef>::operator=(iOther);
+	inherited::operator=(iOther);
 	fMutable = true;
 	return *this;
 	}
 
 ZValData_CFType& ZValData_CFType::operator=(const ZRef<CFDataRef>& iOther)
 	{
-	ZRef<CFDataRef>::operator=(iOther);
+	inherited::operator=(iOther);
 	fMutable = false;
 	return *this;
 	}
 
 ZValData_CFType::ZValData_CFType(size_t iSize)
-:	ZRef<CFDataRef>(sDataMutable(iSize))
+:	inherited(sDataMutable(iSize))
 ,	fMutable(true)
 	{}
 
 ZValData_CFType::ZValData_CFType(const void* iSourceData, size_t iSize)
-:	ZRef<CFDataRef>(NoRetain(::CFDataCreate(
+:	inherited(NoRetain(::CFDataCreate(
 		kCFAllocatorDefault, static_cast<const UInt8*>(iSourceData), iSize)))
 ,	fMutable(true)
 	{}
@@ -141,7 +141,7 @@ void ZValData_CFType::CopyTo(void* iDest, size_t iCount) const
 	{ this->CopyTo(0, iDest, iCount); }
 
 CFDataRef ZValData_CFType::pData() const
-	{ return ZRef<CFDataRef>::Get(); }
+	{ return inherited::Get(); }
 
 CFMutableDataRef ZValData_CFType::pTouch()
 	{
@@ -151,7 +151,7 @@ CFMutableDataRef ZValData_CFType::pTouch()
 		if (!fMutable || ::CFGetRetainCount(theData) > 1)
 			{
 			theMutableData = sDataMutable(theData);
-			ZRef<CFDataRef>::operator=(theMutableData);
+			inherited::operator=(theMutableData);
 			}
 		else
 			{
@@ -161,7 +161,7 @@ CFMutableDataRef ZValData_CFType::pTouch()
 	else
 		{
 		theMutableData = sDataMutable();
-		ZRef<CFDataRef>::operator=(theMutableData);
+		inherited::operator=(theMutableData);
 		}
 	fMutable = true;
 	return theMutableData;

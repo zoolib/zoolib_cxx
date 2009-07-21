@@ -36,8 +36,9 @@ NAMESPACE_ZOOLIB_BEGIN
 class ZValData_CFType
 :	public ZRef<CFDataRef>
 	{
-	class Rep;
+	typedef ZRef<CFDataRef> inherited;
 
+	class Rep;
 public:
 	operator bool() const;
 
