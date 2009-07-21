@@ -49,7 +49,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #else
 
-	#include "zoolib/ZNetscape_API.h"
+	#include "zoolib/netscape/ZNetscape_API.h"
 
 #endif
 
