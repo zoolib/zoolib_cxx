@@ -19,13 +19,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/tuplebase/ZTS_Watchable.h"
+#include "zoolib/tuplebase/ZTSWatcher.h"
+#include "zoolib/tuplebase/ZTupleQuisitioner.h"
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZDList.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZString.h"
-#include "zoolib/tuplebase/ZTSWatcher.h"
-#include "zoolib/ZTupleQuisitioner.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 

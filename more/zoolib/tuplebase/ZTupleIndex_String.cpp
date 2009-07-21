@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZStrim.h"
-#include "zoolib/ZTupleIndex_String.h"
+#include "zoolib/tuplebase/ZTupleIndex_String.h"
 #include "zoolib/ZUnicode.h"
 
 using std::set;

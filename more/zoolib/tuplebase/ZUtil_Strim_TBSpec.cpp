@@ -18,10 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Strim_TBSpec.h"
+#include "zoolib/tuplebase/ZUtil_Strim_TBSpec.h"
+#include "zoolib/tuplebase/ZTBSpec.h"
 
 #include "zoolib/ZStrim.h"
-#include "zoolib/tuplebase/ZTBSpec.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 

@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZStream.h"
-#include "zoolib/ZTupleIndex.h"
+#include "zoolib/tuplebase/ZTupleIndex.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"

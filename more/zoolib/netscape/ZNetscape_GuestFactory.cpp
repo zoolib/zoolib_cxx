@@ -32,6 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
 	#include ZMACINCLUDE2(CoreFoundation,CFBundle.h)
+	#include ZMACINCLUDE2(CoreFoundation,CFPlugin.h)
 	#if __MACH__
 	#	include <mach-o/dyld.h> // For NSModule
 	#endif

@@ -1,9 +1,8 @@
-#include "zoolib/tql/ZTQL_Query.h"
-
 #include "zoolib/tql/ZTQL_Optimize.h"
+#include "zoolib/tql/ZTQL_Query.h"
+#include "zoolib/tql/ZUtil_Strim_TQL.h"
+#include "zoolib/tql/ZUtil_TQLConvert.h"
 
-#include "zoolib/ZUtil_Strim_TQL.h"
-#include "zoolib/ZUtil_TQLConvert.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
 NAMESPACE_ZOOLIB_USING

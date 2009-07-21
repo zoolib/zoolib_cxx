@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_TupleIndex.h"
+#include "zoolib/tuplebase/ZUtil_TupleIndex.h"
 
-#include "zoolib/ZTupleIndex_General.h"
-#include "zoolib/ZTupleIndex_String.h"
-#include "zoolib/ZTupleIndex_T.h"
+#include "zoolib/tuplebase/ZTupleIndex_General.h"
+#include "zoolib/tuplebase/ZTupleIndex_String.h"
+#include "zoolib/tuplebase/ZTupleIndex_T.h"
 
 #define USEGENERAL false
 

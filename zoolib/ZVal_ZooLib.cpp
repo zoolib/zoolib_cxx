@@ -1602,9 +1602,14 @@ int ZValList_ZooLib::Compare(const ZValList_ZooLib& iOther) const
 	if (fRep)
 		{
 		if (iOther.fRep)
-			return sCompare_T(fRep->fVector, iOther.fRep->fVector);
+			{
+			return sCompare_T(fRep->fVector.begin(), fRep->fVector.end(),
+				iOther.fRep->fVector.begin(), iOther.fRep->fVector.end());
+			}
 		else
+			{
 			return 1;
+			}
 		}
 	else if (iOther.fRep)
 		{

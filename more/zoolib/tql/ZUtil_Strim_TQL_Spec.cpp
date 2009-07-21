@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Strim_TQL_Spec.h"
-
 #include "zoolib/tql/ZTQL_LogOp.h"
+#include "zoolib/tql/ZUtil_Strim_TQL_Spec.h"
+
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
 NAMESPACE_ZOOLIB_BEGIN

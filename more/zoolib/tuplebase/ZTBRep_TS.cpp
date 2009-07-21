@@ -19,10 +19,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/tuplebase/ZTBRep_TS.h"
+#include "zoolib/tuplebase/ZTupleQuisitioner.h"
+#include "zoolib/tuplebase/ZTupleIndex.h"
 
 #include "zoolib/ZCompat_algorithm.h"
-#include "zoolib/ZTupleQuisitioner.h"
-#include "zoolib/ZTupleIndex.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 

@@ -37,7 +37,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(TS_DB)
 
 #include "zoolib/ZFile.h"
-#include "zoolib/ZTupleIndex.h"
+#include "zoolib/tuplebase/ZTupleIndex.h"
 
 #include <string>
 #include <vector>
