@@ -31,7 +31,7 @@ namespace ZPhotoshop {
 #pragma mark -
 #pragma mark * Helpers
 
-bool sAppendIfASCII(char iChar, string& ioString)
+static bool spAppendIfASCII(char iChar, string& ioString)
 	{
 	if (iChar < 32 || iChar > 126)
 		return false;
@@ -39,22 +39,22 @@ bool sAppendIfASCII(char iChar, string& ioString)
 	return true;
 	}
 
-static ZVal_ZooLib sIntAsVal(int32 iInt)
+static ZVal_ZooLib spIntAsVal(int32 iInt)
 	{
 	string theString;
 	if (sFromRuntimeTypeID(iInt, theString))
 		return theString;
 
-	if (!sAppendIfASCII(iInt >> 24, theString))
+	if (!spAppendIfASCII(iInt >> 24, theString))
 		return iInt;
 
-	if (!sAppendIfASCII(iInt >> 16, theString))
+	if (!spAppendIfASCII(iInt >> 16, theString))
 		return iInt;
 
-	if (!sAppendIfASCII(iInt >> 8, theString))
+	if (!spAppendIfASCII(iInt >> 8, theString))
 		return iInt;
 
-	if (!sAppendIfASCII(iInt, theString))
+	if (!spAppendIfASCII(iInt, theString))
 		return iInt;
 
 	return theString;
@@ -102,7 +102,7 @@ static bool sAsVal_ZooLib(const Val& iVal, ZVal_ZooLib& oVal)
 		{
 		ZValMap_ZooLib theMap;
 		theMap.Set("!Type", "UnitFloat");
-		theMap.Set("UnitID", sIntAsVal(asUnitFloat.fUnitID));
+		theMap.Set("UnitID", spIntAsVal(asUnitFloat.fUnitID));
 		theMap.Set("Value", asUnitFloat.fValue);
 		oVal = theMap;
 		return true;
@@ -113,8 +113,8 @@ static bool sAsVal_ZooLib(const Val& iVal, ZVal_ZooLib& oVal)
 		{
 		ZValMap_ZooLib theMap;
 		theMap.Set("!Type", "Enumerated");
-		theMap.Set("UnitID", sIntAsVal(asEnumerated.fEnumType));
-		theMap.Set("Value", sIntAsVal(asEnumerated.fValue));
+		theMap.Set("UnitID", spIntAsVal(asEnumerated.fEnumType));
+		theMap.Set("Value", spIntAsVal(asEnumerated.fValue));
 		oVal = theMap;
 		return true;
 		}

@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZUnicode.h"
+#include "zoolib/ZUtil_CFType.h"
 
 #include "ASZStringSuite.h"
 
@@ -90,7 +91,7 @@ namespace ZPhotoshop {
 #pragma mark -
 #pragma mark * Helpers
 
-static PIActionList sDuplicate(PIActionList iSource)
+static PIActionList spDuplicate(PIActionList iSource)
 	{
 	PIActionList dummy;
 	sPSActionList->Make(&dummy);
@@ -105,14 +106,14 @@ static PIActionList sDuplicate(PIActionList iSource)
 	return result;	
 	}
 
-static PIActionDescriptor sDuplicate(PIActionDescriptor iSource)
+static PIActionDescriptor spDuplicate(PIActionDescriptor iSource)
 	{
 	PIActionList dummy;
 	sPSActionList->Make(&dummy);
 
 	sPSActionList->PutObject(dummy, typeObject, iSource);
 
-	ClassID theType;
+	DescriptorClassID theType;
 	PIActionDescriptor result;
 	sPSActionList->GetObject(dummy, 0, &theType, &result);
 
@@ -121,7 +122,7 @@ static PIActionDescriptor sDuplicate(PIActionDescriptor iSource)
 	return result;	
 	}
 
-static string16 sAsString16(const ZRef<ASZString>& iString)
+static string16 spAsString16(const ZRef<ASZString>& iString)
 	{
 	if (size_t theLength = sASZString->LengthAsUnicodeCString(iString))
 		{
@@ -135,7 +136,7 @@ static string16 sAsString16(const ZRef<ASZString>& iString)
 	return string16();
 	}
 
-static ZRef<ASZString> sAsASZString(const string16& iString)
+static ZRef<ASZString> spAsASZString(const string16& iString)
 	{
 	if (size_t theLength = iString.length())
 		{
@@ -149,7 +150,7 @@ static ZRef<ASZString> sAsASZString(const string16& iString)
 	return ZRef<ASZString>();
 	}
 
-static TypeID sAsRuntimeTypeID(const string8& iString)
+static TypeID spAsRuntimeTypeID(const string8& iString)
 	{
 	TypeID theTypeID;
 	if (sAsRuntimeTypeID(iString, theTypeID))
@@ -157,7 +158,7 @@ static TypeID sAsRuntimeTypeID(const string8& iString)
 	return 0;
 	}
 
-static string8 sFromRuntimeTypeID(TypeID iTypeID)
+static string8 spFromRuntimeTypeID(TypeID iTypeID)
 	{
 	string8 result;
 	if (sFromRuntimeTypeID(iTypeID, result))
@@ -165,11 +166,11 @@ static string8 sFromRuntimeTypeID(TypeID iTypeID)
 	return string8();
 	}
 
-static KeyID sAsKeyID(const string8& iName)
-	{ return sAsRuntimeTypeID(iName); }
+static KeyID spAsKeyID(const string8& iName)
+	{ return spAsRuntimeTypeID(iName); }
 
-static string8 sAsString(KeyID iKeyID)
-	{ return sFromRuntimeTypeID(iKeyID); }
+static string8 spAsString(KeyID iKeyID)
+	{ return spFromRuntimeTypeID(iKeyID); }
 
 string8 sWinToPOSIX(const string8& iWin)
 	{
@@ -216,16 +217,53 @@ bool sAsRuntimeTypeID(const string8& iString, TypeID& oTypeID)
 	return false;
 	}
 
+static bool spAppendIfASCII(char iChar, string& ioString)
+	{
+	if (iChar < 32 || iChar > 126)
+		return false;
+	ioString += iChar;
+	return true;
+	}
+
+static bool spIntAsString(int32 iInt, string& oString)
+	{
+	oString.clear();
+
+	if (!spAppendIfASCII(iInt >> 24, oString))
+		return false;
+
+	if (!spAppendIfASCII(iInt >> 16, oString))
+		return false;
+
+	if (!spAppendIfASCII(iInt >> 8, oString))
+		return false;
+
+	if (!spAppendIfASCII(iInt, oString))
+		return false;
+
+	return true;
+	}
 bool sFromRuntimeTypeID(TypeID iTypeID, string8& oString)
 	{
 	char buf[1024];
 	if (noErr == sPSActionControl->TypeIDToStringID(iTypeID, buf, sizeof(buf)-1))
 		{
-		oString = buf;
-		return true;
+		if (buf[0])
+			{
+			oString = buf;
+			return true;
+			}
 		}
-	return false;
+	return spIntAsString(iTypeID, oString);
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ClassID
+
+ClassID::ClassID(const string8& iName)
+:	fDCI(spAsRuntimeTypeID(iName))
+	{}
 
 // =================================================================================================
 #pragma mark -
@@ -233,17 +271,17 @@ bool sFromRuntimeTypeID(TypeID iTypeID, string8& oString)
 
 Enumerated::Enumerated(EnumTypeID iEnumType, const string8& iValue)
 :	fEnumType(iEnumType),
-	fValue(sAsRuntimeTypeID(iValue))
+	fValue(spAsRuntimeTypeID(iValue))
 	{}
 
 Enumerated::Enumerated(const string8& iEnumType, EnumID iValue)
-:	fEnumType(sAsRuntimeTypeID(iEnumType)),
+:	fEnumType(spAsRuntimeTypeID(iEnumType)),
 	fValue(iValue)
 	{}
 
 Enumerated::Enumerated(const string8& iEnumType, const string8& iValue)
-:	fEnumType(sAsRuntimeTypeID(iEnumType)),
-	fValue(sAsRuntimeTypeID(iValue))
+:	fEnumType(spAsRuntimeTypeID(iEnumType)),
+	fValue(spAsRuntimeTypeID(iValue))
 	{}
 
 // =================================================================================================
@@ -315,13 +353,7 @@ FileRef::FileRef(const string8& iPathPOSIX)
 	{
 	#ifndef kPSAliasSuite
 		// We didn't pick up kPSAliasSuite from the include of PIUSuites.h,
-		// so we must be on the old SDK.
-		
-		FSRef theFSRef;
-		Boolean isDir;
-		if (noErr == ::FSPathMakeRef((const UInt8*)iPathPOSIX.c_str(), &theFSRef, &isDir))
-			::FSNewAliasMinimal(&theFSRef, (AliasHandle*)&fHandle);
-		
+		// so we must be on the old SDK.		
 	#else
 		#ifdef __PIMac__
 
@@ -377,14 +409,21 @@ string8 FileRef::AsPathNative() const
 string8 FileRef::pAsString()  const
 	{
 	#ifdef __PIMac__
+		HFSUniStr255 targetName;
+		HFSUniStr255 volumeName;
+		ZRef<CFStringRef> thePath;
+		FSAliasInfoBitmap theFSAIB = 0;
+		FSAliasInfo theFSAI;
 
-		FSRef theFSRef;
-		Boolean wasChanged = false;
-		if (noErr == ::FSResolveAlias(nullptr, (AliasHandle)fHandle, &theFSRef, &wasChanged))
+		OSErr theErr = ::FSCopyAliasInfo(
+			(AliasHandle)fHandle,
+			&targetName, &volumeName,
+			&thePath.GetPtrRef(),
+			&theFSAIB, &theFSAI);
+
+		if (theErr == noErr || theErr == fnfErr)
 			{
-			char pathBuf[1024];
-			if (noErr == ::FSRefMakePath(&theFSRef, (UInt8*)pathBuf, sizeof(pathBuf)))
-				return pathBuf;
+			return ZUtil_CFType::sAsUTF8(thePath);
 			}
 
 	#elif defined(__PIWin__)
@@ -417,7 +456,7 @@ string8 FileRef::pAsString()  const
 #pragma mark * Spec::Entry
 
 Spec::Entry::Entry()
-:	fClassID(0),
+:	fDCI(0),
 	fFormID(0)
 	{}
 
@@ -440,7 +479,7 @@ Spec::Entry& Spec::Entry::operator=(const Entry& iOther)
 Spec::Entry Spec::Entry::sClass(ClassID iClassID)
 	{
 	Entry theEntry;
-	theEntry.fClassID = iClassID;
+	theEntry.fDCI = iClassID.GetDCI();
 	theEntry.fFormID = formClass;
 	return theEntry;
 	}
@@ -448,7 +487,7 @@ Spec::Entry Spec::Entry::sClass(ClassID iClassID)
 Spec::Entry Spec::Entry::sEnum(ClassID iClassID, const Enumerated& iEnum)
 	{
 	Entry theEntry;
-	theEntry.fClassID = iClassID;
+	theEntry.fDCI = iClassID.GetDCI();
 	sConstruct_T(theEntry.fData.fBytes, iEnum);
 	theEntry.fFormID = formEnumerated;
 	return theEntry;
@@ -457,7 +496,7 @@ Spec::Entry Spec::Entry::sEnum(ClassID iClassID, const Enumerated& iEnum)
 Spec::Entry Spec::Entry::sIdentifier(ClassID iClassID, uint32 iIdentifier)
 	{
 	Entry theEntry;
-	theEntry.fClassID = iClassID;
+	theEntry.fDCI = iClassID.GetDCI();
 	theEntry.fData.fAsIdentifier = iIdentifier;
 	theEntry.fFormID = formIdentifier;
 	return theEntry;
@@ -466,7 +505,7 @@ Spec::Entry Spec::Entry::sIdentifier(ClassID iClassID, uint32 iIdentifier)
 Spec::Entry Spec::Entry::sIndex(ClassID iClassID, uint32 iIndex)
 	{
 	Entry theEntry;
-	theEntry.fClassID = iClassID;
+	theEntry.fDCI = iClassID.GetDCI();
 	theEntry.fData.fAsIndex = iIndex;
 	theEntry.fFormID = formIndex;
 	return theEntry;
@@ -475,7 +514,7 @@ Spec::Entry Spec::Entry::sIndex(ClassID iClassID, uint32 iIndex)
 Spec::Entry Spec::Entry::sName(ClassID iClassID, const string8& iName)
 	{
 	Entry theEntry;
-	theEntry.fClassID = iClassID;
+	theEntry.fDCI = iClassID.GetDCI();
 	sConstruct_T(theEntry.fData.fBytes, iName);
 	theEntry.fFormID = formName;
 	return theEntry;
@@ -484,8 +523,8 @@ Spec::Entry Spec::Entry::sName(ClassID iClassID, const string8& iName)
 Spec::Entry Spec::Entry::sName(ClassID iClassID, const ZRef<ASZString>& iName)
 	{
 	Entry theEntry;
-	theEntry.fClassID = iClassID;
-	string8 theString8 = ZUnicode::sAsUTF8(sAsString16(iName));
+	theEntry.fDCI = iClassID.GetDCI();
+	string8 theString8 = ZUnicode::sAsUTF8(spAsString16(iName));
 	sConstruct_T(theEntry.fData.fBytes, theString8);
 	theEntry.fFormID = formName;
 	return theEntry;
@@ -494,7 +533,7 @@ Spec::Entry Spec::Entry::sName(ClassID iClassID, const ZRef<ASZString>& iName)
 Spec::Entry Spec::Entry::sOffset(ClassID iClassID, int32 iOffset)
 	{
 	Entry theEntry;
-	theEntry.fClassID = iClassID;
+	theEntry.fDCI = iClassID.GetDCI();
 	theEntry.fData.fAsOffset = iOffset;
 	theEntry.fFormID = formOffset;
 	return theEntry;
@@ -503,7 +542,7 @@ Spec::Entry Spec::Entry::sOffset(ClassID iClassID, int32 iOffset)
 Spec::Entry Spec::Entry::sProperty(ClassID iClassID, KeyID iKeyID)
 	{
 	Entry theEntry;
-	theEntry.fClassID = iClassID;
+	theEntry.fDCI = iClassID.GetDCI();
 	theEntry.fData.fAsProperty = iKeyID;
 	theEntry.fFormID = formProperty;
 	return theEntry;
@@ -573,7 +612,7 @@ void Spec::Entry::pCopyFrom(const Entry& iOther)
 			break;
 			}
 		}
-	fClassID = iOther.fClassID;
+	fDCI = iOther.fDCI;
 	fFormID = iOther.fFormID;
 	}
 
@@ -583,9 +622,6 @@ void Spec::Entry::pCopyFrom(const Entry& iOther)
 
 Spec Spec::sClass(ClassID iClassID)
 	{ return Entry::sClass(iClassID); }
-
-Spec Spec::sEnum(ClassID iClassID, EnumTypeID iEnumType, EnumID iValue)
-	{ return Entry::sEnum(iClassID, Enumerated(iEnumType, iValue)); }
 
 Spec Spec::sEnum(ClassID iClassID, const Enumerated& iEnum)
 	{ return Entry::sEnum(iClassID, iEnum); }
@@ -609,7 +645,7 @@ Spec Spec::sProperty(ClassID iClassID, KeyID iKeyID)
 	{ return Entry::sProperty(iClassID, iKeyID); }
 
 Spec Spec::sProperty(ClassID iClassID, const string8& iName)
-	{ return Entry::sProperty(iClassID, sAsRuntimeTypeID(iName)); }
+	{ return Entry::sProperty(iClassID, spAsRuntimeTypeID(iName)); }
 
 Spec::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(!fEntries.empty()); }
@@ -697,13 +733,13 @@ PIActionReference Spec::MakeRef() const
 				{
 				case formClass:
 					{
-					if (noErr != sPSActionReference->PutClass(theRef, theEntry.fClassID))
+					if (noErr != sPSActionReference->PutClass(theRef, theEntry.fDCI))
 						allOK = false;
 					break;
 					}
 				case formEnumerated:
 					{
-					if (noErr != sPSActionReference->PutEnumerated(theRef, theEntry.fClassID,
+					if (noErr != sPSActionReference->PutEnumerated(theRef, theEntry.fDCI,
 						sFetch_T<Enumerated>(theEntry.fData.fBytes)->fEnumType,
 						sFetch_T<Enumerated>(theEntry.fData.fBytes)->fValue))
 						{ allOK = false; }
@@ -711,36 +747,37 @@ PIActionReference Spec::MakeRef() const
 					}
 				case formIdentifier:
 					{
-					if (noErr != sPSActionReference->PutIdentifier(theRef, theEntry.fClassID,
+					if (noErr != sPSActionReference->PutIdentifier(theRef,
+						theEntry.fDCI,
 						theEntry.fData.fAsIdentifier))
 						{ allOK = false; }
 					break;
 					}
 				case formIndex:
 					{
-					if (noErr != sPSActionReference->PutIndex(theRef,
-						theEntry.fClassID, theEntry.fData.fAsIndex))
+					if (noErr != sPSActionReference->PutIndex(theRef, theEntry.fDCI,
+						theEntry.fData.fAsIndex))
 						{ allOK = false; }
 					break;
 					}
 				case formName:
 					{
 					const string8& theName = *sFetch_T<string8>(theEntry.fData.fBytes);
-					if (noErr != sPSActionReference->PutName(theRef, theEntry.fClassID,
+					if (noErr != sPSActionReference->PutName(theRef, theEntry.fDCI,
 						const_cast<char*>(theName.c_str())))
 						{ allOK = false; }
 					break;
 					}
 				case formOffset:
 					{
-					if (noErr != sPSActionReference->PutOffset(theRef, theEntry.fClassID,
+					if (noErr != sPSActionReference->PutOffset(theRef, theEntry.fDCI,
 						theEntry.fData.fAsOffset))
 						{ allOK = false; }
 					break;
 					}
 				case formProperty:
 					{
-					if (noErr != sPSActionReference->PutProperty(theRef, theEntry.fClassID,
+					if (noErr != sPSActionReference->PutProperty(theRef, theEntry.fDCI,
 						theEntry.fData.fAsProperty))
 						{ allOK = false; }
 					break;
@@ -763,7 +800,7 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 		if (noErr != sPSActionReference->GetForm(iRef, &theFormID))
 			break;
 
-		ClassID theClassID;
+		DescriptorClassID theClassID;
 		if (noErr != sPSActionReference->GetDesiredClass(iRef, &theClassID))
 			break;
 
@@ -1320,26 +1357,24 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 #pragma mark -
 #pragma mark * List and Map Getter/Setter stuff
 
-#define COMMA() ,
-
-#define GETTERCASES(SUITE, PARAM) \
+#define GETTERCASES(SUITE, P0, P1) \
 	case typeInteger: { int32 theVal; \
-		if (noErr == SUITE->GetInteger(PARAM, &theVal)) { oVal = theVal; return true; } \
+		if (noErr == SUITE->GetInteger(P0, P1, &theVal)) { oVal = theVal; return true; } \
 		break; } \
 	case typeFloat: { double theVal; \
-		if (noErr == SUITE->GetFloat(PARAM, &theVal)) { oVal = theVal; return true; } \
+		if (noErr == SUITE->GetFloat(P0, P1, &theVal)) { oVal = theVal; return true; } \
 		break; } \
 	case typeUnitFloat: { UnitFloat theVal; \
-		if (noErr == SUITE->GetUnitFloat(PARAM, &theVal.fUnitID, &theVal.fValue)) \
+		if (noErr == SUITE->GetUnitFloat(P0, P1, &theVal.fUnitID, &theVal.fValue)) \
 			{ oVal = theVal; return true; } \
 		break; } \
 	case typeChar: \
 		{ \
 		uint32 theLength; \
-		if (noErr == SUITE->GetStringLength(PARAM, &theLength)) \
+		if (noErr == SUITE->GetStringLength(P0, P1, &theLength)) \
 			{ \
 			string8 result(size_t(theLength + 1), ' '); \
-			if (0 == theLength || noErr == SUITE->GetString(PARAM, &result[0], theLength + 1)) \
+			if (0 == theLength || noErr == SUITE->GetString(P0, P1, &result[0], theLength + 1)) \
 				{ \
 				oVal = result.substr(0, theLength); \
 				return true; \
@@ -1348,28 +1383,28 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 		break; \
 		} \
 	case typeBoolean: { Boolean theVal; \
-		if (noErr == SUITE->GetBoolean(PARAM, &theVal)) \
+		if (noErr == SUITE->GetBoolean(P0, P1, &theVal)) \
 			{ oVal = bool(theVal); return true; } \
 		break; } \
 	case typeValueList: { PIActionList theVal; \
-		if (noErr == SUITE->GetList(PARAM, &theVal)) \
+		if (noErr == SUITE->GetList(P0, P1, &theVal)) \
 			{ oVal = List(Adopt(theVal)); return true; } \
 		break; } \
 	case typeObject: { \
-		ClassID theDCID; \
+		DescriptorClassID theDCID; \
 		PIActionDescriptor theVal; \
-		if (noErr == SUITE->GetObject(PARAM, &theDCID, &theVal)) \
+		if (noErr == SUITE->GetObject(P0, P1, &theDCID, &theVal)) \
 			{ oVal = Map(theDCID, Adopt(theVal)); return true; } \
 		break; } \
 	/* global object? */ \
 	case typeEnumerated: { Enumerated theVal; \
-		if (noErr == SUITE->GetEnumerated(PARAM, &theVal.fEnumType, &theVal.fValue)) \
+		if (noErr == SUITE->GetEnumerated(P0, P1, &theVal.fEnumType, &theVal.fValue)) \
 			{ oVal = theVal; return true; } \
 		break; } \
 	case typeObjectSpecifier: \
 		{ \
 		PIActionReference theVal; \
-		if (noErr == SUITE->GetReference(PARAM, &theVal)) \
+		if (noErr == SUITE->GetReference(P0, P1, &theVal)) \
 			{ \
 			oVal = Spec(Adopt(theVal)); \
 			return true; \
@@ -1384,16 +1419,16 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 	/* global class? */ \
 	case typeAlias: \
 	case typePath: { FileRef theVal; \
-		if (noErr == SUITE->GetAlias(PARAM, &theVal.OParam())) \
+		if (noErr == SUITE->GetAlias(P0, P1, &theVal.OParam())) \
 			{ oVal = theVal; return true; } \
 		break; } \
 	case typeRawData: \
 		{ \
 		int32 theLength; \
-		if (noErr == SUITE->GetDataLength(PARAM, &theLength)) \
+		if (noErr == SUITE->GetDataLength(P0, P1, &theLength)) \
 			{ \
 			Data result(theLength); \
-			if (0 == theLength || noErr == SUITE->GetData(PARAM, result.GetData())) \
+			if (0 == theLength || noErr == SUITE->GetData(P0, P1, result.GetData())) \
 				{ \
 				oVal = result; \
 				return true; \
@@ -1454,6 +1489,7 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 		break; \
 		} \
 	/* global class? */ \
+	case typeAlias: \
 	case typePath: \
 		{ \
 		SUITE->PutAlias(PARAM, \
@@ -1482,7 +1518,7 @@ List::List()
 	{ sPSActionList->Make(&fAL); }
 
 List::List(const List& iOther)
-:	fAL(sDuplicate(iOther.fAL))
+:	fAL(spDuplicate(iOther.fAL))
 	{}
 
 List::~List()
@@ -1493,13 +1529,13 @@ List& List::operator=(const List& iOther)
 	if (this != &iOther)
 		{
 		sPSActionList->Free(fAL);
-		fAL = sDuplicate(iOther.fAL);
+		fAL = spDuplicate(iOther.fAL);
 		}
 	return *this;
 	}
 
 List::List(PIActionList iOther)
-:	fAL(sDuplicate(iOther))
+:	fAL(spDuplicate(iOther))
 	{}
 
 List::List(Adopt_T<PIActionList> iOther)
@@ -1509,7 +1545,7 @@ List::List(Adopt_T<PIActionList> iOther)
 List& List::operator=(PIActionList iOther)
 	{
 	sPSActionList->Free(fAL);
-	fAL = sDuplicate(iOther);
+	fAL = spDuplicate(iOther);
 	return *this;
 	}
 
@@ -1545,7 +1581,7 @@ bool List::QGet(size_t iIndex, Val& oVal) const
 
 	switch (theType)
 		{
-		GETTERCASES(sPSActionList, fAL COMMA() iIndex)
+		GETTERCASES(sPSActionList, fAL, iIndex)
 		default:
 			ZUnimplemented();
 		}
@@ -1592,7 +1628,7 @@ Map::Map()
 
 Map::Map(const Map& iOther)
 :	fType(iOther.fType)
-,	fAD(sDuplicate(iOther.fAD))
+,	fAD(spDuplicate(iOther.fAD))
 	{}
 
 Map::~Map()
@@ -1607,19 +1643,29 @@ Map& Map::operator=(const Map& iOther)
 		{
 		sPSActionDescriptor->Free(fAD);
 		fType = iOther.fType;
-		fAD = sDuplicate(iOther.fAD);
+		fAD = spDuplicate(iOther.fAD);
 		}
 	return *this;
 	}
 
+Map::Map(KeyID iType, const Map& iOther)
+:	fType(iType)
+,	fAD(spDuplicate(iOther.fAD))
+	{}
+
+Map::Map(const string8& iType, const Map& iOther)
+:	fType(spAsKeyID(iType))
+,	fAD(spDuplicate(iOther.fAD))
+	{}
+
 Map::Map(KeyID iType, PIActionDescriptor iOther)
 :	fType(iType)
-,	fAD(sDuplicate(iOther))
+,	fAD(spDuplicate(iOther))
 	{}
 
 Map::Map(const string8& iType, PIActionDescriptor iOther)
-:	fType(sAsKeyID(iType))
-,	fAD(sDuplicate(iOther))
+:	fType(spAsKeyID(iType))
+,	fAD(spDuplicate(iOther))
 	{}
 
 Map::Map(KeyID iType, Adopt_T<PIActionDescriptor> iOther)
@@ -1628,7 +1674,7 @@ Map::Map(KeyID iType, Adopt_T<PIActionDescriptor> iOther)
 	{}
 
 Map::Map(const string8& iType, Adopt_T<PIActionDescriptor> iOther)
-:	fType(sAsKeyID(iType))
+:	fType(spAsKeyID(iType))
 ,	fAD(iOther.Get())
 	{}
 
@@ -1646,7 +1692,7 @@ bool Map::QGet(KeyID iKey, Val& oVal) const
 
 	switch (theType)
 		{
-		GETTERCASES(sPSActionDescriptor, fAD COMMA() iKey)
+		GETTERCASES(sPSActionDescriptor, fAD, iKey)
 		default:
 			ZUnimplemented();
 		}
@@ -1654,7 +1700,7 @@ bool Map::QGet(KeyID iKey, Val& oVal) const
 	}
 
 bool Map::QGet(const string8& iName, Val& oVal) const
-	{ return this->QGet(sAsKeyID(iName), oVal); }
+	{ return this->QGet(spAsKeyID(iName), oVal); }
 
 bool Map::QGet(Index_t iIndex, Val& oVal) const
 	{ return this->QGet(this->KeyOf(iIndex), oVal); }
@@ -1694,16 +1740,20 @@ Val Map::Get(Index_t iIndex) const
 
 void Map::Set(KeyID iKey, const Val& iVal)
 	{
+	#define COMMA() ,
+
 	switch (iVal.fType)
 		{
 		SETTERCASES(sPSActionDescriptor, fAD COMMA() iKey)
 		default:
 			ZUnimplemented();//?
 		}
+
+	#undef COMMA
 	}
 
 void Map::Set(const string8& iName, const Val& iVal)
-	{ this->Set(sAsKeyID(iName), iVal); }
+	{ this->Set(spAsKeyID(iName), iVal); }
 
 void Map::Set(Index_t iIndex, const Val& iVal)
 	{ this->Set(this->KeyOf(iIndex), iVal); }
@@ -1712,7 +1762,7 @@ void Map::Erase(KeyID iKey)
 	{ sPSActionDescriptor->Erase(fAD, iKey); }
 
 void Map::Erase(const string8& iName)
-	{ this->Erase(sAsKeyID(iName)); }
+	{ this->Erase(spAsKeyID(iName)); }
 
 void Map::Erase(Index_t iIndex)
 	{ this->Erase(this->KeyOf(iIndex)); }
@@ -1748,7 +1798,7 @@ KeyID Map::KeyOf(Index_t iIndex) const
 string8 Map::NameOf(Index_t iIndex) const
 	{
 	if (KeyID theKey = this->KeyOf(iIndex))
-		return sAsString(theKey);
+		return spAsString(theKey);
 	return string8();
 	}
 
@@ -1768,7 +1818,7 @@ Map::Index_t Map::IndexOf(KeyID iKey) const
 	}
 
 Map::Index_t Map::IndexOf(const string8& iName) const
-	{ return this->IndexOf(sAsKeyID(iName)); }
+	{ return this->IndexOf(spAsKeyID(iName)); }
 
 KeyID Map::GetType() const
 	{ return fType; }
@@ -1787,8 +1837,6 @@ size_t Map::pCount() const
 		return result;
 	return 0;
 	}
-
-#undef COMMA
 
 } // namespace ZPhotoshop
 

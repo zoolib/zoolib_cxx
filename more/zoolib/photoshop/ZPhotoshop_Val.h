@@ -52,7 +52,6 @@ class Map;
 class Spec;
 class Val;
 
-typedef DescriptorClassID ClassID;
 typedef DescriptorEnumID EnumID;
 typedef DescriptorEnumTypeID EnumTypeID;
 typedef DescriptorFormID FormID;
@@ -72,6 +71,26 @@ string8 sWinToPOSIX(const string8& iWin);
 string8 sPOSIXToWin(const string8& iPOSIX);
 
 string8 sHFSToPOSIX(const string8& iHFS);
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ClassID
+
+struct ClassID
+	{
+	ClassID(DescriptorClassID iDCI)
+	:	fDCI(iDCI)
+		{}
+
+	ClassID(const string8& iName);
+
+
+	DescriptorClassID GetDCI() const
+		{ return fDCI; }
+
+private:
+	DescriptorClassID fDCI;
+	};
 
 // =================================================================================================
 #pragma mark -
@@ -167,7 +186,6 @@ public:
 	void swap(Spec& iOther);
 
 	static Spec sClass(ClassID iClassID);
-	static Spec sEnum(ClassID iClassID, EnumTypeID iEnumType, EnumID iValue);
 	static Spec sEnum(ClassID iClassID, const Enumerated& iEnum);
 	static Spec sIdentifier(ClassID iClassID, uint32 iIdentifier);
 	static Spec sIndex(ClassID iClassID, uint32 iIndex);
@@ -219,7 +237,7 @@ private:
 		void pRelease();
 		void pCopyFrom(const Entry& iOther);
 
-		ClassID fClassID;
+		DescriptorClassID fDCI;
 		FormID fFormID;
 
 		union
@@ -301,7 +319,7 @@ private:
 		bool fAsBool;
 		int32 fAsInt32;
 		double fAsDouble;
-		ClassID fAsClassID;
+		DescriptorClassID fAsClassID;
 
 		char fBytes[1];
 
@@ -380,6 +398,9 @@ public:
 	Map(const Map& iOther);
 	~Map();
 	Map& operator=(const Map& iOther);
+
+	Map(KeyID iType, const Map& iOther);
+	Map(const string8& iType, const Map& iOther);
 
 	Map(KeyID iType, PIActionDescriptor iOther);
 	Map(const string8& iType, PIActionDescriptor iOther);
