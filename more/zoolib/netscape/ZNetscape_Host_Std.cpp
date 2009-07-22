@@ -541,10 +541,10 @@ public:
 	void Cancel();
 
 private:
-	const string fURL;
-	void* fNotifyData;
 	Host_Std* fHost;
+	const string fURL;
 	ZHTTP::ValData fData;
+	void* fNotifyData;
 	bool fIsPOST;
 	};
 
@@ -554,7 +554,7 @@ Host_Std::HTTPFetcher::HTTPFetcher(
 	fURL(iURL),
 	fNotifyData(iNotifyData)
 	{
-	if (fData)
+	if (iData)
 		{
 		fData = *iData;
 		fIsPOST = true;
