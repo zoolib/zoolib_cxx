@@ -51,8 +51,12 @@ class ZRefSafe
 		if (iP)
 			sRelease(*iP);
 		}
+
 public:
-	ZRefSafe() : fP(nullptr) {}
+	ZRefSafe()
+	:	fP(nullptr)
+		{}
+
 	ZRefSafe(T* iP)
 	:	fP(fP)
 		{ spRetain(fP); }
