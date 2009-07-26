@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_BlackBerry.h"
+#include "zoolib/blackberry/ZUtil_BlackBerry.h"
 
 #include "zoolib/blackberry/ZBlackBerry_BBDevMgr.h"
 #include "zoolib/blackberry/ZBlackBerry_Client.h"
