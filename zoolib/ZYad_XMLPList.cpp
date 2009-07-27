@@ -33,28 +33,28 @@ using std::string;
 #pragma mark -
 #pragma mark * Static parsing functions
 
-static void sThrowParseException(const string& iMessage)
+static void spThrowParseException(const string& iMessage)
 	{
 	throw ZYadParseException_XMLPList(iMessage);
 	}
 
-static void sBegin(ZML::Reader& r, const string& iTagName)
+static void spBegin(ZML::Reader& r, const string& iTagName)
 	{
 	sSkipText(r);
 
 	if (!sTryRead_Begin(r, iTagName))
-		sThrowParseException("Expected begin tag '" + iTagName + "'");
+		spThrowParseException("Expected begin tag '" + iTagName + "'");
 	}
 
-static void sEnd(ZML::Reader& r, const string& iTagName)
+static void spEnd(ZML::Reader& r, const string& iTagName)
 	{
 	sSkipText(r);
 
 	if (!sTryRead_End(r, iTagName))
-		sThrowParseException("Expected end tag '" + iTagName + "'");
+		spThrowParseException("Expected end tag '" + iTagName + "'");
 	}
 
-static bool sTryRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
+static bool spTryRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
 	{
 	if (r.Current() == ZML::eToken_TagEmpty)
 		{
@@ -87,17 +87,17 @@ static bool sTryRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
 		{}
 	else if (tagName == "integer")
 		{
-		int64 theInteger;
-		if (!ZUtil_Strim::sTryRead_SignedDecimalInteger(ZStrimU_Unreader(r.TextStrim()), theInteger))
-			sThrowParseException("Expected valid integer");
+		int64 theInt64;
+		if (!ZUtil_Strim::sTryRead_SignedDecimalInteger(ZStrimU_Unreader(r.TextStrim()), theInt64))
+			spThrowParseException("Expected valid integer");
 
-		oVal.SetInt32(theInteger);
+		oVal.SetInt32(theInt64);
 		}
 	else if (tagName == "real")
 		{
 		double theDouble;
 		if (!ZUtil_Strim::sTryRead_SignedDouble(ZStrimU_Unreader(r.TextStrim()), theDouble))
-			sThrowParseException("Expected valid real");
+			spThrowParseException("Expected valid real");
 
 		oVal.SetDouble(theDouble);
 		}
@@ -126,22 +126,22 @@ static bool sTryRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
 	else
 		{
 		// Hmm. Ignore tags we don't recognize?
-		sThrowParseException("Invalid begin tag '" + tagName + "'");
+		spThrowParseException("Invalid begin tag '" + tagName + "'");
 		}
 
-	sEnd(r, tagName);
+	spEnd(r, tagName);
 	return true;
 	}
 
-static void sRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
+static void spRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
 	{
 	sSkipText(r);
 
-	if (!sTryRead_SimpleValue(r, oVal))
-		sThrowParseException("Expected value");
+	if (!spTryRead_SimpleValue(r, oVal))
+		spThrowParseException("Expected value");
 	}
 
-static ZRef<ZYadR_Std> sMakeYadR_XMLPList(ZML::Reader& r)
+static ZRef<ZYadR_Std> spMakeYadR_XMLPList(ZML::Reader& r)
 	{
 	sSkipText(r);
 
@@ -170,7 +170,7 @@ static ZRef<ZYadR_Std> sMakeYadR_XMLPList(ZML::Reader& r)
 		}
 	
 	ZVal_ZooLib theVal;
-	if (sTryRead_SimpleValue(r, theVal))
+	if (spTryRead_SimpleValue(r, theVal))
 		return new ZYadPrimR_Std(theVal);
 
 	return ZRef<ZYadR_Std>();
@@ -204,7 +204,7 @@ void ZYadStreamR_XMLPList::Finish()
 	fStreamR_Base64Decode.SkipAll();
 
 	if (fMustReadEndTag)
-		sEnd(fR, "data");
+		spEnd(fR, "data");
 	}
 
 const ZStreamR& ZYadStreamR_XMLPList::GetStreamR()
@@ -223,7 +223,7 @@ void ZYadStrimR_XMLPList::Finish()
 	{
 	fR.Advance();
 	if (fMustReadEndTag)
-		sEnd(fR, "string");
+		spEnd(fR, "string");
 	}
 
 const ZStrimR& ZYadStrimR_XMLPList::GetStrimR()
@@ -248,11 +248,11 @@ void ZYadListR_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 			return;
 		}
 
-	if (!(oYadR = sMakeYadR_XMLPList(fR)))
+	if (!(oYadR = spMakeYadR_XMLPList(fR)))
 		{
 		if (!fMustReadEndTag)
 			return;
-		sThrowParseException("Expected a value");
+		spThrowParseException("Expected a value");
 		}
 	}
 
@@ -279,15 +279,15 @@ void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYad
 		{
 		if (!fMustReadEndTag)
 			return;
-		sThrowParseException("Expected <key>");
+		spThrowParseException("Expected <key>");
 		}
 
 	oName = fR.TextString();
 
-	sEnd(fR, "key");
+	spEnd(fR, "key");
 
-	if (!(oYadR = sMakeYadR_XMLPList(fR)))
-		sThrowParseException("Expected value after <key>...</key>");
+	if (!(oYadR = spMakeYadR_XMLPList(fR)))
+		spThrowParseException("Expected value after <key>...</key>");
 	}
 
 // =================================================================================================
@@ -303,24 +303,24 @@ ZRef<ZYadR> ZYad_XMLPList::sMakeYadR(ZML::Reader& r)
 			break;
 		r.Advance();
 		}
-	return sMakeYadR_XMLPList(r);
+	return spMakeYadR_XMLPList(r);
 	}
 
-static void sToStrim_Stream(const ZML::StrimW& s, const ZStreamR& iStreamR)
+static void spToStrim_Stream(const ZML::StrimW& s, const ZStreamR& iStreamR)
 	{
 	s.Begin("data");
 		iStreamR.CopyAllTo(ZStreamW_Base64Encode(ZStreamW_ASCIIStrim(s)));
 	s.End("data");	
 	}
 
-static void sToStrim_Strim(const ZML::StrimW& s, const ZStrimR& iStrimR)
+static void spToStrim_Strim(const ZML::StrimW& s, const ZStrimR& iStrimR)
 	{
 	s.Begin("string");
 		iStrimR.CopyAllTo(s);
 	s.End("string");	
 	}
 
-static void sToStrim_List(const ZML::StrimW& s, ZRef<ZYadListR> iYadListR)
+static void spToStrim_List(const ZML::StrimW& s, ZRef<ZYadListR> iYadListR)
 	{
 	s.Begin("array");
 		while (ZRef<ZYadR> theChild = iYadListR->ReadInc())
@@ -328,7 +328,7 @@ static void sToStrim_List(const ZML::StrimW& s, ZRef<ZYadListR> iYadListR)
 	s.End("array");
 	}
 
-static void sToStrim_Map(const ZML::StrimW& s, ZRef<ZYadMapR> iYadMapR)
+static void spToStrim_Map(const ZML::StrimW& s, ZRef<ZYadMapR> iYadMapR)
 	{
 	s.Begin("dict");
 		string theName;
@@ -342,7 +342,7 @@ static void sToStrim_Map(const ZML::StrimW& s, ZRef<ZYadMapR> iYadMapR)
 	s.End("dict");
 	}
 
-static void sToStrim_SimpleValue(const ZML::StrimW& s, const ZVal_ZooLib& iVal)
+static void spToStrim_SimpleValue(const ZML::StrimW& s, const ZVal_ZooLib& iVal)
 	{
 	switch (iVal.TypeOf())
 		{
@@ -370,7 +370,7 @@ static void sToStrim_SimpleValue(const ZML::StrimW& s, const ZVal_ZooLib& iVal)
 			}
 		case eZType_Raw:
 			{
-			sToStrim_Stream(s, ZStreamRPos_ValData_T<ZValData_ZooLib>(iVal.GetData()));
+			spToStrim_Stream(s, ZStreamRPos_ValData_T<ZValData_ZooLib>(iVal.GetData()));
 			break;
 			}
 		case eZType_Time:
@@ -410,23 +410,23 @@ void ZYad_XMLPList::sToStrimW_ML(const ZML::StrimW& s, ZRef<ZYadR> iYadR)
 		}
 	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
-		sToStrim_Map(s, theYadMapR);
+		spToStrim_Map(s, theYadMapR);
 		}
 	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
 		{
-		sToStrim_List(s, theYadListR);
+		spToStrim_List(s, theYadListR);
 		}
 	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
 		{
-		sToStrim_Stream(s, theYadStreamR->GetStreamR());
+		spToStrim_Stream(s, theYadStreamR->GetStreamR());
 		}
 	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
 		{
-		sToStrim_Strim(s, theYadStrimR->GetStrimR());
+		spToStrim_Strim(s, theYadStrimR->GetStrimR());
 		}
 	else
 		{
-		sToStrim_SimpleValue(s, sFromYadR_T<ZVal_ZooLib>(iYadR));
+		spToStrim_SimpleValue(s, sFromYadR_T<ZVal_ZooLib>(iYadR));
 		}	
 	}
 

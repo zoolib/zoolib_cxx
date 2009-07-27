@@ -53,7 +53,7 @@ class Maker0
 #pragma mark -
 #pragma mark * Helper functions
 
-static bool sIsSimpleString(const ZYadOptions& iOptions, const string& iString)
+static bool spIsSimpleString(const ZYadOptions& iOptions, const string& iString)
 	{
 	if (iOptions.fStringLineLength && iString.size() > iOptions.fStringLineLength)
 		{
@@ -75,7 +75,7 @@ static bool sIsSimpleString(const ZYadOptions& iOptions, const string& iString)
 	return true;
 	}
 
-static bool sIsSimple(const ZYadOptions& iOptions, const ZVal_ZooLib& iVal)
+static bool spIsSimple(const ZYadOptions& iOptions, const ZVal_ZooLib& iVal)
 	{
 	switch (iVal.TypeOf())
 		{
@@ -90,7 +90,7 @@ static bool sIsSimple(const ZYadOptions& iOptions, const ZVal_ZooLib& iVal)
 				return true;
 
 			if (theList.Count() == 1)
-				return sIsSimple(iOptions, theList.Get(0));
+				return spIsSimple(iOptions, theList.Get(0));
 
 			return false;
 			}
@@ -101,13 +101,13 @@ static bool sIsSimple(const ZYadOptions& iOptions, const ZVal_ZooLib& iVal)
 				return true;
 
 			if (theMap.Count() == 1)
-				return sIsSimple(iOptions, theMap.RGet(theMap.begin()));
+				return spIsSimple(iOptions, theMap.RGet(theMap.begin()));
 
 			return false;
 			}
 		case eZType_String:
 			{
-			return sIsSimpleString(iOptions, iVal.GetString());
+			return spIsSimpleString(iOptions, iVal.GetString());
 			}
 		default:
 			{
@@ -132,7 +132,7 @@ ZYadR_ZooLib::ZYadR_ZooLib(ZType iType, const ZStreamR& iStreamR)
 	{}
 
 bool ZYadR_ZooLib::IsSimple(const ZYadOptions& iOptions)
-	{ return sIsSimple(iOptions, fVal); }
+	{ return spIsSimple(iOptions, fVal); }
 
 // =================================================================================================
 #pragma mark -

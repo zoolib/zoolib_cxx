@@ -38,7 +38,7 @@ for walking HTML.
 #pragma mark -
 #pragma mark * Static helpers
 
-static void sThrowParseException(const string& iMessage)
+static void spThrowParseException(const string& iMessage)
 	{
 	throw ZYadParseException_ML(iMessage);
 	}
@@ -150,7 +150,7 @@ void ZYadMapR_ML::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>
 		}
 
 	if (!oYadR && !fTagName.empty())
-		sThrowParseException("Expected value or end tag '" + fTagName + "'");
+		spThrowParseException("Expected value or end tag '" + fTagName + "'");
 	}
 
 NAMESPACE_ZOOLIB_END

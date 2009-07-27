@@ -35,7 +35,7 @@ ZRef<ZYadR_Std> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR);
 #pragma mark -
 #pragma mark * Static helpers
 
-static void sToStream(const string& iString, const ZStreamW& iStreamW)
+static void spToStream(const string& iString, const ZStreamW& iStreamW)
 	{
 	const size_t theLength = iString.length();
 	iStreamW.WriteCount(theLength);
@@ -43,7 +43,7 @@ static void sToStream(const string& iString, const ZStreamW& iStreamW)
 		iStreamW.Write(iString.data(), theLength);
 	}
 
-static string sStringFromStream(const ZStreamR& iStreamR)
+static string spStringFromStream(const ZStreamR& iStreamR)
 	{
 	if (const size_t theLength = iStreamR.ReadCount())
 		return iStreamR.ReadString(theLength);
@@ -299,7 +299,7 @@ ZYadMapR_ZooLibStreamNew::ZYadMapR_ZooLibStreamNew(const ZStreamR& iStreamR)
 void ZYadMapR_ZooLibStreamNew::Imp_ReadInc(
 	bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
-	oName = sStringFromStream(fStreamR);
+	oName = spStringFromStream(fStreamR);
 	oYadR = sMakeYadR_ZooLibStream(fStreamR);
 	}
 
@@ -318,7 +318,7 @@ void ZYadMapR_ZooLibStreamOld::Imp_ReadInc(
 	if (fCountRemaining)
 		{
 		--fCountRemaining;
-		oName = sStringFromStream(fStreamR);
+		oName = spStringFromStream(fStreamR);
 		oYadR = sMakeYadR_ZooLibStream(fStreamR);
 		}
 	}
@@ -339,7 +339,7 @@ void ZYad_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR)
 		string theName;
 		while (ZRef<ZYadR> theChild = theYadMapR->ReadInc(theName))
 			{
-			sToStream(theName, iStreamW);
+			spToStream(theName, iStreamW);
 			sToStream(iStreamW, theChild);
 			}
 		iStreamW.WriteByte(0); // Empty name

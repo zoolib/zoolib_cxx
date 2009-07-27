@@ -31,12 +31,12 @@ using std::string;
 #pragma mark -
 #pragma mark * Helpers
 
-static void sThrowParseException(const string& iMessage)
+static void spThrowParseException(const string& iMessage)
 	{
 	throw ZYadParseException_Bencode(iMessage);
 	}
 
-static bool sTryRead_Byte(const ZStreamU& s, uint8 iByte)
+static bool spTryRead_Byte(const ZStreamU& s, uint8 iByte)
 	{
 	if (iByte == s.ReadUInt8())
 		return true;
@@ -44,7 +44,7 @@ static bool sTryRead_Byte(const ZStreamU& s, uint8 iByte)
 	return false;
 	}
 
-static bool sTryRead_Digit(const ZStreamU& s, int& oDigit)
+static bool spTryRead_Digit(const ZStreamU& s, int& oDigit)
 	{
 	uint8 theByte;
 	if (!s.ReadByte(theByte))
@@ -67,7 +67,7 @@ static bool sTryRead_DecimalInteger(const ZStreamU& s, int64& oInteger)
 	for (;;)
 		{
 		int curDigit;
-		if (!sTryRead_Digit(s, curDigit))
+		if (!spTryRead_Digit(s, curDigit))
 			return isValid;
 		isValid = true;
 		oInteger *= 10;
@@ -75,9 +75,9 @@ static bool sTryRead_DecimalInteger(const ZStreamU& s, int64& oInteger)
 		}
 	}
 
-static bool sTryRead_SignedInteger(const ZStreamU& s, int64& oInteger)
+static bool spTryRead_SignedInteger(const ZStreamU& s, int64& oInteger)
 	{
-	const bool isNegative = sTryRead_Byte(s, '-');
+	const bool isNegative = spTryRead_Byte(s, '-');
 
 	if (!sTryRead_DecimalInteger(s, oInteger))
 		return false;
@@ -88,28 +88,28 @@ static bool sTryRead_SignedInteger(const ZStreamU& s, int64& oInteger)
 	return true;
 	}
 
-static int64 sRead_PositiveInteger(const ZStreamU& s)
+static int64 spRead_PositiveInteger(const ZStreamU& s)
 	{
 	int64 result;
 	if (!sTryRead_DecimalInteger(s, result))
-		sThrowParseException("Expected unsigned length");
+		spThrowParseException("Expected unsigned length");
 	return result;
 	}
 
-static string sReadString(const ZStreamU& s)
+static string spReadString(const ZStreamU& s)
 	{
-	const int32 stringLength = sRead_PositiveInteger(s);
-	if (!sTryRead_Byte(s, ':'))
-		sThrowParseException("Expected ':' terminator for string length");
+	const int32 stringLength = spRead_PositiveInteger(s);
+	if (!spTryRead_Byte(s, ':'))
+		spThrowParseException("Expected ':' terminator for string length");
 
 	return s.ReadString(stringLength);
 	}
 
-static ZRef<ZYadR_Std> sReadStringish(const ZStreamU& s)
+static ZRef<ZYadR_Std> spReadStringish(const ZStreamU& s)
 	{
-	const int32 theLength = sRead_PositiveInteger(s);
-	if (!sTryRead_Byte(s, ':'))
-		sThrowParseException("Expected ':' terminator for string/binary length");
+	const int32 theLength = spRead_PositiveInteger(s);
+	if (!spTryRead_Byte(s, ':'))
+		spThrowParseException("Expected ':' terminator for string/binary length");
 
 	if (!theLength)
 		return new ZYadPrimR_Std;
@@ -133,7 +133,7 @@ static ZRef<ZYadR_Std> sReadStringish(const ZStreamU& s)
 		}
 	}
 
-static ZRef<ZYadR_Std> sMakeYadR_Bencode(const ZStreamU& s)
+static ZRef<ZYadR_Std> spMakeYadR_Bencode(const ZStreamU& s)
 	{
 	const uint8 type = s.ReadUInt8();
 	switch (type)
@@ -149,10 +149,10 @@ static ZRef<ZYadR_Std> sMakeYadR_Bencode(const ZStreamU& s)
 		case 'i':
 			{
 			int64 theInteger;
-			if (!sTryRead_SignedInteger(s, theInteger))
-				sThrowParseException("Expected signed decimal integer");
-			if (!sTryRead_Byte(s, 'e'))
-				sThrowParseException("Expected 'e' terminator for integer");
+			if (!spTryRead_SignedInteger(s, theInteger))
+				spThrowParseException("Expected signed decimal integer");
+			if (!spTryRead_Byte(s, 'e'))
+				spThrowParseException("Expected 'e' terminator for integer");
 			return new ZYadPrimR_Std(theInteger);
 			}
 		default:
@@ -162,7 +162,7 @@ static ZRef<ZYadR_Std> sMakeYadR_Bencode(const ZStreamU& s)
 
 			// It could be valid UTF-8, or could be
 			// arbitrary bytes, so we call sReadStringish.
-			return sReadStringish(s);
+			return spReadStringish(s);
 			}
 		}
 	return ZRef<ZYadR_Std>();
@@ -190,8 +190,8 @@ ZYadListR_Bencode::ZYadListR_Bencode(const ZStreamU& iStreamU)
 
 void ZYadListR_Bencode::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 	{
-	if (!sTryRead_Byte(fStreamU, 'e'))
-		oYadR = sMakeYadR_Bencode(fStreamU);
+	if (!spTryRead_Byte(fStreamU, 'e'))
+		oYadR = spMakeYadR_Bencode(fStreamU);
 	}
 
 // =================================================================================================
@@ -204,10 +204,10 @@ ZYadMapR_Bencode::ZYadMapR_Bencode(const ZStreamU& iStreamU)
 
 void ZYadMapR_Bencode::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
 	{
-	if (!sTryRead_Byte(fStreamU, 'e'))
+	if (!spTryRead_Byte(fStreamU, 'e'))
 		{
-		oName = sReadString(fStreamU);
-		oYadR = sMakeYadR_Bencode(fStreamU);
+		oName = spReadString(fStreamU);
+		oYadR = spMakeYadR_Bencode(fStreamU);
 		}
 	}
 
@@ -216,6 +216,6 @@ void ZYadMapR_Bencode::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR
 #pragma mark * ZYad_Bencode
 
 ZRef<ZYadR> ZYad_Bencode::sMakeYadR(const ZStreamU& iStreamU)
-	{ return sMakeYadR_Bencode(iStreamU); }
+	{ return spMakeYadR_Bencode(iStreamU); }
 
 NAMESPACE_ZOOLIB_END

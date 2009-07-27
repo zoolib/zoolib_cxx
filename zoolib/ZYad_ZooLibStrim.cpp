@@ -37,12 +37,12 @@ using std::vector;
 #pragma mark -
 #pragma mark * Static parsing functions
 
-static void sThrowParseException(const string& iMessage)
+static void spThrowParseException(const string& iMessage)
 	{
 	throw ZYadParseException_ZooLibStrim(iMessage);
 	}
 
-static bool sTryRead_PropertyName(const ZStrimU& iStrimU, string& oName)
+static bool spTryRead_PropertyName(const ZStrimU& iStrimU, string& oName)
 	{
 	using namespace ZUtil_Strim;
 
@@ -58,27 +58,27 @@ static bool sTryRead_PropertyName(const ZStrimU& iStrimU, string& oName)
 	return true;
 	}
 
-static int64 sMustRead_GenericInteger(const ZStrimU& iStrimU)
+static int64 spMustRead_GenericInteger(const ZStrimU& iStrimU)
 	{
 	using namespace ZUtil_Strim;
 	int64 theInteger;
 	if (!sTryRead_SignedGenericInteger(iStrimU, theInteger))
-		sThrowParseException("Expected an integer");
+		spThrowParseException("Expected an integer");
 	return theInteger;
 	}
 
-static void sMustRead_WSCommaWS(const ZStrimU& iStrimU)
+static void spMustRead_WSCommaWS(const ZStrimU& iStrimU)
 	{
 	using namespace ZUtil_Strim;
 	sSkip_WSAndCPlusPlusComments(iStrimU);
 
 	if (!sTryRead_CP(iStrimU, ','))
-		sThrowParseException("Expected a ','");
+		spThrowParseException("Expected a ','");
 
 	sSkip_WSAndCPlusPlusComments(iStrimU);
 	}
 
-static bool sFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
+static bool spFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 	{
 	using namespace ZUtil_Strim;
 
@@ -96,7 +96,7 @@ static bool sFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 			if (!sTryRead_EscapedString(iStrimU, '\'', propertyName))
 				{
 				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, nullptr, &propertyName))
-					sThrowParseException("Expected a property name after '#'");
+					spThrowParseException("Expected a property name after '#'");
 				}
 			}
 		oVal.SetName(propertyName);
@@ -129,7 +129,7 @@ static bool sFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 			{
 			sSkip_WSAndCPlusPlusComments(iStrimU);
 			if (!sTryRead_CP(iStrimU, '('))
-				sThrowParseException("Expected '(' following a type designator");
+				spThrowParseException("Expected '(' following a type designator");
 
 			sSkip_WSAndCPlusPlusComments(iStrimU);
 
@@ -137,7 +137,7 @@ static bool sFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 				{
 				string typeValueLC, typeValue;
 				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &typeValueLC, &typeValue))
-					sThrowParseException("Expected a type name");
+					spThrowParseException("Expected a type name");
 
 				if (typeValueLC == "null") oVal.SetType(eZType_Null);
 				else if (typeValueLC == "string") oVal.SetType(eZType_String);
@@ -164,53 +164,53 @@ static bool sFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 				else if (typeValueLC == "time") oVal.SetType(eZType_Time);
 //##				else if (typeValueLC == "name") oVal.SetType(eZType_Name);
 				else
-					sThrowParseException("Unknown type name '" + typeValue + "'");
+					spThrowParseException("Unknown type name '" + typeValue + "'");
 				}
 			else if (theTypeLC == "id")
 				{
-				oVal.SetID(sMustRead_GenericInteger(iStrimU));
+				oVal.SetID(spMustRead_GenericInteger(iStrimU));
 				}
 			else if (theTypeLC == "int8")
 				{
-				oVal.SetInt8(sMustRead_GenericInteger(iStrimU));
+				oVal.SetInt8(spMustRead_GenericInteger(iStrimU));
 				}
 			else if (theTypeLC == "int16")
 				{
-				oVal.SetInt16(sMustRead_GenericInteger(iStrimU));
+				oVal.SetInt16(spMustRead_GenericInteger(iStrimU));
 				}
 			else if (theTypeLC == "int32")
 				{
-				oVal.SetInt32(sMustRead_GenericInteger(iStrimU));
+				oVal.SetInt32(spMustRead_GenericInteger(iStrimU));
 				}
 			else if (theTypeLC == "int64")
 				{
-				oVal.SetInt64(sMustRead_GenericInteger(iStrimU));
+				oVal.SetInt64(spMustRead_GenericInteger(iStrimU));
 				}
 			else if (theTypeLC == "bool")
 				{
 				string theBool;
 				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &theBool, nullptr))
-					sThrowParseException("Expected 'false' or 'true'");
+					spThrowParseException("Expected 'false' or 'true'");
 
 				if (theBool == "true")
 					oVal.SetBool(true);
 				else if (theBool == "false")
 					oVal.SetBool(false);
 				else
-					sThrowParseException("Expected 'false' or 'true'");
+					spThrowParseException("Expected 'false' or 'true'");
 				}
 			else if (theTypeLC == "float")
 				{
 				double theDouble;
 				if (!sTryRead_SignedDouble(iStrimU, theDouble))
-					sThrowParseException("Expected a floating point number");
+					spThrowParseException("Expected a floating point number");
 				oVal.SetFloat(theDouble);
 				}
 			else if (theTypeLC == "double")
 				{
 				double theDouble;
 				if (!sTryRead_SignedDouble(iStrimU, theDouble))
-					sThrowParseException("Expected a floating point number");
+					spThrowParseException("Expected a floating point number");
 				oVal.SetDouble(theDouble);
 				}
 			else if (theTypeLC == "time")
@@ -228,26 +228,26 @@ static bool sFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 				// times in text streams for now.
 				double theDouble;
 				if (!sTryRead_SignedDouble(iStrimU, theDouble))
-					sThrowParseException("Expected a floating point time");
+					spThrowParseException("Expected a floating point time");
 				oVal.SetTime(theDouble);
 				}
 			else if (theTypeLC == "rect")
 				{
 				ZRectPOD theRect;
 
-				theRect.left = sMustRead_GenericInteger(iStrimU);
+				theRect.left = spMustRead_GenericInteger(iStrimU);
 
-				sMustRead_WSCommaWS(iStrimU);
+				spMustRead_WSCommaWS(iStrimU);
 
-				theRect.top = sMustRead_GenericInteger(iStrimU);
+				theRect.top = spMustRead_GenericInteger(iStrimU);
 
-				sMustRead_WSCommaWS(iStrimU);
+				spMustRead_WSCommaWS(iStrimU);
 
-				theRect.right = sMustRead_GenericInteger(iStrimU);
+				theRect.right = spMustRead_GenericInteger(iStrimU);
 
-				sMustRead_WSCommaWS(iStrimU);
+				spMustRead_WSCommaWS(iStrimU);
 
-				theRect.bottom = sMustRead_GenericInteger(iStrimU);
+				theRect.bottom = spMustRead_GenericInteger(iStrimU);
 
 				oVal.SetRect(theRect);
 				}
@@ -255,29 +255,29 @@ static bool sFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 				{
 				ZPointPOD thePoint;
 
-				thePoint.h = sMustRead_GenericInteger(iStrimU);
+				thePoint.h = spMustRead_GenericInteger(iStrimU);
 
-				sMustRead_WSCommaWS(iStrimU);
+				spMustRead_WSCommaWS(iStrimU);
 
-				thePoint.v = sMustRead_GenericInteger(iStrimU);
+				thePoint.v = spMustRead_GenericInteger(iStrimU);
 
 				oVal.SetPoint(thePoint);
 				}
 			else
 				{
-				sThrowParseException("Unknown type designator '" + theType + "'");
+				spThrowParseException("Unknown type designator '" + theType + "'");
 				}
 
 			sSkip_WSAndCPlusPlusComments(iStrimU);
 
 			if (!sTryRead_CP(iStrimU, ')'))
-				sThrowParseException("Expected ')' to close a value");
+				spThrowParseException("Expected ')' to close a value");
 			}
 		}
 	return true;
 	}
 
-static ZRef<ZYadR_Std> sMakeYadR_ZooLibStrim(const ZStrimU& iStrimU)
+static ZRef<ZYadR_Std> spMakeYadR_ZooLibStrim(const ZStrimU& iStrimU)
 	{
 	using namespace ZUtil_Strim;
 
@@ -306,7 +306,7 @@ static ZRef<ZYadR_Std> sMakeYadR_ZooLibStrim(const ZStrimU& iStrimU)
 	else
 		{
 		ZVal_ZooLib theVal;
-		if (sFromStrim_Value(iStrimU, theVal))
+		if (spFromStrim_Value(iStrimU, theVal))
 			return new ZYadPrimR_Std(theVal);
 		}
 
@@ -345,7 +345,7 @@ void ZYadStreamR_ZooLibStrim::Finish()
 		{
 		sSkip_WSAndCPlusPlusComments(fStrimU);
 		if (!sTryRead_CP(fStrimU, ')'))
-			sThrowParseException("Expected ')' to close a raw");
+			spThrowParseException("Expected ')' to close a raw");
 		}
 	}
 
@@ -425,7 +425,7 @@ void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* iDest, size_t iCount, si
 					if (sTryRead_CP(fStrimU, '"'))
 						fQuotesSeen = 0;
 					else if (countRead == 0)
-						sThrowParseException("Expected \" to close a string");
+						spThrowParseException("Expected \" to close a string");
 					}
 				break;
 				}
@@ -456,7 +456,7 @@ void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* iDest, size_t iCount, si
 				if (countRead == 0)
 					{
 					if (!fStrimR_Boundary.HitBoundary())
-						sThrowParseException("Expected \"\"\" to close a string");
+						spThrowParseException("Expected \"\"\" to close a string");
 					fStrimR_Boundary.Reset();
 					fQuotesSeen = 0;
 					}
@@ -500,13 +500,13 @@ void ZYadListR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 		}
 
 	if (!gotSeparator)
-		sThrowParseException("Expected ';' or ',' between values");
+		spThrowParseException("Expected ';' or ',' between values");
 
-	if (!(oYadR = sMakeYadR_ZooLibStrim(fStrimU)))
+	if (!(oYadR = spMakeYadR_ZooLibStrim(fStrimU)))
 		{
 		if (!fReadDelimiter)
 			return;
-		sThrowParseException("Expected a value");
+		spThrowParseException("Expected a value");
 		}
 	}
 
@@ -528,7 +528,7 @@ void ZYadMapR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<Z
 	if (!iIsFirst)
 		{
 		if (!sTryRead_CP(fStrimU, ',') && !sTryRead_CP(fStrimU, ';'))
-			sThrowParseException("Expected ';' or ',' after property");
+			spThrowParseException("Expected ';' or ',' after property");
 		sSkip_WSAndCPlusPlusComments(fStrimU);
 		}
 
@@ -538,41 +538,41 @@ void ZYadMapR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<Z
 			return;
 		}
 
-	if (!sTryRead_PropertyName(fStrimU, oName))
+	if (!spTryRead_PropertyName(fStrimU, oName))
 		{
 		if (!fReadDelimiter)
 			return;
-		sThrowParseException("Expected property name");
+		spThrowParseException("Expected property name");
 		}
 
 	sSkip_WSAndCPlusPlusComments(fStrimU);
 
 	if (!sTryRead_CP(fStrimU, '='))
-		sThrowParseException("Expected '=' after property name");
+		spThrowParseException("Expected '=' after property name");
 
-	if (!(oYadR = sMakeYadR_ZooLibStrim(fStrimU)))
-		sThrowParseException("Expected value after '='");
+	if (!(oYadR = spMakeYadR_ZooLibStrim(fStrimU)))
+		spThrowParseException("Expected value after '='");
 	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Static writing functions
 
-static void sWriteIndent(const ZStrimW& iStrimW,
+static void spWriteIndent(const ZStrimW& iStrimW,
 	size_t iCount, const ZYadOptions& iOptions)
 	{
 	while (iCount--)
 		iStrimW.Write(iOptions.fIndentString);
 	}
 
-static void sWriteLFIndent(const ZStrimW& iStrimW,
+static void spWriteLFIndent(const ZStrimW& iStrimW,
 	size_t iCount, const ZYadOptions& iOptions)
 	{
 	iStrimW.Write(iOptions.fEOLString);
-	sWriteIndent(iStrimW, iCount, iOptions);
+	spWriteIndent(iStrimW, iCount, iOptions);
 	}
 
-static void sWriteString(
+static void spWriteString(
 	const ZStrimW& s, const ZYadOptions& iOptions, const string& iString)
 	{
 	if (iOptions.fBreakStrings
@@ -637,7 +637,7 @@ static void sWriteString(
 		}
 	}
 
-static void sToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
+static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	uint64 theSize = iStreamRPos.GetSize();
@@ -651,10 +651,10 @@ static void sToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 		if (iOptions.DoIndentation() && theSize > iOptions.fRawChunkSize)
 			{
 			if (iMayNeedInitialLF)
-				sWriteLFIndent(s, iLevel, iOptions);
+				spWriteLFIndent(s, iLevel, iOptions);
 			
 			s.Writef("( // %lld bytes", theSize);
-			sWriteLFIndent(s, iLevel, iOptions);
+			spWriteLFIndent(s, iLevel, iOptions);
 			if (iOptions.fRawAsASCII)
 				{
 				for (;;)
@@ -689,7 +689,7 @@ static void sToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 						else
 							s.WriteCP(theChar);
 						}
-					sWriteLFIndent(s, iLevel, iOptions);
+					spWriteLFIndent(s, iLevel, iOptions);
 					}
 				}
 			else
@@ -701,7 +701,7 @@ static void sToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 				ZStreamW_HexStrim(iOptions.fRawByteSeparator,
 					eol, iOptions.fRawChunkSize, s).CopyAllFrom(iStreamRPos);
 
-				sWriteLFIndent(s, iLevel, iOptions);
+				spWriteLFIndent(s, iLevel, iOptions);
 				}
 
 			s.Write(")");
@@ -732,12 +732,12 @@ static void sToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 		}
 	}
 
-static void sToStrim_Stream(const ZStrimW& s, const ZStreamR& iStreamR,
+static void spToStrim_Stream(const ZStrimW& s, const ZStreamR& iStreamR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	if (const ZStreamRPos* theStreamRPos = dynamic_cast<const ZStreamRPos*>(&iStreamR))
 		{
-		sToStrim_Stream(s, *theStreamRPos, iLevel, iOptions, iMayNeedInitialLF);
+		spToStrim_Stream(s, *theStreamRPos, iLevel, iOptions, iMayNeedInitialLF);
 		return;
 		}
 
@@ -749,7 +749,7 @@ static void sToStrim_Stream(const ZStrimW& s, const ZStreamR& iStreamR,
 	s.Write(")");
 	}
 
-static void sToStrim_Strim(const ZStrimW& s, const ZStrimR& iStrimR,
+static void spToStrim_Strim(const ZStrimW& s, const ZStrimR& iStrimR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	s.Write("\"");
@@ -764,7 +764,7 @@ static void sToStrim_Strim(const ZStrimW& s, const ZStrimR& iStrimR,
 	s.Write("\"");
 	}
 
-static void sToStrim_SimpleValue(const ZStrimW& s, const ZVal_ZooLib& iVal,
+static void spToStrim_SimpleValue(const ZStrimW& s, const ZVal_ZooLib& iVal,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	switch (iVal.TypeOf())
@@ -857,7 +857,7 @@ static void sToStrim_SimpleValue(const ZStrimW& s, const ZVal_ZooLib& iVal,
 #endif
 		case eZType_String:
 			{
-			sWriteString(s, iOptions, iVal.GetString());
+			spWriteString(s, iOptions, iVal.GetString());
 			break;
 			}
 		case eZType_RefCounted:
@@ -890,10 +890,10 @@ static void sToStrim_SimpleValue(const ZStrimW& s, const ZVal_ZooLib& iVal,
 		}
 	}
 
-static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
+static void spToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 	size_t iInitialIndent, const ZYadOptions& iOptions, bool iMayNeedInitialLF);
 
-static void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
+static void spToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	bool needsIndentation = false;
@@ -914,7 +914,7 @@ static void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 			{
 			// We were invoked by a tuple which has already issued the property
 			// name and equals sign, so we need to start a fresh line.
-			sWriteLFIndent(s, iLevel, iOptions);
+			spWriteLFIndent(s, iLevel, iOptions);
 			}
 
 		s.Write("[");
@@ -924,15 +924,15 @@ static void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 				{
 				if (!isFirst)
 					s.Write(", ");
-				sWriteLFIndent(s, iLevel, iOptions);
-				sToStrim_Yad(s, cur, iLevel, iOptions, false);
+				spWriteLFIndent(s, iLevel, iOptions);
+				spToStrim_Yad(s, cur, iLevel, iOptions, false);
 				}
 			else
 				{
 				break;
 				}
 			}
-		sWriteLFIndent(s, iLevel, iOptions);
+		spWriteLFIndent(s, iLevel, iOptions);
 		s.Write("]");
 		}
 	else
@@ -946,7 +946,7 @@ static void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 				{
 				if (!isFirst)
 					s.Write(", ");
-				sToStrim_Yad(s, cur, iLevel, iOptions, false);
+				spToStrim_Yad(s, cur, iLevel, iOptions, false);
 				}
 			else
 				{
@@ -957,7 +957,7 @@ static void sToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 		}
 	}
 
-static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
+static void spToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	bool needsIndentation = false;
@@ -972,7 +972,7 @@ static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 			{
 			// We're going to be indenting, but need to start
 			// a fresh line to have our { and contents line up.
-			sWriteLFIndent(s, iLevel, iOptions);
+			spWriteLFIndent(s, iLevel, iOptions);
 			}
 
 		s.Write("{");
@@ -981,10 +981,10 @@ static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 			string curName;
 			if (ZRef<ZYadR> cur = iYadMapR->ReadInc(curName))
 				{
-				sWriteLFIndent(s, iLevel, iOptions);
+				spWriteLFIndent(s, iLevel, iOptions);
 				ZYad_ZooLibStrim::sWrite_PropName(s, curName);
 				s << " = ";
-				sToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
+				spToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
 				s.Write(";");
 				}
 			else
@@ -992,7 +992,7 @@ static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 				break;
 				}
 			}
-		sWriteLFIndent(s, iLevel, iOptions);
+		spWriteLFIndent(s, iLevel, iOptions);
 		s.Write("}");
 		}
 	else
@@ -1006,7 +1006,7 @@ static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 				s.Write(" ");
 				ZYad_ZooLibStrim::sWrite_PropName(s, curName);
 				s << " = ";
-				sToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
+				spToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
 				s.Write(";");
 				}
 			else
@@ -1019,7 +1019,7 @@ static void sToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 		}
 	}
 
-static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
+static void spToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	if (!iYadR)
@@ -1028,23 +1028,23 @@ static void sToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 		}
 	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
-		sToStrim_Map(s, theYadMapR, iLevel, iOptions, iMayNeedInitialLF);
+		spToStrim_Map(s, theYadMapR, iLevel, iOptions, iMayNeedInitialLF);
 		}
 	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
 		{
-		sToStrim_List(s, theYadListR, iLevel, iOptions, iMayNeedInitialLF);
+		spToStrim_List(s, theYadListR, iLevel, iOptions, iMayNeedInitialLF);
 		}
 	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
 		{
-		sToStrim_Stream(s, theYadStreamR->GetStreamR(), iLevel, iOptions, iMayNeedInitialLF);
+		spToStrim_Stream(s, theYadStreamR->GetStreamR(), iLevel, iOptions, iMayNeedInitialLF);
 		}
 	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
 		{
-		sToStrim_Strim(s, theYadStrimR->GetStrimR(), iLevel, iOptions, iMayNeedInitialLF);
+		spToStrim_Strim(s, theYadStrimR->GetStrimR(), iLevel, iOptions, iMayNeedInitialLF);
 		}
 	else
 		{
-		sToStrim_SimpleValue(s, sFromYadR_T<ZVal_ZooLib>(iYadR),
+		spToStrim_SimpleValue(s, sFromYadR_T<ZVal_ZooLib>(iYadR),
 			iLevel, iOptions, iMayNeedInitialLF);
 		}
 	}
@@ -1079,16 +1079,16 @@ bool ZYad_ZooLibStrim::sRead_Identifier(
 	}
 
 ZRef<ZYadR> ZYad_ZooLibStrim::sMakeYadR(const ZStrimU& iStrimU)
-	{ return sMakeYadR_ZooLibStrim(iStrimU); }
+	{ return spMakeYadR_ZooLibStrim(iStrimU); }
 
 void ZYad_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR)
-	{ sToStrim_Yad(s, iYadR, 0, ZYadOptions(), false); }
+	{ spToStrim_Yad(s, iYadR, 0, ZYadOptions(), false); }
 
 void ZYad_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
-	{ sToStrim_Yad(s, iYadR, iInitialIndent, iOptions, false); }
+	{ spToStrim_Yad(s, iYadR, iInitialIndent, iOptions, false); }
 
-static bool sContainsProblemChars(const string& iString)
+static bool spContainsProblemChars(const string& iString)
 	{
 	if (iString.empty())
 		{
@@ -1111,7 +1111,7 @@ static bool sContainsProblemChars(const string& iString)
 
 void ZYad_ZooLibStrim::sWrite_PropName(const ZStrimW& iStrimW, const string& iPropName)
 	{
-	if (sContainsProblemChars(iPropName))
+	if (spContainsProblemChars(iPropName))
 		{
 		iStrimW << "\"";
 		ZStrimW_Escaped(iStrimW) << iPropName;

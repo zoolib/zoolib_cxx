@@ -26,15 +26,6 @@ using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Helpers
-
-static void sThrowParseException(const string& iMessage)
-	{
-	throw ZYadParseException_Std(iMessage);
-	}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadParseException_Std
 
 ZYadParseException_Std::ZYadParseException_Std(const string& iWhat)

@@ -88,7 +88,7 @@ type             -
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStrimR_JSONNormalize
+#pragma mark * ZYadStrimR_JSONNormalize declaration
 
 class ZYadStrimR_JSONNormalize
 :	public ZYadR_Std,
@@ -104,23 +104,16 @@ private:
 	ZRef<ZYadStrimR> fSource;
 	};
 
-ZYadStrimR_JSONNormalize::ZYadStrimR_JSONNormalize(ZRef<ZYadStrimR> iSource)
-:	fSource(iSource)
-	{}
-
-const ZStrimR& ZYadStrimR_JSONNormalize::GetStrimR()
-	{ return fSource->GetStrimR(); }
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Helpers
 
-static void sThrowParseException(const string& iMessage)
+static void spThrowParseException(const string& iMessage)
 	{
 	throw ZYadParseException_JSON(iMessage);
 	}
 
-static bool sTryRead_JSONString(const ZStrimU& s, string& oString)
+static bool spTryRead_JSONString(const ZStrimU& s, string& oString)
 	{
 	using namespace ZUtil_Strim;
 
@@ -166,7 +159,7 @@ static bool sTryRead_JSONString(const ZStrimU& s, string& oString)
 	return false;
 	}
 
-static bool sFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
+static bool spFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 	{
 	using namespace ZUtil_Strim;
 
@@ -176,7 +169,7 @@ static bool sFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 	double asDouble;
 	bool isDouble;
 
-	if (sTryRead_JSONString(iStrimU, theString))
+	if (spTryRead_JSONString(iStrimU, theString))
 		{
 		oVal.SetString(theString);
 		}
@@ -201,13 +194,13 @@ static bool sFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 		}
 	else
 		{
-		sThrowParseException("Expected number, string or keyword");
+		spThrowParseException("Expected number, string or keyword");
 		}
 
 	return true;
 	}
 
-static bool sNormalizeSimpleValue(const ZVal_ZooLib& iVal, ZVal_ZooLib& oVal)
+static bool spNormalizeSimpleValue(const ZVal_ZooLib& iVal, ZVal_ZooLib& oVal)
 	{
 	ZAssert(&iVal != &oVal);
 	switch (iVal.TypeOf())
@@ -255,7 +248,7 @@ static bool sNormalizeSimpleValue(const ZVal_ZooLib& iVal, ZVal_ZooLib& oVal)
 	return false;
 	}
 
-static ZRef<ZYadR_Std> sMakeYadR_JSON(const ZStrimU& iStrimU)
+static ZRef<ZYadR_Std> spMakeYadR_JSON(const ZStrimU& iStrimU)
 	{
 	using namespace ZUtil_Strim;
 
@@ -276,14 +269,14 @@ static ZRef<ZYadR_Std> sMakeYadR_JSON(const ZStrimU& iStrimU)
 	else
 		{
 		ZVal_ZooLib theVal;
-		if (sFromStrim_Value(iStrimU, theVal))
+		if (spFromStrim_Value(iStrimU, theVal))
 			return new ZYadPrimR_Std(theVal);
 		}
 
 	return ZRef<ZYadPrimR_Std>();
 	}
 
-static ZRef<ZYadR_Std> sMakeYadR_JSONNormalize(
+static ZRef<ZYadR_Std> spMakeYadR_JSONNormalize(
 	ZRef<ZYadR> iYadR, bool iPreserve, bool iPreserveLists, bool iPreserveMaps)
 	{
 	if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
@@ -308,7 +301,7 @@ static ZRef<ZYadR_Std> sMakeYadR_JSONNormalize(
 			// We were able to turn the value into something
 			// legitimate. Now normalize it if possible.
 			ZVal_ZooLib normalized;
-			if (sNormalizeSimpleValue(theValue, normalized))
+			if (spNormalizeSimpleValue(theValue, normalized))
 				return new ZYadPrimR_Std(normalized);
 			}
 
@@ -379,12 +372,12 @@ void ZYadListR_JSON::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 		{
 		// Must read a separator
 		if (!sTryRead_CP(fStrimU, ','))
-			sThrowParseException("Require ',' to separate array elements");
+			spThrowParseException("Require ',' to separate array elements");
 		sSkip_WSAndCPlusPlusComments(fStrimU);
 		}
 
-	if (!(oYadR = sMakeYadR_JSON(fStrimU)))
-		sThrowParseException("Expected a value");
+	if (!(oYadR = spMakeYadR_JSON(fStrimU)))
+		spThrowParseException("Expected a value");
 	}
 
 // =================================================================================================
@@ -411,21 +404,32 @@ void ZYadMapR_JSON::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_St
 		{
 		// Must read a separator
 		if (!sTryRead_CP(fStrimU, ','))
-			sThrowParseException("Require ',' to separate array elements");
+			spThrowParseException("Require ',' to separate array elements");
 		sSkip_WSAndCPlusPlusComments(fStrimU);
 		}
 
-	if (!sTryRead_JSONString(fStrimU, oName))
-		sThrowParseException("Expected a member name");
+	if (!spTryRead_JSONString(fStrimU, oName))
+		spThrowParseException("Expected a member name");
 
 	sSkip_WSAndCPlusPlusComments(fStrimU);
 
 	if (!sTryRead_CP(fStrimU, ':'))
-		sThrowParseException("Expected ':' after a member name");
+		spThrowParseException("Expected ':' after a member name");
 
-	if (!(oYadR = sMakeYadR_JSON(fStrimU)))
-		sThrowParseException("Expected value after ':'");
+	if (!(oYadR = spMakeYadR_JSON(fStrimU)))
+		spThrowParseException("Expected value after ':'");
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadStrimR_JSONNormalize definition
+
+ZYadStrimR_JSONNormalize::ZYadStrimR_JSONNormalize(ZRef<ZYadStrimR> iSource)
+:	fSource(iSource)
+	{}
+
+const ZStrimR& ZYadStrimR_JSONNormalize::GetStrimR()
+	{ return fSource->GetStrimR(); }
 
 // =================================================================================================
 #pragma mark -
@@ -445,7 +449,7 @@ void ZYadListR_JSONNormalize::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
 		ZRef<ZYadR> next = fYadListR->ReadInc();
 		if (!next)
 			break;
-		oYadR = sMakeYadR_JSONNormalize(
+		oYadR = spMakeYadR_JSONNormalize(
 			next, fPreserveLists, fPreserveLists, fPreserveMaps);
 		if (oYadR)
 			break;
@@ -470,7 +474,7 @@ void ZYadMapR_JSONNormalize::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef
 		ZRef<ZYadR> next = fYadMapR->ReadInc(oName);
 		if (!next)
 			break;
-		oYadR = sMakeYadR_JSONNormalize(
+		oYadR = spMakeYadR_JSONNormalize(
 			next, fPreserveMaps, fPreserveLists, fPreserveMaps);
 		if (oYadR)
 			break;
@@ -481,21 +485,21 @@ void ZYadMapR_JSONNormalize::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef
 #pragma mark -
 #pragma mark * Static writing functions
 
-static void sWriteIndent(const ZStrimW& iStrimW,
+static void spWriteIndent(const ZStrimW& iStrimW,
 	size_t iCount, const ZYadOptions& iOptions)
 	{
 	while (iCount--)
 		iStrimW.Write(iOptions.fIndentString);
 	}
 
-static void sWriteLFIndent(const ZStrimW& iStrimW,
+static void spWriteLFIndent(const ZStrimW& iStrimW,
 	size_t iCount, const ZYadOptions& iOptions)
 	{
 	iStrimW.Write(iOptions.fEOLString);
-	sWriteIndent(iStrimW, iCount, iOptions);
+	spWriteIndent(iStrimW, iCount, iOptions);
 	}
 
-static void sWriteString(const ZStrimW& s, const string& iString)
+static void spWriteString(const ZStrimW& s, const string& iString)
 	{
 	s.Write("\"");
 
@@ -508,7 +512,7 @@ static void sWriteString(const ZStrimW& s, const string& iString)
 	s.Write("\"");
 	}
 
-static void sWriteString(const ZStrimW& s, const ZStrimR& iStrimR)
+static void spWriteString(const ZStrimW& s, const ZStrimR& iStrimR)
 	{
 	s.Write("\"");
 
@@ -521,16 +525,16 @@ static void sWriteString(const ZStrimW& s, const ZStrimR& iStrimR)
 	s.Write("\"");
 	}
 
-static void sToStrim_SimpleValue(const ZStrimW& s, const ZVal_ZooLib& iVal)
+static void spToStrim_SimpleValue(const ZStrimW& s, const ZVal_ZooLib& iVal)
 	{
 	ZVal_ZooLib normalized;
-	sNormalizeSimpleValue(iVal, normalized);
+	spNormalizeSimpleValue(iVal, normalized);
 
 	switch (normalized.TypeOf())
 		{
 		case eZType_String:
 			{
-			sWriteString(s, normalized.GetString());
+			spWriteString(s, normalized.GetString());
 			break;
 			}
 		case eZType_Int64: 
@@ -607,13 +611,13 @@ ZYadVisitor_JSONWriter::ZYadVisitor_JSONWriter(
 
 bool ZYadVisitor_JSONWriter::Visit_YadR(ZRef<ZYadR> iYadR)
 	{
-	sToStrim_SimpleValue(fStrimW, sFromYadR_T<ZVal_ZooLib>(iYadR));
+	spToStrim_SimpleValue(fStrimW, sFromYadR_T<ZVal_ZooLib>(iYadR));
 	return true;
 	}
 
 bool ZYadVisitor_JSONWriter::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	{
-	sWriteString(fStrimW, iYadStrimR->GetStrimR());
+	spWriteString(fStrimW, iYadStrimR->GetStrimR());
 	return true;
 	}
 
@@ -637,7 +641,7 @@ bool ZYadVisitor_JSONWriter::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 			{
 			// We were invoked by a tuple which has already issued the property
 			// name and equals sign, so we need to start a fresh line.
-			sWriteLFIndent(fStrimW, fIndent, fOptions);
+			spWriteLFIndent(fStrimW, fIndent, fOptions);
 			}
 
 		SaveState save(this);
@@ -650,7 +654,7 @@ bool ZYadVisitor_JSONWriter::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 				{
 				if (!isFirst)
 					fStrimW.Write(",");
-				sWriteLFIndent(fStrimW, fIndent, fOptions);
+				spWriteLFIndent(fStrimW, fIndent, fOptions);
 				cur->Accept(*this);
 				}
 			else
@@ -658,7 +662,7 @@ bool ZYadVisitor_JSONWriter::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 				break;
 				}
 			}
-		sWriteLFIndent(fStrimW, fIndent, fOptions);
+		spWriteLFIndent(fStrimW, fIndent, fOptions);
 		fStrimW.Write("]");
 		}
 	else
@@ -698,7 +702,7 @@ bool ZYadVisitor_JSONWriter::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 			{
 			// We're going to be indenting, but need to start
 			// a fresh line to have our { and contents line up.
-			sWriteLFIndent(fStrimW, fIndent, fOptions);
+			spWriteLFIndent(fStrimW, fIndent, fOptions);
 			}
 
 		fStrimW.Write("{");
@@ -709,8 +713,8 @@ bool ZYadVisitor_JSONWriter::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 				{
 				if (!isFirst)
 					fStrimW.Write(",");
-				sWriteLFIndent(fStrimW, fIndent, fOptions);
-				sWriteString(fStrimW, curName);
+				spWriteLFIndent(fStrimW, fIndent, fOptions);
+				spWriteString(fStrimW, curName);
 				fStrimW << " : ";
 
 				SaveState save(this);
@@ -723,7 +727,7 @@ bool ZYadVisitor_JSONWriter::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 				break;
 				}
 			}
-		sWriteLFIndent(fStrimW, fIndent, fOptions);
+		spWriteLFIndent(fStrimW, fIndent, fOptions);
 		fStrimW.Write("}");
 		}
 	else
@@ -737,7 +741,7 @@ bool ZYadVisitor_JSONWriter::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 				if (!isFirst)
 					fStrimW.Write(",");
 				fStrimW.Write(" ");
-				sWriteString(fStrimW, curName);
+				spWriteString(fStrimW, curName);
 				fStrimW << " : ";
 
 				SaveState save(this);
@@ -760,11 +764,11 @@ bool ZYadVisitor_JSONWriter::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 #pragma mark * ZYad_JSON
 
 ZRef<ZYadR> ZYad_JSON::sMakeYadR(const ZStrimU& iStrimU)
-	{ return sMakeYadR_JSON(iStrimU); }
+	{ return spMakeYadR_JSON(iStrimU); }
 
 ZRef<ZYadR> ZYad_JSON::sMakeYadR_Normalize(
 	ZRef<ZYadR> iYadR, bool iPreserveLists, bool iPreserveMaps)
-	{ return sMakeYadR_JSONNormalize(iYadR, true, iPreserveLists, iPreserveMaps); }
+	{ return spMakeYadR_JSONNormalize(iYadR, true, iPreserveLists, iPreserveMaps); }
 
 void ZYad_JSON::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR)
 	{
