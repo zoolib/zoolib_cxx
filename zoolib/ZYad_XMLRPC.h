@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,51 +18,52 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_XMLRPC__
-#define __ZUtil_Strim_XMLRPC__ 1
+#ifndef __ZYad_XMLRPC__
+#define __ZYad_XMLRPC__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZML.h"
-
-#include <stdexcept>
+#include "zoolib/ZYad_Std.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-namespace ZUtil_Strim_XMLRPC {
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadParseException_XMLRPC
 
-class ParseException : public std::runtime_error
+class ZYadParseException_XMLRPC : public ZYadParseException_Std
 	{
 public:
-	ParseException(const std::string& iWhat);
-	ParseException(const char* iWhat);
+	ZYadParseException_XMLRPC(const std::string& iWhat);
+	ZYadParseException_XMLRPC(const char* iWhat);
 	};
 
-void sRequestToStrim(const ZStrimW& iStrimW,
-	const std::string& iMethodName, const std::vector<ZTValue>& iParams);
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYad_XMLRPC
 
-bool sRequestFromStrim(const ZStrimU& iStrimU,
-	std::string& oMethodName, std::vector<ZTValue>& oParams);
+namespace ZYad_XMLRPC {
 
-bool sRequestFromML(ZML::Reader& r,
-	std::string& oMethodName, std::vector<ZTValue>& oParams);
-
-// -----
-
-struct Result_t
+struct Request_t
 	{
-	bool fIsFault;
-	ZTValue fValue;
-	int fFaultCode;
-	std::string fFaultString;
+	std::string fMethodName;
+	ZRef<ZYadListR> fParams;
 	};
 
-void sResponseToStrim(const ZStrimW& iStrimW, const Result_t& iResult);
+struct Response_t
+	{
+	ZRef<ZYadR> fResult;
+	ZRef<ZYadR> fFault;
+	};
 
-bool sResponseFromStrim(const ZStrimU& iStrimU, Result_t& oResult);
-bool sResponseFromML(ZML::Reader& r, Result_t& oResult);
+bool sFromReader(ZML::Reader& iReader, Request_t& oRequest);
+bool sFromReader(ZML::Reader& iReader, Response_t& oResponse);
 
-} // namespace ZUtil_Strim_XMLRPC
+void sToStrim(const ZML::StrimW& s, const Request_t& iRequest);
+void sToStrim(const ZML::StrimW& s, const Response_t& iResponse);
+
+} // namespace ZYad_XMLRPC
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZUtil_Strim_XMLRPC__
+#endif // __ZYad_XMLRPC__
