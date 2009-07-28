@@ -95,42 +95,6 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_JSONNormalize
-
-class ZYadListR_JSONNormalize : public ZYadListR_Std
-	{
-public:
-	ZYadListR_JSONNormalize(ZRef<ZYadListR> iYadListR, bool iPreserveLists, bool iPreserveMaps);
-
-// From ZYadListR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
-
-private:
-	ZRef<ZYadListR> fYadListR;
-	bool fPreserveLists;
-	bool fPreserveMaps;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_JSONNormalize
-
-class ZYadMapR_JSONNormalize : public ZYadMapR_Std
-	{
-public:
-	ZYadMapR_JSONNormalize(ZRef<ZYadMapR> iYadMapR, bool iPreserveLists, bool iPreserveMaps);
-
-// From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
-
-private:
-	ZRef<ZYadMapR> fYadMapR;
-	bool fPreserveLists;
-	bool fPreserveMaps;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadVisitor_JSONWriter
 
 class ZYadVisitor_JSONWriter : public ZYadVisitor
@@ -162,8 +126,6 @@ private:
 namespace ZYad_JSON {
 
 ZRef<ZYadR> sMakeYadR(const ZStrimU& iStrimU);
-
-ZRef<ZYadR> sMakeYadR_Normalize(ZRef<ZYadR> iYadR, bool iPreserveLists, bool iPreserveMaps);
 
 void sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR);
 

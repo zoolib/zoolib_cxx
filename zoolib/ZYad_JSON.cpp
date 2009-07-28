@@ -88,24 +88,6 @@ type             -
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStrimR_JSONNormalize declaration
-
-class ZYadStrimR_JSONNormalize
-:	public ZYadR_Std,
-	public ZYadStrimR
-	{
-public:
-	ZYadStrimR_JSONNormalize(ZRef<ZYadStrimR> iSource);
-
-// From ZStrimmerR via ZYadStrimR
-	const ZStrimR& GetStrimR();
-
-private:
-	ZRef<ZYadStrimR> fSource;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * Helpers
 
 static void spThrowParseException(const string& iMessage)
@@ -276,46 +258,6 @@ static ZRef<ZYadR_Std> spMakeYadR_JSON(const ZStrimU& iStrimU)
 	return ZRef<ZYadPrimR_Std>();
 	}
 
-static ZRef<ZYadR_Std> spMakeYadR_JSONNormalize(
-	ZRef<ZYadR> iYadR, bool iPreserve, bool iPreserveLists, bool iPreserveMaps)
-	{
-	if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
-		{
-		return new ZYadListR_JSONNormalize(theYadListR, iPreserveLists, iPreserveMaps);
-		}
-	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
-		{
-		return new ZYadMapR_JSONNormalize(theYadMapR, iPreserveLists, iPreserveMaps);
-		}
-	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
-		{
-		if (ZRef<ZYadR_Std> theYadR_Std = ZRefDynamicCast<ZYadR_Std>(theYadStrimR))
-			return theYadR_Std;
-		return new ZYadStrimR_JSONNormalize(theYadStrimR);
-		}
-	else
-		{
-		ZVal_ZooLib theValue;
-		if (ZFunctionChain_T<ZVal_ZooLib, ZRef<ZYadR> >::sInvoke(theValue, iYadR))
-			{
-			// We were able to turn the value into something
-			// legitimate. Now normalize it if possible.
-			ZVal_ZooLib normalized;
-			if (spNormalizeSimpleValue(theValue, normalized))
-				return new ZYadPrimR_Std(normalized);
-			}
-
-		if (iPreserve)
-			{
-			// We weren't able to get a ZVal_ZooLib, or it couldn't normalized.
-			// We've been asked to preserve values, so return a null.
-			return new ZYadPrimR_Std(ZVal_ZooLib());
-			}
-		}
-
-	return ZRef<ZYadPrimR_Std>();
-	}
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadParseException_JSON
@@ -418,67 +360,6 @@ void ZYadMapR_JSON::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_St
 
 	if (!(oYadR = spMakeYadR_JSON(fStrimU)))
 		spThrowParseException("Expected value after ':'");
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR_JSONNormalize definition
-
-ZYadStrimR_JSONNormalize::ZYadStrimR_JSONNormalize(ZRef<ZYadStrimR> iSource)
-:	fSource(iSource)
-	{}
-
-const ZStrimR& ZYadStrimR_JSONNormalize::GetStrimR()
-	{ return fSource->GetStrimR(); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadListR_JSONNormalize
-
-ZYadListR_JSONNormalize::ZYadListR_JSONNormalize(
-	ZRef<ZYadListR> iYadListR, bool iPreserveLists, bool iPreserveMaps)
-:	fYadListR(iYadListR),
-	fPreserveLists(iPreserveLists),
-	fPreserveMaps(iPreserveMaps)
-	{}
-
-void ZYadListR_JSONNormalize::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
-	{
-	for (;;)
-		{
-		ZRef<ZYadR> next = fYadListR->ReadInc();
-		if (!next)
-			break;
-		oYadR = spMakeYadR_JSONNormalize(
-			next, fPreserveLists, fPreserveLists, fPreserveMaps);
-		if (oYadR)
-			break;
-		}
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapR_JSONNormalize
-
-ZYadMapR_JSONNormalize::ZYadMapR_JSONNormalize(
-	ZRef<ZYadMapR> iYadMapR, bool iPreserveLists, bool iPreserveMaps)
-:	fYadMapR(iYadMapR),
-	fPreserveLists(iPreserveLists),
-	fPreserveMaps(iPreserveMaps)
-	{}
-
-void ZYadMapR_JSONNormalize::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
-	{
-	for (;;)
-		{
-		ZRef<ZYadR> next = fYadMapR->ReadInc(oName);
-		if (!next)
-			break;
-		oYadR = spMakeYadR_JSONNormalize(
-			next, fPreserveMaps, fPreserveLists, fPreserveMaps);
-		if (oYadR)
-			break;
-		}
 	}
 
 // =================================================================================================
@@ -765,10 +646,6 @@ bool ZYadVisitor_JSONWriter::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 
 ZRef<ZYadR> ZYad_JSON::sMakeYadR(const ZStrimU& iStrimU)
 	{ return spMakeYadR_JSON(iStrimU); }
-
-ZRef<ZYadR> ZYad_JSON::sMakeYadR_Normalize(
-	ZRef<ZYadR> iYadR, bool iPreserveLists, bool iPreserveMaps)
-	{ return spMakeYadR_JSONNormalize(iYadR, true, iPreserveLists, iPreserveMaps); }
 
 void ZYad_JSON::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR)
 	{
