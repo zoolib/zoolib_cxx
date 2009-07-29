@@ -968,19 +968,19 @@ Val::Val(const string8& iVal)
 	fType = typeChar;
 	}
 
-Val::Val(const ZValData_ZooLib& iVal)
+Val::Val(const Data& iVal)
 	{
 	sConstruct_T(fData.fBytes, iVal);
 	fType = typeRawData;
 	}
 
-Val::Val(UnitFloat iVal)
+Val::Val(const UnitFloat& iVal)
 	{
 	sConstruct_T(fData.fBytes, iVal);
 	fType = typeUnitFloat;
 	}
 
-Val::Val(Enumerated iVal)
+Val::Val(const Enumerated& iVal)
 	{
 	sConstruct_T(fData.fBytes, iVal);
 	fType = typeEnumerated;
@@ -1061,11 +1061,11 @@ bool Val::QGet_T<string8>(string8& oVal) const
 	}
 
 template <>
-bool Val::QGet_T<ZValData_ZooLib>(ZValData_ZooLib& oVal) const
+bool Val::QGet_T<Data>(Data& oVal) const
 	{
 	if (typeRawData == fType)
 		{
-		oVal = *sFetch_T<ZValData_ZooLib>(fData.fBytes);
+		oVal = *sFetch_T<Data>(fData.fBytes);
 		return true;
 		}
 	return false;
@@ -1170,7 +1170,7 @@ void Val::Set_T<string8>(const string8& iVal)
 	}
 
 template <>
-void Val::Set_T<ZValData_ZooLib>(const ZValData_ZooLib& iVal)
+void Val::Set_T<Data>(const Data& iVal)
 	{
 	this->pRelease();
 	sConstruct_T(fData.fBytes, iVal);
@@ -1238,7 +1238,7 @@ void Val::pRelease()
 			}
 		case typeRawData:
 			{
-			sDestroy_T<ZValData_ZooLib>(fData.fBytes);
+			sDestroy_T<Data>(fData.fBytes);
 			break;
 			}
 		case typePath:
@@ -1308,7 +1308,7 @@ void Val::pCopy(const Val& iOther)
 			}
 		case typeRawData:
 			{
-			sCopyConstruct_T<ZValData_ZooLib>(iOther.fData.fBytes, fData.fBytes);
+			sCopyConstruct_T<Data>(iOther.fData.fBytes, fData.fBytes);
 			break;
 			}
 		case typePath:
@@ -1345,7 +1345,7 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Int32, int32)
 ZMACRO_ZValAccessors_Def_Entry(Val, Double, double)
 ZMACRO_ZValAccessors_Def_Entry(Val, Bool, bool)
 ZMACRO_ZValAccessors_Def_Entry(Val, String, string8)
-ZMACRO_ZValAccessors_Def_Entry(Val, Data, ZValData_ZooLib)
+ZMACRO_ZValAccessors_Def_Entry(Val, Data, Data)
 ZMACRO_ZValAccessors_Def_Entry(Val, UnitFloat, UnitFloat)
 ZMACRO_ZValAccessors_Def_Entry(Val, Enumerated, Enumerated)
 ZMACRO_ZValAccessors_Def_Entry(Val, FileRef, FileRef)

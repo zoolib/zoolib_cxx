@@ -281,8 +281,8 @@ public:
 	Val(bool iVal);
 	Val(const string8& iVal);
 	Val(const Data& iVal);
-	Val(UnitFloat iVal);
-	Val(Enumerated iVal);
+	Val(const UnitFloat& iVal);
+	Val(const Enumerated& iVal);
 	Val(const FileRef& iVal);
 	Val(const List& iVal);
 	Val(const Map& iVal);
