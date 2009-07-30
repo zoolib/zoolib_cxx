@@ -177,6 +177,12 @@ ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal)
 	return new ZYadPrimR_ZooLib(iVal);
 	}
 
+ZRef<ZYadListR> sMakeYadR(const ZValList_ZooLib& iList)
+	{ return new ZYadListRPos_ZooLib(iList); }
+
+ZRef<ZYadMapR> sMakeYadR(const ZValMap_ZooLib& iMap)
+	{ return new ZYadMapRPos_ZooLib(iMap); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * sFromYadR_T

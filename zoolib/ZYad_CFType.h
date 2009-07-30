@@ -142,6 +142,9 @@ private:
 
 ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal);
 
+template <>
+ZRef<CFTypeRef> sFromYadR_T<ZRef<CFTypeRef> >(ZRef<ZYadR> iYadR);
+
 NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(CFType)

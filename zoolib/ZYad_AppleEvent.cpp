@@ -70,6 +70,12 @@ ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal)
 	return new ZYadMapRPos_Any(spAsMap(iVal));
 	}
 
+ZRef<ZYadListR> sMakeYadR(const ZValList_AppleEvent& iList)
+	{ return new ZYadListRPos_AppleEvent(iList); }
+
+ZRef<ZYadMapR> sMakeYadR(const ZValMap_AppleEvent& iMap)
+	{ return new ZYadMapRPos_AppleEvent(iMap); }
+
 NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(AppleEvent)

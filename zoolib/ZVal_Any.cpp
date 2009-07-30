@@ -234,9 +234,7 @@ ZVal_Any ZValMap_Any::Get(const Index_t& iIndex) const
 	}
 
 void ZValMap_Any::Set(const string8& iName, const ZVal_Any& iVal)
-	{
-	(*this)[iName] = iVal;
-	}
+	{ inherited::insert(pair<string8, ZAny>(iName, iVal)); }
 
 void ZValMap_Any::Set(const Index_t& iIndex, const ZVal_Any& iVal)
 	{
@@ -274,11 +272,18 @@ string8 ZValMap_Any::NameOf(Index_t iIndex) const
 ZValMap_Any::Index_t ZValMap_Any::IndexOf(const string8& iName) const
 	{ return inherited::find(iName); }
 
+ZValMap_Any::Index_t ZValMap_Any::IndexOf(
+	const ZValMap_Any& iOther, const Index_t& iOtherIndex) const
+	{
+	if (this == &iOther)
+		return iOtherIndex;
+	return this->IndexOf(iOther.NameOf(iOtherIndex));
+	}
+
 map<string, ZAny>& ZValMap_Any::OParam()
 	{
 	inherited::clear();
 	return *this;
 	}
-
 
 NAMESPACE_ZOOLIB_END

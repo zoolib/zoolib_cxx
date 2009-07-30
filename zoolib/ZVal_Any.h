@@ -36,11 +36,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 using std::map;
+using std::pair;
 using std::string;
 using std::vector;
 
 class ZVal_Any;
-//class ZValData_Any;
 class ZValList_Any;
 class ZValMap_Any;
 
@@ -175,7 +175,7 @@ class ZValMap_Any
 	{
 	typedef map<string8, ZAny> inherited;
 public:
-	typedef map<string8, ZAny>::const_iterator Index_t;
+	typedef inherited::const_iterator Index_t;
 
 	operator bool() const;
 
@@ -185,8 +185,17 @@ public:
 	ZValMap_Any& operator=(const ZValMap_Any& iOther);
 
 	ZValMap_Any(const map<string, ZAny>& iOther);
-
 	ZValMap_Any& operator=(map<string, ZAny>& iOther);
+
+	template <class T>
+	ZValMap_Any(const vector<pair<string, T> >& iOther)
+	:	inherited(iOther.begin(), iOther.end())
+		{}
+
+	template <class T>
+	ZValMap_Any(const map<string, T>& iOther)
+	:	inherited(iOther.begin(), iOther.end())
+		{}
 
 // ZValMap protocol
 	void Clear();
@@ -212,6 +221,8 @@ public:
 
 	string8 NameOf(Index_t iIndex) const;
 	Index_t IndexOf(const string8& iName) const;
+
+	Index_t IndexOf(const ZValMap_Any& iOther, const Index_t& iOtherIndex) const;
 
 	map<string, ZAny>& OParam();
 	};

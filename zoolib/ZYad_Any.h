@@ -38,6 +38,12 @@ typedef ZYadMapRPos_Val_T<ZValMap_Any> ZYadMapRPos_Any;
 
 ZRef<ZYadR> sMakeYadR(const ZVal_Any& iVal);
 
+ZRef<ZYadStreamR> sMakeYadR(const ZValData_Any& iData);
+
+ZRef<ZYadListR> sMakeYadR(const ZValList_Any& iList);
+
+ZRef<ZYadMapR> sMakeYadR(const ZValMap_Any& iMap);
+
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZYad_Any__

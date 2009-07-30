@@ -68,6 +68,9 @@ ZRef<CFTypeRef> sNumber_T(CFNumberType iNumberType, const S& iVal)
 #pragma mark -
 #pragma mark * ZVal_CFType
 
+ZAny ZVal_CFType::AsAny() const
+	{ return ZUtil_CFType::sAsAny(this); }
+
 ZVal_CFType::ZVal_CFType()
 	{}
 

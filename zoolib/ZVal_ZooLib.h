@@ -446,6 +446,8 @@ public:
 	Index_t IndexOf(const char* iPropName) const;
 	Index_t IndexOf(const ZTName& iPropName) const;
 
+	Index_t IndexOf(const ZValMap_ZooLib& iOther, const Index_t& iOtherIndex) const;
+
 	bool Has(const char* iPropName) const;
 	bool Has(const ZTName& iPropName) const;
 

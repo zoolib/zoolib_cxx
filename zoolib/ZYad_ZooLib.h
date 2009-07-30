@@ -108,6 +108,10 @@ public:
 
 ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal);
 
+ZRef<ZYadListR> sMakeYadR(const ZValList_ZooLib& iList);
+
+ZRef<ZYadMapR> sMakeYadR(const ZValMap_ZooLib& iMap);
+
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZYad_ZooLib__

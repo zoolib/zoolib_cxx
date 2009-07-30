@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
+#include "zoolib/ZAny.h"
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZRef_CFType.h"
 #include "zoolib/ZUnicodeString.h"
@@ -52,6 +53,8 @@ class ZVal_CFType
 	{
 	typedef ZRef<CFTypeRef> inherited;
 public:
+	ZAny AsAny() const;
+
 	operator bool() const;
 
 	ZVal_CFType();

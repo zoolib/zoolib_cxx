@@ -108,12 +108,8 @@ ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const ZML::Attrs_t& iAttrs)
 ZRef<ZYadR> ZYadMapR_ML::Meta()
 	{
 	if (!fAttrs.empty())
-		{
-		ZValMap_Any theMap;
-		for (ZML::Attrs_t::const_iterator i = fAttrs.begin(); i != fAttrs.end(); ++i)
-			theMap.Set((*i).first, (*i).second);
-		return new ZYadMapRPos_Any(theMap);
-		}
+		return new ZYadMapRPos_Any(fAttrs);
+
 	return ZRef<ZYadR>();
 	}
 

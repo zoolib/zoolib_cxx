@@ -224,6 +224,8 @@ public:
 	Index_t IndexOf(AEKeyword iName) const;
 	Index_t IndexOf(const std::string& iName) const;
 
+	Index_t IndexOf(const ZValMap_AppleEvent& iOther, const Index_t& iOtherIndex) const;
+
 private:
 	size_t pCount() const;
 	AEKeyword pKeyOf(size_t iIndex) const;

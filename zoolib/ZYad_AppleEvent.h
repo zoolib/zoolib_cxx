@@ -40,6 +40,10 @@ typedef ZYadMapRPos_Val_T<ZValMap_AppleEvent> ZYadMapRPos_AppleEvent;
 
 ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal);
 
+ZRef<ZYadListR> sMakeYadR(const ZValList_AppleEvent& iList);
+
+ZRef<ZYadMapR> sMakeYadR(const ZValMap_AppleEvent& iMap);
+
 NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(AppleEvent)

@@ -594,6 +594,19 @@ ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::IndexOf(AEKeyword iName) const
 ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::IndexOf(const std::string& iName) const
 	{ return this->IndexOf(spAsAEKeyword(iName)); }
 
+ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::IndexOf(
+	const ZValMap_AppleEvent& iOther, const Index_t& iOtherIndex) const
+	{
+	if (this == &iOther)
+		return iOtherIndex;
+
+	const AEKeyword theKey = iOther.KeyOf(iOtherIndex);
+	if (theKey == this->KeyOf(iOtherIndex))
+		return iOtherIndex;
+
+	return this->IndexOf(theKey);
+	}
+
 size_t ZValMap_AppleEvent::pCount() const
 	{
 	long theCount;

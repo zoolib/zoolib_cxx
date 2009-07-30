@@ -50,4 +50,13 @@ ZRef<ZYadR> sMakeYadR(const ZVal_Any& iVal)
 	return new ZYadPrimR_Std(iVal);
 	}
 
+ZRef<ZYadStreamR> sMakeYadR(const ZValData_Any& iData)
+	{ return new ZYadStreamRPos_Any(iData); }
+
+ZRef<ZYadListR> sMakeYadR(const ZValList_Any& iList)
+	{ return new ZYadListRPos_Any(iList); }
+
+ZRef<ZYadMapR> sMakeYadR(const ZValMap_Any& iMap)
+	{ return new ZYadMapRPos_Any(iMap); }
+
 NAMESPACE_ZOOLIB_END

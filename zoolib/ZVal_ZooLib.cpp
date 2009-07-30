@@ -2339,6 +2339,15 @@ ZValMap_ZooLib::Index_t ZValMap_ZooLib::IndexOf(const ZTName& iPropName) const
 	return sEmptyProperties.end();
 	}
 
+ZValMap_ZooLib::Index_t ZValMap_ZooLib::IndexOf(
+	const ZValMap_ZooLib& iOther, const Index_t& iOtherIndex) const
+	{
+	if (fRep == iOther.fRep)
+		return iOtherIndex;
+
+	return this->IndexOf(iOther.NameOf(iOtherIndex));
+	}
+
 bool ZValMap_ZooLib::Has(const char* iPropName) const
 	{ return this->pLookupAddressConst(iPropName); }
 

@@ -45,7 +45,7 @@ ZValData_Any::Rep::Rep()
 	{}
 
 ZValData_Any::Rep::Rep(size_t iSize)
-:	fVector(0, iSize)
+:	fVector(iSize, 0)
 	{}
 
 ZValData_Any::Rep::Rep(const vector<char>& iVector)
@@ -153,7 +153,7 @@ void ZValData_Any::CopyTo(size_t iOffset, void* iDest, size_t iCount) const
 	if (iCount == 0)
 		return;
 	vector<char>::const_iterator begin = fRep->fVector.begin() + iOffset;
-	std::copy(begin + iOffset, begin + iCount, static_cast<char*>(iDest));
+	std::copy(begin, begin + iCount, static_cast<char*>(iDest));
 	}
 
 void ZValData_Any::CopyTo(void* iDest, size_t iCount) const

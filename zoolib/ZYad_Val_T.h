@@ -191,7 +191,7 @@ public:
 
 	ZYadMapRPos_Val_T(const ValMap_t& iMap, const Index_t& iIndex)
 	:	fMap(iMap)
-	,	fIndex(iIndex)
+	,	fIndex(fMap.IndexOf(iMap, iIndex))
 		{}
 
 // From ZYadMapR
