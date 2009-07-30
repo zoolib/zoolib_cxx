@@ -86,14 +86,24 @@ ZYadParseException::ZYadParseException(const char* iWhat)
 ZYadR::ZYadR()
 	{}
 
-bool ZYadR::Accept(ZYadVisitor& iVisitor)
-	{ return iVisitor.Visit_YadR(this); }
-
-bool ZYadR::IsSimple(const ZYadOptions& iOptions)
-	{ return true; }
+void ZYadR::Finish()
+	{}
 
 ZRef<ZYadR> ZYadR::Meta()
 	{ return ZRef<ZYadR>(); }
+
+bool ZYadR::Accept(ZYadVisitor& iVisitor)
+	{ return iVisitor.Visit_YadR(this); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadPrimR
+
+bool ZYadPrimR::Accept(ZYadVisitor& iVisitor)
+	{ return iVisitor.Visit_YadPrimR(this); }
+
+bool ZYadPrimR::IsSimple(const ZYadOptions& iOptions)
+	{ return true; }
 
 // =================================================================================================
 #pragma mark -
@@ -111,6 +121,9 @@ bool ZYadStreamR::IsSimple(const ZYadOptions& iOptions)
 
 bool ZYadStrimR::Accept(ZYadVisitor& iVisitor)
 	{ return iVisitor.Visit_YadStrimR(this); }
+
+bool ZYadStrimR::IsSimple(const ZYadOptions& iOptions)
+	{ return false; }
 
 // =================================================================================================
 #pragma mark -
@@ -243,6 +256,9 @@ ZYadVisitor::~ZYadVisitor()
 
 bool ZYadVisitor::Visit_YadR(ZRef<ZYadR> iYadR)
 	{ return false; }
+
+bool ZYadVisitor::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
+	{ return this->Visit_YadR(iYadPrimR); }
 
 bool ZYadVisitor::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{ return this->Visit_YadR(iYadStreamR); }

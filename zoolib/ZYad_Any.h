@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2005 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,27 +18,26 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_JSON__
-#define __ZUtil_Strim_JSON__ 1
+#ifndef __ZYad_Any__
+#define __ZYad_Any__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
-#include "zoolib/ZTuple.h"
-
-#include <vector>
+#include "zoolib/ZVal_Any.h"
+#include "zoolib/ZYad_Val_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-namespace ZUtil_Strim_JSON {
+typedef ZYadR_Val_T<ZVal_Any> ZYadR_Any;
+typedef ZYadStreamRPos_Val_T<ZValData_Any> ZYadStreamRPos_Any;
+typedef ZYadListRPos_Val_T<ZValList_Any> ZYadListRPos_Any;
+typedef ZYadMapRPos_Val_T<ZValMap_Any> ZYadMapRPos_Any;
 
-void sToStrim(const ZStrimW& iStrimW, const ZVal_ZooLib& iVal);
-void sToStrim(const ZStrimW& iStrimW, const ZValMap_ZooLib& iMap);
-void sToStrim(const ZStrimW& iStrimW, const ZValList_ZooLib& iList);
+// =================================================================================================
+#pragma mark -
+#pragma mark * sMakeYadR
 
-bool sFromStrim(const ZStrimU& iStrimU, ZVal_ZooLib& oVal);
-
-} // namespace ZUtil_Strim_JSON
+ZRef<ZYadR> sMakeYadR(const ZVal_Any& iVal);
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZUtil_Strim_JSON__
+#endif // __ZYad_Any__

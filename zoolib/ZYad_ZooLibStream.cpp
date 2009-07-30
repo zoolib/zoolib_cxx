@@ -29,7 +29,7 @@ using std::min;
 using std::string;
 using std::vector;
 
-ZRef<ZYadR_Std> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR);
+ZRef<ZYadR> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR);
 
 // =================================================================================================
 #pragma mark -
@@ -52,33 +52,16 @@ static string spStringFromStream(const ZStreamR& iStreamR)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_ZooLibStream
-
-class ZYadPrimR_ZooLibStream
-:	public ZYadR_Std,
-	public ZYadR_ZooLib
-	{
-public:
-	ZYadPrimR_ZooLibStream(ZType iType, const ZStreamR& iStreamR);
-	};
-
-ZYadPrimR_ZooLibStream::ZYadPrimR_ZooLibStream(ZType iType, const ZStreamR& iStreamR)
-:	ZYadR_ZooLib(iType, iStreamR)
-	{}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadStreamR_ZooLibStreamNew
 
 class ZYadStreamR_ZooLibStreamNew
-:	public ZYadR_Std,
-	public ZYadStreamR,
+:	public ZYadStreamR,
 	private ZStreamR
 	{
 public:
 	ZYadStreamR_ZooLibStreamNew(const ZStreamR& iStreamR);
 
-// From ZYadR_Std
+// From ZYadR
 	virtual void Finish();
 
 // From ZStreamerR via ZYadStreamR
@@ -163,13 +146,12 @@ void ZYadStreamR_ZooLibStreamNew::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 #pragma mark * ZYadStreamR_ZooLibStreamOld
 
 class ZYadStreamR_ZooLibStreamOld
-:	public ZYadR_Std,
-	public ZYadStreamR
+:	public ZYadStreamR
 	{
 public:
 	ZYadStreamR_ZooLibStreamOld(const ZStreamR& iStreamR);
 
-// From ZYadR_Std
+// From ZYadR
 	virtual void Finish();
 
 // From ZStreamerR via ZYadStreamR
@@ -194,13 +176,12 @@ const ZStreamR& ZYadStreamR_ZooLibStreamOld::GetStreamR()
 #pragma mark * ZYadStrimR_ZooLibStream
 
 class ZYadStrimR_ZooLibStream
-:	public ZYadR_Std,
-	public ZYadStrimR
+:	public ZYadStrimR
 	{
 public:
 	ZYadStrimR_ZooLibStream(const ZStreamR& iStreamR);
 
-// From ZYadR_Std
+// From ZYadR
 	virtual void Finish();
 
 // From ZStrimmerR via ZYadStrimR
@@ -232,7 +213,7 @@ public:
 	ZYadListR_ZooLibStreamNew(const ZStreamR& iStreamR);
 
 // From ZYadListR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
 	const ZStreamR& fStreamR;
@@ -242,7 +223,7 @@ ZYadListR_ZooLibStreamNew::ZYadListR_ZooLibStreamNew(const ZStreamR& iStreamR)
 :	fStreamR(iStreamR)
 	{}
 
-void ZYadListR_ZooLibStreamNew::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+void ZYadListR_ZooLibStreamNew::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{ oYadR = sMakeYadR_ZooLibStream(fStreamR); }
 
 // =================================================================================================
@@ -255,7 +236,7 @@ public:
 	ZYadListR_ZooLibStreamOld(const ZStreamR& iStreamR);
 
 // From ZYadListR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
 	const ZStreamR& fStreamR;
@@ -267,7 +248,7 @@ ZYadListR_ZooLibStreamOld::ZYadListR_ZooLibStreamOld(const ZStreamR& iStreamR)
 	fCountRemaining(fStreamR.ReadCount())
 	{}
 
-void ZYadListR_ZooLibStreamOld::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+void ZYadListR_ZooLibStreamOld::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	if (fCountRemaining)
 		{
@@ -286,7 +267,7 @@ public:
 	ZYadMapR_ZooLibStreamNew(const ZStreamR& iStreamR);
 
 // From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	const ZStreamR& fStreamR;
@@ -297,7 +278,7 @@ ZYadMapR_ZooLibStreamNew::ZYadMapR_ZooLibStreamNew(const ZStreamR& iStreamR)
 	{}
 
 void ZYadMapR_ZooLibStreamNew::Imp_ReadInc(
-	bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+	bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	oName = spStringFromStream(fStreamR);
 	oYadR = sMakeYadR_ZooLibStream(fStreamR);
@@ -313,7 +294,7 @@ ZYadMapR_ZooLibStreamOld::ZYadMapR_ZooLibStreamOld(const ZStreamR& iStreamR)
 	{}
 
 void ZYadMapR_ZooLibStreamOld::Imp_ReadInc(
-	bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+	bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	if (fCountRemaining)
 		{
@@ -402,7 +383,7 @@ ZRef<ZYadR> ZYad_ZooLibStream::sMakeYadR(const ZStreamR& iStreamR)
 	return sMakeYadR_ZooLibStream(iStreamR);
 	}
 
-ZRef<ZYadR_Std> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR)
+ZRef<ZYadR> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR)
 	{
 	uint8 theType;
 	size_t countRead;
@@ -426,11 +407,11 @@ ZRef<ZYadR_Std> sMakeYadR_ZooLibStream(const ZStreamR& iStreamR)
 			case eZType_String:
 				return new ZYadStrimR_ZooLibStream(iStreamR);			
 			default:
-				return new ZYadPrimR_ZooLibStream(ZType(theType), iStreamR);
+				return new ZYadPrimR_ZooLib(ZType(theType), iStreamR);
 			}
 		}
 
-	return ZRef<ZYadR_Std>();
+	return ZRef<ZYadR>();
 	}
 
 NAMESPACE_ZOOLIB_END

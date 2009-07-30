@@ -18,35 +18,36 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZYad_StdMore.h"
+#include "zoolib/ZYad_Any.h"
+#include "zoolib/ZYad_Std.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadPrimR_Std
-
-ZYadPrimR_Std::ZYadPrimR_Std()
-	{}
-
-ZYadPrimR_Std::ZYadPrimR_Std(const ZVal_ZooLib& iVal)
-:	ZYadR_ZooLib(iVal)
-	{}
+using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStreamRPos_Std
+#pragma mark * sMakeYadR
 
-ZYadStreamRPos_Std::ZYadStreamRPos_Std(const ZValData_ZooLib& iData)
-:	ZYadStreamRPos_ZooLib(iData)
-	{}
+ZRef<ZYadR> sMakeYadR(const ZVal_Any& iVal)
+	{
+	ZValMap_Any asMap;
+	if (iVal.QGet_T<ZValMap_Any>(asMap))
+		return new ZYadMapRPos_Any(asMap);
+		
+	ZValList_Any asList;
+	if (iVal.QGet_T<ZValList_Any>(asList))
+		return new ZYadListRPos_Any(asList);
+		
+	string8 asString;
+	if (iVal.QGet_T<string8>(asString))
+		return new ZYadStrimU_String(asString);
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimU_Std
+	ZValData_Any asData;
+	if (iVal.QGet_T<ZValData_Any>(asData))
+		return new ZYadStreamRPos_Any(asData);
 
-ZYadStrimU_Std::ZYadStrimU_Std(const std::string& iString)
-:	ZYadStrimU_String(iString)
-	{}
+	return new ZYadPrimR_Std(iVal);
+	}
 
 NAMESPACE_ZOOLIB_END

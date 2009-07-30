@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimU_Unreader.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
-#include "zoolib/ZYad_StdMore.h"
 #include "zoolib/ZYad_XMLPList.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -54,20 +53,20 @@ static void spEnd(ZML::Reader& r, const string& iTagName)
 		spThrowParseException("Expected end tag '" + iTagName + "'");
 	}
 
-static bool spTryRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
+static bool spTryRead_Any(ZML::Reader& r, ZAny& oVal)
 	{
 	if (r.Current() == ZML::eToken_TagEmpty)
 		{
 		if (r.Name() == "true")
 			{
-			oVal.SetBool(true);
+			oVal = true;
 			r.Advance();
 			return true;
 			}
 
 		if (r.Name() == "false")
 			{
-			oVal.SetBool(false);
+			oVal = false;
 			r.Advance();
 			return true;
 			}
@@ -91,7 +90,7 @@ static bool spTryRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
 		if (!ZUtil_Strim::sTryRead_SignedDecimalInteger(ZStrimU_Unreader(r.TextStrim()), theInt64))
 			spThrowParseException("Expected valid integer");
 
-		oVal.SetInt32(theInt64);
+		oVal = int32(theInt64);
 		}
 	else if (tagName == "real")
 		{
@@ -99,29 +98,11 @@ static bool spTryRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
 		if (!ZUtil_Strim::sTryRead_SignedDouble(ZStrimU_Unreader(r.TextStrim()), theDouble))
 			spThrowParseException("Expected valid real");
 
-		oVal.SetDouble(theDouble);
+		oVal = theDouble;
 		}
 	else if (tagName == "date")
 		{
-		const string theDate = r.TextString();
-
-		oVal.SetTime(ZUtil_Time::sFromString_ISO8601(theDate));
-		}
-	else if (tagName == "dict")
-		{
-		ZDebugStopf(1, ("sTryRead_SimpleValue, given a dict"));
-		}
-	else if (tagName == "array")
-		{
-		ZDebugStopf(1, ("sTryRead_SimpleValue, given an array"));
-		}
-	else if (tagName == "data")
-		{
-		ZDebugStopf(1, ("sTryRead_SimpleValue, given a data"));
-		}
-	else if (tagName == "string")
-		{
-		ZDebugStopf(1, ("sTryRead_SimpleValue, given a string"));
+		oVal = ZUtil_Time::sFromString_ISO8601(r.TextString());
 		}
 	else
 		{
@@ -133,15 +114,7 @@ static bool spTryRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
 	return true;
 	}
 
-static void spRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
-	{
-	sSkipText(r);
-
-	if (!spTryRead_SimpleValue(r, oVal))
-		spThrowParseException("Expected value");
-	}
-
-static ZRef<ZYadR_Std> spMakeYadR_XMLPList(ZML::Reader& r)
+static ZRef<ZYadR> spMakeYadR_XMLPList(ZML::Reader& r)
 	{
 	sSkipText(r);
 
@@ -169,11 +142,11 @@ static ZRef<ZYadR_Std> spMakeYadR_XMLPList(ZML::Reader& r)
 			}
 		}
 	
-	ZVal_ZooLib theVal;
-	if (spTryRead_SimpleValue(r, theVal))
+	ZAny theVal;
+	if (spTryRead_Any(r, theVal))
 		return new ZYadPrimR_Std(theVal);
 
-	return ZRef<ZYadR_Std>();
+	return ZRef<ZYadR>();
 	}
 
 // =================================================================================================
@@ -238,7 +211,7 @@ ZYadListR_XMLPList::ZYadListR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTa
 	fMustReadEndTag(iMustReadEndTag)
 	{}
 
-void ZYadListR_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+void ZYadListR_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	sSkipText(fR);
 
@@ -265,7 +238,7 @@ ZYadMapR_XMLPList::ZYadMapR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
 	fMustReadEndTag(iMustReadEndTag)
 	{}
 	
-void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	sSkipText(fR);
 
@@ -342,63 +315,38 @@ static void spToStrim_Map(const ZML::StrimW& s, ZRef<ZYadMapR> iYadMapR)
 	s.End("dict");
 	}
 
-static void spToStrim_SimpleValue(const ZML::StrimW& s, const ZVal_ZooLib& iVal)
+static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 	{
-	switch (iVal.TypeOf())
+	if (false)
+		{}
+	else if (const bool* theValue = ZAnyCast<bool>(&iVal))
 		{
-		case eZType_Int32:
-			{
-			s.Begin("integer");
-				s.Writef("%d", iVal.GetInt32());
-			s.End("integer");
-			break;
-			}
-		case eZType_Double:
-			{
-			s.Begin("real");
-				s.Writef("%.17g", iVal.GetDouble());
-			s.End("real");
-			break;
-			}
-		case eZType_Bool:
-			{
-			if (iVal.GetBool())
-				s.Empty("true");
-			else
-				s.Empty("false");
-			break;
-			}
-		case eZType_Raw:
-			{
-			spToStrim_Stream(s, ZStreamRPos_ValData_T<ZValData_ZooLib>(iVal.GetData()));
-			break;
-			}
-		case eZType_Time:
-			{
-			s.Begin("date");
-				s << ZUtil_Time::sAsString_ISO8601(iVal.GetTime(), true);
-			s.End("date");
-			break;
-			}
-		case eZType_Tuple:
-			{
-			ZDebugStopf(0, ("sToStrim_SimpleValue, given a tuple"));
-			break;
-			}
-		case eZType_Vector:
-			{
-			ZDebugStopf(0, ("sToStrim_SimpleValue, given a vector"));
-			break;
-			}
-		case eZType_String:
-			{
-			ZDebugStopf(0, ("sToStrim_SimpleValue, given a string"));
-			break;
-			}
-		default:
-			{
-			ZDebugStopf(0, ("sToStrim_SimpleValue, given an unsupported type"));
-			}
+		if (*theValue)
+			s.Empty("true");
+		else
+			s.Empty("false");
+		}
+	else if (const int32* theValue = ZAnyCast<int32>(&iVal))
+		{
+		s.Begin("integer");
+			s.Writef("%d", *theValue);
+		s.End("integer");
+		}
+	else if (const double* theValue = ZAnyCast<double>(&iVal))
+		{
+		s.Begin("real");
+			s.Writef("%.17g", *theValue);
+		s.End("real");
+		}
+	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iVal))
+		{
+		s.Begin("date");
+			s << ZUtil_Time::sAsString_ISO8601(*theValue, true);
+		s.End("date");
+		}
+	else
+		{
+		s << "!!Unsupported type!!";
 		}
 	}
 
@@ -424,10 +372,14 @@ void ZYad_XMLPList::sToStrimW_ML(const ZML::StrimW& s, ZRef<ZYadR> iYadR)
 		{
 		spToStrim_Strim(s, theYadStrimR->GetStrimR());
 		}
+	else if (ZRef<ZYadPrimR> theYadPrimR = ZRefDynamicCast<ZYadPrimR>(iYadR))
+		{
+		spToStrim_Any(s, theYadPrimR->AsAny());
+		}
 	else
 		{
-		spToStrim_SimpleValue(s, sFromYadR_T<ZVal_ZooLib>(iYadR));
-		}	
+		s << "!!Unrecognized Yad!!";
+		}
 	}
 
 NAMESPACE_ZOOLIB_END

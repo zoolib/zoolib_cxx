@@ -21,9 +21,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(AppleEvent)
 
-#include "zoolib/ZFunctionChain.h"
-#include "zoolib/ZVal_ZooLib.h"
-#include "zoolib/ZYad_ZooLib.h"
+#include "zoolib/ZYad_Any.h"
+#include "zoolib/ZYad_Std.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -33,89 +32,19 @@ using std::string;
 #pragma mark -
 #pragma mark * Helpers
 
-static ZValMap_ZooLib spAsMap(const AEDesc& iAEDesc)
+static ZValMap_Any spAsMap(const AEDesc& iAEDesc)
 	{
-	ZValMap_ZooLib theMap;
+	ZValMap_Any theMap;
 	theMap.Set("AEType", sAEKeywordAsString(iAEDesc.descriptorType));
 
 	const size_t theSize = ::AEGetDescDataSize(&iAEDesc);
-	ZValData_ZooLib theData(theSize);
+	ZValData_Any theData(theSize);
 	::AEGetDescData(&iAEDesc, theData.GetData(), theSize);
 
 	theMap.Set("Value", theData);
 
 	return theMap;
 	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Factory
-
-namespace ZANONYMOUS {
-
-// ZVal_ZooLib <-- ZRef<ZYadR>
-class Maker2
-:	public ZFunctionChain_T<ZVal_ZooLib, ZRef<ZYadR> >
-	{
-public:
-	Maker2() : Base_t(false) {}
-
-	virtual bool Invoke(Result_t& oResult, Param_t iParam)
-		{
-		if (ZRef<ZYadR_AppleEvent> theYadR = ZRefDynamicCast<ZYadR_AppleEvent>(iParam))
-			{
-			oResult = spAsMap(theYadR->GetVal());
-
-			return true;
-			}
-		return false;
-		}	
-	} sMaker2;
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadListRPos_AppleEvent
-
-ZYadListRPos_AppleEvent::ZYadListRPos_AppleEvent(const ZValList_AppleEvent& iList)
-:	ZYadR_AppleEvent(iList)
-,	YadListBase_t(iList)
-	{}
-
-ZYadListRPos_AppleEvent::ZYadListRPos_AppleEvent(
-	const ZValList_AppleEvent& iList, uint64 iPosition)
-:	ZYadR_AppleEvent(iList)
-,	YadListBase_t(iList, iPosition)
-	{}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapRPos_AppleEvent
-
-ZYadMapRPos_AppleEvent::ZYadMapRPos_AppleEvent(const ZValMap_AppleEvent& iMap)
-:	ZYadR_AppleEvent(iMap)
-,	YadMapBase_t(iMap, iMap.begin())
-	{}
-
-ZYadMapRPos_AppleEvent::ZYadMapRPos_AppleEvent(
-	const ZValMap_AppleEvent& iMap, const Index_t& iIndex)
-:	ZYadR_AppleEvent(iMap)
-,	YadMapBase_t(iMap, iIndex)
-	{}
-
-ZRef<ZYadR> ZYadMapRPos_AppleEvent::ReadInc(string& oName)
-	{
-	if (fIndex != fMap.end())
-		{
-		oName = fMap.NameOf(fIndex);
-		return sMakeYadR(fMap.Get(fIndex++));
-		}
-	return ZRef<ZYadR>();
-	}
-
-void ZYadMapRPos_AppleEvent::SetPosition(const std::string& iName)
-	{ fIndex = fMap.IndexOf(iName); }
 
 // =================================================================================================
 #pragma mark -
@@ -131,17 +60,14 @@ ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal)
 	if (iVal.QGetList(asList))
 		return new ZYadListRPos_AppleEvent(asList);
 		
-//	ZValData_AppleEvent asData;
+	string8 asString;
+	if (iVal.QGetString(asString))
+		return new ZYadStrimU_String(asString);
+
 //	if (iVal.QGetData(asData))
 //		return new ZYadStreamRPos_AppleEvent(asData);
 
-//	ZRef<CFStringRef> asCFString;
-//	if (iVal.QGetCFString(asCFString))
-//		return new ZYadStrimR_AppleEvent(asCFString);
-
-	return new ZYadMapRPos_ZooLib(spAsMap(iVal));
-
-//	return new ZYadR_AppleEvent(iVal);
+	return new ZYadMapRPos_Any(spAsMap(iVal));
 	}
 
 NAMESPACE_ZOOLIB_END

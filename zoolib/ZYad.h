@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYad__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZAny.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZStrimmer.h"
 
@@ -78,9 +79,26 @@ protected:
 
 public:
 // Our protocol
+	virtual void Finish();
+	virtual ZRef<ZYadR> Meta();
+	virtual bool Accept(ZYadVisitor& iVisitor);
+	virtual bool IsSimple(const ZYadOptions& iOptions) = 0;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadPrimR
+
+class ZYadPrimR
+:	public virtual ZYadR
+	{
+public:
+// From ZYadR
 	virtual bool Accept(ZYadVisitor& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
-	virtual ZRef<ZYadR> Meta();
+
+// Our protocol
+	virtual ZAny AsAny() = 0;
 	};
 
 // =================================================================================================
@@ -88,8 +106,8 @@ public:
 #pragma mark * ZYadStreamR
 
 class ZYadStreamR
-:	public virtual ZYadR,
-	public virtual ZStreamerR
+:	public virtual ZYadR
+,	public virtual ZStreamerR
 	{
 public:
 // From ZYadR
@@ -102,11 +120,12 @@ public:
 #pragma mark * ZYadStrimR
 
 class ZYadStrimR
-:	public virtual ZYadR,
-	public virtual ZStrimmerR
+:	public virtual ZYadR
+,	public virtual ZStrimmerR
 	{
 // From ZYadR
 	virtual bool Accept(ZYadVisitor& iVisitor);
+	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
 // =================================================================================================
@@ -196,6 +215,7 @@ public:
 	~ZYadVisitor();
 
 	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
+	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
 	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
 	virtual bool Visit_YadListR(ZRef<ZYadListR> iYadListR);

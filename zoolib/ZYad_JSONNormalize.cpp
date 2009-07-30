@@ -28,24 +28,6 @@ using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStrimR_JSONNormalize declaration
-
-class ZYadStrimR_JSONNormalize
-:	public ZYadR_Std,
-	public ZYadStrimR
-	{
-public:
-	ZYadStrimR_JSONNormalize(ZRef<ZYadStrimR> iSource);
-
-// From ZStrimmerR via ZYadStrimR
-	const ZStrimR& GetStrimR();
-
-private:
-	ZRef<ZYadStrimR> fSource;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadListR_JSONNormalize declaration
 
 class ZYadListR_JSONNormalize : public ZYadListR_Std
@@ -54,7 +36,7 @@ public:
 	ZYadListR_JSONNormalize(ZRef<ZYadListR> iYadListR, bool iPreserveLists, bool iPreserveMaps);
 
 // From ZYadListR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZYadListR> fYadListR;
@@ -72,7 +54,7 @@ public:
 	ZYadMapR_JSONNormalize(ZRef<ZYadMapR> iYadMapR, bool iPreserveLists, bool iPreserveMaps);
 
 // From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZYadMapR> fYadMapR;
@@ -84,55 +66,50 @@ private:
 #pragma mark -
 #pragma mark * Helpers
 
-static bool spNormalizeSimpleValue(const ZVal_ZooLib& iVal, ZVal_ZooLib& oVal)
+static bool spNormalizeSimpleValue(const ZAny& iVal, ZAny& oVal)
 	{
-	ZAssert(&iVal != &oVal);
-	switch (iVal.TypeOf())
+	if (false)
+		{}
+	else if (iVal.type() == typeid(void)
+		|| ZAnyCast<int64>(&iVal)
+		|| ZAnyCast<double>(&iVal)
+		|| ZAnyCast<bool>(&iVal)
+		|| ZAnyCast<string>(&iVal))
 		{
-		case eZType_String:
-		case eZType_Int64:
-		case eZType_Double:
-		case eZType_Bool:
-		case eZType_Null:
-			{
-			oVal = iVal;
-			return true;
-			}
-		case eZType_Int8:
-			{
-			oVal.SetInt64(iVal.GetInt8());
-			return true;
-			}
-		case eZType_Int16:
-			{
-			oVal.SetInt64(iVal.GetInt16());
-			return true;
-			}
-		case eZType_Int32:
-			{
-			oVal.SetInt64(iVal.GetInt32());
-			return true;
-			}
-		case eZType_Float:
-			{
-			oVal.SetDouble(iVal.GetFloat());
-			return true;
-			}
-		case eZType_ID:
-			{
-			oVal.SetInt64(iVal.GetID());
-			return true;
-			}
-		case eZType_Time:
-			{
-			oVal.SetDouble(iVal.GetTime().fVal);
-			return true;
-			}
+		oVal = iVal;
 		}
-	return false;
+	else if (const int8* theValue = ZAnyCast<int8>(&iVal))
+		{
+		oVal = int64(*theValue);
+		}
+	else if (const int16* theValue = ZAnyCast<int16>(&iVal))
+		{
+		oVal = int64(*theValue);
+		}
+	else if (const int32* theValue = ZAnyCast<int32>(&iVal))
+		{
+		oVal = int64(*theValue);
+		}
+	else if (const float* theValue = ZAnyCast<float>(&iVal))
+		{
+		oVal = double(*theValue);
+		}
+	else if (const uint64* theValue = ZAnyCast<uint64>(&iVal))
+		{
+		oVal = int64(*theValue);
+		}
+	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iVal))
+		{
+		oVal = double(theValue->fVal);
+		}
+	else
+		{
+		return false;
+		}
+	return true;
 	}
 
-static ZRef<ZYadR_Std> spMakeYadR_JSONNormalize(
+static ZRef<ZYadR> spMakeYadR_JSONNormalize(
 	ZRef<ZYadR> iYadR, bool iPreserve, bool iPreserveLists, bool iPreserveMaps)
 	{
 	if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
@@ -145,43 +122,24 @@ static ZRef<ZYadR_Std> spMakeYadR_JSONNormalize(
 		}
 	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
 		{
-		if (ZRef<ZYadR_Std> theYadR_Std = ZRefDynamicCast<ZYadR_Std>(theYadStrimR))
-			return theYadR_Std;
-		return new ZYadStrimR_JSONNormalize(theYadStrimR);
+		return theYadStrimR;
 		}
-	else
+	else if (ZRef<ZYadPrimR> theYadPrimR = ZRefDynamicCast<ZYadPrimR>(iYadR))
 		{
-		ZVal_ZooLib theValue;
-		if (ZFunctionChain_T<ZVal_ZooLib, ZRef<ZYadR> >::sInvoke(theValue, iYadR))
-			{
-			// We were able to turn the value into something
-			// legitimate. Now normalize it if possible.
-			ZVal_ZooLib normalized;
-			if (spNormalizeSimpleValue(theValue, normalized))
-				return new ZYadPrimR_Std(normalized);
-			}
+		ZAny normalized;
+		if (spNormalizeSimpleValue(theYadPrimR->AsAny(), normalized))
+			return new ZYadPrimR_Std(normalized);
+		}
 
-		if (iPreserve)
-			{
-			// We weren't able to get a ZVal_ZooLib, or it couldn't normalized.
-			// We've been asked to preserve values, so return a null.
-			return new ZYadPrimR_Std(ZVal_ZooLib());
-			}
+	if (iPreserve)
+		{
+		// We weren't able to normalize, but we've been
+		// asked to preserve values, so return a null.
+		return new ZYadPrimR_Std(ZAny());
 		}
 
 	return ZRef<ZYadPrimR_Std>();
 	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimR_JSONNormalize definition
-
-ZYadStrimR_JSONNormalize::ZYadStrimR_JSONNormalize(ZRef<ZYadStrimR> iSource)
-:	fSource(iSource)
-	{}
-
-const ZStrimR& ZYadStrimR_JSONNormalize::GetStrimR()
-	{ return fSource->GetStrimR(); }
 
 // =================================================================================================
 #pragma mark -
@@ -194,7 +152,7 @@ ZYadListR_JSONNormalize::ZYadListR_JSONNormalize(
 	fPreserveMaps(iPreserveMaps)
 	{}
 
-void ZYadListR_JSONNormalize::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+void ZYadListR_JSONNormalize::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	for (;;)
 		{
@@ -219,7 +177,7 @@ ZYadMapR_JSONNormalize::ZYadMapR_JSONNormalize(
 	fPreserveMaps(iPreserveMaps)
 	{}
 
-void ZYadMapR_JSONNormalize::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+void ZYadMapR_JSONNormalize::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	for (;;)
 		{

@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYad_Std__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZAny.h"
 #include "zoolib/ZYad.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -39,13 +40,37 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadR_Std
+#pragma mark * ZYadPrimR_Std
 
-class ZYadR_Std : public virtual ZYadR
+class ZYadPrimR_Std
+:	public ZYadPrimR
 	{
 public:
-// Our protocol
-	virtual void Finish();
+	ZYadPrimR_Std(const ZAny& iAny);
+	virtual ~ZYadPrimR_Std();
+
+// From ZYadPrimR
+	virtual ZAny AsAny();
+
+private:
+	ZAny fAny;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadStrimU_String
+
+typedef ZStrimmerU_T<ZStrimU_String> ZStrimmerU_String;
+
+class ZYadStrimU_String
+:	public ZYadStrimR,
+	public ZStrimmerU_String
+	{
+public:
+	ZYadStrimU_String(const std::string& iString);
+
+// From ZYadR
+	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
 // =================================================================================================
@@ -53,25 +78,24 @@ public:
 #pragma mark * ZYadListR_Std
 
 class ZYadListR_Std
-:	public ZYadR_Std,
-	public ZYadListR
+:	public ZYadListR
 	{
 public:
 	ZYadListR_Std();
 	ZYadListR_Std(bool iFinished);
 
-// From ZYadR_Std
+// From ZYadR
 	virtual void Finish();
 
 // From ZYadListR
 	virtual ZRef<ZYadR> ReadInc();
 
 // Our protocol
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR) = 0;
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR) = 0;
 
 private:
 	bool fStarted;
-	ZRef<ZYadR_Std> fValue;
+	ZRef<ZYadR> fValue;
 	};
 
 // =================================================================================================
@@ -79,25 +103,24 @@ private:
 #pragma mark * ZYadMapR_Std
 
 class ZYadMapR_Std
-:	public ZYadR_Std,
-	public ZYadMapR
+:	public ZYadMapR
 	{
 public:
 	ZYadMapR_Std();
 	ZYadMapR_Std(bool iFinished);
 
-// From ZYadR_Std
+// From ZYadR
 	virtual void Finish();
 
 // From ZYadMapR
 	virtual ZRef<ZYadR> ReadInc(std::string& oName);
 
 // Our protocol
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR) = 0;
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR) = 0;
 
 private:
 	bool fStarted;
-	ZRef<ZYadR_Std> fValue;
+	ZRef<ZYadR> fValue;
 	};
 
 NAMESPACE_ZOOLIB_END

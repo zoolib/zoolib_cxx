@@ -45,14 +45,29 @@ typedef ZYadR_Val_T<ZRef<CFTypeRef> > ZYadR_CFType;
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYadPrimR_CFType
+
+class ZYadPrimR_CFType
+:	public ZYadR_CFType
+,	public ZYadPrimR
+	{
+public:
+	ZYadPrimR_CFType(const ZRef<CFTypeRef>& iVal);
+
+// From ZYadPrimR
+	virtual ZAny AsAny();
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYadStreamRPos_CFType
 
 typedef ZStreamerRPos_T<ZStreamRPos_CFData> ZStreamerRPos_CFType;
 
 class ZYadStreamRPos_CFType
-:	public ZYadR_CFType,
-	public ZYadStreamR,
-	public ZStreamerRPos_CFType
+:	public ZYadR_CFType
+,	public ZYadStreamR
+,	public ZStreamerRPos_CFType
 	{
 public:
 	ZYadStreamRPos_CFType(const ZRef<CFDataRef>& iData);
@@ -69,9 +84,9 @@ public:
 typedef ZStrimmerR_T<ZStrimR_CFString> ZStrimmerR_CFString;
 
 class ZYadStrimR_CFType
-:	public ZYadR_CFType,
-	public ZYadStrimR,
-	public ZStrimmerR_CFString
+:	public ZYadR_CFType
+,	public ZYadStrimR
+,	public ZStrimmerR_CFString
 	{
 public:
 	ZYadStrimR_CFType(ZRef<CFStringRef> iStringRef);
@@ -83,7 +98,7 @@ public:
 
 class ZYadListRPos_CFType
 :	public ZYadR_CFType
-,	public ZYadListRPos_Val_T<ZYadListRPos_CFType, ZValList_CFType>
+,	public ZYadListRPos_Val_Self_T<ZYadListRPos_CFType, ZValList_CFType>
 	{
 public:
 	ZYadListRPos_CFType(const ZRef<CFArrayRef>& iArray);
@@ -95,8 +110,8 @@ public:
 #pragma mark * ZYadMapRPos_CFType
 
 class ZYadMapRPos_CFType
-:	public ZYadR_CFType,
-	public ZYadMapRPos
+:	public ZYadR_CFType
+,	public ZYadMapRPos
 	{
 	ZYadMapRPos_CFType(const ZRef<CFDictionaryRef>& iDictionary,
 		uint64 iPosition,

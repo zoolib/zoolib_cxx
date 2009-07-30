@@ -24,9 +24,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
-#include "zoolib/ZYad_StdMore.h"
-#include "zoolib/ZYad_ZooLib.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
+
+#include <vector>
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -78,7 +78,7 @@ static void spMustRead_WSCommaWS(const ZStrimU& iStrimU)
 	sSkip_WSAndCPlusPlusComments(iStrimU);
 	}
 
-static bool spFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
+static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 	{
 	using namespace ZUtil_Strim;
 
@@ -115,15 +115,15 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 
 		if (theTypeLC == "null")
 			{
-			oVal = ZVal_ZooLib();
+			oVal = ZAny();
 			}
 		else if (theTypeLC == "false")
 			{
-			oVal.SetBool(false);
+			oVal = false;
 			}
 		else if (theTypeLC == "true")
 			{
-			oVal.SetBool(true);
+			oVal = true;
 			}
 		else
 			{
@@ -139,52 +139,52 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &typeValueLC, &typeValue))
 					spThrowParseException("Expected a type name");
 
-				if (typeValueLC == "null") oVal.SetType(eZType_Null);
-				else if (typeValueLC == "string") oVal.SetType(eZType_String);
+				if (typeValueLC == "null") oVal = eZType_Null;
+				else if (typeValueLC == "string") oVal = eZType_String;
 // AG 2007-08-06. cstring has never been used. Not even sure what it's point was.
-//				else if (typeValueLC == "cstring") oVal.SetType(eZType_CString);
-				else if (typeValueLC == "int8") oVal.SetType(eZType_Int8);
-				else if (typeValueLC == "int16") oVal.SetType(eZType_Int16);
-				else if (typeValueLC == "int32") oVal.SetType(eZType_Int32);
-				else if (typeValueLC == "int64") oVal.SetType(eZType_Int64);
-				else if (typeValueLC == "float") oVal.SetType(eZType_Float);
-				else if (typeValueLC == "double") oVal.SetType(eZType_Double);
-				else if (typeValueLC == "time") oVal.SetType(eZType_Time);
-				else if (typeValueLC == "bool") oVal.SetType(eZType_Bool);
-				else if (typeValueLC == "pointer") oVal.SetType(eZType_Pointer);
-				else if (typeValueLC == "raw") oVal.SetType(eZType_Raw);
-				else if (typeValueLC == "tuple") oVal.SetType(eZType_Tuple);
-				else if (typeValueLC == "refcounted") oVal.SetType(eZType_RefCounted);
-				else if (typeValueLC == "rect") oVal.SetType(eZType_Rect);
-				else if (typeValueLC == "point") oVal.SetType(eZType_Point);
-				else if (typeValueLC == "region") oVal.SetType(eZType_Region);
-				else if (typeValueLC == "id") oVal.SetType(eZType_ID);
-				else if (typeValueLC == "vector") oVal.SetType(eZType_Vector);
-				else if (typeValueLC == "type") oVal.SetType(eZType_Type);
-				else if (typeValueLC == "time") oVal.SetType(eZType_Time);
-//##				else if (typeValueLC == "name") oVal.SetType(eZType_Name);
+//				else if (typeValueLC == "cstring") oVal = eZType_CString;
+				else if (typeValueLC == "int8") oVal = eZType_Int8;
+				else if (typeValueLC == "int16") oVal = eZType_Int16;
+				else if (typeValueLC == "int32") oVal = eZType_Int32;
+				else if (typeValueLC == "int64") oVal = eZType_Int64;
+				else if (typeValueLC == "float") oVal = eZType_Float;
+				else if (typeValueLC == "double") oVal = eZType_Double;
+				else if (typeValueLC == "time") oVal = eZType_Time;
+				else if (typeValueLC == "bool") oVal = eZType_Bool;
+				else if (typeValueLC == "pointer") oVal = eZType_Pointer;
+				else if (typeValueLC == "raw") oVal = eZType_Raw;
+				else if (typeValueLC == "tuple") oVal = eZType_Tuple;
+				else if (typeValueLC == "refcounted") oVal = eZType_RefCounted;
+				else if (typeValueLC == "rect") oVal = eZType_Rect;
+				else if (typeValueLC == "point") oVal = eZType_Point;
+				else if (typeValueLC == "region") oVal = eZType_Region;
+				else if (typeValueLC == "id") oVal = eZType_ID;
+				else if (typeValueLC == "vector") oVal = eZType_Vector;
+				else if (typeValueLC == "type") oVal = eZType_Type;
+				else if (typeValueLC == "time") oVal = eZType_Time;
+//##				else if (typeValueLC == "name") oVal = eZType_Name;
 				else
 					spThrowParseException("Unknown type name '" + typeValue + "'");
 				}
 			else if (theTypeLC == "id")
 				{
-				oVal.SetID(spMustRead_GenericInteger(iStrimU));
+				oVal = uint64(spMustRead_GenericInteger(iStrimU));
 				}
 			else if (theTypeLC == "int8")
 				{
-				oVal.SetInt8(spMustRead_GenericInteger(iStrimU));
+				oVal = int8(spMustRead_GenericInteger(iStrimU));
 				}
 			else if (theTypeLC == "int16")
 				{
-				oVal.SetInt16(spMustRead_GenericInteger(iStrimU));
+				oVal = int16(spMustRead_GenericInteger(iStrimU));
 				}
 			else if (theTypeLC == "int32")
 				{
-				oVal.SetInt32(spMustRead_GenericInteger(iStrimU));
+				oVal = int32(spMustRead_GenericInteger(iStrimU));
 				}
 			else if (theTypeLC == "int64")
 				{
-				oVal.SetInt64(spMustRead_GenericInteger(iStrimU));
+				oVal = int64(spMustRead_GenericInteger(iStrimU));
 				}
 			else if (theTypeLC == "bool")
 				{
@@ -193,9 +193,9 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 					spThrowParseException("Expected 'false' or 'true'");
 
 				if (theBool == "true")
-					oVal.SetBool(true);
+					oVal = true;
 				else if (theBool == "false")
-					oVal.SetBool(false);
+					oVal = false;
 				else
 					spThrowParseException("Expected 'false' or 'true'");
 				}
@@ -204,21 +204,21 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 				double theDouble;
 				if (!sTryRead_SignedDouble(iStrimU, theDouble))
 					spThrowParseException("Expected a floating point number");
-				oVal.SetFloat(theDouble);
+				oVal = float(theDouble);
 				}
 			else if (theTypeLC == "double")
 				{
 				double theDouble;
 				if (!sTryRead_SignedDouble(iStrimU, theDouble))
 					spThrowParseException("Expected a floating point number");
-				oVal.SetDouble(theDouble);
+				oVal = theDouble;
 				}
 			else if (theTypeLC == "time")
 				{
 				if (sTryRead_CP(iStrimU, ')'))
 					{
 					// It's a time with no content, hence an invalid time.
-					oVal.SetTime(ZTime());
+					oVal = ZTime();
 					
 					// We'll take an early exit so the normal code that
 					// looks for a closing parenthesis doesn't choke.
@@ -229,7 +229,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 				double theDouble;
 				if (!sTryRead_SignedDouble(iStrimU, theDouble))
 					spThrowParseException("Expected a floating point time");
-				oVal.SetTime(theDouble);
+				oVal = ZTime(theDouble);
 				}
 			else if (theTypeLC == "rect")
 				{
@@ -249,7 +249,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 
 				theRect.bottom = spMustRead_GenericInteger(iStrimU);
 
-				oVal.SetRect(theRect);
+				oVal = theRect;
 				}
 			else if (theTypeLC == "point")
 				{
@@ -261,7 +261,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 
 				thePoint.v = spMustRead_GenericInteger(iStrimU);
 
-				oVal.SetPoint(thePoint);
+				oVal = thePoint;
 				}
 			else
 				{
@@ -277,7 +277,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 	return true;
 	}
 
-static ZRef<ZYadR_Std> spMakeYadR_ZooLibStrim(const ZStrimU& iStrimU)
+static ZRef<ZYadR> spMakeYadR_ZooLibStrim(const ZStrimU& iStrimU)
 	{
 	using namespace ZUtil_Strim;
 
@@ -305,12 +305,12 @@ static ZRef<ZYadR_Std> spMakeYadR_ZooLibStrim(const ZStrimU& iStrimU)
 		}
 	else
 		{
-		ZVal_ZooLib theVal;
+		ZAny theVal;
 		if (spFromStrim_Value(iStrimU, theVal))
 			return new ZYadPrimR_Std(theVal);
 		}
 
-	return ZRef<ZYadR_Std>();
+	return ZRef<ZYadR>();
 	}
 
 // =================================================================================================
@@ -478,7 +478,7 @@ ZYadListR_ZooLibStrim::ZYadListR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadD
 	fReadDelimiter(iReadDelimiter)
 	{}
 
-void ZYadListR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+void ZYadListR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
@@ -519,7 +519,7 @@ ZYadMapR_ZooLibStrim::ZYadMapR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDel
 	fReadDelimiter(iReadDelimiter)
 	{}
 	
-void ZYadMapR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+void ZYadMapR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
@@ -764,129 +764,101 @@ static void spToStrim_Strim(const ZStrimW& s, const ZStrimR& iStrimR,
 	s.Write("\"");
 	}
 
-static void spToStrim_SimpleValue(const ZStrimW& s, const ZVal_ZooLib& iVal,
+static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
-	switch (iVal.TypeOf())
+	if (false)
+		{}
+	else if (iVal.type() == typeid(void))
 		{
-		case eZType_Null: s.Write("Null"); break;
-		case eZType_Type:
+		s.Write("Null");
+		}
+	else if (const ZType* theValue = ZAnyCast<ZType>(&iVal))
+		{
+		s << "Type(" << ZTypeAsString(*theValue) << ")";
+		}
+	else if (const uint64* theValue = ZAnyCast<uint64>(&iVal))
+		{
+		s.Writef("ID(0x%0llX)", *theValue);
+		}
+	else if (const int8* theValue = ZAnyCast<int8>(&iVal))
+		{
+		s.Writef("int8(%d)", *theValue);
+		}
+	else if (const int16* theValue = ZAnyCast<int16>(&iVal))
+		{
+		s.Writef("int16(%d)", *theValue);
+		}
+	else if (const int32* theValue = ZAnyCast<int32>(&iVal))
+		{
+		s.Writef("int32(%d)", *theValue);
+		}
+	else if (const int64* theValue = ZAnyCast<int64>(&iVal))
+		{
+		s.Writef("int64(%lld)", *theValue);
+		}
+	else if (const bool* theValue = ZAnyCast<bool>(&iVal))
+		{
+		if (*theValue)
+			s << "true";
+		else
+			s << "false";
+		}
+	else if (const float* theValue = ZAnyCast<float>(&iVal))
+		{
+		// 9 decimal digits are necessary and sufficient for single precision IEEE 754.
+		// "What Every Computer Scientist Should Know About Floating Point", Goldberg, 1991.
+		// <http://docs.sun.com/source/806-3568/ncg_goldberg.html>
+		s.Writef("float(%.9g)", *theValue);
+		}
+	else if (const double* theValue = ZAnyCast<double>(&iVal))
+		{
+		// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
+		s.Writef("double(%.17g)", *theValue);
+		}
+	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iVal))
+		{
+		// For the moment I'm just writing times as a count of seconds, putting
+		// the broken-out Gregorian version in a comment. Later we can improve
+		// the parsing of dates, and then we can write them in human readable form.
+		if (*theValue)
 			{
-			s.Write("Type(");
-			s.Write(ZTypeAsString(iVal.GetType()));
-			s.Write(")");
-			break;
+			s.Writef("time(%.17g)", theValue->fVal);
+			if (iOptions.fTimesHaveUserLegibleComment)
+				s << " /*" << ZUtil_Time::sAsString_ISO8601(*theValue, true) << "*/";
 			}
-		case eZType_ID:
+		else
 			{
-			s.Writef("ID(0x%0llX)", iVal.GetID());
-			if (iOptions.fIDsHaveDecimalVersionComment)
-				s.Writef(" /*%lld*/", iVal.GetID());
-			break;
+			// We're now allowing empty parens to represent invalid times.
+			s.Write("time()");
 			}
-		case eZType_Int8: s.Writef("int8(%d)", iVal.GetInt8()); break;
-		case eZType_Int16: s.Writef("int16(%d)", iVal.GetInt16()); break;
-		case eZType_Int32: s.Writef("int32(%d)", iVal.GetInt32()); break;
-		case eZType_Int64: s.Writef("int64(0x%0llX)", iVal.GetInt64()); break;
-		case eZType_Bool:
-			{
-			if (iVal.GetBool())
-				s.Write("true");
-			else
-				s.Write("false");
-			break;
-			}
-		case eZType_Float:
-			{
-			// 9 decimal digits are necessary and sufficient for single precision IEEE 754.
-			// "What Every Computer Scientist Should Know About Floating Point", Goldberg, 1991.
-			// <http://docs.sun.com/source/806-3568/ncg_goldberg.html>
-			s.Writef("float(%.9g)", iVal.GetFloat());
-			break;
-			}
-		case eZType_Double:
-			{
-			// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
-			s.Writef("double(%.17g)", iVal.GetDouble());
-			break;
-			}
-		case eZType_Time:
-			{
-			// For the moment I'm just writing times as a count of seconds, putting
-			// the broken-out Gregorian version in a comment. Later we can improve
-			// the parsing of dates, and then we can write them in human readable form.
-			if (ZTime theTime = iVal.GetTime())
-				{
-				s.Writef("time(%.17g)", theTime.fVal);
-				if (iOptions.fTimesHaveUserLegibleComment)
-					s << " /*" << ZUtil_Time::sAsString_ISO8601(theTime, true) << "*/";
-				}
-			else
-				{
-				// We're now allowing empty parens to represent invalid times.
-				s.Write("time()");
-				}
-			break;
-			}
-		case eZType_Pointer: s.Writef("pointer(%08X)", iVal.GetPointer()); break;
-		case eZType_Rect:
-			{
-			const ZRectPOD& theRect = iVal.GetRect();
-			s.Writef("Rect(%d, %d, %d, %d)",
-				theRect.left,
-				theRect.top,
-				theRect.right,
-				theRect.bottom);
-			break;
-			}
-		case eZType_Point:
-			{
-			const ZPointPOD& thePoint = iVal.GetPoint();
-			s.Writef("Point(%d, %d)",
-				thePoint.h,
-				thePoint.v);
-			break;
-			}
-#if 0//##
-		case eZType_Name:
-			{
-			s.Write("@");
-			ZYad_ZooLibStrim::sWrite_PropName(s, iVal.GetName());
-			break;
-			}
-#endif
-		case eZType_String:
-			{
-			spWriteString(s, iOptions, iVal.GetString());
-			break;
-			}
-		case eZType_RefCounted:
-			{
-			s.Writef("RefCounted(%08X)", iVal.GetRefCounted().GetObject());
-			break;
-			}
-		case eZType_Raw:
-			{
-			ZYad_ZooLibStrim::sToStrim(s, new ZYadStreamRPos_ZooLib(iVal.GetData()),
-				iLevel, iOptions);
-			break;
-			}
-		case eZType_Tuple:
-			{
-			ZYad_ZooLibStrim::sToStrim(s, new ZYadMapRPos_ZooLib(iVal.GetMap()), iLevel, iOptions);
-			break;
-			}
-		case eZType_Vector:
-			{
-			ZYad_ZooLibStrim::sToStrim(s, new ZYadListRPos_ZooLib(iVal.GetList()),
-				iLevel, iOptions);
-			break;
-			}
-		default:
-			{
-			ZDebugStopf(0, ("Unrecognized type %d", iVal.TypeOf()));
-			break;
-			}
+		}
+	else if (const VoidStar_t* theValue = ZAnyCast<VoidStar_t>(&iVal))
+		{
+		s.Writef("pointer(%p)", *theValue);
+		}
+	else if (const ZRectPOD* theValue = ZAnyCast<ZRectPOD>(&iVal))
+		{
+		s.Writef("Rect(%d, %d, %d, %d)",
+			theValue->left,
+			theValue->top,
+			theValue->right,
+			theValue->bottom);
+		}
+	else if (const ZPointPOD* theValue = ZAnyCast<ZPointPOD>(&iVal))
+		{
+		s.Writef("Point(%d, %d)",
+			theValue->h,
+			theValue->v);
+		}
+	else if (const ZRef<ZRefCountedWithFinalization>* theValue
+		= ZAnyCast<ZRef<ZRefCountedWithFinalization> >(&iVal))
+		{
+		s.Writef("RefCounted(%p)", theValue->Get());
+		}
+	else
+		{
+		s << "!!Unsupported type!!";
 		}
 	}
 
@@ -1042,10 +1014,14 @@ static void spToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 		{
 		spToStrim_Strim(s, theYadStrimR->GetStrimR(), iLevel, iOptions, iMayNeedInitialLF);
 		}
+	else if (ZRef<ZYadPrimR> theYadPrimR = ZRefDynamicCast<ZYadPrimR>(iYadR))
+		{
+		spToStrim_SimpleValue(s, theYadPrimR->AsAny(),
+			iLevel, iOptions, iMayNeedInitialLF);
+		}
 	else
 		{
-		spToStrim_SimpleValue(s, sFromYadR_T<ZVal_ZooLib>(iYadR),
-			iLevel, iOptions, iMayNeedInitialLF);
+		s << "!!Unsupported Yad!!";
 		}
 	}
 

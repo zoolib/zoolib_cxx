@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZStrimmer.h"
-#include "zoolib/ZVal_ZooLib.h"
 
 #include <string>
 #include <vector>
@@ -38,6 +37,10 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZML {
 
+using std::pair;
+using std::string;
+using std::vector;
+
 enum EToken
 	{
 	eToken_TagBegin,
@@ -47,8 +50,8 @@ enum EToken
 	eToken_Exhausted
 	};
 
-typedef ZVal_ZooLib Val;
-typedef ZValMap_ZooLib ValMap;
+typedef pair<string, string> Attr_t;
+typedef vector<Attr_t> Attrs_t;
 
 // =================================================================================================
 #pragma mark -
@@ -61,7 +64,7 @@ class Reader : private ZStrimR, NonCopyable
 	{
     ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Reader, operator_bool_generator_type, operator_bool_type);
 public:
-	typedef std::string (*EntityCallback)(void* iRefcon, const std::string& iEntity);
+	typedef string (*EntityCallback)(void* iRefcon, const string& iEntity);
 
 	Reader(const ZStrimU& iStrim);
 	Reader(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues);
@@ -72,11 +75,11 @@ public:
 	EToken Current() const;
 	ZML::Reader& Advance();
 
-	const std::string& Name() const;
-	ValMap Attrs() const;
+	const string& Name() const;
+	Attrs_t Attrs() const;
 
 	const ZStrimR& TextStrim();
-	std::string TextString();
+	string TextString();
 
 private:
 // From ZStrimR, to support ZML::Text()'s return of a ZStrimR reference.
@@ -96,8 +99,8 @@ private:
 
 	EToken fToken;
 
-	std::string fTagName;
-	ValMap fTagAttributes;
+	string fTagName;
+	Attrs_t fTagAttributes;
 	};
 
 // =================================================================================================
@@ -106,12 +109,12 @@ private:
 
 void sSkipText(Reader& r);
 
-bool sSkip(Reader& r, const std::string& iTagName);
-bool sSkip(Reader& r, std::vector<std::string>& ioTags);
+bool sSkip(Reader& r, const string& iTagName);
+bool sSkip(Reader& r, std::vector<string>& ioTags);
 
-bool sTryRead_Begin(Reader& r, const std::string& iTagName);
+bool sTryRead_Begin(Reader& r, const string& iTagName);
 
-bool sTryRead_End(Reader& r, const std::string& iTagName);
+bool sTryRead_End(Reader& r, const string& iTagName);
 
 // =================================================================================================
 #pragma mark -
@@ -128,17 +131,17 @@ public:
 	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
 
 // Our protocol
-	std::string BackName() const;
-	ValMap BackAttr() const;
+	string BackName() const;
+	Attrs_t BackAttr() const;
 
-	void AllNames(std::vector<std::string>& oNames) const;
-	void AllAttrs(std::vector<ValMap>& oAttrs) const;
+	void AllNames(std::vector<string>& oNames) const;
+	void AllAttrs(std::vector<Attrs_t>& oAttrs) const;
 
-	const std::vector<std::pair<std::string, ValMap> >& All() const;
+	const std::vector<std::pair<string, Attrs_t> >& All() const;
 
 private:
 	Reader& fReader;
-	std::vector<std::pair<std::string, ValMap> > fTags;
+	std::vector<std::pair<string, Attrs_t> > fTags;
 	};
 
 // =================================================================================================
@@ -219,15 +222,11 @@ public:
 	string iValue etc to the currently pending tag. */
 	const StrimW& Attrf(const string8& iName, const UTF8* iValue, ...) const;
 
-	/** Add an attribute named \a iName to the currently pending tag. The value
-	will be a string containing a sensible textual version of \a iValue. */
-	const StrimW& Attr(const string8& iName, const Val& iValue) const;
-
 	/** Add attributes to the currently pending tag, taking the names and values from
 	properties of iTuple. String values are added as you would expect, null values
 	are added as boolean attributes. This convention is compatible with that
 	used by ZML::Reader. */
-	const StrimW& Attrs(const ValMap& iMap) const;
+	const StrimW& Attrs(const Attrs_t& iAttrs) const;
 
 	/// Set indent enable, and return previous value.
 	bool Indent(bool iIndent) const;

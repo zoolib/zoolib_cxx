@@ -29,7 +29,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include ZMACINCLUDE2(CoreFoundation,CFNumber.h)
 #include ZMACINCLUDE2(CoreFoundation,CFString.h)
 
+#include <typeinfo>
+
 NAMESPACE_ZOOLIB_BEGIN
+
+using std::type_info;
 
 using ZUtil_CFType::sAsUTF8;
 using ZUtil_CFType::sString;
@@ -190,8 +194,12 @@ bool ZVal_CFType::QGet_T<int32>(int32& oVal) const
 		return true;
 	if (sGetNumber_T(*this, kCFNumberIntType, oVal))
 		return true;
-	if (sGetNumber_T(*this, kCFNumberLongType, oVal)) //?? Even on ppc64/x86_64??
-		return true;
+
+	#if !ZCONFIG_Is64Bit
+		if (sGetNumber_T(*this, kCFNumberLongType, oVal))
+			return true;
+	#endif
+
 	return false;
 	}
 
@@ -202,6 +210,12 @@ bool ZVal_CFType::QGet_T<int64>(int64& oVal) const
 		return true;
 	if (sGetNumber_T(*this, kCFNumberLongLongType, oVal))
 		return true;
+
+	#if ZCONFIG_Is64Bit
+		if (sGetNumber_T(*this, kCFNumberLongType, oVal))
+			return true;
+	#endif
+
 	return false;
 	}
 
@@ -210,7 +224,7 @@ bool ZVal_CFType::QGet_T<bool>(bool& oVal) const
 	{
 	if (::CFGetTypeID(*this) == ::CFBooleanGetTypeID())
 		{
-		oVal = ::CFBooleanGetValue(static_cast<CFBooleanRef>(CFTypeRef(*this)));
+		oVal = ::CFBooleanGetValue(static_cast<CFBooleanRef>(Get()));
 		return true;
 		}
 	return false;
@@ -241,7 +255,7 @@ bool ZVal_CFType::QGet_T<string8>(string8& oVal) const
 	{
 	if (::CFGetTypeID(*this) == ::CFStringGetTypeID())
 		{
-		oVal = sAsUTF8(static_cast<CFStringRef>(CFTypeRef(*this)));
+		oVal = sAsUTF8(static_cast<CFStringRef>(Get()));
 		return true;
 		}
 	return false;
@@ -252,7 +266,7 @@ bool ZVal_CFType::QGet_T<ZRef<CFStringRef> >(ZRef<CFStringRef>& oVal) const
 	{
 	if (::CFGetTypeID(*this) == ::CFStringGetTypeID())
 		{
-		oVal = (static_cast<CFStringRef>(CFTypeRef(*this)));
+		oVal = static_cast<CFStringRef>(Get());
 		return true;
 		}
 	return false;
@@ -263,7 +277,7 @@ bool ZVal_CFType::QGet_T<ZValData_CFType>(ZValData_CFType& oVal) const
 	{
 	if (::CFGetTypeID(*this) == ::CFDataGetTypeID())
 		{
-		oVal = (static_cast<CFDataRef>(CFTypeRef(*this)));
+		oVal = static_cast<CFDataRef>(Get());
 		return true;
 		}
 	return false;
@@ -274,7 +288,7 @@ bool ZVal_CFType::QGet_T<ZValList_CFType>(ZValList_CFType& oVal) const
 	{
 	if (::CFGetTypeID(*this) == ::CFArrayGetTypeID())
 		{
-		oVal = (static_cast<CFArrayRef>(CFTypeRef(*this)));
+		oVal = static_cast<CFArrayRef>(Get());
 		return true;
 		}
 	return false;
@@ -285,7 +299,7 @@ bool ZVal_CFType::QGet_T<ZValMap_CFType>(ZValMap_CFType& oVal) const
 	{
 	if (::CFGetTypeID(*this) == ::CFDictionaryGetTypeID())
 		{
-		oVal = (static_cast<CFDictionaryRef>(CFTypeRef(*this)));
+		oVal = static_cast<CFDictionaryRef>(Get());
 		return true;
 		}
 	return false;

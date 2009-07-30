@@ -423,6 +423,9 @@ bool ZTName::Empty() const
 	return false;
 	}
 
+ZTName::operator std::string() const
+	{ return this->AsString(); }
+
 string ZTName::AsString() const
 	{
 	ZAssertStop(kDebug, fData);

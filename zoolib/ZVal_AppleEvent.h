@@ -215,8 +215,8 @@ public:
 	ZVal_AppleEvent GetAttr(AEKeyword iName) const;
 	void SetAttr(AEKeyword iName, const AEDesc& iVal);
 
-	Index_t begin() const;
-	Index_t end() const;
+	Index_t Begin() const;
+	Index_t End() const;
 
 	AEKeyword KeyOf(Index_t iIndex) const;
 	std::string NameOf(Index_t iIndex) const;

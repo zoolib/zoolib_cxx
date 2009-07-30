@@ -19,8 +19,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompat_cmath.h"
+#include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_Bencode.h"
-#include "zoolib/ZYad_StdMore.h"
 #include "zoolib/ZUnicode.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -105,14 +105,14 @@ static string spReadString(const ZStreamU& s)
 	return s.ReadString(stringLength);
 	}
 
-static ZRef<ZYadR_Std> spReadStringish(const ZStreamU& s)
+static ZRef<ZYadR> spReadStringish(const ZStreamU& s)
 	{
 	const int32 theLength = spRead_PositiveInteger(s);
 	if (!spTryRead_Byte(s, ':'))
 		spThrowParseException("Expected ':' terminator for string/binary length");
 
 	if (!theLength)
-		return new ZYadPrimR_Std;
+		return new ZYadPrimR_Std(ZAny());
 
 	const string theString = s.ReadString(theLength);
 	string::const_iterator current = theString.begin();
@@ -125,15 +125,15 @@ static ZRef<ZYadR_Std> spReadStringish(const ZStreamU& s)
 	if (countSkipped == 0)
 		{
 		// We skipped no code units, so theString is valid UTF8.
-		return new ZYadStrimU_Std(theString);
+		return new ZYadStrimU_String(theString);
 		}
 	else
 		{
-		return new ZYadStreamRPos_Std(ZValData_ZooLib(theString.data(), theLength));
+		return new ZYadStreamRPos_Any(ZValData_Any(theString.data(), theLength));
 		}
 	}
 
-static ZRef<ZYadR_Std> spMakeYadR_Bencode(const ZStreamU& s)
+static ZRef<ZYadR> spMakeYadR_Bencode(const ZStreamU& s)
 	{
 	const uint8 type = s.ReadUInt8();
 	switch (type)
@@ -153,7 +153,7 @@ static ZRef<ZYadR_Std> spMakeYadR_Bencode(const ZStreamU& s)
 				spThrowParseException("Expected signed decimal integer");
 			if (!spTryRead_Byte(s, 'e'))
 				spThrowParseException("Expected 'e' terminator for integer");
-			return new ZYadPrimR_Std(theInteger);
+			return new ZYadPrimR_Std(ZAny(theInteger));
 			}
 		default:
 			{
@@ -165,7 +165,7 @@ static ZRef<ZYadR_Std> spMakeYadR_Bencode(const ZStreamU& s)
 			return spReadStringish(s);
 			}
 		}
-	return ZRef<ZYadR_Std>();
+	return ZRef<ZYadR>();
 	}
 
 // =================================================================================================
@@ -188,7 +188,7 @@ ZYadListR_Bencode::ZYadListR_Bencode(const ZStreamU& iStreamU)
 :	fStreamU(iStreamU)
 	{}
 
-void ZYadListR_Bencode::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+void ZYadListR_Bencode::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	if (!spTryRead_Byte(fStreamU, 'e'))
 		oYadR = spMakeYadR_Bencode(fStreamU);
@@ -202,7 +202,7 @@ ZYadMapR_Bencode::ZYadMapR_Bencode(const ZStreamU& iStreamU)
 :	fStreamU(iStreamU)
 	{}
 
-void ZYadMapR_Bencode::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+void ZYadMapR_Bencode::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	if (!spTryRead_Byte(fStreamU, 'e'))
 		{

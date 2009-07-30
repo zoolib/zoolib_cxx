@@ -36,7 +36,7 @@ public:
 	ZYadMapR_ZooLibStreamOld(const ZStreamR& iStreamR);
 
 // From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	const ZStreamR& fStreamR;

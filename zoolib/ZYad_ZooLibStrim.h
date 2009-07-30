@@ -46,13 +46,12 @@ public:
 #pragma mark * ZYadStreamR_ZooLibStrim
 
 class ZYadStreamR_ZooLibStrim
-:	public ZYadR_Std,
-	public ZYadStreamR
+:	public ZYadStreamR
 	{
 public:
 	ZYadStreamR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter);
 
-// From ZYadR_Std
+// From ZYadR
 	virtual void Finish();
 
 // From ZStreamerR via ZYadStreamR
@@ -69,13 +68,12 @@ private:
 #pragma mark * ZYadStrimR_ZooLibStrim_Apos
 
 class ZYadStrimR_ZooLibStrim_Apos
-:	public ZYadR_Std,
-	public ZYadStrimR
+:	public ZYadStrimR
 	{
 public:
 	ZYadStrimR_ZooLibStrim_Apos(const ZStrimU& iStrimU);
 
-// From ZYadR_Std
+// From ZYadR
 	virtual void Finish();
 
 // From ZStrimmerR via ZYadStrimR
@@ -91,14 +89,13 @@ private:
 #pragma mark * ZYadStrimR_ZooLibStrim_Quote
 
 class ZYadStrimR_ZooLibStrim_Quote
-:	public ZYadR_Std,
-	public ZYadStrimR,
+:	public ZYadStrimR,
 	private ZStrimR
 	{
 public:
 	ZYadStrimR_ZooLibStrim_Quote(const ZStrimU& iStrimU);
 
-// From ZYadR_Std
+// From ZYadR
 	virtual void Finish();
 
 // From ZStrimmerR via ZYadStrimR
@@ -123,7 +120,7 @@ public:
 	ZYadListR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter);
 
 // From ZYadListR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
 	const ZStrimU& fStrimU;
@@ -140,7 +137,7 @@ public:
 	ZYadMapR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter);
 
 // From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	const ZStrimU& fStrimU;

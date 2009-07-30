@@ -45,7 +45,7 @@ using std::string;
 #pragma mark -
 #pragma mark * ZHTTP
 
-static bool sReadResponse(const ZStreamR& r, int32* oResponseCode, ValMap* oHeader)
+static bool spReadResponse(const ZStreamR& r, int32* oResponseCode, ValMap* oHeader)
 	{
 	ZMIME::StreamR_Header theSIH_Server(r);
 
@@ -62,7 +62,7 @@ static bool sReadResponse(const ZStreamR& r, int32* oResponseCode, ValMap* oHead
 	return true;
 	}
 
-static bool sRequest(const ZStreamW& w, const ZStreamR& r,
+static bool spRequest(const ZStreamW& w, const ZStreamR& r,
 	const string& iMethod, const string& iHost, const string& iPath,
 	bool iSendConnectionClose,
 	int32* oResponseCode, ValMap* oHeader, ValData* oRawHeader)
@@ -83,11 +83,11 @@ static bool sRequest(const ZStreamW& w, const ZStreamR& r,
 		{
 		ZStreamRWPos_ValData_T<ValData> theSRWP_ValData(*oRawHeader);
 		ZStreamR_Tee theStream_Tee(r, theSRWP_ValData);
-		return sReadResponse(theStream_Tee, oResponseCode, oHeader);
+		return spReadResponse(theStream_Tee, oResponseCode, oHeader);
 		}
 	else
 		{
-		return sReadResponse(r, oResponseCode, oHeader);
+		return spReadResponse(r, oResponseCode, oHeader);
 		}
 	}
 
@@ -112,7 +112,7 @@ ZRef<ZStreamerR> sRequest(
 
 			int32 theResponseCode;
 			ValMap theHeaders;
-			if (!sRequest(
+			if (!spRequest(
 				theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
 				iMethod, theHost, thePath,
 				true,
@@ -160,7 +160,7 @@ ZRef<ZStreamerR> sRequest(
 	return ZRef<ZStreamerR>();
 	}
 
-static void sPOSTPrefix(const ZStreamW& w,
+static void spPost_Prefix(const ZStreamW& w,
 	const string& iHost, const string& iPath, bool iSendConnectionClose)
 	{
 	w.WriteString("POST ");
@@ -173,18 +173,18 @@ static void sPOSTPrefix(const ZStreamW& w,
 		w.WriteString("Connection: close\r\n");
 	}
 
-static bool sPOSTSuffix(const ZStreamR& r,
+static bool spPost_Suffix(const ZStreamR& r,
 	int32* oResponseCode, ValMap* oHeader, ValData* oRawHeader)
 	{
 	if (oRawHeader)
 		{
 		ZStreamRWPos_ValData_T<ValData> theSRWP_ValData(*oRawHeader);
 		ZStreamR_Tee theStream_Tee(r, theSRWP_ValData);
-		return sReadResponse(theStream_Tee, oResponseCode, oHeader);
+		return spReadResponse(theStream_Tee, oResponseCode, oHeader);
 		}
 	else
 		{
-		return sReadResponse(r, oResponseCode, oHeader);
+		return spReadResponse(r, oResponseCode, oHeader);
 		}
 	}
 
@@ -203,7 +203,7 @@ ZRef<ZStreamerR> sPost(
 			const ZStreamR& r = theEndpoint->GetStreamR();
 			const ZStreamW& w = theEndpoint->GetStreamW();
 
-			sPOSTPrefix(w, theHost, thePath, true);
+			spPost_Prefix(w, theHost, thePath, true);
 
 			if (const ZStreamRPos* bodyRPos = dynamic_cast<const ZStreamRPos*>(&iBody))
 				{
@@ -223,7 +223,7 @@ ZRef<ZStreamerR> sPost(
 
 			int32 theResponseCode;
 			ValMap theHeaders;
-			if (sPOSTSuffix(r, &theResponseCode, &theHeaders, oRawHeader))
+			if (spPost_Suffix(r, &theResponseCode, &theHeaders, oRawHeader))
 				{
 				if (200 == theResponseCode)
 					{
@@ -259,13 +259,13 @@ ZRef<ZStreamerR> sPostRaw(
 			const ZStreamR& r = theEndpoint->GetStreamR();
 			const ZStreamW& w = theEndpoint->GetStreamW();
 
-			sPOSTPrefix(w, theHost, thePath, true);
+			spPost_Prefix(w, theHost, thePath, true);
 			w.CopyAllFrom(iBody);
 			w.Flush();
 
 			int32 theResponseCode;
 			ValMap theHeaders;
-			if (sPOSTSuffix(r, &theResponseCode, &theHeaders, oRawHeader))
+			if (spPost_Suffix(r, &theResponseCode, &theHeaders, oRawHeader))
 				{
 				if (200 == theResponseCode)
 					{
@@ -290,7 +290,7 @@ ZRef<ZStreamerR> sPostRaw(
 #pragma mark -
 #pragma mark * ZHTTP, read a POST into a ValMap
 
-static ZRef<ZStrimmerR> sCreateStrimmerR(const ValMap& iHeader, const ZStreamR& iStreamR)
+static ZRef<ZStrimmerR> spCreateStrimmerR(const ValMap& iHeader, const ZStreamR& iStreamR)
 	{
 	const string charset = iHeader
 		.Get("content-type").GetMap()
@@ -303,7 +303,7 @@ static ZRef<ZStrimmerR> sCreateStrimmerR(const ValMap& iHeader, const ZStreamR& 
 		return new ZStrimmerR_StreamR_T<ZStrimR_StreamUTF8>(iStreamR);
 	}
 
-static bool sReadName(const ZStreamU& iStreamU, string& oName)
+static bool spReadName(const ZStreamU& iStreamU, string& oName)
 	{
 	bool gotAny = false;
 	for (;;)
@@ -322,7 +322,7 @@ static bool sReadName(const ZStreamU& iStreamU, string& oName)
 	return gotAny;
 	}
 
-static bool sReadPOST(const ZStreamR& iStreamR, const ValMap& iHeader, Val& oVal)
+static bool spReadPOST(const ZStreamR& iStreamR, const ValMap& iHeader, Val& oVal)
 	{
 	const ValMap content_type = iHeader.Get("content-type").GetMap();
 	if (content_type.Get("type").GetString() == "application"
@@ -387,7 +387,7 @@ static bool sReadPOST(const ZStreamR& iStreamR, const ValMap& iHeader, Val& oVal
 				if (!name.empty())
 					{
 					Val theVal;
-					if (sReadPOST(streamPart, header, theVal))
+					if (spReadPOST(streamPart, header, theVal))
 						theMap.Set(name, theVal);
 					}
 				}
@@ -400,7 +400,7 @@ static bool sReadPOST(const ZStreamR& iStreamR, const ValMap& iHeader, Val& oVal
 		// It's explicitly some kind of text. Use sCreateStrimmerR to create an appropriate
 		// strimmer, which it does by examining values in iHeader.
 		string theString;
-		sCreateStrimmerR(iHeader, iStreamR)->GetStrimR().CopyAllTo(ZStrimW_String(theString));
+		spCreateStrimmerR(iHeader, iStreamR)->GetStrimR().CopyAllTo(ZStrimW_String(theString));
 		oVal.SetString(theString);
 		return true;		
 		}

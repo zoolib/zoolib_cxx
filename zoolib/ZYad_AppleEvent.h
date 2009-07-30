@@ -30,43 +30,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadR_AppleEvent
-
 typedef ZYadR_Val_T<ZVal_AppleEvent> ZYadR_AppleEvent;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadListRPos_AppleEvent
-
-class ZYadListRPos_AppleEvent
-:	public ZYadR_AppleEvent
-,	public ZYadListRPos_Val_T<ZYadListRPos_AppleEvent, ZValList_AppleEvent>
-	{
-public:
-	ZYadListRPos_AppleEvent(const ZValList_AppleEvent& iList);
-	ZYadListRPos_AppleEvent(const ZValList_AppleEvent& iList, uint64 iPosition);
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadMapRPos_AppleEvent
-
-class ZYadMapRPos_AppleEvent
-:	public ZYadR_AppleEvent
-,	public ZYadMapRPos_Val_T<ZYadMapRPos_AppleEvent, ZValMap_AppleEvent>
-	{
-public:
-	ZYadMapRPos_AppleEvent(const ZValMap_AppleEvent& iMap);
-	ZYadMapRPos_AppleEvent(const ZValMap_AppleEvent& iMap, const Index_t& iPosition);
-
-// From ZYadMapR via ZYadMapRPos_Val_T
-	virtual ZRef<ZYadR> ReadInc(std::string& oName);
-
-// From ZYadMapRPos via ZYadMapRPos_Val_T
-	virtual void SetPosition(const std::string& iName);
-	};
+typedef ZYadListRPos_Val_T<ZValList_AppleEvent> ZYadListRPos_AppleEvent;
+typedef ZYadMapRPos_Val_T<ZValMap_AppleEvent> ZYadMapRPos_AppleEvent;
 
 // =================================================================================================
 #pragma mark -

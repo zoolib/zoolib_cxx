@@ -18,41 +18,43 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValData_ZooLib__
-#define __ZValData_ZooLib__ 1
+#ifndef __ZValData_Any__
+#define __ZValData_Any__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompare.h"
+#include "zoolib/ZAny.h"
 #include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZCompare.h"
 #include "zoolib/ZRef.h"
-#include "zoolib/ZTypes.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValData_ZooLib
+#pragma mark * ZValData_Any
 
-class ZValData_ZooLib
+class ZValData_Any
 	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZValData_ZooLib,
+    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZValData_Any,
     	operator_bool_generator_type, operator_bool_type);
 	class Rep;
 
 public:
+	ZAny AsAny() const;
+
 	operator operator_bool_type() const;
 
-	ZValData_ZooLib();
-	ZValData_ZooLib(const ZValData_ZooLib& iOther);
-	~ZValData_ZooLib();
-	ZValData_ZooLib& operator=(const ZValData_ZooLib& iOther);
+	ZValData_Any();
+	ZValData_Any(const ZValData_Any& iOther);
+	~ZValData_Any();
+	ZValData_Any& operator=(const ZValData_Any& iOther);
 
-	ZValData_ZooLib(size_t iSize);
-	ZValData_ZooLib(const void* iSourceData, size_t iSize);
+	ZValData_Any(size_t iSize);
+	ZValData_Any(const void* iSourceData, size_t iSize);
 
-	int Compare(const ZValData_ZooLib& iOther) const;
-	bool operator<(const ZValData_ZooLib& iOther) const;
-	bool operator==(const ZValData_ZooLib& iOther) const;
+	int Compare(const ZValData_Any& iOther) const;
+	bool operator<(const ZValData_Any& iOther) const;
+	bool operator==(const ZValData_Any& iOther) const;
 
 	size_t GetSize() const;
 	void SetSize(size_t iSize);
@@ -72,9 +74,9 @@ private:
 	ZRef<Rep> fRep;
 	};
 
-template <> inline int sCompare_T(const ZValData_ZooLib& iL, const ZValData_ZooLib& iR)
+template <> inline int sCompare_T(const ZValData_Any& iL, const ZValData_Any& iR)
 	{ return iL.Compare(iR); }
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZValData_ZooLib__
+#endif // __ZValData_Any__

@@ -38,47 +38,33 @@ class ZYadR_ZooLib
 public:
 	ZYadR_ZooLib();
 	ZYadR_ZooLib(const ZVal_ZooLib& iVal);
-	ZYadR_ZooLib(ZType iType, const ZStreamR& iStreamR);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadPrimR_ZooLib
+
+class ZYadPrimR_ZooLib
+:	public ZYadR_ZooLib,
+	public ZYadPrimR
+	{
+public:
+	ZYadPrimR_ZooLib();
+	ZYadPrimR_ZooLib(const ZVal_ZooLib& iVal);
+	ZYadPrimR_ZooLib(ZType iType, const ZStreamR& iStreamR);
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
+
+// From ZYadPrimR
+	ZAny AsAny();
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadStreamRPos_ZooLib
 
-typedef ZStreamerRPos_T<ZStreamRPos_ValData_T<ZValData_ZooLib> > ZStreamerRPos_ValData_ZooLib;
-
-class ZYadStreamRPos_ZooLib
-:	public ZYadR_ZooLib,
-	public ZYadStreamR,
-	public ZStreamerRPos_ValData_ZooLib
-	{
-public:
-	ZYadStreamRPos_ZooLib(const ZValData_ZooLib& iValData);
-
-// From ZYadR, disambiguating between ZYadR_ZooLib and ZYadStreamR
-	virtual bool IsSimple(const ZYadOptions& iOptions);
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimU_String
-
-typedef ZStrimmerU_T<ZStrimU_String> ZStrimmerU_String;
-
-class ZYadStrimU_String
-:	public ZYadR_ZooLib,
-	public ZYadStrimR,
-	public ZStrimmerU_String
-	{
-public:
-	ZYadStrimU_String(const std::string& iString);
-
-// From ZYadR, disambiguating between ZYadR_ZooLib and ZYadStreamR
-//	virtual bool IsSimple(const ZYadOptions& iOptions);
-	};
+typedef ZYadStreamRPos_Val_T<ZValData_ZooLib> ZYadStreamRPos_ZooLib;
 
 // =================================================================================================
 #pragma mark -
@@ -86,13 +72,13 @@ public:
 
 class ZYadListRPos_ZooLib
 :	public ZYadR_ZooLib
-,	public ZYadListRPos_Val_T<ZYadListRPos_ZooLib, ZValList_ZooLib>
+,	public ZYadListRPos_Val_Self_T<ZYadListRPos_ZooLib, ZValList_ZooLib>
 	{
 public:
 	ZYadListRPos_ZooLib(const ZValList_ZooLib& iList);
 	ZYadListRPos_ZooLib(const ZValList_ZooLib& iList, uint64 iPosition);
 
-// From ZYadR, disambiguating between ZYadR_ZooLib and ZYadListRPos
+// From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
@@ -100,23 +86,21 @@ public:
 #pragma mark -
 #pragma mark * ZYadMapRPos_ZooLib
 
+//typedef ZYadMapRPos_Val_T<ZValMap_ZooLib, ZValMap_ZooLib::Index_t> ZYadMapRPos_ZooLib;
+
+#if 1
 class ZYadMapRPos_ZooLib
 :	public ZYadR_ZooLib
-,	public ZYadMapRPos_Val_T<ZYadMapRPos_ZooLib, ZValMap_ZooLib>
+,	public ZYadMapRPos_Val_Self_T<ZYadMapRPos_ZooLib, ZValMap_ZooLib, ZValMap_ZooLib::Index_t>
 	{
 public:
 	ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap);
 	ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap, const Index_t& iPosition);
 
-// From ZYadR, disambiguating between ZYadR_ZooLib and ZYadMapRPos
+// From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
-
-// From ZYadMapR via ZYadMapRPos_Val_T
-	virtual ZRef<ZYadR> ReadInc(std::string& oName);
-
-// From ZYadMapRPos via ZYadMapRPos_Val_T
-	virtual void SetPosition(const std::string& iName);
 	};
+#endif
 
 // =================================================================================================
 #pragma mark -

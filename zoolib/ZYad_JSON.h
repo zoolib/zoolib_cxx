@@ -44,13 +44,12 @@ public:
 #pragma mark * ZYadStrimR_JSON
 
 class ZYadStrimR_JSON
-:	public ZYadR_Std,
-	public ZYadStrimR
+:	public ZYadStrimR
 	{
 public:
 	ZYadStrimR_JSON(const ZStrimU& iStrimU);
 
-// From ZYadR_Std
+// From ZYadR
 	virtual void Finish();
 
 // From ZStrimmerR via ZYadStrimR
@@ -71,7 +70,7 @@ public:
 	ZYadListR_JSON(const ZStrimU& iStrimU);
 
 // From ZYadListR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
 	const ZStrimU& fStrimU;
@@ -87,7 +86,7 @@ public:
 	ZYadMapR_JSON(const ZStrimU& iStrimU);
 
 // From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	const ZStrimU& fStrimU;
@@ -104,7 +103,7 @@ public:
 		const ZStrimW& iStrimW, size_t iIndent, const ZYadOptions& iOptions);
 
 // From ZYadVisitor
-	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
+	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
 	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
 	virtual bool Visit_YadListR(ZRef<ZYadListR> iYadListR);
 	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);

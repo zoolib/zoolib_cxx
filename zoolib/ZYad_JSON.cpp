@@ -141,7 +141,7 @@ static bool spTryRead_JSONString(const ZStrimU& s, string& oString)
 	return false;
 	}
 
-static bool spFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
+static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 	{
 	using namespace ZUtil_Strim;
 
@@ -153,26 +153,26 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 
 	if (spTryRead_JSONString(iStrimU, theString))
 		{
-		oVal.SetString(theString);
+		oVal = theString;
 		}
 	else if (sTryRead_SignedDecimalNumber(iStrimU, asInt64, asDouble, isDouble))
 		{
 		if (isDouble)
-			oVal.SetDouble(asDouble);
+			oVal = asDouble;
 		else
-			oVal.SetInt64(asInt64);
+			oVal = asInt64;
 		}
 	else if (sTryRead_CaselessString(iStrimU, "null"))
 		{
-		oVal = ZVal_ZooLib();
+		oVal = ZAny();
 		}
 	else if (sTryRead_CaselessString(iStrimU, "false"))
 		{
-		oVal.SetBool(false);
+		oVal = false;
 		}
 	else if (sTryRead_CaselessString(iStrimU, "true"))
 		{
-		oVal.SetBool(true);
+		oVal = true;
 		}
 	else
 		{
@@ -182,55 +182,7 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZVal_ZooLib& oVal)
 	return true;
 	}
 
-static bool spNormalizeSimpleValue(const ZVal_ZooLib& iVal, ZVal_ZooLib& oVal)
-	{
-	ZAssert(&iVal != &oVal);
-	switch (iVal.TypeOf())
-		{
-		case eZType_String:
-		case eZType_Int64:
-		case eZType_Double:
-		case eZType_Bool:
-		case eZType_Null:
-			{
-			oVal = iVal;
-			return true;
-			}
-		case eZType_Int8:
-			{
-			oVal.SetInt64(iVal.GetInt8());
-			return true;
-			}
-		case eZType_Int16:
-			{
-			oVal.SetInt64(iVal.GetInt16());
-			return true;
-			}
-		case eZType_Int32:
-			{
-			oVal.SetInt64(iVal.GetInt32());
-			return true;
-			}
-		case eZType_Float:
-			{
-			oVal.SetDouble(iVal.GetFloat());
-			return true;
-			}
-		case eZType_ID:
-			{
-			oVal.SetInt64(iVal.GetID());
-			return true;
-			}
-		case eZType_Time:
-			{
-			oVal.SetDouble(iVal.GetTime().fVal);
-			return true;
-			}
-		}
-	return false;
-	}
-
-static ZRef<ZYadR_Std> spMakeYadR_JSON(const ZStrimU& iStrimU)
+static ZRef<ZYadR> spMakeYadR_JSON(const ZStrimU& iStrimU)
 	{
 	using namespace ZUtil_Strim;
 
@@ -250,7 +202,7 @@ static ZRef<ZYadR_Std> spMakeYadR_JSON(const ZStrimU& iStrimU)
 		}
 	else
 		{
-		ZVal_ZooLib theVal;
+		ZAny theVal;
 		if (spFromStrim_Value(iStrimU, theVal))
 			return new ZYadPrimR_Std(theVal);
 		}
@@ -298,7 +250,7 @@ ZYadListR_JSON::ZYadListR_JSON(const ZStrimU& iStrimU)
 :	fStrimU(iStrimU)
 	{}
 
-void ZYadListR_JSON::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+void ZYadListR_JSON::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
@@ -330,7 +282,7 @@ ZYadMapR_JSON::ZYadMapR_JSON(const ZStrimU& iStrimU)
 :	fStrimU(iStrimU)
 	{}
 
-void ZYadMapR_JSON::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+void ZYadMapR_JSON::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
@@ -406,48 +358,56 @@ static void spWriteString(const ZStrimW& s, const ZStrimR& iStrimR)
 	s.Write("\"");
 	}
 
-static void spToStrim_SimpleValue(const ZStrimW& s, const ZVal_ZooLib& iVal)
+static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal)
 	{
-	ZVal_ZooLib normalized;
-	spNormalizeSimpleValue(iVal, normalized);
-
-	switch (normalized.TypeOf())
+	if (false)
+		{}
+	else if (const bool* theValue = ZAnyCast<bool>(&iVal))
 		{
-		case eZType_String:
-			{
-			spWriteString(s, normalized.GetString());
-			break;
-			}
-		case eZType_Int64: 
-			{
-			s.Writef("%lld", normalized.GetInt64());
-			break;
-			}
-		case eZType_Bool:
-			{
-			if (normalized.GetBool())
-				s.Write("true");
-			else
-				s.Write("false");
-			break;
-			}
-		case eZType_Double:
-			{
-			// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
-			// <http://docs.sun.com/source/806-3568/ncg_goldberg.html>
-			s.Writef("%.17g", normalized.GetDouble());
-			break;
-			}
-		case eZType_Null:
-			{
-			s.Write("null");
-			break;
-			}
-		default:
-			{
-			s << "!!Unhandled Type==" << ZTypeAsString(normalized.TypeOf()) << "!!";
-			break;
-			}
+		if (*theValue)
+			s.Write("true");
+		else
+			s.Write("false");
+		}
+	else if (const int8* theValue = ZAnyCast<int8>(&iVal))
+		{
+		s.Writef("%d", int32(*theValue));
+		}
+	else if (const int16* theValue = ZAnyCast<int16>(&iVal))
+		{
+		s.Writef("%d", int32(*theValue));
+		}
+	else if (const int32* theValue = ZAnyCast<int32>(&iVal))
+		{
+		s.Writef("%d", *theValue);
+		}
+	else if (const int64* theValue = ZAnyCast<int64>(&iVal))
+		{
+		s.Writef("%lld", *theValue);
+		}
+	else if (const uint64* theValue = ZAnyCast<uint64>(&iVal))
+		{
+		s.Writef("%llu", *theValue);
+		}
+	else if (const float* theValue = ZAnyCast<float>(&iVal))
+		{
+		s.Writef("%.9g", *theValue);
+		}
+	else if (const double* theValue = ZAnyCast<double>(&iVal))
+		{
+		s.Writef("%.17g", *theValue);
+		}
+	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iVal))
+		{
+		s.Writef("%.17g", theValue->fVal);
+		}
+	else if (const string8* theValue = ZAnyCast<string8>(&iVal))
+		{
+		s << *theValue;
+		}
+	else
+		{
+		s << "!!Unhandled Type!!";
 		}
 	}
 
@@ -490,9 +450,9 @@ ZYadVisitor_JSONWriter::ZYadVisitor_JSONWriter(
 	fMayNeedInitialLF(false)
 	{}
 
-bool ZYadVisitor_JSONWriter::Visit_YadR(ZRef<ZYadR> iYadR)
+bool ZYadVisitor_JSONWriter::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{
-	spToStrim_SimpleValue(fStrimW, sFromYadR_T<ZVal_ZooLib>(iYadR));
+	spToStrim_SimpleValue(fStrimW, iYadPrimR->AsAny());
 	return true;
 	}
 

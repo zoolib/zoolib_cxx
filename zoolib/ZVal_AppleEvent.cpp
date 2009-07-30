@@ -553,10 +553,10 @@ ZVal_AppleEvent ZValMap_AppleEvent::GetAttr(AEKeyword iName) const
 void ZValMap_AppleEvent::SetAttr(AEKeyword iName, const AEDesc& iVal)
 	{ ::AEPutAttributeDesc(this, iName, &iVal); }
 
-ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::begin() const
+ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::Begin() const
 	{ return Index_t(0); }
 
-ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::end() const
+ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::End() const
 	{ return Index_t(this->pCount()); }
 
 AEKeyword ZValMap_AppleEvent::KeyOf(Index_t iIndex) const

@@ -25,12 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
+#include "zoolib/ZAny.h"
 #include "zoolib/ZRef_CFType.h"
 #include "zoolib/ZUnicodeString.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-
-class ZVal_ZooLib;
 
 // =================================================================================================
 #pragma mark -
@@ -67,16 +66,19 @@ ZRef<CFMutableArrayRef> sArrayMutable();
 ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray);
 
 
+ZRef<CFDataRef> sData();
+ZRef<CFDataRef> sData(const void* iSource, size_t iSize);
+
 ZRef<CFMutableDataRef> sDataMutable();
 ZRef<CFMutableDataRef> sDataMutable(size_t iSize);
 ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData);
 
 
-bool sQAsVal_ZooLib(ZRef<CFTypeRef> iVal, ZVal_ZooLib& oVal);
-ZVal_ZooLib sAsVal_ZooLib(ZRef<CFTypeRef> iVal);
+bool sQAsAny(ZRef<CFTypeRef> iVal, ZAny& oVal);
+ZAny sAsAny(ZRef<CFTypeRef> iVal);
 
-bool sQAsCFType(const ZVal_ZooLib& iVal, ZRef<CFTypeRef>& oVal);
-ZRef<CFTypeRef> sAsCFType(const ZVal_ZooLib& iVal);
+bool sQAsCFType(const ZAny& iAny, ZRef<CFTypeRef>& oVal);
+ZRef<CFTypeRef> sAsCFType(const ZAny& iAny);
 
 } // namespace ZUtil_CFType
 

@@ -23,11 +23,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStream_ValData_T.h"
-#include "zoolib/ZValData_ZooLib.h"
+#include "zoolib/ZValData_Any.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-typedef ZValData_ZooLib ZMemoryBlock;
+typedef ZValData_Any ZMemoryBlock;
 
 typedef ZStreamRPos_ValData_T<ZMemoryBlock> ZStreamRPos_MemoryBlock;
 typedef ZStreamRWPos_ValData_T<ZMemoryBlock> ZStreamRWPos_MemoryBlock;

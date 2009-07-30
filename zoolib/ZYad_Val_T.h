@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZYad.h"
+#include "zoolib/ZStream_ValData_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -59,15 +60,32 @@ protected:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYadStreamRPos_Val_T
+
+template <class ValData_t>
+class ZYadStreamRPos_Val_T
+:	public ZYadStreamR,
+	public ZStreamerRPos_T<ZStreamRPos_ValData_T<ValData_t> >
+	{
+public:
+	ZYadStreamRPos_Val_T(const ValData_t& iValData)
+	:	ZStreamerRPos_T<ZStreamRPos_ValData_T<ValData_t> >(iValData)
+		{}
+
+// From ZYadR
+	bool IsSimple(const ZYadOptions& iOptions)
+		{ return this->GetStreamRPos().GetSize() <= iOptions.fRawChunkSize; }
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYadListRPos_Val_T
 
-template <class Self_t, class ValList_t>
+template <class ValList_t>
 class ZYadListRPos_Val_T
 :	public ZYadListRPos
 	{
 public:
-	typedef ZYadListRPos_Val_T YadListBase_t;
-
 	ZYadListRPos_Val_T(const ValList_t& iList)
 	:	fList(iList)
 	,	fPosition(0)
@@ -78,6 +96,57 @@ public:
 	,	fPosition(iPosition)
 		{}
 
+// From ZYadListR via ZYadListRPos
+	virtual ZRef<ZYadR> ReadInc()
+		{
+		if (fPosition < fList.Count())
+			return sMakeYadR(fList.Get(fPosition++));
+		return ZRef<ZYadR>();
+		}
+
+// From ZYadListRPos
+	virtual ZRef<ZYadListRPos> Clone()
+		{ return new ZYadListRPos_Val_T(fList, fPosition); }
+
+	virtual uint64 GetPosition()
+		{ return fPosition; }
+
+	virtual void SetPosition(uint64 iPosition)
+		{ fPosition = iPosition; }
+
+	virtual uint64 GetSize()
+		{ return fList.Count(); }
+
+protected:
+	const ValList_t fList;
+	uint64 fPosition;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadListRPos_Val_Self_T
+
+// Urgh, quite an ugly name.
+
+template <class Self_t, class ValList_t>
+class ZYadListRPos_Val_Self_T
+:	public ZYadListRPos
+	{
+public:
+	typedef ZYadListRPos_Val_Self_T YadListBase_t;
+
+protected:
+	ZYadListRPos_Val_Self_T(const ValList_t& iList)
+	:	fList(iList)
+	,	fPosition(0)
+		{}
+
+	ZYadListRPos_Val_Self_T(const ValList_t& iList, uint64 iPosition)
+	:	fList(iList)
+	,	fPosition(iPosition)
+		{}
+
+public:
 // From ZYadListR via ZYadListRPos
 	virtual ZRef<ZYadR> ReadInc()
 		{
@@ -108,16 +177,16 @@ protected:
 #pragma mark -
 #pragma mark * ZYadMapRPos_Val_T
 
-template <class Self_t, class ValMap_t, class Index_P = typename ValMap_t::Index_t>
+template <class ValMap_t, class Index_P = typename ValMap_t::Index_t>
 class ZYadMapRPos_Val_T
 :	public ZYadMapRPos
 	{
 public:
-	typedef ZYadMapRPos_Val_T YadMapBase_t;
 	typedef Index_P Index_t;
 
 	ZYadMapRPos_Val_T(const ValMap_t& iMap)
 	:	fMap(iMap)
+	,	fIndex(fMap.Begin())
 		{}
 
 	ZYadMapRPos_Val_T(const ValMap_t& iMap, const Index_t& iIndex)
@@ -126,15 +195,69 @@ public:
 		{}
 
 // From ZYadMapR
-	// Redeclared as pure virtual for emphasis. Concrete subclass
-	// has to provide this, because different ValMaps handle iteration differently.
-	virtual ZRef<ZYadR> ReadInc(std::string& oName) = 0;
+	ZRef<ZYadR> ReadInc(std::string& oName)
+		{
+		if (fIndex != fMap.End())
+			{
+			oName = fMap.NameOf(fIndex);
+			return sMakeYadR(fMap.Get(fIndex++));
+			}
+		return ZRef<ZYadR>();
+		}
 
 // From ZYadMapRPos
+	void SetPosition(const std::string& iName)
+		{ fIndex = fMap.IndexOf(iName); }
+
+	virtual ZRef<ZYadMapRPos> Clone()
+		{ return new ZYadMapRPos_Val_T(fMap, fIndex); }
+
+protected:
+	const ValMap_t fMap;
+	Index_t fIndex;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadMapRPos_Val_Self_T
+
+template <class Self_t, class ValMap_t, class Index_P = typename ValMap_t::Index_t>
+class ZYadMapRPos_Val_Self_T
+:	public ZYadMapRPos
+	{
+public:
+	typedef Index_P Index_t;
+
+protected:
+	typedef ZYadMapRPos_Val_Self_T YadMapBase_t;
+	ZYadMapRPos_Val_Self_T(const ValMap_t& iMap)
+	:	fMap(iMap)
+	,	fIndex(fMap.Begin())
+		{}
+
+	ZYadMapRPos_Val_Self_T(const ValMap_t& iMap, const Index_t& iIndex)
+	:	fMap(iMap)
+	,	fIndex(iIndex)
+		{}
+
+public:
+// From ZYadMapR
+	ZRef<ZYadR> ReadInc(std::string& oName)
+		{
+		if (fIndex != fMap.End())
+			{
+			oName = fMap.NameOf(fIndex);
+			return sMakeYadR(fMap.Get(fIndex++));
+			}
+		return ZRef<ZYadR>();
+		}
+
+// From ZYadMapRPos
+	void SetPosition(const std::string& iName)
+		{ fIndex = fMap.IndexOf(iName); }
+
 	virtual ZRef<ZYadMapRPos> Clone()
 		{ return new Self_t(fMap, fIndex); }
-
-	virtual void SetPosition(const std::string& iName) = 0;
 
 protected:
 	const ValMap_t fMap;

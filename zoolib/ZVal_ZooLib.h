@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZVal_ZooLib__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZAny.h"
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZTName.h"
@@ -29,7 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors_Std.h"
 #include "zoolib/ZValAccessors_ZooLib.h"
-#include "zoolib/ZValData_ZooLib.h"
+#include "zoolib/ZVal_Any.h"
+#include "zoolib/ZValData_Any.h"
 
 #include <stdexcept> // For runtime_error
 #include <string>
@@ -49,6 +51,7 @@ class ZStreamR;
 class ZStreamW;
 
 class ZVal_ZooLib;
+typedef ZValData_Any ZValData_ZooLib;
 class ZValList_ZooLib;
 class ZValMap_ZooLib;
 
@@ -72,6 +75,9 @@ class ZVal_ZooLib
 		operator_bool_generator_type, operator_bool_type);
 
 public:
+	static bool sFromAny(const ZAny& iAny, ZVal_ZooLib& oVal);
+	ZAny AsAny() const;
+
 	operator operator_bool_type() const;
 
 	void swap(ZVal_ZooLib& iOther);
@@ -180,7 +186,7 @@ public:
 		float fAs_Float;
 		double fAs_Double;
 		double fAs_Time;
-		void* fAs_Pointer;
+		VoidStar_t fAs_Pointer;
 		ZPointPOD fAs_Point;
 
 		ZRectPOD* fAs_Rect;
@@ -252,6 +258,8 @@ class ZValList_ZooLib
 	class Rep;
 
 public:
+	ZAny AsAny() const;
+
 	operator operator_bool_type() const;
 
 	ZValList_ZooLib();
@@ -378,6 +386,8 @@ public:
 	typedef std::vector<NameVal> PropList;
 	typedef PropList::iterator Index_t;
 
+	ZAny AsAny() const;
+
 	operator operator_bool_type() const;
 
 	ZValMap_ZooLib();
@@ -425,8 +435,8 @@ public:
 	ZVal_ZooLib& Mutable(const char* iPropName);
 	ZVal_ZooLib& Mutable(const ZTName& iPropName);
 
-	Index_t begin() const;
-	Index_t end() const;
+	Index_t Begin() const;
+	Index_t End() const;
 
 	bool Empty() const;
 	size_t Count() const;

@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZYad_ML.h"
-#include "zoolib/ZYad_ZooLib.h"
+#include "zoolib/ZYad_Any.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -60,13 +60,12 @@ ZYadParseException_ML::ZYadParseException_ML(const char* iWhat)
 #pragma mark * ZYadStrimR_ML
 
 class ZYadStrimR_ML
-:	public ZYadR_Std,
-	public ZYadStrimR
+:	public ZYadStrimR
 	{
 public:
 	ZYadStrimR_ML(ZML::Reader& iR);
 
-// From ZYadR_Std
+// From ZYadR
 	virtual void Finish();
 
 // From ZStrimmerR via ZYadStrimR
@@ -94,13 +93,13 @@ ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR)
 :	fR(iR)
 	{}
 
-ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const string& iTagName, const ZML::ValMap& iAttrs)
+ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const string& iTagName, const ZML::Attrs_t& iAttrs)
 :	fR(iR),
 	fTagName(iTagName),
 	fAttrs(iAttrs)
 	{}
 
-ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const ZML::ValMap& iAttrs)
+ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const ZML::Attrs_t& iAttrs)
 :	ZYadMapR_Std(true),
 	fR(iR),
 	fAttrs(iAttrs)
@@ -108,15 +107,20 @@ ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const ZML::ValMap& iAttrs)
 
 ZRef<ZYadR> ZYadMapR_ML::Meta()
 	{
-	if (fAttrs)
-		return new ZYadMapRPos_ZooLib(fAttrs);
+	if (!fAttrs.empty())
+		{
+		ZValMap_Any theMap;
+		for (ZML::Attrs_t::const_iterator i = fAttrs.begin(); i != fAttrs.end(); ++i)
+			theMap.Set((*i).first, (*i).second);
+		return new ZYadMapRPos_Any(theMap);
+		}
 	return ZRef<ZYadR>();
 	}
 
-ZML::ValMap ZYadMapR_ML::GetAttrs()
+ZML::Attrs_t ZYadMapR_ML::GetAttrs()
 	{ return fAttrs; }
 
-void ZYadMapR_ML::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+void ZYadMapR_ML::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	if (!fTagName.empty())
 		{
@@ -130,14 +134,14 @@ void ZYadMapR_ML::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>
 		{
 		case ZML::eToken_TagBegin:
 			{
-			const ZML::ValMap theAttrs = fR.Attrs();
+			const ZML::Attrs_t theAttrs = fR.Attrs();
 			fR.Advance();
 			oYadR = new ZYadMapR_ML(fR, oName, theAttrs);
 			break;
 			}
 		case ZML::eToken_TagEmpty:
 			{
-			const ZML::ValMap theAttrs = fR.Attrs();
+			const ZML::Attrs_t theAttrs = fR.Attrs();
 			fR.Advance();
 			oYadR = new ZYadMapR_ML(fR, theAttrs);
 			break;

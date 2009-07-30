@@ -125,6 +125,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // =================================================================================================
+// ZCONFIG_Is64Bit
+
+#ifndef ZCONFIG_Is64Bit
+#	if 0
+#	elif (ZCONFIG_Processor == ZCONFIG_Processor_PPC_64)
+#		define ZCONFIG_Is64Bit 1
+#	elif (ZCONFIG_Processor == ZCONFIG_Processor_x86_64)
+#		define ZCONFIG_Is64Bit 1
+#	endif
+#endif
+
+#ifndef ZCONFIG_Is64Bit
+#	define ZCONFIG_Is64Bit 0
+#endif
+
+// =================================================================================================
 // We have two different defines for debugging. ZCONFIG_DebugLevel is what type of debugging
 // is wanted for a debug build (one with SYM information being generated). 0 generally means
 // almost no debug code will be generated, although it's legal to have assertions that are always

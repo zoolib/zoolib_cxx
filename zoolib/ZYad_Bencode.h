@@ -48,7 +48,7 @@ public:
 	ZYadListR_Bencode(const ZStreamU& iStreamU);
 
 // From ZYadListR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
 	const ZStreamU& fStreamU;
@@ -64,7 +64,7 @@ public:
 	ZYadMapR_Bencode(const ZStreamU& iStreamU);
 
 // From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	const ZStreamU& fStreamU;

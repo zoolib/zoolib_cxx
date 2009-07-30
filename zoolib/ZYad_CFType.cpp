@@ -22,12 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZStream_ValData_T.h"
 #include "zoolib/ZStrim_CFString.h"
 #include "zoolib/ZUtil_CFType.h"
 #include "zoolib/ZVal_CFType.h"
-#include "zoolib/ZVal_ZooLib.h"
 
 #include <CoreFoundation/CFString.h>
 
@@ -39,57 +37,14 @@ using std::vector;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Factory
+#pragma mark * ZYadPrimR_CFType
 
-namespace ZANONYMOUS {
+ZYadPrimR_CFType::ZYadPrimR_CFType(const ZRef<CFTypeRef>& iVal)
+:	ZYadR_CFType(iVal)
+	{}
 
-// ZRef<CFTypeRef> <-- ZRef<ZYadR>
-class Maker0
-:	public ZFunctionChain_T<ZRef<CFTypeRef>, ZRef<ZYadR> >
-	{
-	virtual bool Invoke(Result_t& oResult, Param_t iParam)
-		{
-		if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iParam))
-			{
-			oResult = theYadR->GetVal();
-			return true;
-			}
-		return false;
-		}	
-	} sMaker0;
-
-// ZRef<CFTypeRef> <-- ZRef<ZYadR>
-class Maker1
-:	public ZFunctionChain_T<ZRef<CFTypeRef>, ZRef<ZYadR> >
-	{
-public:
-	Maker1() : Base_t(false) {}
-
-	virtual bool Invoke(Result_t& oResult, Param_t iParam)
-		{
-		ZVal_ZooLib theVal;
-		if (ZFunctionChain_T<ZVal_ZooLib, ZRef<ZYadR> >::sInvoke(theVal, iParam))
-			return ZUtil_CFType::sQAsCFType(theVal, oResult);
-		return false;
-		}	
-	} sMaker1;
-
-// ZVal_ZooLib <-- ZRef<ZYadR>
-class Maker2
-:	public ZFunctionChain_T<ZVal_ZooLib, ZRef<ZYadR> >
-	{
-public:
-	Maker2() : Base_t(false) {}
-
-	virtual bool Invoke(Result_t& oResult, Param_t iParam)
-		{
-		if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iParam))
-			return ZUtil_CFType::sQAsVal_ZooLib(theYadR->GetVal(), oResult);
-		return false;
-		}	
-	} sMaker2;
-
-} // anonymous namespace
+ZAny ZYadPrimR_CFType::AsAny()
+	{ return ZUtil_CFType::sAsAny(this->GetVal()); }
 
 // =================================================================================================
 #pragma mark -
@@ -218,7 +173,7 @@ ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal)
 	if (theVal.QGetCFString(asCFString))
 		return new ZYadStrimR_CFType(asCFString);
 
-	return new ZYadR_CFType(iVal);
+	return new ZYadPrimR_CFType(iVal);
 	}
 
 // =================================================================================================
@@ -227,11 +182,11 @@ ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal)
 
 namespace ZANONYMOUS {
 
-class YadVisitor_GetValZooLib : public ZYadVisitor
+class YadVisitor_GetValCFType : public ZYadVisitor
 	{
 public:
 // From ZYadVisitor
-	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
+	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
 	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
 	virtual bool Visit_YadListR(ZRef<ZYadListR> iYadListR);
@@ -245,24 +200,24 @@ public:
 template <>
 ZRef<CFTypeRef> sFromYadR_T<ZRef<CFTypeRef> >(ZRef<ZYadR> iYadR)
 	{
-	YadVisitor_GetValZooLib theVisitor;
+	if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iYadR))
+		return theYadR->GetVal();
+
+	YadVisitor_GetValCFType theVisitor;
 	iYadR->Accept(theVisitor);
 	return theVisitor.fOutput;
 	}
 
-bool YadVisitor_GetValZooLib::Visit_YadR(ZRef<ZYadR> iYadR)
-	{
-	fOutput = ZFunctionChain_T<ZRef<CFTypeRef>, ZRef<ZYadR> >::sInvoke(iYadR);
-	return true;
-	}
+bool YadVisitor_GetValCFType::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
+	{ return ZUtil_CFType::sQAsCFType(iYadPrimR->AsAny(), fOutput); }
 
-bool YadVisitor_GetValZooLib::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+bool YadVisitor_GetValCFType::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{
 	fOutput = sReadAll_T<ZValData_CFType>(iYadStreamR->GetStreamR());
 	return true;
 	}
 
-bool YadVisitor_GetValZooLib::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+bool YadVisitor_GetValCFType::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	{
 	ZRef<CFMutableStringRef> result = ZUtil_CFType::sStringMutable();
 	ZStrimW_CFString(result).CopyAllFrom(iYadStrimR->GetStrimR());
@@ -270,7 +225,7 @@ bool YadVisitor_GetValZooLib::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	return true;
 	}
 
-bool YadVisitor_GetValZooLib::Visit_YadListR(ZRef<ZYadListR> iYadListR)
+bool YadVisitor_GetValCFType::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 	{
 	ZValList_CFType theList;
 
@@ -281,7 +236,7 @@ bool YadVisitor_GetValZooLib::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 	return true;
 	}
 
-bool YadVisitor_GetValZooLib::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+bool YadVisitor_GetValCFType::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	{
 	ZValMap_CFType theMap;
 

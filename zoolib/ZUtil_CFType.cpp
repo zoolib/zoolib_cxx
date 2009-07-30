@@ -22,7 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZVal_ZooLib.h"
+#include "zoolib/ZTime.h"
+
+#include <map>
+#include <vector>
 
 #include ZMACINCLUDE2(CoreFoundation,CFArray.h)
 #include ZMACINCLUDE2(CoreFoundation,CFData.h)
@@ -32,6 +35,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include ZMACINCLUDE2(CoreFoundation,CFString.h)
 
 NAMESPACE_ZOOLIB_BEGIN
+
+using std::map;
+using std::pair;
+using std::string;
+using std::vector;
 
 namespace ZUtil_CFType {
 
@@ -151,6 +159,15 @@ ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray)
 		::CFArrayGetCount(iCFArray), iCFArray));
 	}
 
+ZRef<CFDataRef> sData()
+	{ return NoRetain(::CFDataCreate(kCFAllocatorDefault, 0, 0)); }
+
+ZRef<CFDataRef> sData(const void* iSource, size_t iSize)
+	{
+	return NoRetain(::CFDataCreate(kCFAllocatorDefault,
+		static_cast<const UInt8*>(iSource), iSize));
+	}
+
 ZRef<CFMutableDataRef> sDataMutable()
 	{ return NoRetain(::CFDataCreateMutable(kCFAllocatorDefault, 0)); }
 
@@ -168,12 +185,21 @@ ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData)
 #pragma mark -
 #pragma mark * ZUtil_CFType
 
-bool sQAsVal_ZooLib(ZRef<CFTypeRef> iVal, ZVal_ZooLib& oVal)
+static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon)
+	{
+	CFStringRef theKey = static_cast<CFStringRef>(iKey);
+	CFTypeRef theValue = static_cast<CFTypeRef>(iValue);
+
+	map<string, ZAny>* theMap = static_cast<map<string, ZAny>*>(iRefcon);
+	theMap->insert(pair<string, ZAny>(sAsUTF8(theKey), sAsAny(theValue)));
+	}
+
+bool sQAsAny(ZRef<CFTypeRef> iVal, ZAny& oVal)
 	{
 	CFTypeRef theCFTypeRef = iVal;
 	if (!theCFTypeRef)
 		{
-		oVal.Clear();
+		oVal = ZAny();
 		return true;
 		}
 
@@ -181,20 +207,41 @@ bool sQAsVal_ZooLib(ZRef<CFTypeRef> iVal, ZVal_ZooLib& oVal)
 
 	if (theTypeID == ::CFStringGetTypeID())
 		{
-		oVal = ZVal_ZooLib(sAsUTF8(static_cast<CFStringRef>(theCFTypeRef)));
+		oVal = sAsUTF8(static_cast<CFStringRef>(theCFTypeRef));
+		return true;
+		}
+
+	if (theTypeID == ::CFDictionaryGetTypeID())
+		{
+		CFDictionaryRef theDictionaryRef = static_cast<CFDictionaryRef>(theCFTypeRef);
+		map<string, ZAny> theMap;
+		::CFDictionaryApplyFunction(theDictionaryRef, spGatherContents, &theMap);
+		oVal = theMap;
+		return true;
+		}
+
+	if (theTypeID == ::CFArrayGetTypeID())
+		{
+		CFArrayRef theArrayRef = static_cast<CFArrayRef>(theCFTypeRef);
+		vector<ZAny> theVector;
+
+		for (size_t x = 0, theCount = ::CFArrayGetCount(theArrayRef); x < theCount; ++x)
+			theVector.push_back(::CFArrayGetValueAtIndex(theArrayRef, x));
+		oVal = theVector;
+
 		return true;
 		}
 
 	if (theTypeID == ::CFBooleanGetTypeID())
 		{
-		oVal = ZVal_ZooLib(bool(::CFBooleanGetValue(static_cast<CFBooleanRef>(theCFTypeRef))));
+		oVal = bool(::CFBooleanGetValue(static_cast<CFBooleanRef>(theCFTypeRef)));
 		return true;
 		}
 	
 	if (theTypeID == ::CFDateGetTypeID())
 		{
-		oVal = ZVal_ZooLib(ZTime(kCFAbsoluteTimeIntervalSince1970
-			+ ::CFDateGetAbsoluteTime(static_cast<CFDateRef>(theCFTypeRef))));
+		oVal = ZTime(kCFAbsoluteTimeIntervalSince1970
+			+ ::CFDateGetAbsoluteTime(static_cast<CFDateRef>(theCFTypeRef)));
 		return true;
 		}
 	
@@ -202,8 +249,9 @@ bool sQAsVal_ZooLib(ZRef<CFTypeRef> iVal, ZVal_ZooLib& oVal)
 		{
 		CFDataRef theDataRef = static_cast<CFDataRef>(theCFTypeRef);
 		size_t theLength = ::CFDataGetLength(theDataRef);
-		const void* theData = ::CFDataGetBytePtr(theDataRef);
-		oVal = ZVal_ZooLib(theData, theLength);
+		const char* theData
+			= static_cast<const char*>(static_cast<const void*>(::CFDataGetBytePtr(theDataRef)));
+		oVal = vector<char>(theData, theData + theLength);
 		return true;
 		}
 	
@@ -217,7 +265,7 @@ bool sQAsVal_ZooLib(ZRef<CFTypeRef> iVal, ZVal_ZooLib& oVal)
 				{
 				int8 theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberSInt8Type, &theValue);
-				oVal = ZVal_ZooLib(theValue);
+				oVal = theValue;
 				return true;
 				}
 			case kCFNumberSInt16Type:
@@ -225,7 +273,7 @@ bool sQAsVal_ZooLib(ZRef<CFTypeRef> iVal, ZVal_ZooLib& oVal)
 				{
 				int16 theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberSInt16Type, &theValue);
-				oVal = ZVal_ZooLib(theValue);
+				oVal = theValue;
 				return true;
 				}
 			case kCFNumberSInt32Type:
@@ -233,7 +281,7 @@ bool sQAsVal_ZooLib(ZRef<CFTypeRef> iVal, ZVal_ZooLib& oVal)
 				{
 				int32 theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberSInt32Type, &theValue);
-				oVal = ZVal_ZooLib(theValue);
+				oVal = theValue;
 				return true;
 				}
 			case kCFNumberSInt64Type:
@@ -241,7 +289,7 @@ bool sQAsVal_ZooLib(ZRef<CFTypeRef> iVal, ZVal_ZooLib& oVal)
 				{
 				int64 theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberSInt64Type, &theValue);
-				oVal = ZVal_ZooLib(theValue);
+				oVal = theValue;
 				return true;
 				}
 			case kCFNumberFloat32Type:
@@ -249,7 +297,7 @@ bool sQAsVal_ZooLib(ZRef<CFTypeRef> iVal, ZVal_ZooLib& oVal)
 				{
 				float theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberFloat32Type, &theValue);
-				oVal = ZVal_ZooLib(theValue);
+				oVal = theValue;
 				return true;
 				}
 			case kCFNumberFloat64Type:
@@ -257,7 +305,7 @@ bool sQAsVal_ZooLib(ZRef<CFTypeRef> iVal, ZVal_ZooLib& oVal)
 				{
 				double theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberFloat64Type, &theValue);
-				oVal = ZVal_ZooLib(theValue);
+				oVal = theValue;
 				return true;
 				}
 			}
@@ -266,99 +314,106 @@ bool sQAsVal_ZooLib(ZRef<CFTypeRef> iVal, ZVal_ZooLib& oVal)
 	return false;
 	}
 
-ZVal_ZooLib sAsVal_ZooLib(ZRef<CFTypeRef> iVal)
+ZAny sAsAny(ZRef<CFTypeRef> iVal)
 	{
-	ZVal_ZooLib result;
-	if (sQAsVal_ZooLib(iVal, result))
+	ZAny result;
+	if (sQAsAny(iVal, result))
 		return result;
-	return ZVal_ZooLib();
+	return ZAny();
 	}
 
-bool sQAsCFType(const ZVal_ZooLib& iVal, ZRef<CFTypeRef>& oVal)
+bool sQAsCFType(const ZAny& iAny, ZRef<CFTypeRef>& oVal)
 	{
-	switch (iVal.TypeOf())
+	if (false)
+		{}
+	else if (iAny.type() == typeid(void))
 		{
-		case eZType_Null:
+		oVal.Clear();
+		}
+	else if (const string8* theValue = ZAnyCast<string8>(&iAny))
+		{
+		oVal = sString(*theValue);
+		}
+	else if (const vector<char>* theValue = ZAnyCast<vector<char> >(&iAny))
+		{
+		if (size_t theSize = theValue->size())
+			oVal = sData(&(*theValue)[0], theSize);
+		else
+			oVal = sData();
+		}
+	else if (const vector<ZAny>* theValue = ZAnyCast<vector<ZAny> >(&iAny))
+		{
+		ZRef<CFMutableArrayRef> theArray;
+		for (vector<ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
+			i != end; ++i)
 			{
-			oVal.Clear();
-			return true;
+			::CFArrayAppendValue(theArray, sAsCFType(*i));
 			}
-		case eZType_String:
+		oVal = theArray;
+		}
+	else if (const map<string, ZAny>* theValue = ZAnyCast<map<string, ZAny> >(&iAny))
+		{
+		ZRef<CFMutableDictionaryRef> theDictionary = sDictionaryMutable();
+		for (map<string, ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
+			i != end; ++i)
 			{
-			oVal = sString(iVal.GetString());
-			return true;
+			::CFDictionarySetValue(theDictionary, sString((*i).first), sAsCFType((*i).second));
 			}
-		case eZType_Raw:
-			{
-			const ZValData_ZooLib& theData = iVal.GetData();
-			oVal = Adopt_T<CFTypeRef>(::CFDataCreate(kCFAllocatorDefault,
-				static_cast<const UInt8*>(theData.GetData()), theData.GetSize()));
-			return true;
-			}
-		case eZType_Bool:
-			{
-			if (iVal.GetBool())
-				oVal = kCFBooleanTrue;
-			else
-				oVal = kCFBooleanFalse;
-			return true;
-			}
-		case eZType_Time:
-			{
-			oVal = Adopt_T<CFTypeRef>(::CFDateCreate(kCFAllocatorDefault,
-				iVal.GetTime().fVal - kCFAbsoluteTimeIntervalSince1970));
-			return true;
-			}
-		case eZType_Int8:
-			{
-			const int8 theValue = iVal.GetInt8();
-			oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
-				kCFAllocatorDefault, kCFNumberSInt8Type, &theValue));
-			return true;
-			}
-		case eZType_Int16:
-			{
-			const int16 theValue = iVal.GetInt16();
-			oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
-				kCFAllocatorDefault, kCFNumberSInt16Type, &theValue));
-			return true;
-			}
-		case eZType_Int32:
-			{
-			const int32 theValue = iVal.GetInt32();
-			oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
-				kCFAllocatorDefault, kCFNumberSInt32Type, &theValue));
-			return true;
-			}
-		case eZType_Int64:
-			{
-			const int64 theValue = iVal.GetInt64();
-			oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
-				kCFAllocatorDefault, kCFNumberSInt64Type, &theValue));
-			return true;
-			}
-		case eZType_Float:
-			{
-			const float theValue = iVal.GetFloat();
-			oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
-				kCFAllocatorDefault, kCFNumberFloatType, &theValue));
-			return true;
-			}
-		case eZType_Double:
-			{
-			const double theValue = iVal.GetDouble();
-			oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
-				kCFAllocatorDefault, kCFNumberDoubleType, &theValue));
-			return true;
-			}
+		oVal = theDictionary;
+		}
+	else if (const bool* theValue = ZAnyCast<bool>(&iAny))
+		{
+		if (*theValue)
+			oVal = kCFBooleanTrue;
+		else
+			oVal = kCFBooleanFalse;
+		}
+	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iAny))
+		{
+		oVal = Adopt_T<CFTypeRef>(::CFDateCreate(kCFAllocatorDefault,
+			theValue->fVal - kCFAbsoluteTimeIntervalSince1970));
+		}
+	else if (const int8* theValue = ZAnyCast<int8>(&iAny))
+		{
+		oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
+			kCFAllocatorDefault, kCFNumberSInt8Type, theValue));
+		}
+	else if (const int16* theValue = ZAnyCast<int16>(&iAny))
+		{
+		oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
+			kCFAllocatorDefault, kCFNumberSInt16Type, theValue));
+		}
+	else if (const int32* theValue = ZAnyCast<int32>(&iAny))
+		{
+		oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
+			kCFAllocatorDefault, kCFNumberSInt32Type, theValue));
+		}
+	else if (const int64* theValue = ZAnyCast<int64>(&iAny))
+		{
+		oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
+			kCFAllocatorDefault, kCFNumberSInt64Type, theValue));
+		}
+	else if (const float* theValue = ZAnyCast<float>(&iAny))
+		{
+		oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
+			kCFAllocatorDefault, kCFNumberFloatType, theValue));
+		}
+	else if (const double* theValue = ZAnyCast<double>(&iAny))
+		{
+		oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
+			kCFAllocatorDefault, kCFNumberDoubleType, theValue));
+		}
+	else
+		{
+		return false;
 		}
 	return false;
 	}
 
-ZRef<CFTypeRef> sAsCFType(const ZVal_ZooLib& iVal)
+ZRef<CFTypeRef> sAsCFType(const ZAny& iAny)
 	{
 	ZRef<CFTypeRef> result;
-	if (sQAsCFType(iVal, result))
+	if (sQAsCFType(iAny, result))
 		return result;
 
 	return ZRef<CFTypeRef>();

@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimU_Unreader.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
-#include "zoolib/ZYad_StdMore.h"
 #include "zoolib/ZYad_XMLRPC.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -37,13 +36,12 @@ using std::string;
 #pragma mark * ZYadStreamR_XMLRPC
 
 class ZYadStreamR_XMLRPC
-:	public ZYadR_Std,
-	public ZYadStreamR
+:	public ZYadStreamR
 	{
 public:
 	ZYadStreamR_XMLRPC(ZML::Reader& iReader);
 
-// From ZYadR_Std
+// From ZYadR
 	virtual void Finish();
 
 // From ZStreamerR via ZYadStreamR
@@ -60,13 +58,12 @@ private:
 #pragma mark * ZYadStrimR_XMLRPC
 
 class ZYadStrimR_XMLRPC
-:	public ZYadR_Std,
-	public ZYadStrimR
+:	public ZYadStrimR
 	{
 public:
 	ZYadStrimR_XMLRPC(ZML::Reader& iReader);
 
-// From ZYadR_Std
+// From ZYadR
 	virtual void Finish();
 
 // From ZStrimmerR via ZYadStrimR
@@ -86,7 +83,7 @@ public:
 	ZYadListR_XMLRPC(ZML::Reader& iReader);
 
 // From ZYadListR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
 	ZML::Reader& fR;
@@ -102,7 +99,7 @@ public:
 	ZYadMapR_XMLRPC(ZML::Reader& iReader);
 
 // From ZYadMapR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	ZML::Reader& fR;
@@ -162,13 +159,13 @@ static void spRead_TagWrappedText(ZML::Reader& r, const string& iTagName, string
 	spEnd(r, iTagName);
 	}
 
-static bool spTryRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
+static bool spTryRead_SimpleValue(ZML::Reader& r, ZAny& oVal)
 	{
 	if (r.Current() == ZML::eToken_TagEmpty)
 		{
 		if (r.Name() == "nil")
 			{
-			oVal.Clear();
+			oVal = ZAny();
 			r.Advance();
 			return true;
 			}
@@ -192,7 +189,7 @@ static bool spTryRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
 		if (!ZUtil_Strim::sTryRead_SignedDecimalInteger(ZStrimU_Unreader(r.TextStrim()), theInt64))
 			spThrowParseException("Expected valid integer");
 
-		oVal.SetInt32(theInt64);
+		oVal = int32(theInt64);
 		}
 	else if (tagName == "boolean")
 		{
@@ -202,7 +199,8 @@ static bool spTryRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
 			{
 			spThrowParseException("Expected 1 or 0 for boolean");
 			}
-		oVal.SetBool(theInt64);
+
+		oVal = bool(theInt64);
 		}
 	else if (tagName == "double")
 		{
@@ -210,14 +208,11 @@ static bool spTryRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
 		if (!ZUtil_Strim::sTryRead_SignedDouble(ZStrimU_Unreader(r.TextStrim()), theDouble))
 			spThrowParseException("Expected valid double");
 
-		oVal.SetDouble(theDouble);
+		oVal = theDouble;
 		}
 	else if (tagName == "dateTime.iso8601")
 		{
-		string theDate;
-		ZStrimW_String(theDate).CopyAllFrom(r.TextStrim());
-
-		oVal.SetTime(ZUtil_Time::sFromString_ISO8601(theDate));
+		oVal = ZUtil_Time::sFromString_ISO8601(r.TextString());
 		}
 	else if (tagName == "struct")
 		{
@@ -245,15 +240,7 @@ static bool spTryRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
 	return true;
 	}
 
-static void spRead_SimpleValue(ZML::Reader& r, ZVal_ZooLib& oVal)
-	{
-	sSkipText(r);
-
-	if (!spTryRead_SimpleValue(r, oVal))
-		spThrowParseException("Expected value");
-	}
-
-static ZRef<ZYadR_Std> spMakeYadR_XMLRPC(ZML::Reader& r)
+static ZRef<ZYadR> spMakeYadR_XMLRPC(ZML::Reader& r)
 	{
 	sSkipText(r);
 
@@ -281,11 +268,11 @@ static ZRef<ZYadR_Std> spMakeYadR_XMLRPC(ZML::Reader& r)
 			}
 		}
 	
-	ZVal_ZooLib theVal;
+	ZAny theVal;
 	if (spTryRead_SimpleValue(r, theVal))
 		return new ZYadPrimR_Std(theVal);
 
-	return ZRef<ZYadR_Std>();
+	return ZRef<ZYadR>();
 	}
 
 // =================================================================================================
@@ -344,7 +331,7 @@ ZYadListR_XMLRPC::ZYadListR_XMLRPC(ZML::Reader& iReader)
 :	fR(iReader)
 	{}
 
-void ZYadListR_XMLRPC::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+void ZYadListR_XMLRPC::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	sSkipText(fR);
 
@@ -382,7 +369,7 @@ public:
 	ZYadListR_XMLRPC_Params(ZML::Reader& iReader, bool iIsResponse);
 
 // From ZYadListR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
 	ZML::Reader& fR;
@@ -395,7 +382,7 @@ ZYadListR_XMLRPC_Params::ZYadListR_XMLRPC_Params(ZML::Reader& iReader, bool iIsR
 	fIsResponse(iIsResponse)
 	{}
 
-void ZYadListR_XMLRPC_Params::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+void ZYadListR_XMLRPC_Params::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	sSkipText(fR);
 
@@ -444,18 +431,17 @@ public:
 	ZYadListR_XMLRPC_Fault(ZML::Reader& iReader);
 
 // From ZYadListR_Std
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR);
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
 	ZML::Reader& fR;
 	};
 
-
 ZYadListR_XMLRPC_Fault::ZYadListR_XMLRPC_Fault(ZML::Reader& iReader)
 :	fR(iReader)
 	{}
 
-void ZYadListR_XMLRPC_Fault::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR_Std>& oYadR)
+void ZYadListR_XMLRPC_Fault::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	sSkipText(fR);
 
@@ -490,7 +476,7 @@ ZYadMapR_XMLRPC::ZYadMapR_XMLRPC(ZML::Reader& iReader)
 :	fR(iReader)
 	{}
 	
-void ZYadMapR_XMLRPC::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR_Std>& oYadR)
+void ZYadMapR_XMLRPC::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	sSkipText(fR);
 
@@ -582,70 +568,44 @@ static void spToStrim_Map(const ZML::StrimW& s, ZRef<ZYadMapR> iYadMapR)
 	s.End("struct");
 	}
 
-static void spToStrim_SimpleValue(const ZML::StrimW& s, const ZVal_ZooLib& iVal)
+static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 	{
-	switch (iVal.TypeOf())
+	if (false)
+		{}
+	else if (iVal.type() == typeid(void))
 		{
-		case eZType_Int32:
-			{
-			s.Begin("i4");
-				s.Writef("%d", iVal.GetInt32());
-			s.End("i4");
-			break;
-			}
-		case eZType_Double:
-			{
-			s.Begin("double");
-				s.Writef("%.17g", iVal.GetDouble());
-			s.End("double");
-			break;
-			}
-		case eZType_Bool:
-			{
-			s.Begin("boolean");
-				if (iVal.GetBool())
-					s << "1";
-				else
-					s << "0";
-			s.End("boolean");
-			break;
-			}
-		case eZType_Raw:
-			{
-			spToStrim_Stream(s, ZStreamRPos_MemoryBlock(iVal.GetRaw()));
-			break;
-			}
-		case eZType_Time:
-			{
-			s.Begin("dateTime.iso8601");
-				s << ZUtil_Time::sAsString_ISO8601(iVal.GetTime(), true);
-			s.End("dateTime.iso8601");
-			break;
-			}
-		case eZType_Null:
-			{
-			s.Empty("nil");
-			break;
-			}
-		case eZType_Tuple:
-			{
-			ZDebugStopf(1, ("spToStrim_SimpleValue, given a tuple"));
-			break;
-			}
-		case eZType_Vector:
-			{
-			ZDebugStopf(1, ("spToStrim_SimpleValue, given a tuple"));
-			break;
-			}
-		case eZType_String:
-			{
-			ZDebugStopf(1, ("spToStrim_SimpleValue, given a string"));
-			break;
-			}
-		default:
-			{
-			ZDebugStopf(1, ("spToStrim_SimpleValue, given an unsupported type"));
-			}
+		s.Empty("nil");
+		}
+	else if (const bool* theValue = ZAnyCast<bool>(&iVal))
+		{
+		s.Begin("boolean");
+			if (*theValue)
+				s << "1";
+			else
+				s << "0";
+		s.End("boolean");
+		}
+	else if (const int32* theValue = ZAnyCast<int32>(&iVal))
+		{
+		s.Begin("i4");
+			s.Writef("%d", *theValue);
+		s.End("i4");
+		}
+	else if (const double* theValue = ZAnyCast<double>(&iVal))
+		{
+		s.Begin("double");
+			s.Writef("%.17g", *theValue);
+		s.End("double");
+		}
+	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iVal))
+		{
+		s.Begin("dateTime.iso8601");
+			s << ZUtil_Time::sAsString_ISO8601(*theValue, true);
+		s.End("dateTime.iso8601");
+		}
+	else
+		{
+		s << "!!Unsupported type!!";
 		}
 	}
 
@@ -671,10 +631,14 @@ static void spToStrim(const ZML::StrimW& s, ZRef<ZYadR> iYadR)
 		{
 		spToStrim_Strim(s, theYadStrimR->GetStrimR());
 		}
+	else if (ZRef<ZYadPrimR> theYadPrimR = ZRefDynamicCast<ZYadPrimR>(iYadR))
+		{
+		spToStrim_Any(s, theYadPrimR->AsAny());
+		}
 	else
 		{
-		spToStrim_SimpleValue(s, sFromYadR_T<ZVal_ZooLib>(iYadR));
-		}	
+		s << "!!Unrecognized Yad!!";
+		}
 	}
 
 // =================================================================================================

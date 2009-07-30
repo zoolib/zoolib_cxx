@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZFunctionChain.h"
+#include "zoolib/ZYad_Std.h"
 #include "zoolib/ZYad_ZooLib.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -26,28 +26,6 @@ NAMESPACE_ZOOLIB_BEGIN
 using std::pair;
 using std::string;
 using std::vector;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Factory
-
-namespace ZANONYMOUS {
-
-class Maker0
-:	public ZFunctionChain_T<ZVal_ZooLib, ZRef<ZYadR> >
-	{
-	virtual bool Invoke(Result_t& oResult, Param_t iParam)
-		{
-		if (ZRef<ZYadR_ZooLib> theYadR = ZRefDynamicCast<ZYadR_ZooLib>(iParam))
-			{
-			oResult = theYadR->GetVal();
-			return true;
-			}
-		return false;
-		}	
-	} sMaker0;
-
-} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
@@ -101,7 +79,7 @@ static bool spIsSimple(const ZYadOptions& iOptions, const ZVal_ZooLib& iVal)
 				return true;
 
 			if (theMap.Count() == 1)
-				return spIsSimple(iOptions, theMap.RGet(theMap.begin()));
+				return spIsSimple(iOptions, theMap.RGet(theMap.Begin()));
 
 			return false;
 			}
@@ -127,33 +105,26 @@ ZYadR_ZooLib::ZYadR_ZooLib(const ZVal_ZooLib& iVal)
 :	YadBase_t(iVal)
 	{}
 
-ZYadR_ZooLib::ZYadR_ZooLib(ZType iType, const ZStreamR& iStreamR)
-:	YadBase_t(iType, iStreamR)
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadPrimR_ZooLib
+
+ZYadPrimR_ZooLib::ZYadPrimR_ZooLib()
 	{}
 
-bool ZYadR_ZooLib::IsSimple(const ZYadOptions& iOptions)
+ZYadPrimR_ZooLib::ZYadPrimR_ZooLib(const ZVal_ZooLib& iVal)
+:	ZYadR_ZooLib(iVal)
+	{}
+
+ZYadPrimR_ZooLib::ZYadPrimR_ZooLib(ZType iType, const ZStreamR& iStreamR)
+:	ZYadR_ZooLib(ZVal_ZooLib(iType, iStreamR))
+	{}
+
+bool ZYadPrimR_ZooLib::IsSimple(const ZYadOptions& iOptions)
 	{ return spIsSimple(iOptions, fVal); }
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStreamRPos_ZooLib
-
-ZYadStreamRPos_ZooLib::ZYadStreamRPos_ZooLib(const ZValData_ZooLib& iValData)
-:	ZYadR_ZooLib(iValData),
-	ZStreamerRPos_ValData_ZooLib(iValData)
-	{}
-
-bool ZYadStreamRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
-	{ return this->GetStreamRPos().GetSize() <= iOptions.fRawChunkSize; }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadStrimU_String
-
-ZYadStrimU_String::ZYadStrimU_String(const string& iString)
-:	ZYadR_ZooLib(iString),
-	ZStrimmerU_String(this->GetVal().GetString())
-	{}
+ZAny ZYadPrimR_ZooLib::AsAny()
+	{ return fVal.AsAny(); }
 
 // =================================================================================================
 #pragma mark -
@@ -170,7 +141,7 @@ ZYadListRPos_ZooLib::ZYadListRPos_ZooLib(const ZValList_ZooLib& iList, uint64 iP
 	{}
 
 bool ZYadListRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
-	{ return ZYadR_ZooLib::IsSimple(iOptions); }
+	{ return spIsSimple(iOptions, fVal); }
 
 // =================================================================================================
 #pragma mark -
@@ -178,7 +149,7 @@ bool ZYadListRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
 
 ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap)
 :	ZYadR_ZooLib(iMap)
-,	YadMapBase_t(iMap, iMap.begin())
+,	YadMapBase_t(iMap)
 	{}
 
 ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap, const Index_t& iIndex)
@@ -187,20 +158,7 @@ ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap, const Index_t
 	{}
 
 bool ZYadMapRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
-	{ return ZYadR_ZooLib::IsSimple(iOptions); }
-
-ZRef<ZYadR> ZYadMapRPos_ZooLib::ReadInc(string& oName)
-	{
-	if (fIndex != fMap.end())
-		{
-		oName = fMap.NameOf(fIndex).AsString();
-		return sMakeYadR(fMap.Get(fIndex++));
-		}
-	return ZRef<ZYadR>();
-	}
-
-void ZYadMapRPos_ZooLib::SetPosition(const std::string& iName)
-	{ fIndex = fMap.IndexOf(iName); }
+	{ return spIsSimple(iOptions, fVal); }
 
 // =================================================================================================
 #pragma mark -
@@ -216,7 +174,7 @@ ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal)
 		case eZType_String: return new ZYadStrimU_String(iVal.GetString());
 		}
 
-	return new ZYadR_ZooLib(iVal);
+	return new ZYadPrimR_ZooLib(iVal);
 	}
 
 // =================================================================================================
@@ -229,7 +187,7 @@ class YadVisitor_GetValZooLib : public ZYadVisitor
 	{
 public:
 // From ZYadVisitor
-	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
+	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
 	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
 	virtual bool Visit_YadListR(ZRef<ZYadListR> iYadListR);
@@ -243,16 +201,16 @@ public:
 template <>
 ZVal_ZooLib sFromYadR_T<ZVal_ZooLib>(ZRef<ZYadR> iYadR)
 	{
+	if (ZRef<ZYadR_ZooLib> theYadR = ZRefDynamicCast<ZYadR_ZooLib>(iYadR))
+		return theYadR->GetVal();
+
 	YadVisitor_GetValZooLib theVisitor;
 	iYadR->Accept(theVisitor);
 	return theVisitor.fOutput;
 	}
 
-bool YadVisitor_GetValZooLib::Visit_YadR(ZRef<ZYadR> iYadR)
-	{
-	fOutput = ZFunctionChain_T<ZVal_ZooLib, ZRef<ZYadR> >::sInvoke(iYadR);
-	return true;
-	}
+bool YadVisitor_GetValZooLib::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
+	{ return ZVal_ZooLib::sFromAny(iYadPrimR->AsAny(), fOutput); }
 
 bool YadVisitor_GetValZooLib::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{

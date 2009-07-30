@@ -80,6 +80,7 @@ public:
 
 	bool Empty() const;
 
+	operator std::string() const;
 	std::string AsString() const;
 
 private:

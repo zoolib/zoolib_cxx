@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,27 +18,41 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_OSXPList__
-#define __ZUtil_Strim_OSXPList__ 1
-#include "zconfig.h"
+#include "zoolib/ZAny.h"
 
-#include "zoolib/ZYad_XMLPList.h"
-
-#include <stdexcept>
+#if ! ZCONFIG_SPI_Enabled(boost)
 
 NAMESPACE_ZOOLIB_BEGIN
 
-namespace ZUtil_Strim_OSXPList {
+ZAny::ZAny()
+:	content(0)
+	{}
 
-typedef ZYadParseException_XMLPList ParseException;
+ZAny::ZAny(const ZAny& other)
+:	content(other.content ? other.content->clone() : 0)
+	{}
 
-void sToStrim(const ZStrimW& iStrimW, const ZVal_ZooLib& iVal);
+ZAny::~ZAny()
+	{ delete content; }
 
-bool sFromStrim(const ZStrimU& iStrimU, ZVal_ZooLib& oVal);
-bool sFromML(ZML::Reader& r, ZVal_ZooLib& oVal);
+ZAny::ZAny& ZAny::operator=(ZAny rhs)
+	{
+	rhs.swap(*this);
+	return *this;
+	}
 
-} // namespace ZUtil_Strim_OSXPList
+ZAny& ZAny::swap(ZAny& rhs)
+	{
+	std::swap(content, rhs.content);
+	return *this;
+	}
+
+bool ZAny::empty() const
+	{ return !content; }
+
+const std::type_info& ZAny::type() const
+	{ return content ? content->type() : typeid(void); }
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZUtil_Strim_OSXPList__
+#endif // ! ZCONFIG_SPI_Enabled(boost)

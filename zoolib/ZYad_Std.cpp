@@ -38,10 +38,28 @@ ZYadParseException_Std::ZYadParseException_Std(const char* iWhat)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadR_Std
+#pragma mark * ZYadPrimR_Std
 
-void ZYadR_Std::Finish()
+ZYadPrimR_Std::ZYadPrimR_Std(const ZAny& iAny)
+:	fAny(iAny)
 	{}
+
+ZYadPrimR_Std::~ZYadPrimR_Std()
+	{}
+
+ZAny ZYadPrimR_Std::AsAny()
+	{ return fAny; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadStrimU_String
+
+ZYadStrimU_String::ZYadStrimU_String(const string& iString)
+:	ZStrimmerU_String(iString)
+	{}
+
+bool ZYadStrimU_String::IsSimple(const ZYadOptions& iOptions)
+	{ return true; }
 
 // =================================================================================================
 #pragma mark -

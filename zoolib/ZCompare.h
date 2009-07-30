@@ -39,29 +39,49 @@ template <> inline int sCompare_T(const ZType& iL, const ZType& iR)
 template <> inline int sCompare_T(const bool& iL, const bool& iR)
 	{ return int(iL) - int(iR); }
 
-template <> inline int sCompare_T(const int8& iL, const int8& iR)
+// We use real type names, rather than the int8/int16/int32 etc stuff
+// because there's no telling when an int8 is going to be a char vs a
+// signed char, nor if an int32 is an int or a long, and we want sCompare_T
+// to work for everything.
+
+template <> inline int sCompare_T(const char& iL, const char& iR)
 	{ return iL - iR; }
 
-template <> inline int sCompare_T(const int16& iL, const int16& iR)
+template <> inline int sCompare_T(const unsigned char& iL, const unsigned char& iR)
+	{ return int(iL) - int(iR); }
+
+template <> inline int sCompare_T(const signed char& iL, const signed char& iR)
 	{ return iL - iR; }
 
-template <> inline int sCompare_T(const int32& iL, const int32& iR)
-	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
+
+template <> inline int sCompare_T(const short& iL, const short& iR)
+	{ return iL - iR; }
+
+template <> inline int sCompare_T(const unsigned short& iL, const unsigned short& iR)
+	{ return int(iL) - int(iR); }
+
+
+template <> inline int sCompare_T(const int& iL, const int& iR)
+	{ return iL - iR; }
+
+template <> inline int sCompare_T(const unsigned int& iL, const unsigned int& iR)
+	{ return int(iL) - int(iR); }
+
+
+template <> inline int sCompare_T(const long& iL, const long& iR)
+	{ return iL - iR; }
+
+template <> inline int sCompare_T(const unsigned long& iL, const unsigned long& iR)
+	{ return int(iL) - int(iR); }
+
 
 template <> inline int sCompare_T(const int64& iL, const int64& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
-template <> inline int sCompare_T(const uint8& iL, const uint8& iR)
-	{ return int(iL) - int(iR); }
-
-template <> inline int sCompare_T(const uint16& iL, const uint16& iR)
-	{ return int(iL) - int(iR); }
-
-template <> inline int sCompare_T(const uint32& iL, const uint32& iR)
-	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
 template <> inline int sCompare_T(const uint64& iL, const uint64& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
+
 
 template <> inline int sCompare_T(const VoidStar_t& iL, const VoidStar_t& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }

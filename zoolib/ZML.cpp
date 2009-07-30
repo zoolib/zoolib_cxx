@@ -370,11 +370,11 @@ const string& Reader::Name() const
 	return sEmptyString;
 	}
 
-ValMap Reader::Attrs() const
+Attrs_t Reader::Attrs() const
 	{
 	if (fToken == eToken_TagBegin || fToken == eToken_TagEmpty)
 		return fTagAttributes;
-	return ValMap();
+	return Attrs_t();
 	}
 
 const ZStrimR& Reader::TextStrim()
@@ -471,7 +471,7 @@ void Reader::pAdvance()
 	{
 	using namespace ZUtil_Strim;
 
-	fTagAttributes.Clear();
+	fTagAttributes.clear();
 
 	for	(;;)
 		{
@@ -587,11 +587,11 @@ void Reader::pAdvance()
 							fToken = eToken_Exhausted;
 							return;
 							}
-						fTagAttributes.Set(attributeName, attributeValue);
+						fTagAttributes.push_back(Attr_t(attributeName, attributeValue));
 						}
 					else
 						{
-						fTagAttributes.Set(attributeName, Val());
+						fTagAttributes.push_back(Attr_t(attributeName, string()));
 						}
 					}
 
@@ -706,7 +706,7 @@ void StrimR::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 				{
 				case eToken_TagBegin:
 					{
-					fTags.push_back(pair<string, ValMap>(fReader.Name(), fReader.Attrs()));
+					fTags.push_back(pair<string, Attrs_t>(fReader.Name(), fReader.Attrs()));
 					break;
 					}
 				case eToken_TagEnd:
@@ -737,7 +737,7 @@ string StrimR::BackName() const
 	return fTags.back().first;
 	}
 
-ValMap StrimR::BackAttr() const
+Attrs_t StrimR::BackAttr() const
 	{
 	ZAssert(!fTags.empty());
 	return fTags.back().second;
@@ -745,23 +745,23 @@ ValMap StrimR::BackAttr() const
 
 void StrimR::AllNames(vector<string>& oNames) const
 	{
-	for (vector<pair<string, ValMap> >::const_iterator i = fTags.begin();
+	for (vector<pair<string, Attrs_t> >::const_iterator i = fTags.begin();
 		i != fTags.end(); ++i)
 		{
 		oNames.push_back((*i).first);
 		}
 	}
 
-void StrimR::AllAttrs(vector<ValMap>& oAttrs) const
+void StrimR::AllAttrs(vector<Attrs_t>& oAttrs) const
 	{
-	for (vector<pair<string, ValMap> >::const_iterator i = fTags.begin();
+	for (vector<pair<string, Attrs_t> >::const_iterator i = fTags.begin();
 		i != fTags.end(); ++i)
 		{
 		oAttrs.push_back((*i).second);
 		}
 	}
 
-const vector<pair<string, ValMap> >& StrimR::All() const
+const vector<pair<string, Attrs_t> >& StrimR::All() const
 	{
 	return fTags;
 	}
@@ -1235,70 +1235,10 @@ const StrimW& StrimW::Attrf(const string8& iName, const UTF8* iValue, ...) const
 	return *this;
 	}
 
-const StrimW& StrimW::Attr(const string8& iName, const Val& iValue) const
+const StrimW& StrimW::Attrs(const Attrs_t& iMap) const
 	{
-	// The first few types, up to time, will not have any code points
-	// that need entity encoding, and so we call pAttr directly.
-	// String and the default case could contain anything, so we
-	// call Attr(const string8&, const string8&) and return from the switch.
-	string8* theString = nullptr;
-	switch (iValue.TypeOf())
-		{
-		case eZType_Null:
-			break;
-		case eZType_ID:
-			theString = new string8(ZString::sFormat("%lld", iValue.GetID()));
-			break;
-		case eZType_Int8:
-			theString = new string8(ZString::sFormat("%d", iValue.GetInt8()));
-			break;
-		case eZType_Int16:
-			theString = new string8(ZString::sFormat("%d", iValue.GetInt16()));
-			break;
-		case eZType_Int32:
-			theString = new string8(ZString::sFormat("%d", iValue.GetInt32()));
-			break;
-		case eZType_Int64:
-			theString = new string8(ZString::sFormat("%lld", iValue.GetInt64()));
-			break;
-		case eZType_Bool:
-			{
-			if (iValue.GetBool())
-				theString = new string8("true");
-			else
-				theString = new string8("false");
-			break;
-			}
-		case eZType_Float:
-			theString = new string8(ZString::sFormat("%.9g", iValue.GetFloat()));
-			break;
-		case eZType_Double:
-			theString = new string8(ZString::sFormat("%.17g", iValue.GetDouble()));
-			break;
-		case eZType_Time:
-			{
-			if (ZTime theTime = iValue.GetTime())
-				theString = new string8(ZUtil_Time::sAsString_ISO8601(theTime, false));
-			else
-				theString = new string8;
-			break;
-			}
-		case eZType_String:
-			this->Attr(iName, iValue.GetString());
-			return *this;
-		default:
-			this->Attr(iName, ZUtil_Strim_Tuple::sAsString(iValue));
-			return *this;
-		}
-	const_cast<StrimW*>(this)->pAttr(iName, theString);	
-
-	return *this;
-	}
-
-const StrimW& StrimW::Attrs(const ValMap& iMap) const
-	{
-	for (ValMap::Index_t i = iMap.begin(); i != iMap.end(); ++i)
-		this->Attr(iMap.NameOf(i).AsString(), iMap.Get(i));
+	for (Attrs_t::const_iterator i = iMap.begin(); i != iMap.end(); ++i)
+		this->Attr((*i).first, (*i).second);
 
 	return *this;
 	}
