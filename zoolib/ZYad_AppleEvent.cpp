@@ -35,7 +35,7 @@ using std::string;
 static ZValMap_Any spAsMap(const AEDesc& iAEDesc)
 	{
 	ZValMap_Any theMap;
-	theMap.Set("AEType", sAEKeywordAsString(iAEDesc.descriptorType));
+	theMap.Set("!AEType", sAEKeywordAsString(iAEDesc.descriptorType));
 
 	const size_t theSize = ::AEGetDescDataSize(&iAEDesc);
 	ZValData_Any theData(theSize);
