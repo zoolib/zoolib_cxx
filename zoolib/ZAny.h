@@ -53,6 +53,14 @@ NAMESPACE_ZOOLIB_END
 #include "zoolib/ZCompat_algorithm.h" // For swap
 #include <typeinfo>
 
+#ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
+	#if ZCONFIG(Compiler, CodeWarrior)
+		#if __MWERKS__ <= 0x3206
+			#define BOOST_NO_MEMBER_TEMPLATE_FRIENDS
+		#endif
+	#endif
+#endif
+
 NAMESPACE_ZOOLIB_BEGIN
 
 class ZAny
@@ -108,13 +116,16 @@ private:
 		holder& operator=(const holder&);
 		};
 	
+#ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 private: // representation
 	template<typename ValueType>
 	friend ValueType* ZAnyCast(ZAny*);
 
 	template<typename ValueType>
 	friend const ValueType* ZAnyCast(const ZAny*);
-	
+#else
+    public: // representation (public so any_cast can be non-friend)
+#endif	
 	placeholder* content;	
 	};
 

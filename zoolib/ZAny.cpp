@@ -35,7 +35,7 @@ ZAny::ZAny(const ZAny& other)
 ZAny::~ZAny()
 	{ delete content; }
 
-ZAny::ZAny& ZAny::operator=(ZAny rhs)
+ZAny& ZAny::operator=(ZAny rhs)
 	{
 	rhs.swap(*this);
 	return *this;

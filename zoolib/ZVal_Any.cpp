@@ -74,16 +74,37 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Map, ZValMap_Any)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZValList_Any::Rep
+
+class ZValList_Any::Rep
+:	public ZRefCounted
+	{
+public:
+	Rep() {}
+
+	virtual ~Rep() {}
+	
+	Rep(const vector<ZAny>& iVector)
+	:	fVector(iVector)
+		{}
+
+private:
+	vector<ZAny> fVector;
+	friend class ZValList_Any;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZValList_Any
 
-ZValList_Any::operator bool() const
-	{ return this->size(); }
+ZValList_Any::operator operator_bool_type() const
+	{ return operator_bool_generator_type::translate(fRep && !fRep->fVector.empty()); }
 
 ZValList_Any::ZValList_Any()
 	{}
 
 ZValList_Any::ZValList_Any(const ZValList_Any& iOther)
-:	inherited(iOther)
+:	fRep(iOther.fRep)
 	{}
 
 ZValList_Any::~ZValList_Any()
@@ -91,31 +112,35 @@ ZValList_Any::~ZValList_Any()
 
 ZValList_Any& ZValList_Any::operator=(const ZValList_Any& iOther)
 	{
-	inherited::operator=(iOther);
+	fRep = iOther.fRep;
 	return *this;
 	}
 
 ZValList_Any::ZValList_Any(vector<ZAny>& iOther)
-:	inherited(iOther)
+:	fRep(new Rep(iOther))
 	{}
 
 ZValList_Any& ZValList_Any::operator=(vector<ZAny>& iOther)
 	{
-	inherited::operator=(iOther);
+	fRep = new Rep(iOther);
 	return *this;
 	}
 
 size_t ZValList_Any::Count() const
-	{ return inherited::size(); }
+	{
+	if (fRep)
+		return fRep->fVector.size();
+	return 0;
+	}
 
 void ZValList_Any::Clear()
-	{ inherited::clear(); }
+	{ fRep.Clear(); }
 
 bool ZValList_Any::QGet(size_t iIndex, ZVal_Any& oVal) const
 	{
-	if (iIndex < inherited::size())
+	if (fRep && iIndex < fRep->fVector.size())
 		{
-		oVal = (*this)[iIndex];
+		oVal = fRep->fVector[iIndex];
 		return true;
 		}
 	return false;
@@ -123,57 +148,97 @@ bool ZValList_Any::QGet(size_t iIndex, ZVal_Any& oVal) const
 
 ZVal_Any ZValList_Any::DGet(size_t iIndex, const ZVal_Any& iDefault) const
 	{
-	if (iIndex < inherited::size())
-		return (*this)[iIndex];
+	if (fRep && iIndex < fRep->fVector.size())
+		return fRep->fVector[iIndex];
+
 	return iDefault;
 	}
 
 ZVal_Any ZValList_Any::Get(size_t iIndex) const
 	{
-	if (iIndex < inherited::size())
-		return (*this)[iIndex];
+	if (fRep && iIndex < fRep->fVector.size())
+		return fRep->fVector[iIndex];
+
 	return ZVal_Any();
 	}
 
 void ZValList_Any::Set(size_t iIndex, const ZVal_Any& iVal)
 	{
-	if (iIndex < inherited::size())
-		(*this)[iIndex] = iVal;
+	if (fRep && iIndex < fRep->fVector.size())
+		{
+		this->pTouch();
+		fRep->fVector[iIndex] = static_cast<const ZAny&>(iVal);
+		}
 	}
 
 void ZValList_Any::Erase(size_t iIndex)
 	{
-	if (iIndex < inherited::size())
-		inherited::erase(inherited::begin() + iIndex);
+	if (fRep && iIndex < fRep->fVector.size())
+		{
+		this->pTouch();
+		fRep->fVector.erase(fRep->fVector.begin() + iIndex);
+		}
 	}
 
 void ZValList_Any::Insert(size_t iIndex, const ZVal_Any& iVal)
 	{
-	if (iIndex <= inherited::size())
-		inherited::insert((inherited::begin() + iIndex), iVal);
+	this->pTouch();
+	if (iIndex <= fRep->fVector.size())
+		fRep->fVector.insert((fRep->fVector.begin() + iIndex), static_cast<const ZAny&>(iVal));
 	}
 
 void ZValList_Any::Append(const ZVal_Any& iVal)
-	{ inherited::push_back(iVal); }
+	{
+	this->pTouch();
+	fRep->fVector.push_back(static_cast<const ZAny&>(iVal));
+	}
 
 vector<ZAny>& ZValList_Any::OParam()
 	{
-	inherited::clear();
-	return *this;
+	fRep = new Rep;
+	return fRep->fVector;
 	}
+
+void ZValList_Any::pTouch()
+	{
+	if (!fRep)
+		{
+		fRep = new Rep;
+		}
+	else if (fRep->GetRefCount() != 1)
+		{
+		fRep = new Rep(fRep->fVector);
+		}
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZValMap_Any::Rep
+
+ZValMap_Any::Rep::Rep()
+	{}
+
+ZValMap_Any::Rep::~Rep()
+	{}
+
+ZValMap_Any::Rep::Rep(const map<string, ZAny>& iMap)
+:	fMap(iMap)
+	{}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValMap_Any
 
-ZValMap_Any::operator bool() const
-	{ return inherited::size(); }
+static map<string, ZAny> spEmptyMap;
+
+ZValMap_Any::operator operator_bool_type() const
+	{ return operator_bool_generator_type::translate(fRep && !fRep->fMap.empty()); }
 
 ZValMap_Any::ZValMap_Any()
 	{}
 
 ZValMap_Any::ZValMap_Any(const ZValMap_Any& iOther)
-:	inherited(iOther)
+:	fRep(iOther.fRep)
 	{}
 
 ZValMap_Any::~ZValMap_Any()
@@ -181,29 +246,40 @@ ZValMap_Any::~ZValMap_Any()
 
 ZValMap_Any& ZValMap_Any::operator=(const ZValMap_Any& iOther)
 	{
-	inherited::operator=(iOther);
+	fRep = iOther.fRep;
 	return *this;
 	}
 
 ZValMap_Any::ZValMap_Any(const map<string, ZAny>& iOther)
-:	inherited(iOther)
+:	fRep(new Rep(iOther.begin(), iOther.end()))
 	{}
 
 ZValMap_Any& ZValMap_Any::operator=(map<string, ZAny>& iOther)
 	{
-	inherited::operator=(iOther);
+	fRep = new Rep(iOther.begin(), iOther.end());
 	return *this;
 	}
 
 void ZValMap_Any::Clear()
-	{ inherited::clear(); }
+	{ fRep.Clear(); }
 
 bool ZValMap_Any::QGet(const string8& iName, ZVal_Any& oVal) const
-	{ return this->QGet(inherited::find(iName), oVal); }
+	{
+	if (fRep)
+		{
+		Index_t theIndex = fRep->fMap.find(iName);
+		if (theIndex != fRep->fMap.end())
+			{
+			oVal = (*theIndex).second;
+			return true;
+			}
+		}
+	return false;
+	}
 
 bool ZValMap_Any::QGet(const Index_t& iIndex, ZVal_Any& oVal) const
 	{
-	if (iIndex != inherited::end())
+	if (fRep && iIndex != fRep->fMap.end())
 		{
 		oVal = (*iIndex).second;
 		return true;
@@ -212,65 +288,97 @@ bool ZValMap_Any::QGet(const Index_t& iIndex, ZVal_Any& oVal) const
 	}
 
 ZVal_Any ZValMap_Any::DGet(const string8& iName, const ZVal_Any& iDefault) const
-	{ return this->DGet(inherited::find(iName), iDefault); }
+	{
+	if (fRep)
+		{
+		Index_t theIndex = fRep->fMap.find(iName);
+		if (theIndex != fRep->fMap.end())
+			return (*theIndex).second;
+		}
+	return iDefault;
+	}
 
 ZVal_Any ZValMap_Any::DGet(const Index_t& iIndex, const ZVal_Any& iDefault) const
 	{
-	if (iIndex != inherited::end())
+	if (fRep && iIndex != fRep->fMap.end())
 		return (*iIndex).second;
-
 	return iDefault;
 	}
 
 ZVal_Any ZValMap_Any::Get(const string8& iName) const
-	{ return this->Get(inherited::find(iName)); }
+	{
+	if (fRep)
+		{
+		Index_t theIndex = fRep->fMap.find(iName);
+		if (theIndex != fRep->fMap.end())
+			return (*theIndex).second;
+		}
+	return ZVal_Any();
+	}
 
 ZVal_Any ZValMap_Any::Get(const Index_t& iIndex) const
 	{
-	if (iIndex != inherited::end())
+	if (fRep && iIndex != fRep->fMap.end())
 		return (*iIndex).second;
-
 	return ZVal_Any();
 	}
 
 void ZValMap_Any::Set(const string8& iName, const ZVal_Any& iVal)
-	{ inherited::insert(pair<string8, ZAny>(iName, iVal)); }
+	{
+	this->pTouch();
+	fRep->fMap.insert(pair<string8, ZAny>(iName, static_cast<const ZAny&>(iVal)));
+	}
 
 void ZValMap_Any::Set(const Index_t& iIndex, const ZVal_Any& iVal)
 	{
-	// Urg. Do this so it works, but the point of using
-	// the iterator is for performance.
-	if (iIndex != inherited::end())
-		{
-		iterator i = inherited::find((*iIndex).first);
-		(*i).second = iVal;
-		}
+	map<string, ZAny>::iterator theIndex = this->pTouch(iIndex);
+	if (theIndex != this->End())
+		(*theIndex).second = static_cast<const ZAny&>(iVal);
 	}
 
 void ZValMap_Any::Erase(const Index_t& iIndex)
 	{
-	if (iIndex != inherited::end())
-		inherited::erase(inherited::find((*iIndex).first));
+	map<string, ZAny>::iterator theIndex = this->pTouch(iIndex);
+	if (theIndex != this->End())
+		fRep->fMap.erase(theIndex);
 	}
 
 void ZValMap_Any::Erase(const string8& iName)
-	{ inherited::erase(iName); }
+	{
+	if (fRep)
+		{
+		this->pTouch();
+		fRep->fMap.erase(iName);
+		}
+	}
 
 ZValMap_Any::Index_t ZValMap_Any::Begin() const
-	{ return inherited::begin(); }
+	{
+	if (fRep)
+		return fRep->fMap.begin();
+	return spEmptyMap.begin();
+	}
 
 ZValMap_Any::Index_t ZValMap_Any::End() const
-	{ return inherited::end(); }
-
-string8 ZValMap_Any::NameOf(Index_t iIndex) const
 	{
-	if (iIndex != inherited::end())
+	if (fRep)
+		return fRep->fMap.end();
+	return spEmptyMap.end();
+	}
+
+string8 ZValMap_Any::NameOf(const Index_t& iIndex) const
+	{
+	if (fRep && iIndex != fRep->fMap.end())
 		return (*iIndex).first;
 	return string8();
 	}
 
 ZValMap_Any::Index_t ZValMap_Any::IndexOf(const string8& iName) const
-	{ return inherited::find(iName); }
+	{
+	if (fRep)
+		return fRep->fMap.find(iName);
+	return spEmptyMap.end();
+	}
 
 ZValMap_Any::Index_t ZValMap_Any::IndexOf(
 	const ZValMap_Any& iOther, const Index_t& iOtherIndex) const
@@ -282,8 +390,38 @@ ZValMap_Any::Index_t ZValMap_Any::IndexOf(
 
 map<string, ZAny>& ZValMap_Any::OParam()
 	{
-	inherited::clear();
-	return *this;
+	fRep = new Rep;
+	return fRep->fMap;
+	}
+
+void ZValMap_Any::pTouch()
+	{
+	if (!fRep)
+		{
+		fRep = new Rep;
+		}
+	else if (fRep->GetRefCount() != 1)
+		{
+		fRep = new Rep(fRep->fMap);
+		}
+	}
+
+map<string, ZAny>::iterator ZValMap_Any::pTouch(const Index_t& iIndex)
+	{
+	if (!fRep)
+		{
+		return spEmptyMap.end();
+		}
+	else if (fRep->GetRefCount() != 1)
+		{
+		const string theName = (*iIndex).first;
+		fRep = new Rep(fRep->fMap);
+		return fRep->fMap.find(theName);
+		}
+	else
+		{
+		return iIndex;
+		}
 	}
 
 NAMESPACE_ZOOLIB_END

@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAny.h"
 #include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZRef.h"
+#include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors.h"
@@ -130,11 +132,14 @@ public:
 #pragma mark * ZValList_Any
 
 class ZValList_Any
-:	public vector<ZAny>
 	{
-	typedef vector<ZAny> inherited;
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZValMap_Any,
+		operator_bool_generator_type, operator_bool_type);
+
+	class Rep;
+
 public:
-	operator bool() const;
+	operator operator_bool_type() const;
 
 	ZValList_Any();
 	ZValList_Any(const ZValList_Any& iOther);
@@ -164,6 +169,11 @@ public:
 
 // Our protocol
 	vector<ZAny>& OParam();
+
+private:
+	void pTouch();
+
+	ZRef<Rep> fRep;
 	};
 
 // =================================================================================================
@@ -171,13 +181,16 @@ public:
 #pragma mark * ZValMap_Any
 
 class ZValMap_Any
-:	public map<string8, ZAny>
 	{
-	typedef map<string8, ZAny> inherited;
-public:
-	typedef inherited::const_iterator Index_t;
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZValMap_Any,
+		operator_bool_generator_type, operator_bool_type);
 
-	operator bool() const;
+	class Rep;
+
+public:
+	typedef map<string, ZAny>::iterator Index_t;
+
+	operator operator_bool_type() const;
 
 	ZValMap_Any();
 	ZValMap_Any(const ZValMap_Any& iOther);
@@ -188,14 +201,10 @@ public:
 	ZValMap_Any& operator=(map<string, ZAny>& iOther);
 
 	template <class T>
-	ZValMap_Any(const vector<pair<string, T> >& iOther)
-	:	inherited(iOther.begin(), iOther.end())
-		{}
+	ZValMap_Any(const vector<pair<string, T> >& iOther);
 
 	template <class T>
-	ZValMap_Any(const map<string, T>& iOther)
-	:	inherited(iOther.begin(), iOther.end())
-		{}
+	ZValMap_Any(const map<string, T>& iOther);
 
 // ZValMap protocol
 	void Clear();
@@ -219,13 +228,56 @@ public:
 	Index_t Begin() const;
 	Index_t End() const;
 
-	string8 NameOf(Index_t iIndex) const;
+	string8 NameOf(const Index_t& iIndex) const;
 	Index_t IndexOf(const string8& iName) const;
 
 	Index_t IndexOf(const ZValMap_Any& iOther, const Index_t& iOtherIndex) const;
 
 	map<string, ZAny>& OParam();
+
+private:
+	void pTouch();
+	map<string, ZAny>::iterator pTouch(const Index_t& iIndex);
+
+	ZRef<Rep> fRep;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZValMap_Any::Rep
+
+class ZValMap_Any::Rep
+:	public ZRefCounted
+	{
+public:
+	Rep();
+	virtual ~Rep();
+	
+	Rep(const map<string, ZAny>& iMap);
+
+	template <class Iterator>
+	Rep(Iterator begin, Iterator end)
+	:	fMap(begin, end)
+		{}
+
+private:
+	map<string, ZAny> fMap;
+	friend class ZValMap_Any;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZValMap_Any, inline templated constructors
+
+template <class T>
+ZValMap_Any::ZValMap_Any(const vector<pair<string, T> >& iOther)
+:	fRep(new Rep(iOther.begin(), iOther.end()))
+	{}
+
+template <class T>
+ZValMap_Any::ZValMap_Any(const map<string, T>& iOther)
+:	fRep(new Rep(iOther.begin(), iOther.end()))
+	{}
 
 NAMESPACE_ZOOLIB_END
 
