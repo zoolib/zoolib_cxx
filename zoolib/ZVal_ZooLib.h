@@ -30,7 +30,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors_Std.h"
 #include "zoolib/ZValAccessors_ZooLib.h"
-#include "zoolib/ZVal_Any.h"
 #include "zoolib/ZValData_Any.h"
 
 #include <stdexcept> // For runtime_error

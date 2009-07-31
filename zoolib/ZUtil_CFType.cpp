@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(CFType)
 
 #include "zoolib/ZTime.h"
+#include "zoolib/ZVal_Any.h"
 
 #include <map>
 #include <vector>
@@ -190,8 +191,8 @@ static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon
 	CFStringRef theKey = static_cast<CFStringRef>(iKey);
 	CFTypeRef theValue = static_cast<CFTypeRef>(iValue);
 
-	map<string, ZAny>* theMap = static_cast<map<string, ZAny>*>(iRefcon);
-	theMap->insert(pair<string, ZAny>(sAsUTF8(theKey), sAsAny(theValue)));
+	ZValMap_Any* theMap = static_cast<ZValMap_Any*>(iRefcon);
+	theMap->Set(sAsUTF8(theKey), sAsAny(theValue));
 	}
 
 bool sQAsAny(ZRef<CFTypeRef> iVal, ZAny& oVal)
@@ -214,7 +215,7 @@ bool sQAsAny(ZRef<CFTypeRef> iVal, ZAny& oVal)
 	if (theTypeID == ::CFDictionaryGetTypeID())
 		{
 		CFDictionaryRef theDictionaryRef = static_cast<CFDictionaryRef>(theCFTypeRef);
-		map<string, ZAny> theMap;
+		ZValMap_Any theMap;
 		::CFDictionaryApplyFunction(theDictionaryRef, spGatherContents, &theMap);
 		oVal = theMap;
 		return true;
@@ -223,11 +224,12 @@ bool sQAsAny(ZRef<CFTypeRef> iVal, ZAny& oVal)
 	if (theTypeID == ::CFArrayGetTypeID())
 		{
 		CFArrayRef theArrayRef = static_cast<CFArrayRef>(theCFTypeRef);
-		vector<ZAny> theVector;
+		ZValList_Any theList;
 
 		for (size_t x = 0, theCount = ::CFArrayGetCount(theArrayRef); x < theCount; ++x)
-			theVector.push_back(::CFArrayGetValueAtIndex(theArrayRef, x));
-		oVal = theVector;
+			theList.Append(sAsAny(::CFArrayGetValueAtIndex(theArrayRef, x)));
+
+		oVal = theList;
 
 		return true;
 		}
@@ -351,6 +353,15 @@ bool sQAsCFType(const ZAny& iAny, ZRef<CFTypeRef>& oVal)
 			}
 		oVal = theArray;
 		}
+	else if (const ZValList_Any* theValue = ZAnyCast<ZValList_Any>(&iAny))
+		{
+		ZRef<CFMutableArrayRef> theArray;
+		for (size_t x = 0, count = theValue->Count(); x < count; ++x)
+			{
+			::CFArrayAppendValue(theArray, sAsCFType(theValue->Get(x)));
+			}
+		oVal = theArray;
+		}
 	else if (const map<string, ZAny>* theValue = ZAnyCast<map<string, ZAny> >(&iAny))
 		{
 		ZRef<CFMutableDictionaryRef> theDictionary = sDictionaryMutable();
@@ -358,6 +369,17 @@ bool sQAsCFType(const ZAny& iAny, ZRef<CFTypeRef>& oVal)
 			i != end; ++i)
 			{
 			::CFDictionarySetValue(theDictionary, sString((*i).first), sAsCFType((*i).second));
+			}
+		oVal = theDictionary;
+		}
+	else if (const ZValMap_Any* theValue = ZAnyCast<ZValMap_Any>(&iAny))
+		{
+		ZRef<CFMutableDictionaryRef> theDictionary = sDictionaryMutable();
+		for (ZValMap_Any::Index_t i = theValue->Begin(), end = theValue->End();
+			i != end; ++i)
+			{
+			::CFDictionarySetValue(theDictionary,
+				sString(theValue->NameOf(i)), sAsCFType(theValue->Get(i)));
 			}
 		oVal = theDictionary;
 		}

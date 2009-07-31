@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZStream_ValData_T.h"
+#include "zoolib/ZVal_Any.h"
 #include "zoolib/ZVal_ZooLib.h"
 
 #include <map>
@@ -42,38 +43,6 @@ static ZValMap_ZooLib::PropList sEmptyProperties;
 static ZVal_ZooLib sNilVal;
 static ZValList_ZooLib sNilList;
 static vector<ZVal_ZooLib> sNilVector;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZTypeAsTypeInfo
-
-const type_info& ZTypeAsTypeInfo(ZType iType)
-	{
-	switch (iType)
-		{
-		case eZType_Null: return typeid(void);
-		case eZType_Type: return typeid(ZType);
-		case eZType_ID: return typeid(uint64);
-		case eZType_Int8: return typeid(int8);
-		case eZType_Int16: return typeid(int16);
-		case eZType_Int32: return typeid(int32);
-		case eZType_Int64: return typeid(int64);
-		case eZType_Bool: return typeid(bool);
-		case eZType_Float: return typeid(float);
-		case eZType_Double: return typeid(double);
-		case eZType_Time: return typeid(ZTime);
-		case eZType_Pointer: return typeid(void*);
-		case eZType_Rect: return typeid(ZRectPOD);
-		case eZType_Point: return typeid(ZPointPOD);
-		case eZType_String: return typeid(string);
-//##		case eZType_Name: return typeid(uint64);
-//		case eZType_RefCounted: return typeid(uint64);
-//		case eZType_Raw: return typeid(uint64);
-//		case eZType_Vector: return typeid(uint64);
-		}
-	ZUnimplemented();
-	return typeid(void);
-	}
 
 // =================================================================================================
 #pragma mark -
@@ -314,6 +283,19 @@ bool ZVal_ZooLib::sFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 			}
 		oVal = theList;
 		}
+	else if (const ZValList_Any* theValue = ZAnyCast<ZValList_Any>(&iAny))
+		{
+		ZValList_ZooLib theList;
+		for (int x = 0, count = theValue->Count(); x < count; ++x)
+			{
+			ZVal_ZooLib local;
+			if (sFromAny(theValue->Get(x), local))
+				theList.Append(local);
+			else
+				theList.Append(ZVal_ZooLib());
+			}
+		oVal = theList;
+		}
 	else if (const map<string, ZAny>* theValue = ZAnyCast<map<string, ZAny> >(&iAny))
 		{
 		ZValMap_ZooLib theMap;
@@ -322,6 +304,18 @@ bool ZVal_ZooLib::sFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 			{
 			ZVal_ZooLib local;
 			if (sFromAny((*i).second, local))
+				theMap.Set((*i).first, local);
+			}
+		oVal = theMap;
+		}
+	else if (const ZValMap_Any* theValue = ZAnyCast<ZValMap_Any>(&iAny))
+		{
+		ZValMap_ZooLib theMap;
+		for (ZValMap_Any::Index_t i = theValue->Begin(), end = theValue->End();
+			i != end; ++i)
+			{
+			ZVal_ZooLib local;
+			if (sFromAny(theValue->Get(i), local))
 				theMap.Set((*i).first, local);
 			}
 		oVal = theMap;
@@ -1725,17 +1719,16 @@ ZValList_ZooLib::Rep::~Rep()
 
 ZAny ZValList_ZooLib::AsAny() const
 	{
-	vector<ZAny> theVector;
+	ZValList_Any theList;
 	if (fRep)
 		{
 		if (size_t theCount = fRep->fVector.size())
 			{
-			theVector.reserve(theCount);
 			for (size_t x = 0; x < theCount; ++x)
-				theVector.push_back(fRep->fVector[x].AsAny());
+				theList.Append(fRep->fVector[x].AsAny());
 			}
 		}
-	return theVector;
+	return theList;
 	}
 
 ZValList_ZooLib::operator operator_bool_type() const
@@ -2003,13 +1996,13 @@ ZValMap_ZooLib::Rep::~Rep()
 
 ZAny ZValMap_ZooLib::AsAny() const
 	{
-	map<string, ZAny> theMap;
+	ZValMap_Any theMap;
 	if (fRep)
 		{
 		for (Index_t i = fRep->fProperties.begin(), end = fRep->fProperties.end();
 			i != end; ++i)
 			{
-			theMap.insert(pair<string, ZAny>((*i).fName.AsString(), (*i).fVal));
+			theMap.Set((*i).fName.AsString(), (*i).fVal);
 			}
 		}
 	return theMap;
