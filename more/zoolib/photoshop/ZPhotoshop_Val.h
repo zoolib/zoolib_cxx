@@ -23,13 +23,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
+#include "zoolib/ZAny.h"
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZFile.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors_Std.h"
-#include "zoolib/ZValData_ZooLib.h"
+#include "zoolib/ZValData_Any.h"
 
 #include <vector>
 
@@ -44,8 +45,9 @@ NAMESPACE_ZOOLIB_BEGIN
 namespace ZPhotoshop {
 
 using std::string;
+using std::vector;
 
-typedef ZValData_ZooLib Data;
+typedef ZValData_Any Data;
 
 class List;
 class Map;
@@ -78,15 +80,15 @@ string8 sHFSToPOSIX(const string8& iHFS);
 
 struct ClassID
 	{
-	ClassID(DescriptorClassID iDCI)
-	:	fDCI(iDCI)
-		{}
+	ClassID() : fDCI(0)	{}
+
+	ClassID(const ClassID& iOther) : fDCI(iOther.fDCI) {}
+
+	ClassID(DescriptorClassID iDCI) : fDCI(iDCI) {}
 
 	ClassID(const string8& iName);
 
-
-	DescriptorClassID GetDCI() const
-		{ return fDCI; }
+	DescriptorClassID GetDCI() const { return fDCI; }
 
 private:
 	DescriptorClassID fDCI;
@@ -98,7 +100,8 @@ private:
 
 struct UnitFloat
 	{
-	UnitFloat() {}
+	UnitFloat() : fUnitID(0), fValue(0.0) {}
+
 	UnitFloat(UnitID iUnitID, double iValue)
 	:	fUnitID(iUnitID),
 		fValue(iValue)
@@ -117,15 +120,9 @@ struct UnitFloat
 
 struct Enumerated
 	{
-	Enumerated()
-	:	fEnumType(0),
-		fValue(0)
-		{}
+	Enumerated() : fEnumType(0), fValue(0) {}
 
-	Enumerated(EnumTypeID iEnumType, EnumID iValue)
-	:	fEnumType(iEnumType),
-		fValue(iValue)
-		{}
+	Enumerated(EnumTypeID iEnumType, EnumID iValue) : fEnumType(iEnumType), fValue(iValue) {}
 
 	Enumerated(EnumTypeID iEnumType, const string8& iValue);
 
@@ -216,7 +213,7 @@ public:
 	PIActionReference MakeRef() const;
 
 private:
-	static void spConvert(PIActionReference iRef, std::vector<Entry>& oEntries);
+	static void spConvert(PIActionReference iRef, vector<Entry>& oEntries);
 
 	struct Entry
 		{
@@ -253,7 +250,7 @@ private:
 			} fData;
 		};
 
-	std::vector<Entry> fEntries;
+	vector<Entry> fEntries;
 	};
 
 // =================================================================================================
@@ -261,13 +258,14 @@ private:
 #pragma mark * Val
 
 class Val
-:	public ZValR_T<Val>
 	{
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Val,
 		operator_bool_generator_type, operator_bool_type);
 
 public:
 	operator operator_bool_type() const;
+
+	ZAny AsAny() const;
 
 	void swap(Val& iOther);
 
@@ -295,6 +293,12 @@ public:
 	bool QGet_T(S& oVal) const;
 
 	template <class S>
+	S DGet_T(const S& iDefault) const;
+
+	template <class S>
+	S Get_T() const;
+
+	template <class S>
 	void Set_T(const S& iVal);
 
 // Typename accessors
@@ -303,6 +307,7 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Bool, bool)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, String, string8)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Data, Data)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, ClassID, ClassID)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, UnitFloat, UnitFloat)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Enumerated, Enumerated)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, FileRef, FileRef)
@@ -311,27 +316,7 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Spec, Spec)
 
 private:
-	void pRelease();
-	void pCopy(const Val& iOther);
-
-	union
-		{
-		bool fAsBool;
-		int32 fAsInt32;
-		double fAsDouble;
-		DescriptorClassID fAsClassID;
-
-		char fBytes[1];
-
-		char spacer1[sizeof(string8)];
-		char spacer2[sizeof(Data)];
-		char spacer3[sizeof(UnitFloat)];
-		char spacer4[sizeof(Enumerated)];
-		char spacer5[sizeof(Spec)];
-		} fData;
-
-	KeyID fType;
-
+	ZAny fAny;
 	friend class List;
 	friend class Map;
 	};
@@ -347,6 +332,8 @@ class List
 
 public:
 	operator operator_bool_type() const;
+
+	ZAny AsAny() const;
 
 	void swap(List& iOther);
 
@@ -392,6 +379,8 @@ public:
 
 	operator operator_bool_type() const;
 
+	ZAny AsAny() const;
+
 	void swap(Map& iOther);
 
 	Map();
@@ -435,14 +424,16 @@ public:
 	PIActionDescriptor& OParam();
 	PIActionDescriptor IParam() const;
 
-	Index_t begin() const;
-	Index_t end() const;
+	Index_t Begin() const;
+	Index_t End() const;
 
 	KeyID KeyOf(Index_t iIndex) const;
 	string8 NameOf(Index_t iIndex) const;
 
 	Index_t IndexOf(KeyID iKey) const;
 	Index_t IndexOf(const string8& iName) const;
+
+	Index_t IndexOf(const Map& iOther, const Index_t& iOtherIndex) const;
 
 	KeyID GetType() const;
 

@@ -32,36 +32,121 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "PITerminology.h"
 #include "PIUSuites.h"
 
-using std::vector;
+#ifdef __PIMac__
+#	if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
+#		include ZMACINCLUDE3(ApplicationServices,AE,AEObjects.h)
+#	else
+#		include ZMACINCLUDE3(CoreServices,AE,AEObjects.h)
+#	endif
+#endif
 
-NAMESPACE_ZOOLIB_BEGIN
+#include <map>
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZPhotoshop suites
+#pragma mark * Fixup, for building with ancient MW
+
+#ifdef __PIMac__
+
+#include ZMACINCLUDE2(CoreFoundation,CFBundle.h)
+
+#if !defined(MAC_OS_X_VERSION_MIN_REQUIRED) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_2
+
+typedef UInt32                          FSAliasInfoBitmap;
+enum {
+  kFSAliasInfoNone              = 0x00000000, /* no valid info*/
+  kFSAliasInfoVolumeCreateDate  = 0x00000001, /* volume creation date is valid*/
+  kFSAliasInfoTargetCreateDate  = 0x00000002, /* target creation date is valid*/
+  kFSAliasInfoFinderInfo        = 0x00000004, /* file type and creator are valid*/
+  kFSAliasInfoIsDirectory       = 0x00000008, /* isDirectory boolean is valid*/
+  kFSAliasInfoIDs               = 0x00000010, /* parentDirID and nodeID are valid*/
+  kFSAliasInfoFSInfo            = 0x00000020, /* filesystemID and signature are valid*/
+  kFSAliasInfoVolumeFlags       = 0x00000040 /* volumeIsBootVolume, volumeIsAutomounted, volumeIsEjectable and volumeHasPersistentFileIDs are valid*/
+};
+
+/* info block to pass to FSCopyAliasInfo */
+struct FSAliasInfo {
+  UTCDateTime         volumeCreateDate;
+  UTCDateTime         targetCreateDate;
+  OSType              fileType;
+  OSType              fileCreator;
+  UInt32              parentDirID;
+  UInt32              nodeID;
+  UInt16              filesystemID;
+  UInt16              signature;
+  Boolean             volumeIsBootVolume;
+  Boolean             volumeIsAutomounted;
+  Boolean             volumeIsEjectable;
+  Boolean             volumeHasPersistentFileIDs;
+  Boolean             isDirectory;
+};
+
+extern "C" typedef
+OSStatus (*FSCopyAliasInfo_Ptr)(
+	AliasHandle          inAlias,
+	HFSUniStr255 *       targetName,       /* can be NULL */
+	HFSUniStr255 *       volumeName,       /* can be NULL */
+	CFStringRef *        pathString,       /* can be NULL */
+	FSAliasInfoBitmap *  whichInfo,        /* can be NULL */
+	FSAliasInfo *        info)             /* can be NULL */;
+
+static OSStatus FSCopyAliasInfo(
+	AliasHandle          inAlias,
+	HFSUniStr255 *       targetName,       /* can be NULL */
+	HFSUniStr255 *       volumeName,       /* can be NULL */
+	CFStringRef *        pathString,       /* can be NULL */
+	FSAliasInfoBitmap *  whichInfo,        /* can be NULL */
+	FSAliasInfo *        info)             /* can be NULL */
+	{
+	if (CFBundleRef bundleRef = ::CFBundleGetBundleWithIdentifier(CFSTR("com.apple.Carbon")))
+		{
+		if (FSCopyAliasInfo_Ptr theProc = (FSCopyAliasInfo_Ptr)
+			CFBundleGetFunctionPointerForName(bundleRef, CFSTR("FSCopyAliasInfo")))
+			{
+			return theProc(inAlias, targetName, volumeName, pathString, whichInfo, info);
+			}
+		}
+	return -1;
+	}
+
+#endif
+#endif // __PIMac__
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Using statements
+
+NAMESPACE_ZOOLIB_BEGIN
+
+using std::map;
+using std::pair;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZPhotoshop suites, for local use
 
 static AutoSuite<PSActionDescriptorProcs>
-	sPSActionDescriptor(kPSActionDescriptorSuite, kPSActionDescriptorSuiteVersion);
+	spPSActionDescriptor(kPSActionDescriptorSuite, kPSActionDescriptorSuiteVersion);
 
 static AutoSuite<PSActionControlProcs>
-	sPSActionControl(kPSActionControlSuite, kPSActionControlSuitePrevVersion);
+	spPSActionControl(kPSActionControlSuite, kPSActionControlSuitePrevVersion);
 
 static AutoSuite<PSActionReferenceProcs>
-	sPSActionReference(kPSActionReferenceSuite, kPSActionReferenceSuiteVersion);
+	spPSActionReference(kPSActionReferenceSuite, kPSActionReferenceSuiteVersion);
 
 static AutoSuite<PSActionListProcs>
-	sPSActionList(kPSActionListSuite, kPSActionListSuiteVersion);
+	spPSActionList(kPSActionListSuite, kPSActionListSuiteVersion);
 
 #ifdef kPSAliasSuite
 	static AutoSuite<PSAliasSuite>
-		sPSAlias(kPSAliasSuite, kPSAliasSuiteVersion1);
+		spPSAlias(kPSAliasSuite, kPSAliasSuiteVersion1);
 #endif
 
 static AutoSuite<ASZStringSuite>
-	sASZString(kASZStringSuite, kASZStringSuiteVersion1);
+	spASZString(kASZStringSuite, kASZStringSuiteVersion1);
 
 static AutoSuite<PSHandleSuite2>
-	sPSHandle(kPSHandleSuite, kPSHandleSuiteVersion2);
+	spPSHandle(kPSHandleSuite, kPSHandleSuiteVersion2);
 
 // =================================================================================================
 #pragma mark -
@@ -71,14 +156,14 @@ template <>
 void sRetain_T(ASZByteRun* iString)
 	{
 	if (iString)
-		sASZString->AddRef(iString);
+		spASZString->AddRef(iString);
 	}
 
 template <>
 void sRelease_T(ASZByteRun* iString)
 	{
 	if (iString)
-		sASZString->Release(iString);
+		spASZString->Release(iString);
 	}
 
 // =================================================================================================
@@ -94,14 +179,14 @@ namespace ZPhotoshop {
 static PIActionList spDuplicate(PIActionList iSource)
 	{
 	PIActionList dummy;
-	sPSActionList->Make(&dummy);
+	spPSActionList->Make(&dummy);
 
-	sPSActionList->PutList(dummy, iSource);
+	spPSActionList->PutList(dummy, iSource);
 
 	PIActionList result;
-	sPSActionList->GetList(dummy, 0, &result);
+	spPSActionList->GetList(dummy, 0, &result);
 
-	sPSActionList->Free(dummy);
+	spPSActionList->Free(dummy);
 
 	return result;	
 	}
@@ -109,25 +194,25 @@ static PIActionList spDuplicate(PIActionList iSource)
 static PIActionDescriptor spDuplicate(PIActionDescriptor iSource)
 	{
 	PIActionList dummy;
-	sPSActionList->Make(&dummy);
+	spPSActionList->Make(&dummy);
 
-	sPSActionList->PutObject(dummy, typeObject, iSource);
+	spPSActionList->PutObject(dummy, typeObject, iSource);
 
 	DescriptorClassID theType;
 	PIActionDescriptor result;
-	sPSActionList->GetObject(dummy, 0, &theType, &result);
+	spPSActionList->GetObject(dummy, 0, &theType, &result);
 
-	sPSActionList->Free(dummy);
+	spPSActionList->Free(dummy);
 
 	return result;	
 	}
 
 static string16 spAsString16(const ZRef<ASZString>& iString)
 	{
-	if (size_t theLength = sASZString->LengthAsUnicodeCString(iString))
+	if (size_t theLength = spASZString->LengthAsUnicodeCString(iString))
 		{
 		string16 result(0, theLength);
-		if (noErr == sASZString->AsUnicodeCString(
+		if (noErr == spASZString->AsUnicodeCString(
 			iString, (ASUnicode*)&result[0], theLength, false))
 			{
 			return result;
@@ -141,7 +226,7 @@ static ZRef<ASZString> spAsASZString(const string16& iString)
 	if (size_t theLength = iString.length())
 		{
 		ZRef<ASZString> result;
-		if (noErr == sASZString->MakeFromUnicode((ASUnicode*)&iString[0], theLength * 2,
+		if (noErr == spASZString->MakeFromUnicode((ASUnicode*)&iString[0], theLength * 2,
 			&result.GetPtrRef()))
 			{
 			return result;
@@ -212,7 +297,7 @@ string8 sHFSToPOSIX(const string8& iHFS)
 
 bool sAsRuntimeTypeID(const string8& iString, TypeID& oTypeID)
 	{
-	if (noErr == sPSActionControl->StringIDToTypeID(const_cast<char*>(iString.c_str()), &oTypeID))
+	if (noErr == spPSActionControl->StringIDToTypeID(const_cast<char*>(iString.c_str()), &oTypeID))
 		return true;
 	return false;
 	}
@@ -246,7 +331,7 @@ static bool spIntAsString(int32 iInt, string& oString)
 bool sFromRuntimeTypeID(TypeID iTypeID, string8& oString)
 	{
 	char buf[1024];
-	if (noErr == sPSActionControl->TypeIDToStringID(iTypeID, buf, sizeof(buf)-1))
+	if (noErr == spPSActionControl->TypeIDToStringID(iTypeID, buf, sizeof(buf)-1))
 		{
 		if (buf[0])
 			{
@@ -293,8 +378,8 @@ static Handle sHandleDuplicate(Handle iHandle)
 	if (!iHandle)
 		return nullptr;
 
-	size_t theSize = sPSHandle->GetSize(iHandle);
-	Handle result = sPSHandle->New(theSize);
+	size_t theSize = spPSHandle->GetSize(iHandle);
+	Handle result = spPSHandle->New(theSize);
 	ZBlockCopy(iHandle[0], result[0], theSize);
 	return result;
 	}
@@ -302,7 +387,7 @@ static Handle sHandleDuplicate(Handle iHandle)
 static void sHandleDispose(Handle iHandle)
 	{
 	if (iHandle)
-		sPSHandle->Dispose(iHandle);
+		spPSHandle->Dispose(iHandle);
 	}
 
 FileRef::FileRef()
@@ -357,13 +442,13 @@ FileRef::FileRef(const string8& iPathPOSIX)
 	#else
 		#ifdef __PIMac__
 
-			sPSAlias->MacNewAliasFromCString(iPathPOSIX.c_str(), (AliasHandle*)&fHandle);
+			spPSAlias->MacNewAliasFromCString(iPathPOSIX.c_str(), (AliasHandle*)&fHandle);
 
 		#elif defined(__PIWin__)
 
 			string16 asWin = ZUnicode::sAsUTF16(sPOSIXToWin(iPathPOSIX));
 			
-			sPSAlias->WinNewAliasFromWidePath((uint16*)asWin.c_str(), &fHandle);		
+			spPSAlias->WinNewAliasFromWidePath((uint16*)asWin.c_str(), &fHandle);		
 
 		#else
 
@@ -409,6 +494,7 @@ string8 FileRef::AsPathNative() const
 string8 FileRef::pAsString()  const
 	{
 	#ifdef __PIMac__
+
 		HFSUniStr255 targetName;
 		HFSUniStr255 volumeName;
 		ZRef<CFStringRef> thePath;
@@ -428,17 +514,17 @@ string8 FileRef::pAsString()  const
 
 	#elif defined(__PIWin__)
 
-		if (size_t theSize = sPSHandle->GetSize(fHandle))
+		if (size_t theSize = spPSHandle->GetSize(fHandle))
 			{
 			Ptr pointer;
 			Boolean oldLock;
-			sPSHandle->SetLock(fHandle, true, &pointer, &oldLock);
+			spPSHandle->SetLock(fHandle, true, &pointer, &oldLock);
 
 			string8 result;
 			if (pointer)
 				result = (char*)pointer;
 
-			sPSHandle->SetLock(fHandle, oldLock, &pointer, &oldLock);
+			spPSHandle->SetLock(fHandle, oldLock, &pointer, &oldLock);
 			return result;
 			}
 	
@@ -692,7 +778,7 @@ Spec& Spec::operator=(Adopt_T<PIActionReference> iOther)
 	vector<Entry> newEntries;
 	spConvert(iOther.Get(), newEntries);
 	std::swap(fEntries, newEntries);
-	sPSActionReference->Free(iOther.Get());
+	spPSActionReference->Free(iOther.Get());
 	return *this;
 	}
 
@@ -710,10 +796,10 @@ Map Spec::Get() const
 	Map result;
 	if (PIActionReference theRef = this->MakeRef())
 		{
-		OSErr theErr = sPSActionControl->Get(&result.OParam(), theRef);
+		OSErr theErr = spPSActionControl->Get(&result.OParam(), theRef);
 		if (noErr != theErr)
 			result.Clear();
-		sPSActionReference->Free(theRef);
+		spPSActionReference->Free(theRef);
 		}
 	return result;
 	}
@@ -723,7 +809,7 @@ PIActionReference Spec::MakeRef() const
 	bool allOK = true;
 	PIActionReference theRef = nullptr;
 	
-	if (noErr == sPSActionReference->Make(&theRef))
+	if (noErr == spPSActionReference->Make(&theRef))
 		{
 		for (vector<Entry>::const_reverse_iterator i = fEntries.rbegin();
 			allOK && i != fEntries.rend(); ++i)
@@ -733,13 +819,13 @@ PIActionReference Spec::MakeRef() const
 				{
 				case formClass:
 					{
-					if (noErr != sPSActionReference->PutClass(theRef, theEntry.fDCI))
+					if (noErr != spPSActionReference->PutClass(theRef, theEntry.fDCI))
 						allOK = false;
 					break;
 					}
 				case formEnumerated:
 					{
-					if (noErr != sPSActionReference->PutEnumerated(theRef, theEntry.fDCI,
+					if (noErr != spPSActionReference->PutEnumerated(theRef, theEntry.fDCI,
 						sFetch_T<Enumerated>(theEntry.fData.fBytes)->fEnumType,
 						sFetch_T<Enumerated>(theEntry.fData.fBytes)->fValue))
 						{ allOK = false; }
@@ -747,7 +833,7 @@ PIActionReference Spec::MakeRef() const
 					}
 				case formIdentifier:
 					{
-					if (noErr != sPSActionReference->PutIdentifier(theRef,
+					if (noErr != spPSActionReference->PutIdentifier(theRef,
 						theEntry.fDCI,
 						theEntry.fData.fAsIdentifier))
 						{ allOK = false; }
@@ -755,7 +841,7 @@ PIActionReference Spec::MakeRef() const
 					}
 				case formIndex:
 					{
-					if (noErr != sPSActionReference->PutIndex(theRef, theEntry.fDCI,
+					if (noErr != spPSActionReference->PutIndex(theRef, theEntry.fDCI,
 						theEntry.fData.fAsIndex))
 						{ allOK = false; }
 					break;
@@ -763,21 +849,21 @@ PIActionReference Spec::MakeRef() const
 				case formName:
 					{
 					const string8& theName = *sFetch_T<string8>(theEntry.fData.fBytes);
-					if (noErr != sPSActionReference->PutName(theRef, theEntry.fDCI,
+					if (noErr != spPSActionReference->PutName(theRef, theEntry.fDCI,
 						const_cast<char*>(theName.c_str())))
 						{ allOK = false; }
 					break;
 					}
 				case formOffset:
 					{
-					if (noErr != sPSActionReference->PutOffset(theRef, theEntry.fDCI,
+					if (noErr != spPSActionReference->PutOffset(theRef, theEntry.fDCI,
 						theEntry.fData.fAsOffset))
 						{ allOK = false; }
 					break;
 					}
 				case formProperty:
 					{
-					if (noErr != sPSActionReference->PutProperty(theRef, theEntry.fDCI,
+					if (noErr != spPSActionReference->PutProperty(theRef, theEntry.fDCI,
 						theEntry.fData.fAsProperty))
 						{ allOK = false; }
 					break;
@@ -797,11 +883,11 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 	while (iRef && allOK)
 		{
 		FormID theFormID;
-		if (noErr != sPSActionReference->GetForm(iRef, &theFormID))
+		if (noErr != spPSActionReference->GetForm(iRef, &theFormID))
 			break;
 
 		DescriptorClassID theClassID;
-		if (noErr != sPSActionReference->GetDesiredClass(iRef, &theClassID))
+		if (noErr != spPSActionReference->GetDesiredClass(iRef, &theClassID))
 			break;
 
 		switch (theFormID)
@@ -814,7 +900,7 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 			case formEnumerated:
 				{
 				Enumerated theVal;
-				if (noErr != sPSActionReference->GetEnumerated(
+				if (noErr != spPSActionReference->GetEnumerated(
 					iRef, &theVal.fEnumType, &theVal.fValue))
 					{
 					allOK = false;
@@ -828,7 +914,7 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 			case formIdentifier:
 				{
 				uint32 theVal;
-				if (noErr != sPSActionReference->GetIdentifier(iRef, &theVal))
+				if (noErr != spPSActionReference->GetIdentifier(iRef, &theVal))
 					allOK = false;
 				else
 					oEntries.push_back(Entry::sIdentifier(theClassID, theVal));
@@ -837,7 +923,7 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 			case formIndex:
 				{
 				uint32 theVal;
-				if (noErr != sPSActionReference->GetIndex(iRef, &theVal))
+				if (noErr != spPSActionReference->GetIndex(iRef, &theVal))
 					allOK = false;
 				else
 					oEntries.push_back(Entry::sIndex(theClassID, theVal));
@@ -847,20 +933,20 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 				{
 				#if (kPSActionReferenceSuiteVersion >= 3)
 					ZRef<ASZString> theVal;
-					if (noErr != sPSActionReference->GetNameZString(iRef, &theVal.GetPtrRef()))
+					if (noErr != spPSActionReference->GetNameZString(iRef, &theVal.GetPtrRef()))
 						allOK = false;
 					else
 						oEntries.push_back(Entry::sName(theClassID, theVal));
 				#else
 					uint32 theLength;
-					if (noErr != sPSActionReference->GetNameLength(iRef, &theLength))
+					if (noErr != spPSActionReference->GetNameLength(iRef, &theLength))
 						{
 						allOK = false;
 						}
 					else
 						{
 						string8 theName(0, theLength + 1);
-						if (noErr != sPSActionReference->GetName(iRef,
+						if (noErr != spPSActionReference->GetName(iRef,
 							const_cast<char*>(theName.data()), theLength + 1))
 							{
 							allOK = false;
@@ -877,7 +963,7 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 			case formOffset:
 				{
 				int32 theVal;
-				if (noErr != sPSActionReference->GetOffset(iRef, &theVal))
+				if (noErr != spPSActionReference->GetOffset(iRef, &theVal))
 					allOK = false;
 				else
 					oEntries.push_back(Entry::sOffset(theClassID, theVal));
@@ -886,7 +972,7 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 			case formProperty:
 				{
 				KeyID theVal;
-				if (noErr != sPSActionReference->GetProperty(iRef, &theVal))
+				if (noErr != spPSActionReference->GetProperty(iRef, &theVal))
 					allOK = false;
 				else
 					oEntries.push_back(Entry::sProperty(theClassID, theVal));
@@ -894,10 +980,10 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 				}
 			}
 		PIActionReference container;
-		if (noErr != sPSActionReference->GetContainer(iRef, &container))
+		if (noErr != spPSActionReference->GetContainer(iRef, &container))
 			container = nullptr;
 		if (freeRef)
-			sPSActionReference->Free(iRef);
+			spPSActionReference->Free(iRef);
 		iRef = container;
 		freeRef = true;
 		}
@@ -908,433 +994,94 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 #pragma mark * Val
 
 Val::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(fType); }
+	{ return operator_bool_generator_type::translate(fAny.type() != typeid(void)); }
 
-void Val::swap(Val& iOther)
+ZAny Val::AsAny() const
 	{
-	const size_t theSize = sizeof(fData);
+	if (const Map* theVal = ZAnyCast<Map>(&fAny))
+		return theVal->AsAny();
 
-	struct dummy { char bytes[theSize]; };
-
-	dummy& self = *(dummy*)(fData.fBytes);
-	dummy& other = *(dummy*)(iOther.fData.fBytes);
-
-	dummy temp = self;
-	self = other;
-	other = temp;
+	if (const List* theVal = ZAnyCast<List>(&fAny))
+		return theVal->AsAny();
+		
+	return fAny;
 	}
 
+void Val::swap(Val& iOther)
+	{ std::swap(fAny, iOther.fAny); }
+
 Val::Val()
-:	fType(0)
 	{}
 
 Val::Val(const Val& iOther)
-	{ this->pCopy(iOther); }
+:	fAny(iOther.fAny)
+	{}
 
 Val::~Val()
-	{ this->pRelease(); }
+	{}
 
 Val& Val::operator=(const Val& iOther)
 	{
-	if (this != &iOther)
-		{
-		this->pRelease();
-		this->pCopy(iOther);
-		}
+	fAny = iOther.fAny;
 	return *this;
 	}
 
-Val::Val(int32 iVal)
-	{
-	fData.fAsInt32 = iVal;
-	fType = typeInteger;
-	}
+Val::Val(int32 iVal) : fAny(iVal) {}
 
-Val::Val(double iVal)
-	{
-	fData.fAsDouble = iVal;
-	fType = typeFloat;
-	}
+Val::Val(double iVal) : fAny(iVal) {}
 
-Val::Val(bool iVal)
-	{
-	fData.fAsBool = iVal;
-	fType = typeBoolean;
-	}
+Val::Val(bool iVal) : fAny(iVal) {}
 
-Val::Val(const string8& iVal)
-	{
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeChar;
-	}
+Val::Val(const string8& iVal) : fAny(iVal) {}
 
-Val::Val(const Data& iVal)
-	{
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeRawData;
-	}
+Val::Val(const Data& iVal) : fAny(iVal) {}
 
-Val::Val(const UnitFloat& iVal)
-	{
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeUnitFloat;
-	}
+Val::Val(const UnitFloat& iVal) : fAny(iVal) {}
 
-Val::Val(const Enumerated& iVal)
-	{
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeEnumerated;
-	}
+Val::Val(const Enumerated& iVal) : fAny(iVal) {}
 
-Val::Val(const FileRef& iFileRef)
-	{
-	sConstruct_T(fData.fBytes, iFileRef);
-	fType = typePlatformFilePath;
-	}
+Val::Val(const FileRef& iVal) : fAny(iVal) {}
 
-Val::Val(const List& iVal)
-	{
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeValueList;
-	}
+Val::Val(const List& iVal) : fAny(iVal) {}
 
-Val::Val(const Map& iVal)
-	{
-	sConstruct_T<>(fData.fBytes, iVal);
-	fType = typeObject;
-	}
+Val::Val(const Map& iVal) : fAny(iVal) {}
 
-Val::Val(const Spec& iVal)
-	{
-	sConstruct_T<>(fData.fBytes, iVal);
-	fType = typeObjectSpecifier;
-	}
+Val::Val(const Spec& iVal) : fAny(iVal) {}
 
 void Val::Clear()
-	{
-	this->pRelease();
-	fType = 0;
-	}
+	{ fAny = ZAny(); }
 
-template <>
-bool Val::QGet_T<int32>(int32& oVal) const
+template <class S>
+bool Val::QGet_T(S& oVal) const
 	{
-	if (typeInteger == fType)
+	if (const S* theVal = ZAnyCast<S>(&fAny))
 		{
-		oVal = fData.fAsInt32;
+		oVal = *theVal;
 		return true;
 		}
 	return false;
 	}
 
-template <>
-bool Val::QGet_T<double>(double& oVal) const
+template <class S>
+S Val::DGet_T(const S& iDefault) const
 	{
-	if (typeFloat == fType)
-		{
-		oVal = fData.fAsDouble;
-		return true;
-		}
-	return false;
+	if (const S* theVal = ZAnyCast<S>(&fAny))
+		return *theVal;
+	return iDefault;
 	}
 
-template <>
-bool Val::QGet_T<bool>(bool& oVal) const
+template <class S>
+S Val::Get_T() const
 	{
-	if (typeBoolean == fType)
-		{
-		oVal = fData.fAsBool;
-		return true;
-		}
-	return false;
+	if (const S* theVal = ZAnyCast<S>(&fAny))
+		return *theVal;
+	return S();
 	}
 
-template <>
-bool Val::QGet_T<string8>(string8& oVal) const
+template <class S>
+void Val::Set_T(const S& iVal)
 	{
-	if (typeChar == fType)
-		{
-		oVal = *sFetch_T<string8>(fData.fBytes);
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Val::QGet_T<Data>(Data& oVal) const
-	{
-	if (typeRawData == fType)
-		{
-		oVal = *sFetch_T<Data>(fData.fBytes);
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Val::QGet_T<UnitFloat>(UnitFloat& oVal) const
-	{
-	if (typeUnitFloat == fType)
-		{
-		oVal = *sFetch_T<UnitFloat>(fData.fBytes);
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Val::QGet_T<Enumerated>(Enumerated& oVal) const
-	{
-	if (typeEnumerated == fType)
-		{
-		oVal = *sFetch_T<Enumerated>(fData.fBytes);
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Val::QGet_T<FileRef>(FileRef& oVal) const
-	{
-	if (typePath == fType || typeAlias == fType)
-		{
-		oVal = *sFetch_T<FileRef>(fData.fBytes);
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Val::QGet_T<List>(List& oVal) const
-	{
-	if (typeValueList == fType)
-		{
-		oVal = *sFetch_T<List>(fData.fBytes);
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Val::QGet_T<Map>(Map& oVal) const
-	{
-	if (typeObject == fType || typeGlobalObject == fType)
-		{
-		oVal = *sFetch_T<Map>(fData.fBytes);
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool Val::QGet_T<Spec>(Spec& oVal) const
-	{
-	if (typeObjectSpecifier == fType)
-		{
-		oVal = *sFetch_T<Spec>(fData.fBytes);
-		return true;
-		}
-	return false;
-	}
-
-template <>
-void Val::Set_T<int32>(const int32& iVal)
-	{
-	this->pRelease();
-	fData.fAsInt32 = iVal;
-	fType = typeInteger;
-	}
-
-template <>
-void Val::Set_T<bool>(const bool& iVal)
-	{
-	this->pRelease();
-	fData.fAsBool = iVal;
-	fType = typeBoolean;
-	}
-
-template <>
-void Val::Set_T<double>(const double& iVal)
-	{
-	this->pRelease();
-	fData.fAsDouble = iVal;
-	fType = typeFloat;
-	}
-
-template <>
-void Val::Set_T<string8>(const string8& iVal)
-	{
-	this->pRelease();
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeChar;
-	}
-
-template <>
-void Val::Set_T<Data>(const Data& iVal)
-	{
-	this->pRelease();
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeRawData;
-	}
-
-template <>
-void Val::Set_T<UnitFloat>(const UnitFloat& iVal)
-	{
-	this->pRelease();
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeUnitFloat;
-	}
-
-template <>
-void Val::Set_T<Enumerated>(const Enumerated& iVal)
-	{
-	this->pRelease();
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeEnumerated;
-	}
-
-template <>
-void Val::Set_T<FileRef>(const FileRef& iVal)
-	{
-	this->pRelease();
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typePlatformFilePath;
-	}
-
-template <>
-void Val::Set_T<List>(const List& iVal)
-	{
-	this->pRelease();
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeValueList;
-	}
-
-template <>
-void Val::Set_T<Map>(const Map& iVal)
-	{
-	this->pRelease();
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeObject;
-	}
-
-template <>
-void Val::Set_T<Spec>(const Spec& iVal)
-	{
-	this->pRelease();
-	sConstruct_T(fData.fBytes, iVal);
-	fType = typeObjectSpecifier;
-	}
-
-void Val::pRelease()
-	{
-	const KeyID theType = fType;
-	fType = 0;
-	switch (theType)
-		{
-		case typeChar:
-			{
-			sDestroy_T<string8>(fData.fBytes);
-			break;
-			}
-		case typeRawData:
-			{
-			sDestroy_T<Data>(fData.fBytes);
-			break;
-			}
-		case typePath:
-		case typeAlias:
-			{
-			sDestroy_T<FileRef>(fData.fBytes);
-			break;
-			}
-		case typeObject:
-		case typeGlobalObject:
-			{
-			sDestroy_T<Map>(fData.fBytes);
-			break;
-			}
-		case typeValueList:
-			{
-			sDestroy_T<List>(fData.fBytes);
-			break;
-			}
-		case typeObjectSpecifier:
-			{
-			sDestroy_T<Spec>(fData.fBytes);
-			break;
-			}
-		}
-	}
-
-void Val::pCopy(const Val& iOther)
-	{
-	switch (iOther.fType)
-		{
-		case typeInteger:
-			{
-			fData.fAsInt32 = iOther.fData.fAsInt32;
-			break;
-			}
-		case typeFloat:
-			{
-			fData.fAsDouble = iOther.fData.fAsDouble;
-			break;
-			}
-		case typeBoolean:
-			{
-			fData.fAsBool = iOther.fData.fAsBool;
-			break;
-			}
-		case typeUnitFloat:
-			{
-			sCopyConstruct_T<UnitFloat>(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		case typeEnumerated:
-			{
-			sCopyConstruct_T<Enumerated>(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		case typeType:
-		case typeGlobalClass:
-			{
-			fData.fAsClassID = iOther.fData.fAsClassID;
-			break;
-			}
-		case typeChar:
-			{
-			sCopyConstruct_T<string8>(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		case typeRawData:
-			{
-			sCopyConstruct_T<Data>(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		case typePath:
-		case typeAlias:
-			{
-			sCopyConstruct_T<FileRef>(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		case typeObject:
-		case typeGlobalObject:
-			{
-			sCopyConstruct_T<Map>(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		case typeValueList:
-			{
-			sCopyConstruct_T<List>(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		case typeObjectSpecifier:
-			{
-			sCopyConstruct_T<Spec>(iOther.fData.fBytes, fData.fBytes);
-			break;
-			}
-		}
-	fType = iOther.fType;
+	fAny = iVal;
 	}
 
 // =================================================================================================
@@ -1346,6 +1093,7 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Double, double)
 ZMACRO_ZValAccessors_Def_Entry(Val, Bool, bool)
 ZMACRO_ZValAccessors_Def_Entry(Val, String, string8)
 ZMACRO_ZValAccessors_Def_Entry(Val, Data, Data)
+ZMACRO_ZValAccessors_Def_Entry(Val, ClassID, ClassID)
 ZMACRO_ZValAccessors_Def_Entry(Val, UnitFloat, UnitFloat)
 ZMACRO_ZValAccessors_Def_Entry(Val, Enumerated, Enumerated)
 ZMACRO_ZValAccessors_Def_Entry(Val, FileRef, FileRef)
@@ -1439,70 +1187,38 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 
 
 #define SETTERCASES(SUITE, PARAM) \
-	case typeInteger: { SUITE->PutInteger(PARAM, iVal.fData.fAsInt32); return; } \
-	case typeFloat: { SUITE->PutFloat(PARAM, iVal.fData.fAsDouble); return; } \
-	case typeUnitFloat: \
-		{ \
-		SUITE->PutUnitFloat(PARAM, \
-			sFetch_T<UnitFloat>(iVal.fData.fBytes)->fUnitID, \
-			sFetch_T<UnitFloat>(iVal.fData.fBytes)->fValue); \
-		return; \
-		} \
-	case typeChar: \
-		{ \
-		SUITE->PutString(PARAM, \
-			const_cast<char*>(sFetch_T<string8>(iVal.fData.fBytes)->c_str())); \
-		return; \
-		} \
-	case typeBoolean: { SUITE->PutBoolean(PARAM, iVal.fData.fAsBool); return; } \
-	case typeValueList: \
-		{ \
-		SUITE->PutList(PARAM, \
-			sFetch_T<List>(iVal.fData.fBytes)->GetActionList()); \
-		return; \
-		} \
-	case typeObject: \
-		{ \
-		SUITE->PutObject(PARAM, \
-			sFetch_T<Map>(iVal.fData.fBytes)->GetType(), \
-			sFetch_T<Map>(iVal.fData.fBytes)->IParam()); \
-		return; \
-		} \
+	if (false) \
+		{} \
+	else if (const int32* theVal = ZAnyCast<int32>(&iVal.fAny)) \
+		{ SUITE->PutInteger(PARAM, *theVal); return; } \
+	else if (const float* theVal = ZAnyCast<float>(&iVal.fAny)) \
+		{ SUITE->PutFloat(PARAM, *theVal); return; } \
+	else if (const UnitFloat* theVal = ZAnyCast<UnitFloat>(&iVal.fAny)) \
+		{ SUITE->PutUnitFloat(PARAM, theVal->fUnitID, theVal->fValue); return; } \
+	else if (const string8* theVal = ZAnyCast<string8>(&iVal.fAny)) \
+		{ SUITE->PutString(PARAM, const_cast<char*>(theVal->c_str())); return; } \
+	else if (const bool* theVal = ZAnyCast<bool>(&iVal.fAny)) \
+		{ SUITE->PutBoolean(PARAM, *theVal); return; } \
+	else if (const List* theVal = ZAnyCast<List>(&iVal.fAny)) \
+		{ SUITE->PutList(PARAM, theVal->GetActionList()); return; } \
+	else if (const Map* theVal = ZAnyCast<Map>(&iVal.fAny)) \
+		{ SUITE->PutObject(PARAM, theVal->GetType(), theVal->IParam()); return; } \
 	/* global object? */ \
-	case typeEnumerated: \
+	else if (const Enumerated* theVal = ZAnyCast<Enumerated>(&iVal.fAny)) \
+		{ SUITE->PutEnumerated(PARAM, theVal->fEnumType, theVal->fValue); return; } \
+	else if (const Spec* theVal = ZAnyCast<Spec>(&iVal.fAny)) \
 		{ \
-		SUITE->PutEnumerated(PARAM, \
-			sFetch_T<Enumerated>(iVal.fData.fBytes)->fEnumType, \
-			sFetch_T<Enumerated>(iVal.fData.fBytes)->fValue); \
-		return; \
-		} \
-	case typeObjectSpecifier: \
-		{ \
-		PIActionReference tempRef = sFetch_T<Spec>(iVal.fData.fBytes)->MakeRef(); \
+		PIActionReference tempRef = theVal->MakeRef(); \
 		SUITE->PutReference(PARAM, tempRef); \
-		sPSActionReference->Free(tempRef); \
+		spPSActionReference->Free(tempRef); \
 		return; \
 		} \
-	case typeClass: \
-		{ \
-		ZUnimplemented(); \
-		break; \
-		} \
-	/* global class? */ \
-	case typeAlias: \
-	case typePath: \
-		{ \
-		SUITE->PutAlias(PARAM, \
-			sFetch_T<FileRef>(iVal.fData.fBytes)->Get()); \
-		return; \
-		} \
-	case typeRawData: \
-		{ \
-		SUITE->PutData(PARAM, \
-			sFetch_T<Data>(iVal.fData.fBytes)->GetSize(), \
-			const_cast<void*>(sFetch_T<Data>(iVal.fData.fBytes)->GetData())); \
-		return; \
-		} \
+/*Hmmm	else if (const ClassID* theVal = ZAnyCast<ClassID>(&iVal.fAny)) \
+		{ ZUnimplemented(); } Hmm??? SUITE->PutInteger(PARAM, *theVal); return; } */\
+	else if (const FileRef* theVal = ZAnyCast<FileRef>(&iVal.fAny)) \
+		{ SUITE->PutAlias(PARAM, theVal->Get()); return; } \
+	else if (const Data* theVal = ZAnyCast<Data>(&iVal.fAny)) \
+		{ SUITE->PutData(PARAM, theVal->GetSize(), const_cast<void*>(theVal->GetData())); return; }
 
 // =================================================================================================
 #pragma mark -
@@ -1511,24 +1227,36 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 List::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->Count()); }
 
+ZAny List::AsAny() const
+	{
+	vector<ZAny> theVector;
+	if (size_t theCount = this->Count())
+		{
+		theVector.reserve(theCount);
+		for (size_t x = 0; x < theCount; ++x)
+			theVector.push_back(this->Get(x).AsAny());
+		}
+	return theVector;
+	}
+
 void List::swap(List& iOther)
 	{ std::swap(fAL, iOther.fAL); }
 
 List::List()
-	{ sPSActionList->Make(&fAL); }
+	{ spPSActionList->Make(&fAL); }
 
 List::List(const List& iOther)
 :	fAL(spDuplicate(iOther.fAL))
 	{}
 
 List::~List()
-	{ sPSActionList->Free(fAL); }
+	{ spPSActionList->Free(fAL); }
 
 List& List::operator=(const List& iOther)
 	{
 	if (this != &iOther)
 		{
-		sPSActionList->Free(fAL);
+		spPSActionList->Free(fAL);
 		fAL = spDuplicate(iOther.fAL);
 		}
 	return *this;
@@ -1544,14 +1272,14 @@ List::List(Adopt_T<PIActionList> iOther)
 
 List& List::operator=(PIActionList iOther)
 	{
-	sPSActionList->Free(fAL);
+	spPSActionList->Free(fAL);
 	fAL = spDuplicate(iOther);
 	return *this;
 	}
 
 List& List::operator=(Adopt_T<PIActionList> iOther)
 	{
-	sPSActionList->Free(fAL);
+	spPSActionList->Free(fAL);
 	fAL = iOther.Get();
 	return *this;
 	}
@@ -1559,15 +1287,15 @@ List& List::operator=(Adopt_T<PIActionList> iOther)
 size_t List::Count() const
 	{
 	uint32 result;
-	if (noErr == sPSActionList->GetCount(fAL, &result))
+	if (noErr == spPSActionList->GetCount(fAL, &result))
 		return result;
 	return 0;
 	}
 
 void List::Clear()
 	{
-	sPSActionList->Free(fAL);
-	sPSActionList->Make(&fAL);	
+	spPSActionList->Free(fAL);
+	spPSActionList->Make(&fAL);	
 	}
 
 bool List::QGet(size_t iIndex, Val& oVal) const
@@ -1576,12 +1304,12 @@ bool List::QGet(size_t iIndex, Val& oVal) const
 		return false;
 
 	TypeID theType;
-	if (noErr != sPSActionList->GetType(fAL, iIndex, &theType))
+	if (noErr != spPSActionList->GetType(fAL, iIndex, &theType))
 		return false;
 
 	switch (theType)
 		{
-		GETTERCASES(sPSActionList, fAL, iIndex)
+		GETTERCASES(spPSActionList, fAL, iIndex)
 		default:
 			ZUnimplemented();
 		}
@@ -1601,12 +1329,7 @@ Val List::Get(size_t iIndex) const
 
 void List::Append(const Val& iVal)
 	{
-	switch (iVal.fType)
-		{
-		SETTERCASES(sPSActionList, fAL)
-		default:
-			ZUnimplemented();
-		}
+	SETTERCASES(spPSActionList, fAL)
 	}
 
 PIActionList List::GetActionList() const
@@ -1619,12 +1342,21 @@ PIActionList List::GetActionList() const
 Map::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->pCount()); }
 
+ZAny Map::AsAny() const
+	{
+	map<string, ZAny> theMap;
+	for (Index_t i = this->Begin(), end = this->End(); i != end; ++i)
+		theMap.insert(pair<string, ZAny>(this->NameOf(i), this->Get(i)));
+
+	return theMap;
+	}
+
 void Map::swap(Map& iOther)
 	{ std::swap(fAD, iOther.fAD); }
 
 Map::Map()
 :	fType(typeObject)
-	{ sPSActionDescriptor->Make(&fAD); }
+	{ spPSActionDescriptor->Make(&fAD); }
 
 Map::Map(const Map& iOther)
 :	fType(iOther.fType)
@@ -1634,14 +1366,14 @@ Map::Map(const Map& iOther)
 Map::~Map()
 	{
 	if (fAD)
-		sPSActionDescriptor->Free(fAD);
+		spPSActionDescriptor->Free(fAD);
 	}
 
 Map& Map::operator=(const Map& iOther)
 	{
 	if (this != &iOther)
 		{
-		sPSActionDescriptor->Free(fAD);
+		spPSActionDescriptor->Free(fAD);
 		fType = iOther.fType;
 		fAD = spDuplicate(iOther.fAD);
 		}
@@ -1679,7 +1411,7 @@ Map::Map(const string8& iType, Adopt_T<PIActionDescriptor> iOther)
 	{}
 
 void Map::Clear()
-	{ sPSActionDescriptor->Clear(fAD); }
+	{ spPSActionDescriptor->Clear(fAD); }
 
 bool Map::QGet(KeyID iKey, Val& oVal) const
 	{
@@ -1687,12 +1419,12 @@ bool Map::QGet(KeyID iKey, Val& oVal) const
 		return false;
 
 	TypeID theType;
-	if (noErr != sPSActionDescriptor->GetType(fAD, iKey, &theType))
+	if (noErr != spPSActionDescriptor->GetType(fAD, iKey, &theType))
 		return false;
 
 	switch (theType)
 		{
-		GETTERCASES(sPSActionDescriptor, fAD, iKey)
+		GETTERCASES(spPSActionDescriptor, fAD, iKey)
 		default:
 			ZUnimplemented();
 		}
@@ -1742,12 +1474,7 @@ void Map::Set(KeyID iKey, const Val& iVal)
 	{
 	#define COMMA() ,
 
-	switch (iVal.fType)
-		{
-		SETTERCASES(sPSActionDescriptor, fAD COMMA() iKey)
-		default:
-			ZUnimplemented();//?
-		}
+	SETTERCASES(spPSActionDescriptor, fAD COMMA() iKey)
 
 	#undef COMMA
 	}
@@ -1759,7 +1486,7 @@ void Map::Set(Index_t iIndex, const Val& iVal)
 	{ this->Set(this->KeyOf(iIndex), iVal); }
 
 void Map::Erase(KeyID iKey)
-	{ sPSActionDescriptor->Erase(fAD, iKey); }
+	{ spPSActionDescriptor->Erase(fAD, iKey); }
 
 void Map::Erase(const string8& iName)
 	{ this->Erase(spAsKeyID(iName)); }
@@ -1770,7 +1497,7 @@ void Map::Erase(Index_t iIndex)
 PIActionDescriptor& Map::OParam()
 	{
 	if (fAD)
-		sPSActionDescriptor->Free(fAD);
+		spPSActionDescriptor->Free(fAD);
 	fAD = nullptr;
 	return fAD;
 	}
@@ -1778,10 +1505,10 @@ PIActionDescriptor& Map::OParam()
 PIActionDescriptor Map::IParam() const
 	{ return fAD; }
 
-Map::Index_t Map::begin() const
+Map::Index_t Map::Begin() const
 	{ return Index_t(0); }
 
-Map::Index_t Map::end() const
+Map::Index_t Map::End() const
 	{ return Index_t(this->pCount()); }
 
 KeyID Map::KeyOf(Index_t iIndex) const
@@ -1789,7 +1516,7 @@ KeyID Map::KeyOf(Index_t iIndex) const
 	if (iIndex.GetIndex() < this->pCount())
 		{
 		KeyID result;
-		if (noErr == sPSActionDescriptor->GetKey(fAD, iIndex.GetIndex(), &result))
+		if (noErr == spPSActionDescriptor->GetKey(fAD, iIndex.GetIndex(), &result))
 			return result;
 		}
 	return 0;	
@@ -1808,7 +1535,7 @@ Map::Index_t Map::IndexOf(KeyID iKey) const
 	for (size_t x = 0; x < count; ++x)
 		{
 		KeyID theKey;
-		if (noErr == sPSActionDescriptor->GetKey(fAD, x, &theKey))
+		if (noErr == spPSActionDescriptor->GetKey(fAD, x, &theKey))
 			{
 			if (theKey == iKey)
 				return Index_t(x);
@@ -1819,6 +1546,18 @@ Map::Index_t Map::IndexOf(KeyID iKey) const
 
 Map::Index_t Map::IndexOf(const string8& iName) const
 	{ return this->IndexOf(spAsKeyID(iName)); }
+
+Map::Index_t Map::IndexOf(const Map& iOther, const Index_t& iOtherIndex) const
+	{
+	if (this == &iOther)
+		return iOtherIndex;
+
+	const KeyID theKey = iOther.KeyOf(iOtherIndex);
+	if (theKey == this->KeyOf(iOtherIndex))
+		return iOtherIndex;
+
+	return this->IndexOf(theKey);
+	}
 
 KeyID Map::GetType() const
 	{ return fType; }
@@ -1833,7 +1572,7 @@ PIActionDescriptor Map::Orphan()
 size_t Map::pCount() const
 	{
 	uint32 result;
-	if (noErr == sPSActionDescriptor->GetCount(fAD, &result))
+	if (noErr == spPSActionDescriptor->GetCount(fAD, &result))
 		return result;
 	return 0;
 	}

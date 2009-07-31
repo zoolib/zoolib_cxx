@@ -32,15 +32,13 @@ namespace ZPhotoshop {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * YadR
-
-typedef ZYadR_Val_T<Val> YadR;
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZPhotoshop::MakeYadR
 
 ZRef<ZYadR> sMakeYadR(const Val& iVal);
+
+ZRef<ZYadListR> sMakeYadR(const List& iList);
+
+ZRef<ZYadMapR> sMakeYadR(const Map& iMap);
 
 } // namespace ZPhotoshop
 
