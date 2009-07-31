@@ -57,7 +57,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			proc##_ProcInfo = kThinkCStackBased \
 			| STACK_ROUTINE_PARAMETER(1, SIZE_CODE(0)) \
 			| RESULT_SIZE(SIZE_CODE(sizeof(ret))) \
-			};
+			}
 
 #	define ZMacCFM_Priv_DefineUPP0_Void(proc) \
 		typedef UniversalProcPtr proc##_UPP; \
@@ -65,7 +65,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			{ \
 			proc##_ProcInfo = kThinkCStackBased \
 			| STACK_ROUTINE_PARAMETER(1, SIZE_CODE(0)) \
-			};
+			}
 #else
 #	define ZMacCFM_Call0(ret, proc, upp) \
 			upp()
@@ -100,14 +100,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			proc##_ProcInfo = kThinkCStackBased \
 			| STACK_ROUTINE_PARAMETER(1, SIZE_CODE(sizeof(arg1))) \
 			| RESULT_SIZE(SIZE_CODE(sizeof(ret))) \
-			};
+			}
 	#define ZMacCFM_Priv_DefineUPP1_Void(proc, arg1) \
 		typedef UniversalProcPtr proc##_UPP; \
 		enum \
 			{ \
 			proc##_ProcInfo = kThinkCStackBased \
 			| STACK_ROUTINE_PARAMETER(1, SIZE_CODE(sizeof(arg1))) \
-			};
+			}
 #else
 	#define ZMacCFM_Call1(ret, proc, upp, arg1) \
 		upp(arg1)
@@ -142,7 +142,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			| STACK_ROUTINE_PARAMETER(1, SIZE_CODE(sizeof(arg1))) \
 			| STACK_ROUTINE_PARAMETER(2, SIZE_CODE(sizeof(arg2))) \
 			| RESULT_SIZE(SIZE_CODE(sizeof(ret))) \
-			};
+			}
 	#define ZMacCFM_Priv_DefineUPP2_Void(proc, arg1, arg2) \
 		typedef UniversalProcPtr proc##_UPP; \
 		enum \
@@ -150,7 +150,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			proc##_ProcInfo = kThinkCStackBased \
 			| STACK_ROUTINE_PARAMETER(1, SIZE_CODE(sizeof(arg1))) \
 			| STACK_ROUTINE_PARAMETER(2, SIZE_CODE(sizeof(arg2))) \
-			};
+			}
 #else
 	#define ZMacCFM_Call2(ret, proc, upp, arg1, arg2) \
 		upp(arg1, arg2)
@@ -186,7 +186,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			| STACK_ROUTINE_PARAMETER(2, SIZE_CODE(sizeof(arg2))) \
 			| STACK_ROUTINE_PARAMETER(3, SIZE_CODE(sizeof(arg3))) \
 			| RESULT_SIZE(SIZE_CODE(sizeof(ret))) \
-			};
+			}
 	#define ZMacCFM_Priv_DefineUPP3_Void(proc, arg1, arg2, arg3) \
 		typedef UniversalProcPtr proc##_UPP; \
 		enum \
@@ -195,7 +195,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			| STACK_ROUTINE_PARAMETER(1, SIZE_CODE(sizeof(arg1))) \
 			| STACK_ROUTINE_PARAMETER(2, SIZE_CODE(sizeof(arg2))) \
 			| STACK_ROUTINE_PARAMETER(3, SIZE_CODE(sizeof(arg3))) \
-			};
+			}
 #else
 	#define ZMacCFM_Call3(ret, proc, upp, arg1, arg2, arg3) \
 		upp(arg1, arg2, arg3)
@@ -232,7 +232,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			| STACK_ROUTINE_PARAMETER(3, SIZE_CODE(sizeof(arg3))) \
 			| STACK_ROUTINE_PARAMETER(4, SIZE_CODE(sizeof(arg4))) \
 			| RESULT_SIZE(SIZE_CODE(sizeof(ret))) \
-			};
+			}
 	#define ZMacCFM_Priv_DefineUPP4_Void(proc, arg1, arg2, arg3, arg4) \
 		typedef UniversalProcPtr proc##_UPP; \
 		enum \
@@ -242,7 +242,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			| STACK_ROUTINE_PARAMETER(2, SIZE_CODE(sizeof(arg2))) \
 			| STACK_ROUTINE_PARAMETER(3, SIZE_CODE(sizeof(arg3))) \
 			| STACK_ROUTINE_PARAMETER(4, SIZE_CODE(sizeof(arg4))) \
-			};
+			}
 #else
 	#define ZMacCFM_Call4(ret, proc, upp, arg1, arg2, arg3, arg4) \
 		upp(arg1, arg2, arg3, arg4)
@@ -280,7 +280,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			| STACK_ROUTINE_PARAMETER(4, SIZE_CODE(sizeof(arg4))) \
 			| STACK_ROUTINE_PARAMETER(5, SIZE_CODE(sizeof(arg5))) \
 			| RESULT_SIZE(SIZE_CODE(sizeof(ret))) \
-			};
+			}
 	#define ZMacCFM_Priv_DefineUPP5_Void(proc, arg1, arg2, arg3, arg4, arg5) \
 		typedef UniversalProcPtr proc##_UPP; \
 		enum \
@@ -291,7 +291,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			| STACK_ROUTINE_PARAMETER(3, SIZE_CODE(sizeof(arg3))) \
 			| STACK_ROUTINE_PARAMETER(4, SIZE_CODE(sizeof(arg4))) \
 			| STACK_ROUTINE_PARAMETER(5, SIZE_CODE(sizeof(arg5))) \
-			};
+			}
 #else
 	#define ZMacCFM_Call5(ret, proc, upp, arg1, arg2, arg3, arg4, arg5) \
 		upp(arg1, arg2, arg3, arg4, arg5)
@@ -330,7 +330,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			| STACK_ROUTINE_PARAMETER(5, SIZE_CODE(sizeof(arg5))) \
 			| STACK_ROUTINE_PARAMETER(6, SIZE_CODE(sizeof(arg6))) \
 			| RESULT_SIZE(SIZE_CODE(sizeof(ret))) \
-			};
+			}
 	#define ZMacCFM_Priv_DefineUPP6_Void(proc, arg1, arg2, arg3, arg4, arg5, arg6) \
 		typedef UniversalProcPtr proc##_UPP; \
 		enum \
@@ -342,7 +342,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			| STACK_ROUTINE_PARAMETER(4, SIZE_CODE(sizeof(arg4))) \
 			| STACK_ROUTINE_PARAMETER(5, SIZE_CODE(sizeof(arg5))) \
 			| STACK_ROUTINE_PARAMETER(6, SIZE_CODE(sizeof(arg6))) \
-s			};
+			}
 #else
 	#define ZMacCFM_Call6(ret, proc, upp, arg1, arg2, arg3, arg4, arg5, arg6) \
 		upp(arg1, arg2, arg3, arg4, arg5, arg6)
@@ -382,7 +382,7 @@ s			};
 			| STACK_ROUTINE_PARAMETER(6, SIZE_CODE(sizeof(arg6))) \
 			| STACK_ROUTINE_PARAMETER(7, SIZE_CODE(sizeof(arg7))) \
 			| RESULT_SIZE(SIZE_CODE(sizeof(ret))) \
-			};
+			}
 	#define ZMacCFM_Priv_DefineUPP7_Void(proc, arg1, arg2, arg3, arg4, arg5, arg6, arg7) \
 		typedef UniversalProcPtr proc##_UPP; \
 		enum \
@@ -395,7 +395,7 @@ s			};
 			| STACK_ROUTINE_PARAMETER(5, SIZE_CODE(sizeof(arg5))) \
 			| STACK_ROUTINE_PARAMETER(6, SIZE_CODE(sizeof(arg6))) \
 			| STACK_ROUTINE_PARAMETER(7, SIZE_CODE(sizeof(arg7))) \
-			};
+			}
 #else
 	#define ZMacCFM_Call7(ret, proc, upp, arg1, arg2, arg3, arg4, arg5, arg6, arg7) \
 		upp(arg1, arg2, arg3, arg4, arg5, arg6, arg7)
