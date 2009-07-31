@@ -441,6 +441,26 @@ ZValMap_AppleEvent& ZValMap_AppleEvent::operator=(const ZValMap_AppleEvent& iOth
 	return *this;	
 	}
 
+ZValMap_AppleEvent::ZValMap_AppleEvent(AEKeyword iType)
+	{
+	::AECreateList(nullptr, 0, true, this);
+	descriptorType = iType;
+	}
+
+ZValMap_AppleEvent::ZValMap_AppleEvent(AEKeyword iType, const AERecord& iOther)
+	{
+	ZAssert(::AECheckIsRecord(&iOther));
+	::AEDuplicateDesc(&iOther, this);
+	descriptorType = iType;
+	}
+
+ZValMap_AppleEvent::ZValMap_AppleEvent(AEKeyword iType, const ZValMap_AppleEvent& iOther)
+	{
+	ZAssert(::AECheckIsRecord(&iOther));
+	::AEDuplicateDesc(&iOther, this);
+	descriptorType = iType;
+	}
+
 ZValMap_AppleEvent::ZValMap_AppleEvent(const AERecord& iOther)
 	{
 	if (::AECheckIsRecord(&iOther))
@@ -552,6 +572,9 @@ ZVal_AppleEvent ZValMap_AppleEvent::GetAttr(AEKeyword iName) const
 
 void ZValMap_AppleEvent::SetAttr(AEKeyword iName, const AEDesc& iVal)
 	{ ::AEPutAttributeDesc(this, iName, &iVal); }
+
+AEKeyword ZValMap_AppleEvent::GetType() const
+	{ return descriptorType; }
 
 ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::Begin() const
 	{ return Index_t(0); }

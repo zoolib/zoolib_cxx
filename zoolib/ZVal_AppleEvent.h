@@ -181,6 +181,10 @@ public:
 	~ZValMap_AppleEvent();
 	ZValMap_AppleEvent& operator=(const ZValMap_AppleEvent& iOther);
 
+	ZValMap_AppleEvent(AEKeyword iType);
+	ZValMap_AppleEvent(AEKeyword iType, const AERecord& iOther);
+	ZValMap_AppleEvent(AEKeyword iType, const ZValMap_AppleEvent& iOther);
+
 	ZValMap_AppleEvent(const AERecord& iOther);
 	ZValMap_AppleEvent& operator=(const AERecord& iOther);
 
@@ -214,6 +218,8 @@ public:
 	ZVal_AppleEvent DGetAttr(AEKeyword iName, const ZVal_AppleEvent& iDefault) const;
 	ZVal_AppleEvent GetAttr(AEKeyword iName) const;
 	void SetAttr(AEKeyword iName, const AEDesc& iVal);
+
+	AEKeyword GetType() const;
 
 	Index_t Begin() const;
 	Index_t End() const;
