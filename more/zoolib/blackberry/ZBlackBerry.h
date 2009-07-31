@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThreadOld.h"
-#include "zoolib/ZValData_ZooLib.h"
+#include "zoolib/ZVal_Any.h"
 
 #include <set>
 #include <vector>
@@ -33,7 +33,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZBlackBerry {
 
-typedef ZValData_ZooLib ValData;
+typedef ZValData_Any ValData;
 
 struct PasswordHash
 	{
