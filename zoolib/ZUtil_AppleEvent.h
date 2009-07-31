@@ -34,6 +34,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include ZMACINCLUDE3(CoreServices,AE,AEDataModel.h)
 #endif
 
+#include ZMACINCLUDE3(CoreServices,CarbonCore,Aliases.h)
+#include ZMACINCLUDE3(CoreServices,CarbonCore,Files.h)
 #include ZMACINCLUDE3(CoreServices,CarbonCore,MacTypes.h)
 
 NAMESPACE_ZOOLIB_BEGIN

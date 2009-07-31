@@ -28,8 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdio.h>
 #include <time.h>
 
-#if ZCONFIG_SPI_Enabled(MacClassic)
-#	include <OSUtils.h>
+#if ZCONFIG_SPI_Enabled(MacClassic) || ZCONFIG_SPI_Enabled(Carbon)
+#	include ZMACINCLUDE3(CoreServices,CarbonCore,OSUtils.h)
 #endif
 
 #if ZCONFIG_SPI_Enabled(Win)

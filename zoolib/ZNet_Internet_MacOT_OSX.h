@@ -36,7 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Internet_MacOT_OSX)
 
-#if ZCONFIG_SPI_Enabled(MacOSX)
+#if ZCONFIG_SPI_Enabled(Carbon)
 #	include ZMACINCLUDE3(CoreServices,OSServices,OpenTransportProviders.h)
 #endif
 

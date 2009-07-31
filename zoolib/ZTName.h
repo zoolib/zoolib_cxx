@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZTypes.h" // For intptr_t
 
 #include <string>
 
