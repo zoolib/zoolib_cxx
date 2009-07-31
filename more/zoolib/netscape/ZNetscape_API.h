@@ -766,7 +766,7 @@ ZMacCFM_DefineProc2_Void(NPN_UnscheduleTimer, NPP, uint32);
 ZMacCFM_DefineProc2(NPError, NPN_PopUpContextMenu, NPP, NPMenu*);
 
 ZMacCFM_DefineProc7
-	(NPError, NPP_New, NPMIMEType, NPP, uint16, int16, char* argn[], char* argv[], NPSavedData*);
+	(NPError, NPP_New, NPMIMEType, NPP, uint16, int16, char**, char**, NPSavedData*);
 
 ZMacCFM_DefineProc2(NPError, NPP_Destroy, NPP, NPSavedData**);
 ZMacCFM_DefineProc2(NPError, NPP_SetWindow, NPP, NPWindow*);
