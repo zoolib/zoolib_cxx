@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_ASCIIStrim.h"
 #include "zoolib/ZStream_Base64.h"
 #include "zoolib/ZStrimU_Unreader.h"
+#include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZYad_XMLRPC.h"
@@ -570,6 +571,9 @@ static void spToStrim_Map(const ZML::StrimW& s, ZRef<ZYadMapR> iYadMapR)
 
 static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 	{
+	int64 asInt64;
+	double asDouble;
+
 	if (false)
 		{}
 	else if (iVal.type() == typeid(void))
@@ -585,16 +589,16 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 				s << "0";
 		s.End("boolean");
 		}
-	else if (const int32* theValue = ZAnyCast<int32>(&iVal))
+	else if (ZUtil_Any::sQCoerceInt(iVal, asInt64))
 		{
 		s.Begin("i4");
-			s.Writef("%d", *theValue);
+			s.Writef("%d", int(asInt64));
 		s.End("i4");
 		}
-	else if (const double* theValue = ZAnyCast<double>(&iVal))
+	else if (ZUtil_Any::sQCoerceReal(iVal, asDouble))
 		{
 		s.Begin("double");
-			s.Writef("%.17g", *theValue);
+			s.Writef("%.17g", asDouble);
 		s.End("double");
 		}
 	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iVal))

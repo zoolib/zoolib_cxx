@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZStrimU_Unreader.h"
+#include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZYad_XMLPList.h"
@@ -317,6 +318,9 @@ static void spToStrim_Map(const ZML::StrimW& s, ZRef<ZYadMapR> iYadMapR)
 
 static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 	{
+	int64 asInt64;
+	double asDouble;
+
 	if (false)
 		{}
 	else if (const bool* theValue = ZAnyCast<bool>(&iVal))
@@ -326,13 +330,13 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 		else
 			s.Empty("false");
 		}
-	else if (const int32* theValue = ZAnyCast<int32>(&iVal))
+	else if (ZUtil_Any::sQCoerceInt(iVal, asInt64))
 		{
 		s.Begin("integer");
-			s.Writef("%d", *theValue);
+			s.Writef("%lld", asInt64);
 		s.End("integer");
 		}
-	else if (const double* theValue = ZAnyCast<double>(&iVal))
+	else if (ZUtil_Any::sQCoerceReal(iVal, asDouble))
 		{
 		s.Begin("real");
 			s.Writef("%.17g", *theValue);

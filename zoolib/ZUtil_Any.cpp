@@ -67,6 +67,27 @@ int64 sCoerceInt(const ZAny& iAny)
 	return 0;
 	}
 
+bool sQCoerceReal(const ZAny& iAny, double& oVal)
+	{
+	if (false)
+		{}
+	else if (const float* theVal = ZAnyCast<float>(&iAny))
+		oVal = *theVal;
+	else if (const double* theVal = ZAnyCast<double>(&iAny))
+		oVal = *theVal;
+	else
+		return false;
+	return true;
+	}
+
+double sCoerceReal(const ZAny& iAny)
+	{
+	double result;
+	if (sQCoerceReal(iAny, result))
+		return result;
+	return 0;
+	}
+
 } // namespace ZUtil_Any
 
 NAMESPACE_ZOOLIB_END

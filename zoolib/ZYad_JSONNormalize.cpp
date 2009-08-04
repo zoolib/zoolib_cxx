@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZTime.h"
+#include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZYad_JSONNormalize.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -67,6 +68,9 @@ private:
 
 static bool spNormalizeSimpleValue(const ZAny& iVal, ZAny& oVal)
 	{
+	int64 asInt64;
+	double asDouble;
+
 	if (false)
 		{}
 	else if (iVal.type() == typeid(void)
@@ -77,25 +81,13 @@ static bool spNormalizeSimpleValue(const ZAny& iVal, ZAny& oVal)
 		{
 		oVal = iVal;
 		}
-	else if (const int8* theValue = ZAnyCast<int8>(&iVal))
+	else if (ZUtil_Any::sQCoerceInt(iVal, asInt64))
 		{
-		oVal = int64(*theValue);
+		oVal = asInt64;
 		}
-	else if (const int16* theValue = ZAnyCast<int16>(&iVal))
+	else if (ZUtil_Any::sQCoerceReal(iVal, asDouble))
 		{
-		oVal = int64(*theValue);
-		}
-	else if (const int32* theValue = ZAnyCast<int32>(&iVal))
-		{
-		oVal = int64(*theValue);
-		}
-	else if (const float* theValue = ZAnyCast<float>(&iVal))
-		{
-		oVal = double(*theValue);
-		}
-	else if (const uint64* theValue = ZAnyCast<uint64>(&iVal))
-		{
-		oVal = int64(*theValue);
+		oVal = asDouble;
 		}
 	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iVal))
 		{
@@ -105,6 +97,7 @@ static bool spNormalizeSimpleValue(const ZAny& iVal, ZAny& oVal)
 		{
 		return false;
 		}
+
 	return true;
 	}
 
