@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZGeom.h"
 #include "zoolib/ZMulti_T.h"
 #include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZRGBColor.h"
+#include "zoolib/ZRGBA.h"
 
 // For documentation, see ZDCPixmapNS.cpp
 
@@ -71,7 +71,7 @@ public:
 	ZDCPixmap(ZPoint iSize, ZDCPixmapNS::EFormatEfficient iFormat);
 
 	/** \overload */
-	ZDCPixmap(ZPoint iSize, ZDCPixmapNS::EFormatEfficient iFormat, const ZRGBColorPOD& iFillColor);
+	ZDCPixmap(ZPoint iSize, ZDCPixmapNS::EFormatEfficient iFormat, const ZRGBA_POD& iFillColor);
 
 	/** This constructor is a shorthand for creating a pixmap that has a known pixel layout, where
 	that layout is specified by the EFormatStandard enum that is passed in. The pixmap *may* be the
@@ -81,7 +81,7 @@ public:
 	ZDCPixmap(ZPoint iSize, ZDCPixmapNS::EFormatStandard iFormat);
 
 	/** \overload */
-	ZDCPixmap(ZPoint iSize, ZDCPixmapNS::EFormatStandard iFormat, const ZRGBColorPOD& iFillColor);
+	ZDCPixmap(ZPoint iSize, ZDCPixmapNS::EFormatStandard iFormat, const ZRGBA_POD& iFillColor);
 
 	/** \overload */
 	ZDCPixmap(const ZDCPixmapNS::RasterDesc& iRasterDesc,
@@ -95,11 +95,11 @@ public:
 
 	/** Referencing pixvals and copying a color table. */
 	ZDCPixmap(ZPoint iSize, const uint8* iPixvals,
-		const ZRGBColorPOD* iColorTable, size_t iColorTableSize);
+		const ZRGBA_POD* iColorTable, size_t iColorTableSize);
 
 	/** Referencing pixVals and copying a color map. */
 	ZDCPixmap(ZPoint iSize, const char* iPixvals,
-		const ZRGBColorMap* iColorMap, size_t iColorMapSize);
+		const ZRGBAMap* iColorMap, size_t iColorMapSize);
 
 	bool operator==(const ZDCPixmap& other) const;
 
@@ -117,11 +117,11 @@ public:
 
 /** \name Access to pixels, by RGB.
 */	//@{
-	ZRGBColorPOD GetPixel(const ZPoint& iLocation) const;
-	ZRGBColorPOD GetPixel(ZCoord iLocationH, ZCoord iLocationV) const;
+	ZRGBA_POD GetPixel(const ZPoint& iLocation) const;
+	ZRGBA_POD GetPixel(ZCoord iLocationH, ZCoord iLocationV) const;
 
-	void SetPixel(const ZPoint& iLocation, const ZRGBColorPOD& iColor);
-	void SetPixel(ZCoord iLocationH, ZCoord iLocationV, const ZRGBColorPOD& iColor);
+	void SetPixel(const ZPoint& iLocation, const ZRGBA_POD& iColor);
+	void SetPixel(ZCoord iLocationH, ZCoord iLocationV, const ZRGBA_POD& iColor);
 	//@}
 
 /** \name Access to pixels, by pixel value (aka pixval.)
@@ -286,8 +286,8 @@ public:
 	virtual ~ZDCPixmapRep();
 
 // Access to pixels
-	ZRGBColorPOD GetPixel(ZCoord iLocationH, ZCoord iLocationV) const;
-	void SetPixel(ZCoord iLocationH, ZCoord iLocationV, const ZRGBColorPOD& iColor);
+	ZRGBA_POD GetPixel(ZCoord iLocationH, ZCoord iLocationV) const;
+	void SetPixel(ZCoord iLocationH, ZCoord iLocationV, const ZRGBA_POD& iColor);
 
 	uint32 GetPixval(ZCoord iLocationH, ZCoord iLocationV);
 	void SetPixval(ZCoord iLocationH, ZCoord iLocationV, uint32 iPixval);
@@ -359,13 +359,13 @@ inline ZDCPixmap::ZDCPixmap(const ZRef<ZDCPixmapRep>& iRep)
 :	fRep(iRep)
 	{}
 
-inline ZRGBColorPOD ZDCPixmap::GetPixel(const ZPoint& iLocation) const
+inline ZRGBA_POD ZDCPixmap::GetPixel(const ZPoint& iLocation) const
 	{ return this->GetPixel(iLocation.h, iLocation.v); }
 
 inline uint32 ZDCPixmap::GetPixval(const ZPoint& iLocation) const
 	{ return this->GetPixval(iLocation.h, iLocation.v); }
 
-inline void ZDCPixmap::SetPixel(const ZPoint& iLocation, const ZRGBColorPOD& iColor)
+inline void ZDCPixmap::SetPixel(const ZPoint& iLocation, const ZRGBA_POD& iColor)
 	{ this->SetPixel(iLocation.h, iLocation.v, iColor); }
 
 inline void ZDCPixmap::SetPixval(const ZPoint& iLocation, uint32 iPixval)

@@ -91,7 +91,7 @@ void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 
 	PixelDesc destPixelDesc;
 
-	const ZRGBColorPOD* theColors;
+	const ZRGBA_POD* theColors;
 	size_t theColorsCount = 0;
 
 	ZRef<PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
@@ -139,7 +139,7 @@ void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 		{
 		vector<uint8> tempColorsVector(theColorsCount * 4);
 
-		const ZRGBColorPOD* currentSource = theColors;
+		const ZRGBA_POD* currentSource = theColors;
 		uint8* currentDest = &tempColorsVector[0];
 
 		for (size_t x = 0; x < theColorsCount; ++x)
@@ -239,7 +239,7 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 		}
 
 	// Read in the color table, if any
-	vector<ZRGBColorPOD> sourceColorVector;
+	vector<ZRGBA_POD> sourceColorVector;
 	if (biClrUsed > 0)
 		{
 		// We reduce the number of calls to the stream substantially by
@@ -251,7 +251,7 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 		iStream.Read(&readColorTable[0], readColorTable.size());
 
 		const uint8* readColor = &readColorTable[0];
-		ZRGBColorPOD* sourceColor = &sourceColorVector[0];
+		ZRGBA_POD* sourceColor = &sourceColorVector[0];
 		for (size_t x = 0; x < biClrUsed; ++x)
 			{
 			sourceColor->blue = (*readColor++) * 0x101;

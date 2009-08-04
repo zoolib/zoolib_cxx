@@ -128,7 +128,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 				PNG_COLOR_TYPE_PALETTE, PNG_INTERLACE_NONE,
 				PNG_COMPRESSION_TYPE_BASE,PNG_FILTER_TYPE_BASE);
 
-			const ZRGBColorPOD* sourceColors;
+			const ZRGBA_POD* sourceColors;
 			size_t sourceColorCount;
 			thePixelDescRep_Indexed->GetColors(sourceColors, sourceColorCount);
 
@@ -270,7 +270,7 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			case PNG_COLOR_TYPE_PALETTE:
 				{
 				// Turn png's palette into something we can understand
-				vector<ZRGBColorPOD> theColorTable(info_ptr->num_palette);
+				vector<ZRGBA_POD> theColorTable(info_ptr->num_palette);
 				for (size_t x = 0; x < info_ptr->num_palette; ++x)
 					{
 					theColorTable[x].red = info_ptr->palette[x].red * 0x101;

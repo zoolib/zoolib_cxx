@@ -36,7 +36,7 @@ using std::vector;
 /*
 ZDCPixmamp has value semantics. It holds a refcounted pointer to a ZDCPixmapRep. A ZDCPixmapRep
 holds a refcounted pointer to a ZDCPixmapRaster. fBounds indicates which rectangle of pixvals
-within the raster are considered to be "our" pixvals. How the pixvals are turned into ZRGBColors
+within the raster are considered to be "our" pixvals. How the pixvals are turned into ZRGBAs
 is described by fPixelDesc.
 
 Finally a ZDCPixmapRep has a refcounted pointer to a ZDCPimapCache object. Anything which uses
@@ -86,11 +86,11 @@ ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource1, const ZDCPixmap& iSource2, const
 		{
 		for (ZCoord x = 0; x < resultSize.h; ++x)
 			{
-			ZRGBColor source1Pixel = iSource1.GetPixel(x, y);
-			ZRGBColor source2Pixel = iSource2.GetPixel(x, y);
-			ZRGBColor maskPixel = iMask.GetPixel(x, y);
+			ZRGBA source1Pixel = iSource1.GetPixel(x, y);
+			ZRGBA source2Pixel = iSource2.GetPixel(x, y);
+			ZRGBA maskPixel = iMask.GetPixel(x, y);
 			this->SetPixel(x, y,
-				source1Pixel * (ZRGBColor::sWhite - maskPixel) + source2Pixel * maskPixel);
+				source1Pixel * (ZRGBA::sWhite - maskPixel) + source2Pixel * maskPixel);
 			}
 		}
 	}
@@ -105,7 +105,7 @@ ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatEfficient iFormat)
 	fRep = ZDCPixmapRep::sCreate(theRasterDesc, iSize, thePixelDesc);
 	}
 
-ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatEfficient iFormat, const ZRGBColorPOD& iFillColor)
+ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatEfficient iFormat, const ZRGBA_POD& iFillColor)
 	{
 	EFormatStandard theStandardFormat = sMapEfficientToStandard(iFormat);
 
@@ -126,7 +126,7 @@ ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatStandard iFormat)
 	fRep = ZDCPixmapRep::sCreate(theRasterDesc, iSize, thePixelDesc);
 	}
 
-ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatStandard iFormat, const ZRGBColorPOD& iFillColor)
+ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatStandard iFormat, const ZRGBA_POD& iFillColor)
 	{
 	RasterDesc theRasterDesc(iSize, iFormat);
 	PixelDesc thePixelDesc(iFormat);
@@ -159,7 +159,7 @@ ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource, const ZRect& iSourceBounds)
 	}
 
 ZDCPixmap::ZDCPixmap(ZPoint iSize, const uint8* iPixvals,
-	const ZRGBColorPOD* iColorTable, size_t iColorTableSize)
+	const ZRGBA_POD* iColorTable, size_t iColorTableSize)
 	{
 	RasterDesc theRasterDesc;
 	theRasterDesc.fPixvalDesc.fDepth = 8;
@@ -174,7 +174,7 @@ ZDCPixmap::ZDCPixmap(ZPoint iSize, const uint8* iPixvals,
 	}
 
 ZDCPixmap::ZDCPixmap(ZPoint iSize, const char* iPixvals,
-	const ZRGBColorMap* iColorMap, size_t iColorMapSize)
+	const ZRGBAMap* iColorMap, size_t iColorMapSize)
 	{
 	RasterDesc theRasterDesc;
 	theRasterDesc.fPixvalDesc.fDepth = 8;
@@ -211,16 +211,16 @@ ZCoord ZDCPixmap::Height() const
 	return 0;
 	}
 
-ZRGBColorPOD ZDCPixmap::GetPixel(ZCoord iLocationH, ZCoord iLocationV) const
+ZRGBA_POD ZDCPixmap::GetPixel(ZCoord iLocationH, ZCoord iLocationV) const
 	{
 	if (!fRep)
-		return ZRGBColor::sBlack;
+		return ZRGBA::sBlack;
 	iLocationH += fRep->GetBounds().left;
 	iLocationV += fRep->GetBounds().top;
 	return fRep->GetPixel(iLocationH, iLocationV);
 	}
 
-void ZDCPixmap::SetPixel(ZCoord iLocationH, ZCoord iLocationV, const ZRGBColorPOD& iColor)
+void ZDCPixmap::SetPixel(ZCoord iLocationH, ZCoord iLocationV, const ZRGBA_POD& iColor)
 	{
 	if (!fRep)
 		return;
@@ -427,15 +427,15 @@ void ZDCPixmap::Munge(bool iMungeColorTable, MungeProc iMungeProc, void* iRefcon
 		if (PixelDescRep_Indexed* thePixelDescRep_Indexed
 			= ZRefDynamicCast<PixelDescRep_Indexed>(fRep->GetPixelDesc().GetRep()))
 			{
-			const ZRGBColorPOD* theColors;
+			const ZRGBA_POD* theColors;
 			size_t theCount;
 			thePixelDescRep_Indexed->GetColors(theColors, theCount);
-			vector<ZRGBColor> theVector;
+			vector<ZRGBA> theVector;
 			theVector.reserve(theCount);
 			bool changedAny = false;
 			for (size_t x = 0; x < theCount; ++x)
 				{
-				ZRGBColor currentRGBColor = theColors[x];
+				ZRGBA currentRGBColor = theColors[x];
 				if (iMungeProc(-1, -1, currentRGBColor, iRefcon))
 					changedAny = true;
 				theVector.push_back(currentRGBColor);
@@ -631,17 +631,17 @@ ZDCPixmapRep::ZDCPixmapRep(const ZRef<ZDCPixmapRaster>& iRaster,
 ZDCPixmapRep::~ZDCPixmapRep()
 	{}
 
-ZRGBColorPOD ZDCPixmapRep::GetPixel(ZCoord iLocationH, ZCoord iLocationV) const
+ZRGBA_POD ZDCPixmapRep::GetPixel(ZCoord iLocationH, ZCoord iLocationV) const
 	{
 	if (!fBounds.Contains(iLocationH, iLocationV))
-		return ZRGBColor::sBlack;
+		return ZRGBA::sBlack;
 
-	ZRGBColor result;
-	fPixelDesc.AsRGBColor(fRaster->GetPixval(iLocationH, iLocationV), result);
+	ZRGBA result;
+	fPixelDesc.AsRGBA(fRaster->GetPixval(iLocationH, iLocationV), result);
 	return result;
 	}
 
-void ZDCPixmapRep::SetPixel(ZCoord iLocationH, ZCoord iLocationV, const ZRGBColorPOD& iColor)
+void ZDCPixmapRep::SetPixel(ZCoord iLocationH, ZCoord iLocationV, const ZRGBA_POD& iColor)
 	{
 	if (!fBounds.Contains(iLocationH, iLocationV))
 		return;

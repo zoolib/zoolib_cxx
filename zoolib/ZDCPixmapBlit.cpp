@@ -199,7 +199,7 @@ void ZDCPixmapBlit::sBlit(
 
 void ZDCPixmapBlit::sColor(
 	void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const PD& iDestPD,
-	const ZRGBColor& iColor,
+	const ZRGBA_POD& iColor,
 	EOp iOp)
 	{
 	ZRef<PDRep> destPDRep = iDestPD.GetRep();
@@ -224,7 +224,7 @@ void ZDCPixmapBlit::sColor(
 void ZDCPixmapBlit::sColor(
 	const void* iMatteAddress, const RD& iMatteRD, const ZRect& iMatteB, const PD& iMattePD,
 	void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const PD& iDestPD,
-	const ZRGBColor& iColor,
+	const ZRGBA_POD& iColor,
 	EOp iOp)
 	{
 	ZRect realDest = iDestB;
@@ -272,7 +272,7 @@ void ZDCPixmapBlit::sColor(
 	const void* iMatteAddress, const RD& iMatteRD, const ZRect& iMatteB, const PD& iMattePD,
 	ZPoint iMatteOrigin,
 	void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const PD& iDestPD,
-	const ZRGBColor& iColor,
+	const ZRGBA_POD& iColor,
 	EOp iOp)
 	{
 	sColorTile_T(iMatteAddress, iMatteRD, iMatteB, iMattePD,

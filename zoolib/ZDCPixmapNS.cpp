@@ -228,7 +228,7 @@ static void sMaskToShiftsAndMultiplier(uint32 iMask,
 		}
 	}
 
-static uint8* sBuildReverseLookup(const ZRGBColorPOD* iColors, size_t iCount)
+static uint8* sBuildReverseLookup(const ZRGBA_POD* iColors, size_t iCount)
 	{
 	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
 	uint8* lookupTable = new uint8[4096];
@@ -261,43 +261,6 @@ static uint8* sBuildReverseLookup(const ZRGBColorPOD* iColors, size_t iCount)
 		}
 	return lookupTable;
 	}
-
-#if 0
-// This version is not used
-static uint8* sBuildReverseLookup(const ZRGBColorSmallPOD* iColors, size_t iCount)
-	{
-	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
-	uint8* lookupTable = new uint8[4096];
-	for (int32 red = 0; red < 16; ++red)
-		{
-		for (int32 green = 0; green < 16; ++green)
-			{
-			for (int32 blue = 0; blue < 16; ++blue)
-				{
-				int32 bestDistance = 0x7FFFFFFF;
-				uint8 bestIndex = 0;
-				for (size_t x = 0; x < iCount; ++x)
-					{
-					int32 redDelta = red - (iColors[x].red >> 4);
-					int32 greenDelta = green - (iColors[x].green >> 4);
-					int32 blueDelta = blue - (iColors[x].blue >> 4);
-
-					int32 currentDistance = (redDelta * redDelta)
-						+ (greenDelta * greenDelta) + (blueDelta * blueDelta);
-
-					if (bestDistance > currentDistance)
-						{
-						bestDistance = currentDistance;
-						bestIndex = x;
-						}
-					}
-				lookupTable[blue + 16 * (green + 16 * red)] = bestIndex;
-				}
-			}
-		}
-	return lookupTable;
-	}
-#endif // 0
 
 } // anonymous namespace
 
@@ -1650,8 +1613,8 @@ void ZDCPixmapNS::PixvalIterW::Reset(void* iAddress, int iCoord)
 #pragma mark -
 #pragma mark * ZDCPixmapNS::MapPixvalToRGB_Indexed
 
-void ZDCPixmapNS::MapPixvalToRGB_Indexed::AsRGBColors(const uint32* iPixvals,
-	size_t iCount, ZRGBColorPOD* oColors) const
+void ZDCPixmapNS::MapPixvalToRGB_Indexed::AsRGBAs(const uint32* iPixvals,
+	size_t iCount, ZRGBA_POD* oColors) const
 	{
 	register size_t localCount = iCount + 1;
 	if (fPixvals)
@@ -1670,18 +1633,11 @@ void ZDCPixmapNS::MapPixvalToRGB_Indexed::AsRGBColors(const uint32* iPixvals,
 		}
 	}
 
-void ZDCPixmapNS::MapPixvalToRGB_Indexed::pAsRGBColor(uint32 iPixval,
-	ZRGBColorPOD& oColor) const
+void ZDCPixmapNS::MapPixvalToRGB_Indexed::pAsRGBA(uint32 iPixval,
+	ZRGBA_POD& oColor) const
 	{
 	uint32* iter = lower_bound(fPixvals, fPixvals + fCount, iPixval);
 	oColor = fColors[iter - fPixvals];
-	}
-
-void ZDCPixmapNS::MapPixvalToRGB_Indexed::pAsRGBColorSmall(uint32 iPixval,
-	ZRGBColorSmallPOD& oColor) const
-	{
-	uint32* iter = lower_bound(fPixvals, fPixvals + fCount, iPixval);
-	oColor = ZRGBColorSmall(fColors[iter - fPixvals]);
 	}
 
 uint16 ZDCPixmapNS::MapPixvalToRGB_Indexed::pAsAlpha(uint32 iPixval) const
@@ -1694,8 +1650,8 @@ uint16 ZDCPixmapNS::MapPixvalToRGB_Indexed::pAsAlpha(uint32 iPixval) const
 #pragma mark -
 #pragma mark * ZDCPixmapNS::MapPixvalToRGB_Gray
 
-void ZDCPixmapNS::MapPixvalToRGB_Gray::AsRGBColors(const uint32* iPixvals,
-	size_t iCount, ZRGBColorPOD* oColors) const
+void ZDCPixmapNS::MapPixvalToRGB_Gray::AsRGBAs(const uint32* iPixvals,
+	size_t iCount, ZRGBA_POD* oColors) const
 	{
 	register size_t localCount = iCount + 1;
 	while (--localCount)
@@ -1713,8 +1669,8 @@ void ZDCPixmapNS::MapPixvalToRGB_Gray::AsRGBColors(const uint32* iPixvals,
 #pragma mark -
 #pragma mark * ZDCPixmapNS::MapPixvalToRGB_Color
 
-void ZDCPixmapNS::MapPixvalToRGB_Color::AsRGBColors(const uint32* iPixvals,
-	size_t iCount, ZRGBColorPOD* oColors) const
+void ZDCPixmapNS::MapPixvalToRGB_Color::AsRGBAs(const uint32* iPixvals,
+	size_t iCount, ZRGBA_POD* oColors) const
 	{
 	register size_t localCount = iCount + 1;
 	while (--localCount)
@@ -1731,7 +1687,7 @@ void ZDCPixmapNS::MapPixvalToRGB_Color::AsRGBColors(const uint32* iPixvals,
 #pragma mark -
 #pragma mark * ZDCPixmapNS::MapRGBToPixval_Indexed
 
-void ZDCPixmapNS::MapRGBToPixval_Indexed::AsPixvals(const ZRGBColorPOD* iColors,
+void ZDCPixmapNS::MapRGBToPixval_Indexed::AsPixvals(const ZRGBA_POD* iColors,
 	size_t iCount, uint32* oPixvals) const
 	{
 	register size_t localCount = iCount + 1;
@@ -1762,7 +1718,7 @@ void ZDCPixmapNS::MapRGBToPixval_Indexed::AsPixvals(const ZRGBColorPOD* iColors,
 #pragma mark -
 #pragma mark * ZDCPixmapNS::MapRGBToPixval_Gray
 
-void ZDCPixmapNS::MapRGBToPixval_Gray::AsPixvals(const ZRGBColorPOD* iColors,
+void ZDCPixmapNS::MapRGBToPixval_Gray::AsPixvals(const ZRGBA_POD* iColors,
 	size_t iCount, uint32* oPixvals) const
 	{
 	register size_t localCount = iCount + 1;
@@ -1783,7 +1739,7 @@ void ZDCPixmapNS::MapRGBToPixval_Gray::AsPixvals(const ZRGBColorPOD* iColors,
 #pragma mark -
 #pragma mark * ZDCPixmapNS::MapRGBToPixval_Color
 
-void ZDCPixmapNS::MapRGBToPixval_Color::AsPixvals(const ZRGBColorPOD* iColors,
+void ZDCPixmapNS::MapRGBToPixval_Color::AsPixvals(const ZRGBA_POD* iColors,
 	size_t iCount, uint32* oPixvals) const
 	{
 	register size_t localCount = iCount + 1;
@@ -1826,7 +1782,7 @@ int ZDCPixmapNS::PixelDescRep::MarkChanged()
 #pragma mark -
 #pragma mark * ZDCPixmapNS::PixelDescRep_Indexed
 
-ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iColors, size_t iCount)
+ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBA_POD* iColors, size_t iCount)
 :	fCheckedAlpha(false)
 	{
 	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
@@ -1836,11 +1792,11 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iCol
 	fReverseLookup = nullptr;
 
 	fCount = iCount;
-	fColors = new ZRGBColorPOD[iCount];
-	ZBlockCopy(iColors, fColors, iCount * sizeof(ZRGBColorPOD));
+	fColors = new ZRGBA_POD[iCount];
+	ZBlockCopy(iColors, fColors, iCount * sizeof(ZRGBA_POD));
 	}
 
-ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iColors,
+ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBA_POD* iColors,
 	size_t iCount, bool iStripAlpha)
 :	fCheckedAlpha(true),
 	fHasAlpha(false)
@@ -1854,15 +1810,15 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iCol
 	fReverseLookup = nullptr;
 
 	fCount = iCount;
-	fColors = new ZRGBColorPOD[iCount];
-	ZBlockCopy(iColors, fColors, iCount * sizeof(ZRGBColorPOD));
+	fColors = new ZRGBA_POD[iCount];
+	ZBlockCopy(iColors, fColors, iCount * sizeof(ZRGBA_POD));
 
 	// Set the alpha value to be completely opaque.
 	for (size_t x = 0; x < iCount; ++x)
 		fColors[x].alpha = 0xFFFFU;
 	}
 
-ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iColors,
+ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBA_POD* iColors,
 	uint32* iPixvals, size_t iCount)
 :	fCheckedAlpha(false)
 	{
@@ -1872,7 +1828,7 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iCol
 	MapRGBToPixval_Indexed::fPixvals = nullptr;
 	fReverseLookup = nullptr;
 
-	vector<ZRGBColorPOD> vectorColors;
+	vector<ZRGBA_POD> vectorColors;
 	vector<uint32> vectorPixvals;
 	for (size_t x = 0; x < iCount; ++x)
 		{
@@ -1885,7 +1841,7 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iCol
 		}
 
 	fCount = iCount;
-	fColors = new ZRGBColorPOD[iCount];
+	fColors = new ZRGBA_POD[iCount];
 
 	try
 		{
@@ -1898,11 +1854,11 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iCol
 		throw;
 		}
 
-	ZBlockCopy(&vectorColors[0], fColors, iCount * sizeof(ZRGBColorPOD));
+	ZBlockCopy(&vectorColors[0], fColors, iCount * sizeof(ZRGBA_POD));
 	ZBlockCopy(&vectorPixvals[0], MapPixvalToRGB_Indexed::fPixvals, iCount * sizeof(uint32));
 	}
 
-ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iColors,
+ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBA_POD* iColors,
 	uint32* iPixvals, size_t iCount, bool iStripAlpha)
 :	fCheckedAlpha(true),
 	fHasAlpha(false)
@@ -1915,7 +1871,7 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iCol
 	MapRGBToPixval_Indexed::fPixvals = nullptr;
 	fReverseLookup = nullptr;
 
-	vector<ZRGBColorPOD> vectorColors;
+	vector<ZRGBA_POD> vectorColors;
 	vector<uint32> vectorPixvals;
 	for (size_t x = 0; x < iCount; ++x)
 		{
@@ -1928,7 +1884,7 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iCol
 		}
 
 	fCount = iCount;
-	fColors = new ZRGBColorPOD[iCount];
+	fColors = new ZRGBA_POD[iCount];
 
 	try
 		{
@@ -1941,7 +1897,7 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iCol
 		throw;
 		}
 
-	ZBlockCopy(&vectorColors[0], fColors, iCount * sizeof(ZRGBColorPOD));
+	ZBlockCopy(&vectorColors[0], fColors, iCount * sizeof(ZRGBA_POD));
 	ZBlockCopy(&vectorPixvals[0], MapPixvalToRGB_Indexed::fPixvals, iCount * sizeof(uint32));
 
 	// Set the alpha value to be completely opaque.
@@ -1949,65 +1905,8 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorPOD* iCol
 		fColors[x].alpha = 0xFFFFU;
 	}
 
-ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorSmallPOD* iColors,
-	size_t iCount)
-:	fCheckedAlpha(false)
-	{
-	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
-
-	MapPixvalToRGB_Indexed::fPixvals = nullptr;
-	MapRGBToPixval_Indexed::fPixvals = nullptr;
-	fReverseLookup = nullptr;
-
-	fCount = iCount;
-	fColors = new ZRGBColorPOD[iCount];
-	for (size_t x = 0; x < iCount; ++x)
-		fColors[x] = ZRGBColor(iColors[x]);
-	}
-
-ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBColorSmallPOD* iColors,
-	uint32* iPixvals, size_t iCount)
-:	fCheckedAlpha(false)
-	{
-	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
-
-	MapPixvalToRGB_Indexed::fPixvals = nullptr;
-	MapRGBToPixval_Indexed::fPixvals = nullptr;
-	fReverseLookup = nullptr;
-
-	vector<ZRGBColorPOD> vectorColors;
-	vector<uint32> vectorPixvals;
-	for (size_t x = 0; x < iCount; ++x)
-		{
-		vector<uint32>::iterator insertIter
-			= lower_bound(vectorPixvals.begin(), vectorPixvals.end(), iPixvals[x]);
-
-		insertIter = vectorPixvals.insert(insertIter, iPixvals[x]);
-
-		vectorColors.insert(vectorColors.begin() + (insertIter - vectorPixvals.begin()),
-			ZRGBColor(iColors[x]));
-		}
-
-	fCount = iCount;
-	fColors = new ZRGBColorPOD[iCount];
-
-	try
-		{
-		MapPixvalToRGB_Indexed::fPixvals = new uint32[iCount];
-		MapRGBToPixval_Indexed::fPixvals = MapPixvalToRGB_Indexed::fPixvals;
-		}
-	catch (...)
-		{
-		delete fColors;
-		throw;
-		}
-
-	ZBlockCopy(&vectorColors[0], fColors, iCount * sizeof(ZRGBColorPOD));
-	ZBlockCopy(&vectorPixvals[0], MapPixvalToRGB_Indexed::fPixvals, iCount * sizeof(uint32));
-	}
-
 ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(
-	const ZRGBColorMap* iColorMap, size_t iCount)
+	const ZRGBAMap* iColorMap, size_t iCount)
 :	fCheckedAlpha(false)
 	{
 	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
@@ -2017,7 +1916,7 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(
 	fReverseLookup = nullptr;
 
 	fCount = 256;
-	fColors = new ZRGBColorPOD[256];
+	fColors = new ZRGBA_POD[256];
 	for (size_t x = 0; x < 256; ++x)
 		{
 		fColors[x].red = fColors[x].green = fColors[x].blue = 0;
@@ -2040,7 +1939,7 @@ bool ZDCPixmapNS::PixelDescRep_Indexed::HasAlpha()
 	if (!fCheckedAlpha)
 		{
 		fHasAlpha = false;
-		ZRGBColorPOD* current = fColors;
+		ZRGBA_POD* current = fColors;
 		size_t count = fCount + 1;
 		while (--count)
 			{
@@ -2067,35 +1966,24 @@ ZRef<ZDCPixmapNS::PixelDescRep> ZDCPixmapNS::PixelDescRep_Indexed::WithoutAlpha(
 		return new PixelDescRep_Indexed(fColors, fCount);
 	}
 
-void ZDCPixmapNS::PixelDescRep_Indexed::Imp_AsRGBColor(uint32 iPixval, ZRGBColorPOD& oColor) const
-	{ MapPixvalToRGB_Indexed::AsRGBColor(iPixval, oColor); }
+void ZDCPixmapNS::PixelDescRep_Indexed::Imp_AsRGBA(uint32 iPixval, ZRGBA_POD& oColor) const
+	{ MapPixvalToRGB_Indexed::AsRGBA(iPixval, oColor); }
 
-void ZDCPixmapNS::PixelDescRep_Indexed::Imp_AsRGBColorSmall(
-	uint32 iPixval, ZRGBColorSmallPOD& oColor) const
-	{ MapPixvalToRGB_Indexed::AsRGBColorSmall(iPixval, oColor); }
-
-void ZDCPixmapNS::PixelDescRep_Indexed::Imp_AsRGBColors(
-	const uint32* iPixvals, size_t iCount, ZRGBColorPOD* oColors) const
-	{ MapPixvalToRGB_Indexed::AsRGBColors(iPixvals, iCount, oColors); }
+void ZDCPixmapNS::PixelDescRep_Indexed::Imp_AsRGBAs(
+	const uint32* iPixvals, size_t iCount, ZRGBA_POD* oColors) const
+	{ MapPixvalToRGB_Indexed::AsRGBAs(iPixvals, iCount, oColors); }
 
 uint16 ZDCPixmapNS::PixelDescRep_Indexed::Imp_AsAlpha(uint32 iPixval) const
 	{ return MapPixvalToRGB_Indexed::AsAlpha(iPixval); }
 
-uint32 ZDCPixmapNS::PixelDescRep_Indexed::Imp_AsPixval(const ZRGBColorPOD& iRGBColor) const
+uint32 ZDCPixmapNS::PixelDescRep_Indexed::Imp_AsPixval(const ZRGBA_POD& iRGBA) const
 	{
 	this->BuildReverseLookupIfNeeded();
-	return MapRGBToPixval_Indexed::AsPixval(iRGBColor);
-	}
-
-uint32 ZDCPixmapNS::PixelDescRep_Indexed::Imp_AsPixval(
-	const ZRGBColorSmallPOD& iRGBColorSmall) const
-	{
-	this->BuildReverseLookupIfNeeded();
-	return MapRGBToPixval_Indexed::AsPixval(iRGBColorSmall);
+	return MapRGBToPixval_Indexed::AsPixval(iRGBA);
 	}
 
 void ZDCPixmapNS::PixelDescRep_Indexed::Imp_AsPixvals(
-	const ZRGBColorPOD* iColors, size_t iCount, uint32* oPixvals) const
+	const ZRGBA_POD* iColors, size_t iCount, uint32* oPixvals) const
 	{
 	this->BuildReverseLookupIfNeeded();
 	MapRGBToPixval_Indexed::AsPixvals(iColors, iCount, oPixvals);
@@ -2108,7 +1996,7 @@ void ZDCPixmapNS::PixelDescRep_Indexed::BuildReverseLookupIfNeeded() const
 	}
 
 void ZDCPixmapNS::PixelDescRep_Indexed::GetColors(
-	const ZRGBColorPOD*& oColors, size_t& oCount) const
+	const ZRGBA_POD*& oColors, size_t& oCount) const
 	{
 	oColors = fColors;
 	oCount = fCount;
@@ -2144,28 +2032,21 @@ ZRef<ZDCPixmapNS::PixelDescRep> ZDCPixmapNS::PixelDescRep_Gray::WithoutAlpha()
 	return new PixelDescRep_Gray(fMaskL, 0);
 	}
 
-void ZDCPixmapNS::PixelDescRep_Gray::Imp_AsRGBColor(uint32 iPixval, ZRGBColorPOD& oColor) const
-	{ MapPixvalToRGB_Gray::AsRGBColor(iPixval, oColor); }
+void ZDCPixmapNS::PixelDescRep_Gray::Imp_AsRGBA(uint32 iPixval, ZRGBA_POD& oColor) const
+	{ MapPixvalToRGB_Gray::AsRGBA(iPixval, oColor); }
 
-void ZDCPixmapNS::PixelDescRep_Gray::Imp_AsRGBColorSmall(
-	uint32 iPixval, ZRGBColorSmallPOD& oColor) const
-	{ MapPixvalToRGB_Gray::AsRGBColorSmall(iPixval, oColor); }
-
-void ZDCPixmapNS::PixelDescRep_Gray::Imp_AsRGBColors(
-	const uint32* iPixvals, size_t iCount, ZRGBColorPOD* oColors) const
-	{ MapPixvalToRGB_Gray::AsRGBColors(iPixvals, iCount, oColors); }
+void ZDCPixmapNS::PixelDescRep_Gray::Imp_AsRGBAs(
+	const uint32* iPixvals, size_t iCount, ZRGBA_POD* oColors) const
+	{ MapPixvalToRGB_Gray::AsRGBAs(iPixvals, iCount, oColors); }
 
 uint16 ZDCPixmapNS::PixelDescRep_Gray::Imp_AsAlpha(uint32 iPixval) const
 	{ return MapPixvalToRGB_Gray::AsAlpha(iPixval); }
 
-uint32 ZDCPixmapNS::PixelDescRep_Gray::Imp_AsPixval(const ZRGBColorPOD& iRGBColor) const
-	{ return MapRGBToPixval_Gray::AsPixval(iRGBColor); }
-
-uint32 ZDCPixmapNS::PixelDescRep_Gray::Imp_AsPixval(const ZRGBColorSmallPOD& iRGBColorSmall) const
-	{ return MapRGBToPixval_Gray::AsPixval(iRGBColorSmall); }
+uint32 ZDCPixmapNS::PixelDescRep_Gray::Imp_AsPixval(const ZRGBA_POD& iRGBA) const
+	{ return MapRGBToPixval_Gray::AsPixval(iRGBA); }
 
 void ZDCPixmapNS::PixelDescRep_Gray::Imp_AsPixvals(
-	const ZRGBColorPOD* iColors, size_t iCount, uint32* oPixvals) const
+	const ZRGBA_POD* iColors, size_t iCount, uint32* oPixvals) const
 	{ MapRGBToPixval_Gray::AsPixvals(iColors, iCount, oPixvals); }
 
 void ZDCPixmapNS::PixelDescRep_Gray::GetMasks(uint32& oMaskL, uint32& oMaskA) const
@@ -2221,28 +2102,21 @@ ZRef<ZDCPixmapNS::PixelDescRep> ZDCPixmapNS::PixelDescRep_Color::WithoutAlpha()
 	return new PixelDescRep_Color(fMaskR, fMaskG, fMaskB, 0);
 	}
 
-void ZDCPixmapNS::PixelDescRep_Color::Imp_AsRGBColor(uint32 iPixval, ZRGBColorPOD& oColor) const
-	{ MapPixvalToRGB_Color::AsRGBColor(iPixval, oColor); }
+void ZDCPixmapNS::PixelDescRep_Color::Imp_AsRGBA(uint32 iPixval, ZRGBA_POD& oColor) const
+	{ MapPixvalToRGB_Color::AsRGBA(iPixval, oColor); }
 
-void ZDCPixmapNS::PixelDescRep_Color::Imp_AsRGBColorSmall(
-	uint32 iPixval, ZRGBColorSmallPOD& oColor) const
-	{ MapPixvalToRGB_Color::AsRGBColorSmall(iPixval, oColor); }
-
-void ZDCPixmapNS::PixelDescRep_Color::Imp_AsRGBColors(
-	const uint32* iPixvals, size_t iCount, ZRGBColorPOD* oColors) const
-	{ MapPixvalToRGB_Color::AsRGBColors(iPixvals, iCount, oColors); }
+void ZDCPixmapNS::PixelDescRep_Color::Imp_AsRGBAs(
+	const uint32* iPixvals, size_t iCount, ZRGBA_POD* oColors) const
+	{ MapPixvalToRGB_Color::AsRGBAs(iPixvals, iCount, oColors); }
 
 uint16 ZDCPixmapNS::PixelDescRep_Color::Imp_AsAlpha(uint32 iPixval) const
 	{ return MapPixvalToRGB_Color::AsAlpha(iPixval); }
 
-uint32 ZDCPixmapNS::PixelDescRep_Color::Imp_AsPixval(const ZRGBColorPOD& iRGBColor) const
-	{ return MapRGBToPixval_Color::AsPixval(iRGBColor); }
-
-uint32 ZDCPixmapNS::PixelDescRep_Color::Imp_AsPixval(const ZRGBColorSmallPOD& iRGBColorSmall) const
-	{ return MapRGBToPixval_Color::AsPixval(iRGBColorSmall); }
+uint32 ZDCPixmapNS::PixelDescRep_Color::Imp_AsPixval(const ZRGBA_POD& iRGBA) const
+	{ return MapRGBToPixval_Color::AsPixval(iRGBA); }
 
 void ZDCPixmapNS::PixelDescRep_Color::Imp_AsPixvals(
-	const ZRGBColorPOD* iColors, size_t iCount, uint32* oPixvals) const
+	const ZRGBA_POD* iColors, size_t iCount, uint32* oPixvals) const
 	{ MapRGBToPixval_Color::AsPixvals(iColors, iCount, oPixvals); }
 
 void ZDCPixmapNS::PixelDescRep_Color::GetMasks(
@@ -2307,15 +2181,11 @@ ZDCPixmapNS::PixelDesc::PixelDesc(EFormatStandard iFormat)
 	ZUnimplemented();
 	}
 
-ZDCPixmapNS::PixelDesc::PixelDesc(const ZRGBColorPOD* iColors, size_t iCount)
+ZDCPixmapNS::PixelDesc::PixelDesc(const ZRGBA_POD* iColors, size_t iCount)
 :	fRep(new PixelDescRep_Indexed(iColors, iCount))
 	{}
 
-ZDCPixmapNS::PixelDesc::PixelDesc(const ZRGBColorSmallPOD* iColors, size_t iCount)
-:	fRep(new PixelDescRep_Indexed(iColors, iCount))
-	{}
-
-ZDCPixmapNS::PixelDesc::PixelDesc(const ZRGBColorMap* iColorMap, size_t iCount)
+ZDCPixmapNS::PixelDesc::PixelDesc(const ZRGBAMap* iColorMap, size_t iCount)
 :	fRep(new PixelDescRep_Indexed(iColorMap, iCount))
 	{}
 
@@ -2363,27 +2233,21 @@ bool ZDCPixmapNS::PixelDesc::HasAlpha() const
 ZDCPixmapNS::PixelDesc ZDCPixmapNS::PixelDesc::WithoutAlpha() const
 	{ return fRep->WithoutAlpha(); }
 
-void ZDCPixmapNS::PixelDesc::AsRGBColor(uint32 iPixval, ZRGBColorPOD& oColor) const
-	{ fRep->Imp_AsRGBColor(iPixval, oColor); }
+void ZDCPixmapNS::PixelDesc::AsRGBA(uint32 iPixval, ZRGBA_POD& oColor) const
+	{ fRep->Imp_AsRGBA(iPixval, oColor); }
 
-void ZDCPixmapNS::PixelDesc::AsRGBColorSmall(uint32 iPixval, ZRGBColorSmallPOD& oColor) const
-	{ fRep->Imp_AsRGBColorSmall(iPixval, oColor); }
-
-void ZDCPixmapNS::PixelDesc::AsRGBColors(
-	const uint32* iPixvals, size_t iCount, ZRGBColorPOD* oColors) const
-	{ fRep->Imp_AsRGBColors(iPixvals, iCount, oColors); }
+void ZDCPixmapNS::PixelDesc::AsRGBAs(
+	const uint32* iPixvals, size_t iCount, ZRGBA_POD* oColors) const
+	{ fRep->Imp_AsRGBAs(iPixvals, iCount, oColors); }
 
 uint16 ZDCPixmapNS::PixelDesc::AsAlpha(uint32 iPixval) const
 	{ return fRep->Imp_AsAlpha(iPixval); }	
 
-uint32 ZDCPixmapNS::PixelDesc::AsPixval(const ZRGBColorPOD& iRGBColor) const
-	{ return fRep->Imp_AsPixval(iRGBColor); }
-
-uint32 ZDCPixmapNS::PixelDesc::AsPixval(const ZRGBColorSmallPOD& iRGBColorSmall) const
-	{ return fRep->Imp_AsPixval(iRGBColorSmall); }
+uint32 ZDCPixmapNS::PixelDesc::AsPixval(const ZRGBA_POD& iRGBA) const
+	{ return fRep->Imp_AsPixval(iRGBA); }
 
 void ZDCPixmapNS::PixelDesc::AsPixvals(
-	const ZRGBColorPOD* iColors, size_t iCount, uint32* oPixvals) const
+	const ZRGBA_POD* iColors, size_t iCount, uint32* oPixvals) const
 	{ fRep->Imp_AsPixvals(iColors, iCount, oPixvals); }
 
 // =================================================================================================
@@ -2527,14 +2391,14 @@ static void sMungeRow_T(
 	{
 	PixvalAccessor sourceAccessor(iPixvalDesc);
 	int32 hCurrent = 0;
-	ZRGBColorPOD theRGBColor;
+	ZRGBA_POD theRGBA;
 	while (hCurrent < inCount)
 		{
 		uint32 sourceValue = sourceAccessor.GetPixval(iRowAddress, inStartH + hCurrent);
-		iMapPixvalToRGB.AsRGBColor(sourceValue, theRGBColor);
-		if (iMungeProc(hCurrent, inCoordV, theRGBColor, iRefcon))
+		iMapPixvalToRGB.AsRGBA(sourceValue, theRGBA);
+		if (iMungeProc(hCurrent, inCoordV, theRGBA, iRefcon))
 			{
-			uint32 destValue = iMapRGBToPixval.AsPixval(theRGBColor);
+			uint32 destValue = iMapRGBToPixval.AsPixval(theRGBA);
 			sourceAccessor.SetPixval(iRowAddress, inStartH + hCurrent, destValue);
 			}
 		++hCurrent;
@@ -2608,7 +2472,7 @@ static void sBlitRow_T(
 	PixvalAccessor destAccessor(iDestPixvalDesc);
 
 	int32 hCurrent = 0;
-	ZRGBColor theRGBColor;
+	ZRGBA theRGBA;
 	while (hCurrent < inHCount)
 		{
 		uint32 buffer[kBufSize];
@@ -2619,8 +2483,8 @@ static void sBlitRow_T(
 		uint32* currentPixval = buffer;
 		while (--tempCount)
 			{
-			iSourcePixvalToRGB.AsRGBColor(*currentPixval, theRGBColor);
-			*currentPixval++ = iDestRGBToPixval.AsPixval(theRGBColor);
+			iSourcePixvalToRGB.AsRGBA(*currentPixval, theRGBA);
+			*currentPixval++ = iDestRGBToPixval.AsPixval(theRGBA);
 			}
 		destAccessor.SetPixvals(iDestRowAddress, iDestH + hCurrent, count, buffer);
 		hCurrent += count;
@@ -2639,7 +2503,7 @@ static void sBlitRowInvert_T(
 	PixvalAccessor destAccessor(iDestPixvalDesc);
 
 	int32 hCurrent = 0;
-	ZRGBColor theRGBColor;
+	ZRGBA theRGBA;
 	while (hCurrent < inHCount)
 		{
 		uint32 buffer[kBufSize];
@@ -2650,11 +2514,11 @@ static void sBlitRowInvert_T(
 		uint32* currentPixval = buffer;
 		while (--tempCount)
 			{
-			iSourcePixvalToRGB.AsRGBColor(*currentPixval, theRGBColor);
-			theRGBColor.red = 0xFFFFU - theRGBColor.red;
-			theRGBColor.green = 0xFFFFU - theRGBColor.green;
-			theRGBColor.blue = 0xFFFFU - theRGBColor.blue;
-			*currentPixval++ = iDestRGBToPixval.AsPixval(theRGBColor);
+			iSourcePixvalToRGB.AsRGBA(*currentPixval, theRGBA);
+			theRGBA.red = 0xFFFFU - theRGBA.red;
+			theRGBA.green = 0xFFFFU - theRGBA.green;
+			theRGBA.blue = 0xFFFFU - theRGBA.blue;
+			*currentPixval++ = iDestRGBToPixval.AsPixval(theRGBA);
 			}
 		destAccessor.SetPixvals(iDestRowAddress, iDestH + hCurrent, count, buffer);
 		hCurrent += count;
@@ -2711,8 +2575,8 @@ static void sBlitWithMaps_T(
 	}
 
 void ZDCPixmapNS::sBlitPixvals(const void* iSourceBase, const RasterDesc& iSourceRasterDesc,
-			void* iDestBase, const RasterDesc& iDestRasterDesc,
-			const ZRect& iSourceBounds, ZPoint iDestLocation)
+	void* iDestBase, const RasterDesc& iDestRasterDesc,
+	const ZRect& iSourceBounds, ZPoint iDestLocation)
 	{
 	int32 vCount = iSourceBounds.Height();
 	int32 hCount = iSourceBounds.Width();
@@ -2751,7 +2615,7 @@ void ZDCPixmapNS::sBlitPixvals(const void* iSourceBase, const RasterDesc& iSourc
 			PixvalAccessor destAccessor(iDestRasterDesc.fPixvalDesc);
 
 			int32 hCurrent = 0;
-			ZRGBColor theRGBColor;
+			ZRGBA theRGBA;
 			while (hCurrent < hCount)
 				{
 				uint32 buffer[kBufSize];
@@ -2979,7 +2843,7 @@ void ZDCPixmapNS::sBlitRowPixvals(
 		PixvalAccessor destAccessor(iDestPixvalDesc);
 
 		int32 hCurrent = 0;
-		ZRGBColor theRGBColor;
+		ZRGBA theRGBA;
 		while (hCurrent < iCount)
 			{
 			uint32 buffer[kBufSize];

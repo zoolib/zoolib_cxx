@@ -93,7 +93,7 @@ ZDCPixmapEncoder_GIF::~ZDCPixmapEncoder_GIF()
 	{}
 
 static void sWriteColorTable(const ZStreamW& iStream,
-	const ZRGBColorPOD* iColors, size_t iCountAvailable, size_t iCountNeeded)
+	const ZRGBA_POD* iColors, size_t iCountAvailable, size_t iCountNeeded)
 	{
 	iCountAvailable = min(iCountAvailable, iCountNeeded);
 
@@ -148,7 +148,7 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 	iStream.WriteUInt8(0); // backgroundColorIndex
 	iStream.WriteUInt8(0); // Pixel aspect ratio -- 0 == none specified.
 
-	const ZRGBColorPOD* theColors;
+	const ZRGBA_POD* theColors;
 	size_t theColorsCount;
 	thePixelDescRep_Indexed->GetColors(theColors, theColorsCount);
 	sWriteColorTable(iStream, theColors, theColorsCount, 1 << iRasterDesc.fPixvalDesc.fDepth);
@@ -263,7 +263,7 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 #pragma mark * ZDCPixmapDecoder_GIF
 
 static void sReadColorTable(const ZStreamR& iStream,
-	size_t iCount, vector<ZRGBColorPOD>& oColorTable)
+	size_t iCount, vector<ZRGBA_POD>& oColorTable)
 	{
 	oColorTable.resize(iCount);
 
@@ -271,7 +271,7 @@ static void sReadColorTable(const ZStreamR& iStream,
 	iStream.Read(&readColorTable[0], readColorTable.size());
 
 	const uint8* readColor = &readColorTable[0];
-	ZRGBColorPOD* oColor = &oColorTable[0];
+	ZRGBA_POD* oColor = &oColorTable[0];
 	for (size_t x = 0; x < iCount; ++x)
 		{
 		oColor->red = (*readColor++) * 0x101;
@@ -388,7 +388,7 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 	
 		if (strmHasGlobalColorTable)
 			{
-			vector<ZRGBColorPOD> theColors;
+			vector<ZRGBA_POD> theColors;
 			sReadColorTable(iStream, 1 << (strmGlobalColorTableSize + 1), theColors);
 			fPixelDesc = PixelDesc(&theColors[0], theColors.size());
 			}
@@ -458,7 +458,7 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			PixelDesc thePixelDesc = fPixelDesc;
 			if (strmHasLocalColorTable)
 				{
-				vector<ZRGBColorPOD> theColors;
+				vector<ZRGBA_POD> theColors;
 				sReadColorTable(iStream, 1 << (strmLocalColorTableSize + 1), theColors);
 				thePixelDesc = PixelDesc(&theColors[0], theColors.size());
 				}

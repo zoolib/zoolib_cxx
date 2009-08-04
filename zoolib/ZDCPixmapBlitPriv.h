@@ -77,7 +77,7 @@ inline uint16 sMul(uint32 l, uint32 r)
 	return (temp + (temp >> 16)) >> 16;
 	}
 
-inline void sMul(ZRGBColorPOD& ioColor, uint32 r)
+inline void sMul(ZRGBA_POD& ioColor, uint32 r)
 	{
 	if (r == 0xFFFFU)
 		{
@@ -113,7 +113,7 @@ inline uint16 sAddSat(uint16 l, uint16 r)
 
 struct Compose_Over
 	{
-	void operator() (const ZRGBColorPOD& f, ZRGBColorPOD& b) const
+	void operator() (const ZRGBA_POD& f, ZRGBA_POD& b) const
 		{
 		if (f.alpha == 0)
 			{
@@ -157,7 +157,7 @@ struct Compose_Over
 
 struct Compose_Plus
 	{
-	void operator() (const ZRGBColorPOD& f, ZRGBColorPOD& b) const
+	void operator() (const ZRGBA_POD& f, ZRGBA_POD& b) const
 		{
 		// This will crap out with luminescent pixels.
 		b.red = sAdd(b.red, f.red);
@@ -215,7 +215,7 @@ void sTile_SD_T(
 
 		while (--destCountH)
 			{
-			ZRGBColorPOD thePixel;
+			ZRGBA_POD thePixel;
 			sourceIter.ReadInc(thePixel);
 			destIter.WriteInc(thePixel);
 
@@ -285,10 +285,10 @@ void sTile_SDO_T(
 
 		while (--destCountH)
 			{
-			ZRGBColorPOD thePixel;
+			ZRGBA_POD thePixel;
 			sourceIter.ReadInc(thePixel);
 
-			ZRGBColorPOD destPixel;
+			ZRGBA_POD destPixel;
 			destIter.Read(destPixel);
 
 			iOp(thePixel, destPixel);
@@ -386,7 +386,7 @@ void sTile_SMD_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 				thePixel.alpha = matteIter.ReadAlphaInc();
 				destIter.WriteInc(thePixel);
@@ -408,7 +408,7 @@ void sTile_SMD_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 
 				uint16 alpha = matteIter.ReadAlphaInc();
@@ -524,12 +524,12 @@ void sTile_SMDO_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 
 				thePixel.alpha = matteIter.ReadAlphaInc();
 
-				ZRGBColorPOD destPixel;
+				ZRGBA_POD destPixel;
 				destIter.Read(destPixel);
 
 				iOp(thePixel, destPixel);
@@ -553,7 +553,7 @@ void sTile_SMDO_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 
 				uint16 alpha = matteIter.ReadAlphaInc();
@@ -562,7 +562,7 @@ void sTile_SMDO_T(
 				thePixel.blue = sMul(thePixel.blue, alpha);
 				thePixel.alpha = alpha;
 
-				ZRGBColorPOD destPixel;
+				ZRGBA_POD destPixel;
 				destIter.Read(destPixel);
 
 				iOp(thePixel, destPixel);
@@ -636,7 +636,7 @@ void sCopy_SD_T(
 
 		while (--destCountH)
 			{
-			ZRGBColorPOD thePixel;
+			ZRGBA_POD thePixel;
 			sourceIter.ReadInc(thePixel);
 			destIter.WriteInc(thePixel);
 			}
@@ -681,10 +681,10 @@ void sCopy_SDO_T(
 
 		while (--destCountH)
 			{
-			ZRGBColorPOD thePixel;
+			ZRGBA_POD thePixel;
 			sourceIter.ReadInc(thePixel);
 
-			ZRGBColorPOD destPixel;
+			ZRGBA_POD destPixel;
 			destIter.Read(destPixel);
 
 			iOp(thePixel, destPixel);
@@ -742,7 +742,7 @@ void sCopy_SMD_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 				thePixel.alpha = matteIter.ReadAlphaInc();
 				destIter.WriteInc(thePixel);
@@ -752,7 +752,7 @@ void sCopy_SMD_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 
 				uint16 alpha = matteIter.ReadAlphaInc();
@@ -819,12 +819,12 @@ void sCopy_SMDO_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 
 				thePixel.alpha = matteIter.ReadAlphaInc();
 
-				ZRGBColorPOD destPixel;
+				ZRGBA_POD destPixel;
 				destIter.Read(destPixel);
 
 				iOp(thePixel, destPixel);
@@ -836,7 +836,7 @@ void sCopy_SMDO_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 
 				uint16 alpha = matteIter.ReadAlphaInc();
@@ -846,7 +846,7 @@ void sCopy_SMDO_T(
 				thePixel.blue = sMul(thePixel.blue, alpha);
 				thePixel.alpha = alpha;
 
-				ZRGBColorPOD destPixel;
+				ZRGBA_POD destPixel;
 				destIter.Read(destPixel);
 
 				iOp(thePixel, destPixel);
@@ -929,7 +929,7 @@ void sTileSource_SMD_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 				thePixel.alpha = matteIter.ReadAlphaInc();
 				destIter.WriteInc(thePixel);
@@ -945,7 +945,7 @@ void sTileSource_SMD_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 
 				uint16 alpha = matteIter.ReadAlphaInc();
@@ -1039,12 +1039,12 @@ void sTileSource_SMDO_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 
 				thePixel.alpha = matteIter.ReadAlphaInc();
 
-				ZRGBColorPOD destPixel;
+				ZRGBA_POD destPixel;
 				destIter.Read(destPixel);
 
 				iOp(thePixel, destPixel);
@@ -1062,7 +1062,7 @@ void sTileSource_SMDO_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 
 				uint16 alpha = matteIter.ReadAlphaInc();
@@ -1071,7 +1071,7 @@ void sTileSource_SMDO_T(
 				thePixel.blue = sMul(thePixel.blue, alpha);
 				thePixel.alpha = alpha;
 
-				ZRGBColorPOD destPixel;
+				ZRGBA_POD destPixel;
 				destIter.Read(destPixel);
 
 				iOp(thePixel, destPixel);
@@ -1163,7 +1163,7 @@ void sTileMatte_SMD_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 				thePixel.alpha = matteIter.ReadAlphaInc();
 				destIter.WriteInc(thePixel);
@@ -1179,7 +1179,7 @@ void sTileMatte_SMD_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 
 				uint16 alpha = matteIter.ReadAlphaInc();
@@ -1272,12 +1272,12 @@ void sTileMatte_SMDO_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 
 				thePixel.alpha = matteIter.ReadAlphaInc();
 
-				ZRGBColorPOD destPixel;
+				ZRGBA_POD destPixel;
 				destIter.Read(destPixel);
 
 				iOp(thePixel, destPixel);
@@ -1295,7 +1295,7 @@ void sTileMatte_SMDO_T(
 			{
 			while (--destCountH)
 				{
-				ZRGBColorPOD thePixel;
+				ZRGBA_POD thePixel;
 				sourceIter.ReadInc(thePixel);
 
 				uint16 alpha = matteIter.ReadAlphaInc();
@@ -1304,7 +1304,7 @@ void sTileMatte_SMDO_T(
 				thePixel.blue = sMul(thePixel.blue, alpha);
 				thePixel.alpha = alpha;
 
-				ZRGBColorPOD destPixel;
+				ZRGBA_POD destPixel;
 				destIter.Read(destPixel);
 
 				iOp(thePixel, destPixel);
@@ -1372,7 +1372,7 @@ static void sFillPixval(void* iDestAddress, const RD& iDestRD, const ZRect& iDes
 template <class D, class O>
 void sColor_DO_T(
 	void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const D& iDestPD,
-	const ZRGBColor& iColor,
+	const ZRGBA_POD& iColor,
 	const O& iOp)
 	{
 	PixelIterRW_T<D> destIter(
@@ -1390,7 +1390,7 @@ void sColor_DO_T(
 
 		while (--destCountH)
 			{
-			ZRGBColorPOD destPixel;
+			ZRGBA_POD destPixel;
 			destIter.Read(destPixel);
 			iOp(iColor, destPixel);
 			destIter.WriteInc(destPixel);
@@ -1410,7 +1410,7 @@ void sColor_MD_T(
 	const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
 	ZPoint iMatteStart,
 	void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const D& iDestPD,
-	const ZRGBColor& iColor)
+	const ZRGBA_POD& iColor)
 	{
 	PixelIterR_T<M> matteIter(
 		iMatteRD.CalcRowAddress(iMatteAddress, iMatteStart.v),
@@ -1435,7 +1435,7 @@ void sColor_MD_T(
 			{
 			if (uint16 alpha = matteIter.ReadAlphaInc())
 				{
-				ZRGBColorPOD tempColor = iColor;
+				ZRGBA_POD tempColor = iColor;
 				sMul(tempColor, alpha);
 				destIter.WriteInc(tempColor);
 				}
@@ -1462,7 +1462,7 @@ void sColor_MDO_T(
 	const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
 	ZPoint iMatteStart,
 	void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const D& iDestPD,
-	const ZRGBColor& iColor,
+	const ZRGBA_POD& iColor,
 	const O& iOp)
 	{
 	PixelIterR_T<M> matteIter(
@@ -1488,9 +1488,9 @@ void sColor_MDO_T(
 			{
 			if (uint16 alpha = matteIter.ReadAlphaInc())
 				{
-				ZRGBColorPOD destPixel;
+				ZRGBA_POD destPixel;
 				destIter.Read(destPixel);
-				ZRGBColorPOD tempColor = iColor;
+				ZRGBA_POD tempColor = iColor;
 				sMul(tempColor, alpha);
 				iOp(tempColor, destPixel);
 				destIter.WriteInc(destPixel);
@@ -1518,7 +1518,7 @@ void sColorTile_MD_T(
 	const void* iMatteAddress, const RD& iMatteRD, const ZRect& iMatteB, const M& iMattePD,
 	ZPoint iMatteOrigin,
 	void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const D& iDestPD,
-	const ZRGBColor& iColor)
+	const ZRGBA_POD& iColor)
 	{
 	int destWidth = iDestB.Width();
 	int destBottom = iDestB.bottom;
@@ -1549,7 +1549,7 @@ void sColorTile_MD_T(
 		iDestB.left,
 		iDestPD);
 
-	ZRGBColorPOD theColor = iColor;
+	ZRGBA_POD theColor = iColor;
 	for (;;)
 		{
 		int destCountH = destWidth + 1;
@@ -1559,7 +1559,7 @@ void sColorTile_MD_T(
 			{
 			if (uint16 alpha = matteIter.ReadAlphaInc())
 				{
-				ZRGBColorPOD tempColor = iColor;
+				ZRGBA_POD tempColor = iColor;
 				sMul(tempColor, alpha);
 				destIter.WriteInc(tempColor);
 				}
@@ -1595,7 +1595,7 @@ void sColorTile_MDO_T(
 	const void* iMatteAddress, const RD& iMatteRD, const ZRect& iMatteB, const M& iMattePD,
 	ZPoint iMatteOrigin,
 	void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const D& iDestPD,
-	const ZRGBColor& iColor, const O& iOp)
+	const ZRGBA_POD& iColor, const O& iOp)
 	{
 	int destWidth = iDestB.Width();
 	int destBottom = iDestB.bottom;
@@ -1626,7 +1626,7 @@ void sColorTile_MDO_T(
 		iDestB.left,
 		iDestPD);
 
-	ZRGBColorPOD theColor = iColor;
+	ZRGBA_POD theColor = iColor;
 	for (;;)
 		{
 		int destCountH = destWidth + 1;
@@ -1636,9 +1636,9 @@ void sColorTile_MDO_T(
 			{
 			if (uint16 alpha = matteIter.ReadAlphaInc())
 				{
-				ZRGBColorPOD tempColor = iColor;
+				ZRGBA_POD tempColor = iColor;
 				sMul(tempColor, alpha);
-				ZRGBColorPOD destPixel;
+				ZRGBA_POD destPixel;
 				destIter.Read(destPixel);
 				iOp(tempColor, destPixel);
 				destIter.WriteInc(destPixel);
@@ -1939,7 +1939,7 @@ void sBlit_T(
 template <class D>
 void sColor_T(
 	void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const D& iDestPD,
-	const ZRGBColor& iColor,
+	const ZRGBA_POD& iColor,
 	EOp iOp)
 	{
 	switch (iOp)
@@ -1972,7 +1972,7 @@ void sColor_T(
 	const void* iMatteAddress, const RD& iMatteRD, const M& iMattePD,
 	ZPoint iMatteStart,
 	void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const D& iDestPD,
-	const ZRGBColor& iColor,
+	const ZRGBA_POD& iColor,
 	EOp iOp)
 	{
 	switch (iOp)
@@ -2012,7 +2012,7 @@ void sColorTile_T(
 	const void* iMatteAddress, const RD& iMatteRD, const ZRect& iMatteB, const M& iMattePD,
 	ZPoint iMatteOrigin,
 	void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const D& iDestPD,
-	const ZRGBColor& iColor,
+	const ZRGBA_POD& iColor,
 	EOp iOp)
 	{
 	switch (iOp)
@@ -2065,7 +2065,7 @@ void sInvert_T(void* iDestAddress, const RD& iDestRD, const ZRect& iDestB, const
 
 		while (--destCountH)
 			{
-			ZRGBColorPOD destPixel;
+			ZRGBA_POD destPixel;
 			destIter.Read(destPixel);
 			destPixel.red = destPixel.alpha - destPixel.red;
 			destPixel.green = destPixel.alpha - destPixel.green;
@@ -2101,7 +2101,7 @@ void sOpaque_T(
 
 		while (--destCountH)
 			{
-			ZRGBColorPOD destPixel;
+			ZRGBA_POD destPixel;
 			destIter.Read(destPixel);
 			destPixel.red = sMul(destPixel.red, iAmount);
 			destPixel.green = sMul(destPixel.green, iAmount);
@@ -2138,7 +2138,7 @@ void sDarken_T(
 
 		while (--destCountH)
 			{
-			ZRGBColorPOD destPixel;
+			ZRGBA_POD destPixel;
 			destIter.Read(destPixel);
 			destPixel.red = sMul(destPixel.red, iAmount);
 			destPixel.green = sMul(destPixel.green, iAmount);
@@ -2174,7 +2174,7 @@ void sFade_T(
 
 		while (--destCountH)
 			{
-			ZRGBColorPOD destPixel;
+			ZRGBA_POD destPixel;
 			destIter.Read(destPixel);
 			destPixel.alpha = sMul(destPixel.alpha, iAmount);
 			destIter.WriteInc(destPixel);
@@ -2216,7 +2216,7 @@ void sApplyMatte_T(
 
 		while (--destCountH)
 			{
-			ZRGBColorPOD thePixel;
+			ZRGBA_POD thePixel;
 			destIter.Read(thePixel);
 
 			uint16 alpha = matteIter.ReadAlphaInc();

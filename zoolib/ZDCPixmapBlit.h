@@ -98,14 +98,14 @@ void sBlit(
 /** Fill iDestB with iColor. */
 void sColor(
 	void* iDest, const RD& iDestRD, const ZRect& iDestB, const PD& iDestPD,
-	const ZRGBColor& iColor,
+	const ZRGBA_POD& iColor,
 	EOp iOperation);
 
 /** Fill iDestB with iColor, matted. */
 void sColor(
 	const void* iMatte, const RD& iMatteRD, const ZRect& iMatteB, const PD& iMattePD,
 	void* iDest, const RD& iDestRD, const ZRect& iDestB, const PD& iDestPD,
-	const ZRGBColor& iColor,
+	const ZRGBA_POD& iColor,
 	EOp iOperation);
 
 /** Fill iDestB with iColor, with replicated matte. */
@@ -113,7 +113,7 @@ void sColor(
 	const void* iMatte, const RD& iMatteRD, const ZRect& iMatteB, const PD& iMattePD,
 	ZPoint iMatteOrigin,
 	void* iDest, const RD& iDestRD, const ZRect& iDestB, const PD& iDestPD,
-	const ZRGBColor& iColor,
+	const ZRGBA_POD& iColor,
 	EOp iOperation);
 
 /** Invert, replacing each pixel with white minus that pixel. */
