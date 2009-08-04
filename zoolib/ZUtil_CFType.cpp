@@ -343,6 +343,13 @@ bool sQAsCFType(const ZAny& iAny, ZRef<CFTypeRef>& oVal)
 		else
 			oVal = sData();
 		}
+	else if (const ZValData_Any* theValue = ZAnyCast<ZValData_Any>(&iAny))
+		{
+		if (size_t theSize = theValue->GetSize())
+			oVal = sData(theValue->GetData(), theSize);
+		else
+			oVal = sData();
+		}
 	else if (const vector<ZAny>* theValue = ZAnyCast<vector<ZAny> >(&iAny))
 		{
 		ZRef<CFMutableArrayRef> theArray;
@@ -429,7 +436,7 @@ bool sQAsCFType(const ZAny& iAny, ZRef<CFTypeRef>& oVal)
 		{
 		return false;
 		}
-	return false;
+	return true;
 	}
 
 ZRef<CFTypeRef> sAsCFType(const ZAny& iAny)
