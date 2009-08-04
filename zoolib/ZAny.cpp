@@ -24,6 +24,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZAny
+
 ZAny::ZAny()
 :	content(0)
 	{}

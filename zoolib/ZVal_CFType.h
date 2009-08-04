@@ -53,6 +53,7 @@ class ZVal_CFType
 	{
 	typedef ZRef<CFTypeRef> inherited;
 public:
+	bool sFromAny(const ZAny& iAny, ZVal_CFType& oVal);
 	ZAny AsAny() const;
 
 	operator bool() const;
@@ -133,7 +134,7 @@ public:
 	void Clear();
 
 	bool QGet(size_t iIndex, ZVal_CFType& oVal) const;
-	ZVal_CFType DGet(size_t iIndex, const ZVal_CFType& iDefault) const;
+	ZVal_CFType DGet(const ZVal_CFType& iDefault, size_t iIndex) const;
 	ZVal_CFType Get(size_t iIndex) const;
 
 	void Set(size_t iIndex, const ZVal_CFType& iVal);
@@ -181,8 +182,8 @@ public:
 	bool QGet(const string8& iName, ZVal_CFType& oVal) const;
 	bool QGet(CFStringRef iName, ZVal_CFType& oVal) const;
 
-	ZVal_CFType DGet(const string8& iName, const ZVal_CFType& iDefault) const;
-	ZVal_CFType DGet(CFStringRef iName, const ZVal_CFType& iDefault) const;
+	ZVal_CFType DGet(const ZVal_CFType& iDefault, const string8& iName) const;
+	ZVal_CFType DGet(const ZVal_CFType& iDefault, CFStringRef iName) const;
 
 	ZVal_CFType Get(const string8& iName) const;
 	ZVal_CFType Get(CFStringRef iName) const;

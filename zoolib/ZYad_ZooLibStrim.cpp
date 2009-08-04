@@ -781,17 +781,53 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 		{
 		s.Writef("ID(0x%0llX)", *theValue);
 		}
-	else if (const int8* theValue = ZAnyCast<int8>(&iVal))
+	else if (const char* theValue = ZAnyCast<char>(&iVal))
 		{
 		s.Writef("int8(%d)", *theValue);
 		}
-	else if (const int16* theValue = ZAnyCast<int16>(&iVal))
+	else if (const unsigned char* theValue = ZAnyCast<unsigned char>(&iVal))
+		{
+		s.Writef("int8(%d)", *theValue);
+		}
+	else if (const signed char* theValue = ZAnyCast<signed char>(&iVal))
+		{
+		s.Writef("int8(%d)", *theValue);
+		}
+	else if (const short* theValue = ZAnyCast<short>(&iVal))
 		{
 		s.Writef("int16(%d)", *theValue);
 		}
-	else if (const int32* theValue = ZAnyCast<int32>(&iVal))
+	else if (const unsigned short* theValue = ZAnyCast<unsigned short>(&iVal))
 		{
-		s.Writef("int32(%d)", *theValue);
+		s.Writef("int16(%d)", *theValue);
+		}
+	else if (const int* theValue = ZAnyCast<int>(&iVal))
+		{
+		if (ZIntIs32Bit)
+			s.Writef("int32(%d)", *theValue);
+		else
+			s.Writef("int64(%lld)", *theValue);
+		}
+	else if (const unsigned int* theValue = ZAnyCast<unsigned int>(&iVal))
+		{
+		if (ZIntIs32Bit)
+			s.Writef("int32(%d)", *theValue);
+		else
+			s.Writef("int64(%lld)", *theValue);
+		}
+	else if (const long* theValue = ZAnyCast<long>(&iVal))
+		{
+		if (ZLongIs32Bit)
+			s.Writef("int32(%d)", *theValue);
+		else
+			s.Writef("int64(%lld)", *theValue);
+		}
+	else if (const unsigned long* theValue = ZAnyCast<unsigned long>(&iVal))
+		{
+		if (ZLongIs32Bit)
+			s.Writef("int32(%d)", *theValue);
+		else
+			s.Writef("int64(%lld)", *theValue);
 		}
 	else if (const int64* theValue = ZAnyCast<int64>(&iVal))
 		{

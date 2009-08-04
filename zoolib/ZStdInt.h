@@ -136,4 +136,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #endif // defined(ZStdInt_ProjectHeader)
 
+NAMESPACE_ZOOLIB_BEGIN
+
+template <int size> class ZIntTrait_T;
+
+template <> struct ZIntTrait_T<4> { enum { eIs32Bit = 1 }; };
+template <> struct ZIntTrait_T<8> { enum { eIs32Bit = 0 }; };
+
+enum { ZLongIs32Bit = ZIntTrait_T<sizeof(long)>::eIs32Bit };
+
+enum { ZIntIs32Bit = ZIntTrait_T<sizeof(int)>::eIs32Bit };
+
+NAMESPACE_ZOOLIB_END
+
 #endif // __ZStdInt__

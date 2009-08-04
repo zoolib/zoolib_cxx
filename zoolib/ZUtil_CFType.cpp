@@ -324,6 +324,9 @@ ZAny sAsAny(ZRef<CFTypeRef> iVal)
 	return ZAny();
 	}
 
+static ZRef<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
+	{ return Adopt_T<CFTypeRef>(::CFNumberCreate( kCFAllocatorDefault, iType, iVal)); }
+
 bool sQAsCFType(const ZAny& iAny, ZRef<CFTypeRef>& oVal)
 	{
 	if (false)
@@ -402,40 +405,75 @@ bool sQAsCFType(const ZAny& iAny, ZRef<CFTypeRef>& oVal)
 		oVal = Adopt_T<CFTypeRef>(::CFDateCreate(kCFAllocatorDefault,
 			theValue->fVal - kCFAbsoluteTimeIntervalSince1970));
 		}
-	else if (const int8* theValue = ZAnyCast<int8>(&iAny))
+	else if (const char* theValue = ZAnyCast<char>(&iAny))
 		{
-		oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
-			kCFAllocatorDefault, kCFNumberSInt8Type, theValue));
+		oVal = spMakeNumber(kCFNumberSInt8Type, theValue);
 		}
-	else if (const int16* theValue = ZAnyCast<int16>(&iAny))
+	else if (const unsigned char* theValue = ZAnyCast<unsigned char>(&iAny))
 		{
-		oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
-			kCFAllocatorDefault, kCFNumberSInt16Type, theValue));
+		oVal = spMakeNumber(kCFNumberSInt8Type, theValue);
 		}
-	else if (const int32* theValue = ZAnyCast<int32>(&iAny))
+	else if (const signed char* theValue = ZAnyCast<signed char>(&iAny))
 		{
-		oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
-			kCFAllocatorDefault, kCFNumberSInt32Type, theValue));
+		oVal = spMakeNumber(kCFNumberSInt8Type, theValue);
+		}
+	else if (const short* theValue = ZAnyCast<short>(&iAny))
+		{
+		oVal = spMakeNumber(kCFNumberSInt16Type, theValue);
+		}
+	else if (const unsigned short* theValue = ZAnyCast<unsigned short>(&iAny))
+		{
+		oVal = spMakeNumber(kCFNumberSInt16Type, theValue);
+		}
+	else if (const int* theValue = ZAnyCast<int>(&iAny))
+		{
+		if (ZIntIs32Bit)	
+			oVal = spMakeNumber(kCFNumberSInt32Type, theValue);
+		else
+			oVal = spMakeNumber(kCFNumberSInt64Type, theValue);
+		}
+	else if (const unsigned int* theValue = ZAnyCast<unsigned int>(&iAny))
+		{
+		if (ZIntIs32Bit)	
+			oVal = spMakeNumber(kCFNumberSInt32Type, theValue);
+		else
+			oVal = spMakeNumber(kCFNumberSInt64Type, theValue);
+		}
+	else if (const long* theValue = ZAnyCast<long>(&iAny))
+		{
+		if (ZLongIs32Bit)
+			oVal = spMakeNumber(kCFNumberSInt32Type, theValue);
+		else
+			oVal = spMakeNumber(kCFNumberSInt64Type, theValue);
+		}
+	else if (const unsigned long* theValue = ZAnyCast<unsigned long>(&iAny))
+		{
+		if (ZLongIs32Bit)
+			oVal = spMakeNumber(kCFNumberSInt32Type, theValue);
+		else
+			oVal = spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
 	else if (const int64* theValue = ZAnyCast<int64>(&iAny))
 		{
-		oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
-			kCFAllocatorDefault, kCFNumberSInt64Type, theValue));
+		oVal = spMakeNumber(kCFNumberSInt64Type, theValue);
+		}
+	else if (const uint64* theValue = ZAnyCast<uint64>(&iAny))
+		{
+		oVal = spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
 	else if (const float* theValue = ZAnyCast<float>(&iAny))
 		{
-		oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
-			kCFAllocatorDefault, kCFNumberFloatType, theValue));
+		oVal = spMakeNumber(kCFNumberFloatType, theValue);
 		}
 	else if (const double* theValue = ZAnyCast<double>(&iAny))
 		{
-		oVal = Adopt_T<CFTypeRef>(::CFNumberCreate(
-			kCFAllocatorDefault, kCFNumberDoubleType, theValue));
+		oVal = spMakeNumber(kCFNumberDoubleType, theValue);
 		}
 	else
 		{
 		return false;
 		}
+
 	return true;
 	}
 

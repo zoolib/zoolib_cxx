@@ -34,9 +34,11 @@ NAMESPACE_ZOOLIB_BEGIN
 namespace ZUtil_Any {
 
 bool sQCoerceInt(const ZAny& iAny, int64& oVal);
+int64 sDCoerceInt(int64 iDefault, const ZAny& iAny);
 int64 sCoerceInt(const ZAny& iAny);
 
 bool sQCoerceReal(const ZAny& iAny, double& oVal);
+double sDCoerceReal(double iDefault, const ZAny& iAny);
 double sCoerceReal(const ZAny& iAny);
 
 } // namespace ZUtil_Any

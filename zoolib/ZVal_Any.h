@@ -156,7 +156,7 @@ public:
 	void Clear();
 
 	bool QGet(size_t iIndex, ZVal_Any& oVal) const;
-	ZVal_Any DGet(size_t iIndex, const ZVal_Any& iDefault) const;
+	ZVal_Any DGet(const ZVal_Any& iDefault, size_t iIndex) const;
 	ZVal_Any Get(size_t iIndex) const;
 
 	void Set(size_t iIndex, const ZVal_Any& iVal);
@@ -212,8 +212,8 @@ public:
 	bool QGet(const string8& iName, ZVal_Any& oVal) const;
 	bool QGet(const Index_t& iIndex, ZVal_Any& oVal) const;
 
-	ZVal_Any DGet(const string8& iName, const ZVal_Any& iDefault) const;
-	ZVal_Any DGet(const Index_t& iIndex, const ZVal_Any& iDefault) const;
+	ZVal_Any DGet(const ZVal_Any& iDefault, const string8& iName) const;
+	ZVal_Any DGet(const ZVal_Any& iDefault, const Index_t& iIndex) const;
 
 	ZVal_Any Get(const string8& iName) const;
 	ZVal_Any Get(const Index_t& iIndex) const;

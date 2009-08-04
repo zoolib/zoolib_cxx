@@ -59,6 +59,14 @@ bool sQCoerceInt(const ZAny& iAny, int64& oVal)
 	return true;
 	}
 
+int64 sDCoerceInt(int64 iDefault, const ZAny& iAny)
+	{
+	int64 result;
+	if (sQCoerceInt(iAny, result))
+		return result;
+	return iDefault;
+	}
+
 int64 sCoerceInt(const ZAny& iAny)
 	{
 	int64 result;
@@ -78,6 +86,14 @@ bool sQCoerceReal(const ZAny& iAny, double& oVal)
 	else
 		return false;
 	return true;
+	}
+
+double sDCoerceReal(double iDefault, const ZAny& iAny)
+	{
+	int64 result;
+	if (sQCoerceInt(iAny, result))
+		return result;
+	return iDefault;
 	}
 
 double sCoerceReal(const ZAny& iAny)

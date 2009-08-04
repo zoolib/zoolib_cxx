@@ -146,7 +146,7 @@ public:
 	void Clear();
 
 	bool QGet(size_t iIndex, ZVal_AppleEvent& oVal) const;
-	ZVal_AppleEvent DGet(size_t iIndex, const ZVal_AppleEvent& iDefault) const;
+	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, size_t iIndex) const;
 	ZVal_AppleEvent Get(size_t iIndex) const;
 
 	void Set(size_t iIndex, const AEDesc& iVal);
@@ -195,9 +195,9 @@ public:
 	bool QGet(const std::string& iName, ZVal_AppleEvent& oVal) const;
 	bool QGet(Index_t iPropIter, ZVal_AppleEvent& oVal) const;
 
-	ZVal_AppleEvent DGet(AEKeyword iName, const ZVal_AppleEvent& iDefault) const;
-	ZVal_AppleEvent DGet(const std::string& iName, const ZVal_AppleEvent& iDefault) const;
-	ZVal_AppleEvent DGet(Index_t iIndex, const ZVal_AppleEvent& iDefault) const;
+	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, AEKeyword iName) const;
+	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, const std::string& iName) const;
+	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, Index_t iIndex) const;
 
 	ZVal_AppleEvent Get(AEKeyword iName) const;
 	ZVal_AppleEvent Get(const std::string& iName) const;
@@ -215,7 +215,7 @@ public:
 	AERecord& OParam();
 
 	bool QGetAttr(AEKeyword iName, ZVal_AppleEvent& oVal) const;
-	ZVal_AppleEvent DGetAttr(AEKeyword iName, const ZVal_AppleEvent& iDefault) const;
+	ZVal_AppleEvent DGetAttr(const ZVal_AppleEvent& iDefault, AEKeyword iName) const;
 	ZVal_AppleEvent GetAttr(AEKeyword iName) const;
 	void SetAttr(AEKeyword iName, const AEDesc& iVal);
 

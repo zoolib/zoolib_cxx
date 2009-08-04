@@ -146,7 +146,7 @@ bool ZValList_Any::QGet(size_t iIndex, ZVal_Any& oVal) const
 	return false;
 	}
 
-ZVal_Any ZValList_Any::DGet(size_t iIndex, const ZVal_Any& iDefault) const
+ZVal_Any ZValList_Any::DGet(const ZVal_Any& iDefault, size_t iIndex) const
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		return fRep->fVector[iIndex];
@@ -287,7 +287,7 @@ bool ZValMap_Any::QGet(const Index_t& iIndex, ZVal_Any& oVal) const
 	return false;
 	}
 
-ZVal_Any ZValMap_Any::DGet(const string8& iName, const ZVal_Any& iDefault) const
+ZVal_Any ZValMap_Any::DGet(const ZVal_Any& iDefault, const string8& iName) const
 	{
 	if (fRep)
 		{
@@ -298,7 +298,7 @@ ZVal_Any ZValMap_Any::DGet(const string8& iName, const ZVal_Any& iDefault) const
 	return iDefault;
 	}
 
-ZVal_Any ZValMap_Any::DGet(const Index_t& iIndex, const ZVal_Any& iDefault) const
+ZVal_Any ZValMap_Any::DGet(const ZVal_Any& iDefault, const Index_t& iIndex) const
 	{
 	if (fRep && iIndex != fRep->fMap.end())
 		return (*iIndex).second;

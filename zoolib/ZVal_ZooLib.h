@@ -277,7 +277,7 @@ public:
 	void Clear();
 
 	bool QGet(size_t iIndex, ZVal_ZooLib& oVal) const;
-	ZVal_ZooLib DGet(size_t iIndex, const ZVal_ZooLib& iDefault) const;
+	ZVal_ZooLib DGet(const ZVal_ZooLib& iDefault, size_t iIndex) const;
 	ZVal_ZooLib Get(size_t iIndex) const;
 	const ZVal_ZooLib& RGet(size_t iIndex) const;
 
@@ -404,9 +404,9 @@ public:
 	bool QGet(const char* iPropName, ZVal_ZooLib& oVal) const;
 	bool QGet(const ZTName& iPropName, ZVal_ZooLib& oVal) const;
 
-	ZVal_ZooLib DGet(Index_t iIndex, const ZVal_ZooLib& iDefault) const;
-	ZVal_ZooLib DGet(const char* iPropName, const ZVal_ZooLib& iDefault) const;
-	ZVal_ZooLib DGet(const ZTName& iPropName, const ZVal_ZooLib& iDefault) const;
+	ZVal_ZooLib DGet(const ZVal_ZooLib& iDefault, Index_t iIndex) const;
+	ZVal_ZooLib DGet(const ZVal_ZooLib& iDefault, const char* iPropName) const;
+	ZVal_ZooLib DGet(const ZVal_ZooLib& iDefault, const ZTName& iPropName) const;
 
 	ZVal_ZooLib Get(Index_t iIndex) const;
 	ZVal_ZooLib Get(const char* iPropName) const;

@@ -68,6 +68,9 @@ ZRef<CFTypeRef> sNumber_T(CFNumberType iNumberType, const S& iVal)
 #pragma mark -
 #pragma mark * ZVal_CFType
 
+bool ZVal_CFType::sFromAny(const ZAny& iAny, ZVal_CFType& oVal)
+	{ return ZUtil_CFType::sQAsCFType(iAny, oVal); }
+
 ZAny ZVal_CFType::AsAny() const
 	{ return ZUtil_CFType::sAsAny(this); }
 
@@ -449,7 +452,7 @@ bool ZValList_CFType::QGet(size_t iIndex, ZVal_CFType& oVal) const
 	return false;
 	}
 
-ZVal_CFType ZValList_CFType::DGet(size_t iIndex, const ZVal_CFType& iDefault) const
+ZVal_CFType ZValList_CFType::DGet(const ZVal_CFType& iDefault, size_t iIndex) const
 	{
 	ZVal_CFType result;
 	if (this->QGet(iIndex, result))
@@ -458,7 +461,7 @@ ZVal_CFType ZValList_CFType::DGet(size_t iIndex, const ZVal_CFType& iDefault) co
 	}
 
 ZVal_CFType ZValList_CFType::Get(size_t iIndex) const
-	{ return this->DGet(iIndex, ZVal_CFType()); }
+	{ return this->DGet(ZVal_CFType(), iIndex); }
 
 void ZValList_CFType::Set(size_t iIndex, const ZVal_CFType& iVal)
 	{ ::CFArraySetValueAtIndex(this->pTouch(), iIndex, iVal); }
@@ -601,7 +604,7 @@ bool ZValMap_CFType::QGet(CFStringRef iName, ZVal_CFType& oVal) const
 	return false;
 	}
 
-ZVal_CFType ZValMap_CFType::DGet(const string8& iName, const ZVal_CFType& iDefault) const
+ZVal_CFType ZValMap_CFType::DGet(const ZVal_CFType& iDefault, const string8& iName) const
 	{
 	ZVal_CFType theVal;
 	if (this->QGet(iName, theVal))
@@ -609,7 +612,7 @@ ZVal_CFType ZValMap_CFType::DGet(const string8& iName, const ZVal_CFType& iDefau
 	return iDefault;
 	}
 
-ZVal_CFType ZValMap_CFType::DGet(CFStringRef iName, const ZVal_CFType& iDefault) const
+ZVal_CFType ZValMap_CFType::DGet(const ZVal_CFType& iDefault, CFStringRef iName) const
 	{
 	ZVal_CFType theVal;
 	if (this->QGet(iName, theVal))
@@ -618,10 +621,10 @@ ZVal_CFType ZValMap_CFType::DGet(CFStringRef iName, const ZVal_CFType& iDefault)
 	}
 
 ZVal_CFType ZValMap_CFType::Get(const string8& iName) const
-	{ return this->DGet(iName, ZVal_CFType()); }
+	{ return this->DGet(ZVal_CFType(), iName); }
 
 ZVal_CFType ZValMap_CFType::Get(CFStringRef iName) const
-	{ return this->DGet(iName, ZVal_CFType()); }
+	{ return this->DGet(ZVal_CFType(), iName); }
 
 void ZValMap_CFType::Set(const string8& iName, const ZVal_CFType& iVal)
 	{ ::CFDictionarySetValue(this->pTouch(), sString(iName), iVal); }

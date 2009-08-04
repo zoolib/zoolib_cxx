@@ -213,17 +213,53 @@ bool ZVal_ZooLib::sFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
-	else if (const int8* theValue = ZAnyCast<int8>(&iAny))
+	else if (const char* theValue = ZAnyCast<char>(&iAny))
 		{
-		oVal = ZVal_ZooLib(*theValue);
+		oVal = ZVal_ZooLib(int8(*theValue));
 		}
-	else if (const int16* theValue = ZAnyCast<int16>(&iAny))
+	else if (const unsigned char* theValue = ZAnyCast<unsigned char>(&iAny))
 		{
-		oVal = ZVal_ZooLib(*theValue);
+		oVal = ZVal_ZooLib(int8(*theValue));
 		}
-	else if (const int32* theValue = ZAnyCast<int32>(&iAny))
+	else if (const signed char* theValue = ZAnyCast<signed char>(&iAny))
 		{
-		oVal = ZVal_ZooLib(*theValue);
+		oVal = ZVal_ZooLib(int8(*theValue));
+		}
+	else if (const short* theValue = ZAnyCast<short>(&iAny))
+		{
+		oVal = ZVal_ZooLib(int16(*theValue));
+		}
+	else if (const unsigned short* theValue = ZAnyCast<unsigned short>(&iAny))
+		{
+		oVal = ZVal_ZooLib(int16(*theValue));
+		}
+	else if (const int* theValue = ZAnyCast<int>(&iAny))
+		{
+		if (ZIntIs32Bit)
+			oVal = ZVal_ZooLib(int32(*theValue));
+		else
+			oVal = ZVal_ZooLib(int64(*theValue));
+		}
+	else if (const unsigned int* theValue = ZAnyCast<unsigned int>(&iAny))
+		{
+		if (ZIntIs32Bit)
+			oVal = ZVal_ZooLib(int32(*theValue));
+		else
+			oVal = ZVal_ZooLib(int64(*theValue));
+		}
+	else if (const long* theValue = ZAnyCast<long>(&iAny))
+		{
+		if (ZLongIs32Bit)
+			oVal = ZVal_ZooLib(int32(*theValue));
+		else
+			oVal = ZVal_ZooLib(int64(*theValue));
+		}
+	else if (const unsigned long* theValue = ZAnyCast<unsigned long>(&iAny))
+		{
+		if (ZLongIs32Bit)
+			oVal = ZVal_ZooLib(int32(*theValue));
+		else
+			oVal = ZVal_ZooLib(int64(*theValue));
 		}
 	else if (const int64* theValue = ZAnyCast<int64>(&iAny))
 		{
@@ -1789,7 +1825,7 @@ bool ZValList_ZooLib::QGet(size_t iIndex, ZVal_ZooLib& oVal) const
 	return false;
 	}
 
-ZVal_ZooLib ZValList_ZooLib::DGet(size_t iIndex, const ZVal_ZooLib& iDefault) const
+ZVal_ZooLib ZValList_ZooLib::DGet(const ZVal_ZooLib& iDefault, size_t iIndex) const
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		return fRep->fVector.at(iIndex);
@@ -2069,21 +2105,21 @@ bool ZValMap_ZooLib::QGet(const ZTName& iPropName, ZVal_ZooLib& oVal) const
 	return false;
 	}
 
-ZVal_ZooLib ZValMap_ZooLib::DGet(Index_t iIndex, const ZVal_ZooLib& iDefault) const
+ZVal_ZooLib ZValMap_ZooLib::DGet(const ZVal_ZooLib& iDefault, Index_t iIndex) const
 	{
 	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iIndex))
 		return *theValue;
 	return iDefault;
 	}
 
-ZVal_ZooLib ZValMap_ZooLib::DGet(const char* iPropName, const ZVal_ZooLib& iDefault) const
+ZVal_ZooLib ZValMap_ZooLib::DGet(const ZVal_ZooLib& iDefault, const char* iPropName) const
 	{
 	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropName))
 		return *theValue;
 	return iDefault;
 	}
 
-ZVal_ZooLib ZValMap_ZooLib::DGet(const ZTName& iPropName, const ZVal_ZooLib& iDefault) const
+ZVal_ZooLib ZValMap_ZooLib::DGet(const ZVal_ZooLib& iDefault, const ZTName& iPropName) const
 	{
 	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropName))
 		return *theValue;
