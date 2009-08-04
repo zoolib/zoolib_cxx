@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZYad_JSON.h"
+#include "zoolib/ZUtil_Any.h"
 
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -358,53 +359,39 @@ static void spWriteString(const ZStrimW& s, const ZStrimR& iStrimR)
 	s.Write("\"");
 	}
 
-static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal)
+static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 	{
+	int64 asInt64;
+
 	if (false)
 		{}
-	else if (const bool* theValue = ZAnyCast<bool>(&iVal))
+	else if (const bool* theValue = ZAnyCast<bool>(&iAny))
 		{
 		if (*theValue)
 			s.Write("true");
 		else
 			s.Write("false");
 		}
-	else if (const int8* theValue = ZAnyCast<int8>(&iVal))
+	else if (ZUtil_Any::sQCoerceInt(iAny, asInt64))
 		{
-		s.Writef("%d", int32(*theValue));
+		s.Writef("%lld", asInt64);
 		}
-	else if (const int16* theValue = ZAnyCast<int16>(&iVal))
-		{
-		s.Writef("%d", int32(*theValue));
-		}
-	else if (const int32* theValue = ZAnyCast<int32>(&iVal))
-		{
-		s.Writef("%d", *theValue);
-		}
-	else if (const int64* theValue = ZAnyCast<int64>(&iVal))
-		{
-		s.Writef("%lld", *theValue);
-		}
-	else if (const uint64* theValue = ZAnyCast<uint64>(&iVal))
-		{
-		s.Writef("%llu", *theValue);
-		}
-	else if (const float* theValue = ZAnyCast<float>(&iVal))
+	else if (const float* theValue = ZAnyCast<float>(&iAny))
 		{
 		s.Writef("%.9g", *theValue);
 		}
-	else if (const double* theValue = ZAnyCast<double>(&iVal))
+	else if (const double* theValue = ZAnyCast<double>(&iAny))
 		{
 		s.Writef("%.17g", *theValue);
 		}
-	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iVal))
+	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iAny))
 		{
 		s.Writef("%.17g", theValue->fVal);
 		}
-	else if (const string8* theValue = ZAnyCast<string8>(&iVal))
-		{
-		s << *theValue;
-		}
+//	else if (const string8* theValue = ZAnyCast<string8>(&iAny))
+//		{
+//		s << *theValue;
+//		}
 	else
 		{
 		s << "!!Unhandled Type!!";
@@ -556,7 +543,7 @@ bool ZYadVisitor_JSONWriter::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 					fStrimW.Write(",");
 				spWriteLFIndent(fStrimW, fIndent, fOptions);
 				spWriteString(fStrimW, curName);
-				fStrimW << " : ";
+				fStrimW << ": ";
 
 				SaveState save(this);
 				fIndent = fIndent + 1;
@@ -583,7 +570,7 @@ bool ZYadVisitor_JSONWriter::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 					fStrimW.Write(",");
 				fStrimW.Write(" ");
 				spWriteString(fStrimW, curName);
-				fStrimW << " : ";
+				fStrimW << ": ";
 
 				SaveState save(this);
 				fIndent = fIndent + 1;

@@ -20,10 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_Any.h"
 
-#include "zoolib/ZString.h"
-
-using std::string;
-
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZUtil_Any {
@@ -32,41 +28,42 @@ namespace ZUtil_Any {
 #pragma mark -
 #pragma mark * ZUtil_Any
 
+bool sQCoerceInt(const ZAny& iAny, int64& oVal)
+	{
+	if (false)
+		{}
+	else if (const char* theVal = ZAnyCast<char>(&iAny))
+		oVal = *theVal;
+	else if (const signed char* theVal = ZAnyCast<signed char>(&iAny))
+		oVal = *theVal;
+	else if (const unsigned char* theVal = ZAnyCast<unsigned char>(&iAny))
+		oVal = *theVal;
+	else if (const short* theVal = ZAnyCast<short>(&iAny))
+		oVal = *theVal;
+	else if (const unsigned short* theVal = ZAnyCast<unsigned short>(&iAny))
+		oVal = *theVal;
+	else if (const int* theVal = ZAnyCast<int>(&iAny))
+		oVal = *theVal;
+	else if (const unsigned int* theVal = ZAnyCast<unsigned int>(&iAny))
+		oVal = *theVal;
+	else if (const long* theVal = ZAnyCast<long>(&iAny))
+		oVal = *theVal;
+	else if (const unsigned long* theVal = ZAnyCast<unsigned long>(&iAny))
+		oVal = *theVal;
+	else if (const int64* theVal = ZAnyCast<int64>(&iAny))
+		oVal = *theVal;
+	else if (const uint64* theVal = ZAnyCast<uint64>(&iAny))
+		oVal = *theVal;
+	else
+		return false;
+	return true;
+	}
+
 int64 sCoerceInt(const ZAny& iAny)
 	{
-	if (const char* theVal = ZAnyCast<char>(&iAny))
-		return *theVal;
-
-	if (const signed char* theVal = ZAnyCast<signed char>(&iAny))
-		return *theVal;
-
-	if (const unsigned char* theVal = ZAnyCast<unsigned char>(&iAny))
-		return *theVal;
-
-	if (const short* theVal = ZAnyCast<short>(&iAny))
-		return *theVal;
-
-	if (const unsigned short* theVal = ZAnyCast<unsigned short>(&iAny))
-		return *theVal;
-
-	if (const int* theVal = ZAnyCast<int>(&iAny))
-		return *theVal;
-
-	if (const unsigned int* theVal = ZAnyCast<unsigned int>(&iAny))
-		return *theVal;
-
-	if (const long* theVal = ZAnyCast<long>(&iAny))
-		return *theVal;
-
-	if (const unsigned long* theVal = ZAnyCast<unsigned long>(&iAny))
-		return *theVal;
-
-	if (const int64* theVal = ZAnyCast<int64>(&iAny))
-		return *theVal;
-
-	if (const uint64* theVal = ZAnyCast<uint64>(&iAny))
-		return *theVal;
-
+	int64 result;
+	if (sQCoerceInt(iAny, result))
+		return result;
 	return 0;
 	}
 
