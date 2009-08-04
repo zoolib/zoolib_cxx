@@ -22,13 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h" // For min
 #include "zoolib/ZDebug.h"
-//#include "zoolib/ZStream.h"
 #include "zoolib/ZMemory.h" // For ZBlockCopy
 #include "zoolib/ZUnicode.h"
 
 #include <ctype.h>
-#include <stdio.h>
 #include <stdexcept>
+#include <stdio.h>
 #include <string>
 
 using std::min;
