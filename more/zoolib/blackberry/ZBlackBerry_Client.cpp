@@ -143,7 +143,7 @@ public:
 
 	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const string& iName, const PasswordHash* iPasswordHash, Error* oError);
-	virtual ValData GetAttribute(uint16 iObject, uint16 iAttribute);
+	virtual Data GetAttribute(uint16 iObject, uint16 iAttribute);
 	virtual uint32 GetPIN();
 
 // From ZStreamerReader via ZCommer
@@ -234,7 +234,7 @@ ZRef<Channel> Device_Client::Open(bool iPreserveBoundaries,
 	return ZRef<Channel>();
 	}
 
-ValData Device_Client::GetAttribute(uint16 iObject, uint16 iAttribute)
+Data Device_Client::GetAttribute(uint16 iObject, uint16 iAttribute)
 	{
 	try
 		{
@@ -250,7 +250,7 @@ ValData Device_Client::GetAttribute(uint16 iObject, uint16 iAttribute)
 			const ZStreamR& r = theSRWCon->GetStreamR();
 			if (r.ReadBool())
 				{
-				ValData theMB(r.ReadCount());
+				Data theMB(r.ReadCount());
 				r.Read(theMB.GetData(), theMB.GetSize());
 				return theMB;
 				}
@@ -258,7 +258,7 @@ ValData Device_Client::GetAttribute(uint16 iObject, uint16 iAttribute)
 		}
 	catch (...)
 		{}
-	return ValData();
+	return Data();
 	}
 
 uint32 Device_Client::GetPIN()

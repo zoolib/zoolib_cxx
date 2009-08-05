@@ -53,7 +53,7 @@ public:
 	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError);
 
-	virtual ValData GetAttribute(uint16 iObject, uint16 iAttribute);
+	virtual Data GetAttribute(uint16 iObject, uint16 iAttribute);
 
 	virtual uint32 GetPIN();
 
@@ -105,7 +105,7 @@ private:
 		uint16 fObject;
 		uint16 fAttribute;
 		bool fFinished;
-		ValData fResult;
+		Data fResult;
 		};
 	bool fGetAttributeSent;
 	GetAttribute_t* fGetAttribute;

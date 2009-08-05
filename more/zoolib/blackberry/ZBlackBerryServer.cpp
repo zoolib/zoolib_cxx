@@ -429,7 +429,7 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 		const uint16 attribute = r.ReadUInt16();
 		if (ZRef<ZBlackBerry::Device> theDevice = this->pGetDevice(deviceID))
 			{
-			const ZBlackBerry::ValData theMB = theDevice->GetAttribute(object, attribute);
+			const ZBlackBerry::Data theMB = theDevice->GetAttribute(object, attribute);
 			w.WriteBool(true);
 			w.WriteCount(theMB.GetSize());
 			w.Write(theMB.GetData(), theMB.GetSize());

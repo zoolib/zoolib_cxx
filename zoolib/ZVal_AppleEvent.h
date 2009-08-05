@@ -144,7 +144,7 @@ public:
 	ZList_AppleEvent(const AEDescList& iOther);
 	ZList_AppleEvent& operator=(const AEDescList& iOther);
 
-// ZValList protocol
+// ZList protocol
 	size_t Count() const;
 
 	void Clear();
@@ -174,7 +174,7 @@ class ZMap_AppleEvent
 		operator_bool_generator_type, operator_bool_type);
 
 public:
-	typedef ZValMapIndex_T<ZMap_AppleEvent> Index_t;
+	typedef ZMapIndex_T<ZMap_AppleEvent> Index_t;
 
 	ZMap_Any AsMap_Any(const ZVal_Any& iDefault) const;
 
@@ -194,7 +194,7 @@ public:
 	ZMap_AppleEvent(const AERecord& iOther);
 	ZMap_AppleEvent& operator=(const AERecord& iOther);
 
-// ZValMap protocol
+// ZMap protocol
 	void Clear();
 
 	bool QGet(AEKeyword iName, ZVal_AppleEvent& oVal) const;

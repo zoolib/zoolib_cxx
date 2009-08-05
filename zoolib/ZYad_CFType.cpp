@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZStream_ValData_T.h"
+#include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZStrim_CFString.h"
 #include "zoolib/ZUtil_CFType.h"
 #include "zoolib/ZVal_CFType.h"

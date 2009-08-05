@@ -184,25 +184,25 @@ void sRelease(NPObjectH& iOb);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ValMapH
+#pragma mark * MapH
 
 // Sketch of API -- value semantics is an issue.
 
 typedef NPVariantH ValH;
 
-class ValMapH
+class MapH
 :	public ZRef<NPObjectH>
 	{
 public:
-	ValMapH();
-	ValMapH(const ValMapH& iOther);
-	~ValMapH();
-	ValMapH& operator=(const ValMapH& iOther);
+	MapH();
+	MapH(const MapH& iOther);
+	~MapH();
+	MapH& operator=(const MapH& iOther);
 
-	ValMapH(const ZRef<NPObjectH>& iOther);
-	ValMapH& operator=(const ZRef<NPObjectH>& iOther);
+	MapH(const ZRef<NPObjectH>& iOther);
+	MapH& operator=(const ZRef<NPObjectH>& iOther);
 
-// ValMap protocol
+// Map protocol
 	bool QGet(const string& iName, ValH& oVal) const;
 	ValH DGet(const ValH& iDefault, const string& iName) const;
 	ValH Get(const string& iName) const;

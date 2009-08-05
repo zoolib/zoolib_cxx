@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValData_CFType__
-#define __ZValData_CFType__ 1
+#ifndef __ZData_CFType__
+#define __ZData_CFType__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
@@ -62,7 +62,7 @@ public:
 	ZData_CFType(size_t iSize);
 	ZData_CFType(const void* iSourceData, size_t iSize);
 
-// ZValData protocol
+// ZData protocol
 	size_t GetSize() const;
 	void SetSize(size_t iSize);
 
@@ -88,4 +88,4 @@ NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 
-#endif // __ZValData_CFType__
+#endif // __ZData_CFType__

@@ -107,34 +107,34 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValMapIndex_T
+#pragma mark * ZMapIndex_T
 
 template <class T>
-class ZValMapIndex_T
+class ZMapIndex_T
 	{
 public:
-	ZValMapIndex_T() : fVal(0) {}
-	ZValMapIndex_T(const ZValMapIndex_T& iOther) : fVal(iOther.fVal) {}
-	~ZValMapIndex_T() {}
-	ZValMapIndex_T& operator=(const ZValMapIndex_T& iOther)
+	ZMapIndex_T() : fVal(0) {}
+	ZMapIndex_T(const ZMapIndex_T& iOther) : fVal(iOther.fVal) {}
+	~ZMapIndex_T() {}
+	ZMapIndex_T& operator=(const ZMapIndex_T& iOther)
 		{
 		fVal = iOther.fVal;
 		return *this;
 		}
 
-	explicit ZValMapIndex_T(size_t iVal) : fVal(iVal) {}
+	explicit ZMapIndex_T(size_t iVal) : fVal(iVal) {}
 
-	ZValMapIndex_T& operator++()
+	ZMapIndex_T& operator++()
 		{
 		++fVal;
 		return *this;
 		}
 
-	ZValMapIndex_T operator++(int)
-		{ return ZValMapIndex_T(fVal++); }
+	ZMapIndex_T operator++(int)
+		{ return ZMapIndex_T(fVal++); }
 
-	bool operator==(const ZValMapIndex_T& iOther) const { return fVal == iOther.fVal; }
-	bool operator!=(const ZValMapIndex_T& iOther) const { return fVal != iOther.fVal; }
+	bool operator==(const ZMapIndex_T& iOther) const { return fVal == iOther.fVal; }
+	bool operator!=(const ZMapIndex_T& iOther) const { return fVal != iOther.fVal; }
 
 	size_t GetIndex() const { return fVal; }
 

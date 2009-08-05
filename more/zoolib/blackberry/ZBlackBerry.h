@@ -33,7 +33,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZBlackBerry {
 
-typedef ZValData_Any ValData;
+typedef ZData_Any Data;
 
 struct PasswordHash
 	{
@@ -125,7 +125,7 @@ public:
 	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError) = 0;
 
-	virtual ValData GetAttribute(uint16 iObject, uint16 iAttribute) = 0;
+	virtual Data GetAttribute(uint16 iObject, uint16 iAttribute) = 0;
 	virtual uint32 GetPIN();
 
 	class Observer

@@ -270,7 +270,7 @@ public:
 	ZList_ZooLib(size_t iCount, const ZVal_ZooLib& iSingleton);
 	ZList_ZooLib(const std::vector<ZVal_ZooLib>& iOther);
 
-// ZValList protocol
+// ZList protocol
 	size_t Count() const;
 
 	void Clear();
@@ -396,7 +396,7 @@ public:
 	explicit ZMap_ZooLib(const ZStreamR& iStreamR);
 	ZMap_ZooLib(ZRef<Rep> iRep);
 
-// ZValMap protocol
+// ZMap protocol
 	void Clear();
 
 	bool QGet(Index_t iIndex, ZVal_ZooLib& oVal) const;

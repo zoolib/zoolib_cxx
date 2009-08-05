@@ -486,12 +486,12 @@ ZRef<Channel> Device_Streamer::Open(bool iPreserveBoundaries,
 	return ZRef<Channel>();
 	}
 
-ValData Device_Streamer::GetAttribute(uint16 iObject, uint16 iAttribute)
+Data Device_Streamer::GetAttribute(uint16 iObject, uint16 iAttribute)
 	{
 	ZMutexLocker locker(fMutex);
 
 	if (fLifecycle != eLifecycle_Running)
-		return ValData();
+		return Data();
 
 	while (fGetAttribute)
 		fCondition.Wait(fMutex);
@@ -513,7 +513,7 @@ ValData Device_Streamer::GetAttribute(uint16 iObject, uint16 iAttribute)
 
 uint32 Device_Streamer::GetPIN()
 	{
-	ValData theMB_PIN = this->GetAttribute(8, 4);
+	Data theMB_PIN = this->GetAttribute(8, 4);
 	if (theMB_PIN.GetSize() >= 15)
 		return ZByteSwap_ReadLittle32(static_cast<char*>(theMB_PIN.GetData()) + 11);
 	return 0;
@@ -681,7 +681,7 @@ bool Device_Streamer::Write(const ZStreamW& iStreamW)
 	if (fGetAttribute)
 		{
 		fGetAttribute->fFinished = true;
-		fGetAttribute->fResult = ValData();
+		fGetAttribute->fResult = Data();
 		fGetAttribute = nullptr;
 		fGetAttributeSent = false;
 		fCondition.Broadcast();
@@ -1009,7 +1009,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					}
 
 				// We've already read one byte (containing the command);
-				ValData theMB(iPayloadSize - 1);
+				Data theMB(iPayloadSize - 1);
 				iStreamR.Read(theMB.GetData(), theMB.GetSize());
 
 				ZMutexLocker locker(fMutex);

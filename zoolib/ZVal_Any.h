@@ -150,7 +150,7 @@ public:
 
 	ZList_Any& operator=(vector<ZAny>& iOther);
 
-// ZValList protocol
+// ZList protocol
 	size_t Count() const;
 
 	void Clear();
@@ -205,7 +205,7 @@ public:
 	template <class T>
 	ZMap_Any(const map<string, T>& iOther);
 
-// ZValMap protocol
+// ZMap protocol
 	void Clear();
 
 	bool QGet(const string8& iName, ZVal_Any& oVal) const;

@@ -129,7 +129,7 @@ public:
 	ZList_CFType& operator=(const ZRef<CFMutableArrayRef>& iOther);
 	ZList_CFType& operator=(const ZRef<CFArrayRef>& iOther);
 
-// ZValList protocol
+// ZList protocol
 	size_t Count() const;
 
 	void Clear();
@@ -179,7 +179,7 @@ public:
 	ZMap_CFType& operator=(const ZRef<CFMutableDictionaryRef>& iOther);
 	ZMap_CFType& operator=(const ZRef<CFDictionaryRef>& iOther);
 
-// ZValMap protocol
+// ZMap protocol
 	void Clear();
 
 	bool QGet(const string8& iName, ZVal_CFType& oVal) const;

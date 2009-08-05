@@ -348,7 +348,7 @@ public:
 	List& operator=(PIActionList iOther);
 	List& operator=(Adopt_T<PIActionList> iOther);
 
-// ZValList protocol
+// ZList protocol
 	size_t Count() const;
 
 	void Clear();
@@ -378,7 +378,7 @@ class Map
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Map,
 		operator_bool_generator_type, operator_bool_type);
 public:
-	typedef ZValMapIndex_T<Map> Index_t;
+	typedef ZMapIndex_T<Map> Index_t;
 
 	operator operator_bool_type() const;
 
@@ -400,7 +400,7 @@ public:
 	Map(KeyID iType, Adopt_T<PIActionDescriptor> iOther);
 	Map(const string8& iType, Adopt_T<PIActionDescriptor> iOther);
 
-// ZValMap protocol
+// ZMap protocol
 	void Clear();
 
 	bool QGet(KeyID iKey, Val& oVal) const;

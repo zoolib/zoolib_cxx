@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZHTTP_Requests.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZNet_Internet.h"
-#include "zoolib/ZStream_ValData_T.h"
+#include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZWaiter.h"
@@ -533,7 +533,7 @@ class Host_Std::HTTPFetcher
 :	public ZWaiter
 	{
 public:
-	HTTPFetcher(Host_Std* iHost, const string& iURL, ZHTTP::ValData* iData, void* iNotifyData);
+	HTTPFetcher(Host_Std* iHost, const string& iURL, ZHTTP::Data* iData, void* iNotifyData);
 
 // From ZWaiter
 	virtual bool Execute();
@@ -543,13 +543,13 @@ public:
 private:
 	Host_Std* fHost;
 	const string fURL;
-	ZHTTP::ValData fData;
+	ZHTTP::Data fData;
 	void* fNotifyData;
 	bool fIsPOST;
 	};
 
 Host_Std::HTTPFetcher::HTTPFetcher(
-	Host_Std* iHost, const string& iURL, ZHTTP::ValData* iData, void* iNotifyData)
+	Host_Std* iHost, const string& iURL, ZHTTP::Data* iData, void* iNotifyData)
 :	fHost(iHost),
 	fURL(iURL),
 	fNotifyData(iNotifyData)
@@ -570,13 +570,13 @@ bool Host_Std::HTTPFetcher::Execute()
 	try
 		{
 		string theURL = fURL;
-		ZHTTP::ValMap theHeaders;
-		ZHTTP::ValData theRawHeaders;	
+		ZHTTP::Map theHeaders;
+		ZHTTP::Data theRawHeaders;	
 		ZRef<ZStreamerR> theStreamerR;
 		if (fIsPOST)
 			{
 			theStreamerR = ZHTTP::sPostRaw(
-				theURL, ZStreamRPos_ValData_T<ZHTTP::ValData>(fData), nullptr,
+				theURL, ZStreamRPos_Data_T<ZHTTP::Data>(fData), nullptr,
 				&theHeaders, &theRawHeaders);
 			}
 		else
@@ -586,7 +586,7 @@ bool Host_Std::HTTPFetcher::Execute()
 
 		if (theStreamerR && fHost)
 			{
-			const ZHTTP::ValMap theCT = theHeaders.Get("content-type").GetMap();
+			const ZHTTP::Map theCT = theHeaders.Get("content-type").GetMap();
 			const string theMIME = theCT.Get("type").GetString()
 				+ "/" + theCT.Get("subtype").GetString();
 
@@ -602,7 +602,7 @@ bool Host_Std::HTTPFetcher::Execute()
 	if (fHost)
 		{
 		fHost->pHTTPFetcher(
-			this, fNotifyData, fURL, "", ZHTTP::ValData(), ZRef<ZStreamerR>());
+			this, fNotifyData, fURL, "", ZHTTP::Data(), ZRef<ZStreamerR>());
 		}
 
 	return false;
@@ -622,7 +622,7 @@ class Host_Std::Sender
 public:
 	Sender(Host* iHost, const NPP_t& iNPP_t,
 		void* iNotifyData,
-		const std::string& iURL, const std::string& iMIME, const ZHTTP::ValData& iHeaders,
+		const std::string& iURL, const std::string& iMIME, const ZHTTP::Data& iHeaders,
 		ZRef<ZStreamerR> iStreamerR);
 	~Sender();
 
@@ -636,14 +636,14 @@ private:
 	void* fNotifyData;
 	const string fURL;
 	const string fMIME;
-	const ZHTTP::ValData fHeaders;
+	const ZHTTP::Data fHeaders;
 	NPStream_Z fNPStream;
 	ZRef<ZStreamerR> fStreamerR;
 	};
 
 Host_Std::Sender::Sender(Host* iHost, const NPP_t& iNPP_t,
 	void* iNotifyData,
-	const std::string& iURL, const std::string& iMIME, const ZHTTP::ValData& iHeaders,
+	const std::string& iURL, const std::string& iMIME, const ZHTTP::Data& iHeaders,
 	ZRef<ZStreamerR> iStreamerR)
 :	fSentNew(false),
 	fHost(iHost),
@@ -916,7 +916,7 @@ NPError Host_Std::Host_PostURLNotify(NPP npp,
 
 	if (theURL.substr(0, 5) == "http:")
 		{
-		ZHTTP::ValData theData(buf, len);
+		ZHTTP::Data theData(buf, len);
 		ZRef<HTTPFetcher> theFetcher = new HTTPFetcher(this, theURL, &theData, notifyData);
 		fHTTPFetchers.Add(theFetcher);
 		sStartWaiterRunner(theFetcher);
@@ -967,7 +967,7 @@ void Host_Std::Host_ForceRedraw(NPP npp)
 	{}
 
 void Host_Std::pHTTPFetcher(ZRef<HTTPFetcher> iHTTPFetcher, void* iNotifyData,
-	const std::string& iURL, const std::string& iMIME, const ZHTTP::ValData& iHeaders,
+	const std::string& iURL, const std::string& iMIME, const ZHTTP::Data& iHeaders,
 	ZRef<ZStreamerR> iStreamerR)
 	{
 	fHTTPFetchers.Erase(iHTTPFetcher);
@@ -1015,7 +1015,7 @@ void Host_Std::Destroy()
 
 void Host_Std::SendDataAsync(
 	void* iNotifyData,
-	const std::string& iURL, const std::string& iMIME, const ZHTTP::ValData& iHeaders,
+	const std::string& iURL, const std::string& iMIME, const ZHTTP::Data& iHeaders,
 	ZRef<ZStreamerR> iStreamerR)
 	{
 	Sender* theSender = new Sender(this, this->GetNPP(),

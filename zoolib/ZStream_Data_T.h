@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_ValData_T__
-#define __ZStream_ValData_T__ 1
+#ifndef __ZStream_Data_T__
+#define __ZStream_Data_T__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
@@ -28,25 +28,25 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStreamRPos_ValData_T
+#pragma mark * ZStreamRPos_Data_T
 
 template <class T>
-class ZStreamRPos_ValData_T : public ZStreamRPos
+class ZStreamRPos_Data_T : public ZStreamRPos
 	{
 public:
-	ZStreamRPos_ValData_T(const T& iValData)
-	:	fValData(iValData),
+	ZStreamRPos_Data_T(const T& iData)
+	:	fData(iData),
 		fPosition(0)
 		{}
 	
-	~ZStreamRPos_ValData_T()
+	~ZStreamRPos_Data_T()
 		{}
 
 // From ZStreamR via ZStreamRPos
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 		{
-		size_t countToCopy = ZStream::sClampedSize(iCount, fValData.GetSize(), fPosition);
-		fValData.CopyTo(fPosition, iDest, countToCopy);
+		size_t countToCopy = ZStream::sClampedSize(iCount, fData.GetSize(), fPosition);
+		fData.CopyTo(fPosition, iDest, countToCopy);
 		fPosition += countToCopy;
 
 		if (oCountRead)
@@ -55,7 +55,7 @@ public:
 
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 		{
-		size_t realSkip = ZStream::sClampedSize(iCount, fValData.GetSize(), fPosition);
+		size_t realSkip = ZStream::sClampedSize(iCount, fData.GetSize(), fPosition);
 		fPosition += realSkip;
 		if (oCountSkipped)
 			*oCountSkipped = realSkip;
@@ -69,49 +69,49 @@ public:
 		{ fPosition = iPosition; }
 
 	virtual uint64 Imp_GetSize()
-		{ return fValData.GetSize(); }
+		{ return fData.GetSize(); }
 
 private:
-	T fValData;
+	T fData;
 	uint64 fPosition;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStreamRWPos_ValData_T
+#pragma mark * ZStreamRWPos_Data_T
 
 template <class T>
-class ZStreamRWPos_ValData_T : public ZStreamRWPos
+class ZStreamRWPos_Data_T : public ZStreamRWPos
 	{
 public:
-	ZStreamRWPos_ValData_T(T& iValData, size_t iGrowIncrement)
-	:	fValData(iValData)
+	ZStreamRWPos_Data_T(T& iData, size_t iGrowIncrement)
+	:	fData(iData)
 		{
 		fGrowIncrement = iGrowIncrement;
 		fPosition = 0;
-		fSizeLogical = fValData.GetSize();
+		fSizeLogical = fData.GetSize();
 		}
 	
-	ZStreamRWPos_ValData_T(T& iValData)
-	:	fValData(iValData)
+	ZStreamRWPos_Data_T(T& iData)
+	:	fData(iData)
 		{
 		fGrowIncrement = 64;
 		fPosition = 0;
-		fSizeLogical = fValData.GetSize();
+		fSizeLogical = fData.GetSize();
 		}
 
-	~ZStreamRWPos_ValData_T()
+	~ZStreamRWPos_Data_T()
 		{
 		// Finally, make sure the Data is the real size, not the potentially
 		// overallocated size we've been using
-		fValData.SetSize(fSizeLogical);
+		fData.SetSize(fSizeLogical);
 		}
 
 // From ZStreamR via ZStreamRWPos
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 		{
 		const size_t countToCopy = ZStream::sClampedSize(iCount, fSizeLogical, fPosition);
-		fValData.CopyTo(fPosition, iDest, countToCopy);
+		fData.CopyTo(fPosition, iDest, countToCopy);
 		fPosition += countToCopy;
 
 		if (oCountRead)
@@ -130,15 +130,15 @@ public:
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 		{
 		const uint64 neededSpace = fPosition + iCount;
-		if (fValData.GetSize() < neededSpace)
+		if (fData.GetSize() < neededSpace)
 			{
-			const uint64 realSize = std::max(neededSpace, uint64(fValData.GetSize()) + fGrowIncrement);
-			fValData.SetSize(ZStream::sClampedSize(realSize));
+			const uint64 realSize = std::max(neededSpace, uint64(fData.GetSize()) + fGrowIncrement);
+			fData.SetSize(ZStream::sClampedSize(realSize));
 			}
 
-		size_t countToCopy = ZStream::sClampedSize(iCount, fValData.GetSize(), fPosition);
+		size_t countToCopy = ZStream::sClampedSize(iCount, fData.GetSize(), fPosition);
 
-		fValData.CopyFrom(fPosition, iSource, iCount);
+		fData.CopyFrom(fPosition, iSource, iCount);
 
 		fPosition += countToCopy;
 
@@ -150,7 +150,7 @@ public:
 		}
 
 	virtual void Imp_Flush()
-		{ fValData.SetSize(fSizeLogical); }
+		{ fData.SetSize(fSizeLogical); }
 
 // From ZStreamRPos/ZStreamWPos via ZStreamRWPos
 	virtual uint64 Imp_GetPosition()
@@ -169,12 +169,12 @@ public:
 		if (realSize != iSize)
 			sThrowBadSize();
 
-		fValData.SetSize(realSize);
+		fData.SetSize(realSize);
 		fSizeLogical = realSize;
 		}
 
 private:
-	T& fValData;
+	T& fData;
 	size_t fGrowIncrement;
 	uint64 fPosition;
 	size_t fSizeLogical;
@@ -185,12 +185,12 @@ private:
 #pragma mark * Data stream reading functions
 
 template <class T>
-void sReadAll_T(T& ioValData, const ZStreamR& iStreamR)
-	{ ZStreamRWPos_ValData_T<T>(ioValData).CopyAllFrom(iStreamR); }
+void sReadAll_T(T& ioData, const ZStreamR& iStreamR)
+	{ ZStreamRWPos_Data_T<T>(ioData).CopyAllFrom(iStreamR); }
 
 template <class T>
-void sRead_T(T& ioValData, const ZStreamR& iStreamR, size_t iSize)
-	{ ZStreamRWPos_ValData_T<T>(ioValData).CopyFrom(iStreamR, iSize); }
+void sRead_T(T& ioData, const ZStreamR& iStreamR, size_t iSize)
+	{ ZStreamRWPos_Data_T<T>(ioData).CopyFrom(iStreamR, iSize); }
 
 template <class T>
 T sReadAll_T(const ZStreamR& iStreamR)
@@ -210,4 +210,4 @@ T sReadAll(const ZStreamR& iStreamR, size_t iSize)
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZStream_ValData_T__
+#endif // __ZStream_Data_T__

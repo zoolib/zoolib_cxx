@@ -53,7 +53,7 @@ static const char LF = '\n';
 #pragma mark -
 #pragma mark * Utility stuff
 
-static void sAppend(ValMap& ioFields, const string& iName, const Val& iValue)
+static void sAppend(Map& ioFields, const string& iName, const Val& iValue)
 	{ ioFields.Mutable(iName).MutableList().Append(iValue); }
 
 static uint32 sHexCharToUInt(char iChar)
@@ -211,7 +211,7 @@ void Response::Send(const ZStreamW& s) const
 bool sOrganizeRanges(size_t iSourceSize, const Val& iRangeParam,
 	vector<pair<size_t, size_t> >& oRanges)
 	{
-	ValMap asMap = iRangeParam.GetMap();
+	Map asMap = iRangeParam.GetMap();
 	int64 reqBegin;
 	if (asMap.Get("begin").QGetInt64(reqBegin))
 		{
@@ -315,7 +315,7 @@ bool sReadResponse(const ZStreamU& iStream, int32* oResultCode, string* oResultM
 	return true;
 	}
 
-bool sReadHeaderNoParsing(const ZStreamR& iStream, ValMap* oFields)
+bool sReadHeaderNoParsing(const ZStreamR& iStream, Map* oFields)
 	{
 	if (oFields)
 		oFields->Clear();
@@ -331,7 +331,7 @@ bool sReadHeaderNoParsing(const ZStreamR& iStream, ValMap* oFields)
 		}
 	}
 
-bool sReadHeaderLineNoParsing(const ZStreamU& iStream, ValMap* ioFields)
+bool sReadHeaderLineNoParsing(const ZStreamU& iStream, Map* ioFields)
 	{
 	string fieldNameExact;
 	if (!sReadFieldName(iStream, nullptr, &fieldNameExact))
@@ -349,7 +349,7 @@ bool sReadHeaderLineNoParsing(const ZStreamU& iStream, ValMap* ioFields)
 	return true;
 	}
 
-bool sReadHeader(const ZStreamR& iStream, ValMap* oFields)
+bool sReadHeader(const ZStreamR& iStream, Map* oFields)
 	{
 	if (oFields)
 		oFields->Clear();
@@ -365,7 +365,7 @@ bool sReadHeader(const ZStreamR& iStream, ValMap* oFields)
 		}
 	}
 
-bool sReadHeaderLine(const ZStreamU& iStream, ValMap* ioFields)
+bool sReadHeaderLine(const ZStreamU& iStream, Map* ioFields)
 	{
 	string fieldName;
 	if (!sReadFieldName(iStream, &fieldName, nullptr))
@@ -441,7 +441,7 @@ bool sReadHeaderLine(const ZStreamU& iStream, ValMap* ioFields)
 
 			if (ioFields)
 				{
-				ValMap cookieMap = ioFields->Get("cookie").GetMap();
+				Map cookieMap = ioFields->Get("cookie").GetMap();
 				cookieMap.Set(cookieName, cookieValue);
 				ioFields->Set("cookie", cookieMap);
 				}
@@ -563,7 +563,7 @@ static string sDecode_URI(const string& iString)
 	return result;
 	}
 
-void sParseParam(const string& iString, ValMap& oParam)
+void sParseParam(const string& iString, Map& oParam)
 	{
 	string::size_type prevPos = 0;
 	string::size_type pos;
@@ -590,10 +590,10 @@ void sParseParam(const string& iString, ValMap& oParam)
 		}
 	}
 
-bool sParseQuery(const string& iString, ValMap& oTuple)
+bool sParseQuery(const string& iString, Map& oTuple)
 	{ return sParseQuery(ZStreamRPos_String(iString), oTuple); }
 
-bool sParseQuery(const ZStreamU& iStream, ValMap& oTuple)
+bool sParseQuery(const ZStreamU& iStream, Map& oTuple)
 	{
 	for (;;)
 		{
@@ -739,7 +739,7 @@ string sGetString0(const Val& iVal)
 	if (iVal.QGetString(result))
 		return result;
 
-	const ValList& theList = iVal.GetList();
+	const List& theList = iVal.GetList();
 	if (theList.Count())
 		return theList.Get(0).GetString();
 
@@ -747,7 +747,7 @@ string sGetString0(const Val& iVal)
 	}
 
 static ZRef<ZStreamerR> sMakeStreamer_Transfer(
-	const ValMap& iHeader, ZRef<ZStreamerR> iStreamerR)
+	const Map& iHeader, ZRef<ZStreamerR> iStreamerR)
 	{
 	// According to the spec, if content is chunked, content-length must be ignored.
 	// I've seen some pages being returned with transfer-encoding "chunked, chunked", which
@@ -766,7 +766,7 @@ static ZRef<ZStreamerR> sMakeStreamer_Transfer(
 	return iStreamerR;
 	}
 
-ZRef<ZStreamerR> sMakeContentStreamer(const ValMap& iHeader, ZRef<ZStreamerR> iStreamerR)
+ZRef<ZStreamerR> sMakeContentStreamer(const Map& iHeader, ZRef<ZStreamerR> iStreamerR)
 	{
 	iStreamerR = sMakeStreamer_Transfer(iHeader, iStreamerR);
 
@@ -775,7 +775,7 @@ ZRef<ZStreamerR> sMakeContentStreamer(const ValMap& iHeader, ZRef<ZStreamerR> iS
 	return iStreamerR;
 	}
 
-ZRef<ZStreamerR> sMakeContentStreamer(const ValMap& iHeader, const ZStreamR& iStreamR)
+ZRef<ZStreamerR> sMakeContentStreamer(const Map& iHeader, const ZStreamR& iStreamR)
 	{
 	return sMakeContentStreamer(iHeader, new ZStreamerR_Stream(iStreamR));
 	}
@@ -804,15 +804,15 @@ parameters = {
 }
 <\endcode>
 */
-bool sRead_accept(const ZStreamU& iStream, ValMap* ioFields)
+bool sRead_accept(const ZStreamU& iStream, Map* ioFields)
 	{
 	for (;;)
 		{
-		ValMap parameters;
+		Map parameters;
 		string type, subtype;
 		if (!sReadMediaType(iStream, &type, &subtype, &parameters, nullptr, nullptr))
 			break;
-		ValMap temp;
+		Map temp;
 		temp.Set("type", type);
 		temp.Set("subtype", subtype);
 		if (parameters)
@@ -828,10 +828,10 @@ bool sRead_accept(const ZStreamU& iStream, ValMap* ioFields)
 	return true;
 	}
 
-//bool sRead_accept_charset(const ZStreamU& iStream, ValMap* ioFields);
-//bool sRead_accept_encoding(const ZStreamU& iStream, ValMap* ioFields);
+//bool sRead_accept_charset(const ZStreamU& iStream, Map* ioFields);
+//bool sRead_accept_encoding(const ZStreamU& iStream, Map* ioFields);
 
-bool sRead_accept_language(const ZStreamU& iStream, ValMap* ioFields)
+bool sRead_accept_language(const ZStreamU& iStream, Map* ioFields)
 	{
 	for (;;)
 		{
@@ -841,10 +841,10 @@ bool sRead_accept_language(const ZStreamU& iStream, ValMap* ioFields)
 		if (!sReadLanguageTag(iStream, &languageTag))
 			break;
 
-		ValMap temp;
+		Map temp;
 		temp.Set("tag", languageTag);
 		
-		ValMap parameters;
+		Map parameters;
 		for (;;)
 			{
 			sSkipLWS(iStream);
@@ -872,13 +872,13 @@ bool sRead_accept_language(const ZStreamU& iStream, ValMap* ioFields)
 	return true;
 	}
 
-//bool sRead_authorization(const ZStreamU& iStream, ValMap* ioFields);
-//bool sRead_from(const ZStreamU& iStream, ValMap* ioFields);
-//bool sRead_host(const ZStreamU& iStream, ValMap* ioFields);
+//bool sRead_authorization(const ZStreamU& iStream, Map* ioFields);
+//bool sRead_from(const ZStreamU& iStream, Map* ioFields);
+//bool sRead_host(const ZStreamU& iStream, Map* ioFields);
 
-bool sRead_range(const ZStreamU& iStream, ValMap* ioFields)
+bool sRead_range(const ZStreamU& iStream, Map* ioFields)
 	{
-	ValMap theRange;
+	Map theRange;
 	if (!sRead_range(iStream, theRange))
 		return false;
 
@@ -895,7 +895,7 @@ bytes=x-y	{ begin = int64(x);  end = int64(y); } // (x to y inclusive)
 bytes=x-	{ begin = int64(x); } // (x to the end)
 bytes=-y	{ last = int64(y); } // (last y)
 */
-bool sRead_range(const ZStreamU& iStream, ValMap& oRange)
+bool sRead_range(const ZStreamU& iStream, Map& oRange)
 	{
 	sSkipLWS(iStream);
 
@@ -943,19 +943,19 @@ bool sRead_range(const ZStreamU& iStream, ValMap& oRange)
 		}
 	}
 
-//bool sRead_referer(const ZStreamU& iStream, ValMap* ioFields);
+//bool sRead_referer(const ZStreamU& iStream, Map* ioFields);
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZHTTP, response headers
 
-bool sRead_www_authenticate(const ZStreamU& iStream, ValMap* ioFields);
+bool sRead_www_authenticate(const ZStreamU& iStream, Map* ioFields);
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZHTTP, request or response headers
 
-bool sRead_transfer_encoding(const ZStreamU& iStream, ValMap* ioFields)
+bool sRead_transfer_encoding(const ZStreamU& iStream, Map* ioFields)
 	{
 	string encoding;
 	if (!sRead_transfer_encoding(iStream, encoding))
@@ -981,9 +981,9 @@ bool sRead_transfer_encoding(const ZStreamU& iStream, string& oEncoding)
 #pragma mark -
 #pragma mark * ZHTTP, entity headers
 
-bool sRead_content_disposition(const ZStreamU& iStream, ValMap* ioFields)
+bool sRead_content_disposition(const ZStreamU& iStream, Map* ioFields)
 	{
-	ValMap dispositionTuple;
+	Map dispositionTuple;
 	if (!sRead_content_disposition(iStream, dispositionTuple))
 		return false;
 
@@ -992,17 +992,17 @@ bool sRead_content_disposition(const ZStreamU& iStream, ValMap* ioFields)
 	return true;
 	}
 
-bool sRead_content_disposition(const ZStreamU& iStream, ValMap& oTuple)
+bool sRead_content_disposition(const ZStreamU& iStream, Map& oTuple)
 	{
 	sSkipLWS(iStream);
 
 	string disposition;
 	if (sReadToken(iStream, &disposition, nullptr))
 		{
-		ValMap dispositionTuple;
+		Map dispositionTuple;
 		oTuple.Set("value", disposition);
 
-		ValMap parameters;
+		Map parameters;
 		for (;;)
 			{
 			sSkipLWS(iStream);
@@ -1025,10 +1025,10 @@ bool sRead_content_disposition(const ZStreamU& iStream, ValMap& oTuple)
 	return false;
 	}
 
-bool sRead_content_encoding(const ZStreamU& iStream, ValMap* ioFields);
-bool sRead_content_language(const ZStreamU& iStream, ValMap* ioFields);
+bool sRead_content_encoding(const ZStreamU& iStream, Map* ioFields);
+bool sRead_content_language(const ZStreamU& iStream, Map* ioFields);
 
-bool sRead_content_length(const ZStreamU& iStream, ValMap* ioFields)
+bool sRead_content_length(const ZStreamU& iStream, Map* ioFields)
 	{
 	int64 theLength;
 	if (sRead_content_length(iStream, theLength))
@@ -1046,10 +1046,10 @@ bool sRead_content_length(const ZStreamU& iStream, int64& oLength)
 	return sReadInt64(iStream, &oLength);
 	}
 
-bool sRead_content_location(const ZStreamU& iStream, ValMap* ioFields);
-bool sRead_content_md5(const ZStreamU& iStream, ValMap* ioFields);
+bool sRead_content_location(const ZStreamU& iStream, Map* ioFields);
+bool sRead_content_md5(const ZStreamU& iStream, Map* ioFields);
 
-bool sRead_content_range(const ZStreamU& iStream, ValMap* ioFields)
+bool sRead_content_range(const ZStreamU& iStream, Map* ioFields)
 	{
 	int64 begin, end, maxLength;
 	if (!sRead_content_range(iStream, begin, end, maxLength))
@@ -1057,7 +1057,7 @@ bool sRead_content_range(const ZStreamU& iStream, ValMap* ioFields)
 
 	if (ioFields)
 		{
-		ValMap temp;
+		Map temp;
 		temp.Set("begin", begin);
 		temp.Set("end", end);
 		temp.Set("maxlength", maxLength);
@@ -1103,16 +1103,16 @@ bool sRead_content_range(const ZStreamU& iStream,
 	return true;
 	}
 
-bool sRead_content_type(const ZStreamU& iStream, ValMap* ioFields)
+bool sRead_content_type(const ZStreamU& iStream, Map* ioFields)
 	{
 	string type, subType;
-	ValMap parameters;
+	Map parameters;
 	if (!sRead_content_type(iStream, type, subType, parameters))
 		return false;
 
 	if (ioFields)
 		{
-		ValMap temp;
+		Map temp;
 		temp.Set("type", type);
 		temp.Set("subtype", subType);
 		if (parameters)
@@ -1123,7 +1123,7 @@ bool sRead_content_type(const ZStreamU& iStream, ValMap* ioFields)
 	}
 
 bool sRead_content_type(const ZStreamU& iStream,
-	string& oType, string& oSubType, ValMap& oParameters)
+	string& oType, string& oSubType, Map& oParameters)
 	{
 	if (!sReadMediaType(iStream, &oType, &oSubType, &oParameters, nullptr, nullptr))
 		return false;
@@ -1252,7 +1252,7 @@ bool sReadParameter_Cookie(const ZStreamU& iStream,
 	}
 
 bool sReadMediaType(const ZStreamU& iStream,
-	string* oType, string* oSubtype, ValMap* oParameters,
+	string* oType, string* oSubtype, Map* oParameters,
 	string* oTypeExact, string* oSubtypeExact)
 	{
 	if (oType)

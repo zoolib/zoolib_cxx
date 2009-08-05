@@ -98,7 +98,7 @@ void ZTuple::SetTuple(const ZTName& iName, const ZTuple& iTuple)
 #pragma mark -
 #pragma mark * ZMap_ZooLib typename accessors
 
-#define ZMACRO_ZValMapAccessors_Def_Entry(Name_t, TYPENAME, TYPE) \
+#define ZMACRO_ZMapAccessors_Def_Entry(Name_t, TYPENAME, TYPE) \
 	bool ZTuple::QGet##TYPENAME(Name_t iName, TYPE& oVal) const \
 		{ \
 		ZVal_ZooLib theVal; \
@@ -118,23 +118,23 @@ void ZTuple::SetTuple(const ZTName& iName, const ZTuple& iTuple)
 	void ZTuple::Set##TYPENAME(Name_t iName, const TYPE& iVal) \
 		{ return this->Set(iName, iVal); } \
 
-#define ZMACRO_ZValMapAccessors_Def(Name_t) \
-	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, ID, uint64) \
-	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Int8, int8) \
-	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Int16, int16) \
-	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Int32, int32) \
-	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Int64, int64) \
-	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Bool, bool) \
-	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Float, float) \
-	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Double, double) \
-	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, String, std::string) \
-	ZMACRO_ZValMapAccessors_Def_Entry(Name_t, Time, ZTime) \
+#define ZMACRO_ZMapAccessors_Def(Name_t) \
+	ZMACRO_ZMapAccessors_Def_Entry(Name_t, ID, uint64) \
+	ZMACRO_ZMapAccessors_Def_Entry(Name_t, Int8, int8) \
+	ZMACRO_ZMapAccessors_Def_Entry(Name_t, Int16, int16) \
+	ZMACRO_ZMapAccessors_Def_Entry(Name_t, Int32, int32) \
+	ZMACRO_ZMapAccessors_Def_Entry(Name_t, Int64, int64) \
+	ZMACRO_ZMapAccessors_Def_Entry(Name_t, Bool, bool) \
+	ZMACRO_ZMapAccessors_Def_Entry(Name_t, Float, float) \
+	ZMACRO_ZMapAccessors_Def_Entry(Name_t, Double, double) \
+	ZMACRO_ZMapAccessors_Def_Entry(Name_t, String, std::string) \
+	ZMACRO_ZMapAccessors_Def_Entry(Name_t, Time, ZTime) \
 
-ZMACRO_ZValMapAccessors_Def(const char*)
-ZMACRO_ZValMapAccessors_Def(const ZTName&)
-ZMACRO_ZValMapAccessors_Def(const_iterator)
+ZMACRO_ZMapAccessors_Def(const char*)
+ZMACRO_ZMapAccessors_Def(const ZTName&)
+ZMACRO_ZMapAccessors_Def(const_iterator)
 
-#undef ZMACRO_ZValMapAccessors_Def_Entry
-#undef ZMACRO_ZValMapAccessors_Def
+#undef ZMACRO_ZMapAccessors_Def_Entry
+#undef ZMACRO_ZMapAccessors_Def
 
 NAMESPACE_ZOOLIB_END

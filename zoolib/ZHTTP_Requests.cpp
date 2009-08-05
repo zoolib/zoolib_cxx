@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamR_SkipAllOnDestroy.h"
 #include "zoolib/ZStream_String.h"
 #include "zoolib/ZStream_Tee.h"
-#include "zoolib/ZStream_ValData_T.h"
+#include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStrimmer.h"
 #include "zoolib/ZStrimmer_Stream.h"
@@ -45,7 +45,7 @@ using std::string;
 #pragma mark -
 #pragma mark * ZHTTP
 
-static bool spReadResponse(const ZStreamR& r, int32* oResponseCode, ValMap* oHeader)
+static bool spReadResponse(const ZStreamR& r, int32* oResponseCode, Map* oHeader)
 	{
 	ZMIME::StreamR_Header theSIH_Server(r);
 
@@ -65,7 +65,7 @@ static bool spReadResponse(const ZStreamR& r, int32* oResponseCode, ValMap* oHea
 static bool spRequest(const ZStreamW& w, const ZStreamR& r,
 	const string& iMethod, const string& iHost, const string& iPath,
 	bool iSendConnectionClose,
-	int32* oResponseCode, ValMap* oHeader, ValData* oRawHeader)
+	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
 	w.WriteString(iMethod);
 	w.WriteString(" ");
@@ -81,8 +81,8 @@ static bool spRequest(const ZStreamW& w, const ZStreamR& r,
 
 	if (oRawHeader)
 		{
-		ZStreamRWPos_ValData_T<ValData> theSRWP_ValData(*oRawHeader);
-		ZStreamR_Tee theStream_Tee(r, theSRWP_ValData);
+		ZStreamRWPos_Data_T<Data> theSRWP_Data(*oRawHeader);
+		ZStreamR_Tee theStream_Tee(r, theSRWP_Data);
 		return spReadResponse(theStream_Tee, oResponseCode, oHeader);
 		}
 	else
@@ -93,7 +93,7 @@ static bool spRequest(const ZStreamW& w, const ZStreamR& r,
 
 ZRef<ZStreamerR> sRequest(
 	const string& iMethod, string& ioURL,
-	int32* oResultCode, ValMap* oFields, ValData* oRawHeader)
+	int32* oResultCode, Map* oFields, Data* oRawHeader)
 	{
 	for (bool keepGoing = true; keepGoing; /*no inc*/)
 		{
@@ -111,7 +111,7 @@ ZRef<ZStreamerR> sRequest(
 				break;
 
 			int32 theResponseCode;
-			ValMap theHeaders;
+			Map theHeaders;
 			if (!spRequest(
 				theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
 				iMethod, theHost, thePath,
@@ -174,12 +174,12 @@ static void spPost_Prefix(const ZStreamW& w,
 	}
 
 static bool spPost_Suffix(const ZStreamR& r,
-	int32* oResponseCode, ValMap* oHeader, ValData* oRawHeader)
+	int32* oResponseCode, Map* oHeader, Data* oRawHeader)
 	{
 	if (oRawHeader)
 		{
-		ZStreamRWPos_ValData_T<ValData> theSRWP_ValData(*oRawHeader);
-		ZStreamR_Tee theStream_Tee(r, theSRWP_ValData);
+		ZStreamRWPos_Data_T<Data> theSRWP_Data(*oRawHeader);
+		ZStreamR_Tee theStream_Tee(r, theSRWP_Data);
 		return spReadResponse(theStream_Tee, oResponseCode, oHeader);
 		}
 	else
@@ -190,7 +190,7 @@ static bool spPost_Suffix(const ZStreamR& r,
 
 ZRef<ZStreamerR> sPost(
 	const std::string& iURL, const ZStreamR& iBody,
-	int32* oResultCode, ValMap* oFields, ValData* oRawHeader)
+	int32* oResultCode, Map* oFields, Data* oRawHeader)
 	{
 	string theHost;
 	ip_port thePort;
@@ -222,7 +222,7 @@ ZRef<ZStreamerR> sPost(
 			w.Flush();
 
 			int32 theResponseCode;
-			ValMap theHeaders;
+			Map theHeaders;
 			if (spPost_Suffix(r, &theResponseCode, &theHeaders, oRawHeader))
 				{
 				if (200 == theResponseCode)
@@ -246,7 +246,7 @@ ZRef<ZStreamerR> sPost(
 
 ZRef<ZStreamerR> sPostRaw(
 	const std::string& iURL, const ZStreamR& iBody,
-	int32* oResultCode, ValMap* oFields, ValData* oRawHeader)
+	int32* oResultCode, Map* oFields, Data* oRawHeader)
 	{
 	string theHost;
 	ip_port thePort;
@@ -264,7 +264,7 @@ ZRef<ZStreamerR> sPostRaw(
 			w.Flush();
 
 			int32 theResponseCode;
-			ValMap theHeaders;
+			Map theHeaders;
 			if (spPost_Suffix(r, &theResponseCode, &theHeaders, oRawHeader))
 				{
 				if (200 == theResponseCode)
@@ -288,9 +288,9 @@ ZRef<ZStreamerR> sPostRaw(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZHTTP, read a POST into a ValMap
+#pragma mark * ZHTTP, read a POST into a Map
 
-static ZRef<ZStrimmerR> spCreateStrimmerR(const ValMap& iHeader, const ZStreamR& iStreamR)
+static ZRef<ZStrimmerR> spCreateStrimmerR(const Map& iHeader, const ZStreamR& iStreamR)
 	{
 	const string charset = iHeader
 		.Get("content-type").GetMap()
@@ -322,14 +322,14 @@ static bool spReadName(const ZStreamU& iStreamU, string& oName)
 	return gotAny;
 	}
 
-static bool spReadPOST(const ZStreamR& iStreamR, const ValMap& iHeader, Val& oVal)
+static bool spReadPOST(const ZStreamR& iStreamR, const Map& iHeader, Val& oVal)
 	{
-	const ValMap content_type = iHeader.Get("content-type").GetMap();
+	const Map content_type = iHeader.Get("content-type").GetMap();
 	if (content_type.Get("type").GetString() == "application"
 		&& content_type.Get("subtype").GetString() == "x-www-url-encoded")
 		{
-		// It's application/x-www-url-encoded. So we're going to unpack it into a ValMap.
-		// ValMap& theTuple = oVal.SetMutableTuple();
+		// It's application/x-www-url-encoded. So we're going to unpack it into a Map.
+		// Map& theTuple = oVal.SetMutableTuple();
 		// yadda yadda.
 		//#warning "not done yet"
 		return true;
@@ -345,7 +345,7 @@ static bool spReadPOST(const ZStreamR& iStreamR, const ValMap& iHeader, Val& oVa
 		ZStreamR_Boundary(baseBoundary, iStreamR).SkipAll();
 
 		const string boundary = "\r\n--" + baseBoundary;
-		ValMap theMap;
+		Map theMap;
 		for (;;)
 			{
 			bool done = false;
@@ -374,15 +374,15 @@ static bool spReadPOST(const ZStreamR& iStreamR, const ValMap& iHeader, Val& oVa
 			// We're now sitting at the beginning of the part's header.
 			ZStreamR_Boundary streamPart(boundary, iStreamR);
 
-			// We parse it into the ValMap called 'header'.
-			ValMap header;
+			// We parse it into the Map called 'header'.
+			Map header;
 			sReadHeader(
 				ZStreamR_SkipAllOnDestroy(ZMIME::StreamR_Header(streamPart)), &header);
 
-			ValMap contentDisposition = header.Get("content-disposition").GetMap();
+			Map contentDisposition = header.Get("content-disposition").GetMap();
 			if (contentDisposition.Get("value").GetString() == "form-data")
 				{
-				const ValMap parameters = contentDisposition.Get("parameters").GetMap();
+				const Map parameters = contentDisposition.Get("parameters").GetMap();
 				const string name = parameters.Get("name").GetString();
 				if (!name.empty())
 					{
@@ -414,7 +414,7 @@ static bool spReadPOST(const ZStreamR& iStreamR, const ValMap& iHeader, Val& oVa
 		}
 
 	// It's some other kind of content. Put it into a raw.
-	oVal = sReadAll_T<ValData>(iStreamR);
+	oVal = sReadAll_T<Data>(iStreamR);
 	return true;
 	}
 

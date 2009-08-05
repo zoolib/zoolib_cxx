@@ -23,14 +23,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZData_Any.h"
-#include "zoolib/ZStream_ValData_T.h"
+#include "zoolib/ZStream_Data_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 typedef ZData_Any ZMemoryBlock;
 
-typedef ZStreamRPos_ValData_T<ZMemoryBlock> ZStreamRPos_MemoryBlock;
-typedef ZStreamRWPos_ValData_T<ZMemoryBlock> ZStreamRWPos_MemoryBlock;
+typedef ZStreamRPos_Data_T<ZMemoryBlock> ZStreamRPos_MemoryBlock;
+typedef ZStreamRWPos_Data_T<ZMemoryBlock> ZStreamRWPos_MemoryBlock;
 
 NAMESPACE_ZOOLIB_END
 

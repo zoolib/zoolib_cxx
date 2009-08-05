@@ -36,7 +36,7 @@ JSON is JavaScript Object Notation. See <http://www.crockford.com/JSON/index.htm
 
 ZYad_JSON provides Yad facilities to read and write JSON source.
 
-ZValMap is isomorphic to JSON's object, ZValList to JSON's array, and strings, booleans
+ZMap is isomorphic to JSON's object, ZList to JSON's array, and strings, booleans
 and null translate back and forth without trouble. JSON's only other primitive is
 the number, whereas ZVal_ZooLib explicitly stores and retrieves integers of different sizes,
 floats and doubles, raw bytes and other composite types.

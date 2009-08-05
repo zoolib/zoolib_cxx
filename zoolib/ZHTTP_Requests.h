@@ -34,15 +34,15 @@ namespace ZHTTP {
 
 ZRef<ZStreamerR> sRequest(
 	const std::string& iMethod, std::string& ioURL,
-	int32* oResultCode, ValMap* oFields, ValData* oRawHeader);
+	int32* oResultCode, Map* oFields, Data* oRawHeader);
 
 ZRef<ZStreamerR> sPost(
 	const std::string& iURL, const ZStreamR& iBody,
-	int32* oResultCode, ValMap* oFields, ValData* oRawHeader);
+	int32* oResultCode, Map* oFields, Data* oRawHeader);
 
 ZRef<ZStreamerR> sPostRaw(
 	const std::string& iURL, const ZStreamR& iBody,
-	int32* oResultCode, ValMap* oFields, ValData* oRawHeader);
+	int32* oResultCode, Map* oFields, Data* oRawHeader);
 
 } // namespace ZHTTP
 

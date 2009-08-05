@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZYad.h"
-#include "zoolib/ZStream_ValData_T.h"
+#include "zoolib/ZStream_Data_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -62,14 +62,14 @@ protected:
 #pragma mark -
 #pragma mark * ZYadStreamRPos_Val_T
 
-template <class ValData_t>
+template <class Data_t>
 class ZYadStreamRPos_Val_T
 :	public ZYadStreamR,
-	public ZStreamerRPos_T<ZStreamRPos_ValData_T<ValData_t> >
+	public ZStreamerRPos_T<ZStreamRPos_Data_T<Data_t> >
 	{
 public:
-	ZYadStreamRPos_Val_T(const ValData_t& iValData)
-	:	ZStreamerRPos_T<ZStreamRPos_ValData_T<ValData_t> >(iValData)
+	ZYadStreamRPos_Val_T(const Data_t& iData)
+	:	ZStreamerRPos_T<ZStreamRPos_Data_T<Data_t> >(iData)
 		{}
 
 // From ZYadR
@@ -81,17 +81,17 @@ public:
 #pragma mark -
 #pragma mark * ZYadListRPos_Val_T
 
-template <class ValList_t>
+template <class List_t>
 class ZYadListRPos_Val_T
 :	public ZYadListRPos
 	{
 public:
-	ZYadListRPos_Val_T(const ValList_t& iList)
+	ZYadListRPos_Val_T(const List_t& iList)
 	:	fList(iList)
 	,	fPosition(0)
 		{}
 
-	ZYadListRPos_Val_T(const ValList_t& iList, uint64 iPosition)
+	ZYadListRPos_Val_T(const List_t& iList, uint64 iPosition)
 	:	fList(iList)
 	,	fPosition(iPosition)
 		{}
@@ -118,7 +118,7 @@ public:
 		{ return fList.Count(); }
 
 protected:
-	const ValList_t fList;
+	const List_t fList;
 	uint64 fPosition;
 	};
 
@@ -128,7 +128,7 @@ protected:
 
 // Urgh, quite an ugly name.
 
-template <class Self_t, class ValList_t>
+template <class Self_t, class List_t>
 class ZYadListRPos_Val_Self_T
 :	public ZYadListRPos
 	{
@@ -136,12 +136,12 @@ public:
 	typedef ZYadListRPos_Val_Self_T YadListBase_t;
 
 protected:
-	ZYadListRPos_Val_Self_T(const ValList_t& iList)
+	ZYadListRPos_Val_Self_T(const List_t& iList)
 	:	fList(iList)
 	,	fPosition(0)
 		{}
 
-	ZYadListRPos_Val_Self_T(const ValList_t& iList, uint64 iPosition)
+	ZYadListRPos_Val_Self_T(const List_t& iList, uint64 iPosition)
 	:	fList(iList)
 	,	fPosition(iPosition)
 		{}
@@ -169,7 +169,7 @@ public:
 		{ return fList.Count(); }
 
 protected:
-	const ValList_t fList;
+	const List_t fList;
 	uint64 fPosition;
 	};
 
@@ -177,19 +177,19 @@ protected:
 #pragma mark -
 #pragma mark * ZYadMapRPos_Val_T
 
-template <class ValMap_t, class Index_P = typename ValMap_t::Index_t>
+template <class Map_t, class Index_P = typename Map_t::Index_t>
 class ZYadMapRPos_Val_T
 :	public ZYadMapRPos
 	{
 public:
 	typedef Index_P Index_t;
 
-	ZYadMapRPos_Val_T(const ValMap_t& iMap)
+	ZYadMapRPos_Val_T(const Map_t& iMap)
 	:	fMap(iMap)
 	,	fIndex(fMap.Begin())
 		{}
 
-	ZYadMapRPos_Val_T(const ValMap_t& iMap, const Index_t& iIndex)
+	ZYadMapRPos_Val_T(const Map_t& iMap, const Index_t& iIndex)
 	:	fMap(iMap)
 	,	fIndex(fMap.IndexOf(iMap, iIndex))
 		{}
@@ -213,7 +213,7 @@ public:
 		{ return new ZYadMapRPos_Val_T(fMap, fIndex); }
 
 protected:
-	const ValMap_t fMap;
+	const Map_t fMap;
 	Index_t fIndex;
 	};
 
@@ -221,7 +221,7 @@ protected:
 #pragma mark -
 #pragma mark * ZYadMapRPos_Val_Self_T
 
-template <class Self_t, class ValMap_t, class Index_P = typename ValMap_t::Index_t>
+template <class Self_t, class Map_t, class Index_P = typename Map_t::Index_t>
 class ZYadMapRPos_Val_Self_T
 :	public ZYadMapRPos
 	{
@@ -230,12 +230,12 @@ public:
 
 protected:
 	typedef ZYadMapRPos_Val_Self_T YadMapBase_t;
-	ZYadMapRPos_Val_Self_T(const ValMap_t& iMap)
+	ZYadMapRPos_Val_Self_T(const Map_t& iMap)
 	:	fMap(iMap)
 	,	fIndex(fMap.Begin())
 		{}
 
-	ZYadMapRPos_Val_Self_T(const ValMap_t& iMap, const Index_t& iIndex)
+	ZYadMapRPos_Val_Self_T(const Map_t& iMap, const Index_t& iIndex)
 	:	fMap(iMap)
 	,	fIndex(iIndex)
 		{}
@@ -260,7 +260,7 @@ public:
 		{ return new Self_t(fMap, fIndex); }
 
 protected:
-	const ValMap_t fMap;
+	const Map_t fMap;
 	Index_t fIndex;
 	};
 
