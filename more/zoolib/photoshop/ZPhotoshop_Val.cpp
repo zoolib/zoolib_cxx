@@ -1316,7 +1316,7 @@ bool List::QGet(size_t iIndex, Val& oVal) const
 	return false;
 	}
 
-Val List::DGet(size_t iIndex, const Val& iDefault) const
+Val List::DGet(const Val& iDefault, size_t iIndex) const
 	{
 	Val result;
 	if (this->QGet(iIndex, result))
@@ -1325,7 +1325,7 @@ Val List::DGet(size_t iIndex, const Val& iDefault) const
 	}
 
 Val List::Get(size_t iIndex) const
-	{ return this->DGet(iIndex, Val()); }
+	{ return this->DGet(Val(), iIndex); }
 
 void List::Append(const Val& iVal)
 	{
@@ -1437,7 +1437,7 @@ bool Map::QGet(const string8& iName, Val& oVal) const
 bool Map::QGet(Index_t iIndex, Val& oVal) const
 	{ return this->QGet(this->KeyOf(iIndex), oVal); }
 
-Val Map::DGet(KeyID iKey, const Val& iDefault) const
+Val Map::DGet(const Val& iDefault, KeyID iKey) const
 	{
 	Val result;
 	if (this->QGet(iKey, result))
@@ -1445,7 +1445,7 @@ Val Map::DGet(KeyID iKey, const Val& iDefault) const
 	return iDefault;
 	}
 
-Val Map::DGet(const string8& iName, const Val& iDefault) const
+Val Map::DGet(const Val& iDefault, const string8& iName) const
 	{
 	Val result;
 	if (this->QGet(iName, result))
@@ -1453,7 +1453,7 @@ Val Map::DGet(const string8& iName, const Val& iDefault) const
 	return iDefault;
 	}
 
-Val Map::DGet(Index_t iIndex, const Val& iDefault) const
+Val Map::DGet(const Val& iDefault, Index_t iIndex) const
 	{
 	Val result;
 	if (this->QGet(iIndex, result))
@@ -1462,13 +1462,13 @@ Val Map::DGet(Index_t iIndex, const Val& iDefault) const
 	}
 
 Val Map::Get(KeyID iKey) const
-	{ return this->DGet(iKey, Val()); }
+	{ return this->DGet(Val(), iKey); }
 
 Val Map::Get(const string8& iName) const
-	{ return this->DGet(iName, Val()); }
+	{ return this->DGet(Val(), iName); }
 
 Val Map::Get(Index_t iIndex) const
-	{ return this->DGet(iIndex, Val()); }
+	{ return this->DGet(Val(), iIndex); }
 
 void Map::Set(KeyID iKey, const Val& iVal)
 	{

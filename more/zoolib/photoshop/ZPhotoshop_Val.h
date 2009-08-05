@@ -354,7 +354,7 @@ public:
 	void Clear();
 
 	bool QGet(size_t iIndex, Val& oVal) const;
-	Val DGet(size_t iIndex, const Val& iDefault) const;
+	Val DGet(const Val& iDefault, size_t iIndex) const;
 	Val Get(size_t iIndex) const;
 
 	void Append(const Val& iVal);
@@ -404,9 +404,9 @@ public:
 	bool QGet(const string8& iName, Val& oVal) const;
 	bool QGet(Index_t iIndex, Val& iVal) const;
 
-	Val DGet(KeyID iKey, const Val& iDefault) const;
-	Val DGet(const string8& iName, const Val& iDefault) const;
-	Val DGet(Index_t iIndex, const Val& iDefault) const;
+	Val DGet(const Val& iDefault, KeyID iKey) const;
+	Val DGet(const Val& iDefault, const string8& iName) const;
+	Val DGet(const Val& iDefault, Index_t iIndex) const;
 
 	Val Get(KeyID iKey) const;
 	Val Get(const string8& iName) const;
