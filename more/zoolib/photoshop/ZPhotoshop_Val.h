@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors_Std.h"
-#include "zoolib/ZValData_Any.h"
+#include "zoolib/ZVal_Any.h"
 
 #include <vector>
 
@@ -47,7 +47,7 @@ namespace ZPhotoshop {
 using std::string;
 using std::vector;
 
-typedef ZValData_Any Data;
+typedef ZData_Any Data;
 
 class List;
 class Map;
@@ -265,7 +265,7 @@ class Val
 public:
 	operator operator_bool_type() const;
 
-	ZAny AsAny() const;
+	ZVal_Any AsVal_Any(const ZVal_Any& iDefault) const;
 
 	void swap(Val& iOther);
 
@@ -333,7 +333,7 @@ class List
 public:
 	operator operator_bool_type() const;
 
-	ZAny AsAny() const;
+	ZList_Any AsList_Any(const ZVal_Any& iDefault) const;
 
 	void swap(List& iOther);
 
@@ -360,7 +360,10 @@ public:
 	void Append(const Val& iVal);
 
 // Our protocol
-	PIActionList GetActionList() const;
+	PIActionList& OParam();
+	PIActionList IParam() const;
+
+	PIActionList Orphan();
 
 private:
 	PIActionList fAL;
@@ -379,7 +382,7 @@ public:
 
 	operator operator_bool_type() const;
 
-	ZAny AsAny() const;
+	ZMap_Any AsMap_Any(const ZVal_Any& iDefault) const;
 
 	void swap(Map& iOther);
 

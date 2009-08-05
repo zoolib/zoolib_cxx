@@ -996,13 +996,13 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 Val::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fAny.type() != typeid(void)); }
 
-ZAny Val::AsAny() const
+ZVal_Any Val::AsVal_Any(const ZVal_Any& iDefault) const
 	{
 	if (const Map* theVal = ZAnyCast<Map>(&fAny))
-		return theVal->AsAny();
+		return theVal->AsMap_Any(iDefault);
 
 	if (const List* theVal = ZAnyCast<List>(&fAny))
-		return theVal->AsAny();
+		return theVal->AsList_Any(iDefault);
 		
 	return fAny;
 	}
@@ -1200,7 +1200,7 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 	else if (const bool* theVal = ZAnyCast<bool>(&iVal.fAny)) \
 		{ SUITE->PutBoolean(PARAM, *theVal); return; } \
 	else if (const List* theVal = ZAnyCast<List>(&iVal.fAny)) \
-		{ SUITE->PutList(PARAM, theVal->GetActionList()); return; } \
+		{ SUITE->PutList(PARAM, theVal->IParam()); return; } \
 	else if (const Map* theVal = ZAnyCast<Map>(&iVal.fAny)) \
 		{ SUITE->PutObject(PARAM, theVal->GetType(), theVal->IParam()); return; } \
 	/* global object? */ \
@@ -1227,16 +1227,15 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 List::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->Count()); }
 
-ZAny List::AsAny() const
+ZList_Any List::AsList_Any(const ZVal_Any& iDefault) const
 	{
-	vector<ZAny> theVector;
+	ZList_Any theList;
 	if (size_t theCount = this->Count())
 		{
-		theVector.reserve(theCount);
 		for (size_t x = 0; x < theCount; ++x)
-			theVector.push_back(this->Get(x).AsAny());
+			theList.Append(this->Get(x).AsVal_Any(iDefault));
 		}
-	return theVector;
+	return theList;
 	}
 
 void List::swap(List& iOther)
@@ -1332,8 +1331,23 @@ void List::Append(const Val& iVal)
 	SETTERCASES(spPSActionList, fAL)
 	}
 
-PIActionList List::GetActionList() const
+PIActionList& List::OParam()
+	{
+	if (fAL)
+		spPSActionList->Free(fAL);
+	fAL = nullptr;
+	return fAL;
+	}
+
+PIActionList List::IParam() const
 	{ return fAL; }
+
+PIActionList List::Orphan()
+	{
+	PIActionList result = fAL;
+	fAL = nullptr;
+	return result;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -1342,12 +1356,11 @@ PIActionList List::GetActionList() const
 Map::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->pCount()); }
 
-ZAny Map::AsAny() const
+ZMap_Any Map::AsMap_Any(const ZVal_Any& iDefault) const
 	{
-	map<string, ZAny> theMap;
+	ZMap_Any theMap;
 	for (Index_t i = this->Begin(), end = this->End(); i != end; ++i)
-		theMap.insert(pair<string, ZAny>(this->NameOf(i), this->Get(i)));
-
+		theMap.Set(this->NameOf(i), this->Get(i).AsVal_Any(iDefault));
 	return theMap;
 	}
 
