@@ -140,6 +140,12 @@ void ZValData_CFType::CopyTo(size_t iOffset, void* iDest, size_t iCount) const
 void ZValData_CFType::CopyTo(void* iDest, size_t iCount) const
 	{ this->CopyTo(0, iDest, iCount); }
 
+CFDataRef& ZValData_CFType::OParam()
+	{
+	inherited::Clear();
+	return this->GetPtrRef();
+	}
+
 CFDataRef ZValData_CFType::pData() const
 	{ return inherited::Get(); }
 

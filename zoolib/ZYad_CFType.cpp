@@ -176,6 +176,15 @@ ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal)
 	return new ZYadPrimR_CFType(iVal);
 	}
 
+ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFDataRef>& iData)
+	{ return new ZYadStreamRPos_CFType(iData); }
+
+ZRef<ZYadListR> sMakeYadR(const ZRef<CFArrayRef>& iList)
+	{ return new ZYadListRPos_CFType(iList); }
+
+ZRef<ZYadMapR> sMakeYadR(const ZRef<CFDictionaryRef>& iMap)
+	{ return new ZYadMapRPos_CFType(iMap); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * sFromYadR_T

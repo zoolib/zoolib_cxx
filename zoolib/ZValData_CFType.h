@@ -29,6 +29,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+class ZValData_CFType;
+typedef ZValData_CFType ZValData_CF;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValData_CFType
@@ -70,8 +73,7 @@ public:
 	void CopyTo(void* iDest, size_t iCount) const;
 
 // Our protocol
-	ZRef<CFDataRef> Data() const;
-	ZRef<CFMutableDataRef> DataMutable();
+	CFDataRef& OParam();
 
 private:
 	CFDataRef pData() const;

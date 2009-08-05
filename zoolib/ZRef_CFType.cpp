@@ -96,4 +96,8 @@ ZOOLIB_RETAIN_RELEASE(AXUIElementRef)
 typedef struct __CVBuffer *CVBufferRef;
 ZOOLIB_RETAIN_RELEASE(CVBufferRef)
 
+// =================================================================================================
+typedef struct OpaquePasteboardRef* PasteboardRef;
+ZOOLIB_RETAIN_RELEASE(PasteboardRef)
+
 #endif // ZCONFIG_SPI_Enabled(CFType)

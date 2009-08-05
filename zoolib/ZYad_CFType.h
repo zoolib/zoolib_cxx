@@ -142,6 +142,12 @@ private:
 
 ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal);
 
+ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFDataRef>& iData);
+
+ZRef<ZYadListR> sMakeYadR(const ZRef<CFArrayRef>& iList);
+
+ZRef<ZYadMapR> sMakeYadR(const ZRef<CFDictionaryRef>& iMap);
+
 template <>
 ZRef<CFTypeRef> sFromYadR_T<ZRef<CFTypeRef> >(ZRef<ZYadR> iYadR);
 
