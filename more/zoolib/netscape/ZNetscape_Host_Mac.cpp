@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
-#include "zoolib/ZRGBColor.h"
+#include "zoolib/ZRGBA.h"
 #include "zoolib/ZStream_String.h"
 #include "zoolib/ZUtil_CarbonEvents.h"
 #include "zoolib/ZUtil_Strim_Geom.h"
@@ -62,21 +62,21 @@ static void sWriteEvent(const ZStrimW&s, const EventRecord& iER)
 
 #if defined(XP_MACOSX)
 
-static void sSetFill(CGContextRef iCG, const ZRGBColor& iColor)
+static void sSetFill(CGContextRef iCG, const ZRGBA_POD& iColor)
 	{
 	::CGContextSetRGBFillColor(iCG,
 		iColor.floatRed(), iColor.floatGreen(),
 		iColor.floatBlue(), iColor.floatAlpha());
 	}
 
-static void sSetStroke(CGContextRef iCG, const ZRGBColor& iColor)
+static void sSetStroke(CGContextRef iCG, const ZRGBA_POD& iColor)
 	{
 	::CGContextSetRGBStrokeColor(iCG,
 		iColor.floatRed(), iColor.floatGreen(),
 		iColor.floatBlue(), iColor.floatAlpha());
 	}
 
-static void sFillRectf(CGContextRef iCG, const ZGRectf& iRect, const ZRGBColor& iColor)
+static void sFillRectf(CGContextRef iCG, const ZGRectf& iRect, const ZRGBA_POD& iColor)
 	{
 	::CGContextSaveGState(iCG);
 	sSetFill(iCG, iColor);
