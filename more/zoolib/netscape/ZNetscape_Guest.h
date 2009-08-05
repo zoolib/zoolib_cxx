@@ -167,7 +167,20 @@ public:
 		const NPVariantG& iP2);
 
 	NPVariantG InvokeDefault(const NPVariantG* iArgs, size_t iCount);
+
 	NPVariantG InvokeDefault();
+
+	NPVariantG InvokeDefault(
+		const NPVariantG& iP0);
+
+	NPVariantG InvokeDefault(
+		const NPVariantG& iP0,
+		const NPVariantG& iP1);
+
+	NPVariantG InvokeDefault(
+		const NPVariantG& iP0,
+		const NPVariantG& iP1,
+		const NPVariantG& iP2);
 
 	NPVariantG Get(const std::string& iName);
 	NPVariantG Get(size_t iIndex);

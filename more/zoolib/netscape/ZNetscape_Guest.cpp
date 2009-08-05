@@ -453,10 +453,27 @@ NPVariantG NPObjectG::InvokeDefault(const NPVariantG* iArgs, size_t iCount)
 	}
 
 NPVariantG NPObjectG::InvokeDefault()
+	{ return this->InvokeDefault(nullptr, 0); }
+
+NPVariantG NPObjectG::InvokeDefault(
+	const NPVariantG& iP0)
+	{ return this->InvokeDefault(&iP0, 1); }
+
+NPVariantG NPObjectG::InvokeDefault(
+	const NPVariantG& iP0,
+	const NPVariantG& iP1)
 	{
-	NPVariantG result;
-	this->InvokeDefault(nullptr, 0, result);
-	return result;
+	NPVariantG arr[] = { iP0, iP1 };
+	return this->InvokeDefault(arr, countof(arr));
+	}
+
+NPVariantG NPObjectG::InvokeDefault(
+	const NPVariantG& iP0,
+	const NPVariantG& iP1,
+	const NPVariantG& iP2)
+	{
+	NPVariantG arr[] = { iP0, iP1, iP2 };
+	return this->InvokeDefault(arr, countof(arr));
 	}
 
 NPVariantG NPObjectG::Get(const std::string& iName)

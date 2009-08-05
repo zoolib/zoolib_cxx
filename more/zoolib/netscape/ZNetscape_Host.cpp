@@ -421,12 +421,28 @@ NPVariantH NPObjectH::InvokeDefault(const NPVariantH* iArgs, size_t iCount)
 	}
 
 NPVariantH NPObjectH::InvokeDefault()
+	{ return this->InvokeDefault(nullptr, 0); }
+
+NPVariantH NPObjectH::InvokeDefault(
+	const NPVariantH& iP0)
+	{ return this->InvokeDefault(&iP0, 1); }
+
+NPVariantH NPObjectH::InvokeDefault(
+	const NPVariantH& iP0,
+	const NPVariantH& iP1)
 	{
-	NPVariantH result;
-	this->InvokeDefault(nullptr, 0, result);
-	return result;
+	NPVariantH arr[] = { iP0, iP1 };
+	return this->InvokeDefault(arr, countof(arr));
 	}
 
+NPVariantH NPObjectH::InvokeDefault(
+	const NPVariantH& iP0,
+	const NPVariantH& iP1,
+	const NPVariantH& iP2)
+	{
+	NPVariantH arr[] = { iP0, iP1, iP2 };
+	return this->InvokeDefault(arr, countof(arr));
+	}
 NPVariantH NPObjectH::Get(const string& iName)
 	{
 	NPVariantH result;

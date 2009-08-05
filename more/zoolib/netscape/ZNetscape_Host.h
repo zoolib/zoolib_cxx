@@ -154,7 +154,20 @@ public:
 		const NPVariantH& iP2);
 
 	NPVariantH InvokeDefault(const NPVariantH* iArgs, size_t iCount);
+
 	NPVariantH InvokeDefault();
+
+	NPVariantH InvokeDefault(
+		const NPVariantH& iP0);
+
+	NPVariantH InvokeDefault(
+		const NPVariantH& iP0,
+		const NPVariantH& iP1);
+
+	NPVariantH InvokeDefault(
+		const NPVariantH& iP0,
+		const NPVariantH& iP1,
+		const NPVariantH& iP2);
 
 	NPVariantH Get(const string& iName);
 	NPVariantH Get(size_t iIndex);
@@ -191,7 +204,7 @@ public:
 
 // ValMap protocol
 	bool QGet(const string& iName, ValH& oVal) const;
-	ValH DGet(const string& iName, const ValH& iDefault) const;
+	ValH DGet(const ValH& iDefault, const string& iName) const;
 	ValH Get(const string& iName) const;
 	void Set(const string& iName, const ValH& iVal);
 	void Erase(const string& iName);
