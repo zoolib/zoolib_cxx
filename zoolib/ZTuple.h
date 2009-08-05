@@ -50,7 +50,7 @@ typedef ZVal_ZooLib ZTValue;
 	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, String, std::string) \
 	ZMACRO_ZValMapAccessors_Decl_Entry(T, Name_t, Time, ZTime) \
 
-class ZTuple : public ZValMap_ZooLib
+class ZTuple : public ZMap_ZooLib
 	{
 public:
 	ZTuple();
@@ -58,8 +58,8 @@ public:
 	~ZTuple();
 	ZTuple operator=(const ZTuple& iTuple);
 
-	ZTuple(const ZValMap_ZooLib& iMap);
-	ZTuple operator=(const ZValMap_ZooLib& iMap);
+	ZTuple(const ZMap_ZooLib& iMap);
+	ZTuple operator=(const ZMap_ZooLib& iMap);
 
 	explicit ZTuple(const ZStreamR& iStreamR);
 
@@ -70,7 +70,7 @@ public:
 	ZTuple GetTuple(const ZTName& iName) const;
 	void SetTuple(const ZTName& iName, const ZTuple& iTuple);
 
-	ZValMap_ZooLib& SetNull(const ZTName& iPropName);
+	ZMap_ZooLib& SetNull(const ZTName& iPropName);
 	std::vector<ZVal_ZooLib>& SetMutableVector(const ZTName& iPropName);
 
 	Index_t begin() const { return this->Begin(); }
@@ -85,9 +85,9 @@ public:
 		{ return this->IndexOf(iPropName); }
 
 // Typename accessors
-	ZMACRO_ZValMapAccessors_Decl(ZValMap_ZooLib, const char*)
-	ZMACRO_ZValMapAccessors_Decl(ZValMap_ZooLib, const ZTName&)
-	ZMACRO_ZValMapAccessors_Decl(ZValMap_ZooLib, const_iterator)
+	ZMACRO_ZValMapAccessors_Decl(ZMap_ZooLib, const char*)
+	ZMACRO_ZValMapAccessors_Decl(ZMap_ZooLib, const ZTName&)
+	ZMACRO_ZValMapAccessors_Decl(ZMap_ZooLib, const_iterator)
 	};
 
 #undef ZMACRO_ZValMapAccessors_Decl_Entry

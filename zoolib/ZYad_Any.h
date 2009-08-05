@@ -28,9 +28,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 typedef ZYadR_Val_T<ZVal_Any> ZYadR_Any;
-typedef ZYadStreamRPos_Val_T<ZValData_Any> ZYadStreamRPos_Any;
-typedef ZYadListRPos_Val_T<ZValList_Any> ZYadListRPos_Any;
-typedef ZYadMapRPos_Val_T<ZValMap_Any> ZYadMapRPos_Any;
+typedef ZYadStreamRPos_Val_T<ZData_Any> ZYadStreamRPos_Any;
+typedef ZYadListRPos_Val_T<ZList_Any> ZYadListRPos_Any;
+typedef ZYadMapRPos_Val_T<ZMap_Any> ZYadMapRPos_Any;
 
 // =================================================================================================
 #pragma mark -
@@ -38,11 +38,11 @@ typedef ZYadMapRPos_Val_T<ZValMap_Any> ZYadMapRPos_Any;
 
 ZRef<ZYadR> sMakeYadR(const ZVal_Any& iVal);
 
-ZRef<ZYadStreamR> sMakeYadR(const ZValData_Any& iData);
+ZRef<ZYadStreamR> sMakeYadR(const ZData_Any& iData);
 
-ZRef<ZYadListR> sMakeYadR(const ZValList_Any& iList);
+ZRef<ZYadListR> sMakeYadR(const ZList_Any& iList);
 
-ZRef<ZYadMapR> sMakeYadR(const ZValMap_Any& iMap);
+ZRef<ZYadMapR> sMakeYadR(const ZMap_Any& iMap);
 
 NAMESPACE_ZOOLIB_END
 

@@ -77,7 +77,7 @@ bool ZUtil_Strim_Tuple::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV)
 	{
 	if (ZRef<ZYadR> theYadR = ZYad_ZooLibStrim::sMakeYadR(iStrimU))
 		{
-		oTV = sFromYadR_T<ZTValue>(theYadR);
+		oTV = sFromYadR(theYadR, ZTValue());
 		return true;
 		}
 	return false;

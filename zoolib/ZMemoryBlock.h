@@ -22,12 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZMemoryBlock__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZData_Any.h"
 #include "zoolib/ZStream_ValData_T.h"
-#include "zoolib/ZValData_Any.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-typedef ZValData_Any ZMemoryBlock;
+typedef ZData_Any ZMemoryBlock;
 
 typedef ZStreamRPos_ValData_T<ZMemoryBlock> ZStreamRPos_MemoryBlock;
 typedef ZStreamRWPos_ValData_T<ZMemoryBlock> ZStreamRWPos_MemoryBlock;

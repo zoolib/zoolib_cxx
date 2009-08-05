@@ -98,7 +98,7 @@ public:
 
 class ZYadListRPos_CFType
 :	public ZYadR_CFType
-,	public ZYadListRPos_Val_Self_T<ZYadListRPos_CFType, ZValList_CFType>
+,	public ZYadListRPos_Val_Self_T<ZYadListRPos_CFType, ZList_CFType>
 	{
 public:
 	ZYadListRPos_CFType(const ZRef<CFArrayRef>& iArray);
@@ -148,8 +148,11 @@ ZRef<ZYadListR> sMakeYadR(const ZRef<CFArrayRef>& iList);
 
 ZRef<ZYadMapR> sMakeYadR(const ZRef<CFDictionaryRef>& iMap);
 
-template <>
-ZRef<CFTypeRef> sFromYadR_T<ZRef<CFTypeRef> >(ZRef<ZYadR> iYadR);
+// =================================================================================================
+#pragma mark -
+#pragma mark * sFromYadR
+
+ZRef<CFTypeRef> sFromYadR(ZRef<ZYadR> iYadR, const ZRef<CFTypeRef>& iDefault);
 
 NAMESPACE_ZOOLIB_END
 

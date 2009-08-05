@@ -64,7 +64,7 @@ public:
 #pragma mark -
 #pragma mark * ZYadStreamRPos_ZooLib
 
-typedef ZYadStreamRPos_Val_T<ZValData_ZooLib> ZYadStreamRPos_ZooLib;
+typedef ZYadStreamRPos_Val_T<ZData_ZooLib> ZYadStreamRPos_ZooLib;
 
 // =================================================================================================
 #pragma mark -
@@ -72,11 +72,11 @@ typedef ZYadStreamRPos_Val_T<ZValData_ZooLib> ZYadStreamRPos_ZooLib;
 
 class ZYadListRPos_ZooLib
 :	public ZYadR_ZooLib
-,	public ZYadListRPos_Val_Self_T<ZYadListRPos_ZooLib, ZValList_ZooLib>
+,	public ZYadListRPos_Val_Self_T<ZYadListRPos_ZooLib, ZList_ZooLib>
 	{
 public:
-	ZYadListRPos_ZooLib(const ZValList_ZooLib& iList);
-	ZYadListRPos_ZooLib(const ZValList_ZooLib& iList, uint64 iPosition);
+	ZYadListRPos_ZooLib(const ZList_ZooLib& iList);
+	ZYadListRPos_ZooLib(const ZList_ZooLib& iList, uint64 iPosition);
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
@@ -86,16 +86,16 @@ public:
 #pragma mark -
 #pragma mark * ZYadMapRPos_ZooLib
 
-//typedef ZYadMapRPos_Val_T<ZValMap_ZooLib, ZValMap_ZooLib::Index_t> ZYadMapRPos_ZooLib;
+//typedef ZYadMapRPos_Val_T<ZMap_ZooLib, ZMap_ZooLib::Index_t> ZYadMapRPos_ZooLib;
 
 #if 1
 class ZYadMapRPos_ZooLib
 :	public ZYadR_ZooLib
-,	public ZYadMapRPos_Val_Self_T<ZYadMapRPos_ZooLib, ZValMap_ZooLib, ZValMap_ZooLib::Index_t>
+,	public ZYadMapRPos_Val_Self_T<ZYadMapRPos_ZooLib, ZMap_ZooLib, ZMap_ZooLib::Index_t>
 	{
 public:
-	ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap);
-	ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap, const Index_t& iPosition);
+	ZYadMapRPos_ZooLib(const ZMap_ZooLib& iMap);
+	ZYadMapRPos_ZooLib(const ZMap_ZooLib& iMap, const Index_t& iPosition);
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
@@ -108,9 +108,15 @@ public:
 
 ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal);
 
-ZRef<ZYadListR> sMakeYadR(const ZValList_ZooLib& iList);
+ZRef<ZYadListR> sMakeYadR(const ZList_ZooLib& iList);
 
-ZRef<ZYadMapR> sMakeYadR(const ZValMap_ZooLib& iMap);
+ZRef<ZYadMapR> sMakeYadR(const ZMap_ZooLib& iMap);
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sFromYadR
+
+ZVal_ZooLib sFromYadR(ZRef<ZYadR> iYadR, const ZVal_ZooLib& iDefault);
 
 NAMESPACE_ZOOLIB_END
 

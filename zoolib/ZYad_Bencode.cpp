@@ -129,7 +129,7 @@ static ZRef<ZYadR> spReadStringish(const ZStreamU& s)
 		}
 	else
 		{
-		return new ZYadStreamRPos_Any(ZValData_Any(theString.data(), theLength));
+		return new ZYadStreamRPos_Any(ZData_Any(theString.data(), theLength));
 		}
 	}
 

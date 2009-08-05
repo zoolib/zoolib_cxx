@@ -32,7 +32,7 @@ ZTuple::ZTuple()
 	{}
 
 ZTuple::ZTuple(const ZTuple& iTuple)
-:	ZValMap_ZooLib(iTuple)
+:	ZMap_ZooLib(iTuple)
 	{}
 
 ZTuple::~ZTuple()
@@ -40,22 +40,22 @@ ZTuple::~ZTuple()
 
 ZTuple ZTuple::operator=(const ZTuple& iTuple)
 	{
-	ZValMap_ZooLib::operator=(iTuple);
+	ZMap_ZooLib::operator=(iTuple);
 	return *this;
 	}
 
-ZTuple::ZTuple(const ZValMap_ZooLib& iMap)
-:	ZValMap_ZooLib(iMap)
+ZTuple::ZTuple(const ZMap_ZooLib& iMap)
+:	ZMap_ZooLib(iMap)
 	{}
 
-ZTuple ZTuple::operator=(const ZValMap_ZooLib& iMap)
+ZTuple ZTuple::operator=(const ZMap_ZooLib& iMap)
 	{
-	ZValMap_ZooLib::operator=(iMap);
+	ZMap_ZooLib::operator=(iMap);
 	return *this;
 	}
 
 ZTuple::ZTuple(const ZStreamR& iStreamR)
-:	ZValMap_ZooLib(iStreamR)
+:	ZMap_ZooLib(iStreamR)
 	{}
 
 ZTuple ZTuple::Over(const ZTuple& iUnder) const
@@ -75,7 +75,7 @@ ZTuple ZTuple::Over(const ZTuple& iUnder) const
 ZTuple ZTuple::Under(const ZTuple& iOver) const
 	{ return iOver.Over(*this); }
 
-ZValMap_ZooLib& ZTuple::SetNull(const ZTName& iPropName)
+ZMap_ZooLib& ZTuple::SetNull(const ZTName& iPropName)
 	{
 	this->pTouch();
 	*this->pFindOrAllocate(iPropName) = ZVal_ZooLib();
@@ -96,7 +96,7 @@ void ZTuple::SetTuple(const ZTName& iName, const ZTuple& iTuple)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValMap_ZooLib typename accessors
+#pragma mark * ZMap_ZooLib typename accessors
 
 #define ZMACRO_ZValMapAccessors_Def_Entry(Name_t, TYPENAME, TYPE) \
 	bool ZTuple::QGet##TYPENAME(Name_t iName, TYPE& oVal) const \

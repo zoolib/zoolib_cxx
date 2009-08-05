@@ -63,7 +63,7 @@ static bool spIsSimple(const ZYadOptions& iOptions, const ZVal_ZooLib& iVal)
 			}
 		case eZType_Vector:
 			{
-			const ZValList_ZooLib& theList = iVal.GetList();
+			const ZList_ZooLib& theList = iVal.GetList();
 			if (!theList.Count())
 				return true;
 
@@ -74,7 +74,7 @@ static bool spIsSimple(const ZYadOptions& iOptions, const ZVal_ZooLib& iVal)
 			}
 		case eZType_Tuple:
 			{
-			const ZValMap_ZooLib& theMap = iVal.GetMap();
+			const ZMap_ZooLib& theMap = iVal.GetMap();
 			if (theMap.Empty())
 				return true;
 
@@ -124,18 +124,18 @@ bool ZYadPrimR_ZooLib::IsSimple(const ZYadOptions& iOptions)
 	{ return spIsSimple(iOptions, fVal); }
 
 ZAny ZYadPrimR_ZooLib::AsAny()
-	{ return fVal.AsAny(); }
+	{ return fVal.AsVal_Any(ZVal_Any()); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadListRPos_ZooLib
 
-ZYadListRPos_ZooLib::ZYadListRPos_ZooLib(const ZValList_ZooLib& iList)
+ZYadListRPos_ZooLib::ZYadListRPos_ZooLib(const ZList_ZooLib& iList)
 :	ZYadR_ZooLib(iList)
 ,	YadListBase_t(iList)
 	{}
 
-ZYadListRPos_ZooLib::ZYadListRPos_ZooLib(const ZValList_ZooLib& iList, uint64 iPosition)
+ZYadListRPos_ZooLib::ZYadListRPos_ZooLib(const ZList_ZooLib& iList, uint64 iPosition)
 :	ZYadR_ZooLib(iList)
 ,	YadListBase_t(iList, iPosition)
 	{}
@@ -147,12 +147,12 @@ bool ZYadListRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
 #pragma mark -
 #pragma mark * ZYadMapRPos_ZooLib
 
-ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap)
+ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZMap_ZooLib& iMap)
 :	ZYadR_ZooLib(iMap)
 ,	YadMapBase_t(iMap)
 	{}
 
-ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZValMap_ZooLib& iMap, const Index_t& iIndex)
+ZYadMapRPos_ZooLib::ZYadMapRPos_ZooLib(const ZMap_ZooLib& iMap, const Index_t& iIndex)
 :	ZYadR_ZooLib(iMap)
 ,	YadMapBase_t(iMap, iIndex)
 	{}
@@ -177,21 +177,22 @@ ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal)
 	return new ZYadPrimR_ZooLib(iVal);
 	}
 
-ZRef<ZYadListR> sMakeYadR(const ZValList_ZooLib& iList)
+ZRef<ZYadListR> sMakeYadR(const ZList_ZooLib& iList)
 	{ return new ZYadListRPos_ZooLib(iList); }
 
-ZRef<ZYadMapR> sMakeYadR(const ZValMap_ZooLib& iMap)
+ZRef<ZYadMapR> sMakeYadR(const ZMap_ZooLib& iMap)
 	{ return new ZYadMapRPos_ZooLib(iMap); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sFromYadR_T
+#pragma mark * sFromYadR
 
 namespace ZANONYMOUS {
 
 class YadVisitor_GetValZooLib : public ZYadVisitor
 	{
 public:
+	YadVisitor_GetValZooLib(const ZVal_ZooLib& iDefault);
 // From ZYadVisitor
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
 	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
@@ -199,28 +200,35 @@ public:
 	virtual bool Visit_YadListR(ZRef<ZYadListR> iYadListR);
 	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 
+	ZVal_ZooLib fDefault;
 	ZVal_ZooLib fOutput;
 	};
 
 } // anonymous namespace
 
-template <>
-ZVal_ZooLib sFromYadR_T<ZVal_ZooLib>(ZRef<ZYadR> iYadR)
+ZVal_ZooLib sFromYadR(ZRef<ZYadR> iYadR, const ZVal_ZooLib& iDefault)
 	{
 	if (ZRef<ZYadR_ZooLib> theYadR = ZRefDynamicCast<ZYadR_ZooLib>(iYadR))
 		return theYadR->GetVal();
 
-	YadVisitor_GetValZooLib theVisitor;
+	YadVisitor_GetValZooLib theVisitor(iDefault);
 	iYadR->Accept(theVisitor);
 	return theVisitor.fOutput;
 	}
 
+YadVisitor_GetValZooLib::YadVisitor_GetValZooLib(const ZVal_ZooLib& iDefault)
+:	fDefault(iDefault)
+	{}
+
 bool YadVisitor_GetValZooLib::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
-	{ return ZVal_ZooLib::sFromAny(iYadPrimR->AsAny(), fOutput); }
+	{
+	fOutput = ZVal_ZooLib::sFromAny(iYadPrimR->AsAny(), fDefault);
+	return true;
+	}
 
 bool YadVisitor_GetValZooLib::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{
-	fOutput = sReadAll_T<ZValData_ZooLib>(iYadStreamR->GetStreamR());
+	fOutput = sReadAll_T<ZData_ZooLib>(iYadStreamR->GetStreamR());
 	return true;
 	}
 
@@ -234,10 +242,10 @@ bool YadVisitor_GetValZooLib::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 
 bool YadVisitor_GetValZooLib::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 	{
-	ZValList_ZooLib theList;
+	ZList_ZooLib theList;
 
 	while (ZRef<ZYadR> theChild = iYadListR->ReadInc())
-		theList.Append(sFromYadR_T<ZVal_ZooLib>(theChild));
+		theList.Append(sFromYadR(theChild, fDefault));
 
 	fOutput = theList;
 	return true;
@@ -245,11 +253,11 @@ bool YadVisitor_GetValZooLib::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 
 bool YadVisitor_GetValZooLib::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	{
-	ZValMap_ZooLib theMap;
+	ZMap_ZooLib theMap;
 
 	string theName;
 	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
-		theMap.Set(theName, sFromYadR_T<ZVal_ZooLib>(theChild));
+		theMap.Set(theName, sFromYadR(theChild, fDefault));
 
 	fOutput = theMap;
 	return true;

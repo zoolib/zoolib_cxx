@@ -374,7 +374,7 @@ void ZYad_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR)
 		}
 	else
 		{
-		sFromYadR_T<ZVal_ZooLib>(iYadR).ToStream(iStreamW);
+		sFromYadR(iYadR, ZVal_ZooLib()).ToStream(iStreamW);
 		}
 	}
 

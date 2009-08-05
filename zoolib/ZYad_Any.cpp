@@ -31,32 +31,32 @@ using std::string;
 
 ZRef<ZYadR> sMakeYadR(const ZVal_Any& iVal)
 	{
-	ZValMap_Any asMap;
-	if (iVal.QGet_T<ZValMap_Any>(asMap))
+	ZMap_Any asMap;
+	if (iVal.QGet_T<ZMap_Any>(asMap))
 		return new ZYadMapRPos_Any(asMap);
 		
-	ZValList_Any asList;
-	if (iVal.QGet_T<ZValList_Any>(asList))
+	ZList_Any asList;
+	if (iVal.QGet_T<ZList_Any>(asList))
 		return new ZYadListRPos_Any(asList);
 		
 	string8 asString;
 	if (iVal.QGet_T<string8>(asString))
 		return new ZYadStrimU_String(asString);
 
-	ZValData_Any asData;
-	if (iVal.QGet_T<ZValData_Any>(asData))
+	ZData_Any asData;
+	if (iVal.QGet_T<ZData_Any>(asData))
 		return new ZYadStreamRPos_Any(asData);
 
 	return new ZYadPrimR_Std(iVal);
 	}
 
-ZRef<ZYadStreamR> sMakeYadR(const ZValData_Any& iData)
+ZRef<ZYadStreamR> sMakeYadR(const ZData_Any& iData)
 	{ return new ZYadStreamRPos_Any(iData); }
 
-ZRef<ZYadListR> sMakeYadR(const ZValList_Any& iList)
+ZRef<ZYadListR> sMakeYadR(const ZList_Any& iList)
 	{ return new ZYadListRPos_Any(iList); }
 
-ZRef<ZYadMapR> sMakeYadR(const ZValMap_Any& iMap)
+ZRef<ZYadMapR> sMakeYadR(const ZMap_Any& iMap)
 	{ return new ZYadMapRPos_Any(iMap); }
 
 NAMESPACE_ZOOLIB_END

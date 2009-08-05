@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZUtil_AppleEvent.h"
-#include "zoolib/ZVal.h"
+#include "zoolib/ZVal_Any.h"
 #include "zoolib/ZValAccessors.h"
 
 #include <string>
@@ -35,12 +35,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 class ZVal_AppleEvent;
-class ZValList_AppleEvent;
-class ZValMap_AppleEvent;
+class ZList_AppleEvent;
+class ZMap_AppleEvent;
 
 typedef ZVal_AppleEvent ZVal_AE;
-typedef ZValList_AppleEvent ZValList_AE;
-typedef ZValMap_AppleEvent ZValMap_AE;
+typedef ZList_AppleEvent ZList_AE;
+typedef ZMap_AppleEvent ZMap_AE;
 
 std::string sAEKeywordAsString(AEKeyword iKeyword);
 
@@ -56,6 +56,8 @@ class ZVal_AppleEvent
 		operator_bool_generator_type, operator_bool_type);
 
 public:
+	ZVal_Any AsVal_Any(const ZVal_Any& iDefault) const;
+
 	operator operator_bool_type() const;
 
 	void swap(ZVal_AppleEvent& iOther);
@@ -70,8 +72,8 @@ public:
 
 	ZVal_AppleEvent(bool iVal);
 	ZVal_AppleEvent(const std::string& iVal);
-	ZVal_AppleEvent(const ZValList_AppleEvent& iVal);
-	ZVal_AppleEvent(const ZValMap_AppleEvent& iVal);
+	ZVal_AppleEvent(const ZList_AppleEvent& iVal);
+	ZVal_AppleEvent(const ZMap_AppleEvent& iVal);
 
 	template <class T>
 	ZVal_AppleEvent(const T& iVal)
@@ -111,34 +113,36 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Float, float)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Double, double)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, String, std::string)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, List, ZValList_AppleEvent)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Map, ZValMap_AppleEvent)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, List, ZList_AppleEvent)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Map, ZMap_AppleEvent)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, FSSpec, FSSpec)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, FSRef, FSRef)
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValList_AppleEvent
+#pragma mark * ZList_AppleEvent
 
-class ZValList_AppleEvent
+class ZList_AppleEvent
 :	public AEDescList
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZValMap_AppleEvent,
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZMap_AppleEvent,
 		operator_bool_generator_type, operator_bool_type);
 
 public:
+	ZList_Any AsList_Any(const ZVal_Any& iDefault) const;
+
 	operator operator_bool_type() const;
 
-	void swap(ZValList_AppleEvent& iOther);
+	void swap(ZList_AppleEvent& iOther);
 
-	ZValList_AppleEvent();
-	ZValList_AppleEvent(const ZValList_AppleEvent& iOther);
-	~ZValList_AppleEvent();
-	ZValList_AppleEvent& operator=(const ZValList_AppleEvent& iOther);
+	ZList_AppleEvent();
+	ZList_AppleEvent(const ZList_AppleEvent& iOther);
+	~ZList_AppleEvent();
+	ZList_AppleEvent& operator=(const ZList_AppleEvent& iOther);
 
-	ZValList_AppleEvent(const AEDescList& iOther);
-	ZValList_AppleEvent& operator=(const AEDescList& iOther);
+	ZList_AppleEvent(const AEDescList& iOther);
+	ZList_AppleEvent& operator=(const AEDescList& iOther);
 
 // ZValList protocol
 	size_t Count() const;
@@ -161,32 +165,34 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValMap_AppleEvent
+#pragma mark * ZMap_AppleEvent
 
-class ZValMap_AppleEvent
+class ZMap_AppleEvent
 :	public AERecord
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZValMap_AppleEvent,
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZMap_AppleEvent,
 		operator_bool_generator_type, operator_bool_type);
 
 public:
-	typedef ZValMapIndex_T<ZValMap_AppleEvent> Index_t;
+	typedef ZValMapIndex_T<ZMap_AppleEvent> Index_t;
+
+	ZMap_Any AsMap_Any(const ZVal_Any& iDefault) const;
 
 	operator operator_bool_type() const;
 
-	void swap(ZValMap_AppleEvent& iOther);
+	void swap(ZMap_AppleEvent& iOther);
 
-	ZValMap_AppleEvent();
-	ZValMap_AppleEvent(const ZValMap_AppleEvent& iOther);
-	~ZValMap_AppleEvent();
-	ZValMap_AppleEvent& operator=(const ZValMap_AppleEvent& iOther);
+	ZMap_AppleEvent();
+	ZMap_AppleEvent(const ZMap_AppleEvent& iOther);
+	~ZMap_AppleEvent();
+	ZMap_AppleEvent& operator=(const ZMap_AppleEvent& iOther);
 
-	ZValMap_AppleEvent(AEKeyword iType);
-	ZValMap_AppleEvent(AEKeyword iType, const AERecord& iOther);
-	ZValMap_AppleEvent(AEKeyword iType, const ZValMap_AppleEvent& iOther);
+	ZMap_AppleEvent(AEKeyword iType);
+	ZMap_AppleEvent(AEKeyword iType, const AERecord& iOther);
+	ZMap_AppleEvent(AEKeyword iType, const ZMap_AppleEvent& iOther);
 
-	ZValMap_AppleEvent(const AERecord& iOther);
-	ZValMap_AppleEvent& operator=(const AERecord& iOther);
+	ZMap_AppleEvent(const AERecord& iOther);
+	ZMap_AppleEvent& operator=(const AERecord& iOther);
 
 // ZValMap protocol
 	void Clear();
@@ -230,7 +236,7 @@ public:
 	Index_t IndexOf(AEKeyword iName) const;
 	Index_t IndexOf(const std::string& iName) const;
 
-	Index_t IndexOf(const ZValMap_AppleEvent& iOther, const Index_t& iOtherIndex) const;
+	Index_t IndexOf(const ZMap_AppleEvent& iOther, const Index_t& iOtherIndex) const;
 
 private:
 	size_t pCount() const;
@@ -248,10 +254,10 @@ namespace std {
 inline void swap(ZOOLIB_PREFIX::ZVal_AppleEvent& a, ZOOLIB_PREFIX::ZVal_AppleEvent& b)
 	{ a.swap(b); }
 
-inline void swap(ZOOLIB_PREFIX::ZValList_AppleEvent& a, ZOOLIB_PREFIX::ZValList_AppleEvent& b)
+inline void swap(ZOOLIB_PREFIX::ZList_AppleEvent& a, ZOOLIB_PREFIX::ZList_AppleEvent& b)
 	{ a.swap(b); }
 
-inline void swap(ZOOLIB_PREFIX::ZValMap_AppleEvent& a, ZOOLIB_PREFIX::ZValMap_AppleEvent& b)
+inline void swap(ZOOLIB_PREFIX::ZMap_AppleEvent& a, ZOOLIB_PREFIX::ZMap_AppleEvent& b)
 	{ a.swap(b); }
 
 } // namespace std

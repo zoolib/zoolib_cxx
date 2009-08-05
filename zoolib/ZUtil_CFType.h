@@ -25,9 +25,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZAny.h"
 #include "zoolib/ZRef_CFType.h"
 #include "zoolib/ZUnicodeString.h"
+#include "zoolib/ZVal_Any.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -72,10 +72,14 @@ ZRef<CFMutableDataRef> sDataMutable(size_t iSize);
 ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData);
 
 
-bool sQAsAny(ZRef<CFTypeRef> iVal, ZAny& oVal);
-ZAny sAsAny(ZRef<CFTypeRef> iVal);
+ZVal_Any sAsVal_Any(ZRef<CFTypeRef> iVal, const ZVal_Any& iDefault);
+ZVal_Any sAsVal_Any(ZRef<CFTypeRef> iVal);
 
-bool sQAsCFType(const ZAny& iAny, ZRef<CFTypeRef>& oVal);
+ZData_Any sAsData_Any(const ZRef<CFDataRef>& iCFData);
+ZList_Any sAsList_Any(const ZRef<CFArrayRef>& iCFArray, const ZVal_Any& iDefault);
+ZMap_Any sAsMap_Any(const ZRef<CFDictionaryRef>& iCFDictionary, const ZVal_Any& iDefault);
+
+ZRef<CFTypeRef> sAsCFType(const ZAny& iAny, const ZRef<CFTypeRef>& iDefault);
 ZRef<CFTypeRef> sAsCFType(const ZAny& iAny);
 
 } // namespace ZUtil_CFType

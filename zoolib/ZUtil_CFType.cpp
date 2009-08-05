@@ -186,76 +186,34 @@ ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData)
 #pragma mark -
 #pragma mark * ZUtil_CFType
 
-static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon)
-	{
-	CFStringRef theKey = static_cast<CFStringRef>(iKey);
-	CFTypeRef theValue = static_cast<CFTypeRef>(iValue);
-
-	ZValMap_Any* theMap = static_cast<ZValMap_Any*>(iRefcon);
-	theMap->Set(sAsUTF8(theKey), sAsAny(theValue));
-	}
-
-bool sQAsAny(ZRef<CFTypeRef> iVal, ZAny& oVal)
+ZVal_Any sAsVal_Any(ZRef<CFTypeRef> iVal, const ZVal_Any& iDefault)
 	{
 	CFTypeRef theCFTypeRef = iVal;
 	if (!theCFTypeRef)
-		{
-		oVal = ZAny();
-		return true;
-		}
+		return iDefault;
 
 	const CFTypeID theTypeID = ::CFGetTypeID(theCFTypeRef);
 
 	if (theTypeID == ::CFStringGetTypeID())
-		{
-		oVal = sAsUTF8(static_cast<CFStringRef>(theCFTypeRef));
-		return true;
-		}
+		return sAsUTF8(static_cast<CFStringRef>(theCFTypeRef));
 
 	if (theTypeID == ::CFDictionaryGetTypeID())
-		{
-		CFDictionaryRef theDictionaryRef = static_cast<CFDictionaryRef>(theCFTypeRef);
-		ZValMap_Any theMap;
-		::CFDictionaryApplyFunction(theDictionaryRef, spGatherContents, &theMap);
-		oVal = theMap;
-		return true;
-		}
+		return sAsMap_Any(static_cast<CFDictionaryRef>(theCFTypeRef), iDefault);
 
 	if (theTypeID == ::CFArrayGetTypeID())
-		{
-		CFArrayRef theArrayRef = static_cast<CFArrayRef>(theCFTypeRef);
-		ZValList_Any theList;
-
-		for (size_t x = 0, theCount = ::CFArrayGetCount(theArrayRef); x < theCount; ++x)
-			theList.Append(sAsAny(::CFArrayGetValueAtIndex(theArrayRef, x)));
-
-		oVal = theList;
-
-		return true;
-		}
+		return sAsList_Any(static_cast<CFArrayRef>(theCFTypeRef), iDefault);
 
 	if (theTypeID == ::CFBooleanGetTypeID())
-		{
-		oVal = bool(::CFBooleanGetValue(static_cast<CFBooleanRef>(theCFTypeRef)));
-		return true;
-		}
+		return bool(::CFBooleanGetValue(static_cast<CFBooleanRef>(theCFTypeRef)));
 	
 	if (theTypeID == ::CFDateGetTypeID())
 		{
-		oVal = ZTime(kCFAbsoluteTimeIntervalSince1970
+		return ZTime(kCFAbsoluteTimeIntervalSince1970
 			+ ::CFDateGetAbsoluteTime(static_cast<CFDateRef>(theCFTypeRef)));
-		return true;
 		}
 	
 	if (theTypeID == ::CFDataGetTypeID())
-		{
-		CFDataRef theDataRef = static_cast<CFDataRef>(theCFTypeRef);
-		size_t theLength = ::CFDataGetLength(theDataRef);
-		const char* theData
-			= static_cast<const char*>(static_cast<const void*>(::CFDataGetBytePtr(theDataRef)));
-		oVal = vector<char>(theData, theData + theLength);
-		return true;
-		}
+		return sAsData_Any(static_cast<CFDataRef>(theCFTypeRef));
 	
 	if (theTypeID == ::CFNumberGetTypeID())
 		{
@@ -267,91 +225,117 @@ bool sQAsAny(ZRef<CFTypeRef> iVal, ZAny& oVal)
 				{
 				int8 theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberSInt8Type, &theValue);
-				oVal = theValue;
-				return true;
+				return theValue;
 				}
 			case kCFNumberSInt16Type:
 			case kCFNumberShortType:
 				{
 				int16 theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberSInt16Type, &theValue);
-				oVal = theValue;
-				return true;
+				return theValue;
 				}
 			case kCFNumberSInt32Type:
 			case kCFNumberIntType:
 				{
 				int32 theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberSInt32Type, &theValue);
-				oVal = theValue;
-				return true;
+				return theValue;
 				}
 			case kCFNumberSInt64Type:
 			case kCFNumberLongLongType:
 				{
 				int64 theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberSInt64Type, &theValue);
-				oVal = theValue;
-				return true;
+				return theValue;
 				}
 			case kCFNumberFloat32Type:
 			case kCFNumberFloatType:
 				{
 				float theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberFloat32Type, &theValue);
-				oVal = theValue;
-				return true;
+				return theValue;
 				}
 			case kCFNumberFloat64Type:
 			case kCFNumberDoubleType:
 				{
 				double theValue;
 				::CFNumberGetValue(theNumberRef, kCFNumberFloat64Type, &theValue);
-				oVal = theValue;
-				return true;
+				return theValue;
 				}
 			}
 		}
 
-	return false;
+	return iDefault;
 	}
 
-ZAny sAsAny(ZRef<CFTypeRef> iVal)
+ZVal_Any sAsVal_Any(ZRef<CFTypeRef> iVal)
+	{ return sAsVal_Any(iVal, ZVal_Any()); }
+
+ZData_Any sAsData_Any(const ZRef<CFDataRef>& iCFData)
 	{
-	ZAny result;
-	if (sQAsAny(iVal, result))
-		return result;
-	return ZAny();
+	ZData_Any theData;
+	if (size_t theLength = ::CFDataGetLength(iCFData))
+		return ZData_Any(::CFDataGetBytePtr(iCFData), theLength);
+	return ZData_Any();
+	}
+
+ZList_Any sAsList_Any(const ZRef<CFArrayRef>& iCFArray, const ZVal_Any& iDefault)
+	{
+	ZList_Any theList;
+
+	for (size_t x = 0, theCount = ::CFArrayGetCount(iCFArray); x < theCount; ++x)
+		theList.Append(sAsVal_Any(::CFArrayGetValueAtIndex(iCFArray, x), iDefault));
+
+	return theList;
+	}
+
+static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon)
+	{
+	CFStringRef theKey = static_cast<CFStringRef>(iKey);
+	CFTypeRef theValue = static_cast<CFTypeRef>(iValue);
+
+	pair<ZMap_Any*, const ZVal_Any*>* thePair =
+		static_cast<pair<ZMap_Any*, const ZVal_Any*>*>(iRefcon);
+
+	thePair->first->Set(sAsUTF8(theKey), sAsVal_Any(theValue, *thePair->second));
+	}
+
+ZMap_Any sAsMap_Any(const ZRef<CFDictionaryRef>& iCFDictionary, const ZVal_Any& iDefault)
+	{
+	ZMap_Any theMap;
+	pair<ZMap_Any*, const ZVal_Any*> thePair(&theMap, &iDefault);
+	::CFDictionaryApplyFunction(iCFDictionary, spGatherContents, &thePair);
+	return theMap;
 	}
 
 static ZRef<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
 	{ return Adopt_T<CFTypeRef>(::CFNumberCreate( kCFAllocatorDefault, iType, iVal)); }
 
-bool sQAsCFType(const ZAny& iAny, ZRef<CFTypeRef>& oVal)
+ZRef<CFTypeRef> sAsCFType(const ZAny& iAny, const ZRef<CFTypeRef>& iDefault)
 	{
 	if (false)
 		{}
 	else if (iAny.type() == typeid(void))
 		{
-		oVal.Clear();
+		return ZRef<CFTypeRef>();
 		}
 	else if (const string8* theValue = ZAnyCast<string8>(&iAny))
 		{
-		oVal = sString(*theValue);
+		return sString(*theValue);
 		}
 	else if (const vector<char>* theValue = ZAnyCast<vector<char> >(&iAny))
 		{
 		if (size_t theSize = theValue->size())
-			oVal = sData(&(*theValue)[0], theSize);
+			return sData(&(*theValue)[0], theSize);
 		else
-			oVal = sData();
+			return sData();
 		}
-	else if (const ZValData_Any* theValue = ZAnyCast<ZValData_Any>(&iAny))
+	else if (const ZData_Any* theValue = ZAnyCast<ZData_Any>(&iAny))
 		{
 		if (size_t theSize = theValue->GetSize())
-			oVal = sData(theValue->GetData(), theSize);
+			return sData(theValue->GetData(), theSize);
 		else
-			oVal = sData();
+			return sData();
 		}
 	else if (const vector<ZAny>* theValue = ZAnyCast<vector<ZAny> >(&iAny))
 		{
@@ -359,18 +343,18 @@ bool sQAsCFType(const ZAny& iAny, ZRef<CFTypeRef>& oVal)
 		for (vector<ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
 			i != end; ++i)
 			{
-			::CFArrayAppendValue(theArray, sAsCFType(*i));
+			::CFArrayAppendValue(theArray, sAsCFType(*i, iDefault));
 			}
-		oVal = theArray;
+		return theArray;
 		}
-	else if (const ZValList_Any* theValue = ZAnyCast<ZValList_Any>(&iAny))
+	else if (const ZList_Any* theValue = ZAnyCast<ZList_Any>(&iAny))
 		{
 		ZRef<CFMutableArrayRef> theArray;
 		for (size_t x = 0, count = theValue->Count(); x < count; ++x)
 			{
-			::CFArrayAppendValue(theArray, sAsCFType(theValue->Get(x)));
+			::CFArrayAppendValue(theArray, sAsCFType(theValue->Get(x), iDefault));
 			}
-		oVal = theArray;
+		return theArray;
 		}
 	else if (const map<string, ZAny>* theValue = ZAnyCast<map<string, ZAny> >(&iAny))
 		{
@@ -378,113 +362,104 @@ bool sQAsCFType(const ZAny& iAny, ZRef<CFTypeRef>& oVal)
 		for (map<string, ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
 			i != end; ++i)
 			{
-			::CFDictionarySetValue(theDictionary, sString((*i).first), sAsCFType((*i).second));
+			::CFDictionarySetValue(theDictionary,
+				sString((*i).first), sAsCFType((*i).second, iDefault));
 			}
-		oVal = theDictionary;
+		return theDictionary;
 		}
-	else if (const ZValMap_Any* theValue = ZAnyCast<ZValMap_Any>(&iAny))
+	else if (const ZMap_Any* theValue = ZAnyCast<ZMap_Any>(&iAny))
 		{
 		ZRef<CFMutableDictionaryRef> theDictionary = sDictionaryMutable();
-		for (ZValMap_Any::Index_t i = theValue->Begin(), end = theValue->End();
+		for (ZMap_Any::Index_t i = theValue->Begin(), end = theValue->End();
 			i != end; ++i)
 			{
 			::CFDictionarySetValue(theDictionary,
-				sString(theValue->NameOf(i)), sAsCFType(theValue->Get(i)));
+				sString(theValue->NameOf(i)), sAsCFType(theValue->Get(i), iDefault));
 			}
-		oVal = theDictionary;
+		return theDictionary;
 		}
 	else if (const bool* theValue = ZAnyCast<bool>(&iAny))
 		{
 		if (*theValue)
-			oVal = kCFBooleanTrue;
+			return kCFBooleanTrue;
 		else
-			oVal = kCFBooleanFalse;
+			return kCFBooleanFalse;
 		}
 	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iAny))
 		{
-		oVal = Adopt_T<CFTypeRef>(::CFDateCreate(kCFAllocatorDefault,
+		return Adopt_T<CFTypeRef>(::CFDateCreate(kCFAllocatorDefault,
 			theValue->fVal - kCFAbsoluteTimeIntervalSince1970));
 		}
 	else if (const char* theValue = ZAnyCast<char>(&iAny))
 		{
-		oVal = spMakeNumber(kCFNumberSInt8Type, theValue);
+		return spMakeNumber(kCFNumberSInt8Type, theValue);
 		}
 	else if (const unsigned char* theValue = ZAnyCast<unsigned char>(&iAny))
 		{
-		oVal = spMakeNumber(kCFNumberSInt8Type, theValue);
+		return spMakeNumber(kCFNumberSInt8Type, theValue);
 		}
 	else if (const signed char* theValue = ZAnyCast<signed char>(&iAny))
 		{
-		oVal = spMakeNumber(kCFNumberSInt8Type, theValue);
+		return spMakeNumber(kCFNumberSInt8Type, theValue);
 		}
 	else if (const short* theValue = ZAnyCast<short>(&iAny))
 		{
-		oVal = spMakeNumber(kCFNumberSInt16Type, theValue);
+		return spMakeNumber(kCFNumberSInt16Type, theValue);
 		}
 	else if (const unsigned short* theValue = ZAnyCast<unsigned short>(&iAny))
 		{
-		oVal = spMakeNumber(kCFNumberSInt16Type, theValue);
+		return spMakeNumber(kCFNumberSInt16Type, theValue);
 		}
 	else if (const int* theValue = ZAnyCast<int>(&iAny))
 		{
 		if (ZIntIs32Bit)	
-			oVal = spMakeNumber(kCFNumberSInt32Type, theValue);
+			return spMakeNumber(kCFNumberSInt32Type, theValue);
 		else
-			oVal = spMakeNumber(kCFNumberSInt64Type, theValue);
+			return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
 	else if (const unsigned int* theValue = ZAnyCast<unsigned int>(&iAny))
 		{
 		if (ZIntIs32Bit)	
-			oVal = spMakeNumber(kCFNumberSInt32Type, theValue);
+			return spMakeNumber(kCFNumberSInt32Type, theValue);
 		else
-			oVal = spMakeNumber(kCFNumberSInt64Type, theValue);
+			return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
 	else if (const long* theValue = ZAnyCast<long>(&iAny))
 		{
 		if (ZLongIs32Bit)
-			oVal = spMakeNumber(kCFNumberSInt32Type, theValue);
+			return spMakeNumber(kCFNumberSInt32Type, theValue);
 		else
-			oVal = spMakeNumber(kCFNumberSInt64Type, theValue);
+			return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
 	else if (const unsigned long* theValue = ZAnyCast<unsigned long>(&iAny))
 		{
 		if (ZLongIs32Bit)
-			oVal = spMakeNumber(kCFNumberSInt32Type, theValue);
+			return spMakeNumber(kCFNumberSInt32Type, theValue);
 		else
-			oVal = spMakeNumber(kCFNumberSInt64Type, theValue);
+			return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
 	else if (const int64* theValue = ZAnyCast<int64>(&iAny))
 		{
-		oVal = spMakeNumber(kCFNumberSInt64Type, theValue);
+		return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
 	else if (const uint64* theValue = ZAnyCast<uint64>(&iAny))
 		{
-		oVal = spMakeNumber(kCFNumberSInt64Type, theValue);
+		return spMakeNumber(kCFNumberSInt64Type, theValue);
 		}
 	else if (const float* theValue = ZAnyCast<float>(&iAny))
 		{
-		oVal = spMakeNumber(kCFNumberFloatType, theValue);
+		return spMakeNumber(kCFNumberFloatType, theValue);
 		}
 	else if (const double* theValue = ZAnyCast<double>(&iAny))
 		{
-		oVal = spMakeNumber(kCFNumberDoubleType, theValue);
-		}
-	else
-		{
-		return false;
+		return spMakeNumber(kCFNumberDoubleType, theValue);
 		}
 
-	return true;
+	return iDefault;
 	}
 
 ZRef<CFTypeRef> sAsCFType(const ZAny& iAny)
-	{
-	ZRef<CFTypeRef> result;
-	if (sQAsCFType(iAny, result))
-		return result;
-
-	return ZRef<CFTypeRef>();
-	}
+	{ return sAsCFType(iAny, ZRef<CFTypeRef>()); }
 
 } // namespace ZUtil_CFType
 

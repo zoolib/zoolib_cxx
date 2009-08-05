@@ -52,8 +52,8 @@ The mappings are as follows:
 JSON          ZVal_ZooLib
 ----          -------
 null          null
-object        ZValMap_ZooLib
-array         ZValList_ZooLib
+object        ZMap_ZooLib
+array         ZList_ZooLib
 boolean       bool
 string        string
 number        int64 or double
@@ -62,8 +62,8 @@ number        int64 or double
 ZVal_ZooLib          JSON
 -------          ----
 null             null
-ZValMap_ZooLib   object
-ZValList_ZooLib  array
+ZMap_ZooLib   object
+ZList_ZooLib  array
 bool             boolean
 string           string
 int8             number

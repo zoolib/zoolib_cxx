@@ -32,13 +32,13 @@ using std::string;
 #pragma mark -
 #pragma mark * Helpers
 
-static ZValMap_Any spAsMap(const AEDesc& iAEDesc)
+static ZMap_Any spAsMap(const AEDesc& iAEDesc)
 	{
-	ZValMap_Any theMap;
+	ZMap_Any theMap;
 	theMap.Set("!AEType", sAEKeywordAsString(iAEDesc.descriptorType));
 
 	const size_t theSize = ::AEGetDescDataSize(&iAEDesc);
-	ZValData_Any theData(theSize);
+	ZData_Any theData(theSize);
 	::AEGetDescData(&iAEDesc, theData.GetData(), theSize);
 
 	theMap.Set("Value", theData);
@@ -52,11 +52,11 @@ static ZValMap_Any spAsMap(const AEDesc& iAEDesc)
 
 ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal)
 	{
-	ZValMap_AppleEvent asMap;
+	ZMap_AppleEvent asMap;
 	if (iVal.QGetMap(asMap))
 		return new ZYadMapRPos_AppleEvent(asMap);
 		
-	ZValList_AppleEvent asList;
+	ZList_AppleEvent asList;
 	if (iVal.QGetList(asList))
 		return new ZYadListRPos_AppleEvent(asList);
 		
@@ -70,10 +70,10 @@ ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal)
 	return new ZYadMapRPos_Any(spAsMap(iVal));
 	}
 
-ZRef<ZYadListR> sMakeYadR(const ZValList_AppleEvent& iList)
+ZRef<ZYadListR> sMakeYadR(const ZList_AppleEvent& iList)
 	{ return new ZYadListRPos_AppleEvent(iList); }
 
-ZRef<ZYadMapR> sMakeYadR(const ZValMap_AppleEvent& iMap)
+ZRef<ZYadMapR> sMakeYadR(const ZMap_AppleEvent& iMap)
 	{ return new ZYadMapRPos_AppleEvent(iMap); }
 
 NAMESPACE_ZOOLIB_END

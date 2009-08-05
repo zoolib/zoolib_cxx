@@ -18,48 +18,44 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValData_CFType__
-#define __ZValData_CFType__ 1
+#ifndef __ZValData_Any__
+#define __ZValData_Any__ 1
 #include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(CFType)
-
-#include "zoolib/ZRef_CFType.h"
+#include "zoolib/ZAny.h"
+#include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZCompare.h"
+#include "zoolib/ZRef.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZValData_CFType;
-typedef ZValData_CFType ZValData_CF;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValData_CFType
+#pragma mark * ZData_Any
 
-class ZValData_CFType
-:	public ZRef<CFDataRef>
+class ZData_Any
 	{
-	typedef ZRef<CFDataRef> inherited;
-
+    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZData_Any,
+    	operator_bool_generator_type, operator_bool_type);
 	class Rep;
+
 public:
-	operator bool() const;
+	ZData_Any AsData_Any() const;
 
-	ZValData_CFType();
-	ZValData_CFType(const ZValData_CFType& iOther);
-	~ZValData_CFType();
-	ZValData_CFType& operator=(const ZValData_CFType& iOther);
+	operator operator_bool_type() const;
 
-	ZValData_CFType(const ZRef<CFMutableDataRef>& iOther);
-	ZValData_CFType(const ZRef<CFDataRef>& iOther);
+	ZData_Any();
+	ZData_Any(const ZData_Any& iOther);
+	~ZData_Any();
+	ZData_Any& operator=(const ZData_Any& iOther);
 
-	ZValData_CFType& operator=(const ZRef<CFMutableDataRef>& iOther);
-	ZValData_CFType& operator=(const ZRef<CFDataRef>& iOther);
+	ZData_Any(size_t iSize);
+	ZData_Any(const void* iSourceData, size_t iSize);
 
-	ZValData_CFType(size_t iSize);
-	ZValData_CFType(const void* iSourceData, size_t iSize);
+	int Compare(const ZData_Any& iOther) const;
+	bool operator<(const ZData_Any& iOther) const;
+	bool operator==(const ZData_Any& iOther) const;
 
-// ZValData protocol
 	size_t GetSize() const;
 	void SetSize(size_t iSize);
 
@@ -72,17 +68,15 @@ public:
 	void CopyTo(size_t iOffset, void* iDest, size_t iCount) const;
 	void CopyTo(void* iDest, size_t iCount) const;
 
-// Our protocol
-	CFDataRef& OParam();
-
 private:
-	CFDataRef pData() const;
-	CFMutableDataRef pTouch();
-	bool fMutable;
+	void pTouch();
+
+	ZRef<Rep> fRep;
 	};
+
+template <> inline int sCompare_T(const ZData_Any& iL, const ZData_Any& iR)
+	{ return iL.Compare(iR); }
 
 NAMESPACE_ZOOLIB_END
 
-#endif // ZCONFIG_SPI_Enabled(CFType)
-
-#endif // __ZValData_CFType__
+#endif // __ZValData_Any__

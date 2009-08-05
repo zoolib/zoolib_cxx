@@ -34,9 +34,9 @@ NAMESPACE_ZOOLIB_BEGIN
 namespace ZHTTP {
 
 typedef ZVal_ZooLib Val;
-typedef ZValData_ZooLib ValData;
-typedef ZValList_ZooLib ValList;
-typedef ZValMap_ZooLib ValMap;
+typedef ZData_ZooLib ValData;
+typedef ZList_ZooLib ValList;
+typedef ZMap_ZooLib ValMap;
 
 class StreamR_Chunked;
 class StreamW_Chunked;

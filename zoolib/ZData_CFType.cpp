@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZValData_CFType.h"
+#include "zoolib/ZData_CFType.h"
 #include "zoolib/ZUtil_CFType.h"
 
 #if ZCONFIG_SPI_Enabled(CFType)
@@ -31,92 +31,95 @@ using ZUtil_CFType::sDataMutable;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValData_CFType
+#pragma mark * ZData_CFType
 
-ZValData_CFType::operator bool() const
+ZData_Any ZData_CFType::AsData_Any() const
+	{ return ZUtil_CFType::sAsData_Any(this->pData()); }
+
+ZData_CFType::operator bool() const
 	{ return this->GetSize(); }
 
-ZValData_CFType::ZValData_CFType()
+ZData_CFType::ZData_CFType()
 :	inherited(sDataMutable())
 	{}
 
-ZValData_CFType::ZValData_CFType(const ZValData_CFType& iOther)
+ZData_CFType::ZData_CFType(const ZData_CFType& iOther)
 :	inherited(iOther)
 ,	fMutable(iOther.fMutable)
 	{}
 
-ZValData_CFType::~ZValData_CFType()
+ZData_CFType::~ZData_CFType()
 	{}
 
-ZValData_CFType& ZValData_CFType::operator=(const ZValData_CFType& iOther)
+ZData_CFType& ZData_CFType::operator=(const ZData_CFType& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = iOther.fMutable;
 	return *this;
 	}
 
-ZValData_CFType::ZValData_CFType(const ZRef<CFMutableDataRef>& iOther)
+ZData_CFType::ZData_CFType(const ZRef<CFMutableDataRef>& iOther)
 :	inherited(iOther)
 ,	fMutable(true)
 	{}
 
-ZValData_CFType::ZValData_CFType(const ZRef<CFDataRef>& iOther)
+ZData_CFType::ZData_CFType(const ZRef<CFDataRef>& iOther)
 :	inherited(iOther)
 ,	fMutable(false)
 	{}
 
-ZValData_CFType& ZValData_CFType::operator=(const ZRef<CFMutableDataRef>& iOther)
+ZData_CFType& ZData_CFType::operator=(const ZRef<CFMutableDataRef>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = true;
 	return *this;
 	}
 
-ZValData_CFType& ZValData_CFType::operator=(const ZRef<CFDataRef>& iOther)
+ZData_CFType& ZData_CFType::operator=(const ZRef<CFDataRef>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;
 	return *this;
 	}
 
-ZValData_CFType::ZValData_CFType(size_t iSize)
+ZData_CFType::ZData_CFType(size_t iSize)
 :	inherited(sDataMutable(iSize))
 ,	fMutable(true)
 	{}
 
-ZValData_CFType::ZValData_CFType(const void* iSourceData, size_t iSize)
+ZData_CFType::ZData_CFType(const void* iSourceData, size_t iSize)
 :	inherited(NoRetain(::CFDataCreate(
 		kCFAllocatorDefault, static_cast<const UInt8*>(iSourceData), iSize)))
 ,	fMutable(true)
 	{}
 
-size_t ZValData_CFType::GetSize() const
+size_t ZData_CFType::GetSize() const
 	{
 	if (CFDataRef theData = this->pData())
 		return ::CFDataGetLength(theData);
 	return 0;
 	}
 
-void ZValData_CFType::SetSize(size_t iSize)
+void ZData_CFType::SetSize(size_t iSize)
 	{
 	CFMutableDataRef theData = this->pTouch();
 	::CFDataSetLength(theData, iSize);
 	}
 
-const void* ZValData_CFType::GetData() const
+const void* ZData_CFType::GetData() const
 	{
 	if (CFDataRef theData = this->pData())
 		return ::CFDataGetBytePtr(theData);
 	return nullptr;
 	}
 
-void* ZValData_CFType::GetData()
+void* ZData_CFType::GetData()
 	{
 	CFMutableDataRef theData = this->pTouch();
 	return ::CFDataGetMutableBytePtr(theData);
 	}
 
-void ZValData_CFType::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
+void ZData_CFType::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
 	{
 	if (iCount)
 		{
@@ -126,10 +129,10 @@ void ZValData_CFType::CopyFrom(size_t iOffset, const void* iSource, size_t iCoun
 		}
 	}
 
-void ZValData_CFType::CopyFrom(const void* iSource, size_t iCount)
+void ZData_CFType::CopyFrom(const void* iSource, size_t iCount)
 	{ this->CopyFrom(0, iSource, iCount); }
 
-void ZValData_CFType::CopyTo(size_t iOffset, void* iDest, size_t iCount) const
+void ZData_CFType::CopyTo(size_t iOffset, void* iDest, size_t iCount) const
 	{
 	const CFRange theRange = { iOffset, iCount };
 	CFDataRef theData = this->pData();
@@ -137,19 +140,19 @@ void ZValData_CFType::CopyTo(size_t iOffset, void* iDest, size_t iCount) const
 	::CFDataGetBytes(theData, theRange, static_cast<UInt8*>(iDest));
 	}
 
-void ZValData_CFType::CopyTo(void* iDest, size_t iCount) const
+void ZData_CFType::CopyTo(void* iDest, size_t iCount) const
 	{ this->CopyTo(0, iDest, iCount); }
 
-CFDataRef& ZValData_CFType::OParam()
+CFDataRef& ZData_CFType::OParam()
 	{
 	inherited::Clear();
 	return this->GetPtrRef();
 	}
 
-CFDataRef ZValData_CFType::pData() const
+CFDataRef ZData_CFType::pData() const
 	{ return inherited::Get(); }
 
-CFMutableDataRef ZValData_CFType::pTouch()
+CFMutableDataRef ZData_CFType::pTouch()
 	{
 	ZRef<CFMutableDataRef> theMutableData;
 	if (CFDataRef theData = this->pData())

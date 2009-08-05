@@ -44,27 +44,41 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZAETypeMap_T
 
-template <class T> struct ZAETypeMap_T {};
+template <int T> struct ZAELookup_Desc2CPP {};
+template <class T> struct ZAELookup_CPP2Desc {};
 
-#define ZMACRO_AETypeMap(cpp_t, DescType) \
-	template <> struct ZAETypeMap_T<cpp_t> { enum { sDescType = DescType }; }
+#define ZMACRO_AELookup_Desc2CPP(DescType, cpp_t) \
+	template <> struct ZAELookup_Desc2CPP<DescType> { typedef cpp_t CPP_t; };
 
-ZMACRO_AETypeMap(int16, typeSInt16);
-ZMACRO_AETypeMap(int32, typeSInt32);
-ZMACRO_AETypeMap(uint32, typeUInt32);
-ZMACRO_AETypeMap(int64, typeSInt64);
-ZMACRO_AETypeMap(float, typeIEEE32BitFloatingPoint);
-ZMACRO_AETypeMap(double, typeIEEE64BitFloatingPoint);
-ZMACRO_AETypeMap(FSRef, typeFSRef);
-ZMACRO_AETypeMap(FSSpec, typeFSS);
-ZMACRO_AETypeMap(AliasHandle, typeAlias);
-ZMACRO_AETypeMap(ZHandle_T<AliasHandle>, typeAlias);
+#define ZMACRO_AELookup_CPP2Desc(cpp_t, DescType) \
+	template <> struct ZAELookup_CPP2Desc<cpp_t> { enum { sDescType = DescType }; };
+
+#define ZMACRO_AELookup(cpp_t, DescType) \
+	ZMACRO_AELookup_Desc2CPP(DescType, cpp_t) \
+	ZMACRO_AELookup_CPP2Desc(cpp_t, DescType)
+
+
+ZMACRO_AELookup(int16, typeSInt16)
+ZMACRO_AELookup(int32, typeSInt32)
+ZMACRO_AELookup(uint32, typeUInt32)
+ZMACRO_AELookup(int64, typeSInt64)
+ZMACRO_AELookup(float, typeIEEE32BitFloatingPoint)
+ZMACRO_AELookup(double, typeIEEE64BitFloatingPoint)
+ZMACRO_AELookup(FSRef, typeFSRef)
+ZMACRO_AELookup(FSSpec, typeFSS)
+ZMACRO_AELookup(AliasHandle, typeAlias)
+
+ZMACRO_AELookup_CPP2Desc(ZHandle_T<AliasHandle>, typeAlias)
+
+#undef ZMACRO_AELookup_Desc2CPP
+#undef ZMACRO_AELookup_CPP2Desc
+#undef ZMACRO_AELookup
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZAEValRef_T, generic
 
-template <class T, int D = ZAETypeMap_T<T>::sDescType>
+template <class T, int D = ZAELookup_CPP2Desc<T>::sDescType>
 class ZAEValRef_T
 	{
 public:

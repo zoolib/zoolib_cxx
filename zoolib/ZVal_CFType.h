@@ -25,23 +25,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZAny.h"
 #include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZData_CFType.h"
 #include "zoolib/ZRef_CFType.h"
 #include "zoolib/ZUnicodeString.h"
-#include "zoolib/ZVal.h"
+#include "zoolib/ZVal_Any.h"
 #include "zoolib/ZValAccessors_Std.h"
-#include "zoolib/ZValData_CFType.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 class ZVal_CFType;
-class ZValList_CFType;
-class ZValMap_CFType;
+class ZList_CFType;
+class ZMap_CFType;
 
 typedef ZVal_CFType ZVal_CF;
-typedef ZValList_CFType ZValList_CF;
-typedef ZValMap_CFType ZValMap_CF;
+typedef ZList_CFType ZList_CF;
+typedef ZMap_CFType ZMap_CF;
 
 // =================================================================================================
 #pragma mark -
@@ -54,7 +53,7 @@ class ZVal_CFType
 	typedef ZRef<CFTypeRef> inherited;
 public:
 	bool sFromAny(const ZAny& iAny, ZVal_CFType& oVal);
-	ZAny AsAny() const;
+	ZVal_Any AsVal_Any(const ZVal_Any& iDefault) const;
 
 	operator bool() const;
 
@@ -75,9 +74,9 @@ public:
 	ZVal_CFType(const string16& iVal);
 	ZVal_CFType(CFStringRef iVal);
 
-	ZVal_CFType(const ZValData_CFType& iVal);
-	ZVal_CFType(const ZValList_CFType& iVal);
-	ZVal_CFType(const ZValMap_CFType& iVal);
+	ZVal_CFType(const ZData_CFType& iVal);
+	ZVal_CFType(const ZList_CFType& iVal);
+	ZVal_CFType(const ZMap_CFType& iVal);
 
 	explicit ZVal_CFType(CFTypeRef iVal);
 	explicit ZVal_CFType(CFDataRef iVal);
@@ -101,32 +100,34 @@ public:
 // Typename accessors
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_CFType)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, CFString, ZRef<CFStringRef>)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Data, ZValData_CFType)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, List, ZValList_CFType)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Map, ZValMap_CFType)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Data, ZData_CFType)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, List, ZList_CFType)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Map, ZMap_CFType)
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValList_CFType
+#pragma mark * ZList_CFType
 
-class ZValList_CFType
+class ZList_CFType
 :	public ZRef<CFArrayRef>
 	{
 	typedef ZRef<CFArrayRef> inherited;
 public:
+	ZList_Any AsList_Any(const ZVal_Any& iDefault) const;
+
 	operator bool() const;
 
-	ZValList_CFType();
-	ZValList_CFType(const ZValList_CFType& iOther);
-	~ZValList_CFType();
-	ZValList_CFType& operator=(const ZValList_CFType& iOther);
+	ZList_CFType();
+	ZList_CFType(const ZList_CFType& iOther);
+	~ZList_CFType();
+	ZList_CFType& operator=(const ZList_CFType& iOther);
 
-	ZValList_CFType(const ZRef<CFMutableArrayRef>& iOther);
-	ZValList_CFType(const ZRef<CFArrayRef>& iOther);
+	ZList_CFType(const ZRef<CFMutableArrayRef>& iOther);
+	ZList_CFType(const ZRef<CFArrayRef>& iOther);
 
-	ZValList_CFType& operator=(const ZRef<CFMutableArrayRef>& iOther);
-	ZValList_CFType& operator=(const ZRef<CFArrayRef>& iOther);
+	ZList_CFType& operator=(const ZRef<CFMutableArrayRef>& iOther);
+	ZList_CFType& operator=(const ZRef<CFArrayRef>& iOther);
 
 // ZValList protocol
 	size_t Count() const;
@@ -156,25 +157,27 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValMap_CFType
+#pragma mark * ZMap_CFType
 
-class ZValMap_CFType
+class ZMap_CFType
 :	public ZRef<CFDictionaryRef>
 	{
 	typedef ZRef<CFDictionaryRef> inherited;
 public:
+	ZMap_Any AsMap_Any(const ZVal_Any& iDefault) const;
+
 	operator bool() const;
 
-	ZValMap_CFType();
-	ZValMap_CFType(const ZValMap_CFType& iOther);
-	~ZValMap_CFType();
-	ZValMap_CFType& operator=(const ZValMap_CFType& iOther);
+	ZMap_CFType();
+	ZMap_CFType(const ZMap_CFType& iOther);
+	~ZMap_CFType();
+	ZMap_CFType& operator=(const ZMap_CFType& iOther);
 
-	ZValMap_CFType(const ZRef<CFMutableDictionaryRef>& iOther);
-	ZValMap_CFType(const ZRef<CFDictionaryRef>& iOther);
+	ZMap_CFType(const ZRef<CFMutableDictionaryRef>& iOther);
+	ZMap_CFType(const ZRef<CFDictionaryRef>& iOther);
 
-	ZValMap_CFType& operator=(const ZRef<CFMutableDictionaryRef>& iOther);
-	ZValMap_CFType& operator=(const ZRef<CFDictionaryRef>& iOther);
+	ZMap_CFType& operator=(const ZRef<CFMutableDictionaryRef>& iOther);
+	ZMap_CFType& operator=(const ZRef<CFDictionaryRef>& iOther);
 
 // ZValMap protocol
 	void Clear();

@@ -69,10 +69,10 @@ ZRef<CFTypeRef> sNumber_T(CFNumberType iNumberType, const S& iVal)
 #pragma mark * ZVal_CFType
 
 bool ZVal_CFType::sFromAny(const ZAny& iAny, ZVal_CFType& oVal)
-	{ return ZUtil_CFType::sQAsCFType(iAny, oVal); }
+	{ return ZUtil_CFType::sAsCFType(iAny, oVal); }
 
-ZAny ZVal_CFType::AsAny() const
-	{ return ZUtil_CFType::sAsAny(this); }
+ZVal_Any ZVal_CFType::AsVal_Any(const ZVal_Any& iDefault) const
+	{ return ZUtil_CFType::sAsVal_Any(this, iDefault); }
 
 ZVal_CFType::ZVal_CFType()
 	{}
@@ -140,15 +140,15 @@ ZVal_CFType::ZVal_CFType(CFStringRef iVal)
 :	inherited(iVal)
 	{}
 
-ZVal_CFType::ZVal_CFType(const ZValData_CFType& iVal)
+ZVal_CFType::ZVal_CFType(const ZData_CFType& iVal)
 :	inherited(iVal)
 	{}
 
-ZVal_CFType::ZVal_CFType(const ZValList_CFType& iVal)
+ZVal_CFType::ZVal_CFType(const ZList_CFType& iVal)
 :	inherited(iVal)
 	{}
 
-ZVal_CFType::ZVal_CFType(const ZValMap_CFType& iVal)
+ZVal_CFType::ZVal_CFType(const ZMap_CFType& iVal)
 :	inherited(iVal)
 	{}
 
@@ -279,7 +279,7 @@ bool ZVal_CFType::QGet_T<ZRef<CFStringRef> >(ZRef<CFStringRef>& oVal) const
 	}
 
 template <>
-bool ZVal_CFType::QGet_T<ZValData_CFType>(ZValData_CFType& oVal) const
+bool ZVal_CFType::QGet_T<ZData_CFType>(ZData_CFType& oVal) const
 	{
 	if (::CFGetTypeID(*this) == ::CFDataGetTypeID())
 		{
@@ -290,7 +290,7 @@ bool ZVal_CFType::QGet_T<ZValData_CFType>(ZValData_CFType& oVal) const
 	}
 
 template <>
-bool ZVal_CFType::QGet_T<ZValList_CFType>(ZValList_CFType& oVal) const
+bool ZVal_CFType::QGet_T<ZList_CFType>(ZList_CFType& oVal) const
 	{
 	if (::CFGetTypeID(*this) == ::CFArrayGetTypeID())
 		{
@@ -301,7 +301,7 @@ bool ZVal_CFType::QGet_T<ZValList_CFType>(ZValList_CFType& oVal) const
 	}
 
 template <>
-bool ZVal_CFType::QGet_T<ZValMap_CFType>(ZValMap_CFType& oVal) const
+bool ZVal_CFType::QGet_T<ZMap_CFType>(ZMap_CFType& oVal) const
 	{
 	if (::CFGetTypeID(*this) == ::CFDictionaryGetTypeID())
 		{
@@ -348,15 +348,15 @@ void ZVal_CFType::Set_T<ZRef<CFStringRef> >(const ZRef<CFStringRef>& iVal)
 	{ inherited::operator=(iVal); }
 
 template <>
-void ZVal_CFType::Set_T<ZValData_CFType>(const ZValData_CFType& iVal)
+void ZVal_CFType::Set_T<ZData_CFType>(const ZData_CFType& iVal)
 	{ inherited::operator=(iVal); }
 
 template <>
-void ZVal_CFType::Set_T<ZValList_CFType>(const ZValList_CFType& iVal)
+void ZVal_CFType::Set_T<ZList_CFType>(const ZList_CFType& iVal)
 	{ inherited::operator=(iVal); }
 
 template <>
-void ZVal_CFType::Set_T<ZValMap_CFType>(const ZValMap_CFType& iVal)
+void ZVal_CFType::Set_T<ZMap_CFType>(const ZMap_CFType& iVal)
 	{ inherited::operator=(iVal); }
 
 CFTypeRef& ZVal_CFType::OParam()
@@ -371,72 +371,75 @@ CFTypeRef& ZVal_CFType::OParam()
 
 ZMACRO_ZValAccessors_Def_Std(ZVal_CFType)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, CFString, ZRef<CFStringRef>)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Data, ZValData_CFType)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, List, ZValList_CFType)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Map, ZValMap_CFType)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Data, ZData_CFType)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, List, ZList_CFType)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Map, ZMap_CFType)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValList_CFType
+#pragma mark * ZList_CFType
 
-ZValList_CFType::operator bool() const
+ZList_Any ZList_CFType::AsList_Any(const ZVal_Any& iDefault) const
+	{ return ZUtil_CFType::sAsList_Any(this->pArray(), iDefault); }
+
+ZList_CFType::operator bool() const
 	{ return this->Count(); }
 
-ZValList_CFType::ZValList_CFType()
+ZList_CFType::ZList_CFType()
 :	inherited(sArrayMutable())
 ,	fMutable(true)
 	{}
 
-ZValList_CFType::ZValList_CFType(const ZValList_CFType& iOther)
+ZList_CFType::ZList_CFType(const ZList_CFType& iOther)
 :	inherited(iOther)
 ,	fMutable(iOther.fMutable)
 	{}
 
-ZValList_CFType::~ZValList_CFType()
+ZList_CFType::~ZList_CFType()
 	{}
 
-ZValList_CFType& ZValList_CFType::operator=(const ZValList_CFType& iOther)
+ZList_CFType& ZList_CFType::operator=(const ZList_CFType& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = iOther.fMutable;
 	return *this;
 	}
 
-ZValList_CFType::ZValList_CFType(const ZRef<CFMutableArrayRef>& iOther)
+ZList_CFType::ZList_CFType(const ZRef<CFMutableArrayRef>& iOther)
 :	inherited(iOther)
 ,	fMutable(true)
 	{}
 
-ZValList_CFType::ZValList_CFType(const ZRef<CFArrayRef>& iOther)
+ZList_CFType::ZList_CFType(const ZRef<CFArrayRef>& iOther)
 :	inherited(iOther)
 ,	fMutable(false)
 	{}
 
-ZValList_CFType& ZValList_CFType::operator=(const ZRef<CFMutableArrayRef>& iOther)
+ZList_CFType& ZList_CFType::operator=(const ZRef<CFMutableArrayRef>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = true;
 	return *this;
 	}
 
-ZValList_CFType& ZValList_CFType::operator=(const ZRef<CFArrayRef>& iOther)
+ZList_CFType& ZList_CFType::operator=(const ZRef<CFArrayRef>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;
 	return *this;
 	}
 
-size_t ZValList_CFType::Count() const
+size_t ZList_CFType::Count() const
 	{
 	if (CFArrayRef theArray = this->pArray())
 		return ::CFArrayGetCount(theArray);
 	return 0;
 	}
 
-void ZValList_CFType::Clear()
+void ZList_CFType::Clear()
 	{ inherited::Clear(); }
 
-bool ZValList_CFType::QGet(size_t iIndex, ZVal_CFType& oVal) const
+bool ZList_CFType::QGet(size_t iIndex, ZVal_CFType& oVal) const
 	{
 	if (CFArrayRef theArray = this->pArray())
 		{
@@ -452,7 +455,7 @@ bool ZValList_CFType::QGet(size_t iIndex, ZVal_CFType& oVal) const
 	return false;
 	}
 
-ZVal_CFType ZValList_CFType::DGet(const ZVal_CFType& iDefault, size_t iIndex) const
+ZVal_CFType ZList_CFType::DGet(const ZVal_CFType& iDefault, size_t iIndex) const
 	{
 	ZVal_CFType result;
 	if (this->QGet(iIndex, result))
@@ -460,13 +463,13 @@ ZVal_CFType ZValList_CFType::DGet(const ZVal_CFType& iDefault, size_t iIndex) co
 	return iDefault;
 	}
 
-ZVal_CFType ZValList_CFType::Get(size_t iIndex) const
+ZVal_CFType ZList_CFType::Get(size_t iIndex) const
 	{ return this->DGet(ZVal_CFType(), iIndex); }
 
-void ZValList_CFType::Set(size_t iIndex, const ZVal_CFType& iVal)
+void ZList_CFType::Set(size_t iIndex, const ZVal_CFType& iVal)
 	{ ::CFArraySetValueAtIndex(this->pTouch(), iIndex, iVal); }
 
-void ZValList_CFType::Erase(size_t iIndex)
+void ZList_CFType::Erase(size_t iIndex)
 	{
 	CFMutableArrayRef theArray = this->pTouch();
 	if (const size_t theCount = ::CFArrayGetCount(theArray))
@@ -476,7 +479,7 @@ void ZValList_CFType::Erase(size_t iIndex)
 		}
 	}
 
-void ZValList_CFType::Insert(size_t iIndex, const ZVal_CFType& iVal)
+void ZList_CFType::Insert(size_t iIndex, const ZVal_CFType& iVal)
 	{
 	CFMutableArrayRef theArray = this->pTouch();
 	const size_t theCount = ::CFArrayGetCount(theArray);
@@ -484,19 +487,19 @@ void ZValList_CFType::Insert(size_t iIndex, const ZVal_CFType& iVal)
 		::CFArrayInsertValueAtIndex(theArray, iIndex, iVal);
 	}
 
-void ZValList_CFType::Append(const ZVal_CFType& iVal)
+void ZList_CFType::Append(const ZVal_CFType& iVal)
 	{ ::CFArrayAppendValue(this->pTouch(), iVal); }
 
-CFArrayRef& ZValList_CFType::OParam()
+CFArrayRef& ZList_CFType::OParam()
 	{
 	inherited::Clear();
 	return this->GetPtrRef();
 	}
 
-CFArrayRef ZValList_CFType::pArray() const
+CFArrayRef ZList_CFType::pArray() const
 	{ return inherited::Get(); }
 
-CFMutableArrayRef ZValList_CFType::pTouch()
+CFMutableArrayRef ZList_CFType::pTouch()
 	{
 	ZRef<CFMutableArrayRef> theMutableArray;
 	if (CFArrayRef theArray = this->pArray())
@@ -522,63 +525,66 @@ CFMutableArrayRef ZValList_CFType::pTouch()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValMap_CFType
+#pragma mark * ZMap_CFType
 
-ZValMap_CFType::operator bool() const
+ZMap_Any ZMap_CFType::AsMap_Any(const ZVal_Any& iDefault) const
+	{ return ZUtil_CFType::sAsMap_Any(this->pDictionary(), iDefault); }
+
+ZMap_CFType::operator bool() const
 	{
 	if (CFDictionaryRef theDictionary = this->pDictionary())
 		return ::CFDictionaryGetCount(theDictionary);
 	return false;
 	}
 
-ZValMap_CFType::ZValMap_CFType()
+ZMap_CFType::ZMap_CFType()
 :	inherited(sDictionaryMutable())
 ,	fMutable(true)
 	{}
 
-ZValMap_CFType::ZValMap_CFType(const ZValMap_CFType& iOther)
+ZMap_CFType::ZMap_CFType(const ZMap_CFType& iOther)
 :	inherited(iOther)
 ,	fMutable(iOther.fMutable)
 	{}
 
-ZValMap_CFType::~ZValMap_CFType()
+ZMap_CFType::~ZMap_CFType()
 	{}
 
-ZValMap_CFType& ZValMap_CFType::operator=(const ZValMap_CFType& iOther)
+ZMap_CFType& ZMap_CFType::operator=(const ZMap_CFType& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = iOther.fMutable;
 	return *this;
 	}
 
-ZValMap_CFType::ZValMap_CFType(const ZRef<CFDictionaryRef>& iOther)
+ZMap_CFType::ZMap_CFType(const ZRef<CFDictionaryRef>& iOther)
 :	inherited(iOther)
 ,	fMutable(false)
 	{}
 
-ZValMap_CFType::ZValMap_CFType(const ZRef<CFMutableDictionaryRef>& iOther)
+ZMap_CFType::ZMap_CFType(const ZRef<CFMutableDictionaryRef>& iOther)
 :	inherited(iOther)
 ,	fMutable(true)
 	{}
 
-ZValMap_CFType& ZValMap_CFType::operator=(const ZRef<CFMutableDictionaryRef>& iOther)
+ZMap_CFType& ZMap_CFType::operator=(const ZRef<CFMutableDictionaryRef>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = true;
 	return *this;
 	}
 
-ZValMap_CFType& ZValMap_CFType::operator=(const ZRef<CFDictionaryRef>& iOther)
+ZMap_CFType& ZMap_CFType::operator=(const ZRef<CFDictionaryRef>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;
 	return *this;
 	}
 
-void ZValMap_CFType::Clear()
+void ZMap_CFType::Clear()
 	{ inherited::Clear(); }
 
-bool ZValMap_CFType::QGet(const string8& iName, ZVal_CFType& oVal) const
+bool ZMap_CFType::QGet(const string8& iName, ZVal_CFType& oVal) const
 	{
 	if (CFDictionaryRef theDictionary = this->pDictionary())
 		{
@@ -591,7 +597,7 @@ bool ZValMap_CFType::QGet(const string8& iName, ZVal_CFType& oVal) const
 	return false;
 	}
 
-bool ZValMap_CFType::QGet(CFStringRef iName, ZVal_CFType& oVal) const
+bool ZMap_CFType::QGet(CFStringRef iName, ZVal_CFType& oVal) const
 	{
 	if (CFDictionaryRef theDictionary = this->pDictionary())
 		{
@@ -604,7 +610,7 @@ bool ZValMap_CFType::QGet(CFStringRef iName, ZVal_CFType& oVal) const
 	return false;
 	}
 
-ZVal_CFType ZValMap_CFType::DGet(const ZVal_CFType& iDefault, const string8& iName) const
+ZVal_CFType ZMap_CFType::DGet(const ZVal_CFType& iDefault, const string8& iName) const
 	{
 	ZVal_CFType theVal;
 	if (this->QGet(iName, theVal))
@@ -612,7 +618,7 @@ ZVal_CFType ZValMap_CFType::DGet(const ZVal_CFType& iDefault, const string8& iNa
 	return iDefault;
 	}
 
-ZVal_CFType ZValMap_CFType::DGet(const ZVal_CFType& iDefault, CFStringRef iName) const
+ZVal_CFType ZMap_CFType::DGet(const ZVal_CFType& iDefault, CFStringRef iName) const
 	{
 	ZVal_CFType theVal;
 	if (this->QGet(iName, theVal))
@@ -620,34 +626,34 @@ ZVal_CFType ZValMap_CFType::DGet(const ZVal_CFType& iDefault, CFStringRef iName)
 	return iDefault;
 	}
 
-ZVal_CFType ZValMap_CFType::Get(const string8& iName) const
+ZVal_CFType ZMap_CFType::Get(const string8& iName) const
 	{ return this->DGet(ZVal_CFType(), iName); }
 
-ZVal_CFType ZValMap_CFType::Get(CFStringRef iName) const
+ZVal_CFType ZMap_CFType::Get(CFStringRef iName) const
 	{ return this->DGet(ZVal_CFType(), iName); }
 
-void ZValMap_CFType::Set(const string8& iName, const ZVal_CFType& iVal)
+void ZMap_CFType::Set(const string8& iName, const ZVal_CFType& iVal)
 	{ ::CFDictionarySetValue(this->pTouch(), sString(iName), iVal); }
 
-void ZValMap_CFType::Set(CFStringRef iName, const ZVal_CFType& iVal)
+void ZMap_CFType::Set(CFStringRef iName, const ZVal_CFType& iVal)
 	{ ::CFDictionarySetValue(this->pTouch(), iName, iVal); }
 
-void ZValMap_CFType::Erase(const string8& iName)
+void ZMap_CFType::Erase(const string8& iName)
 	{ ::CFDictionaryRemoveValue(this->pTouch(), sString(iName)); }
 
-void ZValMap_CFType::Erase(CFStringRef iName)
+void ZMap_CFType::Erase(CFStringRef iName)
 	{ ::CFDictionaryRemoveValue(this->pTouch(), iName); }
 
-CFDictionaryRef& ZValMap_CFType::OParam()
+CFDictionaryRef& ZMap_CFType::OParam()
 	{
 	inherited::Clear();
 	return this->GetPtrRef();
 	}
 
-CFDictionaryRef ZValMap_CFType::pDictionary() const
+CFDictionaryRef ZMap_CFType::pDictionary() const
 	{ return inherited::Get(); }
 
-CFMutableDictionaryRef ZValMap_CFType::pTouch()
+CFMutableDictionaryRef ZMap_CFType::pTouch()
 	{
 	ZRef<CFMutableDictionaryRef> theMutableDictionary;
 	if (CFDictionaryRef theDictionary = this->pDictionary())

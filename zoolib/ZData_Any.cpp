@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZData_Any.h"
 #include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZValData_Any.h"
 
 #include <vector>
 
@@ -29,9 +29,9 @@ using std::vector;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValData_Any::Rep
+#pragma mark * ZData_Any::Rep
 
-class ZValData_Any::Rep : public ZRefCounted
+class ZData_Any::Rep : public ZRefCounted
 	{
 public:
 	Rep();
@@ -41,56 +41,56 @@ public:
 	vector<char> fVector;
 	};
 
-ZValData_Any::Rep::Rep()
+ZData_Any::Rep::Rep()
 	{}
 
-ZValData_Any::Rep::Rep(size_t iSize)
+ZData_Any::Rep::Rep(size_t iSize)
 :	fVector(iSize, 0)
 	{}
 
-ZValData_Any::Rep::Rep(const vector<char>& iVector)
+ZData_Any::Rep::Rep(const vector<char>& iVector)
 :	fVector(iVector)
 	{}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValData_Any
+#pragma mark * ZData_Any
 
-ZAny ZValData_Any::AsAny() const
-	{ return fRep->fVector; }
+ZData_Any ZData_Any::AsData_Any() const
+	{ return *this; }
 
-ZValData_Any::operator operator_bool_type() const
+ZData_Any::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fRep->fVector.size()); }
 
-ZValData_Any::ZValData_Any()
+ZData_Any::ZData_Any()
 :	fRep(new Rep)
 	{}
 
-ZValData_Any::ZValData_Any(const ZValData_Any& iOther)
+ZData_Any::ZData_Any(const ZData_Any& iOther)
 :	fRep(iOther.fRep)
 	{}
 
-ZValData_Any::~ZValData_Any()
+ZData_Any::~ZData_Any()
 	{}
 
-ZValData_Any& ZValData_Any::operator=(const ZValData_Any& iOther)
+ZData_Any& ZData_Any::operator=(const ZData_Any& iOther)
 	{
 	fRep = iOther.fRep;
 	return *this;
 	}
 
-ZValData_Any::ZValData_Any(size_t iSize)
+ZData_Any::ZData_Any(size_t iSize)
 :	fRep(new Rep(iSize))
 	{}
 
-ZValData_Any::ZValData_Any(const void* iSource, size_t iSize)
+ZData_Any::ZData_Any(const void* iSource, size_t iSize)
 :	fRep(new Rep)
 	{
 	const char* source = static_cast<const char*>(iSource);
 	fRep->fVector.insert(fRep->fVector.begin(), source, source + iSize);
 	}
 
-int ZValData_Any::Compare(const ZValData_Any& iOther) const
+int ZData_Any::Compare(const ZData_Any& iOther) const
 	{
 	if (fRep == iOther.fRep)
 		return 0;
@@ -99,24 +99,24 @@ int ZValData_Any::Compare(const ZValData_Any& iOther) const
 		iOther.fRep->fVector.begin(), iOther.fRep->fVector.end());
 	}
 
-bool ZValData_Any::operator<(const ZValData_Any& iOther) const
+bool ZData_Any::operator<(const ZData_Any& iOther) const
 	{
 	if (fRep == iOther.fRep)
 		return false;
 	return fRep->fVector < iOther.fRep->fVector;
 	}
 
-bool ZValData_Any::operator==(const ZValData_Any& iOther) const
+bool ZData_Any::operator==(const ZData_Any& iOther) const
 	{
 	if (fRep == iOther.fRep)
 		return false;
 	return fRep->fVector == iOther.fRep->fVector;
 	}
 
-size_t ZValData_Any::GetSize() const
+size_t ZData_Any::GetSize() const
 	{ return fRep->fVector.size(); }
 
-void ZValData_Any::SetSize(size_t iSize)
+void ZData_Any::SetSize(size_t iSize)
 	{
 	if (iSize != fRep->fVector.size())
 		{
@@ -125,16 +125,16 @@ void ZValData_Any::SetSize(size_t iSize)
 		}
 	}
 
-const void* ZValData_Any::GetData() const
+const void* ZData_Any::GetData() const
 	{ return &*fRep->fVector.begin(); }
 
-void* ZValData_Any::GetData()
+void* ZData_Any::GetData()
 	{
 	this->pTouch();
 	return &*fRep->fVector.begin();
 	}
 
-void ZValData_Any::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
+void ZData_Any::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
 	{
 	ZAssertStop(2, iCount + iOffset <= this->GetSize());
 	if (iCount == 0)
@@ -144,10 +144,10 @@ void ZValData_Any::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
 	std::copy(source, source + iCount, fRep->fVector.begin() + iOffset);
 	}
 
-void ZValData_Any::CopyFrom(const void* iSource, size_t iCount)
+void ZData_Any::CopyFrom(const void* iSource, size_t iCount)
 	{ this->CopyFrom(0, iSource, iCount); }
 
-void ZValData_Any::CopyTo(size_t iOffset, void* iDest, size_t iCount) const
+void ZData_Any::CopyTo(size_t iOffset, void* iDest, size_t iCount) const
 	{
 	ZAssertStop(2, iCount + iOffset <= this->GetSize());
 	if (iCount == 0)
@@ -156,10 +156,10 @@ void ZValData_Any::CopyTo(size_t iOffset, void* iDest, size_t iCount) const
 	std::copy(begin, begin + iCount, static_cast<char*>(iDest));
 	}
 
-void ZValData_Any::CopyTo(void* iDest, size_t iCount) const
+void ZData_Any::CopyTo(void* iDest, size_t iCount) const
 	{ this->CopyTo(0, iDest, iCount); }
 
-void ZValData_Any::pTouch()
+void ZData_Any::pTouch()
 	{
 	if (fRep->GetRefCount() == 1)
 		return;

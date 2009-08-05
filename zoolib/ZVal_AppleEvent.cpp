@@ -82,9 +82,125 @@ string sAEKeywordAsString(AEKeyword iKeyword)
 		return result;
 		}
 	}
+
+
+static ZVal_Any spAsVal_Any(const AEDesc& iDesc, const ZVal_Any& iDefault);
+
+static ZList_Any spAsList_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
+	{
+	ZList_Any theList;
+
+	long count;
+	if (noErr == ::AECountItems(&iDesc, &count))
+		{
+		for (size_t x = 0; x < count; ++x)
+			{
+			ZVal_AppleEvent result;
+			if (noErr == ::AEGetNthDesc(&iDesc, x + 1, typeWildCard, nullptr, &result.OParam()))
+				theList.Append(spAsVal_Any(result, iDefault));
+			else
+				theList.Append(iDefault);
+			}
+		}
+
+	return theList;
+	}
+
+static ZMap_Any spAsMap_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
+	{
+	ZMap_Any theMap;
+
+	long count;
+	if (noErr == ::AECountItems(&iDesc, &count))
+		{
+		for (size_t x = 0; x < count; ++x)
+			{
+			AEKeyword key;
+			ZVal_AppleEvent result;
+			if (noErr == ::AEGetNthDesc(&iDesc, x + 1, typeWildCard, &key, &result.OParam()))
+				theMap.Set(sAEKeywordAsString(key), spAsVal_Any(result, iDefault));
+			}
+		}
+
+	return theMap;
+	}
+
+#define AEGETTER(cpp_t, DescType) \
+	case DescType: \
+		{ \
+		cpp_t theVal; \
+		::AEGetDescData(&iDesc, &theVal, sizeof(theVal)); \
+		return theVal; \
+		} \
+
+static ZVal_Any spAsVal_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
+	{
+	if (typeAEList == iDesc.descriptorType)
+		return spAsList_Any(iDesc, iDefault);
+
+	if (::AECheckIsRecord(&iDesc))
+		return spAsMap_Any(iDesc, iDefault);
+
+	switch (iDesc.descriptorType)
+		{
+		AEGETTER(int16, typeSInt16)
+		AEGETTER(int32, typeSInt32)
+		AEGETTER(uint32, typeUInt32)
+		AEGETTER(int64, typeSInt64)
+		AEGETTER(float, typeIEEE32BitFloatingPoint)
+		AEGETTER(double, typeIEEE64BitFloatingPoint)
+		AEGETTER(FSRef, typeFSRef)
+		AEGETTER(FSSpec, typeFSS)
+
+		case typeTrue: return true;
+		case typeFalse: return false;
+		case typeBoolean:
+			{
+			Boolean theFlag;
+			::AEGetDescData(&iDesc, &theFlag, sizeof(theFlag));
+			return true && theFlag;
+			}
+
+		#if ZCONFIG_Has_typeUTF8Text
+		case typeUTF8Text:
+			{
+			string result;
+			const size_t theSize = ::AEGetDescDataSize(&iDesc);
+			if (theSize)
+				{
+				result.resize(theSize);
+				::AEGetDescData(&iDesc, const_cast<char*>(result.data()), theSize);
+				}
+			return result;
+			}
+		#endif
+
+		case typeChar:
+			{
+			string result;
+			const size_t theSize = ::AEGetDescDataSize(&iDesc);
+			if (theSize)
+				{
+				result.resize(theSize);
+				::AEGetDescData(&iDesc, const_cast<char*>(result.data()), theSize);
+				}
+			return result;
+			}
+
+//		AEGETTER(ZHandle_T<AliasHandle>, typeAlias)		
+		}
+
+	return iDefault;
+	}
+
+#undef AEGETTER
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVal_AppleEvent
+
+ZVal_Any ZVal_AppleEvent::AsVal_Any(const ZVal_Any& iDefault) const
+	{ return spAsVal_Any(*this, iDefault); }
 
 ZVal_AppleEvent::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(descriptorType != typeNull); }
@@ -140,10 +256,10 @@ ZVal_AppleEvent::ZVal_AppleEvent(const std::string& iVal)
 	#endif
 	}
 
-ZVal_AppleEvent::ZVal_AppleEvent(const ZValList_AppleEvent& iVal)
+ZVal_AppleEvent::ZVal_AppleEvent(const ZList_AppleEvent& iVal)
 	{ ::AEDuplicateDesc(&iVal, this); }
 
-ZVal_AppleEvent::ZVal_AppleEvent(const ZValMap_AppleEvent& iVal)
+ZVal_AppleEvent::ZVal_AppleEvent(const ZMap_AppleEvent& iVal)
 	{ ::AEDuplicateDesc(&iVal, this); }
 
 void ZVal_AppleEvent::Clear()
@@ -204,7 +320,7 @@ bool ZVal_AppleEvent::QGet_T<string>(string& oVal) const
 	}
 
 template <>
-bool ZVal_AppleEvent::QGet_T<ZValList_AppleEvent>(ZValList_AppleEvent& oVal) const
+bool ZVal_AppleEvent::QGet_T<ZList_AppleEvent>(ZList_AppleEvent& oVal) const
 	{
 	if (typeAEList == descriptorType)
 		{
@@ -215,7 +331,7 @@ bool ZVal_AppleEvent::QGet_T<ZValList_AppleEvent>(ZValList_AppleEvent& oVal) con
 	}
 
 template <>
-bool ZVal_AppleEvent::QGet_T<ZValMap_AppleEvent>(ZValMap_AppleEvent& oVal) const
+bool ZVal_AppleEvent::QGet_T<ZMap_AppleEvent>(ZMap_AppleEvent& oVal) const
 	{
 	if (::AECheckIsRecord(this))
 		{
@@ -228,7 +344,7 @@ bool ZVal_AppleEvent::QGet_T<ZValMap_AppleEvent>(ZValMap_AppleEvent& oVal) const
 template <class S>
 bool ZVal_AppleEvent::QGet_T(S& oVal) const
 	{
-	if (ZAETypeMap_T<S>::sDescType == descriptorType)
+	if (ZAELookup_CPP2Desc<S>::sDescType == descriptorType)
 		{
 		::AEGetDescData(this, &oVal, sizeof(oVal));
 		return true;
@@ -254,14 +370,14 @@ void ZVal_AppleEvent::Set_T<std::string>(const std::string& iVal)
 	}
 
 template <>
-void ZVal_AppleEvent::Set_T<ZValList_AppleEvent>(const ZValList_AppleEvent& iVal)
+void ZVal_AppleEvent::Set_T<ZList_AppleEvent>(const ZList_AppleEvent& iVal)
 	{
 	::AEDisposeDesc(this);
 	::AEDuplicateDesc(&iVal, this);
 	}
 
 template <>
-void ZVal_AppleEvent::Set_T<ZValMap_AppleEvent>(const ZValMap_AppleEvent& iVal)
+void ZVal_AppleEvent::Set_T<ZMap_AppleEvent>(const ZMap_AppleEvent& iVal)
 	{
 	::AEDisposeDesc(this);
 	::AEDuplicateDesc(&iVal, this);
@@ -291,34 +407,37 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Bool, bool)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Float, float)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Double, double)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, String, std::string)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, List, ZValList_AppleEvent)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Map, ZValMap_AppleEvent)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, List, ZList_AppleEvent)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Map, ZMap_AppleEvent)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, FSSpec, FSSpec)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, FSRef, FSRef)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValList_AppleEvent
+#pragma mark * ZList_AppleEvent
 
-ZValList_AppleEvent::operator operator_bool_type() const
+ZList_Any ZList_AppleEvent::AsList_Any(const ZVal_Any& iDefault) const
+	{ return spAsList_Any(*this, iDefault); }
+
+ZList_AppleEvent::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->Count()); }
 
-void ZValList_AppleEvent::swap(ZValList_AppleEvent& iOther)
+void ZList_AppleEvent::swap(ZList_AppleEvent& iOther)
 	{ std::swap(static_cast<AEDesc&>(*this), static_cast<AEDesc&>(iOther)); }
 
-ZValList_AppleEvent::ZValList_AppleEvent()
+ZList_AppleEvent::ZList_AppleEvent()
 	{ ::AECreateList(nullptr, 0, false, this); }
 
-ZValList_AppleEvent::ZValList_AppleEvent(const ZValList_AppleEvent& iOther)
+ZList_AppleEvent::ZList_AppleEvent(const ZList_AppleEvent& iOther)
 	{
 	ZAssert(typeAEList == iOther.descriptorType);
 	::AEDuplicateDesc(&iOther, this);
 	}
 
-ZValList_AppleEvent::~ZValList_AppleEvent()
+ZList_AppleEvent::~ZList_AppleEvent()
 	{ ::AEDisposeDesc(this); }
 
-ZValList_AppleEvent& ZValList_AppleEvent::operator=(const ZValList_AppleEvent& iOther)
+ZList_AppleEvent& ZList_AppleEvent::operator=(const ZList_AppleEvent& iOther)
 	{
 	if (this != &iOther)
 		{
@@ -329,7 +448,7 @@ ZValList_AppleEvent& ZValList_AppleEvent::operator=(const ZValList_AppleEvent& i
 	return *this;	
 	}
 
-ZValList_AppleEvent::ZValList_AppleEvent(const AEDescList& iOther)
+ZList_AppleEvent::ZList_AppleEvent(const AEDescList& iOther)
 	{
 	if (typeAEList == iOther.descriptorType)
 		::AEDuplicateDesc(&iOther, this);
@@ -337,7 +456,7 @@ ZValList_AppleEvent::ZValList_AppleEvent(const AEDescList& iOther)
 		::AECreateList(nullptr, 0, false, this);
 	}
 
-ZValList_AppleEvent& ZValList_AppleEvent::operator=(const AEDescList& iOther)
+ZList_AppleEvent& ZList_AppleEvent::operator=(const AEDescList& iOther)
 	{
 	if (this != &iOther)
 		{
@@ -348,7 +467,7 @@ ZValList_AppleEvent& ZValList_AppleEvent::operator=(const AEDescList& iOther)
 	return *this;	
 	}
 
-size_t ZValList_AppleEvent::Count() const
+size_t ZList_AppleEvent::Count() const
 	{
 	long result;
 	if (noErr == ::AECountItems(this, &result))
@@ -356,16 +475,16 @@ size_t ZValList_AppleEvent::Count() const
 	return 0;
 	}
 
-void ZValList_AppleEvent::Clear()
+void ZList_AppleEvent::Clear()
 	{
 	::AEDisposeDesc(this);
 	::AECreateList(nullptr, 0, false, this);
 	}
 
-bool ZValList_AppleEvent::ZValList_AppleEvent::QGet(size_t iIndex, ZVal_AppleEvent& oVal) const
+bool ZList_AppleEvent::ZList_AppleEvent::QGet(size_t iIndex, ZVal_AppleEvent& oVal) const
 	{ return noErr == ::AEGetNthDesc(this, iIndex + 1, typeWildCard, nullptr, &oVal.OParam()); }
 
-ZVal_AppleEvent ZValList_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, size_t iIndex) const
+ZVal_AppleEvent ZList_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, size_t iIndex) const
 	{
 	ZVal_AppleEvent result;
 	if (noErr == ::AEGetNthDesc(this, iIndex + 1, typeWildCard, nullptr, &result.OParam()))
@@ -373,7 +492,7 @@ ZVal_AppleEvent ZValList_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, size_
 	return iDefault;
 	}
 
-ZVal_AppleEvent ZValList_AppleEvent::Get(size_t iIndex) const
+ZVal_AppleEvent ZList_AppleEvent::Get(size_t iIndex) const
 	{
 	ZVal_AppleEvent result;
 	if (noErr == ::AEGetNthDesc(this, iIndex + 1, typeWildCard, nullptr, &result.OParam()))
@@ -381,13 +500,13 @@ ZVal_AppleEvent ZValList_AppleEvent::Get(size_t iIndex) const
 	return ZVal_AppleEvent();
 	}
 
-void ZValList_AppleEvent::Erase(size_t iIndex)
+void ZList_AppleEvent::Erase(size_t iIndex)
 	{ ::AEDeleteItem(this, iIndex + 1); }
 
-void ZValList_AppleEvent::Set(size_t iIndex, const AEDesc& iVal)
+void ZList_AppleEvent::Set(size_t iIndex, const AEDesc& iVal)
 	{ ::AEPutDesc(this, iIndex + 1, &iVal); }
 
-void ZValList_AppleEvent::Insert(size_t iIndex, const AEDesc& iVal)
+void ZList_AppleEvent::Insert(size_t iIndex, const AEDesc& iVal)
 	{
 	long theCount;
 	if (noErr == ::AECountItems(this, &theCount))
@@ -402,35 +521,38 @@ void ZValList_AppleEvent::Insert(size_t iIndex, const AEDesc& iVal)
 		}
 	}
 
-void ZValList_AppleEvent::Append(const AEDesc& iVal)
+void ZList_AppleEvent::Append(const AEDesc& iVal)
 	{ ::AEPutDesc(this, 0, &iVal); }
 
-void ZValList_AppleEvent::Append(const ZVal_AppleEvent& iVal)
+void ZList_AppleEvent::Append(const ZVal_AppleEvent& iVal)
 	{ ::AEPutDesc(this, 0, &iVal); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValMap_AppleEvent
+#pragma mark * ZMap_AppleEvent
 
-ZValMap_AppleEvent::operator operator_bool_type() const
+ZMap_Any ZMap_AppleEvent::AsMap_Any(const ZVal_Any& iDefault) const
+	{ return spAsMap_Any(*this, iDefault); }
+
+ZMap_AppleEvent::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->pCount()); }
 
-void ZValMap_AppleEvent::swap(ZValMap_AppleEvent& iOther)
+void ZMap_AppleEvent::swap(ZMap_AppleEvent& iOther)
 	{ std::swap(static_cast<AEDesc&>(*this), static_cast<AEDesc&>(iOther)); }
 
-ZValMap_AppleEvent::ZValMap_AppleEvent()
+ZMap_AppleEvent::ZMap_AppleEvent()
 	{ ::AECreateList(nullptr, 0, true, this); }
 
-ZValMap_AppleEvent::ZValMap_AppleEvent(const ZValMap_AppleEvent& iOther)
+ZMap_AppleEvent::ZMap_AppleEvent(const ZMap_AppleEvent& iOther)
 	{
 	ZAssert(::AECheckIsRecord(&iOther));
 	::AEDuplicateDesc(&iOther, this);
 	}
 
-ZValMap_AppleEvent::~ZValMap_AppleEvent()
+ZMap_AppleEvent::~ZMap_AppleEvent()
 	{ ::AEDisposeDesc(this); }
 
-ZValMap_AppleEvent& ZValMap_AppleEvent::operator=(const ZValMap_AppleEvent& iOther)
+ZMap_AppleEvent& ZMap_AppleEvent::operator=(const ZMap_AppleEvent& iOther)
 	{
 	if (this != &iOther)
 		{
@@ -441,27 +563,27 @@ ZValMap_AppleEvent& ZValMap_AppleEvent::operator=(const ZValMap_AppleEvent& iOth
 	return *this;	
 	}
 
-ZValMap_AppleEvent::ZValMap_AppleEvent(AEKeyword iType)
+ZMap_AppleEvent::ZMap_AppleEvent(AEKeyword iType)
 	{
 	::AECreateList(nullptr, 0, true, this);
 	descriptorType = iType;
 	}
 
-ZValMap_AppleEvent::ZValMap_AppleEvent(AEKeyword iType, const AERecord& iOther)
+ZMap_AppleEvent::ZMap_AppleEvent(AEKeyword iType, const AERecord& iOther)
 	{
 	ZAssert(::AECheckIsRecord(&iOther));
 	::AEDuplicateDesc(&iOther, this);
 	descriptorType = iType;
 	}
 
-ZValMap_AppleEvent::ZValMap_AppleEvent(AEKeyword iType, const ZValMap_AppleEvent& iOther)
+ZMap_AppleEvent::ZMap_AppleEvent(AEKeyword iType, const ZMap_AppleEvent& iOther)
 	{
 	ZAssert(::AECheckIsRecord(&iOther));
 	::AEDuplicateDesc(&iOther, this);
 	descriptorType = iType;
 	}
 
-ZValMap_AppleEvent::ZValMap_AppleEvent(const AERecord& iOther)
+ZMap_AppleEvent::ZMap_AppleEvent(const AERecord& iOther)
 	{
 	if (::AECheckIsRecord(&iOther))
 		::AEDuplicateDesc(&iOther, this);
@@ -469,7 +591,7 @@ ZValMap_AppleEvent::ZValMap_AppleEvent(const AERecord& iOther)
 		::AECreateList(nullptr, 0, true, this);
 	}
 
-ZValMap_AppleEvent& ZValMap_AppleEvent::operator=(const AERecord& iOther)
+ZMap_AppleEvent& ZMap_AppleEvent::operator=(const AERecord& iOther)
 	{
 	if (this != &iOther)
 		{
@@ -480,25 +602,25 @@ ZValMap_AppleEvent& ZValMap_AppleEvent::operator=(const AERecord& iOther)
 	return *this;	
 	}
 
-void ZValMap_AppleEvent::Clear()
+void ZMap_AppleEvent::Clear()
 	{
 	::AEDisposeDesc(this);
 	::AECreateList(nullptr, 0, true, this);
 	}
 
-bool ZValMap_AppleEvent::QGet(AEKeyword iName, ZVal_AppleEvent& oVal) const
+bool ZMap_AppleEvent::QGet(AEKeyword iName, ZVal_AppleEvent& oVal) const
 	{ return noErr ==::AEGetKeyDesc(this, iName, typeWildCard, &oVal.OParam()); }
 
-bool ZValMap_AppleEvent::QGet(const string& iName, ZVal_AppleEvent& oVal) const
+bool ZMap_AppleEvent::QGet(const string& iName, ZVal_AppleEvent& oVal) const
 	{ return noErr == ::AEGetKeyDesc(this, spAsAEKeyword(iName), typeWildCard, &oVal.OParam()); }
 
-bool ZValMap_AppleEvent::QGet(Index_t iIndex, ZVal_AppleEvent& oVal) const
+bool ZMap_AppleEvent::QGet(Index_t iIndex, ZVal_AppleEvent& oVal) const
 	{
 	return noErr == ::AEGetNthDesc(this, iIndex.GetIndex() + 1, typeWildCard,
 		nullptr, &oVal.OParam());
 	}
 
-ZVal_AppleEvent ZValMap_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, AEKeyword iName) const
+ZVal_AppleEvent ZMap_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, AEKeyword iName) const
 	{
 	ZVal_AppleEvent result;
 	if (this->QGet(iName, result))
@@ -506,7 +628,7 @@ ZVal_AppleEvent ZValMap_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, AEKeyw
 	return iDefault;
 	}
 
-ZVal_AppleEvent ZValMap_AppleEvent::DGet(
+ZVal_AppleEvent ZMap_AppleEvent::DGet(
 	const ZVal_AppleEvent& iDefault, const std::string& iName) const
 	{
 	ZVal_AppleEvent result;
@@ -515,7 +637,7 @@ ZVal_AppleEvent ZValMap_AppleEvent::DGet(
 	return iDefault;
 	}
 
-ZVal_AppleEvent ZValMap_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, Index_t iIndex) const
+ZVal_AppleEvent ZMap_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, Index_t iIndex) const
 	{
 	ZVal_AppleEvent result;
 	if (this->QGet(iIndex, result))
@@ -523,43 +645,43 @@ ZVal_AppleEvent ZValMap_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, Index_
 	return iDefault;
 	}
 
-ZVal_AppleEvent ZValMap_AppleEvent::Get(AEKeyword iName) const
+ZVal_AppleEvent ZMap_AppleEvent::Get(AEKeyword iName) const
 	{ return this->DGet(ZVal_AppleEvent(), iName); }
 	
-ZVal_AppleEvent ZValMap_AppleEvent::Get(const std::string& iName) const
+ZVal_AppleEvent ZMap_AppleEvent::Get(const std::string& iName) const
 	{ return this->DGet(ZVal_AppleEvent(), iName); }
 
-ZVal_AppleEvent ZValMap_AppleEvent::Get(Index_t iIndex) const
+ZVal_AppleEvent ZMap_AppleEvent::Get(Index_t iIndex) const
 	{ return this->DGet(ZVal_AppleEvent(), iIndex); }
 
-void ZValMap_AppleEvent::Set(AEKeyword iName, const AEDesc& iVal)
+void ZMap_AppleEvent::Set(AEKeyword iName, const AEDesc& iVal)
 	{ ::AEPutKeyDesc(this, iName, &iVal); }
 
-void ZValMap_AppleEvent::Set(const string& iName, const AEDesc& iVal)
+void ZMap_AppleEvent::Set(const string& iName, const AEDesc& iVal)
 	{ ::AEPutKeyDesc(this, spAsAEKeyword(iName), &iVal); }
 
-void ZValMap_AppleEvent::Set(Index_t iIndex, const AEDesc& iVal)
+void ZMap_AppleEvent::Set(Index_t iIndex, const AEDesc& iVal)
 	{ ::AEPutDesc(this, iIndex.GetIndex() + 1, &iVal); }
 
-void ZValMap_AppleEvent::Erase(AEKeyword iName)
+void ZMap_AppleEvent::Erase(AEKeyword iName)
 	{ ::AEDeleteKeyDesc(this, iName); }
 
-void ZValMap_AppleEvent::Erase(const string& iName)
+void ZMap_AppleEvent::Erase(const string& iName)
 	{ ::AEDeleteKeyDesc(this, spAsAEKeyword(iName)); }
 
-void ZValMap_AppleEvent::Erase(Index_t iIndex)
+void ZMap_AppleEvent::Erase(Index_t iIndex)
 	{  ::AEDeleteItem(this, iIndex.GetIndex() + 1); }
 
-AEDesc& ZValMap_AppleEvent::OParam()
+AEDesc& ZMap_AppleEvent::OParam()
 	{
 	::AEDisposeDesc(this);
 	return *this;
 	}
 
-bool ZValMap_AppleEvent::QGetAttr(AEKeyword iName, ZVal_AppleEvent& oVal) const
+bool ZMap_AppleEvent::QGetAttr(AEKeyword iName, ZVal_AppleEvent& oVal) const
 	{ return noErr == ::AEGetAttributeDesc(this, iName, typeWildCard, &oVal.OParam()); }
 
-ZVal_AppleEvent ZValMap_AppleEvent::DGetAttr(const ZVal_AppleEvent& iDefault, AEKeyword iName) const
+ZVal_AppleEvent ZMap_AppleEvent::DGetAttr(const ZVal_AppleEvent& iDefault, AEKeyword iName) const
 	{
 	ZVal_AppleEvent theVal;
 	if (this->QGetAttr(iName, theVal))
@@ -567,22 +689,22 @@ ZVal_AppleEvent ZValMap_AppleEvent::DGetAttr(const ZVal_AppleEvent& iDefault, AE
 	return iDefault;
 	}
 
-ZVal_AppleEvent ZValMap_AppleEvent::GetAttr(AEKeyword iName) const
+ZVal_AppleEvent ZMap_AppleEvent::GetAttr(AEKeyword iName) const
 	{ return this->DGetAttr(ZVal_AppleEvent(), iName); }
 
-void ZValMap_AppleEvent::SetAttr(AEKeyword iName, const AEDesc& iVal)
+void ZMap_AppleEvent::SetAttr(AEKeyword iName, const AEDesc& iVal)
 	{ ::AEPutAttributeDesc(this, iName, &iVal); }
 
-AEKeyword ZValMap_AppleEvent::GetType() const
+AEKeyword ZMap_AppleEvent::GetType() const
 	{ return descriptorType; }
 
-ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::Begin() const
+ZMap_AppleEvent::Index_t ZMap_AppleEvent::Begin() const
 	{ return Index_t(0); }
 
-ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::End() const
+ZMap_AppleEvent::Index_t ZMap_AppleEvent::End() const
 	{ return Index_t(this->pCount()); }
 
-AEKeyword ZValMap_AppleEvent::KeyOf(Index_t iIndex) const
+AEKeyword ZMap_AppleEvent::KeyOf(Index_t iIndex) const
 	{
 	AEKeyword theKey;
 	if (noErr == ::AEGetNthPtr(this, iIndex.GetIndex() + 1, typeWildCard, &theKey,
@@ -593,7 +715,7 @@ AEKeyword ZValMap_AppleEvent::KeyOf(Index_t iIndex) const
 	return 0;
 	}
 
-string ZValMap_AppleEvent::NameOf(Index_t iIndex) const
+string ZMap_AppleEvent::NameOf(Index_t iIndex) const
 	{
 	AEKeyword theKey;
 	if (noErr == ::AEGetNthPtr(this, iIndex.GetIndex() + 1, typeWildCard, &theKey,
@@ -604,7 +726,7 @@ string ZValMap_AppleEvent::NameOf(Index_t iIndex) const
 	return string();
 	}
 
-ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::IndexOf(AEKeyword iName) const
+ZMap_AppleEvent::Index_t ZMap_AppleEvent::IndexOf(AEKeyword iName) const
 	{
 	for (size_t x = 0, count = this->pCount(); x < count; ++x)
 		{
@@ -614,11 +736,11 @@ ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::IndexOf(AEKeyword iName) const
 	return Index_t(this->pCount());
 	}
 
-ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::IndexOf(const std::string& iName) const
+ZMap_AppleEvent::Index_t ZMap_AppleEvent::IndexOf(const std::string& iName) const
 	{ return this->IndexOf(spAsAEKeyword(iName)); }
 
-ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::IndexOf(
-	const ZValMap_AppleEvent& iOther, const Index_t& iOtherIndex) const
+ZMap_AppleEvent::Index_t ZMap_AppleEvent::IndexOf(
+	const ZMap_AppleEvent& iOther, const Index_t& iOtherIndex) const
 	{
 	if (this == &iOther)
 		return iOtherIndex;
@@ -630,7 +752,7 @@ ZValMap_AppleEvent::Index_t ZValMap_AppleEvent::IndexOf(
 	return this->IndexOf(theKey);
 	}
 
-size_t ZValMap_AppleEvent::pCount() const
+size_t ZMap_AppleEvent::pCount() const
 	{
 	long theCount;
 	if (noErr == ::AECountItems(this, &theCount))
@@ -638,7 +760,7 @@ size_t ZValMap_AppleEvent::pCount() const
 	return 0;
 	}
 
-AEKeyword ZValMap_AppleEvent::pKeyOf(size_t iIndex) const
+AEKeyword ZMap_AppleEvent::pKeyOf(size_t iIndex) const
 	{
 	AEKeyword theKey;
 	if (noErr == ::AEGetNthPtr(this, iIndex + 1, typeWildCard, &theKey,

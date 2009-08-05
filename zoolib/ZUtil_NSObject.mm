@@ -172,7 +172,7 @@ id ZUtil_NSObject::sCreateNSObject(const ZTValue& iTV)
 			}
 		case eZType_Raw:
 			{
-			const ZValData_ZooLib theData = iTV.GetData();
+			const ZData_ZooLib theData = iTV.GetData();
 			return [[NSData alloc] initWithBytes:theData.GetData() length:theData.GetSize()];
 			}
 		case eZType_Bool:

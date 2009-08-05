@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZValMap_ZooLib;
+class ZMap_ZooLib;
 
 // =================================================================================================
 #pragma mark -
