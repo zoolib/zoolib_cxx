@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/netscape/ZNetscape_Host.h"
 #include "zoolib/ZSafeSet.h"
 #include "zoolib/ZStreamer.h"
-#include "zoolib/ZValData_Any.h"
+#include "zoolib/ZData_Any.h"
 
 #include <set>
 
@@ -215,7 +215,7 @@ public:
 
 	void SendDataAsync(
 		void* iNotifyData,
-		const std::string& iURL, const std::string& iMIME, const ZValData_Any& iHeaders,
+		const std::string& iURL, const std::string& iMIME, const ZData_Any& iHeaders,
 		ZRef<ZStreamerR> iStreamerR);
 
 	void SendDataSync(
@@ -239,7 +239,7 @@ private:
 	friend class HTTPFetcher;
 
 	void pHTTPFetcher(ZRef<HTTPFetcher> iHTTPFetcher, void* iNotifyData,
-		const std::string& iURL, const std::string& iMIME, const ZValData_Any& iHeaders,
+		const std::string& iURL, const std::string& iMIME, const ZData_Any& iHeaders,
 		ZRef<ZStreamerR> iStreamerR);
 	
 	ZSafeSet<ZRef<HTTPFetcher> > fHTTPFetchers;
