@@ -54,13 +54,11 @@ string16 sAsUTF16(CFStringRef iCFString);
 
 ZRef<CFDictionaryRef> sDictionary();
 
-
 ZRef<CFMutableDictionaryRef> sDictionaryMutable();
 ZRef<CFMutableDictionaryRef> sDictionaryMutable(const ZRef<CFDictionaryRef>& iCFDictionary);
 
 
 ZRef<CFArrayRef> sArray();
-
 
 ZRef<CFMutableArrayRef> sArrayMutable();
 ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray);
