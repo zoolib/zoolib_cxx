@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/netscape/ZNetscape_Host.h"
+#include "zoolib/netscape/ZNetscape_ObjectPriv.h"
 #include "zoolib/netscape/ZNetscape_VariantPriv.h"
 
 #include "zoolib/ZDebug.h"
@@ -64,9 +65,16 @@ template <>
 void* sMalloc_T(NPVariantH&, size_t iLength)
 	{ return HostMeister::sGet()->MemAlloc(iLength); }
 
+template <>
+void sFree_T<NPVariantH>(void* iPtr)
+	{ return HostMeister::sGet()->MemFree(iPtr); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * NPObjectH
+
+// Explicitly instantiate NPObjectH
+template class NPObject_T<NPVariantH>;
 
 void sRetain(NPObjectH& iOb)
 	{ iOb.Retain(); }
@@ -79,8 +87,6 @@ static NPP fake = nullptr;
 NPObjectH::NPObjectH()
 	{}
 
-NPObjectH::~NPObjectH()
-	{}
 bool NPObjectH::sIsString(NPIdentifier iNPI)
 	{ return HostMeister::sGet()->IdentifierIsString(iNPI); }
 
@@ -145,128 +151,8 @@ bool NPObjectH::RemoveProperty(const string& iName)
 bool NPObjectH::RemoveProperty(size_t iIndex)
 	{ return HostMeister::sGet()->RemoveProperty(fake, this, sAsNPI(iIndex)); }
 
-NPVariantH NPObjectH::Invoke(const string& iName, const NPVariantH* iArgs, size_t iCount)
-	{
-	NPVariantH result;
-	this->Invoke(iName, iArgs, iCount, result);
-	return result;
-	}
-
-NPVariantH NPObjectH::Invoke(const string& iName)
-	{
-	NPVariantH result;
-	this->Invoke(iName, nullptr, 0, result);
-	return result;
-	}
-
-NPVariantH NPObjectH::Invoke(const string& iName,
-	const NPVariantH& iP0)
-	{ return this->Invoke(iName, &iP0, 1); }
-
-NPVariantH NPObjectH::Invoke(const string& iName,
-	const NPVariantH& iP0,
-	const NPVariantH& iP1)
-	{
-	NPVariantH arr[] = { iP0, iP1};
-	return this->Invoke(iName, arr, countof(arr));
-	}
-
-NPVariantH NPObjectH::Invoke(const string& iName,
-	const NPVariantH& iP0,
-	const NPVariantH& iP1,
-	const NPVariantH& iP2)
-	{
-	NPVariantH arr[] = { iP0, iP1, iP2 };
-	return this->Invoke(iName, arr, countof(arr));
-	}
-
-NPVariantH NPObjectH::InvokeDefault(const NPVariantH* iArgs, size_t iCount)
-	{
-	NPVariantH result;
-	this->InvokeDefault(iArgs, iCount, result);
-	return result;
-	}
-
-NPVariantH NPObjectH::InvokeDefault()
-	{ return this->InvokeDefault(nullptr, 0); }
-
-NPVariantH NPObjectH::InvokeDefault(
-	const NPVariantH& iP0)
-	{ return this->InvokeDefault(&iP0, 1); }
-
-NPVariantH NPObjectH::InvokeDefault(
-	const NPVariantH& iP0,
-	const NPVariantH& iP1)
-	{
-	NPVariantH arr[] = { iP0, iP1 };
-	return this->InvokeDefault(arr, countof(arr));
-	}
-
-NPVariantH NPObjectH::InvokeDefault(
-	const NPVariantH& iP0,
-	const NPVariantH& iP1,
-	const NPVariantH& iP2)
-	{
-	NPVariantH arr[] = { iP0, iP1, iP2 };
-	return this->InvokeDefault(arr, countof(arr));
-	}
-
 bool NPObjectH::Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount)
 	{ return HostMeister::sGet()->Enumerate(fake, this, &oIdentifiers, &oCount); }
-
-bool NPObjectH::Enumerate(std::vector<NPIdentifier>& oIdentifiers)
-	{
-	oIdentifiers.clear();
-	NPIdentifier* theIDs = nullptr;
-	uint32_t theCount;
-	if (!this->Enumerate(theIDs, theCount))
-		return false;
-
-	oIdentifiers.insert(oIdentifiers.end(), theIDs, theIDs + theCount);
-	HostMeister::sGet()->MemFree(theIDs);
-
-	return true;
-	}
-
-bool NPObjectH::QGet(const std::string& iName, NPVariantH& oVal)
-	{ return this->GetProperty(iName, oVal); }
-
-bool NPObjectH::QGet(size_t iIndex, NPVariantH& oVal)
-	{ return this->GetProperty(iIndex, oVal); }
-
-NPVariantH NPObjectH::DGet(const std::string& iName, const NPVariantH& iDefault)
-	{
-	NPVariantH result;
-	if (this->GetProperty(iName, result))
-		return result;
-	return iDefault;
-	}
-
-NPVariantH NPObjectH::DGet(size_t iIndex, const NPVariantH& iDefault)
-	{
-	NPVariantH result;
-	if (this->GetProperty(iIndex, result))
-		return result;
-	return iDefault;
-	}
-
-NPVariantH NPObjectH::Get(const std::string& iName)
-	{ return this->DGet(iName, NPVariantH()); }
-
-NPVariantH NPObjectH::Get(size_t iIndex)
-	{ return this->DGet(iIndex, NPVariantH()); }
-
-bool NPObjectH::Set(const string& iName, const NPVariantH& iValue)
-	{ return this->SetProperty(iName, iValue); }
-
-bool NPObjectH::Set(size_t iIndex, const NPVariantH& iValue)
-	{ return this->SetProperty(iIndex, iValue); }
-
-bool NPObjectH::Erase(const string& iName)
-	{ return this->RemoveProperty(iName); }
-
-bool NPObjectH::Erase(size_t iIndex)
-	{ return this->RemoveProperty(iIndex); }
 
 // =================================================================================================
 #pragma mark -

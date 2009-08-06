@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/netscape/ZNetscape.h"
+#include "zoolib/netscape/ZNetscape_Object.h"
 #include "zoolib/netscape/ZNetscape_Variant.h"
 
 #include "zoolib/ZDebug.h" // For ZAssert
@@ -49,11 +50,14 @@ typedef NPVariant_T<NPObjectH> NPVariantH;
 #pragma mark -
 #pragma mark * NPObjectH
 
-class NPObjectH : public NPObject
+void sRetain(NPObjectH& iOb);
+void sRelease(NPObjectH& iOb);
+
+class NPObjectH
+:	public NPObject_T<NPVariantH>
 	{
 protected:
 	NPObjectH();
-	~NPObjectH();
 
 public:
 	static bool sIsString(NPIdentifier iNPI);
@@ -67,8 +71,12 @@ public:
 	void Release();
 
 	bool HasMethod(const string& iName);
+
+	using Base_t::Invoke;
 	bool Invoke(
 		const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
+
+	using Base_t::InvokeDefault;
 	bool InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
 
 	bool HasProperty(const string& iName);
@@ -83,88 +91,7 @@ public:
 	bool RemoveProperty(const string& iName);
 	bool RemoveProperty(size_t iIndex);
 
-	NPVariantH Invoke(const string& iName,
-		const NPVariantH* iArgs, size_t iCount);
-
-	NPVariantH Invoke(const string& iName);
-
-	NPVariantH Invoke(const string& iName,
-		const NPVariantH& iP0);
-
-	NPVariantH Invoke(const string& iName,
-		const NPVariantH& iP0,
-		const NPVariantH& iP1);
-
-	NPVariantH Invoke(const string& iName,
-		const NPVariantH& iP0,
-		const NPVariantH& iP1,
-		const NPVariantH& iP2);
-
-	NPVariantH InvokeDefault(const NPVariantH* iArgs, size_t iCount);
-
-	NPVariantH InvokeDefault();
-
-	NPVariantH InvokeDefault(
-		const NPVariantH& iP0);
-
-	NPVariantH InvokeDefault(
-		const NPVariantH& iP0,
-		const NPVariantH& iP1);
-
-	NPVariantH InvokeDefault(
-		const NPVariantH& iP0,
-		const NPVariantH& iP1,
-		const NPVariantH& iP2);
-
 	bool Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount);
-	bool Enumerate(std::vector<NPIdentifier>& oIdentifiers);
-
-// ZMap protocol (ish)
-	bool QGet(const std::string& iName, NPVariantH& oVal);
-	bool QGet(size_t iIndex, NPVariantH& oVal);
-
-	NPVariantH DGet(const std::string& iName, const NPVariantH& iDefault);
-	NPVariantH DGet(size_t iIndex, const NPVariantH& iDefault);
-
-	NPVariantH Get(const string& iName);
-	NPVariantH Get(size_t iIndex);
-
-	bool Set(const string& iName, const NPVariantH& iValue);
-	bool Set(size_t iIndex, const NPVariantH& iValue);
-
-	bool Erase(const string& iName);
-	bool Erase(size_t iIndex);
-	};
-
-void sRetain(NPObjectH& iOb);
-void sRelease(NPObjectH& iOb);
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * MapH
-
-// Sketch of API -- value semantics is an issue.
-
-typedef NPVariantH ValH;
-
-class MapH
-:	public ZRef<NPObjectH>
-	{
-public:
-	MapH();
-	MapH(const MapH& iOther);
-	~MapH();
-	MapH& operator=(const MapH& iOther);
-
-	MapH(const ZRef<NPObjectH>& iOther);
-	MapH& operator=(const ZRef<NPObjectH>& iOther);
-
-// Map protocol
-	bool QGet(const string& iName, ValH& oVal) const;
-	ValH DGet(const ValH& iDefault, const string& iName) const;
-	ValH Get(const string& iName) const;
-	void Set(const string& iName, const ValH& iVal);
-	void Erase(const string& iName);
 	};
 
 // =================================================================================================
@@ -176,6 +103,7 @@ class ObjectH : public NPObjectH
 protected:
 	ObjectH();
 	virtual ~ObjectH();
+
 	virtual void Imp_Invalidate();
 	virtual bool Imp_HasMethod(const string& iName);
 
@@ -183,7 +111,6 @@ protected:
 		const string& iName, const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
 
 	virtual bool Imp_InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
-
 	virtual bool Imp_HasProperty(const string& iName);
 	virtual bool Imp_HasProperty(int32_t iInt);
 	virtual bool Imp_GetProperty(const string& iName, NPVariantH& oResult);

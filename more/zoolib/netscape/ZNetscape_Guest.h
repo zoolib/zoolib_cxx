@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/netscape/ZNetscape.h"
+#include "zoolib/netscape/ZNetscape_Object.h"
 #include "zoolib/netscape/ZNetscape_Variant.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZVal.h"
@@ -63,11 +64,14 @@ typedef NPVariant_T<NPObjectG> NPVariantG;
 #pragma mark -
 #pragma mark * NPObjectG
 
-class NPObjectG : public NPObject
+void sRetain(NPObjectG& iOb);
+void sRelease(NPObjectG& iOb);
+
+class NPObjectG
+:	public NPObject_T<NPVariantG>
 	{
 protected:
 	NPObjectG();
-	~NPObjectG();
 
 public:
 	static bool sIsString(NPIdentifier iNPI);
@@ -81,8 +85,12 @@ public:
 	void Release();
 
 	bool HasMethod(const std::string& iName);
+
+	using Base_t::Invoke;
 	bool Invoke(
 		const std::string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult);
+
+	using Base_t::InvokeDefault;
 	bool InvokeDefault(const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult);
 
 	bool HasProperty(const std::string& iName);
@@ -97,61 +105,8 @@ public:
 	bool RemoveProperty(const std::string& iName);
 	bool RemoveProperty(size_t iIndex);
 
-	NPVariantG Invoke(const std::string& iName,
-		const NPVariantG* iArgs, size_t iCount);
-
-	NPVariantG Invoke(const std::string& iName);
-
-	NPVariantG Invoke(const std::string& iName,
-		const NPVariantG& iP0);
-
-	NPVariantG Invoke(const std::string& iName,
-		const NPVariantG& iP0,
-		const NPVariantG& iP1);
-
-	NPVariantG Invoke(const std::string& iName,
-		const NPVariantG& iP0,
-		const NPVariantG& iP1,
-		const NPVariantG& iP2);
-
-	NPVariantG InvokeDefault(const NPVariantG* iArgs, size_t iCount);
-
-	NPVariantG InvokeDefault();
-
-	NPVariantG InvokeDefault(
-		const NPVariantG& iP0);
-
-	NPVariantG InvokeDefault(
-		const NPVariantG& iP0,
-		const NPVariantG& iP1);
-
-	NPVariantG InvokeDefault(
-		const NPVariantG& iP0,
-		const NPVariantG& iP1,
-		const NPVariantG& iP2);
-
 	bool Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount);
-	bool Enumerate(std::vector<NPIdentifier>& oIdentifiers);
-
-// ZMap protocol (ish)
-	bool QGet(const std::string& iName, NPVariantG& oVal);
-	bool QGet(size_t iIndex, NPVariantG& oVal);
-
-	NPVariantG DGet(const std::string& iName, const NPVariantG& iDefault);
-	NPVariantG DGet(size_t iIndex, const NPVariantG& iDefault);
-
-	NPVariantG Get(const std::string& iName);
-	NPVariantG Get(size_t iIndex);
-
-	bool Set(const std::string& iName, const NPVariantG& iValue);
-	bool Set(size_t iIndex, const NPVariantG& iValue);
-
-	bool Erase(const string& iName);
-	bool Erase(size_t iIndex);
 	};
-
-void sRetain(NPObjectG& iOb);
-void sRelease(NPObjectG& iOb);
 
 // =================================================================================================
 #pragma mark -
@@ -167,6 +122,7 @@ protected:
 
 	ObjectG();
 	virtual ~ObjectG();
+
 	virtual void Imp_Invalidate();
 	virtual bool Imp_HasMethod(const std::string& iName);
 
@@ -174,7 +130,6 @@ protected:
 		const std::string& iName, const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult);
 
 	virtual bool Imp_InvokeDefault(const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult);
-
 	virtual bool Imp_HasProperty(const std::string& iName);
 	virtual bool Imp_HasProperty(int32_t iInt);
 	virtual bool Imp_GetProperty(const std::string& iName, NPVariantG& oResult);

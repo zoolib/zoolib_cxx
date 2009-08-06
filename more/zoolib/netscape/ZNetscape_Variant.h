@@ -71,6 +71,9 @@ template <class T>
 void* sMalloc_T(T&, size_t);
 
 template <class T>
+void sFree_T(void*);
+
+template <class T>
 class NPVariant_T
 :	public NPVariantBase
 	{
