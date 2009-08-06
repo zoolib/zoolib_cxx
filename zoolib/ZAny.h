@@ -84,10 +84,10 @@ public:
 		}
 
 	ZAny& swap(ZAny& rhs);
-	
+
 	bool empty() const;
 	const std::type_info & type() const;
-	
+
 private:
 	class placeholder
 		{
@@ -97,52 +97,53 @@ private:
 		virtual const std::type_info& type() const = 0;
 		virtual placeholder* clone() const = 0;
 		};
-	
+
 	template<typename ValueType>
 	class holder : public placeholder
 		{
-	public:			
+	public:
 		holder(const ValueType& value) : held(value) {}
-		
+
 		virtual const std::type_info& type() const
 			{ return typeid(ValueType); }
-		
+
 		virtual placeholder* clone() const
 			{ return new holder(held); }
-		
+
 		ValueType held;
-		
+
 	private: // intentionally left unimplemented
 		holder& operator=(const holder&);
 		};
-	
-#ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-private: // representation
+
+#ifdef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
+    public: // so ZAnyCast can be non-friend
+#else
+private:
 	template<typename ValueType>
 	friend ValueType* ZAnyCast(ZAny*);
 
 	template<typename ValueType>
 	friend const ValueType* ZAnyCast(const ZAny*);
-#else
-    public: // representation (public so any_cast can be non-friend)
-#endif	
-	placeholder* content;	
+#endif
+
+	placeholder* content;
 	};
 
 template<typename ValueType>
 ValueType* ZAnyCast(ZAny* operand)
 	{
-	return operand && operand->type() == typeid(ValueType)
-		? &static_cast<ZAny::holder<ValueType>*>(operand->content)->held
-		: 0;
+	if (!operand || operand->type() != typeid(ValueType))
+		return 0;
+	return &static_cast<ZAny::holder<ValueType>*>(operand->content)->held;
 	}
 
 template<typename ValueType>
 const ValueType* ZAnyCast(const ZAny* operand)
 	{
-	return operand && operand->type() == typeid(ValueType)
-		? &static_cast<ZAny::holder<ValueType>*>(operand->content)->held
-		: 0;
+	if (!operand || operand->type() != typeid(ValueType))
+		return 0;
+	return &static_cast<ZAny::holder<ValueType>*>(operand->content)->held;
 	}
 
 NAMESPACE_ZOOLIB_END

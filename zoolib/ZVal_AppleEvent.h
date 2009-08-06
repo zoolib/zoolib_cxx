@@ -56,6 +56,7 @@ class ZVal_AppleEvent
 		operator_bool_generator_type, operator_bool_type);
 
 public:
+	ZVal_Any AsVal_Any() const;
 	ZVal_Any AsVal_Any(const ZVal_Any& iDefault) const;
 
 	operator operator_bool_type() const;
@@ -126,10 +127,11 @@ public:
 class ZList_AppleEvent
 :	public AEDescList
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZMap_AppleEvent,
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZList_AppleEvent,
 		operator_bool_generator_type, operator_bool_type);
 
 public:
+	ZList_Any AsList_Any() const;
 	ZList_Any AsList_Any(const ZVal_Any& iDefault) const;
 
 	operator operator_bool_type() const;
@@ -176,6 +178,7 @@ class ZMap_AppleEvent
 public:
 	typedef ZMapIndex_T<ZMap_AppleEvent> Index_t;
 
+	ZMap_Any AsMap_Any() const;
 	ZMap_Any AsMap_Any(const ZVal_Any& iDefault) const;
 
 	operator operator_bool_type() const;

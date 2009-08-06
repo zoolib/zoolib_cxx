@@ -32,13 +32,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZYadR_ZooLib
 
-class ZYadR_ZooLib
-:	public ZYadR_Val_T<ZVal_ZooLib>
-	{
-public:
-	ZYadR_ZooLib();
-	ZYadR_ZooLib(const ZVal_ZooLib& iVal);
-	};
+typedef ZYadR_Val_T<ZVal_ZooLib> ZYadR_ZooLib;
 
 // =================================================================================================
 #pragma mark -

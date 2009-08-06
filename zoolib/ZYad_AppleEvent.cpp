@@ -62,7 +62,7 @@ ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal)
 		
 	string8 asString;
 	if (iVal.QGetString(asString))
-		return new ZYadStrimU_String(asString);
+		return sMakeYadR(asString);
 
 //	if (iVal.QGetData(asData))
 //		return new ZYadStreamRPos_AppleEvent(asData);

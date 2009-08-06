@@ -26,6 +26,9 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZVal_Any
 
+ZVal_Any ZVal_Any::AsVal_Any()
+	{ return *this; }
+
 ZVal_Any ZVal_Any::AsVal_Any(const ZVal_Any& iDefault)
 	{ return *this; }
 
@@ -36,7 +39,7 @@ ZVal_Any::ZVal_Any()
 	{}
 
 ZVal_Any::ZVal_Any(const ZVal_Any& iOther)
-:	inherited(iOther)
+:	inherited(static_cast<const ZAny&>(iOther))
 	{}
 
 ZVal_Any::~ZVal_Any()
@@ -44,7 +47,7 @@ ZVal_Any::~ZVal_Any()
 
 ZVal_Any& ZVal_Any::operator=(const ZVal_Any& iOther)
 	{
-	inherited::operator=(iOther);
+	inherited::operator=(static_cast<const ZAny&>(iOther));
 	return *this;
 	}
 
@@ -73,26 +76,22 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Map, ZMap_Any)
 #pragma mark -
 #pragma mark * ZList_Any::Rep
 
-class ZList_Any::Rep
-:	public ZRefCounted
-	{
-public:
-	Rep() {}
+ZList_Any::Rep::Rep()
+	{}
 
-	virtual ~Rep() {}
+ZList_Any::Rep::~Rep()
+	{}
 	
-	Rep(const vector<ZAny>& iVector)
-	:	fVector(iVector)
-		{}
-
-private:
-	vector<ZAny> fVector;
-	friend class ZList_Any;
-	};
+ZList_Any::Rep::Rep(const vector<ZAny>& iVector)
+:	fVector(iVector)
+	{}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZList_Any
+
+ZList_Any ZList_Any::AsList_Any()
+	{ return *this; }
 
 ZList_Any ZList_Any::AsList_Any(const ZVal_Any& iDefault)
 	{ return *this; }
@@ -162,6 +161,16 @@ ZVal_Any ZList_Any::Get(size_t iIndex) const
 	return ZVal_Any();
 	}
 
+ZVal_Any* ZList_Any::PGet(size_t iIndex)
+	{
+	if (fRep && iIndex < fRep->fVector.size())
+		{
+		this->pTouch();
+		return static_cast<ZVal_Any*>(&fRep->fVector[iIndex]);
+		}
+	return nullptr;
+	}
+
 void ZList_Any::Set(size_t iIndex, const ZVal_Any& iVal)
 	{
 	if (fRep && iIndex < fRep->fVector.size())
@@ -224,6 +233,9 @@ ZMap_Any::Rep::Rep(const map<string, ZAny>& iMap)
 #pragma mark * ZMap_Any
 
 static map<string, ZAny> spEmptyMap;
+
+ZMap_Any ZMap_Any::AsMap_Any()
+	{ return *this; }
 
 ZMap_Any ZMap_Any::AsMap_Any(const ZVal_Any& iDefault)
 	{ return *this; }
@@ -318,6 +330,26 @@ ZVal_Any ZMap_Any::Get(const Index_t& iIndex) const
 	if (fRep && iIndex != fRep->fMap.end())
 		return (*iIndex).second;
 	return ZVal_Any();
+	}
+
+ZVal_Any* ZMap_Any::PGet(const string8& iName)
+	{
+	if (fRep)
+		{
+		this->pTouch();
+		Index_t theIndex = fRep->fMap.find(iName);
+		if (theIndex != fRep->fMap.end())
+			return static_cast<ZVal_Any*>(&(*theIndex).second);
+		}
+	return nullptr;
+	}
+
+ZVal_Any* ZMap_Any::PGet(const Index_t& iIndex)
+	{
+	map<string, ZAny>::iterator theIndex = this->pTouch(iIndex);
+	if (theIndex != this->End())
+		return static_cast<ZVal_Any*>(&(*theIndex).second);
+	return nullptr;
 	}
 
 void ZMap_Any::Set(const string8& iName, const ZVal_Any& iVal)

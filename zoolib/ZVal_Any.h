@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
+#include "zoolib/ZAny.h"
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZRef.h"
@@ -58,6 +59,7 @@ class ZVal_Any
 	typedef ZAny inherited;
 
 public:
+	ZVal_Any AsVal_Any();
 	ZVal_Any AsVal_Any(const ZVal_Any& iDefault);
 
 	operator operator_bool_type() const;
@@ -114,10 +116,23 @@ public:
 		}
 
 	template <class S>
+	S* PGet_T()
+		{ return ZAnyCast<S>(this); }
+
+	template <class S>
+	const S* PGet_T() const
+		{ return ZAnyCast<S>(this); }
+
+	template <class S>
 	void Set_T(const S& iVal)
 		{
 		ZAny::operator=(iVal);
 		}
+
+// Our protocol
+	template <class S>
+	bool Is_T() const
+		{ return ZAnyCast<S>(this); }
 
 // Typename accessors
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Data, ZData_Any)
@@ -131,12 +146,13 @@ public:
 
 class ZList_Any
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZMap_Any,
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZList_Any,
 		operator_bool_generator_type, operator_bool_type);
 
 	class Rep;
 
 public:
+	ZList_Any AsList_Any();
 	ZList_Any AsList_Any(const ZVal_Any& iDefault);
 
 	operator operator_bool_type() const;
@@ -150,6 +166,9 @@ public:
 
 	ZList_Any& operator=(vector<ZAny>& iOther);
 
+	template <class Iterator>
+	ZList_Any(Iterator begin, Iterator end);
+
 // ZList protocol
 	size_t Count() const;
 
@@ -158,6 +177,7 @@ public:
 	bool QGet(size_t iIndex, ZVal_Any& oVal) const;
 	ZVal_Any DGet(const ZVal_Any& iDefault, size_t iIndex) const;
 	ZVal_Any Get(size_t iIndex) const;
+	ZVal_Any* PGet(size_t iIndex);
 
 	void Set(size_t iIndex, const ZVal_Any& iVal);
 
@@ -175,6 +195,37 @@ private:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZList_Any::Rep
+
+class ZList_Any::Rep
+:	public ZRefCounted
+	{
+private:
+	Rep();
+	virtual ~Rep();
+	
+	Rep(const vector<ZAny>& iVector);
+
+	template <class Iterator>
+	Rep(Iterator begin, Iterator end)
+	:	fVector(begin, end)
+		{}
+
+	vector<ZAny> fVector;
+	friend class ZList_Any;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZList_Any, inline templated constructor
+
+template <class Iterator>
+ZList_Any::ZList_Any(Iterator begin, Iterator end)
+:	fRep(new Rep(begin, end))
+	{}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZMap_Any
 
 class ZMap_Any
@@ -187,6 +238,7 @@ class ZMap_Any
 public:
 	typedef map<string, ZAny>::iterator Index_t;
 
+	ZMap_Any AsMap_Any();
 	ZMap_Any AsMap_Any(const ZVal_Any& iDefault);
 
 	operator operator_bool_type() const;
@@ -199,11 +251,11 @@ public:
 	ZMap_Any(const map<string, ZAny>& iOther);
 	ZMap_Any& operator=(map<string, ZAny>& iOther);
 
-	template <class T>
-	ZMap_Any(const vector<pair<string, T> >& iOther);
+	template <class Container>
+	ZMap_Any(const Container& iContainer);
 
-	template <class T>
-	ZMap_Any(const map<string, T>& iOther);
+	template <class Iterator>
+	ZMap_Any(Iterator begin, Iterator end);
 
 // ZMap protocol
 	void Clear();
@@ -216,6 +268,9 @@ public:
 
 	ZVal_Any Get(const string8& iName) const;
 	ZVal_Any Get(const Index_t& iIndex) const;
+
+	ZVal_Any* PGet(const string8& iName);
+	ZVal_Any* PGet(const Index_t& iIndex);
 
 	void Set(const string8& iName, const ZVal_Any& iVal);
 	void Set(const Index_t& iIndex, const ZVal_Any& iVal);
@@ -246,7 +301,7 @@ private:
 class ZMap_Any::Rep
 :	public ZRefCounted
 	{
-public:
+private:
 	Rep();
 	virtual ~Rep();
 	
@@ -257,23 +312,22 @@ public:
 	:	fMap(begin, end)
 		{}
 
-private:
 	map<string, ZAny> fMap;
 	friend class ZMap_Any;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZMap_Any, inline templated constructors
+#pragma mark * ZMap_Any, inline templated constructor
 
-template <class T>
-ZMap_Any::ZMap_Any(const vector<pair<string, T> >& iOther)
-:	fRep(new Rep(iOther.begin(), iOther.end()))
+template <class Container>
+ZMap_Any::ZMap_Any(const Container& iContainer)
+:	fRep(new Rep(iContainer.begin(), iContainer.end()))
 	{}
 
-template <class T>
-ZMap_Any::ZMap_Any(const map<string, T>& iOther)
-:	fRep(new Rep(iOther.begin(), iOther.end()))
+template <class Iterator>
+ZMap_Any::ZMap_Any(Iterator begin, Iterator end)
+:	fRep(new Rep(begin, end))
 	{}
 
 NAMESPACE_ZOOLIB_END

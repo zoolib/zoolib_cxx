@@ -199,6 +199,9 @@ static ZVal_Any spAsVal_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
 #pragma mark -
 #pragma mark * ZVal_AppleEvent
 
+ZVal_Any ZVal_AppleEvent::AsVal_Any() const
+	{ return this->AsVal_Any(ZVal_Any()); }
+
 ZVal_Any ZVal_AppleEvent::AsVal_Any(const ZVal_Any& iDefault) const
 	{ return spAsVal_Any(*this, iDefault); }
 
@@ -416,6 +419,9 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, FSRef, FSRef)
 #pragma mark -
 #pragma mark * ZList_AppleEvent
 
+ZList_Any ZList_AppleEvent::AsList_Any() const
+	{ return this->AsList_Any(ZVal_Any()); }
+
 ZList_Any ZList_AppleEvent::AsList_Any(const ZVal_Any& iDefault) const
 	{ return spAsList_Any(*this, iDefault); }
 
@@ -530,6 +536,9 @@ void ZList_AppleEvent::Append(const ZVal_AppleEvent& iVal)
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZMap_AppleEvent
+
+ZMap_Any ZMap_AppleEvent::AsMap_Any() const
+	{ return this->AsMap_Any(ZVal_Any()); }
 
 ZMap_Any ZMap_AppleEvent::AsMap_Any(const ZVal_Any& iDefault) const
 	{ return spAsMap_Any(*this, iDefault); }

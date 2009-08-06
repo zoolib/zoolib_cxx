@@ -265,6 +265,7 @@ class Val
 public:
 	operator operator_bool_type() const;
 
+	ZVal_Any AsVal_Any() const;
 	ZVal_Any AsVal_Any(const ZVal_Any& iDefault) const;
 
 	void swap(Val& iOther);
@@ -333,6 +334,7 @@ class List
 public:
 	operator operator_bool_type() const;
 
+	ZList_Any AsList_Any() const;
 	ZList_Any AsList_Any(const ZVal_Any& iDefault) const;
 
 	void swap(List& iOther);
@@ -382,6 +384,7 @@ public:
 
 	operator operator_bool_type() const;
 
+	ZMap_Any AsMap_Any() const;
 	ZMap_Any AsMap_Any(const ZVal_Any& iDefault) const;
 
 	void swap(Map& iOther);

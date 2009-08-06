@@ -996,6 +996,9 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 Val::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fAny.type() != typeid(void)); }
 
+ZVal_Any Val::AsVal_Any() const
+	{ return this->AsVal_Any(ZVal_Any()); }
+
 ZVal_Any Val::AsVal_Any(const ZVal_Any& iDefault) const
 	{
 	if (const Map* theVal = ZAnyCast<Map>(&fAny))
@@ -1227,6 +1230,9 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 List::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->Count()); }
 
+ZList_Any List::AsList_Any() const
+	{ return this->AsList_Any(ZVal_Any()); }
+
 ZList_Any List::AsList_Any(const ZVal_Any& iDefault) const
 	{
 	ZList_Any theList;
@@ -1355,6 +1361,9 @@ PIActionList List::Orphan()
 
 Map::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->pCount()); }
+
+ZMap_Any Map::AsMap_Any() const
+	{ return this->AsMap_Any(ZVal_Any()); }
 
 ZMap_Any Map::AsMap_Any(const ZVal_Any& iDefault) const
 	{

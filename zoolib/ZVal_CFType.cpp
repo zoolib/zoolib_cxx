@@ -71,6 +71,9 @@ ZRef<CFTypeRef> sNumber_T(CFNumberType iNumberType, const S& iVal)
 bool ZVal_CFType::sFromAny(const ZAny& iAny, ZVal_CFType& oVal)
 	{ return ZUtil_CFType::sAsCFType(iAny, oVal); }
 
+ZVal_Any ZVal_CFType::AsVal_Any() const
+	{ return this->AsVal_Any(ZVal_Any()); }
+
 ZVal_Any ZVal_CFType::AsVal_Any(const ZVal_Any& iDefault) const
 	{ return ZUtil_CFType::sAsVal_Any(this, iDefault); }
 
@@ -379,6 +382,9 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Map, ZMap_CFType)
 #pragma mark -
 #pragma mark * ZList_CFType
 
+ZList_Any ZList_CFType::AsList_Any() const
+	{ return this->AsList_Any(ZVal_Any()); }
+
 ZList_Any ZList_CFType::AsList_Any(const ZVal_Any& iDefault) const
 	{ return ZUtil_CFType::sAsList_Any(this->pArray(), iDefault); }
 
@@ -526,6 +532,9 @@ CFMutableArrayRef ZList_CFType::pTouch()
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZMap_CFType
+
+ZMap_Any ZMap_CFType::AsMap_Any() const
+	{ return this->AsMap_Any(ZVal_Any()); }
 
 ZMap_Any ZMap_CFType::AsMap_Any(const ZVal_Any& iDefault) const
 	{ return ZUtil_CFType::sAsMap_Any(this->pDictionary(), iDefault); }

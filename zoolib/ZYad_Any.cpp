@@ -31,21 +31,17 @@ using std::string;
 
 ZRef<ZYadR> sMakeYadR(const ZVal_Any& iVal)
 	{
-	ZMap_Any asMap;
-	if (iVal.QGet_T<ZMap_Any>(asMap))
-		return new ZYadMapRPos_Any(asMap);
+	if (const ZMap_Any* theVal = iVal.PGet_T<ZMap_Any>())
+		return sMakeYadR(*theVal);
 		
-	ZList_Any asList;
-	if (iVal.QGet_T<ZList_Any>(asList))
-		return new ZYadListRPos_Any(asList);
-		
-	string8 asString;
-	if (iVal.QGet_T<string8>(asString))
-		return new ZYadStrimU_String(asString);
+	if (const ZList_Any* theVal = iVal.PGet_T<ZList_Any>())
+		return sMakeYadR(*theVal);
 
-	ZData_Any asData;
-	if (iVal.QGet_T<ZData_Any>(asData))
-		return new ZYadStreamRPos_Any(asData);
+	if (const string8* theVal = iVal.PGet_T<string8>())
+		return sMakeYadR(*theVal);
+
+	if (const ZData_Any* theVal = iVal.PGet_T<ZData_Any>())
+		return new ZYadStreamRPos_Any(*theVal);
 
 	return new ZYadPrimR_Std(iVal);
 	}

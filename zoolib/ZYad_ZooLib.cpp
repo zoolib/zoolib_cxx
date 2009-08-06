@@ -96,17 +96,6 @@ static bool spIsSimple(const ZYadOptions& iOptions, const ZVal_ZooLib& iVal)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadR_ZooLib
-
-ZYadR_ZooLib::ZYadR_ZooLib()
-	{}
-
-ZYadR_ZooLib::ZYadR_ZooLib(const ZVal_ZooLib& iVal)
-:	YadBase_t(iVal)
-	{}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadPrimR_ZooLib
 
 ZYadPrimR_ZooLib::ZYadPrimR_ZooLib()
@@ -124,7 +113,7 @@ bool ZYadPrimR_ZooLib::IsSimple(const ZYadOptions& iOptions)
 	{ return spIsSimple(iOptions, fVal); }
 
 ZAny ZYadPrimR_ZooLib::AsAny()
-	{ return fVal.AsVal_Any(ZVal_Any()); }
+	{ return fVal.AsVal_Any(); }
 
 // =================================================================================================
 #pragma mark -
@@ -168,10 +157,10 @@ ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal)
 	{
 	switch (iVal.TypeOf())
 		{
-		case eZType_Vector: return new ZYadListRPos_ZooLib(iVal.GetList());
-		case eZType_Tuple: return new ZYadMapRPos_ZooLib(iVal.GetMap());
+		case eZType_Vector: return sMakeYadR(iVal.GetList());
+		case eZType_Tuple: return sMakeYadR(iVal.GetMap());
 		case eZType_Raw: return new ZYadStreamRPos_ZooLib(iVal.GetData());
-		case eZType_String: return new ZYadStrimU_String(iVal.GetString());
+		case eZType_String: return sMakeYadR(iVal.GetString());
 		}
 
 	return new ZYadPrimR_ZooLib(iVal);

@@ -125,11 +125,11 @@ static ZRef<ZYadR> spReadStringish(const ZStreamU& s)
 	if (countSkipped == 0)
 		{
 		// We skipped no code units, so theString is valid UTF8.
-		return new ZYadStrimU_String(theString);
+		return sMakeYadR(theString);
 		}
 	else
 		{
-		return new ZYadStreamRPos_Any(ZData_Any(theString.data(), theLength));
+		return sMakeYadR(ZData_Any(theString.data(), theLength));
 		}
 	}
 

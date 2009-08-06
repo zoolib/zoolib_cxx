@@ -74,6 +74,8 @@ class ZVal_ZooLib
 
 public:
 	static bool sFromAny(const ZAny& iAny, ZVal_ZooLib& oVal);
+
+	ZVal_Any AsVal_Any() const;
 	ZVal_Any AsVal_Any(const ZVal_Any& iDefault) const;
 
 	operator operator_bool_type() const;
@@ -256,6 +258,7 @@ class ZList_ZooLib
 	class Rep;
 
 public:
+	ZList_Any AsList_Any() const;
 	ZList_Any AsList_Any(const ZVal_Any& iDefault) const;
 
 	operator operator_bool_type() const;
@@ -384,6 +387,7 @@ public:
 	typedef std::vector<NameVal> PropList;
 	typedef PropList::iterator Index_t;
 
+	ZMap_Any AsMap_Any() const;
 	ZMap_Any AsMap_Any(const ZVal_Any& iDefault) const;
 
 	operator operator_bool_type() const;

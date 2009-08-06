@@ -99,7 +99,7 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 		theMap.Set("!Type", string("UnitFloat"));
 		theMap.Set("UnitID", spIntAsVal(asUnitFloat.fUnitID));
 		theMap.Set("Value", asUnitFloat.fValue);
-		return new ZYadMapRPos_Any(theMap);
+		return sMakeYadR(theMap);
 		}
 
 	Enumerated asEnumerated;
@@ -109,7 +109,7 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 		theMap.Set("!Type", string("Enumerated"));
 		theMap.Set("UnitID", spIntAsVal(asEnumerated.fEnumType));
 		theMap.Set("Value", spIntAsVal(asEnumerated.fValue));
-		return new ZYadMapRPos_Any(theMap);
+		return sMakeYadR(theMap);
 		}
 
 	FileRef asFileRef;
@@ -119,7 +119,7 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 		theMap.Set("!Type", string("FileRef"));
 		theMap.Set("PathPOSIX", asFileRef.AsPathPOSIX());
 		theMap.Set("PathNative", asFileRef.AsPathNative());
-		return new ZYadMapRPos_Any(theMap);
+		return sMakeYadR(theMap);
 		}
 
 	Spec asSpec;
@@ -127,10 +127,10 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 		{
 		ZMap_Any theMap;
 		theMap.Set("!Type", string("Spec"));
-		return new ZYadMapRPos_Any(theMap);
+		return sMakeYadR(theMap);
 		}
 
-	return new ZYadPrimR_Std(iVal.AsVal_Any(ZVal_Any()));
+	return new ZYadPrimR_Std(iVal.AsVal_Any());
 	}
 
 ZRef<ZYadListR> sMakeYadR(const List& iList)

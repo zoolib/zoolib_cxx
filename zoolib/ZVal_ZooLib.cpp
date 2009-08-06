@@ -305,6 +305,11 @@ bool ZVal_ZooLib::sFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 		else
 			oVal = ZData_ZooLib();
 		}
+	else if (const ZData_Any* theValue = ZAnyCast<ZData_Any>(&iAny))
+		{
+		// This relies on the fact that ZData_ZooLib is a typedef of ZData_Any.
+		oVal = *theValue;
+		}
 	else if (const vector<ZAny>* theValue = ZAnyCast<vector<ZAny> >(&iAny))
 		{
 		ZList_ZooLib theList;
@@ -362,6 +367,9 @@ bool ZVal_ZooLib::sFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 		}
 	return true;
 	}
+
+ZVal_Any ZVal_ZooLib::AsVal_Any() const
+	{ return this->AsVal_Any(ZVal_Any()); }
 
 ZVal_Any ZVal_ZooLib::AsVal_Any(const ZVal_Any& iDefault) const
 	{
@@ -1753,6 +1761,9 @@ ZList_ZooLib::Rep::~Rep()
 #pragma mark -
 #pragma mark * ZList_ZooLib
 
+ZList_Any ZList_ZooLib::AsList_Any() const
+	{ return this->AsList_Any(ZVal_Any()); }
+
 ZList_Any ZList_ZooLib::AsList_Any(const ZVal_Any& iDefault) const
 	{
 	ZList_Any theList;
@@ -2029,6 +2040,9 @@ ZMap_ZooLib::Rep::~Rep()
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZMap_ZooLib
+
+ZMap_Any ZMap_ZooLib::AsMap_Any() const
+	{ return this->AsMap_Any(ZVal_Any()); }
 
 ZMap_Any ZMap_ZooLib::AsMap_Any(const ZVal_Any& iDefault) const
 	{

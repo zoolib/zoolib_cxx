@@ -58,23 +58,6 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadStrimU_String
-
-typedef ZStrimmerU_T<ZStrimU_String> ZStrimmerU_String;
-
-class ZYadStrimU_String
-:	public ZYadStrimR,
-	public ZStrimmerU_String
-	{
-public:
-	ZYadStrimU_String(const std::string& iString);
-
-// From ZYadR
-	virtual bool IsSimple(const ZYadOptions& iOptions);
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadListR_Std
 
 class ZYadListR_Std
@@ -122,6 +105,12 @@ private:
 	bool fStarted;
 	ZRef<ZYadR> fValue;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sMakeYadR
+
+ZRef<ZYadR> sMakeYadR(const std::string& iVal);
 
 NAMESPACE_ZOOLIB_END
 
