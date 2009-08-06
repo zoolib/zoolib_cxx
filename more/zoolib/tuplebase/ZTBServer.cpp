@@ -452,7 +452,6 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		sSend(this, fLogFacility, locker, iStream, response);
 		}
 
-
 	if (!didAnything)
 		iStream.Flush();
 	else

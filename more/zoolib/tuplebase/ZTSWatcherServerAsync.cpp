@@ -75,6 +75,15 @@ static void sSort(vector<uint64>& ioWrittenTupleIDs, vector<ZTuple>& ioWrittenTu
 	ioWrittenTuples.swap(newTuples);
 	}
 
+void ZTSWatcherServerAsync::Kill()
+	{
+// ??
+	ZMutexLocker locker(fMutex);
+	fSendClose = true;
+	locker.Release();
+	this->Wake();	
+	}
+
 bool ZTSWatcherServerAsync::Read(const ZStreamR& iStreamR)
 	{
 	if (ZLOG(s, eDebug, "ZTSWatcherServerAsync"))

@@ -99,7 +99,6 @@ private:
 	ZMutex fMutex;
 	ZRef<ZTSWatcherFactory> fFactory;
 	ZRef<ZTSWatcher> fTSWatcher;
-	EStatus fStatus;
 	bool fConnectionFailed;
 	Callback_t fCallback;
 	void* fRefcon;

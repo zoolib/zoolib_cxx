@@ -55,7 +55,7 @@ ZTSWatcher_Reader::ZTSWatcher_Reader(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamer
 ZTSWatcher_Reader::~ZTSWatcher_Reader()
 	{
 	ZMutexLocker locker(fMutex_Structure);
-	if (!fSentClose)
+	if (!fSentClose && fStreamsOkay)
 		{
 		fSentClose = true;
 		ZMutexLocker locker_Stream(fMutex_Stream);
@@ -68,9 +68,9 @@ ZTSWatcher_Reader::~ZTSWatcher_Reader()
 		catch (...)
 			{}
 		}
-	fStreamsOkay = false;
-	fCondition.Broadcast();
-	locker.Release();
+//	fStreamsOkay = false;
+//	fCondition.Broadcast();
+//	locker.Release();
 
 //	this->WaitForDetach();
 	}

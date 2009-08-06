@@ -92,7 +92,7 @@ static void sCriterionUnionFromTuple(
 	for (vector<ZTValue>::const_iterator outerIter = outerVector.begin();
 		outerIter != outerVector.end(); ++outerIter, ++critListIter)
 		{
-		const ZValList_ZooLib theList = (*outerIter).GetList();
+		const ZList_ZooLib theList = (*outerIter).GetList();
 		const vector<ZTValue>& innerVector = theList.GetVector();
 		for (vector<ZTValue>::const_iterator inner = innerVector.begin();
 			inner != innerVector.end(); ++inner)
@@ -670,7 +670,7 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 			}
 		case eRel_VectorContains:
 			{
-			ZValList_ZooLib theList;
+			ZList_ZooLib theList;
 			if (iTuple.Get(propIter).QGetList(theList))
 				{
 				const vector<ZTValue>& theVector = theList.GetVector();

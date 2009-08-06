@@ -1084,7 +1084,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		ZTuple reqTuple;
 		reqTuple.SetString("What", "Create");
 
-		ZValList_ZooLib theList;
+		ZList_ZooLib theList;
 		vector<ZTValue>& vectorTransactionIDs = theList.MutableVector();
 		for (vector<Transaction*>::iterator i = fTransactions_Create_Unsent.begin();
 			i != fTransactions_Create_Unsent.end(); /*no inc*/)
@@ -1117,7 +1117,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		ZTuple reqTuple;
 		reqTuple.SetString("What", "Abort");
 
-		ZValList_ZooLib theList;
+		ZList_ZooLib theList;
 		vector<ZTValue>& vectorServerIDs = theList.MutableVector();
 		for (vector<Transaction*>::iterator i = fTransactions_Aborted_Unsent.begin();
 			i != fTransactions_Aborted_Unsent.end(); /*no inc*/)
@@ -1152,7 +1152,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 			ZTuple reqTuple;
 			reqTuple.SetString("What", "Validate");
 
-			ZValList_ZooLib theList;
+			ZList_ZooLib theList;
 			vector<ZTValue>& vectorServerIDs = theList.MutableVector();
 			for (vector<Transaction*>::iterator i = fTransactions_Validate_Unsent.begin();
 				i != fTransactions_Validate_Unsent.end(); /*no inc*/)
@@ -1183,7 +1183,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		ZTuple reqTuple;
 		reqTuple.SetString("What", "Commit");
 
-		ZValList_ZooLib theList;
+		ZList_ZooLib theList;
 		vector<ZTValue>& vectorServerIDs = theList.MutableVector();
 		for (vector<Transaction*>::iterator i = fTransactions_Commit_Unsent.begin();
 			i != fTransactions_Commit_Unsent.end(); /*no inc*/)
@@ -1230,7 +1230,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 			ZTuple actionsTuple;
 			if (!theTransaction->fTransTuples_NeedWork.empty())
 				{
-				ZValList_ZooLib valWrites, valGets;
+				ZList_ZooLib valWrites, valGets;
 				vector<ZTValue>& vectorWrites = valWrites.MutableVector();
 				vector<ZTValue>& vectorGets = valGets.MutableVector();
 
@@ -1277,7 +1277,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 				searchesTuple.SetString("What", "Search");
 				searchesTuple.SetInt64("ServerID", theTransaction->fServerID);
 
-				ZValList_ZooLib theList;
+				ZList_ZooLib theList;
 				vector<ZTValue>& vectorSearches = theList.MutableVector();
 				for (vector<TransSearch_t*>::iterator i = theTransaction->fSearches_Unsent.begin();
 					i != theTransaction->fSearches_Unsent.end(); ++i)
@@ -1299,7 +1299,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 				countsTuple.SetString("What", "Count");
 				countsTuple.SetInt64("ServerID", theTransaction->fServerID);
 
-				ZValList_ZooLib theList;
+				ZList_ZooLib theList;
 				vector<ZTValue>& vectorCounts = theList.MutableVector();
 				for (vector<TransCount_t*>::iterator i = theTransaction->fCounts_Unsent.begin();
 					i != theTransaction->fCounts_Unsent.end(); ++i)
