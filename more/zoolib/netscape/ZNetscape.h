@@ -110,22 +110,6 @@ public:
 std::string sAsString(NPNVariable iVar);
 std::string sAsString(NPPVariable iVar);
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * NPVariantBase
-
-class NPVariantBase : public NPVariant
-	{
-public:
-	bool IsVoid() const { return type == NPVariantType_Void; }
-	bool IsNull() const { return type == NPVariantType_Null; }
-	bool IsBool() const { return type == NPVariantType_Bool; }
-	bool IsInt32() const { return type == NPVariantType_Int32; }
-	bool IsDouble() const { return type == NPVariantType_Double; }
-	bool IsString() const { return type == NPVariantType_String; }
-	bool IsObject() const { return type == NPVariantType_Object; }
-	};
-
 } // namespace ZNetscape
 
 NAMESPACE_ZOOLIB_END

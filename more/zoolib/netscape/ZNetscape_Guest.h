@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/netscape/ZNetscape.h"
+#include "zoolib/netscape/ZNetscape_Variant.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors.h"
@@ -56,60 +57,7 @@ public:
 #pragma mark -
 #pragma mark * NPVariantG
 
-class NPVariantG
-:	public NPVariantBase
-,	public ZValR_T<NPVariantG>
-	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(NPVariantG,
-    	operator_bool_generator_type, operator_bool_type);
-
-public:
-	operator operator_bool_type() const;
-
-	NPVariantG();
-	NPVariantG(const NPVariantG& iOther);
-	~NPVariantG();
-	NPVariantG& operator=(const NPVariantG& iOther);
-
-	NPVariantG(const NPVariant& iOther);
-	NPVariantG& operator=(const NPVariant& iOther);
-
-	NPVariantG(bool iValue);
-	NPVariantG(int32 iValue);
-	NPVariantG(double iValue);
-	NPVariantG(const std::string& iValue);
-	NPVariantG(const char* iValue);
-	NPVariantG(NPObjectG* iValue);
-	NPVariantG(const ZRef<NPObjectG>& iValue);
-
-// ZVal protocol
-	void Clear();
-
-	template <class S>
-	bool QGet_T(S& oVal) const;
-
-	template <class S>
-	void Set_T(const S& iVal);
-
-// Our protocol
-	operator ZRef<NPObjectG>() const;
-
-	void SetVoid();
-	void SetNull();
-
-// Typename accessors
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Bool, bool)
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Int32, int32)
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Double, double)
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, String, std::string)
-	ZMACRO_ZValAccessors_Decl_Entry(NPVariantG, Object, ZRef<NPObjectG>)
-
-private:
-	void pSetString(const char* iChars, size_t iLength);
-	void pSetString(const std::string& iString);
-	void pCopyFrom(const NPVariant& iOther);
-	void pRelease();
-	};
+typedef NPVariant_T<NPObjectG> NPVariantG;
 
 // =================================================================================================
 #pragma mark -
@@ -182,14 +130,24 @@ public:
 		const NPVariantG& iP1,
 		const NPVariantG& iP2);
 
+	bool Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount);
+	bool Enumerate(std::vector<NPIdentifier>& oIdentifiers);
+
+// ZMap protocol (ish)
+	bool QGet(const std::string& iName, NPVariantG& oVal);
+	bool QGet(size_t iIndex, NPVariantG& oVal);
+
+	NPVariantG DGet(const std::string& iName, const NPVariantG& iDefault);
+	NPVariantG DGet(size_t iIndex, const NPVariantG& iDefault);
+
 	NPVariantG Get(const std::string& iName);
 	NPVariantG Get(size_t iIndex);
 
 	bool Set(const std::string& iName, const NPVariantG& iValue);
 	bool Set(size_t iIndex, const NPVariantG& iValue);
 
-	bool Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount);
-	bool Enumerate(std::vector<NPIdentifier>& oIdentifiers);
+	bool Erase(const string& iName);
+	bool Erase(size_t iIndex);
 	};
 
 void sRetain(NPObjectG& iOb);

@@ -1,0 +1,152 @@
+/* -------------------------------------------------------------------------------------------------
+Copyright (c) 2009 Andrew Green
+http://www.zoolib.org
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+and associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+------------------------------------------------------------------------------------------------- */
+
+#ifndef __ZNetscape_Variant__
+#define __ZNetscape_Variant__ 1
+#include "zconfig.h"
+
+#include "zoolib/netscape/ZNetscape.h"
+#include "zoolib/ZRef.h"
+#include "zoolib/ZVal_Any.h"
+#include "zoolib/ZValAccessors.h"
+
+NAMESPACE_ZOOLIB_BEGIN
+
+namespace ZNetscape {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * NPVariantBase
+
+// NPVariantBase is only needed to work around our inability
+// to have partial template member specialization.
+
+class NPVariantBase
+:	public NPVariant
+	{
+public:
+// ZVal Get protocol
+	template <class S>
+	bool QGet_T(S& oVal) const;
+
+	template <class S>
+	S DGet_T(const S& iDefault) const
+		{
+		S result;
+		if (this->QGet_T(result))
+			return result;
+		return iDefault;
+		}
+
+	template <class S>
+	S Get_T() const
+		{ return this->DGet_T(S()); }
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * NPVariant_T
+
+template <class T>
+void sRelease_T(T&);
+
+template <class T>
+void* sMalloc_T(T&, size_t);
+
+template <class T>
+class NPVariant_T
+:	public NPVariantBase
+	{
+private:
+	void pCopyFrom(const NPVariant& iOther);
+	void pRelease();
+
+public:
+    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(NPVariant_T<T>,
+    	operator_bool_generator_type, operator_bool_type);
+
+	operator operator_bool_type() const;
+
+	typedef T Object_t;
+
+	ZVal_Any AsVal_Any() const;
+	ZVal_Any AsVal_Any(const ZVal_Any& iDefault) const;
+
+	NPVariant_T();
+	NPVariant_T(const NPVariant_T& iOther);
+	~NPVariant_T();
+	NPVariant_T& operator=(const NPVariant_T& iOther);
+
+	NPVariant_T(const NPVariant& iOther);
+	NPVariant_T& operator=(const NPVariant& iOther);
+
+	explicit NPVariant_T(bool iValue);
+	explicit NPVariant_T(int32 iValue);
+	explicit NPVariant_T(double iValue);
+	NPVariant_T(const std::string& iValue);
+	NPVariant_T(const char* iValue);
+	NPVariant_T(T* iValue);
+	NPVariant_T(const ZRef<T>& iValue);
+
+	NPVariant_T& operator=(bool iValue);
+	NPVariant_T& operator=(int32 iValue);
+	NPVariant_T& operator=(double iValue);
+	NPVariant_T& operator=(const char* iValue);
+	NPVariant_T& operator=(const std::string& iValue);
+	NPVariant_T& operator=(T* iValue);
+	NPVariant_T& operator=(const ZRef<T>& iValue);
+
+	operator ZRef<T>() const;
+
+	bool IsVoid() const;
+	bool IsNull() const;
+	bool IsBool() const;
+	bool IsInt32() const;
+	bool IsDouble() const;
+	bool IsString() const;
+	bool IsObject() const;
+
+// Our protocol
+	void SetVoid();
+	void SetNull();
+	void SetBool(bool iValue);
+	void SetInt32(int32 iValue);
+	void SetDouble(double iValue);
+	void SetString(const std::string& iValue);
+	void SetObject(T* iValue);
+	void SetObject(const ZRef<T>& iValue);
+
+// Typename get accessors
+	ZMACRO_ZValAccessors_Decl_Get(NPVariant_T<T>, Bool, bool)
+	ZMACRO_ZValAccessors_Decl_Get(NPVariant_T<T>, Int32, int32)
+	ZMACRO_ZValAccessors_Decl_Get(NPVariant_T<T>, Double, double)
+	ZMACRO_ZValAccessors_Decl_Get(NPVariant_T<T>, String, std::string)
+	ZMACRO_ZValAccessors_Decl_Get(NPVariant_T<T>, Object, ZRef<T>)
+
+private:
+	void pSetString(const char* iChars, size_t iLength);
+	void pSetString(const std::string& iString);
+	};
+
+} // namespace ZNetscape
+
+NAMESPACE_ZOOLIB_END
+
+#endif // __ZNetscape_Variant__
