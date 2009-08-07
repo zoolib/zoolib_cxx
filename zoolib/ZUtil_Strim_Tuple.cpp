@@ -75,7 +75,8 @@ string ZUtil_Strim_Tuple::sAsString(const ZTValue& iTV)
 
 bool ZUtil_Strim_Tuple::sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV)
 	{
-	if (ZRef<ZYadR> theYadR = ZYad_ZooLibStrim::sMakeYadR(iStrimU))
+	ZRef<ZStrimmerU_Strim> theStrimmerU = new ZStrimmerU_Strim(iStrimU);
+	if (ZRef<ZYadR> theYadR = ZYad_ZooLibStrim::sMakeYadR(theStrimmerU))
 		{
 		oTV = sFromYadR(theYadR, ZTValue());
 		return true;

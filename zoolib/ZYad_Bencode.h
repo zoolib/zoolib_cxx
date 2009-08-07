@@ -45,13 +45,13 @@ public:
 class ZYadListR_Bencode : public ZYadListR_Std
 	{
 public:
-	ZYadListR_Bencode(const ZStreamU& iStreamU);
+	ZYadListR_Bencode(ZRef<ZStreamerU> iStreamerU);
 
 // From ZYadListR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
-	const ZStreamU& fStreamU;
+	ZRef<ZStreamerU> fStreamerU;
 	};
 
 // =================================================================================================
@@ -61,13 +61,13 @@ private:
 class ZYadMapR_Bencode : public ZYadMapR_Std
 	{
 public:
-	ZYadMapR_Bencode(const ZStreamU& iStreamU);
+	ZYadMapR_Bencode(ZRef<ZStreamerU> iStreamerU);
 
 // From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
-	const ZStreamU& fStreamU;
+	ZRef<ZStreamerU> fStreamerU;
 	};
 
 // =================================================================================================
@@ -76,7 +76,7 @@ private:
 
 namespace ZYad_Bencode {
 
-ZRef<ZYadR> sMakeYadR(const ZStreamU& iStreamU);
+ZRef<ZYadR> sMakeYadR(ZRef<ZStreamerU> iStreamerU);
 
 } // namespace ZYad_Bencode
 

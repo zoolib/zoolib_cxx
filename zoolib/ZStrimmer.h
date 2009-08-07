@@ -186,18 +186,23 @@ public:
 	virtual ~ZStrimmerU_FT() {}
 
 	template <class P>
-	ZStrimmerU_FT(P& iParam, ZRef<ZStrimmerR> iStrimmer)
-	:	fStrimmerReal(iStrimmer),
-		fStrim(iParam, iStrimmer->GetStrimR())
-		{}
-
-	template <class P>
 	ZStrimmerU_FT(const P& iParam, ZRef<ZStrimmerR> iStrimmer)
 	:	fStrimmerReal(iStrimmer),
 		fStrim(iParam, iStrimmer->GetStrimR())
 		{}
 
 	ZStrimmerU_FT(ZRef<ZStrimmerR> iStrimmer)
+	:	fStrimmerReal(iStrimmer),
+		fStrim(iStrimmer->GetStrimR())
+		{}
+
+	template <class P>
+	ZStrimmerU_FT(const P& iParam, ZRef<ZStrimmerU> iStrimmer)
+	:	fStrimmerReal(iStrimmer),
+		fStrim(iParam, iStrimmer->GetStrimR())
+		{}
+
+	ZStrimmerU_FT(ZRef<ZStrimmerU> iStrimmer)
 	:	fStrimmerReal(iStrimmer),
 		fStrim(iStrimmer->GetStrimR())
 		{}
@@ -212,7 +217,7 @@ public:
 	Strim_t& GetStrim() { return fStrim; }
 
 protected:
-	ZRef<ZStrimmerU> fStrimmerReal;
+	ZRef<ZStrimmerR> fStrimmerReal;
 	Strim_t fStrim;
 	};
 
@@ -284,6 +289,64 @@ protected:
 	ZRef<ZStrimmerW> fStrimmerReal;
 	Strim_t fStrim;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStrimmerR_Strim
+
+class ZStrimmerR_Strim
+:	public ZStrimmerR
+	{
+public:
+	ZStrimmerR_Strim(const ZStrimR& iStrimR)
+	:	fStrimR(iStrimR)
+		{}
+
+// From ZStrimmerR
+	virtual const ZStrimR& GetStrimR() { return fStrimR; }
+
+protected:
+	const ZStrimR& fStrimR;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStrimmerU_Strim
+
+class ZStrimmerU_Strim
+:	public ZStrimmerU
+	{
+public:
+	ZStrimmerU_Strim(const ZStrimU& iStrimU)
+	:	fStrimU(iStrimU)
+		{}
+
+// From ZStrimmerU
+	virtual const ZStrimU& GetStrimU() { return fStrimU; }
+
+protected:
+	const ZStrimU& fStrimU;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStrimmerW_Strim
+
+class ZStrimmerW_Strim
+:	public ZStrimmerW
+	{
+public:
+	ZStrimmerW_Strim(const ZStrimW& iStrimW)
+	:	fStrimW(iStrimW)
+		{}
+
+// From ZStrimmerW
+	virtual const ZStrimW& GetStrimW() { return fStrimW; }
+
+protected:
+	const ZStrimW& fStrimW;
+	};
+
 
 NAMESPACE_ZOOLIB_END
 

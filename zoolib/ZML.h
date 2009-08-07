@@ -47,7 +47,8 @@ enum EToken
 	eToken_TagEnd,
 	eToken_TagEmpty,
 	eToken_Text,
-	eToken_Exhausted
+	eToken_Exhausted,
+	eToken_Fresh
 	};
 
 typedef pair<string, string> Attr_t;
@@ -101,6 +102,26 @@ private:
 
 	string fTagName;
 	Attrs_t fTagAttributes;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZML::Readerer
+
+class Readerer
+:	public ZRefCountedWithFinalization
+,	Reader
+	{
+public:
+	Readerer(ZRef<ZStrimmerU> iStrimmerU);
+	Readerer(ZRef<ZStrimmerU> iStrimmerU, bool iRecognizeEntitiesInAttributeValues);
+	Readerer(ZRef<ZStrimmerU> iStrimmerU, EntityCallback iCallback, void* iRefcon);
+	virtual ~Readerer();
+	
+	Reader& GetReader();
+
+public:
+	ZRef<ZStrimmerU> fStrimmerU;
 	};
 
 // =================================================================================================

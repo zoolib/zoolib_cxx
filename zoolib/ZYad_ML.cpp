@@ -63,7 +63,7 @@ class ZYadStrimR_ML
 :	public ZYadStrimR
 	{
 public:
-	ZYadStrimR_ML(ZML::Reader& iR);
+	ZYadStrimR_ML(ZRef<ZML::Readerer> iReaderer);
 
 // From ZYadR
 	virtual void Finish();
@@ -72,36 +72,37 @@ public:
 	virtual const ZStrimR& GetStrimR();
 
 private:
-	ZML::Reader& fR;
+	ZRef<ZML::Readerer> fReaderer;
 	};
 
-ZYadStrimR_ML::ZYadStrimR_ML(ZML::Reader& iR)
-:	fR(iR)
+ZYadStrimR_ML::ZYadStrimR_ML(ZRef<ZML::Readerer> iReaderer)
+:	fReaderer(iReaderer)
 	{}
 
 void ZYadStrimR_ML::Finish()
-	{ fR.Advance(); }
+	{ fReaderer->GetReader().Advance(); }
 
 const ZStrimR& ZYadStrimR_ML::GetStrimR()
-	{ return fR.TextStrim(); }
+	{ return fReaderer->GetReader().TextStrim(); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadMapR_ML
 
-ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR)
-:	fR(iR)
+ZYadMapR_ML::ZYadMapR_ML(ZRef<ZML::Readerer> iReaderer)
+:	fReaderer(iReaderer)
 	{}
 
-ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const string& iTagName, const ZML::Attrs_t& iAttrs)
-:	fR(iR),
+ZYadMapR_ML::ZYadMapR_ML(
+	ZRef<ZML::Readerer> iReaderer, const string& iTagName, const ZML::Attrs_t& iAttrs)
+:	fReaderer(iReaderer),
 	fTagName(iTagName),
 	fAttrs(iAttrs)
 	{}
 
-ZYadMapR_ML::ZYadMapR_ML(ZML::Reader& iR, const ZML::Attrs_t& iAttrs)
+ZYadMapR_ML::ZYadMapR_ML(ZRef<ZML::Readerer> iReaderer, const ZML::Attrs_t& iAttrs)
 :	ZYadMapR_Std(true),
-	fR(iR),
+	fReaderer(iReaderer),
 	fAttrs(iAttrs)
 	{}
 
@@ -118,33 +119,35 @@ ZML::Attrs_t ZYadMapR_ML::GetAttrs()
 
 void ZYadMapR_ML::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
+	ZML::Reader& theR = fReaderer->GetReader();
+
 	if (!fTagName.empty())
 		{
-		if (sTryRead_End(fR, fTagName))
+		if (sTryRead_End(theR, fTagName))
 			return;
 		}
 
-	oName = fR.Name();
+	oName = theR.Name();
 
-	switch (fR.Current())
+	switch (theR.Current())
 		{
 		case ZML::eToken_TagBegin:
 			{
-			const ZML::Attrs_t theAttrs = fR.Attrs();
-			fR.Advance();
-			oYadR = new ZYadMapR_ML(fR, oName, theAttrs);
+			const ZML::Attrs_t theAttrs = theR.Attrs();
+			theR.Advance();
+			oYadR = new ZYadMapR_ML(fReaderer, oName, theAttrs);
 			break;
 			}
 		case ZML::eToken_TagEmpty:
 			{
-			const ZML::Attrs_t theAttrs = fR.Attrs();
-			fR.Advance();
-			oYadR = new ZYadMapR_ML(fR, theAttrs);
+			const ZML::Attrs_t theAttrs = theR.Attrs();
+			theR.Advance();
+			oYadR = new ZYadMapR_ML(fReaderer, theAttrs);
 			break;
 			}
 		case ZML::eToken_Text:
 			{
-			oYadR = new ZYadStrimR_ML(fR);
+			oYadR = new ZYadStrimR_ML(fReaderer);
 			break;
 			}
 		}

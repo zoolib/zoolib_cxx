@@ -33,13 +33,13 @@ NAMESPACE_ZOOLIB_BEGIN
 class ZYadMapR_ZooLibStreamOld : public ZYadMapR_Std
 	{
 public:
-	ZYadMapR_ZooLibStreamOld(const ZStreamR& iStreamR);
+	ZYadMapR_ZooLibStreamOld(ZRef<ZStreamerR> iStreamerR);
 
 // From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
-	const ZStreamR& fStreamR;
+	ZRef<ZStreamerR> fStreamerR;
 	size_t fCountRemaining;
 	};
 
@@ -49,7 +49,7 @@ private:
 
 namespace ZYad_ZooLibStream {
 
-ZRef<ZYadR> sMakeYadR(const ZStreamR& iStreamR);
+ZRef<ZYadR> sMakeYadR(ZRef<ZStreamerR> iStreamerR);
 
 void sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR);
 

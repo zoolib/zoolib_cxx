@@ -277,36 +277,38 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 	return true;
 	}
 
-static ZRef<ZYadR> spMakeYadR_ZooLibStrim(const ZStrimU& iStrimU)
+static ZRef<ZYadR> spMakeYadR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU)
 	{
 	using namespace ZUtil_Strim;
 
-	sSkip_WSAndCPlusPlusComments(iStrimU);
+	const ZStrimU& theStrimU = iStrimmerU->GetStrimU();
+
+	sSkip_WSAndCPlusPlusComments(theStrimU);
 	
-	if (sTryRead_CP(iStrimU, '['))
+	if (sTryRead_CP(theStrimU, '['))
 		{
-		return new ZYadListR_ZooLibStrim(iStrimU, true);
+		return new ZYadListR_ZooLibStrim(iStrimmerU, true);
 		}
-	else if (sTryRead_CP(iStrimU, '{'))
+	else if (sTryRead_CP(theStrimU, '{'))
 		{
-		return new ZYadMapR_ZooLibStrim(iStrimU, true);
+		return new ZYadMapR_ZooLibStrim(iStrimmerU, true);
 		}
-	else if (sTryRead_CP(iStrimU, '('))
+	else if (sTryRead_CP(theStrimU, '('))
 		{
-		return new ZYadStreamR_ZooLibStrim(iStrimU, true);
+		return new ZYadStreamR_ZooLibStrim(iStrimmerU, true);
 		}
-	else if (sTryRead_CP(iStrimU, '"'))
+	else if (sTryRead_CP(theStrimU, '"'))
 		{
-		return new ZYadStrimR_ZooLibStrim_Quote(iStrimU);
+		return new ZYadStrimR_ZooLibStrim_Quote(iStrimmerU);
 		}
-	else if (sTryRead_CP(iStrimU, '\''))
+	else if (sTryRead_CP(theStrimU, '\''))
 		{
-		return new ZYadStrimR_ZooLibStrim_Apos(iStrimU);
+		return new ZYadStrimR_ZooLibStrim_Apos(iStrimmerU);
 		}
 	else
 		{
 		ZAny theVal;
-		if (spFromStrim_Value(iStrimU, theVal))
+		if (spFromStrim_Value(theStrimU, theVal))
 			return new ZYadPrimR_Std(theVal);
 		}
 
@@ -329,10 +331,10 @@ ZYadParseException_ZooLibStrim::ZYadParseException_ZooLibStrim(const char* iWhat
 #pragma mark -
 #pragma mark * ZYadStreamR_ZooLibStrim
 
-ZYadStreamR_ZooLibStrim::ZYadStreamR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter)
-:	fStrimU(iStrimU),
+ZYadStreamR_ZooLibStrim::ZYadStreamR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iReadDelimiter)
+:	fStrimmerU(iStrimmerU),
 	fReadDelimiter(iReadDelimiter),
-	fStreamR(iStrimU)
+	fStreamR(fStrimmerU->GetStrimU())
 	{}
 
 void ZYadStreamR_ZooLibStrim::Finish()
@@ -343,8 +345,9 @@ void ZYadStreamR_ZooLibStrim::Finish()
 
 	if (fReadDelimiter)
 		{
-		sSkip_WSAndCPlusPlusComments(fStrimU);
-		if (!sTryRead_CP(fStrimU, ')'))
+		const ZStrimU& theStrimU = fStrimmerU->GetStrimU();
+		sSkip_WSAndCPlusPlusComments(theStrimU);
+		if (!sTryRead_CP(theStrimU, ')'))
 			spThrowParseException("Expected ')' to close a raw");
 		}
 	}
@@ -356,16 +359,16 @@ const ZStreamR& ZYadStreamR_ZooLibStrim::GetStreamR()
 #pragma mark -
 #pragma mark * ZYadStrimR_ZooLibStrim_Apos
 
-ZYadStrimR_ZooLibStrim_Apos::ZYadStrimR_ZooLibStrim_Apos(const ZStrimU& iStrimU)
-:	fStrimU(iStrimU),
-	fStrimR(iStrimU, '\'')
+ZYadStrimR_ZooLibStrim_Apos::ZYadStrimR_ZooLibStrim_Apos(ZRef<ZStrimmerU> iStrimmerU)
+:	fStrimmerU(iStrimmerU),
+	fStrimR(fStrimmerU->GetStrimU(), '\'')
 	{}
 
 void ZYadStrimR_ZooLibStrim_Apos::Finish()
 	{
 	using namespace ZUtil_Strim;
 	fStrimR.SkipAll();
-	if (!sTryRead_CP(fStrimU, '\''))
+	if (!sTryRead_CP(fStrimmerU->GetStrimU(), '\''))
 		throw ParseException("Missing string delimiter");
 	}
 
@@ -376,9 +379,9 @@ const ZStrimR& ZYadStrimR_ZooLibStrim_Apos::GetStrimR()
 #pragma mark -
 #pragma mark * ZYadStrimR_ZooLibStrim_Quote
 
-ZYadStrimR_ZooLibStrim_Quote::ZYadStrimR_ZooLibStrim_Quote(const ZStrimU& iStrimU)
-:	fStrimU(iStrimU),
-	fStrimR_Boundary("\"\"\"", iStrimU),
+ZYadStrimR_ZooLibStrim_Quote::ZYadStrimR_ZooLibStrim_Quote(ZRef<ZStrimmerU> iStrimmerU)
+:	fStrimmerU(iStrimmerU),
+	fStrimR_Boundary("\"\"\"", fStrimmerU->GetStrimR()),
 	fQuotesSeen(1)
 	{}
 
@@ -392,6 +395,8 @@ void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* iDest, size_t iCount, si
 	{
 	using namespace ZUtil_Strim;
 
+	const ZStrimU& theStrimU = fStrimmerU->GetStrimU();
+
 	UTF32* localDest = iDest;
 	UTF32* localDestEnd = iDest + iCount;
 	bool exhausted = false;
@@ -401,9 +406,9 @@ void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* iDest, size_t iCount, si
 			{
 			case 0:
 				{
-				sSkip_WSAndCPlusPlusComments(fStrimU);
+				sSkip_WSAndCPlusPlusComments(theStrimU);
 
-				if (sTryRead_CP(fStrimU, '"'))
+				if (sTryRead_CP(theStrimU, '"'))
 					fQuotesSeen = 1;
 				else
 					exhausted = true;
@@ -411,18 +416,18 @@ void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* iDest, size_t iCount, si
 				}
 			case 1:
 				{
-				if (sTryRead_CP(fStrimU, '"'))
+				if (sTryRead_CP(theStrimU, '"'))
 					{
 					fQuotesSeen = 2;
 					}
 				else
 					{
 					size_t countRead;
-					ZStrimR_Escaped(fStrimU, '"')
+					ZStrimR_Escaped(theStrimU, '"')
 						.Read(localDest, localDestEnd - localDest, &countRead);
 					localDest += countRead;
 
-					if (sTryRead_CP(fStrimU, '"'))
+					if (sTryRead_CP(theStrimU, '"'))
 						fQuotesSeen = 0;
 					else if (countRead == 0)
 						spThrowParseException("Expected \" to close a string");
@@ -431,12 +436,12 @@ void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* iDest, size_t iCount, si
 				}
 			case 2:
 				{
-				if (sTryRead_CP(fStrimU, '"'))
+				if (sTryRead_CP(theStrimU, '"'))
 					{
 					fQuotesSeen = 3;
-					UTF32 theCP = fStrimU.ReadCP();
+					UTF32 theCP = theStrimU.ReadCP();
 					if (!ZUnicode::sIsEOL(theCP))
-						fStrimU.Unread(theCP);
+						theStrimU.Unread(theCP);
 					}
 				else
 					{
@@ -473,8 +478,8 @@ void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* iDest, size_t iCount, si
 #pragma mark -
 #pragma mark * ZYadListR_ZooLibStrim
 
-ZYadListR_ZooLibStrim::ZYadListR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter)
-:	fStrimU(iStrimU),
+ZYadListR_ZooLibStrim::ZYadListR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iReadDelimiter)
+:	fStrimmerU(iStrimmerU),
 	fReadDelimiter(iReadDelimiter)
 	{}
 
@@ -482,27 +487,29 @@ void ZYadListR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
-	sSkip_WSAndCPlusPlusComments(fStrimU);
+	const ZStrimU& theStrimU = fStrimmerU->GetStrimU();
+
+	sSkip_WSAndCPlusPlusComments(theStrimU);
 
 	bool gotSeparator = true;
 	if (!iIsFirst)
 		{
-		if (!sTryRead_CP(fStrimU, ',') && !sTryRead_CP(fStrimU, ';'))
+		if (!sTryRead_CP(theStrimU, ',') && !sTryRead_CP(theStrimU, ';'))
 			gotSeparator = false;
 		else
-			sSkip_WSAndCPlusPlusComments(fStrimU);
+			sSkip_WSAndCPlusPlusComments(theStrimU);
 		}
 
 	if (fReadDelimiter)
 		{
-		if (sTryRead_CP(fStrimU, ']'))
+		if (sTryRead_CP(theStrimU, ']'))
 			return;
 		}
 
 	if (!gotSeparator)
 		spThrowParseException("Expected ';' or ',' between values");
 
-	if (!(oYadR = spMakeYadR_ZooLibStrim(fStrimU)))
+	if (!(oYadR = spMakeYadR_ZooLibStrim(fStrimmerU)))
 		{
 		if (!fReadDelimiter)
 			return;
@@ -514,8 +521,8 @@ void ZYadListR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 #pragma mark -
 #pragma mark * ZYadMapR_ZooLibStrim
 
-ZYadMapR_ZooLibStrim::ZYadMapR_ZooLibStrim(const ZStrimU& iStrimU, bool iReadDelimiter)
-:	fStrimU(iStrimU),
+ZYadMapR_ZooLibStrim::ZYadMapR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iReadDelimiter)
+:	fStrimmerU(iStrimmerU),
 	fReadDelimiter(iReadDelimiter)
 	{}
 	
@@ -523,34 +530,36 @@ void ZYadMapR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<Z
 	{
 	using namespace ZUtil_Strim;
 
-	sSkip_WSAndCPlusPlusComments(fStrimU);
+	const ZStrimU& theStrimU = fStrimmerU->GetStrimU();
+
+	sSkip_WSAndCPlusPlusComments(theStrimU);
 
 	if (!iIsFirst)
 		{
-		if (!sTryRead_CP(fStrimU, ',') && !sTryRead_CP(fStrimU, ';'))
+		if (!sTryRead_CP(theStrimU, ',') && !sTryRead_CP(theStrimU, ';'))
 			spThrowParseException("Expected ';' or ',' after property");
-		sSkip_WSAndCPlusPlusComments(fStrimU);
+		sSkip_WSAndCPlusPlusComments(theStrimU);
 		}
 
 	if (fReadDelimiter)
 		{
-		if (sTryRead_CP(fStrimU, '}'))
+		if (sTryRead_CP(theStrimU, '}'))
 			return;
 		}
 
-	if (!spTryRead_PropertyName(fStrimU, oName))
+	if (!spTryRead_PropertyName(theStrimU, oName))
 		{
 		if (!fReadDelimiter)
 			return;
 		spThrowParseException("Expected property name");
 		}
 
-	sSkip_WSAndCPlusPlusComments(fStrimU);
+	sSkip_WSAndCPlusPlusComments(theStrimU);
 
-	if (!sTryRead_CP(fStrimU, '='))
+	if (!sTryRead_CP(theStrimU, '='))
 		spThrowParseException("Expected '=' after property name");
 
-	if (!(oYadR = spMakeYadR_ZooLibStrim(fStrimU)))
+	if (!(oYadR = spMakeYadR_ZooLibStrim(fStrimmerU)))
 		spThrowParseException("Expected value after '='");
 	}
 
@@ -894,7 +903,7 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 		}
 	else
 		{
-		s << "!!Unsupported type!!";
+		s << "null /* Unhandled: */" << iVal.type().name() << " */";
 		}
 	}
 
@@ -1022,7 +1031,6 @@ static void spToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 				break;
 				}
 			}
-
 		s.Write(" }");
 		}
 	}
@@ -1057,7 +1065,7 @@ static void spToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 		}
 	else
 		{
-		s << "!!Unsupported Yad!!";
+		s << "null /*!! Unhandled yad !!*/";
 		}
 	}
 
@@ -1090,8 +1098,8 @@ bool ZYad_ZooLibStrim::sRead_Identifier(
 	return gotAny;
 	}
 
-ZRef<ZYadR> ZYad_ZooLibStrim::sMakeYadR(const ZStrimU& iStrimU)
-	{ return spMakeYadR_ZooLibStrim(iStrimU); }
+ZRef<ZYadR> ZYad_ZooLibStrim::sMakeYadR(ZRef<ZStrimmerU> iStrimmerU)
+	{ return spMakeYadR_ZooLibStrim(iStrimmerU); }
 
 void ZYad_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR)
 	{ spToStrim_Yad(s, iYadR, 0, ZYadOptions(), false); }

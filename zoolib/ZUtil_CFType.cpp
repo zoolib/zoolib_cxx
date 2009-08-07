@@ -190,9 +190,12 @@ ZVal_Any sAsVal_Any(ZRef<CFTypeRef> iVal, const ZVal_Any& iDefault)
 	{
 	CFTypeRef theCFTypeRef = iVal;
 	if (!theCFTypeRef)
-		return iDefault;
+		return ZVal_Any();
 
 	const CFTypeID theTypeID = ::CFGetTypeID(theCFTypeRef);
+
+	if (theTypeID == ::CFNullGetTypeID())
+		return ZVal_Any();
 
 	if (theTypeID == ::CFStringGetTypeID())
 		return sAsUTF8(static_cast<CFStringRef>(theCFTypeRef));
@@ -317,7 +320,7 @@ ZRef<CFTypeRef> sAsCFType(const ZAny& iAny, const ZRef<CFTypeRef>& iDefault)
 		{}
 	else if (iAny.type() == typeid(void))
 		{
-		return ZRef<CFTypeRef>();
+		return kCFNull; //??
 		}
 	else if (const string8* theValue = ZAnyCast<string8>(&iAny))
 		{

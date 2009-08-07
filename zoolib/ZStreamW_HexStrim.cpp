@@ -79,8 +79,8 @@ void ZStreamW_HexStrim::Imp_Write(const void* iSource, size_t iCount, size_t* oC
 	if (oCountWritten)
 		*oCountWritten = 0;
 	const uint8* localSource = reinterpret_cast<const uint8*>(iSource);
-	size_t countRemaining = iCount;
-	while (countRemaining)
+
+	while (iCount)
 		{
 		if (fWrittenAny)
 			{
@@ -99,7 +99,7 @@ void ZStreamW_HexStrim::Imp_Write(const void* iSource, size_t iCount, size_t* oC
 		fCurrentChunkLength += 1;
 		if (fCurrentChunkLength == fChunkSize)
 			fCurrentChunkLength = 0;
-		countRemaining -= 1;
+		iCount -= 1;
 		localSource += 1;
 		if (oCountWritten)
 			*oCountWritten += 1;

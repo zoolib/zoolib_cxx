@@ -56,8 +56,8 @@ struct Response_t
 	ZRef<ZYadR> fFault;
 	};
 
-bool sFromReader(ZML::Reader& iReader, Request_t& oRequest);
-bool sFromReader(ZML::Reader& iReader, Response_t& oResponse);
+bool sFromReader(ZRef<ZML::Reader> iReaderer, Request_t& oRequest);
+bool sFromReader(ZRef<ZML::Reader> iReaderer, Response_t& oResponse);
 
 void sToStrim(const ZML::StrimW& s, const Request_t& iRequest);
 void sToStrim(const ZML::StrimW& s, const Response_t& iResponse);

@@ -182,6 +182,7 @@ class YadVisitor_GetValZooLib : public ZYadVisitor
 	{
 public:
 	YadVisitor_GetValZooLib(const ZVal_ZooLib& iDefault);
+
 // From ZYadVisitor
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
 	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);

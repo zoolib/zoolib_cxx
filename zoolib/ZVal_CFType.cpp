@@ -77,6 +77,16 @@ ZVal_Any ZVal_CFType::AsVal_Any() const
 ZVal_Any ZVal_CFType::AsVal_Any(const ZVal_Any& iDefault) const
 	{ return ZUtil_CFType::sAsVal_Any(this, iDefault); }
 
+ZVal_CFType::operator bool() const
+	{
+	if (CFTypeRef theVal = this->Get())
+		{
+		if (::CFGetTypeID(theVal) != ::CFNullGetTypeID())
+			return true;
+		}
+	return false;
+	}
+
 ZVal_CFType::ZVal_CFType()
 	{}
 

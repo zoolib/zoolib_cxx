@@ -29,7 +29,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTypes.h"
 #include "zoolib/ZVal_Any.h"
 #include "zoolib/ZValAccessors_Std.h"
-#include "zoolib/ZValAccessors_ZooLib.h"
 
 #include <stdexcept> // For runtime_error
 #include <string>
@@ -140,7 +139,13 @@ public:
 
 // Typename accessors
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_ZooLib)
-	ZMACRO_ZValAccessors_Decl_ZooLib(ZVal_ZooLib)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, ID, uint64)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Type, ZType)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Time, ZTime)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Rect, ZRectPOD)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Point, ZPointPOD)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, RefCounted, ZRef<ZRefCountedWithFinalize>)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Pointer, VoidStar_t)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Data, ZData_ZooLib)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, List, ZList_ZooLib)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Map, ZMap_ZooLib)

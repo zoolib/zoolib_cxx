@@ -301,32 +301,26 @@ Reader::Reader(const ZStrimU& iStrim)
 :	fStrim(iStrim),
 	fCallback(nullptr),
 	fBufferStart(0),
-	fToken(eToken_Exhausted),
+	fToken(eToken_Fresh),
 	fRecognizeEntitiesInAttributeValues(false)
-	{
-	this->pAdvance();
-	}
+	{}
 
 Reader::Reader(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues)
 :	fStrim(iStrim),
 	fCallback(nullptr),
 	fBufferStart(0),
-	fToken(eToken_Exhausted),
+	fToken(eToken_Fresh),
 	fRecognizeEntitiesInAttributeValues(iRecognizeEntitiesInAttributeValues)
-	{
-	this->pAdvance();
-	}
+	{}
 
 Reader::Reader(const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon)
 :	fStrim(iStrim),
 	fCallback(iCallback),
 	fRefcon(iRefcon),
 	fBufferStart(0),
-	fToken(eToken_Exhausted),
+	fToken(eToken_Fresh),
 	fRecognizeEntitiesInAttributeValues(false)
-	{
-	this->pAdvance();
-	}
+	{}
 
 Reader::~Reader()
 	{}
@@ -335,10 +329,18 @@ Reader::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fToken != eToken_Exhausted); }
 
 EToken Reader::Current() const
-	{ return fToken; }
+	{
+	if (fToken == eToken_Fresh)
+		const_cast<Reader*>(this)->pAdvance();
+
+	return fToken;
+	}
 
 Reader& Reader::Advance()
 	{
+	if (fToken == eToken_Fresh)
+		this->pAdvance();
+
 	if (fToken == eToken_Text)
 		{
 		// Suck up all the text till we hit the start of a tag.
@@ -357,6 +359,7 @@ Reader& Reader::Advance()
 				}
 			}
 		}
+
 	this->pAdvance();
 	return *this;
 	}
@@ -365,15 +368,23 @@ static string sEmptyString;
 
 const string& Reader::Name() const
 	{
+	if (fToken == eToken_Fresh)
+		const_cast<Reader*>(this)->pAdvance();
+
 	if (fToken == eToken_TagBegin || fToken == eToken_TagEnd || fToken == eToken_TagEmpty)
 		return fTagName;
+
 	return sEmptyString;
 	}
 
 Attrs_t Reader::Attrs() const
 	{
+	if (fToken == eToken_Fresh)
+		const_cast<Reader*>(this)->pAdvance();
+
 	if (fToken == eToken_TagBegin || fToken == eToken_TagEmpty)
 		return fTagAttributes;
+
 	return Attrs_t();
 	}
 
@@ -610,6 +621,31 @@ void Reader::pAdvance()
 			}
 		}
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZML::Readerer
+
+Readerer::Readerer(ZRef<ZStrimmerU> iStrimmerU)
+:	Reader(iStrimmerU->GetStrimU())
+,	fStrimmerU(iStrimmerU)
+	{}
+
+Readerer::Readerer(ZRef<ZStrimmerU> iStrimmerU, bool iRecognizeEntitiesInAttributeValues)
+:	Reader(iStrimmerU->GetStrimU(), iRecognizeEntitiesInAttributeValues)
+,	fStrimmerU(iStrimmerU)
+	{}
+
+Readerer::Readerer(ZRef<ZStrimmerU> iStrimmerU, EntityCallback iCallback, void* iRefcon)
+:	Reader(iStrimmerU->GetStrimU(), iCallback, iRefcon)
+,	fStrimmerU(iStrimmerU)
+	{}
+
+Readerer::~Readerer()
+	{}
+
+Reader& Readerer::GetReader()
+	{ return *this; }
 
 // =================================================================================================
 #pragma mark -

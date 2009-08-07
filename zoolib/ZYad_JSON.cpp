@@ -183,28 +183,30 @@ static bool spFromStrim_Value(const ZStrimU& iStrimU, ZAny& oVal)
 	return true;
 	}
 
-static ZRef<ZYadR> spMakeYadR_JSON(const ZStrimU& iStrimU)
+static ZRef<ZYadR> spMakeYadR_JSON(ZRef<ZStrimmerU> iStrimmerU)
 	{
 	using namespace ZUtil_Strim;
 
-	sSkip_WSAndCPlusPlusComments(iStrimU);
+	const ZStrimU& theStrimU = iStrimmerU->GetStrimU();
+
+	sSkip_WSAndCPlusPlusComments(theStrimU);
 	
-	if (sTryRead_CP(iStrimU, '['))
+	if (sTryRead_CP(theStrimU, '['))
 		{
-		return new ZYadListR_JSON(iStrimU);
+		return new ZYadListR_JSON(iStrimmerU);
 		}
-	else if (sTryRead_CP(iStrimU, '{'))
+	else if (sTryRead_CP(theStrimU, '{'))
 		{
-		return new ZYadMapR_JSON(iStrimU);
+		return new ZYadMapR_JSON(iStrimmerU);
 		}
-	else if (sTryRead_CP(iStrimU, '"'))
+	else if (sTryRead_CP(theStrimU, '"'))
 		{
-		return new ZYadStrimR_JSON(iStrimU);
+		return new ZYadStrimR_JSON(iStrimmerU);
 		}
 	else
 		{
 		ZAny theVal;
-		if (spFromStrim_Value(iStrimU, theVal))
+		if (spFromStrim_Value(theStrimU, theVal))
 			return new ZYadPrimR_Std(theVal);
 		}
 
@@ -227,16 +229,16 @@ ZYadParseException_JSON::ZYadParseException_JSON(const char* iWhat)
 #pragma mark -
 #pragma mark * ZYadStrimR_JSON
 
-ZYadStrimR_JSON::ZYadStrimR_JSON(const ZStrimU& iStrimU)
-:	fStrimU(iStrimU),
-	fStrimR(iStrimU, '"')
+ZYadStrimR_JSON::ZYadStrimR_JSON(ZRef<ZStrimmerU> iStrimmerU)
+:	fStrimmerU(iStrimmerU),
+	fStrimR(iStrimmerU->GetStrimU(), '"')
 	{}
 
 void ZYadStrimR_JSON::Finish()
 	{
 	using namespace ZUtil_Strim;
 	fStrimR.SkipAll();
-	if (!sTryRead_CP(fStrimU, '"'))
+	if (!sTryRead_CP(fStrimmerU->GetStrimU(), '"'))
 		throw ParseException("Missing string delimiter");
 	}
 
@@ -247,17 +249,19 @@ const ZStrimR& ZYadStrimR_JSON::GetStrimR()
 #pragma mark -
 #pragma mark * ZYadListR_JSON
 
-ZYadListR_JSON::ZYadListR_JSON(const ZStrimU& iStrimU)
-:	fStrimU(iStrimU)
+ZYadListR_JSON::ZYadListR_JSON(ZRef<ZStrimmerU> iStrimmerU)
+:	fStrimmerU(iStrimmerU)
 	{}
 
 void ZYadListR_JSON::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
-	sSkip_WSAndCPlusPlusComments(fStrimU);
+	const ZStrimU& theStrimU = fStrimmerU->GetStrimU();
 
-	if (sTryRead_CP(fStrimU, ']'))
+	sSkip_WSAndCPlusPlusComments(theStrimU);
+
+	if (sTryRead_CP(theStrimU, ']'))
 		{
 		// Reached end.
 		return;
@@ -266,12 +270,12 @@ void ZYadListR_JSON::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	if (!iIsFirst)
 		{
 		// Must read a separator
-		if (!sTryRead_CP(fStrimU, ','))
+		if (!sTryRead_CP(theStrimU, ','))
 			spThrowParseException("Require ',' to separate array elements");
-		sSkip_WSAndCPlusPlusComments(fStrimU);
+		sSkip_WSAndCPlusPlusComments(theStrimU);
 		}
 
-	if (!(oYadR = spMakeYadR_JSON(fStrimU)))
+	if (!(oYadR = spMakeYadR_JSON(fStrimmerU)))
 		spThrowParseException("Expected a value");
 	}
 
@@ -279,17 +283,19 @@ void ZYadListR_JSON::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 #pragma mark -
 #pragma mark * ZYadMapR_JSON
 
-ZYadMapR_JSON::ZYadMapR_JSON(const ZStrimU& iStrimU)
-:	fStrimU(iStrimU)
+ZYadMapR_JSON::ZYadMapR_JSON(ZRef<ZStrimmerU> iStrimmerU)
+:	fStrimmerU(iStrimmerU)
 	{}
 
 void ZYadMapR_JSON::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
-	sSkip_WSAndCPlusPlusComments(fStrimU);
+	const ZStrimU& theStrimU = fStrimmerU->GetStrimU();
 
-	if (sTryRead_CP(fStrimU, '}'))
+	sSkip_WSAndCPlusPlusComments(theStrimU);
+
+	if (sTryRead_CP(theStrimU, '}'))
 		{
 		// Reached end.
 		return;
@@ -298,20 +304,20 @@ void ZYadMapR_JSON::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& 
 	if (!iIsFirst)
 		{
 		// Must read a separator
-		if (!sTryRead_CP(fStrimU, ','))
+		if (!sTryRead_CP(theStrimU, ','))
 			spThrowParseException("Require ',' to separate array elements");
-		sSkip_WSAndCPlusPlusComments(fStrimU);
+		sSkip_WSAndCPlusPlusComments(theStrimU);
 		}
 
-	if (!spTryRead_JSONString(fStrimU, oName))
+	if (!spTryRead_JSONString(theStrimU, oName))
 		spThrowParseException("Expected a member name");
 
-	sSkip_WSAndCPlusPlusComments(fStrimU);
+	sSkip_WSAndCPlusPlusComments(theStrimU);
 
-	if (!sTryRead_CP(fStrimU, ':'))
+	if (!sTryRead_CP(theStrimU, ':'))
 		spThrowParseException("Expected ':' after a member name");
 
-	if (!(oYadR = spMakeYadR_JSON(fStrimU)))
+	if (!(oYadR = spMakeYadR_JSON(fStrimmerU)))
 		spThrowParseException("Expected value after ':'");
 	}
 
@@ -388,13 +394,9 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 		{
 		s.Writef("%.17g", theValue->fVal);
 		}
-//	else if (const string8* theValue = ZAnyCast<string8>(&iAny))
-//		{
-//		s << *theValue;
-//		}
 	else
 		{
-		s << "!!Unhandled Type!!";
+		s << "null /*!! Unhandled: " << iAny.type().name() << " !!*/";
 		}
 	}
 
@@ -437,9 +439,21 @@ ZYadVisitor_JSONWriter::ZYadVisitor_JSONWriter(
 	fMayNeedInitialLF(false)
 	{}
 
+bool ZYadVisitor_JSONWriter::Visit_YadR(ZRef<ZYadR> iYadR)
+	{
+	fStrimW << "null /*!! Unhandled yad !!*/";
+	return false;
+	}
+
 bool ZYadVisitor_JSONWriter::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{
 	spToStrim_SimpleValue(fStrimW, iYadPrimR->AsAny());
+	return true;
+	}
+
+bool ZYadVisitor_JSONWriter::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+	{
+	fStrimW << "null /*!! ZYadStreamR not representable in JSON !!*/";
 	return true;
 	}
 
@@ -591,8 +605,8 @@ bool ZYadVisitor_JSONWriter::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 #pragma mark -
 #pragma mark * ZYad_JSON
 
-ZRef<ZYadR> ZYad_JSON::sMakeYadR(const ZStrimU& iStrimU)
-	{ return spMakeYadR_JSON(iStrimU); }
+ZRef<ZYadR> ZYad_JSON::sMakeYadR(ZRef<ZStrimmerU> iStrimmerU)
+	{ return spMakeYadR_JSON(iStrimmerU); }
 
 void ZYad_JSON::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR)
 	{

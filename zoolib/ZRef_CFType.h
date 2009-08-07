@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 typedef const void * CFTypeRef;
 
+typedef const struct __CFNull * CFNullRef;
+
 typedef const struct __CFArray * CFArrayRef;
 typedef struct __CFArray * CFMutableArrayRef;
 

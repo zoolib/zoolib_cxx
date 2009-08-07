@@ -133,38 +133,41 @@ static ZRef<ZYadR> spReadStringish(const ZStreamU& s)
 		}
 	}
 
-static ZRef<ZYadR> spMakeYadR_Bencode(const ZStreamU& s)
+static ZRef<ZYadR> spMakeYadR_Bencode(ZRef<ZStreamerU> iStreamerU)
 	{
-	const uint8 type = s.ReadUInt8();
+	const ZStreamU& theStreamU = iStreamerU->GetStreamU();
+
+	const uint8 type = theStreamU.ReadUInt8();
 	switch (type)
 		{
 		case 'd':
 			{
-			return new ZYadMapR_Bencode(s);
+			return new ZYadMapR_Bencode(iStreamerU);
 			}
 		case 'l':
 			{
-			return new ZYadListR_Bencode(s);
+			return new ZYadListR_Bencode(iStreamerU);
 			}
 		case 'i':
 			{
 			int64 theInteger;
-			if (!spTryRead_SignedInteger(s, theInteger))
+			if (!spTryRead_SignedInteger(theStreamU, theInteger))
 				spThrowParseException("Expected signed decimal integer");
-			if (!spTryRead_Byte(s, 'e'))
+			if (!spTryRead_Byte(theStreamU, 'e'))
 				spThrowParseException("Expected 'e' terminator for integer");
 			return new ZYadPrimR_Std(ZAny(theInteger));
 			}
 		default:
 			{
-			s.Unread();
+			theStreamU.Unread();
 			// It must be a 'string'.
 
 			// It could be valid UTF-8, or could be
 			// arbitrary bytes, so we call sReadStringish.
-			return spReadStringish(s);
+			return spReadStringish(theStreamU);
 			}
 		}
+
 	return ZRef<ZYadR>();
 	}
 
@@ -184,30 +187,31 @@ ZYadParseException_Bencode::ZYadParseException_Bencode(const char* iWhat)
 #pragma mark -
 #pragma mark * ZYadListR_Bencode
 
-ZYadListR_Bencode::ZYadListR_Bencode(const ZStreamU& iStreamU)
-:	fStreamU(iStreamU)
+ZYadListR_Bencode::ZYadListR_Bencode(ZRef<ZStreamerU> iStreamerU)
+:	fStreamerU(iStreamerU)
 	{}
 
 void ZYadListR_Bencode::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
-	if (!spTryRead_Byte(fStreamU, 'e'))
-		oYadR = spMakeYadR_Bencode(fStreamU);
+	if (!spTryRead_Byte(fStreamerU->GetStreamU(), 'e'))
+		oYadR = spMakeYadR_Bencode(fStreamerU);
 	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadMapR_Bencode
 
-ZYadMapR_Bencode::ZYadMapR_Bencode(const ZStreamU& iStreamU)
-:	fStreamU(iStreamU)
+ZYadMapR_Bencode::ZYadMapR_Bencode(ZRef<ZStreamerU> iStreamerU)
+:	fStreamerU(iStreamerU)
 	{}
 
 void ZYadMapR_Bencode::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
-	if (!spTryRead_Byte(fStreamU, 'e'))
+	const ZStreamU& theStreamU = fStreamerU->GetStreamU();
+	if (!spTryRead_Byte(theStreamU, 'e'))
 		{
-		oName = spReadString(fStreamU);
-		oYadR = spMakeYadR_Bencode(fStreamU);
+		oName = spReadString(theStreamU);
+		oYadR = spMakeYadR_Bencode(fStreamerU);
 		}
 	}
 
@@ -215,7 +219,7 @@ void ZYadMapR_Bencode::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR
 #pragma mark -
 #pragma mark * ZYad_Bencode
 
-ZRef<ZYadR> ZYad_Bencode::sMakeYadR(const ZStreamU& iStreamU)
-	{ return spMakeYadR_Bencode(iStreamU); }
+ZRef<ZYadR> ZYad_Bencode::sMakeYadR(ZRef<ZStreamerU> iStreamerU)
+	{ return spMakeYadR_Bencode(iStreamerU); }
 
 NAMESPACE_ZOOLIB_END

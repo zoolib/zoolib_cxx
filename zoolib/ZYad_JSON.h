@@ -47,7 +47,7 @@ class ZYadStrimR_JSON
 :	public ZYadStrimR
 	{
 public:
-	ZYadStrimR_JSON(const ZStrimU& iStrimU);
+	ZYadStrimR_JSON(ZRef<ZStrimmerU> iStrimmerU);
 
 // From ZYadR
 	virtual void Finish();
@@ -56,7 +56,7 @@ public:
 	const ZStrimR& GetStrimR();
 
 private:
-	const ZStrimU& fStrimU;
+	ZRef<ZStrimmerU> fStrimmerU;
 	ZStrimR_Escaped fStrimR;
 	};
 
@@ -67,13 +67,13 @@ private:
 class ZYadListR_JSON : public ZYadListR_Std
 	{
 public:
-	ZYadListR_JSON(const ZStrimU& iStrimU);
+	ZYadListR_JSON(ZRef<ZStrimmerU> iStrimmerU);
 
 // From ZYadListR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
-	const ZStrimU& fStrimU;
+	ZRef<ZStrimmerU> fStrimmerU;
 	};
 
 // =================================================================================================
@@ -83,13 +83,13 @@ private:
 class ZYadMapR_JSON : public ZYadMapR_Std
 	{
 public:
-	ZYadMapR_JSON(const ZStrimU& iStrimU);
+	ZYadMapR_JSON(ZRef<ZStrimmerU> iStrimmerU);
 
 // From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
-	const ZStrimU& fStrimU;
+	ZRef<ZStrimmerU> fStrimmerU;
 	};
 
 // =================================================================================================
@@ -103,7 +103,9 @@ public:
 		const ZStrimW& iStrimW, size_t iIndent, const ZYadOptions& iOptions);
 
 // From ZYadVisitor
+	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
+	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
 	virtual bool Visit_YadListR(ZRef<ZYadListR> iYadListR);
 	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
@@ -124,7 +126,7 @@ private:
 
 namespace ZYad_JSON {
 
-ZRef<ZYadR> sMakeYadR(const ZStrimU& iStrimU);
+ZRef<ZYadR> sMakeYadR(ZRef<ZStrimmerU> iStrimmerU);
 
 void sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR);
 

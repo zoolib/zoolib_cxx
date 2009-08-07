@@ -45,9 +45,9 @@ public:
 class ZYadMapR_ML : public ZYadMapR_Std
 	{
 public:
-	ZYadMapR_ML(ZML::Reader& iR);
-	ZYadMapR_ML(ZML::Reader& iR, const ZML::Attrs_t& iAttrs);
-	ZYadMapR_ML(ZML::Reader& iR, const std::string& iTagName, const ZML::Attrs_t& iAttrs);
+	ZYadMapR_ML(ZRef<ZML::Readerer> iReaderer);
+	ZYadMapR_ML(ZRef<ZML::Readerer> iReaderer, const ZML::Attrs_t& iAttrs);
+	ZYadMapR_ML(ZRef<ZML::Readerer> iReaderer, const std::string& iTagName, const ZML::Attrs_t& iAttrs);
 
 // From ZYadR
 	virtual ZRef<ZYadR> Meta();
@@ -61,7 +61,7 @@ public:
 private:
 	void pAdvance(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
-	ZML::Reader& fR;
+	ZRef<ZML::Readerer> fReaderer;
 
 	const std::string fTagName;
 	const ZML::Attrs_t fAttrs;

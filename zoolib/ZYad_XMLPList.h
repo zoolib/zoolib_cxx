@@ -48,7 +48,7 @@ class ZYadStreamR_XMLPList
 :	public ZYadStreamR
 	{
 public:
-	ZYadStreamR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
+	ZYadStreamR_XMLPList(ZRef<ZML::Readerer> iReaderer, bool iMustReadEndTag);
 
 // From ZYadR
 	virtual void Finish();
@@ -57,7 +57,7 @@ public:
 	const ZStreamR& GetStreamR();
 
 private:
-	ZML::Reader& fR;
+	ZRef<ZML::Readerer> fReaderer;
 	bool fMustReadEndTag;
 	ZStreamR_ASCIIStrim fStreamR_ASCIIStrim;
 	ZStreamR_Base64Decode fStreamR_Base64Decode;
@@ -71,7 +71,7 @@ class ZYadStrimR_XMLPList
 :	public ZYadStrimR
 	{
 public:
-	ZYadStrimR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
+	ZYadStrimR_XMLPList(ZRef<ZML::Readerer> iReaderer, bool iMustReadEndTag);
 
 // From ZYadR
 	virtual void Finish();
@@ -80,7 +80,7 @@ public:
 	const ZStrimR& GetStrimR();
 
 private:
-	ZML::Reader& fR;
+	ZRef<ZML::Readerer> fReaderer;
 	bool fMustReadEndTag;
 	};
 
@@ -91,13 +91,13 @@ private:
 class ZYadListR_XMLPList : public ZYadListR_Std
 	{
 public:
-	ZYadListR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
+	ZYadListR_XMLPList(ZRef<ZML::Readerer> iReaderer, bool iMustReadEndTag);
 
 // From ZYadListR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
-	ZML::Reader& fR;
+	ZRef<ZML::Readerer> fReaderer;
 	bool fMustReadEndTag;
 	};
 
@@ -108,13 +108,13 @@ private:
 class ZYadMapR_XMLPList : public ZYadMapR_Std
 	{
 public:
-	ZYadMapR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag);
+	ZYadMapR_XMLPList(ZRef<ZML::Readerer> iReaderer, bool iMustReadEndTag);
 
 // From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
-	ZML::Reader& fR;
+	ZRef<ZML::Readerer> fReaderer;
 	bool fMustReadEndTag;
 	};
 
@@ -124,7 +124,7 @@ private:
 
 namespace ZYad_XMLPList {
 
-ZRef<ZYadR> sMakeYadR(ZML::Reader& iReader);
+ZRef<ZYadR> sMakeYadR(ZRef<ZML::Readerer> iR);
 
 void sToStrimW_ML(const ZML::StrimW& s, ZRef<ZYadR> iYadR);
 

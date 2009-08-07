@@ -115,36 +115,37 @@ static bool spTryRead_Any(ZML::Reader& r, ZAny& oVal)
 	return true;
 	}
 
-static ZRef<ZYadR> spMakeYadR_XMLPList(ZML::Reader& r)
+static ZRef<ZYadR> spMakeYadR_XMLPList(ZRef<ZML::Readerer> iReaderer)
 	{
-	sSkipText(r);
+	ZML::Reader& theR = iReaderer->GetReader();
+	sSkipText(theR);
 
-	if (r.Current() == ZML::eToken_TagBegin)
+	if (theR.Current() == ZML::eToken_TagBegin)
 		{
-		if (r.Name() == "dict")
+		if (theR.Name() == "dict")
 			{
-			r.Advance();
-			return new ZYadMapR_XMLPList(r, true);
+			theR.Advance();
+			return new ZYadMapR_XMLPList(iReaderer, true);
 			}
-		else if (r.Name() == "array")
+		else if (theR.Name() == "array")
 			{
-			r.Advance();
-			return new ZYadListR_XMLPList(r, true);
+			theR.Advance();
+			return new ZYadListR_XMLPList(iReaderer, true);
 			}
-		else if (r.Name() == "data")
+		else if (theR.Name() == "data")
 			{
-			r.Advance();
-			return new ZYadStreamR_XMLPList(r, true);
+			theR.Advance();
+			return new ZYadStreamR_XMLPList(iReaderer, true);
 			}
-		else if (r.Name() == "string")
+		else if (theR.Name() == "string")
 			{
-			r.Advance();
-			return new ZYadStrimR_XMLPList(r, true);
+			theR.Advance();
+			return new ZYadStrimR_XMLPList(iReaderer, true);
 			}
 		}
 	
 	ZAny theVal;
-	if (spTryRead_Any(r, theVal))
+	if (spTryRead_Any(theR, theVal))
 		return new ZYadPrimR_Std(theVal);
 
 	return ZRef<ZYadR>();
@@ -166,10 +167,10 @@ ZYadParseException_XMLPList::ZYadParseException_XMLPList(const char* iWhat)
 #pragma mark -
 #pragma mark * ZYadStreamR_XMLPList
 
-ZYadStreamR_XMLPList::ZYadStreamR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
-:	fR(iReader),
+ZYadStreamR_XMLPList::ZYadStreamR_XMLPList(ZRef<ZML::Readerer> iReaderer, bool iMustReadEndTag)
+:	fReaderer(iReaderer),
 	fMustReadEndTag(iMustReadEndTag),
-	fStreamR_ASCIIStrim(fR.TextStrim()),
+	fStreamR_ASCIIStrim(fReaderer->GetReader().TextStrim()),
 	fStreamR_Base64Decode(fStreamR_ASCIIStrim)
 	{}
 
@@ -178,7 +179,7 @@ void ZYadStreamR_XMLPList::Finish()
 	fStreamR_Base64Decode.SkipAll();
 
 	if (fMustReadEndTag)
-		spEnd(fR, "data");
+		spEnd(fReaderer->GetReader(), "data");
 	}
 
 const ZStreamR& ZYadStreamR_XMLPList::GetStreamR()
@@ -188,41 +189,43 @@ const ZStreamR& ZYadStreamR_XMLPList::GetStreamR()
 #pragma mark -
 #pragma mark * ZYadStrimR_XMLPList
 
-ZYadStrimR_XMLPList::ZYadStrimR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
-:	fR(iReader),
+ZYadStrimR_XMLPList::ZYadStrimR_XMLPList(ZRef<ZML::Readerer> iReaderer, bool iMustReadEndTag)
+:	fReaderer(iReaderer),
 	fMustReadEndTag(iMustReadEndTag)
 	{}
 
 void ZYadStrimR_XMLPList::Finish()
 	{
-	fR.Advance();
+	fReaderer->GetReader().Advance();
 	if (fMustReadEndTag)
-		spEnd(fR, "string");
+		spEnd(fReaderer->GetReader(), "string");
 	}
 
 const ZStrimR& ZYadStrimR_XMLPList::GetStrimR()
-	{ return fR.TextStrim(); }
+	{ return fReaderer->GetReader().TextStrim(); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadReaderRep_XMLPList
 
-ZYadListR_XMLPList::ZYadListR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
-:	fR(iReader),
+ZYadListR_XMLPList::ZYadListR_XMLPList(ZRef<ZML::Readerer> iReaderer, bool iMustReadEndTag)
+:	fReaderer(iReaderer),
 	fMustReadEndTag(iMustReadEndTag)
 	{}
 
 void ZYadListR_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
-	sSkipText(fR);
+	ZML::Reader& theR = fReaderer->GetReader();
+
+	sSkipText(theR);
 
 	if (fMustReadEndTag)
 		{
-		if (sTryRead_End(fR, "array"))
+		if (sTryRead_End(theR, "array"))
 			return;
 		}
 
-	if (!(oYadR = spMakeYadR_XMLPList(fR)))
+	if (!(oYadR = spMakeYadR_XMLPList(fReaderer)))
 		{
 		if (!fMustReadEndTag)
 			return;
@@ -234,33 +237,35 @@ void ZYadListR_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 #pragma mark -
 #pragma mark * ZYadMapR_XMLPList
 
-ZYadMapR_XMLPList::ZYadMapR_XMLPList(ZML::Reader& iReader, bool iMustReadEndTag)
-:	fR(iReader),
+ZYadMapR_XMLPList::ZYadMapR_XMLPList(ZRef<ZML::Readerer> iReaderer, bool iMustReadEndTag)
+:	fReaderer(iReaderer),
 	fMustReadEndTag(iMustReadEndTag)
 	{}
 	
 void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
-	sSkipText(fR);
+	ZML::Reader& theR = fReaderer->GetReader();
+
+	sSkipText(theR);
 
 	if (fMustReadEndTag)
 		{
-		if (sTryRead_End(fR, "dict"))
+		if (sTryRead_End(theR, "dict"))
 			return;
 		}
 
-	if (!sTryRead_Begin(fR, "key"))
+	if (!sTryRead_Begin(theR, "key"))
 		{
 		if (!fMustReadEndTag)
 			return;
 		spThrowParseException("Expected <key>");
 		}
 
-	oName = fR.TextString();
+	oName = theR.TextString();
 
-	spEnd(fR, "key");
+	spEnd(theR, "key");
 
-	if (!(oYadR = spMakeYadR_XMLPList(fR)))
+	if (!(oYadR = spMakeYadR_XMLPList(fReaderer)))
 		spThrowParseException("Expected value after <key>...</key>");
 	}
 
@@ -268,16 +273,19 @@ void ZYadMapR_XMLPList::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYad
 #pragma mark -
 #pragma mark * ZYad_XMLPList
 
-ZRef<ZYadR> ZYad_XMLPList::sMakeYadR(ZML::Reader& r)
+ZRef<ZYadR> ZYad_XMLPList::sMakeYadR(ZRef<ZML::Readerer> iReaderer)
 	{
+	ZML::Reader& theR = iReaderer->GetReader();
+
 	for (;;)
 		{
-		sSkipText(r);
-		if (r.Current() != ZML::eToken_TagBegin || r.Name() != "plist")
+		sSkipText(theR);
+		if (theR.Current() != ZML::eToken_TagBegin || theR.Name() != "plist")
 			break;
-		r.Advance();
+		theR.Advance();
 		}
-	return spMakeYadR_XMLPList(r);
+
+	return spMakeYadR_XMLPList(iReaderer);
 	}
 
 static void spToStrim_Stream(const ZML::StrimW& s, const ZStreamR& iStreamR)
@@ -350,7 +358,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 		}
 	else
 		{
-		s << "!!Unsupported type!!";
+		s.Raw() << "<nil/> <!--!! Unhandled: */" << iVal.type().name() << " !!-->";
 		}
 	}
 
@@ -382,7 +390,7 @@ void ZYad_XMLPList::sToStrimW_ML(const ZML::StrimW& s, ZRef<ZYadR> iYadR)
 		}
 	else
 		{
-		s << "!!Unrecognized Yad!!";
+		s.Raw() << "<nil/> <!--!! Unhandled Yad !!-->";
 		}
 	}
 

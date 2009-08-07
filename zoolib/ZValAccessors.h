@@ -26,20 +26,29 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark -
 #pragma mark * ZMACRO_ZValAccessors
 
-#define ZMACRO_ZValAccessors_Decl_Entry(T, TYPENAME, TYPE) \
+#define ZMACRO_ZValAccessors_Decl_Get(T, TYPENAME, TYPE) \
 	bool QGet##TYPENAME(TYPE& oVal) const; \
 	TYPE DGet##TYPENAME(const TYPE& iDefault) const; \
 	TYPE Get##TYPENAME() const; \
+
+#define ZMACRO_ZValAccessors_Decl_Entry(T, TYPENAME, TYPE) \
+	ZMACRO_ZValAccessors_Decl_Get(T, TYPENAME, TYPE) \
 	void Set##TYPENAME(const TYPE& iVal); \
 
-#define ZMACRO_ZValAccessors_Def_Entry(T, TYPENAME, TYPE) \
-	bool T::QGet##TYPENAME(TYPE& oVal) const \
+#define ZMACRO_ZValAccessors_Def_GetP(P, T, TYPENAME, TYPE) \
+	P bool T::QGet##TYPENAME(TYPE& oVal) const \
 		{ return this->QGet_T<>(oVal); } \
-	TYPE T::DGet##TYPENAME(const TYPE& iDefault) const \
+	P TYPE T::DGet##TYPENAME(const TYPE& iDefault) const \
 		{ return this->DGet_T<>(iDefault); } \
-	TYPE T::Get##TYPENAME() const \
+	P TYPE T::Get##TYPENAME() const \
 		{ return this->Get_T<TYPE>(); } \
-	void T::Set##TYPENAME(const TYPE& iVal) \
+
+#define ZMACRO_ZValAccessors_Def_EntryP(P, T, TYPENAME, TYPE) \
+	ZMACRO_ZValAccessors_Def_GetP(P, T, TYPENAME, TYPE) \
+	P void T::Set##TYPENAME(const TYPE& iVal) \
 		{ return this->Set_T<>(iVal); } \
+
+#define ZMACRO_ZValAccessors_Def_Entry(T, TYPENAME, TYPE) \
+	ZMACRO_ZValAccessors_Def_EntryP(,T,TYPENAME, TYPE)
 
 #endif // __ZValAccessors__

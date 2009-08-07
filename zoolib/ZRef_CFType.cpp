@@ -53,6 +53,7 @@ ZOOLIB_CF(WriteStream)
 	ZOOLIB_RETAIN_RELEASE(CF##a##Ref)
 
 ZOOLIB_CF_CONST(URL)
+ZOOLIB_CF_CONST(Null)
 
 // =================================================================================================
 #define ZOOLIB_CF_WITH_MUTABLE(a) \

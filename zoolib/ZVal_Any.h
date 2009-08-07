@@ -89,9 +89,17 @@ public:
 	void Clear();
 
 	template <class S>
+	S* PGet_T()
+		{ return ZAnyCast<S>(this); }
+
+	template <class S>
+	const S* PGet_T() const
+		{ return ZAnyCast<S>(this); }
+
+	template <class S>
 	bool QGet_T(S& oVal) const
 		{
-		if (const S* theVal = ZAnyCast<S>(this))
+		if (const S* theVal = this->PGet_T<S>())
 			{
 			oVal = *theVal;
 			return true;
@@ -102,7 +110,7 @@ public:
 	template <class S>
 	S DGet_T(const S& iDefault) const
 		{
-		if (const S* theVal = ZAnyCast<S>(this))
+		if (const S* theVal = this->PGet_T<S>())
 			return *theVal;
 		return iDefault;
 		}
@@ -110,18 +118,10 @@ public:
 	template <class S>
 	S Get_T() const
 		{
-		if (const S* theVal = ZAnyCast<S>(this))
+		if (const S* theVal = this->PGet_T<S>())
 			return *theVal;
 		return S();
 		}
-
-	template <class S>
-	S* PGet_T()
-		{ return ZAnyCast<S>(this); }
-
-	template <class S>
-	const S* PGet_T() const
-		{ return ZAnyCast<S>(this); }
 
 	template <class S>
 	void Set_T(const S& iVal)

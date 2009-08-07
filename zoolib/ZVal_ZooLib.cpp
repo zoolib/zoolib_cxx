@@ -1268,7 +1268,13 @@ void ZVal_ZooLib::ToStream(const ZStreamW& iStreamW) const
 #pragma mark * ZVal_ZooLib typename accessors
 
 ZMACRO_ZValAccessors_Def_Std(ZVal_ZooLib)
-ZMACRO_ZValAccessors_Def_ZooLib(ZVal_ZooLib)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, ID, uint64)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Type, ZType)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Time, ZTime)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Rect, ZRectPOD)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Point, ZPointPOD)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, RefCounted, ZRef<ZRefCountedWithFinalize>)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Pointer, VoidStar_t)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Data, ZData_ZooLib)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, List, ZList_ZooLib)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Map, ZMap_ZooLib)

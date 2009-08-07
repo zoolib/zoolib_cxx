@@ -133,7 +133,6 @@ public:
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
-
 YadStrimU_String::YadStrimU_String(const string& iString)
 :	StrimmerU_String(iString)
 	{}
