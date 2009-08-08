@@ -2094,10 +2094,92 @@ ZMap_ZooLib::ZMap_ZooLib(ZRef<Rep> iRep)
 void ZMap_ZooLib::Clear()
 	{ fRep.Clear(); }
 
+ZVal_ZooLib* ZMap_ZooLib::PGet(Index_t iIndex)
+	{
+	if (fRep && iIndex != fRep->fProperties.end())
+		{
+		iIndex = this->pTouch(iIndex);
+		return &(*iIndex).fVal;
+		}
+	return nullptr;
+	}
+
+ZVal_ZooLib* ZMap_ZooLib::PGet(const char* iPropName)
+	{
+	this->pTouch();
+
+	ZAssertStop(kDebug_Tuple, fRep);
+
+	size_t propNameLength = strlen(iPropName);
+	for (PropList::iterator i = fRep->fProperties.begin(),
+		theEnd = fRep->fProperties.end();
+		i != theEnd; ++i)
+		{
+		if ((*i).fName.Equals(iPropName, propNameLength))
+			return &(*i).fVal;
+		}
+
+	return nullptr;
+	}
+
+ZVal_ZooLib* ZMap_ZooLib::PGet(const ZTName& iPropName)
+	{
+	this->pTouch();
+
+	ZAssertStop(kDebug_Tuple, fRep);
+
+	for (PropList::iterator i = fRep->fProperties.begin(),
+		theEnd = fRep->fProperties.end();
+		i != theEnd; ++i)
+		{
+		if ((*i).fName.Equals(iPropName))
+			return &(*i).fVal;
+		}
+
+	return nullptr;
+	}
+
+const ZVal_ZooLib* ZMap_ZooLib::PGet(Index_t iIndex) const
+	{
+	if (fRep && iIndex != fRep->fProperties.end())
+		return &(*iIndex).fVal;
+	return nullptr;
+	}
+
+const ZVal_ZooLib* ZMap_ZooLib::PGet(const char* iPropName) const
+	{
+	if (fRep)
+		{
+		size_t propNameLength = strlen(iPropName);
+		for (PropList::const_iterator i = fRep->fProperties.begin(),
+			theEnd = fRep->fProperties.end();
+			i != theEnd; ++i)
+			{
+			if ((*i).fName.Equals(iPropName, propNameLength))
+				return &(*i).fVal;
+			}
+		}
+	return nullptr;
+	}
+
+const ZVal_ZooLib* ZMap_ZooLib::PGet(const ZTName& iPropName) const
+	{
+	if (fRep)
+		{
+		for (PropList::const_iterator i = fRep->fProperties.begin(),
+			theEnd = fRep->fProperties.end();
+			i != theEnd; ++i)
+			{
+			if ((*i).fName.Equals(iPropName))
+				return &(*i).fVal;
+			}
+		}
+	return nullptr;
+	}
 
 bool ZMap_ZooLib::QGet(Index_t iIndex, ZVal_ZooLib& oVal) const
 	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iIndex))
+	if (const ZVal_ZooLib* theValue = this->PGet(iIndex))
 		{
 		oVal = *theValue;
 		return true;
@@ -2107,7 +2189,7 @@ bool ZMap_ZooLib::QGet(Index_t iIndex, ZVal_ZooLib& oVal) const
 
 bool ZMap_ZooLib::QGet(const char* iPropName, ZVal_ZooLib& oVal) const
 	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropName))
+	if (const ZVal_ZooLib* theValue = this->PGet(iPropName))
 		{
 		oVal = *theValue;
 		return true;
@@ -2117,7 +2199,7 @@ bool ZMap_ZooLib::QGet(const char* iPropName, ZVal_ZooLib& oVal) const
 
 bool ZMap_ZooLib::QGet(const ZTName& iPropName, ZVal_ZooLib& oVal) const
 	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropName))
+	if (const ZVal_ZooLib* theValue = this->PGet(iPropName))
 		{
 		oVal = *theValue;
 		return true;
@@ -2127,63 +2209,42 @@ bool ZMap_ZooLib::QGet(const ZTName& iPropName, ZVal_ZooLib& oVal) const
 
 ZVal_ZooLib ZMap_ZooLib::DGet(const ZVal_ZooLib& iDefault, Index_t iIndex) const
 	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iIndex))
+	if (const ZVal_ZooLib* theValue = this->PGet(iIndex))
 		return *theValue;
 	return iDefault;
 	}
 
 ZVal_ZooLib ZMap_ZooLib::DGet(const ZVal_ZooLib& iDefault, const char* iPropName) const
 	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropName))
+	if (const ZVal_ZooLib* theValue = this->PGet(iPropName))
 		return *theValue;
 	return iDefault;
 	}
 
 ZVal_ZooLib ZMap_ZooLib::DGet(const ZVal_ZooLib& iDefault, const ZTName& iPropName) const
 	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropName))
+	if (const ZVal_ZooLib* theValue = this->PGet(iPropName))
 		return *theValue;
 	return iDefault;
 	}
 
 ZVal_ZooLib ZMap_ZooLib::Get(Index_t iIndex) const
 	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iIndex))
+	if (const ZVal_ZooLib* theValue = this->PGet(iIndex))
 		return *theValue;
 	return sNilVal;
 	}
 
 ZVal_ZooLib ZMap_ZooLib::Get(const char* iPropName) const
 	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropName))
+	if (const ZVal_ZooLib* theValue = this->PGet(iPropName))
 		return *theValue;
 	return sNilVal;
 	}
 
 ZVal_ZooLib ZMap_ZooLib::Get(const ZTName& iPropName) const
 	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropName))
-		return *theValue;
-	return sNilVal;
-	}
-
-const ZVal_ZooLib& ZMap_ZooLib::RGet(Index_t iIndex) const
-	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iIndex))
-		return *theValue;
-	return sNilVal;
-	}
-
-const ZVal_ZooLib& ZMap_ZooLib::RGet(const char* iPropName) const
-	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropName))
-		return *theValue;
-	return sNilVal;
-	}
-
-const ZVal_ZooLib& ZMap_ZooLib::RGet(const ZTName& iPropName) const
-	{
-	if (const ZVal_ZooLib* theValue = this->pLookupAddressConst(iPropName))
+	if (const ZVal_ZooLib* theValue = this->PGet(iPropName))
 		return *theValue;
 	return sNilVal;
 	}
@@ -2315,16 +2376,10 @@ ZVal_ZooLib& ZMap_ZooLib::Mutable(Index_t iIndex)
 	}
 
 ZVal_ZooLib& ZMap_ZooLib::Mutable(const char* iPropName)
-	{
-	this->pTouch();
-	return *this->pFindOrAllocate(iPropName);
-	}
+	{ return *this->pFindOrAllocate(iPropName); }
 
 ZVal_ZooLib& ZMap_ZooLib::Mutable(const ZTName& iPropName)
-	{
-	this->pTouch();
-	return *this->pFindOrAllocate(iPropName);
-	}
+	{ return *this->pFindOrAllocate(iPropName); }
 
 ZMap_ZooLib::Index_t ZMap_ZooLib::Begin() const
 	{
@@ -2398,10 +2453,10 @@ ZMap_ZooLib::Index_t ZMap_ZooLib::IndexOf(
 	}
 
 bool ZMap_ZooLib::Has(const char* iPropName) const
-	{ return this->pLookupAddressConst(iPropName); }
+	{ return this->PGet(iPropName); }
 
 bool ZMap_ZooLib::Has(const ZTName& iPropName) const
-	{ return this->pLookupAddressConst(iPropName); }
+	{ return this->PGet(iPropName); }
 
 void ZMap_ZooLib::ToStream(const ZStreamW& iStreamW) const
 	{
@@ -2424,92 +2479,32 @@ void ZMap_ZooLib::ToStream(const ZStreamW& iStreamW) const
 
 void ZMap_ZooLib::pSet(Index_t iIndex, const ZVal_ZooLib& iVal)
 	{
-	if (fRep && iIndex != fRep->fProperties.end())
-		{
-		iIndex = this->pTouch(iIndex);
-		(*iIndex).fVal = iVal;
-		}
+	if (ZVal_ZooLib* theVal = this->PGet(iIndex))
+		*theVal = iVal;
 	}
 
 void ZMap_ZooLib::pSet(const char* iPropName, const ZVal_ZooLib& iVal)
-	{
-	this->pTouch();
-	*pFindOrAllocate(iPropName) = iVal;
-	}
+	{ *pFindOrAllocate(iPropName) = iVal; }
 
 void ZMap_ZooLib::pSet(const ZTName& iPropName, const ZVal_ZooLib& iVal)
-	{
-	this->pTouch();
-	*pFindOrAllocate(iPropName) = iVal;
-	}
+	{ *pFindOrAllocate(iPropName) = iVal; }
 
 ZVal_ZooLib* ZMap_ZooLib::pFindOrAllocate(const char* iPropName)
 	{
-	ZAssertStop(kDebug_Tuple, fRep);
+	if (ZVal_ZooLib* theVal = this->PGet(iPropName))
+		return theVal;
 
-	size_t propNameLength = strlen(iPropName);
-	for (PropList::iterator i = fRep->fProperties.begin(),
-		theEnd = fRep->fProperties.end();
-		i != theEnd; ++i)
-		{
-		if ((*i).fName.Equals(iPropName, propNameLength))
-			return &(*i).fVal;
-		}
 	fRep->fProperties.push_back(NameVal(iPropName));
 	return &fRep->fProperties.back().fVal;
 	}
 
 ZVal_ZooLib* ZMap_ZooLib::pFindOrAllocate(const ZTName& iPropName)
 	{
-	ZAssertStop(kDebug_Tuple, fRep);
+	if (ZVal_ZooLib* theVal = this->PGet(iPropName))
+		return theVal;
 
-	for (PropList::iterator i = fRep->fProperties.begin(),
-		theEnd = fRep->fProperties.end();
-		i != theEnd; ++i)
-		{
-		if ((*i).fName.Equals(iPropName))
-			return &(*i).fVal;
-		}
 	fRep->fProperties.push_back(NameVal(iPropName));
 	return &fRep->fProperties.back().fVal;
-	}
-
-const ZVal_ZooLib* ZMap_ZooLib::pLookupAddressConst(Index_t iIndex) const
-	{
-	if (fRep && iIndex != fRep->fProperties.end())
-		return &(*iIndex).fVal;
-	return nullptr;
-	}
-
-const ZVal_ZooLib* ZMap_ZooLib::pLookupAddressConst(const char* iPropName) const
-	{
-	if (fRep)
-		{
-		size_t propNameLength = strlen(iPropName);
-		for (PropList::const_iterator i = fRep->fProperties.begin(),
-			theEnd = fRep->fProperties.end();
-			i != theEnd; ++i)
-			{
-			if ((*i).fName.Equals(iPropName, propNameLength))
-				return &(*i).fVal;
-			}
-		}
-	return nullptr;
-	}
-
-const ZVal_ZooLib* ZMap_ZooLib::pLookupAddressConst(const ZTName& iPropName) const
-	{
-	if (fRep)
-		{
-		for (PropList::const_iterator i = fRep->fProperties.begin(),
-			theEnd = fRep->fProperties.end();
-			i != theEnd; ++i)
-			{
-			if ((*i).fName.Equals(iPropName))
-				return &(*i).fVal;
-			}
-		}
-	return nullptr;
 	}
 
 void ZMap_ZooLib::pErase(Index_t iIndex)

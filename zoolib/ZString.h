@@ -73,16 +73,16 @@ bool sContainsi(const string& iTarget, const string& iCandidate);
 // -- 
 // ZUtil_Tuple-style conversion API
 
-bool sInt64Q(const string& iString, int64& oVal);
-int64 sInt64D(const string& iString, int64 iDefault);
+bool sQInt64(const string& iString, int64& oVal);
+int64 sDInt64(int64 iDefault, const string& iString);
 int64 sInt64(const string& iString);
 
-bool sUInt64Q(const string& iString, uint64& oVal);
-uint64 sUInt64D(const string& iString, uint64 iDefault);
+bool sQUInt64(const string& iString, uint64& oVal);
+uint64 sDUInt64(uint64 iDefault, const string& iString);
 uint64 sUInt64(const string& iString);
 
-bool sDoubleQ(const string& iString, double& oVal);
-double sDoubleD(const string& iString, double iDefault);
+bool sQDouble(const string& iString, double& oVal);
+double sDDouble(double iDefault, const string& iString);
 double sDouble(const string& iString);
 
 // -- 

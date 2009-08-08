@@ -220,7 +220,7 @@ bool ZString::sContainsi(const string& iTarget, const string& iCandidate)
 	return std::string::npos != ZUnicode::sToLower(iTarget).find(ZUnicode::sToLower(iCandidate));
 	}
 
-bool ZString::sInt64Q(const string& iString, int64& oVal)
+bool ZString::sQInt64(const string& iString, int64& oVal)
 	{
 	if (iString.size())
 		{
@@ -230,18 +230,18 @@ bool ZString::sInt64Q(const string& iString, int64& oVal)
 	return false;
 	}
 
-int64 ZString::sInt64D(const string& iString, int64 iDefault)
+int64 ZString::sDInt64(int64 iDefault, const string& iString)
 	{
 	int64 result;
-	if (sInt64Q(iString, result))
+	if (sQInt64(iString, result))
 		return result;
 	return iDefault;
 	}
 
 int64 ZString::sInt64(const string& iString)
-	{ return sInt64D(iString, 0); }
+	{ return sDInt64(0, iString); }
 
-bool ZString::sUInt64Q(const string& iString, uint64& oVal)
+bool ZString::sQUInt64(const string& iString, uint64& oVal)
 	{
 	if (iString.size())
 		{
@@ -251,18 +251,18 @@ bool ZString::sUInt64Q(const string& iString, uint64& oVal)
 	return false;
 	}
 
-uint64 ZString::sUInt64D(const string& iString, uint64 iDefault)
+uint64 ZString::sDUInt64(uint64 iDefault, const string& iString)
 	{
 	uint64 result;
-	if (sUInt64Q(iString, result))
+	if (sQUInt64(iString, result))
 		return result;
 	return iDefault;
 	}
 
 uint64 ZString::sUInt64(const string& iString)
-	{ return sUInt64D(iString, 0); }
+	{ return sDUInt64(0, iString); }
 
-bool ZString::sDoubleQ(const string& iString, double& oVal)
+bool ZString::sQDouble(const string& iString, double& oVal)
 	{
 	if (iString.size())
 		{
@@ -272,16 +272,16 @@ bool ZString::sDoubleQ(const string& iString, double& oVal)
 	return false;
 	}
 
-double ZString::sDoubleD(const string& iString, double iDefault)
+double ZString::sDDouble(double iDefault, const string& iString)
 	{
 	double result;
-	if (sDoubleQ(iString, result))
+	if (sQDouble(iString, result))
 		return result;
 	return iDefault;
 	}
 
 double ZString::sDouble(const string& iString)
-	{ return sDoubleD(iString, 0.0); }
+	{ return sDDouble(0.0, iString); }
 
 string ZString::sFresh(const string& iOther)
 	{

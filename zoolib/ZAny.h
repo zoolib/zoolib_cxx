@@ -22,6 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZAny__
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
+#include "zoolib/ZTypes.h"
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZAny as a typedef of boost::any
 
 #if ZCONFIG_SPI_Enabled(boost)
 
@@ -41,9 +46,14 @@ const ValueType* ZAnyCast(const ZAny* operand)
 
 NAMESPACE_ZOOLIB_END
 
-#else // ZCONFIG_SPI_Enabled(boost)
+#endif // ZCONFIG_SPI_Enabled(boost)
 
-// Copied and reworked from boost::any
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZAny, copied/reworked from boost::any
+
+#if ! ZCONFIG_SPI_Enabled(boost)
+
 // Copyright Kevlin Henney, 2000, 2001, 2002. All rights reserved.
 //
 // Distributed under the Boost Software License, Version 1.0. (See
@@ -148,6 +158,22 @@ const ValueType* ZAnyCast(const ZAny* operand)
 
 NAMESPACE_ZOOLIB_END
 
-#endif // ZCONFIG_SPI_Enabled(boost)
+#endif // ! ZCONFIG_SPI_Enabled(boost)
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZAny coercion
+
+NAMESPACE_ZOOLIB_BEGIN
+
+bool sQCoerceInt(const ZAny& iAny, int64& oVal);
+int64 sDCoerceInt(int64 iDefault, const ZAny& iAny);
+int64 sCoerceInt(const ZAny& iAny);
+
+bool sQCoerceReal(const ZAny& iAny, double& oVal);
+double sDCoerceReal(double iDefault, const ZAny& iAny);
+double sCoerceReal(const ZAny& iAny);
+
+NAMESPACE_ZOOLIB_END
 
 #endif // __ZAny__

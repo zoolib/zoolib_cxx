@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZTime.h"
-#include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZYad_JSONNormalize.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -81,11 +80,11 @@ static bool spNormalizeSimpleValue(const ZAny& iVal, ZAny& oVal)
 		{
 		oVal = iVal;
 		}
-	else if (ZUtil_Any::sQCoerceInt(iVal, asInt64))
+	else if (sQCoerceInt(iVal, asInt64))
 		{
 		oVal = asInt64;
 		}
-	else if (ZUtil_Any::sQCoerceReal(iVal, asDouble))
+	else if (sQCoerceReal(iVal, asDouble))
 		{
 		oVal = asDouble;
 		}

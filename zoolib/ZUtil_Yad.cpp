@@ -18,30 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Yad.h"
 #include "zoolib/ZString.h"
-
-#include <stdio.h> // For sscanf
+#include "zoolib/ZUtil_Yad.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-using std::min;
 using std::string;
-using std::vector;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Static helpers
-
-static bool sAsInt(const string& iString, int& oInt)
-	{
-	if (iString.size())
-		{
-		if (sscanf(iString.c_str(), "%d", &oInt) > 0)
-			return true;
-		}
-	return false;
-	}
 
 static ZRef<ZYadR> sGetChild(ZRef<ZYadR> iYadR, const string& iName)
 	{
@@ -73,7 +59,7 @@ static ZRef<ZYadR> sGetChild(ZRef<ZYadR> iYadR, const string& iName)
 	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
 		{
 		int64 theIntIndex;
-		if (ZString::sInt64Q(iName, theIntIndex) && theIntIndex >= 0)
+		if (ZString::sQInt64(iName, theIntIndex) && theIntIndex >= 0)
 			{
 			if (ZRef<ZYadListRPos> theYadListPosR = ZRefDynamicCast<ZYadListRPos>(iYadR))
 				{
@@ -107,13 +93,9 @@ static ZRef<ZYadR> sGetChild(ZRef<ZYadR> iYadR, const string& iName)
 ZRef<ZYadR> ZUtil_Yad::sWalk(ZRef<ZYadR> iYadR, const ZTrail& iTrail)
 	{
 	const ZTrail theTrail = iTrail.Normalized();
-	const vector<string>& theComps = theTrail.GetComps();
 
-	for (vector<string>::const_iterator i = theComps.begin();
-		iYadR && i != theComps.end(); ++i)
-		{
-		iYadR = sGetChild(iYadR, *i);
-		}
+	for (size_t x = 0, count = theTrail.Count(); iYadR && x < count; ++x)
+		iYadR = sGetChild(iYadR, theTrail.At(x));
 
 	return iYadR;
 	}

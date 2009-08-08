@@ -125,9 +125,7 @@ public:
 
 	template <class S>
 	void Set_T(const S& iVal)
-		{
-		ZAny::operator=(iVal);
-		}
+		{ *this = iVal; }
 
 // Our protocol
 	template <class S>
@@ -152,6 +150,8 @@ class ZList_Any
 	class Rep;
 
 public:
+	typedef ZVal_Any Val_t;
+
 	ZList_Any AsList_Any();
 	ZList_Any AsList_Any(const ZVal_Any& iDefault);
 
@@ -174,10 +174,11 @@ public:
 
 	void Clear();
 
+	ZVal_Any* PGet(size_t iIndex);
+	const ZVal_Any* PGet(size_t iIndex) const;
 	bool QGet(size_t iIndex, ZVal_Any& oVal) const;
 	ZVal_Any DGet(const ZVal_Any& iDefault, size_t iIndex) const;
 	ZVal_Any Get(size_t iIndex) const;
-	ZVal_Any* PGet(size_t iIndex);
 
 	void Set(size_t iIndex, const ZVal_Any& iVal);
 
@@ -237,6 +238,7 @@ class ZMap_Any
 
 public:
 	typedef map<string, ZAny>::iterator Index_t;
+	typedef ZVal_Any Val_t;
 
 	ZMap_Any AsMap_Any();
 	ZMap_Any AsMap_Any(const ZVal_Any& iDefault);
@@ -260,6 +262,12 @@ public:
 // ZMap protocol
 	void Clear();
 
+	ZVal_Any* PGet(const string8& iName);
+	ZVal_Any* PGet(const Index_t& iIndex);
+
+	const ZVal_Any* PGet(const string8& iName) const;
+	const ZVal_Any* PGet(const Index_t& iIndex) const;
+
 	bool QGet(const string8& iName, ZVal_Any& oVal) const;
 	bool QGet(const Index_t& iIndex, ZVal_Any& oVal) const;
 
@@ -268,9 +276,6 @@ public:
 
 	ZVal_Any Get(const string8& iName) const;
 	ZVal_Any Get(const Index_t& iIndex) const;
-
-	ZVal_Any* PGet(const string8& iName);
-	ZVal_Any* PGet(const Index_t& iIndex);
 
 	void Set(const string8& iName, const ZVal_Any& iVal);
 	void Set(const Index_t& iIndex, const ZVal_Any& iVal);

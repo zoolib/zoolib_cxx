@@ -263,6 +263,8 @@ class ZList_ZooLib
 	class Rep;
 
 public:
+	typedef ZVal_ZooLib Val_t;
+
 	ZList_Any AsList_Any() const;
 	ZList_Any AsList_Any(const ZVal_Any& iDefault) const;
 
@@ -391,6 +393,7 @@ class ZMap_ZooLib
 public:
 	typedef std::vector<NameVal> PropList;
 	typedef PropList::iterator Index_t;
+	typedef ZVal_ZooLib Val_t;
 
 	ZMap_Any AsMap_Any() const;
 	ZMap_Any AsMap_Any(const ZVal_Any& iDefault) const;
@@ -408,6 +411,14 @@ public:
 // ZMap protocol
 	void Clear();
 
+	ZVal_ZooLib* PGet(Index_t iIndex);
+	ZVal_ZooLib* PGet(const char* iPropName);
+	ZVal_ZooLib* PGet(const ZTName& iPropName);
+
+	const ZVal_ZooLib* PGet(Index_t iIndex) const;
+	const ZVal_ZooLib* PGet(const char* iPropName) const;
+	const ZVal_ZooLib* PGet(const ZTName& iPropName) const;
+
 	bool QGet(Index_t iIndex, ZVal_ZooLib& oVal) const;
 	bool QGet(const char* iPropName, ZVal_ZooLib& oVal) const;
 	bool QGet(const ZTName& iPropName, ZVal_ZooLib& oVal) const;
@@ -419,10 +430,6 @@ public:
 	ZVal_ZooLib Get(Index_t iIndex) const;
 	ZVal_ZooLib Get(const char* iPropName) const;
 	ZVal_ZooLib Get(const ZTName& iPropName) const;
-
-	const ZVal_ZooLib& RGet(Index_t iIndex) const;
-	const ZVal_ZooLib& RGet(const char* iPropName) const;
-	const ZVal_ZooLib& RGet(const ZTName& iPropName) const;
 
 	void Set(Index_t iIndex, const ZVal_ZooLib& iVal);
 	void Set(const char* iPropName, const ZVal_ZooLib& iVal);
@@ -467,10 +474,6 @@ protected:
 
 	ZVal_ZooLib* pFindOrAllocate(const char* iPropName);
 	ZVal_ZooLib* pFindOrAllocate(const ZTName& iPropName);
-
-	const ZVal_ZooLib* pLookupAddressConst(Index_t iIndex) const;
-	const ZVal_ZooLib* pLookupAddressConst(const char* iPropName) const;
-	const ZVal_ZooLib* pLookupAddressConst(const ZTName& iPropName) const;
 
 	void pErase(Index_t iIndex);
 	void pTouch();

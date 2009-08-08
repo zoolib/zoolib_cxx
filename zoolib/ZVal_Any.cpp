@@ -135,32 +135,6 @@ size_t ZList_Any::Count() const
 void ZList_Any::Clear()
 	{ fRep.Clear(); }
 
-bool ZList_Any::QGet(size_t iIndex, ZVal_Any& oVal) const
-	{
-	if (fRep && iIndex < fRep->fVector.size())
-		{
-		oVal = fRep->fVector[iIndex];
-		return true;
-		}
-	return false;
-	}
-
-ZVal_Any ZList_Any::DGet(const ZVal_Any& iDefault, size_t iIndex) const
-	{
-	if (fRep && iIndex < fRep->fVector.size())
-		return fRep->fVector[iIndex];
-
-	return iDefault;
-	}
-
-ZVal_Any ZList_Any::Get(size_t iIndex) const
-	{
-	if (fRep && iIndex < fRep->fVector.size())
-		return fRep->fVector[iIndex];
-
-	return ZVal_Any();
-	}
-
 ZVal_Any* ZList_Any::PGet(size_t iIndex)
 	{
 	if (fRep && iIndex < fRep->fVector.size())
@@ -169,6 +143,37 @@ ZVal_Any* ZList_Any::PGet(size_t iIndex)
 		return static_cast<ZVal_Any*>(&fRep->fVector[iIndex]);
 		}
 	return nullptr;
+	}
+
+const ZVal_Any* ZList_Any::PGet(size_t iIndex) const
+	{
+	if (fRep && iIndex < fRep->fVector.size())
+		return static_cast<ZVal_Any*>(&fRep->fVector[iIndex]);
+	return nullptr;
+	}
+
+bool ZList_Any::QGet(size_t iIndex, ZVal_Any& oVal) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iIndex))
+		{
+		oVal = *theVal;
+		return true;
+		}
+	return false;
+	}
+
+ZVal_Any ZList_Any::DGet(const ZVal_Any& iDefault, size_t iIndex) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iIndex))
+		return *theVal;
+	return iDefault;
+	}
+
+ZVal_Any ZList_Any::Get(size_t iIndex) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iIndex))
+		return *theVal;
+	return ZVal_Any();
 	}
 
 void ZList_Any::Set(size_t iIndex, const ZVal_Any& iVal)
@@ -272,66 +277,6 @@ ZMap_Any& ZMap_Any::operator=(map<string, ZAny>& iOther)
 void ZMap_Any::Clear()
 	{ fRep.Clear(); }
 
-bool ZMap_Any::QGet(const string8& iName, ZVal_Any& oVal) const
-	{
-	if (fRep)
-		{
-		Index_t theIndex = fRep->fMap.find(iName);
-		if (theIndex != fRep->fMap.end())
-			{
-			oVal = (*theIndex).second;
-			return true;
-			}
-		}
-	return false;
-	}
-
-bool ZMap_Any::QGet(const Index_t& iIndex, ZVal_Any& oVal) const
-	{
-	if (fRep && iIndex != fRep->fMap.end())
-		{
-		oVal = (*iIndex).second;
-		return true;
-		}
-	return false;
-	}
-
-ZVal_Any ZMap_Any::DGet(const ZVal_Any& iDefault, const string8& iName) const
-	{
-	if (fRep)
-		{
-		Index_t theIndex = fRep->fMap.find(iName);
-		if (theIndex != fRep->fMap.end())
-			return (*theIndex).second;
-		}
-	return iDefault;
-	}
-
-ZVal_Any ZMap_Any::DGet(const ZVal_Any& iDefault, const Index_t& iIndex) const
-	{
-	if (fRep && iIndex != fRep->fMap.end())
-		return (*iIndex).second;
-	return iDefault;
-	}
-
-ZVal_Any ZMap_Any::Get(const string8& iName) const
-	{
-	if (fRep)
-		{
-		Index_t theIndex = fRep->fMap.find(iName);
-		if (theIndex != fRep->fMap.end())
-			return (*theIndex).second;
-		}
-	return ZVal_Any();
-	}
-
-ZVal_Any ZMap_Any::Get(const Index_t& iIndex) const
-	{
-	if (fRep && iIndex != fRep->fMap.end())
-		return (*iIndex).second;
-	return ZVal_Any();
-	}
-
 ZVal_Any* ZMap_Any::PGet(const string8& iName)
 	{
 	if (fRep)
@@ -350,6 +295,72 @@ ZVal_Any* ZMap_Any::PGet(const Index_t& iIndex)
 	if (theIndex != this->End())
 		return static_cast<ZVal_Any*>(&(*theIndex).second);
 	return nullptr;
+	}
+
+const ZVal_Any* ZMap_Any::PGet(const string8& iName) const
+	{
+	if (fRep)
+		{
+		Index_t theIndex = fRep->fMap.find(iName);
+		if (theIndex != fRep->fMap.end())
+			return static_cast<ZVal_Any*>(&(*theIndex).second);
+		}
+	return nullptr;
+	}
+
+const ZVal_Any* ZMap_Any::PGet(const Index_t& iIndex) const
+	{
+	if (fRep && iIndex != fRep->fMap.end())
+		return static_cast<ZVal_Any*>(&(*iIndex).second);
+	return nullptr;
+	}
+
+bool ZMap_Any::QGet(const string8& iName, ZVal_Any& oVal) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iName))
+		{
+		oVal = *theVal;
+		return true;
+		}
+	return false;
+	}
+
+bool ZMap_Any::QGet(const Index_t& iIndex, ZVal_Any& oVal) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iIndex))
+		{
+		oVal = *theVal;
+		return true;
+		}
+	return false;
+	}
+
+ZVal_Any ZMap_Any::DGet(const ZVal_Any& iDefault, const string8& iName) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iName))
+		return *theVal;
+	return iDefault;
+	}
+
+ZVal_Any ZMap_Any::DGet(const ZVal_Any& iDefault, const Index_t& iIndex) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iIndex))
+		return *theVal;
+	return iDefault;
+	}
+
+ZVal_Any ZMap_Any::Get(const string8& iName) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iName))
+		return *theVal;
+	return ZVal_Any();
+	}
+
+ZVal_Any ZMap_Any::Get(const Index_t& iIndex) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iIndex))
+		return *theVal;
+	return ZVal_Any();
 	}
 
 void ZMap_Any::Set(const string8& iName, const ZVal_Any& iVal)

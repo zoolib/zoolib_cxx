@@ -79,7 +79,7 @@ static bool spIsSimple(const ZYadOptions& iOptions, const ZVal_ZooLib& iVal)
 				return true;
 
 			if (theMap.Count() == 1)
-				return spIsSimple(iOptions, theMap.RGet(theMap.Begin()));
+				return spIsSimple(iOptions, *theMap.PGet(theMap.Begin()));
 
 			return false;
 			}

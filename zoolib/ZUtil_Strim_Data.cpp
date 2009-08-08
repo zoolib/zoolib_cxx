@@ -35,10 +35,10 @@ using std::string;
 
 void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& s)
 	{
-	sDumpData(iStreamRPos, s, 1024*1024);
+	sDumpData(iStreamRPos, s, ZINT64_C(-1));
 	}
 
-void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& s, size_t iMax)
+void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& s, uint64 iMax)
 	{
 	const string byteSeparator = " ";
 	const string chunkSeparator = "\n";
@@ -92,13 +92,13 @@ void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& 
 		}
 	}
 
-void ZUtil_Strim_Data::sDumpData(const ZStrimW& s, const void* iSource, size_t iCount, size_t iMax)
+void ZUtil_Strim_Data::sDumpData(const ZStrimW& s, const void* iSource, uint64 iCount, uint64 iMax)
 	{
 	if (iCount)
 		ZUtil_Strim_Data::sDumpData(ZStreamRPos_Memory(iSource, iCount), s, iMax);
 	}
 
-void ZUtil_Strim_Data::sDumpData(const ZStrimW& s, const void* iSource, size_t iCount)
+void ZUtil_Strim_Data::sDumpData(const ZStrimW& s, const void* iSource, uint64 iCount)
 	{
 	if (iCount)
 		ZUtil_Strim_Data::sDumpData(ZStreamRPos_Memory(iSource, iCount), s);

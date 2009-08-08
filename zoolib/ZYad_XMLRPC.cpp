@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_ASCIIStrim.h"
 #include "zoolib/ZStream_Base64.h"
 #include "zoolib/ZStrimU_Unreader.h"
-#include "zoolib/ZUtil_Any.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZYad_XMLRPC.h"
@@ -601,13 +600,13 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 				s << "0";
 		s.End("boolean");
 		}
-	else if (ZUtil_Any::sQCoerceInt(iVal, asInt64))
+	else if (sQCoerceInt(iVal, asInt64))
 		{
 		s.Begin("i4");
 			s.Writef("%d", int(asInt64));
 		s.End("i4");
 		}
-	else if (ZUtil_Any::sQCoerceReal(iVal, asDouble))
+	else if (sQCoerceReal(iVal, asDouble))
 		{
 		s.Begin("double");
 			s.Writef("%.17g", asDouble);

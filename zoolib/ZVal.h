@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZVal__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZString.h"//##
 #include "zoolib/ZTypes.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -141,6 +142,32 @@ public:
 private:
 	size_t fVal;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sPGeti, case-insensitive get
+
+template <class Map_t>
+typename Map_t::Val_t* sPGeti(Map_t& iMap, const std::string& iNamei)
+	{
+	for (typename Map_t::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
+		{
+		if (ZString::sEquali(iMap.NameOf(i).AsString(), iNamei))
+			return iMap.PGet(i);
+		}
+	return nullptr;
+	}
+
+template <class Map_t>
+const typename Map_t::Val_t* sPGeti(const Map_t& iMap, const std::string& iNamei)
+	{
+	for (typename Map_t::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
+		{
+		if (ZString::sEquali(iMap.NameOf(i).AsString(), iNamei))
+			return iMap.PGet(i);
+		}
+	return nullptr;
+	}
 
 NAMESPACE_ZOOLIB_END
 

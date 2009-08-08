@@ -24,8 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZYad_JSON.h"
-#include "zoolib/ZUtil_Any.h"
-
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -378,7 +376,7 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 		else
 			s.Write("false");
 		}
-	else if (ZUtil_Any::sQCoerceInt(iAny, asInt64))
+	else if (sQCoerceInt(iAny, asInt64))
 		{
 		s.Writef("%lld", asInt64);
 		}
