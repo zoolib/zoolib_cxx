@@ -139,7 +139,7 @@ ZDCPixmap ZDCPixmap_Asset_BMP::sGetPixmap(const ZAsset& iAsset)
 		}
 
 	// Read in the color table, if any
-	vector<ZRGBColorPOD> localColorVector;
+	vector<ZRGBA_POD> localColorVector;
 	if (biClrUsed > 0)
 		{
 		localColorVector.resize(biClrUsed);
@@ -149,7 +149,7 @@ ZDCPixmap ZDCPixmap_Asset_BMP::sGetPixmap(const ZAsset& iAsset)
 
 		for (size_t x = 0; x < biClrUsed; ++x)
 			{
-			ZRGBColorPOD& theColor = localColorVector[x];
+			ZRGBA_POD& theColor = localColorVector[x];
 			theColor.blue = (*theColors++) * 0x101;
 			theColor.green = (*theColors++) * 0x101;
 			theColor.red = (*theColors++) * 0x101;

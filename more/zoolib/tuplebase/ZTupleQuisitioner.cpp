@@ -99,7 +99,7 @@ static void sExtractProps(const vector<ZTBQuery::SortSpec>& iSort, const ZTuple&
 	for (vector<ZTBQuery::SortSpec>::const_iterator i = iSort.begin(), theEnd = iSort.end();
 		i != theEnd; ++i)
 		{
-		oProps.push_back(&iTuple.RGet((*i).fPropName));
+		oProps.push_back(iTuple.PGet((*i).fPropName));
 		}
 	}
 

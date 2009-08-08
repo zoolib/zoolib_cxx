@@ -2339,13 +2339,13 @@ ZDCPixmapRep_DIB::ZDCPixmapRep_DIB(HDC iHDC, HBITMAP iHBITMAP, bool iForce32BPP)
 					}
 				else
 					{
-					vector<ZRGBColorSmallPOD> colorTable(colorTableSize);
+					vector<ZRGBColorPOD> colorTable(colorTableSize);
 					for (size_t x = 0; x < colorTable.size(); ++x)
 						{
-						colorTable[x].red = fBITMAPINFO->bmiColors[x].rgbRed;
-						colorTable[x].green = fBITMAPINFO->bmiColors[x].rgbGreen;
-						colorTable[x].blue = fBITMAPINFO->bmiColors[x].rgbBlue;
-						colorTable[x].alpha = 0xFFU;
+						colorTable[x].red = 0x101 * fBITMAPINFO->bmiColors[x].rgbRed;
+						colorTable[x].green = 0x101 * fBITMAPINFO->bmiColors[x].rgbGreen;
+						colorTable[x].blue = 0x101 * fBITMAPINFO->bmiColors[x].rgbBlue;
+						colorTable[x].alpha = 0xFFFFU;
 						}
 					fPixelDesc = PixelDesc(&colorTable[0], colorTable.size());
 					}

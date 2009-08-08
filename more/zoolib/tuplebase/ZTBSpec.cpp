@@ -656,7 +656,7 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 			}
 		case eRel_HasOfType:
 			{
-			return iTuple.RGet(propIter).TypeOf() == this->GetTValue().GetType();
+			return iTuple.PGet(propIter)->TypeOf() == this->GetTValue().GetType();
 			}
 		case eRel_Lacks:
 			{
@@ -666,7 +666,7 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 			}
 		case eRel_LacksOfType:
 			{
-			return iTuple.RGet(propIter).TypeOf() != this->GetTValue().GetType();			
+			return iTuple.PGet(propIter)->TypeOf() != this->GetTValue().GetType();			
 			}
 		case eRel_VectorContains:
 			{

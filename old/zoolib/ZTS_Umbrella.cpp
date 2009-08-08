@@ -158,7 +158,7 @@ uint64 ZTS_Umbrella::pAllocateID(ZRef<ZTS> iTS)
 		}
 	}
 
-void ZTS_Umbrella::pTranslate_GlobalToLocal(size_t iChildIndex, ZValMap_ZooLib& ioTuple)
+void ZTS_Umbrella::pTranslate_GlobalToLocal(size_t iChildIndex, ZMap_ZooLib& ioTuple)
 	{
 	for (ZTuple::const_iterator i = ioTuple.begin(), theEnd = ioTuple.end();
 		i != theEnd; ++i)
@@ -192,7 +192,7 @@ void ZTS_Umbrella::pTranslate_GlobalToLocal(size_t iChildIndex, ZValMap_ZooLib& 
 		}
 	}
 
-void ZTS_Umbrella::pTranslate_LocalToGlobal(size_t iChildIndex, ZValMap_ZooLib& ioTuple)
+void ZTS_Umbrella::pTranslate_LocalToGlobal(size_t iChildIndex, ZMap_ZooLib& ioTuple)
 	{
 	for (ZTuple::const_iterator i = ioTuple.begin(), theEnd = ioTuple.end();
 		i != theEnd; ++i)

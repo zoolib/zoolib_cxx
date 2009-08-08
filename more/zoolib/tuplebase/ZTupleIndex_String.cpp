@@ -170,7 +170,7 @@ bool ZTupleIndex_String::pKeyFromTuple(uint64 iID, const ZTuple* iTuple, Key& oK
 	ZTuple::const_iterator propIter = iTuple->IteratorOf(fPropName);
 	if (propIter == iTuple->end())
 		return false;
-	if (iTuple->RGet(propIter).TypeOf() != eZType_String)
+	if (iTuple->PGet(propIter)->TypeOf() != eZType_String)
 		return false;
 	oKey.fValue = ZUnicode::sAsUTF16(iTuple->GetString(propIter));
 	oKey.fID = iID;
