@@ -187,7 +187,7 @@ simple ZTuple API to work with the data that's streamed as XML. See
 for a discussion of the issues.
 */
 
-static ZTValue sReadTV(ZML::Reader& ml, const string& iName)
+static ZTValue sReadTV(ZML::StrimR& ml, const string& iName)
 	{
 	// We're sitting just after the begin tag. If there is any
 	// text, suck it into a string and move on.
@@ -250,7 +250,7 @@ static ZTValue sReadTV(ZML::Reader& ml, const string& iName)
 	return result;
 	}
 
-static ZTuple sReadTuple(ZML::Reader& ml)
+static ZTuple sReadTuple(ZML::StrimR& ml)
 	{
 	// We assume we're sitting just prior to a document element --
 	// a top level begin tag. We're going to turn the
@@ -271,7 +271,7 @@ static ZTuple sReadTuple(const ZStrimR& iStrimR)
 	try
 		{
 		ZStrimU_Unreader strimU(iStrimR);
-		ZML::Reader ml(strimU);
+		ZML::StrimR ml(strimU);
 		return sReadTuple(ml);
 		}
 	catch (...)
