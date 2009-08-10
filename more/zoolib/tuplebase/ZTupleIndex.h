@@ -70,6 +70,9 @@ public:
 		const ZTValue*& oValueEqual,
 		const ZTValue*& oBestValueLess, const ZTValue*& oBestValueLessEqual,
 		const ZTValue*& oBestValueGreater, const ZTValue*& oBestValueGreaterEqual);
+
+protected:
+	static ZTValue spEmptyVal;
 	};
 
 // =================================================================================================

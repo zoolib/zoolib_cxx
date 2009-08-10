@@ -325,7 +325,12 @@ bool ZTupleIndex_General::pKeyFromTuple(uint64 iID, const ZTuple* iTuple, Key& o
 	oKey.fValues[0] = iTuple->PGet(tupleIter);
 	
 	for (size_t x = 1; x < fPropNameCount; ++x)
-		oKey.fValues[x] = iTuple->PGet(fPropNames[x]);
+		{
+		if (const ZTValue* theVal = iTuple->PGet(fPropNames[x]))
+			oKey.fValues[x] = theVal;
+		else
+			oKey.fValues[x] = &spEmptyVal;
+		}
 
 	oKey.fID = iID;
 	return true;

@@ -31,6 +31,8 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZTupleIndex
 
+ZTValue ZTupleIndex::spEmptyVal;
+
 ZTupleIndex::~ZTupleIndex()
 	{}
 
