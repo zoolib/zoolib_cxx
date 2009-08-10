@@ -670,7 +670,7 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 					{
 					uint64 lastPos = iStreamRPos.GetPosition();
 					uint64 countCopied;
-					ZStreamW_HexStrim(iOptions.fRawByteSeparator, "", 0, s)
+					ZStreamW_HexStrim(iOptions.fRawByteSeparator, string(), 0, s)
 						.CopyFrom(iStreamRPos, iOptions.fRawChunkSize, &countCopied, nullptr);
 
 					if (countCopied == 0)
@@ -719,7 +719,7 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamRPos& iStreamRPos,
 			{
 			s.Write("(");
 
-			ZStreamW_HexStrim(iOptions.fRawByteSeparator, "", 0, s)
+			ZStreamW_HexStrim(iOptions.fRawByteSeparator, string(), 0, s)
 				.CopyAllFrom(iStreamRPos);
 
 			if (iOptions.fRawAsASCII)
@@ -747,30 +747,38 @@ static void spToStrim_Stream(const ZStrimW& s, const ZStreamR& iStreamR,
 	if (const ZStreamRPos* theStreamRPos = dynamic_cast<const ZStreamRPos*>(&iStreamR))
 		{
 		spToStrim_Stream(s, *theStreamRPos, iLevel, iOptions, iMayNeedInitialLF);
-		return;
 		}
+	else
+		{
+		s.Write("(");
 
-	s.Write("(");
+		ZStreamW_HexStrim(iOptions.fRawByteSeparator, string(), 0, s)
+			.CopyAllFrom(iStreamR);
 
-	ZStreamW_HexStrim(iOptions.fRawByteSeparator, "", 0, s)
-		.CopyAllFrom(iStreamR);
-
-	s.Write(")");
+		s.Write(")");
+		}
 	}
 
 static void spToStrim_Strim(const ZStrimW& s, const ZStrimR& iStrimR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
-	s.Write("\"");
+	if (const ZStrimU_String8* theStrimU = dynamic_cast<const ZStrimU_String8*>(&iStrimR))
+		{
+		spWriteString(s, iOptions, theStrimU->GetString8());
+		}
+	else
+		{
+		s.Write("\"");
 
-	ZStrimW_Escaped::Options theOptions;
-	theOptions.fQuoteQuotes = true;
-	theOptions.fEscapeHighUnicode = false;
-	
-	ZStrimW_Escaped(theOptions, s)
-		.CopyAllFrom(iStrimR);
+		ZStrimW_Escaped::Options theOptions;
+		theOptions.fQuoteQuotes = true;
+		theOptions.fEscapeHighUnicode = false;
+		
+		ZStrimW_Escaped(theOptions, s)
+			.CopyAllFrom(iStrimR);
 
-	s.Write("\"");
+		s.Write("\"");
+		}
 	}
 
 static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
