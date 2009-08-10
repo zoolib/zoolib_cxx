@@ -67,6 +67,7 @@ void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTV);
 void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTV,
 	size_t iInitialIndent, const ZYadOptions& iOptions);
 
+std::string sAsString(const ZTValue& iTV, size_t iInitialIndent, const ZYadOptions& iOptions);
 std::string sAsString(const ZTValue& iTV);
 
 bool sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV);

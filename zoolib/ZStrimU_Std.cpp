@@ -42,7 +42,6 @@ void ZStrimU_Std::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 		UTF32 theCP;
 		if (fStack.empty())
 			{
-			UTF32 theCP;
 			if (!fStrimR_CRLFRemove.ReadCP(theCP))
 				break;
 			}

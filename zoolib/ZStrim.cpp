@@ -1825,6 +1825,9 @@ void ZStrimU_String8::Imp_Unread(UTF32 iCP)
 size_t ZStrimU_String8::Imp_UnreadableLimit()
 	{ return size_t(-1); }
 
+string8 ZStrimU_String8::GetString8() const
+	{ return fString; }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStrimW_String

@@ -655,6 +655,9 @@ public:
 	virtual void Imp_Unread(UTF32 iCP);
 	virtual size_t Imp_UnreadableLimit();
 
+// Our protocol
+	string8 GetString8() const;
+
 private:
 	string8 fString;
 	size_t fPosition;

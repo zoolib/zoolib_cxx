@@ -66,6 +66,13 @@ void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTValue& iTV,
 	ZYad_ZooLibStrim::sToStrim(iInitialIndent, iOptions, sMakeYadR(iTV), s);
 	}
 
+string ZUtil_Strim_Tuple::sAsString(const ZTValue& iTV, size_t iInitialIndent, const ZYadOptions& iOptions)
+	{
+	string theString;
+	sToStrim(ZStrimW_String(theString), iTV, iInitialIndent, iOptions);
+	return theString;
+	}
+
 string ZUtil_Strim_Tuple::sAsString(const ZTValue& iTV)
 	{
 	string theString;
