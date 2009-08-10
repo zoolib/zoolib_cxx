@@ -158,7 +158,7 @@ ZRef<ZYadMapR> sMakeYadR(const ZRef<CFDictionaryRef>& iMap);
 #pragma mark -
 #pragma mark * sFromYadR
 
-ZRef<CFTypeRef> sFromYadR(ZRef<ZYadR> iYadR, const ZRef<CFTypeRef>& iDefault);
+ZRef<CFTypeRef> sFromYadR(const ZRef<CFTypeRef>& iDefault, ZRef<ZYadR> iYadR);
 
 NAMESPACE_ZOOLIB_END
 

@@ -110,7 +110,7 @@ ZRef<ZYadMapR> sMakeYadR(const ZMap_ZooLib& iMap);
 #pragma mark -
 #pragma mark * sFromYadR
 
-ZVal_ZooLib sFromYadR(ZRef<ZYadR> iYadR, const ZVal_ZooLib& iDefault);
+ZVal_ZooLib sFromYadR(const ZVal_ZooLib& iDefault, ZRef<ZYadR> iYadR);
 
 NAMESPACE_ZOOLIB_END
 

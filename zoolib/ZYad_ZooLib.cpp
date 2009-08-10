@@ -196,7 +196,7 @@ public:
 
 } // anonymous namespace
 
-ZVal_ZooLib sFromYadR(ZRef<ZYadR> iYadR, const ZVal_ZooLib& iDefault)
+ZVal_ZooLib sFromYadR(const ZVal_ZooLib& iDefault, ZRef<ZYadR> iYadR)
 	{
 	if (ZRef<ZYadR_ZooLib> theYadR = ZRefDynamicCast<ZYadR_ZooLib>(iYadR))
 		return theYadR->GetVal();
@@ -235,7 +235,7 @@ bool YadVisitor_GetValZooLib::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 	ZList_ZooLib theList;
 
 	while (ZRef<ZYadR> theChild = iYadListR->ReadInc())
-		theList.Append(sFromYadR(theChild, fDefault));
+		theList.Append(sFromYadR(fDefault, theChild));
 
 	fOutput = theList;
 	return true;
@@ -247,7 +247,7 @@ bool YadVisitor_GetValZooLib::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 
 	string theName;
 	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
-		theMap.Set(theName, sFromYadR(theChild, fDefault));
+		theMap.Set(theName, sFromYadR(fDefault, theChild));
 
 	fOutput = theMap;
 	return true;

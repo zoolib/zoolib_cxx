@@ -662,7 +662,7 @@ static void spToStrim(const ZML::StrimW& s, ZRef<ZYadR> iYadR)
 
 namespace ZYad_XMLRPC {
 
-bool sFromReader(ZRef<ZML::StrimmerR> iStrimmerR, Request_t& oRequest)
+bool sFromStrimmer(ZRef<ZML::StrimmerR> iStrimmerR, Request_t& oRequest)
 	{
 	ZML::StrimR& theR = iStrimmerR->GetStrim();
 
@@ -689,7 +689,7 @@ bool sFromReader(ZRef<ZML::StrimmerR> iStrimmerR, Request_t& oRequest)
 	return true;
 	}
 
-bool sFromReader(ZRef<ZML::StrimmerR> iStrimmerR, Response_t& oResponse)
+bool sFromStrimmer(ZRef<ZML::StrimmerR> iStrimmerR, Response_t& oResponse)
 	{
 	ZML::StrimR& theR = iStrimmerR->GetStrim();
 
