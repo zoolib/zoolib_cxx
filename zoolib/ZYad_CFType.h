@@ -142,10 +142,16 @@ private:
 
 ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal);
 
+ZRef<ZYadStrimR> sMakeYadR(const ZRef<CFMutableStringRef>& iString);
+ZRef<ZYadStrimR> sMakeYadR(const ZRef<CFStringRef>& iString);
+
+ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFMutableDataRef>& iData);
 ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFDataRef>& iData);
 
+ZRef<ZYadListR> sMakeYadR(const ZRef<CFMutableArrayRef>& iList);
 ZRef<ZYadListR> sMakeYadR(const ZRef<CFArrayRef>& iList);
 
+ZRef<ZYadMapR> sMakeYadR(const ZRef<CFMutableDictionaryRef>& iMap);
 ZRef<ZYadMapR> sMakeYadR(const ZRef<CFDictionaryRef>& iMap);
 
 // =================================================================================================

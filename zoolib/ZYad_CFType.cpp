@@ -176,11 +176,26 @@ ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal)
 	return new ZYadPrimR_CFType(iVal);
 	}
 
+ZRef<ZYadStrimR> sMakeYadR(const ZRef<CFMutableStringRef>& iString)
+	{ return new ZYadStrimR_CFType(iString); }
+
+ZRef<ZYadStrimR> sMakeYadR(const ZRef<CFStringRef>& iString)
+	{ return new ZYadStrimR_CFType(iString); }
+
+ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFMutableDataRef>& iData)
+	{ return new ZYadStreamRPos_CFType(iData); }
+
 ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFDataRef>& iData)
 	{ return new ZYadStreamRPos_CFType(iData); }
 
+ZRef<ZYadListR> sMakeYadR(const ZRef<CFMutableArrayRef>& iList)
+	{ return new ZYadListRPos_CFType(iList); }
+
 ZRef<ZYadListR> sMakeYadR(const ZRef<CFArrayRef>& iList)
 	{ return new ZYadListRPos_CFType(iList); }
+
+ZRef<ZYadMapR> sMakeYadR(const ZRef<CFMutableDictionaryRef>& iMap)
+	{ return new ZYadMapRPos_CFType(iMap); }
 
 ZRef<ZYadMapR> sMakeYadR(const ZRef<CFDictionaryRef>& iMap)
 	{ return new ZYadMapRPos_CFType(iMap); }
