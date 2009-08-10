@@ -36,9 +36,9 @@ using namespace ZTQL;
 #pragma mark -
 #pragma mark * ZUtil_Strim_TQL_Spec
 
-void sToStrim(const ZStrimW& iStrimW, const Condition& iCondition);
-void sToStrim(const ZStrimW& iStrimW, const Spec& iSpec);
-void sToStrim(const ZStrimW& iStrimW, ZRef<LogOp> iLogOp);
+void sToStrim(const Condition& iCondition, const ZStrimW& iStrimW);
+void sToStrim(const Spec& iSpec, const ZStrimW& iStrimW);
+void sToStrim(ZRef<LogOp> iLogOp, const ZStrimW& iStrimW);
 
 } // namespace ZUtil_Strim_TQL_Spec
 

@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/tql/ZUtil_Strim_TQL_Spec.h"
 
 #include "zoolib/ZUtil_Strim_Tuple.h"
+#include "zoolib/ZYad_ZooLibStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -31,7 +32,7 @@ namespace ZUtil_Strim_TQL_Spec {
 #pragma mark -
 #pragma mark * Static helper functions
 
-static void sToStrim(const ZStrimW& s, ZRef<ComparandRep> iCR)
+static void spToStrim(ZRef<ComparandRep> iCR, const ZStrimW& s)
 	{
 	if (!iCR)
 		{
@@ -40,7 +41,7 @@ static void sToStrim(const ZStrimW& s, ZRef<ComparandRep> iCR)
 	else if (ZRef<ComparandRep_Name> cr = ZRefDynamicCast<ComparandRep_Name>(iCR))
 		{
 		s << "@";
-		ZUtil_Strim_Tuple::sWrite_PropName(s, cr->GetName());
+		ZYad_ZooLibStrim::sWrite_PropName(cr->GetName(), s);
 		}
 	else if (ZRef<ComparandRep_Value> cr = ZRefDynamicCast<ComparandRep_Value>(iCR))
 		{
@@ -52,7 +53,7 @@ static void sToStrim(const ZStrimW& s, ZRef<ComparandRep> iCR)
 		}
 	}
 
-static void sToStrim(const ZStrimW& s, ZRef<ComparatorRep> iCR)
+static void spToStrim(ZRef<ComparatorRep> iCR, const ZStrimW& s)
 	{
 	if (!iCR)
 		{
@@ -137,9 +138,9 @@ bool Writer::Visit_False(ZRef<LogOp_False> iLogOp)
 bool Writer::Visit_And(ZRef<LogOp_And> iLogOp)
 	{
 	fStrimW << "(";
-	sToStrim(fStrimW, iLogOp->GetLHS());
+	sToStrim(iLogOp->GetLHS(), fStrimW);
 	fStrimW << " & ";
-	sToStrim(fStrimW, iLogOp->GetRHS());
+	sToStrim(iLogOp->GetRHS(), fStrimW);
 	fStrimW << ")";
 	return true;
 	}
@@ -147,16 +148,16 @@ bool Writer::Visit_And(ZRef<LogOp_And> iLogOp)
 bool Writer::Visit_Or(ZRef<LogOp_Or> iLogOp)
 	{
 	fStrimW << "(";
-	sToStrim(fStrimW, iLogOp->GetLHS());
+	sToStrim(iLogOp->GetLHS(), fStrimW);
 	fStrimW << " | ";
-	sToStrim(fStrimW, iLogOp->GetRHS());
+	sToStrim(iLogOp->GetRHS(), fStrimW);
 	fStrimW << ")";
 	return true;
 	}
 
 bool Writer::Visit_Condition(ZRef<LogOp_Condition> iLogOp)
 	{
-	ZUtil_Strim_TQL_Spec::sToStrim(fStrimW, iLogOp->GetCondition());
+	ZUtil_Strim_TQL_Spec::sToStrim(iLogOp->GetCondition(), fStrimW);
 	return true;
 	}
 
@@ -164,19 +165,17 @@ bool Writer::Visit_Condition(ZRef<LogOp_Condition> iLogOp)
 #pragma mark -
 #pragma mark * ZUtil_Strim_TQL_Spec
 
-void sToStrim(const ZStrimW& s, const Condition& iCondition)
+void sToStrim(const Condition& iCondition, const ZStrimW& s)
 	{
-	sToStrim(s, iCondition.GetLHS().GetRep());
-	sToStrim(s, iCondition.GetComparator().GetRep());
-	sToStrim(s, iCondition.GetRHS().GetRep());
+	spToStrim(iCondition.GetLHS().GetRep(), s);
+	spToStrim(iCondition.GetComparator().GetRep(), s);
+	spToStrim(iCondition.GetRHS().GetRep(), s);
 	}
 
-void sToStrim(const ZStrimW& s, const Spec& iSpec)
-	{
-	sToStrim(s, iSpec.GetLogOp());
-	}
+void sToStrim(const Spec& iSpec, const ZStrimW& s)
+	{ sToStrim(iSpec.GetLogOp(), s); }
 
-void sToStrim(const ZStrimW& s, ZRef<LogOp> iLogOp)
+void sToStrim(ZRef<LogOp> iLogOp, const ZStrimW& s)
 	{
 	if (iLogOp)
 		{

@@ -28,6 +28,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTuple.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
+#include "zoolib/ZYad_ZooLib.h"
+#include "zoolib/ZYad_ZooLibStrim.h"
 
 using std::map;
 using std::pair;
@@ -204,7 +206,7 @@ void sToStrim(uint64 iNextUnusedID, Source& iSource, const ZStrimW& iStrimW)
 	iStrimW.Writef("// Version 1.0\n// Next unused ID: \n0x%llX /*%lld*/\n",
 		iNextUnusedID, iNextUnusedID);
 
-	ZUtil_Strim_Tuple::Options theOptions;
+	ZYadOptions theOptions;
 	theOptions.fEOLString = "\n\t";
 	theOptions.fIndentString = "  ";
 	theOptions.fRawChunkSize = 16;
@@ -218,7 +220,7 @@ void sToStrim(uint64 iNextUnusedID, Source& iSource, const ZStrimW& iStrimW)
 		if (!iSource.Get(anID, aTuple))
 			break;
 		iStrimW.Writef("0x%llX /*%lld*/:\t", anID, anID);
-		ZUtil_Strim_Tuple::sToStrim(iStrimW, aTuple, 0, theOptions);
+		ZYad_ZooLibStrim::sToStrim(0, theOptions, sMakeYadR(aTuple), iStrimW);
 		iStrimW.Write("\n");
 		}
 	}

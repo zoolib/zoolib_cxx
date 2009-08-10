@@ -25,21 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTuple.h"
 #include "zoolib/ZYad.h"
 
-#include <string>
-
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZStrimR;
-class ZStrimU;
 class ZStrimW;
 
 namespace ZUtil_Strim_Tuple {
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Strim_Tuple::Options
-
-typedef ZYadOptions Options;
 
 // =================================================================================================
 #pragma mark -
@@ -54,25 +44,7 @@ struct Format
 	const ZYadOptions& fOptions;
 	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_Strim_Tuple, writing and parsing pieces
-
-void sWrite_PropName(const ZStrimW& iStrimW, const ZTName& iPropName);
-
-bool sRead_Identifier(const ZStrimU& iStrimU, std::string* oStringLC, std::string* oStringExact);
-
-void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTV);
-
-void sToStrim(const ZStrimW& iStrimW, const ZTValue& iTV,
-	size_t iInitialIndent, const ZYadOptions& iOptions);
-
-std::string sAsString(const ZTValue& iTV, size_t iInitialIndent, const ZYadOptions& iOptions);
-std::string sAsString(const ZTValue& iTV);
-
 bool sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV);
-
-bool sFromString(const std::string& iString, ZTValue& oTV);
 
 }  // namespace ZUtil_Strim_Tuple
 

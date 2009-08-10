@@ -34,7 +34,7 @@ class ZTBSpec;
 
 namespace ZUtil_Strim_TBSpec {
 
-void sToStrim(const ZStrimW& iStrimW, const ZTBSpec& iTBSpec);
+void sToStrim(const ZTBSpec& iTBSpec, const ZStrimW& iStrimW);
 
 bool sFromStrim(const ZStrimU& iStrimU, ZTBSpec& oTBSpec);
 

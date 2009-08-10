@@ -990,7 +990,7 @@ void ZTS_Watchable::pUpdateQueryResults(PQuery* iPQuery)
 			if (ZLOG(s, eDebug, "ZTS_Watchable"))
 				{
 				s.Writef("Slow query, %.3fms\n", elapsed * 1000);
-				ZUtil_Strim_Tuple::sToStrim(s, iPQuery->fTBQuery.AsTuple(), 0, ZUtil_Strim_Tuple::Options(true));
+				s << ZUtil_Strim_Tuple::Format(iPQuery->fTBQuery.AsTuple(), 0, ZYadOptions(true));
 				}
 			}
 		if (false && sDumpQuery)

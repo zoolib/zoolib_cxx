@@ -64,8 +64,7 @@ static void sDumpRequest(ZRef<ZTSWatcher> iWatcher, const ZTuple& iTuple)
 	if (ZLOG(s, eDebug, "ZTSWatcherServer"))
 		{
 		s.Writef(">> ZTSWatcherServer: %08X ", iWatcher.GetObject());
-		ZUtil_Strim_Tuple::sToStrim(s, iTuple);
-		s.Write("\n");
+		s << iTuple;
 		}
 #endif
 	}
@@ -76,8 +75,7 @@ static void sSendResponse(ZRef<ZTSWatcher> iWatcher, const ZStreamW& iStreamW, c
 	if (ZLOG(s, eDebug, "ZTSWatcherServer"))
 		{
 		s.Writef("<< ZTSWatcherServer: %08X ", iWatcher.GetObject());
-		ZUtil_Strim_Tuple::sToStrim(s, iTuple);
-		s.Write("\n");
+		s << iTuple;
 		}
 #endif
 	iTuple.ToStream(iStreamW);

@@ -57,7 +57,7 @@ static void sDumpRequest(const string& iLogFacility, ZTBServer* iServer, const Z
 	if (ZLOG(s, eDebug, iLogFacility))
 		{
 		s.Writef("<< Server: %08X ", iServer);
-		ZUtil_Strim_Tuple::sToStrim(s, iTuple);
+		s << iTuple;
 		}
 #endif
 	}
@@ -69,7 +69,7 @@ static void sSend(void* iConnection, const string& iLogFacility,
 	if (ZLOG(s, eDebug, iLogFacility))
 		{
 		s.Writef(">> Server: %08X ", iConnection);
-		ZUtil_Strim_Tuple::sToStrim(s, iTuple);
+		s << iTuple;
 		}
 #endif
 	locker.Release();

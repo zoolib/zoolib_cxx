@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/tql/ZUtil_Strim_TQL_Spec.h"
 
 #include "zoolib/ZUtil_Strim_Tuple.h"
+#include "zoolib/ZYad_ZooLibStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -111,7 +112,7 @@ static void sWrite_EffectiveRelHeadComment(const ZStrimW& s, ZRef<Node> iNode)
 		if (!isFirst)
 			s.Write(", ");
 		isFirst = false;
-		ZUtil_Strim_Tuple::sWrite_PropName(s, *i);
+		ZYad_ZooLibStrim::sWrite_PropName(*i, s);
 		}
 	}
 
@@ -252,7 +253,7 @@ bool Writer::Visit_Restrict(ZRef<Node_Restrict> iNode)
 	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
 	sWrite(fStrimW, "(");
 	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	ZUtil_Strim_TQL_Spec::sToStrim(fStrimW, iNode->GetCondition());
+	ZUtil_Strim_TQL_Spec::sToStrim(iNode->GetCondition(), fStrimW);
 	sWrite(fStrimW, ",");
 	sWrite(fStrimW, fIndent + 1, fOptions, iNode->GetNode());
 	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
@@ -267,7 +268,7 @@ bool Writer::Visit_Select(ZRef<Node_Select> iNode)
 	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
 	sWrite(fStrimW, "(");
 	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	ZUtil_Strim_TQL_Spec::sToStrim(fStrimW, iNode->GetLogOp());
+	ZUtil_Strim_TQL_Spec::sToStrim(iNode->GetLogOp(), fStrimW);
 	sWrite(fStrimW, ",");
 	sWrite(fStrimW, fIndent + 1, fOptions, iNode->GetNode());
 	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
@@ -305,7 +306,7 @@ void sToStrim(const ZStrimW& iStrimW,
 void sWrite_PropName(const ZStrimW& s, const ZTName& iTName)
 	{
 	s.Write("@");
-	ZUtil_Strim_Tuple::sWrite_PropName(s, iTName);
+	ZYad_ZooLibStrim::sWrite_PropName(iTName, s);
 	}
 
 void sWrite_RelHead(const ZStrimW& s, const RelHead& iRelHead)

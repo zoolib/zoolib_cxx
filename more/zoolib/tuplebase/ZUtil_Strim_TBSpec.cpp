@@ -23,6 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZUtil_Strim.h"
+#include "zoolib/ZYad_ZooLib.h"
+#include "zoolib/ZYad_ZooLibStrim.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
 using std::string;
@@ -68,7 +70,7 @@ static void sWrite_Comparator(const ZStrimW& s, const ZTBSpec::Comparator& iComp
 
 static void sWrite_Criterion(const ZStrimW& iStrimW, const ZTBSpec::Criterion& iCriterion)
 	{
-	ZUtil_Strim_Tuple::sWrite_PropName(iStrimW, iCriterion.GetPropName());
+	ZYad_ZooLibStrim::sWrite_PropName(iCriterion.GetPropName(), iStrimW);
 
 	iStrimW << " ";
 
@@ -181,7 +183,7 @@ static bool sRead_Criterion(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 			{
 			if (!sTryRead_EscapedString(iStrimU, '\'', thePropertyName))
 				{				
-				if (!ZUtil_Strim_Tuple::sRead_Identifier(iStrimU, &thePropertyNameLC, &thePropertyName))
+				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &thePropertyNameLC, &thePropertyName))
 					return false;
 				wasIdentifier = true;
 				}
@@ -209,7 +211,7 @@ static bool sRead_Criterion(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 			}
 
 		sSkip_WSAndCPlusPlusComments(iStrimU);
-
+		
 		ZTValue theTV;
 		if (!ZUtil_Strim_Tuple::sFromStrim(iStrimU, theTV))
 			throw ParseException("Expected a value after a relationship");
@@ -275,7 +277,7 @@ should not be part of ZTBSpec itself because they would then create spurious dep
 */
 namespace ZUtil_Strim_TBSpec {
 
-void sToStrim(const ZStrimW& iStrimW, const ZTBSpec& iTBSpec)
+void sToStrim(const ZTBSpec& iTBSpec, const ZStrimW& iStrimW)
 	{
 	typedef ZTBSpec::CriterionUnion TBU;
 	typedef ZTBSpec::CriterionSect TBS;
@@ -369,7 +371,7 @@ bool sFromStrim(const ZStrimU& iStrimU, ZTBSpec& oTBSpec)
 
 const ZStrimW& operator<<(const ZStrimW& s, const ZTBSpec& iTBSpec)
 	{
-	ZUtil_Strim_TBSpec::sToStrim(s, iTBSpec);
+	ZUtil_Strim_TBSpec::sToStrim(iTBSpec, s);
 	return s;
 	}
 
