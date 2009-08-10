@@ -54,27 +54,30 @@ enum EToken
 typedef pair<string, string> Attr_t;
 typedef vector<Attr_t> Attrs_t;
 
+typedef string (*EntityCallback)(void* iRefcon, const string& iEntity);
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZML::Reader
+#pragma mark * ZML::StrimR
 
-// N.B. It is an implementation detail that Reader inherits
-// from ZStrimR, hence the private derivation.
-
-class Reader : private ZStrimR, NonCopyable
+class StrimR
+:	public ZStrimR
+,	NonCopyable
 	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Reader, operator_bool_generator_type, operator_bool_type);
+    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(StrimR, operator_bool_generator_type, operator_bool_type);
 public:
-	typedef string (*EntityCallback)(void* iRefcon, const string& iEntity);
+	StrimR(const ZStrimU& iStrim);
+	StrimR(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues);
+	StrimR(const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon);
+	~StrimR();
 
-	Reader(const ZStrimU& iStrim);
-	Reader(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues);
-	Reader(const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon);
-	~Reader();
+// From ZStrimR
+	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
 
+// Our protocol
 	operator operator_bool_type() const;
 	EToken Current() const;
-	ZML::Reader& Advance();
+	ZML::StrimR& Advance();
 
 	const string& Name() const;
 	Attrs_t Attrs() const;
@@ -83,8 +86,6 @@ public:
 	string TextString();
 
 private:
-// From ZStrimR, to support ZML::Text()'s return of a ZStrimR reference.
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
 
 	void pAdvance();
 
@@ -106,47 +107,50 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZML::Readerer
+#pragma mark * ZML::StrimmerR
 
-class Readerer
-:	public ZRefCountedWithFinalize
-,	Reader
+class StrimmerR : public ZStrimmerR
 	{
 public:
-	Readerer(ZRef<ZStrimmerU> iStrimmerU);
-	Readerer(ZRef<ZStrimmerU> iStrimmerU, bool iRecognizeEntitiesInAttributeValues);
-	Readerer(ZRef<ZStrimmerU> iStrimmerU, EntityCallback iCallback, void* iRefcon);
-	virtual ~Readerer();
+	StrimmerR(ZRef<ZStrimmerU> iStrimmerU);
+	StrimmerR(ZRef<ZStrimmerU> iStrimmerU, bool iRecognizeEntitiesInAttributeValues);
+	StrimmerR(ZRef<ZStrimmerU> iStrimmerU, EntityCallback iCallback, void* iRefcon);
+	virtual ~StrimmerR();
 	
-	Reader& GetReader();
+// From ZStrimmerR
+	const ZStrimR& GetStrimR();
+
+// Our protocol
+	StrimR& GetStrim();
 
 public:
 	ZRef<ZStrimmerU> fStrimmerU;
+	StrimR fStrim;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZML parsing support
 
-void sSkipText(Reader& r);
+void sSkipText(StrimR& r);
 
-bool sSkip(Reader& r, const string& iTagName);
-bool sSkip(Reader& r, std::vector<string>& ioTags);
+bool sSkip(StrimR& r, const string& iTagName);
+bool sSkip(StrimR& r, std::vector<string>& ioTags);
 
-bool sTryRead_Begin(Reader& r, const string& iTagName);
+bool sTryRead_Begin(StrimR& r, const string& iTagName);
 
-bool sTryRead_End(Reader& r, const string& iTagName);
+bool sTryRead_End(StrimR& r, const string& iTagName);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZML::StrimR
+#pragma mark * ZML::StrimR_TextOnly
 
-/// A read strim that returns only the text from a ZML::Reader
+/// A read strim that returns only the text from a ZML::StrimR
 
-class StrimR : public ZStrimR
+class StrimR_TextOnly : public ZStrimR
 	{
 public:
-	StrimR(Reader& iReader);
+	StrimR_TextOnly(StrimR& iStrimR);
 
 // From ZStrimR
 	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
@@ -161,7 +165,7 @@ public:
 	const std::vector<std::pair<string, Attrs_t> >& All() const;
 
 private:
-	Reader& fReader;
+	StrimR& fStrimR;
 	std::vector<std::pair<string, Attrs_t> > fTags;
 	};
 
@@ -246,7 +250,7 @@ public:
 	/** Add attributes to the currently pending tag, taking the names and values from
 	properties of iTuple. String values are added as you would expect, null values
 	are added as boolean attributes. This convention is compatible with that
-	used by ZML::Reader. */
+	used by ZML::StrimR. */
 	const StrimW& Attrs(const Attrs_t& iAttrs) const;
 
 	/// Set indent enable, and return previous value.

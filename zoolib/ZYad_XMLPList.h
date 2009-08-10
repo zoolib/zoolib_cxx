@@ -48,7 +48,7 @@ class ZYadStreamR_XMLPList
 :	public ZYadStreamR
 	{
 public:
-	ZYadStreamR_XMLPList(ZRef<ZML::Readerer> iReaderer, bool iMustReadEndTag);
+	ZYadStreamR_XMLPList(ZRef<ZML::StrimmerR> iStrimmerR, bool iMustReadEndTag);
 
 // From ZYadR
 	virtual void Finish();
@@ -57,7 +57,7 @@ public:
 	const ZStreamR& GetStreamR();
 
 private:
-	ZRef<ZML::Readerer> fReaderer;
+	ZRef<ZML::StrimmerR> fStrimmerR;
 	bool fMustReadEndTag;
 	ZStreamR_ASCIIStrim fStreamR_ASCIIStrim;
 	ZStreamR_Base64Decode fStreamR_Base64Decode;
@@ -71,7 +71,7 @@ class ZYadStrimR_XMLPList
 :	public ZYadStrimR
 	{
 public:
-	ZYadStrimR_XMLPList(ZRef<ZML::Readerer> iReaderer, bool iMustReadEndTag);
+	ZYadStrimR_XMLPList(ZRef<ZML::StrimmerR> iStrimmerR, bool iMustReadEndTag);
 
 // From ZYadR
 	virtual void Finish();
@@ -80,7 +80,7 @@ public:
 	const ZStrimR& GetStrimR();
 
 private:
-	ZRef<ZML::Readerer> fReaderer;
+	ZRef<ZML::StrimmerR> fStrimmerR;
 	bool fMustReadEndTag;
 	};
 
@@ -91,13 +91,13 @@ private:
 class ZYadListR_XMLPList : public ZYadListR_Std
 	{
 public:
-	ZYadListR_XMLPList(ZRef<ZML::Readerer> iReaderer, bool iMustReadEndTag);
+	ZYadListR_XMLPList(ZRef<ZML::StrimmerR> iStrimmerR, bool iMustReadEndTag);
 
 // From ZYadListR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
-	ZRef<ZML::Readerer> fReaderer;
+	ZRef<ZML::StrimmerR> fStrimmerR;
 	bool fMustReadEndTag;
 	};
 
@@ -108,13 +108,13 @@ private:
 class ZYadMapR_XMLPList : public ZYadMapR_Std
 	{
 public:
-	ZYadMapR_XMLPList(ZRef<ZML::Readerer> iReaderer, bool iMustReadEndTag);
+	ZYadMapR_XMLPList(ZRef<ZML::StrimmerR> iStrimmerR, bool iMustReadEndTag);
 
 // From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
-	ZRef<ZML::Readerer> fReaderer;
+	ZRef<ZML::StrimmerR> fStrimmerR;
 	bool fMustReadEndTag;
 	};
 
@@ -124,7 +124,7 @@ private:
 
 namespace ZYad_XMLPList {
 
-ZRef<ZYadR> sMakeYadR(ZRef<ZML::Readerer> iR);
+ZRef<ZYadR> sMakeYadR(ZRef<ZML::StrimmerR> iR);
 
 void sToStrimW_ML(ZRef<ZYadR> iYadR, const ZML::StrimW& s);
 

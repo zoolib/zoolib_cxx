@@ -46,7 +46,7 @@ using std::vector;
 #pragma mark * Static helper functions
 
 static string sReadReference(
-	const ZStrimU& iStrim, Reader::EntityCallback iCallback, void* iRefcon)
+	const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon)
 	{
 	using namespace ZUtil_Strim;
 
@@ -167,7 +167,7 @@ static bool sReadUntil(const ZStrimU& s, UTF32 iTerminator, string& oText)
 
 static bool sReadUntil(
 	const ZStrimU& s, bool iRecognizeEntities,
-	Reader::EntityCallback iCallback, void* iRefcon,
+	EntityCallback iCallback, void* iRefcon,
 	UTF32 iTerminator, string& oText)
 	{
 	oText.resize(0);
@@ -239,7 +239,7 @@ static bool sReadMLAttributeName(const ZStrimU& s, string& oName)
 
 static bool sReadMLAttributeValue(
 	const ZStrimU& s, bool iRecognizeEntities,
-	Reader::EntityCallback iCallback, void* iRefcon,
+	EntityCallback iCallback, void* iRefcon,
 	string& oValue)
 	{
 	oValue.resize(0);
@@ -295,9 +295,9 @@ static bool sReadMLAttributeValue(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZML::Reader
+#pragma mark * ZML::StrimR
 
-Reader::Reader(const ZStrimU& iStrim)
+StrimR::StrimR(const ZStrimU& iStrim)
 :	fStrim(iStrim),
 	fCallback(nullptr),
 	fBufferStart(0),
@@ -305,7 +305,7 @@ Reader::Reader(const ZStrimU& iStrim)
 	fRecognizeEntitiesInAttributeValues(false)
 	{}
 
-Reader::Reader(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues)
+StrimR::StrimR(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues)
 :	fStrim(iStrim),
 	fCallback(nullptr),
 	fBufferStart(0),
@@ -313,7 +313,7 @@ Reader::Reader(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues)
 	fRecognizeEntitiesInAttributeValues(iRecognizeEntitiesInAttributeValues)
 	{}
 
-Reader::Reader(const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon)
+StrimR::StrimR(const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon)
 :	fStrim(iStrim),
 	fCallback(iCallback),
 	fRefcon(iRefcon),
@@ -322,21 +322,21 @@ Reader::Reader(const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon)
 	fRecognizeEntitiesInAttributeValues(false)
 	{}
 
-Reader::~Reader()
+StrimR::~StrimR()
 	{}
 
-Reader::operator operator_bool_type() const
+StrimR::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fToken != eToken_Exhausted); }
 
-EToken Reader::Current() const
+EToken StrimR::Current() const
 	{
 	if (fToken == eToken_Fresh)
-		const_cast<Reader*>(this)->pAdvance();
+		const_cast<StrimR*>(this)->pAdvance();
 
 	return fToken;
 	}
 
-Reader& Reader::Advance()
+StrimR& StrimR::Advance()
 	{
 	if (fToken == eToken_Fresh)
 		this->pAdvance();
@@ -366,10 +366,10 @@ Reader& Reader::Advance()
 
 static string sEmptyString;
 
-const string& Reader::Name() const
+const string& StrimR::Name() const
 	{
 	if (fToken == eToken_Fresh)
-		const_cast<Reader*>(this)->pAdvance();
+		const_cast<StrimR*>(this)->pAdvance();
 
 	if (fToken == eToken_TagBegin || fToken == eToken_TagEnd || fToken == eToken_TagEmpty)
 		return fTagName;
@@ -377,10 +377,10 @@ const string& Reader::Name() const
 	return sEmptyString;
 	}
 
-Attrs_t Reader::Attrs() const
+Attrs_t StrimR::Attrs() const
 	{
 	if (fToken == eToken_Fresh)
-		const_cast<Reader*>(this)->pAdvance();
+		const_cast<StrimR*>(this)->pAdvance();
 
 	if (fToken == eToken_TagBegin || fToken == eToken_TagEmpty)
 		return fTagAttributes;
@@ -388,17 +388,17 @@ Attrs_t Reader::Attrs() const
 	return Attrs_t();
 	}
 
-const ZStrimR& Reader::TextStrim()
+const ZStrimR& StrimR::TextStrim()
 	{ return *this; }
 
-std::string Reader::TextString()
+std::string StrimR::TextString()
 	{
 	string theString;
 	ZStrimW_String(theString).CopyAllFrom(this->TextStrim());
 	return theString;
 	}
 
-void Reader::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void StrimR::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 	{
 	UTF32* localDest = iDest;
 	if (fToken == eToken_Text)
@@ -478,7 +478,7 @@ static bool sTryRead_String(const ZStrimR& iStrimR, const string8& iPattern)
 		}
 	}
 
-void Reader::pAdvance()
+void StrimR::pAdvance()
 	{
 	using namespace ZUtil_Strim;
 
@@ -624,46 +624,49 @@ void Reader::pAdvance()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZML::Readerer
+#pragma mark * ZML::StrimmerR
 
-Readerer::Readerer(ZRef<ZStrimmerU> iStrimmerU)
-:	Reader(iStrimmerU->GetStrimU())
-,	fStrimmerU(iStrimmerU)
+StrimmerR::StrimmerR(ZRef<ZStrimmerU> iStrimmerU)
+:	fStrimmerU(iStrimmerU)
+,	fStrim(iStrimmerU->GetStrimU())
 	{}
 
-Readerer::Readerer(ZRef<ZStrimmerU> iStrimmerU, bool iRecognizeEntitiesInAttributeValues)
-:	Reader(iStrimmerU->GetStrimU(), iRecognizeEntitiesInAttributeValues)
-,	fStrimmerU(iStrimmerU)
+StrimmerR::StrimmerR(ZRef<ZStrimmerU> iStrimmerU, bool iRecognizeEntitiesInAttributeValues)
+:	fStrimmerU(iStrimmerU)
+,	fStrim(iStrimmerU->GetStrimU(), iRecognizeEntitiesInAttributeValues)
 	{}
 
-Readerer::Readerer(ZRef<ZStrimmerU> iStrimmerU, EntityCallback iCallback, void* iRefcon)
-:	Reader(iStrimmerU->GetStrimU(), iCallback, iRefcon)
-,	fStrimmerU(iStrimmerU)
+StrimmerR::StrimmerR(ZRef<ZStrimmerU> iStrimmerU, EntityCallback iCallback, void* iRefcon)
+:	fStrimmerU(iStrimmerU)
+,	fStrim(iStrimmerU->GetStrimU(), iCallback, iRefcon)
 	{}
 
-Readerer::~Readerer()
+StrimmerR::~StrimmerR()
 	{}
 
-Reader& Readerer::GetReader()
-	{ return *this; }
+const ZStrimR& StrimmerR::GetStrimR()
+	{ return fStrim; }
+
+StrimR& StrimmerR::GetStrim()
+	{ return fStrim; }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZML parsing support
 
-void sSkipText(Reader& r)
+void sSkipText(StrimR& r)
 	{
 	while (r.Current() == eToken_Text)
 		r.Advance();
 	}
 
-bool sSkip(Reader& r, const string& iTagName)
+bool sSkip(StrimR& r, const string& iTagName)
 	{
 	vector<string> theTags(1, iTagName);
 	return sSkip(r, theTags);
 	}
 
-bool sSkip(Reader& r, vector<string>& ioTags)
+bool sSkip(StrimR& r, vector<string>& ioTags)
 	{
 	while (!ioTags.empty())
 		{
@@ -691,7 +694,7 @@ bool sSkip(Reader& r, vector<string>& ioTags)
 	return true;
 	}
 
-bool sTryRead_Begin(Reader& r, const string& iTagName)
+bool sTryRead_Begin(StrimR& r, const string& iTagName)
 	{
 	if (r.Current() != eToken_TagBegin || r.Name() != iTagName)
 		return false;
@@ -700,7 +703,7 @@ bool sTryRead_Begin(Reader& r, const string& iTagName)
 	return true;
 	}
 
-bool sTryRead_End(Reader& r, const string& iTagName)
+bool sTryRead_End(StrimR& r, const string& iTagName)
 	{
 	if (r.Current() != eToken_TagEnd || r.Name() != iTagName)
 		return false;
@@ -711,24 +714,24 @@ bool sTryRead_End(Reader& r, const string& iTagName)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZML::StrimR
+#pragma mark * ZML::StrimR_TextOnly
 
-StrimR::StrimR(Reader& iReader)
-:	fReader(iReader)
+StrimR_TextOnly::StrimR_TextOnly(StrimR& iStrimR)
+:	fStrimR(iStrimR)
 	{}
 
-void StrimR::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void StrimR_TextOnly::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 	{
 	UTF32* localDest = iDest;
 	while (iCount)
 		{
-		if (fReader.Current() == eToken_Text)
+		if (fStrimR.Current() == eToken_Text)
 			{
 			size_t countRead;
-			fReader.TextStrim().Read(localDest, iCount, &countRead);
+			fStrimR.Read(localDest, iCount, &countRead);
 			if (countRead == 0)
 				{
-				fReader.Advance();
+				fStrimR.Advance();
 				}
 			else
 				{
@@ -738,11 +741,11 @@ void StrimR::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 			}
 		else
 			{
-			switch (fReader.Current())
+			switch (fStrimR.Current())
 				{
 				case eToken_TagBegin:
 					{
-					fTags.push_back(pair<string, Attrs_t>(fReader.Name(), fReader.Attrs()));
+					fTags.push_back(pair<string, Attrs_t>(fStrimR.Name(), fStrimR.Attrs()));
 					break;
 					}
 				case eToken_TagEnd:
@@ -759,7 +762,7 @@ void StrimR::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 				default:
 					break;
 				}
-			fReader.Advance();
+			fStrimR.Advance();
 			}
 		}
 
@@ -767,19 +770,19 @@ void StrimR::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 		*oCount = localDest - iDest;
 	}
 
-string StrimR::BackName() const
+string StrimR_TextOnly::BackName() const
 	{
 	ZAssert(!fTags.empty());
 	return fTags.back().first;
 	}
 
-Attrs_t StrimR::BackAttr() const
+Attrs_t StrimR_TextOnly::BackAttr() const
 	{
 	ZAssert(!fTags.empty());
 	return fTags.back().second;
 	}
 
-void StrimR::AllNames(vector<string>& oNames) const
+void StrimR_TextOnly::AllNames(vector<string>& oNames) const
 	{
 	for (vector<pair<string, Attrs_t> >::const_iterator i = fTags.begin();
 		i != fTags.end(); ++i)
@@ -788,7 +791,7 @@ void StrimR::AllNames(vector<string>& oNames) const
 		}
 	}
 
-void StrimR::AllAttrs(vector<Attrs_t>& oAttrs) const
+void StrimR_TextOnly::AllAttrs(vector<Attrs_t>& oAttrs) const
 	{
 	for (vector<pair<string, Attrs_t> >::const_iterator i = fTags.begin();
 		i != fTags.end(); ++i)
@@ -797,7 +800,7 @@ void StrimR::AllAttrs(vector<Attrs_t>& oAttrs) const
 		}
 	}
 
-const vector<pair<string, Attrs_t> >& StrimR::All() const
+const vector<pair<string, Attrs_t> >& StrimR_TextOnly::All() const
 	{
 	return fTags;
 	}
