@@ -179,11 +179,7 @@ ZTSoup::ZTSoup(ZRef<ZTSWatcher> iTSWatcher)
 	fMutex_CallUpdate("ZTSoup::fMutex_CallUpdate"),
 	fMutex_Structure("ZTSoup::fMutex_Structure"),
 	fCalled_UpdateNeeded(false),
-	fCallback_UpdateNeeded(nullptr),
-	fRefcon_UpdateNeeded(nullptr),
-	fCalled_SyncNeeded(false),
-	fCallback_SyncNeeded(nullptr),
-	fRefcon_SyncNeeded(nullptr)
+	fCalled_SyncNeeded(false)
 	{
 	fTSWatcher->SetCallback(pCallback_TSWatcher, this);
 	}
@@ -192,36 +188,6 @@ ZTSoup::~ZTSoup()
 	{
 	if (ZLOG(s, eDebug + 1, "ZTSoup"))
 		s << "destroying";
-	}
-
-void ZTSoup::SetCallback_Update(
-	Callback_UpdateNeeded_t iCallback_UpdateNeeded, void* iRefcon_UpdateNeeded)
-	{
-	ZMutexLocker locker_CallUpdate(fMutex_CallUpdate);
-	ZMutexLocker locker_Structure(fMutex_Structure);
-
-	fCallback_UpdateNeeded = iCallback_UpdateNeeded;
-	fRefcon_UpdateNeeded = iRefcon_UpdateNeeded;
-
-	locker_CallUpdate.Release();
-
-	if (fCalled_UpdateNeeded && fCallback_UpdateNeeded)
-		fCallback_UpdateNeeded(fRefcon_UpdateNeeded);
-	}
-
-void ZTSoup::SetCallback_Sync(
-	Callback_SyncNeeded_t iCallback_SyncNeeded, void* iRefcon_SyncNeeded)
-	{
-	ZMutexLocker locker_CallUpdate(fMutex_CallUpdate);
-	ZMutexLocker locker_Structure(fMutex_Structure);
-
-	fCallback_SyncNeeded = iCallback_SyncNeeded;
-	fRefcon_SyncNeeded = iRefcon_SyncNeeded;
-
-	locker_CallUpdate.Release();
-
-	if (fCalled_SyncNeeded && fCallback_SyncNeeded)
-		fCallback_SyncNeeded(fRefcon_SyncNeeded);
 	}
 
 bool ZTSoup::AllocateIDs(size_t iCount, uint64& oBaseID, size_t& oCountIssued)
@@ -1125,8 +1091,7 @@ void ZTSoup::pTriggerUpdate()
 	if (!fCalled_UpdateNeeded)
 		{
 		fCalled_UpdateNeeded = true;
-		if (fCallback_UpdateNeeded)
-			fCallback_UpdateNeeded(fRefcon_UpdateNeeded);
+		this->UpdateNeeded();
 		}
 	}
 
@@ -1137,8 +1102,7 @@ void ZTSoup::pTriggerSync()
 	if (!fCalled_SyncNeeded)
 		{
 		fCalled_SyncNeeded = true;
-		if (fCallback_SyncNeeded)
-			fCallback_SyncNeeded(fRefcon_SyncNeeded);
+		this->SyncNeeded();
 		}
 	}
 
@@ -1227,13 +1191,12 @@ void ZTCrouton::Changed(ZTSoup::EChanged iChanged)
 #pragma mark * ZTCrouton_Bowl
 
 ZTCrouton_Bowl::ZTCrouton_Bowl()
-:	fTBowl(nullptr)
 	{}
 
 void ZTCrouton_Bowl::Changed(ZTSoup::EChanged iChanged)
 	{
-	if (fTBowl)
-		fTBowl->CroutonChanged(this, iChanged);
+	if (ZRef<ZTBowl> theBowl = fTBowl)
+		theBowl->CroutonChanged(this, iChanged);
 	}
 
 ZRef<ZTBowl> ZTCrouton_Bowl::GetBowl() const
@@ -1249,7 +1212,7 @@ ZTBowl::ZTBowl()
 ZTBowl::~ZTBowl()
 	{
 	for (vector<ZRef<ZTCrouton> >::iterator i = fTCroutons.begin(); i != fTCroutons.end(); ++i)
-		ZRefStaticCast<ZTCrouton_Bowl>(*i)->fTBowl = nullptr;
+		ZRefStaticCast<ZTCrouton_Bowl>(*i)->fTBowl.Clear();
 	fTCroutons.clear();
 	}
 
@@ -1274,7 +1237,7 @@ void ZTBowl::Changed(ZTSoup::EChanged iChanged)
 						<< ", Refcount: " << ZString::sFormat("%d", theTCrouton->GetRefCount());
 					}
 
-				ZRefStaticCast<ZTCrouton_Bowl>(*i)->fTBowl = nullptr;
+				ZRefStaticCast<ZTCrouton_Bowl>(*i)->fTBowl.Clear();
 				i = fTCroutons.erase(i);
 				}
 			else
@@ -1284,12 +1247,13 @@ void ZTBowl::Changed(ZTSoup::EChanged iChanged)
 			}
 		}
 
+	ZRef<ZTBowl> selfRef = this;
 	set<uint64> addedIDs;
 	this->GetAdded(addedIDs);
 	for (set<uint64>::const_iterator i = addedIDs.begin(); i != addedIDs.end(); ++i)
 		{
 		ZRef<ZTCrouton_Bowl> newCrouton = this->MakeCrouton();
-		newCrouton->fTBowl = this;
+		newCrouton->fTBowl = selfRef;
 		fTCroutons.push_back(newCrouton);
 
 		if (ZLOG(s, eDebug, "ZTBowl"))

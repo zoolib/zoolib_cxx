@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/netscape/ZNetscape_Host_Std.h"
 
+#include "zoolib/ZActor.h"
 #include "zoolib/ZCompat_string.h" // For strdup
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZHTTP_Requests.h"
@@ -28,7 +29,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZUtil_STL.h"
-#include "zoolib/ZWaiter.h"
 
 #include <stdlib.h> // For malloc/free
 
@@ -530,13 +530,13 @@ bool HostMeister_Std::Construct
 #pragma mark * Host_Std::HTTPer
 
 class Host_Std::HTTPFetcher
-:	public ZWaiter
+:	public ZActor
 	{
 public:
 	HTTPFetcher(Host_Std* iHost, const string& iURL, ZHTTP::Data* iData, void* iNotifyData);
 
-// From ZWaiter
-	virtual bool Execute();
+// From ZActor
+	virtual bool Act();
 
 	void Cancel();
 
@@ -565,7 +565,7 @@ Host_Std::HTTPFetcher::HTTPFetcher(
 		}
 	}
 
-bool Host_Std::HTTPFetcher::Execute()
+bool Host_Std::HTTPFetcher::Act()
 	{
 	try
 		{
@@ -896,7 +896,7 @@ NPError Host_Std::Host_GetURLNotify(NPP npp,
 		{
 		ZRef<HTTPFetcher> theFetcher = new HTTPFetcher(this, theURL, nullptr, notifyData);
 		fHTTPFetchers.Add(theFetcher);
-		sStartWaiterRunner(theFetcher);
+		sStartActorRunner(theFetcher);
 		return NPERR_NO_ERROR;
 		}
 
@@ -919,7 +919,7 @@ NPError Host_Std::Host_PostURLNotify(NPP npp,
 		ZHTTP::Data theData(buf, len);
 		ZRef<HTTPFetcher> theFetcher = new HTTPFetcher(this, theURL, &theData, notifyData);
 		fHTTPFetchers.Add(theFetcher);
-		sStartWaiterRunner(theFetcher);
+		sStartActorRunner(theFetcher);
 		return NPERR_NO_ERROR;
 		}
 

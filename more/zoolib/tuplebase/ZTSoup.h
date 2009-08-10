@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDList.h"
 #include "zoolib/ZThreadOld.h"
+#include "zoolib/ZRefWeak.h"
 #include "zoolib/tuplebase/ZTSWatcher.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -38,7 +39,8 @@ class ZTSieve;
 #pragma mark -
 #pragma mark * ZTSoup
 
-class ZTSoup : public ZRefCounted
+class ZTSoup
+:	public ZRefCountedWithFinalize
 	{
 public:
 	enum { kDebug = ZCONFIG_Debug_TSoup_Debug };
@@ -60,17 +62,11 @@ public:
 	static std::string sAsString(ELoaded iLoaded);
 	static std::string sAsString(EChanged iChanged);
 
-	typedef void (*Callback_UpdateNeeded_t)(void* iRefcon);
-	typedef void (*Callback_SyncNeeded_t)(void* iRefcon);
-
 	ZTSoup(ZRef<ZTSWatcher> iTSWatcher);
 	virtual ~ZTSoup();
 
-	void SetCallback_Update(
-		Callback_UpdateNeeded_t iCallback_UpdateNeeded, void* iRefcon_UpdateNeeded);
-
-	void SetCallback_Sync(
-		Callback_SyncNeeded_t iCallback_SyncNeeded, void* iRefcon_SyncNeeded);
+	virtual void UpdateNeeded() = 0;
+	virtual void SyncNeeded() = 0;
 
 	bool AllocateIDs(size_t iCount, uint64& oBaseID, size_t& oCountIssued);
 
@@ -160,12 +156,7 @@ private:
 	ZMutex fMutex_TSWatcher;
 
 	bool fCalled_UpdateNeeded;
-	Callback_UpdateNeeded_t fCallback_UpdateNeeded;
-	void* fRefcon_UpdateNeeded;
-	
 	bool fCalled_SyncNeeded;
-	Callback_SyncNeeded_t fCallback_SyncNeeded;
-	void* fRefcon_SyncNeeded;
 
 	std::map<ZTBQuery, PSieve> fTBQuery_To_PSieve;
 
@@ -186,10 +177,13 @@ private:
 #pragma mark -
 #pragma mark * ZTSieve
 
-class DLink_ZTSieve_Using : public DListLink<ZTSieve, DLink_ZTSieve_Using>
+class DLink_ZTSieve_Using
+:	public DListLink<ZTSieve, DLink_ZTSieve_Using>
 	{};
 
-class ZTSieve : public ZRefCounted, public DLink_ZTSieve_Using
+class ZTSieve
+:	public ZRefCountedWithFinalize
+,	public DLink_ZTSieve_Using
 	{
 public:
 	ZTSieve();
@@ -221,10 +215,13 @@ private:
 #pragma mark -
 #pragma mark * ZTCrouton
 
-class DLink_ZTCrouton_Using : public DListLink<ZTCrouton, DLink_ZTCrouton_Using>
+class DLink_ZTCrouton_Using
+:	public DListLink<ZTCrouton, DLink_ZTCrouton_Using>
 	{};
 
-class ZTCrouton : public ZRefCounted, public DLink_ZTCrouton_Using
+class ZTCrouton
+:	public ZRefCountedWithFinalize
+,	public DLink_ZTCrouton_Using
 	{
 public:
 	ZTCrouton();
@@ -263,14 +260,16 @@ public:
 
 private:
 	friend class ZTBowl;
-	ZTBowl* fTBowl;
+	ZRefWeak<ZTBowl> fTBowl;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTBowl
 
-class ZTBowl : public ZTSieve
+class ZTBowl
+:	public ZTSieve
+,	public ZWeakReferee
 	{
 public:
 	ZTBowl();
@@ -293,10 +292,9 @@ private:
 #pragma mark -
 #pragma mark * ZTBowl_T
 
-struct ZTBowlBogusInitializer_t;
-
-template <class Crouton_t, typename Initalizer_t = ZTBowlBogusInitializer_t>
-class ZTBowl_T : public ZTBowl
+template <class Crouton_t, typename Initalizer_t = void>
+class ZTBowl_T
+:	public ZTBowl
 	{
 public:
 	ZTBowl_T(Initalizer_t iInitializer)
@@ -313,7 +311,8 @@ private:
 
 // For use with croutons that do not take an initializer.
 template <class Crouton_t>
-class ZTBowl_T<Crouton_t, ZTBowlBogusInitializer_t> : public ZTBowl
+class ZTBowl_T<Crouton_t, void>
+:	public ZTBowl
 	{
 public:
 	virtual ZRef<ZTCrouton_Bowl> MakeCrouton()

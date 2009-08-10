@@ -44,24 +44,7 @@ protected:
 public:
 	virtual bool AllocateIDs(size_t iCount, uint64& oBaseID, size_t& oCountIssued) = 0;
 
-	struct AddedQueryCombo
-		{
-	public:
-		AddedQueryCombo()
-			{}
-
-		AddedQueryCombo(size_t iSize)
-		:	fMemoryBlock(iSize)
-			{}
-
-		inline bool operator<(const AddedQueryCombo& iOther) const
-			{ return fRefcon < iOther.fRefcon; }
-
-		int64 fRefcon;
-		bool fPrefetch;
-		ZMemoryBlock fMemoryBlock;
-		ZTBQuery fTBQuery;
-		};
+	class AddedQueryCombo;
 
 	virtual bool Sync(
 		const uint64* iRemovedIDs, size_t iRemovedIDsCount,
@@ -75,6 +58,29 @@ public:
 
 	typedef void (*Callback_t)(void* iRefcon);
 	virtual void SetCallback(Callback_t iCallback, void* iRefcon) = 0;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZTSWatcher
+
+class ZTSWatcher::AddedQueryCombo
+	{
+public:
+	AddedQueryCombo()
+		{}
+
+	AddedQueryCombo(size_t iSize)
+	:	fMemoryBlock(iSize)
+		{}
+
+	inline bool operator<(const AddedQueryCombo& iOther) const
+		{ return fRefcon < iOther.fRefcon; }
+
+	int64 fRefcon;
+	bool fPrefetch;
+	ZMemoryBlock fMemoryBlock;
+	ZTBQuery fTBQuery;
 	};
 
 // =================================================================================================

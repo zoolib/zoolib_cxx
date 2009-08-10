@@ -40,7 +40,7 @@ bool NPVariantBase::QGet_T<bool>(bool& oVal) const
 	}
 
 template <>
-bool NPVariantBase::QGet_T(int32& oVal) const
+bool NPVariantBase::QGet_T<int32>(int32& oVal) const
 	{
 	if (type == NPVariantType_Int32)
 		{
@@ -51,7 +51,7 @@ bool NPVariantBase::QGet_T(int32& oVal) const
 	}
 
 template <>
-bool NPVariantBase::QGet_T(double& oVal) const
+bool NPVariantBase::QGet_T<double>(double& oVal) const
 	{
 	if (type == NPVariantType_Double)
 		{
@@ -62,7 +62,7 @@ bool NPVariantBase::QGet_T(double& oVal) const
 	}
 
 template <>
-bool NPVariantBase::QGet_T(std::string& oVal) const
+bool NPVariantBase::QGet_T<std::string>(std::string& oVal) const
 	{
 	if (type == NPVariantType_String)
 		{

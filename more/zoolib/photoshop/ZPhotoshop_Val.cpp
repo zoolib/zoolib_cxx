@@ -61,7 +61,8 @@ enum {
   kFSAliasInfoIsDirectory       = 0x00000008, /* isDirectory boolean is valid*/
   kFSAliasInfoIDs               = 0x00000010, /* parentDirID and nodeID are valid*/
   kFSAliasInfoFSInfo            = 0x00000020, /* filesystemID and signature are valid*/
-  kFSAliasInfoVolumeFlags       = 0x00000040 /* volumeIsBootVolume, volumeIsAutomounted, volumeIsEjectable and volumeHasPersistentFileIDs are valid*/
+  kFSAliasInfoVolumeFlags       = 0x00000040 /* volumeIsBootVolume, volumeIsAutomounted,
+	volumeIsEjectable and volumeHasPersistentFileIDs are valid*/
 };
 
 /* info block to pass to FSCopyAliasInfo */
