@@ -44,7 +44,7 @@ ZYadPrimR_CFType::ZYadPrimR_CFType(const ZRef<CFTypeRef>& iVal)
 	{}
 
 ZAny ZYadPrimR_CFType::AsAny()
-	{ return ZUtil_CFType::sAsVal_Any(this->GetVal()); }
+	{ return ZUtil_CFType::sAsVal_Any(this->GetVal()).AsAny(); }
 
 // =================================================================================================
 #pragma mark -

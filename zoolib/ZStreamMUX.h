@@ -40,7 +40,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZStreamMUX
 
 class ZStreamMUX
-:	public ZRefCountedWithFinalization,
+:	public ZRefCountedWithFinalize,
 	public ZWeakReferee
 	{
 public:

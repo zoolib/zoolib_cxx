@@ -51,16 +51,15 @@ class ZMap_Any;
 #pragma mark * ZVal_Any
 
 class ZVal_Any
-:	public ZAny
 	{
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZVal_Any,
 		operator_bool_generator_type, operator_bool_type);
 
-	typedef ZAny inherited;
-
 public:
 	ZVal_Any AsVal_Any();
 	ZVal_Any AsVal_Any(const ZVal_Any& iDefault);
+
+	const ZAny& AsAny() const;
 
 	operator operator_bool_type() const;
 
@@ -75,13 +74,13 @@ public:
 
 	template <class S>
 	ZVal_Any(const S& iVal)
-	:	inherited(iVal)
+	:	fAny(iVal)
 		{}
 
 	template <class S>
 	ZVal_Any& operator=(const S& iVal)
 		{
-		inherited::operator=(iVal);
+		fAny = iVal;
 		return *this;
 		}
 
@@ -90,11 +89,11 @@ public:
 
 	template <class S>
 	S* PGet_T()
-		{ return ZAnyCast<S>(this); }
+		{ return ZAnyCast<S>(&fAny); }
 
 	template <class S>
 	const S* PGet_T() const
-		{ return ZAnyCast<S>(this); }
+		{ return ZAnyCast<S>(&fAny); }
 
 	template <class S>
 	bool QGet_T(S& oVal) const
@@ -125,17 +124,20 @@ public:
 
 	template <class S>
 	void Set_T(const S& iVal)
-		{ *this = iVal; }
+		{ fAny = iVal; }
 
 // Our protocol
 	template <class S>
 	bool Is_T() const
-		{ return ZAnyCast<S>(this); }
+		{ return ZAnyCast<S>(&fAny); }
 
 // Typename accessors
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Data, ZData_Any)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, List, ZList_Any)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Map, ZMap_Any)
+
+private:
+	ZAny fAny;
 	};
 
 // =================================================================================================
@@ -162,9 +164,9 @@ public:
 	~ZList_Any();
 	ZList_Any& operator=(const ZList_Any& iOther);
 
-	ZList_Any(vector<ZAny>& iOther);
+	ZList_Any(const vector<ZVal_Any>& iOther);
 
-	ZList_Any& operator=(vector<ZAny>& iOther);
+	ZList_Any& operator=(const vector<ZVal_Any>& iOther);
 
 	template <class Iterator>
 	ZList_Any(Iterator begin, Iterator end);
@@ -205,14 +207,14 @@ private:
 	Rep();
 	virtual ~Rep();
 	
-	Rep(const vector<ZAny>& iVector);
+	Rep(const vector<ZVal_Any>& iVector);
 
 	template <class Iterator>
 	Rep(Iterator begin, Iterator end)
 	:	fVector(begin, end)
 		{}
 
-	vector<ZAny> fVector;
+	vector<ZVal_Any> fVector;
 	friend class ZList_Any;
 	};
 
@@ -237,7 +239,7 @@ class ZMap_Any
 	class Rep;
 
 public:
-	typedef map<string, ZAny>::iterator Index_t;
+	typedef map<string, ZVal_Any>::iterator Index_t;
 	typedef ZVal_Any Val_t;
 
 	ZMap_Any AsMap_Any();
@@ -250,8 +252,8 @@ public:
 	~ZMap_Any();
 	ZMap_Any& operator=(const ZMap_Any& iOther);
 
-	ZMap_Any(const map<string, ZAny>& iOther);
-	ZMap_Any& operator=(map<string, ZAny>& iOther);
+	ZMap_Any(const map<string, ZVal_Any>& iOther);
+	ZMap_Any& operator=(map<string, ZVal_Any>& iOther);
 
 	template <class Container>
 	ZMap_Any(const Container& iContainer);
@@ -294,7 +296,7 @@ public:
 
 private:
 	void pTouch();
-	map<string, ZAny>::iterator pTouch(const Index_t& iIndex);
+	map<string, ZVal_Any>::iterator pTouch(const Index_t& iIndex);
 
 	ZRef<Rep> fRep;
 	};
@@ -310,14 +312,14 @@ private:
 	Rep();
 	virtual ~Rep();
 	
-	Rep(const map<string, ZAny>& iMap);
+	Rep(const map<string, ZVal_Any>& iMap);
 
 	template <class Iterator>
 	Rep(Iterator begin, Iterator end)
 	:	fMap(begin, end)
 		{}
 
-	map<string, ZAny> fMap;
+	map<string, ZVal_Any> fMap;
 	friend class ZMap_Any;
 	};
 

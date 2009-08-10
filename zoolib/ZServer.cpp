@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-using std::vector;
+//using std::vector;
 
 // =================================================================================================
 #pragma mark -
@@ -68,7 +68,7 @@ void ZServer::StreamerListener::pStop()
 	{
 	fServer.Clear();
 	fFactory->Cancel();
-	ZWaiter::Wake();
+	ZActor::Wake();
 	}
 
 // =================================================================================================
@@ -123,7 +123,7 @@ void ZServer::StartListener(ZRef<ZStreamerRWFactory> iFactory)
 
 	fStreamerListener = new StreamerListener(this, iFactory);
 
-	sStartWaiterRunner(fStreamerListener);
+	sStartActorRunner(fStreamerListener);
 	}
 
 void ZServer::StopListener()
@@ -153,16 +153,8 @@ ZRef<ZStreamerRWFactory> ZServer::GetFactory()
 	return ZRef<ZStreamerRWFactory>();
 	}
 
-void ZServer::GetResponders(vector<ZRef<Responder> >& oResponders)
-	{
-	for (ZSafeSetIterConst<ZRef<Responder> > i = fResponders; /*no test*/; /*no inc*/)
-		{
-		if (ZRef<Responder> theResponder = i.ReadInc())
-			oResponders.push_back(theResponder);
-		else
-			break;
-		}
-	}
+ZSafeSetIterConst<ZRef<ZServer::Responder> > ZServer::GetResponders()
+	{ return fResponders; }
 
 void ZServer::pConnected(ZRef<ZStreamerRW> iStreamerRW)
 	{

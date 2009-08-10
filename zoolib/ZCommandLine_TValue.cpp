@@ -31,6 +31,9 @@ using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 
+// TODO. Paramaterize the value type, so we can use CFType or
+// ZVal_Any, and also parameterize the parser.
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZCommandLine::TValue

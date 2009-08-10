@@ -194,8 +194,11 @@ ZVal_Any sAsVal_Any(ZRef<CFTypeRef> iVal, const ZVal_Any& iDefault)
 
 	const CFTypeID theTypeID = ::CFGetTypeID(theCFTypeRef);
 
-	if (theTypeID == ::CFNullGetTypeID())
-		return ZVal_Any();
+	#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
+		&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
+		if (theTypeID == ::CFNullGetTypeID())
+			return ZVal_Any();
+	#endif
 
 	if (theTypeID == ::CFStringGetTypeID())
 		return sAsUTF8(static_cast<CFStringRef>(theCFTypeRef));
@@ -320,7 +323,12 @@ ZRef<CFTypeRef> sAsCFType(const ZAny& iAny, const ZRef<CFTypeRef>& iDefault)
 		{}
 	else if (iAny.type() == typeid(void))
 		{
-		return kCFNull; //??
+		#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
+			&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
+			return kCFNull;
+		#else
+			return ZRef<CFTypeRef>();
+		#endif
 		}
 	else if (const string8* theValue = ZAnyCast<string8>(&iAny))
 		{

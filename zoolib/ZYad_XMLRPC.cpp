@@ -716,7 +716,7 @@ bool sFromReader(ZRef<ZML::Readerer> iReaderer, Response_t& oResponse)
 	return true;
 	}
 
-void sToStrim(const ZML::StrimW& s, const Request_t& iRequest)
+void sToStrim(const Request_t& iRequest, const ZML::StrimW& s)
 	{
 	s.Begin("methodCall");
 
@@ -741,7 +741,7 @@ void sToStrim(const ZML::StrimW& s, const Request_t& iRequest)
 	s.End("methodCall");
 	}
 
-void sToStrim(const ZML::StrimW& s, const Response_t& iResponse)
+void sToStrim(const Response_t& iResponse, const ZML::StrimW& s)
 	{
 	s.Begin("methodResponse");
 

@@ -35,7 +35,8 @@ using std::string;
 
 void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& s)
 	{
-	sDumpData(iStreamRPos, s, ZINT64_C(-1));
+	sDumpData(iStreamRPos, s, ZINT64_C(0xFFFFFFFFFFFFFFFF));
+//	sDumpData(iStreamRPos, s, ZINT64_C(~0));
 	}
 
 void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& s, uint64 iMax)

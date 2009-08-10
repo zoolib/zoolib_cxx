@@ -34,7 +34,7 @@ ZStreamerOpener::ZStreamerOpener(ZRef<ZTaskOwner> iTaskOwner, ZRef<ZStreamerRWFa
 ZStreamerOpener::~ZStreamerOpener()
 	{}
 
-bool ZStreamerOpener::Execute()
+bool ZStreamerOpener::Act()
 	{
 	fStreamerRW = fFactory->MakeStreamerRW();
 	ZTask::pFinished();

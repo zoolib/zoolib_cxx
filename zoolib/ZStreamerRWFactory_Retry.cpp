@@ -56,7 +56,7 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Retry::MakeStreamerRW()
 				attempt, fCount);
 			}
 
-		if (ZRef<ZStreamerRW> theSRW = fStreamerRWFactory->MakeStreamerRW())
+		if (ZRef<ZStreamerRW> theSRW = theFactory->MakeStreamerRW())
 			{
 			if (ZLOG(s, eInfo, "ZStreamerRWFactory_Retry"))
 				s << "Connect succeeded";

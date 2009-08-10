@@ -34,7 +34,7 @@ typedef ZVal_ZooLib ZTValue;
 
 #define ZMACRO_ZMapAccessors_Decl_Entry(T, Name_t, TYPENAME, TYPE) \
 	bool QGet##TYPENAME(Name_t iName, TYPE& oVal) const; \
-	TYPE DGet##TYPENAME(Name_t iName, const TYPE& iDefault) const; \
+	TYPE DGet##TYPENAME(const TYPE& iDefault, Name_t iName) const; \
 	TYPE Get##TYPENAME(Name_t iName) const; \
 	void Set##TYPENAME(Name_t iName, const TYPE& iVal); \
 

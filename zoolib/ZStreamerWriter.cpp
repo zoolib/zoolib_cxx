@@ -32,17 +32,17 @@ ZStreamerWriter::ZStreamerWriter(ZRef<ZStreamerW> iStreamerW)
 
 void ZStreamerWriter::RunnerAttached()
 	{
-	ZWaiter::RunnerAttached();
+	ZActor::RunnerAttached();
 	this->WriteStarted();
 	}
 
 void ZStreamerWriter::RunnerDetached()
 	{
 	this->WriteFinished();
-	ZWaiter::RunnerDetached();
+	ZActor::RunnerDetached();
 	}
 
-bool ZStreamerWriter::Execute()
+bool ZStreamerWriter::Act()
 	{ return this->Write(fStreamerW->GetStreamW()); }
 
 void ZStreamerWriter::WriteStarted()

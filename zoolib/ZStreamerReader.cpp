@@ -32,29 +32,28 @@ ZStreamerReader::ZStreamerReader(ZRef<ZStreamerR> iStreamerR)
 
 void ZStreamerReader::RunnerAttached()
 	{
-	ZWaiter::RunnerAttached();
+	ZActor::RunnerAttached();
 	this->ReadStarted();
 	}
 
 void ZStreamerReader::RunnerDetached()
 	{
 	this->ReadFinished();
-	ZWaiter::RunnerDetached();
+	ZActor::RunnerDetached();
 	}
 
-bool ZStreamerReader::Execute()
+bool ZStreamerReader::Act()
 	{
-	if (this->Read(fStreamerR->GetStreamR()))
-		{
-		// ##
-		// This is the point at which we'd want to register with a waker that
-		// will call our Wake() when fStreamerR is readable. For now we'll just
-		// unconditionally call Wake(), so this method will be called again
-		// immediately, and we'll just block in Read().
-		this->Wake();
-		return true;
-		}
-	return false;
+	if (!this->Read(fStreamerR->GetStreamR()))
+		return false;
+
+	// ##
+	// This is the point at which we'd want to register with a waker that
+	// will call our Wake() when fStreamerR is readable. For now we'll just
+	// unconditionally call Wake(), so this method will be called again
+	// immediately, and we'll just block in Read().
+	this->Wake();
+	return true;
 	}
 
 void ZStreamerReader::ReadStarted()

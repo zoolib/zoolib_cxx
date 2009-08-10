@@ -141,10 +141,10 @@ ZRefWeakBase::ZRefWeakBase(ZWeakReferee* iWeakReferee)
 ZRefWeakBase::~ZRefWeakBase()
 	{}
 
-void ZRefWeakBase::AssignFrom(const ZRefWeakBase& iOther)
+void ZRefWeakBase::pAssignFrom(const ZRefWeakBase& iOther)
 	{ fWRP = iOther.fWRP; }
 
-void ZRefWeakBase::AssignFrom(ZWeakReferee* iWeakReferee)
+void ZRefWeakBase::pAssignFrom(ZWeakReferee* iWeakReferee)
 	{
 	if (iWeakReferee)
 		fWRP = iWeakReferee->pGetWeakRefereeProxy();
@@ -152,17 +152,17 @@ void ZRefWeakBase::AssignFrom(ZWeakReferee* iWeakReferee)
 		fWRP.Clear();
 	}
 
-void ZRefWeakBase::Clear()
+void ZRefWeakBase::pClear()
 	{ fWRP.Clear(); }
 
-ZWeakReferee* ZRefWeakBase::LockUse() const
+ZWeakReferee* ZRefWeakBase::pLockUse() const
 	{
 	if (fWRP)
 		return fWRP->pLockUse();
 	return nullptr;
 	}
 
-void ZRefWeakBase::Unlock() const
+void ZRefWeakBase::pUnlock() const
 	{ fWRP->pUnlock(); }
 
 NAMESPACE_ZOOLIB_END

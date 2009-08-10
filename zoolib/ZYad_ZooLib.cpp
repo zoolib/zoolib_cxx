@@ -113,7 +113,7 @@ bool ZYadPrimR_ZooLib::IsSimple(const ZYadOptions& iOptions)
 	{ return spIsSimple(iOptions, fVal); }
 
 ZAny ZYadPrimR_ZooLib::AsAny()
-	{ return fVal.AsVal_Any(); }
+	{ return fVal.AsVal_Any().AsAny(); }
 
 // =================================================================================================
 #pragma mark -

@@ -60,13 +60,13 @@ protected:
 	ZRefWeakBase(ZWeakReferee* iWeakReferee);
 	~ZRefWeakBase();
 
-	void AssignFrom(const ZRefWeakBase& iOther);
-	void AssignFrom(ZWeakReferee* iWeakReferee);
+	void pAssignFrom(const ZRefWeakBase& iOther);
+	void pAssignFrom(ZWeakReferee* iWeakReferee);
 
-	void Clear();
+	void pClear();
 
-	ZWeakReferee* LockUse() const;
-	void Unlock() const;
+	ZWeakReferee* pLockUse() const;
+	void pUnlock() const;
 
 	ZRef<ZWeakRefereeProxy> fWRP;
 	};
@@ -121,21 +121,21 @@ public:
 	ZRefWeak& operator=(const ZRef<O>& iRef)
 		{
 		static_cast<T*>(static_cast<O*>(0)); // Ensure that T is a supertype of O
-		ZRefWeakBase::AssignFrom(iRef.Get());
+		ZRefWeakBase::pAssignFrom(iRef.Get());
 		return *this;
 		}
 
 	void Clear()
-		{ ZRefWeakBase::Clear(); }
+		{ ZRefWeakBase::pClear(); }
 
 	template <class O>
 	operator ZRef<O>() const
 		{
 		ZRef<O> result;
-		if (ZWeakReferee* theWeakReferee = ZRefWeakBase::LockUse())
+		if (ZWeakReferee* theWeakReferee = ZRefWeakBase::pLockUse())
 			{
 			result = static_cast<O*>(theWeakReferee);
-			ZRefWeakBase::Unlock();
+			ZRefWeakBase::pUnlock();
 			}
 		return result;
 		}

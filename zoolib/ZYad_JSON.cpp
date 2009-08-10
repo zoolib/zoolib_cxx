@@ -430,10 +430,10 @@ ZYadVisitor_JSONWriter::SaveState::~SaveState()
 #pragma mark * ZYadVisitor_JSONWriter
 
 ZYadVisitor_JSONWriter::ZYadVisitor_JSONWriter(
-	const ZStrimW& iStrimW, size_t iIndent, const ZYadOptions& iOptions)
-:	fStrimW(iStrimW),
-	fIndent(iIndent),
+	size_t iIndent, const ZYadOptions& iOptions, const ZStrimW& iStrimW)
+:	fIndent(iIndent),
 	fOptions(iOptions),
+	fStrimW(iStrimW),
 	fMayNeedInitialLF(false)
 	{}
 
@@ -606,15 +606,15 @@ bool ZYadVisitor_JSONWriter::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 ZRef<ZYadR> ZYad_JSON::sMakeYadR(ZRef<ZStrimmerU> iStrimmerU)
 	{ return spMakeYadR_JSON(iStrimmerU); }
 
-void ZYad_JSON::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR)
+void ZYad_JSON::sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s)
 	{
-	sToStrim(s, iYadR, 0, ZYadOptions());
+	sToStrim(0, ZYadOptions(), iYadR, s);
 	}
 
-void ZYad_JSON::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR,
-	size_t iInitialIndent, const ZYadOptions& iOptions)
+void ZYad_JSON::sToStrim(size_t iInitialIndent, const ZYadOptions& iOptions,
+	ZRef<ZYadR> iYadR, const ZStrimW& s)
 	{
-	ZYadVisitor_JSONWriter theWriter(s, iInitialIndent, iOptions);
+	ZYadVisitor_JSONWriter theWriter(iInitialIndent, iOptions, s);
 	iYadR->Accept(theWriter);
 	}
 

@@ -59,8 +59,8 @@ struct Response_t
 bool sFromReader(ZRef<ZML::Reader> iReaderer, Request_t& oRequest);
 bool sFromReader(ZRef<ZML::Reader> iReaderer, Response_t& oResponse);
 
-void sToStrim(const ZML::StrimW& s, const Request_t& iRequest);
-void sToStrim(const ZML::StrimW& s, const Response_t& iResponse);
+void sToStrim(const Request_t& iRequest, const ZML::StrimW& s);
+void sToStrim(const Response_t& iResponse, const ZML::StrimW& s);
 
 } // namespace ZYad_XMLRPC
 

@@ -32,14 +32,17 @@ ZVal_Any ZVal_Any::AsVal_Any()
 ZVal_Any ZVal_Any::AsVal_Any(const ZVal_Any& iDefault)
 	{ return *this; }
 
+const ZAny& ZVal_Any::AsAny() const
+	{ return fAny; }
+
 ZVal_Any::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(this->type() != typeid(void)); }
+	{ return operator_bool_generator_type::translate(fAny.type() != typeid(void)); }
 
 ZVal_Any::ZVal_Any()
 	{}
 
 ZVal_Any::ZVal_Any(const ZVal_Any& iOther)
-:	inherited(static_cast<const ZAny&>(iOther))
+:	fAny(iOther.fAny)
 	{}
 
 ZVal_Any::~ZVal_Any()
@@ -47,22 +50,25 @@ ZVal_Any::~ZVal_Any()
 
 ZVal_Any& ZVal_Any::operator=(const ZVal_Any& iOther)
 	{
-	inherited::operator=(static_cast<const ZAny&>(iOther));
+	fAny = iOther.fAny;
 	return *this;
 	}
 
 ZVal_Any::ZVal_Any(const ZAny& iVal)
-:	inherited(iVal)
+:	fAny(iVal)
 	{}
 
 ZVal_Any& ZVal_Any::operator=(const ZAny& iVal)
 	{
-	inherited::operator=(iVal);
+	fAny = iVal;
 	return *this;
 	}
 
 void ZVal_Any::Clear()
-	{ *this = ZAny(); }
+	{
+	ZAny temp;
+	fAny.swap(temp);
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -82,7 +88,7 @@ ZList_Any::Rep::Rep()
 ZList_Any::Rep::~Rep()
 	{}
 	
-ZList_Any::Rep::Rep(const vector<ZAny>& iVector)
+ZList_Any::Rep::Rep(const vector<ZVal_Any>& iVector)
 :	fVector(iVector)
 	{}
 
@@ -115,11 +121,11 @@ ZList_Any& ZList_Any::operator=(const ZList_Any& iOther)
 	return *this;
 	}
 
-ZList_Any::ZList_Any(vector<ZAny>& iOther)
+ZList_Any::ZList_Any(const vector<ZVal_Any>& iOther)
 :	fRep(new Rep(iOther))
 	{}
 
-ZList_Any& ZList_Any::operator=(vector<ZAny>& iOther)
+ZList_Any& ZList_Any::operator=(const vector<ZVal_Any>& iOther)
 	{
 	fRep = new Rep(iOther);
 	return *this;
@@ -229,7 +235,7 @@ ZMap_Any::Rep::Rep()
 ZMap_Any::Rep::~Rep()
 	{}
 
-ZMap_Any::Rep::Rep(const map<string, ZAny>& iMap)
+ZMap_Any::Rep::Rep(const map<string, ZVal_Any>& iMap)
 :	fMap(iMap)
 	{}
 
@@ -237,7 +243,7 @@ ZMap_Any::Rep::Rep(const map<string, ZAny>& iMap)
 #pragma mark -
 #pragma mark * ZMap_Any
 
-static map<string, ZAny> spEmptyMap;
+static map<string, ZVal_Any> spEmptyMap;
 
 ZMap_Any ZMap_Any::AsMap_Any()
 	{ return *this; }
@@ -264,11 +270,11 @@ ZMap_Any& ZMap_Any::operator=(const ZMap_Any& iOther)
 	return *this;
 	}
 
-ZMap_Any::ZMap_Any(const map<string, ZAny>& iOther)
+ZMap_Any::ZMap_Any(const map<string, ZVal_Any>& iOther)
 :	fRep(new Rep(iOther.begin(), iOther.end()))
 	{}
 
-ZMap_Any& ZMap_Any::operator=(map<string, ZAny>& iOther)
+ZMap_Any& ZMap_Any::operator=(map<string, ZVal_Any>& iOther)
 	{
 	fRep = new Rep(iOther.begin(), iOther.end());
 	return *this;
@@ -291,7 +297,7 @@ ZVal_Any* ZMap_Any::PGet(const string8& iName)
 
 ZVal_Any* ZMap_Any::PGet(const Index_t& iIndex)
 	{
-	map<string, ZAny>::iterator theIndex = this->pTouch(iIndex);
+	map<string, ZVal_Any>::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())
 		return static_cast<ZVal_Any*>(&(*theIndex).second);
 	return nullptr;
@@ -371,14 +377,14 @@ void ZMap_Any::Set(const string8& iName, const ZVal_Any& iVal)
 
 void ZMap_Any::Set(const Index_t& iIndex, const ZVal_Any& iVal)
 	{
-	map<string, ZAny>::iterator theIndex = this->pTouch(iIndex);
+	map<string, ZVal_Any>::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())
 		(*theIndex).second = static_cast<const ZAny&>(iVal);
 	}
 
 void ZMap_Any::Erase(const Index_t& iIndex)
 	{
-	map<string, ZAny>::iterator theIndex = this->pTouch(iIndex);
+	map<string, ZVal_Any>::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())
 		fRep->fMap.erase(theIndex);
 	}
@@ -440,7 +446,7 @@ void ZMap_Any::pTouch()
 		}
 	}
 
-map<string, ZAny>::iterator ZMap_Any::pTouch(const Index_t& iIndex)
+map<string, ZVal_Any>::iterator ZMap_Any::pTouch(const Index_t& iIndex)
 	{
 	if (!fRep)
 		{

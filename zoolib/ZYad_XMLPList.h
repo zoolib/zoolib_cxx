@@ -126,7 +126,7 @@ namespace ZYad_XMLPList {
 
 ZRef<ZYadR> sMakeYadR(ZRef<ZML::Readerer> iR);
 
-void sToStrimW_ML(const ZML::StrimW& s, ZRef<ZYadR> iYadR);
+void sToStrimW_ML(ZRef<ZYadR> iYadR, const ZML::StrimW& s);
 
 } // namespace ZYad_XMLPList
 

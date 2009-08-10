@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_MacOSX.h"
 
-#if ZCONFIG_SPI_Enabled(Carbon)
+#if ZCONFIG_SPI_Enabled(Carbon) && ZCONFIG(Processor, PPC)
 
 #include ZMACINCLUDE3(CoreServices,CarbonCore,OSUtils.h) // For MakeDataExecutable
 
@@ -31,8 +31,6 @@ NAMESPACE_ZOOLIB_BEGIN
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_MacOSX
-
-#if ZCONFIG_SPI_Enabled(Carbon) && ZCONFIG(Processor, PPC)
 
 void ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
 	void* ioFuncs, size_t iCount, vector<char>& ioStorage)
@@ -69,9 +67,6 @@ void ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
     ::MakeDataExecutable(&ioStorage[0], ioStorage.size());
 	}
 
-#endif // ZCONFIG_SPI_Enabled(Carbon) && ZCONFIG(Processor, PPC)
-
 NAMESPACE_ZOOLIB_END
 
-#endif // ZCONFIG_SPI_Enabled(Carbon)
-
+#endif // ZCONFIG_SPI_Enabled(Carbon) && ZCONFIG(Processor, PPC)

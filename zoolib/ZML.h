@@ -109,7 +109,7 @@ private:
 #pragma mark * ZML::Readerer
 
 class Readerer
-:	public ZRefCountedWithFinalization
+:	public ZRefCountedWithFinalize
 ,	Reader
 	{
 public:

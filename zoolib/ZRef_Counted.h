@@ -99,8 +99,6 @@ public:
 	virtual ~ZRefCountedWithFinalize();
 	};
 
-typedef ZRefCountedWithFinalize ZRefCountedWithFinalization;
-
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZRef_Counted__

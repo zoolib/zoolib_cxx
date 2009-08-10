@@ -22,12 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZServer__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZActor.h"
+#include "zoolib/ZRefSafe.h"
 #include "zoolib/ZSafeSet.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZTask.h"
-#include "zoolib/ZWaiter.h"
-
-#include <vector>
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -60,7 +59,7 @@ public:
 	
 	ZRef<ZStreamerRWFactory> GetFactory();
 
-	void GetResponders(std::vector<ZRef<Responder> >& oResponders);
+	ZSafeSetIterConst<ZRef<Responder> > GetResponders();
 
 private:
 	class StreamerListener;
@@ -69,7 +68,7 @@ private:
 // Called by StreamerListener
 	void pConnected(ZRef<ZStreamerRW> iStreamer);
 
-	ZRef<StreamerListener> fStreamerListener;
+	ZRefSafe<StreamerListener> fStreamerListener;
 	ZSafeSet<ZRef<Responder> > fResponders;
 	};
 

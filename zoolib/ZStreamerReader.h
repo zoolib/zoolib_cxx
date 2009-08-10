@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStreamerReader__
 #include "zconfig.h"
 
+#include "zoolib/ZActor.h"
 #include "zoolib/ZStreamer.h"
-#include "zoolib/ZWaiter.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -31,16 +31,16 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZStreamerReader
 
-class ZStreamerReader : public ZWaiter
+class ZStreamerReader : public ZActor
 	{
 public:
 	ZStreamerReader(ZRef<ZStreamerR> iStreamerR);
 
-// From ZWaiter
+// From ZActor
 	virtual void RunnerAttached();
 	virtual void RunnerDetached();
 
-	virtual bool Execute();
+	virtual bool Act();
 
 // Our protocol
 	virtual void ReadStarted();

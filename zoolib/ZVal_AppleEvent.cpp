@@ -25,8 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h"
 
-#include <string>
-
 using std::string;
 
 #if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
@@ -34,6 +32,52 @@ using std::string;
 #else
 #	define ZCONFIG_Has_typeUTF8Text 0
 #endif
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * spAECheckIsRecord
+
+#if TARGET_RT_MAC_CFM
+
+#include ZMACINCLUDE2(CoreFoundation,CFBundle.h)
+
+// We're building for CFM, so AECheckIsRecord is not in CarbonLib. Manually load the entry point.
+
+extern "C" typedef
+Boolean (*AECheckIsRecord_Ptr)(const AEDesc* theDesc);
+
+static bool spAECheckIsRecord(const AEDesc* theDesc)
+	{
+	static bool spLoaded = false;
+	static AECheckIsRecord_Ptr spProc = nullptr;
+
+	if (!spLoaded)
+		{
+		CFBundleRef bundleRef =
+			::CFBundleGetBundleWithIdentifier(CFSTR("com.apple.ApplicationServices"));
+		ZAssert(bundleRef);
+
+		spProc = (AECheckIsRecord_Ptr)
+			CFBundleGetFunctionPointerForName(bundleRef, CFSTR("AECheckIsRecord"));
+		ZAssert(spProc);
+
+		spLoaded = true;
+		}
+
+	return spProc(theDesc);
+	}
+
+#else // TARGET_RT_MAC_CFM
+
+static bool spAECheckIsRecord(const AEDesc* theDesc)
+	{ return ::AECheckIsRecord(theDesc); }
+
+#endif // TARGET_RT_MAC_CFM
+
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * 
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -138,7 +182,7 @@ static ZVal_Any spAsVal_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
 	if (typeAEList == iDesc.descriptorType)
 		return spAsList_Any(iDesc, iDefault);
 
-	if (::AECheckIsRecord(&iDesc))
+	if (spAECheckIsRecord(&iDesc))
 		return spAsMap_Any(iDesc, iDefault);
 
 	switch (iDesc.descriptorType)
@@ -336,7 +380,7 @@ bool ZVal_AppleEvent::QGet_T<ZList_AppleEvent>(ZList_AppleEvent& oVal) const
 template <>
 bool ZVal_AppleEvent::QGet_T<ZMap_AppleEvent>(ZMap_AppleEvent& oVal) const
 	{
-	if (::AECheckIsRecord(this))
+	if (spAECheckIsRecord(this))
 		{
 		oVal = *static_cast<const AERecord*>(this);
 		return true;
@@ -554,7 +598,7 @@ ZMap_AppleEvent::ZMap_AppleEvent()
 
 ZMap_AppleEvent::ZMap_AppleEvent(const ZMap_AppleEvent& iOther)
 	{
-	ZAssert(::AECheckIsRecord(&iOther));
+	ZAssert(spAECheckIsRecord(&iOther));
 	::AEDuplicateDesc(&iOther, this);
 	}
 
@@ -566,7 +610,7 @@ ZMap_AppleEvent& ZMap_AppleEvent::operator=(const ZMap_AppleEvent& iOther)
 	if (this != &iOther)
 		{
 		::AEDisposeDesc(this);
-		ZAssert(::AECheckIsRecord(&iOther));
+		ZAssert(spAECheckIsRecord(&iOther));
 		::AEDuplicateDesc(&iOther, this);
 		}
 	return *this;	
@@ -580,21 +624,21 @@ ZMap_AppleEvent::ZMap_AppleEvent(AEKeyword iType)
 
 ZMap_AppleEvent::ZMap_AppleEvent(AEKeyword iType, const AERecord& iOther)
 	{
-	ZAssert(::AECheckIsRecord(&iOther));
+	ZAssert(spAECheckIsRecord(&iOther));
 	::AEDuplicateDesc(&iOther, this);
 	descriptorType = iType;
 	}
 
 ZMap_AppleEvent::ZMap_AppleEvent(AEKeyword iType, const ZMap_AppleEvent& iOther)
 	{
-	ZAssert(::AECheckIsRecord(&iOther));
+	ZAssert(spAECheckIsRecord(&iOther));
 	::AEDuplicateDesc(&iOther, this);
 	descriptorType = iType;
 	}
 
 ZMap_AppleEvent::ZMap_AppleEvent(const AERecord& iOther)
 	{
-	if (::AECheckIsRecord(&iOther))
+	if (spAECheckIsRecord(&iOther))
 		::AEDuplicateDesc(&iOther, this);
 	else
 		::AECreateList(nullptr, 0, true, this);
@@ -605,7 +649,7 @@ ZMap_AppleEvent& ZMap_AppleEvent::operator=(const AERecord& iOther)
 	if (this != &iOther)
 		{
 		::AEDisposeDesc(this);
-		ZAssert(::AECheckIsRecord(&iOther));
+		ZAssert(spAECheckIsRecord(&iOther));
 		::AEDuplicateDesc(&iOther, this);
 		}
 	return *this;	

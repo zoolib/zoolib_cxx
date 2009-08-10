@@ -896,8 +896,8 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 			theValue->h,
 			theValue->v);
 		}
-	else if (const ZRef<ZRefCountedWithFinalization>* theValue
-		= ZAnyCast<ZRef<ZRefCountedWithFinalization> >(&iVal))
+	else if (const ZRef<ZRefCountedWithFinalize>* theValue
+		= ZAnyCast<ZRef<ZRefCountedWithFinalize> >(&iVal))
 		{
 		s.Writef("RefCounted(%p)", theValue->Get());
 		}
@@ -999,7 +999,7 @@ static void spToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 			if (ZRef<ZYadR> cur = iYadMapR->ReadInc(curName))
 				{
 				spWriteLFIndent(s, iLevel, iOptions);
-				ZYad_ZooLibStrim::sWrite_PropName(s, curName);
+				ZYad_ZooLibStrim::sWrite_PropName(curName, s);
 				s << " = ";
 				spToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
 				s.Write(";");
@@ -1021,7 +1021,7 @@ static void spToStrim_Map(const ZStrimW& s, ZRef<ZYadMapR> iYadMapR,
 			if (ZRef<ZYadR> cur = iYadMapR->ReadInc(curName))
 				{
 				s.Write(" ");
-				ZYad_ZooLibStrim::sWrite_PropName(s, curName);
+				ZYad_ZooLibStrim::sWrite_PropName(curName, s);
 				s << " = ";
 				spToStrim_Yad(s, cur, iLevel + 1, iOptions, true);
 				s.Write(";");
@@ -1101,11 +1101,11 @@ bool ZYad_ZooLibStrim::sRead_Identifier(
 ZRef<ZYadR> ZYad_ZooLibStrim::sMakeYadR(ZRef<ZStrimmerU> iStrimmerU)
 	{ return spMakeYadR_ZooLibStrim(iStrimmerU); }
 
-void ZYad_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR)
+void ZYad_ZooLibStrim::sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s)
 	{ spToStrim_Yad(s, iYadR, 0, ZYadOptions(), false); }
 
-void ZYad_ZooLibStrim::sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR,
-	size_t iInitialIndent, const ZYadOptions& iOptions)
+void ZYad_ZooLibStrim::sToStrim(size_t iInitialIndent, const ZYadOptions& iOptions,
+	ZRef<ZYadR> iYadR, const ZStrimW& s)
 	{ spToStrim_Yad(s, iYadR, iInitialIndent, iOptions, false); }
 
 static bool spContainsProblemChars(const string& iString)
@@ -1129,7 +1129,7 @@ static bool spContainsProblemChars(const string& iString)
 	return false;
 	}
 
-void ZYad_ZooLibStrim::sWrite_PropName(const ZStrimW& iStrimW, const string& iPropName)
+void ZYad_ZooLibStrim::sWrite_PropName(const string& iPropName, const ZStrimW& iStrimW)
 	{
 	if (spContainsProblemChars(iPropName))
 		{

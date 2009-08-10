@@ -100,7 +100,7 @@ class ZYadVisitor_JSONWriter : public ZYadVisitor
 	{
 public:
 	ZYadVisitor_JSONWriter(
-		const ZStrimW& iStrimW, size_t iIndent, const ZYadOptions& iOptions);
+		size_t iIndent, const ZYadOptions& iOptions, const ZStrimW& iStrimW);
 
 // From ZYadVisitor
 	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
@@ -114,9 +114,9 @@ private:
 	class SaveState;
 	friend class SaveState;
 
-	const ZStrimW& fStrimW;
 	size_t fIndent;
 	ZYadOptions fOptions;
+	const ZStrimW& fStrimW;
 	bool fMayNeedInitialLF;
 	};
 
@@ -128,10 +128,10 @@ namespace ZYad_JSON {
 
 ZRef<ZYadR> sMakeYadR(ZRef<ZStrimmerU> iStrimmerU);
 
-void sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR);
+void sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s);
 
-void sToStrim(const ZStrimW& s, ZRef<ZYadR> iYadR,
-	size_t iInitialIndent, const ZYadOptions& iOptions);
+void sToStrim(size_t iInitialIndent, const ZYadOptions& iOptions,
+	ZRef<ZYadR> iYadR, const ZStrimW& s);
 
 } // namespace ZYad_JSON
 

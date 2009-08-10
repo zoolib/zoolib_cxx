@@ -81,8 +81,12 @@ ZVal_CFType::operator bool() const
 	{
 	if (CFTypeRef theVal = this->Get())
 		{
-		if (::CFGetTypeID(theVal) != ::CFNullGetTypeID())
-			return true;
+		#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
+			&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
+			if (::CFGetTypeID(theVal) == ::CFNullGetTypeID())
+				return false;
+		#endif
+		return true;
 		}
 	return false;
 	}

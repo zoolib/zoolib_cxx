@@ -196,6 +196,7 @@ private:
 	ZMtx fMtx;
 	EntryList fList;
 	EntryMap fMap;
+
 	friend class ZSafeSet<T>;
 	friend class ZSafeSetIter<T>;
 	friend class ZSafeSetIterConst<T>;
@@ -301,7 +302,7 @@ public:
 			theRep->pInit(theRep, *this);
 		}
 
-	bool ReadInc(T& oValue)
+	bool QReadInc(T& oValue)
 		{
 		if (ZRef<ZSafeSetRep<T> > theRep = fRep)
 			return theRep->pReadInc(*this, oValue);
@@ -311,7 +312,7 @@ public:
 	T ReadInc()
 		{
 		T temp;
-		if (this->ReadInc(temp))
+		if (this->QReadInc(temp))
 			return temp;
 		return T();
 		}
@@ -349,7 +350,7 @@ public:
 	ZSafeSetIter& operator=(const ZSafeSetIter& iOther)
 		{ return ZSafeSetIterConst<T>::operator=(iOther); }
 	
-	bool ReadErase(T& oValue)
+	bool QReadErase(T& oValue)
 		{
 		// Hmm, don't know why I need to qualify the reference to fRep.
 		if (ZRef<ZSafeSetRep<T> > theRep = ZSafeSetIterConst<T>::fRep)
@@ -360,7 +361,7 @@ public:
 	T ReadErase()
 		{
 		T temp;
-		if (this->ReadErase(temp))
+		if (this->QReadErase(temp))
 			return temp;
 		return T();
 		}

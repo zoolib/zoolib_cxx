@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStreamerCopier__
 #include "zconfig.h"
 
+#include "zoolib/ZActor.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZTask.h"
-#include "zoolib/ZWaiter.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -33,7 +33,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZStreamerCopier
 
 class ZStreamerCopier
-:	public ZWaiter,
+:	public ZActor,
 	public ZTask
 	{
 public:
@@ -45,9 +45,9 @@ public:
 
 	virtual ~ZStreamerCopier();
 
-// From ZWaiter
+// From ZActor
 	virtual void RunnerDetached();
-	virtual bool Execute();
+	virtual bool Act();
 
 // From ZTask
 	virtual void Kill();

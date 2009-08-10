@@ -44,7 +44,7 @@ ZUtil_Strim_Tuple::Format::Format(
 #pragma mark * ZUtil_Strim_Tuple, writing and parsing pieces
 
 void ZUtil_Strim_Tuple::sWrite_PropName(const ZStrimW& iStrimW, const ZTName& iPropName)
-	{ ZYad_ZooLibStrim::sWrite_PropName(iStrimW, iPropName.AsString()); }
+	{ ZYad_ZooLibStrim::sWrite_PropName(iPropName.AsString(), iStrimW); }
 
 bool ZUtil_Strim_Tuple::sRead_Identifier(
 	const ZStrimU& iStrimU, string* oStringLC, string* oStringExact)
@@ -57,13 +57,13 @@ bool ZUtil_Strim_Tuple::sRead_Identifier(
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTValue& iTV)
 	{
 	ZRef<ZYadR> theYadR = sMakeYadR(iTV);
-	ZYad_ZooLibStrim::sToStrim(s, theYadR, 0, ZYadOptions());
+	ZYad_ZooLibStrim::sToStrim(0, ZYadOptions(), theYadR, s);
 	}
 
 void ZUtil_Strim_Tuple::sToStrim(const ZStrimW& s, const ZTValue& iTV,
 	size_t iInitialIndent, const ZYadOptions& iOptions)
 	{
-	ZYad_ZooLibStrim::sToStrim(s, sMakeYadR(iTV), iInitialIndent, iOptions);
+	ZYad_ZooLibStrim::sToStrim(iInitialIndent, iOptions, sMakeYadR(iTV), s);
 	}
 
 string ZUtil_Strim_Tuple::sAsString(const ZTValue& iTV)

@@ -293,8 +293,8 @@ bool ZVal_ZooLib::sFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
-	else if (const ZRef<ZRefCountedWithFinalization>* theValue
-		= ZAnyCast<ZRef<ZRefCountedWithFinalization> >(&iAny))
+	else if (const ZRef<ZRefCountedWithFinalize>* theValue
+		= ZAnyCast<ZRef<ZRefCountedWithFinalize> >(&iAny))
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
@@ -417,7 +417,7 @@ ZVal_Any ZVal_ZooLib::AsVal_Any(const ZVal_Any& iDefault) const
 			}
 		case eZType_Time:
 			{
-			return fData.fAs_Time;
+			return ZTime(fData.fAs_Time);
 			}
 		case eZType_Pointer:
 			{

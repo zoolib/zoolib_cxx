@@ -131,8 +131,8 @@ void ZCommer::WaitTillFinished()
 
 void sStartCommerRunners(ZRef<ZCommer> iCommer)
 	{
-	sStartWaiterRunner(ZRefStaticCast<ZStreamerReader>(iCommer));
-	sStartWaiterRunner(ZRefStaticCast<ZStreamerWriter>(iCommer));
+	sStartActorRunner(ZRefStaticCast<ZStreamerReader>(iCommer));
+	sStartActorRunner(ZRefStaticCast<ZStreamerWriter>(iCommer));
 	}
 
 NAMESPACE_ZOOLIB_END

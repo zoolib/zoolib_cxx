@@ -106,7 +106,7 @@ void ZTuple::SetTuple(const ZTName& iName, const ZTuple& iTuple)
 			return theVal.QGet_T<TYPE>(oVal); \
 		return false; \
 		} \
-	TYPE ZTuple::DGet##TYPENAME(Name_t iName, const TYPE& iDefault) const \
+	TYPE ZTuple::DGet##TYPENAME(const TYPE& iDefault, Name_t iName) const \
 		{ \
 		ZVal_ZooLib theVal; \
 		if (this->QGet(iName, theVal)) \

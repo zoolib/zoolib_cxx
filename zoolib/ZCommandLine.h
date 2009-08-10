@@ -46,8 +46,8 @@ public:
 
 	enum EFlags
 		{
-		eRequired,
-		eOptional
+		eOptional,
+		eRequired
 		};
 
 protected:

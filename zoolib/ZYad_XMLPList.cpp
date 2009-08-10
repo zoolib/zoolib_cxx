@@ -305,7 +305,7 @@ static void spToStrim_List(const ZML::StrimW& s, ZRef<ZYadListR> iYadListR)
 	{
 	s.Begin("array");
 		while (ZRef<ZYadR> theChild = iYadListR->ReadInc())
-			ZYad_XMLPList::sToStrimW_ML(s, theChild);
+			ZYad_XMLPList::sToStrimW_ML(theChild, s);
 	s.End("array");
 	}
 
@@ -318,7 +318,7 @@ static void spToStrim_Map(const ZML::StrimW& s, ZRef<ZYadMapR> iYadMapR)
 			s.Begin("key");
 				s << theName;
 			s.End("key");
-			ZYad_XMLPList::sToStrimW_ML(s, theChild);
+			ZYad_XMLPList::sToStrimW_ML(theChild, s);
 			}
 	s.End("dict");
 	}
@@ -361,7 +361,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 		}
 	}
 
-void ZYad_XMLPList::sToStrimW_ML(const ZML::StrimW& s, ZRef<ZYadR> iYadR)
+void ZYad_XMLPList::sToStrimW_ML(ZRef<ZYadR> iYadR, const ZML::StrimW& s)
 	{
 	if (!iYadR)
 		{
