@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWaiter__
-#define __ZWaiter__ 1
+#ifndef __ZActor__
+#define __ZActor__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZRef_Counted.h"
@@ -28,45 +28,46 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZWaiter;
+class ZActor;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWaiterRunner
+#pragma mark * ZActorRunner
 
-class ZWaiterRunner
+class ZActorRunner
 :	public ZRefCountedWithFinalize,
 	public ZWeakReferee
 	{
 public:
-	ZWaiterRunner();
-	virtual ~ZWaiterRunner();
+	ZActorRunner();
+	virtual ~ZActorRunner();
 
 protected:
 // Called by subclasses
-	void pAttachWaiter(ZRef<ZWaiter> iWaiter);
-	void pDetachWaiter(ZRef<ZWaiter> iWaiter);
+	void pAttachActor(ZRef<ZActor> iActor);
+	void pDetachActor(ZRef<ZActor> iActor);
 
-// Called by ZWaiter instances.
-	virtual void Waiter_WakeAt(ZRef<ZWaiter> iWaiter, ZTime iSystemTime) = 0;
-	virtual void Waiter_WakeIn(ZRef<ZWaiter> iWaiter, double iInterval) = 0;
+// Called by ZActor instances.
+	virtual void Actor_Wake(ZRef<ZActor> iActor) = 0;
+	virtual void Actor_WakeAt(ZRef<ZActor> iActor, ZTime iSystemTime) = 0;
+	virtual void Actor_WakeIn(ZRef<ZActor> iActor, double iInterval) = 0;
 
-	friend class ZWaiter;
+	friend class ZActor;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWaiter
+#pragma mark * ZActor
 
-class ZWaiter : public ZRefCountedWithFinalize
+class ZActor : public ZRefCountedWithFinalize
 	{
 public:
-	ZWaiter();
+	ZActor();
 
 	virtual void RunnerAttached();
 	virtual void RunnerDetached();
 
-	virtual bool Execute() = 0;
+	virtual bool Act() = 0;
 
 	void Wake();
 	void WakeAt(ZTime iSystemTime);
@@ -76,8 +77,8 @@ private:
 	void pRunnerAttached();
 	void pRunnerDetached();
 
-	ZRefWeak<ZWaiterRunner> fRunner;
-	friend class ZWaiterRunner;
+	ZRefWeak<ZActorRunner> fRunner;
+	friend class ZActorRunner;
 	};
 
 // =================================================================================================
@@ -85,8 +86,8 @@ private:
 #pragma mark * Utility methods
 
 // Here for now till I find a better home.
-void sStartWaiterRunner(ZRef<ZWaiter> iWaiter);
+void sStartActorRunner(ZRef<ZActor> iActor);
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZWaiter__
+#endif // __ZActor__
