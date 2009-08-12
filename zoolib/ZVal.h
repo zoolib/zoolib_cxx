@@ -80,34 +80,6 @@ inline T* sFetch_T(void* iBytes)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValR_T
-
-template <class T>
-class ZValR_T
-	{
-protected:
-	ZValR_T() {}
-	ZValR_T(const ZValR_T&) {}
-	~ZValR_T() {}
-	ZValR_T& operator=(ZValR_T&) { return *this; }
-	
-public:
-	template <class S>
-	S DGet_T(const S& iDefault) const
-		{
-		S result;
-		if (static_cast<const T*>(this)->QGet_T(result))
-			return result;
-		return iDefault;
-		}
-
-	template <class S>
-	S Get_T() const
-		{ return static_cast<const T*>(this)->DGet_T(S()); }
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZMapIndex_T
 
 template <class T>
@@ -152,7 +124,7 @@ typename Map_t::Val_t* sPGeti(Map_t& iMap, const std::string& iNamei)
 	{
 	for (typename Map_t::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
 		{
-		if (ZString::sEquali(iMap.NameOf(i).AsString(), iNamei))
+		if (ZString::sEquali(iMap.NameOf(i), iNamei))
 			return iMap.PGet(i);
 		}
 	return nullptr;
@@ -163,7 +135,7 @@ const typename Map_t::Val_t* sPGeti(const Map_t& iMap, const std::string& iNamei
 	{
 	for (typename Map_t::Index_t i = iMap.Begin(); i != iMap.End(); ++i)
 		{
-		if (ZString::sEquali(iMap.NameOf(i).AsString(), iNamei))
+		if (ZString::sEquali(iMap.NameOf(i), iNamei))
 			return iMap.PGet(i);
 		}
 	return nullptr;

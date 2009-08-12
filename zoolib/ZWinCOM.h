@@ -76,7 +76,6 @@ namespace ZWinCOM {
 
 class Variant
 :	public VARIANT
-,	public ZValR_T<Variant>
 	{
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Variant,
 		operator_bool_generator_type, operator_bool_type);
@@ -113,6 +112,19 @@ public:
 // ZVal protocol
 	template <class S>
 	bool QGet_T(S& oVal) const;
+
+	template <class S>
+	S DGet_T(const S& iDefault) const
+		{
+		S result;
+		if (this->QGet_T(result))
+			return result;
+		return iDefault;
+		}
+
+	template <class S>
+	S Get_T() const
+		{ return this->DGet_T(S()); }
 
 	template <class S>
 	void Set_T(const S& iVal);

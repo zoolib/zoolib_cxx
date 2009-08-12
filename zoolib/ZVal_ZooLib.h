@@ -66,7 +66,6 @@ typedef ZMap_ZooLib ZMap_Z;
 #endif
 
 class ZVal_ZooLib
-:	public ZValR_T<ZVal_ZooLib>
 	{
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZVal_ZooLib,
 		operator_bool_generator_type, operator_bool_type);
@@ -120,6 +119,19 @@ public:
 
 	template <class S>
 	bool QGet_T(S& oResult) const;
+
+	template <class S>
+	S DGet_T(const S& iDefault) const
+		{
+		S result;
+		if (this->QGet_T(result))
+			return result;
+		return iDefault;
+		}
+
+	template <class S>
+	S Get_T() const
+		{ return this->DGet_T(S()); }
 
 	template <class S>
 	void Set_T(const S& iVal);

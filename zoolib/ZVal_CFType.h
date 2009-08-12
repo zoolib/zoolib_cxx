@@ -48,7 +48,6 @@ typedef ZMap_CFType ZMap_CF;
 
 class ZVal_CFType
 :	public ZRef<CFTypeRef>
-,	public ZValR_T<ZVal_CFType>
 	{
 	typedef ZRef<CFTypeRef> inherited;
 public:
@@ -92,6 +91,19 @@ public:
 
 	template <class S>
 	bool QGet_T(S& oVal) const;
+
+	template <class S>
+	S DGet_T(const S& iDefault) const
+		{
+		S result;
+		if (this->QGet_T(result))
+			return result;
+		return iDefault;
+		}
+
+	template <class S>
+	S Get_T() const
+		{ return this->DGet_T(S()); }
 
 	template <class S>
 	void Set_T(const S& iVal);
