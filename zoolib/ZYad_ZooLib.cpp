@@ -212,7 +212,8 @@ YadVisitor_GetValZooLib::YadVisitor_GetValZooLib(const ZVal_ZooLib& iDefault)
 
 bool YadVisitor_GetValZooLib::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{
-	fOutput = ZVal_ZooLib::sFromAny(iYadPrimR->AsAny(), fDefault);
+	if (!ZVal_ZooLib::sFromAny(iYadPrimR->AsAny(), fOutput))
+		fOutput = fDefault;
 	return true;
 	}
 
