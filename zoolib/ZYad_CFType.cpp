@@ -240,7 +240,7 @@ YadVisitor_GetValCFType::YadVisitor_GetValCFType(ZRef<CFTypeRef> iDefault)
 
 bool YadVisitor_GetValCFType::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{
-	fOutput = ZUtil_CFType::sAsCFType(iYadPrimR->AsAny(), fDefault);
+	fOutput = ZUtil_CFType::sAsCFType(fDefault, iYadPrimR->AsAny());
 	return true;
 	}
 
