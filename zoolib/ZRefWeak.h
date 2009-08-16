@@ -99,13 +99,14 @@ public:
 	ZRefWeak(const ZRefWeak<O>& iOther)
 	:	ZRefWeakBase(iOther)
 		{
-		static_cast<T*>(static_cast<O*>(0)); // Ensure that T is a supertype of O
+		// Ensure that T is a supertype of O
+		static_cast<T*>(static_cast<O*>(0));
 		}
 
 	template <class O>
 	ZRefWeak& operator=(const ZRefWeak<O>& iOther)
 		{
-		static_cast<T*>(static_cast<O*>(0)); // Ensure that T is a supertype of O
+		static_cast<T*>(static_cast<O*>(0));
 		this->AssignFrom(iOther);
 		return *this;
 		}
@@ -114,13 +115,13 @@ public:
 	ZRefWeak(const ZRef<O>& iRef)
 	:	ZRefWeakBase(iRef.Get())
 		{
-		static_cast<T*>(static_cast<O*>(0)); // Ensure that T is a supertype of O
+		static_cast<T*>(static_cast<O*>(0));
 		}
 
 	template <class O>
 	ZRefWeak& operator=(const ZRef<O>& iRef)
 		{
-		static_cast<T*>(static_cast<O*>(0)); // Ensure that T is a supertype of O
+		static_cast<T*>(static_cast<O*>(0));
 		ZRefWeakBase::pAssignFrom(iRef.Get());
 		return *this;
 		}
