@@ -72,14 +72,14 @@ ZRef<CFMutableDataRef> sDataMutable(size_t iSize);
 ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData);
 
 
-ZVal_Any sAsVal_Any(ZRef<CFTypeRef> iVal, const ZVal_Any& iDefault);
+ZVal_Any sAsVal_Any(const ZVal_Any& iDefault, ZRef<CFTypeRef> iVal);
 ZVal_Any sAsVal_Any(ZRef<CFTypeRef> iVal);
 
 ZData_Any sAsData_Any(const ZRef<CFDataRef>& iCFData);
-ZList_Any sAsList_Any(const ZRef<CFArrayRef>& iCFArray, const ZVal_Any& iDefault);
-ZMap_Any sAsMap_Any(const ZRef<CFDictionaryRef>& iCFDictionary, const ZVal_Any& iDefault);
+ZList_Any sAsList_Any(const ZVal_Any& iDefault, const ZRef<CFArrayRef>& iCFArray);
+ZMap_Any sAsMap_Any(const ZVal_Any& iDefault, const ZRef<CFDictionaryRef>& iCFDictionary);
 
-ZRef<CFTypeRef> sAsCFType(const ZAny& iAny, const ZRef<CFTypeRef>& iDefault);
+ZRef<CFTypeRef> sAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iAny);
 ZRef<CFTypeRef> sAsCFType(const ZAny& iAny);
 
 } // namespace ZUtil_CFType

@@ -186,7 +186,7 @@ ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData)
 #pragma mark -
 #pragma mark * ZUtil_CFType
 
-ZVal_Any sAsVal_Any(ZRef<CFTypeRef> iVal, const ZVal_Any& iDefault)
+ZVal_Any sAsVal_Any(const ZVal_Any& iDefault, ZRef<CFTypeRef> iVal)
 	{
 	CFTypeRef theCFTypeRef = iVal;
 	if (!theCFTypeRef)
@@ -204,10 +204,10 @@ ZVal_Any sAsVal_Any(ZRef<CFTypeRef> iVal, const ZVal_Any& iDefault)
 		return sAsUTF8(static_cast<CFStringRef>(theCFTypeRef));
 
 	if (theTypeID == ::CFDictionaryGetTypeID())
-		return sAsMap_Any(static_cast<CFDictionaryRef>(theCFTypeRef), iDefault);
+		return sAsMap_Any(iDefault, static_cast<CFDictionaryRef>(theCFTypeRef));
 
 	if (theTypeID == ::CFArrayGetTypeID())
-		return sAsList_Any(static_cast<CFArrayRef>(theCFTypeRef), iDefault);
+		return sAsList_Any(iDefault, static_cast<CFArrayRef>(theCFTypeRef));
 
 	if (theTypeID == ::CFBooleanGetTypeID())
 		return bool(::CFBooleanGetValue(static_cast<CFBooleanRef>(theCFTypeRef)));
@@ -275,7 +275,7 @@ ZVal_Any sAsVal_Any(ZRef<CFTypeRef> iVal, const ZVal_Any& iDefault)
 	}
 
 ZVal_Any sAsVal_Any(ZRef<CFTypeRef> iVal)
-	{ return sAsVal_Any(iVal, ZVal_Any()); }
+	{ return sAsVal_Any(ZVal_Any(), iVal); }
 
 ZData_Any sAsData_Any(const ZRef<CFDataRef>& iCFData)
 	{
@@ -285,12 +285,12 @@ ZData_Any sAsData_Any(const ZRef<CFDataRef>& iCFData)
 	return ZData_Any();
 	}
 
-ZList_Any sAsList_Any(const ZRef<CFArrayRef>& iCFArray, const ZVal_Any& iDefault)
+ZList_Any sAsList_Any(const ZVal_Any& iDefault, const ZRef<CFArrayRef>& iCFArray)
 	{
 	ZList_Any theList;
 
 	for (size_t x = 0, theCount = ::CFArrayGetCount(iCFArray); x < theCount; ++x)
-		theList.Append(sAsVal_Any(::CFArrayGetValueAtIndex(iCFArray, x), iDefault));
+		theList.Append(sAsVal_Any(iDefault, ::CFArrayGetValueAtIndex(iCFArray, x)));
 
 	return theList;
 	}
@@ -303,10 +303,10 @@ static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon
 	pair<ZMap_Any*, const ZVal_Any*>* thePair =
 		static_cast<pair<ZMap_Any*, const ZVal_Any*>*>(iRefcon);
 
-	thePair->first->Set(sAsUTF8(theKey), sAsVal_Any(theValue, *thePair->second));
+	thePair->first->Set(sAsUTF8(theKey), sAsVal_Any(*thePair->second, theValue));
 	}
 
-ZMap_Any sAsMap_Any(const ZRef<CFDictionaryRef>& iCFDictionary, const ZVal_Any& iDefault)
+ZMap_Any sAsMap_Any(const ZVal_Any& iDefault, const ZRef<CFDictionaryRef>& iCFDictionary)
 	{
 	ZMap_Any theMap;
 	pair<ZMap_Any*, const ZVal_Any*> thePair(&theMap, &iDefault);
@@ -317,7 +317,7 @@ ZMap_Any sAsMap_Any(const ZRef<CFDictionaryRef>& iCFDictionary, const ZVal_Any& 
 static ZRef<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
 	{ return Adopt_T<CFTypeRef>(::CFNumberCreate( kCFAllocatorDefault, iType, iVal)); }
 
-ZRef<CFTypeRef> sAsCFType(const ZAny& iAny, const ZRef<CFTypeRef>& iDefault)
+ZRef<CFTypeRef> sAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iAny)
 	{
 	if (false)
 		{}
@@ -354,7 +354,7 @@ ZRef<CFTypeRef> sAsCFType(const ZAny& iAny, const ZRef<CFTypeRef>& iDefault)
 		for (vector<ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
 			i != end; ++i)
 			{
-			::CFArrayAppendValue(theArray, sAsCFType(*i, iDefault));
+			::CFArrayAppendValue(theArray, sAsCFType(iDefault, *i));
 			}
 		return theArray;
 		}
@@ -363,7 +363,7 @@ ZRef<CFTypeRef> sAsCFType(const ZAny& iAny, const ZRef<CFTypeRef>& iDefault)
 		ZRef<CFMutableArrayRef> theArray;
 		for (size_t x = 0, count = theValue->Count(); x < count; ++x)
 			{
-			::CFArrayAppendValue(theArray, sAsCFType(theValue->Get(x), iDefault));
+			::CFArrayAppendValue(theArray, sAsCFType(iDefault, theValue->Get(x)));
 			}
 		return theArray;
 		}
@@ -374,7 +374,7 @@ ZRef<CFTypeRef> sAsCFType(const ZAny& iAny, const ZRef<CFTypeRef>& iDefault)
 			i != end; ++i)
 			{
 			::CFDictionarySetValue(theDictionary,
-				sString((*i).first), sAsCFType((*i).second, iDefault));
+				sString((*i).first), sAsCFType(iDefault, (*i).second));
 			}
 		return theDictionary;
 		}
@@ -385,7 +385,7 @@ ZRef<CFTypeRef> sAsCFType(const ZAny& iAny, const ZRef<CFTypeRef>& iDefault)
 			i != end; ++i)
 			{
 			::CFDictionarySetValue(theDictionary,
-				sString(theValue->NameOf(i)), sAsCFType(theValue->Get(i), iDefault));
+				sString(theValue->NameOf(i)), sAsCFType(iDefault, theValue->Get(i)));
 			}
 		return theDictionary;
 		}
@@ -470,7 +470,7 @@ ZRef<CFTypeRef> sAsCFType(const ZAny& iAny, const ZRef<CFTypeRef>& iDefault)
 	}
 
 ZRef<CFTypeRef> sAsCFType(const ZAny& iAny)
-	{ return sAsCFType(iAny, ZRef<CFTypeRef>()); }
+	{ return sAsCFType(ZRef<CFTypeRef>(), iAny); }
 
 } // namespace ZUtil_CFType
 

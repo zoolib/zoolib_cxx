@@ -68,14 +68,11 @@ ZRef<CFTypeRef> sNumber_T(CFNumberType iNumberType, const S& iVal)
 #pragma mark -
 #pragma mark * ZVal_CFType
 
-bool ZVal_CFType::sFromAny(const ZAny& iAny, ZVal_CFType& oVal)
-	{ return ZUtil_CFType::sAsCFType(iAny, oVal); }
-
 ZVal_Any ZVal_CFType::AsVal_Any() const
 	{ return this->AsVal_Any(ZVal_Any()); }
 
 ZVal_Any ZVal_CFType::AsVal_Any(const ZVal_Any& iDefault) const
-	{ return ZUtil_CFType::sAsVal_Any(this, iDefault); }
+	{ return ZUtil_CFType::sAsVal_Any(iDefault, this); }
 
 ZVal_CFType::operator bool() const
 	{
@@ -400,7 +397,7 @@ ZList_Any ZList_CFType::AsList_Any() const
 	{ return this->AsList_Any(ZVal_Any()); }
 
 ZList_Any ZList_CFType::AsList_Any(const ZVal_Any& iDefault) const
-	{ return ZUtil_CFType::sAsList_Any(this->pArray(), iDefault); }
+	{ return ZUtil_CFType::sAsList_Any(iDefault, this->pArray()); }
 
 ZList_CFType::operator bool() const
 	{ return this->Count(); }
@@ -551,7 +548,7 @@ ZMap_Any ZMap_CFType::AsMap_Any() const
 	{ return this->AsMap_Any(ZVal_Any()); }
 
 ZMap_Any ZMap_CFType::AsMap_Any(const ZVal_Any& iDefault) const
-	{ return ZUtil_CFType::sAsMap_Any(this->pDictionary(), iDefault); }
+	{ return ZUtil_CFType::sAsMap_Any(iDefault, this->pDictionary()); }
 
 ZMap_CFType::operator bool() const
 	{

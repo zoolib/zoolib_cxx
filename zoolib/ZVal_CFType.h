@@ -51,8 +51,6 @@ class ZVal_CFType
 	{
 	typedef ZRef<CFTypeRef> inherited;
 public:
-	bool sFromAny(const ZAny& iAny, ZVal_CFType& oVal);
-
 	ZVal_Any AsVal_Any() const;
 	ZVal_Any AsVal_Any(const ZVal_Any& iDefault) const;
 
