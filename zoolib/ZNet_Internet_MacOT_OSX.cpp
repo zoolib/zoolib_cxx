@@ -201,6 +201,9 @@ namespace ZANONYMOUS {
 class Make_NameLookup
 :	public ZFunctionChain_T<ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t>
 	{
+public:
+	Make_NameLookup() : Base_t(false) {}
+
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		try
@@ -218,6 +221,9 @@ class Make_NameLookup
 class Make_Listener
 :	public ZFunctionChain_T<ZRef<ZNetListener_TCP>, ZNetListener_TCP::MakeParam_t>
 	{
+public:
+	Make_Listener() : Base_t(false) {}
+
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		try
@@ -235,6 +241,9 @@ class Make_Listener
 class Make_Endpoint
 :	public ZFunctionChain_T<ZRef<ZNetEndpoint_TCP>, ZNetEndpoint_TCP::MakeParam_t>
 	{
+public:
+	Make_Endpoint() : Base_t(false) {}
+
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
 		try
