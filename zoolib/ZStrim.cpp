@@ -344,6 +344,65 @@ void ZStrimR::CopyAllTo(const ZStrimW& iStrimW) const
 		ZStrimW::sThrowEndOfStrim();
 	}
 
+/**
+\brief Read all remaining code units into a string of the appropriate type.
+*/
+string8 ZStrimR::ReadAll8() const
+	{
+	string8 theString;
+	size_t start = 0;
+	for (;;)
+		{
+		if (theString.size() <= start)
+			theString.resize(start + 1024);
+		const size_t countToRead = theString.size() - start;
+		size_t countRead;
+		this->Read(&theString[0], countToRead, &countRead);
+		if (0 == countRead)
+			break;
+		start += countRead;
+		}
+	theString.resize(start);
+	return theString;
+	}
+
+string16 ZStrimR::ReadAll16() const
+	{
+	string16 theString;
+	size_t start = 0;
+	for (;;)
+		{
+		if (theString.size() <= start)
+			theString.resize(start + 1024);
+		const size_t countToRead = theString.size() - start;
+		size_t countRead;
+		this->Read(&theString[0], countToRead, &countRead);
+		if (0 == countRead)
+			break;
+		start += countRead;
+		}
+	theString.resize(start);
+	return theString;
+	}
+
+string32 ZStrimR::ReadAll32() const
+	{
+	string32 theString;
+	size_t start = 0;
+	for (;;)
+		{
+		if (theString.size() <= start)
+			theString.resize(start + 1024);
+		const size_t countToRead = theString.size() - start;
+		size_t countRead;
+		this->Read(&theString[0], countToRead, &countRead);
+		if (0 == countRead)
+			break;
+		start += countRead;
+		}
+	theString.resize(start);
+	return theString;
+	}
 
 /// Read data from this strim and write it to \a iStrimW until one or other strim reaches its end.
 /**

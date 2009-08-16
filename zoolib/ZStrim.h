@@ -99,6 +99,9 @@ public:
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP) const;
 	//@}
 
+	string8 ReadAll8() const;
+	string16 ReadAll16() const;
+	string32 ReadAll32() const;
 
 /** \name Copy To
 Read code points from this strim and write them to iStrimW.
