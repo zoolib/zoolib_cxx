@@ -84,8 +84,8 @@ public:
 	bool QGet(const std::string& iName, Variant_t& oVal);
 	bool QGet(size_t iIndex, Variant_t& oVal);
 
-	Variant_t DGet(const std::string& iName, const Variant_t& iDefault);
-	Variant_t DGet(size_t iIndex, const Variant_t& iDefault);
+	Variant_t DGet(const Variant_t& iDefault, const std::string& iName);
+	Variant_t DGet(const Variant_t& iDefault, size_t iIndex);
 
 	Variant_t Get(const std::string& iName);
 	Variant_t Get(size_t iIndex);

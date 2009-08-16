@@ -138,7 +138,7 @@ bool NPObject_T<Variant_t>::QGet(size_t iIndex, Variant_t& oVal)
 	{ return static_cast<Self_t*>(this)->GetProperty(iIndex, oVal); }
 
 template <class Variant_t>
-Variant_t NPObject_T<Variant_t>::DGet(const std::string& iName, const Variant_t& iDefault)
+Variant_t NPObject_T<Variant_t>::DGet(const Variant_t& iDefault, const std::string& iName)
 	{
 	Variant_t result;
 	if (static_cast<Self_t*>(this)->GetProperty(iName, result))
@@ -147,7 +147,7 @@ Variant_t NPObject_T<Variant_t>::DGet(const std::string& iName, const Variant_t&
 	}
 
 template <class Variant_t>
-Variant_t NPObject_T<Variant_t>::DGet(size_t iIndex, const Variant_t& iDefault)
+Variant_t NPObject_T<Variant_t>::DGet(const Variant_t& iDefault, size_t iIndex)
 	{
 	Variant_t result;
 	if (static_cast<Self_t*>(this)->GetProperty(iIndex, result))
@@ -157,11 +157,11 @@ Variant_t NPObject_T<Variant_t>::DGet(size_t iIndex, const Variant_t& iDefault)
 
 template <class Variant_t>
 Variant_t NPObject_T<Variant_t>::Get(const std::string& iName)
-	{ return static_cast<Self_t*>(this)->DGet(iName, Variant_t()); }
+	{ return static_cast<Self_t*>(this)->DGet(Variant_t(), iName); }
 
 template <class Variant_t>
 Variant_t NPObject_T<Variant_t>::Get(size_t iIndex)
-	{ return static_cast<Self_t*>(this)->DGet(iIndex, Variant_t()); }
+	{ return static_cast<Self_t*>(this)->DGet(Variant_t(), iIndex); }
 
 template <class Variant_t>
 bool NPObject_T<Variant_t>::Set(const std::string& iName, const Variant_t& iValue)
