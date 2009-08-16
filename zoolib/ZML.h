@@ -58,35 +58,35 @@ typedef string (*EntityCallback)(void* iRefcon, const string& iEntity);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZML::StrimR
+#pragma mark * ZML::StrimU
 
-class StrimR
-:	public ZStrimR
+class StrimU
+:	public ZStrimU
 ,	NonCopyable
 	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(StrimR, operator_bool_generator_type, operator_bool_type);
+    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(StrimU, operator_bool_generator_type, operator_bool_type);
 public:
-	StrimR(const ZStrimU& iStrim);
-	StrimR(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues);
-	StrimR(const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon);
-	~StrimR();
+	StrimU(const ZStrimU& iStrim);
+	StrimU(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues);
+	StrimU(const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon);
+	~StrimU();
 
-// From ZStrimR
+// From ZStrimR via ZStrimU
 	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+
+// From ZStrimU
+	virtual void Imp_Unread(UTF32 iCP);
+	virtual size_t Imp_UnreadableLimit();
 
 // Our protocol
 	operator operator_bool_type() const;
 	EToken Current() const;
-	ZML::StrimR& Advance();
+	ZML::StrimU& Advance();
 
 	const string& Name() const;
 	Attrs_t Attrs() const;
 
-	const ZStrimR& TextStrim();
-	string TextString();
-
 private:
-
 	void pAdvance();
 
 	const ZStrimU& fStrim;
@@ -107,50 +107,51 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZML::StrimmerR
+#pragma mark * ZML::StrimmerU
 
-class StrimmerR : public ZStrimmerR
+class StrimmerU : public ZStrimmerU
 	{
 public:
-	StrimmerR(ZRef<ZStrimmerU> iStrimmerU);
-	StrimmerR(ZRef<ZStrimmerU> iStrimmerU, bool iRecognizeEntitiesInAttributeValues);
-	StrimmerR(ZRef<ZStrimmerU> iStrimmerU, EntityCallback iCallback, void* iRefcon);
-	virtual ~StrimmerR();
+	StrimmerU(ZRef<ZStrimmerU> iStrimmerU);
+	StrimmerU(ZRef<ZStrimmerU> iStrimmerU, bool iRecognizeEntitiesInAttributeValues);
+	StrimmerU(ZRef<ZStrimmerU> iStrimmerU, EntityCallback iCallback, void* iRefcon);
+	virtual ~StrimmerU();
 	
-// From ZStrimmerR
-	const ZStrimR& GetStrimR();
+// From ZStrimmerU
+	const ZStrimU& GetStrimU();
 
 // Our protocol
-	StrimR& GetStrim();
+	StrimU& GetStrim();
 
 public:
 	ZRef<ZStrimmerU> fStrimmerU;
-	StrimR fStrim;
+	StrimU fStrim;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZML parsing support
 
-void sSkipText(StrimR& r);
+void sSkipText(StrimU& r);
 
-bool sSkip(StrimR& r, const string& iTagName);
-bool sSkip(StrimR& r, std::vector<string>& ioTags);
+bool sSkip(StrimU& r, const string& iTagName);
+bool sSkip(StrimU& r, std::vector<string>& ioTags);
 
-bool sTryRead_Begin(StrimR& r, const string& iTagName);
+bool sTryRead_Begin(StrimU& r, const string& iTagName);
 
-bool sTryRead_End(StrimR& r, const string& iTagName);
+bool sTryRead_End(StrimU& r, const string& iTagName);
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZML::StrimR_TextOnly
 
+#if 0
 /// A read strim that returns only the text from a ZML::StrimR
 
 class StrimR_TextOnly : public ZStrimR
 	{
 public:
-	StrimR_TextOnly(StrimR& iStrimR);
+	StrimR_TextOnly(StrimU& iStrimU);
 
 // From ZStrimR
 	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
@@ -165,9 +166,11 @@ public:
 	const std::vector<std::pair<string, Attrs_t> >& All() const;
 
 private:
-	StrimR& fStrimR;
+	StrimU& fStrimU;
 	std::vector<std::pair<string, Attrs_t> > fTags;
 	};
+
+#endif
 
 // =================================================================================================
 #pragma mark -

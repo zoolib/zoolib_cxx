@@ -295,9 +295,9 @@ static bool sReadMLAttributeValue(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZML::StrimR
+#pragma mark * ZML::StrimU
 
-StrimR::StrimR(const ZStrimU& iStrim)
+StrimU::StrimU(const ZStrimU& iStrim)
 :	fStrim(iStrim),
 	fCallback(nullptr),
 	fBufferStart(0),
@@ -305,7 +305,7 @@ StrimR::StrimR(const ZStrimU& iStrim)
 	fRecognizeEntitiesInAttributeValues(false)
 	{}
 
-StrimR::StrimR(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues)
+StrimU::StrimU(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues)
 :	fStrim(iStrim),
 	fCallback(nullptr),
 	fBufferStart(0),
@@ -313,7 +313,7 @@ StrimR::StrimR(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues)
 	fRecognizeEntitiesInAttributeValues(iRecognizeEntitiesInAttributeValues)
 	{}
 
-StrimR::StrimR(const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon)
+StrimU::StrimU(const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon)
 :	fStrim(iStrim),
 	fCallback(iCallback),
 	fRefcon(iRefcon),
@@ -322,83 +322,10 @@ StrimR::StrimR(const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon)
 	fRecognizeEntitiesInAttributeValues(false)
 	{}
 
-StrimR::~StrimR()
+StrimU::~StrimU()
 	{}
 
-StrimR::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(fToken != eToken_Exhausted); }
-
-EToken StrimR::Current() const
-	{
-	if (fToken == eToken_Fresh)
-		const_cast<StrimR*>(this)->pAdvance();
-
-	return fToken;
-	}
-
-StrimR& StrimR::Advance()
-	{
-	if (fToken == eToken_Fresh)
-		this->pAdvance();
-
-	if (fToken == eToken_Text)
-		{
-		// Suck up all the text till we hit the start of a tag.
-		for (;;)
-			{
-			UTF32 theCP;
-			if (!fStrim.ReadCP(theCP))
-				{
-				fToken = eToken_Exhausted;
-				return *this;
-				}
-			else if (theCP == '<')
-				{
-				fStrim.Unread(theCP);
-				break;
-				}
-			}
-		}
-
-	this->pAdvance();
-	return *this;
-	}
-
-static string sEmptyString;
-
-const string& StrimR::Name() const
-	{
-	if (fToken == eToken_Fresh)
-		const_cast<StrimR*>(this)->pAdvance();
-
-	if (fToken == eToken_TagBegin || fToken == eToken_TagEnd || fToken == eToken_TagEmpty)
-		return fTagName;
-
-	return sEmptyString;
-	}
-
-Attrs_t StrimR::Attrs() const
-	{
-	if (fToken == eToken_Fresh)
-		const_cast<StrimR*>(this)->pAdvance();
-
-	if (fToken == eToken_TagBegin || fToken == eToken_TagEmpty)
-		return fTagAttributes;
-
-	return Attrs_t();
-	}
-
-const ZStrimR& StrimR::TextStrim()
-	{ return *this; }
-
-std::string StrimR::TextString()
-	{
-	string theString;
-	ZStrimW_String(theString).CopyAllFrom(this->TextStrim());
-	return theString;
-	}
-
-void StrimR::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void StrimU::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 	{
 	UTF32* localDest = iDest;
 	if (fToken == eToken_Text)
@@ -414,6 +341,7 @@ void StrimR::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 				fBufferStart += countToCopy;
 				if (fBufferStart >= fBuffer.size())
 					{
+					// We've read everything in the buffer, so we can toss it.
 					fBufferStart = 0;
 					fBuffer.resize(0);
 					}
@@ -449,9 +377,88 @@ void StrimR::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 		*oCount = localDest - iDest;
 	}
 
+void StrimU::Imp_Unread(UTF32 iCP)
+	{
+	if (fBufferStart == 0)
+		{
+		fBuffer.insert(fBuffer.begin(), iCP);
+		}
+	else
+		{
+		ZAssert(fBuffer[fBufferStart] == iCP);
+		--fBufferStart;
+		}
+	}
+
+size_t StrimU::Imp_UnreadableLimit()
+	{ return size_t(-1); }
+
+StrimU::operator operator_bool_type() const
+	{ return operator_bool_generator_type::translate(fToken != eToken_Exhausted); }
+
+EToken StrimU::Current() const
+	{
+	if (fToken == eToken_Fresh)
+		const_cast<StrimU*>(this)->pAdvance();
+
+	return fToken;
+	}
+
+StrimU& StrimU::Advance()
+	{
+	if (fToken == eToken_Fresh)
+		this->pAdvance();
+
+	if (fToken == eToken_Text)
+		{
+		// Suck up all the text till we hit the start of a tag.
+		for (;;)
+			{
+			UTF32 theCP;
+			if (!fStrim.ReadCP(theCP))
+				{
+				fToken = eToken_Exhausted;
+				return *this;
+				}
+			else if (theCP == '<')
+				{
+				fStrim.Unread(theCP);
+				break;
+				}
+			}
+		}
+
+	this->pAdvance();
+	return *this;
+	}
+
+static string sEmptyString;
+
+const string& StrimU::Name() const
+	{
+	if (fToken == eToken_Fresh)
+		const_cast<StrimU*>(this)->pAdvance();
+
+	if (fToken == eToken_TagBegin || fToken == eToken_TagEnd || fToken == eToken_TagEmpty)
+		return fTagName;
+
+	return sEmptyString;
+	}
+
+Attrs_t StrimU::Attrs() const
+	{
+	if (fToken == eToken_Fresh)
+		const_cast<StrimU*>(this)->pAdvance();
+
+	if (fToken == eToken_TagBegin || fToken == eToken_TagEmpty)
+		return fTagAttributes;
+
+	return Attrs_t();
+	}
+
 // The semantics of this do not precisely match those of other sTryRead_XXX methods.
 // We will consume code points from \a s up to and including the failing code point.
-static bool sTryRead_String(const ZStrimR& iStrimR, const string8& iPattern)
+static bool spTryRead_String(const ZStrimR& iStrimR, const string8& iPattern)
 	{
 	for (string8::const_iterator iter = iPattern.begin(), iterEnd = iPattern.end();
 		/*no test*/;/*no inc*/)
@@ -478,7 +485,7 @@ static bool sTryRead_String(const ZStrimR& iStrimR, const string8& iPattern)
 		}
 	}
 
-void StrimR::pAdvance()
+void StrimU::pAdvance()
 	{
 	using namespace ZUtil_Strim;
 
@@ -553,7 +560,7 @@ void StrimR::pAdvance()
 						ZStrimR_Boundary(">", fStrim).SkipAll();
 						}
 					}
-				else if (sTryRead_String(fStrim, "[CDATA["))
+				else if (spTryRead_String(fStrim, "[CDATA["))
 					{
 					// CDATA
 					ZStrimR_Boundary("]]>", fStrim).SkipAll();
@@ -624,49 +631,49 @@ void StrimR::pAdvance()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZML::StrimmerR
+#pragma mark * ZML::StrimmerU
 
-StrimmerR::StrimmerR(ZRef<ZStrimmerU> iStrimmerU)
+StrimmerU::StrimmerU(ZRef<ZStrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
 ,	fStrim(iStrimmerU->GetStrimU())
 	{}
 
-StrimmerR::StrimmerR(ZRef<ZStrimmerU> iStrimmerU, bool iRecognizeEntitiesInAttributeValues)
+StrimmerU::StrimmerU(ZRef<ZStrimmerU> iStrimmerU, bool iRecognizeEntitiesInAttributeValues)
 :	fStrimmerU(iStrimmerU)
 ,	fStrim(iStrimmerU->GetStrimU(), iRecognizeEntitiesInAttributeValues)
 	{}
 
-StrimmerR::StrimmerR(ZRef<ZStrimmerU> iStrimmerU, EntityCallback iCallback, void* iRefcon)
+StrimmerU::StrimmerU(ZRef<ZStrimmerU> iStrimmerU, EntityCallback iCallback, void* iRefcon)
 :	fStrimmerU(iStrimmerU)
 ,	fStrim(iStrimmerU->GetStrimU(), iCallback, iRefcon)
 	{}
 
-StrimmerR::~StrimmerR()
+StrimmerU::~StrimmerU()
 	{}
 
-const ZStrimR& StrimmerR::GetStrimR()
+const ZStrimU& StrimmerU::GetStrimU()
 	{ return fStrim; }
 
-StrimR& StrimmerR::GetStrim()
+StrimU& StrimmerU::GetStrim()
 	{ return fStrim; }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZML parsing support
 
-void sSkipText(StrimR& r)
+void sSkipText(StrimU& r)
 	{
 	while (r.Current() == eToken_Text)
 		r.Advance();
 	}
 
-bool sSkip(StrimR& r, const string& iTagName)
+bool sSkip(StrimU& r, const string& iTagName)
 	{
 	vector<string> theTags(1, iTagName);
 	return sSkip(r, theTags);
 	}
 
-bool sSkip(StrimR& r, vector<string>& ioTags)
+bool sSkip(StrimU& r, vector<string>& ioTags)
 	{
 	while (!ioTags.empty())
 		{
@@ -694,7 +701,7 @@ bool sSkip(StrimR& r, vector<string>& ioTags)
 	return true;
 	}
 
-bool sTryRead_Begin(StrimR& r, const string& iTagName)
+bool sTryRead_Begin(StrimU& r, const string& iTagName)
 	{
 	if (r.Current() != eToken_TagBegin || r.Name() != iTagName)
 		return false;
@@ -703,7 +710,7 @@ bool sTryRead_Begin(StrimR& r, const string& iTagName)
 	return true;
 	}
 
-bool sTryRead_End(StrimR& r, const string& iTagName)
+bool sTryRead_End(StrimU& r, const string& iTagName)
 	{
 	if (r.Current() != eToken_TagEnd || r.Name() != iTagName)
 		return false;
@@ -716,8 +723,10 @@ bool sTryRead_End(StrimR& r, const string& iTagName)
 #pragma mark -
 #pragma mark * ZML::StrimR_TextOnly
 
-StrimR_TextOnly::StrimR_TextOnly(StrimR& iStrimR)
-:	fStrimR(iStrimR)
+#if 0
+
+StrimR_TextOnly::StrimR_TextOnly(StrimU& iStrimU)
+:	fStrimU(iStrimU)
 	{}
 
 void StrimR_TextOnly::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
@@ -725,13 +734,13 @@ void StrimR_TextOnly::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 	UTF32* localDest = iDest;
 	while (iCount)
 		{
-		if (fStrimR.Current() == eToken_Text)
+		if (fStrimU.Current() == eToken_Text)
 			{
 			size_t countRead;
-			fStrimR.Read(localDest, iCount, &countRead);
+			fStrimU.Read(localDest, iCount, &countRead);
 			if (countRead == 0)
 				{
-				fStrimR.Advance();
+				fStrimU.Advance();
 				}
 			else
 				{
@@ -741,11 +750,11 @@ void StrimR_TextOnly::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 			}
 		else
 			{
-			switch (fStrimR.Current())
+			switch (fStrimU.Current())
 				{
 				case eToken_TagBegin:
 					{
-					fTags.push_back(pair<string, Attrs_t>(fStrimR.Name(), fStrimR.Attrs()));
+					fTags.push_back(pair<string, Attrs_t>(fStrimU.Name(), fStrimU.Attrs()));
 					break;
 					}
 				case eToken_TagEnd:
@@ -762,7 +771,7 @@ void StrimR_TextOnly::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 				default:
 					break;
 				}
-			fStrimR.Advance();
+			fStrimU.Advance();
 			}
 		}
 
@@ -805,6 +814,7 @@ const vector<pair<string, Attrs_t> >& StrimR_TextOnly::All() const
 	return fTags;
 	}
 
+#endif
 
 // =================================================================================================
 #pragma mark -
