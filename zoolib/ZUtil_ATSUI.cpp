@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZUtil_ATSUI {
+
 ZAssertCompile(sizeof(UTF16) == sizeof(UniChar));
 
 using std::string;
@@ -34,7 +36,7 @@ using std::string;
 #pragma mark -
 #pragma mark * ZUtil_ATSUI
 
-ATSUStyle ZUtil_ATSUI::sAsATSUStyle(const ZDCFont& iFont, float iFontSize)
+ATSUStyle sAsATSUStyle(const ZDCFont& iFont, float iFontSize)
 	{
 	ZDCFont::Style theStyle = iFont.GetStyle();
 
@@ -84,7 +86,7 @@ ATSUStyle ZUtil_ATSUI::sAsATSUStyle(const ZDCFont& iFont, float iFontSize)
 	return localStyle;
 	}
 
-ATSUTextLayout ZUtil_ATSUI::sCreateLayout(
+ATSUTextLayout sCreateLayout(
 	const UTF16* iText, UniCharCount iTextLength, ATSUStyle iStyle, bool iUseFallbacks)
 	{
 	if (!iStyle)
@@ -93,9 +95,15 @@ ATSUTextLayout ZUtil_ATSUI::sCreateLayout(
   	if (!iTextLength)
   		return nullptr;
 
+	UniCharCount runLengths = kATSUToTextEnd;
   	ATSUTextLayout theLayout = nullptr;
-	::ATSUCreateTextLayoutWithTextPtr((ConstUniCharArrayPtr)iText, 0, iTextLength, iTextLength,
-		1, &iTextLength, &iStyle, &theLayout);
+	::ATSUCreateTextLayoutWithTextPtr((ConstUniCharArrayPtr)iText,
+		kATSUFromTextBeginning, kATSUToTextEnd,
+		iTextLength,
+		1,
+		&runLengths,
+		&iStyle,
+		&theLayout);
 
 	if (iUseFallbacks)
 		{
@@ -111,6 +119,7 @@ ATSUTextLayout ZUtil_ATSUI::sCreateLayout(
 
 				::ATSUSetTransientFontMatching(theLayout, true);
 				}
+			::ATSUDisposeFontFallbacks(theFontFallbacks);
 			}
 		}
 
@@ -119,15 +128,15 @@ ATSUTextLayout ZUtil_ATSUI::sCreateLayout(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_ATSUI::Attributes
+#pragma mark * Attributes
 
-ZUtil_ATSUI::Attributes::Attributes()
+Attributes::Attributes()
 	{}
 
-ZUtil_ATSUI::Attributes::~Attributes()
+Attributes::~Attributes()
 	{}
 
-void ZUtil_ATSUI::Attributes::Add(
+void Attributes::Add(
 	const ATSUAttributeTag& iTag, size_t iSize, const void* iValue)
 	{
 	fTags.push_back(iTag);
@@ -135,17 +144,19 @@ void ZUtil_ATSUI::Attributes::Add(
 	fValues.push_back(iValue);
 	}
 
-bool ZUtil_ATSUI::Attributes::Apply(ATSUTextLayout iLayout)
+bool Attributes::Apply(ATSUTextLayout iLayout)
 	{
 	return noErr == ::ATSUSetLayoutControls(iLayout,
 		fTags.size(), &fTags[0], &fSizes[0], const_cast<void**>(&fValues[0]));
 	}
 
-bool ZUtil_ATSUI::Attributes::Apply(ATSUStyle iStyle)
+bool Attributes::Apply(ATSUStyle iStyle)
 	{
 	return noErr == ::ATSUSetAttributes(iStyle,
 		fTags.size(), &fTags[0], &fSizes[0], const_cast<void**>(&fValues[0]));
 	}
+
+} // namespace ZUtil_ATSUI
 
 NAMESPACE_ZOOLIB_END
 
