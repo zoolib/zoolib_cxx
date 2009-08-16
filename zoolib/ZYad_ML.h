@@ -45,10 +45,10 @@ public:
 class ZYadMapR_ML : public ZYadMapR_Std
 	{
 public:
-	ZYadMapR_ML(ZRef<ZML::StrimmerR> iStrimmerR);
-	ZYadMapR_ML(ZRef<ZML::StrimmerR> iStrimmerR, const ZML::Attrs_t& iAttrs);
+	ZYadMapR_ML(ZRef<ZML::StrimmerU> iStrimmerU);
+	ZYadMapR_ML(ZRef<ZML::StrimmerU> iStrimmerU, const ZML::Attrs_t& iAttrs);
 	ZYadMapR_ML(
-		ZRef<ZML::StrimmerR> iStrimmerR, const std::string& iTagName, const ZML::Attrs_t& iAttrs);
+		ZRef<ZML::StrimmerU> iStrimmerU, const std::string& iTagName, const ZML::Attrs_t& iAttrs);
 
 // From ZYadR
 	virtual ZRef<ZYadR> Meta();
@@ -62,7 +62,7 @@ public:
 private:
 	void pAdvance(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
-	ZRef<ZML::StrimmerR> fStrimmerR;
+	ZRef<ZML::StrimmerU> fStrimmerU;
 
 	const std::string fTagName;
 	const ZML::Attrs_t fAttrs;

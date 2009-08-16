@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZStream_ASCIIStrim.h"
 #include "zoolib/ZStream_Base64.h"
-#include "zoolib/ZStrimU_Unreader.h"
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZUtil_Time.h"
 #include "zoolib/ZYad_XMLRPC.h"
@@ -39,7 +38,7 @@ class ZYadStreamR_XMLRPC
 :	public ZYadStreamR
 	{
 public:
-	ZYadStreamR_XMLRPC(ZRef<ZML::StrimmerR> iStrimmerR);
+	ZYadStreamR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU);
 
 // From ZYadR
 	virtual void Finish();
@@ -48,7 +47,7 @@ public:
 	const ZStreamR& GetStreamR();
 
 private:
-	ZRef<ZML::StrimmerR>& fStrimmerR;
+	ZRef<ZML::StrimmerU>& fStrimmerU;
 	ZStreamR_ASCIIStrim fStreamR_ASCIIStrim;
 	ZStreamR_Base64Decode fStreamR_Base64Decode;
 	};
@@ -61,16 +60,16 @@ class ZYadStrimR_XMLRPC
 :	public ZYadStrimR
 	{
 public:
-	ZYadStrimR_XMLRPC(ZRef<ZML::StrimmerR> iStrimmerR);
+	ZYadStrimR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU);
 
 // From ZYadR
 	virtual void Finish();
 
-// From ZStrimmerR via ZYadStrimR
+// From ZStrimmerU via ZYadStrimR
 	const ZStrimR& GetStrimR();
 
 private:
-	ZRef<ZML::StrimmerR> fStrimmerR;
+	ZRef<ZML::StrimmerU> fStrimmerU;
 	};
 
 // =================================================================================================
@@ -80,13 +79,13 @@ private:
 class ZYadListR_XMLRPC : public ZYadListR_Std
 	{
 public:
-	ZYadListR_XMLRPC(ZRef<ZML::StrimmerR> iStrimmerR);
+	ZYadListR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU);
 
 // From ZYadListR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
-	ZRef<ZML::StrimmerR> fStrimmerR;
+	ZRef<ZML::StrimmerU> fStrimmerU;
 	};
 
 // =================================================================================================
@@ -96,13 +95,13 @@ private:
 class ZYadMapR_XMLRPC : public ZYadMapR_Std
 	{
 public:
-	ZYadMapR_XMLRPC(ZRef<ZML::StrimmerR> iStrimmerR);
+	ZYadMapR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU);
 
 // From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
-	ZRef<ZML::StrimmerR> fStrimmerR;
+	ZRef<ZML::StrimmerU> fStrimmerU;
 	};
 
 // =================================================================================================
@@ -114,7 +113,7 @@ static void spThrowParseException(const string& iMessage)
 	throw ZYadParseException_XMLRPC(iMessage);
 	}
 
-void spSkipCruft(ZML::StrimR& r)
+void spSkipCruft(ZML::StrimU& r)
 	{
 	// Ignore the leading text, ?xml, !DOCTYPE and plist tags
 	for (;;)
@@ -134,7 +133,7 @@ void spSkipCruft(ZML::StrimR& r)
 		}
 	}
 
-static void spBegin(ZML::StrimR& r, const string& iTagName)
+static void spBegin(ZML::StrimU& r, const string& iTagName)
 	{
 	sSkipText(r);
 
@@ -142,7 +141,7 @@ static void spBegin(ZML::StrimR& r, const string& iTagName)
 		spThrowParseException("Expected begin tag '" + iTagName + "'");
 	}
 
-static void spEnd(ZML::StrimR& r, const string& iTagName)
+static void spEnd(ZML::StrimU& r, const string& iTagName)
 	{
 	sSkipText(r);
 
@@ -150,16 +149,16 @@ static void spEnd(ZML::StrimR& r, const string& iTagName)
 		spThrowParseException("Expected end tag '" + iTagName + "'");
 	}
 
-static void spRead_TagWrappedText(ZML::StrimR& r, const string& iTagName, string& oText)
+static void spRead_TagWrappedText(ZML::StrimU& r, const string& iTagName, string& oText)
 	{
 	spBegin(r, iTagName);
 
-		ZStrimW_String(oText).CopyAllFrom(r.TextStrim());
+		oText = r.ReadAll8();
 	
 	spEnd(r, iTagName);
 	}
 
-static bool spTryRead_SimpleValue(ZML::StrimR& r, ZAny& oVal)
+static bool spTryRead_SimpleValue(ZML::StrimU& r, ZAny& oVal)
 	{
 	if (r.Current() == ZML::eToken_TagEmpty)
 		{
@@ -186,7 +185,7 @@ static bool spTryRead_SimpleValue(ZML::StrimR& r, ZAny& oVal)
 	else if (tagName == "i4" || tagName == "int")
 		{
 		int64 theInt64;
-		if (!ZUtil_Strim::sTryRead_SignedDecimalInteger(ZStrimU_Unreader(r.TextStrim()), theInt64))
+		if (!ZUtil_Strim::sTryRead_SignedDecimalInteger(r, theInt64))
 			spThrowParseException("Expected valid integer");
 
 		oVal = int32(theInt64);
@@ -194,7 +193,7 @@ static bool spTryRead_SimpleValue(ZML::StrimR& r, ZAny& oVal)
 	else if (tagName == "boolean")
 		{
 		int64 theInt64;
-		if (!ZUtil_Strim::sTryRead_DecimalInteger(ZStrimU_Unreader(r.TextStrim()), theInt64)
+		if (!ZUtil_Strim::sTryRead_DecimalInteger(r, theInt64)
 			|| (theInt64 != 0 && theInt64 != 1))
 			{
 			spThrowParseException("Expected 1 or 0 for boolean");
@@ -205,14 +204,14 @@ static bool spTryRead_SimpleValue(ZML::StrimR& r, ZAny& oVal)
 	else if (tagName == "double")
 		{
 		double theDouble;
-		if (!ZUtil_Strim::sTryRead_SignedDouble(ZStrimU_Unreader(r.TextStrim()), theDouble))
+		if (!ZUtil_Strim::sTryRead_SignedDouble(r, theDouble))
 			spThrowParseException("Expected valid double");
 
 		oVal = theDouble;
 		}
 	else if (tagName == "dateTime.iso8601")
 		{
-		oVal = ZUtil_Time::sFromString_ISO8601(r.TextString());
+		oVal = ZUtil_Time::sFromString_ISO8601(r.ReadAll8());
 		}
 	else if (tagName == "struct")
 		{
@@ -240,9 +239,9 @@ static bool spTryRead_SimpleValue(ZML::StrimR& r, ZAny& oVal)
 	return true;
 	}
 
-static ZRef<ZYadR> spMakeYadR_XMLRPC(ZRef<ZML::StrimmerR> iStrimmerR)
+static ZRef<ZYadR> spMakeYadR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 	{
-	ZML::StrimR& theR = iStrimmerR->GetStrim();
+	ZML::StrimU& theR = iStrimmerU->GetStrim();
 
 	sSkipText(theR);
 
@@ -251,22 +250,22 @@ static ZRef<ZYadR> spMakeYadR_XMLRPC(ZRef<ZML::StrimmerR> iStrimmerR)
 		if (theR.Name() == "struct")
 			{
 			theR.Advance();
-			return new ZYadMapR_XMLRPC(iStrimmerR);
+			return new ZYadMapR_XMLRPC(iStrimmerU);
 			}
 		else if (theR.Name() == "array")
 			{
 			theR.Advance();
-			return new ZYadListR_XMLRPC(iStrimmerR);
+			return new ZYadListR_XMLRPC(iStrimmerU);
 			}
 		else if (theR.Name() == "base64")
 			{
 			theR.Advance();
-			return new ZYadStreamR_XMLRPC(iStrimmerR);
+			return new ZYadStreamR_XMLRPC(iStrimmerU);
 			}
 		else if (theR.Name() == "string")
 			{
 			theR.Advance();
-			return new ZYadStrimR_XMLRPC(iStrimmerR);
+			return new ZYadStrimR_XMLRPC(iStrimmerU);
 			}
 		}
 	
@@ -293,16 +292,16 @@ ZYadParseException_XMLRPC::ZYadParseException_XMLRPC(const char* iWhat)
 #pragma mark -
 #pragma mark * ZYadStreamR_XMLRPC
 
-ZYadStreamR_XMLRPC::ZYadStreamR_XMLRPC(ZRef<ZML::StrimmerR> iStrimmerR)
-:	fStrimmerR(iStrimmerR),
-	fStreamR_ASCIIStrim(fStrimmerR->GetStrimR()),
+ZYadStreamR_XMLRPC::ZYadStreamR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
+:	fStrimmerU(iStrimmerU),
+	fStreamR_ASCIIStrim(fStrimmerU->GetStrimR()),
 	fStreamR_Base64Decode(fStreamR_ASCIIStrim)
 	{}
 
 void ZYadStreamR_XMLRPC::Finish()
 	{
 	fStreamR_Base64Decode.SkipAll();
-	spEnd(fStrimmerR->GetStrim(), "base64");
+	spEnd(fStrimmerU->GetStrim(), "base64");
 	}
 
 const ZStreamR& ZYadStreamR_XMLRPC::GetStreamR()
@@ -312,32 +311,32 @@ const ZStreamR& ZYadStreamR_XMLRPC::GetStreamR()
 #pragma mark -
 #pragma mark * ZYadStrimR_XMLRPC
 
-ZYadStrimR_XMLRPC::ZYadStrimR_XMLRPC(ZRef<ZML::StrimmerR> iStrimmerR)
-:	fStrimmerR(iStrimmerR)
+ZYadStrimR_XMLRPC::ZYadStrimR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
+:	fStrimmerU(iStrimmerU)
 	{}
 
 void ZYadStrimR_XMLRPC::Finish()
 	{
-	ZML::StrimR& theR = fStrimmerR->GetStrim();
+	ZML::StrimU& theR = fStrimmerU->GetStrim();
 
 	theR.Advance();
 	spEnd(theR, "string");
 	}
 
 const ZStrimR& ZYadStrimR_XMLRPC::GetStrimR()
-	{ return fStrimmerR->GetStrimR(); }
+	{ return fStrimmerU->GetStrimR(); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadListR_XMLRPC
 
-ZYadListR_XMLRPC::ZYadListR_XMLRPC(ZRef<ZML::StrimmerR> iStrimmerR)
-:	fStrimmerR(iStrimmerR)
+ZYadListR_XMLRPC::ZYadListR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
+:	fStrimmerU(iStrimmerU)
 	{}
 
 void ZYadListR_XMLRPC::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
-	ZML::StrimR& theR = fStrimmerR->GetStrim();
+	ZML::StrimU& theR = fStrimmerU->GetStrim();
 
 	sSkipText(theR);
 
@@ -361,7 +360,7 @@ void ZYadListR_XMLRPC::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 
 	spBegin(theR, "value");
 	
-	if (!(oYadR = spMakeYadR_XMLRPC(fStrimmerR)))
+	if (!(oYadR = spMakeYadR_XMLRPC(fStrimmerU)))
 		spThrowParseException("Expected a value");
 	}
 
@@ -372,25 +371,24 @@ void ZYadListR_XMLRPC::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 class ZYadListR_XMLRPC_Params : public ZYadListR_Std
 	{
 public:
-	ZYadListR_XMLRPC_Params(ZRef<ZML::StrimmerR> iStrimmerR, bool iIsResponse);
+	ZYadListR_XMLRPC_Params(ZRef<ZML::StrimmerU> iStrimmerU, bool iIsResponse);
 
 // From ZYadListR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
-	ZRef<ZML::StrimmerR> fStrimmerR;
+	ZRef<ZML::StrimmerU> fStrimmerU;
 	bool fIsResponse;
 	};
 
-
-ZYadListR_XMLRPC_Params::ZYadListR_XMLRPC_Params(ZRef<ZML::StrimmerR> iStrimmerR, bool iIsResponse)
-:	fStrimmerR(iStrimmerR),
+ZYadListR_XMLRPC_Params::ZYadListR_XMLRPC_Params(ZRef<ZML::StrimmerU> iStrimmerU, bool iIsResponse)
+:	fStrimmerU(iStrimmerU),
 	fIsResponse(iIsResponse)
 	{}
 
 void ZYadListR_XMLRPC_Params::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
-	ZML::StrimR& theR = fStrimmerR->GetStrim();
+	ZML::StrimU& theR = fStrimmerU->GetStrim();
 
 	sSkipText(theR);
 
@@ -425,7 +423,7 @@ void ZYadListR_XMLRPC_Params::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 
 	spBegin(theR, "value");
 	
-	if (!(oYadR = spMakeYadR_XMLRPC(fStrimmerR)))
+	if (!(oYadR = spMakeYadR_XMLRPC(fStrimmerU)))
 		spThrowParseException("Expected a value");
 	}
 
@@ -436,22 +434,22 @@ void ZYadListR_XMLRPC_Params::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 class ZYadListR_XMLRPC_Fault : public ZYadListR_Std
 	{
 public:
-	ZYadListR_XMLRPC_Fault(ZRef<ZML::StrimmerR> iStrimmerR);
+	ZYadListR_XMLRPC_Fault(ZRef<ZML::StrimmerU> iStrimmerU);
 
 // From ZYadListR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
-	ZRef<ZML::StrimmerR> fStrimmerR;
+	ZRef<ZML::StrimmerU> fStrimmerU;
 	};
 
-ZYadListR_XMLRPC_Fault::ZYadListR_XMLRPC_Fault(ZRef<ZML::StrimmerR> iStrimmerR)
-:	fStrimmerR(iStrimmerR)
+ZYadListR_XMLRPC_Fault::ZYadListR_XMLRPC_Fault(ZRef<ZML::StrimmerU> iStrimmerU)
+:	fStrimmerU(iStrimmerU)
 	{}
 
 void ZYadListR_XMLRPC_Fault::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
-	ZML::StrimR& theR = fStrimmerR->GetStrim();
+	ZML::StrimU& theR = fStrimmerU->GetStrim();
 
 	sSkipText(theR);
 
@@ -474,7 +472,7 @@ void ZYadListR_XMLRPC_Fault::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 
 	spBegin(theR, "value");
 	
-	if (!(oYadR = spMakeYadR_XMLRPC(fStrimmerR)))
+	if (!(oYadR = spMakeYadR_XMLRPC(fStrimmerU)))
 		spThrowParseException("Expected a value");
 	}
 
@@ -482,13 +480,13 @@ void ZYadListR_XMLRPC_Fault::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 #pragma mark -
 #pragma mark * ZYadMapR_XMLRPC
 
-ZYadMapR_XMLRPC::ZYadMapR_XMLRPC(ZRef<ZML::StrimmerR> iStrimmerR)
-:	fStrimmerR(iStrimmerR)
+ZYadMapR_XMLRPC::ZYadMapR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
+:	fStrimmerU(iStrimmerU)
 	{}
 	
 void ZYadMapR_XMLRPC::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
 	{
-	ZML::StrimR& theR = fStrimmerR->GetStrim();
+	ZML::StrimU& theR = fStrimmerU->GetStrim();
 
 	sSkipText(theR);
 
@@ -515,7 +513,7 @@ void ZYadMapR_XMLRPC::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>
 
 	spBegin(theR, "name");
 
-	ZStrimW_String(oName).CopyAllFrom(theR.TextStrim());
+	oName = theR.ReadAll8();
 
 	spEnd(theR, "name");
 
@@ -523,7 +521,7 @@ void ZYadMapR_XMLRPC::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>
 
 	spBegin(theR, "value");
 
-	if (!(oYadR = spMakeYadR_XMLRPC(fStrimmerR)))
+	if (!(oYadR = spMakeYadR_XMLRPC(fStrimmerU)))
 		spThrowParseException("Expected value");
 	}
 
@@ -662,9 +660,9 @@ static void spToStrim(const ZML::StrimW& s, ZRef<ZYadR> iYadR)
 
 namespace ZYad_XMLRPC {
 
-bool sFromStrimmer(ZRef<ZML::StrimmerR> iStrimmerR, Request_t& oRequest)
+bool sFromStrimmer(ZRef<ZML::StrimmerU> iStrimmerU, Request_t& oRequest)
 	{
-	ZML::StrimR& theR = iStrimmerR->GetStrim();
+	ZML::StrimU& theR = iStrimmerU->GetStrim();
 
 	spSkipCruft(theR);
 
@@ -677,7 +675,7 @@ bool sFromStrimmer(ZRef<ZML::StrimmerR> iStrimmerR, Request_t& oRequest)
 
 	if (sTryRead_Begin(theR, "params"))
 		{
-		oRequest.fParams = new ZYadListR_XMLRPC_Params(iStrimmerR, false);
+		oRequest.fParams = new ZYadListR_XMLRPC_Params(iStrimmerU, false);
 		}
 	else
 		{
@@ -689,9 +687,9 @@ bool sFromStrimmer(ZRef<ZML::StrimmerR> iStrimmerR, Request_t& oRequest)
 	return true;
 	}
 
-bool sFromStrimmer(ZRef<ZML::StrimmerR> iStrimmerR, Response_t& oResponse)
+bool sFromStrimmer(ZRef<ZML::StrimmerU> iStrimmerU, Response_t& oResponse)
 	{
-	ZML::StrimR& theR = iStrimmerR->GetStrim();
+	ZML::StrimU& theR = iStrimmerU->GetStrim();
 
 	spSkipCruft(theR);
 
@@ -702,11 +700,11 @@ bool sFromStrimmer(ZRef<ZML::StrimmerR> iStrimmerR, Response_t& oResponse)
 
 	if (sTryRead_Begin(theR, "params"))
 		{
-		oResponse.fResult = new ZYadListR_XMLRPC_Params(iStrimmerR, true);
+		oResponse.fResult = new ZYadListR_XMLRPC_Params(iStrimmerU, true);
 		}
 	else if (sTryRead_Begin(theR, "fault"))
 		{
-		oResponse.fFault = new ZYadListR_XMLRPC_Fault(iStrimmerR);
+		oResponse.fFault = new ZYadListR_XMLRPC_Fault(iStrimmerU);
 		}
 	else
 		{
