@@ -45,7 +45,7 @@ using std::vector;
 #pragma mark -
 #pragma mark * Static helper functions
 
-static string sReadReference(
+static string spReadReference(
 	const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon)
 	{
 	using namespace ZUtil_Strim;
@@ -112,7 +112,7 @@ static string sReadReference(
 	return result;
 	}
 
-static bool sReadMLIdentifier(const ZStrimU& s, string& oText)
+static bool spReadMLIdentifier(const ZStrimU& s, string& oText)
 	{
 	oText.resize(0);
 
@@ -148,7 +148,7 @@ static bool sReadMLIdentifier(const ZStrimU& s, string& oText)
 	return true;
 	}
 
-static bool sReadUntil(const ZStrimU& s, UTF32 iTerminator, string& oText)
+static bool spReadUntil(const ZStrimU& s, UTF32 iTerminator, string& oText)
 	{
 	oText.resize(0);
 
@@ -165,7 +165,7 @@ static bool sReadUntil(const ZStrimU& s, UTF32 iTerminator, string& oText)
 		}
 	}
 
-static bool sReadUntil(
+static bool spReadUntil(
 	const ZStrimU& s, bool iRecognizeEntities,
 	EntityCallback iCallback, void* iRefcon,
 	UTF32 iTerminator, string& oText)
@@ -185,7 +185,7 @@ static bool sReadUntil(
 			}
 		else if (theCP == '&' && iRecognizeEntities)
 			{
-			oText += sReadReference(s, iCallback, iRefcon);
+			oText += spReadReference(s, iCallback, iRefcon);
 			}
 		else
 			{
@@ -194,7 +194,7 @@ static bool sReadUntil(
 		}
 	}
 
-static bool sReadMLAttributeName(const ZStrimU& s, string& oName)
+static bool spReadMLAttributeName(const ZStrimU& s, string& oName)
 	{
 	oName.resize(0);
 
@@ -204,11 +204,11 @@ static bool sReadMLAttributeName(const ZStrimU& s, string& oName)
 
 	if (curCP == '"')
 		{
-		return sReadUntil(s, '"', oName);
+		return spReadUntil(s, '"', oName);
 		}
 	else if (curCP == '\'')
 		{
-		return sReadUntil(s, '\'', oName);
+		return spReadUntil(s, '\'', oName);
 		}
 	else
 		{
@@ -237,7 +237,7 @@ static bool sReadMLAttributeName(const ZStrimU& s, string& oName)
 	return true;
 	}
 
-static bool sReadMLAttributeValue(
+static bool spReadMLAttributeValue(
 	const ZStrimU& s, bool iRecognizeEntities,
 	EntityCallback iCallback, void* iRefcon,
 	string& oValue)
@@ -250,12 +250,12 @@ static bool sReadMLAttributeValue(
 
 	if (curCP == '"')
 		{
-		return sReadUntil(s, iRecognizeEntities,
+		return spReadUntil(s, iRecognizeEntities,
 			iCallback, iRefcon, '"', oValue);
 		}
 	else if (curCP == '\'')
 		{
-		return sReadUntil(s, iRecognizeEntities,
+		return spReadUntil(s, iRecognizeEntities,
 			iCallback, iRefcon, '\'', oValue);
 		}
 	else
@@ -281,7 +281,7 @@ static bool sReadMLAttributeValue(
 				}
 			else if (curCP == '&' && iRecognizeEntities)
 				{
-				oValue += sReadReference(s, iCallback, iRefcon);
+				oValue += spReadReference(s, iCallback, iRefcon);
 				}
 			else
 				{
@@ -362,7 +362,7 @@ void StrimU::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 				else if (theCP == '&')
 					{
 					fBufferStart = 0;
-					fBuffer = ZUnicode::sAsUTF32(sReadReference(fStrim, fCallback, fRefcon));
+					fBuffer = ZUnicode::sAsUTF32(spReadReference(fStrim, fCallback, fRefcon));
 					}
 				else
 					{					
@@ -380,14 +380,11 @@ void StrimU::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 void StrimU::Imp_Unread(UTF32 iCP)
 	{
 	if (fBufferStart == 0)
-		{
 		fBuffer.insert(fBuffer.begin(), iCP);
-		}
 	else
-		{
-		ZAssert(fBuffer[fBufferStart] == iCP);
 		--fBufferStart;
-		}
+
+	ZAssert(fBuffer[fBufferStart] == iCP);
 	}
 
 size_t StrimU::Imp_UnreadableLimit()
@@ -432,7 +429,7 @@ StrimU& StrimU::Advance()
 	return *this;
 	}
 
-static string sEmptyString;
+static string spEmptyString;
 
 const string& StrimU::Name() const
 	{
@@ -442,7 +439,7 @@ const string& StrimU::Name() const
 	if (fToken == eToken_TagBegin || fToken == eToken_TagEnd || fToken == eToken_TagEmpty)
 		return fTagName;
 
-	return sEmptyString;
+	return spEmptyString;
 	}
 
 Attrs_t StrimU::Attrs() const
@@ -521,7 +518,7 @@ void StrimU::pAdvance()
 				{
 				sSkip_WS(fStrim);
 
-				if (!sReadMLIdentifier(fStrim, fTagName))
+				if (!spReadMLIdentifier(fStrim, fTagName))
 					{
 					fToken = eToken_Exhausted;
 					return;
@@ -576,7 +573,7 @@ void StrimU::pAdvance()
 				{
 				fStrim.Unread(theCP);
 
-				if (!sReadMLIdentifier(fStrim, fTagName))
+				if (!spReadMLIdentifier(fStrim, fTagName))
 					{
 					fToken = eToken_Exhausted;
 					return;
@@ -588,7 +585,7 @@ void StrimU::pAdvance()
 
 					string attributeName;
 					attributeName.reserve(8);
-					if (!sReadMLAttributeName(fStrim, attributeName))
+					if (!spReadMLAttributeName(fStrim, attributeName))
 						break;
 
 					sSkip_WS(fStrim);
@@ -598,7 +595,7 @@ void StrimU::pAdvance()
 						sSkip_WS(fStrim);
 						string attributeValue;
 						attributeValue.reserve(8);
-						if (!sReadMLAttributeValue(
+						if (!spReadMLAttributeValue(
 							fStrim, fRecognizeEntitiesInAttributeValues,
 							fCallback, fRefcon, attributeValue))
 							{
