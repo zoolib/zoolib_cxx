@@ -22,8 +22,8 @@ using std::string;
 static Query A(const ZTName& iIDName)
 	{ return ZTQL::sAll(iIDName); }
 
-static Query D(const Query& iQuery1, const Query& iQuery2)
-	{ return sDifference(iQuery1, iQuery2); }
+//static Query D(const Query& iQuery1, const Query& iQuery2)
+//	{ return sDifference(iQuery1, iQuery2); }
 
 static Query E(const ZTuple* iTuples, size_t iCount)
 	{ return sExplicit(iTuples, iCount); }
@@ -63,6 +63,11 @@ Query operator&(const Query& iQuery1, const Query& iQuery2)
 Query operator&(const Query& iQuery1, const Spec& iSpec);
 Query operator&(const Query& iQuery1, const Spec& iSpec)
 	{ return iQuery1.Select(iSpec); }
+
+// No difference method
+//Query operator-(const Query& iQuery1, const Query& iQuery2);
+//Query operator-(const Query& iQuery1, const Query& iQuery2)
+//	{ return iQuery1.Difference(iQuery2); }
 
 Query operator*(const Query& iQuery1, const Query& iQuery2);
 Query operator*(const Query& iQuery1, const Query& iQuery2)
@@ -151,8 +156,10 @@ static Query sPrefix(const ZTName& iPrefix, const RelHead& iIgnore, Query iQuery
 	return iQuery;
 	}
 
-static Query sSuperJoin(const ZTName& iPrefix1,
-	Query iQuery1, const RelHead& iJoinOn, Query iQuery2, const ZTName& iPrefix2)
+static Query sSuperJoin(
+	const ZTName& iPrefix1, Query iQuery1,
+	const RelHead& iJoinOn,
+	Query iQuery2, const ZTName& iPrefix2)
 	{
 	Query newQuery1 = sPrefix(iPrefix1, iJoinOn, iQuery1);
 	Query newQuery2 = sPrefix(iPrefix2, iJoinOn, iQuery2);
@@ -191,8 +198,8 @@ static Query sAllViews()
 
 static Query sAllViewsNoHead()
 	{
-	return Query::sAllID("$ID$", sRelHead_view) & Spec(true);
-//	return Query::sAllID("$ID$") & (CName("Object").EQ(CValue("view")));
+//	return Query::sAllID("$ID$", sRelHead_view) & Spec(true);
+	return Query::sAllID("$ID$") & (CName("Object").EQ(CValue("view")));
 	}
 
 static Query sAllContains()
@@ -239,13 +246,13 @@ static Query sQuery()
 static void sDumpQuery(const ZStrimW& s, Query iQuery)
 	{
 	s << "ZTQL::Query equivalent -----------------------\n";
-	ZUtil_Strim_TQL::sToStrim(s, iQuery.GetNode());
+	ZUtil_Strim_TQL::sToStrim(iQuery.GetNode(), s);
 
 	s << "\nZTQL::Query optimized -----------------------\n";
 	
 	ZRef<Node> theNode = sOptimize(iQuery.GetNode());
 	
-	ZUtil_Strim_TQL::sToStrim(s, theNode);
+	ZUtil_Strim_TQL::sToStrim(theNode, s);
 
 	s << "\n";	
 	}
@@ -264,7 +271,8 @@ void sTestQL(const ZStrimW& s);
 void sTestQL(const ZStrimW& s)
 	{
 //	sDumpQuery(s, sGetVCN());
-	sDumpQuery(s, sQueryNoHead());
+	sDumpQuery(s, sQuery());
+//	sDumpQuery(s, sQueryNoHead());
 //	sDumpQuery(s, ZUtil_TQLConvert::sConvert(sTBQuery(), false));
 
 //	sDumpQuery(s, badPassword());
@@ -298,4 +306,3 @@ void sTestQL(const ZStrimW& s)
 //	ZUtil_StrimTQL::sToStrim(s, query);
 //	s << "\n";
 	}
-

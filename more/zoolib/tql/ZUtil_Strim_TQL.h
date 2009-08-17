@@ -43,19 +43,19 @@ struct Options
 	std::string fIndentString;
 	};
 
-void sToStrim(const ZStrimW& iStrimW, const Query& iQuery);
-void sToStrim(const ZStrimW& iStrimW, ZRef<Node> iNode);
+void sToStrim(const Query& iQuery, const ZStrimW& s);
+void sToStrim(ZRef<Node> iNode, const ZStrimW& s);
 
-void sToStrim(const ZStrimW& iStrimW,
-	size_t iInitialIndent, const Options& iOptions,
-	const Query& iQuery);
+void sToStrim(size_t iInitialIndent, const Options& iOptions,
+	const Query& iQuery,
+	const ZStrimW& s);
 
-void sToStrim(const ZStrimW& iStrimW,
-	size_t iInitialIndent, const Options& iOptions,
-	ZRef<Node> iNode);
+void sToStrim(size_t iInitialIndent, const Options& iOptions,
+	ZRef<Node> iNode,
+	const ZStrimW& s);
 
-void sWrite_PropName(const ZStrimW& s, const ZTName& iTName);
-void sWrite_RelHead(const ZStrimW& s, const RelHead& iRelHead);
+void sWrite_PropName(const ZTName& iTName, const ZStrimW& s);
+void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s);
 
 } // namespace ZUtil_Strim_TQL
 

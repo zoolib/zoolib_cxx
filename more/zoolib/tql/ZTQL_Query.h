@@ -85,7 +85,7 @@ Query sAllID(const ZTName& iIDName);
 
 Query sAllID(const ZTName& iIDName, const RelHead& iRelHead);
 
-Query sDifference(const Query& iQuery1, const Query& iQuery2);
+//Query sDifference(const Query& iQuery1, const Query& iQuery2);
 
 Query sExplicit(const ZTuple* iTuples, size_t iCount);
 

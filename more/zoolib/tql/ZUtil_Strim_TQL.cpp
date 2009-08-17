@@ -45,24 +45,22 @@ Options::Options()
 #pragma mark -
 #pragma mark * Static helpers
 
-static void sWrite(const ZStrimW& s, const string& iString)
+static void sWrite(const string& iString, const ZStrimW& s)
 	{ s.Write(iString); }
 
-static void sWrite(const ZStrimW& s, const UTF8* iString)
+static void sWrite(const UTF8* iString, const ZStrimW& s)
 	{ s.Write(iString); }
 
-static void sWrite_Indent(const ZStrimW& iStrimW,
-	size_t iCount, const Options& iOptions)
+static void sWrite_Indent(size_t iCount, const Options& iOptions, const ZStrimW& iStrimW)
 	{
 	while (iCount--)
-		sWrite(iStrimW, iOptions.fIndentString);
+		sWrite(iOptions.fIndentString, iStrimW);
 	}
 
-static void sWrite_LFIndent(const ZStrimW& iStrimW,
-	size_t iCount, const Options& iOptions)
+static void sWrite_LFIndent(size_t iCount, const Options& iOptions, const ZStrimW& iStrimW)
 	{
-	sWrite(iStrimW, iOptions.fEOLString);
-	sWrite_Indent(iStrimW, iCount, iOptions);
+	sWrite(iOptions.fEOLString, iStrimW);
+	sWrite_Indent(iCount, iOptions, iStrimW);
 	}
 
 // =================================================================================================
@@ -74,7 +72,7 @@ namespace ZANONYMOUS {
 class Writer : public NodeVisitor
 	{
 public:
-	Writer(const ZStrimW& iStrimW, size_t iIndent, const Options& iOptions);
+	Writer(size_t iIndent, const Options& iOptions, const ZStrimW& iStrimW);
 
 // From NodeVisitor
 	virtual bool Visit_All(ZRef<Node_All> iNode);
@@ -93,14 +91,14 @@ public:
 private:
 	bool pWriteDyadic(const string& iFunctionName, ZRef<Node_Dyadic> iNode);
 
-	const ZStrimW& fStrimW;
 	size_t fIndent;
 	const Options& fOptions;
+	const ZStrimW& fStrimW;
 	};
 
 } // anonymous namespace
 
-static void sWrite_EffectiveRelHeadComment(const ZStrimW& s, ZRef<Node> iNode)
+static void sWrite_EffectiveRelHeadComment(ZRef<Node> iNode, const ZStrimW& s)
 	{
 	s.Write(" // ");
 
@@ -116,22 +114,22 @@ static void sWrite_EffectiveRelHeadComment(const ZStrimW& s, ZRef<Node> iNode)
 		}
 	}
 
-static void sWrite(const ZStrimW& s,
-	size_t iIndent, const Options& iOptions,
-	ZRef<Node> iNode)
+static void sWrite(size_t iIndent, const Options& iOptions,
+	ZRef<Node> iNode,
+	const ZStrimW& s)
 	{
-	sWrite_LFIndent(s, iIndent, iOptions);
+	sWrite_LFIndent(iIndent, iOptions, s);
 
 //	sWrite_EffectiveRelHeadComment(s, iNode);
 
 //	sWrite_LFIndent(s, iIndent, iOptions);
-	Writer(s, iIndent, iOptions).Write(iNode);
+	Writer(iIndent, iOptions, s).Write(iNode);
 	}
 
-Writer::Writer(const ZStrimW& iStrimW, size_t iIndent, const Options& iOptions)
-:	fStrimW(iStrimW),
-	fIndent(iIndent),
-	fOptions(iOptions)
+Writer::Writer(size_t iIndent, const Options& iOptions, const ZStrimW& iStrimW)
+:	fIndent(iIndent),
+	fOptions(iOptions),
+	fStrimW(iStrimW)
 	{}
 
 void Writer::Write(ZRef<Node> iNode)
@@ -141,15 +139,15 @@ bool Writer::pWriteDyadic(const string& iFunctionName, ZRef<Node_Dyadic> iNode)
 	{
 	ZRef<Node> theNodeA = iNode->GetNodeA();
 	ZRef<Node> theNodeB = iNode->GetNodeB();
-	sWrite(fStrimW, iFunctionName);
-	sWrite_EffectiveRelHeadComment(fStrimW, iNode);
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	sWrite(fStrimW, "(");
-	sWrite(fStrimW, fIndent + 1, fOptions, theNodeA);
-	sWrite(fStrimW, ", ");
-	sWrite(fStrimW, fIndent + 1, fOptions, theNodeB);
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	sWrite(fStrimW, ")");
+	sWrite(iFunctionName, fStrimW);
+	sWrite_EffectiveRelHeadComment(iNode, fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
+	sWrite("(", fStrimW);
+	sWrite(fIndent + 1, fOptions, theNodeA, fStrimW);
+	sWrite(", ", fStrimW);
+	sWrite(fIndent + 1, fOptions, theNodeB, fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
+	sWrite(")", fStrimW);
 	return true;
 	}
 
@@ -158,16 +156,16 @@ bool Writer::Visit_All(ZRef<Node_All> iNode)
 	const ZTName theIDPropName = iNode->GetIDPropName();
 	if (theIDPropName.Empty())
 		{
-		sWrite(fStrimW, "All(");
+		sWrite("All(", fStrimW);
 		}
 	else
 		{
-		sWrite(fStrimW, "AID(");
-		sWrite_PropName(fStrimW, theIDPropName);
-		sWrite(fStrimW, ", ");
+		sWrite("AID(", fStrimW);
+		sWrite_PropName(theIDPropName, fStrimW);
+		sWrite(", ", fStrimW);
 		}
-	sWrite_RelHead(fStrimW, iNode->GetRelHead());
-	sWrite(fStrimW, ")");
+	sWrite_RelHead(iNode->GetRelHead(), fStrimW);
+	sWrite(")", fStrimW);
 	return true;
 	}
 
@@ -176,18 +174,18 @@ bool Writer::Visit_Difference(ZRef<Node_Difference> iNode)
 
 bool Writer::Visit_Explicit(ZRef<Node_Explicit> iNode)
 	{
-	sWrite(fStrimW, "Explicit(");
+	sWrite("Explicit(", fStrimW);
 	bool isFirst = true;
 	const vector<ZTuple> theTuples = iNode->GetTuples();
 	for (vector<ZTuple>::const_iterator i = theTuples.begin(); i != theTuples.end(); ++i)
 		{
 		if (!isFirst)
-			sWrite(fStrimW, ", ");
+			sWrite(", ", fStrimW);
 		isFirst = false;
 
 		fStrimW << *i;
 		}
-	sWrite(fStrimW, ")");
+	sWrite(")", fStrimW);
 	return true;
 	}
 
@@ -201,78 +199,78 @@ bool Writer::Visit_Join(ZRef<Node_Join> iNode)
 	const RelHead joinOn = theNodeA->GetEffectiveRelHead()
 		& theNodeB->GetEffectiveRelHead();
 
-	sWrite(fStrimW, "Join");
-	sWrite_EffectiveRelHeadComment(fStrimW, iNode);
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	sWrite(fStrimW, "( // Join on: ");
-	sWrite_RelHead(fStrimW, joinOn);
-	sWrite(fStrimW, fIndent + 1, fOptions, theNodeA);
-	sWrite(fStrimW, ", ");
-	sWrite(fStrimW, fIndent + 1, fOptions, theNodeB);
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	sWrite(fStrimW, ")");
+	sWrite("Join", fStrimW);
+	sWrite_EffectiveRelHeadComment(iNode, fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
+	sWrite("( // Join on: ", fStrimW);
+	sWrite_RelHead(joinOn, fStrimW);
+	sWrite(fIndent + 1, fOptions, theNodeA, fStrimW);
+	sWrite(", ", fStrimW);
+	sWrite(fIndent + 1, fOptions, theNodeB, fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
+	sWrite(")", fStrimW);
 	return true;
 	}
 
 bool Writer::Visit_Project(ZRef<Node_Project> iNode)
 	{
-	sWrite(fStrimW, "Project");
-	sWrite_EffectiveRelHeadComment(fStrimW, iNode);
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	sWrite(fStrimW, "(");
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	sWrite_RelHead(fStrimW, iNode->GetRelHead());
-	sWrite(fStrimW, ",");
-	sWrite(fStrimW, fIndent + 1, fOptions, iNode->GetNode());
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	sWrite(fStrimW, ")");
+	sWrite("Project", fStrimW);
+	sWrite_EffectiveRelHeadComment(iNode, fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
+	sWrite("(", fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
+	sWrite_RelHead(iNode->GetRelHead(), fStrimW);
+	sWrite(",", fStrimW);
+	sWrite(fIndent + 1, fOptions, iNode->GetNode(), fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
+	sWrite(")", fStrimW);
 	return true;
 	}
 
 bool Writer::Visit_Rename(ZRef<Node_Rename> iNode)
 	{
-	sWrite(fStrimW, "Rename");
-	sWrite_EffectiveRelHeadComment(fStrimW, iNode);
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	sWrite(fStrimW, "(");
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	sWrite_PropName(fStrimW, iNode->GetOld());
-	sWrite(fStrimW, ", ");
-	sWrite_PropName(fStrimW, iNode->GetNew());
-	sWrite(fStrimW, ",");
-	sWrite(fStrimW, fIndent + 1, fOptions, iNode->GetNode());
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	sWrite(fStrimW, ")");
+	sWrite("Rename", fStrimW);
+	sWrite_EffectiveRelHeadComment(iNode, fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
+	sWrite("(", fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
+	sWrite_PropName(iNode->GetOld(), fStrimW);
+	sWrite(", ", fStrimW);
+	sWrite_PropName(iNode->GetNew(), fStrimW);
+	sWrite(",", fStrimW);
+	sWrite(fIndent + 1, fOptions, iNode->GetNode(), fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
+	sWrite(")", fStrimW);
 	return true;
 	}
 
 bool Writer::Visit_Restrict(ZRef<Node_Restrict> iNode)
 	{
-	sWrite(fStrimW, "Restrict");
-	sWrite_EffectiveRelHeadComment(fStrimW, iNode);
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	sWrite(fStrimW, "(");
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
+	sWrite("Restrict", fStrimW);
+	sWrite_EffectiveRelHeadComment(iNode, fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
+	sWrite("(", fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
 	ZUtil_Strim_TQL_Spec::sToStrim(iNode->GetCondition(), fStrimW);
-	sWrite(fStrimW, ",");
-	sWrite(fStrimW, fIndent + 1, fOptions, iNode->GetNode());
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	sWrite(fStrimW, ")");
+	sWrite(",", fStrimW);
+	sWrite(fIndent + 1, fOptions, iNode->GetNode(), fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
+	sWrite(")", fStrimW);
 	return true;
 	}
 
 bool Writer::Visit_Select(ZRef<Node_Select> iNode)
 	{
-	sWrite(fStrimW, "Select");
-	sWrite_EffectiveRelHeadComment(fStrimW, iNode);
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	sWrite(fStrimW, "(");
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
+	sWrite("Select", fStrimW);
+	sWrite_EffectiveRelHeadComment(iNode, fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
+	sWrite("(", fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
 	ZUtil_Strim_TQL_Spec::sToStrim(iNode->GetLogOp(), fStrimW);
-	sWrite(fStrimW, ",");
-	sWrite(fStrimW, fIndent + 1, fOptions, iNode->GetNode());
-	sWrite_LFIndent(fStrimW, fIndent + 1, fOptions);
-	sWrite(fStrimW, ")");
+	sWrite(",", fStrimW);
+	sWrite(fIndent + 1, fOptions, iNode->GetNode(), fStrimW);
+	sWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
+	sWrite(")", fStrimW);
 	return true;
 	}
 
@@ -283,33 +281,34 @@ bool Writer::Visit_Union(ZRef<Node_Union> iNode)
 #pragma mark -
 #pragma mark * ZUtil_Strim_TQL
 
-void sToStrim(const ZStrimW& iStrimW, const Query& iQuery)
-	{ sToStrim(iStrimW, 0, Options(), iQuery.GetNode()); }
+void sToStrim(const Query& iQuery, const ZStrimW& s)
+	{ sToStrim(0, Options(), iQuery.GetNode(), s); }
 
-void sToStrim(const ZStrimW& iStrimW, ZRef<Node> iNode)
-	{ sToStrim(iStrimW, 0, Options(), iNode); }
+void sToStrim(ZRef<Node> iNode, const ZStrimW& s)
+	{ sToStrim(0, Options(), iNode, s); }
 
-void sToStrim(const ZStrimW& iStrimW,
+void sToStrim(
 	size_t iInitialIndent, const Options& iOptions,
-	const Query& iQuery)
+	const Query& iQuery,
+	const ZStrimW& s)
 	{
-	sWrite(iStrimW, iInitialIndent, iOptions, iQuery.GetNode());
+	sWrite(iInitialIndent, iOptions, iQuery.GetNode(), s);
 	}
 
-void sToStrim(const ZStrimW& iStrimW,
-	size_t iInitialIndent, const Options& iOptions,
-	ZRef<Node> iNode)
+void sToStrim(size_t iInitialIndent, const Options& iOptions,
+	ZRef<Node> iNode,
+	const ZStrimW& s)
 	{
-	sWrite(iStrimW, iInitialIndent, iOptions, iNode);
+	sWrite(iInitialIndent, iOptions, iNode, s);
 	}
 
-void sWrite_PropName(const ZStrimW& s, const ZTName& iTName)
+void sWrite_PropName(const ZTName& iTName, const ZStrimW& s)
 	{
 	s.Write("@");
 	ZYad_ZooLibStrim::sWrite_PropName(iTName, s);
 	}
 
-void sWrite_RelHead(const ZStrimW& s, const RelHead& iRelHead)
+void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s)
 	{
 	set<ZTName> names;
 	iRelHead.GetNames(names);
@@ -320,7 +319,7 @@ void sWrite_RelHead(const ZStrimW& s, const RelHead& iRelHead)
 		if (!isFirst)
 			s.Write(", ");
 		isFirst = false;
-		sWrite_PropName(s, *i);
+		sWrite_PropName(*i, s);
 		}
 	s.Write("]");
 	}
