@@ -175,37 +175,308 @@ namespace ZPhotoshop {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * List and Map Copy, Getter, Setter stuff
+
+#define COPYFROMTO(SUITE, iSource, iKey, iType, DEST) \
+	switch (iType) \
+		{ \
+		case typeInteger: \
+			{ \
+			int32 theVal; \
+			if (noErr == SUITE->GetInteger(iSource, iKey, &theVal)) \
+				SUITE->PutInteger(DEST, theVal); \
+			break; \
+			} \
+		case typeFloat: \
+			{ \
+			double theVal; \
+			if (noErr == SUITE->GetFloat(iSource, iKey, &theVal)) \
+				SUITE->PutFloat(DEST, theVal); \
+			break; \
+			} \
+		case typeUnitFloat: \
+			{ \
+			UnitFloat theVal; \
+			if (noErr == SUITE->GetUnitFloat(iSource, iKey, &theVal.fUnitID, &theVal.fValue)) \
+				SUITE->PutUnitFloat(DEST, theVal.fUnitID, theVal.fValue); \
+			break; \
+			} \
+		case typeChar: \
+			{ \
+			uint32 theLength; \
+			if (noErr == SUITE->GetStringLength(iSource, iKey, &theLength)) \
+				{ \
+				string8 theVal(size_t(theLength + 1), ' '); \
+				if (0 == theLength \
+					|| noErr == SUITE->GetString(iSource, iKey, &theVal[0], theLength + 1)) \
+					{ \
+					SUITE->PutString(DEST, const_cast<char*>(theVal.c_str())); \
+					} \
+				} \
+			break; \
+			} \
+		case typeBoolean: \
+			{ \
+			Boolean theVal; \
+			if (noErr == SUITE->GetBoolean(iSource, iKey, &theVal)) \
+				SUITE->PutBoolean(DEST, theVal); \
+			break; \
+			} \
+		case typeEnumerated: \
+			{ \
+			Enumerated theVal; \
+			if (noErr == SUITE->GetEnumerated(iSource, iKey, &theVal.fEnumType, &theVal.fValue)) \
+				SUITE->PutEnumerated(DEST, theVal.fEnumType, theVal.fValue); \
+			break; \
+			} \
+		case typeObjectSpecifier: \
+			{ \
+			PIActionReference theVal; \
+			if (noErr == SUITE->GetReference(iSource, iKey, &theVal)) \
+				{ \
+				SUITE->PutReference(DEST, theVal); \
+				/*??spPSActionReference->Free(theVal);*/ \
+				} \
+			break; \
+			} \
+		case typeValueList: \
+			{ \
+			PIActionList theVal; \
+			if (noErr == SUITE->GetList(iSource, iKey, &theVal)) \
+				{ \
+				theVal = spDuplicate(theVal); \
+				SUITE->PutList(DEST, theVal); \
+				} \
+			break; \
+			} \
+		case typeObject: \
+			{ \
+			DescriptorClassID theDCID; \
+			PIActionDescriptor theVal; \
+			if (noErr == SUITE->GetObject(iSource, iKey, &theDCID, &theVal)) \
+				{ \
+				theVal = spDuplicate(theVal); \
+				SUITE->PutObject(DEST, theDCID, theVal); \
+				} \
+			break; \
+			} \
+		/* global object? */ \
+		case typeClass: \
+			{ \
+			ZUnimplemented(); \
+			break; \
+			} \
+		/* global class? */ \
+		case typeAlias: \
+		case typePath: \
+			{ \
+			FileRef theVal; \
+			if (noErr == SUITE->GetAlias(iSource, iKey, &theVal.OParam())) \
+				SUITE->PutAlias(DEST, theVal.Get()); \
+			break; \
+			} \
+		case typeRawData: \
+			{ \
+			int32 theLength; \
+			if (noErr == SUITE->GetDataLength(iSource, iKey, &theLength)) \
+				{ \
+				Data theVal(theLength); \
+				if (0 == theLength \
+					|| noErr == SUITE->GetData(iSource, iKey, theVal.GetData())) \
+					{ \
+					SUITE->PutData(DEST, theVal.GetSize(), theVal.GetData()); \
+					} \
+				} \
+			break; \
+			} \
+		} \
+
+#define GETTERCASES(SUITE, P0, P1) \
+	case typeInteger: \
+		{ \
+		int32 theVal; \
+		if (noErr == SUITE->GetInteger(P0, P1, &theVal)) \
+			{ oVal = theVal; return true; } \
+		break; \
+		} \
+	case typeFloat: \
+		{ \
+		double theVal; \
+		if (noErr == SUITE->GetFloat(P0, P1, &theVal)) \
+			{ oVal = theVal; return true; } \
+		break; \
+		} \
+	case typeUnitFloat: \
+		{ \
+		UnitFloat theVal; \
+		if (noErr == SUITE->GetUnitFloat(P0, P1, &theVal.fUnitID, &theVal.fValue)) \
+			{ oVal = theVal; return true; } \
+		break; \
+		} \
+	case typeChar: \
+		{ \
+		uint32 theLength; \
+		if (noErr == SUITE->GetStringLength(P0, P1, &theLength)) \
+			{ \
+			string8 result(size_t(theLength + 1), ' '); \
+			if (0 == theLength || noErr == SUITE->GetString(P0, P1, &result[0], theLength + 1)) \
+				{ \
+				oVal = result.substr(0, theLength); \
+				return true; \
+				} \
+			} \
+		break; \
+		} \
+	case typeBoolean: \
+		{ \
+		Boolean theVal; \
+		if (noErr == SUITE->GetBoolean(P0, P1, &theVal)) \
+			{ oVal = bool(theVal); return true; } \
+		break; \
+		} \
+	case typeEnumerated: \
+		{ \
+		Enumerated theVal; \
+		if (noErr == SUITE->GetEnumerated(P0, P1, &theVal.fEnumType, &theVal.fValue)) \
+			{ oVal = theVal; return true; } \
+		break; \
+		} \
+	case typeObjectSpecifier: \
+		{ \
+		PIActionReference theVal; \
+		if (noErr == SUITE->GetReference(P0, P1, &theVal)) \
+			{ \
+			oVal = Spec(Adopt(theVal)); \
+			return true; \
+			} \
+		break; \
+		} \
+	case typeValueList: \
+		{ \
+		PIActionList theVal; \
+		if (noErr == SUITE->GetList(P0, P1, &theVal)) \
+			{ oVal = List(Adopt(theVal)); return true; } \
+		break; \
+		} \
+	case typeObject: \
+		{ \
+		DescriptorClassID theDCID; \
+		PIActionDescriptor theVal; \
+		if (noErr == SUITE->GetObject(P0, P1, &theDCID, &theVal)) \
+			{ oVal = Map(theDCID, Adopt(theVal)); return true; } \
+		break; \
+		} \
+	/* global object? */ \
+	case typeClass: \
+		{ \
+		ZUnimplemented(); \
+		break; \
+		} \
+	/* global class? */ \
+	case typeAlias: \
+	case typePath: \
+		{ \
+		FileRef theVal; \
+		if (noErr == SUITE->GetAlias(P0, P1, &theVal.OParam())) \
+			{ oVal = theVal; return true; } \
+		break; \
+		} \
+	case typeRawData: \
+		{ \
+		int32 theLength; \
+		if (noErr == SUITE->GetDataLength(P0, P1, &theLength)) \
+			{ \
+			Data result(theLength); \
+			if (0 == theLength || noErr == SUITE->GetData(P0, P1, result.GetData())) \
+				{ \
+				oVal = result; \
+				return true; \
+				} \
+			} \
+		break; \
+		} \
+
+#define SETTERCASES(SUITE, PARAM) \
+	if (false) \
+		{} \
+	else if (const int32* theVal = ZAnyCast<int32>(&iVal.fAny)) \
+		{ SUITE->PutInteger(PARAM, *theVal); return; } \
+	else if (const float* theVal = ZAnyCast<float>(&iVal.fAny)) \
+		{ SUITE->PutFloat(PARAM, *theVal); return; } \
+	else if (const UnitFloat* theVal = ZAnyCast<UnitFloat>(&iVal.fAny)) \
+		{ SUITE->PutUnitFloat(PARAM, theVal->fUnitID, theVal->fValue); return; } \
+	else if (const string8* theVal = ZAnyCast<string8>(&iVal.fAny)) \
+		{ SUITE->PutString(PARAM, const_cast<char*>(theVal->c_str())); return; } \
+	else if (const bool* theVal = ZAnyCast<bool>(&iVal.fAny)) \
+		{ SUITE->PutBoolean(PARAM, *theVal); return; } \
+	else if (const List* theVal = ZAnyCast<List>(&iVal.fAny)) \
+		{ SUITE->PutList(PARAM, theVal->IParam()); return; } \
+	else if (const Map* theVal = ZAnyCast<Map>(&iVal.fAny)) \
+		{ SUITE->PutObject(PARAM, theVal->GetType(), theVal->IParam()); return; } \
+	/* global object? */ \
+	else if (const Enumerated* theVal = ZAnyCast<Enumerated>(&iVal.fAny)) \
+		{ SUITE->PutEnumerated(PARAM, theVal->fEnumType, theVal->fValue); return; } \
+	else if (const Spec* theVal = ZAnyCast<Spec>(&iVal.fAny)) \
+		{ \
+		PIActionReference tempRef = theVal->MakeRef(); \
+		SUITE->PutReference(PARAM, tempRef); \
+		spPSActionReference->Free(tempRef); \
+		return; \
+		} \
+/*Hmmm	else if (const ClassID* theVal = ZAnyCast<ClassID>(&iVal.fAny)) \
+		{ ZUnimplemented(); } Hmm??? SUITE->PutInteger(PARAM, *theVal); return; } */\
+	else if (const FileRef* theVal = ZAnyCast<FileRef>(&iVal.fAny)) \
+		{ SUITE->PutAlias(PARAM, theVal->Get()); return; } \
+	else if (const Data* theVal = ZAnyCast<Data>(&iVal.fAny)) \
+		{ SUITE->PutData(PARAM, theVal->GetSize(), const_cast<void*>(theVal->GetData())); return; }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Helpers
+
+static PIActionDescriptor spDuplicate(PIActionDescriptor iSource);
 
 static PIActionList spDuplicate(PIActionList iSource)
 	{
-	PIActionList dummy;
-	spPSActionList->Make(&dummy);
-
-	spPSActionList->PutList(dummy, iSource);
-
-	PIActionList result;
-	spPSActionList->GetList(dummy, 0, &result);
-
-	spPSActionList->Free(dummy);
-
-	return result;	
+	PIActionList theDest;
+	spPSActionList->Make(&theDest);
+	uint32 theCount;
+	if (noErr == spPSActionList->GetCount(iSource, &theCount))
+		{
+		for (size_t x = 0; x < theCount; ++x)
+			{
+			TypeID theType;
+			if (noErr != spPSActionList->GetType(iSource, x, &theType))
+				break;
+			COPYFROMTO(spPSActionList, iSource, x, theType, theDest)
+			}
+		}
+	return theDest;
 	}
 
 static PIActionDescriptor spDuplicate(PIActionDescriptor iSource)
 	{
-	PIActionList dummy;
-	spPSActionList->Make(&dummy);
+	PIActionDescriptor theDest;
+	spPSActionDescriptor->Make(&theDest);
+	uint32 theCount;
+	if (noErr == spPSActionDescriptor->GetCount(iSource, &theCount))
+		{
+		for (size_t x = 0; x < theCount; ++x)
+			{
+			KeyID theKey;
+			if (noErr != spPSActionDescriptor->GetKey(iSource, x, &theKey))
+				break;
+			TypeID theType;
+			if (noErr != spPSActionDescriptor->GetType(iSource, theKey, &theType))
+				break;
+			#define COMMA() ,
 
-	spPSActionList->PutObject(dummy, typeObject, iSource);
+			COPYFROMTO(spPSActionDescriptor, iSource, theKey, theType, theDest COMMA() theKey)
 
-	DescriptorClassID theType;
-	PIActionDescriptor result;
-	spPSActionList->GetObject(dummy, 0, &theType, &result);
-
-	spPSActionList->Free(dummy);
-
-	return result;	
+			#undef COMMA
+			}
+		}
+	return theDest;
 	}
 
 static string16 spAsString16(const ZRef<ASZString>& iString)
@@ -1104,125 +1375,6 @@ ZMACRO_ZValAccessors_Def_Entry(Val, FileRef, FileRef)
 ZMACRO_ZValAccessors_Def_Entry(Val, List, List)
 ZMACRO_ZValAccessors_Def_Entry(Val, Map, Map)
 ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * List and Map Getter/Setter stuff
-
-#define GETTERCASES(SUITE, P0, P1) \
-	case typeInteger: { int32 theVal; \
-		if (noErr == SUITE->GetInteger(P0, P1, &theVal)) { oVal = theVal; return true; } \
-		break; } \
-	case typeFloat: { double theVal; \
-		if (noErr == SUITE->GetFloat(P0, P1, &theVal)) { oVal = theVal; return true; } \
-		break; } \
-	case typeUnitFloat: { UnitFloat theVal; \
-		if (noErr == SUITE->GetUnitFloat(P0, P1, &theVal.fUnitID, &theVal.fValue)) \
-			{ oVal = theVal; return true; } \
-		break; } \
-	case typeChar: \
-		{ \
-		uint32 theLength; \
-		if (noErr == SUITE->GetStringLength(P0, P1, &theLength)) \
-			{ \
-			string8 result(size_t(theLength + 1), ' '); \
-			if (0 == theLength || noErr == SUITE->GetString(P0, P1, &result[0], theLength + 1)) \
-				{ \
-				oVal = result.substr(0, theLength); \
-				return true; \
-				} \
-			} \
-		break; \
-		} \
-	case typeBoolean: { Boolean theVal; \
-		if (noErr == SUITE->GetBoolean(P0, P1, &theVal)) \
-			{ oVal = bool(theVal); return true; } \
-		break; } \
-	case typeValueList: { PIActionList theVal; \
-		if (noErr == SUITE->GetList(P0, P1, &theVal)) \
-			{ oVal = List(Adopt(theVal)); return true; } \
-		break; } \
-	case typeObject: { \
-		DescriptorClassID theDCID; \
-		PIActionDescriptor theVal; \
-		if (noErr == SUITE->GetObject(P0, P1, &theDCID, &theVal)) \
-			{ oVal = Map(theDCID, Adopt(theVal)); return true; } \
-		break; } \
-	/* global object? */ \
-	case typeEnumerated: { Enumerated theVal; \
-		if (noErr == SUITE->GetEnumerated(P0, P1, &theVal.fEnumType, &theVal.fValue)) \
-			{ oVal = theVal; return true; } \
-		break; } \
-	case typeObjectSpecifier: \
-		{ \
-		PIActionReference theVal; \
-		if (noErr == SUITE->GetReference(P0, P1, &theVal)) \
-			{ \
-			oVal = Spec(Adopt(theVal)); \
-			return true; \
-			} \
-		break; \
-		} \
-	case typeClass: \
-		{ \
-		ZUnimplemented(); \
-		break; \
-		} \
-	/* global class? */ \
-	case typeAlias: \
-	case typePath: { FileRef theVal; \
-		if (noErr == SUITE->GetAlias(P0, P1, &theVal.OParam())) \
-			{ oVal = theVal; return true; } \
-		break; } \
-	case typeRawData: \
-		{ \
-		int32 theLength; \
-		if (noErr == SUITE->GetDataLength(P0, P1, &theLength)) \
-			{ \
-			Data result(theLength); \
-			if (0 == theLength || noErr == SUITE->GetData(P0, P1, result.GetData())) \
-				{ \
-				oVal = result; \
-				return true; \
-				} \
-			} \
-		break; \
-		} \
-
-
-#define SETTERCASES(SUITE, PARAM) \
-	if (false) \
-		{} \
-	else if (const int32* theVal = ZAnyCast<int32>(&iVal.fAny)) \
-		{ SUITE->PutInteger(PARAM, *theVal); return; } \
-	else if (const float* theVal = ZAnyCast<float>(&iVal.fAny)) \
-		{ SUITE->PutFloat(PARAM, *theVal); return; } \
-	else if (const UnitFloat* theVal = ZAnyCast<UnitFloat>(&iVal.fAny)) \
-		{ SUITE->PutUnitFloat(PARAM, theVal->fUnitID, theVal->fValue); return; } \
-	else if (const string8* theVal = ZAnyCast<string8>(&iVal.fAny)) \
-		{ SUITE->PutString(PARAM, const_cast<char*>(theVal->c_str())); return; } \
-	else if (const bool* theVal = ZAnyCast<bool>(&iVal.fAny)) \
-		{ SUITE->PutBoolean(PARAM, *theVal); return; } \
-	else if (const List* theVal = ZAnyCast<List>(&iVal.fAny)) \
-		{ SUITE->PutList(PARAM, theVal->IParam()); return; } \
-	else if (const Map* theVal = ZAnyCast<Map>(&iVal.fAny)) \
-		{ SUITE->PutObject(PARAM, theVal->GetType(), theVal->IParam()); return; } \
-	/* global object? */ \
-	else if (const Enumerated* theVal = ZAnyCast<Enumerated>(&iVal.fAny)) \
-		{ SUITE->PutEnumerated(PARAM, theVal->fEnumType, theVal->fValue); return; } \
-	else if (const Spec* theVal = ZAnyCast<Spec>(&iVal.fAny)) \
-		{ \
-		PIActionReference tempRef = theVal->MakeRef(); \
-		SUITE->PutReference(PARAM, tempRef); \
-		spPSActionReference->Free(tempRef); \
-		return; \
-		} \
-/*Hmmm	else if (const ClassID* theVal = ZAnyCast<ClassID>(&iVal.fAny)) \
-		{ ZUnimplemented(); } Hmm??? SUITE->PutInteger(PARAM, *theVal); return; } */\
-	else if (const FileRef* theVal = ZAnyCast<FileRef>(&iVal.fAny)) \
-		{ SUITE->PutAlias(PARAM, theVal->Get()); return; } \
-	else if (const Data* theVal = ZAnyCast<Data>(&iVal.fAny)) \
-		{ SUITE->PutData(PARAM, theVal->GetSize(), const_cast<void*>(theVal->GetData())); return; }
 
 // =================================================================================================
 #pragma mark -
