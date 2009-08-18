@@ -130,7 +130,7 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 		return sMakeYadR(theMap);
 		}
 
-	return new ZYadPrimR_Std(iVal.AsVal_Any());
+	return new ZYadPrimR_Std(iVal.AsVal_Any().AsAny());
 	}
 
 ZRef<ZYadListR> sMakeYadR(const List& iList)
