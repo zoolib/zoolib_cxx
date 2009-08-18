@@ -146,7 +146,7 @@ ZVal_Any* ZList_Any::PGet(size_t iIndex)
 	if (fRep && iIndex < fRep->fVector.size())
 		{
 		this->pTouch();
-		return static_cast<ZVal_Any*>(&fRep->fVector[iIndex]);
+		return &fRep->fVector[iIndex];
 		}
 	return nullptr;
 	}
@@ -154,7 +154,7 @@ ZVal_Any* ZList_Any::PGet(size_t iIndex)
 const ZVal_Any* ZList_Any::PGet(size_t iIndex) const
 	{
 	if (fRep && iIndex < fRep->fVector.size())
-		return static_cast<ZVal_Any*>(&fRep->fVector[iIndex]);
+		return &fRep->fVector[iIndex];
 	return nullptr;
 	}
 
@@ -187,7 +187,7 @@ void ZList_Any::Set(size_t iIndex, const ZVal_Any& iVal)
 	if (fRep && iIndex < fRep->fVector.size())
 		{
 		this->pTouch();
-		fRep->fVector[iIndex] = static_cast<const ZAny&>(iVal);
+		fRep->fVector[iIndex] = iVal;
 		}
 	}
 
@@ -204,13 +204,13 @@ void ZList_Any::Insert(size_t iIndex, const ZVal_Any& iVal)
 	{
 	this->pTouch();
 	if (iIndex <= fRep->fVector.size())
-		fRep->fVector.insert((fRep->fVector.begin() + iIndex), static_cast<const ZAny&>(iVal));
+		fRep->fVector.insert((fRep->fVector.begin() + iIndex), iVal);
 	}
 
 void ZList_Any::Append(const ZVal_Any& iVal)
 	{
 	this->pTouch();
-	fRep->fVector.push_back(static_cast<const ZAny&>(iVal));
+	fRep->fVector.push_back(iVal);
 	}
 
 void ZList_Any::pTouch()
@@ -290,7 +290,7 @@ ZVal_Any* ZMap_Any::PGet(const string8& iName)
 		this->pTouch();
 		Index_t theIndex = fRep->fMap.find(iName);
 		if (theIndex != fRep->fMap.end())
-			return static_cast<ZVal_Any*>(&(*theIndex).second);
+			return &(*theIndex).second;
 		}
 	return nullptr;
 	}
@@ -299,7 +299,7 @@ ZVal_Any* ZMap_Any::PGet(const Index_t& iIndex)
 	{
 	map<string, ZVal_Any>::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())
-		return static_cast<ZVal_Any*>(&(*theIndex).second);
+		return &(*theIndex).second;
 	return nullptr;
 	}
 
@@ -309,7 +309,7 @@ const ZVal_Any* ZMap_Any::PGet(const string8& iName) const
 		{
 		Index_t theIndex = fRep->fMap.find(iName);
 		if (theIndex != fRep->fMap.end())
-			return static_cast<ZVal_Any*>(&(*theIndex).second);
+			return &(*theIndex).second;
 		}
 	return nullptr;
 	}
@@ -317,7 +317,7 @@ const ZVal_Any* ZMap_Any::PGet(const string8& iName) const
 const ZVal_Any* ZMap_Any::PGet(const Index_t& iIndex) const
 	{
 	if (fRep && iIndex != fRep->fMap.end())
-		return static_cast<ZVal_Any*>(&(*iIndex).second);
+		return &(*iIndex).second;
 	return nullptr;
 	}
 
@@ -372,14 +372,14 @@ ZVal_Any ZMap_Any::Get(const Index_t& iIndex) const
 void ZMap_Any::Set(const string8& iName, const ZVal_Any& iVal)
 	{
 	this->pTouch();
-	fRep->fMap.insert(pair<string8, ZAny>(iName, static_cast<const ZAny&>(iVal)));
+	fRep->fMap.insert(pair<string8, ZVal_Any>(iName, iVal));
 	}
 
 void ZMap_Any::Set(const Index_t& iIndex, const ZVal_Any& iVal)
 	{
 	map<string, ZVal_Any>::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())
-		(*theIndex).second = static_cast<const ZAny&>(iVal);
+		(*theIndex).second = iVal;
 	}
 
 void ZMap_Any::Erase(const Index_t& iIndex)
