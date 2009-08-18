@@ -43,7 +43,7 @@ ZRef<ZYadR> sMakeYadR(const ZVal_Any& iVal)
 	if (const ZData_Any* theVal = iVal.PGet_T<ZData_Any>())
 		return new ZYadStreamRPos_Any(*theVal);
 
-	return new ZYadPrimR_Std(iVal);
+	return new ZYadPrimR_Std(iVal.AsAny());
 	}
 
 ZRef<ZYadStreamR> sMakeYadR(const ZData_Any& iData)
