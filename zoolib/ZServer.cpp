@@ -23,8 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-//using std::vector;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZServer::StreamerListener

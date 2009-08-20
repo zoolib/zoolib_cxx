@@ -50,7 +50,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE2(CoreFoundation,CFBundle.h)
 
-#if !defined(MAC_OS_X_VERSION_MIN_REQUIRED) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_2
+#if !defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
+	|| MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_2
 
 typedef UInt32                          FSAliasInfoBitmap;
 enum {
@@ -110,7 +111,9 @@ static OSStatus FSCopyAliasInfo(
 	return -1;
 	}
 
-#endif
+#endif !defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
+	|| MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_2
+
 #endif // __PIMac__
 
 // =================================================================================================
