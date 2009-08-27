@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"
+#include "zoolib/ZUtil_STL.h"
 
 #define kDebug_TSWatcherServerAsync 1
 
@@ -275,14 +276,15 @@ bool ZTSWatcherServerAsync::Write(const ZStreamW& iStreamW)
 		vector<ZTuple> changedTuples;
 		map<int64, vector<uint64> > changedQueries;
 
+		using ZUtil_STL::sFirstOrNil;
 		bool success = fTSWatcher->Sync(
-			&removedIDs[0], removedIDs.size(),
-			&addedIDs[0], addedIDs.size(),
-			&removedQueries[0], removedQueries.size(),
-			&addedQueries[0], addedQueries.size(),
+			sFirstOrNil(removedIDs), removedIDs.size(),
+			sFirstOrNil(addedIDs), addedIDs.size(),
+			sFirstOrNil(removedQueries), removedQueries.size(),
+			sFirstOrNil(addedQueries), addedQueries.size(),
 			watcherAddedIDs,
 			changedTupleIDs, changedTuples,
-			&writtenTupleIDs[0], &writtenTuples[0], writtenTupleIDs.size(),
+			sFirstOrNil(writtenTupleIDs), sFirstOrNil(writtenTuples), writtenTupleIDs.size(),
 			changedQueries);
 
 		if (!success)
