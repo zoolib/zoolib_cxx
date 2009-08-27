@@ -32,17 +32,17 @@ ZStreamerReader::ZStreamerReader(ZRef<ZStreamerR> iStreamerR)
 
 void ZStreamerReader::RunnerAttached()
 	{
-	ZActor::RunnerAttached();
+	ZWorker::RunnerAttached();
 	this->ReadStarted();
 	}
 
 void ZStreamerReader::RunnerDetached()
 	{
 	this->ReadFinished();
-	ZActor::RunnerDetached();
+	ZWorker::RunnerDetached();
 	}
 
-bool ZStreamerReader::Act()
+bool ZStreamerReader::Work()
 	{
 	if (!this->Read(fStreamerR->GetStreamR()))
 		return false;

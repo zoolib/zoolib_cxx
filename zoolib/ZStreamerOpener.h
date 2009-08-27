@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStreamerOpener__
 #include "zconfig.h"
 
-#include "zoolib/ZActor.h"
 #include "zoolib/ZRefSafe.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZTask.h"
+#include "zoolib/ZWorker.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -34,15 +34,15 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZStreamerOpener
 
 class ZStreamerOpener
-:	public ZActor,
+:	public ZWorker,
 	public ZTask
 	{
 public:
 	ZStreamerOpener(ZRef<ZTaskOwner> iTaskOwner, ZRef<ZStreamerRWFactory> iFactory);
 	virtual ~ZStreamerOpener();
 
-// From ZActor
-	virtual bool Act();
+// From ZWorker
+	virtual bool Work();
 
 // From ZTask
 	virtual void Kill();

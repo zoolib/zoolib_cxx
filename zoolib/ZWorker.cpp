@@ -18,94 +18,94 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZActor.h"
 #include "zoolib/ZThread.h"
+#include "zoolib/ZWorker.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZActorRunner
+#pragma mark * ZWorkerRunner
 
-ZActorRunner::ZActorRunner()
+ZWorkerRunner::ZWorkerRunner()
 	{}
 
-ZActorRunner::~ZActorRunner()
+ZWorkerRunner::~ZWorkerRunner()
 	{}
 
-void ZActorRunner::pAttachActor(ZRef<ZActor> iActor)
+void ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 	{
-	ZAssert(iActor);
-	ZAssert(!ZRef<ZActorRunner>(iActor->fRunner));
+	ZAssert(iWorker);
+	ZAssert(!ZRef<ZWorkerRunner>(iWorker->fRunner));
 
-	iActor->fRunner = ZRef<ZActorRunner>(this);
+	iWorker->fRunner = ZRef<ZWorkerRunner>(this);
 
-	iActor->pRunnerAttached();
+	iWorker->pRunnerAttached();
 	}
 
-void ZActorRunner::pDetachActor(ZRef<ZActor> iActor)
+void ZWorkerRunner::pDetachWorker(ZRef<ZWorker> iWorker)
 	{
-	ZAssert(iActor);
-	ZAssert(ZRef<ZActorRunner>(iActor->fRunner) == this);
+	ZAssert(iWorker);
+	ZAssert(ZRef<ZWorkerRunner>(iWorker->fRunner) == this);
 
-	iActor->fRunner.Clear();
+	iWorker->fRunner.Clear();
 
-	iActor->pRunnerDetached();
+	iWorker->pRunnerDetached();
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZActorRunner_Threaded
+#pragma mark * ZWorkerRunner_Threaded
 
-class ZActorRunner_Threaded : public ZActorRunner
+class ZWorkerRunner_Threaded : public ZWorkerRunner
 	{
 public:
-	ZActorRunner_Threaded(ZRef<ZActor> iActor);
-	virtual ~ZActorRunner_Threaded();
+	ZWorkerRunner_Threaded(ZRef<ZWorker> iWorker);
+	virtual ~ZWorkerRunner_Threaded();
 
 	void Start();
 
-// From ZActorRunner
-	virtual void Actor_Wake(ZRef<ZActor> iActor);
-	virtual void Actor_WakeAt(ZRef<ZActor> iActor, ZTime iSystemTime);
-	virtual void Actor_WakeIn(ZRef<ZActor> iActor, double iInterval);
+// From ZWorkerRunner
+	virtual void Wake(ZRef<ZWorker> iWorker);
+	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
+	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval);
 
 private:
 	void pRun();
-	static void spRun(ZRef<ZActorRunner_Threaded> iParam);
+	static void spRun(ZRef<ZWorkerRunner_Threaded> iParam);
 
 	ZMtx fMtx;
 	ZCnd fCnd;
-	ZRef<ZActor> fActor;
+	ZRef<ZWorker> fWorker;
 	ZTime fNextWake;
 	};
 
-ZActorRunner_Threaded::ZActorRunner_Threaded(ZRef<ZActor> iActor)
-:	fActor(iActor),
+ZWorkerRunner_Threaded::ZWorkerRunner_Threaded(ZRef<ZWorker> iWorker)
+:	fWorker(iWorker),
 	fNextWake(ZTime::sSystem())
 	{}
 
-ZActorRunner_Threaded::~ZActorRunner_Threaded()
+ZWorkerRunner_Threaded::~ZWorkerRunner_Threaded()
 	{}
 
-void ZActorRunner_Threaded::Start()
+void ZWorkerRunner_Threaded::Start()
 	{
-	this->pAttachActor(fActor);
-	ZThread::sCreate_T<ZRef<ZActorRunner_Threaded> >(spRun, this);
+	this->pAttachWorker(fWorker);
+	ZThread::sCreate_T<ZRef<ZWorkerRunner_Threaded> >(spRun, this);
 	}
 
-void ZActorRunner_Threaded::Actor_Wake(ZRef<ZActor> iActor)
+void ZWorkerRunner_Threaded::Wake(ZRef<ZWorker> iWorker)
 	{
 	ZGuardMtx locker(fMtx);
-	ZAssert(iActor == fActor);
+	ZAssert(iWorker == fWorker);
 	fNextWake = 0;
 	fCnd.Broadcast();
 	}
 
-void ZActorRunner_Threaded::Actor_WakeAt(ZRef<ZActor> iActor, ZTime iSystemTime)
+void ZWorkerRunner_Threaded::WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime)
 	{
 	ZGuardMtx locker(fMtx);
-	ZAssert(iActor == fActor);
+	ZAssert(iWorker == fWorker);
 	if (fNextWake > iSystemTime)
 		{
 		fNextWake = iSystemTime;
@@ -113,10 +113,10 @@ void ZActorRunner_Threaded::Actor_WakeAt(ZRef<ZActor> iActor, ZTime iSystemTime)
 		}
 	}
 
-void ZActorRunner_Threaded::Actor_WakeIn(ZRef<ZActor> iActor, double iInterval)
+void ZWorkerRunner_Threaded::WakeIn(ZRef<ZWorker> iWorker, double iInterval)
 	{
 	ZGuardMtx locker(fMtx);
-	ZAssert(iActor == fActor);
+	ZAssert(iWorker == fWorker);
 	ZTime newWake = ZTime::sSystem() + iInterval;
 	if (fNextWake > newWake)
 		{
@@ -125,7 +125,7 @@ void ZActorRunner_Threaded::Actor_WakeIn(ZRef<ZActor> iActor, double iInterval)
 		}
 	}
 
-void ZActorRunner_Threaded::pRun()
+void ZWorkerRunner_Threaded::pRun()
 	{
 	for (;;)
 		{
@@ -146,7 +146,7 @@ void ZActorRunner_Threaded::pRun()
 
 		try
 			{
-			if (!fActor->Act())
+			if (!fWorker->Work())
 				break;
 			}
 		catch (...)
@@ -155,57 +155,57 @@ void ZActorRunner_Threaded::pRun()
 			}
 		}
 
-	this->pDetachActor(fActor);
-	fActor.Clear();
+	this->pDetachWorker(fWorker);
+	fWorker.Clear();
 	}
 
-void ZActorRunner_Threaded::spRun(ZRef<ZActorRunner_Threaded> iParam)
+void ZWorkerRunner_Threaded::spRun(ZRef<ZWorkerRunner_Threaded> iParam)
 	{ iParam->pRun(); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZActor
+#pragma mark * ZWorker
 
-ZActor::ZActor()
+ZWorker::ZWorker()
 	{}
 
-void ZActor::RunnerAttached()
+void ZWorker::RunnerAttached()
 	{}
 
-void ZActor::RunnerDetached()
+void ZWorker::RunnerDetached()
 	{}
 
-void ZActor::Wake()
+void ZWorker::Wake()
 	{
-	if (ZRef<ZActorRunner> theRunner = fRunner)
-		theRunner->Actor_Wake(this);
+	if (ZRef<ZWorkerRunner> theRunner = fRunner)
+		theRunner->Wake(this);
 	}
 
-void ZActor::WakeIn(double iInterval)
+void ZWorker::WakeIn(double iInterval)
 	{
-	if (ZRef<ZActorRunner> theRunner = fRunner)
-		theRunner->Actor_WakeIn(this, iInterval);
+	if (ZRef<ZWorkerRunner> theRunner = fRunner)
+		theRunner->WakeIn(this, iInterval);
 	}
 
-void ZActor::WakeAt(ZTime iSystemTime)
+void ZWorker::WakeAt(ZTime iSystemTime)
 	{
-	if (ZRef<ZActorRunner> theRunner = fRunner)
-		theRunner->Actor_WakeAt(this, iSystemTime);
+	if (ZRef<ZWorkerRunner> theRunner = fRunner)
+		theRunner->WakeAt(this, iSystemTime);
 	}
 
-void ZActor::pRunnerAttached()
+void ZWorker::pRunnerAttached()
 	{ this->RunnerAttached(); }
 
-void ZActor::pRunnerDetached()
+void ZWorker::pRunnerDetached()
 	{ this->RunnerDetached(); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Utility methods
 
-void sStartActorRunner(ZRef<ZActor> iActor)
+void sStartWorkerRunner(ZRef<ZWorker> iWorker)
 	{
-	ZRef<ZActorRunner_Threaded> theRunner = new ZActorRunner_Threaded(iActor);
+	ZRef<ZWorkerRunner_Threaded> theRunner = new ZWorkerRunner_Threaded(iWorker);
 	theRunner->Start();
 	}
 

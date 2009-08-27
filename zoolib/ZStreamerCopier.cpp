@@ -77,12 +77,12 @@ ZStreamerCopier::~ZStreamerCopier()
 void ZStreamerCopier::RunnerDetached()
 	{
 	ZTask::pFinished();
-	ZActor::RunnerDetached();
+	ZWorker::RunnerDetached();
 	}
 
-bool ZStreamerCopier::Act()
+bool ZStreamerCopier::Work()
 	{
-	ZActor::Wake();//##
+	ZWorker::Wake();//##
 	if (fChunkSize <= sStackBufferSize)
 		{
 		char buffer[sStackBufferSize];

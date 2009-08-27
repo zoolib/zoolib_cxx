@@ -66,7 +66,7 @@ void ZServer::StreamerListener::pStop()
 	{
 	fServer.Clear();
 	fFactory->Cancel();
-	ZActor::Wake();
+	ZWorker::Wake();
 	}
 
 // =================================================================================================
@@ -121,7 +121,7 @@ void ZServer::StartListener(ZRef<ZStreamerRWFactory> iFactory)
 
 	fStreamerListener = new StreamerListener(this, iFactory);
 
-	sStartActorRunner(fStreamerListener);
+	sStartWorkerRunner(fStreamerListener);
 	}
 
 void ZServer::StopListener()

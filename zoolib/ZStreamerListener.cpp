@@ -37,17 +37,17 @@ ZStreamerListener::~ZStreamerListener()
 
 void ZStreamerListener::RunnerAttached()
 	{
-	ZActor::RunnerAttached();
+	ZWorker::RunnerAttached();
 	this->ListenStarted();
 	}
 
 void ZStreamerListener::RunnerDetached()
 	{
 	this->ListenFinished();
-	ZActor::RunnerDetached();
+	ZWorker::RunnerDetached();
 	}
 
-bool ZStreamerListener::Act()
+bool ZStreamerListener::Work()
 	{
 	this->Wake();
 	return this->Connected(fFactory->MakeStreamerRW());

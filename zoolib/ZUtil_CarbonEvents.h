@@ -82,7 +82,7 @@ T sDGetParam_T(const T& iDefault, EventRef iEventRef, EventParamName iName, Even
 
 template <typename T>
 T sGetParam_T(EventRef iEventRef, EventParamName iName, EventParamType iType)
-	{ return sDGetParam_T(iEventRef, iName, iType, T()); }
+	{ return sDGetParam_T(T(), iEventRef, iName, iType); }
 
 void sSetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
 	size_t iBufferSize, const void* iBuffer);
