@@ -30,7 +30,7 @@ NAMESPACE_ZOOLIB_BEGIN
 RateLimiter::RateLimiter(double iRate, size_t iQuantum)
 :	fRate(iRate),
 	fQuantum(iQuantum),
-	fLastTime(ZTime(0))
+	fLastTime(0)
 	{}
 
 size_t RateLimiter::GetCount(size_t iLastCount, size_t iCount)
