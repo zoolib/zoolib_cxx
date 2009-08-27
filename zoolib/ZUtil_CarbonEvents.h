@@ -72,7 +72,7 @@ bool sGetParam_T(EventRef iEventRef, EventParamName iName, EventParamType iType,
 	{ return sQGetParam(iEventRef, iName, iType, sizeof(oT), &oT); }
 
 template <typename T>
-T sDGetParam_T(EventRef iEventRef, EventParamName iName, EventParamType iType, const T& iDefault)
+T sDGetParam_T(const T& iDefault, EventRef iEventRef, EventParamName iName, EventParamType iType)
 	{
 	T theT;
 	if (sQGetParam(iEventRef, iName, iType, sizeof(theT), &theT))
