@@ -270,15 +270,15 @@ void ZBlackBerryServer::Handler_DeviceFinished::TripIt()
 
 namespace ZANONYMOUS {
 
-class StreamerCopier_Chunked : public ZActor
+class StreamerCopier_Chunked : public ZWorker
 	{
 public:
 	StreamerCopier_Chunked(ZRef<ZStreamerRCon> iStreamerRCon, ZRef<ZStreamerWCon> iStreamerWCon);
 
 	~StreamerCopier_Chunked();
 
-// From ZActor
-	virtual bool Act();
+// From ZWorker
+	virtual bool Work();
 
 private:
 	ZRef<ZStreamerRCon> fStreamerRCon;
@@ -294,9 +294,9 @@ StreamerCopier_Chunked::StreamerCopier_Chunked(
 StreamerCopier_Chunked::~StreamerCopier_Chunked()
 	{}
 
-bool StreamerCopier_Chunked::Act()
+bool StreamerCopier_Chunked::Work()
 	{
-	ZActor::Wake();//##
+	ZWorker::Wake();//##
 	const ZStreamRCon& r = fStreamerRCon->GetStreamRCon();
 	const ZStreamWCon& w = fStreamerWCon->GetStreamWCon();
 
@@ -482,14 +482,14 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 				w.WriteUInt32(writeSize);
 				w.Flush();
 				// Use a standard copier for the device-->client direction
-				ZRef<ZActor> deviceToClient
+				ZRef<ZWorker> deviceToClient
 					= new ZStreamerCopier(ZRef<ZTaskOwner>(), deviceCon, iSRWCon, readSize);
-				sStartActorRunner(deviceToClient);
+				sStartWorkerRunner(deviceToClient);
 
 				// And our specialized copier for the client-->device direction.
-				ZRef<ZActor> clientToDevice
+				ZRef<ZWorker> clientToDevice
 					= new StreamerCopier_Chunked(iSRWCon, deviceCon);
-				sStartActorRunner(clientToDevice);
+				sStartWorkerRunner(clientToDevice);
 
 				return;
 				}
