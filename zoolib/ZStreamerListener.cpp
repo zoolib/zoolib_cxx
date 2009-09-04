@@ -73,7 +73,11 @@ ZRef<ZStreamerRWFactory> ZStreamerListener::GetFactory()
 
 void ZStreamerListener::Stop()
 	{
-	fFactory.Clear();
+	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
+		{
+		fFactory.Clear();
+		theFactory->Cancel();
+		}
 	ZWorker::Wake();
 	}
 
