@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/netscape/ZNetscape_Host_Std.h"
 
-#include "zoolib/ZActor.h"
 #include "zoolib/ZCompat_string.h" // For strdup
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZHTTP_Requests.h"
@@ -29,6 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZString.h"
 #include "zoolib/ZUtil_STL.h"
+#include "zoolib/ZWorker.h"
 
 #include <stdlib.h> // For malloc/free
 
@@ -54,7 +54,9 @@ HostMeister_Std::HostMeister_Std()
 	{}
 
 HostMeister_Std::~HostMeister_Std()
-	{}
+	{
+	ZLOGFUNCTION(eDebug);
+	}
 
 Host_Std* HostMeister_Std::sHostFromNPP_Std(NPP npp)
 	{ return static_cast<Host_Std*>(sHostFromNPP(npp)); }
@@ -530,13 +532,13 @@ bool HostMeister_Std::Construct
 #pragma mark * Host_Std::HTTPer
 
 class Host_Std::HTTPFetcher
-:	public ZActor
+:	public ZWorker
 	{
 public:
 	HTTPFetcher(Host_Std* iHost, const string& iURL, ZHTTP::Data* iData, void* iNotifyData);
 
-// From ZActor
-	virtual bool Act();
+// From ZWorker
+	virtual bool Work();
 
 	void Cancel();
 
@@ -565,8 +567,10 @@ Host_Std::HTTPFetcher::HTTPFetcher(
 		}
 	}
 
-bool Host_Std::HTTPFetcher::Act()
+bool Host_Std::HTTPFetcher::Work()
 	{
+	ZLOGFUNCTION(eDebug);
+
 	try
 		{
 		string theURL = fURL;
@@ -610,6 +614,8 @@ bool Host_Std::HTTPFetcher::Act()
 
 void Host_Std::HTTPFetcher::Cancel()
 	{
+	ZLOGFUNCTION(eDebug);
+
 	fHost = nullptr;
 	}
 
@@ -778,6 +784,8 @@ Host_Std::Host_Std(ZRef<GuestFactory> iGuestFactory)
 
 Host_Std::~Host_Std()
 	{
+	ZLOGFUNCTION(eDebug);
+
 	for (ZSafeSetIterConst<ZRef<HTTPFetcher> > i = fHTTPFetchers;;)
 		{
 		if (ZRef<HTTPFetcher> current = i.ReadInc())
@@ -896,7 +904,7 @@ NPError Host_Std::Host_GetURLNotify(NPP npp,
 		{
 		ZRef<HTTPFetcher> theFetcher = new HTTPFetcher(this, theURL, nullptr, notifyData);
 		fHTTPFetchers.Add(theFetcher);
-		sStartActorRunner(theFetcher);
+		sStartWorkerRunner(theFetcher);
 		return NPERR_NO_ERROR;
 		}
 
@@ -919,7 +927,7 @@ NPError Host_Std::Host_PostURLNotify(NPP npp,
 		ZHTTP::Data theData(buf, len);
 		ZRef<HTTPFetcher> theFetcher = new HTTPFetcher(this, theURL, &theData, notifyData);
 		fHTTPFetchers.Add(theFetcher);
-		sStartActorRunner(theFetcher);
+		sStartWorkerRunner(theFetcher);
 		return NPERR_NO_ERROR;
 		}
 

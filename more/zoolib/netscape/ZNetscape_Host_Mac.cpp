@@ -455,8 +455,9 @@ OSStatus Host_WindowRef::EventHandler_Window(EventHandlerCallRef iCallRef, Event
 			#if defined(XP_MACOSX)
 				if (::GetEventKind(iEventRef) == kEventMouseDown)
 					{
-					if (inContent == sDGetParam_T<WindowPartCode>(iEventRef,
-						kEventParamWindowPartCode, typeWindowPartCode, 0))
+					if (inContent == sDGetParam_T<WindowPartCode>(
+						0,
+						iEventRef, kEventParamWindowPartCode, typeWindowPartCode))
 						{
 						this->pDeliverEvent(iEventRef);
 						// Absorb the mousedown, so that the standard handler
@@ -740,8 +741,9 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 				case kEventControlSetFocusPart:
 					{
 					bool isFocused =
-						kControlFocusNoPart != sDGetParam_T<ControlFocusPart>(iEventRef,
-						kEventParamControlPart, typeControlPartCode, kControlFocusNoPart);
+						kControlFocusNoPart != sDGetParam_T<ControlFocusPart>(
+						kControlFocusNoPart,
+						iEventRef, kEventParamControlPart, typeControlPartCode);
 
 					Host_Mac::DoFocus(isFocused);
 
