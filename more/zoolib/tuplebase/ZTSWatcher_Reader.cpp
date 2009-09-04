@@ -382,7 +382,7 @@ ZRef<ZTSWatcher> ZTSWatcherFactory_Reader::MakeTSWatcher()
 		if (ZRef<ZStreamerRW> theSRW = fStreamerRWFactory->MakeStreamerRW())
 			{
 			ZRef<ZTSWatcher_Reader> theTSWR = new ZTSWatcher_Reader(theSRW, theSRW);
-			sStartActorRunner(theTSWR);
+			sStartWorkerRunner(theTSWR);
 			return theTSWR;
 			}
 		}
