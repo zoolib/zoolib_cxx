@@ -49,8 +49,17 @@ void ZStreamerListener::RunnerDetached()
 
 bool ZStreamerListener::Work()
 	{
-	this->Wake();
-	return this->Connected(fFactory->MakeStreamerRW());
+	if (ZRef<ZStreamerRWFactory> theFactory = fFactory)
+		{
+		if (this->Connected(theFactory->MakeStreamerRW()))
+			{
+			// ##
+			// See comment in ZStreamerReader::Work.
+			ZWorker::Wake();
+			return true;
+			}
+		}
+	return false;
 	}
 
 void ZStreamerListener::ListenStarted()
@@ -61,5 +70,11 @@ void ZStreamerListener::ListenFinished()
 
 ZRef<ZStreamerRWFactory> ZStreamerListener::GetFactory()
 	{ return fFactory; }
+
+void ZStreamerListener::Stop()
+	{
+	fFactory.Clear();
+	ZWorker::Wake();
+	}
 
 NAMESPACE_ZOOLIB_END

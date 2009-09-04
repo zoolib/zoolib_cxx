@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZStreamerListener__
 #include "zconfig.h"
 
+#include "zoolib/ZRefSafe.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZWorker.h"
 
@@ -51,8 +52,10 @@ public:
 
 	ZRef<ZStreamerRWFactory> GetFactory();
 
+	void Stop();
+
 protected:
-	ZRef<ZStreamerRWFactory> fFactory;
+	ZRefSafe<ZStreamerRWFactory> fFactory;
 	};
 
 NAMESPACE_ZOOLIB_END

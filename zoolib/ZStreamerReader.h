@@ -35,6 +35,7 @@ class ZStreamerReader : public ZWorker
 	{
 public:
 	ZStreamerReader(ZRef<ZStreamerR> iStreamerR);
+	virtual ~ZStreamerReader();
 
 // From ZWorker
 	virtual void RunnerAttached();
