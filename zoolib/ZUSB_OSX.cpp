@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZString.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZUtil_Strim_Data.h"
-
-#include <CoreFoundation/CoreFoundation.h>
+#include "zoolib/ZVal_CFType.h"
 
 #include <IOKit/IOMessage.h>
 #include <IOKit/IOCFPlugIn.h>
@@ -92,26 +91,18 @@ static IOUSBDeviceInterface182** sCreate_USBDeviceInterface(io_service_t iUSBDev
 #pragma mark -
 #pragma mark * ZUSBWatcher
 
-static void sSetSInt32(CFMutableDictionaryRef iDict, CFStringRef iPropName, SInt32 iValue)
-	{
-	ZRef<CFNumberRef> numberRef
-		= NoRetain(::CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type, &iValue));
-
-	::CFDictionarySetValue(iDict, iPropName, numberRef);
-	}
-
 ZUSBWatcher::ZUSBWatcher(
 	IONotificationPortRef iIONotificationPortRef, SInt32 iUSBVendor, SInt32 iUSBProduct)
 :	fObserver(nullptr),
 	fIONotificationPortRef(iIONotificationPortRef),
 	fNotification(0)
 	{
-	CFMutableDictionaryRef matchingDict = ::IOServiceMatching(kIOUSBDeviceClassName);
-	sSetSInt32(matchingDict, CFSTR(kUSBVendorID), iUSBVendor);
-	sSetSInt32(matchingDict, CFSTR(kUSBProductID), iUSBProduct);
+	ZMap_CF theMap(Adopt(::IOServiceMatching(kIOUSBDeviceClassName)));
+	theMap.Set(kUSBVendorID, int32(iUSBVendor));
+	theMap.Set(kUSBProductID, int32(iUSBProduct));
 
 	sThrowIfErr(::IOServiceAddMatchingNotification(
-		fIONotificationPortRef, kIOFirstMatchNotification, matchingDict,
+		fIONotificationPortRef, kIOFirstMatchNotification, theMap.Orphan(),
 		spDeviceAdded, this, &fNotification));
 	}
 
@@ -191,7 +182,7 @@ ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_
 		if (result)
 			{
 			if (ZLOG(s, eInfo, "ZUSBDevice"))
-				s.Writef("ZUSBDevice, USBDeviceOpen failed");
+				s.Writef("ZUSBDevice, USBDeviceOpen failed: %d", result);
 			throw runtime_error("ZUSBDevice, USBDeviceOpen failed");
 			}
 
