@@ -18,10 +18,48 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZLog.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZWorker.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWorker
+
+ZWorker::ZWorker()
+	{}
+
+void ZWorker::RunnerAttached()
+	{}
+
+void ZWorker::RunnerDetached()
+	{}
+
+void ZWorker::Wake()
+	{
+	if (ZRef<ZWorkerRunner> theRunner = fRunner)
+		theRunner->Wake(this);
+	}
+
+void ZWorker::WakeIn(double iInterval)
+	{
+	if (ZRef<ZWorkerRunner> theRunner = fRunner)
+		theRunner->WakeIn(this, iInterval);
+	}
+
+void ZWorker::WakeAt(ZTime iSystemTime)
+	{
+	if (ZRef<ZWorkerRunner> theRunner = fRunner)
+		theRunner->WakeAt(this, iSystemTime);
+	}
+
+void ZWorker::pRunnerAttached()
+	{ this->RunnerAttached(); }
+
+void ZWorker::pRunnerDetached()
+	{ this->RunnerDetached(); }
 
 // =================================================================================================
 #pragma mark -
@@ -63,12 +101,13 @@ public:
 	ZWorkerRunner_Threaded(ZRef<ZWorker> iWorker);
 	virtual ~ZWorkerRunner_Threaded();
 
-	void Start();
-
 // From ZWorkerRunner
 	virtual void Wake(ZRef<ZWorker> iWorker);
 	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
 	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval);
+
+// Our protocol
+	void Start();
 
 private:
 	void pRun();
@@ -87,12 +126,6 @@ ZWorkerRunner_Threaded::ZWorkerRunner_Threaded(ZRef<ZWorker> iWorker)
 
 ZWorkerRunner_Threaded::~ZWorkerRunner_Threaded()
 	{}
-
-void ZWorkerRunner_Threaded::Start()
-	{
-	this->pAttachWorker(fWorker);
-	ZThread::sCreate_T<ZRef<ZWorkerRunner_Threaded> >(spRun, this);
-	}
 
 void ZWorkerRunner_Threaded::Wake(ZRef<ZWorker> iWorker)
 	{
@@ -124,9 +157,16 @@ void ZWorkerRunner_Threaded::WakeIn(ZRef<ZWorker> iWorker, double iInterval)
 		fCnd.Broadcast();
 		}
 	}
+void ZWorkerRunner_Threaded::Start()
+	{
+	ZWorkerRunner::pAttachWorker(fWorker);
+	ZThread::sCreate_T<ZRef<ZWorkerRunner_Threaded> >(spRun, this);
+	}
 
 void ZWorkerRunner_Threaded::pRun()
 	{
+	ZLOGFUNCTION(eDebug);
+
 	for (;;)
 		{
 		{
@@ -155,49 +195,14 @@ void ZWorkerRunner_Threaded::pRun()
 			}
 		}
 
-	this->pDetachWorker(fWorker);
+	ZGuardMtx locker(fMtx);
+	ZWorkerRunner::pDetachWorker(fWorker);
 	fWorker.Clear();
+	fCnd.Broadcast();
 	}
 
 void ZWorkerRunner_Threaded::spRun(ZRef<ZWorkerRunner_Threaded> iParam)
 	{ iParam->pRun(); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZWorker
-
-ZWorker::ZWorker()
-	{}
-
-void ZWorker::RunnerAttached()
-	{}
-
-void ZWorker::RunnerDetached()
-	{}
-
-void ZWorker::Wake()
-	{
-	if (ZRef<ZWorkerRunner> theRunner = fRunner)
-		theRunner->Wake(this);
-	}
-
-void ZWorker::WakeIn(double iInterval)
-	{
-	if (ZRef<ZWorkerRunner> theRunner = fRunner)
-		theRunner->WakeIn(this, iInterval);
-	}
-
-void ZWorker::WakeAt(ZTime iSystemTime)
-	{
-	if (ZRef<ZWorkerRunner> theRunner = fRunner)
-		theRunner->WakeAt(this, iSystemTime);
-	}
-
-void ZWorker::pRunnerAttached()
-	{ this->RunnerAttached(); }
-
-void ZWorker::pRunnerDetached()
-	{ this->RunnerDetached(); }
 
 // =================================================================================================
 #pragma mark -

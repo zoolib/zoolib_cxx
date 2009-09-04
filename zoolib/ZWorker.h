@@ -28,7 +28,34 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZWorker;
+class ZWorkerRunner;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWorker
+
+class ZWorker
+:	public ZRefCountedWithFinalize
+	{
+public:
+	ZWorker();
+
+	virtual void RunnerAttached();
+	virtual void RunnerDetached();
+
+	virtual bool Work() = 0;
+
+	void Wake();
+	void WakeAt(ZTime iSystemTime);
+	void WakeIn(double iInterval);
+
+private:
+	void pRunnerAttached();
+	void pRunnerDetached();
+
+	ZRefWeak<ZWorkerRunner> fRunner;
+	friend class ZWorkerRunner;
+	};
 
 // =================================================================================================
 #pragma mark -
@@ -53,32 +80,6 @@ protected:
 	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval) = 0;
 
 	friend class ZWorker;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZWorker
-
-class ZWorker : public ZRefCountedWithFinalize
-	{
-public:
-	ZWorker();
-
-	virtual void RunnerAttached();
-	virtual void RunnerDetached();
-
-	virtual bool Work() = 0;
-
-	void Wake();
-	void WakeAt(ZTime iSystemTime);
-	void WakeIn(double iInterval);
-
-private:
-	void pRunnerAttached();
-	void pRunnerDetached();
-
-	ZRefWeak<ZWorkerRunner> fRunner;
-	friend class ZWorkerRunner;
 	};
 
 // =================================================================================================
