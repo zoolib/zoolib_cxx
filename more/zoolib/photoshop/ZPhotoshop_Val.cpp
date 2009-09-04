@@ -21,14 +21,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/photoshop/ZPhotoshop_Val.h"
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZMemory.h"
-#include "zoolib/ZTrail.h"
 #include "zoolib/ZUnicode.h"
-#include "zoolib/ZUtil_CFType.h"
 
 #include "ASZStringSuite.h"
-
-#include "PIHandleSuite.h"
 #include "PITerminology.h"
 #include "PIUSuites.h"
 
@@ -44,141 +39,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Fixup, for building with ancient MW
-
-#ifdef __PIMac__
-
-#include ZMACINCLUDE2(CoreFoundation,CFBundle.h)
-
-#if !defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
-	|| MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_2
-
-typedef UInt32                          FSAliasInfoBitmap;
-enum {
-  kFSAliasInfoNone              = 0x00000000, /* no valid info*/
-  kFSAliasInfoVolumeCreateDate  = 0x00000001, /* volume creation date is valid*/
-  kFSAliasInfoTargetCreateDate  = 0x00000002, /* target creation date is valid*/
-  kFSAliasInfoFinderInfo        = 0x00000004, /* file type and creator are valid*/
-  kFSAliasInfoIsDirectory       = 0x00000008, /* isDirectory boolean is valid*/
-  kFSAliasInfoIDs               = 0x00000010, /* parentDirID and nodeID are valid*/
-  kFSAliasInfoFSInfo            = 0x00000020, /* filesystemID and signature are valid*/
-  kFSAliasInfoVolumeFlags       = 0x00000040 /* volumeIsBootVolume, volumeIsAutomounted,
-	volumeIsEjectable and volumeHasPersistentFileIDs are valid*/
-};
-
-/* info block to pass to FSCopyAliasInfo */
-struct FSAliasInfo {
-  UTCDateTime         volumeCreateDate;
-  UTCDateTime         targetCreateDate;
-  OSType              fileType;
-  OSType              fileCreator;
-  UInt32              parentDirID;
-  UInt32              nodeID;
-  UInt16              filesystemID;
-  UInt16              signature;
-  Boolean             volumeIsBootVolume;
-  Boolean             volumeIsAutomounted;
-  Boolean             volumeIsEjectable;
-  Boolean             volumeHasPersistentFileIDs;
-  Boolean             isDirectory;
-};
-
-extern "C" typedef
-OSStatus (*FSCopyAliasInfo_Ptr)(
-	AliasHandle          inAlias,
-	HFSUniStr255 *       targetName,       /* can be NULL */
-	HFSUniStr255 *       volumeName,       /* can be NULL */
-	CFStringRef *        pathString,       /* can be NULL */
-	FSAliasInfoBitmap *  whichInfo,        /* can be NULL */
-	FSAliasInfo *        info)             /* can be NULL */;
-
-static OSStatus FSCopyAliasInfo(
-	AliasHandle          inAlias,
-	HFSUniStr255 *       targetName,       /* can be NULL */
-	HFSUniStr255 *       volumeName,       /* can be NULL */
-	CFStringRef *        pathString,       /* can be NULL */
-	FSAliasInfoBitmap *  whichInfo,        /* can be NULL */
-	FSAliasInfo *        info)             /* can be NULL */
-	{
-	if (CFBundleRef bundleRef = ::CFBundleGetBundleWithIdentifier(CFSTR("com.apple.Carbon")))
-		{
-		if (FSCopyAliasInfo_Ptr theProc = (FSCopyAliasInfo_Ptr)
-			CFBundleGetFunctionPointerForName(bundleRef, CFSTR("FSCopyAliasInfo")))
-			{
-			return theProc(inAlias, targetName, volumeName, pathString, whichInfo, info);
-			}
-		}
-	return -1;
-	}
-
-#endif !defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
-	|| MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_2
-
-#endif // __PIMac__
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Using statements
-
-NAMESPACE_ZOOLIB_BEGIN
-
-using std::map;
-using std::pair;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZPhotoshop suites, for local use
-
-static AutoSuite<PSActionDescriptorProcs>
-	spPSActionDescriptor(kPSActionDescriptorSuite, kPSActionDescriptorSuiteVersion);
-
-static AutoSuite<PSActionControlProcs>
-	spPSActionControl(kPSActionControlSuite, kPSActionControlSuitePrevVersion);
-
-static AutoSuite<PSActionReferenceProcs>
-	spPSActionReference(kPSActionReferenceSuite, kPSActionReferenceSuiteVersion);
-
-static AutoSuite<PSActionListProcs>
-	spPSActionList(kPSActionListSuite, kPSActionListSuiteVersion);
-
-#ifdef kPSAliasSuite
-	static AutoSuite<PSAliasSuite>
-		spPSAlias(kPSAliasSuite, kPSAliasSuiteVersion1);
-#endif
-
-static AutoSuite<ASZStringSuite>
-	spASZString(kASZStringSuite, kASZStringSuiteVersion1);
-
-static AutoSuite<PSHandleSuite2>
-	spPSHandle(kPSHandleSuite, kPSHandleSuiteVersion2);
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZRef support
-
-template <>
-void sRetain_T(ASZByteRun* iString)
-	{
-	if (iString)
-		spASZString->AddRef(iString);
-	}
-
-template <>
-void sRelease_T(ASZByteRun* iString)
-	{
-	if (iString)
-		spASZString->Release(iString);
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZPhotoshop
-
-namespace ZPhotoshop {
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * List and Map Copy, Getter, Setter stuff
+#pragma mark * List and Map Copy, Getter, Setter macros
 
 #define COPYFROMTO(SUITE, iSource, iKey, iType, DEST) \
 	switch (iType) \
@@ -435,6 +296,58 @@ namespace ZPhotoshop {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZPhotoshop suites, for local use
+
+static AutoSuite<PSActionDescriptorProcs>
+	spPSActionDescriptor(kPSActionDescriptorSuite, kPSActionDescriptorSuiteVersion);
+
+static AutoSuite<PSActionControlProcs>
+	spPSActionControl(kPSActionControlSuite, kPSActionControlSuitePrevVersion);
+
+static AutoSuite<PSActionReferenceProcs>
+	spPSActionReference(kPSActionReferenceSuite, kPSActionReferenceSuiteVersion);
+
+static AutoSuite<PSActionListProcs>
+	spPSActionList(kPSActionListSuite, kPSActionListSuiteVersion);
+
+static AutoSuite<ASZStringSuite>
+	spASZString(kASZStringSuite, kASZStringSuiteVersion1);
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Using statements
+
+NAMESPACE_ZOOLIB_BEGIN
+
+using std::map;
+using std::pair;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Support for ZRef<ASZString>
+
+template <>
+void sRetain_T(struct ASZByteRun* iString)
+	{
+	if (iString)
+		spASZString->AddRef(iString);
+	}
+
+template <>
+void sRelease_T(struct ASZByteRun* iString)
+	{
+	if (iString)
+		spASZString->Release(iString);
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZPhotoshop
+
+namespace ZPhotoshop {
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Helpers
 
 static PIActionDescriptor spDuplicate(PIActionDescriptor iSource);
@@ -532,39 +445,6 @@ static KeyID spAsKeyID(const string8& iName)
 static string8 spAsString(KeyID iKeyID)
 	{ return spFromRuntimeTypeID(iKeyID); }
 
-string8 sWinToPOSIX(const string8& iWin)
-	{
-	ZTrail theTrail("\\", "", "", iWin);
-	string8 result;
-	if (theTrail.Count() > 0)
-		{
-		result += "/" + theTrail.At(0).substr(0, 1) + "/";
-		if (theTrail.Count() > 1)
-			result += theTrail.SubTrail(1).AsString();
-		}
-	return result;
-	}
-
-string8 sPOSIXToWin(const string8& iPOSIX)
-	{
-	ZTrail theTrail = iPOSIX;
-	string8 result;
-	if (theTrail.Count() > 0)
-		{
-		result = theTrail.At(0) + ":\\";
-		if (theTrail.Count() > 1)
-			result += theTrail.SubTrail(1).AsString("\\", "");
-		}
-	return result;
-	}
-
-string8 sHFSToPOSIX(const string8& iHFS)
-	{
-	ZTrail theTrail(":", "", "", iHFS);
-	theTrail = "Volumes" + theTrail;
-	return "/" + theTrail.AsString();
-	}
-
 
 // =================================================================================================
 #pragma mark -
@@ -630,195 +510,27 @@ ClassID::ClassID(const string8& iName)
 #pragma mark * Enumerated
 
 Enumerated::Enumerated(EnumTypeID iEnumType, const string8& iValue)
-:	fEnumType(iEnumType),
-	fValue(spAsRuntimeTypeID(iValue))
+:	fEnumType(iEnumType)
+,	fValue(spAsRuntimeTypeID(iValue))
 	{}
 
 Enumerated::Enumerated(const string8& iEnumType, EnumID iValue)
-:	fEnumType(spAsRuntimeTypeID(iEnumType)),
-	fValue(iValue)
+:	fEnumType(spAsRuntimeTypeID(iEnumType))
+,	fValue(iValue)
 	{}
 
 Enumerated::Enumerated(const string8& iEnumType, const string8& iValue)
-:	fEnumType(spAsRuntimeTypeID(iEnumType)),
-	fValue(spAsRuntimeTypeID(iValue))
+:	fEnumType(spAsRuntimeTypeID(iEnumType))
+,	fValue(spAsRuntimeTypeID(iValue))
 	{}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * FileRef
-
-static Handle sHandleDuplicate(Handle iHandle)
-	{
-	if (!iHandle)
-		return nullptr;
-
-	size_t theSize = spPSHandle->GetSize(iHandle);
-	Handle result = spPSHandle->New(theSize);
-	ZBlockCopy(iHandle[0], result[0], theSize);
-	return result;
-	}
-
-static void sHandleDispose(Handle iHandle)
-	{
-	if (iHandle)
-		spPSHandle->Dispose(iHandle);
-	}
-
-FileRef::FileRef()
-:	fHandle(nullptr)
-	{}
-
-FileRef::FileRef(const FileRef& iOther)
-:	fHandle(sHandleDuplicate(iOther.fHandle))
-	{}
-
-FileRef::~FileRef()
-	{ sHandleDispose(fHandle); }
-
-FileRef& FileRef::operator=(const FileRef& iOther)
-	{
-	if (this != &iOther)
-		{
-		sHandleDispose(fHandle);
-		fHandle = sHandleDuplicate(iOther.fHandle);
-		}
-	return *this;
-	}
-
-FileRef::FileRef(Handle iHandle)
-:	fHandle(sHandleDuplicate(iHandle))
-	{}
-
-FileRef::FileRef(Adopt_T<Handle> iOther)
-:	fHandle(iOther.Get())
-	{}
-
-FileRef& FileRef::operator=(Handle iHandle)
-	{
-	sHandleDispose(fHandle);
-	fHandle = sHandleDuplicate(iHandle);
-	return *this;
-	}
-
-FileRef& FileRef::operator=(Adopt_T<Handle> iOther)
-	{
-	sHandleDispose(fHandle);
-	fHandle = iOther.Get();
-	return *this;
-	}
-
-FileRef::FileRef(const string8& iPathPOSIX)
-:	fHandle(nullptr)
-	{
-	#ifndef kPSAliasSuite
-		// We didn't pick up kPSAliasSuite from the include of PIUSuites.h,
-		// so we must be on the old SDK.		
-	#else
-		#ifdef __PIMac__
-
-			spPSAlias->MacNewAliasFromCString(iPathPOSIX.c_str(), (AliasHandle*)&fHandle);
-
-		#elif defined(__PIWin__)
-
-			string16 asWin = ZUnicode::sAsUTF16(sPOSIXToWin(iPathPOSIX));
-			
-			spPSAlias->WinNewAliasFromWidePath((uint16*)asWin.c_str(), &fHandle);		
-
-		#else
-
-			#error Unsupported platform
-
-		#endif
-	#endif
-	}
-
-Handle FileRef::Get() const
-	{ return fHandle; }
-
-Handle FileRef::Orphan()
-	{
-	Handle result = fHandle;
-	fHandle = 0;
-	return result;
-	}
-
-Handle& FileRef::OParam()
-	{
-	sHandleDispose(fHandle);
-	fHandle = nullptr;
-	return fHandle;
-	}
-
-string8 FileRef::AsPathPOSIX() const
-	{
-	string8 thePath = this->pAsString();
-
-	#if defined(__PIWin__)
-		thePath = sWinToPOSIX(thePath);
-	#endif
-
-	return thePath;
-	}
-
-string8 FileRef::AsPathNative() const
-	{
-	return this->pAsString();
-	}
-
-string8 FileRef::pAsString()  const
-	{
-	#ifdef __PIMac__
-
-		HFSUniStr255 targetName;
-		HFSUniStr255 volumeName;
-		ZRef<CFStringRef> thePath;
-		FSAliasInfoBitmap theFSAIB = 0;
-		FSAliasInfo theFSAI;
-
-		OSErr theErr = ::FSCopyAliasInfo(
-			(AliasHandle)fHandle,
-			&targetName, &volumeName,
-			&thePath.GetPtrRef(),
-			&theFSAIB, &theFSAI);
-
-		if (theErr == noErr || theErr == fnfErr)
-			{
-			return ZUtil_CFType::sAsUTF8(thePath);
-			}
-
-	#elif defined(__PIWin__)
-
-		if (size_t theSize = spPSHandle->GetSize(fHandle))
-			{
-			Ptr pointer;
-			Boolean oldLock;
-			spPSHandle->SetLock(fHandle, true, &pointer, &oldLock);
-
-			string8 result;
-			if (pointer)
-				result = (char*)pointer;
-
-			spPSHandle->SetLock(fHandle, oldLock, &pointer, &oldLock);
-			return result;
-			}
-	
-	#else
-
-		#error Unsupported platform
-
-	#endif
-
-	return string8();
-	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Spec::Entry
 
 Spec::Entry::Entry()
-:	fDCI(0),
-	fFormID(0)
+:	fDCI(0)
+,	fFormID(0)
 	{}
 
 Spec::Entry::Entry(const Entry& iOther)
@@ -1304,27 +1016,49 @@ Val& Val::operator=(const Val& iOther)
 	return *this;
 	}
 
-Val::Val(int32 iVal) : fAny(iVal) {}
+Val::Val(int32 iVal)
+:	fAny(iVal)
+	{}
 
-Val::Val(double iVal) : fAny(iVal) {}
+Val::Val(double iVal)
+:	fAny(iVal)
+	{}
 
-Val::Val(bool iVal) : fAny(iVal) {}
+Val::Val(bool iVal)
+:	fAny(iVal)
+	{}
 
-Val::Val(const string8& iVal) : fAny(iVal) {}
+Val::Val(const string8& iVal)
+:	fAny(iVal)
+	{}
 
-Val::Val(const Data& iVal) : fAny(iVal) {}
+Val::Val(const Data& iVal)
+:	fAny(iVal)
+	{}
 
-Val::Val(const UnitFloat& iVal) : fAny(iVal) {}
+Val::Val(const UnitFloat& iVal)
+:	fAny(iVal)
+	{}
 
-Val::Val(const Enumerated& iVal) : fAny(iVal) {}
+Val::Val(const Enumerated& iVal)
+:	fAny(iVal)
+	{}
 
-Val::Val(const FileRef& iVal) : fAny(iVal) {}
+Val::Val(const FileRef& iVal)
+:	fAny(iVal)
+	{}
 
-Val::Val(const List& iVal) : fAny(iVal) {}
+Val::Val(const List& iVal)
+:	fAny(iVal)
+	{}
 
-Val::Val(const Map& iVal) : fAny(iVal) {}
+Val::Val(const Map& iVal)
+:	fAny(iVal)
+	{}
 
-Val::Val(const Spec& iVal) : fAny(iVal) {}
+Val::Val(const Spec& iVal)
+:	fAny(iVal)
+	{}
 
 void Val::Clear()
 	{ fAny = ZAny(); }
@@ -1579,8 +1313,8 @@ Map::Map(const string8& iType, PIActionDescriptor iOther)
 	{}
 
 Map::Map(KeyID iType, Adopt_T<PIActionDescriptor> iOther)
-:	fType(iType),
-	fAD(iOther.Get())
+:	fType(iType)
+,	fAD(iOther.Get())
 	{}
 
 Map::Map(const string8& iType, Adopt_T<PIActionDescriptor> iOther)

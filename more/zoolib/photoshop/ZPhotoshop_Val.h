@@ -32,6 +32,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZValAccessors_Std.h"
 #include "zoolib/ZVal_Any.h"
 
+#include "zoolib/photoshop/ZPhotoshop_FileRef.h"
+
 #include <vector>
 
 #include "PIActions.h"
@@ -68,11 +70,6 @@ typedef DescriptorUnitID UnitID;
 bool sAsRuntimeTypeID(const string8& iString, TypeID& oTypeID);
 
 bool sFromRuntimeTypeID(TypeID iTypeID, string8& oString);
-
-string8 sWinToPOSIX(const string8& iWin);
-string8 sPOSIXToWin(const string8& iPOSIX);
-
-string8 sHFSToPOSIX(const string8& iHFS);
 
 // =================================================================================================
 #pragma mark -
@@ -132,38 +129,6 @@ struct Enumerated
 
 	EnumTypeID fEnumType;
 	EnumID fValue;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * FileRef
-
-class FileRef
-	{
-public:
-	FileRef();
-	FileRef(const FileRef& iOther);
-	~FileRef();
-	FileRef& operator=(const FileRef& iOther);
-
-	FileRef(Handle iHandle);
-	FileRef(Adopt_T<Handle> iHandle);
-
-	FileRef& operator=(Handle iHandle);
-	FileRef& operator=(Adopt_T<Handle> iHandle);
-
-	FileRef(const string8& iPathPOSIX);
-
-	Handle Get() const;
-	Handle Orphan();
-	Handle& OParam();
-
-	string8 AsPathPOSIX() const;
-	string8 AsPathNative() const;
-
-private:
-	string8 pAsString() const;
-	Handle fHandle;
 	};
 
 // =================================================================================================

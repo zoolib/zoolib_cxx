@@ -117,8 +117,9 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 		{
 		ZMap_Any theMap;
 		theMap.Set("!Type", string("FileRef"));
-		theMap.Set("PathPOSIX", asFileRef.AsPathPOSIX());
-		theMap.Set("PathNative", asFileRef.AsPathNative());
+		theMap.Set("PathTrail", asFileRef.AsTrail());
+//		theMap.Set("PathPOSIX", asFileRef.AsPathPOSIX());
+//		theMap.Set("PathNative", asFileRef.AsPathNative());
 		return sMakeYadR(theMap);
 		}
 
