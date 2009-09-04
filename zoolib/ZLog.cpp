@@ -26,8 +26,10 @@ using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZLog {
+
 static ZMtx sMutex;
-static ZLog::LogMeister* sLogMeister;
+static LogMeister* sLogMeister;
 
 // =================================================================================================
 #pragma mark -
@@ -45,7 +47,7 @@ static const char* const sNames[] =
 	"Debug"
 	};
 
-ZLog::EPriority ZLog::sPriorityFromName(const string& iString)
+EPriority sPriorityFromName(const string& iString)
 	{
 	for (int priority = 0; priority <= eDebug; ++priority)
 		{
@@ -55,7 +57,7 @@ ZLog::EPriority ZLog::sPriorityFromName(const string& iString)
 	return -1;
 	}
 
-string ZLog::sNameFromPriority(EPriority iPriority)
+string sNameFromPriority(EPriority iPriority)
 	{
 	if (iPriority < 0)
 		return ZString::sFormat("%d", iPriority);
@@ -70,23 +72,23 @@ string ZLog::sNameFromPriority(EPriority iPriority)
 #pragma mark -
 #pragma mark * ZLog::StrimW
 
-ZLog::StrimW::StrimW(EPriority iPriority, const string& iName)
+StrimW::StrimW(EPriority iPriority, const string& iName)
 :	fPriority(iPriority),
 	fName(iName)
 	{}
 
-ZLog::StrimW::StrimW(EPriority iPriority, const char* iName)
+StrimW::StrimW(EPriority iPriority, const char* iName)
 :	fPriority(iPriority),
 	fName(iName)
 	{}
 
-ZLog::StrimW::~StrimW()
+StrimW::~StrimW()
 	{
 	if (!fMessage.empty())
 		this->pEmit();
 	}
 
-void ZLog::StrimW::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
+void StrimW::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t* oCountCU)
 	{
 	try
 		{
@@ -99,7 +101,7 @@ void ZLog::StrimW::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size_t*
 		}
 	}
 
-void ZLog::StrimW::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, size_t* oCountCU)
+void StrimW::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, size_t* oCountCU)
 	{
 	try
 		{
@@ -112,7 +114,7 @@ void ZLog::StrimW::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, size_t*
 		}
 	}
 
-void ZLog::StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU)
+void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU)
 	{
 	try
 		{
@@ -125,13 +127,13 @@ void ZLog::StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* o
 		}
 	}
 
-ZLog::StrimW::operator operator_bool_type() const
+StrimW::operator operator_bool_type() const
 	{
 	return operator_bool_generator_type::translate(sLogMeister
 		&& sLogMeister->Enabled(fPriority, fName));
 	}
 
-void ZLog::StrimW::Emit() const
+void StrimW::Emit() const
 	{
 	if (!fMessage.empty())
 		{
@@ -140,7 +142,7 @@ void ZLog::StrimW::Emit() const
 		}
 	}
 
-void ZLog::StrimW::pEmit()
+void StrimW::pEmit()
 	{
 	sMutex.Acquire();
 	if (sLogMeister)
@@ -159,27 +161,47 @@ void ZLog::StrimW::pEmit()
 #pragma mark -
 #pragma mark * ZLog::LogMeister
 
-ZLog::LogMeister::LogMeister()
+LogMeister::LogMeister()
 	{}
 
-ZLog::LogMeister::LogMeister(const LogMeister&)
+LogMeister::LogMeister(const LogMeister&)
 	{}
 
-ZLog::LogMeister& ZLog::LogMeister::operator=(const LogMeister&)
+LogMeister& LogMeister::operator=(const LogMeister&)
 	{ return *this; }
 	
-ZLog::LogMeister::~LogMeister()
+LogMeister::~LogMeister()
 	{}
 
-bool ZLog::LogMeister::Enabled(EPriority iPriority, const string& iName)
+bool LogMeister::Enabled(EPriority iPriority, const string& iName)
 	{ return true; }
 
-void ZLog::sSetLogMeister(LogMeister* iLogMeister)
+void sSetLogMeister(LogMeister* iLogMeister)
 	{
 	sMutex.Acquire();
 	delete sLogMeister;
 	sLogMeister = iLogMeister;
 	sMutex.Release();
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZLog::FunctionEntryExit
+
+FunctionEntryExit::FunctionEntryExit(EPriority iPriority, const char* iFunctionName)
+:	fPriority(iPriority)
+,	fFunctionName(iFunctionName)
+	{
+	if (const S& s = S(fPriority, "ZooLib"))
+		s << "+" << fFunctionName;
+	}
+
+FunctionEntryExit::~FunctionEntryExit()
+	{
+	if (const S& s = S(fPriority, "ZooLib"))
+		s << "-" << fFunctionName;
+	}
+
+} // namespace ZLog
 
 NAMESPACE_ZOOLIB_END

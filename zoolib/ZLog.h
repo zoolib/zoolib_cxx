@@ -30,16 +30,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // p == priority
 // f == facility
 
+
 #if ZCONFIG(Compiler, GCC)
-#	define ZLOGPF(s, p) const ZLog::S& s = ZLog::S(ZLog::p, __PRETTY_FUNCTION__)
+#	define ZMACRO_PRETTY_FUNCTION __PRETTY_FUNCTION__
 #elif ZCONFIG(Compiler, MSVC)
-#	define ZLOGPF(s, p) const ZLog::S& s = ZLog::S(ZLog::p, __FUNCDNAME__)
+#	define ZMACRO_PRETTY_FUNCTION __FUNCDNAME__
 #else
-#	define ZLOGPF(s, p) const ZLog::S& s = ZLog::S(ZLog::p, __FUNCTION__)
+#	define ZMACRO_PRETTY_FUNCTION __FUNCTION__
 #endif
 
-#define ZLOGF(s, p) const ZLog::S& s = ZLog::S(ZLog::p, __FUNCTION__)
-#define ZLOG(s, p, f) const ZLog::S& s = ZLog::S(ZLog::p, f)
+#define ZLOGPF(s, p) const ZooLib::ZLog::S& s = ZLog::S(ZLog::p, ZMACRO_PRETTY_FUNCTION)
+#define ZLOGF(s, p) const ZooLib::ZLog::S& s = ZLog::S(ZLog::p, __FUNCTION__)
+#define ZLOG(s, p, f) const ZooLib::ZLog::S& s = ZLog::S(ZLog::p, f)
+
+#define ZLOGFUNCTION(p) ZooLib::ZLog::FunctionEntryExit \
+	theLogFEE##__LINE__(ZLog::p, ZMACRO_PRETTY_FUNCTION)
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -127,6 +132,21 @@ public:
 	};
 
 void sSetLogMeister(LogMeister* iLogMeister);
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZLog::FunctionEntryExit
+
+class FunctionEntryExit
+	{
+public:
+	FunctionEntryExit(EPriority iPriority, const char* iFunctionName);
+	~FunctionEntryExit();
+
+private:
+	EPriority fPriority;
+	const char* fFunctionName;
+	};
 
 } // namespace ZLog
 
