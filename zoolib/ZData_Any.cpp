@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZUtil_STL.h"
 
 #include <vector>
 
@@ -126,12 +127,12 @@ void ZData_Any::SetSize(size_t iSize)
 	}
 
 const void* ZData_Any::GetData() const
-	{ return &*fRep->fVector.begin(); }
+	{ return ZUtil_STL::sFirstOrNil(fRep->fVector); }
 
 void* ZData_Any::GetData()
 	{
 	this->pTouch();
-	return &*fRep->fVector.begin();
+	return ZUtil_STL::sFirstOrNil(fRep->fVector);
 	}
 
 void ZData_Any::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
