@@ -27,45 +27,51 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZServer::StreamerListener
 
-class ZServer::StreamerListener : public ZStreamerListener
+class ZServer::StreamerListener
+:	public ZStreamerListener
+,	public ZTask
 	{
 public:
 	StreamerListener(ZRef<ZServer> iServer, ZRef<ZStreamerRWFactory> iFactory);
 	virtual ~StreamerListener();
 
 // From StreamerListener
+	virtual void ListenFinished();
+
 	virtual bool Connected(ZRef<ZStreamerRW> iStreamer);
 
-private:
-	void pStop();
-
-	ZRefWeak<ZServer> fServer;
-	friend class ZServer;
+// From ZTask
+	virtual void Kill();
 	};
 
 ZServer::StreamerListener::StreamerListener(
 	ZRef<ZServer> iServer, ZRef<ZStreamerRWFactory> iFactory)
-:	ZStreamerListener(iFactory),
-	fServer(iServer)
+:	ZStreamerListener(iFactory)
+,	ZTask(iServer)
 	{}
 
 ZServer::StreamerListener::~StreamerListener()
 	{}
 
+void ZServer::StreamerListener::ListenFinished()
+	{
+	ZTask::pFinished();
+	ZStreamerListener::ListenFinished();
+	}
+
 bool ZServer::StreamerListener::Connected(ZRef<ZStreamerRW> iStreamerRW)
 	{
-	if (ZRef<ZServer> theServer = fServer)
+	if (ZRef<ZTaskOwner> theOwner = this->GetOwner())
 		{
-		theServer->pConnected(iStreamerRW);
+		ZRefStaticCast<ZServer>(theOwner)->pConnected(iStreamerRW);
 		return true;
 		}
 	return false;
 	}
 
-void ZServer::StreamerListener::pStop()
+void ZServer::StreamerListener::Kill()
 	{
-	fServer.Clear();
-	fFactory->Cancel();
+	ZStreamerListener::Stop();
 	ZWorker::Wake();
 	}
 
@@ -84,10 +90,13 @@ ZServer::~ZServer()
 
 void ZServer::Finalize()
 	{
-	if (ZRef<StreamerListener> theStreamerListener = fStreamerListener)
+	{
+	ZGuardMtx locker(fMtx);
+	if (fStreamerListener)
 		{
-		fStreamerListener.Clear();
-		theStreamerListener->pStop();
+		fStreamerListener->Kill();
+		while (fStreamerListener)
+			fCnd.Wait(fMtx);
 		}
 
 	for (ZSafeSetIter<ZRef<Responder> > i = fResponders; /*no test*/; /*no inc*/)
@@ -103,19 +112,32 @@ void ZServer::Finalize()
 		this->FinalizationComplete();
 		return;
 		}
-
 	this->FinalizationComplete();
+	}
+
 	delete this;
 	}
 
 void ZServer::Task_Finished(ZRef<ZTask> iTask)
 	{
-	ZRef<Responder> theResponder = ZRefStaticCast<Responder>(iTask);
-	fResponders.Erase(theResponder);
+	ZGuardMtx locker(fMtx);
+
+	if (fStreamerListener == iTask)
+		{
+		fStreamerListener.Clear();
+		}
+	else if (ZRef<Responder> theResponder = ZRefDynamicCast<Responder>(iTask))
+		{
+		fResponders.Erase(theResponder);
+		}
+
+	fCnd.Broadcast();
 	}
 
 void ZServer::StartListener(ZRef<ZStreamerRWFactory> iFactory)
 	{
+	ZGuardMtx locker(fMtx);
+
 	ZAssert(!fStreamerListener);
 	ZAssert(iFactory);
 
@@ -126,11 +148,31 @@ void ZServer::StartListener(ZRef<ZStreamerRWFactory> iFactory)
 
 void ZServer::StopListener()
 	{
-	if (ZRef<StreamerListener> theStreamerListener = fStreamerListener)
+	fMtx.Acquire();
+	if (ZRef<StreamerListener> theSL = fStreamerListener)
 		{
-		fStreamerListener.Clear();
-		theStreamerListener->pStop();
+		fMtx.Release();
+		theSL->Kill();
 		}
+	else
+		{
+		fMtx.Release();
+		}
+	}
+
+void ZServer::StopListenerWait()
+	{
+	fMtx.Acquire();
+
+	if (ZRef<StreamerListener> theSL = fStreamerListener)
+		{
+		fMtx.Release();
+		theSL->Kill();
+		fMtx.Acquire();
+		while (fStreamerListener)
+			fCnd.Wait(fMtx);
+		}
+	fMtx.Release();
 	}
 
 void ZServer::KillResponders()
@@ -142,6 +184,15 @@ void ZServer::KillResponders()
 		else
 			break;
 		}
+	}
+
+void ZServer::KillRespondersWait()
+	{
+	this->KillResponders();
+
+	ZGuardMtx locker(fMtx);
+	while (!fResponders.Empty())
+		fCnd.Wait(fMtx);
 	}
 
 ZRef<ZStreamerRWFactory> ZServer::GetFactory()

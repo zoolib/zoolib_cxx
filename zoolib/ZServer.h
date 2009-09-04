@@ -53,9 +53,12 @@ public:
 	virtual ZRef<Responder> MakeResponder() = 0;
 
 	void StartListener(ZRef<ZStreamerRWFactory> iFactory);
+
 	void StopListener();
+	void StopListenerWait();
 
 	void KillResponders();
+	void KillRespondersWait();
 	
 	ZRef<ZStreamerRWFactory> GetFactory();
 
@@ -68,7 +71,10 @@ private:
 // Called by StreamerListener
 	void pConnected(ZRef<ZStreamerRW> iStreamer);
 
-	ZRefSafe<StreamerListener> fStreamerListener;
+	ZMtx fMtx;
+	ZCnd fCnd;
+
+	ZRef<StreamerListener> fStreamerListener;
 	ZSafeSet<ZRef<Responder> > fResponders;
 	};
 
