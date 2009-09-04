@@ -92,9 +92,9 @@ ZFileSpec::ZFileSpec(const string& iPath)
 		*this = sCWD();
 
 	if (iPath[0] == '/')
-		*this = sRoot().Trail(iPath.substr(1));
+		*this = sRoot().Trail(ZTrail(iPath.substr(1)));
 	else
-		*this = sCWD().Trail(iPath);
+		*this = sCWD().Trail(ZTrail(iPath));
 	}
 
 /** \brief Returns true if the file spec is valid, that is if it represents
