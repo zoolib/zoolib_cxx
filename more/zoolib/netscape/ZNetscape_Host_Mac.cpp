@@ -40,13 +40,13 @@ enum
 	};
 #endif
 
+NAMESPACE_ZOOLIB_BEGIN
+
 using std::string;
 
-using ZooLib::ZUtil_CarbonEvents::sGetParam_T;
-using ZooLib::ZUtil_CarbonEvents::sDGetParam_T;
-using ZooLib::ZUtil_CarbonEvents::sSetParam_T;
-
-NAMESPACE_ZOOLIB_BEGIN
+using ZUtil_CarbonEvents::sGetParam_T;
+using ZUtil_CarbonEvents::sDGetParam_T;
+using ZUtil_CarbonEvents::sSetParam_T;
 
 namespace ZNetscape {
 

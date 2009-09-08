@@ -113,10 +113,6 @@ void NPVariant_T<T>::pRelease()
 	{ sRelease_T(*this); }
 
 template <class T>
-NPVariant_T<T>::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(type != NPVariantType_Void); }
-
-template <class T>
 NPVariant_T<T>::NPVariant_T()
 	{ type = NPVariantType_Void; }
 

@@ -96,7 +96,7 @@ class Host_WindowRef : public Host_Mac
 	{
 public:
 	Host_WindowRef(
-		ZooLib::ZRef<ZooLib::ZNetscape::GuestFactory> iGF, bool iAllowCG, WindowRef iWindowRef);
+		ZRef<GuestFactory> iGF, bool iAllowCG, WindowRef iWindowRef);
 	virtual ~Host_WindowRef();
 
 // From Host_Std
@@ -132,7 +132,7 @@ class Host_HIViewRef : public Host_Mac
 	{
 public:
 	Host_HIViewRef(
-		ZooLib::ZRef<ZooLib::ZNetscape::GuestFactory> iGF, bool iAllowCG, HIViewRef iHIViewRef);
+		ZRef<GuestFactory> iGF, bool iAllowCG, HIViewRef iHIViewRef);
 	virtual ~Host_HIViewRef();
 
 // From Host_Std

@@ -38,7 +38,7 @@ namespace ZNetscape {
 
 class Host_Win
 :	public Host_Std,
-	public ZooLib::ZWNDSubClassW
+	public ZWNDSubClassW
 	{
 public:
 	Host_Win(ZRef<GuestFactory> iGuestFactory, HWND iHWND);
