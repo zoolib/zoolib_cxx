@@ -20,8 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZRef_CFType.h"
 
-#include "zoolib/ZCONFIG_SPI.h"
-
 #if ZCONFIG_SPI_Enabled(CFType)
 
 #include ZMACINCLUDE2(CoreFoundation,CFBase.h) // For CFRetain and CFRelease
