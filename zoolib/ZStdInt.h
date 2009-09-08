@@ -138,7 +138,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-template <int size> class ZIntTrait_T;
+template <int size> struct ZIntTrait_T;
 
 template <> struct ZIntTrait_T<4> { enum { eIs32Bit = 1 }; };
 template <> struct ZIntTrait_T<8> { enum { eIs32Bit = 0 }; };
