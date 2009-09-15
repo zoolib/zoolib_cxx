@@ -126,7 +126,7 @@ void Host_Win::PostCreateAndLoad()
 	else
 		{
 		fNPWindow.type = NPWindowTypeDrawable;
-		fNPWindow.window = fInnerWND;
+		fNPWindow.window = nullptr;
 		}
 
 	this->pStuffNPWindow(theWidth, theHeight);
@@ -137,6 +137,7 @@ void Host_Win::PaintBackground(HDC iHDC, const PAINTSTRUCT& iPS)
 
 LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
+#if 0
 	// From WebCore's PluginViewWin.cpp
 	switch (iMessage)
 		{
@@ -155,6 +156,7 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 			break;
 			}
 		}
+#endif
 
 //--
 
@@ -181,27 +183,30 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 		case WM_WINDOWPOSCHANGED:
 			{
 			WINDOWPOS* theWPOS = reinterpret_cast<WINDOWPOS*>(iLPARAM);
+
 			if (!(theWPOS->flags & SWP_NOSIZE))
 				{
-				this->pStuffNPWindow(
-					theWPOS->cx,
-					theWPOS->cy);
+				RECT theCR;
+				::GetClientRect(iHWND, &theCR);
+				const int theWidth = theCR.right - theCR.left;
+				const int theHeight = theCR.bottom - theCR.top;
 
 				if (fInnerWND)
 					{
 					::SetWindowPos(fInnerWND, nullptr,
-						0, 0, theWPOS->cx, theWPOS->cy,
+						0, 0, theWidth, theHeight,
 						SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE);
 					}
 				else
 					{
-					RECT theCR;
-					::GetClientRect(iHWND, &theCR);
 					::InvalidateRect(fHWND, &theCR, false);
 					}
-				}			
+
+				this->pStuffNPWindow(theWidth, theHeight);
+				}
 			break;
 			}
+		case WM_ACTIVATE:
 		case WM_LBUTTONDOWN:
 		case WM_LBUTTONDBLCLK:
 		case WM_RBUTTONDBLCLK:
@@ -239,8 +244,7 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 
 void Host_Win::pPaint(HWND iHWND, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
-	if (ZLOG(s, eDebug, "Host_Win"))
-		s << "+pPaint";
+	ZLOGFUNCTION(eDebug + 3);
 
 	PAINTSTRUCT thePS;
 	HDC theHDC = ::BeginPaint(iHWND, &thePS);
@@ -263,9 +267,6 @@ void Host_Win::pPaint(HWND iHWND, WPARAM iWPARAM, LPARAM iLPARAM)
 		}
 
 	::EndPaint(iHWND, &thePS);
-
-	if (ZLOG(s, eDebug, "Host_Win"))
-		s << "-pPaint";
 	}
 
 void Host_Win::pStuffNPWindow(int iWidth, int iHeight)
