@@ -137,29 +137,6 @@ void Host_Win::PaintBackground(HDC iHDC, const PAINTSTRUCT& iPS)
 
 LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{
-#if 0
-	// From WebCore's PluginViewWin.cpp
-	switch (iMessage)
-		{
-		case WM_LBUTTONDOWN:
-		case WM_MBUTTONDOWN:
-		case WM_RBUTTONDOWN:
-			{
-			::SetCapture(iHWND);
-			break;
-			}
-		case WM_LBUTTONUP:
-		case WM_MBUTTONUP:
-		case WM_RBUTTONUP:
-			{
-			::ReleaseCapture();
-			break;
-			}
-		}
-#endif
-
-//--
-
 	switch (iMessage)
 		{
 		case WM_TIMER:
@@ -206,6 +183,15 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 				}
 			break;
 			}
+		case WM_SETFOCUS:
+			{
+			if (fInnerWND)
+				{
+				::SetFocus(fInnerWND);
+				return 0;
+				}
+			// fall through
+			}
 		case WM_ACTIVATE:
 		case WM_LBUTTONDOWN:
 		case WM_LBUTTONDBLCLK:
@@ -223,7 +209,6 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 		case WM_CHAR:
 		case WM_DEADCHAR:
 		case WM_SETCURSOR:
-		case WM_SETFOCUS:
 		case WM_KILLFOCUS:
 			{
 			if (!fIsWindowed)
