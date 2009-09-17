@@ -32,42 +32,6 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWNDA
-
-class ZWNDA
-	{
-public:
-	static HWND sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam);
-
-	ZWNDA(WNDPROC iWNDPROC);
-	virtual ~ZWNDA();
-
-	void Create(HWND iParent, DWORD iStyle);
-
-	HWND GetHWND();
-
-	virtual void HWNDDestroyed();
-
-	virtual LRESULT WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
-
-	LRESULT CallBase(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
-
-	static LRESULT CALLBACK sWindowProcA(
-		HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
-
-	static int sInit();
-
-	static void sRegisterWindowClassA(const CHAR* iWNDCLASSName, WNDPROC iWNDPROC);
-
-protected:
-	static ZWNDA* sFromHWNDNilOkayA(HWND iHWND);
-
-	HWND fHWND;
-	WNDPROC fWNDPROC;	
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZWNDW
 
 class ZWNDW
@@ -97,37 +61,6 @@ public:
 
 protected:
 	static ZWNDW* sFromHWNDNilOkayW(HWND iHWND);
-
-	HWND fHWND;
-	WNDPROC fWNDPROC;	
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZWNDSubClassA
-
-class ZWNDSubClassA
-	{
-public:
-	ZWNDSubClassA();
-	virtual ~ZWNDSubClassA();
-
-	void Attach(HWND iHWND);
-	void Detach();
-
-	HWND GetHWND();
-
-	virtual void HWNDDestroyed();
-
-	virtual LRESULT WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
-
-	LRESULT CallBase(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
-
-	static LRESULT CALLBACK sWindowProcA(
-		HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
-
-protected:
-	static ZWNDSubClassA* sFromHWNDNilOkayA(HWND iHWND);
 
 	HWND fHWND;
 	WNDPROC fWNDPROC;	
