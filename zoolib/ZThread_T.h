@@ -31,6 +31,52 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZAcquirer_T
+
+template <class Mtx>
+class ZAcquirer_T : NonCopyable
+	{
+private:
+	Mtx& fMtx;
+
+public:
+	ZAcquirer_T(Mtx& iMtx)
+	:	fMtx(iMtx)
+		{ fMtx.Acquire(); }
+
+	ZAcquirer_T(const Mtx& iMtx)
+	:	fMtx(const_cast<Mtx&>(iMtx))
+		{ fMtx.Acquire(); }
+
+	~ZAcquirer_T()
+		{ fMtx.Release(); }
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZReleaser_T
+
+template <class Mtx>
+class ZReleaser_T : NonCopyable
+	{
+private:
+	Mtx& fMtx;
+
+public:
+	ZReleaser_T(Mtx& iMtx)
+	:	fMtx(iMtx)
+		{ fMtx.Release(); }
+
+	ZReleaser_T(const Mtx& iMtx)
+	:	fMtx(const_cast<Mtx&>(iMtx))
+		{ fMtx.Release(); }
+
+	~ZReleaser_T()
+		{ fMtx.Acquire(); }
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZGuard_T
 
 template <class Mtx>
@@ -130,23 +176,19 @@ public:
 		{
 		ZAtomic_Inc(&fWaitingThreads);
 
-		iMtx.Release();
+		ZReleaser_T<Mtx> rel(iMtx);
 
 		fSem.Wait();
-		
-		iMtx.Acquire();
 		}
 
 	void Imp_Wait(Mtx& iMtx, double iTimeout)
 		{
 		ZAtomic_Inc(&fWaitingThreads);
 
-		iMtx.Release();
+		ZReleaser_T<Mtx> rel(iMtx);
 
 		if (!fSem.Wait(iTimeout))
 			ZAtomic_Dec(&fWaitingThreads);
-		
-		iMtx.Acquire();
 		}
 
 	void Imp_Signal()
@@ -246,12 +288,11 @@ public:
 
 	void Imp_Wait(int iCount)
 		{
-		fMtx.Acquire();
+		ZAcquirer_T<Mtx> acq(fMtx);
 
 		if (fAvailable >= iCount)
 			{
 			fAvailable -= iCount;
-			fMtx.Release();
 			return;
 			}
 
@@ -262,19 +303,17 @@ public:
 			fCnd.Wait(fMtx);
 
 		fWaiters.Remove(&theWaiter);
-
-		fMtx.Release();
 		}
 
 	bool Imp_Wait(int iCount, double iTimeout)
 		{
 		ZTime expired = ZTime::sSystem() + iTimeout;
-		fMtx.Acquire();
+
+		ZAcquirer_T<Mtx> acq(fMtx);
 
 		if (fAvailable >= iCount)
 			{
 			fAvailable -= iCount;
-			fMtx.Release();
 			return true;
 			}
 
@@ -291,20 +330,17 @@ public:
 
 		if (int acquired = iCount - theWaiter.fCount)
 			{
-			this->Imp_Signal(acquired);
+			this->pSignal(acquired);
 			return false;
 			}
 		
-		fMtx.Release();
-
 		return true;
 		}
 
 	void Imp_Signal(int iCount)
 		{
-		fMtx.Acquire();
+		ZAcquirer_T<Mtx> acq(fMtx);
 		this->pSignal(iCount);
-		fMtx.Release();
 		}
 
 	void pSignal(int iCount)
