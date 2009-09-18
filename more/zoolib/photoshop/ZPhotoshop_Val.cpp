@@ -932,7 +932,7 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 						}
 					else
 						{
-						string8 theName(0, theLength + 1);
+						string8 theName(size_t(theLength + 1), ' ');
 						if (noErr != spPSActionReference->GetName(iRef,
 							const_cast<char*>(theName.data()), theLength + 1))
 							{

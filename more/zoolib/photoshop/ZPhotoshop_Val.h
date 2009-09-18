@@ -256,6 +256,14 @@ public:
 	void Clear();
 
 	template <class S>
+	S* PGet_T()
+		{ return ZAnyCast<S>(&fAny); }
+
+	template <class S>
+	const S* PGet_T() const
+		{ return ZAnyCast<S>(&fAny); }
+
+	template <class S>
 	bool QGet_T(S& oVal) const;
 
 	template <class S>

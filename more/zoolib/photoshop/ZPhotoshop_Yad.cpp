@@ -84,47 +84,39 @@ typedef ZYadMapRPos_Val_T<Map> YadMapRPos;
 
 ZRef<ZYadR> sMakeYadR(const Val& iVal)
 	{
-	Map asMap;
-	if (iVal.QGetMap(asMap))
-		return new YadMapRPos(asMap);
+	if (const Map* asMap = iVal.PGet_T<Map>())
+		return new YadMapRPos(*asMap);
 
-	List asList;
-	if (iVal.QGetList(asList))
-		return new YadListRPos(asList);
+	if (const List* asList = iVal.PGet_T<List>())
+		return new YadListRPos(*asList);
 
-	UnitFloat asUnitFloat;
-	if (iVal.QGetUnitFloat(asUnitFloat))
+	if (const UnitFloat* asUnitFloat = iVal.PGet_T<UnitFloat>())
 		{
 		ZMap_Any theMap;
 		theMap.Set("!Type", string("UnitFloat"));
-		theMap.Set("UnitID", spIntAsVal(asUnitFloat.fUnitID));
-		theMap.Set("Value", asUnitFloat.fValue);
+		theMap.Set("UnitID", spIntAsVal(asUnitFloat->fUnitID));
+		theMap.Set("Value", asUnitFloat->fValue);
 		return sMakeYadR(theMap);
 		}
 
-	Enumerated asEnumerated;
-	if (iVal.QGetEnumerated(asEnumerated))
+	if (const Enumerated* asEnumerated = iVal.PGet_T<Enumerated>())
 		{
 		ZMap_Any theMap;
 		theMap.Set("!Type", string("Enumerated"));
-		theMap.Set("UnitID", spIntAsVal(asEnumerated.fEnumType));
-		theMap.Set("Value", spIntAsVal(asEnumerated.fValue));
+		theMap.Set("UnitID", spIntAsVal(asEnumerated->fEnumType));
+		theMap.Set("Value", spIntAsVal(asEnumerated->fValue));
 		return sMakeYadR(theMap);
 		}
 
-	FileRef asFileRef;
-	if (iVal.QGetFileRef(asFileRef))
+	if (const FileRef* asFileRef = iVal.PGet_T<FileRef>())
 		{
 		ZMap_Any theMap;
 		theMap.Set("!Type", string("FileRef"));
-		theMap.Set("PathTrail", asFileRef.AsTrail());
-//		theMap.Set("PathPOSIX", asFileRef.AsPathPOSIX());
-//		theMap.Set("PathNative", asFileRef.AsPathNative());
+		theMap.Set("PathTrail", asFileRef->AsTrail().AsString());
 		return sMakeYadR(theMap);
 		}
 
-	Spec asSpec;
-	if (iVal.QGetSpec(asSpec))
+	if (const Spec* asSpec = iVal.PGet_T<Spec>())
 		{
 		ZMap_Any theMap;
 		theMap.Set("!Type", string("Spec"));
