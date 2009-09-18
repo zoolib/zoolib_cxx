@@ -29,37 +29,75 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWNDW
+#pragma mark * ZWindowClassRegistrationW
 
-void ZWNDW::sRegisterWindowClassW(const WCHAR* iWNDCLASSName, WNDPROC iWNDPROC)
+static HINSTANCE spGetModuleHandle()
+	{
+	#if ZCONFIG(Compiler, CodeWarrior)
+		return ::GetModuleHandleW(nullptr);
+	#else
+		HMODULE theHINSTANCE;
+		bool result = ::GetModuleHandleExW(
+			GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT | GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
+			reinterpret_cast<LPCWSTR>(spGetModuleHandle),
+			&theHINSTANCE);
+		ZAssert(result);
+		return theHINSTANCE;
+	#endif
+	}
+
+class ZWindowClassRegistrationW
+	{
+public:
+	ZWindowClassRegistrationW(WNDPROC iWNDPROC, const WCHAR* iWNDCLASSName);
+	~ZWindowClassRegistrationW();
+
+	const WCHAR* GetWNDCLASSName() const;
+
+private:
+	const WCHAR* fWNDCLASSName;
+	ATOM fATOM;
+	};
+
+ZWindowClassRegistrationW::ZWindowClassRegistrationW(WNDPROC iWNDPROC, const WCHAR* iWNDCLASSName)
+:	fWNDCLASSName(iWNDCLASSName)
 	{
 	WNDCLASSW windowClass;
-	if (!::GetClassInfoW(::GetModuleHandleW(nullptr), iWNDCLASSName, &windowClass) &&
-		!::GetClassInfoW(nullptr, iWNDCLASSName, &windowClass))
-		{
-		windowClass.style = 0;
-		windowClass.lpfnWndProc = iWNDPROC;
-		windowClass.cbClsExtra = 0;
-		windowClass.cbWndExtra = 0;
-		windowClass.hInstance = ::GetModuleHandleW(nullptr);
-		windowClass.hIcon = nullptr;
-		windowClass.hCursor = ::LoadCursorW(nullptr, MAKEINTRESOURCEW(IDC_ARROW));
-		windowClass.hbrBackground = 0;//(HBRUSH)COLOR_WINDOW;
-		windowClass.lpszMenuName = nullptr;
-		windowClass.lpszClassName = iWNDCLASSName;
-		ATOM theResult = ::RegisterClassW(&windowClass);
-//		ZAssertStop(kDebug_Win, theResult != 0);
-		}
+	windowClass.style = 0;
+	windowClass.lpfnWndProc = iWNDPROC;
+	windowClass.cbClsExtra = 0;
+	windowClass.cbWndExtra = 0;
+	windowClass.hInstance = spGetModuleHandle();
+	windowClass.hIcon = nullptr;
+	windowClass.hCursor = ::LoadCursorW(nullptr, MAKEINTRESOURCEW(IDC_ARROW));
+	windowClass.hbrBackground = 0;//(HBRUSH)COLOR_WINDOW;
+	windowClass.lpszMenuName = nullptr;
+	windowClass.lpszClassName = iWNDCLASSName;
+	fATOM = ::RegisterClassW(&windowClass);
+	ZAssertStop(0, fATOM != 0);
 	}
+
+ZWindowClassRegistrationW::~ZWindowClassRegistrationW()
+	{
+	bool result = ::UnregisterClassW(fWNDCLASSName, spGetModuleHandle());
+	ZAssert(result);
+	}
+
+const WCHAR* ZWindowClassRegistrationW::GetWNDCLASSName() const
+	{ return fWNDCLASSName; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWNDW
+
+static ZWindowClassRegistrationW
+	spWindowClassRegistrationW_Default(DefWindowProcW, L"WindowClassRegistrationW_Default");
 
 HWND ZWNDW::sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam)
 	{
-	static const UTF16 sClassName[] = L"ZWNDW::DefWindowProc";
-	sRegisterWindowClassW(sClassName, DefWindowProcW);
-
 	return ::CreateWindowExW(
 		0, // Extended attributes
-		sClassName, // window class name
+		spWindowClassRegistrationW_Default.GetWNDCLASSName(),
 		nullptr, // window caption
 		iStyle, // window style
 		0, // initial x position
@@ -68,7 +106,7 @@ HWND ZWNDW::sCreateDefault(HWND iParent, DWORD iStyle, void* iCreateParam)
 		10, // initial y size
 		iParent, // Parent window
 		nullptr,
-		::GetModuleHandleW(nullptr), // program instance handle
+		spGetModuleHandle(),
 		iCreateParam); // creation parameters
 	}
 
@@ -86,16 +124,16 @@ ZWNDW::~ZWNDW()
 		}	
 	}
 
+static ZWindowClassRegistrationW
+	spWindowClassRegistrationW_Other(ZWNDW::sWindowProcW, L"ZWNDW::sWindowProcW");
+
 void ZWNDW::Create(HWND iParent, DWORD iStyle)
 	{
 	ZAssert(!fHWND && fWNDPROC);
 
-	static const UTF16 sClassName[] = L"ZWNDW::sWindowProcW";
-	sRegisterWindowClassW(sClassName, sWindowProcW);
-
 	HWND theHWND = ::CreateWindowExW(
 		0, // Extended attributes
-		sClassName, // window class name
+		spWindowClassRegistrationW_Other.GetWNDCLASSName(),
 		nullptr, // window caption
 		iStyle, // window style
 		0, // initial x position
@@ -104,7 +142,7 @@ void ZWNDW::Create(HWND iParent, DWORD iStyle)
 		10, // initial y size
 		iParent, // Parent window
 		nullptr,
-		::GetModuleHandleW(nullptr), // program instance handle
+		spGetModuleHandle(),
 		this); // creation parameters
 
 	ZAssert(fHWND == theHWND);
@@ -115,7 +153,7 @@ HWND ZWNDW::GetHWND()
 	return fHWND;
 	}
 
-void ZWNDW::HWNDDestroyed()
+void ZWNDW::HWNDDestroyed(HWND iHWND)
 	{
 	ZAssert(!fHWND);
 	delete this;
@@ -127,22 +165,18 @@ LRESULT ZWNDW::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPA
 		{
 		case WM_NCDESTROY:
 			{
-			WNDPROC priorWNDPROC = fWNDPROC;
-			if (HWND theHWND = fHWND)
-				{
-				fHWND = nullptr;
-				this->HWNDDestroyed();
-				}
-			return ::CallWindowProcW(priorWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
+			ZAssert(fHWND && fHWND == iHWND);
+			fHWND = nullptr;
+			WNDPROC theWNDPROC = fWNDPROC;
+			this->HWNDDestroyed(iHWND);
+			return ::CallWindowProcW(theWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
 			}
 		}
 	return this->CallBase(iHWND, iMessage, iWPARAM, iLPARAM);
 	}
 
 LRESULT ZWNDW::CallBase(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
-	{
-	return ::CallWindowProcW(fWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM);
-	}
+	{ return ::CallWindowProcW(fWNDPROC, iHWND, iMessage, iWPARAM, iLPARAM); }
 
 LRESULT ZWNDW::sWindowProcW(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM)
 	{

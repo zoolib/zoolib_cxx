@@ -46,7 +46,7 @@ public:
 
 	HWND GetHWND();
 
-	virtual void HWNDDestroyed();
+	virtual void HWNDDestroyed(HWND iHWND);
 
 	virtual LRESULT WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
 
@@ -54,10 +54,6 @@ public:
 
 	static LRESULT CALLBACK sWindowProcW(
 		HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
-
-	static int sInit();
-
-	static void sRegisterWindowClassW(const WCHAR* iWNDCLASSName, WNDPROC iWNDPROC);
 
 protected:
 	static ZWNDW* sFromHWNDNilOkayW(HWND iHWND);
