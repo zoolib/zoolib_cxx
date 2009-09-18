@@ -28,9 +28,6 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZWorker
 
-ZWorker::ZWorker()
-	{}
-
 void ZWorker::RunnerAttached()
 	{}
 
@@ -65,12 +62,6 @@ void ZWorker::pRunnerDetached()
 #pragma mark -
 #pragma mark * ZWorkerRunner
 
-ZWorkerRunner::ZWorkerRunner()
-	{}
-
-ZWorkerRunner::~ZWorkerRunner()
-	{}
-
 void ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 	{
 	ZAssert(iWorker);
@@ -99,7 +90,6 @@ class ZWorkerRunner_Threaded : public ZWorkerRunner
 	{
 public:
 	ZWorkerRunner_Threaded(ZRef<ZWorker> iWorker);
-	virtual ~ZWorkerRunner_Threaded();
 
 // From ZWorkerRunner
 	virtual void Wake(ZRef<ZWorker> iWorker);
@@ -120,16 +110,13 @@ private:
 	};
 
 ZWorkerRunner_Threaded::ZWorkerRunner_Threaded(ZRef<ZWorker> iWorker)
-:	fWorker(iWorker),
-	fNextWake(ZTime::sSystem())
-	{}
-
-ZWorkerRunner_Threaded::~ZWorkerRunner_Threaded()
+:	fWorker(iWorker)
+,	fNextWake(ZTime::sSystem())
 	{}
 
 void ZWorkerRunner_Threaded::Wake(ZRef<ZWorker> iWorker)
 	{
-	ZGuardMtx locker(fMtx);
+	ZAcqMtx acq(fMtx);
 	ZAssert(iWorker == fWorker);
 	fNextWake = 0;
 	fCnd.Broadcast();
@@ -137,7 +124,7 @@ void ZWorkerRunner_Threaded::Wake(ZRef<ZWorker> iWorker)
 
 void ZWorkerRunner_Threaded::WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime)
 	{
-	ZGuardMtx locker(fMtx);
+	ZAcqMtx acq(fMtx);
 	ZAssert(iWorker == fWorker);
 	if (fNextWake > iSystemTime)
 		{
@@ -148,7 +135,7 @@ void ZWorkerRunner_Threaded::WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime)
 
 void ZWorkerRunner_Threaded::WakeIn(ZRef<ZWorker> iWorker, double iInterval)
 	{
-	ZGuardMtx locker(fMtx);
+	ZAcqMtx acq(fMtx);
 	ZAssert(iWorker == fWorker);
 	ZTime newWake = ZTime::sSystem() + iInterval;
 	if (fNextWake > newWake)
@@ -167,10 +154,9 @@ void ZWorkerRunner_Threaded::pRun()
 	{
 	ZLOGFUNCTION(eDebug);
 
+	ZAcqMtx acq(fMtx);
 	for (;;)
 		{
-		{
-		ZGuardMtx locker(fMtx);
 		for (;;)
 			{
 			const ZTime now = ZTime::sSystem();
@@ -182,8 +168,8 @@ void ZWorkerRunner_Threaded::pRun()
 
 			fCnd.Wait(fMtx, fNextWake - now);
 			}
-		}
 
+		ZRelMtx rel(fMtx);
 		try
 			{
 			if (!fWorker->Work())
@@ -195,7 +181,6 @@ void ZWorkerRunner_Threaded::pRun()
 			}
 		}
 
-	ZGuardMtx locker(fMtx);
 	ZWorkerRunner::pDetachWorker(fWorker);
 	fWorker.Clear();
 	fCnd.Broadcast();

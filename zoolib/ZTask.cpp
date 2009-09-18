@@ -26,12 +26,6 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZTaskOwner
 
-ZTaskOwner::ZTaskOwner()
-	{}
-
-ZTaskOwner::~ZTaskOwner()
-	{}
-
 void ZTaskOwner::Task_Finished(ZRef<ZTask> iTask)
 	{}
 
@@ -42,9 +36,7 @@ void ZTaskOwner::pDetachTask(ZRef<ZTask> iTask)
 	}
 
 void ZTaskOwner::pTask_Finished(ZRef<ZTask> iTask)
-	{
-	this->Task_Finished(iTask);
-	}
+	{ this->Task_Finished(iTask); }
 
 // =================================================================================================
 #pragma mark -
@@ -52,9 +44,6 @@ void ZTaskOwner::pTask_Finished(ZRef<ZTask> iTask)
 
 ZTask::ZTask(ZRef<ZTaskOwner> iTaskOwner)
 :	fTaskOwner(iTaskOwner)
-	{}
-
-ZTask::~ZTask()
 	{}
 
 ZRef<ZTaskOwner> ZTask::GetOwner()

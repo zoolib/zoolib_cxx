@@ -38,9 +38,6 @@ class ZTaskOwner
 	public ZWeakReferee
 	{
 public:
-	ZTaskOwner();
-	virtual ~ZTaskOwner();
-
 	virtual void Task_Finished(ZRef<ZTask> iTask);
 
 protected:
@@ -59,7 +56,6 @@ class ZTask : public ZRefCountedWithFinalize
 	{
 public:
 	ZTask(ZRef<ZTaskOwner> iTaskOwner);
-	virtual ~ZTask();
 
 	ZRef<ZTaskOwner> GetOwner();
 
