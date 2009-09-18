@@ -90,7 +90,7 @@ ZServer::~ZServer()
 
 void ZServer::Finalize()
 	{
-	{
+	{ // Scope for locker
 	ZGuardMtx locker(fMtx);
 	if (fStreamerListener)
 		{
@@ -148,31 +148,24 @@ void ZServer::StartListener(ZRef<ZStreamerRWFactory> iFactory)
 
 void ZServer::StopListener()
 	{
-	fMtx.Acquire();
-	if (ZRef<StreamerListener> theSL = fStreamerListener)
-		{
-		fMtx.Release();
+	ZRef<StreamerListener> theSL;
+
+	{
+	ZGuardMtx locker(fMtx);
+	theSL = fStreamerListener;
+	}
+
+	if (theSL)
 		theSL->Kill();
-		}
-	else
-		{
-		fMtx.Release();
-		}
 	}
 
 void ZServer::StopListenerWait()
 	{
-	fMtx.Acquire();
+	this->StopListener();
 
-	if (ZRef<StreamerListener> theSL = fStreamerListener)
-		{
-		fMtx.Release();
-		theSL->Kill();
-		fMtx.Acquire();
-		while (fStreamerListener)
-			fCnd.Wait(fMtx);
-		}
-	fMtx.Release();
+	ZGuardMtx locker(fMtx);
+	while (fStreamerListener)
+		fCnd.Wait(fMtx);
 	}
 
 void ZServer::KillResponders()
