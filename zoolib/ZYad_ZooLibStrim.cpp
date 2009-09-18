@@ -911,7 +911,7 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 		}
 	else
 		{
-		s << "null /* Unhandled: */" << iVal.type().name() << " */";
+		s << "null /* Unhandled: " << iVal.type().name() << " */";
 		}
 	}
 
