@@ -55,7 +55,7 @@ HostMeister_Std::HostMeister_Std()
 
 HostMeister_Std::~HostMeister_Std()
 	{
-	ZLOGFUNCTION(eDebug);
+//##	ZLOGFUNCTION(eDebug);
 	}
 
 Host_Std* HostMeister_Std::sHostFromNPP_Std(NPP npp)
@@ -983,8 +983,8 @@ void Host_Std::pHTTPFetcher(ZRef<HTTPFetcher> iHTTPFetcher, void* iNotifyData,
 	}
 
 void Host_Std::CreateAndLoad(
-		const std::string& iURL, const std::string& iMIME,
-		const Param_t* iParams, size_t iCount)
+	const std::string& iURL, const std::string& iMIME,
+	const Param_t* iParams, size_t iCount)
 	{
 	fURL = iURL;
 
