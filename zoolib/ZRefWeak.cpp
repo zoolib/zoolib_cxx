@@ -101,9 +101,7 @@ ZWeakReferee::ZWeakReferee()
 	{}
 
 ZWeakReferee::~ZWeakReferee()
-	{
-	this->pDetachProxy();
-	}
+	{ this->pDetachProxy(); }
 
 void ZWeakReferee::pDetachProxy()
 	{

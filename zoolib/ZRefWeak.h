@@ -34,11 +34,10 @@ class ZWeakRefereeProxy;
 
 class ZWeakReferee
 	{
-public:
+protected:
 	ZWeakReferee();
 	~ZWeakReferee();
 
-protected:
 	void pDetachProxy();
 
 private:
@@ -91,7 +90,7 @@ public:
 
 	ZRefWeak& operator=(const ZRefWeak& iOther)
 		{
-		this->AssignFrom(iOther);
+		ZRefWeakBase::pAssignFrom(iOther);
 		return *this;
 		}
 
@@ -107,7 +106,7 @@ public:
 	ZRefWeak& operator=(const ZRefWeak<O>& iOther)
 		{
 		static_cast<T*>(static_cast<O*>(0));
-		this->AssignFrom(iOther);
+		ZRefWeakBase::pAssignFrom(iOther);
 		return *this;
 		}
 
