@@ -228,7 +228,7 @@ FileRef::FileRef(const ZTrail& iTrail)
 		// Run the path through CFURL, to expand tildes and so forth.
 		ZRef<CFURLRef> theURL =
 			Adopt(::CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
-			ZUtil_CFType::sString(iTrail.AsString()), kCFURLPOSIXPathStyle, false));
+			ZUtil_CFType::sString("/" + iTrail.AsString()), kCFURLPOSIXPathStyle, false));
 
 		#if defined(kPSAliasSuite)
 
