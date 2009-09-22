@@ -44,7 +44,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZLOG(s, p, f) const ZooLib::ZLog::S& s = ZLog::S(ZLog::p, f)
 
 #define ZLOGFUNCTION(p) ZooLib::ZLog::FunctionEntryExit \
-	theLogFEE##__LINE__(ZLog::p, ZMACRO_PRETTY_FUNCTION)
+	theLogFEE##__LINE__(ZooLib::ZLog::p, ZMACRO_PRETTY_FUNCTION)
+
+#define ZLOGTRACE(p) ZooLib::ZLog::sLogTrace(ZooLib::ZLog::p, __FILE__, __LINE__)
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -147,6 +149,12 @@ private:
 	EPriority fPriority;
 	const char* fFunctionName;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZLog::sLogLine
+
+void sLogTrace(EPriority iPriority, const char* iFile, int iLine);
 
 } // namespace ZLog
 

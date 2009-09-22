@@ -192,14 +192,24 @@ FunctionEntryExit::FunctionEntryExit(EPriority iPriority, const char* iFunctionN
 :	fPriority(iPriority)
 ,	fFunctionName(iFunctionName)
 	{
-	if (const S& s = S(fPriority, "ZLOGFUNCTION"))
-		s << ">" << fFunctionName;
+	if (const S& s = S(fPriority, "ZLOGFUNCTION>>"))
+		s << fFunctionName;
 	}
 
 FunctionEntryExit::~FunctionEntryExit()
 	{
-	if (const S& s = S(fPriority, "ZLOGFUNCTION"))
-		s << "<" << fFunctionName;
+	if (const S& s = S(fPriority, "ZLOGFUNCTION<<"))
+		s << fFunctionName;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZLog::sLogTrace
+
+void sLogTrace(EPriority iPriority, const char* iFile, int iLine)
+	{
+	if (const S& s = S(iPriority, "ZLOGTRACE"))
+		s << iFile << ":" << ZString::sFormat("%d", iLine);
 	}
 
 } // namespace ZLog
