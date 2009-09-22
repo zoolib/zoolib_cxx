@@ -35,6 +35,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	endif
 #endif
 
+#ifndef AUTORELEASE
+#	ifdef __OBJC__
+#		define AUTORELEASE(a) ([a autorelease])
+#	else
+#		define AUTORELEASE(a) $ONLY_USE_IN_OBJECTIVE_C$
+#	endif
+#endif
+
 #ifdef __cplusplus
 
 #ifdef __OBJC__
