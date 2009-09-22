@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZStream_Data_T.h"
-#include "zoolib/ZVal_Any.h"
 #include "zoolib/ZVal_ZooLib.h"
 
 #include <map>
@@ -197,13 +196,17 @@ ZVal_ZooLib::Ex_IllegalType::Ex_IllegalType(int iType)
 \nosubgrouping
 */
 
-bool ZVal_ZooLib::sFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
+bool ZVal_ZooLib::sQFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 	{
 	if (false)
 		{}
-	else if (iAny.type() == typeid(void))
+	else if (! iAny)
 		{
 		oVal = ZVal_ZooLib();
+		}
+	else if (const string* theValue = ZAnyCast<string>(&iAny))
+		{
+		oVal = ZVal_ZooLib(*theValue);
 		}
 	else if (const ZType* theValue = ZAnyCast<ZType>(&iAny))
 		{
@@ -317,7 +320,7 @@ bool ZVal_ZooLib::sFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 			i != end; ++i)
 			{
 			ZVal_ZooLib local;
-			if (sFromAny(*i, local))
+			if (sQFromAny(*i, local))
 				theList.Append(local);
 			else
 				theList.Append(ZVal_ZooLib());
@@ -330,7 +333,7 @@ bool ZVal_ZooLib::sFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 		for (int x = 0, count = theValue->Count(); x < count; ++x)
 			{
 			ZVal_ZooLib local;
-			if (sFromAny(theValue->Get(x), local))
+			if (sQFromAny(theValue->Get(x), local))
 				theList.Append(local);
 			else
 				theList.Append(ZVal_ZooLib());
@@ -344,7 +347,7 @@ bool ZVal_ZooLib::sFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 			i != end; ++i)
 			{
 			ZVal_ZooLib local;
-			if (sFromAny((*i).second, local))
+			if (sQFromAny((*i).second, local))
 				theMap.Set((*i).first, local);
 			}
 		oVal = theMap;
@@ -356,7 +359,7 @@ bool ZVal_ZooLib::sFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 			i != end; ++i)
 			{
 			ZVal_ZooLib local;
-			if (sFromAny(theValue->Get(i), local))
+			if (sQFromAny(theValue->Get(i), local))
 				theMap.Set((*i).first, local);
 			}
 		oVal = theMap;
@@ -368,84 +371,99 @@ bool ZVal_ZooLib::sFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 	return true;
 	}
 
-ZVal_Any ZVal_ZooLib::AsVal_Any() const
-	{ return this->AsVal_Any(ZVal_Any()); }
+ZVal_ZooLib ZVal_ZooLib::sDFromAny(const ZVal_ZooLib& iDefault, const ZAny& iAny)
+	{
+	ZVal_ZooLib result;
+	if (sQFromAny(iAny, result))
+		return result;
+	return iDefault;
+	}
 
-ZVal_Any ZVal_ZooLib::AsVal_Any(const ZVal_Any& iDefault) const
+ZVal_ZooLib ZVal_ZooLib::sFromAny(const ZAny& iAny)
+	{
+	ZVal_ZooLib result;
+	if (sQFromAny(iAny, result))
+		return result;
+	return ZVal_ZooLib();
+	}
+
+ZAny ZVal_ZooLib::AsAny() const
+	{ return this->AsAny(ZAny()); }
+
+ZAny ZVal_ZooLib::AsAny(const ZAny& iDefault) const
 	{
 	switch (fType.fType)
 		{
 		case eZType_Null:
 			{
-			return ZVal_Any();
+			return ZAny();
 			}
 		case eZType_Type:
 			{
-			return fData.fAs_Type;
+			return ZAny(fData.fAs_Type);
 			}
 		case eZType_ID:
 			{
-			return fData.fAs_ID;
+			return ZAny(fData.fAs_ID);
 			}
 		case eZType_Int8:
 			{
-			return fData.fAs_Int8;
+			return ZAny(fData.fAs_Int8);
 			}
 		case eZType_Int16:
 			{
-			return fData.fAs_Int16;
+			return ZAny(fData.fAs_Int16);
 			}
 		case eZType_Int32:
 			{
-			return fData.fAs_Int32;
+			return ZAny(fData.fAs_Int32);
 			}
 		case eZType_Int64:
 			{
-			return fData.fAs_Int64;
+			return ZAny(fData.fAs_Int64);
 			}
 		case eZType_Bool:
 			{
-			return fData.fAs_Bool;
+			return ZAny(fData.fAs_Bool);
 			}
 		case eZType_Float:
 			{
-			return fData.fAs_Float;
+			return ZAny(fData.fAs_Float);
 			}
 		case eZType_Double:
 			{
-			return fData.fAs_Double;
+			return ZAny(fData.fAs_Double);
 			}
 		case eZType_Time:
 			{
-			return ZTime(fData.fAs_Time);
+			return ZAny(ZTime(fData.fAs_Time));
 			}
 		case eZType_Pointer:
 			{
-			return fData.fAs_Pointer;
+			return ZAny(fData.fAs_Pointer);
 			}
 		case eZType_Rect:
 			{
-			return fData.fAs_Rect;
+			return ZAny(fData.fAs_Rect);
 			}
 		case eZType_Point:
 			{
-			return fData.fAs_Point;
+			return ZAny(fData.fAs_Point);
 			}
 		case eZType_String:
 			{
-			return sFetch_T<ValString>(fType.fBytes)->AsString();
+			return ZAny(sFetch_T<ValString>(fType.fBytes)->AsString());
 			}
 #if 0//##
 		case eZType_Name:
 			{
-			sFetch_T<ZTName>(fType.fBytes)->ToStream(iStreamW);
+			sFetch_T<ZTName>(fType.fBytes)->ToStream(iStreamW));
 			break;
 			}
 #endif//##
 		case eZType_Tuple:
 			{
-			return sFetch_T<ZMap_ZooLib>(fType.fBytes)->AsMap_Any(iDefault);
-			break;
+			return sFetch_T<ZMap_ZooLib>(fType.fBytes)->AsAny(iDefault);
 			}
 		case eZType_RefCounted:
 			{
@@ -454,14 +472,19 @@ ZVal_Any ZVal_ZooLib::AsVal_Any(const ZVal_Any& iDefault) const
 			}
 		case eZType_Raw:
 			{
-			return sFetch_T<ZData_ZooLib>(fType.fBytes)->AsData_Any();
+			return sFetch_T<ZData_ZooLib>(fType.fBytes)->AsAny();
 			}
 		case eZType_Vector:
 			{
-			return sFetch_T<ZList_ZooLib>(fType.fBytes)->AsList_Any(iDefault);
+			return sFetch_T<ZList_ZooLib>(fType.fBytes)->AsAny(iDefault);
+			}
+		default:
+			{
+			if (fType.fType < 0)
+				return ZAny(string(fType.fBytes, -fType.fType-1));
 			}
 		}
-	return ZAny();
+	return iDefault;
 	}
 
 ZVal_ZooLib::operator operator_bool_type() const
@@ -1767,10 +1790,10 @@ ZList_ZooLib::Rep::~Rep()
 #pragma mark -
 #pragma mark * ZList_ZooLib
 
-ZList_Any ZList_ZooLib::AsList_Any() const
-	{ return this->AsList_Any(ZVal_Any()); }
+ZAny ZList_ZooLib::AsAny() const
+	{ return this->AsAny(ZAny()); }
 
-ZList_Any ZList_ZooLib::AsList_Any(const ZVal_Any& iDefault) const
+ZAny ZList_ZooLib::AsAny(const ZAny& iDefault) const
 	{
 	ZList_Any theList;
 	if (fRep)
@@ -1778,10 +1801,10 @@ ZList_Any ZList_ZooLib::AsList_Any(const ZVal_Any& iDefault) const
 		if (size_t theCount = fRep->fVector.size())
 			{
 			for (size_t x = 0; x < theCount; ++x)
-				theList.Append(fRep->fVector[x].AsVal_Any(iDefault));
+				theList.Append(fRep->fVector[x].AsAny(iDefault));
 			}
 		}
-	return theList;
+	return ZAny(theList);
 	}
 
 ZList_ZooLib::operator operator_bool_type() const
@@ -2047,10 +2070,10 @@ ZMap_ZooLib::Rep::~Rep()
 #pragma mark -
 #pragma mark * ZMap_ZooLib
 
-ZMap_Any ZMap_ZooLib::AsMap_Any() const
-	{ return this->AsMap_Any(ZVal_Any()); }
+ZAny ZMap_ZooLib::AsAny() const
+	{ return this->AsAny(ZAny()); }
 
-ZMap_Any ZMap_ZooLib::AsMap_Any(const ZVal_Any& iDefault) const
+ZAny ZMap_ZooLib::AsAny(const ZAny& iDefault) const
 	{
 	ZMap_Any theMap;
 	if (fRep)
@@ -2058,10 +2081,10 @@ ZMap_Any ZMap_ZooLib::AsMap_Any(const ZVal_Any& iDefault) const
 		for (Index_t i = fRep->fProperties.begin(), end = fRep->fProperties.end();
 			i != end; ++i)
 			{
-			theMap.Set((*i).fName.AsString(), (*i).fVal.AsVal_Any(iDefault));
+			theMap.Set((*i).fName.AsString(), (*i).fVal.AsAny(iDefault));
 			}
 		}
-	return theMap;
+	return ZAny(theMap);
 	}
 
 ZMap_ZooLib::operator operator_bool_type() const

@@ -51,8 +51,8 @@ class ZVal_CFType
 	{
 	typedef ZRef<CFTypeRef> inherited;
 public:
-	ZVal_Any AsVal_Any() const;
-	ZVal_Any AsVal_Any(const ZVal_Any& iDefault) const;
+	ZAny AsAny() const;
+	ZAny AsAny(const ZAny& iDefault) const;
 
 	operator bool() const;
 
@@ -69,6 +69,7 @@ public:
 	ZVal_CFType(bool iVal);
 	ZVal_CFType(float iVal);
 	ZVal_CFType(double iVal);
+	ZVal_CFType(const char* iVal);
 	ZVal_CFType(const string8& iVal);
 	ZVal_CFType(const string16& iVal);
 	ZVal_CFType(CFStringRef iVal);
@@ -127,8 +128,8 @@ class ZList_CFType
 	typedef ZRef<CFArrayRef> inherited;
 
 public:
-	ZList_Any AsList_Any() const;
-	ZList_Any AsList_Any(const ZVal_Any& iDefault) const;
+	ZAny AsAny() const;
+	ZAny AsAny(const ZAny& iDefault) const;
 
 	operator bool() const;
 
@@ -179,8 +180,8 @@ class ZMap_CFType
 	typedef ZRef<CFDictionaryRef> inherited;
 
 public:
-	ZMap_Any AsMap_Any() const;
-	ZMap_Any AsMap_Any(const ZVal_Any& iDefault) const;
+	ZAny AsAny() const;
+	ZAny AsAny(const ZAny& iDefault) const;
 
 	operator bool() const;
 

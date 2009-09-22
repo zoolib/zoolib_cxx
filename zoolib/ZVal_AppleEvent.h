@@ -55,8 +55,8 @@ class ZVal_AppleEvent
 		operator_bool_generator_type, operator_bool_type);
 
 public:
-	ZVal_Any AsVal_Any() const;
-	ZVal_Any AsVal_Any(const ZVal_Any& iDefault) const;
+	ZAny AsAny() const;
+	ZAny AsAny(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 
@@ -144,7 +144,7 @@ class ZList_AppleEvent
 
 public:
 	ZList_Any AsList_Any() const;
-	ZList_Any AsList_Any(const ZVal_Any& iDefault) const;
+	ZList_Any AsList_Any(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 
@@ -191,7 +191,7 @@ public:
 	typedef ZMapIndex_T<ZMap_AppleEvent> Index_t;
 
 	ZMap_Any AsMap_Any() const;
-	ZMap_Any AsMap_Any(const ZVal_Any& iDefault) const;
+	ZMap_Any AsMap_Any(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 

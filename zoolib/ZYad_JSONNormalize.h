@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYad_JSON__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZYad_Std.h"
+#include "zoolib/ZYad.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 

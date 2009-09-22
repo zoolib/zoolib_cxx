@@ -29,7 +29,7 @@ using std::string;
 #pragma mark -
 #pragma mark * sMakeYadR
 
-ZRef<ZYadR> sMakeYadR(const ZVal_Any& iVal)
+ZRef<ZYadR> sMakeYadR(const ZAny& iVal)
 	{
 	if (const ZMap_Any* theVal = iVal.PGet_T<ZMap_Any>())
 		return sMakeYadR(*theVal);
@@ -43,7 +43,7 @@ ZRef<ZYadR> sMakeYadR(const ZVal_Any& iVal)
 	if (const ZData_Any* theVal = iVal.PGet_T<ZData_Any>())
 		return new ZYadStreamRPos_Any(*theVal);
 
-	return new ZYadPrimR_Std(iVal.AsAny());
+	return new ZYadPrimR_Any(iVal);
 	}
 
 ZRef<ZYadStreamR> sMakeYadR(const ZData_Any& iData)

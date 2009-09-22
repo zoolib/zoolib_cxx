@@ -22,12 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZUnicode.h"
+#include "zoolib/ZVal_Any.h"
 
 #include "ASZStringSuite.h"
 #include "PITerminology.h"
 #include "PIUSuites.h"
 
-#ifdef __PIMac__
+#if ZCONFIG_SPI_Enabled(Carbon)
 #	if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
 #		include ZMACINCLUDE3(ApplicationServices,AE,AEObjects.h)
 #	else
@@ -263,35 +264,35 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define SETTERCASES(SUITE, PARAM) \
 	if (false) \
 		{} \
-	else if (const int32* theVal = ZAnyCast<int32>(&iVal.fAny)) \
+	else if (const int32* theVal = iVal.PGet_T<int32>()) \
 		{ SUITE->PutInteger(PARAM, *theVal); return; } \
-	else if (const float* theVal = ZAnyCast<float>(&iVal.fAny)) \
+	else if (const float* theVal = iVal.PGet_T<float>()) \
 		{ SUITE->PutFloat(PARAM, *theVal); return; } \
-	else if (const UnitFloat* theVal = ZAnyCast<UnitFloat>(&iVal.fAny)) \
+	else if (const UnitFloat* theVal = iVal.PGet_T<UnitFloat>()) \
 		{ SUITE->PutUnitFloat(PARAM, theVal->fUnitID, theVal->fValue); return; } \
-	else if (const string8* theVal = ZAnyCast<string8>(&iVal.fAny)) \
+	else if (const string8* theVal = iVal.PGet_T<string8>()) \
 		{ SUITE->PutString(PARAM, const_cast<char*>(theVal->c_str())); return; } \
-	else if (const bool* theVal = ZAnyCast<bool>(&iVal.fAny)) \
+	else if (const bool* theVal = iVal.PGet_T<bool>()) \
 		{ SUITE->PutBoolean(PARAM, *theVal); return; } \
-	else if (const List* theVal = ZAnyCast<List>(&iVal.fAny)) \
+	else if (const List* theVal = iVal.PGet_T<List>()) \
 		{ SUITE->PutList(PARAM, theVal->IParam()); return; } \
-	else if (const Map* theVal = ZAnyCast<Map>(&iVal.fAny)) \
+	else if (const Map* theVal = iVal.PGet_T<Map>()) \
 		{ SUITE->PutObject(PARAM, theVal->GetType(), theVal->IParam()); return; } \
 	/* global object? */ \
-	else if (const Enumerated* theVal = ZAnyCast<Enumerated>(&iVal.fAny)) \
+	else if (const Enumerated* theVal = iVal.PGet_T<Enumerated>()) \
 		{ SUITE->PutEnumerated(PARAM, theVal->fEnumType, theVal->fValue); return; } \
-	else if (const Spec* theVal = ZAnyCast<Spec>(&iVal.fAny)) \
+	else if (const Spec* theVal = iVal.PGet_T<Spec>()) \
 		{ \
 		PIActionReference tempRef = theVal->MakeRef(); \
 		SUITE->PutReference(PARAM, tempRef); \
 		spPSActionReference->Free(tempRef); \
 		return; \
 		} \
-/*Hmmm	else if (const ClassID* theVal = ZAnyCast<ClassID>(&iVal.fAny)) \
+/*Hmmm	else if (const ClassID* theVal = iVal.PGet_T<ClassID>()) \
 		{ ZUnimplemented(); } Hmm??? SUITE->PutInteger(PARAM, *theVal); return; } */\
-	else if (const FileRef* theVal = ZAnyCast<FileRef>(&iVal.fAny)) \
+	else if (const FileRef* theVal = iVal.PGet_T<FileRef>()) \
 		{ SUITE->PutAlias(PARAM, theVal->Get()); return; } \
-	else if (const Data* theVal = ZAnyCast<Data>(&iVal.fAny)) \
+	else if (const Data* theVal = iVal.PGet_T<Data>()) \
 		{ SUITE->PutData(PARAM, theVal->GetSize(), const_cast<void*>(theVal->GetData())); return; }
 
 // =================================================================================================
@@ -302,7 +303,7 @@ static AutoSuite<PSActionDescriptorProcs>
 	spPSActionDescriptor(kPSActionDescriptorSuite, kPSActionDescriptorSuiteVersion);
 
 static AutoSuite<PSActionControlProcs>
-	spPSActionControl(kPSActionControlSuite, kPSActionControlSuitePrevVersion);
+	spPSActionControl(kPSActionControlSuite, kPSActionControlSuiteVersion);
 
 static AutoSuite<PSActionReferenceProcs>
 	spPSActionReference(kPSActionReferenceSuite, kPSActionReferenceSuiteVersion);
@@ -385,6 +386,7 @@ static PIActionDescriptor spDuplicate(PIActionDescriptor iSource)
 			TypeID theType;
 			if (noErr != spPSActionDescriptor->GetType(iSource, theKey, &theType))
 				break;
+
 			#define COMMA() ,
 
 			COPYFROMTO(spPSActionDescriptor, iSource, theKey, theType, theDest COMMA() theKey)
@@ -980,31 +982,25 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 #pragma mark -
 #pragma mark * Val
 
-Val::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(fAny.type() != typeid(void)); }
+ZAny Val::AsAny() const
+	{ return this->AsAny(ZAny()); }
 
-ZVal_Any Val::AsVal_Any() const
-	{ return this->AsVal_Any(ZVal_Any()); }
-
-ZVal_Any Val::AsVal_Any(const ZVal_Any& iDefault) const
+ZAny Val::AsAny(const ZAny& iDefault) const
 	{
-	if (const Map* theVal = ZAnyCast<Map>(&fAny))
-		return theVal->AsMap_Any(iDefault);
+	if (const Map* theVal = this->PGet_T<Map>())
+		return ZAny(theVal->AsAny(iDefault));
 
-	if (const List* theVal = ZAnyCast<List>(&fAny))
-		return theVal->AsList_Any(iDefault);
+	if (const List* theVal = this->PGet_T<List>())
+		return ZAny(theVal->AsAny(iDefault));
 		
-	return fAny;
+	return *this;
 	}
-
-void Val::swap(Val& iOther)
-	{ std::swap(fAny, iOther.fAny); }
 
 Val::Val()
 	{}
 
 Val::Val(const Val& iOther)
-:	fAny(iOther.fAny)
+:	ZAny((const ZAny&)iOther)
 	{}
 
 Val::~Val()
@@ -1012,89 +1008,57 @@ Val::~Val()
 
 Val& Val::operator=(const Val& iOther)
 	{
-	fAny = iOther.fAny;
+	ZAny::operator=((const ZAny&)iOther);
 	return *this;
 	}
 
+Val::Val(const ZAny& iOther)
+:	ZAny(iOther)
+	{}
+
 Val::Val(int32 iVal)
-:	fAny(iVal)
+:	ZAny(iVal)
 	{}
 
 Val::Val(double iVal)
-:	fAny(iVal)
+:	ZAny(iVal)
 	{}
 
 Val::Val(bool iVal)
-:	fAny(iVal)
+:	ZAny(iVal)
 	{}
 
 Val::Val(const string8& iVal)
-:	fAny(iVal)
+:	ZAny(iVal)
 	{}
 
 Val::Val(const Data& iVal)
-:	fAny(iVal)
+:	ZAny(iVal)
 	{}
 
 Val::Val(const UnitFloat& iVal)
-:	fAny(iVal)
+:	ZAny(iVal)
 	{}
 
 Val::Val(const Enumerated& iVal)
-:	fAny(iVal)
+:	ZAny(iVal)
 	{}
 
 Val::Val(const FileRef& iVal)
-:	fAny(iVal)
+:	ZAny(iVal)
 	{}
 
 Val::Val(const List& iVal)
-:	fAny(iVal)
+:	ZAny(iVal)
 	{}
 
 Val::Val(const Map& iVal)
-:	fAny(iVal)
+:	ZAny(iVal)
 	{}
 
 Val::Val(const Spec& iVal)
-:	fAny(iVal)
+:	ZAny(iVal)
 	{}
-
-void Val::Clear()
-	{ fAny = ZAny(); }
-
-template <class S>
-bool Val::QGet_T(S& oVal) const
-	{
-	if (const S* theVal = ZAnyCast<S>(&fAny))
-		{
-		oVal = *theVal;
-		return true;
-		}
-	return false;
-	}
-
-template <class S>
-S Val::DGet_T(const S& iDefault) const
-	{
-	if (const S* theVal = ZAnyCast<S>(&fAny))
-		return *theVal;
-	return iDefault;
-	}
-
-template <class S>
-S Val::Get_T() const
-	{
-	if (const S* theVal = ZAnyCast<S>(&fAny))
-		return *theVal;
-	return S();
-	}
-
-template <class S>
-void Val::Set_T(const S& iVal)
-	{
-	fAny = iVal;
-	}
 
 // =================================================================================================
 #pragma mark -
@@ -1120,18 +1084,18 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 List::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->Count()); }
 
-ZList_Any List::AsList_Any() const
-	{ return this->AsList_Any(ZVal_Any()); }
+ZAny List::AsAny() const
+	{ return this->AsAny(ZAny()); }
 
-ZList_Any List::AsList_Any(const ZVal_Any& iDefault) const
+ZAny List::AsAny(const ZAny& iDefault) const
 	{
 	ZList_Any theList;
 	if (size_t theCount = this->Count())
 		{
 		for (size_t x = 0; x < theCount; ++x)
-			theList.Append(this->Get(x).AsVal_Any(iDefault));
+			theList.Append(this->Get(x).AsAny(iDefault));
 		}
-	return theList;
+	return ZAny(theList);
 	}
 
 void List::swap(List& iOther)
@@ -1252,15 +1216,15 @@ PIActionList List::Orphan()
 Map::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->pCount()); }
 
-ZMap_Any Map::AsMap_Any() const
-	{ return this->AsMap_Any(ZVal_Any()); }
+ZAny Map::AsAny() const
+	{ return this->AsAny(ZAny()); }
 
-ZMap_Any Map::AsMap_Any(const ZVal_Any& iDefault) const
+ZAny Map::AsAny(const ZAny& iDefault) const
 	{
 	ZMap_Any theMap;
 	for (Index_t i = this->Begin(), end = this->End(); i != end; ++i)
-		theMap.Set(this->NameOf(i), this->Get(i).AsVal_Any(iDefault));
-	return theMap;
+		theMap.Set(this->NameOf(i), this->Get(i).AsAny(iDefault));
+	return ZAny(theMap);
 	}
 
 void Map::swap(Map& iOther)

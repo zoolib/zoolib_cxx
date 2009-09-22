@@ -224,6 +224,24 @@ public:
 	virtual bool Visit_YadMapRPos(ZRef<ZYadMapRPos> iYadMapRPos);
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadPrimR_Any
+
+class ZYadPrimR_Any
+:	public ZYadPrimR
+	{
+public:
+	ZYadPrimR_Any(const ZAny& iAny);
+	virtual ~ZYadPrimR_Any();
+
+// From ZYadPrimR
+	virtual ZAny AsAny();
+
+private:
+	const ZAny fAny;
+	};
+
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZYad__

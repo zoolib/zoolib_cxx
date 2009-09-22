@@ -33,8 +33,8 @@ using ZUtil_CFType::sDataMutable;
 #pragma mark -
 #pragma mark * ZData_CFType
 
-ZData_Any ZData_CFType::AsData_Any() const
-	{ return ZUtil_CFType::sAsData_Any(this->pData()); }
+ZAny ZData_CFType::AsAny() const
+	{ return ZUtil_CFType::sAsAny(this->pData()); }
 
 ZData_CFType::operator bool() const
 	{ return this->GetSize(); }

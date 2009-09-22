@@ -108,10 +108,10 @@ int ZRefCountedWithFinalizeBase::GetRefCount() const
 
 int ZRefCountedWithFinalizeBase::pCOMAddRef()
 	{
-	int newCount = ZAtomic_Add(&fRefCount, 1);
-	if (newCount == 1)
+	int oldRefCount = ZAtomic_Add(&fRefCount, 1);
+	if (oldRefCount == 0)
 		this->Initialize();
-	return newCount;
+	return oldRefCount + 1;
 	}
 
 int ZRefCountedWithFinalizeBase::pCOMRelease()

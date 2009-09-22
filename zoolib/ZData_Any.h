@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZData_Any__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZAny.h"
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZRef.h"
@@ -39,7 +40,7 @@ class ZData_Any
 	class Rep;
 
 public:
-	ZData_Any AsData_Any() const;
+	ZAny AsAny() const;
 
 	operator operator_bool_type() const;
 

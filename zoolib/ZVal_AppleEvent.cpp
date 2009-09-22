@@ -128,9 +128,9 @@ string sAEKeywordAsString(AEKeyword iKeyword)
 	}
 
 
-static ZVal_Any spAsVal_Any(const AEDesc& iDesc, const ZVal_Any& iDefault);
+static ZAny spAsAny(const ZAny& iDefault, const AEDesc& iDesc);
 
-static ZList_Any spAsList_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
+static ZList_Any spAsList_Any(const ZAny& iDefault, const AEDesc& iDesc)
 	{
 	ZList_Any theList;
 
@@ -141,7 +141,7 @@ static ZList_Any spAsList_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
 			{
 			ZVal_AppleEvent result;
 			if (noErr == ::AEGetNthDesc(&iDesc, x + 1, typeWildCard, nullptr, &result.OParam()))
-				theList.Append(spAsVal_Any(result, iDefault));
+				theList.Append(spAsAny(iDefault, result));
 			else
 				theList.Append(iDefault);
 			}
@@ -150,7 +150,7 @@ static ZList_Any spAsList_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
 	return theList;
 	}
 
-static ZMap_Any spAsMap_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
+static ZMap_Any spAsMap_Any(const ZAny& iDefault, const AEDesc& iDesc)
 	{
 	ZMap_Any theMap;
 
@@ -162,7 +162,7 @@ static ZMap_Any spAsMap_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
 			AEKeyword key;
 			ZVal_AppleEvent result;
 			if (noErr == ::AEGetNthDesc(&iDesc, x + 1, typeWildCard, &key, &result.OParam()))
-				theMap.Set(sAEKeywordAsString(key), spAsVal_Any(result, iDefault));
+				theMap.Set(sAEKeywordAsString(key), spAsAny(iDefault, result));
 			}
 		}
 
@@ -174,16 +174,16 @@ static ZMap_Any spAsMap_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
 		{ \
 		cpp_t theVal; \
 		::AEGetDescData(&iDesc, &theVal, sizeof(theVal)); \
-		return theVal; \
+		return ZAny(theVal); \
 		} \
 
-static ZVal_Any spAsVal_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
+static ZAny spAsAny(const ZAny& iDefault, const AEDesc& iDesc)
 	{
 	if (typeAEList == iDesc.descriptorType)
-		return spAsList_Any(iDesc, iDefault);
+		return ZAny(spAsList_Any(iDefault, iDesc));
 
 	if (spAECheckIsRecord(&iDesc))
-		return spAsMap_Any(iDesc, iDefault);
+		return ZAny(spAsMap_Any(iDefault, iDesc));
 
 	switch (iDesc.descriptorType)
 		{
@@ -196,13 +196,13 @@ static ZVal_Any spAsVal_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
 		AEGETTER(FSRef, typeFSRef)
 		AEGETTER(FSSpec, typeFSS)
 
-		case typeTrue: return true;
-		case typeFalse: return false;
+		case typeTrue: return ZAny(true);
+		case typeFalse: return ZAny(false);
 		case typeBoolean:
 			{
 			Boolean theFlag;
 			::AEGetDescData(&iDesc, &theFlag, sizeof(theFlag));
-			return true && theFlag;
+			return ZAny(true && theFlag);
 			}
 
 		#if ZCONFIG_Has_typeUTF8Text
@@ -215,7 +215,7 @@ static ZVal_Any spAsVal_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
 				result.resize(theSize);
 				::AEGetDescData(&iDesc, const_cast<char*>(result.data()), theSize);
 				}
-			return result;
+			return ZAny(result);
 			}
 		#endif
 
@@ -228,7 +228,7 @@ static ZVal_Any spAsVal_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
 				result.resize(theSize);
 				::AEGetDescData(&iDesc, const_cast<char*>(result.data()), theSize);
 				}
-			return result;
+			return ZAny(result);
 			}
 
 //		AEGETTER(ZHandle_T<AliasHandle>, typeAlias)		
@@ -243,11 +243,11 @@ static ZVal_Any spAsVal_Any(const AEDesc& iDesc, const ZVal_Any& iDefault)
 #pragma mark -
 #pragma mark * ZVal_AppleEvent
 
-ZVal_Any ZVal_AppleEvent::AsVal_Any() const
-	{ return this->AsVal_Any(ZVal_Any()); }
+ZAny ZVal_AppleEvent::AsAny() const
+	{ return this->AsAny(ZAny()); }
 
-ZVal_Any ZVal_AppleEvent::AsVal_Any(const ZVal_Any& iDefault) const
-	{ return spAsVal_Any(*this, iDefault); }
+ZAny ZVal_AppleEvent::AsAny(const ZAny& iDefault) const
+	{ return spAsAny(iDefault, *this); }
 
 ZVal_AppleEvent::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(descriptorType != typeNull); }
@@ -464,10 +464,10 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, FSRef, FSRef)
 #pragma mark * ZList_AppleEvent
 
 ZList_Any ZList_AppleEvent::AsList_Any() const
-	{ return this->AsList_Any(ZVal_Any()); }
+	{ return this->AsList_Any(ZAny()); }
 
-ZList_Any ZList_AppleEvent::AsList_Any(const ZVal_Any& iDefault) const
-	{ return spAsList_Any(*this, iDefault); }
+ZList_Any ZList_AppleEvent::AsList_Any(const ZAny& iDefault) const
+	{ return spAsList_Any(iDefault, *this); }
 
 ZList_AppleEvent::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->Count()); }
@@ -582,10 +582,10 @@ void ZList_AppleEvent::Append(const ZVal_AppleEvent& iVal)
 #pragma mark * ZMap_AppleEvent
 
 ZMap_Any ZMap_AppleEvent::AsMap_Any() const
-	{ return this->AsMap_Any(ZVal_Any()); }
+	{ return this->AsMap_Any(ZAny()); }
 
-ZMap_Any ZMap_AppleEvent::AsMap_Any(const ZVal_Any& iDefault) const
-	{ return spAsMap_Any(*this, iDefault); }
+ZMap_Any ZMap_AppleEvent::AsMap_Any(const ZAny& iDefault) const
+	{ return spAsMap_Any(iDefault, *this); }
 
 ZMap_AppleEvent::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->pCount()); }

@@ -25,13 +25,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAny.h"
 #include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZData_Any.h"
 #include "zoolib/ZFile.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors_Std.h"
-#include "zoolib/ZVal_Any.h"
 
+#include "zoolib/photoshop/ZPhotoshop.h"
 #include "zoolib/photoshop/ZPhotoshop_FileRef.h"
 
 #include <vector>
@@ -222,23 +223,18 @@ private:
 #pragma mark -
 #pragma mark * Val
 
-class Val
+class Val : public ZAny
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Val,
-		operator_bool_generator_type, operator_bool_type);
-
 public:
-	operator operator_bool_type() const;
-
-	ZVal_Any AsVal_Any() const;
-	ZVal_Any AsVal_Any(const ZVal_Any& iDefault) const;
-
-	void swap(Val& iOther);
+	ZAny AsAny() const;
+	ZAny AsAny(const ZAny& iDefault) const;
 
 	Val();
 	Val(const Val& iOther);
 	~Val();
 	Val& operator=(const Val& iOther);
+
+	Val(const ZAny& iOther);
 
 	Val(int32 iVal);
 	Val(double iVal);
@@ -251,29 +247,6 @@ public:
 	Val(const List& iVal);
 	Val(const Map& iVal);
 	Val(const Spec& iVal);
-
-// ZVal protocol
-	void Clear();
-
-	template <class S>
-	S* PGet_T()
-		{ return ZAnyCast<S>(&fAny); }
-
-	template <class S>
-	const S* PGet_T() const
-		{ return ZAnyCast<S>(&fAny); }
-
-	template <class S>
-	bool QGet_T(S& oVal) const;
-
-	template <class S>
-	S DGet_T(const S& iDefault) const;
-
-	template <class S>
-	S Get_T() const;
-
-	template <class S>
-	void Set_T(const S& iVal);
 
 // Typename accessors
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Int32, int32)
@@ -288,11 +261,6 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(Val, List, List)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Map, Map)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Spec, Spec)
-
-private:
-	ZAny fAny;
-	friend class List;
-	friend class Map;
 	};
 
 // =================================================================================================
@@ -307,8 +275,8 @@ class List
 public:
 	operator operator_bool_type() const;
 
-	ZList_Any AsList_Any() const;
-	ZList_Any AsList_Any(const ZVal_Any& iDefault) const;
+	ZAny AsAny() const;
+	ZAny AsAny(const ZAny& iDefault) const;
 
 	void swap(List& iOther);
 
@@ -357,8 +325,8 @@ public:
 
 	operator operator_bool_type() const;
 
-	ZMap_Any AsMap_Any() const;
-	ZMap_Any AsMap_Any(const ZVal_Any& iDefault) const;
+	ZAny AsAny() const;
+	ZAny AsAny(const ZAny& iDefault) const;
 
 	void swap(Map& iOther);
 

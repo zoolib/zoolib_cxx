@@ -20,6 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTime.h"
 #include "zoolib/ZYad_JSONNormalize.h"
+#include "zoolib/ZYad_Std.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 

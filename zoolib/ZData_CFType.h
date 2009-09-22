@@ -44,7 +44,7 @@ class ZData_CFType
 
 	class Rep;
 public:
-	ZData_Any AsData_Any() const;
+	ZAny AsAny() const;
 
 	operator bool() const;
 

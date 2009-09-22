@@ -24,54 +24,6 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVal_Any
-
-ZVal_Any ZVal_Any::AsVal_Any()
-	{ return *this; }
-
-ZVal_Any ZVal_Any::AsVal_Any(const ZVal_Any& iDefault)
-	{ return *this; }
-
-const ZAny& ZVal_Any::AsAny() const
-	{ return fAny; }
-
-ZVal_Any::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(fAny.type() != typeid(void)); }
-
-ZVal_Any::ZVal_Any()
-	{}
-
-ZVal_Any::ZVal_Any(const ZVal_Any& iOther)
-:	fAny(iOther.fAny)
-	{}
-
-ZVal_Any::~ZVal_Any()
-	{}
-
-ZVal_Any& ZVal_Any::operator=(const ZVal_Any& iOther)
-	{
-	fAny = iOther.fAny;
-	return *this;
-	}
-
-ZVal_Any::ZVal_Any(const ZAny& iVal)
-:	fAny(iVal)
-	{}
-
-ZVal_Any& ZVal_Any::operator=(const ZAny& iVal)
-	{
-	fAny = iVal;
-	return *this;
-	}
-
-void ZVal_Any::Clear()
-	{
-	ZAny temp;
-	fAny.swap(temp);
-	}
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZVal_Any typename accessors
 
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Data, ZData_Any)
@@ -96,11 +48,11 @@ ZList_Any::Rep::Rep(const vector<ZVal_Any>& iVector)
 #pragma mark -
 #pragma mark * ZList_Any
 
-ZList_Any ZList_Any::AsList_Any()
-	{ return *this; }
+ZAny ZList_Any::AsAny() const
+	{ return ZAny(*this); }
 
-ZList_Any ZList_Any::AsList_Any(const ZVal_Any& iDefault)
-	{ return *this; }
+ZAny ZList_Any::AsAny(const ZAny& iDefault) const
+	{ return ZAny(*this); }
 
 ZList_Any::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fRep && !fRep->fVector.empty()); }
@@ -245,11 +197,11 @@ ZMap_Any::Rep::Rep(const map<string, ZVal_Any>& iMap)
 
 static map<string, ZVal_Any> spEmptyMap;
 
-ZMap_Any ZMap_Any::AsMap_Any()
-	{ return *this; }
+ZAny ZMap_Any::AsAny() const
+	{ return ZAny(*this); }
 
-ZMap_Any ZMap_Any::AsMap_Any(const ZVal_Any& iDefault)
-	{ return *this; }
+ZAny ZMap_Any::AsAny(const ZAny& iDefault) const
+	{ return ZAny(*this); }
 
 ZMap_Any::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fRep && !fRep->fMap.empty()); }

@@ -113,7 +113,7 @@ bool ZYadPrimR_ZooLib::IsSimple(const ZYadOptions& iOptions)
 	{ return spIsSimple(iOptions, fVal); }
 
 ZAny ZYadPrimR_ZooLib::AsAny()
-	{ return fVal.AsVal_Any().AsAny(); }
+	{ return fVal.AsAny(); }
 
 // =================================================================================================
 #pragma mark -
@@ -212,8 +212,7 @@ YadVisitor_GetValZooLib::YadVisitor_GetValZooLib(const ZVal_ZooLib& iDefault)
 
 bool YadVisitor_GetValZooLib::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{
-	if (!ZVal_ZooLib::sFromAny(iYadPrimR->AsAny(), fOutput))
-		fOutput = fDefault;
+	fOutput = ZVal_ZooLib::sDFromAny(fDefault, iYadPrimR->AsAny());
 	return true;
 	}
 

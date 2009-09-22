@@ -42,19 +42,7 @@ public:
 #pragma mark -
 #pragma mark * ZYadPrimR_Std
 
-class ZYadPrimR_Std
-:	public ZYadPrimR
-	{
-public:
-	ZYadPrimR_Std(const ZAny& iAny);
-	virtual ~ZYadPrimR_Std();
-
-// From ZYadPrimR
-	virtual ZAny AsAny();
-
-private:
-	const ZAny fAny;
-	};
+typedef ZYadPrimR_Any ZYadPrimR_Std;
 
 // =================================================================================================
 #pragma mark -

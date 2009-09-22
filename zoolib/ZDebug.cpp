@@ -134,7 +134,38 @@ public:
 	} sDebugFunction_POSIX;
 
 #endif // ZCONFIG_SPI_Enabled(POSIX)
+#if 0
+// Mac IDP.
 
+extern "C" {
+
+bool IsDebuggerPresent() {
+    int mib[4];
+    struct kinfo_proc info;
+    size_t size;
+
+    info.kp_proc.p_flag = 0;
+    mib[0] = CTL_KERN;
+    mib[1] = KERN_PROC;
+    mib[2] = KERN_PROC_PID;
+    mib[3] = getpid();
+
+    size = sizeof(info);
+    sysctl(mib, sizeof(mib) / sizeof(*mib), &info, &size, NULL, 0);
+
+    return ((info.kp_proc.p_flag & P_TRACED) != 0);
+}
+
+void OutputDebugString(const char *restrict fmt, ...) {
+    if( !IsDebuggerPresent() )
+        return;
+
+    va_list args;
+    va_start(args, fmt);
+    vprintf(fmt, args);
+    va_end(args);
+}
+#endif
 // =================================================================================================
 #pragma mark -
 #pragma mark * Win

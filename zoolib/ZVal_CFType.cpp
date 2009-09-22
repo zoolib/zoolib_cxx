@@ -68,11 +68,11 @@ ZRef<CFTypeRef> sNumber_T(CFNumberType iNumberType, const S& iVal)
 #pragma mark -
 #pragma mark * ZVal_CFType
 
-ZVal_Any ZVal_CFType::AsVal_Any() const
-	{ return this->AsVal_Any(ZVal_Any()); }
+ZAny ZVal_CFType::AsAny() const
+	{ return this->AsAny(ZAny()); }
 
-ZVal_Any ZVal_CFType::AsVal_Any(const ZVal_Any& iDefault) const
-	{ return ZUtil_CFType::sAsVal_Any(iDefault, this); }
+ZAny ZVal_CFType::AsAny(const ZAny& iDefault) const
+	{ return ZUtil_CFType::sAsAny(iDefault, *this); }
 
 ZVal_CFType::operator bool() const
 	{
@@ -140,6 +140,10 @@ ZVal_CFType::ZVal_CFType(float iVal)
 ZVal_CFType::ZVal_CFType(double iVal)
 :	inherited(
 		NoRetain(CFTypeRef(::CFNumberCreate(kCFAllocatorDefault, kCFNumberFloat64Type, &iVal))))
+	{}
+
+ZVal_CFType::ZVal_CFType(const char* iVal)
+:	inherited(sString(iVal))
 	{}
 
 ZVal_CFType::ZVal_CFType(const string8& iVal)
@@ -242,7 +246,7 @@ bool ZVal_CFType::QGet_T<int64>(int64& oVal) const
 template <>
 bool ZVal_CFType::QGet_T<bool>(bool& oVal) const
 	{
-	if (::CFGetTypeID(*this) == ::CFBooleanGetTypeID())
+	if (*this && ::CFGetTypeID(*this) == ::CFBooleanGetTypeID())
 		{
 		oVal = ::CFBooleanGetValue(static_cast<CFBooleanRef>(Get()));
 		return true;
@@ -273,7 +277,7 @@ bool ZVal_CFType::QGet_T<double>(double& oVal) const
 template <>
 bool ZVal_CFType::QGet_T<string8>(string8& oVal) const
 	{
-	if (::CFGetTypeID(*this) == ::CFStringGetTypeID())
+	if (*this && ::CFGetTypeID(*this) == ::CFStringGetTypeID())
 		{
 		oVal = sAsUTF8(static_cast<CFStringRef>(Get()));
 		return true;
@@ -284,7 +288,7 @@ bool ZVal_CFType::QGet_T<string8>(string8& oVal) const
 template <>
 bool ZVal_CFType::QGet_T<ZRef<CFStringRef> >(ZRef<CFStringRef>& oVal) const
 	{
-	if (::CFGetTypeID(*this) == ::CFStringGetTypeID())
+	if (*this && ::CFGetTypeID(*this) == ::CFStringGetTypeID())
 		{
 		oVal = static_cast<CFStringRef>(Get());
 		return true;
@@ -295,7 +299,7 @@ bool ZVal_CFType::QGet_T<ZRef<CFStringRef> >(ZRef<CFStringRef>& oVal) const
 template <>
 bool ZVal_CFType::QGet_T<ZData_CFType>(ZData_CFType& oVal) const
 	{
-	if (::CFGetTypeID(*this) == ::CFDataGetTypeID())
+	if (*this && ::CFGetTypeID(*this) == ::CFDataGetTypeID())
 		{
 		oVal = static_cast<CFDataRef>(Get());
 		return true;
@@ -306,7 +310,7 @@ bool ZVal_CFType::QGet_T<ZData_CFType>(ZData_CFType& oVal) const
 template <>
 bool ZVal_CFType::QGet_T<ZList_CFType>(ZList_CFType& oVal) const
 	{
-	if (::CFGetTypeID(*this) == ::CFArrayGetTypeID())
+	if (*this && ::CFGetTypeID(*this) == ::CFArrayGetTypeID())
 		{
 		oVal = static_cast<CFArrayRef>(Get());
 		return true;
@@ -317,7 +321,7 @@ bool ZVal_CFType::QGet_T<ZList_CFType>(ZList_CFType& oVal) const
 template <>
 bool ZVal_CFType::QGet_T<ZMap_CFType>(ZMap_CFType& oVal) const
 	{
-	if (::CFGetTypeID(*this) == ::CFDictionaryGetTypeID())
+	if (*this && ::CFGetTypeID(*this) == ::CFDictionaryGetTypeID())
 		{
 		oVal = static_cast<CFDictionaryRef>(Get());
 		return true;
@@ -393,11 +397,11 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Map, ZMap_CFType)
 #pragma mark -
 #pragma mark * ZList_CFType
 
-ZList_Any ZList_CFType::AsList_Any() const
-	{ return this->AsList_Any(ZVal_Any()); }
+ZAny ZList_CFType::AsAny() const
+	{ return this->AsAny(ZAny()); }
 
-ZList_Any ZList_CFType::AsList_Any(const ZVal_Any& iDefault) const
-	{ return ZUtil_CFType::sAsList_Any(iDefault, this->pArray()); }
+ZAny ZList_CFType::AsAny(const ZAny& iDefault) const
+	{ return ZUtil_CFType::sAsAny(iDefault, this->pArray()); }
 
 ZList_CFType::operator bool() const
 	{ return this->Count(); }
@@ -544,11 +548,11 @@ CFMutableArrayRef ZList_CFType::pTouch()
 #pragma mark -
 #pragma mark * ZMap_CFType
 
-ZMap_Any ZMap_CFType::AsMap_Any() const
-	{ return this->AsMap_Any(ZVal_Any()); }
+ZAny ZMap_CFType::AsAny() const
+	{ return this->AsAny(ZAny()); }
 
-ZMap_Any ZMap_CFType::AsMap_Any(const ZVal_Any& iDefault) const
-	{ return ZUtil_CFType::sAsMap_Any(iDefault, this->pDictionary()); }
+ZAny ZMap_CFType::AsAny(const ZAny& iDefault) const
+	{ return ZUtil_CFType::sAsAny(iDefault, this->pDictionary()); }
 
 ZMap_CFType::operator bool() const
 	{

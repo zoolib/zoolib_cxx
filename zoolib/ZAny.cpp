@@ -28,38 +28,55 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-ZAny::ZAny()
+ZAnyBase::ZAnyBase()
 :	content(0)
 	{}
 
-ZAny::ZAny(const ZAny& other)
+ZAnyBase::ZAnyBase(const ZAnyBase& other)
 :	content(other.content ? other.content->clone() : 0)
 	{}
 
-ZAny::~ZAny()
+ZAnyBase::~ZAnyBase()
 	{ delete content; }
 
-ZAny& ZAny::operator=(ZAny rhs)
+ZAnyBase& ZAnyBase::operator=(ZAnyBase rhs)
 	{
 	rhs.swap(*this);
 	return *this;
 	}
 
-ZAny& ZAny::swap(ZAny& rhs)
+ZAnyBase& ZAnyBase::swap(ZAnyBase& rhs)
 	{
 	std::swap(content, rhs.content);
 	return *this;
 	}
 
-bool ZAny::empty() const
+bool ZAnyBase::empty() const
 	{ return !content; }
 
-const std::type_info& ZAny::type() const
+const std::type_info& ZAnyBase::type() const
 	{ return content ? content->type() : typeid(void); }
 
 NAMESPACE_ZOOLIB_END
 
 #endif // ! ZCONFIG_SPI_Enabled(boost)
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZAny
+
+NAMESPACE_ZOOLIB_BEGIN
+
+ZAny::operator operator_bool_type() const
+	{ return operator_bool_generator_type::translate(this->type() != typeid(void)); }
+
+void ZAny::Clear()
+	{
+	ZAny temp;
+	this->swap(temp);
+	}
+
+NAMESPACE_ZOOLIB_END
 
 // =================================================================================================
 #pragma mark -

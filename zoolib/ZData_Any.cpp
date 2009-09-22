@@ -57,8 +57,8 @@ ZData_Any::Rep::Rep(const vector<char>& iVector)
 #pragma mark -
 #pragma mark * ZData_Any
 
-ZData_Any ZData_Any::AsData_Any() const
-	{ return *this; }
+ZAny ZData_Any::AsAny() const
+	{ return ZAny(*this); }
 
 ZData_Any::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fRep->fVector.size()); }

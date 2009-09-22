@@ -22,10 +22,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZNetscape_Variant__ 1
 #include "zconfig.h"
 
-#include "zoolib/netscape/ZNetscape.h"
+#include "zoolib/ZAny.h"
 #include "zoolib/ZRef.h"
-#include "zoolib/ZVal_Any.h"
 #include "zoolib/ZValAccessors.h"
+
+#include "zoolib/netscape/ZNetscape.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -90,8 +91,8 @@ public:
 
 	typedef T Object_t;
 
-	ZVal_Any AsVal_Any() const;
-	ZVal_Any AsVal_Any(const ZVal_Any& iDefault) const;
+	ZAny AsAny() const;
+	ZAny AsAny(const ZAny& iDefault) const;
 
 	NPVariant_T();
 	NPVariant_T(const NPVariant_T& iOther);

@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZAny.h"
-#include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZRef_Counted.h"
@@ -50,94 +49,54 @@ class ZMap_Any;
 #pragma mark -
 #pragma mark * ZVal_Any
 
-class ZVal_Any
+class ZVal_Any : public ZAny
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZVal_Any,
-		operator_bool_generator_type, operator_bool_type);
-
 public:
-	ZVal_Any AsVal_Any();
-	ZVal_Any AsVal_Any(const ZVal_Any& iDefault);
+	const ZAny& AsAny() const
+		{ return *this; }
 
-	const ZAny& AsAny() const;
+	ZVal_Any()
+		{}
 
-	operator operator_bool_type() const;
+	ZVal_Any(const ZVal_Any& iOther)
+	:	ZAny((const ZAny&)iOther)
+		{}
 
-	ZVal_Any();
-	ZVal_Any(const ZVal_Any& iOther);
-	~ZVal_Any();
-	ZVal_Any& operator=(const ZVal_Any& iOther);
+	~ZVal_Any()
+		{}
 
-	ZVal_Any(const ZAny& iVal);
+	ZVal_Any& operator=(const ZVal_Any& iOther)
+		{
+		ZAny::operator=((const ZAny&)iOther);
+		return *this;
+		}
 
-	ZVal_Any& operator=(const ZAny& iVal);
+	ZVal_Any(const ZAny& iOther)
+	:	ZAny(iOther)
+		{}
+
+	ZVal_Any& operator=(const ZAny& rhs)
+		{
+		ZAny::operator=(rhs);
+		return *this;
+		}
 
 	template <class S>
 	ZVal_Any(const S& iVal)
-	:	fAny(iVal)
+	:	ZAny(iVal)
 		{}
 
 	template <class S>
 	ZVal_Any& operator=(const S& iVal)
 		{
-		fAny = iVal;
+		ZAny::operator=(iVal);
 		return *this;
 		}
-
-// ZVal protocol
-	void Clear();
-
-	template <class S>
-	S* PGet_T()
-		{ return ZAnyCast<S>(&fAny); }
-
-	template <class S>
-	const S* PGet_T() const
-		{ return ZAnyCast<S>(&fAny); }
-
-	template <class S>
-	bool QGet_T(S& oVal) const
-		{
-		if (const S* theVal = this->PGet_T<S>())
-			{
-			oVal = *theVal;
-			return true;
-			}
-		return false;
-		}
-
-	template <class S>
-	S DGet_T(const S& iDefault) const
-		{
-		if (const S* theVal = this->PGet_T<S>())
-			return *theVal;
-		return iDefault;
-		}
-
-	template <class S>
-	S Get_T() const
-		{
-		if (const S* theVal = this->PGet_T<S>())
-			return *theVal;
-		return S();
-		}
-
-	template <class S>
-	void Set_T(const S& iVal)
-		{ fAny = iVal; }
-
-// Our protocol
-	template <class S>
-	bool Is_T() const
-		{ return ZAnyCast<S>(&fAny); }
 
 // Typename accessors
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Data, ZData_Any)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, List, ZList_Any)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Map, ZMap_Any)
-
-private:
-	ZAny fAny;
 	};
 
 // =================================================================================================
@@ -154,8 +113,8 @@ class ZList_Any
 public:
 	typedef ZVal_Any Val_t;
 
-	ZList_Any AsList_Any();
-	ZList_Any AsList_Any(const ZVal_Any& iDefault);
+	ZAny AsAny() const;
+	ZAny AsAny(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 
@@ -242,8 +201,8 @@ public:
 	typedef map<string, ZVal_Any>::iterator Index_t;
 	typedef ZVal_Any Val_t;
 
-	ZMap_Any AsMap_Any();
-	ZMap_Any AsMap_Any(const ZVal_Any& iDefault);
+	ZAny AsAny() const;
+	ZAny AsAny(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 

@@ -22,7 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZAny__
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
-#include "zoolib/ZTypes.h"
+
+#include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZTypes.h" // For int64
 
 // =================================================================================================
 #pragma mark -
@@ -34,14 +36,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-typedef boost::any ZAny;
+typedef boost::any ZAnyBase;
 
 template<typename ValueType>
-ValueType* ZAnyCast(ZAny* operand)
+ValueType* ZAnyBaseCast(ZAnyBase* operand)
 	{ return boost::any_cast<ValueType>(operand); }
 
 template<typename ValueType>
-const ValueType* ZAnyCast(const ZAny* operand)
+const ValueType* ZAnyBaseCast(const ZAnyBase* operand)
 	{ return boost::any_cast<ValueType>(operand); }
 
 NAMESPACE_ZOOLIB_END
@@ -50,7 +52,7 @@ NAMESPACE_ZOOLIB_END
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZAny, copied/reworked from boost::any
+#pragma mark * ZAnyBase, copied/reworked from boost::any
 
 #if ! ZCONFIG_SPI_Enabled(boost)
 
@@ -73,27 +75,27 @@ NAMESPACE_ZOOLIB_END
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZAny
+class ZAnyBase
 	{
 public:
-	ZAny();
-	ZAny(const ZAny& other);
-	~ZAny();
-	ZAny& operator=(ZAny rhs);
+	ZAnyBase();
+	ZAnyBase(const ZAnyBase& other);
+	~ZAnyBase();
+	ZAnyBase& operator=(ZAnyBase rhs);
 
 	template<typename ValueType>
-	ZAny(const ValueType & value)
+	ZAnyBase(const ValueType & value)
 	:	content(new holder<ValueType>(value))
 		{}
 
 	template<typename ValueType>
-	ZAny& operator=(const ValueType & rhs)
+	ZAnyBase& operator=(const ValueType & rhs)
 		{
-		ZAny(rhs).swap(*this);
+		ZAnyBase(rhs).swap(*this);
 		return *this;
 		}
 
-	ZAny& swap(ZAny& rhs);
+	ZAnyBase& swap(ZAnyBase& rhs);
 
 	bool empty() const;
 	const std::type_info & type() const;
@@ -127,38 +129,144 @@ private:
 		};
 
 #ifdef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-    public: // so ZAnyCast can be non-friend
+    public: // so ZAnyBaseCast can be non-friend
 #else
 private:
 	template<typename ValueType>
-	friend ValueType* ZAnyCast(ZAny*);
+	friend ValueType* ZAnyBaseCast(ZAnyBase*);
 
 	template<typename ValueType>
-	friend const ValueType* ZAnyCast(const ZAny*);
+	friend const ValueType* ZAnyBaseCast(const ZAnyBase*);
 #endif
 
 	placeholder* content;
 	};
 
 template<typename ValueType>
-ValueType* ZAnyCast(ZAny* operand)
+ValueType* ZAnyBaseCast(ZAnyBase* operand)
 	{
 	if (!operand || operand->type() != typeid(ValueType))
 		return 0;
-	return &static_cast<ZAny::holder<ValueType>*>(operand->content)->held;
+	return &static_cast<ZAnyBase::holder<ValueType>*>(operand->content)->held;
 	}
 
 template<typename ValueType>
-const ValueType* ZAnyCast(const ZAny* operand)
+const ValueType* ZAnyBaseCast(const ZAnyBase* operand)
 	{
 	if (!operand || operand->type() != typeid(ValueType))
 		return 0;
-	return &static_cast<ZAny::holder<ValueType>*>(operand->content)->held;
+	return &static_cast<ZAnyBase::holder<ValueType>*>(operand->content)->held;
 	}
 
 NAMESPACE_ZOOLIB_END
 
 #endif // ! ZCONFIG_SPI_Enabled(boost)
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZAny
+
+NAMESPACE_ZOOLIB_BEGIN
+
+class ZAny : private ZAnyBase
+	{
+public:
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZAny,
+		operator_bool_generator_type, operator_bool_type);
+
+	operator operator_bool_type() const;
+
+	void swap(ZAny& rhs)
+		{ ZAnyBase::swap((ZAnyBase&)rhs); }
+
+	const std::type_info & type() const
+		{ return ZAnyBase::type(); }
+
+	ZAny()
+		{}
+
+	ZAny(const ZAny& other)
+	:	ZAnyBase((const ZAnyBase&)other)
+		{}
+
+	~ZAny()
+		{}
+
+	ZAny& operator=(const ZAny& rhs)
+		{
+		ZAnyBase::operator=((const ZAnyBase&)rhs);
+		return *this;
+		}
+
+	template <class S>
+	explicit ZAny(const S& iVal)
+	:	ZAnyBase(iVal)
+		{}
+
+	template <class S>
+	ZAny& operator=(const S& iVal)
+		{
+		ZAnyBase::operator=(iVal);
+		return *this;
+		}
+
+// ZVal protocol, for use by ZVal derivatives
+	void Clear();
+
+	template <class S>
+	S* PGet_T()
+		{ return ZAnyBaseCast<S>(this); }
+
+	template <class S>
+	const S* PGet_T() const
+		{ return ZAnyBaseCast<S>(this); }
+
+	template <class S>
+	bool QGet_T(S& oVal) const
+		{
+		if (const S* theVal = this->PGet_T<S>())
+			{
+			oVal = *theVal;
+			return true;
+			}
+		return false;
+		}
+
+	template <class S>
+	S DGet_T(const S& iDefault) const
+		{
+		if (const S* theVal = this->PGet_T<S>())
+			return *theVal;
+		return iDefault;
+		}
+
+	template <class S>
+	S Get_T() const
+		{
+		if (const S* theVal = this->PGet_T<S>())
+			return *theVal;
+		return S();
+		}
+
+	template <class S>
+	void Set_T(const S& iVal)
+		{ ZAnyBase::operator=(iVal); }
+
+// Our protocol
+	template <class S>
+	bool Is_T() const
+		{ return this->PGet_T<S>(); }
+	};
+
+template<typename ValueType>
+ValueType* ZAnyCast(ZAny* operand)
+	{ return operand->PGet_T<ValueType>(); }
+
+template<typename ValueType>
+const ValueType* ZAnyCast(const ZAny* operand)
+	{ return operand->PGet_T<ValueType>(); }
+
+NAMESPACE_ZOOLIB_END
 
 // =================================================================================================
 #pragma mark -

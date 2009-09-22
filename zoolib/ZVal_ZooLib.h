@@ -71,10 +71,12 @@ class ZVal_ZooLib
 		operator_bool_generator_type, operator_bool_type);
 
 public:
-	static bool sFromAny(const ZAny& iAny, ZVal_ZooLib& oVal);
+	static bool sQFromAny(const ZAny& iAny, ZVal_ZooLib& oVal);
+	static ZVal_ZooLib sDFromAny(const ZVal_ZooLib& iDefault, const ZAny& iAny);
+	static ZVal_ZooLib sFromAny(const ZAny& iAny);
 
-	ZVal_Any AsVal_Any() const;
-	ZVal_Any AsVal_Any(const ZVal_Any& iDefault) const;
+	ZAny AsAny() const;
+	ZAny AsAny(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 
@@ -277,8 +279,8 @@ class ZList_ZooLib
 public:
 	typedef ZVal_ZooLib Val_t;
 
-	ZList_Any AsList_Any() const;
-	ZList_Any AsList_Any(const ZVal_Any& iDefault) const;
+	ZAny AsAny() const;
+	ZAny AsAny(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 
@@ -407,8 +409,8 @@ public:
 	typedef PropList::iterator Index_t;
 	typedef ZVal_ZooLib Val_t;
 
-	ZMap_Any AsMap_Any() const;
-	ZMap_Any AsMap_Any(const ZVal_Any& iDefault) const;
+	ZAny AsAny() const;
+	ZAny AsAny(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 

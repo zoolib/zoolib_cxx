@@ -278,4 +278,18 @@ bool ZYadVisitor::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 bool ZYadVisitor::Visit_YadMapRPos(ZRef<ZYadMapRPos> iYadMapRPos)
 	{ return this->Visit_YadMapR(iYadMapRPos); }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadPrimR_Any
+
+ZYadPrimR_Any::ZYadPrimR_Any(const ZAny& iAny)
+:	fAny(iAny)
+	{}
+
+ZYadPrimR_Any::~ZYadPrimR_Any()
+	{}
+
+ZAny ZYadPrimR_Any::AsAny()
+	{ return fAny; }
+
 NAMESPACE_ZOOLIB_END

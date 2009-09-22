@@ -38,7 +38,6 @@ using std::string;
 #pragma mark -
 #pragma mark * ZPhotoshop suites, for local use
 
-//###undef kPSAliasSuite
 #ifdef kPSAliasSuite
 	static AutoSuite<PSAliasSuite>
 		spPSAlias(kPSAliasSuite, kPSAliasSuiteVersion1);

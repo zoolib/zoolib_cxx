@@ -33,36 +33,35 @@ namespace ZNetscape {
 #pragma mark * NPVariant_T
 
 template <class T>
-ZVal_Any NPVariant_T<T>::AsVal_Any() const
-	{ return this->AsVal_Any(ZVal_Any()); }
+ZAny NPVariant_T<T>::AsAny() const
+	{ return this->AsAny(ZAny()); }
 
 template <class T>
-ZVal_Any NPVariant_T<T>::AsVal_Any(const ZVal_Any& iDefault) const
+ZAny NPVariant_T<T>::AsAny(const ZAny& iDefault) const
 	{
 	switch (type)
 		{
 		case NPVariantType_Bool:
 			{
-			return bool(value.boolValue);
+			return ZAny(bool(value.boolValue));
 			}
 		case NPVariantType_Int32:
 			{
-			return int32(value.intValue);
-			break;
+			return ZAny(int32(value.intValue));
 			}
 		case NPVariantType_Double:
 			{
-			return value.doubleValue;
+			return ZAny(value.doubleValue);
 			}
 		case NPVariantType_String:
 			{
-			return std::string(
+			return ZAny(std::string(
 				sNPStringCharsConst(value.stringValue),
-				sNPStringLengthConst(value.stringValue));
+				sNPStringLengthConst(value.stringValue)));
 			}
 		case NPVariantType_Object:
 			{
-			return ZRef<T>(static_cast<T*>(value.objectValue));
+			return ZAny(ZRef<T>(static_cast<T*>(value.objectValue)));
 			}
 		}
 	return iDefault;

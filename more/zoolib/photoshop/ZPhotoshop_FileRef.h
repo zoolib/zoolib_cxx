@@ -29,8 +29,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTypes.h"
 #include "zoolib/ZUnicodeString.h"
 
-#include "PITypes.h"
-#include "SPFiles.h"
+#include "zoolib/photoshop/ZPhotoshop.h"
+
+#include "SPFiles.h" // For SPPlatformFileSpecification
 
 NAMESPACE_ZOOLIB_BEGIN
 

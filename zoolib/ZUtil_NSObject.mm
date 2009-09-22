@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Cocoa)
 
+#include "zoolib/ZObjC.h"
+#include "zoolib/ZTime.h"
 #include "zoolib/ZUnicode.h"
 
 #import <Foundation/NSString.h>
@@ -31,100 +33,8 @@ using std::vector;
 
 NAMESPACE_ZOOLIB_USING
 
-// =================================================================================================
-
-@interface NSObject (ZTValueAdditions)
--(ZTValue)AsZTValue;
-@end
-
-@interface NSDictionary (ZTValueAdditions)
--(ZTValue)AsZTValue;
-@end
-
-@interface NSArray (ZTValueAdditions)
--(ZTValue)AsZTValue;
-@end
-
-@interface NSString (ZTValueAdditions)
--(ZTValue)AsZTValue;
-@end
-
-@interface NSNumber (ZTValueAdditions)
--(ZTValue)AsZTValue;
-@end
-
-/*
-@interface NSData (ZTValueAdditions)
--(ZTValue)AsZTValue;
-@end
-*/
-
-// =================================================================================================
-
-@implementation NSObject (ZTValueAdditions)
-
--(ZTValue)AsZTValue
-	{
-	// Hmm, log and return null or what?
-	ZDebugLogf(0, ("NSObject (ZTValueAdditions) AsZTValue called"));
-	return ZTValue();
-	}
-
-@end
-
-// =================================================================================================
-
-@implementation NSDictionary (ZTValueAdditions)
-
--(ZTValue)AsZTValue
-	{
-	ZTuple result;
-	for (id theKey, i = [self keyEnumerator]; (theKey = [i nextObject]); /*no inc*/)
-		{
-		const ZTValue theValue = [[self objectForKey:theKey] AsZTValue];
-		const string theName = ZUtil_NSObject::sAsUTF8((NSString*)theKey);
-		result.Set(theName, theValue);
-		}
-	return result;
-	}
-
-@end
-
-// =================================================================================================
-
-@implementation NSArray (ZTValueAdditions)
-
--(ZTValue)AsZTValue
-	{
-	ZTValue result;
-	vector<ZTValue>& theVec = result.MutableList().MutableVector();
-	for (id theValue, i = [self objectEnumerator]; (theValue = [i nextObject]); /*no inc*/)
-		theVec.push_back([theValue AsZTValue]);
-	return result;
-	}
-
-@end
-
-// =================================================================================================
-
-@implementation NSString (ZTValueAdditions)
-
--(ZTValue)AsZTValue
-	{
-	return ZTValue([self UTF8String]);
-	}
-
-@end
-
-// =================================================================================================
-
-@implementation NSNumber (ZTValueAdditions)
-
--(ZTValue)AsZTValue
-	{
-	return ZTValue([self longLongValue]);
-	}
-
+@interface NSObject (ZAny_Additions)
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
 @end
 
 // =================================================================================================
@@ -133,128 +43,325 @@ NAMESPACE_ZOOLIB_USING
 
 NAMESPACE_ZOOLIB_BEGIN
 
-NSString* ZUtil_NSObject::sCreateNSString_UTF8(const string8& iString8)
-	{ return [[NSString alloc] initWithUTF8String:iString8.c_str()]; }
+namespace ZUtil_NSObject {
 
-NSString* ZUtil_NSObject::sCreateNSString_UTF16(const string16& iString16)
+NSString* sString()
+	{ return [NSString string]; }
+
+NSString* sString(const string8& iString8)
+	{ return [NSString stringWithUTF8String:iString8.c_str()]; }
+
+NSString* sString(const string16& iString16)
 	{
-	return [[NSString alloc]
-		initWithCharacters:(const unichar*)iString16.c_str()
+	return [NSString
+		stringWithCharacters:(const unichar*)iString16.c_str()
 		length:iString16.length()];
 	}
 
-string8 ZUtil_NSObject::sAsUTF8(NSString* iNSString)
-	{ return [iNSString UTF8String]; }
 
-string16 ZUtil_NSObject::sAsUTF16(NSString* iNSString)
-	{ return ZUnicode::sAsUTF16([iNSString UTF8String]); }
+NSMutableString* sStringMutable()
+	{ return [NSMutableString string]; }
 
-ZTValue ZUtil_NSObject::sAsTV(id iNSObject)
+NSMutableString* sStringMutable(const string8& iString8)
+	{ return [NSMutableString stringWithUTF8String:iString8.c_str()]; }
+
+NSMutableString* sStringMutable(const string16& iString16)
 	{
-	return [iNSObject AsZTValue];
+	return [NSMutableString
+		stringWithCharacters:(const unichar*)iString16.c_str()
+		length:iString16.length()];
 	}
 
-id ZUtil_NSObject::sCreateNSObject(const ZTValue& iTV)
-	{
-	switch (iTV.TypeOf())
-		{
-		case eZType_Tuple:
-			{
-			return sCreateNSDictionary(iTV.GetTuple());
-			}
-		case eZType_String:
-			{
-			return sCreateNSString_UTF8(iTV.GetString());
-			}
-		case eZType_Vector:
-			{
-			return sCreateNSArray(iTV.GetList().GetVector());
-			}
-		case eZType_Raw:
-			{
-			const ZData_ZooLib theData = iTV.GetData();
-			return [[NSData alloc] initWithBytes:theData.GetData() length:theData.GetSize()];
-			}
-		case eZType_Bool:
-			{
-			return [[NSNumber alloc] initWithBool:iTV.GetBool()];
-			}
-		case eZType_Int8:
-			{
-			return [[NSNumber alloc] initWithChar:iTV.GetInt8()];
-			}
-		case eZType_Int16:
-			{
-			return [[NSNumber alloc] initWithShort:iTV.GetInt16()];
-			}
-		case eZType_Int32:
-			{
-			return [[NSNumber alloc] initWithInt:iTV.GetInt32()]; //?? int or long??
-			}
-		case eZType_Int64:
-			{
-			return [[NSNumber alloc] initWithLongLong:iTV.GetInt64()];
-			}
-		case eZType_Float:
-			{
-			return [[NSNumber alloc] initWithFloat:iTV.GetFloat()];
-			}
-		case eZType_Double:
-			{
-			return [[NSNumber alloc] initWithDouble:iTV.GetDouble()];
-			}
-		}
-	return nullptr;
-	}
+NSMutableString* sStringMutable(NSString* iNSString)
+	{ return [NSMutableString stringWithString:iNSString]; }
 
-ZTuple ZUtil_NSObject::sAsTuple(NSDictionary* iNSDictionary)
+// -----
+
+NSDictionary* sDictionary()
+	{ return [NSDictionary dictionary]; }
+
+NSMutableDictionary* sDictionaryMutable()
+	{ return [NSMutableDictionary dictionary]; }
+
+NSMutableDictionary* sDictionaryMutable(NSDictionary* iNSDictionary)
+	{ return [NSMutableDictionary dictionaryWithDictionary:iNSDictionary]; }
+	
+
+// -----
+
+NSArray* sArray()
+	{ return [NSArray array]; }
+
+NSMutableArray* sArrayMutable()
+	{ return [NSMutableArray array]; }
+
+NSMutableArray* sArrayMutable(NSArray* iNSArray)
+	{ return [NSMutableArray arrayWithArray:iNSArray]; }
+
+// -----
+
+NSData* sData()
+	{ return [NSData data]; }
+
+NSData* sData(const void* iSource, size_t iSize)
+	{ return [NSData dataWithBytes:iSource length:iSize]; }
+
+NSMutableData* sDataMutable()
+	{ return [NSMutableData data]; }
+
+NSMutableData* sDataMutable(size_t iSize)
 	{
-	ZTuple result;
-	for (id theKey, i = [iNSDictionary keyEnumerator]; (theKey = [i nextObject]); /*no inc*/)
-		{
-		const ZTValue theValue = sAsTV([iNSDictionary objectForKey:theKey]);
-		result.Set(sAsUTF8((NSString*)theKey), theValue);
-		}
+	NSMutableData* result = [NSMutableData data];
+	[result setLength:iSize];
 	return result;
 	}
 
-NSDictionary* ZUtil_NSObject::sCreateNSDictionary(const ZTuple& iTuple)
+NSMutableData* sDataMutable(NSData* iNSData)
+	{ return [NSMutableData dataWithData:iNSData]; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZUtil_NSObject, conversions
+
+string8 sAsUTF8(NSString* iNSString)
+	{ return [iNSString UTF8String]; }
+
+string16 sAsUTF16(NSString* iNSString)
+	{ return ZUnicode::sAsUTF16([iNSString UTF8String]); }
+
+ZAny sAsAny(const ZAny& iDefault, NSObject* iVal)
 	{
-	vector<id> keys;
-	vector<id> values;
-
-	for (ZTuple::const_iterator i = iTuple.begin(); i != iTuple.end(); ++i)
+	if (iVal)
 		{
-		id theKey = sCreateNSString_UTF8(iTuple.NameOf(i).AsString());
-		keys.push_back(theKey);
+		@try
+			{
+			return [iVal asAnyWithDefault:iDefault];
+			}
+		@catch (id ex)
+			{}
+		}
+	return iDefault;
+	}
 
-		id theValue = sCreateNSObject(iTuple.Get(i));
-		values.push_back(theValue);
+ZAny sAsAny(NSObject* iVal)
+	{ return sAsAny(ZAny(), iVal); }
+
+NSObject* sAsNSObject(NSObject* iDefault, const ZAny& iVal)
+	{
+	if (false)
+		{}
+	else if (!iVal)
+		{
+		return [NSNull null];
+		}
+	else if (const string8* theValue = iVal.PGet_T<string8>())
+		{
+		return sString(*theValue);
+		}
+	else if (const vector<char>* theValue = iVal.PGet_T<vector<char> >())
+		{
+		if (size_t theSize = theValue->size())
+			return sData(&(*theValue)[0], theSize);
+		else
+			return sData();
+		}
+	else if (const ZData_Any* theValue = iVal.PGet_T<ZData_Any>())
+		{
+		if (size_t theSize = theValue->GetSize())
+			return sData(theValue->GetData(), theSize);
+		else
+			return sData();
+		}
+	else if (const ZList_Any* theValue = iVal.PGet_T<ZList_Any>())
+		{
+		NSMutableArray* theArray = sArrayMutable();
+		for (size_t x = 0, count = theValue->Count(); x < count; ++x)
+			[theArray addObject:sAsNSObject(iDefault, theValue->Get(x))];
+		return theArray;
+		}
+	else if (const ZMap_Any* theValue = iVal.PGet_T<ZMap_Any>())
+		{
+		NSMutableDictionary* theDictionary = sDictionaryMutable();
+		for (ZMap_Any::Index_t i = theValue->Begin(), end = theValue->End();
+			i != end; ++i)
+			{
+			[theDictionary setObject:sAsNSObject(iDefault, theValue->Get(i))
+				forKey:sString(theValue->NameOf(i))];
+			}
+		return theDictionary;
+		}
+	else if (const bool* theValue = iVal.PGet_T<bool>())
+		{
+		return [NSNumber numberWithBool:(BOOL)*theValue];
+		}
+	else if (const ZTime* theValue = iVal.PGet_T<ZTime>())
+		{
+		return [NSDate dateWithTimeIntervalSince1970:theValue->fVal];
+		}
+	else if (const char* theValue = iVal.PGet_T<char>())
+		{
+		return [NSNumber numberWithChar:*theValue];
+		}
+	else if (const unsigned char* theValue = iVal.PGet_T<unsigned char>())
+		{
+		return [NSNumber numberWithUnsignedChar:*theValue];
+		}
+	else if (const signed char* theValue = iVal.PGet_T<signed char>())
+		{
+		return [NSNumber numberWithChar:*theValue];
+		}
+	else if (const short* theValue = iVal.PGet_T<short>())
+		{
+		return [NSNumber numberWithShort:*theValue];
+		}
+	else if (const unsigned short* theValue = iVal.PGet_T<unsigned short>())
+		{
+		return [NSNumber numberWithUnsignedShort:*theValue];
+		}
+	else if (const int* theValue = iVal.PGet_T<int>())
+		{
+		return [NSNumber numberWithInt:*theValue];
+		}
+	else if (const unsigned int* theValue = iVal.PGet_T<unsigned int>())
+		{
+		return [NSNumber numberWithUnsignedInt:*theValue];
+		}
+	else if (const long* theValue = iVal.PGet_T<long>())
+		{
+		return [NSNumber numberWithLong:*theValue];
+		}
+	else if (const unsigned long* theValue = iVal.PGet_T<unsigned long>())
+		{
+		return [NSNumber numberWithUnsignedLong:*theValue];
+		}
+	else if (const int64* theValue = iVal.PGet_T<int64>())
+		{
+		return [NSNumber numberWithLongLong:(long long)*theValue];
+		}
+	else if (const uint64* theValue = iVal.PGet_T<uint64>())
+		{
+		return [NSNumber numberWithUnsignedLongLong:(unsigned long long)*theValue];
+		}
+	else if (const float* theValue = iVal.PGet_T<float>())
+		{
+		return [NSNumber numberWithFloat:*theValue];
+		}
+	else if (const double* theValue = iVal.PGet_T<double>())
+		{
+		return [NSNumber numberWithDouble:*theValue];
 		}
 
-	return [[NSDictionary alloc]
-		initWithObjects:&values[0]
-		forKeys:&keys[0]
-		count:values.size()];
+	return iDefault;
 	}
 
-void ZUtil_NSObject::sAsVector(NSArray* iNSArray, vector<ZTValue>& oVector)
-	{
-	for (id theValue, i = [iNSArray objectEnumerator]; (theValue = [i nextObject]); /*no inc*/)
-		oVector.push_back(sAsTV(theValue));
-	}
+NSObject* sAsNSObject(const ZAny& iVal)
+	{ return sAsNSObject([NSNull null], iVal); }
 
-NSArray* ZUtil_NSObject::sCreateNSArray(const vector<ZTValue>& iVector)
-	{
-	vector<id> values;
-	for (vector<ZTValue>::const_iterator i = iVector.begin(); i != iVector.end(); ++i)
-		values.push_back(sCreateNSObject(*i));
-
-	return [[NSArray alloc]
-		initWithObjects:&values[0]
-		count:values.size()];
-	}
+} // namespace ZUtil_NSObject
 
 NAMESPACE_ZOOLIB_END
+
+// =================================================================================================
+@implementation NSObject (ZAny_Additions)
+
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault
+	{
+	// Hmm, log and return null or what?
+	ZDebugLogf(0, ("NSObject (ZAny_Additions) AsAny called"));
+	return iDefault;
+	}
+
+@end
+
+// =================================================================================================
+@interface NSNull (ZAny_Additions)
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
+@end
+
+@implementation NSNull (ZAny_Additions)
+
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault
+	{ return ZAny(); }
+
+@end
+
+// =================================================================================================
+@interface NSDictionary (ZAny_Additions)
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
+@end
+
+@implementation NSDictionary (ZAny_Additions)
+
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault
+	{
+	ZMap_Any result;
+	for (id theKey, i = [self keyEnumerator];
+		(theKey = [i nextObject]); /*no inc*/)
+		{
+		const string theName = ZUtil_NSObject::sAsUTF8((NSString*)theKey);
+		const ZAny theVal =
+			[[self objectForKey:theKey] asAnyWithDefault:iDefault];
+		result.Set(theName, theVal);
+		}
+	return ZAny(result);
+	}
+
+@end
+
+// =================================================================================================
+@interface NSArray (ZAny_Additions)
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
+@end
+
+@implementation NSArray (ZAny_Additions)
+
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault
+	{
+	ZList_Any result;
+	for (id theValue, i = [self objectEnumerator];
+		(theValue = [i nextObject]); /*no inc*/)
+		{
+		result.Append([theValue asAnyWithDefault:iDefault]);
+		}
+	return ZAny(result);
+	}
+
+@end
+
+// =================================================================================================
+@interface NSData (ZAny_Additions)
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
+@end
+
+@implementation NSData (ZAny_Additions)
+
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault
+	{ return ZAny(ZData_Any([self bytes], [self length])); }
+
+@end
+
+// =================================================================================================
+@interface NSString (ZAny_Additions)
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
+@end
+
+@implementation NSString (ZAny_Additions)
+
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault
+	{ return ZAny(string([self UTF8String])); }
+
+@end
+
+// =================================================================================================
+@interface NSNumber (ZAny_Additions)
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
+@end
+
+@implementation NSNumber (ZAny_Additions)
+
+-(ZAny)asAnyWithDefault:(const ZAny&)iDefault
+	{ return ZAny(int64([self longLongValue])); }
+
+@end
 
 #endif // ZCONFIG_SPI_Enabled(Cocoa)

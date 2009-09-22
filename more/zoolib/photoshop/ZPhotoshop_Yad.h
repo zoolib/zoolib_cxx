@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZPhotoshop_Yad__ 1
 #include "zconfig.h"
 
-#include "zoolib/photoshop/ZPhotoshop_Val.h"
+#include "zoolib/ZYad.h"
 
-#include "zoolib/ZYad_Val_T.h"
+#include "zoolib/photoshop/ZPhotoshop.h"
+#include "zoolib/photoshop/ZPhotoshop_Val.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 

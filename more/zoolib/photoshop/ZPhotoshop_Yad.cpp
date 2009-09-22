@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/photoshop/ZPhotoshop_Yad.h"
 
 #include "zoolib/ZYad_Any.h"
-#include "zoolib/ZYad_Std.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -116,14 +115,14 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 		return sMakeYadR(theMap);
 		}
 
-	if (const Spec* asSpec = iVal.PGet_T<Spec>())
+	if (/*const Spec* asSpec = */iVal.PGet_T<Spec>())
 		{
 		ZMap_Any theMap;
 		theMap.Set("!Type", string("Spec"));
 		return sMakeYadR(theMap);
 		}
 
-	return new ZYadPrimR_Std(iVal.AsVal_Any().AsAny());
+	return new ZYadPrimR_Any(iVal.AsAny());
 	}
 
 ZRef<ZYadListR> sMakeYadR(const List& iList)

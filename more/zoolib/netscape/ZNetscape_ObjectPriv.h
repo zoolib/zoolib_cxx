@@ -172,7 +172,7 @@ bool NPObject_T<Variant_t>::Set(size_t iIndex, const Variant_t& iValue)
 	{ return static_cast<Self_t*>(this)->SetProperty(iIndex, iValue); }
 
 template <class Variant_t>
-bool NPObject_T<Variant_t>::Erase(const string& iName)
+bool NPObject_T<Variant_t>::Erase(const std::string& iName)
 	{ return static_cast<Self_t*>(this)->RemoveProperty(iName); }
 
 template <class Variant_t>

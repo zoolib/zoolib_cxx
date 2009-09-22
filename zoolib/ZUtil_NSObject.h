@@ -29,8 +29,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // with Cocotron, otherwise va_list isn't appropriately visible to ObjC code.
 #include <Foundation/Foundation.h>
 
-#include "zoolib/ZTuple.h"
 #include "zoolib/ZUnicodeString.h"
+#include "zoolib/ZVal_Any.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -40,20 +40,48 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZUtil_NSObject {
 
-NSString* sCreateNSString_UTF8(const string8& iString8);
-NSString* sCreateNSString_UTF16(const string16& iString16);
+NSString* sString();
+NSString* sString(const string8& iString8);
+NSString* sString(const string16& iString16);
+
+NSMutableString* sStringMutable();
+NSMutableString* sStringMutable(const string8& iString8);
+NSMutableString* sStringMutable(const string16& iString16);
+NSMutableString* sStringMutable(NSString* iNSString);
+
+// -----
+
+NSDictionary* sDictionary();
+
+NSMutableDictionary* sDictionaryMutable();
+NSMutableDictionary* sDictionaryMutable(NSDictionary* iNSDictionary);
+
+// -----
+
+NSArray* sArray();
+
+NSMutableArray* sArrayMutable();
+NSMutableArray* sArrayMutable(NSArray* iNSArray);
+
+// -----
+
+NSData* sData();
+NSData* sData(const void* iSource, size_t iSize);
+
+NSMutableData* sDataMutable();
+NSMutableData* sDataMutable(size_t iSize);
+NSMutableData* sDataMutable(NSData* iNSData);
+
+// -----
 
 string8 sAsUTF8(NSString* iNSString);
 string16 sAsUTF16(NSString* iNSString);
 
-ZTValue sAsTV(id iNSObject);
-id sCreateNSObject(const ZTValue& iTV);
+ZAny sAsAny(const ZAny& iDefault, NSObject* iVal);
+ZAny sAsAny(NSObject* iVal);
 
-ZTuple sAsTuple(NSDictionary* iNSDictionary);
-NSDictionary* sCreateNSDictionary(const ZTuple& iTuple);
-
-void sAsVector(NSArray* iNSArray, std::vector<ZTValue>& oVector);
-NSArray* sCreateNSArray(const std::vector<ZTValue>& iVector);
+NSObject* sAsNSObject(NSObject* iDefault, const ZAny& iVal);
+NSObject* sAsNSObject(const ZAny& iVal);
 
 } // namespace ZUtil_NSObject
 

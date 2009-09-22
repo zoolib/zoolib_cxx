@@ -181,7 +181,7 @@ void ZNetListener_RFCOMM_OSX::CancelListen()
 void ZNetListener_RFCOMM_OSX::pChannelOpened(IOBluetoothRFCOMMChannel* iChannel)
 	{
 	ZGuardMtx locker(fMutex);
-	[iChannel release];
+	[iChannel release]; // ??
 	fQueue.push_back(iChannel);
 	fCondition.Broadcast();
 	}

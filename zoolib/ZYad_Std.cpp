@@ -38,20 +38,6 @@ ZYadParseException_Std::ZYadParseException_Std(const char* iWhat)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadPrimR_Std
-
-ZYadPrimR_Std::ZYadPrimR_Std(const ZAny& iAny)
-:	fAny(iAny)
-	{}
-
-ZYadPrimR_Std::~ZYadPrimR_Std()
-	{}
-
-ZAny ZYadPrimR_Std::AsAny()
-	{ return fAny; }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZYadListR_Std
 
 ZYadListR_Std::ZYadListR_Std()

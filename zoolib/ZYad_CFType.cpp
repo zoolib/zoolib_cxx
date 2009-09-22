@@ -44,15 +44,15 @@ ZYadPrimR_CFType::ZYadPrimR_CFType(const ZRef<CFTypeRef>& iVal)
 	{}
 
 ZAny ZYadPrimR_CFType::AsAny()
-	{ return ZUtil_CFType::sAsVal_Any(this->GetVal()).AsAny(); }
+	{ return ZUtil_CFType::sAsAny(this->GetVal()); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadStreamRPos_CFType
 
 ZYadStreamRPos_CFType::ZYadStreamRPos_CFType(const ZRef<CFDataRef>& iDataRef)
-:	ZYadR_CFType(iDataRef),
-	ZStreamerRPos_CFType(iDataRef)
+:	ZYadR_CFType(iDataRef)
+,	ZStreamerRPos_CFType(iDataRef)
 	{}
 
 ZYadStreamRPos_CFType::~ZYadStreamRPos_CFType()
@@ -66,8 +66,8 @@ bool ZYadStreamRPos_CFType::IsSimple(const ZYadOptions& iOptions)
 #pragma mark * ZYadStrimR_CFType
 
 ZYadStrimR_CFType::ZYadStrimR_CFType(ZRef<CFStringRef> iStringRef)
-:	ZYadR_CFType(iStringRef),
-	ZStrimmerR_CFString(iStringRef)
+:	ZYadR_CFType(iStringRef)
+,	ZStrimmerR_CFString(iStringRef)
 	{}
 
 // =================================================================================================
@@ -109,17 +109,17 @@ ZYadMapRPos_CFType::ZYadMapRPos_CFType(const ZRef<CFDictionaryRef>& iDictionary,
 	uint64 iPosition,
 	const std::vector<CFStringRef>& iNames,
 	const std::vector<CFTypeRef>& iValues)
-:	ZYadR_CFType(iDictionary),
-	fDictionary(iDictionary),
-	fPosition(iPosition),
-	fNames(iNames),
-	fValues(iValues)
+:	ZYadR_CFType(iDictionary)
+,	fDictionary(iDictionary)
+,	fPosition(iPosition)
+,	fNames(iNames)
+,	fValues(iValues)
 	{}
 
 ZYadMapRPos_CFType::ZYadMapRPos_CFType(const ZRef<CFDictionaryRef>& iDictionary)
-:	ZYadR_CFType(iDictionary),
-	fDictionary(iDictionary),
-	fPosition(0)
+:	ZYadR_CFType(iDictionary)
+,	fDictionary(iDictionary)
+,	fPosition(0)
 	{
 	GatherContents_t theParam;
 	theParam.fNames = &fNames;
@@ -176,28 +176,28 @@ ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal)
 	return new ZYadPrimR_CFType(iVal);
 	}
 
-ZRef<ZYadStrimR> sMakeYadR(const ZRef<CFMutableStringRef>& iString)
+ZRef<ZYadStrimR> sMakeYadR(CFMutableStringRef iString)
 	{ return new ZYadStrimR_CFType(iString); }
 
-ZRef<ZYadStrimR> sMakeYadR(const ZRef<CFStringRef>& iString)
+ZRef<ZYadStrimR> sMakeYadR(CFStringRef iString)
 	{ return new ZYadStrimR_CFType(iString); }
 
-ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFMutableDataRef>& iData)
+ZRef<ZYadStreamR> sMakeYadR(CFMutableDataRef iData)
 	{ return new ZYadStreamRPos_CFType(iData); }
 
-ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFDataRef>& iData)
+ZRef<ZYadStreamR> sMakeYadR(CFDataRef iData)
 	{ return new ZYadStreamRPos_CFType(iData); }
 
-ZRef<ZYadListR> sMakeYadR(const ZRef<CFMutableArrayRef>& iList)
+ZRef<ZYadListR> sMakeYadR(CFMutableArrayRef iList)
 	{ return new ZYadListRPos_CFType(iList); }
 
-ZRef<ZYadListR> sMakeYadR(const ZRef<CFArrayRef>& iList)
+ZRef<ZYadListR> sMakeYadR(CFArrayRef iList)
 	{ return new ZYadListRPos_CFType(iList); }
 
-ZRef<ZYadMapR> sMakeYadR(const ZRef<CFMutableDictionaryRef>& iMap)
+ZRef<ZYadMapR> sMakeYadR(CFMutableDictionaryRef iMap)
 	{ return new ZYadMapRPos_CFType(iMap); }
 
-ZRef<ZYadMapR> sMakeYadR(const ZRef<CFDictionaryRef>& iMap)
+ZRef<ZYadMapR> sMakeYadR(CFDictionaryRef iMap)
 	{ return new ZYadMapRPos_CFType(iMap); }
 
 // =================================================================================================
