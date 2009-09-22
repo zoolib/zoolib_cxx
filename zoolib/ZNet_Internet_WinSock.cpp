@@ -295,23 +295,23 @@ void ZNetListener_TCP_WinSock::pInit(
 		throw ZNetEx(sTranslateError(err));
 		}
 
+	int reuseAddrFlag = 1;
+	::setsockopt(fSOCKET, IPPROTO_TCP, SO_REUSEADDR, (char*)&reuseAddrFlag, sizeof(reuseAddrFlag));
+
 	sockaddr_in localSockAddr;
 	ZBlockZero(&localSockAddr, sizeof(localSockAddr));
 	localSockAddr.sin_family = AF_INET;
 	localSockAddr.sin_port = htons(iLocalPort);
 	localSockAddr.sin_addr.s_addr = htonl(iLocalAddress);
 
-	int reuseAddrFlag = 1;
-	::setsockopt(fSOCKET, IPPROTO_TCP, SO_REUSEADDR, (char*)&reuseAddrFlag, sizeof(reuseAddrFlag));
-
-	if (::bind(fSOCKET, (sockaddr*)&localSockAddr, sizeof(localSockAddr)) == SOCKET_ERROR)
+	if (::bind(fSOCKET, (struct sockaddr*)&localSockAddr, sizeof(localSockAddr)))
 		{
 		int err = ::WSAGetLastError();
 		::closesocket(fSOCKET);
 		throw ZNetEx(sTranslateError(err));
 		}
 
-	if (::listen(fSOCKET, iListenQueueSize) == SOCKET_ERROR)
+	if (::listen(fSOCKET, iListenQueueSize))
 		{
 		int err = ::WSAGetLastError();
 		::closesocket(fSOCKET);
@@ -320,7 +320,7 @@ void ZNetListener_TCP_WinSock::pInit(
 
 	// Set the socket to be non-blocking
 	unsigned long param = 1;
-	if (::ioctlsocket(fSOCKET, FIONBIO, &param) == SOCKET_ERROR)
+	if (::ioctlsocket(fSOCKET, FIONBIO, &param))
 		{
 		int err = ::WSAGetLastError();
 		::closesocket(fSOCKET);
