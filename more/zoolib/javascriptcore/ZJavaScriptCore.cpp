@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZThread.h"
 #include "zoolib/ZUnicode.h"
+#include "zoolib/ZVal_Any.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -232,6 +233,10 @@ String& String::operator=(const String& iOther)
 	return *this;
 	}
 
+String::String(JSStringRef iJSStringRef)
+:	fRep(iJSStringRef)
+	{}
+
 String::String(const Adopt_T<JSStringRef>& iJSStringRef)
 :	fRep(iJSStringRef)
 	{}
@@ -275,6 +280,135 @@ string16 String::AsString16() const
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZJavaScriptCore::Value
+
+bool Value::sQFromAny(const ZAny& iAny, Value& oVal)
+	{
+	int64 asInt64;
+	double asDouble;
+	if (false)
+		{}
+	else if (! iAny)
+		{
+		oVal = Value();
+		}
+	else if (sQCoerceInt(iAny, asInt64))
+		{
+		oVal = Value(double(asInt64));
+		}
+	else if (sQCoerceReal(iAny, asDouble))
+		{
+		oVal = Value(asDouble);
+		}
+	else if (const string* theValue = ZAnyCast<string>(&iAny))
+		{
+		oVal = Value(*theValue);
+		}
+	else if (const ZType* theValue = ZAnyCast<ZType>(&iAny))
+		{
+		oVal = Value(double(*theValue));
+		}
+	else if (const bool* theValue = ZAnyCast<bool>(&iAny))
+		{
+		return Value(*theValue);
+		}
+	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iAny))
+		{
+		oVal = Value(double(theValue->fVal));
+		}
+#if 0
+	else if (const vector<ZAny>* theValue = ZAnyCast<vector<ZAny> >(&iAny))
+		{
+		ZList_ZooLib theList;
+		for (vector<ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
+			i != end; ++i)
+			{
+			ZVal_ZooLib local;
+			if (sQFromAny(*i, local))
+				theList.Append(local);
+			else
+				theList.Append(ZVal_ZooLib());
+			}
+		oVal = theList;
+		}
+	else if (const ZList_Any* theValue = ZAnyCast<ZList_Any>(&iAny))
+		{
+		ZList_ZooLib theList;
+		for (int x = 0, count = theValue->Count(); x < count; ++x)
+			{
+			ZVal_ZooLib local;
+			if (sQFromAny(theValue->Get(x), local))
+				theList.Append(local);
+			else
+				theList.Append(ZVal_ZooLib());
+			}
+		oVal = theList;
+		}
+#endif
+	else if (const map<string, ZAny>* theValue = ZAnyCast<map<string, ZAny> >(&iAny))
+		{
+		ObjectRef theMap;
+		for (map<string, ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
+			i != end; ++i)
+			{
+			Value local;
+			if (sQFromAny((*i).second, local))
+				theMap.Set((*i).first, local);
+			}
+		oVal = theMap;
+		}
+	else if (const ZMap_Any* theValue = ZAnyCast<ZMap_Any>(&iAny))
+		{
+		ObjectRef theMap;
+		for (ZMap_Any::Index_t i = theValue->Begin(), end = theValue->End();
+			i != end; ++i)
+			{
+			Value local;
+			if (sQFromAny(theValue->Get(i), local))
+				theMap.Set((*i).first, local);
+			}
+		oVal = theMap;
+		}
+	else
+		{
+		return false;
+		}
+	return true;
+	}
+
+Value Value::sDFromAny(const Value& iDefault, const ZAny& iAny)
+	{
+	Value result;
+	if (sQFromAny(iAny, result))
+		return result;
+	return iDefault;
+	}
+
+Value Value::sFromAny(const ZAny& iAny)
+	{ return sDFromAny(Value(), iAny); }
+
+ZAny Value::AsAny() const
+	{
+	if (JSValueRef theRef = inherited::Get())
+		{
+		switch (::JSValueGetType(sCurrentContext(), theRef))
+			{
+			case kJSTypeBoolean:
+				return ZAny(bool(::JSValueToBoolean(sCurrentContext(), theRef)));
+			case kJSTypeNumber:
+				return ZAny(double(::JSValueToNumber(sCurrentContext(), theRef, nil)));
+			case kJSTypeString:
+				{
+				if (ZRef<JSStringRef> theStringRef =
+					Adopt(::JSValueToStringCopy(sCurrentContext(), theRef, nil)))
+					{
+					return ZAny(String(theStringRef).AsString8());
+					}
+				break;
+				}
+			}
+		}
+	return ZAny();
+	}
 
 Value::operator operator_bool_type() const
 	{
@@ -321,12 +455,12 @@ Value& Value::operator=(const Value& iOther)
 	return *this;
 	}
 
-Value::Value(FunctionImp* iOther)
-:	inherited(iOther->GetJSOR())
+Value::Value(ObjectImp* iOther)
+:	inherited(iOther->GetJSObjectRef())
 	{}
 
-Value::Value(const ZRef<FunctionImp>& iOther)
-:	inherited(iOther->GetJSOR())
+Value::Value(const ZRef<ObjectImp>& iOther)
+:	inherited(iOther->GetJSObjectRef())
 	{}
 
 Value::Value(JSObjectRef iOther)
@@ -418,7 +552,7 @@ bool Value::QGet_T<double>(double& oVal) const
 		{
 		if (kJSTypeNumber == ::JSValueGetType(sCurrentContext(), theRef))
 			{
-			JSValueRef theEx;
+			JSValueRef theEx = nil;
 			oVal = ::JSValueToNumber(sCurrentContext(), theRef, &theEx);
 			return !theEx;
 			}
@@ -522,7 +656,7 @@ ObjectRef& ObjectRef::operator=(const ZRef<JSObjectRef>& iOther)
 
 bool ObjectRef::QGet(const string8& iName, Value& oVal) const
 	{	
-	JSValueRef theEx;
+	JSValueRef theEx = nil;
 	JSValueRef theResult = ::JSObjectGetProperty(sCurrentContext(),
 		inherited::Get(), String(iName), &theEx);
 	if (!theEx)
@@ -535,7 +669,7 @@ bool ObjectRef::QGet(const string8& iName, Value& oVal) const
 
 bool ObjectRef::QGet(size_t iIndex, Value& oVal) const
 	{
-	JSValueRef theEx;
+	JSValueRef theEx = nil;
 	JSValueRef theResult = ::JSObjectGetPropertyAtIndex(sCurrentContext(),
 		inherited::Get(), iIndex, &theEx);
 	if (!theEx)
@@ -570,14 +704,14 @@ Value ObjectRef::Get(size_t iIndex) const
 
 bool ObjectRef::Set(const string8& iName, const Value& iValue)
 	{
-	JSValueRef theEx;
+	JSValueRef theEx = nil;
 	::JSObjectSetProperty(sCurrentContext(), inherited::Get(), String(iName), iValue, 0, &theEx);
 	return !theEx;
 	}
 
 bool ObjectRef::Set(size_t iIndex, const Value& iValue)
 	{
-	JSValueRef theEx;
+	JSValueRef theEx = nil;
 	::JSObjectSetPropertyAtIndex(sCurrentContext(), inherited::Get(), iIndex, iValue, &theEx);
 	return !theEx;
 	}
@@ -607,104 +741,179 @@ Value ObjectRef::CallAsFunction(const ObjectRef& iThis,
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZJavaScriptCore::FunctionImp
+#pragma mark * ZJavaScriptCore::ObjectImp
 
-FunctionImp::FunctionImp()
+ObjectImp::ObjectImp()
 :	fJSObjectRef(nil)
 	{
 	JSObjectRef theOR = ::JSObjectMake(sCurrentContext(), spGetJSClass(), this);
 	ZAssert(theOR == fJSObjectRef);
 	}
 
-FunctionImp::~FunctionImp()
+ObjectImp::~ObjectImp()
 	{
 	ZAssert(!fJSObjectRef);
 	}
 
-void FunctionImp::Finalize()
+void ObjectImp::Finalize()
 	{
 	this->FinalizationComplete();
 	this->pTossIfAppropriate();
 	}
 
-void FunctionImp::pTossIfAppropriate()
+void ObjectImp::pTossIfAppropriate()
 	{
 	if (this->GetRefCount() == 0 && !fJSObjectRef)
 		delete this;
 	}
 
-JSObjectRef FunctionImp::GetJSOR()
+JSObjectRef ObjectImp::GetJSObjectRef()
 	{ return fJSObjectRef; }
 
-void FunctionImp::Initialize(JSContextRef iJSContextRef, JSObjectRef iJSObjectRef)
+void ObjectImp::Initialize(JSContextRef iJSContextRef, JSObjectRef iJSObjectRef)
 	{
 	ZAssert(!fJSObjectRef);
 	fJSObjectRef = iJSObjectRef;
 	}
 
-void FunctionImp::Finalize(JSObjectRef iJSObjectRef)
+void ObjectImp::Finalize(JSObjectRef iJSObjectRef)
 	{
 	ZAssert(fJSObjectRef == iJSObjectRef);
 	fJSObjectRef = nil;
 	this->pTossIfAppropriate();
 	}
 
-Value FunctionImp::CallAsFunction(const ObjectRef& iFunction, const ObjectRef& iThis,
+bool ObjectImp::HasProperty(const ObjectRef& iThis, const String& iPropName)
+	{ return false; }
+
+Value ObjectImp::GetProperty(
+	const ObjectRef& iThis, const String& iPropName, Value& oEx)
+	{
+	return Value();
+	}
+
+bool ObjectImp::SetProperty(
+	const ObjectRef& iThis, const String& iPropName, const Value& iVal, Value& oEx)
+	{ return false; }
+
+void ObjectImp::GetPropertyNames(
+	const ObjectRef& iThis, JSPropertyNameAccumulatorRef propertyNames)
+	{}
+
+Value ObjectImp::CallAsFunction(const ObjectRef& iFunction, const ObjectRef& iThis,
 	const Value* iArgs, size_t iArgCount, Value& oEx)
 	{
 	return Value();
 	}
 
-void FunctionImp::spInitialize(JSContextRef ctx, JSObjectRef object)
+void ObjectImp::spInitialize(JSContextRef ctx, JSObjectRef object)
 	{
 	ContextSetter cs(ctx);
-	if (ZRef<FunctionImp> fun = spFromRef(object))
+	if (ZRef<ObjectImp> fun = spFromRef(object))
 		fun->Initialize(ctx, object);
 	}
 
-void FunctionImp::spFinalize(JSObjectRef object)
+void ObjectImp::spFinalize(JSObjectRef object)
 	{
 	// Hmm -- pretend there's no current context.
 	ContextSetter cs(nil);
-	if (ZRef<FunctionImp> fun = spFromRef(object))
+	if (ZRef<ObjectImp> fun = spFromRef(object))
 		fun->Finalize(object);
 	}
 
-JSValueRef FunctionImp::spCallAsFunction(JSContextRef ctx,
+bool ObjectImp::spHasProperty(JSContextRef ctx, JSObjectRef object, JSStringRef propertyName)
+	{
+	ContextSetter cs(ctx);
+	if (ZRef<ObjectImp> fun = spFromRef(object))
+		return fun->HasProperty(ObjectRef(object), String(propertyName));
+
+	return false;
+	}
+
+JSValueRef ObjectImp::spGetProperty(JSContextRef ctx,
+	JSObjectRef object, JSStringRef propertyName, JSValueRef* exception)
+	{
+	ContextSetter cs(ctx);
+	if (ZRef<ObjectImp> fun = spFromRef(object))
+		{
+		Value ex;
+		Value result = fun->GetProperty(ObjectRef(object), String(propertyName), ex);
+
+		if (exception)
+			*exception = ex;
+
+		return result;
+		}
+
+	return Value();
+	}
+
+bool ObjectImp::spSetProperty(JSContextRef ctx,
+	JSObjectRef object, JSStringRef propertyName, JSValueRef value, JSValueRef* exception)
+	{
+	ContextSetter cs(ctx);
+	if (ZRef<ObjectImp> fun = spFromRef(object))
+		{
+		Value ex;
+		bool result = fun->SetProperty(ObjectRef(object), String(propertyName), value, ex);
+
+		if (exception)
+			*exception = ex;
+
+		return result;
+		}
+
+	return false;
+	}
+
+void ObjectImp::spGetPropertyNames(JSContextRef ctx,
+	JSObjectRef object, JSPropertyNameAccumulatorRef propertyNames)
+	{
+	ContextSetter cs(ctx);
+	if (ZRef<ObjectImp> fun = spFromRef(object))
+		fun->GetPropertyNames(ObjectRef(object), propertyNames);
+	}
+
+JSValueRef ObjectImp::spCallAsFunction(JSContextRef ctx,
 	JSObjectRef function, JSObjectRef thisObject,
 	size_t argumentCount, const JSValueRef arguments[], JSValueRef* exception)
 	{
 	ContextSetter cs(ctx);
-	if (ZRef<FunctionImp> fun = spFromRef(function))
+	if (ZRef<ObjectImp> fun = spFromRef(function))
 		{
 		Value ex;
-		Value result = fun->CallAsFunction(Context(ctx),
-			ObjectRef(function), ObjectRef(thisObject),
+		Value result = fun->CallAsFunction(ObjectRef(function), ObjectRef(thisObject),
 			reinterpret_cast<const Value*>(arguments), argumentCount,
 			ex);
 
 		if (exception)
 			*exception = ex;
+
+		return result;
 		}
 	return nullptr;
 	}
 
-ZRef<FunctionImp> FunctionImp::spFromRef(JSObjectRef object)
+ZRef<ObjectImp> ObjectImp::spFromRef(JSObjectRef object)
 	{
 	if (object)
-		return static_cast<FunctionImp*>(::JSObjectGetPrivate(object));
-	return ZRef<FunctionImp>();
+		return static_cast<ObjectImp*>(::JSObjectGetPrivate(object));
+	return ZRef<ObjectImp>();
 	}
 
-JSClassRef FunctionImp::spGetJSClass()
+JSClassRef ObjectImp::spGetJSClass()
 	{
 	static JSClassDefinition classDefinition =
 		{
 		0, kJSClassAttributeNone,
-		"FunctionImp", 0,
+		"ObjectImp", 0,
 		0, 0,
 		spInitialize, spFinalize,
-		0, 0, 0, 0, 0,
+		spHasProperty,
+		spGetProperty,
+		spSetProperty,
+		0,
+		spGetPropertyNames,
 		spCallAsFunction,
 		0,
 		0, 0

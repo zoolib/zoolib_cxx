@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZJavaScriptCore__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZAny.h"
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZRef_Counted.h"
@@ -37,7 +38,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZJavaScriptCore {
 
-class FunctionImp;
+class ObjectImp;
 class ObjectRef;
 
 // =================================================================================================
@@ -95,6 +96,7 @@ public:
 	~String();
 	String& operator=(const String& iOther);
 
+	String(JSStringRef iJSStringRef);
 	String(const ZRef<JSStringRef>& iJSStringRef);
 	String(const Adopt_T<JSStringRef>& iJSStringRef);
 	String(const string8&);
@@ -118,13 +120,19 @@ class Value
 	{
 	typedef ZRef<JSValueRef> inherited;
 public:
+	static bool sQFromAny(const ZAny& iAny, Value& oVal);
+	static Value sDFromAny(const Value& iDefault, const ZAny& iAny);
+	static Value sFromAny(const ZAny& iAny);
+
+	ZAny AsAny() const;
+
 	Value();
 	Value(const Value& iOther);
 	~Value();
 	Value& operator=(const Value& iOther);
 
-	Value(FunctionImp* iOther);
-	Value(const ZRef<FunctionImp>& iOther);
+	Value(ObjectImp* iOther);
+	Value(const ZRef<ObjectImp>& iOther);
 	Value(JSObjectRef iOther);
 	Value(JSValueRef iOther);
 	explicit Value(bool iValue);
@@ -215,23 +223,35 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZJavaScriptCore::FunctionImp
+#pragma mark * ZJavaScriptCore::ObjectImp
 
-class FunctionImp
+class ObjectImp
 :	public ZRefCountedWithFinalize
 	{
 public:
-	FunctionImp();
-	virtual ~FunctionImp();
+	ObjectImp();
+	virtual ~ObjectImp();
 
 // From ZRefCountedWithFinalize
 	virtual void Finalize();
 
 // Our protocol
-	JSObjectRef GetJSOR();
+	JSObjectRef GetJSObjectRef();
 
 	virtual void Initialize(JSContextRef iJSContextRef, JSObjectRef iJSObjectRef);
 	virtual void Finalize(JSObjectRef iJSObjectRef);
+
+	virtual bool HasProperty(const ObjectRef& iThis, const String& iPropName);
+
+	virtual Value GetProperty(
+		const ObjectRef& iThis, const String& iPropName, Value& oEx);
+
+	virtual bool SetProperty(
+		const ObjectRef& iThis, const String& iPropName, const Value& iVal, Value& oEx);
+
+	virtual void GetPropertyNames(
+		const ObjectRef& iThis, JSPropertyNameAccumulatorRef propertyNames);
+
 	virtual Value CallAsFunction(const ObjectRef& iFunction, const ObjectRef& iThis,
 		const Value* iArgs, size_t iArgCount,
 		Value& oEx);
@@ -239,11 +259,23 @@ public:
 private:
 	static void spInitialize(JSContextRef ctx, JSObjectRef object);
 	static void spFinalize(JSObjectRef object);
+
+	static bool spHasProperty(JSContextRef ctx, JSObjectRef object, JSStringRef propertyName);
+
+	static JSValueRef spGetProperty(JSContextRef ctx,
+		JSObjectRef object, JSStringRef propertyName, JSValueRef* exception);
+
+	static bool spSetProperty(JSContextRef ctx,
+		JSObjectRef object, JSStringRef propertyName, JSValueRef value, JSValueRef* exception);
+
+	static void spGetPropertyNames(JSContextRef ctx,
+		JSObjectRef object, JSPropertyNameAccumulatorRef propertyNames);
+
 	static JSValueRef spCallAsFunction(JSContextRef ctx,
 		JSObjectRef function, JSObjectRef thisObject,
 		size_t argumentCount, const JSValueRef arguments[], JSValueRef* exception);
 
-	static ZRef<FunctionImp> spFromRef(JSObjectRef object);
+	static ZRef<ObjectImp> spFromRef(JSObjectRef object);
 
 	static JSClassRef spGetJSClass();
 
