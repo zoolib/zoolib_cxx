@@ -45,4 +45,3 @@ void sRelease(NSObject& iNSObject)
 NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Cocoa)
-
