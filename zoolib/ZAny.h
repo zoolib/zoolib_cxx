@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
-#include "zoolib/ZTypes.h" // For int64
+#include "zoolib/ZStdInt.h" // For int64
 
 // =================================================================================================
 #pragma mark -
