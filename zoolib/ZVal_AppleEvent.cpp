@@ -127,7 +127,6 @@ string sAEKeywordAsString(AEKeyword iKeyword)
 		}
 	}
 
-
 static ZAny spAsAny(const ZAny& iDefault, const AEDesc& iDesc);
 
 static ZList_Any spAsList_Any(const ZAny& iDefault, const AEDesc& iDesc)
@@ -179,11 +178,11 @@ static ZMap_Any spAsMap_Any(const ZAny& iDefault, const AEDesc& iDesc)
 
 static ZAny spAsAny(const ZAny& iDefault, const AEDesc& iDesc)
 	{
-	if (typeAEList == iDesc.descriptorType)
-		return ZAny(spAsList_Any(iDefault, iDesc));
-
 	if (spAECheckIsRecord(&iDesc))
 		return ZAny(spAsMap_Any(iDefault, iDesc));
+
+	if (typeAEList == iDesc.descriptorType)
+		return ZAny(spAsList_Any(iDefault, iDesc));
 
 	switch (iDesc.descriptorType)
 		{
