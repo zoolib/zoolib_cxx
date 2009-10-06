@@ -118,6 +118,27 @@ void sRelease_T(JSObjectRef iRef)
 
 namespace ZJavaScriptCore {
 
+static string8 spAsString8(JSStringRef iRef)
+	{
+	if (iRef)
+		{
+		return ZUnicode::sAsUTF8(
+			static_cast<const UTF16*>(::JSStringGetCharactersPtr(iRef)),
+			::JSStringGetLength(iRef));
+		}
+	return string8();
+	}
+
+static string16 spAsString16(JSStringRef iRef)
+	{
+	if (iRef)
+		{
+		return string16(::JSStringGetCharactersPtr(iRef),
+			::JSStringGetLength(iRef));
+		}
+	return string16();
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZJavaScriptCore::ContextSetter
@@ -257,25 +278,10 @@ String::operator JSStringRef() const
 	{ return fRep.Get(); }
 
 string8 String::AsString8() const
-	{
-	if (fRep)
-		{
-		return ZUnicode::sAsUTF8(
-			static_cast<const UTF16*>(::JSStringGetCharactersPtr(fRep)),
-			::JSStringGetLength(fRep));
-		}
-	return string8();
-	}
+	{ return spAsString8(fRep); }
 
 string16 String::AsString16() const
-	{
-	if (fRep)
-		{
-		return string16(::JSStringGetCharactersPtr(fRep),
-			::JSStringGetLength(fRep));
-		}
-	return string16();
-	}
+	{ return spAsString16(fRep); }
 
 // =================================================================================================
 #pragma mark -
@@ -393,17 +399,22 @@ ZAny Value::AsAny() const
 		switch (::JSValueGetType(sCurrentContext(), theRef))
 			{
 			case kJSTypeBoolean:
+				{
 				return ZAny(bool(::JSValueToBoolean(sCurrentContext(), theRef)));
+				}
 			case kJSTypeNumber:
+				{
 				return ZAny(double(::JSValueToNumber(sCurrentContext(), theRef, nil)));
+				}
 			case kJSTypeString:
 				{
-				if (ZRef<JSStringRef> theStringRef =
-					Adopt(::JSValueToStringCopy(sCurrentContext(), theRef, nil)))
-					{
-					return ZAny(String(theStringRef).AsString8());
-					}
-				break;
+				ZRef<JSStringRef> theStringRef =
+					Adopt(::JSValueToStringCopy(sCurrentContext(), theRef, nil));
+				return ZAny(spAsString8(theStringRef));
+				}
+			case kJSTypeObject:
+				{
+				return ObjectRef(const_cast<JSObjectRef>(theRef)).AsAny();
 				}
 			}
 		}
@@ -627,6 +638,35 @@ ZMACRO_ZValAccessors_Def_GetP(,Value, ObjectRef, ObjectRef)
 #pragma mark -
 #pragma mark * ZJavaScriptCore::ObjectRef
 
+ZAny ObjectRef::AsAny() const
+	{
+	if (JSObjectRef thisRef = inherited::Get())
+		{
+		double length;
+		if (this->Get("length").QGetDouble(length))
+			{
+			ZList_Any result;
+			for (size_t x = 0; x < length; ++x)
+				result.Append(this->Get(x).AsAny());
+			return ZAny(result);
+			}
+		else
+			{
+			ZMap_Any result;
+			ZRef<JSPropertyNameArrayRef> theNames =
+				Adopt(::JSObjectCopyPropertyNames(sCurrentContext(), thisRef));
+			for (size_t x = 0, count = ::JSPropertyNameArrayGetCount(theNames); x < count; ++x)
+				{
+				const string8 theName =
+					spAsString8(::JSPropertyNameArrayGetNameAtIndex(theNames, x));
+				result.Set(theName, this->Get(theName).AsAny());
+				}
+			return ZAny(result);
+			}
+		}
+	return ZAny();
+	}
+
 ObjectRef::ObjectRef()
 :	inherited(::JSObjectMake(sCurrentContext(), nil, nil))
 	{}
@@ -667,6 +707,46 @@ bool ObjectRef::QGet(const string8& iName, Value& oVal) const
 	return false;
 	}
 
+Value ObjectRef::DGet(const Value& iDefault, const string8& iName) const
+	{
+	Value result;
+	if (this->QGet(iName, result))
+		return result;
+	return iDefault;
+	}
+
+Value ObjectRef::Get(const string8& iName) const
+	{ return this->DGet(Value(), iName); }
+
+bool ObjectRef::Set(const string8& iName, const Value& iValue)
+	{
+	JSValueRef theEx = nil;
+	::JSObjectSetProperty(sCurrentContext(), inherited::Get(), String(iName), iValue, 0, &theEx);
+	return !theEx;
+	}
+
+bool ObjectRef::Erase(const string8& iName)
+	{
+	return ::JSObjectDeleteProperty(sCurrentContext(),
+		inherited::Get(), String(iName), nullptr);
+	}
+
+bool ObjectRef::IsList() const
+	{
+	double length;
+	if (this->Get("length").QGetDouble(length))
+		return true;
+	return false;
+	}
+
+Value ObjectRef::DGet(const Value& iDefault, size_t iIndex) const
+	{
+	Value result;
+	if (this->QGet(iIndex, result))
+		return result;
+	return iDefault;
+	}
+
 bool ObjectRef::QGet(size_t iIndex, Value& oVal) const
 	{
 	JSValueRef theEx = nil;
@@ -680,34 +760,8 @@ bool ObjectRef::QGet(size_t iIndex, Value& oVal) const
 	return false;
 	}
 
-Value ObjectRef::DGet(const Value& iDefault, const string8& iName) const
-	{
-	Value result;
-	if (this->QGet(iName, result))
-		return result;
-	return iDefault;
-	}
-
-Value ObjectRef::DGet(const Value& iDefault, size_t iIndex) const
-	{
-	Value result;
-	if (this->QGet(iIndex, result))
-		return result;
-	return iDefault;
-	}
-
-Value ObjectRef::Get(const string8& iName) const
-	{ return this->DGet(Value(), iName); }
-
 Value ObjectRef::Get(size_t iIndex) const
 	{ return this->DGet(Value(), iIndex); }
-
-bool ObjectRef::Set(const string8& iName, const Value& iValue)
-	{
-	JSValueRef theEx = nil;
-	::JSObjectSetProperty(sCurrentContext(), inherited::Get(), String(iName), iValue, 0, &theEx);
-	return !theEx;
-	}
 
 bool ObjectRef::Set(size_t iIndex, const Value& iValue)
 	{
@@ -716,17 +770,17 @@ bool ObjectRef::Set(size_t iIndex, const Value& iValue)
 	return !theEx;
 	}
 
-bool ObjectRef::Erase(const string8& iName)
-	{
-	return ::JSObjectDeleteProperty(sCurrentContext(),
-		inherited::Get(), String(iName), nullptr);
-	}
-
-/*
 bool ObjectRef::Erase(size_t iIndex)
 	{
+	if (ObjectRef splice = this->Get("splice").GetObjectRef())
+		{
+		Value args[] = { Value(double(iIndex)), Value(double(1)) };
+		Value ex;
+		splice.CallAsFunction(*this, args, countof(args), ex);
+		return !ex;
+		}
+	return false;
 	}
-*/
 
 Value ObjectRef::CallAsFunction(const ObjectRef& iThis,
 	const Value* iArgs, size_t iArgCount,

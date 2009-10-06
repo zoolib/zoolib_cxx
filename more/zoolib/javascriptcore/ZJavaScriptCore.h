@@ -191,6 +191,8 @@ class ObjectRef
 	{
 	typedef ZRef<JSObjectRef> inherited;
 public:
+	ZAny AsAny() const;
+
 	ObjectRef();
 	ObjectRef(const ObjectRef& iOther);
 	~ObjectRef();
@@ -201,19 +203,21 @@ public:
 
 // ZMap protocol (ish)
 	bool QGet(const string8& iName, Value& oVal) const;
-	bool QGet(size_t iIndex, Value& oVal) const;
-
 	Value DGet(const Value& iDefault, const string8& iName) const;
-	Value DGet(const Value& iDefault, size_t iIndex) const;
-
 	Value Get(const string8& iName) const;
-	Value Get(size_t iIndex) const;
-
 	bool Set(const string8& iName, const Value& iValue);
-	bool Set(size_t iIndex, const Value& iValue);
-
 	bool Erase(const string8& iName);
-//	bool Erase(size_t iIndex);
+
+// ZList protocol (ish)
+	bool IsList() const;
+	size_t Count() const;
+	bool QGet(size_t iIndex, Value& oVal) const;
+	Value DGet(const Value& iDefault, size_t iIndex) const;
+	Value Get(size_t iIndex) const;
+	bool Set(size_t iIndex, const Value& iValue);
+	bool Erase(size_t iIndex);
+	void Insert(size_t iIndex, const Value& iVal);
+	void Append(const Value& iVal);
 
 // Our protocol
 	Value CallAsFunction(const ObjectRef& iThis,
