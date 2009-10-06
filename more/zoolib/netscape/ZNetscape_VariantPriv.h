@@ -177,14 +177,14 @@ NPVariant_T<T>::NPVariant_T(double iValue)
 	}
 
 template <class T>
-NPVariant_T<T>::NPVariant_T(const std::string& iValue)
+NPVariant_T<T>::NPVariant_T(const char* iValue)
 	{
 	this->pSetString(iValue);
 	type = NPVariantType_String;
 	}
 
 template <class T>
-NPVariant_T<T>::NPVariant_T(const char* iValue)
+NPVariant_T<T>::NPVariant_T(const std::string& iValue)
 	{
 	this->pSetString(iValue);
 	type = NPVariantType_String;

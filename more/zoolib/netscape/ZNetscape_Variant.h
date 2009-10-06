@@ -105,8 +105,8 @@ public:
 	explicit NPVariant_T(bool iValue);
 	explicit NPVariant_T(int32 iValue);
 	explicit NPVariant_T(double iValue);
-	NPVariant_T(const std::string& iValue);
 	NPVariant_T(const char* iValue);
+	NPVariant_T(const std::string& iValue);
 	NPVariant_T(T* iValue);
 	NPVariant_T(const ZRef<T>& iValue);
 
