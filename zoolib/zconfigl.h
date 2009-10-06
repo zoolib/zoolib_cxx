@@ -173,7 +173,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #			define ZCONFIG_Debug 0
 #		endif
 #	else
-#		if defined(DEBUG)
+#		if defined(DEBUG) || defined(_GLIBCXX_DEBUG)
 #			define ZCONFIG_Debug ZCONFIG_DebugLevel
 #		else
 #			define ZCONFIG_Debug 0
