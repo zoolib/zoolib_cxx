@@ -53,7 +53,7 @@ class ZMtx_pthread;
 namespace ZTSS_pthread {
 
 typedef pthread_key_t Key;
-typedef void* Value;
+typedef const void* Value;
 
 Key sCreate();
 void sFree(Key iKey);
