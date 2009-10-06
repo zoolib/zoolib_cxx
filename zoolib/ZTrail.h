@@ -39,7 +39,7 @@ class ZTrail
     ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTrail, operator_bool_generator_type, operator_bool_type);
 public:
 	ZTrail();
-	ZTrail(bool iValid);
+	explicit ZTrail(bool iValid);
 
 	ZTrail(const ZTrail& iTrail);
 
