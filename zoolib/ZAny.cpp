@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZAny, copied/reworked from boost::any
+#pragma mark * ZAnyBase, copied/reworked from boost::any
 
 #if ! ZCONFIG_SPI_Enabled(boost)
 
