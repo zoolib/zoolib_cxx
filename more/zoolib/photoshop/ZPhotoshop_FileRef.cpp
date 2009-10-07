@@ -25,10 +25,54 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_CFType.h"
 
+#include <stdexcept> // For runtime_error
+
 #include "PIDefines.h"
 #include "PIGetPathSuite.h"
 #include "PIHandleSuite.h"
 #include "PIUSuites.h"
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Fixup, for building with ancient MW
+
+#ifdef __PIMac__
+
+#include ZMACINCLUDE2(CoreFoundation,CFBundle.h)
+
+#if !defined(MAC_OS_X_VERSION_MIN_REQUIRED) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_2
+
+extern "C" typedef
+OSErr 
+(*FSNewAliasMinimalUnicode_Ptr)(
+  const FSRef *    targetParentRef,
+  UniCharCount     targetNameLength,
+  const UniChar *  targetName,
+  AliasHandle *    inAlias,
+  Boolean *        isDirectory)            /* can be NULL */;
+
+
+static OSErr 
+FSNewAliasMinimalUnicode(
+  const FSRef *    targetParentRef,
+  UniCharCount     targetNameLength,
+  const UniChar *  targetName,
+  AliasHandle *    inAlias,
+  Boolean *        isDirectory)            /* can be NULL */
+	{
+	if (CFBundleRef bundleRef = ::CFBundleGetBundleWithIdentifier(CFSTR("com.apple.Carbon")))
+		{
+		if (FSNewAliasMinimalUnicode_Ptr theProc = (FSNewAliasMinimalUnicode_Ptr)
+			CFBundleGetFunctionPointerForName(bundleRef, CFSTR("FSNewAliasMinimalUnicode")))
+			{
+			return theProc(targetParentRef, targetNameLength, targetName, inAlias, isDirectory);
+			}
+		}
+	return -1;
+	}
+
+#endif
+#endif // __PIMac__
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -45,6 +89,7 @@ using std::string;
 
 static AutoSuite<PSHandleSuite2>
 	spPSHandle(kPSHandleSuite, kPSHandleSuiteVersion2);
+
 
 // =================================================================================================
 #pragma mark -
@@ -220,40 +265,31 @@ FileRef& FileRef::operator=(Adopt_T<Handle> iOther)
 	return *this;
 	}
 
+
 FileRef::FileRef(const ZTrail& iTrail)
 :	fHandle(nullptr)
 	{
 	#ifdef __PIMac__
-		// Run the path through CFURL, to expand tildes and so forth.
-		ZRef<CFURLRef> theURL =
+
+		// Run it path through CFURL, to expand tildes and so forth.
+		ZRef<CFURLRef> parentURL =
 			Adopt(::CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
-			ZUtil_CFType::sString("/" + iTrail.AsString()), kCFURLPOSIXPathStyle, false));
+			ZUtil_CFType::sString("/" + iTrail.Branch().AsString()), kCFURLPOSIXPathStyle, false));
 
-		#if defined(kPSAliasSuite)
+		if (!parentURL)
+			throw std::runtime_error("FileRef::FileRef, couldn't create parentURL");
 
-			ZRef<CFStringRef> asCFString =
-				Adopt(::CFURLCopyFileSystemPath(theURL, kCFURLPOSIXPathStyle));
+		FSRef parentFSRef;
+		if (!::CFURLGetFSRef(parentURL, &parentFSRef))
+			throw std::runtime_error("FileRef::FileRef, couldn't get parentFSRef");
 
-			const string asPOSIX = ZUtil_CFType::sAsUTF8(asCFString);
+		const string16 leaf = ZUnicode::sAsUTF16(iTrail.Leaf());
+		
+		OSErr result = ::FSNewAliasMinimalUnicode(
+			&parentFSRef, leaf.size(), (const UniChar*)leaf.c_str(), (AliasHandle*)&fHandle, nil);
 
-			spPSAlias->MacNewAliasFromCString(asPOSIX.c_str(), (AliasHandle*)&fHandle);
-
-		#else
-
-			// We didn't pick up kPSAliasSuite from the include of PIUSuites.h,
-			// so we must be on the old SDK, and need to transform iPathPOSIX to
-			// an HFS path.			
-			
-			ZRef<CFStringRef> asCFString =
-				Adopt(::CFURLCopyFileSystemPath(theURL, kCFURLHFSPathStyle));
-
-			const string asHFS = ZUtil_CFType::sAsUTF8(asCFString);
-
-			OSErr theErr = ::NewAliasMinimalFromFullPath(
-				asHFS.length(), asHFS.c_str(),
-				nullptr, nullptr, &(AliasHandle)fHandle);
-
-		#endif
+		if (result != noErr && result != fnfErr || !fHandle)
+			throw std::runtime_error("FileRef::FileRef, couldn't create AliasHandle");
 
 	#elif defined(__PIWin__)
 
