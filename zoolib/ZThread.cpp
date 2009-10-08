@@ -31,13 +31,60 @@ namespace ZThread {
 
 ZAssertCompile(sizeof(void*) == sizeof(ProcVoid_t));
 
+static ZAtomic_t sThreadCount;
+
+void sStarted()
+	{ ZAtomic_Inc(&sThreadCount); }
+
+void sFinished()
+	{ ZAtomic_Dec(&sThreadCount); }
+
+static bool sDontTearDown;
+
+void sDontTearDownTillAllThreadsExit()
+	{ sDontTearDown = true; }
+
+static ZAtomic_t sInitCount;
+
+InitHelper::InitHelper()
+	{ ZAtomic_Inc(&sInitCount); }
+
+InitHelper::~InitHelper()
+	{
+	if (ZAtomic_DecAndTest(&sInitCount) && sDontTearDown)
+		{
+		for (;;)
+			{
+			int count = ZAtomic_Get(&sThreadCount);
+			// This sleep serves two purposes. First it means we're polling at
+			// intervals for the value of sThreadCount, rather than busy-waiting.
+			// Second, at least .1s will elapse between the thread count hitting
+			// zero and this code exiting, so the last thread will have
+			// had a chance to fully terminate.
+			sSleep(.1);
+			if (0 == count)
+				{
+				fputs("ZThread, final exit\n", stderr);
+				break;
+				}
+			}
+		}
+	}
+
 #if ZCONFIG_API_Enabled(ThreadImp_Win)
 	static ProcResult_t __stdcall sEntryVoid(ProcVoid_t iProc)
 #else
 	static ProcResult_t sEntryVoid(ProcVoid_t iProc)
 #endif
 	{
-	iProc();
+	sStarted();
+	try
+		{
+		iProc();
+		}
+	catch (...)
+		{}
+	sFinished();
 	return 0;
 	}
 

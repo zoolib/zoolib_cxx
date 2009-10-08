@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread_boost.h"
 #include "zoolib/ZThread_MacMP.h"
 #include "zoolib/ZThread_pthread.h"
-#include "zoolib/ZThread_T.h" // For ZGuard_T
+#include "zoolib/ZThread_T.h" // For ZGuard_T, ZAcquirer_T, ZReleaser_T
 #include "zoolib/ZThread_Win.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -85,6 +85,19 @@ typedef ZReleaser_T<ZMtx> ZRelMtx;
 
 namespace ZThread {
 
+void sStarted();
+void sFinished();
+void sDontTearDownTillAllThreadsExit();
+
+class InitHelper
+	{
+public:
+	InitHelper();
+	~InitHelper();
+	};
+
+static InitHelper sInitHelper;
+
 // The Starter_T class is used to provide a scope for the Proc typedef
 // and the ProxyParam struct, without which the code is pretty impenetrable.
 
@@ -114,7 +127,16 @@ public:
 
 		delete iProxyParam;
 
-		localProxyParam.fProc(localProxyParam.fParam);
+		sStarted();
+
+		try
+			{
+			localProxyParam.fProc(localProxyParam.fParam);
+			}
+		catch (...)
+			{}
+			
+		sFinished();
 
 		return 0;
 		}
