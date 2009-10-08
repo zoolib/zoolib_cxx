@@ -40,7 +40,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE2(CoreFoundation,CFBundle.h)
 
-#if !defined(MAC_OS_X_VERSION_MIN_REQUIRED) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_2
+#if !defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
+	|| MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_2
 
 extern "C" typedef
 OSErr 
@@ -72,6 +73,7 @@ FSNewAliasMinimalUnicode(
 	}
 
 #endif
+
 #endif // __PIMac__
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -265,28 +267,25 @@ FileRef& FileRef::operator=(Adopt_T<Handle> iOther)
 	return *this;
 	}
 
-
 FileRef::FileRef(const ZTrail& iTrail)
 :	fHandle(nullptr)
 	{
 	#ifdef __PIMac__
 
-		// Run it path through CFURL, to expand tildes and so forth.
-		ZRef<CFURLRef> parentURL =
-			Adopt(::CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
-			ZUtil_CFType::sString("/" + iTrail.Branch().AsString()), kCFURLPOSIXPathStyle, false));
-
-		if (!parentURL)
-			throw std::runtime_error("FileRef::FileRef, couldn't create parentURL");
-
 		FSRef parentFSRef;
-		if (!::CFURLGetFSRef(parentURL, &parentFSRef))
+		if (noErr != ::FSPathMakeRef(
+			(const UInt8*)(("/" + iTrail.Branch().AsString()).c_str()),
+			&parentFSRef, nullptr))
+			{
 			throw std::runtime_error("FileRef::FileRef, couldn't get parentFSRef");
+			}
 
 		const string16 leaf = ZUnicode::sAsUTF16(iTrail.Leaf());
 		
 		OSErr result = ::FSNewAliasMinimalUnicode(
-			&parentFSRef, leaf.size(), (const UniChar*)leaf.c_str(), (AliasHandle*)&fHandle, nil);
+			&parentFSRef,
+			leaf.size(), (const UniChar*)leaf.c_str(),
+			(AliasHandle*)&fHandle, nullptr);
 
 		if (result != noErr && result != fnfErr || !fHandle)
 			throw std::runtime_error("FileRef::FileRef, couldn't create AliasHandle");
