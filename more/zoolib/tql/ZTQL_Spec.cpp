@@ -30,15 +30,13 @@ namespace ZTQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Comparand derivatives
+#pragma mark * Comparand pseudo constructors
 
-CName::CName(const ZTName& iName)
-:	Comparand(new ComparandRep_Name(iName))
-	{}
+Comparand CName(const ZTName& iName)
+	{ return Comparand(new ComparandRep_Name(iName)); }
 
-CValue::CValue(const ZTValue& iValue)
-:	Comparand(new ComparandRep_Value(iValue))
-	{}
+Comparand CValue(const Value& iValue)
+	{ return Comparand(new ComparandRep_Value(iValue)); }
 
 // =================================================================================================
 #pragma mark -
@@ -74,7 +72,7 @@ Spec::Spec(const Condition& iCondition)
 :	fLogOp(new LogOp_Condition(iCondition))
 	{}
 
-bool Spec::Matches(const ZTuple& iTuple) const
+bool Spec::Matches(const Tuple& iTuple) const
 	{
 	if (fLogOp)
 		return fLogOp->Matches(iTuple);

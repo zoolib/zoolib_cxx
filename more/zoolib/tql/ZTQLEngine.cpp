@@ -49,14 +49,14 @@ public:
 	Iterator_Explicit(ZRef<ZTQL::Node_Explicit> iNode);
 
 	virtual bool HasValue();
-	virtual ZTuple Current();
+	virtual Tuple Current();
 	virtual void Advance();
 
 private:
 	ZRef<ZTQL::Node_Explicit> fNode;
 
-	vector<ZTuple>::const_iterator fCurrent;
-	vector<ZTuple>::const_iterator fEnd;
+	vector<Tuple>::const_iterator fCurrent;
+	vector<Tuple>::const_iterator fEnd;
 	};
 
 Iterator_Explicit::Iterator_Explicit(ZRef<ZTQL::Node_Explicit> iNode)
@@ -68,7 +68,7 @@ Iterator_Explicit::Iterator_Explicit(ZRef<ZTQL::Node_Explicit> iNode)
 bool Iterator_Explicit::HasValue()
 	{ return fCurrent != fEnd; }
 
-ZTuple Iterator_Explicit::Current()
+Tuple Iterator_Explicit::Current()
 	{ return *fCurrent; }
 
 void Iterator_Explicit::Advance()
@@ -86,12 +86,12 @@ ZTQLEngine::ZTQLEngine()
 // oResults probably needs to be a more sophisicated structure -- a tree, each
 // path from leaf to root of which constitutes a single result.
 
-void ZTQLEngine::Execute(ZRef<ZTQL::Node> iNode, vector<ZTuple>& oResults)
+void ZTQLEngine::Execute(ZRef<ZTQL::Node> iNode, vector<Tuple>& oResults)
 	{
 	this->pExecute(iNode, oResults);
 	}
 
-void ZTQLEngine::pExecute(ZRef<ZTQL::Node> iNode, vector<ZTuple>& oResults)
+void ZTQLEngine::pExecute(ZRef<ZTQL::Node> iNode, vector<Tuple>& oResults)
 	{
 	if (ZRef<ZTQL::Node_Explicit> theNode_Explicit = ZRefDynamicCast<ZTQL::Node_Explicit>(iNode))
 		{

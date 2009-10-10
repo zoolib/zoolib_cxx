@@ -39,15 +39,16 @@ class RelHead
 	{
 public:
 	RelHead();
+	RelHead(const RelHead& iOther);
+	~RelHead();
+
+	RelHead& operator=(const RelHead& iOther);
+
 	RelHead(const ZTName& iName);
 	RelHead(const std::set<ZTName>& iNames);
 	RelHead(std::set<ZTName>& ioNames, bool iKnowWhatImDoing);
 	RelHead(const std::vector<ZTName>& iNames);
 	RelHead(const ZTName* iNames, size_t iCount);
-	RelHead(const RelHead& iOther);
-	~RelHead();
-
-	RelHead& operator=(const RelHead& iOther);
 
 	bool operator==(const RelHead& iOther) const;
 	bool operator!=(const RelHead& iOther) const;

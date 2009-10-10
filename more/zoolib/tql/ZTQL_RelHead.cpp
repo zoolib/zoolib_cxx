@@ -37,6 +37,19 @@ namespace ZTQL {
 RelHead::RelHead()
 	{}
 
+RelHead::RelHead(const RelHead& iOther)
+:	fNames(iOther.fNames)
+	{}
+
+RelHead::~RelHead()
+	{}
+
+RelHead& RelHead::operator=(const RelHead& iOther)
+	{
+	fNames = iOther.fNames;
+	return *this;
+	}
+
 RelHead::RelHead(const ZTName& iName)
 :	fNames(&iName, &iName + 1)
 	{}
@@ -58,19 +71,6 @@ RelHead::RelHead(const vector<ZTName>& iNames)
 RelHead::RelHead(const ZTName* iNames, size_t iCount)
 :	fNames(iNames, iNames + iCount)
 	{}
-
-RelHead::RelHead(const RelHead& iOther)
-:	fNames(iOther.fNames)
-	{}
-
-RelHead::~RelHead()
-	{}
-
-RelHead& RelHead::operator=(const RelHead& iOther)
-	{
-	fNames = iOther.fNames;
-	return *this;
-	}
 
 bool RelHead::operator==(const RelHead& iOther) const
 	{ return fNames == iOther.fNames; }

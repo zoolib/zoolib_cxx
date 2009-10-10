@@ -47,9 +47,9 @@ public:
 
 	Query(ZRef<Node> iNode);
 
-	Query(const ZTuple* iTuples, size_t iCount);
+	Query(const Tuple* iTuples, size_t iCount);
 
-	Query(const std::vector<ZTuple>& iTuples);
+	Query(const std::vector<Tuple>& iTuples);
 
 	ZRef<Node> GetNode() const;
 
@@ -87,9 +87,9 @@ Query sAllID(const ZTName& iIDName, const RelHead& iRelHead);
 
 //Query sDifference(const Query& iQuery1, const Query& iQuery2);
 
-Query sExplicit(const ZTuple* iTuples, size_t iCount);
+Query sExplicit(const Tuple* iTuples, size_t iCount);
 
-Query sExplicit(const std::vector<ZTuple>& iTuples);
+Query sExplicit(const std::vector<Tuple>& iTuples);
 
 Query sIntersect(const Query& iQuery1, const Query& iQuery2);
 

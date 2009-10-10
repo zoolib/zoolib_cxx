@@ -111,11 +111,11 @@ RelHead Node_Difference::GetEffectiveRelHead()
 #pragma mark -
 #pragma mark * Node_Explicit
 
-Node_Explicit::Node_Explicit(const ZTuple* iTuples, size_t iCount)
+Node_Explicit::Node_Explicit(const Tuple* iTuples, size_t iCount)
 :	fTuples(iTuples, iTuples + iCount)
 	{}
 
-Node_Explicit::Node_Explicit(const std::vector<ZTuple>& iTuples)
+Node_Explicit::Node_Explicit(const std::vector<Tuple>& iTuples)
 :	fTuples(iTuples)
 	{}
 
@@ -129,7 +129,7 @@ RelHead Node_Explicit::GetEffectiveRelHead()
 	return RelHead();
 	}
 
-const vector<ZTuple>& Node_Explicit::GetTuples()
+const vector<Tuple>& Node_Explicit::GetTuples()
 	{ return fTuples; }
 
 // =================================================================================================

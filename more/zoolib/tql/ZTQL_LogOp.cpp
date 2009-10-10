@@ -52,7 +52,7 @@ LogOp_True::~LogOp_True()
 bool LogOp_True::Accept(LogOpVisitor& iVisitor)
 	{ return iVisitor.Visit_True(this); }
 
-bool LogOp_True::Matches(const ZTuple& iTuple)
+bool LogOp_True::Matches(const Tuple& iTuple)
 	{ return true; }
 
 // =================================================================================================
@@ -68,7 +68,7 @@ LogOp_False::~LogOp_False()
 bool LogOp_False::Accept(LogOpVisitor& iVisitor)
 	{ return iVisitor.Visit_False(this); }
 
-bool LogOp_False::Matches(const ZTuple& iTuple)
+bool LogOp_False::Matches(const Tuple& iTuple)
 	{ return false; }
 
 // =================================================================================================
@@ -86,7 +86,7 @@ LogOp_And::~LogOp_And()
 bool LogOp_And::Accept(LogOpVisitor& iVisitor)
 	{ return iVisitor.Visit_And(this); }
 
-bool LogOp_And::Matches(const ZTuple& iTuple)
+bool LogOp_And::Matches(const Tuple& iTuple)
 	{
 	if (fLHS)
 		{
@@ -125,7 +125,7 @@ LogOp_Or::~LogOp_Or()
 bool LogOp_Or::Accept(LogOpVisitor& iVisitor)
 	{ return iVisitor.Visit_Or(this); }
 
-bool LogOp_Or::Matches(const ZTuple& iTuple)
+bool LogOp_Or::Matches(const Tuple& iTuple)
 	{
 	if (fLHS)
 		{
@@ -169,7 +169,7 @@ LogOp_Condition::~LogOp_Condition()
 bool LogOp_Condition::Accept(LogOpVisitor& iVisitor)
 	{ return iVisitor.Visit_Condition(this); }
 
-bool LogOp_Condition::Matches(const ZTuple& iTuple)
+bool LogOp_Condition::Matches(const Tuple& iTuple)
 	{ return fCondition.Matches(iTuple); }
 
 void LogOp_Condition::GatherPropNames(set<ZTName>& ioNames)

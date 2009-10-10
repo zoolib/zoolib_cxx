@@ -25,10 +25,10 @@ static Query A(const ZTName& iIDName)
 //static Query D(const Query& iQuery1, const Query& iQuery2)
 //	{ return sDifference(iQuery1, iQuery2); }
 
-static Query E(const ZTuple* iTuples, size_t iCount)
+static Query E(const Tuple* iTuples, size_t iCount)
 	{ return sExplicit(iTuples, iCount); }
 
-static Query E(const std::vector<ZTuple>& iTuples)
+static Query E(const std::vector<Tuple>& iTuples)
 	{ return sExplicit(iTuples); }
 
 static Query I(const Query& iQuery1, const Query& iQuery2)

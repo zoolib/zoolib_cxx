@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/tql/ZTQL_Condition.h"
 #include "zoolib/tql/ZTQL_RelHead.h"
-#include "zoolib/ZTuple.h"
+#include "zoolib/tql/ZTQL_Value.h"
 
 #include <set>
 
@@ -48,7 +48,7 @@ public:
 	virtual ~LogOp();
 
 	virtual bool Accept(LogOpVisitor& iVisitor) = 0;
-	virtual bool Matches(const ZTuple& iTuple) = 0;
+	virtual bool Matches(const Tuple& iTuple) = 0;
 	virtual void GatherPropNames(std::set<ZTName>& ioNames);
 	};
 
@@ -64,7 +64,7 @@ public:
 
 // From LogOp
 	virtual bool Accept(LogOpVisitor& iVisitor);
-	virtual bool Matches(const ZTuple& iTuple);
+	virtual bool Matches(const Tuple& iTuple);
 	};
 
 // =================================================================================================
@@ -79,7 +79,7 @@ public:
 
 // From LogOp
 	virtual bool Accept(LogOpVisitor& iVisitor);
-	virtual bool Matches(const ZTuple& iTuple);
+	virtual bool Matches(const Tuple& iTuple);
 	};
 
 // =================================================================================================
@@ -94,7 +94,7 @@ public:
 
 // From LogOp
 	virtual bool Accept(LogOpVisitor& iVisitor);
-	virtual bool Matches(const ZTuple& iTuple);
+	virtual bool Matches(const Tuple& iTuple);
 	virtual void GatherPropNames(std::set<ZTName>& ioNames);
 
 // Our protocol
@@ -118,7 +118,7 @@ public:
 
 // From LogOp
 	virtual bool Accept(LogOpVisitor& iVisitor);
-	virtual bool Matches(const ZTuple& iTuple);
+	virtual bool Matches(const Tuple& iTuple);
 	virtual void GatherPropNames(std::set<ZTName>& ioNames);
 
 // Our protocol
@@ -142,7 +142,7 @@ public:
 
 // From LogOp
 	virtual bool Accept(LogOpVisitor& iVisitor);
-	virtual bool Matches(const ZTuple& iTuple);
+	virtual bool Matches(const Tuple& iTuple);
 	virtual void GatherPropNames(std::set<ZTName>& ioNames);
 
 // Our protocol

@@ -176,8 +176,8 @@ bool Writer::Visit_Explicit(ZRef<Node_Explicit> iNode)
 	{
 	sWrite("Explicit(", fStrimW);
 	bool isFirst = true;
-	const vector<ZTuple> theTuples = iNode->GetTuples();
-	for (vector<ZTuple>::const_iterator i = theTuples.begin(); i != theTuples.end(); ++i)
+	const vector<Tuple> theTuples = iNode->GetTuples();
+	for (vector<Tuple>::const_iterator i = theTuples.begin(); i != theTuples.end(); ++i)
 		{
 		if (!isFirst)
 			sWrite(", ", fStrimW);

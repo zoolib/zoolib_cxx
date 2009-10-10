@@ -45,7 +45,7 @@ ComparatorRep_Simple::ComparatorRep_Simple(EComparator iEComparator)
 :	fEComparator(iEComparator)
 	{}
 
-bool ComparatorRep_Simple::Matches(const ZTValue& iLHS, const ZTValue& iRHS)
+bool ComparatorRep_Simple::Matches(const Value& iLHS, const Value& iRHS)
 	{	
 	switch (fEComparator)
 		{
@@ -76,7 +76,7 @@ Comparator::Comparator(ZRef<ComparatorRep> iRep)
 ZRef<ComparatorRep> Comparator::GetRep() const
 	{ return fRep; }
 
-bool Comparator::Matches(const ZTValue& iLHS, const ZTValue& iRHS) const
+bool Comparator::Matches(const Value& iLHS, const Value& iRHS) const
 	{
 	if (fRep)
 		return fRep->Matches(iLHS, iRHS);
@@ -105,7 +105,7 @@ ComparandRep_Name::ComparandRep_Name(const ZTName& iName)
 :	fName(iName)
 	{}
 
-const ZTValue& ComparandRep_Name::Imp_GetValue(const ZTuple& iTuple)
+const Value& ComparandRep_Name::Imp_GetValue(const Tuple& iTuple)
 	{ return *iTuple.PGet(fName); }
 
 void ComparandRep_Name::GatherPropNames(set<ZTName>& ioNames)
@@ -118,14 +118,14 @@ const ZTName& ComparandRep_Name::GetName()
 #pragma mark -
 #pragma mark * ComparandRep_Value
 
-ComparandRep_Value::ComparandRep_Value(const ZTValue& iValue)
+ComparandRep_Value::ComparandRep_Value(const Value& iValue)
 :	fValue(iValue)
 	{}
 
-const ZTValue& ComparandRep_Value::Imp_GetValue(const ZTuple& iTuple)
+const Value& ComparandRep_Value::Imp_GetValue(const Tuple& iTuple)
 	{ return fValue; }
 
-const ZTValue& ComparandRep_Value::GetValue()
+const Value& ComparandRep_Value::GetValue()
 	{ return fValue; }
 
 // =================================================================================================
@@ -139,10 +139,6 @@ Comparand::Comparand(const Comparand& iOther)
 :	fRep(iOther.fRep)
 	{}
 
-Comparand::Comparand(ZRef<ComparandRep> iRep)
-:	fRep(iRep)
-	{}
-
 Comparand::~Comparand()
 	{}
 
@@ -152,12 +148,16 @@ Comparand& Comparand::operator=(const Comparand& iOther)
 	return *this;
 	}
 
+Comparand::Comparand(ZRef<ComparandRep> iRep)
+:	fRep(iRep)
+	{}
+
 ZRef<ComparandRep> Comparand::GetRep() const
 	{ return fRep; }
 
-static ZTValue sEmptyValue;
+static Value sEmptyValue;
 
-const ZTValue& Comparand::GetValue(const ZTuple& iTuple) const
+const Value& Comparand::GetValue(const Tuple& iTuple) const
 	{
 	if (fRep)
 		return fRep->Imp_GetValue(iTuple);
@@ -224,6 +224,17 @@ Condition::Condition(const Condition& iOther)
 	fRHS(iOther.fRHS)
 	{}
 
+Condition::~Condition()
+	{}
+
+Condition& Condition::operator=(const Condition& iOther)
+	{
+	fLHS = iOther.fLHS;
+	fComparator = iOther.fComparator;
+	fRHS = iOther.fRHS;
+	return *this;
+	}
+
 Condition::Condition(
 	ZRef<ComparandRep> iLHS, ZRef<ComparatorRep> iComparator, ZRef<ComparandRep> iRHS)
 :	fLHS(iLHS),
@@ -237,17 +248,6 @@ Condition::Condition(const Comparand& iLHS, const Comparator& iComparator, const
 	fRHS(iRHS)
 	{}
 
-Condition::~Condition()
-	{}
-
-Condition& Condition::operator=(const Condition& iOther)
-	{
-	fLHS = iOther.fLHS;
-	fComparator = iOther.fComparator;
-	fRHS = iOther.fRHS;
-	return *this;
-	}
-
 const Comparand& Condition::GetLHS() const
 	{ return fLHS; }
 
@@ -257,7 +257,7 @@ const Comparator& Condition::GetComparator() const
 const Comparand& Condition::GetRHS() const
 	{ return fRHS; }
 
-bool Condition::Matches(const ZTuple& iTuple) const
+bool Condition::Matches(const Tuple& iTuple) const
 	{ return fComparator.Matches(fLHS.GetValue(iTuple), fRHS.GetValue(iTuple)); }
 
 void Condition::GatherPropNames(set<ZTName>& ioNames) const

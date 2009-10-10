@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2009 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,50 +18,28 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTQLEngine__
-#define __ZTQLEngine__ 1
+#ifndef __ZTQL_Value__
+#define __ZTQL_Value__ 1
+
 #include "zconfig.h"
 
-#include "zoolib/tql/ZTQL_Node.h"
+//#include "zoolib/ZVal_ZooLib.h"
+#include "zoolib/ZTuple.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-using ZTQL::Tuple;
+namespace ZTQL {
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZTQLEngine
+#if 0
+	typedef ZTValue Value;
+	typedef ZTuple Tuple;
+#else
+	typedef ZVal_ZooLib Value;
+	typedef ZMap_ZooLib Tuple;
+#endif
 
-class ZTQLEngine
-	{
-public:
-	class Iterator
-		{
-	protected:
-		Iterator();
-
-	public:
-		virtual ~Iterator();
-
-		virtual bool HasValue() = 0;
-		virtual Tuple Current() = 0;
-		virtual void Advance() = 0;
-		};
-
-
-	ZTQLEngine();
-
-	void Execute(ZRef<ZTQL::Node> iNode, std::vector<Tuple>& oResults);
-
-	virtual Iterator* Search();//ZTSpec::CriterionSect iSect);
-
-
-//		const ZTSpec& iTSpec, std::vector<std::pair<uint64, Tuple> >& oResults) = 0;
-
-private:	
-	void pExecute(ZRef<ZTQL::Node> iNode, std::vector<Tuple>& oResults);
-	};
+} // namespace ZTQL
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZTQLEngine__
+#endif // __ZTQL_Spec__

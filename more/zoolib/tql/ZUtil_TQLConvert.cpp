@@ -212,7 +212,7 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const ZTName* iName, Spec* iFilt
 			cur.SetID(sIDName, *i);
 			theTuples.push_back(cur);
 			}
-		Query theQ = sExplicit(theTuples);
+		Query theQ = sExplicit(&theTuples[0], theTuples.size());
 		return theQ;
 		#if 0
 		if (iFilter)

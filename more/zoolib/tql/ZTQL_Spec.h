@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zconfig.h"
 
+#include "zoolib/tql/ZTQL_Value.h"
 #include "zoolib/tql/ZTQL_Condition.h"
 #include "zoolib/tql/ZTQL_RelHead.h"
 
@@ -34,19 +35,10 @@ class LogOp;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Comparand derivatives
+#pragma mark * Comparand pseudo constructors
 
-class CName : public Comparand
-	{
-public:
-	CName(const ZTName& iName);
-	};
-
-class CValue : public Comparand
-	{
-public:
-	CValue(const ZTValue& iValue);
-	};
+Comparand CName(const ZTName& iName);
+Comparand CValue(const Value& iValue);
 
 // =================================================================================================
 #pragma mark -
@@ -68,7 +60,7 @@ public:
 	Spec(bool iBool);
 	Spec(const Condition& iCondition);
 
-	bool Matches(const ZTuple& iTuple) const;
+	bool Matches(const Tuple& iTuple) const;
 
 	RelHead GetRelHead() const;
 
