@@ -798,10 +798,10 @@ void ZTSoup::Purge()
 	}
 
 void ZTSoup::Updated(
-		const set<ZRef<ZTSieve> >& iSievesLoaded,
-		const set<ZRef<ZTSieve> >& iSievesChanged,
-		const set<ZRef<ZTCrouton> >& iCroutonsLoaded,
-		const set<ZRef<ZTCrouton> >& iCroutonsChanged)
+	const set<ZRef<ZTSieve> >& iSievesLoaded,
+	const set<ZRef<ZTSieve> >& iSievesChanged,
+	const set<ZRef<ZTCrouton> >& iCroutonsLoaded,
+	const set<ZRef<ZTCrouton> >& iCroutonsChanged)
 	{
 	this->Loaded(iSievesLoaded, eLoaded_Update);
 	this->Changed(iSievesChanged, eChanged_Remote);
