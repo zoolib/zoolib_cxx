@@ -24,8 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCONFIG_SPI.h"
 
-//#include "zoolib/ZYad.h"
-
 #if ZCONFIG_SPI_Enabled(CFType)
 
 #include "zoolib/ZStream_CFData.h"

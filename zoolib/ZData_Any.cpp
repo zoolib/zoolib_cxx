@@ -36,7 +36,7 @@ class ZData_Any::Rep : public ZRefCounted
 	{
 public:
 	Rep();
-	Rep(size_t inSize);
+	Rep(size_t iSize);
 	Rep(const vector<char>& iVector);
 
 	vector<char> fVector;
