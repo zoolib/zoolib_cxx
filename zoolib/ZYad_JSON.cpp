@@ -57,11 +57,11 @@ string        string
 number        int64 or double
 
 
-ZVal_ZooLib          JSON
+ZVal_ZooLib      JSON
 -------          ----
 null             null
-ZMap_ZooLib   object
-ZList_ZooLib  array
+ZMap_ZooLib      object
+ZList_ZooLib     array
 bool             boolean
 string           string
 int8             number
