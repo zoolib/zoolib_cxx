@@ -43,15 +43,15 @@ class ObjectRef;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZJavaScriptCore::ContextSetter
+#pragma mark * ZJavaScriptCore::ContextRefSetter
 
-JSContextRef sCurrentContext();
+JSContextRef sCurrentContextRef();
 
-class ContextSetter
+class ContextRefSetter
 	{
 public:
-	ContextSetter(JSContextRef iJSContextRef);
-	~ContextSetter();
+	ContextRefSetter(JSContextRef iJSContextRef);
+	~ContextRefSetter();
 
 private:
 	JSContextRef fJSContextRef_Prior;
@@ -59,23 +59,23 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZJavaScriptCore::Context
+#pragma mark * ZJavaScriptCore::ContextRef
 
-class Context
+class ContextRef
 	{
 public:
-	Context();
-	Context(const Context& iOther);
-	~Context();
-	Context& operator=(const Context& iOther);
+	ContextRef();
+	ContextRef(const ContextRef& iOther);
+	~ContextRef();
+	ContextRef& operator=(const ContextRef& iOther);
 
-	Context(JSContextRef iJSContextRef);
-	Context(JSGlobalContextRef iJSGlobalContextRef);
+	ContextRef(JSContextRef iJSContextRef);
+	ContextRef(JSGlobalContextRef iJSGlobalContextRef);
 
 	operator JSGlobalContextRef() const;
 
-	bool operator==(const Context& iOther) const;
-	bool operator!=(const Context& iOther) const;
+	bool operator==(const ContextRef& iOther) const;
+	bool operator!=(const ContextRef& iOther) const;
 
 	ObjectRef GetGlobalObjectRef() const;
 

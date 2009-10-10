@@ -92,28 +92,28 @@ template <>
 void sRetain_T(JSValueRef iRef)
 	{
 	if (iRef)
-		::JSValueProtect(ZJavaScriptCore::sCurrentContext(), iRef);
+		::JSValueProtect(ZJavaScriptCore::sCurrentContextRef(), iRef);
 	}
 
 template <>
 void sRelease_T(JSValueRef iRef)
 	{
 	if (iRef)
-		::JSValueUnprotect(ZJavaScriptCore::sCurrentContext(), iRef);
+		::JSValueUnprotect(ZJavaScriptCore::sCurrentContextRef(), iRef);
 	}
 
 template <>
 void sRetain_T(JSObjectRef iRef)
 	{
 	if (iRef)
-		::JSValueProtect(ZJavaScriptCore::sCurrentContext(), iRef);
+		::JSValueProtect(ZJavaScriptCore::sCurrentContextRef(), iRef);
 	}
 
 template <>
 void sRelease_T(JSObjectRef iRef)
 	{
 	if (iRef)
-		::JSValueUnprotect(ZJavaScriptCore::sCurrentContext(), iRef);
+		::JSValueUnprotect(ZJavaScriptCore::sCurrentContextRef(), iRef);
 	}
 
 namespace ZJavaScriptCore {
@@ -141,34 +141,34 @@ static string16 spAsString16(JSStringRef iRef)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZJavaScriptCore::ContextSetter
+#pragma mark * ZJavaScriptCore::ContextRefSetter
 
-static ZTSS::Key sContextKey = ZTSS::sCreate();
+static ZTSS::Key sContextRefKey = ZTSS::sCreate();
 
-static JSContextRef spCurrentContext()
-	{ return static_cast<JSContextRef>(ZTSS::sGet(sContextKey)); }
+static JSContextRef spCurrentContextRef()
+	{ return static_cast<JSContextRef>(ZTSS::sGet(sContextRefKey)); }
 
-JSContextRef sCurrentContext()
+JSContextRef sCurrentContextRef()
 	{
-	JSContextRef theCR = spCurrentContext();
+	JSContextRef theCR = spCurrentContextRef();
 	ZAssert(theCR);
 	return theCR;
 	}
 
-ContextSetter::ContextSetter(JSContextRef iJSContextRef)
+ContextRefSetter::ContextRefSetter(JSContextRef iJSContextRef)
 	{
-	fJSContextRef_Prior = spCurrentContext();
-	ZTSS::sSet(sContextKey, iJSContextRef);
+	fJSContextRef_Prior = spCurrentContextRef();
+	ZTSS::sSet(sContextRefKey, iJSContextRef);
 	}
 
-ContextSetter::~ContextSetter()
-	{ ZTSS::sSet(sContextKey, fJSContextRef_Prior); }
+ContextRefSetter::~ContextRefSetter()
+	{ ZTSS::sSet(sContextRefKey, fJSContextRef_Prior); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZJavaScriptCore::Context::Rep
+#pragma mark * ZJavaScriptCore::ContextRef::Rep
 
-class Context::Rep : public ZRefCountedWithFinalize
+class ContextRef::Rep : public ZRefCountedWithFinalize
 	{
 public:
 	Rep(ZRef<JSGlobalContextRef> iJSGlobalContextRef);
@@ -180,58 +180,58 @@ private:
 	ZRef<JSGlobalContextRef> fRep;
 	};
 
-Context::Rep::Rep(ZRef<JSGlobalContextRef> iJSGlobalContextRef)
+ContextRef::Rep::Rep(ZRef<JSGlobalContextRef> iJSGlobalContextRef)
 :	fRep(iJSGlobalContextRef)
 	{}
 
-Context::Rep::~Rep()
+ContextRef::Rep::~Rep()
 	{}
 
-JSGlobalContextRef Context::Rep::GetJSGlobalContextRef()
+JSGlobalContextRef ContextRef::Rep::GetJSGlobalContextRef()
 	{ return fRep.Get(); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZJavaScriptCore::Context
+#pragma mark * ZJavaScriptCore::ContextRef
 
-Context::Context()
+ContextRef::ContextRef()
 	{}
 
-Context::Context(const Context& iOther)
+ContextRef::ContextRef(const ContextRef& iOther)
 :	fRep(iOther.fRep)
 	{}
 
-Context::~Context()
+ContextRef::~ContextRef()
 	{}
 
-Context& Context::operator=(const Context& iOther)
+ContextRef& ContextRef::operator=(const ContextRef& iOther)
 	{
 	fRep = iOther.fRep;
 	return *this;
 	}
 
-Context::Context(JSContextRef iJSContextRef)
+ContextRef::ContextRef(JSContextRef iJSContextRef)
 :	fRep(new Rep(const_cast<JSGlobalContextRef>(iJSContextRef)))
 	{}
 
-Context::Context(JSGlobalContextRef iJSGlobalContextRef)
+ContextRef::ContextRef(JSGlobalContextRef iJSGlobalContextRef)
 :	fRep(new Rep(iJSGlobalContextRef))
 	{}
 
-Context::operator JSGlobalContextRef() const
+ContextRef::operator JSGlobalContextRef() const
 	{
 	if (fRep)
 		return fRep->GetJSGlobalContextRef();
 	return nullptr;
 	}
 
-bool Context::operator==(const Context& iOther) const
+bool ContextRef::operator==(const ContextRef& iOther) const
 	{ return static_cast<JSGlobalContextRef>(*this) == static_cast<JSGlobalContextRef>(iOther); }
 
-bool Context::operator!=(const Context& iOther) const
+bool ContextRef::operator!=(const ContextRef& iOther) const
 	{ return !(*this == iOther); }
 
-ObjectRef Context::GetGlobalObjectRef() const
+ObjectRef ContextRef::GetGlobalObjectRef() const
 	{ return ObjectRef(::JSContextGetGlobalObject(*this)); }
 
 // =================================================================================================
@@ -396,20 +396,20 @@ ZAny Value::AsAny() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
-		switch (::JSValueGetType(sCurrentContext(), theRef))
+		switch (::JSValueGetType(sCurrentContextRef(), theRef))
 			{
 			case kJSTypeBoolean:
 				{
-				return ZAny(bool(::JSValueToBoolean(sCurrentContext(), theRef)));
+				return ZAny(bool(::JSValueToBoolean(sCurrentContextRef(), theRef)));
 				}
 			case kJSTypeNumber:
 				{
-				return ZAny(double(::JSValueToNumber(sCurrentContext(), theRef, nil)));
+				return ZAny(double(::JSValueToNumber(sCurrentContextRef(), theRef, nil)));
 				}
 			case kJSTypeString:
 				{
 				ZRef<JSStringRef> theStringRef =
-					Adopt(::JSValueToStringCopy(sCurrentContext(), theRef, nil));
+					Adopt(::JSValueToStringCopy(sCurrentContextRef(), theRef, nil));
 				return ZAny(spAsString8(theStringRef));
 				}
 			case kJSTypeObject:
@@ -425,7 +425,7 @@ Value::operator operator_bool_type() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
-		if (kJSTypeUndefined != ::JSValueGetType(sCurrentContext(), theRef))
+		if (kJSTypeUndefined != ::JSValueGetType(sCurrentContextRef(), theRef))
 			return operator_bool_generator_type::translate(true);
 		}
 	return operator_bool_generator_type::translate(false);
@@ -435,7 +435,7 @@ Value::operator bool() const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
-		if (kJSTypeUndefined != ::JSValueGetType(sCurrentContext(), theRef))
+		if (kJSTypeUndefined != ::JSValueGetType(sCurrentContextRef(), theRef))
 			return true;
 		}
 	return false;
@@ -483,15 +483,15 @@ Value::Value(JSValueRef iOther)
 	{}
 
 Value::Value(bool iValue)
-:	inherited(::JSValueMakeBoolean(sCurrentContext(), iValue))
+:	inherited(::JSValueMakeBoolean(sCurrentContextRef(), iValue))
 	{}
 
 Value::Value(double iValue)
-:	inherited(::JSValueMakeNumber(sCurrentContext(), iValue))
+:	inherited(::JSValueMakeNumber(sCurrentContextRef(), iValue))
 	{}
 
 Value::Value(const String& iValue)
-:	inherited(::JSValueMakeString(sCurrentContext(), iValue))
+:	inherited(::JSValueMakeString(sCurrentContextRef(), iValue))
 	{}
 
 Value::Value(const ObjectRef& iValue)
@@ -512,19 +512,19 @@ Value& Value::operator=(JSValueRef iOther)
 
 Value& Value::operator=(bool iValue)
 	{
-	inherited::operator=(::JSValueMakeBoolean(sCurrentContext(), iValue));
+	inherited::operator=(::JSValueMakeBoolean(sCurrentContextRef(), iValue));
 	return *this;
 	}
 
 Value& Value::operator=(double iValue)
 	{
-	inherited::operator=(::JSValueMakeNumber(sCurrentContext(), iValue));
+	inherited::operator=(::JSValueMakeNumber(sCurrentContextRef(), iValue));
 	return *this;
 	}
 
 Value& Value::operator=(const String& iValue)
 	{
-	inherited::operator=(::JSValueMakeString(sCurrentContext(), iValue));
+	inherited::operator=(::JSValueMakeString(sCurrentContextRef(), iValue));
 	return *this;
 	}
 
@@ -537,7 +537,7 @@ Value& Value::operator=(const ObjectRef& iValue)
 String Value::ToString() const
 	{
 	if (JSValueRef theRef = inherited::Get())
-		return Adopt(::JSValueToStringCopy(sCurrentContext(), theRef, nil));
+		return Adopt(::JSValueToStringCopy(sCurrentContextRef(), theRef, nil));
 
 	return String();
 	}
@@ -547,9 +547,9 @@ bool Value::QGet_T<bool>(bool& oVal) const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
-		if (kJSTypeBoolean == ::JSValueGetType(sCurrentContext(), theRef))
+		if (kJSTypeBoolean == ::JSValueGetType(sCurrentContextRef(), theRef))
 			{
-			oVal = ::JSValueToBoolean(sCurrentContext(), theRef);
+			oVal = ::JSValueToBoolean(sCurrentContextRef(), theRef);
 			return true;
 			}
 		}
@@ -561,10 +561,10 @@ bool Value::QGet_T<double>(double& oVal) const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
-		if (kJSTypeNumber == ::JSValueGetType(sCurrentContext(), theRef))
+		if (kJSTypeNumber == ::JSValueGetType(sCurrentContextRef(), theRef))
 			{
 			JSValueRef theEx = nil;
-			oVal = ::JSValueToNumber(sCurrentContext(), theRef, &theEx);
+			oVal = ::JSValueToNumber(sCurrentContextRef(), theRef, &theEx);
 			return !theEx;
 			}
 		}
@@ -576,10 +576,10 @@ bool Value::QGet_T<String>(String& oVal) const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
-		if (kJSTypeString == ::JSValueGetType(sCurrentContext(), theRef))
+		if (kJSTypeString == ::JSValueGetType(sCurrentContextRef(), theRef))
 			{
 			if (ZRef<JSStringRef> theStringRef =
-				Adopt(::JSValueToStringCopy(sCurrentContext(), theRef, nil)))
+				Adopt(::JSValueToStringCopy(sCurrentContextRef(), theRef, nil)))
 				{
 				oVal = theStringRef;
 				return true;
@@ -618,7 +618,7 @@ bool Value::QGet_T<ObjectRef>(ObjectRef& oVal) const
 	{
 	if (JSValueRef theRef = inherited::Get())
 		{
-		if (::JSValueIsObject(sCurrentContext(), theRef))
+		if (::JSValueIsObject(sCurrentContextRef(), theRef))
 			{
 			oVal = ObjectRef(const_cast<JSObjectRef>(theRef));
 			return true;
@@ -654,7 +654,7 @@ ZAny ObjectRef::AsAny() const
 			{
 			ZMap_Any result;
 			ZRef<JSPropertyNameArrayRef> theNames =
-				Adopt(::JSObjectCopyPropertyNames(sCurrentContext(), thisRef));
+				Adopt(::JSObjectCopyPropertyNames(sCurrentContextRef(), thisRef));
 			for (size_t x = 0, count = ::JSPropertyNameArrayGetCount(theNames); x < count; ++x)
 				{
 				const string8 theName =
@@ -668,7 +668,7 @@ ZAny ObjectRef::AsAny() const
 	}
 
 ObjectRef::ObjectRef()
-:	inherited(::JSObjectMake(sCurrentContext(), nil, nil))
+:	inherited(::JSObjectMake(sCurrentContextRef(), nil, nil))
 	{}
 
 ObjectRef::ObjectRef(const ObjectRef& iOther)
@@ -697,7 +697,7 @@ ObjectRef& ObjectRef::operator=(const ZRef<JSObjectRef>& iOther)
 bool ObjectRef::QGet(const string8& iName, Value& oVal) const
 	{	
 	JSValueRef theEx = nil;
-	JSValueRef theResult = ::JSObjectGetProperty(sCurrentContext(),
+	JSValueRef theResult = ::JSObjectGetProperty(sCurrentContextRef(),
 		inherited::Get(), String(iName), &theEx);
 	if (!theEx)
 		{
@@ -721,13 +721,14 @@ Value ObjectRef::Get(const string8& iName) const
 bool ObjectRef::Set(const string8& iName, const Value& iValue)
 	{
 	JSValueRef theEx = nil;
-	::JSObjectSetProperty(sCurrentContext(), inherited::Get(), String(iName), iValue, 0, &theEx);
+	::JSObjectSetProperty(sCurrentContextRef(),
+		inherited::Get(), String(iName), iValue, 0, &theEx);
 	return !theEx;
 	}
 
 bool ObjectRef::Erase(const string8& iName)
 	{
-	return ::JSObjectDeleteProperty(sCurrentContext(),
+	return ::JSObjectDeleteProperty(sCurrentContextRef(),
 		inherited::Get(), String(iName), nullptr);
 	}
 
@@ -750,7 +751,7 @@ Value ObjectRef::DGet(const Value& iDefault, size_t iIndex) const
 bool ObjectRef::QGet(size_t iIndex, Value& oVal) const
 	{
 	JSValueRef theEx = nil;
-	JSValueRef theResult = ::JSObjectGetPropertyAtIndex(sCurrentContext(),
+	JSValueRef theResult = ::JSObjectGetPropertyAtIndex(sCurrentContextRef(),
 		inherited::Get(), iIndex, &theEx);
 	if (!theEx)
 		{
@@ -766,7 +767,8 @@ Value ObjectRef::Get(size_t iIndex) const
 bool ObjectRef::Set(size_t iIndex, const Value& iValue)
 	{
 	JSValueRef theEx = nil;
-	::JSObjectSetPropertyAtIndex(sCurrentContext(), inherited::Get(), iIndex, iValue, &theEx);
+	::JSObjectSetPropertyAtIndex(sCurrentContextRef(),
+		inherited::Get(), iIndex, iValue, &theEx);
 	return !theEx;
 	}
 
@@ -786,7 +788,7 @@ Value ObjectRef::CallAsFunction(const ObjectRef& iThis,
 	const Value* iArgs, size_t iArgCount,
 	Value& oEx)
 	{
-	return ::JSObjectCallAsFunction(sCurrentContext(),
+	return ::JSObjectCallAsFunction(sCurrentContextRef(),
 		inherited::Get(),
 		iThis,
 		iArgCount, reinterpret_cast<const JSValueRef*>(iArgs),
@@ -800,7 +802,7 @@ Value ObjectRef::CallAsFunction(const ObjectRef& iThis,
 ObjectImp::ObjectImp()
 :	fJSObjectRef(nil)
 	{
-	JSObjectRef theOR = ::JSObjectMake(sCurrentContext(), spGetJSClass(), this);
+	JSObjectRef theOR = ::JSObjectMake(sCurrentContextRef(), spGetJSClass(), this);
 	ZAssert(theOR == fJSObjectRef);
 	}
 
@@ -862,7 +864,7 @@ Value ObjectImp::CallAsFunction(const ObjectRef& iFunction, const ObjectRef& iTh
 
 void ObjectImp::spInitialize(JSContextRef ctx, JSObjectRef object)
 	{
-	ContextSetter cs(ctx);
+	ContextRefSetter cs(ctx);
 	if (ZRef<ObjectImp> fun = spFromRef(object))
 		fun->Initialize(ctx, object);
 	}
@@ -870,14 +872,14 @@ void ObjectImp::spInitialize(JSContextRef ctx, JSObjectRef object)
 void ObjectImp::spFinalize(JSObjectRef object)
 	{
 	// Hmm -- pretend there's no current context.
-	ContextSetter cs(nil);
+	ContextRefSetter cs(nil);
 	if (ZRef<ObjectImp> fun = spFromRef(object))
 		fun->Finalize(object);
 	}
 
 bool ObjectImp::spHasProperty(JSContextRef ctx, JSObjectRef object, JSStringRef propertyName)
 	{
-	ContextSetter cs(ctx);
+	ContextRefSetter cs(ctx);
 	if (ZRef<ObjectImp> fun = spFromRef(object))
 		return fun->HasProperty(ObjectRef(object), String(propertyName));
 
@@ -887,7 +889,7 @@ bool ObjectImp::spHasProperty(JSContextRef ctx, JSObjectRef object, JSStringRef 
 JSValueRef ObjectImp::spGetProperty(JSContextRef ctx,
 	JSObjectRef object, JSStringRef propertyName, JSValueRef* exception)
 	{
-	ContextSetter cs(ctx);
+	ContextRefSetter cs(ctx);
 	if (ZRef<ObjectImp> fun = spFromRef(object))
 		{
 		Value ex;
@@ -905,7 +907,7 @@ JSValueRef ObjectImp::spGetProperty(JSContextRef ctx,
 bool ObjectImp::spSetProperty(JSContextRef ctx,
 	JSObjectRef object, JSStringRef propertyName, JSValueRef value, JSValueRef* exception)
 	{
-	ContextSetter cs(ctx);
+	ContextRefSetter cs(ctx);
 	if (ZRef<ObjectImp> fun = spFromRef(object))
 		{
 		Value ex;
@@ -923,7 +925,7 @@ bool ObjectImp::spSetProperty(JSContextRef ctx,
 void ObjectImp::spGetPropertyNames(JSContextRef ctx,
 	JSObjectRef object, JSPropertyNameAccumulatorRef propertyNames)
 	{
-	ContextSetter cs(ctx);
+	ContextRefSetter cs(ctx);
 	if (ZRef<ObjectImp> fun = spFromRef(object))
 		fun->GetPropertyNames(ObjectRef(object), propertyNames);
 	}
@@ -932,7 +934,7 @@ JSValueRef ObjectImp::spCallAsFunction(JSContextRef ctx,
 	JSObjectRef function, JSObjectRef thisObject,
 	size_t argumentCount, const JSValueRef arguments[], JSValueRef* exception)
 	{
-	ContextSetter cs(ctx);
+	ContextRefSetter cs(ctx);
 	if (ZRef<ObjectImp> fun = spFromRef(function))
 		{
 		Value ex;
