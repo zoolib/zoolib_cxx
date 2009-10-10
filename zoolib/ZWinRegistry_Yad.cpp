@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZYad_Any.h"
+#include "zoolib/ZYad_Val_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -32,9 +33,6 @@ namespace ZWinRegistry {
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWinRegistry
-
-ZRef<ZYadMapR> sMakeYadR(const KeyRef& iKeyRef)
-	{ return new YadMapRPos(iKeyRef); }
 
 ZRef<ZYadR> sMakeYadR(const Val& iVal)
 	{
@@ -46,6 +44,9 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 
 	return sMakeYadR(iVal.AsAny());
 	}
+
+ZRef<ZYadMapR> sMakeYadR(const KeyRef& iKeyRef)
+	{ return new ZYadMapRPos_Val_T<KeyRef>(iKeyRef); }
 
 } // namespace ZWinRegistry
 

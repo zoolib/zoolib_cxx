@@ -27,23 +27,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZWinHeader.h"
 #include "zoolib/ZWinRegistry_Val.h"
-#include "zoolib/ZYad_Val_T.h"
+#include "zoolib/ZYad.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZWinRegistry {
 
-using namespace std;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWinRegistry
 
-typedef ZYadMapRPos_Val_T<KeyRef, KeyRef::Index_t> YadMapRPos;
+ZRef<ZYadR> sMakeYadR(const Val& iVal);
 
 ZRef<ZYadMapR> sMakeYadR(const KeyRef& iKeyRef);
-
-ZRef<ZYadR> sMakeYadR(const Val& iVal);
 
 } // namespace ZWinRegistry
 
