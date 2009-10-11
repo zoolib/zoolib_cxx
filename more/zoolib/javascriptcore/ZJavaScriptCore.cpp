@@ -315,7 +315,7 @@ bool Value::sQFromAny(const ZAny& iAny, Value& oVal)
 		}
 	else if (const bool* theValue = ZAnyCast<bool>(&iAny))
 		{
-		return Value(*theValue);
+		oVal = Value(*theValue);
 		}
 	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iAny))
 		{
