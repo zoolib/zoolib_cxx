@@ -23,6 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZVal_ZooLib.h"
 
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZLog.h"
+
 #include <map>
 #include <typeinfo>
 
@@ -42,6 +45,12 @@ static ZMap_ZooLib::PropList sEmptyProperties;
 static ZVal_ZooLib sNilVal;
 static ZList_ZooLib sNilList;
 static vector<ZVal_ZooLib> sNilVector;
+
+static bool spIsSpecialString(size_t iSize)
+	{
+	return false;
+//	return iSize <= kBytesSize;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -619,7 +628,7 @@ ZVal_ZooLib::ZVal_ZooLib(const ZPointPOD& iVal)
 ZVal_ZooLib::ZVal_ZooLib(const char* iVal)
 	{
 	size_t theSize = strlen(iVal);
-	if (theSize <= kBytesSize)
+	if (spIsSpecialString(theSize))
 		{
 		fType.fType = -int(theSize)-1;
 		if (theSize)
@@ -635,7 +644,7 @@ ZVal_ZooLib::ZVal_ZooLib(const char* iVal)
 ZVal_ZooLib::ZVal_ZooLib(const string& iVal)
 	{
 	size_t theSize = iVal.size();
-	if (theSize <= kBytesSize)
+	if (spIsSpecialString(theSize))
 		{
 		fType.fType = -int(theSize)-1;
 		if (theSize)
@@ -1004,7 +1013,7 @@ void ZVal_ZooLib::Set_T<ConstCharStar_t>(const ConstCharStar_t& iVal)
 	{
 	this->pRelease();
 	size_t theSize = strlen(iVal);
-	if (theSize <= kBytesSize)
+	if (spIsSpecialString(theSize))
 		{
 		fType.fType = -int(theSize)-1;
 		if (theSize)
@@ -1022,7 +1031,7 @@ void ZVal_ZooLib::Set_T<string>(const string& iVal)
 	{
 	this->pRelease();
 	size_t theSize = iVal.size();
-	if (theSize <= kBytesSize)
+	if (spIsSpecialString(theSize))
 		{
 		fType.fType = -int(theSize)-1;
 		if (theSize)
@@ -1157,7 +1166,7 @@ void ZVal_ZooLib::ToStream(const ZStreamW& iStreamW) const
 		{
 		iStreamW.WriteUInt8(eZType_String);
 		size_t theSize = -fType.fType-1;
-		ZAssertStop(kDebug_Tuple, theSize <= kBytesSize);
+		ZAssertStop(kDebug_Tuple, spIsSpecialString(theSize));
 		iStreamW.WriteCount(theSize);
 		if (theSize)
 			iStreamW.Write(fType.fBytes, theSize);
@@ -1701,7 +1710,7 @@ void ZVal_ZooLib::pFromStream(ZType iType, const ZStreamR& iStreamR)
 		case eZType_String:
 			{
 			uint32 theSize = iStreamR.ReadCount();
-			if (theSize <= kBytesSize)
+			if (spIsSpecialString(theSize))
 				{
 				iType = (ZType)(-int(theSize)-1);
 				if (theSize)
@@ -2065,6 +2074,13 @@ ZMap_ZooLib::Rep::Rep(const ZMap_ZooLib::PropList& iProperties)
 
 ZMap_ZooLib::Rep::~Rep()
 	{}
+
+int ZMap_ZooLib::GetRefCount() const
+	{
+	if (fRep)
+		return fRep->GetRefCount();
+	return 0;
+	}
 
 // =================================================================================================
 #pragma mark -
