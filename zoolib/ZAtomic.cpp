@@ -216,6 +216,30 @@ int ZAtomic_Add(ZAtomic_t* iAtomic, int iParam)
 
 #endif
 // -----------------------------------------------
+#if !defined(DEFINED_ZAtomic_DecAndTest)
+#define DEFINED_ZAtomic_DecAndTest 1
+
+bool ZAtomic_DecAndTest(ZAtomic_t* iAtomic)
+	{ return 0 == ::OSAtomicAdd32Barrier(-1, (int32_t*)&iAtomic->fValue); }
+
+#endif
+// -----------------------------------------------
+#if !defined(DEFINED_ZAtomic_Inc)
+#define DEFINED_ZAtomic_Inc 1
+
+void ZAtomic_Inc(ZAtomic_t* iAtomic)
+	{ ::OSAtomicIncrement32((int32_t*)&iAtomic->fValue); }
+
+#endif
+// -----------------------------------------------
+#if !defined(DEFINED_ZAtomic_Dec)
+#define DEFINED_ZAtomic_Dec 1
+
+void ZAtomic_Dec(ZAtomic_t* iAtomic)
+	{ ::OSAtomicDecrement32((int32_t*)&iAtomic->fValue); }
+
+#endif
+// -----------------------------------------------
 
 NAMESPACE_ZOOLIB_END
 
@@ -337,7 +361,7 @@ int ZAtomic_Add(ZAtomic_t* iAtomic, int iParam)
 #define DEFINED_ZAtomic_DecAndTest 1
 
 bool ZAtomic_DecAndTest(ZAtomic_t* iAtomic)
-	{ return 0 == ZAtomic_Add(iAtomic, -1); }
+	{ return 1 == ZAtomic_Add(iAtomic, -1); }
 
 #endif
 // -----------------------------------------------
