@@ -69,8 +69,8 @@ public:
 	~ContextRef();
 	ContextRef& operator=(const ContextRef& iOther);
 
-	ContextRef(JSContextRef iJSContextRef);
-	ContextRef(JSGlobalContextRef iJSGlobalContextRef);
+	ContextRef(ZRef<JSContextRef> iJSContextRef);
+	ContextRef(ZRef<JSGlobalContextRef> iJSGlobalContextRef);
 
 	operator JSGlobalContextRef() const;
 

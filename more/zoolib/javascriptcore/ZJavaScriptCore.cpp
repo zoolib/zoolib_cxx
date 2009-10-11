@@ -210,11 +210,11 @@ ContextRef& ContextRef::operator=(const ContextRef& iOther)
 	return *this;
 	}
 
-ContextRef::ContextRef(JSContextRef iJSContextRef)
-:	fRep(new Rep(const_cast<JSGlobalContextRef>(iJSContextRef)))
+ContextRef::ContextRef(ZRef<JSContextRef> iJSContextRef)
+:	fRep(new Rep(const_cast<JSGlobalContextRef>(iJSContextRef.Get())))
 	{}
 
-ContextRef::ContextRef(JSGlobalContextRef iJSGlobalContextRef)
+ContextRef::ContextRef(ZRef<JSGlobalContextRef> iJSGlobalContextRef)
 :	fRep(new Rep(iJSGlobalContextRef))
 	{}
 
