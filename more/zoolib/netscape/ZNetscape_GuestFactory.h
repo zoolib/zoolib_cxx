@@ -34,7 +34,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZNetscape {
 
-ZRef<GuestFactory> sMakeGuestFactory(const std::string& iPath);
+ZRef<GuestFactory> sMakeGuestFactory(const std::string& iNativePath);
 
 } // namespace ZNetscape
 

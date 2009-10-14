@@ -24,7 +24,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZUnicode.h"
+#include "zoolib/ZUtil_CFType.h"
 #include "zoolib/ZUtil_MacOSX.h"
+
+#include "zoolib/ZRef_WinHANDLE.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
 	#include "zoolib/ZWinHeader.h"
@@ -131,19 +134,19 @@ P sLookup_T(CFBundleRef iBundleRef, CFStringRef iName)
 class GuestFactory_Win : public ZNetscape::GuestFactory
 	{
 public:
-	GuestFactory_Win(HMODULE iHMODULE);
+	GuestFactory_Win(const ZRef<HMODULE>& iHMODULE);
 	virtual ~GuestFactory_Win();
 
 	virtual const NPPluginFuncs& GetEntryPoints();
 
 private:
-	HMODULE fHMODULE;
+	ZRef<HMODULE> fHMODULE;
 	NPNetscapeFuncs_Z fNPNF;
 	NPPluginFuncs fNPPluginFuncs;
 	NPP_ShutdownProcPtr fShutdown;
 	};
 
-GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
+GuestFactory_Win::GuestFactory_Win(const ZRef<HMODULE>& iHMODULE)
 :	fHMODULE(iHMODULE)
 	{
 	// Get our own copy of our host's function pointers
@@ -184,8 +187,6 @@ GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 GuestFactory_Win::~GuestFactory_Win()
 	{
 	fShutdown();
-
-	::FreeLibrary(fHMODULE);
 	}
 
 const NPPluginFuncs& GuestFactory_Win::GetEntryPoints()
@@ -437,46 +438,35 @@ const NPPluginFuncs& GuestFactory_HostCFM::GetEntryPoints()
 #pragma mark -
 #pragma mark * ZNetscape
 
-ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory(const std::string& iPath)
+ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory(const std::string& iNativePath)
 	{
-	#if ZCONFIG_SPI_Enabled(Win)
-		string16 thePath = ZUnicode::sAsUTF16(iPath);
-		if (HMODULE theHMODULE = ::LoadLibraryW(thePath.c_str()))
-			{
-			try
+	try
+		{
+		#if ZCONFIG_SPI_Enabled(Win)
+			if (ZRef<HMODULE> theHMODULE = Adopt(::LoadLibraryW(
+				ZUnicode::sAsUTF16(iNativePath).c_str())))
 				{
 				return new GuestFactory_Win(theHMODULE);
 				}
-			catch (...)
-				{
-				::FreeLibrary(theHMODULE);				
-				}
-			}
-	#endif
+		#endif
 
-	#if ZCONFIG_SPI_Enabled(CoreFoundation)
-		if (ZRef<CFStringRef> thePath = Adopt(::CFStringCreateWithCString(
-			nullptr, iPath.c_str(), kCFStringEncodingUTF8)))
-			{
+		#if ZCONFIG_SPI_Enabled(CoreFoundation)
 			if (ZRef<CFURLRef> theURL = Adopt(::CFURLCreateWithFileSystemPath(
-				nullptr, thePath, kCFURLPOSIXPathStyle, true)))
+				nullptr, ZUtil_CFType::sString(iNativePath), kCFURLPOSIXPathStyle, true)))
 				{
 				if (ZRef<CFPlugInRef> thePlugInRef = Adopt(::CFPlugInCreate(nullptr, theURL)))
 					{
-					try
-						{
-						#if __MACH__
-							return new GuestFactory_HostMachO(thePlugInRef);
-						#elif ZCONFIG(Processor,PPC)
-							return new GuestFactory_HostCFM(thePlugInRef);
-						#endif
-						}
-					catch (...)
-						{}
+					#if __MACH__
+						return new GuestFactory_HostMachO(thePlugInRef);
+					#elif ZCONFIG(Processor,PPC)
+						return new GuestFactory_HostCFM(thePlugInRef);
+					#endif
 					}
 				}
-			}
-	#endif
+		#endif
+		}
+	catch (...)
+		{}
 
 	return ZRef<ZNetscape::GuestFactory>();
 	}
