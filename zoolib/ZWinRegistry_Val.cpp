@@ -33,37 +33,7 @@ namespace ZWinRegistry {
 #pragma mark -
 #pragma mark * ZWinRegistry
 
-static HKEY spClone(HKEY iHKEY)
-	{
-	if (iHKEY)
-		{
-		HKEY result;
-		if (::DuplicateHandle(
-			::GetCurrentProcess(), // hSourceProcessHandle
-			iHKEY, // hSourceHandle
-			::GetCurrentProcess(), // hTargetProcessHandle
-			(LPHANDLE)&result, // lpTargetHandle
-			0, // dwDesiredAccess
-			false, // bInheritHandle
-			DUPLICATE_SAME_ACCESS // dwOptions
-			))
-			{
-			return result;
-			}
-
-		if (0x80000000 & (ULONG_PTR)iHKEY)
-			return iHKEY;
-		}
-	return nullptr;
-	}
-
-static void spClose(HKEY iHKEY)
-	{
-	if (iHKEY)
-		::RegCloseKey(iHKEY);
-	}
-
-static bool spCount(HKEY iHKEY,
+static bool spCount(const ZRef<HKEY>& iHKEY,
 	DWORD* oCountKeys, DWORD* oMaxLengthKeyName,
 	DWORD* oCountValues, DWORD* oMaxLengthValueName)
 	{
@@ -191,7 +161,7 @@ static bool spQGet(DWORD iType, const void* iBuffer, DWORD iLength, Val& oVal)
 	return false;
 	}
 
-static string8 spKeyName(HKEY iHKEY, DWORD iMaxLengthKeyName, size_t iIndex)
+static string8 spKeyName(const ZRef<HKEY>& iHKEY, DWORD iMaxLengthKeyName, size_t iIndex)
 	{
 	vector<WCHAR> theName(iMaxLengthKeyName);
 	if (ERROR_SUCCESS == ::RegEnumKeyExW(
@@ -210,7 +180,7 @@ static string8 spKeyName(HKEY iHKEY, DWORD iMaxLengthKeyName, size_t iIndex)
 	return string8();
 	}
 
-static string8 spValueName(HKEY iHKEY, DWORD iMaxLengthValueName, size_t iIndex)
+static string8 spValueName(const ZRef<HKEY>& iHKEY, DWORD iMaxLengthValueName, size_t iIndex)
 	{
 	vector<WCHAR> theName(iMaxLengthValueName);
 	if (ERROR_SUCCESS == ::RegEnumValueW(
@@ -288,7 +258,6 @@ Val::Val(const KeyRef& iVal)
 :	inherited(iVal)
 	{}
 
-//ZMACRO_ZValAccessors_Def_GetP(,Val, String8, string8)
 ZMACRO_ZValAccessors_Def_GetP(,Val, String16, string16)
 ZMACRO_ZValAccessors_Def_GetP(,Val, StringList, vector<string16>)
 ZMACRO_ZValAccessors_Def_GetP(,Val, String_Env, String_Env)
@@ -302,6 +271,18 @@ ZMACRO_ZValAccessors_Def_GetP(,Val, KeyRef, KeyRef)
 #pragma mark -
 #pragma mark * ZWinRegistry::KeyRef
 
+KeyRef KeyRef::sHKCR()
+	{ return KeyRef(HKEY_CLASSES_ROOT); }
+
+KeyRef KeyRef::sHKCU()
+	{ return KeyRef(HKEY_CURRENT_USER); }
+
+KeyRef KeyRef::sHKLM()
+	{ return KeyRef(HKEY_LOCAL_MACHINE); }
+
+KeyRef KeyRef::sHKU()
+	{ return KeyRef(HKEY_USERS); }
+
 KeyRef::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fHKEY); }
 
@@ -313,51 +294,37 @@ KeyRef::KeyRef()
 	{}
 
 KeyRef::KeyRef(const KeyRef& iOther)
-:	fHKEY(spClone(iOther.fHKEY))
+:	fHKEY(iOther.fHKEY)
 	{}
 
 KeyRef::~KeyRef()
-	{ spClose(fHKEY); }
+	{}
 
 KeyRef& KeyRef::operator=(const KeyRef& iOther)
 	{
-	if (fHKEY != iOther.fHKEY)
-		{
-		spClose(fHKEY);
-		fHKEY = spClone(iOther.fHKEY);
-		}
+	fHKEY = iOther.fHKEY;
 	return *this;
 	}
 
 KeyRef::KeyRef(HKEY iOther)
-:	fHKEY(spClone(iOther))
+:	fHKEY(iOther)
 	{}
 
 KeyRef& KeyRef::operator=(HKEY iOther)
 	{
-	if (fHKEY != iOther)
-		{
-		spClose(fHKEY);
-		fHKEY = spClone(iOther);
-		}
+	fHKEY = iOther;
 	return *this;
 	}
 
 KeyRef::KeyRef(const Adopt_T<HKEY>& iOther)
-:	fHKEY(iOther.Get())
+:	fHKEY(iOther)
 	{}
 
 KeyRef& KeyRef::operator=(const Adopt_T<HKEY>& iOther)
 	{
-	HKEY otherHKEY = iOther.Get();
-	if (fHKEY != otherHKEY)
-		{
-		spClose(fHKEY);
-		fHKEY = otherHKEY;
-		}
+	fHKEY = iOther;
 	return *this;
 	}
-
 
 bool KeyRef::QGet(const string16& iName, Val& oVal) const
 	{

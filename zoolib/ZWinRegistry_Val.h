@@ -30,6 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAny.h"
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZData_Any.h"
+#include "zoolib/ZRef_WinHANDLE.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZValAccessors.h"
 #include "zoolib/ZVal_Any.h"
@@ -95,7 +96,6 @@ public:
 	Val(const Data& iVal);
 	Val(const KeyRef& iVal);
 
-//	ZMACRO_ZValAccessors_Decl_Get(Val, String8, string8)
 	ZMACRO_ZValAccessors_Decl_Get(Val, String16, string16)
 	ZMACRO_ZValAccessors_Decl_Get(Val, StringList, vector<string16>)
 	ZMACRO_ZValAccessors_Decl_Get(Val, String_Env, String_Env)
@@ -113,6 +113,11 @@ public:
 class KeyRef
 	{
 public:
+	static KeyRef sHKCR();
+	static KeyRef sHKCU();
+	static KeyRef sHKLM();
+	static KeyRef sHKU();
+
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(KeyRef,
 		operator_bool_generator_type, operator_bool_type);
 
@@ -163,7 +168,7 @@ public:
 	Index_t IndexOf(const KeyRef& iOther, const Index_t& iOtherIndex) const;
 
 private:
-	HKEY fHKEY;
+	ZRef<HKEY> fHKEY;
 	};
 
 } // namespace ZWinRegistry

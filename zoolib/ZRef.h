@@ -182,14 +182,14 @@ Adopt_T<P> NoRetain(P iP)
 #pragma mark -
 #pragma mark * ZRef partially specialized for pointer types
 
-template <class T> void sRetain_T(T);
+template <class T> void sRetain_T(T&);
 template <class T> void sRelease_T(T);
 
 template <class T>
 class ZRef<T*>
 	{
 private:
-	static void spRetain(T* iP)
+	static void spRetain(T*& iP)
 		{
 		if (iP)
 			sRetain_T(iP);

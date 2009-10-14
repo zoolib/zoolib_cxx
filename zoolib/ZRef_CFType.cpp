@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define ZOOLIB_RETAIN_RELEASE(a) \
 	NAMESPACE_ZOOLIB_BEGIN \
-	template <> void sRetain_T(a iRef) { if (iRef) ::CFRetain(iRef); } \
+	template <> void sRetain_T(a& iRef) { if (iRef) ::CFRetain(iRef); } \
 	template <> void sRelease_T(a iRef) { if (iRef) ::CFRelease(iRef); } \
 	NAMESPACE_ZOOLIB_END
 
@@ -37,13 +37,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ZOOLIB_RETAIN_RELEASE(CFTypeRef)
 
 // =================================================================================================
-#define ZOOLIB_CF(a) \
+#define ZOOLIB_CF_MUTABLE(a) \
 	typedef struct __CF##a * CF##a##Ref; \
 	ZOOLIB_RETAIN_RELEASE(CF##a##Ref)
 
-ZOOLIB_CF(Bundle)
-ZOOLIB_CF(ReadStream)
-ZOOLIB_CF(WriteStream)
+ZOOLIB_CF_MUTABLE(Bundle)
+ZOOLIB_CF_MUTABLE(ReadStream)
+ZOOLIB_CF_MUTABLE(WriteStream)
 
 // =================================================================================================
 #define ZOOLIB_CF_CONST(a) \
@@ -54,18 +54,18 @@ ZOOLIB_CF_CONST(URL)
 ZOOLIB_CF_CONST(Null)
 
 // =================================================================================================
-#define ZOOLIB_CF_WITH_MUTABLE(a) \
+#define ZOOLIB_CF(a) \
 	typedef const struct __CF##a * CF##a##Ref; \
 	typedef struct __CF##a * CFMutable##a##Ref; \
 	ZOOLIB_RETAIN_RELEASE(CF##a##Ref) \
 	ZOOLIB_RETAIN_RELEASE(CFMutable##a##Ref)
 
-ZOOLIB_CF_WITH_MUTABLE(Array)
-ZOOLIB_CF_WITH_MUTABLE(Boolean)
-ZOOLIB_CF_WITH_MUTABLE(Data)
-ZOOLIB_CF_WITH_MUTABLE(Dictionary)
-ZOOLIB_CF_WITH_MUTABLE(Number)
-ZOOLIB_CF_WITH_MUTABLE(String)
+ZOOLIB_CF(Array)
+ZOOLIB_CF(Boolean)
+ZOOLIB_CF(Data)
+ZOOLIB_CF(Dictionary)
+ZOOLIB_CF(Number)
+ZOOLIB_CF(String)
 
 // =================================================================================================
 #define ZOOLIB_CG(a) \
