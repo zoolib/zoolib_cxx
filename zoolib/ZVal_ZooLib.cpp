@@ -46,17 +46,14 @@ static ZVal_ZooLib sNilVal;
 static ZList_ZooLib sNilList;
 static vector<ZVal_ZooLib> sNilVector;
 
-static bool spIsSpecialString(size_t iSize)
-	{
-	return false;
-//	return iSize <= kBytesSize;
-	}
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Helper functions
 
-static inline int sCompare(const void* iLeft, size_t iLeftLength,
+static inline bool spIsSpecialString(size_t iSize)
+	{ return iSize <= ZVal_ZooLib::kBytesSize; }
+
+static inline int spCompare(const void* iLeft, size_t iLeftLength,
 	const void* iRight, size_t iRightLength)
 	{
 	if (int compare = memcmp(iLeft, iRight, min(iLeftLength, iRightLength)))
@@ -159,15 +156,15 @@ ValString::ValString(const ZStreamR& iStreamR, size_t iSize)
 	}
 
 inline int ValString::Compare(const ValString& iOther) const
-	{ return sCompare(fBuffer, fSize, iOther.fBuffer, iOther.fSize); }
+	{ return spCompare(fBuffer, fSize, iOther.fBuffer, iOther.fSize); }
 
 inline int ValString::Compare(const char* iString, size_t iSize) const
-	{ return sCompare(fBuffer, fSize, iString, iSize); }
+	{ return spCompare(fBuffer, fSize, iString, iSize); }
 
 inline int ValString::Compare(const string& iString) const
 	{
 	if (size_t otherSize = iString.size())
-		return sCompare(fBuffer, fSize, iString.data(), otherSize);
+		return spCompare(fBuffer, fSize, iString.data(), otherSize);
 
 	// iString is empty. If fSize is zero, then fSize!=0 is true, and
 	// will convert to 1. Otherwise it will be false, and convert
@@ -1087,7 +1084,7 @@ int ZVal_ZooLib::Compare(const ZVal_ZooLib& iOther) const
 		if (iOther.fType.fType < 0)
 			{
 			// So is iOther
-			return sCompare(fType.fBytes, -fType.fType-1,
+			return spCompare(fType.fBytes, -fType.fType-1,
 				iOther.fType.fBytes, -iOther.fType.fType-1);
 			}
 		else if (iOther.fType.fType == eZType_String)
@@ -2074,13 +2071,6 @@ ZMap_ZooLib::Rep::Rep(const ZMap_ZooLib::PropList& iProperties)
 
 ZMap_ZooLib::Rep::~Rep()
 	{}
-
-int ZMap_ZooLib::GetRefCount() const
-	{
-	if (fRep)
-		return fRep->GetRefCount();
-	return 0;
-	}
 
 // =================================================================================================
 #pragma mark -

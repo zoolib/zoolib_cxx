@@ -405,8 +405,6 @@ class ZMap_ZooLib
 	class Rep;
 
 public:
-	int GetRefCount() const;
-
 	typedef std::vector<NameVal> PropList;
 	typedef PropList::iterator Index_t;
 	typedef ZVal_ZooLib Val_t;
