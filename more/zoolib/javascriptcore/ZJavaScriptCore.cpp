@@ -33,7 +33,7 @@ using std::string;
 #pragma mark * ZRef support
 
 template <>
-void sRetain_T(JSPropertyNameArrayRef iRef)
+void sRetain_T(JSPropertyNameArrayRef& iRef)
 	{
 	if (iRef)
 		::JSPropertyNameArrayRetain(iRef);
@@ -47,7 +47,7 @@ void sRelease_T(JSPropertyNameArrayRef iRef)
 	}
 
 template <>
-void sRetain_T(JSStringRef iRef)
+void sRetain_T(JSStringRef& iRef)
 	{
 	if (iRef)
 		::JSStringRetain(iRef);
@@ -61,7 +61,7 @@ void sRelease_T(JSStringRef iRef)
 	}
 
 template <>
-void sRetain_T(JSClassRef iRef)
+void sRetain_T(JSClassRef& iRef)
 	{
 	if (iRef)
 		::JSClassRetain(iRef);
@@ -75,7 +75,7 @@ void sRelease_T(JSClassRef iRef)
 	}
 
 template <>
-void sRetain_T(JSGlobalContextRef iRef)
+void sRetain_T(JSGlobalContextRef& iRef)
 	{
 	if (iRef)
 		::JSGlobalContextRetain(iRef);
@@ -89,7 +89,7 @@ void sRelease_T(JSGlobalContextRef iRef)
 	}
 
 template <>
-void sRetain_T(JSValueRef iRef)
+void sRetain_T(JSValueRef& iRef)
 	{
 	if (iRef)
 		::JSValueProtect(ZJavaScriptCore::sCurrentContextRef(), iRef);
@@ -103,7 +103,7 @@ void sRelease_T(JSValueRef iRef)
 	}
 
 template <>
-void sRetain_T(JSObjectRef iRef)
+void sRetain_T(JSObjectRef& iRef)
 	{
 	if (iRef)
 		::JSValueProtect(ZJavaScriptCore::sCurrentContextRef(), iRef);
