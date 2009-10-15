@@ -74,7 +74,7 @@ static HANDLE spDuplicateHandle(HANDLE iHANDLE)
 // =================================================================================================
 
 ZMACRO_ZRef_WinHANDLE_WithReleaser(HKEY, RegCloseKey)
-ZMACRO_ZRef_WinHANDLE_WithReleaser(HINSTANCE, FreeLibrary)
+//ZMACRO_ZRef_WinHANDLE_WithReleaser(HINSTANCE, FreeLibrary)
 
 //ZMACRO_ZRef_WinHANDLE_WithReleaserDecl(HKEY, WINADVAPI LONG, RegCloseKey)
 //ZMACRO_ZRef_WinHANDLE_WithReleaserDecl(HINSTANCE, WINBASEAPI BOOL, FreeLibrary)
