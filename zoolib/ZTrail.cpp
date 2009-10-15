@@ -141,17 +141,30 @@ size_t ZTrail::sNormalize_ReturnLeadingBounces(const vector<string>& iComps,
 	return bounces;
 	}
 
+ZTrail::operator operator_bool_type() const
+	{ return operator_bool_generator_type::translate(fValid); }
+
 ZTrail::ZTrail()
 :	fValid(true)
-	{}
-
-ZTrail::ZTrail(bool iValid)
-:	fValid(iValid)
 	{}
 
 ZTrail::ZTrail(const ZTrail& iTrail)
 :	fComps(iTrail.fComps),
 	fValid(iTrail.fValid)
+	{}
+
+ZTrail::~ZTrail()
+	{}
+
+ZTrail& ZTrail::operator=(const ZTrail& iTrail)
+	{
+	fComps = iTrail.fComps;
+	fValid = iTrail.fValid;
+	return *this;
+	}
+
+ZTrail::ZTrail(bool iValid)
+:	fValid(iValid)
 	{}
 
 ZTrail::ZTrail(const string& iPOSIXTrail)
@@ -186,17 +199,18 @@ ZTrail::ZTrail(const std::string& iSeparator, const std::string& iIgnore,
 		}
 	}
 
-ZTrail::~ZTrail()
-	{}
-
-ZTrail::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(fValid); }
-
-ZTrail& ZTrail::operator=(const ZTrail& iTrail)
+bool ZTrail::operator==(const ZTrail& iOther) const
 	{
-	fComps = iTrail.fComps;
-	fValid = iTrail.fValid;
-	return *this;
+	if (fValid && iOther.fValid)
+		return fComps == iOther.fComps;
+	return fValid == iOther.fValid;
+	}
+
+bool ZTrail::operator<(const ZTrail& iOther) const
+	{
+	if (fValid && iOther.fValid)
+		return fComps < iOther.fComps;
+	return fValid < iOther.fValid;
 	}
 
 ZTrail ZTrail::operator+(const ZTrail& iTrail) const

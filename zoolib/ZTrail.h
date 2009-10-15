@@ -38,11 +38,14 @@ class ZTrail
 	{
     ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTrail, operator_bool_generator_type, operator_bool_type);
 public:
+	operator operator_bool_type() const;
+
 	ZTrail();
-	explicit ZTrail(bool iValid);
-
 	ZTrail(const ZTrail& iTrail);
+	~ZTrail();
+	ZTrail& operator=(const ZTrail& iTrail);
 
+	explicit ZTrail(bool iValid);
 	ZTrail(const std::string& iPOSIXTrail);
 	ZTrail(const char* iPOSIXTrail);
 	ZTrail(const char* iPOSIXTrail, size_t iSize);
@@ -56,15 +59,12 @@ public:
 		fValid(true)
 		{}
 
-	~ZTrail();
-
-	operator operator_bool_type() const;
-
-	ZTrail& operator=(const ZTrail& iTrail);
+	bool operator==(const ZTrail& iOther) const;
+	bool operator<(const ZTrail& iOther) const;
 
 	ZTrail operator+(const ZTrail& iTrail) const;
 	ZTrail& operator+=(const ZTrail& iTrail);
-
+	
 	template <class I>
 	void AppendTrail(const I& iBegin, const I& iEnd)
 		{ fComps.insert(fComps.end(), iBegin, iEnd); }
