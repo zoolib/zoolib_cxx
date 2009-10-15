@@ -377,12 +377,6 @@ template <>
 void ZVal_CFType::Set_T<ZMap_CFType>(const ZMap_CFType& iVal)
 	{ inherited::operator=(iVal); }
 
-CFTypeRef& ZVal_CFType::OParam()
-	{
-	inherited::Clear();
-	return this->GetPtrRef();
-	}
-	
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVal_CFType typename accessors
@@ -510,12 +504,6 @@ void ZList_CFType::Insert(size_t iIndex, const ZVal_CFType& iVal)
 
 void ZList_CFType::Append(const ZVal_CFType& iVal)
 	{ ::CFArrayAppendValue(this->pTouch(), iVal); }
-
-CFArrayRef& ZList_CFType::OParam()
-	{
-	inherited::Clear();
-	return this->GetPtrRef();
-	}
 
 CFArrayRef ZList_CFType::pArray() const
 	{ return inherited::Get(); }
@@ -667,12 +655,6 @@ void ZMap_CFType::Erase(const string8& iName)
 
 void ZMap_CFType::Erase(CFStringRef iName)
 	{ ::CFDictionaryRemoveValue(this->pTouch(), iName); }
-
-CFDictionaryRef& ZMap_CFType::OParam()
-	{
-	inherited::Clear();
-	return this->GetPtrRef();
-	}
 
 CFDictionaryRef ZMap_CFType::pDictionary() const
 	{ return inherited::Get(); }

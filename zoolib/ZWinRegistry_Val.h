@@ -28,7 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZWinHeader.h"
 
 #include "zoolib/ZAny.h"
-#include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZRef_WinHANDLE.h"
 #include "zoolib/ZUnicodeString.h"
@@ -111,17 +110,14 @@ public:
 #pragma mark * ZWinRegistry::KeyRef
 
 class KeyRef
+:	public ZRef<HKEY>
 	{
+	typedef ZRef<HKEY> inherited;
 public:
 	static KeyRef sHKCR();
 	static KeyRef sHKCU();
 	static KeyRef sHKLM();
 	static KeyRef sHKU();
-
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(KeyRef,
-		operator_bool_generator_type, operator_bool_type);
-
-	operator operator_bool_type() const;
 
 	void swap(KeyRef& rhs);
 
@@ -132,11 +128,8 @@ public:
 	~KeyRef();
 	KeyRef& operator=(const KeyRef& iOther);
 
-	KeyRef(HKEY iOther);
-	KeyRef& operator=(HKEY iOther);
-
-	KeyRef(const Adopt_T<HKEY>& iOther);
-	KeyRef& operator=(const Adopt_T<HKEY>& iOther);
+	KeyRef(ZRef<HKEY> iOther);
+	KeyRef& operator=(ZRef<HKEY> iOther);
 
 // ZMap protocol
 	bool QGet(const string16& iName, Val& oVal) const;
@@ -167,8 +160,8 @@ public:
 	Index_t IndexOf(const string8& iName) const;
 	Index_t IndexOf(const KeyRef& iOther, const Index_t& iOtherIndex) const;
 
-private:
-	ZRef<HKEY> fHKEY;
+// Our protocol
+	HKEY& OParam();
 	};
 
 } // namespace ZWinRegistry

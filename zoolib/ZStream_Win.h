@@ -23,10 +23,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(Win)
-
+#include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZStreamer.h"
-#include "zoolib/ZWinHeader.h"
+
+#if ZCONFIG_SPI_Enabled(Win)
 
 #include <string>
 #include <vector>

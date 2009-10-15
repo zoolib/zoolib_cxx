@@ -40,7 +40,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Unfortunately we need to pull in the Windows headers so
 // the definition of CRITICAL_SECTION is visible.
-#include "zoolib/ZWinHeader.h"
+#include "zoolib/ZCompat_Win.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 

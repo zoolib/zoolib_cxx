@@ -69,8 +69,21 @@ public:
 	:	fP(nullptr)
 		{}
 
+	ZRef(const ZRef& iOther)
+	:	fP(iOther.Get())
+		{ spRetain(fP); }
+
 	~ZRef()
 		{ spRelease(fP); } 
+
+	ZRef& operator=(const ZRef& iOther)
+		{
+		P theP = iOther.Get();
+		std::swap(theP, fP);
+		spRetain(fP);
+		spRelease(theP);
+		return *this;
+		}
 
 	ZRef(P iP)
 	:	fP(iP)
@@ -84,31 +97,6 @@ public:
 		return *this;
 		}
 	
-	bool operator==(const P iP) const
-		{ return fP == iP; }
-
-	bool operator!=(const P iP) const
-		{ return fP != iP; }
-
-	ZRef(const ZRef& iOther)
-	:	fP(iOther.Get())
-		{ spRetain(fP); }
-
-	ZRef& operator=(const ZRef& iOther)
-		{
-		P theP = iOther.Get();
-		std::swap(theP, fP);
-		spRetain(fP);
-		spRelease(theP);
-		return *this;
-		}
-
-	bool operator==(const ZRef& iOther) const
-		{ return fP == iOther.Get(); }
-
-	bool operator!=(const ZRef& iOther) const
-		{ return fP != iOther.Get(); }
-
 	template <class O>
 	ZRef(const ZRef<O>& iOther)
 	:	fP(iOther.Get())
@@ -123,6 +111,18 @@ public:
 		spRelease(theP);
 		return *this;
 		}
+
+	bool operator==(const P iP) const
+		{ return fP == iP; }
+
+	bool operator!=(const P iP) const
+		{ return fP != iP; }
+
+	bool operator==(const ZRef& iOther) const
+		{ return fP == iOther.Get(); }
+
+	bool operator!=(const ZRef& iOther) const
+		{ return fP != iOther.Get(); }
 
 	template <class O>
 	bool operator==(const ZRef<O>& iOther) const
@@ -209,42 +209,12 @@ public:
 	:	fP(nullptr)
 		{}
 
-	~ZRef()
-		{ spRelease(fP); } 
-
-	ZRef(T* iP)
-	:	fP(iP)
-		{ spRetain(fP); }
-	
-	ZRef(const Adopt_T<T*>& iNRP)
-	:	fP(iNRP.Get())
-		{}
-
-	ZRef& operator=(T* iP)
-		{
-		std::swap(iP, fP);
-		spRetain(fP);
-		spRelease(iP);	
-		return *this;
-		}
-	
-	ZRef& operator=(const Adopt_T<T*>& iNRP)
-		{
-		T* theP = iNRP.Get();
-		std::swap(theP, fP);
-		spRelease(theP);
-		return *this;
-		}
-
-	bool operator==(const T* iP) const
-		{ return fP == iP; }
-
-	bool operator!=(const T* iP) const
-		{ return fP != iP; }
-
 	ZRef(const ZRef& iOther)
 	:	fP(iOther.Get())
 		{ spRetain(fP); }
+
+	~ZRef()
+		{ spRelease(fP); } 
 
 	ZRef& operator=(const ZRef& iOther)
 		{
@@ -255,12 +225,18 @@ public:
 		return *this;
 		}
 
-	bool operator==(const ZRef& iOther) const
-		{ return fP == iOther.Get(); }
-
-	bool operator!=(const ZRef& iOther) const
-		{ return fP != iOther.Get(); }
-
+	ZRef(T* iP)
+	:	fP(iP)
+		{ spRetain(fP); }
+	
+	ZRef& operator=(T* iP)
+		{
+		std::swap(iP, fP);
+		spRetain(fP);
+		spRelease(iP);	
+		return *this;
+		}
+	
 	template <class O>
 	ZRef(const ZRef<O>& iOther)
 	:	fP(iOther.Get())
@@ -275,6 +251,30 @@ public:
 		spRelease(theP);
 		return *this;
 		}
+
+	ZRef(const Adopt_T<T*>& iNRP)
+	:	fP(iNRP.Get())
+		{}
+
+	ZRef& operator=(const Adopt_T<T*>& iNRP)
+		{
+		T* theP = iNRP.Get();
+		std::swap(theP, fP);
+		spRelease(theP);
+		return *this;
+		}
+
+	bool operator==(const T* iP) const
+		{ return fP == iP; }
+
+	bool operator!=(const T* iP) const
+		{ return fP != iP; }
+
+	bool operator==(const ZRef& iOther) const
+		{ return fP == iOther.Get(); }
+
+	bool operator!=(const ZRef& iOther) const
+		{ return fP != iOther.Get(); }
 
 	template <class O>
 	bool operator==(const ZRef<O>& iOther) const
@@ -310,6 +310,11 @@ public:
 
 	// Used with output parameters.
 	T*& GetPtrRef() { return fP; }
+	T*& OParam()
+		{
+		this->Clear();
+		return this->GetPtrRef();
+		}
 
 private:
 	T* fP;

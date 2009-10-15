@@ -283,18 +283,17 @@ KeyRef KeyRef::sHKLM()
 KeyRef KeyRef::sHKU()
 	{ return KeyRef(HKEY_USERS); }
 
-KeyRef::operator operator_bool_type() const
-	{ return operator_bool_generator_type::translate(fHKEY); }
+//KeyRef::operator operator_bool_type() const
+//	{ return operator_bool_generator_type::translate(fHKEY); }
 
 void KeyRef::swap(KeyRef& rhs)
-	{ std::swap(fHKEY, rhs.fHKEY); }
+	{ inherited::swap(rhs); }
 
 KeyRef::KeyRef()
-:	fHKEY(nullptr)
 	{}
 
 KeyRef::KeyRef(const KeyRef& iOther)
-:	fHKEY(iOther.fHKEY)
+:	inherited(iOther)
 	{}
 
 KeyRef::~KeyRef()
@@ -302,27 +301,17 @@ KeyRef::~KeyRef()
 
 KeyRef& KeyRef::operator=(const KeyRef& iOther)
 	{
-	fHKEY = iOther.fHKEY;
+	inherited::operator=(iOther);
 	return *this;
 	}
 
-KeyRef::KeyRef(HKEY iOther)
-:	fHKEY(iOther)
+KeyRef::KeyRef(ZRef<HKEY> iOther)
+:	inherited(iOther)
 	{}
 
-KeyRef& KeyRef::operator=(HKEY iOther)
+KeyRef& KeyRef::operator=(ZRef<HKEY> iOther)
 	{
-	fHKEY = iOther;
-	return *this;
-	}
-
-KeyRef::KeyRef(const Adopt_T<HKEY>& iOther)
-:	fHKEY(iOther)
-	{}
-
-KeyRef& KeyRef::operator=(const Adopt_T<HKEY>& iOther)
-	{
-	fHKEY = iOther;
+	inherited::operator=(iOther);
 	return *this;
 	}
 
@@ -333,15 +322,15 @@ bool KeyRef::QGet(const string16& iName, Val& oVal) const
 
 	if (iName[0] != '!')
 		{
-		HKEY subKey;
+		KeyRef subKey;
 		if (ERROR_SUCCESS == ::RegOpenKeyExW(
-			fHKEY,
+			*this,
 			iName.c_str(),
 			0, // ulOptions
 			KEY_READ,
-			&subKey))
+			&subKey.OParam()))
 			{
-			oVal = KeyRef(Adopt(subKey));
+			oVal = subKey;
 			return true;
 			}
 		return false;
@@ -354,7 +343,7 @@ bool KeyRef::QGet(const string16& iName, Val& oVal) const
 		vector<BYTE> bufferVec(curLength);
 		DWORD length = curLength;
 		LONG result = ::RegQueryValueExW(
-			fHKEY,
+			*this,
 			&iName.c_str()[1],
 			nullptr, // lpReserved
 			&type,
@@ -383,7 +372,7 @@ bool KeyRef::QGet(const string8& iName, Val& oVal) const
 bool KeyRef::QGet(const Index_t& iIndex, Val& oVal) const
 	{
 	DWORD countKeys, maxLengthKeyName, countValues, maxLengthValueName;
-	if (!spCount(fHKEY, &countKeys, &maxLengthKeyName, &countValues, &maxLengthValueName))
+	if (!spCount(*this, &countKeys, &maxLengthKeyName, &countValues, &maxLengthValueName))
 		return false;
 
 	size_t offset = iIndex;
@@ -391,7 +380,7 @@ bool KeyRef::QGet(const Index_t& iIndex, Val& oVal) const
 		{
 		vector<WCHAR> theName(maxLengthKeyName);
 		if (ERROR_SUCCESS == ::RegEnumKeyExW(
-			fHKEY,
+			*this,
 			offset,
 			&theName[0],
 			&maxLengthKeyName,
@@ -401,15 +390,15 @@ bool KeyRef::QGet(const Index_t& iIndex, Val& oVal) const
 			nullptr // lpftLastWriteTime
 			))
 			{
-			HKEY subKey;
+			KeyRef subKey;
 			if (ERROR_SUCCESS == ::RegOpenKeyExW(
-				fHKEY,
+				*this,
 				&theName[0],
 				0, // ulOptions
 				KEY_READ,
-				&subKey))
+				&subKey.OParam()))
 				{
-				oVal = KeyRef(Adopt(subKey));
+				oVal = subKey;
 				return true;
 				}
 			}
@@ -429,7 +418,7 @@ bool KeyRef::QGet(const Index_t& iIndex, Val& oVal) const
 		vector<BYTE> bufferVec(curLength);
 		DWORD length = curLength;
 		LONG result = ::RegEnumValueW(
-			fHKEY,
+			*this,
 			offset,
 			&theName[0], // lpValueName
 			&nameLength, // lpcbValueName
@@ -499,7 +488,7 @@ KeyRef::Index_t KeyRef::Begin() const
 KeyRef::Index_t KeyRef::End() const
 	{
 	DWORD countKeys, countValues;
-	if (spCount(fHKEY, &countKeys, nullptr, &countValues, nullptr))
+	if (spCount(*this, &countKeys, nullptr, &countValues, nullptr))
 		return countKeys + countValues;
 	return 0;
 	}
@@ -507,15 +496,15 @@ KeyRef::Index_t KeyRef::End() const
 string8 KeyRef::NameOf(const Index_t& iIndex) const
 	{
 	DWORD countKeys, maxLengthKeyName, countValues, maxLengthValueName;
-	if (spCount(fHKEY, &countKeys, &maxLengthKeyName, &countValues, &maxLengthValueName))
+	if (spCount(*this, &countKeys, &maxLengthKeyName, &countValues, &maxLengthValueName))
 		{
 		size_t offset = iIndex;
 		if (offset < countKeys)
-			return spKeyName(fHKEY, maxLengthKeyName, offset);
+			return spKeyName(*this, maxLengthKeyName, offset);
 
 		offset -= countKeys;
 		if (offset < countValues)
-			return "!" + spValueName(fHKEY, maxLengthValueName, offset);
+			return "!" + spValueName(*this, maxLengthValueName, offset);
 		}
 	return string8();
 	}
@@ -533,6 +522,12 @@ KeyRef::Index_t KeyRef::IndexOf(const string8& iName) const
 
 KeyRef::Index_t KeyRef::IndexOf(const KeyRef& iOther, const Index_t& iOtherIndex) const
 	{ return iOtherIndex; }
+
+HKEY& KeyRef::OParam()
+	{
+	inherited::Clear();
+	return this->GetPtrRef();
+	}
 
 } // namespace ZWinRegistry
 

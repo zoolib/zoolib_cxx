@@ -107,9 +107,6 @@ public:
 	template <class S>
 	void Set_T(const S& iVal);
 
-// Our protocol
-	CFTypeRef& OParam();
-
 // Typename accessors
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_CFType)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, CFString, ZRef<CFStringRef>)
@@ -161,9 +158,6 @@ public:
 
 	void Append(const ZVal_CFType& iVal);
 
-// Our protocol
-	CFArrayRef& OParam();
-
 private:
 	CFArrayRef pArray() const;
 	CFMutableArrayRef pTouch();
@@ -213,9 +207,6 @@ public:
 
 	void Erase(const string8& iName);
 	void Erase(CFStringRef iName);
-
-// Our protocol
-	CFDictionaryRef& OParam();
 
 private:
 	CFDictionaryRef pDictionary() const;

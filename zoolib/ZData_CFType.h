@@ -75,9 +75,6 @@ public:
 	void CopyTo(size_t iOffset, void* iDest, size_t iCount) const;
 	void CopyTo(void* iDest, size_t iCount) const;
 
-// Our protocol
-	CFDataRef& OParam();
-
 private:
 	CFDataRef pData() const;
 	CFMutableDataRef pTouch();

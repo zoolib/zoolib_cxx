@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZCONFIG_SPI.h"
@@ -25,10 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdio.h>
 #include <string.h>
-
-#if ZCONFIG_SPI_Enabled(Win)
-	#include "zoolib/ZWinHeader.h"
-#endif
 
 #if ZCONFIG(Compiler, MSVC)
 #	define vsnprintf _vsnprintf

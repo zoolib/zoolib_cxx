@@ -64,7 +64,7 @@ extern "C" int main(int argc, char **argv)
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "zoolib/ZWinHeader.h"
+#include "zoolib/ZCompat_Win.h"
 
 #if !(ZCONFIG(Compiler, CodeWarrior) || ZCONFIG(Compiler, MSVC) || defined(__MINGW32__))
 #	error (Probably) unsupported compiler

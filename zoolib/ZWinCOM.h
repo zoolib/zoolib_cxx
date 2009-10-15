@@ -28,12 +28,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
+#include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal.h"
 #include "zoolib/ZValAccessors.h"
 #include "zoolib/ZWinCOM_Macros.h"
-#include "zoolib/ZWinHeader.h"
 
 // Necessary when building with Cocotron
 #include <ole2.h>

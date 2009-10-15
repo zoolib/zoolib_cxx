@@ -22,14 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCompat_GdiPlus__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCONFIG_SPI.h"
+#include "zoolib/ZCompat_Win.h"
 
 // =================================================================================================
 
 #if ZCONFIG_SPI_Enabled(Win)
 
 #include "zoolib/ZCompat_algorithm.h"
-#include "zoolib/ZWinHeader.h"
 
 namespace Gdiplus {
 

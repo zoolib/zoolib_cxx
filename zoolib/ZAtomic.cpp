@@ -251,7 +251,7 @@ NAMESPACE_ZOOLIB_END
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "zoolib/ZWinHeader.h"
+#include "zoolib/ZCompat_Win.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 

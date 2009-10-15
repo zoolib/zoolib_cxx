@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
+#include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZFunctionChain.h"
-#include "zoolib/ZWinHeader.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZUnicode {

@@ -38,7 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if ZCONFIG_SPI_Enabled(Win)
-#	include "zoolib/ZWinHeader.h"
+#	include "zoolib/ZCompat_Win.h"
 #	include "zoolib/ZUtil_Win.h"
 #endif
 

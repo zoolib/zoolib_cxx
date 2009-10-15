@@ -37,7 +37,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(GRgnRep_HRGN)
 
-#include "zoolib/ZWinHeader.h"
+#include "zoolib/ZCompat_Win.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
