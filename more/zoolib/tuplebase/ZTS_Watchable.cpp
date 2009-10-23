@@ -291,7 +291,8 @@ ZTS_Watchable::~ZTS_Watchable()
 	// actually destroying its entries, which will be stale pointers
 	// to PQueries, and the ZTBQuery keys.
 
-	for (map<ZMemoryBlock, PQuery*>::iterator i = fMB_To_PQuery.begin(); i != fMB_To_PQuery.end(); ++i)
+	for (map<ZMemoryBlock, PQuery*>::iterator i = fMB_To_PQuery.begin();
+		i != fMB_To_PQuery.end(); ++i)
 		{
 		PQuery* thePQuery = (*i).second;
 		for (set<PSpec*>::iterator
@@ -422,8 +423,8 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 	// For some it's easy to provide the ZMemoryBlock, for others its easy to
 	// provide the ZTBQuery. Obviously it has to provide one or the other.
 
-	// This section of code takes the structure lock intermittently, so conversion between ZMemoryBlock
-	// and ZTBQuery run independently of any other caller to Watcher_Sync.
+	// This section of code takes the structure lock intermittently, so conversion
+	// between ZMemoryBlock and ZTBQuery runs independently of any other caller to Watcher_Sync.
 
 	bool missingQueries = false;
 	for (vector<ZTSWatcher::AddedQueryCombo>::iterator i = local_AddedQueries.begin();
@@ -538,7 +539,8 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 			fMB_To_PQuery.insert(position, pair<ZMemoryBlock, PQuery*>(theMB, thePQuery));
 			}
 
-		WatcherQuery* theWatcherQuery = new WatcherQuery(iWatcher, theRefcon, thePQuery, thePrefetch);
+		WatcherQuery* theWatcherQuery =
+			new WatcherQuery(iWatcher, theRefcon, thePQuery, thePrefetch);
 		thePQuery->fUsingWatcherQueries.Insert(theWatcherQuery);
 
 		ZUtil_STL::sInsertMustNotContain(kDebug,
@@ -571,7 +573,7 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 			// iWrittenTupleIDs/iWrittenTuples is sorted by ID.
 			// If not then don't call this method.
 			const uint64* wasWritten = lower_bound(iWrittenTupleIDs, writtenTupleIDsEnd, theID);
-			if (wasWritten != writtenTupleIDsEnd && *wasWritten != theID)
+			if (wasWritten != writtenTupleIDsEnd && *wasWritten == theID)
 				{
 				iWatcher->fTrippedPTuples.erase(i);
 				i = iWatcher->fTrippedPTuples.lower_bound(thePTuple);
