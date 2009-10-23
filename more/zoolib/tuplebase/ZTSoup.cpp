@@ -325,9 +325,7 @@ void ZTSoup::Register(ZRef<ZTCrouton> iTCrouton, uint64 iID)
 	}
 
 void ZTSoup::Register(ZRef<ZTCrouton> iTCrouton)
-	{
-	this->Register(iTCrouton, this->AllocateID());
-	}
+	{ this->Register(iTCrouton, this->AllocateID()); }
 
 bool ZTSoup::Sync()
 	{
@@ -497,6 +495,7 @@ bool ZTSoup::Sync()
 
 	if (ZLOG(s, eDebug + 1, "ZTSoup"))
 		s << "Sync acquired lock";
+
 
 	for (vector<uint64>::iterator iterWatcherAddedIDs = watcherAddedIDs.begin(),
 		theEnd = watcherAddedIDs.end();
