@@ -36,8 +36,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(DC_GDI)
 
+#include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZThreadOld.h"
-#include "zoolib/ZWinHeader.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 

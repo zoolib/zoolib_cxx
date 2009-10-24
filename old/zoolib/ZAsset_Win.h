@@ -20,14 +20,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZAsset_Win__
 #define __ZAsset_Win__ 1
-
 #include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
+
+#include "zoolib/ZCompat_Win.h"
 
 #if ZCONFIG_SPI_Enabled(Win)
 
 #include "zoolib/ZAsset_Std.h"
-#include "zoolib/ZWinHeader.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
