@@ -74,7 +74,8 @@ public:
 
 private:
 	void pWait(ZCnd& iCnd);
-	void pWait(ZCnd& iCnd, double iTimeout);
+	bool pWaitFor(ZCnd& iCnd, double iTimeout);
+	bool pWaitUntil(ZCnd& iCnd, ZTime iDeadline);
 
 	ZThread::ID fThreadID_Owner;
 	ZMtx fMtx;
@@ -96,20 +97,17 @@ public:
 	void Wait(ZMutex& iMutex)
 		{ iMutex.pWait(*this); }
 
-	void Wait(ZMutex& iMutex, bigtime_t iMicroseconds)
-		{ iMutex.pWait(*this, iMicroseconds / 1e6); }
+	bool WaitFor(ZMutex& iMutex, double iTimeout)
+		{ return iMutex.pWaitFor(*this, iTimeout); }
 
-	void Wait(ZMtx& iMtx)
-		{ ZCnd::Wait(iMtx); }
+	bool WaitUntil(ZMutex& iMutex, ZTime iDeadline)
+		{ return iMutex.pWaitUntil(*this, iDeadline); }
 
-	void Wait(ZMtx& iMtx, bigtime_t iMicroseconds)
-		{ ZCnd::Wait(iMtx, iMicroseconds / 1e6); }
-
-	void Signal()
-		{ ZCnd::Signal(); }
-
-	void Broadcast()
-		{ ZCnd::Broadcast(); }
+	using ZCnd::Wait;
+	using ZCnd::WaitFor;
+	using ZCnd::WaitUntil;
+	using ZCnd::Signal;
+	using ZCnd::Broadcast;
 	};
 
 // =================================================================================================

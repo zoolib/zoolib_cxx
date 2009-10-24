@@ -99,7 +99,8 @@ public:
 	~ZSem_Win();
 
 	void Wait();
-	bool Wait(double iTimeout);
+	bool WaitFor(double iTimeout);
+	bool WaitUntil(ZTime iDeadline);
 	void Signal();
 
 protected:

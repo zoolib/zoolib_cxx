@@ -40,16 +40,9 @@ private:
 	Mtx& fMtx;
 
 public:
-	ZAcquirer_T(Mtx& iMtx)
-	:	fMtx(iMtx)
-		{ fMtx.Acquire(); }
-
-	ZAcquirer_T(const Mtx& iMtx)
-	:	fMtx(const_cast<Mtx&>(iMtx))
-		{ fMtx.Acquire(); }
-
-	~ZAcquirer_T()
-		{ fMtx.Release(); }
+	ZAcquirer_T(Mtx& iMtx) : fMtx(iMtx) { fMtx.Acquire(); }
+	ZAcquirer_T(const Mtx& iMtx) : fMtx(const_cast<Mtx&>(iMtx)) { fMtx.Acquire(); }
+	~ZAcquirer_T() { fMtx.Release(); }
 	};
 
 // =================================================================================================
@@ -63,16 +56,9 @@ private:
 	Mtx& fMtx;
 
 public:
-	ZReleaser_T(Mtx& iMtx)
-	:	fMtx(iMtx)
-		{ fMtx.Release(); }
-
-	ZReleaser_T(const Mtx& iMtx)
-	:	fMtx(const_cast<Mtx&>(iMtx))
-		{ fMtx.Release(); }
-
-	~ZReleaser_T()
-		{ fMtx.Acquire(); }
+	ZReleaser_T(Mtx& iMtx) : fMtx(iMtx) { fMtx.Release(); }
+	ZReleaser_T(const Mtx& iMtx) : fMtx(const_cast<Mtx&>(iMtx)) { fMtx.Release(); }
+	~ZReleaser_T() { fMtx.Acquire(); }
 	};
 
 // =================================================================================================
@@ -86,16 +72,9 @@ private:
 	Mtx& fMtx;
 
 public:
-	ZGuard_T(Mtx& iMtx)
-	:	fMtx(iMtx)
-		{ fMtx.Acquire(); }
-
-	ZGuard_T(const Mtx& iMtx)
-	:	fMtx(const_cast<Mtx&>(iMtx))
-		{ fMtx.Acquire(); }
-
-	~ZGuard_T()
-		{ fMtx.Release(); }
+	ZGuard_T(Mtx& iMtx) : fMtx(iMtx) { fMtx.Acquire(); }
+	ZGuard_T(const Mtx& iMtx) : fMtx(const_cast<Mtx&>(iMtx)) { fMtx.Acquire(); }
+	~ZGuard_T() { fMtx.Release(); }
 	};
 
 // =================================================================================================
@@ -110,15 +89,8 @@ private:
 	int fCount;
 
 public:
-	ZGuardR_T(Mtx& iMtx)
-	:	fMtx(iMtx),
-		fCount(1)
-		{ fMtx.Acquire(); }
-
-	ZGuardR_T(const Mtx& iMtx)
-	:	fMtx(const_cast<Mtx&>(iMtx)),
-		fCount(1)
-		{ fMtx.Acquire(); }
+	ZGuardR_T(Mtx& iMtx) : fMtx(iMtx) , fCount(1) { fMtx.Acquire(); }
+	ZGuardR_T(const Mtx& iMtx) : fMtx(const_cast<Mtx&>(iMtx)) , fCount(1) { fMtx.Acquire(); }
 
 	~ZGuardR_T()
 		{
@@ -161,18 +133,10 @@ private:
 	ZAtomic_t fWaitingThreads;
 
 public:
-	ZCnd_T()
-	:	fWaitingThreads(0)
-		{}
-
+	ZCnd_T() : fWaitingThreads(0) {}
 	~ZCnd_T() {}
 
-	void Wait(Mtx& iMtx) { this->Imp_Wait(iMtx); }
-	void Wait(Mtx& iMtx, double iTimeout) { this->Imp_Wait(iMtx, iTimeout); }
-	void Signal() { this->Imp_Signal(); }
-	void Broadcast() { this->Imp_Broadcast(); }
-
-	void Imp_Wait(Mtx& iMtx)
+	void Wait(Mtx& iMtx)
 		{
 		ZAtomic_Inc(&fWaitingThreads);
 
@@ -181,17 +145,33 @@ public:
 		fSem.Wait();
 		}
 
-	void Imp_Wait(Mtx& iMtx, double iTimeout)
+	bool WaitFor(Mtx& iMtx, double iTimeout)
 		{
 		ZAtomic_Inc(&fWaitingThreads);
 
 		ZReleaser_T<Mtx> rel(iMtx);
 
-		if (!fSem.Wait(iTimeout))
-			ZAtomic_Dec(&fWaitingThreads);
+		if (fSem.WaitFor(iTimeout))
+			return true;
+
+		ZAtomic_Dec(&fWaitingThreads);
+		return false;
 		}
 
-	void Imp_Signal()
+	bool WaitUntil(Mtx& iMtx, ZTime iDeadline)
+		{
+		ZAtomic_Inc(&fWaitingThreads);
+
+		ZReleaser_T<Mtx> rel(iMtx);
+
+		if (fSem.WaitUntil(iDeadline))
+			return true;
+
+		ZAtomic_Dec(&fWaitingThreads);
+		return false;
+		}
+
+	void Signal()
 		{
 		for (;;)
 			{
@@ -206,7 +186,7 @@ public:
 			}
 		}
 
-	void Imp_Broadcast()
+	void Broadcast()
 		{
 		for (;;)
 			{
@@ -234,17 +214,11 @@ private:
 	Sem fSem;
 
 public:
-	ZMtx_T(const char* iName = nullptr)
-		{ fSem.Signal(); }
+	ZMtx_T(const char* iName = nullptr) { fSem.Signal(); }
+	~ZMtx_T() {}
 
-	~ZMtx_T()
-		{}
-
-	void Acquire()
-		{ fSem.Wait(); }
-
-	void Release()
-		{ fSem.Signal(); }
+	void Acquire() { fSem.Wait(); }
+	void Release() { fSem.Signal(); }
 	};
 
 // =================================================================================================
@@ -276,23 +250,21 @@ private:
 		};
 
 public:
-	ZSem_T()
-	:	fAvailable(0)
-		{}
-
+	ZSem_T() : fAvailable(0) {}
 	~ZSem_T() {}
 
-	void Wait() { this->Imp_Wait(1); }
-	bool Wait(double iTimeout) { return this->Imp_Wait(1, iTimeout); }
-	void Signal() { this->Imp_Signal(1); }
+	void Wait() { this->pWait(1); }
+	bool WaitFor(double iTimeout) { return this->pWaitUntil(1, ZTime::sSystem() + iTimeout); }
+	bool WaitUntil(ZTime iDeadline) { return this->pWaitUntil(1, iDeadline); }
+	void Signal() { this->pSignal(1); }
 
-	void Imp_Wait(int iCount)
+	void pWait(int iCount)
 		{
 		ZAcquirer_T<Mtx> acq(fMtx);
 
-		if (fAvailable >= iCount)
+		if (fAvailable)
 			{
-			fAvailable -= iCount;
+			--fAvailable;
 			return;
 			}
 
@@ -305,10 +277,8 @@ public:
 		fWaiters.Remove(&theWaiter);
 		}
 
-	bool Imp_Wait(int iCount, double iTimeout)
+	bool pWaitUntil(int iCount, ZTime iDeadline)
 		{
-		ZTime expired = ZTime::sSystem() + iTimeout;
-
 		ZAcquirer_T<Mtx> acq(fMtx);
 
 		if (fAvailable >= iCount)
@@ -317,14 +287,11 @@ public:
 			return true;
 			}
 
-		if (iTimeout <= 0)
-			return false;
-
 		Waiter theWaiter(iCount);
 		fWaiters.PushBack(&theWaiter);
 
-		while (theWaiter.fCount > 0 && expired > ZTime::sSystem())
-			fCnd.Wait(fMtx, expired - ZTime::sSystem());
+		while (theWaiter.fCount > 0 && fCnd.WaitUntil(fMtx, iDeadline))
+			{}
 
 		fWaiters.Remove(&theWaiter);
 
@@ -337,14 +304,10 @@ public:
 		return true;
 		}
 
-	void Imp_Signal(int iCount)
-		{
-		ZAcquirer_T<Mtx> acq(fMtx);
-		this->pSignal(iCount);
-		}
-
 	void pSignal(int iCount)
 		{
+		ZAcquirer_T<Mtx> acq(fMtx);
+
 		if (!fWaiters)
 			{
 			fAvailable += iCount;

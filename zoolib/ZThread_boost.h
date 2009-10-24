@@ -65,7 +65,8 @@ public:
 	~ZCnd_boost();
 
 	void Wait(boost::mutex& iMtx);
-	bool Wait(boost::mutex& iMtx, double iTimeout);
+	bool WaitFor(boost::mutex& iMtx, double iTimeout);
+	bool WaitUntil(boost::mutex& iMtx, ZTime iDeadline);
 
 	void Signal();
 	void Broadcast();

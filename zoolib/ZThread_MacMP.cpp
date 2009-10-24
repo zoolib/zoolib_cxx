@@ -80,7 +80,7 @@ ZSem_MacMP::~ZSem_MacMP()
 void ZSem_MacMP::Wait()
 	{ ::MPWaitOnSemaphore(fMPSemaphoreID, kDurationForever); }
 
-bool ZSem_MacMP::Wait(double iTimeout)
+bool ZSem_MacMP::WaitFor(double iTimeout)
 	{
 	if (iTimeout <= 0)
 		{
@@ -97,6 +97,9 @@ bool ZSem_MacMP::Wait(double iTimeout)
 		return noErr == ::MPWaitOnSemaphore(fMPSemaphoreID, std::min(1e9, iTimeout * 1e3));
 		}
 	}
+
+bool ZSem_MacMP::WaitUntil(ZTime iDeadline)
+	{ return this->WaitFor(iDeadline - ZTime::sSystem()); }
 
 void ZSem_MacMP::Signal()
 	{ ::MPSignalSemaphore(fMPSemaphoreID); }

@@ -59,7 +59,8 @@ Key sCreate();
 void sFree(Key iKey);
 
 void sSet(Key iKey, Value iValue);
-Value sGet(Key iKey);
+inline Value sGet(Key iKey)
+	{ return ::pthread_getspecific(iKey); }
 
 } // namespace ZTSS_pthread
 
@@ -71,11 +72,11 @@ class ZCnd_pthread : NonCopyable
 	{
 public:
 	ZCnd_pthread();
-
 	~ZCnd_pthread();
 
 	void Wait(ZMtx_pthread& iMtx);
-	void Wait(ZMtx_pthread& iMtx, double iTimeout);
+	bool WaitFor(ZMtx_pthread& iMtx, double iTimeout);
+	bool WaitUntil(ZMtx_pthread& iMtx, ZTime iDeadline);
 	void Signal();
 	void Broadcast();
 
@@ -90,16 +91,27 @@ protected:
 class ZMtx_pthread : NonCopyable
 	{
 public:
-	ZMtx_pthread(const char* iName = nullptr);
-	~ZMtx_pthread();
+	ZMtx_pthread(const char* iName = nullptr) { ::pthread_mutex_init(&fMutex, nullptr); }
+	~ZMtx_pthread() { ::pthread_mutex_destroy(&fMutex); }
 
-	void Acquire();
-	void Release();
+	void Acquire() { ::pthread_mutex_lock(&fMutex); }
+	void Release() { ::pthread_mutex_unlock(&fMutex); }
 
 protected:
 	pthread_mutex_t fMutex;
 	friend class ZCnd_pthread;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCnd_pthread inlines
+
+inline ZCnd_pthread::ZCnd_pthread() { ::pthread_cond_init(&fCond, nullptr); }
+inline ZCnd_pthread::~ZCnd_pthread() { ::pthread_cond_destroy(&fCond); }
+
+inline void ZCnd_pthread::Wait(ZMtx_pthread& iMtx) { ::pthread_cond_wait(&fCond, &iMtx.fMutex); }
+inline void ZCnd_pthread::Signal() { ::pthread_cond_signal(&fCond); }
+inline void ZCnd_pthread::Broadcast() { ::pthread_cond_broadcast(&fCond); }
 
 // =================================================================================================
 #pragma mark -

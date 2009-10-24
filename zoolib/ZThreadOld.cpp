@@ -81,14 +81,26 @@ void ZMutex::pWait(ZCnd& iCnd)
 	fCount = priorCount;
 	}
 
-void ZMutex::pWait(ZCnd& iCnd, double iTimeout)
+bool ZMutex::pWaitFor(ZCnd& iCnd, double iTimeout)
 	{
 	int priorCount = fCount;
 	fCount = 0;
 	fThreadID_Owner = 0;
-	iCnd.Wait(fMtx, iTimeout);
+	bool result = iCnd.WaitFor(fMtx, iTimeout);
 	fThreadID_Owner = ZThread::sID();
 	fCount = priorCount;
+	return result;
+	}
+
+bool ZMutex::pWaitUntil(ZCnd& iCnd, ZTime iDeadline)
+	{
+	int priorCount = fCount;
+	fCount = 0;
+	fThreadID_Owner = 0;
+	bool result = iCnd.WaitUntil(fMtx, iDeadline);
+	fThreadID_Owner = ZThread::sID();
+	fCount = priorCount;
+	return result;
 	}
 
 // =================================================================================================
@@ -118,11 +130,11 @@ void ZSemaphore::Wait(int32 iCount)
 
 bool ZSemaphore::Wait(int32 iCount, bigtime_t iMicroseconds)
 	{
-	ZTime expired = ZTime::sSystem() + iMicroseconds / 1e6;
+	ZTime deadline = ZTime::sSystem() + iMicroseconds / 1e6;
 	int32 acquired = 0;
 	while (iCount)
 		{
-		if (!ZSem::Wait(expired - ZTime::sSystem()))
+		if (!ZSem::WaitUntil(deadline))
 			{
 			this->Signal(acquired);
 			return false;

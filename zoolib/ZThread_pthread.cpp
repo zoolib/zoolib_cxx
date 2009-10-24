@@ -37,69 +37,43 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZTSS_pthread
 
-ZTSS_pthread::Key ZTSS_pthread::sCreate()
+namespace ZTSS_pthread {
+
+Key sCreate()
 	{
 	Key theKey;
 	::pthread_key_create(&theKey, nullptr);
 	return theKey;
 	}
 
-void ZTSS_pthread::sFree(Key iKey)
+void sFree(Key iKey)
 	{ ::pthread_key_delete(iKey); }
 
-void ZTSS_pthread::sSet(Key iKey, Value iValue)
+void sSet(Key iKey, Value iValue)
 	{ ::pthread_setspecific(iKey, iValue); }
 
-ZTSS_pthread::Value ZTSS_pthread::sGet(Key iKey)
-	{ return ::pthread_getspecific(iKey); }
+} // namespace ZTSS_pthread
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZCnd_pthread
 
-ZCnd_pthread::ZCnd_pthread()
-	{ ::pthread_cond_init(&fCond, nullptr); }
-
-ZCnd_pthread::~ZCnd_pthread()
-	{ ::pthread_cond_destroy(&fCond); }
-
-void ZCnd_pthread::Wait(ZMtx_pthread& iMtx)
-	{ ::pthread_cond_wait(&fCond, &iMtx.fMutex); }
-
-void ZCnd_pthread::Wait(ZMtx_pthread& iMtx, double iTimeout)
+bool ZCnd_pthread::WaitFor(ZMtx_pthread& iMtx, double iTimeout)
 	{
-	timeval theTimeVal;
-	::gettimeofday(&theTimeVal, nullptr);
-	double wakeTime = theTimeVal.tv_sec + theTimeVal.tv_usec / 1e6 + iTimeout;
-
-	timespec theTimeSpec;
-	theTimeSpec.tv_sec = time_t(wakeTime);
-	theTimeSpec.tv_nsec = int(fmod(wakeTime, 1.0) * 1e9);
-
-	::pthread_cond_timedwait(&fCond, &iMtx.fMutex, &theTimeSpec);
+	if (iTimeout <= 0)
+		return false;
+	return this->WaitUntil(iMtx, ZTime::sSystem() + iTimeout);
 	}
 
-void ZCnd_pthread::Signal()
-	{ ::pthread_cond_signal(&fCond); }
+bool ZCnd_pthread::WaitUntil(ZMtx_pthread& iMtx, ZTime iDeadline)
+	{
+	timespec theTimeSpec;
+	theTimeSpec.tv_sec = time_t(iDeadline.fVal);
+	theTimeSpec.tv_nsec = int(fmod(iDeadline.fVal, 1.0) * 1e9);
 
-void ZCnd_pthread::Broadcast()
-	{ ::pthread_cond_broadcast(&fCond); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZMtx_pthread
-
-ZMtx_pthread::ZMtx_pthread(const char* iName)
-	{ ::pthread_mutex_init(&fMutex, nullptr); }
-
-ZMtx_pthread::~ZMtx_pthread()
-	{ ::pthread_mutex_destroy(&fMutex); }
-
-void ZMtx_pthread::Acquire()
-	{ ::pthread_mutex_lock(&fMutex); }
-
-void ZMtx_pthread::Release()
-	{ ::pthread_mutex_unlock(&fMutex); }
+	int result = ::pthread_cond_timedwait(&fCond, &iMtx.fMutex, &theTimeSpec);
+	return result == 0;
+	}
 
 // =================================================================================================
 #pragma mark -
