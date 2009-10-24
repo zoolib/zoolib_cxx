@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Internet_WinSock)
 
+#include "zoolib/ZCompat_cmath.h"
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZTime.h"
@@ -437,7 +438,7 @@ size_t ZNetEndpoint_TCP_WinSock::Imp_CountReadable()
 	return localResult;
 	}
 
-static bool sWaitReadable(SOCKET iSOCKET, double iTimeout)
+static bool spWaitReadable(SOCKET iSOCKET, double iTimeout)
 	{
 	fd_set readSet, exceptSet;
 	FD_ZERO(&readSet);
@@ -446,15 +447,13 @@ static bool sWaitReadable(SOCKET iSOCKET, double iTimeout)
 	FD_SET(iSOCKET, &exceptSet);
 
 	struct timeval timeOut;
-	timeOut.tv_sec = iMilliseconds / 1000;
-	timeOut.tv_usec = (iMilliseconds % 1000) * 1000;
+	timeOut.tv_sec = int(iTimeout);
+	timeOut.tv_usec = int(fmod(iTimeout, 1.0) * 1e6);
 	return 0 < ::select(0, &readSet, nullptr, &exceptSet, &timeOut);
 	}
 
 bool ZNetEndpoint_TCP_WinSock::Imp_WaitReadable(double iTimeout)
-	{
-	return sWaitReadable(fSOCKET, iMilliseconds);
-	}
+	{ return spWaitReadable(fSOCKET, iTimeout); }
 
 void ZNetEndpoint_TCP_WinSock::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
@@ -478,7 +477,7 @@ void ZNetEndpoint_TCP_WinSock::Imp_Write(const void* iSource, size_t iCount, siz
 
 bool ZNetEndpoint_TCP_WinSock::Imp_ReceiveDisconnect(double iTimeout)
 	{
-	ZTime endTime = ZTime::sSystem() + double(iMilliseconds) / 1000;
+	ZTime endTime = ZTime::sSystem() + iTimeout;
 
 	bool gotIt = false;
 	for (;;)
@@ -492,7 +491,25 @@ bool ZNetEndpoint_TCP_WinSock::Imp_ReceiveDisconnect(double iTimeout)
 			}
 		else if (result < 0)
 			{
-			break;
+			int err = errno;
+			if (err == EAGAIN)
+				{
+				if (iTimeout < 0)
+					{
+					spWaitReadable(fSOCKET, 60);
+					}
+				else
+					{
+					ZTime now = ZTime::sSystem();
+					if (endTime < now)
+						break;
+					spWaitReadable(fSOCKET, endTime - now);
+					}
+				}
+			else if (err != EINTR)
+				{
+				break;
+				}
 			}
 		}
 	return gotIt;

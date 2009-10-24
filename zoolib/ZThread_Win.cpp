@@ -72,8 +72,11 @@ ZSem_Win::~ZSem_Win()
 void ZSem_Win::Wait()
 	{ ::WaitForSingleObject(fHANDLE, INFINITE); }
 
-bool ZSem_Win::Wait(double iTimeout)
+bool ZSem_Win::WaitFor(double iTimeout)
 	{ return WAIT_OBJECT_0 == ::WaitForSingleObject(fHANDLE, DWORD(iTimeout * 1e3)); }
+
+bool ZSem_Win::WaitUntil(ZTime iDeadline)
+	{ return this->WaitFor(iDeadline - ZTime::sSystem()); }
 
 void ZSem_Win::Signal()
 	{ ::ReleaseSemaphore(fHANDLE, 1, nullptr); }
