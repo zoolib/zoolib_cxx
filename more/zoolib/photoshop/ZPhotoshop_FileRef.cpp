@@ -92,7 +92,6 @@ using std::string;
 static AutoSuite<PSHandleSuite2>
 	spPSHandle(kPSHandleSuite, kPSHandleSuiteVersion2);
 
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Helpers

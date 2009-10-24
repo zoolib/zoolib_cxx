@@ -20,18 +20,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/netscape/ZNetscape_GuestFactory.h"
 
+#include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_CFType.h"
 #include "zoolib/ZUtil_MacOSX.h"
-
-#include "zoolib/ZRef_WinHANDLE.h"
-
-#if ZCONFIG_SPI_Enabled(Win)
-	#include "zoolib/ZWinHeader.h"
-#endif
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
 	#include ZMACINCLUDE2(CoreFoundation,CFBundle.h)

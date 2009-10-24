@@ -34,7 +34,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_SPI_Enabled(Win)
 
 #	define XP_WIN 1
-#	include "zoolib/ZWinHeader.h"
 
 #elif ZCONFIG_SPI_Enabled(Carbon)
 
@@ -80,7 +79,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark * Windows headers
 
 #if defined(XP_WIN)
-#	include "zoolib/ZWinHeader.h"
+#	include "zoolib/ZCompat_Win.h"
 #endif
 
 // =================================================================================================
