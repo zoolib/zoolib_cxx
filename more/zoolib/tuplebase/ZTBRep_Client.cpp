@@ -1341,7 +1341,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		{
 		iStream.Flush();
 		// Wait for up to two seconds before going round again.
-		fCondition_Sender.Wait(fMutex_Structure, 2 * 1000000);
+		fCondition_Sender.WaitFor(fMutex_Structure, 2);
 		}
 	}
 

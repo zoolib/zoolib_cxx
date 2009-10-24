@@ -406,7 +406,7 @@ static ZTuple sGetTuple(ZTBRepTransaction* iTBRepTransaction, uint64 iID)
 	{
 	Callback_GetTuple_t theStruct;
 	iTBRepTransaction->GetTuples(1, &iID, sCallback_GetTuple, &theStruct);
-	theStruct.fSem.Wait(1);
+	theStruct.fSem.Wait();
 
 	return theStruct.fTuple;
 	}
@@ -427,7 +427,7 @@ static size_t sCount(ZTBRepTransaction* iTBRepTransaction, const ZTBQuery& iQuer
 	{
 	Callback_Count_t theStruct;
 	iTBRepTransaction->Count(iQuery, sCallback_Count, &theStruct);
-	theStruct.fSem.Wait(1);
+	theStruct.fSem.Wait();
 
 	return theStruct.fResult;
 	}
@@ -462,7 +462,7 @@ uint64 ZTB::AllocateID()
 	{
 	Callback_AllocateID_t theStruct;
 	fTBRep->AllocateIDs(1, sCallback_AllocateID, &theStruct);
-	theStruct.fSem.Wait(1);
+	theStruct.fSem.Wait();
 	return theStruct.fID;
 	}
 
@@ -470,7 +470,7 @@ uint64 ZTB::Add(const ZTxn& iTxn, const ZTuple& iTuple)
 	{
 	Callback_AllocateID_t theStruct;
 	fTBRep->AllocateIDs(1, sCallback_AllocateID, &theStruct);
-	theStruct.fSem.Wait(1);
+	theStruct.fSem.Wait();
 
 	ZTBRepTransaction* theTBRepTransaction = fTBRep->FindOrCreateTransaction(iTxn);
 	theTBRepTransaction->SetTuple(theStruct.fID, iTuple);
@@ -530,7 +530,7 @@ uint64 ZTBTxn::AllocateID() const
 	{
 	Callback_AllocateID_t theStruct;
 	fTBRepTransaction->GetTBRep()->AllocateIDs(1, sCallback_AllocateID, &theStruct);
-	theStruct.fSem.Wait(1);
+	theStruct.fSem.Wait();
 
 	return theStruct.fID;
 	}
@@ -539,7 +539,7 @@ uint64 ZTBTxn::Add(const ZTuple& iTuple) const
 	{
 	Callback_AllocateID_t theStruct;
 	fTBRepTransaction->GetTBRep()->AllocateIDs(1, sCallback_AllocateID, &theStruct);
-	theStruct.fSem.Wait(1);
+	theStruct.fSem.Wait();
 
 	fTBRepTransaction->SetTuple(theStruct.fID, iTuple);
 
@@ -604,7 +604,7 @@ ZTBIterRep::ZTBIterRep(ZTBRepTransaction* iTransaction, const ZTBQuery& iQuery)
 	Callback_Search_Struct theStruct;
 	theStruct.fRep = this;
 	fTransaction->Search(iQuery, sCallback_Search, &theStruct);
-	theStruct.fSem.Wait(1);
+	theStruct.fSem.Wait();
 	}
 
 ZTBIterRep::~ZTBIterRep()
