@@ -144,11 +144,11 @@ size_t ZStreamR_Boundary::Imp_CountReadable()
 	return fDataEnd - fDataStart;
 	}
 
-bool ZStreamR_Boundary::Imp_WaitReadable(int iMilliseconds)
+bool ZStreamR_Boundary::Imp_WaitReadable(double iTimeout)
 	{
 	if (fDataEnd - fDataStart)
 		return true;
-	return fStreamSource.WaitReadable(iMilliseconds);
+	return fStreamSource.WaitReadable(iTimeout);
 	}
 
 /**

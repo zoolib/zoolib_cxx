@@ -364,10 +364,7 @@ ZNetEndpoint_TCP_WinSock::ZNetEndpoint_TCP_WinSock(ip_addr iRemoteHost, ip_port 
 	}
 
 ZNetEndpoint_TCP_WinSock::~ZNetEndpoint_TCP_WinSock()
-	{
-	if (fSOCKET != INVALID_SOCKET)
-		::closesocket(fSOCKET);
-	}
+	{ ::closesocket(fSOCKET); }
 
 const ZStreamRCon& ZNetEndpoint_TCP_WinSock::GetStreamRCon()
 	{ return *this; }
@@ -375,17 +372,30 @@ const ZStreamRCon& ZNetEndpoint_TCP_WinSock::GetStreamRCon()
 const ZStreamWCon& ZNetEndpoint_TCP_WinSock::GetStreamWCon()
 	{ return *this; }
 
-ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetRemoteAddress()
+ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetLocalAddress()
 	{
-	if (fSOCKET != INVALID_SOCKET)
+	sockaddr_in localSockAddr;
+	int length = sizeof(localSockAddr);
+	if (::getsockname(fSOCKET, (sockaddr*)&localSockAddr, &length) >= 0)
 		{
-		sockaddr_in remoteSockAddr;
-		int length = sizeof(remoteSockAddr);
-		if (::getpeername(fSOCKET, (sockaddr*)&remoteSockAddr, &length) >= 0)
+		if (localSockAddr.sin_family == AF_INET)
 			{
 			return new ZNetAddress_Internet(
-				ntohl(remoteSockAddr.sin_addr.s_addr), ntohs(remoteSockAddr.sin_port));
+				ntohl(localSockAddr.sin_addr.s_addr), ntohs(localSockAddr.sin_port));
 			}
+		}
+
+	return ZRef<ZNetAddress>();
+	}
+
+ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetRemoteAddress()
+	{
+	sockaddr_in remoteSockAddr;
+	int length = sizeof(remoteSockAddr);
+	if (::getpeername(fSOCKET, (sockaddr*)&remoteSockAddr, &length) >= 0)
+		{
+		return new ZNetAddress_Internet(
+			ntohl(remoteSockAddr.sin_addr.s_addr), ntohs(remoteSockAddr.sin_port));
 		}
 
 	return ZRef<ZNetAddress>();
@@ -427,7 +437,7 @@ size_t ZNetEndpoint_TCP_WinSock::Imp_CountReadable()
 	return localResult;
 	}
 
-static bool sWaitReadable(SOCKET iSOCKET, int iMilliseconds)
+static bool sWaitReadable(SOCKET iSOCKET, double iTimeout)
 	{
 	fd_set readSet, exceptSet;
 	FD_ZERO(&readSet);
@@ -441,7 +451,7 @@ static bool sWaitReadable(SOCKET iSOCKET, int iMilliseconds)
 	return 0 < ::select(0, &readSet, nullptr, &exceptSet, &timeOut);
 	}
 
-bool ZNetEndpoint_TCP_WinSock::Imp_WaitReadable(int iMilliseconds)
+bool ZNetEndpoint_TCP_WinSock::Imp_WaitReadable(double iTimeout)
 	{
 	return sWaitReadable(fSOCKET, iMilliseconds);
 	}
@@ -466,7 +476,7 @@ void ZNetEndpoint_TCP_WinSock::Imp_Write(const void* iSource, size_t iCount, siz
 		*oCountWritten = localSource - reinterpret_cast<const char*>(iSource);
 	}
 
-bool ZNetEndpoint_TCP_WinSock::Imp_ReceiveDisconnect(int iMilliseconds)
+bool ZNetEndpoint_TCP_WinSock::Imp_ReceiveDisconnect(double iTimeout)
 	{
 	ZTime endTime = ZTime::sSystem() + double(iMilliseconds) / 1000;
 
@@ -497,8 +507,6 @@ void ZNetEndpoint_TCP_WinSock::Imp_SendDisconnect()
 
 void ZNetEndpoint_TCP_WinSock::Imp_Abort()
 	{
-	if (fSOCKET == INVALID_SOCKET)
-		return;
 	struct linger theLinger;
 	theLinger.l_onoff = 1;
 	theLinger.l_linger = 1;

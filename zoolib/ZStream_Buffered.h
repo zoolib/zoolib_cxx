@@ -42,7 +42,7 @@ public:
 // From ZStreamR
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
-	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual bool Imp_WaitReadable(double iTimeout);
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 // Our protocol
@@ -103,7 +103,7 @@ public:
 // From ZStreamR
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
-	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual bool Imp_WaitReadable(double iTimeout);
 
 // Our protocol
 	void Rewind();

@@ -40,7 +40,7 @@ public:
 // From ZStreamR
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
-	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual bool Imp_WaitReadable(double iTimeout);
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
@@ -66,12 +66,12 @@ public:
 
 // From ZStreamR via ZStreamRCon
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
-	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual bool Imp_WaitReadable(double iTimeout);
 	virtual size_t Imp_CountReadable();
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 // From ZStreamRCon
-	virtual bool Imp_ReceiveDisconnect(int iMilliseconds);
+	virtual bool Imp_ReceiveDisconnect(double iTimeout);
 	virtual void Imp_Abort();
 
 protected:
@@ -92,7 +92,7 @@ public:
 // From ZStreamR via ZStreamU
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
-	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual bool Imp_WaitReadable(double iTimeout);
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 // from ZStreamU

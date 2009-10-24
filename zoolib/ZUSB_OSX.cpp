@@ -407,10 +407,10 @@ public:
 // From ZStreamR
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
-	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual bool Imp_WaitReadable(double iTimeout);
 
 private:
-	bool pRefill(int iMilliseconds);
+	bool pRefill(double iTimeout);
 
 	ZRef<ZUSBInterfaceInterface> fUSBII;
 	IOUSBInterfaceInterface190** fII;
@@ -472,15 +472,15 @@ void StreamerR_TO::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 size_t StreamerR_TO::Imp_CountReadable()
 	{ return fEnd - fOffset; }
 
-bool StreamerR_TO::Imp_WaitReadable(int iMilliseconds)
+bool StreamerR_TO::Imp_WaitReadable(double iTimeout)
 	{
-	if (this->pRefill(iMilliseconds))
+	if (this->pRefill(iTimeout))
 		return fEnd > fOffset;
 
 	return true;
 	}
 
-bool StreamerR_TO::pRefill(int iMilliseconds)
+bool StreamerR_TO::pRefill(double iTimeout)
 	{
 	if (fEnd > fOffset)
 		return true;
@@ -489,7 +489,7 @@ bool StreamerR_TO::pRefill(int iMilliseconds)
 	fEnd = 0;
 	UInt32 localCount = fSize;
 	IOReturn result = fII[0]->ReadPipeTO(
-		fII, fPipeRefR, fBuffer, &localCount, iMilliseconds, 1000000);	
+		fII, fPipeRefR, fBuffer, &localCount, iTimeout * 1e3, 1000000);	
 
 	if (kIOUSBTransactionTimeout == result)
 		{
@@ -545,7 +545,7 @@ public:
 // From ZStreamR
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
-	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual bool Imp_WaitReadable(double iTimeout);
 
 private:
 	void pTriggerRead();
@@ -631,7 +631,7 @@ void StreamerR_Async::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 size_t StreamerR_Async::Imp_CountReadable()
 	{ return fEnd - fOffset; }
 
-bool StreamerR_Async::Imp_WaitReadable(int iMilliseconds)
+bool StreamerR_Async::Imp_WaitReadable(double iTimeout)
 	{
 	ZGuardMtx guard(fMtx);
 
@@ -640,7 +640,7 @@ bool StreamerR_Async::Imp_WaitReadable(int iMilliseconds)
 		this->pTriggerRead();
 
 		if (fOffset >= fEnd)
-			fCnd.Wait(fMtx, iMilliseconds / 1e3);
+			fCnd.WaitFor(fMtx, iTimeout);
 		}
 
 	return fOffset < fEnd;

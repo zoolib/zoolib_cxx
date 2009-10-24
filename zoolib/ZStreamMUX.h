@@ -91,12 +91,12 @@ private:
 
 	size_t Endpoint_CountReadable(Endpoint* iEP);
 
-	bool Endpoint_WaitReadable(Endpoint* iEP, int iMilliseconds);
+	bool Endpoint_WaitReadable(Endpoint* iEP, double iTimeout);
 
 	void Endpoint_Write(Endpoint* iEP,
 		const void* iSource, size_t iCount, size_t* oCountWritten);
 
-	bool Endpoint_ReceiveDisconnect(Endpoint* iEP, int iMilliseconds);
+	bool Endpoint_ReceiveDisconnect(Endpoint* iEP, double iTimeout);
 
 	void Endpoint_SendDisconnect(Endpoint* iEP);
 

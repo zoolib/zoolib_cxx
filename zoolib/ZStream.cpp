@@ -534,7 +534,7 @@ Skip may block indefinitely.
 size_t ZStreamR::Imp_CountReadable()
 	{ return 0;}
 
-bool ZStreamR::Imp_WaitReadable(int iMilliseconds)
+bool ZStreamR::Imp_WaitReadable(double iTimeout)
 	{ return true; }
 
 /** \brief Invoke \a iStreamW's \c Imp_CopyFrom method.
@@ -602,8 +602,8 @@ ZStreamR::ExEndOfStream::ExEndOfStream()
 #pragma mark -
 #pragma mark * ZStreamRCon
 
-bool ZStreamRCon::ReceiveDisconnect(int iMilliseconds) const
-	{ return const_cast<ZStreamRCon*>(this)->Imp_ReceiveDisconnect(iMilliseconds); }
+bool ZStreamRCon::ReceiveDisconnect(double iTimeout) const
+	{ return const_cast<ZStreamRCon*>(this)->Imp_ReceiveDisconnect(iTimeout); }
 
 void ZStreamRCon::Abort() const
 	{ const_cast<ZStreamRCon*>(this)->Imp_Abort(); }
@@ -632,7 +632,7 @@ As data is read the position is updated by the number of bytes consumed.
 size_t ZStreamRPos::Imp_CountReadable()
 	{ return ZStream::sClampedSize(this->GetSize(), this->GetPosition()); }
 
-bool ZStreamRPos::Imp_WaitReadable(int iMilliseconds)
+bool ZStreamRPos::Imp_WaitReadable(double iTimeout)
 	{
 	return true; // Hmmm
 	}

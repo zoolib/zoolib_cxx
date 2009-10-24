@@ -166,7 +166,7 @@ void ZWorkerRunner_Threaded::pRun()
 				break;
 				}
 
-			fCnd.Wait(fMtx, fNextWake - now);
+			fCnd.WaitFor(fMtx, fNextWake - now);
 			}
 
 		ZRelMtx rel(fMtx);

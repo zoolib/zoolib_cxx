@@ -28,9 +28,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Time.h"
 
-#include <cmath> // For fmod
-
 #include <stdlib.h> // For abort
+
+#if __MACH__
+	#include <mach/mach_init.h> // For mach_thread_self
+#endif
 
 #if ZCONFIG_SPI_Enabled(POSIX)
 #	include <csignal>
@@ -214,9 +216,16 @@ void LogMeister::LogIt(
 	// extraSpace will ensure that the message text from multiple calls lines
 	// up, so long as iName is 20 CPs or less in length.
 	string extraSpace(fExtraSpace - min(fExtraSpace, curLength), ' ');
+
 	theStrimW
 			<< ZUtil_Time::sAsString_ISO8601_us(now, false)
-			<< " " << ZString::sFormat("0x%08X", ZThread::sID())
+			#if __MACH__
+				// GDB on Mac uses the mach thread ID for the systag.
+				<< ZString::sFormat(" %5x/", ((int)mach_thread_self()))
+			#else
+				<< " 0x"
+			#endif
+			<< ZString::sFormat("%08X", ZThread::sID())
 			<< " P" << ZString::sFormat("%X", iPriority)
 			<< " " << extraSpace << iName
 			<< " - " << iMessage << "\n";

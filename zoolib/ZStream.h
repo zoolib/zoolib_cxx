@@ -180,7 +180,7 @@ Read single bytes without exceptions being thrown.
 
 /** \name Informational
 */	//@{
-	bool WaitReadable(int iMilliseconds) const;
+	bool WaitReadable(double iTimeout) const;
 	size_t CountReadable() const;
 	//@}
 
@@ -198,7 +198,7 @@ but particular subclasses may have more efficient implementations available.
 */	//@{
 	virtual size_t Imp_CountReadable();
 
-	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual bool Imp_WaitReadable(double iTimeout);
 
 	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
 		uint64* oCountRead, uint64* oCountWritten);
@@ -227,8 +227,8 @@ inline size_t ZStreamR::CountReadable() const
 	{ return const_cast<ZStreamR*>(this)->Imp_CountReadable(); }
 
 /** Return true if a read would not block, false if we timeout. */
-inline bool ZStreamR::WaitReadable(int iMilliseconds) const
-	{ return const_cast<ZStreamR*>(this)->Imp_WaitReadable(iMilliseconds); }
+inline bool ZStreamR::WaitReadable(double iTimeout) const
+	{ return const_cast<ZStreamR*>(this)->Imp_WaitReadable(iTimeout); }
 
 // =================================================================================================
 #pragma mark -
@@ -251,14 +251,14 @@ class ZStreamRCon : public ZStreamR
 public:
 /** \name Connection API
 */	//@{
-	bool ReceiveDisconnect(int iMilliseconds) const;
+	bool ReceiveDisconnect(double iTimeout) const;
 	void Abort() const;
 	//@}
 
 
 /** \name Essential overrides
 */	//@{
-	virtual bool Imp_ReceiveDisconnect(int iMilliseconds) = 0;
+	virtual bool Imp_ReceiveDisconnect(double iTimeout) = 0;
 
 	virtual void Imp_Abort() = 0;
 	//@}
@@ -295,7 +295,7 @@ public:
 /** \name Implementation of optional ZStreamR methods
 */	//@{
 	virtual size_t Imp_CountReadable();
-	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual bool Imp_WaitReadable(double iTimeout);
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 	//@}
 

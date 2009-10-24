@@ -278,13 +278,17 @@ size_t ZNetEndpoint_RFCOMM_OSX::Imp_CountReadable()
 	return fBuffer.size();
 	}
 
-bool ZNetEndpoint_RFCOMM_OSX::Imp_WaitReadable(int iMilliseconds)
+bool ZNetEndpoint_RFCOMM_OSX::Imp_WaitReadable(double iTimeout)
 	{
+	const ZTime deadline = ZTime::sSystem() + iTimeout;
 	ZGuardMtx locker(fMutex);
-	if (!fBuffer.size())
-		fCondition.Wait(fMutex, iMilliseconds);
-
-	return fBuffer.size();
+	for (;;)
+		{
+		if (fBuffer.size())
+			return true;
+		if (!fCondition.WaitUntil(fMutex, deadline))
+			return false;
+		}
 	}
 
 void ZNetEndpoint_RFCOMM_OSX::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
@@ -310,11 +314,10 @@ void ZNetEndpoint_RFCOMM_OSX::Imp_Write(const void* iSource, size_t iCount, size
 		*oCountWritten = localSource - static_cast<const char*>(iSource);
 	}
 
-bool ZNetEndpoint_RFCOMM_OSX::Imp_ReceiveDisconnect(int iMilliseconds)
+bool ZNetEndpoint_RFCOMM_OSX::Imp_ReceiveDisconnect(double iTimeout)
 	{
+	const ZTime deadline = ZTime::sSystem() + iTimeout;
 	ZGuardMtx locker(fMutex);
-	ZTime expired = ZTime::sSystem() + iMilliseconds / 1e3;
-
 	for (;;)
 		{
 		if (!fBuffer.empty())
@@ -323,10 +326,8 @@ bool ZNetEndpoint_RFCOMM_OSX::Imp_ReceiveDisconnect(int iMilliseconds)
 		if (!fOpen)
 			return true;
 
-		if (expired <= ZTime::sSystem())
+		if (!fCondition.WaitUntil(fMutex, deadline))
 			return false;
-
-		fCondition.Wait(fMutex, expired - ZTime::sSystem());
 		}
 	}
 

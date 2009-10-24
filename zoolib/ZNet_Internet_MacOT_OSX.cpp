@@ -824,7 +824,7 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_GetCountReadable(void* iParam)
 		theStruct->fCountReadable = 0;
 	}
 
-bool ZNetEndpoint_TCP_MacOT_OSX::Imp_WaitReadable(int iMilliseconds)
+bool ZNetEndpoint_TCP_MacOT_OSX::Imp_WaitReadable(double iTimeout)
 	{
 	//#warning "Not done yet. We're not really timing out here"
 	return this->Imp_CountReadable();
@@ -891,11 +891,11 @@ struct ReceiveDisconnect_t
 	bool fResult;
 	};
 
-bool ZNetEndpoint_TCP_MacOT_OSX::Imp_ReceiveDisconnect(int iMilliseconds)
+bool ZNetEndpoint_TCP_MacOT_OSX::Imp_ReceiveDisconnect(double iTimeout)
 	{
 	ReceiveDisconnect_t theStruct;
 	theStruct.fEndpointRef = fEndpointRef;
-	theStruct.fMilliseconds = iMilliseconds;
+	theStruct.fMilliseconds = iTimeout * 1e3;
 	ZMacMP::sInvokeInMP(sMP_ReceiveDisconnect, &theStruct);
 	return theStruct.fResult;
 	}

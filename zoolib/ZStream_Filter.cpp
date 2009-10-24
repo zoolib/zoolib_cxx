@@ -39,8 +39,8 @@ void ZStreamR_Filter::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 size_t ZStreamR_Filter::Imp_CountReadable()
 	{ return const_cast<ZStreamR&>(fStreamReal).Imp_CountReadable(); }
 
-bool ZStreamR_Filter::Imp_WaitReadable(int iMilliseconds)
-	{ return const_cast<ZStreamR&>(fStreamReal).Imp_WaitReadable(iMilliseconds); }
+bool ZStreamR_Filter::Imp_WaitReadable(double iTimeout)
+	{ return const_cast<ZStreamR&>(fStreamReal).Imp_WaitReadable(iTimeout); }
 
 void ZStreamR_Filter::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{ const_cast<ZStreamR&>(fStreamReal).Imp_Skip(iCount, oCountSkipped); }
@@ -73,14 +73,14 @@ void ZStreamRCon_Filter::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead
 size_t ZStreamRCon_Filter::Imp_CountReadable()
 	{ return const_cast<ZStreamRCon&>(fStreamReal).Imp_CountReadable(); }
 
-bool ZStreamRCon_Filter::Imp_WaitReadable(int iMilliseconds)
-	{ return const_cast<ZStreamRCon&>(fStreamReal).Imp_WaitReadable(iMilliseconds); }
+bool ZStreamRCon_Filter::Imp_WaitReadable(double iTimeout)
+	{ return const_cast<ZStreamRCon&>(fStreamReal).Imp_WaitReadable(iTimeout); }
 
 void ZStreamRCon_Filter::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{ const_cast<ZStreamRCon&>(fStreamReal).Imp_Skip(iCount, oCountSkipped); }
 
-bool ZStreamRCon_Filter::Imp_ReceiveDisconnect(int iMilliseconds)
-	{ return const_cast<ZStreamRCon&>(fStreamReal).Imp_ReceiveDisconnect(iMilliseconds); }
+bool ZStreamRCon_Filter::Imp_ReceiveDisconnect(double iTimeout)
+	{ return const_cast<ZStreamRCon&>(fStreamReal).Imp_ReceiveDisconnect(iTimeout); }
 
 void ZStreamRCon_Filter::Imp_Abort()
 	{ const_cast<ZStreamRCon&>(fStreamReal).Imp_Abort(); }
@@ -102,8 +102,8 @@ void ZStreamU_Filter::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 size_t ZStreamU_Filter::Imp_CountReadable()
 	{ return const_cast<ZStreamU&>(fStreamReal).Imp_CountReadable(); }
 
-bool ZStreamU_Filter::Imp_WaitReadable(int iMilliseconds)
-	{ return const_cast<ZStreamU&>(fStreamReal).Imp_WaitReadable(iMilliseconds); }
+bool ZStreamU_Filter::Imp_WaitReadable(double iTimeout)
+	{ return const_cast<ZStreamU&>(fStreamReal).Imp_WaitReadable(iTimeout); }
 
 void ZStreamU_Filter::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{ const_cast<ZStreamU&>(fStreamReal).Imp_Skip(iCount, oCountSkipped); }

@@ -49,7 +49,7 @@ class ZNet_Socket
 public:
 	static int sSend(int iSocket, const char* iSource, size_t iCount);
 	static int sReceive(int iSocket, char* iDest, size_t iCount);
-	static bool sWaitReadable(int iSocket, int iMilliseconds);
+	static bool sWaitReadable(int iSocket, double iTimeout);
 	static void sWaitWriteable(int iSocket);
 	static ZNet::Error sTranslateError(int iNativeError);
 	};
@@ -115,13 +115,13 @@ private:
 // From ZStreamR via ZStreamRCon
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
-	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual bool Imp_WaitReadable(double iTimeout);
 
 // From ZStreamW via ZStreamWCon
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
 
 // From ZStreamRCon
-	virtual bool Imp_ReceiveDisconnect(int iMilliseconds);
+	virtual bool Imp_ReceiveDisconnect(double iTimeout);
 
 // From ZStreamWCon
 	virtual void Imp_SendDisconnect();

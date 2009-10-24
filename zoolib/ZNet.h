@@ -192,8 +192,8 @@ public:
 	virtual ZRef<ZNetAddress> GetRemoteAddress() = 0;
 
 // Compatibility protocol
-	bool WaitTillReadable(int iMilliseconds);
-	bool ReceiveDisconnect(int iMilliseconds);
+	bool WaitTillReadable(double iTimeout);
+	bool ReceiveDisconnect(double iTimeout);
 	void SendDisconnect();
 	};
 

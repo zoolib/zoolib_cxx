@@ -24,24 +24,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZTime.h"
+#include "zoolib/ZUtil_POSIXFD.h"
 
 #include <errno.h>
 #include <fcntl.h>
 #include <signal.h>
 
-// See comment in Solaris' /usr/include/sys/ioctl.h
-#if __sun__
-#	define BSD_COMP
-#endif
-#include <sys/ioctl.h>
 #include <sys/socket.h>
-
-// AG 2005-01-04. It looks like poll.h is not always present on MacOS X.
-// We don't use poll on MacOS, so we can just skip the include for now.
-#ifndef __APPLE__
-#	define POLL_NO_WARN // Switch off Apple warning re poll().
-#	include <poll.h>
-#endif
 
 using std::string;
 
@@ -87,33 +76,6 @@ int ZNet_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
 
 int ZNet_Socket::sReceive(int iSocket, char* iDest, size_t iCount)
 	{ return ::recv(iSocket, iDest, iCount, 0); }
-
-bool ZNet_Socket::sWaitReadable(int iSocket, int iMilliseconds)
-	{
-	fd_set readSet, exceptSet;
-	FD_ZERO(&readSet);
-	FD_ZERO(&exceptSet);
-	FD_SET(iSocket, &readSet);
-	FD_SET(iSocket, &exceptSet);
-
-	struct timeval timeOut;
-	timeOut.tv_sec = iMilliseconds / 1000;
-	timeOut.tv_usec = (iMilliseconds % 1000) * 1000;
-	return 0 < ::select(iSocket + 1, &readSet, nullptr, &exceptSet, &timeOut);
-	}
-
-void ZNet_Socket::sWaitWriteable(int iSocket)
-	{
-	fd_set writeSet;
-	FD_ZERO(&writeSet);
-	FD_SET(iSocket, &writeSet);
-
-	struct timeval timeOut;
-	timeOut.tv_sec = 1;
-	timeOut.tv_usec = 0;
-
-	::select(iSocket + 1, nullptr, &writeSet, nullptr, &timeOut);
-	}
 
 #elif defined(linux) || defined(__sun__)
 
@@ -206,24 +168,13 @@ int ZNet_Socket::sReceive(int iSocket, char* iDest, size_t iCount)
 		}
 	}
 
-bool ZNet_Socket::sWaitReadable(int iSocket, int iMilliseconds)
-	{
-	pollfd thePollFD;
-	thePollFD.fd = iSocket;
-	thePollFD.events = POLLIN | POLLPRI;
-	thePollFD.revents = 0;
-	return 0 < ::poll(&thePollFD, 1, iMilliseconds);
-	}
+#endif
+
+bool ZNet_Socket::sWaitReadable(int iSocket, double iTimeout)
+	{ return ZUtil_POSIXFD::sWaitReadable(iSocket, iTimeout); }
 
 void ZNet_Socket::sWaitWriteable(int iSocket)
-	{
-	pollfd thePollFD;
-	thePollFD.fd = iSocket;
-	thePollFD.events = POLLOUT;
-	::poll(&thePollFD, 1, 1000);
-	}
-
-#endif
+	{ ZUtil_POSIXFD::sWaitWriteable(iSocket); }
 
 ZNet::Error ZNet_Socket::sTranslateError(int iNativeError)
 	{
@@ -262,9 +213,7 @@ ZNetListener_Socket::ZNetListener_Socket(int iSocketFD, size_t iListenQueueSize)
 	}
 
 ZNetListener_Socket::~ZNetListener_Socket()
-	{
-	::close(fSocketFD);
-	}
+	{ ::close(fSocketFD); }
 
 ZRef<ZNetEndpoint> ZNetListener_Socket::Listen()
 	{
@@ -361,9 +310,7 @@ ZNetEndpoint_Socket::ZNetEndpoint_Socket(int iSocketFD)
 	}
 
 ZNetEndpoint_Socket::~ZNetEndpoint_Socket()
-	{
-	::close(fSocketFD);
-	}
+	{ ::close(fSocketFD); }
 
 const ZStreamRCon& ZNetEndpoint_Socket::GetStreamRCon()
 	{ return *this; }
@@ -413,17 +360,10 @@ void ZNetEndpoint_Socket::Imp_Read(void* iDest, size_t iCount, size_t* oCountRea
 	}
 
 size_t ZNetEndpoint_Socket::Imp_CountReadable()
-	{
-	int localResult;
-	if (0 <= ::ioctl(fSocketFD, FIONREAD, &localResult))
-		return localResult;
-	return 0;
-	}
+	{ return ZUtil_POSIXFD::sCountReadable(fSocketFD); }
 
-bool ZNetEndpoint_Socket::Imp_WaitReadable(int iMilliseconds)
-	{
-	return sWaitReadable(fSocketFD, iMilliseconds);
-	}
+bool ZNetEndpoint_Socket::Imp_WaitReadable(double iTimeout)
+	{ return sWaitReadable(fSocketFD, iTimeout); }
 
 void ZNetEndpoint_Socket::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
@@ -462,9 +402,9 @@ void ZNetEndpoint_Socket::Imp_Write(const void* iSource, size_t iCount, size_t* 
 		*oCountWritten = localSource - static_cast<const char*>(iSource);
 	}
 
-bool ZNetEndpoint_Socket::Imp_ReceiveDisconnect(int iMilliseconds)
+bool ZNetEndpoint_Socket::Imp_ReceiveDisconnect(double iTimeout)
 	{
-	ZTime endTime = ZTime::sSystem() + iMilliseconds / 1000.0;
+	ZTime endTime = ZTime::sSystem() + iTimeout;
 
 	bool gotIt = false;
 	for (;;)
@@ -481,16 +421,16 @@ bool ZNetEndpoint_Socket::Imp_ReceiveDisconnect(int iMilliseconds)
 			int err = errno;
 			if (err == EAGAIN)
 				{
-				if (iMilliseconds < 0)
+				if (iTimeout < 0)
 					{
-					sWaitReadable(fSocketFD, 1000);
+					sWaitReadable(fSocketFD, 60);
 					}
 				else
 					{
 					ZTime now = ZTime::sSystem();
 					if (endTime < now)
 						break;
-					sWaitReadable(fSocketFD, int(1000 * (endTime - now)));
+					sWaitReadable(fSocketFD, endTime - now);
 					}
 				}
 			else if (err != EINTR)
@@ -503,9 +443,7 @@ bool ZNetEndpoint_Socket::Imp_ReceiveDisconnect(int iMilliseconds)
 	}
 
 void ZNetEndpoint_Socket::Imp_SendDisconnect()
-	{
-	::shutdown(fSocketFD, SHUT_WR);
-	}
+	{ ::shutdown(fSocketFD, SHUT_WR); }
 
 void ZNetEndpoint_Socket::Imp_Abort()
 	{

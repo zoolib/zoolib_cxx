@@ -240,8 +240,8 @@ void ZFileFormat_JPEG::StreamR_Segment::Imp_Read(void* iDest, size_t iCount, siz
 size_t ZFileFormat_JPEG::StreamR_Segment::Imp_CountReadable()
 	{ return min(fCountRemaining, fStreamR.CountReadable()); }
 
-bool ZFileFormat_JPEG::StreamR_Segment::Imp_WaitReadable(int iMilliseconds)
-	{ return fStreamR.WaitReadable(iMilliseconds); }
+bool ZFileFormat_JPEG::StreamR_Segment::Imp_WaitReadable(double iTimeout)
+	{ return fStreamR.WaitReadable(iTimeout); }
 
 void ZFileFormat_JPEG::StreamR_Segment::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)

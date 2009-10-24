@@ -50,10 +50,10 @@ void ZStreamR_Limited::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 size_t ZStreamR_Limited::Imp_CountReadable()
 	{ return min(fStreamSource.CountReadable(), ZStream::sClampedSize(fCountRemaining)); }
 
-bool ZStreamR_Limited::Imp_WaitReadable(int iMilliseconds)
+bool ZStreamR_Limited::Imp_WaitReadable(double iTimeout)
 	{
 	if (fCountRemaining)
-		return fStreamSource.WaitReadable(iMilliseconds);
+		return fStreamSource.WaitReadable(iTimeout);
 	return true;
 	}
 

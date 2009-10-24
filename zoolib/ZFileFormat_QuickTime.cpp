@@ -135,8 +135,8 @@ void ZFileFormat_QuickTime::StreamR_Chunk::Imp_Read(void* iDest, size_t iCount, 
 size_t ZFileFormat_QuickTime::StreamR_Chunk::Imp_CountReadable()
 	{ return min(fCountRemaining, fStream.CountReadable()); }
 
-bool ZFileFormat_QuickTime::StreamR_Chunk::Imp_WaitReadable(int iMilliseconds)
-	{ return fStream.WaitReadable(iMilliseconds); }
+bool ZFileFormat_QuickTime::StreamR_Chunk::Imp_WaitReadable(double iTimeout)
+	{ return fStream.WaitReadable(iTimeout); }
 
 void ZFileFormat_QuickTime::StreamR_Chunk::Imp_CopyToDispatch(
 	const ZStreamW& iStreamW, uint64 iCount, uint64* oCountRead, uint64* oCountWritten)

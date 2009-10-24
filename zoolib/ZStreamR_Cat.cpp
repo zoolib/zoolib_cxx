@@ -74,12 +74,12 @@ size_t ZStreamR_Cat::Imp_CountReadable()
 		return fStreamR2.CountReadable();
 	}
 
-bool ZStreamR_Cat::Imp_WaitReadable(int iMilliseconds)
+bool ZStreamR_Cat::Imp_WaitReadable(double iTimeout)
 	{
 	if (fFirstIsLive)
-		return fStreamR1.WaitReadable(iMilliseconds);
+		return fStreamR1.WaitReadable(iTimeout);
 	else
-		return fStreamR2.WaitReadable(iMilliseconds);
+		return fStreamR2.WaitReadable(iTimeout);
 	}
 
 void ZStreamR_Cat::Imp_Skip(uint64 iCount, uint64* oCountSkipped)

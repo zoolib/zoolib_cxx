@@ -67,8 +67,8 @@ void ZStreamR_Chunked::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 size_t ZStreamR_Chunked::Imp_CountReadable()
 	{ return min(fChunkSize, fStreamSource.CountReadable()); }
 
-bool ZStreamR_Chunked::Imp_WaitReadable(int iMilliseconds)
-	{ return fStreamSource.WaitReadable(iMilliseconds); }
+bool ZStreamR_Chunked::Imp_WaitReadable(double iTimeout)
+	{ return fStreamSource.WaitReadable(iTimeout); }
 
 void ZStreamR_Chunked::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{

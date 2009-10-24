@@ -129,11 +129,11 @@ ZNetEndpoint::~ZNetEndpoint()
 ZRef<ZNetAddress> ZNetEndpoint::GetLocalAddress()
 	{ return ZRef<ZNetAddress>(); }
 
-bool ZNetEndpoint::WaitTillReadable(int iMilliseconds)
-	{ return this->GetStreamRCon().WaitReadable(iMilliseconds); }
+bool ZNetEndpoint::WaitTillReadable(double iTimeout)
+	{ return this->GetStreamRCon().WaitReadable(iTimeout); }
 
-bool ZNetEndpoint::ReceiveDisconnect(int iMilliseconds)
-	{ return this->GetStreamRCon().ReceiveDisconnect(iMilliseconds); }
+bool ZNetEndpoint::ReceiveDisconnect(double iTimeout)
+	{ return this->GetStreamRCon().ReceiveDisconnect(iTimeout); }
 
 void ZNetEndpoint::SendDisconnect()
 	{ this->GetStreamWCon().SendDisconnect(); }

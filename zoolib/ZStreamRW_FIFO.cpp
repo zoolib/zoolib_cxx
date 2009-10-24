@@ -91,13 +91,17 @@ size_t ZStreamRW_FIFO::Imp_CountReadable()
 	return fBuffer.size();
 	}
 
-bool ZStreamRW_FIFO::Imp_WaitReadable(int iMilliseconds)
+bool ZStreamRW_FIFO::Imp_WaitReadable(double iTimeout)
 	{
+	const ZTime deadline = ZTime::sSystem() + iTimeout;
 	ZGuardMtx locker(fMutex);
-	if (!fBuffer.size())
-		fCondition_Read.Wait(fMutex, iMilliseconds * 1000);
-
-	return fBuffer.size();
+	for (;;)
+		{
+		if (fBuffer.size())
+			return true;
+		if (!fCondition_Read.WaitUntil(fMutex, deadline))
+			return false;
+		}
 	}
 
 void ZStreamRW_FIFO::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)

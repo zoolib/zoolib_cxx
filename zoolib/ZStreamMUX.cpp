@@ -221,13 +221,13 @@ public:
 // From ZStreamR via ZStreamRCon
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
-	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual bool Imp_WaitReadable(double iTimeout);
 
 // From ZStreamW via ZStreamWCon
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
 
 // From ZStreamRCon
-	virtual bool Imp_ReceiveDisconnect(int iMilliseconds);
+	virtual bool Imp_ReceiveDisconnect(double iTimeout);
 
 // From ZStreamWCon
 	virtual void Imp_SendDisconnect();
@@ -368,10 +368,10 @@ size_t ZStreamMUX::Endpoint::Imp_CountReadable()
 		return 0;
 	}
 
-bool ZStreamMUX::Endpoint::Imp_WaitReadable(int iMilliseconds)
+bool ZStreamMUX::Endpoint::Imp_WaitReadable(double iTimeout)
 	{
 	if (ZRef<ZStreamMUX> theMUX = fMUX)
-		return theMUX->Endpoint_WaitReadable(this, iMilliseconds);
+		return theMUX->Endpoint_WaitReadable(this, iTimeout);
 	return true;
 	}
 
@@ -388,10 +388,10 @@ void ZStreamMUX::Endpoint::Imp_Write(const void* iSource, size_t iCount, size_t*
 		}
 	}
 
-bool ZStreamMUX::Endpoint::Imp_ReceiveDisconnect(int iMilliseconds)
+bool ZStreamMUX::Endpoint::Imp_ReceiveDisconnect(double iTimeout)
 	{
 	if (ZRef<ZStreamMUX> theMUX = fMUX)
-		theMUX->Endpoint_ReceiveDisconnect(this, iMilliseconds);
+		theMUX->Endpoint_ReceiveDisconnect(this, iTimeout);
 	return true;
 	}
 
@@ -893,8 +893,9 @@ size_t ZStreamMUX::Endpoint_CountReadable(Endpoint* iEP)
 	return iEP->fBuffer_Receive.size();
 	}
 
-bool ZStreamMUX::Endpoint_WaitReadable(Endpoint* iEP, int iMilliseconds)
+bool ZStreamMUX::Endpoint_WaitReadable(Endpoint* iEP, double iTimeout)
 	{
+	const ZTime deadline = ZTime::sSystem() + iTimeout;
 	ZMutexLocker locker(fMutex);
 	for (;;)
 		{
@@ -906,18 +907,8 @@ bool ZStreamMUX::Endpoint_WaitReadable(Endpoint* iEP, int iMilliseconds)
 			return true;
 			}
 
-		if (iMilliseconds < 0)
-			{
-			iEP->fCondition_Receive.Wait(fMutex);
-			}
-		else
-			{
-			const ZTime start = ZTime::sSystem();
-			iEP->fCondition_Receive.Wait(fMutex, iMilliseconds * 1000);
-			iMilliseconds -= int(1000 * (ZTime::sSystem() - start));
-			if (iMilliseconds <= 0)
-				return false;
-			}
+		if (!iEP->fCondition_Receive.WaitUntil(fMutex, deadline))
+			return false;
 		}
 	}
 
@@ -951,8 +942,9 @@ void ZStreamMUX::Endpoint_Write(Endpoint* iEP,
 		*oCountWritten = localSource - static_cast<const uint8*>(iSource);
 	}
 
-bool ZStreamMUX::Endpoint_ReceiveDisconnect(Endpoint* iEP, int iMilliseconds)
+bool ZStreamMUX::Endpoint_ReceiveDisconnect(Endpoint* iEP, double iTimeout)
 	{
+	const ZTime deadline = ZTime::sSystem() + iTimeout;
 	ZMutexLocker locker(fMutex);
 
 	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
@@ -976,18 +968,8 @@ bool ZStreamMUX::Endpoint_ReceiveDisconnect(Endpoint* iEP, int iMilliseconds)
 			return true;
 			}
 
-		if (iMilliseconds < 0)
-			{
-			iEP->fCondition_Receive.Wait(fMutex);
-			}
-		else
-			{
-			const ZTime start = ZTime::sSystem();
-			iEP->fCondition_Receive.Wait(fMutex, iMilliseconds * 1000);
-			iMilliseconds -= int(1000 * (ZTime::sSystem() - start));
-			if (iMilliseconds <= 0)
-				return false;
-			}
+		if (!iEP->fCondition_Receive.WaitUntil(fMutex, deadline))
+			return false;
 		}
 	}
 

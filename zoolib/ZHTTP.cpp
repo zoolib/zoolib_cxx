@@ -1791,8 +1791,8 @@ void StreamR_Chunked::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 size_t StreamR_Chunked::Imp_CountReadable()
 	{ return min(ZStream::sClampedSize(fChunkSize), fStreamSource.CountReadable()); }
 
-bool StreamR_Chunked::Imp_WaitReadable(int iMilliseconds)
-	{ return fStreamSource.WaitReadable(iMilliseconds); }
+bool StreamR_Chunked::Imp_WaitReadable(double iTimeout)
+	{ return fStreamSource.WaitReadable(iTimeout); }
 
 // =================================================================================================
 #pragma mark -
