@@ -82,10 +82,10 @@ public:
 // From ZStreamR via ZStreamRCon
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
-	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual bool Imp_WaitReadable(double iTimeout);
 
 // From ZStreamRCon
-	virtual bool Imp_ReceiveDisconnect(int iMilliseconds);
+	virtual bool Imp_ReceiveDisconnect(double iTimeout);
 
 // From ZStreamW via ZStreamWCon
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
@@ -97,7 +97,7 @@ public:
 	virtual void Imp_Abort();
 
 private:
-	bool pRefill(ZMutexLocker& iLocker, ZRef<IChannel> iChannel, int* ioTimeout);
+	bool pRefill(ZMutexLocker& iLocker, ZRef<IChannel> iChannel, double* ioTimeout);
 	void pAbort();
 	ZRef<IChannel> pUseChannel();
 
@@ -289,14 +289,14 @@ size_t Channel_BBDevMgr::Imp_CountReadable()
 		ZRef<IChannel> theChannel = this->pUseChannel();
 		if (!theChannel)
 			return 0;
-		int theTimeout = 0;
+		double theTimeout = 0;
 		this->pRefill(locker, theChannel, &theTimeout);
 		}
 		
 	return fEnd - fStart;
 	}
 
-bool Channel_BBDevMgr::Imp_WaitReadable(int iMilliseconds)
+bool Channel_BBDevMgr::Imp_WaitReadable(double iTimeout)
 	{
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 		s << "Imp_WaitReadable";
@@ -315,12 +315,12 @@ bool Channel_BBDevMgr::Imp_WaitReadable(int iMilliseconds)
 		if (!theChannel)
 			return true;
 
-		if (!this->pRefill(locker, theChannel, &iMilliseconds))
+		if (!this->pRefill(locker, theChannel, &iTimeout))
 			return false;
 		}
 	}
 
-bool Channel_BBDevMgr::Imp_ReceiveDisconnect(int iMilliseconds)
+bool Channel_BBDevMgr::Imp_ReceiveDisconnect(double iTimeout)
 	{
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 		s << "Imp_ReceiveDisconnect";
@@ -339,7 +339,7 @@ bool Channel_BBDevMgr::Imp_ReceiveDisconnect(int iMilliseconds)
 		if (!theChannel)
 			return true;
 
-		if (!this->pRefill(locker, theChannel, &iMilliseconds))
+		if (!this->pRefill(locker, theChannel, &iTimeout))
 			return true;
 		}
 	}
@@ -389,7 +389,7 @@ void Channel_BBDevMgr::Imp_Abort()
 	this->pAbort();
 	}
 
-bool Channel_BBDevMgr::pRefill(ZMutexLocker& iLocker, ZRef<IChannel> iChannel, int* ioTimeout)
+bool Channel_BBDevMgr::pRefill(ZMutexLocker& iLocker, ZRef<IChannel> iChannel, double* ioTimeout)
 	{
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 		s.Writef("pRefill");
@@ -443,20 +443,14 @@ bool Channel_BBDevMgr::pRefill(ZMutexLocker& iLocker, ZRef<IChannel> iChannel, i
 				break;
 				}
 			}
-		else if (!ioTimeout)
+		else if (ioTimeout)
 			{
-			fCondition_Reader.Wait(fMutex, 1000000);
+			if (!fCondition_Reader.WaitFor(fMutex, *ioTimeout))
+				return false;
 			}
 		else
 			{
-			const ZTime start = ZTime::sSystem();
-			fCondition_Reader.Wait(fMutex, *ioTimeout * 1000);
-			*ioTimeout -= int(1000 * (ZTime::sSystem() - start));
-			if (*ioTimeout <= 0)
-				{
-				*ioTimeout = 0;
-				break;
-				}
+			fCondition_Reader.WaitFor(fMutex, 1.0);
 			}
 		}
 	return result;
@@ -628,12 +622,14 @@ Manager_BBDevMgr::Manager_BBDevMgr()
 :	fMutex("Manager_BBDevMgr::fMutex"),
 	fNextID(1)
 	{
-	::CoCreateInstance(
+	HRESULT theHRESULT = ::CoCreateInstance(
 		IDeviceManager::sCLSID,
 		nullptr,
 		CLSCTX_ALL,
 		ZUUIDOF(IDeviceManager),
 		sCOMVoidPtr(fDeviceManager));
+
+	printf("%08X", theHRESULT);
 
 	if (fDeviceManager)
 		{

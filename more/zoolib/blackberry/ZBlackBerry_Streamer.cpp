@@ -213,10 +213,10 @@ public:
 // From ZStreamR via ZStreamRCon
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
-	virtual bool Imp_WaitReadable(int iMilliseconds);
+	virtual bool Imp_WaitReadable(double iTimeout);
 
 // From ZStreamRCon
-	virtual bool Imp_ReceiveDisconnect(int iMilliseconds);
+	virtual bool Imp_ReceiveDisconnect(double iTimeout);
 
 // From ZStreamW via ZStreamWCon
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
@@ -340,18 +340,18 @@ size_t Channel_Streamer::Imp_CountReadable()
 	return 0;
 	}
 
-bool Channel_Streamer::Imp_WaitReadable(int iMilliseconds)
+bool Channel_Streamer::Imp_WaitReadable(double iTimeout)
 	{
 	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
-		return theDevice_Streamer->Channel_WaitReadable(this, iMilliseconds);
+		return theDevice_Streamer->Channel_WaitReadable(this, iTimeout);
 
 	return true;
 	}
 
-bool Channel_Streamer::Imp_ReceiveDisconnect(int iMilliseconds)
+bool Channel_Streamer::Imp_ReceiveDisconnect(double iTimeout)
 	{
 	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
-		return theDevice_Streamer->Channel_ReceiveDisconnect(this, iMilliseconds);
+		return theDevice_Streamer->Channel_ReceiveDisconnect(this, iTimeout);
 
 	return true;
 	}
@@ -814,16 +814,17 @@ size_t Device_Streamer::Channel_CountReadable(Channel_Streamer* iChannel)
 	return iChannel->fReceive_Buffer.size();
 	}
 
-bool Device_Streamer::Channel_WaitReadable(Channel_Streamer* iChannel, int iMilliseconds)
+bool Device_Streamer::Channel_WaitReadable(Channel_Streamer* iChannel, double iTimeout)
 	{
+	const ZTime deadline = ZTime::sSystem() + iTimeout;
 	ZMutexLocker locker(fMutex);
-	if (iChannel->fState != eState_Connected)
-		return true;
-
-	if (!iChannel->fReceive_Buffer.size())
-		iChannel->fCondition_Receive.Wait(fMutex, iMilliseconds * 1000);		
-	
-	return iChannel->fState != eState_Connected || iChannel->fReceive_Buffer.size();
+	for (;;)
+		{
+		if (iChannel->fState != eState_Connected || iChannel->fReceive_Buffer.size())
+			return true;
+		if (!iChannel->fCondition_Receive.WaitUntil(fMutex, deadline))
+			return false;
+		}
 	}
 
 void Device_Streamer::Channel_Write(
@@ -872,7 +873,7 @@ void Device_Streamer::Channel_SendDisconnect(Channel_Streamer* iChannel)
 		}
 	}
 
-bool Device_Streamer::Channel_ReceiveDisconnect(Channel_Streamer* iChannel, int iMilliseconds)
+bool Device_Streamer::Channel_ReceiveDisconnect(Channel_Streamer* iChannel, double iTimeout)
 	{
 	ZMutexLocker locker(fMutex);
 

@@ -73,14 +73,14 @@ private:
 
 	size_t Channel_CountReadable(Channel_Streamer* iChannel);
 
-	bool Channel_WaitReadable(Channel_Streamer* iChannel, int iMilliseconds);
+	bool Channel_WaitReadable(Channel_Streamer* iChannel, double iTimeout);
 
 	void Channel_Write(
 		Channel_Streamer* iChannel, const void* iSource, size_t iCount, size_t* oCountWritten);
 
 	void Channel_SendDisconnect(Channel_Streamer* iChannel);
 
-	bool Channel_ReceiveDisconnect(Channel_Streamer* iChannel, int iMilliseconds);
+	bool Channel_ReceiveDisconnect(Channel_Streamer* iChannel, double iTimeout);
 
 	void Channel_Abort(Channel_Streamer* iChannel);
 
