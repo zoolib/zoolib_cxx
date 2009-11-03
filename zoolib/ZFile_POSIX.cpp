@@ -717,7 +717,8 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 	if (0 == ::_NSGetExecutablePath(&buffer[0], &theSize))
 		{
 		vector<string> comps;
-		sSplit('/', false, &buffer[0], &buffer[0] + theSize, comps);
+		// Pass theSize - 1 to omit the terminating NUL.
+		sSplit('/', false, &buffer[0], &buffer[0] + theSize - 1, comps);
 		return new ZFileLoc_POSIX(true, comps, true);
 		}
 	return ZRef<ZFileLoc_POSIX>();
