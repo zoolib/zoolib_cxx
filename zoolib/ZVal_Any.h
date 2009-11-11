@@ -135,6 +135,12 @@ public:
 
 	void Clear();
 
+	template <class S>
+	S* PGet_T(size_t iIndex);
+
+	template <class S>
+	const S* PGet_T(size_t iIndex) const;
+
 	ZVal_Any* PGet(size_t iIndex);
 	const ZVal_Any* PGet(size_t iIndex) const;
 	bool QGet(size_t iIndex, ZVal_Any& oVal) const;
@@ -154,6 +160,24 @@ private:
 
 	ZRef<Rep> fRep;
 	};
+
+template <class S>
+inline
+S* ZList_Any::PGet_T(size_t iIndex)
+	{
+	if (ZVal_Any* theVal = this->PGet(iIndex))
+		return theVal->PGet_T<S>();
+	return nullptr;
+	}
+
+template <class S>
+inline
+const S* ZList_Any::PGet_T(size_t iIndex) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iIndex))
+		return theVal->PGet_T<S>();
+	return nullptr;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -223,6 +247,18 @@ public:
 // ZMap protocol
 	void Clear();
 
+	template <class S>
+	S* PGet_T(const string8& iName);
+
+	template <class S>
+	S* PGet_T(const Index_t& iIndex);
+
+	template <class S>
+	const S* PGet_T(const string8& iName) const;
+
+	template <class S>
+	const S* PGet_T(const Index_t& iIndex) const;
+
 	ZVal_Any* PGet(const string8& iName);
 	ZVal_Any* PGet(const Index_t& iIndex);
 
@@ -259,6 +295,42 @@ private:
 
 	ZRef<Rep> fRep;
 	};
+
+template <class S>
+inline
+S* ZMap_Any::PGet_T(const string8& iName)
+	{
+	if (ZVal_Any* theVal = this->PGet(iName))
+		return theVal->PGet_T<S>();
+	return nullptr;
+	}
+
+template <class S>
+inline
+S* ZMap_Any::PGet_T(const Index_t& iIndex)
+	{
+	if (ZVal_Any* theVal = this->PGet(iIndex))
+		return theVal->PGet_T<S>();
+	return nullptr;
+	}
+
+template <class S>
+inline
+const S* ZMap_Any::PGet_T(const string8& iName) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iName))
+		return theVal->PGet_T<S>();
+	return nullptr;
+	}
+
+template <class S>
+inline
+const S* ZMap_Any::PGet_T(const Index_t& iIndex) const
+	{
+	if (const ZVal_Any* theVal = this->PGet(iIndex))
+		return theVal->PGet_T<S>();
+	return nullptr;
+	}
 
 // =================================================================================================
 #pragma mark -
