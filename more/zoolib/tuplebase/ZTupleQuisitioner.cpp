@@ -135,13 +135,16 @@ inline bool CompareTuples_t::operator()(const pair<uint64, vector<const ZTValue*
 	size_t count = fSort.size();
 	for (size_t x = 0; x < count; ++x)
 		{
-		if (int compare = sTupleValueComp(fTextCollators, fSort[x].fStrength,
-			*(*leftIter++), *(*rightIter++)))
+		const ZTValue* left = *leftIter++;
+		const ZTValue* right = *rightIter++;
+		if (left && right)
 			{
-			if (fSort[x].fAscending)
-				return compare < 0;
-			else
-				return compare >= 0;
+			if (int compare = sTupleValueComp(fTextCollators, fSort[x].fStrength, *left, *right))
+				return fSort[x].fAscending == (compare < 0);
+			}
+		else if (right)
+			{
+			return fSort[x].fAscending;
 			}
 		}
 	// Tiebreak using the entries' IDs.
