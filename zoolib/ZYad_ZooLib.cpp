@@ -178,10 +178,10 @@ ZRef<ZYadMapR> sMakeYadR(const ZMap_ZooLib& iMap)
 
 namespace ZANONYMOUS {
 
-class YadVisitor_GetValZooLib : public ZYadVisitor
+class YadVisitor_GetVal_ZooLib : public ZYadVisitor
 	{
 public:
-	YadVisitor_GetValZooLib(const ZVal_ZooLib& iDefault);
+	YadVisitor_GetVal_ZooLib(const ZVal_ZooLib& iDefault);
 
 // From ZYadVisitor
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
@@ -201,36 +201,34 @@ ZVal_ZooLib sFromYadR(const ZVal_ZooLib& iDefault, ZRef<ZYadR> iYadR)
 	if (ZRef<ZYadR_ZooLib> theYadR = ZRefDynamicCast<ZYadR_ZooLib>(iYadR))
 		return theYadR->GetVal();
 
-	YadVisitor_GetValZooLib theVisitor(iDefault);
+	YadVisitor_GetVal_ZooLib theVisitor(iDefault);
 	iYadR->Accept(theVisitor);
 	return theVisitor.fOutput;
 	}
 
-YadVisitor_GetValZooLib::YadVisitor_GetValZooLib(const ZVal_ZooLib& iDefault)
+YadVisitor_GetVal_ZooLib::YadVisitor_GetVal_ZooLib(const ZVal_ZooLib& iDefault)
 :	fDefault(iDefault)
 	{}
 
-bool YadVisitor_GetValZooLib::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
+bool YadVisitor_GetVal_ZooLib::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{
 	fOutput = ZVal_ZooLib::sDFromAny(fDefault, iYadPrimR->AsAny());
 	return true;
 	}
 
-bool YadVisitor_GetValZooLib::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+bool YadVisitor_GetVal_ZooLib::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{
 	fOutput = sReadAll_T<ZData_ZooLib>(iYadStreamR->GetStreamR());
 	return true;
 	}
 
-bool YadVisitor_GetValZooLib::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+bool YadVisitor_GetVal_ZooLib::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	{
-	string theString;
-	ZStrimW_String(theString).CopyAllFrom(iYadStrimR->GetStrimR());
-	fOutput = theString;
+	fOutput = iYadStrimR->GetStrimR().ReadAll8();
 	return true;
 	}
 
-bool YadVisitor_GetValZooLib::Visit_YadListR(ZRef<ZYadListR> iYadListR)
+bool YadVisitor_GetVal_ZooLib::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 	{
 	ZList_ZooLib theList;
 
@@ -241,7 +239,7 @@ bool YadVisitor_GetValZooLib::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 	return true;
 	}
 
-bool YadVisitor_GetValZooLib::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+bool YadVisitor_GetVal_ZooLib::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	{
 	ZMap_ZooLib theMap;
 

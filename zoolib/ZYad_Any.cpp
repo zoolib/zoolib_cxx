@@ -106,9 +106,7 @@ bool YadVisitor_GetVal_Any::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 
 bool YadVisitor_GetVal_Any::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	{
-	string8 theString;
-	ZStrimW_String(theString).CopyAllFrom(iYadStrimR->GetStrimR());
-	fOutput = theString;
+	fOutput = iYadStrimR->GetStrimR().ReadAll8();
 	return true;
 	}
 
