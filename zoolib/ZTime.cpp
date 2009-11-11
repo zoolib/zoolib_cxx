@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCONFIG_SPI.h"
 
+#include "zoolib/ZCompat_cmath.h" // For NAN, isnan etc.
 #include "zoolib/ZTypes.h" // For countof
 
 #if ZCONFIG_SPI_Enabled(POSIX)
@@ -37,7 +38,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if ZCONFIG_SPI_Enabled(Win)
-#	include "zoolib/ZCompat_cmath.h" // For NAN, isnan etc.
 #	include "zoolib/ZCompat_Win.h"
 #	include "zoolib/ZUtil_Win.h"
 #endif
