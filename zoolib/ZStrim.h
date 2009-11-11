@@ -670,21 +670,23 @@ typedef ZStrimU_String8 ZStrimU_String;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStrimW_String
+#pragma mark * ZStrimW_String8
 
 /// Provides a ZStrimW interface to a standard library string, writing UTF-8 code units.
 
-class ZStrimW_String : public ZStrimW_NativeUTF8
+class ZStrimW_String8 : public ZStrimW_NativeUTF8
 	{
 public:
-	ZStrimW_String(string8& iString);
-	~ZStrimW_String();
+	ZStrimW_String8(string8& iString);
+	~ZStrimW_String8();
 
 	virtual void Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU);
 
 private:
 	string8& fString;
 	};
+
+typedef ZStrimW_String8 ZStrimW_String;
 
 // =================================================================================================
 #pragma mark -

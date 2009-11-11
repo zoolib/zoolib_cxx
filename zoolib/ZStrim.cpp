@@ -1889,16 +1889,16 @@ string8 ZStrimU_String8::GetString8() const
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStrimW_String
+#pragma mark * ZStrimW_String8
 
-ZStrimW_String::ZStrimW_String(string8& iString)
+ZStrimW_String8::ZStrimW_String8(string8& iString)
 :	fString(iString)
 	{}
 
-ZStrimW_String::~ZStrimW_String()
+ZStrimW_String8::~ZStrimW_String8()
 	{}
 
-void ZStrimW_String::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU)
+void ZStrimW_String8::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU)
 	{
 	try
 		{
