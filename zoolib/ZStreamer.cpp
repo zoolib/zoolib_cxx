@@ -149,7 +149,8 @@ const ZStreamWPos& ZStreamerRWPos::GetStreamWPos()
 void ZStreamerRWCon::Disconnect()
 	{
 	this->GetStreamWCon().SendDisconnect();
-	this->GetStreamRCon().ReceiveDisconnect(-1);
+	// Wait for five minutes (effectively infinite);
+	this->GetStreamRCon().ReceiveDisconnect(300);
 	}
 
 void ZStreamerRWCon::Abort()
