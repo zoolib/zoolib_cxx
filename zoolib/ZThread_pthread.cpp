@@ -135,7 +135,7 @@ ID sID()
 
 void sSleep(double iDuration)
 	{
-	if (iDuration < 0)
+	if (iDuration <= 0)
 		::usleep(0);
 	else if (iDuration < 1000)
 		::usleep(useconds_t(iDuration * 1e6));
