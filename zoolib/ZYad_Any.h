@@ -43,6 +43,12 @@ ZRef<ZYadListR> sMakeYadR(const ZList_Any& iList);
 
 ZRef<ZYadMapR> sMakeYadR(const ZMap_Any& iMap);
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * sFromYadR
+
+ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR);
+
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZYad_Any__

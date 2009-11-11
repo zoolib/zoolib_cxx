@@ -55,4 +55,84 @@ ZRef<ZYadListR> sMakeYadR(const ZList_Any& iList)
 ZRef<ZYadMapR> sMakeYadR(const ZMap_Any& iMap)
 	{ return new ZYadMapRPos_Any(iMap); }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * sFromYadR
+
+namespace ZANONYMOUS {
+
+class YadVisitor_GetVal_Any : public ZYadVisitor
+	{
+public:
+	YadVisitor_GetVal_Any(ZVal_Any iDefault);
+
+// From ZYadVisitor
+	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
+	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
+	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
+	virtual bool Visit_YadListR(ZRef<ZYadListR> iYadListR);
+	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
+
+	ZVal_Any fDefault;
+	ZVal_Any fOutput;
+	};
+
+} // anonymous namespace
+
+ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
+	{
+	// Could detect that we're dealing with a ZYadR encapsulating a ZData_Any, ZList_Any or ZMap_Any
+
+	YadVisitor_GetVal_Any theVisitor(iDefault);
+	iYadR->Accept(theVisitor);
+	return theVisitor.fOutput;
+	}
+
+YadVisitor_GetVal_Any::YadVisitor_GetVal_Any(ZVal_Any iDefault)
+:	fDefault(iDefault)
+	{}
+
+bool YadVisitor_GetVal_Any::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
+	{
+	fOutput = iYadPrimR->AsAny();
+	return true;
+	}
+
+bool YadVisitor_GetVal_Any::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+	{
+	fOutput = sReadAll_T<ZData_Any>(iYadStreamR->GetStreamR());
+	return true;
+	}
+
+bool YadVisitor_GetVal_Any::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+	{
+	string8 theString;
+	ZStrimW_String(theString).CopyAllFrom(iYadStrimR->GetStrimR());
+	fOutput = theString;
+	return true;
+	}
+
+bool YadVisitor_GetVal_Any::Visit_YadListR(ZRef<ZYadListR> iYadListR)
+	{
+	ZList_Any theList;
+
+	while (ZRef<ZYadR> theChild = iYadListR->ReadInc())
+		theList.Append(sFromYadR(fDefault, theChild));
+
+	fOutput = theList;
+	return true;
+	}
+
+bool YadVisitor_GetVal_Any::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+	{
+	ZMap_Any theMap;
+
+	string theName;
+	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
+		theMap.Set(theName, sFromYadR(fDefault, theChild));
+
+	fOutput = theMap;
+	return true;
+	}
+
 NAMESPACE_ZOOLIB_END
