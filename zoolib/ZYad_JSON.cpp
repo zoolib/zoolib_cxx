@@ -439,7 +439,9 @@ ZYadVisitor_JSONWriter::ZYadVisitor_JSONWriter(
 
 bool ZYadVisitor_JSONWriter::Visit_YadR(ZRef<ZYadR> iYadR)
 	{
-	fStrimW << "null /*!! Unhandled yad !!*/";
+	fStrimW << "null";
+	if (fOptions.fBreakStrings)
+		fStrimW << " /*!! Unhandled yad !!*/";
 	return false;
 	}
 
@@ -451,7 +453,9 @@ bool ZYadVisitor_JSONWriter::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 
 bool ZYadVisitor_JSONWriter::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{
-	fStrimW << "null /*!! ZYadStreamR not representable in JSON !!*/";
+	fStrimW << "null";
+	if (fOptions.fBreakStrings)
+		fStrimW << " /*!! ZYadStreamR not representable in JSON !!*/";
 	return true;
 	}
 
@@ -515,7 +519,11 @@ bool ZYadVisitor_JSONWriter::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 			if (ZRef<ZYadR> cur = iYadListR->ReadInc())
 				{
 				if (!isFirst)
-					fStrimW.Write(", ");
+					{
+					fStrimW.Write(",");
+					if (fOptions.fBreakStrings)
+						fStrimW.Write(" ");
+					}
 				cur->Accept(*this);
 				}
 			else
@@ -580,9 +588,12 @@ bool ZYadVisitor_JSONWriter::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 				{
 				if (!isFirst)
 					fStrimW.Write(",");
-				fStrimW.Write(" ");
+				if (fOptions.fBreakStrings)
+					fStrimW.Write(" ");
 				spWriteString(fStrimW, curName);
-				fStrimW << ": ";
+				fStrimW.Write(":");
+				if (fOptions.fBreakStrings)
+					fStrimW.Write(" ");
 
 				SaveState save(this);
 				fIndent = fIndent + 1;
@@ -594,7 +605,9 @@ bool ZYadVisitor_JSONWriter::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 				break;
 				}
 			}
-		fStrimW.Write(" }");
+		if (fOptions.fBreakStrings)
+			fStrimW.Write(" ");
+		fStrimW.Write("}");
 		}
 	return true;
 	}
