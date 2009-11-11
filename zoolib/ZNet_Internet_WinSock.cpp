@@ -491,8 +491,8 @@ bool ZNetEndpoint_TCP_WinSock::Imp_ReceiveDisconnect(double iTimeout)
 			}
 		else if (result < 0)
 			{
-			int err = errno;
-			if (err == EAGAIN)
+			int err = WSAGetLastError();
+			if (err == WSAEWOULDBLOCK)
 				{
 				if (iTimeout < 0)
 					{
@@ -506,7 +506,7 @@ bool ZNetEndpoint_TCP_WinSock::Imp_ReceiveDisconnect(double iTimeout)
 					spWaitReadable(fSOCKET, endTime - now);
 					}
 				}
-			else if (err != EINTR)
+			else
 				{
 				break;
 				}
