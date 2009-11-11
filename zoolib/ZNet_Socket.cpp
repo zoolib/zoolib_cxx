@@ -224,9 +224,9 @@ ZRef<ZNetEndpoint> ZNetListener_Socket::Listen()
 
 	int sleepTime;
 	if (sFastCancellationEnabled)
-		sleepTime = 10000;
+		sleepTime = 10;
 	else
-		sleepTime = 1000;
+		sleepTime = 1;
 
 	fMutexNR.Release();
 
