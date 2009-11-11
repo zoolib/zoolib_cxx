@@ -387,6 +387,17 @@ bool ZVal_AppleEvent::QGet_T<ZMap_AppleEvent>(ZMap_AppleEvent& oVal) const
 	return false;
 	}
 
+template <>
+bool ZVal_AppleEvent::QGet_T<FSSpec>(FSSpec& oVal) const
+	{
+	if (ZAELookup_CPP2Desc<FSSpec>::sDescType == descriptorType)
+		{
+		::AEGetDescData(this, &oVal, sizeof(oVal));
+		return true;
+		}
+	return false;
+	}
+
 template <class S>
 bool ZVal_AppleEvent::QGet_T(S& oVal) const
 	{
