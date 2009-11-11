@@ -89,6 +89,9 @@ void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 				case '\'':
 					theCP = '\'';
 					break;
+				case '/':
+					theCP = '/';
+					break;
 				case 'x':
 					{
 					int curDigit;
