@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZThreadSafe.h"
-#include "zoolib/ZTypes.h" // For bigtime_t and nil
 
 // =================================================================================================
 // A macro that has proven to be useful.
@@ -123,7 +122,7 @@ public:
 	~ZSemaphore();
 
 	void Wait(int32 iCount);
-	bool Wait(int32 iCount, bigtime_t iMicroseconds);
+	bool Wait(int32 iCount, int64 iMicroseconds);
 	void Signal(int32 iCount);
 	};
 

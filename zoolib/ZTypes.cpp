@@ -72,12 +72,6 @@ uint32 is an unsigned 32 bit integer.
 uint64 is an unsigned 64 bit integer.
 */
 
-/** \typedef bigtime_t
-\ingroup group_Types
-bigtime_t is a type from BeOS that's used to represent
-microsecond-resolution times on all platforms.
-*/
-
 /** \typedef ZPointPOD
 \ingroup group_Types
 ZPointPOD is used in circumstances where a ZPoint would present

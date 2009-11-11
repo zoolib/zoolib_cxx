@@ -132,8 +132,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	typedef int64_t int64;
 	typedef uint64_t uint64;
 
-	typedef int64 bigtime_t;
-
 #endif // defined(ZStdInt_ProjectHeader)
 
 NAMESPACE_ZOOLIB_BEGIN

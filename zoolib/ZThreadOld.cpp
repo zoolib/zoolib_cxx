@@ -128,7 +128,7 @@ void ZSemaphore::Wait(int32 iCount)
 		ZSem::Wait();
 	}
 
-bool ZSemaphore::Wait(int32 iCount, bigtime_t iMicroseconds)
+bool ZSemaphore::Wait(int32 iCount, int64 iMicroseconds)
 	{
 	ZTime deadline = ZTime::sSystem() + iMicroseconds / 1e6;
 	int32 acquired = 0;
