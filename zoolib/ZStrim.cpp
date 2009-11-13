@@ -357,7 +357,7 @@ string8 ZStrimR::ReadAll8() const
 			theString.resize(start + 1024);
 		const size_t countToRead = theString.size() - start;
 		size_t countRead;
-		this->Read(&theString[0], countToRead, &countRead);
+		this->Read(&theString[start], countToRead, &countRead);
 		if (0 == countRead)
 			break;
 		start += countRead;
@@ -376,7 +376,7 @@ string16 ZStrimR::ReadAll16() const
 			theString.resize(start + 1024);
 		const size_t countToRead = theString.size() - start;
 		size_t countRead;
-		this->Read(&theString[0], countToRead, &countRead);
+		this->Read(&theString[start], countToRead, &countRead);
 		if (0 == countRead)
 			break;
 		start += countRead;
@@ -395,7 +395,7 @@ string32 ZStrimR::ReadAll32() const
 			theString.resize(start + 1024);
 		const size_t countToRead = theString.size() - start;
 		size_t countRead;
-		this->Read(&theString[0], countToRead, &countRead);
+		this->Read(&theString[start], countToRead, &countRead);
 		if (0 == countRead)
 			break;
 		start += countRead;
