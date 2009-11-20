@@ -36,7 +36,10 @@ void ZTaskOwner::pDetachTask(ZRef<ZTask> iTask)
 	}
 
 void ZTaskOwner::pTask_Finished(ZRef<ZTask> iTask)
-	{ this->Task_Finished(iTask); }
+	{
+	this->Task_Finished(iTask);
+	iTask->fTaskOwner.Clear();
+	}
 
 // =================================================================================================
 #pragma mark -
