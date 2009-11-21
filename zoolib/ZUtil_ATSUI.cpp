@@ -86,28 +86,21 @@ ATSUStyle sAsATSUStyle(const ZDCFont& iFont, float iFontSize)
 	return localStyle;
 	}
 
-namespace {
-
-ATSUFontFallbacks sATSUFontFallbacks;
-
-class Init_ATSUFontFallbacks
+static ATSUFontFallbacks spCreate_ATSUFontFallbacks()
 	{
-public:
-	Init_ATSUFontFallbacks()
+	ATSUFontFallbacks result = nullptr;
+	if (noErr == ::ATSUCreateFontFallbacks(&result))
 		{
-		if (noErr == ::ATSUCreateFontFallbacks(&sATSUFontFallbacks))
+		if (noErr == ::ATSUSetObjFontFallbacks(
+			result, 0, nullptr, kATSUDefaultFontFallbacks))
 			{
-			if (noErr == ::ATSUSetObjFontFallbacks(
-				sATSUFontFallbacks, 0, nullptr, kATSUDefaultFontFallbacks))
-				{
-				return;
-				}
+			return result;
 			}
-		sATSUFontFallbacks = nullptr;
 		}
-	};
-static Init_ATSUFontFallbacks Init_ATSUFontFallbacks_inst;
-} // anonymous namespace
+	return nullptr;
+	}
+
+static ATSUFontFallbacks spATSUFontFallbacks = spCreate_ATSUFontFallbacks();
 
 ATSUTextLayout sCreateLayout(
 	const UTF16* iText, UniCharCount iTextLength, ATSUStyle iStyle, bool iUseFallbacks)
@@ -128,10 +121,10 @@ ATSUTextLayout sCreateLayout(
 		&iStyle,
 		&theLayout);
 
-	if (iUseFallbacks && sATSUFontFallbacks)
+	if (iUseFallbacks && spATSUFontFallbacks)
 		{
 		Attributes theAttributes;
-		theAttributes.Add_T(kATSULineFontFallbacksTag, sATSUFontFallbacks);
+		theAttributes.Add_T(kATSULineFontFallbacksTag, spATSUFontFallbacks);
 		theAttributes.Apply(theLayout);
 
 		::ATSUSetTransientFontMatching(theLayout, true);
