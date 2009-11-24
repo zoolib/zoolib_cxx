@@ -306,7 +306,11 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			case PNG_COLOR_TYPE_RGB_ALPHA:
 				{
 				// Force 8 bits per component
-				::png_set_strip_16(read_ptr);
+				if (thePNGDepth == 16)
+					{
+					thePNGDepth = 8;
+					::png_set_strip_16(read_ptr);
+					}
 				// Build the component masks
 				uint32 maskAlpha;
 				uint32 maskBlue;
