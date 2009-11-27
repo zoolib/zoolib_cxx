@@ -1,0 +1,230 @@
+/* -------------------------------------------------------------------------------------------------
+Copyright (c) 2009 Andrew Green
+http://www.zoolib.org
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+and associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+------------------------------------------------------------------------------------------------- */
+
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZYad_XMLAttr.h"
+
+/*
+ZYad_XMLAttr turns this:
+  <tag1 at1="1" at2="2">
+    <tag2>val2</tag2>
+    <tag3 at3="3" at4="4"/>
+    <tag4 at3="3" at4="4">
+      <tag5>val2</tag5>
+    </tag4>
+  </tag1>
+
+into this:
+  {
+  tag1 = 
+    {
+    at1 = "1";
+    at2 = "2";
+    tag2 = "val2";
+    tag3 = 
+      {
+      at3 = "3";
+      at4 = "4";
+      };
+    tag4 = 
+      {
+      at3 = "3";
+      at4 = "4";
+      tag5 = "val2";
+      };
+    };
+  }
+*/
+
+NAMESPACE_ZOOLIB_BEGIN
+
+using std::string;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Static parsing functions
+
+static void spThrowParseException(const string& iMessage)
+	{
+	throw ZYadParseException_XMLAttr(iMessage);
+	}
+
+static void spEnd(ZML::StrimU& r, const string& iTagName)
+	{
+	sSkipText(r);
+
+	if (!sTryRead_End(r, iTagName))
+		spThrowParseException("Expected end tag '" + iTagName + "'");
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadParseException_XMLAttr
+
+ZYadParseException_XMLAttr::ZYadParseException_XMLAttr(const string& iWhat)
+:	ZYadParseException(iWhat)
+	{}
+
+ZYadParseException_XMLAttr::ZYadParseException_XMLAttr(const char* iWhat)
+:	ZYadParseException(iWhat)
+	{}
+
+namespace ZYad_XMLAttr {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * YadMapR_Attrs
+
+class YadMapR_Attrs : public ZYadMapR
+	{
+public:
+	YadMapR_Attrs(const ZML::Attrs_t& iAttrs);
+
+// From ZYadMapR
+	virtual ZRef<ZYadR> ReadInc(std::string& oName);
+
+private:
+	const ZML::Attrs_t fAttrs;
+	ZML::Attrs_t::const_iterator fIter;
+	};
+
+YadMapR_Attrs::YadMapR_Attrs(const ZML::Attrs_t& iAttrs)
+:	fAttrs(iAttrs)
+,	fIter(fAttrs.begin())
+	{}
+
+ZRef<ZYadR> YadMapR_Attrs::ReadInc(std::string& oName)
+	{
+	if (fIter != fAttrs.end())
+		{
+		oName = (*fIter).first;
+		ZRef<ZYadR> result = ZooLib::sMakeYadR((*fIter).second);
+		++fIter;
+		return result;
+		}
+	return ZRef<ZYadR>();
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * YadMapR
+
+class YadMapR : public ZYadMapR
+	{
+public:
+	YadMapR(const ZML::Attrs_t& iAttrs);
+	YadMapR(ZRef<ZML::StrimmerU> iStrimmerU);
+	YadMapR(ZRef<ZML::StrimmerU> iStrimmerU, const string& iOuterName, const ZML::Attrs_t& iAttrs);
+
+// From ZYadMapR
+	virtual ZRef<ZYadR> ReadInc(std::string& oName);
+
+private:
+	ZRef<ZML::StrimmerU> fStrimmerU;
+	string fOuterName;
+	const ZML::Attrs_t fAttrs;
+	ZML::Attrs_t::const_iterator fIter;
+	};
+
+YadMapR::YadMapR(const ZML::Attrs_t& iAttrs)
+:	fAttrs(iAttrs)
+,	fIter(fAttrs.begin())
+	{}
+
+YadMapR::YadMapR(ZRef<ZML::StrimmerU> iStrimmerU)
+:	fStrimmerU(iStrimmerU)
+,	fIter(fAttrs.begin())
+	{}
+
+YadMapR::YadMapR(
+	ZRef<ZML::StrimmerU> iStrimmerU, const string& iOuterName, const ZML::Attrs_t& iAttrs)
+:	fStrimmerU(iStrimmerU)
+,	fOuterName(iOuterName)
+,	fAttrs(iAttrs)
+,	fIter(fAttrs.begin())
+	{}
+
+ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
+	{
+	if (fIter != fAttrs.end())
+		{
+		oName = (*fIter).first;
+		ZRef<ZYadR> result = ZooLib::sMakeYadR((*fIter).second);
+		++fIter;
+		return result;
+		}
+
+	if (fOuterName.empty())
+		return ZRef<ZYadR>();
+
+	ZML::StrimU& theR = fStrimmerU->GetStrim();
+
+	// We have read the begin, and have returned
+	// any attributes on that begin.
+	sSkipText(theR);
+
+	if (sTryRead_End(theR, fOuterName))
+		return ZRef<ZYadR>();
+
+	if (theR.Current() == ZML::eToken_TagEmpty)
+		{
+		oName = theR.Name();
+		ZRef<ZYadR> result = new YadMapR(theR.Attrs());
+		theR.Advance();
+		return result;
+		}
+
+	if (theR.Current() != ZML::eToken_TagBegin)
+		spThrowParseException("Unexpected token");
+
+	const ZML::Attrs_t theAttrs = theR.Attrs();
+	const string theName = theR.Name();
+	theR.Advance();
+	oName = theName;
+	const string8 theText = theR.ReadAll8();
+	sSkipText(theR);
+
+	if (theR.Current() == ZML::eToken_TagEnd)
+		{
+		if (theR.Name() != theName)
+			spThrowParseException("Incorrect end");
+
+		if (theAttrs.empty())
+			{
+			theR.Advance();
+			return ZooLib::sMakeYadR(theText);
+			}			
+		}
+	return new YadMapR(fStrimmerU, theName, theAttrs);
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sMakeYadR
+
+ZRef<ZYadR> sMakeYadR(ZRef<ZML::StrimmerU> iStrimmerU)
+	{
+	sSkipText(iStrimmerU->GetStrim());
+	return new YadMapR(iStrimmerU);
+	}
+
+} // namespace ZYad_XMLAttr
+
+NAMESPACE_ZOOLIB_END
