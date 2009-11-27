@@ -66,14 +66,6 @@ static void spThrowParseException(const string& iMessage)
 	throw ZYadParseException_XMLAttr(iMessage);
 	}
 
-static void spEnd(ZML::StrimU& r, const string& iTagName)
-	{
-	sSkipText(r);
-
-	if (!sTryRead_End(r, iTagName))
-		spThrowParseException("Expected end tag '" + iTagName + "'");
-	}
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadParseException_XMLAttr
@@ -87,40 +79,6 @@ ZYadParseException_XMLAttr::ZYadParseException_XMLAttr(const char* iWhat)
 	{}
 
 namespace ZYad_XMLAttr {
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * YadMapR_Attrs
-
-class YadMapR_Attrs : public ZYadMapR
-	{
-public:
-	YadMapR_Attrs(const ZML::Attrs_t& iAttrs);
-
-// From ZYadMapR
-	virtual ZRef<ZYadR> ReadInc(std::string& oName);
-
-private:
-	const ZML::Attrs_t fAttrs;
-	ZML::Attrs_t::const_iterator fIter;
-	};
-
-YadMapR_Attrs::YadMapR_Attrs(const ZML::Attrs_t& iAttrs)
-:	fAttrs(iAttrs)
-,	fIter(fAttrs.begin())
-	{}
-
-ZRef<ZYadR> YadMapR_Attrs::ReadInc(std::string& oName)
-	{
-	if (fIter != fAttrs.end())
-		{
-		oName = (*fIter).first;
-		ZRef<ZYadR> result = ZooLib::sMakeYadR((*fIter).second);
-		++fIter;
-		return result;
-		}
-	return ZRef<ZYadR>();
-	}
 
 // =================================================================================================
 #pragma mark -
@@ -171,7 +129,7 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 		return result;
 		}
 
-	if (fOuterName.empty())
+	if (!fStrimmerU)
 		return ZRef<ZYadR>();
 
 	ZML::StrimU& theR = fStrimmerU->GetStrim();
@@ -180,8 +138,15 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 	// any attributes on that begin.
 	sSkipText(theR);
 
-	if (sTryRead_End(theR, fOuterName))
+	if (fOuterName.empty())
+		{
+		if (theR.Current() == ZML::eToken_Exhausted)
+			return ZRef<ZYadR>();
+		}
+	else if (sTryRead_End(theR, fOuterName))
+		{
 		return ZRef<ZYadR>();
+		}
 
 	if (theR.Current() == ZML::eToken_TagEmpty)
 		{
@@ -192,7 +157,7 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 		}
 
 	if (theR.Current() != ZML::eToken_TagBegin)
-		spThrowParseException("Unexpected token");
+		spThrowParseException("Expected begin tag");
 
 	const ZML::Attrs_t theAttrs = theR.Attrs();
 	const string theName = theR.Name();
@@ -204,7 +169,7 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 	if (theR.Current() == ZML::eToken_TagEnd)
 		{
 		if (theR.Name() != theName)
-			spThrowParseException("Incorrect end");
+			spThrowParseException("Expected end tag '" + theName + "'");
 
 		if (theAttrs.empty())
 			{
