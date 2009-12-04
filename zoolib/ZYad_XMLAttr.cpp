@@ -18,7 +18,6 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZDebug.h"
 #include "zoolib/ZYad_XMLAttr.h"
 
 /*
@@ -162,6 +161,7 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 	const ZML::Attrs_t theAttrs = theR.Attrs();
 	const string theName = theR.Name();
 	theR.Advance();
+
 	oName = theName;
 	const string8 theText = theR.ReadAll8();
 	sSkipText(theR);
@@ -177,6 +177,7 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 			return ZooLib::sMakeYadR(theText);
 			}			
 		}
+
 	return new YadMapR(fStrimmerU, theName, theAttrs);
 	}
 
