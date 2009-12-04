@@ -859,15 +859,11 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 		}
 	else if (const float* theValue = ZAnyCast<float>(&iVal))
 		{
-		// 9 decimal digits are necessary and sufficient for single precision IEEE 754.
-		// "What Every Computer Scientist Should Know About Floating Point", Goldberg, 1991.
-		// <http://docs.sun.com/source/806-3568/ncg_goldberg.html>
-		s.Writef("float(%.9g)", *theValue);
+		ZUtil_Strim::sWriteExact(s, *theValue);
 		}
 	else if (const double* theValue = ZAnyCast<double>(&iVal))
 		{
-		// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
-		s.Writef("double(%.17g)", *theValue);
+		ZUtil_Strim::sWriteExact(s, *theValue);
 		}
 	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iVal))
 		{
@@ -876,7 +872,9 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 		// the parsing of dates, and then we can write them in human readable form.
 		if (*theValue)
 			{
-			s.Writef("time(%.17g)", theValue->fVal);
+			s.Write("time(");
+			ZUtil_Strim::sWriteExact(s, theValue->fVal);
+			s.Write(")");
 			if (iOptions.fTimesHaveUserLegibleComment)
 				s << " /*" << ZUtil_Time::sAsString_ISO8601(*theValue, true) << "*/";
 			}

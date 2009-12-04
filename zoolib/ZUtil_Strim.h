@@ -104,6 +104,10 @@ bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& iDest);
 bool sTryRead_Identifier(const ZStrimU& iStrimU, string8& oString);
 // Other methods for other kinds of identifiers? -- Java, C++, Pascal, AlphaNum etc
 
+
+void sWriteExact(const ZStrimW& iStrimW, float iFloat);
+void sWriteExact(const ZStrimW& iStrimW, double iDouble);
+
 } // namespace ZUtil_Strim
 
 NAMESPACE_ZOOLIB_END

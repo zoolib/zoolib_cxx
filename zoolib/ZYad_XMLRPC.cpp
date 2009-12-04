@@ -607,7 +607,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 	else if (sQCoerceReal(iVal, asDouble))
 		{
 		s.Begin("double");
-			s.Writef("%.17g", asDouble);
+			ZUtil_Strim::sWriteExact(s, asDouble);
 		s.End("double");
 		}
 	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iVal))

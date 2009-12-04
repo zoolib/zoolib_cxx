@@ -369,6 +369,10 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 
 	if (false)
 		{}
+	else if (!iAny)
+		{
+		s << "null";
+		}
 	else if (const bool* theValue = ZAnyCast<bool>(&iAny))
 		{
 		if (*theValue)
@@ -380,17 +384,17 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iAny)
 		{
 		s.Writef("%lld", asInt64);
 		}
-	else if (const float* theValue = ZAnyCast<float>(&iAny))
+	else if (const float* asFloat = ZAnyCast<float>(&iAny))
 		{
-		s.Writef("%.9g", *theValue);
+		ZUtil_Strim::sWriteExact(s, *asFloat);
 		}
-	else if (const double* theValue = ZAnyCast<double>(&iAny))
+	else if (const double* asDouble = ZAnyCast<double>(&iAny))
 		{
-		s.Writef("%.17g", *theValue);
+		ZUtil_Strim::sWriteExact(s, *asDouble);
 		}
-	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iAny))
+	else if (const ZTime* asTime = ZAnyCast<ZTime>(&iAny))
 		{
-		s.Writef("%.17g", theValue->fVal);
+		ZUtil_Strim::sWriteExact(s, asTime->fVal);
 		}
 	else
 		{
