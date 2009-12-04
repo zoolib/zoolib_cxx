@@ -606,13 +606,13 @@ void sWriteExact(const ZStrimW& iStrimW, float iFloat)
 	// 9 decimal digits are necessary and sufficient for single precision IEEE 754.
 	// "What Every Computer Scientist Should Know About Floating Point", Goldberg, 1991.
 	// <http://docs.sun.com/source/806-3568/ncg_goldberg.html>
-	iStrimW.Writef("float(%.9g)", iFloat);
+	iStrimW.Writef("%.9g", iFloat);
 	}
 
 void sWriteExact(const ZStrimW& iStrimW, double iDouble)
 	{
 	// 17 decimal digits are necessary and sufficient for double precision IEEE 754.
-	iStrimW.Writef("double(%.17g)", iDouble);
+	iStrimW.Writef("%.17g", iDouble);
 	}
 
 } // namespace ZUtil_Strim

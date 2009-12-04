@@ -859,11 +859,15 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 		}
 	else if (const float* theValue = ZAnyCast<float>(&iVal))
 		{
+		s << "float(";
 		ZUtil_Strim::sWriteExact(s, *theValue);
+		s << ")";
 		}
 	else if (const double* theValue = ZAnyCast<double>(&iVal))
 		{
+		s << "double(";
 		ZUtil_Strim::sWriteExact(s, *theValue);
+		s << ")";
 		}
 	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iVal))
 		{
