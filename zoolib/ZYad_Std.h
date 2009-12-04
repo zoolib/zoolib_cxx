@@ -94,11 +94,6 @@ private:
 	ZRef<ZYadR> fValue;
 	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * sMakeYadR
-
-ZRef<ZYadR> sMakeYadR(const std::string& iVal);
 
 NAMESPACE_ZOOLIB_END
 

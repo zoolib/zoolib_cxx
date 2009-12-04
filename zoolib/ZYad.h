@@ -242,6 +242,12 @@ private:
 	const ZAny fAny;
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * sMakeYadR
+
+ZRef<ZYadR> sMakeYadR(const std::string& iVal);
+
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZYad__

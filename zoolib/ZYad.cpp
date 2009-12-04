@@ -292,4 +292,35 @@ ZYadPrimR_Any::~ZYadPrimR_Any()
 ZAny ZYadPrimR_Any::AsAny()
 	{ return fAny; }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * sMakeYadR
+
+namespace ZANONYMOUS {
+
+typedef ZStrimmerU_T<ZStrimU_String> StrimmerU_String;
+
+class YadStrimU_String
+:	public ZYadStrimR,
+	public StrimmerU_String
+	{
+public:
+	YadStrimU_String(const std::string& iString);
+
+// From ZYadR
+	virtual bool IsSimple(const ZYadOptions& iOptions);
+	};
+
+YadStrimU_String::YadStrimU_String(const string& iString)
+:	StrimmerU_String(iString)
+	{}
+
+bool YadStrimU_String::IsSimple(const ZYadOptions& iOptions)
+	{ return true; }
+
+} // anonymous namespace
+
+ZRef<ZYadR> sMakeYadR(const string& iVal)
+	{ return new YadStrimU_String(iVal); }
+
 NAMESPACE_ZOOLIB_END
