@@ -322,9 +322,13 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 
 	if (false)
 		{}
-	else if (const bool* theValue = ZAnyCast<bool>(&iVal))
+	else if (!iVal)
 		{
-		if (*theValue)
+		s.Empty("nil");
+		}
+	else if (const bool* asBool = ZAnyCast<bool>(&iVal))
+		{
+		if (*asBool)
 			s.Empty("true");
 		else
 			s.Empty("false");
@@ -338,7 +342,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 	else if (sQCoerceReal(iVal, asDouble))
 		{
 		s.Begin("real");
-			s.Writef("%.17g", *theValue);
+			s.Writef("%.17g", asDouble);
 		s.End("real");
 		}
 	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iVal))
