@@ -70,6 +70,7 @@ NSData* sData(const void* iSource, size_t iSize);
 
 NSMutableData* sDataMutable();
 NSMutableData* sDataMutable(size_t iSize);
+NSMutableData* sDataMutable(const void* iSource, size_t iSize);
 NSMutableData* sDataMutable(NSData* iNSData);
 
 // -----

@@ -116,6 +116,9 @@ NSMutableData* sDataMutable(size_t iSize)
 	return result;
 	}
 
+NSMutableData* sDataMutable(const void* iSource, size_t iSize)
+	{ return [NSMutableData dataWithBytes:iSource length:iSize]; }
+
 NSMutableData* sDataMutable(NSData* iNSData)
 	{ return [NSMutableData dataWithData:iNSData]; }
 
