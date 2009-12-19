@@ -170,6 +170,10 @@ ZVal_CFType::ZVal_CFType(const ZMap_CFType& iVal)
 :	inherited(iVal)
 	{}
 
+ZVal_CFType::ZVal_CFType(CFTypeRef iVal)
+:	inherited(iVal)
+	{}
+
 ZVal_CFType::ZVal_CFType(CFDataRef iVal)
 :	inherited(iVal)
 	{}
