@@ -23,75 +23,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZStream.h"
+#include "zoolib/ZStream_Data_T.h"
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZRef.h"
-
-#include <CoreFoundation/CFData.h>
+#include "zoolib/ZData_CFType.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRPos_CFData
-
-class ZStreamRPos_CFData : public ZStreamRPos
-	{
-public:
-	ZStreamRPos_CFData(ZRef<CFDataRef> iDataRef);
-	~ZStreamRPos_CFData();
-
-// From ZStreamR via ZStreamRPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
-	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
-
-// From ZStreamRPos
-	virtual uint64 Imp_GetPosition();
-	virtual void Imp_SetPosition(uint64 iPosition);
-
-	virtual uint64 Imp_GetSize();
-
-private:
-	ZRef<CFDataRef> fDataRef;
-	uint64 fPosition;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZStreamRWPos_CFData
-
-class ZStreamRWPos_CFData : public ZStreamRWPos
-	{
-public:
-	ZStreamRWPos_CFData(ZRef<CFMutableDataRef> iDataRef, size_t iGrowIncrement);
-	ZStreamRWPos_CFData(ZRef<CFMutableDataRef> iDataRef);
-	~ZStreamRWPos_CFData();
-
-// From ZStreamR via ZStreamRWPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
-	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
-
-// From ZStreamW via ZStreamRWPos
-	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
-	virtual void Imp_Flush();
-
-// From ZStreamRPos/ZStreamWPos via ZStreamRWPos
-	virtual uint64 Imp_GetPosition();
-	virtual void Imp_SetPosition(uint64 iPosition);
-
-	virtual uint64 Imp_GetSize();
-
-// From ZStreamWPos via ZStreamRWPos
-	virtual void Imp_SetSize(uint64 iSize);
-
-private:
-	ZRef<CFMutableDataRef> fDataRef;
-	size_t fGrowIncrement;
-	uint64 fPosition;
-	size_t fSizeLogical;
-	};
+typedef ZStreamRPos_Data_T<ZData_CFType> ZStreamRPos_CFData;
+typedef ZStreamRWPos_Data_T<ZData_CFType> ZStreamRWPos_CFData;
 
 NAMESPACE_ZOOLIB_END
 
