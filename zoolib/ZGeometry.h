@@ -128,20 +128,62 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZGExtent_T declaration
+#pragma mark * ZGExtentPOD_T declaration
 
 template <class T>
-class ZGExtent_T
+class ZGExtentPOD_T
 	{
 public:
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZGExtent_T<T>,
+    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZGExtentPOD_T<T>,
     	operator_bool_generator_type, operator_bool_type);
+
 	operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(h || v); }
 
-	T h;
-	T v;
+	union { T h; T width; };
+	union { T v; T height; };
 
+	template <class S>
+	ZGExtentPOD_T& operator=(const ZGExtentPOD_T<S>& other);
+
+	ZGExtentPOD_T& operator=(const ZPointPOD& other);
+
+	operator ZPointPOD() const;
+
+// Conversions to & from native types
+	#if ZCONFIG_SPI_Enabled(CoreGraphics)
+		operator CGSize() const;
+	#endif
+
+	#if ZCONFIG_SPI_Enabled(Cocoa)
+		operator NSSize() const;
+	#endif
+
+	#if ZCONFIG_SPI_Enabled(QuickDraw)
+		operator Point() const;
+	#endif
+
+	#if ZCONFIG_SPI_Enabled(GDI)
+		operator POINT() const;
+	#endif
+
+	#if ZCONFIG_SPI_Enabled(X11)
+		operator XPoint() const;
+	#endif
+
+// Relational operators
+	bool operator!=(const ZGExtentPOD_T& other) const { return h != other.h || v != other.v; }
+	bool operator==(const ZGExtentPOD_T& other) const { return h == other.h && v == other.v; }
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZGExtent_T declaration
+
+template <class T>
+class ZGExtent_T : public ZGExtentPOD_T<T>
+	{
+public:
 	ZGExtent_T();
 
 	ZGExtent_T(T iVal);
@@ -149,46 +191,32 @@ public:
 	ZGExtent_T(T iH, T iV);
 
 	template <class S>
-	ZGExtent_T(const ZGExtent_T<S>& other);
-
-	template <class S>
-	ZGExtent_T& operator=(const ZGExtent_T<S>& other);
+	ZGExtent_T(const ZGExtentPOD_T<S>& other);
 
 	ZGExtent_T(const ZPointPOD& iPoint);
-
-	ZGExtent_T& operator=(const ZPointPOD& other);
 
 	operator ZPointPOD() const;
 
 // Conversions to & from native types
 	#if ZCONFIG_SPI_Enabled(CoreGraphics)
 		ZGExtent_T(const CGSize& other);
-		operator CGSize() const;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(Cocoa)
 		ZGExtent_T(const NSSize& size);
-		operator NSSize() const;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(QuickDraw)
 		ZGExtent_T(const Point& other);
-		operator Point() const;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(GDI)
 		ZGExtent_T(const POINT& other);
-		operator POINT() const;
 	#endif
 
 	#if ZCONFIG_SPI_Enabled(X11)
 		ZGExtent_T(const XPoint& other);
-		operator XPoint() const;
 	#endif
-
-// Relational operators
-	bool operator!=(const ZGExtent_T& other) const { return h != other.h || v != other.v; }
-	bool operator==(const ZGExtent_T& other) const { return h == other.h && v == other.v; }
 	};
 
 // =================================================================================================
@@ -205,7 +233,7 @@ public:
 		{ return operator_bool_generator_type::translate(extent); }
 
 	ZGPoint_T<T> origin;
-	ZGExtent_T<T> extent;
+	union { ZGExtentPOD_T<T> extent; ZGExtentPOD_T<T> size; };
 
 	ZGRect_T();
 
@@ -214,7 +242,7 @@ public:
 	ZGRect_T(T iWidth, T iHeight);
 
 	template <class U>
-	ZGRect_T(const ZGExtent_T<U>& iExtent);
+	ZGRect_T(const ZGExtentPOD_T<U>& iExtent);
 
 	ZGRect_T(T iOriginX, T iOriginY, T iWidth, T iHeight);
 
@@ -333,6 +361,19 @@ ZGPoint_T<T>& ZGPoint_T<T>::operator=(const ZPointPOD& other)
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZGExtentPOD_T generic definitions
+
+template <class T>
+template <class S>
+ZGExtentPOD_T<T>& ZGExtentPOD_T<T>::operator=(const ZGExtentPOD_T<S>& other)
+	{ h = T(other.h); v = T(other.v); return *this; }
+
+template <class T>
+ZGExtentPOD_T<T>& ZGExtentPOD_T<T>::operator=(const ZPointPOD& other)
+	{ h = T(other.h); v = T(other.v); return *this; }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZGExtent_T generic definitions
 
 template <class T>
@@ -341,34 +382,32 @@ ZGExtent_T<T>::ZGExtent_T()
 
 template <class T>
 ZGExtent_T<T>::ZGExtent_T(T iVal)
-:	h(iVal), v(iVal)
-	{}
+	{
+	this->h = iVal;
+	this->v = iVal;
+	}
 
 template <class T>
 ZGExtent_T<T>::ZGExtent_T(T iH, T iV)
-:	h(iH), v(iV)
-	{}
+	{
+	this->h = iH;
+	this->v = iV;
+	}
 
 template <class T>
 template <class S>
-ZGExtent_T<T>::ZGExtent_T(const ZGExtent_T<S>& other)
-:	h(T(other.h)), v(T(other.v))
-	{}
-
-template <class T>
-template <class S>
-ZGExtent_T<T>& ZGExtent_T<T>::operator=(const ZGExtent_T<S>& other)
-	{ h = T(other.h); v = T(other.v); return *this; }
+ZGExtent_T<T>::ZGExtent_T(const ZGExtentPOD_T<S>& other)
+	{
+	this->h = T(other.h);
+	this->v = T(other.v);
+	}
 
 template <class T>
 ZGExtent_T<T>::ZGExtent_T(const ZPointPOD& iPoint)
-:	h(T(iPoint.h)),
-	v(T(iPoint.v))
-	{}
-
-template <class T>
-ZGExtent_T<T>& ZGExtent_T<T>::operator=(const ZPointPOD& other)
-	{ h = T(other.h); v = T(other.v); return *this; }
+	{
+	this->h = T(iPoint.h);
+	this->v = T(iPoint.v);
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -386,22 +425,28 @@ ZGRect_T<T>::ZGRect_T(const ZGRect_T<T>& iOther)
 
 template <class T>
 ZGRect_T<T>::ZGRect_T(T iWidth, T iHeight)
-:	origin(0, 0),
-	extent(iWidth, iHeight)
-	{}
+:	origin(0, 0)
+	{
+	extent.h = iWidth;
+	extent.v = iHeight;
+	}
 
 template <class T>
 template <class U>
-ZGRect_T<T>::ZGRect_T(const ZGExtent_T<U>& iExtent)
-:	origin(0, 0),
-	extent(iExtent)
-	{}
+ZGRect_T<T>::ZGRect_T(const ZGExtentPOD_T<U>& iExtent)
+:	origin(0, 0)
+	{
+	extent.h = iExtent.h;
+	extent.v = iExtent.v;
+	}
 
 template <class T>
 ZGRect_T<T>::ZGRect_T(T iOriginX, T iOriginY, T iWidth, T iHeight)
-:	origin(iOriginX, iOriginY),
-	extent(iWidth, iHeight)
-	{}
+:	origin(iOriginX, iOriginY)
+	{
+	extent.h = iWidth;
+	extent.v = iHeight;
+	}
 
 template <class T>
 template <class U, class V>
@@ -631,6 +676,12 @@ ZGRect_T<T>& operator|=(ZGRect_T<T>& l, const ZGRect_T<U>& r)
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
 	template <class T>
 	inline
+	ZGExtentPOD_T<T>::operator CGSize() const
+		{ CGSize size; size.width = h; size.height = v; return size; }
+
+
+	template <class T>
+	inline
 	ZGPoint_T<T>::ZGPoint_T(const CGPoint& pt)
 	:	x(T(pt.x)),
 		y(T(pt.y))
@@ -644,14 +695,10 @@ ZGRect_T<T>& operator|=(ZGRect_T<T>& l, const ZGRect_T<U>& r)
 	template <class T>
 	inline
 	ZGExtent_T<T>::ZGExtent_T(const CGSize& iOther)
-	:	h(T(iOther.width)),
-		v(T(iOther.height))
-		{}
-
-	template <class T>
-	inline
-	ZGExtent_T<T>::operator CGSize() const
-		{ CGSize size; size.width = h; size.height = v; return size; }
+		{
+		this->h = T(iOther.width);
+		this->v = T(iOther.height);
+		}
 
 	template <class T>
 	inline
@@ -663,9 +710,11 @@ ZGRect_T<T>& operator|=(ZGRect_T<T>& l, const ZGRect_T<U>& r)
 	template <class T>
 	inline
 	ZGRect_T<T>::ZGRect_T(const CGRect& iRect)
-	:	origin(iRect.origin),
-		extent(iRect.size)
-		{}
+	:	origin(iRect.origin)
+		{
+		extent.h = T(iRect.size.width);
+		extent.v = T(iRect.size.height);
+		}
 
 	template <class T>
 	inline
@@ -688,33 +737,44 @@ ZGRect_T<T>& operator|=(ZGRect_T<T>& l, const ZGRect_T<U>& r)
 
 	template <class T>
 	inline
-	ZGExtent_T<T>::ZGExtent_T(const NSSize& iOther)
-	:	h(T(iOther.width)),
-		v(T(iOther.height))
-		{}
-
-	template <class T>
-	inline
-	ZGExtent_T<T>::operator NSSize() const
+	ZGExtentPOD_T<T>::operator NSSize() const
 		{ NSSize size; size.width = h; size.height = v; return size; }
 
 	template <class T>
 	inline
+	ZGExtent_T<T>::ZGExtent_T(const NSSize& iOther)
+		{
+		this->h = T(iOther.width);
+		this->v = T(iOther.height);
+		}
+
+	template <class T>
+	inline
 	ZGRect_T<T>::ZGRect_T(const NSSize& iSize)
-	:	origin(0),
-		extent(iSize)
-		{}
+	:	origin(0)
+		{
+		extent.h = iSize.width;
+		extent.v = iSize.height;
+		}
 
 	template <class T>
 	inline ZGRect_T<T>::ZGRect_T(const NSRect& iRect)
-	:	origin(iRect.origin),
-		extent(iRect.size)
-		{}
+	:	origin(iRect.origin)
+		{
+		extent.h = iRect.size.width;
+		extent.v = iRect.size.height;
+		}
 
 	template <class T>
 	inline
 	ZGRect_T<T>::operator NSRect() const
-		{ NSRect rect; rect.origin = origin; rect.size = extent; return rect; }
+		{
+		NSRect rect;
+		rect.origin = origin;
+		rect.size.width = extent.h;
+		rect.size.height = extent.v;
+		return rect;
+		}
 #endif
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
@@ -734,13 +794,7 @@ ZGRect_T<T>& operator|=(ZGRect_T<T>& l, const ZGRect_T<U>& r)
 		}
 
 	template <class T>
-	inline ZGExtent_T<T>::ZGExtent_T(const Point& pt)
-	:	h(T(pt.h)),
-		v(T(pt.v))
-		{}
-
-	template <class T>
-	inline ZGExtent_T<T>::operator Point() const
+	inline ZGExtentPOD_T<T>::operator Point() const
 		{
 		Point thePoint;
 		thePoint.h = h;
@@ -749,10 +803,19 @@ ZGRect_T<T>& operator|=(ZGRect_T<T>& l, const ZGRect_T<U>& r)
 		}
 
 	template <class T>
+	inline ZGExtent_T<T>::ZGExtent_T(const Point& pt)
+		{
+		this->h = T(pt.h);
+		this->v = T(pt.v);
+		}
+
+	template <class T>
 	inline ZGRect_T<T>::ZGRect_T(const Rect& iRect)
-	:	origin(T(iRect.left), T(iRect.top)),
-		extent(T(iRect.right - iRect.left), T(iRect.bottom - iRect.top))
-		{}
+	:	origin(T(iRect.left), T(iRect.top))
+		{
+		extent.h = T(iRect.right - iRect.left);
+		extent.v = T(iRect.bottom - iRect.top);
+		}
 
 	template <class T>
 	inline ZGRect_T<T>::operator Rect() const
@@ -784,19 +847,19 @@ ZGRect_T<T>& operator|=(ZGRect_T<T>& l, const ZGRect_T<U>& r)
 		}
 
 	template <class T>
-	inline ZGExtent_T<T>::ZGExtent_T(const POINT& pt)
-	:	h(T(pt.x)),
-		v(T(pt.y))
-		{}
-
-	template <class T>
-	inline ZGExtent_T<T>::operator POINT() const
+	inline ZGExtentPOD_T<T>::operator POINT() const
 		{
 		POINT thePOINT;
 		thePOINT.x = h;
 		thePOINT.y = v;
 		return thePOINT;
 		}
+
+	template <class T>
+	inline ZGExtent_T<T>::ZGExtent_T(const POINT& pt)
+	:	h(T(pt.x)),
+		v(T(pt.y))
+		{}
 
 	template <class T>
 	inline ZGRect_T<T>::ZGRect_T(const RECT& iRect)
@@ -834,19 +897,19 @@ ZGRect_T<T>& operator|=(ZGRect_T<T>& l, const ZGRect_T<U>& r)
 		}
 
 	template <class T>
-	inline ZGExtent_T<T>::ZGExtent_T(const XPoint& pt)
-	:	h(T(pt.x)),
-		v(T(pt.y))
-		{}
-
-	template <class T>
-	inline ZGExtent_T<T>::operator XPoint() const
+	inline ZGExtentPOD_T<T>::operator XPoint() const
 		{
 		XPoint theXPoint;
 		theXPoint.x = short(h);
 		theXPoint.y = short(v);
 		return theXPoint;
 		}
+
+	template <class T>
+	inline ZGExtent_T<T>::ZGExtent_T(const XPoint& pt)
+	:	h(T(pt.x)),
+		v(T(pt.y))
+		{}
 
 	template <class T>
 	inline ZGRect_T<T>::ZGRect_T(const XRectangle& iRect)
@@ -894,5 +957,12 @@ typedef ZGExtent_T<float> ZGExtentf;
 typedef ZGRect_T<float> ZGRectf;
 
 NAMESPACE_ZOOLIB_END
+
+float ZGRectGetMinX(const ZooLib::ZGRectf&);
+float ZGRectGetMaxX(const ZooLib::ZGRectf&);
+float ZGRectGetMinY(const ZooLib::ZGRectf&);
+float ZGRectGetMaxY(const ZooLib::ZGRectf&);
+float ZGRectGetWidth(const ZooLib::ZGRectf&);
+float ZGRectGetHeight(const ZooLib::ZGRectf&);
 
 #endif // __ZGeometry__
