@@ -1,0 +1,171 @@
+/* -------------------------------------------------------------------------------------------------
+Copyright (c) 2009 Andrew Green
+http://www.zoolib.org
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+and associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+------------------------------------------------------------------------------------------------- */
+
+#include "zoolib/ZData_NS.h"
+#include "zoolib/ZUtil_NSObject.h"
+
+#if ZCONFIG_SPI_Enabled(Cocoa)
+
+NAMESPACE_ZOOLIB_BEGIN
+
+namespace ZUtil_NS = ZUtil_NSObject;
+
+using ZUtil_NS::sDataMutable;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZData_NS
+
+ZAny ZData_NS::AsAny() const
+	{ return ZUtil_NS::sAsAny(this->pData()); }
+
+ZData_NS::operator bool() const
+	{ return this->GetSize(); }
+
+ZData_NS::ZData_NS()
+:	inherited(sDataMutable())
+	{}
+
+ZData_NS::ZData_NS(const ZData_NS& iOther)
+:	inherited(iOther)
+,	fMutable(iOther.fMutable)
+	{}
+
+ZData_NS::~ZData_NS()
+	{}
+
+ZData_NS& ZData_NS::operator=(const ZData_NS& iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = iOther.fMutable;
+	return *this;
+	}
+
+ZData_NS::ZData_NS(const ZRef<NSMutableData>& iOther)
+:	inherited(iOther)
+,	fMutable(true)
+	{}
+
+ZData_NS::ZData_NS(const ZRef<NSData>& iOther)
+:	inherited(iOther)
+,	fMutable(false)
+	{}
+
+ZData_NS& ZData_NS::operator=(const ZRef<NSMutableData>& iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = true;
+	return *this;
+	}
+
+ZData_NS& ZData_NS::operator=(const ZRef<NSData>& iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = false;
+	return *this;
+	}
+
+ZData_NS::ZData_NS(size_t iSize)
+:	inherited(sDataMutable(iSize))
+,	fMutable(true)
+	{}
+
+ZData_NS::ZData_NS(const void* iSourceData, size_t iSize)
+:	inherited(sDataMutable(iSourceData, iSize))
+,	fMutable(true)
+	{}
+
+size_t ZData_NS::GetSize() const
+	{
+	if (NSData* theData = this->pData())
+		return [theData length];
+	return 0;
+	}
+
+void ZData_NS::SetSize(size_t iSize)
+	{ [this->pTouch() setLength:NSUInteger(iSize)]; }
+
+const void* ZData_NS::GetData() const
+	{
+	if (NSData* theData = this->pData())
+		return [theData bytes];
+	return nullptr;
+	}
+
+void* ZData_NS::GetData()
+	{ return [this->pTouch() mutableBytes]; }
+
+void ZData_NS::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
+	{
+	if (iCount)
+		{
+		NSMutableData* theData = this->pTouch();
+		const NSRange theRange = { iOffset, iCount };
+		[theData replaceBytesInRange:theRange withBytes:iSource];
+		}
+	}
+
+void ZData_NS::CopyFrom(const void* iSource, size_t iCount)
+	{ this->CopyFrom(0, iSource, iCount); }
+
+void ZData_NS::CopyTo(size_t iOffset, void* iDest, size_t iCount) const
+	{
+	if (iCount)
+		{
+		NSData* theData = this->pData();
+		ZAssert(theData);
+		const NSRange theRange = { iOffset, iCount };
+		[theData getBytes:iDest range:theRange];
+		}
+	}
+
+void ZData_NS::CopyTo(void* iDest, size_t iCount) const
+	{ this->CopyTo(0, iDest, iCount); }
+
+NSData* ZData_NS::pData() const
+	{ return inherited::Get(); }
+
+NSMutableData* ZData_NS::pTouch()
+	{
+	ZRef<NSMutableData> theMutableData;
+	if (NSData* theData = this->pData())
+		{
+		if (!fMutable || ::CFGetRetainCount(theData) > 1)
+			{
+			theMutableData = sDataMutable(theData);
+			inherited::operator=(theMutableData);
+			}
+		else
+			{
+			theMutableData = static_cast<NSMutableData*>(theData);
+			}
+		}
+	else
+		{
+		theMutableData = sDataMutable();
+		inherited::operator=(theMutableData);
+		}
+	fMutable = true;
+	return theMutableData.Get();
+	}
+
+NAMESPACE_ZOOLIB_END
+
+#endif // ZCONFIG_SPI_Enabled(Cocoa)
