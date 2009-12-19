@@ -42,6 +42,28 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZStream_ZLib
+
+namespace ZStream_ZLib {
+
+enum EFormatR
+	{
+	eFormatR_Raw,
+	eFormatR_ZLib,
+	eFormatR_GZip,
+	eFormatR_Auto
+	};
+
+enum EFormatW
+	{
+	eFormatW_Raw,
+	eFormatW_ZLib,
+	eFormatW_GZip
+	};
+}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZStreamR_ZLibDecode
 
 /// A read filter stream that zlib-decompresses (inflates) a source stream.
@@ -50,7 +72,11 @@ class ZStreamR_ZLibDecode : public ZStreamR
 	{
 public:
 	ZStreamR_ZLibDecode(const ZStreamR& iStreamSource);
-	ZStreamR_ZLibDecode(size_t iBufferSize, const ZStreamR& iStreamSource);
+
+	ZStreamR_ZLibDecode(
+		ZStream_ZLib::EFormatR iFormatR, size_t iBufferSize,
+		const ZStreamR& iStreamSource);
+
 	~ZStreamR_ZLibDecode();
 
 // From ZStreamR
@@ -59,7 +85,7 @@ public:
 	virtual bool Imp_WaitReadable(double iTimeout);
 
 protected:
-	void pInit(size_t iBufferSize);
+	void pInit(ZStream_ZLib::EFormatR iFormatR, size_t iBufferSize);
 
 	const ZStreamR& fStreamSource;
 	z_stream fState;
@@ -67,7 +93,30 @@ protected:
 	size_t fBufferSize;
 	};
 
-typedef ZStreamerR_FT<ZStreamR_ZLibDecode> ZStreamerR_ZLibDecode;
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStreamerR_ZLibDecode
+
+/// A read filter streamer that zlib-decompresses (inflates) a source stream.
+
+class ZStreamerR_ZLibDecode : public ZStreamerR
+	{
+public:
+	ZStreamerR_ZLibDecode(ZRef<ZStreamerR> iStreamer);
+
+	ZStreamerR_ZLibDecode(
+		ZStream_ZLib::EFormatR iFormatR, size_t iBufferSize,
+		ZRef<ZStreamerR> iStreamer);
+
+	virtual ~ZStreamerR_ZLibDecode();
+
+// From ZStreamerR
+	virtual const ZStreamR& GetStreamR();
+
+protected:
+	ZRef<ZStreamerR> fStreamer;
+	ZStreamR_ZLibDecode fStream;
+	};
 
 // =================================================================================================
 #pragma mark -
@@ -78,8 +127,12 @@ typedef ZStreamerR_FT<ZStreamR_ZLibDecode> ZStreamerR_ZLibDecode;
 class ZStreamW_ZLibEncode : public ZStreamW
 	{
 public:
-	ZStreamW_ZLibEncode(int iCompressionLevel, const ZStreamW& iStreamSink);
-	ZStreamW_ZLibEncode(int iCompressionLevel, size_t iBufferSize, const ZStreamW& iStreamSink);
+	ZStreamW_ZLibEncode(const ZStreamW& iStreamSink);
+
+	ZStreamW_ZLibEncode(
+		ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
+		const ZStreamW& iStreamSink);
+
 	~ZStreamW_ZLibEncode();
 
 // From ZStreamW
@@ -87,7 +140,7 @@ public:
 	virtual void Imp_Flush();
 
 protected:
-	void pInit(int iCompressionLevel, size_t iBufferSize);
+	void pInit(ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize);
 	void pFlush();
 
 	const ZStreamW& fStreamSink;
@@ -105,8 +158,11 @@ protected:
 class ZStreamerW_ZLibEncode : public ZStreamerW
 	{
 public:
-	ZStreamerW_ZLibEncode(int iCompressionLevel, ZRef<ZStreamerW> iStreamer);
-	ZStreamerW_ZLibEncode(int iCompressionLevel, size_t iBufferSize, ZRef<ZStreamerW> iStreamer);
+	ZStreamerW_ZLibEncode(ZRef<ZStreamerW> iStreamer);
+
+	ZStreamerW_ZLibEncode(
+		ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
+		ZRef<ZStreamerW> iStreamer);
 
 	virtual ~ZStreamerW_ZLibEncode();
 

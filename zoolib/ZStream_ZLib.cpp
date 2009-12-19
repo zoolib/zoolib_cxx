@@ -50,19 +50,22 @@ NAMESPACE_ZOOLIB_BEGIN
 ZStreamR_ZLibDecode::ZStreamR_ZLibDecode(const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource)
 	{
-	this->pInit(1024);
+	this->pInit(ZStream_ZLib::eFormatR_Auto, 1024);
 	}
 
 /**
+\param iFormatR
 \param iBufferSize The buffer size determines the maximum size of chunks we try to read from
 the source stream. The default value is 1024 bytes which should be okay for most purposes. If
 your source stream has poor latency then use a larger value or interpose a ZStreamR_Buffered.
 \param iStreamSource The stream from which compressed data will be read.
 */
-ZStreamR_ZLibDecode::ZStreamR_ZLibDecode(size_t iBufferSize, const ZStreamR& iStreamSource)
+ZStreamR_ZLibDecode::ZStreamR_ZLibDecode(
+	ZStream_ZLib::EFormatR iFormatR, size_t iBufferSize,
+	const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource)
 	{
-	this->pInit(iBufferSize);
+	this->pInit(iFormatR, iBufferSize);
 	}
 
 ZStreamR_ZLibDecode::~ZStreamR_ZLibDecode()
@@ -111,7 +114,14 @@ size_t ZStreamR_ZLibDecode::Imp_CountReadable()
 	return fState.avail_out;
 	}
 
-void ZStreamR_ZLibDecode::pInit(size_t iBufferSize)
+bool ZStreamR_ZLibDecode::Imp_WaitReadable(double iTimeout)
+	{
+	if (fState.avail_out)
+		return true;
+	return fStreamSource.WaitReadable(iTimeout);
+	}
+
+void ZStreamR_ZLibDecode::pInit(ZStream_ZLib::EFormatR iFormatR, size_t iBufferSize)
 	{
 	fBufferSize = max(size_t(1024), iBufferSize);
 	fBuffer = new Bytef[fBufferSize];
@@ -126,9 +136,43 @@ void ZStreamR_ZLibDecode::pInit(size_t iBufferSize)
 	fState.next_out = nullptr;
 	fState.avail_out = 0;
 
-	if (Z_OK != ::inflateInit(&fState))
+	int windowBits;
+	switch (iFormatR)
+		{
+		case ZStream_ZLib::eFormatR_Auto: windowBits = 32 | 15; break;
+		case ZStream_ZLib::eFormatR_GZip: windowBits = 16 | 15; break;
+		case ZStream_ZLib::eFormatR_ZLib: windowBits = 15; break;
+		case ZStream_ZLib::eFormatR_Raw: windowBits = -15; break;
+		}
+
+	int error = inflateInit2(&fState,  windowBits);
+	if (Z_OK != error)
 		throw runtime_error("ZStreamR_ZLibDecode problem");
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZStreamerR_ZLibDecode
+
+/// A read filter streamer that zlib-decompresses (inflates) a source stream.
+
+ZStreamerR_ZLibDecode::ZStreamerR_ZLibDecode(ZRef<ZStreamerR> iStreamer)
+:	fStreamer(iStreamer),
+	fStream(iStreamer->GetStreamR())
+	{}
+
+ZStreamerR_ZLibDecode::ZStreamerR_ZLibDecode(
+	ZStream_ZLib::EFormatR iFormatR, size_t iBufferSize,
+	ZRef<ZStreamerR> iStreamer)
+:	fStreamer(iStreamer),
+	fStream(iFormatR, iBufferSize, iStreamer->GetStreamR())
+	{}
+
+ZStreamerR_ZLibDecode::~ZStreamerR_ZLibDecode()
+	{}
+
+const ZStreamR& ZStreamerR_ZLibDecode::GetStreamR()
+	{ return fStream; }
 
 // =================================================================================================
 #pragma mark -
@@ -144,13 +188,14 @@ void ZStreamR_ZLibDecode::pInit(size_t iBufferSize)
 range from 1 to 9. 3 is a good tradeoff between CPU time and compression ratio.
 \param iStreamSink The stream to which compressed data should be written.
 */
-ZStreamW_ZLibEncode::ZStreamW_ZLibEncode(int iCompressionLevel, const ZStreamW& iStreamSink)
+ZStreamW_ZLibEncode::ZStreamW_ZLibEncode(const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink)
 	{
-	this->pInit(iCompressionLevel, 1024);
+	this->pInit(ZStream_ZLib::eFormatW_ZLib, 3, 1024);
 	}
 
 /**
+\param iFormatW
 \param iCompressionLevel Indicates the amount of compression that should be applied, in the
 range from 1 to 9. 3 is a good tradeoff between CPU time and compression ratio.
 \param iBufferSize. The buffer size determines how much data we accumulate before passing it on
@@ -160,10 +205,11 @@ value, or interpose a ZStreamW_Buffered or ZStreamW_DynamicBuffered.
 \param iStreamSink The stream to which compressed data should be written.
 */
 ZStreamW_ZLibEncode::ZStreamW_ZLibEncode(
-	int iCompressionLevel, size_t iBufferSize, const ZStreamW& iStreamSink)
+	ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
+	const ZStreamW& iStreamSink)
 :	fStreamSink(iStreamSink)
 	{
-	this->pInit(iCompressionLevel, iBufferSize);
+	this->pInit(iFormatW, iCompressionLevel, iBufferSize);
 	}
 
 ZStreamW_ZLibEncode::~ZStreamW_ZLibEncode()
@@ -236,7 +282,8 @@ void ZStreamW_ZLibEncode::Imp_Flush()
 	fStreamSink.Flush();
 	}
 
-void ZStreamW_ZLibEncode::pInit(int iCompressionLevel, size_t iBufferSize)
+void ZStreamW_ZLibEncode::pInit(
+	ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize)
 	{
 	fBufferSize = max(size_t(1024), iBufferSize);
 	fBuffer = new Bytef[fBufferSize];
@@ -251,8 +298,19 @@ void ZStreamW_ZLibEncode::pInit(int iCompressionLevel, size_t iBufferSize)
 	fState.next_out = fBuffer;
 	fState.avail_out = fBufferSize;
 
-	if (Z_OK != ::deflateInit(&fState, iCompressionLevel))
+	int windowBits;
+	switch (iFormatW)
+		{
+		case ZStream_ZLib::eFormatW_GZip: windowBits = 16 | 15; break;
+		case ZStream_ZLib::eFormatW_ZLib: windowBits = 15; break;
+		case ZStream_ZLib::eFormatW_Raw: windowBits = -15; break;
+		}
+
+	if (Z_OK != ::deflateInit2(&fState,
+		iCompressionLevel, Z_DEFLATED, windowBits, 8, Z_DEFAULT_STRATEGY))
+		{
 		throw runtime_error("ZStreamW_ZLibEncode problem");
+		}
 	}
 
 void ZStreamW_ZLibEncode::pFlush()
@@ -285,15 +343,16 @@ void ZStreamW_ZLibEncode::pFlush()
 #pragma mark -
 #pragma mark * ZStreamerW_ZLibEncode
 
-ZStreamerW_ZLibEncode::ZStreamerW_ZLibEncode(int iCompressionLevel, ZRef<ZStreamerW> iStreamer)
+ZStreamerW_ZLibEncode::ZStreamerW_ZLibEncode(ZRef<ZStreamerW> iStreamer)
 :	fStreamer(iStreamer),
-	fStream(iCompressionLevel, iStreamer->GetStreamW())
+	fStream(iStreamer->GetStreamW())
 	{}
 
 ZStreamerW_ZLibEncode::ZStreamerW_ZLibEncode(
-	int iCompressionLevel, size_t iBufferSize, ZRef<ZStreamerW> iStreamer)
+	ZStream_ZLib::EFormatW iFormatW, int iCompressionLevel, size_t iBufferSize,
+	ZRef<ZStreamerW> iStreamer)
 :	fStreamer(iStreamer),
-	fStream(iCompressionLevel, iBufferSize, iStreamer->GetStreamW())
+	fStream(iFormatW, iCompressionLevel, iBufferSize, iStreamer->GetStreamW())
 	{}
 
 ZStreamerW_ZLibEncode::~ZStreamerW_ZLibEncode()
