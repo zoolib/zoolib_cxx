@@ -145,8 +145,13 @@ public:
 		return fP;
 		}
 
+	P Copy() const
+		{
+		spRetain(fP);
+		return fP;
+		}
+
 	P Get() const { return fP; }
-	P GetObject() const { return fP; }
 
 	void Clear()
 		{
