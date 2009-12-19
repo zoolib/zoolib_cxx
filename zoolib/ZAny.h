@@ -274,6 +274,10 @@ NAMESPACE_ZOOLIB_END
 
 NAMESPACE_ZOOLIB_BEGIN
 
+bool sQCoerceBool(const ZAny& iAny, bool& oVal);
+bool sDCoerceBool(bool iDefault, const ZAny& iAny);
+bool sCoerceBool(const ZAny& iAny);
+
 bool sQCoerceInt(const ZAny& iAny, int64& oVal);
 int64 sDCoerceInt(int64 iDefault, const ZAny& iAny);
 int64 sCoerceInt(const ZAny& iAny);

@@ -19,6 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZAny.h"
+#include "zoolib/ZString.h"
+
+using std::string;
 
 // =================================================================================================
 #pragma mark -
@@ -84,31 +87,98 @@ NAMESPACE_ZOOLIB_END
 
 NAMESPACE_ZOOLIB_BEGIN
 
+bool sQCoerceBool(const ZAny& iAny, bool& oVal)
+	{
+	int64 asInt64;
+	if (sQCoerceInt(iAny, asInt64))
+		{
+		oVal = (0 != asInt64);
+		return true;
+		}
+
+	double asDouble;
+	if (sQCoerceReal(iAny, asDouble))
+		{
+		oVal =(0.0 != asDouble);
+		return true;
+		}
+
+	if (const string* asString = iAny.PGet_T<string>())
+		{
+		if (asString->empty())
+			{
+			oVal = false;
+			return true;
+			}
+
+		if (ZString::sQDouble(*asString, asDouble))
+			{
+			oVal = (0.0 != asDouble);
+			return true;
+			}
+
+		if (ZString::sQInt64(*asString, asInt64))
+			{
+			oVal = (0 != asInt64);
+			return true;
+			}
+
+		if (ZString::sEquali(*asString, "t") || ZString::sEquali(*asString, "true"))
+			{
+			oVal = true;
+			return true;
+			}
+
+		if (ZString::sEquali(*asString, "f") || ZString::sEquali(*asString, "false"))
+			{
+			oVal = false;
+			return true;
+			}
+		}
+	return false;
+	}
+
+bool sDCoerceBool(bool iDefault, const ZAny& iAny)
+	{
+	bool result;
+	if (sQCoerceBool(iAny, result))
+		return result;
+	return iDefault;
+	}
+
+bool sCoerceBool(const ZAny& iAny)
+	{
+	bool result;
+	if (sQCoerceBool(iAny, result))
+		return result;
+	return false;
+	}
+
 bool sQCoerceInt(const ZAny& iAny, int64& oVal)
 	{
 	if (false)
 		{}
-	else if (const char* theVal = ZAnyCast<char>(&iAny))
+	else if (const char* theVal = iAny.PGet_T<char>())
 		oVal = *theVal;
-	else if (const signed char* theVal = ZAnyCast<signed char>(&iAny))
+	else if (const signed char* theVal = iAny.PGet_T<signed char>())
 		oVal = *theVal;
-	else if (const unsigned char* theVal = ZAnyCast<unsigned char>(&iAny))
+	else if (const unsigned char* theVal = iAny.PGet_T<unsigned char>())
 		oVal = *theVal;
-	else if (const short* theVal = ZAnyCast<short>(&iAny))
+	else if (const short* theVal = iAny.PGet_T<short>())
 		oVal = *theVal;
-	else if (const unsigned short* theVal = ZAnyCast<unsigned short>(&iAny))
+	else if (const unsigned short* theVal = iAny.PGet_T<unsigned short>())
 		oVal = *theVal;
-	else if (const int* theVal = ZAnyCast<int>(&iAny))
+	else if (const int* theVal = iAny.PGet_T<int>())
 		oVal = *theVal;
-	else if (const unsigned int* theVal = ZAnyCast<unsigned int>(&iAny))
+	else if (const unsigned int* theVal = iAny.PGet_T<unsigned int>())
 		oVal = *theVal;
-	else if (const long* theVal = ZAnyCast<long>(&iAny))
+	else if (const long* theVal = iAny.PGet_T<long>())
 		oVal = *theVal;
-	else if (const unsigned long* theVal = ZAnyCast<unsigned long>(&iAny))
+	else if (const unsigned long* theVal = iAny.PGet_T<unsigned long>())
 		oVal = *theVal;
-	else if (const int64* theVal = ZAnyCast<int64>(&iAny))
+	else if (const int64* theVal = iAny.PGet_T<int64>())
 		oVal = *theVal;
-	else if (const uint64* theVal = ZAnyCast<uint64>(&iAny))
+	else if (const uint64* theVal = iAny.PGet_T<uint64>())
 		oVal = *theVal;
 	else
 		return false;
@@ -135,9 +205,9 @@ bool sQCoerceReal(const ZAny& iAny, double& oVal)
 	{
 	if (false)
 		{}
-	else if (const float* theVal = ZAnyCast<float>(&iAny))
+	else if (const float* theVal = iAny.PGet_T<float>())
 		oVal = *theVal;
-	else if (const double* theVal = ZAnyCast<double>(&iAny))
+	else if (const double* theVal = iAny.PGet_T<double>())
 		oVal = *theVal;
 	else
 		return false;
@@ -157,7 +227,7 @@ double sCoerceReal(const ZAny& iAny)
 	double result;
 	if (sQCoerceReal(iAny, result))
 		return result;
-	return 0;
+	return 0.0;
 	}
 
 NAMESPACE_ZOOLIB_END
