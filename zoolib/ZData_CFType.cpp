@@ -134,10 +134,13 @@ void ZData_CFType::CopyFrom(const void* iSource, size_t iCount)
 
 void ZData_CFType::CopyTo(size_t iOffset, void* iDest, size_t iCount) const
 	{
-	const CFRange theRange = { iOffset, iCount };
-	CFDataRef theData = this->pData();
-	ZAssert(theData);
-	::CFDataGetBytes(theData, theRange, static_cast<UInt8*>(iDest));
+	if (iCount)
+		{
+		CFDataRef theData = this->pData();
+		ZAssert(theData);
+		const CFRange theRange = { iOffset, iCount };
+		::CFDataGetBytes(theData, theRange, static_cast<UInt8*>(iDest));
+		}
 	}
 
 void ZData_CFType::CopyTo(void* iDest, size_t iCount) const
