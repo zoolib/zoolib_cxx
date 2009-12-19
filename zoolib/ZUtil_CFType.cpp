@@ -179,7 +179,6 @@ string16 sAsUTF16(CFStringRef iCFString)
 
 static ZData_Any spAsData_Any(const ZRef<CFDataRef>& iCFData)
 	{
-	ZData_Any theData;
 	if (size_t theLength = ::CFDataGetLength(iCFData))
 		return ZData_Any(::CFDataGetBytePtr(iCFData), theLength);
 	return ZData_Any();
