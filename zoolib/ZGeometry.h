@@ -779,103 +779,98 @@ ZGRect_T<T>& operator|=(ZGRect_T<T>& l, const ZGRect_T<U>& r)
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 	template <class T>
-	inline ZGPoint_T<T>::ZGPoint_T(const Point& pt)
+	inline
+	ZGPoint_T<T>::ZGPoint_T(const Point& pt)
 	:	x(T(pt.h)),
 		y(T(pt.v))
 		{}
 
 	template <class T>
-	inline ZGPoint_T<T>::operator Point() const
-		{
-		Point thePoint;
-		thePoint.h = x;
-		thePoint.v = y;
-		return thePoint;
-		}
+	inline
+	ZGPoint_T<T>::operator Point() const
+		{ Point p; p.h = x; p.v = y; return p; }
 
 	template <class T>
-	inline ZGExtentPOD_T<T>::operator Point() const
-		{
-		Point thePoint;
-		thePoint.h = h;
-		thePoint.v = v;
-		return thePoint;
-		}
+	inline
+	ZGExtentPOD_T<T>::operator Point() const
+		{ Point p; p.h = h; p.v = v; return p; }
 
 	template <class T>
-	inline ZGExtent_T<T>::ZGExtent_T(const Point& pt)
+	inline
+	ZGExtent_T<T>::ZGExtent_T(const Point& pt)
 		{
 		this->h = T(pt.h);
 		this->v = T(pt.v);
 		}
 
 	template <class T>
-	inline ZGRect_T<T>::ZGRect_T(const Rect& iRect)
-	:	origin(T(iRect.left), T(iRect.top))
+	inline
+	ZGRect_T<T>::ZGRect_T(const Rect& iRect)
 		{
+		origin.x = T(iRect.left);
+		origin.y = T(iRect.top);
 		extent.h = T(iRect.right - iRect.left);
 		extent.v = T(iRect.bottom - iRect.top);
 		}
 
 	template <class T>
-	inline ZGRect_T<T>::operator Rect() const
+	inline
+	ZGRect_T<T>::operator Rect() const
 		{
 		Rect theRect;
 		theRect.left = this->MinX();
 		theRect.right = this->MaxX();
 		theRect.top = this->MinY();
 		theRect.bottom = this->MaxY();
-
 		return theRect;
 		}
 #endif
 
 #if ZCONFIG_SPI_Enabled(GDI)
 	template <class T>
-	inline ZGPoint_T<T>::ZGPoint_T(const POINT& pt)
+	inline
+	ZGPoint_T<T>::ZGPoint_T(const POINT& pt)
 	:	x(T(pt.x)),
 		y(T(pt.y))
 		{}
 
 	template <class T>
-	inline ZGPoint_T<T>::operator POINT() const
+	inline
+	ZGPoint_T<T>::operator POINT() const
+		{ POINT p; p.x = x; p.y = y; return p; }
+
+	template <class T>
+	inline
+	ZGExtentPOD_T<T>::operator POINT() const
+		{ POINT p; p.x = h; p.y = v; return p; }
+
+	template <class T>
+	inline
+	ZGExtent_T<T>::ZGExtent_T(const POINT& pt)
 		{
-		POINT thePOINT;
-		thePOINT.x = x;
-		thePOINT.y = y;
-		return thePOINT;
+		this->h = T(pt.x);
+		this->v = T(pt.y);
 		}
 
 	template <class T>
-	inline ZGExtentPOD_T<T>::operator POINT() const
+	inline
+	ZGRect_T<T>::ZGRect_T(const RECT& iRect)
 		{
-		POINT thePOINT;
-		thePOINT.x = h;
-		thePOINT.y = v;
-		return thePOINT;
+		origin.x = T(iRect.left);
+		origin.y = T(iRect.top);
+		extent.h = T(iRect.right - iRect.left);
+		extent.v = T(iRect.bottom - iRect.top);
 		}
 
 	template <class T>
-	inline ZGExtent_T<T>::ZGExtent_T(const POINT& pt)
-	:	h(T(pt.x)),
-		v(T(pt.y))
-		{}
-
-	template <class T>
-	inline ZGRect_T<T>::ZGRect_T(const RECT& iRect)
-	:	origin(T(iRect.left), T(iRect.top)),
-		extent(T(iRect.right - iRect.left), T(iRect.bottom - iRect.top))
-		{}
-
-	template <class T>
-	inline ZGRect_T<T>::operator RECT() const
+	inline
+	ZGRect_T<T>::operator RECT() const
 		{
 		RECT theRECT;
 		theRECT.left = this->MinX();
 		theRECT.right = this->MaxX();
 		theRECT.top = this->MinY();
 		theRECT.bottom = this->MaxY();
-
 		return theRECT;
 		}
 #endif
