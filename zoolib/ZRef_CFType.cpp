@@ -72,10 +72,12 @@ ZOOLIB_CF(String)
 	typedef struct CG##a * CG##a##Ref; \
 	ZOOLIB_RETAIN_RELEASE(CG##a##Ref)
 
-ZOOLIB_CG(Image)
+ZOOLIB_CG(Color)
 ZOOLIB_CG(ColorSpace)
 ZOOLIB_CG(Context)
 ZOOLIB_CG(DataProvider)
+ZOOLIB_CG(Gradient)
+ZOOLIB_CG(Image)
 
 // =================================================================================================
 typedef struct OpaqueSecKeychainRef *SecKeychainRef;
