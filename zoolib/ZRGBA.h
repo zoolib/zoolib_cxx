@@ -47,9 +47,48 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZRGBA_POD
 
-// AG 98-05-27. We need a POD version of ZRGBA in cases where we're embedding
-// inside a union. A POD version has no constructor/destructor etc, and hence a bitwise
-// copy is all that's gonna be done with it, which makes unions safe.
+class ColorComp
+	{
+public:
+	operator float() const
+		{ return fVal; }
+
+	operator uint8() const
+		{ return uint8(0xFFu * fVal); }
+
+	operator uint16() const
+		{ return uint16(0xFFFFu * fVal); }
+
+	operator uint32() const
+		{ return uint32(0xFFFFFFFFu * fVal); }
+
+	ColorComp& operator=(float iVal)
+		{
+		fVal = iVal;
+		return *this;
+		}
+
+	ColorComp& operator=(uint8 iVal)
+		{
+		fVal = iVal / 255.0;
+		return *this;
+		}
+
+	ColorComp& operator=(uint16 iVal)
+		{
+		fVal = iVal / 65535.0;
+		return *this;
+		}
+
+	ColorComp& operator=(uint32 iVal)
+		{
+		fVal = iVal / 4294967295.0;
+		return *this;
+		}
+
+private:
+	uint16 fVal;
+	};
 
 class ZRGBA_POD
 	{
@@ -356,7 +395,7 @@ public:
 	ZRGBA(float iGray, float iAlpha)
 		{
 		red = green = blue = uint16(iGray * 65535);
-		alpha = 0xFFFFU;
+		alpha = uint16(iAlpha * 65535);
 		}
 
 	ZRGBA(float iRed, float iGreen, float iBlue)
@@ -384,7 +423,7 @@ public:
 	ZRGBA(double iGray, double iAlpha)
 		{
 		red = green = blue = uint16(iGray * 65535);
-		alpha = 0xFFFFU;
+		alpha = uint16(iAlpha * 65535);
 		}
 
 	ZRGBA(double iRed, double iGreen, double iBlue)
