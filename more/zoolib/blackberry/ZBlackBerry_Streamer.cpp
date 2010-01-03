@@ -448,7 +448,7 @@ ZRef<Channel> Device_Streamer::Open(bool iPreserveBoundaries,
 		{
 		ZRef<Channel_Streamer> theChannel
 			= new Channel_Streamer(this, iPreserveBoundaries, iName, iPasswordHash);
-		fChannels.push_back(theChannel.GetObject());
+		fChannels.push_back(theChannel.Get());
 		theChannel->fState = eState_LookupNeeded;
 
 		this->Wake();
