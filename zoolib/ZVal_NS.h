@@ -83,6 +83,7 @@ public:
 	explicit ZVal_NS(NSArray* iVal);
 	explicit ZVal_NS(NSDictionary* iVal);
 
+	ZVal_NS& operator=(const ZRef<NSObject>& iVal);
 	ZVal_NS& operator=(NSObject* iVal);
 
 // ZVal protocol

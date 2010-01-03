@@ -167,6 +167,12 @@ ZVal_NS::ZVal_NS(NSDictionary* iVal)
 :	inherited(iVal)
 	{}
 
+ZVal_NS& ZVal_NS::operator=(const ZRef<NSObject>& iVal)
+	{
+	inherited::operator=(iVal);
+	return *this;
+	}
+
 ZVal_NS& ZVal_NS::operator=(NSObject* iVal)
 	{
 	inherited::operator=(iVal);

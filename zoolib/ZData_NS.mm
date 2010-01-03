@@ -116,9 +116,8 @@ void ZData_NS::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
 	{
 	if (iCount)
 		{
-		NSMutableData* theData = this->pTouch();
 		const NSRange theRange = { iOffset, iCount };
-		[theData replaceBytesInRange:theRange withBytes:iSource];
+		[this->pTouch() replaceBytesInRange:theRange withBytes:iSource];
 		}
 	}
 

@@ -38,7 +38,7 @@ static const size_t kBufSize = sStackBufferSize;
 #pragma mark -
 #pragma mark * ZStrimR_NSString
 
-ZStrimR_NSString::ZStrimR_NSString(NSString* iString)
+ZStrimR_NSString::ZStrimR_NSString(ZRef<NSString> iString)
 :	fString(iString)
 ,	fPosition(0)
 	{}
@@ -48,7 +48,7 @@ ZStrimR_NSString::~ZStrimR_NSString()
 
 void ZStrimR_NSString::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 	{
-	const NSUInteger length = [fString.Get() length];
+	const NSUInteger length = [fString length];
 	if (0 == length)
 		{
 		if (oCount)
@@ -61,7 +61,7 @@ void ZStrimR_NSString::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 		UTF16 buffer[kBufSize];
 		const size_t cuToCopy = min(iCount, min(countAvailable, kBufSize));
 		const NSRange theRange = { fPosition, cuToCopy };
-		[fString.Get() getCharacters:(unichar*)buffer range:theRange];
+		[fString getCharacters:(unichar*)buffer range:theRange];
 		ZUnicode::sUTF16ToUTF32(
 			buffer, cuToCopy,
 			&countConsumed, nullptr,
@@ -75,7 +75,7 @@ void ZStrimR_NSString::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 void ZStrimR_NSString::Imp_ReadUTF16(UTF16* iDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
-	const CFIndex length = [fString.Get() length];
+	const CFIndex length = [fString length];
 	if (0 == length)
 		{
 		if (oCountCP)
@@ -156,7 +156,7 @@ void ZStrimR_NSString::Imp_ReadUTF8(UTF8* iDest,
 bool ZStrimR_NSString::Imp_ReadCP(UTF32& oCP)
 	{
 	using namespace ZUnicode;
-	const NSUInteger length = [fString.Get() length];
+	const NSUInteger length = [fString length];
 	for (;;)
 		{
 		if (fPosition >= length)
@@ -165,7 +165,7 @@ bool ZStrimR_NSString::Imp_ReadCP(UTF32& oCP)
 			return false;
 			}
 
-		const unichar theCU = [fString.Get() characterAtIndex:fPosition++];
+		const unichar theCU = [fString characterAtIndex:fPosition++];
 		if (sIsSmallNormal(theCU))
 			{
 			oCP = theCU;
@@ -181,7 +181,7 @@ bool ZStrimR_NSString::Imp_ReadCP(UTF32& oCP)
 				return false;
 				}
 
-			const unichar theCU2 = [fString.Get() characterAtIndex:fPosition++];
+			const unichar theCU2 = [fString characterAtIndex:fPosition++];
 			if (sIsLowSurrogate(theCU2))
 				{
 				oCP = sUTF32FromSurrogates(theCU, theCU2);
@@ -206,7 +206,7 @@ bool ZStrimR_NSString::Imp_ReadCP(UTF32& oCP)
 #pragma mark -
 #pragma mark * ZStrimW_NSString
 
-ZStrimW_NSString::ZStrimW_NSString(NSMutableString* iString)
+ZStrimW_NSString::ZStrimW_NSString(ZRef<NSMutableString> iString)
 :	fString(iString)
 	{}
 
@@ -219,7 +219,7 @@ void ZStrimW_NSString::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, siz
 		{
 		NSString* asString =
 			[[NSString alloc] initWithCharacters:(unichar*)iSource length:NSUInteger(iCountCU)];
-		[fString.Get() appendString:asString];
+		[fString appendString:asString];
 		[asString release];
 		}
 

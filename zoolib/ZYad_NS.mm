@@ -43,7 +43,7 @@ ZYadPrimR_NS::ZYadPrimR_NS(const ZRef<NSObject>& iVal)
 	{}
 
 ZAny ZYadPrimR_NS::AsAny()
-	{ return ZUtil_NS::sAsAny(this->GetVal().Get()); }
+	{ return ZUtil_NS::sAsAny(this->GetVal()); }
 
 // =================================================================================================
 #pragma mark -
@@ -66,7 +66,7 @@ bool ZYadStreamRPos_NS::IsSimple(const ZYadOptions& iOptions)
 
 ZYadStrimR_NS::ZYadStrimR_NS(ZRef<NSString> iString)
 :	ZYadR_NS(iString)
-,	ZStrimmerR_NSString(iString.Get())
+,	ZStrimmerR_NSString(iString)
 	{}
 
 // =================================================================================================
@@ -102,8 +102,8 @@ ZYadMapRPos_NS::ZYadMapRPos_NS(const ZRef<NSDictionary>& iDictionary)
 :	ZYadR_NS(iDictionary)
 ,	fDictionary(iDictionary)
 ,	fPosition(0)
-,	fNames(ZRef<NSArray>([iDictionary.Get() allKeys]))
-,	fValues(ZRef<NSArray>([iDictionary.Get() allValues]))
+,	fNames(ZRef<NSArray>([iDictionary allKeys]))
+,	fValues(ZRef<NSArray>([iDictionary allValues]))
 	{}
 
 ZRef<ZYadR> ZYadMapRPos_NS::ReadInc(string& oName)
@@ -220,7 +220,7 @@ YadVisitor_GetVal_NS::YadVisitor_GetVal_NS(ZRef<NSObject> iDefault)
 
 bool YadVisitor_GetVal_NS::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{
-	fOutput = ZUtil_NS::sAsNSObject(fDefault.Get(), iYadPrimR->AsAny());
+	fOutput = ZUtil_NS::sAsNSObject(fDefault, iYadPrimR->AsAny());
 	return true;
 	}
 

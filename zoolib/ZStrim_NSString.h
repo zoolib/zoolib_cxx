@@ -40,7 +40,7 @@ NAMESPACE_ZOOLIB_BEGIN
 class ZStrimR_NSString : public ZStrimR
 	{
 public:
-	ZStrimR_NSString(NSString* iString);
+	ZStrimR_NSString(ZRef<NSString> iString);
 	~ZStrimR_NSString();
 
 // From ZStrimR
@@ -66,7 +66,7 @@ private:
 class ZStrimW_NSString : public ZStrimW_NativeUTF16
 	{
 public:
-	ZStrimW_NSString(NSMutableString* iString);
+	ZStrimW_NSString(ZRef<NSMutableString> iString);
 	~ZStrimW_NSString();
 
 // From ZStrimW via ZStrimW_NativeUTF16
