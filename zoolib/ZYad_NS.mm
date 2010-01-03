@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZStrim_NSString.h"
 #include "zoolib/ZUtil_NSObject.h"
-#include "zoolib/ZVal_NS.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -90,8 +89,8 @@ ZYadListRPos_NS::ZYadListRPos_NS(const ZRef<NSArray>& iArray, uint64 iPosition)
 
 ZYadMapRPos_NS::ZYadMapRPos_NS(const ZRef<NSDictionary>& iDictionary,
 	uint64 iPosition,
-	ZRef<NSArray> iNames,
-	ZRef<NSArray> iValues)
+	const ZList_NS& iNames,
+	const ZList_NS& iValues)
 :	ZYadR_NS(iDictionary)
 ,	fDictionary(iDictionary)
 ,	fPosition(iPosition)
@@ -103,16 +102,16 @@ ZYadMapRPos_NS::ZYadMapRPos_NS(const ZRef<NSDictionary>& iDictionary)
 :	ZYadR_NS(iDictionary)
 ,	fDictionary(iDictionary)
 ,	fPosition(0)
-,	fNames([iDictionary.Get() allKeys])
-,	fValues([iDictionary.Get() allValues])
+,	fNames(ZRef<NSArray>([iDictionary.Get() allKeys]))
+,	fValues(ZRef<NSArray>([iDictionary.Get() allValues]))
 	{}
 
 ZRef<ZYadR> ZYadMapRPos_NS::ReadInc(string& oName)
 	{
-	if (fPosition < [fNames.Get() count])	
+	if (fPosition < fNames.Count())
 		{
-		oName = ZUtil_NS::sAsUTF8([fNames.Get() objectAtIndex:fPosition]);
-		return sMakeYadR(ZRef<NSObject>([fValues.Get() objectAtIndex:fPosition++]));
+		oName = fNames.Get(fPosition).GetString();
+		return sMakeYadR(fValues.Get(fPosition++));
 		}
 	return ZRef<ZYadR>();
 	}
@@ -122,10 +121,10 @@ ZRef<ZYadMapRPos> ZYadMapRPos_NS::Clone()
 
 void ZYadMapRPos_NS::SetPosition(const std::string& iName)
 	{
-	const int count = [fNames.Get() count];
+	const size_t count = fNames.Count();
 	for (fPosition = 0; fPosition < count; ++fPosition)
 		{
-		if (iName == ZUtil_NS::sAsUTF8([fNames.Get() objectAtIndex:fPosition]))
+		if (iName == fNames.Get(fPosition).GetString())
 			break;
 		}
 	}

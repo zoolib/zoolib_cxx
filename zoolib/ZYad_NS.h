@@ -113,8 +113,8 @@ class ZYadMapRPos_NS
 	{
 	ZYadMapRPos_NS(const ZRef<NSDictionary>& iDictionary,
 		uint64 iPosition,
-		ZRef<NSArray> iNames,
-		ZRef<NSArray> iValues);
+		const ZList_NS& iNames,
+		const ZList_NS& iValues);
 
 public:
 	ZYadMapRPos_NS(const ZRef<NSDictionary>& iDictionary);
@@ -130,8 +130,8 @@ public:
 private:
 	const ZRef<NSDictionary> fDictionary;
 	uint64 fPosition;
-	ZRef<NSArray> fNames;
-	ZRef<NSArray> fValues;
+	ZList_NS fNames;
+	ZList_NS fValues;
 	};
 
 // =================================================================================================
