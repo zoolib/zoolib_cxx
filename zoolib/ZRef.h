@@ -37,31 +37,34 @@ template <class T>
 class ZRef
 	{
 private:
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRef,
-		operator_bool_generator_type, operator_bool_type);
-
-	typedef T* P;
-
-	static void spRetain(P iP)
+	static void spRetain(T* iP)
 		{
 		if (iP)
 			sRetain(*iP);
 		}
 
-	static void spRelease(P iP)
+	static void spRelease(T* iP)
 		{
 		if (iP)
 			sRelease(*iP);
 		}
 
-	static void spCheck(P iP)
+	static void spCheck(T* iP)
 		{
 		ZAssert(iP);
-//		if (sCheckAccessEnabled(Retainable_T<T>::sGet(iP))
-//			sCheckAccess(Retainable_T<T>::sGet(iP))
 		}
 
 public:
+//	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRef,
+//		operator_bool_generator_type, operator_bool_type);
+
+//	operator operator_bool_type() const
+//		{ return operator_bool_generator_type::translate(fP); }
+
+	// Needed for Objective C method invocation. Need to conditionalize this
+	// vs operator_bool_type based on T being derived from objc_object.
+	operator T*() const { return fP; }
+
 	void swap(ZRef& iOther)
 		{ std::swap(fP, iOther.fP); }
 
@@ -78,18 +81,18 @@ public:
 
 	ZRef& operator=(const ZRef& iOther)
 		{
-		P theP = iOther.Get();
+		T* theP = iOther.Get();
 		std::swap(theP, fP);
 		spRetain(fP);
 		spRelease(theP);
 		return *this;
 		}
 
-	ZRef(P iP)
+	ZRef(T* iP)
 	:	fP(iP)
 		{ spRetain(fP); }
 	
-	ZRef& operator=(P iP)
+	ZRef& operator=(T* iP)
 		{
 		std::swap(iP, fP);
 		spRetain(fP);
@@ -105,17 +108,17 @@ public:
 	template <class O>
 	ZRef& operator=(const ZRef<O>& iOther)
 		{
-		P theP = iOther.Get();
+		T* theP = iOther.Get();
 		std::swap(theP, fP);
 		spRetain(fP);
 		spRelease(theP);
 		return *this;
 		}
 
-	bool operator==(const P iP) const
+	bool operator==(const T* iP) const
 		{ return fP == iP; }
 
-	bool operator!=(const P iP) const
+	bool operator!=(const T* iP) const
 		{ return fP != iP; }
 
 	bool operator==(const ZRef& iOther) const
@@ -136,35 +139,32 @@ public:
 	bool operator<(const ZRef<O>& iOther) const
 		{ return fP < iOther.Get(); }
 
-	operator operator_bool_type() const
-		{ return operator_bool_generator_type::translate(fP); }
-
 	T* operator->() const
 		{
 		spCheck(fP);
 		return fP;
 		}
 
-	P Copy() const
+	T* Copy() const
 		{
 		spRetain(fP);
 		return fP;
 		}
 
-	P Get() const { return fP; }
+	T* Get() const { return fP; }
 
 	void Clear()
 		{
-		P theP = nullptr;
+		T* theP = nullptr;
 		std::swap(theP, fP);
 		spRelease(theP);
 		}
 
 	// Used with COM output parameters. See sCOMPtr and sCOMVoidPtr in ZWinCOM.h
-	P& GetPtrRef() { return fP; }
+	T*& GetPtrRef() { return fP; }
 
 private:
-	P fP;
+	T* fP;
 	};
 
 template <class T>
