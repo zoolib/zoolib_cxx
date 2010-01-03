@@ -147,7 +147,7 @@ NSMutableData* ZData_NS::pTouch()
 	ZRef<NSMutableData> theMutableData;
 	if (NSData* theData = this->pData())
 		{
-		if (!fMutable || ::CFGetRetainCount(theData) > 1)
+		if (!fMutable || [theData retainCount] > 1)
 			{
 			theMutableData = sDataMutable(theData);
 			inherited::operator=(theMutableData);
