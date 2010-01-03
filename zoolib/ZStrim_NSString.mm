@@ -58,10 +58,10 @@ void ZStrimR_NSString::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 		{
 		size_t countConsumed;
 		const size_t countAvailable = length < fPosition ? 0 : length - fPosition;
-		unichar buffer[kBufSize];
+		UTF16 buffer[kBufSize];
 		const size_t cuToCopy = min(iCount, min(countAvailable, kBufSize));
 		const NSRange theRange = { fPosition, cuToCopy };
-		[fString.Get() getCharacters:buffer range:theRange];
+		[fString.Get() getCharacters:(unichar*)buffer range:theRange];
 		ZUnicode::sUTF16ToUTF32(
 			buffer, cuToCopy,
 			&countConsumed, nullptr,
@@ -217,7 +217,8 @@ void ZStrimW_NSString::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, siz
 	{
 	if (iCountCU)
 		{
-		NSString* asString = [[NSString alloc] initWithCharacters:iSource length:NSUInteger(iCountCU)];
+		NSString* asString =
+			[[NSString alloc] initWithCharacters:(unichar*)iSource length:NSUInteger(iCountCU)];
 		[fString.Get() appendString:asString];
 		[asString release];
 		}
