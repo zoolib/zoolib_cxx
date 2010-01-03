@@ -345,7 +345,7 @@ ZRef<ZTSWatcher> ZTSWatcherMUX::NewWatcher(bool iAlwaysForceSync)
 	{
 	ZRef<Watcher> theWatcher = new Watcher(this, iAlwaysForceSync);
 	ZMutexLocker locker(fMutex_Structure);
-	fWatchers.insert(theWatcher.GetObject());
+	fWatchers.insert(theWatcher.Get());
 	return theWatcher;
 	}
 

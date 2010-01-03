@@ -284,7 +284,7 @@ void ZTSoup::Register(ZRef<ZTSieve> iTSieve, const ZTBQuery& iTBQuery, bool iPre
 			s << ", not known to watcher";
 		}
 
-	ZTSieve* theTSieve = iTSieve.GetObject();
+	ZTSieve* theTSieve = iTSieve.Get();
 	theTSieve->fPSieve = thePSieve;
 	thePSieve->fTSieves_Using.Insert(theTSieve);
 
@@ -309,7 +309,7 @@ void ZTSoup::Register(ZRef<ZTCrouton> iTCrouton, uint64 iID)
 			s << ", not known to watcher";
 		}
 
-	ZTCrouton* theTCrouton = iTCrouton.GetObject();
+	ZTCrouton* theTCrouton = iTCrouton.Get();
 	iTCrouton->fPCrouton = thePCrouton;
 	thePCrouton->fTCroutons_Using.Insert(theTCrouton);
 
@@ -1232,7 +1232,7 @@ void ZTBowl::Changed(ZTSoup::EChanged iChanged)
 					{
 					s << "Changed, removing TCrouton, ID: "
 						<< ZString::sFormat("%llX", theTCrouton->GetID())
-						<< ", Address: " << ZString::sFormat("%X", theTCrouton.GetObject())
+						<< ", Address: " << ZString::sFormat("%X", theTCrouton.Get())
 						<< ", Refcount: " << ZString::sFormat("%d", theTCrouton->GetRefCount());
 					}
 
@@ -1258,7 +1258,7 @@ void ZTBowl::Changed(ZTSoup::EChanged iChanged)
 		if (ZLOG(s, eDebug, "ZTBowl"))
 			{
 			s << "Changed, added TCrouton, ID: " << ZString::sFormat("%llX", *i)
-				<< ", Address: " << ZString::sFormat("%X", newCrouton.GetObject());
+				<< ", Address: " << ZString::sFormat("%X", newCrouton.Get());
 			}
 
 		this->GetTSoup()->Register(newCrouton, *i);

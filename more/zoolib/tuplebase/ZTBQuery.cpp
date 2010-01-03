@@ -69,7 +69,7 @@ inline int ZTBQueryNode::Compare(const ZRef<ZTBQueryNode>& iOther)
 
 	// VERY IMPORTANT. pRevCompare returns 1 if the callee is less than
 	// the param. So we invoke it on iOther to get the sense that callers expect.
-	return iOther.GetObject()->pRevCompare(this);
+	return iOther.Get()->pRevCompare(this);
 	}
 
 // =================================================================================================

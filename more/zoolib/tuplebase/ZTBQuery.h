@@ -571,9 +571,9 @@ inline ZTBQuery::operator operator_bool_type() const
 
 inline int ZTBQuery::Compare(const ZTBQuery& iOther) const
 	{
-	ZTBQueryNode* otherNode = iOther.fNode.GetObject();
+	ZTBQueryNode* otherNode = iOther.fNode.Get();
 
-	if (ZTBQueryNode* myNode = fNode.GetObject())
+	if (ZTBQueryNode* myNode = fNode.Get())
 		{
 		if (otherNode)
 			return - myNode->pRevCompare(otherNode);
@@ -589,9 +589,9 @@ inline int ZTBQuery::Compare(const ZTBQuery& iOther) const
 
 inline bool ZTBQuery::operator==(const ZTBQuery& iOther) const
 	{
-	ZTBQueryNode* otherNode = iOther.fNode.GetObject();
+	ZTBQueryNode* otherNode = iOther.fNode.Get();
 
-	if (ZTBQueryNode* myNode = fNode.GetObject())
+	if (ZTBQueryNode* myNode = fNode.Get())
 		{
 		if (otherNode)
 			return 0 == myNode->pRevCompare(otherNode);
@@ -610,9 +610,9 @@ inline bool ZTBQuery::operator!=(const ZTBQuery& iOther) const
 
 inline bool ZTBQuery::operator<(const ZTBQuery& iOther) const
 	{
-	ZTBQueryNode* otherNode = iOther.fNode.GetObject();
+	ZTBQueryNode* otherNode = iOther.fNode.Get();
 
-	if (ZTBQueryNode* myNode = fNode.GetObject())
+	if (ZTBQueryNode* myNode = fNode.Get())
 		{
 		if (otherNode)
 			return 0 < myNode->pRevCompare(otherNode);

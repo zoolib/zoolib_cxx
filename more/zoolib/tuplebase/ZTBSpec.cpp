@@ -806,8 +806,8 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 
 int ZTBSpec::Criterion::Compare(const Criterion& iOther) const
 	{
-	Rep* myRep = fRep.GetObject();
-	Rep* otherRep = iOther.fRep.GetObject();
+	Rep* myRep = fRep.Get();
+	Rep* otherRep = iOther.fRep.Get();
 
 	if (int compare = myRep->fComparator.Compare(otherRep->fComparator))
 		return compare;
@@ -1259,7 +1259,7 @@ void ZTBSpec::MakeFresh()
 	if (!fRep)
 		fRep = new Rep;
 	else if (fRep->GetRefCount() > 1)
-		fRep = new Rep(*fRep.GetObject());
+		fRep = new Rep(*fRep.Get());
 	}
 
 /**
