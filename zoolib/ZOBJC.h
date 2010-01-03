@@ -48,7 +48,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifdef __OBJC__
 	@class NSAutoreleasePool;
 #else
-	typedef struct objc_NSAutoreleasePool* NSAutoreleasePool;
+	typedef struct objc_NSAutoreleasePool NSAutoreleasePool;
 #endif
 
 NAMESPACE_ZOOLIB_BEGIN
