@@ -87,7 +87,7 @@ class ZYadStrimR_CFType
 ,	public ZStrimmerR_CFString
 	{
 public:
-	ZYadStrimR_CFType(ZRef<CFStringRef> iStringRef);
+	ZYadStrimR_CFType(const ZRef<CFStringRef>& iStringRef);
 	};
 
 // =================================================================================================

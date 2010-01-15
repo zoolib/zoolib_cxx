@@ -1892,34 +1892,38 @@ const ZVal_ZooLib& ZList_ZooLib::RGet(size_t iIndex) const
 	return sNilVal;
 	}
 
-void ZList_ZooLib::Set(size_t iIndex, const ZVal_ZooLib& iVal)
+ZList_ZooLib& ZList_ZooLib::Set(size_t iIndex, const ZVal_ZooLib& iVal)
 	{
 	this->pTouch();
 	vector<ZVal_ZooLib>& theVec = fRep->fVector;
 	if (iIndex < theVec.size())
 		*(theVec.begin() + iIndex) = iVal;
+	return *this;
 	}
 
-void ZList_ZooLib::Erase(size_t iIndex)
+ZList_ZooLib& ZList_ZooLib::Erase(size_t iIndex)
 	{
 	this->pTouch();
 	vector<ZVal_ZooLib>& theVec = fRep->fVector;
 	if (iIndex < theVec.size())
 		theVec.erase(theVec.begin() + iIndex);
+	return *this;
 	}
 
-void ZList_ZooLib::Insert(size_t iIndex, const ZVal_ZooLib& iVal)
+ZList_ZooLib& ZList_ZooLib::Insert(size_t iIndex, const ZVal_ZooLib& iVal)
 	{
 	this->pTouch();
 	vector<ZVal_ZooLib>& theVec = fRep->fVector;
 	if (iIndex <= theVec.size())
 		theVec.insert(theVec.begin() + iIndex, iVal);
+	return *this;
 	}
 
-void ZList_ZooLib::Append(const ZVal_ZooLib& iVal)
+ZList_ZooLib& ZList_ZooLib::Append(const ZVal_ZooLib& iVal)
 	{
 	this->pTouch();
 	fRep->fVector.push_back(iVal);
+	return *this;
 	}
 
 int ZList_ZooLib::Compare(const ZList_ZooLib& iOther) const
@@ -2278,31 +2282,43 @@ ZVal_ZooLib ZMap_ZooLib::Get(const ZTName& iPropName) const
 	return sNilVal;
 	}
 
-void ZMap_ZooLib::Set(Index_t iIndex, const ZVal_ZooLib& iVal)
-	{ this->pSet(iIndex, iVal); }
+ZMap_ZooLib& ZMap_ZooLib::Set(Index_t iIndex, const ZVal_ZooLib& iVal)
+	{
+	this->pSet(iIndex, iVal);
+	return *this;
+	}
 
-void ZMap_ZooLib::Set(const char* iPropName, const ZVal_ZooLib& iVal)
-	{ this->pSet(iPropName, iVal); }
+ZMap_ZooLib& ZMap_ZooLib::Set(const char* iPropName, const ZVal_ZooLib& iVal)
+	{
+	this->pSet(iPropName, iVal);
+	return *this;
+	}
 
-void ZMap_ZooLib::Set(const ZTName& iPropName, const ZVal_ZooLib& iVal)
-	{ this->pSet(iPropName, iVal); }
+ZMap_ZooLib& ZMap_ZooLib::Set(const ZTName& iPropName, const ZVal_ZooLib& iVal)
+	{
+	this->pSet(iPropName, iVal);
+	return *this;
+	}
 
-void ZMap_ZooLib::Erase(Index_t iIndex)
+ZMap_ZooLib& ZMap_ZooLib::Erase(Index_t iIndex)
 	{
 	if (fRep)
 		this->pErase(iIndex);
+	return *this;
 	}
 
-void ZMap_ZooLib::Erase(const char* iPropName)
+ZMap_ZooLib& ZMap_ZooLib::Erase(const char* iPropName)
 	{
 	if (fRep)
 		this->pErase(this->IndexOf(iPropName));
+	return *this;
 	}
 
-void ZMap_ZooLib::Erase(const ZTName& iPropName)
+ZMap_ZooLib& ZMap_ZooLib::Erase(const ZTName& iPropName)
 	{
 	if (fRep)
 		this->pErase(this->IndexOf(iPropName));
+	return *this;
 	}
 
 int ZMap_ZooLib::Compare(const ZMap_ZooLib& iOther) const

@@ -65,7 +65,7 @@ bool ZYadStreamRPos_CFType::IsSimple(const ZYadOptions& iOptions)
 #pragma mark -
 #pragma mark * ZYadStrimR_CFType
 
-ZYadStrimR_CFType::ZYadStrimR_CFType(ZRef<CFStringRef> iStringRef)
+ZYadStrimR_CFType::ZYadStrimR_CFType(const ZRef<CFStringRef>& iStringRef)
 :	ZYadR_CFType(iStringRef)
 ,	ZStrimmerR_CFString(iStringRef)
 	{}

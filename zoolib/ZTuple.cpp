@@ -115,8 +115,11 @@ void ZTuple::SetTuple(const ZTName& iName, const ZTuple& iTuple)
 		} \
 	TYPE ZTuple::Get##TYPENAME(Name_t iName) const \
 		{ return this->Get(iName).Get_T<TYPE>(); } \
-	void ZTuple::Set##TYPENAME(Name_t iName, const TYPE& iVal) \
-		{ return this->Set(iName, iVal); } \
+	ZTuple& ZTuple::Set##TYPENAME(Name_t iName, const TYPE& iVal) \
+		{ \
+		this->Set(iName, iVal); \
+		return *this; \
+		} \
 
 #define ZMACRO_ZMapAccessors_Def(Name_t) \
 	ZMACRO_ZMapAccessors_Def_Entry(Name_t, ID, uint64) \

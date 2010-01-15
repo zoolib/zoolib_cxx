@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "zoolib/ZWinHeader.h"
+#include "zoolib/ZCompat_Win.h"
 
 #include "zoolib/ZAny.h"
 #include "zoolib/ZData_Any.h"
@@ -144,13 +144,13 @@ public:
 	Val Get(const string8& iName) const;
 	Val Get(const Index_t& iIndex) const;
 
-	void Set(const string16& iName, const Val& iVal);
-	void Set(const string8& iName, const Val& iVal);
-	void Set(const Index_t& iIndex, const Val& iVal);
+//	void Set(const string16& iName, const Val& iVal);
+//	void Set(const string8& iName, const Val& iVal);
+//	void Set(const Index_t& iIndex, const Val& iVal);
 
-	void Erase(const string16& iName);
-	void Erase(const string8& iName);
-	void Erase(const Index_t& iIndex);
+//	void Erase(const string16& iName);
+//	void Erase(const string8& iName);
+//	void Erase(const Index_t& iIndex);
 
 // Extended ZMap protocol
 	Index_t Begin() const;

@@ -147,13 +147,13 @@ public:
 	ZVal_Any DGet(const ZVal_Any& iDefault, size_t iIndex) const;
 	ZVal_Any Get(size_t iIndex) const;
 
-	void Set(size_t iIndex, const ZVal_Any& iVal);
+	ZList_Any& Set(size_t iIndex, const ZVal_Any& iVal);
 
-	void Erase(size_t iIndex);
+	ZList_Any& Erase(size_t iIndex);
 
-	void Insert(size_t iIndex, const ZVal_Any& iVal);
+	ZList_Any& Insert(size_t iIndex, const ZVal_Any& iVal);
 
-	void Append(const ZVal_Any& iVal);
+	ZList_Any& Append(const ZVal_Any& iVal);
 
 private:
 	void pTouch();
@@ -274,11 +274,11 @@ public:
 	ZVal_Any Get(const string8& iName) const;
 	ZVal_Any Get(const Index_t& iIndex) const;
 
-	void Set(const string8& iName, const ZVal_Any& iVal);
-	void Set(const Index_t& iIndex, const ZVal_Any& iVal);
+	ZMap_Any& Set(const string8& iName, const ZVal_Any& iVal);
+	ZMap_Any& Set(const Index_t& iIndex, const ZVal_Any& iVal);
 
-	void Erase(const string8& iName);
-	void Erase(const Index_t& iIndex);
+	ZMap_Any& Erase(const string8& iName);
+	ZMap_Any& Erase(const Index_t& iIndex);
 
 // Our protocol
 	Index_t Begin() const;

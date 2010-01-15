@@ -300,7 +300,7 @@ public:
 	Val DGet(const Val& iDefault, size_t iIndex) const;
 	Val Get(size_t iIndex) const;
 
-	void Append(const Val& iVal);
+	List& Append(const Val& iVal);
 
 // Our protocol
 	PIActionList& OParam();
@@ -359,13 +359,13 @@ public:
 	Val Get(const string8& iName) const;
 	Val Get(Index_t iIndex) const;
 
-	void Set(KeyID iKey, const Val& iVal);
-	void Set(const string8& iName, const Val& iVal);
-	void Set(Index_t iIndex, const Val& iVal);
+	Map& Set(KeyID iKey, const Val& iVal);
+	Map& Set(const string8& iName, const Val& iVal);
+	Map& Set(Index_t iIndex, const Val& iVal);
 
-	void Erase(KeyID iKey);
-	void Erase(const string8& iName);
-	void Erase(Index_t iIndex);
+	Map& Erase(KeyID iKey);
+	Map& Erase(const string8& iName);
+	Map& Erase(Index_t iIndex);
 
 // Our protocol
 	PIActionDescriptor& OParam();

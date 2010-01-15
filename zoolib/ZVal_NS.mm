@@ -439,7 +439,7 @@ size_t ZList_NS::Count() const
 void ZList_NS::Clear()
 	{ inherited::Clear(); }
 
-bool ZList_NS::QGet(size_t iIndex, ZVal_NS& oVal) const
+bool ZList_NS::QGet(size_t iIndex, ZRef<NSObject>& oVal) const
 	{
 	if (NSArray* theArray = this->pArray())
 		{
@@ -466,10 +466,13 @@ ZVal_NS ZList_NS::DGet(const ZVal_NS& iDefault, size_t iIndex) const
 ZVal_NS ZList_NS::Get(size_t iIndex) const
 	{ return this->DGet(ZVal_NS(), iIndex); }
 
-void ZList_NS::Set(size_t iIndex, const ZVal_NS& iVal)
-	{ [this->pTouch() replaceObjectAtIndex:NSUInteger(iIndex) withObject:iVal.Get()]; }
+ZList_NS& ZList_NS::Set(size_t iIndex, const ZVal_NS& iVal)
+	{
+	[this->pTouch() replaceObjectAtIndex:NSUInteger(iIndex) withObject:iVal.Get()];
+	return *this;
+	}
 
-void ZList_NS::Erase(size_t iIndex)
+ZList_NS& ZList_NS::Erase(size_t iIndex)
 	{
 	NSMutableArray* theArray = this->pTouch();
 	if (const size_t theCount = [theArray count])
@@ -477,18 +480,23 @@ void ZList_NS::Erase(size_t iIndex)
 		if (iIndex < theCount)
 			[theArray removeObjectAtIndex:NSUInteger(iIndex)];
 		}
+	return *this;
 	}
 
-void ZList_NS::Insert(size_t iIndex, const ZVal_NS& iVal)
+ZList_NS& ZList_NS::Insert(size_t iIndex, const ZVal_NS& iVal)
 	{
 	NSMutableArray* theArray = this->pTouch();
 	const size_t theCount = [theArray count];
 	if (iIndex <= theCount)
 		[theArray insertObject:iVal.Get() atIndex:NSUInteger(iIndex)];
+	return *this;
 	}
 
-void ZList_NS::Append(const ZVal_NS& iVal)
-	{ [this->pTouch() addObject:iVal.Get()]; }
+ZList_NS& ZList_NS::Append(const ZVal_NS& iVal)
+	{
+	[this->pTouch() addObject:iVal.Get()];
+	return *this;
+	}
 
 NSArray* ZList_NS::pArray() const
 	{ return inherited::Get(); }
@@ -581,7 +589,7 @@ ZMap_NS& ZMap_NS::operator=(const ZRef<NSDictionary>& iOther)
 void ZMap_NS::Clear()
 	{ inherited::Clear(); }
 
-bool ZMap_NS::QGet(const string8& iName, ZVal_NS& oVal) const
+bool ZMap_NS::QGet(const string8& iName, ZRef<NSObject>& oVal) const
 	{
 	if (NSDictionary* theDictionary = this->pDictionary())
 		{
@@ -594,7 +602,7 @@ bool ZMap_NS::QGet(const string8& iName, ZVal_NS& oVal) const
 	return false;
 	}
 
-bool ZMap_NS::QGet(NSString* iName, ZVal_NS& oVal) const
+bool ZMap_NS::QGet(NSString* iName, ZRef<NSObject>& oVal) const
 	{
 	if (NSDictionary* theDictionary = this->pDictionary())
 		{
@@ -629,17 +637,29 @@ ZVal_NS ZMap_NS::Get(const string8& iName) const
 ZVal_NS ZMap_NS::Get(NSString* iName) const
 	{ return this->DGet(ZVal_NS(), iName); }
 
-void ZMap_NS::Set(const string8& iName, const ZVal_NS& iVal)
-	{ [this->pTouch() setValue:iVal.Get() forKey:sString(iName)]; }
+ZMap_NS& ZMap_NS::Set(const string8& iName, const ZVal_NS& iVal)
+	{
+	[this->pTouch() setValue:iVal.Get() forKey:sString(iName)];
+	return *this;
+	}
 
-void ZMap_NS::Set(NSString* iName, const ZVal_NS& iVal)
-	{ [this->pTouch() setValue:iVal.Get() forKey:iName]; }
+ZMap_NS& ZMap_NS::Set(NSString* iName, const ZVal_NS& iVal)
+	{
+	[this->pTouch() setValue:iVal.Get() forKey:iName];
+	return *this;
+	}
 
-void ZMap_NS::Erase(const string8& iName)
-	{ [this->pTouch() removeObjectForKey:sString(iName)]; }
+ZMap_NS& ZMap_NS::Erase(const string8& iName)
+	{
+	[this->pTouch() removeObjectForKey:sString(iName)];
+	return *this;
+	}
 
-void ZMap_NS::Erase(NSString* iName)
-	{ [this->pTouch() removeObjectForKey:iName]; }
+ZMap_NS& ZMap_NS::Erase(NSString* iName)
+	{
+	[this->pTouch() removeObjectForKey:iName];
+	return *this;
+	}
 
 NSDictionary* ZMap_NS::pDictionary() const
 	{ return inherited::Get(); }

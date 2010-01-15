@@ -560,13 +560,18 @@ ZVal_AppleEvent ZList_AppleEvent::Get(size_t iIndex) const
 	return ZVal_AppleEvent();
 	}
 
-void ZList_AppleEvent::Erase(size_t iIndex)
-	{ ::AEDeleteItem(this, iIndex + 1); }
+ZList_AppleEvent& ZList_AppleEvent::Erase(size_t iIndex)
+	{::AEDeleteItem(this, iIndex + 1);
+	return *this;
+	}
 
-void ZList_AppleEvent::Set(size_t iIndex, const AEDesc& iVal)
-	{ ::AEPutDesc(this, iIndex + 1, &iVal); }
+ZList_AppleEvent& ZList_AppleEvent::Set(size_t iIndex, const AEDesc& iVal)
+	{
+	::AEPutDesc(this, iIndex + 1, &iVal);
+	return *this;
+	}
 
-void ZList_AppleEvent::Insert(size_t iIndex, const AEDesc& iVal)
+ZList_AppleEvent& ZList_AppleEvent::Insert(size_t iIndex, const AEDesc& iVal)
 	{
 	long theCount;
 	if (noErr == ::AECountItems(this, &theCount))
@@ -579,13 +584,20 @@ void ZList_AppleEvent::Insert(size_t iIndex, const AEDesc& iVal)
 			}
 		::AEPutDesc(this, iIndex + 1, &iVal);
 		}
+	return *this;
 	}
 
-void ZList_AppleEvent::Append(const AEDesc& iVal)
-	{ ::AEPutDesc(this, 0, &iVal); }
+ZList_AppleEvent& ZList_AppleEvent::Append(const AEDesc& iVal)
+	{
+	::AEPutDesc(this, 0, &iVal);
+	return *this;
+	}
 
-void ZList_AppleEvent::Append(const ZVal_AppleEvent& iVal)
-	{ ::AEPutDesc(this, 0, &iVal); }
+ZList_AppleEvent& ZList_AppleEvent::Append(const ZVal_AppleEvent& iVal)
+	{
+	::AEPutDesc(this, 0, &iVal);
+	return *this;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -717,23 +729,41 @@ ZVal_AppleEvent ZMap_AppleEvent::Get(const std::string& iName) const
 ZVal_AppleEvent ZMap_AppleEvent::Get(Index_t iIndex) const
 	{ return this->DGet(ZVal_AppleEvent(), iIndex); }
 
-void ZMap_AppleEvent::Set(AEKeyword iName, const AEDesc& iVal)
-	{ ::AEPutKeyDesc(this, iName, &iVal); }
+ZMap_AppleEvent& ZMap_AppleEvent::Set(AEKeyword iName, const AEDesc& iVal)
+	{
+	::AEPutKeyDesc(this, iName, &iVal);
+	return *this;
+	}
 
-void ZMap_AppleEvent::Set(const string& iName, const AEDesc& iVal)
-	{ ::AEPutKeyDesc(this, spAsAEKeyword(iName), &iVal); }
+ZMap_AppleEvent& ZMap_AppleEvent::Set(const string& iName, const AEDesc& iVal)
+	{
+	::AEPutKeyDesc(this, spAsAEKeyword(iName), &iVal);
+	return *this;
+	}
 
-void ZMap_AppleEvent::Set(Index_t iIndex, const AEDesc& iVal)
-	{ ::AEPutDesc(this, iIndex.GetIndex() + 1, &iVal); }
+ZMap_AppleEvent& ZMap_AppleEvent::Set(Index_t iIndex, const AEDesc& iVal)
+	{
+	::AEPutDesc(this, iIndex.GetIndex() + 1, &iVal);
+	return *this;
+	}
 
-void ZMap_AppleEvent::Erase(AEKeyword iName)
-	{ ::AEDeleteKeyDesc(this, iName); }
+ZMap_AppleEvent& ZMap_AppleEvent::Erase(AEKeyword iName)
+	{
+	::AEDeleteKeyDesc(this, iName);
+	return *this;
+	}
 
-void ZMap_AppleEvent::Erase(const string& iName)
-	{ ::AEDeleteKeyDesc(this, spAsAEKeyword(iName)); }
+ZMap_AppleEvent& ZMap_AppleEvent::Erase(const string& iName)
+	{
+	::AEDeleteKeyDesc(this, spAsAEKeyword(iName));
+	return *this;
+	}
 
-void ZMap_AppleEvent::Erase(Index_t iIndex)
-	{  ::AEDeleteItem(this, iIndex.GetIndex() + 1); }
+ZMap_AppleEvent& ZMap_AppleEvent::Erase(Index_t iIndex)
+	{
+	::AEDeleteItem(this, iIndex.GetIndex() + 1);
+	return *this;
+	}
 
 AEDesc& ZMap_AppleEvent::OParam()
 	{

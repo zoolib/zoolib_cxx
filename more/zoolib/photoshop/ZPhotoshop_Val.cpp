@@ -265,35 +265,34 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	if (false) \
 		{} \
 	else if (const int32* theVal = iVal.PGet_T<int32>()) \
-		{ SUITE->PutInteger(PARAM, *theVal); return; } \
+		{ SUITE->PutInteger(PARAM, *theVal); } \
 	else if (const float* theVal = iVal.PGet_T<float>()) \
-		{ SUITE->PutFloat(PARAM, *theVal); return; } \
+		{ SUITE->PutFloat(PARAM, *theVal); } \
 	else if (const UnitFloat* theVal = iVal.PGet_T<UnitFloat>()) \
-		{ SUITE->PutUnitFloat(PARAM, theVal->fUnitID, theVal->fValue); return; } \
+		{ SUITE->PutUnitFloat(PARAM, theVal->fUnitID, theVal->fValue); } \
 	else if (const string8* theVal = iVal.PGet_T<string8>()) \
-		{ SUITE->PutString(PARAM, const_cast<char*>(theVal->c_str())); return; } \
+		{ SUITE->PutString(PARAM, const_cast<char*>(theVal->c_str())); } \
 	else if (const bool* theVal = iVal.PGet_T<bool>()) \
-		{ SUITE->PutBoolean(PARAM, *theVal); return; } \
+		{ SUITE->PutBoolean(PARAM, *theVal); } \
 	else if (const List* theVal = iVal.PGet_T<List>()) \
-		{ SUITE->PutList(PARAM, theVal->IParam()); return; } \
+		{ SUITE->PutList(PARAM, theVal->IParam()); } \
 	else if (const Map* theVal = iVal.PGet_T<Map>()) \
-		{ SUITE->PutObject(PARAM, theVal->GetType(), theVal->IParam()); return; } \
+		{ SUITE->PutObject(PARAM, theVal->GetType(), theVal->IParam()); } \
 	/* global object? */ \
 	else if (const Enumerated* theVal = iVal.PGet_T<Enumerated>()) \
-		{ SUITE->PutEnumerated(PARAM, theVal->fEnumType, theVal->fValue); return; } \
+		{ SUITE->PutEnumerated(PARAM, theVal->fEnumType, theVal->fValue); } \
 	else if (const Spec* theVal = iVal.PGet_T<Spec>()) \
 		{ \
 		PIActionReference tempRef = theVal->MakeRef(); \
 		SUITE->PutReference(PARAM, tempRef); \
 		spPSActionReference->Free(tempRef); \
-		return; \
 		} \
 /*Hmmm	else if (const ClassID* theVal = iVal.PGet_T<ClassID>()) \
-		{ ZUnimplemented(); } Hmm??? SUITE->PutInteger(PARAM, *theVal); return; } */\
+		{ ZUnimplemented(); } Hmm??? SUITE->PutInteger(PARAM, *theVal); } */\
 	else if (const FileRef* theVal = iVal.PGet_T<FileRef>()) \
-		{ SUITE->PutAlias(PARAM, theVal->Get()); return; } \
+		{ SUITE->PutAlias(PARAM, theVal->Get()); } \
 	else if (const Data* theVal = iVal.PGet_T<Data>()) \
-		{ SUITE->PutData(PARAM, theVal->GetSize(), const_cast<void*>(theVal->GetData())); return; }
+		{ SUITE->PutData(PARAM, theVal->GetSize(), const_cast<void*>(theVal->GetData())); }
 
 // =================================================================================================
 #pragma mark -
@@ -1186,9 +1185,10 @@ Val List::DGet(const Val& iDefault, size_t iIndex) const
 Val List::Get(size_t iIndex) const
 	{ return this->DGet(Val(), iIndex); }
 
-void List::Append(const Val& iVal)
+List& List::Append(const Val& iVal)
 	{
 	SETTERCASES(spPSActionList, fAL)
+	return *this;
 	}
 
 PIActionList& List::OParam()
@@ -1346,29 +1346,46 @@ Val Map::Get(const string8& iName) const
 Val Map::Get(Index_t iIndex) const
 	{ return this->DGet(Val(), iIndex); }
 
-void Map::Set(KeyID iKey, const Val& iVal)
+Map& Map::Set(KeyID iKey, const Val& iVal)
 	{
 	#define COMMA() ,
 
 	SETTERCASES(spPSActionDescriptor, fAD COMMA() iKey)
 
 	#undef COMMA
+
+	return *this;
 	}
 
-void Map::Set(const string8& iName, const Val& iVal)
-	{ this->Set(spAsKeyID(iName), iVal); }
+Map& Map::Set(const string8& iName, const Val& iVal)
+	{
+	this->Set(spAsKeyID(iName), iVal);
+	return *this;
+	}
 
-void Map::Set(Index_t iIndex, const Val& iVal)
-	{ this->Set(this->KeyOf(iIndex), iVal); }
+Map& Map::Set(Index_t iIndex, const Val& iVal)
+	{
+	this->Set(this->KeyOf(iIndex), iVal);
+	return *this;
+	}
 
-void Map::Erase(KeyID iKey)
-	{ spPSActionDescriptor->Erase(fAD, iKey); }
+Map& Map::Erase(KeyID iKey)
+	{
+	spPSActionDescriptor->Erase(fAD, iKey);
+	return *this;
+	}
 
-void Map::Erase(const string8& iName)
-	{ this->Erase(spAsKeyID(iName)); }
+Map& Map::Erase(const string8& iName)
+	{
+	this->Erase(spAsKeyID(iName));
+	return *this;
+	}
 
-void Map::Erase(Index_t iIndex)
-	{ this->Erase(this->KeyOf(iIndex)); }
+Map& Map::Erase(Index_t iIndex)
+	{
+	this->Erase(this->KeyOf(iIndex));
+	return *this;
+	}
 
 PIActionDescriptor& Map::OParam()
 	{

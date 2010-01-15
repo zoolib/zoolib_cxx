@@ -146,17 +146,17 @@ public:
 
 	void Clear();
 
-	bool QGet(size_t iIndex, ZVal_CFType& oVal) const;
+	bool QGet(size_t iIndex, ZRef<CFTypeRef>& oVal) const;
 	ZVal_CFType DGet(const ZVal_CFType& iDefault, size_t iIndex) const;
 	ZVal_CFType Get(size_t iIndex) const;
 
-	void Set(size_t iIndex, const ZVal_CFType& iVal);
+	ZList_CFType& Set(size_t iIndex, const ZVal_CFType& iVal);
 
-	void Erase(size_t iIndex);
+	ZList_CFType& Erase(size_t iIndex);
 
-	void Insert(size_t iIndex, const ZVal_CFType& iVal);
+	ZList_CFType& Insert(size_t iIndex, const ZVal_CFType& iVal);
 
-	void Append(const ZVal_CFType& iVal);
+	ZList_CFType& Append(const ZVal_CFType& iVal);
 
 private:
 	CFArrayRef pArray() const;
@@ -193,8 +193,8 @@ public:
 // ZMap protocol
 	void Clear();
 
-	bool QGet(const string8& iName, ZVal_CFType& oVal) const;
-	bool QGet(CFStringRef iName, ZVal_CFType& oVal) const;
+	bool QGet(const string8& iName, ZRef<CFTypeRef>& oVal) const;
+	bool QGet(CFStringRef iName, ZRef<CFTypeRef>& oVal) const;
 
 	ZVal_CFType DGet(const ZVal_CFType& iDefault, const string8& iName) const;
 	ZVal_CFType DGet(const ZVal_CFType& iDefault, CFStringRef iName) const;
@@ -202,11 +202,11 @@ public:
 	ZVal_CFType Get(const string8& iName) const;
 	ZVal_CFType Get(CFStringRef iName) const;
 
-	void Set(const string8& iName, const ZVal_CFType& iVal);
-	void Set(CFStringRef iName, const ZVal_CFType& iVal);
+	ZMap_CFType& Set(const string8& iName, const ZVal_CFType& iVal);
+	ZMap_CFType& Set(CFStringRef iName, const ZVal_CFType& iVal);
 
-	void Erase(const string8& iName);
-	void Erase(CFStringRef iName);
+	ZMap_CFType& Erase(const string8& iName);
+	ZMap_CFType& Erase(CFStringRef iName);
 
 private:
 	CFDictionaryRef pDictionary() const;

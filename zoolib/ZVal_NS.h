@@ -147,17 +147,17 @@ public:
 
 	void Clear();
 
-	bool QGet(size_t iIndex, ZVal_NS& oVal) const;
+	bool QGet(size_t iIndex, ZRef<NSObject>& oVal) const;
 	ZVal_NS DGet(const ZVal_NS& iDefault, size_t iIndex) const;
 	ZVal_NS Get(size_t iIndex) const;
 
-	void Set(size_t iIndex, const ZVal_NS& iVal);
+	ZList_NS& Set(size_t iIndex, const ZVal_NS& iVal);
 
-	void Erase(size_t iIndex);
+	ZList_NS& Erase(size_t iIndex);
 
-	void Insert(size_t iIndex, const ZVal_NS& iVal);
+	ZList_NS& Insert(size_t iIndex, const ZVal_NS& iVal);
 
-	void Append(const ZVal_NS& iVal);
+	ZList_NS& Append(const ZVal_NS& iVal);
 
 private:
 	NSArray* pArray() const;
@@ -194,8 +194,8 @@ public:
 // ZMap protocol
 	void Clear();
 
-	bool QGet(const string8& iName, ZVal_NS& oVal) const;
-	bool QGet(NSString* iName, ZVal_NS& oVal) const;
+	bool QGet(const string8& iName, ZRef<NSObject>& oVal) const;
+	bool QGet(NSString* iName, ZRef<NSObject>& oVal) const;
 
 	ZVal_NS DGet(const ZVal_NS& iDefault, const string8& iName) const;
 	ZVal_NS DGet(const ZVal_NS& iDefault, NSString* iName) const;
@@ -203,11 +203,11 @@ public:
 	ZVal_NS Get(const string8& iName) const;
 	ZVal_NS Get(NSString* iName) const;
 
-	void Set(const string8& iName, const ZVal_NS& iVal);
-	void Set(NSString* iName, const ZVal_NS& iVal);
+	ZMap_NS& Set(const string8& iName, const ZVal_NS& iVal);
+	ZMap_NS& Set(NSString* iName, const ZVal_NS& iVal);
 
-	void Erase(const string8& iName);
-	void Erase(NSString* iName);
+	ZMap_NS& Erase(const string8& iName);
+	ZMap_NS& Erase(NSString* iName);
 
 private:
 	NSDictionary* pDictionary() const;

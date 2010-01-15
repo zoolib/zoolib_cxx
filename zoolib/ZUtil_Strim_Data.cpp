@@ -34,10 +34,7 @@ using std::string;
 #pragma mark * Helper functions
 
 void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& s)
-	{
-	sDumpData(iStreamRPos, s, ZINT64_C(0xFFFFFFFFFFFFFFFF));
-//	sDumpData(iStreamRPos, s, ZINT64_C(~0));
-	}
+	{ sDumpData(iStreamRPos, s, ZUINT64_C(0xFFFFFFFFFFFFFFFF)); }
 
 void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& s, uint64 iMax)
 	{
@@ -46,7 +43,7 @@ void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& 
 	const size_t chunkSize = 16;
 
 	const uint64 theCount = iStreamRPos.GetSize() - iStreamRPos.GetPosition();
-	uint64 countRemaining = min(theCount, uint64(iMax));
+	uint64 countRemaining = min(theCount, iMax);
 
 	s.Writef("Size: %lld", theCount);
 	if (theCount > countRemaining)

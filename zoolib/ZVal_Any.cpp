@@ -134,35 +134,39 @@ ZVal_Any ZList_Any::Get(size_t iIndex) const
 	return ZVal_Any();
 	}
 
-void ZList_Any::Set(size_t iIndex, const ZVal_Any& iVal)
+ZList_Any& ZList_Any::Set(size_t iIndex, const ZVal_Any& iVal)
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		{
 		this->pTouch();
 		fRep->fVector[iIndex] = iVal;
 		}
+	return *this;
 	}
 
-void ZList_Any::Erase(size_t iIndex)
+ZList_Any& ZList_Any::Erase(size_t iIndex)
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		{
 		this->pTouch();
 		fRep->fVector.erase(fRep->fVector.begin() + iIndex);
 		}
+	return *this;
 	}
 
-void ZList_Any::Insert(size_t iIndex, const ZVal_Any& iVal)
+ZList_Any& ZList_Any::Insert(size_t iIndex, const ZVal_Any& iVal)
 	{
 	this->pTouch();
 	if (iIndex <= fRep->fVector.size())
 		fRep->fVector.insert((fRep->fVector.begin() + iIndex), iVal);
+	return *this;
 	}
 
-void ZList_Any::Append(const ZVal_Any& iVal)
+ZList_Any& ZList_Any::Append(const ZVal_Any& iVal)
 	{
 	this->pTouch();
 	fRep->fVector.push_back(iVal);
+	return *this;
 	}
 
 void ZList_Any::pTouch()
@@ -321,33 +325,37 @@ ZVal_Any ZMap_Any::Get(const Index_t& iIndex) const
 	return ZVal_Any();
 	}
 
-void ZMap_Any::Set(const string8& iName, const ZVal_Any& iVal)
+ZMap_Any& ZMap_Any::Set(const string8& iName, const ZVal_Any& iVal)
 	{
 	this->pTouch();
 	fRep->fMap.insert(pair<string8, ZVal_Any>(iName, iVal));
+	return *this;
 	}
 
-void ZMap_Any::Set(const Index_t& iIndex, const ZVal_Any& iVal)
+ZMap_Any& ZMap_Any::Set(const Index_t& iIndex, const ZVal_Any& iVal)
 	{
 	map<string, ZVal_Any>::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())
 		(*theIndex).second = iVal;
+	return *this;
 	}
 
-void ZMap_Any::Erase(const Index_t& iIndex)
+ZMap_Any& ZMap_Any::Erase(const Index_t& iIndex)
 	{
 	map<string, ZVal_Any>::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())
 		fRep->fMap.erase(theIndex);
+	return *this;
 	}
 
-void ZMap_Any::Erase(const string8& iName)
+ZMap_Any& ZMap_Any::Erase(const string8& iName)
 	{
 	if (fRep)
 		{
 		this->pTouch();
 		fRep->fMap.erase(iName);
 		}
+	return *this;
 	}
 
 ZMap_Any::Index_t ZMap_Any::Begin() const

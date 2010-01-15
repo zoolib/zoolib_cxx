@@ -304,13 +304,13 @@ public:
 	ZVal_ZooLib Get(size_t iIndex) const;
 	const ZVal_ZooLib& RGet(size_t iIndex) const;
 
-	void Set(size_t iIndex, const ZVal_ZooLib& iVal);
+	ZList_ZooLib& Set(size_t iIndex, const ZVal_ZooLib& iVal);
 
-	void Erase(size_t iIndex);
+	ZList_ZooLib& Erase(size_t iIndex);
 
-	void Insert(size_t iIndex, const ZVal_ZooLib& iVal);
+	ZList_ZooLib& Insert(size_t iIndex, const ZVal_ZooLib& iVal);
 
-	void Append(const ZVal_ZooLib& iVal);
+	ZList_ZooLib& Append(const ZVal_ZooLib& iVal);
 
 // Comparison
 	int Compare(const ZList_ZooLib& iOther) const;
@@ -445,13 +445,13 @@ public:
 	ZVal_ZooLib Get(const char* iPropName) const;
 	ZVal_ZooLib Get(const ZTName& iPropName) const;
 
-	void Set(Index_t iIndex, const ZVal_ZooLib& iVal);
-	void Set(const char* iPropName, const ZVal_ZooLib& iVal);
-	void Set(const ZTName& iPropName, const ZVal_ZooLib& iVal);
+	ZMap_ZooLib& Set(Index_t iIndex, const ZVal_ZooLib& iVal);
+	ZMap_ZooLib& Set(const char* iPropName, const ZVal_ZooLib& iVal);
+	ZMap_ZooLib& Set(const ZTName& iPropName, const ZVal_ZooLib& iVal);
 
-	void Erase(Index_t iIndex);
-	void Erase(const char* iPropName);
-	void Erase(const ZTName& iPropName);
+	ZMap_ZooLib& Erase(Index_t iIndex);
+	ZMap_ZooLib& Erase(const char* iPropName);
+	ZMap_ZooLib& Erase(const ZTName& iPropName);
 
 // Comparison
 	int Compare(const ZMap_ZooLib& iOther) const;

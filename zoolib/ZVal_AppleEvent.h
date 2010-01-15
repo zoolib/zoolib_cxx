@@ -167,14 +167,14 @@ public:
 	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, size_t iIndex) const;
 	ZVal_AppleEvent Get(size_t iIndex) const;
 
-	void Set(size_t iIndex, const AEDesc& iVal);
+	ZList_AppleEvent& Set(size_t iIndex, const AEDesc& iVal);
 
-	void Erase(size_t iIndex);
+	ZList_AppleEvent& Erase(size_t iIndex);
 
-	void Insert(size_t iIndex, const AEDesc& iVal);
+	ZList_AppleEvent& Insert(size_t iIndex, const AEDesc& iVal);
 
-	void Append(const AEDesc& iVal);
-	void Append(const ZVal_AppleEvent& iVal);
+	ZList_AppleEvent& Append(const AEDesc& iVal);
+	ZList_AppleEvent& Append(const ZVal_AppleEvent& iVal);
 	};
 
 // =================================================================================================
@@ -224,13 +224,13 @@ public:
 	ZVal_AppleEvent Get(const std::string& iName) const;
 	ZVal_AppleEvent Get(Index_t iIndex) const;
 
-	void Set(AEKeyword iName, const AEDesc& iVal);
-	void Set(const std::string& iName, const AEDesc& iVal);
-	void Set(Index_t iIndex, const AEDesc& iVal);
+	ZMap_AppleEvent& Set(AEKeyword iName, const AEDesc& iVal);
+	ZMap_AppleEvent& Set(const std::string& iName, const AEDesc& iVal);
+	ZMap_AppleEvent& Set(Index_t iIndex, const AEDesc& iVal);
 
-	void Erase(AEKeyword iName);
-	void Erase(const std::string& iName);
-	void Erase(Index_t iIndex);
+	ZMap_AppleEvent& Erase(AEKeyword iName);
+	ZMap_AppleEvent& Erase(const std::string& iName);
+	ZMap_AppleEvent& Erase(Index_t iIndex);
 
 // Our protocol
 	AERecord& OParam();
