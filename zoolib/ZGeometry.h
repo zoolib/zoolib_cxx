@@ -78,6 +78,8 @@ public:
 	T x;
 	T y;
 	
+	ZGPointPOD_T& operator=(T iVal);
+
 	template <class S>
 	ZGPointPOD_T& operator=(const ZGPointPOD_T<S>& other);
 
@@ -114,6 +116,11 @@ public:
 	bool operator!=(const ZGPointPOD_T& other) const { return x != other.x || y != other.y; }
 	bool operator==(const ZGPointPOD_T& other) const { return x == other.x && y == other.y; }
 	};
+
+template <class T>
+inline
+ZGPointPOD_T<T>& ZGPointPOD_T<T>::operator=(T iVal)
+	{ x = y = iVal; return *this; }
 
 template <class T>
 template <class S>
@@ -220,6 +227,8 @@ public:
 	union { T h; T width; };
 	union { T v; T height; };
 
+	ZGExtentPOD_T& operator=(T iVal);
+
 	template <class S>
 	ZGExtentPOD_T& operator=(const ZGExtentPOD_T<S>& other);
 
@@ -257,6 +266,11 @@ public:
 	bool operator!=(const ZGExtentPOD_T& other) const { return h != other.h || v != other.v; }
 	bool operator==(const ZGExtentPOD_T& other) const { return h == other.h && v == other.v; }
 	};
+
+template <class T>
+inline
+ZGExtentPOD_T<T>& ZGExtentPOD_T<T>::operator=(T iVal)
+	{ h = v = iVal; return *this; }
 
 template <class T>
 template <class S>
