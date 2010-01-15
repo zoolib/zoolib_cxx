@@ -141,6 +141,9 @@ public:
 	template <class S>
 	const S* PGet_T(size_t iIndex) const;
 
+	template <class S>
+	S Get_T(size_t iIndex) const;
+
 	ZVal_Any* PGet(size_t iIndex);
 	const ZVal_Any* PGet(size_t iIndex) const;
 	bool QGet(size_t iIndex, ZVal_Any& oVal) const;
@@ -178,6 +181,11 @@ const S* ZList_Any::PGet_T(size_t iIndex) const
 		return theVal->PGet_T<S>();
 	return nullptr;
 	}
+
+template <class S>
+inline
+S ZList_Any::Get_T(size_t iIndex) const
+	{ return this->Get(iIndex).Get_T<S>(); }
 
 // =================================================================================================
 #pragma mark -
@@ -259,6 +267,12 @@ public:
 	template <class S>
 	const S* PGet_T(const Index_t& iIndex) const;
 
+	template <class S>
+	S Get_T(const string8& iName) const;
+
+	template <class S>
+	S Get_T(const Index_t& iIndex) const;
+
 	ZVal_Any* PGet(const string8& iName);
 	ZVal_Any* PGet(const Index_t& iIndex);
 
@@ -331,6 +345,16 @@ const S* ZMap_Any::PGet_T(const Index_t& iIndex) const
 		return theVal->PGet_T<S>();
 	return nullptr;
 	}
+
+template <class S>
+inline
+S ZMap_Any::Get_T(const string8& iName) const
+	{ return this->Get(iName).Get_T<S>(); }
+
+template <class S>
+inline
+S ZMap_Any::Get_T(const Index_t& iIndex) const
+	{ return this->Get(iIndex).Get_T<S>(); }
 
 // =================================================================================================
 #pragma mark -
