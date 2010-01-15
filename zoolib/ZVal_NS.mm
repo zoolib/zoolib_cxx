@@ -91,8 +91,16 @@ ZVal_NS& ZVal_NS::operator=(const ZVal_NS& iOther)
 	return *this;
 	}
 
+ZVal_NS::ZVal_NS(NSObject* iVal)
+:	inherited(iVal)
+	{}
+
 ZVal_NS::ZVal_NS(const ZRef<NSObject>& iVal)
 :	inherited(iVal)
+	{}
+
+ZVal_NS::ZVal_NS(const Adopt_T<NSObject>& iVal)
+:	inherited(iVal.Get())
 	{}
 
 ZVal_NS::ZVal_NS(int8 iVal)
@@ -151,10 +159,6 @@ ZVal_NS::ZVal_NS(const ZMap_NS& iVal)
 :	inherited(iVal)
 	{}
 
-ZVal_NS::ZVal_NS(NSObject* iVal)
-:	inherited(iVal)
-	{}
-
 ZVal_NS::ZVal_NS(NSData* iVal)
 :	inherited(iVal)
 	{}
@@ -167,13 +171,19 @@ ZVal_NS::ZVal_NS(NSDictionary* iVal)
 :	inherited(iVal)
 	{}
 
+ZVal_NS& ZVal_NS::operator=(NSObject* iVal)
+	{
+	inherited::operator=(iVal);
+	return *this;
+	}
+
 ZVal_NS& ZVal_NS::operator=(const ZRef<NSObject>& iVal)
 	{
 	inherited::operator=(iVal);
 	return *this;
 	}
 
-ZVal_NS& ZVal_NS::operator=(NSObject* iVal)
+ZVal_NS& ZVal_NS::operator=(const Adopt_T<NSObject>& iVal)
 	{
 	inherited::operator=(iVal);
 	return *this;
@@ -405,6 +415,16 @@ ZList_NS& ZList_NS::operator=(const ZList_NS& iOther)
 	return *this;
 	}
 
+ZList_NS::ZList_NS(NSMutableArray* iOther)
+:	inherited(iOther)
+,	fMutable(true)
+	{}
+
+ZList_NS::ZList_NS(NSArray* iOther)
+:	inherited(iOther)
+,	fMutable(false)
+	{}
+
 ZList_NS::ZList_NS(const ZRef<NSMutableArray>& iOther)
 :	inherited(iOther)
 ,	fMutable(true)
@@ -415,6 +435,30 @@ ZList_NS::ZList_NS(const ZRef<NSArray>& iOther)
 ,	fMutable(false)
 	{}
 
+ZList_NS::ZList_NS(const Adopt_T<NSMutableArray>& iOther)
+:	inherited(ZRef<NSMutableArray>(iOther))
+,	fMutable(true)
+	{}
+
+ZList_NS::ZList_NS(const Adopt_T<NSArray>& iOther)
+:	inherited(iOther)
+,	fMutable(false)
+	{}
+
+ZList_NS& ZList_NS::operator=(NSMutableArray* iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = true;
+	return *this;
+	}
+
+ZList_NS& ZList_NS::operator=(NSArray* iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = false;
+	return *this;
+	}
+
 ZList_NS& ZList_NS::operator=(const ZRef<NSMutableArray>& iOther)
 	{
 	inherited::operator=(iOther);
@@ -423,6 +467,20 @@ ZList_NS& ZList_NS::operator=(const ZRef<NSMutableArray>& iOther)
 	}
 
 ZList_NS& ZList_NS::operator=(const ZRef<NSArray>& iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = false;
+	return *this;
+	}
+
+ZList_NS& ZList_NS::operator=(const Adopt_T<NSMutableArray>& iOther)
+	{
+	inherited::operator=(ZRef<NSMutableArray>(iOther));
+	fMutable = true;
+	return *this;
+	}
+
+ZList_NS& ZList_NS::operator=(const Adopt_T<NSArray>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;
@@ -562,6 +620,16 @@ ZMap_NS& ZMap_NS::operator=(const ZMap_NS& iOther)
 	return *this;
 	}
 
+ZMap_NS::ZMap_NS(NSDictionary* iOther)
+:	inherited(iOther)
+,	fMutable(false)
+	{}
+
+ZMap_NS::ZMap_NS(NSMutableDictionary* iOther)
+:	inherited(iOther)
+,	fMutable(true)
+	{}
+
 ZMap_NS::ZMap_NS(const ZRef<NSDictionary>& iOther)
 :	inherited(iOther)
 ,	fMutable(false)
@@ -572,6 +640,30 @@ ZMap_NS::ZMap_NS(const ZRef<NSMutableDictionary>& iOther)
 ,	fMutable(true)
 	{}
 
+ZMap_NS::ZMap_NS(const Adopt_T<NSDictionary>& iOther)
+:	inherited(iOther)
+,	fMutable(false)
+	{}
+
+ZMap_NS::ZMap_NS(const Adopt_T<NSMutableDictionary>& iOther)
+:	inherited(ZRef<NSMutableDictionary>(iOther))
+,	fMutable(true)
+	{}
+
+ZMap_NS& ZMap_NS::operator=(NSMutableDictionary* iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = true;
+	return *this;
+	}
+
+ZMap_NS& ZMap_NS::operator=(NSDictionary* iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = false;
+	return *this;
+	}
+
 ZMap_NS& ZMap_NS::operator=(const ZRef<NSMutableDictionary>& iOther)
 	{
 	inherited::operator=(iOther);
@@ -580,6 +672,20 @@ ZMap_NS& ZMap_NS::operator=(const ZRef<NSMutableDictionary>& iOther)
 	}
 
 ZMap_NS& ZMap_NS::operator=(const ZRef<NSDictionary>& iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = false;
+	return *this;
+	}
+
+ZMap_NS& ZMap_NS::operator=(const Adopt_T<NSMutableDictionary>& iOther)
+	{
+	inherited::operator=(ZRef<NSMutableDictionary>(iOther));
+	fMutable = true;
+	return *this;
+	}
+
+ZMap_NS& ZMap_NS::operator=(const Adopt_T<NSDictionary>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;

@@ -48,7 +48,7 @@ ZRef<CFStringRef> sString(const string8& iString8)
 	{
 	if (CFIndex sourceSize = iString8.size())
 		{
-		return NoRetain(::CFStringCreateWithBytes(nullptr,
+		return Adopt(::CFStringCreateWithBytes(nullptr,
 			reinterpret_cast<const UInt8*>(iString8.data()), sourceSize,
 			kCFStringEncodingUTF8, false));
 		}
@@ -60,7 +60,7 @@ ZRef<CFStringRef> sString(const string16& iString16)
 	{
 	if (CFIndex sourceSize = iString16.size())
 		{
-		return NoRetain(::CFStringCreateWithCharacters(nullptr,
+		return Adopt(::CFStringCreateWithCharacters(nullptr,
 			reinterpret_cast<const UniChar*>(iString16.data()), sourceSize));
 		}
 
@@ -68,7 +68,7 @@ ZRef<CFStringRef> sString(const string16& iString16)
 	}
 
 ZRef<CFMutableStringRef> sStringMutable()
-	{ return NoRetain(::CFStringCreateMutable(kCFAllocatorDefault, 0)); }
+	{ return Adopt(::CFStringCreateMutable(kCFAllocatorDefault, 0)); }
 
 ZRef<CFMutableStringRef> sStringMutable(const string8& iString8)
 	{ return sStringMutable(sString(iString8)); }
@@ -77,59 +77,59 @@ ZRef<CFMutableStringRef> sStringMutable(const string16& iString16)
 	{ return sStringMutable(sString(iString16)); }
 
 ZRef<CFMutableStringRef> sStringMutable(const ZRef<CFStringRef>& iCFString)
-	{ return NoRetain(::CFStringCreateMutableCopy(kCFAllocatorDefault, 0, iCFString)); }
+	{ return Adopt(::CFStringCreateMutableCopy(kCFAllocatorDefault, 0, iCFString)); }
 
 ZRef<CFDictionaryRef> sDictionary()
 	{
-	return NoRetain(::CFDictionaryCreate(kCFAllocatorDefault, nullptr, nullptr, 0,
+	return Adopt(::CFDictionaryCreate(kCFAllocatorDefault, nullptr, nullptr, 0,
 		&kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks));
 	}
 
 ZRef<CFMutableDictionaryRef> sDictionaryMutable()
 	{
-	return NoRetain(::CFDictionaryCreateMutable(kCFAllocatorDefault, 0,
+	return Adopt(::CFDictionaryCreateMutable(kCFAllocatorDefault, 0,
 		&kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks));
 	}
 
 ZRef<CFMutableDictionaryRef> sDictionaryMutable(const ZRef<CFDictionaryRef>& iCFDictionary)
 	{
-	return NoRetain(::CFDictionaryCreateMutableCopy(kCFAllocatorDefault,
+	return Adopt(::CFDictionaryCreateMutableCopy(kCFAllocatorDefault,
 		::CFDictionaryGetCount(iCFDictionary), iCFDictionary));
 	}
 
 ZRef<CFArrayRef> sArray()
-	{ return NoRetain(::CFArrayCreate(kCFAllocatorDefault, nullptr, 0, &kCFTypeArrayCallBacks)); }
+	{ return Adopt(::CFArrayCreate(kCFAllocatorDefault, nullptr, 0, &kCFTypeArrayCallBacks)); }
 
 ZRef<CFMutableArrayRef> sArrayMutable()
-	{ return NoRetain(::CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks)); }
+	{ return Adopt(::CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks)); }
 
 ZRef<CFMutableArrayRef> sArrayMutable(const ZRef<CFArrayRef>& iCFArray)
 	{
-	return NoRetain(::CFArrayCreateMutableCopy(kCFAllocatorDefault,
+	return Adopt(::CFArrayCreateMutableCopy(kCFAllocatorDefault,
 		::CFArrayGetCount(iCFArray), iCFArray));
 	}
 
 ZRef<CFDataRef> sData()
-	{ return NoRetain(::CFDataCreate(kCFAllocatorDefault, 0, 0)); }
+	{ return Adopt(::CFDataCreate(kCFAllocatorDefault, 0, 0)); }
 
 ZRef<CFDataRef> sData(const void* iSource, size_t iSize)
 	{
-	return NoRetain(::CFDataCreate(kCFAllocatorDefault,
+	return Adopt(::CFDataCreate(kCFAllocatorDefault,
 		static_cast<const UInt8*>(iSource), iSize));
 	}
 
 ZRef<CFMutableDataRef> sDataMutable()
-	{ return NoRetain(::CFDataCreateMutable(kCFAllocatorDefault, 0)); }
+	{ return Adopt(::CFDataCreateMutable(kCFAllocatorDefault, 0)); }
 
 ZRef<CFMutableDataRef> sDataMutable(size_t iSize)
 	{
-	ZRef<CFMutableDataRef> theData = NoRetain(::CFDataCreateMutable(kCFAllocatorDefault, 0));
+	ZRef<CFMutableDataRef> theData = Adopt(::CFDataCreateMutable(kCFAllocatorDefault, 0));
 	::CFDataSetLength(theData, iSize);
 	return theData;
 	}
 
 ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData)
-	{ return NoRetain(::CFDataCreateMutableCopy(kCFAllocatorDefault, 0, iCFData)); }
+	{ return Adopt(::CFDataCreateMutableCopy(kCFAllocatorDefault, 0, iCFData)); }
 
 // =================================================================================================
 #pragma mark -

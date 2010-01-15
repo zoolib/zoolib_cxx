@@ -61,7 +61,10 @@ public:
 	~ZVal_NS();
 	ZVal_NS& operator=(const ZVal_NS& iOther);
 
+	ZVal_NS(NSObject* iVal);
 	ZVal_NS(const ZRef<NSObject>& iVal);
+	ZVal_NS(const Adopt_T<NSObject>& iVal);
+
 	ZVal_NS(int8 iVal);
 	ZVal_NS(int16 iVal);
 	ZVal_NS(int32 iVal);
@@ -78,13 +81,13 @@ public:
 	ZVal_NS(const ZList_NS& iVal);
 	ZVal_NS(const ZMap_NS& iVal);
 
-	explicit ZVal_NS(NSObject* iVal);
 	explicit ZVal_NS(NSData* iVal);
 	explicit ZVal_NS(NSArray* iVal);
 	explicit ZVal_NS(NSDictionary* iVal);
 
-	ZVal_NS& operator=(const ZRef<NSObject>& iVal);
 	ZVal_NS& operator=(NSObject* iVal);
+	ZVal_NS& operator=(const ZRef<NSObject>& iVal);
+	ZVal_NS& operator=(const Adopt_T<NSObject>& iVal);
 
 // ZVal protocol
 	void Clear();
@@ -136,11 +139,23 @@ public:
 	~ZList_NS();
 	ZList_NS& operator=(const ZList_NS& iOther);
 
+	ZList_NS(NSMutableArray* iOther);
+	ZList_NS(NSArray* iOther);
+
 	ZList_NS(const ZRef<NSMutableArray>& iOther);
 	ZList_NS(const ZRef<NSArray>& iOther);
 
+	ZList_NS(const Adopt_T<NSMutableArray>& iOther);
+	ZList_NS(const Adopt_T<NSArray>& iOther);
+
+	ZList_NS& operator=(NSMutableArray* iOther);
+	ZList_NS& operator=(NSArray* iOther);
+
 	ZList_NS& operator=(const ZRef<NSMutableArray>& iOther);
 	ZList_NS& operator=(const ZRef<NSArray>& iOther);
+
+	ZList_NS& operator=(const Adopt_T<NSMutableArray>& iOther);
+	ZList_NS& operator=(const Adopt_T<NSArray>& iOther);
 
 // ZList protocol
 	size_t Count() const;
@@ -185,11 +200,23 @@ public:
 	~ZMap_NS();
 	ZMap_NS& operator=(const ZMap_NS& iOther);
 
+	ZMap_NS(NSMutableDictionary* iOther);
+	ZMap_NS(NSDictionary* iOther);
+
 	ZMap_NS(const ZRef<NSMutableDictionary>& iOther);
 	ZMap_NS(const ZRef<NSDictionary>& iOther);
 
+	ZMap_NS(const Adopt_T<NSMutableDictionary>& iOther);
+	ZMap_NS(const Adopt_T<NSDictionary>& iOther);
+
+	ZMap_NS& operator=(NSMutableDictionary* iOther);
+	ZMap_NS& operator=(NSDictionary* iOther);
+
 	ZMap_NS& operator=(const ZRef<NSMutableDictionary>& iOther);
 	ZMap_NS& operator=(const ZRef<NSDictionary>& iOther);
+
+	ZMap_NS& operator=(const Adopt_T<NSMutableDictionary>& iOther);
+	ZMap_NS& operator=(const Adopt_T<NSDictionary>& iOther);
 
 // ZMap protocol
 	void Clear();

@@ -61,7 +61,10 @@ public:
 	~ZVal_CFType();
 	ZVal_CFType& operator=(const ZVal_CFType& iOther);
 
+	ZVal_CFType(CFTypeRef iVal);
 	ZVal_CFType(const ZRef<CFTypeRef>& iVal);
+	ZVal_CFType(const Adopt_T<CFTypeRef>& iVal);
+
 	ZVal_CFType(int8 iVal);
 	ZVal_CFType(int16 iVal);
 	ZVal_CFType(int32 iVal);
@@ -78,12 +81,13 @@ public:
 	ZVal_CFType(const ZList_CFType& iVal);
 	ZVal_CFType(const ZMap_CFType& iVal);
 
-	explicit ZVal_CFType(CFTypeRef iVal);
 	explicit ZVal_CFType(CFDataRef iVal);
 	explicit ZVal_CFType(CFArrayRef iVal);
 	explicit ZVal_CFType(CFDictionaryRef iVal);
 
 	ZVal_CFType& operator=(CFTypeRef iVal);
+	ZVal_CFType& operator=(const ZRef<CFTypeRef>& iVal);
+	ZVal_CFType& operator=(const Adopt_T<CFTypeRef>& iVal);
 
 // ZVal protocol
 	void Clear();
@@ -135,11 +139,23 @@ public:
 	~ZList_CFType();
 	ZList_CFType& operator=(const ZList_CFType& iOther);
 
+	ZList_CFType(CFMutableArrayRef iOther);
+	ZList_CFType(CFArrayRef iOther);
+
 	ZList_CFType(const ZRef<CFMutableArrayRef>& iOther);
 	ZList_CFType(const ZRef<CFArrayRef>& iOther);
 
+	ZList_CFType(const Adopt_T<CFMutableArrayRef>& iOther);
+	ZList_CFType(const Adopt_T<CFArrayRef>& iOther);
+
+	ZList_CFType& operator=(CFMutableArrayRef iOther);
+	ZList_CFType& operator=(CFArrayRef iOther);
+
 	ZList_CFType& operator=(const ZRef<CFMutableArrayRef>& iOther);
 	ZList_CFType& operator=(const ZRef<CFArrayRef>& iOther);
+
+	ZList_CFType& operator=(const Adopt_T<CFMutableArrayRef>& iOther);
+	ZList_CFType& operator=(const Adopt_T<CFArrayRef>& iOther);
 
 // ZList protocol
 	size_t Count() const;
@@ -187,8 +203,20 @@ public:
 	ZMap_CFType(const ZRef<CFMutableDictionaryRef>& iOther);
 	ZMap_CFType(const ZRef<CFDictionaryRef>& iOther);
 
+	ZMap_CFType(CFMutableDictionaryRef iOther);
+	ZMap_CFType(CFDictionaryRef iOther);
+
+	ZMap_CFType(const Adopt_T<CFMutableDictionaryRef>& iOther);
+	ZMap_CFType(const Adopt_T<CFDictionaryRef>& iOther);
+
+	ZMap_CFType& operator=(CFMutableDictionaryRef iOther);
+	ZMap_CFType& operator=(CFDictionaryRef iOther);
+
 	ZMap_CFType& operator=(const ZRef<CFMutableDictionaryRef>& iOther);
 	ZMap_CFType& operator=(const ZRef<CFDictionaryRef>& iOther);
+
+	ZMap_CFType& operator=(const Adopt_T<CFMutableDictionaryRef>& iOther);
+	ZMap_CFType& operator=(const Adopt_T<CFDictionaryRef>& iOther);
 
 // ZMap protocol
 	void Clear();

@@ -88,7 +88,7 @@ ZData_CFType::ZData_CFType(size_t iSize)
 	{}
 
 ZData_CFType::ZData_CFType(const void* iSourceData, size_t iSize)
-:	inherited(NoRetain(::CFDataCreate(
+:	inherited(Adopt(::CFDataCreate(
 		kCFAllocatorDefault, static_cast<const UInt8*>(iSourceData), iSize)))
 ,	fMutable(true)
 	{}

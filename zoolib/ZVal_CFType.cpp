@@ -64,7 +64,7 @@ bool spGetNumber_T(CFTypeRef iTypeRef, CFNumberType iNumberType, S& oVal)
 
 template <class S>
 ZRef<CFTypeRef> spNumber_T(CFNumberType iNumberType, const S& iVal)
-	{ return NoRetain(CFTypeRef(::CFNumberCreate(kCFAllocatorDefault, iNumberType, &iVal))); }
+	{ return Adopt(CFTypeRef(::CFNumberCreate(kCFAllocatorDefault, iNumberType, &iVal))); }
 
 } // anonymous namespace
 
@@ -108,7 +108,15 @@ ZVal_CFType& ZVal_CFType::operator=(const ZVal_CFType& iOther)
 	return *this;
 	}
 
+ZVal_CFType::ZVal_CFType(CFTypeRef iVal)
+:	inherited(iVal)
+	{}
+
 ZVal_CFType::ZVal_CFType(const ZRef<CFTypeRef>& iVal)
+:	inherited(iVal)
+	{}
+
+ZVal_CFType::ZVal_CFType(const Adopt_T<CFTypeRef>& iVal)
 :	inherited(iVal)
 	{}
 
@@ -168,10 +176,6 @@ ZVal_CFType::ZVal_CFType(const ZMap_CFType& iVal)
 :	inherited(iVal)
 	{}
 
-ZVal_CFType::ZVal_CFType(CFTypeRef iVal)
-:	inherited(iVal)
-	{}
-
 ZVal_CFType::ZVal_CFType(CFDataRef iVal)
 :	inherited(iVal)
 	{}
@@ -185,6 +189,18 @@ ZVal_CFType::ZVal_CFType(CFDictionaryRef iVal)
 	{}
 
 ZVal_CFType& ZVal_CFType::operator=(CFTypeRef iVal)
+	{
+	inherited::operator=(iVal);
+	return *this;
+	}
+
+ZVal_CFType& ZVal_CFType::operator=(const ZRef<CFTypeRef>& iVal)
+	{
+	inherited::operator=(iVal);
+	return *this;
+	}
+
+ZVal_CFType& ZVal_CFType::operator=(const Adopt_T<CFTypeRef>& iVal)
 	{
 	inherited::operator=(iVal);
 	return *this;
@@ -422,6 +438,16 @@ ZList_CFType& ZList_CFType::operator=(const ZList_CFType& iOther)
 	return *this;
 	}
 
+ZList_CFType::ZList_CFType(CFMutableArrayRef iOther)
+:	inherited(iOther)
+,	fMutable(true)
+	{}
+
+ZList_CFType::ZList_CFType(CFArrayRef iOther)
+:	inherited(iOther)
+,	fMutable(false)
+	{}
+
 ZList_CFType::ZList_CFType(const ZRef<CFMutableArrayRef>& iOther)
 :	inherited(iOther)
 ,	fMutable(true)
@@ -432,6 +458,30 @@ ZList_CFType::ZList_CFType(const ZRef<CFArrayRef>& iOther)
 ,	fMutable(false)
 	{}
 
+ZList_CFType::ZList_CFType(const Adopt_T<CFMutableArrayRef>& iOther)
+:	inherited(ZRef<CFMutableArrayRef>(iOther))
+,	fMutable(true)
+	{}
+
+ZList_CFType::ZList_CFType(const Adopt_T<CFArrayRef>& iOther)
+:	inherited(iOther)
+,	fMutable(false)
+	{}
+
+ZList_CFType& ZList_CFType::operator=(CFMutableArrayRef iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = true;
+	return *this;
+	}
+
+ZList_CFType& ZList_CFType::operator=(CFArrayRef iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = false;
+	return *this;
+	}
+
 ZList_CFType& ZList_CFType::operator=(const ZRef<CFMutableArrayRef>& iOther)
 	{
 	inherited::operator=(iOther);
@@ -440,6 +490,20 @@ ZList_CFType& ZList_CFType::operator=(const ZRef<CFMutableArrayRef>& iOther)
 	}
 
 ZList_CFType& ZList_CFType::operator=(const ZRef<CFArrayRef>& iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = false;
+	return *this;
+	}
+
+ZList_CFType& ZList_CFType::operator=(const Adopt_T<CFMutableArrayRef>& iOther)
+	{
+	inherited::operator=(ZRef<CFMutableArrayRef>(iOther));
+	fMutable = true;
+	return *this;
+	}
+
+ZList_CFType& ZList_CFType::operator=(const Adopt_T<CFArrayRef>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;
@@ -579,6 +643,16 @@ ZMap_CFType& ZMap_CFType::operator=(const ZMap_CFType& iOther)
 	return *this;
 	}
 
+ZMap_CFType::ZMap_CFType(CFDictionaryRef iOther)
+:	inherited(iOther)
+,	fMutable(false)
+	{}
+
+ZMap_CFType::ZMap_CFType(CFMutableDictionaryRef iOther)
+:	inherited(iOther)
+,	fMutable(true)
+	{}
+
 ZMap_CFType::ZMap_CFType(const ZRef<CFDictionaryRef>& iOther)
 :	inherited(iOther)
 ,	fMutable(false)
@@ -589,6 +663,30 @@ ZMap_CFType::ZMap_CFType(const ZRef<CFMutableDictionaryRef>& iOther)
 ,	fMutable(true)
 	{}
 
+ZMap_CFType::ZMap_CFType(const Adopt_T<CFDictionaryRef>& iOther)
+:	inherited(iOther)
+,	fMutable(false)
+	{}
+
+ZMap_CFType::ZMap_CFType(const Adopt_T<CFMutableDictionaryRef>& iOther)
+:	inherited(ZRef<CFMutableDictionaryRef>(iOther))
+,	fMutable(true)
+	{}
+
+ZMap_CFType& ZMap_CFType::operator=(CFMutableDictionaryRef iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = true;
+	return *this;
+	}
+
+ZMap_CFType& ZMap_CFType::operator=(CFDictionaryRef iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = false;
+	return *this;
+	}
+
 ZMap_CFType& ZMap_CFType::operator=(const ZRef<CFMutableDictionaryRef>& iOther)
 	{
 	inherited::operator=(iOther);
@@ -597,6 +695,20 @@ ZMap_CFType& ZMap_CFType::operator=(const ZRef<CFMutableDictionaryRef>& iOther)
 	}
 
 ZMap_CFType& ZMap_CFType::operator=(const ZRef<CFDictionaryRef>& iOther)
+	{
+	inherited::operator=(iOther);
+	fMutable = false;
+	return *this;
+	}
+
+ZMap_CFType& ZMap_CFType::operator=(const Adopt_T<CFMutableDictionaryRef>& iOther)
+	{
+	inherited::operator=(ZRef<CFMutableDictionaryRef>(iOther));
+	fMutable = true;
+	return *this;
+	}
+
+ZMap_CFType& ZMap_CFType::operator=(const Adopt_T<CFDictionaryRef>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;

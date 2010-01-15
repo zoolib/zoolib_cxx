@@ -89,6 +89,9 @@ ZOOLIB_RETAIN_RELEASE(SecKeychainItemRef)
 typedef struct OpaqueSecKeychainSearchRef *SecKeychainSearchRef;
 ZOOLIB_RETAIN_RELEASE(SecKeychainSearchRef)
 
+typedef const struct __SCDynamicStore *	SCDynamicStoreRef;
+ZOOLIB_RETAIN_RELEASE(SCDynamicStoreRef)
+
 // =================================================================================================
 typedef const struct __AXUIElement *AXUIElementRef;
 ZOOLIB_RETAIN_RELEASE(AXUIElementRef)
