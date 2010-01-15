@@ -64,7 +64,7 @@ static inline size_t sClampedSize(uint64 iSize, uint64 iPosition)
 	{ return sClampedSize(sClampedCount(iSize, iPosition)); }
 
 static inline size_t sClampedSize(size_t iCount, uint64 iSize, uint64 iPosition)
-	{ return std::min(iCount, ZStream::sClampedSize(iSize, iPosition)); }
+	{ return std::min(iCount, sClampedSize(iSize, iPosition)); }
 
 class ExEndOfStream : public std::range_error
 	{
