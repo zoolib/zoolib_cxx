@@ -20,12 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZStreamRWPos_RAM__
 #define __ZStreamRWPos_RAM__ 1
-
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"
 
-#include <vector>
+#include <deque>
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -33,12 +32,12 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZStreamRWPos_RAM
 
-/// A RWPos stream that maintains its data in multiple fixed size memory chunks.
+/// A RWPos stream that maintains its data in memory.
 
 class ZStreamRWPos_RAM : public ZStreamRWPos
 	{
 public:
-	ZStreamRWPos_RAM(size_t inChunkSize = 1024);
+	ZStreamRWPos_RAM();
 	~ZStreamRWPos_RAM();
 
 // From ZStreamR via ZStreamRWPos
@@ -59,13 +58,9 @@ public:
 	virtual void Imp_SetSize(uint64 iSize);
 
 protected:
-	std::vector<char*> fVector_Chunks;
-	size_t fChunkSize;
+	std::deque<char> fDeque;
 	size_t fPosition;
-	size_t fSize;
 	};
-
-//typedef ZStreamerRWPos_T<ZStreamRWPos_RAM> ZStreamerRWPos_RAM;
 
 NAMESPACE_ZOOLIB_END
 

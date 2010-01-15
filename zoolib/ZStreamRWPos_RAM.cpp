@@ -20,13 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamRWPos_RAM.h"
 
-#include "zoolib/ZMemory.h" // For ZBlockCopy
-#include "zoolib/ZUtil_STL.h"
-
-#define kDebug_StreamRWPos_RAM 2
-
-using std::min;
-
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
@@ -36,80 +29,49 @@ NAMESPACE_ZOOLIB_BEGIN
 /**
 \class ZStreamRWPos_RAM
 \ingroup stream
-ZStreamRWPos_RAM maintainins its contents in a list of fixed size chunks. A similar capability
-exists with ZStreamRWPos_Handle, but there the backing store is a single block of memory which
-must be resized as it is written to, leading to a great deal of copying overhead.
 */
 
-ZStreamRWPos_RAM::ZStreamRWPos_RAM(size_t iChunkSize)
-	{
-	// Ensure the chunk size is within sensible limits: 32 bytes to 128K
-	ZAssertStop(kDebug_StreamRWPos_RAM, iChunkSize >= 32 && iChunkSize < 128 * 1024);
-	fChunkSize = iChunkSize;
-	fPosition = 0;
-	fSize = 0;
-	}
+ZStreamRWPos_RAM::ZStreamRWPos_RAM()
+:	fPosition(0)
+	{}
 
 ZStreamRWPos_RAM::~ZStreamRWPos_RAM()
-	{
-	ZUtil_STL::sDeleteAll(fVector_Chunks.begin(), fVector_Chunks.end());
-	}
+	{}
 
 void ZStreamRWPos_RAM::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	{
-	char* localDest = reinterpret_cast<char*>(iDest);
-	while (iCount)
+	const size_t count = ZStream::sClampedSize(iCount, fDeque.size(), fPosition);
+	if (count)
 		{
-		size_t currentChunkOffset = fPosition % fChunkSize; 
-		size_t currentChunkIndex = fPosition / fChunkSize;
-		size_t countToMove = min(iCount, fChunkSize - currentChunkOffset);
-		countToMove = ZStream::sClampedSize(countToMove, fSize, fPosition);
-		if (countToMove == 0)
-			break;
-		ZBlockCopy(fVector_Chunks[currentChunkIndex] + currentChunkOffset, localDest, countToMove);
-		iCount -= countToMove;
-		localDest += countToMove;
-		fPosition += countToMove;
+		const std::deque<char>::const_iterator i = fDeque.begin() + fPosition;
+		copy(i, i + count, static_cast<char*>(iDest));
+		fPosition += count;
 		}
+
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<char*>(iDest);
+		*oCountRead = count;
 	}
 
 size_t ZStreamRWPos_RAM::Imp_CountReadable()
-	{ return ZStream::sClampedSize(fSize, fPosition); }
+	{ return ZStream::sClampedSize(fDeque.size(), fPosition); }
 
 void ZStreamRWPos_RAM::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-	size_t countSkipped = ZStream::sClampedSize(iCount, fSize, fPosition);
-	fPosition += countSkipped;
+	const size_t countToSkip = ZStream::sClampedSize(iCount, fDeque.size(), fPosition);
+	fPosition += countToSkip;
 	if (oCountSkipped)
-		*oCountSkipped = countSkipped;
+		*oCountSkipped = countToSkip;
 	}
 
 void ZStreamRWPos_RAM::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
+	const char* localSource = static_cast<const char*>(iSource);
+	const size_t countToCopy = ZStream::sClampedSize(iCount, fDeque.size(), fPosition);
+	std::copy(localSource, localSource + countToCopy, fDeque.begin() + fPosition);
+	fDeque.insert(fDeque.end(), localSource + countToCopy, localSource + iCount);
+	fPosition += iCount;
 	if (oCountWritten)
-		*oCountWritten = 0;
-
-	const char* localSource = reinterpret_cast<const char*>(iSource);
-	while (iCount)
-		{
-		size_t currentChunkOffset = fPosition % fChunkSize; 
-		size_t currentChunkIndex = fPosition / fChunkSize;
-		while (currentChunkIndex >= fVector_Chunks.size())
-			fVector_Chunks.push_back(new char[fChunkSize]);
-		size_t countToMove = min(iCount, fChunkSize - currentChunkOffset);
-		ZBlockCopy(localSource,
-			fVector_Chunks[currentChunkIndex] + currentChunkOffset,
-			countToMove);
-		iCount -= countToMove;
-		localSource += countToMove;
-		fPosition += countToMove;
-		if (fSize < fPosition)
-			fSize = fPosition;
-		}
-	if (oCountWritten)
-		*oCountWritten = localSource - reinterpret_cast<const char*>(iSource);
+		*oCountWritten = iCount;
 	}
 
 uint64 ZStreamRWPos_RAM::Imp_GetPosition()
@@ -119,25 +81,9 @@ void ZStreamRWPos_RAM::Imp_SetPosition(uint64 iPosition)
 	{ fPosition = iPosition; }
 
 uint64 ZStreamRWPos_RAM::Imp_GetSize()
-	{ return fSize; }
+	{ return fDeque.size(); }
 
 void ZStreamRWPos_RAM::Imp_SetSize(uint64 iSize)
-	{
-	if (fSize != iSize)
-		{
-		uint64 neededChunkCount = (iSize + fChunkSize - 1) / fChunkSize;
-
-		while (neededChunkCount > fVector_Chunks.size())
-			fVector_Chunks.push_back(new char[fChunkSize]);
-
-		while (neededChunkCount < fVector_Chunks.size())
-			{
-			delete fVector_Chunks.back();
-			fVector_Chunks.pop_back();
-			}
-
-		fSize = iSize;
-		}
-	}
+	{ fDeque.resize(iSize); }
 
 NAMESPACE_ZOOLIB_END
