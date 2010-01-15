@@ -115,6 +115,18 @@ public:
 		return *this;
 		}
 
+	ZRef(const Adopt_T<T>& iNRP)
+	:	fP(iNRP.Get())
+		{}
+
+	ZRef& operator=(const Adopt_T<T>& iNRP)
+		{
+		T* theP = iNRP.Get();
+		std::swap(theP, fP);
+		spRelease(theP);
+		return *this;
+		}
+
 	bool operator==(const T* iP) const
 		{ return fP == iP; }
 
