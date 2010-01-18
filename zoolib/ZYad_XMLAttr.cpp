@@ -22,31 +22,30 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /*
 ZYad_XMLAttr turns this:
-  <tag1 at1="1" at2="2">
-    <tag2>val2</tag2>
-    <tag3 at3="3" at4="4"/>
-    <tag4 at3="3" at4="4">
-      <tag5>val2</tag5>
-    </tag4>
+  <tag1>
+    <tag2>val3</tag2>
+    <tag4 at5="5" at6="6"/>
+    <tag7 at8="8">
+      <tag9/>
+      <tag10></tag10>
+    </tag7>
   </tag1>
 
 into this:
   {
   tag1 = 
     {
-    at1 = "1";
-    at2 = "2";
-    tag2 = "val2";
-    tag3 = 
-      {
-      at3 = "3";
-      at4 = "4";
-      };
+    tag2 = "val3";
     tag4 = 
       {
-      at3 = "3";
-      at4 = "4";
-      tag5 = "val2";
+      at5 = "5";
+      at6 = "6";
+      };
+    tag7 = 
+      {
+      at8 = "8";
+      tag9 = {};
+      tag10 = "";
       };
     };
   }
