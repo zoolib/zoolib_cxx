@@ -164,19 +164,9 @@ GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 	if (!fShutdown || !theInit || !theEntryPoints)
 		sThrowMissingEntryPoint();
 
-	NPError theNPError;
-	theNPError = theEntryPoints(&fNPPluginFuncs);
-
-	// Hmm -- why am I doing this here? Leave it for now, but it's
-	// obviously flash-specific.
-	typedef NPError (*NP_DISABLELOCALSECURITY)();
-	if (NP_DISABLELOCALSECURITY theDLS
-		= sLookup_T<NP_DISABLELOCALSECURITY>(fHMODULE, "Flash_DisableLocalSecurity"))
-		{
-		theDLS();
-		}
-
-	theNPError = theInit(&fNPNF);
+	// Windows Flash 10.1 requires theEntryPoints be called first.
+	theEntryPoints(&fNPPluginFuncs);
+	theInit(&fNPNF);
 	}
 
 GuestFactory_Win::~GuestFactory_Win()
@@ -186,9 +176,7 @@ GuestFactory_Win::~GuestFactory_Win()
 	}
 
 const NPPluginFuncs& GuestFactory_Win::GetEntryPoints()
-	{
-	return fNPPluginFuncs;
-	}
+	{ return fNPPluginFuncs; }
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
@@ -270,8 +258,9 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 		if (!fShutdown || !theInit || !theEntryPoints)
 			sThrowMissingEntryPoint();
 
-		theEntryPoints(&fNPPluginFuncs);
+		// Mac Flash 10.1 requires theInit be called first. cf GuestFactory_Win.
 		theInit(&fNPNF);
+		theEntryPoints(&fNPPluginFuncs);
 		}
 	else
 		{
@@ -288,7 +277,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 				fGlue_NPNF);
 		#endif
 
-		// Call main, which itself may be a CFM function, but the bundle function
+		// Call main, which itself will be a CFM function, but the bundle function
 		// lookup mechanism will have created a MachO-callable thunk for it.
 		
 		MainFuncPtr theMain
