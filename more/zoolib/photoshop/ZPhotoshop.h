@@ -32,8 +32,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZCONFIG_Photoshop_SDKVersion_CS2 9
 #define ZCONFIG_Photoshop_SDKVersion_CS3 10
 #define ZCONFIG_Photoshop_SDKVersion_CS4 11
+#define ZCONFIG_Photoshop_SDKVersion_CS5 12
 
-#if defined(PIWin64X86CodeProperty)
+#if 0
+#elif defined(__PSIntTypes__)
+	#define ZCONFIG_Photoshop_SDKVersion ZCONFIG_Photoshop_SDKVersion_CS5
+#elif defined(PIWin64X86CodeProperty)
 	#define ZCONFIG_Photoshop_SDKVersion ZCONFIG_Photoshop_SDKVersion_CS4
 #elif defined(PICodeMacIntel64Property)
 	#define ZCONFIG_Photoshop_SDKVersion ZCONFIG_Photoshop_SDKVersion_CS3
