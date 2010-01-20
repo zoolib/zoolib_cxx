@@ -109,7 +109,7 @@ void NPVariant_T<T>::pCopyFrom(const NPVariant& iOther)
 
 template <class T>
 void NPVariant_T<T>::pRelease()
-	{ sRelease_T(*this); }
+	{ sVariantRelease_T(*this); }
 
 template <class T>
 NPVariant_T<T>::NPVariant_T()

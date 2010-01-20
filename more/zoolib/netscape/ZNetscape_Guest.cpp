@@ -43,13 +43,6 @@ using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 
-template <>
-void sRelease_T(const ZNetscape::NPVariantG& iNPVariantG)
-	{
-	ZNetscape::GuestMeister::sGet()->
-		Host_ReleaseVariantValue(const_cast<ZNetscape::NPVariantG*>(&iNPVariantG));
-	}
-
 namespace ZNetscape {
 
 // =================================================================================================
@@ -86,6 +79,10 @@ bool NPVariantBase::QGet_T<ZRef<NPObjectG> >(ZRef<NPObjectG>& oVal) const
 		}
 	return false;
 	}
+
+template <>
+void sVariantRelease_T(NPVariantG& iNPVariantG)
+	{ GuestMeister::sGet()->ReleaseVariantValue(&NPVariantG); }
 
 template <>
 void* sMalloc_T(NPVariantG&, size_t iLength)

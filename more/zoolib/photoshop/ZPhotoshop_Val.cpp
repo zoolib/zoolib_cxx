@@ -334,7 +334,7 @@ void sRetain_T(const ASZString& iString)
 	}
 
 template <>
-void sRelease_T(const ASZString& iString)
+void sRelease_T(struct ASZByteRun* iString)
 	{
 	if (iString)
 		spASZString->Release(iString);

@@ -36,13 +36,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-template <>
-void sRelease_T(const ZNetscape::NPVariantH& iNPVariantH)
-	{
-	ZNetscape::HostMeister::sGet()->
-		ReleaseVariantValue(const_cast<ZNetscape::NPVariantH*>(&iNPVariantH));
-	}
-
 namespace ZNetscape {
 
 // =================================================================================================
@@ -63,6 +56,10 @@ bool NPVariantBase::QGet_T<ZRef<NPObjectH> >(ZRef<NPObjectH>& oVal) const
 		}
 	return false;
 	}
+
+template <>
+void sVariantRelease_T(NPVariantH& iNPVariantH)
+	{ HostMeister::sGet()->ReleaseVariantValue(&iNPVariantH); }
 
 template <>
 void* sMalloc_T(NPVariantH&, size_t iLength)
