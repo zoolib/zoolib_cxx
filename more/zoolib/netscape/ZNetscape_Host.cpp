@@ -57,9 +57,9 @@ bool NPVariantBase::QGet_T<ZRef<NPObjectH> >(ZRef<NPObjectH>& oVal) const
 	return false;
 	}
 
-template <>
-void sRelease_T(NPVariantH& iNPVariantH)
-	{ HostMeister::sGet()->ReleaseVariantValue(&iNPVariantH); }
+//template <>
+//void sRelease_T(NPVariantH& iNPVariantH)
+//	{ HostMeister::sGet()->ReleaseVariantValue(&iNPVariantH); }
 
 template <>
 void* sMalloc_T(NPVariantH&, size_t iLength)

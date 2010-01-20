@@ -66,9 +66,6 @@ public:
 #pragma mark * NPVariant_T
 
 template <class T>
-void sRelease_T(T&);
-
-template <class T>
 void* sMalloc_T(T&, size_t);
 
 template <class T>
