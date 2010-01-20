@@ -38,20 +38,20 @@ ZYadParseException_Std::ZYadParseException_Std(const char* iWhat)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_Std
+#pragma mark * ZYadSeqR_Std
 
-ZYadListR_Std::ZYadListR_Std()
+ZYadSeqR_Std::ZYadSeqR_Std()
 :	fStarted(false)
 	{}
 
-ZYadListR_Std::ZYadListR_Std(bool iFinished)
+ZYadSeqR_Std::ZYadSeqR_Std(bool iFinished)
 :	fStarted(iFinished)
 	{}
 
-void ZYadListR_Std::Finish()
+void ZYadSeqR_Std::Finish()
 	{ this->SkipAll(); }
 
-ZRef<ZYadR> ZYadListR_Std::ReadInc()
+ZRef<ZYadR> ZYadSeqR_Std::ReadInc()
 	{
 	if (!fStarted)
 		{

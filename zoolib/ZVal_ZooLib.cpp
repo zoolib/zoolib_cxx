@@ -43,7 +43,7 @@ NAMESPACE_ZOOLIB_BEGIN
 static ZTName sNilName;
 static ZMap_ZooLib::PropList sEmptyProperties;
 static ZVal_ZooLib sNilVal;
-static ZList_ZooLib sNilList;
+static ZSeq_ZooLib sNilSeq;
 static vector<ZVal_ZooLib> sNilVector;
 
 // =================================================================================================
@@ -321,30 +321,30 @@ bool ZVal_ZooLib::sQFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 		}
 	else if (const vector<ZAny>* theValue = ZAnyCast<vector<ZAny> >(&iAny))
 		{
-		ZList_ZooLib theList;
+		ZSeq_ZooLib theSeq;
 		for (vector<ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
 			i != end; ++i)
 			{
 			ZVal_ZooLib local;
 			if (sQFromAny(*i, local))
-				theList.Append(local);
+				theSeq.Append(local);
 			else
-				theList.Append(ZVal_ZooLib());
+				theSeq.Append(ZVal_ZooLib());
 			}
-		oVal = theList;
+		oVal = theSeq;
 		}
-	else if (const ZList_Any* theValue = ZAnyCast<ZList_Any>(&iAny))
+	else if (const ZSeq_Any* theValue = ZAnyCast<ZSeq_Any>(&iAny))
 		{
-		ZList_ZooLib theList;
+		ZSeq_ZooLib theSeq;
 		for (int x = 0, count = theValue->Count(); x < count; ++x)
 			{
 			ZVal_ZooLib local;
 			if (sQFromAny(theValue->Get(x), local))
-				theList.Append(local);
+				theSeq.Append(local);
 			else
-				theList.Append(ZVal_ZooLib());
+				theSeq.Append(ZVal_ZooLib());
 			}
-		oVal = theList;
+		oVal = theSeq;
 		}
 	else if (const map<string, ZAny>* theValue = ZAnyCast<map<string, ZAny> >(&iAny))
 		{
@@ -482,7 +482,7 @@ ZAny ZVal_ZooLib::AsAny(const ZAny& iDefault) const
 			}
 		case eZType_Vector:
 			{
-			return sFetch_T<ZList_ZooLib>(fType.fBytes)->AsAny(iDefault);
+			return sFetch_T<ZSeq_ZooLib>(fType.fBytes)->AsAny(iDefault);
 			}
 		default:
 			{
@@ -533,7 +533,7 @@ ZVal_ZooLib::ZVal_ZooLib(ZType iType, const ZStreamR& iStreamR)
 ZVal_ZooLib::ZVal_ZooLib(const ZVal_ZooLib& iVal, bool iAsVector)
 	{
 	ZAssertStop(kDebug_Tuple, iAsVector);
-	sConstruct_T<ZList_ZooLib>(fType.fBytes, 1, iVal);
+	sConstruct_T<ZSeq_ZooLib>(fType.fBytes, 1, iVal);
 	fType.fType = eZType_Vector;
 	}
 
@@ -660,7 +660,7 @@ ZVal_ZooLib::ZVal_ZooLib(const ZData_ZooLib& iVal)
 	sConstruct_T(fType.fBytes, iVal);
 	}
 
-ZVal_ZooLib::ZVal_ZooLib(const ZList_ZooLib& iVal)
+ZVal_ZooLib::ZVal_ZooLib(const ZSeq_ZooLib& iVal)
 	{
 	fType.fType = eZType_Vector;
 	sConstruct_T(fType.fBytes, iVal);
@@ -868,11 +868,11 @@ bool ZVal_ZooLib::QGet_T<ZData_ZooLib>(ZData_ZooLib& oVal) const
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<ZList_ZooLib>(ZList_ZooLib& oVal) const
+bool ZVal_ZooLib::QGet_T<ZSeq_ZooLib>(ZSeq_ZooLib& oVal) const
 	{
 	if (fType.fType == eZType_Vector)
 		{
-		oVal = *sFetch_T<ZList_ZooLib>(fType.fBytes);
+		oVal = *sFetch_T<ZSeq_ZooLib>(fType.fBytes);
 		return true;
 		}
 	return false;
@@ -1050,7 +1050,7 @@ void ZVal_ZooLib::Set_T<ZData_ZooLib>(const ZData_ZooLib& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<ZList_ZooLib>(const ZList_ZooLib& iVal)
+void ZVal_ZooLib::Set_T<ZSeq_ZooLib>(const ZSeq_ZooLib& iVal)
 	{
 	this->pRelease();
 	sConstruct_T(fType.fBytes, iVal);
@@ -1132,15 +1132,15 @@ bool ZVal_ZooLib::operator==(const ZVal_ZooLib& iOther) const
 bool ZVal_ZooLib::operator<(const ZVal_ZooLib& iOther) const
 	{ return this->Compare(iOther) < 0; }
 
-ZList_ZooLib& ZVal_ZooLib::MutableList()
+ZSeq_ZooLib& ZVal_ZooLib::MutableSeq()
 	{
 	if (fType.fType != eZType_Vector)
 		{
 		this->pRelease();
-		sConstruct_T<ZList_ZooLib>(fType.fBytes);
+		sConstruct_T<ZSeq_ZooLib>(fType.fBytes);
 		fType.fType = eZType_Vector;
 		}
-	return *sFetch_T<ZList_ZooLib>(fType.fBytes);
+	return *sFetch_T<ZSeq_ZooLib>(fType.fBytes);
 	}
 
 ZMap_ZooLib& ZVal_ZooLib::MutableMap()
@@ -1282,7 +1282,7 @@ void ZVal_ZooLib::ToStream(const ZStreamW& iStreamW) const
 			}
 		case eZType_Vector:
 			{
-			sFetch_T<ZList_ZooLib>(fType.fBytes)->ToStream(iStreamW);
+			sFetch_T<ZSeq_ZooLib>(fType.fBytes)->ToStream(iStreamW);
 			break;
 			}
 		default:
@@ -1305,7 +1305,7 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Point, ZPointPOD)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, RefCounted, ZRef<ZRefCountedWithFinalize>)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Pointer, VoidStar_t)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Data, ZData_ZooLib)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, List, ZList_ZooLib)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Seq, ZSeq_ZooLib)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Map, ZMap_ZooLib)
 
 // Backwards compatibility
@@ -1373,8 +1373,8 @@ int ZVal_ZooLib::pUncheckedCompare(const ZVal_ZooLib& iOther) const
 			}
 		case eZType_Vector:
 			{
-			return sFetch_T<ZList_ZooLib>(fType.fBytes)
-				->Compare(*sFetch_T<ZList_ZooLib>(iOther.fType.fBytes));
+			return sFetch_T<ZSeq_ZooLib>(fType.fBytes)
+				->Compare(*sFetch_T<ZSeq_ZooLib>(iOther.fType.fBytes));
 			}
 		}
 	ZDebugStopf(kDebug_Tuple, ("Unknown type (%d)", fType.fType));
@@ -1429,8 +1429,8 @@ bool ZVal_ZooLib::pUncheckedLess(const ZVal_ZooLib& iOther) const
 			}
 		case eZType_Vector:
 			{
-			return *sFetch_T<ZList_ZooLib>(fType.fBytes)
-				< *sFetch_T<ZList_ZooLib>(iOther.fType.fBytes);
+			return *sFetch_T<ZSeq_ZooLib>(fType.fBytes)
+				< *sFetch_T<ZSeq_ZooLib>(iOther.fType.fBytes);
 			}
 		}
 	ZDebugStopf(kDebug_Tuple, ("Unknown type (%d)", fType.fType));
@@ -1490,8 +1490,8 @@ bool ZVal_ZooLib::pUncheckedEqual(const ZVal_ZooLib& iOther) const
 			}
 		case eZType_Vector:
 			{
-			return *sFetch_T<ZList_ZooLib>(fType.fBytes)
-				== *sFetch_T<ZList_ZooLib>(iOther.fType.fBytes);
+			return *sFetch_T<ZSeq_ZooLib>(fType.fBytes)
+				== *sFetch_T<ZSeq_ZooLib>(iOther.fType.fBytes);
 			}
 		}
 	ZDebugStopf(kDebug_Tuple, ("Unknown type (%d)", fType.fType));
@@ -1527,7 +1527,7 @@ void ZVal_ZooLib::pRelease()
 			break;
 			}
 		case eZType_Raw: sDestroy_T<ZData_ZooLib>(fType.fBytes); break;
-		case eZType_Vector: sDestroy_T<ZList_ZooLib>(fType.fBytes); break;
+		case eZType_Vector: sDestroy_T<ZSeq_ZooLib>(fType.fBytes); break;
 		default:
 			{
 			if (fType.fType >= 0)
@@ -1608,7 +1608,7 @@ void ZVal_ZooLib::pCopy(const ZVal_ZooLib& iOther)
 				sCopyConstruct_T<ZData_ZooLib>(iOther.fType.fBytes, fType.fBytes);
 				break;
 			case eZType_Vector:
-				sCopyConstruct_T<ZList_ZooLib>(iOther.fType.fBytes, fType.fBytes);
+				sCopyConstruct_T<ZSeq_ZooLib>(iOther.fType.fBytes, fType.fBytes);
 				break;
 			default:
 				ZDebugStopf(kDebug_Tuple, ("Unknown type (%d)", fType.fType));
@@ -1757,7 +1757,7 @@ void ZVal_ZooLib::pFromStream(ZType iType, const ZStreamR& iStreamR)
 			}
 		case eZType_Vector:
 			{
-			sConstruct_T<ZList_ZooLib>(fType.fBytes, iStreamR);
+			sConstruct_T<ZSeq_ZooLib>(fType.fBytes, iStreamR);
 			break;
 			}
 		default:
@@ -1770,9 +1770,9 @@ void ZVal_ZooLib::pFromStream(ZType iType, const ZStreamR& iStreamR)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZList_ZooLib::Rep
+#pragma mark * ZSeq_ZooLib::Rep
 
-class ZList_ZooLib::Rep : public ZRefCounted
+class ZSeq_ZooLib::Rep : public ZRefCounted
 	{
 public:
 	Rep();
@@ -1782,57 +1782,57 @@ public:
 	std::vector<ZVal_ZooLib> fVector;
 	};
 
-ZList_ZooLib::Rep::Rep()
+ZSeq_ZooLib::Rep::Rep()
 	{}
 
-ZList_ZooLib::Rep::Rep(const vector<ZVal_ZooLib>& iOther)
+ZSeq_ZooLib::Rep::Rep(const vector<ZVal_ZooLib>& iOther)
 :	fVector(iOther)
 	{}
 
-ZList_ZooLib::Rep::~Rep()
+ZSeq_ZooLib::Rep::~Rep()
 	{}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZList_ZooLib
+#pragma mark * ZSeq_ZooLib
 
-ZAny ZList_ZooLib::AsAny() const
+ZAny ZSeq_ZooLib::AsAny() const
 	{ return this->AsAny(ZAny()); }
 
-ZAny ZList_ZooLib::AsAny(const ZAny& iDefault) const
+ZAny ZSeq_ZooLib::AsAny(const ZAny& iDefault) const
 	{
-	ZList_Any theList;
+	ZSeq_Any theSeq;
 	if (fRep)
 		{
 		if (size_t theCount = fRep->fVector.size())
 			{
 			for (size_t x = 0; x < theCount; ++x)
-				theList.Append(fRep->fVector[x].AsAny(iDefault));
+				theSeq.Append(fRep->fVector[x].AsAny(iDefault));
 			}
 		}
-	return ZAny(theList);
+	return ZAny(theSeq);
 	}
 
-ZList_ZooLib::operator operator_bool_type() const
+ZSeq_ZooLib::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fRep && !fRep->fVector.empty()); }
 
-ZList_ZooLib::ZList_ZooLib()
+ZSeq_ZooLib::ZSeq_ZooLib()
 	{}
 
-ZList_ZooLib::ZList_ZooLib(const ZList_ZooLib& iOther)
+ZSeq_ZooLib::ZSeq_ZooLib(const ZSeq_ZooLib& iOther)
 :	fRep(iOther.fRep)
 	{}
 
-ZList_ZooLib::~ZList_ZooLib()
+ZSeq_ZooLib::~ZSeq_ZooLib()
 	{}
 
-ZList_ZooLib& ZList_ZooLib::operator=(const ZList_ZooLib& iOther)
+ZSeq_ZooLib& ZSeq_ZooLib::operator=(const ZSeq_ZooLib& iOther)
 	{
 	fRep = iOther.fRep;
 	return *this;
 	}
 
-ZList_ZooLib::ZList_ZooLib(const ZStreamR& iStreamR)
+ZSeq_ZooLib::ZSeq_ZooLib(const ZStreamR& iStreamR)
 	{
 	if (uint32 theCount = iStreamR.ReadCount())
 		{
@@ -1843,25 +1843,25 @@ ZList_ZooLib::ZList_ZooLib(const ZStreamR& iStreamR)
 		}
 	}
 
-ZList_ZooLib::ZList_ZooLib(size_t iCount, const ZVal_ZooLib& iSingleton)
+ZSeq_ZooLib::ZSeq_ZooLib(size_t iCount, const ZVal_ZooLib& iSingleton)
 :	fRep(new Rep(vector<ZVal_ZooLib>(iCount, iSingleton)))
 	{}
 
-ZList_ZooLib::ZList_ZooLib(const vector<ZVal_ZooLib>& iOther)
+ZSeq_ZooLib::ZSeq_ZooLib(const vector<ZVal_ZooLib>& iOther)
 :	fRep(new Rep(vector<ZVal_ZooLib>(iOther)))
 	{}
 
-size_t ZList_ZooLib::Count() const
+size_t ZSeq_ZooLib::Count() const
 	{
 	if (fRep)
 		return fRep->fVector.size();
 	return 0;
 	}
 
-void ZList_ZooLib::Clear()
+void ZSeq_ZooLib::Clear()
 	{ fRep.Clear(); }
 
-bool ZList_ZooLib::QGet(size_t iIndex, ZVal_ZooLib& oVal) const
+bool ZSeq_ZooLib::QGet(size_t iIndex, ZVal_ZooLib& oVal) const
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		{
@@ -1871,28 +1871,28 @@ bool ZList_ZooLib::QGet(size_t iIndex, ZVal_ZooLib& oVal) const
 	return false;
 	}
 
-ZVal_ZooLib ZList_ZooLib::DGet(const ZVal_ZooLib& iDefault, size_t iIndex) const
+ZVal_ZooLib ZSeq_ZooLib::DGet(const ZVal_ZooLib& iDefault, size_t iIndex) const
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		return fRep->fVector.at(iIndex);
 	return iDefault;
 	}
 
-ZVal_ZooLib ZList_ZooLib::Get(size_t iIndex) const
+ZVal_ZooLib ZSeq_ZooLib::Get(size_t iIndex) const
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		return fRep->fVector.at(iIndex);
 	return sNilVal;
 	}
 
-const ZVal_ZooLib& ZList_ZooLib::RGet(size_t iIndex) const
+const ZVal_ZooLib& ZSeq_ZooLib::RGet(size_t iIndex) const
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		return fRep->fVector.at(iIndex);
 	return sNilVal;
 	}
 
-ZList_ZooLib& ZList_ZooLib::Set(size_t iIndex, const ZVal_ZooLib& iVal)
+ZSeq_ZooLib& ZSeq_ZooLib::Set(size_t iIndex, const ZVal_ZooLib& iVal)
 	{
 	this->pTouch();
 	vector<ZVal_ZooLib>& theVec = fRep->fVector;
@@ -1901,7 +1901,7 @@ ZList_ZooLib& ZList_ZooLib::Set(size_t iIndex, const ZVal_ZooLib& iVal)
 	return *this;
 	}
 
-ZList_ZooLib& ZList_ZooLib::Erase(size_t iIndex)
+ZSeq_ZooLib& ZSeq_ZooLib::Erase(size_t iIndex)
 	{
 	this->pTouch();
 	vector<ZVal_ZooLib>& theVec = fRep->fVector;
@@ -1910,7 +1910,7 @@ ZList_ZooLib& ZList_ZooLib::Erase(size_t iIndex)
 	return *this;
 	}
 
-ZList_ZooLib& ZList_ZooLib::Insert(size_t iIndex, const ZVal_ZooLib& iVal)
+ZSeq_ZooLib& ZSeq_ZooLib::Insert(size_t iIndex, const ZVal_ZooLib& iVal)
 	{
 	this->pTouch();
 	vector<ZVal_ZooLib>& theVec = fRep->fVector;
@@ -1919,14 +1919,14 @@ ZList_ZooLib& ZList_ZooLib::Insert(size_t iIndex, const ZVal_ZooLib& iVal)
 	return *this;
 	}
 
-ZList_ZooLib& ZList_ZooLib::Append(const ZVal_ZooLib& iVal)
+ZSeq_ZooLib& ZSeq_ZooLib::Append(const ZVal_ZooLib& iVal)
 	{
 	this->pTouch();
 	fRep->fVector.push_back(iVal);
 	return *this;
 	}
 
-int ZList_ZooLib::Compare(const ZList_ZooLib& iOther) const
+int ZSeq_ZooLib::Compare(const ZSeq_ZooLib& iOther) const
 	{
 	if (fRep)
 		{
@@ -1950,32 +1950,32 @@ int ZList_ZooLib::Compare(const ZList_ZooLib& iOther) const
 		}
 	}
 
-bool ZList_ZooLib::operator==(const ZList_ZooLib& iOther) const
+bool ZSeq_ZooLib::operator==(const ZSeq_ZooLib& iOther) const
 	{ return this->Compare(iOther) == 0; }
 
-bool ZList_ZooLib::operator<(const ZList_ZooLib& iOther) const
+bool ZSeq_ZooLib::operator<(const ZSeq_ZooLib& iOther) const
 	{ return this->Compare(iOther) < 0; }
 
-ZVal_ZooLib& ZList_ZooLib::Mutable(size_t iIndex)
+ZVal_ZooLib& ZSeq_ZooLib::Mutable(size_t iIndex)
 	{
 	ZAssert(fRep && iIndex < fRep->fVector.size());
 	return fRep->fVector.at(iIndex);
 	}
 
-vector<ZVal_ZooLib>& ZList_ZooLib::MutableVector()
+vector<ZVal_ZooLib>& ZSeq_ZooLib::MutableVector()
 	{
 	this->pTouch();
 	return fRep->fVector;
 	}
 
-const vector<ZVal_ZooLib>& ZList_ZooLib::GetVector() const
+const vector<ZVal_ZooLib>& ZSeq_ZooLib::GetVector() const
 	{
 	if (fRep)
 		return fRep->fVector;
 	return sNilVector;
 	}
 
-void ZList_ZooLib::ToStream(const ZStreamW& iStreamW) const
+void ZSeq_ZooLib::ToStream(const ZStreamW& iStreamW) const
 	{
 	if (fRep)
 		{
@@ -1995,7 +1995,7 @@ void ZList_ZooLib::ToStream(const ZStreamW& iStreamW) const
 	iStreamW.WriteCount(0);
 	}
 
-void ZList_ZooLib::pTouch()
+void ZSeq_ZooLib::pTouch()
 	{
 	if (fRep)
 		{

@@ -37,7 +37,7 @@ namespace ZPhotoshop {
 
 ZRef<ZYadR> sMakeYadR(const Val& iVal);
 
-ZRef<ZYadListR> sMakeYadR(const List& iList);
+ZRef<ZYadSeqR> sMakeYadR(const Seq& iSeq);
 
 ZRef<ZYadMapR> sMakeYadR(const Map& iMap);
 

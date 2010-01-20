@@ -56,9 +56,9 @@ ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal)
 	if (iVal.QGetMap(asMap))
 		return new ZYadMapRPos_AppleEvent(asMap);
 		
-	ZList_AppleEvent asList;
-	if (iVal.QGetList(asList))
-		return new ZYadListRPos_AppleEvent(asList);
+	ZSeq_AppleEvent asSeq;
+	if (iVal.QGetSeq(asSeq))
+		return new ZYadSeqRPos_AppleEvent(asSeq);
 		
 	string8 asString;
 	if (iVal.QGetString(asString))
@@ -70,8 +70,8 @@ ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal)
 	return new ZYadMapRPos_Any(spAsMap(iVal));
 	}
 
-ZRef<ZYadListR> sMakeYadR(const ZList_AppleEvent& iList)
-	{ return new ZYadListRPos_AppleEvent(iList); }
+ZRef<ZYadSeqR> sMakeYadR(const ZSeq_AppleEvent& iSeq)
+	{ return new ZYadSeqRPos_AppleEvent(iSeq); }
 
 ZRef<ZYadMapR> sMakeYadR(const ZMap_AppleEvent& iMap)
 	{ return new ZYadMapRPos_AppleEvent(iMap); }

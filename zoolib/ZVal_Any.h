@@ -42,7 +42,7 @@ using std::string;
 using std::vector;
 
 class ZVal_Any;
-class ZList_Any;
+class ZSeq_Any;
 class ZMap_Any;
 
 // =================================================================================================
@@ -95,17 +95,17 @@ public:
 
 // Typename accessors
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Data, ZData_Any)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, List, ZList_Any)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Seq, ZSeq_Any)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Map, ZMap_Any)
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZList_Any
+#pragma mark * ZSeq_Any
 
-class ZList_Any
+class ZSeq_Any
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZList_Any,
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZSeq_Any,
 		operator_bool_generator_type, operator_bool_type);
 
 	class Rep;
@@ -118,19 +118,19 @@ public:
 
 	operator operator_bool_type() const;
 
-	ZList_Any();
-	ZList_Any(const ZList_Any& iOther);
-	~ZList_Any();
-	ZList_Any& operator=(const ZList_Any& iOther);
+	ZSeq_Any();
+	ZSeq_Any(const ZSeq_Any& iOther);
+	~ZSeq_Any();
+	ZSeq_Any& operator=(const ZSeq_Any& iOther);
 
-	ZList_Any(const vector<ZVal_Any>& iOther);
+	ZSeq_Any(const vector<ZVal_Any>& iOther);
 
-	ZList_Any& operator=(const vector<ZVal_Any>& iOther);
+	ZSeq_Any& operator=(const vector<ZVal_Any>& iOther);
 
 	template <class Iterator>
-	ZList_Any(Iterator begin, Iterator end);
+	ZSeq_Any(Iterator begin, Iterator end);
 
-// ZList protocol
+// ZSeq protocol
 	size_t Count() const;
 
 	void Clear();
@@ -150,13 +150,13 @@ public:
 	ZVal_Any DGet(const ZVal_Any& iDefault, size_t iIndex) const;
 	ZVal_Any Get(size_t iIndex) const;
 
-	ZList_Any& Set(size_t iIndex, const ZVal_Any& iVal);
+	ZSeq_Any& Set(size_t iIndex, const ZVal_Any& iVal);
 
-	ZList_Any& Erase(size_t iIndex);
+	ZSeq_Any& Erase(size_t iIndex);
 
-	ZList_Any& Insert(size_t iIndex, const ZVal_Any& iVal);
+	ZSeq_Any& Insert(size_t iIndex, const ZVal_Any& iVal);
 
-	ZList_Any& Append(const ZVal_Any& iVal);
+	ZSeq_Any& Append(const ZVal_Any& iVal);
 
 private:
 	void pTouch();
@@ -166,7 +166,7 @@ private:
 
 template <class S>
 inline
-S* ZList_Any::PGet_T(size_t iIndex)
+S* ZSeq_Any::PGet_T(size_t iIndex)
 	{
 	if (ZVal_Any* theVal = this->PGet(iIndex))
 		return theVal->PGet_T<S>();
@@ -175,7 +175,7 @@ S* ZList_Any::PGet_T(size_t iIndex)
 
 template <class S>
 inline
-const S* ZList_Any::PGet_T(size_t iIndex) const
+const S* ZSeq_Any::PGet_T(size_t iIndex) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iIndex))
 		return theVal->PGet_T<S>();
@@ -184,14 +184,14 @@ const S* ZList_Any::PGet_T(size_t iIndex) const
 
 template <class S>
 inline
-S ZList_Any::Get_T(size_t iIndex) const
+S ZSeq_Any::Get_T(size_t iIndex) const
 	{ return this->Get(iIndex).Get_T<S>(); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZList_Any::Rep
+#pragma mark * ZSeq_Any::Rep
 
-class ZList_Any::Rep
+class ZSeq_Any::Rep
 :	public ZRefCounted
 	{
 private:
@@ -206,15 +206,15 @@ private:
 		{}
 
 	vector<ZVal_Any> fVector;
-	friend class ZList_Any;
+	friend class ZSeq_Any;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZList_Any, inline templated constructor
+#pragma mark * ZSeq_Any, inline templated constructor
 
 template <class Iterator>
-ZList_Any::ZList_Any(Iterator begin, Iterator end)
+ZSeq_Any::ZSeq_Any(Iterator begin, Iterator end)
 :	fRep(new Rep(begin, end))
 	{}
 

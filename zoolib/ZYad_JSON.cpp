@@ -34,7 +34,7 @@ JSON is JavaScript Object Notation. See <http://www.crockford.com/JSON/index.htm
 
 ZYad_JSON provides Yad facilities to read and write JSON source.
 
-ZMap is isomorphic to JSON's object, ZList to JSON's array, and strings, booleans
+ZMap is isomorphic to JSON's object, ZSeq to JSON's array, and strings, booleans
 and null translate back and forth without trouble. JSON's only other primitive is
 the number, whereas ZVal_ZooLib explicitly stores and retrieves integers of different sizes,
 floats and doubles, raw bytes and other composite types.
@@ -51,7 +51,7 @@ JSON          ZVal_ZooLib
 ----          -------
 null          null
 object        ZMap_ZooLib
-array         ZList_ZooLib
+array         ZSeq_ZooLib
 boolean       bool
 string        string
 number        int64 or double
@@ -61,7 +61,7 @@ ZVal_ZooLib      JSON
 -------          ----
 null             null
 ZMap_ZooLib      object
-ZList_ZooLib     array
+ZSeq_ZooLib     array
 bool             boolean
 string           string
 int8             number
@@ -191,7 +191,7 @@ static ZRef<ZYadR> spMakeYadR_JSON(ZRef<ZStrimmerU> iStrimmerU)
 	
 	if (sTryRead_CP(theStrimU, '['))
 		{
-		return new ZYadListR_JSON(iStrimmerU);
+		return new ZYadSeqR_JSON(iStrimmerU);
 		}
 	else if (sTryRead_CP(theStrimU, '{'))
 		{
@@ -245,13 +245,13 @@ const ZStrimR& ZYadStrimR_JSON::GetStrimR()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_JSON
+#pragma mark * ZYadSeqR_JSON
 
-ZYadListR_JSON::ZYadListR_JSON(ZRef<ZStrimmerU> iStrimmerU)
+ZYadSeqR_JSON::ZYadSeqR_JSON(ZRef<ZStrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
 	{}
 
-void ZYadListR_JSON::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+void ZYadSeqR_JSON::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
@@ -469,7 +469,7 @@ bool ZYadVisitor_JSONWriter::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	return true;
 	}
 
-bool ZYadVisitor_JSONWriter::Visit_YadListR(ZRef<ZYadListR> iYadListR)
+bool ZYadVisitor_JSONWriter::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	{
 	bool needsIndentation = false;
 	if (fOptions.DoIndentation())
@@ -479,7 +479,7 @@ bool ZYadVisitor_JSONWriter::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 		// 2. A non-empty tuple.
 		// or if iOptions.fBreakStrings is true, any element is a string with embedded
 		// line breaks or more than iOptions.fStringLineLength characters.
-		needsIndentation = ! iYadListR->IsSimple(fOptions);
+		needsIndentation = ! iYadSeqR->IsSimple(fOptions);
 		}
 
 	if (needsIndentation)
@@ -498,7 +498,7 @@ bool ZYadVisitor_JSONWriter::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 		fStrimW.Write("[");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (ZRef<ZYadR> cur = iYadListR->ReadInc())
+			if (ZRef<ZYadR> cur = iYadSeqR->ReadInc())
 				{
 				if (!isFirst)
 					fStrimW.Write(",");
@@ -520,7 +520,7 @@ bool ZYadVisitor_JSONWriter::Visit_YadListR(ZRef<ZYadListR> iYadListR)
 		fStrimW.Write("[");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (ZRef<ZYadR> cur = iYadListR->ReadInc())
+			if (ZRef<ZYadR> cur = iYadSeqR->ReadInc())
 				{
 				if (!isFirst)
 					{

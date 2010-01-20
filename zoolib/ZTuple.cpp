@@ -85,7 +85,7 @@ ZMap_ZooLib& ZTuple::SetNull(const ZTName& iPropName)
 vector<ZVal_ZooLib>& ZTuple::SetMutableVector(const ZTName& iPropName)
 	{
 	this->pTouch();
-	return this->pFindOrAllocate(iPropName)->MutableList().MutableVector();
+	return this->pFindOrAllocate(iPropName)->MutableSeq().MutableVector();
 	}
 
 ZTuple ZTuple::GetTuple(const ZTName& iPropName) const

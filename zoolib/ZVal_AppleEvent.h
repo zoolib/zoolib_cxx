@@ -35,11 +35,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 class ZVal_AppleEvent;
-class ZList_AppleEvent;
+class ZSeq_AppleEvent;
 class ZMap_AppleEvent;
 
 typedef ZVal_AppleEvent ZVal_AE;
-typedef ZList_AppleEvent ZList_AE;
+typedef ZSeq_AppleEvent ZSeq_AE;
 typedef ZMap_AppleEvent ZMap_AE;
 
 std::string sAEKeywordAsString(AEKeyword iKeyword);
@@ -72,7 +72,7 @@ public:
 
 	ZVal_AppleEvent(bool iVal);
 	ZVal_AppleEvent(const std::string& iVal);
-	ZVal_AppleEvent(const ZList_AppleEvent& iVal);
+	ZVal_AppleEvent(const ZSeq_AppleEvent& iVal);
 	ZVal_AppleEvent(const ZMap_AppleEvent& iVal);
 
 	template <class T>
@@ -126,7 +126,7 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Float, float)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Double, double)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, String, std::string)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, List, ZList_AppleEvent)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Seq, ZSeq_AppleEvent)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Map, ZMap_AppleEvent)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, FSSpec, FSSpec)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, FSRef, FSRef)
@@ -134,31 +134,31 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZList_AppleEvent
+#pragma mark * ZSeq_AppleEvent
 
-class ZList_AppleEvent
+class ZSeq_AppleEvent
 :	public AEDescList
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZList_AppleEvent,
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZSeq_AppleEvent,
 		operator_bool_generator_type, operator_bool_type);
 
 public:
-	ZList_Any AsList_Any() const;
-	ZList_Any AsList_Any(const ZAny& iDefault) const;
+	ZSeq_Any AsSeq_Any() const;
+	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 
-	void swap(ZList_AppleEvent& iOther);
+	void swap(ZSeq_AppleEvent& iOther);
 
-	ZList_AppleEvent();
-	ZList_AppleEvent(const ZList_AppleEvent& iOther);
-	~ZList_AppleEvent();
-	ZList_AppleEvent& operator=(const ZList_AppleEvent& iOther);
+	ZSeq_AppleEvent();
+	ZSeq_AppleEvent(const ZSeq_AppleEvent& iOther);
+	~ZSeq_AppleEvent();
+	ZSeq_AppleEvent& operator=(const ZSeq_AppleEvent& iOther);
 
-	ZList_AppleEvent(const AEDescList& iOther);
-	ZList_AppleEvent& operator=(const AEDescList& iOther);
+	ZSeq_AppleEvent(const AEDescList& iOther);
+	ZSeq_AppleEvent& operator=(const AEDescList& iOther);
 
-// ZList protocol
+// ZSeq protocol
 	size_t Count() const;
 
 	void Clear();
@@ -167,14 +167,14 @@ public:
 	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, size_t iIndex) const;
 	ZVal_AppleEvent Get(size_t iIndex) const;
 
-	ZList_AppleEvent& Set(size_t iIndex, const AEDesc& iVal);
+	ZSeq_AppleEvent& Set(size_t iIndex, const AEDesc& iVal);
 
-	ZList_AppleEvent& Erase(size_t iIndex);
+	ZSeq_AppleEvent& Erase(size_t iIndex);
 
-	ZList_AppleEvent& Insert(size_t iIndex, const AEDesc& iVal);
+	ZSeq_AppleEvent& Insert(size_t iIndex, const AEDesc& iVal);
 
-	ZList_AppleEvent& Append(const AEDesc& iVal);
-	ZList_AppleEvent& Append(const ZVal_AppleEvent& iVal);
+	ZSeq_AppleEvent& Append(const AEDesc& iVal);
+	ZSeq_AppleEvent& Append(const ZVal_AppleEvent& iVal);
 	};
 
 // =================================================================================================
@@ -269,7 +269,7 @@ namespace std {
 inline void swap(ZOOLIB_PREFIX::ZVal_AppleEvent& a, ZOOLIB_PREFIX::ZVal_AppleEvent& b)
 	{ a.swap(b); }
 
-inline void swap(ZOOLIB_PREFIX::ZList_AppleEvent& a, ZOOLIB_PREFIX::ZList_AppleEvent& b)
+inline void swap(ZOOLIB_PREFIX::ZSeq_AppleEvent& a, ZOOLIB_PREFIX::ZSeq_AppleEvent& b)
 	{ a.swap(b); }
 
 inline void swap(ZOOLIB_PREFIX::ZMap_AppleEvent& a, ZOOLIB_PREFIX::ZMap_AppleEvent& b)

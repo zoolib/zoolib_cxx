@@ -292,7 +292,7 @@ static void sWriteAsXML(const ZStrimW_ML& s, const string& iName, const ZTValue&
 		{
 		case eZType_Vector:
 			{
-			const vector<ZTValue>& v = iTV.GetList().GetVector();
+			const vector<ZTValue>& v = iTV.GetSeq().GetVector();
 			for (vector<ZTValue>::const_iterator i = v.begin(); i != v.end(); ++i)
 				sWriteAsXML(s, iName, *i);
 			break;
@@ -326,7 +326,7 @@ static bool sGetStringAt(const ZTuple& iTuple, const string& iName, string& oStr
 	if (iTuple.QGetString(iName, oString))
 		return true;
 
-	const vector<ZTValue>& theVector = iTuple.Get(iName).GetList().GetVector();
+	const vector<ZTValue>& theVector = iTuple.Get(iName).GetSeq().GetVector();
 	if (!theVector.empty())
 		return theVector[0].QGetString(oString);
 
@@ -405,9 +405,9 @@ static void sGetProperties(
  	for (vector<string>::const_iterator i = iPropNames.begin(); i != iPropNames.end(); ++i)
  		{
  		if (ZTuple propT = sGetProp(iNode, *i))
-			oGoodT.Mutable("D:prop").MutableList().Append(propT);
+			oGoodT.Mutable("D:prop").MutableSeq().Append(propT);
  		else
- 			oBadT.Mutable("D:prop").MutableList().Append(ZTuple().SetNull(*i));
+ 			oBadT.Mutable("D:prop").MutableSeq().Append(ZTuple().SetNull(*i));
  		}
 	}
 
@@ -463,7 +463,7 @@ static bool sDelete(const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& iNod
 		ZTuple responseT;
 		responseT.SetString("D:href", sMakeHREF(iPrefix, iRoot, iNode));
 		responseT.SetString("D:status", "HTTP/1.1 404");
-		ioT.Mutable("D:response").MutableList().Append(responseT);
+		ioT.Mutable("D:response").MutableSeq().Append(responseT);
 		}
 	return false;
 	}
@@ -840,16 +840,16 @@ static void sHandle_PROPFIND_Some(
 			if (goodT)
 				{
 				goodT.SetString("D:status", "HTTP/1.1 200 OK");
-				responseT.Mutable("D:propstat").MutableList().Append(goodT);
+				responseT.Mutable("D:propstat").MutableSeq().Append(goodT);
 				}
 
 			if (badT)
 				{
 				badT.SetString("D:status", "HTTP/1.1 404 Not Found");
-				responseT.Mutable("D:propstat").MutableList().Append(badT);
+				responseT.Mutable("D:propstat").MutableSeq().Append(badT);
 				}
 			
-			ioTuple.Mutable("D:response").MutableList().Append(responseT);
+			ioTuple.Mutable("D:response").MutableSeq().Append(responseT);
 			}
 		}
 	}
@@ -878,10 +878,10 @@ static void sHandle_PROPFIND_All(
 			if (goodT)
 				{
 				goodT.SetString("D:status", "HTTP/1.1 200 OK");
-				responseT.Mutable("D:propstat").MutableList().Append(goodT);
+				responseT.Mutable("D:propstat").MutableSeq().Append(goodT);
 				}
 			
-			ioTuple.Mutable("D:response").MutableList().Append(responseT);
+			ioTuple.Mutable("D:response").MutableSeq().Append(responseT);
 			}
 		}
 	}

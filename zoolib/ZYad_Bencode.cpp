@@ -146,7 +146,7 @@ static ZRef<ZYadR> spMakeYadR_Bencode(ZRef<ZStreamerU> iStreamerU)
 			}
 		case 'l':
 			{
-			return new ZYadListR_Bencode(iStreamerU);
+			return new ZYadSeqR_Bencode(iStreamerU);
 			}
 		case 'i':
 			{
@@ -185,13 +185,13 @@ ZYadParseException_Bencode::ZYadParseException_Bencode(const char* iWhat)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_Bencode
+#pragma mark * ZYadSeqR_Bencode
 
-ZYadListR_Bencode::ZYadListR_Bencode(ZRef<ZStreamerU> iStreamerU)
+ZYadSeqR_Bencode::ZYadSeqR_Bencode(ZRef<ZStreamerU> iStreamerU)
 :	fStreamerU(iStreamerU)
 	{}
 
-void ZYadListR_Bencode::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+void ZYadSeqR_Bencode::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	if (!spTryRead_Byte(fStreamerU->GetStreamU(), 'e'))
 		oYadR = spMakeYadR_Bencode(fStreamerU);

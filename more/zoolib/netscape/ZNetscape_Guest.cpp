@@ -82,7 +82,7 @@ bool NPVariantBase::QGet_T<ZRef<NPObjectG> >(ZRef<NPObjectG>& oVal) const
 
 template <>
 void sVariantRelease_T(NPVariantG& iNPVariantG)
-	{ GuestMeister::sGet()->ReleaseVariantValue(&NPVariantG); }
+	{ GuestMeister::sGet()->Host_ReleaseVariantValue(&iNPVariantG); }
 
 template <>
 void* sMalloc_T(NPVariantG&, size_t iLength)

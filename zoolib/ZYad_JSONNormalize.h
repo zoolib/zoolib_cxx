@@ -32,7 +32,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZYad_JSONNormalize {
 
-ZRef<ZYadR> sMakeYadR(ZRef<ZYadR> iYadR, bool iPreserveLists, bool iPreserveMaps);
+ZRef<ZYadR> sMakeYadR(ZRef<ZYadR> iYadR, bool iPreserveSeqs, bool iPreserveMaps);
 
 } // namespace ZYad_JSONNormalize
 

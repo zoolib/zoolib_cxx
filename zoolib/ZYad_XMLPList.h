@@ -86,14 +86,14 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_XMLPList
+#pragma mark * ZYadSeqR_XMLPList
 
-class ZYadListR_XMLPList : public ZYadListR_Std
+class ZYadSeqR_XMLPList : public ZYadSeqR_Std
 	{
 public:
-	ZYadListR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, bool iMustReadEndTag);
+	ZYadSeqR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, bool iMustReadEndTag);
 
-// From ZYadListR_Std
+// From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:

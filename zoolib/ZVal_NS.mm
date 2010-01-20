@@ -151,7 +151,7 @@ ZVal_NS::ZVal_NS(const ZData_NS& iVal)
 :	inherited(iVal)
 	{}
 
-ZVal_NS::ZVal_NS(const ZList_NS& iVal)
+ZVal_NS::ZVal_NS(const ZSeq_NS& iVal)
 :	inherited(iVal)
 	{}
 
@@ -303,7 +303,7 @@ bool ZVal_NS::QGet_T<ZData_NS>(ZData_NS& oVal) const
 	}
 
 template <>
-bool ZVal_NS::QGet_T<ZList_NS>(ZList_NS& oVal) const
+bool ZVal_NS::QGet_T<ZSeq_NS>(ZSeq_NS& oVal) const
 	{
 	if (ZRef<NSArray> asArray = spAs_T<NSArray>(inherited::Get()))
 		{
@@ -365,7 +365,7 @@ void ZVal_NS::Set_T<ZData_NS>(const ZData_NS& iVal)
 	{ inherited::operator=(iVal); }
 
 template <>
-void ZVal_NS::Set_T<ZList_NS>(const ZList_NS& iVal)
+void ZVal_NS::Set_T<ZSeq_NS>(const ZSeq_NS& iVal)
 	{ inherited::operator=(iVal); }
 
 template <>
@@ -379,125 +379,125 @@ void ZVal_NS::Set_T<ZMap_NS>(const ZMap_NS& iVal)
 ZMACRO_ZValAccessors_Def_Std(ZVal_NS)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, NSString, ZRef<NSString>)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, Data, ZData_NS)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, List, ZList_NS)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, Seq, ZSeq_NS)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, Map, ZMap_NS)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZList_NS
+#pragma mark * ZSeq_NS
 
-ZAny ZList_NS::AsAny() const
+ZAny ZSeq_NS::AsAny() const
 	{ return this->AsAny(ZAny()); }
 
-ZAny ZList_NS::AsAny(const ZAny& iDefault) const
+ZAny ZSeq_NS::AsAny(const ZAny& iDefault) const
 	{ return ZUtil_NS::sAsAny(iDefault, this->pArray()); }
 
-ZList_NS::operator bool() const
+ZSeq_NS::operator bool() const
 	{ return this->Count(); }
 
-ZList_NS::ZList_NS()
+ZSeq_NS::ZSeq_NS()
 :	inherited(sArrayMutable())
 ,	fMutable(true)
 	{}
 
-ZList_NS::ZList_NS(const ZList_NS& iOther)
+ZSeq_NS::ZSeq_NS(const ZSeq_NS& iOther)
 :	inherited(iOther)
 ,	fMutable(iOther.fMutable)
 	{}
 
-ZList_NS::~ZList_NS()
+ZSeq_NS::~ZSeq_NS()
 	{}
 
-ZList_NS& ZList_NS::operator=(const ZList_NS& iOther)
+ZSeq_NS& ZSeq_NS::operator=(const ZSeq_NS& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = iOther.fMutable;
 	return *this;
 	}
 
-ZList_NS::ZList_NS(NSMutableArray* iOther)
+ZSeq_NS::ZSeq_NS(NSMutableArray* iOther)
 :	inherited(iOther)
 ,	fMutable(true)
 	{}
 
-ZList_NS::ZList_NS(NSArray* iOther)
+ZSeq_NS::ZSeq_NS(NSArray* iOther)
 :	inherited(iOther)
 ,	fMutable(false)
 	{}
 
-ZList_NS::ZList_NS(const ZRef<NSMutableArray>& iOther)
+ZSeq_NS::ZSeq_NS(const ZRef<NSMutableArray>& iOther)
 :	inherited(iOther)
 ,	fMutable(true)
 	{}
 
-ZList_NS::ZList_NS(const ZRef<NSArray>& iOther)
+ZSeq_NS::ZSeq_NS(const ZRef<NSArray>& iOther)
 :	inherited(iOther)
 ,	fMutable(false)
 	{}
 
-ZList_NS::ZList_NS(const Adopt_T<NSMutableArray>& iOther)
+ZSeq_NS::ZSeq_NS(const Adopt_T<NSMutableArray>& iOther)
 :	inherited(ZRef<NSMutableArray>(iOther))
 ,	fMutable(true)
 	{}
 
-ZList_NS::ZList_NS(const Adopt_T<NSArray>& iOther)
+ZSeq_NS::ZSeq_NS(const Adopt_T<NSArray>& iOther)
 :	inherited(iOther)
 ,	fMutable(false)
 	{}
 
-ZList_NS& ZList_NS::operator=(NSMutableArray* iOther)
+ZSeq_NS& ZSeq_NS::operator=(NSMutableArray* iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = true;
 	return *this;
 	}
 
-ZList_NS& ZList_NS::operator=(NSArray* iOther)
+ZSeq_NS& ZSeq_NS::operator=(NSArray* iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;
 	return *this;
 	}
 
-ZList_NS& ZList_NS::operator=(const ZRef<NSMutableArray>& iOther)
+ZSeq_NS& ZSeq_NS::operator=(const ZRef<NSMutableArray>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = true;
 	return *this;
 	}
 
-ZList_NS& ZList_NS::operator=(const ZRef<NSArray>& iOther)
+ZSeq_NS& ZSeq_NS::operator=(const ZRef<NSArray>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;
 	return *this;
 	}
 
-ZList_NS& ZList_NS::operator=(const Adopt_T<NSMutableArray>& iOther)
+ZSeq_NS& ZSeq_NS::operator=(const Adopt_T<NSMutableArray>& iOther)
 	{
 	inherited::operator=(ZRef<NSMutableArray>(iOther));
 	fMutable = true;
 	return *this;
 	}
 
-ZList_NS& ZList_NS::operator=(const Adopt_T<NSArray>& iOther)
+ZSeq_NS& ZSeq_NS::operator=(const Adopt_T<NSArray>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;
 	return *this;
 	}
 
-size_t ZList_NS::Count() const
+size_t ZSeq_NS::Count() const
 	{
 	if (NSArray* theArray = this->pArray())
 		return [theArray count];
 	return 0;
 	}
 
-void ZList_NS::Clear()
+void ZSeq_NS::Clear()
 	{ inherited::Clear(); }
 
-bool ZList_NS::QGet(size_t iIndex, ZRef<NSObject>& oVal) const
+bool ZSeq_NS::QGet(size_t iIndex, ZRef<NSObject>& oVal) const
 	{
 	if (NSArray* theArray = this->pArray())
 		{
@@ -513,7 +513,7 @@ bool ZList_NS::QGet(size_t iIndex, ZRef<NSObject>& oVal) const
 	return false;
 	}
 
-ZVal_NS ZList_NS::DGet(const ZVal_NS& iDefault, size_t iIndex) const
+ZVal_NS ZSeq_NS::DGet(const ZVal_NS& iDefault, size_t iIndex) const
 	{
 	ZVal_NS result;
 	if (this->QGet(iIndex, result))
@@ -521,16 +521,16 @@ ZVal_NS ZList_NS::DGet(const ZVal_NS& iDefault, size_t iIndex) const
 	return iDefault;
 	}
 
-ZVal_NS ZList_NS::Get(size_t iIndex) const
+ZVal_NS ZSeq_NS::Get(size_t iIndex) const
 	{ return this->DGet(ZVal_NS(), iIndex); }
 
-ZList_NS& ZList_NS::Set(size_t iIndex, const ZVal_NS& iVal)
+ZSeq_NS& ZSeq_NS::Set(size_t iIndex, const ZVal_NS& iVal)
 	{
 	[this->pTouch() replaceObjectAtIndex:NSUInteger(iIndex) withObject:iVal.Get()];
 	return *this;
 	}
 
-ZList_NS& ZList_NS::Erase(size_t iIndex)
+ZSeq_NS& ZSeq_NS::Erase(size_t iIndex)
 	{
 	NSMutableArray* theArray = this->pTouch();
 	if (const size_t theCount = [theArray count])
@@ -541,7 +541,7 @@ ZList_NS& ZList_NS::Erase(size_t iIndex)
 	return *this;
 	}
 
-ZList_NS& ZList_NS::Insert(size_t iIndex, const ZVal_NS& iVal)
+ZSeq_NS& ZSeq_NS::Insert(size_t iIndex, const ZVal_NS& iVal)
 	{
 	NSMutableArray* theArray = this->pTouch();
 	const size_t theCount = [theArray count];
@@ -550,16 +550,16 @@ ZList_NS& ZList_NS::Insert(size_t iIndex, const ZVal_NS& iVal)
 	return *this;
 	}
 
-ZList_NS& ZList_NS::Append(const ZVal_NS& iVal)
+ZSeq_NS& ZSeq_NS::Append(const ZVal_NS& iVal)
 	{
 	[this->pTouch() addObject:iVal.Get()];
 	return *this;
 	}
 
-NSArray* ZList_NS::pArray() const
+NSArray* ZSeq_NS::pArray() const
 	{ return inherited::Get(); }
 
-NSMutableArray* ZList_NS::pTouch()
+NSMutableArray* ZSeq_NS::pTouch()
 	{
 	ZRef<NSMutableArray> theMutableArray;
 	if (NSArray* theArray = this->pArray())

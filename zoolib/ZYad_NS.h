@@ -92,15 +92,15 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListRPos_NS
+#pragma mark * ZYadSeqRPos_NS
 
-class ZYadListRPos_NS
+class ZYadSeqRPos_NS
 :	public ZYadR_NS
-,	public ZYadListRPos_Val_Self_T<ZYadListRPos_NS, ZList_NS>
+,	public ZYadSeqRPos_Val_Self_T<ZYadSeqRPos_NS, ZSeq_NS>
 	{
 public:
-	ZYadListRPos_NS(const ZRef<NSArray>& iArray);
-	ZYadListRPos_NS(const ZRef<NSArray>& iArray, uint64 iPosition);
+	ZYadSeqRPos_NS(const ZRef<NSArray>& iArray);
+	ZYadSeqRPos_NS(const ZRef<NSArray>& iArray, uint64 iPosition);
 	};
 
 // =================================================================================================
@@ -113,8 +113,8 @@ class ZYadMapRPos_NS
 	{
 	ZYadMapRPos_NS(const ZRef<NSDictionary>& iDictionary,
 		uint64 iPosition,
-		const ZList_NS& iNames,
-		const ZList_NS& iValues);
+		const ZSeq_NS& iNames,
+		const ZSeq_NS& iValues);
 
 public:
 	ZYadMapRPos_NS(const ZRef<NSDictionary>& iDictionary);
@@ -130,8 +130,8 @@ public:
 private:
 	const ZRef<NSDictionary> fDictionary;
 	uint64 fPosition;
-	ZList_NS fNames;
-	ZList_NS fValues;
+	ZSeq_NS fNames;
+	ZSeq_NS fValues;
 	};
 
 // =================================================================================================
@@ -146,11 +146,11 @@ ZRef<ZYadStrimR> sMakeYadR(const ZRef<NSString>& iString);
 ZRef<ZYadStreamR> sMakeYadR(const ZRef<NSMutableData>& iData);
 ZRef<ZYadStreamR> sMakeYadR(const ZRef<NSData>& iData);
 
-ZRef<ZYadListR> sMakeYadR(const ZRef<NSMutableArray>& iList);
-ZRef<ZYadListR> sMakeYadR(const ZRef<NSArray>& iList);
+ZRef<ZYadSeqR> sMakeYadR(const ZRef<NSMutableArray>& iArray);
+ZRef<ZYadSeqR> sMakeYadR(const ZRef<NSArray>& iArray);
 
-ZRef<ZYadMapR> sMakeYadR(const ZRef<NSMutableDictionary>& iMap);
-ZRef<ZYadMapR> sMakeYadR(const ZRef<NSDictionary>& iMap);
+ZRef<ZYadMapR> sMakeYadR(const ZRef<NSMutableDictionary>& iDictionary);
+ZRef<ZYadMapR> sMakeYadR(const ZRef<NSDictionary>& iDictionary);
 
 // =================================================================================================
 #pragma mark -

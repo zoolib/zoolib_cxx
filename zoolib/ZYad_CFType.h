@@ -92,15 +92,15 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListRPos_CFType
+#pragma mark * ZYadSeqRPos_CFType
 
-class ZYadListRPos_CFType
+class ZYadSeqRPos_CFType
 :	public ZYadR_CFType
-,	public ZYadListRPos_Val_Self_T<ZYadListRPos_CFType, ZList_CFType>
+,	public ZYadSeqRPos_Val_Self_T<ZYadSeqRPos_CFType, ZSeq_CFType>
 	{
 public:
-	ZYadListRPos_CFType(const ZRef<CFArrayRef>& iArray);
-	ZYadListRPos_CFType(const ZRef<CFArrayRef>& iArray, uint64 iPosition);
+	ZYadSeqRPos_CFType(const ZRef<CFArrayRef>& iArray);
+	ZYadSeqRPos_CFType(const ZRef<CFArrayRef>& iArray, uint64 iPosition);
 	};
 
 // =================================================================================================
@@ -146,11 +146,11 @@ ZRef<ZYadStrimR> sMakeYadR(const ZRef<CFStringRef>& iString);
 ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFMutableDataRef>& iData);
 ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFDataRef>& iData);
 
-ZRef<ZYadListR> sMakeYadR(const ZRef<CFMutableArrayRef>& iList);
-ZRef<ZYadListR> sMakeYadR(const ZRef<CFArrayRef>& iList);
+ZRef<ZYadSeqR> sMakeYadR(const ZRef<CFMutableArrayRef>& iArray);
+ZRef<ZYadSeqR> sMakeYadR(const ZRef<CFArrayRef>& iArray);
 
-ZRef<ZYadMapR> sMakeYadR(const ZRef<CFMutableDictionaryRef>& iMap);
-ZRef<ZYadMapR> sMakeYadR(const ZRef<CFDictionaryRef>& iMap);
+ZRef<ZYadMapR> sMakeYadR(const ZRef<CFMutableDictionaryRef>& iDictionary);
+ZRef<ZYadMapR> sMakeYadR(const ZRef<CFDictionaryRef>& iDictionary);
 
 // =================================================================================================
 #pragma mark -

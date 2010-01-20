@@ -886,7 +886,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	else if (theWhat == "Create_Ack")
 		{
-		const vector<ZTValue>& vectorIDs = theResp.Get("IDs").GetList().GetVector();
+		const vector<ZTValue>& vectorIDs = theResp.Get("IDs").GetSeq().GetVector();
 		for (vector<ZTValue>::const_iterator i = vectorIDs.begin(); i != vectorIDs.end(); ++i)
 			{
 			ZTuple theTuple = (*i).GetTuple();
@@ -907,7 +907,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	else if (theWhat == "Validate_Succeeded")
 		{
-		const vector<ZTValue>& vectorClientIDs = theResp.Get("ClientIDs").GetList().GetVector();
+		const vector<ZTValue>& vectorClientIDs = theResp.Get("ClientIDs").GetSeq().GetVector();
 		for (vector<ZTValue>::const_iterator i = vectorClientIDs.begin();
 			i != vectorClientIDs.end(); ++i)
 			{
@@ -924,7 +924,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	else if (theWhat == "Validate_Failed")
 		{
-		const vector<ZTValue>& vectorClientIDs = theResp.Get("ClientIDs").GetList().GetVector();
+		const vector<ZTValue>& vectorClientIDs = theResp.Get("ClientIDs").GetSeq().GetVector();
 		for (vector<ZTValue>::const_iterator i = vectorClientIDs.begin();
 			i != vectorClientIDs.end(); ++i)
 			{
@@ -941,7 +941,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	else if (theWhat == "Commit_Ack")
 		{
-		const vector<ZTValue>& vectorClientIDs = theResp.Get("ClientIDs").GetList().GetVector();
+		const vector<ZTValue>& vectorClientIDs = theResp.Get("ClientIDs").GetSeq().GetVector();
 		for (vector<ZTValue>::const_iterator i = vectorClientIDs.begin();
 			i != vectorClientIDs.end(); ++i)
 			{
@@ -957,7 +957,9 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	else if (theWhat == "GetTuples_Ack")
 		{
-		const vector<ZTValue>& vectorTransactions = theResp.Get("Transactions").GetList().GetVector();
+		const vector<ZTValue>& vectorTransactions =
+			theResp.Get("Transactions").GetSeq().GetVector();
+
 		for (vector<ZTValue>::const_iterator i = vectorTransactions.begin();
 			i != vectorTransactions.end(); ++i)
 			{
@@ -965,7 +967,9 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 			Transaction* theTransaction
 				= reinterpret_cast<Transaction*>(theTransactionTuple.GetInt64("ClientID"));
 
-			const vector<ZTValue>& vectorIDTuples = theTransactionTuple.Get("IDValues").GetList().GetVector();
+			const vector<ZTValue>& vectorIDTuples =
+				theTransactionTuple.Get("IDValues").GetSeq().GetVector();
+
 			for (vector<ZTValue>::const_iterator i = vectorIDTuples.begin();
 				i != vectorIDTuples.end(); ++i)
 				{
@@ -992,7 +996,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	else if (theWhat == "Search_Ack")
 		{
-		const vector<ZTValue>& vectorSearches = theResp.Get("Searches").GetList().GetVector();
+		const vector<ZTValue>& vectorSearches = theResp.Get("Searches").GetSeq().GetVector();
 		for (vector<ZTValue>::const_iterator i = vectorSearches.begin();
 			i != vectorSearches.end(); ++i)
 			{
@@ -1003,7 +1007,8 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 			theTransaction->fSearches_Waiting.erase(theSearch);
 			
 			vector<uint64> vectorResultIDs;
-			theSearchTuple.Get("Results").MutableList().GetVector_T(back_inserter(vectorResultIDs), uint64());
+			theSearchTuple.Get("Results").MutableSeq()
+				.GetVector_T(back_inserter(vectorResultIDs), uint64());
 
 			theSearch->fCallback(theSearch->fRefcon, vectorResultIDs);
 			delete theSearch;
@@ -1011,7 +1016,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	else if (theWhat == "Count_Ack")
 		{
-		const vector<ZTValue>& vectorCounts = theResp.Get("Counts").GetList().GetVector();
+		const vector<ZTValue>& vectorCounts = theResp.Get("Counts").GetSeq().GetVector();
 		for (vector<ZTValue>::const_iterator i = vectorCounts.begin();
 			i != vectorCounts.end(); ++i)
 			{
@@ -1084,8 +1089,8 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		ZTuple reqTuple;
 		reqTuple.SetString("What", "Create");
 
-		ZList_ZooLib theList;
-		vector<ZTValue>& vectorTransactionIDs = theList.MutableVector();
+		ZSeq_ZooLib theSeq;
+		vector<ZTValue>& vectorTransactionIDs = theSeq.MutableVector();
 		for (vector<Transaction*>::iterator i = fTransactions_Create_Unsent.begin();
 			i != fTransactions_Create_Unsent.end(); /*no inc*/)
 			{
@@ -1106,7 +1111,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 
 		if (!vectorTransactionIDs.empty())
 			{
-			reqTuple.Set("ClientIDs", theList);
+			reqTuple.Set("ClientIDs", theSeq);
 			sSend(locker, iStream, reqTuple);
 			didAnything = true;
 			}
@@ -1117,8 +1122,8 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		ZTuple reqTuple;
 		reqTuple.SetString("What", "Abort");
 
-		ZList_ZooLib theList;
-		vector<ZTValue>& vectorServerIDs = theList.MutableVector();
+		ZSeq_ZooLib theSeq;
+		vector<ZTValue>& vectorServerIDs = theSeq.MutableVector();
 		for (vector<Transaction*>::iterator i = fTransactions_Aborted_Unsent.begin();
 			i != fTransactions_Aborted_Unsent.end(); /*no inc*/)
 			{
@@ -1138,7 +1143,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 
 		if (!vectorServerIDs.empty())
 			{
-			reqTuple.Set("ServerIDs", theList);
+			reqTuple.Set("ServerIDs", theSeq);
 			sSend(locker, iStream, reqTuple);
 			didAnything = true;
 			}
@@ -1152,8 +1157,8 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 			ZTuple reqTuple;
 			reqTuple.SetString("What", "Validate");
 
-			ZList_ZooLib theList;
-			vector<ZTValue>& vectorServerIDs = theList.MutableVector();
+			ZSeq_ZooLib theSeq;
+			vector<ZTValue>& vectorServerIDs = theSeq.MutableVector();
 			for (vector<Transaction*>::iterator i = fTransactions_Validate_Unsent.begin();
 				i != fTransactions_Validate_Unsent.end(); /*no inc*/)
 				{
@@ -1172,7 +1177,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 					}
 				}
 
-			reqTuple.Set("ServerIDs", theList);
+			reqTuple.Set("ServerIDs", theSeq);
 			sSend(locker, iStream, reqTuple);
 			}
 		didAnything = true;
@@ -1183,8 +1188,8 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		ZTuple reqTuple;
 		reqTuple.SetString("What", "Commit");
 
-		ZList_ZooLib theList;
-		vector<ZTValue>& vectorServerIDs = theList.MutableVector();
+		ZSeq_ZooLib theSeq;
+		vector<ZTValue>& vectorServerIDs = theSeq.MutableVector();
 		for (vector<Transaction*>::iterator i = fTransactions_Commit_Unsent.begin();
 			i != fTransactions_Commit_Unsent.end(); /*no inc*/)
 			{
@@ -1205,7 +1210,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 
 		if (!vectorServerIDs.empty())
 			{
-			reqTuple.Set("ServerIDs", theList);
+			reqTuple.Set("ServerIDs", theSeq);
 			sSend(locker, iStream, reqTuple);
 			didAnything = true;
 			}
@@ -1230,7 +1235,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 			ZTuple actionsTuple;
 			if (!theTransaction->fTransTuples_NeedWork.empty())
 				{
-				ZList_ZooLib valWrites, valGets;
+				ZSeq_ZooLib valWrites, valGets;
 				vector<ZTValue>& vectorWrites = valWrites.MutableVector();
 				vector<ZTValue>& vectorGets = valGets.MutableVector();
 
@@ -1277,8 +1282,8 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 				searchesTuple.SetString("What", "Search");
 				searchesTuple.SetInt64("ServerID", theTransaction->fServerID);
 
-				ZList_ZooLib theList;
-				vector<ZTValue>& vectorSearches = theList.MutableVector();
+				ZSeq_ZooLib theSeq;
+				vector<ZTValue>& vectorSearches = theSeq.MutableVector();
 				for (vector<TransSearch_t*>::iterator i = theTransaction->fSearches_Unsent.begin();
 					i != theTransaction->fSearches_Unsent.end(); ++i)
 					{
@@ -1289,7 +1294,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 					vectorSearches.push_back(theTuple);
 					theTransaction->fSearches_Waiting.insert(theSearch);
 					}
-				searchesTuple.Set("Searches", theList);
+				searchesTuple.Set("Searches", theSeq);
 				theTransaction->fSearches_Unsent.clear();
 				}
 
@@ -1299,8 +1304,8 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 				countsTuple.SetString("What", "Count");
 				countsTuple.SetInt64("ServerID", theTransaction->fServerID);
 
-				ZList_ZooLib theList;
-				vector<ZTValue>& vectorCounts = theList.MutableVector();
+				ZSeq_ZooLib theSeq;
+				vector<ZTValue>& vectorCounts = theSeq.MutableVector();
 				for (vector<TransCount_t*>::iterator i = theTransaction->fCounts_Unsent.begin();
 					i != theTransaction->fCounts_Unsent.end(); ++i)
 					{
@@ -1311,7 +1316,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 					vectorCounts.push_back(theTuple);
 					theTransaction->fCounts_Waiting.insert(theCount);
 					}
-				countsTuple.Set("Counts", theList);
+				countsTuple.Set("Counts", theSeq);
 				theTransaction->fCounts_Unsent.clear();
 				}
 

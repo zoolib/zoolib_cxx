@@ -482,7 +482,7 @@ void ZTBServer::Handle_Create(const ZTuple& iReq)
 	{
 	ZMutexLocker locker(fMutex_Structure);
 
-	const vector<ZTValue>& vectorClientIDs = iReq.Get("ClientIDs").GetList().GetVector();
+	const vector<ZTValue>& vectorClientIDs = iReq.Get("ClientIDs").GetSeq().GetVector();
 	for (vector<ZTValue>::const_iterator i = vectorClientIDs.begin();
 		i != vectorClientIDs.end(); ++i)
 		{
@@ -558,7 +558,7 @@ void ZTBServer::Handle_Search(const ZTuple& iReq)
 	Transaction* theTransaction = reinterpret_cast<Transaction*>(iReq.GetInt64("ServerID"));
 	ZAssert(theTransaction->fServer == this);
 
-	const vector<ZTValue>& vectorSearches = iReq.Get("Searches").GetList().GetVector();
+	const vector<ZTValue>& vectorSearches = iReq.Get("Searches").GetSeq().GetVector();
 	for (vector<ZTValue>::const_iterator i = vectorSearches.begin();
 		i != vectorSearches.end(); ++i)
 		{
@@ -596,7 +596,7 @@ void ZTBServer::Handle_Count(const ZTuple& iReq)
 	Transaction* theTransaction = reinterpret_cast<Transaction*>(iReq.GetInt64("ServerID"));
 	ZAssert(theTransaction->fServer == this);
 
-	const vector<ZTValue>& vectorCounts = iReq.Get("Counts").GetList().GetVector();
+	const vector<ZTValue>& vectorCounts = iReq.Get("Counts").GetSeq().GetVector();
 	for (vector<ZTValue>::const_iterator i = vectorCounts.begin(); i != vectorCounts.end(); ++i)
 		{
 		ZTuple t = (*i).GetTuple();
@@ -636,7 +636,7 @@ void ZTBServer::Handle_Validate(const ZTuple& iReq)
 	{
 	ZMutexLocker locker(fMutex_Structure);
 
-	const vector<ZTValue>& vectorServerIDs = iReq.Get("ServerIDs").GetList().GetVector();
+	const vector<ZTValue>& vectorServerIDs = iReq.Get("ServerIDs").GetSeq().GetVector();
 	for (vector<ZTValue>::const_iterator i = vectorServerIDs.begin();
 		i != vectorServerIDs.end(); ++i)
 		{
@@ -657,7 +657,7 @@ void ZTBServer::Handle_Abort(const ZTuple& iReq)
 	{
 	ZMutexLocker locker(fMutex_Structure);
 
-	const vector<ZTValue>& vectorServerIDs = iReq.Get("ServerIDs").GetList().GetVector();
+	const vector<ZTValue>& vectorServerIDs = iReq.Get("ServerIDs").GetSeq().GetVector();
 	for (vector<ZTValue>::const_iterator i = vectorServerIDs.begin();
 		i != vectorServerIDs.end(); ++i)
 		{
@@ -698,7 +698,7 @@ void ZTBServer::Handle_Commit(const ZTuple& iReq)
 	{
 	ZMutexLocker locker(fMutex_Structure);
 
-	const vector<ZTValue>& vectorServerIDs = iReq.Get("ServerIDs").GetList().GetVector();
+	const vector<ZTValue>& vectorServerIDs = iReq.Get("ServerIDs").GetSeq().GetVector();
 	for (vector<ZTValue>::const_iterator i = vectorServerIDs.begin();
 		i != vectorServerIDs.end(); ++i)
 		{
@@ -741,12 +741,12 @@ void ZTBServer::Handle_Actions(const ZTuple& iReq)
 	Transaction* theTransaction = reinterpret_cast<Transaction*>(iReq.GetInt64("ServerID"));
 
 	vector<uint64> vectorGets;
-	iReq.Get("Gets").GetList().GetVector_T(back_inserter(vectorGets), uint64());
+	iReq.Get("Gets").GetSeq().GetVector_T(back_inserter(vectorGets), uint64());
 
 	theTransaction->fTBRepTransaction->GetTuples(
 		vectorGets.size(), &vectorGets[0], sCallback_GetTuple, theTransaction);
 
-	const vector<ZTValue>& vectorWrites = iReq.Get("Writes").GetList().GetVector();
+	const vector<ZTValue>& vectorWrites = iReq.Get("Writes").GetSeq().GetVector();
 	for (vector<ZTValue>::const_iterator i = vectorWrites.begin(); i != vectorWrites.end(); ++i)
 		{
 		const ZTuple& t = (*i).GetTuple();

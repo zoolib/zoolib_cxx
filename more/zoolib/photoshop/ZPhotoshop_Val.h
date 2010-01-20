@@ -52,8 +52,8 @@ using std::vector;
 
 typedef ZData_Any Data;
 
-class List;
 class Map;
+class Seq;
 class Spec;
 class Val;
 
@@ -244,7 +244,7 @@ public:
 	Val(const UnitFloat& iVal);
 	Val(const Enumerated& iVal);
 	Val(const FileRef& iVal);
-	Val(const List& iVal);
+	Val(const Seq& iVal);
 	Val(const Map& iVal);
 	Val(const Spec& iVal);
 
@@ -258,18 +258,18 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(Val, UnitFloat, UnitFloat)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Enumerated, Enumerated)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, FileRef, FileRef)
-	ZMACRO_ZValAccessors_Decl_Entry(Val, List, List)
+	ZMACRO_ZValAccessors_Decl_Entry(Val, Seq, Seq)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Map, Map)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Spec, Spec)
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * List
+#pragma mark * Seq
 
-class List
+class Seq
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(List,
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Seq,
 		operator_bool_generator_type, operator_bool_type);
 
 public:
@@ -278,20 +278,20 @@ public:
 	ZAny AsAny() const;
 	ZAny AsAny(const ZAny& iDefault) const;
 
-	void swap(List& iOther);
+	void swap(Seq& iOther);
 
-	List();
-	List(const List& iOther);
-	~List();
-	List& operator=(const List& iOther);
+	Seq();
+	Seq(const Seq& iOther);
+	~Seq();
+	Seq& operator=(const Seq& iOther);
 
-	List(PIActionList iOther);
-	List(Adopt_T<PIActionList> iOther);
+	Seq(PIActionList iOther);
+	Seq(Adopt_T<PIActionList> iOther);
 
-	List& operator=(PIActionList iOther);
-	List& operator=(Adopt_T<PIActionList> iOther);
+	Seq& operator=(PIActionList iOther);
+	Seq& operator=(Adopt_T<PIActionList> iOther);
 
-// ZList protocol
+// ZSeq protocol
 	size_t Count() const;
 
 	void Clear();
@@ -300,7 +300,7 @@ public:
 	Val DGet(const Val& iDefault, size_t iIndex) const;
 	Val Get(size_t iIndex) const;
 
-	List& Append(const Val& iVal);
+	Seq& Append(const Val& iVal);
 
 // Our protocol
 	PIActionList& OParam();
@@ -409,7 +409,7 @@ inline void swap(ZOOLIB_PREFIX::ZPhotoshop::Spec& a, ZOOLIB_PREFIX::ZPhotoshop::
 inline void swap(ZOOLIB_PREFIX::ZPhotoshop::Val& a, ZOOLIB_PREFIX::ZPhotoshop::Val& b)
 	{ a.swap(b); }
 
-inline void swap(ZOOLIB_PREFIX::ZPhotoshop::List& a, ZOOLIB_PREFIX::ZPhotoshop::List& b)
+inline void swap(ZOOLIB_PREFIX::ZPhotoshop::Seq& a, ZOOLIB_PREFIX::ZPhotoshop::Seq& b)
 	{ a.swap(b); }
 
 inline void swap(ZOOLIB_PREFIX::ZPhotoshop::Map& a, ZOOLIB_PREFIX::ZPhotoshop::Map& b)

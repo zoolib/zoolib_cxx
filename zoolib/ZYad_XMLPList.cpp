@@ -121,7 +121,7 @@ static ZRef<ZYadR> spMakeYadR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU)
 		else if (theR.Name() == "array")
 			{
 			theR.Advance();
-			return new ZYadListR_XMLPList(iStrimmerU, true);
+			return new ZYadSeqR_XMLPList(iStrimmerU, true);
 			}
 		else if (theR.Name() == "data")
 			{
@@ -199,12 +199,12 @@ const ZStrimR& ZYadStrimR_XMLPList::GetStrimR()
 #pragma mark -
 #pragma mark * ZYadReaderRep_XMLPList
 
-ZYadListR_XMLPList::ZYadListR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, bool iMustReadEndTag)
+ZYadSeqR_XMLPList::ZYadSeqR_XMLPList(ZRef<ZML::StrimmerU> iStrimmerU, bool iMustReadEndTag)
 :	fStrimmerU(iStrimmerU),
 	fMustReadEndTag(iMustReadEndTag)
 	{}
 
-void ZYadListR_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+void ZYadSeqR_XMLPList::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	ZML::StrimU& theR = fStrimmerU->GetStrim();
 
@@ -293,10 +293,10 @@ static void spToStrim_Strim(const ZML::StrimW& s, const ZStrimR& iStrimR)
 	s.End("string");	
 	}
 
-static void spToStrim_List(const ZML::StrimW& s, ZRef<ZYadListR> iYadListR)
+static void spToStrim_List(const ZML::StrimW& s, ZRef<ZYadSeqR> iYadSeqR)
 	{
 	s.Begin("array");
-		while (ZRef<ZYadR> theChild = iYadListR->ReadInc())
+		while (ZRef<ZYadR> theChild = iYadSeqR->ReadInc())
 			ZYad_XMLPList::sToStrim(theChild, s);
 	s.End("array");
 	}
@@ -367,9 +367,9 @@ void ZYad_XMLPList::sToStrim(ZRef<ZYadR> iYadR, const ZML::StrimW& s)
 		{
 		spToStrim_Map(s, theYadMapR);
 		}
-	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
+	else if (ZRef<ZYadSeqR> theYadSeqR = ZRefDynamicCast<ZYadSeqR>(iYadR))
 		{
-		spToStrim_List(s, theYadListR);
+		spToStrim_List(s, theYadSeqR);
 		}
 	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
 		{

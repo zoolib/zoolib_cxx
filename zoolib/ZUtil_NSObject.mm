@@ -175,7 +175,7 @@ NSObject* sAsNSObject(NSObject* iDefault, const ZAny& iVal)
 		else
 			return sData();
 		}
-	else if (const ZList_Any* theValue = iVal.PGet_T<ZList_Any>())
+	else if (const ZSeq_Any* theValue = iVal.PGet_T<ZSeq_Any>())
 		{
 		NSMutableArray* theArray = sArrayMutable();
 		for (size_t x = 0, count = theValue->Count(); x < count; ++x)
@@ -320,7 +320,7 @@ NAMESPACE_ZOOLIB_END
 
 -(ZAny)asAnyWithDefault:(const ZAny&)iDefault
 	{
-	ZList_Any result;
+	ZSeq_Any result;
 	for (id theValue, i = [self objectEnumerator];
 		(theValue = [i nextObject]); /*no inc*/)
 		{

@@ -178,7 +178,7 @@ void ZTS_Umbrella::pTranslate_GlobalToLocal(size_t iChildIndex, ZMap_ZooLib& ioT
 				}
 			case eZType_Vector:
 				{
-				vector<ZTValue>& theVector = ioTuple.Mutable(i).MutableList().MutableVector();
+				vector<ZTValue>& theVector = ioTuple.Mutable(i).MutableSeq().MutableVector();
 				for (vector<ZTValue>::iterator j = theVector.begin(); j != theVector.end(); ++j)
 					{
 					if (eZType_ID == (*j).TypeOf())
@@ -212,7 +212,7 @@ void ZTS_Umbrella::pTranslate_LocalToGlobal(size_t iChildIndex, ZMap_ZooLib& ioT
 				}
 			case eZType_Vector:
 				{
-				vector<ZTValue>& theVector = ioTuple.Mutable(i).MutableList().MutableVector();
+				vector<ZTValue>& theVector = ioTuple.Mutable(i).MutableSeq().MutableVector();
 				for (vector<ZTValue>::iterator j = theVector.begin(); j != theVector.end(); ++j)
 					{
 					if (eZType_ID == (*j).TypeOf())

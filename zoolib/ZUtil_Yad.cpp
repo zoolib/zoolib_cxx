@@ -56,21 +56,21 @@ static ZRef<ZYadR> sGetChild(ZRef<ZYadR> iYadR, const string& iName)
 				}
 			}
 		}
-	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
+	else if (ZRef<ZYadSeqR> theYadSeqR = ZRefDynamicCast<ZYadSeqR>(iYadR))
 		{
 		int64 theIntIndex;
 		if (ZString::sQInt64(iName, theIntIndex) && theIntIndex >= 0)
 			{
-			if (ZRef<ZYadListRPos> theYadListPosR = ZRefDynamicCast<ZYadListRPos>(iYadR))
+			if (ZRef<ZYadSeqRPos> theYadSeqPosR = ZRefDynamicCast<ZYadSeqRPos>(iYadR))
 				{
-				theYadListPosR->SetPosition(theIntIndex);
-				return theYadListPosR->ReadInc();
+				theYadSeqPosR->SetPosition(theIntIndex);
+				return theYadSeqPosR->ReadInc();
 				}
 			else
 				{
 				for (;;)
 					{
-					if (ZRef<ZYadR> cur = theYadListR->ReadInc())
+					if (ZRef<ZYadR> cur = theYadSeqR->ReadInc())
 						{
 						if (0 == theIntIndex--)
 							return cur;

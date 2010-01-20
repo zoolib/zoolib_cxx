@@ -54,7 +54,7 @@ static const char LF = '\n';
 #pragma mark * Utility stuff
 
 static void sAppend(Map& ioFields, const string& iName, const Val& iValue)
-	{ ioFields.Mutable(iName).MutableList().Append(iValue); }
+	{ ioFields.Mutable(iName).MutableSeq().Append(iValue); }
 
 static uint32 sHexCharToUInt(char iChar)
 	{
@@ -739,9 +739,9 @@ string sGetString0(const Val& iVal)
 	if (iVal.QGetString(result))
 		return result;
 
-	const List& theList = iVal.GetList();
-	if (theList.Count())
-		return theList.Get(0).GetString();
+	const Seq& theSeq = iVal.GetSeq();
+	if (theSeq.Count())
+		return theSeq.Get(0).GetString();
 
 	return string();
 	}

@@ -36,8 +36,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	endif
 #endif
 
-#include <map>
-
 #if ZCONFIG_SPI_Enabled(Win)
 	enum
 		{
@@ -48,7 +46,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * List and Map Copy, Getter, Setter macros
+#pragma mark * Seq and Map Copy, Getter, Setter macros
 
 #define COPYFROMTO(SUITE, iSource, iKey, iType, DEST) \
 	switch (iType) \
@@ -228,7 +226,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		{ \
 		PIActionList theVal; \
 		if (noErr == SUITE->GetList(P0, P1, &theVal)) \
-			{ oVal = List(Adopt(theVal)); return true; } \
+			{ oVal = Seq(Adopt(theVal)); return true; } \
 		break; \
 		} \
 	case typeObject: \
@@ -282,7 +280,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		{ SUITE->PutString(PARAM, const_cast<char*>(theVal->c_str())); } \
 	else if (const bool* theVal = iVal.PGet_T<bool>()) \
 		{ SUITE->PutBoolean(PARAM, *theVal); } \
-	else if (const List* theVal = iVal.PGet_T<List>()) \
+	else if (const Seq* theVal = iVal.PGet_T<Seq>()) \
 		{ SUITE->PutList(PARAM, theVal->IParam()); } \
 	else if (const Map* theVal = iVal.PGet_T<Map>()) \
 		{ SUITE->PutObject(PARAM, theVal->GetType(), theVal->IParam()); } \
@@ -454,7 +452,6 @@ static KeyID spAsKeyID(const string8& iName)
 static string8 spAsString(KeyID iKeyID)
 	{ return spFromRuntimeTypeID(iKeyID); }
 
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Public utilities
@@ -492,6 +489,7 @@ static bool spIntAsString(int32 iInt, string& oString)
 
 	return true;
 	}
+
 bool sFromRuntimeTypeID(TypeID iTypeID, string8& oString)
 	{
 	char buf[1024];
@@ -997,7 +995,7 @@ ZAny Val::AsAny(const ZAny& iDefault) const
 	if (const Map* theVal = this->PGet_T<Map>())
 		return ZAny(theVal->AsAny(iDefault));
 
-	if (const List* theVal = this->PGet_T<List>())
+	if (const Seq* theVal = this->PGet_T<Seq>())
 		return ZAny(theVal->AsAny(iDefault));
 		
 	return *this;
@@ -1055,7 +1053,7 @@ Val::Val(const FileRef& iVal)
 :	ZAny(iVal)
 	{}
 
-Val::Val(const List& iVal)
+Val::Val(const Seq& iVal)
 :	ZAny(iVal)
 	{}
 
@@ -1080,23 +1078,23 @@ ZMACRO_ZValAccessors_Def_Entry(Val, ClassID, ClassID)
 ZMACRO_ZValAccessors_Def_Entry(Val, UnitFloat, UnitFloat)
 ZMACRO_ZValAccessors_Def_Entry(Val, Enumerated, Enumerated)
 ZMACRO_ZValAccessors_Def_Entry(Val, FileRef, FileRef)
-ZMACRO_ZValAccessors_Def_Entry(Val, List, List)
+ZMACRO_ZValAccessors_Def_Entry(Val, Seq, Seq)
 ZMACRO_ZValAccessors_Def_Entry(Val, Map, Map)
 ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * List
+#pragma mark * Seq
 
-List::operator operator_bool_type() const
+Seq::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->Count()); }
 
-ZAny List::AsAny() const
+ZAny Seq::AsAny() const
 	{ return this->AsAny(ZAny()); }
 
-ZAny List::AsAny(const ZAny& iDefault) const
+ZAny Seq::AsAny(const ZAny& iDefault) const
 	{
-	ZList_Any theList;
+	ZSeq_Any theList;
 	if (size_t theCount = this->Count())
 		{
 		for (size_t x = 0; x < theCount; ++x)
@@ -1105,20 +1103,20 @@ ZAny List::AsAny(const ZAny& iDefault) const
 	return ZAny(theList);
 	}
 
-void List::swap(List& iOther)
+void Seq::swap(Seq& iOther)
 	{ std::swap(fAL, iOther.fAL); }
 
-List::List()
+Seq::Seq()
 	{ spPSActionList->Make(&fAL); }
 
-List::List(const List& iOther)
+Seq::Seq(const Seq& iOther)
 :	fAL(spDuplicate(iOther.fAL))
 	{}
 
-List::~List()
+Seq::~Seq()
 	{ spPSActionList->Free(fAL); }
 
-List& List::operator=(const List& iOther)
+Seq& Seq::operator=(const Seq& iOther)
 	{
 	if (this != &iOther)
 		{
@@ -1128,29 +1126,29 @@ List& List::operator=(const List& iOther)
 	return *this;
 	}
 
-List::List(PIActionList iOther)
+Seq::Seq(PIActionList iOther)
 :	fAL(spDuplicate(iOther))
 	{}
 
-List::List(Adopt_T<PIActionList> iOther)
+Seq::Seq(Adopt_T<PIActionList> iOther)
 :	fAL(iOther.Get())
 	{}
 
-List& List::operator=(PIActionList iOther)
+Seq& Seq::operator=(PIActionList iOther)
 	{
 	spPSActionList->Free(fAL);
 	fAL = spDuplicate(iOther);
 	return *this;
 	}
 
-List& List::operator=(Adopt_T<PIActionList> iOther)
+Seq& Seq::operator=(Adopt_T<PIActionList> iOther)
 	{
 	spPSActionList->Free(fAL);
 	fAL = iOther.Get();
 	return *this;
 	}
 
-size_t List::Count() const
+size_t Seq::Count() const
 	{
 	uint32 result;
 	if (noErr == spPSActionList->GetCount(fAL, &result))
@@ -1158,13 +1156,13 @@ size_t List::Count() const
 	return 0;
 	}
 
-void List::Clear()
+void Seq::Clear()
 	{
 	spPSActionList->Free(fAL);
 	spPSActionList->Make(&fAL);	
 	}
 
-bool List::QGet(size_t iIndex, Val& oVal) const
+bool Seq::QGet(size_t iIndex, Val& oVal) const
 	{
 	if (iIndex >= this->Count())
 		return false;
@@ -1182,7 +1180,7 @@ bool List::QGet(size_t iIndex, Val& oVal) const
 	return false;
 	}
 
-Val List::DGet(const Val& iDefault, size_t iIndex) const
+Val Seq::DGet(const Val& iDefault, size_t iIndex) const
 	{
 	Val result;
 	if (this->QGet(iIndex, result))
@@ -1190,16 +1188,16 @@ Val List::DGet(const Val& iDefault, size_t iIndex) const
 	return iDefault;
 	}
 
-Val List::Get(size_t iIndex) const
+Val Seq::Get(size_t iIndex) const
 	{ return this->DGet(Val(), iIndex); }
 
-List& List::Append(const Val& iVal)
+Seq& Seq::Append(const Val& iVal)
 	{
 	SETTERCASES(spPSActionList, fAL)
 	return *this;
 	}
 
-PIActionList& List::OParam()
+PIActionList& Seq::OParam()
 	{
 	if (fAL)
 		spPSActionList->Free(fAL);
@@ -1207,10 +1205,10 @@ PIActionList& List::OParam()
 	return fAL;
 	}
 
-PIActionList List::IParam() const
+PIActionList Seq::IParam() const
 	{ return fAL; }
 
-PIActionList List::Orphan()
+PIActionList Seq::Orphan()
 	{
 	PIActionList result = fAL;
 	fAL = nullptr;

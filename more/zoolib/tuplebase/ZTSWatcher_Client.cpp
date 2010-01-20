@@ -300,12 +300,12 @@ void ZTSWatcher_Client::pSync1(
 		}
 
 	oAddedIDs.clear();
-	response.Get("addedTuples").GetList().GetVector_T(back_inserter(oAddedIDs), uint64());
+	response.Get("addedTuples").GetSeq().GetVector_T(back_inserter(oAddedIDs), uint64());
 
 
 	oChangedTupleIDs.clear();
 	oChangedTuples.clear();
-	const vector<ZTValue>& changedTuplesV = response.Get("changedTuples").GetList().GetVector();
+	const vector<ZTValue>& changedTuplesV = response.Get("changedTuples").GetSeq().GetVector();
 	if (size_t theCount = changedTuplesV.size())
 		{
 		oChangedTupleIDs.reserve(theCount);
@@ -331,7 +331,7 @@ void ZTSWatcher_Client::pSync1(
 
 
 	oChangedQueries.clear();
-	const vector<ZTValue>& changedQueriesV = response.Get("changedQueries").GetList().GetVector();
+	const vector<ZTValue>& changedQueriesV = response.Get("changedQueries").GetSeq().GetVector();
 	for (vector<ZTValue>::const_iterator
 		i = changedQueriesV.begin(), theEnd = changedQueriesV.end();
 		i != theEnd; ++i)
@@ -344,8 +344,8 @@ void ZTSWatcher_Client::pSync1(
 			pair<map<int64, vector<uint64> >::iterator, bool> pos =
 				oChangedQueries.insert(pair<int64, vector<uint64> >(theRefcon, vector<uint64>()));
 			vector<uint64>& theIDs = (*pos.first).second;
-			theIDs.reserve(entry.Get("IDs").GetList().Count());
-			entry.Get("IDs").GetList().GetVector_T(back_inserter(theIDs), uint64());
+			theIDs.reserve(entry.Get("IDs").GetSeq().Count());
+			entry.Get("IDs").GetSeq().GetVector_T(back_inserter(theIDs), uint64());
 			}
 		}
 

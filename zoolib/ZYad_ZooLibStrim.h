@@ -112,14 +112,14 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_ZooLibStrim
+#pragma mark * ZYadSeqR_ZooLibStrim
 
-class ZYadListR_ZooLibStrim : public ZYadListR_Std
+class ZYadSeqR_ZooLibStrim : public ZYadSeqR_Std
 	{
 public:
-	ZYadListR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iReadDelimiter);
+	ZYadSeqR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iReadDelimiter);
 
-// From ZYadListR_Std
+// From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:

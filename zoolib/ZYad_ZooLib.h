@@ -62,15 +62,15 @@ typedef ZYadStreamRPos_Val_T<ZData_ZooLib> ZYadStreamRPos_ZooLib;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListRPos_ZooLib
+#pragma mark * ZYadSeqRPos_ZooLib
 
-class ZYadListRPos_ZooLib
+class ZYadSeqRPos_ZooLib
 :	public ZYadR_ZooLib
-,	public ZYadListRPos_Val_Self_T<ZYadListRPos_ZooLib, ZList_ZooLib>
+,	public ZYadSeqRPos_Val_Self_T<ZYadSeqRPos_ZooLib, ZSeq_ZooLib>
 	{
 public:
-	ZYadListRPos_ZooLib(const ZList_ZooLib& iList);
-	ZYadListRPos_ZooLib(const ZList_ZooLib& iList, uint64 iPosition);
+	ZYadSeqRPos_ZooLib(const ZSeq_ZooLib& iSeq);
+	ZYadSeqRPos_ZooLib(const ZSeq_ZooLib& iSeq, uint64 iPosition);
 
 // From ZYadR
 	virtual bool IsSimple(const ZYadOptions& iOptions);
@@ -102,7 +102,7 @@ public:
 
 ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal);
 
-ZRef<ZYadListR> sMakeYadR(const ZList_ZooLib& iList);
+ZRef<ZYadSeqR> sMakeYadR(const ZSeq_ZooLib& iSeq);
 
 ZRef<ZYadMapR> sMakeYadR(const ZMap_ZooLib& iMap);
 

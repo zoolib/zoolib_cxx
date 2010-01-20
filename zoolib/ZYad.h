@@ -130,9 +130,9 @@ class ZYadStrimR
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR
+#pragma mark * ZYadSeqR
 
-class ZYadListR : public virtual ZYadR
+class ZYadSeqR : public virtual ZYadR
 	{
 public:
 // From ZYadR
@@ -148,21 +148,21 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListRPos
+#pragma mark * ZYadSeqRPos
 
-class ZYadListRPos : public virtual ZYadListR
+class ZYadSeqRPos : public virtual ZYadSeqR
 	{
 public:
 // From ZYadR
 	virtual bool Accept(ZYadVisitor& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
-// Default implementation of ZYadListR protocol
+// Default implementation of ZYadSeqR protocol
 	virtual bool Skip();
 	virtual void SkipAll();
 
 // Our protocol
-	virtual ZRef<ZYadListRPos> Clone() = 0;
+	virtual ZRef<ZYadSeqRPos> Clone() = 0;
 
 	virtual uint64 GetPosition() = 0;
 	virtual void SetPosition(uint64 iPosition) = 0;
@@ -218,8 +218,8 @@ public:
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
 	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
-	virtual bool Visit_YadListR(ZRef<ZYadListR> iYadListR);
-	virtual bool Visit_YadListRPos(ZRef<ZYadListRPos> iYadListRPos);
+	virtual bool Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
+	virtual bool Visit_YadSeqRPos(ZRef<ZYadSeqRPos> iYadSeqRPos);
 	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 	virtual bool Visit_YadMapRPos(ZRef<ZYadMapRPos> iYadMapRPos);
 	};

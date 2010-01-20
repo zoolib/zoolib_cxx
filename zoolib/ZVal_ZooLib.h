@@ -49,12 +49,12 @@ class ZStreamW;
 
 class ZVal_ZooLib;
 typedef ZData_Any ZData_ZooLib;
-class ZList_ZooLib;
+class ZSeq_ZooLib;
 class ZMap_ZooLib;
 
 typedef ZVal_ZooLib ZVal_Z;
 typedef ZData_ZooLib ZData_Z;
-typedef ZList_ZooLib ZList_Z;
+typedef ZSeq_ZooLib ZSeq_Z;
 typedef ZMap_ZooLib ZMap_Z;
 
 // =================================================================================================
@@ -110,7 +110,7 @@ public:
 	ZVal_ZooLib(const char* iVal);
 	ZVal_ZooLib(const std::string& iVal);
 	ZVal_ZooLib(const ZData_ZooLib& iVal);
-	ZVal_ZooLib(const ZList_ZooLib& iVal);
+	ZVal_ZooLib(const ZSeq_ZooLib& iVal);
 	ZVal_ZooLib(const ZMap_ZooLib& iVal);
 	ZVal_ZooLib(const ZRef<ZRefCountedWithFinalize>& iVal);
 	ZVal_ZooLib(const void* iSource, size_t iSize);
@@ -144,7 +144,7 @@ public:
 	bool operator<(const ZVal_ZooLib& iOther) const;
 
 // Our protocol
-	ZList_ZooLib& MutableList();
+	ZSeq_ZooLib& MutableSeq();
 	ZMap_ZooLib& MutableMap();
 
 	ZType TypeOf() const;
@@ -161,7 +161,7 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, RefCounted, ZRef<ZRefCountedWithFinalize>)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Pointer, VoidStar_t)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Data, ZData_ZooLib)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, List, ZList_ZooLib)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Seq, ZSeq_ZooLib)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Map, ZMap_ZooLib)
 
 // Backwards compatibility
@@ -267,11 +267,11 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZList_ZooLib
+#pragma mark * ZSeq_ZooLib
 
-class ZList_ZooLib
+class ZSeq_ZooLib
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZList_ZooLib,
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZSeq_ZooLib,
 		operator_bool_generator_type, operator_bool_type);
 
 	class Rep;
@@ -284,17 +284,17 @@ public:
 
 	operator operator_bool_type() const;
 
-	ZList_ZooLib();
-	ZList_ZooLib(const ZList_ZooLib& iOther);
-	~ZList_ZooLib();
-	ZList_ZooLib& operator=(const ZList_ZooLib& iOther);
+	ZSeq_ZooLib();
+	ZSeq_ZooLib(const ZSeq_ZooLib& iOther);
+	~ZSeq_ZooLib();
+	ZSeq_ZooLib& operator=(const ZSeq_ZooLib& iOther);
 
-	explicit ZList_ZooLib(const ZStreamR& iStreamR);
+	explicit ZSeq_ZooLib(const ZStreamR& iStreamR);
 
-	ZList_ZooLib(size_t iCount, const ZVal_ZooLib& iSingleton);
-	ZList_ZooLib(const std::vector<ZVal_ZooLib>& iOther);
+	ZSeq_ZooLib(size_t iCount, const ZVal_ZooLib& iSingleton);
+	ZSeq_ZooLib(const std::vector<ZVal_ZooLib>& iOther);
 
-// ZList protocol
+// ZSeq protocol
 	size_t Count() const;
 
 	void Clear();
@@ -304,18 +304,18 @@ public:
 	ZVal_ZooLib Get(size_t iIndex) const;
 	const ZVal_ZooLib& RGet(size_t iIndex) const;
 
-	ZList_ZooLib& Set(size_t iIndex, const ZVal_ZooLib& iVal);
+	ZSeq_ZooLib& Set(size_t iIndex, const ZVal_ZooLib& iVal);
 
-	ZList_ZooLib& Erase(size_t iIndex);
+	ZSeq_ZooLib& Erase(size_t iIndex);
 
-	ZList_ZooLib& Insert(size_t iIndex, const ZVal_ZooLib& iVal);
+	ZSeq_ZooLib& Insert(size_t iIndex, const ZVal_ZooLib& iVal);
 
-	ZList_ZooLib& Append(const ZVal_ZooLib& iVal);
+	ZSeq_ZooLib& Append(const ZVal_ZooLib& iVal);
 
 // Comparison
-	int Compare(const ZList_ZooLib& iOther) const;
-	bool operator==(const ZList_ZooLib& iOther) const;
-	bool operator<(const ZList_ZooLib& iOther) const;
+	int Compare(const ZSeq_ZooLib& iOther) const;
+	bool operator==(const ZSeq_ZooLib& iOther) const;
+	bool operator<(const ZSeq_ZooLib& iOther) const;
 
 // Our protocol
 	ZVal_ZooLib& Mutable(size_t iIndex);
@@ -337,25 +337,25 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZList_ZooLib inlines
+#pragma mark * ZSeq_ZooLib inlines
 
-inline bool operator!=(const ZList_ZooLib& l, const ZList_ZooLib& r)
+inline bool operator!=(const ZSeq_ZooLib& l, const ZSeq_ZooLib& r)
 	{ return !(l == r); }
 
-inline bool operator<=(const ZList_ZooLib& l, const ZList_ZooLib& r)
+inline bool operator<=(const ZSeq_ZooLib& l, const ZSeq_ZooLib& r)
 	{ return !(r < l); }
 
-inline bool operator>(const ZList_ZooLib& l, const ZList_ZooLib& r)
+inline bool operator>(const ZSeq_ZooLib& l, const ZSeq_ZooLib& r)
 	{ return r < l; }
 
-inline bool operator>=(const ZList_ZooLib& l, const ZList_ZooLib& r)
+inline bool operator>=(const ZSeq_ZooLib& l, const ZSeq_ZooLib& r)
 	{ return !(l < r); }
 
-template <> inline int sCompare_T(const ZList_ZooLib& iL, const ZList_ZooLib& iR)
+template <> inline int sCompare_T(const ZSeq_ZooLib& iL, const ZSeq_ZooLib& iR)
 	{ return iL.Compare(iR); }
 
 template <typename OutputIterator, typename T>
-inline void ZList_ZooLib::GetVector_T(OutputIterator iIter, const T& iDummy) const
+inline void ZSeq_ZooLib::GetVector_T(OutputIterator iIter, const T& iDummy) const
 	{
 	const std::vector<ZVal_ZooLib>& theVector = this->GetVector();
 	for (std::vector<ZVal_ZooLib>::const_iterator i = theVector.begin(), theEnd = theVector.end();

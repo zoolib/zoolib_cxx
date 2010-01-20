@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 typedef ZYadR_Val_T<ZVal_AppleEvent> ZYadR_AppleEvent;
-typedef ZYadListRPos_Val_T<ZList_AppleEvent> ZYadListRPos_AppleEvent;
+typedef ZYadSeqRPos_Val_T<ZSeq_AppleEvent> ZYadSeqRPos_AppleEvent;
 typedef ZYadMapRPos_Val_T<ZMap_AppleEvent> ZYadMapRPos_AppleEvent;
 
 // =================================================================================================
@@ -40,7 +40,7 @@ typedef ZYadMapRPos_Val_T<ZMap_AppleEvent> ZYadMapRPos_AppleEvent;
 
 ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal);
 
-ZRef<ZYadListR> sMakeYadR(const ZList_AppleEvent& iList);
+ZRef<ZYadSeqR> sMakeYadR(const ZSeq_AppleEvent& iSeq);
 
 ZRef<ZYadMapR> sMakeYadR(const ZMap_AppleEvent& iMap);
 

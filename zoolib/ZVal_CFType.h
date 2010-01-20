@@ -35,11 +35,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 class ZVal_CFType;
-class ZList_CFType;
+class ZSeq_CFType;
 class ZMap_CFType;
 
 typedef ZVal_CFType ZVal_CF;
-typedef ZList_CFType ZList_CF;
+typedef ZSeq_CFType ZSeq_CF;
 typedef ZMap_CFType ZMap_CF;
 
 // =================================================================================================
@@ -78,7 +78,7 @@ public:
 	ZVal_CFType(CFStringRef iVal);
 
 	ZVal_CFType(const ZData_CFType& iVal);
-	ZVal_CFType(const ZList_CFType& iVal);
+	ZVal_CFType(const ZSeq_CFType& iVal);
 	ZVal_CFType(const ZMap_CFType& iVal);
 
 	explicit ZVal_CFType(CFDataRef iVal);
@@ -115,15 +115,15 @@ public:
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_CFType)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, CFString, ZRef<CFStringRef>)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Data, ZData_CFType)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, List, ZList_CFType)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Seq, ZSeq_CFType)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_CFType, Map, ZMap_CFType)
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZList_CFType
+#pragma mark * ZSeq_CFType
 
-class ZList_CFType
+class ZSeq_CFType
 :	public ZRef<CFArrayRef>
 	{
 	typedef ZRef<CFArrayRef> inherited;
@@ -134,30 +134,30 @@ public:
 
 	operator bool() const;
 
-	ZList_CFType();
-	ZList_CFType(const ZList_CFType& iOther);
-	~ZList_CFType();
-	ZList_CFType& operator=(const ZList_CFType& iOther);
+	ZSeq_CFType();
+	ZSeq_CFType(const ZSeq_CFType& iOther);
+	~ZSeq_CFType();
+	ZSeq_CFType& operator=(const ZSeq_CFType& iOther);
 
-	ZList_CFType(CFMutableArrayRef iOther);
-	ZList_CFType(CFArrayRef iOther);
+	ZSeq_CFType(CFMutableArrayRef iOther);
+	ZSeq_CFType(CFArrayRef iOther);
 
-	ZList_CFType(const ZRef<CFMutableArrayRef>& iOther);
-	ZList_CFType(const ZRef<CFArrayRef>& iOther);
+	ZSeq_CFType(const ZRef<CFMutableArrayRef>& iOther);
+	ZSeq_CFType(const ZRef<CFArrayRef>& iOther);
 
-	ZList_CFType(const Adopt_T<CFMutableArrayRef>& iOther);
-	ZList_CFType(const Adopt_T<CFArrayRef>& iOther);
+	ZSeq_CFType(const Adopt_T<CFMutableArrayRef>& iOther);
+	ZSeq_CFType(const Adopt_T<CFArrayRef>& iOther);
 
-	ZList_CFType& operator=(CFMutableArrayRef iOther);
-	ZList_CFType& operator=(CFArrayRef iOther);
+	ZSeq_CFType& operator=(CFMutableArrayRef iOther);
+	ZSeq_CFType& operator=(CFArrayRef iOther);
 
-	ZList_CFType& operator=(const ZRef<CFMutableArrayRef>& iOther);
-	ZList_CFType& operator=(const ZRef<CFArrayRef>& iOther);
+	ZSeq_CFType& operator=(const ZRef<CFMutableArrayRef>& iOther);
+	ZSeq_CFType& operator=(const ZRef<CFArrayRef>& iOther);
 
-	ZList_CFType& operator=(const Adopt_T<CFMutableArrayRef>& iOther);
-	ZList_CFType& operator=(const Adopt_T<CFArrayRef>& iOther);
+	ZSeq_CFType& operator=(const Adopt_T<CFMutableArrayRef>& iOther);
+	ZSeq_CFType& operator=(const Adopt_T<CFArrayRef>& iOther);
 
-// ZList protocol
+// ZSeq protocol
 	size_t Count() const;
 
 	void Clear();
@@ -166,13 +166,13 @@ public:
 	ZVal_CFType DGet(const ZVal_CFType& iDefault, size_t iIndex) const;
 	ZVal_CFType Get(size_t iIndex) const;
 
-	ZList_CFType& Set(size_t iIndex, const ZVal_CFType& iVal);
+	ZSeq_CFType& Set(size_t iIndex, const ZVal_CFType& iVal);
 
-	ZList_CFType& Erase(size_t iIndex);
+	ZSeq_CFType& Erase(size_t iIndex);
 
-	ZList_CFType& Insert(size_t iIndex, const ZVal_CFType& iVal);
+	ZSeq_CFType& Insert(size_t iIndex, const ZVal_CFType& iVal);
 
-	ZList_CFType& Append(const ZVal_CFType& iVal);
+	ZSeq_CFType& Append(const ZVal_CFType& iVal);
 
 private:
 	CFArrayRef pArray() const;

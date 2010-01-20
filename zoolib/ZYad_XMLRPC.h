@@ -47,7 +47,7 @@ namespace ZYad_XMLRPC {
 struct Request_t
 	{
 	std::string fMethodName;
-	ZRef<ZYadListR> fParams;
+	ZRef<ZYadSeqR> fParams;
 	};
 
 struct Response_t

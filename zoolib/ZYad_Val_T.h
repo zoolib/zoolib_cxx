@@ -79,34 +79,34 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListRPos_Val_T
+#pragma mark * ZYadSeqRPos_Val_T
 
-template <class List_t>
-class ZYadListRPos_Val_T
-:	public ZYadListRPos
+template <class Seq_t>
+class ZYadSeqRPos_Val_T
+:	public ZYadSeqRPos
 	{
 public:
-	ZYadListRPos_Val_T(const List_t& iList)
-	:	fList(iList)
+	ZYadSeqRPos_Val_T(const Seq_t& iSeq)
+	:	fSeq(iSeq)
 	,	fPosition(0)
 		{}
 
-	ZYadListRPos_Val_T(const List_t& iList, uint64 iPosition)
-	:	fList(iList)
+	ZYadSeqRPos_Val_T(const Seq_t& iSeq, uint64 iPosition)
+	:	fSeq(iSeq)
 	,	fPosition(iPosition)
 		{}
 
-// From ZYadListR via ZYadListRPos
+// From ZYadSeqR via ZYadSeqRPos
 	virtual ZRef<ZYadR> ReadInc()
 		{
-		if (fPosition < fList.Count())
-			return sMakeYadR(fList.Get(fPosition++));
+		if (fPosition < fSeq.Count())
+			return sMakeYadR(fSeq.Get(fPosition++));
 		return ZRef<ZYadR>();
 		}
 
-// From ZYadListRPos
-	virtual ZRef<ZYadListRPos> Clone()
-		{ return new ZYadListRPos_Val_T(fList, fPosition); }
+// From ZYadSeqRPos
+	virtual ZRef<ZYadSeqRPos> Clone()
+		{ return new ZYadSeqRPos_Val_T(fSeq, fPosition); }
 
 	virtual uint64 GetPosition()
 		{ return fPosition; }
@@ -115,49 +115,49 @@ public:
 		{ fPosition = iPosition; }
 
 	virtual uint64 GetSize()
-		{ return fList.Count(); }
+		{ return fSeq.Count(); }
 
 protected:
-	const List_t fList;
+	const Seq_t fSeq;
 	uint64 fPosition;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListRPos_Val_Self_T
+#pragma mark * ZYadSeqRPos_Val_Self_T
 
 // Urgh, quite an ugly name.
 
-template <class Self_t, class List_t>
-class ZYadListRPos_Val_Self_T
-:	public ZYadListRPos
+template <class Self_t, class Seq_t>
+class ZYadSeqRPos_Val_Self_T
+:	public ZYadSeqRPos
 	{
 public:
-	typedef ZYadListRPos_Val_Self_T YadListBase_t;
+	typedef ZYadSeqRPos_Val_Self_T YadSeqBase_t;
 
 protected:
-	ZYadListRPos_Val_Self_T(const List_t& iList)
-	:	fList(iList)
+	ZYadSeqRPos_Val_Self_T(const Seq_t& iSeq)
+	:	fSeq(iSeq)
 	,	fPosition(0)
 		{}
 
-	ZYadListRPos_Val_Self_T(const List_t& iList, uint64 iPosition)
-	:	fList(iList)
+	ZYadSeqRPos_Val_Self_T(const Seq_t& iSeq, uint64 iPosition)
+	:	fSeq(iSeq)
 	,	fPosition(iPosition)
 		{}
 
 public:
-// From ZYadListR via ZYadListRPos
+// From ZYadSeqR via ZYadSeqRPos
 	virtual ZRef<ZYadR> ReadInc()
 		{
-		if (fPosition < fList.Count())
-			return sMakeYadR(fList.Get(fPosition++));
+		if (fPosition < fSeq.Count())
+			return sMakeYadR(fSeq.Get(fPosition++));
 		return ZRef<ZYadR>();
 		}
 
-// From ZYadListRPos
-	virtual ZRef<ZYadListRPos> Clone()
-		{ return new Self_t(fList, fPosition); }
+// From ZYadSeqRPos
+	virtual ZRef<ZYadSeqRPos> Clone()
+		{ return new Self_t(fSeq, fPosition); }
 
 	virtual uint64 GetPosition()
 		{ return fPosition; }
@@ -166,10 +166,10 @@ public:
 		{ fPosition = iPosition; }
 
 	virtual uint64 GetSize()
-		{ return fList.Count(); }
+		{ return fSeq.Count(); }
 
 protected:
-	const List_t fList;
+	const Seq_t fSeq;
 	uint64 fPosition;
 	};
 

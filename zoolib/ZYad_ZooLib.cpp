@@ -63,12 +63,12 @@ static bool spIsSimple(const ZYadOptions& iOptions, const ZVal_ZooLib& iVal)
 			}
 		case eZType_Vector:
 			{
-			const ZList_ZooLib& theList = iVal.GetList();
-			if (!theList.Count())
+			const ZSeq_ZooLib& theSeq = iVal.GetSeq();
+			if (!theSeq.Count())
 				return true;
 
-			if (theList.Count() == 1)
-				return spIsSimple(iOptions, theList.Get(0));
+			if (theSeq.Count() == 1)
+				return spIsSimple(iOptions, theSeq.Get(0));
 
 			return false;
 			}
@@ -117,19 +117,19 @@ ZAny ZYadPrimR_ZooLib::AsAny()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListRPos_ZooLib
+#pragma mark * ZYadSeqRPos_ZooLib
 
-ZYadListRPos_ZooLib::ZYadListRPos_ZooLib(const ZList_ZooLib& iList)
-:	ZYadR_ZooLib(iList)
-,	YadListBase_t(iList)
+ZYadSeqRPos_ZooLib::ZYadSeqRPos_ZooLib(const ZSeq_ZooLib& iSeq)
+:	ZYadR_ZooLib(iSeq)
+,	YadSeqBase_t(iSeq)
 	{}
 
-ZYadListRPos_ZooLib::ZYadListRPos_ZooLib(const ZList_ZooLib& iList, uint64 iPosition)
-:	ZYadR_ZooLib(iList)
-,	YadListBase_t(iList, iPosition)
+ZYadSeqRPos_ZooLib::ZYadSeqRPos_ZooLib(const ZSeq_ZooLib& iSeq, uint64 iPosition)
+:	ZYadR_ZooLib(iSeq)
+,	YadSeqBase_t(iSeq, iPosition)
 	{}
 
-bool ZYadListRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
+bool ZYadSeqRPos_ZooLib::IsSimple(const ZYadOptions& iOptions)
 	{ return spIsSimple(iOptions, fVal); }
 
 // =================================================================================================
@@ -157,7 +157,7 @@ ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal)
 	{
 	switch (iVal.TypeOf())
 		{
-		case eZType_Vector: return sMakeYadR(iVal.GetList());
+		case eZType_Vector: return sMakeYadR(iVal.GetSeq());
 		case eZType_Tuple: return sMakeYadR(iVal.GetMap());
 		case eZType_Raw: return new ZYadStreamRPos_ZooLib(iVal.GetData());
 		case eZType_String: return sMakeYadR(iVal.GetString());
@@ -166,8 +166,8 @@ ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal)
 	return new ZYadPrimR_ZooLib(iVal);
 	}
 
-ZRef<ZYadListR> sMakeYadR(const ZList_ZooLib& iList)
-	{ return new ZYadListRPos_ZooLib(iList); }
+ZRef<ZYadSeqR> sMakeYadR(const ZSeq_ZooLib& iSeq)
+	{ return new ZYadSeqRPos_ZooLib(iSeq); }
 
 ZRef<ZYadMapR> sMakeYadR(const ZMap_ZooLib& iMap)
 	{ return new ZYadMapRPos_ZooLib(iMap); }
@@ -187,7 +187,7 @@ public:
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
 	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
-	virtual bool Visit_YadListR(ZRef<ZYadListR> iYadListR);
+	virtual bool Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
 	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 
 	ZVal_ZooLib fDefault;
@@ -228,14 +228,14 @@ bool YadVisitor_GetVal_ZooLib::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	return true;
 	}
 
-bool YadVisitor_GetVal_ZooLib::Visit_YadListR(ZRef<ZYadListR> iYadListR)
+bool YadVisitor_GetVal_ZooLib::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	{
-	ZList_ZooLib theList;
+	ZSeq_ZooLib theSeq;
 
-	while (ZRef<ZYadR> theChild = iYadListR->ReadInc())
-		theList.Append(sFromYadR(fDefault, theChild));
+	while (ZRef<ZYadR> theChild = iYadSeqR->ReadInc())
+		theSeq.Append(sFromYadR(fDefault, theChild));
 
-	fOutput = theList;
+	fOutput = theSeq;
 	return true;
 	}
 

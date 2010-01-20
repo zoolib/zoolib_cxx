@@ -28,19 +28,19 @@ using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_JSONNormalize declaration
+#pragma mark * ZYadSeqR_JSONNormalize declaration
 
-class ZYadListR_JSONNormalize : public ZYadListR_Std
+class ZYadSeqR_JSONNormalize : public ZYadSeqR_Std
 	{
 public:
-	ZYadListR_JSONNormalize(ZRef<ZYadListR> iYadListR, bool iPreserveLists, bool iPreserveMaps);
+	ZYadSeqR_JSONNormalize(ZRef<ZYadSeqR> iYadSeqR, bool iPreserveSeqs, bool iPreserveMaps);
 
-// From ZYadListR_Std
+// From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
-	ZRef<ZYadListR> fYadListR;
-	bool fPreserveLists;
+	ZRef<ZYadSeqR> fYadSeqR;
+	bool fPreserveSeqs;
 	bool fPreserveMaps;
 	};
 
@@ -51,14 +51,14 @@ private:
 class ZYadMapR_JSONNormalize : public ZYadMapR_Std
 	{
 public:
-	ZYadMapR_JSONNormalize(ZRef<ZYadMapR> iYadMapR, bool iPreserveLists, bool iPreserveMaps);
+	ZYadMapR_JSONNormalize(ZRef<ZYadMapR> iYadMapR, bool iPreserveSeqs, bool iPreserveMaps);
 
 // From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZYadMapR> fYadMapR;
-	bool fPreserveLists;
+	bool fPreserveSeqs;
 	bool fPreserveMaps;
 	};
 
@@ -102,15 +102,15 @@ static bool spNormalizeSimpleValue(const ZAny& iVal, ZAny& oVal)
 	}
 
 static ZRef<ZYadR> spMakeYadR_JSONNormalize(
-	ZRef<ZYadR> iYadR, bool iPreserve, bool iPreserveLists, bool iPreserveMaps)
+	ZRef<ZYadR> iYadR, bool iPreserve, bool iPreserveSeqs, bool iPreserveMaps)
 	{
-	if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
+	if (ZRef<ZYadSeqR> theYadSeqR = ZRefDynamicCast<ZYadSeqR>(iYadR))
 		{
-		return new ZYadListR_JSONNormalize(theYadListR, iPreserveLists, iPreserveMaps);
+		return new ZYadSeqR_JSONNormalize(theYadSeqR, iPreserveSeqs, iPreserveMaps);
 		}
 	else if (ZRef<ZYadMapR> theYadMapR = ZRefDynamicCast<ZYadMapR>(iYadR))
 		{
-		return new ZYadMapR_JSONNormalize(theYadMapR, iPreserveLists, iPreserveMaps);
+		return new ZYadMapR_JSONNormalize(theYadMapR, iPreserveSeqs, iPreserveMaps);
 		}
 	else if (ZRef<ZYadStrimR> theYadStrimR = ZRefDynamicCast<ZYadStrimR>(iYadR))
 		{
@@ -135,24 +135,24 @@ static ZRef<ZYadR> spMakeYadR_JSONNormalize(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_JSONNormalize
+#pragma mark * ZYadSeqR_JSONNormalize
 
-ZYadListR_JSONNormalize::ZYadListR_JSONNormalize(
-	ZRef<ZYadListR> iYadListR, bool iPreserveLists, bool iPreserveMaps)
-:	fYadListR(iYadListR),
-	fPreserveLists(iPreserveLists),
+ZYadSeqR_JSONNormalize::ZYadSeqR_JSONNormalize(
+	ZRef<ZYadSeqR> iYadSeqR, bool iPreserveSeqs, bool iPreserveMaps)
+:	fYadSeqR(iYadSeqR),
+	fPreserveSeqs(iPreserveSeqs),
 	fPreserveMaps(iPreserveMaps)
 	{}
 
-void ZYadListR_JSONNormalize::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+void ZYadSeqR_JSONNormalize::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	for (;;)
 		{
-		ZRef<ZYadR> next = fYadListR->ReadInc();
+		ZRef<ZYadR> next = fYadSeqR->ReadInc();
 		if (!next)
 			break;
 		oYadR = spMakeYadR_JSONNormalize(
-			next, fPreserveLists, fPreserveLists, fPreserveMaps);
+			next, fPreserveSeqs, fPreserveSeqs, fPreserveMaps);
 		if (oYadR)
 			break;
 		}
@@ -163,9 +163,9 @@ void ZYadListR_JSONNormalize::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 #pragma mark * ZYadMapR_JSONNormalize
 
 ZYadMapR_JSONNormalize::ZYadMapR_JSONNormalize(
-	ZRef<ZYadMapR> iYadMapR, bool iPreserveLists, bool iPreserveMaps)
+	ZRef<ZYadMapR> iYadMapR, bool iPreserveSeqs, bool iPreserveMaps)
 :	fYadMapR(iYadMapR),
-	fPreserveLists(iPreserveLists),
+	fPreserveSeqs(iPreserveSeqs),
 	fPreserveMaps(iPreserveMaps)
 	{}
 
@@ -177,7 +177,7 @@ void ZYadMapR_JSONNormalize::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef
 		if (!next)
 			break;
 		oYadR = spMakeYadR_JSONNormalize(
-			next, fPreserveMaps, fPreserveLists, fPreserveMaps);
+			next, fPreserveMaps, fPreserveSeqs, fPreserveMaps);
 		if (oYadR)
 			break;
 		}
@@ -188,7 +188,7 @@ void ZYadMapR_JSONNormalize::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef
 #pragma mark * ZYad_JSONNormalize
 
 ZRef<ZYadR> ZYad_JSONNormalize::sMakeYadR(
-	ZRef<ZYadR> iYadR, bool iPreserveLists, bool iPreserveMaps)
-	{ return spMakeYadR_JSONNormalize(iYadR, true, iPreserveLists, iPreserveMaps); }
+	ZRef<ZYadR> iYadR, bool iPreserveSeqs, bool iPreserveMaps)
+	{ return spMakeYadR_JSONNormalize(iYadR, true, iPreserveSeqs, iPreserveMaps); }
 
 NAMESPACE_ZOOLIB_END

@@ -35,9 +35,6 @@ namespace ZNetscape {
 #pragma mark -
 #pragma mark * ZNetscape::NPClass_Z
 
-//#define ASSIGN(a) \
-//	*static_cast<intptr_t*>(static_cast<void*>(&this->a)) = reinterpret_cast<intptr_t>(a);
-
 #define ASSIGN(a) this->a = a
 
 NPClass_Z::NPClass_Z(
@@ -82,7 +79,7 @@ NPClass_Z* sGetClass(NPObject* obj)
 
 #define CASE(a) case a: return #a
 
-std::string sAsString(NPNVariable iVar)
+string sAsString(NPNVariable iVar)
 	{
 	switch (iVar)
 		{
@@ -109,7 +106,7 @@ std::string sAsString(NPNVariable iVar)
 	return ZString::sFormat("NPNVariable=%d", iVar);
 	}
 
-std::string sAsString(NPPVariable iVar)
+string sAsString(NPPVariable iVar)
 	{
 	switch (iVar)
 		{

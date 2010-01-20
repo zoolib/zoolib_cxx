@@ -184,14 +184,14 @@ static ZData_Any spAsData_Any(const ZRef<CFDataRef>& iCFData)
 	return ZData_Any();
 	}
 
-static ZList_Any spAsList_Any(const ZAny& iDefault, const ZRef<CFArrayRef>& iCFArray)
+static ZSeq_Any spAsSeq_Any(const ZAny& iDefault, const ZRef<CFArrayRef>& iCFArray)
 	{
-	ZList_Any theList;
+	ZSeq_Any theSeq;
 
 	for (size_t x = 0, theCount = ::CFArrayGetCount(iCFArray); x < theCount; ++x)
-		theList.Append(sAsAny(iDefault, ::CFArrayGetValueAtIndex(iCFArray, x)));
+		theSeq.Append(sAsAny(iDefault, ::CFArrayGetValueAtIndex(iCFArray, x)));
 
-	return theList;
+	return theSeq;
 	}
 
 static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon)
@@ -235,7 +235,7 @@ ZAny sAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal)
 		return ZAny(spAsMap_Any(iDefault, static_cast<CFDictionaryRef>(theCFTypeRef)));
 
 	if (theTypeID == ::CFArrayGetTypeID())
-		return ZAny(spAsList_Any(iDefault, static_cast<CFArrayRef>(theCFTypeRef)));
+		return ZAny(spAsSeq_Any(iDefault, static_cast<CFArrayRef>(theCFTypeRef)));
 
 	if (theTypeID == ::CFBooleanGetTypeID())
 		return ZAny(bool(::CFBooleanGetValue(static_cast<CFBooleanRef>(theCFTypeRef))));
@@ -339,7 +339,7 @@ ZRef<CFTypeRef> sAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
 		else
 			return sData();
 		}
-	else if (const ZList_Any* theValue = iVal.PGet_T<ZList_Any>())
+	else if (const ZSeq_Any* theValue = iVal.PGet_T<ZSeq_Any>())
 		{
 		ZRef<CFMutableArrayRef> theArray;
 		for (size_t x = 0, count = theValue->Count(); x < count; ++x)

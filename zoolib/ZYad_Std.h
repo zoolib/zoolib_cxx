@@ -46,19 +46,19 @@ typedef ZYadPrimR_Any ZYadPrimR_Std;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_Std
+#pragma mark * ZYadSeqR_Std
 
-class ZYadListR_Std
-:	public ZYadListR
+class ZYadSeqR_Std
+:	public ZYadSeqR
 	{
 public:
-	ZYadListR_Std();
-	ZYadListR_Std(bool iFinished);
+	ZYadSeqR_Std();
+	ZYadSeqR_Std(bool iFinished);
 
 // From ZYadR
 	virtual void Finish();
 
-// From ZYadListR
+// From ZYadSeqR
 	virtual ZRef<ZYadR> ReadInc();
 
 // Our protocol

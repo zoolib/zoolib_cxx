@@ -168,7 +168,7 @@ ZVal_CFType::ZVal_CFType(const ZData_CFType& iVal)
 :	inherited(iVal)
 	{}
 
-ZVal_CFType::ZVal_CFType(const ZList_CFType& iVal)
+ZVal_CFType::ZVal_CFType(const ZSeq_CFType& iVal)
 :	inherited(iVal)
 	{}
 
@@ -326,7 +326,7 @@ bool ZVal_CFType::QGet_T<ZData_CFType>(ZData_CFType& oVal) const
 	}
 
 template <>
-bool ZVal_CFType::QGet_T<ZList_CFType>(ZList_CFType& oVal) const
+bool ZVal_CFType::QGet_T<ZSeq_CFType>(ZSeq_CFType& oVal) const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFArrayGetTypeID())
 		{
@@ -388,7 +388,7 @@ void ZVal_CFType::Set_T<ZData_CFType>(const ZData_CFType& iVal)
 	{ inherited::operator=(iVal); }
 
 template <>
-void ZVal_CFType::Set_T<ZList_CFType>(const ZList_CFType& iVal)
+void ZVal_CFType::Set_T<ZSeq_CFType>(const ZSeq_CFType& iVal)
 	{ inherited::operator=(iVal); }
 
 template <>
@@ -402,125 +402,125 @@ void ZVal_CFType::Set_T<ZMap_CFType>(const ZMap_CFType& iVal)
 ZMACRO_ZValAccessors_Def_Std(ZVal_CFType)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, CFString, ZRef<CFStringRef>)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Data, ZData_CFType)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, List, ZList_CFType)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Seq, ZSeq_CFType)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Map, ZMap_CFType)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZList_CFType
+#pragma mark * ZSeq_CFType
 
-ZAny ZList_CFType::AsAny() const
+ZAny ZSeq_CFType::AsAny() const
 	{ return this->AsAny(ZAny()); }
 
-ZAny ZList_CFType::AsAny(const ZAny& iDefault) const
+ZAny ZSeq_CFType::AsAny(const ZAny& iDefault) const
 	{ return ZUtil_CFType::sAsAny(iDefault, this->pArray()); }
 
-ZList_CFType::operator bool() const
+ZSeq_CFType::operator bool() const
 	{ return this->Count(); }
 
-ZList_CFType::ZList_CFType()
+ZSeq_CFType::ZSeq_CFType()
 :	inherited(sArrayMutable())
 ,	fMutable(true)
 	{}
 
-ZList_CFType::ZList_CFType(const ZList_CFType& iOther)
+ZSeq_CFType::ZSeq_CFType(const ZSeq_CFType& iOther)
 :	inherited(iOther)
 ,	fMutable(iOther.fMutable)
 	{}
 
-ZList_CFType::~ZList_CFType()
+ZSeq_CFType::~ZSeq_CFType()
 	{}
 
-ZList_CFType& ZList_CFType::operator=(const ZList_CFType& iOther)
+ZSeq_CFType& ZSeq_CFType::operator=(const ZSeq_CFType& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = iOther.fMutable;
 	return *this;
 	}
 
-ZList_CFType::ZList_CFType(CFMutableArrayRef iOther)
+ZSeq_CFType::ZSeq_CFType(CFMutableArrayRef iOther)
 :	inherited(iOther)
 ,	fMutable(true)
 	{}
 
-ZList_CFType::ZList_CFType(CFArrayRef iOther)
+ZSeq_CFType::ZSeq_CFType(CFArrayRef iOther)
 :	inherited(iOther)
 ,	fMutable(false)
 	{}
 
-ZList_CFType::ZList_CFType(const ZRef<CFMutableArrayRef>& iOther)
+ZSeq_CFType::ZSeq_CFType(const ZRef<CFMutableArrayRef>& iOther)
 :	inherited(iOther)
 ,	fMutable(true)
 	{}
 
-ZList_CFType::ZList_CFType(const ZRef<CFArrayRef>& iOther)
+ZSeq_CFType::ZSeq_CFType(const ZRef<CFArrayRef>& iOther)
 :	inherited(iOther)
 ,	fMutable(false)
 	{}
 
-ZList_CFType::ZList_CFType(const Adopt_T<CFMutableArrayRef>& iOther)
+ZSeq_CFType::ZSeq_CFType(const Adopt_T<CFMutableArrayRef>& iOther)
 :	inherited(ZRef<CFMutableArrayRef>(iOther))
 ,	fMutable(true)
 	{}
 
-ZList_CFType::ZList_CFType(const Adopt_T<CFArrayRef>& iOther)
+ZSeq_CFType::ZSeq_CFType(const Adopt_T<CFArrayRef>& iOther)
 :	inherited(iOther)
 ,	fMutable(false)
 	{}
 
-ZList_CFType& ZList_CFType::operator=(CFMutableArrayRef iOther)
+ZSeq_CFType& ZSeq_CFType::operator=(CFMutableArrayRef iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = true;
 	return *this;
 	}
 
-ZList_CFType& ZList_CFType::operator=(CFArrayRef iOther)
+ZSeq_CFType& ZSeq_CFType::operator=(CFArrayRef iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;
 	return *this;
 	}
 
-ZList_CFType& ZList_CFType::operator=(const ZRef<CFMutableArrayRef>& iOther)
+ZSeq_CFType& ZSeq_CFType::operator=(const ZRef<CFMutableArrayRef>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = true;
 	return *this;
 	}
 
-ZList_CFType& ZList_CFType::operator=(const ZRef<CFArrayRef>& iOther)
+ZSeq_CFType& ZSeq_CFType::operator=(const ZRef<CFArrayRef>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;
 	return *this;
 	}
 
-ZList_CFType& ZList_CFType::operator=(const Adopt_T<CFMutableArrayRef>& iOther)
+ZSeq_CFType& ZSeq_CFType::operator=(const Adopt_T<CFMutableArrayRef>& iOther)
 	{
 	inherited::operator=(ZRef<CFMutableArrayRef>(iOther));
 	fMutable = true;
 	return *this;
 	}
 
-ZList_CFType& ZList_CFType::operator=(const Adopt_T<CFArrayRef>& iOther)
+ZSeq_CFType& ZSeq_CFType::operator=(const Adopt_T<CFArrayRef>& iOther)
 	{
 	inherited::operator=(iOther);
 	fMutable = false;
 	return *this;
 	}
 
-size_t ZList_CFType::Count() const
+size_t ZSeq_CFType::Count() const
 	{
 	if (CFArrayRef theArray = this->pArray())
 		return ::CFArrayGetCount(theArray);
 	return 0;
 	}
 
-void ZList_CFType::Clear()
+void ZSeq_CFType::Clear()
 	{ inherited::Clear(); }
 
-bool ZList_CFType::QGet(size_t iIndex, ZRef<CFTypeRef>& oVal) const
+bool ZSeq_CFType::QGet(size_t iIndex, ZRef<CFTypeRef>& oVal) const
 	{
 	if (CFArrayRef theArray = this->pArray())
 		{
@@ -536,7 +536,7 @@ bool ZList_CFType::QGet(size_t iIndex, ZRef<CFTypeRef>& oVal) const
 	return false;
 	}
 
-ZVal_CFType ZList_CFType::DGet(const ZVal_CFType& iDefault, size_t iIndex) const
+ZVal_CFType ZSeq_CFType::DGet(const ZVal_CFType& iDefault, size_t iIndex) const
 	{
 	ZVal_CFType result;
 	if (this->QGet(iIndex, result))
@@ -544,16 +544,16 @@ ZVal_CFType ZList_CFType::DGet(const ZVal_CFType& iDefault, size_t iIndex) const
 	return iDefault;
 	}
 
-ZVal_CFType ZList_CFType::Get(size_t iIndex) const
+ZVal_CFType ZSeq_CFType::Get(size_t iIndex) const
 	{ return this->DGet(ZVal_CFType(), iIndex); }
 
-ZList_CFType& ZList_CFType::Set(size_t iIndex, const ZVal_CFType& iVal)
+ZSeq_CFType& ZSeq_CFType::Set(size_t iIndex, const ZVal_CFType& iVal)
 	{
 	::CFArraySetValueAtIndex(this->pTouch(), iIndex, iVal);
 	return *this;
 	}
 
-ZList_CFType& ZList_CFType::Erase(size_t iIndex)
+ZSeq_CFType& ZSeq_CFType::Erase(size_t iIndex)
 	{
 	CFMutableArrayRef theArray = this->pTouch();
 	if (const size_t theCount = ::CFArrayGetCount(theArray))
@@ -564,7 +564,7 @@ ZList_CFType& ZList_CFType::Erase(size_t iIndex)
 	return *this;
 	}
 
-ZList_CFType& ZList_CFType::Insert(size_t iIndex, const ZVal_CFType& iVal)
+ZSeq_CFType& ZSeq_CFType::Insert(size_t iIndex, const ZVal_CFType& iVal)
 	{
 	CFMutableArrayRef theArray = this->pTouch();
 	const size_t theCount = ::CFArrayGetCount(theArray);
@@ -573,16 +573,16 @@ ZList_CFType& ZList_CFType::Insert(size_t iIndex, const ZVal_CFType& iVal)
 	return *this;
 	}
 
-ZList_CFType& ZList_CFType::Append(const ZVal_CFType& iVal)
+ZSeq_CFType& ZSeq_CFType::Append(const ZVal_CFType& iVal)
 	{
 	::CFArrayAppendValue(this->pTouch(), iVal);
 	return *this;
 	}
 
-CFArrayRef ZList_CFType::pArray() const
+CFArrayRef ZSeq_CFType::pArray() const
 	{ return inherited::Get(); }
 
-CFMutableArrayRef ZList_CFType::pTouch()
+CFMutableArrayRef ZSeq_CFType::pTouch()
 	{
 	ZRef<CFMutableArrayRef> theMutableArray;
 	if (CFArrayRef theArray = this->pArray())

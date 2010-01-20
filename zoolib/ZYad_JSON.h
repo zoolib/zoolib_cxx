@@ -62,14 +62,14 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_JSON
+#pragma mark * ZYadSeqR_JSON
 
-class ZYadListR_JSON : public ZYadListR_Std
+class ZYadSeqR_JSON : public ZYadSeqR_Std
 	{
 public:
-	ZYadListR_JSON(ZRef<ZStrimmerU> iStrimmerU);
+	ZYadSeqR_JSON(ZRef<ZStrimmerU> iStrimmerU);
 
-// From ZYadListR_Std
+// From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
@@ -107,7 +107,7 @@ public:
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
 	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
-	virtual bool Visit_YadListR(ZRef<ZYadListR> iYadListR);
+	virtual bool Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
 	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 
 private:

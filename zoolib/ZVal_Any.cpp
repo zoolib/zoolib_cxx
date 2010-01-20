@@ -27,73 +27,73 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZVal_Any typename accessors
 
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Data, ZData_Any)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, List, ZList_Any)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Seq, ZSeq_Any)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Map, ZMap_Any)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZList_Any::Rep
+#pragma mark * ZSeq_Any::Rep
 
-ZList_Any::Rep::Rep()
+ZSeq_Any::Rep::Rep()
 	{}
 
-ZList_Any::Rep::~Rep()
+ZSeq_Any::Rep::~Rep()
 	{}
 	
-ZList_Any::Rep::Rep(const vector<ZVal_Any>& iVector)
+ZSeq_Any::Rep::Rep(const vector<ZVal_Any>& iVector)
 :	fVector(iVector)
 	{}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZList_Any
+#pragma mark * ZSeq_Any
 
-ZAny ZList_Any::AsAny() const
+ZAny ZSeq_Any::AsAny() const
 	{ return ZAny(*this); }
 
-ZAny ZList_Any::AsAny(const ZAny& iDefault) const
+ZAny ZSeq_Any::AsAny(const ZAny& iDefault) const
 	{ return ZAny(*this); }
 
-ZList_Any::operator operator_bool_type() const
+ZSeq_Any::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fRep && !fRep->fVector.empty()); }
 
-ZList_Any::ZList_Any()
+ZSeq_Any::ZSeq_Any()
 	{}
 
-ZList_Any::ZList_Any(const ZList_Any& iOther)
+ZSeq_Any::ZSeq_Any(const ZSeq_Any& iOther)
 :	fRep(iOther.fRep)
 	{}
 
-ZList_Any::~ZList_Any()
+ZSeq_Any::~ZSeq_Any()
 	{}
 
-ZList_Any& ZList_Any::operator=(const ZList_Any& iOther)
+ZSeq_Any& ZSeq_Any::operator=(const ZSeq_Any& iOther)
 	{
 	fRep = iOther.fRep;
 	return *this;
 	}
 
-ZList_Any::ZList_Any(const vector<ZVal_Any>& iOther)
+ZSeq_Any::ZSeq_Any(const vector<ZVal_Any>& iOther)
 :	fRep(new Rep(iOther))
 	{}
 
-ZList_Any& ZList_Any::operator=(const vector<ZVal_Any>& iOther)
+ZSeq_Any& ZSeq_Any::operator=(const vector<ZVal_Any>& iOther)
 	{
 	fRep = new Rep(iOther);
 	return *this;
 	}
 
-size_t ZList_Any::Count() const
+size_t ZSeq_Any::Count() const
 	{
 	if (fRep)
 		return fRep->fVector.size();
 	return 0;
 	}
 
-void ZList_Any::Clear()
+void ZSeq_Any::Clear()
 	{ fRep.Clear(); }
 
-ZVal_Any* ZList_Any::PGet(size_t iIndex)
+ZVal_Any* ZSeq_Any::PGet(size_t iIndex)
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		{
@@ -103,14 +103,14 @@ ZVal_Any* ZList_Any::PGet(size_t iIndex)
 	return nullptr;
 	}
 
-const ZVal_Any* ZList_Any::PGet(size_t iIndex) const
+const ZVal_Any* ZSeq_Any::PGet(size_t iIndex) const
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		return &fRep->fVector[iIndex];
 	return nullptr;
 	}
 
-bool ZList_Any::QGet(size_t iIndex, ZVal_Any& oVal) const
+bool ZSeq_Any::QGet(size_t iIndex, ZVal_Any& oVal) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iIndex))
 		{
@@ -120,21 +120,21 @@ bool ZList_Any::QGet(size_t iIndex, ZVal_Any& oVal) const
 	return false;
 	}
 
-ZVal_Any ZList_Any::DGet(const ZVal_Any& iDefault, size_t iIndex) const
+ZVal_Any ZSeq_Any::DGet(const ZVal_Any& iDefault, size_t iIndex) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iIndex))
 		return *theVal;
 	return iDefault;
 	}
 
-ZVal_Any ZList_Any::Get(size_t iIndex) const
+ZVal_Any ZSeq_Any::Get(size_t iIndex) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iIndex))
 		return *theVal;
 	return ZVal_Any();
 	}
 
-ZList_Any& ZList_Any::Set(size_t iIndex, const ZVal_Any& iVal)
+ZSeq_Any& ZSeq_Any::Set(size_t iIndex, const ZVal_Any& iVal)
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		{
@@ -144,7 +144,7 @@ ZList_Any& ZList_Any::Set(size_t iIndex, const ZVal_Any& iVal)
 	return *this;
 	}
 
-ZList_Any& ZList_Any::Erase(size_t iIndex)
+ZSeq_Any& ZSeq_Any::Erase(size_t iIndex)
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		{
@@ -154,7 +154,7 @@ ZList_Any& ZList_Any::Erase(size_t iIndex)
 	return *this;
 	}
 
-ZList_Any& ZList_Any::Insert(size_t iIndex, const ZVal_Any& iVal)
+ZSeq_Any& ZSeq_Any::Insert(size_t iIndex, const ZVal_Any& iVal)
 	{
 	this->pTouch();
 	if (iIndex <= fRep->fVector.size())
@@ -162,14 +162,14 @@ ZList_Any& ZList_Any::Insert(size_t iIndex, const ZVal_Any& iVal)
 	return *this;
 	}
 
-ZList_Any& ZList_Any::Append(const ZVal_Any& iVal)
+ZSeq_Any& ZSeq_Any::Append(const ZVal_Any& iVal)
 	{
 	this->pTouch();
 	fRep->fVector.push_back(iVal);
 	return *this;
 	}
 
-void ZList_Any::pTouch()
+void ZSeq_Any::pTouch()
 	{
 	if (!fRep)
 		{

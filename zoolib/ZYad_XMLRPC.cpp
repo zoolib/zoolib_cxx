@@ -74,14 +74,14 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_XMLRPC
+#pragma mark * ZYadSeqR_XMLRPC
 
-class ZYadListR_XMLRPC : public ZYadListR_Std
+class ZYadSeqR_XMLRPC : public ZYadSeqR_Std
 	{
 public:
-	ZYadListR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU);
+	ZYadSeqR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU);
 
-// From ZYadListR_Std
+// From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
@@ -255,7 +255,7 @@ static ZRef<ZYadR> spMakeYadR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 		else if (theR.Name() == "array")
 			{
 			theR.Advance();
-			return new ZYadListR_XMLRPC(iStrimmerU);
+			return new ZYadSeqR_XMLRPC(iStrimmerU);
 			}
 		else if (theR.Name() == "base64")
 			{
@@ -328,13 +328,13 @@ const ZStrimR& ZYadStrimR_XMLRPC::GetStrimR()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_XMLRPC
+#pragma mark * ZYadSeqR_XMLRPC
 
-ZYadListR_XMLRPC::ZYadListR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
+ZYadSeqR_XMLRPC::ZYadSeqR_XMLRPC(ZRef<ZML::StrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
 	{}
 
-void ZYadListR_XMLRPC::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+void ZYadSeqR_XMLRPC::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	ZML::StrimU& theR = fStrimmerU->GetStrim();
 
@@ -366,14 +366,14 @@ void ZYadListR_XMLRPC::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_XMLRPC_Params
+#pragma mark * ZYadSeqR_XMLRPC_Params
 
-class ZYadListR_XMLRPC_Params : public ZYadListR_Std
+class ZYadSeqR_XMLRPC_Params : public ZYadSeqR_Std
 	{
 public:
-	ZYadListR_XMLRPC_Params(ZRef<ZML::StrimmerU> iStrimmerU, bool iIsResponse);
+	ZYadSeqR_XMLRPC_Params(ZRef<ZML::StrimmerU> iStrimmerU, bool iIsResponse);
 
-// From ZYadListR_Std
+// From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
@@ -381,12 +381,12 @@ private:
 	bool fIsResponse;
 	};
 
-ZYadListR_XMLRPC_Params::ZYadListR_XMLRPC_Params(ZRef<ZML::StrimmerU> iStrimmerU, bool iIsResponse)
+ZYadSeqR_XMLRPC_Params::ZYadSeqR_XMLRPC_Params(ZRef<ZML::StrimmerU> iStrimmerU, bool iIsResponse)
 :	fStrimmerU(iStrimmerU),
 	fIsResponse(iIsResponse)
 	{}
 
-void ZYadListR_XMLRPC_Params::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+void ZYadSeqR_XMLRPC_Params::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	ZML::StrimU& theR = fStrimmerU->GetStrim();
 
@@ -429,25 +429,25 @@ void ZYadListR_XMLRPC_Params::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_XMLRPC_Fault
+#pragma mark * ZYadSeqR_XMLRPC_Fault
 
-class ZYadListR_XMLRPC_Fault : public ZYadListR_Std
+class ZYadSeqR_XMLRPC_Fault : public ZYadSeqR_Std
 	{
 public:
-	ZYadListR_XMLRPC_Fault(ZRef<ZML::StrimmerU> iStrimmerU);
+	ZYadSeqR_XMLRPC_Fault(ZRef<ZML::StrimmerU> iStrimmerU);
 
-// From ZYadListR_Std
+// From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZML::StrimmerU> fStrimmerU;
 	};
 
-ZYadListR_XMLRPC_Fault::ZYadListR_XMLRPC_Fault(ZRef<ZML::StrimmerU> iStrimmerU)
+ZYadSeqR_XMLRPC_Fault::ZYadSeqR_XMLRPC_Fault(ZRef<ZML::StrimmerU> iStrimmerU)
 :	fStrimmerU(iStrimmerU)
 	{}
 
-void ZYadListR_XMLRPC_Fault::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+void ZYadSeqR_XMLRPC_Fault::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	ZML::StrimU& theR = fStrimmerU->GetStrim();
 
@@ -545,11 +545,11 @@ static void spToStrim_Strim(const ZML::StrimW& s, const ZStrimR& iStrimR)
 	s.End("string");	
 	}
 
-static void spToStrim_List(const ZML::StrimW& s, ZRef<ZYadListR> iYadListR)
+static void spToStrim_Seq(const ZML::StrimW& s, ZRef<ZYadSeqR> iYadSeqR)
 	{
 	s.Begin("array");
 		s.Begin("data");
-			while (ZRef<ZYadR> theChild = iYadListR->ReadInc())
+			while (ZRef<ZYadR> theChild = iYadSeqR->ReadInc())
 				{
 				s.Begin("value");
 					spToStrim(s, theChild);
@@ -632,9 +632,9 @@ static void spToStrim(const ZML::StrimW& s, ZRef<ZYadR> iYadR)
 		{
 		spToStrim_Map(s, theYadMapR);
 		}
-	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
+	else if (ZRef<ZYadSeqR> theYadSeqR = ZRefDynamicCast<ZYadSeqR>(iYadR))
 		{
-		spToStrim_List(s, theYadListR);
+		spToStrim_Seq(s, theYadSeqR);
 		}
 	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
 		{
@@ -675,7 +675,7 @@ bool sFromStrimmer(ZRef<ZML::StrimmerU> iStrimmerU, Request_t& oRequest)
 
 	if (sTryRead_Begin(theR, "params"))
 		{
-		oRequest.fParams = new ZYadListR_XMLRPC_Params(iStrimmerU, false);
+		oRequest.fParams = new ZYadSeqR_XMLRPC_Params(iStrimmerU, false);
 		}
 	else
 		{
@@ -700,11 +700,11 @@ bool sFromStrimmer(ZRef<ZML::StrimmerU> iStrimmerU, Response_t& oResponse)
 
 	if (sTryRead_Begin(theR, "params"))
 		{
-		oResponse.fResult = new ZYadListR_XMLRPC_Params(iStrimmerU, true);
+		oResponse.fResult = new ZYadSeqR_XMLRPC_Params(iStrimmerU, true);
 		}
 	else if (sTryRead_Begin(theR, "fault"))
 		{
-		oResponse.fFault = new ZYadListR_XMLRPC_Fault(iStrimmerU);
+		oResponse.fFault = new ZYadSeqR_XMLRPC_Fault(iStrimmerU);
 		}
 	else
 		{

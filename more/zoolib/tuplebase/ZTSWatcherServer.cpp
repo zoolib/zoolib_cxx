@@ -138,20 +138,20 @@ static bool sSync1(
 
 	
 	vector<uint64> removedIDs;
-	iReq.Get("removedIDs").GetList().GetVector_T(back_inserter(removedIDs), uint64());
+	iReq.Get("removedIDs").GetSeq().GetVector_T(back_inserter(removedIDs), uint64());
 
 
 	vector<uint64> addedIDs;
-	iReq.Get("addedIDs").GetList().GetVector_T(back_inserter(addedIDs), uint64());
+	iReq.Get("addedIDs").GetSeq().GetVector_T(back_inserter(addedIDs), uint64());
 
 
 	vector<int64> removedQueries;
-	iReq.Get("removedQueries").GetList().GetVector_T(back_inserter(removedQueries), uint64());
+	iReq.Get("removedQueries").GetSeq().GetVector_T(back_inserter(removedQueries), uint64());
 
 
 	vector<ZTSWatcher::AddedQueryCombo> addedQueries;
 	{
-	const vector<ZTValue>& addedQueriesV = iReq.Get("addedQueries").GetList().GetVector();
+	const vector<ZTValue>& addedQueriesV = iReq.Get("addedQueries").GetSeq().GetVector();
 	if (size_t theCount = addedQueriesV.size())
 		{
 		addedQueries.reserve(theCount);
@@ -183,7 +183,7 @@ static bool sSync1(
 	vector<ZTuple> writtenTuples;
 	bool writeNeededSort = false;
 	{
-	const vector<ZTValue>& writtenTuplesV = iReq.Get("writtenTuples").GetList().GetVector();
+	const vector<ZTValue>& writtenTuplesV = iReq.Get("writtenTuples").GetSeq().GetVector();
 	if (size_t theCount = writtenTuplesV.size())
 		{
 		writtenTupleIDs.reserve(theCount);

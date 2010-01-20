@@ -287,7 +287,7 @@ static ZRef<ZYadR> spMakeYadR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU)
 	
 	if (sTryRead_CP(theStrimU, '['))
 		{
-		return new ZYadListR_ZooLibStrim(iStrimmerU, true);
+		return new ZYadSeqR_ZooLibStrim(iStrimmerU, true);
 		}
 	else if (sTryRead_CP(theStrimU, '{'))
 		{
@@ -476,14 +476,14 @@ void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* iDest, size_t iCount, si
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_ZooLibStrim
+#pragma mark * ZYadSeqR_ZooLibStrim
 
-ZYadListR_ZooLibStrim::ZYadListR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iReadDelimiter)
+ZYadSeqR_ZooLibStrim::ZYadSeqR_ZooLibStrim(ZRef<ZStrimmerU> iStrimmerU, bool iReadDelimiter)
 :	fStrimmerU(iStrimmerU),
 	fReadDelimiter(iReadDelimiter)
 	{}
 
-void ZYadListR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+void ZYadSeqR_ZooLibStrim::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	using namespace ZUtil_Strim;
 
@@ -920,7 +920,7 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 static void spToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 	size_t iInitialIndent, const ZYadOptions& iOptions, bool iMayNeedInitialLF);
 
-static void spToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
+static void spToStrim_Seq(const ZStrimW& s, ZRef<ZYadSeqR> iYadSeqR,
 	size_t iLevel, const ZYadOptions& iOptions, bool iMayNeedInitialLF)
 	{
 	bool needsIndentation = false;
@@ -931,7 +931,7 @@ static void spToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 		// 2. A non-empty tuple.
 		// or if iOptions.fBreakStrings is true, any element is a string with embedded
 		// line breaks or more than iOptions.fStringLineLength characters.
-		needsIndentation = !iYadListR->IsSimple(iOptions);
+		needsIndentation = !iYadSeqR->IsSimple(iOptions);
 		}
 
 	if (needsIndentation)
@@ -947,7 +947,7 @@ static void spToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 		s.Write("[");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (ZRef<ZYadR> cur = iYadListR->ReadInc())
+			if (ZRef<ZYadR> cur = iYadSeqR->ReadInc())
 				{
 				if (!isFirst)
 					s.Write(", ");
@@ -969,7 +969,7 @@ static void spToStrim_List(const ZStrimW& s, ZRef<ZYadListR> iYadListR,
 		s.Write("[");
 		for (bool isFirst = true; /*no test*/ ; isFirst = false)
 			{
-			if (ZRef<ZYadR> cur = iYadListR->ReadInc())
+			if (ZRef<ZYadR> cur = iYadSeqR->ReadInc())
 				{
 				if (!isFirst)
 					s.Write(", ");
@@ -1056,9 +1056,9 @@ static void spToStrim_Yad(const ZStrimW& s, ZRef<ZYadR> iYadR,
 		{
 		spToStrim_Map(s, theYadMapR, iLevel, iOptions, iMayNeedInitialLF);
 		}
-	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
+	else if (ZRef<ZYadSeqR> theYadSeqR = ZRefDynamicCast<ZYadSeqR>(iYadR))
 		{
-		spToStrim_List(s, theYadListR, iLevel, iOptions, iMayNeedInitialLF);
+		spToStrim_Seq(s, theYadSeqR, iLevel, iOptions, iMayNeedInitialLF);
 		}
 	else if (ZRef<ZYadStreamR> theYadStreamR = ZRefDynamicCast<ZYadStreamR>(iYadR))
 		{

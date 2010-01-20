@@ -39,7 +39,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 class ZVal_NS;
-class ZList_NS;
+class ZSeq_NS;
 class ZMap_NS;
 
 // =================================================================================================
@@ -78,7 +78,7 @@ public:
 	ZVal_NS(NSString* iVal);
 
 	ZVal_NS(const ZData_NS& iVal);
-	ZVal_NS(const ZList_NS& iVal);
+	ZVal_NS(const ZSeq_NS& iVal);
 	ZVal_NS(const ZMap_NS& iVal);
 
 	explicit ZVal_NS(NSData* iVal);
@@ -115,15 +115,15 @@ public:
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_NS)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, NSString, ZRef<NSString>)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, Data, ZData_NS)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, List, ZList_NS)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, Seq, ZSeq_NS)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, Map, ZMap_NS)
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZList_NS
+#pragma mark * ZSeq_NS
 
-class ZList_NS
+class ZSeq_NS
 :	public ZRef<NSArray>
 	{
 	typedef ZRef<NSArray> inherited;
@@ -134,30 +134,30 @@ public:
 
 	operator bool() const;
 
-	ZList_NS();
-	ZList_NS(const ZList_NS& iOther);
-	~ZList_NS();
-	ZList_NS& operator=(const ZList_NS& iOther);
+	ZSeq_NS();
+	ZSeq_NS(const ZSeq_NS& iOther);
+	~ZSeq_NS();
+	ZSeq_NS& operator=(const ZSeq_NS& iOther);
 
-	ZList_NS(NSMutableArray* iOther);
-	ZList_NS(NSArray* iOther);
+	ZSeq_NS(NSMutableArray* iOther);
+	ZSeq_NS(NSArray* iOther);
 
-	ZList_NS(const ZRef<NSMutableArray>& iOther);
-	ZList_NS(const ZRef<NSArray>& iOther);
+	ZSeq_NS(const ZRef<NSMutableArray>& iOther);
+	ZSeq_NS(const ZRef<NSArray>& iOther);
 
-	ZList_NS(const Adopt_T<NSMutableArray>& iOther);
-	ZList_NS(const Adopt_T<NSArray>& iOther);
+	ZSeq_NS(const Adopt_T<NSMutableArray>& iOther);
+	ZSeq_NS(const Adopt_T<NSArray>& iOther);
 
-	ZList_NS& operator=(NSMutableArray* iOther);
-	ZList_NS& operator=(NSArray* iOther);
+	ZSeq_NS& operator=(NSMutableArray* iOther);
+	ZSeq_NS& operator=(NSArray* iOther);
 
-	ZList_NS& operator=(const ZRef<NSMutableArray>& iOther);
-	ZList_NS& operator=(const ZRef<NSArray>& iOther);
+	ZSeq_NS& operator=(const ZRef<NSMutableArray>& iOther);
+	ZSeq_NS& operator=(const ZRef<NSArray>& iOther);
 
-	ZList_NS& operator=(const Adopt_T<NSMutableArray>& iOther);
-	ZList_NS& operator=(const Adopt_T<NSArray>& iOther);
+	ZSeq_NS& operator=(const Adopt_T<NSMutableArray>& iOther);
+	ZSeq_NS& operator=(const Adopt_T<NSArray>& iOther);
 
-// ZList protocol
+// ZSeq protocol
 	size_t Count() const;
 
 	void Clear();
@@ -166,13 +166,13 @@ public:
 	ZVal_NS DGet(const ZVal_NS& iDefault, size_t iIndex) const;
 	ZVal_NS Get(size_t iIndex) const;
 
-	ZList_NS& Set(size_t iIndex, const ZVal_NS& iVal);
+	ZSeq_NS& Set(size_t iIndex, const ZVal_NS& iVal);
 
-	ZList_NS& Erase(size_t iIndex);
+	ZSeq_NS& Erase(size_t iIndex);
 
-	ZList_NS& Insert(size_t iIndex, const ZVal_NS& iVal);
+	ZSeq_NS& Insert(size_t iIndex, const ZVal_NS& iVal);
 
-	ZList_NS& Append(const ZVal_NS& iVal);
+	ZSeq_NS& Append(const ZVal_NS& iVal);
 
 private:
 	NSArray* pArray() const;

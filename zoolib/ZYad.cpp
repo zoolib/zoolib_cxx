@@ -43,7 +43,7 @@ return further instances of ZYadR referencing substructures of that source. Basi
 generic facility for accessing data that looks like ZooLib ZTuple suite -- CFDictionary,
 NSDictionary, PList, XMLRPC, JSON, Javascript types etc.
 
-The idea is that there are a Map-like and List-like entities in many APIs, and that abstracting
+The idea is that there are a Map-like and Seq-like entities in many APIs, and that abstracting
 access to them allows code to be applied to any of them.
 */
 
@@ -127,18 +127,18 @@ bool ZYadStrimR::IsSimple(const ZYadOptions& iOptions)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR
+#pragma mark * ZYadSeqR
 
-bool ZYadListR::Accept(ZYadVisitor& iVisitor)
-	{ return iVisitor.Visit_YadListR(this); }
+bool ZYadSeqR::Accept(ZYadVisitor& iVisitor)
+	{ return iVisitor.Visit_YadSeqR(this); }
 
-bool ZYadListR::IsSimple(const ZYadOptions& iOptions)
+bool ZYadSeqR::IsSimple(const ZYadOptions& iOptions)
 	{ return false; }
 
-bool ZYadListR::Skip()
+bool ZYadSeqR::Skip()
 	{ return this->ReadInc(); }
 
-void ZYadListR::SkipAll()
+void ZYadSeqR::SkipAll()
 	{
 	while (this->Skip())
 		{}
@@ -146,12 +146,12 @@ void ZYadListR::SkipAll()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListRPos
+#pragma mark * ZYadSeqRPos
 
-bool ZYadListRPos::Accept(ZYadVisitor& iVisitor)
-	{ return iVisitor.Visit_YadListRPos(this); }
+bool ZYadSeqRPos::Accept(ZYadVisitor& iVisitor)
+	{ return iVisitor.Visit_YadSeqRPos(this); }
 
-bool ZYadListRPos::IsSimple(const ZYadOptions& iOptions)
+bool ZYadSeqRPos::IsSimple(const ZYadOptions& iOptions)
 	{
 	uint64 theSize = this->GetSize();
 	if (theSize == 0)
@@ -168,7 +168,7 @@ bool ZYadListRPos::IsSimple(const ZYadOptions& iOptions)
 	return false;
 	}
 
-bool ZYadListRPos::Skip()
+bool ZYadSeqRPos::Skip()
 	{
 	uint64 theSize = this->GetSize();
 	uint64 thePosition = this->GetPosition();
@@ -180,7 +180,7 @@ bool ZYadListRPos::Skip()
 	return false;
 	}
 
-void ZYadListRPos::SkipAll()
+void ZYadSeqRPos::SkipAll()
 	{ this->SetPosition(this->GetSize()); }
 
 // =================================================================================================
@@ -266,11 +266,11 @@ bool ZYadVisitor::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 bool ZYadVisitor::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	{ return this->Visit_YadR(iYadStrimR); }
 
-bool ZYadVisitor::Visit_YadListR(ZRef<ZYadListR> iYadListR)
-	{ return this->Visit_YadR(iYadListR); }
+bool ZYadVisitor::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+	{ return this->Visit_YadR(iYadSeqR); }
 
-bool ZYadVisitor::Visit_YadListRPos(ZRef<ZYadListRPos> iYadListRPos)
-	{ return this->Visit_YadListR(iYadListRPos); }
+bool ZYadVisitor::Visit_YadSeqRPos(ZRef<ZYadSeqRPos> iYadSeqRPos)
+	{ return this->Visit_YadSeqR(iYadSeqRPos); }
 
 bool ZYadVisitor::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	{ return this->Visit_YadR(iYadMapR); }

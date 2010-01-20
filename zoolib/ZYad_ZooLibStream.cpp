@@ -217,37 +217,37 @@ const ZStrimR& ZYadStrimR_ZooLibStream::GetStrimR()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_ZooLibStreamNew
+#pragma mark * ZYadSeqR_ZooLibStreamNew
 
-class ZYadListR_ZooLibStreamNew : public ZYadListR_Std
+class ZYadSeqR_ZooLibStreamNew : public ZYadSeqR_Std
 	{
 public:
-	ZYadListR_ZooLibStreamNew(ZRef<ZStreamerR> iStreamerR);
+	ZYadSeqR_ZooLibStreamNew(ZRef<ZStreamerR> iStreamerR);
 
-// From ZYadListR_Std
+// From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
 	ZRef<ZStreamerR> fStreamerR;
 	};
 
-ZYadListR_ZooLibStreamNew::ZYadListR_ZooLibStreamNew(ZRef<ZStreamerR> iStreamerR)
+ZYadSeqR_ZooLibStreamNew::ZYadSeqR_ZooLibStreamNew(ZRef<ZStreamerR> iStreamerR)
 :	fStreamerR(iStreamerR)
 	{}
 
-void ZYadListR_ZooLibStreamNew::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+void ZYadSeqR_ZooLibStreamNew::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{ oYadR = spMakeYadR_ZooLibStream(fStreamerR); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_ZooLibStreamOld
+#pragma mark * ZYadSeqR_ZooLibStreamOld
 
-class ZYadListR_ZooLibStreamOld : public ZYadListR_Std
+class ZYadSeqR_ZooLibStreamOld : public ZYadSeqR_Std
 	{
 public:
-	ZYadListR_ZooLibStreamOld(ZRef<ZStreamerR> iStreamerR);
+	ZYadSeqR_ZooLibStreamOld(ZRef<ZStreamerR> iStreamerR);
 
-// From ZYadListR_Std
+// From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
@@ -255,12 +255,12 @@ private:
 	size_t fCountRemaining;
 	};
 
-ZYadListR_ZooLibStreamOld::ZYadListR_ZooLibStreamOld(ZRef<ZStreamerR> iStreamerR)
+ZYadSeqR_ZooLibStreamOld::ZYadSeqR_ZooLibStreamOld(ZRef<ZStreamerR> iStreamerR)
 :	fStreamerR(iStreamerR),
 	fCountRemaining(fStreamerR->GetStreamR().ReadCount())
 	{}
 
-void ZYadListR_ZooLibStreamOld::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+void ZYadSeqR_ZooLibStreamOld::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	{
 	if (fCountRemaining)
 		{
@@ -338,20 +338,20 @@ void ZYad_ZooLibStream::sToStream(const ZStreamW& iStreamW, ZRef<ZYadR> iYadR)
 		iStreamW.WriteByte(0); // Empty name
 		iStreamW.WriteByte(0xFF); // Terminator
 		}
-	else if (ZRef<ZYadListR> theYadListR = ZRefDynamicCast<ZYadListR>(iYadR))
+	else if (ZRef<ZYadSeqR> theYadSeqR = ZRefDynamicCast<ZYadSeqR>(iYadR))
 		{
-		if (ZRef<ZYadListRPos> theYadListRPos = ZRefDynamicCast<ZYadListRPos>(iYadR))
+		if (ZRef<ZYadSeqRPos> theYadSeqRPos = ZRefDynamicCast<ZYadSeqRPos>(iYadR))
 			{
 			iStreamW.WriteUInt8(eZType_Vector);
-			size_t theCount = theYadListRPos->GetSize() - theYadListRPos->GetPosition();
+			size_t theCount = theYadSeqRPos->GetSize() - theYadSeqRPos->GetPosition();
 			iStreamW.WriteCount(theCount);
 			while (--theCount)
-				sToStream(iStreamW, theYadListRPos->ReadInc());
+				sToStream(iStreamW, theYadSeqRPos->ReadInc());
 			}
 		else
 			{
 			iStreamW.WriteUInt8(0x80 | eZType_Vector);
-			while (ZRef<ZYadR> theChild = theYadListR->ReadInc())
+			while (ZRef<ZYadR> theChild = theYadSeqR->ReadInc())
 				sToStream(iStreamW, theChild);
 			iStreamW.WriteByte(0xFF); // Terminator (distinct from any value in ZType)
 			}
@@ -403,9 +403,9 @@ ZRef<ZYadR> spMakeYadR_ZooLibStream(ZRef<ZStreamerR> iStreamerR)
 		switch (theType)
 			{
 			case eZType_Vector:
-				return new ZYadListR_ZooLibStreamOld(iStreamerR);
+				return new ZYadSeqR_ZooLibStreamOld(iStreamerR);
 			case 0x80 | eZType_Vector:
-				return new ZYadListR_ZooLibStreamNew(iStreamerR);
+				return new ZYadSeqR_ZooLibStreamNew(iStreamerR);
 			case eZType_Tuple:
 				return new ZYadMapR_ZooLibStreamOld(iStreamerR);
 			case 0x80 | eZType_Tuple:

@@ -67,9 +67,9 @@ static ZVal_Any spIntAsVal(int32 iInt)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * YadListRPos
+#pragma mark * YadSeqRPos
 
-typedef ZYadListRPos_Val_T<List> YadListRPos;
+typedef ZYadSeqRPos_Val_T<Seq> YadSeqRPos;
 
 // =================================================================================================
 #pragma mark -
@@ -86,47 +86,47 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 	if (const Map* asMap = iVal.PGet_T<Map>())
 		return new YadMapRPos(*asMap);
 
-	if (const List* asList = iVal.PGet_T<List>())
-		return new YadListRPos(*asList);
+	if (const Seq* asSeq = iVal.PGet_T<Seq>())
+		return new YadSeqRPos(*asSeq);
 
 	if (const UnitFloat* asUnitFloat = iVal.PGet_T<UnitFloat>())
 		{
-		ZMap_Any theMap;
-		theMap.Set("!Type", string("UnitFloat"));
-		theMap.Set("UnitID", spIntAsVal(asUnitFloat->fUnitID));
-		theMap.Set("Value", asUnitFloat->fValue);
+		const ZMap_Any theMap = ZMap_Any()
+			.Set("!Type", string("UnitFloat"))
+			.Set("UnitID", spIntAsVal(asUnitFloat->fUnitID))
+			.Set("Value", asUnitFloat->fValue);
 		return sMakeYadR(theMap);
 		}
 
 	if (const Enumerated* asEnumerated = iVal.PGet_T<Enumerated>())
 		{
-		ZMap_Any theMap;
-		theMap.Set("!Type", string("Enumerated"));
-		theMap.Set("UnitID", spIntAsVal(asEnumerated->fEnumType));
-		theMap.Set("Value", spIntAsVal(asEnumerated->fValue));
+		const ZMap_Any theMap = ZMap_Any()
+			.Set("!Type", string("Enumerated"))
+			.Set("UnitID", spIntAsVal(asEnumerated->fEnumType))
+			.Set("Value", spIntAsVal(asEnumerated->fValue));
 		return sMakeYadR(theMap);
 		}
 
 	if (const FileRef* asFileRef = iVal.PGet_T<FileRef>())
 		{
-		ZMap_Any theMap;
-		theMap.Set("!Type", string("FileRef"));
-		theMap.Set("PathTrail", asFileRef->AsTrail().AsString());
+		const ZMap_Any theMap = ZMap_Any()
+			.Set("!Type", string("FileRef"))
+			.Set("PathTrail", asFileRef->AsTrail().AsString());
 		return sMakeYadR(theMap);
 		}
 
 	if (/*const Spec* asSpec = */iVal.PGet_T<Spec>())
 		{
-		ZMap_Any theMap;
-		theMap.Set("!Type", string("Spec"));
+		const ZMap_Any theMap = ZMap_Any()
+			.Set("!Type", string("Spec"));
 		return sMakeYadR(theMap);
 		}
 
 	return new ZYadPrimR_Any(iVal.AsAny());
 	}
 
-ZRef<ZYadListR> sMakeYadR(const List& iList)
-	{ return new YadListRPos(iList); }
+ZRef<ZYadSeqR> sMakeYadR(const Seq& iSeq)
+	{ return new YadSeqRPos(iSeq); }
 
 ZRef<ZYadMapR> sMakeYadR(const Map& iMap)
 	{ return new YadMapRPos(iMap); }

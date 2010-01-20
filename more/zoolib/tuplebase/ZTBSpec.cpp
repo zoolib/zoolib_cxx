@@ -84,7 +84,7 @@ static ZTBSpec::ERel sRelFromString(const std::string& iString)
 static void sCriterionUnionFromTuple(
 	const ZTuple& iTuple, ZTBSpec::CriterionUnion& ioCriterionUnion)
 	{
-	const vector<ZTValue>& outerVector = iTuple.Get("Criteria").GetList().GetVector();
+	const vector<ZTValue>& outerVector = iTuple.Get("Criteria").GetSeq().GetVector();
 
 	ioCriterionUnion.resize(outerVector.size());
 	ZTBSpec::CriterionUnion::iterator critListIter = ioCriterionUnion.begin();
@@ -92,8 +92,8 @@ static void sCriterionUnionFromTuple(
 	for (vector<ZTValue>::const_iterator outerIter = outerVector.begin();
 		outerIter != outerVector.end(); ++outerIter, ++critListIter)
 		{
-		const ZList_ZooLib theList = (*outerIter).GetList();
-		const vector<ZTValue>& innerVector = theList.GetVector();
+		const ZSeq_ZooLib theSeq = (*outerIter).GetSeq();
+		const vector<ZTValue>& innerVector = theSeq.GetVector();
 		for (vector<ZTValue>::const_iterator inner = innerVector.begin();
 			inner != innerVector.end(); ++inner)
 			{
@@ -116,7 +116,7 @@ static ZTuple sCriterionUnionToTuple(const ZTBSpec::CriterionUnion& iCriterionUn
 		critListIter != critListEnd;
 		++critListIter, ++outerIter)
 		{
-		vector<ZTValue>& innerVector = (*outerIter).MutableList().MutableVector();
+		vector<ZTValue>& innerVector = (*outerIter).MutableSeq().MutableVector();
 		for (ZTBSpec::CriterionSect::const_iterator i = (*critListIter).begin(),
 			theEnd = (*critListIter).end();
 			i != theEnd; ++i)
@@ -670,10 +670,10 @@ bool ZTBSpec::Criterion::Matches(const ZTuple& iTuple) const
 			}
 		case eRel_VectorContains:
 			{
-			ZList_ZooLib theList;
-			if (iTuple.Get(propIter).QGetList(theList))
+			ZSeq_ZooLib theSeq;
+			if (iTuple.Get(propIter).QGetSeq(theSeq))
 				{
-				const vector<ZTValue>& theVector = theList.GetVector();
+				const vector<ZTValue>& theVector = theSeq.GetVector();
 				for (vector<ZTValue>::const_iterator i = theVector.begin();
 					i != theVector.end(); ++i)
 					{

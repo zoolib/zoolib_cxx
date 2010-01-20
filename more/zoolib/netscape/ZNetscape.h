@@ -26,8 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/netscape/ZCompat_npapi.h"
 
-#include "zoolib/ZCompat_operator_bool.h"
-
 #include <string>
 #include <vector>
 

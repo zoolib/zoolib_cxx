@@ -40,14 +40,14 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadListR_Bencode
+#pragma mark * ZYadSeqR_Bencode
 
-class ZYadListR_Bencode : public ZYadListR_Std
+class ZYadSeqR_Bencode : public ZYadSeqR_Std
 	{
 public:
-	ZYadListR_Bencode(ZRef<ZStreamerU> iStreamerU);
+	ZYadSeqR_Bencode(ZRef<ZStreamerU> iStreamerU);
 
-// From ZYadListR_Std
+// From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:

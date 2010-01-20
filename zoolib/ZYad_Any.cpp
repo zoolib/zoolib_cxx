@@ -34,7 +34,7 @@ ZRef<ZYadR> sMakeYadR(const ZAny& iVal)
 	if (const ZMap_Any* theVal = iVal.PGet_T<ZMap_Any>())
 		return sMakeYadR(*theVal);
 		
-	if (const ZList_Any* theVal = iVal.PGet_T<ZList_Any>())
+	if (const ZSeq_Any* theVal = iVal.PGet_T<ZSeq_Any>())
 		return sMakeYadR(*theVal);
 
 	if (const string8* theVal = iVal.PGet_T<string8>())
@@ -49,8 +49,8 @@ ZRef<ZYadR> sMakeYadR(const ZAny& iVal)
 ZRef<ZYadStreamR> sMakeYadR(const ZData_Any& iData)
 	{ return new ZYadStreamRPos_Any(iData); }
 
-ZRef<ZYadListR> sMakeYadR(const ZList_Any& iList)
-	{ return new ZYadListRPos_Any(iList); }
+ZRef<ZYadSeqR> sMakeYadR(const ZSeq_Any& iSeq)
+	{ return new ZYadSeqRPos_Any(iSeq); }
 
 ZRef<ZYadMapR> sMakeYadR(const ZMap_Any& iMap)
 	{ return new ZYadMapRPos_Any(iMap); }
@@ -70,7 +70,7 @@ public:
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
 	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
-	virtual bool Visit_YadListR(ZRef<ZYadListR> iYadListR);
+	virtual bool Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
 	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 
 	ZVal_Any fDefault;
@@ -81,7 +81,7 @@ public:
 
 ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
 	{
-	// Could detect that we're dealing with a ZYadR encapsulating a ZData_Any, ZList_Any or ZMap_Any
+	// Could detect that we're dealing with a ZYadR encapsulating a ZData_Any, ZSeq_Any or ZMap_Any
 
 	YadVisitor_GetVal_Any theVisitor(iDefault);
 	iYadR->Accept(theVisitor);
@@ -110,14 +110,14 @@ bool YadVisitor_GetVal_Any::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	return true;
 	}
 
-bool YadVisitor_GetVal_Any::Visit_YadListR(ZRef<ZYadListR> iYadListR)
+bool YadVisitor_GetVal_Any::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	{
-	ZList_Any theList;
+	ZSeq_Any theSeq;
 
-	while (ZRef<ZYadR> theChild = iYadListR->ReadInc())
-		theList.Append(sFromYadR(fDefault, theChild));
+	while (ZRef<ZYadR> theChild = iYadSeqR->ReadInc())
+		theSeq.Append(sFromYadR(fDefault, theChild));
 
-	fOutput = theList;
+	fOutput = theSeq;
 	return true;
 	}
 
