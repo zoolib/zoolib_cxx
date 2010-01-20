@@ -38,6 +38,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <map>
 
+#if ZCONFIG_SPI_Enabled(Win)
+	enum
+		{
+		typeSInt32 = typeInteger,
+		typeIEEE64BitFloatingPoint = typeFloat
+		};
+#endif
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * List and Map Copy, Getter, Setter macros
@@ -45,14 +53,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define COPYFROMTO(SUITE, iSource, iKey, iType, DEST) \
 	switch (iType) \
 		{ \
-		case typeInteger: \
+		case typeSInt32: \
 			{ \
 			int32 theVal; \
 			if (noErr == SUITE->GetInteger(iSource, iKey, &theVal)) \
 				SUITE->PutInteger(DEST, theVal); \
 			break; \
 			} \
-		case typeFloat: \
+		case typeIEEE64BitFloatingPoint: \
 			{ \
 			double theVal; \
 			if (noErr == SUITE->GetFloat(iSource, iKey, &theVal)) \
@@ -157,14 +165,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		} \
 
 #define GETTERCASES(SUITE, P0, P1) \
-	case typeInteger: \
+	case typeSInt32: \
 		{ \
 		int32 theVal; \
 		if (noErr == SUITE->GetInteger(P0, P1, &theVal)) \
 			{ oVal = theVal; return true; } \
 		break; \
 		} \
-	case typeFloat: \
+	case typeIEEE64BitFloatingPoint: \
 		{ \
 		double theVal; \
 		if (noErr == SUITE->GetFloat(P0, P1, &theVal)) \
@@ -327,10 +335,10 @@ using std::pair;
 #pragma mark * Support for ZRef<ASZString>
 
 template <>
-void sRetain_T(const ASZString& iString)
+void sRetain_T(struct ASZByteRun*& ioString)
 	{
-	if (iString)
-		spASZString->AddRef(iString);
+	if (ioString)
+		spASZString->AddRef(ioString);
 	}
 
 template <>
