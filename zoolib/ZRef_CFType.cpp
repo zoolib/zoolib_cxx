@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZOOLIB_RETAIN_RELEASE(a) \
 	NAMESPACE_ZOOLIB_BEGIN \
 	template <> void sRetain_T(a& iRef) { if (iRef) ::CFRetain(iRef); } \
-	template <> void sRelease_T(a iRef) { if (iRef) ::CFRelease(iRef); } \
+	template <> void sRelease_T(const a& iRef) { if (iRef) ::CFRelease(iRef); } \
 	NAMESPACE_ZOOLIB_END
 
 // =================================================================================================

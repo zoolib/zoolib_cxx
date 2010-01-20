@@ -327,14 +327,14 @@ using std::pair;
 #pragma mark * Support for ZRef<ASZString>
 
 template <>
-void sRetain_T(struct ASZByteRun*& iString)
+void sRetain_T(const ASZString& iString)
 	{
 	if (iString)
 		spASZString->AddRef(iString);
 	}
 
 template <>
-void sRelease_T(struct ASZByteRun* iString)
+void sRelease_T(const ASZString& iString)
 	{
 	if (iString)
 		spASZString->Release(iString);

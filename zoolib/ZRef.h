@@ -200,7 +200,7 @@ Adopt_T<P> NoRetain(P iP)
 #pragma mark * ZRef partially specialized for pointer types
 
 template <class T> void sRetain_T(T&);
-template <class T> void sRelease_T(T);
+template <class T> void sRelease_T(const T&);
 
 template <class T>
 class ZRef<T*>
