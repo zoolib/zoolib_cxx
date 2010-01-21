@@ -35,7 +35,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #	define XP_WIN 1
 
-#elif ZCONFIG_SPI_Enabled(Carbon)
+#elif ZCONFIG_SPI_Enabled(Carbon64)
 
 #	if __MACH__
 #		define XP_MACOSX 1
@@ -53,7 +53,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark -
 #pragma mark * NP_NO_QUICKDRAW and NP_NO_CARBON
 
-#if defined(XP_MACOSX) && defined(__LP64__)
+#if defined(XP_MACOSX) && __LP64__
 #	define NP_NO_QUICKDRAW 1
 #	define NP_NO_CARBON 1
 #endif
@@ -65,12 +65,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if defined(XP_MACOSX)
 #	include <ApplicationServices/ApplicationServices.h>
 #	include <OpenGL/OpenGL.h>
-#	if !defined(NP_NO_CARBON)
-#		include <Carbon/Carbon.h>
-#	endif
 #endif
 
-#if defined(XP_MAC)
+#if defined(XP_MACOSX) || defined(XP_MAC)
 #	include ZMACINCLUDE2(Carbon,Carbon.h)
 #endif
 
@@ -101,7 +98,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark -
 #pragma mark "* Mac-specific, set structure alignment to be 68K"
 
-#if !defined(__LP64__)
+#if ! __LP64__
 #	if defined(XP_MAC) || defined(XP_MACOSX)
 #		pragma options align=mac68k
 #	endif
@@ -869,7 +866,7 @@ typedef struct _NPPluginFuncs
 #pragma mark -
 #pragma mark * Mac-specific, reset structure alignment
 
-#if !defined(__LP64__)
+#if ! __LP64__
 #	if defined(XP_MAC) || defined(XP_MACOSX)
 #		pragma options align=reset
 #	endif

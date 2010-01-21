@@ -116,7 +116,9 @@ Host_Mac::Host_Mac(ZRef<GuestFactory> iGuestFactory, bool iAllowCG)
 		fNP_CGContext.window = nullptr;
 	#endif
 
-	ZBlockZero(&fNP_Port, sizeof(fNP_Port));
+	#if !defined(NP_NO_QUICKDRAW)
+		ZBlockZero(&fNP_Port, sizeof(fNP_Port));
+	#endif
 
 	fNPWindow.type = NPWindowTypeDrawable;
 
@@ -161,7 +163,7 @@ NPError Host_Mac::Host_SetValue(NPP npp, NPPVariable variable, void* value)
 			{
 			if (ZLOG(s, eDebug, "Host_Mac"))
 				s << "Host_SetValue, NPPVpluginDrawingModel";
-			if (reinterpret_cast<int>(value) == NPDrawingModelCoreGraphics)
+			if (reinterpret_cast<intptr_t>(value) == NPDrawingModelCoreGraphics)
 				fUseCoreGraphics = true;
 			else
 				fUseCoreGraphics = false;
@@ -250,8 +252,10 @@ void Host_Mac::DoSetWindow(int iX, int iY, int iWidth, int iHeight)
 	if (ZLOG(s, eDebug + 1, "Host_Mac"))
 		s.Writef("DoSetWindow, (%d, %d, %d, %d)", iX, iY, iX + iWidth, iY + iHeight);
 
-	fNP_Port.portx = -iX;
-	fNP_Port.porty = -iY;
+	#if !defined(NP_NO_QUICKDRAW)
+		fNP_Port.portx = -iX;
+		fNP_Port.porty = -iY;
+	#endif
 
 	fNPWindow.x = iX;
 	fNPWindow.y = iY;
@@ -403,10 +407,16 @@ void Host_WindowRef::PostCreateAndLoad()
 		fNPWindow.window = &fNP_CGContext;
 		}
 	#endif // defined(XP_MACOSX)
-	else
+	#if !defined(NP_NO_QUICKDRAW)
+	else if (true)
 		{
 		fNP_Port.port = ::GetWindowPort(fWindowRef);
 		fNPWindow.window = &fNP_Port;
+		}
+	#endif // !defined(NP_NO_QUICKDRAW)
+	else
+		{
+		ZUnimplemented();
 		}
 
 	Rect winFrameRect;
@@ -688,10 +698,16 @@ void Host_HIViewRef::PostCreateAndLoad()
 		fNPWindow.window = &fNP_CGContext;
 		}
 	#endif // defined(XP_MACOSX)
-	else
+	#if !defined(NP_NO_QUICKDRAW)
+	else if (true)
 		{
 		fNP_Port.port = ::GetWindowPort(theWindowRef);
 		fNPWindow.window = &fNP_Port;
+		}
+	#endif // !defined(NP_NO_QUICKDRAW)
+	else
+		{
+		ZUnimplemented();
 		}
 
 	ZGRectf theFrame;

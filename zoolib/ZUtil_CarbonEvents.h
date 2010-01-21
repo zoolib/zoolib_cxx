@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(Carbon)
+#if ZCONFIG_SPI_Enabled(Carbon64)
 
 #include ZMACINCLUDE3(Carbon,HIToolbox,CarbonEvents.h)
 
@@ -103,6 +103,6 @@ std::string sEventTypeAsString(UInt16 iEventType);
 
 NAMESPACE_ZOOLIB_END
 
-#endif // ZCONFIG_SPI_Enabled(Carbon)
+#endif // ZCONFIG_SPI_Enabled(Carbon64)
 
 #endif // __ZUtil_CarbonEvents__

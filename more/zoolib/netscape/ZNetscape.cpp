@@ -98,7 +98,9 @@ string sAsString(NPNVariable iVar)
 		CASE(NPNVPluginElementNPObject);
 		CASE(NPNVSupportsWindowless);
 		#if defined(XP_MACOSX)
-			CASE(NPNVsupportsQuickDrawBool);
+			#ifndef NP_NO_QUICKDRAW
+				CASE(NPNVsupportsQuickDrawBool);
+			#endif
 			CASE(NPNVsupportsCoreGraphicsBool);
 			CASE(NPNVsupportsOpenGLBool);
 		#endif

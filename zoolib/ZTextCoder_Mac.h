@@ -26,8 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef ZCONFIG_API_Avail__TextCoder_Mac
 #	define ZCONFIG_API_Avail__TextCoder_Mac \
-	(ZCONFIG_SPI_Enabled(Carbon) \
-	|| ZCONFIG_SPI_Enabled(MacOSX) \
+	(ZCONFIG_SPI_Enabled(Carbon64) \
 	|| ZCONFIG_SPI_Enabled(MacClassic))
 #endif
 

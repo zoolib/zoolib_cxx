@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_CarbonEvents.h"
 
-#if ZCONFIG_SPI_Enabled(Carbon)
+#if ZCONFIG_SPI_Enabled(Carbon64)
 
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZLog.h"
@@ -52,7 +52,7 @@ bool ZUtil_CarbonEvents::sQGetParam(EventRef iEventRef, EventParamName iName, Ev
 size_t ZUtil_CarbonEvents::sGetParamLength(
 	EventRef iEventRef, EventParamName iName, EventParamType iType)
 	{
-	UInt32 theLength;
+	ByteCount theLength;
 	if (noErr == ::GetEventParameter(iEventRef, iName, iType, nullptr, 0, &theLength, nullptr))
 		return theLength;
 	return 0;
@@ -285,8 +285,10 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 		CLASS(kEventClassWindow);
 		switch (iEK)
 			{
-			KIND(kEventWindowUpdate);
-			KIND(kEventWindowDrawContent);
+			#if ZCONFIG_SPI_Enabled(Carbon)
+				KIND(kEventWindowUpdate);
+				KIND(kEventWindowDrawContent);
+			#endif
 			KIND(kEventWindowActivated);
 			KIND(kEventWindowDeactivated);
 			KIND(kEventWindowGetClickActivation);
@@ -304,13 +306,15 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventWindowDragStarted);
 			KIND(kEventWindowDragCompleted);
 			KIND(kEventWindowClosed);
-			KIND(kEventWindowClickDragRgn);
-			KIND(kEventWindowClickResizeRgn);
-			KIND(kEventWindowClickCollapseRgn);
-			KIND(kEventWindowClickCloseRgn);
-			KIND(kEventWindowClickZoomRgn);
-			KIND(kEventWindowClickContentRgn);
-			KIND(kEventWindowClickProxyIconRgn);
+			#if ZCONFIG_SPI_Enabled(Carbon)
+				KIND(kEventWindowClickDragRgn);
+				KIND(kEventWindowClickResizeRgn);
+				KIND(kEventWindowClickCollapseRgn);
+				KIND(kEventWindowClickCloseRgn);
+				KIND(kEventWindowClickZoomRgn);
+				KIND(kEventWindowClickContentRgn);
+				KIND(kEventWindowClickProxyIconRgn);
+			#endif
 			KIND(kEventWindowCursorChange);
 			KIND(kEventWindowCollapse);
 			KIND(kEventWindowCollapseAll);
@@ -326,7 +330,9 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventWindowGetMinimumSize);
 			KIND(kEventWindowGetMaximumSize);
 			KIND(kEventWindowConstrain);
-			KIND(kEventWindowHandleContentClick);
+			#if ZCONFIG_SPI_Enabled(Carbon)
+				KIND(kEventWindowHandleContentClick);
+			#endif
 			KIND(kEventWindowProxyBeginDrag);
 			KIND(kEventWindowProxyEndDrag);
 			KIND(kEventWindowFocusAcquired);
@@ -354,8 +360,10 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventWindowExpanding);
 			KIND(kEventWindowTransitionStarted);
 			KIND(kEventWindowTransitionCompleted);
-			KIND(kEventWindowClickToolbarButtonRgn);
-			KIND(kEventWindowClickStructureRgn);
+			#if ZCONFIG_SPI_Enabled(Carbon)
+				KIND(kEventWindowClickToolbarButtonRgn);
+				KIND(kEventWindowClickStructureRgn);
+			#endif
 			KIND(kEventWindowFocusDrawer);
 			KIND(kEventWindowGetDockTileMenu);
 			KIND(kEventWindowToolbarSwitchMode);
@@ -423,7 +431,9 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventControlSimulateHit);
 			KIND(kEventControlHitTest);
 			KIND(kEventControlDraw);
-			KIND(kEventControlApplyBackground);
+			#if ZCONFIG_SPI_Enabled(Carbon)
+				KIND(kEventControlApplyBackground);
+			#endif
 			KIND(kEventControlApplyTextColor);
 			KIND(kEventControlSetFocusPart);
 			KIND(kEventControlGetFocusPart);
@@ -449,7 +459,9 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 			KIND(kEventControlRemovingSubControl);
 			KIND(kEventControlBoundsChanged);
 			KIND(kEventControlOwningWindowChanged);
-			KIND(kEventControlArbitraryMessage);
+			#if ZCONFIG_SPI_Enabled(Carbon)
+				KIND(kEventControlArbitraryMessage);
+			#endif
 
 			#if !USING_ANCIENT_HEADERS
 			KIND(kEventControlGetNextFocusCandidate);
@@ -508,4 +520,4 @@ string ZUtil_CarbonEvents::sEventTypeAsString(UInt16 iEventType)
 		
 NAMESPACE_ZOOLIB_END
 
-#endif // ZCONFIG_SPI_Enabled(Carbon)
+#endif // ZCONFIG_SPI_Enabled(Carbon64)

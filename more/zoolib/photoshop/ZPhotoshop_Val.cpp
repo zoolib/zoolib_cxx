@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "PITerminology.h"
 #include "PIUSuites.h"
 
-#if ZCONFIG_SPI_Enabled(Carbon)
+#if ZCONFIG_SPI_Enabled(Carbon64)
 #	if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
 #		include ZMACINCLUDE3(ApplicationServices,AE,AEObjects.h)
 #	else

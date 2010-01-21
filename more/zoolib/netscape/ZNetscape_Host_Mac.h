@@ -75,7 +75,10 @@ protected:
 		bool fUseCoreGraphics;
 	#endif
 
-	NP_Port fNP_Port;
+	#if !defined(NP_NO_QUICKDRAW)
+		NP_Port fNP_Port;
+	#endif
+
 	float fLeft;
 	float fTop;
 	float fRight;

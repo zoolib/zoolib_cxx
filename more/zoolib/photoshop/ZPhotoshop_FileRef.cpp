@@ -96,8 +96,7 @@ static AutoSuite<PSHandleSuite2>
 #pragma mark -
 #pragma mark * Helpers
 
-#if defined(__PIMac__)
-
+#if ZCONFIG_SPI_Enabled(Carbon)
 static ZTrail spMacAsTrail(short iVRefNum, long iDirID, const unsigned char* iName)
 	{
 	ZTrail theResult;
@@ -151,8 +150,18 @@ static ZTrail spMacAsTrail(short iVRefNum, long iDirID, const unsigned char* iNa
 
 	return theResult;
 	}
+#endif // ZCONFIG_SPI_Enabled(Carbon)
 
-#endif // defined(__PIMac__)
+#if ZCONFIG_SPI_Enabled(Carbon64)
+static ZTrail spMacAsTrail(const FSRef& iFSRef)
+	{
+	char buffer[1024];
+	if (noErr == ::FSRefMakePath(&iFSRef, (UInt8*)buffer, 1024))
+		return ZTrail(buffer);
+
+	return ZTrail(false);
+	}
+#endif // ZCONFIG_SPI_Enabled(Carbon64)
 
 static string8 spTrailAsWin(const ZTrail& iTrail)
 	{
@@ -189,16 +198,22 @@ ZTrail sWinAsTrail(const string8& iWin)
 
 ZTrail sAsTrail(const SPPlatformFileSpecification& iSpec)
 	{
-	#if defined(__PIMac__)
-		return spMacAsTrail(iSpec.vRefNum, iSpec.parID, iSpec.name);
-	#endif
+	#if ZCONFIG_SPI_Enabled(Carbon)
 
-	#if defined(__PIWin__)
+		return spMacAsTrail(iSpec.vRefNum, iSpec.parID, iSpec.name);
+
+	#elif ZCONFIG_SPI_Enabled(Carbon64)
+
+		return spMacAsTrail(iSpec.mReference);
+
+	#elif defined(__PIWin__)
+
 		AutoSuite<PSGetPathSuite1> theSPGetPath(kPSGetPathSuite, kPSGetPathSuiteVersion1);
 		char buf[1024];
 		theSPGetPath->GetPathName(const_cast<SPPlatformFileSpecification*>(&iSpec),
 			buf, sizeof(buf));
 		return sWinAsTrail(buf);
+
 	#endif
 	}
 

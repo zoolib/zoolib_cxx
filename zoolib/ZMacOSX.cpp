@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(Carbon)
+#if ZCONFIG_SPI_Enabled(Carbon64)
 #	include ZMACINCLUDE3(CoreServices,CarbonCore,Gestalt.h)
 #	if !ZCONFIG_SPI_Enabled(MacOSX)
 		static bool sIsMacOSX_Checked;
@@ -38,7 +38,7 @@ bool ZMacOSX::sIsMacOSX()
 
 		return true;
 
-	#elif ZCONFIG_SPI_Enabled(Carbon)
+	#elif ZCONFIG_SPI_Enabled(Carbon64)
 
 		if (!sIsMacOSX_Checked)
 			{

@@ -65,8 +65,11 @@ ZMACRO_AELookup(int64, typeSInt64)
 ZMACRO_AELookup(float, typeIEEE32BitFloatingPoint)
 ZMACRO_AELookup(double, typeIEEE64BitFloatingPoint)
 ZMACRO_AELookup(FSRef, typeFSRef)
-ZMACRO_AELookup(FSSpec, typeFSS)
 ZMACRO_AELookup(AliasHandle, typeAlias)
+
+#if ZCONFIG_SPI_Enabled(Carbon)
+	ZMACRO_AELookup(FSSpec, typeFSS)
+#endif
 
 ZMACRO_AELookup_CPP2Desc(ZHandle_T<AliasHandle>, typeAlias)
 

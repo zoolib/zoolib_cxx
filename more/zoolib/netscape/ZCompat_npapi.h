@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	#include ZProjectHeader_npapi
 
-#elif defined(__APPLE__) && !defined(__LP64__)
+#elif defined(__APPLE__) && ! __LP64__
 
 	#include <WebKit/npfunctions.h>
 	#if !defined(XP_MACOSX)

@@ -193,7 +193,9 @@ static ZAny spAsAny(const ZAny& iDefault, const AEDesc& iDesc)
 		AEGETTER(float, typeIEEE32BitFloatingPoint)
 		AEGETTER(double, typeIEEE64BitFloatingPoint)
 		AEGETTER(FSRef, typeFSRef)
-		AEGETTER(FSSpec, typeFSS)
+		#if ZCONFIG_SPI_Enabled(Carbon)
+			AEGETTER(FSSpec, typeFSS)
+		#endif
 
 		case typeTrue: return ZAny(true);
 		case typeFalse: return ZAny(false);
@@ -230,7 +232,7 @@ static ZAny spAsAny(const ZAny& iDefault, const AEDesc& iDesc)
 			return ZAny(result);
 			}
 
-//		AEGETTER(ZHandle_T<AliasHandle>, typeAlias)		
+//		AEGETTER(ZHandle_T<AliasHandle>, typeAlias)
 		}
 
 	return iDefault;
@@ -387,6 +389,7 @@ bool ZVal_AppleEvent::QGet_T<ZMap_AppleEvent>(ZMap_AppleEvent& oVal) const
 	return false;
 	}
 
+#if ZCONFIG_SPI_Enabled(Carbon)
 template <>
 bool ZVal_AppleEvent::QGet_T<FSSpec>(FSSpec& oVal) const
 	{
@@ -397,6 +400,7 @@ bool ZVal_AppleEvent::QGet_T<FSSpec>(FSSpec& oVal) const
 		}
 	return false;
 	}
+#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 template <class S>
 bool ZVal_AppleEvent::QGet_T(S& oVal) const
@@ -466,8 +470,11 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Double, double)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, String, std::string)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Seq, ZSeq_AppleEvent)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, Map, ZMap_AppleEvent)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, FSSpec, FSSpec)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, FSRef, FSRef)
+
+#if ZCONFIG_SPI_Enabled(Carbon)
+	ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, FSSpec, FSSpec)
+#endif
 
 // =================================================================================================
 #pragma mark -

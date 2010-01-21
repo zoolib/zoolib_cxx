@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream_Mac.h"
 
-#if ZCONFIG_SPI_Enabled(Carbon)
+#if ZCONFIG_SPI_Enabled(Carbon64)
 
 #include "zoolib/ZCompat_algorithm.h" // For min
 #include "zoolib/ZDebug.h"
@@ -100,4 +100,4 @@ const ZStreamRPos& ZStreamerRPos_Mac_PartialResource::GetStreamRPos()
 
 NAMESPACE_ZOOLIB_END
 
-#endif // ZCONFIG_SPI_Enabled(Carbon)
+#endif // ZCONFIG_SPI_Enabled(Carbon64)

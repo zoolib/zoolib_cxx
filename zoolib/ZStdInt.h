@@ -47,7 +47,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	#if ZCONFIG_SPI_Enabled(MacOSX) \
 		|| ZCONFIG_SPI_Enabled(MacClassic) \
-		|| ZCONFIG_SPI_Enabled(Carbon)
+		|| ZCONFIG_SPI_Enabled(Carbon64)
 
 		#if __arm__
 			#include <MacTypes.h>

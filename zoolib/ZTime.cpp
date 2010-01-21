@@ -33,7 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <DriverServices.h> // For UpTime
 #endif
 
-#if ZCONFIG_SPI_Enabled(Carbon)
+#if ZCONFIG_SPI_Enabled(Carbon64)
 #	include ZMACINCLUDE2(CoreServices,CoreServices.h)
 #endif
 
@@ -125,7 +125,7 @@ ZTime ZTime::sNow()
 	::gettimeofday(&theTimeVal, nullptr);
 	return theTimeVal.tv_sec + double(theTimeVal.tv_usec) / 1e6;
 
-#elif ZCONFIG_SPI_Enabled(Carbon)
+#elif ZCONFIG_SPI_Enabled(Carbon64)
 
 	UTCDateTime theUTCDateTime;
 	::GetUTCDateTime(&theUTCDateTime, kUTCDefaultOptions);
@@ -200,7 +200,7 @@ ZTime ZTime::sSystem()
 	sLast = result;
 	return result + sDelta;
 
-#elif ZCONFIG_SPI_Enabled(Carbon) || ZCONFIG_SPI_Enabled(MacClassic)
+#elif ZCONFIG_SPI_Enabled(Carbon64) || ZCONFIG_SPI_Enabled(MacClassic)
 
 	Nanoseconds theNanoseconds = AbsoluteToNanoseconds(UpTime());
 	return double(*reinterpret_cast<uint64*>(&theNanoseconds)) / 1e9;
