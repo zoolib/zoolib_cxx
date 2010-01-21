@@ -119,8 +119,7 @@ private:
 
 Channel_BBDevMgr::Channel_BBDevMgr(ZRef<Channel>& oChannel, ZRef<IDevice> iDevice,
 	bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash)
-:	fChannel(nullptr),
-	fPreserveBoundaries(iPreserveBoundaries),
+:	fPreserveBoundaries(iPreserveBoundaries),
 	fStart(0),
 	fEnd(0),
 	fHasPasswordHash(0 != iPasswordHash),
