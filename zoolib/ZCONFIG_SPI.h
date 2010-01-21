@@ -41,7 +41,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark AppleEvent
 #ifndef ZCONFIG_SPI_Avail__AppleEvent
-#	define ZCONFIG_SPI_Avail__AppleEvent (ZCONFIG_SPI_Avail__Carbon && ZCONFIG_SPI_Desired__Carbon)
+#	define ZCONFIG_SPI_Avail__AppleEvent \
+	(ZCONFIG_SPI_Avail__Carbon && ZCONFIG_SPI_Desired__Carbon) \
+	|| (ZCONFIG_SPI_Avail__MacOSX && ZCONFIG_SPI_Desired__MacOSX)
 #endif
 
 #ifndef ZCONFIG_SPI_Desired__AppleEvent
@@ -121,7 +123,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark Carbon
 #ifndef ZCONFIG_SPI_Avail__Carbon
 #	if __MACH__
-#		if ! TARGET_IPHONE_SIMULATOR && ! TARGET_OS_IPHONE && ! defined(__LP64__)
+#		if ! TARGET_IPHONE_SIMULATOR && ! TARGET_OS_IPHONE && ! __LP64__
 #			define ZCONFIG_SPI_Avail__Carbon 1
 #		endif
 #	elif macintosh
@@ -144,11 +146,33 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 // =================================================================================================
+#pragma mark Carbon64
+#ifndef ZCONFIG_SPI_Avail__Carbon64
+#	if ZCONFIG_SPI_Avail__Carbon
+#		define ZCONFIG_SPI_Avail__Carbon64 1
+#	elif __MACH__
+#		if ! TARGET_IPHONE_SIMULATOR && ! TARGET_OS_IPHONE
+#			define ZCONFIG_SPI_Avail__Carbon64 1
+#		endif
+#	endif
+#endif
+
+#ifndef ZCONFIG_SPI_Avail__Carbon64
+#	define ZCONFIG_SPI_Avail__Carbon64 0
+#endif
+
+
+#ifndef ZCONFIG_SPI_Desired__Carbon64
+#	define ZCONFIG_SPI_Desired__Carbon64 1
+#endif
+
+
+// =================================================================================================
 #pragma mark CFType
 #ifndef ZCONFIG_SPI_Avail__CFType
-#	if defined(__MACH__)
+#	if __MACH__
 #		define ZCONFIG_SPI_Avail__CFType 1
-#	elif ZCONFIG_SPI_Avail__Carbon
+#	elif ZCONFIG_SPI_Avail__Carbon64
 #		define ZCONFIG_SPI_Avail__CFType 1
 #	endif
 #endif
@@ -165,9 +189,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark Cocoa
 #ifndef ZCONFIG_SPI_Avail__Cocoa
-#	if defined(__MACH__)
+#	if __MACH__
 #		define ZCONFIG_SPI_Avail__Cocoa 1
-#	elif defined(__COCOTRON__)
+#	elif __COCOTRON__
 #		define ZCONFIG_SPI_Avail__Cocoa 1
 #	endif
 #endif
@@ -184,9 +208,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark CoreFoundation
 #ifndef ZCONFIG_SPI_Avail__CoreFoundation
-#	if defined(__MACH__)
+#	if __MACH__
 #		define ZCONFIG_SPI_Avail__CoreFoundation 1
-#	elif ZCONFIG_SPI_Avail__Carbon
+#	elif ZCONFIG_SPI_Avail__Carbon64
 #		define ZCONFIG_SPI_Avail__CoreFoundation 1
 #	endif
 #endif
@@ -203,7 +227,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark CoreGraphics
 #ifndef ZCONFIG_SPI_Avail__CoreGraphics
-#	if defined(__MACH__)
+#	if __MACH__
 #		define ZCONFIG_SPI_Avail__CoreGraphics 1
 #	endif
 #endif
@@ -341,7 +365,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark MacClassic
 #ifndef ZCONFIG_SPI_Avail__MacClassic
-#	if defined(macintosh) && !(ZCONFIG_SPI_Avail__Carbon)
+#	if macintosh && ! ZCONFIG_SPI_Avail__Carbon
 #		define ZCONFIG_SPI_Avail__MacClassic 1
 #	endif
 #endif
@@ -358,7 +382,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark MacMP
 #ifndef ZCONFIG_SPI_Avail__MacMP
-#	if defined(macintosh) || (ZCONFIG_SPI_Avail__Carbon)
+#	if macintosh || ZCONFIG_SPI_Avail__Carbon64
 #		define ZCONFIG_SPI_Avail__MacMP 1
 #	endif
 #endif
@@ -375,7 +399,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark MacOSX
 #ifndef ZCONFIG_SPI_Avail__MacOSX
-#	if defined(__MACH__)
+#	if __MACH__
 #		define ZCONFIG_SPI_Avail__MacOSX 1
 #	endif
 #endif
@@ -403,9 +427,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 #pragma mark POSIX
 #ifndef ZCONFIG_SPI_Avail__POSIX
-#	if defined(__MACH__)
+#	if __MACH__
 #		define ZCONFIG_SPI_Avail__POSIX 1
-#	elif defined(linux)
+#	elif linux
 #		define ZCONFIG_SPI_Avail__POSIX 1
 #	endif
 #endif
