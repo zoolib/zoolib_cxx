@@ -304,17 +304,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark -
 #pragma mark * ZPhotoshop suites, for local use
 
+// If we use the symbolic constants for suite version numbers and use a more recent
+// SDK then we will have an unnecessary runtime error with older host apps.
+// However, we also compile-time assert that the SDK's constants are sufficiently recent.
+
+ZAssertCompile(kPSActionDescriptorSuiteVersion >= 2);
+ZAssertCompile(kPSActionControlSuiteVersion >= 2);
+ZAssertCompile(kPSActionReferenceSuiteVersion >= 2);
+ZAssertCompile(kPSActionListSuiteVersion >= 1);
+
 static AutoSuite<PSActionDescriptorProcs>
-	spPSActionDescriptor(kPSActionDescriptorSuite, kPSActionDescriptorSuiteVersion);
+	spPSActionDescriptor(kPSActionDescriptorSuite, 2);
 
 static AutoSuite<PSActionControlProcs>
-	spPSActionControl(kPSActionControlSuite, kPSActionControlSuiteVersion);
+	spPSActionControl(kPSActionControlSuite, 2);
 
 static AutoSuite<PSActionReferenceProcs>
-	spPSActionReference(kPSActionReferenceSuite, kPSActionReferenceSuiteVersion);
+	spPSActionReference(kPSActionReferenceSuite, 2);
 
 static AutoSuite<PSActionListProcs>
-	spPSActionList(kPSActionListSuite, kPSActionListSuiteVersion);
+	spPSActionList(kPSActionListSuite, 1);
 
 static AutoSuite<ASZStringSuite>
 	spASZString(kASZStringSuite, kASZStringSuiteVersion1);
