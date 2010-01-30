@@ -109,18 +109,18 @@ public:
 class Node_Explicit : public Node
 	{
 public:
-	Node_Explicit(const Tuple* iTuples, size_t iCount);
-	Node_Explicit(const std::vector<Tuple>& iTuples);
+	Node_Explicit(const Map* iMaps, size_t iCount);
+	Node_Explicit(const std::vector<Map>& iMaps);
 
 // From Node
 	virtual bool Accept(NodeVisitor& iVisitor);
 	virtual RelHead GetEffectiveRelHead();
 
 // Our protocol
-	const std::vector<Tuple>& GetTuples();
+	const std::vector<Map>& GetMaps();
 
 private:
-	std::vector<Tuple> fTuples;
+	std::vector<Map> fMaps;
 	};
 
 // =================================================================================================

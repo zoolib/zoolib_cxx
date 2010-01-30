@@ -111,12 +111,12 @@ RelHead Node_Difference::GetEffectiveRelHead()
 #pragma mark -
 #pragma mark * Node_Explicit
 
-Node_Explicit::Node_Explicit(const Tuple* iTuples, size_t iCount)
-:	fTuples(iTuples, iTuples + iCount)
+Node_Explicit::Node_Explicit(const Map* iMaps, size_t iCount)
+:	fMaps(iMaps, iMaps + iCount)
 	{}
 
-Node_Explicit::Node_Explicit(const std::vector<Tuple>& iTuples)
-:	fTuples(iTuples)
+Node_Explicit::Node_Explicit(const std::vector<Map>& iMaps)
+:	fMaps(iMaps)
 	{}
 
 bool Node_Explicit::Accept(NodeVisitor& iVisitor)
@@ -124,13 +124,13 @@ bool Node_Explicit::Accept(NodeVisitor& iVisitor)
 
 RelHead Node_Explicit::GetEffectiveRelHead()
 	{
-	// Hmm -- should we be unioning our tuples property names together?
+	// Hmm -- should we be unioning our Maps property names together?
 	// Or should an explicit take a RelHead as an initializer?
 	return RelHead();
 	}
 
-const vector<Tuple>& Node_Explicit::GetTuples()
-	{ return fTuples; }
+const vector<Map>& Node_Explicit::GetMaps()
+	{ return fMaps; }
 
 // =================================================================================================
 #pragma mark -

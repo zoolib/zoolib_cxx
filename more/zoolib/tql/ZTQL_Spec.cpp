@@ -35,8 +35,11 @@ namespace ZTQL {
 Comparand CName(const ZTName& iName)
 	{ return Comparand(new ComparandRep_Name(iName)); }
 
-Comparand CValue(const Value& iValue)
-	{ return Comparand(new ComparandRep_Value(iValue)); }
+Comparand CVal(const char* iVal)
+	{ return Comparand(new ComparandRep_Val(string(iVal))); }
+
+Comparand CVal(const Val& iVal)
+	{ return Comparand(new ComparandRep_Val(iVal)); }
 
 // =================================================================================================
 #pragma mark -
@@ -72,10 +75,10 @@ Spec::Spec(const Condition& iCondition)
 :	fLogOp(new LogOp_Condition(iCondition))
 	{}
 
-bool Spec::Matches(const Tuple& iTuple) const
+bool Spec::Matches(const Map& iMap) const
 	{
 	if (fLogOp)
-		return fLogOp->Matches(iTuple);
+		return fLogOp->Matches(iMap);
 	return false;
 	}
 

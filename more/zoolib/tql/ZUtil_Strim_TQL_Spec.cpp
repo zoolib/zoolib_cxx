@@ -43,9 +43,9 @@ static void spToStrim(ZRef<ComparandRep> iCR, const ZStrimW& s)
 		s << "@";
 		ZYad_ZooLibStrim::sWrite_PropName(cr->GetName(), s);
 		}
-	else if (ZRef<ComparandRep_Value> cr = ZRefDynamicCast<ComparandRep_Value>(iCR))
+	else if (ZRef<ComparandRep_Val> cr = ZRefDynamicCast<ComparandRep_Val>(iCR))
 		{
-		s << cr->GetValue();
+		s << cr->GetVal();
 		}
 	else
 		{

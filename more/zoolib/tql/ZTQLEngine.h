@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-using ZTQL::Tuple;
+using ZTQL::Map;
 
 // =================================================================================================
 #pragma mark -
@@ -44,22 +44,22 @@ public:
 		virtual ~Iterator();
 
 		virtual bool HasValue() = 0;
-		virtual Tuple Current() = 0;
+		virtual Map Current() = 0;
 		virtual void Advance() = 0;
 		};
 
 
 	ZTQLEngine();
 
-	void Execute(ZRef<ZTQL::Node> iNode, std::vector<Tuple>& oResults);
+	void Execute(ZRef<ZTQL::Node> iNode, std::vector<Map>& oResults);
 
 	virtual Iterator* Search();//ZTSpec::CriterionSect iSect);
 
 
-//		const ZTSpec& iTSpec, std::vector<std::pair<uint64, Tuple> >& oResults) = 0;
+//		const ZTSpec& iTSpec, std::vector<std::pair<uint64, Map> >& oResults) = 0;
 
 private:	
-	void pExecute(ZRef<ZTQL::Node> iNode, std::vector<Tuple>& oResults);
+	void pExecute(ZRef<ZTQL::Node> iNode, std::vector<Map>& oResults);
 	};
 
 NAMESPACE_ZOOLIB_END

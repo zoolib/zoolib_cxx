@@ -69,7 +69,7 @@ static Spec sAsTSpec(const ZTBSpec& iTBSpec)
 					break;
 				}
 			ZRef<ComparandRep> lhs = new ComparandRep_Name(siter->GetPropName());
-			ZRef<ComparandRep> rhs = new ComparandRep_Value(siter->GetTValue());
+			ZRef<ComparandRep> rhs = new ComparandRep_Val(siter->GetTValue());
 			Condition theCondition(lhs, theComparatorRep, rhs);
 			if (sisfirst)
 				{
@@ -204,15 +204,15 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const ZTName* iName, Spec* iFilt
 		ZRefDynamicCast<ZTBQueryNode_ID_Constant>(iNode))
 		{
 		const vector<uint64>& theIDs = theNode_ID_Constant->GetIDs();
-		vector<ZTuple> theTuples;
-		theTuples.reserve(theIDs.size());
+		vector<Map> theMaps;
+		theMaps.reserve(theIDs.size());
 		for (vector<uint64>::const_iterator i = theIDs.begin(); i != theIDs.end(); ++i)
 			{
-			ZTuple cur;
-			cur.SetID(sIDName, *i);
-			theTuples.push_back(cur);
+			Map cur;
+			cur.Set(sIDName, Val(*i));
+			theMaps.push_back(cur);
 			}
-		Query theQ = sExplicit(&theTuples[0], theTuples.size());
+		Query theQ = sExplicit(&theMaps[0], theMaps.size());
 		return theQ;
 		#if 0
 		if (iFilter)

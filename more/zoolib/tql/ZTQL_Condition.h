@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/tql/ZTQL_RelHead.h"
-#include "zoolib/tql/ZTQL_Value.h"
+#include "zoolib/tql/ZTQL_Val.h"
 
 #include <set>
 
@@ -44,7 +44,7 @@ protected:
 public:
 	virtual ~ComparatorRep();
 
-	virtual bool Matches(const Value& iLHS, const Value& iRHS) = 0;
+	virtual bool Matches(const Val& iLHS, const Val& iRHS) = 0;
 	};
 
 // =================================================================================================
@@ -66,7 +66,7 @@ public:
 	ComparatorRep_Simple(EComparator iEComparator);
 
 // From ComparatorRep
-	virtual bool Matches(const Value& iLHS, const Value& iRHS);
+	virtual bool Matches(const Val& iLHS, const Val& iRHS);
 
 // Our protocol
 	EComparator GetEComparator();
@@ -85,7 +85,7 @@ public:
 	ComparatorRep_StringContains(int iStrength);
 
 // From ComparatorRep
-	virtual bool Matches(const Value& iLHS, const Value& iRHS);
+	virtual bool Matches(const Val& iLHS, const Val& iRHS);
 
 private:
 	const int fStrength;
@@ -101,7 +101,7 @@ public:
 	ComparatorRep_VectorContains();
 
 // From ComparatorRep
-	virtual bool Matches(const Value& iLHS, const Value& iRHS);
+	virtual bool Matches(const Val& iLHS, const Val& iRHS);
 	};
 
 // =================================================================================================
@@ -114,7 +114,7 @@ public:
 	ComparatorRep_Regex(const std::string& iPattern, int iStrength);
 
 // From ComparatorRep
-	virtual bool Matches(const Value& iLHS, const Value& iRHS);
+	virtual bool Matches(const Val& iLHS, const Val& iRHS);
 
 private:
 	const std::string fPattern;
@@ -133,7 +133,7 @@ public:
 
 	ZRef<ComparatorRep> GetRep() const;
 
-	bool Matches(const Value& iLHS, const Value& iRHS) const;
+	bool Matches(const Val& iLHS, const Val& iRHS) const;
 
 private:
 	ZRef<ComparatorRep> fRep;
@@ -151,7 +151,7 @@ protected:
 public:
 	virtual ~ComparandRep();
 
-	virtual const Value& Imp_GetValue(const Tuple& iTuple) = 0;
+	virtual const Val& Imp_GetVal(const Map& iMap) = 0;
 	virtual void GatherPropNames(std::set<ZTName>& ioNames);
 	};
 
@@ -165,7 +165,7 @@ public:
 	ComparandRep_Name(const ZTName& iName);
 
 // From ComparandRep
-	virtual const Value& Imp_GetValue(const Tuple& iTuple);
+	virtual const Val& Imp_GetVal(const Map& iMap);
 	virtual void GatherPropNames(std::set<ZTName>& ioNames);
 
 // Our protocol
@@ -177,21 +177,21 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ComparandRep_Value
+#pragma mark * ComparandRep_Val
 
-class ComparandRep_Value : public ComparandRep
+class ComparandRep_Val : public ComparandRep
 	{
 public:
-	ComparandRep_Value(const Value& iValue);
+	ComparandRep_Val(const Val& iVal);
 
 // From ComparandRep
-	virtual const Value& Imp_GetValue(const Tuple& iTuple);
+	virtual const Val& Imp_GetVal(const Map& iMap);
 
 // Our protocol
-	const Value& GetValue();
+	const Val& GetVal();
 
 private:
-	const Value fValue;
+	const Val fVal;
 	};
 
 // =================================================================================================
@@ -212,7 +212,7 @@ public:
 
 	ZRef<ComparandRep> GetRep() const;
 
-	const Value& GetValue(const Tuple& iTuple) const;
+	const Val& GetVal(const Map& iMap) const;
 	void GatherPropNames(std::set<ZTName>& ioNames) const;
 
 	Condition LT(const Comparand& iRHS) const;
@@ -244,7 +244,7 @@ public:
 	const Comparator& GetComparator() const;
 	const Comparand& GetRHS() const;
 
-	bool Matches(const Tuple& iTuple) const;
+	bool Matches(const Map& iMap) const;
 	void GatherPropNames(std::set<ZTName>& ioNames) const;
 
 private:

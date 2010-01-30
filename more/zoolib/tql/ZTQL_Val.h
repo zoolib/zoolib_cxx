@@ -18,28 +18,21 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTQL_Value__
-#define __ZTQL_Value__ 1
-
+#ifndef __ZTQL_Val__
+#define __ZTQL_Val__ 1
 #include "zconfig.h"
 
-//#include "zoolib/ZVal_ZooLib.h"
-#include "zoolib/ZTuple.h"
+#include "zoolib/ZVal_Any.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZTQL {
 
-#if 0
-	typedef ZTValue Value;
-	typedef ZTuple Tuple;
-#else
-	typedef ZVal_ZooLib Value;
-	typedef ZMap_ZooLib Tuple;
-#endif
+typedef ZVal_Any Val;
+typedef ZMap_Any Map;
 
 } // namespace ZTQL
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZTQL_Spec__
+#endif // __ZTQL_Val__

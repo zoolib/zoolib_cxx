@@ -53,12 +53,12 @@ Query::Query(ZRef<Node> iNode)
 :	fNode(iNode)
 	{}
 
-Query::Query(const Tuple* iTuples, size_t iCount)
-:	fNode(new Node_Explicit(iTuples, iCount))
+Query::Query(const Map* iMaps, size_t iCount)
+:	fNode(new Node_Explicit(iMaps, iCount))
 	{}
 
-Query::Query(const std::vector<Tuple>& iTuples)
-:	fNode(new Node_Explicit(iTuples))
+Query::Query(const std::vector<Map>& iMaps)
+:	fNode(new Node_Explicit(iMaps))
 	{}
 
 ZRef<Node> Query::GetNode() const
@@ -132,11 +132,11 @@ Query sAll(const RelHead& iRelHead)
 //##Query sDifference(const Query& iQuery1, const Query& iQuery2)
 //##	{ return iQuery1.Difference(iQuery2); }
 
-Query sExplicit(const Tuple* iTuples, size_t iCount)
-	{ return Query(iTuples, iCount); }
+Query sExplicit(const Map* iMaps, size_t iCount)
+	{ return Query(iMaps, iCount); }
 
-Query sExplicit(const std::vector<Tuple>& iTuples)
-	{ return Query(iTuples); }
+Query sExplicit(const std::vector<Map>& iMaps)
+	{ return Query(iMaps); }
 
 Query sIntersect(const Query& iQuery1, const Query& iQuery2)
 	{ return iQuery1.Intersect(iQuery2); }

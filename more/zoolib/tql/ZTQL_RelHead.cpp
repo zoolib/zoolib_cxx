@@ -54,6 +54,12 @@ RelHead::RelHead(const ZTName& iName)
 :	fNames(&iName, &iName + 1)
 	{}
 
+RelHead::RelHead(const ZTName& iName1, const ZTName& iName2)
+	{
+	fNames.insert(iName1);
+	fNames.insert(iName2);
+	}
+
 RelHead::RelHead(const set<ZTName>& iNames)
 :	fNames(iNames)
 	{}
@@ -233,7 +239,7 @@ RelHead operator&(const ZTName& iName, const RelHead& iRelHead)
 
 ZTQL::RelHead operator|(const ZTName& iLHS, const ZTName& iRHS)
 	{
-	return ZTQL::RelHead(iLHS) | iRHS;
+	return ZTQL::RelHead(iLHS, iRHS);
 	}
 
 NAMESPACE_ZOOLIB_END

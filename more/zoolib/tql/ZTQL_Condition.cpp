@@ -45,18 +45,19 @@ ComparatorRep_Simple::ComparatorRep_Simple(EComparator iEComparator)
 :	fEComparator(iEComparator)
 	{}
 
-bool ComparatorRep_Simple::Matches(const Value& iLHS, const Value& iRHS)
-	{	
+bool ComparatorRep_Simple::Matches(const Val& iLHS, const Val& iRHS)
+	{
+	int compare = sCompare_T(iLHS, iRHS);
 	switch (fEComparator)
 		{
-		case eLT: return iLHS < iRHS;
-		case eLE: return iLHS <= iRHS;
-		case eEQ: return iLHS == iRHS;
-		case eGE: return iLHS >= iRHS;
-		case eGT: return iLHS > iRHS;
+		case eLT: return compare < 0;
+		case eLE: return compare <= 0;
+		case eEQ: return compare == 0;
+		case eGE: return compare >= 0;
+		case eGT: return compare > 0;
 		}
 	ZUnimplemented();
-	return iLHS < iRHS;
+	return false;
 	}
 
 ComparatorRep_Simple::EComparator ComparatorRep_Simple::GetEComparator()
@@ -76,12 +77,12 @@ Comparator::Comparator(ZRef<ComparatorRep> iRep)
 ZRef<ComparatorRep> Comparator::GetRep() const
 	{ return fRep; }
 
-bool Comparator::Matches(const Value& iLHS, const Value& iRHS) const
+bool Comparator::Matches(const Val& iLHS, const Val& iRHS) const
 	{
 	if (fRep)
 		return fRep->Matches(iLHS, iRHS);
 	// Assume LT, for the sake of having defined behavior.
-	return iLHS < iRHS;
+	return sCompare_T(iLHS, iRHS) < 0;
 	}
 
 // =================================================================================================
@@ -105,8 +106,8 @@ ComparandRep_Name::ComparandRep_Name(const ZTName& iName)
 :	fName(iName)
 	{}
 
-const Value& ComparandRep_Name::Imp_GetValue(const Tuple& iTuple)
-	{ return *iTuple.PGet(fName); }
+const Val& ComparandRep_Name::Imp_GetVal(const Map& iMap)
+	{ return *iMap.PGet(fName); }
 
 void ComparandRep_Name::GatherPropNames(set<ZTName>& ioNames)
 	{ ioNames.insert(fName); }
@@ -116,17 +117,17 @@ const ZTName& ComparandRep_Name::GetName()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ComparandRep_Value
+#pragma mark * ComparandRep_Val
 
-ComparandRep_Value::ComparandRep_Value(const Value& iValue)
-:	fValue(iValue)
+ComparandRep_Val::ComparandRep_Val(const Val& iVal)
+:	fVal(iVal)
 	{}
 
-const Value& ComparandRep_Value::Imp_GetValue(const Tuple& iTuple)
-	{ return fValue; }
+const Val& ComparandRep_Val::Imp_GetVal(const Map& iMap)
+	{ return fVal; }
 
-const Value& ComparandRep_Value::GetValue()
-	{ return fValue; }
+const Val& ComparandRep_Val::GetVal()
+	{ return fVal; }
 
 // =================================================================================================
 #pragma mark -
@@ -155,14 +156,14 @@ Comparand::Comparand(ZRef<ComparandRep> iRep)
 ZRef<ComparandRep> Comparand::GetRep() const
 	{ return fRep; }
 
-static Value sEmptyValue;
+static Val sEmptyVal;
 
-const Value& Comparand::GetValue(const Tuple& iTuple) const
+const Val& Comparand::GetVal(const Map& iMap) const
 	{
 	if (fRep)
-		return fRep->Imp_GetValue(iTuple);
+		return fRep->Imp_GetVal(iMap);
 
-	return sEmptyValue;
+	return sEmptyVal;
 	}
 
 void Comparand::GatherPropNames(set<ZTName>& ioNames) const
@@ -257,8 +258,8 @@ const Comparator& Condition::GetComparator() const
 const Comparand& Condition::GetRHS() const
 	{ return fRHS; }
 
-bool Condition::Matches(const Tuple& iTuple) const
-	{ return fComparator.Matches(fLHS.GetValue(iTuple), fRHS.GetValue(iTuple)); }
+bool Condition::Matches(const Map& iMap) const
+	{ return fComparator.Matches(fLHS.GetVal(iMap), fRHS.GetVal(iMap)); }
 
 void Condition::GatherPropNames(set<ZTName>& ioNames) const
 	{

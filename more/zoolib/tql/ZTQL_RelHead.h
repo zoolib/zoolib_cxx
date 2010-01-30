@@ -45,6 +45,7 @@ public:
 	RelHead& operator=(const RelHead& iOther);
 
 	RelHead(const ZTName& iName);
+	RelHead(const ZTName& iName1, const ZTName& iName2);
 	RelHead(const std::set<ZTName>& iNames);
 	RelHead(std::set<ZTName>& ioNames, bool iKnowWhatImDoing);
 	RelHead(const std::vector<ZTName>& iNames);

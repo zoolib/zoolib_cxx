@@ -25,11 +25,11 @@ static Query A(const ZTName& iIDName)
 //static Query D(const Query& iQuery1, const Query& iQuery2)
 //	{ return sDifference(iQuery1, iQuery2); }
 
-static Query E(const Tuple* iTuples, size_t iCount)
-	{ return sExplicit(iTuples, iCount); }
+static Query E(const Map* iMaps, size_t iCount)
+	{ return sExplicit(iMaps, iCount); }
 
-static Query E(const std::vector<Tuple>& iTuples)
-	{ return sExplicit(iTuples); }
+static Query E(const std::vector<Map>& iMaps)
+	{ return sExplicit(iMaps); }
 
 static Query I(const Query& iQuery1, const Query& iQuery2)
 	{ return sIntersect(iQuery1, iQuery2); }
@@ -77,7 +77,7 @@ Query operator*(const Query& iQuery1, const Query& iQuery2)
 
 static void sTesterfsdfsdf()
 	{
-	Condition theCondition = CName("Object").EQ(CValue("view"));
+	Condition theCondition = CName("Object").EQ(CVal("view"));
 	}
 
 static const ZTName sProps_note[] = { "Object", "titl", "crea", "text", "stat" };
@@ -88,14 +88,14 @@ static const RelHead sRelHead_view(sProps_view, countof(sProps_view));
 
 static Query sNotesWithIDs()
 	{
-	return Query::sAllID("noteID", sRelHead_note) & (CName("Object").EQ(CValue("note")));
+	return Query::sAllID("noteID", sRelHead_note) & (CName("Object").EQ(CVal("note")));
 	}
 
 static const ZTName sProps_Link[] = { "Link", "from", "to" };
 static const RelHead sRelHead_Link(sProps_Link, countof(sProps_Link));
 static Query sLinks_Owns()
 	{
-	return Query::sAll(sRelHead_Link) & (CName("Link").EQ(CValue("owns")));
+	return Query::sAll(sRelHead_Link) & (CName("Link").EQ(CVal("owns")));
 	}
 
 static void sTest()
@@ -106,7 +106,7 @@ static void sTest()
 
 static Spec sBadAuthors()
 	{
-	Spec theSpec = CName("Object").EQ(CValue("author"))
+	Spec theSpec = CName("Object").EQ(CVal("author"))
 		&
 		(CName("pass").EQ(CName("fnam"))
 		| CName("pass").EQ(CName("lnam"))
@@ -181,30 +181,30 @@ static Query sAllIDs()
 
 static Query sAllNotes()
 	{
-	Query theQuery = Query::sAllID("$ID$", sRelHead_note) & (CName("Object").EQ(CValue("note")));
+	Query theQuery = Query::sAllID("$ID$", sRelHead_note) & (CName("Object").EQ(CVal("note")));
 	return sDrop(theQuery, "Object");
 	}
 
 static Query sAllNotesNoHead()
 	{
-	return Query::sAllID("$ID$") & (CName("Object").EQ(CValue("note")));
+	return Query::sAllID("$ID$") & (CName("Object").EQ(CVal("note")));
 	}
 
 static Query sAllViews()
 	{
-	Query theQuery = Query::sAllID("$ID$", sRelHead_view) & (CName("Object").EQ(CValue("view")));
+	Query theQuery = Query::sAllID("$ID$", sRelHead_view) & (CName("Object").EQ(CVal("view")));
 	return sDrop(theQuery, "Object");
 	}
 
 static Query sAllViewsNoHead()
 	{
 //	return Query::sAllID("$ID$", sRelHead_view) & Spec(true);
-	return Query::sAllID("$ID$") & (CName("Object").EQ(CValue("view")));
+	return Query::sAllID("$ID$") & (CName("Object").EQ(CVal("view")));
 	}
 
 static Query sAllContains()
 	{
-	Query theQuery = Query::sAll(sRelHead_Link) & (CName("Link").EQ(CValue("contains")));
+	Query theQuery = Query::sAll(sRelHead_Link) & (CName("Link").EQ(CVal("contains")));
 	return sDrop(theQuery, "Link");
 	}
 
