@@ -59,7 +59,7 @@ public:
 	ZData_NS& operator=(const ZRef<NSData>& iOther);
 
 	ZData_NS(size_t iSize);
-	ZData_NS(const void* iSourceData, size_t iSize);
+	ZData_NS(const void* iSource, size_t iSize);
 
 // ZData protocol
 	size_t GetSize() const;

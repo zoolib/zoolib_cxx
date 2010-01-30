@@ -87,8 +87,8 @@ ZData_NS::ZData_NS(size_t iSize)
 ,	fMutable(true)
 	{}
 
-ZData_NS::ZData_NS(const void* iSourceData, size_t iSize)
-:	inherited(sDataMutable(iSourceData, iSize))
+ZData_NS::ZData_NS(const void* iSource, size_t iSize)
+:	inherited(sDataMutable(iSource, iSize))
 ,	fMutable(true)
 	{}
 

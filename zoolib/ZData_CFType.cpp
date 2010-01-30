@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+using ZUtil_CFType::sData;
 using ZUtil_CFType::sDataMutable;
 
 // =================================================================================================
@@ -87,10 +88,9 @@ ZData_CFType::ZData_CFType(size_t iSize)
 ,	fMutable(true)
 	{}
 
-ZData_CFType::ZData_CFType(const void* iSourceData, size_t iSize)
-:	inherited(Adopt(::CFDataCreate(
-		kCFAllocatorDefault, static_cast<const UInt8*>(iSourceData), iSize)))
-,	fMutable(true)
+ZData_CFType::ZData_CFType(const void* iSource, size_t iSize)
+:	inherited(sData(iSource, iSize))
+,	fMutable(false)
 	{}
 
 size_t ZData_CFType::GetSize() const

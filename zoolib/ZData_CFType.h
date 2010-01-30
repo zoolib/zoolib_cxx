@@ -60,7 +60,7 @@ public:
 	ZData_CFType& operator=(const ZRef<CFDataRef>& iOther);
 
 	ZData_CFType(size_t iSize);
-	ZData_CFType(const void* iSourceData, size_t iSize);
+	ZData_CFType(const void* iSource, size_t iSize);
 
 // ZData protocol
 	size_t GetSize() const;
