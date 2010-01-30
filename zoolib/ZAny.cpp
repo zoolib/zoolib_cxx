@@ -89,6 +89,12 @@ NAMESPACE_ZOOLIB_BEGIN
 
 bool sQCoerceBool(const ZAny& iAny, bool& oVal)
 	{
+	if (const bool* asBool = iAny.PGet_T<bool>())
+		{
+		oVal = *asBool;
+		return true;
+		}
+
 	int64 asInt64;
 	if (sQCoerceInt(iAny, asInt64))
 		{
@@ -216,8 +222,8 @@ bool sQCoerceReal(const ZAny& iAny, double& oVal)
 
 double sDCoerceReal(double iDefault, const ZAny& iAny)
 	{
-	int64 result;
-	if (sQCoerceInt(iAny, result))
+	double result;
+	if (sQCoerceReal(iAny, result))
 		return result;
 	return iDefault;
 	}
