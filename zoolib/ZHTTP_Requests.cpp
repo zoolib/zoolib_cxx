@@ -399,9 +399,7 @@ static bool spReadPOST(const ZStreamR& iStreamR, const Map& iHeader, Val& oVal)
 		{
 		// It's explicitly some kind of text. Use sCreateStrimmerR to create an appropriate
 		// strimmer, which it does by examining values in iHeader.
-		string theString;
-		spCreateStrimmerR(iHeader, iStreamR)->GetStrimR().CopyAllTo(ZStrimW_String(theString));
-		oVal.SetString(theString);
+		oVal = spCreateStrimmerR(iHeader, iStreamR)->GetStrimR().ReadAll8();
 		return true;		
 		}
 	else if (!content_type)
