@@ -333,6 +333,10 @@ public:
 		return this->GetPtrRef();
 		}
 
+	template <class O>
+	O StaticCast() const
+		{ return static_cast<O>(fP); }
+
 private:
 	T* fP;
 	};
@@ -346,6 +350,12 @@ template <class O, class T> inline O* ZRefDynamicCast(const ZRef<T>& iVal)
 
 template <class O, class T> inline O* ZRefStaticCast(const ZRef<T>& iVal)
 	{ return static_cast<O*>(iVal.Get()); }
+
+template <class O, class T> inline O ZRefStaticCast(const ZRef<T*>& iVal)
+	{ return static_cast<O>(iVal.Get()); }
+
+template <class O, class T> inline O ZRefStaticCast(const ZRef<const T*>& iVal)
+	{ return static_cast<O>(iVal.Get()); }
 
 // =================================================================================================
 
