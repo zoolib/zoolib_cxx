@@ -148,7 +148,7 @@ public:
 	const ZVal_Any* PGet(size_t iIndex) const;
 	bool QGet(size_t iIndex, ZVal_Any& oVal) const;
 	ZVal_Any DGet(const ZVal_Any& iDefault, size_t iIndex) const;
-	ZVal_Any Get(size_t iIndex) const;
+	const ZVal_Any& Get(size_t iIndex) const;
 
 	ZSeq_Any& Set(size_t iIndex, const ZVal_Any& iVal);
 
@@ -285,8 +285,8 @@ public:
 	ZVal_Any DGet(const ZVal_Any& iDefault, const string8& iName) const;
 	ZVal_Any DGet(const ZVal_Any& iDefault, const Index_t& iIndex) const;
 
-	ZVal_Any Get(const string8& iName) const;
-	ZVal_Any Get(const Index_t& iIndex) const;
+	const ZVal_Any& Get(const string8& iName) const;
+	const ZVal_Any& Get(const Index_t& iIndex) const;
 
 	ZMap_Any& Set(const string8& iName, const ZVal_Any& iVal);
 	ZMap_Any& Set(const Index_t& iIndex, const ZVal_Any& iVal);
