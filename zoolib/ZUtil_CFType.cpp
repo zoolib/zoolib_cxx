@@ -215,12 +215,10 @@ static ZMap_Any spAsMap_Any(const ZAny& iDefault, const ZRef<CFDictionaryRef>& i
 
 ZAny sAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal)
 	{
-	CFTypeRef theCFTypeRef = iVal;
-
-	if (!theCFTypeRef)
+	if (!iVal)
 		return ZAny();
 
-	const CFTypeID theTypeID = ::CFGetTypeID(theCFTypeRef);
+	const CFTypeID theTypeID = ::CFGetTypeID(iVal);
 
 	#if defined(MAC_OS_X_VERSION_MIN_REQUIRED) \
 		&& MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_2
@@ -229,29 +227,29 @@ ZAny sAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal)
 	#endif
 
 	if (theTypeID == ::CFStringGetTypeID())
-		return ZAny(sAsUTF8(static_cast<CFStringRef>(theCFTypeRef)));
+		return ZAny(sAsUTF8(iVal.StaticCast<CFStringRef>()));
 
 	if (theTypeID == ::CFDictionaryGetTypeID())
-		return ZAny(spAsMap_Any(iDefault, static_cast<CFDictionaryRef>(theCFTypeRef)));
+		return ZAny(spAsMap_Any(iDefault, iVal.StaticCast<CFDictionaryRef>()));
 
 	if (theTypeID == ::CFArrayGetTypeID())
-		return ZAny(spAsSeq_Any(iDefault, static_cast<CFArrayRef>(theCFTypeRef)));
+		return ZAny(spAsSeq_Any(iDefault, iVal.StaticCast<CFArrayRef>()));
 
 	if (theTypeID == ::CFBooleanGetTypeID())
-		return ZAny(bool(::CFBooleanGetValue(static_cast<CFBooleanRef>(theCFTypeRef))));
-	
+		return ZAny(bool(::CFBooleanGetValue(iVal.StaticCast<CFBooleanRef>())));
+
 	if (theTypeID == ::CFDateGetTypeID())
 		{
 		return ZAny(ZTime(kCFAbsoluteTimeIntervalSince1970
-			+ ::CFDateGetAbsoluteTime(static_cast<CFDateRef>(theCFTypeRef))));
+			+ ::CFDateGetAbsoluteTime(iVal.StaticCast<CFDateRef>())));
 		}
 	
 	if (theTypeID == ::CFDataGetTypeID())
-		return ZAny(spAsData_Any(static_cast<CFDataRef>(theCFTypeRef)));
+		return ZAny(spAsData_Any(iVal.StaticCast<CFDataRef>()));
 	
 	if (theTypeID == ::CFNumberGetTypeID())
 		{
-		const CFNumberRef theNumberRef = static_cast<CFNumberRef>(theCFTypeRef);
+		const CFNumberRef theNumberRef = iVal.StaticCast<CFNumberRef>();
 		switch (::CFNumberGetType(theNumberRef))
 			{
 			case kCFNumberSInt8Type:
@@ -343,9 +341,7 @@ ZRef<CFTypeRef> sAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
 		{
 		ZRef<CFMutableArrayRef> theArray;
 		for (size_t x = 0, count = theValue->Count(); x < count; ++x)
-			{
 			::CFArrayAppendValue(theArray, sAsCFType(iDefault, theValue->Get(x)));
-			}
 		return theArray;
 		}
 	else if (const ZMap_Any* theValue = iVal.PGet_T<ZMap_Any>())
