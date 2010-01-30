@@ -72,6 +72,7 @@ SOFTWARE.
 
 using std::max;
 using std::min;
+using std::numeric_limits;
 using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -95,10 +96,8 @@ ZBigRegion ZBigRegion::sRects(const ZRect_T<int32>* iRects, size_t iCount, bool 
 			resultRgn.fNumRects = iCount;
 
 			ZRect_T<int32> bounds;
-			bounds.top = LONG_MAX;
-			bounds.left = LONG_MAX;
-			bounds.right = LONG_MIN;
-			bounds.bottom = LONG_MIN;
+			bounds.top = bounds.left = numeric_limits<int32>::max();
+			bounds.right = bounds.bottom = numeric_limits<int32>::min();
 
 			ZRect_T<int32>* currentDest = resultRgn.fRects;
 			while (iCount--)
