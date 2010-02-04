@@ -208,8 +208,8 @@ public:
 	bool Set(const string8& iName, const Value& iValue);
 	bool Erase(const string8& iName);
 
-// ZList protocol (ish)
-	bool IsList() const;
+// ZSeq protocol (ish)
+	bool IsSeq() const;
 	size_t Count() const;
 	bool QGet(size_t iIndex, Value& oVal) const;
 	Value DGet(const Value& iDefault, size_t iIndex) const;

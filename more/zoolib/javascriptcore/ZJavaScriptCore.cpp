@@ -305,26 +305,26 @@ bool Value::sQFromAny(const ZAny& iAny, Value& oVal)
 		{
 		oVal = Value(asDouble);
 		}
-	else if (const string* theValue = ZAnyCast<string>(&iAny))
+	else if (const string* theValue = iAny.PGet_T<string>())
 		{
 		oVal = Value(*theValue);
 		}
-	else if (const ZType* theValue = ZAnyCast<ZType>(&iAny))
+	else if (const ZType* theValue = iAny.PGet_T<ZType>())
 		{
 		oVal = Value(double(*theValue));
 		}
-	else if (const bool* theValue = ZAnyCast<bool>(&iAny))
+	else if (const bool* theValue = iAny.PGet_T<bool>())
 		{
 		oVal = Value(*theValue);
 		}
-	else if (const ZTime* theValue = ZAnyCast<ZTime>(&iAny))
+	else if (const ZTime* theValue = iAny.PGet_T<ZTime>())
 		{
 		oVal = Value(double(theValue->fVal));
 		}
 #if 0
-	else if (const vector<ZAny>* theValue = ZAnyCast<vector<ZAny> >(&iAny))
+	else if (const vector<ZAny>* theValue = iAny.PGet_T<vector<ZAny> >())
 		{
-		ZList_ZooLib theList;
+		ZSeq_ZooLib theList;
 		for (vector<ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
 			i != end; ++i)
 			{
@@ -336,9 +336,9 @@ bool Value::sQFromAny(const ZAny& iAny, Value& oVal)
 			}
 		oVal = theList;
 		}
-	else if (const ZList_Any* theValue = ZAnyCast<ZList_Any>(&iAny))
+	else if (const ZSeq_Any* theValue = iAny.PGet_T<ZSeq_Any>())
 		{
-		ZList_ZooLib theList;
+		ZSeq_ZooLib theList;
 		for (int x = 0, count = theValue->Count(); x < count; ++x)
 			{
 			ZVal_ZooLib local;
@@ -350,7 +350,7 @@ bool Value::sQFromAny(const ZAny& iAny, Value& oVal)
 		oVal = theList;
 		}
 #endif
-	else if (const map<string, ZAny>* theValue = ZAnyCast<map<string, ZAny> >(&iAny))
+	else if (const map<string, ZAny>* theValue = iAny.PGet_T<map<string, ZAny> >())
 		{
 		ObjectRef theMap;
 		for (map<string, ZAny>::const_iterator i = theValue->begin(), end = theValue->end();
@@ -362,7 +362,7 @@ bool Value::sQFromAny(const ZAny& iAny, Value& oVal)
 			}
 		oVal = theMap;
 		}
-	else if (const ZMap_Any* theValue = ZAnyCast<ZMap_Any>(&iAny))
+	else if (const ZMap_Any* theValue = iAny.PGet_T<ZMap_Any>())
 		{
 		ObjectRef theMap;
 		for (ZMap_Any::Index_t i = theValue->Begin(), end = theValue->End();
@@ -645,7 +645,7 @@ ZAny ObjectRef::AsAny() const
 		double length;
 		if (this->Get("length").QGetDouble(length))
 			{
-			ZList_Any result;
+			ZSeq_Any result;
 			for (size_t x = 0; x < length; ++x)
 				result.Append(this->Get(x).AsAny());
 			return ZAny(result);
@@ -732,7 +732,7 @@ bool ObjectRef::Erase(const string8& iName)
 		inherited::Get(), String(iName), nullptr);
 	}
 
-bool ObjectRef::IsList() const
+bool ObjectRef::IsSeq() const
 	{
 	double length;
 	if (this->Get("length").QGetDouble(length))
