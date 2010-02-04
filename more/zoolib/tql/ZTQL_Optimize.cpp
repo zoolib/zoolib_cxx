@@ -20,19 +20,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/tql/ZTQL_Optimize.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+#include "zoolib/ZExpr_Query.h"
+#include "zoolib/ZExpr_ValCondition.h"
 
-using namespace ZTQL;
+NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL, sConvertSelect
 
-// Turns a Node_Select into a tree of Node_Restrict and Node_Union.
+// Turns a Select into a tree of Restrict and Union.
 
 using std::vector;
 
-typedef vector<Condition> CondSect;
+typedef vector<ZValCondition> CondSect;
 typedef vector<CondSect> CondUnion;
 
 static void sCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight, CondUnion& oResult)
@@ -50,11 +51,11 @@ static void sCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight, Cond
 		}
 	}
 
-static void sGather(ZRef<LogOp> iLogOp, CondUnion& oResult)
+static void sGather(ZRef<ZExprRep_Logical> iRep, CondUnion& oResult)
 	{
 	ZAssert(oResult.empty());
 
-	if (ZRef<LogOp_And> lo = ZRefDynamicCast<LogOp_And>(iLogOp))
+	if (ZRef<ZExprRep_Logical_And> lo = ZRefDynamicCast<ZExprRep_Logical_And>(iRep))
 		{
 		CondUnion left;
 		sGather(lo->GetLHS(), left);
@@ -62,7 +63,7 @@ static void sGather(ZRef<LogOp> iLogOp, CondUnion& oResult)
 		sGather(lo->GetRHS(), right);
 		sCrossMultiply(left, right, oResult);
 		}
-	else if (ZRef<LogOp_Or> lo = ZRefDynamicCast<LogOp_Or>(iLogOp))
+	else if (ZRef<ZExprRep_Logical_Or> lo = ZRefDynamicCast<ZExprRep_Logical_Or>(iRep))
 		{
 		CondUnion left;
 		sGather(lo->GetLHS(), left);
@@ -71,20 +72,20 @@ static void sGather(ZRef<LogOp> iLogOp, CondUnion& oResult)
 		oResult = left;
 		oResult.insert(oResult.end(), right.begin(), right.end());
 		}
-	else if (ZRef<LogOp_Condition> lo = ZRefDynamicCast<LogOp_Condition>(iLogOp))
+	else if (ZRef<ZExprRep_ValCondition> lo = ZRefDynamicCast<ZExprRep_ValCondition>(iRep))
 		{
 		oResult.resize(1);
-		oResult[0].push_back(lo->GetCondition());
+		oResult[0].push_back(lo->GetValCondition());
 		}
-	else if (ZRef<LogOp_True> lo = ZRefDynamicCast<LogOp_True>(iLogOp))
+	else if (ZRef<ZExprRep_Logical_True> lo = ZRefDynamicCast<ZExprRep_Logical_True>(iRep))
 		{
 		oResult.resize(1);
 		}
-	else if (ZRef<LogOp_False> lo = ZRefDynamicCast<LogOp_False>(iLogOp))
+	else if (ZRef<ZExprRep_Logical_False> lo = ZRefDynamicCast<ZExprRep_Logical_False>(iRep))
 		{
 		// Do nothing.
 		}
-	else if (iLogOp)
+	else if (iRep)
 		{
 		// Unknown LogOp
 		ZUnimplemented();
@@ -95,31 +96,32 @@ static void sGather(ZRef<LogOp> iLogOp, CondUnion& oResult)
 		}
 	}
 
-static ZRef<Node> sConvertSelect(ZRef<Node> iNode, ZRef<LogOp> iLogOp)
+static ZRef<ZExprRep_Relational> sConvertSelect(
+	ZRef<ZExprRep_Relational> iRelational, ZRef<ZExprRep_Logical> iLogical)
 	{
-	if (!iNode)
-		return ZRef<Node>();
+	if (!iRelational)
+		return ZRef<ZExprRep_Relational>();
 
-	CondUnion result;
-	sGather(iLogOp, result);
+	CondUnion resultLogical;
+	sGather(iLogical, resultLogical);
 
-	ZRef<Node> resultNode;
-	for (CondUnion::const_iterator iterUnion = result.begin();
-		iterUnion != result.end(); ++iterUnion)
+	ZRef<ZExprRep_Relational> resultRelational;
+	for (CondUnion::const_iterator iterUnion = resultLogical.begin();
+		iterUnion != resultLogical.end(); ++iterUnion)
 		{
-		ZRef<Node> currentNode = iNode;
+		ZRef<ZExprRep_Relational> current = iRelational;
 		for (CondSect::const_iterator iterSect = iterUnion->begin();
 			iterSect != iterUnion->end(); ++iterSect)
 			{
-			currentNode = new Node_Restrict(currentNode, *iterSect);
+			current = new ZExprRep_Query_Restrict(*iterSect, current);
 			}
 
-		if (resultNode)
-			resultNode = new Node_Union(resultNode, currentNode);
+		if (resultRelational)
+			resultRelational = new ZExprRep_Relational_Union(current, resultRelational);
 		else
-			resultNode = currentNode;
+			resultRelational = current;
 		}
-	return resultNode;
+	return resultRelational;
 	}
 
 // =================================================================================================
@@ -128,23 +130,21 @@ static ZRef<Node> sConvertSelect(ZRef<Node> iNode, ZRef<LogOp> iLogOp)
 
 namespace ZANONYMOUS {
 
-class Optimize : public NodeTransformer
+class Optimize : public ZQueryTransformer
 	{
 public:
-	virtual ZRef<Node> Transform_Select(ZRef<Node_Select> iNode);
+	virtual ZRef<ZExprRep_Relational> Transform_Select(ZRef<ZExprRep_Query_Select> iRep);
 	};
 
-ZRef<Node> Optimize::Transform_Select(ZRef<Node_Select> iNode)
+ZRef<ZExprRep_Relational> Optimize::Transform_Select(ZRef<ZExprRep_Query_Select> iRep)
 	{
-	ZRef<Node> newNode = this->Transform(iNode->GetNode());
-	return sConvertSelect(newNode, iNode->GetLogOp());
+	ZRef<ZExprRep_Relational> newRep = this->Transform(iRep->GetExpr_Relational());
+	return sConvertSelect(newRep, iRep->GetExpr_Logical());
 	}
 
 } // anonymous namespace
 
-ZRef<Node> ZTQL::sOptimize(ZRef<Node> iNode)
-	{
-	return Optimize().Transform(iNode);
-	}
+ZRef<ZExprRep_Relational> ZTQL::sOptimize(ZRef<ZExprRep_Relational> iRep)
+	{ return Optimize().Transform(iRep); }
 
 NAMESPACE_ZOOLIB_END

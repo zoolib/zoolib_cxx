@@ -18,10 +18,18 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/tql/ZTQL_Spec.h"
 #include "zoolib/tql/ZUtil_TQLConvert.h"
+#include "zoolib/ZExpr_Query.h"
+#include "zoolib/ZExpr_ValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+
+typedef ZExpr_Logical Spec;
+typedef ZExpr_Relational Query;
+typedef ZMap_Expr Map;
+typedef ZRelHead RelHead;
+typedef ZVal_Expr Val;
+typedef ZValCondition Condition;
 
 namespace ZUtil_TQLConvert {
 
@@ -31,7 +39,7 @@ using std::vector;
 #pragma mark -
 #pragma mark * Static helpers.
 
-static const ZTName sIDName("$ID$");
+static const string sIDName = "$ID$";
 
 static Spec sAsTSpec(const ZTBSpec& iTBSpec)
 	{
@@ -46,39 +54,41 @@ static Spec sAsTSpec(const ZTBSpec& iTBSpec)
 		for (vector<ZTBSpec::Criterion>::const_iterator siter = uiter->begin();
 			siter != uiter->end(); ++siter)
 			{
-			ZRef<ComparatorRep> theComparatorRep;
+			ZRef<ZValComparatorRep<Val> > theComparator;
 			switch (siter->GetComparator().fRel)
 				{
 				case ZTBSpec::eRel_Less:
-					theComparatorRep = new ComparatorRep_Simple(ComparatorRep_Simple::eLT);
+					theComparator = new ZValComparatorRep_Simple<Val>(ZValComparatorRep_Simple<Val>::eLT);
 					break;
 				case ZTBSpec::eRel_LessEqual:
-					theComparatorRep = new ComparatorRep_Simple(ComparatorRep_Simple::eLE);
+					theComparator = new ZValComparatorRep_Simple<Val>(ZValComparatorRep_Simple<Val>::eLE);
 					break;
 				case ZTBSpec::eRel_Equal:
-					theComparatorRep = new ComparatorRep_Simple(ComparatorRep_Simple::eEQ);
+					theComparator = new ZValComparatorRep_Simple<Val>(ZValComparatorRep_Simple<Val>::eEQ);
 					break;
 				case ZTBSpec::eRel_GreaterEqual:
-					theComparatorRep = new ComparatorRep_Simple(ComparatorRep_Simple::eGE);
+					theComparator = new ZValComparatorRep_Simple<Val>(ZValComparatorRep_Simple<Val>::eGE);
 					break;
 				case ZTBSpec::eRel_Greater:
-					theComparatorRep = new ComparatorRep_Simple(ComparatorRep_Simple::eGT);
+					theComparator = new ZValComparatorRep_Simple<Val>(ZValComparatorRep_Simple<Val>::eGT);
 					break;
 				default:
 					ZUnimplemented();
 					break;
 				}
-			ZRef<ComparandRep> lhs = new ComparandRep_Name(siter->GetPropName());
-			ZRef<ComparandRep> rhs = new ComparandRep_Val(siter->GetTValue());
-			Condition theCondition(lhs, theComparatorRep, rhs);
+
+			Condition theCondition
+				(CName(siter->GetPropName()), theComparator, CConst(siter->GetTValue()));
+
 			if (sisfirst)
 				{
 				sisfirst = false;
-				sect = theCondition;
+				sect = ZExpr_Logical(new ZExprRep_ValCondition(theCondition));
 				}
 			else
 				{
-				sect &= theCondition;
+				sect = sect & theCondition;
+//				sect &= theCondition;
 				}
 			}
 		if (uisfirst)
@@ -89,8 +99,7 @@ static Spec sAsTSpec(const ZTBSpec& iTBSpec)
 		else
 			{
 			theTSpec |= sect;
-			}
-			
+			}			
 		}
 
 	return theTSpec;;
@@ -101,7 +110,7 @@ sConvert returns a query whose RelHead is [$ID$], unless iName is non-null in wh
 case the RelHead is [*iName]. The tuples returned have been filtered by iFilter, if any.
 */
 
-static Query sConvert(ZRef<ZTBQueryNode> iNode, const ZTName* iName, Spec* iFilter, bool iVerbose)
+static Query sConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFilter, bool iVerbose)
 	{
 	if (ZRefDynamicCast<ZTBQueryNode_All>(iNode))
 		{
@@ -109,24 +118,24 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const ZTName* iName, Spec* iFilt
 		// except as a clause in a combo with a filter.
 		ZAssert(iFilter);
 
-		const RelHead filterRelHead = iFilter->GetRelHead();
+		const RelHead filterRelHead = sGetRelHead(*iFilter);
 
 		Query theQ;
 		if (iName)
 			{
-			theQ = sAll(filterRelHead | *iName).Select(*iFilter);
+			theQ = sSelect(*iFilter, sAll(filterRelHead | *iName));
 			if (iVerbose)
-				theQ = theQ.Project(*iName | ZTName("$$All_Name$$"));
+				theQ = sProject(RelHead(*iName) | "$$All_Name$$", theQ);
 			else
-				theQ = theQ.Project(*iName);
+				theQ = sProject(*iName, theQ);
 			}
 		else
 			{
-			theQ = sAllID(sIDName, filterRelHead).Select(*iFilter);
+			theQ = sSelect(*iFilter, sAllID(sIDName, filterRelHead));
 			if (iVerbose)
-				theQ = theQ.Project(sIDName | ZTName("$$All$$"));
+				theQ = sProject(RelHead(sIDName) | "$$All$$", theQ);
 			else
-				theQ = theQ.Project(sIDName);
+				theQ = sProject(sIDName, theQ);
 			}
 		return theQ;
 		}
@@ -170,7 +179,7 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const ZTName* iName, Spec* iFilt
 					}
 				else
 					{
-					innerQ = innerQ.Intersect(innermostQ);
+					innerQ = sIntersect(innermostQ, innerQ);
 					}
 				}
 
@@ -181,21 +190,21 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const ZTName* iName, Spec* iFilt
 				}
 			else
 				{
-				outerQ = outerQ.Union(innerQ);
+				outerQ = sUnion(innerQ, outerQ);
 				}
 			}
 
 		if (iName)
 			{
 			if (iVerbose)
-				return outerQ.Project(*iName | ZTName("$$ComboReturn_Name$$"));
+				return sProject(RelHead(*iName) | "$$ComboReturn_Name$$", outerQ);
 			else
 				return outerQ;//.Project(*iName);
 			}
 		else
 			{
 			if (iVerbose)
-				return outerQ.Project(sIDName | ZTName("$$ComboReturn"));
+				return sProject(RelHead(sIDName) | "$$ComboReturn$$", outerQ);
 			else
 				return outerQ;//.Project(sIDName);
 			}
@@ -204,15 +213,15 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const ZTName* iName, Spec* iFilt
 		ZRefDynamicCast<ZTBQueryNode_ID_Constant>(iNode))
 		{
 		const vector<uint64>& theIDs = theNode_ID_Constant->GetIDs();
-		vector<Map> theMaps;
-		theMaps.reserve(theIDs.size());
+		vector<Val> theVals;
+		theVals.reserve(theIDs.size());
 		for (vector<uint64>::const_iterator i = theIDs.begin(); i != theIDs.end(); ++i)
 			{
 			Map cur;
 			cur.Set(sIDName, Val(*i));
-			theMaps.push_back(cur);
+			theVals.push_back(cur);
 			}
-		Query theQ = sExplicit(&theMaps[0], theMaps.size());
+		Query theQ = sExplicit(&theVals[0], theVals.size());
 		return theQ;
 		#if 0
 		if (iFilter)
@@ -225,7 +234,7 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const ZTName* iName, Spec* iFilt
 		if (iName)
 			{
 			#if iVerbose
-				return theQ.Project(*iName | ZTName("$$ComboReturn$$"));
+				return theQ.Project(RelHead(*iName) | "$$ComboReturn$$");
 			#else
 				return theQ.Project(*iName);
 			#endif
@@ -240,50 +249,50 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const ZTName* iName, Spec* iFilt
 		ZRefDynamicCast<ZTBQueryNode_ID_FromSource>(iNode))
 		{
 		ZRef<ZTBQueryNode> sourceNode = theNode_ID_FromSource->GetSourceNode();
-		const ZTName sourcePropName = theNode_ID_FromSource->GetSourcePropName();
+		const string sourcePropName = theNode_ID_FromSource->GetSourcePropName();
 
 		// Get the source tuples' sourcePropName
 		Query theQ = sConvert(sourceNode, &sourcePropName, nullptr, iVerbose);
 
 		// Rename it to sIDName.
-		theQ = theQ.Rename(sourcePropName, sIDName);
+		theQ = sRename(sourcePropName, sIDName, theQ);
 		
 		// Get the referenced tuples and filter them
 		if (iFilter)
 			{
-			const RelHead filterRelHead = iFilter->GetRelHead();
+			const RelHead filterRelHead = sGetRelHead(*iFilter);
 			if (iName)
 				{
-				theQ = sAllID(sIDName, filterRelHead | *iName).Join(theQ).Select(*iFilter);
+				theQ = sJoin(theQ, sSelect(*iFilter, sAllID(sIDName, filterRelHead | *iName)));
 				if (iVerbose)
-					theQ = theQ.Project(*iName | ZTName("$$FromSource_Name_Filter$$"));
+					theQ = sProject(RelHead(*iName) | "$$FromSource_Name_Filter$$", theQ);
 				else
-					theQ = theQ.Project(*iName);
+					theQ = sProject(*iName, theQ);
 				}
 			else
 				{
-				theQ = sAllID(sIDName, filterRelHead).Join(theQ).Select(*iFilter);
+				theQ = sJoin(theQ, sSelect(*iFilter, sAllID(sIDName, filterRelHead)));
 				if (iVerbose)
-					theQ = theQ.Project(sIDName | ZTName("$$FromSource_Filter$$"));
+					theQ = sProject(RelHead(sIDName) | "$$FromSource_Filter$$", theQ);
 				else
-					theQ = theQ.Project(sIDName);
+					theQ = sProject(sIDName, theQ);
 				}
 			}
 		else
 			{
 			if (iName)
 				{
-				theQ = sAllID(sIDName, *iName).Join(theQ);
+				theQ = sJoin(theQ, sAllID(sIDName, *iName));
 				if (iVerbose)
-					theQ = theQ.Project(*iName | ZTName("$$FromSource_Name$$"));
+					theQ = sProject(RelHead(*iName) | "$$FromSource_Name$$", theQ);
 				else
-					theQ = theQ.Project(*iName);
+					theQ = sProject(*iName, theQ);
 				}
 			else
 				{
 				// Do nothing -- already have the IDs.
 				if (iVerbose)
-					theQ = theQ.Project(ZTName("$$FromSource$$"));
+					theQ = sProject("$$FromSource$$", theQ);
 				}
 			}
 		return theQ;
@@ -292,56 +301,56 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const ZTName* iName, Spec* iFilt
 		ZRefDynamicCast<ZTBQueryNode_Property>(iNode))
 		{
 		ZRef<ZTBQueryNode> sourceNode = theNode_Property->GetSourceNode();
-		const ZTName thePropName = theNode_Property->GetPropName();
+		const string thePropName = theNode_Property->GetPropName();
 
 		// Get the source tuples' IDs.
 		Query theQ = sConvert(sourceNode, nullptr, nullptr, iVerbose);
 
 		// Renamed to thePropName;
-		theQ = theQ.Rename(sIDName, thePropName);
+		theQ = sRename(sIDName, thePropName, theQ);
 
 		// Get tuples whose property 'thePropName' match the IDs and filter them
 		if (iFilter)
 			{
-			const RelHead filterRelHead = iFilter->GetRelHead();
+			const RelHead filterRelHead = sGetRelHead(*iFilter);
 			if (iName)
 				{
-				theQ = sAllID(sIDName, filterRelHead | *iName | thePropName).Join(theQ);
-				theQ = theQ.Project(filterRelHead | *iName);
-				theQ = theQ.Select(*iFilter);
+				theQ = sJoin(theQ, sAllID(sIDName, filterRelHead | *iName | thePropName));
+				theQ = sProject(filterRelHead | *iName, theQ);
+				theQ = sSelect(*iFilter, theQ);
 				if (iVerbose)
-					theQ = theQ.Project(*iName | ZTName("$$Property_Name_Filter$$"));
+					theQ = sProject(RelHead(*iName) | "$$Property_Name_Filter$$", theQ);
 				else
-					theQ = theQ.Project(*iName);
+					theQ = sProject(*iName, theQ);
 				}
 			else
 				{
-				theQ = sAllID(sIDName, filterRelHead | thePropName).Join(theQ);
-				theQ = theQ.Project(filterRelHead);
-				theQ = theQ.Select(*iFilter);
+				theQ = sJoin(theQ, sAllID(sIDName, filterRelHead | thePropName));
+				theQ = sProject(filterRelHead, theQ);
+				theQ = sSelect(*iFilter, theQ);
 				if (iVerbose)
-					theQ = theQ.Project(sIDName | ZTName("$$Property_Filter$$"));
+					theQ = sProject(RelHead(sIDName) | "$$Property_Filter$$", theQ);
 				else
-					theQ = theQ.Project(sIDName);
+					theQ = sProject(sIDName, theQ);
 				}
 			}
 		else
 			{
 			if (iName)
 				{
-				theQ = sAllID(sIDName, *iName | thePropName).Join(theQ);
+				theQ = sJoin(theQ,  sAllID(sIDName, RelHead(*iName) | thePropName));
 				if (iVerbose)
-					theQ = theQ.Project(*iName | ZTName("$$Property_Name"));
+					theQ = sProject(RelHead(*iName) | "$$Property_Name", theQ);
 				else
-					theQ = theQ.Project(*iName);
+					theQ = sProject(*iName, theQ);
 				}
 			else
 				{
-				theQ = sAllID(sIDName, thePropName).Join(theQ);
+				theQ = sJoin(theQ, sAllID(sIDName, thePropName));
 				if (iVerbose)
-					theQ = theQ.Project(sIDName | ZTName("$$Property"));
+					theQ = sProject(RelHead(sIDName) | "$$Property", theQ);
 				else
-					theQ = theQ.Project(sIDName);
+					theQ = sProject(sIDName, theQ);
 				}
 			}
 		return theQ;

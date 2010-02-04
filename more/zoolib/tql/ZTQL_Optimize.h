@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTQL_Optimize__ 1
 #include "zconfig.h"
 
-#include "zoolib/tql/ZTQL_Node.h"
+#include "zoolib/ZExpr_Relational.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -32,7 +32,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZTQL {
 
-ZRef<Node> sOptimize(ZRef<Node> iNode);
+ZRef<ZExprRep_Relational> sOptimize(ZRef<ZExprRep_Relational> iRep);
 
 } // namespace ZTQL
 

@@ -1,9 +1,13 @@
 #include "zoolib/tql/ZTQL_Optimize.h"
-#include "zoolib/tql/ZTQL_Query.h"
-#include "zoolib/tql/ZUtil_Strim_TQL.h"
+#include "zoolib/ZExpr_Query.h"
+
+#include "zoolib/tql/ZUtil_Strim_TQL_Query.h"
 #include "zoolib/tql/ZUtil_TQLConvert.h"
+#include "zoolib/ZExpr_ValCondition.h"
 
 #include "zoolib/ZUtil_Strim_Tuple.h"
+
+#include "zoolib/tuplebase/ZTBQuery.h"
 
 NAMESPACE_ZOOLIB_USING
 
@@ -12,24 +16,31 @@ using namespace ZTQL;
 using std::set;
 using std::string;
 
+typedef ZExpr_Logical Spec;
+typedef ZExpr_Relational Query;
+typedef ZMap_Expr Map;
+typedef ZRelHead RelHead;
+typedef ZVal_Expr Val;
+typedef ZValCondition Condition;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTQL, test code
 
 //static Query A()
-//	{ return ZTQL::sAll(); }
+//	{ return ZTQL::sAll(RelHead(true)); }
 
-static Query A(const ZTName& iIDName)
-	{ return ZTQL::sAll(iIDName); }
+static Query A(const string& iIDName)
+	{ return sAll(iIDName); }
 
 //static Query D(const Query& iQuery1, const Query& iQuery2)
 //	{ return sDifference(iQuery1, iQuery2); }
 
-static Query E(const Map* iMaps, size_t iCount)
-	{ return sExplicit(iMaps, iCount); }
+static Query E(const Val* iVals, size_t iCount)
+	{ return sExplicit(iVals, iCount); }
 
-static Query E(const std::vector<Map>& iMaps)
-	{ return sExplicit(iMaps); }
+static Query E(const std::vector<Val>& iVals)
+	{ return sExplicit(iVals); }
 
 static Query I(const Query& iQuery1, const Query& iQuery2)
 	{ return sIntersect(iQuery1, iQuery2); }
@@ -37,12 +48,12 @@ static Query I(const Query& iQuery1, const Query& iQuery2)
 static Query J(const Query& iQuery1, const Query& iQuery2)
 	{ return sJoin(iQuery1, iQuery2); }
 
-//static Query P(const ZTName& iPropName0, const Query& iQuery)
+//static Query P(const string& iPropName0, const Query& iQuery)
 //	{ return sProject(iQuery, iPropName0); }
 static Query P(const RelHead& iRelHead, const Query& iQuery)
 	{ return sProject(iRelHead, iQuery); }
 
-static Query R(const ZTName& iOldPropName, const ZTName& iNewPropName, const Query& iQuery)
+static Query R(const string& iOldPropName, const string& iNewPropName, const Query& iQuery)
 	{ return sRename(iOldPropName, iNewPropName, iQuery); }
 
 static Query S(const Spec& iSpec, const Query& iQuery)
@@ -51,51 +62,35 @@ static Query S(const Spec& iSpec, const Query& iQuery)
 static Query U(const Query& iQuery1, const Query& iQuery2)
 	{ return sUnion(iQuery1, iQuery2); }
 
-// Do we even want this? Union and intersection are actually uncommon operations.
-Query operator|(const Query& iQuery1, const Query& iQuery2);
-Query operator|(const Query& iQuery1, const Query& iQuery2)
-	{ return iQuery1.Union(iQuery2); }
-
-Query operator&(const Query& iQuery1, const Query& iQuery2);
-Query operator&(const Query& iQuery1, const Query& iQuery2)
-	{ return iQuery1.Intersect(iQuery2); }
-
-Query operator&(const Query& iQuery1, const Spec& iSpec);
-Query operator&(const Query& iQuery1, const Spec& iSpec)
-	{ return iQuery1.Select(iSpec); }
 
 // No difference method
 //Query operator-(const Query& iQuery1, const Query& iQuery2);
 //Query operator-(const Query& iQuery1, const Query& iQuery2)
 //	{ return iQuery1.Difference(iQuery2); }
 
-Query operator*(const Query& iQuery1, const Query& iQuery2);
-Query operator*(const Query& iQuery1, const Query& iQuery2)
-	{ return iQuery1.Join(iQuery2); }
-
 // =================================================================================================
 
 static void sTesterfsdfsdf()
 	{
-	Condition theCondition = CName("Object").EQ(CVal("view"));
+	Condition theCondition = CName("Object").EQ(CConst("view"));
 	}
 
-static const ZTName sProps_note[] = { "Object", "titl", "crea", "text", "stat" };
+static const string sProps_note[] = { "Object", "titl", "crea", "text", "stat" };
 static const RelHead sRelHead_note(sProps_note, countof(sProps_note));
 
-static const ZTName sProps_view[] = { "Object", "titl", "level", "lock", "stat", };
+static const string sProps_view[] = { "Object", "titl", "level", "lock", "stat", };
 static const RelHead sRelHead_view(sProps_view, countof(sProps_view));
 
 static Query sNotesWithIDs()
 	{
-	return Query::sAllID("noteID", sRelHead_note) & (CName("Object").EQ(CVal("note")));
+	return sAllID("noteID", sRelHead_note) & (CName("Object").EQ(CConst("note")));
 	}
 
-static const ZTName sProps_Link[] = { "Link", "from", "to" };
+static const string sProps_Link[] = { "Link", "from", "to" };
 static const RelHead sRelHead_Link(sProps_Link, countof(sProps_Link));
 static Query sLinks_Owns()
 	{
-	return Query::sAll(sRelHead_Link) & (CName("Link").EQ(CVal("owns")));
+	return sAll(sRelHead_Link) & (CName("Link").EQ(CConst("owns")));
 	}
 
 static void sTest()
@@ -106,11 +101,16 @@ static void sTest()
 
 static Spec sBadAuthors()
 	{
-	Spec theSpec = CName("Object").EQ(CVal("author"))
-		&
-		(CName("pass").EQ(CName("fnam"))
-		| CName("pass").EQ(CName("lnam"))
-		| CName("pass").EQ(CName("unam")));
+//	const Spec theSpec = (CName("Object") == CConst("author"));
+	
+	const Spec theSpec =
+		CName("Object") == CConst("author")
+		&	(
+			CName("pass") == CName("fnam")
+			| CName("pass") == CName("lnam")
+			| CName("pass") == CName("unam")
+			);
+
 	return theSpec;
 	}
 
@@ -125,7 +125,7 @@ static Query badPassword()
 static Query badPassword2()
 	{
 //	return (A("authorID") & sBadAuthors()).Project("authorID");
-	return (A("authorID") & sBadAuthors()).Project(ZTName("authorID"));
+	return sProject(string("authorID"), A("authorID") & sBadAuthors());
 	}
 
 // S(A(@authorID), @Object == "author" & (@fnam == @pass | @lnam == @pass | @unam == @pass));
@@ -140,86 +140,88 @@ static ZTBQuery sTBQuery()
 	return result;
 	}
 
-static Query sPrefix(const ZTName& iPrefix, const RelHead& iIgnore, Query iQuery)
+static Query sPrefix(const string& iPrefix, const RelHead& iIgnore, Query iQuery)
 	{
-	if (iPrefix.Empty())
+	if (iPrefix.empty())
 		return iQuery;
 
-	set<ZTName> theNames;
-	iQuery.GetRelHead().GetNames(theNames);
-	for (set<ZTName>::iterator i = theNames.begin(); i != theNames.end(); ++i)
+	bool universal;
+	set<string> theNames;
+	iQuery.GetRelHead().GetNames(universal, theNames);
+	for (set<string>::iterator i = theNames.begin(); i != theNames.end(); ++i)
 		{
 		if (iIgnore.Contains(*i))
 			continue;
-		iQuery = iQuery.Rename(*i, iPrefix.AsString() + i->AsString());
+		iQuery = sRename(*i, iPrefix + *i, iQuery);
 		}
 	return iQuery;
 	}
 
 static Query sSuperJoin(
-	const ZTName& iPrefix1, Query iQuery1,
+	const string& iPrefix1, Query iQuery1,
 	const RelHead& iJoinOn,
-	Query iQuery2, const ZTName& iPrefix2)
+	Query iQuery2, const string& iPrefix2)
 	{
 	Query newQuery1 = sPrefix(iPrefix1, iJoinOn, iQuery1);
 	Query newQuery2 = sPrefix(iPrefix2, iJoinOn, iQuery2);
 	return newQuery1 * newQuery2;
 	}
 
-static Query sDrop(Query iQuery, const ZTName& iTName)
+static Query sDrop(Query iQuery, const string& iTName)
 	{
 	RelHead theRelHead = iQuery.GetRelHead();
 	if (theRelHead.Contains(iTName))
-		return iQuery.Project(theRelHead - iTName);
+		return sProject(theRelHead - iTName, iQuery);
 	return iQuery;	
 	}
 
 static Query sAllIDs()
 	{
-	return Query::sAllID("$ID$");
+	return sAllID("$ID$");
 	}
 
 static Query sAllNotes()
 	{
-	Query theQuery = Query::sAllID("$ID$", sRelHead_note) & (CName("Object").EQ(CVal("note")));
+	Query theQuery = sAllID("$ID$", sRelHead_note) & (CName("Object") == CConst("note"));
 	return sDrop(theQuery, "Object");
 	}
 
 static Query sAllNotesNoHead()
 	{
-	return Query::sAllID("$ID$") & (CName("Object").EQ(CVal("note")));
+	return sAllID("$ID$") & (CName("Object").EQ(CConst("note")));
 	}
 
 static Query sAllViews()
 	{
-	Query theQuery = Query::sAllID("$ID$", sRelHead_view) & (CName("Object").EQ(CVal("view")));
+	Query theQuery = sAllID("$ID$", sRelHead_view) & (CName("Object") == CConst("view"));
 	return sDrop(theQuery, "Object");
 	}
 
 static Query sAllViewsNoHead()
 	{
-//	return Query::sAllID("$ID$", sRelHead_view) & Spec(true);
-	return Query::sAllID("$ID$") & (CName("Object").EQ(CVal("view")));
+//	return sAllID("$ID$", sRelHead_view) & Spec(true);
+	return sAllID("$ID$") & (CName("Object").EQ(CConst("view")));
 	}
 
 static Query sAllContains()
 	{
-	Query theQuery = Query::sAll(sRelHead_Link) & (CName("Link").EQ(CVal("contains")));
+	Query theQuery = sAll(sRelHead_Link) & (CName("Link") == CConst("contains"));
+//	Query theQuery = sAll(sRelHead_Link) & (CName("Link").EQ(CConst("contains")));
 	return sDrop(theQuery, "Link");
 	}
 
 static Query sQueryNoHead()
 	{
-	Query allViews = sAllViewsNoHead().Rename("$ID$", "from");
-	Query allNotes = sAllNotesNoHead().Rename("$ID$", "to");
+	Query allViews = sRename("$ID$", "from", sAllViewsNoHead());
+	Query allNotes = sRename("$ID$", "to", sAllNotesNoHead());
 	Query allContains = sAllContains();
 	return allViews * (allContains * allNotes);
 	}
 
 static Query sQuery()
 	{
-	Query allViews = sAllViews().Rename("$ID$", "from");
-	Query allNotes = sAllNotes().Rename("$ID$", "to");
+	Query allViews = sRename("$ID$", "from", sAllViews());
+	Query allNotes = sRename("$ID$", "to", sAllNotes());
 	Query allContains = sAllContains();
 
 	return sPrefix("view.", RelHead("from"), allViews)
@@ -240,17 +242,17 @@ static Query sQuery()
 // %
 // ^
 
-	return sAllViews().Rename("$ID$", "from") * (sAllContains().Rename("to", "$ID$")) * (sAllNotes().Rename("titl", "noteTitle"));
+	return sRename("$ID$", "from", sAllViews()) * sRename("to", "$ID$", sAllContains()) * sRename("titl", "noteTitle", sAllNotes());
 	}
 
 static void sDumpQuery(const ZStrimW& s, Query iQuery)
 	{
 	s << "ZTQL::Query equivalent -----------------------\n";
-	ZUtil_Strim_TQL::sToStrim(iQuery.GetNode(), s);
+	ZUtil_Strim_TQL::sToStrim(iQuery, s);
 
 	s << "\nZTQL::Query optimized -----------------------\n";
 	
-	ZRef<Node> theNode = sOptimize(iQuery.GetNode());
+	ZExpr_Relational theNode = sOptimize(iQuery);
 	
 	ZUtil_Strim_TQL::sToStrim(theNode, s);
 
@@ -266,14 +268,15 @@ static void sTestOne(const string& iLabel, const ZStrimW& s, const ZTBQuery& iTB
 	sDumpQuery(s, query);
 	}
 
-//Query sGetVCN();
 void sTestQL(const ZStrimW& s);
 void sTestQL(const ZStrimW& s)
 	{
-//	sDumpQuery(s, sGetVCN());
-	sDumpQuery(s, sQuery());
+//	Spec theSpec = CTrail("name/last") == CConst("Fred");
+//	Query theQuery = sAllID("$ID$") & theSpec;
+//	sDumpQuery(s, theQuery);
+//	sDumpQuery(s, sQuery());
 //	sDumpQuery(s, sQueryNoHead());
-//	sDumpQuery(s, ZUtil_TQLConvert::sConvert(sTBQuery(), false));
+	sDumpQuery(s, ZUtil_TQLConvert::sConvert(sTBQuery(), false));
 
 //	sDumpQuery(s, badPassword());
 	return;

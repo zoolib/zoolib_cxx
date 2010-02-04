@@ -22,40 +22,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim_TQL__
 #include "zconfig.h"
 
+#include "zoolib/ZRelHead.h"
 #include "zoolib/ZStrim.h"
-#include "zoolib/tql/ZTQL_Query.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZUtil_Strim_TQL {
 
-using namespace ZTQL;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Strim_TQL
 
-struct Options
-	{
-	Options();
-
-	std::string fEOLString;
-	std::string fIndentString;
-	};
-
-void sToStrim(const Query& iQuery, const ZStrimW& s);
-void sToStrim(ZRef<Node> iNode, const ZStrimW& s);
-
-void sToStrim(size_t iInitialIndent, const Options& iOptions,
-	const Query& iQuery,
-	const ZStrimW& s);
-
-void sToStrim(size_t iInitialIndent, const Options& iOptions,
-	ZRef<Node> iNode,
-	const ZStrimW& s);
-
-void sWrite_PropName(const ZTName& iTName, const ZStrimW& s);
-void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s);
+void sWrite_PropName(const std::string& iName, const ZStrimW& s);
+void sWrite_RelHead(const ZRelHead& iRelHead, const ZStrimW& s);
 
 } // namespace ZUtil_Strim_TQL
 

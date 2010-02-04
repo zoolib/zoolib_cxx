@@ -22,20 +22,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_TQLConvert__
 #include "zconfig.h"
 
-#include "zoolib/tql/ZTQL_Query.h"
+#include "zoolib/ZExpr_Query.h"
 #include "zoolib/tuplebase/ZTBQuery.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZUtil_TQLConvert {
 
-using namespace ZTQL;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_TQLConvert
 
-Query sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
+ZExpr_Relational sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
 
 } // namespace ZUtil_TQLConvert
 

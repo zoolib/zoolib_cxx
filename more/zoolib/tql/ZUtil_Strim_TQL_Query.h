@@ -18,50 +18,37 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTQLEngine__
-#define __ZTQLEngine__ 1
+#ifndef __ZUtil_Strim_TQL_Query__
+#define __ZUtil_Strim_TQL_Query__
 #include "zconfig.h"
 
-#include "zoolib/tql/ZTQL_Node.h"
+#include "zoolib/ZStrim.h"
+#include "zoolib/ZExpr_Query.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-using ZTQL::Map;
+namespace ZUtil_Strim_TQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQLEngine
+#pragma mark * ZUtil_Strim_TQL
 
-class ZTQLEngine
+struct Options
 	{
-public:
-	class Iterator
-		{
-	protected:
-		Iterator();
+	Options();
 
-	public:
-		virtual ~Iterator();
-
-		virtual bool HasValue() = 0;
-		virtual Map Current() = 0;
-		virtual void Advance() = 0;
-		};
-
-
-	ZTQLEngine();
-
-	void Execute(ZRef<ZTQL::Node> iNode, std::vector<Map>& oResults);
-
-	virtual Iterator* Search();//ZTSpec::CriterionSect iSect);
-
-
-//		const ZTSpec& iTSpec, std::vector<std::pair<uint64, Map> >& oResults) = 0;
-
-private:	
-	void pExecute(ZRef<ZTQL::Node> iNode, std::vector<Map>& oResults);
+	std::string fEOLString;
+	std::string fIndentString;
 	};
+
+void sToStrim(const ZRef<ZExprRep_Relational>& iRep, const ZStrimW& s);
+
+void sToStrim(size_t iInitialIndent, const Options& iOptions,
+	const ZRef<ZExprRep_Relational>& iRep,
+	const ZStrimW& s);
+
+} // namespace ZUtil_Strim_TQL
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZTQLEngine__
+#endif // __ZUtil_Strim_TQL_Query__

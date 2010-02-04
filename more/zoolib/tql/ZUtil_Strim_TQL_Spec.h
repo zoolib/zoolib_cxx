@@ -22,25 +22,24 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_Strim_TQL_Spec__
 #include "zconfig.h"
 
-#include "zoolib/tql/ZTQL_Spec.h"
+#include "zoolib/ZExpr_ValCondition.h"
+#include "zoolib/ZValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 class ZStrimW;
 
-namespace ZUtil_Strim_TQL_Spec {
-
-using namespace ZTQL;
+namespace ZUtil_Strim_TQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_Strim_TQL_Spec
+#pragma mark * ZUtil_Strim_TQL
 
-void sToStrim(const Condition& iCondition, const ZStrimW& iStrimW);
-void sToStrim(const Spec& iSpec, const ZStrimW& iStrimW);
-void sToStrim(ZRef<LogOp> iLogOp, const ZStrimW& iStrimW);
+void sToStrim(const ZValCondition& iValCondition, const ZStrimW& iStrimW);
+void sToStrim(const ZRef<ZExprRep_Logical>& iRep, const ZStrimW& iStrimW);
+void sWrite(const ZVal_Any& iVal, const ZStrimW& s);
 
-} // namespace ZUtil_Strim_TQL_Spec
+} // namespace ZUtil_Strim_TQL
 
 NAMESPACE_ZOOLIB_END
 
