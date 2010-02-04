@@ -50,7 +50,7 @@ namespace {
 template <class S>
 bool spGetNumber_T(CFTypeRef iTypeRef, CFNumberType iNumberType, S& oVal)
 	{
-	if (::CFGetTypeID(iTypeRef) == ::CFNumberGetTypeID())
+	if (iTypeRef && ::CFGetTypeID(iTypeRef) == ::CFNumberGetTypeID())
 		{
 		CFNumberRef theNumberRef = static_cast<CFNumberRef>(iTypeRef);
 		if (::CFNumberGetType(theNumberRef) == iNumberType)
@@ -266,7 +266,7 @@ bool ZVal_CFType::QGet_T<bool>(bool& oVal) const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFBooleanGetTypeID())
 		{
-		oVal = ::CFBooleanGetValue(static_cast<CFBooleanRef>(Get()));
+		oVal = ::CFBooleanGetValue(this->StaticCast<CFBooleanRef>());
 		return true;
 		}
 	return false;
@@ -297,7 +297,7 @@ bool ZVal_CFType::QGet_T<string8>(string8& oVal) const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFStringGetTypeID())
 		{
-		oVal = sAsUTF8(static_cast<CFStringRef>(Get()));
+		oVal = sAsUTF8(this->StaticCast<CFStringRef>());
 		return true;
 		}
 	return false;
@@ -308,7 +308,7 @@ bool ZVal_CFType::QGet_T<ZRef<CFStringRef> >(ZRef<CFStringRef>& oVal) const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFStringGetTypeID())
 		{
-		oVal = static_cast<CFStringRef>(Get());
+		oVal = this->StaticCast<CFStringRef>();
 		return true;
 		}
 	return false;
@@ -319,7 +319,7 @@ bool ZVal_CFType::QGet_T<ZData_CFType>(ZData_CFType& oVal) const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFDataGetTypeID())
 		{
-		oVal = static_cast<CFDataRef>(Get());
+		oVal = this->StaticCast<CFDataRef>();
 		return true;
 		}
 	return false;
@@ -330,7 +330,7 @@ bool ZVal_CFType::QGet_T<ZSeq_CFType>(ZSeq_CFType& oVal) const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFArrayGetTypeID())
 		{
-		oVal = static_cast<CFArrayRef>(Get());
+		oVal = this->StaticCast<CFArrayRef>();
 		return true;
 		}
 	return false;
@@ -341,7 +341,7 @@ bool ZVal_CFType::QGet_T<ZMap_CFType>(ZMap_CFType& oVal) const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFDictionaryGetTypeID())
 		{
-		oVal = static_cast<CFDictionaryRef>(Get());
+		oVal = this->StaticCast<CFDictionaryRef>();
 		return true;
 		}
 	return false;
