@@ -66,12 +66,46 @@ bool ZVisitor_ExprRep_ValCondition_T<Val>::Visit_ValCondition(ZRef<ZExprRep_ValC
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZExpr_ValCondition_T
+
+template <class Val>
+ZExpr_ValCondition_T<Val>::ZExpr_ValCondition_T()
+	{}
+
+template <class Val>
+ZExpr_ValCondition_T<Val>::ZExpr_ValCondition_T(const ZExpr_ValCondition_T<Val>& iOther)
+:	inherited(iOther)
+	{}
+
+template <class Val>
+ZExpr_ValCondition_T<Val>::~ZExpr_ValCondition_T()
+	{}
+
+template <class Val>
+ZExpr_ValCondition_T<Val>& ZExpr_ValCondition_T<Val>::operator=(const ZExpr_ValCondition_T<Val>& iOther)
+	{
+	inherited::operator=(iOther);
+	return *this;
+	}
+
+template <class Val>
+ZExpr_ValCondition_T<Val>::ZExpr_ValCondition_T(const ZRef<ZExprRep_ValCondition_T<Val> >& iRep)
+:	inherited(ZRef<ZExprRep_Logical>(iRep))
+	{}
+
+template <class Val>
+ZExpr_ValCondition_T<Val>::operator ZRef<ZExprRep_ValCondition_T<Val> >() const
+	{ return ZRefStaticCast<ZExprRep_ValCondition_T<Val> >(*this); }
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Operators
 
 template <class Val>
-ZExpr_Logical operator<(const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS)
+ZExpr_ValCondition_T<Val> operator<(
+	const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS)
 	{
-	return ZExpr_Logical(new ZExprRep_ValCondition(
+	return ZExpr_ValCondition_T<Val>(new ZExprRep_ValCondition(
 		ZValCondition_T<Val>(iLHS,
 		new ZValComparatorRep_Simple<Val>(ZValComparatorRep_Simple<Val>::eLT),
 		iRHS)));
@@ -79,36 +113,40 @@ ZExpr_Logical operator<(const ZValComparand_T<Val>& iLHS, const ZValComparand_T<
 
 
 template <class Val>
-ZExpr_Logical operator<=(const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS)
+ZExpr_ValCondition_T<Val> operator<=(
+	const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS)
 	{
-	return ZExpr_Logical(new ZExprRep_ValCondition(
+	return ZExpr_ValCondition_T<Val>(new ZExprRep_ValCondition(
 		ZValCondition_T<Val>(iLHS,
 		new ZValComparatorRep_Simple<Val>(ZValComparatorRep_Simple<Val>::eLE),
 		iRHS)));
 	}
 
 template <class Val>
-ZExpr_Logical operator==(const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS)
+ZExpr_ValCondition_T<Val> operator==(
+	const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS)
 	{
-	return ZExpr_Logical(new ZExprRep_ValCondition(
+	return ZExpr_ValCondition_T<Val>(new ZExprRep_ValCondition(
 		ZValCondition_T<Val>(iLHS,
 		new ZValComparatorRep_Simple<Val>(ZValComparatorRep_Simple<Val>::eEQ),
 		iRHS)));
 	}
 
 template <class Val>
-ZExpr_Logical operator>=(const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS)
+ZExpr_ValCondition_T<Val> operator>=(
+	const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS)
 	{
-	return ZExpr_Logical(new ZExprRep_ValCondition(
+	return ZExpr_ValCondition_T<Val>(new ZExprRep_ValCondition(
 		ZValCondition_T<Val>(iLHS,
 		new ZValComparatorRep_Simple<Val>(ZValComparatorRep_Simple<Val>::eGE),
 		iRHS)));
 	}
 
 template <class Val>
-ZExpr_Logical operator>(const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS)
+ZExpr_ValCondition_T<Val> operator>(
+	const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS)
 	{
-	return ZExpr_Logical(new ZExprRep_ValCondition(
+	return ZExpr_ValCondition_T<Val>(new ZExprRep_ValCondition(
 		ZValCondition_T<Val>(iLHS,
 		new ZValComparatorRep_Simple<Val>(ZValComparatorRep_Simple<Val>::eGT),
 		iRHS)));

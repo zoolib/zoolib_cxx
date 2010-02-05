@@ -211,10 +211,6 @@ ZExpr_Logical::ZExpr_Logical(const ZRef<ZExprRep_Logical>& iRep)
 :	inherited(iRep)
 	{}
 
-ZExpr_Logical::ZExpr_Logical(bool iBool)
-:	inherited(iBool ? new ZExprRep_Logical_True : nullptr)
-	{}
-
 ZExpr_Logical::operator ZRef<ZExprRep_Logical>() const
 	{ return ZRefStaticCast<ZExprRep_Logical>(*this); }
 

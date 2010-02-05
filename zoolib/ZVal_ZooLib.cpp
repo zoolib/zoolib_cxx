@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZCompare.h"
+#include "zoolib/ZCompare_Vector.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZVal_ZooLib.h"
@@ -1932,8 +1932,7 @@ int ZSeq_ZooLib::Compare(const ZSeq_ZooLib& iOther) const
 		{
 		if (iOther.fRep)
 			{
-			return sCompare_T(fRep->fVector.begin(), fRep->fVector.end(),
-				iOther.fRep->fVector.begin(), iOther.fRep->fVector.end());
+			return sCompare_T(fRep->fVector, iOther.fRep->fVector);
 			}
 		else
 			{

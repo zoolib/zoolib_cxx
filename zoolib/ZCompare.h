@@ -100,61 +100,6 @@ template <> int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR);
 template <> int sCompare_T(const float& iL, const float& iR);
 template <> int sCompare_T(const double& iL, const double& iR);
 
-// Forward declaration of iterator comparison
-template <class InputIterator>
-int sCompare_T(InputIterator leftIter, InputIterator leftEnd,
-	InputIterator rightIter, InputIterator rightEnd);
-
-// Template template to match containers
-template <class T, template <class> class C>
-int sCompare_T(const C<T>& iLeft, const C<T>& iRight)
-	{ return sCompare_T(iLeft.begin(), iLeft.end(), iRight.begin(), iRight.end()); }
-
-// Definition of iterator comparison
-template <class InputIterator>
-int sCompare_T(InputIterator leftIter, InputIterator leftEnd,
-	InputIterator rightIter, InputIterator rightEnd)
-	{
-	for (/*no init*/; /*no test*/; ++leftIter, ++rightIter)
-		{
-		if (leftIter != leftEnd)
-			{
-			// Left is not exhausted.
-			if (rightIter != rightEnd)
-				{
-				// Right is not exhausted either, so we compare their current values.
-				if (int compare = sCompare_T(*leftIter, *rightIter))
-					{
-					// The current values of left and right
-					// are different, so we have a result.
-					return compare;
-					}
-				}
-			else
-				{
-				// Exhausted right, but still have left
-				// remaining, so left is greater than right.
-				return 1;
-				}
-			}
-		else
-			{
-			// Exhausted left.
-			if (rightIter != rightEnd)
-				{
-				// Still have right remaining, so left is less than right.
-				return -1;
-				}
-			else
-				{
-				// Exhausted right. And as left is also
-				// exhausted left equals right.
-				return 0;
-				}
-			}
-		}
-	}
-
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZCompare__

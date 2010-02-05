@@ -31,24 +31,26 @@ template class ZExprRep_ValCondition_T<ZVal_Expr>;
 
 template class ZVisitor_ExprRep_ValCondition_T<ZVal_Expr>;
 
+template class ZExpr_ValCondition_T<ZVal_Expr>;
+
 template
-ZExpr_Logical operator<(
+ZExpr_ValCondition operator<(
 	const ZValComparand_T<ZVal_Expr>& iLHS, const ZValComparand_T<ZVal_Expr>& iRHS);
 
 template
-ZExpr_Logical operator<=(
+ZExpr_ValCondition operator<=(
 	const ZValComparand_T<ZVal_Expr>& iLHS, const ZValComparand_T<ZVal_Expr>& iRHS);
 
 template
-ZExpr_Logical operator==(
+ZExpr_ValCondition operator==(
 	const ZValComparand_T<ZVal_Expr>& iLHS, const ZValComparand_T<ZVal_Expr>& iRHS);
 
 template
-ZExpr_Logical operator>=(
+ZExpr_ValCondition operator>=(
 	const ZValComparand_T<ZVal_Expr>& iLHS, const ZValComparand_T<ZVal_Expr>& iRHS);
 
 template
-ZExpr_Logical operator>(
+ZExpr_ValCondition operator>(
 	const ZValComparand_T<ZVal_Expr>& iLHS, const ZValComparand_T<ZVal_Expr>& iRHS);
 
 template

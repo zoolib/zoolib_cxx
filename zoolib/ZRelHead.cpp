@@ -53,7 +53,7 @@ ZRelHead& ZRelHead::operator=(const ZRelHead& iOther)
 ZRelHead::ZRelHead(bool iUniversal)
 :	fUniversal(iUniversal)
 	{
-	ZAssert(!fUniversal);
+	// ZAssert(!fUniversal);
 	// Universal not done yet.
 	}
 

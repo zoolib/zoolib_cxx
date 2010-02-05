@@ -30,11 +30,14 @@ NAMESPACE_ZOOLIB_BEGIN
 
 
 typedef ZExprRep_ValCondition_T<ZVal_Expr> ZExprRep_ValCondition;
+
 typedef ZVisitor_ExprRep_ValCondition_T<ZVal_Expr> ZVisitor_ExprRep_ValCondition;
+
+typedef ZExpr_ValCondition_T<ZVal_Expr> ZExpr_ValCondition;
 
 ZRelHead sGetRelHead(const ZRef<ZExprRep_Logical>& iRep);
 
-bool sMatches(const ZRef<ZExprRep_Logical>& iRep, const ZVal_Any& iVal);
+bool sMatches(const ZRef<ZExprRep_Logical>& iRep, const ZVal_Expr& iVal);
 
 NAMESPACE_ZOOLIB_END
 

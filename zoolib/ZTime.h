@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTime__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompare.h"
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZStdInt.h"
 
@@ -100,6 +99,7 @@ public:
 		= ((ZUINT64_C(369) * 365) + 89) * 24 * 60 * 60; // == 11,644,473,600
 	};
 
+template <class T> int sCompare_T(const T& iL, const T& iR);
 template <> inline int sCompare_T(const ZTime& iL, const ZTime& iR)
 	{ return iL.Compare(iR); }
 

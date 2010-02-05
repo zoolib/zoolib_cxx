@@ -171,7 +171,6 @@ public:
 	ZExpr_Logical& operator=(const ZExpr_Logical& iOther);
 
 	ZExpr_Logical(const ZRef<ZExprRep_Logical>& iRep);
-	explicit ZExpr_Logical(bool iBool);
 
 	operator ZRef<ZExprRep_Logical>() const;
 	};

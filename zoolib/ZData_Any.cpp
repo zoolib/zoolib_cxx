@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCompare_Vector.h"
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZUtil_STL.h"
@@ -96,8 +97,7 @@ int ZData_Any::Compare(const ZData_Any& iOther) const
 	if (fRep == iOther.fRep)
 		return 0;
 
-	return sCompare_T(fRep->fVector.begin(), fRep->fVector.end(),
-		iOther.fRep->fVector.begin(), iOther.fRep->fVector.end());
+	return sCompare_T(fRep->fVector, iOther.fRep->fVector);
 	}
 
 bool ZData_Any::operator<(const ZData_Any& iOther) const

@@ -62,25 +62,54 @@ public:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZExpr_ValCondition_T
+
+template <class Val>
+class ZExpr_ValCondition_T : public ZExpr_Logical
+	{
+	typedef ZExpr_Logical inherited;
+
+	ZExpr_ValCondition_T operator=(const ZExpr_Logical&);
+	ZExpr_ValCondition_T operator=(const ZRef<ZExprRep_Logical>&);
+
+public:
+	ZExpr_ValCondition_T();
+	ZExpr_ValCondition_T(const ZExpr_ValCondition_T& iOther);
+	~ZExpr_ValCondition_T();
+	ZExpr_ValCondition_T& operator=(const ZExpr_ValCondition_T& iOther);
+
+	ZExpr_ValCondition_T(const ZRef<ZExprRep_ValCondition_T<Val> >& iRep);
+
+	operator ZRef<ZExprRep_ValCondition_T<Val> >() const;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Operators
 
 template <class Val>
-ZExpr_Logical operator<(const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS);
+ZExpr_ValCondition_T<Val> operator<(
+	const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS);
 
 template <class Val>
-ZExpr_Logical operator<=(const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS);
+ZExpr_ValCondition_T<Val> operator<=(
+	const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS);
 
 template <class Val>
-ZExpr_Logical operator==(const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS);
+ZExpr_ValCondition_T<Val> operator==(
+	const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS);
 
 template <class Val>
-ZExpr_Logical operator>=(const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS);
+ZExpr_ValCondition_T<Val> operator>=(
+	const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS);
 
 template <class Val>
-ZExpr_Logical operator>(const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS);
+ZExpr_ValCondition_T<Val> operator>(
+	const ZValComparand_T<Val>& iLHS, const ZValComparand_T<Val>& iRHS);
 
 template <class Val>
-ZExpr_Logical operator&(const ZValCondition_T<Val>& iLHS, const ZValCondition_T<Val>& iRHS);
+ZExpr_Logical operator&(
+	const ZValCondition_T<Val>& iLHS, const ZValCondition_T<Val>& iRHS);
 
 template <class Val>
 ZExpr_Logical operator&(const ZValCondition_T<Val>& iLHS, const ZExpr_Logical& iRHS);
@@ -92,7 +121,8 @@ template <class Val>
 ZExpr_Logical& operator&=(ZExpr_Logical& iLHS, const ZValCondition_T<Val>& iRHS);
 
 template <class Val>
-ZExpr_Logical operator|(const ZValCondition_T<Val>& iLHS, const ZValCondition_T<Val>& iRHS);
+ZExpr_Logical operator|(
+	const ZValCondition_T<Val>& iLHS, const ZValCondition_T<Val>& iRHS);
 
 template <class Val>
 ZExpr_Logical operator|(const ZValCondition_T<Val>& iLHS, const ZExpr_Logical& iRHS);

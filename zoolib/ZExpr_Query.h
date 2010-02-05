@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZExpr_Query__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Relational.h"
+#include "zoolib/ZExpr_Relation.h"
 #include "zoolib/ZValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -33,14 +33,14 @@ class ZVisitor_ExprRep_Query;
 #pragma mark -
 #pragma mark * ZExprRep_Query
 
-class ZExprRep_Query : public ZExprRep_Relational
+class ZExprRep_Query : public ZExprRep_Relation
 	{
 protected:
 	ZExprRep_Query();
 
 public:
-// From ZExprRep_Relational
-	virtual bool Accept(ZVisitor_ExprRep_Relational& iVisitor);
+// From ZExprRep_Relation
+	virtual bool Accept(ZVisitor_ExprRep_Relation& iVisitor);
 
 // Our protocol
 	virtual bool Accept(ZVisitor_ExprRep_Query& iVisitor) = 0;
@@ -59,7 +59,7 @@ public:
 
 	virtual ~ZExprRep_Query_All();
 
-// From ZExprRep_Relational via ZExprRep_Query
+// From ZExprRep_Relation via ZExprRep_Query
 	virtual ZRelHead GetRelHead();
 
 // From ZExprRep_Query
@@ -70,8 +70,8 @@ public:
 	const ZRelHead& GetAllRelHead();
 
 private:
-	std::string fIDPropName;
-	ZRelHead fRelHead;
+	const std::string fIDPropName;
+	const ZRelHead fRelHead;
 	};
 
 // =================================================================================================
@@ -86,7 +86,7 @@ public:
 
 	virtual ~ZExprRep_Query_Explicit();
 
-// From ZExprRep_Relational via ZExprRep_Query
+// From ZExprRep_Relation via ZExprRep_Query
 	virtual ZRelHead GetRelHead();
 
 // From ZExprRep_Query
@@ -96,7 +96,7 @@ public:
 	const std::vector<ZVal_Expr>& GetVals();
 
 private:
-	std::vector<ZVal_Expr> fVals;
+	const std::vector<ZVal_Expr> fVals;
 	};
 
 // =================================================================================================
@@ -107,11 +107,11 @@ class ZExprRep_Query_Restrict : public ZExprRep_Query
 	{
 public:
 	ZExprRep_Query_Restrict(
-		const ZValCondition& iValCondition, const ZRef<ZExprRep_Relational>& iExpr);
+		const ZValCondition& iValCondition, const ZRef<ZExprRep_Relation>& iExpr);
 
 	virtual ~ZExprRep_Query_Restrict();
 
-// From ZExprRep_Relational via ZExprRep_Query
+// From ZExprRep_Relation via ZExprRep_Query
 	virtual ZRelHead GetRelHead();
 
 // From ZExprRep_Query
@@ -119,11 +119,11 @@ public:
 
 // Our protocol
 	ZValCondition GetValCondition();
-	ZRef<ZExprRep_Relational> GetExpr();
+	ZRef<ZExprRep_Relation> GetExpr();
 
 private:
 	const ZValCondition fValCondition;
-	ZRef<ZExprRep_Relational> fExpr;
+	const ZRef<ZExprRep_Relation> fExpr;
 	};
 
 // =================================================================================================
@@ -135,11 +135,11 @@ class ZExprRep_Query_Select : public ZExprRep_Query
 public:
 	ZExprRep_Query_Select(
 		const ZRef<ZExprRep_Logical>& iExpr_Logical,
-		const ZRef<ZExprRep_Relational>& iExpr_Relational);
+		const ZRef<ZExprRep_Relation>& iExpr_Relation);
 
 	virtual ~ZExprRep_Query_Select();
 
-// From ZExprRep_Relational via ZExprRep_Query
+// From ZExprRep_Relation via ZExprRep_Query
 	virtual ZRelHead GetRelHead();
 
 // From ZExprRep_Query
@@ -147,18 +147,18 @@ public:
 
 // Our protocol
 	ZRef<ZExprRep_Logical> GetExpr_Logical();
-	ZRef<ZExprRep_Relational> GetExpr_Relational();
+	ZRef<ZExprRep_Relation> GetExpr_Relation();
 
 private:
-	ZRef<ZExprRep_Logical> fExpr_Logical;
-	ZRef<ZExprRep_Relational> fExpr_Relational;
+	const ZRef<ZExprRep_Logical> fExpr_Logical;
+	const ZRef<ZExprRep_Relation> fExpr_Relation;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVisitor_ExprRep_Query
 
-class ZVisitor_ExprRep_Query : public ZVisitor_ExprRep_Relational
+class ZVisitor_ExprRep_Query : public ZVisitor_ExprRep_Relation
 	{
 public:
 	virtual bool Visit_All(ZRef<ZExprRep_Query_All> iRep);
@@ -171,9 +171,13 @@ public:
 #pragma mark -
 #pragma mark * ZExpr_Query
 
-class ZExpr_Query : public ZExpr_Relational
+class ZExpr_Query : public ZExpr_Relation
 	{
-	typedef ZExpr_Relational inherited;
+	typedef ZExpr_Relation inherited;
+
+	ZExpr_Query operator=(const ZExpr_Relation&);
+	ZExpr_Query operator=(const ZRef<ZExprRep_Relation>&);
+
 public:
 	ZExpr_Query();
 	ZExpr_Query(const ZExpr_Query& iOther);
@@ -199,17 +203,17 @@ ZExpr_Query sExplicit(const ZVal_Expr* iVals, size_t iCount);
 
 ZExpr_Query sExplicit(const std::vector<ZVal_Expr>& iVals);
 
-ZExpr_Query sSelect(const ZExpr_Relational& iExpr_Relational, const ZExpr_Logical& iExpr_Logical);
+ZExpr_Query sSelect(const ZExpr_Relation& iExpr_Relation, const ZExpr_Logical& iExpr_Logical);
 
-ZExpr_Query sSelect(const ZExpr_Logical& iExpr_Logical, const ZExpr_Relational& iExpr_Relational);
+ZExpr_Query sSelect(const ZExpr_Logical& iExpr_Logical, const ZExpr_Relation& iExpr_Relation);
 
-ZExpr_Query operator&(const ZExpr_Relational& iExpr_Relational, const ZExpr_Logical& iExpr_Logical);
+ZExpr_Query operator&(const ZExpr_Relation& iExpr_Relation, const ZExpr_Logical& iExpr_Logical);
 
-ZExpr_Query operator&(const ZExpr_Logical& iExpr_Logical, const ZExpr_Relational& iExpr_Relational);
+ZExpr_Query operator&(const ZExpr_Logical& iExpr_Logical, const ZExpr_Relation& iExpr_Relation);
 
-ZExpr_Query operator&(const ZExpr_Relational& iExpr_Relational, const ZValCondition& iValCondition);
+ZExpr_Query operator&(const ZExpr_Relation& iExpr_Relation, const ZValCondition& iValCondition);
 
-ZExpr_Query operator&(const ZValCondition& iValCondition, const ZExpr_Relational& iExpr_Relational);
+ZExpr_Query operator&(const ZValCondition& iValCondition, const ZExpr_Relation& iExpr_Relation);
 
 // =================================================================================================
 #pragma mark -
@@ -218,13 +222,13 @@ ZExpr_Query operator&(const ZValCondition& iValCondition, const ZExpr_Relational
 class ZQueryTransformer : public ZVisitor_ExprRep_Query
 	{
 public:
-// From ZVisitor_ExprRep_Relational via ZVisitor_ExprRep_Query
-	virtual bool Visit_Difference(ZRef<ZExprRep_Relational_Difference> iRep);
-	virtual bool Visit_Intersect(ZRef<ZExprRep_Relational_Intersect> iRep);
-	virtual bool Visit_Join(ZRef<ZExprRep_Relational_Join> iRep);
-	virtual bool Visit_Project(ZRef<ZExprRep_Relational_Project> iRep);
-	virtual bool Visit_Rename(ZRef<ZExprRep_Relational_Rename> iRep);
-	virtual bool Visit_Union(ZRef<ZExprRep_Relational_Union> iRep);
+// From ZVisitor_ExprRep_Relation via ZVisitor_ExprRep_Query
+	virtual bool Visit_Difference(ZRef<ZExprRep_Relation_Difference> iRep);
+	virtual bool Visit_Intersect(ZRef<ZExprRep_Relation_Intersect> iRep);
+	virtual bool Visit_Join(ZRef<ZExprRep_Relation_Join> iRep);
+	virtual bool Visit_Project(ZRef<ZExprRep_Relation_Project> iRep);
+	virtual bool Visit_Rename(ZRef<ZExprRep_Relation_Rename> iRep);
+	virtual bool Visit_Union(ZRef<ZExprRep_Relation_Union> iRep);
 
 // From ZVisitor_ExprRep_Query
 	virtual bool Visit_All(ZRef<ZExprRep_Query_All> iRep);
@@ -233,21 +237,21 @@ public:
 	virtual bool Visit_Select(ZRef<ZExprRep_Query_Select> iRep);
 
 // Our protocol
-	ZRef<ZExprRep_Relational> Transform(ZRef<ZExprRep_Relational> iRep);
+	ZRef<ZExprRep_Relation> Transform(ZRef<ZExprRep_Relation> iRep);
 
-	virtual ZRef<ZExprRep_Relational> Transform_All(ZRef<ZExprRep_Query_All> iRep);
-	virtual ZRef<ZExprRep_Relational> Transform_Difference(ZRef<ZExprRep_Relational_Difference> iRep);
-	virtual ZRef<ZExprRep_Relational> Transform_Explicit(ZRef<ZExprRep_Query_Explicit> iRep);
-	virtual ZRef<ZExprRep_Relational> Transform_Intersect(ZRef<ZExprRep_Relational_Intersect> iRep);
-	virtual ZRef<ZExprRep_Relational> Transform_Join(ZRef<ZExprRep_Relational_Join> iRep);
-	virtual ZRef<ZExprRep_Relational> Transform_Project(ZRef<ZExprRep_Relational_Project> iRep);
-	virtual ZRef<ZExprRep_Relational> Transform_Rename(ZRef<ZExprRep_Relational_Rename> iRep);
-	virtual ZRef<ZExprRep_Relational> Transform_Restrict(ZRef<ZExprRep_Query_Restrict> iRep);
-	virtual ZRef<ZExprRep_Relational> Transform_Select(ZRef<ZExprRep_Query_Select> iRep);
-	virtual ZRef<ZExprRep_Relational> Transform_Union(ZRef<ZExprRep_Relational_Union> iRep);
+	virtual ZRef<ZExprRep_Relation> Transform_All(ZRef<ZExprRep_Query_All> iRep);
+	virtual ZRef<ZExprRep_Relation> Transform_Difference(ZRef<ZExprRep_Relation_Difference> iRep);
+	virtual ZRef<ZExprRep_Relation> Transform_Explicit(ZRef<ZExprRep_Query_Explicit> iRep);
+	virtual ZRef<ZExprRep_Relation> Transform_Intersect(ZRef<ZExprRep_Relation_Intersect> iRep);
+	virtual ZRef<ZExprRep_Relation> Transform_Join(ZRef<ZExprRep_Relation_Join> iRep);
+	virtual ZRef<ZExprRep_Relation> Transform_Project(ZRef<ZExprRep_Relation_Project> iRep);
+	virtual ZRef<ZExprRep_Relation> Transform_Rename(ZRef<ZExprRep_Relation_Rename> iRep);
+	virtual ZRef<ZExprRep_Relation> Transform_Restrict(ZRef<ZExprRep_Query_Restrict> iRep);
+	virtual ZRef<ZExprRep_Relation> Transform_Select(ZRef<ZExprRep_Query_Select> iRep);
+	virtual ZRef<ZExprRep_Relation> Transform_Union(ZRef<ZExprRep_Relation_Union> iRep);
 
 private:
-	ZRef<ZExprRep_Relational> fResult;
+	ZRef<ZExprRep_Relation> fResult;
 	};
 
 NAMESPACE_ZOOLIB_END
