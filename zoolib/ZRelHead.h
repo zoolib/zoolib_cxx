@@ -34,6 +34,8 @@ NAMESPACE_ZOOLIB_BEGIN
 
 class ZRelHead
 	{
+	explicit ZRelHead(bool iUniversal, std::set<std::string>& ioNames, bool iKnowWhatImDoing);
+
 public:
 	ZRelHead();
 	ZRelHead(const ZRelHead& iOther);
@@ -48,7 +50,6 @@ public:
 	ZRelHead(const std::string& iName1, const std::string& iName2);
 
 	ZRelHead(const std::set<std::string>& iNames);
-	ZRelHead(std::set<std::string>& ioNames, bool iKnowWhatImDoing);
 
 	ZRelHead(const std::vector<std::string>& iNames);
 	ZRelHead(const std::string* iNames, size_t iCount);
@@ -84,8 +85,6 @@ private:
 ZRelHead operator|(const std::string& iName, const ZRelHead& iRelHead);
 
 ZRelHead operator&(const std::string& iName, const ZRelHead& iRelHead);
-
-//ZRelHead operator|(const std::string& iLHS, const std::string& iRHS);
 
 NAMESPACE_ZOOLIB_END
 

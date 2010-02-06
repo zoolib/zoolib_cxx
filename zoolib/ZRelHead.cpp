@@ -27,9 +27,54 @@ using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZANONYMOUS {
+
+static void spOr(const set<string>& iLHS, const set<string>& iRHS, set<string>& oResult)
+	{
+	set_union(iLHS.begin(), iLHS.end(),
+		iRHS.begin(), iRHS.end(),
+		inserter(oResult, oResult.end()));
+	}
+
+static void spAnd(const set<string>& iLHS, const set<string>& iRHS, set<string>& oResult)
+	{
+	set_intersection(iLHS.begin(), iLHS.end(),
+		iRHS.begin(), iRHS.end(),
+		inserter(oResult, oResult.end()));
+	}
+
+static void spMinus(const set<string>& iLHS, const set<string>& iRHS, set<string>& oResult)
+	{
+	set_difference(iLHS.begin(), iLHS.end(),
+		iRHS.begin(), iRHS.end(),
+		inserter(oResult, oResult.end()));
+	}
+
+static void spXor(const set<string>& iLHS, const set<string>& iRHS, set<string>& oResult)
+	{
+	set_symmetric_difference(iLHS.begin(), iLHS.end(),
+		iRHS.begin(), iRHS.end(),
+		inserter(oResult, oResult.end()));
+	}
+
+static bool spIncludes(const set<string>& iLHS, const set<string>& iRHS)
+	{
+	return includes(iLHS.begin(), iLHS.end(),
+		iRHS.begin(), iRHS.end());
+	}
+
+} // anonymous namespace
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZRelHead
+
+ZRelHead::ZRelHead(bool iUniversal, std::set<std::string>& ioNames, bool iKnowWhatImDoing)
+:	fUniversal(iUniversal)
+	{
+	fNames.swap(ioNames);
+	ZAssert(iKnowWhatImDoing);
+	}
 
 ZRelHead::ZRelHead()
 :	fUniversal(false)
@@ -52,10 +97,7 @@ ZRelHead& ZRelHead::operator=(const ZRelHead& iOther)
 
 ZRelHead::ZRelHead(bool iUniversal)
 :	fUniversal(iUniversal)
-	{
-	// ZAssert(!fUniversal);
-	// Universal not done yet.
-	}
+	{}
 
 ZRelHead::ZRelHead(const char* iName)
 :	fUniversal(false)
@@ -80,13 +122,6 @@ ZRelHead::ZRelHead(const set<string>& iNames)
 ,	fNames(iNames)
 	{}
 
-ZRelHead::ZRelHead(set<string>& ioNames, bool iKnowWhatImDoing)
-:	fUniversal(false)
-	{
-	ZAssert(iKnowWhatImDoing);
-	fNames.swap(ioNames);
-	}
-
 ZRelHead::ZRelHead(const vector<string>& iNames)
 :	fUniversal(false)
 ,	fNames(iNames.begin(), iNames.end())
@@ -105,123 +140,178 @@ bool ZRelHead::operator!=(const ZRelHead& iOther) const
 
 ZRelHead& ZRelHead::operator&=(const ZRelHead& iOther)
 	{
-	set<string> result;
-
-	set_intersection(fNames.begin(), fNames.end(),
-		iOther.fNames.begin(), iOther.fNames.end(),
-		inserter(result, result.end()));
-
-	fNames.swap(result);
-
+	*this = *this & iOther;
 	return *this;
 	}
 
 ZRelHead ZRelHead::operator&(const ZRelHead& iOther) const
 	{
 	set<string> result;
-
-	set_intersection(fNames.begin(), fNames.end(),
-		iOther.fNames.begin(), iOther.fNames.end(),
-		inserter(result, result.end()));
-
-	return ZRelHead(result, true);
+	bool resultUniversal;
+	if (fUniversal)
+		{
+		if (iOther.fUniversal)
+			{
+			resultUniversal = true;
+			spOr(fNames, iOther.fNames, result);
+			}
+		else
+			{
+			resultUniversal = false;
+			spMinus(iOther.fNames, fNames, result);
+			}
+		}
+	else
+		{
+		if (iOther.fUniversal)
+			{
+			resultUniversal = false;
+			spMinus(fNames, iOther.fNames, result);
+			}
+		else
+			{
+			resultUniversal = false;
+			spAnd(iOther.fNames, fNames, result);
+			}
+		}
+	return ZRelHead(resultUniversal, result, true);
 	}
 
 ZRelHead& ZRelHead::operator|=(const ZRelHead& iOther)
 	{
-	set<string> result;
-
-	set_union(fNames.begin(), fNames.end(),
-		iOther.fNames.begin(), iOther.fNames.end(),
-		inserter(result, result.end()));
-
-	fNames.swap(result);
-
+	*this = *this | iOther;
 	return *this;
 	}
 
 ZRelHead ZRelHead::operator|(const ZRelHead& iOther) const
 	{
 	set<string> result;
-
-	set_union(fNames.begin(), fNames.end(),
-		iOther.fNames.begin(), iOther.fNames.end(),
-		inserter(result, result.end()));
-
-	return ZRelHead(result, true);
+	bool resultUniversal;
+	if (fUniversal)
+		{
+		if (iOther.fUniversal)
+			{
+			resultUniversal = true;
+			spXor(fNames, iOther.fNames, result);
+			}
+		else
+			{
+			resultUniversal = true;
+			spMinus(fNames, iOther.fNames, result);
+			}
+		}
+	else
+		{
+		if (iOther.fUniversal)
+			{
+			resultUniversal = true;
+			spMinus(iOther.fNames, fNames, result);
+			}
+		else
+			{
+			resultUniversal = false;
+			spOr(fNames, iOther.fNames, result);
+			}
+		}
+	return ZRelHead(resultUniversal, result, true);
 	}
 
 ZRelHead& ZRelHead::operator-=(const ZRelHead& iOther)
 	{
-	set<string> result;
-
-	set_difference(fNames.begin(), fNames.end(),
-		iOther.fNames.begin(), iOther.fNames.end(),
-		inserter(result, result.end()));
-
-	fNames.swap(result);
-
+	*this = *this - iOther;
 	return *this;
 	}
 
 ZRelHead ZRelHead::operator-(const ZRelHead& iOther) const
 	{
 	set<string> result;
-
-	set_difference(fNames.begin(), fNames.end(),
-		iOther.fNames.begin(), iOther.fNames.end(),
-		inserter(result, result.end()));
-
-	return ZRelHead(result, true);
+	bool resultUniversal;
+	if (fUniversal)
+		{
+		if (iOther.fUniversal)
+			{
+			resultUniversal = false;
+			set<string> result2;
+			spXor(fNames, iOther.fNames, result2);
+			spAnd(result2, iOther.fNames, result);
+			}
+		else
+			{
+			resultUniversal = true;
+			spOr(fNames, iOther.fNames, result);
+			}
+		}
+	else
+		{
+		if (iOther.fUniversal)
+			{
+			resultUniversal = false;
+			spAnd(fNames, iOther.fNames, result);
+			}
+		else
+			{
+			resultUniversal = false;
+			spMinus(fNames, iOther.fNames, result);
+			}
+		}
+	return ZRelHead(resultUniversal, result, true);
 	}
 
 ZRelHead& ZRelHead::operator^=(const ZRelHead& iOther)
 	{
-	set<string> result;
-
-	set_symmetric_difference(fNames.begin(), fNames.end(),
-		iOther.fNames.begin(), iOther.fNames.end(),
-		inserter(result, result.end()));
-
-	fNames.swap(result);
-
+	*this = *this ^ iOther;
 	return *this;
 	}
 
 ZRelHead ZRelHead::operator^(const ZRelHead& iOther) const
 	{
 	set<string> result;
-
-	set_symmetric_difference(fNames.begin(), fNames.end(),
-		iOther.fNames.begin(), iOther.fNames.end(),
-		inserter(result, result.end()));
-
-	return ZRelHead(result, true);
+	bool resultUniversal = fUniversal ^ iOther.fUniversal;
+	spXor(fNames, iOther.fNames, result);
+	return ZRelHead(resultUniversal, result, true);
 	}
 
 bool ZRelHead::Contains(const ZRelHead& iOther) const
 	{
-	return includes(fNames.begin(), fNames.end(),
-		iOther.fNames.begin(), iOther.fNames.end());
+	if (fUniversal)
+		{
+		if (iOther.fUniversal)
+			{
+			return spIncludes(iOther.fNames, fNames);
+			}
+		else
+			{
+			set<string> sect;
+			spAnd(fNames, iOther.fNames, sect);
+			return sect.empty();
+			}
+		}
+	else
+		{
+		if (iOther.fUniversal)
+			return false;
+		else
+			return spIncludes(fNames, iOther.fNames);
+		}
 	}
 
 bool ZRelHead::Contains(const string& iName) const
-	{ return fNames.end() != fNames.find(iName); }
+	{ return fUniversal != (fNames.end() != fNames.find(iName)); }
 
 void ZRelHead::Add(const string& iName)
 	{
 	if (fUniversal)
-		fNames.insert(iName);
-	else
 		fNames.erase(iName);
+	else
+		fNames.insert(iName);
 	}
 
 void ZRelHead::Remove(const string& iName)
 	{
 	if (fUniversal)
-		fNames.erase(iName);
-	else
 		fNames.insert(iName);
+	else
+		fNames.erase(iName);
 	}
 
 void ZRelHead::GetNames(bool& oUniversal, std::set<string>& oNames) const
