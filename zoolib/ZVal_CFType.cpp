@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
+#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZUtil_CFType.h"
 
 #include ZMACINCLUDE2(CoreFoundation,CFArray.h)
@@ -40,6 +41,19 @@ using ZUtil_CFType::sString;
 using ZUtil_CFType::sStringMutable;
 using ZUtil_CFType::sArrayMutable;
 using ZUtil_CFType::sDictionaryMutable;
+
+template<> int sCompare_T(const ZVal_CFType& iL, const ZVal_CFType& iR)
+	{ return sCompare_T(ZRef<CFTypeRef>(iL), ZRef<CFTypeRef>(iR)); }
+//	{ return iL.Compare(iR); }
+
+template<> int sCompare_T(const ZSeq_CFType& iL, const ZSeq_CFType& iR)
+	{ return sCompare_T(ZRef<CFTypeRef>(iL), ZRef<CFTypeRef>(iR)); }
+//	{ return iL.Compare(iR); }
+
+template<> int sCompare_T(const ZMap_CFType& iL, const ZMap_CFType& iR)
+	{ return sCompare_T(ZRef<CFTypeRef>(iL), ZRef<CFTypeRef>(iR)); }
+//	{ return iL.Compare(iR); }
+
 
 // =================================================================================================
 #pragma mark -

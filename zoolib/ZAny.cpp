@@ -27,8 +27,6 @@ using std::string;
 #pragma mark -
 #pragma mark * ZAnyBase, copied/reworked from boost::any
 
-#if ! ZCONFIG_SPI_Enabled(boost)
-
 NAMESPACE_ZOOLIB_BEGIN
 
 ZAnyBase::ZAnyBase()
@@ -60,9 +58,10 @@ bool ZAnyBase::empty() const
 const std::type_info& ZAnyBase::type() const
 	{ return content ? content->type() : typeid(void); }
 
-NAMESPACE_ZOOLIB_END
+int ZAnyBase::compare(const ZAnyBase& iOther) const
+	{ return content->compare(iOther.content); }
 
-#endif // ! ZCONFIG_SPI_Enabled(boost)
+NAMESPACE_ZOOLIB_END
 
 // =================================================================================================
 #pragma mark -

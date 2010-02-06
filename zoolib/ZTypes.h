@@ -24,11 +24,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCONFIG_SPI.h"
 
+#include "zoolib/ZCompare_T.h"
+#include "zoolib/ZStdInt.h"
+
 // Pull in definition of size_t, which is heavily used by zoolib.
 #include <stddef.h>
-
-// Incorporate standard int types.
-#include "zoolib/ZStdInt.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -76,6 +76,8 @@ struct ZPointPOD
 	int32 v;
 	};
 
+template <> int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR);
+
 struct ZRectPOD
 	{
 	int32 left;
@@ -83,6 +85,8 @@ struct ZRectPOD
 	int32 right;
 	int32 bottom;
 	};
+
+template <> int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR);
 
 // ==================================================
 
@@ -112,6 +116,9 @@ enum ZType
 //##	eZType_Name = 21
 	eZType_Max
 	};
+
+template <> inline int sCompare_T(const ZType& iL, const ZType& iR)
+	{ return int(iL) - int(iR); }
 
 const char* ZTypeAsString(ZType iType);
 
@@ -170,7 +177,16 @@ Adopt_T<P> Adopt(P iP)
 	{ return Adopt_T<P>(iP); }
 
 typedef void* VoidStar_t;
+
+template <> inline int sCompare_T(const VoidStar_t& iL, const VoidStar_t& iR)
+	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
+
 typedef const void* ConstVoidStar_t;
+
+template <> inline int sCompare_T(const ConstVoidStar_t& iL, const ConstVoidStar_t& iR)
+	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
+
+// ==================================================
 
 NAMESPACE_ZOOLIB_END
 

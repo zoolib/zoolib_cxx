@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2005 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,14 +18,31 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompare__
-#define __ZCompare__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZCompare_T.h"
+#include "zoolib/ZCompare_Integer.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-NAMESPACE_ZOOLIB_END
+template <> int sCompare_T(const bool& iL, const bool& iR);
+template <> int sCompare_T(const char& iL, const char& iR);
+template <> int sCompare_T(const unsigned char& iL, const unsigned char& iR);
+template <> int sCompare_T(const signed char& iL, const signed char& iR);
+template <> int sCompare_T(const short& iL, const short& iR);
+template <> int sCompare_T(const unsigned short& iL, const unsigned short& iR);
+template <> int sCompare_T(const int& iL, const int& iR);
+template <> int sCompare_T(const unsigned int& iL, const unsigned int& iR);
+template <> int sCompare_T(const long& iL, const long& iR);
+template <> int sCompare_T(const unsigned long& iL, const unsigned long& iR);
 
-#endif // __ZCompare__
+#if ZCONFIG(Compiler, MSVC)
+
+	template <> int sCompare_T(const __int64& iL, const __int64& iR);
+	template <> int sCompare_T(const unsigned __int64& iL, const unsigned __int64& iR);
+
+#else
+
+	template <> int sCompare_T(const long long& iL, const long long& iR);
+	template <> int sCompare_T(const unsigned long long& iL, const unsigned long long& iR);
+
+#endif
+
+NAMESPACE_ZOOLIB_END

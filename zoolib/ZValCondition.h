@@ -25,15 +25,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZExpr_Logical.h"
 #include "zoolib/ZValCondition_T.h"
-//#include "zoolib/ZVal_Any.h"
-#include "zoolib/ZVal_Zoolib.h"
+
+#include "zoolib/ZVal_Any.h"
+//#include "zoolib/ZVal_CFType.h"
+//#include "zoolib/ZVal_Zoolib.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-//typedef ZVal_Any ZVal_Expr;
-//typedef ZMap_Any ZMap_Expr;
-typedef ZVal_ZooLib ZVal_Expr;
-typedef ZMap_ZooLib ZMap_Expr;
+typedef ZVal_Any ZVal_Expr;
+typedef ZMap_Any ZMap_Expr;
+//typedef ZVal_CFType ZVal_Expr;
+//typedef ZMap_CFType ZMap_Expr;
+//typedef ZVal_ZooLib ZVal_Expr;
+//typedef ZMap_ZooLib ZMap_Expr;
 
 // =================================================================================================
 #pragma mark -

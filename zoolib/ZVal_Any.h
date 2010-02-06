@@ -130,6 +130,8 @@ public:
 	template <class Iterator>
 	ZSeq_Any(Iterator begin, Iterator end);
 
+	int Compare(const ZSeq_Any& iOther) const;
+
 // ZSeq protocol
 	size_t Count() const;
 
@@ -251,6 +253,8 @@ public:
 
 	template <class Iterator>
 	ZMap_Any(Iterator begin, Iterator end);
+
+	int Compare(const ZMap_Any& iOther) const;
 
 // ZMap protocol
 	void Clear();

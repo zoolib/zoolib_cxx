@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCompare_Vector__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZCompare.h"
+#include "zoolib/ZCompare_T.h"
 
 #include <vector>
 

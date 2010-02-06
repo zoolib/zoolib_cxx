@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2005 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,14 +18,19 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompare__
-#define __ZCompare__ 1
+#ifndef __ZCompare_String__
+#define __ZCompare_String__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZCompare_T.h"
 
+#include <string>
+
 NAMESPACE_ZOOLIB_BEGIN
+
+template <> int sCompare_T(const std::string& iL, const std::string& iR)
+	{ return iL.compare(iR); }
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZCompare__
+#endif // __ZCompare_String__

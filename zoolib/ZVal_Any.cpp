@@ -18,9 +18,20 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCompare_T.h"
+#include "zoolib/ZCompare_Vector.h"
 #include "zoolib/ZVal_Any.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+
+template<> int sCompare_T(const ZVal_Any& iL, const ZVal_Any& iR)
+	{ return iL.Compare(iR); }
+
+template<> int sCompare_T(const ZSeq_Any& iL, const ZSeq_Any& iR)
+	{ return iL.Compare(iR); }
+
+template<> int sCompare_T(const ZMap_Any& iL, const ZMap_Any& iR)
+	{ return iL.Compare(iR); }
 
 // =================================================================================================
 #pragma mark -
@@ -90,6 +101,29 @@ size_t ZSeq_Any::Count() const
 	if (fRep)
 		return fRep->fVector.size();
 	return 0;
+	}
+
+int ZSeq_Any::Compare(const ZSeq_Any& iOther) const
+	{
+	if (fRep)
+		{
+		if (iOther.fRep)
+			{
+			return sCompare_T(fRep->fVector, iOther.fRep->fVector);
+			}
+		else
+			{
+			return 1;
+			}
+		}
+	else if (iOther.fRep)
+		{
+		return -1;
+		}
+	else
+		{
+		return 0;
+		}
 	}
 
 void ZSeq_Any::Clear()
@@ -236,6 +270,92 @@ ZMap_Any& ZMap_Any::operator=(map<string, ZVal_Any>& iOther)
 	{
 	fRep = new Rep(iOther.begin(), iOther.end());
 	return *this;
+	}
+
+int ZMap_Any::Compare(const ZMap_Any& iOther) const
+	{
+	if (fRep == iOther.fRep)
+		{
+		// We share the same rep, so we're identical.
+		return 0;
+		}
+
+	if (!fRep)
+		{
+		// We have no rep, and iOther must have a rep (or fRep would be == iOther.fRep).
+		if (iOther.fRep->fMap.empty())
+			{
+			// And iOther's map is empty, we're equivalent.
+			return 0;
+			}
+		else
+			{
+			// iOther has properties, so we're less than it.
+			return -1;
+			}
+		}
+
+	if (!iOther.fRep)
+		{
+		// iOther has no rep.
+		if (fRep->fMap.empty())
+			{
+			// And our map is empty, so we're equivalent.
+			return 0;
+			}
+		else
+			{
+			// We have properties, so we're greater than iOther.
+			return 1;
+			}
+		}
+
+	for (map<string, ZVal_Any>::const_iterator iterThis = fRep->fMap.begin(),
+		iterOther = iOther.fRep->fMap.begin(),
+		endThis = fRep->fMap.end(),
+		endOther = iOther.fRep->fMap.end();
+		/*no test*/; ++iterThis, ++iterOther)
+		{
+		if (iterThis != endThis)
+			{
+			// This is not exhausted.
+			if (iterOther != endOther)
+				{
+				// Other is not exhausted either, so we compare their current values.
+				if (int compare = sCompare_T<string>((*iterThis).first, (*iterOther).first))
+					{
+					// The names are different.
+					return compare;
+					}
+				if (int compare = sCompare_T<ZVal_Any>((*iterThis).second, (*iterOther).second))
+					{
+					// The values are different.
+					return compare;
+					}
+				}
+			else
+				{
+				// Exhausted other, but still have this
+				// remaining, so this is greater than other.
+				return 1;
+				}
+			}
+		else
+			{
+			// Exhausted this.
+			if (iterOther != endOther)
+				{
+				// Still have other remaining, so this is less than other.
+				return -1;
+				}
+			else
+				{
+				// Exhausted other. And as this is also
+				// exhausted this equals other.
+				return 0;
+				}
+			}
+		}
 	}
 
 void ZMap_Any::Clear()

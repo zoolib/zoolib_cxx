@@ -22,6 +22,34 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+// =================================================================================================
+#pragma mark -
+#pragma mark *
+
+template <>
+int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR)
+	{
+	if (int compare = sCompare_T(iL.left, iR.left))
+		return compare;
+	if (int compare = sCompare_T(iL.top, iR.top))
+		return compare;
+	if (int compare = sCompare_T(iL.right, iR.right))
+		return compare;
+	return sCompare_T(iL.bottom, iR.bottom);
+	}
+
+template <>
+int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR)
+	{
+	if (int compare = sCompare_T(iL.h, iR.h))
+		return compare;
+	return sCompare_T(iL.v, iR.v);
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark *
+
 /** \defgroup group_Types Types
 Although the standard library defines a range of integer types in cstdint,
 older versions of the library may not define the complete range, or 

@@ -138,12 +138,16 @@ NAMESPACE_ZOOLIB_BEGIN
 
 template <int size> struct ZIntTrait_T;
 
-template <> struct ZIntTrait_T<4> { enum { eIs32Bit = 1 }; };
-template <> struct ZIntTrait_T<8> { enum { eIs32Bit = 0 }; };
+template <> struct ZIntTrait_T<4> { enum { eIs32Bit = 1, eIs64Bit = 0 }; };
+template <> struct ZIntTrait_T<8> { enum { eIs32Bit = 0, eIs64Bit = 1 }; };
 
 enum { ZLongIs32Bit = ZIntTrait_T<sizeof(long)>::eIs32Bit };
 
 enum { ZIntIs32Bit = ZIntTrait_T<sizeof(int)>::eIs32Bit };
+
+enum { ZLongIs64Bit = ZIntTrait_T<sizeof(long)>::eIs64Bit };
+
+enum { ZIntIs64Bit = ZIntTrait_T<sizeof(int)>::eIs64Bit };
 
 NAMESPACE_ZOOLIB_END
 

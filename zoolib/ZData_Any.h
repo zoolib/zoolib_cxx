@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZAny.h"
+#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZRef.h"
 
@@ -73,7 +74,6 @@ private:
 	ZRef<Rep> fRep;
 	};
 
-template <class T> int sCompare_T(const T& iL, const T& iR);
 template <> inline int sCompare_T(const ZData_Any& iL, const ZData_Any& iR)
 	{ return iL.Compare(iR); }
 

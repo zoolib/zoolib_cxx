@@ -28,7 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-
 typedef ZExprRep_ValCondition_T<ZVal_Expr> ZExprRep_ValCondition;
 
 typedef ZVisitor_ExprRep_ValCondition_T<ZVal_Expr> ZVisitor_ExprRep_ValCondition;

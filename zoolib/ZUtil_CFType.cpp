@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
+#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZTime.h"
 
 #include ZMACINCLUDE2(CoreFoundation,CFArray.h)
@@ -439,6 +440,12 @@ ZRef<CFTypeRef> sAsCFType(const ZAny& iVal)
 	{ return sAsCFType(ZRef<CFTypeRef>(), iVal); }
 
 } // namespace ZUtil_CFType
+
+// Urgh. Inefficient but usable for now.
+template <> int sCompare_T(const ZRef<CFTypeRef>& iLHS, const ZRef<CFTypeRef>& iRHS)
+	{
+	return sCompare_T<ZAny>(ZUtil_CFType::sAsAny(ZAny(), iLHS), ZUtil_CFType::sAsAny(ZAny(), iRHS));
+	}
 
 NAMESPACE_ZOOLIB_END
 

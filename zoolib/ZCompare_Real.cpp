@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2005 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,14 +18,48 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompare__
-#define __ZCompare__ 1
-#include "zconfig.h"
+#include "zoolib/ZCompare_Real.h"
 
-#include "zoolib/ZCompare_T.h"
+#include "zoolib/ZCompat_cmath.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-NAMESPACE_ZOOLIB_END
+// To provide stable ordering between floating point values we
+// arbitrarily say that a nan is less than any non-nan value.
+template <>
+int sCompare_T(const float& iL, const float& iR)
+	{
+	if (isnan(iL))
+		{
+		if (isnan(iR))
+			return 0;
+		return -1;
+		}
+	else if (isnan(iR))
+		return 1;
+	else if (iL < iR)
+		return -1;
+	else if (iL > iR)
+		return 1;
+	return 0;
+	}
 
-#endif // __ZCompare__
+template <>
+int sCompare_T(const double& iL, const double& iR)
+	{
+	if (isnan(iL))
+		{
+		if (isnan(iR))
+			return 0;
+		return -1;
+		}
+	else if (isnan(iR))
+		return 1;
+	else if (iL < iR)
+		return -1;
+	else if (iL > iR)
+		return 1;
+	return 0;
+	}
+
+NAMESPACE_ZOOLIB_END

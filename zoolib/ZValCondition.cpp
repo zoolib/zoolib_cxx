@@ -23,13 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-
-template <> inline int sCompare_T(const ZVal_Any& iL, const ZVal_Any& iR)
-	{
-	ZUnimplemented();
-	return &iL < &iR;
-	}
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Explicit instantiations
