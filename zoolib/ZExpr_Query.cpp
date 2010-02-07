@@ -109,68 +109,12 @@ const vector<ZVal_Expr>& ZExprRep_Query_Explicit::GetVals()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExprRep_Query_Restrict
-
-ZExprRep_Query_Restrict::ZExprRep_Query_Restrict(
-	const ZValCondition& iValCondition, const ZRef<ZExprRep_Relation>& iExpr)
-:	fValCondition(iValCondition)
-,	fExpr(iExpr)
-	{}
-
-ZExprRep_Query_Restrict::~ZExprRep_Query_Restrict()
-	{}
-
-ZRelHead ZExprRep_Query_Restrict::GetRelHead()
-	{ return fExpr->GetRelHead() | fValCondition.GetRelHead(); }
-	
-bool ZExprRep_Query_Restrict::Accept(ZVisitor_ExprRep_Query& iVisitor)
-	{ return iVisitor.Visit_Restrict(this); }
-
-ZValCondition ZExprRep_Query_Restrict::GetValCondition()
-	{ return fValCondition; }
-
-ZRef<ZExprRep_Relation> ZExprRep_Query_Restrict::GetExpr()
-	{ return fExpr; }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZExprRep_Query_Select
-
-ZExprRep_Query_Select::ZExprRep_Query_Select(
-	const ZRef<ZExprRep_Logical>& iExpr_Logical, const ZRef<ZExprRep_Relation>& iExpr_Relation)
-:	fExpr_Logical(iExpr_Logical)
-,	fExpr_Relation(iExpr_Relation)
-	{}
-
-ZExprRep_Query_Select::~ZExprRep_Query_Select()
-	{}
-
-ZRelHead ZExprRep_Query_Select::GetRelHead()
-	{ return sGetRelHead(fExpr_Logical) | fExpr_Relation->GetRelHead(); }
-
-bool ZExprRep_Query_Select::Accept(ZVisitor_ExprRep_Query& iVisitor)
-	{ return iVisitor.Visit_Select(this); }
-
-ZRef<ZExprRep_Logical> ZExprRep_Query_Select::GetExpr_Logical()
-	{ return fExpr_Logical; }
-
-ZRef<ZExprRep_Relation> ZExprRep_Query_Select::GetExpr_Relation()
-	{ return fExpr_Relation; }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZVisitor_ExprRep_Query
 
 bool ZVisitor_ExprRep_Query::Visit_All(ZRef<ZExprRep_Query_All> iRep)
 	{ return ZVisitor_ExprRep_Relation::Visit(iRep); }
 
 bool ZVisitor_ExprRep_Query::Visit_Explicit(ZRef<ZExprRep_Query_Explicit> iRep)
-	{ return ZVisitor_ExprRep_Relation::Visit(iRep); }
-
-bool ZVisitor_ExprRep_Query::Visit_Restrict(ZRef<ZExprRep_Query_Restrict> iRep)
-	{ return ZVisitor_ExprRep_Relation::Visit(iRep); }
-
-bool ZVisitor_ExprRep_Query::Visit_Select(ZRef<ZExprRep_Query_Select> iRep)
 	{ return ZVisitor_ExprRep_Relation::Visit(iRep); }
 
 // =================================================================================================
@@ -218,30 +162,6 @@ ZExpr_Query sExplicit(const ZVal_Expr* iVals, size_t iCount)
 
 ZExpr_Query sExplicit(const vector<ZVal_Expr>& iVals)
 	{ return ZExpr_Query(new ZExprRep_Query_Explicit(iVals)); }
-
-ZExpr_Query sSelect(const ZExpr_Relation& iExpr_Relation, const ZExpr_Logical& iExpr_Logical)
-	{ return ZExpr_Query(new ZExprRep_Query_Select(iExpr_Logical, iExpr_Relation)); }
-
-ZExpr_Query sSelect(const ZExpr_Logical& iExpr_Logical, const ZExpr_Relation& iExpr_Relation)
-	{ return ZExpr_Query(new ZExprRep_Query_Select(iExpr_Logical, iExpr_Relation)); }
-
-ZExpr_Query operator&(const ZExpr_Relation& iExpr_Relation, const ZExpr_Logical& iExpr_Logical)
-	{ return ZExpr_Query(new ZExprRep_Query_Select(iExpr_Logical, iExpr_Relation)); }
-
-ZExpr_Query operator&(const ZExpr_Logical& iExpr_Logical, const ZExpr_Relation& iExpr_Relation)
-	{ return ZExpr_Query(new ZExprRep_Query_Select(iExpr_Logical, iExpr_Relation)); }
-
-ZExpr_Query operator&(const ZExpr_Relation& iExpr_Relation, const ZValCondition& iValCondition)
-	{
-	return ZExpr_Query(
-		new ZExprRep_Query_Select(new ZExprRep_ValCondition(iValCondition), iExpr_Relation));
-	}
-
-ZExpr_Query operator&(const ZValCondition& iValCondition, const ZExpr_Relation& iExpr_Relation)
-	{
-	return ZExpr_Query(
-		new ZExprRep_Query_Select(new ZExprRep_ValCondition(iValCondition), iExpr_Relation));
-	}
 
 // =================================================================================================
 #pragma mark -
@@ -295,13 +215,13 @@ bool ZQueryTransformer::Visit_Explicit(ZRef<ZExprRep_Query_Explicit> iRep)
 	return true;
 	}
 
-bool ZQueryTransformer::Visit_Restrict(ZRef<ZExprRep_Query_Restrict> iRep)
+bool ZQueryTransformer::Visit_Restrict(ZRef<ZExprRep_Restrict> iRep)
 	{
 	fResult = this->Transform_Restrict(iRep);
 	return true;
 	}
 
-bool ZQueryTransformer::Visit_Select(ZRef<ZExprRep_Query_Select> iRep)
+bool ZQueryTransformer::Visit_Select(ZRef<ZExprRep_Select> iRep)
 	{
 	fResult = this->Transform_Select(iRep);
 	return true;
@@ -364,16 +284,16 @@ ZRef<ZExprRep_Relation> ZQueryTransformer::Transform_Rename(
 	return new ZExprRep_Relation_Rename(newRep, iRep->GetOld(), iRep->GetNew());
 	}
 
-ZRef<ZExprRep_Relation> ZQueryTransformer::Transform_Restrict(ZRef<ZExprRep_Query_Restrict> iRep)
+ZRef<ZExprRep_Relation> ZQueryTransformer::Transform_Restrict(ZRef<ZExprRep_Restrict> iRep)
 	{
 	ZRef<ZExprRep_Relation> newRep = this->Transform(iRep->GetExpr());
-	return new ZExprRep_Query_Restrict(iRep->GetValCondition(), newRep);
+	return new ZExprRep_Restrict(iRep->GetValCondition(), newRep);
 	}
 
-ZRef<ZExprRep_Relation> ZQueryTransformer::Transform_Select(ZRef<ZExprRep_Query_Select> iRep)
+ZRef<ZExprRep_Relation> ZQueryTransformer::Transform_Select(ZRef<ZExprRep_Select> iRep)
 	{
 	ZRef<ZExprRep_Relation> newRep = this->Transform(iRep->GetExpr_Relation());
-	return new ZExprRep_Query_Select(iRep->GetExpr_Logical(), newRep);
+	return new ZExprRep_Select(iRep->GetExpr_Logical(), newRep);
 	}
 
 ZRef<ZExprRep_Relation> ZQueryTransformer::Transform_Union(ZRef<ZExprRep_Relation_Union> iRep)

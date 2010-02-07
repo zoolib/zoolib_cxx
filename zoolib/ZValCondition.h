@@ -26,18 +26,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZExpr_Logical.h"
 #include "zoolib/ZValCondition_T.h"
 
-#include "zoolib/ZVal_Any.h"
+//#include "zoolib/ZVal_Any.h"
 //#include "zoolib/ZVal_CFType.h"
-//#include "zoolib/ZVal_Zoolib.h"
+#include "zoolib/ZVal_Zoolib.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-typedef ZVal_Any ZVal_Expr;
-typedef ZMap_Any ZMap_Expr;
+//typedef ZVal_Any ZVal_Expr;
+//typedef ZMap_Any ZMap_Expr;
 //typedef ZVal_CFType ZVal_Expr;
 //typedef ZMap_CFType ZMap_Expr;
-//typedef ZVal_ZooLib ZVal_Expr;
-//typedef ZMap_ZooLib ZMap_Expr;
+typedef ZVal_ZooLib ZVal_Expr;
+typedef ZMap_ZooLib ZMap_Expr;
 
 // =================================================================================================
 #pragma mark -
@@ -46,15 +46,23 @@ typedef ZMap_Any ZMap_Expr;
 typedef ZValCondition_T<ZVal_Expr> ZValCondition;
 typedef ZValComparand_T<ZVal_Expr> ZValComparand;
 
-ZValComparand CConst(const char* iVal);
-ZValComparand CConst(const ZVal_Expr& iVal);
+inline ZValComparand CConst(const char* iVal)
+	{ return CConst_T<ZVal_Expr>(iVal); }
 
-ZValComparand CName(const std::string& iName);
-ZValComparand CTrail(const ZTrail& iTrail);
+inline ZValComparand CConst(const ZVal_Expr& iVal)
+	{ return CConst_T<ZVal_Expr>(iVal); }
 
-ZValComparand CVal();
+inline ZValComparand CName(const std::string& iName)
+	{ return CName_T<ZVal_Expr>(iName); }
 
-ZValComparand CVar(const std::string& iVarName);
+inline ZValComparand CTrail(const ZTrail& iTrail)
+	{ return CTrail_T<ZVal_Expr>(iTrail); }
+
+inline ZValComparand CVal()
+	{ return CVal_T<ZVal_Expr>(); }
+
+inline ZValComparand CVar(const std::string& iVarName)
+	{ return CVar_T<ZVal_Expr>(iVarName); }
 
 NAMESPACE_ZOOLIB_END
 

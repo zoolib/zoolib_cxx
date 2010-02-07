@@ -23,9 +23,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Relation.h"
+#include "zoolib/ZExpr_Restrict_T.h"
+#include "zoolib/ZExpr_Select.h"
 #include "zoolib/ZValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+
+typedef ZExpr_Restrict_T<ZVal_Expr> ZExpr_Restrict;
+typedef ZExprRep_Restrict_T<ZVal_Expr> ZExprRep_Restrict;
+typedef ZVisitor_ExprRep_Restrict_T<ZVal_Expr> ZVisitor_ExprRep_Restrict;
 
 class ZVisitor_ExprRep_Query;
 
@@ -101,70 +107,13 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExprRep_Query_Restrict
-
-class ZExprRep_Query_Restrict : public ZExprRep_Query
-	{
-public:
-	ZExprRep_Query_Restrict(
-		const ZValCondition& iValCondition, const ZRef<ZExprRep_Relation>& iExpr);
-
-	virtual ~ZExprRep_Query_Restrict();
-
-// From ZExprRep_Relation via ZExprRep_Query
-	virtual ZRelHead GetRelHead();
-
-// From ZExprRep_Query
-	virtual bool Accept(ZVisitor_ExprRep_Query& iVisitor);
-
-// Our protocol
-	ZValCondition GetValCondition();
-	ZRef<ZExprRep_Relation> GetExpr();
-
-private:
-	const ZValCondition fValCondition;
-	const ZRef<ZExprRep_Relation> fExpr;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZExprRep_Query_Select
-
-class ZExprRep_Query_Select : public ZExprRep_Query
-	{
-public:
-	ZExprRep_Query_Select(
-		const ZRef<ZExprRep_Logical>& iExpr_Logical,
-		const ZRef<ZExprRep_Relation>& iExpr_Relation);
-
-	virtual ~ZExprRep_Query_Select();
-
-// From ZExprRep_Relation via ZExprRep_Query
-	virtual ZRelHead GetRelHead();
-
-// From ZExprRep_Query
-	virtual bool Accept(ZVisitor_ExprRep_Query& iVisitor);
-
-// Our protocol
-	ZRef<ZExprRep_Logical> GetExpr_Logical();
-	ZRef<ZExprRep_Relation> GetExpr_Relation();
-
-private:
-	const ZRef<ZExprRep_Logical> fExpr_Logical;
-	const ZRef<ZExprRep_Relation> fExpr_Relation;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZVisitor_ExprRep_Query
 
-class ZVisitor_ExprRep_Query : public ZVisitor_ExprRep_Relation
+class ZVisitor_ExprRep_Query : public virtual ZVisitor_ExprRep_Relation
 	{
 public:
 	virtual bool Visit_All(ZRef<ZExprRep_Query_All> iRep);
 	virtual bool Visit_Explicit(ZRef<ZExprRep_Query_Explicit> iRep);
-	virtual bool Visit_Restrict(ZRef<ZExprRep_Query_Restrict> iRep);
-	virtual bool Visit_Select(ZRef<ZExprRep_Query_Select> iRep);
 	};
 
 // =================================================================================================
@@ -203,23 +152,14 @@ ZExpr_Query sExplicit(const ZVal_Expr* iVals, size_t iCount);
 
 ZExpr_Query sExplicit(const std::vector<ZVal_Expr>& iVals);
 
-ZExpr_Query sSelect(const ZExpr_Relation& iExpr_Relation, const ZExpr_Logical& iExpr_Logical);
-
-ZExpr_Query sSelect(const ZExpr_Logical& iExpr_Logical, const ZExpr_Relation& iExpr_Relation);
-
-ZExpr_Query operator&(const ZExpr_Relation& iExpr_Relation, const ZExpr_Logical& iExpr_Logical);
-
-ZExpr_Query operator&(const ZExpr_Logical& iExpr_Logical, const ZExpr_Relation& iExpr_Relation);
-
-ZExpr_Query operator&(const ZExpr_Relation& iExpr_Relation, const ZValCondition& iValCondition);
-
-ZExpr_Query operator&(const ZValCondition& iValCondition, const ZExpr_Relation& iExpr_Relation);
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZQueryTransformer
 
-class ZQueryTransformer : public ZVisitor_ExprRep_Query
+class ZQueryTransformer
+:	public ZVisitor_ExprRep_Query
+,	public ZVisitor_ExprRep_Restrict
+,	public ZVisitor_ExprRep_Select
 	{
 public:
 // From ZVisitor_ExprRep_Relation via ZVisitor_ExprRep_Query
@@ -233,8 +173,12 @@ public:
 // From ZVisitor_ExprRep_Query
 	virtual bool Visit_All(ZRef<ZExprRep_Query_All> iRep);
 	virtual bool Visit_Explicit(ZRef<ZExprRep_Query_Explicit> iRep);
-	virtual bool Visit_Restrict(ZRef<ZExprRep_Query_Restrict> iRep);
-	virtual bool Visit_Select(ZRef<ZExprRep_Query_Select> iRep);
+
+// From ZVisitor_ExprRep_Restrict
+	virtual bool Visit_Restrict(ZRef<ZExprRep_Restrict> iRep);
+
+// From ZVisitor_ExprRep_Select
+	virtual bool Visit_Select(ZRef<ZExprRep_Select> iRep);
 
 // Our protocol
 	ZRef<ZExprRep_Relation> Transform(ZRef<ZExprRep_Relation> iRep);
@@ -246,8 +190,8 @@ public:
 	virtual ZRef<ZExprRep_Relation> Transform_Join(ZRef<ZExprRep_Relation_Join> iRep);
 	virtual ZRef<ZExprRep_Relation> Transform_Project(ZRef<ZExprRep_Relation_Project> iRep);
 	virtual ZRef<ZExprRep_Relation> Transform_Rename(ZRef<ZExprRep_Relation_Rename> iRep);
-	virtual ZRef<ZExprRep_Relation> Transform_Restrict(ZRef<ZExprRep_Query_Restrict> iRep);
-	virtual ZRef<ZExprRep_Relation> Transform_Select(ZRef<ZExprRep_Query_Select> iRep);
+	virtual ZRef<ZExprRep_Relation> Transform_Restrict(ZRef<ZExprRep_Restrict> iRep);
+	virtual ZRef<ZExprRep_Relation> Transform_Select(ZRef<ZExprRep_Select> iRep);
 	virtual ZRef<ZExprRep_Relation> Transform_Union(ZRef<ZExprRep_Relation_Union> iRep);
 
 private:

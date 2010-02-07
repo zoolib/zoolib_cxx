@@ -143,7 +143,7 @@ public:
 #pragma mark -
 #pragma mark * ZVisitor_ExprRep_Logical
 
-class ZVisitor_ExprRep_Logical : public ZVisitor_ExprRep
+class ZVisitor_ExprRep_Logical : public virtual ZVisitor_ExprRep
 	{
 public:
 	virtual bool Visit_Logical_True(ZRef<ZExprRep_Logical_True> iRep);

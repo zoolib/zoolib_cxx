@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,82 +18,88 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYad_Std__
-#define __ZYad_Std__ 1
+#ifndef __ZExpr_Select__
+#define __ZExpr_Select__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZAny.h"
-#include "zoolib/ZYad.h"
+#include "zoolib/ZExpr_Relation.h"
+#include "zoolib/ZValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
+class ZVisitor_ExprRep_Select;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadParseException_Std
+#pragma mark * ZExprRep_Select
 
-class ZYadParseException_Std : public ZYadParseException
+class ZExprRep_Select : public ZExprRep_Relation
 	{
 public:
-	ZYadParseException_Std(const std::string& iWhat);
-	ZYadParseException_Std(const char* iWhat);
-	};
+	ZExprRep_Select(
+		const ZRef<ZExprRep_Logical>& iExpr_Logical,
+		const ZRef<ZExprRep_Relation>& iExpr_Relation);
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadPrimR_Std
+	virtual ~ZExprRep_Select();
 
-typedef ZYadPrimR_Any ZYadPrimR_Std;
+// From ZExprRep_Relation
+	virtual bool Accept(ZVisitor_ExprRep_Relation& iVisitor);
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZYadSeqR_Std
-
-class ZYadSeqR_Std
-:	public ZYadSeqR
-	{
-public:
-	ZYadSeqR_Std();
-	ZYadSeqR_Std(bool iFinished);
-
-// From ZYadR
-	virtual void Finish();
-
-// From ZYadSeqR
-	virtual ZRef<ZYadR> ReadInc();
+	virtual ZRelHead GetRelHead();
 
 // Our protocol
-	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR) = 0;
+	virtual bool Accept(ZVisitor_ExprRep_Select& iVisitor);
+
+	ZRef<ZExprRep_Logical> GetExpr_Logical();
+	ZRef<ZExprRep_Relation> GetExpr_Relation();
 
 private:
-	bool fStarted;
-	ZRef<ZYadR> fValue;
+	const ZRef<ZExprRep_Logical> fExpr_Logical;
+	const ZRef<ZExprRep_Relation> fExpr_Relation;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadMapR_Std
+#pragma mark * ZVisitor_ExprRep_Select
 
-class ZYadMapR_Std
-:	public ZYadMapR
+class ZVisitor_ExprRep_Select : public virtual ZVisitor_ExprRep_Relation
 	{
 public:
-	ZYadMapR_Std();
-	ZYadMapR_Std(bool iFinished);
-
-// From ZYadR
-	virtual void Finish();
-
-// From ZYadMapR
-	virtual ZRef<ZYadR> ReadInc(std::string& oName);
-
-// Our protocol
-	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR) = 0;
-
-private:
-	bool fStarted;
-	ZRef<ZYadR> fValue;
+	virtual bool Visit_Select(ZRef<ZExprRep_Select> iRep);
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZExpr_Select
+
+class ZExpr_Select : public ZExpr_Relation
+	{
+	typedef ZExpr_Relation inherited;
+
+	ZExpr_Select operator=(const ZExpr_Relation&);
+	ZExpr_Select operator=(const ZRef<ZExprRep_Relation>&);
+
+public:
+	ZExpr_Select();
+	ZExpr_Select(const ZExpr_Select& iOther);
+	~ZExpr_Select();
+	ZExpr_Select& operator=(const ZExpr_Select& iOther);
+
+	ZExpr_Select(const ZRef<ZExprRep_Select>& iRep);
+
+	operator ZRef<ZExprRep_Select>() const;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Query operators
+
+ZExpr_Select sSelect(const ZExpr_Logical& iExpr_Logical, const ZExpr_Relation& iExpr_Relation);
+
+ZExpr_Select operator&(const ZExpr_Logical& iExpr_Logical, const ZExpr_Relation& iExpr_Relation);
+
+ZExpr_Select operator&(const ZExpr_Relation& iExpr_Relation, const ZExpr_Logical& iExpr_Logical);
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZYad_Std__
+#endif // __ZExpr_Select__

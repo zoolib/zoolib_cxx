@@ -182,7 +182,7 @@ public:
 #pragma mark -
 #pragma mark * ZVisitor_ExprRep_Relation
 
-class ZVisitor_ExprRep_Relation : public ZVisitor_ExprRep
+class ZVisitor_ExprRep_Relation : public virtual ZVisitor_ExprRep
 	{
 public:
 	virtual bool Visit_Difference(ZRef<ZExprRep_Relation_Difference> iRep);
