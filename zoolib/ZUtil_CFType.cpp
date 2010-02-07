@@ -441,10 +441,10 @@ ZRef<CFTypeRef> sAsCFType(const ZAny& iVal)
 
 } // namespace ZUtil_CFType
 
-// Urgh. Inefficient but usable for now.
 template <> int sCompare_T(const ZRef<CFTypeRef>& iLHS, const ZRef<CFTypeRef>& iRHS)
 	{
-	return sCompare_T<ZAny>(ZUtil_CFType::sAsAny(ZAny(), iLHS), ZUtil_CFType::sAsAny(ZAny(), iRHS));
+	ZUnimplemented();
+	return 0;
 	}
 
 NAMESPACE_ZOOLIB_END
