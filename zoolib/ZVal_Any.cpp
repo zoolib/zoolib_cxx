@@ -37,6 +37,15 @@ template<> int sCompare_T(const ZMap_Any& iL, const ZMap_Any& iR)
 #pragma mark -
 #pragma mark * ZVal_Any typename accessors
 
+int ZVal_Any::Compare(const ZVal_Any& iOther) const
+	{
+	if (int compare = strcmp(this->type().name(), iOther.type().name()))
+		return compare;
+	ZUnimplemented();
+	return this < &iOther ? -1 : this > &iOther ? 1 : 0;
+//	return sCompare_T<ValueType>(held, static_cast<holder*>(iOther)->held);	
+	}
+
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Data, ZData_Any)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Seq, ZSeq_Any)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Map, ZMap_Any)

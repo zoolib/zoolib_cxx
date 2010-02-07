@@ -21,15 +21,40 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZAny__
 #define __ZAny__
 #include "zconfig.h"
+#include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZStdInt.h" // For int64
-#include <string.h> // For strcmp
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZAny as a typedef of boost::any
+
+#if ZCONFIG_SPI_Enabled(boost)
+
+#include "boost/any.hpp"
+
+NAMESPACE_ZOOLIB_BEGIN
+
+typedef boost::any ZAnyBase;
+
+template<typename ValueType>
+ValueType* ZAnyBaseCast(ZAnyBase* operand)
+	{ return boost::any_cast<ValueType>(operand); }
+
+template<typename ValueType>
+const ValueType* ZAnyBaseCast(const ZAnyBase* operand)
+	{ return boost::any_cast<ValueType>(operand); }
+
+NAMESPACE_ZOOLIB_END
+
+#endif // ZCONFIG_SPI_Enabled(boost)
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZAnyBase, copied/reworked from boost::any
+
+#if ! ZCONFIG_SPI_Enabled(boost)
 
 // Copyright Kevlin Henney, 2000, 2001, 2002. All rights reserved.
 //
@@ -74,7 +99,6 @@ public:
 
 	bool empty() const;
 	const std::type_info & type() const;
-	int compare(const ZAnyBase& iOther) const;
 
 private:
 	class placeholder
@@ -84,7 +108,6 @@ private:
 
 		virtual const std::type_info& type() const = 0;
 		virtual placeholder* clone() const = 0;
-		virtual int compare(placeholder* iOther) const = 0;
 		};
 
 	template<typename ValueType>
@@ -98,13 +121,6 @@ private:
 
 		virtual placeholder* clone() const
 			{ return new holder(held); }
-
-		virtual int compare(placeholder* iOther) const
-			{
-			if (int compare = strcmp(this->type().name(), iOther->type().name()))
-				return compare;
-			return sCompare_T<ValueType>(held, static_cast<holder*>(iOther)->held);
-			}
 
 		ValueType held;
 
@@ -144,6 +160,8 @@ const ValueType* ZAnyBaseCast(const ZAnyBase* operand)
 
 NAMESPACE_ZOOLIB_END
 
+#endif // ! ZCONFIG_SPI_Enabled(boost)
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZAny
@@ -163,9 +181,6 @@ public:
 
 	const std::type_info & type() const
 		{ return ZAnyBase::type(); }
-
-	int Compare(const ZAny& iOther) const
-		{ return ZAnyBase::compare(iOther); }
 
 	ZAny()
 		{}
@@ -250,9 +265,6 @@ ValueType* ZAnyCast(ZAny* operand)
 template<typename ValueType>
 const ValueType* ZAnyCast(const ZAny* operand)
 	{ return operand->PGet_T<ValueType>(); }
-
-template <> inline int sCompare_T(const ZAny& iL, const ZAny& iR)
-	{ return iL.Compare(iR); }
 
 NAMESPACE_ZOOLIB_END
 

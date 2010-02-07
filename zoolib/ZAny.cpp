@@ -27,6 +27,8 @@ using std::string;
 #pragma mark -
 #pragma mark * ZAnyBase, copied/reworked from boost::any
 
+#if ! ZCONFIG_SPI_Enabled(boost)
+
 NAMESPACE_ZOOLIB_BEGIN
 
 ZAnyBase::ZAnyBase()
@@ -58,10 +60,9 @@ bool ZAnyBase::empty() const
 const std::type_info& ZAnyBase::type() const
 	{ return content ? content->type() : typeid(void); }
 
-int ZAnyBase::compare(const ZAnyBase& iOther) const
-	{ return content->compare(iOther.content); }
-
 NAMESPACE_ZOOLIB_END
+
+#endif // ! ZCONFIG_SPI_Enabled(boost)
 
 // =================================================================================================
 #pragma mark -
@@ -88,12 +89,6 @@ NAMESPACE_ZOOLIB_BEGIN
 
 bool sQCoerceBool(const ZAny& iAny, bool& oVal)
 	{
-	if (const bool* asBool = iAny.PGet_T<bool>())
-		{
-		oVal = *asBool;
-		return true;
-		}
-
 	int64 asInt64;
 	if (sQCoerceInt(iAny, asInt64))
 		{
@@ -221,8 +216,8 @@ bool sQCoerceReal(const ZAny& iAny, double& oVal)
 
 double sDCoerceReal(double iDefault, const ZAny& iAny)
 	{
-	double result;
-	if (sQCoerceReal(iAny, result))
+	int64 result;
+	if (sQCoerceInt(iAny, result))
 		return result;
 	return iDefault;
 	}

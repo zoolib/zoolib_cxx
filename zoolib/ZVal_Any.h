@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZAny.h"
+#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZRef_Counted.h"
@@ -92,6 +93,8 @@ public:
 		ZAny::operator=(iVal);
 		return *this;
 		}
+
+	int Compare(const ZVal_Any& iOther) const;
 
 // Typename accessors
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Data, ZData_Any)
