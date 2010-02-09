@@ -795,7 +795,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 						}
 					this->Guest_HandleEvent(&theER);
 
-					for (;true;)
+					for (;;)
 						{
 						MouseTrackingResult	theResult;
 						UInt32 theModifiers;
