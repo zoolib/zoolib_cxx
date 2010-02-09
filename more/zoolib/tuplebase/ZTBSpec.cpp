@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/tuplebase/ZTBSpec.h"
 
-#include "zoolib/ZCompare.h"
+#include "zoolib/ZCompare_Vector.h"
 #include "zoolib/ZRegex.h"
 #include "zoolib/ZStream.h"
 #include "zoolib/ZTextCollator.h"
@@ -1057,8 +1057,7 @@ int ZTBSpec::Compare(const ZTBSpec& iOther) const
 		}
 	else
 		{
-		return sCompare_T(fRep->fCriterionUnion.begin(), fRep->fCriterionUnion.end(),
-			iOther.fRep->fCriterionUnion.begin(), iOther.fRep->fCriterionUnion.end());
+		return sCompare_T(fRep->fCriterionUnion, iOther.fRep->fCriterionUnion);
 		}
 	}
 
