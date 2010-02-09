@@ -25,7 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZTrail.h"
-#include "zoolib/ZVal_ZooLib.h"
+#include "zoolib/ZVal_Any.h"
+//#include "zoolib/ZVal_ZooLib.h"
 
 #include <vector>
 
@@ -33,10 +34,17 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZHTTP {
 
+#if 1
+typedef ZData_Any Data;
+typedef ZVal_Any Val;
+typedef ZSeq_Any Seq;
+typedef ZMap_Any Map;
+#else
 typedef ZData_ZooLib Data;
 typedef ZVal_ZooLib Val;
 typedef ZSeq_ZooLib Seq;
 typedef ZMap_ZooLib Map;
+#endif
 
 class StreamR_Chunked;
 class StreamW_Chunked;

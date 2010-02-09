@@ -295,7 +295,7 @@ static ZRef<ZStrimmerR> spCreateStrimmerR(const Map& iHeader, const ZStreamR& iS
 	const string charset = iHeader
 		.Get("content-type").GetMap()
 		.Get("parameters").GetMap()
-		.Get("charset").GetString();
+		.Get("charset").Get_T<string>();
 
 	if (ZTextDecoder* theDecoder = ZTextDecoder::sMake(charset))
 		return new ZStrimmerR_StreamR_T<ZStrimR_StreamDecoder>(theDecoder, iStreamR);
@@ -325,8 +325,8 @@ static bool spReadName(const ZStreamU& iStreamU, string& oName)
 static bool spReadPOST(const ZStreamR& iStreamR, const Map& iHeader, Val& oVal)
 	{
 	const Map content_type = iHeader.Get("content-type").GetMap();
-	if (content_type.Get("type").GetString() == "application"
-		&& content_type.Get("subtype").GetString() == "x-www-url-encoded")
+	if (content_type.Get("type").Get_T<string>() == "application"
+		&& content_type.Get("subtype").Get_T<string>() == "x-www-url-encoded")
 		{
 		// It's application/x-www-url-encoded. So we're going to unpack it into a Map.
 		// Map& theTuple = oVal.SetMutableTuple();
@@ -334,12 +334,12 @@ static bool spReadPOST(const ZStreamR& iStreamR, const Map& iHeader, Val& oVal)
 		//#warning "not done yet"
 		return true;
 		}
-	else if (content_type.Get("type").GetString() == "multipart"
-		&& content_type.Get("subtype").GetString() == "form-data")
+	else if (content_type.Get("type").Get_T<string>() == "multipart"
+		&& content_type.Get("subtype").Get_T<string>() == "form-data")
 		{
 		const string baseBoundary = content_type
 			.Get("parameters").GetMap()
-			.Get("boundary").GetString();
+			.Get("boundary").Get_T<string>();
 
 		// Skip optional unheadered data section before the first boundary.
 		ZStreamR_Boundary(baseBoundary, iStreamR).SkipAll();
@@ -380,10 +380,10 @@ static bool spReadPOST(const ZStreamR& iStreamR, const Map& iHeader, Val& oVal)
 				ZStreamR_SkipAllOnDestroy(ZMIME::StreamR_Header(streamPart)), &header);
 
 			Map contentDisposition = header.Get("content-disposition").GetMap();
-			if (contentDisposition.Get("value").GetString() == "form-data")
+			if (contentDisposition.Get("value").Get_T<string>() == "form-data")
 				{
 				const Map parameters = contentDisposition.Get("parameters").GetMap();
-				const string name = parameters.Get("name").GetString();
+				const string name = parameters.Get("name").Get_T<string>();
 				if (!name.empty())
 					{
 					Val theVal;
@@ -395,7 +395,7 @@ static bool spReadPOST(const ZStreamR& iStreamR, const Map& iHeader, Val& oVal)
 			}
 		oVal = theMap;
 		}
-	else if (content_type.Get("type").GetString() == "text")
+	else if (content_type.Get("type").Get_T<string>() == "text")
 		{
 		// It's explicitly some kind of text. Use sCreateStrimmerR to create an appropriate
 		// strimmer, which it does by examining values in iHeader.
@@ -407,7 +407,7 @@ static bool spReadPOST(const ZStreamR& iStreamR, const Map& iHeader, Val& oVal)
 		// There was no content type specified, so assume text.
 		string theString;
 		ZStreamWPos_String(theString).CopyAllFrom(iStreamR);
-		oVal.SetString(theString);
+		oVal = theString;
 		return true;
 		}
 

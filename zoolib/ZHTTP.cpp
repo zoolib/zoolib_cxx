@@ -54,7 +54,12 @@ static const char LF = '\n';
 #pragma mark * Utility stuff
 
 static void sAppend(Map& ioFields, const string& iName, const Val& iValue)
-	{ ioFields.Mutable(iName).MutableSeq().Append(iValue); }
+	{
+	Seq theSeq = ioFields.Get(iName).Get_T<Seq>();
+	theSeq.Append(iValue);
+	ioFields.Set(iName, theSeq);
+//	ioFields.Mutable(iName).MutableSeq().Append(iValue);
+	}
 
 static uint32 sHexCharToUInt(char iChar)
 	{
@@ -213,10 +218,10 @@ bool sOrganizeRanges(size_t iSourceSize, const Val& iRangeParam,
 	{
 	Map asMap = iRangeParam.GetMap();
 	int64 reqBegin;
-	if (asMap.Get("begin").QGetInt64(reqBegin))
+	if (asMap.Get("begin").QGet_T(reqBegin))
 		{
 		int64 reqEnd;
-		if (asMap.Get("end").QGetInt64(reqEnd))
+		if (asMap.Get("end").QGet_T(reqEnd))
 			{
 			if (reqEnd < reqBegin)
 				return false;
@@ -231,7 +236,7 @@ bool sOrganizeRanges(size_t iSourceSize, const Val& iRangeParam,
 	else
 		{
 		int64 reqLast;
-		if (asMap.Get("last").QGetInt64(reqLast))
+		if (asMap.Get("last").QGet_T(reqLast))
 			{
 			if (reqLast > iSourceSize)
 				return false;
@@ -736,12 +741,12 @@ string sEncodeTrail(const ZTrail& iTrail)
 string sGetString0(const Val& iVal)
 	{
 	string result;
-	if (iVal.QGetString(result))
+	if (iVal.QGet_T(result))
 		return result;
 
 	const Seq& theSeq = iVal.GetSeq();
 	if (theSeq.Count())
-		return theSeq.Get(0).GetString();
+		return theSeq.Get(0).Get_T<string>();
 
 	return string();
 	}
@@ -758,7 +763,7 @@ static ZRef<ZStreamerR> sMakeStreamer_Transfer(
 		}
 
 	int64 contentLength;
-	if (iHeader.Get("content-length").QGetInt64(contentLength))
+	if (iHeader.Get("content-length").QGet_T(contentLength))
 		{
 		return new ZStreamerR_FT<ZStreamR_Limited>(contentLength, iStreamerR);
 		}
