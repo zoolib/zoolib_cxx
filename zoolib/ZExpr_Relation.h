@@ -58,9 +58,10 @@ class ZExprRep_Relation_Dyadic : public ZExprRep_Relation
 	{
 protected:
 	ZExprRep_Relation_Dyadic(ZRef<ZExprRep_Relation> iLHS, ZRef<ZExprRep_Relation> iRHS);
-	virtual ~ZExprRep_Relation_Dyadic();
 
 public:
+	virtual ~ZExprRep_Relation_Dyadic();
+
 // Our protocol
 	ZRef<ZExprRep_Relation> GetLHS();
 	ZRef<ZExprRep_Relation> GetRHS();

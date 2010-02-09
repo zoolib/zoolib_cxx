@@ -18,51 +18,18 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValCondition__
-#define __ZValCondition__ 1
-
-#include "zconfig.h"
-
-#include "zoolib/ZValCondition_T.h"
-
-//#include "zoolib/ZVal_Any.h"
-//#include "zoolib/ZVal_CFType.h"
-#include "zoolib/ZVal_Zoolib.h"
+#include "zoolib/ZExpr_Physical.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-//typedef ZVal_Any ZVal_Expr;
-//typedef ZMap_Any ZMap_Expr;
-//typedef ZVal_CFType ZVal_Expr;
-//typedef ZMap_CFType ZMap_Expr;
-typedef ZVal_ZooLib ZVal_Expr;
-typedef ZMap_ZooLib ZMap_Expr;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValCondition
+#pragma mark * ZExprRep_Physical
 
-typedef ZValCondition_T<ZVal_Expr> ZValCondition;
-typedef ZValComparand_T<ZVal_Expr> ZValComparand;
+ZExprRep_Physical::ZExprRep_Physical()
+	{}
 
-inline ZValComparand CConst(const char* iVal)
-	{ return CConst_T<ZVal_Expr>(iVal); }
-
-inline ZValComparand CConst(const ZVal_Expr& iVal)
-	{ return CConst_T<ZVal_Expr>(iVal); }
-
-inline ZValComparand CName(const std::string& iName)
-	{ return CName_T<ZVal_Expr>(iName); }
-
-inline ZValComparand CTrail(const ZTrail& iTrail)
-	{ return CTrail_T<ZVal_Expr>(iTrail); }
-
-inline ZValComparand CVal()
-	{ return CVal_T<ZVal_Expr>(); }
-
-inline ZValComparand CVar(const std::string& iVarName)
-	{ return CVar_T<ZVal_Expr>(iVarName); }
+ZExprRep_Physical::~ZExprRep_Physical()
+	{}
 
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZValCondition__

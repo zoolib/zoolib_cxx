@@ -28,8 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-template <class Val>
-class ZVisitor_ExprRep_ValCondition_T;
+template <class Val> class ZVisitor_ExprRep_ValCondition_T;
 
 // =================================================================================================
 #pragma mark -
@@ -234,12 +233,12 @@ ZExpr_Logical& operator|=(
 #pragma mark * GetRelHead
 
 template <class Val>
-class ZVisitor_ExprRep_Condition_GetRelHead_T
+class ZVisitor_ExprRep_ValCondition_GetRelHead_T
 :	public ZVisitor_ExprRep_ValCondition_T<Val>
 	{
 	typedef ZVisitor_ExprRep_ValCondition_T<Val> inherited;
 public:
-	ZVisitor_ExprRep_Condition_GetRelHead_T(ZRelHead& ioRelHead);
+	ZVisitor_ExprRep_ValCondition_GetRelHead_T(ZRelHead& ioRelHead);
 
 // From ZVisitor_ExprRep_ValCondition_T
 	virtual bool Visit_ValCondition(ZRef<ZExprRep_ValCondition_T<Val> > iRep);
@@ -249,13 +248,13 @@ private:
 	};
 
 template <class Val>
-ZVisitor_ExprRep_Condition_GetRelHead_T<Val>::ZVisitor_ExprRep_Condition_GetRelHead_T(
+ZVisitor_ExprRep_ValCondition_GetRelHead_T<Val>::ZVisitor_ExprRep_ValCondition_GetRelHead_T(
 	ZRelHead& ioRelHead)
 :	fRelHead(ioRelHead)
 	{}
 
 template <class Val>
-bool ZVisitor_ExprRep_Condition_GetRelHead_T<Val>::Visit_ValCondition(
+bool ZVisitor_ExprRep_ValCondition_GetRelHead_T<Val>::Visit_ValCondition(
 	ZRef<ZExprRep_ValCondition_T<Val> > iRep)
 	{
 	if (!inherited::Visit_ValCondition(iRep))
@@ -270,7 +269,7 @@ ZRelHead sGetRelHead_T(const ZRef<ZExprRep_Logical>& iRep)
 	ZRelHead theRelHead;
 	if (iRep)
 		{
-		ZVisitor_ExprRep_Condition_GetRelHead_T<Val> theVisitor(theRelHead);
+		ZVisitor_ExprRep_ValCondition_GetRelHead_T<Val> theVisitor(theRelHead);
 		iRep->Accept(theVisitor);
 		}
 	return theRelHead;
@@ -281,13 +280,13 @@ ZRelHead sGetRelHead_T(const ZRef<ZExprRep_Logical>& iRep)
 #pragma mark * Matches
 
 template <class Val>
-class ZVisitor_ExprRep_Condition_Matches_T
+class ZVisitor_ExprRep_ValCondition_Matches_T
 :	public ZVisitor_ExprRep_ValCondition_T<Val>
 	{
 	typedef ZVisitor_ExprRep_ValCondition_T<Val> inherited;
 public:
 
-	ZVisitor_ExprRep_Condition_Matches_T(const Val& iVal);
+	ZVisitor_ExprRep_ValCondition_Matches_T(const Val& iVal);
 
 // From ZVisitor_ExprRep_Logical via ZVisitor_ExprRep_ValCondition_T
 	virtual bool Visit_Logical_True(ZRef<ZExprRep_Logical_True> iRep);
@@ -305,23 +304,23 @@ private:
 	};
 
 template <class Val>
-ZVisitor_ExprRep_Condition_Matches_T<Val>::ZVisitor_ExprRep_Condition_Matches_T(
+ZVisitor_ExprRep_ValCondition_Matches_T<Val>::ZVisitor_ExprRep_ValCondition_Matches_T(
 	const Val& iVal)
 :	fVal(iVal)
 	{}
 
 template <class Val>
-bool ZVisitor_ExprRep_Condition_Matches_T<Val>::Visit_Logical_True(
+bool ZVisitor_ExprRep_ValCondition_Matches_T<Val>::Visit_Logical_True(
 	ZRef<ZExprRep_Logical_True> iRep)
 	{ return true; }
 
 template <class Val>
-bool ZVisitor_ExprRep_Condition_Matches_T<Val>::Visit_Logical_False(
+bool ZVisitor_ExprRep_ValCondition_Matches_T<Val>::Visit_Logical_False(
 	ZRef<ZExprRep_Logical_False> iRep)
 	{ return false; }
 
 template <class Val>
-bool ZVisitor_ExprRep_Condition_Matches_T<Val>::Visit_Logical_Not(
+bool ZVisitor_ExprRep_ValCondition_Matches_T<Val>::Visit_Logical_Not(
 	ZRef<ZExprRep_Logical_Not> iRep)
 	{
 	if (ZRef<ZExprRep_Logical> theRep = iRep->GetOperand())
@@ -330,7 +329,7 @@ bool ZVisitor_ExprRep_Condition_Matches_T<Val>::Visit_Logical_Not(
 	}
 
 template <class Val>
-bool ZVisitor_ExprRep_Condition_Matches_T<Val>::Visit_Logical_And(
+bool ZVisitor_ExprRep_ValCondition_Matches_T<Val>::Visit_Logical_And(
 	ZRef<ZExprRep_Logical_And> iRep)
 	{
 	if (ZRef<ZExprRep_Logical> theLHS = iRep->GetLHS())
@@ -342,7 +341,7 @@ bool ZVisitor_ExprRep_Condition_Matches_T<Val>::Visit_Logical_And(
 	}
 
 template <class Val>
-bool ZVisitor_ExprRep_Condition_Matches_T<Val>::Visit_Logical_Or(ZRef<ZExprRep_Logical_Or> iRep)
+bool ZVisitor_ExprRep_ValCondition_Matches_T<Val>::Visit_Logical_Or(ZRef<ZExprRep_Logical_Or> iRep)
 	{
 	if (ZRef<ZExprRep_Logical> theLHS = iRep->GetLHS())
 		{
@@ -360,7 +359,7 @@ bool ZVisitor_ExprRep_Condition_Matches_T<Val>::Visit_Logical_Or(ZRef<ZExprRep_L
 	}
 
 template <class Val>
-bool ZVisitor_ExprRep_Condition_Matches_T<Val>::Visit_ValCondition(
+bool ZVisitor_ExprRep_ValCondition_Matches_T<Val>::Visit_ValCondition(
 	ZRef<ZExprRep_ValCondition_T<Val> > iRep)
 	{ return iRep->GetValCondition().Matches(fContext, fVal); }
 
@@ -369,7 +368,7 @@ bool sMatches_T(const ZRef<ZExprRep_Logical>& iRep, const Val& iVal)
 	{
 	if (iRep)
 		{
-		ZVisitor_ExprRep_Condition_Matches_T<Val> theVisitor(iVal);
+		ZVisitor_ExprRep_ValCondition_Matches_T<Val> theVisitor(iVal);
 		return iRep->Accept(theVisitor);
 		}
 	return false;

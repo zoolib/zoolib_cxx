@@ -32,9 +32,9 @@ NAMESPACE_ZOOLIB_BEGIN
 class ZValContext
 	{};
 
-template <class T> class ZValComparand_T;
+template <class Val> class ZValComparand_T;
 
-template <class T> class ZValCondition_T;
+template <class Val> class ZValCondition_T;
 
 // =================================================================================================
 #pragma mark -
