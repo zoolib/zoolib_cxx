@@ -53,10 +53,13 @@ class Channel_BBDevMgr
 	friend class Device_BBDevMgr;
 
 public:
-	Channel_BBDevMgr(ZRef<Channel>& oChannel, ZRef<IDevice> iDevice,
+	Channel_BBDevMgr(ZRef<IDevice> iDevice,
 		bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash);
 
 	virtual ~Channel_BBDevMgr();
+
+// From ZRefCountedWithFinalize via ZBlackBerry::Channel
+	virtual void Initialize();
 
 // From IUnknown via IChannelEvents
 	virtual STDMETHODIMP QueryInterface(const IID& inInterfaceID, void** outObjectRef);
@@ -103,10 +106,13 @@ private:
 
 	ZMutex fMutex;
 	ZCondition fCondition_Reader;
+
+	ZRef<IDevice> fDevice;
+	bool fPreserveBoundaries;
+	string fName;
+
 	ZRef<IChannel> fChannel;
 	ChannelParams fChannelParams;
-
-	bool fPreserveBoundaries;
 
 	vector<char> fBuffer;
 	size_t fStart;
@@ -117,39 +123,41 @@ private:
 	bool fClosed;
 	};
 
-Channel_BBDevMgr::Channel_BBDevMgr(ZRef<Channel>& oChannel, ZRef<IDevice> iDevice,
+Channel_BBDevMgr::Channel_BBDevMgr(ZRef<IDevice> iDevice,
 	bool iPreserveBoundaries, const string& iName, const PasswordHash* iPasswordHash)
-:	fPreserveBoundaries(iPreserveBoundaries),
+:	fDevice(iDevice),
+	fPreserveBoundaries(iPreserveBoundaries),
+	fName(iName),
 	fStart(0),
 	fEnd(0),
 	fHasPasswordHash(0 != iPasswordHash),
 	fClosed(false)
 	{
-	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
-		s << "Channel_BBDevMgr";
-
 	if (iPasswordHash)
 		fPasswordHash = *iPasswordHash;
-
-	// The call to OpenChannel will AddRef/Release us. So keep
-	// a reference around till we return.
-	ZRef<Channel> self = this;
-	wstring wideName = ZUnicode::sAsWString(iName);
-	HRESULT theResult = iDevice->OpenChannel(wideName.c_str(), this, sCOMPtr(fChannel));
-
-	if (SUCCEEDED(theResult) && fChannel)
-		{
-		fChannel->Params(&fChannelParams);
-		// Allow for two extra bytes, just in case we're preserving boundaries.
-		fBuffer.resize(fChannelParams.fMaxReceiveUnit + 2);
-		oChannel = self;
-		}
 	}
 
 Channel_BBDevMgr::~Channel_BBDevMgr()
 	{
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 		s << "~Channel_BBDevMgr";
+	}
+
+void Channel_BBDevMgr::Initialize()
+	{
+	wstring wideName = ZUnicode::sAsWString(fName);
+	HRESULT theResult = fDevice->OpenChannel(wideName.c_str(), this, sCOMPtr(fChannel));
+
+	if (SUCCEEDED(theResult) && fChannel)
+		{
+		fChannel->Params(&fChannelParams);
+		// Allow for two extra bytes, just in case we're preserving boundaries.
+		fBuffer.resize(fChannelParams.fMaxReceiveUnit + 2);
+		}
+	else
+		{
+		throw std::runtime_error("Channel_BBDevMgr::Initialize, Couldn't open channel");
+		}
 	}
 
 STDMETHODIMP Channel_BBDevMgr::QueryInterface(const IID& iInterfaceID, void** oObjectRef)
@@ -512,22 +520,18 @@ ZRef<Channel> Device_BBDevMgr::Open(bool iPreserveBoundaries,
 
 	if (ZRef<IDevice> theDevice = this->pUseDevice())
 		{
-		// theChannel's refcount is manipulated by both COM and ZRef. When created it is zero,
-		// and in the ZRef scheme is not incremented to one until it is first assigned to a
-		// ZRef<>. The process of opening a channel, and failing, will AddRef and Release
-		// theChannel, and it will be Finalized and thus disposed. So we pass a reference to a
-		// ZRef to the constructor, to which the constructor assigns 'this', extending the
-		// lifetime appropriately.
-		ZRef<Channel> theChannel;
-		new Channel_BBDevMgr(theChannel, theDevice, iPreserveBoundaries, iName, iPasswordHash);
-
-		if (theChannel)
+		try 
+			{
+			ZRef<Channel> theChannel = new Channel_BBDevMgr(theDevice, iPreserveBoundaries, iName, iPasswordHash);
 			return theChannel;
-
-		// FIXME. Failure may also be due to a bad/missing/expired password.
-		//#warning "NDY"
-		if (oError)
-			*oError = error_UnknownChannel;
+			}
+		catch (...)
+			{
+			// FIXME. Failure may also be due to a bad/missing/expired password.
+			//#warning "NDY"
+			if (oError)
+				*oError = error_UnknownChannel;
+			}
 		}
 	else
 		{
