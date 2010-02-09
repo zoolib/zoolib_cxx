@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(JPEGLib)
 
-#if ZCONFIG_SPI_Enabled(Win) && defined(__ZWinHeader__)
+#if ZCONFIG_SPI_Enabled(Win) && defined(__ZCompat_Win__)
 	// Fix up some stuff that breaks jpeglib's jmorecfg.h when we've also already pulled in
-	// the Windows Headers. That happens when we're compiling for Windows using ZWinHeader
+	// the Windows Headers. That happens when we're compiling for Windows using ZCompat_Win
 	// and CodeWarrior's precompiled headers.
 
 	// jmorecfg.h unconditionally #defines FAR, so remove any existing definition.
