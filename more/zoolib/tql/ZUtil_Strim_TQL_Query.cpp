@@ -67,41 +67,48 @@ static void spWrite_LFIndent(size_t iCount, const Options& iOptions, const ZStri
 #pragma mark -
 #pragma mark * Writer
 
-class Writer : public ZVisitor_ExprRep_Query
+class Writer
+:	public ZVisitor_ExprRep_Query
+,	public ZVisitor_ExprRep_Restrict
+,	public ZVisitor_ExprRep_Select
 	{
 public:
 	Writer(size_t iIndent, const Options& iOptions, const ZStrimW& iStrimW);
 
 // From NodeVisitor
-	virtual bool Visit_Difference(ZRef<ZExprRep_Relational_Difference> iRep);
-	virtual bool Visit_Intersect(ZRef<ZExprRep_Relational_Intersect> iRep);
-	virtual bool Visit_Join(ZRef<ZExprRep_Relational_Join> iRep);
-	virtual bool Visit_Project(ZRef<ZExprRep_Relational_Project> iRep);
-	virtual bool Visit_Rename(ZRef<ZExprRep_Relational_Rename> iRep);
-	virtual bool Visit_Union(ZRef<ZExprRep_Relational_Union> iRep);
+	virtual bool Visit_Difference(ZRef<ZExprRep_Relation_Difference> iRep);
+	virtual bool Visit_Intersect(ZRef<ZExprRep_Relation_Intersect> iRep);
+	virtual bool Visit_Join(ZRef<ZExprRep_Relation_Join> iRep);
+	virtual bool Visit_Project(ZRef<ZExprRep_Relation_Project> iRep);
+	virtual bool Visit_Rename(ZRef<ZExprRep_Relation_Rename> iRep);
+	virtual bool Visit_Union(ZRef<ZExprRep_Relation_Union> iRep);
 
 // From ZVisitor_ExprRep_Query
 	virtual bool Visit_All(ZRef<ZExprRep_Query_All> iRep);
 	virtual bool Visit_Explicit(ZRef<ZExprRep_Query_Explicit> iRep);
-	virtual bool Visit_Restrict(ZRef<ZExprRep_Query_Restrict> iRep);
-	virtual bool Visit_Select(ZRef<ZExprRep_Query_Select> iRep);
+
+// From ZVisitor_ExprRep_Restrict
+	virtual bool Visit_Restrict(ZRef<ZExprRep_Restrict> iRep);
+
+// From ZVisitor_ExprRep_Select
+	virtual bool Visit_Select(ZRef<ZExprRep_Select> iRep);
 
 private:
-	bool pWriteDyadic(const string& iFunctionName, ZRef<ZExprRep_Relational_Dyadic> iRep);
+	bool pWriteDyadic(const string& iFunctionName, ZRef<ZExprRep_Relation_Dyadic> iRep);
 
 	size_t fIndent;
 	const Options& fOptions;
 	const ZStrimW& fStrimW;
 	};
 
-static void spWrite_EffectiveRelHeadComment(ZRef<ZExprRep_Relational> iRep, const ZStrimW& s)
+static void spWrite_EffectiveRelHeadComment(ZRef<ZExprRep_Relation> iRep, const ZStrimW& s)
 	{
 	s.Write(" // ");
 	ZUtil_Strim_TQL::sWrite_RelHead(iRep->GetRelHead(), s);
 	}
 
 static void spWrite(size_t iIndent, const Options& iOptions,
-	ZRef<ZExprRep_Relational> iRep,
+	ZRef<ZExprRep_Relation> iRep,
 	const ZStrimW& s)
 	{
 	spWrite_LFIndent(iIndent, iOptions, s);
@@ -115,16 +122,16 @@ Writer::Writer(size_t iIndent, const Options& iOptions, const ZStrimW& iStrimW)
 	fStrimW(iStrimW)
 	{}
 
-bool Writer::Visit_Difference(ZRef<ZExprRep_Relational_Difference> iRep)
+bool Writer::Visit_Difference(ZRef<ZExprRep_Relation_Difference> iRep)
 	{ return this->pWriteDyadic("Difference", iRep); }
 
-bool Writer::Visit_Intersect(ZRef<ZExprRep_Relational_Intersect> iRep)
+bool Writer::Visit_Intersect(ZRef<ZExprRep_Relation_Intersect> iRep)
 	{ return this->pWriteDyadic("Intersect", iRep); }
 
-bool Writer::Visit_Join(ZRef<ZExprRep_Relational_Join> iRep)
+bool Writer::Visit_Join(ZRef<ZExprRep_Relation_Join> iRep)
 	{
-	ZRef<ZExprRep_Relational> theLHS = iRep->GetLHS();
-	ZRef<ZExprRep_Relational> theRHS = iRep->GetRHS();
+	ZRef<ZExprRep_Relation> theLHS = iRep->GetLHS();
+	ZRef<ZExprRep_Relation> theRHS = iRep->GetRHS();
 
 	const ZRelHead joinOn = theLHS->GetRelHead()
 		& theRHS->GetRelHead();
@@ -142,7 +149,7 @@ bool Writer::Visit_Join(ZRef<ZExprRep_Relational_Join> iRep)
 	return true;
 	}
 
-bool Writer::Visit_Project(ZRef<ZExprRep_Relational_Project> iRep)
+bool Writer::Visit_Project(ZRef<ZExprRep_Relation_Project> iRep)
 	{
 	spWrite("Project", fStrimW);
 	spWrite_EffectiveRelHeadComment(iRep, fStrimW);
@@ -157,7 +164,7 @@ bool Writer::Visit_Project(ZRef<ZExprRep_Relational_Project> iRep)
 	return true;
 	}
 
-bool Writer::Visit_Rename(ZRef<ZExprRep_Relational_Rename> iRep)
+bool Writer::Visit_Rename(ZRef<ZExprRep_Relation_Rename> iRep)
 	{
 	spWrite("Rename", fStrimW);
 	spWrite_EffectiveRelHeadComment(iRep, fStrimW);
@@ -174,7 +181,7 @@ bool Writer::Visit_Rename(ZRef<ZExprRep_Relational_Rename> iRep)
 	return true;
 	}
 
-bool Writer::Visit_Union(ZRef<ZExprRep_Relational_Union> iRep)
+bool Writer::Visit_Union(ZRef<ZExprRep_Relation_Union> iRep)
 	{ return this->pWriteDyadic("Union", iRep); }
 
 bool Writer::Visit_All(ZRef<ZExprRep_Query_All> iRep)
@@ -212,7 +219,7 @@ bool Writer::Visit_Explicit(ZRef<ZExprRep_Query_Explicit> iRep)
 	return true;
 	}
 
-bool Writer::Visit_Restrict(ZRef<ZExprRep_Query_Restrict> iRep)
+bool Writer::Visit_Restrict(ZRef<ZExprRep_Restrict> iRep)
 	{
 	spWrite("Restrict", fStrimW);
 	spWrite_EffectiveRelHeadComment(iRep, fStrimW);
@@ -227,7 +234,7 @@ bool Writer::Visit_Restrict(ZRef<ZExprRep_Query_Restrict> iRep)
 	return true;
 	}
 
-bool Writer::Visit_Select(ZRef<ZExprRep_Query_Select> iRep)
+bool Writer::Visit_Select(ZRef<ZExprRep_Select> iRep)
 	{
 	spWrite("Select", fStrimW);
 	spWrite_EffectiveRelHeadComment(iRep, fStrimW);
@@ -236,13 +243,13 @@ bool Writer::Visit_Select(ZRef<ZExprRep_Query_Select> iRep)
 	spWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
 	sToStrim(iRep->GetExpr_Logical(), fStrimW);
 	spWrite(",", fStrimW);
-	spWrite(fIndent + 1, fOptions, iRep->GetExpr_Relational(), fStrimW);
+	spWrite(fIndent + 1, fOptions, iRep->GetExpr_Relation(), fStrimW);
 	spWrite_LFIndent(fIndent + 1, fOptions, fStrimW);
 	spWrite(")", fStrimW);
 	return true;
 	}
 
-bool Writer::pWriteDyadic(const string& iFunctionName, ZRef<ZExprRep_Relational_Dyadic> iRep)
+bool Writer::pWriteDyadic(const string& iFunctionName, ZRef<ZExprRep_Relation_Dyadic> iRep)
 	{
 	spWrite(iFunctionName, fStrimW);
 
@@ -267,11 +274,11 @@ bool Writer::pWriteDyadic(const string& iFunctionName, ZRef<ZExprRep_Relational_
 #pragma mark -
 #pragma mark * ZUtil_Strim_TQL
 
-void sToStrim(const ZRef<ZExprRep_Relational>& iRep, const ZStrimW& s)
+void sToStrim(const ZRef<ZExprRep_Relation>& iRep, const ZStrimW& s)
 	{ sToStrim(0, Options(), iRep, s); }
 
 void sToStrim(size_t iInitialIndent, const Options& iOptions,
-	const ZRef<ZExprRep_Relational>& iRep,
+	const ZRef<ZExprRep_Relation>& iRep,
 	const ZStrimW& s)
 	{ spWrite(iInitialIndent, iOptions, iRep, s); }
 

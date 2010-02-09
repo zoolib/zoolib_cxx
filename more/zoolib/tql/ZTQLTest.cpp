@@ -17,7 +17,7 @@ using std::set;
 using std::string;
 
 typedef ZExpr_Logical Spec;
-typedef ZExpr_Relational Query;
+typedef ZExpr_Relation Query;
 typedef ZMap_Expr Map;
 typedef ZRelHead RelHead;
 typedef ZVal_Expr Val;
@@ -101,8 +101,16 @@ static void sTest()
 
 static Spec sBadAuthors()
 	{
+	const ZValComparand a, b;
+	ZValCondition theSpec = a > b;
+//	Spec theSpec = operator<< <>(a << b;
+//	ZExpr_ValCondition_T<ZVal_Expr>::Expr_Condition result = CName_T<ZVal_Expr>("Object") == CConst_T<ZVal_Expr>("author");
+//	ZExpr_ValCondition_T<ZVal_Expr>::Expr_Condition result = CName("Object") == CConst("author");
+//	ZExpr_ValCondition_T<ZVal_Expr>::Expr_Condition result = operator==<ZVal_Expr>(CName_T<ZVal_Expr>("Object"), CName_T<ZVal_Expr>("author"));
+//	const Spec theSpec = operator==<ZVal_Expr>(CName_T<ZVal_Expr>("Object"), CName_T<ZVal_Expr>("author"));
 //	const Spec theSpec = (CName("Object") == CConst("author"));
 	
+/*
 	const Spec theSpec =
 		CName("Object") == CConst("author")
 		&	(
@@ -110,8 +118,8 @@ static Spec sBadAuthors()
 			| CName("pass") == CName("lnam")
 			| CName("pass") == CName("unam")
 			);
-
-	return theSpec;
+*/
+	return ZExpr_ValCondition(theSpec);
 	}
 
 static Query badPassword()
@@ -252,7 +260,7 @@ static void sDumpQuery(const ZStrimW& s, Query iQuery)
 
 	s << "\nZTQL::Query optimized -----------------------\n";
 	
-	ZExpr_Relational theNode = sOptimize(iQuery);
+	ZExpr_Relation theNode = sOptimize(iQuery);
 	
 	ZUtil_Strim_TQL::sToStrim(theNode, s);
 
@@ -271,22 +279,41 @@ static void sTestOne(const string& iLabel, const ZStrimW& s, const ZTBQuery& iTB
 void sTestQL(const ZStrimW& s);
 void sTestQL(const ZStrimW& s)
 	{
-//	Spec theSpec = CTrail("name/last") == CConst("Fred");
+	ZMap_Expr theMap;
+	theMap.Set("name", ZMap_Expr().Set("last", string("fred")));
+//	Spec theSpec = CTrail("name/last") < CConst("fred1");
+	
+	if (sMatches(ZExpr_ValCondition(CTrail("name/last") < CConst("fred1")), theMap))
+		s << "Matches\n";
+	else
+		s << "Doesn't\n";
+
+	if (sMatches(ZExpr_ValCondition(CTrail("name/last") >= CConst("fred1")), theMap))
+		s << "Matches\n";
+	else
+		s << "Doesn't\n";
+
+	ZExpr_Relation theExp = sSelect(CVar("TestVar1") == CConst(1) & CVar("TestVar2") == CConst(2), sAll(ZRelHead(true)));
+	sDumpQuery(s, theExp);
+
+
+//	return;
+	
 //	Query theQuery = sAllID("$ID$") & theSpec;
 //	sDumpQuery(s, theQuery);
-//	sDumpQuery(s, sQuery());
+	sDumpQuery(s, sQuery());
 //	sDumpQuery(s, sQueryNoHead());
-	sDumpQuery(s, ZUtil_TQLConvert::sConvert(sTBQuery(), false));
+//	sDumpQuery(s, ZUtil_TQLConvert::sConvert(sTBQuery(), false));
 
 //	sDumpQuery(s, badPassword());
 	return;
 	
 	const ZTBQuery allViews
 		= ZTBSpec::sEquals("Object", "view") & ZTBSpec::sEquals("titl", "something");
-	sTestOne("allviews", s, allViews);
+//	sTestOne("allviews", s, allViews);
 
 	const ZTBQuery allContains = ZTBSpec::sEquals("Link", "contains");
-//	sTestOne("allContains", s, allContains);
+	sTestOne("allContains", s, allContains);
 
 	const ZTBQuery allNotes
 		= ZTBSpec::sEquals("Object", "note") | ZTBSpec::sEquals("Object", "attachment");

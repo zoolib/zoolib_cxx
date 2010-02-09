@@ -37,7 +37,7 @@ namespace ZUtil_Strim_TQL {
 
 void sToStrim(const ZValCondition& iValCondition, const ZStrimW& iStrimW);
 void sToStrim(const ZRef<ZExprRep_Logical>& iRep, const ZStrimW& iStrimW);
-void sWrite(const ZVal_Any& iVal, const ZStrimW& s);
+void sWrite(const ZVal_Expr& iVal, const ZStrimW& s);
 
 } // namespace ZUtil_Strim_TQL
 

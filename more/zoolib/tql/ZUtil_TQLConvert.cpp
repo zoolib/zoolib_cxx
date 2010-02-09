@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 typedef ZExpr_Logical Spec;
-typedef ZExpr_Relational Query;
+typedef ZExpr_Relation Query;
 typedef ZMap_Expr Map;
 typedef ZRelHead RelHead;
 typedef ZVal_Expr Val;
@@ -54,31 +54,33 @@ static Spec sAsTSpec(const ZTBSpec& iTBSpec)
 		for (vector<ZTBSpec::Criterion>::const_iterator siter = uiter->begin();
 			siter != uiter->end(); ++siter)
 			{
-			ZRef<ZValComparatorRep<Val> > theComparator;
+			ZValComparatorRep_Simple_T<Val>::EComparator theComparator;
 			switch (siter->GetComparator().fRel)
 				{
 				case ZTBSpec::eRel_Less:
-					theComparator = new ZValComparatorRep_Simple<Val>(ZValComparatorRep_Simple<Val>::eLT);
+					theComparator = ZValComparatorRep_Simple_T<Val>::eLT;
 					break;
 				case ZTBSpec::eRel_LessEqual:
-					theComparator = new ZValComparatorRep_Simple<Val>(ZValComparatorRep_Simple<Val>::eLE);
+					theComparator = ZValComparatorRep_Simple_T<Val>::eLE;
 					break;
 				case ZTBSpec::eRel_Equal:
-					theComparator = new ZValComparatorRep_Simple<Val>(ZValComparatorRep_Simple<Val>::eEQ);
+					theComparator = ZValComparatorRep_Simple_T<Val>::eEQ;
 					break;
 				case ZTBSpec::eRel_GreaterEqual:
-					theComparator = new ZValComparatorRep_Simple<Val>(ZValComparatorRep_Simple<Val>::eGE);
+					theComparator = ZValComparatorRep_Simple_T<Val>::eGE;
 					break;
 				case ZTBSpec::eRel_Greater:
-					theComparator = new ZValComparatorRep_Simple<Val>(ZValComparatorRep_Simple<Val>::eGT);
+					theComparator = ZValComparatorRep_Simple_T<Val>::eGT;
 					break;
 				default:
 					ZUnimplemented();
 					break;
 				}
 
-			Condition theCondition
-				(CName(siter->GetPropName()), theComparator, CConst(siter->GetTValue()));
+			ZValCondition_T<Val> theCondition(
+				CName(siter->GetPropName()),
+				new ZValComparatorRep_Simple_T<Val>(theComparator),
+				CConst(siter->GetTValue()));
 
 			if (sisfirst)
 				{

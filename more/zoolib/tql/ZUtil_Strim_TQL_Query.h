@@ -41,10 +41,10 @@ struct Options
 	std::string fIndentString;
 	};
 
-void sToStrim(const ZRef<ZExprRep_Relational>& iRep, const ZStrimW& s);
+void sToStrim(const ZRef<ZExprRep_Relation>& iRep, const ZStrimW& s);
 
 void sToStrim(size_t iInitialIndent, const Options& iOptions,
-	const ZRef<ZExprRep_Relational>& iRep,
+	const ZRef<ZExprRep_Relation>& iRep,
 	const ZStrimW& s);
 
 } // namespace ZUtil_Strim_TQL

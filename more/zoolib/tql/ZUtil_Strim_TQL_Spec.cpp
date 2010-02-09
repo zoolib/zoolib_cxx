@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZYad_Any.h"
+#include "zoolib/ZYad_CFType.h"
 #include "zoolib/ZYad_ZooLib.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
@@ -29,19 +30,19 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZUtil_Strim_TQL {
 
-typedef ZVal_Any Val;
+typedef ZVal_Expr Val;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Static helper functions
 
-static void spToStrim(const ZRef<ZValComparandRep<ZVal_Expr> >& iCR, const ZStrimW& s)
+static void spToStrim(const ZRef<ZValCondition_T<ZVal_Expr>::ComparandRep>& iCR, const ZStrimW& s)
 	{
 	if (!iCR)
 		{
 		s << "!!Null Comparand!!";
 		}
-	else if (ZRef<ZValComparandRep_Trail<ZVal_Expr> > cr = ZRefDynamicCast<ZValComparandRep_Trail<ZVal_Expr> >(iCR))
+	else if (ZRef<ZValComparandRep_Trail_T<ZVal_Expr> > cr = ZRefDynamicCast<ZValComparandRep_Trail_T<ZVal_Expr> >(iCR))
 		{
 		const ZTrail& theTrail = cr->GetTrail();
 		if (theTrail.Count() == 1)
@@ -49,12 +50,12 @@ static void spToStrim(const ZRef<ZValComparandRep<ZVal_Expr> >& iCR, const ZStri
 		else
 			ZUtil_Strim_TQL::sWrite_PropName("/" + theTrail.AsString(), s);
 		}
-	else if (ZRef<ZValComparandRep_Var<ZVal_Expr> > cr = ZRefDynamicCast<ZValComparandRep_Var<ZVal_Expr> >(iCR))
+	else if (ZRef<ZValComparandRep_Var_T<ZVal_Expr> > cr = ZRefDynamicCast<ZValComparandRep_Var_T<ZVal_Expr> >(iCR))
 		{
 		s << "$";
 		ZYad_ZooLibStrim::sWrite_PropName(cr->GetVarName(), s);
 		}
-	else if (ZRef<ZValComparandRep_Const<ZVal_Expr> > cr = ZRefDynamicCast<ZValComparandRep_Const<ZVal_Expr> >(iCR))
+	else if (ZRef<ZValComparandRep_Const_T<ZVal_Expr> > cr = ZRefDynamicCast<ZValComparandRep_Const_T<ZVal_Expr> >(iCR))
 		{
 		ZUtil_Strim_TQL::sWrite(cr->GetVal(), s);
 		}
@@ -64,37 +65,37 @@ static void spToStrim(const ZRef<ZValComparandRep<ZVal_Expr> >& iCR, const ZStri
 		}
 	}
 
-static void spToStrim(const ZRef<ZValComparatorRep<ZVal_Expr> >& iCR, const ZStrimW& s)
+static void spToStrim(const ZRef<ZValCondition_T<ZVal_Expr>::ComparatorRep>& iCR, const ZStrimW& s)
 	{
 	if (!iCR)
 		{
 		s << "!!Null Comparator!!";
 		}
-	else if (ZRef<ZValComparatorRep_Simple<ZVal_Expr> > cr = ZRefDynamicCast<ZValComparatorRep_Simple<ZVal_Expr> >(iCR))
+	else if (ZRef<ZValComparatorRep_Simple_T<ZVal_Expr> > cr = ZRefDynamicCast<ZValComparatorRep_Simple_T<ZVal_Expr> >(iCR))
 		{
 		switch (cr->GetEComparator())
 			{
-			case ZValComparatorRep_Simple<ZVal_Expr>::eLT:
+			case ZValComparatorRep_Simple_T<ZVal_Expr>::eLT:
 				{
 				s << " < ";
 				break;
 				}
-			case ZValComparatorRep_Simple<ZVal_Expr>::eLE:
+			case ZValComparatorRep_Simple_T<ZVal_Expr>::eLE:
 				{
 				s << " <= ";
 				break;
 				}
-			case ZValComparatorRep_Simple<ZVal_Expr>::eEQ:
+			case ZValComparatorRep_Simple_T<ZVal_Expr>::eEQ:
 				{
 				s << " == ";
 				break;
 				}
-			case ZValComparatorRep_Simple<ZVal_Expr>::eGE:
+			case ZValComparatorRep_Simple_T<ZVal_Expr>::eGE:
 				{
 				s << " >= ";
 				break;
 				}
-			case ZValComparatorRep_Simple<ZVal_Expr>::eGT:
+			case ZValComparatorRep_Simple_T<ZVal_Expr>::eGT:
 				{
 				s << " > ";
 				break;
@@ -116,9 +117,11 @@ namespace ZANONYMOUS {
 class Writer : public ZVisitor_ExprRep_ValCondition_T<ZVal_Expr>
 	{
 public:
+	typedef ZExprRep_ValCondition_T<ZVal_Expr> ExprRep_ValCondition;
+
 	Writer(const ZStrimW& iStrimW);
 
-// From ZVisitor_ExprRep via ZVisitor_ExprRep_ValCondition_T
+// From ZVisitor_ExprRep
 	virtual bool Visit(ZRef<ZExprRep> iRep);
 
 
@@ -129,8 +132,8 @@ public:
 	virtual bool Visit_Logical_And(ZRef<ZExprRep_Logical_And> iRep);
 	virtual bool Visit_Logical_Or(ZRef<ZExprRep_Logical_Or> iRep);
 
-// From ZVisitor_ExprRep_ValCondition_T
-	virtual bool Visit_ValCondition(ZRef<ZExprRep_ValCondition> iRep);
+// From Visitor_ExprRep_Condition
+	virtual bool Visit_ValCondition(ZRef<ExprRep_ValCondition> iRep);
 
 private:
 	const ZStrimW& fStrimW;
@@ -188,7 +191,7 @@ bool Writer::Visit_Logical_Or(ZRef<ZExprRep_Logical_Or> iRep)
 	return true;
 	}
 
-bool Writer::Visit_ValCondition(ZRef<ZExprRep_ValCondition> iRep)
+bool Writer::Visit_ValCondition(ZRef<ExprRep_ValCondition> iRep)
 	{
 	ZUtil_Strim_TQL::sToStrim(iRep->GetValCondition(), fStrimW);
 	return true;
@@ -218,7 +221,7 @@ void sToStrim(const ZRef<ZExprRep_Logical>& iRep, const ZStrimW& s)
 		}
 	}
 
-void sWrite(const ZVal_Any& iVal, const ZStrimW& s)
+void sWrite(const Val& iVal, const ZStrimW& s)
 	{ ZYad_ZooLibStrim::sToStrim(sMakeYadR(iVal), s); }
 
 } // namespace ZUtil_Strim_TQL

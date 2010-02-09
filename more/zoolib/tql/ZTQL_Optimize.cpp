@@ -96,28 +96,28 @@ static void sGather(ZRef<ZExprRep_Logical> iRep, CondUnion& oResult)
 		}
 	}
 
-static ZRef<ZExprRep_Relational> sConvertSelect(
-	ZRef<ZExprRep_Relational> iRelational, ZRef<ZExprRep_Logical> iLogical)
+static ZRef<ZExprRep_Relation> sConvertSelect(
+	ZRef<ZExprRep_Relation> iRelational, ZRef<ZExprRep_Logical> iLogical)
 	{
 	if (!iRelational)
-		return ZRef<ZExprRep_Relational>();
+		return ZRef<ZExprRep_Relation>();
 
 	CondUnion resultLogical;
 	sGather(iLogical, resultLogical);
 
-	ZRef<ZExprRep_Relational> resultRelational;
+	ZRef<ZExprRep_Relation> resultRelational;
 	for (CondUnion::const_iterator iterUnion = resultLogical.begin();
 		iterUnion != resultLogical.end(); ++iterUnion)
 		{
-		ZRef<ZExprRep_Relational> current = iRelational;
+		ZRef<ZExprRep_Relation> current = iRelational;
 		for (CondSect::const_iterator iterSect = iterUnion->begin();
 			iterSect != iterUnion->end(); ++iterSect)
 			{
-			current = new ZExprRep_Query_Restrict(*iterSect, current);
+			current = new ZExprRep_Restrict(*iterSect, current);
 			}
 
 		if (resultRelational)
-			resultRelational = new ZExprRep_Relational_Union(current, resultRelational);
+			resultRelational = new ZExprRep_Relation_Union(current, resultRelational);
 		else
 			resultRelational = current;
 		}
@@ -133,18 +133,18 @@ namespace ZANONYMOUS {
 class Optimize : public ZQueryTransformer
 	{
 public:
-	virtual ZRef<ZExprRep_Relational> Transform_Select(ZRef<ZExprRep_Query_Select> iRep);
+	virtual ZRef<ZExprRep_Relation> Transform_Select(ZRef<ZExprRep_Select> iRep);
 	};
 
-ZRef<ZExprRep_Relational> Optimize::Transform_Select(ZRef<ZExprRep_Query_Select> iRep)
+ZRef<ZExprRep_Relation> Optimize::Transform_Select(ZRef<ZExprRep_Select> iRep)
 	{
-	ZRef<ZExprRep_Relational> newRep = this->Transform(iRep->GetExpr_Relational());
+	ZRef<ZExprRep_Relation> newRep = this->Transform(iRep->GetExpr_Relation());
 	return sConvertSelect(newRep, iRep->GetExpr_Logical());
 	}
 
 } // anonymous namespace
 
-ZRef<ZExprRep_Relational> ZTQL::sOptimize(ZRef<ZExprRep_Relational> iRep)
+ZRef<ZExprRep_Relation> ZTQL::sOptimize(ZRef<ZExprRep_Relation> iRep)
 	{ return Optimize().Transform(iRep); }
 
 NAMESPACE_ZOOLIB_END

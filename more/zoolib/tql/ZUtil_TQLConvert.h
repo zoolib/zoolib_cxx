@@ -33,7 +33,7 @@ namespace ZUtil_TQLConvert {
 #pragma mark -
 #pragma mark * ZUtil_TQLConvert
 
-ZExpr_Relational sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
+ZExpr_Relation sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
 
 } // namespace ZUtil_TQLConvert
 
