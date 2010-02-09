@@ -75,6 +75,8 @@ P sLookup_T(HMODULE iHMODULE, const char* iName)
 
 static NSModule sLoadNSModule(CFBundleRef iBundleRef)
 	{
+	// FIXME
+	// On 10.3+ we should use dlopen with RTLD_LOCAL.
 	if (ZRef<CFURLRef> executableURL = ::CFBundleCopyExecutableURL(iBundleRef))
 		{
 		char buff[PATH_MAX];
@@ -84,11 +86,13 @@ static NSModule sLoadNSModule(CFBundleRef iBundleRef)
 			NSObjectFileImage image;
 			if (NSObjectFileImageSuccess == ::NSCreateObjectFileImageFromFile(buff, &image))
 				{
-				return ::NSLinkModule(
+				NSModule result = ::NSLinkModule(
 					image, buff,
 					NSLINKMODULE_OPTION_BINDNOW
 					| NSLINKMODULE_OPTION_PRIVATE
 					| NSLINKMODULE_OPTION_RETURN_ON_ERROR);
+				::NSDestroyObjectFileImage(image);
+				return result;
 				}
 			}
 		}
