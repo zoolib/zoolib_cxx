@@ -22,6 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompare_Vector.h"
 #include "zoolib/ZVal_Any.h"
 
+#include <cstring> // for strcmp
+
+using std::strcmp;
+
 NAMESPACE_ZOOLIB_BEGIN
 
 template<> int sCompare_T(const ZVal_Any& iL, const ZVal_Any& iR)
