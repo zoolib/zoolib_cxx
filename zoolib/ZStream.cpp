@@ -1117,11 +1117,7 @@ ZStreamWPos::ExBadSize::ExBadSize()
 ZStreamRWPos inherits from both ZStreamRPos and ZStreamWPos without extending either protocol.
 It serves as a standard designation for an entity that is considered to contain a list of bytes
 that can be both read and written to. Calls to read and write are fulfilled at the current
-position, and the current position is updated.
-The position can be set to any value from 0 to 2^64-1. If the position is set beyond the end
-of the current list of bytes, the list is augmented with bytes of arbitrary value to match the
-new position. The size can be set to any value from 0 to 2^64-1 bytes. If the size is set to
-a value less than the current position then the current position is reduced to match.
+position, and the current position (and size) is updated.
 */
 
 // =================================================================================================
