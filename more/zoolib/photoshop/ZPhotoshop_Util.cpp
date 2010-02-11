@@ -18,26 +18,51 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Photoshop__
-#define __ZUtil_Photoshop__ 1
-#include "zconfig.h"
+#include "zoolib/photoshop/ZPhotoshop_Util.h"
+#include "zoolib/photoshop/ZPhotoshop_Val.h"
 
-#include "zoolib/photoshop/ZPhotoshop.h"
+#include "PITerminology.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-namespace ZUtil_Photoshop {
+namespace ZPhotoshop {
+
+using namespace ZPhotoshop;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Photoshop
 
-void sGetHostVersion(int& oMajor, int& oMinor, int& oFix);
+void sGetHostVersion(int& oMajor, int& oMinor, int& oFix)
+	{
+	static bool sFetched;
+	static int sMajor, sMinor, sFix;
+	if (!sFetched)
+		{
+		Spec theSpec;
+		theSpec += Spec::sEnum(classApplication, Enumerated(typeOrdinal, enumTarget));
+		theSpec += Spec::sProperty(classProperty, keyHostVersion);
 
-int sGetHostVersion_Major();
+		if (const Map& versionMap = theSpec.Get().Get(keyHostVersion).GetMap())
+			{
+			sMajor = versionMap.Get(keyVersionMajor).GetInt32();
+			sMinor = versionMap.Get(keyVersionMinor).GetInt32();
+			sFix = versionMap.Get(keyVersionFix).GetInt32();
+			}
+		sFetched = true;
+		}
+	oMajor = sMajor;
+	oMinor = sMinor;
+	oFix = sFix;
+	}
+
+int sGetHostVersion_Major()
+	{
+	int major, minor, fix;
+	sGetHostVersion(major, minor, fix);
+	return major;
+	}
 
 } // namespace ZUtil_Photoshop
 
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZUtil_Photoshop__

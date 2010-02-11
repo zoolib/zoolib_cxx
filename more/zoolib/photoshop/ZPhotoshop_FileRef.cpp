@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/photoshop/ZPhotoshop_FileRef.h"
-#include "zoolib/photoshop/ZUtil_Photoshop.h"
+#include "zoolib/photoshop/ZPhotoshop_Util.h"
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
@@ -390,7 +390,7 @@ FileRef::FileRef(const ZTrail& iTrail)
 			const string theWinPath = spTrailAsWin(iTrail);
 			ZStreamRWPos_RAM buffer;
 			if (ZCONFIG_Photoshop_SDKVersion <= ZCONFIG_Photoshop_SDKVersion_PS7
-				&& ZUtil_Photoshop::sGetHostVersion_Major() <= ZCONFIG_Photoshop_SDKVersion_PS7)
+				&& ZPhotoshop::sGetHostVersion_Major() <= ZCONFIG_Photoshop_SDKVersion_PS7)
 				{
 				// We're being hosted by an old version of photoshop. Convert our
 				// UTF8 string to the 8-bit system codepage.
@@ -461,7 +461,7 @@ ZTrail FileRef::AsTrail() const
 			FSSpec result;
 			Boolean wasChanged;
 			if (noErr == ::ResolveAlias(nullptr, (AliasHandle)fHandle, &result, &wasChanged))
-				return sAsTrail(reinterpret_cast<const &SPPlatformFileSpecification>(result));
+				return sAsTrail(reinterpret_cast<const SPPlatformFileSpecification&>(result));
 
 		#endif
 
