@@ -19,13 +19,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/photoshop/ZPhotoshop_FileRef.h"
+#include "zoolib/photoshop/ZUtil_Photoshop.h"
 
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZMemory.h"
+#include "zoolib/ZStream_Memory.h"
+#include "zoolib/ZStreamRWPos_RAM.h"
+#include "zoolib/ZStrim_Stream.h"
+#include "zoolib/ZStdInt.h"
+#include "zoolib/ZString.h"
+#include "zoolib/ZTextCoder_Win.h"
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_CFType.h"
 
 #include <stdexcept> // For runtime_error
+#include <cstdio> // For sscanf
 
 #include "PIDefines.h"
 #include "PIGetPathSuite.h"
@@ -84,21 +93,84 @@ using std::string;
 #pragma mark -
 #pragma mark * ZPhotoshop suites, for local use
 
-#ifdef kPSAliasSuite
-	static AutoSuite<PSAliasSuite>
-		spPSAlias(kPSAliasSuite, kPSAliasSuiteVersion1);
-#endif
-
 static AutoSuite<PSHandleSuite2>
 	spPSHandle(kPSHandleSuite, kPSHandleSuiteVersion2);
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * UseHandle
+
+namespace ZANONYMOUS {
+
+class UseHandle
+	{
+public:
+	UseHandle(Handle iHandle);
+	~UseHandle();
+
+	void* Ptr() const;
+	size_t Size()  const;
+
+private:
+	Handle fHandle;
+	::Ptr fPtr;
+	Boolean fOldLock;
+	};
+
+UseHandle::UseHandle(Handle iHandle)
+:	fHandle(iHandle)
+	{ spPSHandle->SetLock(fHandle, true, &fPtr, &fOldLock); }
+
+UseHandle::~UseHandle()
+	{ spPSHandle->SetLock(fHandle, fOldLock, &fPtr, &fOldLock); }
+
+void* UseHandle::Ptr() const
+	{ return fPtr; }
+
+size_t UseHandle::Size() const
+	{ return spPSHandle->GetSize(fHandle); }
+
+} // namespace ZANONYMOUS
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Helpers
 
+static Handle spHandleDuplicate(Handle iHandle)
+	{
+	if (!iHandle)
+		return nullptr;
+
+	size_t theSize = spPSHandle->GetSize(iHandle);
+	Handle result = spPSHandle->New(theSize);
+	ZBlockCopy(iHandle[0], UseHandle(result).Ptr(), theSize);
+	return result;
+	}
+
+static void spHandleDispose(Handle iHandle)
+	{
+	if (iHandle)
+		spPSHandle->Dispose(iHandle);
+	}
+
+static string8 spTrailAsWin(const ZTrail& iTrail)
+	{
+	string8 result;
+	if (iTrail.Count() > 0)
+		{
+		result = iTrail.At(0) + ":\\";
+		if (iTrail.Count() > 1)
+			result += iTrail.SubTrail(1).AsString("\\", "");
+		}
+	return result;
+	}
+
 #if ZCONFIG_SPI_Enabled(Carbon)
+
 static ZTrail spMacAsTrail(short iVRefNum, long iDirID, const unsigned char* iName)
 	{
+	// If we're on an old PS, we;ll need to convert from MacRoman to UTF-8
+
 	ZTrail theResult;
 
 	for (;;)
@@ -150,9 +222,11 @@ static ZTrail spMacAsTrail(short iVRefNum, long iDirID, const unsigned char* iNa
 
 	return theResult;
 	}
+
 #endif // ZCONFIG_SPI_Enabled(Carbon)
 
 #if ZCONFIG_SPI_Enabled(Carbon64)
+
 static ZTrail spMacAsTrail(const FSRef& iFSRef)
 	{
 	char buffer[1024];
@@ -161,19 +235,31 @@ static ZTrail spMacAsTrail(const FSRef& iFSRef)
 
 	return ZTrail(false);
 	}
+
 #endif // ZCONFIG_SPI_Enabled(Carbon64)
 
-static string8 spTrailAsWin(const ZTrail& iTrail)
+#if defined(__PIWin__)
+
+static UINT spGetSystemCodePage()
 	{
-	string8 result;
-	if (iTrail.Count() > 0)
+	static bool sFetched = false;
+	static UINT sValue;
+	if (!sFetched)
 		{
-		result = iTrail.At(0) + ":\\";
-		if (iTrail.Count() > 1)
-			result += iTrail.SubTrail(1).AsString("\\", "");
+		char theCP[10];
+		int length = ::GetLocaleInfoA(
+			::GetSystemDefaultLCID(),
+			LOCALE_IDEFAULTANSICODEPAGE, 
+			theCP, 
+			countof(theCP));
+
+		std::sscanf(theCP, "%d", &sValue);
+		sFetched = true;
 		}
-	return result;
+	return sValue;
 	}
+
+#endif // defined(__PIWin__)
 
 // =================================================================================================
 #pragma mark -
@@ -220,23 +306,6 @@ ZTrail sAsTrail(const SPPlatformFileSpecification& iSpec)
 // =================================================================================================
 #pragma mark -
 #pragma mark * FileRef
-
-static Handle spHandleDuplicate(Handle iHandle)
-	{
-	if (!iHandle)
-		return nullptr;
-
-	size_t theSize = spPSHandle->GetSize(iHandle);
-	Handle result = spPSHandle->New(theSize);
-	ZBlockCopy(iHandle[0], result[0], theSize);
-	return result;
-	}
-
-static void spHandleDispose(Handle iHandle)
-	{
-	if (iHandle)
-		spPSHandle->Dispose(iHandle);
-	}
 
 FileRef::FileRef()
 :	fHandle(nullptr)
@@ -306,9 +375,57 @@ FileRef::FileRef(const ZTrail& iTrail)
 
 	#elif defined(__PIWin__)
 
-		string16 asWin = ZUnicode::sAsUTF16(spTrailAsWin(iTrail));
-		
-		spPSAlias->WinNewAliasFromWidePath((uint16*)asWin.c_str(), &fHandle);		
+		#ifdef kPSAliasSuite
+
+			const string16 asWin = ZUnicode::sAsUTF16(spTrailAsWin(iTrail));
+
+			AutoSuite<PSAliasSuite> thePSAlias(kPSAliasSuite, kPSAliasSuiteVersion1);
+			thePSAlias->WinNewAliasFromWidePath((uint16*)asWin.c_str(), &fHandle);
+
+		#else
+
+			// The only mention of the 'utxt'-tagged format is in this message:
+			// <http://forums.adobe.com/message/2356596>
+
+			const string theWinPath = spTrailAsWin(iTrail);
+			ZStreamRWPos_RAM buffer;
+			if (ZUtil_Photoshop::sGetHostVersion_Major() <= ZCONFIG_Photoshop_SDKVersion_PS7)
+				{
+				// We're being hosted by an old version of photoshop. Convert our
+				// UTF8 string to the 8-bit system codepage.
+				ZStrimW_StreamEncoder theStrimW(new ZTextEncoder_Win(spGetSystemCodePage()), buffer);
+				theStrimW.Write(theWinPath);
+				buffer.WriteInt8(0);
+
+				size_t stringSize = buffer.GetSize();
+				fHandle = spPSHandle->New(stringSize);
+				buffer.SetPosition(0);
+				buffer.Read(UseHandle(fHandle).Ptr(), stringSize);
+				}
+			else
+				{
+				// We can use the 'utxt' tagged format.
+				ZStrimW_StreamUTF16LE theStrimW(buffer);
+				theStrimW.Write(theWinPath);
+				buffer.WriteInt16(0);
+
+				// Need to look at this again when we're doing 64 bit compiles.
+				ZAssertCompile(ZIntTrait_T<sizeof(size_t)>::eIs32Bit);
+
+				const uint32 stringSize = buffer.GetSize();
+				const uint32 handleSize = stringSize + 12;
+				fHandle = spPSHandle->New(handleSize);
+				UseHandle useHandle(fHandle);
+
+				uint32* header = static_cast<uint32*>(useHandle.Ptr());
+				header[0] = ZFOURCC('u', 't', 'x', 't');
+				header[1] = handleSize;
+				header[2] = stringSize / 2;
+				buffer.SetPosition(0);				
+				buffer.Read(&header[3], stringSize);
+				}
+
+		#endif
 
 	#else
 
@@ -317,28 +434,11 @@ FileRef::FileRef(const ZTrail& iTrail)
 	#endif
 	}
 
-Handle FileRef::Get() const
-	{ return fHandle; }
-
-Handle FileRef::Orphan()
-	{
-	Handle result = fHandle;
-	fHandle = 0;
-	return result;
-	}
-
-Handle& FileRef::OParam()
-	{
-	spHandleDispose(fHandle);
-	fHandle = nullptr;
-	return fHandle;
-	}
-
 ZTrail FileRef::AsTrail() const
 	{
 	#if defined(__PIMac__)
 
-		#if defined(kPSAliasSuite)
+		#if defined(kPSAliasSuite) // <-- This is not the right check, really
 
 			HFSUniStr255 targetName;
 			HFSUniStr255 volumeName;
@@ -360,26 +460,40 @@ ZTrail FileRef::AsTrail() const
 			FSSpec result;
 			Boolean wasChanged;
 			if (noErr == ::ResolveAlias(nullptr, (AliasHandle)fHandle, &result, &wasChanged))
-				return spMacAsTrail(result.vRefNum, result.parID, result.name);
+				return sAsTrail(reinterpret_cast<const &SPPlatformFileSpecification>(result));
 
 		#endif
 
 	#elif defined(__PIWin__)
-
-		if (size_t theSize = spPSHandle->GetSize(fHandle))
+		
+		UseHandle useHandle(fHandle);
+		size_t handleSize = useHandle.Size();
+		const uint32* header = static_cast<uint32*>(useHandle.Ptr());
+		if (handleSize >= 12)
 			{
-			Ptr pointer;
-			Boolean oldLock;
-			spPSHandle->SetLock(fHandle, true, &pointer, &oldLock);
-
-			ZTrail result(false);
-			if (pointer)
-				result = sWinAsTrail((const char*)pointer);
-
-			spPSHandle->SetLock(fHandle, oldLock, &pointer, &oldLock);
-			return result;
+			// The handle is large enough.
+			if (header[0] == ZFOURCC('u', 't', 'x', 't'))
+				{
+				// It has the 'utxt' prefix.
+				if (header[1] == handleSize)
+					{
+					// Its stored block size matches the handle size.
+					if (header[2] == (handleSize - 12) / 2)
+						{
+						// The count of code units is correct.
+						const string8 theWinPath = ZUnicode::sAsUTF8((const UTF16*)&header[3]);
+						return sWinAsTrail(theWinPath);
+						}
+					}					
+				}
 			}
-	
+		// The handle did not pass our screening, assume it's
+		// an 8 bit string in the system codepage, skipping the NUL terminator.
+		ZStreamRPos_Memory theStreamR(header, handleSize - 1);
+		ZStrimR_StreamDecoder theStrimR(new ZTextDecoder_Win(spGetSystemCodePage()), theStreamR);
+		const string8 theWinPath = theStrimR.ReadAll8();
+		return sWinAsTrail(theWinPath);
+
 	#else
 
 		#error Unsupported platform
@@ -387,6 +501,27 @@ ZTrail FileRef::AsTrail() const
 	#endif
 
 	return ZTrail(false);
+	}
+
+Handle FileRef::Get() const
+	{ return fHandle; }
+
+Handle FileRef::Orphan()
+	{
+	Handle result = fHandle;
+	fHandle = 0;
+	return result;
+	}
+
+Handle& FileRef::OParam()
+	{
+	spHandleDispose(fHandle);
+	// When the Handle passed to ActionSuite GetAlias methods contains
+	// the bytes 'utxt' that tells PS that it should return a UTF16
+	// string, with a special header that distinguishes it from the
+	// regular 8-bit encoding using the system codepage.
+	fHandle = reinterpret_cast<Handle>('utxt'); \
+	return fHandle;
 	}
 
 } // namespace ZPhotoshop

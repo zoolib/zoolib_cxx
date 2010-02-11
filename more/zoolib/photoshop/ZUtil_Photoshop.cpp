@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,68 +18,51 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZPhotoshop_FileRef__
-#define __ZPhotoshop_FileRef__ 1
-#include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
+#include "zoolib/photoshop/ZUtil_Photoshop.h"
+#include "zoolib/photoshop/ZPhotoshop_Val.h"
 
-#include "zoolib/ZMacFixup.h"
-
-#include "zoolib/ZTrail.h"
-#include "zoolib/ZTypes.h"
-#include "zoolib/ZUnicodeString.h"
-
-#include "zoolib/photoshop/ZPhotoshop.h"
-
-#include "SPFiles.h" // For SPPlatformFileSpecification
+#include "PITerminology.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZPhotoshop
+namespace ZUtil_Photoshop {
 
-namespace ZPhotoshop {
+using namespace ZPhotoshop;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Public utilities
+#pragma mark * ZUtil_Photoshop
 
-ZTrail sWinAsTrail(const string8& iWin);
-ZTrail sAsTrail(const SPPlatformFileSpecification& iSpec);
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * FileRef
-
-class FileRef
+void sGetHostVersion(int& oMajor, int& oMinor, int& oFix)
 	{
-public:
-	FileRef();
-	FileRef(const FileRef& iOther);
-	~FileRef();
-	FileRef& operator=(const FileRef& iOther);
+	static bool sFetched;
+	static int sMajor, sMinor, sFix;
+	if (!sFetched)
+		{
+		Spec theSpec;
+		theSpec += Spec::sEnum(classApplication, Enumerated(typeOrdinal, enumTarget));
+		theSpec += Spec::sProperty(classProperty, keyHostVersion);
 
-	FileRef(Handle iHandle);
-	FileRef(Adopt_T<Handle> iHandle);
+		if (const Map& versionMap = theSpec.Get().Get(keyHostVersion).GetMap())
+			{
+			sMajor = versionMap.Get(keyVersionMajor).GetInt32();
+			sMinor = versionMap.Get(keyVersionMinor).GetInt32();
+			sFix = versionMap.Get(keyVersionFix).GetInt32();
+			}
+		sFetched = true;
+		}
+	oMajor = sMajor;
+	oMinor = sMinor;
+	oFix = sFix;
+	}
 
-	FileRef& operator=(Handle iHandle);
-	FileRef& operator=(Adopt_T<Handle> iHandle);
+int sGetHostVersion_Major()
+	{
+	int major, minor, fix;
+	sGetHostVersion(major, minor, fix);
+	return major;
+	}
 
-	explicit FileRef(const ZTrail& iTrail);
-
-	ZTrail AsTrail() const;
-
-	Handle Get() const;
-	Handle Orphan();
-	Handle& OParam();
-	
-private:
-	Handle fHandle;
-	};
-
-} // namespace ZPhotoshop
+} // namespace ZUtil_Photoshop
 
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZPhotoshop_FileRef__

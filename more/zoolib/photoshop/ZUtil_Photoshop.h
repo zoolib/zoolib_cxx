@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,68 +18,26 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZPhotoshop_FileRef__
-#define __ZPhotoshop_FileRef__ 1
+#ifndef __ZUtil_Photoshop__
+#define __ZUtil_Photoshop__ 1
 #include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
-
-#include "zoolib/ZMacFixup.h"
-
-#include "zoolib/ZTrail.h"
-#include "zoolib/ZTypes.h"
-#include "zoolib/ZUnicodeString.h"
 
 #include "zoolib/photoshop/ZPhotoshop.h"
 
-#include "SPFiles.h" // For SPPlatformFileSpecification
-
 NAMESPACE_ZOOLIB_BEGIN
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZPhotoshop
-
-namespace ZPhotoshop {
+namespace ZUtil_Photoshop {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Public utilities
+#pragma mark * ZUtil_Photoshop
 
-ZTrail sWinAsTrail(const string8& iWin);
-ZTrail sAsTrail(const SPPlatformFileSpecification& iSpec);
+void sGetHostVersion(int& oMajor, int& oMinor, int& oFix);
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * FileRef
+int sGetHostVersion_Major();
 
-class FileRef
-	{
-public:
-	FileRef();
-	FileRef(const FileRef& iOther);
-	~FileRef();
-	FileRef& operator=(const FileRef& iOther);
-
-	FileRef(Handle iHandle);
-	FileRef(Adopt_T<Handle> iHandle);
-
-	FileRef& operator=(Handle iHandle);
-	FileRef& operator=(Adopt_T<Handle> iHandle);
-
-	explicit FileRef(const ZTrail& iTrail);
-
-	ZTrail AsTrail() const;
-
-	Handle Get() const;
-	Handle Orphan();
-	Handle& OParam();
-	
-private:
-	Handle fHandle;
-	};
-
-} // namespace ZPhotoshop
+} // namespace ZUtil_Photoshop
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZPhotoshop_FileRef__
+#endif // __ZUtil_Photoshop__
