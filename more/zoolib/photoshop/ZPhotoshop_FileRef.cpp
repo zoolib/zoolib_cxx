@@ -240,7 +240,7 @@ static ZTrail spMacAsTrail(const FSRef& iFSRef)
 
 #if defined(__PIWin__)
 
-static UINT spGetSystemCodePage()
+static UINT spSystemCodePage()
 	{
 	static bool sFetched = false;
 	static UINT sValue;
@@ -389,11 +389,12 @@ FileRef::FileRef(const ZTrail& iTrail)
 
 			const string theWinPath = spTrailAsWin(iTrail);
 			ZStreamRWPos_RAM buffer;
-			if (ZUtil_Photoshop::sGetHostVersion_Major() <= ZCONFIG_Photoshop_SDKVersion_PS7)
+			if (ZCONFIG_Photoshop_SDKVersion <= ZCONFIG_Photoshop_SDKVersion_PS7
+				&& ZUtil_Photoshop::sGetHostVersion_Major() <= ZCONFIG_Photoshop_SDKVersion_PS7)
 				{
 				// We're being hosted by an old version of photoshop. Convert our
 				// UTF8 string to the 8-bit system codepage.
-				ZStrimW_StreamEncoder theStrimW(new ZTextEncoder_Win(spGetSystemCodePage()), buffer);
+				ZStrimW_StreamEncoder theStrimW(new ZTextEncoder_Win(spSystemCodePage()), buffer);
 				theStrimW.Write(theWinPath);
 				buffer.WriteInt8(0);
 
@@ -490,7 +491,7 @@ ZTrail FileRef::AsTrail() const
 		// The handle did not pass our screening, assume it's
 		// an 8 bit string in the system codepage, skipping the NUL terminator.
 		ZStreamRPos_Memory theStreamR(header, handleSize - 1);
-		ZStrimR_StreamDecoder theStrimR(new ZTextDecoder_Win(spGetSystemCodePage()), theStreamR);
+		ZStrimR_StreamDecoder theStrimR(new ZTextDecoder_Win(spSystemCodePage()), theStreamR);
 		const string8 theWinPath = theStrimR.ReadAll8();
 		return sWinAsTrail(theWinPath);
 
