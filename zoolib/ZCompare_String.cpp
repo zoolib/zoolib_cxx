@@ -18,10 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCompare.h"
 #include "zoolib/ZCompare_String.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 template <> int sCompare_T(const std::string& iL, const std::string& iR);
+
+ZMACRO_CompareRegistration_T(std::string);
 
 NAMESPACE_ZOOLIB_END

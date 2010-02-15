@@ -66,7 +66,6 @@ template <> int sCompare_T(const unsigned long& iL, const unsigned long& iR)
 	template <> int sCompare_T(const __int64& iL, const __int64& iR)
 		{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
-
 	template <> int sCompare_T(const unsigned __int64& iL, const unsigned __int64& iR)
 		{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
@@ -74,7 +73,6 @@ template <> int sCompare_T(const unsigned long& iL, const unsigned long& iR)
 
 	template <> int sCompare_T(const long long& iL, const long long& iR)
 		{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
-
 
 	template <> int sCompare_T(const unsigned long long& iL, const unsigned long long& iR)
 		{ return iL < iR ? -1 : iR < iL ? 1 : 0; }

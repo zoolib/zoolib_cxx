@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCompare.h"
 #include "zoolib/ZCompare_Real.h"
-
 #include "zoolib/ZCompat_cmath.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -44,6 +44,8 @@ int sCompare_T(const float& iL, const float& iR)
 	return 0;
 	}
 
+ZMACRO_CompareRegistration_T(float);
+
 template <>
 int sCompare_T(const double& iL, const double& iR)
 	{
@@ -61,5 +63,7 @@ int sCompare_T(const double& iL, const double& iR)
 		return 1;
 	return 0;
 	}
+
+ZMACRO_CompareRegistration_T(double);
 
 NAMESPACE_ZOOLIB_END

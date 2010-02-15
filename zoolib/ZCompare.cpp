@@ -19,7 +19,67 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompare.h"
+#include "zoolib/ZDebug.h"
+
+#include <map>
+
+using std::map;
+using std::pair;
 
 NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * CompareCharStars
+
+namespace ZANONYMOUS {
+
+class CompareCharStars
+	{
+public:
+	bool operator()(const char* iL, const char* iR) const
+		{ return std::strcmp(iL, iR) < 0; }
+	};
+
+} // anonymous namespace
+
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCompare
+
+static int sInitCount;
+static map<const char*, ZCompare*, CompareCharStars>* sMap;
+
+ZCompare::ZCompare(const char* iTypeName)
+	{
+	if (++sInitCount == 1)
+		{
+		ZAssert(sMap);
+		sMap = new map<const char*, ZCompare*, CompareCharStars>;
+		}
+	sMap->insert(pair<const char*, ZCompare*>(iTypeName, this));
+	}
+
+ZCompare::~ZCompare()
+	{
+	if (--sInitCount == 0)
+		{
+		delete sMap;
+		sMap = nullptr;
+		}
+	}
+
+int ZCompare::sCompare(const char* iTypeName, const void* iL, const void* iR)
+	{
+	ZAssert(sMap);
+
+	map<const char*, ZCompare*, CompareCharStars>::iterator i = sMap->find(iTypeName);
+	if (i != sMap->end())
+		return (*i).second->Compare(iL, iR);
+
+	ZDebugStopf(0, ("ZCompare::sCompare called on unsupported type '%s'", iTypeName));
+	return iL < iR ? -1 : iL > iR ? 1 : 0;
+	}
 
 NAMESPACE_ZOOLIB_END

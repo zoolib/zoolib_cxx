@@ -24,7 +24,52 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompare_T.h"
 
+#include <typeinfo>
+
 NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCompare
+
+class ZCompare
+	{
+protected:
+	ZCompare(const char* iTypeName);
+	~ZCompare();
+
+	virtual int Compare(const void* iL, const void* iR) = 0;
+
+public:
+	static int sCompare(const char* iTypeName, const void* iL, const void* iR);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCompareRegistration_T
+
+template <class T, int (*CompareProc)(const T& iL, const T& iR)>
+class ZCompareRegistration_T : public ZCompare
+	{
+public:
+	ZCompareRegistration_T() : ZCompare(typeid(T).name()) {}
+
+// From ZCompare
+	virtual int Compare(const void* iL, const void* iR)
+		{ return CompareProc(*static_cast<const T*>(iL), *static_cast<const T*>(iR)); }
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Macros
+
+#define ZMACRO_CompareRegistration_T_Real(t, CLASS, INST) \
+	static class CLASS : public ZCompareRegistration_T<t, sCompare_T<t> > {} INST
+
+#define ZMACRO_CompareRegistration_T(t) \
+	ZMACRO_CompareRegistration_T_Real(t, \
+	ZMACRO_CONCAT(ZComparer_,__LINE__), \
+	ZMACRO_CONCAT(sComparer_,__LINE__))
 
 NAMESPACE_ZOOLIB_END
 

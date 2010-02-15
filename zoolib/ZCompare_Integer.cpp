@@ -18,30 +18,35 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCompare.h"
 #include "zoolib/ZCompare_Integer.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-template <> int sCompare_T(const bool& iL, const bool& iR);
-template <> int sCompare_T(const char& iL, const char& iR);
-template <> int sCompare_T(const unsigned char& iL, const unsigned char& iR);
-template <> int sCompare_T(const signed char& iL, const signed char& iR);
-template <> int sCompare_T(const short& iL, const short& iR);
-template <> int sCompare_T(const unsigned short& iL, const unsigned short& iR);
-template <> int sCompare_T(const int& iL, const int& iR);
-template <> int sCompare_T(const unsigned int& iL, const unsigned int& iR);
-template <> int sCompare_T(const long& iL, const long& iR);
-template <> int sCompare_T(const unsigned long& iL, const unsigned long& iR);
+#define ZMACRO_InstantiateTemplate_And_CompareRegistration(t) \
+	template <> int sCompare_T(const t& iL, const t& iR); \
+	ZMACRO_CompareRegistration_T(t)
+	
+ZMACRO_InstantiateTemplate_And_CompareRegistration(bool);
+ZMACRO_InstantiateTemplate_And_CompareRegistration(char);
+ZMACRO_InstantiateTemplate_And_CompareRegistration(unsigned char);
+ZMACRO_InstantiateTemplate_And_CompareRegistration(signed char);
+ZMACRO_InstantiateTemplate_And_CompareRegistration(short);
+ZMACRO_InstantiateTemplate_And_CompareRegistration(unsigned short);
+ZMACRO_InstantiateTemplate_And_CompareRegistration(int);
+ZMACRO_InstantiateTemplate_And_CompareRegistration(unsigned int);
+ZMACRO_InstantiateTemplate_And_CompareRegistration(long);
+ZMACRO_InstantiateTemplate_And_CompareRegistration(unsigned long);
 
 #if ZCONFIG(Compiler, MSVC)
 
-	template <> int sCompare_T(const __int64& iL, const __int64& iR);
-	template <> int sCompare_T(const unsigned __int64& iL, const unsigned __int64& iR);
+	ZMACRO_InstantiateTemplate_And_CompareRegistration(__int64);
+	ZMACRO_InstantiateTemplate_And_CompareRegistration(unsigned __int64);
 
 #else
 
-	template <> int sCompare_T(const long long& iL, const long long& iR);
-	template <> int sCompare_T(const unsigned long long& iL, const unsigned long long& iR);
+	ZMACRO_InstantiateTemplate_And_CompareRegistration(long long);
+	ZMACRO_InstantiateTemplate_And_CompareRegistration(unsigned long long);
 
 #endif
 
