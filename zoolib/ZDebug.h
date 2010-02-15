@@ -95,7 +95,7 @@ size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams)
 // struct obeys necessary alignment rules). It either drops out completely or generates an
 // error, depending on whether the expression evaulates true or false.
 template <bool> struct AssertCompile {};
-template<> struct AssertCompile<true> { typedef bool IsValid; };
+template <> struct AssertCompile<true> { typedef bool IsValid; };
 
 #define ZAssertCompile(a) typedef ZooLib::ZDebug::AssertCompile<(a)>::IsValid ZAssertCompileValid
 
