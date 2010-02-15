@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-// ==================================================
+// =================================================================================================
 
 namespace ZUnicode {
 // This template and its two specializations below let us
@@ -58,7 +58,7 @@ typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf32_t UTF32;
 typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf16_t UTF16;
 typedef char UTF8;
 
-// ==================================================
+// =================================================================================================
 
 // Use the ZFourCC inline if possible.
 inline uint32 ZFourCC(uint8 a, uint8 b, uint8 c, uint8 d)
@@ -68,7 +68,7 @@ inline uint32 ZFourCC(uint8 a, uint8 b, uint8 c, uint8 d)
 #define ZFOURCC(a,b,c,d) \
 	((uint32)((((uint8)a) << 24) | (((uint8)b) << 16) | (((uint8)c) << 8) | (((uint8)d))))
 
-// ==================================================
+// =================================================================================================
 
 struct ZPointPOD
 	{
@@ -88,7 +88,7 @@ struct ZRectPOD
 
 template <> int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR);
 
-// ==================================================
+// =================================================================================================
 
 enum ZType
 	{
@@ -122,7 +122,7 @@ template <> inline int sCompare_T(const ZType& iL, const ZType& iR)
 
 const char* ZTypeAsString(ZType iType);
 
-// ==================================================
+// =================================================================================================
 
 // There are several places where we need a buffer for some other code
 // to dump data into, the content of which we don't care about. Rather
@@ -143,7 +143,7 @@ extern char sGarbageBuffer[4096];
 	static const size_t sStackBufferSize = 4096;
 #endif
 
-// ==================================================
+// =================================================================================================
 // For a discussion of the implementation of countof See section 14.3 of
 // "Imperfect C++" by Matthew Wilson, published by Addison Wesley.
 
@@ -152,7 +152,7 @@ uint8 (&byte_array_of_same_dimension_as(T(&)[N]))[N];
 
 #define countof(x) sizeof(ZOOLIB_PREFIX::byte_array_of_same_dimension_as((x)))
 
-// ==================================================
+// =================================================================================================
 
 template <class T>
 class Adopt_T
@@ -176,6 +176,8 @@ template <class P>
 Adopt_T<P> Adopt(P iP)
 	{ return Adopt_T<P>(iP); }
 
+// =================================================================================================
+
 typedef void* VoidStar_t;
 
 template <> inline int sCompare_T(const VoidStar_t& iL, const VoidStar_t& iR)
@@ -186,7 +188,7 @@ typedef const void* ConstVoidStar_t;
 template <> inline int sCompare_T(const ConstVoidStar_t& iL, const ConstVoidStar_t& iR)
 	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
 
-// ==================================================
+// =================================================================================================
 
 NAMESPACE_ZOOLIB_END
 
