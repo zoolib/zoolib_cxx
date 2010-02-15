@@ -71,6 +71,10 @@ public:
 	virtual uint64 Imp_GetSize()
 		{ return fData.GetSize(); }
 
+// Our protocol
+	const T& GetData() const
+		{ return fData; }
+
 private:
 	T fData;
 	uint64 fPosition;
@@ -172,6 +176,13 @@ public:
 		fData.SetSize(realSize);
 		fSizeLogical = realSize;
 		}
+
+// Our protocol
+	const T& GetData() const
+		{ return fData; }
+
+	T& GetData()
+		{ return fData; }
 
 private:
 	T& fData;
