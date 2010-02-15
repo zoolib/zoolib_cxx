@@ -56,7 +56,7 @@ class ZVal_AppleEvent
 
 public:
 	ZAny AsAny() const;
-	ZAny AsAny(const ZAny& iDefault) const;
+	ZAny DAsAny(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 

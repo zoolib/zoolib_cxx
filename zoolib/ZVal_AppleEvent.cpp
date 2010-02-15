@@ -127,7 +127,7 @@ string sAEKeywordAsString(AEKeyword iKeyword)
 		}
 	}
 
-static ZAny spAsAny(const ZAny& iDefault, const AEDesc& iDesc);
+static ZAny spDAsAny(const ZAny& iDefault, const AEDesc& iDesc);
 
 static ZSeq_Any spAsSeq_Any(const ZAny& iDefault, const AEDesc& iDesc)
 	{
@@ -140,7 +140,7 @@ static ZSeq_Any spAsSeq_Any(const ZAny& iDefault, const AEDesc& iDesc)
 			{
 			ZVal_AppleEvent result;
 			if (noErr == ::AEGetNthDesc(&iDesc, x + 1, typeWildCard, nullptr, &result.OParam()))
-				theSeq.Append(spAsAny(iDefault, result));
+				theSeq.Append(spDAsAny(iDefault, result));
 			else
 				theSeq.Append(iDefault);
 			}
@@ -161,7 +161,7 @@ static ZMap_Any spAsMap_Any(const ZAny& iDefault, const AEDesc& iDesc)
 			AEKeyword key;
 			ZVal_AppleEvent result;
 			if (noErr == ::AEGetNthDesc(&iDesc, x + 1, typeWildCard, &key, &result.OParam()))
-				theMap.Set(sAEKeywordAsString(key), spAsAny(iDefault, result));
+				theMap.Set(sAEKeywordAsString(key), spDAsAny(iDefault, result));
 			}
 		}
 
@@ -176,7 +176,7 @@ static ZMap_Any spAsMap_Any(const ZAny& iDefault, const AEDesc& iDesc)
 		return ZAny(theVal); \
 		} \
 
-static ZAny spAsAny(const ZAny& iDefault, const AEDesc& iDesc)
+static ZAny spDAsAny(const ZAny& iDefault, const AEDesc& iDesc)
 	{
 	if (spAECheckIsRecord(&iDesc))
 		return ZAny(spAsMap_Any(iDefault, iDesc));
@@ -245,10 +245,10 @@ static ZAny spAsAny(const ZAny& iDefault, const AEDesc& iDesc)
 #pragma mark * ZVal_AppleEvent
 
 ZAny ZVal_AppleEvent::AsAny() const
-	{ return this->AsAny(ZAny()); }
+	{ return this->DAsAny(ZAny()); }
 
-ZAny ZVal_AppleEvent::AsAny(const ZAny& iDefault) const
-	{ return spAsAny(iDefault, *this); }
+ZAny ZVal_AppleEvent::DAsAny(const ZAny& iDefault) const
+	{ return spDAsAny(iDefault, *this); }
 
 ZVal_AppleEvent::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(descriptorType != typeNull); }
