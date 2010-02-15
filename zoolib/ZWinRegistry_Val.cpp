@@ -305,11 +305,11 @@ KeyRef& KeyRef::operator=(const KeyRef& iOther)
 	return *this;
 	}
 
-KeyRef::KeyRef(ZRef<HKEY> iOther)
+KeyRef::KeyRef(const ZRef<HKEY>& iOther)
 :	inherited(iOther)
 	{}
 
-KeyRef& KeyRef::operator=(ZRef<HKEY> iOther)
+KeyRef& KeyRef::operator=(const ZRef<HKEY>& iOther)
 	{
 	inherited::operator=(iOther);
 	return *this;

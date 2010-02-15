@@ -30,6 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAny.h"
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZRef_WinHANDLE.h"
+#include "zoolib/ZTagged_T.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZValAccessors.h"
 #include "zoolib/ZVal_Any.h"
@@ -45,26 +46,10 @@ using namespace std;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWinRegistry::Tagged_T
+#pragma mark * Types
 
-template <class Tag, class Value>
-class Tagged_T
-	{
-	Value fValue;
-public:
-	Tagged_T() {}
-	Tagged_T(const Tagged_T& iOther) : fValue(iOther.fValue) {}
-	~Tagged_T() {}
-	Tagged_T& operator=(const Tagged_T& iOther) { fValue = iOther.fValue; return *this; }
-
-	Tagged_T(const Value& iValue) : fValue(iValue) {}
-	Tagged_T& operator=(const Value& iValue) { fValue = iValue; return *this; }
-
-	const Value& Get() const { return fValue; }
-	};
-
-typedef Tagged_T<struct Env, string16> String_Env;
-typedef Tagged_T<struct Link, string16> String_Link;
+typedef ZTagged_T<struct Env, string16> String_Env;
+typedef ZTagged_T<struct Link, string16> String_Link;
 typedef vector<string16> StringList;
 typedef ZData_Any Data;
 class KeyRef;
@@ -128,8 +113,8 @@ public:
 	~KeyRef();
 	KeyRef& operator=(const KeyRef& iOther);
 
-	KeyRef(ZRef<HKEY> iOther);
-	KeyRef& operator=(ZRef<HKEY> iOther);
+	KeyRef(const ZRef<HKEY>& iOther);
+	KeyRef& operator=(const ZRef<HKEY>& iOther);
 
 // ZMap protocol
 	bool QGet(const string16& iName, Val& oVal) const;
