@@ -220,7 +220,7 @@ YadVisitor_GetVal_NS::YadVisitor_GetVal_NS(ZRef<NSObject> iDefault)
 
 bool YadVisitor_GetVal_NS::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{
-	fOutput = ZUtil_NS::sAsNSObject(fDefault, iYadPrimR->AsAny());
+	fOutput = ZUtil_NS::sDAsNSObject(fDefault, iYadPrimR->AsAny());
 	return true;
 	}
 

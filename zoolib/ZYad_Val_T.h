@@ -117,6 +117,10 @@ public:
 	virtual uint64 GetSize()
 		{ return fSeq.Count(); }
 
+// Our protocol
+	const Seq_t& GetSeq()
+		{ return fSeq; }
+
 protected:
 	const Seq_t fSeq;
 	uint64 fPosition;
@@ -212,6 +216,10 @@ public:
 	virtual ZRef<ZYadMapRPos> Clone()
 		{ return new ZYadMapRPos_Val_T(fMap, fIndex); }
 
+// Our protocol
+	const Map_t& GetMap()
+		{ return fMap; }
+
 protected:
 	const Map_t fMap;
 	Index_t fIndex;
@@ -258,6 +266,10 @@ public:
 
 	virtual ZRef<ZYadMapRPos> Clone()
 		{ return new Self_t(fMap, fIndex); }
+
+// Our protocol
+	const Map_t& GetMap()
+		{ return fMap; }
 
 protected:
 	const Map_t fMap;

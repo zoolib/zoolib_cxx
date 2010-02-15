@@ -31,17 +31,17 @@ using std::string;
 
 ZRef<ZYadR> sMakeYadR(const ZAny& iVal)
 	{
-	if (const ZMap_Any* theVal = iVal.PGet_T<ZMap_Any>())
-		return sMakeYadR(*theVal);
-		
-	if (const ZSeq_Any* theVal = iVal.PGet_T<ZSeq_Any>())
-		return sMakeYadR(*theVal);
-
 	if (const string8* theVal = iVal.PGet_T<string8>())
 		return sMakeYadR(*theVal);
 
 	if (const ZData_Any* theVal = iVal.PGet_T<ZData_Any>())
 		return new ZYadStreamRPos_Any(*theVal);
+
+	if (const ZSeq_Any* theVal = iVal.PGet_T<ZSeq_Any>())
+		return sMakeYadR(*theVal);
+
+	if (const ZMap_Any* theVal = iVal.PGet_T<ZMap_Any>())
+		return sMakeYadR(*theVal);
 
 	return new ZYadPrimR_Any(iVal);
 	}
@@ -64,7 +64,7 @@ namespace ZANONYMOUS {
 class YadVisitor_GetVal_Any : public ZYadVisitor
 	{
 public:
-	YadVisitor_GetVal_Any(ZVal_Any iDefault);
+	YadVisitor_GetVal_Any(const ZVal_Any& iDefault);
 
 // From ZYadVisitor
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
@@ -73,7 +73,7 @@ public:
 	virtual bool Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
 	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 
-	ZVal_Any fDefault;
+	const ZVal_Any& fDefault;
 	ZVal_Any fOutput;
 	};
 
@@ -81,14 +81,27 @@ public:
 
 ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
 	{
-	// Could detect that we're dealing with a ZYadR encapsulating a ZData_Any, ZSeq_Any or ZMap_Any
+	if (ZRef<ZYadPrimR_Any> asPrim = iYadR.DynamicCast<ZYadPrimR_Any>())
+		return asPrim->GetAny();
+
+	if (ZRef<ZYadStrimU_String> asString = iYadR.DynamicCast<ZYadStrimU_String>())
+		return asString->GetStrim().GetString8();
+
+	if (ZRef<ZYadStreamRPos_Any> asYadStream = iYadR.DynamicCast<ZYadStreamRPos_Any>())
+		return asYadStream->GetStream().GetData();
+
+	if (ZRef<ZYadMapRPos_Any> asMap = iYadR.DynamicCast<ZYadMapRPos_Any>())
+		return asMap->GetMap();
+
+	if (ZRef<ZYadSeqRPos_Any> asSeq = iYadR.DynamicCast<ZYadSeqRPos_Any>())
+		return asSeq->GetSeq();
 
 	YadVisitor_GetVal_Any theVisitor(iDefault);
 	iYadR->Accept(theVisitor);
 	return theVisitor.fOutput;
 	}
 
-YadVisitor_GetVal_Any::YadVisitor_GetVal_Any(ZVal_Any iDefault)
+YadVisitor_GetVal_Any::YadVisitor_GetVal_Any(const ZVal_Any& iDefault)
 :	fDefault(iDefault)
 	{}
 

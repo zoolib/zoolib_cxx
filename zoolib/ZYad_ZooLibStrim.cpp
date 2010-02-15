@@ -786,7 +786,7 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 	{
 	if (false)
 		{}
-	else if (iVal.type() == typeid(void))
+	else if (iVal.Type() == typeid(void))
 		{
 		s.Write("Null");
 		}
@@ -913,7 +913,7 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 		}
 	else
 		{
-		s << "null /* Unhandled: " << iVal.type().name() << " */";
+		s << "null /* Unhandled: " << iVal.Type().name() << " */";
 		}
 	}
 

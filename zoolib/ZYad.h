@@ -238,8 +238,26 @@ public:
 // From ZYadPrimR
 	virtual ZAny AsAny();
 
+// Our protocol
+	const ZAny& GetAny();
+
 private:
 	const ZAny fAny;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadStrimU_String
+
+class ZYadStrimU_String
+:	public ZYadStrimR,
+	public ZStrimmerU_T<ZStrimU_String>
+	{
+public:
+	ZYadStrimU_String(const std::string& iString);
+
+// From ZYadR
+	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
 // =================================================================================================
