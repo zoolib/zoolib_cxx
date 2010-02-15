@@ -175,6 +175,14 @@ public:
 	// Used with COM output parameters. See sCOMPtr and sCOMVoidPtr in ZWinCOM.h
 	T*& GetPtrRef() { return fP; }
 
+	template <class O>
+	O* DynamicCast() const
+		{ return dynamic_cast<O*>(fP); }
+
+	template <class O>
+	O* StaticCast() const
+		{ return static_cast<O*>(fP); }
+
 private:
 	T* fP;
 	};
