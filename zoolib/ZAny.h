@@ -28,33 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZAny as a typedef of boost::any
-
-#if ZCONFIG_SPI_Enabled(boost)
-
-#include "boost/any.hpp"
-
-NAMESPACE_ZOOLIB_BEGIN
-
-typedef boost::any ZAnyBase;
-
-template<typename ValueType>
-ValueType* ZAnyBaseCast(ZAnyBase* operand)
-	{ return boost::any_cast<ValueType>(operand); }
-
-template<typename ValueType>
-const ValueType* ZAnyBaseCast(const ZAnyBase* operand)
-	{ return boost::any_cast<ValueType>(operand); }
-
-NAMESPACE_ZOOLIB_END
-
-#endif // ZCONFIG_SPI_Enabled(boost)
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZAnyBase, copied/reworked from boost::any
-
-#if ! ZCONFIG_SPI_Enabled(boost)
 
 // Copyright Kevlin Henney, 2000, 2001, 2002. All rights reserved.
 //
@@ -99,6 +73,8 @@ public:
 
 	bool empty() const;
 	const std::type_info & type() const;
+	const void* voidstar() const;
+	void* voidstar();
 
 private:
 	class placeholder
@@ -108,6 +84,7 @@ private:
 
 		virtual const std::type_info& type() const = 0;
 		virtual placeholder* clone() const = 0;
+		virtual void* voidstar() = 0;
 		};
 
 	template<typename ValueType>
@@ -121,6 +98,9 @@ private:
 
 		virtual placeholder* clone() const
 			{ return new holder(held); }
+
+		virtual void* voidstar()
+			{ return &held; }
 
 		ValueType held;
 
@@ -160,8 +140,6 @@ const ValueType* ZAnyBaseCast(const ZAnyBase* operand)
 
 NAMESPACE_ZOOLIB_END
 
-#endif // ! ZCONFIG_SPI_Enabled(boost)
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZAny
@@ -179,8 +157,14 @@ public:
 	void swap(ZAny& rhs)
 		{ ZAnyBase::swap((ZAnyBase&)rhs); }
 
-	const std::type_info & type() const
+	const std::type_info& Type() const
 		{ return ZAnyBase::type(); }
+
+	const void* VoidStar() const
+		{ return ZAnyBase::voidstar(); }
+
+	void* VoidStar()
+		{ return ZAnyBase::voidstar(); }
 
 	ZAny()
 		{}
