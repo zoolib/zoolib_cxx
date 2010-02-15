@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCompare.h"
 #include "zoolib/ZCompare_T.h"
 #include "zoolib/ZCompare_Vector.h"
 #include "zoolib/ZVal_Any.h"
@@ -28,14 +29,18 @@ using std::strcmp;
 
 NAMESPACE_ZOOLIB_BEGIN
 
-template<> int sCompare_T(const ZVal_Any& iL, const ZVal_Any& iR)
+template <> int sCompare_T(const ZVal_Any& iL, const ZVal_Any& iR)
 	{ return iL.Compare(iR); }
 
-template<> int sCompare_T(const ZSeq_Any& iL, const ZSeq_Any& iR)
+template <> int sCompare_T(const ZSeq_Any& iL, const ZSeq_Any& iR)
 	{ return iL.Compare(iR); }
 
-template<> int sCompare_T(const ZMap_Any& iL, const ZMap_Any& iR)
+template <> int sCompare_T(const ZMap_Any& iL, const ZMap_Any& iR)
 	{ return iL.Compare(iR); }
+
+ZMACRO_CompareRegistration_T(ZVal_Any);
+ZMACRO_CompareRegistration_T(ZSeq_Any);
+ZMACRO_CompareRegistration_T(ZMap_Any);
 
 // =================================================================================================
 #pragma mark -
@@ -43,11 +48,10 @@ template<> int sCompare_T(const ZMap_Any& iL, const ZMap_Any& iR)
 
 int ZVal_Any::Compare(const ZVal_Any& iOther) const
 	{
-	if (int compare = strcmp(this->type().name(), iOther.type().name()))
+	const char* typeName = this->Type().name();
+	if (int compare = strcmp(typeName, iOther.Type().name()))
 		return compare;
-	ZUnimplemented();
-	return this < &iOther ? -1 : this > &iOther ? 1 : 0;
-//	return sCompare_T<ValueType>(held, static_cast<holder*>(iOther)->held);	
+	return ZCompare::sCompare(typeName, this->VoidStar(), iOther.VoidStar());
 	}
 
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Data, ZData_Any)
@@ -77,7 +81,7 @@ ZSeq_Any::Rep::Rep(const vector<ZVal_Any>& iVector)
 ZAny ZSeq_Any::AsAny() const
 	{ return ZAny(*this); }
 
-ZAny ZSeq_Any::AsAny(const ZAny& iDefault) const
+ZAny ZSeq_Any::DAsAny(const ZAny& iDefault) const
 	{ return ZAny(*this); }
 
 ZSeq_Any::operator operator_bool_type() const
@@ -253,7 +257,7 @@ static map<string, ZVal_Any> spEmptyMap;
 ZAny ZMap_Any::AsAny() const
 	{ return ZAny(*this); }
 
-ZAny ZMap_Any::AsAny(const ZAny& iDefault) const
+ZAny ZMap_Any::DAsAny(const ZAny& iDefault) const
 	{ return ZAny(*this); }
 
 ZMap_Any::operator operator_bool_type() const

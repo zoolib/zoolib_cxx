@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZAny.h"
-#include "zoolib/ZCompare_T.h"
 #include "zoolib/ZData_Any.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZRef_Counted.h"
@@ -117,7 +116,7 @@ public:
 	typedef ZVal_Any Val_t;
 
 	ZAny AsAny() const;
-	ZAny AsAny(const ZAny& iDefault) const;
+	ZAny DAsAny(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 
@@ -239,7 +238,7 @@ public:
 	typedef ZVal_Any Val_t;
 
 	ZAny AsAny() const;
-	ZAny AsAny(const ZAny& iDefault) const;
+	ZAny DAsAny(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 
