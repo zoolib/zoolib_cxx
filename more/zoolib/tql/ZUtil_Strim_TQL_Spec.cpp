@@ -147,7 +147,7 @@ Writer::Writer(const ZStrimW& iStrimW)
 
 bool Writer::Visit(ZRef<ZExprRep> iRep)
 	{
-	fStrimW << "/*unknown LogOp*/";
+	fStrimW << "/*unknown expr*/";
 	return true;
 	}
 

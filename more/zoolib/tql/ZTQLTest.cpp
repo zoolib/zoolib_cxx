@@ -9,6 +9,19 @@
 
 #include "zoolib/tuplebase/ZTBQuery.h"
 
+#include "zoolib/ZStream_Buffered.h"
+#include "zoolib/ZStrim_Stream.h"
+#include "zoolib/ZStrimmer_Streamer.h"
+#include "zoolib/ZStrimU_Unreader.h"
+#include "zoolib/ZStrimW_ML.h"
+
+#include "zoolib/ZFile.h"
+#include "zoolib/ZYad_XMLPList.h"
+#include "zoolib/ZYad_ZooLibStrim.h"
+#include "zoolib/ZUtil_Yad.h"
+#include "zoolib/ZYad_Any.h"
+#include "zoolib/ZYad_MapAsSeq.h"
+
 NAMESPACE_ZOOLIB_USING
 
 using namespace ZTQL;
@@ -277,7 +290,35 @@ static void sTestOne(const string& iLabel, const ZStrimW& s, const ZTBQuery& iTB
 	}
 
 void sTestQL(const ZStrimW& s);
-void sTestQL(const ZStrimW& s)
+void sTestQL2(const ZStrimW& s)
+	{
+	Map m1;
+	m1.Set("prop1", string("value"));
+	Map m2 = m1, m3 = m1;
+
+	m1.Set("prop2", string("value1"));
+
+	m2.Set("prop2", string("value2"));
+
+	m3.Set("prop2", string("value1"));
+
+	int res0a = sCompare_T(m1, m2);
+	int res0b = sCompare_T(m2, m1);
+	int res0c = sCompare_T(m1, m3);
+	int res0d = sCompare_T(m3, m1);
+
+	ZVal_Expr val1 = string("Fred");
+	ZVal_Expr val2 = string("bill");
+	ZVal_Expr val3 = int32(27);
+	ZVal_Expr val4 = int32(28);
+	
+	int res1 = sCompare_T(val1, val2);
+	int res2 = sCompare_T(val2, val3);
+	int res3 = sCompare_T(val3, val4);
+	int res4 = sCompare_T(val1, val1);
+	}
+
+void sTestQL3(const ZStrimW& s)
 	{
 	ZMap_Expr theMap;
 	theMap.Set("name", ZMap_Expr().Set("last", string("fred")));
@@ -335,4 +376,47 @@ void sTestQL(const ZStrimW& s)
 //	Query query = sQuery();
 //	ZUtil_StrimTQL::sToStrim(s, query);
 //	s << "\n";
+	}
+
+
+void sTestQL(const ZStrimW& s)
+	{
+	ZRef<ZStreamerR> theStreamerR = ZFileSpec("/Users/ag/Music/iTunes/iTunes Music Library.xml").OpenR();
+	theStreamerR = new ZStreamerR_Buffered(4096, theStreamerR);
+
+	ZRef<ZStrimmerR> theStrimmerR_StreamUTF8 =
+		new ZStrimmerR_Streamer_T<ZStrimR_StreamUTF8>(theStreamerR);
+
+	ZRef<ZStrimmerU> theStrimmerU_Unreader =
+		new ZStrimmerU_FT<ZStrimU_Unreader>(theStrimmerR_StreamUTF8);
+
+	ZRef<ZML::StrimmerU> theStrimmerU_ML = new ZML::StrimmerU(theStrimmerU_Unreader);
+
+	ZRef<ZYadR> theYadR = ZYad_XMLPList::sMakeYadR(theStrimmerU_ML);
+
+	ZYadOptions theYadOptions(true);
+	
+	ZExpr_Logical theCondition = CName("Disc Number") == CConst(int32(2)) & CName("Track Number") > CConst(int32(10));
+
+	const ZVal_Any theVal = sFromYadR(ZVal_Any(), theYadR);
+	theYadR = sMakeYadR(theVal);
+	theYadR = ZUtil_Yad::sWalk(theYadR, "Tracks");
+	if (ZRef<ZYadMapR> theYadMapR = theYadR.DynamicCast<ZYadMapR>())
+		{
+		ZRef<ZYadSeqR> theYadSeqR = sMapAsSeq("Dummy", theYadMapR);
+		for (;;)
+			{
+			ZRef<ZYadR> inner = theYadSeqR->ReadInc();
+			if (!inner)
+				break;
+			ZVal_Any theVal = sFromYadR(ZVal_Any(), inner);
+
+			if (sMatches(theCondition, theVal))
+				{
+				ZYad_ZooLibStrim::sToStrim(0, theYadOptions, sMakeYadR(theVal), s);
+				}
+			}
+		}
+
+	
 	}
