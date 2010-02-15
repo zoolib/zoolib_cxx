@@ -76,7 +76,7 @@ public:
 	static ZVal_ZooLib sFromAny(const ZAny& iAny);
 
 	ZAny AsAny() const;
-	ZAny AsAny(const ZAny& iDefault) const;
+	ZAny DAsAny(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 
@@ -280,7 +280,7 @@ public:
 	typedef ZVal_ZooLib Val_t;
 
 	ZAny AsAny() const;
-	ZAny AsAny(const ZAny& iDefault) const;
+	ZAny DAsAny(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 
@@ -410,7 +410,7 @@ public:
 	typedef ZVal_ZooLib Val_t;
 
 	ZAny AsAny() const;
-	ZAny AsAny(const ZAny& iDefault) const;
+	ZAny DAsAny(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 
@@ -424,6 +424,12 @@ public:
 
 // ZMap protocol
 	void Clear();
+
+	template <class S>
+	S Get_T(const string8& iName) const;
+
+	template <class S>
+	S Get_T(const Index_t& iIndex) const;
 
 	ZVal_ZooLib* PGet(Index_t iIndex);
 	ZVal_ZooLib* PGet(const char* iPropName);
@@ -497,6 +503,16 @@ protected:
 
 	ZRef<Rep> fRep;
 	};
+
+template <class S>
+inline
+S ZMap_Z::Get_T(const string8& iName) const
+	{ return this->Get(iName).Get_T<S>(); }
+
+template <class S>
+inline
+S ZMap_Z::Get_T(const Index_t& iIndex) const
+	{ return this->Get(iIndex).Get_T<S>(); }
 
 // =================================================================================================
 #pragma mark -

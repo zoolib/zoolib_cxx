@@ -190,7 +190,7 @@ static ZSeq_Any spAsSeq_Any(const ZAny& iDefault, const ZRef<CFArrayRef>& iCFArr
 	ZSeq_Any theSeq;
 
 	for (size_t x = 0, theCount = ::CFArrayGetCount(iCFArray); x < theCount; ++x)
-		theSeq.Append(sAsAny(iDefault, ::CFArrayGetValueAtIndex(iCFArray, x)));
+		theSeq.Append(sDAsAny(iDefault, ::CFArrayGetValueAtIndex(iCFArray, x)));
 
 	return theSeq;
 	}
@@ -203,7 +203,7 @@ static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon
 	pair<ZMap_Any*, const ZAny*>* thePair =
 		static_cast<pair<ZMap_Any*, const ZAny*>*>(iRefcon);
 
-	thePair->first->Set(sAsUTF8(theKey), sAsAny(*thePair->second, theValue));
+	thePair->first->Set(sAsUTF8(theKey), sDAsAny(*thePair->second, theValue));
 	}
 
 static ZMap_Any spAsMap_Any(const ZAny& iDefault, const ZRef<CFDictionaryRef>& iCFDictionary)
@@ -214,7 +214,7 @@ static ZMap_Any spAsMap_Any(const ZAny& iDefault, const ZRef<CFDictionaryRef>& i
 	return theMap;
 	}
 
-ZAny sAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal)
+ZAny sDAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal)
 	{
 	if (!iVal)
 		return ZAny();
@@ -302,7 +302,7 @@ ZAny sAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal)
 	}
 
 ZAny sAsAny(ZRef<CFTypeRef> iVal)
-	{ return sAsAny(ZAny(), iVal); }
+	{ return sDAsAny(ZAny(), iVal); }
 
 static ZRef<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
 	{ return Adopt_T<CFTypeRef>(::CFNumberCreate( kCFAllocatorDefault, iType, iVal)); }

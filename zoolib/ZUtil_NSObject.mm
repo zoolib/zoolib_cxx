@@ -132,7 +132,7 @@ string8 sAsUTF8(NSString* iNSString)
 string16 sAsUTF16(NSString* iNSString)
 	{ return ZUnicode::sAsUTF16([iNSString UTF8String]); }
 
-ZAny sAsAny(const ZAny& iDefault, NSObject* iVal)
+ZAny sDAsAny(const ZAny& iDefault, NSObject* iVal)
 	{
 	if (iVal)
 		{
@@ -147,9 +147,9 @@ ZAny sAsAny(const ZAny& iDefault, NSObject* iVal)
 	}
 
 ZAny sAsAny(NSObject* iVal)
-	{ return sAsAny(ZAny(), iVal); }
+	{ return sDAsAny(ZAny(), iVal); }
 
-NSObject* sAsNSObject(NSObject* iDefault, const ZAny& iVal)
+NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal)
 	{
 	if (false)
 		{}
@@ -179,7 +179,7 @@ NSObject* sAsNSObject(NSObject* iDefault, const ZAny& iVal)
 		{
 		NSMutableArray* theArray = sArrayMutable();
 		for (size_t x = 0, count = theValue->Count(); x < count; ++x)
-			[theArray addObject:sAsNSObject(iDefault, theValue->Get(x))];
+			[theArray addObject:sDAsNSObject(iDefault, theValue->Get(x))];
 		return theArray;
 		}
 	else if (const ZMap_Any* theValue = iVal.PGet_T<ZMap_Any>())
@@ -188,7 +188,7 @@ NSObject* sAsNSObject(NSObject* iDefault, const ZAny& iVal)
 		for (ZMap_Any::Index_t i = theValue->Begin(), end = theValue->End();
 			i != end; ++i)
 			{
-			[theDictionary setObject:sAsNSObject(iDefault, theValue->Get(i))
+			[theDictionary setObject:sDAsNSObject(iDefault, theValue->Get(i))
 				forKey:sString(theValue->NameOf(i))];
 			}
 		return theDictionary;
@@ -258,7 +258,7 @@ NSObject* sAsNSObject(NSObject* iDefault, const ZAny& iVal)
 	}
 
 NSObject* sAsNSObject(const ZAny& iVal)
-	{ return sAsNSObject([NSNull null], iVal); }
+	{ return sDAsNSObject([NSNull null], iVal); }
 
 } // namespace ZUtil_NSObject
 

@@ -394,9 +394,9 @@ ZVal_ZooLib ZVal_ZooLib::sFromAny(const ZAny& iAny)
 	}
 
 ZAny ZVal_ZooLib::AsAny() const
-	{ return this->AsAny(ZAny()); }
+	{ return this->DAsAny(ZAny()); }
 
-ZAny ZVal_ZooLib::AsAny(const ZAny& iDefault) const
+ZAny ZVal_ZooLib::DAsAny(const ZAny& iDefault) const
 	{
 	switch (fType.fType)
 		{
@@ -469,7 +469,7 @@ ZAny ZVal_ZooLib::AsAny(const ZAny& iDefault) const
 #endif//##
 		case eZType_Tuple:
 			{
-			return sFetch_T<ZMap_ZooLib>(fType.fBytes)->AsAny(iDefault);
+			return sFetch_T<ZMap_ZooLib>(fType.fBytes)->DAsAny(iDefault);
 			}
 		case eZType_RefCounted:
 			{
@@ -482,7 +482,7 @@ ZAny ZVal_ZooLib::AsAny(const ZAny& iDefault) const
 			}
 		case eZType_Vector:
 			{
-			return sFetch_T<ZSeq_ZooLib>(fType.fBytes)->AsAny(iDefault);
+			return sFetch_T<ZSeq_ZooLib>(fType.fBytes)->DAsAny(iDefault);
 			}
 		default:
 			{
@@ -1797,9 +1797,9 @@ ZSeq_ZooLib::Rep::~Rep()
 #pragma mark * ZSeq_ZooLib
 
 ZAny ZSeq_ZooLib::AsAny() const
-	{ return this->AsAny(ZAny()); }
+	{ return this->DAsAny(ZAny()); }
 
-ZAny ZSeq_ZooLib::AsAny(const ZAny& iDefault) const
+ZAny ZSeq_ZooLib::DAsAny(const ZAny& iDefault) const
 	{
 	ZSeq_Any theSeq;
 	if (fRep)
@@ -1807,7 +1807,7 @@ ZAny ZSeq_ZooLib::AsAny(const ZAny& iDefault) const
 		if (size_t theCount = fRep->fVector.size())
 			{
 			for (size_t x = 0; x < theCount; ++x)
-				theSeq.Append(fRep->fVector[x].AsAny(iDefault));
+				theSeq.Append(fRep->fVector[x].DAsAny(iDefault));
 			}
 		}
 	return ZAny(theSeq);
@@ -2080,9 +2080,9 @@ ZMap_ZooLib::Rep::~Rep()
 #pragma mark * ZMap_ZooLib
 
 ZAny ZMap_ZooLib::AsAny() const
-	{ return this->AsAny(ZAny()); }
+	{ return this->DAsAny(ZAny()); }
 
-ZAny ZMap_ZooLib::AsAny(const ZAny& iDefault) const
+ZAny ZMap_ZooLib::DAsAny(const ZAny& iDefault) const
 	{
 	ZMap_Any theMap;
 	if (fRep)
@@ -2090,7 +2090,7 @@ ZAny ZMap_ZooLib::AsAny(const ZAny& iDefault) const
 		for (Index_t i = fRep->fProperties.begin(), end = fRep->fProperties.end();
 			i != end; ++i)
 			{
-			theMap.Set((*i).fName.AsString(), (*i).fVal.AsAny(iDefault));
+			theMap.Set((*i).fName.AsString(), (*i).fVal.DAsAny(iDefault));
 			}
 		}
 	return ZAny(theMap);

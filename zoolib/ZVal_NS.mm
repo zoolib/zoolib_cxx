@@ -56,10 +56,10 @@ NSNumber* spAsNumber(NSObject* iObj)
 #pragma mark * ZVal_NS
 
 ZAny ZVal_NS::AsAny() const
-	{ return this->AsAny(ZAny()); }
+	{ return this->DAsAny(ZAny()); }
 
-ZAny ZVal_NS::AsAny(const ZAny& iDefault) const
-	{ return ZUtil_NS::sAsAny(iDefault, inherited::Get()); }
+ZAny ZVal_NS::DAsAny(const ZAny& iDefault) const
+	{ return ZUtil_NS::sDAsAny(iDefault, inherited::Get()); }
 
 ZVal_NS::operator bool() const
 	{
@@ -387,10 +387,10 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, Map, ZMap_NS)
 #pragma mark * ZSeq_NS
 
 ZAny ZSeq_NS::AsAny() const
-	{ return this->AsAny(ZAny()); }
+	{ return this->DAsAny(ZAny()); }
 
-ZAny ZSeq_NS::AsAny(const ZAny& iDefault) const
-	{ return ZUtil_NS::sAsAny(iDefault, this->pArray()); }
+ZAny ZSeq_NS::DAsAny(const ZAny& iDefault) const
+	{ return ZUtil_NS::sDAsAny(iDefault, this->pArray()); }
 
 ZSeq_NS::operator bool() const
 	{ return this->Count(); }
@@ -588,10 +588,10 @@ NSMutableArray* ZSeq_NS::pTouch()
 #pragma mark * ZMap_NS
 
 ZAny ZMap_NS::AsAny() const
-	{ return this->AsAny(ZAny()); }
+	{ return this->DAsAny(ZAny()); }
 
-ZAny ZMap_NS::AsAny(const ZAny& iDefault) const
-	{ return ZUtil_NS::sAsAny(iDefault, this->pDictionary()); }
+ZAny ZMap_NS::DAsAny(const ZAny& iDefault) const
+	{ return ZUtil_NS::sDAsAny(iDefault, this->pDictionary()); }
 
 ZMap_NS::operator bool() const
 	{

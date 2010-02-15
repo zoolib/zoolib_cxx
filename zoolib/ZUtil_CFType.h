@@ -75,7 +75,7 @@ ZRef<CFMutableDataRef> sDataMutable(const ZRef<CFDataRef>& iCFData);
 string8 sAsUTF8(CFStringRef iCFString);
 string16 sAsUTF16(CFStringRef iCFString);
 
-ZAny sAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal);
+ZAny sDAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal);
 ZAny sAsAny(ZRef<CFTypeRef> iVal);
 
 ZRef<CFTypeRef> sAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal);

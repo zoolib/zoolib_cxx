@@ -30,11 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include ZMACINCLUDE2(CoreFoundation,CFNumber.h)
 #include ZMACINCLUDE2(CoreFoundation,CFString.h)
 
-#include <typeinfo>
-
 NAMESPACE_ZOOLIB_BEGIN
-
-using std::type_info;
 
 using ZUtil_CFType::sAsUTF8;
 using ZUtil_CFType::sString;
@@ -42,18 +38,14 @@ using ZUtil_CFType::sStringMutable;
 using ZUtil_CFType::sArrayMutable;
 using ZUtil_CFType::sDictionaryMutable;
 
-template<> int sCompare_T(const ZVal_CFType& iL, const ZVal_CFType& iR)
+template <> int sCompare_T(const ZVal_CFType& iL, const ZVal_CFType& iR)
 	{ return sCompare_T(ZRef<CFTypeRef>(iL), ZRef<CFTypeRef>(iR)); }
-//	{ return iL.Compare(iR); }
 
-template<> int sCompare_T(const ZSeq_CFType& iL, const ZSeq_CFType& iR)
+template <> int sCompare_T(const ZSeq_CFType& iL, const ZSeq_CFType& iR)
 	{ return sCompare_T(ZRef<CFTypeRef>(iL), ZRef<CFTypeRef>(iR)); }
-//	{ return iL.Compare(iR); }
 
-template<> int sCompare_T(const ZMap_CFType& iL, const ZMap_CFType& iR)
+template <> int sCompare_T(const ZMap_CFType& iL, const ZMap_CFType& iR)
 	{ return sCompare_T(ZRef<CFTypeRef>(iL), ZRef<CFTypeRef>(iR)); }
-//	{ return iL.Compare(iR); }
-
 
 // =================================================================================================
 #pragma mark -
@@ -78,7 +70,7 @@ bool spGetNumber_T(CFTypeRef iTypeRef, CFNumberType iNumberType, S& oVal)
 
 template <class S>
 ZRef<CFTypeRef> spNumber_T(CFNumberType iNumberType, const S& iVal)
-	{ return Adopt(CFTypeRef(::CFNumberCreate(kCFAllocatorDefault, iNumberType, &iVal))); }
+	{ return Adopt_T<CFTypeRef>(::CFNumberCreate(kCFAllocatorDefault, iNumberType, &iVal)); }
 
 } // anonymous namespace
 
@@ -87,10 +79,10 @@ ZRef<CFTypeRef> spNumber_T(CFNumberType iNumberType, const S& iVal)
 #pragma mark * ZVal_CFType
 
 ZAny ZVal_CFType::AsAny() const
-	{ return this->AsAny(ZAny()); }
+	{ return this->DAsAny(ZAny()); }
 
-ZAny ZVal_CFType::AsAny(const ZAny& iDefault) const
-	{ return ZUtil_CFType::sAsAny(iDefault, *this); }
+ZAny ZVal_CFType::DAsAny(const ZAny& iDefault) const
+	{ return ZUtil_CFType::sDAsAny(iDefault, *this); }
 
 ZVal_CFType::operator bool() const
 	{
@@ -424,10 +416,10 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Map, ZMap_CFType)
 #pragma mark * ZSeq_CFType
 
 ZAny ZSeq_CFType::AsAny() const
-	{ return this->AsAny(ZAny()); }
+	{ return this->DAsAny(ZAny()); }
 
-ZAny ZSeq_CFType::AsAny(const ZAny& iDefault) const
-	{ return ZUtil_CFType::sAsAny(iDefault, this->pArray()); }
+ZAny ZSeq_CFType::DAsAny(const ZAny& iDefault) const
+	{ return ZUtil_CFType::sDAsAny(iDefault, this->pArray()); }
 
 ZSeq_CFType::operator bool() const
 	{ return this->Count(); }
@@ -625,10 +617,10 @@ CFMutableArrayRef ZSeq_CFType::pTouch()
 #pragma mark * ZMap_CFType
 
 ZAny ZMap_CFType::AsAny() const
-	{ return this->AsAny(ZAny()); }
+	{ return this->DAsAny(ZAny()); }
 
-ZAny ZMap_CFType::AsAny(const ZAny& iDefault) const
-	{ return ZUtil_CFType::sAsAny(iDefault, this->pDictionary()); }
+ZAny ZMap_CFType::DAsAny(const ZAny& iDefault) const
+	{ return ZUtil_CFType::sDAsAny(iDefault, this->pDictionary()); }
 
 ZMap_CFType::operator bool() const
 	{

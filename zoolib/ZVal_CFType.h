@@ -52,7 +52,7 @@ class ZVal_CFType
 	typedef ZRef<CFTypeRef> inherited;
 public:
 	ZAny AsAny() const;
-	ZAny AsAny(const ZAny& iDefault) const;
+	ZAny DAsAny(const ZAny& iDefault) const;
 
 	operator bool() const;
 
@@ -130,7 +130,7 @@ class ZSeq_CFType
 
 public:
 	ZAny AsAny() const;
-	ZAny AsAny(const ZAny& iDefault) const;
+	ZAny DAsAny(const ZAny& iDefault) const;
 
 	operator bool() const;
 
@@ -191,7 +191,7 @@ class ZMap_CFType
 
 public:
 	ZAny AsAny() const;
-	ZAny AsAny(const ZAny& iDefault) const;
+	ZAny DAsAny(const ZAny& iDefault) const;
 
 	operator bool() const;
 

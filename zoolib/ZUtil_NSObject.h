@@ -78,10 +78,10 @@ NSMutableData* sDataMutable(NSData* iNSData);
 string8 sAsUTF8(NSString* iNSString);
 string16 sAsUTF16(NSString* iNSString);
 
-ZAny sAsAny(const ZAny& iDefault, NSObject* iVal);
+ZAny sDAsAny(const ZAny& iDefault, NSObject* iVal);
 ZAny sAsAny(NSObject* iVal);
 
-NSObject* sAsNSObject(NSObject* iDefault, const ZAny& iVal);
+NSObject* sDAsNSObject(NSObject* iDefault, const ZAny& iVal);
 NSObject* sAsNSObject(const ZAny& iVal);
 
 } // namespace ZUtil_NSObject
