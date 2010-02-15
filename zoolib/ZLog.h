@@ -44,7 +44,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZLOG(s, p, f) const ZooLib::ZLog::S& s = ZLog::S(ZLog::p, f)
 
 #define ZLOGFUNCTION(p) ZooLib::ZLog::FunctionEntryExit \
-	theLogFEE##__LINE__(ZooLib::ZLog::p, ZMACRO_PRETTY_FUNCTION)
+	ZMACRO_CONCAT(theLogFEE_,__LINE__)(ZooLib::ZLog::p, ZMACRO_PRETTY_FUNCTION)
 
 #define ZLOGTRACE(p) ZooLib::ZLog::sLogTrace(ZooLib::ZLog::p, __FILE__, __LINE__)
 

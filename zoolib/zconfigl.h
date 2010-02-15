@@ -350,4 +350,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZMACINCLUDE3(a,b,c) <c>
 #endif
 
+#define ZMACRO_CONCAT_(x, y) x ## y
+#define ZMACRO_CONCAT(x, y) ZMACRO_CONCAT_(x,y)
+
 #endif // __zconfigl__
