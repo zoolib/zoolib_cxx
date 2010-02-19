@@ -1,0 +1,186 @@
+/**
+\mainpage
+Some words for the main page
+*/
+
+/**
+\defgroup NamingConvention Naming Convention
+
+\section ScopePrefixes Prefixes Designate Scope
+Most of my confusion when reading unfamiliar C++ is determining from which scope a name is drawn.
+
+We've got local and instance variables, parameters, and class, file and namespace statics to
+distinguish. ZooLib uses name prefixes to make distinct the scope in which a name is defined.
+
+- \c f - instance variables. (\c f stands for 'field', cf MacApp/Taligent/Object Pascal).
+
+- \c s - static variables and functions. These are class or namespace static, and are publicly
+accessible.
+
+- \c sp - static private variables and functions. If file static then obviously they're not publicly
+visible. If class static, then they're in the private section, are not publicly accessible and
+are intended for use by subclasses.
+
+- \c i - input parameter. This is the most common type of parameter and probably conforms most closely
+to the classic definition of a parameter. Its value at entry will very likely affect what the
+function does. Its value in the calling scope will not be changed by the functions's execution.
+If the function cannot operate without its value, then it's a compulsory parameter and is passed by
+value or const reference. If the parameter is optional it's passed by const pointer, so the caller
+can pass nullptr indicating that no value is available.
+
+- \c o - output parameter. Output parameters allow more than one value to be returned by a function.
+Its value on entry will not affect the function's execution and the function takes full
+responsibility for giving it an appropriate value before returning. If the parameter is compulsory
+it is passed by non-const reference. If optional, by non-const pointer.
+
+- \c io - input/output parameter. An input/output parameter's value at entry may/will affect the
+function's execution and should thus have a sensible value. Its value in the calling scope
+may/will be changed by the function's execution. If compulsory, pass by non-const reference. If
+optional by non-const pointer, just as with output parameters.
+
+- \c e - enumeration value. Enumerations are sufficiently rare that we don't bother encoding the
+scope in the name.
+
+- \c E - enumeration type
+
+\section Names Names
+Types are nouns or noun phrases; functions are verbs or verb phrases.
+
+Names that are phrases are 'intra cased', each word in the phrase has its first letter upper cased.
+If there is a prefix, the prefix is lower cased and the 'meat' starts with an upper case letter, the
+remainder being intra cased.
+
+For non-class types I'll usually use a \c _t suffix, and for template types/classes/functions a
+\c _T suffix.
+
+Classes and method names have an upper case initial letter.
+
+Local variables have a lower case initial letter. I often use a  \c the prefix, but the rule is to
+use whatever reads best.
+
+Pretty much everything else has a scope prefix.
+
+\section CompoundNames Compound Names
+
+This may be the most controversial stylistic decision, but I've found it helpful.
+
+Much of ZooLib
+consists of abstract interfaces and a suite of concrete implementations. In such situations the
+base is named with a noun or noun phrase (intra cased of course). Concrete implementations are
+named with the base name, an underscore, and a distinguishing noun or noun phrase. This somewhat
+Germanic approach keeps hierarchies together when their members are sorted lexicographically. In
+addition it provides a strong hint of a type's likely compatibility -- if you see an \c Xxxx_Yyyy
+it can generally be passed to a function expecting an \c Xxxx.
+
+For types that are related but not type-compatible I use reverse English order noun phrases, so
+\c XxxxYyyy and \c XxxxZzzz are probably part of an \c Xxxx package.
+
+The goal is not to be rigidly prescriptive, but to make several hundreds of names somewhat
+predictable and intelligible.
+*/
+
+/**
+\defgroup CodePhilosophy Code Philosophy
+
+This is not gospel. These are the ideas and approaches
+that work for me, and seem to work for code I respect.
+
+There's a couple of ways to write code. We can regard it as simply the input to a compiler
+or interpreter, and hence is written to take advantage of language features, to maximize
+the efficiency of object code and to minimize keystrokes and working space requirements.
+<em>We do not do this</em>.
+
+Instead we expect each line to be read and modified by unknown other people many times. They'll be
+unfamiliar with the code and working under pressure with many other responsibilities . So we write
+code to clearly express our intent, to lead the reader through the task at hand, to educate them
+about the problem space and our understanding of it. We might even strive to write code so that
+reading it is a pleasurable and invigorating experience.
+
+When we sit down at the keyboard we expect what we write to be published in some journal, with
+no prior opportunity for revision, so we want to be proud of it. Obviously we don't all write code
+the same way. Our experiences and individual predelictions shape what we write, whether it be code
+or prose.
+
+We're careful when working with code that's collaborative, because the clear vision laid down
+by the initial author is blurred with each incremental change. Sometimes that code's clarity
+declines to the point that it must be rewritten, not because it doesn't work but because it's
+no longer clearly intelligible, and thus ceases to be comprehensible for use or as a basis
+for extension.
+
+
+\section Guidelines Guidelines
+
+Some development communities have rigid rules about low-level formatting and high-level
+organization. I think dogmatic rules are neither necessary nor sufficient for intelligent and
+experienced professionals. But these are the guidelines I use for myself.
+
+
+\subsection Kindness
+
+Code is communication from your present state of mind to other people and to your future self.
+Be kind to them.
+
+
+\subsection Whitespace
+
+Different text editing environments use different fonts, styles, tab stops and
+space widths. The only line-to-line alignment that you can count on is whitespace at the start of
+a line. Creating a regular, intelligible and generally pleasing appearance by using embedded tabs
+or spaces will create code that looks like its been through a shredder on most other people's
+machines. Find some other way to make your code readable.
+
+The rules of the language dictate that there are some things that
+are going to be dense and ugly. Ameliorate that ugliness with whitespace, setting it off from
+the rest of the source. An empty line before and after is usually all that's needed. Even clean
+code should have a chunked feel to it, a handful of lines that address a particular sub-task,
+then another handful that have a slightly different focus. Break them up with whitespace, just
+as prose is broken into paragraphs. Within expressions, use spaces to help the reader, putting
+spaces around operators so that they are clearly visible, and breaking long expressions over
+multiple lines, with appropriate indentation.
+
+
+\subsection Courage Have the courage of your convictions.
+
+If you need to change some code, then <em>change it</em>.
+Don't just patch it. Dive in, immerse yourself. Make it lively and effective, stamped with
+your personality and perspective. Use preprocessor macros as scaffolding, to let you switch quickly
+between alternatives. But when you have confidence in the result, get rid of the old code.
+People don't want to see "The Making of Star Wars" in preference to "Star Wars" itself. They don't
+want to read a magazine article or a book littered with change bars. They want the most distilled
+expression the writer or director is capable of creating. And if you're called upon to direct
+"Hamlet" having only ever done story boards for "South Park", then reach out to others who might
+be able to provide guidance.
+
+
+\subsection LexicalScoping Lexical scoping is your friend.
+We're working with C++. We're able to declare variables in
+places that C never allowed. So do so. Declare variables as close their point of first usage as
+possible. A variable that is declared too early may inadvertantly be used without having been
+given an appropriate value (doing so with simple types will trigger a warning, complex types won't.)
+Use different names in different scopes if the variables have different intents, but don't be scared
+to reuse a name in different scopes if that's what makes the code more readable.
+
+
+\subsection Comments
+Generally the more powerful is a language feature the less often is it used.
+I would claim that in any language comments are the most powerful feature of all; comments can be
+placed anywhere, can contain anything and can express things formal code cannot. Use a comment to
+make clear to a reader only what <em>cannot</em> be made clear in code. Remember that comments is
+can express falsehoods no compiler will ever catch.
+
+
+\subsection Question Question your first solution.
+Minsky said <em>"You don't understand anything until you learn it more
+than one way."</em> When you write code to achieve some objective don't stop when it's working.
+Find another solution, and another, and another until you have a suite of possibilities amongst
+which to choose. Then you'll have created the best of which you're capable, rather than the least
+you can get away with.
+
+
+\subsection Debugging The Most Powerful Debugger
+The most powerful debugger is between your ears. A source level debugger is no substitute for a
+deep understanding of the problem space and the code that tackles that problem space. Use the
+debugger to confirm or deny hypotheses you've already formulated based on your brainwork. And
+remember the second law of thermodynamics -- a random change is going to make things worse.
+
+*/
