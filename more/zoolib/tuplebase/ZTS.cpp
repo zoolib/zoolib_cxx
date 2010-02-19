@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 /**
-\defgroup group_Tuplestore Tuplestore
+\defgroup Tuplestore
 A tuplestore is simply a humungous array of 2^64 tuples. Each entry in the array can be
 considered as being an ID/tuple pair, where the ID is simply the index into the array,
 and thus each entry's ID is unique within the tuplestore.
@@ -38,7 +38,7 @@ allocated before and  never will again. This lets us add new data to a tuplestor
 overwriting IDs that have already been used.
 
 The class ZTS defines an API for reading and writing entries in a tuplestore. Generally though
-you'll use a \ref group_Tuplebase or a \ref group_Tuplesoup instance, depending on whether you want
+you'll use a \ref Tuplebase or a \ref Tuplesoup instance, depending on whether you want
 transactional database-like features, or the more UI-friendly soup access.
 */
 
@@ -49,7 +49,7 @@ transactional database-like features, or the more UI-friendly soup access.
 /**
 \class ZTS
 \nosubgrouping
-\ingroup group_Tuplestore
+\ingroup Tuplestore
 
 ZTS defines an API for managing the huge, fixed-size, sparse array of tuples discussed in
 \ref Tuplestore. ZTS::SetTuples and ZTS::GetTuples provide access to the tuples themselves.

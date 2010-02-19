@@ -40,8 +40,8 @@ using ZUtil_STL::sFirstOrNil;
 
 // =================================================================================================
 /**
-\defgroup group_Tuplesoup Tuplesoup
-\sa group_Tuplestore
+\defgroup Tuplesoup
+\sa Tuplestore
 
 */
 
@@ -144,7 +144,7 @@ public:
 /**
 \class ZTSoup
 \nosubgrouping
-\ingroup group_Tuplesoup
+\ingroup Tuplesoup
 
 ZTSoup and its associated classes ZTSieve and ZTCrouton provide an alternative means of working
 with data in a tuplestore.

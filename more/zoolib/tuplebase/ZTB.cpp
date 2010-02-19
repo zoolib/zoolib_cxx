@@ -30,8 +30,8 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 /**
-\defgroup group_Tuplebase Tuplebase
-\sa group_Tuplestore
+\defgroup Tuplebase
+\sa Tuplestore
 
 A tuplebase is an array of 2^64 tuples. It's always fully populated so that
 every index of the array contains a tuple. When first created a tuplebase contains
@@ -438,7 +438,7 @@ static size_t sCount(ZTBRepTransaction* iTBRepTransaction, const ZTBQuery& iQuer
 
 /**
 \class ZTB
-\ingroup group_Tuplebase
+\ingroup Tuplebase
 */
 
 ZTB::ZTB(ZRef<ZTBRep> iTBRep)
@@ -511,7 +511,7 @@ ZRef<ZTBRep> ZTB::GetTBRep() const
 
 /**
 \class ZTBTxn
-\ingroup group_Tuplebase
+\ingroup Tuplebase
 */
 
 ZTBTxn::ZTBTxn(const ZTBTxn& iOther)
@@ -616,7 +616,7 @@ ZTBIterRep::~ZTBIterRep()
 
 /**
 \class ZTBIter
-\ingroup group_Tuplebase
+\ingroup Tuplebase
 */
 
 /// Instantiate a null iterator that references no tuple.

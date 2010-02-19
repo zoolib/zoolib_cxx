@@ -122,8 +122,7 @@ public:
 	Writer(const ZStrimW& iStrimW);
 
 // From ZVisitor_ExprRep
-	virtual bool Visit(ZRef<ZExprRep> iRep);
-
+	virtual bool Visit_ExprRep(ZRef<ZExprRep> iRep);
 
 // From ZVisitor_ExprRep_Logical via ZVisitor_ExprRep_ValCondition_T
 	virtual bool Visit_Logical_True(ZRef<ZExprRep_Logical_True> iRep);
@@ -145,7 +144,7 @@ Writer::Writer(const ZStrimW& iStrimW)
 :	fStrimW(iStrimW)
 	{}
 
-bool Writer::Visit(ZRef<ZExprRep> iRep)
+bool Writer::Visit_ExprRep(ZRef<ZExprRep> iRep)
 	{
 	fStrimW << "/*unknown expr*/";
 	return true;

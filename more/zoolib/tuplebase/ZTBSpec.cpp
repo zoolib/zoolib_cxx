@@ -885,12 +885,12 @@ ZTBSpec::Rep::Rep(const CriterionSect& iCriterionSect)
 /**
 \class ZTBSpec
 \nosubgrouping
-\ingroup group_Tuplebase
-\ingroup group_Tuplesoup
-\ingroup group_Tuplestore
-\sa group_Tuplebase
-\sa group_Tuplesoup
-\sa group_Tuplestore
+\ingroup Tuplebase
+\ingroup Tuplesoup
+\ingroup Tuplestore
+\sa Tuplebase
+\sa Tuplesoup
+\sa Tuplestore
 
 \note Despite its name ZTBSpec, like ZTBQuery, knows nothing about
 tuplebases, tuplesoups or tuplestores. It's simply a way to create and manage a suite

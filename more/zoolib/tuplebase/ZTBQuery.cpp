@@ -79,20 +79,20 @@ inline int ZTBQueryNode::Compare(const ZRef<ZTBQueryNode>& iOther)
 /**
 \class ZTBQuery
 \nosubgrouping
-\ingroup group_Tuplebase
-\ingroup group_Tuplesoup
-\sa group_Tuplebase
-\sa group_Tuplesoup
+\ingroup Tuplebase
+\ingroup Tuplesoup
+\sa Tuplebase
+\sa Tuplesoup
 
 \note Despite its name ZTBQuery, like ZTBSpec, knows nothing about
 tuplebases, tuplesoups or tuplestores. It's simply a way to create and manage a tree of
 simple queries and indirections through intermediate query results to be applied to a set
-of ID/tuple pairs, as discussed in \ref group_Tuplestore. As such it probably ought to be called
+of ID/tuple pairs, as discussed in \ref Tuplestore. As such it probably ought to be called
 ZTupleQuery or ZTQuery.
 
 Whereas ZTBSpec is a predicate against which \em any tuple can be checked for satisfaction,
 a ZTBQuery represents the selection of tuples from a
-\link group_Tuplestore set of ID/tuple pairs\endlink, and potentially the use of values from
+\link Tuplestore set of ID/tuple pairs\endlink, and potentially the use of values from
 the discovered tuples to execute further selection.
 
 The simplest ZTBQuery is also the most rare; a ZTBQuery initialized with a list of IDs. Its

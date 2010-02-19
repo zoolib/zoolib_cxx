@@ -33,6 +33,7 @@ typedef ZValCondition Condition;
 
 namespace ZUtil_TQLConvert {
 
+using std::string;
 using std::vector;
 
 // =================================================================================================
