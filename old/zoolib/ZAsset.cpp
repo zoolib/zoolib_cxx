@@ -27,7 +27,7 @@ using std::vector;
 NAMESPACE_ZOOLIB_BEGIN
 
 /**
-\defgroup group_Asset Assets
+\defgroup Asset
 
 The name \e asset was chosen as an alternative to \e resource. Resource is a
 term that already has too many disparate meanings on our target platforms,
@@ -194,7 +194,7 @@ little easier to understand.
 are currently immutable only ZAsset::OpenR and ZAsset::OpenRPos will return a
 valid streamer.
 
-\c ZAsset::OpenXXX each return a newly created \link group_Streamer streamer\endlink
+\c ZAsset::OpenXXX each return a newly created \link Streamer streamer\endlink
 of the appropriate type. The streamer that's returned is yours to do with as you wish.
 It's independent of any other streamer created by any other code -- its
 position will only be changed by calls to it, not by anything done by
@@ -340,8 +340,8 @@ an invalid ZAsset and an empty string, respectively.
 
 /**
 \class ZAsset
-\ingroup group_Asset
-\sa group_Asset
+\ingroup Asset
+\sa Asset
 */
 
 
@@ -480,8 +480,8 @@ ZRef<ZStreamerRWPos> ZAsset::OpenRWPos() const
 
 /**
 \class ZAssetIter
-\ingroup group_Asset
-\sa group_Asset
+\ingroup Asset
+\sa Asset
 */
 
 /// Instantiate an iterator that references no asset.

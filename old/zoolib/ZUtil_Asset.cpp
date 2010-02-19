@@ -56,7 +56,7 @@ using std::vector;
 \namespace ZUtil_Asset
 \brief Functions mainly concerned with instantiating assets from data in the executable
 file or in external files.
-\ingroup group_Asset
+\ingroup Asset
 */
 
 // =================================================================================================

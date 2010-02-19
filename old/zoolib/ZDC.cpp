@@ -25,12 +25,12 @@ using namespace std;
 NAMESPACE_ZOOLIB_BEGIN
 
 /**
-\defgroup group_Graphics Graphics
+\defgroup Graphics
 */
 
 /**
 \class ZDC
-\ingroup group_Graphics
+\ingroup Graphics
 It has value semantics itself, but references a potentially
 shared canvas that can be also be drawn into by other instances of ZDC.
 It also holds drawing state: ink, pen width, origin, pattern origin.
