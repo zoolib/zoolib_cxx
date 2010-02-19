@@ -82,7 +82,7 @@ ZAny ZVal_CFType::AsAny() const
 	{ return this->DAsAny(ZAny()); }
 
 ZAny ZVal_CFType::DAsAny(const ZAny& iDefault) const
-	{ return ZUtil_CFType::sDAsAny(iDefault, *this); }
+	{ return ZUtil_CFType::sDAsAny(ZAny(), *this); }
 
 ZVal_CFType::operator bool() const
 	{

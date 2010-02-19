@@ -114,7 +114,7 @@ public:
 template <class Val>
 bool ZVisitor_ExprRep_Restrict_T<Val>::Visit_Restrict(ZRef<ZExprRep_Restrict_T<Val> > iRep)
 	{
-	if (!ZVisitor_ExprRep_Relation::Visit(iRep))
+	if (!ZVisitor_ExprRep_Relation::Visit_ExprRep(iRep))
 		return false;
 
 	if (ZRef<ZExprRep_Relation> theExpr = iRep->GetExpr())

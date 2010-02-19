@@ -186,12 +186,12 @@ ZRef<ZYadMapR> sMakeYadR(const ZRef<NSDictionary>& iDictionary)
 
 namespace ZANONYMOUS {
 
-class YadVisitor_GetVal_NS : public ZYadVisitor
+class Visitor_Yad_GetVal_NS : public ZVisitor_Yad
 	{
 public:
-	YadVisitor_GetVal_NS(ZRef<NSObject> iDefault);
+	Visitor_Yad_GetVal_NS(ZRef<NSObject> iDefault);
 
-// From ZYadVisitor
+// From ZVisitor_Yad
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
 	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
@@ -206,31 +206,31 @@ public:
 
 ZRef<NSObject> sFromYadR(const ZRef<NSObject>& iDefault, ZRef<ZYadR> iYadR)
 	{
-	if (ZRef<ZYadR_NS> theYadR = ZRefDynamicCast<ZYadR_NS>(iYadR))
+	if (ZRef<ZYadR_NS> theYadR = iYadR.DynamicCast<ZYadR_NS>())
 		return theYadR->GetVal();
 
-	YadVisitor_GetVal_NS theVisitor(iDefault);
+	Visitor_Yad_GetVal_NS theVisitor(iDefault);
 	iYadR->Accept(theVisitor);
 	return theVisitor.fOutput;
 	}
 
-YadVisitor_GetVal_NS::YadVisitor_GetVal_NS(ZRef<NSObject> iDefault)
+Visitor_Yad_GetVal_NS::Visitor_Yad_GetVal_NS(ZRef<NSObject> iDefault)
 :	fDefault(iDefault)
 	{}
 
-bool YadVisitor_GetVal_NS::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
+bool Visitor_Yad_GetVal_NS::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{
 	fOutput = ZUtil_NS::sDAsNSObject(fDefault, iYadPrimR->AsAny());
 	return true;
 	}
 
-bool YadVisitor_GetVal_NS::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+bool Visitor_Yad_GetVal_NS::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{
 	fOutput = sReadAll_T<ZData_NS>(iYadStreamR->GetStreamR());
 	return true;
 	}
 
-bool YadVisitor_GetVal_NS::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+bool Visitor_Yad_GetVal_NS::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	{
 	NSMutableString* result = ZUtil_NS::sStringMutable();
 	ZStrimW_NSString(result).CopyAllFrom(iYadStrimR->GetStrimR());
@@ -238,7 +238,7 @@ bool YadVisitor_GetVal_NS::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	return true;
 	}
 
-bool YadVisitor_GetVal_NS::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+bool Visitor_Yad_GetVal_NS::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	{
 	ZSeq_NS theSeq;
 
@@ -249,7 +249,7 @@ bool YadVisitor_GetVal_NS::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	return true;
 	}
 
-bool YadVisitor_GetVal_NS::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+bool Visitor_Yad_GetVal_NS::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	{
 	ZMap_NS theMap;
 

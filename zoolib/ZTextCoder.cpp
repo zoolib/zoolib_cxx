@@ -462,7 +462,7 @@ void ZTextCoder::sGetAliases(const std::string& iName, std::vector<std::string>&
 
 /**
 \class ZTextDecoder
-\sa group_Unicode
+\sa Unicode
 \sa ZTextEncoder
 
 \brief Takes binary data and generates Unicode text according to some encoding scheme.
@@ -609,7 +609,7 @@ void ZTextDecoder::Reset()
 
 /**
 \class ZTextEncoder
-\sa group_Unicode
+\sa Unicode
 \sa ZTextDecoder
 
 \brief Takes Unicode text and generates binary data according to some encoding scheme.

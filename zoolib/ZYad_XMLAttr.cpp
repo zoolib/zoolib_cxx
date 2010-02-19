@@ -94,7 +94,7 @@ public:
 
 private:
 	ZRef<ZML::StrimmerU> fStrimmerU;
-	string fOuterName;
+	const string fOuterName;
 	const ZML::Attrs_t fAttrs;
 	ZML::Attrs_t::const_iterator fIter;
 	};

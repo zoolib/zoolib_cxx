@@ -43,7 +43,51 @@ NAMESPACE_ZOOLIB_BEGIN
 #define kDebug_Stream 2
 
 /**
-\defgroup group_Stream Streams
+\defgroup Stream
+\section ReadStreams Read Streams
+A read stream is an entity from which you can read bytes. At its simplest
+you can say 'here is a block of memory, read X bytes into it'. The read
+stream will do so, perhaps after blocking until the requested bytes arrive
+from whatever source produces them. A read stream has no knowable extent
+(aka size) and has no notion of a current position -- you simply read bytes
+from it. The only error that can occur is that at some point the read
+stream will likely determine that it can no longer provide bytes to you; its
+finite limit has been reached, and a request for X bytes cannot now and
+never will in the future be satisfiable. The read request thus has three
+parameters: the address of the buffer into which the bytes should be placed,
+a count of how many bytes we would like to read, and the address of a count
+that will be modified to indicate the number of bytes that were actually
+read. Usually the count actually read will equal the count requested. If the
+stream's limit is reached during a call to read X bytes, the count read will
+be less than X. Every subsequent call thereafter will read nothing at all,
+and the count read will be zero.
+
+\section WriteStreams Write Streams
+The complement to a read stream is (obviously) a write stream. This is
+an entity that bytes can be written to. Again we pass it the address of a
+buffer, this time the buffer contains the bytes we want written. We also
+pass it a count, indicating how many bytes from the buffer should be
+written, and we pass the address of a count which will be modified to
+indicate how many bytes were succesfully written. Just as with the read
+stream, the write stream has no 'position' and no size, and it also might
+(will) be finite. This is an important point; something that is finite
+obviously *must* have a size (curved space notwithstanding), but in the case
+of read and write streams the size is knowable only *in retrospect* --
+when we hit the limit we know where it was, but we have *no* way of knowing
+that limit ahead of time (unless that information is conveyed by some other
+mechanism -- but any such mechanism is not part of the standard definition
+of read or write streams.)
+
+\section Lifetime
+The stream base classes have protected constructor, destructor, copy constructor and assignment
+methods. Although a particular subclass may have value semantics, you can't create, destroy or
+assign a stream through the base interface.
+
+
+\section PositionableStreams Positionable Streams
+
+\section ConnectedStreams Connected Streams
+
 */
 
 /* These checks ensure that floats and doubles are the same size as
@@ -154,8 +198,8 @@ ZStream::ExEndOfStream::ExEndOfStream(const char* iWhat)
 
 /**
 \class ZStreamR
-\ingroup group_Stream
-\sa group_Stream
+\ingroup Stream
+\sa Stream
 
 The ZStreamR interface is heavily used by ZooLib entities that need to read formatted and
 unformatted data from arbitrary sources. It represents a continuous stream of bytes, with
@@ -602,6 +646,11 @@ ZStreamR::ExEndOfStream::ExEndOfStream()
 #pragma mark -
 #pragma mark * ZStreamRCon
 
+/**
+\class ZStreamRCon
+\ingroup Stream
+*/
+
 bool ZStreamRCon::ReceiveDisconnect(double iTimeout) const
 	{ return const_cast<ZStreamRCon*>(this)->Imp_ReceiveDisconnect(iTimeout); }
 
@@ -614,7 +663,7 @@ void ZStreamRCon::Abort() const
 
 /**
 \class ZStreamU
-\ingroup group_Stream
+\ingroup Stream
 */
 
 // =================================================================================================
@@ -623,7 +672,7 @@ void ZStreamRCon::Abort() const
 
 /**
 \class ZStreamRPos
-\ingroup group_Stream
+\ingroup Stream
 A ZStreamRPos augments ZStreamW with two attributes, an immutable size and a position. The
 position may take any value, but reads will only succeed when it is less then size.
 As data is read the position is updated by the number of bytes consumed.
@@ -672,7 +721,7 @@ void ZStreamRPos::Imp_Unread()
 
 /**
 \class ZStreamW
-\ingroup group_Stream
+\ingroup Stream
 */
 
 /** \brief Write to the stream the \a iCount bytes starting at the address \a iSource.
@@ -1071,6 +1120,11 @@ ZStreamW::ExEndOfStream::ExEndOfStream()
 #pragma mark -
 #pragma mark * ZStreamWCon
 
+/**
+\class ZStreamWCon
+\ingroup Stream
+*/
+
 void ZStreamWCon::SendDisconnect() const
 	{ const_cast<ZStreamWCon*>(this)->Imp_SendDisconnect(); }
 
@@ -1083,7 +1137,7 @@ void ZStreamWCon::Abort() const
 
 /**
 \class ZStreamWPos
-\ingroup group_Stream
+\ingroup Stream
 A ZStreamWPos augments ZStreamW with two attributes, a size and a position.
 */
 
@@ -1112,7 +1166,7 @@ ZStreamWPos::ExBadSize::ExBadSize()
 
 /**
 \class ZStreamRWPos
-\ingroup group_Stream
+\ingroup Stream
 
 ZStreamRWPos inherits from both ZStreamRPos and ZStreamWPos without extending either protocol.
 It serves as a standard designation for an entity that is considered to contain a list of bytes
@@ -1123,11 +1177,6 @@ position, and the current position (and size) is updated.
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamU_Unreader
-
-/**
-\class ZStreamU_Unreader
-\ingroup group_Stream
-*/
 
 ZStreamU_Unreader::ZStreamU_Unreader(const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource),

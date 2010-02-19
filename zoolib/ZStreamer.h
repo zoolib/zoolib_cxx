@@ -32,7 +32,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZStreamerR
 
 /** A refcounted entity that provides access to a ZStreamR.
-\ingroup group_Streamer
+\ingroup Streamer
 */
 
 class ZStreamerR : public ZRefCountedWithFinalize
@@ -46,7 +46,7 @@ public:
 #pragma mark * ZStreamerRCon
 
 /** A refcounted entity that provides access to a ZStreamRCon.
-\ingroup group_Streamer
+\ingroup Streamer
 */
 
 class ZStreamerRCon : public virtual ZStreamerR
@@ -64,7 +64,7 @@ public:
 #pragma mark * ZStreamerU
 
 /** A refcounted entity that provides access to a ZStreamU.
-\ingroup group_Streamer
+\ingroup Streamer
 */
 
 class ZStreamerU : public virtual ZStreamerR
@@ -82,7 +82,7 @@ public:
 #pragma mark * ZStreamerRPos
 
 /** A refcounted entity that provides access to a ZStreamRPos.
-\ingroup group_Streamer
+\ingroup Streamer
 */
 
 class ZStreamerRPos : public ZStreamerU
@@ -103,7 +103,7 @@ public:
 #pragma mark * ZStreamerW
 
 /** A refcounted entity that provides access to a ZStreamW.
-\ingroup group_Streamer
+\ingroup Streamer
 */
 
 class ZStreamerW : public ZRefCountedWithFinalize
@@ -117,7 +117,7 @@ public:
 #pragma mark * ZStreamerWCon
 
 /** A refcounted entity that provides access to a ZStreamWCon.
-\ingroup group_Streamer
+\ingroup Streamer
 */
 
 class ZStreamerWCon : public virtual ZStreamerW
@@ -135,7 +135,7 @@ public:
 #pragma mark * ZStreamerWPos
 
 /** A refcounted entity that provides access to a ZStreamWPos.
-\ingroup group_Streamer
+\ingroup Streamer
 */
 
 class ZStreamerWPos : public virtual ZStreamerW
@@ -153,7 +153,7 @@ public:
 #pragma mark * ZStreamerRWPos
 
 /** A refcounted entity that provides access to a ZStreamRWPos.
-\ingroup group_Streamer
+\ingroup Streamer
 */
 
 class ZStreamerRWPos
@@ -186,7 +186,7 @@ public:
 
 /** A refcounted entity that implements both ZStreamerR and ZStreamerW interfaces, and
 thus provides access to a ZStreamR and a ZStreamW.
-\ingroup group_Streamer
+\ingroup Streamer
 */
 
 class ZStreamerRW
@@ -201,7 +201,7 @@ class ZStreamerRW
 
 /** A refcounted entity that implements both ZStreamerRCon and ZStreamerWCon interfaces, and
 thus provides access to a ZStreamRCon and a ZStreamWCon.
-\ingroup group_Streamer
+\ingroup Streamer
 */
 
 class ZStreamerRWCon

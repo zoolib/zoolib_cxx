@@ -93,7 +93,7 @@ public:
 template <class Val>
 bool ZVisitor_ExprRep_ValCondition_T<Val>::Visit_ValCondition(
 	ZRef<ZExprRep_ValCondition_T<Val> > iRep)
-	{ return ZVisitor_ExprRep_Logical::Visit(iRep); }
+	{ return ZVisitor_ExprRep_Logical::Visit_ExprRep(iRep); }
 
 // =================================================================================================
 #pragma mark -

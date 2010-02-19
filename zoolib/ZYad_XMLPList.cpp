@@ -353,7 +353,9 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 		}
 	else
 		{
-		s.Raw() << "<nil/> <!--!! Unhandled: */" << iVal.Type().name() << " !!-->";
+		s.Raw() << "<nil/> <!--!! Unhandled: */";
+		s << iVal.Type().name();
+		s.Raw() << " !!-->";
 		}
 	}
 

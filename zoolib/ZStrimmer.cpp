@@ -23,7 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 /**
-\defgroup group_Strimmer Strimmers
+\defgroup Strimmer
+\sa Streamer
 
 The various \c ZStrimmerXX interfaces fulfill the same role for strims that \c ZStreamerXX
 does for \c ZStreamXX. They are standard types representing reference counted entities

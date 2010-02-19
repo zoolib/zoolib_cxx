@@ -36,11 +36,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-using std::map;
-using std::pair;
-using std::string;
-using std::vector;
-
 class ZVal_Any;
 class ZSeq_Any;
 class ZMap_Any;
@@ -125,9 +120,9 @@ public:
 	~ZSeq_Any();
 	ZSeq_Any& operator=(const ZSeq_Any& iOther);
 
-	ZSeq_Any(const vector<ZVal_Any>& iOther);
+	ZSeq_Any(const std::vector<ZVal_Any>& iOther);
 
-	ZSeq_Any& operator=(const vector<ZVal_Any>& iOther);
+	ZSeq_Any& operator=(const std::vector<ZVal_Any>& iOther);
 
 	template <class Iterator>
 	ZSeq_Any(Iterator begin, Iterator end);
@@ -202,14 +197,14 @@ private:
 	Rep();
 	virtual ~Rep();
 	
-	Rep(const vector<ZVal_Any>& iVector);
+	Rep(const std::vector<ZVal_Any>& iVector);
 
 	template <class Iterator>
 	Rep(Iterator begin, Iterator end)
 	:	fVector(begin, end)
 		{}
 
-	vector<ZVal_Any> fVector;
+	std::vector<ZVal_Any> fVector;
 	friend class ZSeq_Any;
 	};
 
@@ -234,7 +229,8 @@ class ZMap_Any
 	class Rep;
 
 public:
-	typedef map<string, ZVal_Any>::iterator Index_t;
+	typedef std::map<std::string, ZVal_Any> Map_t;
+	typedef Map_t::iterator Index_t;
 	typedef ZVal_Any Val_t;
 
 	ZAny AsAny() const;
@@ -247,8 +243,8 @@ public:
 	~ZMap_Any();
 	ZMap_Any& operator=(const ZMap_Any& iOther);
 
-	ZMap_Any(const map<string, ZVal_Any>& iOther);
-	ZMap_Any& operator=(map<string, ZVal_Any>& iOther);
+	ZMap_Any(const Map_t& iOther);
+	ZMap_Any& operator=(Map_t& iOther);
 
 	template <class Container>
 	ZMap_Any(const Container& iContainer);
@@ -311,7 +307,7 @@ public:
 
 private:
 	void pTouch();
-	map<string, ZVal_Any>::iterator pTouch(const Index_t& iIndex);
+	Map_t::iterator pTouch(const Index_t& iIndex);
 
 	ZRef<Rep> fRep;
 	};
@@ -373,14 +369,14 @@ private:
 	Rep();
 	virtual ~Rep();
 	
-	Rep(const map<string, ZVal_Any>& iMap);
+	Rep(const std::map<std::string, ZVal_Any>& iMap);
 
 	template <class Iterator>
 	Rep(Iterator begin, Iterator end)
 	:	fMap(begin, end)
 		{}
 
-	map<string, ZVal_Any> fMap;
+	std::map<std::string, ZVal_Any> fMap;
 	friend class ZMap_Any;
 	};
 

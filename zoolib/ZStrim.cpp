@@ -42,15 +42,15 @@ NAMESPACE_ZOOLIB_BEGIN
 #define kDebug_Strim 2
 
 /**
-\defgroup group_Strim Strims
+\defgroup Strim
 \sa ZUnicode
-\sa group_Unicode
+\sa Unicode
 
 The word \e strim was coined by Eric Cooper. It's a nice punchy designator
 for a <i>string stream</i>, an interface that is akin to a stream but geared
 towards the reading and writing of unicode strings. In working with strims
 you should understand the terms <i>code unit</i> and <i>code point</i>, which
-are covered in the documentation sections \ref group_Unicode and \ref ZUnicode.
+are covered in the documentation sections \ref Unicode and \ref ZUnicode.
 
 If you're working with ASCII or other single-byte encoding of text then the
 ZStreamR and ZStreamW facilities are sufficient. If you'd like to be able
@@ -204,10 +204,10 @@ ZStrim::ExEndOfStrim::ExEndOfStrim(const char* iWhat)
 /**
 \class ZStrimR
 \nosubgrouping
-\ingroup group_Strim
-\ingroup group_Unicode
-\sa group_Strim
-\sa group_Unicode
+\ingroup Strim
+\ingroup Unicode
+\sa Strim
+\sa Unicode
 */
 
 /// Read a single CP, returning false if the end of the strim has been reached.
@@ -671,10 +671,10 @@ ZStrimR::ExEndOfStrim::ExEndOfStrim()
 /**
 \class ZStrimU
 \nosubgrouping
-\ingroup group_Strim
-\ingroup group_Unicode
-\sa group_Strim
-\sa group_Unicode
+\ingroup Strim
+\ingroup Unicode
+\sa Strim
+\sa Unicode
 
 A ZStrimU is a read strim with the addition of an Unread method. Unread causes the last code point
 read to be returned as the first code point in any subsequent read request. Think \c ungetc.
@@ -693,10 +693,10 @@ size_t ZStrimU::UnreadableLimit() const
 /**
 \class ZStrimW
 \nosubgrouping
-\ingroup group_Strim
-\ingroup group_Unicode
-\sa group_Strim
-\sa group_Unicode
+\ingroup Strim
+\ingroup Unicode
+\sa Strim
+\sa Unicode
 */
 
 /** Write the single code point \a iCP.

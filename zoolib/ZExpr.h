@@ -51,7 +51,7 @@ public:
 class ZVisitor_ExprRep
 	{
 public:
-	virtual bool Visit(ZRef<ZExprRep> iRep);
+	virtual bool Visit_ExprRep(ZRef<ZExprRep> iRep);
 	};
 
 // =================================================================================================

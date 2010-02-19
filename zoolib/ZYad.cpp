@@ -28,19 +28,21 @@ NAMESPACE_ZOOLIB_BEGIN
 using std::min;
 using std::string;
 
-/*
+/**
+\defgroup Yad
 Yad is another neologism by Eric Cooper. As an acronym it stands for Yet Another Data, but
 interestingly it is also a hebrew word. From <http://en.wikipedia.org/wiki/Yad>:
 
-	A yad (Hebrew: יד‎), literally, "hand," is a Jewish ritual pointer, used to point to the text
+	\par
+	<em>A yad (Hebrew: יד‎), literally, 'hand,' is a Jewish ritual pointer, used to point to the text
 	during the Torah reading from the parchment Torah scrolls. It is intended to prevent anyone
 	from touching the parchment, which is considered sacred; additionally, the fragile parchment
 	can be damaged by the oils of the skin. While not required when chanting from the Torah, it
-	is used frequently.
+	is used frequently.</em>
 
 An instance of ZYadR points within some data source, can be moved through that source, and can
 return further instances of ZYadR referencing substructures of that source. Basically it's a
-generic facility for accessing data that looks like ZooLib ZTuple suite -- CFDictionary,
+generic facility for accessing data that looks like ZooLib ZVal suite -- CFDictionary,
 NSDictionary, PList, XMLRPC, JSON, Javascript types etc.
 
 The idea is that there are a Map-like and Seq-like entities in many APIs, and that abstracting
@@ -83,6 +85,13 @@ ZYadParseException::ZYadParseException(const char* iWhat)
 #pragma mark -
 #pragma mark * ZYadR
 
+/**
+\class ZYadR
+\ingroup Yad
+\sa Yad
+
+*/
+
 ZYadR::ZYadR()
 	{}
 
@@ -92,14 +101,14 @@ void ZYadR::Finish()
 ZRef<ZYadR> ZYadR::Meta()
 	{ return ZRef<ZYadR>(); }
 
-bool ZYadR::Accept(ZYadVisitor& iVisitor)
+bool ZYadR::Accept(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadR(this); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadPrimR
 
-bool ZYadPrimR::Accept(ZYadVisitor& iVisitor)
+bool ZYadPrimR::Accept(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadPrimR(this); }
 
 bool ZYadPrimR::IsSimple(const ZYadOptions& iOptions)
@@ -109,7 +118,7 @@ bool ZYadPrimR::IsSimple(const ZYadOptions& iOptions)
 #pragma mark -
 #pragma mark * ZYadStreamR
 
-bool ZYadStreamR::Accept(ZYadVisitor& iVisitor)
+bool ZYadStreamR::Accept(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadStreamR(this); }
 
 bool ZYadStreamR::IsSimple(const ZYadOptions& iOptions)
@@ -119,7 +128,7 @@ bool ZYadStreamR::IsSimple(const ZYadOptions& iOptions)
 #pragma mark -
 #pragma mark * ZYadStrimR
 
-bool ZYadStrimR::Accept(ZYadVisitor& iVisitor)
+bool ZYadStrimR::Accept(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadStrimR(this); }
 
 bool ZYadStrimR::IsSimple(const ZYadOptions& iOptions)
@@ -129,7 +138,7 @@ bool ZYadStrimR::IsSimple(const ZYadOptions& iOptions)
 #pragma mark -
 #pragma mark * ZYadSeqR
 
-bool ZYadSeqR::Accept(ZYadVisitor& iVisitor)
+bool ZYadSeqR::Accept(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadSeqR(this); }
 
 bool ZYadSeqR::IsSimple(const ZYadOptions& iOptions)
@@ -148,7 +157,7 @@ void ZYadSeqR::SkipAll()
 #pragma mark -
 #pragma mark * ZYadSeqRPos
 
-bool ZYadSeqRPos::Accept(ZYadVisitor& iVisitor)
+bool ZYadSeqRPos::Accept(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadSeqRPos(this); }
 
 bool ZYadSeqRPos::IsSimple(const ZYadOptions& iOptions)
@@ -187,7 +196,7 @@ void ZYadSeqRPos::SkipAll()
 #pragma mark -
 #pragma mark * ZYadMapR
 
-bool ZYadMapR::Accept(ZYadVisitor& iVisitor)
+bool ZYadMapR::Accept(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadMapR(this); }
 
 bool ZYadMapR::IsSimple(const ZYadOptions& iOptions)
@@ -209,7 +218,7 @@ void ZYadMapR::SkipAll()
 #pragma mark -
 #pragma mark * ZYadMapRPos
 
-bool ZYadMapRPos::Accept(ZYadVisitor& iVisitor)
+bool ZYadMapRPos::Accept(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadMapRPos(this); }
 
 bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
@@ -246,36 +255,36 @@ bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadVisitor
+#pragma mark * ZVisitor_Yad
 
-ZYadVisitor::ZYadVisitor()
+ZVisitor_Yad::ZVisitor_Yad()
 	{}
 
-ZYadVisitor::~ZYadVisitor()
+ZVisitor_Yad::~ZVisitor_Yad()
 	{}
 
-bool ZYadVisitor::Visit_YadR(ZRef<ZYadR> iYadR)
+bool ZVisitor_Yad::Visit_YadR(ZRef<ZYadR> iYadR)
 	{ return false; }
 
-bool ZYadVisitor::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
+bool ZVisitor_Yad::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{ return this->Visit_YadR(iYadPrimR); }
 
-bool ZYadVisitor::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+bool ZVisitor_Yad::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{ return this->Visit_YadR(iYadStreamR); }
 
-bool ZYadVisitor::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+bool ZVisitor_Yad::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	{ return this->Visit_YadR(iYadStrimR); }
 
-bool ZYadVisitor::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+bool ZVisitor_Yad::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	{ return this->Visit_YadR(iYadSeqR); }
 
-bool ZYadVisitor::Visit_YadSeqRPos(ZRef<ZYadSeqRPos> iYadSeqRPos)
+bool ZVisitor_Yad::Visit_YadSeqRPos(ZRef<ZYadSeqRPos> iYadSeqRPos)
 	{ return this->Visit_YadSeqR(iYadSeqRPos); }
 
-bool ZYadVisitor::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+bool ZVisitor_Yad::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	{ return this->Visit_YadR(iYadMapR); }
 
-bool ZYadVisitor::Visit_YadMapRPos(ZRef<ZYadMapRPos> iYadMapRPos)
+bool ZVisitor_Yad::Visit_YadMapRPos(ZRef<ZYadMapRPos> iYadMapRPos)
 	{ return this->Visit_YadMapR(iYadMapRPos); }
 
 // =================================================================================================

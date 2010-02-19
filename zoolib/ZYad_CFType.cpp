@@ -206,12 +206,12 @@ ZRef<ZYadMapR> sMakeYadR(const ZRef<CFDictionaryRef>& iDictionary)
 
 namespace ZANONYMOUS {
 
-class YadVisitor_GetVal_CFType : public ZYadVisitor
+class Visitor_Yad_GetVal_CFType : public ZVisitor_Yad
 	{
 public:
-	YadVisitor_GetVal_CFType(ZRef<CFTypeRef> iDefault);
+	Visitor_Yad_GetVal_CFType(ZRef<CFTypeRef> iDefault);
 
-// From ZYadVisitor
+// From ZVisitor_Yad
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
 	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
 	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
@@ -229,28 +229,28 @@ ZRef<CFTypeRef> sFromYadR(const ZRef<CFTypeRef>& iDefault, ZRef<ZYadR> iYadR)
 	if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iYadR))
 		return theYadR->GetVal();
 
-	YadVisitor_GetVal_CFType theVisitor(iDefault);
+	Visitor_Yad_GetVal_CFType theVisitor(iDefault);
 	iYadR->Accept(theVisitor);
 	return theVisitor.fOutput;
 	}
 
-YadVisitor_GetVal_CFType::YadVisitor_GetVal_CFType(ZRef<CFTypeRef> iDefault)
+Visitor_Yad_GetVal_CFType::Visitor_Yad_GetVal_CFType(ZRef<CFTypeRef> iDefault)
 :	fDefault(iDefault)
 	{}
 
-bool YadVisitor_GetVal_CFType::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
+bool Visitor_Yad_GetVal_CFType::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{
-	fOutput = ZUtil_CFType::sAsCFType(fDefault, iYadPrimR->AsAny());
+	fOutput = ZUtil_CFType::sDAsCFType(fDefault, iYadPrimR->AsAny());
 	return true;
 	}
 
-bool YadVisitor_GetVal_CFType::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+bool Visitor_Yad_GetVal_CFType::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{
 	fOutput = sReadAll_T<ZData_CFType>(iYadStreamR->GetStreamR());
 	return true;
 	}
 
-bool YadVisitor_GetVal_CFType::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+bool Visitor_Yad_GetVal_CFType::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	{
 	ZRef<CFMutableStringRef> result = ZUtil_CFType::sStringMutable();
 	ZStrimW_CFString(result).CopyAllFrom(iYadStrimR->GetStrimR());
@@ -258,7 +258,7 @@ bool YadVisitor_GetVal_CFType::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	return true;
 	}
 
-bool YadVisitor_GetVal_CFType::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+bool Visitor_Yad_GetVal_CFType::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	{
 	ZSeq_CFType theSeq;
 
@@ -269,7 +269,7 @@ bool YadVisitor_GetVal_CFType::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	return true;
 	}
 
-bool YadVisitor_GetVal_CFType::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+bool Visitor_Yad_GetVal_CFType::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	{
 	ZMap_CFType theMap;
 

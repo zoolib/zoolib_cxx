@@ -137,7 +137,7 @@ protected:
 #pragma mark -
 #pragma mark * ZStreamerRWPos_PageBuffered
 
-/// A positionable read/write filter streamer wrapping a ZStreamerRWPos_PageBuffered.
+/// A positionable read/write filter streamer wrapping a ZStreamRWPos_PageBuffered.
 
 class ZStreamerRWPos_PageBuffered : public ZStreamerRWPos
 	{

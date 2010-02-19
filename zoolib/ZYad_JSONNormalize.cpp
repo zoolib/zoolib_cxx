@@ -73,7 +73,7 @@ static bool spNormalizeSimpleValue(const ZAny& iVal, ZAny& oVal)
 
 	if (false)
 		{}
-	else if (iVal.type() == typeid(void)
+	else if (iVal.Type() == typeid(void)
 		|| ZAnyCast<int64>(&iVal)
 		|| ZAnyCast<double>(&iVal)
 		|| ZAnyCast<bool>(&iVal)

@@ -22,9 +22,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+/**
+\defgroup Task
+
+*/
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTaskOwner
+
+/**
+\class ZTaskOwner
+\ingroup Task
+\sa task
+*/
 
 void ZTaskOwner::Task_Finished(ZRef<ZTask> iTask)
 	{}
@@ -44,6 +55,12 @@ void ZTaskOwner::pTask_Finished(ZRef<ZTask> iTask)
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTask
+
+/**
+\class ZTask
+\ingroup Task
+\sa task
+*/
 
 ZTask::ZTask(ZRef<ZTaskOwner> iTaskOwner)
 :	fTaskOwner(iTaskOwner)

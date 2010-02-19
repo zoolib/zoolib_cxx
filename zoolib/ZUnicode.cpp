@@ -58,7 +58,7 @@ trademarks of Taligent, Inc.
 /* ================================================================ */
 
 /**
-\defgroup group_Unicode Unicode
+\defgroup Unicode
 \sa ZUnicode
 
 If you're unfamiliar with Unicode I recommend reading Markus Kuhn's excellent backgrounder
@@ -82,8 +82,8 @@ than one code unit may be required.
 \namespace ZUnicode
 \brief The ZUnicode namespace defines a collection of data types and functions for
 working with Unicode data.
-\ingroup group_Unicode
-\sa group_Unicode
+\ingroup Unicode
+\sa Unicode
 
 ZUnicode does not directly address internationalization and localization issues, but it
 is an important building block in support of such work.
@@ -187,7 +187,7 @@ Offset  Dec  Acc  Inc
 CodeWarrior building for Mach-o defines wchar_t to be a 32 bits in size. The CW debugger,
 as of 8.3 at least, always treats wchar_t as being 16 bits in size, which can make
 things very confusing. You can have the compiler define wchar_t to be 16 bits in size
-by using <code>#pragma ushort_wchar_t on</code>
+by using <code>\#pragma ushort_wchar_t on</code>
 */
 
 // =================================================================================================

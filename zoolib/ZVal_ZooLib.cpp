@@ -67,10 +67,10 @@ static inline int spCompare(const void* iLeft, size_t iLeftLength,
 #pragma mark -
 #pragma mark * ValString
 
+namespace ZANONYMOUS {
+
 /** ValString is a lighterweight implementation of immutable strings, used
 for holding longer string properties in ZVal_ZooLib instances. */
-
-namespace ZANONYMOUS {
 
 class ValString
 	{

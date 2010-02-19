@@ -22,11 +22,25 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread.h"
 #include "zoolib/ZWorker.h"
 
+
 NAMESPACE_ZOOLIB_BEGIN
+
+/**
+\defgroup Worker
+
+ZWorker provides a disciplined lifecycle for long-lived repetitive tasks.
+
+*/
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWorker
+
+/**
+\class ZWorker
+\ingroup Worker
+\sa Worker
+*/
 
 void ZWorker::RunnerAttached()
 	{}

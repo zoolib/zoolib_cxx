@@ -39,7 +39,7 @@ bool ZExprRep::Accept(ZVisitor_ExprRep& iVisitor)
 #pragma mark -
 #pragma mark * ZVisitor_ExprRep
 
-bool ZVisitor_ExprRep::Visit(ZRef<ZExprRep> iRep)
+bool ZVisitor_ExprRep::Visit_ExprRep(ZRef<ZExprRep> iRep)
 	{ return true; }
 
 // =================================================================================================

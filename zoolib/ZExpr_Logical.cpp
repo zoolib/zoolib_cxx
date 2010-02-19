@@ -131,14 +131,14 @@ bool ZExprRep_Logical_Or::Accept(ZVisitor_ExprRep_Logical& iVisitor)
 #pragma mark * ZVisitor_ExprRep_Logical
 
 bool ZVisitor_ExprRep_Logical::Visit_Logical_True(ZRef<ZExprRep_Logical_True> iRep)
-	{ return ZVisitor_ExprRep::Visit(iRep); }
+	{ return ZVisitor_ExprRep::Visit_ExprRep(iRep); }
 
 bool ZVisitor_ExprRep_Logical::Visit_Logical_False(ZRef<ZExprRep_Logical_False> iRep)
-	{ return ZVisitor_ExprRep::Visit(iRep); }
+	{ return ZVisitor_ExprRep::Visit_ExprRep(iRep); }
 
 bool ZVisitor_ExprRep_Logical::Visit_Logical_Not(ZRef<ZExprRep_Logical_Not> iRep)
 	{
-	if (!ZVisitor_ExprRep::Visit(iRep))
+	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
 		return false;
 
 	if (ZRef<ZExprRep_Logical> theRep = iRep->GetOperand())
@@ -149,7 +149,7 @@ bool ZVisitor_ExprRep_Logical::Visit_Logical_Not(ZRef<ZExprRep_Logical_Not> iRep
 
 bool ZVisitor_ExprRep_Logical::Visit_Logical_And(ZRef<ZExprRep_Logical_And> iRep)
 	{
-	if (!ZVisitor_ExprRep::Visit(iRep))
+	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
 		return false;
 
 	if (ZRef<ZExprRep_Logical> theLHS = iRep->GetLHS())
@@ -169,7 +169,7 @@ bool ZVisitor_ExprRep_Logical::Visit_Logical_And(ZRef<ZExprRep_Logical_And> iRep
 
 bool ZVisitor_ExprRep_Logical::Visit_Logical_Or(ZRef<ZExprRep_Logical_Or> iRep)
 	{
-	if (!ZVisitor_ExprRep::Visit(iRep))
+	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
 		return false;
 
 	if (ZRef<ZExprRep_Logical> theLHS = iRep->GetLHS())

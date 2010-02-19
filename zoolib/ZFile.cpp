@@ -31,7 +31,7 @@ using std::vector;
 NAMESPACE_ZOOLIB_BEGIN
 
 /**
-\defgroup group_File Files
+\defgroup File
 General information about files and filesystems.
 
 
@@ -48,8 +48,8 @@ that's more than I want to do right now.
 #pragma mark * ZFileSpec
 /**
 \class ZFileSpec
-\ingroup group_File
-\sa group_File
+\ingroup File
+\sa File
 */
 
 /** \brief Constructs a file spec that is invalid, ie that represents
@@ -757,8 +757,8 @@ ZFileSpec ZFileSpec::sPOSIXPath(const string& iPath)
 #pragma mark * ZFileIter
 
 /** \class ZFileIter
-\ingroup group_File
-\sa group_File
+\ingroup File
+\sa File
 */
 
 ZFileIter::ZFileIter()
@@ -903,7 +903,7 @@ std::string ZFileTreeIter::CurrentName() const
 #pragma mark * ZFileLoc
 
 /** \class ZFileLoc
-\ingroup group_File
+\ingroup File
 ZFileLoc encapsulates the notion of a node in a file system. Generally
 ZFileLoc can only refer to a node that exists, or existed at the time the ZFileLoc was
 instantiated.

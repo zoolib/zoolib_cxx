@@ -78,7 +78,7 @@ string16 sAsUTF16(CFStringRef iCFString);
 ZAny sDAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal);
 ZAny sAsAny(ZRef<CFTypeRef> iVal);
 
-ZRef<CFTypeRef> sAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal);
+ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal);
 ZRef<CFTypeRef> sAsCFType(const ZAny& iVal);
 
 } // namespace ZUtil_CFType

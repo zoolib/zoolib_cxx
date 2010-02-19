@@ -70,7 +70,7 @@ ZRef<ZExprRep_Relation> ZExprRep_Select::GetExpr_Relation()
 
 bool ZVisitor_ExprRep_Select::Visit_Select(ZRef<ZExprRep_Select> iRep)
 	{
-	if (!ZVisitor_ExprRep_Relation::Visit(iRep))
+	if (!ZVisitor_ExprRep_Relation::Visit_ExprRep(iRep))
 		return false;
 
 	if (ZRef<ZExprRep_Logical> theExpr_Logical = iRep->GetExpr_Logical())

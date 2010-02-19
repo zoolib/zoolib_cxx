@@ -60,6 +60,8 @@ typedef string (*EntityCallback)(void* iRefcon, const string& iEntity);
 #pragma mark -
 #pragma mark * ZML::StrimU
 
+/// Tokenizes ML in a source strim.
+
 class StrimU
 :	public ZStrimU
 ,	NonCopyable
@@ -251,7 +253,7 @@ public:
 	const StrimW& Attrf(const string8& iName, const UTF8* iValue, ...) const;
 
 	/** Add attributes to the currently pending tag, taking the names and values from
-	properties of iTuple. String values are added as you would expect, null values
+	properties of iAttrs. String values are added as you would expect, null values
 	are added as boolean attributes. This convention is compatible with that
 	used by ZML::StrimR. */
 	const StrimW& Attrs(const Attrs_t& iAttrs) const;

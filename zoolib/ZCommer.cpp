@@ -112,6 +112,12 @@ void ZCommer::WriteFinished()
 	ZStreamerWriter::WriteFinished();
 	}
 
+void ZCommer::Wake()
+	{ ZStreamerWriter::Wake(); }
+
+void ZCommer::WakeAt(ZTime iSystemTime)
+	{ ZStreamerWriter::WakeAt(iSystemTime); }
+
 void ZCommer::Started()
 	{}
 
@@ -120,7 +126,7 @@ void ZCommer::Finished()
 
 void ZCommer::WaitTillFinished()
 	{
-	ZGuardMtx locker(fMtx);
+	ZAcqMtx locker(fMtx);
 	while (fReadStarted || fWriteStarted)
 		fCnd.Wait(fMtx);
 	}
@@ -131,8 +137,8 @@ void ZCommer::WaitTillFinished()
 
 void sStartCommerRunners(ZRef<ZCommer> iCommer)
 	{
-	sStartWorkerRunner(ZRefStaticCast<ZStreamerReader>(iCommer));
-	sStartWorkerRunner(ZRefStaticCast<ZStreamerWriter>(iCommer));
+	sStartWorkerRunner(iCommer.StaticCast<ZStreamerReader>());
+	sStartWorkerRunner(iCommer.StaticCast<ZStreamerWriter>());
 	}
 
 NAMESPACE_ZOOLIB_END

@@ -205,7 +205,7 @@ void ZServer::pConnected(ZRef<ZStreamerRW> iStreamerRW)
 		if (ZRef<Responder> theResponder = this->MakeResponder())
 			{
 			fResponders.Add(theResponder);
-			theResponder->Handle(iStreamerRW);
+			theResponder->Respond(iStreamerRW);
 			}
 		}
 	}

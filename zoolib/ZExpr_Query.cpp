@@ -112,10 +112,10 @@ const vector<ZVal_Expr>& ZExprRep_Query_Explicit::GetVals()
 #pragma mark * ZVisitor_ExprRep_Query
 
 bool ZVisitor_ExprRep_Query::Visit_All(ZRef<ZExprRep_Query_All> iRep)
-	{ return ZVisitor_ExprRep_Relation::Visit(iRep); }
+	{ return ZVisitor_ExprRep_Relation::Visit_ExprRep(iRep); }
 
 bool ZVisitor_ExprRep_Query::Visit_Explicit(ZRef<ZExprRep_Query_Explicit> iRep)
-	{ return ZVisitor_ExprRep_Relation::Visit(iRep); }
+	{ return ZVisitor_ExprRep_Relation::Visit_ExprRep(iRep); }
 
 // =================================================================================================
 #pragma mark -

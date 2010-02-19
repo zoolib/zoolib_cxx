@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 /**
-\defgroup group_Streamer Streamers
+\defgroup Streamer
 
 The various \c ZStreamXX classes are just interfaces. They make it easy to wrap a
 standard lightweight API around arbitrary data sources, sinks and filters, and
@@ -78,11 +78,6 @@ The \c ZStreamerXX classes have a hierarchy that parallels the \c ZStreamXX hier
   +--ZStreamerRWCon
 \endverbatim
 
-You'll notice that ZStreamerRWPos multiply inherits from both ZStreamerRPos and ZStreamerWPos,
-and ZStreamerRW from both ZStreamerR and ZStreamerW. As ZStreamerR and ZStreamerW each
-descend from ZRefCounted, and we require a single ZRefCounted subobject in any ZRefCounted
-descendant, ZStreamerR and ZStreamerW have ZRefCounted as a virtual base class. The
-first and only time in 17 years of C++ programming where I've needed to do this.
 */
 
 // =================================================================================================

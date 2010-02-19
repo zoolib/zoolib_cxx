@@ -25,7 +25,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cstring> // for strcmp
 
+using std::map;
+using std::pair;
 using std::strcmp;
+using std::string;
+using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
 

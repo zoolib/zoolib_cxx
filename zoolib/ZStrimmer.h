@@ -34,7 +34,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZStrimmerR
 
 /** A refcounted entity that provides access to a ZStrimR.
-\ingroup group_Strimmer
+\ingroup Strimmer
 */
 
 class ZStrimmerR : public virtual ZRefCountedWithFinalize
@@ -48,7 +48,7 @@ public:
 #pragma mark * ZStrimmerU
 
 /** A refcounted entity that provides access to a ZStrimU.
-\ingroup group_Strimmer
+\ingroup Strimmer
 */
 
 class ZStrimmerU : public virtual ZStrimmerR
@@ -66,7 +66,7 @@ public:
 #pragma mark * ZStrimmerW
 
 /** A refcounted entity that provides access to a ZStrimW.
-\ingroup group_Strimmer
+\ingroup Strimmer
 */
 
 class ZStrimmerW : public virtual ZRefCountedWithFinalize

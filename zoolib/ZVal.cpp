@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2008 Andrew Green
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,58 +18,17 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCommer__
-#define __ZCommer__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZStreamerReader.h"
-#include "zoolib/ZStreamerWriter.h"
-#include "zoolib/ZThread.h"
+#include "ZVal.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCommer
+/**
+\defgroup ZVal Variant Types
 
-class ZCommer
-:	public ZStreamerReader,
-	public ZStreamerWriter
-	{
-public:
-	ZCommer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
-	virtual ~ZCommer();
+Variant types show up all over the place, in COM, Javascript, interfacing with browsers, OSX's
+CFTypes etc. The APIs for each differ wildly even though they're conceptually very similar. To
+make life easier ZooLib provides a suite of types that put a consistent API atop variants, so
+the terminology, constraints and facilities are homogenous.
 
-// From ZStreamerReader
-	virtual void ReadStarted();
-	virtual void ReadFinished();
 
-// From ZStreamerWriter
-	virtual void WriteStarted();
-	virtual void WriteFinished();
-
-// Our protocol
-	void Wake();
-	void WakeAt(ZTime iSystemTime);
-
-	virtual void Started();
-	virtual void Finished();
-
-	void WaitTillFinished();
-
-private:
-	ZMtx fMtx;
-	ZCnd fCnd;
-	bool fReadStarted;
-	bool fWriteStarted;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCommer utility methods
-
-void sStartCommerRunners(ZRef<ZCommer> iCommer);
-
-NAMESPACE_ZOOLIB_END
-
-#endif // __ZCommer__
+*/

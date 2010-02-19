@@ -94,15 +94,15 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadVisitor_JSONWriter
+#pragma mark * ZVisitor_Yad_JSONWriter
 
-class ZYadVisitor_JSONWriter : public ZYadVisitor
+class ZVisitor_Yad_JSONWriter : public ZVisitor_Yad
 	{
 public:
-	ZYadVisitor_JSONWriter(
+	ZVisitor_Yad_JSONWriter(
 		size_t iIndent, const ZYadOptions& iOptions, const ZStrimW& iStrimW);
 
-// From ZYadVisitor
+// From ZVisitor_Yad
 	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
 	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);

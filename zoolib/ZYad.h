@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZYadVisitor;
+class ZVisitor_Yad;
 
 // =================================================================================================
 #pragma mark -
@@ -81,7 +81,7 @@ public:
 // Our protocol
 	virtual void Finish();
 	virtual ZRef<ZYadR> Meta();
-	virtual bool Accept(ZYadVisitor& iVisitor);
+	virtual bool Accept(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions) = 0;
 	};
 
@@ -94,7 +94,7 @@ class ZYadPrimR
 	{
 public:
 // From ZYadR
-	virtual bool Accept(ZYadVisitor& iVisitor);
+	virtual bool Accept(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
@@ -111,7 +111,7 @@ class ZYadStreamR
 	{
 public:
 // From ZYadR
-	virtual bool Accept(ZYadVisitor& iVisitor);
+	virtual bool Accept(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
@@ -124,7 +124,7 @@ class ZYadStrimR
 ,	public virtual ZStrimmerR
 	{
 // From ZYadR
-	virtual bool Accept(ZYadVisitor& iVisitor);
+	virtual bool Accept(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
@@ -136,7 +136,7 @@ class ZYadSeqR : public virtual ZYadR
 	{
 public:
 // From ZYadR
-	virtual bool Accept(ZYadVisitor& iVisitor);
+	virtual bool Accept(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
@@ -154,7 +154,7 @@ class ZYadSeqRPos : public virtual ZYadSeqR
 	{
 public:
 // From ZYadR
-	virtual bool Accept(ZYadVisitor& iVisitor);
+	virtual bool Accept(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Default implementation of ZYadSeqR protocol
@@ -178,7 +178,7 @@ class ZYadMapR : public virtual ZYadR
 	{
 public:
 // From ZYadR
-	virtual bool Accept(ZYadVisitor& iVisitor);
+	virtual bool Accept(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
@@ -195,7 +195,7 @@ class ZYadMapRPos : public virtual ZYadMapR
 	{
 public:
 // From ZYadR
-	virtual bool Accept(ZYadVisitor& iVisitor);
+	virtual bool Accept(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
@@ -206,13 +206,13 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadVisitor
+#pragma mark * ZVisitor_Yad
 
-class ZYadVisitor
+class ZVisitor_Yad
 	{
 public:
-	ZYadVisitor();
-	~ZYadVisitor();
+	ZVisitor_Yad();
+	~ZVisitor_Yad();
 
 	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);

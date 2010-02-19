@@ -585,7 +585,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 
 	if (false)
 		{}
-	else if (iVal.type() == typeid(void))
+	else if (iVal.Type() == typeid(void))
 		{
 		s.Empty("nil");
 		}
@@ -618,7 +618,7 @@ static void spToStrim_Any(const ZML::StrimW& s, const ZAny& iVal)
 		}
 	else
 		{
-		s.Raw() << "<nil/> <!--!! Unhandled: */" << iVal.type().name() << " !!-->";
+		s.Raw() << "<nil/> <!--!! Unhandled: */" << iVal.Type().name() << " !!-->";
 		}
 	}
 

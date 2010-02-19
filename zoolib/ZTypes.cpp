@@ -50,7 +50,8 @@ int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR)
 #pragma mark -
 #pragma mark *
 
-/** \defgroup group_Types Types
+/**
+\defgroup Types
 Although the standard library defines a range of integer types in cstdint,
 older versions of the library may not define the complete range, or 
 the types may conflict with types used in platform specific headers. Also some
@@ -61,59 +62,59 @@ compatible with each target platform.
 */
 
 /** \typedef int8
-\ingroup group_Types
+\ingroup Types
 int8 is a signed 8 bit integer.
 */
 
 /** \typedef int16
-\ingroup group_Types
+\ingroup Types
 int16 is a signed 16 bit integer.
 */
 
 /** \typedef int32
-\ingroup group_Types
+\ingroup Types
 int32 is a signed 32 bit integer.
 */
 
 /** \typedef int64
-\ingroup group_Types
+\ingroup Types
 int64 is a signed 64 bit integer.
 */
 
 /** \typedef uint8
-\ingroup group_Types
+\ingroup Types
 uint8 is an unsigned 8 bit integer.
 */
 
 /** \typedef uint16
-\ingroup group_Types
+\ingroup Types
 uint16 is an unsigned 16 bit integer.
 */
 
 /** \typedef uint32
-\ingroup group_Types
+\ingroup Types
 uint32 is an unsigned 32 bit integer.
 */
 
 /** \typedef uint64
-\ingroup group_Types
+\ingroup Types
 uint64 is an unsigned 64 bit integer.
 */
 
 /** \typedef ZPointPOD
-\ingroup group_Types
+\ingroup Types
 ZPointPOD is used in circumstances where a ZPoint would present
 difficulties because of its ctor/dtor (in unions, mainly.).
 */
 
 /** \typedef ZRectPOD
-\ingroup group_Types
+\ingroup Types
 ZRectPOD is used in circumstances where a ZRect would present
 difficulties because of its ctor/dtor (in unions, mainly.).
 */
 
 /** \typedef ZType
-\ingroup group_Types
+\ingroup Types
 ZType is a numeric representation of a range of basic types,
 used most commonly in ZVal_ZooLib.
 */

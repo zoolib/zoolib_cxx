@@ -32,6 +32,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include ZMACINCLUDE2(CoreFoundation,CFNumber.h)
 #include ZMACINCLUDE2(CoreFoundation,CFString.h)
 
+using std::pair;
+using std::vector;
+
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZUtil_CFType {
@@ -307,7 +310,7 @@ ZAny sAsAny(ZRef<CFTypeRef> iVal)
 static ZRef<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
 	{ return Adopt_T<CFTypeRef>(::CFNumberCreate( kCFAllocatorDefault, iType, iVal)); }
 
-ZRef<CFTypeRef> sAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
+ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
 	{
 	if (false)
 		{}
@@ -342,7 +345,7 @@ ZRef<CFTypeRef> sAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
 		{
 		ZRef<CFMutableArrayRef> theArray;
 		for (size_t x = 0, count = theValue->Count(); x < count; ++x)
-			::CFArrayAppendValue(theArray, sAsCFType(iDefault, theValue->Get(x)));
+			::CFArrayAppendValue(theArray, sDAsCFType(iDefault, theValue->Get(x)));
 		return theArray;
 		}
 	else if (const ZMap_Any* theValue = iVal.PGet_T<ZMap_Any>())
@@ -352,7 +355,7 @@ ZRef<CFTypeRef> sAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
 			i != end; ++i)
 			{
 			::CFDictionarySetValue(theDictionary,
-				sString(theValue->NameOf(i)), sAsCFType(iDefault, theValue->Get(i)));
+				sString(theValue->NameOf(i)), sDAsCFType(iDefault, theValue->Get(i)));
 			}
 		return theDictionary;
 		}
@@ -437,7 +440,7 @@ ZRef<CFTypeRef> sAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
 	}
 
 ZRef<CFTypeRef> sAsCFType(const ZAny& iVal)
-	{ return sAsCFType(ZRef<CFTypeRef>(), iVal); }
+	{ return sDAsCFType(ZRef<CFTypeRef>(), iVal); }
 
 } // namespace ZUtil_CFType
 

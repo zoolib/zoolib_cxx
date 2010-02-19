@@ -817,7 +817,7 @@ const vector<pair<string, Attrs_t> >& StrimR_TextOnly::All() const
 #pragma mark -
 #pragma mark * ZML::StrimW
 
-/** \class StrimW
+/** \class ZML::StrimW
 ZML::StrimW extends the ZStrimW protocol with methods to open and close
 tags, attach attributes to those tags incrementally and pretty-print the
 output. For example, assuming we're passed \c iStrimW:

@@ -220,7 +220,7 @@ ZRelHead ZExprRep_Relation_Union::GetRelHead()
 
 bool ZVisitor_ExprRep_Relation::Visit_Difference(ZRef<ZExprRep_Relation_Difference> iRep)
 	{
-	if (!ZVisitor_ExprRep::Visit(iRep))
+	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
 		return false;
 
 	if (ZRef<ZExprRep_Relation> theLHS = iRep->GetLHS())
@@ -240,7 +240,7 @@ bool ZVisitor_ExprRep_Relation::Visit_Difference(ZRef<ZExprRep_Relation_Differen
 
 bool ZVisitor_ExprRep_Relation::Visit_Intersect(ZRef<ZExprRep_Relation_Intersect> iRep)
 	{
-	if (!ZVisitor_ExprRep::Visit(iRep))
+	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
 		return false;
 
 	if (ZRef<ZExprRep_Relation> theLHS = iRep->GetLHS())
@@ -260,7 +260,7 @@ bool ZVisitor_ExprRep_Relation::Visit_Intersect(ZRef<ZExprRep_Relation_Intersect
 
 bool ZVisitor_ExprRep_Relation::Visit_Join(ZRef<ZExprRep_Relation_Join> iRep)
 	{
-	if (!ZVisitor_ExprRep::Visit(iRep))
+	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
 		return false;
 
 	if (ZRef<ZExprRep_Relation> theLHS = iRep->GetLHS())
@@ -280,7 +280,7 @@ bool ZVisitor_ExprRep_Relation::Visit_Join(ZRef<ZExprRep_Relation_Join> iRep)
 
 bool ZVisitor_ExprRep_Relation::Visit_Project(ZRef<ZExprRep_Relation_Project> iRep)
 	{
-	if (!ZVisitor_ExprRep::Visit(iRep))
+	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
 		return false;
 
 	if (ZRef<ZExprRep_Relation> theExpr = iRep->GetExpr())
@@ -294,7 +294,7 @@ bool ZVisitor_ExprRep_Relation::Visit_Project(ZRef<ZExprRep_Relation_Project> iR
 
 bool ZVisitor_ExprRep_Relation::Visit_Rename(ZRef<ZExprRep_Relation_Rename> iRep)
 	{
-	if (!ZVisitor_ExprRep::Visit(iRep))
+	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
 		return false;
 
 	if (ZRef<ZExprRep_Relation> theExpr = iRep->GetExpr())
@@ -308,7 +308,7 @@ bool ZVisitor_ExprRep_Relation::Visit_Rename(ZRef<ZExprRep_Relation_Rename> iRep
 
 bool ZVisitor_ExprRep_Relation::Visit_Union(ZRef<ZExprRep_Relation_Union> iRep)
 	{
-	if (!ZVisitor_ExprRep::Visit(iRep))
+	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
 		return false;
 
 	if (ZRef<ZExprRep_Relation> theLHS = iRep->GetLHS())

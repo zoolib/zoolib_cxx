@@ -55,7 +55,7 @@ ZCompare::ZCompare(const char* iTypeName)
 	{
 	if (++sInitCount == 1)
 		{
-		ZAssert(sMap);
+		ZAssert(!sMap);
 		sMap = new map<const char*, ZCompare*, CompareCharStars>;
 		}
 	sMap->insert(pair<const char*, ZCompare*>(iTypeName, this));

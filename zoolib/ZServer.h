@@ -88,7 +88,7 @@ public:
 	Responder(ZRef<ZServer> iServer);
 	virtual ~Responder();
 
-	virtual void Handle(ZRef<ZStreamerRW> iStreamerRW) = 0;
+	virtual void Respond(ZRef<ZStreamerRW> iStreamerRW) = 0;
 
 	ZRef<ZServer> GetServer();
 	};
