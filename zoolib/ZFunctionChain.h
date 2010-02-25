@@ -43,14 +43,14 @@ public:
 		// Try preferred first
 		for (ZFunctionChain_T* iter = head; iter; iter = iter->fNext)
 			{
-			if (iter->Invoke(true, oResult, iParam))
+			if (iter->pInvoke(true, oResult, iParam))
 				return true;
 			}
 
 		// then non-preferred
 		for (ZFunctionChain_T* iter = head; iter; iter = iter->fNext)
 			{
-			if (iter->Invoke(false, oResult, iParam))
+			if (iter->pInvoke(false, oResult, iParam))
 				return true;
 			}
 
@@ -93,6 +93,17 @@ protected:
 		}
 
 private:
+	bool pInvoke(bool iIsPreferred, Result& oResult, Param iParam)
+		{
+		try
+			{
+			return this->Invoke(iIsPreferred, oResult, iParam);
+			}
+		catch (...)
+			{}
+		return false;
+		}
+
 	static ZFunctionChain_T*& sHead()
 		{
 		static ZFunctionChain_T* sHead;

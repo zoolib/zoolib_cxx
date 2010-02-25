@@ -203,6 +203,13 @@ static string8 spValueName(const ZRef<HKEY>& iHKEY, DWORD iMaxLengthValueName, s
 #pragma mark -
 #pragma mark * ZWinRegistry::Val
 
+/**
+\class ZWinRegistry::Val
+\ingroup ZVal
+
+\brief A ZVal-compatible entity for use with KeyRef
+*/
+
 ZAny Val::AsAny() const
 	{ return *this; }
 
@@ -270,6 +277,13 @@ ZMACRO_ZValAccessors_Def_GetP(,Val, KeyRef, KeyRef)
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWinRegistry::KeyRef
+
+/**
+\class ZWinRegistry::KeyRef
+\ingroup ZVal
+
+\brief Compatible with ZMap & HKEY
+*/
 
 KeyRef KeyRef::sHKCR()
 	{ return KeyRef(HKEY_CLASSES_ROOT); }

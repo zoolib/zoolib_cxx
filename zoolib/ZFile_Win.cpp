@@ -52,29 +52,24 @@ class Make_FileLoc
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		try
+		if (ZUtil_Win::sUseWAPI())
 			{
-			if (ZUtil_Win::sUseWAPI())
+			switch (iParam)
 				{
-				switch (iParam)
-					{
-					case ZFileLoc::eLoc_Root: oResult = ZFileLoc_WinNT::sGet_Root(); return true;
-					case ZFileLoc::eLoc_CWD: oResult = ZFileLoc_WinNT::sGet_CWD(); return true;
-					case ZFileLoc::eLoc_App: oResult = ZFileLoc_WinNT::sGet_App(); return true;
-					}
-				}
-			else
-				{
-				switch (iParam)
-					{
-					case ZFileLoc::eLoc_Root: oResult = ZFileLoc_Win::sGet_Root(); return true;
-					case ZFileLoc::eLoc_CWD: oResult = ZFileLoc_Win::sGet_CWD(); return true;
-					case ZFileLoc::eLoc_App: oResult = ZFileLoc_Win::sGet_App(); return true;
-					}
+				case ZFileLoc::eLoc_Root: oResult = ZFileLoc_WinNT::sGet_Root(); return true;
+				case ZFileLoc::eLoc_CWD: oResult = ZFileLoc_WinNT::sGet_CWD(); return true;
+				case ZFileLoc::eLoc_App: oResult = ZFileLoc_WinNT::sGet_App(); return true;
 				}
 			}
-		catch (...)
-			{}
+		else
+			{
+			switch (iParam)
+				{
+				case ZFileLoc::eLoc_Root: oResult = ZFileLoc_Win::sGet_Root(); return true;
+				case ZFileLoc::eLoc_CWD: oResult = ZFileLoc_Win::sGet_CWD(); return true;
+				case ZFileLoc::eLoc_App: oResult = ZFileLoc_Win::sGet_App(); return true;
+				}
+			}
 		return false;
 		}	
 	} sMaker0;

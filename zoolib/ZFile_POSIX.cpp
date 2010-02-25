@@ -78,17 +78,12 @@ class Make_FileLoc
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		try
+		switch (iParam)
 			{
-			switch (iParam)
-				{
-				case ZFileLoc::eLoc_Root: oResult = ZFileLoc_POSIX::sGet_Root(); return true;
-				case ZFileLoc::eLoc_CWD: oResult = ZFileLoc_POSIX::sGet_CWD(); return true;
-				case ZFileLoc::eLoc_App: oResult = ZFileLoc_POSIX::sGet_App(); return true;
-				}
+			case ZFileLoc::eLoc_Root: oResult = ZFileLoc_POSIX::sGet_Root(); return true;
+			case ZFileLoc::eLoc_CWD: oResult = ZFileLoc_POSIX::sGet_CWD(); return true;
+			case ZFileLoc::eLoc_App: oResult = ZFileLoc_POSIX::sGet_App(); return true;
 			}
-		catch (...)
-			{}
 		return false;
 		}	
 	} sMaker0;

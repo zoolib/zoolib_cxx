@@ -41,37 +41,16 @@ class Make_Decoder
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		try
-			{
-			if (iParam == "ascii")
-				{
-				oResult = new ZTextDecoder_ASCII;
-				return true;
-				}
-			else if (iParam == "cp1252")
-				{
-				oResult = new ZTextDecoder_CP1252;
-				return true;
-				}
-			else if (iParam == "cp850")
-				{
-				oResult = new ZTextDecoder_CP850;
-				return true;
-				}
-			else if (iParam == "iso_8859-1" || iParam == "iso-8859-1")
-				{
-				oResult = new ZTextDecoder_ISO8859_1;
-				return true;
-				}
-			else if (iParam == "macroman")
-				{
-				oResult = new ZTextDecoder_MacRoman;
-				return true;
-				}
-			}
-		catch (...)
-			{}
-		return false;
+		if (false) {}
+		else if (iParam == "ascii") oResult = new ZTextDecoder_ASCII;
+		else if (iParam == "cp1252") oResult = new ZTextDecoder_CP1252;
+		else if (iParam == "cp850") oResult = new ZTextDecoder_CP850;
+		else if (iParam == "macroman") oResult = new ZTextDecoder_MacRoman;
+		else if (iParam == "iso_8859-1" || iParam == "iso-8859-1")
+			oResult = new ZTextDecoder_ISO8859_1;
+		else return false;
+
+		return true;
 		}	
 	} sMaker0;
 
@@ -80,37 +59,16 @@ class Make_Encoder
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		try
-			{
-			if (iParam == "ascii")
-				{
-				oResult = new ZTextEncoder_ASCII;
-				return true;
-				}
-			else if (iParam == "cp1252")
-				{
-				oResult = new ZTextEncoder_CP1252;
-				return true;
-				}
-			else if (iParam == "cp850")
-				{
-				oResult = new ZTextEncoder_CP850;
-				return true;
-				}
-			else if (iParam == "iso_8859-1" || iParam == "iso-8859-1")
-				{
-				oResult = new ZTextEncoder_ISO8859_1;
-				return true;
-				}
-			else if (iParam == "macroman")
-				{
-				oResult = new ZTextEncoder_MacRoman;
-				return true;
-				}
-			}
-		catch (...)
-			{}
-		return false;
+		if (false) {}
+		else if (iParam == "ascii") oResult = new ZTextEncoder_ASCII;
+		else if (iParam == "cp1252") oResult = new ZTextEncoder_CP1252;
+		else if (iParam == "cp850") oResult = new ZTextEncoder_CP850;
+		else if (iParam == "macroman") oResult = new ZTextEncoder_MacRoman;
+		else if (iParam == "iso_8859-1" || iParam == "iso-8859-1")
+			oResult = new ZTextEncoder_ISO8859_1;
+		else return false;
+
+		return true;
 		}	
 	} sMaker1;
 

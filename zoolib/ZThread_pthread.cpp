@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #if ZCONFIG_API_Enabled(Thread_pthread)
 
 #include "zoolib/ZCompat_cmath.h" // for fmod
-#include "zoolib/ZDebug.h"
+//###include "zoolib/ZDebug.h"
 
 #include <errno.h> // For errno
 #include <sys/time.h> // For gettimeofday
@@ -93,7 +93,7 @@ void ZSemNoTimeout_pthread::Wait()
 			{
 			if (EINTR == result)
 				continue;
-			ZUnimplemented();
+//##			ZUnimplemented();
 			}
 		break;
 		}

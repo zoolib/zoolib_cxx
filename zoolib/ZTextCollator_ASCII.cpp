@@ -38,16 +38,11 @@ class Make_Collator
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		try
+		if (iParam.fLocaleName.empty())
 			{
-			if (iParam.fLocaleName.empty())
-				{
-				oResult = new ZTextCollatorRep_ASCII(iParam.fStrength);
-				return true;
-				}
+			oResult = new ZTextCollatorRep_ASCII(iParam.fStrength);
+			return true;
 			}
-		catch (...)
-			{}
 		return false;
 		}	
 	} sMaker0;

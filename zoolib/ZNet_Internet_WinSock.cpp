@@ -42,14 +42,8 @@ class Make_NameLookup
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		try
-			{
-			oResult = new ZNetNameLookup_Internet_WinSock(iParam.f0, iParam.f1, iParam.f2);
-			return true;
-			}
-		catch (...)
-			{}
-		return false;
+		oResult = new ZNetNameLookup_Internet_WinSock(iParam.f0, iParam.f1, iParam.f2);
+		return true;
 		}	
 	} sMaker0;
 
@@ -59,14 +53,8 @@ class Make_Listener
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		try
-			{
-			oResult = new ZNetListener_TCP_WinSock(iParam.f0, iParam.f1, iParam.f2);
-			return true;
-			}
-		catch (...)
-			{}
-		return false;
+		oResult = new ZNetListener_TCP_WinSock(iParam.f0, iParam.f1, iParam.f2);
+		return true;
 		}	
 	} sMaker1;
 
@@ -76,14 +64,8 @@ class Make_Endpoint
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		try
-			{
-			oResult = new ZNetEndpoint_TCP_WinSock(iParam.f0, iParam.f1);
-			return true;
-			}
-		catch (...)
-			{}
-		return false;
+		oResult = new ZNetEndpoint_TCP_WinSock(iParam.f0, iParam.f1);
+		return true;
 		}	
 	} sMaker2;
 

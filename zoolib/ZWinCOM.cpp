@@ -36,6 +36,13 @@ namespace ZWinCOM {
 #pragma mark -
 #pragma mark * Variant
 
+/**
+\class ZWinCOM::Variant
+\ingroup ZVal
+
+\brief Compatible with ZVal & VARIANT
+*/
+
 Variant::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(VT_NULL != vt); }
 

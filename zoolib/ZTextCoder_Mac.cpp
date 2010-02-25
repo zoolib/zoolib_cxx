@@ -54,14 +54,8 @@ class Make_Decoder
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		try
-			{
-			oResult = new ZTextDecoder_Mac(iParam);
-			return true;		
-			}
-		catch (...)
-			{}
-		return false;
+		oResult = new ZTextDecoder_Mac(iParam);
+		return true;		
 		}	
 	} sMaker0;
 
@@ -70,14 +64,8 @@ class Make_Encoder
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		try
-			{
-			oResult = new ZTextEncoder_Mac(iParam);
-			return true;		
-			}
-		catch (...)
-			{}
-		return false;
+		oResult = new ZTextEncoder_Mac(iParam);
+		return true;		
 		}	
 	} sMaker1;
 
