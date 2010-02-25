@@ -39,6 +39,16 @@ public:
 	virtual ~ZExprRep_Physical();
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVisitor_ExprRep_Physical
+
+class ZVisitor_ExprRep_Physical : public virtual ZVisitor_ExprRep_Relation
+	{
+public:
+	virtual bool Visit_Physical(ZRef<ZExprRep_Physical> iRep);
+	};
+
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZExpr_Physical__
