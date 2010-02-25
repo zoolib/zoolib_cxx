@@ -21,15 +21,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZYad.h"
 
-#include <stdio.h> // For printf
-
 NAMESPACE_ZOOLIB_BEGIN
 
 using std::min;
 using std::string;
 
 /**
-\defgroup Yad
+\defgroup Yad Yad (Yet Another Data)
 Yad is another neologism by Eric Cooper. As an acronym it stands for Yet Another Data, but
 interestingly it is also a hebrew word. From <http://en.wikipedia.org/wiki/Yad>:
 
@@ -108,6 +106,13 @@ bool ZYadR::Accept(ZVisitor_Yad& iVisitor)
 #pragma mark -
 #pragma mark * ZYadPrimR
 
+/**
+\class ZYadPrimR
+\ingroup Yad
+\sa Yad
+
+*/
+
 bool ZYadPrimR::Accept(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadPrimR(this); }
 
@@ -117,6 +122,13 @@ bool ZYadPrimR::IsSimple(const ZYadOptions& iOptions)
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadStreamR
+
+/**
+\class ZYadStreamR
+\ingroup Yad
+\sa Yad
+
+*/
 
 bool ZYadStreamR::Accept(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadStreamR(this); }
@@ -128,6 +140,13 @@ bool ZYadStreamR::IsSimple(const ZYadOptions& iOptions)
 #pragma mark -
 #pragma mark * ZYadStrimR
 
+/**
+\class ZYadStrimR
+\ingroup Yad
+\sa Yad
+
+*/
+
 bool ZYadStrimR::Accept(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadStrimR(this); }
 
@@ -137,6 +156,13 @@ bool ZYadStrimR::IsSimple(const ZYadOptions& iOptions)
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadSeqR
+
+/**
+\class ZYadSeqR
+\ingroup Yad
+\sa Yad
+
+*/
 
 bool ZYadSeqR::Accept(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadSeqR(this); }
@@ -156,6 +182,13 @@ void ZYadSeqR::SkipAll()
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadSeqRPos
+
+/**
+\class ZYadSeqRPos
+\ingroup Yad
+\sa Yad
+
+*/
 
 bool ZYadSeqRPos::Accept(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadSeqRPos(this); }
@@ -196,6 +229,13 @@ void ZYadSeqRPos::SkipAll()
 #pragma mark -
 #pragma mark * ZYadMapR
 
+/**
+\class ZYadMapR
+\ingroup Yad
+\sa Yad
+
+*/
+
 bool ZYadMapR::Accept(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadMapR(this); }
 
@@ -217,6 +257,13 @@ void ZYadMapR::SkipAll()
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadMapRPos
+
+/**
+\class ZYadMapRPos
+\ingroup Yad
+\sa Yad
+
+*/
 
 bool ZYadMapRPos::Accept(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadMapRPos(this); }
@@ -256,6 +303,13 @@ bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVisitor_Yad
+
+/**
+\class ZVisitor_Yad
+\ingroup Yad
+\sa Yad
+
+*/
 
 ZVisitor_Yad::ZVisitor_Yad()
 	{}

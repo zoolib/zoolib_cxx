@@ -244,6 +244,13 @@ static ZAny spDAsAny(const ZAny& iDefault, const AEDesc& iDesc)
 #pragma mark -
 #pragma mark * ZVal_AppleEvent
 
+/**
+\class ZVal_AppleEvent
+\ingroup ZVal
+
+\brief Compatible with ZVal & AEDesc
+*/
+
 ZAny ZVal_AppleEvent::AsAny() const
 	{ return this->DAsAny(ZAny()); }
 

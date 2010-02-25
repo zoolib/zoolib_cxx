@@ -128,8 +128,11 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, String, std::string)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Seq, ZSeq_AppleEvent)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Map, ZMap_AppleEvent)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, FSSpec, FSSpec)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, FSRef, FSRef)
+
+#if ZCONFIG_SPI_Enabled(Carbon)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, FSSpec, FSSpec)
+#endif
 	};
 
 // =================================================================================================

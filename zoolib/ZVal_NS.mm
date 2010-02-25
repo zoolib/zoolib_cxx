@@ -55,6 +55,13 @@ NSNumber* spAsNumber(NSObject* iObj)
 #pragma mark -
 #pragma mark * ZVal_NS
 
+/**
+\class ZVal_NS
+\ingroup ZVal
+
+\brief Compatible with ZVal & NSObject
+*/
+
 ZAny ZVal_NS::AsAny() const
 	{ return this->DAsAny(ZAny()); }
 

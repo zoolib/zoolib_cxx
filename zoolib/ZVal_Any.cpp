@@ -50,6 +50,13 @@ ZMACRO_CompareRegistration_T(ZMap_Any);
 #pragma mark -
 #pragma mark * ZVal_Any typename accessors
 
+/**
+\class ZVal_Any
+\ingroup ZVal
+
+\brief
+*/
+
 int ZVal_Any::Compare(const ZVal_Any& iOther) const
 	{
 	const char* typeName = this->Type().name();

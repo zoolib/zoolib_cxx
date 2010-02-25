@@ -78,6 +78,13 @@ ZRef<CFTypeRef> spNumber_T(CFNumberType iNumberType, const S& iVal)
 #pragma mark -
 #pragma mark * ZVal_CFType
 
+/**
+\class ZVal_CFType
+\ingroup ZVal
+
+\brief Compatible with ZVal & CFTypeRef
+*/
+
 ZAny ZVal_CFType::AsAny() const
 	{ return this->DAsAny(ZAny()); }
 
