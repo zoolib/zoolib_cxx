@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(CFType)
 
-#include "zoolib/ZData_Any.h"
+#include "zoolib/ZAny.h"
 #include "zoolib/ZRef_CFType.h"
 
 NAMESPACE_ZOOLIB_BEGIN
