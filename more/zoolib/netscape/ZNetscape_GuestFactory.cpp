@@ -32,8 +32,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#include ZMACINCLUDE2(CoreFoundation,CFBundle.h)
 	#include ZMACINCLUDE2(CoreFoundation,CFPlugin.h)
 	#if __MACH__
-	#	include <mach-o/dyld.h> // For NSModule
+		#include <mach-o/dyld.h> // For NSModule
 	#endif
+#endif
+
+#if __MACH__
+	#include <csignal>
 #endif
 
 #include <stdexcept>
@@ -217,6 +221,9 @@ private:
 	#endif
 	};
 
+static void spIgnoreSignal(int iSig)
+	{}
+
 GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 :	fPlugInRef(iPlugInRef),
 	fNSModule(nullptr)
@@ -224,7 +231,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 	// If the plugin contains ObjC code then unloading it will kill the
 	// host application. So (for now at least) we do an extra retain, leaving
 	// the rest of the plugin management as it should be.
-	::CFRetain(fPlugInRef.Get());
+	::CFRetain(fPlugInRef);
 
 	// Get our own copies of our host's function pointers
 	GuestFactory::GetNPNF(fNPNF);
@@ -263,7 +270,15 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 			sThrowMissingEntryPoint();
 
 		// Mac Flash 10.1 requires theInit be called first. cf GuestFactory_Win.
+		// Also, Flash tends to call Debugger, which is usually innocuous, but under
+		// some circumstances causes the app to crash with an unhandled SIGTRAP, so
+		// we catch and ignore it.
+		{
+		sig_t prior = ::signal(SIGTRAP, spIgnoreSignal);
 		theInit(&fNPNF);
+		::signal(SIGTRAP, prior);
+		}
+
 		theEntryPoints(&fNPPluginFuncs);
 		}
 	else
@@ -362,7 +377,7 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(ZRef<CFPlugInRef> iPlugInRef)
 	// If the plugin contains ObjC code then unloading it will kill the
 	// host application. So (for now at least) we do an extra retain, leaving
 	// the rest of the plugin management as it should be.
-	::CFRetain(fPlugInRef.Get());
+	::CFRetain(fPlugInRef);
 
 	// Get local copies of our host's function pointers
 	GuestFactory::GetNPNF(fNPNF);
