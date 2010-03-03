@@ -89,6 +89,7 @@ public:
 	Attrs_t Attrs() const;
 
 private:
+	void pAdvance() const;
 	void pAdvance();
 
 	const ZStrimU& fStrim;

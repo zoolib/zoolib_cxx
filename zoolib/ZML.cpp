@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_STL.h"
-#include "zoolib/ZUtil_Strim_Tuple.h"
 
 #include <stdio.h> // For sprintf
 
@@ -327,6 +326,9 @@ StrimU::~StrimU()
 
 void StrimU::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 	{
+	if (fToken == eToken_Fresh)
+		this->pAdvance();
+
 	UTF32* localDest = iDest;
 	if (fToken == eToken_Text)
 		{
@@ -379,6 +381,8 @@ void StrimU::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 
 void StrimU::Imp_Unread(UTF32 iCP)
 	{
+	ZAssert(fToken == eToken_Text);
+
 	if (fBufferStart == 0)
 		fBuffer.insert(fBuffer.begin(), iCP);
 	else
@@ -396,7 +400,7 @@ StrimU::operator operator_bool_type() const
 EToken StrimU::Current() const
 	{
 	if (fToken == eToken_Fresh)
-		const_cast<StrimU*>(this)->pAdvance();
+		this->pAdvance();
 
 	return fToken;
 	}
@@ -404,28 +408,16 @@ EToken StrimU::Current() const
 StrimU& StrimU::Advance()
 	{
 	if (fToken == eToken_Fresh)
-		this->pAdvance();
-
-	if (fToken == eToken_Text)
 		{
-		// Suck up all the text till we hit the start of a tag.
-		for (;;)
-			{
-			UTF32 theCP;
-			if (!fStrim.ReadCP(theCP))
-				{
-				fToken = eToken_Exhausted;
-				return *this;
-				}
-			else if (theCP == '<')
-				{
-				fStrim.Unread(theCP);
-				break;
-				}
-			}
+		this->pAdvance();
 		}
+	else
+		{
+		// If we're on a text token, this will skip it. Otherwise it's a no-op.
+		this->SkipAll();
 
-	this->pAdvance();
+		fToken = eToken_Fresh;
+		}
 	return *this;
 	}
 
@@ -434,7 +426,7 @@ static string spEmptyString;
 const string& StrimU::Name() const
 	{
 	if (fToken == eToken_Fresh)
-		const_cast<StrimU*>(this)->pAdvance();
+		this->pAdvance();
 
 	if (fToken == eToken_TagBegin || fToken == eToken_TagEnd || fToken == eToken_TagEmpty)
 		return fTagName;
@@ -445,7 +437,7 @@ const string& StrimU::Name() const
 Attrs_t StrimU::Attrs() const
 	{
 	if (fToken == eToken_Fresh)
-		const_cast<StrimU*>(this)->pAdvance();
+		this->pAdvance();
 
 	if (fToken == eToken_TagBegin || fToken == eToken_TagEmpty)
 		return fTagAttributes;
@@ -481,6 +473,9 @@ static bool spTryRead_String(const ZStrimR& iStrimR, const string8& iPattern)
 			}
 		}
 	}
+
+void StrimU::pAdvance() const
+	{ const_cast<StrimU*>(this)->pAdvance(); }
 
 void StrimU::pAdvance()
 	{
