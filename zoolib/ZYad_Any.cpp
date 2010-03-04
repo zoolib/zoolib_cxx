@@ -64,7 +64,7 @@ namespace ZANONYMOUS {
 class Visitor_Yad_GetVal_Any : public ZVisitor_Yad
 	{
 public:
-	Visitor_Yad_GetVal_Any(const ZVal_Any& iDefault);
+	Visitor_Yad_GetVal_Any(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault);
 
 // From ZVisitor_Yad
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
@@ -73,6 +73,7 @@ public:
 	virtual bool Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
 	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 
+	bool fRepeatedPropsAsSeq;
 	const ZVal_Any& fDefault;
 	ZVal_Any fOutput;
 	};
@@ -80,6 +81,9 @@ public:
 } // anonymous namespace
 
 ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
+	{ return sFromYadR(false, iDefault, iYadR); }
+
+ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
 	{
 	if (ZRef<ZYadPrimR_Any> asPrim = iYadR.DynamicCast<ZYadPrimR_Any>())
 		return asPrim->GetAny();
@@ -96,13 +100,14 @@ ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
 	if (ZRef<ZYadSeqRPos_Any> asSeq = iYadR.DynamicCast<ZYadSeqRPos_Any>())
 		return asSeq->GetSeq();
 
-	Visitor_Yad_GetVal_Any theVisitor(iDefault);
+	Visitor_Yad_GetVal_Any theVisitor(iRepeatedPropsAsSeq, iDefault);
 	iYadR->Accept(theVisitor);
 	return theVisitor.fOutput;
 	}
 
-Visitor_Yad_GetVal_Any::Visitor_Yad_GetVal_Any(const ZVal_Any& iDefault)
-:	fDefault(iDefault)
+Visitor_Yad_GetVal_Any::Visitor_Yad_GetVal_Any(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault)
+:	fRepeatedPropsAsSeq(iRepeatedPropsAsSeq)
+,	fDefault(iDefault)
 	{}
 
 bool Visitor_Yad_GetVal_Any::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
@@ -140,7 +145,25 @@ bool Visitor_Yad_GetVal_Any::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 
 	string theName;
 	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
-		theMap.Set(theName, sFromYadR(fDefault, theChild));
+		{
+		ZVal_Any theVal = sFromYadR(fRepeatedPropsAsSeq, fDefault, theChild);
+		if (fRepeatedPropsAsSeq)
+			{
+			if (ZVal_Any* prior = theMap.PGet(theName))
+				{
+				if (ZSeq_Any* priorSeq = prior->PGet_T<ZSeq_Any>())
+					{
+					priorSeq->Append(theVal);
+					continue;
+					}
+				ZSeq_Any theSeq;
+				theSeq.Append(*prior);
+				theSeq.Append(theVal);
+				theVal = theSeq;
+				}
+			}
+		theMap.Set(theName, theVal);
+		}
 
 	fOutput = theMap;
 	return true;

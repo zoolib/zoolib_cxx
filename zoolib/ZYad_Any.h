@@ -48,6 +48,7 @@ ZRef<ZYadMapR> sMakeYadR(const ZMap_Any& iMap);
 #pragma mark * sFromYadR
 
 ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR);
+ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYadR> iYadR);
 
 NAMESPACE_ZOOLIB_END
 
