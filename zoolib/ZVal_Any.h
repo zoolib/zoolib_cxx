@@ -110,9 +110,6 @@ class ZSeq_Any
 public:
 	typedef ZVal_Any Val_t;
 
-	ZAny AsAny() const;
-	ZAny DAsAny(const ZAny& iDefault) const;
-
 	operator operator_bool_type() const;
 
 	ZSeq_Any();
@@ -232,9 +229,6 @@ public:
 	typedef std::map<std::string, ZVal_Any> Map_t;
 	typedef Map_t::iterator Index_t;
 	typedef ZVal_Any Val_t;
-
-	ZAny AsAny() const;
-	ZAny DAsAny(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 

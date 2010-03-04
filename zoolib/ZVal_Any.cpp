@@ -89,12 +89,6 @@ ZSeq_Any::Rep::Rep(const vector<ZVal_Any>& iVector)
 #pragma mark -
 #pragma mark * ZSeq_Any
 
-ZAny ZSeq_Any::AsAny() const
-	{ return ZAny(*this); }
-
-ZAny ZSeq_Any::DAsAny(const ZAny& iDefault) const
-	{ return ZAny(*this); }
-
 ZSeq_Any::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fRep && !fRep->fVector.empty()); }
 
@@ -264,12 +258,6 @@ ZMap_Any::Rep::Rep(const map<string, ZVal_Any>& iMap)
 #pragma mark * ZMap_Any
 
 static map<string, ZVal_Any> spEmptyMap;
-
-ZAny ZMap_Any::AsAny() const
-	{ return ZAny(*this); }
-
-ZAny ZMap_Any::DAsAny(const ZAny& iDefault) const
-	{ return ZAny(*this); }
 
 ZMap_Any::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fRep && !fRep->fMap.empty()); }
@@ -478,7 +466,7 @@ const ZVal_Any& ZMap_Any::Get(const Index_t& iIndex) const
 ZMap_Any& ZMap_Any::Set(const string8& iName, const ZVal_Any& iVal)
 	{
 	this->pTouch();
-	fRep->fMap.insert(pair<string8, ZVal_Any>(iName, iVal));
+	fRep->fMap[iName] = iVal;
 	return *this;
 	}
 
