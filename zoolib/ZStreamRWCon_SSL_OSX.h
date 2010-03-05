@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_SSL_OSX__
-#define __ZStream_SSL_OSX__ 1
+#ifndef __ZStreamRWCon_SSL_OSX__
+#define __ZStreamRWCon_SSL_OSX__ 1
 #include "zconfig.h"
 #include "ZConfig_SPI.h"
 
@@ -59,13 +59,13 @@ public:
 // From ZStreamRCon and ZStreamWCon
 	virtual void Imp_Abort();
 
+private:
 	OSStatus pRead(void* iDest, size_t* ioCount);
 	static OSStatus spRead(SSLConnectionRef iRefcon, void* iDest, size_t* ioCount);
 
 	OSStatus pWrite(const void* iSource, size_t* ioCount);
 	static OSStatus spWrite(SSLConnectionRef iRefcon, const void* iSource, size_t* ioCount);
 
-private:
 	const ZStreamR& fStreamR;
 	const ZStreamW& fStreamW;
 	SSLContextRef fSSLCR;
@@ -89,6 +89,9 @@ public:
 // From ZStreamerWCon via ZStreamerRWCon
 	virtual const ZStreamWCon& GetStreamWCon();
 
+// Our protocol
+	ZStreamRWCon_SSL_OSX& GetStream();
+
 private:
 	ZRef<ZStreamerR> fStreamerR;
 	ZRef<ZStreamerW> fStreamerW;
@@ -99,4 +102,4 @@ NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(MacOSX)
 
-#endif // __ZStream_POSIX__
+#endif // __ZStreamRWCon_SSL_OSX__

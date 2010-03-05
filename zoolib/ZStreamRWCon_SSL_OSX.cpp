@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStream_SSL_OSX.h"
+#include "zoolib/ZStreamRWCon_SSL_OSX.h"
 
 #if ZCONFIG_SPI_Enabled(MacOSX)
 
@@ -98,7 +98,7 @@ void ZStreamRWCon_SSL_OSX::Imp_SendDisconnect()
 
 void ZStreamRWCon_SSL_OSX::Imp_Abort()
 	{
-	::SSLClose(fSSLCR); //???
+	::SSLClose(fSSLCR); // ???
 	}
 
 OSStatus ZStreamRWCon_SSL_OSX::pRead(void* iDest, size_t* ioCount)
@@ -177,6 +177,9 @@ const ZStreamRCon& ZStreamerRWCon_SSL_OSX::GetStreamRCon()
 	{ return fStream; }
 
 const ZStreamWCon& ZStreamerRWCon_SSL_OSX::GetStreamWCon()
+	{ return fStream; }
+
+ZStreamRWCon_SSL_OSX& ZStreamerRWCon_SSL_OSX::GetStream()
 	{ return fStream; }
 
 NAMESPACE_ZOOLIB_END
