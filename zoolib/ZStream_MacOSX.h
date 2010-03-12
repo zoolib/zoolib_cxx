@@ -75,6 +75,8 @@ private:
 
 typedef ZStreamerW_T<ZStreamW_CFStream> ZStreamerW_CFStream;
 
+NAMESPACE_ZOOLIB_END
+
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
 
 // =================================================================================================
@@ -82,6 +84,8 @@ typedef ZStreamerW_T<ZStreamW_CFStream> ZStreamerW_CFStream;
 #pragma mark * ZStream_MacOSX
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
+
+NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZStream_MacOSX {
 
@@ -91,7 +95,7 @@ CGDataProviderRef sCGDataProviderCreateRewind(ZRef<ZStreamerRPos> iStreamer);
 
 CGDataConsumerRef sCGDataConsumerCreate(ZRef<ZStreamerW> iStreamer);
 
-} // ZStream_MacOSX
+} // namespace ZStream_MacOSX
 
 NAMESPACE_ZOOLIB_END
 
