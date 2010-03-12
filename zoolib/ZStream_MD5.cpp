@@ -267,12 +267,12 @@ void ZStream_MD5::sFinal(ZStream_MD5::Context& ioContext, uint8 oDigest[16])
 	uint32* dest = reinterpret_cast<uint32*>(&oDigest[0]);
 	if ZCONFIG(Endian, Big)
 		{
-		for (size_t x = 0; x < 5; ++x)
+		for (size_t x = 0; x < 4; ++x)
 			dest[x] = ioContext.fState[x];
 		}
 	else
 		{
-		for (size_t x = 0; x < 5; ++x)
+		for (size_t x = 0; x < 4; ++x)
 			ZByteSwap_WriteBig32(dest++, ioContext.fState[x]);
 		}
 	}
