@@ -49,14 +49,9 @@ typedef MD5_CTX Context;
 
 struct Context
 	{
-	uint32 fState[4];
-	size_t fSpaceUsed;
-	size_t fBuffersSent;
-	union
-		{
-		uint32 fBuffer32[16];
-		uint8 fBuffer8[64];
-		};
+	uint32 buf[4];
+	uint32 bits[2];
+	unsigned char in[64];
 	};
 
 #endif // ZCONFIG_StreamMD5_UseOpenSSL
