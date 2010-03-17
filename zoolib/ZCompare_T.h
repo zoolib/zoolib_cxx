@@ -26,6 +26,13 @@ NAMESPACE_ZOOLIB_BEGIN
 
 template <class T> int sCompare_T(const T& iL, const T& iR);
 
+template <class T> class ZCompare_T
+	{
+public:
+	int operator()(const T& iL, const T& iR) const
+		{ return sCompare_T<T>(iL, iR); }
+	};
+
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZCompare_Vector__

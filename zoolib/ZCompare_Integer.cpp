@@ -23,30 +23,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-#define ZMACRO_InstantiateTemplate_And_CompareRegistration(t) \
-	template <> int sCompare_T(const t& iL, const t& iR); \
-	ZMACRO_CompareRegistration_T(t)
-	
-ZMACRO_InstantiateTemplate_And_CompareRegistration(bool);
-ZMACRO_InstantiateTemplate_And_CompareRegistration(char);
-ZMACRO_InstantiateTemplate_And_CompareRegistration(unsigned char);
-ZMACRO_InstantiateTemplate_And_CompareRegistration(signed char);
-ZMACRO_InstantiateTemplate_And_CompareRegistration(short);
-ZMACRO_InstantiateTemplate_And_CompareRegistration(unsigned short);
-ZMACRO_InstantiateTemplate_And_CompareRegistration(int);
-ZMACRO_InstantiateTemplate_And_CompareRegistration(unsigned int);
-ZMACRO_InstantiateTemplate_And_CompareRegistration(long);
-ZMACRO_InstantiateTemplate_And_CompareRegistration(unsigned long);
+ZMACRO_CompareRegistration_T(bool);
+ZMACRO_CompareRegistration_T(char);
+ZMACRO_CompareRegistration_T(unsigned char);
+ZMACRO_CompareRegistration_T(signed char);
+ZMACRO_CompareRegistration_T(short);
+ZMACRO_CompareRegistration_T(unsigned short);
+ZMACRO_CompareRegistration_T(int);
+ZMACRO_CompareRegistration_T(unsigned int);
+ZMACRO_CompareRegistration_T(long);
+ZMACRO_CompareRegistration_T(unsigned long);
 
 #if ZCONFIG(Compiler, MSVC)
 
-	ZMACRO_InstantiateTemplate_And_CompareRegistration(__int64);
-	ZMACRO_InstantiateTemplate_And_CompareRegistration(unsigned __int64);
+	ZMACRO_CompareRegistration_T(__int64);
+	ZMACRO_CompareRegistration_T(unsigned __int64);
 
 #else
 
-	ZMACRO_InstantiateTemplate_And_CompareRegistration(long long);
-	ZMACRO_InstantiateTemplate_And_CompareRegistration(unsigned long long);
+	ZMACRO_CompareRegistration_T(long long);
+	ZMACRO_CompareRegistration_T(unsigned long long);
 
 #endif
 

@@ -84,7 +84,6 @@ inline int sCompareIterators_T(
 		}
 	}
 
-
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZCompare_Vector__

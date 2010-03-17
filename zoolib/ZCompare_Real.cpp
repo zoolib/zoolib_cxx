@@ -26,6 +26,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // To provide stable ordering between floating point values we
 // arbitrarily say that a nan is less than any non-nan value.
+
 template <>
 int sCompare_T(const float& iL, const float& iR)
 	{

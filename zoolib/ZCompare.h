@@ -48,23 +48,45 @@ public:
 #pragma mark -
 #pragma mark * ZCompareRegistration_T
 
-template <class T, int (*CompareProc)(const T& iL, const T& iR)>
-class ZCompareRegistration_T : public ZCompare
-	{
-public:
-	ZCompareRegistration_T() : ZCompare(typeid(T).name()) {}
+#if defined(__MWERKS__) && (__MWERKS__ <= 0x2406)
 
-// From ZCompare
-	virtual int Compare(const void* iL, const void* iR)
-		{ return CompareProc(*static_cast<const T*>(iL), *static_cast<const T*>(iR)); }
-	};
+	// MW Pro 7 doesn't handle function template parameters properly, so
+	// we indirect through a ZCompare_T functor.
+
+	template <class T, class CompareFunctor>
+	class ZCompareRegistration_T : public ZCompare
+		{
+	public:
+		ZCompareRegistration_T() : ZCompare(typeid(T).name()) {}
+
+	// From ZCompare
+		virtual int Compare(const void* iL, const void* iR)
+			{ return CompareFunctor()(*static_cast<const T*>(iL), *static_cast<const T*>(iR)); }
+		};
+
+	#define ZMACRO_CompareRegistration_T_Real(t, CLASS, INST) \
+		static class CLASS : public ZCompareRegistration_T<t, ZCompare_T<t> > {} INST
+#else
+
+	template <class T, int (*CompareProc)(const T& iL, const T& iR)>
+	class ZCompareRegistration_T : public ZCompare
+		{
+	public:
+		ZCompareRegistration_T() : ZCompare(typeid(T).name()) {}
+
+	// From ZCompare
+		virtual int Compare(const void* iL, const void* iR)
+			{ return CompareProc(*static_cast<const T*>(iL), *static_cast<const T*>(iR)); }
+		};
+
+	#define ZMACRO_CompareRegistration_T_Real(t, CLASS, INST) \
+		static class CLASS : public ZCompareRegistration_T<t, sCompare_T<t> > {} INST
+
+#endif
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Macros
-
-#define ZMACRO_CompareRegistration_T_Real(t, CLASS, INST) \
-	static class CLASS : public ZCompareRegistration_T<t, sCompare_T<t> > {} INST
 
 #define ZMACRO_CompareRegistration_T(t) \
 	ZMACRO_CompareRegistration_T_Real(t, \
