@@ -23,26 +23,26 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-ZMACRO_CompareRegistration_T(bool);
-ZMACRO_CompareRegistration_T(char);
-ZMACRO_CompareRegistration_T(unsigned char);
-ZMACRO_CompareRegistration_T(signed char);
-ZMACRO_CompareRegistration_T(short);
-ZMACRO_CompareRegistration_T(unsigned short);
-ZMACRO_CompareRegistration_T(int);
-ZMACRO_CompareRegistration_T(unsigned int);
-ZMACRO_CompareRegistration_T(long);
-ZMACRO_CompareRegistration_T(unsigned long);
+ZMACRO_CompareRegistration_T(bool)
+ZMACRO_CompareRegistration_T(char)
+ZMACRO_CompareRegistration_T(unsigned char)
+ZMACRO_CompareRegistration_T(signed char)
+ZMACRO_CompareRegistration_T(short)
+ZMACRO_CompareRegistration_T(unsigned short)
+ZMACRO_CompareRegistration_T(int)
+ZMACRO_CompareRegistration_T(unsigned int)
+ZMACRO_CompareRegistration_T(long)
+ZMACRO_CompareRegistration_T(unsigned long)
 
 #if ZCONFIG(Compiler, MSVC)
 
-	ZMACRO_CompareRegistration_T(__int64);
-	ZMACRO_CompareRegistration_T(unsigned __int64);
+	ZMACRO_CompareRegistration_T(__int64)
+	ZMACRO_CompareRegistration_T(unsigned __int64)
 
 #else
 
-	ZMACRO_CompareRegistration_T(long long);
-	ZMACRO_CompareRegistration_T(unsigned long long);
+	ZMACRO_CompareRegistration_T(long long)
+	ZMACRO_CompareRegistration_T(unsigned long long)
 
 #endif
 

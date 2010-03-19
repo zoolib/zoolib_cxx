@@ -25,6 +25,6 @@ NAMESPACE_ZOOLIB_BEGIN
 
 template <> int sCompare_T(const std::string& iL, const std::string& iR);
 
-ZMACRO_CompareRegistration_T(std::string);
+ZMACRO_CompareRegistration_T(std::string)
 
 NAMESPACE_ZOOLIB_END

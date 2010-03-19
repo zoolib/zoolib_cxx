@@ -65,7 +65,7 @@ public:
 		};
 
 	#define ZMACRO_CompareRegistration_T_Real(t, CLASS, INST) \
-		static class CLASS : public ZCompareRegistration_T<t, ZCompare_T<t> > {} INST
+		namespace { class CLASS : public ZCompareRegistration_T<t, ZCompare_T<t> > {} INST; }
 #else
 
 	template <class T, int (*CompareProc)(const T& iL, const T& iR)>
@@ -80,7 +80,7 @@ public:
 		};
 
 	#define ZMACRO_CompareRegistration_T_Real(t, CLASS, INST) \
-		static class CLASS : public ZCompareRegistration_T<t, sCompare_T<t> > {} INST
+		namespace { class CLASS : public ZCompareRegistration_T<t, sCompare_T<t> > {} INST; }
 
 #endif
 
@@ -90,8 +90,8 @@ public:
 
 #define ZMACRO_CompareRegistration_T(t) \
 	ZMACRO_CompareRegistration_T_Real(t, \
-	ZMACRO_CONCAT(ZComparer_,__LINE__), \
-	ZMACRO_CONCAT(sComparer_,__LINE__))
+		ZMACRO_CONCAT(ZComparer_,__LINE__), \
+		ZMACRO_CONCAT(sComparer_,__LINE__))
 
 NAMESPACE_ZOOLIB_END
 

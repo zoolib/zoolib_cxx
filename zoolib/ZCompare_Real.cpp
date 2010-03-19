@@ -45,7 +45,7 @@ int sCompare_T(const float& iL, const float& iR)
 	return 0;
 	}
 
-ZMACRO_CompareRegistration_T(float);
+ZMACRO_CompareRegistration_T(float)
 
 template <>
 int sCompare_T(const double& iL, const double& iR)
@@ -65,6 +65,6 @@ int sCompare_T(const double& iL, const double& iR)
 	return 0;
 	}
 
-ZMACRO_CompareRegistration_T(double);
+ZMACRO_CompareRegistration_T(double)
 
 NAMESPACE_ZOOLIB_END
