@@ -45,7 +45,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#endif
 
 	#if !defined(NAN)
-	#	define NAN (0.0/0.0)
+		#define NAN (0.0/0.0)
 	#endif
 
 #endif
