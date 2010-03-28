@@ -31,9 +31,9 @@ class ZTask;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTaskOwner
+#pragma mark * ZTaskMaster
 
-class ZTaskOwner
+class ZTaskMaster
 :	public ZRefCountedWithFinalize,
 	public ZWeakReferee
 	{
@@ -55,11 +55,11 @@ private:
 class ZTask : public ZRefCountedWithFinalize
 	{
 public:
-	ZTask(ZRef<ZTaskOwner> iTaskOwner);
+	ZTask(ZRef<ZTaskMaster> iTaskMaster);
 
-	ZRef<ZTaskOwner> GetOwner();
+	ZRef<ZTaskMaster> GetTaskMaster();
 
-	virtual void TaskOwner_Detached(ZRef<ZTaskOwner> iTaskOwner);
+	virtual void TaskMaster_Detached(ZRef<ZTaskMaster> iTaskMaster);
 
 	virtual void Kill();
 
@@ -67,8 +67,8 @@ protected:
 	void pFinished();
 
 private:
-	ZRefWeak<ZTaskOwner> fTaskOwner;
-	friend class ZTaskOwner;
+	ZRefWeak<ZTaskMaster> fTaskMaster;
+	friend class ZTaskMaster;
 	};
 
 NAMESPACE_ZOOLIB_END

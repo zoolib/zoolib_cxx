@@ -29,27 +29,27 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTaskOwner
+#pragma mark * ZTaskMaster
 
 /**
-\class ZTaskOwner
+\class ZTaskMaster
 \ingroup Task
 \sa task
 */
 
-void ZTaskOwner::Task_Finished(ZRef<ZTask> iTask)
+void ZTaskMaster::Task_Finished(ZRef<ZTask> iTask)
 	{}
 
-void ZTaskOwner::pDetachTask(ZRef<ZTask> iTask)
+void ZTaskMaster::pDetachTask(ZRef<ZTask> iTask)
 	{
-	iTask->TaskOwner_Detached(this);
-	iTask->fTaskOwner.Clear();
+	iTask->TaskMaster_Detached(this);
+	iTask->fTaskMaster.Clear();
 	}
 
-void ZTaskOwner::pTask_Finished(ZRef<ZTask> iTask)
+void ZTaskMaster::pTask_Finished(ZRef<ZTask> iTask)
 	{
 	this->Task_Finished(iTask);
-	iTask->fTaskOwner.Clear();
+	iTask->fTaskMaster.Clear();
 	}
 
 // =================================================================================================
@@ -62,14 +62,14 @@ void ZTaskOwner::pTask_Finished(ZRef<ZTask> iTask)
 \sa task
 */
 
-ZTask::ZTask(ZRef<ZTaskOwner> iTaskOwner)
-:	fTaskOwner(iTaskOwner)
+ZTask::ZTask(ZRef<ZTaskMaster> iTaskMaster)
+:	fTaskMaster(iTaskMaster)
 	{}
 
-ZRef<ZTaskOwner> ZTask::GetOwner()
-	{ return fTaskOwner; }
+ZRef<ZTaskMaster> ZTask::GetTaskMaster()
+	{ return fTaskMaster; }
 
-void ZTask::TaskOwner_Detached(ZRef<ZTaskOwner> iTaskOwner)
+void ZTask::TaskMaster_Detached(ZRef<ZTaskMaster> iTaskMaster)
 	{}
 
 void ZTask::Kill()
@@ -77,8 +77,8 @@ void ZTask::Kill()
 
 void ZTask::pFinished()
 	{
-	if (ZRef<ZTaskOwner> theTaskOwner = fTaskOwner)
-		theTaskOwner->pTask_Finished(this);
+	if (ZRef<ZTaskMaster> theTaskMaster = fTaskMaster)
+		theTaskMaster->pTask_Finished(this);
 	}
 
 NAMESPACE_ZOOLIB_END

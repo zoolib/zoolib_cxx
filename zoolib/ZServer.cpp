@@ -61,9 +61,9 @@ void ZServer::StreamerListener::ListenFinished()
 
 bool ZServer::StreamerListener::Connected(ZRef<ZStreamerRW> iStreamerRW)
 	{
-	if (ZRef<ZTaskOwner> theOwner = this->GetOwner())
+	if (ZRef<ZTaskMaster> theTaskMaster = this->GetTaskMaster())
 		{
-		ZRefStaticCast<ZServer>(theOwner)->pConnected(iStreamerRW);
+		theTaskMaster.StaticCast<ZServer>()->pConnected(iStreamerRW);
 		return true;
 		}
 	return false;
@@ -222,6 +222,6 @@ ZServer::Responder::~Responder()
 	{}
 
 ZRef<ZServer> ZServer::Responder::GetServer()
-	{ return ZRefStaticCast<ZServer>(this->GetOwner()); }
+	{ return this->GetTaskMaster().StaticCast<ZServer>(); }
 
 NAMESPACE_ZOOLIB_END

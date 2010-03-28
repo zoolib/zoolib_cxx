@@ -38,7 +38,7 @@ class ZStreamerOpener
 	public ZTask
 	{
 public:
-	ZStreamerOpener(ZRef<ZTaskOwner> iTaskOwner, ZRef<ZStreamerRWFactory> iFactory);
+	ZStreamerOpener(ZRef<ZTaskMaster> iTaskMaster, ZRef<ZStreamerRWFactory> iFactory);
 	virtual ~ZStreamerOpener();
 
 // From ZWorker

@@ -37,10 +37,10 @@ class ZStreamerCopier
 	public ZTask
 	{
 public:
-	ZStreamerCopier(ZRef<ZTaskOwner> iTaskOwner, ZRef<ZStreamerRCon> iStreamerRCon,
+	ZStreamerCopier(ZRef<ZTaskMaster> iTaskMaster, ZRef<ZStreamerRCon> iStreamerRCon,
 		ZRef<ZStreamerWCon> iStreamerWCon);
 
-	ZStreamerCopier(ZRef<ZTaskOwner> iTaskOwner, ZRef<ZStreamerRCon> iStreamerRCon,
+	ZStreamerCopier(ZRef<ZTaskMaster> iTaskMaster, ZRef<ZStreamerRCon> iStreamerRCon,
 		ZRef<ZStreamerWCon> iStreamerWCon, size_t iChunkSize);
 
 	virtual ~ZStreamerCopier();

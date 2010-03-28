@@ -26,8 +26,8 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZStreamerCopier
 
-ZStreamerOpener::ZStreamerOpener(ZRef<ZTaskOwner> iTaskOwner, ZRef<ZStreamerRWFactory> iFactory)
-:	ZTask(iTaskOwner)
+ZStreamerOpener::ZStreamerOpener(ZRef<ZTaskMaster> iTaskMaster, ZRef<ZStreamerRWFactory> iFactory)
+:	ZTask(iTaskMaster)
 ,	fFactory(iFactory)
 	{}
 

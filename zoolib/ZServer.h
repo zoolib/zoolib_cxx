@@ -34,7 +34,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZServer
 
-class ZServer : public ZTaskOwner
+class ZServer : public ZTaskMaster
 	{
 public:
 	class Responder;
@@ -46,7 +46,7 @@ public:
 // From ZRefCountedWithFinalize
 	virtual void Finalize();
 
-// From ZTaskOwner
+// From ZTaskMaster
 	virtual void Task_Finished(ZRef<ZTask> iTask);
 
 // Our protocol
