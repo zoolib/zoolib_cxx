@@ -43,7 +43,14 @@ void ZStreamerWriter::RunnerDetached()
 	}
 
 bool ZStreamerWriter::Work()
-	{ return this->Write(fStreamerW->GetStreamW()); }
+	{
+	const bool result = this->Write(fStreamerW->GetStreamW());
+
+	if (!result || !this->IsAwake())
+		fStreamerW->GetStreamW().Flush();
+
+	return result;
+	}
 
 void ZStreamerWriter::WriteStarted()
 	{}

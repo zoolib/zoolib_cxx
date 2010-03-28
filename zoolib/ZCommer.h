@@ -48,10 +48,6 @@ public:
 	virtual void WriteStarted();
 	virtual void WriteFinished();
 
-// Our protocol
-	void Wake();
-	void WakeAt(ZTime iSystemTime);
-
 	virtual void Started();
 	virtual void Finished();
 

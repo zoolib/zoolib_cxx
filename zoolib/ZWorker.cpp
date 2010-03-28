@@ -66,6 +66,13 @@ void ZWorker::WakeAt(ZTime iSystemTime)
 		theRunner->WakeAt(this, iSystemTime);
 	}
 
+bool ZWorker::IsAwake()
+	{
+	if (ZRef<ZWorkerRunner> theRunner = fRunner)
+		return theRunner->IsAwake(this);
+	return false;
+	}
+
 void ZWorker::pRunnerAttached()
 	{ this->RunnerAttached(); }
 
@@ -109,6 +116,7 @@ public:
 	virtual void Wake(ZRef<ZWorker> iWorker);
 	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
 	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval);
+	virtual bool IsAwake(ZRef<ZWorker> iWorker);
 
 // Our protocol
 	void Start();
@@ -158,6 +166,13 @@ void ZWorkerRunner_Threaded::WakeIn(ZRef<ZWorker> iWorker, double iInterval)
 		fCnd.Broadcast();
 		}
 	}
+
+bool ZWorkerRunner_Threaded::IsAwake(ZRef<ZWorker> iWorker)
+	{
+	ZAcqMtx acq(fMtx);
+	return fNextWake <= ZTime::sSystem();
+	}
+
 void ZWorkerRunner_Threaded::Start()
 	{
 	ZWorkerRunner::pAttachWorker(fWorker);

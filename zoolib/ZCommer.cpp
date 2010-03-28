@@ -112,12 +112,6 @@ void ZCommer::WriteFinished()
 	ZStreamerWriter::WriteFinished();
 	}
 
-void ZCommer::Wake()
-	{ ZStreamerWriter::Wake(); }
-
-void ZCommer::WakeAt(ZTime iSystemTime)
-	{ ZStreamerWriter::WakeAt(iSystemTime); }
-
 void ZCommer::Started()
 	{}
 

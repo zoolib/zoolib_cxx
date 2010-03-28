@@ -35,7 +35,7 @@ class ZWorkerRunner;
 #pragma mark * ZWorker
 
 class ZWorker
-:	public ZRefCountedWithFinalize
+:	public virtual ZRefCountedWithFinalize
 	{
 public:
 	virtual void RunnerAttached();
@@ -46,6 +46,8 @@ public:
 	void Wake();
 	void WakeAt(ZTime iSystemTime);
 	void WakeIn(double iInterval);
+
+	bool IsAwake();
 
 private:
 	void pRunnerAttached();
@@ -72,6 +74,7 @@ protected:
 	virtual void Wake(ZRef<ZWorker> iWorker) = 0;
 	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime) = 0;
 	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval) = 0;
+	virtual bool IsAwake(ZRef<ZWorker> iWorker) = 0;
 
 	friend class ZWorker;
 	};

@@ -590,7 +590,7 @@ void ZStreamMUX::Stop()
 			{
 			this->pAbort(i->second);
 			}
-		fCommer->Wake();
+		fCommer.StaticCast<ZStreamerWriter>()->Wake();
 		}
 	else
 		{
@@ -635,7 +635,7 @@ ZRef<ZStreamerRWCon> ZStreamMUX::Connect(const std::string& iName, size_t iRecei
 			}
 
 		fMap_IDToEndpoint.insert(pair<uint32, Endpoint*>(theEPID, theEndpoint.Get()));
-		fCommer->Wake();
+		fCommer.StaticCast<ZStreamerWriter>()->Wake();
 
 		while (theEndpoint->fStateEP != eStateEP_Connected)
 			theEndpoint->fCondition_Receive.Wait(fMutex);
@@ -665,7 +665,7 @@ void ZStreamMUX::SetPingInterval(double iInterval)
 	ZMutexLocker locker(fMutex);
 	fPingInterval = iInterval;
 	if (fCommer)
-		fCommer->Wake();
+		fCommer.StaticCast<ZStreamerWriter>()->Wake();
 	}
 
 bool ZStreamMUX::pRead(const ZStreamR& iStreamR)
@@ -684,7 +684,7 @@ bool ZStreamMUX::pRead(const ZStreamR& iStreamR)
 			{
 			locker.Acquire();
 			fLifecycle = eLifecycle_StreamsDead;
-			fCommer->Wake();
+			fCommer.StaticCast<ZStreamerWriter>()->Wake();
 			}
 		}
 
@@ -762,7 +762,10 @@ bool ZStreamMUX::pWrite(const ZStreamW& iStreamW)
 					else
 						{
 						if (fPingInterval > 0)
-							fCommer->WakeAt(ZTime::sSystem() + fPingInterval);
+							{
+							fCommer.StaticCast<ZStreamerWriter>()->
+								WakeAt(ZTime::sSystem() + fPingInterval);
+							}
 						return true;
 						}
 					}
@@ -845,7 +848,7 @@ bool ZStreamMUX::Endpoint_Finalize(Endpoint* iEP)
 		}
 
 	iEP->fCondition_Receive.Broadcast();
-	fCommer->Wake();
+	fCommer.StaticCast<ZStreamerWriter>()->Wake();
 
 	return this->pDetachIfUnused(iEP);
 	}
@@ -866,7 +869,7 @@ void ZStreamMUX::Endpoint_Read(Endpoint* iEP,
 			iCount -= countToRead;
 			theBR.erase(theBR.begin(), theBR.begin() + countToRead);
 			iEP->fCount_Received += countToRead;
-			fCommer->Wake();
+			fCommer.StaticCast<ZStreamerWriter>()->Wake();
 			break;
 			}
 		else if (iEP->fStateReceive == eStateReceive_CloseReceived
@@ -929,7 +932,7 @@ void ZStreamMUX::Endpoint_Write(Endpoint* iEP,
 			localSource += countToWrite;
 			iCount -= countToWrite;
 			iEP->fCreditRemaining -= countToWrite;
-			fCommer->Wake();
+			fCommer.StaticCast<ZStreamerWriter>()->Wake();
 			break;
 			}
 		else
@@ -959,7 +962,7 @@ bool ZStreamMUX::Endpoint_ReceiveDisconnect(Endpoint* iEP, double iTimeout)
 			{
 			iEP->fCount_Received += count;
 			iEP->fBuffer_Receive.clear();
-			fCommer->Wake();
+			fCommer.StaticCast<ZStreamerWriter>()->Wake();
 			}
 		else if (iEP->fStateEP != eStateEP_Connected
 			|| iEP->fStateReceive == eStateReceive_CloseReceived
@@ -985,7 +988,7 @@ void ZStreamMUX::Endpoint_SendDisconnect(Endpoint* iEP)
 				this, iEP->fEPID);
 			}
 		iEP->fStateSend = eStateSend_ClosePending;
-		fCommer->Wake();
+		fCommer.StaticCast<ZStreamerWriter>()->Wake();
 		}
 	else
 		{
@@ -1003,7 +1006,7 @@ void ZStreamMUX::Endpoint_Abort(Endpoint* iEP)
 
 	this->pAbort(iEP);
 
-	fCommer->Wake();
+	fCommer.StaticCast<ZStreamerWriter>()->Wake();
 	}
 
 void ZStreamMUX::Listener_Finalize(Listener* iListener)
@@ -1111,7 +1114,7 @@ bool ZStreamMUX::pDetachIfUnused(Endpoint* iEP)
 		{
 		ZUtil_STL::sEraseMustContain(kDebug, fMap_IDToEndpoint, iEP->fEPID);
 		iEP->fEPID = 0;
-		fCommer->Wake();
+		fCommer.StaticCast<ZStreamerWriter>()->Wake();
 		}
 
 //	return true;
@@ -1148,7 +1151,7 @@ void ZStreamMUX::pAbort(Endpoint* iEP)
 
 	iEP->fCondition_Receive.Broadcast();
 	iEP->fCondition_Send.Broadcast();
-	fCommer->Wake();
+	fCommer.StaticCast<ZStreamerWriter>()->Wake();
 	}
 
 void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
@@ -1167,7 +1170,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 			{
 			fPingReceived = true;
 			locker.Release();
-			fCommer->Wake();
+			fCommer.StaticCast<ZStreamerWriter>()->Wake();
 			break;
 			}
 		case eMsg_Pong:
@@ -1213,7 +1216,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 				theListener->fCondition.Broadcast();
 				}
 			locker.Release();
-			fCommer->Wake();
+			fCommer.StaticCast<ZStreamerWriter>()->Wake();
 			break;			
 			}
 		case eMsg_OpenAck:
@@ -1312,7 +1315,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 				delete theEP;
 
 			locker.Release();
-			fCommer->Wake();
+			fCommer.StaticCast<ZStreamerWriter>()->Wake();
 			break;
 			}
 		case eMsg_CloseYourSend:
@@ -1363,7 +1366,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 				delete theEP;
 
 			locker.Release();
-			fCommer->Wake();
+			fCommer.StaticCast<ZStreamerWriter>()->Wake();
 			break;
 			}
 		case eMsg_Data:
@@ -1403,7 +1406,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 				{
 				theEP->fCount_Received += theCount;
 				locker.Release();
-				fCommer->Wake();
+				fCommer.StaticCast<ZStreamerWriter>()->Wake();
 				}
 			break;
 			}
@@ -1444,7 +1447,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 				{
 				fLifecycle = eLifecycle_ReadDead;
 				locker.Release();
-				fCommer->Wake();
+				fCommer.StaticCast<ZStreamerWriter>()->Wake();
 				}
 			break;
 			}
