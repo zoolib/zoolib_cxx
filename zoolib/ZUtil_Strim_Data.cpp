@@ -45,7 +45,7 @@ void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& 
 	const uint64 theCount = iStreamRPos.GetSize() - iStreamRPos.GetPosition();
 	uint64 countRemaining = min(theCount, iMax);
 
-	s.Writef("Size: %lld", theCount);
+	s.Writef("Size: %lld/%llX", theCount, theCount);
 	if (theCount > countRemaining)
 		s.Writef(", showing first %lld bytes", countRemaining);
 
