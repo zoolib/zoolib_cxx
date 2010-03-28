@@ -22,11 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMIME.h"
 #include "zoolib/ZNet_Internet.h"
-#include "zoolib/ZStreamR_Boundary.h"
-#include "zoolib/ZStreamR_SkipAllOnDestroy.h"
 #include "zoolib/ZStream_String.h"
 #include "zoolib/ZStream_Tee.h"
 #include "zoolib/ZStream_Data_T.h"
+#include "zoolib/ZStreamR_Boundary.h"
+#include "zoolib/ZStreamR_SkipAllOnDestroy.h"
+#include "zoolib/ZStreamerRWCon_SSL.h"
 #include "zoolib/ZStrim_Stream.h"
 #include "zoolib/ZStrimmer.h"
 #include "zoolib/ZStrimmer_Stream.h"
@@ -91,6 +92,35 @@ static bool spRequest(const ZStreamW& w, const ZStreamR& r,
 		}
 	}
 
+static ZRef<ZStreamerRWCon> spConnect(const string& iScheme, const string& iHost, ip_port iPort)
+	{
+	if (false)
+		{}
+	else if (ZString::sEquali("http", iScheme))
+		{
+		if (!iPort)
+			iPort = 80;
+		}
+	else if (ZString::sEquali("https", iScheme))
+		{
+		if (!iPort)
+			iPort = 443;
+		}
+	else
+		{
+		return ZRef<ZStreamerRWCon>();
+		}
+
+	if (ZRef<ZStreamerRWCon> theEP = ZNetName_Internet(iHost, iPort).Connect(10))
+		{
+		if (ZString::sEquali("http", iScheme))
+			return theEP;
+		
+		return sMake_StreamerRWCon_SSL(theEP, theEP);
+		}
+	return ZRef<ZStreamerRWCon>();
+	}
+
 ZRef<ZStreamerR> sRequest(
 	const string& iMethod, string& ioURL,
 	int32* oResultCode, Map* oFields, Data* oRawHeader)
@@ -100,20 +130,20 @@ ZRef<ZStreamerR> sRequest(
 		if (oRawHeader)
 			oRawHeader->SetSize(0);
 
+		string theScheme;
 		string theHost;
-		ip_port thePort = 80;
+		ip_port thePort;
 		string thePath;
-		if (sParseURL(ioURL, nullptr, &theHost, &thePort, &thePath))
+		if (sParseURL(ioURL, &theScheme, &theHost, &thePort, &thePath))
 			{
-			ZRef<ZNetName_Internet> theNN = new ZNetName_Internet(theHost, thePort);
-			ZRef<ZNetEndpoint> theEndpoint = theNN->Connect(10);
-			if (!theEndpoint)
+			ZRef<ZStreamerRWCon> theEP = spConnect(theScheme, theHost, thePort);
+			if (!theEP)
 				break;
 
 			int32 theResponseCode;
 			Map theHeaders;
 			if (!spRequest(
-				theEndpoint->GetStreamW(), theEndpoint->GetStreamR(),
+				theEP->GetStreamW(), theEP->GetStreamR(),
 				iMethod, theHost, thePath,
 				true,
 				&theResponseCode, &theHeaders, oRawHeader))
@@ -135,10 +165,10 @@ ZRef<ZStreamerR> sRequest(
 						return new ZStreamerR_T<ZStreamR_Null>();
 
 					ZRef<ZStreamerR> theStreamerR
-						= sMakeContentStreamer(theHeaders, theEndpoint);
+						= sMakeContentStreamer(theHeaders, theEP);
 
 					if (!theStreamerR)
-						theStreamerR = theEndpoint;
+						theStreamerR = theEP;
 
 					return theStreamerR;
 					}
@@ -161,7 +191,7 @@ ZRef<ZStreamerR> sRequest(
 	}
 
 static void spPost_Prefix(const ZStreamW& w,
-	const string& iHost, const string& iPath, bool iSendConnectionClose)
+	const string& iHost, const string& iPath, const Map* iFields, bool iSendConnectionClose)
 	{
 	w.WriteString("POST ");
 	w.WriteString(iPath);
@@ -171,6 +201,16 @@ static void spPost_Prefix(const ZStreamW& w,
 	w.WriteString("\r\n");
 	if (iSendConnectionClose)
 		w.WriteString("Connection: close\r\n");
+	if (iFields)
+		{
+		for (Map::Index_t i = iFields->Begin(); i != iFields->End(); ++i)
+			{
+			w.WriteString(iFields->NameOf(i));
+			w.WriteString(": ");
+			w.WriteString(iFields->Get_T<string>(i));
+			w.WriteString("\r\n");
+			}
+		}
 	}
 
 static bool spPost_Suffix(const ZStreamR& r,
@@ -191,19 +231,24 @@ static bool spPost_Suffix(const ZStreamR& r,
 ZRef<ZStreamerR> sPost(
 	const std::string& iURL, const ZStreamR& iBody,
 	int32* oResultCode, Map* oFields, Data* oRawHeader)
+	{ return sPost(iURL, nullptr, iBody, oResultCode, oFields, oRawHeader); }
+
+ZRef<ZStreamerR> sPost(
+	const std::string& iURL, const Map* iFields, const ZStreamR& iBody,
+	int32* oResultCode, Map* oFields, Data* oRawHeader)
 	{
+	string theScheme;
 	string theHost;
 	ip_port thePort;
 	string thePath;
-	if (sParseURL(iURL, nullptr, &theHost, &thePort, &thePath))
+	if (sParseURL(iURL, &theScheme, &theHost, &thePort, &thePath))
 		{
-		ZRef<ZNetName_Internet> theNN = new ZNetName_Internet(theHost, thePort);
-		if (ZRef<ZNetEndpoint> theEndpoint = theNN->Connect(10))
+		if (ZRef<ZStreamerRWCon> theEP = spConnect(theScheme, theHost, thePort))
 			{
-			const ZStreamR& r = theEndpoint->GetStreamR();
-			const ZStreamW& w = theEndpoint->GetStreamW();
+			const ZStreamR& r = theEP->GetStreamR();
+			const ZStreamW& w = theEP->GetStreamW();
 
-			spPost_Prefix(w, theHost, thePath, true);
+			spPost_Prefix(w, theHost, thePath, iFields, true);
 
 			if (const ZStreamRPos* bodyRPos = dynamic_cast<const ZStreamRPos*>(&iBody))
 				{
@@ -231,10 +276,10 @@ ZRef<ZStreamerR> sPost(
 						*oFields = theHeaders;
 
 					ZRef<ZStreamerR> theStreamerR
-						= sMakeContentStreamer(theHeaders, theEndpoint);
+						= sMakeContentStreamer(theHeaders, theEP);
 
 					if (!theStreamerR)
-						theStreamerR = theEndpoint;
+						theStreamerR = theEP;
 
 					return theStreamerR;
 					}
@@ -248,18 +293,18 @@ ZRef<ZStreamerR> sPostRaw(
 	const std::string& iURL, const ZStreamR& iBody,
 	int32* oResultCode, Map* oFields, Data* oRawHeader)
 	{
+	string theScheme;
 	string theHost;
 	ip_port thePort;
 	string thePath;
-	if (sParseURL(iURL, nullptr, &theHost, &thePort, &thePath))
+	if (sParseURL(iURL, &theScheme, &theHost, &thePort, &thePath))
 		{
-		ZRef<ZNetName_Internet> theNN = new ZNetName_Internet(theHost, thePort);
-		if (ZRef<ZNetEndpoint> theEndpoint = theNN->Connect(10))
+		if (ZRef<ZStreamerRWCon> theEP = spConnect(theScheme, theHost, thePort))
 			{
-			const ZStreamR& r = theEndpoint->GetStreamR();
-			const ZStreamW& w = theEndpoint->GetStreamW();
+			const ZStreamR& r = theEP->GetStreamR();
+			const ZStreamW& w = theEP->GetStreamW();
 
-			spPost_Prefix(w, theHost, thePath, true);
+			spPost_Prefix(w, theHost, thePath, nullptr, true);
 			w.CopyAllFrom(iBody);
 			w.Flush();
 
@@ -273,10 +318,10 @@ ZRef<ZStreamerR> sPostRaw(
 						*oFields = theHeaders;
 
 					ZRef<ZStreamerR> theStreamerR
-						= sMakeContentStreamer(theHeaders, theEndpoint);
+						= sMakeContentStreamer(theHeaders, theEP);
 
 					if (!theStreamerR)
-						theStreamerR = theEndpoint;
+						theStreamerR = theEP;
 
 					return theStreamerR;
 					}
