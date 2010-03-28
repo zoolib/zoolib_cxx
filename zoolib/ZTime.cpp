@@ -30,11 +30,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #if ZCONFIG_SPI_Enabled(MacClassic)
-#	include <DriverServices.h> // For UpTime
+#	include <DriverServices.h> // For UpTime, Nanoseconds etc
 #endif
 
 #if ZCONFIG_SPI_Enabled(Carbon64)
-#	include ZMACINCLUDE2(CoreServices,CoreServices.h)
+#	include ZMACINCLUDE3(CoreServices,CarbonCore,DriverServices.h) // For UpTime, Nanoseconds etc
 #endif
 
 #if ZCONFIG_SPI_Enabled(Win)
