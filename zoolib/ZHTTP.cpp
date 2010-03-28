@@ -1342,8 +1342,14 @@ bool sReadLanguageTag(const ZStreamU& iStream, string* oLanguageTag)
 #pragma mark * ZHTTP, Lower level parsing
 
 bool sParseURL(const string& iURL,
-	string* ioScheme, string* ioHost, uint16* ioPort, string* oPath)
+	string* oScheme, string* oHost, uint16* oPort, string* oPath)
 	{
+	if (oScheme)
+		oScheme->clear();
+	if (oHost)
+		oHost->clear();
+	if (oPort)
+		*oPort = 0;
 	if (oPath)
 		oPath->clear();
 
@@ -1359,8 +1365,8 @@ bool sParseURL(const string& iURL,
 	else
 		{
 		start = dividerOffset + strlen(schemeDivider);
-		if (ioScheme)
-			*ioScheme = iURL.substr(0, dividerOffset);
+		if (oScheme)
+			*oScheme = iURL.substr(0, dividerOffset);
 		}
 
 	string hostAndPort;
@@ -1382,15 +1388,15 @@ bool sParseURL(const string& iURL,
 	const size_t colonOffset = hostAndPort.find(':');
 	if (string::npos != colonOffset)
 		{
-		if (ioPort)
-			*ioPort = ZString::sAsInt(hostAndPort.substr(colonOffset + 1));
-		if (ioHost)
-			*ioHost = hostAndPort.substr(0, colonOffset);
+		if (oPort)
+			*oPort = ZString::sAsInt(hostAndPort.substr(colonOffset + 1));
+		if (oHost)
+			*oHost = hostAndPort.substr(0, colonOffset);
 		}
 	else
 		{
-		if (ioHost)
-			*ioHost = hostAndPort;
+		if (oHost)
+			*oHost = hostAndPort;
 		}
 
 	return true;

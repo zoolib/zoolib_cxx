@@ -177,7 +177,7 @@ bool sReadLanguageTag(const ZStreamU& iStream, std::string* oLanguageTag);
 // Lower level parsing
 
 bool sParseURL(const std::string& iURL,
-	std::string* ioScheme, std::string* ioHost, uint16* ioPort, std::string* oPath);
+	std::string* oScheme, std::string* oHost, uint16* oPort, std::string* oPath);
 
 bool sReadToken(const ZStreamU& iStream, std::string* oTokenLC, std::string* oTokenExact);
 

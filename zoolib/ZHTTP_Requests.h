@@ -37,6 +37,10 @@ ZRef<ZStreamerR> sRequest(
 	int32* oResultCode, Map* oFields, Data* oRawHeader);
 
 ZRef<ZStreamerR> sPost(
+	const std::string& iURL, const Map* iFields, const ZStreamR& iBody,
+	int32* oResultCode, Map* oFields, Data* oRawHeader);
+
+ZRef<ZStreamerR> sPost(
 	const std::string& iURL, const ZStreamR& iBody,
 	int32* oResultCode, Map* oFields, Data* oRawHeader);
 
