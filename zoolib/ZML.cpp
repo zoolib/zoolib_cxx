@@ -1063,7 +1063,10 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 	}
 
 void StrimW::Imp_Flush()
-	{ fStrimSink.Flush(); }
+	{
+	const_cast<StrimW*>(this)->pWritePending();
+	fStrimSink.Flush();
+	}
 
 const ZStrimW& StrimW::Raw() const
 	{
@@ -1342,10 +1345,9 @@ const StrimW& StrimW::EndAll(const string8& iTag)
 	return *this;
 	}
 
-const StrimW& StrimW::WritePending()
+const StrimW& StrimW::WritePending() const
 	{
-	this->pWritePending();
-
+	const_cast<StrimW*>(this)->pWritePending();
 	return *this;
 	}
 
@@ -1518,6 +1520,9 @@ StrimmerW::~StrimmerW()
 	{}
 
 const ZStrimW& StrimmerW::GetStrimW()
+	{ return fStrimW; }
+
+ZML::StrimW& StrimmerW::GetStrim()
 	{ return fStrimW; }
 
 } // namespace ZML

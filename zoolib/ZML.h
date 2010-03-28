@@ -279,7 +279,7 @@ public:
 	has been made, then the tag has not actually been written out as we're
 	still allowing attributes to be added. Write any such pending tag, and
 	switch to the same state we'd be if we'd called Write. */
-	const StrimW& WritePending();
+	const StrimW& WritePending() const;
 
 protected:
 	enum ETagType
@@ -337,6 +337,9 @@ public:
 
 // From ZStrimmerW
 	virtual const ZStrimW& GetStrimW();
+
+// Our protocol
+	StrimW& GetStrim();
 
 protected:
 	ZRef<ZStrimmerW> fStrimmerW;
