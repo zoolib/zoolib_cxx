@@ -22,9 +22,30 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(MacOSX)
 
+#include "zoolib/ZFunctionChain.h"
+#include "zoolib/ZStreamerRWCon_SSL.h"
+
 #include ZMACINCLUDE3(CoreServices,CarbonCore,MacErrors.h) // For ioErr
 
 NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Factory functions
+
+namespace ZANONYMOUS {
+
+class Make_SSL
+:	public ZFunctionChain_T<ZRef<ZStreamerRWCon>, MakeSSLParam_t>
+	{
+	virtual bool Invoke(Result_t& oResult, Param_t iParam)
+		{
+		oResult = new ZStreamerRWCon_SSL_OSX(iParam.fStreamerR, iParam.fStreamerW);
+		return true;
+		}	
+	} sMaker0;
+
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

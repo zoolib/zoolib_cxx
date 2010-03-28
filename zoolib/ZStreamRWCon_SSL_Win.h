@@ -18,30 +18,38 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStreamRWCon_SSL_OSX__
-#define __ZStreamRWCon_SSL_OSX__ 1
+#ifndef __ZStreamRWCon_SSL_Win__
+#define __ZStreamRWCon_SSL_Win__ 1
 #include "zconfig.h"
 #include "ZConfig_SPI.h"
 
 #include "zoolib/ZStreamer.h"
 
-#if ZCONFIG_SPI_Enabled(MacOSX)
+#if ZCONFIG_SPI_Enabled(Win)
 
-#include <Security/SecureTransport.h>
+#include "zoolib/ZCompat_Win.h"
+
+#include <vector>
+#include <deque>
+
+#define SECURITY_WIN32 1
+#include <Security.h>
+
+//#include <Security/SecureTransport.h>
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStreamRWCon_SSL_OSX
+#pragma mark * ZStreamRWCon_SSL_Win
 
-class ZStreamRWCon_SSL_OSX
+class ZStreamRWCon_SSL_Win
 :	public ZStreamRCon
 ,	public ZStreamWCon
 	{
 public:
-	ZStreamRWCon_SSL_OSX(const ZStreamR& iStreamR, const ZStreamW& iStreamW);
-	~ZStreamRWCon_SSL_OSX();
+	ZStreamRWCon_SSL_Win(const ZStreamR& iStreamR, const ZStreamW& iStreamW);
+	~ZStreamRWCon_SSL_Win();
 
 // From ZStreamR via ZStreamRCon
 	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
@@ -60,46 +68,47 @@ public:
 	virtual void Imp_Abort();
 
 private:
-	OSStatus pRead(void* iDest, size_t* ioCount);
-	static OSStatus spRead(SSLConnectionRef iRefcon, void* iDest, size_t* ioCount);
-
-	OSStatus pWrite(const void* iSource, size_t* ioCount);
-	static OSStatus spWrite(SSLConnectionRef iRefcon, const void* iSource, size_t* ioCount);
+	bool pConnect();
+	bool pHandshake();
 
 	const ZStreamR& fStreamR;
 	const ZStreamW& fStreamW;
-	SSLContextRef fSSLCR;
-	bool fLastWasWrite;
+	CredHandle fCredHandle;
+	CtxtHandle fCtxtHandle;
+	bool fSendOpen;
+	bool fReceiveOpen;
+	std::vector<char> fBufferEnc;
+	std::deque<char> fBufferPlain;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZStreamRWCon_SSL_OSX
+#pragma mark * ZStreamRWCon_SSL_Win
 
-class ZStreamerRWCon_SSL_OSX
+class ZStreamerRWCon_SSL_Win
 :	public ZStreamerRWCon
 	{
 public:
-	ZStreamerRWCon_SSL_OSX(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
-	virtual ~ZStreamerRWCon_SSL_OSX();
+	ZStreamerRWCon_SSL_Win(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
+	virtual ~ZStreamerRWCon_SSL_Win();
 	
-// From ZStreamerRCon via ZStreamerRWCon_SSL
+// From ZStreamerRCon via ZStreamerRWCon
 	virtual const ZStreamRCon& GetStreamRCon();
 
-// From ZStreamerWCon via ZStreamerRWCon_SSL
+// From ZStreamerWCon via ZStreamerRWCon
 	virtual const ZStreamWCon& GetStreamWCon();
 
 // Our protocol
-	ZStreamRWCon_SSL_OSX& GetStream();
+	ZStreamRWCon_SSL_Win& GetStream();
 
 private:
 	ZRef<ZStreamerR> fStreamerR;
 	ZRef<ZStreamerW> fStreamerW;
-	ZStreamRWCon_SSL_OSX fStream;
+	ZStreamRWCon_SSL_Win fStream;
 	};
 
 NAMESPACE_ZOOLIB_END
 
-#endif // ZCONFIG_SPI_Enabled(MacOSX)
+#endif // ZCONFIG_SPI_Enabled(Win)
 
-#endif // __ZStreamRWCon_SSL_OSX__
+#endif // __ZStreamRWCon_SSL_Win__
