@@ -225,7 +225,7 @@ void LogMeister::LogIt(
 			#else
 				<< " 0x"
 			#endif
-			<< ZString::sFormat("%08X", ZThread::sID())
+			<< ZString::sFormat("%X", ZThread::sID())
 			<< " P" << ZString::sFormat("%X", iPriority)
 			<< " " << extraSpace << iName
 			<< " - " << iMessage << "\n";
