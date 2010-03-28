@@ -142,7 +142,7 @@ ZExpr_Query::ZExpr_Query(const ZRef<ZExprRep_Query>& iRep)
 	{}
 
 ZExpr_Query::operator ZRef<ZExprRep_Query>() const
-	{ return ZRefStaticCast<ZExprRep_Query>(*this); }
+	{ return this->StaticCast<ZExprRep_Query>(); }
 
 // =================================================================================================
 #pragma mark -

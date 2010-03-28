@@ -176,7 +176,7 @@ ZExpr_Restrict_T<Val>::ZExpr_Restrict_T(const ZRef<ZExprRep_Restrict_T<Val> >& i
 
 template <class Val>
 ZExpr_Restrict_T<Val>::operator ZRef<ZExprRep_Restrict_T<Val> >() const
-	{ return ZRefStaticCast<ZExprRep_Restrict_T<Val> >(*this); }
+	{ return this->StaticCast<ZExprRep_Restrict_T<Val> >(); }
 
 // =================================================================================================
 #pragma mark -

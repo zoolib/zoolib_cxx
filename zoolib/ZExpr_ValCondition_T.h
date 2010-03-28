@@ -152,7 +152,7 @@ ZExpr_ValCondition_T<Val>::ZExpr_ValCondition_T(const ZRef<ZExprRep_ValCondition
 
 template <class Val>
 ZExpr_ValCondition_T<Val>::operator ZRef<ZExprRep_ValCondition_T<Val> >() const
-	{ return ZRefStaticCast<ZExprRep_ValCondition_T<Val> >(*this); }
+	{ return this->StaticCast<ZExprRep_ValCondition_T<Val> >(); }
 
 // =================================================================================================
 #pragma mark -

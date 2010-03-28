@@ -351,7 +351,7 @@ ZExpr_Relation::ZExpr_Relation(const ZRef<ZExprRep_Relation>& iRep)
 	{}
 
 ZExpr_Relation::operator ZRef<ZExprRep_Relation>() const
-	{ return ZRefStaticCast<ZExprRep_Relation>(*this); }
+	{ return this->StaticCast<ZExprRep_Relation>(); }
 
 ZRelHead ZExpr_Relation::GetRelHead() const
 	{

@@ -113,7 +113,7 @@ ZExpr_Select::ZExpr_Select(const ZRef<ZExprRep_Select>& iRep)
 	{}
 
 ZExpr_Select::operator ZRef<ZExprRep_Select>() const
-	{ return ZRefStaticCast<ZExprRep_Select>(*this); }
+	{ return this->StaticCast<ZExprRep_Select>(); }
 
 // =================================================================================================
 #pragma mark -

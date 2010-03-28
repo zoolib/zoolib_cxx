@@ -212,7 +212,7 @@ ZExpr_Logical::ZExpr_Logical(const ZRef<ZExprRep_Logical>& iRep)
 	{}
 
 ZExpr_Logical::operator ZRef<ZExprRep_Logical>() const
-	{ return ZRefStaticCast<ZExprRep_Logical>(*this); }
+	{ return this->StaticCast<ZExprRep_Logical>(); }
 
 ZExpr_Logical operator&(const ZExpr_Logical& iLHS, const ZExpr_Logical& iRHS)
 	{
