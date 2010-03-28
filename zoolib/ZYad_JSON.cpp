@@ -303,7 +303,7 @@ void ZYadMapR_JSON::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& 
 		{
 		// Must read a separator
 		if (!sTryRead_CP(theStrimU, ','))
-			spThrowParseException("Require ',' to separate array elements");
+			spThrowParseException("Require ',' to separate object elements");
 		sSkip_WSAndCPlusPlusComments(theStrimU);
 		}
 
