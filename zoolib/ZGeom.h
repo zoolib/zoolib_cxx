@@ -23,26 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZGeometry.h"
-#include "zoolib/ZTypes.h" // For ZRectPOD and ZPointPOD
-
-#if ZCONFIG_SPI_Enabled(CoreGraphics)
-#	include <ApplicationServices/ApplicationServices.h>
-#endif
-
-#if ZCONFIG_SPI_Enabled(QuickDraw)
-#	include ZMACINCLUDE3(CoreServices,CarbonCore,MacTypes.h)
-#	include ZMACINCLUDE3(ApplicationServices,QD,QuickDraw.h)
-#endif
-
-#if ZCONFIG_SPI_Enabled(GDI)
-#	include "zoolib/ZCompat_Win.h"
-#endif
-
-#if ZCONFIG_SPI_Enabled(X11)
-#	include "zoolib/ZCompat_Xlib.h"
-#	include <X11/Xutil.h>
-#endif
+#include "zoolib/ZGeometry.h" // Pulls in platform types
 
 #if ZCONFIG_SPI_Enabled(BeOS)
 #	include <interface/Point.h>

@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTypes.h" // For ZRectPOD and ZPointPOD
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
-#	include <ApplicationServices/ApplicationServices.h>
+#	include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGGeometry.h)
 #endif
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
