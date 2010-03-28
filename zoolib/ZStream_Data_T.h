@@ -179,10 +179,16 @@ public:
 
 // Our protocol
 	const T& GetData() const
-		{ return fData; }
+		{
+		const_cast<T&>(fData).SetSize(fSizeLogical);
+		return fData;
+		}
 
 	T& GetData()
-		{ return fData; }
+		{
+		fData.SetSize(fSizeLogical);
+		return fData;
+		}
 
 private:
 	T& fData;
@@ -212,7 +218,7 @@ T sReadAll_T(const ZStreamR& iStreamR)
 	}
 
 template <class T>
-T sReadAll(const ZStreamR& iStreamR, size_t iSize)
+T sRead_T(const ZStreamR& iStreamR, size_t iSize)
 	{
 	T theData;
 	sRead_T<T>(theData, iStreamR, iSize);
