@@ -422,11 +422,8 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_CFType, Map, ZMap_CFType)
 #pragma mark -
 #pragma mark * ZSeq_CFType
 
-ZAny ZSeq_CFType::AsAny() const
-	{ return this->DAsAny(ZAny()); }
-
-ZAny ZSeq_CFType::DAsAny(const ZAny& iDefault) const
-	{ return ZUtil_CFType::sDAsAny(iDefault, this->pArray()); }
+ZSeq_Any ZSeq_CFType::AsSeq_Any(const ZAny& iDefault) const
+	{ return ZUtil_CFType::sAsSeq_Any(iDefault, this->pArray()); }
 
 ZSeq_CFType::operator bool() const
 	{ return this->Count(); }
@@ -623,11 +620,8 @@ CFMutableArrayRef ZSeq_CFType::pTouch()
 #pragma mark -
 #pragma mark * ZMap_CFType
 
-ZAny ZMap_CFType::AsAny() const
-	{ return this->DAsAny(ZAny()); }
-
-ZAny ZMap_CFType::DAsAny(const ZAny& iDefault) const
-	{ return ZUtil_CFType::sDAsAny(iDefault, this->pDictionary()); }
+ZMap_Any ZMap_CFType::AsMap_Any(const ZAny& iDefault) const
+	{ return ZUtil_CFType::sAsMap_Any(iDefault, this->pDictionary()); }
 
 ZMap_CFType::operator bool() const
 	{

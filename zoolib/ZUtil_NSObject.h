@@ -88,6 +88,10 @@ NSObject* sAsNSObject(const ZAny& iVal);
 
 NAMESPACE_ZOOLIB_END
 
+@interface NSObject (ZAny_Additions)
+-(ZooLib::ZAny)asAnyWithDefault:(const ZooLib::ZAny&)iDefault;
+@end
+
 #endif // ZCONFIG_SPI_Enabled(Cocoa)
 
 #endif // __ZUtil_NSObject__

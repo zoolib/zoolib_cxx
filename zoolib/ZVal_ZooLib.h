@@ -279,8 +279,7 @@ class ZSeq_ZooLib
 public:
 	typedef ZVal_ZooLib Val_t;
 
-	ZAny AsAny() const;
-	ZAny DAsAny(const ZAny& iDefault) const;
+	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 
@@ -409,8 +408,7 @@ public:
 	typedef PropList::iterator Index_t;
 	typedef ZVal_ZooLib Val_t;
 
-	ZAny AsAny() const;
-	ZAny DAsAny(const ZAny& iDefault) const;
+	ZMap_Any AsMap_Any(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
 

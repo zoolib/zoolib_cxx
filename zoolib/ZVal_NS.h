@@ -129,9 +129,6 @@ class ZSeq_NS
 	typedef ZRef<NSArray> inherited;
 
 public:
-	ZAny AsAny() const;
-	ZAny DAsAny(const ZAny& iDefault) const;
-
 	operator bool() const;
 
 	ZSeq_NS();
@@ -190,9 +187,6 @@ class ZMap_NS
 	typedef ZRef<NSDictionary> inherited;
 
 public:
-	ZAny AsAny() const;
-	ZAny DAsAny(const ZAny& iDefault) const;
-
 	operator bool() const;
 
 	ZMap_NS();

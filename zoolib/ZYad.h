@@ -250,8 +250,8 @@ private:
 #pragma mark * ZYadStrimU_String
 
 class ZYadStrimU_String
-:	public ZYadStrimR,
-	public ZStrimmerU_T<ZStrimU_String>
+:	public ZYadStrimR
+,	public ZStrimmerU_T<ZStrimU_String>
 	{
 public:
 	ZYadStrimU_String(const std::string& iString);

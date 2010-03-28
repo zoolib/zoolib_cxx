@@ -81,6 +81,9 @@ ZAny sAsAny(ZRef<CFTypeRef> iVal);
 ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal);
 ZRef<CFTypeRef> sAsCFType(const ZAny& iVal);
 
+ZSeq_Any sAsSeq_Any(const ZAny& iDefault, const ZRef<CFArrayRef>& iCFArray);
+ZMap_Any sAsMap_Any(const ZAny& iDefault, const ZRef<CFDictionaryRef>& iCFDictionary);
+
 } // namespace ZUtil_CFType
 
 NAMESPACE_ZOOLIB_END

@@ -30,7 +30,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 using std::vector;
 
-ZMACRO_CompareRegistration_T(ZData_Any);
+ZMACRO_CompareRegistration_T(ZData_Any)
 
 // =================================================================================================
 #pragma mark -

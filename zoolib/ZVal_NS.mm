@@ -393,12 +393,6 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_NS, Map, ZMap_NS)
 #pragma mark -
 #pragma mark * ZSeq_NS
 
-ZAny ZSeq_NS::AsAny() const
-	{ return this->DAsAny(ZAny()); }
-
-ZAny ZSeq_NS::DAsAny(const ZAny& iDefault) const
-	{ return ZUtil_NS::sDAsAny(iDefault, this->pArray()); }
-
 ZSeq_NS::operator bool() const
 	{ return this->Count(); }
 
@@ -512,7 +506,7 @@ bool ZSeq_NS::QGet(size_t iIndex, ZRef<NSObject>& oVal) const
 			{
 			if (iIndex < theCount)
 				{
-				oVal = [theArray objectAtIndex:NSUInteger(iIndex)];
+				oVal = [theArray objectAtIndex:iIndex];
 				return true;
 				}
 			}
@@ -533,7 +527,7 @@ ZVal_NS ZSeq_NS::Get(size_t iIndex) const
 
 ZSeq_NS& ZSeq_NS::Set(size_t iIndex, const ZVal_NS& iVal)
 	{
-	[this->pTouch() replaceObjectAtIndex:NSUInteger(iIndex) withObject:iVal.Get()];
+	[this->pTouch() replaceObjectAtIndex:iIndex withObject:iVal.Get()];
 	return *this;
 	}
 
@@ -543,7 +537,7 @@ ZSeq_NS& ZSeq_NS::Erase(size_t iIndex)
 	if (const size_t theCount = [theArray count])
 		{
 		if (iIndex < theCount)
-			[theArray removeObjectAtIndex:NSUInteger(iIndex)];
+			[theArray removeObjectAtIndex:iIndex];
 		}
 	return *this;
 	}
@@ -553,7 +547,7 @@ ZSeq_NS& ZSeq_NS::Insert(size_t iIndex, const ZVal_NS& iVal)
 	NSMutableArray* theArray = this->pTouch();
 	const size_t theCount = [theArray count];
 	if (iIndex <= theCount)
-		[theArray insertObject:iVal.Get() atIndex:NSUInteger(iIndex)];
+		[theArray insertObject:iVal.Get() atIndex:iIndex];
 	return *this;
 	}
 
@@ -593,12 +587,6 @@ NSMutableArray* ZSeq_NS::pTouch()
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZMap_NS
-
-ZAny ZMap_NS::AsAny() const
-	{ return this->DAsAny(ZAny()); }
-
-ZAny ZMap_NS::DAsAny(const ZAny& iDefault) const
-	{ return ZUtil_NS::sDAsAny(iDefault, this->pDictionary()); }
 
 ZMap_NS::operator bool() const
 	{

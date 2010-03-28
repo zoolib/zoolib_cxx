@@ -102,8 +102,8 @@ ZYadMapRPos_NS::ZYadMapRPos_NS(const ZRef<NSDictionary>& iDictionary)
 :	ZYadR_NS(iDictionary)
 ,	fDictionary(iDictionary)
 ,	fPosition(0)
-,	fNames(ZRef<NSArray>([iDictionary allKeys]))
-,	fValues(ZRef<NSArray>([iDictionary allValues]))
+,	fNames((NSArray*)[iDictionary allKeys])
+,	fValues((NSArray*)[iDictionary allValues])
 	{}
 
 ZRef<ZYadR> ZYadMapRPos_NS::ReadInc(string& oName)

@@ -33,10 +33,6 @@ using std::vector;
 
 NAMESPACE_ZOOLIB_USING
 
-@interface NSObject (ZAny_Additions)
--(ZAny)asAnyWithDefault:(const ZAny&)iDefault;
-@end
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_NSObject

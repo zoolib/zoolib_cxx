@@ -487,9 +487,6 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_AppleEvent, FSRef, FSRef)
 #pragma mark -
 #pragma mark * ZSeq_AppleEvent
 
-ZSeq_Any ZSeq_AppleEvent::AsSeq_Any() const
-	{ return this->AsSeq_Any(ZAny()); }
-
 ZSeq_Any ZSeq_AppleEvent::AsSeq_Any(const ZAny& iDefault) const
 	{ return spAsSeq_Any(iDefault, *this); }
 
@@ -616,9 +613,6 @@ ZSeq_AppleEvent& ZSeq_AppleEvent::Append(const ZVal_AppleEvent& iVal)
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZMap_AppleEvent
-
-ZMap_Any ZMap_AppleEvent::AsMap_Any() const
-	{ return this->AsMap_Any(ZAny()); }
 
 ZMap_Any ZMap_AppleEvent::AsMap_Any(const ZAny& iDefault) const
 	{ return spAsMap_Any(iDefault, *this); }

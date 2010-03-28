@@ -188,7 +188,7 @@ static ZData_Any spAsData_Any(const ZRef<CFDataRef>& iCFData)
 	return ZData_Any();
 	}
 
-static ZSeq_Any spAsSeq_Any(const ZAny& iDefault, const ZRef<CFArrayRef>& iCFArray)
+ZSeq_Any sAsSeq_Any(const ZAny& iDefault, const ZRef<CFArrayRef>& iCFArray)
 	{
 	ZSeq_Any theSeq;
 
@@ -209,7 +209,7 @@ static void spGatherContents(const void* iKey, const void* iValue, void* iRefcon
 	thePair->first->Set(sAsUTF8(theKey), sDAsAny(*thePair->second, theValue));
 	}
 
-static ZMap_Any spAsMap_Any(const ZAny& iDefault, const ZRef<CFDictionaryRef>& iCFDictionary)
+ZMap_Any sAsMap_Any(const ZAny& iDefault, const ZRef<CFDictionaryRef>& iCFDictionary)
 	{
 	ZMap_Any theMap;
 	pair<ZMap_Any*, const ZAny*> thePair(&theMap, &iDefault);
@@ -234,10 +234,10 @@ ZAny sDAsAny(const ZAny& iDefault, ZRef<CFTypeRef> iVal)
 		return ZAny(sAsUTF8(iVal.StaticCast<CFStringRef>()));
 
 	if (theTypeID == ::CFDictionaryGetTypeID())
-		return ZAny(spAsMap_Any(iDefault, iVal.StaticCast<CFDictionaryRef>()));
+		return ZAny(sAsMap_Any(iDefault, iVal.StaticCast<CFDictionaryRef>()));
 
 	if (theTypeID == ::CFArrayGetTypeID())
-		return ZAny(spAsSeq_Any(iDefault, iVal.StaticCast<CFArrayRef>()));
+		return ZAny(sAsSeq_Any(iDefault, iVal.StaticCast<CFArrayRef>()));
 
 	if (theTypeID == ::CFBooleanGetTypeID())
 		return ZAny(bool(::CFBooleanGetValue(iVal.StaticCast<CFBooleanRef>())));

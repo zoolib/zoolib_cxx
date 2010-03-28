@@ -48,7 +48,7 @@ ZStrimR_NSString::~ZStrimR_NSString()
 
 void ZStrimR_NSString::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 	{
-	const NSUInteger length = [fString length];
+	const size_t length = [fString length];
 	if (0 == length)
 		{
 		if (oCount)
@@ -156,7 +156,7 @@ void ZStrimR_NSString::Imp_ReadUTF8(UTF8* iDest,
 bool ZStrimR_NSString::Imp_ReadCP(UTF32& oCP)
 	{
 	using namespace ZUnicode;
-	const NSUInteger length = [fString length];
+	const size_t length = [fString length];
 	for (;;)
 		{
 		if (fPosition >= length)
@@ -218,7 +218,7 @@ void ZStrimW_NSString::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, siz
 	if (iCountCU)
 		{
 		NSString* asString =
-			[[NSString alloc] initWithCharacters:(unichar*)iSource length:NSUInteger(iCountCU)];
+			[[NSString alloc] initWithCharacters:(unichar*)iSource length:iCountCU];
 		[fString appendString:asString];
 		[asString release];
 		}

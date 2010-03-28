@@ -129,8 +129,7 @@ class ZSeq_CFType
 	typedef ZRef<CFArrayRef> inherited;
 
 public:
-	ZAny AsAny() const;
-	ZAny DAsAny(const ZAny& iDefault) const;
+	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
 
 	operator bool() const;
 
@@ -190,8 +189,7 @@ class ZMap_CFType
 	typedef ZRef<CFDictionaryRef> inherited;
 
 public:
-	ZAny AsAny() const;
-	ZAny DAsAny(const ZAny& iDefault) const;
+	ZMap_Any AsMap_Any(const ZAny& iDefault) const;
 
 	operator bool() const;
 

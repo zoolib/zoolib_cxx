@@ -469,7 +469,7 @@ ZAny ZVal_ZooLib::DAsAny(const ZAny& iDefault) const
 #endif//##
 		case eZType_Tuple:
 			{
-			return sFetch_T<ZMap_ZooLib>(fType.fBytes)->DAsAny(iDefault);
+			return ZAny(sFetch_T<ZMap_ZooLib>(fType.fBytes)->AsMap_Any(iDefault));
 			}
 		case eZType_RefCounted:
 			{
@@ -482,7 +482,7 @@ ZAny ZVal_ZooLib::DAsAny(const ZAny& iDefault) const
 			}
 		case eZType_Vector:
 			{
-			return sFetch_T<ZSeq_ZooLib>(fType.fBytes)->DAsAny(iDefault);
+			return ZAny(sFetch_T<ZSeq_ZooLib>(fType.fBytes)->AsSeq_Any(iDefault));
 			}
 		default:
 			{
@@ -1796,10 +1796,7 @@ ZSeq_ZooLib::Rep::~Rep()
 #pragma mark -
 #pragma mark * ZSeq_ZooLib
 
-ZAny ZSeq_ZooLib::AsAny() const
-	{ return this->DAsAny(ZAny()); }
-
-ZAny ZSeq_ZooLib::DAsAny(const ZAny& iDefault) const
+ZSeq_Any ZSeq_ZooLib::AsSeq_Any(const ZAny& iDefault) const
 	{
 	ZSeq_Any theSeq;
 	if (fRep)
@@ -1810,7 +1807,7 @@ ZAny ZSeq_ZooLib::DAsAny(const ZAny& iDefault) const
 				theSeq.Append(fRep->fVector[x].DAsAny(iDefault));
 			}
 		}
-	return ZAny(theSeq);
+	return theSeq;
 	}
 
 ZSeq_ZooLib::operator operator_bool_type() const
@@ -2079,10 +2076,7 @@ ZMap_ZooLib::Rep::~Rep()
 #pragma mark -
 #pragma mark * ZMap_ZooLib
 
-ZAny ZMap_ZooLib::AsAny() const
-	{ return this->DAsAny(ZAny()); }
-
-ZAny ZMap_ZooLib::DAsAny(const ZAny& iDefault) const
+ZMap_Any ZMap_ZooLib::AsMap_Any(const ZAny& iDefault) const
 	{
 	ZMap_Any theMap;
 	if (fRep)
@@ -2093,7 +2087,7 @@ ZAny ZMap_ZooLib::DAsAny(const ZAny& iDefault) const
 			theMap.Set((*i).fName.AsString(), (*i).fVal.DAsAny(iDefault));
 			}
 		}
-	return ZAny(theMap);
+	return theMap;
 	}
 
 ZMap_ZooLib::operator operator_bool_type() const
