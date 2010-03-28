@@ -53,6 +53,7 @@ into this:
 
 NAMESPACE_ZOOLIB_BEGIN
 
+using std::pair;
 using std::string;
 
 // =================================================================================================
@@ -157,7 +158,7 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 	if (theR.Current() != ZML::eToken_TagBegin)
 		spThrowParseException("Expected begin tag");
 
-	const ZML::Attrs_t theAttrs = theR.Attrs();
+	ZML::Attrs_t theAttrs = theR.Attrs();
 	const string theName = theR.Name();
 	theR.Advance();
 
@@ -174,7 +175,11 @@ ZRef<ZYadR> YadMapR::ReadInc(std::string& oName)
 			{
 			theR.Advance();
 			return ZooLib::sMakeYadR(theText);
-			}			
+			}
+		else if (!theText.empty())
+			{
+			theAttrs.push_back(pair<string, string>("!text", theText));
+			}
 		}
 
 	return new YadMapR(fStrimmerU, theName, theAttrs);
