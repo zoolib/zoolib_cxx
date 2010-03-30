@@ -79,9 +79,9 @@ passing 19, so theInt2 will be 19 or whatever int was previously assigned to the
 The third example puts the stored value in theInt3 and returns true, or leaves theInt3 untouched
 and returns false. The 'Q' stands for Query (cf LISPish function names).
 
-The final example is not available in all Val suites. For those where there is an accesible
+The final example is not available in all Val suites. For those where there is an accessible
 storage location we can return a pointer to the actual value iff what's stored is of the correct
-type. This generally works with tagged unions, doesn't work with more abstracted APIs.
+type. This generally is available with tagged unions, not with more abstracted APIs.
 
 For those APIs with a fixed repertoire of supported types, methods named \c SetXXX, \c GetXXX,
 \c DGetXXX and \c QGetXXX are often provided, where \c XXX is the generalized typename
@@ -92,10 +92,10 @@ it adds a \c Count method returning the number of Vals in the Seq, and generally
 \c Erase, \c Insert and \c Append methods.
 
 Map is similar, but here the initial parameter is a name of some sort. Generally a std::string can
-be used, which is converted to an appropriate underlying type if appropriate. There's usually
-also some Index_t type, which may be an integer or a more complex type -- the Map will have
-Begin and End methods, which respectively return an Index_t referring to the first stored Val and
-an Index_t that indicates one past the end of the map.
+be used, which is converted to an underlying type if appropriate. There's usually
+also some \c Index_t type, which may be an integer or a more complex type -- the Map will have
+\c Begin and \c End methods, which respectively return an \c Index_t referring to the first stored
+Val and an \c Index_t that referring to the position just past the end of the map.
 
 Where possible Val, Seq and Map are type-compatible with the appropriate native type. For example,
 a ZWinCOM::Variant can be used where a VARIANT would be expected. In other cases the native
