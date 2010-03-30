@@ -186,7 +186,7 @@ void ZTextEncoder_ISO8859_1::Encode(const UTF32* iSource, size_t iSourceCU, size
 #pragma mark -
 #pragma mark * ZTextDecoder_MacRoman
 
-static const UTF32 sMacToUnicode[256] =
+static const UTF32 spMacToUnicode[256] =
 	{
 	0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
 	0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F, 
@@ -232,7 +232,7 @@ bool ZTextDecoder_MacRoman::Decode(
 	UTF32* localDestEnd = iDest + iDestCU;
 
 	while (localSource < localSourceEnd && localDest < localDestEnd)
-		*localDest++ = sMacToUnicode[*localSource++];
+		*localDest++ = spMacToUnicode[*localSource++];
 
 	if (oSourceBytes)
 		*oSourceBytes = localSource - static_cast<const uint8*>(iSource);
@@ -256,7 +256,7 @@ struct UnicodeToMac_t
 	bool operator<(const UnicodeToMac_t& rhs) const { return fUnicode < rhs.fUnicode; }
 	};
 
-static const UnicodeToMac_t sUnicodeToMac[256] =
+static const UnicodeToMac_t spUnicodeToMac[256] =
 	{
 	{0x00, 0x0000}, {0x01, 0x0001}, {0x02, 0x0002}, {0x03, 0x0003},
 	{0x04, 0x0004}, {0x05, 0x0005}, {0x06, 0x0006}, {0x07, 0x0007}, 
@@ -339,9 +339,9 @@ void ZTextEncoder_MacRoman::Encode(const UTF32* iSource, size_t iSourceCU, size_
 			break;	
 
 		const UnicodeToMac_t* iter = std::lower_bound(
-			sUnicodeToMac, sUnicodeToMac + 256, codeLookup);
+			spUnicodeToMac, spUnicodeToMac + 256, codeLookup);
 
-		if (iter < sUnicodeToMac + 256 && *iter == codeLookup)
+		if (iter < spUnicodeToMac + 256 && *iter == codeLookup)
 			*localDest++ = iter->fMac;
 		}
 
@@ -358,7 +358,7 @@ void ZTextEncoder_MacRoman::Encode(const UTF32* iSource, size_t iSourceCU, size_
 // CP1252 is also known as Latin1. It's a superset of ISO-8859-1, but has various
 // dingbat characters in CL and CR
 
-static const UTF32 sCP1252ToUnicode[128] =
+static const UTF32 spCP1252ToUnicode[128] =
 	{
 	/* 0x80 */
 	0x20ac, 0xfffd, 0x201a, 0x0192, 0x201e, 0x2026, 0x2020, 0x2021,
@@ -383,7 +383,7 @@ bool ZTextDecoder_CP1252::Decode(
 		if (readByte < 0x80 || readByte >= 0xa0)
 			*localDest++ = readByte;
 		else
-			*localDest++ = sCP1252ToUnicode[readByte - 0x80];
+			*localDest++ = spCP1252ToUnicode[readByte - 0x80];
 		}
 
 	if (oSourceBytes)
@@ -399,7 +399,7 @@ bool ZTextDecoder_CP1252::Decode(
 #pragma mark -
 #pragma mark * ZTextEncoder_CP1252
 
-static const uint8 sCP1252_Page01[72] =
+static const uint8 spCP1252_Page01[72] =
 	{
 	0x00, 0x00, 0x8c, 0x9c, 0x00, 0x00, 0x00, 0x00, /* 0x50-0x57 */
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x58-0x5f */
@@ -411,14 +411,14 @@ static const uint8 sCP1252_Page01[72] =
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x88-0x8f */
 	0x00, 0x00, 0x83, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x90-0x97 */
 	};
-static const uint8 sCP1252_Page02[32] =
+static const uint8 spCP1252_Page02[32] =
 	{
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x88, 0x00, /* 0xc0-0xc7 */
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0xc8-0xcf */
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0xd0-0xd7 */
 	0x00, 0x00, 0x00, 0x00, 0x98, 0x00, 0x00, 0x00, /* 0xd8-0xdf */
 	};
-static const uint8 sCP1252_Page20[48] =
+static const uint8 spCP1252_Page20[48] =
 	{
 	0x00, 0x00, 0x00, 0x96, 0x97, 0x00, 0x00, 0x00, /* 0x10-0x17 */
 	0x91, 0x92, 0x82, 0x00, 0x93, 0x94, 0x84, 0x00, /* 0x18-0x1f */
@@ -441,9 +441,9 @@ void ZTextEncoder_CP1252::Encode(const UTF32* iSource, size_t iSourceCU, size_t*
 		uint32 theCP = *localSource++;
 		if (theCP < 0x80) *localDest++ = theCP;
 		else if (theCP >= 0x00a0 && theCP < 0x0100) *localDest++ = theCP;
-		else if (theCP >= 0x0150 && theCP < 0x0198) *localDest++ = sCP1252_Page01[theCP - 0x0150];
-		else if (theCP >= 0x02c0 && theCP < 0x02e0) *localDest++ = sCP1252_Page02[theCP - 0x02c0];
-		else if (theCP >= 0x2010 && theCP < 0x2040) *localDest++ = sCP1252_Page20[theCP - 0x2010];
+		else if (theCP >= 0x0150 && theCP < 0x0198) *localDest++ = spCP1252_Page01[theCP - 0x0150];
+		else if (theCP >= 0x02c0 && theCP < 0x02e0) *localDest++ = spCP1252_Page02[theCP - 0x02c0];
+		else if (theCP >= 0x2010 && theCP < 0x2040) *localDest++ = spCP1252_Page20[theCP - 0x2010];
 		else if (theCP == 0x20ac) *localDest++ = 0x80;
 		else if (theCP == 0x2122) *localDest++ = 0x99;
 		}
@@ -458,7 +458,7 @@ void ZTextEncoder_CP1252::Encode(const UTF32* iSource, size_t iSourceCU, size_t*
 #pragma mark -
 #pragma mark * ZTextDecoder_CP850
 
-static const UTF32 sCP850ToUnicode[128] =
+static const UTF32 spCP850ToUnicode[128] =
 	{
 	/* 0x80 */
 	0x20ac, 0xfffd, 0x201a, 0x0192, 0x201e, 0x2026, 0x2020, 0x2021,
@@ -483,7 +483,7 @@ bool ZTextDecoder_CP850::Decode(
 		if (readByte < 0x80 || readByte >= 0xa0)
 			*localDest++ = readByte;
 		else
-			*localDest++ = sCP850ToUnicode[readByte - 0x80];
+			*localDest++ = spCP850ToUnicode[readByte - 0x80];
 		}
 
 	if (oSourceBytes)
@@ -499,7 +499,7 @@ bool ZTextDecoder_CP850::Decode(
 #pragma mark -
 #pragma mark * ZTextEncoder_CP850
 
-static const unsigned char sCP850_Page00[96] =
+static const unsigned char spCP850_Page00[96] =
 	{
 	0xff, 0xad, 0xbd, 0x9c, 0xcf, 0xbe, 0xdd, 0xf5, /* 0xa0-0xa7 */
 	0xf9, 0xb8, 0xa6, 0xae, 0xaa, 0xf0, 0xa9, 0xee, /* 0xa8-0xaf */
@@ -515,7 +515,7 @@ static const unsigned char sCP850_Page00[96] =
 	0x9b, 0x97, 0xa3, 0x96, 0x81, 0xec, 0xe7, 0x98, /* 0xf8-0xff */
 	};
 
-static const unsigned char sCP850_Page25[168] =
+static const unsigned char spCP850_Page25[168] =
 	{
 	0xc4, 0x00, 0xb3, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x00-0x07 */
 	0x00, 0x00, 0x00, 0x00, 0xda, 0x00, 0x00, 0x00, /* 0x08-0x0f */
@@ -552,11 +552,11 @@ void ZTextEncoder_CP850::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 		{
 		uint32 theCP = *localSource++;
 		if (theCP < 0x80) *localDest++ = theCP;
-		else if (theCP >= 0x00a0 && theCP < 0x0100) *localDest++ = sCP850_Page00[theCP-0x00a0];
+		else if (theCP >= 0x00a0 && theCP < 0x0100) *localDest++ = spCP850_Page00[theCP-0x00a0];
 		else if (theCP == 0x0131) *localDest++ = 0xd5;
 		else if (theCP == 0x0192) *localDest++ = 0x9f;
 		else if (theCP == 0x2017) *localDest++ = 0xf2;
-		else if (theCP >= 0x2500 && theCP < 0x25a8) *localDest++ = sCP850_Page25[theCP-0x2500];
+		else if (theCP >= 0x2500 && theCP < 0x25a8) *localDest++ = spCP850_Page25[theCP-0x2500];
 		}
 
 	if (oSourceCU)

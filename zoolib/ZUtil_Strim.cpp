@@ -32,7 +32,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZUtil_Strim {
 
-static void sThrowParseException(const std::string& iWhat)
+static void spThrowParseException(const std::string& iWhat)
 	{ throw ParseException(iWhat); }
 
 // =================================================================================================
@@ -164,7 +164,7 @@ bool sTryRead_SignedGenericInteger(const ZStrimU& iStrimU, int64& oInt64)
 					oInt64 = -oInt64;
 				return true;
 				}
-			sThrowParseException("Expected a valid hex integer after '0x' prefix");
+			spThrowParseException("Expected a valid hex integer after '0x' prefix");
 			}
 		
 		iStrimU.Unread(theCP);
@@ -193,9 +193,9 @@ bool sTryRead_SignedGenericInteger(const ZStrimU& iStrimU, int64& oInt64)
 		{
 		// We've already absorbed a plus or minus sign, hence we have a parse exception.
 		if (isNegative)
-			sThrowParseException("Expected a valid integer after '-' prefix");
+			spThrowParseException("Expected a valid integer after '-' prefix");
 		else
-			sThrowParseException("Expected a valid integer after '+' prefix");
+			spThrowParseException("Expected a valid integer after '+' prefix");
 		}
 
 	return false;
@@ -285,7 +285,7 @@ bool sTryRead_SignedDecimalInteger(const ZStrimU& iStrimU, int64& oInt64)
 		}
 
 	if (hadSign)
-		sThrowParseException("Expected a valid integer after sign prefix");
+		spThrowParseException("Expected a valid integer after sign prefix");
 
 	return false;
 	}
@@ -334,7 +334,7 @@ bool sTryRead_DecimalNumber(const ZStrimU& iStrimU, int64& oInt64, double& oDoub
 		oIsDouble = true;
 		int64 exponent;
 		if (!sTryRead_SignedDecimalInteger(iStrimU, exponent))
-			sThrowParseException("Expected a valid exponent after 'e'");
+			spThrowParseException("Expected a valid exponent after 'e'");
 		oDouble = oDouble * pow(10.0, int(exponent));
 		}
 
@@ -357,7 +357,7 @@ bool sTryRead_SignedDecimalNumber(const ZStrimU& iStrimU,
 		}
 
 	if (hadSign)
-		sThrowParseException("Expected a valid number after sign prefix");
+		spThrowParseException("Expected a valid number after sign prefix");
 
 	return false;
 	}
@@ -437,7 +437,7 @@ void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZStrimW& iDest)
 					{
 					iDest.Write("/*");
 					if (!sCopy_Until(iStrimU, "*/", iDest))
-						sThrowParseException("Unexpected end of data while parsing a /**/ comment");
+						spThrowParseException("Unexpected end of data while parsing a /**/ comment");
 					iDest.Write("*/");
 					continue;
 					}
@@ -547,7 +547,7 @@ bool sTryCopy_EscapedString(const ZStrimU& iStrimU,
 	sCopy_EscapedString(iStrimU, iDelimiter, iDest);
 
 	if (!sTryRead_CP(iStrimU, iDelimiter))
-		sThrowParseException("Missing string delimiter");
+		spThrowParseException("Missing string delimiter");
 
 	return true;
 	}

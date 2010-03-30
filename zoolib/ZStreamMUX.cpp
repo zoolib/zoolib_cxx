@@ -91,46 +91,46 @@ enum EMsg
 
 // These functions will ultimately pack small values into a byte, whilst
 // still being able to handle larger values.
-static uint32 sReceivePackedInt(const ZStreamR& iStreamR)
+static uint32 spReceivePackedInt(const ZStreamR& iStreamR)
 	{
 	return iStreamR.ReadCount();
 	}
 
-static void sSendPackedInt(const ZStreamW& iStreamW, uint32 iInt)
+static void spSendPackedInt(const ZStreamW& iStreamW, uint32 iInt)
 	{
 	iStreamW.WriteCount(iInt);
 	}
 
-static uint32 sReceivePackedID(const ZStreamR& iStreamR)
+static uint32 spReceivePackedID(const ZStreamR& iStreamR)
 	{
-	return sReceivePackedInt(iStreamR);
+	return spReceivePackedInt(iStreamR);
 	}
 
-static void sSendPackedID(const ZStreamW& iStreamW, uint32 iInt)
+static void spSendPackedID(const ZStreamW& iStreamW, uint32 iInt)
 	{
-	sSendPackedInt(iStreamW, iInt ^ 0x1);
+	spSendPackedInt(iStreamW, iInt ^ 0x1);
 	}
 
-static string sReceivePackedString(const ZStreamR& iStreamR)
+static string spReceivePackedString(const ZStreamR& iStreamR)
 	{
-	if (size_t theLength = sReceivePackedInt(iStreamR))
+	if (size_t theLength = spReceivePackedInt(iStreamR))
 		return iStreamR.ReadString(theLength);
 
 	return string();
 	}
 
-static void sSendPackedString(const ZStreamW& iStreamW, const string& iString)
+static void spSendPackedString(const ZStreamW& iStreamW, const string& iString)
 	{
 	size_t theLength = iString.length();
-	sSendPackedInt(iStreamW, theLength);
+	spSendPackedInt(iStreamW, theLength);
 	iStreamW.WriteString(iString);
 	}
 
-static bool sIsLocal(uint32 iID)
+static bool spIsLocal(uint32 iID)
 	{ return iID & 0x1; }
 
-static bool sIsRemote(uint32 iID)
-	{ return !sIsLocal(iID); }
+static bool spIsRemote(uint32 iID)
+	{ return !spIsLocal(iID); }
 
 // =================================================================================================
 #pragma mark -
@@ -276,7 +276,7 @@ ZStreamMUX::Endpoint::Endpoint(ZRef<ZStreamMUX> iMUX, uint32 iEPID, size_t iRece
 	fCreditRemaining(iCreditLimit),
 	fReceivedSinceLastCredit(true)
 	{
-	ZAssert(sIsRemote(fEPID));
+	ZAssert(spIsRemote(fEPID));
 	}
 	
 // Called by ZStreamMUX when opening a connection
@@ -295,7 +295,7 @@ ZStreamMUX::Endpoint::Endpoint(ZRef<ZStreamMUX> iMUX, uint32 iEPID, size_t iRece
 	fCreditRemaining(0),
 	fReceivedSinceLastCredit(true)
 	{
-	ZAssert(sIsLocal(fEPID));
+	ZAssert(spIsLocal(fEPID));
 	}
 
 ZStreamMUX::Endpoint::~Endpoint()
@@ -1184,10 +1184,10 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 
 			// Open contains the remote sessionID, initial credit,
 			// and the listener name against which to connect.
-			const uint32 theID = sReceivePackedID(iStreamR);
-			ZAssert(sIsRemote(theID));
-			const uint32 creditLimit = sReceivePackedInt(iStreamR);
-			const string listenerName = sReceivePackedString(iStreamR);
+			const uint32 theID = spReceivePackedID(iStreamR);
+			ZAssert(spIsRemote(theID));
+			const uint32 creditLimit = spReceivePackedInt(iStreamR);
+			const string listenerName = spReceivePackedString(iStreamR);
 
 			if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 				{
@@ -1223,9 +1223,9 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 			{
 			locker.Release();
 
-			const uint32 theID = sReceivePackedID(iStreamR);
-			ZAssert(sIsLocal(theID));			
-			const uint32 creditLimit = sReceivePackedInt(iStreamR);
+			const uint32 theID = spReceivePackedID(iStreamR);
+			ZAssert(spIsLocal(theID));			
+			const uint32 creditLimit = spReceivePackedInt(iStreamR);
 
 			if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 				{
@@ -1249,8 +1249,8 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 			locker.Release();
 
 			// An attempt to contact a Listener failed.
-			const uint32 theID = sReceivePackedID(iStreamR);
-			ZAssert(sIsLocal(theID));			
+			const uint32 theID = spReceivePackedID(iStreamR);
+			ZAssert(spIsLocal(theID));			
 
 			if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 				{
@@ -1272,7 +1272,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 			{
 			locker.Release();
 
-			const uint32 theID = sReceivePackedID(iStreamR);
+			const uint32 theID = spReceivePackedID(iStreamR);
 
 			if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 				{
@@ -1322,7 +1322,7 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 			{
 			locker.Release();
 
-			const uint32 theID = sReceivePackedID(iStreamR);
+			const uint32 theID = spReceivePackedID(iStreamR);
 
 			if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 				{
@@ -1373,9 +1373,9 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 			{
 			locker.Release();
 
-			const uint32 theID = sReceivePackedID(iStreamR);
-			const uint32 theCount = sReceivePackedInt(iStreamR);
-			if (true || sIsLocal(theID))
+			const uint32 theID = spReceivePackedID(iStreamR);
+			const uint32 theCount = spReceivePackedInt(iStreamR);
+			if (true || spIsLocal(theID))
 				{
 				if (ZLOG(s, eDebug + 2, "ZStreamMUX"))
 					{
@@ -1414,10 +1414,10 @@ void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 			{
 			locker.Release();
 
-			const uint32 theID = sReceivePackedID(iStreamR);
-			const uint32 countAcked = sReceivePackedInt(iStreamR);
+			const uint32 theID = spReceivePackedID(iStreamR);
+			const uint32 countAcked = spReceivePackedInt(iStreamR);
 
-			if (true || sIsLocal(theID))
+			if (true || spIsLocal(theID))
 				{
 				if (ZLOG(s, eDebug + 2, "ZStreamMUX"))
 					{
@@ -1461,7 +1461,7 @@ bool ZStreamMUX::pSendMessage(
 	try
 		{
 		iStreamW.WriteUInt8(iMessage);
-		sSendPackedID(iStreamW, iEPID);
+		spSendPackedID(iStreamW, iEPID);
 		fMutex.Acquire();
 		return true;
 		}
@@ -1498,8 +1498,8 @@ bool ZStreamMUX::pSendMessage_Param(
 	try
 		{
 		iStreamW.WriteUInt8(iMessage);
-		sSendPackedID(iStreamW, iEPID);
-		sSendPackedInt(iStreamW, iParam);
+		spSendPackedID(iStreamW, iEPID);
+		spSendPackedInt(iStreamW, iParam);
 		fMutex.Acquire();
 		return true;
 		}
@@ -1515,16 +1515,16 @@ bool ZStreamMUX::pSendMessage_Open(
 	const ZStreamW& iStreamW, Endpoint* iEP)
 	{
 	const uint32 theEPID = iEP->fEPID;
-	ZAssert(sIsLocal(theEPID));
+	ZAssert(spIsLocal(theEPID));
 	const uint32 creditLimit = iEP->fReceiveBufferSize;
 	const string& theName = *iEP->fOpenName;
 	fMutex.Release();
 	try
 		{
 		iStreamW.WriteUInt8(eMsg_Open);
-		sSendPackedID(iStreamW, theEPID);
-		sSendPackedInt(iStreamW, creditLimit);
-		sSendPackedString(iStreamW, theName);
+		spSendPackedID(iStreamW, theEPID);
+		spSendPackedInt(iStreamW, creditLimit);
+		spSendPackedString(iStreamW, theName);
 		fMutex.Acquire();
 		return true;
 		}
@@ -1543,8 +1543,8 @@ bool ZStreamMUX::pSendMessage_Data(
 	try
 		{
 		iStreamW.WriteUInt8(eMsg_Data);
-		sSendPackedID(iStreamW, iEPID);
-		sSendPackedInt(iStreamW, iCount);
+		spSendPackedID(iStreamW, iEPID);
+		spSendPackedInt(iStreamW, iCount);
 		iStreamW.Write(iSource, iCount);
 		fMutex.Acquire();
 		return true;
@@ -1685,7 +1685,7 @@ bool ZStreamMUX::pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP)
 						deque<uint8>::iterator end = begin + countToSend;
 						vector<uint8> buffer(begin, end);
 						theBS.erase(begin, end);
-						if (true || sIsLocal(iEP->fEPID))
+						if (true || spIsLocal(iEP->fEPID))
 							{
 							if (ZLOG(s, eDebug + 2, "ZStreamMUX"))
 								{

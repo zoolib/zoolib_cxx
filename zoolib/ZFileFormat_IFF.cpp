@@ -37,13 +37,14 @@ using std::pair;
 #pragma mark -
 #pragma mark * Static helper functions
 
-static const uint8 sZeroes[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-static void sWriteZeroes(const ZStreamW& iStream, size_t iCount)
+static const uint8 spZeroes[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+static void spWriteZeroes(const ZStreamW& iStream, size_t iCount)
 	{
 	while (iCount)
 		{
 		size_t countWritten;
-		iStream.Write(sZeroes, min(iCount, countof(sZeroes)), &countWritten);
+		iStream.Write(spZeroes, min(iCount, countof(spZeroes)), &countWritten);
 		iCount -= countWritten;
 		}
 	}
@@ -108,7 +109,7 @@ void ZFileFormat_IFF::Writer::End(const ZStreamWPos& iStream, uint32 iChunkType)
 	iStream.SetPosition(position);
 
 	// Write out any padding necessary.
-	sWriteZeroes(iStream, sAligned(chunkSize, fPadMultiple));
+	spWriteZeroes(iStream, sAligned(chunkSize, fPadMultiple));
 	}
 
 void ZFileFormat_IFF::Writer::End(const ZStreamWPos& iStream, const char* iChunkType)

@@ -27,8 +27,8 @@ using std::min;
 
 NAMESPACE_ZOOLIB_BEGIN
 
-static const UTF32 sLF[] = { '\n' };
-static const UTF32 sCR[] = { '\r' };
+static const UTF32 spLF[] = { '\n' };
+static const UTF32 spCR[] = { '\r' };
 static const UTF32 LF = '\n';
 static const UTF32 CR = '\r';
 
@@ -195,7 +195,7 @@ void ZStrimW_CRLFInsert::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, s
 			{
 			fLastWasCR = false;
 			size_t countWritten;
-			fStrimSink.Write(sLF, 1, &countWritten);
+			fStrimSink.Write(spLF, 1, &countWritten);
 			if (countWritten == 0)
 				break;
 			if (*localSource == LF)
@@ -207,7 +207,7 @@ void ZStrimW_CRLFInsert::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, s
 		else if (*localSource == CR)
 			{
 			size_t countWritten;
-			fStrimSink.Write(sCR, 1, &countWritten);
+			fStrimSink.Write(spCR, 1, &countWritten);
 			if (countWritten == 0)
 				break;
 			--iCountCU;
@@ -217,7 +217,7 @@ void ZStrimW_CRLFInsert::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, s
 		else if (*localSource == LF)
 			{
 			size_t countWritten;
-			fStrimSink.Write(sCR, 1, &countWritten);
+			fStrimSink.Write(spCR, 1, &countWritten);
 			if (countWritten == 0)
 				break;
 			// Pretend that the last was a CR, we'll write the LF and consume

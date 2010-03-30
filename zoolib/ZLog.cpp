@@ -28,14 +28,14 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZLog {
 
-static ZMtx sMutex;
-static LogMeister* sLogMeister;
+static ZMtx spMutex;
+static LogMeister* spLogMeister;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * String/integer mapping
 
-static const char* const sNames[] =
+static const char* const spNames[] =
 	{
 	"Emerg",
 	"Alert",
@@ -51,7 +51,7 @@ EPriority sPriorityFromName(const string& iString)
 	{
 	for (int priority = 0; priority <= eDebug; ++priority)
 		{
-		if (0 == ZString::sEquali(iString, sNames[priority]))
+		if (0 == ZString::sEquali(iString, spNames[priority]))
 			return priority;
 		}
 	return -1;
@@ -63,9 +63,9 @@ string sNameFromPriority(EPriority iPriority)
 		return ZString::sFormat("%d", iPriority);
 
 	if (iPriority <= eDebug)
-		return sNames[iPriority];
+		return spNames[iPriority];
 
-	return sNames[eDebug] + ZString::sFormat("+%d", iPriority - eDebug);
+	return spNames[eDebug] + ZString::sFormat("+%d", iPriority - eDebug);
 	}
 
 // =================================================================================================
@@ -129,8 +129,8 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 
 StrimW::operator operator_bool_type() const
 	{
-	return operator_bool_generator_type::translate(sLogMeister
-		&& sLogMeister->Enabled(fPriority, fName));
+	return operator_bool_generator_type::translate(spLogMeister
+		&& spLogMeister->Enabled(fPriority, fName));
 	}
 
 void StrimW::Emit() const
@@ -144,17 +144,17 @@ void StrimW::Emit() const
 
 void StrimW::pEmit()
 	{
-	sMutex.Acquire();
-	if (sLogMeister)
+	spMutex.Acquire();
+	if (spLogMeister)
 		{
 		try
 			{
-			sLogMeister->LogIt(fPriority, fName, fMessage);
+			spLogMeister->LogIt(fPriority, fName, fMessage);
 			}
 		catch (...)
 			{}
 		}
-	sMutex.Release();
+	spMutex.Release();
 	}
 
 // =================================================================================================
@@ -178,10 +178,10 @@ bool LogMeister::Enabled(EPriority iPriority, const string& iName)
 
 void sSetLogMeister(LogMeister* iLogMeister)
 	{
-	sMutex.Acquire();
-	delete sLogMeister;
-	sLogMeister = iLogMeister;
-	sMutex.Release();
+	spMutex.Acquire();
+	delete spLogMeister;
+	spLogMeister = iLogMeister;
+	spMutex.Release();
 	}
 
 // =================================================================================================

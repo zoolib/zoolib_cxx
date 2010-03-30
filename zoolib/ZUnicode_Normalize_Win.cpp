@@ -36,7 +36,7 @@ namespace ZANONYMOUS {
 
 #if WINVER >= 0x0600
 
-static string16 sNormalized_C_Win(const string16& iString, ENormForm iNormForm)
+static string16 spNormalized_C_Win(const string16& iString, ENormForm iNormForm)
 	{
 	string16 result = iString;
 	if (!iString.empty())
@@ -76,7 +76,7 @@ static string16 sNormalized_C_Win(const string16& iString, ENormForm iNormForm)
 
 #elif WINVER >= 0x0500 || _WIN32_WINNT >= 0x0500
 
-static string16 sNormalized_C_Win(const string16& iString, ENormForm iNormForm)
+static string16 spNormalized_C_Win(const string16& iString, ENormForm iNormForm)
 	{
 	// Note that FoldString uses old tables which do not match the unicode standard behavior.
 	string16 result = iString;
@@ -124,7 +124,7 @@ class Function
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = sNormalized_C_Win(iParam.fString, iParam.fNormForm);
+		oResult = spNormalized_C_Win(iParam.fString, iParam.fNormForm);
 		return true;		
 		}	
 	} sFunction0;

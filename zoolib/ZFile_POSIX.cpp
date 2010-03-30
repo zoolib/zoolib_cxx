@@ -94,7 +94,7 @@ class Make_FileLoc
 #pragma mark -
 #pragma mark * Shared implementation details
 
-static ZFile::Error sTranslateError(int iNativeError)
+static ZFile::Error spTranslateError(int iNativeError)
 	{
 	ZFile::Error theErr = ZFile::errorGeneric;
 	switch (iNativeError)
@@ -128,7 +128,7 @@ static ZFile::Error sTranslateError(int iNativeError)
 	return theErr;
 	}
 
-static int sFCntl(int iFD, int iCmd, struct flock& ioFLock)
+static int spFCntl(int iFD, int iCmd, struct flock& ioFLock)
 	{
 	for (;;)
 		{
@@ -140,7 +140,7 @@ static int sFCntl(int iFD, int iCmd, struct flock& ioFLock)
 		}
 	}
 
-static int sLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreventWriters, ZFile::Error* oErr)
+static int spLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreventWriters, ZFile::Error* oErr)
 	{
 	ZAssertStop(kDebug_File_POSIX, iRead || iWrite);
 
@@ -164,13 +164,13 @@ static int sLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreventWriters, 
 	int err;
 	if (iPreventWriters)
 		{
-		err = sFCntl(iFD, F_SETLK, theFLock);
+		err = spFCntl(iFD, F_SETLK, theFLock);
 		if (err == 0)
 			return iFD;
 		}
 	else
 		{
-		err = sFCntl(iFD, F_GETLK, theFLock);
+		err = spFCntl(iFD, F_GETLK, theFLock);
 
 		if (err == ENOLCK || err == EACCES)
 			{
@@ -185,11 +185,11 @@ static int sLockOrClose(int iFD, bool iRead, bool iWrite, bool iPreventWriters, 
 
 	::close(iFD);
 	if (oErr)
-		*oErr = sTranslateError(err);
+		*oErr = spTranslateError(err);
 	return -1;
 	}
 
-static int sOpen(const char* iPath,
+static int spOpen(const char* iPath,
 	bool iRead, bool iWrite, bool iPreventWriters, ZFile::Error* oErr)
 	{
 	#if defined(linux)
@@ -210,14 +210,14 @@ static int sOpen(const char* iPath,
 	if (theFD < 0)
 		{
 		if (oErr)
-			*oErr = sTranslateError(errno);
+			*oErr = spTranslateError(errno);
 		return -1;
 		}
 
-	return sLockOrClose(theFD, iRead, iWrite, iPreventWriters, oErr);
+	return spLockOrClose(theFD, iRead, iWrite, iPreventWriters, oErr);
 	}
 
-static void sClose(int iFD)
+static void spClose(int iFD)
 	{
 	if (iFD < 0)
 		return;
@@ -238,7 +238,7 @@ static void sClose(int iFD)
 	::close(iFD);
 	}
 
-static int sCreate(const char* iPath,
+static int spCreate(const char* iPath,
 	bool iOpenExisting, bool iAllowRead, bool iPreventWriters, ZFile::Error* oErr)
 	{
 	#if defined(linux)
@@ -260,14 +260,14 @@ static int sCreate(const char* iPath,
 	if (theFD < 0)
 		{
 		if (oErr)
-			*oErr = sTranslateError(errno);
+			*oErr = spTranslateError(errno);
 		return -1;
 		}
 
-	return sLockOrClose(theFD, iAllowRead, true, iPreventWriters, oErr);
+	return spLockOrClose(theFD, iAllowRead, true, iPreventWriters, oErr);
 	}
 
-static ZFile::Error sRead(int iFD, void* iDest, size_t iCount, size_t* oCountRead)
+static ZFile::Error spRead(int iFD, void* iDest, size_t iCount, size_t* oCountRead)
 	{
 	if (oCountRead)
 		*oCountRead = 0;
@@ -286,7 +286,7 @@ static ZFile::Error sRead(int iFD, void* iDest, size_t iCount, size_t* oCountRea
 			int err = errno;
 			if (err == EINTR)
 				continue;
-			return sTranslateError(err);
+			return spTranslateError(err);
 			}
 		if (oCountRead)
 			*oCountRead += countRead;
@@ -296,7 +296,7 @@ static ZFile::Error sRead(int iFD, void* iDest, size_t iCount, size_t* oCountRea
 	return ZFile::errorNone;
 	}
 
-static ZFile::Error sWrite(int iFD, const void* iSource, size_t iCount, size_t* oCountWritten)
+static ZFile::Error spWrite(int iFD, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	if (oCountWritten)
 		*oCountWritten = 0;
@@ -311,7 +311,7 @@ static ZFile::Error sWrite(int iFD, const void* iSource, size_t iCount, size_t* 
 			int err = errno;
 			if (err == EINTR)
 				continue;
-			return sTranslateError(err);
+			return spTranslateError(err);
 			}
 		if (oCountWritten)
 			*oCountWritten += countWritten;
@@ -321,7 +321,8 @@ static ZFile::Error sWrite(int iFD, const void* iSource, size_t iCount, size_t* 
 	return ZFile::errorNone;
 	}
 
-static ZFile::Error sReadAt(int iFD, uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
+static ZFile::Error spReadAt(
+	int iFD, uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
 	{
 #if ZCONFIG_File_AtAPISupported
 
@@ -352,7 +353,7 @@ static ZFile::Error sReadAt(int iFD, uint64 iOffset, void* iDest, size_t iCount,
 			int err = errno;
 			if (err == EINTR)
 				continue;
-			return sTranslateError(err);
+			return spTranslateError(err);
 			}
 		if (oCountRead)
 			*oCountRead += countRead;
@@ -370,7 +371,7 @@ static ZFile::Error sReadAt(int iFD, uint64 iOffset, void* iDest, size_t iCount,
 #endif
 	}
 
-static ZFile::Error sWriteAt(int iFD,
+static ZFile::Error spWriteAt(int iFD,
 	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 #if ZCONFIG_File_AtAPISupported
@@ -399,7 +400,7 @@ static ZFile::Error sWriteAt(int iFD,
 			int err = errno;
 			if (err == EINTR)
 				continue;
-			return sTranslateError(err);
+			return spTranslateError(err);
 			}
 		if (oCountWritten)
 			*oCountWritten += countWritten;
@@ -417,7 +418,7 @@ static ZFile::Error sWriteAt(int iFD,
 #endif
 	}
 
-static ZFile::Error sGetPosition(int iFD, uint64& oPosition)
+static ZFile::Error spGetPosition(int iFD, uint64& oPosition)
 	{
 	#if defined(linux)
 		off64_t result = ::lseek64(iFD, 0, SEEK_CUR);
@@ -426,55 +427,55 @@ static ZFile::Error sGetPosition(int iFD, uint64& oPosition)
 	#endif
 
 	if (result < 0)
-		return sTranslateError(errno);
+		return spTranslateError(errno);
 	oPosition = result;
 	return ZFile::errorNone;
 	}
 
-static ZFile::Error sSetPosition(int iFD, uint64 iPosition)
+static ZFile::Error spSetPosition(int iFD, uint64 iPosition)
 	{
 	#if defined(linux)
 		if (::lseek64(iFD, iPosition, SEEK_SET) < 0)
-			return sTranslateError(errno);
+			return spTranslateError(errno);
 	#else
 		if (::lseek(iFD, iPosition, SEEK_SET) < 0)
-			return sTranslateError(errno);
+			return spTranslateError(errno);
 	#endif
 
 	return ZFile::errorNone;
 	}
 
-static ZFile::Error sGetSize(int iFD, uint64& oSize)
+static ZFile::Error spGetSize(int iFD, uint64& oSize)
 	{
 	#if defined(linux)
 		struct stat64 theStatStruct;
 		if (::fstat64(iFD, &theStatStruct))
-			return sTranslateError(errno);
+			return spTranslateError(errno);
 	#else
 		struct stat theStatStruct;
 		if (::fstat(iFD, &theStatStruct))
-			return sTranslateError(errno);
+			return spTranslateError(errno);
 	#endif
 
 	oSize = theStatStruct.st_size;
 	return ZFile::errorNone;
 	}
 
-static ZFile::Error sSetSize(int iFD, uint64 iSize)
+static ZFile::Error spSetSize(int iFD, uint64 iSize)
 	{
 	// NB ftruncate is not supported on all systems
 	#if defined(linux)
 		if (::ftruncate64(iFD, iSize) < 0)
-			return sTranslateError(errno);
+			return spTranslateError(errno);
 	#else
 		if (::ftruncate(iFD, iSize) < 0)
-			return sTranslateError(errno);
+			return spTranslateError(errno);
 	#endif
 
 	return ZFile::errorNone;
 	}
 
-static ZFile::Error sFlush(int iFD)
+static ZFile::Error spFlush(int iFD)
 	{
 	// AG 2001-08-02. Stumbled across the docs for fdatasync, which ensures the contents of a
 	// file are flushed to disk, but does not necessarily ensure mod time is brought up to date.
@@ -487,13 +488,13 @@ static ZFile::Error sFlush(int iFD)
 	return ZFile::errorNone;
 	}
 
-static ZFile::Error sFlushVolume(int iFD)
+static ZFile::Error spFlushVolume(int iFD)
 	{
 	::fsync(iFD);
 	return ZFile::errorNone;
 	}
 
-static void sSplit(char iSep, bool iIncludeEmpties, const char* iPath, vector<string>& oComps)
+static void spSplit(char iSep, bool iIncludeEmpties, const char* iPath, vector<string>& oComps)
 	{
 	for (;;)
 		{
@@ -514,7 +515,7 @@ static void sSplit(char iSep, bool iIncludeEmpties, const char* iPath, vector<st
 		}
 	}
 
-static void sSplit(
+static void spSplit(
 	char iSep, bool iIncludeEmpties, const char* iPath, const char* iEnd,
 	vector<string>& oComps)
 	{
@@ -537,20 +538,20 @@ static void sSplit(
 		}
 	}
 
-static void sSplit(char iSep, bool iIncludeEmpties, const string& iPath, vector<string>& oComps)
+static void spSplit(char iSep, bool iIncludeEmpties, const string& iPath, vector<string>& oComps)
 	{
 	if (size_t length = iPath.length())
-		sSplit(iSep, iIncludeEmpties, iPath.data(), iPath.data() + length, oComps);
+		spSplit(iSep, iIncludeEmpties, iPath.data(), iPath.data() + length, oComps);
 	}
 
-static void sGetCWD(vector<string>& oComps)
+static void spGetCWD(vector<string>& oComps)
 	{
 	for (size_t bufSize = 1024; bufSize < 16384; bufSize *= 2)
 		{
 		vector<char> buffer(bufSize);
 		if (::getcwd(&buffer[0], bufSize))
 			{
-			sSplit('/', false, &buffer[0], oComps);
+			spSplit('/', false, &buffer[0], oComps);
 			break;
 			}
 		}
@@ -685,7 +686,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 		if (result < bufSize)
 			{
 			vector<string> comps;
-			sSplit('/', false, &buffer[0], &buffer[result], comps);
+			spSplit('/', false, &buffer[0], &buffer[result], comps);
 			return new ZFileLoc_POSIX(true, comps, true);
 			}
 		}
@@ -713,7 +714,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 		{
 		vector<string> comps;
 		// Pass theSize - 1 to omit the terminating NUL.
-		sSplit('/', false, &buffer[0], &buffer[0] + theSize - 1, comps);
+		spSplit('/', false, &buffer[0], &buffer[0] + theSize - 1, comps);
 		return new ZFileLoc_POSIX(true, comps, true);
 		}
 	return ZRef<ZFileLoc_POSIX>();
@@ -733,7 +734,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 			{
 			// It starts with a separator and so is an absolute path.
 			vector<string> comps;
-			sSplit('/', false, name, comps);
+			spSplit('/', false, name, comps);
 			return new ZFileLoc_POSIX(true, comps);
 			}
 		else if (string::npos != name.find("/"))
@@ -741,7 +742,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 			// It contains at least one separator and so should be interpreted
 			// as a path relative to the current working directory.
 			vector<string> comps;
-			sSplit('/', false, name, comps);
+			spSplit('/', false, name, comps);
 			return new ZFileLoc_POSIX(false, comps);
 			}
 		else
@@ -751,7 +752,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 			if (const char* pEnv = ::getenv("PATH"))
 				{
 				vector<string> paths;
-				sSplit(':', true, pEnv, paths);
+				spSplit(':', true, pEnv, paths);
 
 				for (vector<string>::const_iterator i = paths.begin(); i != paths.end(); ++i)
 					{
@@ -769,7 +770,7 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 						if (S_ISREG(theStat.st_mode))
 							{
 							vector<string> comps;
-							sSplit('/', false, trial, comps);
+							spSplit('/', false, trial, comps);
 							return new ZFileLoc_POSIX(trial[0] == '/', comps);
 							}
 						}
@@ -845,7 +846,7 @@ ZTrail ZFileLoc_POSIX::TrailTo(ZRef<ZFileLoc> iDest, ZFile::Error* oErr) const
 			return ZTrail::sTrailFromTo(fComps, dest->fComps);
 
 		vector<string> theFullTrail;
-		sGetCWD(theFullTrail);
+		spGetCWD(theFullTrail);
 		if (fIsAtRoot)
 			{
 			theFullTrail.insert(theFullTrail.end(), dest->fComps.begin(), dest->fComps.end());
@@ -882,7 +883,7 @@ ZRef<ZFileLoc> ZFileLoc_POSIX::GetParent(ZFile::Error* oErr)
 		// We're empty and not at explicitly at the root, ie we reference the CWD. So
 		// get the CWD as a list of components.
 		vector<string> realComps;
-		sGetCWD(realComps);
+		spGetCWD(realComps);
 		if (!realComps.empty())
 			{
 			// There's at least one component, so return the list minus the last component.
@@ -967,7 +968,7 @@ ZFile::Kind ZFileLoc_POSIX::Kind(ZFile::Error* oErr)
 #endif
 		{
 		if (oErr)
-			*oErr = sTranslateError(errno);
+			*oErr = spTranslateError(errno);
 		return ZFile::kindNone;
 		}
 
@@ -1003,7 +1004,7 @@ uint64 ZFileLoc_POSIX::Size(ZFile::Error* oErr)
 	if (result < 0)
 		{
 		if (oErr)
-			*oErr = sTranslateError(errno);
+			*oErr = spTranslateError(errno);
 		return 0;
 		}
 
@@ -1019,7 +1020,7 @@ ZTime ZFileLoc_POSIX::TimeCreated(ZFile::Error* oErr)
 	if (0 > ::stat(this->pGetPath().c_str(), &theStat))
 		{
 		if (oErr)
-			*oErr = sTranslateError(errno);
+			*oErr = spTranslateError(errno);
 		return ZTime();
 		}
 
@@ -1041,7 +1042,7 @@ ZTime ZFileLoc_POSIX::TimeModified(ZFile::Error* oErr)
 	if (0 > ::stat(this->pGetPath().c_str(), &theStat))
 		{
 		if (oErr)
-			*oErr = sTranslateError(errno);
+			*oErr = spTranslateError(errno);
 		return ZTime();
 		}
 
@@ -1062,7 +1063,7 @@ ZRef<ZFileLoc> ZFileLoc_POSIX::CreateDir(ZFile::Error* oErr)
 	if (0 > ::mkdir(this->pGetPath().c_str(), 0777))
 		{
 		if (oErr)
-			*oErr = sTranslateError(errno);
+			*oErr = spTranslateError(errno);
 		return ZRef<ZFileLoc>();
 		}
 
@@ -1085,7 +1086,7 @@ ZRef<ZFileLoc> ZFileLoc_POSIX::MoveTo(ZRef<ZFileLoc> iDest, ZFile::Error* oErr)
 	if (0 > ::rename(this->pGetPath().c_str(), other->pGetPath().c_str()))
 		{
 		if (oErr)
-			*oErr = sTranslateError(errno);
+			*oErr = spTranslateError(errno);
 		return ZRef<ZFileLoc>();
 		}
 
@@ -1101,7 +1102,7 @@ bool ZFileLoc_POSIX::Delete(ZFile::Error* oErr)
 		if (ENOENT == errno)
 			{
 			if (oErr)
-				*oErr = sTranslateError(ENOENT);
+				*oErr = spTranslateError(ENOENT);
 			return false;
 			}
 
@@ -1109,7 +1110,7 @@ bool ZFileLoc_POSIX::Delete(ZFile::Error* oErr)
 		if (0 > ::rmdir(myPath.c_str()))
 			{
 			if (oErr)
-				*oErr = sTranslateError(errno);
+				*oErr = spTranslateError(errno);
 			return false;
 			}
 		}
@@ -1121,7 +1122,7 @@ bool ZFileLoc_POSIX::Delete(ZFile::Error* oErr)
 
 ZRef<ZStreamerRPos> ZFileLoc_POSIX::OpenRPos(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	int theFD = sOpen(this->pGetPath().c_str(), true, false, iPreventWriters, oErr);
+	int theFD = spOpen(this->pGetPath().c_str(), true, false, iPreventWriters, oErr);
 	if (theFD < 0)
 		return ZRef<ZStreamerRPos>();
 
@@ -1130,7 +1131,7 @@ ZRef<ZStreamerRPos> ZFileLoc_POSIX::OpenRPos(bool iPreventWriters, ZFile::Error*
 
 ZRef<ZStreamerWPos> ZFileLoc_POSIX::OpenWPos(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	int theFD = sOpen(this->pGetPath().c_str(), false, true, iPreventWriters, oErr);
+	int theFD = spOpen(this->pGetPath().c_str(), false, true, iPreventWriters, oErr);
 	if (theFD < 0)
 		return ZRef<ZStreamerWPos>();
 
@@ -1139,7 +1140,7 @@ ZRef<ZStreamerWPos> ZFileLoc_POSIX::OpenWPos(bool iPreventWriters, ZFile::Error*
 
 ZRef<ZStreamerRWPos> ZFileLoc_POSIX::OpenRWPos(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	int theFD = sOpen(this->pGetPath().c_str(), true, true, iPreventWriters, oErr);
+	int theFD = spOpen(this->pGetPath().c_str(), true, true, iPreventWriters, oErr);
 	if (theFD < 0)
 		return ZRef<ZStreamerRWPos>();
 
@@ -1149,7 +1150,7 @@ ZRef<ZStreamerRWPos> ZFileLoc_POSIX::OpenRWPos(bool iPreventWriters, ZFile::Erro
 ZRef<ZStreamerWPos> ZFileLoc_POSIX::CreateWPos(
 	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
-	int theFD = sCreate(this->pGetPath().c_str(), iOpenExisting, false, iPreventWriters, oErr);
+	int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, false, iPreventWriters, oErr);
 	if (theFD < 0)
 		return ZRef<ZStreamerWPos>();
 
@@ -1159,7 +1160,7 @@ ZRef<ZStreamerWPos> ZFileLoc_POSIX::CreateWPos(
 ZRef<ZStreamerRWPos> ZFileLoc_POSIX::CreateRWPos(
 	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
-	int theFD = sCreate(this->pGetPath().c_str(), iOpenExisting, true, iPreventWriters, oErr);
+	int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFD < 0)
 		return ZRef<ZStreamerRWPos>();
 
@@ -1168,7 +1169,7 @@ ZRef<ZStreamerRWPos> ZFileLoc_POSIX::CreateRWPos(
 
 ZRef<ZFileR> ZFileLoc_POSIX::OpenFileR(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	int theFD = sOpen(this->pGetPath().c_str(), true, false, iPreventWriters, oErr);
+	int theFD = spOpen(this->pGetPath().c_str(), true, false, iPreventWriters, oErr);
 	if (theFD < 0)
 		return ZRef<ZFileR>();
 
@@ -1180,7 +1181,7 @@ ZRef<ZFileR> ZFileLoc_POSIX::OpenFileR(bool iPreventWriters, ZFile::Error* oErr)
 
 ZRef<ZFileW> ZFileLoc_POSIX::OpenFileW(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	int theFD = sOpen(this->pGetPath().c_str(), false, true, iPreventWriters, oErr);
+	int theFD = spOpen(this->pGetPath().c_str(), false, true, iPreventWriters, oErr);
 	if (theFD < 0)
 		return ZRef<ZFileW>();
 
@@ -1192,7 +1193,7 @@ ZRef<ZFileW> ZFileLoc_POSIX::OpenFileW(bool iPreventWriters, ZFile::Error* oErr)
 
 ZRef<ZFileRW> ZFileLoc_POSIX::OpenFileRW(bool iPreventWriters, ZFile::Error* oErr)
 	{
-	int theFD = sOpen(this->pGetPath().c_str(), true, true, iPreventWriters, oErr);
+	int theFD = spOpen(this->pGetPath().c_str(), true, true, iPreventWriters, oErr);
 	if (theFD < 0)
 		return ZRef<ZFileRW>();
 
@@ -1205,7 +1206,7 @@ ZRef<ZFileRW> ZFileLoc_POSIX::OpenFileRW(bool iPreventWriters, ZFile::Error* oEr
 ZRef<ZFileW> ZFileLoc_POSIX::CreateFileW(
 	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
-	int theFD = sCreate(this->pGetPath().c_str(), iOpenExisting, false, iPreventWriters, oErr);
+	int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, false, iPreventWriters, oErr);
 	if (theFD < 0)
 		return ZRef<ZFileW>();
 
@@ -1218,7 +1219,7 @@ ZRef<ZFileW> ZFileLoc_POSIX::CreateFileW(
 ZRef<ZFileRW> ZFileLoc_POSIX::CreateFileRW(
 	bool iOpenExisting, bool iPreventWriters, ZFile::Error* oErr)
 	{
-	int theFD = sCreate(this->pGetPath().c_str(), iOpenExisting, true, iPreventWriters, oErr);
+	int theFD = spCreate(this->pGetPath().c_str(), iOpenExisting, true, iPreventWriters, oErr);
 	if (theFD < 0)
 		return ZRef<ZFileRW>();
 
@@ -1260,14 +1261,14 @@ ZFileR_POSIX::ZFileR_POSIX(int iFD, bool iCloseWhenFinalized)
 ZFileR_POSIX::~ZFileR_POSIX()
 	{
 	if (fCloseWhenFinalized)
-		sClose(fFD);
+		spClose(fFD);
 	}
 
 ZFile::Error ZFileR_POSIX::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
-	{ return sReadAt(fFD, iOffset, iDest, iCount, oCountRead); }
+	{ return spReadAt(fFD, iOffset, iDest, iCount, oCountRead); }
 
 ZFile::Error ZFileR_POSIX::GetSize(uint64& oSize)
-	{ return sGetSize(fFD, oSize); }
+	{ return spGetSize(fFD, oSize); }
 
 // =================================================================================================
 #pragma mark -
@@ -1281,24 +1282,24 @@ ZFileW_POSIX::ZFileW_POSIX(int iFD, bool iCloseWhenFinalized)
 ZFileW_POSIX::~ZFileW_POSIX()
 	{
 	if (fCloseWhenFinalized)
-		sClose(fFD);
+		spClose(fFD);
 	}
 
 ZFile::Error ZFileW_POSIX::WriteAt(
 	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
-	{ return sWriteAt(fFD, iOffset, iSource, iCount, oCountWritten); }
+	{ return spWriteAt(fFD, iOffset, iSource, iCount, oCountWritten); }
 
 ZFile::Error ZFileW_POSIX::GetSize(uint64& oSize)
-	{ return sGetSize(fFD, oSize); }
+	{ return spGetSize(fFD, oSize); }
 
 ZFile::Error ZFileW_POSIX::SetSize(uint64 iSize)
-	{ return sSetSize(fFD, iSize); }
+	{ return spSetSize(fFD, iSize); }
 
 ZFile::Error ZFileW_POSIX::Flush()
-	{ return sFlush(fFD); }
+	{ return spFlush(fFD); }
 
 ZFile::Error ZFileW_POSIX::FlushVolume()
-	{ return sFlushVolume(fFD); }
+	{ return spFlushVolume(fFD); }
 
 // =================================================================================================
 #pragma mark -
@@ -1312,28 +1313,28 @@ ZFileRW_POSIX::ZFileRW_POSIX(int iFD, bool iCloseWhenFinalized)
 ZFileRW_POSIX::~ZFileRW_POSIX()
 	{
 	if (fCloseWhenFinalized)
-		sClose(fFD);
+		spClose(fFD);
 	}
 
 ZFile::Error ZFileRW_POSIX::ReadAt(
 	uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
-	{ return sReadAt(fFD, iOffset, iDest, iCount, oCountRead); }
+	{ return spReadAt(fFD, iOffset, iDest, iCount, oCountRead); }
 
 ZFile::Error ZFileRW_POSIX::WriteAt(
 	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
-	{ return sWriteAt(fFD, iOffset, iSource, iCount, oCountWritten); }
+	{ return spWriteAt(fFD, iOffset, iSource, iCount, oCountWritten); }
 
 ZFile::Error ZFileRW_POSIX::GetSize(uint64& oSize)
-	{ return sGetSize(fFD, oSize); }
+	{ return spGetSize(fFD, oSize); }
 
 ZFile::Error ZFileRW_POSIX::SetSize(uint64 iSize)
-	{ return sSetSize(fFD, iSize); }
+	{ return spSetSize(fFD, iSize); }
 
 ZFile::Error ZFileRW_POSIX::Flush()
-	{ return sFlush(fFD); }
+	{ return spFlush(fFD); }
 
 ZFile::Error ZFileRW_POSIX::FlushVolume()
-	{ return sFlushVolume(fFD); }
+	{ return spFlushVolume(fFD); }
 
 // =================================================================================================
 #pragma mark -
@@ -1348,7 +1349,7 @@ ZFileR_POSIXMutex::ZFileR_POSIXMutex(int iFD, bool iCloseWhenFinalized)
 ZFileR_POSIXMutex::~ZFileR_POSIXMutex()
 	{
 	if (fCloseWhenFinalized)
-		sClose(fFD);
+		spClose(fFD);
 	}
 
 ZFile::Error ZFileR_POSIXMutex::ReadAt(
@@ -1357,7 +1358,7 @@ ZFile::Error ZFileR_POSIXMutex::ReadAt(
 	ZGuardMtx locker(fMtx);
 	if (fPosition != iOffset)
 		{
-		ZFile::Error err = sSetPosition(fFD, iOffset);
+		ZFile::Error err = spSetPosition(fFD, iOffset);
 		if (err != ZFile::errorNone)
 			{
 			fPosition = uint64(-1);
@@ -1365,11 +1366,11 @@ ZFile::Error ZFileR_POSIXMutex::ReadAt(
 			}
 		fPosition = iOffset;
 		}
-	return sRead(fFD, iDest, iCount, oCountRead);
+	return spRead(fFD, iDest, iCount, oCountRead);
 	}
 
 ZFile::Error ZFileR_POSIXMutex::GetSize(uint64& oSize)
-	{ return sGetSize(fFD, oSize); }
+	{ return spGetSize(fFD, oSize); }
 
 // =================================================================================================
 #pragma mark -
@@ -1384,7 +1385,7 @@ ZFileW_POSIXMutex::ZFileW_POSIXMutex(int iFD, bool iCloseWhenFinalized)
 ZFileW_POSIXMutex::~ZFileW_POSIXMutex()
 	{
 	if (fCloseWhenFinalized)
-		sClose(fFD);
+		spClose(fFD);
 	}
 
 ZFile::Error ZFileW_POSIXMutex::WriteAt(
@@ -1393,7 +1394,7 @@ ZFile::Error ZFileW_POSIXMutex::WriteAt(
 	ZGuardMtx locker(fMtx);
 	if (fPosition != iOffset)
 		{
-		ZFile::Error err = sSetPosition(fFD, iOffset);
+		ZFile::Error err = spSetPosition(fFD, iOffset);
 		if (err != ZFile::errorNone)
 			{
 			fPosition = uint64(-1);
@@ -1401,20 +1402,20 @@ ZFile::Error ZFileW_POSIXMutex::WriteAt(
 			}
 		fPosition = iOffset;
 		}
-	return sWrite(fFD, iSource, iCount, oCountWritten);
+	return spWrite(fFD, iSource, iCount, oCountWritten);
 	}
 
 ZFile::Error ZFileW_POSIXMutex::GetSize(uint64& oSize)
-	{ return sGetSize(fFD, oSize); }
+	{ return spGetSize(fFD, oSize); }
 
 ZFile::Error ZFileW_POSIXMutex::SetSize(uint64 iSize)
-	{ return sSetSize(fFD, iSize); }
+	{ return spSetSize(fFD, iSize); }
 
 ZFile::Error ZFileW_POSIXMutex::Flush()
-	{ return sFlush(fFD); }
+	{ return spFlush(fFD); }
 
 ZFile::Error ZFileW_POSIXMutex::FlushVolume()
-	{ return sFlushVolume(fFD); }
+	{ return spFlushVolume(fFD); }
 
 // =================================================================================================
 #pragma mark -
@@ -1429,7 +1430,7 @@ ZFileRW_POSIXMutex::ZFileRW_POSIXMutex(int iFD, bool iCloseWhenFinalized)
 ZFileRW_POSIXMutex::~ZFileRW_POSIXMutex()
 	{
 	if (fCloseWhenFinalized)
-		sClose(fFD);
+		spClose(fFD);
 	}
 
 ZFile::Error ZFileRW_POSIXMutex::ReadAt(
@@ -1438,7 +1439,7 @@ ZFile::Error ZFileRW_POSIXMutex::ReadAt(
 	ZGuardMtx locker(fMtx);
 	if (fPosition != iOffset)
 		{
-		ZFile::Error err = sSetPosition(fFD, iOffset);
+		ZFile::Error err = spSetPosition(fFD, iOffset);
 		if (err != ZFile::errorNone)
 			{
 			fPosition = uint64(-1);
@@ -1446,7 +1447,7 @@ ZFile::Error ZFileRW_POSIXMutex::ReadAt(
 			}
 		fPosition = iOffset;
 		}
-	return sRead(fFD, iDest, iCount, oCountRead);
+	return spRead(fFD, iDest, iCount, oCountRead);
 	}
 
 ZFile::Error ZFileRW_POSIXMutex::WriteAt(
@@ -1455,7 +1456,7 @@ ZFile::Error ZFileRW_POSIXMutex::WriteAt(
 	ZGuardMtx locker(fMtx);
 	if (fPosition != iOffset)
 		{
-		ZFile::Error err = sSetPosition(fFD, iOffset);
+		ZFile::Error err = spSetPosition(fFD, iOffset);
 		if (err != ZFile::errorNone)
 			{
 			fPosition = uint64(-1);
@@ -1463,20 +1464,20 @@ ZFile::Error ZFileRW_POSIXMutex::WriteAt(
 			}
 		fPosition = iOffset;
 		}
-	return sWrite(fFD, iSource, iCount, oCountWritten);
+	return spWrite(fFD, iSource, iCount, oCountWritten);
 	}
 
 ZFile::Error ZFileRW_POSIXMutex::GetSize(uint64& oSize)
-	{ return sGetSize(fFD, oSize); }
+	{ return spGetSize(fFD, oSize); }
 
 ZFile::Error ZFileRW_POSIXMutex::SetSize(uint64 iSize)
-	{ return sSetSize(fFD, iSize); }
+	{ return spSetSize(fFD, iSize); }
 
 ZFile::Error ZFileRW_POSIXMutex::Flush()
-	{ return sFlush(fFD); }
+	{ return spFlush(fFD); }
 
 ZFile::Error ZFileRW_POSIXMutex::FlushVolume()
-	{ return sFlushVolume(fFD); }
+	{ return spFlushVolume(fFD); }
 
 // =================================================================================================
 #pragma mark -
@@ -1490,27 +1491,27 @@ ZStreamRPos_File_POSIX::ZStreamRPos_File_POSIX(int iFD, bool iCloseWhenFinalized
 ZStreamRPos_File_POSIX::~ZStreamRPos_File_POSIX()
 	{
 	if (fCloseWhenFinalized)
-		sClose(fFD);
+		spClose(fFD);
 	}
 
 void ZStreamRPos_File_POSIX::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ sRead(fFD, iDest, iCount, oCountRead); }
+	{ spRead(fFD, iDest, iCount, oCountRead); }
 
 uint64 ZStreamRPos_File_POSIX::Imp_GetPosition()
 	{
 	uint64 pos;
-	if (ZFile::errorNone == sGetPosition(fFD, pos))
+	if (ZFile::errorNone == spGetPosition(fFD, pos))
 		return pos;
 	return 0;
 	}
 
 void ZStreamRPos_File_POSIX::Imp_SetPosition(uint64 iPosition)
-	{ sSetPosition(fFD, iPosition); }
+	{ spSetPosition(fFD, iPosition); }
 
 uint64 ZStreamRPos_File_POSIX::Imp_GetSize()
 	{
 	uint64 theSize;
-	if (ZFile::errorNone == sGetSize(fFD, theSize))
+	if (ZFile::errorNone == spGetSize(fFD, theSize))
 		return theSize;
 	return 0;
 	}
@@ -1541,37 +1542,37 @@ ZStreamWPos_File_POSIX::ZStreamWPos_File_POSIX(int iFD, bool iCloseWhenFinalized
 ZStreamWPos_File_POSIX::~ZStreamWPos_File_POSIX()
 	{
 	if (fCloseWhenFinalized)
-		sClose(fFD);
+		spClose(fFD);
 	}
 
 void ZStreamWPos_File_POSIX::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
-	{ sWrite(fFD, iSource, iCount, oCountWritten); }
+	{ spWrite(fFD, iSource, iCount, oCountWritten); }
 
 void ZStreamWPos_File_POSIX::Imp_Flush()
-	{ sFlush(fFD); }
+	{ spFlush(fFD); }
 
 uint64 ZStreamWPos_File_POSIX::Imp_GetPosition()
 	{
 	uint64 pos;
-	if (ZFile::errorNone == sGetPosition(fFD, pos))
+	if (ZFile::errorNone == spGetPosition(fFD, pos))
 		return pos;
 	return 0;
 	}
 
 void ZStreamWPos_File_POSIX::Imp_SetPosition(uint64 iPosition)
-	{ sSetPosition(fFD, iPosition); }
+	{ spSetPosition(fFD, iPosition); }
 
 uint64 ZStreamWPos_File_POSIX::Imp_GetSize()
 	{
 	uint64 theSize;
-	if (ZFile::errorNone == sGetSize(fFD, theSize))
+	if (ZFile::errorNone == spGetSize(fFD, theSize))
 		return theSize;
 	return 0;
 	}
 
 void ZStreamWPos_File_POSIX::Imp_SetSize(uint64 iSize)
 	{
-	if (ZFile::errorNone != sSetSize(fFD, iSize))
+	if (ZFile::errorNone != spSetSize(fFD, iSize))
 		sThrowBadSize();
 	}
 
@@ -1601,40 +1602,40 @@ ZStreamRWPos_File_POSIX::ZStreamRWPos_File_POSIX(int iFD, bool iCloseWhenFinaliz
 ZStreamRWPos_File_POSIX::~ZStreamRWPos_File_POSIX()
 	{
 	if (fCloseWhenFinalized)
-		sClose(fFD);
+		spClose(fFD);
 	}
 
 void ZStreamRWPos_File_POSIX::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ sRead(fFD, iDest, iCount, oCountRead); }
+	{ spRead(fFD, iDest, iCount, oCountRead); }
 
 void ZStreamRWPos_File_POSIX::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
-	{ sWrite(fFD, iSource, iCount, oCountWritten); }
+	{ spWrite(fFD, iSource, iCount, oCountWritten); }
 
 void ZStreamRWPos_File_POSIX::Imp_Flush()
-	{ sFlush(fFD); }
+	{ spFlush(fFD); }
 
 uint64 ZStreamRWPos_File_POSIX::Imp_GetPosition()
 	{
 	uint64 pos;
-	if (ZFile::errorNone == sGetPosition(fFD, pos))
+	if (ZFile::errorNone == spGetPosition(fFD, pos))
 		return pos;
 	return 0;
 	}
 
 void ZStreamRWPos_File_POSIX::Imp_SetPosition(uint64 iPosition)
-	{ sSetPosition(fFD, iPosition); }
+	{ spSetPosition(fFD, iPosition); }
 
 uint64 ZStreamRWPos_File_POSIX::Imp_GetSize()
 	{
 	uint64 theSize;
-	if (ZFile::errorNone == sGetSize(fFD, theSize))
+	if (ZFile::errorNone == spGetSize(fFD, theSize))
 		return theSize;
 	return 0;
 	}
 
 void ZStreamRWPos_File_POSIX::Imp_SetSize(uint64 iSize)
 	{
-	if (ZFile::errorNone != sSetSize(fFD, iSize))
+	if (ZFile::errorNone != spSetSize(fFD, iSize))
 		sThrowBadSize();
 	}
 

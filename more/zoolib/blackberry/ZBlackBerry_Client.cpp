@@ -177,7 +177,7 @@ Device_Client::~Device_Client()
 		s << "~Device_Client";
 	}
 
-static void sWriteString(const ZStreamW& w, const string& iString)
+static void spWriteString(const ZStreamW& w, const string& iString)
 	{
 	w.WriteCount(iString.size());
 	w.WriteString(iString);
@@ -211,7 +211,7 @@ ZRef<Channel> Device_Client::Open(bool iPreserveBoundaries,
 				w.WriteBool(false);
 				}
 
-			sWriteString(w, iName);
+			spWriteString(w, iName);
 
 			w.Flush();
 

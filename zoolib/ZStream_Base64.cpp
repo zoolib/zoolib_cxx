@@ -23,47 +23,47 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-static const uint8 sBase64EncodeTable[]
+static const uint8 spBase64EncodeTable[]
 	= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-static void sBase64Encode(const uint8* iSource, size_t iSourceCount, uint8* iDest)
+static void spBase64Encode(const uint8* iSource, size_t iSourceCount, uint8* iDest)
 	{
 	switch (iSourceCount)
 		{
 		case 3:
 			{
-			iDest[0] = sBase64EncodeTable[iSource[0] >> 2];
-			iDest[1] = sBase64EncodeTable[((iSource[0] & 0x03) << 4) | (iSource[1] >> 4)];
-			iDest[2] = sBase64EncodeTable[((iSource[1] & 0x0F) << 2) | (iSource[2] >> 6)];
-			iDest[3] = sBase64EncodeTable[iSource[2] & 0x3F];
+			iDest[0] = spBase64EncodeTable[iSource[0] >> 2];
+			iDest[1] = spBase64EncodeTable[((iSource[0] & 0x03) << 4) | (iSource[1] >> 4)];
+			iDest[2] = spBase64EncodeTable[((iSource[1] & 0x0F) << 2) | (iSource[2] >> 6)];
+			iDest[3] = spBase64EncodeTable[iSource[2] & 0x3F];
 			break;
 			}
 		case 2:
 			{
-			iDest[0] = sBase64EncodeTable[iSource[0] >> 2];
-			iDest[1] = sBase64EncodeTable[((iSource[0] & 0x03) << 4) | (iSource[1] >> 4)];
-			iDest[2] = sBase64EncodeTable[((iSource[1] & 0x0F) << 2)];
+			iDest[0] = spBase64EncodeTable[iSource[0] >> 2];
+			iDest[1] = spBase64EncodeTable[((iSource[0] & 0x03) << 4) | (iSource[1] >> 4)];
+			iDest[2] = spBase64EncodeTable[((iSource[1] & 0x0F) << 2)];
 			iDest[3] = '=';
 			break;
 			}
 		case 1:
 			{
-			iDest[0] = sBase64EncodeTable[iSource[0] >> 2];
-			iDest[1] = sBase64EncodeTable[((iSource[0] & 0x03) << 4)];
+			iDest[0] = spBase64EncodeTable[iSource[0] >> 2];
+			iDest[1] = spBase64EncodeTable[((iSource[0] & 0x03) << 4)];
 			iDest[2] = '=';
 			iDest[3] = '=';
 			break;
 			}
 		default:
 			{
-			// sBase64Encode must be called with iSourceCount == 1, 2 or 3
+			// spBase64Encode must be called with iSourceCount == 1, 2 or 3
 			ZDebugStop(0);
 			break;
 			}
 		}
 	}
 
-static const uint8 sBase64DecodeTable[] =
+static const uint8 spBase64DecodeTable[] =
 	{
 	255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
 	255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
@@ -128,7 +128,7 @@ void ZStreamR_Base64Encode::Imp_Read(void* iDest, size_t iCount, size_t* oCountR
 				}
 			if (sourceCount == 0)
 				break;
-			sBase64Encode(sourceBuf, sourceCount, fSinkBuf);
+			spBase64Encode(sourceBuf, sourceCount, fSinkBuf);
 			fSinkCount = 0;
 			}
 		}
@@ -176,7 +176,7 @@ void ZStreamR_Base64Decode::Imp_Read(void* iDest, size_t iCount, size_t* oCountR
 				if (!fStreamSource.ReadByte(currChar))
 					break;
 
-				uint8 c = sBase64DecodeTable[currChar];
+				uint8 c = spBase64DecodeTable[currChar];
 				if (c != 0xFF)
 					{
 					source = (source << 6) | c;
@@ -216,7 +216,7 @@ ZStreamW_Base64Encode::~ZStreamW_Base64Encode()
 	if (fSourceCount > 0)
 		{
 		uint8 sinkBuf[4];
-		sBase64Encode(fSourceBuf, fSourceCount, sinkBuf);
+		spBase64Encode(fSourceBuf, fSourceCount, sinkBuf);
 		size_t countWritten;
 		fStreamSink.Write(sinkBuf, 4, &countWritten);
 		fSourceCount = 0;
@@ -244,7 +244,7 @@ void ZStreamW_Base64Encode::Imp_Write(const void* iSource, size_t iCount, size_t
 		if (fSourceCount == 3)
 			{
 			uint8 sinkBuf[4];
-			sBase64Encode(fSourceBuf, 3, sinkBuf);
+			spBase64Encode(fSourceBuf, 3, sinkBuf);
 			fSourceCount = 0;
 			size_t countWritten;
 			fStreamSink.Write(sinkBuf, 4, &countWritten);
@@ -257,7 +257,7 @@ void ZStreamW_Base64Encode::Imp_Flush()
 	if (fSourceCount > 0)
 		{
 		uint8 sinkBuf[4];
-		sBase64Encode(fSourceBuf, fSourceCount, sinkBuf);
+		spBase64Encode(fSourceBuf, fSourceCount, sinkBuf);
 		fSourceCount = 0;
 		fStreamSink.Write(sinkBuf, 4);
 		}
@@ -289,7 +289,7 @@ void ZStreamW_Base64Decode::Imp_Write(const void* iSource, size_t iCount, size_t
 		{
 		while (fSourceCount != 4 && countRemaining)
 			{
-			uint8 c = sBase64DecodeTable[*localSource++];
+			uint8 c = spBase64DecodeTable[*localSource++];
 
 			--countRemaining;
 			if (oCountWritten)

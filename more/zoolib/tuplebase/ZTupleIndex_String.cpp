@@ -66,7 +66,7 @@ void ZTupleIndex_String::Remove(uint64 iID, const ZTuple* iTuple)
 		fSet.erase(theKey);
 	}
 
-static void sExtractConstraint(const ZTName& iPropName,
+static void spExtractConstraint(const ZTName& iPropName,
 	vector<const ZTBSpec::Criterion*>& ioCriteria, string16& oValue)
 	{
 	for (vector<const ZTBSpec::Criterion*>::iterator critIter = ioCriteria.begin();
@@ -92,7 +92,7 @@ static void sExtractConstraint(const ZTName& iPropName,
 	ZUnimplemented();
 	}
 
-static bool sCheckForConstraint(
+static bool spCheckForConstraint(
 	const ZTName& iPropName, const ZTBSpec::CriterionSect& iCriterionSect)
 	{
 	for (ZTBSpec::CriterionSect::const_iterator critIter = iCriterionSect.begin(),
@@ -119,7 +119,7 @@ void ZTupleIndex_String::Find(const set<uint64>& iSkipIDs,
 		vector<const ZTBSpec::Criterion*>& ioCriteria, vector<uint64>& oIDs)
 	{
 	Key theKey;
-	sExtractConstraint(fPropName, ioCriteria, theKey.fValue);
+	spExtractConstraint(fPropName, ioCriteria, theKey.fValue);
 
 	theKey.fID = 0;
 	set<Key, Compare>::iterator lowerBound = fSet.lower_bound(theKey);
@@ -144,7 +144,7 @@ void ZTupleIndex_String::Find(const set<uint64>& iSkipIDs,
 
 size_t ZTupleIndex_String::CanHandle(const ZTBSpec::CriterionSect& iCriterionSect)
 	{
-	if (!sCheckForConstraint(fPropName, iCriterionSect))
+	if (!spCheckForConstraint(fPropName, iCriterionSect))
 		return 0;
 
 	// Our result is the number of tuples we'll likely have to visit

@@ -102,10 +102,10 @@ public:
 	~InitHelper__();
 private:
 	WSADATA fWSADATA;
-	static InitHelper__ sInitHelper__;
+	static InitHelper__ spInitHelper__;
 	};
 
-ZNet_Internet_WinSock::InitHelper__ ZNet_Internet_WinSock::InitHelper__::sInitHelper__;
+ZNet_Internet_WinSock::InitHelper__ ZNet_Internet_WinSock::InitHelper__::spInitHelper__;
 
 ZNet_Internet_WinSock::InitHelper__::InitHelper__()
 	{

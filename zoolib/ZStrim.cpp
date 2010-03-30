@@ -106,7 +106,7 @@ static const size_t kBufSize = sStackBufferSize;
 Copy data from \a iStrimR to \a iStrimW by reading it into a buffer and writing
 from that buffer.
 */
-static void sCopyReadToWrite(const ZStrimR& iStrimR, const ZStrimW& iStrimW,
+static void spCopyReadToWrite(const ZStrimR& iStrimR, const ZStrimW& iStrimW,
 	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
 	{
 	if (oCountCPRead)
@@ -614,7 +614,7 @@ and thus can be written to \a iStrimW by a single call to its \c Write method.
 */
 void ZStrimR::Imp_CopyTo(const ZStrimW& iStrimW,
 	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
-	{ sCopyReadToWrite(*this, iStrimW, iCountCP, oCountCPRead, oCountCPWritten); }
+	{ spCopyReadToWrite(*this, iStrimW, iCountCP, oCountCPRead, oCountCPWritten); }
 
 
 bool ZStrimR::Imp_ReadCP(UTF32& oCP)
@@ -1060,7 +1060,7 @@ and thus can be modified by calling \a iStrimR's \c Read method.
 */
 void ZStrimW::Imp_CopyFrom(const ZStrimR& iStrimR,
 	size_t iCountCP, size_t* oCountCPRead, size_t* oCountCPWritten)
-	{ sCopyReadToWrite(iStrimR, *this, iCountCP, oCountCPRead, oCountCPWritten); }
+	{ spCopyReadToWrite(iStrimR, *this, iCountCP, oCountCPRead, oCountCPWritten); }
 
 
 /// If this strim buffers data then pass it on to its ultimate destination.

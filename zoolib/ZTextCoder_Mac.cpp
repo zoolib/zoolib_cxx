@@ -75,7 +75,7 @@ class Make_Encoder
 #pragma mark -
 #pragma mark * ZTextCoder_Mac
 
-static TextEncoding sLookupName(const string& iName)
+static TextEncoding spLookupName(const string& iName)
 	{
 	TextEncoding theTE;
 	Str255 theNameStr255;
@@ -107,12 +107,12 @@ static TextEncoding sLookupName(const string& iName)
 
 ZTextDecoder_Mac::ZTextDecoder_Mac(const char* iName)
 	{
-	this->Init(sLookupName(iName));
+	this->Init(spLookupName(iName));
 	}
 
 ZTextDecoder_Mac::ZTextDecoder_Mac(const string& iName)
 	{
-	this->Init(sLookupName(iName));
+	this->Init(spLookupName(iName));
 	}
 
 ZTextDecoder_Mac::ZTextDecoder_Mac(TextEncoding iSourceEncoding)
@@ -125,8 +125,8 @@ ZTextDecoder_Mac::~ZTextDecoder_Mac()
 	::DisposeTextToUnicodeInfo(&fInfo);
 	}
 
-static ByteOffset sSourceOffsets[kBufSize];
-static bool sInitedSourceOffsets = false;
+static ByteOffset spSourceOffsets[kBufSize];
+static bool spInitedSourceOffsets = false;
 
 bool ZTextDecoder_Mac::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
@@ -135,8 +135,8 @@ bool ZTextDecoder_Mac::Decode(
 	// When we're working with a destination buffer that can't hold all the source material
 	// we have ConvertFromTextToUnicode write into the local array 'offsets' the byte
 	// offsets that correspond to each UTF-16 intermediate code unit generated.
-	// sSourceOffsets is used to tell ConvertFromTextToUnicode which offsets are
-	// 'significant', in our case that means all of them. We populate sSourceOffsets
+	// spSourceOffsets is used to tell ConvertFromTextToUnicode which offsets are
+	// 'significant', in our case that means all of them. We populate spSourceOffsets
 	// the first time we need to use it, it's then available for use in all
 	// subsequent invocations.
 	ByteOffset offsets[kBufSize];
@@ -172,21 +172,21 @@ bool ZTextDecoder_Mac::Decode(
 			// code units and so this iteration may be the one where we have to
 			// bail out early. So we pass the offset array to ConvertFromTextToUnicode in
 			// order to discover where any truncation in the source occurred.
-			if (!sInitedSourceOffsets)
+			if (!spInitedSourceOffsets)
 				{
 				// This is thread safe, even if two threads execute this at the same time
 				// the end result will be the same -- an array of kBufSize elements containing
-				// values from 0 to kBufSize - 1, and sInitedSourceOffsets being true.
+				// values from 0 to kBufSize - 1, and spInitedSourceOffsets being true.
 				for (size_t x = 0; x < kBufSize; ++x)
-					sSourceOffsets[x] = x;
-				sInitedSourceOffsets = true;
+					spSourceOffsets[x] = x;
+				spInitedSourceOffsets = true;
 				}
 			size_t countToConvert = min(iSourceBytes, kBufSize);
 			err = ::ConvertFromTextToUnicode(
 				fInfo,
 				countToConvert, localSource, 
 				flags,
-				countToConvert, sSourceOffsets, &countOffsets, offsets,
+				countToConvert, spSourceOffsets, &countOffsets, offsets,
 				kBufSize * sizeof(UniChar), &sourceConsumed, &utf16Generated, utf16Buffer);
 			}
 		else
@@ -295,12 +295,12 @@ void ZTextDecoder_Mac::Init(TextEncoding iSourceEncoding)
 
 ZTextEncoder_Mac::ZTextEncoder_Mac(const char* iName)
 	{
-	this->Init(sLookupName(iName));
+	this->Init(spLookupName(iName));
 	}
 
 ZTextEncoder_Mac::ZTextEncoder_Mac(const string& iName)
 	{
-	this->Init(sLookupName(iName));
+	this->Init(spLookupName(iName));
 	}
 
 ZTextEncoder_Mac::ZTextEncoder_Mac(TextEncoding iDestEncoding)
@@ -377,7 +377,7 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 		*oDestBytes = localDest - static_cast<uint8*>(iDest);
 	}
 
-static pascal OSStatus sUnicodeToTextFallback_Null(UniChar *iSrcUniStr, ByteCount iSrcUniStrLen,
+static pascal OSStatus spUnicodeToTextFallback_Null(UniChar *iSrcUniStr, ByteCount iSrcUniStrLen,
 	ByteCount *oSrcConvLen,
 	TextPtr oDestStr, ByteCount iDestStrLen, ByteCount *oDestConvLen,
 	LogicalAddress iInfoPtr, ConstUnicodeMappingPtr iUnicodeMappingPtr)
@@ -387,8 +387,8 @@ static pascal OSStatus sUnicodeToTextFallback_Null(UniChar *iSrcUniStr, ByteCoun
 	return noErr;
 	}
 
-static UnicodeToTextFallbackUPP sUnicodeToTextFallback_NullUPP
-	= NewUnicodeToTextFallbackUPP(sUnicodeToTextFallback_Null);
+static UnicodeToTextFallbackUPP spUnicodeToTextFallback_NullUPP
+	= NewUnicodeToTextFallbackUPP(spUnicodeToTextFallback_Null);
 
 void ZTextEncoder_Mac::Init(TextEncoding iDestEncoding)
 	{
@@ -403,7 +403,7 @@ void ZTextEncoder_Mac::Init(TextEncoding iDestEncoding)
 	if (noErr != ::CreateUnicodeToTextInfo(&theMapping, &fInfo))
 		throw runtime_error("ZTextDecoder_Mac, couldn't create converter");
 
-	::SetFallbackUnicodeToText(fInfo, sUnicodeToTextFallback_NullUPP,
+	::SetFallbackUnicodeToText(fInfo, spUnicodeToTextFallback_NullUPP,
 		kUnicodeFallbackCustomOnly | kUnicodeFallbackInterruptSafeMask, nullptr);
 	}
 

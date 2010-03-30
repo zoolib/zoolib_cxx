@@ -89,7 +89,7 @@ void sParseStringAndAppend_T(
 		}
 	}
 
-static void sNormalize_KeepLeadingBounces(const vector<string>& iComps, vector<string>& oComps)
+static void spNormalize_KeepLeadingBounces(const vector<string>& iComps, vector<string>& oComps)
 	{
 	for (vector<string>::const_iterator current = iComps.begin();
 		current != iComps.end(); ++current)
@@ -131,7 +131,7 @@ void ZTrail::sParseStringAndAppend(
 size_t ZTrail::sNormalize_ReturnLeadingBounces(const vector<string>& iComps,
 	vector<string>& oComps)
 	{
-	sNormalize_KeepLeadingBounces(iComps, oComps);
+	spNormalize_KeepLeadingBounces(iComps, oComps);
 	size_t bounces = 0;
 	while (oComps.size() && oComps.front().empty())
 		{
@@ -372,7 +372,7 @@ ZTrail ZTrail::SubTrail(size_t iBegin) const
 ZTrail ZTrail::Normalized() const
 	{
 	vector<string> newComps;
-	sNormalize_KeepLeadingBounces(fComps, newComps);
+	spNormalize_KeepLeadingBounces(fComps, newComps);
 	return ZTrail(newComps.begin(), newComps.end());
 	}
 
@@ -380,7 +380,7 @@ ZTrail ZTrail::Normalized() const
 ZTrail& ZTrail::Normalize()
 	{
 	vector<string> newComps;
-	sNormalize_KeepLeadingBounces(fComps, newComps);
+	spNormalize_KeepLeadingBounces(fComps, newComps);
 	fComps = newComps;
 	return *this;
 	}

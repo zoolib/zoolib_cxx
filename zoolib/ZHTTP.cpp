@@ -53,7 +53,7 @@ static const char LF = '\n';
 #pragma mark -
 #pragma mark * Utility stuff
 
-static void sAppend(Map& ioFields, const string& iName, const Val& iValue)
+static void spAppend(Map& ioFields, const string& iName, const Val& iValue)
 	{
 	Seq theSeq = ioFields.Get(iName).Get_T<Seq>();
 	theSeq.Append(iValue);
@@ -61,7 +61,7 @@ static void sAppend(Map& ioFields, const string& iName, const Val& iValue)
 //	ioFields.Mutable(iName).MutableSeq().Append(iValue);
 	}
 
-static uint32 sHexCharToUInt(char iChar)
+static uint32 spHexCharToUInt(char iChar)
 	{
 	if (iChar >= '0' && iChar <= '9')
 		return iChar - '0';
@@ -73,7 +73,7 @@ static uint32 sHexCharToUInt(char iChar)
 	return 0;
 	}
 
-static bool sReadDigit(const ZStreamU& iStream, int& oDigit)
+static bool spReadDigit(const ZStreamU& iStream, int& oDigit)
 	{
 	char readChar;
 	if (!iStream.ReadChar(readChar))
@@ -89,13 +89,13 @@ static bool sReadDigit(const ZStreamU& iStream, int& oDigit)
 	return true;
 	}
 
-static bool sReadInt32(const ZStreamU& iStream, int32* oInt32)
+static bool spReadInt32(const ZStreamU& iStream, int32* oInt32)
 	{
 	if (oInt32)
 		*oInt32 = 0;
 
 	int digit;
-	if (!sReadDigit(iStream, digit))
+	if (!spReadDigit(iStream, digit))
 		return false;
 	for (;;)
 		{
@@ -104,19 +104,19 @@ static bool sReadInt32(const ZStreamU& iStream, int32* oInt32)
 			*oInt32 *= 10;
 			*oInt32 += digit;
 			}
-		if (!sReadDigit(iStream, digit))
+		if (!spReadDigit(iStream, digit))
 			break;
 		}
 	return true;
 	}
 
-static bool sReadInt64(const ZStreamU& iStream, int64* oInt64)
+static bool spReadInt64(const ZStreamU& iStream, int64* oInt64)
 	{
 	if (oInt64)
 		*oInt64 = 0;
 
 	int digit;
-	if (!sReadDigit(iStream, digit))
+	if (!spReadDigit(iStream, digit))
 		return false;
 	for (;;)
 		{
@@ -125,7 +125,7 @@ static bool sReadInt64(const ZStreamU& iStream, int64* oInt64)
 			*oInt64 *= 10;
 			*oInt64 += digit;
 			}
-		if (!sReadDigit(iStream, digit))
+		if (!spReadDigit(iStream, digit))
 			break;
 		}
 	return true;
@@ -300,7 +300,7 @@ bool sReadResponse(const ZStreamU& iStream, int32* oResultCode, string* oResultM
 
 	sSkipLWS(iStream);
 
-	if (!sReadInt32(iStream, oResultCode))
+	if (!spReadInt32(iStream, oResultCode))
 		return false;
 
 	sSkipLWS(iStream);
@@ -349,7 +349,7 @@ bool sReadHeaderLineNoParsing(const ZStreamU& iStream, Map* ioFields)
 	string fieldBody;
 	iStream.CopyAllTo(ZStreamWPos_String(fieldBody));
 	if (ioFields)
-		sAppend(*ioFields, fieldNameExact, fieldBody);
+		spAppend(*ioFields, fieldNameExact, fieldBody);
 
 	return true;
 	}
@@ -395,7 +395,7 @@ bool sReadHeaderLine(const ZStreamU& iStream, Map* ioFields)
 				break;
 
 			if (ioFields)
-				sAppend(*ioFields, "accept-charset", charset);
+				spAppend(*ioFields, "accept-charset", charset);
 
 			sSkipLWS(iStream);
 
@@ -414,7 +414,7 @@ bool sReadHeaderLine(const ZStreamU& iStream, Map* ioFields)
 				break;
 
 			if (ioFields)
-				sAppend(*ioFields, "accept-encoding", encoding);
+				spAppend(*ioFields, "accept-encoding", encoding);
 
 			sSkipLWS(iStream);
 
@@ -496,7 +496,7 @@ bool sReadHeaderLine(const ZStreamU& iStream, Map* ioFields)
 				break;
 
 			if (ioFields)
-				sAppend(*ioFields, "content-encoding", encoding);
+				spAppend(*ioFields, "content-encoding", encoding);
 
 			sSkipLWS(iStream);
 
@@ -515,7 +515,7 @@ bool sReadHeaderLine(const ZStreamU& iStream, Map* ioFields)
 				break;
 
 			if (ioFields)
-				sAppend(*ioFields, "content-language", language);
+				spAppend(*ioFields, "content-language", language);
 
 			sSkipLWS(iStream);
 
@@ -539,7 +539,7 @@ bool sReadHeaderLine(const ZStreamU& iStream, Map* ioFields)
 		string fieldBody;
 		iStream.CopyAllTo(ZStreamWPos_String(fieldBody));
 		if (ioFields)
-			sAppend(*ioFields, fieldName, fieldBody);
+			spAppend(*ioFields, fieldName, fieldBody);
 		}
 
 	return true;
@@ -823,7 +823,7 @@ bool sRead_accept(const ZStreamU& iStream, Map* ioFields)
 		if (parameters)
 			temp.Set("parameters", parameters);
 		if (ioFields)
-			sAppend(*ioFields, "accept", temp);
+			spAppend(*ioFields, "accept", temp);
 
 		sSkipLWS(iStream);
 
@@ -867,7 +867,7 @@ bool sRead_accept_language(const ZStreamU& iStream, Map* ioFields)
 			temp.Set("parameters", parameters);
 
 		if (ioFields)
-			sAppend(*ioFields, "accept-language", temp);
+			spAppend(*ioFields, "accept-language", temp);
 
 		sSkipLWS(iStream);
 
@@ -919,7 +919,7 @@ bool sRead_range(const ZStreamU& iStream, Map& oRange)
 		sSkipLWS(iStream);
 
 		int64 lastBytes;
-		if (!sReadInt64(iStream, &lastBytes))
+		if (!spReadInt64(iStream, &lastBytes))
 			return false;
 		oRange.Set("last", lastBytes);
 		return true;
@@ -929,7 +929,7 @@ bool sRead_range(const ZStreamU& iStream, Map& oRange)
 		sSkipLWS(iStream);
 
 		int64 begin;
-		if (!sReadInt64(iStream, &begin))
+		if (!spReadInt64(iStream, &begin))
 			return false;
 
 		sSkipLWS(iStream);
@@ -942,7 +942,7 @@ bool sRead_range(const ZStreamU& iStream, Map& oRange)
 		sSkipLWS(iStream);
 
 		int64 end;
-		if (sReadInt64(iStream, &end))
+		if (spReadInt64(iStream, &end))
 			oRange.Set("end", end);
 		return true;
 		}
@@ -1048,7 +1048,7 @@ bool sRead_content_length(const ZStreamU& iStream, Map* ioFields)
 bool sRead_content_length(const ZStreamU& iStream, int64& oLength)
 	{
 	sSkipLWS(iStream);
-	return sReadInt64(iStream, &oLength);
+	return spReadInt64(iStream, &oLength);
 	}
 
 bool sRead_content_location(const ZStreamU& iStream, Map* ioFields);
@@ -1082,7 +1082,7 @@ bool sRead_content_range(const ZStreamU& iStream,
 
 	sSkipLWS(iStream);
 
-	if (!sReadInt64(iStream, &oBegin))
+	if (!spReadInt64(iStream, &oBegin))
 		return false;
 
 	sSkipLWS(iStream);
@@ -1092,7 +1092,7 @@ bool sRead_content_range(const ZStreamU& iStream,
 
 	sSkipLWS(iStream);
 
-	if (!sReadInt64(iStream, &oEnd))
+	if (!spReadInt64(iStream, &oEnd))
 		return false;
 
 	sSkipLWS(iStream);
@@ -1102,7 +1102,7 @@ bool sRead_content_range(const ZStreamU& iStream,
 
 	sSkipLWS(iStream);
 
-	if (!sReadInt64(iStream, &oMaxLength))
+	if (!spReadInt64(iStream, &oMaxLength))
 		return false;
 
 	return true;
@@ -1142,13 +1142,13 @@ bool sReadHTTPVersion(const ZStreamU& iStream, int32* oVersionMajor, int32* oVer
 	if (!sReadChars(iStream, "HTTP/"))
 		return false;
 
-	if (!sReadInt32(iStream, oVersionMajor))
+	if (!spReadInt32(iStream, oVersionMajor))
 		return false;
 
 	if (!sReadChar(iStream, '.'))
 		return false;
 
-	if (!sReadInt32(iStream, oVersionMinor))
+	if (!spReadInt32(iStream, oVersionMinor))
 		return false;
 	return true;
 	}
@@ -1611,7 +1611,7 @@ bool sReadDecodedChars(const ZStreamU& iStream, string& ioString)
 			}
 		else
 			{
-			ioString.append(1, char((sHexCharToUInt(readChar) << 4) + sHexCharToUInt(readChar2)));
+			ioString.append(1, char((spHexCharToUInt(readChar) << 4) + spHexCharToUInt(readChar2)));
 			}
 		}
 	return true;

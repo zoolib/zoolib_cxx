@@ -95,8 +95,8 @@ private:
 	PTuple* pGetPTupleMustExist(uint64 iID);
 	PTuple* pGetPTupleIfExtant(uint64 iID);
 
-	void Callback();
-	static void sCallback(void* iRefcon);
+	void pCallback();
+	static void spCallback(void* iRefcon);
 
 	ZMutex fMutex_Structure;
 	ZCondition fCondition;

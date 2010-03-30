@@ -58,7 +58,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 #if DO_IT_OURSELVES
 // Return 1 if iYear (1900-based) is a leap year. 0 Otherwise
-static int sLeapYear(int iYear)
+static int spLeapYear(int iYear)
 	{
 	if (iYear % 4)
 		{
@@ -86,14 +86,14 @@ static int sLeapYear(int iYear)
 static const uint32 kSecondsPerMinute = 60;
 static const uint32 kSecondsPerHour = 60 * kSecondsPerMinute;
 static const uint32 kSecondsPerDay = 24 * kSecondsPerHour;
-static const uint32 sMonthToDays[2][13] =
+static const uint32 spMonthToDays[2][13] =
 	{
 	{ 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 },
 	{ 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 }
 	};
 #endif // DO_IT_OURSELVES
 
-static void sTimeToTM(time_t iTime_t, struct tm& oTM)
+static void spTimeToTM(time_t iTime_t, struct tm& oTM)
 	{
 	#if DO_IT_OURSELVES
 
@@ -119,7 +119,7 @@ static void sTimeToTM(time_t iTime_t, struct tm& oTM)
 			// incredibly ugly to have to iterate (as of 2005) 105 times
 			// to figure out the number of years/number of days represented
 			// by iTime_t.
-			uint32 daysThisYear = sLeapYear(years) ? 366 : 365;
+			uint32 daysThisYear = spLeapYear(years) ? 366 : 365;
 	
 			if (days < daysThisYear)
 				break;
@@ -133,15 +133,15 @@ static void sTimeToTM(time_t iTime_t, struct tm& oTM)
 	
 		uint32 months = 0;
 	
-		uint32 isLeapYear = sLeapYear(years);
+		uint32 isLeapYear = spLeapYear(years);
 	
 		for (;;)
 			{
-			uint32 daysThruThisMonth = sMonthToDays[isLeapYear][months + 1];
+			uint32 daysThruThisMonth = spMonthToDays[isLeapYear][months + 1];
 	
 			if (days < daysThruThisMonth)
 				{
-				days -= sMonthToDays[isLeapYear][months];
+				days -= spMonthToDays[isLeapYear][months];
 				break;
 				}
 	
@@ -167,7 +167,7 @@ static void sTimeToTM(time_t iTime_t, struct tm& oTM)
 	#endif
 	}
 
-static time_t sTMToTime(const struct tm& iTM)
+static time_t spTMToTime(const struct tm& iTM)
 	{
 	time_t result;
 
@@ -204,7 +204,7 @@ static time_t sTMToTime(const struct tm& iTM)
 // current timezone value for %z, and usually an empty string for %Z.
 // So we handle the %z and %Z fields ourselves.
 
-static string sFormatTimeUTC(const struct tm& iTM, const string& iFormat)
+static string spFormatTimeUTC(const struct tm& iTM, const string& iFormat)
 	{	
 	string realFormat;
 	realFormat.reserve(iFormat.size());
@@ -241,7 +241,7 @@ static string sFormatTimeUTC(const struct tm& iTM, const string& iFormat)
 	return buf;
 	}
 
-static string sFormatTimeLocal(const struct tm& iTM, const string& iFormat, int iDeltaSeconds)
+static string spFormatTimeLocal(const struct tm& iTM, const string& iFormat, int iDeltaSeconds)
 	{
 	string realFormat;
 	realFormat.reserve(iFormat.size());
@@ -293,11 +293,11 @@ string ZUtil_Time::sAsStringUTC(ZTime iTime, const string& iFormat)
 		return "invalid";
 
 	struct tm theTM;
-	sTimeToTM(time_t(iTime.fVal), theTM);
+	spTimeToTM(time_t(iTime.fVal), theTM);
 
 	#if DO_IT_OURSELVES
 
-		return sFormatTimeUTC(theTM, iFormat);
+		return spFormatTimeUTC(theTM, iFormat);
 
 	#else
 
@@ -309,7 +309,7 @@ string ZUtil_Time::sAsStringUTC(ZTime iTime, const string& iFormat)
 	}
 
 #if DO_IT_OURSELVES
-static int sUTCToLocalDelta()
+static int spUTCToLocalDelta()
 	{
 	#if ZCONFIG_SPI_Enabled(POSIX)
 
@@ -391,10 +391,10 @@ string ZUtil_Time::sAsStringLocal(ZTime iTime, const string& iFormat)
 
 	#if DO_IT_OURSELVES
 
-		int delta = sUTCToLocalDelta();
+		int delta = spUTCToLocalDelta();
 		time_t localTime = time_t(iTime.fVal + delta);
-		sTimeToTM(localTime, theTM);
-		return sFormatTimeLocal(theTM, iFormat, delta);
+		spTimeToTM(localTime, theTM);
+		return spFormatTimeLocal(theTM, iFormat, delta);
 
 	#else
 
@@ -408,7 +408,7 @@ string ZUtil_Time::sAsStringLocal(ZTime iTime, const string& iFormat)
 	#endif
 	}
 
-static string sYmdHM(ZTime iTime, bool iIncludeT)
+static string spYmdHM(ZTime iTime, bool iIncludeT)
 	{
 	if (iIncludeT)
 		return ZUtil_Time::sAsStringUTC(iTime, "%Y-%m-%dT%H:%M:");
@@ -423,7 +423,7 @@ string ZUtil_Time::sAsString_ISO8601(ZTime iTime, bool iIncludeT)
 	// To get a leading zero in the seconds' tens column we add 100
 	// to the count of seconds, so to get up to 7 digits in the fraction we
 	// need to allow ten digits overall.
-	const string YmdHM = sYmdHM(iTime, iIncludeT);
+	const string YmdHM = spYmdHM(iTime, iIncludeT);
 	return YmdHM + ZString::sFormat("%.10g", 100.0 + fmod(iTime.fVal, 60)).substr(1);
 	}
 
@@ -437,13 +437,13 @@ string ZUtil_Time::sAsString_ISO8601_s(ZTime iTime, bool iIncludeT)
 
 string ZUtil_Time::sAsString_ISO8601_ms(ZTime iTime, bool iIncludeT)
 	{
-	const string YmdHM = sYmdHM(iTime, iIncludeT);
+	const string YmdHM = spYmdHM(iTime, iIncludeT);
 	return YmdHM + ZString::sFormat("%06.3f", fmod(iTime.fVal, 60));
 	}
 
 string ZUtil_Time::sAsString_ISO8601_us(ZTime iTime, bool iIncludeT)
 	{
-	const string YmdHM = sYmdHM(iTime, iIncludeT);
+	const string YmdHM = spYmdHM(iTime, iIncludeT);
 	return YmdHM + ZString::sFormat("%09.6f", fmod(iTime.fVal, 60));
 	}
 
@@ -474,7 +474,7 @@ string ZUtil_Time::sAsString_ISO8601_us(ZTime iTime, bool iIncludeT)
 
 	if (gotIt)
 		{
-		time_t theTime = sTMToTime(theTM);
+		time_t theTime = spTMToTime(theTM);
 		return seconds + theTime;
 		}
 	return ZTime();

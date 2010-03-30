@@ -158,22 +158,22 @@ bool NPObjectH::Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount)
 #pragma mark -
 #pragma mark * ObjectH
 
-NPClass_Z ObjectH::sNPClass(
-	sAllocate,
-	sDeallocate,
-	sInvalidate,
-	sHasMethod,
-	sInvoke,
-	sInvokeDefault,
-	sHasProperty,
-	sGetProperty,
-	sSetProperty,
-	sRemoveProperty,
-	sEnumerate);
+NPClass_Z ObjectH::spNPClass(
+	spAllocate,
+	spDeallocate,
+	spInvalidate,
+	spHasMethod,
+	spInvoke,
+	spInvokeDefault,
+	spHasProperty,
+	spGetProperty,
+	spSetProperty,
+	spRemoveProperty,
+	spEnumerate);
 
 ObjectH::ObjectH()
 	{
-	this->_class = &sNPClass;
+	this->_class = &spNPClass;
 	this->referenceCount = 0;
 	}
 
@@ -244,34 +244,34 @@ bool ObjectH::Imp_Enumerate(NPIdentifier*& oIDs, uint32_t& oCount)
 bool ObjectH::Imp_Enumerate(std::vector<string>& oNames)
 	{ return false; }
 
-NPObject* ObjectH::sAllocate(NPP npp, NPClass *aClass)
+NPObject* ObjectH::spAllocate(NPP npp, NPClass *aClass)
 	{
 	ZUnimplemented();
 	return nullptr;
 	}
 
-void ObjectH::sDeallocate(NPObject* npobj)
+void ObjectH::spDeallocate(NPObject* npobj)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		delete static_cast<ObjectH*>(npobj);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-void ObjectH::sInvalidate(NPObject* npobj)
+void ObjectH::spInvalidate(NPObject* npobj)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		static_cast<ObjectH*>(npobj)->Imp_Invalidate();
 	ZNETSCAPE_AFTER_VOID
 	}
 
-bool ObjectH::sHasMethod(NPObject* npobj, NPIdentifier name)
+bool ObjectH::spHasMethod(NPObject* npobj, NPIdentifier name)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		return static_cast<ObjectH*>(npobj)->Imp_HasMethod(sAsString(name));
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool ObjectH::sInvoke(NPObject* npobj,
+bool ObjectH::spInvoke(NPObject* npobj,
 	NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
@@ -283,7 +283,7 @@ bool ObjectH::sInvoke(NPObject* npobj,
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool ObjectH::sInvokeDefault(NPObject* npobj,
+bool ObjectH::spInvokeDefault(NPObject* npobj,
 	const NPVariant* args, uint32_t argCount, NPVariant* result)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
@@ -294,7 +294,7 @@ bool ObjectH::sInvokeDefault(NPObject* npobj,
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool ObjectH::sHasProperty(NPObject* npobj, NPIdentifier name)
+bool ObjectH::spHasProperty(NPObject* npobj, NPIdentifier name)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		{
@@ -306,7 +306,7 @@ bool ObjectH::sHasProperty(NPObject* npobj, NPIdentifier name)
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool ObjectH::sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result)
+bool ObjectH::spGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		if (sIsString(name))
@@ -324,7 +324,7 @@ bool ObjectH::sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool ObjectH::sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value)
+bool ObjectH::spSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		if (sIsString(name))
@@ -342,7 +342,7 @@ bool ObjectH::sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* 
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool ObjectH::sRemoveProperty(NPObject* npobj, NPIdentifier name)
+bool ObjectH::spRemoveProperty(NPObject* npobj, NPIdentifier name)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		if (sIsString(name))
@@ -352,7 +352,7 @@ bool ObjectH::sRemoveProperty(NPObject* npobj, NPIdentifier name)
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool ObjectH::sEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t* oCount)
+bool ObjectH::spEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t* oCount)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		return static_cast<ObjectH*>(npobj)->Imp_Enumerate(*oIdentifiers, *oCount);
@@ -363,12 +363,12 @@ bool ObjectH::sEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t*
 #pragma mark -
 #pragma mark * HostMeister
 
-static HostMeister* sHostMeister;
+static HostMeister* spHostMeister;
 
 HostMeister* HostMeister::sGet()
 	{
-	ZAssert(sHostMeister);
-	return sHostMeister;
+	ZAssert(spHostMeister);
+	return spHostMeister;
 	}
 
 Host* HostMeister::sHostFromNPP(NPP npp)
@@ -479,14 +479,14 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
 
 HostMeister::HostMeister()
 	{
-	ZAssert(!sHostMeister);
-	sHostMeister = this;
+	ZAssert(!spHostMeister);
+	spHostMeister = this;
 	}
 
 HostMeister::~HostMeister()
 	{
-	ZAssert(sHostMeister == this);
-	sHostMeister = nullptr;
+	ZAssert(spHostMeister == this);
+	spHostMeister = nullptr;
 	}
 
 string HostMeister::StringFromIdentifier(NPIdentifier identifier)

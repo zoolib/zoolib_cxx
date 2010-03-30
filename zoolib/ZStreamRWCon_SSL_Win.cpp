@@ -30,6 +30,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <schannel.h>
 
+// Some #include fixups
+#ifndef SecInvalidateHandle
+	#define SecInvalidateHandle( x )    \
+            ((PSecHandle) x)->dwLower = (ULONG_PTR) -1 ; \
+            ((PSecHandle) x)->dwUpper = (ULONG_PTR) -1 ;
+#endif
+
+#ifndef SP_PROT_SSL3TLS1_CLIENTS
+	#define SP_PROT_SSL3TLS1_CLIENTS        (SP_PROT_TLS1_CLIENT | SP_PROT_SSL3_CLIENT)
+#endif
+
 #ifndef SEC_I_CONTEXT_EXPIRED
 	#define SEC_I_CONTEXT_EXPIRED _HRESULT_TYPEDEF_(0x00090317L)
 #endif
@@ -118,7 +129,7 @@ static bool spAcquireCredentials(bool iVerify, bool iCheckName, CredHandle& oCre
 
 	return SEC_E_OK == sPSFT->AcquireCredentialsHandleA(
 		nullptr,
-		UNISP_NAME_A,
+		const_cast<SEC_CHAR*>(UNISP_NAME_A),
 		SECPKG_CRED_OUTBOUND,
 		nullptr,
 		&theSCC,

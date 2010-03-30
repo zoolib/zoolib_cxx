@@ -844,7 +844,7 @@ void* Host_Std::Host_GetJavaPeer(NPP npp)
 	return nullptr;
 	}
 
-static string sFixURL(const string& iBaseURL, const string& iRelativeURL)
+static string spFixURL(const string& iBaseURL, const string& iRelativeURL)
 	{
 	string relScheme;
 	string relHost;
@@ -891,7 +891,7 @@ static string sFixURL(const string& iBaseURL, const string& iRelativeURL)
 NPError Host_Std::Host_GetURLNotify(NPP npp,
 	const char* URL, const char* window, void* notifyData)
 	{
-	const string theURL = sFixURL(fURL, URL);
+	const string theURL = spFixURL(fURL, URL);
 	if (theURL.empty())
 		return NPERR_INVALID_URL;
 
@@ -913,7 +913,7 @@ NPError Host_Std::Host_PostURLNotify(NPP npp,
 	const char* URL, const char* window,
 	uint32 len, const char* buf, NPBool file, void* notifyData)
 	{
-	const string theURL = sFixURL(fURL, URL);
+	const string theURL = spFixURL(fURL, URL);
 	if (theURL.empty())
 		return NPERR_INVALID_URL;
 

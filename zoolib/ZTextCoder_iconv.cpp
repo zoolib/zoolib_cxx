@@ -69,21 +69,21 @@ class Make_Encoder
 #pragma mark * Helper functions
 
 typedef size_t (*iconvproc_const_t)(iconv_t cd, const char**, size_t*, char**, size_t*);
-static inline size_t sIconvIntermediary(iconvproc_const_t iProc,
+static inline size_t spIconvIntermediary(iconvproc_const_t iProc,
 	iconv_t cd, const char** inbuf, size_t *inbytesleft, char** outbuf, size_t *outbytesleft)
 	{
 	return iProc(cd, inbuf, inbytesleft, outbuf, outbytesleft);
 	}
 
 typedef size_t (*iconvproc_t)(iconv_t cd, char**, size_t*, char**, size_t*);
-static inline size_t sIconvIntermediary(iconvproc_t iProc,
+static inline size_t spIconvIntermediary(iconvproc_t iProc,
 	iconv_t cd, const char** inbuf, size_t *inbytesleft, char** outbuf, size_t *outbytesleft)
 	{
 	char** inbufNonConst = const_cast<char**>(const_cast<char* const*>(inbuf));
 	return iProc(cd, inbufNonConst, inbytesleft, outbuf, outbytesleft);
 	}
 
-size_t static sIconv(
+size_t static spIconv(
 	iconv_t cd, const char** inbuf, size_t *inbytesleft, char** outbuf, size_t *outbytesleft)
 	{
 	// Different versions of iconv.h may declare inbuf as being const or non-const.
@@ -94,19 +94,19 @@ size_t static sIconv(
 
 	// So we don't know if inbuf should be 'const char**' or 'char**', and there's no
 	// type to which we can unconditionally cast that will then be implicitly cast to
-	// the appropriate type. So we pass iconv to the overloaded sIconvIntermediary function,
+	// the appropriate type. So we pass iconv to the overloaded spIconvIntermediary function,
 	// the appropriate version of which will be selected by the compiler. One version
 	// simply calls the passed in function, the other does an appropriate cast.
 	// The actual code generated will generally be identical to a simple invocation of iconv.
 
-	return sIconvIntermediary(iconv, cd, inbuf, inbytesleft, outbuf, outbytesleft);
+	return spIconvIntermediary(iconv, cd, inbuf, inbytesleft, outbuf, outbytesleft);
 	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZTextDecoder_iconv
 
-static iconv_t sIconvOpenDecoder(const string& iSourceName)
+static iconv_t spIconvOpenDecoder(const string& iSourceName)
 	{
 	iconv_t result;
 	if (ZCONFIG(Endian, Big))
@@ -119,9 +119,9 @@ static iconv_t sIconvOpenDecoder(const string& iSourceName)
 	return result;
 	}
 
-static iconv_t sOpenDecoder(const string& iSourceName)
+static iconv_t spOpenDecoder(const string& iSourceName)
 	{
-	if (iconv_t result = sIconvOpenDecoder(iSourceName))
+	if (iconv_t result = spIconvOpenDecoder(iSourceName))
 		return result;
 
 	// Work our way through any aliases ZTextCoder may know about
@@ -129,7 +129,7 @@ static iconv_t sOpenDecoder(const string& iSourceName)
 	ZTextCoder::sGetAliases(iSourceName, aliases);
 	for (vector<string>::iterator i = aliases.begin(); i != aliases.end(); ++i)
 		{
-		if (iconv_t result = sIconvOpenDecoder(*i))
+		if (iconv_t result = spIconvOpenDecoder(*i))
 			return result;
 		}
 	return 0;
@@ -137,14 +137,14 @@ static iconv_t sOpenDecoder(const string& iSourceName)
 
 ZTextDecoder_iconv::ZTextDecoder_iconv(const string& iSourceName)
 	{
-	fConverter = sOpenDecoder(iSourceName);
+	fConverter = spOpenDecoder(iSourceName);
 	if (!fConverter)
 		throw runtime_error("Couldn't open converter");
 	}
 
 ZTextDecoder_iconv::ZTextDecoder_iconv(const char* iSourceName)
 	{
-	fConverter = sOpenDecoder(iSourceName);
+	fConverter = spOpenDecoder(iSourceName);
 	if (!fConverter)
 		throw runtime_error("Couldn't open converter");
 	}
@@ -169,7 +169,7 @@ bool ZTextDecoder_iconv::Decode(
 	bool sourceComplete = true;
 	while (localSourceBytes && localDestBytes)
 		{
-		if (size_t(-1) == sIconv(
+		if (size_t(-1) == spIconv(
 			fConverter, &localSource, &localSourceBytes, &localDest, &localDestBytes))
 			{
 			int err = errno;
@@ -213,7 +213,7 @@ void ZTextDecoder_iconv::Reset()
 #pragma mark -
 #pragma mark * ZTextEncoder_iconv
 
-static iconv_t sIconvOpenEncoder(const string& iDestName)
+static iconv_t spIconvOpenEncoder(const string& iDestName)
 	{
 	iconv_t result;
 	if (ZCONFIG(Endian, Big))
@@ -226,9 +226,9 @@ static iconv_t sIconvOpenEncoder(const string& iDestName)
 	return result;
 	}
 
-static iconv_t sOpenEncoder(const string& iDestName)
+static iconv_t spOpenEncoder(const string& iDestName)
 	{
-	if (iconv_t result = sIconvOpenEncoder(iDestName))
+	if (iconv_t result = spIconvOpenEncoder(iDestName))
 		return result;
 
 	// Work our way through any aliases ZTextCoder may know about
@@ -236,7 +236,7 @@ static iconv_t sOpenEncoder(const string& iDestName)
 	ZTextCoder::sGetAliases(iDestName, aliases);
 	for (vector<string>::iterator i = aliases.begin(); i != aliases.end(); ++i)
 		{
-		if (iconv_t result = sIconvOpenEncoder(*i))
+		if (iconv_t result = spIconvOpenEncoder(*i))
 			return result;
 		}
 	return 0;
@@ -244,14 +244,14 @@ static iconv_t sOpenEncoder(const string& iDestName)
 
 ZTextEncoder_iconv::ZTextEncoder_iconv(const string& iDestName)
 	{
-	fConverter = sOpenEncoder(iDestName);
+	fConverter = spOpenEncoder(iDestName);
 	if (!fConverter)
 		throw runtime_error("Couldn't open converter");
 	}
 
 ZTextEncoder_iconv::ZTextEncoder_iconv(const char* iDestName)
 	{
-	fConverter = sOpenEncoder(iDestName);
+	fConverter = spOpenEncoder(iDestName);
 	if (!fConverter)
 		throw runtime_error("Couldn't open converter");
 	}
@@ -272,7 +272,7 @@ void ZTextEncoder_iconv::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 
 	while (localSourceBytes && localDestBytes)
 		{
-		if (size_t(-1) == sIconv(
+		if (size_t(-1) == spIconv(
 			fConverter, &localSource, &localSourceBytes, &localDest, &localDestBytes))
 			{
 			int err = errno;

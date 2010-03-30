@@ -294,7 +294,7 @@ ZTSWatcherMUX::ZTSWatcherMUX(ZRef<ZTSWatcher> iTSWatcher,
 	fCacheSize_Queries(iCacheSize_Queries),
 	fCacheSize_Tuples(iCacheSize_Tuples)
 	{
-	fTSWatcher->SetCallback(sCallback, this);
+	fTSWatcher->SetCallback(spCallback, this);
 	}
 
 ZTSWatcherMUX::~ZTSWatcherMUX()
@@ -965,7 +965,7 @@ ZTSWatcherMUX::PTuple* ZTSWatcherMUX::pGetPTupleIfExtant(uint64 iID)
 	return nullptr;
 	}
 
-void ZTSWatcherMUX::Callback()
+void ZTSWatcherMUX::pCallback()
 	{
 	ZMutexLocker locker(fMutex_Structure);
 	if (!fForceNextSync)
@@ -991,8 +991,8 @@ void ZTSWatcherMUX::Callback()
 		}
 	}
 
-void ZTSWatcherMUX::sCallback(void* iRefcon)
-	{ static_cast<ZTSWatcherMUX*>(iRefcon)->Callback(); }
+void ZTSWatcherMUX::spCallback(void* iRefcon)
+	{ static_cast<ZTSWatcherMUX*>(iRefcon)->pCallback(); }
 
 // =================================================================================================
 #pragma mark -

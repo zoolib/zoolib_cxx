@@ -123,24 +123,24 @@ protected:
 	virtual bool Imp_Enumerate(std::vector<string>& oNames);
 
 private:
-	static NPObject* sAllocate(NPP npp, NPClass *aClass);	
-	static void sDeallocate(NPObject* npobj);
-	static void sInvalidate(NPObject* npobj);
-	static bool sHasMethod(NPObject* npobj, NPIdentifier name);
+	static NPObject* spAllocate(NPP npp, NPClass *aClass);	
+	static void spDeallocate(NPObject* npobj);
+	static void spInvalidate(NPObject* npobj);
+	static bool spHasMethod(NPObject* npobj, NPIdentifier name);
 
-	static bool sInvoke(NPObject* npobj,
+	static bool spInvoke(NPObject* npobj,
 		NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result);
 
-	static bool sInvokeDefault(NPObject* npobj,
+	static bool spInvokeDefault(NPObject* npobj,
 		const NPVariant* args, uint32_t argCount, NPVariant* result);
 
-	static bool sHasProperty(NPObject* npobj, NPIdentifier name);
-	static bool sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result);
-	static bool sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value);
-	static bool sRemoveProperty(NPObject* npobj, NPIdentifier name);
-	static bool sEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t* oCount);
+	static bool spHasProperty(NPObject* npobj, NPIdentifier name);
+	static bool spGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result);
+	static bool spSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value);
+	static bool spRemoveProperty(NPObject* npobj, NPIdentifier name);
+	static bool spEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t* oCount);
 
-	static NPClass_Z sNPClass;
+	static NPClass_Z spNPClass;
 	};
 
 // =================================================================================================

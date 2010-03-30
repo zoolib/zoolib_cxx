@@ -335,7 +335,7 @@ bool StreamerCopier_Chunked::Work()
 #pragma mark -
 #pragma mark * ZBlackBerryServer
 
-static string sReadString(const ZStreamR& r)
+static string spReadString(const ZStreamR& r)
 	{
 	if (size_t theLength = r.ReadCount())
 		return r.ReadString(theLength);
@@ -466,7 +466,7 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 		if (gotHash)
 			r.Read(&thePasswordHash, sizeof(thePasswordHash));
 
-		const string channelName = sReadString(r);
+		const string channelName = spReadString(r);
 
 		ZBlackBerry::Device::Error theError = ZBlackBerry::Device::error_DeviceClosed;
 

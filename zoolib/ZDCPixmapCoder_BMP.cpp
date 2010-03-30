@@ -54,7 +54,7 @@ ZDCPixmapEncoder_BMP::ZDCPixmapEncoder_BMP(bool iWithFileHeader)
 ZDCPixmapEncoder_BMP::~ZDCPixmapEncoder_BMP()
 	{}
 
-static int sNearestIndexedDepth(int iDepth)
+static int spNearestIndexedDepth(int iDepth)
 	{
 	ZAssert(iDepth >= 1 && iDepth <= 8);
 	if (iDepth <= 1)
@@ -98,7 +98,7 @@ void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 	if (PixelDescRep_Indexed* thePixelDescRep_Indexed
 		= ZRefDynamicCast<PixelDescRep_Indexed>(thePixelDescRep))
 		{
-		destPixvalDesc.fDepth = sNearestIndexedDepth(iRasterDesc.fPixvalDesc.fDepth);
+		destPixvalDesc.fDepth = spNearestIndexedDepth(iRasterDesc.fPixvalDesc.fDepth);
 		destPixelDesc = thePixelDescRep_Indexed;
 		thePixelDescRep_Indexed->GetColors(theColors, theColorsCount);
 		}
@@ -186,10 +186,10 @@ ZDCPixmapDecoder_BMP::ZDCPixmapDecoder_BMP(bool iWithFileHeader)
 ZDCPixmapDecoder_BMP::~ZDCPixmapDecoder_BMP()
 	{}
 
-static void sReadRLE8(const ZStreamR& iStream,
+static void spReadRLE8(const ZStreamR& iStream,
 	ZCoord iWidth, ZCoord iHeight, size_t iRowBytes, bool iFlip, uint8* iBuffer);
 
-static void sReadRLE4(const ZStreamR& iStream,
+static void spReadRLE4(const ZStreamR& iStream,
 	ZCoord iWidth, ZCoord iHeight, size_t iRowBytes, bool iFlip, uint8* iBuffer);
 
 void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
@@ -346,7 +346,7 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			{
 			thePixmap.GetRaster()->Fill(0);
 			bool destFlipped = (thePixmap.GetRasterDesc().fFlipped);
-			sReadRLE8(iStream,
+			spReadRLE8(iStream,
 				biWidth, biHeight,
 				sourceRasterDesc.fRowBytes,
 				sourceFlipped != destFlipped,
@@ -357,7 +357,7 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			{
 			thePixmap.GetRaster()->Fill(0);
 			bool destFlipped = (thePixmap.GetRasterDesc().fFlipped);
-			sReadRLE4(iStream,
+			spReadRLE4(iStream,
 				biWidth, biHeight,
 				sourceRasterDesc.fRowBytes,
 				destFlipped,
@@ -369,7 +369,7 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 	oPixmap = thePixmap;
 	}
 
-static void sReadRLE8(const ZStreamR& iStream,
+static void spReadRLE8(const ZStreamR& iStream,
 	ZCoord iWidth, ZCoord iHeight, size_t iRowBytes, bool iFlip, uint8* iBuffer)
 	{
 	ZCoord currentRow = 0;
@@ -429,7 +429,7 @@ static void sReadRLE8(const ZStreamR& iStream,
 		}
 	}
 
-static void sReadRLE4(const ZStreamR& iStream,
+static void spReadRLE4(const ZStreamR& iStream,
 	ZCoord iWidth, ZCoord iHeight, size_t iRowBytes, bool iFlip, uint8* iBuffer)
 	{
 	ZCoord currentRow = 0;

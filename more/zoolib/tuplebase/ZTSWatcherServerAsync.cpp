@@ -55,7 +55,7 @@ ZTSWatcherServerAsync::~ZTSWatcherServerAsync()
 	{
 	}
 
-static void sSort(vector<uint64>& ioWrittenTupleIDs, vector<ZTuple>& ioWrittenTuples)
+static void spSort(vector<uint64>& ioWrittenTupleIDs, vector<ZTuple>& ioWrittenTuples)
 	{
 	vector<uint64> newIDs;
 	vector<ZTuple> newTuples;
@@ -179,7 +179,7 @@ bool ZTSWatcherServerAsync::Read(const ZStreamR& iStreamR)
 					}
 
 				if (writeNeededSort)
-					sSort(writtenTupleIDs, writtenTuples);
+					spSort(writtenTupleIDs, writtenTuples);
 				}
 
 			ZMutexLocker locker(fMutex);

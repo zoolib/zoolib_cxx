@@ -73,11 +73,11 @@ private:
 
 	jmp_buf fEnv;
 
-	static void sErrorExit(j_common_ptr cinfo);
-	static void sEmitMessage(j_common_ptr cinfo, int msg_level);
-	static void sOutputMessage(j_common_ptr cinfo);
-	static void sFormatMessage(j_common_ptr cinfo, char * buffer);
-	static void sReset(j_common_ptr cinfo);
+	static void spErrorExit(j_common_ptr cinfo);
+	static void spEmitMessage(j_common_ptr cinfo, int msg_level);
+	static void spOutputMessage(j_common_ptr cinfo);
+	static void spFormatMessage(j_common_ptr cinfo, char * buffer);
+	static void spReset(j_common_ptr cinfo);
 	};
 
 JPEGErrorMgr::JPEGErrorMgr(struct jpeg_compress_struct& iJCS)
@@ -101,28 +101,28 @@ void JPEGErrorMgr::pInit(struct jpeg_error_mgr*& oErrField)
 	{
 	oErrField = this;
 
-	error_exit = sErrorExit;
-	emit_message = sEmitMessage;
-	output_message = sOutputMessage;
-	format_message = sFormatMessage;
-	reset_error_mgr = sReset;
+	error_exit = spErrorExit;
+	emit_message = spEmitMessage;
+	output_message = spOutputMessage;
+	format_message = spFormatMessage;
+	reset_error_mgr = spReset;
 	}
 
-void JPEGErrorMgr::sErrorExit(j_common_ptr cinfo)
+void JPEGErrorMgr::spErrorExit(j_common_ptr cinfo)
 	{
 	static_cast<JPEGErrorMgr*>(cinfo->err)->Fail();
 	}
 
-void JPEGErrorMgr::sEmitMessage(j_common_ptr cinfo, int msg_level)
+void JPEGErrorMgr::spEmitMessage(j_common_ptr cinfo, int msg_level)
 	{}
 
-void JPEGErrorMgr::sOutputMessage(j_common_ptr cinfo)
+void JPEGErrorMgr::spOutputMessage(j_common_ptr cinfo)
 	{}
 
-void JPEGErrorMgr::sFormatMessage(j_common_ptr cinfo, char * buffer)
+void JPEGErrorMgr::spFormatMessage(j_common_ptr cinfo, char * buffer)
 	{}
 
-void JPEGErrorMgr::sReset(j_common_ptr cinfo)
+void JPEGErrorMgr::spReset(j_common_ptr cinfo)
 	{}
 
 } // anonymous namespace
@@ -140,9 +140,9 @@ public:
 	~JPEGWriter();
 
 private:
-	static void sInititialize(j_compress_ptr iCInfo);
-	static boolean sEmptyOutputBuffer(j_compress_ptr iCInfo);
-	static void sTerminate(j_compress_ptr iCInfo);
+	static void spInititialize(j_compress_ptr iCInfo);
+	static boolean spEmptyOutputBuffer(j_compress_ptr iCInfo);
+	static void spTerminate(j_compress_ptr iCInfo);
 
 	const ZStreamW& fStream;
 	vector<JOCTET> fBuffer;
@@ -152,22 +152,22 @@ JPEGWriter::JPEGWriter(const ZStreamW& iStream)
 :	fStream(iStream),
 	fBuffer(1024)
 	{
-	init_destination = sInititialize;
-	empty_output_buffer = sEmptyOutputBuffer;
-	term_destination = sTerminate;
+	init_destination = spInititialize;
+	empty_output_buffer = spEmptyOutputBuffer;
+	term_destination = spTerminate;
 	}
 
 JPEGWriter::~JPEGWriter()
 	{}
 
-void JPEGWriter::sInititialize(j_compress_ptr iCInfo)
+void JPEGWriter::spInititialize(j_compress_ptr iCInfo)
 	{
 	JPEGWriter* theWriter = static_cast<JPEGWriter*>(iCInfo->dest);
 	theWriter->next_output_byte = &theWriter->fBuffer[0];
 	theWriter->free_in_buffer = theWriter->fBuffer.size();
 	}
 
-boolean JPEGWriter::sEmptyOutputBuffer(j_compress_ptr iCInfo)
+boolean JPEGWriter::spEmptyOutputBuffer(j_compress_ptr iCInfo)
 	{
 	try
 		{
@@ -187,7 +187,7 @@ boolean JPEGWriter::sEmptyOutputBuffer(j_compress_ptr iCInfo)
 	return FALSE;
 	}
 
-void JPEGWriter::sTerminate(j_compress_ptr iCInfo)
+void JPEGWriter::spTerminate(j_compress_ptr iCInfo)
 	{
 	try
 		{
@@ -216,10 +216,10 @@ public:
 	~JPEGReader();
 
 private:
-	static void sInititialize(j_decompress_ptr iCInfo);
-	static boolean sFillInputBuffer(j_decompress_ptr iCInfo);
-	static void sSkip(j_decompress_ptr iCInfo, long num_bytes);
-	static void sTerminate(j_decompress_ptr iCInfo);
+	static void spInititialize(j_decompress_ptr iCInfo);
+	static boolean spFillInputBuffer(j_decompress_ptr iCInfo);
+	static void spSkip(j_decompress_ptr iCInfo, long num_bytes);
+	static void spTerminate(j_decompress_ptr iCInfo);
 
 	const ZStreamR& fStream;
 	vector<JOCTET> fBuffer;
@@ -229,24 +229,24 @@ JPEGReader::JPEGReader(const ZStreamR& iStream)
 :	fStream(iStream),
 	fBuffer(1024)
 	{
-	init_source = sInititialize;
-	fill_input_buffer = sFillInputBuffer;
-	skip_input_data = sSkip;
+	init_source = spInititialize;
+	fill_input_buffer = spFillInputBuffer;
+	skip_input_data = spSkip;
 	resync_to_restart = jpeg_resync_to_restart;
-	term_source = sTerminate;
+	term_source = spTerminate;
 	}
 
 JPEGReader::~JPEGReader()
 	{}
 
-void JPEGReader::sInititialize(j_decompress_ptr iCInfo)
+void JPEGReader::spInititialize(j_decompress_ptr iCInfo)
 	{
 	JPEGReader* theReader = static_cast<JPEGReader*>(iCInfo->src);
 	theReader->next_input_byte = &theReader->fBuffer[0];
 	theReader->bytes_in_buffer = 0;
 	}
 
-boolean JPEGReader::sFillInputBuffer(j_decompress_ptr iCInfo)
+boolean JPEGReader::spFillInputBuffer(j_decompress_ptr iCInfo)
 	{
 	try
 		{
@@ -285,7 +285,7 @@ boolean JPEGReader::sFillInputBuffer(j_decompress_ptr iCInfo)
 	return FALSE;
 	}
 
-void JPEGReader::sSkip(j_decompress_ptr iCInfo, long num_bytes)
+void JPEGReader::spSkip(j_decompress_ptr iCInfo, long num_bytes)
 	{
 	JPEGReader* theReader = static_cast<JPEGReader*>(iCInfo->src);
 	if (theReader->bytes_in_buffer >= num_bytes)
@@ -301,7 +301,7 @@ void JPEGReader::sSkip(j_decompress_ptr iCInfo, long num_bytes)
 		}
 	}
 
-void JPEGReader::sTerminate(j_decompress_ptr iCInfo)
+void JPEGReader::spTerminate(j_decompress_ptr iCInfo)
 	{}
 
 } // anonymous namespace

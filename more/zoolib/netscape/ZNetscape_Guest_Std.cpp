@@ -31,7 +31,7 @@ namespace ZNetscape {
 #pragma mark -
 #pragma mark * GuestMeister
 
-static Guest_Std* sGuest(NPP iNPP)
+static Guest_Std* spGuest(NPP iNPP)
 	{ return static_cast<Guest_Std*>(iNPP->pdata); }
 
 GuestMeister_Std::GuestMeister_Std()
@@ -57,45 +57,45 @@ NPError GuestMeister_Std::New(
 	}
 
 NPError GuestMeister_Std::Destroy(NPP iNPP, NPSavedData** save)
-	{ return sGuest(iNPP)->Guest_Destroy(save); }
+	{ return spGuest(iNPP)->Guest_Destroy(save); }
 
 NPError GuestMeister_Std::SetWindow(NPP iNPP, NPWindow* window)
-	{ return sGuest(iNPP)->Guest_SetWindow(window); }
+	{ return spGuest(iNPP)->Guest_SetWindow(window); }
 
 NPError GuestMeister_Std::NewStream(NPP iNPP,
 	NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype)
-	{ return sGuest(iNPP)->Guest_NewStream(type, stream, seekable, stype); }
+	{ return spGuest(iNPP)->Guest_NewStream(type, stream, seekable, stype); }
 
 NPError GuestMeister_Std::DestroyStream(NPP iNPP, NPStream* stream, NPReason reason)
-	{ return sGuest(iNPP)->Guest_DestroyStream(stream, reason); }
+	{ return spGuest(iNPP)->Guest_DestroyStream(stream, reason); }
 
 int32 GuestMeister_Std::WriteReady(NPP iNPP, NPStream* stream)
-	{ return sGuest(iNPP)->Guest_WriteReady(stream); }
+	{ return spGuest(iNPP)->Guest_WriteReady(stream); }
 
 int32 GuestMeister_Std::Write(NPP iNPP,
 	NPStream* stream, int32_t offset, int32_t len, void* buffer)
-	{ return sGuest(iNPP)->Guest_Write(stream, offset, len, buffer); }
+	{ return spGuest(iNPP)->Guest_Write(stream, offset, len, buffer); }
 
 void GuestMeister_Std::StreamAsFile(NPP iNPP, NPStream* stream, const char* fname)
-	{ return sGuest(iNPP)->Guest_StreamAsFile(stream, fname); }
+	{ return spGuest(iNPP)->Guest_StreamAsFile(stream, fname); }
 
 void GuestMeister_Std::Print(NPP iNPP, NPPrint* platformPrint)
-	{ return sGuest(iNPP)->Guest_Print(platformPrint); }
+	{ return spGuest(iNPP)->Guest_Print(platformPrint); }
 
 int16 GuestMeister_Std::HandleEvent(NPP iNPP, void* event)
-	{ return sGuest(iNPP)->Guest_HandleEvent(event); }
+	{ return spGuest(iNPP)->Guest_HandleEvent(event); }
 
 void GuestMeister_Std::URLNotify(NPP iNPP, const char* url, NPReason reason, void* notifyData)
-	{ return sGuest(iNPP)->Guest_URLNotify(url, reason, notifyData); }
+	{ return spGuest(iNPP)->Guest_URLNotify(url, reason, notifyData); }
 
 jref GuestMeister_Std::GetJavaClass()
 	{ return nullptr; }
 
 NPError GuestMeister_Std::GetValue(NPP iNPP, NPPVariable variable, void *value)
-	{ return sGuest(iNPP)->Guest_GetValue(variable, value); }
+	{ return spGuest(iNPP)->Guest_GetValue(variable, value); }
 
 NPError GuestMeister_Std::SetValue(NPP iNPP, NPNVariable variable, void *value)
-	{ return sGuest(iNPP)->Guest_SetValue(variable, value); }
+	{ return spGuest(iNPP)->Guest_SetValue(variable, value); }
 
 // =================================================================================================
 #pragma mark -

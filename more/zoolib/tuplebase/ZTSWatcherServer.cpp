@@ -52,13 +52,13 @@ using std::vector;
 #pragma mark -
 #pragma mark * Static helpers
 
-static inline void sWriteCount(const ZStreamW& iStreamW, uint32 iCount)
+static inline void spWriteCount(const ZStreamW& iStreamW, uint32 iCount)
 	{ iStreamW.WriteCount(iCount); }
 
-static inline uint32 sReadCount(const ZStreamR& iStreamR)
+static inline uint32 spReadCount(const ZStreamR& iStreamR)
 	{ return iStreamR.ReadCount(); }
 
-static void sDumpRequest(ZRef<ZTSWatcher> iWatcher, const ZTuple& iTuple)
+static void spDumpRequest(ZRef<ZTSWatcher> iWatcher, const ZTuple& iTuple)
 	{
 #if kDebug_ShowCommsTuples
 	if (ZLOG(s, eDebug, "ZTSWatcherServer"))
@@ -69,7 +69,7 @@ static void sDumpRequest(ZRef<ZTSWatcher> iWatcher, const ZTuple& iTuple)
 #endif
 	}
 
-static void sSendResponse(ZRef<ZTSWatcher> iWatcher, const ZStreamW& iStreamW, const ZTuple& iTuple)
+static void spSendResponse(ZRef<ZTSWatcher> iWatcher, const ZStreamW& iStreamW, const ZTuple& iTuple)
 	{
 #if kDebug_ShowCommsTuples
 	if (ZLOG(s, eDebug, "ZTSWatcherServer"))
@@ -81,7 +81,7 @@ static void sSendResponse(ZRef<ZTSWatcher> iWatcher, const ZStreamW& iStreamW, c
 	iTuple.ToStream(iStreamW);
 	}
 
-static bool sAllocateIDs(ZRef<ZTSWatcher> iWatcher, const ZTuple& iReq, const ZStreamW& iStreamW)
+static bool spAllocateIDs(ZRef<ZTSWatcher> iWatcher, const ZTuple& iReq, const ZStreamW& iStreamW)
 	{
 	size_t theCount = iReq.GetInt32("Count");
 	uint64 baseID;
@@ -91,11 +91,10 @@ static bool sAllocateIDs(ZRef<ZTSWatcher> iWatcher, const ZTuple& iReq, const ZS
 	ZTuple response;
 	response.SetInt64("BaseID", baseID);
 	response.SetInt32("Count", countIssued);
-	sSendResponse(iWatcher, iStreamW, response);
+	spSendResponse(iWatcher, iStreamW, response);
 	iStreamW.Flush();
 	return true;
 	}
-
 
 // =================================================================================================
 #pragma mark -
@@ -286,9 +285,9 @@ static bool sSync1(
 
 	uint64 bytesWritten;
 	if (kDebug_ShowTimes)
-		sSendResponse(iWatcher, ZStreamW_Count(bytesWritten, iStreamW), response);
+		spSendResponse(iWatcher, ZStreamW_Count(bytesWritten, iStreamW), response);
 	else
-		sSendResponse(iWatcher, iStreamW, response);
+		spSendResponse(iWatcher, iStreamW, response);
 
 	iStreamW.Flush();
 
@@ -349,7 +348,7 @@ static void sSync_Initial(const ZStreamR& iStreamR,
 	vector<uint64>& oAddedIDs,
 	vector<int64>& oRemovedQueries)
 	{
-	if (uint32 theCount = sReadCount(iStreamR))
+	if (uint32 theCount = spReadCount(iStreamR))
 		{
 		oRemovedIDs.reserve(theCount);
 		while (theCount--)
@@ -357,7 +356,7 @@ static void sSync_Initial(const ZStreamR& iStreamR,
 		}
 
 
-	if (uint32 theCount = sReadCount(iStreamR))
+	if (uint32 theCount = spReadCount(iStreamR))
 		{
 		oAddedIDs.reserve(theCount);
 		while (theCount--)
@@ -365,7 +364,7 @@ static void sSync_Initial(const ZStreamR& iStreamR,
 		}
 
 
-	if (uint32 theCount = sReadCount(iStreamR))
+	if (uint32 theCount = spReadCount(iStreamR))
 		{
 		oRemovedQueries.reserve(theCount);
 		while (theCount--)
@@ -379,7 +378,7 @@ static bool sSync_NextBit(const ZStreamR& iStreamR,
 	vector<ZTuple>& oWrittenTuples)
 	{
 	bool writeNeededSort = false;
-	if (uint32 theCount = sReadCount(iStreamR))
+	if (uint32 theCount = spReadCount(iStreamR))
 		{
 		oWrittenTupleIDs.reserve(theCount);
 		oWrittenTuples.reserve(theCount);
@@ -407,7 +406,7 @@ static void sSync_LastBit(const ZStreamW& iStreamW,
 	{
 	ZAssertStop(kDebug_TSWatcherServer, iChangedTupleIDs.size() == iChangedTuples.size());
 
-	sWriteCount(iStreamW, iChangedTupleIDs.size());
+	spWriteCount(iStreamW, iChangedTupleIDs.size());
 	
 	vector<ZTuple>::const_iterator iterCT = iChangedTuples.begin();
 	for (vector<uint64>::const_iterator
@@ -418,14 +417,14 @@ static void sSync_LastBit(const ZStreamW& iStreamW,
 		(*iterCT).ToStream(iStreamW);
 		}
 	
-	sWriteCount(iStreamW, iChangedQueries.size());
+	spWriteCount(iStreamW, iChangedQueries.size());
 	for (map<int64, vector<uint64> >::const_iterator
 		i = iChangedQueries.begin(), theEnd = iChangedQueries.end();
 		i != theEnd; ++i)
 		{
 		iStreamW.WriteInt64((*i).first);
 		const vector<uint64>& theVector = (*i).second;
-		sWriteCount(iStreamW, theVector.size());
+		spWriteCount(iStreamW, theVector.size());
 		for (vector<uint64>::const_iterator j = theVector.begin(); j != theVector.end(); ++j)
 			iStreamW.WriteUInt64(*j);
 		}
@@ -454,7 +453,7 @@ static bool sSync2(
 
 
 	vector<ZTSWatcher::AddedQueryCombo> addedQueries;
-	if (uint32 theCount = sReadCount(iStreamR))
+	if (uint32 theCount = spReadCount(iStreamR))
 		{
 		addedQueries.reserve(theCount);
 		while (theCount--)
@@ -586,13 +585,13 @@ static bool sSync3(
 	// it will use the bytes in the ZMemoryBlock as the key to find the query.
 
 	vector<ZTSWatcher::AddedQueryCombo> addedQueries;
-	if (uint32 theCount = sReadCount(iStreamR))
+	if (uint32 theCount = spReadCount(iStreamR))
 		{
 		addedQueries.reserve(theCount);
 		while (theCount--)
 			{
 			int64 theRefcon = iStreamR.ReadInt64();
-			size_t theSize = sReadCount(iStreamR);
+			size_t theSize = spReadCount(iStreamR);
 
 			ZTSWatcher::AddedQueryCombo theCombo(theSize);
 			theCombo.fRefcon = theRefcon;
@@ -717,14 +716,14 @@ static bool sSync4(
 	// The caller can mark a query as being prefetched (see line marked <--).
 
 	vector<ZTSWatcher::AddedQueryCombo> addedQueries;
-	if (uint32 theCount = sReadCount(iStreamR))
+	if (uint32 theCount = spReadCount(iStreamR))
 		{
 		addedQueries.reserve(theCount);
 		while (theCount--)
 			{
 			int64 theRefcon = iStreamR.ReadInt64();
 			bool thePrefetch = iStreamR.ReadBool(); // <--
-			size_t theSize = sReadCount(iStreamR);
+			size_t theSize = spReadCount(iStreamR);
 
 			ZTSWatcher::AddedQueryCombo theCombo(theSize);
 			theCombo.fRefcon = theRefcon;
@@ -777,7 +776,7 @@ static bool sSync4(
 	// us, and which we now consider to be registered. Their
 	// actual content will be included with changedTupleIDs and changedTuples.
 
-	sWriteCount(iStreamW, watcherAddedIDs.size());
+	spWriteCount(iStreamW, watcherAddedIDs.size());
 	for (vector<uint64>::const_iterator
 		i = watcherAddedIDs.begin(), theEnd = watcherAddedIDs.end();
 		i != theEnd; ++i)
@@ -863,14 +862,14 @@ void ZTSWatcherServer::Run(const ZStreamR& iStreamR, const ZStreamW& iStreamW)
 			ZTuple theReq(iStreamR);
 		#endif
 
-		sDumpRequest(fWatcher, theReq);
+		spDumpRequest(fWatcher, theReq);
 
 		string theWhat;
 		if (theReq.QGetString("What", theWhat))
 			{
 			if ("AllocateIDs" == theWhat)
 				{
-				if (!sAllocateIDs(fWatcher, theReq, iStreamW))
+				if (!spAllocateIDs(fWatcher, theReq, iStreamW))
 					break;
 				}
 			else if ("DoIt" == theWhat)

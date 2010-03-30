@@ -29,7 +29,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 using std::min;
 
-static const char* const sSegmentNames[] =
+static const char* const spSegmentNames[] =
 	{
 	"SOF_0", // 0xC0
 	"SOF_1",
@@ -117,7 +117,7 @@ const char* ZFileFormat_JPEG::sSegmentAsText(uint8 iSegment)
 		return "TEM";
 
 	if (iSegment >= 0xC0 && iSegment <= 0xFE)
-		return sSegmentNames[iSegment - 0xC0];
+		return spSegmentNames[iSegment - 0xC0];
 
 	return "??";
 	}

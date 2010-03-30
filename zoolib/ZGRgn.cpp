@@ -27,7 +27,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * Factory functions
 
-static ZRef<ZGRgnRep> sMake(const ZRect& iBounds)
+static ZRef<ZGRgnRep> spMake(const ZRect& iBounds)
 	{
 	return ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRect&>
 		::sInvoke(iBounds);
@@ -70,16 +70,16 @@ ZGRgn& ZGRgn::operator=(const ZRef<ZGRgnRep>& iRep)
 	}
 
 ZGRgn::ZGRgn(const ZRect& iRect)
-:	fRep(sMake(iRect))
+:	fRep(spMake(iRect))
 	{}
 
 ZGRgn::ZGRgn(ZCoord iLeft, ZCoord iTop, ZCoord iRight, ZCoord iBottom)
-:	fRep(sMake(ZRect(iLeft, iTop, iRight, iBottom)))
+:	fRep(spMake(ZRect(iLeft, iTop, iRight, iBottom)))
 	{}
 
 ZGRgn& ZGRgn::operator=(const ZRect& iRect)
 	{
-	fRep = sMake(iRect);
+	fRep = spMake(iRect);
 	return *this;
 	}
 
@@ -193,7 +193,7 @@ ZGRgn ZGRgn::Offsetted(ZCoord iOffsetH, ZCoord iOffsetV) const
 void ZGRgn::Include(const ZRect& iRect)
 	{
 	if (!fRep)
-		fRep = sMake(iRect);
+		fRep = spMake(iRect);
 	else if (fRep->GetRefCount() > 1)
 		fRep = fRep->Including(iRect);
 	else
@@ -203,7 +203,7 @@ void ZGRgn::Include(const ZRect& iRect)
 ZGRgn ZGRgn::Including(const ZRect& iRect) const
 	{
 	if (!fRep)
-		return ZGRgn(sMake(iRect));
+		return ZGRgn(spMake(iRect));
 	else
 		return ZGRgn(fRep->Including(iRect));
 	}

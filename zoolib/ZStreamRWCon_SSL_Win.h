@@ -35,8 +35,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define SECURITY_WIN32 1
 #include <Security.h>
 
-//#include <Security/SecureTransport.h>
-
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================

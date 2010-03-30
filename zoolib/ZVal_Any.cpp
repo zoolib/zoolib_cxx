@@ -69,7 +69,7 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Data, ZData_Any)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Seq, ZSeq_Any)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_Any, Map, ZMap_Any)
 
-static ZVal_Any sVal_Null;
+static ZVal_Any spVal_Null;
 
 // =================================================================================================
 #pragma mark -
@@ -189,7 +189,7 @@ const ZVal_Any& ZSeq_Any::Get(size_t iIndex) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iIndex))
 		return *theVal;
-	return sVal_Null;
+	return spVal_Null;
 	}
 
 ZSeq_Any& ZSeq_Any::Set(size_t iIndex, const ZVal_Any& iVal)
@@ -453,14 +453,14 @@ const ZVal_Any& ZMap_Any::Get(const string8& iName) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iName))
 		return *theVal;
-	return sVal_Null;
+	return spVal_Null;
 	}
 
 const ZVal_Any& ZMap_Any::Get(const Index_t& iIndex) const
 	{
 	if (const ZVal_Any* theVal = this->PGet(iIndex))
 		return *theVal;
-	return sVal_Null;
+	return spVal_Null;
 	}
 
 ZMap_Any& ZMap_Any::Set(const string8& iName, const ZVal_Any& iVal)

@@ -28,7 +28,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZStreamerCopier
 
-static bool sCopy(
+static bool spCopy(
 	const ZStreamRCon& iStreamRCon,
 	void* iBuffer, size_t iBufferSize,
 	const ZStreamWCon& iStreamWCon)
@@ -86,13 +86,13 @@ bool ZStreamerCopier::Work()
 	if (fChunkSize <= sStackBufferSize)
 		{
 		char buffer[sStackBufferSize];
-		return sCopy(fStreamerRCon->GetStreamRCon(),
+		return spCopy(fStreamerRCon->GetStreamRCon(),
 			buffer, sStackBufferSize, fStreamerWCon->GetStreamWCon());
 		}
 	else
 		{
 		std::vector<char> buffer(fChunkSize);
-		return sCopy(fStreamerRCon->GetStreamRCon(),
+		return spCopy(fStreamerRCon->GetStreamRCon(),
 			&buffer[0], fChunkSize, fStreamerWCon->GetStreamWCon());
 		}	
 	}

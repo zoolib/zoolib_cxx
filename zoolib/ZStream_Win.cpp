@@ -40,7 +40,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZStreamRPos_Win_MultiResource
 
-static HRSRC sFindResource(HMODULE iHMODULE, const string& iName, const string& iType)
+static HRSRC spFindResource(HMODULE iHMODULE, const string& iName, const string& iType)
 	{
 	if (ZUtil_Win::sUseWAPI())
 		{
@@ -76,7 +76,7 @@ ZStreamRPos_Win_MultiResource::ZStreamRPos_Win_MultiResource(
 	fPosition = 0;
 
 	// Load the descriptor resource
-	if (HRSRC descHRSRC = sFindResource(fHMODULE, iName, iType))
+	if (HRSRC descHRSRC = spFindResource(fHMODULE, iName, iType))
 		{
 		if (HGLOBAL descHGLOBAL = ::LoadResource(fHMODULE, descHRSRC))
 			{
@@ -91,7 +91,7 @@ ZStreamRPos_Win_MultiResource::ZStreamRPos_Win_MultiResource(
 				for (size_t x = 0; x < resourceCount; ++x)
 					{
 					string resourceName = sReadZeroTerminatedString(theSIM);
-					if (HRSRC currentHRSRC = sFindResource(fHMODULE, resourceName, resourceType))
+					if (HRSRC currentHRSRC = spFindResource(fHMODULE, resourceName, resourceType))
 						{
 						fVector_HRSRC.push_back(currentHRSRC);
 						accumulatedSize += ::SizeofResource(fHMODULE, currentHRSRC);

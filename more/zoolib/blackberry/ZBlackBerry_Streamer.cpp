@@ -1279,7 +1279,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 		}		
 	}
 
-static void sSHA1(const void* iSource, size_t iSourceSize, uint8 oDigest[20])
+static void spSHA1(const void* iSource, size_t iSourceSize, uint8 oDigest[20])
 	{
 	ZStream_SHA1::Context theContext;
 	sInit(theContext);
@@ -1347,7 +1347,7 @@ bool Device_Streamer::pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iCha
 
 			// Hash the whole thing.
 			uint8 sentHash[20];
-			sSHA1(prefixedHash, sizeof(prefixedHash), sentHash);
+			spSHA1(prefixedHash, sizeof(prefixedHash), sentHash);
 
 			StreamW_Chunked w;
 			w.WriteUInt8(eMsg_PasswordResponse);

@@ -126,13 +126,13 @@ void Sink_Map::Clear()
 #pragma mark -
 #pragma mark * ZUtil_TS
 
-static const char sMagicText[] = "ZTS_RAM 1.0 CRLF\r\nCR\rLF\n";
+static const char spMagicText[] = "ZTS_RAM 1.0 CRLF\r\nCR\rLF\n";
 
 void sToStream(uint64 iNextUnusedID, Source& iSource, const ZStreamWPos& iStreamWPos)
 	{
 	iStreamWPos.Truncate();
 
-	iStreamWPos.Write(sMagicText, sizeof(sMagicText));
+	iStreamWPos.Write(spMagicText, sizeof(spMagicText));
 
 	iStreamWPos.WriteUInt64(iNextUnusedID);
 	uint64 positionOfCount = iStreamWPos.GetPosition();
@@ -167,10 +167,10 @@ void sFromStream(Sink& iSink, uint64& oNextUnusedID, const ZStreamR& iStreamR)
 	{
 	ZStreamR_Buffered theSRB(64 * 1024, iStreamR);
 
-	char dummy[sizeof(sMagicText)];
+	char dummy[sizeof(spMagicText)];
 	size_t countRead;
-	theSRB.Read(dummy, sizeof(sMagicText), &countRead);
-	if (countRead != sizeof(sMagicText) || 0 != memcmp(dummy, sMagicText, sizeof(sMagicText)))
+	theSRB.Read(dummy, sizeof(spMagicText), &countRead);
+	if (countRead != sizeof(spMagicText) || 0 != memcmp(dummy, spMagicText, sizeof(spMagicText)))
 		throw Ex_MagicTextMissing();
 
 	oNextUnusedID = theSRB.ReadUInt64();
@@ -377,7 +377,7 @@ void sRead(const ZStreamRPos& iStreamRPos, uint64& oNextUnusedID, Sink& iSink)
 
 void sWriteMagicText(const ZStreamW& iStreamW)
 	{
-	iStreamW.Write(sMagicText, sizeof(sMagicText));
+	iStreamW.Write(spMagicText, sizeof(spMagicText));
 	}
 
 } // namespace ZUtil_TS

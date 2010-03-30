@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompare.h"
+#include "zoolib/ZCompat_String.h"
 #include "zoolib/ZDebug.h"
 
 #include <map>
@@ -38,7 +39,7 @@ class CompareCharStars
 	{
 public:
 	bool operator()(const char* iL, const char* iR) const
-		{ return std::strcmp(iL, iR) < 0; }
+		{ return strcmp(iL, iR) < 0; }
 	};
 
 } // anonymous namespace
@@ -47,34 +48,34 @@ public:
 #pragma mark -
 #pragma mark * ZCompare
 
-static int sInitCount;
-static map<const char*, ZCompare*, CompareCharStars>* sMap;
+static int spInitCount;
+static map<const char*, ZCompare*, CompareCharStars>* spMap;
 
 ZCompare::ZCompare(const char* iTypeName)
 	{
-	if (++sInitCount == 1)
+	if (++spInitCount == 1)
 		{
-		ZAssert(!sMap);
-		sMap = new map<const char*, ZCompare*, CompareCharStars>;
+		ZAssert(!spMap);
+		spMap = new map<const char*, ZCompare*, CompareCharStars>;
 		}
-	sMap->insert(pair<const char*, ZCompare*>(iTypeName, this));
+	spMap->insert(pair<const char*, ZCompare*>(iTypeName, this));
 	}
 
 ZCompare::~ZCompare()
 	{
-	if (--sInitCount == 0)
+	if (--spInitCount == 0)
 		{
-		delete sMap;
-		sMap = nullptr;
+		delete spMap;
+		spMap = nullptr;
 		}
 	}
 
 int ZCompare::sCompare(const char* iTypeName, const void* iL, const void* iR)
 	{
-	ZAssert(sMap);
+	ZAssert(spMap);
 
-	map<const char*, ZCompare*, CompareCharStars>::iterator i = sMap->find(iTypeName);
-	if (i != sMap->end())
+	map<const char*, ZCompare*, CompareCharStars>::iterator i = spMap->find(iTypeName);
+	if (i != spMap->end())
 		return (*i).second->Compare(iL, iR);
 
 	ZDebugStopf(0, ("ZCompare::sCompare called on unsupported type '%s'", iTypeName));

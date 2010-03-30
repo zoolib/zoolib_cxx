@@ -2485,7 +2485,6 @@ class Make_CreateRasterDesc
 				new ZDCPixmapRaster_Simple(iParam.f0), iParam.f1, iParam.f2);
 			return true;
 			}
-
 		return false;
 		}	
 	} sMaker1;

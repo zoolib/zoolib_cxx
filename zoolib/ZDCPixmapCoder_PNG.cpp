@@ -36,12 +36,12 @@ using namespace ZDCPixmapNS;
 #pragma mark -
 #pragma mark * Static functions
 
-static void sThrowToStream()
+static void spThrowToStream()
 	{
 	throw runtime_error("ZDCPixmapCoder_PNG, to stream");
 	}
 
-static void sPNG_Write(png_structp png_ptr, png_bytep iDestAddress, png_size_t iSize)
+static void spPNG_Write(png_structp png_ptr, png_bytep iDestAddress, png_size_t iSize)
 	{
 	try
 		{
@@ -54,17 +54,17 @@ static void sPNG_Write(png_structp png_ptr, png_bytep iDestAddress, png_size_t i
 	longjmp(png_ptr->jmpbuf, 1);
 	}
 
-static void sPNG_Write_Flush(png_structp png_ptr)
+static void spPNG_Write_Flush(png_structp png_ptr)
 	{
 	static_cast<ZStreamW*>(png_ptr->io_ptr)->Flush();
 	}
 
-static void sThrowFromStream()
+static void spThrowFromStream()
 	{
 	throw runtime_error("ZDCPixmapCoder_PNG, from stream");
 	}
 
-static void sPNG_Read(png_structp png_ptr, png_bytep iDestAddress, png_size_t iSize)
+static void spPNG_Read(png_structp png_ptr, png_bytep iDestAddress, png_size_t iSize)
 	{
 	try
 		{
@@ -109,7 +109,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 		{
 		info_ptr = ::png_create_info_struct(write_ptr);
 		::png_set_write_fn(write_ptr,
-			&const_cast<ZStreamW&>(iStream), sPNG_Write, sPNG_Write_Flush);
+			&const_cast<ZStreamW&>(iStream), spPNG_Write, spPNG_Write_Flush);
 
 		PixvalDesc sourcePixvalDesc = iRasterDesc.fPixvalDesc;
 
@@ -189,7 +189,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 		theRowBufferVector.resize(iBounds.Width() * (destPixvalDesc.fDepth / 8));
 
 		if (setjmp(write_ptr->jmpbuf))
-			sThrowToStream();
+			spThrowToStream();
 		::png_write_info(write_ptr, info_ptr);
 
 		uint8* theRowBuffer = &theRowBufferVector[0];
@@ -205,12 +205,12 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 					iBounds.Width());
 
 				if (setjmp(write_ptr->jmpbuf))
-					sThrowToStream();
+					spThrowToStream();
 				::png_write_row(write_ptr, theRowBuffer);
 				}
 			}
 		if (setjmp(write_ptr->jmpbuf))
-			sThrowToStream();
+			spThrowToStream();
 		::png_write_end(write_ptr, info_ptr);
 		}
 	catch (...)
@@ -249,10 +249,10 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 	try
 		{
 		info_ptr = ::png_create_info_struct(read_ptr);
-		::png_set_read_fn(read_ptr, &const_cast<ZStreamR&>(iStream), sPNG_Read);
+		::png_set_read_fn(read_ptr, &const_cast<ZStreamR&>(iStream), spPNG_Read);
 
 		if (setjmp(read_ptr->jmpbuf))
-			sThrowFromStream();
+			spThrowFromStream();
 
 		::png_read_info(read_ptr, info_ptr);
 
@@ -348,11 +348,11 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			theRowPointers[y] = theRasterDesc.CalcRowAddressDest(baseAddress, y);
 
 		if (setjmp(read_ptr->jmpbuf))
-			sThrowFromStream();
+			spThrowFromStream();
 		::png_read_image(read_ptr, reinterpret_cast<png_byte**>(&theRowPointers[0]));
 
 		if (setjmp(read_ptr->jmpbuf))
-			sThrowFromStream();
+			spThrowFromStream();
 		::png_read_end(read_ptr, info_ptr);
 		}
 	catch (...)

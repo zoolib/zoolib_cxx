@@ -44,7 +44,7 @@ using std::string;
 #pragma mark -
 #pragma mark * Other stuff
 
-static string sErrorAsString(IOReturn iError)
+static string spErrorAsString(IOReturn iError)
 	{
 	switch (iError)
 		{
@@ -56,13 +56,13 @@ static string sErrorAsString(IOReturn iError)
 		}
 	}
 
-static void sThrowIfErr(IOReturn iErr)
+static void spThrowIfErr(IOReturn iErr)
 	{
 	if (iErr)
 		throw runtime_error("Got error");
 	}
 
-static IOCFPlugInInterface** sCreatePluginInterface(io_service_t iService)
+static IOCFPlugInInterface** spCreatePluginInterface(io_service_t iService)
 	{
 	IOCFPlugInInterface** plugInInterface = nullptr;
 	SInt32 theScore;
@@ -71,10 +71,10 @@ static IOCFPlugInInterface** sCreatePluginInterface(io_service_t iService)
 	return plugInInterface;
 	}
 
-static IOUSBDeviceInterface182** sCreate_USBDeviceInterface(io_service_t iUSBDevice)
+static IOUSBDeviceInterface182** spCreate_USBDeviceInterface(io_service_t iUSBDevice)
 	{
 	IOUSBDeviceInterface182** theIOUSBDeviceInterface = nullptr;
-	if (IOCFPlugInInterface** plugInInterface = sCreatePluginInterface(iUSBDevice))
+	if (IOCFPlugInInterface** plugInInterface = spCreatePluginInterface(iUSBDevice))
 		{
 		if (0 != plugInInterface[0]->QueryInterface(plugInInterface,
 			CFUUIDGetUUIDBytes(kIOUSBDeviceInterfaceID182), (LPVOID*)&theIOUSBDeviceInterface))
@@ -101,7 +101,7 @@ ZUSBWatcher::ZUSBWatcher(
 	theMap.Set(kUSBVendorID, int32(iUSBVendor));
 	theMap.Set(kUSBProductID, int32(iUSBProduct));
 
-	sThrowIfErr(::IOServiceAddMatchingNotification(
+	spThrowIfErr(::IOServiceAddMatchingNotification(
 		fIONotificationPortRef, kIOFirstMatchNotification, theMap.Orphan(),
 		spDeviceAdded, this, &fNotification));
 	}
@@ -160,7 +160,7 @@ ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_
 	{
 	try
 		{
-		fIOUSBDeviceInterface = sCreate_USBDeviceInterface(iUSBDevice);
+		fIOUSBDeviceInterface = spCreate_USBDeviceInterface(iUSBDevice);
 		if (!fIOUSBDeviceInterface)
 			{
 			if (ZLOG(s, eDebug, "ZUSBDevice"))
@@ -187,7 +187,7 @@ ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_
 			}
 
 		UInt8 numConf;
-		sThrowIfErr(fIOUSBDeviceInterface[0]->
+		spThrowIfErr(fIOUSBDeviceInterface[0]->
 			GetNumberOfConfigurations(fIOUSBDeviceInterface, &numConf));
 
 		if (!numConf)
@@ -198,12 +198,12 @@ ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_
 			}
 
 		IOUSBConfigurationDescriptorPtr confDesc;
-		sThrowIfErr(fIOUSBDeviceInterface[0]->
+		spThrowIfErr(fIOUSBDeviceInterface[0]->
 			GetConfigurationDescriptorPtr(fIOUSBDeviceInterface, 0, &confDesc));
 
 // I'm disabling this unconditional SetConfiguration as it causes what looks like
 // a device re-enumeration, and does not appear to be essential for connecting to BlackBerries.
-//##		sThrowIfErr(fIOUSBDeviceInterface[0]->
+//##		spThrowIfErr(fIOUSBDeviceInterface[0]->
 //##			SetConfiguration(fIOUSBDeviceInterface, confDesc->bConfigurationValue));
 		}
 	catch (...)
@@ -514,8 +514,7 @@ bool StreamerR_TO::pRefill(double iTimeout)
 		{
 		if (ZLOG(s, eDebug, "StreamerR_TO"))
 			{
-			s << "pRefill, Got result: " << sErrorAsString(result);
-
+			s << "pRefill, Got result: " << spErrorAsString(result);
 			}
 		return false;
 		}

@@ -190,25 +190,25 @@ bool NPObjectG::Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount)
 #pragma mark -
 #pragma mark * ObjectG
 
-NPClass_Z ObjectG::sNPClass(
-	sAllocate,
-	sDeallocate,
-	sInvalidate,
-	sHasMethod,
-	sInvoke,
-	sInvokeDefault,
-	sHasProperty,
-	sGetProperty,
-	sSetProperty,
-	sRemoveProperty,
-	sEnumerate);
+NPClass_Z ObjectG::spNPClass(
+	spAllocate,
+	spDeallocate,
+	spInvalidate,
+	spHasMethod,
+	spInvoke,
+	spInvokeDefault,
+	spHasProperty,
+	spGetProperty,
+	spSetProperty,
+	spRemoveProperty,
+	spEnumerate);
 
 NPP ObjectG::GetNPP()
 	{ return fNPP; }
 
 ObjectG::ObjectG()
 	{
-	this->_class = &sNPClass;
+	this->_class = &spNPClass;
 	this->referenceCount = 0;
 	fNPP = NPPSetter::sCurrent();
 	}
@@ -282,34 +282,34 @@ bool ObjectG::Imp_Enumerate(NPIdentifier*& oIDs, uint32_t& oCount)
 bool ObjectG::Imp_Enumerate(std::vector<std::string>& oNames)
 	{ return false; }
 
-NPObject* ObjectG::sAllocate(NPP npp, NPClass *aClass)
+NPObject* ObjectG::spAllocate(NPP npp, NPClass *aClass)
 	{
 	ZUnimplemented();
 	return nullptr;
 	}
 
-void ObjectG::sDeallocate(NPObject* npobj)
+void ObjectG::spDeallocate(NPObject* npobj)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		delete static_cast<ObjectG*>(npobj);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-void ObjectG::sInvalidate(NPObject* npobj)
+void ObjectG::spInvalidate(NPObject* npobj)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		static_cast<ObjectG*>(npobj)->Imp_Invalidate();
 	ZNETSCAPE_AFTER_VOID
 	}
 
-bool ObjectG::sHasMethod(NPObject* npobj, NPIdentifier name)
+bool ObjectG::spHasMethod(NPObject* npobj, NPIdentifier name)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		return static_cast<ObjectG*>(npobj)->Imp_HasMethod(sAsString(name));
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool ObjectG::sInvoke(NPObject* npobj,
+bool ObjectG::spInvoke(NPObject* npobj,
 	NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
@@ -321,7 +321,7 @@ bool ObjectG::sInvoke(NPObject* npobj,
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool ObjectG::sInvokeDefault(NPObject* npobj,
+bool ObjectG::spInvokeDefault(NPObject* npobj,
 	const NPVariant* args, uint32_t argCount, NPVariant* result)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
@@ -332,7 +332,7 @@ bool ObjectG::sInvokeDefault(NPObject* npobj,
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool ObjectG::sHasProperty(NPObject* npobj, NPIdentifier name)
+bool ObjectG::spHasProperty(NPObject* npobj, NPIdentifier name)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		{
@@ -344,7 +344,7 @@ bool ObjectG::sHasProperty(NPObject* npobj, NPIdentifier name)
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool ObjectG::sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result)
+bool ObjectG::spGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		if (sIsString(name))
@@ -362,7 +362,7 @@ bool ObjectG::sGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool ObjectG::sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value)
+bool ObjectG::spSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* value)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		if (sIsString(name))
@@ -380,7 +380,7 @@ bool ObjectG::sSetProperty(NPObject* npobj, NPIdentifier name, const NPVariant* 
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool ObjectG::sRemoveProperty(NPObject* npobj, NPIdentifier name)
+bool ObjectG::spRemoveProperty(NPObject* npobj, NPIdentifier name)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		if (sIsString(name))
@@ -390,7 +390,7 @@ bool ObjectG::sRemoveProperty(NPObject* npobj, NPIdentifier name)
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool ObjectG::sEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t* oCount)
+bool ObjectG::spEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t* oCount)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		return static_cast<ObjectG*>(npobj)->Imp_Enumerate(*oIdentifiers, *oCount);
@@ -401,25 +401,25 @@ bool ObjectG::sEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t*
 #pragma mark -
 #pragma mark * GuestMeister
 
-static GuestMeister* sGuestMeister;
+static GuestMeister* spGuestMeister;
 
 GuestMeister::GuestMeister()
 	{
-	ZAssert(!sGuestMeister);
-	sGuestMeister = this;
+	ZAssert(!spGuestMeister);
+	spGuestMeister = this;
 	ZBlockZero(&fNPNF, sizeof(fNPNF));
 	}
 
 GuestMeister::~GuestMeister()
 	{
-	ZAssert(sGuestMeister == this);
-	sGuestMeister = nullptr;
+	ZAssert(spGuestMeister == this);
+	spGuestMeister = nullptr;
 	}
 
 GuestMeister* GuestMeister::sGet()
 	{
-	ZAssert(sGuestMeister);
-	return sGuestMeister;
+	ZAssert(spGuestMeister);
+	return spGuestMeister;
 	}
 
 NPError GuestMeister::Initialize(NPNetscapeFuncs_Z* iBrowserFuncs)
@@ -837,7 +837,7 @@ jref GuestMeister::sGetJavaClass()
 	ZNETSCAPE_AFTER_RETURN_NIL
 	}
 
-static bool sHostUsesOldWebKit(NPP npp)
+static bool spHostUsesOldWebKit(NPP npp)
 	{
 	// Logic and comments taken from NetscapeMoviePlugIn/main.c
     // This check is necessary if you want your exposed NPObject to not leak in WebKit-based
@@ -875,7 +875,7 @@ NPError GuestMeister::sGetValue(NPP npp, NPPVariable variable, void *value)
 		NPError result = sGet()->GetValue(npp, variable, value);
 		if (NPERR_NO_ERROR == result
 			&& NPPVpluginScriptableNPObject == variable
-			&& sHostUsesOldWebKit(npp))
+			&& spHostUsesOldWebKit(npp))
 			{
 			// We do not call releaseObject, because the likelihood is that the ref
 			// count is currently one, and an active release would destroy the object

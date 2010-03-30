@@ -43,7 +43,7 @@ struct CharsetEntry_t
 	};
 } // anonymous namespace
 
-static const CharsetEntry_t sCharsetTable[] =
+static const CharsetEntry_t spCharsetTable[] =
 	{
 		{ "csmacintosh", 2027 },
 		{ "mac", 2027 },
@@ -436,7 +436,7 @@ static const CharsetEntry_t sCharsetTable[] =
 void ZTextCoder::sGetAliases(const std::string& iName, std::vector<std::string>& oAliases)
 	{	
 	const CharsetEntry_t* found = nullptr;
-	for (const CharsetEntry_t* current = sCharsetTable; current->fName && !found; ++current)
+	for (const CharsetEntry_t* current = spCharsetTable; current->fName && !found; ++current)
 		{
 		if (iName == current->fName)
 			found = current;
@@ -447,7 +447,7 @@ void ZTextCoder::sGetAliases(const std::string& iName, std::vector<std::string>&
 		int theMIB = found->fMIB;
 		if (theMIB != -1)
 			{
-			for (const CharsetEntry_t* current = sCharsetTable; current->fName; ++current)
+			for (const CharsetEntry_t* current = spCharsetTable; current->fName; ++current)
 				{
 				if (theMIB == current->fMIB)
 					oAliases.push_back(current->fName);

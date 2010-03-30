@@ -57,7 +57,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #	include <netinet/tcp.h>
 #endif
 
-static void sSetSocketOptions(int iSocket)
+static void spSetSocketOptions(int iSocket)
 	{
 	// Set the socket to be non blocking
 	::fcntl(iSocket, F_SETFL, ::fcntl(iSocket, F_GETFL,0) | O_NONBLOCK);
@@ -84,7 +84,7 @@ int ZNet_Socket::sReceive(int iSocket, char* iDest, size_t iCount)
 // if they don't recognize the flag, and thus don't have the behavior. So we use a static
 // bool to remember if MSG_NOSIGNAL is available in the kernel.
 
-static void sSetSocketOptions(int iSocket)
+static void spSetSocketOptions(int iSocket)
 	{
 	// Set the socket to be non blocking
 	::fcntl(iSocket, F_SETFL, ::fcntl(iSocket, F_GETFL,0) | O_NONBLOCK);
@@ -98,18 +98,18 @@ static void sSetSocketOptions(int iSocket)
 #	define MSG_NOSIGNAL 0x2000
 #endif
 
-static bool sCanUse_MSG_NOSIGNAL = false;
-static bool sChecked_MSG_NOSIGNAL = false;
+static bool spCanUse_MSG_NOSIGNAL = false;
+static bool spChecked_MSG_NOSIGNAL = false;
 
 int ZNet_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
 	{
-	if (sCanUse_MSG_NOSIGNAL)
+	if (spCanUse_MSG_NOSIGNAL)
 		{
 		return ::send(iSocket, iSource, iCount, MSG_NOSIGNAL);
 		}
 	else
 		{
-		if (sChecked_MSG_NOSIGNAL)
+		if (spChecked_MSG_NOSIGNAL)
 			{
 			return ::send(iSocket, iSource, iCount, 0);
 			}
@@ -118,14 +118,14 @@ int ZNet_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
 			int result = ::send(iSocket, iSource, iCount, MSG_NOSIGNAL);
 			if (result >= 0)
 				{
-				sCanUse_MSG_NOSIGNAL = true;
-				sChecked_MSG_NOSIGNAL = true;
+				spCanUse_MSG_NOSIGNAL = true;
+				spChecked_MSG_NOSIGNAL = true;
 				}
 			else
 				{
 				if (errno == EINVAL)
 					{
-					sChecked_MSG_NOSIGNAL = true;
+					spChecked_MSG_NOSIGNAL = true;
 					return ::send(iSocket, iSource, iCount, 0);
 					}				
 				}
@@ -136,13 +136,13 @@ int ZNet_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
 
 int ZNet_Socket::sReceive(int iSocket, char* iDest, size_t iCount)
 	{
-	if (sCanUse_MSG_NOSIGNAL)
+	if (spCanUse_MSG_NOSIGNAL)
 		{
 		return ::recv(iSocket, iDest, iCount, MSG_NOSIGNAL);
 		}
 	else
 		{
-		if (sChecked_MSG_NOSIGNAL)
+		if (spChecked_MSG_NOSIGNAL)
 			{
 			return ::recv(iSocket, iDest, iCount, 0);
 			}
@@ -152,14 +152,14 @@ int ZNet_Socket::sReceive(int iSocket, char* iDest, size_t iCount)
 
 			if (result >= 0)
 				{
-				sCanUse_MSG_NOSIGNAL = true;
-				sChecked_MSG_NOSIGNAL = true;
+				spCanUse_MSG_NOSIGNAL = true;
+				spChecked_MSG_NOSIGNAL = true;
 				}
 			else
 				{
 				if (errno == EINVAL)
 					{
-					sChecked_MSG_NOSIGNAL = true;
+					spChecked_MSG_NOSIGNAL = true;
 					return ::recv(iSocket, iDest, iCount, 0);
 					}				
 				}
@@ -195,7 +195,7 @@ ZNet::Error ZNet_Socket::sTranslateError(int iNativeError)
 #pragma mark -
 #pragma mark * ZNetListener_Socket
 
-static bool sFastCancellationEnabled;
+static bool spFastCancellationEnabled;
 
 ZNetListener_Socket::ZNetListener_Socket(int iSocketFD, size_t iListenQueueSize)
 :	fSocketFD(iSocketFD)
@@ -223,7 +223,7 @@ ZRef<ZNetEndpoint> ZNetListener_Socket::Listen()
 	fThreadID_Listening = ZThread::sID();
 
 	int sleepTime;
-	if (sFastCancellationEnabled)
+	if (spFastCancellationEnabled)
 		sleepTime = 10;
 	else
 		sleepTime = 1;
@@ -262,12 +262,12 @@ void ZNetListener_Socket::CancelListen()
 	fMutexNR.Acquire();
 	
 	// It's not essential that we do anything here other than wait for a call to Listen
-	// to drop out. However, if sFastCancellationEnabled, then we issue a SIGALRM to
+	// to drop out. However, if spFastCancellationEnabled, then we issue a SIGALRM to
 	// the blocked thread, which will drop out of its call to poll or select with
 	// an inncoccuous EINTR.
 	
 	#if ZCONFIG_SPI_Enabled(pthread)
-		if (sFastCancellationEnabled && fThreadID_Listening)
+		if (spFastCancellationEnabled && fThreadID_Listening)
 			{
 			::pthread_kill(fThreadID_Listening, SIGALRM);
 			}
@@ -282,18 +282,18 @@ void ZNetListener_Socket::CancelListen()
 int ZNetListener_Socket::GetSocketFD()
 	{ return fSocketFD; }
 
-static void sDummyAction(int iSignal)
+static void spDummyAction(int iSignal)
 	{}
 
 void ZNetListener_Socket::sEnableFastCancellation()
 	{
 	#if ZCONFIG_SPI_Enabled(pthread)
 		struct sigaction sigaction_new;
-		sigaction_new.sa_handler = sDummyAction;
+		sigaction_new.sa_handler = spDummyAction;
 		sigaction_new.sa_flags = 0;
 		sigemptyset(&sigaction_new.sa_mask);
 		::sigaction(SIGALRM, &sigaction_new, nullptr);
-		sFastCancellationEnabled = true;
+		spFastCancellationEnabled = true;
 	#endif
 	}
 
@@ -306,7 +306,7 @@ ZNetEndpoint_Socket::ZNetEndpoint_Socket(int iSocketFD)
 	fSocketFD = iSocketFD;
 	ZAssertStop(2, fSocketFD != -1);
 
-	sSetSocketOptions(fSocketFD);
+	spSetSocketOptions(fSocketFD);
 	}
 
 ZNetEndpoint_Socket::~ZNetEndpoint_Socket()

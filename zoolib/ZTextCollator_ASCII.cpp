@@ -53,7 +53,7 @@ class Make_Collator
 #pragma mark -
 #pragma mark * Helper functions
 
-static int sCompare_CaseSensitive(const UTF8* iLeft, size_t iLeftLength,
+static int spCompare_CaseSensitive(const UTF8* iLeft, size_t iLeftLength,
 	const UTF8* iRight, size_t iRightLength)
 	{
 	for (size_t count = min(iLeftLength, iRightLength); count; --count)
@@ -68,7 +68,7 @@ static int sCompare_CaseSensitive(const UTF8* iLeft, size_t iLeftLength,
 	return 0;
 	}
 
-static int sCompare_CaseInsensitive(const UTF8* iLeft, size_t iLeftLength,
+static int spCompare_CaseInsensitive(const UTF8* iLeft, size_t iLeftLength,
 	const UTF8* iRight, size_t iRightLength)
 	{
 	for (size_t count = min(iLeftLength, iRightLength); count; --count)
@@ -83,23 +83,23 @@ static int sCompare_CaseInsensitive(const UTF8* iLeft, size_t iLeftLength,
 	return 0;
 	}
 
-static int sCompare(int iStrength, const UTF8* iLeft, size_t iLeftLength,
+static int spCompare(int iStrength, const UTF8* iLeft, size_t iLeftLength,
 	const UTF8* iRight, size_t iRightLength)
 	{
 	if (iStrength == 1)
-		return sCompare_CaseInsensitive(iLeft, iLeftLength, iRight, iRightLength);
+		return spCompare_CaseInsensitive(iLeft, iLeftLength, iRight, iRightLength);
 	else
-		return sCompare_CaseSensitive(iLeft, iLeftLength, iRight, iRightLength);
+		return spCompare_CaseSensitive(iLeft, iLeftLength, iRight, iRightLength);
 	}
 
-static bool sContains(int iStrength, const UTF8* iPattern, size_t iPatternLength,
+static bool spContains(int iStrength, const UTF8* iPattern, size_t iPatternLength,
 	const UTF8* iTarget, size_t iTargetLength)
 	{
 	// Dumb implementation for now.
 	for (size_t patIndex = 0, patEnd = iTargetLength - iPatternLength;
 		patIndex <= patEnd; ++patIndex)
 		{
-		if (0 == sCompare(iStrength, iPattern, iPatternLength, iTarget + patIndex, iPatternLength))
+		if (0 == spCompare(iStrength, iPattern, iPatternLength, iTarget + patIndex, iPatternLength))
 			return true;
 		}
 	return false;
@@ -129,7 +129,7 @@ bool ZTextCollatorRep_ASCII::Equals(const string8& iLeft, const string8& iRight)
 	if (iRight.empty())
 		return false;
 
-	return 0 == sCompare(fStrength, iLeft.data(), iLeft.size(), iRight.data(), iRight.size());
+	return 0 == spCompare(fStrength, iLeft.data(), iLeft.size(), iRight.data(), iRight.size());
 	}
 
 bool ZTextCollatorRep_ASCII::Equals(const UTF8* iLeft, size_t iLeftLength, const
@@ -141,7 +141,7 @@ bool ZTextCollatorRep_ASCII::Equals(const UTF8* iLeft, size_t iLeftLength, const
 	if (!iRightLength)
 		return false;
 
-	return 0 == sCompare(fStrength, iLeft, iLeftLength, iRight, iRightLength);
+	return 0 == spCompare(fStrength, iLeft, iLeftLength, iRight, iRightLength);
 	}
 
 int ZTextCollatorRep_ASCII::Compare(const string8& iLeft, const string8& iRight)
@@ -156,7 +156,7 @@ int ZTextCollatorRep_ASCII::Compare(const string8& iLeft, const string8& iRight)
 	if (iRight.empty())
 		return 1;
 
-	return sCompare(fStrength, iLeft.data(), iLeft.size(), iRight.data(), iRight.size());
+	return spCompare(fStrength, iLeft.data(), iLeft.size(), iRight.data(), iRight.size());
 	}
  
 int ZTextCollatorRep_ASCII::Compare(const UTF8* iLeft, size_t iLeftLength,
@@ -172,7 +172,7 @@ int ZTextCollatorRep_ASCII::Compare(const UTF8* iLeft, size_t iLeftLength,
 	if (!iRightLength)
 		return 1;
 
-	return sCompare(fStrength, iLeft, iLeftLength, iRight, iRightLength);
+	return spCompare(fStrength, iLeft, iLeftLength, iRight, iRightLength);
 	}
 
 bool ZTextCollatorRep_ASCII::Contains(const string8& iPattern, const string8& iTarget)
@@ -183,7 +183,7 @@ bool ZTextCollatorRep_ASCII::Contains(const string8& iPattern, const string8& iT
 	if (iPattern.size() > iTarget.size())
 		return false;
 
-	return sContains(fStrength, iPattern.data(), iPattern.size(), iTarget.data(), iTarget.size());
+	return spContains(fStrength, iPattern.data(), iPattern.size(), iTarget.data(), iTarget.size());
 	}
 
 bool ZTextCollatorRep_ASCII::Contains(const UTF8* iPattern, size_t iPatternLength,
@@ -195,7 +195,7 @@ bool ZTextCollatorRep_ASCII::Contains(const UTF8* iPattern, size_t iPatternLengt
 	if (iPatternLength > iTargetLength)
 		return false;
 
-	return sContains(fStrength, iPattern, iPatternLength, iTarget, iTargetLength);
+	return spContains(fStrength, iPattern, iPatternLength, iTarget, iTargetLength);
 	}
 
 NAMESPACE_ZOOLIB_END

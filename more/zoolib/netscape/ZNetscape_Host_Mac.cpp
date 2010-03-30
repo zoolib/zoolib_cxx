@@ -52,7 +52,7 @@ namespace ZNetscape {
 
 // =================================================================================================
 
-static void sWriteEvent(const ZStrimW&s, const EventRecord& iER)
+static void spWriteEvent(const ZStrimW&s, const EventRecord& iER)
 	{
 	s << "what: " << ZUtil_CarbonEvents::sEventTypeAsString(iER.what) << ", ";
 
@@ -62,38 +62,16 @@ static void sWriteEvent(const ZStrimW&s, const EventRecord& iER)
 
 #if defined(XP_MACOSX)
 
-static void sSetFill(CGContextRef iCG, const ZRGBA_POD& iColor)
-	{
-	::CGContextSetRGBFillColor(iCG,
-		iColor.floatRed(), iColor.floatGreen(),
-		iColor.floatBlue(), iColor.floatAlpha());
-	}
-
-static void sSetStroke(CGContextRef iCG, const ZRGBA_POD& iColor)
-	{
-	::CGContextSetRGBStrokeColor(iCG,
-		iColor.floatRed(), iColor.floatGreen(),
-		iColor.floatBlue(), iColor.floatAlpha());
-	}
-
-static void sFillRectf(CGContextRef iCG, const ZGRectf& iRect, const ZRGBA_POD& iColor)
-	{
-	::CGContextSaveGState(iCG);
-	sSetFill(iCG, iColor);
-	::CGContextFillRect(iCG, iRect);
-	::CGContextRestoreGState(iCG);	
-	}
-
-static HIRect& sHI(ZGRectf& iR)
+static HIRect& spHI(ZGRectf& iR)
 	{ return *((HIRect*)&iR); }
 
-static const HIRect& sHI(const ZGRectf& iR)
+static const HIRect& spHI(const ZGRectf& iR)
 	{ return *((const HIRect*)&iR); }
 
-static HIPoint& sHI(ZGPointf& iP)
+static HIPoint& spHI(ZGPointf& iP)
 	{ return *((HIPoint*)&iP); }
 
-static const HIPoint& sHI(const ZGPointf& iP)
+static const HIPoint& spHI(const ZGPointf& iP)
 	{ return *((const HIPoint*)&iP); }
 
 #endif // defined(XP_MACOSX)
@@ -175,7 +153,7 @@ NPError Host_Mac::Host_SetValue(NPP npp, NPPVariable variable, void* value)
 	return Host_Std::Host_SetValue(npp, variable, value);
 	}
 
-static void sStuffEventRecord(EventRecord& oEventRecord)
+static void spStuffEventRecord(EventRecord& oEventRecord)
 	{
 	oEventRecord.what = nullEvent;
 	oEventRecord.message = 0;
@@ -187,7 +165,7 @@ static void sStuffEventRecord(EventRecord& oEventRecord)
 void Host_Mac::DoActivate(bool iActivate)
 	{
 	EventRecord theER;
-	sStuffEventRecord(theER);
+	spStuffEventRecord(theER);
 
 	theER.what = activateEvt;
 	if (iActivate)
@@ -219,7 +197,7 @@ void Host_Mac::pApplyInsets(ZGRectf& ioRect)
 void Host_Mac::DoEvent(EventKind iWhat, uint32 iMessage)
 	{
 	EventRecord theER;
-	sStuffEventRecord(theER);
+	spStuffEventRecord(theER);
 
 	theER.what = iWhat;
 	theER.message = iMessage;
@@ -235,7 +213,7 @@ void Host_Mac::DoEvent(const EventRecord& iEvent)
 		if (ZLOG(s, eDebug + 1, "Host_Mac"))
 			{
 			s << "DoEvent, ";
-			sWriteEvent(s, theER);
+			spWriteEvent(s, theER);
 			}
 		}
 	this->Guest_HandleEvent(&theER);
@@ -683,7 +661,7 @@ void Host_HIViewRef::Host_InvalidateRect(NPP npp, NPRect* rect)
 	theRect.extent.h = rect->right - rect->left;
 	theRect.extent.v = rect->bottom - rect->top;
 
-	::HIViewSetNeedsDisplayInRect(fHIViewRef, &sHI(theRect), true);
+	::HIViewSetNeedsDisplayInRect(fHIViewRef, &spHI(theRect), true);
 	}
 
 void Host_HIViewRef::PostCreateAndLoad()
@@ -711,9 +689,9 @@ void Host_HIViewRef::PostCreateAndLoad()
 		}
 
 	ZGRectf theFrame;
-	::HIViewGetBounds(fHIViewRef, &sHI(theFrame));
+	::HIViewGetBounds(fHIViewRef, &spHI(theFrame));
 	this->pApplyInsets(theFrame);
-	::HIViewSetNeedsDisplayInRect(fHIViewRef, &sHI(theFrame), true);
+	::HIViewSetNeedsDisplayInRect(fHIViewRef, &spHI(theFrame), true);
 	}
 
 EventHandlerUPP Host_HIViewRef::sEventHandlerUPP_View = NewEventHandlerUPP(sEventHandler_View);
@@ -778,7 +756,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					ZGPointf startPoint = sGetParam_T<Point>(iEventRef,
 						kEventParamMouseLocation, typeQDPoint);
 
-					::HIPointConvert(&sHI(startPoint),
+					::HIPointConvert(&spHI(startPoint),
 						kHICoordSpaceView, fHIViewRef, kHICoordSpace72DPIGlobal, theWindowRef);
 
 					EventRecord theER;
@@ -791,7 +769,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 
 					if (ZLOG(s, eDebug + 1, "Host_ViewRef"))
 						{
-						sWriteEvent(s, theER);
+						spWriteEvent(s, theER);
 						}
 					this->Guest_HandleEvent(&theER);
 
@@ -806,14 +784,14 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 						if (theResult == kMouseTrackingMouseReleased)
 							{
 							theER.what = mouseUp;
-							sWriteEvent(s, theER);
+							spWriteEvent(s, theER);
 							this->Guest_HandleEvent(&theER);
 							break;
 							}
 						else
 							{
 							theER.what = nullEvent;
-							sWriteEvent(s, theER);
+							spWriteEvent(s, theER);
 							this->Guest_HandleEvent(&theER);							
 							}
 						}
@@ -833,7 +811,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					WindowRef theWindowRef = ::HIViewGetWindow(fHIViewRef);
 
 					ZGRectf theFrame;
-					::HIViewGetBounds(fHIViewRef, &sHI(theFrame));
+					::HIViewGetBounds(fHIViewRef, &spHI(theFrame));
 					this->pApplyInsets(theFrame);
 
 					ZGRectf winFrame = theFrame;
@@ -843,7 +821,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 
 					if (fUseCoreGraphics)
 						{
-						::HIRectConvert(&sHI(winFrame),
+						::HIRectConvert(&spHI(winFrame),
 							kHICoordSpaceView, fHIViewRef, kHICoordSpaceWindow, theWindowRef);
 
 						if (CGContextRef theCG = sGetParam_T<CGContextRef>(iEventRef,
@@ -884,7 +862,7 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 					if (!fUseCoreGraphics)
 						newFrame.origin = 0;
 
-					::HIViewSetNeedsDisplayInRect(fHIViewRef, &sHI(ZGRectf(newFrame.extent)), true);
+					::HIViewSetNeedsDisplayInRect(fHIViewRef, &spHI(ZGRectf(newFrame.extent)), true);
 
 					this->pApplyInsets(newFrame);
 						

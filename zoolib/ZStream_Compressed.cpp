@@ -34,7 +34,7 @@ using std::min;
 using std::runtime_error;
 using std::vector;
 
-static const char sMagicText[] = "ZStream_Compressed 1.0 CRLF\r\nCR\rLF\n";
+static const char spMagicText[] = "ZStream_Compressed 1.0 CRLF\r\nCR\rLF\n";
 
 // =================================================================================================
 #pragma mark -
@@ -60,7 +60,7 @@ ZStreamW_Compressed::~ZStreamW_Compressed()
 	for (vector<uint64>::iterator i = fOffsets.begin(); i != fOffsets.end(); ++i)
 		fSink.WriteUInt64(*i);
 
-	fSink.Write(sMagicText, sizeof(sMagicText));
+	fSink.Write(spMagicText, sizeof(spMagicText));
 	fSink.WriteUInt32(fChunkSize);
 	fSink.WriteUInt64((fOffsets.size() - 1) * fChunkSize + fChunkPosition);
 	}
@@ -100,14 +100,14 @@ ZStreamRPos_Compressed::ZStreamRPos_Compressed(const ZStreamRPos& iSource)
 	fPosition(0)
 	{
 	uint64 sourceSize = iSource.GetSize();
-	if (sourceSize < 8 + sizeof(sMagicText) + 12)
+	if (sourceSize < 8 + sizeof(spMagicText) + 12)
 		throw runtime_error("ZStreamRPos_Compressed, source too small");
 
-	iSource.SetPosition(sourceSize - sizeof(sMagicText) - 12);
-	char dummy[sizeof(sMagicText)];
+	iSource.SetPosition(sourceSize - sizeof(spMagicText) - 12);
+	char dummy[sizeof(spMagicText)];
 	size_t countRead;
-	iSource.Read(dummy, sizeof(sMagicText), &countRead);
-	if (countRead != sizeof(sMagicText) || 0 != memcmp(dummy, sMagicText, sizeof(sMagicText)))
+	iSource.Read(dummy, sizeof(spMagicText), &countRead);
+	if (countRead != sizeof(spMagicText) || 0 != memcmp(dummy, spMagicText, sizeof(spMagicText)))
 		throw runtime_error("ZStreamRPos_Compressed, magic text not found");
 	
 	fChunkSize = iSource.ReadUInt32();
@@ -115,7 +115,7 @@ ZStreamRPos_Compressed::ZStreamRPos_Compressed(const ZStreamRPos& iSource)
 	uint32 offsetCount = (fSize + fChunkSize - 1) / fChunkSize;
 	fOffsets.reserve(offsetCount);
 
-	iSource.SetPosition(sourceSize - sizeof(sMagicText) - 12 - (offsetCount * 8));
+	iSource.SetPosition(sourceSize - sizeof(spMagicText) - 12 - (offsetCount * 8));
 	for (size_t x = 0; x < offsetCount; ++x)
 		fOffsets.push_back(iSource.ReadUInt64());
 	}

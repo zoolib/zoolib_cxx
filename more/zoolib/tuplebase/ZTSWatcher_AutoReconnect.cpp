@@ -244,7 +244,7 @@ bool ZTSWatcher_AutoReconnect::pEstablishConnection()
 	// nests from outside in, but that may change when we switch to an async
 	// ZTSWatcher_Client implementation.
 
-	fTSWatcher->SetCallback(sCallback, this);
+	fTSWatcher->SetCallback(spCallback, this);
 	return true;
 	}
 
@@ -378,14 +378,14 @@ bool ZTSWatcher_AutoReconnect::pSync(
 	return false;
 	}
 
-void ZTSWatcher_AutoReconnect::Callback()
+void ZTSWatcher_AutoReconnect::pCallback()
 	{
 	if (fCallback)
 		fCallback(fRefcon);
 	}
 
-void ZTSWatcher_AutoReconnect::sCallback(void* iRefcon)
-	{ static_cast<ZTSWatcher_AutoReconnect*>(iRefcon)->Callback(); }
+void ZTSWatcher_AutoReconnect::spCallback(void* iRefcon)
+	{ static_cast<ZTSWatcher_AutoReconnect*>(iRefcon)->pCallback(); }
 
 // =================================================================================================
 #pragma mark -

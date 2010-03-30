@@ -92,8 +92,8 @@ private:
 		const uint64* iWrittenTupleIDs, const ZTuple* iWrittenTuples, size_t iWrittenTuplesCount,
 		std::map<int64, std::vector<uint64> >& oChangedQueries);
 
-	void Callback();
-	static void sCallback(void* iRefcon);
+	void pCallback();
+	static void spCallback(void* iRefcon);
 
 private:
 	ZMutex fMutex;

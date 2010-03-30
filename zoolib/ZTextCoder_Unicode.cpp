@@ -146,12 +146,12 @@ class Make_Encoder
 #pragma mark -
 #pragma mark * Utility functions
 
-static void sCopyUTF32(const void* iSource, void* iDest, size_t iCount)
+static void spCopyUTF32(const void* iSource, void* iDest, size_t iCount)
 	{
 	ZBlockCopy(iSource, iDest, iCount * sizeof(UTF32));
 	}
 
-static void sCopyUTF32Swapped(const void* iSource, void* iDest, size_t iCount)
+static void spCopyUTF32Swapped(const void* iSource, void* iDest, size_t iCount)
 	{
 	const UTF32* localSource = static_cast<const UTF32*>(iSource);
 	UTF32* localDest = static_cast<UTF32*>(iDest);
@@ -159,7 +159,7 @@ static void sCopyUTF32Swapped(const void* iSource, void* iDest, size_t iCount)
 		*localDest++ = ZByteSwap_Read32(localSource++);
 	}
 
-static bool sDecodeUTF32(
+static bool spDecodeUTF32(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* iDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -216,7 +216,7 @@ static bool sDecodeUTF32(
 		}
 	}
 
-static bool sDecodeUTF32Swapped(
+static bool spDecodeUTF32Swapped(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* iDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -273,7 +273,7 @@ static bool sDecodeUTF32Swapped(
 		}
 	}
 
-static bool sDecodeUTF16(
+static bool spDecodeUTF16(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* iDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -314,7 +314,7 @@ static bool sDecodeUTF16(
 		}
 	}
 
-static bool sDecodeUTF16Swapped(
+static bool spDecodeUTF16Swapped(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* iDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -414,7 +414,7 @@ static bool sDecodeUTF16Swapped(
 		}
 	}
 
-static void sEncodeUTF16(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+static void spEncodeUTF16(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* iDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	ZUnicode::sUTF32ToUTF16(
@@ -432,7 +432,7 @@ static void sEncodeUTF16(const UTF32* iSource, size_t iSourceCU, size_t* oSource
 		}
 	}
 
-static void sEncodeUTF16Swapped(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+static void spEncodeUTF16Swapped(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* iDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	size_t countGenerated;
@@ -454,7 +454,7 @@ static void sEncodeUTF16Swapped(const UTF32* iSource, size_t iSourceCU, size_t* 
 		}
 	}
 
-static bool sDecodeUTF8(
+static bool spDecodeUTF8(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* iDest, size_t iDestCU, size_t* oDestCU)
 	{
@@ -465,7 +465,7 @@ static bool sDecodeUTF8(
 		oDestCU);
 	}
 
-static void sEncodeUTF8(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
+static void spEncodeUTF8(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* iDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	ZUnicode::sUTF32ToUTF8(
@@ -486,12 +486,12 @@ bool ZTextDecoder_UTF32BE::Decode(
 	{
 	if (ZCONFIG(Endian, Big))
 		{
-		return sDecodeUTF32(
+		return spDecodeUTF32(
 			iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, iDest, iDestCU, oDestCU);
 		}
 	else
 		{
-		return sDecodeUTF32Swapped(
+		return spDecodeUTF32Swapped(
 			iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, iDest, iDestCU, oDestCU);
 		}
 	}
@@ -506,9 +506,9 @@ void ZTextEncoder_UTF32BE::Encode(const UTF32* iSource, size_t iSourceCU, size_t
 	size_t countToCopy = min(iSourceCU, iDestBytes / 4);
 
 	if (ZCONFIG(Endian, Big))
-		sCopyUTF32(iSource, iDest, countToCopy);
+		spCopyUTF32(iSource, iDest, countToCopy);
 	else
-		sCopyUTF32Swapped(iSource, iDest, countToCopy);
+		spCopyUTF32Swapped(iSource, iDest, countToCopy);
 
 	if (oSourceCU)
 		*oSourceCU = countToCopy;
@@ -526,12 +526,12 @@ bool ZTextDecoder_UTF32LE::Decode(
 	{
 	if (ZCONFIG(Endian, Big))
 		{
-		return sDecodeUTF32Swapped(
+		return spDecodeUTF32Swapped(
 			iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, iDest, iDestCU, oDestCU);
 		}
 	else
 		{
-		return sDecodeUTF32(
+		return spDecodeUTF32(
 			iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, iDest, iDestCU, oDestCU);
 		}
 	}
@@ -546,9 +546,9 @@ void ZTextEncoder_UTF32LE::Encode(const UTF32* iSource, size_t iSourceCU, size_t
 	size_t countToCopy = min(iSourceCU, iDestBytes / 4);
 
 	if (ZCONFIG(Endian, Big))
-		sCopyUTF32Swapped(iSource, iDest, countToCopy);
+		spCopyUTF32Swapped(iSource, iDest, countToCopy);
 	else
-		sCopyUTF32(iSource, iDest, countToCopy);
+		spCopyUTF32(iSource, iDest, countToCopy);
 
 	if (oSourceCU)
 		*oSourceCU = countToCopy;
@@ -566,12 +566,12 @@ bool ZTextDecoder_UTF16BE::Decode(
 	{
 	if (ZCONFIG(Endian, Big))
 		{
-		return sDecodeUTF16(
+		return spDecodeUTF16(
 			iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, iDest, iDestCU, oDestCU);
 		}
 	else
 		{
-		return sDecodeUTF16Swapped(
+		return spDecodeUTF16Swapped(
 			iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, iDest, iDestCU, oDestCU);
 		}
 	}
@@ -584,9 +584,9 @@ void ZTextEncoder_UTF16BE::Encode(const UTF32* iSource, size_t iSourceCU, size_t
 	void* iDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	if (ZCONFIG(Endian, Big))
-		sEncodeUTF16(iSource, iSourceCU, oSourceCU, iDest, iDestBytes, oDestBytes);
+		spEncodeUTF16(iSource, iSourceCU, oSourceCU, iDest, iDestBytes, oDestBytes);
 	else
-		sEncodeUTF16Swapped(iSource, iSourceCU, oSourceCU, iDest, iDestBytes, oDestBytes);
+		spEncodeUTF16Swapped(iSource, iSourceCU, oSourceCU, iDest, iDestBytes, oDestBytes);
 	}
 
 // =================================================================================================
@@ -599,12 +599,12 @@ bool ZTextDecoder_UTF16LE::Decode(
 	{
 	if (ZCONFIG(Endian, Big))
 		{
-		return sDecodeUTF16Swapped(
+		return spDecodeUTF16Swapped(
 			iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, iDest, iDestCU, oDestCU);
 		}
 	else
 		{
-		return sDecodeUTF16(
+		return spDecodeUTF16(
 		iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, iDest, iDestCU, oDestCU);
 		}
 	}
@@ -617,9 +617,9 @@ void ZTextEncoder_UTF16LE::Encode(const UTF32* iSource, size_t iSourceCU, size_t
 	void* iDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	if (ZCONFIG(Endian, Big))
-		sEncodeUTF16Swapped(iSource, iSourceCU, oSourceCU, iDest, iDestBytes, oDestBytes);
+		spEncodeUTF16Swapped(iSource, iSourceCU, oSourceCU, iDest, iDestBytes, oDestBytes);
 	else
-		sEncodeUTF16(iSource, iSourceCU, oSourceCU, iDest, iDestBytes, oDestBytes);
+		spEncodeUTF16(iSource, iSourceCU, oSourceCU, iDest, iDestBytes, oDestBytes);
 	}
 
 // =================================================================================================
@@ -630,7 +630,7 @@ bool ZTextDecoder_UTF8::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
 	UTF32* iDest, size_t iDestCU, size_t* oDestCU)
 	{
-	return sDecodeUTF8(
+	return spDecodeUTF8(
 		iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped, iDest, iDestCU, oDestCU);
 	}
 
@@ -641,7 +641,7 @@ bool ZTextDecoder_UTF8::Decode(
 void ZTextEncoder_UTF8::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
 	void* iDest, size_t iDestBytes, size_t* oDestBytes)
 	{
-	sEncodeUTF8(iSource, iSourceCU, oSourceCU, iDest, iDestBytes, oDestBytes);
+	spEncodeUTF8(iSource, iSourceCU, oSourceCU, iDest, iDestBytes, oDestBytes);
 	}
 
 // =================================================================================================
@@ -713,7 +713,7 @@ bool ZTextDecoder_Unicode_AutoDetect::Decode(
 			// We found a BOM. Record that we've consumed those bytes in oSourceBytes
 			// and return. Of course we haven't generated any output, but that's okay.
 			// We'll be called again, this time with the BOM skipped over and we
-			// can then call the appropriate sDecode method.
+			// can then call the appropriate spDecode method.
 			if (oSourceBytes)
 				*oSourceBytes = localSource - static_cast<const uint8*>(iSource);
 			return true;
@@ -724,19 +724,19 @@ bool ZTextDecoder_Unicode_AutoDetect::Decode(
 		{
 		case eUTF8:
 			{
-			return sDecodeUTF8(iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped,
+			return spDecodeUTF8(iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped,
 				iDest, iDestCU, oDestCU);
 			}
 		case eUTF16BE:
 			{
 			if (ZCONFIG(Endian, Big))
 				{
-				return sDecodeUTF16(iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped,
+				return spDecodeUTF16(iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped,
 					iDest, iDestCU, oDestCU);
 				}
 			else
 				{
-				return sDecodeUTF16Swapped(iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped,
+				return spDecodeUTF16Swapped(iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped,
 					iDest, iDestCU, oDestCU);
 				}
 			}
@@ -744,12 +744,12 @@ bool ZTextDecoder_Unicode_AutoDetect::Decode(
 			{
 			if (ZCONFIG(Endian, Big))
 				{
-				return sDecodeUTF16Swapped(iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped,
+				return spDecodeUTF16Swapped(iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped,
 					iDest, iDestCU, oDestCU);
 				}
 			else
 				{
-				return sDecodeUTF16(iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped,
+				return spDecodeUTF16(iSource, iSourceBytes, oSourceBytes, oSourceBytesSkipped,
 					iDest, iDestCU, oDestCU);
 				}
 			}

@@ -38,7 +38,7 @@ namespace ZBlackBerry {
 #pragma mark -
 #pragma mark * BlackBerry USB stuff
 
-static bool sSendControlMessage(IOUSBDeviceInterface182** iUDI,
+static bool spSendControlMessage(IOUSBDeviceInterface182** iUDI,
 	uint8_t bRequestType, uint8_t bRequest,
 	uint16_t wValue, uint16_t wIndex,
 	void* bytes, unsigned int numbytes,
@@ -58,7 +58,7 @@ static bool sSendControlMessage(IOUSBDeviceInterface182** iUDI,
 	return noErr == iUDI[0]->DeviceRequestTO(iUDI, &urequest);
 	}
 
-static bool sSetConfiguration(IOUSBDeviceInterface182** iUDI)
+static bool spSetConfiguration(IOUSBDeviceInterface182** iUDI)
 	{
 	IOUSBConfigurationDescriptorPtr confDesc;
 	if (0 == iUDI[0]->GetConfigurationDescriptorPtr(iUDI, 0, &confDesc))
@@ -71,7 +71,7 @@ static bool sSetConfiguration(IOUSBDeviceInterface182** iUDI)
 	return false;
 	}
 
-static UInt8 sGetUsedPower(ZRef<ZUSBDevice> iUSBDevice)
+static UInt8 spGetUsedPower(ZRef<ZUSBDevice> iUSBDevice)
 	{
 	if (IOUSBDeviceInterface182** theUDI = iUSBDevice->GetIOUSBDeviceInterface())
 		{
@@ -82,27 +82,26 @@ static UInt8 sGetUsedPower(ZRef<ZUSBDevice> iUSBDevice)
 	return 0;
 	}
 
-static bool sUseHighPower(ZRef<ZUSBDevice> iUSBDevice)
+static bool spUseHighPower(ZRef<ZUSBDevice> iUSBDevice)
 	{
 	if (IOUSBDeviceInterface182** theUDI = iUSBDevice->GetIOUSBDeviceInterface())
 		{
 		char buffer[2];
 
-		if (!sSendControlMessage(theUDI, 0xc0, 0xa5, 0, 0, buffer, 2, 100))
+		if (!spSendControlMessage(theUDI, 0xc0, 0xa5, 0, 0, buffer, 2, 100))
 			return false;
 
-		if (!sSendControlMessage(theUDI, 0x40, 0xa2, 0, 0, buffer, 0, 100))
+		if (!spSendControlMessage(theUDI, 0x40, 0xa2, 0, 0, buffer, 0, 100))
 			return false;
 
-		return sSetConfiguration(theUDI);
+		return spSetConfiguration(theUDI);
 		}
 	return false;
 	}
 
-static void sChangeMode(ZRef<ZUSBDevice> iUSBDevice, bool iAllowMassStorage)
+static void spChangeMode(ZRef<ZUSBDevice> iUSBDevice, bool iAllowMassStorage)
 	{
-	if (ZLOG(s, eDebug, "ZBlackBerry_OSXUSB"))
-		s << "sChangeMode, Enter";
+	ZLOGFUNCTION(eDebug);
 
 	if (IOUSBDeviceInterface182** theUDI = iUSBDevice->GetIOUSBDeviceInterface())
 		{
@@ -112,17 +111,17 @@ static void sChangeMode(ZRef<ZUSBDevice> iUSBDevice, bool iAllowMassStorage)
 		if (iAllowMassStorage)
 			theValue = 1;
 
-		if (!sSendControlMessage(theUDI, 0xc0, 0xa9, theValue, 0, buffer, 2, 100))
+		if (!spSendControlMessage(theUDI, 0xc0, 0xa9, theValue, 0, buffer, 2, 100))
 			{
 			if (ZLOG(s, eInfo, "ZBlackBerry_OSXUSB"))
-				s << "sChangeMode, Failed to send message";
+				s << "spChangeMode, Failed to send message";
 			}
 		else
 			{
-			if (!sSetConfiguration(theUDI))
+			if (!spSetConfiguration(theUDI))
 				{
 				if (ZLOG(s, eInfo, "ZBlackBerry_OSXUSB"))
-					s << "sChangeMode, Failed to set configuration";
+					s << "spChangeMode, Failed to set configuration";
 				}
 			else
 				{
@@ -130,9 +129,6 @@ static void sChangeMode(ZRef<ZUSBDevice> iUSBDevice, bool iAllowMassStorage)
 				}
 			}
 		}
-
-	if (ZLOG(s, eDebug, "ZBlackBerry_OSXUSB"))
-		s << "sChangeMode, Exit";
 	}
 
 // =================================================================================================
@@ -288,22 +284,22 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 		return;
 		}
 
-	const UInt8 usedPower = sGetUsedPower(iUSBDevice);
+	const UInt8 usedPower = spGetUsedPower(iUSBDevice);
 	if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 		s.Writef("Used power: %d", usedPower);
 
 	if (usedPower < 250)
 		{
-		// Note that call to sUseHighPower causes our connection to reset,
+		// Note that call to spUseHighPower causes our connection to reset,
 		// so this device will disappear and be rediscovered.
-		if (!sUseHighPower(iUSBDevice))
+		if (!spUseHighPower(iUSBDevice))
 			{
 			if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
-				s << "sUseHighPower returned false";
+				s << "spUseHighPower returned false";
 			}
 		else
 			{
-			const UInt8 usedPower = sGetUsedPower(iUSBDevice);
+			const UInt8 usedPower = spGetUsedPower(iUSBDevice);
 			if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 				s.Writef("After calling UseHighPower, used power: %d", usedPower);
 			}
@@ -314,7 +310,7 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 		if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 			s << "Mass storage only, changing modes.";
 
-		sChangeMode(iUSBDevice, fAllowMassStorage);
+		spChangeMode(iUSBDevice, fAllowMassStorage);
 
 		return;
 		}

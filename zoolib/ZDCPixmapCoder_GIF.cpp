@@ -44,8 +44,8 @@ typedef ZStreamW_Chunked StreamW_Chunk;
 
 } // anonymous namespace
 
-static const int sInterlaceStart[] = { 0, 4, 2, 1 };
-static const int sInterlaceIncrement[] = { 8, 8, 4, 2 };
+static const int spInterlaceStart[] = { 0, 4, 2, 1 };
+static const int spInterlaceIncrement[] = { 8, 8, 4, 2 };
 
 // =================================================================================================
 #pragma mark -
@@ -92,7 +92,7 @@ ZDCPixmapEncoder_GIF::ZDCPixmapEncoder_GIF(
 ZDCPixmapEncoder_GIF::~ZDCPixmapEncoder_GIF()
 	{}
 
-static void sWriteColorTable(const ZStreamW& iStream,
+static void spWriteColorTable(const ZStreamW& iStream,
 	const ZRGBA_POD* iColors, size_t iCountAvailable, size_t iCountNeeded)
 	{
 	iCountAvailable = min(iCountAvailable, iCountNeeded);
@@ -151,7 +151,7 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 	const ZRGBA_POD* theColors;
 	size_t theColorsCount;
 	thePixelDescRep_Indexed->GetColors(theColors, theColorsCount);
-	sWriteColorTable(iStream, theColors, theColorsCount, 1 << iRasterDesc.fPixvalDesc.fDepth);
+	spWriteColorTable(iStream, theColors, theColorsCount, 1 << iRasterDesc.fPixvalDesc.fDepth);
 
 	if (fTransparent)
 		{
@@ -214,8 +214,8 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 			{
 			for (int pass = 0; pass < 4; ++pass)
 				{
-				for (ZCoord currentY = iBounds.top + sInterlaceStart[pass];
-					currentY < iBounds.bottom; currentY += sInterlaceIncrement[pass])
+				for (ZCoord currentY = iBounds.top + spInterlaceStart[pass];
+					currentY < iBounds.bottom; currentY += spInterlaceIncrement[pass])
 					{
 					const void* sourceRowAddress
 						= iRasterDesc.CalcRowAddress(iBaseAddress, currentY);
@@ -262,7 +262,7 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 #pragma mark -
 #pragma mark * ZDCPixmapDecoder_GIF
 
-static void sReadColorTable(const ZStreamR& iStream,
+static void spReadColorTable(const ZStreamR& iStream,
 	size_t iCount, vector<ZRGBA_POD>& oColorTable)
 	{
 	oColorTable.resize(iCount);
@@ -282,7 +282,7 @@ static void sReadColorTable(const ZStreamR& iStream,
 		}
 	}
 
-static void sReadImageData(const ZStreamR& iStream,
+static void spReadImageData(const ZStreamR& iStream,
 	bool iInterlaced, const ZRect& iBounds, ZRef<ZDCPixmapRaster> ioRaster)
 	{
 	uint8 initialCodeSize = iStream.ReadUInt8();
@@ -303,8 +303,8 @@ static void sReadImageData(const ZStreamR& iStream,
 		{
 		for (int pass = 0; pass < 4; ++pass)
 			{
-			for (ZCoord currentY = iBounds.top + sInterlaceStart[pass];
-				currentY < iBounds.bottom; currentY += sInterlaceIncrement[pass])
+			for (ZCoord currentY = iBounds.top + spInterlaceStart[pass];
+				currentY < iBounds.bottom; currentY += spInterlaceIncrement[pass])
 				{
 				theSILZW.Read(theRowBuffer, iBounds.Width());
 				void* destRowAddress = destRasterDesc.CalcRowAddressDest(destBaseAddress, currentY);
@@ -343,7 +343,7 @@ ZDCPixmapDecoder_GIF::ZDCPixmapDecoder_GIF()
 ZDCPixmapDecoder_GIF::~ZDCPixmapDecoder_GIF()
 	{}
 
-static void sThrowBadFormat()
+static void spThrowBadFormat()
 	{
 	throw runtime_error("ZDCPixmapDecoder_GIF::Imp_Read, invalid BMP file");
 	}
@@ -362,15 +362,15 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			|| 'F' != iStream.ReadUInt8()
 			|| '8' != iStream.ReadUInt8())
 			{
-			sThrowBadFormat();
+			spThrowBadFormat();
 			}
 
 		uint8 version = iStream.ReadUInt8();
 		if ('7' != version && '9' != version)
-			sThrowBadFormat();
+			spThrowBadFormat();
 
 		if ('a' != iStream.ReadUInt8())
-			sThrowBadFormat();
+			spThrowBadFormat();
 
 		fIs89a = version == '9';
 	
@@ -389,7 +389,7 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 		if (strmHasGlobalColorTable)
 			{
 			vector<ZRGBA_POD> theColors;
-			sReadColorTable(iStream, 1 << (strmGlobalColorTableSize + 1), theColors);
+			spReadColorTable(iStream, 1 << (strmGlobalColorTableSize + 1), theColors);
 			fPixelDesc = PixelDesc(&theColors[0], theColors.size());
 			}
 
@@ -459,11 +459,11 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			if (strmHasLocalColorTable)
 				{
 				vector<ZRGBA_POD> theColors;
-				sReadColorTable(iStream, 1 << (strmLocalColorTableSize + 1), theColors);
+				spReadColorTable(iStream, 1 << (strmLocalColorTableSize + 1), theColors);
 				thePixelDesc = PixelDesc(&theColors[0], theColors.size());
 				}
 
-			sReadImageData(iStream, strmIsInterlaced, curBounds, fRaster);
+			spReadImageData(iStream, strmIsInterlaced, curBounds, fRaster);
 			oPixmap = new ZDCPixmapRep(fRaster, ZRect(fSize), thePixelDesc);
 			return;
 			}

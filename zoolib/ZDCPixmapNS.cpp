@@ -190,7 +190,7 @@ StandardToInfoColor_t sStandardToInfoColor[] =
 #endif
 	};
 
-static void sMaskToShiftsAndMultiplier(uint32 iMask,
+static void spMaskToShiftsAndMultiplier(uint32 iMask,
 	int32& oShiftLeft, int32& oShiftRight, uint32& oMultiplier, uint32& oAdd)
 	{
 	if (iMask == 0)
@@ -228,7 +228,7 @@ static void sMaskToShiftsAndMultiplier(uint32 iMask,
 		}
 	}
 
-static uint8* sBuildReverseLookup(const ZRGBA_POD* iColors, size_t iCount)
+static uint8* spBuildReverseLookup(const ZRGBA_POD* iColors, size_t iCount)
 	{
 	ZAssertStop(kDebug_PixmapNS, iCount <= 256);
 	uint8* lookupTable = new uint8[4096];
@@ -667,12 +667,12 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 #endif
 
 #if __MWERKS__ && __MACH__
-static uint32 sByteSwap_Read32(const uint32* iValueAddress)
+static uint32 spByteSwap_Read32(const uint32* iValueAddress)
 	{
 	return ZByteSwap_Read32(iValueAddress);
 	}
 
-static void sByteSwap_Write32(uint32* iValueAddress, uint32 iValue)
+static void spByteSwap_Write32(uint32* iValueAddress, uint32 iValue)
 	{
 	ZByteSwap_Write32(iValueAddress, iValue);
 	}
@@ -895,11 +895,11 @@ void ZDCPixmapNS::PixvalAccessor::GetPixvals(const void* iRowAddress,
 					localCount -= 4;
 
 					// AG 2002-04-27. We run out of registers when compiling this
-					// with CW Mach, hence the use of sByteSwap_Read32.
+					// with CW Mach, hence the use of spByteSwap_Read32.
 					#if __MWERKS__ && __MACH__
-					c1a0b0c0 = sByteSwap_Read32(localSource32++);
-					b2c2a1b1 = sByteSwap_Read32(localSource32++);
-					a3b3c3a2 = sByteSwap_Read32(localSource32++);
+					c1a0b0c0 = spByteSwap_Read32(localSource32++);
+					b2c2a1b1 = spByteSwap_Read32(localSource32++);
+					a3b3c3a2 = spByteSwap_Read32(localSource32++);
 					#else
 					c1a0b0c0 = ZByteSwap_Read32(localSource32++);
 					b2c2a1b1 = ZByteSwap_Read32(localSource32++);
@@ -1411,9 +1411,9 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 					a3b3c3 = iPixvals[3] & 0x00FFFFFF;
 					iPixvals += 4;
 					#if __MWERKS__ && __MACH__
-					sByteSwap_Write32(localDest32++, a0b0c0 | (a1b1c1 << 24));
-					sByteSwap_Write32(localDest32++, (a1b1c1 >> 8) | (a2b2c2 << 16));
-					sByteSwap_Write32(localDest32++, (a2b2c2 >> 16) | (a3b3c3 << 8));
+					spByteSwap_Write32(localDest32++, a0b0c0 | (a1b1c1 << 24));
+					spByteSwap_Write32(localDest32++, (a1b1c1 >> 8) | (a2b2c2 << 16));
+					spByteSwap_Write32(localDest32++, (a2b2c2 >> 16) | (a3b3c3 << 8));
 					#else
 					ZByteSwap_Write32(localDest32++, a0b0c0 | (a1b1c1 << 24));
 					ZByteSwap_Write32(localDest32++, (a1b1c1 >> 8) | (a2b2c2 << 16));
@@ -1992,7 +1992,7 @@ void ZDCPixmapNS::PixelDescRep_Indexed::Imp_AsPixvals(
 void ZDCPixmapNS::PixelDescRep_Indexed::BuildReverseLookupIfNeeded() const
 	{
 	if (!fReverseLookup)
-		fReverseLookup = sBuildReverseLookup(fColors, fCount);
+		fReverseLookup = spBuildReverseLookup(fColors, fCount);
 	}
 
 void ZDCPixmapNS::PixelDescRep_Indexed::GetColors(
@@ -2013,11 +2013,11 @@ bool ZDCPixmapNS::PixelDescRep_Indexed::Matches(const PixelDescRep_Indexed* iOth
 
 ZDCPixmapNS::PixelDescRep_Gray::PixelDescRep_Gray(uint32 iMaskL, uint32 iMaskA)
 	{
-	sMaskToShiftsAndMultiplier(iMaskL, fShiftLeftL, fShiftRightL, fMultiplierL, fAddL);
+	spMaskToShiftsAndMultiplier(iMaskL, fShiftLeftL, fShiftRightL, fMultiplierL, fAddL);
 	fShiftL = fShiftLeftL;
 	fMaskL = iMaskL;
 
-	sMaskToShiftsAndMultiplier(iMaskA, fShiftLeftA, fShiftRightA, fMultiplierA, fAddA);
+	spMaskToShiftsAndMultiplier(iMaskA, fShiftLeftA, fShiftRightA, fMultiplierA, fAddA);
 	fShiftA = fShiftLeftA;
 	fMaskA = iMaskA;
 	}
@@ -2075,19 +2075,19 @@ ZDCPixmapNS::PixelDescRep_Color::PixelDescRep_Color(
 	ZAssertStop(kDebug_PixmapNS, 0 == ((iMaskR & iMaskG) | (iMaskR & iMaskB) | (iMaskR & iMaskA)
 		| (iMaskG & iMaskB) | (iMaskG & iMaskA) | (iMaskB & iMaskA)));
 
-	sMaskToShiftsAndMultiplier(iMaskR, fShiftLeftR, fShiftRightR, fMultiplierR, fAddR);
+	spMaskToShiftsAndMultiplier(iMaskR, fShiftLeftR, fShiftRightR, fMultiplierR, fAddR);
 	fShiftR = fShiftLeftR;
 	fMaskR = iMaskR;
 
-	sMaskToShiftsAndMultiplier(iMaskG, fShiftLeftG, fShiftRightG, fMultiplierG, fAddG);
+	spMaskToShiftsAndMultiplier(iMaskG, fShiftLeftG, fShiftRightG, fMultiplierG, fAddG);
 	fShiftG = fShiftLeftG;
 	fMaskG = iMaskG;
 
-	sMaskToShiftsAndMultiplier(iMaskB, fShiftLeftB, fShiftRightB, fMultiplierB, fAddB);
+	spMaskToShiftsAndMultiplier(iMaskB, fShiftLeftB, fShiftRightB, fMultiplierB, fAddB);
 	fShiftB = fShiftLeftB;
 	fMaskB = iMaskB;
 
-	sMaskToShiftsAndMultiplier(iMaskA, fShiftLeftA, fShiftRightA, fMultiplierA, fAddA);
+	spMaskToShiftsAndMultiplier(iMaskA, fShiftLeftA, fShiftRightA, fMultiplierA, fAddA);
 	fShiftA = fShiftLeftA;
 	fMaskA = iMaskA;
 	}

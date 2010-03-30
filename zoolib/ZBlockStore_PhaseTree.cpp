@@ -553,9 +553,9 @@ PT_INLINE uint32 ZBlockStore_PhaseTree::Index_GetSubTreeSize(Slot* iSlot, size_t
 // We embed CRLF, CR and LF into the magic text, if the file passes through
 // a line-ending transforming gateway of some kind one or other (or all) of
 // the endings will get munged and the magic text will be messed up.
-static const char sMagicText[] = "PT1.0 CRLF\r\nCR\rLF\n";
+static const char spMagicText[] = "PT1.0 CRLF\r\nCR\rLF\n";
 
-static void sThrowBadFormat()
+static void spThrowBadFormat()
 	{
 	throw std::runtime_error("ZBlockStore_PhaseTree, bad format");
 	}
@@ -564,7 +564,7 @@ static void sThrowBadFormat()
 Layout of header
 
 fUserHeaderSize bytes that are never touched.
-the string defined by sMagicText (including the terminating zero.)
+the string defined by spMagicText (including the terminating zero.)
 uint32 -- slot size
 uint32 -- highwater
 uint32 -- root slot number
@@ -605,7 +605,7 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(
 		iSlotSize >= sizeof(uint32) + (sizeof(uint32) * (5 + 6 + 6)));
 
 	// Additionally slots must be large enough to accomodate the metaroot (43 bytes.)
-	ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlotSize >= sizeof(sMagicText) + 6 * sizeof(uint32));
+	ZAssertStop(ZCONFIG_PhaseTree_Debug, iSlotSize >= sizeof(spMagicText) + 6 * sizeof(uint32));
 
 	fCapacity_BlockRoot_Byte = fSlotSize - sizeof(uint32);
 	fCapacity_BlockRoot_Slots = (fSlotSize - sizeof(uint32)) / sizeof(uint32);
@@ -623,7 +623,7 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(
 
 	theStream.SetSize(fUserHeaderSize + fSlotSize); // Truncate
 	theStream.SetPosition(fUserHeaderSize);
-	theStream.Write(sMagicText, sizeof(sMagicText));
+	theStream.Write(spMagicText, sizeof(spMagicText));
 	theStream.WriteUInt32(fSlotSize);
 	theStream.WriteUInt32(fHighWater);
 	theStream.WriteUInt32(fRootSlotNumber);
@@ -658,15 +658,15 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(ZRef<ZFileRW> iFile, size_t iUserHe
 
 	ZStreamRWPos_FileRW theStream(fFileRW);
 
-	if (theStream.GetSize() < fUserHeaderSize + sizeof(sMagicText) + 6 * sizeof(uint32))
-		sThrowBadFormat();
+	if (theStream.GetSize() < fUserHeaderSize + sizeof(spMagicText) + 6 * sizeof(uint32))
+		spThrowBadFormat();
 
 	theStream.SetPosition(fUserHeaderSize);
 
-	char dummy[sizeof(sMagicText)];
-	theStream.Read(dummy, sizeof(sMagicText));
-	if (0 != memcmp(dummy, sMagicText, sizeof(sMagicText)))
-		sThrowBadFormat();
+	char dummy[sizeof(spMagicText)];
+	theStream.Read(dummy, sizeof(spMagicText));
+	if (0 != memcmp(dummy, spMagicText, sizeof(spMagicText)))
+		spThrowBadFormat();
 
 	fSlotSize = theStream.ReadUInt32();
 	fHighWater = theStream.ReadUInt32();
@@ -678,7 +678,7 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(ZRef<ZFileRW> iFile, size_t iUserHe
 	// stream to be larger than what the header says it needs. However, it must
 	// not have been made smaller.
 	if (theStream.GetSize() < fUserHeaderSize + fSlotSize * fHighWater)
-		sThrowBadFormat();
+		spThrowBadFormat();
 	theStream.SetSize(fUserHeaderSize + fSlotSize * fHighWater);
 
 	uint32 freeListHeadSlotNumber = theStream.ReadUInt32();
@@ -744,15 +744,15 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(ZRef<ZFileR> iFile, size_t iUserHea
 
 	ZStreamRPos_FileR theStream(fFileR);
 
-	if (theStream.GetSize() < fUserHeaderSize + sizeof(sMagicText) + 6 * sizeof(uint32))
-		sThrowBadFormat();
+	if (theStream.GetSize() < fUserHeaderSize + sizeof(spMagicText) + 6 * sizeof(uint32))
+		spThrowBadFormat();
 
 	theStream.SetPosition(fUserHeaderSize);
 
-	char dummy[sizeof(sMagicText)];
-	theStream.Read(dummy, sizeof(sMagicText));
-	if (0 != memcmp(dummy, sMagicText, sizeof(sMagicText)))
-		sThrowBadFormat();
+	char dummy[sizeof(spMagicText)];
+	theStream.Read(dummy, sizeof(spMagicText));
+	if (0 != memcmp(dummy, spMagicText, sizeof(spMagicText)))
+		spThrowBadFormat();
 
 	fSlotSize = theStream.ReadUInt32();
 	fHighWater = theStream.ReadUInt32();
@@ -764,7 +764,7 @@ ZBlockStore_PhaseTree::ZBlockStore_PhaseTree(ZRef<ZFileR> iFile, size_t iUserHea
 	// stream to be larger than what the header says it needs. However, it must
 	// not have been made smaller.
 	if (theStream.GetSize() < fUserHeaderSize + fSlotSize * fHighWater)
-		sThrowBadFormat();
+		spThrowBadFormat();
 
 	uint32 freeListHeadSlotNumber = theStream.ReadUInt32();
 	uint32 freeListCount = theStream.ReadUInt32();
@@ -819,7 +819,7 @@ ZBlockStore_PhaseTree::~ZBlockStore_PhaseTree()
 		}
 	}
 
-static void sCalcHighWaterAndMunge(uint32& ioHighWater, set<uint32>& ioSet)
+static void spCalcHighWaterAndMunge(uint32& ioHighWater, set<uint32>& ioSet)
 	{
 	if (ioSet.size())
 		{
@@ -837,7 +837,7 @@ static void sCalcHighWaterAndMunge(uint32& ioHighWater, set<uint32>& ioSet)
 	ioSet.erase(iter, ioSet.end());
 	}
 
-static void sSetAugment(const set<uint32>& iSet1, set<uint32>& ioSet2)
+static void spSetAugment(const set<uint32>& iSet1, set<uint32>& ioSet2)
 	{
 	for (set<uint32>::const_iterator i = iSet1.begin(); i != iSet1.end(); ++i)
 		ioSet2.insert(*i);
@@ -1010,11 +1010,11 @@ allocated since we started the flush and that will form part of the next snapsho
 	// Chop off from the end of releasedAll any slots that are contiguous
 	// with each other and the high water we're going to write to the
 	// header, and adjust the written high water to match.
-	sCalcHighWaterAndMunge(writtenHighWater, releasedAll);
+	spCalcHighWaterAndMunge(writtenHighWater, releasedAll);
 
 	// Similarly, chop off from fSlots_ReleasedForked those slots contiguous with
 	// the current highWater.
-	sCalcHighWaterAndMunge(fHighWater, fSlots_ReleasedForked);
+	spCalcHighWaterAndMunge(fHighWater, fSlots_ReleasedForked);
 
 	ZAssertStop(ZCONFIG_PhaseTree_Debug, writtenHighWater <= fHighWater);
 
@@ -1060,7 +1060,7 @@ allocated since we started the flush and that will form part of the next snapsho
 		}
 
 	// From this point on our clean released slots are augmented by what's in pages.
-	sSetAugment(pages, fSlots_ReleasedClean);
+	spSetAugment(pages, fSlots_ReleasedClean);
 
 	// Our forked released slots are augmented by all the slots between
 	// writtenHighWater (included) and fHighWater (not included).
@@ -1128,7 +1128,7 @@ failure -- it must write completely or not at all.
 
 	ZStreamWPos_Memory bufferStream(&buffer[0], fSlotSize);
 
-	bufferStream.Write(sMagicText, sizeof(sMagicText));
+	bufferStream.Write(spMagicText, sizeof(spMagicText));
 	bufferStream.WriteUInt32(fSlotSize);
 	bufferStream.WriteUInt32(writtenHighWater);
 	bufferStream.WriteUInt32(writtenRootSlotNumber);
@@ -1154,7 +1154,7 @@ stageOneReleasedClean still references a bunch of slots that were free but that 
 be written to until the header had been written out. Add those slots into fSlots_ReleasedForked.
 */
 	fMutex_Slots.Acquire();
-	sSetAugment(stageOneReleasedClean, fSlots_ReleasedForked);
+	spSetAugment(stageOneReleasedClean, fSlots_ReleasedForked);
 	fMutex_Slots.Release();
 
 	// Let other calls to flush proceed.
@@ -1385,7 +1385,7 @@ void ZBlockStore_PhaseTree::ValidateTree()
 		}
 	}
 
-static void sPrintIndent(int iIndent)
+static void spPrintIndent(int iIndent)
 	{
 	for (int i = 0; i < iIndent; ++i)
 		fprintf(stdout, ". ");
@@ -1396,16 +1396,16 @@ void ZBlockStore_PhaseTree::DumpOne(Slot* iSlot, int iHeight, int iIndent)
 	size_t count = this->Index_GetCount(iSlot);
 	if (iHeight)
 		{
-		sPrintIndent(iIndent);
+		spPrintIndent(iIndent);
 		fprintf(stdout, "Count: %d Slot: %d\n", count, iSlot->fSlotNumber);
 		for (size_t x = 0; x <= count; ++x)
 			{
 			if (x)
 				{
-				sPrintIndent(iIndent);
+				spPrintIndent(iIndent);
 				fprintf(stdout, "Key: %08X\n", this->Index_GetKey(iSlot, false, x - 1));
 				}
-			sPrintIndent(iIndent);
+			spPrintIndent(iIndent);
 			fprintf(stdout, "SubTree: %d\n", this->Index_GetSubTreeSize(iSlot, x));
 			Slot* theSlot = this->UseSlot(this->Index_GetChild(iSlot, false, x));
 			this->DumpOne(theSlot, iHeight - 1, iIndent + 1);
@@ -1414,11 +1414,11 @@ void ZBlockStore_PhaseTree::DumpOne(Slot* iSlot, int iHeight, int iIndent)
 		}
 	else
 		{
-		sPrintIndent(iIndent);
+		spPrintIndent(iIndent);
 		fprintf(stdout, "Count: %d Slot: %d\n", count, iSlot->fSlotNumber);
 		for (size_t x = 0; x < count; ++x)
 			{
-			sPrintIndent(iIndent);
+			spPrintIndent(iIndent);
 			fprintf(stdout, "Key: %08X ", this->Index_GetKey(iSlot, true, x));
 			Slot* theBlockSlot = this->UseSlot(this->Index_GetChild(iSlot, true, x));
 			this->DumpBlock(theBlockSlot, 0);

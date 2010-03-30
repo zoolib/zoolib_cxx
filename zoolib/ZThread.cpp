@@ -33,31 +33,31 @@ namespace ZThread {
 
 ZAssertCompile(sizeof(void*) == sizeof(ProcVoid_t));
 
-static ZAtomic_t sThreadCount;
+static ZAtomic_t spThreadCount;
 
 void sStarted()
-	{ ZAtomic_Inc(&sThreadCount); }
+	{ ZAtomic_Inc(&spThreadCount); }
 
 void sFinished()
-	{ ZAtomic_Dec(&sThreadCount); }
+	{ ZAtomic_Dec(&spThreadCount); }
 
-static bool sDontTearDown;
+static bool spDontTearDown;
 
 void sDontTearDownTillAllThreadsExit()
-	{ sDontTearDown = true; }
+	{ spDontTearDown = true; }
 
-static ZAtomic_t sInitCount;
+static ZAtomic_t spInitCount;
 
 InitHelper::InitHelper()
-	{ ZAtomic_Inc(&sInitCount); }
+	{ ZAtomic_Inc(&spInitCount); }
 
 InitHelper::~InitHelper()
 	{
-	if (ZAtomic_DecAndTest(&sInitCount) && sDontTearDown)
+	if (ZAtomic_DecAndTest(&spInitCount) && spDontTearDown)
 		{
 		for (;;)
 			{
-			int count = ZAtomic_Get(&sThreadCount);
+			int count = ZAtomic_Get(&spThreadCount);
 			// This sleep serves two purposes. First it means we're polling at
 			// intervals for the value of sThreadCount, rather than busy-waiting.
 			// Second, at least .1s will elapse between the thread count hitting
@@ -74,9 +74,9 @@ InitHelper::~InitHelper()
 	}
 
 #if ZCONFIG_API_Enabled(ThreadImp_Win)
-	static ProcResult_t __stdcall sEntryVoid(ProcVoid_t iProc)
+	static ProcResult_t __stdcall spEntryVoid(ProcVoid_t iProc)
 #else
-	static ProcResult_t sEntryVoid(ProcVoid_t iProc)
+	static ProcResult_t spEntryVoid(ProcVoid_t iProc)
 #endif
 	{
 	sStarted();
@@ -100,7 +100,7 @@ void sCreateVoid(ProcVoid_t iProcVoid)
 
 	theConverter.fAsProc = iProcVoid;
 
-	sCreateRaw(0, (ProcRaw_t)sEntryVoid, theConverter.fAsPointer);
+	sCreateRaw(0, (ProcRaw_t)spEntryVoid, theConverter.fAsPointer);
 	}
 
 } // namespace ZThread

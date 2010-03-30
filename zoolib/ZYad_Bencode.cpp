@@ -60,7 +60,7 @@ static bool spTryRead_Digit(const ZStreamU& s, int& oDigit)
 	return false;
 	}
 
-static bool sTryRead_DecimalInteger(const ZStreamU& s, int64& oInteger)
+static bool spTryRead_DecimalInteger(const ZStreamU& s, int64& oInteger)
 	{
 	oInteger = 0;
 	bool isValid = false;
@@ -79,7 +79,7 @@ static bool spTryRead_SignedInteger(const ZStreamU& s, int64& oInteger)
 	{
 	const bool isNegative = spTryRead_Byte(s, '-');
 
-	if (!sTryRead_DecimalInteger(s, oInteger))
+	if (!spTryRead_DecimalInteger(s, oInteger))
 		return false;
 
 	if (isNegative)
@@ -91,7 +91,7 @@ static bool spTryRead_SignedInteger(const ZStreamU& s, int64& oInteger)
 static int64 spRead_PositiveInteger(const ZStreamU& s)
 	{
 	int64 result;
-	if (!sTryRead_DecimalInteger(s, result))
+	if (!spTryRead_DecimalInteger(s, result))
 		spThrowParseException("Expected unsigned length");
 	return result;
 	}

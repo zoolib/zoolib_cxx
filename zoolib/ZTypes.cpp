@@ -122,7 +122,7 @@ used most commonly in ZVal_ZooLib.
 /**
 Provides standard textual versions of ZType values.
 */
-static const char* const sZTypeAsString[eZType_Max] =
+static const char* const spZTypeAsString[eZType_Max] =
 	{
 	"Null",
 	"String",
@@ -151,7 +151,7 @@ static const char* const sZTypeAsString[eZType_Max] =
 const char* ZTypeAsString(ZType iType)
 	{
 	if (iType <= eZType_Time)
-		return sZTypeAsString[iType];
+		return spZTypeAsString[iType];
 	return "Unknown";
 	}
 

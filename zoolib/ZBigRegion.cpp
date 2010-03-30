@@ -206,7 +206,7 @@ ZBigRegion& ZBigRegion::operator=(const ZRect_T<int32>& iBounds)
 	return *this;
 	}
 
-static void sCompress(ZBigRegion& ioRegion,
+static void spCompress(ZBigRegion& ioRegion,
 	ZBigRegion& ioTempRegion1, ZBigRegion& ioTempRegion2,
 	int32 delta, bool iHorizontal, bool iGrow)
 	{
@@ -267,12 +267,12 @@ void ZBigRegion::MakeInset(int32 iInsetH, int32 iInsetV)
 	bool grow = iInsetH < 0;
 	if (grow)
 		iInsetH = -iInsetH;
-	sCompress(*this, tempRegion1, tempBigRegion2, 2 * iInsetH, true, grow);
+	spCompress(*this, tempRegion1, tempBigRegion2, 2 * iInsetH, true, grow);
 
 	grow = iInsetV < 0;
 	if (grow)
 		iInsetV = -iInsetV;
-	sCompress(*this, tempRegion1, tempBigRegion2, 2*iInsetV, false, grow);
+	spCompress(*this, tempRegion1, tempBigRegion2, 2*iInsetV, false, grow);
 
 	*this += ZPoint_T<int32>(iInsetH, iInsetV);
 	}

@@ -230,7 +230,7 @@ ZRef<ZNetListener_TCP_Socket> ZNetListener_TCP_Socket::sCreateWithFD(
 	return ZRef<ZNetListener_TCP_Socket>();
 	}
 
-static int sEnsureInet(int iSocketFD)
+static int spEnsureInet(int iSocketFD)
 	{
 	sockaddr_in localSockAddr;
 	socklen_t length = sizeof(localSockAddr);
@@ -244,7 +244,7 @@ static int sEnsureInet(int iSocketFD)
 
 ZNetListener_TCP_Socket::ZNetListener_TCP_Socket(
 	int iSocketFD, size_t iListenQueueSize, bool iKnowWhatImDoing)
-:	ZNetListener_Socket(sEnsureInet(iSocketFD), iListenQueueSize)
+:	ZNetListener_Socket(spEnsureInet(iSocketFD), iListenQueueSize)
 	{
 	// We could ensure that iSocketFD
 	ZAssert(iKnowWhatImDoing);
@@ -280,7 +280,7 @@ ZRef<ZNetEndpoint> ZNetListener_TCP_Socket::Imp_MakeEndpoint(int iSocketFD)
 #pragma mark -
 #pragma mark * ZNetEndpoint_TCP_Socket
 
-static void sSetSocketOptions(int iSocketFD)
+static void spSetSocketOptions(int iSocketFD)
 	{
 	// There's no simple way to flush a socket under MacOS X. We could hold on to the last byte
 	// written, then set NODELAY, write the byte, and clear NODELAY. I don't want to munge
@@ -295,10 +295,10 @@ static void sSetSocketOptions(int iSocketFD)
 ZNetEndpoint_TCP_Socket::ZNetEndpoint_TCP_Socket(int iSocketFD)
 :	ZNetEndpoint_Socket(iSocketFD)
 	{
-	sSetSocketOptions(this->GetSocketFD());
+	spSetSocketOptions(this->GetSocketFD());
 	}
 
-static int sConnect(ip_addr iRemoteHost, ip_port iRemotePort)
+static int spConnect(ip_addr iRemoteHost, ip_port iRemotePort)
 	{
 	int socketFD = ::socket(PF_INET, SOCK_STREAM, 0);
 	if (socketFD < 0)
@@ -318,9 +318,9 @@ static int sConnect(ip_addr iRemoteHost, ip_port iRemotePort)
 	}
 
 ZNetEndpoint_TCP_Socket::ZNetEndpoint_TCP_Socket(ip_addr iRemoteHost, ip_port iRemotePort)
-:	ZNetEndpoint_Socket(sConnect(iRemoteHost, iRemotePort))
+:	ZNetEndpoint_Socket(spConnect(iRemoteHost, iRemotePort))
 	{
-	sSetSocketOptions(this->GetSocketFD());
+	spSetSocketOptions(this->GetSocketFD());
 	}
 
 ZNetEndpoint_TCP_Socket::~ZNetEndpoint_TCP_Socket()

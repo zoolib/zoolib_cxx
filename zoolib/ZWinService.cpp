@@ -35,14 +35,14 @@ using std::wstring;
 #pragma mark -
 #pragma mark * ZWinService
 
-static vector<SERVICE_TABLE_ENTRYW> sEntries;
+static vector<SERVICE_TABLE_ENTRYW> spEntries;
 
 void ZWinService::sRunDispatcher()
 	{
 	if (ZLOG(s, eDebug, "ZWinService"))
 		s << "ZWinService::sRunDispatcher 1";
 
-	if (sEntries.empty())
+	if (spEntries.empty())
 		{
 		// The vector is empty, so no service instances have been
 		// created, and there's nothing to do. So bail out.
@@ -50,11 +50,11 @@ void ZWinService::sRunDispatcher()
 		}
 
 	SERVICE_TABLE_ENTRYW nullEntry = { nullptr, nullptr };
-	sEntries.push_back(nullEntry);
+	spEntries.push_back(nullEntry);
 
 	if (ZLOG(s, eDebug, "ZWinService"))
 		s << "ZWinService::sRunDispatcher 2";
-	::StartServiceCtrlDispatcherW(&sEntries[0]);	
+	::StartServiceCtrlDispatcherW(&spEntries[0]);	
 	}
 
 ZWinService::ZWinService(
@@ -68,7 +68,7 @@ ZWinService::ZWinService(
 	SERVICE_TABLE_ENTRYW theEntry;
 	theEntry.lpServiceName = const_cast<wchar_t*>(fServiceName.c_str());
 	theEntry.lpServiceProc = iServiceMain;
-	sEntries.push_back(theEntry);
+	spEntries.push_back(theEntry);
 	}
 
 void ZWinService::Pause()

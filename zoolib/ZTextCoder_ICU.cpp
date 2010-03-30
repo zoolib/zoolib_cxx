@@ -71,7 +71,7 @@ class Make_Encoder
 #pragma mark -
 #pragma mark * ZTextDecoder_ICU
 
-static void sCallbackCount(const void* iContext, UConverterToUnicodeArgs* toUArgs,
+static void spCallbackCount(const void* iContext, UConverterToUnicodeArgs* toUArgs,
 	const char* codePoints, int32_t length, UConverterCallbackReason reason, UErrorCode* err)
 	{
 	if (reason == UCNV_UNASSIGNED)
@@ -87,7 +87,7 @@ ZTextDecoder_ICU::ZTextDecoder_ICU(const string& iSourceName)
 	fConverter = ::ucnv_open(iSourceName.c_str(), &status);
 	if (!fConverter)
 		throw runtime_error("Couldn't open converter");
-	::ucnv_setToUCallBack(fConverter, sCallbackCount, &fCountSkipped, nullptr, nullptr, &status);
+	::ucnv_setToUCallBack(fConverter, spCallbackCount, &fCountSkipped, nullptr, nullptr, &status);
 	}
 
 ZTextDecoder_ICU::ZTextDecoder_ICU(const char* iSourceName)
@@ -96,7 +96,7 @@ ZTextDecoder_ICU::ZTextDecoder_ICU(const char* iSourceName)
 	fConverter = ::ucnv_open(iSourceName, &status);
 	if (!fConverter)
 		throw runtime_error("Couldn't open converter");
-	::ucnv_setToUCallBack(fConverter, sCallbackCount, &fCountSkipped, nullptr, nullptr, &status);
+	::ucnv_setToUCallBack(fConverter, spCallbackCount, &fCountSkipped, nullptr, nullptr, &status);
 	}
 
 ZTextDecoder_ICU::~ZTextDecoder_ICU()

@@ -65,7 +65,7 @@ extern void sInvoke(int iLevel, bool iStop,
 		}
 	}
 
-static const char* sTruncateFileName(const char* inFilename)
+static const char* spTruncateFileName(const char* inFilename)
 	{
 	if (const char* truncatedFileName = strrchr(inFilename, '/'))
 		return truncatedFileName + 1;
@@ -80,7 +80,7 @@ size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams)
 			"Assertion failed: (%s), in %s[%s:%d]",
 			iParams.fConditionMessage,
 			iParams.fFunctionName,
-			sTruncateFileName(iParams.fFileName),
+			spTruncateFileName(iParams.fFileName),
 			iParams.fLine);
 		}
 	else
@@ -88,7 +88,7 @@ size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams)
 		return snprintf(iBuf, iBufSize,
 			"%s[%s:%d]",
 			iParams.fFunctionName,
-			sTruncateFileName(iParams.fFileName),
+			spTruncateFileName(iParams.fFileName),
 			iParams.fLine);
 		}
 	}
@@ -99,7 +99,7 @@ size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams)
 
 #if ZCONFIG_SPI_Enabled(POSIX)
 
-static void sHandleDebug_POSIX(const Params_t& iParams, va_list iArgs)
+static void spHandleDebug_POSIX(const Params_t& iParams, va_list iArgs)
 	{
 	char theBuf[4096];
 	sFormatStandardMessage(theBuf, sizeof(theBuf), iParams);
@@ -125,7 +125,7 @@ public:
 
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = sHandleDebug_POSIX;
+		oResult = spHandleDebug_POSIX;
 		return true;
 		}
 	} sDebugFunction_POSIX;
@@ -228,7 +228,7 @@ static bool sIsDebuggerPresent()
 	#endif
 	}
 
-static void sHandleDebug_Win(const Params_t& iParams, va_list iArgs)
+static void spHandleDebug_Win(const Params_t& iParams, va_list iArgs)
 	{
 	char theBuf[4096];
 	size_t theLength = sFormatStandardMessage(theBuf, sizeof(theBuf), iParams);
@@ -263,7 +263,7 @@ public:
 
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = sHandleDebug_Win;
+		oResult = spHandleDebug_Win;
 		return true;
 		}
 	} sDebugFunction_Win;

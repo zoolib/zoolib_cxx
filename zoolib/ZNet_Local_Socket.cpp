@@ -128,7 +128,7 @@ ZRef<ZNetListener_Local_Socket> ZNetListener_Local_Socket::sCreateWithFD(
 	return ZRef<ZNetListener_Local_Socket>();
 	}
 
-static int sEnsureLocal(int iSocketFD)
+static int spEnsureLocal(int iSocketFD)
 	{
 	sockaddr_un localSockAddr;
 	socklen_t length = sizeof(localSockAddr);
@@ -142,12 +142,12 @@ static int sEnsureLocal(int iSocketFD)
 
 ZNetListener_Local_Socket::ZNetListener_Local_Socket(
 	int iSocketFD, size_t iListenQueueSize, bool iKnowWhatImDoing)
-:	ZNetListener_Socket(sEnsureLocal(iSocketFD), iListenQueueSize)
+:	ZNetListener_Socket(spEnsureLocal(iSocketFD), iListenQueueSize)
 	{
 	ZAssert(iKnowWhatImDoing);
 	}
 
-static int sListen(const string& iPath)
+static int spListen(const string& iPath)
 	{
 	sockaddr_un localSockAddr;
 	ZBlockZero(&localSockAddr, sizeof(localSockAddr));
@@ -178,7 +178,7 @@ static int sListen(const string& iPath)
 
 ZNetListener_Local_Socket::ZNetListener_Local_Socket(
 	const std::string& iPath, size_t iListenQueueSize)
-:	ZNetListener_Socket(sListen(iPath), iListenQueueSize),
+:	ZNetListener_Socket(spListen(iPath), iListenQueueSize),
 	fPath(iPath)
 	{}
 
@@ -197,16 +197,16 @@ ZRef<ZNetEndpoint> ZNetListener_Local_Socket::Imp_MakeEndpoint(int iSocketFD)
 #pragma mark -
 #pragma mark * ZNetEndpoint_Local_Socket
 
-static void sSetSocketOptions(int iSocketFD)
+static void spSetSocketOptions(int iSocketFD)
 	{}
 
 ZNetEndpoint_Local_Socket::ZNetEndpoint_Local_Socket(int iSocketFD)
 :	ZNetEndpoint_Socket(iSocketFD)
 	{
-	sSetSocketOptions(this->GetSocketFD());
+	spSetSocketOptions(this->GetSocketFD());
 	}
 
-static int sConnect(const string& iPath)
+static int spConnect(const string& iPath)
 	{
 	int socketFD = ::socket(PF_LOCAL, SOCK_STREAM, 0);
 	if (socketFD < 0)
@@ -226,9 +226,9 @@ static int sConnect(const string& iPath)
 	}
 
 ZNetEndpoint_Local_Socket::ZNetEndpoint_Local_Socket(const std::string& iRemotePath)
-:	ZNetEndpoint_Socket(sConnect(iRemotePath))
+:	ZNetEndpoint_Socket(spConnect(iRemotePath))
 	{
-	sSetSocketOptions(this->GetSocketFD());
+	spSetSocketOptions(this->GetSocketFD());
 	}
 
 ZNetEndpoint_Local_Socket::~ZNetEndpoint_Local_Socket()

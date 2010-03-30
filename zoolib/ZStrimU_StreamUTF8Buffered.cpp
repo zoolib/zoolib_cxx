@@ -43,7 +43,7 @@ ZStrimU_StreamUTF8Buffered::~ZStrimU_StreamUTF8Buffered()
 
 
 // Do a more optimal version of this?
-static void sUTF8ToUTF32(
+static void spUTF8ToUTF32(
 	const UTF8* iStart, size_t iCountCU,
 	UTF32* iDest, size_t iDestCount,
 	size_t& oDestCount)
@@ -109,7 +109,7 @@ void ZStrimU_StreamUTF8Buffered::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size
 				break;
 
 			size_t destCU;
-			sUTF8ToUTF32(&utf8Buffer[0], utf8Read, utf32Buffer, countToRead, destCU);
+			spUTF8ToUTF32(&utf8Buffer[0], utf8Read, utf32Buffer, countToRead, destCU);
 			fFeedIn += destCU;
 			}
 		}

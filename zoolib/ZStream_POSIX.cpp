@@ -38,7 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <sys/param.h>
 #endif
 
-static void sRead(FILE* iFILE, void* iDest, size_t iCount, size_t* oCountRead)
+static void spRead(FILE* iFILE, void* iDest, size_t iCount, size_t* oCountRead)
 	{
 	char* localDest = reinterpret_cast<char*>(iDest);
 	if (iFILE)
@@ -56,7 +56,7 @@ static void sRead(FILE* iFILE, void* iDest, size_t iCount, size_t* oCountRead)
 		*oCountRead = reinterpret_cast<char*>(iDest) - localDest;
 	}
 
-static void sWrite(FILE* iFILE, const void* iSource, size_t iCount, size_t* oCountWritten)
+static void spWrite(FILE* iFILE, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
 	const char* localSource = reinterpret_cast<const char*>(iSource);
 	if (iFILE)
@@ -74,7 +74,7 @@ static void sWrite(FILE* iFILE, const void* iSource, size_t iCount, size_t* oCou
 		*oCountWritten = localSource - reinterpret_cast<const char*>(iSource);
 	}
 
-static uint64 sGetPosition(FILE* iFILE)
+static uint64 spGetPosition(FILE* iFILE)
 	{
 	if (iFILE)
 		{
@@ -91,7 +91,7 @@ static uint64 sGetPosition(FILE* iFILE)
 	return 0;
 	}
 
-static bool sSetPosition(FILE* iFILE, uint64 iPosition)
+static bool spSetPosition(FILE* iFILE, uint64 iPosition)
 	{
 	if (iFILE)
 		{
@@ -106,7 +106,7 @@ static bool sSetPosition(FILE* iFILE, uint64 iPosition)
 	return false;
 	}
 
-static uint64 sGetSize(FILE* iFILE)
+static uint64 spGetSize(FILE* iFILE)
 	{
 	if (iFILE)
 		{
@@ -153,7 +153,7 @@ ZStreamR_FILE::~ZStreamR_FILE()
 	}
 
 void ZStreamR_FILE::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ sRead(fFILE, iDest, iCount, oCountRead); }
+	{ spRead(fFILE, iDest, iCount, oCountRead); }
 
 // =================================================================================================
 #pragma mark -
@@ -176,19 +176,19 @@ ZStreamRPos_FILE::~ZStreamRPos_FILE()
 	}
 
 void ZStreamRPos_FILE::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ sRead(fFILE, iDest, iCount, oCountRead); }
+	{ spRead(fFILE, iDest, iCount, oCountRead); }
 
 uint64 ZStreamRPos_FILE::Imp_GetPosition()
-	{ return sGetPosition(fFILE); }
+	{ return spGetPosition(fFILE); }
 
 void ZStreamRPos_FILE::Imp_SetPosition(uint64 iPosition)
 	{
-	if (!sSetPosition(fFILE, iPosition))
+	if (!spSetPosition(fFILE, iPosition))
 		throw range_error("ZStreamRPos_FILE::Imp_SetPosition");
 	}
 
 uint64 ZStreamRPos_FILE::Imp_GetSize()
-	{ return sGetSize(fFILE); }
+	{ return spGetSize(fFILE); }
 
 // =================================================================================================
 #pragma mark -
@@ -211,7 +211,7 @@ ZStreamW_FILE::~ZStreamW_FILE()
 	}
 
 void ZStreamW_FILE::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
-	{ sWrite(fFILE, iSource, iCount, oCountWritten); }
+	{ spWrite(fFILE, iSource, iCount, oCountWritten); }
 
 void ZStreamW_FILE::Imp_Flush()
 	{
@@ -225,21 +225,21 @@ void ZStreamW_FILE::Imp_Flush()
 
 #if defined(__USE_GNU)
 
-static ssize_t sReadStreamR(void* iCookie, char* iDest, size_t iCount)
+static ssize_t spReadStreamR(void* iCookie, char* iDest, size_t iCount)
 	{
 	size_t countRead;
 	static_cast<ZStreamR*>(iCookie)->Read(iDest, iCount, &countRead);
 	return countRead;
 	}
 
-static ssize_t sWriteStreamW(void* iCookie, const char* iSource, size_t iCount)
+static ssize_t spWriteStreamW(void* iCookie, const char* iSource, size_t iCount)
 	{
 	size_t countWritten;
 	static_cast<ZStreamW*>(iCookie)->Write(iSource, iCount, &countWritten);
 	return countWritten;;
 	}
 
-static int64 sSeekStreamRPos(const ZStreamRPos& iStreamRPos, int64 iPos, int iWhence)
+static int64 spSeekStreamRPos(const ZStreamRPos& iStreamRPos, int64 iPos, int iWhence)
 	{
 	switch (iWhence)
 		{
@@ -265,51 +265,51 @@ static int64 sSeekStreamRPos(const ZStreamRPos& iStreamRPos, int64 iPos, int iWh
 	return -1;
 	}
 
-static int sSeekStreamRPos(void* iCookie, _IO_off64_t *iPos, int iWhence)
+static int spSeekStreamRPos(void* iCookie, _IO_off64_t *iPos, int iWhence)
 	{
-	return sSeekStreamRPos(*static_cast<ZStreamRPos*>(iCookie), *iPos, iWhence);
+	return spSeekStreamRPos(*static_cast<ZStreamRPos*>(iCookie), *iPos, iWhence);
 	}
 
-static ssize_t sReadStreamerR(void* iCookie, char* iDest, size_t iCount)
+static ssize_t spReadStreamerR(void* iCookie, char* iDest, size_t iCount)
 	{
 	size_t countRead;
 	static_cast<ZRef<ZStreamerR>*>(iCookie)[0]->GetStreamR().Read(iDest, iCount, &countRead);
 	return countRead;
 	}
 
-static ssize_t sReadStreamerRPos(void* iCookie, char* iDest, size_t iCount)
+static ssize_t spReadStreamerRPos(void* iCookie, char* iDest, size_t iCount)
 	{
 	size_t countRead;
 	static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamR().Read(iDest, iCount, &countRead);
 	return countRead;
 	}
 
-static int sSeekStreamerRPos(void* iCookie, _IO_off64_t *iPos, int iWhence)
+static int spSeekStreamerRPos(void* iCookie, _IO_off64_t *iPos, int iWhence)
 	{
-	return sSeekStreamRPos(
+	return spSeekStreamRPos(
 		static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamRPos(), *iPos, iWhence);
 	}
 
-static ssize_t sWriteStreamerW(void* iCookie, const char* iSource, size_t iCount)
+static ssize_t spWriteStreamerW(void* iCookie, const char* iSource, size_t iCount)
 	{
 	size_t countWritten;
 	static_cast<ZRef<ZStreamerW>*>(iCookie)[0]->GetStreamW().Write(iSource, iCount, &countWritten);
 	return countWritten;;
 	}
 
-static int sCloseStreamerR(void* iCookie)
+static int spCloseStreamerR(void* iCookie)
 	{
 	delete static_cast<ZRef<ZStreamerR>*>(iCookie);
 	return 0;
 	}
 
-static int sCloseStreamerRPos(void* iCookie)
+static int spCloseStreamerRPos(void* iCookie)
 	{
 	delete static_cast<ZRef<ZStreamerRPos>*>(iCookie);
 	return 0;
 	}
 
-static int sCloseStreamerW(void* iCookie)
+static int spCloseStreamerW(void* iCookie)
 	{
 	delete static_cast<ZRef<ZStreamerW>*>(iCookie);
 	return 0;
@@ -318,7 +318,7 @@ static int sCloseStreamerW(void* iCookie)
 FILE* sStreamOpen(const ZStreamR& iStreamR)
 	{
 	_IO_cookie_io_functions_t theFunctions;
-	theFunctions.read = sReadStreamR;
+	theFunctions.read = spReadStreamR;
 	theFunctions.write = nullptr;
 	theFunctions.seek = nullptr;
 	theFunctions.close = nullptr;
@@ -328,9 +328,9 @@ FILE* sStreamOpen(const ZStreamR& iStreamR)
 FILE* sStreamOpen(const ZStreamRPos& iStreamRPos)
 	{
 	_IO_cookie_io_functions_t theFunctions;
-	theFunctions.read = sReadStreamR;
+	theFunctions.read = spReadStreamR;
 	theFunctions.write = nullptr;
-	theFunctions.seek = sSeekStreamRPos;
+	theFunctions.seek = spSeekStreamRPos;
 	theFunctions.close = nullptr;
 	return ::fopencookie(const_cast<ZStreamRPos*>(&iStreamRPos), "", theFunctions);
 	}
@@ -339,7 +339,7 @@ FILE* sStreamOpen(const ZStreamW& iStreamW)
 	{
 	_IO_cookie_io_functions_t theFunctions;
 	theFunctions.read = nullptr;
-	theFunctions.write = sWriteStreamW;
+	theFunctions.write = spWriteStreamW;
 	theFunctions.seek = nullptr;
 	theFunctions.close = nullptr;
 	return ::fopencookie(const_cast<ZStreamW*>(&iStreamW), "", theFunctions);
@@ -348,20 +348,20 @@ FILE* sStreamOpen(const ZStreamW& iStreamW)
 FILE* sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
 	{
 	_IO_cookie_io_functions_t theFunctions;
-	theFunctions.read = sReadStreamerR;
+	theFunctions.read = spReadStreamerR;
 	theFunctions.write = nullptr;
 	theFunctions.seek = nullptr;
-	theFunctions.close = sCloseStreamerR;
+	theFunctions.close = spCloseStreamerR;
 	return ::fopencookie(new ZRef<ZStreamerR>(iStreamerR), "", theFunctions);
 	}
 
 FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
 	{
 	_IO_cookie_io_functions_t theFunctions;
-	theFunctions.read = sReadStreamerRPos;
+	theFunctions.read = spReadStreamerRPos;
 	theFunctions.write = nullptr;
-	theFunctions.seek = sSeekStreamerRPos;
-	theFunctions.close = sCloseStreamerRPos;
+	theFunctions.seek = spSeekStreamerRPos;
+	theFunctions.close = spCloseStreamerRPos;
 	return ::fopencookie(new ZRef<ZStreamerRPos>(iStreamerRPos), "", theFunctions);
 	}
 
@@ -369,22 +369,22 @@ FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
 	{
 	_IO_cookie_io_functions_t theFunctions;
 	theFunctions.read = nullptr;
-	theFunctions.write = sWriteStreamerW;
+	theFunctions.write = spWriteStreamerW;
 	theFunctions.seek = nullptr;
-	theFunctions.close = sCloseStreamerW;
+	theFunctions.close = spCloseStreamerW;
 	return ::fopencookie(new ZRef<ZStreamerW>(iStreamerW), "", theFunctions);
 	}
 
 #elif defined(BSD)
 
-static int sReadStreamR(void* iCookie, char* iDest, int iCount)
+static int spReadStreamR(void* iCookie, char* iDest, int iCount)
 	{
 	size_t countRead;
 	static_cast<ZStreamR*>(iCookie)->Read(iDest, iCount, &countRead);
 	return countRead;
 	}
 
-static fpos_t sSeekStreamRPos(const ZStreamRPos& iStreamRPos, fpos_t iPos, int iWhence)
+static fpos_t spSeekStreamRPos(const ZStreamRPos& iStreamRPos, fpos_t iPos, int iWhence)
 	{
 	switch (iWhence)
 		{
@@ -410,92 +410,96 @@ static fpos_t sSeekStreamRPos(const ZStreamRPos& iStreamRPos, fpos_t iPos, int i
 	return -1;
 	}
 
-static fpos_t sSeekStreamRPos(void* iCookie, fpos_t iPos, int iWhence)
+static fpos_t spSeekStreamRPos(void* iCookie, fpos_t iPos, int iWhence)
 	{
-	return sSeekStreamRPos(*static_cast<ZStreamRPos*>(iCookie), iPos, iWhence);
+	return spSeekStreamRPos(*static_cast<ZStreamRPos*>(iCookie), iPos, iWhence);
 	}
 
-static int sWriteStreamW(void* iCookie, const char* iSource, int iCount)
+static int spWriteStreamW(void* iCookie, const char* iSource, int iCount)
 	{
 	size_t countWritten;
 	static_cast<ZStreamW*>(iCookie)->Write(iSource, iCount, &countWritten);
 	return countWritten;;
 	}
 
-static int sReadStreamerR(void* iCookie, char* iDest, int iCount)
+static int spReadStreamerR(void* iCookie, char* iDest, int iCount)
 	{
 	size_t countRead;
 	static_cast<ZRef<ZStreamerR>*>(iCookie)[0]->GetStreamR().Read(iDest, iCount, &countRead);
 	return countRead;
 	}
 
-static int sReadStreamerRPos(void* iCookie, char* iDest, int iCount)
+static int spReadStreamerRPos(void* iCookie, char* iDest, int iCount)
 	{
 	size_t countRead;
 	static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamR().Read(iDest, iCount, &countRead);
 	return countRead;
 	}
 
-static fpos_t sSeekStreamerRPos(void* iCookie, fpos_t iPos, int iWhence)
+static fpos_t spSeekStreamerRPos(void* iCookie, fpos_t iPos, int iWhence)
 	{
-	return sSeekStreamRPos(
+	return spSeekStreamRPos(
 		static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamRPos(), iPos, iWhence);
 	}
 
-static int sWriteStreamerW(void* iCookie, const char* iSource, int iCount)
+static int spWriteStreamerW(void* iCookie, const char* iSource, int iCount)
 	{
 	size_t countWritten;
 	static_cast<ZRef<ZStreamerW>*>(iCookie)[0]->GetStreamW().Write(iSource, iCount, &countWritten);
 	return countWritten;;
 	}
 
-static int sCloseStreamerR(void* iCookie)
+static int spCloseStreamerR(void* iCookie)
 	{
 	delete static_cast<ZRef<ZStreamerR>*>(iCookie);
 	return 0;
 	}
 
-static int sCloseStreamerRPos(void* iCookie)
+static int spCloseStreamerRPos(void* iCookie)
 	{
 	delete static_cast<ZRef<ZStreamerRPos>*>(iCookie);
 	return 0;
 	}
 
-static int sCloseStreamerW(void* iCookie)
+static int spCloseStreamerW(void* iCookie)
 	{
 	delete static_cast<ZRef<ZStreamerW>*>(iCookie);
 	return 0;
 	}
 
 FILE* sStreamOpen(const ZStreamR& iStreamR)
-	{ return ::funopen(const_cast<ZStreamR*>(&iStreamR), sReadStreamR, nullptr, nullptr, nullptr); }
+	{
+	return ::funopen(const_cast<ZStreamR*>(&iStreamR), spReadStreamR, nullptr, nullptr, nullptr);
+	}
 
 FILE* sStreamOpen(const ZStreamRPos& iStreamRPos)
 	{
 	return ::funopen(
-		const_cast<ZStreamRPos*>(&iStreamRPos), sReadStreamR, nullptr, sSeekStreamRPos, nullptr);
+		const_cast<ZStreamRPos*>(&iStreamRPos), spReadStreamR, nullptr, spSeekStreamRPos, nullptr);
 	}
 
 FILE* sStreamOpen(const ZStreamW& iStreamW)
-	{ return ::funopen(const_cast<ZStreamW*>(&iStreamW), nullptr, sWriteStreamW, nullptr, nullptr); }
+	{
+	return ::funopen(const_cast<ZStreamW*>(&iStreamW), nullptr, spWriteStreamW, nullptr, nullptr);
+	}
 
 FILE* sStreamerOpen(ZRef<ZStreamerR> iStreamerR)
 	{
 	return ::funopen(
-		new ZRef<ZStreamerR>(iStreamerR), sReadStreamerR, nullptr, nullptr, sCloseStreamerRPos);
+		new ZRef<ZStreamerR>(iStreamerR), spReadStreamerR, nullptr, nullptr, spCloseStreamerRPos);
 	}
 
 FILE* sStreamerOpen(ZRef<ZStreamerRPos> iStreamerRPos)
 	{
 	return ::funopen(
 		new ZRef<ZStreamerRPos>(iStreamerRPos),
-		sReadStreamerRPos, nullptr, sSeekStreamerRPos, sCloseStreamerRPos);
+		spReadStreamerRPos, nullptr, spSeekStreamerRPos, spCloseStreamerRPos);
 	}
 
 FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
 	{
 	return ::funopen(new ZRef<ZStreamerW>(iStreamerW),
-		nullptr, sWriteStreamerW, nullptr, sCloseStreamerW);
+		nullptr, spWriteStreamerW, nullptr, spCloseStreamerW);
 	}
 
 #else

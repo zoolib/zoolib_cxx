@@ -44,7 +44,7 @@ using std::min;
 
 NAMESPACE_ZOOLIB_BEGIN
 
-static void sCheckIt(ZStream_SHA1::Context& ioContext, const uint8 iDigest[20])
+static void spCheckIt(ZStream_SHA1::Context& ioContext, const uint8 iDigest[20])
 	{
 	uint8 theDigest[20];
 	ZStream_SHA1::sFinal(ioContext, theDigest);
@@ -60,7 +60,7 @@ void ZStream_SHA1::sTest()
 	const uint8 check1[] = {
 		0xA9, 0x99, 0x3E, 0x36, 0x47, 0x06, 0x81, 0x6A, 0xBA, 0x3E,
 		0x25, 0x71, 0x78, 0x50, 0xC2, 0x6C, 0x9C, 0xD0, 0xD8, 0x9D };
-	sCheckIt(theContext, check1);
+	spCheckIt(theContext, check1);
 
 	sInit(theContext);
 	static const char string2[] = "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
@@ -68,7 +68,7 @@ void ZStream_SHA1::sTest()
 	const uint8 check2[] = {
 		0x84, 0x98, 0x3E, 0x44, 0x1C, 0x3B, 0xD2, 0x6E, 0xBA, 0xAE,
 		0x4A, 0xA1, 0xF9, 0x51, 0x29, 0xE5, 0xE5, 0x46, 0x70, 0xF1 };
-	sCheckIt(theContext, check2);
+	spCheckIt(theContext, check2);
 
 	sInit(theContext);
 	const char string3 = 'a';
@@ -77,9 +77,8 @@ void ZStream_SHA1::sTest()
 	const uint8 check3[] = {
 		0x34, 0xAA, 0x97, 0x3C, 0xD4, 0xC4, 0xDA, 0xA4, 0xF6, 0x1E,
 		0xEB, 0x2B, 0xDB, 0xAD, 0x27, 0x31, 0x65, 0x34, 0x01, 0x6F };
-	sCheckIt(theContext, check3);
+	spCheckIt(theContext, check3);
 	}
-
 
 // =================================================================================================
 
@@ -129,7 +128,7 @@ void ZStream_SHA1::sFinal(Context& ioContext, uint8 oDigest[20])
 
 
 // Hash a single 512-bit block. This is the core of the algorithm.
-static void sSHA1_Transform(uint32 ioState[5], const uint32 iData[16])
+static void spSHA1_Transform(uint32 ioState[5], const uint32 iData[16])
 	{
 	// Copy ioState to working vars
 	uint32 a = ioState[0];
@@ -209,7 +208,7 @@ void ZStream_SHA1::sUpdate(ZStream_SHA1::Context& ioContext, const void* iData, 
 			else
 				{
 				// We've got 64 or more bytes to use, work directly with the source material.
-				sSHA1_Transform(ioContext.fState, (const uint32*)(localData));
+				spSHA1_Transform(ioContext.fState, (const uint32*)(localData));
 				ioContext.fBuffersSent += 1;
 
 				countRemaining -= 64;
@@ -226,7 +225,7 @@ void ZStream_SHA1::sUpdate(ZStream_SHA1::Context& ioContext, const void* iData, 
 			localData += countToCopy;
 			if (ioContext.fSpaceUsed == 64)
 				{
-				sSHA1_Transform(ioContext.fState, ioContext.fBuffer32);
+				spSHA1_Transform(ioContext.fState, ioContext.fBuffer32);
 				ioContext.fBuffersSent += 1;
 				ioContext.fSpaceUsed = 0;
 				}
@@ -250,7 +249,7 @@ void ZStream_SHA1::sFinal(ZStream_SHA1::Context& ioContext, uint8 oDigest[20])
 	while (ioContext.fSpaceUsed != 56)
 		sUpdate(ioContext, &pad0, 1);
 
-	// This next call will make it an even 64 bytes and cause sSHA1_Transform
+	// This next call will make it an even 64 bytes and cause spSHA1_Transform
 	// to be called one final time.
 	sUpdate(ioContext, &finalBitCountBE, 8);
 	uint32* dest = reinterpret_cast<uint32*>(&oDigest[0]);

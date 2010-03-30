@@ -465,7 +465,7 @@ void ZTBServer::Finished()
 	ZTask::pFinished();
 	}
 
-void ZTBServer::sCallback_AllocateIDs(void* iRefcon, uint64 iBaseID, size_t iCount)
+void ZTBServer::spCallback_AllocateIDs(void* iRefcon, uint64 iBaseID, size_t iCount)
 	{
 	ZTBServer* theServer = static_cast<ZTBServer*>(iRefcon);
 	ZMutexLocker locker(theServer->fMutex_Structure);
@@ -475,7 +475,7 @@ void ZTBServer::sCallback_AllocateIDs(void* iRefcon, uint64 iBaseID, size_t iCou
 
 void ZTBServer::Handle_AllocateIDs(const ZTuple& iReq)
 	{
-	fTBRep->AllocateIDs(iReq.GetInt32("Count"), sCallback_AllocateIDs, this);
+	fTBRep->AllocateIDs(iReq.GetInt32("Count"), spCallback_AllocateIDs, this);
 	}
 
 void ZTBServer::Handle_Create(const ZTuple& iReq)
@@ -501,7 +501,7 @@ void ZTBServer::Handle_Create(const ZTuple& iReq)
 		}
 	}
 
-void ZTBServer::sCallback_GetTupleForSearch(
+void ZTBServer::spCallback_GetTupleForSearch(
 	void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
 	{
 	if (iCount)
@@ -526,7 +526,7 @@ void ZTBServer::sCallback_GetTupleForSearch(
 		}
 	}
 
-void ZTBServer::sCallback_Search(void* iRefcon, vector<uint64>& ioResults)
+void ZTBServer::spCallback_Search(void* iRefcon, vector<uint64>& ioResults)
 	{
 	Search_t* theSearch = static_cast<Search_t*>(iRefcon);
 	Transaction* theTransaction = theSearch->fTransaction;
@@ -547,7 +547,7 @@ void ZTBServer::sCallback_Search(void* iRefcon, vector<uint64>& ioResults)
 	if (ioResults.size())
 		{
 		theTransaction->fTBRepTransaction->GetTuples(ioResults.size(), &ioResults[0],
-			sCallback_GetTupleForSearch, theTransaction);
+			spCallback_GetTupleForSearch, theTransaction);
 		}
 	}
 
@@ -569,11 +569,11 @@ void ZTBServer::Handle_Search(const ZTuple& iReq)
 		theSearch->fClientSearchID = t.GetInt64("SearchID");
 		ZTBQuery theQuery(t.GetTuple("QueryAsTuple"));
 		sSortedInsertMustNotContain(kDebug_TBServer, fSearches_Waiting, theSearch);
-		theTransaction->fTBRepTransaction->Search(theQuery, sCallback_Search, theSearch);
+		theTransaction->fTBRepTransaction->Search(theQuery, spCallback_Search, theSearch);
 		}
 	}
 
-void ZTBServer::sCallback_Count(void* iRefcon, size_t iResult)
+void ZTBServer::spCallback_Count(void* iRefcon, size_t iResult)
 	{
 	Count_t* theCount = static_cast<Count_t*>(iRefcon);
 	Transaction* theTransaction = theCount->fTransaction;
@@ -606,11 +606,11 @@ void ZTBServer::Handle_Count(const ZTuple& iReq)
 		theCount->fClientCountID = t.GetInt64("CountID");
 		ZTBQuery theQuery(t.GetTuple("QueryAsTuple"));
 		sSortedInsertMustNotContain(kDebug_TBServer, fCounts_Waiting, theCount);
-		theTransaction->fTBRepTransaction->Count(theQuery, sCallback_Count, theCount);
+		theTransaction->fTBRepTransaction->Count(theQuery, spCallback_Count, theCount);
 		}
 	}
 
-void ZTBServer::sCallback_Validate(bool iSucceeded, void* iRefcon)
+void ZTBServer::spCallback_Validate(bool iSucceeded, void* iRefcon)
 	{
 	Transaction* theTransaction = static_cast<Transaction*>(iRefcon);
 	ZMutexLocker locker(theTransaction->fServer->fMutex_Structure);
@@ -648,7 +648,7 @@ void ZTBServer::Handle_Validate(const ZTuple& iReq)
 			fTransactions_Validate_Waiting, theTransaction);
 
 		locker.Release();
-		theTransaction->fTBRepTransaction->Validate(sCallback_Validate, theTransaction);
+		theTransaction->fTBRepTransaction->Validate(spCallback_Validate, theTransaction);
 		locker.Acquire();
 		}
 	}
@@ -680,7 +680,7 @@ void ZTBServer::Handle_Abort(const ZTuple& iReq)
 		}
 	}
 
-void ZTBServer::sCallback_Commit(void* iRefcon)
+void ZTBServer::spCallback_Commit(void* iRefcon)
 	{
 	Transaction* theTransaction = static_cast<Transaction*>(iRefcon);
 	ZMutexLocker locker(theTransaction->fServer->fMutex_Structure);
@@ -706,12 +706,12 @@ void ZTBServer::Handle_Commit(const ZTuple& iReq)
 		sSortedEraseMustContain(kDebug_TBServer, fTransactions_Validated, theTransaction);
 		sSortedInsertMustNotContain(kDebug_TBServer, fTransactions_Commit_Waiting, theTransaction);
 		locker.Release();
-		theTransaction->fTBRepTransaction->Commit(sCallback_Commit, theTransaction);
+		theTransaction->fTBRepTransaction->Commit(spCallback_Commit, theTransaction);
 		locker.Acquire();
 		}
 	}
 
-void ZTBServer::sCallback_GetTuple(
+void ZTBServer::spCallback_GetTuple(
 	void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
 	{
 	if (iCount)
@@ -744,7 +744,7 @@ void ZTBServer::Handle_Actions(const ZTuple& iReq)
 	iReq.Get("Gets").GetSeq().GetVector_T(back_inserter(vectorGets), uint64());
 
 	theTransaction->fTBRepTransaction->GetTuples(
-		vectorGets.size(), &vectorGets[0], sCallback_GetTuple, theTransaction);
+		vectorGets.size(), &vectorGets[0], spCallback_GetTuple, theTransaction);
 
 	const vector<ZTValue>& vectorWrites = iReq.Get("Writes").GetSeq().GetVector();
 	for (vector<ZTValue>::const_iterator i = vectorWrites.begin(); i != vectorWrites.end(); ++i)

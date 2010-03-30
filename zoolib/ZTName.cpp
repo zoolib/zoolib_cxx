@@ -37,7 +37,7 @@ static const int kDebug = 2;
 #pragma mark -
 #pragma mark * ZTName, helper functions and PNRep
 
-static inline int sCompare(const void* iLeft, size_t iLeftLength,
+static inline int spCompare(const void* iLeft, size_t iLeftLength,
 	const void* iRight, size_t iRightLength)
 	{
 	if (int compare = memcmp(iLeft, iRight,
@@ -66,16 +66,16 @@ struct Compare_PNRep_Key_t
 	typedef Key second_argument_type;
 
 	bool operator()(const first_argument_type& iL, const second_argument_type& iR) const
-		{ return 0 > sCompare(iL->fBuffer, iL->fLength, iR.first, iR.second); }
+		{ return 0 > spCompare(iL->fBuffer, iL->fLength, iR.first, iR.second); }
 
 	#if ZCONFIG(Compiler,MSVC) && defined(_HAS_ITERATOR_DEBUGGING)
 		// When iterator debugging is enabled MSVC
 		// asserts ! b < a, when we're doing a < b.
 		bool operator()(const second_argument_type& iR, const first_argument_type& iL) const
-			{ return 0 < sCompare(iL->fBuffer, iL->fLength, iR.first, iR.second); }
+			{ return 0 < spCompare(iL->fBuffer, iL->fLength, iR.first, iR.second); }
 
 		bool operator()(const first_argument_type& iL, const first_argument_type& iR) const
-			{ return 0 > sCompare(iL->fBuffer, iL->fLength, iR->fBuffer, iR->fLength); }
+			{ return 0 > spCompare(iL->fBuffer, iL->fLength, iR->fBuffer, iR->fLength); }
 	#endif
 
 	typedef bool result_type;
@@ -83,47 +83,47 @@ struct Compare_PNRep_Key_t
 
 } // anonymous namespace
 
-static vector<const PNRep*>* sNames;
+static vector<const PNRep*>* spNames;
 
-static inline bool sDifferent(const PNRep* iPNRep, const char* iName, size_t iLength)
-	{ return sCompare(iPNRep->fBuffer, iPNRep->fLength, iName, iLength); }
+static inline bool spDifferent(const PNRep* iPNRep, const char* iName, size_t iLength)
+	{ return spCompare(iPNRep->fBuffer, iPNRep->fLength, iName, iLength); }
 
-static const PNRep* sLookupAndTag(const char* iName, size_t iLength)
+static const PNRep* spLookupAndTag(const char* iName, size_t iLength)
 	{
 	if (!iLength)
 		return reinterpret_cast<const PNRep*>(1);
 
-	if (!sNames)
+	if (!spNames)
 		return nullptr;
 
 	vector<const PNRep*>::iterator theIter =
-		lower_bound(sNames->begin(), sNames->end(), Key(iName, iLength), Compare_PNRep_Key_t());
+		lower_bound(spNames->begin(), spNames->end(), Key(iName, iLength), Compare_PNRep_Key_t());
 
-	if (theIter == sNames->end() || sDifferent(*theIter, iName, iLength))
+	if (theIter == spNames->end() || spDifferent(*theIter, iName, iLength))
 		return nullptr;
 
 	return reinterpret_cast<const PNRep*>(reinterpret_cast<intptr_t>(*theIter) | 1);
 	}
 
-static const PNRep* sLookupAndTag(const string& iName)
+static const PNRep* spLookupAndTag(const string& iName)
 	{
 	if (iName.empty())
 		return reinterpret_cast<const PNRep*>(1);
 
-	if (!sNames)
+	if (!spNames)
 		return nullptr;
 
 	vector<const PNRep*>::iterator theIter = lower_bound(
-		sNames->begin(), sNames->end(), Key(iName.data(), iName.length()),
+		spNames->begin(), spNames->end(), Key(iName.data(), iName.length()),
 		Compare_PNRep_Key_t());
 
-	if (theIter == sNames->end() || sDifferent(*theIter, iName.data(), iName.length()))
+	if (theIter == spNames->end() || spDifferent(*theIter, iName.data(), iName.length()))
 		return nullptr;
 
 	return reinterpret_cast<const PNRep*>(reinterpret_cast<intptr_t>(*theIter) | 1);
 	}
 
-static inline const PNRep* sGetPNRep(const void* iData)
+static inline const PNRep* spGetPNRep(const void* iData)
 	{ return reinterpret_cast<const PNRep*>(reinterpret_cast<intptr_t>(iData) & ~1); }
 
 // =================================================================================================
@@ -144,20 +144,20 @@ inline ZTName::String::String(const char* iString, size_t iSize)
 inline int ZTName::String::Compare(const String& iOther) const
 	{
 	ZAssertStop(kDebug, fSize);
-	return sCompare(fBuffer, fSize, iOther.fBuffer, iOther.fSize);
+	return spCompare(fBuffer, fSize, iOther.fBuffer, iOther.fSize);
 	}
 
 inline int ZTName::String::Compare(const char* iString, size_t iSize) const
 	{
 	ZAssertStop(kDebug, fSize);
-	return sCompare(fBuffer, fSize, iString, iSize);
+	return spCompare(fBuffer, fSize, iString, iSize);
 	}
 
 inline int ZTName::String::Compare(const std::string& iString) const
 	{
 	ZAssertStop(kDebug, fSize);
 	if (size_t otherSize = iString.size())
-		return sCompare(fBuffer, fSize, iString.data(), otherSize);
+		return spCompare(fBuffer, fSize, iString.data(), otherSize);
 	// We can't be empty, so we must be greater than iString.
 	return 1;
 	}
@@ -171,8 +171,8 @@ inline string ZTName::String::AsString() const
 
 int ZTName::sPreRegister(const char* const* iNames, size_t iCount)
 	{
-	if (!sNames)
-		sNames = new vector<const PNRep*>;
+	if (!spNames)
+		spNames = new vector<const PNRep*>;
 
 	// This function should be called under very constrained
 	// circumstances, generally from a static initialization.
@@ -188,15 +188,15 @@ int ZTName::sPreRegister(const char* const* iNames, size_t iCount)
 			if (theLength < 255)
 				{
 				vector<const PNRep*>::iterator theIter = lower_bound(
-					sNames->begin(), sNames->end(), Key(theName, theLength),
+					spNames->begin(), spNames->end(), Key(theName, theLength),
 					Compare_PNRep_Key_t());
 
-				if (theIter == sNames->end() || sDifferent(*theIter, theName, theLength))
+				if (theIter == spNames->end() || spDifferent(*theIter, theName, theLength))
 					{
 					PNRep* newRep = reinterpret_cast<PNRep*>(new char[theLength + 1]);
 					newRep->fLength = theLength;
 					ZBlockCopy(theName, newRep->fBuffer, theLength);
-					sNames->insert(theIter, newRep);
+					spNames->insert(theIter, newRep);
 					}
 				}
 			}
@@ -227,7 +227,7 @@ ZTName::ZTName(const ZStreamR& iStreamR)
 		{
 		char buffer[sStackBufferSize];
 		iStreamR.Read(buffer, theSize);
-		fData = sLookupAndTag(buffer, theSize);
+		fData = spLookupAndTag(buffer, theSize);
 		if (!fData)
 			fString = new (theSize) String(buffer, theSize);
 		}
@@ -236,7 +236,7 @@ ZTName::ZTName(const ZStreamR& iStreamR)
 		// theSize must be > 0 (it's greater than sStackBufferSize).
 		vector<char> buffer(theSize);
 		iStreamR.Read(&buffer[0], theSize);
-		fData = sLookupAndTag(&buffer[0], theSize);
+		fData = spLookupAndTag(&buffer[0], theSize);
 		if (!fData)
 			fString = new (theSize) String(&buffer[0], theSize);
 		}
@@ -244,14 +244,14 @@ ZTName::ZTName(const ZStreamR& iStreamR)
 
 ZTName::ZTName(const char* iString, size_t iLength)
 	{
-	fData = sLookupAndTag(iString, iLength);
+	fData = spLookupAndTag(iString, iLength);
 	if (!fData)
 		fString = new (iLength) String(iString, iLength);
 	}
 
 ZTName::ZTName(const std::string& iString)
 	{
-	fData = sLookupAndTag(iString);
+	fData = spLookupAndTag(iString);
 	if (!fData)
 		fString = new (iString.size()) String(iString.data(), iString.size());
 	}
@@ -259,7 +259,7 @@ ZTName::ZTName(const std::string& iString)
 ZTName::ZTName(const char* iString)
 	{
 	size_t theLength = ::strlen(iString);
-	fData = sLookupAndTag(iString, theLength);
+	fData = spLookupAndTag(iString, theLength);
 	if (!fData)
 		fString = new (theLength) String(iString, theLength);
 	}
@@ -278,13 +278,13 @@ int ZTName::Compare(const ZTName& iOther) const
 		if (sIsPNRep(iOther.fData))
 			{
 			// Other is a PNRep.
-			if (const PNRep* thisPNRep = sGetPNRep(fData))
+			if (const PNRep* thisPNRep = spGetPNRep(fData))
 				{
 				// This is allocated, thus not empty.
-				if (const PNRep* otherPNRep = sGetPNRep(iOther.fData))
+				if (const PNRep* otherPNRep = spGetPNRep(iOther.fData))
 					{
 					// Other is allocated, thus not empty.
-					return sCompare(thisPNRep->fBuffer, thisPNRep->fLength,
+					return spCompare(thisPNRep->fBuffer, thisPNRep->fLength,
 						otherPNRep->fBuffer, otherPNRep->fLength);
 					}
 				else
@@ -298,7 +298,7 @@ int ZTName::Compare(const ZTName& iOther) const
 			else
 				{
 				// This is unallocated, thus empty.
-				if (sGetPNRep(iOther.fData))
+				if (spGetPNRep(iOther.fData))
 					{
 					// Other is allocated, and thus not empty.
 
@@ -317,14 +317,14 @@ int ZTName::Compare(const ZTName& iOther) const
 		else
 			{
 			// Other is not a PNRep.
-			if (const PNRep* thisPNRep = sGetPNRep(fData))
+			if (const PNRep* thisPNRep = spGetPNRep(fData))
 				{
 				// This is allocated. We could call other's String::Compare and negate
 				// the result, but that little minus sign is easy to miss:
 				// return - iOther.fString->Compare(thisPNRep->fBuffer, thisPNRep->fLength);
 
 				// So we do the work explicitly:
-				return sCompare(thisPNRep->fBuffer, thisPNRep->fLength,
+				return spCompare(thisPNRep->fBuffer, thisPNRep->fLength,
 					iOther.fString->fBuffer, iOther.fString->fSize);
 				}
 			else
@@ -338,7 +338,7 @@ int ZTName::Compare(const ZTName& iOther) const
 		}
 	else if (sIsPNRep(iOther.fData))
 		{
-		if (const PNRep* otherPNRep = sGetPNRep(iOther.fData))
+		if (const PNRep* otherPNRep = spGetPNRep(iOther.fData))
 			{
 			// Other is allocated.
 			return fString->Compare(otherPNRep->fBuffer, otherPNRep->fLength);
@@ -362,10 +362,10 @@ bool ZTName::Equals(const char* iString, size_t iLength) const
 
 	if (sIsPNRep(fData))
 		{
-		if (const PNRep* thePNRep = sGetPNRep(fData))
+		if (const PNRep* thePNRep = spGetPNRep(fData))
 			{
 			// We're allocated.
-			return 0 == sCompare(thePNRep->fBuffer, thePNRep->fLength, iString, iLength);
+			return 0 == spCompare(thePNRep->fBuffer, thePNRep->fLength, iString, iLength);
 			}
 		else
 			{
@@ -385,13 +385,13 @@ bool ZTName::Equals(const std::string& iString) const
 
 	if (sIsPNRep(fData))
 		{
-		if (const PNRep* thePNRep = sGetPNRep(fData))
+		if (const PNRep* thePNRep = spGetPNRep(fData))
 			{
 			// We're not unallocated.
 			if (size_t otherLength = iString.size())
 				{
 				// Nor is iString -- match characters.
-				return 0 == sCompare(thePNRep->fBuffer, thePNRep->fLength,
+				return 0 == spCompare(thePNRep->fBuffer, thePNRep->fLength,
 					iString.data(), otherLength);
 				}
 			else
@@ -416,7 +416,7 @@ bool ZTName::Empty() const
 	ZAssertStop(kDebug, fData);
 
 	if (sIsPNRep(fData))
-		return !sGetPNRep(fData);
+		return !spGetPNRep(fData);
 
 	ZAssertStop(kDebug, fString->fSize);
 
@@ -432,7 +432,7 @@ string ZTName::AsString() const
 
 	if (sIsPNRep(fData))
 		{
-		if (const PNRep* thePNRep = sGetPNRep(fData))
+		if (const PNRep* thePNRep = spGetPNRep(fData))
 			return string(thePNRep->fBuffer, thePNRep->fLength);
 		return string();
 		}
@@ -448,7 +448,7 @@ void ZTName::ToStream(const ZStreamW& iStreamW) const
 
 	if (sIsPNRep(fData))
 		{
-		if (const PNRep* thePNRep = sGetPNRep(fData))
+		if (const PNRep* thePNRep = spGetPNRep(fData))
 			{
 			// Because our length < 255 this preserves the
 			// format used by ZStreamW::WriteCount.

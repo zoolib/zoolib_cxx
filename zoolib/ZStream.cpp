@@ -106,7 +106,7 @@ ZAssertCompile(sizeof(double) == sizeof(int64));
 #pragma mark -
 #pragma mark * Utility methods
 
-static void sCopyReadToWrite(void* iBuffer, size_t iBufferSize,
+static void spCopyReadToWrite(void* iBuffer, size_t iBufferSize,
 	const ZStreamR& iStreamR, const ZStreamW& iStreamW, uint64 iCount,
 	uint64* oCountRead, uint64* oCountWritten)
 	{
@@ -162,7 +162,7 @@ void ZStream::sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStream
 			{
 			try
 				{
-				sCopyReadToWrite(heapBuffer, 8192,
+				spCopyReadToWrite(heapBuffer, 8192,
 					iStreamR, iStreamW, iCount,
 					oCountRead, oCountWritten);
 				}
@@ -183,7 +183,7 @@ void ZStream::sCopyReadToWrite(const ZStreamR& iStreamR, const ZStreamW& iStream
 	// fewer than 8 times. Previously we'd unconditionally used one of size 4096, but that's
 	// fairly large and can contribute to blowing the stack on MacOS.
 	uint8 localBuffer[1024];
-	sCopyReadToWrite(localBuffer, sizeof(localBuffer),
+	spCopyReadToWrite(localBuffer, sizeof(localBuffer),
 		iStreamR, iStreamW, iCount,
 		oCountRead, oCountWritten);
 	}

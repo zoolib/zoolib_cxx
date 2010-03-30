@@ -38,7 +38,7 @@ public:
 
 	static bool sInvoke(Result& oResult, Param iParam)
 		{
-		ZFunctionChain_T* head = sHead();
+		ZFunctionChain_T* head = spHead();
 
 		// Try preferred first
 		for (ZFunctionChain_T* iter = head; iter; iter = iter->fNext)
@@ -69,7 +69,7 @@ protected:
 	ZFunctionChain_T()
 	:	fIsPreferred(true)
 		{
-		ZFunctionChain_T*& theHead = sHead();
+		ZFunctionChain_T*& theHead = spHead();
 		fNext = theHead;
 		theHead = this;
 		}
@@ -77,7 +77,7 @@ protected:
 	ZFunctionChain_T(bool iPreferred)
 	:	fIsPreferred(iPreferred)
 		{
-		ZFunctionChain_T*& theHead = sHead();
+		ZFunctionChain_T*& theHead = spHead();
 		fNext = theHead;
 		theHead = this;
 		}
@@ -104,10 +104,10 @@ private:
 		return false;
 		}
 
-	static ZFunctionChain_T*& sHead()
+	static ZFunctionChain_T*& spHead()
 		{
-		static ZFunctionChain_T* sHead;
-		return sHead;
+		static ZFunctionChain_T* spHead;
+		return spHead;
 		}
 
 	ZFunctionChain_T* fNext;

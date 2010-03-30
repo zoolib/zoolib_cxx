@@ -963,21 +963,21 @@ StrimW::~StrimW()
 	// ZAssertLog(kDebug_StrimW_ML, fTags.empty());
 	}
 
-static void sWriteIndent(const ZStrimW& iStrim, const string8& iString, size_t iCount)
+static void spWriteIndent(const ZStrimW& iStrim, const string8& iString, size_t iCount)
 	{
 	while (iCount--)
 		iStrim.Write(iString);
 	}
 
-namespace {
+namespace ZANONYMOUS {
+
 struct Entity_t
 	{
 	const UTF8* fText;
 	size_t fLength;
 	};
-} // anonymous namespace
 
-static const Entity_t sEntities[] =
+const Entity_t spEntities[] =
 	{
 	{ "&quot;", 6 },
 	{ "&amp;", 5 },
@@ -985,6 +985,8 @@ static const Entity_t sEntities[] =
 	{ "&gt;", 4 },
 	{ "&nbsp;", 6 },
 	};
+
+} // anonymous namespace
 
 void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU)
 	{
@@ -1006,11 +1008,11 @@ void StrimW::Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountC
 				break;
 			switch (theCP)
 				{
-				case '"': entity = &sEntities[0]; break;
-				case '&': entity = &sEntities[1]; break;
-				case '<': entity = &sEntities[2]; break;
-				case '>': entity = &sEntities[3]; break;
-				case 0x00A0: entity = &sEntities[4]; break;
+				case '"': entity = &spEntities[0]; break;
+				case '&': entity = &spEntities[1]; break;
+				case '<': entity = &spEntities[2]; break;
+				case '>': entity = &spEntities[3]; break;
+				case 0x00A0: entity = &spEntities[4]; break;
 				}
 			}
 
@@ -1376,7 +1378,7 @@ void StrimW::pPreTag()
 			{
 			if (!fLastWasEOL)
 				fStrimSink.Write(fString_EOL);
-			sWriteIndent(fStrimSink, fString_Indent, fTags.size() - 1);
+			spWriteIndent(fStrimSink, fString_Indent, fTags.size() - 1);
 			}
 		}
 	fWrittenSinceLastTag = false;
@@ -1396,7 +1398,7 @@ void StrimW::pWritePending()
 			{
 			if (!fLastWasEOL)
 				fStrimSink.Write(fString_EOL);
-			sWriteIndent(fStrimSink, fString_Indent, fTags.size() - 1);
+			spWriteIndent(fStrimSink, fString_Indent, fTags.size() - 1);
 			}
 		}
 	fWrittenSinceLastTag = false;
@@ -1469,7 +1471,7 @@ void StrimW::pEnd()
 			{
 			if (!fLastWasEOL)
 				fStrimSink.Write(fString_EOL);
-			sWriteIndent(fStrimSink, fString_Indent, fTags.size() - 1);
+			spWriteIndent(fStrimSink, fString_Indent, fTags.size() - 1);
 			}
 		}
 	fWrittenSinceLastTag = false;

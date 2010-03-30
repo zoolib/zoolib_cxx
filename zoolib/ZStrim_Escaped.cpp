@@ -184,7 +184,7 @@ ZStrimW_Escaped::~ZStrimW_Escaped()
 		{}
 	}
 
-static UTF32 sAsHexCP(int inInt)
+static UTF32 spAsHexCP(int inInt)
 	{
 	if (inInt < 10)
 		return inInt + '0';
@@ -239,8 +239,8 @@ void ZStrimW_Escaped::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size
 				default:
 					{
 					fStrimSink.Write("\\x");
-					fStrimSink.WriteCP(sAsHexCP(theCP >> 4));
-					fStrimSink.WriteCP(sAsHexCP(theCP & 0xF));
+					fStrimSink.WriteCP(spAsHexCP(theCP >> 4));
+					fStrimSink.WriteCP(spAsHexCP(theCP & 0xF));
 					break;
 					}
 				}
@@ -259,22 +259,22 @@ void ZStrimW_Escaped::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size
 		else if (theCP < 0x10000)
 			{
 			fStrimSink.Write("\\u");
-			fStrimSink.WriteCP(sAsHexCP((theCP >> 12) & 0xF));
-			fStrimSink.WriteCP(sAsHexCP((theCP >> 8) & 0xF));
-			fStrimSink.WriteCP(sAsHexCP((theCP >> 4) & 0xF));
-			fStrimSink.WriteCP(sAsHexCP(theCP & 0xF));
+			fStrimSink.WriteCP(spAsHexCP((theCP >> 12) & 0xF));
+			fStrimSink.WriteCP(spAsHexCP((theCP >> 8) & 0xF));
+			fStrimSink.WriteCP(spAsHexCP((theCP >> 4) & 0xF));
+			fStrimSink.WriteCP(spAsHexCP(theCP & 0xF));
 			}
 		else
 			{
 			fStrimSink.Write("\\U");
-			fStrimSink.WriteCP(sAsHexCP((theCP >> 28) & 0xF));
-			fStrimSink.WriteCP(sAsHexCP((theCP >> 24) & 0xF));
-			fStrimSink.WriteCP(sAsHexCP((theCP >> 20) & 0xF));
-			fStrimSink.WriteCP(sAsHexCP((theCP >> 16) & 0xF));
-			fStrimSink.WriteCP(sAsHexCP((theCP >> 12) & 0xF));
-			fStrimSink.WriteCP(sAsHexCP((theCP >> 8) & 0xF));
-			fStrimSink.WriteCP(sAsHexCP((theCP >> 4) & 0xF));
-			fStrimSink.WriteCP(sAsHexCP(theCP & 0xF));
+			fStrimSink.WriteCP(spAsHexCP((theCP >> 28) & 0xF));
+			fStrimSink.WriteCP(spAsHexCP((theCP >> 24) & 0xF));
+			fStrimSink.WriteCP(spAsHexCP((theCP >> 20) & 0xF));
+			fStrimSink.WriteCP(spAsHexCP((theCP >> 16) & 0xF));
+			fStrimSink.WriteCP(spAsHexCP((theCP >> 12) & 0xF));
+			fStrimSink.WriteCP(spAsHexCP((theCP >> 8) & 0xF));
+			fStrimSink.WriteCP(spAsHexCP((theCP >> 4) & 0xF));
+			fStrimSink.WriteCP(spAsHexCP(theCP & 0xF));
 			}
 		}
 	if (oCountCU)

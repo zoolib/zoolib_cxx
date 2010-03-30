@@ -27,8 +27,8 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZStreamW_HexStrim
 
-static const UTF8 sHexDigits[] = "0123456789ABCDEF";
-static const UTF8 sHexDigitsWithUnderscore[] = "_123456789ABCDEF";
+static const UTF8 spHexDigits[] = "0123456789ABCDEF";
+static const UTF8 spHexDigitsWithUnderscore[] = "_123456789ABCDEF";
 
 /**
 \param iByteSeparator A UTF-8 string to be inserted between each byte that is output.
@@ -43,7 +43,7 @@ ZStreamW_HexStrim::ZStreamW_HexStrim(const std::string& iByteSeparator,
 	fChunkSeparator(iChunkSeparator),
 	fChunkSize(iChunkSize),
 	fCurrentChunkLength(0),
-	fHexDigits(sHexDigits),
+	fHexDigits(spHexDigits),
 	fWrittenAny(false)
 	{}
 
@@ -69,9 +69,9 @@ ZStreamW_HexStrim::ZStreamW_HexStrim(const std::string& iByteSeparator,
 	fWrittenAny(false)
 	{
 	if (iUseUnderscore)
-		fHexDigits = sHexDigitsWithUnderscore;
+		fHexDigits = spHexDigitsWithUnderscore;
 	else
-		fHexDigits = sHexDigits;
+		fHexDigits = spHexDigits;
 	}
 
 void ZStreamW_HexStrim::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)

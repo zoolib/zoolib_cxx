@@ -94,17 +94,17 @@ void sDumpStackCrawl(const ZStackCrawl& iCrawl, const ZStrimW& s)
 
 #if ZCONFIG_SPI_Enabled(POSIX) && ZCONFIG_API_Enabled(StackCrawl)
 
-static bool sHandlingFatal;
-static void sHandleSignal_Sync(int inSignal)
+static bool spHandlingFatal;
+static void spHandleSignal_Sync(int inSignal)
 	{
 	switch (inSignal)
 		{
 		case SIGSEGV:
 		case SIGBUS:
 			{
-			if (!sHandlingFatal)
+			if (!spHandlingFatal)
 				{
-				sHandlingFatal = true;
+				spHandlingFatal = true;
 				ZLog::S s(ZLog::ePriority_Crit, "ZUtil_Debug");
 				if (inSignal == SIGSEGV)
 					s << "SIGSEGV";
@@ -126,7 +126,7 @@ static void sHandleSignal_Sync(int inSignal)
 #pragma mark -
 #pragma mark * ZDebug and ZAssert handler
 
-static void sHandleDebug(const ZDebug::Params_t& iParams, va_list iArgs)
+static void spHandleDebug(const ZDebug::Params_t& iParams, va_list iArgs)
 	{
 	char theBuf[4096];
 	sFormatStandardMessage(theBuf, sizeof(theBuf), iParams);
@@ -174,7 +174,7 @@ class DebugFunction
 public:
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = sHandleDebug;
+		oResult = spHandleDebug;
 		return true;
 		}
 	};

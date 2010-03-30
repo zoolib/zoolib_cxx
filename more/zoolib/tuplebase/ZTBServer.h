@@ -67,29 +67,29 @@ public:
 	virtual void Finished();
 
 private:
-	static void sCallback_AllocateIDs(void* iRefcon, uint64 iBaseID, size_t iCount);
+	static void spCallback_AllocateIDs(void* iRefcon, uint64 iBaseID, size_t iCount);
 	void Handle_AllocateIDs(const ZTuple& iReq);
 
 	void Handle_Create(const ZTuple& iReq);
 
-	static void sCallback_GetTupleForSearch(
+	static void spCallback_GetTupleForSearch(
 		void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples);
 
-	static void sCallback_Search(void* iRefcon, std::vector<uint64>& ioResults);
+	static void spCallback_Search(void* iRefcon, std::vector<uint64>& ioResults);
 	void Handle_Search(const ZTuple& iReq);
 
-	static void sCallback_Count(void* iRefcon, size_t iResult);
+	static void spCallback_Count(void* iRefcon, size_t iResult);
 	void Handle_Count(const ZTuple& iReq);
 
 	void Handle_Abort(const ZTuple& iReq);
 
-	static void sCallback_Validate(bool iSucceeded, void* iRefcon);
+	static void spCallback_Validate(bool iSucceeded, void* iRefcon);
 	void Handle_Validate(const ZTuple& iReq);
 
-	static void sCallback_Commit(void* iRefcon);
+	static void spCallback_Commit(void* iRefcon);
 	void Handle_Commit(const ZTuple& iReq);
 
-	static void sCallback_GetTuple(
+	static void spCallback_GetTuple(
 		void* iRefcon, size_t iCount, const uint64* iIDs, const ZTuple* iTuples);
 
 	void Handle_Actions(const ZTuple& iReq);

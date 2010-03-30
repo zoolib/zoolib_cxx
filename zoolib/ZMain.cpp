@@ -26,13 +26,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 int ZOOLIB_PREFIX::ZMainNS::sArgC;
 char** ZOOLIB_PREFIX::ZMainNS::sArgV;
 
-/** sMain puts argc and argv into the globals ZMainNS::sArgC and
+/** spMain puts argc and argv into the globals ZMainNS::sArgC and
 ZMain::sArgV, and then invokes the application-defined ZMain, wrapping
 the call in in a try/catch block. Ideally your ZMain will not allow
 exceptions to propogate, and if it does this code will report them
 using ZDebugLogf. */
 
-static int sMain(int argc, char **argv)
+static int spMain(int argc, char **argv)
 	{
 	NAMESPACE_ZOOLIB_USING
 
@@ -57,7 +57,7 @@ static int sMain(int argc, char **argv)
 
 extern "C" int main(int argc, char **argv)
 	{
-	return sMain(argc, argv);
+	return spMain(argc, argv);
 	}
 
 // =================================================================================================
@@ -90,7 +90,7 @@ extern "C" int APIENTRY WinMain(
 	ZAssertStopf(0, theProcessVersion >= 0x00040000,
 		("theProcessVersion == 0x08x", theProcessVersion));
 
-	return sMain(__argc, __argv);
+	return spMain(__argc, __argv);
 	}
 
 #endif // ZCONFIG_SPI_Enabled(Win)

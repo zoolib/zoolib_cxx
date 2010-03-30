@@ -49,10 +49,10 @@ using std::vector;
 #pragma mark -
 #pragma mark * Helper functions
 
-static inline void sWriteCount(const ZStreamW& iStreamW, uint32 iCount)
+static inline void spWriteCount(const ZStreamW& iStreamW, uint32 iCount)
 	{ iStreamW.WriteCount(iCount); }
 
-static inline uint32 sReadCount(const ZStreamR& iStreamR)
+static inline uint32 spReadCount(const ZStreamR& iStreamR)
 	{ return iStreamR.ReadCount(); }
 
 // =================================================================================================
@@ -417,22 +417,22 @@ void ZTSWatcher_Client::pSync2(
 		const ZStreamW& theStreamW = iStreamW;
 	#endif
 
-	sWriteCount(theStreamW, iRemovedIDsCount);
+	spWriteCount(theStreamW, iRemovedIDsCount);
 	for (size_t count = iRemovedIDsCount; count; --count)
 		theStreamW.WriteUInt64(*iRemovedIDs++);
 
 
-	sWriteCount(theStreamW, iAddedIDsCount);
+	spWriteCount(theStreamW, iAddedIDsCount);
 	for (size_t count = iAddedIDsCount; count; --count)
 		theStreamW.WriteUInt64(*iAddedIDs++);
 
 
-	sWriteCount(theStreamW, iRemovedQueriesCount);
+	spWriteCount(theStreamW, iRemovedQueriesCount);
 	for (size_t count = iRemovedQueriesCount; count; --count)
 		theStreamW.WriteInt64(*iRemovedQueries++);
 
 
-	sWriteCount(theStreamW, iAddedQueriesCount);
+	spWriteCount(theStreamW, iAddedQueriesCount);
 	for (size_t count = iAddedQueriesCount; count; --count)
 		{
 		const AddedQueryCombo& theAQC = *iAddedQueries++;
@@ -449,7 +449,7 @@ void ZTSWatcher_Client::pSync2(
 		}
 
 
-	sWriteCount(theStreamW, iWrittenTuplesCount);
+	spWriteCount(theStreamW, iWrittenTuplesCount);
 	for (size_t count = iWrittenTuplesCount; count; --count)
 		{
 		theStreamW.WriteInt64(*iWrittenTupleIDs++);
@@ -477,7 +477,7 @@ void ZTSWatcher_Client::pSync2(
 
 	oChangedTupleIDs.clear();
 	oChangedTuples.clear();
-	if (uint32 theCount = sReadCount(theStreamR))
+	if (uint32 theCount = spReadCount(theStreamR))
 		{
 		oChangedTupleIDs.reserve(theCount);
 		oChangedTuples.reserve(theCount);
@@ -490,7 +490,7 @@ void ZTSWatcher_Client::pSync2(
 
 
 	oChangedQueries.clear();
-	if (uint32 theCount = sReadCount(theStreamR))
+	if (uint32 theCount = spReadCount(theStreamR))
 		{
 		while (theCount--)
 			{
@@ -499,7 +499,7 @@ void ZTSWatcher_Client::pSync2(
 				oChangedQueries.insert(pair<int64, vector<uint64> >(theRefcon, vector<uint64>()));
 			
 			vector<uint64>& theVector = (*pos.first).second;
-			if (uint32 theIDCount = sReadCount(theStreamR))
+			if (uint32 theIDCount = spReadCount(theStreamR))
 				{
 				theVector.reserve(theIDCount);
 				while (theIDCount--)
@@ -573,22 +573,22 @@ void ZTSWatcher_Client::pSync3(
 	#endif
 
 
-	sWriteCount(theStreamW, iRemovedIDsCount);
+	spWriteCount(theStreamW, iRemovedIDsCount);
 	for (size_t count = iRemovedIDsCount; count; --count)
 		theStreamW.WriteUInt64(*iRemovedIDs++);
 
 
-	sWriteCount(theStreamW, iAddedIDsCount);
+	spWriteCount(theStreamW, iAddedIDsCount);
 	for (size_t count = iAddedIDsCount; count; --count)
 		theStreamW.WriteUInt64(*iAddedIDs++);
 
 
-	sWriteCount(theStreamW, iRemovedQueriesCount);
+	spWriteCount(theStreamW, iRemovedQueriesCount);
 	for (size_t count = iRemovedQueriesCount; count; --count)
 		theStreamW.WriteInt64(*iRemovedQueries++);
 
 
-	sWriteCount(theStreamW, iAddedQueriesCount);
+	spWriteCount(theStreamW, iAddedQueriesCount);
 	for (size_t count = iAddedQueriesCount; count; --count)
 		{
 		const AddedQueryCombo& theAQC = *iAddedQueries++;
@@ -602,12 +602,12 @@ void ZTSWatcher_Client::pSync3(
 			theAQC.fTBQuery.ToStream(ZStreamRWPos_MemoryBlock(theMB, 1024));
 			}
 
-		sWriteCount(theStreamW, theMB.GetSize());
+		spWriteCount(theStreamW, theMB.GetSize());
 		theStreamW.Write(theMB.GetData(), theMB.GetSize());
 		}
 
 
-	sWriteCount(theStreamW, iWrittenTuplesCount);
+	spWriteCount(theStreamW, iWrittenTuplesCount);
 	for (size_t count = iWrittenTuplesCount; count; --count)
 		{
 		theStreamW.WriteInt64(*iWrittenTupleIDs++);
@@ -635,7 +635,7 @@ void ZTSWatcher_Client::pSync3(
 	
 	oChangedTupleIDs.clear();
 	oChangedTuples.clear();
-	if (uint32 theCount = sReadCount(theStreamR))
+	if (uint32 theCount = spReadCount(theStreamR))
 		{
 		oChangedTupleIDs.reserve(theCount);
 		oChangedTuples.reserve(theCount);
@@ -648,7 +648,7 @@ void ZTSWatcher_Client::pSync3(
 
 
 	oChangedQueries.clear();
-	if (uint32 theCount = sReadCount(theStreamR))
+	if (uint32 theCount = spReadCount(theStreamR))
 		{
 		while (theCount--)
 			{
@@ -657,7 +657,7 @@ void ZTSWatcher_Client::pSync3(
 				oChangedQueries.insert(pair<int64, vector<uint64> >(theRefcon, vector<uint64>()));
 			
 			vector<uint64>& theVector = (*pos.first).second;
-			if (uint32 theIDCount = sReadCount(theStreamR))
+			if (uint32 theIDCount = spReadCount(theStreamR))
 				{
 				theVector.reserve(theIDCount);
 				while (theIDCount--)
@@ -733,22 +733,22 @@ void ZTSWatcher_Client::pSync4(
 	#endif
 
 
-	sWriteCount(theStreamW, iRemovedIDsCount);
+	spWriteCount(theStreamW, iRemovedIDsCount);
 	for (size_t count = iRemovedIDsCount; count; --count)
 		theStreamW.WriteUInt64(*iRemovedIDs++);
 
 
-	sWriteCount(theStreamW, iAddedIDsCount);
+	spWriteCount(theStreamW, iAddedIDsCount);
 	for (size_t count = iAddedIDsCount; count; --count)
 		theStreamW.WriteUInt64(*iAddedIDs++);
 
 
-	sWriteCount(theStreamW, iRemovedQueriesCount);
+	spWriteCount(theStreamW, iRemovedQueriesCount);
 	for (size_t count = iRemovedQueriesCount; count; --count)
 		theStreamW.WriteInt64(*iRemovedQueries++);
 
 
-	sWriteCount(theStreamW, iAddedQueriesCount);
+	spWriteCount(theStreamW, iAddedQueriesCount);
 	for (size_t count = iAddedQueriesCount; count; --count)
 		{
 		const AddedQueryCombo& theAQC = *iAddedQueries++;
@@ -764,12 +764,12 @@ void ZTSWatcher_Client::pSync4(
 			theAQC.fTBQuery.ToStream(ZStreamRWPos_MemoryBlock(theMB, 1024));
 			}
 
-		sWriteCount(theStreamW, theMB.GetSize());
+		spWriteCount(theStreamW, theMB.GetSize());
 		theStreamW.Write(theMB.GetData(), theMB.GetSize());
 		}
 
 
-	sWriteCount(theStreamW, iWrittenTuplesCount);
+	spWriteCount(theStreamW, iWrittenTuplesCount);
 	for (size_t count = iWrittenTuplesCount; count; --count)
 		{
 		theStreamW.WriteInt64(*iWrittenTupleIDs++);
@@ -796,7 +796,7 @@ void ZTSWatcher_Client::pSync4(
 
 	
 	oAddedIDs.clear();
-	if (uint32 theCount = sReadCount(theStreamR))
+	if (uint32 theCount = spReadCount(theStreamR))
 		{
 		oAddedIDs.reserve(theCount);
 		while (theCount--)
@@ -805,7 +805,7 @@ void ZTSWatcher_Client::pSync4(
 
 	oChangedTupleIDs.clear();
 	oChangedTuples.clear();
-	if (uint32 theCount = sReadCount(theStreamR))
+	if (uint32 theCount = spReadCount(theStreamR))
 		{
 		oChangedTupleIDs.reserve(theCount);
 		oChangedTuples.reserve(theCount);
@@ -818,7 +818,7 @@ void ZTSWatcher_Client::pSync4(
 
 
 	oChangedQueries.clear();
-	if (uint32 theCount = sReadCount(theStreamR))
+	if (uint32 theCount = spReadCount(theStreamR))
 		{
 		while (theCount--)
 			{
@@ -827,7 +827,7 @@ void ZTSWatcher_Client::pSync4(
 				oChangedQueries.insert(pair<int64, vector<uint64> >(theRefcon, vector<uint64>()));
 			
 			vector<uint64>& theVector = (*pos.first).second;
-			if (uint32 theIDCount = sReadCount(theStreamR))
+			if (uint32 theIDCount = spReadCount(theStreamR))
 				{
 				theVector.reserve(theIDCount);
 				while (theIDCount--)

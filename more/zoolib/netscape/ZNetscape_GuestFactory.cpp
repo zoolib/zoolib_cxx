@@ -54,7 +54,7 @@ using ZNetscape::NPNetscapeFuncs_Z;
 #pragma mark -
 #pragma mark * Helper functions
 
-static void sThrowMissingEntryPoint()
+static void spThrowMissingEntryPoint()
 	{
 	throw runtime_error("Missing entry point");
 	}
@@ -77,7 +77,7 @@ P sLookup_T(HMODULE iHMODULE, const char* iName)
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation) && __MACH__
 
-static NSModule sLoadNSModule(CFBundleRef iBundleRef)
+static NSModule spLoadNSModule(CFBundleRef iBundleRef)
 	{
 	// FIXME
 	// On 10.3+ we should use dlopen with RTLD_LOCAL.
@@ -103,7 +103,7 @@ static NSModule sLoadNSModule(CFBundleRef iBundleRef)
 	return nullptr;
 	}
 
-static void* sLookup(NSModule iModule, const char* iName)
+static void* spLookup(NSModule iModule, const char* iName)
 	{
 	if (NSSymbol theSymbol = ::NSLookupSymbolInModule(iModule, iName))
 		return ::NSAddressOfSymbol(theSymbol);
@@ -112,7 +112,7 @@ static void* sLookup(NSModule iModule, const char* iName)
 
 template <typename P>
 P sLookup_T(NSModule iNSModule, const char* iName)
-	{ return reinterpret_cast<P>(sLookup(iNSModule, iName)); }
+	{ return reinterpret_cast<P>(spLookup(iNSModule, iName)); }
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation) && __MACH__
 
@@ -170,7 +170,7 @@ GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 		(fHMODULE, "NP_GetEntryPoints");
 
 	if (!fShutdown || !theInit || !theEntryPoints)
-		sThrowMissingEntryPoint();
+		spThrowMissingEntryPoint();
 
 	// Windows Flash 10.1 requires theEntryPoints be called first.
 	theEntryPoints(&fNPPluginFuncs);
@@ -254,7 +254,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 
 	if (isMachOPlugin)
 		{
-		fNSModule = sLoadNSModule(theBundleRef);
+		fNSModule = spLoadNSModule(theBundleRef);
 
 		fShutdown = sLookup_T<NPP_ShutdownProcPtr>(fNSModule, "_NP_Shutdown");
 
@@ -267,7 +267,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 			(fNSModule, "_NP_Initialize");
 
 		if (!fShutdown || !theInit || !theEntryPoints)
-			sThrowMissingEntryPoint();
+			spThrowMissingEntryPoint();
 
 		// Mac Flash 10.1 requires theInit be called first. cf GuestFactory_Win.
 		// Also, Flash tends to call Debugger, which is usually innocuous, but under
@@ -304,7 +304,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 			(theBundleRef, CFSTR("main"));
 
 		if (!theMain)
-			sThrowMissingEntryPoint();
+			spThrowMissingEntryPoint();
 
 		theMain(&fNPNF, &fNPPluginFuncs, &fShutdown);
 
@@ -415,7 +415,7 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(ZRef<CFPlugInRef> iPlugInRef)
 			(theBundleRef, CFSTR("NP_Initialize"));
 
 		if (!fShutdown || !theInit || !theEntryPoints)
-			sThrowMissingEntryPoint();
+			spThrowMissingEntryPoint();
 
 		theEntryPoints(&fNPPluginFuncs);
 

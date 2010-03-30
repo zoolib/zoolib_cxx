@@ -29,8 +29,8 @@ using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 
-static char sCR[] = { '\r' };
-static char sLF[] = { '\n' };
+static char spCR[] = { '\r' };
+static char spLF[] = { '\n' };
 
 static const char CR = '\r';
 static const char LF = '\n';
@@ -285,7 +285,7 @@ ZStreamW_CRLFInsert::~ZStreamW_CRLFInsert()
 	{
 	if (fLastWasCR)
 		{
-		fStreamSink.Write(sLF, 1, nullptr);
+		fStreamSink.Write(spLF, 1, nullptr);
 		fLastWasCR = false;
 		}
 	}
@@ -303,7 +303,7 @@ void ZStreamW_CRLFInsert::Imp_Write(const void* iSource, size_t iCount, size_t* 
 			{
 			fLastWasCR = false;
 			size_t countWritten;
-			fStreamSink.Write(sLF, 1, &countWritten);
+			fStreamSink.Write(spLF, 1, &countWritten);
 			if (countWritten == 0)
 				break;
 			if (*localSource == LF)
@@ -317,7 +317,7 @@ void ZStreamW_CRLFInsert::Imp_Write(const void* iSource, size_t iCount, size_t* 
 		else if (*localSource == CR)
 			{
 			size_t countWritten;
-			fStreamSink.Write(sCR, 1, &countWritten);
+			fStreamSink.Write(spCR, 1, &countWritten);
 			if (countWritten == 0)
 				break;
 			fLastWasCR = true;
@@ -329,7 +329,7 @@ void ZStreamW_CRLFInsert::Imp_Write(const void* iSource, size_t iCount, size_t* 
 		else if (*localSource == LF)
 			{
 			size_t countWritten;
-			fStreamSink.Write(sCR, 1, &countWritten);
+			fStreamSink.Write(spCR, 1, &countWritten);
 			if (countWritten == 0)
 				break;
 			// Pretend that the last was a CR, we'll write the LF and consume
