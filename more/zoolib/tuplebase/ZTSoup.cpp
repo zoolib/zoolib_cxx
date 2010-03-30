@@ -1211,7 +1211,7 @@ ZTBowl::ZTBowl()
 ZTBowl::~ZTBowl()
 	{
 	for (vector<ZRef<ZTCrouton> >::iterator i = fTCroutons.begin(); i != fTCroutons.end(); ++i)
-		ZRefStaticCast<ZTCrouton_Bowl>(*i)->fTBowl.Clear();
+		(*i).StaticCast<ZTCrouton_Bowl>()->fTBowl.Clear();
 	fTCroutons.clear();
 	}
 
@@ -1236,7 +1236,7 @@ void ZTBowl::Changed(ZTSoup::EChanged iChanged)
 						<< ", Refcount: " << ZString::sFormat("%d", theTCrouton->GetRefCount());
 					}
 
-				ZRefStaticCast<ZTCrouton_Bowl>(*i)->fTBowl.Clear();
+				(*i).StaticCast<ZTCrouton_Bowl>()->fTBowl.Clear();
 				i = fTCroutons.erase(i);
 				}
 			else

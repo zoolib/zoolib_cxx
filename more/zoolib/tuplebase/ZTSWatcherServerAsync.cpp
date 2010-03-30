@@ -37,10 +37,10 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZTSWatcherServerAsync
 
 ZTSWatcherServerAsync::ZTSWatcherServerAsync(
-	ZRef<ZTaskOwner> iTaskOwner,
+	ZRef<ZTaskMaster> iTaskMaster,
 	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
 	ZRef<ZTSWatcher> iTSWatcher)
-:	ZTask(iTaskOwner),
+:	ZTask(iTaskMaster),
 	ZCommer(iStreamerR, iStreamerW),
 	fTSWatcher(iTSWatcher),
 	fSendClose(false),
@@ -80,7 +80,7 @@ void ZTSWatcherServerAsync::Kill()
 	ZMutexLocker locker(fMutex);
 	fSendClose = true;
 	locker.Release();
-	this->Wake();	
+	ZStreamerWriter::Wake();	
 	}
 
 bool ZTSWatcherServerAsync::Read(const ZStreamR& iStreamR)
@@ -97,7 +97,7 @@ bool ZTSWatcherServerAsync::Read(const ZStreamR& iStreamR)
 			ZMutexLocker locker(fMutex);
 			fSendClose = true;
 			locker.Release();
-			this->Wake();
+			ZStreamerWriter::Wake();
 			return false;
 			}
 		case eReq_IDs:
@@ -108,7 +108,7 @@ bool ZTSWatcherServerAsync::Read(const ZStreamR& iStreamR)
 			ZMutexLocker locker(fMutex);
 			fIDsNeeded += theIDsNeeded;
 			locker.Release();
-			this->Wake();
+			ZStreamerWriter::Wake();
 			break;
 			}
 		case eReq_Sync:
@@ -202,7 +202,7 @@ bool ZTSWatcherServerAsync::Read(const ZStreamR& iStreamR)
 			fSyncNeeded = true;
 
 			locker.Release();
-			this->Wake();
+			ZStreamerWriter::Wake();
 			break;
 			}
 		}
@@ -337,7 +337,7 @@ bool ZTSWatcherServerAsync::Write(const ZStreamW& iStreamW)
 		}
 
 	if (wroteAnything)
-		this->Wake();
+		ZStreamerWriter::Wake();
 	else
 		iStreamW.Flush();
 
@@ -356,7 +356,7 @@ void ZTSWatcherServerAsync::pCallback()
 	if (!fCallbackNeeded)
 		{
 		fCallbackNeeded = true;
-		this->Wake();
+		ZStreamerWriter::Wake();
 		}
 	}
 

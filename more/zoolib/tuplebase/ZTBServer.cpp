@@ -110,10 +110,10 @@ public:
 	};
 
 ZTBServer::ZTBServer(
-	ZRef<ZTaskOwner> iTaskOwner,
+	ZRef<ZTaskMaster> iTaskMaster,
 	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
 	ZRef<ZTBRep> iTBRep, const std::string& iLogFacility)
-:	ZTask(iTaskOwner),
+:	ZTask(iTaskMaster),
 	ZCommer(iStreamerR, iStreamerW),
 	fTBRep(iTBRep),
 	fSendClose(false),
@@ -150,7 +150,7 @@ bool ZTBServer::Read(const ZStreamR& iStream)
 	else if (theWhat == "Ping")
 		{
 		fPingRequested = true;
-		this->Wake();
+		ZStreamerWriter::Wake();
 		}
 	else if (theWhat == "Pong")
 		{
@@ -159,7 +159,7 @@ bool ZTBServer::Read(const ZStreamR& iStream)
 	else if (theWhat == "Close")
 		{
 		fSendClose = true;
-		this->Wake();
+		ZStreamerWriter::Wake();
 		}
 	else
 		{
@@ -455,7 +455,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 	if (!didAnything)
 		iStream.Flush();
 	else
-		this->Wake();
+		ZStreamerWriter::Wake();
 
 	return !fSendClose;
 	}
@@ -470,7 +470,7 @@ void ZTBServer::sCallback_AllocateIDs(void* iRefcon, uint64 iBaseID, size_t iCou
 	ZTBServer* theServer = static_cast<ZTBServer*>(iRefcon);
 	ZMutexLocker locker(theServer->fMutex_Structure);
 	theServer->fIDs.push_back(pair<uint64, size_t>(iBaseID, iCount));
-	theServer->Wake();
+	theServer->ZStreamerWriter::Wake();
 	}
 
 void ZTBServer::Handle_AllocateIDs(const ZTuple& iReq)
@@ -497,7 +497,7 @@ void ZTBServer::Handle_Create(const ZTuple& iReq)
 
 		sSortedInsertMustNotContain(kDebug_TBServer, fTransactions_Create_Unsent, theTransaction);
 
-		this->Wake();
+		ZStreamerWriter::Wake();
 		}
 	}
 
@@ -522,7 +522,7 @@ void ZTBServer::sCallback_GetTupleForSearch(
 			}
 
 		theTransaction->fServer->fTransactions_HaveTuplesToSend.insert(theTransaction);
-		theTransaction->fServer->Wake();
+		theTransaction->fServer->ZStreamerWriter::Wake();
 		}
 	}
 
@@ -540,7 +540,7 @@ void ZTBServer::sCallback_Search(void* iRefcon, vector<uint64>& ioResults)
 	sSortedEraseMustContain(kDebug_TBServer, theTransaction->fServer->fSearches_Waiting, theSearch);
 	sSortedInsertMustNotContain(kDebug_TBServer,
 		theTransaction->fServer->fSearches_Unsent, theSearch);
-	theTransaction->fServer->Wake();
+	theTransaction->fServer->ZStreamerWriter::Wake();
 
 	locker.Release();
 
@@ -584,7 +584,7 @@ void ZTBServer::sCallback_Count(void* iRefcon, size_t iResult)
 
 	sSortedEraseMustContain(kDebug_TBServer, theTransaction->fServer->fCounts_Waiting, theCount);
 	sSortedInsertMustNotContain(kDebug_TBServer, theTransaction->fServer->fCounts_Unsent, theCount);
-	theTransaction->fServer->Wake();
+	theTransaction->fServer->ZStreamerWriter::Wake();
 
 	locker.Release();
 	}
@@ -629,7 +629,7 @@ void ZTBServer::sCallback_Validate(bool iSucceeded, void* iRefcon)
 			theTransaction->fServer->fTransactions_Validate_Failed, theTransaction);
 		}
 
-	theTransaction->fServer->Wake();
+	theTransaction->fServer->ZStreamerWriter::Wake();
 	}
 
 void ZTBServer::Handle_Validate(const ZTuple& iReq)
@@ -691,7 +691,7 @@ void ZTBServer::sCallback_Commit(void* iRefcon)
 	sSortedInsertMustNotContain(kDebug_TBServer,
 		theTransaction->fServer->fTransactions_Commit_Acked, theTransaction);
 
-	theTransaction->fServer->Wake();
+	theTransaction->fServer->ZStreamerWriter::Wake();
 	}
 
 void ZTBServer::Handle_Commit(const ZTuple& iReq)
@@ -732,7 +732,7 @@ void ZTBServer::sCallback_GetTuple(
 			}
 
 		theTransaction->fServer->fTransactions_HaveTuplesToSend.insert(theTransaction);
-		theTransaction->fServer->Wake();
+		theTransaction->fServer->ZStreamerWriter::Wake();
 		}
 	}
 

@@ -51,7 +51,7 @@ private:
 
 public:
 	ZTBServer(
-		ZRef<ZTaskOwner> iTaskOwner,
+		ZRef<ZTaskMaster> iTaskMaster,
 		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
 		ZRef<ZTBRep> iTBRep, const std::string& iLogFacility);
 

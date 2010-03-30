@@ -39,7 +39,7 @@ class ZTSWatcherServerAsync
 	{
 public:
 	ZTSWatcherServerAsync(
-		ZRef<ZTaskOwner> iTaskOwner,
+		ZRef<ZTaskMaster> iTaskMaster,
 		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
 		ZRef<ZTSWatcher> iTSWatcher);
 
