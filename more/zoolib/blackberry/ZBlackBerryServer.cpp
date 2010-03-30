@@ -85,7 +85,7 @@ bool ZBlackBerryServer::Handler_ManagerChanged::Read(const ZStreamR& r)
 		{
 		fState = eState_SendClosed;
 		locker.Release();
-		this->Wake();
+		ZStreamerWriter::Wake();
 		return false;		
 		}
 
@@ -100,7 +100,7 @@ bool ZBlackBerryServer::Handler_ManagerChanged::Read(const ZStreamR& r)
 			{
 			fState = eState_SendChanged;
 			locker.Release();
-			this->Wake();
+			ZStreamerWriter::Wake();
 			return true;
 			}
 		}
@@ -153,7 +153,7 @@ void ZBlackBerryServer::Handler_ManagerChanged::TripIt()
 
 	locker.Release();
 
-	this->Wake();
+	ZStreamerWriter::Wake();
 	}
 
 // =================================================================================================
@@ -217,7 +217,7 @@ bool ZBlackBerryServer::Handler_DeviceFinished::Read(const ZStreamR& r)
 
 	ZAssert(fClientOpen);
 	fClientOpen = false;
-	this->Wake();
+	ZStreamerWriter::Wake();
 	return false;
 	}
 
@@ -261,7 +261,7 @@ void ZBlackBerryServer::Handler_DeviceFinished::TripIt()
 		s << "TripIt";
 		}
 	fRunning = false;
-	this->Wake();
+	ZStreamerWriter::Wake();
 	}
 
 // =================================================================================================
@@ -483,7 +483,7 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 				w.Flush();
 				// Use a standard copier for the device-->client direction
 				ZRef<ZWorker> deviceToClient
-					= new ZStreamerCopier(ZRef<ZTaskOwner>(), deviceCon, iSRWCon, readSize);
+					= new ZStreamerCopier(ZRef<ZTaskMaster>(), deviceCon, iSRWCon, readSize);
 				sStartWorkerRunner(deviceToClient);
 
 				// And our specialized copier for the client-->device direction.

@@ -424,7 +424,7 @@ void Device_Streamer::Stop()
 				theChannel->fCondition_Send.Broadcast();
 				}
 			}
-		this->Wake();
+		ZStreamerWriter::Wake();
 		}
 	else
 		{
@@ -451,7 +451,7 @@ ZRef<Channel> Device_Streamer::Open(bool iPreserveBoundaries,
 		fChannels.push_back(theChannel.Get());
 		theChannel->fState = eState_LookupNeeded;
 
-		this->Wake();
+		ZStreamerWriter::Wake();
 		
 		while (theChannel->fState != eState_Dead
 			&& theChannel->fState != eState_Connected)
@@ -503,7 +503,7 @@ Data Device_Streamer::GetAttribute(uint16 iObject, uint16 iAttribute)
 
 	fGetAttribute = &theGA;
 
-	this->Wake();
+	ZStreamerWriter::Wake();
 
 	while (!theGA.fFinished)
 		fCondition.Wait(fMutex);
@@ -546,7 +546,7 @@ bool Device_Streamer::Read(const ZStreamR& iStreamR)
 			{
 			locker.Acquire();
 			fLifecycle = eLifecycle_StreamsDead;
-			this->Wake();
+			ZStreamerWriter::Wake();
 			}
 		}
 
@@ -719,7 +719,7 @@ bool Device_Streamer::Channel_Finalize(Channel_Streamer* iChannel)
 				}
 
 			iChannel->fState = eState_CloseNeeded;
-			this->Wake();
+			ZStreamerWriter::Wake();
 			break;
 			}
 		case eState_Dead:
@@ -793,7 +793,7 @@ void Device_Streamer::Channel_Read(
 			localDest += countToRead;
 			iCount -= countToRead;
 			theBuffer.erase(theBuffer.begin(), theBuffer.begin() + countToRead);
-			this->Wake();
+			ZStreamerWriter::Wake();
 			break;
 			}
 		else
@@ -841,7 +841,7 @@ void Device_Streamer::Channel_Write(
 		{
 		iChannel->fSend_Data = localSource;
 		iChannel->fSend_Size = iCount;
-		this->Wake();
+		ZStreamerWriter::Wake();
 
 		while (iChannel->fSend_Size)
 			iChannel->fCondition_Send.Wait(fMutex);
@@ -869,7 +869,7 @@ void Device_Streamer::Channel_SendDisconnect(Channel_Streamer* iChannel)
 	if (iChannel->fState == eState_Connected)
 		{
 		iChannel->fState = eState_CloseNeeded;
-		this->Wake();
+		ZStreamerWriter::Wake();
 		}
 	}
 
@@ -904,7 +904,7 @@ void Device_Streamer::Channel_Abort(Channel_Streamer* iChannel)
 		iChannel->fReceive_Buffer.clear();
 		iChannel->fCondition_Receive.Broadcast();
 		iChannel->fCondition_Send.Broadcast();
-		this->Wake();
+		ZStreamerWriter::Wake();
 		}
 	}
 
@@ -955,7 +955,7 @@ bool Device_Streamer::pDetachIfUnused(Channel_Streamer* iChannel)
 		return false;
 
 	ZUtil_STL::sEraseMustContain(1, fChannels, iChannel);
-	this->Wake();
+	ZStreamerWriter::Wake();
 	return true;
 	}
 
@@ -1066,7 +1066,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 						iStreamR.Skip(2);
 						theChannel->fSend_ChunkSize = iStreamR.ReadUInt16LE();
 
-						this->Wake();
+						ZStreamerWriter::Wake();
 						}
 					else
 						{
@@ -1102,19 +1102,19 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 						{
 						theChannel->fState = eState_CloseNeeded;
 						theChannel->fError = error_PasswordNeeded;
-						this->Wake();
+						ZStreamerWriter::Wake();
 						}
 					else if (remainingTries <= 3)
 						{
 						theChannel->fState = eState_CloseNeeded;
 						theChannel->fError = error_PasswordExhausted;
-						this->Wake();
+						ZStreamerWriter::Wake();
 						}
 					else
 						{
 						theChannel->fState = eState_ChallengeRcvd;
 						theChannel->fChallenge = challenge;
-						this->Wake();
+						ZStreamerWriter::Wake();
 						}
 					}
 				break;
@@ -1133,7 +1133,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					{
 					theChannel->fState = eState_CloseNeeded;
 					theChannel->fError = error_PasswordIncorrect;
-					this->Wake();
+					ZStreamerWriter::Wake();
 					}				
 				break;
 				}
@@ -1193,7 +1193,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					theChannel->fReceive_Buffer.clear();
 					theChannel->fCondition_Receive.Broadcast();
 					theChannel->fCondition_Send.Broadcast();
-					this->Wake();
+					ZStreamerWriter::Wake();
 					}
 				break;
 				}
@@ -1271,7 +1271,7 @@ void Device_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					theChannel->fWaitingForSequence = false;
 					theChannel->fNextSequence = sequence + 1;
 					theChannel->fCondition_Send.Broadcast();
-					this->Wake();
+					ZStreamerWriter::Wake();
 					}
 				break;
 				}

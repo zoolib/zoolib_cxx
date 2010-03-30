@@ -186,7 +186,7 @@ static void sWriteString(const ZStreamW& w, const string& iString)
 void Device_Client::Stop()
 	{
 	fOpen = false;
-	this->Wake();
+	ZStreamerWriter::Wake();
 	}
 
 ZRef<Channel> Device_Client::Open(bool iPreserveBoundaries,
@@ -286,7 +286,7 @@ void Device_Client::ReadStarted()
 	{
 	ZCommer::ReadStarted();
 	fOpen = false;
-	this->Wake();
+	ZStreamerWriter::Wake();
 	}
 
 bool Device_Client::Read(const ZStreamR& r)
@@ -358,7 +358,7 @@ void Manager_Client::Commer_Changed::ReadFinished()
 	{
 	// Force the writer to attempt to close, and thus to exit.
 	fSendClose = true;
-	this->Wake();
+	ZStreamerWriter::Wake();
 
 	ZCommer::ReadFinished();
 	}
@@ -372,7 +372,7 @@ bool Manager_Client::Commer_Changed::Read(const ZStreamR& r)
 			theManager->pNotifyObservers();
 
 		fSendNotificationRequest = true;
-		this->Wake();
+		ZStreamerWriter::Wake();
 		return true;		
 		}
 	else
@@ -468,7 +468,7 @@ void Manager_Client::Stop()
 	{
 //	fAutoReconnect = false;
 	fCommer_Changed->fManager.Clear();
-	fCommer_Changed->Wake();
+	fCommer_Changed->ZStreamerWriter::Wake();
 	fCommer_Changed.Clear();
 	this->pStopped();
 	}
