@@ -22,7 +22,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZUnicode.h"
-#include "zoolib/ZVal_Any.h"
 
 #include "ASZStringSuite.h"
 #include "PITerminology.h"
@@ -359,6 +358,7 @@ void sRelease_T(struct ASZByteRun* iString)
 #pragma mark -
 #pragma mark * ZPhotoshop
 
+/** Various stuff */
 namespace ZPhotoshop {
 
 // =================================================================================================
@@ -709,6 +709,12 @@ void Spec::Entry::pCopyFrom(const Entry& iOther)
 #pragma mark -
 #pragma mark * Spec
 
+/**
+\class Spec
+
+\brief
+*/
+
 Spec Spec::sClass(ClassID iClassID)
 	{ return Entry::sClass(iClassID); }
 
@@ -996,16 +1002,26 @@ void Spec::spConvert(PIActionReference iRef, vector<Entry>& oEntries)
 #pragma mark -
 #pragma mark * Val
 
-ZAny Val::AsAny() const
-	{ return this->AsAny(ZAny()); }
+/**
+\class Val
+\ingroup ZVal
 
-ZAny Val::AsAny(const ZAny& iDefault) const
+\brief A ZVal-compatible entity for use with ZPhotoshop::Map and ZPhotoshop::Seq
+
+For simplicity Val is based on ZAny, however ZPhotoshop::Map and ZPhotoshop::Seq
+have a limited type repertoire which must be respected.
+*/
+
+ZAny Val::AsAny() const
+	{ return this->DAsAny(ZAny()); }
+
+ZAny Val::DAsAny(const ZAny& iDefault) const
 	{
 	if (const Map* theVal = this->PGet_T<Map>())
-		return ZAny(theVal->AsAny(iDefault));
+		return ZAny(theVal->AsMap_Any(iDefault));
 
 	if (const Seq* theVal = this->PGet_T<Seq>())
-		return ZAny(theVal->AsAny(iDefault));
+		return ZAny(theVal->AsSeq_Any(iDefault));
 		
 	return *this;
 	}
@@ -1095,21 +1111,24 @@ ZMACRO_ZValAccessors_Def_Entry(Val, Spec, Spec)
 #pragma mark -
 #pragma mark * Seq
 
+/**
+\class Seq
+
+\brief Encapsulates a PIActionList, implementing the ZSeq API.
+*/
+
 Seq::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->Count()); }
 
-ZAny Seq::AsAny() const
-	{ return this->AsAny(ZAny()); }
-
-ZAny Seq::AsAny(const ZAny& iDefault) const
+ZSeq_Any Seq::AsSeq_Any(const ZAny& iDefault) const
 	{
-	ZSeq_Any theList;
+	ZSeq_Any theSeq;
 	if (size_t theCount = this->Count())
 		{
 		for (size_t x = 0; x < theCount; ++x)
-			theList.Append(this->Get(x).AsAny(iDefault));
+			theSeq.Append(this->Get(x).DAsAny(iDefault));
 		}
-	return ZAny(theList);
+	return theSeq;
 	}
 
 void Seq::swap(Seq& iOther)
@@ -1228,18 +1247,21 @@ PIActionList Seq::Orphan()
 #pragma mark -
 #pragma mark * Map
 
+/**
+\class Map
+
+\brief Encapsulates a PIActionDescriptor, implementing the ZMap API.
+*/
+
 Map::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->pCount()); }
 
-ZAny Map::AsAny() const
-	{ return this->AsAny(ZAny()); }
-
-ZAny Map::AsAny(const ZAny& iDefault) const
+ZMap_Any Map::AsMap_Any(const ZAny& iDefault) const
 	{
 	ZMap_Any theMap;
 	for (Index_t i = this->Begin(), end = this->End(); i != end; ++i)
-		theMap.Set(this->NameOf(i), this->Get(i).AsAny(iDefault));
-	return ZAny(theMap);
+		theMap.Set(this->NameOf(i), this->Get(i).DAsAny(iDefault));
+	return theMap;
 	}
 
 void Map::swap(Map& iOther)

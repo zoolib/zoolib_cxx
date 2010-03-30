@@ -229,6 +229,7 @@ static ZTrail spMacAsTrail(short iVRefNum, long iDirID, const unsigned char* iNa
 
 static ZTrail spMacAsTrail(const FSRef& iFSRef)
 	{
+	// Use 1024, PATH_MAX not defined in old Mac headers.
 	char buffer[1024];
 	if (noErr == ::FSRefMakePath(&iFSRef, (UInt8*)buffer, 1024))
 		return ZTrail(buffer);
@@ -389,13 +390,13 @@ FileRef::FileRef(const ZTrail& iTrail)
 
 			const string theWinPath = spTrailAsWin(iTrail);
 			ZStreamRWPos_RAM buffer;
-			if (ZCONFIG_Photoshop_SDKVersion <= ZCONFIG_Photoshop_SDKVersion_PS7
-				&& ZPhotoshop::sGetHostVersion_Major() <= ZCONFIG_Photoshop_SDKVersion_PS7)
+			if (ZPhotoshop::sGetHostVersion_Major() <= ZCONFIG_Photoshop_SDKVersion_CS1)
 				{
 				// We're being hosted by an old version of photoshop. Convert our
 				// UTF8 string to the 8-bit system codepage.
-				ZStrimW_StreamEncoder theStrimW(new ZTextEncoder_Win(spSystemCodePage()), buffer);
-				theStrimW.Write(theWinPath);
+				ZStrimW_StreamEncoder(new ZTextEncoder_Win(spSystemCodePage()), buffer)
+					.Write(theWinPath);
+
 				buffer.WriteInt8(0);
 
 				size_t stringSize = buffer.GetSize();
@@ -406,12 +407,10 @@ FileRef::FileRef(const ZTrail& iTrail)
 			else
 				{
 				// We can use the 'utxt' tagged format.
-				ZStrimW_StreamUTF16LE theStrimW(buffer);
-				theStrimW.Write(theWinPath);
-				buffer.WriteInt16(0);
+				ZStrimW_StreamUTF16LE(buffer)
+					.Write(theWinPath);
 
-				// Need to look at this again when we're doing 64 bit compiles.
-				ZAssertCompile(ZIntTrait_T<sizeof(size_t)>::eIs32Bit);
+				buffer.WriteInt16(0);
 
 				const uint32 stringSize = buffer.GetSize();
 				const uint32 handleSize = stringSize + 12;
@@ -467,6 +466,9 @@ ZTrail FileRef::AsTrail() const
 
 	#elif defined(__PIWin__)
 		
+		// Need to look at this again when we're doing 64 bit compiles.
+		ZAssertCompile(ZIntTrait_T<sizeof(size_t)>::eIs32Bit);
+
 		UseHandle useHandle(fHandle);
 		size_t handleSize = useHandle.Size();
 		const uint32* header = static_cast<uint32*>(useHandle.Ptr());
@@ -491,8 +493,9 @@ ZTrail FileRef::AsTrail() const
 		// The handle did not pass our screening, assume it's
 		// an 8 bit string in the system codepage, skipping the NUL terminator.
 		ZStreamRPos_Memory theStreamR(header, handleSize - 1);
-		ZStrimR_StreamDecoder theStrimR(new ZTextDecoder_Win(spSystemCodePage()), theStreamR);
-		const string8 theWinPath = theStrimR.ReadAll8();
+		const string8 theWinPath =
+			ZStrimR_StreamDecoder(new ZTextDecoder_Win(spSystemCodePage()), theStreamR)
+			.theStrimR.ReadAll8();
 		return sWinAsTrail(theWinPath);
 
 	#else

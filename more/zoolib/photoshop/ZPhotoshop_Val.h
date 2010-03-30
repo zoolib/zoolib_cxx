@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFile.h"
 #include "zoolib/ZRef.h"
 #include "zoolib/ZUnicodeString.h"
-#include "zoolib/ZVal.h"
+#include "zoolib/ZVal_Any.h"
 #include "zoolib/ZValAccessors_Std.h"
 
 #include "zoolib/photoshop/ZPhotoshop.h"
@@ -227,7 +227,7 @@ class Val : public ZAny
 	{
 public:
 	ZAny AsAny() const;
-	ZAny AsAny(const ZAny& iDefault) const;
+	ZAny DAsAny(const ZAny& iDefault) const;
 
 	Val();
 	Val(const Val& iOther);
@@ -275,8 +275,7 @@ class Seq
 public:
 	operator operator_bool_type() const;
 
-	ZAny AsAny() const;
-	ZAny AsAny(const ZAny& iDefault) const;
+	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
 
 	void swap(Seq& iOther);
 
@@ -325,8 +324,7 @@ public:
 
 	operator operator_bool_type() const;
 
-	ZAny AsAny() const;
-	ZAny AsAny(const ZAny& iDefault) const;
+	ZMap_Any AsMap_Any(const ZAny& iDefault) const;
 
 	void swap(Map& iOther);
 
