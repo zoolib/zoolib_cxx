@@ -26,6 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+using std::map;
 using std::string;
 
 // =================================================================================================
@@ -133,7 +134,8 @@ static string16 spAsString16(JSStringRef iRef)
 	{
 	if (iRef)
 		{
-		return string16(::JSStringGetCharactersPtr(iRef),
+		return string16(
+			::JSStringGetCharactersPtr(iRef),
 			::JSStringGetLength(iRef));
 		}
 	return string16();
