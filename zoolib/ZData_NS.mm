@@ -100,7 +100,10 @@ size_t ZData_NS::GetSize() const
 	}
 
 void ZData_NS::SetSize(size_t iSize)
-	{ [this->pTouch() setLength:iSize]; }
+	{
+	if (this->GetSize() != iSize)
+		[this->pTouch() setLength:iSize];
+	}
 
 const void* ZData_NS::GetData() const
 	{

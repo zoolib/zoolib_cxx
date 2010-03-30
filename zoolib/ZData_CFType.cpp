@@ -103,8 +103,8 @@ size_t ZData_CFType::GetSize() const
 
 void ZData_CFType::SetSize(size_t iSize)
 	{
-	CFMutableDataRef theData = this->pTouch();
-	::CFDataSetLength(theData, iSize);
+	if (this->GetSize() != iSize)
+		::CFDataSetLength(this->pTouch(), iSize);
 	}
 
 const void* ZData_CFType::GetData() const
@@ -115,18 +115,14 @@ const void* ZData_CFType::GetData() const
 	}
 
 void* ZData_CFType::GetData()
-	{
-	CFMutableDataRef theData = this->pTouch();
-	return ::CFDataGetMutableBytePtr(theData);
-	}
+	{ return ::CFDataGetMutableBytePtr(this->pTouch()); }
 
 void ZData_CFType::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
 	{
 	if (iCount)
 		{
-		CFMutableDataRef theData = this->pTouch();
 		const CFRange theRange = { iOffset, iCount };
-		::CFDataReplaceBytes(theData, theRange, static_cast<const UInt8*>(iSource), iCount);
+		::CFDataReplaceBytes(this->pTouch(), theRange, static_cast<const UInt8*>(iSource), iCount);
 		}
 	}
 
