@@ -39,17 +39,17 @@ using std::vector;
 #pragma mark -
 #pragma mark * Utility routines
 
-static uint32 sReadCount(const ZStreamR& iStream)
+static uint32 spReadCount(const ZStreamR& iStream)
 	{ return iStream.ReadCount(); }
 
-static void sThrowBadFormat()
+static void spThrowBadFormat()
 	{
 	throw runtime_error("ZAssetTree_Std, bad format");
 	}
 
-static const char sEmptyString[] = "";
-static const char sMagicText[] = "ZAO v1.0";
-static const size_t sMagicTextSize = sizeof(sMagicText);
+static const char spEmptyString[] = "";
+static const char spMagicText[] = "ZAO v1.0";
+static const size_t spMagicTextSize = sizeof(spMagicText);
 
 // =================================================================================================
 #pragma mark -
@@ -134,14 +134,14 @@ ZAssetRep_Std_Directory::ZAssetRep_Std_Directory(
 	const char* iNameTable, const size_t* iNameOffsets)
 :	ZAssetRep_Std(iParent, iName, iNameLength)
 	{
-	fChildrenCount = sReadCount(iStream);
+	fChildrenCount = spReadCount(iStream);
 	if (fChildrenCount == 0)
 		{
 		fChildren = nullptr;
 		}
 	else if (fChildrenCount == 1)
 		{
-		uint32 childNameIndex = sReadCount(iStream);
+		uint32 childNameIndex = spReadCount(iStream);
 		size_t nameOffset = ZByteSwap_ReadBig32(iNameOffsets + childNameIndex);
 		size_t nextNameOffset = ZByteSwap_ReadBig32(iNameOffsets + childNameIndex + 1);
 		fChild = iAssetTree->LoadAssetRep(this, iNameTable + nameOffset,
@@ -153,7 +153,7 @@ ZAssetRep_Std_Directory::ZAssetRep_Std_Directory(
 		fChildren = new ZAssetRep_Std*[fChildrenCount];
 		for (size_t x = 0; x < fChildrenCount; ++x)
 			{
-			uint32 childNameIndex = sReadCount(iStream);
+			uint32 childNameIndex = spReadCount(iStream);
 			size_t nameOffset = ZByteSwap_ReadBig32(iNameOffsets + childNameIndex);
 			size_t nextNameOffset = ZByteSwap_ReadBig32(iNameOffsets + childNameIndex + 1);
 			fChildren[x] = iAssetTree->LoadAssetRep(this, iNameTable + nameOffset,
@@ -310,10 +310,10 @@ ZAssetRep_Std_Union::ZAssetRep_Std_Union(
 :	ZAssetRep_Std(iParent, iName, iNameLength)
 	{
 	fResolved = false;
-	size_t countOfPaths = sReadCount(iStream);
+	size_t countOfPaths = spReadCount(iStream);
 	for (size_t x = 0; x < countOfPaths; ++x)
 		{
-		uint32 pathNameIndex = sReadCount(iStream);
+		uint32 pathNameIndex = spReadCount(iStream);
 		fPaths.push_back(iNameTable + ZByteSwap_ReadBig32(iNameOffsets + pathNameIndex));
 		}
 	}
@@ -584,7 +584,7 @@ ZAssetRep_Std_Data_Stream::ZAssetRep_Std_Data_Stream(
 	{
 	fAssetTree_Std_Stream = iAssetTree;
 	fDataOffset = 0;
-	fDataSize = sReadCount(iStream);
+	fDataSize = spReadCount(iStream);
 	if (fDataSize)
 		fDataOffset = iStream.ReadUInt32();
 	fData = nullptr;
@@ -748,19 +748,19 @@ void ZAssetTree_Std_Stream::LoadUp(const ZStreamRPos* iStream, size_t iOffset, s
 	try
 		{
 		// Check that the stream is big enough to hold the magic text and header size
-		size_t trailerSize = sizeof(uint32) + sMagicTextSize;
+		size_t trailerSize = sizeof(uint32) + spMagicTextSize;
 		if (iSize < trailerSize)
-			sThrowBadFormat();
+			spThrowBadFormat();
 
 		// Get the header size and check the magic text
 		fStream->SetPosition(iOffset + iSize - trailerSize);
 
 		uint32 headerSize = fStream->ReadUInt32();
 
-		char checkedText[sMagicTextSize];
-		fStream->Read(checkedText, sMagicTextSize);
-		if (0 != memcmp(checkedText, sMagicText, sMagicTextSize))
-			sThrowBadFormat();
+		char checkedText[spMagicTextSize];
+		fStream->Read(checkedText, spMagicTextSize);
+		if (0 != memcmp(checkedText, spMagicText, spMagicTextSize))
+			spThrowBadFormat();
 
 		// Move back to the beginning of the header
 		fStream->SetPosition(iOffset + iSize - trailerSize - headerSize);
@@ -780,7 +780,7 @@ void ZAssetTree_Std_Stream::LoadUp(const ZStreamRPos* iStream, size_t iOffset, s
 		fStream->Read(fNameTable, nameTableSize);
 
 		// Pull in the tree
-		fRoot = this->LoadAssetRep(nullptr, sEmptyString, 0, *fStream, fNameTable, &nameOffsets[0]);
+		fRoot = this->LoadAssetRep(nullptr, spEmptyString, 0, *fStream, fNameTable, &nameOffsets[0]);
 
 		// Remember where the start of the data is
 		fDataOffset = iOffset;
@@ -881,7 +881,7 @@ ZAssetRep_Std_Data_File::ZAssetRep_Std_Data_File(
 	{
 	fAssetTree_Std_File = iAssetTree;
 	fDataOffset = 0;
-	fDataSize = sReadCount(iStream);
+	fDataSize = spReadCount(iStream);
 	if (fDataSize)
 		fDataOffset = iStream.ReadUInt32();
 	fData = nullptr;
@@ -1016,9 +1016,9 @@ ZAssetTree_Std_File::ZAssetTree_Std_File(ZRef<ZFileR> iFile, uint64 iOffset, siz
 	try
 		{
 		// Check that the stream is big enough to hold the magic text and header size
-		size_t trailerSize = sizeof(uint32) + sMagicTextSize;
+		size_t trailerSize = sizeof(uint32) + spMagicTextSize;
 		if (iSize < trailerSize)
-			sThrowBadFormat();
+			spThrowBadFormat();
 
 		ZRef<StreamerRPos> theStreamer = new StreamerRPos(iFile, iOffset, iSize);
 		const ZStreamRPos& theStream = theStreamer->GetStreamRPos();
@@ -1028,10 +1028,10 @@ ZAssetTree_Std_File::ZAssetTree_Std_File(ZRef<ZFileR> iFile, uint64 iOffset, siz
 
 		uint32 headerSize = theStream.ReadUInt32();
 
-		char checkedText[sMagicTextSize];
-		theStream.Read(checkedText, sMagicTextSize);
-		if (0 != memcmp(checkedText, sMagicText, sMagicTextSize))
-			sThrowBadFormat();
+		char checkedText[spMagicTextSize];
+		theStream.Read(checkedText, spMagicTextSize);
+		if (0 != memcmp(checkedText, spMagicText, spMagicTextSize))
+			spThrowBadFormat();
 
 		// Move back to the beginning of the header
 		theStream.SetPosition(iSize - trailerSize - headerSize);
@@ -1051,7 +1051,7 @@ ZAssetTree_Std_File::ZAssetTree_Std_File(ZRef<ZFileR> iFile, uint64 iOffset, siz
 		theStream.Read(fNameTable, nameTableSize);
 
 		// Pull in the tree
-		fRoot = this->LoadAssetRep(nullptr, sEmptyString, 0, theStream, fNameTable, &nameOffsets[0]);
+		fRoot = this->LoadAssetRep(nullptr, spEmptyString, 0, theStream, fNameTable, &nameOffsets[0]);
 
 		// Remember where the start of the data is
 		fDataOffset = iOffset;
@@ -1119,7 +1119,7 @@ ZAssetRep_Std_Data_Memory::ZAssetRep_Std_Data_Memory(
 	const char* iName, size_t iNameLength, const ZStreamRPos& iStream)
 :	ZAssetRep_Std(iParent, iName, iNameLength)
 	{
-	fDataSize = sReadCount(iStream);
+	fDataSize = spReadCount(iStream);
 	if (fDataSize)
 		fDataAddress = iBaseAddress + iStream.ReadUInt32();
 	else
@@ -1195,19 +1195,19 @@ void ZAssetTree_Std_Memory::LoadUp(const void* iAddress, size_t iSize)
 		ZStreamRPos_Memory theSIM(fAddress, iSize);
 
 		// Check that the stream is big enough to hold the magic text and header size
-		size_t trailerSize = sizeof(int32) + sMagicTextSize;
+		size_t trailerSize = sizeof(int32) + spMagicTextSize;
 		if (iSize < trailerSize)
-			sThrowBadFormat();
+			spThrowBadFormat();
 
 		// Get the header size and check the magic text
 		theSIM.SetPosition(iSize - trailerSize);
 
 		uint32 headerSize = theSIM.ReadUInt32();
 
-		char checkedText[sMagicTextSize];
-		theSIM.Read(checkedText, sMagicTextSize);
-		if (0 != memcmp(checkedText, sMagicText, sMagicTextSize))
-			sThrowBadFormat();
+		char checkedText[spMagicTextSize];
+		theSIM.Read(checkedText, spMagicTextSize);
+		if (0 != memcmp(checkedText, spMagicText, spMagicTextSize))
+			spThrowBadFormat();
 
 		// Move back to the beginning of the header
 		theSIM.SetPosition(iSize - trailerSize - headerSize);
@@ -1227,7 +1227,7 @@ void ZAssetTree_Std_Memory::LoadUp(const void* iAddress, size_t iSize)
 		theSIM.Skip(ZByteSwap_ReadBig32(nameOffsets + nameCount));
 
 		// Pull in the tree
-		fRoot = this->LoadAssetRep(nullptr, sEmptyString, 0, theSIM, nameTable, &nameOffsets[0]);
+		fRoot = this->LoadAssetRep(nullptr, spEmptyString, 0, theSIM, nameTable, &nameOffsets[0]);
 		}
 	catch (...)
 		{

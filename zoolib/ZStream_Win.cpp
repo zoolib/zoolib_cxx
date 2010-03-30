@@ -53,7 +53,7 @@ static HRSRC spFindResource(HMODULE iHMODULE, const string& iName, const string&
 		}
 	}
 
-static string sReadZeroTerminatedString(const ZStreamR& iStream)
+static string spReadZeroTerminatedString(const ZStreamR& iStream)
 	{
 	string theString;
 	while (true)
@@ -87,10 +87,10 @@ ZStreamRPos_Win_MultiResource::ZStreamRPos_Win_MultiResource(
 
 				size_t accumulatedSize = 0;
 				size_t resourceCount = theSIM.ReadUInt16();
-				string resourceType = sReadZeroTerminatedString(theSIM);
+				string resourceType = spReadZeroTerminatedString(theSIM);
 				for (size_t x = 0; x < resourceCount; ++x)
 					{
-					string resourceName = sReadZeroTerminatedString(theSIM);
+					string resourceName = spReadZeroTerminatedString(theSIM);
 					if (HRSRC currentHRSRC = spFindResource(fHMODULE, resourceName, resourceType))
 						{
 						fVector_HRSRC.push_back(currentHRSRC);

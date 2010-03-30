@@ -348,12 +348,12 @@ void ZDCCanvas::DrawPixmap(ZDCState& ioState,
 ZDCPixmap ZDCCanvas::GetPixmap(ZDCState& ioState, const ZRect& inBounds)
 	{ return ZDCPixmap(); }
 
-static ZDCRgn sCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
+static ZDCRgn spCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
 	ZDCState& ioState, ZPoint inSeedLocation);
 
 void ZDCCanvas::FloodFill(ZDCState& ioState, const ZPoint& inSeedLocation)
 	{
-	ZDCRgn theMaskRgn =sCalcFloodFillRgn(this, ioState, inSeedLocation);
+	ZDCRgn theMaskRgn = spCalcFloodFillRgn(this, ioState, inSeedLocation);
 	this->FillRegion(ioState, theMaskRgn);
 	}
 
@@ -370,7 +370,7 @@ ZRef<ZDCCanvas> ZDCCanvas::CreateOffScreen(const ZRect& iCanvasBounds)
 #pragma mark -
 #pragma mark Flood fill generic implementation
 
-static bool sCheckPixel(const ZRef<ZDCCanvas>& inCanvas, ZDCState& ioState,
+static bool spCheckPixel(const ZRef<ZDCCanvas>& inCanvas, ZDCState& ioState,
 	ZCoord inLocationH, ZCoord inLocationV, const ZRGBColor& inSeedColor, const ZDCRgn& inMaskRgn)
 	{
 	if (inMaskRgn.Contains(inLocationH, inLocationV))
@@ -388,7 +388,7 @@ static bool sCheckPixel(const ZRef<ZDCCanvas>& inCanvas, ZDCState& ioState,
 	return true;
 	}
 
-static ZDCRgn sCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
+static ZDCRgn spCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
 	ZDCState& ioState, ZPoint inSeedLocation)
 	{
 	ZDCRgn theMaskRgn;
@@ -403,12 +403,12 @@ static ZDCRgn sCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
 		{
 		ZPoint theLocation = theStack.back();
 		theStack.pop_back();
-		if (sCheckPixel(inCanvas, ioState, theLocation.h, theLocation.v, theSeedColor, theMaskRgn))
+		if (spCheckPixel(inCanvas, ioState, theLocation.h, theLocation.v, theSeedColor, theMaskRgn))
 			{
 			// Find left and right boundaries
 			ZCoord left = theLocation.h;
 			while ((left > theBounds.left)
-				&& sCheckPixel(inCanvas, ioState,
+				&& spCheckPixel(inCanvas, ioState,
 				left - 1, theLocation.v, theSeedColor, theMaskRgn))
 				{
 				--left;
@@ -416,7 +416,7 @@ static ZDCRgn sCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
 
 			ZCoord right = theLocation.h;
 			while ((right < theBounds.right)
-				&& sCheckPixel(inCanvas, ioState,
+				&& spCheckPixel(inCanvas, ioState,
 				right, theLocation.v, theSeedColor, theMaskRgn))
 				{
 				++right;
@@ -433,7 +433,7 @@ static ZDCRgn sCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
 				while (currentX < right)
 					{
 					while ((currentX < right)
-						&& !sCheckPixel(inCanvas, ioState,
+						&& !spCheckPixel(inCanvas, ioState,
 						currentX, currentY, theSeedColor, theMaskRgn))
 						{
 						++currentX;
@@ -442,7 +442,7 @@ static ZDCRgn sCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
 					if (currentX < right)
 						{
 						while ((currentX < right)
-							&& sCheckPixel(inCanvas, ioState,
+							&& spCheckPixel(inCanvas, ioState,
 							currentX, currentY, theSeedColor, theMaskRgn))
 							{
 							++currentX;
@@ -461,7 +461,7 @@ static ZDCRgn sCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
 				while (currentX < right)
 					{
 					while ((currentX < right)
-						&& !sCheckPixel(inCanvas, ioState,
+						&& !spCheckPixel(inCanvas, ioState,
 						currentX, currentY, theSeedColor, theMaskRgn))
 						{
 						++currentX;
@@ -470,7 +470,7 @@ static ZDCRgn sCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
 					if (currentX < right)
 						{
 						while ((currentX < right)
-							&& sCheckPixel(inCanvas, ioState,
+							&& spCheckPixel(inCanvas, ioState,
 							currentX, currentY, theSeedColor, theMaskRgn))
 							{
 							++currentX;
@@ -489,12 +489,12 @@ static ZDCRgn sCalcFloodFillRgn(const ZRef<ZDCCanvas>& inCanvas,
 #pragma mark -
 #pragma mark * ZDCCanvasFactory
 
-ZDCCanvasFactory* ZDCCanvasFactory::sHead = nullptr;
+ZDCCanvasFactory* ZDCCanvasFactory::spHead = nullptr;
 
 ZDCCanvasFactory::ZDCCanvasFactory()
 	{
-	fNext = sHead;
-	sHead = this;
+	fNext = spHead;
+	spHead = this;
 	}
 
 ZDCCanvasFactory::~ZDCCanvasFactory()
@@ -504,7 +504,7 @@ ZDCCanvasFactory::~ZDCCanvasFactory()
 ZRef<ZDCCanvas> ZDCCanvasFactory::sCreateCanvas(ZPoint iSize,
 	bool iBigEndian, const ZDCPixmapNS::PixelDesc& iPixelDesc)
 	{
-	ZDCCanvasFactory* current = sHead;
+	ZDCCanvasFactory* current = spHead;
 	while (current)
 		{
 		if (ZRef<ZDCCanvas> theCanvas = current->CreateCanvas(iSize, iBigEndian, iPixelDesc))
@@ -519,16 +519,16 @@ ZRef<ZDCCanvas> ZDCCanvasFactory::sCreateCanvas(ZPoint iSize,
 #pragma mark -
 #pragma mark * ZDCScratch
 
-static ZDC sScratchDC;
+static ZDC spScratchDC;
 
 const ZDC& ZDCScratch::sGet()
 	{
-	return sScratchDC;
+	return spScratchDC;
 	}
 
 void ZDCScratch::sSet(ZRef<ZDCCanvas> inCanvas)
 	{
-	sScratchDC = ZDC(inCanvas);
+	spScratchDC = ZDC(inCanvas);
 	}
 
 // =================================================================================================

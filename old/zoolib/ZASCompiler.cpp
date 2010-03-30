@@ -31,7 +31,7 @@ using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
 
-static void sWriteCount(const ZStreamW& inStream, uint32 inCount)
+static void spWriteCount(const ZStreamW& inStream, uint32 inCount)
 	{
 	if (inCount < 0xFF)
 		{
@@ -44,16 +44,16 @@ static void sWriteCount(const ZStreamW& inStream, uint32 inCount)
 		}
 	}
 
-static void sWriteStringWithSizePrefixAndZeroTerminator(
+static void spWriteStringWithSizePrefixAndZeroTerminator(
 	const ZStreamW& inStream, const string& inString)
 	{
-	sWriteCount(inStream, inString.size());
+	spWriteCount(inStream, inString.size());
 	if (inString.size())
 		inStream.Write(inString.data(), inString.size());
 	inStream.WriteUInt8(0);
 	}
 
-static void sSkipWrite(const ZStreamW& inStream, size_t inCount)
+static void spSkipWrite(const ZStreamW& inStream, size_t inCount)
 	{
 	for (size_t x = 0; x < inCount; ++x)
 		inStream.WriteUInt8(0);
@@ -220,16 +220,16 @@ void ZASCompiler::Node::WriteTo(const ZStreamW& inStream)
 		{
 		// Write our type code
 		inStream.WriteUInt8(2);
-		sWriteCount(inStream, fUnionEntries.size());
+		spWriteCount(inStream, fUnionEntries.size());
 		for (vector<NameEntry*>::iterator i = fUnionEntries.begin(); i != fUnionEntries.end(); ++i)
-			sWriteCount(inStream, (*i)->fNameIndex);
+			spWriteCount(inStream, (*i)->fNameIndex);
 		}
 	else if (fDataOffset || fDataSize)
 		{
 		// Write our type code
 		inStream.WriteUInt8(1);
 		// Write the size and offset of our data (if any)
-		sWriteCount(inStream, fDataSize);
+		spWriteCount(inStream, fDataSize);
 		if (fDataSize)
 			inStream.WriteUInt32(fDataOffset);
 		}
@@ -246,13 +246,13 @@ void ZASCompiler::Node::WriteTo(const ZStreamW& inStream)
 			++countOfChildren;
 			currentChild = currentChild->fSibling;
 			}
-		sWriteCount(inStream, countOfChildren);
+		spWriteCount(inStream, countOfChildren);
 
 		// Write each child
 		currentChild = fChild;
 		while (currentChild)
 			{
-			sWriteCount(inStream, currentChild->fNameEntry->fNameIndex);
+			spWriteCount(inStream, currentChild->fNameEntry->fNameIndex);
 			currentChild->WriteTo(inStream);
 			currentChild = currentChild->fSibling;
 			}
@@ -282,8 +282,8 @@ void ZASCompiler::StartParse()
 	fRoot = new Node(nullptr);
 	}
 
-static const char sMagicText[] = "ZAO v1.0";
-static size_t sMagicTextSize = sizeof(sMagicText);
+static const char spMagicText[] = "ZAO v1.0";
+static size_t spMagicTextSize = sizeof(spMagicText);
 
 void ZASCompiler::EndParse()
 	{
@@ -335,7 +335,7 @@ void ZASCompiler::EndParse()
 	fStreamW.WriteUInt32(fStreamW.GetCount() - startOfHeader);
 
 	// Write out the magic text
-	fStreamW.Write(sMagicText, sMagicTextSize);
+	fStreamW.Write(spMagicText, spMagicTextSize);
 
 	delete fRoot;
 	fRoot = nullptr;
@@ -363,9 +363,9 @@ void ZASCompiler::ParsedString(const string& inValue)
 void ZASCompiler::ParsedStringTable(const vector<string>& inValues)
 	{
 	ZStreamRWPos_RAM theStream;
-	sWriteCount(theStream, inValues.size());
+	spWriteCount(theStream, inValues.size());
 	for (size_t x = 0; x < inValues.size(); ++x)
-		sWriteStringWithSizePrefixAndZeroTerminator(theStream, inValues[x]);
+		spWriteStringWithSizePrefixAndZeroTerminator(theStream, inValues[x]);
 	theStream.SetPosition(0);
 	this->AddAsset(fNameStack, "!stringtable", theStream);
 	}
@@ -415,7 +415,7 @@ void ZASCompiler::AddAsset(const vector<string>& inNameStack,
 	// Align the end of the data at the next four byte boundary. Note that we're aligned
 	// relative to where we wrote our first byte in the stream, _not_ relative to the start
 	// of whatever underlies the stream.
-	sSkipWrite(fStreamW, ((endPosition + 3) & ~3) - endPosition);
+	spSkipWrite(fStreamW, ((endPosition + 3) & ~3) - endPosition);
 	}
 
 ZASCompiler::NameEntry* ZASCompiler::AllocateName(const string& inName)

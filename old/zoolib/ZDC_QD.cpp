@@ -34,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_ATSUI.h"
 #include "zoolib/ZUtil_Mac_LL.h"
 
-static short sModeLookup[] = { srcCopy, srcOr, srcXor, srcBic};
+static short spModeLookup[] = { srcCopy, srcOr, srcXor, srcBic};
 
 // If we're using the old headers then MacLineTo won't be defined
 #if !defined(TARGET_OS_MAC) || (TARGET_OS_MAC && !defined(MacLineTo))
@@ -58,14 +58,14 @@ using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
 
-static inline void sUseHiliteColor()
+static inline void spUseHiliteColor()
 	{
 	#if !ZCONFIG_SPI_Enabled(Win)//Hmm 
 		::LMSetHiliteMode(0);
 	#endif
 	}
 
-static inline const BitMap* sGetPortBitMapForCopyBits(CGrafPtr iGrafPtr)
+static inline const BitMap* spGetPortBitMapForCopyBits(CGrafPtr iGrafPtr)
 	{
 	#if ACCESSOR_CALLS_ARE_FUNCTIONS
 		return ::GetPortBitMapForCopyBits(iGrafPtr);
@@ -74,7 +74,7 @@ static inline const BitMap* sGetPortBitMapForCopyBits(CGrafPtr iGrafPtr)
 	#endif
 	}
 
-static inline ZPoint sGetPortOrigin(CGrafPtr inGrafPtr)
+static inline ZPoint spGetPortOrigin(CGrafPtr inGrafPtr)
 	{
 	#if ACCESSOR_CALLS_ARE_FUNCTIONS
 		Rect tempRect;
@@ -85,7 +85,7 @@ static inline ZPoint sGetPortOrigin(CGrafPtr inGrafPtr)
 	#endif
 	}
 
-static inline bool sIsPortOffscreen(CGrafPtr iGrafPtr)
+static inline bool spIsPortOffscreen(CGrafPtr iGrafPtr)
 	{
 	#if ACCESSOR_CALLS_ARE_FUNCTIONS
 		return ::IsPortOffscreen(iGrafPtr);
@@ -95,7 +95,7 @@ static inline bool sIsPortOffscreen(CGrafPtr iGrafPtr)
 	}
 
 // Forward declarations of utility methods
-static ZRef<ZDCPixmapRep_QD> sGetPixmapRep_QDIfComplex(const ZRef<ZDCInk::Rep>& inInkRep);
+static ZRef<ZDCPixmapRep_QD> spGetPixmapRep_QDIfComplex(const ZRef<ZDCInk::Rep>& inInkRep);
 
 // =================================================================================================
 #pragma mark -
@@ -304,7 +304,7 @@ void ZDCCanvas_QD::Line(ZDCState& ioState, ZCoord inStartH, ZCoord inStartV, ZCo
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = spGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		if (inStartH == inEndH)
 			{
@@ -375,7 +375,7 @@ void ZDCCanvas_QD::FrameRect(ZDCState& ioState, const ZRect& inRect)
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = spGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		if (inRect.Width() <= ioState.fPenWidth * 2 || inRect.Height() <= ioState.fPenWidth * 2)
 			this->Internal_TileRegion(ioState, inRect, thePixmapRep);
@@ -413,7 +413,7 @@ void ZDCCanvas_QD::FillRect(ZDCState& ioState, const ZRect& inRect)
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = spGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		this->Internal_TileRegion(ioState, inRect, thePixmapRep);
 		}
@@ -455,7 +455,7 @@ void ZDCCanvas_QD::HiliteRect(ZDCState& ioState, const ZRect& inRect, const ZRGB
 	::GetBackColor(&oldBackColor);
 	RGBColor tempColor(inBackColor);
 	::RGBBackColor(&tempColor);
-	sUseHiliteColor();
+	spUseHiliteColor();
 	Rect tempRect = inRect + (ioState.fOrigin + ioState.fPatternOrigin);
 	::MacInvertRect(&tempRect);
 	::RGBBackColor(&oldBackColor);
@@ -474,7 +474,7 @@ void ZDCCanvas_QD::FrameRegion(ZDCState& ioState, const ZDCRgn& inRgn)
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = spGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		this->Internal_TileRegion(ioState, inRgn - inRgn.Inset(ioState.fPenWidth, ioState.fPenWidth), thePixmapRep);
 		}
@@ -497,7 +497,7 @@ void ZDCCanvas_QD::FillRegion(ZDCState& ioState, const ZDCRgn& inRgn)
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = spGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		this->Internal_TileRegion(ioState, inRgn, thePixmapRep);
 		}
@@ -531,7 +531,7 @@ void ZDCCanvas_QD::HiliteRegion(ZDCState& ioState, const ZDCRgn& inRgn, const ZR
 	::GetBackColor(&oldBackColor);
 	RGBColor tempColor(inBackColor);
 	::RGBBackColor(&tempColor);
-	sUseHiliteColor();
+	spUseHiliteColor();
 	::MacInvertRgn((inRgn + (ioState.fOrigin + ioState.fPatternOrigin)).GetRgnHandle());
 	::RGBBackColor(&oldBackColor);
 	}
@@ -552,7 +552,7 @@ void ZDCCanvas_QD::FrameRoundRect(ZDCState& ioState, const ZRect& inRect, const 
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = spGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		ZDCRgn outerRgn = ZDCRgn::sRoundRect(inRect, inCornerSize);
 		ZDCRgn innerRgn = ZDCRgn::sRoundRect(inRect.left + ioState.fPenWidth, inRect.top + ioState.fPenWidth,
@@ -587,7 +587,7 @@ void ZDCCanvas_QD::FillRoundRect(ZDCState& ioState, const ZRect& inRect, const Z
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = spGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		this->Internal_TileRegion(ioState, ZDCRgn::sRoundRect(inRect, inCornerSize), thePixmapRep);
 		}
@@ -627,7 +627,7 @@ void ZDCCanvas_QD::HiliteRoundRect(ZDCState& ioState, const ZRect& inRect, const
 	::GetBackColor(&oldBackColor);
 	RGBColor tempColor(inBackColor);
 	::RGBBackColor(&tempColor);
-	sUseHiliteColor();
+	spUseHiliteColor();
 	::MacInvertRgn(ZDCRgn::sRoundRect(inRect + (ioState.fOrigin + ioState.fPatternOrigin), inCornerSize).GetRgnHandle());
 	::RGBBackColor(&oldBackColor);
 	}
@@ -648,7 +648,7 @@ void ZDCCanvas_QD::FrameEllipse(ZDCState& ioState, const ZRect& inBounds)
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = spGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		ZDCRgn outerRgn = ZDCRgn::sEllipse(inBounds);
 		ZDCRgn innerRgn = ZDCRgn::sEllipse(inBounds.Inset(ioState.fPenWidth, ioState.fPenWidth));
@@ -680,7 +680,7 @@ void ZDCCanvas_QD::FillEllipse(ZDCState& ioState, const ZRect& inBounds)
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = spGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		this->Internal_TileRegion(ioState, ZDCRgn::sEllipse(inBounds), thePixmapRep);
 		}
@@ -722,7 +722,7 @@ void ZDCCanvas_QD::HiliteEllipse(ZDCState& ioState, const ZRect& inBounds, const
 	::GetBackColor(&oldBackColor);
 	RGBColor tempColor(inBackColor);
 	::RGBBackColor(&tempColor);
-	sUseHiliteColor();
+	spUseHiliteColor();
 	Rect tempRect(inBounds + (ioState.fOrigin + ioState.fPatternOrigin));
 	::InvertOval(&tempRect);
 	::RGBBackColor(&oldBackColor);
@@ -738,7 +738,7 @@ void ZDCCanvas_QD::FillPoly(ZDCState& ioState, const ZDCPoly& inPoly)
 	if (!theInkRep)
 		return;
 
-	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = sGetPixmapRep_QDIfComplex(theInkRep))
+	if (ZRef<ZDCPixmapRep_QD> thePixmapRep = spGetPixmapRep_QDIfComplex(theInkRep))
 		{
 		this->Internal_TileRegion(ioState, ZDCRgn::sPoly(inPoly), thePixmapRep);
 		}
@@ -774,7 +774,7 @@ void ZDCCanvas_QD::HilitePoly(ZDCState& ioState, const ZDCPoly& inPoly, const ZR
 	::GetBackColor(&oldBackColor);
 	RGBColor tempColor(inBackColor);
 	::RGBBackColor(&tempColor);
-	sUseHiliteColor();
+	spUseHiliteColor();
 	PolyHandle thePolyHandle = inPoly.GetPolyHandle(ioState.fOrigin + ioState.fPatternOrigin);
 	::InvertPoly(thePolyHandle);
 	::RGBBackColor(&oldBackColor);
@@ -787,7 +787,7 @@ void ZDCCanvas_QD::FillPixmap(ZDCState& ioState, const ZPoint& inLocation, const
 	ZUnimplemented();
 	}
 
-static void sDrawPixmap(CGrafPtr iGrafPtr, const ZPoint& iLocation, const ZDCPixmap& iSourcePixmap)
+static void spDrawPixmap(CGrafPtr iGrafPtr, const ZPoint& iLocation, const ZDCPixmap& iSourcePixmap)
 	{
 	bool doneIt = false;
 
@@ -827,7 +827,7 @@ static void sDrawPixmap(CGrafPtr iGrafPtr, const ZPoint& iLocation, const ZDCPix
 
 			Rect qdMaskBounds = maskRep->GetBounds();
 
-			::CopyDeepMask((BitMap*)&sourcePixMap, (BitMap*)&maskPixMap, sGetPortBitMapForCopyBits(iGrafPtr),
+			::CopyDeepMask((BitMap*)&sourcePixMap, (BitMap*)&maskPixMap, spGetPortBitMapForCopyBits(iGrafPtr),
 				&qdSourceRect, &qdMaskBounds, &qdDestRect, srcCopy, nullptr);
 
 			doneIt = true;
@@ -845,7 +845,7 @@ static void sDrawPixmap(CGrafPtr iGrafPtr, const ZPoint& iLocation, const ZDCPix
 		Rect qdSourceRect = localSourceBounds;
 		Rect qdDestRect = localSourceBounds - localSourceBounds.TopLeft() + iLocation;
 
-		::CopyBits((BitMap*)&sourcePixMap, sGetPortBitMapForCopyBits(iGrafPtr), &qdSourceRect, &qdDestRect, srcCopy, nullptr);
+		::CopyBits((BitMap*)&sourcePixMap, spGetPortBitMapForCopyBits(iGrafPtr), &qdSourceRect, &qdDestRect, srcCopy, nullptr);
 		}
 	}
 
@@ -904,11 +904,11 @@ void ZDCCanvas_QD::DrawPixmap(ZDCState& ioState, const ZPoint& inLocation, const
 		Rect qdDestRest = localSourceBounds - localSourceBounds.TopLeft() + realLocation;
 
 		// And do the blit
-		::CopyMask((BitMap*)&sourcePixMap, &tempMaskBitmap, sGetPortBitMapForCopyBits(fGrafPtr), &qdSourceRect, &tempMaskBitmap.bounds, &qdDestRest);
+		::CopyMask((BitMap*)&sourcePixMap, &tempMaskBitmap, spGetPortBitMapForCopyBits(fGrafPtr), &qdSourceRect, &tempMaskBitmap.bounds, &qdDestRest);
 		}
 	else
 		{
-		sDrawPixmap(fGrafPtr, realLocation, inSourcePixmap);
+		spDrawPixmap(fGrafPtr, realLocation, inSourcePixmap);
 		}
 	}
 
@@ -934,7 +934,7 @@ void ZDCCanvas_QD::FloodFill(ZDCState& ioState, const ZPoint& inSeedLocation)
 	tempBitmap.baseAddr = &tempMaskVector[0];
 
 	Rect qdRect = theBounds;
-	::SeedCFill(sGetPortBitMapForCopyBits(fGrafPtr), &tempBitmap, &qdRect, &qdRect, realSeedLocation.h, realSeedLocation.v, nullptr, 0);
+	::SeedCFill(spGetPortBitMapForCopyBits(fGrafPtr), &tempBitmap, &qdRect, &qdRect, realSeedLocation.h, realSeedLocation.v, nullptr, 0);
 	ZDCRgn theFillRgn;
 	::BitMapToRegion(theFillRgn.GetRgnHandle(), &tempBitmap);
 	theFillRgn -= (ioState.fOrigin + ioState.fPatternOrigin);
@@ -1187,7 +1187,7 @@ void ZDCCanvas_QD::Flush()
 	#endif
 	}
 
-static short sGetDepth(CGrafPtr inGrafPtr)
+static short spGetDepth(CGrafPtr inGrafPtr)
 	{
 	::SetGWorld(inGrafPtr, nullptr);
 	CGrafPtr ourGrafPtr;
@@ -1205,12 +1205,12 @@ short ZDCCanvas_QD::GetDepth()
 		return 0;
 
 	ZMutexLocker locker(*fMutexToLock);
-	return sGetDepth(fGrafPtr);
+	return spGetDepth(fGrafPtr);
 	}
 
 bool ZDCCanvas_QD::IsOffScreen()
 	{
-	return sIsPortOffscreen(fGrafPtr);
+	return spIsPortOffscreen(fGrafPtr);
 	}
 
 bool ZDCCanvas_QD::IsPrinting()
@@ -1370,7 +1370,7 @@ void ZDCCanvas_QD::Internal_SetupInk(ZDCState& ioState)
 	if (ioState.fChangeCount_Mode != fChangeCount_Mode)
 		{
 		ioState.fChangeCount_Mode = ++fChangeCount_Mode;
-		::PenMode(sModeLookup[ioState.fMode]);
+		::PenMode(spModeLookup[ioState.fMode]);
 		}
 
 	if (ioState.fChangeCount_PenWidth != fChangeCount_PenWidth)
@@ -1404,10 +1404,9 @@ struct TileRegion_t
 	ZDCRgn fRgn;
 	};
 
-static int sDummy = 0;
-//static PixMap sPixMap;
+static int spDummy = 0;
 
-static DEFINE_API(void) sTileRegion(short inDepth, short inDeviceFlags, GDHandle inTargetDevice, long inUserData)
+static DEFINE_API(void) spTileRegion(short inDepth, short inDeviceFlags, GDHandle inTargetDevice, long inUserData)
 	{
 	TileRegion_t* theData = reinterpret_cast<TileRegion_t*>(inUserData);
 
@@ -1462,7 +1461,7 @@ static DEFINE_API(void) sTileRegion(short inDepth, short inDeviceFlags, GDHandle
 				{
 				::LockPixels(::GetGWorldPixMap(theGWorldPtr));
 				SetGWorld(theGWorldPtr, nullptr);
-				sourceBitMap = sGetPortBitMapForCopyBits(theGWorldPtr);
+				sourceBitMap = spGetPortBitMapForCopyBits(theGWorldPtr);
 				tempRect.left = 0;
 				tempRect.top = 0;
 				tempRect.right = pixmapSize.h;
@@ -1479,12 +1478,12 @@ static DEFINE_API(void) sTileRegion(short inDepth, short inDeviceFlags, GDHandle
 		sourceBitMap = (BitMap*)theData->fPixMap;
 		}
 
-	const BitMap* destBitMap = sGetPortBitMapForCopyBits(theData->fGrafPtr);
+	const BitMap* destBitMap = spGetPortBitMapForCopyBits(theData->fGrafPtr);
 
 	if (drawnBounds.Width() > pixmapSize.h || drawnBounds.Height() > pixmapSize.v)
 		{
 		if (pixmapSize.h >= 64 || pixmapSize.v >= 64)
-			++sDummy;
+			++spDummy;
 		}
 
 	for (ZCoord y = drawnBounds.top; y < drawnBounds.bottom; y += pixmapSize.v)
@@ -1535,7 +1534,7 @@ static DEFINE_API(void) sTileRegion(short inDepth, short inDeviceFlags, GDHandle
 		::DisposeGWorld(theGWorldPtr);
 	}
 
-static DeviceLoopDrawingUPP sTileRegionUPP = NewDeviceLoopDrawingUPP(sTileRegion);
+static DeviceLoopDrawingUPP spTileRegionUPP = NewDeviceLoopDrawingUPP(spTileRegion);
 
 void ZDCCanvas_QD::Internal_TileRegion(ZDCState& ioState, const ZDCRgn& inRgn, ZRef<ZDCPixmapRep_QD> inPixmapRep)
 	{
@@ -1547,7 +1546,7 @@ void ZDCCanvas_QD::Internal_TileRegion(ZDCState& ioState, const ZDCRgn& inRgn, Z
 	ZUtil_Mac_LL::SaveSetBlackWhite theSSBW;
 
 	// Get the current QD origin
-	ZPoint currentQDOrigin = sGetPortOrigin(fGrafPtr);
+	ZPoint currentQDOrigin = spGetPortOrigin(fGrafPtr);
 
 	// Offset inRgn to be in ZDC coords, intersect it with our clip rgn (also in ZDC coords).
 	ZDCRgn realRgn = (inRgn + ioState.fOrigin) & this->Internal_CalcClipRgn(ioState);
@@ -1564,14 +1563,14 @@ void ZDCCanvas_QD::Internal_TileRegion(ZDCState& ioState, const ZDCRgn& inRgn, Z
 	theData.fRealPatternOrigin = ioState.fPatternOrigin - currentQDOrigin;
 	theData.fLocalToGlobalOffset.h = 0;
 	theData.fLocalToGlobalOffset.v = 0;
-	if (1 || sIsPortOffscreen(fGrafPtr))
+	if (1 || spIsPortOffscreen(fGrafPtr))
 		{
-		sTileRegion(0, 0, 0, reinterpret_cast<long>(&theData));
+		spTileRegion(0, 0, 0, reinterpret_cast<long>(&theData));
 		}
 	else
 		{
 		::LocalToGlobal(&theData.fLocalToGlobalOffset);
-		::DeviceLoop(realRgn.GetRgnHandle(), sTileRegionUPP, reinterpret_cast<long>(&theData), 0);
+		::DeviceLoop(realRgn.GetRgnHandle(), spTileRegionUPP, reinterpret_cast<long>(&theData), 0);
 		}
 
 	++fChangeCount_Clip;
@@ -1627,7 +1626,7 @@ void ZDCCanvas_QD_NonWindow::Scroll(ZDCState& ioState, const ZRect& inRect, ZCoo
 
 	// We don't bother ensuring that our grafPort's origin is at (0,0), we just compensate for whatever
 	// value it has by adding in currentQDOrigin as needed.
-	ZPoint currentQDOrigin = sGetPortOrigin(fGrafPtr);
+	ZPoint currentQDOrigin = spGetPortOrigin(fGrafPtr);
 	ZPoint offset(hDelta, vDelta);
 
 	// Work out effectiveVisRgn, the set of pixels we're able/allowed to touch. It's made
@@ -1662,7 +1661,7 @@ void ZDCCanvas_QD_NonWindow::Scroll(ZDCState& ioState, const ZRect& inRect, ZCoo
 
 	Rect qdSourceRect = drawnRgn.Bounds() + currentQDOrigin - offset;
 	Rect qdDestRect = drawnRgn.Bounds() + currentQDOrigin;
-	::CopyBits(sGetPortBitMapForCopyBits(fGrafPtr), sGetPortBitMapForCopyBits(fGrafPtr), &qdSourceRect, &qdDestRect, srcCopy, nullptr);
+	::CopyBits(spGetPortBitMapForCopyBits(fGrafPtr), spGetPortBitMapForCopyBits(fGrafPtr), &qdSourceRect, &qdDestRect, srcCopy, nullptr);
 	}
 
 void ZDCCanvas_QD_NonWindow::CopyFrom(ZDCState& ioState, const ZPoint& inDestLocation, ZRef<ZDCCanvas> inSourceCanvas, const ZDCState& inSourceState, const ZRect& inSourceRect)
@@ -1683,14 +1682,14 @@ void ZDCCanvas_QD_NonWindow::CopyFrom(ZDCState& ioState, const ZPoint& inDestLoc
 	::SetGWorld(fGrafPtr, nullptr);
 	ZUtil_Mac_LL::SaveSetBlackWhite theSSBW;
 
-	ZPoint currentDestQDOrigin = sGetPortOrigin(fGrafPtr);
-	ZPoint currentSourceQDOrigin = sGetPortOrigin(sourceGrafPtr);
+	ZPoint currentDestQDOrigin = spGetPortOrigin(fGrafPtr);
+	ZPoint currentSourceQDOrigin = spGetPortOrigin(sourceGrafPtr);
 
 	::SetClip((ioState.fClip + (ioState.fClipOrigin + currentDestQDOrigin)).GetRgnHandle());
 
 	Rect qdSourceRect = inSourceRect + (inSourceState.fOrigin + currentSourceQDOrigin);
 	Rect qdDestRect = inSourceRect + (inDestLocation - inSourceRect.TopLeft() + ioState.fOrigin + currentDestQDOrigin);
-	::CopyBits(sGetPortBitMapForCopyBits(sourceGrafPtr), sGetPortBitMapForCopyBits(fGrafPtr), &qdSourceRect, &qdDestRect, srcCopy, nullptr);
+	::CopyBits(spGetPortBitMapForCopyBits(sourceGrafPtr), spGetPortBitMapForCopyBits(fGrafPtr), &qdSourceRect, &qdDestRect, srcCopy, nullptr);
 	}
 
 ZDCRgn ZDCCanvas_QD_NonWindow::Internal_CalcClipRgn(const ZDCState& inState)
@@ -1716,25 +1715,6 @@ ZDCCanvas_QD_OffScreen::ZDCCanvas_QD_OffScreen(const ZRect& inGlobalRect)
 	::LockPixels(::GetGWorldPixMap(fGWorldPtr));
 
 	this->Internal_Link(fGWorldPtr);
-	}
-
-static short sFormatEfficientToDepth(ZDCPixmapNS::EFormatEfficient iFormat)
-	{
-	using namespace ZDCPixmapNS;
-	switch (iFormat)
-		{
-//		case eFormatEfficient_Indexed_1: return 1;
-//		case eFormatEfficient_Indexed_8: return 8;
-
-		case eFormatEfficient_Gray_1: return 1;
-		case eFormatEfficient_Gray_8: return 8;
-
-		case eFormatEfficient_Color_16: return 16;
-		case eFormatEfficient_Color_24: return 32;
-		case eFormatEfficient_Color_32: return 32;
-		}
-	ZUnimplemented();
-	return 0;
 	}
 
 ZDCCanvas_QD_OffScreen::ZDCCanvas_QD_OffScreen(ZPoint inDimensions, ZDCPixmapNS::EFormatEfficient iFormat)
@@ -1868,10 +1848,10 @@ public:
 	ZDCCanvas_QD_PICT(const ZRect& inBounds, const ZStreamW& inStream);
 	virtual ~ZDCCanvas_QD_PICT();
 
-protected:
+private:
 	void PutPicProc(const void* dataPtr, short byteCount);
-	static DEFINE_API(void) sPutPicProc(const void* dataPtr, short byteCount);
-	static QDPutPicUPP sPutPicProcUPP;
+	static DEFINE_API(void) spPutPicProc(const void* dataPtr, short byteCount);
+	static QDPutPicUPP spPutPicProcUPP;
 
 	const ZStreamW& fStream;
 	bool fStreamOkay;
@@ -1884,7 +1864,7 @@ protected:
 
 	ZDCCanvas_QD_PICT* fPrev;
 	ZDCCanvas_QD_PICT* fNext;
-	static ZDCCanvas_QD_PICT* sHead;
+	static ZDCCanvas_QD_PICT* spHead;
 	};
 
 ZDCCanvas_QD_PICT::ZDCCanvas_QD_PICT(const ZRect& inBounds, const ZStreamW& inStream)
@@ -1923,16 +1903,16 @@ ZDCCanvas_QD_PICT::ZDCCanvas_QD_PICT(const ZRect& inBounds, const ZStreamW& inSt
 	// Put ourselves on the list of PICT canvases
 	sMutex_List.Acquire();
 	fPrev = nullptr;
-	fNext = sHead;
-	if (sHead)
-		sHead->fPrev = this;
-	sHead = this;
+	fNext = spHead;
+	if (spHead)
+		spHead->fPrev = this;
+	spHead = this;
 	sMutex_List.Release();
 
 	// Attach our pic save proc
 	::SetGWorld(fGWorldPtr, nullptr);
 	::SetStdCProcs(&fCQDProcs);
-	fCQDProcs.putPicProc = sPutPicProcUPP;
+	fCQDProcs.putPicProc = spPutPicProcUPP;
 
 	#if ACCESSOR_CALLS_ARE_FUNCTIONS
 		fCQDProcs_Old = ::GetPortGrafProcs(fGWorldPtr);
@@ -1976,8 +1956,8 @@ ZDCCanvas_QD_PICT::~ZDCCanvas_QD_PICT()
 			fPrev->fNext = fNext;
 		if (fNext)
 			fNext->fPrev = fPrev;
-		if (sHead == this)
-			sHead = fNext;
+		if (spHead == this)
+			spHead = fNext;
 		sMutex_List.Release();
 
 		::DisposeGWorld(fGWorldPtr);
@@ -2014,13 +1994,13 @@ void ZDCCanvas_QD_PICT::PutPicProc(const void* dataPtr, short byteCount)
 		}
 	}
 
-DEFINE_API(void) ZDCCanvas_QD_PICT::sPutPicProc(const void* dataPtr, short byteCount)
+DEFINE_API(void) ZDCCanvas_QD_PICT::spPutPicProc(const void* dataPtr, short byteCount)
 	{
 	CGrafPtr currentPort;
 	GDHandle currentGDHandle;
 	::GetGWorld(&currentPort, &currentGDHandle);
 	sMutex_List.Acquire();
-	ZDCCanvas_QD_PICT* current = sHead;
+	ZDCCanvas_QD_PICT* current = spHead;
 	while (current && current->fGWorldPtr != currentPort)
 		current = current->fNext;
 	sMutex_List.Release();
@@ -2028,8 +2008,8 @@ DEFINE_API(void) ZDCCanvas_QD_PICT::sPutPicProc(const void* dataPtr, short byteC
 	current->PutPicProc(dataPtr, byteCount);
 	}
 
-QDPutPicUPP ZDCCanvas_QD_PICT::sPutPicProcUPP = NewQDPutPicUPP(sPutPicProc);
-ZDCCanvas_QD_PICT* ZDCCanvas_QD_PICT::sHead = nullptr;
+QDPutPicUPP ZDCCanvas_QD_PICT::spPutPicProcUPP = NewQDPutPicUPP(spPutPicProc);
+ZDCCanvas_QD_PICT* ZDCCanvas_QD_PICT::spHead = nullptr;
 
 // =================================================================================================
 #pragma mark -
@@ -2158,7 +2138,7 @@ CGrafPtr ZDCSetupForQD::GetCGrafPtr()
 #pragma mark -
 #pragma mark * ZDCPixmapRep_QD
 
-static bool sCheckDesc(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect& inBounds,
+static bool spCheckDesc(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect& inBounds,
 							const ZDCPixmapNS::PixelDesc& inPixelDesc)
 	{
 	using namespace ZDCPixmapNS;
@@ -2236,16 +2216,16 @@ static bool sCheckDesc(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZRect&
 	return isOkay;
 	}
 
-static ZRef<ZDCPixmapRep_QD> sCreateRepForDesc(ZRef<ZDCPixmapRaster> inRaster, const ZRect& inBounds,
+static ZRef<ZDCPixmapRep_QD> spCreateRepForDesc(ZRef<ZDCPixmapRaster> inRaster, const ZRect& inBounds,
 												const ZDCPixmapNS::PixelDesc& inPixelDesc)
 	{
-	if (sCheckDesc(inRaster->GetRasterDesc(), inBounds, inPixelDesc))
+	if (spCheckDesc(inRaster->GetRasterDesc(), inBounds, inPixelDesc))
 		return new ZDCPixmapRep_QD(inRaster, inBounds, inPixelDesc);
 
 	return ZRef<ZDCPixmapRep_QD>();
 	}
 
-static bool sSetupPixMap(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZDCPixmapNS::PixelDesc& inPixelDesc, PixMap& outPixMap)
+static bool spSetupPixMap(const ZDCPixmapNS::RasterDesc& inRasterDesc, const ZDCPixmapNS::PixelDesc& inPixelDesc, PixMap& outPixMap)
 	{
 	using namespace ZDCPixmapNS;
 
@@ -2332,7 +2312,7 @@ ZDCPixmapRep_QD::ZDCPixmapRep_QD(ZRef<ZDCPixmapRaster> inRaster,
 								const ZDCPixmapNS::PixelDesc& inPixelDesc)
 :	ZDCPixmapRep(inRaster, inBounds, inPixelDesc)
 	{
-	bool result = sSetupPixMap(fRaster->GetRasterDesc(), fPixelDesc, fPixMap);
+	bool result = spSetupPixMap(fRaster->GetRasterDesc(), fPixelDesc, fPixMap);
 	ZAssertStop(kDebug_QD, result);
 	fPixMap.baseAddr = reinterpret_cast<Ptr>(fRaster->GetBaseAddress());
 	fChangeCount = fPixelDesc.GetChangeCount() - 1;
@@ -2392,7 +2372,7 @@ ZDCPixmapRep_QD::ZDCPixmapRep_QD(const PixMap* inSourcePixMap, const void* inSou
 					fPixelDesc,
 					inSourceBounds);
 
-	bool result = sSetupPixMap(fRaster->GetRasterDesc(), fPixelDesc, fPixMap);
+	bool result = spSetupPixMap(fRaster->GetRasterDesc(), fPixelDesc, fPixMap);
 	ZAssertStop(kDebug_QD, result);
 	fPixMap.baseAddr = reinterpret_cast<Ptr>(fRaster->GetBaseAddress());
 	}
@@ -2442,7 +2422,7 @@ ZRef<ZDCPixmapRep_QD> ZDCPixmapRep_QD::sAsPixmapRep_QD(ZRef<ZDCPixmapRep> inRep)
 		ZRef<ZDCPixmapRaster> theRaster = inRep->GetRaster();
 		ZRect theBounds = inRep->GetBounds();
 		PixelDesc thePixelDesc = inRep->GetPixelDesc();
-		theRep_QD = sCreateRepForDesc(theRaster, theBounds, thePixelDesc);
+		theRep_QD = spCreateRepForDesc(theRaster, theBounds, thePixelDesc);
 		if (!theRep_QD)
 			{
 			EFormatStandard fallbackFormat = eFormatStandard_xRGB_32;
@@ -2463,7 +2443,7 @@ ZRef<ZDCPixmapRep_QD> ZDCPixmapRep_QD::sAsPixmapRep_QD(ZRef<ZDCPixmapRep> inRep)
 #pragma mark -
 #pragma mark * Rep conversion/coercion utilities
 
-static ZRef<ZDCPixmapRep_QD> sGetPixmapRep_QDIfComplex(const ZRef<ZDCInk::Rep>& inInkRep)
+static ZRef<ZDCPixmapRep_QD> spGetPixmapRep_QDIfComplex(const ZRef<ZDCInk::Rep>& inInkRep)
 	{
 	ZRef<ZDCPixmapRep_QD> thePixmapRep_QD;
 	if (inInkRep->fType == ZDCInk::eTypeMultiColor)
@@ -2518,7 +2498,7 @@ class Make_CreateRaster
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		oResult = sCreateRepForDesc(iParam.f0, iParam.f1, iParam.f2);
+		oResult = spCreateRepForDesc(iParam.f0, iParam.f1, iParam.f2);
 		return oResult;
 		}	
 	} sMaker0;
@@ -2529,7 +2509,7 @@ class Make_CreateRasterDesc
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
-		if (sCheckDesc(iParam.f0, iParam.f1, iParam.f2))
+		if (spCheckDesc(iParam.f0, iParam.f1, iParam.f2))
 			{
 			oResult = new ZDCPixmapRep_QD(
 				new ZDCPixmapRaster_Simple(iParam.f0), iParam.f1, iParam.f2);
@@ -2573,7 +2553,7 @@ public:
 	virtual ZRef<ZDCCanvas> CreateCanvas(ZPoint iSize, bool iBigEndian, const ZDCPixmapNS::PixelDesc& iPixelDesc);
 	};
 
-static ZDCCanvasFactory_QD sZDCCanvasFactory_QD;
+static ZDCCanvasFactory_QD spZDCCanvasFactory_QD;
 
 ZRef<ZDCCanvas> ZDCCanvasFactory_QD::CreateCanvas(ZPoint iSize, bool iBigEndian, const ZDCPixmapNS::PixelDesc& iPixelDesc)
 	{

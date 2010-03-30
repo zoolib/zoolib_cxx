@@ -1037,7 +1037,7 @@ void ZTBRep_Client::pReader(const ZStreamR& iStream)
 		}
 	}
 
-static void sSend(ZMutexLocker& iLocker, const ZStreamW& iStream, const ZTuple& iTuple)
+static void spSend(ZMutexLocker& iLocker, const ZStreamW& iStream, const ZTuple& iTuple)
 	{
 	iLocker.Release();
 
@@ -1061,7 +1061,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		fPingRequested = false;
 		ZTuple response;
 		response.SetString("What", "Pong");
-		sSend(locker, iStream, response);
+		spSend(locker, iStream, response);
 		didAnything = true;
 		}
 
@@ -1070,7 +1070,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		fPingSent = true;
 		ZTuple req;
 		req.SetString("What", "Ping");
-		sSend(locker, iStream, req);
+		spSend(locker, iStream, req);
 		didAnything = true;
 		}
 
@@ -1080,7 +1080,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		reqTuple.SetString("What", "AllocateIDs");
 		reqTuple.SetInt32("Count", fIDsNeeded);
 		fIDsNeeded = 0;
-		sSend(locker, iStream, reqTuple);
+		spSend(locker, iStream, reqTuple);
 		didAnything = true;
 		}
 
@@ -1112,7 +1112,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		if (!vectorTransactionIDs.empty())
 			{
 			reqTuple.Set("ClientIDs", theSeq);
-			sSend(locker, iStream, reqTuple);
+			spSend(locker, iStream, reqTuple);
 			didAnything = true;
 			}
 		}
@@ -1144,7 +1144,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		if (!vectorServerIDs.empty())
 			{
 			reqTuple.Set("ServerIDs", theSeq);
-			sSend(locker, iStream, reqTuple);
+			spSend(locker, iStream, reqTuple);
 			didAnything = true;
 			}
 		}
@@ -1178,7 +1178,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 				}
 
 			reqTuple.Set("ServerIDs", theSeq);
-			sSend(locker, iStream, reqTuple);
+			spSend(locker, iStream, reqTuple);
 			}
 		didAnything = true;
 		}
@@ -1211,7 +1211,7 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 		if (!vectorServerIDs.empty())
 			{
 			reqTuple.Set("ServerIDs", theSeq);
-			sSend(locker, iStream, reqTuple);
+			spSend(locker, iStream, reqTuple);
 			didAnything = true;
 			}
 		}
@@ -1322,19 +1322,19 @@ void ZTBRep_Client::pWriter(const ZStreamW& iStream)
 
 			if (actionsTuple)
 				{
-				sSend(locker, iStream, actionsTuple);
+				spSend(locker, iStream, actionsTuple);
 				didAnything = true;
 				}
 
 			if (searchesTuple)
 				{
-				sSend(locker, iStream, searchesTuple);
+				spSend(locker, iStream, searchesTuple);
 				didAnything = true;
 				}
 
 			if (countsTuple)
 				{
-				sSend(locker, iStream, countsTuple);
+				spSend(locker, iStream, countsTuple);
 				didAnything = true;
 				}
 

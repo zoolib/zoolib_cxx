@@ -40,11 +40,7 @@ using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
 
-static short sModeLookup[] = { R2_COPYPEN, R2_MERGEPEN, R2_NOTXORPEN, R2_MASKNOTPEN };
-
-// Forward declarations of utility methods
-static BITMAPINFO* sCreateBITMAPINFO(
-	const ZDCPixmapNS::RasterDesc& iRasterDesc, size_t iColorTableSize);
+static short spModeLookup[] = { R2_COPYPEN, R2_MERGEPEN, R2_NOTXORPEN, R2_MASKNOTPEN };
 
 // =================================================================================================
 #pragma mark -
@@ -56,14 +52,14 @@ static BITMAPINFO* sCreateBITMAPINFO(
 #pragma mark -
 #pragma mark * Static helper functions
 
-static inline COLORREF sAsCOLORREF_Palette(HDC iHDC, const ZRGBColor& iColor)
+static inline COLORREF spAsCOLORREF_Palette(HDC iHDC, const ZRGBColor& iColor)
 	{ return PALETTERGB((iColor.red >> 8), (iColor.green >> 8), (iColor.blue >> 8)); }
 
-static WORD sAllBitsSet[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+static WORD spAllBitsSet[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
-static HBITMAP sHBITMAP_AllBitsSet = ::CreateBitmap(8, 8, 1, 1, &sAllBitsSet[0]);
+static HBITMAP spHBITMAP_AllBitsSet = ::CreateBitmap(8, 8, 1, 1, &sAllBitsSet[0]);
 
-static HBRUSH sCreateHBRUSH(HDC iHDC, const ZRef<ZDCInk::Rep>& iRep, ZPoint iRealPatternOrigin)
+static HBRUSH spCreateHBRUSH(HDC iHDC, const ZRef<ZDCInk::Rep>& iRep, ZPoint iRealPatternOrigin)
 	{
 	HBRUSH theHBRUSH = nullptr;
 	if (iRep->fType == ZDCInk::eTypeSolidColor)
@@ -93,7 +89,7 @@ static HBRUSH sCreateHBRUSH(HDC iHDC, const ZRef<ZDCInk::Rep>& iRep, ZPoint iRea
 	return theHBRUSH;
 	}
 
-static HFONT sCreateHFONT(const ZDCFont& iFont)
+static HFONT spCreateHFONT(const ZDCFont& iFont)
 	{
 	HFONT theHFONT;
 	if (ZUtil_Win::sUseWAPI())
@@ -227,7 +223,7 @@ ZDCCanvas_GDI::SetupHPEN::SetupHPEN(ZDCCanvas_GDI* iCanvas, ZDCState& ioState)
 
 	fHPEN_Saved = (HPEN)::SelectObject(fHDC, theHPEN);
 	fHBRUSH_Saved = (HBRUSH)::SelectObject(fHDC, ::GetStockObject(NULL_BRUSH));
-	fROP2_Saved = ::SetROP2(fHDC, sModeLookup[ioState.fMode]);
+	fROP2_Saved = ::SetROP2(fHDC, spModeLookup[ioState.fMode]);
 	}
 
 ZDCCanvas_GDI::SetupHPEN::SetupHPEN(HDC iHDC, const ZRGBColor& iColor, ZCoord iPenWidth)
@@ -311,7 +307,7 @@ ZDCCanvas_GDI::SetupHBRUSH::SetupHBRUSH(ZDCCanvas_GDI* iCanvas, ZDCState& ioStat
 
 	fHBRUSH_Saved = (HBRUSH)::SelectObject(fHDC, theHBRUSH);
 	fHPEN_Saved = (HPEN)::SelectObject(fHDC, ::GetStockObject(NULL_PEN));
-	fROP2_Saved = ::SetROP2(fHDC, sModeLookup[ioState.fMode]);
+	fROP2_Saved = ::SetROP2(fHDC, spModeLookup[ioState.fMode]);
 	}
 
 ZDCCanvas_GDI::SetupHBRUSH::SetupHBRUSH(HDC iHDC, const ZRGBColor& iColor)
@@ -382,7 +378,7 @@ ZDCCanvas_GDI::SetupModeColor::SetupModeColor(ZDCCanvas_GDI* iCanvas, ZDCState& 
 			sAsCOLORREF_Palette(fHDC, theRep->fAsTwoColor.fForeColor));
 		}
 
-	fROP2_Saved = ::SetROP2(fHDC, sModeLookup[ioState.fMode]);
+	fROP2_Saved = ::SetROP2(fHDC, spModeLookup[ioState.fMode]);
 	}
 
 ZDCCanvas_GDI::SetupModeColor::~SetupModeColor()
@@ -418,7 +414,7 @@ ZDCCanvas_GDI::SetupHFONT::SetupHFONT(ZDCCanvas_GDI* iCanvas, ZDCState& ioState)
 	HFONT theHFONT = sCreateHFONT(ioState.fFont);
 	ZAssertStop(kDebug_GDI, theHFONT);
 	fHFONT_Saved = (HFONT)::SelectObject(fHDC, theHFONT);
-	fROP2_Saved = ::SetROP2(fHDC, sModeLookup[ioState.fMode]);
+	fROP2_Saved = ::SetROP2(fHDC, spModeLookup[ioState.fMode]);
 
 	fTextColor_Saved = ::SetTextColor(fHDC, sAsCOLORREF_Palette(fHDC, ioState.fTextColor));
 
@@ -540,7 +536,7 @@ void ZDCCanvas_GDI::Pixel(ZDCState& ioState,
 		sAsCOLORREF_Palette(fHDC, iColor));
 	}
 
-static void sBuildPolygonForLine(
+static void spBuildPolygonForLine(
 	ZCoord iStartH, ZCoord iStartV, ZCoord iEndH, ZCoord iEndV, ZCoord iPenWidth, POINT* oPOINTS)
 	{
 	// For notes on this see AG's log book, 97-03-05
@@ -1645,7 +1641,7 @@ ZDCRgn ZDCCanvas_GDI_NonWindow::Internal_CalcClipRgn(const ZDCState& iState)
 #pragma mark -
 #pragma mark * ZDCCanvas_GDI_OffScreen
 
-static HPALETTE sHPALETTE_Offscreen = ::CreateHalftonePalette(nullptr);
+static HPALETTE spHPALETTE_Offscreen = ::CreateHalftonePalette(nullptr);
 
 ZDCCanvas_GDI_OffScreen::ZDCCanvas_GDI_OffScreen(HDC iOther, const ZRect& iGlobalRect)
 	{
@@ -1669,7 +1665,7 @@ ZDCCanvas_GDI_OffScreen::ZDCCanvas_GDI_OffScreen(HDC iOther, const ZRect& iGloba
 	this->Internal_Link();
 	}
 
-static short sFormateEfficientToDepth(ZDCPixmapNS::EFormatEfficient iFormat)
+static short spFormatEfficientToDepth(ZDCPixmapNS::EFormatEfficient iFormat)
 	{
 	using namespace ZDCPixmapNS;
 
@@ -1697,7 +1693,7 @@ ZDCCanvas_GDI_OffScreen::ZDCCanvas_GDI_OffScreen(
 	if (iDimensions.h <= 0 || iDimensions.v <= 0)
 		throw runtime_error("ZDCCanvas_GDI_OffScreen, zero sized offscreen");
 
-	short depth = sFormateEfficientToDepth(iFormat);
+	short depth = spFormatEfficientToDepth(iFormat);
 
 	BITMAPINFO theBITMAPINFO;
 	theBITMAPINFO.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -1976,7 +1972,7 @@ HDC ZDCSetupForGDI::GetHDC()
 #pragma mark -
 #pragma mark * ZDCPixmapRep_DIB
 
-static bool sCheckDesc(const ZDCPixmapNS::RasterDesc& iRasterDesc, const ZRect& iBounds,
+static bool spCheckDesc(const ZDCPixmapNS::RasterDesc& iRasterDesc, const ZRect& iBounds,
 	const ZDCPixmapNS::PixelDesc& iPixelDesc)
 	{
 	using namespace ZDCPixmapNS;
@@ -2053,7 +2049,7 @@ static bool sCheckDesc(const ZDCPixmapNS::RasterDesc& iRasterDesc, const ZRect& 
 	return isOkay;
 	}
 
-static ZRef<ZDCPixmapRep_DIB> sCreateRepForDesc(
+static ZRef<ZDCPixmapRep_DIB> spCreateRepForDesc(
 	ZRef<ZDCPixmapRaster> iRaster,
 	const ZRect& iBounds,
 	const ZDCPixmapNS::PixelDesc& iPixelDesc)
@@ -2064,7 +2060,7 @@ static ZRef<ZDCPixmapRep_DIB> sCreateRepForDesc(
 	return ZRef<ZDCPixmapRep_DIB>();
 	}
 
-static BITMAPINFO* sAllocateBITMAPINFOColor(
+static BITMAPINFO* spAllocateBITMAPINFOColor(
 	size_t iRowBytes, int32 iDepth, int32 iHeight, bool iFlipped)
 	{
 	BITMAPINFO* theBITMAPINFO = reinterpret_cast<BITMAPINFO*>(new char[sizeof(BITMAPINFOHEADER)]);
@@ -2086,7 +2082,7 @@ static BITMAPINFO* sAllocateBITMAPINFOColor(
 	return theBITMAPINFO;
 	}
 
-static bool sSetupDIB(
+static bool spSetupDIB(
 	const ZDCPixmapNS::RasterDesc& iRasterDesc, const ZDCPixmapNS::PixelDesc& iPixelDesc,
 	BITMAPINFO*& oBITMAPINFO)
 	{

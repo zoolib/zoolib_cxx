@@ -129,22 +129,22 @@ ZNode DAVIter::Current()
 #pragma mark -
 #pragma mark * Helpers
 
-static ZRef<ZStrimmerR> sMakeStrimmer(const ZTuple& iHeader, ZRef<ZStreamerR> iStreamerR)
+static ZRef<ZStrimmerR> spMakeStrimmer(const ZTuple& iHeader, ZRef<ZStreamerR> iStreamerR)
 	{
 	return new ZStrimmerR_Streamer_T<ZStrimR_StreamUTF8>(iStreamerR);
 	}
 
-static ZRef<ZStrimmerR> sMakeStrimmer(const ZTuple& iHeader, const ZStreamR& iStreamR)
+static ZRef<ZStrimmerR> spMakeStrimmer(const ZTuple& iHeader, const ZStreamR& iStreamR)
 	{
-	return sMakeStrimmer(iHeader, new ZStreamerR_Stream(iStreamR));
+	return spMakeStrimmer(iHeader, new ZStreamerR_Stream(iStreamR));
 	}
 
-static string sAsString_WebDAV(ZTime iTime)
+static string spAsString_WebDAV(ZTime iTime)
 	{
 	return ZUtil_Time::sAsStringUTC(iTime, "%a, %d %b %Y %H:%M:%S %Z");	
 	}
 
-static string sGetPathFromURL(const string& iURL)
+static string spGetPathFromURL(const string& iURL)
 	{
 	size_t pos = iURL.find("//");
 	if (pos != string::npos)
@@ -157,7 +157,7 @@ static string sGetPathFromURL(const string& iURL)
 	}
 
 /*
-sReadTV and sWriteAsXML transform between the XML representation:
+spReadTV and spWriteAsXML transform between the XML representation:
 <D:propfind>
 	<D:prop>
 		<R:fred/>
@@ -187,7 +187,7 @@ simple ZTuple API to work with the data that's streamed as XML. See
 for a discussion of the issues.
 */
 
-static ZTValue sReadTV(ZML::StrimU& ml, const string& iName)
+static ZTValue spReadTV(ZML::StrimU& ml, const string& iName)
 	{
 	// We're sitting just after the begin tag. If there is any
 	// text, suck it into a string and move on.
@@ -216,7 +216,7 @@ static ZTValue sReadTV(ZML::StrimU& ml, const string& iName)
 			// We have a nested begin tag. Grab its name and recurse.
 			string name = ml.Name();
 			ml.Advance();
-			ZTValue theTV = sReadTV(ml, name);
+			ZTValue theTV = spReadTV(ml, name);
 			result.Set(name, theTV);
 			}
 		else if (ml.Current() == ZML::eToken_TagEmpty)
@@ -250,7 +250,7 @@ static ZTValue sReadTV(ZML::StrimU& ml, const string& iName)
 	return result;
 	}
 
-static ZTuple sReadTuple(ZML::StrimU& ml)
+static ZTuple spReadTuple(ZML::StrimU& ml)
 	{
 	// We assume we're sitting just prior to a document element --
 	// a top level begin tag. We're going to turn the
@@ -261,32 +261,32 @@ static ZTuple sReadTuple(ZML::StrimU& ml)
 		{
 		string name = ml.Name();
 		ml.Advance();
-		result = sReadTV(ml, name).GetTuple();
+		result = spReadTV(ml, name).GetTuple();
 		}
 	return result;
 	}
 
-static ZTuple sReadTuple(const ZStrimR& iStrimR)
+static ZTuple spReadTuple(const ZStrimR& iStrimR)
 	{
 	try
 		{
 		ZStrimU_Unreader strimU(iStrimR);
 		ZML::StrimU ml(strimU);
-		return sReadTuple(ml);
+		return spReadTuple(ml);
 		}
 	catch (...)
 		{}
 	return ZTuple();
 	}
 
-static void sWriteAsXML(const ZStrimW_ML& s, const string& iName, const ZTValue& iTV);
-static void sWriteAsXML(const ZStrimW_ML& s, const ZTuple& iTuple)
+static void spWriteAsXML(const ZStrimW_ML& s, const string& iName, const ZTValue& iTV);
+static void spWriteAsXML(const ZStrimW_ML& s, const ZTuple& iTuple)
 	{
 	for (ZTuple::const_iterator i = iTuple.begin(); i != iTuple.end(); ++i)
-		sWriteAsXML(s, iTuple.NameOf(i).AsString(), iTuple.Get(i));
+		spWriteAsXML(s, iTuple.NameOf(i).AsString(), iTuple.Get(i));
 	}
 
-static void sWriteAsXML(const ZStrimW_ML& s, const string& iName, const ZTValue& iTV)
+static void spWriteAsXML(const ZStrimW_ML& s, const string& iName, const ZTValue& iTV)
 	{
 	switch (iTV.TypeOf())
 		{
@@ -294,13 +294,13 @@ static void sWriteAsXML(const ZStrimW_ML& s, const string& iName, const ZTValue&
 			{
 			const vector<ZTValue>& v = iTV.GetSeq().GetVector();
 			for (vector<ZTValue>::const_iterator i = v.begin(); i != v.end(); ++i)
-				sWriteAsXML(s, iName, *i);
+				spWriteAsXML(s, iName, *i);
 			break;
 			}
 		case eZType_Tuple:
 			{
 			s.Begin(iName);
-				sWriteAsXML(s, iTV.GetTuple());
+				spWriteAsXML(s, iTV.GetTuple());
 			s.End(iName);
 			break;
 			}
@@ -321,7 +321,7 @@ static void sWriteAsXML(const ZStrimW_ML& s, const string& iName, const ZTValue&
 		}
 	}
 
-static bool sGetStringAt(const ZTuple& iTuple, const string& iName, string& oString)
+static bool spGetStringAt(const ZTuple& iTuple, const string& iName, string& oString)
 	{
 	if (iTuple.QGetString(iName, oString))
 		return true;
@@ -333,10 +333,10 @@ static bool sGetStringAt(const ZTuple& iTuple, const string& iName, string& oStr
 	return false;
 	}
 
-static int sGetDepth(const ZTuple& iTuple)
+static int spGetDepth(const ZTuple& iTuple)
 	{
 	string theDepth;
-	if (sGetStringAt(iTuple, "depth", theDepth))
+	if (spGetStringAt(iTuple, "depth", theDepth))
 		{
 		if (theDepth == "0")
 			return 0;
@@ -346,7 +346,7 @@ static int sGetDepth(const ZTuple& iTuple)
 	return 2;
 	}
 
-static ZTuple sGetProp(const ZNode& iNode, const string& iPropName)
+static ZTuple spGetProp(const ZNode& iNode, const string& iPropName)
  	{
  	ZTuple propT;
 
@@ -373,7 +373,7 @@ static ZTuple sGetProp(const ZNode& iNode, const string& iPropName)
 		if (iNode.GetProp("TimeCreated", theValue))
 			{
 			if (ZTime theTime = theValue.GetTime())
-				propT.SetString(iPropName, sAsString_WebDAV(theTime));
+				propT.SetString(iPropName, spAsString_WebDAV(theTime));
 			}
 		}
 	else if (iPropName == "D:getlastmodified")
@@ -382,7 +382,7 @@ static ZTuple sGetProp(const ZNode& iNode, const string& iPropName)
 		if (iNode.GetProp("TimeModified", theValue))
 			{
 			if (ZTime theTime = theValue.GetTime())
-				propT.SetString(iPropName, sAsString_WebDAV(theTime));
+				propT.SetString(iPropName, spAsString_WebDAV(theTime));
 			}
 		}
 	else if (iPropName == "D:getcontentlength")
@@ -399,26 +399,26 @@ static ZTuple sGetProp(const ZNode& iNode, const string& iPropName)
  	return propT;
  	}
 
-static void sGetProperties(
+static void spGetProperties(
 	const ZNode& iNode, const vector<string>& iPropNames, ZTuple& oGoodT, ZTuple& oBadT)
 	{
  	for (vector<string>::const_iterator i = iPropNames.begin(); i != iPropNames.end(); ++i)
  		{
- 		if (ZTuple propT = sGetProp(iNode, *i))
+ 		if (ZTuple propT = spGetProp(iNode, *i))
 			oGoodT.Mutable("D:prop").MutableSeq().Append(propT);
  		else
  			oBadT.Mutable("D:prop").MutableSeq().Append(ZTuple().SetNull(*i));
  		}
 	}
 
-static ZTrail sTrailFromTo(const ZNode& iFrom, const ZNode& iTo)
+static ZTrail spTrailFromTo(const ZNode& iFrom, const ZNode& iTo)
 	{
 	if (ZTrail fromTrail = iFrom.TrailFromRoot())
 		{
 		if (ZTrail toTrail = iTo.TrailFromRoot())
 			{
 			ZTrail result = ZTrail::sTrailFromTo(fromTrail.GetComps(), toTrail.GetComps());
-			if (ZLOG(s, eDebug, "sTrailFromTo"))
+			if (ZLOG(s, eDebug, "spTrailFromTo"))
 				{
 				s << "From: " << fromTrail.AsString()
 					<< "\nTo: " << toTrail.AsString()
@@ -430,12 +430,12 @@ static ZTrail sTrailFromTo(const ZNode& iFrom, const ZNode& iTo)
 	return ZTrail(false);
 	}
 
-static string sMakeHREF(const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& iNode)
+static string spMakeHREF(const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& iNode)
 	{
-	ZTrail fromTo = sTrailFromTo(iRoot, iNode);
+	ZTrail fromTo = spTrailFromTo(iRoot, iNode);
 	ZTrail combined = iPrefix + fromTo;
 	string result = ZHTTP::sEncodeTrail(combined);
-	if (ZLOG(s, eDebug, "sMakeHREF"))
+	if (ZLOG(s, eDebug, "spMakeHREF"))
 		{
 		s << "iPrefix: " << iPrefix.AsString()
 			<< "\nfromTo: " << fromTo.AsString()
@@ -445,13 +445,13 @@ static string sMakeHREF(const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& 
 	return result;
 	}
 
-static bool sDelete(const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& iNode, ZTuple& ioT)
+static bool spDelete(const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& iNode, ZTuple& ioT)
 	{
 	bool allOkay = true;
 	// Delete any descendants of iNode.
 	for (ZNodeIter i = iNode; i; i.Advance())
 		{
-		if (!sDelete(iPrefix, iRoot, i.Current(), ioT))
+		if (!spDelete(iPrefix, iRoot, i.Current(), ioT))
 			allOkay = false;
 		}
 
@@ -461,14 +461,14 @@ static bool sDelete(const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& iNod
 			return true;
 
 		ZTuple responseT;
-		responseT.SetString("D:href", sMakeHREF(iPrefix, iRoot, iNode));
+		responseT.SetString("D:href", spMakeHREF(iPrefix, iRoot, iNode));
 		responseT.SetString("D:status", "HTTP/1.1 404");
 		ioT.Mutable("D:response").MutableSeq().Append(responseT);
 		}
 	return false;
 	}
 
-static ZTrail sStripPrefix(const ZTrail& iPrefix, const ZTrail& iTrail)
+static ZTrail spStripPrefix(const ZTrail& iPrefix, const ZTrail& iTrail)
 	{
 	size_t start = 0;
 	while (start < iPrefix.Count()
@@ -492,7 +492,7 @@ bool ZWebDAV::sHandle_DELETE(
 	ZNode theNode = iRoot.Trail(iTrail);
 
 	ZHTTP::Response r;
-	r.Set("date", sAsString_WebDAV(ZTime::sNow()));
+	r.Set("date", spAsString_WebDAV(ZTime::sNow()));
 
 	if (theNode.Delete())
 		{
@@ -507,7 +507,7 @@ bool ZWebDAV::sHandle_DELETE(
 		// post-order scan of the tree. Failure of a child causes failure
 		// of all ancestors, but not necessarily of any sibling.
 		ZTuple responsesT;
-		if (sDelete(iPrefix, iRoot, theNode, responsesT))
+		if (spDelete(iPrefix, iRoot, theNode, responsesT))
 			{
 			// The whole tree was deleted succesfully.
 			r.SetResult(204);
@@ -531,7 +531,7 @@ bool ZWebDAV::sHandle_DELETE(
 
 			s.Begin("D:multistatus");
 				s.Attr("xmlns:D", "DAV:");
-				sWriteAsXML(s, responsesT);
+				spWriteAsXML(s, responsesT);
 			s.End("D:multistatus");
 			}
 		}
@@ -545,7 +545,7 @@ bool ZWebDAV::sHandle_GET(
 	ZNode theNode = iRoot.Trail(iTrail);
 
 	ZHTTP::Response r;
-	r.Set("date", sAsString_WebDAV(ZTime::sNow()));
+	r.Set("date", spAsString_WebDAV(ZTime::sNow()));
 
 	if (iHeader.Has("range"))
 		{
@@ -633,7 +633,7 @@ bool ZWebDAV::sHandle_GET(
 			if (theNode.GetProp("lastModified", theValue))
 				{
 				if (ZTime theTime = theValue.GetTime())
-					r.Set("Last-Modified", sAsString_WebDAV(theTime));
+					r.Set("Last-Modified", spAsString_WebDAV(theTime));
 				}
 
 			r.Set("Content-Transfer-Encoding", "binary");
@@ -659,7 +659,7 @@ bool ZWebDAV::sHandle_LOCK(
 	{
 	ZHTTP::Response r;
 	r.SetResult(200);
-	r.Set("Date", sAsString_WebDAV(ZTime::sNow()));
+	r.Set("Date", spAsString_WebDAV(ZTime::sNow()));
 	r.Set("Content-Type", "text/xml; charset=\"utf-8\"");
 	r.Set("Transfer-Encoding", "chunked");
 	r.Send(iStreamW);
@@ -720,7 +720,7 @@ bool ZWebDAV::sHandle_MKCOL(
 	ZNode theNode = iRoot.Trail(iTrail);
 
 	ZHTTP::Response r;
-	r.Set("date", sAsString_WebDAV(ZTime::sNow()));
+	r.Set("date", spAsString_WebDAV(ZTime::sNow()));
 	r.Set("Content-Length", 0);
 
 	if (theNode.Exists())
@@ -748,7 +748,7 @@ bool ZWebDAV::sHandle_MOVE(
 	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
 	{
 	ZHTTP::Response r;
-	r.Set("date", sAsString_WebDAV(ZTime::sNow()));
+	r.Set("date", spAsString_WebDAV(ZTime::sNow()));
 	r.Set("Content-Length", 0);
 
 
@@ -759,8 +759,8 @@ bool ZWebDAV::sHandle_MOVE(
 		}
 	else
 		{
-		string thePath = sGetPathFromURL(ZHTTP::sGetString0(iHeader.Get("destination")));
-		ZTrail theTrail = sStripPrefix(iPrefix, ZHTTP::sDecodeTrail(thePath));
+		string thePath = spGetPathFromURL(ZHTTP::sGetString0(iHeader.Get("destination")));
+		ZTrail theTrail = spStripPrefix(iPrefix, ZHTTP::sDecodeTrail(thePath));
 		ZNode theDestNode = iRoot.Trail(theTrail);
 
 		if (ZLOG(s, eInfo, "ZWebDAV::sHandle_MOVE"))
@@ -822,7 +822,7 @@ bool ZWebDAV::sHandle_OPTIONS(
 	return true;
 	}
 
-static void sHandle_PROPFIND_Some(
+static void spHandle_PROPFIND_Some(
 	const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& iNode,
 	int iDepth, const vector<string>& iPropNames, ZTuple& ioTuple)
 	{
@@ -832,10 +832,10 @@ static void sHandle_PROPFIND_Some(
 		if (theNode.Exists())
 			{
 			ZTuple goodT, badT;
-			sGetProperties(theNode, iPropNames, goodT, badT);
+			spGetProperties(theNode, iPropNames, goodT, badT);
 
 			ZTuple responseT;
-			responseT.SetString("D:href", sMakeHREF(iPrefix, iRoot, theNode));
+			responseT.SetString("D:href", spMakeHREF(iPrefix, iRoot, theNode));
 
 			if (goodT)
 				{
@@ -854,7 +854,7 @@ static void sHandle_PROPFIND_Some(
 		}
 	}
 
-static void sHandle_PROPFIND_All(
+static void spHandle_PROPFIND_All(
 	const ZTrail& iPrefix, const ZNode& iRoot, const ZNode& iNode, int iDepth, ZTuple& ioTuple)
 	{
 	vector<string> thePropNames;
@@ -870,10 +870,10 @@ static void sHandle_PROPFIND_All(
 		if (theNode.Exists())
 			{
 			ZTuple goodT, badT;
-			sGetProperties(theNode, thePropNames, goodT, badT);
+			spGetProperties(theNode, thePropNames, goodT, badT);
 
 			ZTuple responseT;
-			responseT.SetString("D:href", sMakeHREF(iPrefix, iRoot, theNode));
+			responseT.SetString("D:href", spMakeHREF(iPrefix, iRoot, theNode));
 
 			if (goodT)
 				{
@@ -890,13 +890,13 @@ bool ZWebDAV::sHandle_PROPFIND(
 	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
 	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
 	{
-	int depth = sGetDepth(iHeader);
+	int depth = spGetDepth(iHeader);
 
-	ZRef<ZStrimmerR> theStrimmerR = sMakeStrimmer(iHeader, iStreamR);
+	ZRef<ZStrimmerR> theStrimmerR = spMakeStrimmer(iHeader, iStreamR);
 	const ZStrimR& theStrimR = theStrimmerR->GetStrimR();
 
 	ZHTTP::Response r;
-	r.Set("Date", sAsString_WebDAV(ZTime::sNow()));
+	r.Set("Date", spAsString_WebDAV(ZTime::sNow()));
 
 	ZNode theNode = iRoot.Trail(iTrail);
 	if (!theNode.Exists())
@@ -908,12 +908,12 @@ bool ZWebDAV::sHandle_PROPFIND(
 		}
 	else
 		{		
-		ZTuple t = sReadTuple(theStrimR);
+		ZTuple t = spReadTuple(theStrimR);
 		
 		ZTuple results;
 		if (t.Empty() || t.Has("D:allprop"))
 			{
-			sHandle_PROPFIND_All(iPrefix, iRoot, theNode, depth, results);
+			spHandle_PROPFIND_All(iPrefix, iRoot, theNode, depth, results);
 			}
 		else
 			{
@@ -921,7 +921,7 @@ bool ZWebDAV::sHandle_PROPFIND(
 			vector<string> thePropNames;
 			for (ZTuple::const_iterator i = propT.begin(); i != propT.end(); ++i)
 				thePropNames.push_back(propT.NameOf(i).AsString());
-			sHandle_PROPFIND_Some(iPrefix, iRoot, theNode, depth, thePropNames, results);
+			spHandle_PROPFIND_Some(iPrefix, iRoot, theNode, depth, thePropNames, results);
 			}
 
 		if (ZLOG(s, eDebug, "ZWebDAV"))
@@ -943,7 +943,7 @@ bool ZWebDAV::sHandle_PROPFIND(
 			s.Attr("encoding", "utf-8");
 		s.Begin("D:multistatus");
 			s.Attr("xmlns:D", "DAV:");
-			sWriteAsXML(s, results);
+			spWriteAsXML(s, results);
 		s.End("D:multistatus");
 		}
 	return true;
@@ -953,17 +953,17 @@ bool ZWebDAV::sHandle_PROPPATCH(
 	const ZTrail& iPrefix, ZNode iRoot, const ZStreamR& iStreamR, const ZStreamW& iStreamW,
 	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
 	{
-//	int depth = sGetDepth(iHeader);
+//	int depth = spGetDepth(iHeader);
 
-	ZRef<ZStrimmerR> theStrimmerR = sMakeStrimmer(iHeader, iStreamR);
+	ZRef<ZStrimmerR> theStrimmerR = spMakeStrimmer(iHeader, iStreamR);
 	const ZStrimR& theStrimR = theStrimmerR->GetStrimR();
 
 	ZHTTP::Response r;
-	r.Set("Date", sAsString_WebDAV(ZTime::sNow()));
+	r.Set("Date", spAsString_WebDAV(ZTime::sNow()));
 	
 	ZNode theNode = iRoot.Trail(iTrail);
 
-	ZTuple t = sReadTuple(theStrimR);
+	ZTuple t = spReadTuple(theStrimR);
 	if (ZLOG(s, eInfo, "ZWebDAV"))
 		s << "PROPPATCH Request:" << t << "\n";
 
@@ -982,7 +982,7 @@ bool ZWebDAV::sHandle_PUT(
 	const ZTuple& iHeader, const ZTrail& iTrail, const ZTuple& iParam)
 	{
 	ZHTTP::Response r;
-	r.Set("date", sAsString_WebDAV(ZTime::sNow()));
+	r.Set("date", spAsString_WebDAV(ZTime::sNow()));
 	r.Set("Content-Length", 0);
 
 	ZNode theNode = iRoot.Trail(iTrail);

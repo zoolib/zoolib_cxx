@@ -49,17 +49,17 @@ namespace ZNetscape {
 #pragma mark -
 #pragma mark * NPPSetter
 
-NPP NPPSetter::sNPP;
+NPP NPPSetter::spNPP;
 
 NPPSetter::NPPSetter(NPP iNPP)
-:	fPrior(sNPP)
-	{ sNPP = iNPP; }
+:	fPrior(spNPP)
+	{ spNPP = iNPP; }
 
 NPPSetter::~NPPSetter()
-	{ sNPP = fPrior; }
+	{ spNPP = fPrior; }
 
 NPP NPPSetter::sCurrent()
-	{ return sNPP; }
+	{ return spNPP; }
 
 // =================================================================================================
 #pragma mark -
@@ -494,19 +494,19 @@ NPError GuestMeister::GetEntryPoints(NPPluginFuncs* oPluginFuncs)
 	oPluginFuncs->size = sizeof(NPPluginFuncs);
 	oPluginFuncs->version = 11;
 
-    oPluginFuncs->newp = sNew;
-    oPluginFuncs->destroy = sDestroy;
-    oPluginFuncs->setwindow = sSetWindow;
-    oPluginFuncs->newstream = sNewStream;
-    oPluginFuncs->destroystream = sDestroyStream;
-    oPluginFuncs->asfile = sStreamAsFile;
-    oPluginFuncs->writeready = (NPP_WriteReadyProcPtr)sWriteReady;
-    oPluginFuncs->write = (NPP_WriteProcPtr)sWrite;
-    oPluginFuncs->print = sPrint;
-    oPluginFuncs->event = sHandleEvent;
-    oPluginFuncs->urlnotify = sURLNotify;
-    oPluginFuncs->getvalue = sGetValue;
-    oPluginFuncs->setvalue = sSetValue;
+    oPluginFuncs->newp = spNew;
+    oPluginFuncs->destroy = spDestroy;
+    oPluginFuncs->setwindow = spSetWindow;
+    oPluginFuncs->newstream = spNewStream;
+    oPluginFuncs->destroystream = spDestroyStream;
+    oPluginFuncs->asfile = spStreamAsFile;
+    oPluginFuncs->writeready = (NPP_WriteReadyProcPtr)spWriteReady;
+    oPluginFuncs->write = (NPP_WriteProcPtr)spWrite;
+    oPluginFuncs->print = spPrint;
+    oPluginFuncs->event = spHandleEvent;
+    oPluginFuncs->urlnotify = spURLNotify;
+    oPluginFuncs->getvalue = spGetValue;
+    oPluginFuncs->setvalue = spSetValue;
     
     return NPERR_NO_ERROR;
 	}
@@ -750,7 +750,7 @@ bool GuestMeister::Host_Construct
 	return false;
 	}
 
-NPError GuestMeister::sNew(
+NPError GuestMeister::spNew(
 	NPMIMEType pluginType, NPP npp, uint16 mode,
 	int16 argc, char* argn[], char* argv[], NPSavedData* saved)
 	{
@@ -759,21 +759,21 @@ NPError GuestMeister::sNew(
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-NPError GuestMeister::sDestroy(NPP npp, NPSavedData** save)
+NPError GuestMeister::spDestroy(NPP npp, NPSavedData** save)
 	{
 	ZNETSCAPE_BEFORE_GUESTMEISTER(npp)
 		return sGet()->Destroy(npp, save);
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-NPError GuestMeister::sSetWindow(NPP npp, NPWindow* window)
+NPError GuestMeister::spSetWindow(NPP npp, NPWindow* window)
 	{
 	ZNETSCAPE_BEFORE_GUESTMEISTER(npp)
 		return sGet()->SetWindow(npp, window);
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-NPError GuestMeister::sNewStream(
+NPError GuestMeister::spNewStream(
 	NPP npp, NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype)
 	{
 	ZNETSCAPE_BEFORE_GUESTMEISTER(npp)
@@ -781,56 +781,56 @@ NPError GuestMeister::sNewStream(
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-NPError GuestMeister::sDestroyStream(NPP npp, NPStream* stream, NPReason reason)
+NPError GuestMeister::spDestroyStream(NPP npp, NPStream* stream, NPReason reason)
 	{
 	ZNETSCAPE_BEFORE_GUESTMEISTER(npp)
 		return sGet()->DestroyStream(npp, stream, reason);
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-int32 GuestMeister::sWriteReady(NPP npp, NPStream* stream)
+int32 GuestMeister::spWriteReady(NPP npp, NPStream* stream)
 	{
 	ZNETSCAPE_BEFORE_GUESTMEISTER(npp)
 		return sGet()->WriteReady(npp, stream);
 	ZNETSCAPE_AFTER_RETURN(0)
 	}
 
-int32 GuestMeister::sWrite(NPP npp, NPStream* stream, int32_t offset, int32_t len, void* buffer)
+int32 GuestMeister::spWrite(NPP npp, NPStream* stream, int32_t offset, int32_t len, void* buffer)
 	{
 	ZNETSCAPE_BEFORE_GUESTMEISTER(npp)
 		return sGet()->Write(npp, stream, offset, len, buffer);
 	ZNETSCAPE_AFTER_RETURN(0)
 	}
 
-void GuestMeister::sStreamAsFile(NPP npp, NPStream* stream, const char* fname)
+void GuestMeister::spStreamAsFile(NPP npp, NPStream* stream, const char* fname)
 	{
 	ZNETSCAPE_BEFORE_GUESTMEISTER(npp)
 		return sGet()->StreamAsFile(npp, stream, fname);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-void GuestMeister::sPrint(NPP npp, NPPrint* platformPrint)
+void GuestMeister::spPrint(NPP npp, NPPrint* platformPrint)
 	{
 	ZNETSCAPE_BEFORE_GUESTMEISTER(npp)
 		return sGet()->Print(npp, platformPrint);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-int16 GuestMeister::sHandleEvent(NPP npp, void* event)
+int16 GuestMeister::spHandleEvent(NPP npp, void* event)
 	{
 	ZNETSCAPE_BEFORE_GUESTMEISTER(npp)
 		return sGet()->HandleEvent(npp, event);
 	ZNETSCAPE_AFTER_RETURN(0)
 	}
 
-void GuestMeister::sURLNotify(NPP npp, const char* url, NPReason reason, void* notifyData)
+void GuestMeister::spURLNotify(NPP npp, const char* url, NPReason reason, void* notifyData)
 	{
 	ZNETSCAPE_BEFORE_GUESTMEISTER(npp)
 		return sGet()->URLNotify(npp, url, reason, notifyData);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-jref GuestMeister::sGetJavaClass()
+jref GuestMeister::spGetJavaClass()
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->GetJavaClass();
@@ -848,9 +848,9 @@ static bool spHostUsesOldWebKit(NPP npp)
     // 420 do not retain returned NPObjects automatically; plug-ins are required to retain them
     // before returning from NPP_GetValue(), as in other browsers.
 
-	static bool sChecked = false;
-	static bool sUsesOldWebKit = false;
-	if (!sChecked)
+	static bool spChecked = false;
+	static bool spUsesOldWebKit = false;
+	if (!spChecked)
 		{
 		if (const char* userAgent = GuestMeister::sGet()->Host_UserAgent(npp))
 			{
@@ -860,16 +860,16 @@ static bool spHostUsesOldWebKit(NPP npp)
 				versionString += strlen(prefix);
 				int webKitVersion = atoi(versionString);
 		        if (webKitVersion && webKitVersion < 420)
-					sUsesOldWebKit = true;
+					spUsesOldWebKit = true;
 				}
 			}
-		sChecked = true;
+		spChecked = true;
 		}
 
-	return sUsesOldWebKit;
+	return spUsesOldWebKit;
 	}
 
-NPError GuestMeister::sGetValue(NPP npp, NPPVariable variable, void *value)
+NPError GuestMeister::spGetValue(NPP npp, NPPVariable variable, void *value)
 	{
 	ZNETSCAPE_BEFORE_GUESTMEISTER(npp)
 		NPError result = sGet()->GetValue(npp, variable, value);
@@ -887,7 +887,7 @@ NPError GuestMeister::sGetValue(NPP npp, NPPVariable variable, void *value)
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-NPError GuestMeister::sSetValue(NPP npp, NPNVariable variable, void *value)
+NPError GuestMeister::spSetValue(NPP npp, NPNVariable variable, void *value)
 	{
 	ZNETSCAPE_BEFORE_GUESTMEISTER(npp)
 		return sGet()->SetValue(npp, variable, value);

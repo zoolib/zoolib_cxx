@@ -545,7 +545,7 @@ bool sReadHeaderLine(const ZStreamU& iStream, Map* ioFields)
 	return true;
 	}
 
-static string sDecode_URI(const string& iString)
+static string spDecode_URI(const string& iString)
 	{
 	string result = iString;
 	replace(result.begin(), result.end(),'+',' '); // replace + with space
@@ -580,7 +580,7 @@ void sParseParam(const string& iString, Map& oParam)
 		if (epos != string::npos)
 			{
 			oParam.Set(theData.substr(0, epos),
-				sDecode_URI(theData.substr(epos + 1, pos - epos - 1)));
+				spDecode_URI(theData.substr(epos + 1, pos - epos - 1)));
 			}
 		prevPos = ++pos;
 		}
@@ -591,7 +591,7 @@ void sParseParam(const string& iString, Map& oParam)
 	if (epos != string::npos)
 		{
 		oParam.Set(theData.substr(0, epos),
-			sDecode_URI(theData.substr(epos + 1, pos - epos - 1)));
+			spDecode_URI(theData.substr(epos + 1, pos - epos - 1)));
 		}
 	}
 
@@ -695,9 +695,9 @@ ZTrail sDecodeTrail(const string& iURL)
 
 string sEncodeComponent(const string& iString)
 	{
-	static const char sValidChars[]
+	static const char spValidChars[]
 		= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-	static const size_t sValidCharsLen = sizeof(sValidChars) - 1;
+	static const size_t spValidCharsLen = sizeof(spValidChars) - 1;
 
 	string result;
 	// The result is going to be at least as long as the source
@@ -707,7 +707,7 @@ string sEncodeComponent(const string& iString)
 	for (;;)
 		{
 		string::size_type nextProb
-			= iString.find_first_not_of(sValidChars, lastGood, sValidCharsLen);
+			= iString.find_first_not_of(spValidChars, lastGood, spValidCharsLen);
 
 		if (nextProb == string::npos)
 			{

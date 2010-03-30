@@ -58,7 +58,7 @@ void ZMacMP::sInvokeInMP(EntryProc iProc, void* iParam)
 		}
 	catch (...)
 		{
-		ZDebugStopf(1, ("sMPTaskEntry, caught an exception"));
+		ZDebugStopf(1, ("spMPTaskEntry, caught an exception"));
 		}
 	}
 #endif // !ZCONFIG(Thread_API, Mac)
@@ -69,27 +69,27 @@ void ZMacMP::sInvokeInMP(EntryProc iProc, void* iParam)
 #include "zoolib/ZAtomic.h"
 #include "zoolib/ZThreadTM.h"
 
-static MPQueueID sQueue;
+static MPQueueID spQueue;
 
 namespace ZANONYMOUS {
 
-static int sInitCount;
+static int spInitCount;
 class InitHelper
 	{
 public:
 	InitHelper()
 		{
-		if (sInitCount++ == 0)
+		if (spInitCount++ == 0)
 			{
 			MPLibraryIsLoaded();
-			::MPCreateQueue(&sQueue);
+			::MPCreateQueue(&spQueue);
 			}
 		}
 
 	~InitHelper()
 		{
-		if (--sInitCount == 0)
-			::MPDeleteQueue(sQueue);
+		if (--spInitCount == 0)
+			::MPDeleteQueue(spQueue);
 		}
 	};
 
@@ -97,9 +97,9 @@ InitHelper sInitHelper;
 
 } // anonymous namespace
 
-static ZAtomic_t sMPTaskCount;
+static ZAtomic_t spMPTaskCount;
 
-static OSStatus sMPTaskEntry(void* iArg)
+static OSStatus spMPTaskEntry(void* iArg)
 	{
 	while (true)
 		{
@@ -107,7 +107,7 @@ static OSStatus sMPTaskEntry(void* iArg)
 		void* param2;
 		void* param3;
 		
-		if (noErr != ::MPWaitOnQueue(sQueue, &param1, &param2, &param3, kDurationForever))
+		if (noErr != ::MPWaitOnQueue(spQueue, &param1, &param2, &param3, kDurationForever))
 			break;
 
 		try
@@ -116,14 +116,14 @@ static OSStatus sMPTaskEntry(void* iArg)
 			}
 		catch (...)
 			{
-			ZDebugStopf(1, ("sMPTaskEntry, caught an exception"));
+			ZDebugStopf(1, ("spMPTaskEntry, caught an exception"));
 			}
 
 		::ZThreadTM_Resume(static_cast<ZThreadTM_State*>(param3));
 
-		if (ZAtomic_Add(&sMPTaskCount, 1) >= 5)
+		if (ZAtomic_Add(&spMPTaskCount, 1) >= 5)
 			{
-			ZAtomic_Add(&sMPTaskCount, -1);
+			ZAtomic_Add(&spMPTaskCount, -1);
 			break;
 			}
 		}
@@ -140,21 +140,21 @@ void ZMacMP::sInvokeInMP(EntryProc iProc, void* iParam)
 			}
 		catch (...)
 			{
-			ZDebugStopf(1, ("sMPTaskEntry, caught an exception"));
+			ZDebugStopf(1, ("spMPTaskEntry, caught an exception"));
 			}
 		}
 	else
 		{
 		ZThreadTM_State* theThread = ZThreadTM_Current();
-		if (ZAtomic_Add(&sMPTaskCount, -1) <= 0)
+		if (ZAtomic_Add(&spMPTaskCount, -1) <= 0)
 			{
-			ZAtomic_Add(&sMPTaskCount, 1);
+			ZAtomic_Add(&spMPTaskCount, 1);
 			MPTaskID theTaskID;
-			OSStatus err = ::MPCreateTask(sMPTaskEntry, nullptr, 64 * 1024, 0, 0, 0, 0, &theTaskID);
+			OSStatus err = ::MPCreateTask(spMPTaskEntry, nullptr, 64 * 1024, 0, 0, 0, 0, &theTaskID);
 			ZAssertStop(1, err == noErr);
 			}
 
-		::MPNotifyQueue(sQueue, iProc, iParam, theThread);
+		::MPNotifyQueue(spQueue, iProc, iParam, theThread);
 		::ZThreadTM_Suspend();
 		}
 	}
@@ -164,27 +164,27 @@ void ZMacMP::sInvokeInMP(EntryProc iProc, void* iParam)
 #pragma mark -
 #pragma mark * Initialize OpenTransport
 
-static OTClientContextPtr sOTClientContextPtr;
+static OTClientContextPtr spOTClientContextPtr;
 
 namespace ZANONYMOUS {
 
-static int sInitCount;
+static int spInitCount;
 class InitHelper
 	{
 public:
 	InitHelper()
 		{
-		if (sInitCount++ == 0)
+		if (spInitCount++ == 0)
 			{
-			::InitOpenTransportInContext(kInitOTForExtensionMask, &sOTClientContextPtr);
+			::InitOpenTransportInContext(kInitOTForExtensionMask, &spOTClientContextPtr);
 			MPLibraryIsLoaded();
 			}
 		}
 
 	~InitHelper()
 		{
-		if (--sInitCount == 0)
-			::CloseOpenTransportInContext(sOTClientContextPtr);
+		if (--spInitCount == 0)
+			::CloseOpenTransportInContext(spOTClientContextPtr);
 		}
 	};
 
@@ -245,14 +245,14 @@ public:
 #pragma mark -
 #pragma mark * Helper functions
 
-static ZNet::Error sTranslateError(OTResult theOTResult)
+static ZNet::Error spTranslateError(OTResult theOTResult)
 	{
 	if (theOTResult == kOTNoError)
 		return ZNet::errorNone;
 	return ZNet::errorGeneric;
 	}
 
-static OTResult sSetFourByteOption(EndpointRef ep, OTXTILevel level, OTXTIName name, UInt32 value)
+static OTResult spSetFourByteOption(EndpointRef ep, OTXTILevel level, OTXTIName name, UInt32 value)
 	{
 	// Set up the option buffer to specify the option and value to set.
 	TOption option;
@@ -379,7 +379,7 @@ void ZNetNameLookup_Internet_MacOT_OSX::sMP_Lookup(void* iParam)
 
 	OSStatus theErr;
 	InetSvcRef theInetSvcRef = ::OTOpenInternetServicesInContext(
-		kDefaultInternetServicesPath, 0, &theErr, sOTClientContextPtr);
+		kDefaultInternetServicesPath, 0, &theErr, spOTClientContextPtr);
 
 	if (noErr != theErr)
 		return;
@@ -423,7 +423,7 @@ ZNetListener_TCP_MacOT_OSX::ZNetListener_TCP_MacOT_OSX(ip_port iLocalPort, size_
 	ZMacMP::sInvokeInMP(sMP_Constructor, &theStruct);
 
 	if (theStruct.fResult != noErr)
-		throw ZNetEx(sTranslateError(theStruct.fResult));
+		throw ZNetEx(spTranslateError(theStruct.fResult));
 	}
 
 void ZNetListener_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
@@ -432,14 +432,14 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 
 	theStruct->fListener->fEndpointRef = ::OTOpenEndpointInContext(
 		::OTCreateConfiguration("tilisten, tcp"),
-		0, nullptr, &theStruct->fResult, sOTClientContextPtr);
+		0, nullptr, &theStruct->fResult, spOTClientContextPtr);
 
 	if (theStruct->fResult == noErr)
 		theStruct->fResult = ::OTSetBlocking(theStruct->fListener->fEndpointRef);
 		
 	if (theStruct->fResult == noErr)
 		{
-		theStruct->fResult = sSetFourByteOption(theStruct->fListener->fEndpointRef,
+		theStruct->fResult = spSetFourByteOption(theStruct->fListener->fEndpointRef,
 			INET_IP, kIP_REUSEADDR, 1);
 		}
 
@@ -483,7 +483,7 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Destructor(void* iParam)
 		::OTCloseProvider(theStruct->fEndpointRef);
 	}
 
-static OSStatus sOTAcceptQ(EndpointRef listener, EndpointRef worker, TCall* call)
+static OSStatus spOTAcceptQ(EndpointRef listener, EndpointRef worker, TCall* call)
 	// My own personal wrapper around the OTAccept routine that handles 
 	// the connection attempt disappearing cleanly.
 	{
@@ -564,13 +564,13 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Listen(void* iParam)
 		{
 		EndpointRef acceptedEndpointRef = ::OTOpenEndpointInContext(
 			::OTCreateConfiguration("tcp"),
-			0, nullptr, &theOTResult, sOTClientContextPtr);
+			0, nullptr, &theOTResult, spOTClientContextPtr);
 
 		if (acceptedEndpointRef)
 			{
 			theOTResult = ::OTSetBlocking(acceptedEndpointRef);
 			if (theOTResult == noErr)		
-				theOTResult = sOTAcceptQ(
+				theOTResult = spOTAcceptQ(
 					theStruct->fListener->fEndpointRef, acceptedEndpointRef, &theTCall);
 
 			if (theOTResult == noErr)
@@ -640,7 +640,7 @@ ZNetEndpoint_TCP_MacOT_OSX::ZNetEndpoint_TCP_MacOT_OSX(ip_addr iRemoteHost, ip_p
 	ZMacMP::sInvokeInMP(sMP_Constructor, &theStruct);
 
 	if (theStruct.fResult != noErr)
-		throw ZNetEx(sTranslateError(theStruct.fResult));
+		throw ZNetEx(spTranslateError(theStruct.fResult));
 	}
 
 void ZNetEndpoint_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
@@ -649,7 +649,7 @@ void ZNetEndpoint_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 
 	theStruct->fEndpoint->fEndpointRef = ::OTOpenEndpointInContext(
 		::OTCreateConfiguration(kTCPName),
-		0, nullptr, &theStruct->fResult, sOTClientContextPtr);
+		0, nullptr, &theStruct->fResult, spOTClientContextPtr);
 
 	if (theStruct->fResult == noErr)
 		{

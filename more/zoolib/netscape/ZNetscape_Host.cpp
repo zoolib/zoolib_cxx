@@ -392,66 +392,66 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
 
 	oNPNF.size = sizeof(oNPNF);
 	
-	oNPNF.geturl = sGetURL;
-	oNPNF.posturl = sPostURL;
-	oNPNF.requestread = sRequestRead;
-	oNPNF.newstream = sNewStream;
-	oNPNF.write = sWrite;
-	oNPNF.destroystream = sDestroyStream;
-	oNPNF.status = sStatus;
-	oNPNF.uagent = sUserAgent;
-	oNPNF.memalloc = sMemAlloc;
-	oNPNF.memfree = sMemFree;
-	oNPNF.memflush = sMemFlush;
-	oNPNF.reloadplugins = sReloadPlugins;
+	oNPNF.geturl = spGetURL;
+	oNPNF.posturl = spPostURL;
+	oNPNF.requestread = spRequestRead;
+	oNPNF.newstream = spNewStream;
+	oNPNF.write = spWrite;
+	oNPNF.destroystream = spDestroyStream;
+	oNPNF.status = spStatus;
+	oNPNF.uagent = spUserAgent;
+	oNPNF.memalloc = spMemAlloc;
+	oNPNF.memfree = spMemFree;
+	oNPNF.memflush = spMemFlush;
+	oNPNF.reloadplugins = spReloadPlugins;
 
 	// Mozilla return value is a JRIEnv
 	#if defined(NewNPN_GetJavaEnvProc)
-		oNPNF.getJavaEnv = (NPN_GetJavaEnvUPP)sGetJavaEnv;
+		oNPNF.getJavaEnv = (NPN_GetJavaEnvUPP)spGetJavaEnv;
 	#else
-		oNPNF.getJavaEnv = (NPN_GetJavaEnvProcPtr)sGetJavaEnv;
+		oNPNF.getJavaEnv = (NPN_GetJavaEnvProcPtr)spGetJavaEnv;
 	#endif
 
 	// Mozilla return value is a jref
 	#if defined(NewNPN_GetJavaPeerProc)
-		oNPNF.getJavaPeer = (NPN_GetJavaPeerUPP)sGetJavaPeer;
+		oNPNF.getJavaPeer = (NPN_GetJavaPeerUPP)spGetJavaPeer;
 	#else
-		oNPNF.getJavaPeer = (NPN_GetJavaPeerProcPtr)sGetJavaPeer;
+		oNPNF.getJavaPeer = (NPN_GetJavaPeerProcPtr)spGetJavaPeer;
 	#endif
 
-	oNPNF.geturlnotify = sGetURLNotify;
-	oNPNF.posturlnotify = sPostURLNotify;
-	oNPNF.getvalue = sGetValue;
-	oNPNF.setvalue = sSetValue;
-	oNPNF.invalidaterect = sInvalidateRect;
-	oNPNF.invalidateregion = sInvalidateRegion;
-	oNPNF.forceredraw = sForceRedraw;
+	oNPNF.geturlnotify = spGetURLNotify;
+	oNPNF.posturlnotify = spPostURLNotify;
+	oNPNF.getvalue = spGetValue;
+	oNPNF.setvalue = spSetValue;
+	oNPNF.invalidaterect = spInvalidateRect;
+	oNPNF.invalidateregion = spInvalidateRegion;
+	oNPNF.forceredraw = spForceRedraw;
 
-	oNPNF.getstringidentifier = sGetStringIdentifier;
-	oNPNF.getstringidentifiers = sGetStringIdentifiers;
-	oNPNF.getintidentifier = sGetIntIdentifier;
-	oNPNF.identifierisstring = sIdentifierIsString;
-	oNPNF.utf8fromidentifier = sUTF8FromIdentifier;
+	oNPNF.getstringidentifier = spGetStringIdentifier;
+	oNPNF.getstringidentifiers = spGetStringIdentifiers;
+	oNPNF.getintidentifier = spGetIntIdentifier;
+	oNPNF.identifierisstring = spIdentifierIsString;
+	oNPNF.utf8fromidentifier = spUTF8FromIdentifier;
 
 	// WebKit/10.4 return value is (incorrectly) an NPIdentifier.
 	#if defined(NewNPN_IntFromIdentifierProc)
-		oNPNF.intfromidentifier = sIntFromIdentifier;
+		oNPNF.intfromidentifier = spIntFromIdentifier;
 	#else
-		oNPNF.intfromidentifier = (NPN_IntFromIdentifierProcPtr)sIntFromIdentifier;
+		oNPNF.intfromidentifier = (NPN_IntFromIdentifierProcPtr)spIntFromIdentifier;
 	#endif
 
-	oNPNF.createobject = sCreateObject;
-	oNPNF.retainobject = sRetainObject;
-	oNPNF.releaseobject = sReleaseObject;
-	oNPNF.invoke = sInvoke;
-	oNPNF.invokeDefault = sInvokeDefault;
-	oNPNF.evaluate = sEvaluate;
-	oNPNF.getproperty = sGetProperty;
-	oNPNF.setproperty = sSetProperty;
-	oNPNF.removeproperty = sRemoveProperty;
-	oNPNF.hasproperty = sHasProperty;
-	oNPNF.hasmethod = sHasMethod;
-	oNPNF.releasevariantvalue = sReleaseVariantValue;
+	oNPNF.createobject = spCreateObject;
+	oNPNF.retainobject = spRetainObject;
+	oNPNF.releaseobject = spReleaseObject;
+	oNPNF.invoke = spInvoke;
+	oNPNF.invokeDefault = spInvokeDefault;
+	oNPNF.evaluate = spEvaluate;
+	oNPNF.getproperty = spGetProperty;
+	oNPNF.setproperty = spSetProperty;
+	oNPNF.removeproperty = spRemoveProperty;
+	oNPNF.hasproperty = spHasProperty;
+	oNPNF.hasmethod = spHasMethod;
+	oNPNF.releasevariantvalue = spReleaseVariantValue;
 
 	// I'm disabling setexception for now -- it's defined as taking
 	// NPString* or UTF8* in different versions of headers, and I
@@ -460,21 +460,21 @@ void HostMeister::sGetNPNF(NPNetscapeFuncs_Z& oNPNF)
 
 	// Mozilla return value is a bool
 	#if defined(NewNPN_PushPopupsEnabledStateProc)
-		oNPNF.pushpopupsenabledstate = (NPN_PushPopupsEnabledStateUPP)sPushPopupsEnabledState;
+		oNPNF.pushpopupsenabledstate = (NPN_PushPopupsEnabledStateUPP)spPushPopupsEnabledState;
 	#else
-		oNPNF.pushpopupsenabledstate = sPushPopupsEnabledState;
+		oNPNF.pushpopupsenabledstate = spPushPopupsEnabledState;
 	#endif
 
 	// Mozilla return value is a bool
 	#if defined(NewNPN_PopPopupsEnabledStateProc)
-		oNPNF.poppopupsenabledstate = (NPN_PopPopupsEnabledStateUPP)sPopPopupsEnabledState;
+		oNPNF.poppopupsenabledstate = (NPN_PopPopupsEnabledStateUPP)spPopPopupsEnabledState;
 	#else
-		oNPNF.poppopupsenabledstate = sPopPopupsEnabledState;
+		oNPNF.poppopupsenabledstate = spPopPopupsEnabledState;
 	#endif
 
-	oNPNF.enumerate = sEnumerate;
-	oNPNF.pluginthreadasynccall = sPluginThreadAsyncCall;
-	oNPNF.construct = sConstruct;
+	oNPNF.enumerate = spEnumerate;
+	oNPNF.pluginthreadasynccall = spPluginThreadAsyncCall;
+	oNPNF.construct = spConstruct;
 	}
 
 HostMeister::HostMeister()
@@ -500,14 +500,14 @@ string HostMeister::StringFromIdentifier(NPIdentifier identifier)
 	return result;
 	}
 
-NPError HostMeister::sGetURL(NPP npp, const char* URL, const char* window)
+NPError HostMeister::spGetURL(NPP npp, const char* URL, const char* window)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->GetURL(npp, URL, window);
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-NPError HostMeister::sPostURL(NPP npp,
+NPError HostMeister::spPostURL(NPP npp,
 	const char* URL, const char* window, uint32 len, const char* buf, NPBool file)
 	{
 	ZNETSCAPE_BEFORE
@@ -515,14 +515,14 @@ NPError HostMeister::sPostURL(NPP npp,
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-NPError HostMeister::sRequestRead(NPStream* stream, NPByteRange* rangeList)
+NPError HostMeister::spRequestRead(NPStream* stream, NPByteRange* rangeList)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->RequestRead(stream, rangeList);
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-NPError HostMeister::sNewStream(NPP npp,
+NPError HostMeister::spNewStream(NPP npp,
 	NPMIMEType type, const char* window, NPStream** stream)
 	{
 	ZNETSCAPE_BEFORE
@@ -530,77 +530,77 @@ NPError HostMeister::sNewStream(NPP npp,
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-int32 HostMeister::sWrite(NPP npp, NPStream* stream, int32 len, void* buffer)
+int32 HostMeister::spWrite(NPP npp, NPStream* stream, int32 len, void* buffer)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->Write(npp, stream, len, buffer);
 	ZNETSCAPE_AFTER_RETURN(-1)
 	}
 
-NPError HostMeister::sDestroyStream(NPP npp, NPStream* stream, NPReason reason)
+NPError HostMeister::spDestroyStream(NPP npp, NPStream* stream, NPReason reason)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->DestroyStream(npp, stream, reason);
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-void HostMeister::sStatus(NPP npp, const char* message)
+void HostMeister::spStatus(NPP npp, const char* message)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->Status(npp, message);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-const char* HostMeister::sUserAgent(NPP npp)
+const char* HostMeister::spUserAgent(NPP npp)
 	{
 	ZNETSCAPE_BEFORE			
 		return sGet()->UserAgent(npp);
 	ZNETSCAPE_AFTER_RETURN_NIL
 	}
 
-void* HostMeister::sMemAlloc(uint32 size)
+void* HostMeister::spMemAlloc(uint32 size)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->MemAlloc(size);
 	ZNETSCAPE_AFTER_RETURN_NIL
 	}
 
-void HostMeister::sMemFree(void* ptr)
+void HostMeister::spMemFree(void* ptr)
 	{
 	ZNETSCAPE_BEFORE
 		sGet()->MemFree(ptr);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-uint32 HostMeister::sMemFlush(uint32 size)
+uint32 HostMeister::spMemFlush(uint32 size)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->MemFlush(size);
 	ZNETSCAPE_AFTER_RETURN(0)
 	}
 
-void HostMeister::sReloadPlugins(NPBool reloadPages)
+void HostMeister::spReloadPlugins(NPBool reloadPages)
 	{
 	ZNETSCAPE_BEFORE
 		sGet()->ReloadPlugins(reloadPages);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-void* HostMeister::sGetJavaEnv()
+void* HostMeister::spGetJavaEnv()
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->GetJavaEnv();
 	ZNETSCAPE_AFTER_RETURN_NIL
 	}
 
-void* HostMeister::sGetJavaPeer(NPP npp)
+void* HostMeister::spGetJavaPeer(NPP npp)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->GetJavaPeer(npp);
 	ZNETSCAPE_AFTER_RETURN_NIL
 	}
 
-NPError HostMeister::sGetURLNotify(NPP npp,
+NPError HostMeister::spGetURLNotify(NPP npp,
 	const char* URL, const char* window, void* notifyData)
 	{
 	ZNETSCAPE_BEFORE
@@ -608,7 +608,7 @@ NPError HostMeister::sGetURLNotify(NPP npp,
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-NPError HostMeister::sPostURLNotify(NPP npp,
+NPError HostMeister::spPostURLNotify(NPP npp,
 	const char* URL, const char* window,
 	uint32 len, const char* buf, NPBool file, void* notifyData)
 	{
@@ -617,49 +617,49 @@ NPError HostMeister::sPostURLNotify(NPP npp,
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-NPError HostMeister::sGetValue(NPP npp, NPNVariable variable, void* ret_value)
+NPError HostMeister::spGetValue(NPP npp, NPNVariable variable, void* ret_value)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->GetValue(npp, variable, ret_value);
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-NPError HostMeister::sSetValue(NPP npp, NPPVariable variable, void* value)
+NPError HostMeister::spSetValue(NPP npp, NPPVariable variable, void* value)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->SetValue(npp, variable, value);
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-void HostMeister::sInvalidateRect(NPP npp, NPRect* rect)
+void HostMeister::spInvalidateRect(NPP npp, NPRect* rect)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->InvalidateRect(npp, rect);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-void HostMeister::sInvalidateRegion(NPP npp, NPRegion region)
+void HostMeister::spInvalidateRegion(NPP npp, NPRegion region)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->InvalidateRegion(npp, region);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-void HostMeister::sForceRedraw(NPP npp)
+void HostMeister::spForceRedraw(NPP npp)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->ForceRedraw(npp);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-NPIdentifier HostMeister::sGetStringIdentifier(const NPUTF8* name)
+NPIdentifier HostMeister::spGetStringIdentifier(const NPUTF8* name)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->GetStringIdentifier(name);
 	ZNETSCAPE_AFTER_RETURN_NIL
 	}
 
-void HostMeister::sGetStringIdentifiers(
+void HostMeister::spGetStringIdentifiers(
 	const NPUTF8** names, int32_t nameCount, NPIdentifier* identifiers)
 	{
 	ZNETSCAPE_BEFORE
@@ -667,56 +667,56 @@ void HostMeister::sGetStringIdentifiers(
 	ZNETSCAPE_AFTER_VOID
 	}
 
-NPIdentifier HostMeister::sGetIntIdentifier(int32_t intid)
+NPIdentifier HostMeister::spGetIntIdentifier(int32_t intid)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->GetIntIdentifier(intid);
 	ZNETSCAPE_AFTER_RETURN_NIL
 	}
 
-bool HostMeister::sIdentifierIsString(NPIdentifier identifier)
+bool HostMeister::spIdentifierIsString(NPIdentifier identifier)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->IdentifierIsString(identifier);
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-NPUTF8* HostMeister::sUTF8FromIdentifier(NPIdentifier identifier)
+NPUTF8* HostMeister::spUTF8FromIdentifier(NPIdentifier identifier)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->UTF8FromIdentifier(identifier);
 	ZNETSCAPE_AFTER_RETURN_NIL
 	}
 
-int32_t HostMeister::sIntFromIdentifier(NPIdentifier identifier)
+int32_t HostMeister::spIntFromIdentifier(NPIdentifier identifier)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->IntFromIdentifier(identifier);
 	ZNETSCAPE_AFTER_RETURN(0xFFFFFFFF)
 	}
 
-NPObject* HostMeister::sCreateObject(NPP npp, NPClass* aClass)
+NPObject* HostMeister::spCreateObject(NPP npp, NPClass* aClass)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->CreateObject(npp, aClass);
 	ZNETSCAPE_AFTER_RETURN_NIL
 	}
 
-NPObject* HostMeister::sRetainObject(NPObject* obj)
+NPObject* HostMeister::spRetainObject(NPObject* obj)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->RetainObject(obj);
 	ZNETSCAPE_AFTER_RETURN_NIL
 	}
 
-void HostMeister::sReleaseObject(NPObject* obj)
+void HostMeister::spReleaseObject(NPObject* obj)
 	{
 	ZNETSCAPE_BEFORE
 		sGet()->ReleaseObject(obj);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-bool HostMeister::sInvoke(NPP npp,
+bool HostMeister::spInvoke(NPP npp,
 	NPObject* obj, NPIdentifier methodName, const NPVariant* args, unsigned argCount,
 	NPVariant* result)
 	{
@@ -725,7 +725,7 @@ bool HostMeister::sInvoke(NPP npp,
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool HostMeister::sInvokeDefault(NPP npp,
+bool HostMeister::spInvokeDefault(NPP npp,
 	NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result)
 	{
 	ZNETSCAPE_BEFORE
@@ -733,7 +733,7 @@ bool HostMeister::sInvokeDefault(NPP npp,
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool HostMeister::sEvaluate(NPP npp,
+bool HostMeister::spEvaluate(NPP npp,
 	NPObject* obj, NPString* script, NPVariant* result)
 	{
 	ZNETSCAPE_BEFORE
@@ -741,7 +741,7 @@ bool HostMeister::sEvaluate(NPP npp,
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool HostMeister::sGetProperty(NPP npp,
+bool HostMeister::spGetProperty(NPP npp,
 	NPObject* obj, NPIdentifier propertyName, NPVariant* result)
 	{
 	ZNETSCAPE_BEFORE
@@ -749,7 +749,7 @@ bool HostMeister::sGetProperty(NPP npp,
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool HostMeister::sSetProperty(NPP npp,
+bool HostMeister::spSetProperty(NPP npp,
 	NPObject* obj, NPIdentifier propertyName, const NPVariant* value)
 	{
 	ZNETSCAPE_BEFORE
@@ -757,63 +757,63 @@ bool HostMeister::sSetProperty(NPP npp,
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool HostMeister::sRemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName)
+bool HostMeister::spRemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->RemoveProperty(npp, obj, propertyName);
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool HostMeister::sHasProperty(NPP npp, NPObject* npobj, NPIdentifier propertyName)
+bool HostMeister::spHasProperty(NPP npp, NPObject* npobj, NPIdentifier propertyName)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->HasProperty(npp, npobj, propertyName);
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-bool HostMeister::sHasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName)
+bool HostMeister::spHasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->HasMethod(npp, npobj, methodName);
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-void HostMeister::sReleaseVariantValue(NPVariant* variant)
+void HostMeister::spReleaseVariantValue(NPVariant* variant)
 	{
 	ZNETSCAPE_BEFORE
 		sGet()->ReleaseVariantValue(variant);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-void HostMeister::sSetException(NPObject* obj, const NPUTF8* message)
+void HostMeister::spSetException(NPObject* obj, const NPUTF8* message)
 	{
 	ZNETSCAPE_BEFORE
 		sGet()->SetException(obj, message);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-void HostMeister::sSetExceptionNPString(NPObject* obj, NPString* message)
+void HostMeister::spSetExceptionNPString(NPObject* obj, NPString* message)
 	{
 	ZNETSCAPE_BEFORE
 		sGet()->SetException(obj, sNPStringChars(*message));
 	ZNETSCAPE_AFTER_VOID
 	}
 
-void HostMeister::sPushPopupsEnabledState(NPP npp, NPBool enabled)
+void HostMeister::spPushPopupsEnabledState(NPP npp, NPBool enabled)
 	{
 	ZNETSCAPE_BEFORE
 		sGet()->PushPopupsEnabledState(npp, enabled);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-void HostMeister::sPopPopupsEnabledState(NPP npp)
+void HostMeister::spPopPopupsEnabledState(NPP npp)
 	{
 	ZNETSCAPE_BEFORE
 		sGet()->PopPopupsEnabledState(npp);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-bool HostMeister::sEnumerate
+bool HostMeister::spEnumerate
 	(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count)
 	{
 	ZNETSCAPE_BEFORE
@@ -821,15 +821,15 @@ bool HostMeister::sEnumerate
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
-void HostMeister::sPluginThreadAsyncCall
+void HostMeister::spPluginThreadAsyncCall
 	(NPP npp, void (*func)(void *), void *userData)
 	{
 	ZNETSCAPE_BEFORE
-		sGet()->sPluginThreadAsyncCall(npp, func, userData);
+		sGet()->PluginThreadAsyncCall(npp, func, userData);
 	ZNETSCAPE_AFTER_VOID
 	}
 
-bool HostMeister::sConstruct
+bool HostMeister::spConstruct
 	(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
 	{
 	ZNETSCAPE_BEFORE

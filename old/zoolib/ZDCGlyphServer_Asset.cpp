@@ -29,7 +29,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * Helper functions
 
-static int16 sReadAsset_Int16(const ZAsset& iAsset)
+static int16 spReadAsset_Int16(const ZAsset& iAsset)
 	{
 	try
 		{
@@ -42,7 +42,7 @@ static int16 sReadAsset_Int16(const ZAsset& iAsset)
 	return 0;
 	}
 
-static int16 sReadAsset_Int8(const ZAsset& iAsset)
+static int16 spReadAsset_Int8(const ZAsset& iAsset)
 	{
 	try
 		{
@@ -55,7 +55,7 @@ static int16 sReadAsset_Int8(const ZAsset& iAsset)
 	return 0;
 	}
 
-static string sReadAsset_String(const ZAsset& iAsset)
+static string spReadAsset_String(const ZAsset& iAsset)
 	{
 	try
 		{
@@ -74,7 +74,7 @@ static string sReadAsset_String(const ZAsset& iAsset)
 	return string();
 	}
 
-static ZPoint sReadAsset_ZPoint(const ZAsset& iAsset)
+static ZPoint spReadAsset_ZPoint(const ZAsset& iAsset)
 	{
 	try
 		{
@@ -135,7 +135,7 @@ ZDCGlyphServer_Asset::ZDCGlyphServer_Asset(const ZAsset& iAsset)
 ZDCGlyphServer_Asset::~ZDCGlyphServer_Asset()
 	{}
 
-static ZAsset sGetFontAsset(const ZAsset& iParent, const string& iName)
+static ZAsset spGetFontAsset(const ZAsset& iParent, const string& iName)
 	{
 	if (iName.size())
 		{
@@ -154,24 +154,24 @@ static ZAsset sGetFontAsset(const ZAsset& iParent, const string& iName)
 bool ZDCGlyphServer_Asset::GetGlyph(const ZDCFont& iFont, UTF32 iCP,
 	ZPoint& oOrigin, ZCoord& oEscapement, ZDCPixmap& oPixmap)
 	{
-	if (ZAsset fontAsset = sGetFontAsset(fAsset, iFont.GetName()))
+	if (ZAsset fontAsset = spGetFontAsset(fAsset, iFont.GetName()))
 		{
 		if (ZAsset metricsAsset
 			= fontAsset.GetChild("metrics").GetChild(ZString::sFormat("%06X", iCP)))
 			{
-			oOrigin = sReadAsset_ZPoint(metricsAsset.GetChild("origin"));
-			oEscapement = sReadAsset_Int16(metricsAsset.GetChild("escapement"));
-			string strikeName = sReadAsset_String(metricsAsset.GetChild("strikename"));
+			oOrigin = spReadAsset_ZPoint(metricsAsset.GetChild("origin"));
+			oEscapement = spReadAsset_Int16(metricsAsset.GetChild("escapement"));
+			string strikeName = spReadAsset_String(metricsAsset.GetChild("strikename"));
 			if (ZAsset strikeAsset = fontAsset.GetChild("strikes").GetChild(strikeName))
 				{
-				ZCoord offsetInStrike = sReadAsset_Int16(metricsAsset.GetChild("strikeoffset"));
-				ZCoord width = sReadAsset_Int16(metricsAsset.GetChild("width"));
+				ZCoord offsetInStrike = spReadAsset_Int16(metricsAsset.GetChild("strikeoffset"));
+				ZCoord width = spReadAsset_Int16(metricsAsset.GetChild("width"));
 
 				ZDCPixmapNS::RasterDesc theRasterDesc;
-				theRasterDesc.fPixvalDesc.fDepth = sReadAsset_Int8(strikeAsset.GetChild("depth"));
+				theRasterDesc.fPixvalDesc.fDepth = spReadAsset_Int8(strikeAsset.GetChild("depth"));
 				theRasterDesc.fPixvalDesc.fBigEndian = true;
-				theRasterDesc.fRowBytes = sReadAsset_Int16(strikeAsset.GetChild("rowBytes"));
-				theRasterDesc.fRowCount = sReadAsset_Int16(strikeAsset.GetChild("height"));
+				theRasterDesc.fRowBytes = spReadAsset_Int16(strikeAsset.GetChild("rowBytes"));
+				theRasterDesc.fRowCount = spReadAsset_Int16(strikeAsset.GetChild("height"));
 				theRasterDesc.fFlipped = false;
 				if (ZAsset strikeDataAsset = strikeAsset.GetChild("data|!binary"))
 					{
@@ -198,12 +198,12 @@ bool ZDCGlyphServer_Asset::GetGlyph(const ZDCFont& iFont, UTF32 iCP,
 
 ZCoord ZDCGlyphServer_Asset::GetEscapement(const ZDCFont& iFont, UTF32 iCP)
 	{
-	if (ZAsset fontAsset = sGetFontAsset(fAsset, iFont.GetName()))
+	if (ZAsset fontAsset = spGetFontAsset(fAsset, iFont.GetName()))
 		{
 		if (ZAsset metricsAsset
 			= fontAsset.GetChild("metrics").GetChild(ZString::sFormat("%06X", iCP)))
 			{
-			return sReadAsset_Int16(metricsAsset.GetChild("escapement"));
+			return spReadAsset_Int16(metricsAsset.GetChild("escapement"));
 			}
 		}
 	return 0;
@@ -215,11 +215,11 @@ void ZDCGlyphServer_Asset::GetFontInfo(const ZDCFont& iFont,
 	oAscent = 1;
 	oDescent = 1;
 	oLeading = 0;
-	if (ZAsset fontAsset = sGetFontAsset(fAsset, iFont.GetName()))
+	if (ZAsset fontAsset = spGetFontAsset(fAsset, iFont.GetName()))
 		{
-		oAscent = sReadAsset_Int16(fontAsset.GetChild("ascent"));
-		oDescent = sReadAsset_Int16(fontAsset.GetChild("descent"));
-		oLeading = sReadAsset_Int16(fontAsset.GetChild("leading"));
+		oAscent = spReadAsset_Int16(fontAsset.GetChild("ascent"));
+		oDescent = spReadAsset_Int16(fontAsset.GetChild("descent"));
+		oLeading = spReadAsset_Int16(fontAsset.GetChild("leading"));
 		}	
 	}
 

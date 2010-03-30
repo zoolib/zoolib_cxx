@@ -34,7 +34,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // ==================================================
 
-static short sModeLookup[] = { GXcopy, GXor, GXxor };
+static short spModeLookup[] = { GXcopy, GXor, GXxor };
 
 // =================================================================================================
 #pragma mark -
@@ -119,7 +119,7 @@ ZDCCanvas_X::SetupInk::SetupInk(ZDCCanvas_X* inCanvas, ZDCState& ioState)
 
 	if (ioState.fChangeCount_Mode != fCanvas->fChangeCount_Mode)
 		{
-		fCanvas->fXServer->SetFunction(fCanvas->fGC, sModeLookup[ioState.fMode]);
+		fCanvas->fXServer->SetFunction(fCanvas->fGC, spModeLookup[ioState.fMode]);
 		ioState.fChangeCount_Mode = ++fCanvas->fChangeCount_Mode;
 		}
 
@@ -158,7 +158,7 @@ ZDCCanvas_X::SetupInk::SetupInk(ZDCCanvas_X* inCanvas, ZDCState& ioState)
 			// ZXServer::CreateBitmapFromDCPixmap uses ZDCPixmapNS to transfer the bits, and
 			// correctly describes the destination has having little endian bit order.
 			
-			static const uint8 sBitsReversed[256] =
+			static const uint8 spBitsReversed[256] =
 				{
 				0, 128, 64, 192, 32, 160, 96, 224, 16, 144, 80, 208, 48, 176, 112, 240,
 				8, 136, 72, 200, 40, 168, 104, 232, 24, 152, 88, 216, 56, 184, 120, 248,
@@ -180,7 +180,7 @@ ZDCCanvas_X::SetupInk::SetupInk(ZDCCanvas_X* inCanvas, ZDCState& ioState)
 			
 			uint8 tempPattern[8];
 			for (size_t x = 0; x < 8; ++x)
-				tempPattern[x] = sBitsReversed[theRep->fAsTwoColor.fPattern.pat[x]];
+				tempPattern[x] = spBitsReversed[theRep->fAsTwoColor.fPattern.pat[x]];
 			fCanvas->fCachedInkPixmap = fCanvas->fXServer->CreateBitmapFromData(fCanvas->fDrawable, reinterpret_cast<char*>(&tempPattern[0]), 8, 8);
 
 			fCanvas->fXServer->SetStipple(fCanvas->fGC, fCanvas->fCachedInkPixmap);

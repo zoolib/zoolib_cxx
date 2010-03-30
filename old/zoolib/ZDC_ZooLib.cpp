@@ -560,7 +560,7 @@ struct DrawSolidColor_t
 	ZDCPixmapBlit::EOp fOp;
 	};
 
-static bool sDraw_SolidColor(const ZRect& iRect, void* iRefcon)
+static bool spDraw_SolidColor(const ZRect& iRect, void* iRefcon)
 	{
 	DrawSolidColor_t* theInfo = static_cast<DrawSolidColor_t*>(iRefcon);
 	ZDCPixmapBlit::sColor(
@@ -578,7 +578,7 @@ void ZDCCanvas_ZooLib::pFillRegion(const ZDCRgn& iRgn, const ZRGBColorPOD& iColo
 	theInfo.fOffset = fRep->GetBounds().TopLeft();
 	theInfo.fColor = iColor;
 	theInfo.fOp = sModeToOp[iMode];
-	(iRgn & fRep->GetBounds()).Decompose(sDraw_SolidColor, &theInfo);
+	(iRgn & fRep->GetBounds()).Decompose(spDraw_SolidColor, &theInfo);
 	}
 
 struct DrawPixmap_t
@@ -598,7 +598,7 @@ struct DrawPixmap_t
 	ZDCPixmapBlit::EOp fOp;
 	};
 
-static bool sDraw_Pixmap(const ZRect& iRect, void* iRefcon)
+static bool spDraw_Pixmap(const ZRect& iRect, void* iRefcon)
 	{
 	DrawPixmap_t* theInfo = static_cast<DrawPixmap_t*>(iRefcon);
 	
@@ -640,7 +640,7 @@ void ZDCCanvas_ZooLib::pFillRegion(const ZDCRgn& iRgn,
 
 	theInfo.fOp = sModeToOp[iMode];
 
-	(iRgn & fRep->GetBounds()).Decompose(sDraw_Pixmap, &theInfo);
+	(iRgn & fRep->GetBounds()).Decompose(spDraw_Pixmap, &theInfo);
 	}
 
 void ZDCCanvas_ZooLib::pFillRegion(const ZDCRgn& iRgn,
@@ -661,7 +661,7 @@ void ZDCCanvas_ZooLib::pFillRegion(const ZDCRgn& iRgn,
 
 	theInfo.fOp = sModeToOp[iMode];
 
-	(iRgn & fRep->GetBounds()).Decompose(sDraw_Pixmap, &theInfo);
+	(iRgn & fRep->GetBounds()).Decompose(spDraw_Pixmap, &theInfo);
 	}
 
 struct Invert_t
@@ -673,7 +673,7 @@ struct Invert_t
 	ZPoint fOffset;
 	};
 
-static bool sInvert(const ZRect& iRect, void* iRefcon)
+static bool spInvert(const ZRect& iRect, void* iRefcon)
 	{
 	Invert_t* theInfo = static_cast<Invert_t*>(iRefcon);
 	ZDCPixmapBlit::sInvert(theInfo->fAddress, theInfo->fRasterDesc,
@@ -689,7 +689,7 @@ void ZDCCanvas_ZooLib::pInvertRegion(const ZDCRgn& iRgn)
 	theInfo.fPixelDesc = fRep->GetPixelDesc();
 
 	theInfo.fOffset = fRep->GetBounds().TopLeft();
-	(iRgn & fRep->GetBounds()).Decompose(sInvert, &theInfo);
+	(iRgn & fRep->GetBounds()).Decompose(spInvert, &theInfo);
 	}
 
 // =================================================================================================
@@ -703,7 +703,7 @@ public:
 		ZPoint iSize, bool iBigEndian, const PixelDesc& iPixelDesc);
 	};
 
-static ZDCCanvasFactory_ZooLib sZDCCanvasFactory_ZooLib;
+static ZDCCanvasFactory_ZooLib spsZDCCanvasFactory_ZooLib;
 
 ZRef<ZDCCanvas> ZDCCanvasFactory_ZooLib::CreateCanvas(
 	ZPoint iSize, bool iBigEndian, const PixelDesc& iPixelDesc)

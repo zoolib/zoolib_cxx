@@ -27,7 +27,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL, sConvertSelect
+#pragma mark * ZTQL, spConvertSelect
 
 // Turns a Select into a tree of Restrict and Union.
 
@@ -36,7 +36,7 @@ using std::vector;
 typedef vector<ZValCondition> CondSect;
 typedef vector<CondSect> CondUnion;
 
-static void sCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight, CondUnion& oResult)
+static void spCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight, CondUnion& oResult)
 	{
 	for (CondUnion::const_iterator iterLeft = iLeft.begin();
 		iterLeft != iLeft.end(); ++iterLeft)
@@ -51,24 +51,24 @@ static void sCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight, Cond
 		}
 	}
 
-static void sGather(ZRef<ZExprRep_Logical> iRep, CondUnion& oResult)
+static void spGather(ZRef<ZExprRep_Logical> iRep, CondUnion& oResult)
 	{
 	ZAssert(oResult.empty());
 
 	if (ZRef<ZExprRep_Logical_And> lo = ZRefDynamicCast<ZExprRep_Logical_And>(iRep))
 		{
 		CondUnion left;
-		sGather(lo->GetLHS(), left);
+		spGather(lo->GetLHS(), left);
 		CondUnion right;
-		sGather(lo->GetRHS(), right);
-		sCrossMultiply(left, right, oResult);
+		spGather(lo->GetRHS(), right);
+		spCrossMultiply(left, right, oResult);
 		}
 	else if (ZRef<ZExprRep_Logical_Or> lo = ZRefDynamicCast<ZExprRep_Logical_Or>(iRep))
 		{
 		CondUnion left;
-		sGather(lo->GetLHS(), left);
+		spGather(lo->GetLHS(), left);
 		CondUnion right;
-		sGather(lo->GetRHS(), right);
+		spGather(lo->GetRHS(), right);
 		oResult = left;
 		oResult.insert(oResult.end(), right.begin(), right.end());
 		}
@@ -96,14 +96,14 @@ static void sGather(ZRef<ZExprRep_Logical> iRep, CondUnion& oResult)
 		}
 	}
 
-static ZRef<ZExprRep_Relation> sConvertSelect(
+static ZRef<ZExprRep_Relation> spConvertSelect(
 	ZRef<ZExprRep_Relation> iRelational, ZRef<ZExprRep_Logical> iLogical)
 	{
 	if (!iRelational)
 		return ZRef<ZExprRep_Relation>();
 
 	CondUnion resultLogical;
-	sGather(iLogical, resultLogical);
+	spGather(iLogical, resultLogical);
 
 	ZRef<ZExprRep_Relation> resultRelational;
 	for (CondUnion::const_iterator iterUnion = resultLogical.begin();
@@ -139,7 +139,7 @@ public:
 ZRef<ZExprRep_Relation> Optimize::Transform_Select(ZRef<ZExprRep_Select> iRep)
 	{
 	ZRef<ZExprRep_Relation> newRep = this->Transform(iRep->GetExpr_Relation());
-	return sConvertSelect(newRep, iRep->GetExpr_Logical());
+	return spConvertSelect(newRep, iRep->GetExpr_Logical());
 	}
 
 } // anonymous namespace

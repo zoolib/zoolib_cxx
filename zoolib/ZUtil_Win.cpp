@@ -27,32 +27,32 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 // From Whisper 1.3
-static bool sIsWinNT_Inited;
-static bool sIsWinNT_Result;
+static bool spIsWinNT_Inited;
+static bool spIsWinNT_Result;
 bool ZUtil_Win::sIsWinNT()
 	{
 	// We unconditionally use the 'A' API because we don't yet know
 	// if we're on NT, which is what this method is trying to determine.
 	// We could use the W entry point, and a failure used to indicate
 	// that we know we're not on NT.
-	if (!sIsWinNT_Inited)
+	if (!spIsWinNT_Inited)
 		{
 		OSVERSIONINFOA info;
 		info.dwOSVersionInfoSize = sizeof(info);
 
 		if (::GetVersionExA(&info))
-			sIsWinNT_Result = info.dwPlatformId == VER_PLATFORM_WIN32_NT;
+			spIsWinNT_Result = info.dwPlatformId == VER_PLATFORM_WIN32_NT;
 
-		sIsWinNT_Inited = true;
+		spIsWinNT_Inited = true;
 		}
-	return sIsWinNT_Result;
+	return spIsWinNT_Result;
 	}
 
-static bool sIsWin95OSR2_Inited;
-static bool sIsWin95OSR2_Result;
+static bool spIsWin95OSR2_Inited;
+static bool spIsWin95OSR2_Result;
 bool ZUtil_Win::sIsWin95OSR2()
 	{
-	if (!sIsWin95OSR2_Inited)
+	if (!spIsWin95OSR2_Inited)
 		{
 		OSVERSIONINFOA info;
 		info.dwOSVersionInfoSize = sizeof(info);
@@ -62,28 +62,28 @@ bool ZUtil_Win::sIsWin95OSR2()
 			if (info.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS)
 				{
 				if (info.dwMinorVersion >= 10)
-					sIsWin95OSR2_Result = true;
+					spIsWin95OSR2_Result = true;
 				else if (LOWORD(info.dwBuildNumber) > 1080)
-					sIsWin95OSR2_Result = true;
+					spIsWin95OSR2_Result = true;
 				}
 			}
 
-		sIsWin95OSR2_Inited = true;
+		spIsWin95OSR2_Inited = true;
 		}
-	return sIsWin95OSR2_Result;
+	return spIsWin95OSR2_Result;
 	}
 
-static bool sFlag_DisallowWAPI;
+static bool spFlag_DisallowWAPI;
 bool ZUtil_Win::sUseWAPI()
 	{
-	if (sFlag_DisallowWAPI)
+	if (spFlag_DisallowWAPI)
 		return false;
 
 	return sIsWinNT();
 	}
 
 void ZUtil_Win::sDisallowWAPI()
-	{ sFlag_DisallowWAPI = true; }
+	{ spFlag_DisallowWAPI = true; }
 
 NAMESPACE_ZOOLIB_END
 

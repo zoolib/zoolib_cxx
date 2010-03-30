@@ -269,110 +269,110 @@ public:
 		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result) = 0;
 
 private:
-	static NPError sGetURL(NPP npp, const char* URL, const char* window);
+	static NPError spGetURL(NPP npp, const char* URL, const char* window);
 
-	static NPError sPostURL(NPP npp,
+	static NPError spPostURL(NPP npp,
 		const char* URL, const char* window, uint32 len, const char* buf, NPBool file);
 
-	static NPError sRequestRead(NPStream* stream, NPByteRange* rangeList);
+	static NPError spRequestRead(NPStream* stream, NPByteRange* rangeList);
 
-	static NPError sNewStream(NPP npp,
+	static NPError spNewStream(NPP npp,
 		NPMIMEType type, const char* window, NPStream** stream);
 
-	static int32 sWrite(NPP npp, NPStream* stream, int32 len, void* buffer);
+	static int32 spWrite(NPP npp, NPStream* stream, int32 len, void* buffer);
 
-	static NPError sDestroyStream(NPP npp, NPStream* stream, NPReason reason);
+	static NPError spDestroyStream(NPP npp, NPStream* stream, NPReason reason);
 
-	static void sStatus(NPP npp, const char* message);
+	static void spStatus(NPP npp, const char* message);
 
-	static const char* sUserAgent(NPP npp);
+	static const char* spUserAgent(NPP npp);
 
-	static void* sMemAlloc(uint32 size);
+	static void* spMemAlloc(uint32 size);
 
-	static void sMemFree(void* ptr);
+	static void spMemFree(void* ptr);
 
-	static uint32 sMemFlush(uint32 size);
+	static uint32 spMemFlush(uint32 size);
 
-	static void sReloadPlugins(NPBool reloadPages);
+	static void spReloadPlugins(NPBool reloadPages);
 
-	static void* sGetJavaEnv();
+	static void* spGetJavaEnv();
 
-	static void* sGetJavaPeer(NPP npp);
+	static void* spGetJavaPeer(NPP npp);
 
-	static NPError sGetURLNotify(NPP npp,
+	static NPError spGetURLNotify(NPP npp,
 		const char* URL, const char* window, void* notifyData);
 
-	static NPError sPostURLNotify(NPP npp,
+	static NPError spPostURLNotify(NPP npp,
 		const char* URL, const char* window,
 		uint32 len, const char* buf, NPBool file, void* notifyData);
 
-	static NPError sGetValue(NPP npp, NPNVariable variable, void* ret_value);
+	static NPError spGetValue(NPP npp, NPNVariable variable, void* ret_value);
 
-	static NPError sSetValue(NPP npp, NPPVariable variable, void* value);
+	static NPError spSetValue(NPP npp, NPPVariable variable, void* value);
 
-	static void sInvalidateRect(NPP npp, NPRect* rect);
+	static void spInvalidateRect(NPP npp, NPRect* rect);
 
-	static void sInvalidateRegion(NPP npp, NPRegion region);
+	static void spInvalidateRegion(NPP npp, NPRegion region);
 
-	static void sForceRedraw(NPP npp);
+	static void spForceRedraw(NPP npp);
 
-	static NPIdentifier sGetStringIdentifier(const NPUTF8* name);
+	static NPIdentifier spGetStringIdentifier(const NPUTF8* name);
 
-	static void sGetStringIdentifiers(
+	static void spGetStringIdentifiers(
 		const NPUTF8** names, int32_t nameCount, NPIdentifier* identifiers);
 
-	static NPIdentifier sGetIntIdentifier(int32_t intid);
+	static NPIdentifier spGetIntIdentifier(int32_t intid);
 
-	static bool sIdentifierIsString(NPIdentifier identifier);
+	static bool spIdentifierIsString(NPIdentifier identifier);
 
-	static NPUTF8* sUTF8FromIdentifier(NPIdentifier identifier);
+	static NPUTF8* spUTF8FromIdentifier(NPIdentifier identifier);
 
-	static int32_t sIntFromIdentifier(NPIdentifier identifier);
+	static int32_t spIntFromIdentifier(NPIdentifier identifier);
 
-	static NPObject* sCreateObject(NPP npp, NPClass* aClass);
+	static NPObject* spCreateObject(NPP npp, NPClass* aClass);
 
-	static NPObject* sRetainObject(NPObject* obj);
+	static NPObject* spRetainObject(NPObject* obj);
 
-	static void sReleaseObject(NPObject* obj);
+	static void spReleaseObject(NPObject* obj);
 
-	static bool sInvoke(NPP npp,
+	static bool spInvoke(NPP npp,
 		NPObject* obj, NPIdentifier methodName, const NPVariant* args, unsigned argCount,
 		NPVariant* result);
 
-	static bool sInvokeDefault(NPP npp,
+	static bool spInvokeDefault(NPP npp,
 		NPObject* obj, const NPVariant* args, unsigned argCount, NPVariant* result);
 
-	static bool sEvaluate(NPP npp,
+	static bool spEvaluate(NPP npp,
 		NPObject* obj, NPString* script, NPVariant* result);
 
-	static bool sGetProperty(NPP npp,
+	static bool spGetProperty(NPP npp,
 		NPObject* obj, NPIdentifier propertyName, NPVariant* result);
 
-	static bool sSetProperty(NPP npp,
+	static bool spSetProperty(NPP npp,
 		NPObject* obj, NPIdentifier propertyName, const NPVariant* value);
 
-	static bool sRemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName);
+	static bool spRemoveProperty(NPP npp, NPObject* obj, NPIdentifier propertyName);
 
-	static bool sHasProperty(NPP npp, NPObject* npobj, NPIdentifier propertyName);
+	static bool spHasProperty(NPP npp, NPObject* npobj, NPIdentifier propertyName);
 
-	static bool sHasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName);
+	static bool spHasMethod(NPP npp, NPObject* npobj, NPIdentifier methodName);
 
-	static void sReleaseVariantValue(NPVariant* variant);
+	static void spReleaseVariantValue(NPVariant* variant);
 
-	static void sSetException(NPObject* obj, const NPUTF8* message);
-	static void sSetExceptionNPString(NPObject* obj, NPString* message);
+	static void spSetException(NPObject* obj, const NPUTF8* message);
+	static void spSetExceptionNPString(NPObject* obj, NPString* message);
 
-	static void sPushPopupsEnabledState(NPP npp, NPBool enabled);
+	static void spPushPopupsEnabledState(NPP npp, NPBool enabled);
 
-	static void sPopPopupsEnabledState(NPP npp);
+	static void spPopPopupsEnabledState(NPP npp);
 
-	static bool sEnumerate
+	static bool spEnumerate
 		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
 
-	static void sPluginThreadAsyncCall
+	static void spPluginThreadAsyncCall
 		(NPP npp, void (*func)(void *), void *userData);
 
-	static bool sConstruct
+	static bool spConstruct
 		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
 	};
 

@@ -29,7 +29,7 @@ using std::string;
 #pragma mark -
 #pragma mark * Static helpers
 
-static ZNode::Error sTranslateError(ZFile::Error iErr)
+static ZNode::Error spTranslateError(ZFile::Error iErr)
 	{
 	switch (iErr)
 		{
@@ -48,10 +48,10 @@ static ZNode::Error sTranslateError(ZFile::Error iErr)
 	return ZNode::errorGeneric;
 	}
 
-static void sTranslateError(ZFile::Error iErr, ZNode::Error* oError)
+static void spTranslateError(ZFile::Error iErr, ZNode::Error* oError)
 	{
 	if (oError)
-		*oError = sTranslateError(iErr);
+		*oError = spTranslateError(iErr);
 	}
 
 // =================================================================================================
@@ -75,7 +75,7 @@ bool ZNodeRep_FS::GetProp(const string& iPropName, ZTValue& oTV, ZNode::Error* o
 			{
 			ZFile::Error fileError;
 			uint64 theSize = fFileSpec.Size(&fileError);
-			sTranslateError(fileError, oError);
+			spTranslateError(fileError, oError);
 			if (fileError == ZFile::errorNone)
 				{
 				oTV.SetInt64(theSize);
@@ -87,7 +87,7 @@ bool ZNodeRep_FS::GetProp(const string& iPropName, ZTValue& oTV, ZNode::Error* o
 		{
 		ZFile::Error fileError;
 		ZTime lastModified = fFileSpec.TimeCreated(&fileError);
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		if (fileError == ZFile::errorNone)
 			{
 			oTV.SetTime(lastModified);
@@ -98,7 +98,7 @@ bool ZNodeRep_FS::GetProp(const string& iPropName, ZTValue& oTV, ZNode::Error* o
 		{
 		ZFile::Error fileError;
 		ZTime lastModified = fFileSpec.TimeModified(&fileError);
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		if (fileError == ZFile::errorNone)
 			{
 			oTV.SetTime(lastModified);
@@ -114,7 +114,7 @@ bool ZNodeRep_FS::CanHaveChildren(ZNode::Error* oError)
 		{
 		ZFile::Error fileError;
 		bool result = fFileSpec.IsDir(&fileError);
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		return result;
 		}
 	else
@@ -129,7 +129,7 @@ std::string ZNodeRep_FS::GetName(ZNode::Error* oError)
 		{
 		ZFile::Error fileError;
 		std::string result = fFileSpec.Name(&fileError);
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		return result;
 		}
 	else
@@ -146,7 +146,7 @@ ZTrail ZNodeRep_FS::TrailTo(ZRef<ZNodeRep> iDest, ZNode::Error* oError)
 			{
 			ZFile::Error fileError;
 			ZTrail result = fFileSpec.TrailTo(theDest->GetFileSpec(), &fileError);
-			sTranslateError(fileError, oError);
+			spTranslateError(fileError, oError);
 			return result;
 			}
 		else
@@ -171,7 +171,7 @@ ZRef<ZNodeRep> ZNodeRep_FS::GetAncestor(size_t iCount, ZNode::Error* oError)
 			*oError = ZNode::errorNone;
 			return new ZNodeRep_FS(newSpec);
 			}
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		}
 	else
 		{
@@ -191,7 +191,7 @@ ZRef<ZNodeRep> ZNodeRep_FS::GetDescendant(const std::string* iComps, size_t iCou
 			*oError = ZNode::errorNone;
 			return new ZNodeRep_FS(newSpec);
 			}
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		}
 	else
 		{
@@ -207,7 +207,7 @@ bool ZNodeRep_FS::Exists(ZNode::Error* oError)
 		{
 		ZFile::Error fileError;
 		bool result = fFileSpec.Exists(&fileError);
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		return result;
 		}
 	else
@@ -226,7 +226,7 @@ ZRef<ZNodeRep> ZNodeRep_FS::CreateDir(ZNode::Error* oError)
 			*oError = ZNode::errorNone;
 			return new ZNodeRep_FS(newSpec);
 			}
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		}
 	else
 		{
@@ -250,7 +250,7 @@ ZRef<ZNodeRep> ZNodeRep_FS::MoveTo(ZRef<ZNodeRep> iDest, ZNode::Error* oError)
 				*oError = ZNode::errorNone;
 				return new ZNodeRep_FS(newSpec);
 				}
-			sTranslateError(fileError, oError);
+			spTranslateError(fileError, oError);
 			}
 		else
 			{
@@ -271,7 +271,7 @@ bool ZNodeRep_FS::Delete(ZNode::Error* oError)
 		{
 		ZFile::Error fileError;
 		bool result = fFileSpec.Delete(&fileError);
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		return result;
 		}
 	else
@@ -286,7 +286,7 @@ ZRef<ZStreamerR> ZNodeRep_FS::OpenR(bool iPreventWriters, ZNode::Error* oError)
 		{
 		ZFile::Error fileError;
 		ZRef<ZStreamerR> result = fFileSpec.OpenR(iPreventWriters, &fileError);
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		return result;
 		}
 	else
@@ -301,7 +301,7 @@ ZRef<ZStreamerRPos> ZNodeRep_FS::OpenRPos(bool iPreventWriters, ZNode::Error* oE
 		{
 		ZFile::Error fileError;
 		ZRef<ZStreamerRPos> result = fFileSpec.OpenRPos(iPreventWriters, &fileError);
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		return result;
 		}
 	else
@@ -316,7 +316,7 @@ ZRef<ZStreamerW> ZNodeRep_FS::OpenW(bool iPreventWriters, ZNode::Error* oError)
 		{
 		ZFile::Error fileError;
 		ZRef<ZStreamerW> result = fFileSpec.OpenW(iPreventWriters, &fileError);
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		return result;
 		}
 	else
@@ -331,7 +331,7 @@ ZRef<ZStreamerWPos> ZNodeRep_FS::OpenWPos(bool iPreventWriters, ZNode::Error* oE
 		{
 		ZFile::Error fileError;
 		ZRef<ZStreamerWPos> result = fFileSpec.OpenWPos(iPreventWriters, &fileError);
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		return result;
 		}
 	else
@@ -346,7 +346,7 @@ ZRef<ZStreamerRWPos> ZNodeRep_FS::OpenRWPos(bool iPreventWriters, ZNode::Error* 
 		{
 		ZFile::Error fileError;
 		ZRef<ZStreamerRWPos> result = fFileSpec.OpenRWPos(iPreventWriters, &fileError);
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		return result;
 		}
 	else
@@ -361,7 +361,7 @@ ZRef<ZStreamerWPos> ZNodeRep_FS::CreateWPos(bool iOpenExisting, bool iPreventWri
 		{
 		ZFile::Error fileError;
 		ZRef<ZStreamerWPos> result = fFileSpec.CreateWPos(iOpenExisting, iPreventWriters, &fileError);
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		return result;
 		}
 	else
@@ -376,7 +376,7 @@ ZRef<ZStreamerRWPos> ZNodeRep_FS::CreateRWPos(bool iOpenExisting, bool iPreventW
 		{
 		ZFile::Error fileError;
 		ZRef<ZStreamerRWPos> result = fFileSpec.CreateRWPos(iOpenExisting, iPreventWriters, &fileError);
-		sTranslateError(fileError, oError);
+		spTranslateError(fileError, oError);
 		return result;
 		}
 	else

@@ -71,10 +71,10 @@ PixmapRaster_Asset::~PixmapRaster_Asset()
 #pragma mark -
 #pragma mark * ZDCPixmap_Asset_BMP::sGetPixmap
 
-static void sReadRLE8(const ZStreamR& iStream,
+static void spReadRLE8(const ZStreamR& iStream,
 	ZCoord iWidth, ZCoord iHeight, size_t iRowBytes, bool iFlip, uint8* iBuffer);
 
-static void sReadRLE4(const ZStreamR& iStream,
+static void spReadRLE4(const ZStreamR& iStream,
 	ZCoord iWidth, ZCoord iHeight, size_t iRowBytes, bool iFlip, uint8* iBuffer);
 
 ZDCPixmap ZDCPixmap_Asset_BMP::sGetPixmap(const ZAsset& iAsset)
@@ -236,7 +236,7 @@ ZDCPixmap ZDCPixmap_Asset_BMP::sGetPixmap(const ZAsset& iAsset)
 			{
 			thePixmap.GetRaster()->Fill(0);
 			bool destFlipped = (thePixmap.GetRasterDesc().fFlipped);
-			sReadRLE8(theStream, biWidth, biHeight,
+			spReadRLE8(theStream, biWidth, biHeight,
 				sourceRasterDesc.fRowBytes, sourceFlipped != destFlipped,
 				reinterpret_cast<uint8*>(thePixmap.GetRaster()->GetBaseAddress()));
 			}
@@ -245,7 +245,7 @@ ZDCPixmap ZDCPixmap_Asset_BMP::sGetPixmap(const ZAsset& iAsset)
 			ZAssertStop(2, biCompression == BI_RLE4);
 			thePixmap.GetRaster()->Fill(0);
 			bool destFlipped = (thePixmap.GetRasterDesc().fFlipped);
-			sReadRLE4(theStream, biWidth, biHeight,
+			spReadRLE4(theStream, biWidth, biHeight,
 				sourceRasterDesc.fRowBytes, destFlipped,
 				reinterpret_cast<uint8*>(thePixmap.GetRaster()->GetBaseAddress()));
 			}
@@ -253,7 +253,7 @@ ZDCPixmap ZDCPixmap_Asset_BMP::sGetPixmap(const ZAsset& iAsset)
 		}
 	}
 
-static void sReadRLE8(const ZStreamR& iStream,
+static void spReadRLE8(const ZStreamR& iStream,
 	ZCoord iWidth, ZCoord iHeight, size_t iRowBytes, bool iFlip, uint8* iBuffer)
 	{
 	ZCoord currentRow = 0;
@@ -312,7 +312,7 @@ static void sReadRLE8(const ZStreamR& iStream,
 		}
 	}
 
-static void sReadRLE4(const ZStreamR& iStream,
+static void spReadRLE4(const ZStreamR& iStream,
 	ZCoord iWidth, ZCoord iHeight, size_t iRowBytes, bool iFlip, uint8* iBuffer)
 	{
 	ZCoord currentRow = 0;

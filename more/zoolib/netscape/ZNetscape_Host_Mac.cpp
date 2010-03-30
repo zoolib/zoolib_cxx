@@ -326,7 +326,7 @@ Host_WindowRef::Host_WindowRef(
 
 	fEventTargetRef_Window = ::GetWindowEventTarget(fWindowRef);
 
-	static const EventTypeSpec sEvents_Window[] =
+	static const EventTypeSpec spEvents_Window[] =
 		{
 		{ kEventClassWindow, kEventWindowActivated },
 		{ kEventClassWindow, kEventWindowDeactivated },
@@ -352,7 +352,7 @@ Host_WindowRef::Host_WindowRef(
 		};
 
 	::InstallEventHandler(fEventTargetRef_Window, sEventHandlerUPP_Window,
-		countof(sEvents_Window), sEvents_Window,
+		countof(spEvents_Window), spEvents_Window,
 		this, &fEventHandlerRef_Window);
 	}
 
@@ -610,7 +610,7 @@ Host_HIViewRef::Host_HIViewRef(
 
 	fEventTargetRef_View = ::GetControlEventTarget(fHIViewRef);
 
-	static const EventTypeSpec sEvents_View[] =
+	static const EventTypeSpec spEvents_View[] =
 		{
 		{ kEventClassKeyboard, kEventRawKeyDown },
 		{ kEventClassKeyboard, kEventRawKeyRepeat },
@@ -640,7 +640,7 @@ Host_HIViewRef::Host_HIViewRef(
 		};
 
 	::InstallEventHandler(fEventTargetRef_View, sEventHandlerUPP_View,
-		countof(sEvents_View), sEvents_View,
+		countof(spEvents_View), spEvents_View,
 		this, &fEventHandlerRef_View);
 	}
 

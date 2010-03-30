@@ -51,7 +51,7 @@ using namespace ZUtil_STL;
 
 // =================================================================================================
 
-static void sDumpRequest(const string& iLogFacility, ZTBServer* iServer, const ZTuple& iTuple)
+static void spDumpRequest(const string& iLogFacility, ZTBServer* iServer, const ZTuple& iTuple)
 	{
 #if kDebug_ShowCommsTuples
 	if (ZLOG(s, eDebug, iLogFacility))
@@ -62,7 +62,7 @@ static void sDumpRequest(const string& iLogFacility, ZTBServer* iServer, const Z
 #endif
 	}
 
-static void sSend(void* iConnection, const string& iLogFacility,
+static void spSend(void* iConnection, const string& iLogFacility,
 	ZMutexLocker& locker, const ZStreamW& iStream, const ZTuple& iTuple)
 	{
 #if kDebug_ShowCommsTuples
@@ -129,7 +129,7 @@ bool ZTBServer::Read(const ZStreamR& iStream)
 	{
 	ZTuple req(iStream);
 	
-	sDumpRequest(fLogFacility, this, req);
+	spDumpRequest(fLogFacility, this, req);
 
 	ZMutexLocker locker(fMutex_Structure);
 	fTime_LastRead = ZTime::sSystem();
@@ -180,7 +180,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		fPingRequested = false;
 		ZTuple response;
 		response.SetString("What", "Pong");
-		sSend(this, fLogFacility, locker, iStream, response);
+		spSend(this, fLogFacility, locker, iStream, response);
 		didAnything = true;
 		}
 
@@ -190,7 +190,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		fPingSent = true;
 		ZTuple response;
 		response.SetString("What", "Ping");
-		sSend(this, fLogFacility, locker, iStream, response);
+		spSend(this, fLogFacility, locker, iStream, response);
 		didAnything = true;
 		}
 
@@ -204,7 +204,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		response.SetString("What", "AllocateIDs_Ack");
 		response.SetInt64("BaseID", thePair.first);
 		response.SetInt32("Count", thePair.second);
-		sSend(this, fLogFacility, locker, iStream, response);
+		spSend(this, fLogFacility, locker, iStream, response);
 		didAnything = true;
 		}
 
@@ -228,7 +228,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 			}
 		fTransactions_Create_Unsent.clear();
 
-		sSend(this, fLogFacility, locker, iStream, response);
+		spSend(this, fLogFacility, locker, iStream, response);
 		didAnything = true;
 		}
 
@@ -249,7 +249,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 			}
 		fTransactions_Validate_Succeeded.clear();
 
-		sSend(this, fLogFacility, locker, iStream, response);
+		spSend(this, fLogFacility, locker, iStream, response);
 		didAnything = true;
 		}
 
@@ -271,7 +271,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 			}
 		fTransactions_Validate_Failed.clear();
 
-		sSend(this, fLogFacility, locker, iStream, response);
+		spSend(this, fLogFacility, locker, iStream, response);
 		didAnything = true;
 		}
 
@@ -292,7 +292,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 			}
 		fTransactions_Commit_Acked.clear();
 
-		sSend(this, fLogFacility, locker, iStream, response);
+		spSend(this, fLogFacility, locker, iStream, response);
 		didAnything = true;
 		}
 
@@ -346,7 +346,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 
 		if (sentAny)
 			{
-			sSend(this, fLogFacility, locker, iStream, response);
+			spSend(this, fLogFacility, locker, iStream, response);
 			didAnything = true;
 			}
 		}
@@ -372,7 +372,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 			}
 		fSearches_Unsent.clear();
 
-		sSend(this, fLogFacility, locker, iStream, response);
+		spSend(this, fLogFacility, locker, iStream, response);
 		didAnything = true;
 		}
 
@@ -395,7 +395,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 			}
 		fCounts_Unsent.clear();
 
-		sSend(this, fLogFacility, locker, iStream, response);
+		spSend(this, fLogFacility, locker, iStream, response);
 		didAnything = true;
 		}
 
@@ -441,7 +441,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		if (allEmptied)
 			fTransactions_HaveTuplesToSend.clear();
 
-		sSend(this, fLogFacility, locker, iStream, response);
+		spSend(this, fLogFacility, locker, iStream, response);
 		didAnything = true;
 		}
 
@@ -449,7 +449,7 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		{
 		ZTuple response;
 		response.SetString("What", "Close");
-		sSend(this, fLogFacility, locker, iStream, response);
+		spSend(this, fLogFacility, locker, iStream, response);
 		}
 
 	if (!didAnything)

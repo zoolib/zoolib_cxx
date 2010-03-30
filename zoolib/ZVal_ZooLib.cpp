@@ -40,11 +40,11 @@ using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
 
-static ZTName sNilName;
-static ZMap_ZooLib::PropList sEmptyProperties;
-static ZVal_ZooLib sNilVal;
-static ZSeq_ZooLib sNilSeq;
-static vector<ZVal_ZooLib> sNilVector;
+static ZTName spNilName;
+static ZMap_ZooLib::PropList spEmptyProperties;
+static ZVal_ZooLib spNilVal;
+static ZSeq_ZooLib spNilSeq;
+static vector<ZVal_ZooLib> spNilVector;
 
 // =================================================================================================
 #pragma mark -
@@ -1879,14 +1879,14 @@ ZVal_ZooLib ZSeq_ZooLib::Get(size_t iIndex) const
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		return fRep->fVector.at(iIndex);
-	return sNilVal;
+	return spNilVal;
 	}
 
 const ZVal_ZooLib& ZSeq_ZooLib::RGet(size_t iIndex) const
 	{
 	if (fRep && iIndex < fRep->fVector.size())
 		return fRep->fVector.at(iIndex);
-	return sNilVal;
+	return spNilVal;
 	}
 
 ZSeq_ZooLib& ZSeq_ZooLib::Set(size_t iIndex, const ZVal_ZooLib& iVal)
@@ -1968,7 +1968,7 @@ const vector<ZVal_ZooLib>& ZSeq_ZooLib::GetVector() const
 	{
 	if (fRep)
 		return fRep->fVector;
-	return sNilVector;
+	return spNilVector;
 	}
 
 void ZSeq_ZooLib::ToStream(const ZStreamW& iStreamW) const
@@ -2258,21 +2258,21 @@ ZVal_ZooLib ZMap_ZooLib::Get(Index_t iIndex) const
 	{
 	if (const ZVal_ZooLib* theValue = this->PGet(iIndex))
 		return *theValue;
-	return sNilVal;
+	return spNilVal;
 	}
 
 ZVal_ZooLib ZMap_ZooLib::Get(const char* iPropName) const
 	{
 	if (const ZVal_ZooLib* theValue = this->PGet(iPropName))
 		return *theValue;
-	return sNilVal;
+	return spNilVal;
 	}
 
 ZVal_ZooLib ZMap_ZooLib::Get(const ZTName& iPropName) const
 	{
 	if (const ZVal_ZooLib* theValue = this->PGet(iPropName))
 		return *theValue;
-	return sNilVal;
+	return spNilVal;
 	}
 
 ZMap_ZooLib& ZMap_ZooLib::Set(Index_t iIndex, const ZVal_ZooLib& iVal)
@@ -2423,14 +2423,14 @@ ZMap_ZooLib::Index_t ZMap_ZooLib::Begin() const
 	{
 	if (fRep)
 		return fRep->fProperties.begin();
-	return sEmptyProperties.end();
+	return spEmptyProperties.end();
 	}
 
 ZMap_ZooLib::Index_t ZMap_ZooLib::End() const
 	{
 	if (fRep)
 		return fRep->fProperties.end();
-	return sEmptyProperties.end();
+	return spEmptyProperties.end();
 	}
 
 bool ZMap_ZooLib::Empty() const
@@ -2447,7 +2447,7 @@ const ZTName& ZMap_ZooLib::NameOf(Index_t iIndex) const
 	{
 	if (fRep && iIndex != fRep->fProperties.end())
 		return (*iIndex).fName;
-	return sNilName;
+	return spNilName;
 	}
 
 ZMap_ZooLib::Index_t ZMap_ZooLib::IndexOf(const char* iPropName) const
@@ -2463,7 +2463,7 @@ ZMap_ZooLib::Index_t ZMap_ZooLib::IndexOf(const char* iPropName) const
 			}
 		return end;
 		}
-	return sEmptyProperties.end();
+	return spEmptyProperties.end();
 	}
 
 ZMap_ZooLib::Index_t ZMap_ZooLib::IndexOf(const ZTName& iPropName) const
@@ -2478,7 +2478,7 @@ ZMap_ZooLib::Index_t ZMap_ZooLib::IndexOf(const ZTName& iPropName) const
 			}
 		return end;
 		}
-	return sEmptyProperties.end();
+	return spEmptyProperties.end();
 	}
 
 ZMap_ZooLib::Index_t ZMap_ZooLib::IndexOf(

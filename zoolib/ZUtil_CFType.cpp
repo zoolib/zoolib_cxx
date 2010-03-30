@@ -43,10 +43,10 @@ namespace ZUtil_CFType {
 #pragma mark -
 #pragma mark * ZUtil_CFType
 
-static CFStringRef sEmptyCFString = CFSTR("");
+static CFStringRef spEmptyCFString = CFSTR("");
 
 ZRef<CFStringRef> sString()
-	{ return sEmptyCFString; }
+	{ return spEmptyCFString; }
 
 ZRef<CFStringRef> sString(const string8& iString8)
 	{
@@ -57,7 +57,7 @@ ZRef<CFStringRef> sString(const string8& iString8)
 			kCFStringEncodingUTF8, false));
 		}
 
-	return sEmptyCFString;
+	return spEmptyCFString;
 	}
 
 ZRef<CFStringRef> sString(const string16& iString16)
@@ -68,7 +68,7 @@ ZRef<CFStringRef> sString(const string16& iString16)
 			reinterpret_cast<const UniChar*>(iString16.data()), sourceSize));
 		}
 
-	return sEmptyCFString;
+	return spEmptyCFString;
 	}
 
 ZRef<CFMutableStringRef> sStringMutable()

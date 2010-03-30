@@ -135,16 +135,16 @@ ZRef<ZNodeRep> ZNodeRep_Wrapper::CreateDir(Error* oError)
 	return ZRef<ZNodeRep>();
 	}
 
-static ZRef<ZNodeRep> sGetReal(ZRef<ZNodeRep> iNodeRep)
+static ZRef<ZNodeRep> spGetReal(ZRef<ZNodeRep> iNodeRep)
 	{
 	if (ZRef<ZNodeRep_Wrapper> theWrapper = ZRefDynamicCast<ZNodeRep_Wrapper>(iNodeRep))
-		return sGetReal(theWrapper->GetRealNodeRep());
+		return spGetReal(theWrapper->GetRealNodeRep());
 	return iNodeRep;
 	}
 
 ZRef<ZNodeRep> ZNodeRep_Wrapper::MoveTo(ZRef<ZNodeRep> iDest, Error* oError)
 	{
-	if (ZRef<ZNodeRep> result = fNodeRep->MoveTo(sGetReal(iDest), oError))
+	if (ZRef<ZNodeRep> result = fNodeRep->MoveTo(spGetReal(iDest), oError))
 		return iDest;
 	return ZRef<ZNodeRep>();
 	}

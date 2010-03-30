@@ -107,7 +107,7 @@ void ZStackCrawl::sPopulateStackFrames(vector<ZStackCrawl::pFrame_t>& oFrames)
 		}
 	}
 
-static bool sGetLogicalAddress(const void* iAddr, char* oModuleName,
+static bool spGetLogicalAddress(const void* iAddr, char* oModuleName,
 	size_t iModuleNameLen, size_t& oSection, size_t& oOffset)
 	{
 	MEMORY_BASIC_INFORMATION theMBI;
@@ -160,18 +160,18 @@ static bool sGetLogicalAddress(const void* iAddr, char* oModuleName,
 	return false;
 	}
 
-static const char* sTruncateFileName(const char* iFilename)
+static const char* spTruncateFileName(const char* iFilename)
 	{
 	if (const char* truncatedFileName = strrchr(iFilename, '\\'))
 		return truncatedFileName + 1;
 	return iFilename;
 	}
 
-static bool sInited;
-static void sGetSymNameAndOffset(const void* iAddress, string& oSymName, size_t& oOffset)
+static bool spInited;
+static void spGetSymNameAndOffset(const void* iAddress, string& oSymName, size_t& oOffset)
 	{
 	HANDLE currentProcess = ::GetCurrentProcess();
-	if (!sInited)
+	if (!spInited)
 		{
 		bool inited1 = ::SymInitialize(currentProcess, nullptr, false);
 
@@ -185,7 +185,7 @@ static void sGetSymNameAndOffset(const void* iAddress, string& oSymName, size_t&
 						nullptr,            // module name
 						0,              // load address
 						0);             // module size
-		sInited = true;
+		spInited = true;
 		}
 
 	const uint32 kMaxSymbolName = 512;
@@ -224,14 +224,14 @@ static void sGetSymNameAndOffset(const void* iAddress, string& oSymName, size_t&
 			// is much easier to handle.
 			size_t theSection;
 			size_t theOffset;
-			if (!::sGetLogicalAddress(iAddress, theModuleName,
+			if (!::spGetLogicalAddress(iAddress, theModuleName,
 				sizeof(theModuleName), theSection, theOffset))
 				{
 				theModuleName[0] = '\0';
 				}
 
 			oOffset = theOffset;
-			oSymName = sTruncateFileName(theModuleName);
+			oSymName = spTruncateFileName(theModuleName);
 			}
 		}
 	}
@@ -269,7 +269,7 @@ private:
 	bool ReadStabs(int iFD, const Elf32_Ehdr& iHdr, size_t iBaseAddr);
 	};
 
-static bool sVerifyELF(const Elf32_Ehdr& iHdr)
+static bool spVerifyELF(const Elf32_Ehdr& iHdr)
 	{
 	if (memcmp(&iHdr.e_ident[EI_MAG0], ELFMAG, SELFMAG))
 		return false;
@@ -304,7 +304,7 @@ Symbols::Symbols(const char* iFileName, size_t iBaseAddr)
 			{
 			Elf32_Ehdr theEHdr;
 			read(theFD, &theEHdr, sizeof(theEHdr));
-			if (!sVerifyELF(theEHdr))
+			if (!spVerifyELF(theEHdr))
 				{
 				throw runtime_error(string("\"")
 					+ iFileName + "\" does not have a valid ELF header");
@@ -597,7 +597,7 @@ ZStackCrawl::Frame ZStackCrawl::At(size_t iIndex) const
 				&theFrame.fParams[0] + kMaxCountParams,
 				&result.fParams[0]);
 
-			sGetSymNameAndOffset(result.fPC, result.fName, result.fOffset);
+			spGetSymNameAndOffset(result.fPC, result.fName, result.fOffset);
 			return result;
 		#endif
 		}

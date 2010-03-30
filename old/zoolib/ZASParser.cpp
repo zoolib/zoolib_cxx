@@ -51,7 +51,7 @@ namespace ZANONYMOUS {
 #pragma mark -
 #pragma mark * Static helper functions
 
-static bool sAtEnd(ZStrimU& iStrimU)
+static bool spAtEnd(ZStrimU& iStrimU)
 	{
 	UTF32 theCP;
 	if (!iStrimU.ReadCP(theCP))
@@ -231,7 +231,7 @@ void Parser::Parse()
 	for (;;)
 		{
 		sSkip_WSAndCPlusPlusComments(*fStrimU);
-		if (sAtEnd(*fStrimU))
+		if (spAtEnd(*fStrimU))
 			return;
 
 		if (!this->TryParseStatement())
@@ -345,7 +345,7 @@ void Parser::ParseNameBody(const string& inName)
 		for (;;)
 			{
 			sSkip_WSAndCPlusPlusComments(*fStrimU);
-			if (sAtEnd(*fStrimU))
+			if (spAtEnd(*fStrimU))
 				break;
 
 			if (!this->TryParseStatement())
@@ -692,19 +692,19 @@ void ZASParser::ErrorHandler::ReportProgress(int iLinesProcessed) const
 #pragma mark -
 #pragma mark * ZASParser::ParseHandler_Prettify
 
-static void sWriteIndent(const ZStrimW& iStrimW, int iIndent)
+static void spWriteIndent(const ZStrimW& iStrimW, int iIndent)
 	{
 	ZAssert(iIndent >= 0);
 	for (int x = 0; x < iIndent; ++x)
 		iStrimW.WriteCP('\t');
 	}
 
-static void sWriteEscapifiedString(const ZStrimW& iStrimW, const string& iString)
+static void spWriteEscapifiedString(const ZStrimW& iStrimW, const string& iString)
 	{
 	ZStrimW_Escaped(iStrimW).Write(iString);
 	}
 
-static void sWriteEscapifiedStringIndented(
+static void spWriteEscapifiedStringIndented(
 	const ZStrimW& iStrimW, const string& iString, int iIndent)
 	{
 	string eol = "\"\n";
@@ -726,9 +726,9 @@ void ZASParser::ParseHandler_Prettify::EnterName(
 	const string& iName, bool iWasInBlock, bool iNowInBlock)
 	{
 	if (iWasInBlock)
-		sWriteIndent(fStrimW, fIndent);
+		spWriteIndent(fStrimW, fIndent);
 	fStrimW.Write("name \"");
-	sWriteEscapifiedString(fStrimW, iName);
+	spWriteEscapifiedString(fStrimW, iName);
 	fStrimW.Write("\"");
 
 	fNames.push_back(iName);
@@ -736,7 +736,7 @@ void ZASParser::ParseHandler_Prettify::EnterName(
 		{
 		++fIndent;
 		fStrimW.Write("\n");
-		sWriteIndent(fStrimW, fIndent);
+		spWriteIndent(fStrimW, fIndent);
 		fStrimW.Write("{\n");
 		}
 	else
@@ -750,9 +750,9 @@ void ZASParser::ParseHandler_Prettify::ExitName(bool iWasInBlock, bool iNowInBlo
 	{
 	if (iWasInBlock)
 		{
-		sWriteIndent(fStrimW, fIndent);
+		spWriteIndent(fStrimW, fIndent);
 		fStrimW.Write("} // name \"");
-		sWriteEscapifiedString(fStrimW, fNames.back());
+		spWriteEscapifiedString(fStrimW, fNames.back());
 		fStrimW.Write("\"\n");
 		--fIndent;
 		}
@@ -763,33 +763,33 @@ void ZASParser::ParseHandler_Prettify::ExitName(bool iWasInBlock, bool iNowInBlo
 void ZASParser::ParseHandler_Prettify::ParsedString(const string& iValue)
 	{
 	if (fInBlock)
-		sWriteIndent(fStrimW, fIndent);
+		spWriteIndent(fStrimW, fIndent);
 	fStrimW.Write("string \"");
-	sWriteEscapifiedStringIndented(fStrimW, iValue, fIndent);
+	spWriteEscapifiedStringIndented(fStrimW, iValue, fIndent);
 	fStrimW.Write("\"\n");
 	}
 
 void ZASParser::ParseHandler_Prettify::ParsedStringTable(const vector<string>& iValues)
 	{
 	if (fInBlock)
-		sWriteIndent(fStrimW, fIndent);
+		spWriteIndent(fStrimW, fIndent);
 
 	fStrimW.Write("stringtable\n");
 
-	sWriteIndent(fStrimW, fIndent + 1);
+	spWriteIndent(fStrimW, fIndent + 1);
 	fStrimW.Write("{\n");
 
 	for (size_t x = 0; x < iValues.size(); ++x)
 		{
-		sWriteIndent(fStrimW, fIndent + 1);
+		spWriteIndent(fStrimW, fIndent + 1);
 		fStrimW.Write("\"");
-		sWriteEscapifiedStringIndented(fStrimW, iValues[x], fIndent);
+		spWriteEscapifiedStringIndented(fStrimW, iValues[x], fIndent);
 		fStrimW.Write("\"");
 		if (x != iValues.size() - 1)
 			fStrimW.Write(",");
 		fStrimW.Write("\n");
 		}
-	sWriteIndent(fStrimW, fIndent + 1);
+	spWriteIndent(fStrimW, fIndent + 1);
 	fStrimW.Writef("} // (%d entries)\n", iValues.size());
 	}
 
@@ -798,7 +798,7 @@ void ZASParser::ParseHandler_Prettify::ParsedBinary(const ZStreamR& iStream)
 	if (fDumpBinaries)
 		{
 		if (fInBlock)
-			sWriteIndent(fStrimW, fIndent);
+			spWriteIndent(fStrimW, fIndent);
 
 		// Let's see if we've got more than 16 bytes. We only have a read
 		// stream, so we can't _ask_ how many bytes would be physically
@@ -828,15 +828,16 @@ void ZASParser::ParseHandler_Prettify::ParsedBinary(const ZStreamR& iStream)
 			// We've got more than 16 bytes, break them up into nice lines.
 			fStrimW.Write("binary\n");
 	
-			sWriteIndent(fStrimW, fIndent + 1);
+			spWriteIndent(fStrimW, fIndent + 1);
 			fStrimW.Write("{");
 	
 			uint64 size;
 			string chunkSeparator = "\n" + string(fIndent + 1, '\t');
-			ZStreamW_HexStrim(" ", chunkSeparator, 16, fStrimW).CopyAllFrom(theStream, &size, nullptr);	
+			ZStreamW_HexStrim(" ", chunkSeparator, 16, fStrimW)
+				.CopyAllFrom(theStream, &size, nullptr);	
 	
 			fStrimW.Write("\n");
-			sWriteIndent(fStrimW, fIndent + 1);
+			spWriteIndent(fStrimW, fIndent + 1);
 			fStrimW.Writef("} // %lld bytes\n", size);
 			}
 		}
@@ -846,7 +847,7 @@ void ZASParser::ParseHandler_Prettify::ParsedBinary(const ZStreamR& iStream)
 		iStream.SkipAll(&size);
 
 		if (fInBlock)
-			sWriteIndent(fStrimW, fIndent);
+			spWriteIndent(fStrimW, fIndent);
 
 		fStrimW.Writef("binary { /* content not shown */ } // %d bytes\n", size);
 		}
@@ -855,33 +856,33 @@ void ZASParser::ParseHandler_Prettify::ParsedBinary(const ZStreamR& iStream)
 void ZASParser::ParseHandler_Prettify::ParsedUnion(const vector<string>& iNames)
 	{
 	if (fInBlock)
-		sWriteIndent(fStrimW, fIndent);
+		spWriteIndent(fStrimW, fIndent);
 
 	fStrimW.Write("union\n");
 
-	sWriteIndent(fStrimW, fIndent + 1);
+	spWriteIndent(fStrimW, fIndent + 1);
 	fStrimW.Write("{\n");
 
 	for (size_t x = 0; x < iNames.size(); ++x)
 		{
-		sWriteIndent(fStrimW, fIndent + 1);
+		spWriteIndent(fStrimW, fIndent + 1);
 		fStrimW.Write("\"");
-		sWriteEscapifiedString(fStrimW, iNames[x]);
+		spWriteEscapifiedString(fStrimW, iNames[x]);
 		fStrimW.Write("\"");
 		if (x != iNames.size() - 1)
 			fStrimW.Write(",");
 		fStrimW.Write("\n");
 		}
-	sWriteIndent(fStrimW, fIndent + 1);
+	spWriteIndent(fStrimW, fIndent + 1);
 	fStrimW.Writef("} // (%d entries)\n", iNames.size());
 	}
 
 void ZASParser::ParseHandler_Prettify::EnterInclude(const ZFileSpec& iFileSpec)
 	{
-	sWriteIndent(fStrimW, fIndent);
+	spWriteIndent(fStrimW, fIndent);
 	fStrimW.Write("// -----> enter file \"");
 	string fileAsString = iFileSpec.AsString();
-	sWriteEscapifiedString(fStrimW, fileAsString);
+	spWriteEscapifiedString(fStrimW, fileAsString);
 	fStrimW.Write("\"\n");
 
 	fIncludes.push_back(fileAsString);
@@ -889,9 +890,9 @@ void ZASParser::ParseHandler_Prettify::EnterInclude(const ZFileSpec& iFileSpec)
 
 void ZASParser::ParseHandler_Prettify::ExitInclude()
 	{
-	sWriteIndent(fStrimW, fIndent);
+	spWriteIndent(fStrimW, fIndent);
 	fStrimW.Write("// <----- exit file \"");
-	sWriteEscapifiedString(fStrimW, fIncludes.back());
+	spWriteEscapifiedString(fStrimW, fIncludes.back());
 	fStrimW.Write("\"\n");
 
 	fIncludes.pop_back();
@@ -903,7 +904,7 @@ void ZASParser::ParseHandler_Prettify::EnterCharSet(
 	// We don't emit any charset designator -- we're dumping everything as unicode.
 	// However we do need to handle indentation.
 	if (iWasInBlock && !iNowInBlock)
-		sWriteIndent(fStrimW, fIndent);
+		spWriteIndent(fStrimW, fIndent);
 	fInBlock = iNowInBlock;
 	}
 

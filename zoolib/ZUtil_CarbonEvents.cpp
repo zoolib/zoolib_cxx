@@ -83,8 +83,9 @@ public:
 
 	void InvokeOnMainThread(Callback_t iCallback, void* iRefcon);
 
-	static EventHandlerUPP sEventHandlerUPP;
-	static pascal OSStatus sEventHandler(
+private:
+	static EventHandlerUPP spEventHandlerUPP;
+	static pascal OSStatus spEventHandler(
 		EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon);
 	OSStatus EventHandler(EventHandlerCallRef iCallRef, EventRef iEventRef);
 
@@ -110,7 +111,7 @@ Handler::Handler()
 		{ kEventClassID_ZooLib, kEventKindID_Call }
 		};
 
-	::InstallEventHandler(::GetEventDispatcherTarget(), sEventHandlerUPP,
+	::InstallEventHandler(::GetEventDispatcherTarget(), spEventHandlerUPP,
 		countof(sEvents), sEvents,
 		this, &fEventHandlerRef);
 	}
@@ -146,9 +147,9 @@ void Handler::InvokeOnMainThread(Callback_t iCallback, void* iRefcon)
 		}
 	}
 
-EventHandlerUPP Handler::sEventHandlerUPP = NewEventHandlerUPP(sEventHandler);
+EventHandlerUPP Handler::spEventHandlerUPP = NewEventHandlerUPP(spEventHandler);
 
-pascal OSStatus Handler::sEventHandler(
+pascal OSStatus Handler::spEventHandler(
 	EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon)
 	{
 	try
@@ -158,12 +159,12 @@ pascal OSStatus Handler::sEventHandler(
 	catch (std::exception& ex)
 		{
 		if (ZLOG(s, eNotice, "Handler"))
-			s << "sEventHandler, uncaught exception: " << ex.what();
+			s << "spEventHandler, uncaught exception: " << ex.what();
 		}
 	catch (...)
 		{
 		if (ZLOG(s, eNotice, "Handler"))
-			s << "sEventHandler, uncaught exception, not derived fron std::exception";
+			s << "spEventHandler, uncaught exception, not derived fron std::exception";
 		}
 	return noErr;
 	}

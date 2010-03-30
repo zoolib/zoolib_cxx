@@ -63,10 +63,10 @@ file or in external files.
 
 #if ZCONFIG_SPI_Enabled(POSIX)
 
-static const char sMagicText[] = "ZooLib Appended Data v1.0";
-static const size_t sMagicTextSize = sizeof(sMagicText);
+static const char spMagicText[] = "ZooLib Appended Data v1.0";
+static const size_t spMagicTextSize = sizeof(spMagicText);
 
-static bool sGetAssetTreeInfoFromExecutable(const string& iName, int& oFD, size_t& oStart, size_t& oLength)
+static bool spGetAssetTreeInfoFromExecutable(const string& iName, int& oFD, size_t& oStart, size_t& oLength)
 	{
 	ZRef<ZFileLoc_POSIX> theFileLoc = ZFileLoc_POSIX::sGet_App();
 	if (!theFileLoc)
@@ -85,7 +85,7 @@ static bool sGetAssetTreeInfoFromExecutable(const string& iName, int& oFD, size_
 		ZStreamRPos_File_POSIX theStream(oFD, false);
 
 		size_t theSize = theStream.GetSize();
-		const size_t trailerSize = sMagicTextSize + sizeof(int32) + sizeof(int32);
+		const size_t trailerSize = spMagicTextSize + sizeof(int32) + sizeof(int32);
 
 		// Check for there being at least enough room for an empty trailer.
 		if (theSize >= trailerSize)
@@ -98,9 +98,9 @@ static bool sGetAssetTreeInfoFromExecutable(const string& iName, int& oFD, size_
 			if (theSize >= trailerSize + offsetOfData)
 				{
 				// The data offset is within the file.
-				char checkedText[sMagicTextSize];
-				theStream.Read(checkedText, sMagicTextSize);
-				if (0 == memcmp(checkedText, sMagicText, sMagicTextSize))
+				char checkedText[spMagicTextSize];
+				theStream.Read(checkedText, spMagicTextSize);
+				if (0 == memcmp(checkedText, spMagicText, spMagicTextSize))
 					{
 					// The magic text matches.
 					if (theSize >= trailerSize + offsetOfTOC)
@@ -149,7 +149,7 @@ typedef ENUMRESNAMEPROC ENUMRESNAMEPROCW;
 
 #endif //  defined(__MINGW32__)
 
-static BOOL CALLBACK sEnumResNameCallbackW(HMODULE iHMODULE, const UTF16* iType, UTF16* iName, LONG_PTR iParam)
+static BOOL CALLBACK spEnumResNameCallbackW(HMODULE iHMODULE, const UTF16* iType, UTF16* iName, LONG_PTR iParam)
 	{
 	if (iName[0])
 		reinterpret_cast<vector<string>*>(iParam)->push_back(ZUnicode::sAsUTF8(iName));
@@ -157,7 +157,7 @@ static BOOL CALLBACK sEnumResNameCallbackW(HMODULE iHMODULE, const UTF16* iType,
 	return TRUE;
 	}
 
-static BOOL CALLBACK sEnumResNameCallbackA(HMODULE iHMODULE, const char* iType, char* iName, LONG_PTR iParam)
+static BOOL CALLBACK spEnumResNameCallbackA(HMODULE iHMODULE, const char* iType, char* iName, LONG_PTR iParam)
 	{
 	if (iName[0])
 		reinterpret_cast<vector<string>*>(iParam)->push_back(iName);
@@ -235,12 +235,12 @@ void ZUtil_Asset::sGetAssetTreeNamesFromExecutable(vector<string>& oAssetTreeNam
 	if (ZUtil_Win::sUseWAPI())
 		{
 		::EnumResourceNamesW(::GetModuleHandleW(0), L"ZAO_",
-			(ENUMRESNAMEPROCW)sEnumResNameCallbackW, reinterpret_cast<LONG_PTR>(&oAssetTreeNames));
+			(ENUMRESNAMEPROCW)spEnumResNameCallbackW, reinterpret_cast<LONG_PTR>(&oAssetTreeNames));
 		}
 	else
 		{
 		::EnumResourceNamesA(::GetModuleHandleA(0), "ZAO_",
-			(ENUMRESNAMEPROCA)sEnumResNameCallbackA, reinterpret_cast<LONG_PTR>(&oAssetTreeNames));
+			(ENUMRESNAMEPROCA)spEnumResNameCallbackA, reinterpret_cast<LONG_PTR>(&oAssetTreeNames));
 		}
 
 #elif ZCONFIG_SPI_Enabled(POSIX)
@@ -249,7 +249,7 @@ void ZUtil_Asset::sGetAssetTreeNamesFromExecutable(vector<string>& oAssetTreeNam
 		{
 		const ZStreamRPos& theStream = theStreamer->GetStreamRPos();
 		size_t theSize = theStream.GetSize();
-		size_t trailerSize = sMagicTextSize + sizeof(int32) + sizeof(int32);
+		size_t trailerSize = spMagicTextSize + sizeof(int32) + sizeof(int32);
 		// Check for there being at least enough room for an empty trailer
 		if (theSize >= trailerSize)
 			{
@@ -259,9 +259,9 @@ void ZUtil_Asset::sGetAssetTreeNamesFromExecutable(vector<string>& oAssetTreeNam
 			size_t offsetOfTOC = theStream.ReadInt32();
 			if (theSize >= trailerSize + offsetOfData)
 				{
-				char checkedText[sMagicTextSize];
-				theStream.Read(checkedText, sMagicTextSize);
-				if (0 == memcmp(checkedText, sMagicText, sMagicTextSize))
+				char checkedText[spMagicTextSize];
+				theStream.Read(checkedText, spMagicTextSize);
+				if (0 == memcmp(checkedText, spMagicText, spMagicTextSize))
 					{
 					theStream.SetPosition(theSize - trailerSize - offsetOfTOC);
 					size_t countOfChunks = theStream.ReadInt32();
@@ -344,7 +344,7 @@ ZRef<ZAssetTree> ZUtil_Asset::sGetAssetTreeFromExecutable(const string& iAssetTr
 
 	int theFD;
 	size_t theStart, theLength;
-	if (sGetAssetTreeInfoFromExecutable(iAssetTreeName, theFD, theStart, theLength))
+	if (spGetAssetTreeInfoFromExecutable(iAssetTreeName, theFD, theStart, theLength))
 		return new ZAssetTree_POSIX_MemoryMapped(theFD, true, theStart, theLength);
 
 #elif ZCONFIG_SPI_Enabled(BeOS)

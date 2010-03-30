@@ -42,7 +42,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 
-static int sTupleValueComp(ZTextCollator* ioTextCollators, int iStrength,
+static int spTupleValueComp(ZTextCollator* ioTextCollators, int iStrength,
 	const ZTValue& iLeft, const ZTValue& iRight)
 	{
 	ZType leftType = iLeft.TypeOf();
@@ -74,7 +74,7 @@ static int sTupleValueComp(ZTextCollator* ioTextCollators, int iStrength,
 	}
 
 /*! Remove from ioIDs any entry whose corresponding tuple does not match iFilter. */
-static void sFilter(const ZTBSpec& iFilter, const vector<ZTuple>& iTuples, vector<uint64>& ioIDs)
+static void spFilter(const ZTBSpec& iFilter, const vector<ZTuple>& iTuples, vector<uint64>& ioIDs)
 	{
 	vector<ZTuple>::const_iterator iterTuple = iTuples.begin();
 	vector<ZTuple>::const_iterator theEnd = iTuples.end();
@@ -92,7 +92,7 @@ static void sFilter(const ZTBSpec& iFilter, const vector<ZTuple>& iTuples, vecto
 	}
 
 /*! For each property listed in iSort, put the corresponding value in oProps. */
-static void sExtractProps(const vector<ZTBQuery::SortSpec>& iSort, const ZTuple& iTuple,
+static void spExtractProps(const vector<ZTBQuery::SortSpec>& iSort, const ZTuple& iTuple,
 	vector<const ZTValue*>& oProps)
 	{
 	oProps.reserve(iSort.size());
@@ -139,7 +139,7 @@ inline bool CompareTuples_t::operator()(const pair<uint64, vector<const ZTValue*
 		const ZTValue* right = *rightIter++;
 		if (left && right)
 			{
-			if (int compare = sTupleValueComp(fTextCollators, fSort[x].fStrength, *left, *right))
+			if (int compare = spTupleValueComp(fTextCollators, fSort[x].fStrength, *left, *right))
 				return fSort[x].fAscending == (compare < 0);
 			}
 		else if (right)
@@ -154,7 +154,7 @@ inline bool CompareTuples_t::operator()(const pair<uint64, vector<const ZTValue*
 
 // =================================================================================================
 
-static void sSort(ZTextCollator ioTextCollators[], const vector<ZTBQuery::SortSpec>& iSort,
+static void spSort(ZTextCollator ioTextCollators[], const vector<ZTBQuery::SortSpec>& iSort,
 	const vector<ZTuple>& iTuples, vector<uint64>& ioIDs)
 	{
 	// This is ugly, but simple. We extract the values of properties we care
@@ -165,7 +165,7 @@ static void sSort(ZTextCollator ioTextCollators[], const vector<ZTBQuery::SortSp
 		{
 		theArray.push_back(pair<uint64, vector<const ZTValue*> >
 			(ioIDs[x], vector<const ZTValue*>()));
-		sExtractProps(iSort, iTuples[x], theArray.back().second);
+		spExtractProps(iSort, iTuples[x], theArray.back().second);
 		}
 
 	sort(theArray.begin(), theArray.end(), CompareTuples_t(ioTextCollators, iSort));
@@ -180,7 +180,7 @@ static void sSort(ZTextCollator ioTextCollators[], const vector<ZTBQuery::SortSp
 
 /*! Compare the first \a iOffset entries in \a iLeft and \a iRight
 using the strength/ascending values from \a iSort. */
-static int sComparePrefix(ZTextCollator* ioTextCollators, size_t iOffset,
+static int spComparePrefix(ZTextCollator* ioTextCollators, size_t iOffset,
 	const vector<ZTBQuery::SortSpec>& iSort,
 	const vector<const ZTValue*>& iLeft, const vector<const ZTValue*>& iRight)
 	{
@@ -188,7 +188,7 @@ static int sComparePrefix(ZTextCollator* ioTextCollators, size_t iOffset,
 	vector<const ZTValue*>::const_iterator rightIter = iRight.begin();
 	for (size_t index = 0; index < iOffset; ++index)
 		{
-		if (int compare = sTupleValueComp(ioTextCollators, iSort[index].fStrength,
+		if (int compare = spTupleValueComp(ioTextCollators, iSort[index].fStrength,
 			*(*leftIter++), *(*rightIter++)))
 			{
 			if (iSort[index].fAscending)
@@ -202,7 +202,7 @@ static int sComparePrefix(ZTextCollator* ioTextCollators, size_t iOffset,
 
 /*! Compare the entries in \a iLeft and \a iRight from \a iOffset to
 the end using the strength/ascending values from \a iSort. */
-static int sCompareSuffix(ZTextCollator* ioTextCollators, size_t iOffset,
+static int spCompareSuffix(ZTextCollator* ioTextCollators, size_t iOffset,
 	const vector<ZTBQuery::SortSpec>& iSort,
 	const vector<const ZTValue*>& iLeft, const vector<const ZTValue*>& iRight)
 	{
@@ -211,7 +211,7 @@ static int sCompareSuffix(ZTextCollator* ioTextCollators, size_t iOffset,
 	size_t count = iLeft.size();
 	for (size_t index = iOffset; index < count; ++index)
 		{
-		if (int compare = sTupleValueComp(ioTextCollators, iSort[index].fStrength,
+		if (int compare = spTupleValueComp(ioTextCollators, iSort[index].fStrength,
 			*(*leftIter++), *(*rightIter++)))
 			{
 			if (iSort[index].fAscending)
@@ -253,7 +253,7 @@ ComparePrefix_t::ComparePrefix_t(ZTextCollator* ioTextCollators, size_t iOffset,
 inline bool ComparePrefix_t::operator()(const vector<const ZTValue*>& iLeft,
 	const vector<const ZTValue*>& iRight) const
 	{
-	return -1 == sComparePrefix(fTextCollators, fOffset, fSort, iLeft, iRight);
+	return -1 == spComparePrefix(fTextCollators, fOffset, fSort, iLeft, iRight);
 	}
 } // anonymous namespace
 
@@ -263,7 +263,7 @@ inline bool ComparePrefix_t::operator()(const vector<const ZTValue*>& iLeft,
 their IDs. We effectively sort the tuples using iSort, and for entries which have
 the same values to the left of the property named iFirst (the sequence coming from
 iSort) we preserve only the smallest. */
-static void sFirst(ZTextCollator* ioTextCollators, const ZTName& iFirst,
+static void spFirst(ZTextCollator* ioTextCollators, const ZTName& iFirst,
 	const vector<ZTBQuery::SortSpec>& iSort,
 	const vector<ZTuple>& iTuples, vector<uint64>& ioIDs)
 	{
@@ -283,7 +283,7 @@ static void sFirst(ZTextCollator* ioTextCollators, const ZTName& iFirst,
 	for (size_t x = 0; x < ioIDs.size(); ++x)
 		{
 		vector<const ZTValue*> curProps;
-		sExtractProps(iSort, iTuples[x], curProps);
+		spExtractProps(iSort, iTuples[x], curProps);
 
 		// Find the entry in sortedProps which is greater than or
 		// equal to curProps, comparing as far as firstOffset.
@@ -298,12 +298,14 @@ static void sFirst(ZTextCollator* ioTextCollators, const ZTName& iFirst,
 			}
 		else
 			{
-			int compare = sComparePrefix(ioTextCollators, firstOffset, iSort, curProps, *foundIter);
+			int compare = spComparePrefix(
+				ioTextCollators, firstOffset, iSort, curProps, *foundIter);
+
 			if (compare == 0)
 				{
 				// Their prefix is the same. We now need to compare the suffix and
 				// keep whichever is "less".
-				if (sCompareSuffix(ioTextCollators, firstOffset, iSort, curProps, *foundIter) < 0)
+				if (spCompareSuffix(ioTextCollators, firstOffset, iSort, curProps, *foundIter) < 0)
 					{
 					sortedIDs[foundIter - sortedProps.begin()] = ioIDs[x];
 					*foundIter = curProps;
@@ -324,9 +326,9 @@ static void sFirst(ZTextCollator* ioTextCollators, const ZTName& iFirst,
 
 // =================================================================================================
 
-/*! Does the same job as sFirst, except that it then removes all
+/*! Does the same job as spFirst, except that it then removes all
 the resulting tuples that do not match iFilter.*/
-static void sFirst_Filter(ZTextCollator* ioTextCollators, const ZTBSpec& iFilter,
+static void spFirst_Filter(ZTextCollator* ioTextCollators, const ZTBSpec& iFilter,
 	const ZTName& iFirst, const vector<ZTBQuery::SortSpec>& iSort,
 	const vector<ZTuple>& iTuples, vector<uint64>& ioIDs)
 	{
@@ -349,7 +351,7 @@ static void sFirst_Filter(ZTextCollator* ioTextCollators, const ZTBSpec& iFilter
 		uint64 curID = ioIDs[x];
 		vector<const ZTValue*> curProps;
 		ZTuple curTuple = iTuples[x];
-		sExtractProps(iSort, curTuple, curProps);
+		spExtractProps(iSort, curTuple, curProps);
 
 		// Find the entry in sortedProps which is greater than or equal
 		// to curProps, comparing as far as firstOffset.
@@ -365,12 +367,14 @@ static void sFirst_Filter(ZTextCollator* ioTextCollators, const ZTBSpec& iFilter
 		else
 			{
 			size_t foundOffset = foundIter - sortedProps.begin();
-			int compare = sComparePrefix(ioTextCollators, firstOffset, iSort, curProps, *foundIter);
+			int compare = spComparePrefix(
+				ioTextCollators, firstOffset, iSort, curProps, *foundIter);
+
 			if (compare == 0)
 				{
 				// Their prefix is the same. We now need to compare the suffix and
 				// keep whichever is "less".
-				if (sCompareSuffix(ioTextCollators, firstOffset, iSort, curProps, *foundIter) < 0)
+				if (spCompareSuffix(ioTextCollators, firstOffset, iSort, curProps, *foundIter) < 0)
 					{
 					sortedIDs[foundOffset] = curID;
 					sortedTuples[foundOffset] = curTuple;
@@ -388,7 +392,7 @@ static void sFirst_Filter(ZTextCollator* ioTextCollators, const ZTBSpec& iFilter
 			}
 		}
 
-	sFilter(iFilter, sortedTuples, sortedIDs);
+	spFilter(iFilter, sortedTuples, sortedIDs);
 	ioIDs.swap(sortedIDs);
 	}
 
@@ -448,7 +452,7 @@ void ZTupleQuisitioner::Query_Unordered(
 			vector<uint64> destIDVector = theNode_ID_Constant->GetIDs();
 			vector<ZTuple> destTuples(destIDVector.size(), ZTuple());
 			this->FetchTuples(destIDVector.size(), &destIDVector[0], &destTuples[0]);
-			sFilter(*iFilter, destTuples, destIDVector);
+			spFilter(*iFilter, destTuples, destIDVector);
 			ioIDs.insert(destIDVector.begin(), destIDVector.end());
 			}
 		else
@@ -565,7 +569,7 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode,
 			vector<uint64> destIDVector = theNode_ID_Constant->GetIDs();
 			vector<ZTuple> destTuples(destIDVector.size(), ZTuple());
 			this->FetchTuples(destIDVector.size(), &destIDVector[0], &destTuples[0]);
-			sFilter(*iFilter, destTuples, destIDVector);
+			spFilter(*iFilter, destTuples, destIDVector);
 			ioIDs.insert(ioIDs.end(), destIDVector.begin(), destIDVector.end());
 			}
 		else
@@ -596,7 +600,7 @@ void ZTupleQuisitioner::Query(const ZRef<ZTBQueryNode>& iNode,
 			vector<uint64> destIDVector(destIDs.begin(), destIDs.end());
 			vector<ZTuple> destTuples(destIDVector.size(), ZTuple());
 			this->FetchTuples(destIDVector.size(), &destIDVector[0], &destTuples[0]);
-			sFilter(*iFilter, destTuples, destIDVector);
+			spFilter(*iFilter, destTuples, destIDVector);
 			ioIDs.insert(ioIDs.end(), destIDVector.begin(), destIDVector.end());
 			}
 		else
@@ -713,7 +717,7 @@ void ZTupleQuisitioner::Query_Combo_Sorted(const vector<ZTBQuery::SortSpec>& iSo
 		vector<ZTuple> tuples(theIDs.size(), ZTuple());
 		this->FetchTuples(theIDs.size(), &theIDs[0], &tuples[0]);
 
-		sSort(fTextCollators, iSort, tuples, theIDs);
+		spSort(fTextCollators, iSort, tuples, theIDs);
 
 		ioIDs.insert(ioIDs.end(), theIDs.begin(), theIDs.end());
 		}
@@ -754,9 +758,9 @@ void ZTupleQuisitioner::Query_Combo_First(const ZTName& iFirst,
 	this->FetchTuples(results.size(), &results[0], &tuples[0]);
 
 	if (iFilter)
-		sFirst_Filter(fTextCollators, *iFilter, iFirst, iSort, tuples, results);
+		spFirst_Filter(fTextCollators, *iFilter, iFirst, iSort, tuples, results);
 	else
-		sFirst(fTextCollators, iFirst, iSort, tuples, results);
+		spFirst(fTextCollators, iFirst, iSort, tuples, results);
 
 	ioIDs.insert(ioIDs.end(), results.begin(), results.end());
 	}

@@ -69,9 +69,9 @@ EXPORT_DEF(int) main(
 
 	#if __MACH__ && ZCONFIG(Processor, PPC)
 
-		static vector<char> sGlue_NPNF;
-		static vector<char> sGlue_PluginFuncs;
-		static vector<char> sGlue_Shutdown;
+		static vector<char> spGlue_NPNF;
+		static vector<char> spGlue_PluginFuncs;
+		static vector<char> spGlue_Shutdown;
 		// We're MachO on PPC, but main has been called. We have to assume that
 		// the caller is expecting CFM function pointers.
 
@@ -85,7 +85,7 @@ EXPORT_DEF(int) main(
 		ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
 			&localNPNF.geturl,
 			(localNPNF.size - offsetof(NPNetscapeFuncs, geturl)) / sizeof(void*),
-			sGlue_NPNF);
+			spGlue_NPNF);
 
 		// And pass the munged local structure to NP_Initialize.
 		result = NP_Initialize(&localNPNF);
@@ -97,10 +97,10 @@ EXPORT_DEF(int) main(
 		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(
 			&oPluginFuncs->newp,
 			(oPluginFuncs->size - offsetof(NPPluginFuncs, newp)) / sizeof(void*),
-			sGlue_PluginFuncs);
+			spGlue_PluginFuncs);
 
 		*oShutdownFunc = (NPP_ShutdownProcPtr)NP_Shutdown; 	
-		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(&oShutdownFunc, 1, sGlue_Shutdown);
+		ZUtil_MacOSX::sCreateThunks_CFMCalledByMachO(&oShutdownFunc, 1, spGlue_Shutdown);
 		
 	#else
 

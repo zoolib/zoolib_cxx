@@ -35,7 +35,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * Static functions
 
-static void sWrite_Comparator(const ZStrimW& s, const ZTBSpec::Comparator& iComparator)
+static void spWrite_Comparator(const ZStrimW& s, const ZTBSpec::Comparator& iComparator)
 	{
 	switch (iComparator.fRel)
 		{
@@ -68,18 +68,18 @@ static void sWrite_Comparator(const ZStrimW& s, const ZTBSpec::Comparator& iComp
 		s.Writef("%d", iComparator.fStrength);
 	}
 
-static void sWrite_Criterion(const ZStrimW& iStrimW, const ZTBSpec::Criterion& iCriterion)
+static void spWrite_Criterion(const ZStrimW& iStrimW, const ZTBSpec::Criterion& iCriterion)
 	{
 	ZYad_ZooLibStrim::sWrite_PropName(iCriterion.GetPropName(), iStrimW);
 
 	iStrimW << " ";
 
-	sWrite_Comparator(iStrimW, iCriterion.GetComparator());
+	spWrite_Comparator(iStrimW, iCriterion.GetComparator());
 
 	iStrimW << " " << iCriterion.GetTValue();
 	}
 
-static bool sRead_Rel(const ZStrimU& iStrimU, ZTBSpec::ERel& oRel)
+static bool spRead_Rel(const ZStrimU& iStrimU, ZTBSpec::ERel& oRel)
 	{
 	using namespace ZUtil_Strim;
 
@@ -142,9 +142,9 @@ static bool sRead_Rel(const ZStrimU& iStrimU, ZTBSpec::ERel& oRel)
 	return false;
 	}
 
-static bool sRead_Comparator(const ZStrimU& iStrimU, ZTBSpec::Comparator& oComparator)
+static bool spRead_Comparator(const ZStrimU& iStrimU, ZTBSpec::Comparator& oComparator)
 	{
-	if (!sRead_Rel(iStrimU, oComparator.fRel))
+	if (!spRead_Rel(iStrimU, oComparator.fRel))
 		return false;
 
 	int64 theInteger;
@@ -156,9 +156,9 @@ static bool sRead_Comparator(const ZStrimU& iStrimU, ZTBSpec::Comparator& oCompa
 	return true;
 	}
 
-static bool sRead_Union(const ZStrimU& iStrimU, ZTBSpec& oSpec);
+static bool spRead_Union(const ZStrimU& iStrimU, ZTBSpec& oSpec);
 
-static bool sRead_Criterion(const ZStrimU& iStrimU, ZTBSpec& oSpec)
+static bool spRead_Criterion(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 	{
 	using namespace ZUtil_Strim;
 
@@ -166,7 +166,7 @@ static bool sRead_Criterion(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 
 	if (sTryRead_CP(iStrimU, '('))
 		{
-		if (!sRead_Union(iStrimU, oSpec))
+		if (!spRead_Union(iStrimU, oSpec))
 			throw ParseException("Expected an expression after '('");
 
 		sSkip_WSAndCPlusPlusComments(iStrimU);
@@ -183,8 +183,11 @@ static bool sRead_Criterion(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 			{
 			if (!sTryRead_EscapedString(iStrimU, '\'', thePropertyName))
 				{				
-				if (!ZYad_ZooLibStrim::sRead_Identifier(iStrimU, &thePropertyNameLC, &thePropertyName))
+				if (!ZYad_ZooLibStrim::sRead_Identifier(
+					iStrimU, &thePropertyNameLC, &thePropertyName))
+					{
 					return false;
+					}
 				wasIdentifier = true;
 				}
 			}
@@ -192,7 +195,7 @@ static bool sRead_Criterion(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 		sSkip_WSAndCPlusPlusComments(iStrimU);
 
 		ZTBSpec::Comparator theComparator;
-		if (!sRead_Comparator(iStrimU, theComparator))
+		if (!spRead_Comparator(iStrimU, theComparator))
 			{
 			if (wasIdentifier)
 				{
@@ -221,7 +224,7 @@ static bool sRead_Criterion(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 	return true;
 	}
 
-static bool sRead_Intersection(const ZStrimU& iStrimU, ZTBSpec& oSpec)
+static bool spRead_Intersection(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 	{
 	using namespace ZUtil_Strim;
 
@@ -230,7 +233,7 @@ static bool sRead_Intersection(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 	for (;;)
 		{
 		ZTBSpec theSpec;
-		if (!sRead_Criterion(iStrimU, theSpec))
+		if (!spRead_Criterion(iStrimU, theSpec))
 			break;
 
 		gotAny = true;
@@ -244,7 +247,7 @@ static bool sRead_Intersection(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 	return gotAny;
 	}
 
-static bool sRead_Union(const ZStrimU& iStrimU, ZTBSpec& oSpec)
+static bool spRead_Union(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 	{
 	using namespace ZUtil_Strim;
 
@@ -253,7 +256,7 @@ static bool sRead_Union(const ZStrimU& iStrimU, ZTBSpec& oSpec)
 	for (;;)
 		{
 		ZTBSpec theSpec;
-		if (!sRead_Intersection(iStrimU, theSpec))
+		if (!spRead_Intersection(iStrimU, theSpec))
 			break;
 
 		gotAny = true;
@@ -301,7 +304,7 @@ void sToStrim(const ZTBSpec& iTBSpec, const ZStrimW& iStrimW)
 				}
 			else if ((*iterU).size() == 1)
 				{
-				sWrite_Criterion(iStrimW, *(*iterU).begin());
+				spWrite_Criterion(iStrimW, *(*iterU).begin());
 				}
 			else
 				{
@@ -312,7 +315,7 @@ void sToStrim(const ZTBSpec& iTBSpec, const ZStrimW& iStrimW)
 					if (iterS != (*iterU).begin())
 						iStrimW << " & ";
 
-					sWrite_Criterion(iStrimW, *iterS);
+					spWrite_Criterion(iStrimW, *iterS);
 					}
 				if (theTBU.size() > 1)
 					iStrimW << ")";
@@ -360,7 +363,7 @@ tvalue = { the syntax used by ZUtil_Strim_Tuple }
 */
 bool sFromStrim(const ZStrimU& iStrimU, ZTBSpec& oTBSpec)
 	{
-	return sRead_Union(iStrimU, oTBSpec);
+	return spRead_Union(iStrimU, oTBSpec);
 	}
 
 } // namespace ZUtil_Strim_TBSpec

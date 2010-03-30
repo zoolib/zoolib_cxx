@@ -222,8 +222,6 @@ protected:
 	ZTBQueryNode();
 
 public:
-	static bool sCheckAccessEnabled() { return false; }
-
 	virtual ~ZTBQueryNode();
 
 	int Compare(const ZRef<ZTBQueryNode>& iOther);

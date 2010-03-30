@@ -173,10 +173,10 @@ void OutputDebugString(const char *restrict fmt, ...) {
 #	define __asm asm
 #endif
 
-// sIsDebuggerPresent was taken from Whisper 1.3, which was adpated
+// spIsDebuggerPresent was taken from Whisper 1.3, which was adpated
 // from code in Windows Developer Journal, March 1999.
 
-static bool sIsDebuggerPresent()
+static bool spIsDebuggerPresent()
 	{
 	#if ZCONFIG(Processor, x86) && !ZCONFIG(Compiler, GCC)
 
@@ -236,7 +236,7 @@ static void spHandleDebug_Win(const Params_t& iParams, va_list iArgs)
 		::vsnprintf(theBuf + theLength, sizeof(theBuf) - theLength, iParams.fUserMessage, iArgs);
 	if (iParams.fStop)
 		{
-		if (sIsDebuggerPresent())
+		if (spIsDebuggerPresent())
 			{
 			::OutputDebugStringA(theBuf);
 			#if ZCONFIG(Processor, x86) && !ZCONFIG(Compiler, GCC)

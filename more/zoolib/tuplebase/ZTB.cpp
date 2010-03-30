@@ -402,7 +402,7 @@ static void spCallback_GetTuple(
 	static_cast<Callback_GetTuple_t*>(iRefcon)->fSem.Signal();
 	}
 
-static ZTuple sGetTuple(ZTBRepTransaction* iTBRepTransaction, uint64 iID)
+static ZTuple spGetTuple(ZTBRepTransaction* iTBRepTransaction, uint64 iID)
 	{
 	Callback_GetTuple_t theStruct;
 	iTBRepTransaction->GetTuples(1, &iID, spCallback_GetTuple, &theStruct);
@@ -423,7 +423,7 @@ static void spCallback_Count(void* iRefcon, size_t iResult)
 	static_cast<Callback_Count_t*>(iRefcon)->fSem.Signal();
 	}
 
-static size_t sCount(ZTBRepTransaction* iTBRepTransaction, const ZTBQuery& iQuery)
+static size_t spCount(ZTBRepTransaction* iTBRepTransaction, const ZTBQuery& iQuery)
 	{
 	Callback_Count_t theStruct;
 	iTBRepTransaction->Count(iQuery, spCallback_Count, &theStruct);
@@ -493,13 +493,13 @@ void ZTB::Erase(const ZTxn& iTxn, uint64 iID)
 ZTuple ZTB::Get(const ZTxn& iTxn, uint64 iID)
 	{
 	ZTBRepTransaction* theTBRepTransaction = fTBRep->FindOrCreateTransaction(iTxn);
-	return sGetTuple(theTBRepTransaction, iID);
+	return spGetTuple(theTBRepTransaction, iID);
 	}
 
 size_t ZTB::Count(const ZTxn& iTxn, const ZTBQuery& iQuery)
 	{
 	ZTBRepTransaction* theTBRepTransaction = fTBRep->FindOrCreateTransaction(iTxn);
-	return sCount(theTBRepTransaction, iQuery);
+	return spCount(theTBRepTransaction, iQuery);
 	}
 
 ZRef<ZTBRep> ZTB::GetTBRep() const
@@ -558,12 +558,12 @@ void ZTBTxn::Erase(uint64 iID) const
 
 ZTuple ZTBTxn::Get(uint64 iID) const
 	{
-	return sGetTuple(fTBRepTransaction, iID);
+	return spGetTuple(fTBRepTransaction, iID);
 	}
 
 size_t ZTBTxn::Count(const ZTBQuery& iQuery) const
 	{
-	return sCount(fTBRepTransaction, iQuery);
+	return spCount(fTBRepTransaction, iQuery);
 	}
 
 ZTBRepTransaction* ZTBTxn::GetTBRepTransaction() const
@@ -576,8 +576,6 @@ ZTBRepTransaction* ZTBTxn::GetTBRepTransaction() const
 class ZTBIterRep : public ZRefCounted
 	{
 public:
-	static inline bool sCheckAccessEnabled() { return false; }
-
 	ZTBIterRep(ZTBRepTransaction* iTransaction, const ZTBQuery& iQuery);
 	virtual ~ZTBIterRep();
 
@@ -697,7 +695,7 @@ size_t ZTBIter::AdvanceAll()
 ZTuple ZTBIter::Get() const
 	{
 	if (fRep && fIndex < fRep->fIDs.size())
-		return sGetTuple(fRep->fTransaction, fRep->fIDs[fIndex]);
+		return spGetTuple(fRep->fTransaction, fRep->fIDs[fIndex]);
 	return ZTuple();
 	}
 
@@ -715,7 +713,7 @@ void ZTBIter::Get(uint64* oID, ZTuple* oTuple) const
 		if (oID)
 			*oID = fRep->fIDs[fIndex];
 		if (oTuple)
-			*oTuple = sGetTuple(fRep->fTransaction, fRep->fIDs[fIndex]);
+			*oTuple = spGetTuple(fRep->fTransaction, fRep->fIDs[fIndex]);
 		}
 	else
 		{

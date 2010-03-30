@@ -400,7 +400,7 @@ public:
 		bool iBigEndian, const ZDCPixmapNS::PixelDesc& iPixelDesc) = 0;
 	
 private:
-	static ZDCCanvasFactory* sHead;
+	static ZDCCanvasFactory* spHead;
 	ZDCCanvasFactory* fNext;
 	};
 

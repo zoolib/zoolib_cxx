@@ -49,7 +49,7 @@ static void spWriteZeroes(const ZStreamW& iStream, size_t iCount)
 		}
 	}
 
-static size_t sAligned(size_t iCount, size_t iMultiple)
+static size_t spAligned(size_t iCount, size_t iMultiple)
 	{ return (iMultiple - (iCount % iMultiple)) % iMultiple; }
 
 // =================================================================================================
@@ -109,7 +109,7 @@ void ZFileFormat_IFF::Writer::End(const ZStreamWPos& iStream, uint32 iChunkType)
 	iStream.SetPosition(position);
 
 	// Write out any padding necessary.
-	spWriteZeroes(iStream, sAligned(chunkSize, fPadMultiple));
+	spWriteZeroes(iStream, spAligned(chunkSize, fPadMultiple));
 	}
 
 void ZFileFormat_IFF::Writer::End(const ZStreamWPos& iStream, const char* iChunkType)
@@ -218,7 +218,7 @@ void ZFileFormat_IFF::StreamR_Chunk::pInit(uint32& oChunkType, bool iSkipOnDestr
 		else
 			fCountRemaining = fStream.ReadUInt32LE();
 
-		fPadCount = sAligned(fCountRemaining, iPadMultiple);
+		fPadCount = spAligned(fCountRemaining, iPadMultiple);
 		}
 	catch (...)
 		{
@@ -258,7 +258,7 @@ ZFileFormat_IFF::StreamRPos_Chunk::~StreamRPos_Chunk()
 		{
 		try
 			{
-			fStream.SetPosition(fStart + sAligned(fSize, fPadMultiple));
+			fStream.SetPosition(fStart + spAligned(fSize, fPadMultiple));
 			}
 		catch (...)
 			{}
@@ -366,7 +366,7 @@ ZFileFormat_IFF::StreamWPos_Chunk::~StreamWPos_Chunk()
 		fStream.WriteUInt32(size);
 	else
 		fStream.WriteUInt32LE(size);
-	fStream.SetPosition(position + sAligned(size, fPadMultiple));
+	fStream.SetPosition(position + spAligned(size, fPadMultiple));
 	}
 
 void ZFileFormat_IFF::StreamWPos_Chunk::Imp_Write(

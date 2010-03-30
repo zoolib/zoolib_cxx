@@ -174,7 +174,7 @@ int ZTextCollatorRep_ICU::Compare(const UTF16* iLeft, size_t iLeftLength,
 	return ::ucol_strcoll(fCollator, iLeft, iLeftLength, iRight, iRightLength);
 	}
 
-static bool sContains(UCollator* iCollator, const UTF16* iPattern, size_t iPatternLength,
+static bool spContains(UCollator* iCollator, const UTF16* iPattern, size_t iPatternLength,
 	const UTF16* iTarget, size_t iTargetLength)
 	{
 	UErrorCode status = U_ZERO_ERROR;
@@ -202,7 +202,7 @@ bool ZTextCollatorRep_ICU::Contains(const string16& iPattern, const string16& iT
 	if (iTarget.empty())
 		return false;
 
-	return sContains(fCollator, iPattern.data(), iPattern.size(), iTarget.data(), iTarget.size());
+	return spContains(fCollator, iPattern.data(), iPattern.size(), iTarget.data(), iTarget.size());
 	}
 
 bool ZTextCollatorRep_ICU::Contains(const UTF16* iPattern, size_t iPatternLength,
@@ -214,7 +214,7 @@ bool ZTextCollatorRep_ICU::Contains(const UTF16* iPattern, size_t iPatternLength
 	if (!iTargetLength)
 		return false;
 
-	return sContains(fCollator, iPattern, iPatternLength, iTarget, iTargetLength);
+	return spContains(fCollator, iPattern, iPatternLength, iTarget, iTargetLength);
 	}
 
 NAMESPACE_ZOOLIB_END

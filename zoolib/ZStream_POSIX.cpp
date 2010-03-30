@@ -126,7 +126,7 @@ static uint64 spGetSize(FILE* iFILE)
 	}
 
 // This one's difficult to support
-//static void sSetSize(FILE* iFILE, uint64 iSize)
+//static void spSetSize(FILE* iFILE, uint64 iSize)
 
 NAMESPACE_ZOOLIB_BEGIN
 

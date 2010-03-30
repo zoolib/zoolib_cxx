@@ -79,8 +79,8 @@ private:
 	bool pGetTuple(uint64 iID, ZTuple& oTuple);
 	void pFlush();
 
-	static int sBTree_Compare(const DBT* iLeft, const DBT* iRight);
-	static size_t sBTree_Prefix(const DBT* iLeft, const DBT* iRight);
+	static int spBTree_Compare(const DBT* iLeft, const DBT* iRight);
+	static size_t spBTree_Prefix(const DBT* iLeft, const DBT* iRight);
 
 	ZMutex fMutex;
 	ZMutex fMutex_ID;

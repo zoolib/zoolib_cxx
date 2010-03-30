@@ -42,7 +42,7 @@ using std::vector;
 
 static const string sIDName = "$ID$";
 
-static Spec sAsTSpec(const ZTBSpec& iTBSpec)
+static Spec spAsTSpec(const ZTBSpec& iTBSpec)
 	{
 	const ZTBSpec::CriterionUnion theCU = iTBSpec.GetCriterionUnion();
 	bool uisfirst = true;
@@ -113,7 +113,7 @@ sConvert returns a query whose RelHead is [$ID$], unless iName is non-null in wh
 case the RelHead is [*iName]. The tuples returned have been filtered by iFilter, if any.
 */
 
-static Query sConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFilter, bool iVerbose)
+static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFilter, bool iVerbose)
 	{
 	if (ZRefDynamicCast<ZTBQueryNode_All>(iNode))
 		{
@@ -163,7 +163,7 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFilt
 			{
 			const ZTBQueryNode_Combo::Intersection& theIntersection = *i;
 
-			Spec theFilter = sAsTSpec(theIntersection.fFilter);
+			Spec theFilter = spAsTSpec(theIntersection.fFilter);
 
 			if (iFilter)
 				theFilter &= *iFilter;
@@ -174,7 +174,7 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFilt
 				iterNodes = theIntersection.fNodes.begin(), theEnd = theIntersection.fNodes.end();
 				iterNodes != theEnd; ++iterNodes)
 				{
-				Query innermostQ = sConvert(*iterNodes, iName, &theFilter, iVerbose);
+				Query innermostQ = spConvert(*iterNodes, iName, &theFilter, iVerbose);
 				if (isFirst)
 					{
 					innerQ = innermostQ;
@@ -255,7 +255,7 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFilt
 		const string sourcePropName = theNode_ID_FromSource->GetSourcePropName();
 
 		// Get the source tuples' sourcePropName
-		Query theQ = sConvert(sourceNode, &sourcePropName, nullptr, iVerbose);
+		Query theQ = spConvert(sourceNode, &sourcePropName, nullptr, iVerbose);
 
 		// Rename it to sIDName.
 		theQ = sRename(sourcePropName, sIDName, theQ);
@@ -307,7 +307,7 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFilt
 		const string thePropName = theNode_Property->GetPropName();
 
 		// Get the source tuples' IDs.
-		Query theQ = sConvert(sourceNode, nullptr, nullptr, iVerbose);
+		Query theQ = spConvert(sourceNode, nullptr, nullptr, iVerbose);
 
 		// Renamed to thePropName;
 		theQ = sRename(sIDName, thePropName, theQ);
@@ -368,7 +368,7 @@ static Query sConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFilt
 
 Query sConvert(const ZTBQuery& iTBQuery, bool iVerbose)
 	{
-	return sConvert(iTBQuery.GetNode(), nullptr, nullptr, iVerbose);
+	return spConvert(iTBQuery.GetNode(), nullptr, nullptr, iVerbose);
 	}
 
 } // namespace ZUtil_TQLConvert

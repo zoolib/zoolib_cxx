@@ -41,7 +41,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * Utility functions
 
-static string sStringFromRel(ZTBSpec::ERel iRel)
+static string spStringFromRel(ZTBSpec::ERel iRel)
 	{
 	switch (iRel)
 		{
@@ -63,7 +63,7 @@ static string sStringFromRel(ZTBSpec::ERel iRel)
 	return "???";
 	}
 
-static ZTBSpec::ERel sRelFromString(const std::string& iString)
+static ZTBSpec::ERel spRelFromString(const std::string& iString)
 	{
 	if (iString == "<") return ZTBSpec::eRel_Less;
 	else if (iString == "<=") return ZTBSpec::eRel_LessEqual;
@@ -81,7 +81,7 @@ static ZTBSpec::ERel sRelFromString(const std::string& iString)
 	return ZTBSpec::eRel_Invalid;
 	}
 
-static void sCriterionUnionFromTuple(
+static void spCriterionUnionFromTuple(
 	const ZTuple& iTuple, ZTBSpec::CriterionUnion& ioCriterionUnion)
 	{
 	const vector<ZTValue>& outerVector = iTuple.Get("Criteria").GetSeq().GetVector();
@@ -102,7 +102,7 @@ static void sCriterionUnionFromTuple(
 		}
 	}
 
-static ZTuple sCriterionUnionToTuple(const ZTBSpec::CriterionUnion& iCriterionUnion)
+static ZTuple spCriterionUnionToTuple(const ZTBSpec::CriterionUnion& iCriterionUnion)
 	{
 	ZTuple result;
 
@@ -128,39 +128,39 @@ static ZTuple sCriterionUnionToTuple(const ZTBSpec::CriterionUnion& iCriterionUn
 	return result;
 	}
 
-static inline void sWriteCount(const ZStreamW& iStreamW, uint32 iCount)
+static inline void spWriteCount(const ZStreamW& iStreamW, uint32 iCount)
 	{ iStreamW.WriteCount(iCount); }
 
-static inline uint32 sReadCount(const ZStreamR& iStreamR)
+static inline uint32 spReadCount(const ZStreamR& iStreamR)
 	{ return iStreamR.ReadCount(); }
 
-static void sReadString(const ZStreamR& iStreamR, string& oString)
+static void spReadString(const ZStreamR& iStreamR, string& oString)
 	{
-	uint32 theCount = sReadCount(iStreamR);
+	uint32 theCount = spReadCount(iStreamR);
 	oString.resize(theCount);
 	if (theCount)
 		iStreamR.Read(const_cast<char*>(oString.data()), theCount);
 	}
 
-static void sWriteString(const ZStreamW& iStreamW, const string& iString)
+static void spWriteString(const ZStreamW& iStreamW, const string& iString)
 	{
 	size_t theSize = iString.size();
-	sWriteCount(iStreamW, theSize);
+	spWriteCount(iStreamW, theSize);
 	if (theSize)
 		iStreamW.Write(iString.data(), theSize);
 	}
 
-static void sCriterionUnionFromStream(const ZStreamR& iStreamR,
+static void spCriterionUnionFromStream(const ZStreamR& iStreamR,
 	ZTBSpec::CriterionUnion& ioCriterionUnion)
 	{
-	if (uint32 outerCount = sReadCount(iStreamR))
+	if (uint32 outerCount = spReadCount(iStreamR))
 		{
 		ioCriterionUnion.reserve(outerCount);
 		ioCriterionUnion.resize(outerCount);
 		for (ZTBSpec::CriterionUnion::iterator outer = ioCriterionUnion.begin();
 			outer != ioCriterionUnion.end(); ++outer)
 			{
-			if (uint32 innerCount = sReadCount(iStreamR))
+			if (uint32 innerCount = spReadCount(iStreamR))
 				{
 				(*outer).reserve(innerCount);
 				while (innerCount--)
@@ -170,14 +170,14 @@ static void sCriterionUnionFromStream(const ZStreamR& iStreamR,
 		}
 	}
 
-static void sCriterionUnionToStream(const ZStreamW& iStreamW,
+static void spCriterionUnionToStream(const ZStreamW& iStreamW,
 	const ZTBSpec::CriterionUnion& iCriterionUnion)
 	{
-	sWriteCount(iStreamW, iCriterionUnion.size());
+	spWriteCount(iStreamW, iCriterionUnion.size());
 	for (ZTBSpec::CriterionUnion::const_iterator outer = iCriterionUnion.begin();
 		outer != iCriterionUnion.end(); ++outer)
 		{
-		sWriteCount(iStreamW, (*outer).size());
+		spWriteCount(iStreamW, (*outer).size());
 		for (ZTBSpec::CriterionSect::const_iterator inner = (*outer).begin();
 			inner != (*outer).end(); ++inner)
 			{
@@ -188,7 +188,7 @@ static void sCriterionUnionToStream(const ZStreamW& iStreamW,
 
 /** Remove tautologies, collapse overlapping ranges. If there are any contradictions return
 false. If ioCrit is a tautology empty ioCrit and return true. Otherwise return true. */
-static bool sSimplify(ZTBSpec::CriterionSect& ioCrit)
+static bool spSimplify(ZTBSpec::CriterionSect& ioCrit)
 	{
 	// AG2005-10-02. For the moment I'm disabling the simplification of criteria. The
 	// precise technique I'm using causes a lot of allocations/deallocations and
@@ -454,13 +454,13 @@ static bool sSimplify(ZTBSpec::CriterionSect& ioCrit)
 #endif
 	}
 
-static void sSimplify(ZTBSpec::CriterionUnion& ioCritList)
+static void spSimplify(ZTBSpec::CriterionUnion& ioCritList)
 	{
 #if 0
 	for (vector<vector<ZTBSpec::Criterion> >::iterator outer = ioCritVector.begin();
 		outer != ioCritVector.end(); /*no inc*/)
 		{
-		if (!sSimplify(*outer))
+		if (!spSimplify(*outer))
 			{
 			// *outer represents a contradiction, so drop it.
 			outer = ioCritVector.erase(outer);
@@ -536,7 +536,7 @@ ZTBSpec::Criterion::Rep::Rep(const ZStreamR& iStreamR)
 
 ZTBSpec::Criterion::Rep::Rep(const ZTuple& iTuple)
 :	fPropName(iTuple.GetString("PropName")),
-	fComparator(sRelFromString(iTuple.GetString("Rel")), iTuple.GetInt32("Strength")),
+	fComparator(spRelFromString(iTuple.GetString("Rel")), iTuple.GetInt32("Strength")),
 	fTValue(iTuple.Get("Value"))
 	{}
 
@@ -575,7 +575,7 @@ ZTuple ZTBSpec::Criterion::Rep::AsTuple() const
 	{
 	ZTuple result;
 	result.SetString("PropName", fPropName.AsString());
-	result.SetString("Rel", sStringFromRel(fComparator.fRel));
+	result.SetString("Rel", spStringFromRel(fComparator.fRel));
 	if (fComparator.fStrength)
 		result.SetInt32("Strength", fComparator.fStrength);
 	if (fTValue)
@@ -825,8 +825,6 @@ int ZTBSpec::Criterion::Compare(const Criterion& iOther) const
 class ZTBSpec::Rep : public ZRefCounted
 	{
 public:
-	static bool sCheckAccessEnabled() { return false; }
-
 	Rep();
 	Rep(const Rep& iOther);
 	Rep(bool iAny);
@@ -935,8 +933,8 @@ Some useful identities:
 	- someSpec | ZTBSpec::sNone() == someSpec
 */
 
-static const ZTBSpec::CriterionUnion sCriterionUnion_Empty;
-static const ZRef<ZTBSpec::Rep> sRepAny = new ZTBSpec::Rep(true);
+static const ZTBSpec::CriterionUnion spCriterionUnion_Empty;
+static const ZRef<ZTBSpec::Rep> spRepAny = new ZTBSpec::Rep(true);
 
 ZTBSpec::ZTBSpec()
 	{}
@@ -948,7 +946,7 @@ ZTBSpec::ZTBSpec(const ZTBSpec& iOther)
 ZTBSpec::ZTBSpec(bool iAny)
 	{
 	if (iAny)
-		fRep = sRepAny;
+		fRep = spRepAny;
 	}
 
 ZTBSpec& ZTBSpec::operator=(const ZTBSpec& iOther)
@@ -1011,31 +1009,31 @@ ZTBSpec::ZTBSpec(const CriterionSect& iCriterionSect)
 ZTBSpec::ZTBSpec(const ZTuple& iTuple)
 :	fRep(new Rep)
 	{
-	sCriterionUnionFromTuple(iTuple, fRep->fCriterionUnion);
-	sSimplify(fRep->fCriterionUnion);
+	spCriterionUnionFromTuple(iTuple, fRep->fCriterionUnion);
+	spSimplify(fRep->fCriterionUnion);
 	}
 
 ZTBSpec::ZTBSpec(const ZStreamR& iStreamR)
 :	fRep(new Rep)
 	{
-	sCriterionUnionFromStream(iStreamR, fRep->fCriterionUnion);
-	sSimplify(fRep->fCriterionUnion);
+	spCriterionUnionFromStream(iStreamR, fRep->fCriterionUnion);
+	spSimplify(fRep->fCriterionUnion);
 	}
 
 ZTuple ZTBSpec::AsTuple() const
 	{
 	if (fRep)
-		return sCriterionUnionToTuple(fRep->fCriterionUnion);
+		return spCriterionUnionToTuple(fRep->fCriterionUnion);
 	else
-		return sCriterionUnionToTuple(sCriterionUnion_Empty);
+		return spCriterionUnionToTuple(spCriterionUnion_Empty);
 	}
 
 void ZTBSpec::ToStream(const ZStreamW& iStreamW) const
 	{
 	if (fRep)
-		sCriterionUnionToStream(iStreamW, fRep->fCriterionUnion);
+		spCriterionUnionToStream(iStreamW, fRep->fCriterionUnion);
 	else
-		sCriterionUnionToStream(iStreamW, sCriterionUnion_Empty);
+		spCriterionUnionToStream(iStreamW, spCriterionUnion_Empty);
 	}
 
 int ZTBSpec::Compare(const ZTBSpec& iOther) const
@@ -1061,13 +1059,13 @@ int ZTBSpec::Compare(const ZTBSpec& iOther) const
 		}
 	}
 
-static inline void sReserve(vector<ZTBSpec::Criterion>& ioVector, size_t iSize)
+static inline void spReserve(vector<ZTBSpec::Criterion>& ioVector, size_t iSize)
 	{ ioVector.reserve(iSize); }
 
-static inline void sReserve(list<ZTBSpec::Criterion>& ioList, size_t iSize)
+static inline void spReserve(list<ZTBSpec::Criterion>& ioList, size_t iSize)
 	{}
 
-static void sCrossProduct(const ZTBSpec::CriterionUnion& iSourceA,
+static void spCrossProduct(const ZTBSpec::CriterionUnion& iSourceA,
 	const ZTBSpec::CriterionUnion& iSourceB,
 	ZTBSpec::CriterionUnion& oDest)
 	{
@@ -1079,7 +1077,7 @@ static void sCrossProduct(const ZTBSpec::CriterionUnion& iSourceA,
 			{
 			oDest.push_back(*iterSourceA);
 			ZTBSpec::CriterionSect& temp = oDest.back();
-			sReserve(temp, temp.size() + (*iterSourceB).size());
+			spReserve(temp, temp.size() + (*iterSourceB).size());
 			temp.insert(temp.end(), (*iterSourceB).begin(), (*iterSourceB).end());
 			}
 		}
@@ -1094,8 +1092,8 @@ ZTBSpec ZTBSpec::operator&(const ZTBSpec& iOther) const
 		return iOther;
 
 	CriterionUnion crossProduct;
-	sCrossProduct(fRep->fCriterionUnion, iOther.fRep->fCriterionUnion, crossProduct);
-	sSimplify(crossProduct);
+	spCrossProduct(fRep->fCriterionUnion, iOther.fRep->fCriterionUnion, crossProduct);
+	spSimplify(crossProduct);
 	// Here we use our special constructor that swaps its empty list
 	// with the passed in list.
 	return ZTBSpec(crossProduct, true);
@@ -1116,8 +1114,8 @@ ZTBSpec& ZTBSpec::operator&=(const ZTBSpec& iOther)
 	CriterionUnion sourceA;
 	fRep->fCriterionUnion.swap(sourceA);
 	// sourceA now holds what fCriterionUnion held, and fCriterionUnion is empty.
-	sCrossProduct(sourceA, iOther.fRep->fCriterionUnion, fRep->fCriterionUnion);
-	sSimplify(fRep->fCriterionUnion);
+	spCrossProduct(sourceA, iOther.fRep->fCriterionUnion, fRep->fCriterionUnion);
+	spSimplify(fRep->fCriterionUnion);
 	return *this;
 	}
 
@@ -1132,7 +1130,7 @@ ZTBSpec ZTBSpec::operator|(const ZTBSpec& iOther) const
 	CriterionUnion theCriterionUnion = fRep->fCriterionUnion;
 	theCriterionUnion.insert(theCriterionUnion.end(),
 		iOther.fRep->fCriterionUnion.begin(), iOther.fRep->fCriterionUnion.end());
-	sSimplify(theCriterionUnion);
+	spSimplify(theCriterionUnion);
 	return ZTBSpec(theCriterionUnion, true);
 	}
 
@@ -1150,11 +1148,11 @@ ZTBSpec& ZTBSpec::operator|=(const ZTBSpec& iOther)
 	this->MakeFresh();
 	fRep->fCriterionUnion.insert(fRep->fCriterionUnion.end(),
 		iOther.fRep->fCriterionUnion.begin(), iOther.fRep->fCriterionUnion.end());
-	sSimplify(fRep->fCriterionUnion);
+	spSimplify(fRep->fCriterionUnion);
 	return *this;
 	}
 
-static inline bool sIsCheap(ZTBSpec::ERel iRel)
+static inline bool spIsCheap(ZTBSpec::ERel iRel)
 	{ return iRel < ZTBSpec::eRel_VectorContains; }
 
 bool ZTBSpec::Matches(const ZTuple& iTuple) const
@@ -1169,7 +1167,7 @@ bool ZTBSpec::Matches(const ZTuple& iTuple) const
 			for (CriterionSect::const_iterator inner = (*outer).begin(), innerEnd = (*outer).end();
 				inner != innerEnd; ++inner)
 				{
-				if (sIsCheap(inner->GetComparator().fRel))
+				if (spIsCheap(inner->GetComparator().fRel))
 					{
 					if (!inner->Matches(iTuple))
 						{
@@ -1184,7 +1182,7 @@ bool ZTBSpec::Matches(const ZTuple& iTuple) const
 				for (CriterionSect::const_iterator inner = (*outer).begin(), innerEnd = (*outer).end();
 					inner != innerEnd; ++inner)
 					{
-					if (!sIsCheap(inner->GetComparator().fRel))
+					if (!spIsCheap(inner->GetComparator().fRel))
 						{
 						if (!inner->Matches(iTuple))
 							{
@@ -1212,7 +1210,7 @@ const ZTBSpec::CriterionUnion& ZTBSpec::GetCriterionUnion() const
 	{
 	if (fRep)
 		return fRep->fCriterionUnion;
-	return sCriterionUnion_Empty;
+	return spCriterionUnion_Empty;
 	}
 
 void ZTBSpec::GetPropNames(std::set<std::string>& oPropNames) const

@@ -52,7 +52,7 @@ bool ZUtil_Win::sDragFullWindows()
 	return dragFullWindows;
 	}
 
-static bool sMungeProc_Invert(ZCoord hCoord, ZCoord vCoord, ZRGBColorPOD& ioColor, void* iRefcon)
+static bool spMungeProc_Invert(ZCoord hCoord, ZCoord vCoord, ZRGBColorPOD& ioColor, void* iRefcon)
 	{
 	ioColor = ZRGBColor::sWhite - ioColor;
 	return true;
@@ -88,7 +88,7 @@ void ZUtil_Win::sPixmapsFromHICON(HICON iHICON,
 		}
 
 	if (oMaskPixmap)
-		oMaskPixmap->Munge(sMungeProc_Invert, nullptr);
+		oMaskPixmap->Munge(spMungeProc_Invert, nullptr);
 
 	if (theICONINFO.hbmMask)
 		::DeleteObject(theICONINFO.hbmMask);
@@ -98,7 +98,7 @@ void ZUtil_Win::sPixmapsFromHICON(HICON iHICON,
 	::ReleaseDC(nullptr, dummyHDC);
 	}
 
-static HINSTANCE sGetAppModuleHandle()
+static HINSTANCE spGetAppModuleHandle()
 	{
 	if (ZUtil_Win::sUseWAPI())
 		return ::GetModuleHandleW(0);
@@ -111,7 +111,7 @@ HBITMAP ZUtil_Win::sLoadBitmapID(bool iFromApp, int iResourceID)
 	ZAssertStop(kDebug_Win, (iResourceID & 0xFFFF0000) == 0);
 	HINSTANCE theHINSTANCE = nullptr;
 	if (iFromApp)
-		theHINSTANCE = sGetAppModuleHandle();
+		theHINSTANCE = spGetAppModuleHandle();
 
 	if (ZUtil_Win::sUseWAPI())
 		return ::LoadBitmapW(theHINSTANCE, MAKEINTRESOURCEW(iResourceID));
@@ -125,7 +125,7 @@ HICON ZUtil_Win::sLoadIconID(bool iFromApp, int iResourceID)
 
 	HINSTANCE theHINSTANCE = nullptr;
 	if (iFromApp)
-		theHINSTANCE = sGetAppModuleHandle();
+		theHINSTANCE = spGetAppModuleHandle();
 
 	if (ZUtil_Win::sUseWAPI())
 		return ::LoadIconW(theHINSTANCE, MAKEINTRESOURCEW(iResourceID));

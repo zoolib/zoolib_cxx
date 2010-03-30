@@ -43,7 +43,7 @@ public:
 
 private:
 	void pCallback();
-	static void sCallback(void* iRefcon);
+	static void spCallback(void* iRefcon);
 
 	ZRef<ZTSWatcher> fWatcher;
 	};

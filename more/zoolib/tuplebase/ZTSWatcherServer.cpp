@@ -98,14 +98,14 @@ static bool spAllocateIDs(ZRef<ZTSWatcher> iWatcher, const ZTuple& iReq, const Z
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sSync common code
+#pragma mark * spSync common code
 
 // ZTSWatcher now requires that the tuples passed to it are sorted by ID, so it
 // can efficiently identify overlaps between the set written by a client, and
 // the set that has been written by others. Previously we'd passed a set<uint64>,
 // for which that operation is obviously already efficient.
 
-static void sSort(vector<uint64>& ioWrittenTupleIDs, vector<ZTuple>& ioWrittenTuples)
+static void spSort(vector<uint64>& ioWrittenTupleIDs, vector<ZTuple>& ioWrittenTuples)
 	{
 	vector<uint64> newIDs;
 	vector<ZTuple> newTuples;
@@ -126,11 +126,11 @@ static void sSort(vector<uint64>& ioWrittenTupleIDs, vector<ZTuple>& ioWrittenTu
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sSync1
+#pragma mark * spSync1
 
 // Unpacks a request in a ZTuple, and returns the results in a tuple.
 
-static bool sSync1(
+static bool spSync1(
 	double iReadTime, ZRef<ZTSWatcher> iWatcher, const ZTuple& iReq, const ZStreamW& iStreamW)
 	{
 	ZTime start = ZTime::sSystem();
@@ -209,7 +209,7 @@ static bool sSync1(
 				}
 			}
 		if (writeNeededSort)
-			sSort(writtenTupleIDs, writtenTuples);
+			spSort(writtenTupleIDs, writtenTuples);
 		}
 	}
 
@@ -341,9 +341,9 @@ static bool sSync1(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sSync2, sSync3 and sSync4 common code
+#pragma mark * spSync2, spSync3 and spSync4 common code
 
-static void sSync_Initial(const ZStreamR& iStreamR,
+static void spSync_Initial(const ZStreamR& iStreamR,
 	vector<uint64>& oRemovedIDs,
 	vector<uint64>& oAddedIDs,
 	vector<int64>& oRemovedQueries)
@@ -373,7 +373,7 @@ static void sSync_Initial(const ZStreamR& iStreamR,
 	}
 	
 
-static bool sSync_NextBit(const ZStreamR& iStreamR,
+static bool spSync_NextBit(const ZStreamR& iStreamR,
 	vector<uint64>& oWrittenTupleIDs,
 	vector<ZTuple>& oWrittenTuples)
 	{
@@ -395,12 +395,12 @@ static bool sSync_NextBit(const ZStreamR& iStreamR,
 			}
 
 		if (writeNeededSort)
-			sSort(oWrittenTupleIDs, oWrittenTuples);
+			spSort(oWrittenTupleIDs, oWrittenTuples);
 		}
 	return writeNeededSort;
 	}
 
-static void sSync_LastBit(const ZStreamW& iStreamW,
+static void spSync_LastBit(const ZStreamW& iStreamW,
 	const vector<uint64>& iChangedTupleIDs, const vector<ZTuple>& iChangedTuples,
 	const map<int64, vector<uint64> >& iChangedQueries)
 	{
@@ -432,9 +432,9 @@ static void sSync_LastBit(const ZStreamW& iStreamW,
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sSync2
+#pragma mark * spSync2
 
-static bool sSync2(
+static bool spSync2(
 	ZRef<ZTSWatcher> iWatcher, const ZStreamR& iStreamR_Real, const ZStreamW& iStreamW_Real)
 	{
 	ZTime start = ZTime::sSystem();
@@ -449,7 +449,7 @@ static bool sSync2(
 	vector<uint64> removedIDs;
 	vector<uint64> addedIDs;
 	vector<int64> removedQueries;
-	sSync_Initial(iStreamR, removedIDs, addedIDs, removedQueries);
+	spSync_Initial(iStreamR, removedIDs, addedIDs, removedQueries);
 
 
 	vector<ZTSWatcher::AddedQueryCombo> addedQueries;
@@ -475,7 +475,7 @@ static bool sSync2(
 	
 	vector<uint64> writtenTupleIDs;
 	vector<ZTuple> writtenTuples;
-	sSync_NextBit(iStreamR, writtenTupleIDs, writtenTuples);
+	spSync_NextBit(iStreamR, writtenTupleIDs, writtenTuples);
 
 
 	vector<uint64> watcherAddedIDs;
@@ -511,7 +511,7 @@ static bool sSync2(
 		const ZStreamW& iStreamW = iStreamW_Real;
 	#endif
 
-	sSync_LastBit(iStreamW, changedTupleIDs, changedTuples, changedQueries);
+	spSync_LastBit(iStreamW, changedTupleIDs, changedTuples, changedQueries);
 
 	iStreamW.Flush();
 
@@ -559,9 +559,9 @@ static bool sSync2(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sSync3
+#pragma mark * spSync3
 
-static bool sSync3(
+static bool spSync3(
 	ZRef<ZTSWatcher> iWatcher, const ZStreamR& iStreamR_Real, const ZStreamW& iStreamW_Real)
 	{
 	ZTime start = ZTime::sSystem();
@@ -576,9 +576,9 @@ static bool sSync3(
 	vector<uint64> removedIDs;
 	vector<uint64> addedIDs;
 	vector<int64> removedQueries;
-	sSync_Initial(iStreamR, removedIDs, addedIDs, removedQueries);
+	spSync_Initial(iStreamR, removedIDs, addedIDs, removedQueries);
 
-	// This is where we differ from sSync2 -- the caller will have prefixed the
+	// This is where we differ from spSync2 -- the caller will have prefixed the
 	// each serialiazed ZTBQuery with a count of how many bytes follow. So we
 	// do not have to interpret it to read it, so we may be able to avoid
 	// interpreting it at all, if iWatcher currently has this query in use --
@@ -606,7 +606,7 @@ static bool sSync3(
 	
 	vector<uint64> writtenTupleIDs;
 	vector<ZTuple> writtenTuples;
-	bool writeNeededSort = sSync_NextBit(iStreamR, writtenTupleIDs, writtenTuples);
+	bool writeNeededSort = spSync_NextBit(iStreamR, writtenTupleIDs, writtenTuples);
 
 	
 	vector<uint64> watcherAddedIDs;
@@ -642,7 +642,7 @@ static bool sSync3(
 		const ZStreamW& iStreamW = iStreamW_Real;
 	#endif
 
-	sSync_LastBit(iStreamW, changedTupleIDs, changedTuples, changedQueries);
+	spSync_LastBit(iStreamW, changedTupleIDs, changedTuples, changedQueries);
 
 	iStreamW.Flush();
 
@@ -693,9 +693,9 @@ static bool sSync3(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * sSync4
+#pragma mark * spSync4
 
-static bool sSync4(
+static bool spSync4(
 	ZRef<ZTSWatcher> iWatcher, const ZStreamR& iStreamR_Real, const ZStreamW& iStreamW_Real)
 	{
 	ZTime start = ZTime::sSystem();
@@ -710,9 +710,9 @@ static bool sSync4(
 	vector<uint64> removedIDs;
 	vector<uint64> addedIDs;
 	vector<int64> removedQueries;
-	sSync_Initial(iStreamR, removedIDs, addedIDs, removedQueries);
+	spSync_Initial(iStreamR, removedIDs, addedIDs, removedQueries);
 
-	// This is where our request parsinsg differs from sSync3.
+	// This is where our request parsinsg differs from spSync3.
 	// The caller can mark a query as being prefetched (see line marked <--).
 
 	vector<ZTSWatcher::AddedQueryCombo> addedQueries;
@@ -738,7 +738,7 @@ static bool sSync4(
 	
 	vector<uint64> writtenTupleIDs;
 	vector<ZTuple> writtenTuples;
-	bool writeNeededSort = sSync_NextBit(iStreamR, writtenTupleIDs, writtenTuples);
+	bool writeNeededSort = spSync_NextBit(iStreamR, writtenTupleIDs, writtenTuples);
 
 	
 	vector<uint64> watcherAddedIDs;
@@ -784,8 +784,8 @@ static bool sSync4(
 		iStreamW.WriteUInt64(*i);
 		}
 
-	// From here on we're the same as sSync3.
-	sSync_LastBit(iStreamW, changedTupleIDs, changedTuples, changedQueries);
+	// From here on we're the same as spSync3.
+	spSync_LastBit(iStreamW, changedTupleIDs, changedTuples, changedQueries);
 
 	iStreamW.Flush();
 
@@ -843,7 +843,7 @@ static bool sSync4(
 ZTSWatcherServer::ZTSWatcherServer(ZRef<ZTSWatcher> iWatcher)
 :	fWatcher(iWatcher)
 	{
-	fWatcher->SetCallback(sCallback, this);
+	fWatcher->SetCallback(spCallback, this);
 	}
 
 void ZTSWatcherServer::Run(const ZStreamR& iStreamR, const ZStreamW& iStreamW)
@@ -874,22 +874,22 @@ void ZTSWatcherServer::Run(const ZStreamR& iStreamR, const ZStreamW& iStreamW)
 				}
 			else if ("DoIt" == theWhat)
 				{
-				if (!sSync1(readTime, fWatcher, theReq, iStreamW))
+				if (!spSync1(readTime, fWatcher, theReq, iStreamW))
 					break;
 				}
 			else if ("NewDoIt" == theWhat || "DoIt2" == theWhat)
 				{
-				if (!sSync2(fWatcher, iStreamR, iStreamW))
+				if (!spSync2(fWatcher, iStreamR, iStreamW))
 					break;
 				}
 			else if ("DoIt3" == theWhat)
 				{
-				if (!sSync3(fWatcher, iStreamR, iStreamW))
+				if (!spSync3(fWatcher, iStreamR, iStreamW))
 					break;
 				}
 			else if ("DoIt4" == theWhat)
 				{
-				if (!sSync4(fWatcher, iStreamR, iStreamW))
+				if (!spSync4(fWatcher, iStreamR, iStreamW))
 					break;
 				}
 			else if ("Close" == theWhat)
@@ -909,7 +909,7 @@ void ZTSWatcherServer::Run(const ZStreamR& iStreamR, const ZStreamW& iStreamW)
 void ZTSWatcherServer::pCallback()
 	{}
 
-void ZTSWatcherServer::sCallback(void* iRefcon)
+void ZTSWatcherServer::spCallback(void* iRefcon)
 	{ static_cast<ZTSWatcherServer*>(iRefcon)->pCallback(); }
 
 NAMESPACE_ZOOLIB_END

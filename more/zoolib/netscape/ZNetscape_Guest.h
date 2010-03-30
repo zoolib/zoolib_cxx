@@ -46,7 +46,7 @@ class NPPSetter
 	{
 private:
 	NPP fPrior;
-	static NPP sNPP;
+	static NPP spNPP;
 
 public:
 	NPPSetter(NPP iNPP);
@@ -319,36 +319,36 @@ public:
 	virtual NPError SetValue(NPP npp, NPNVariable variable, void *value) = 0;
 
 private:
-	static NPError sNew(
+	static NPError spNew(
 		NPMIMEType pluginType, NPP npp, uint16 mode,
 		int16 argc, char* argn[], char* argv[], NPSavedData* saved);
 
-	static NPError sDestroy(NPP npp, NPSavedData** save);
+	static NPError spDestroy(NPP npp, NPSavedData** save);
 
-	static NPError sSetWindow(NPP npp, NPWindow* window);
+	static NPError spSetWindow(NPP npp, NPWindow* window);
 
-	static NPError sNewStream(NPP npp,
+	static NPError spNewStream(NPP npp,
 		NPMIMEType type, NPStream* stream, NPBool seekable, uint16* stype);
 
-	static NPError sDestroyStream(NPP npp, NPStream* stream, NPReason reason);
+	static NPError spDestroyStream(NPP npp, NPStream* stream, NPReason reason);
 
-	static int32 sWriteReady(NPP npp, NPStream* stream);
+	static int32 spWriteReady(NPP npp, NPStream* stream);
 
-	static int32 sWrite(NPP npp, NPStream* stream, int32_t offset, int32_t len, void* buffer);
+	static int32 spWrite(NPP npp, NPStream* stream, int32_t offset, int32_t len, void* buffer);
 
-	static void sStreamAsFile(NPP npp, NPStream* stream, const char* fname);
+	static void spStreamAsFile(NPP npp, NPStream* stream, const char* fname);
 
-	static void sPrint(NPP npp, NPPrint* platformPrint);
+	static void spPrint(NPP npp, NPPrint* platformPrint);
 
-	static int16 sHandleEvent(NPP npp, void* event);
+	static int16 spHandleEvent(NPP npp, void* event);
 
-	static void sURLNotify(NPP npp, const char* url, NPReason reason, void* notifyData);
+	static void spURLNotify(NPP npp, const char* url, NPReason reason, void* notifyData);
 
-	static jref sGetJavaClass();
+	static jref spGetJavaClass();
 
-	static NPError sGetValue(NPP npp, NPPVariable variable, void *value);
+	static NPError spGetValue(NPP npp, NPPVariable variable, void *value);
 
-	static NPError sSetValue(NPP npp, NPNVariable variable, void *value);
+	static NPError spSetValue(NPP npp, NPNVariable variable, void *value);
 
 	NPNetscapeFuncs_Z fNPNF;
 

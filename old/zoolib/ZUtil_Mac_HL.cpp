@@ -68,7 +68,7 @@ void ZUtil_Mac_HL::sPixmapsFromCIconHandle(CIconHandle inHandle, ZDCPixmap* outC
 CIconHandle ZUtil_Mac_HL::sCIconHandleFromPixmapCombo(const ZDCPixmapCombo& inPixmapCombo)
 	{ return sCIconHandleFromPixmaps(inPixmapCombo.GetColor(), inPixmapCombo.GetMono(), inPixmapCombo.GetMask()); }
 
-static void sInvert(void* iAddress, size_t iCount)
+static void spInvert(void* iAddress, size_t iCount)
 	{
 	uint8* theAddress = static_cast<uint8*>(iAddress);
 	while (iCount--)
@@ -241,7 +241,7 @@ sSizePixelMapping[] =
 
 } // namespace ZUtil_Mac_HL
 
-static bool sGestalt_IconUtilitiesHas48PixelIcons()
+static bool spGestalt_IconUtilitiesHas48PixelIcons()
 	{
 	long response;
 	OSErr err = ::Gestalt(gestaltIconUtilitiesAttr, &response);
@@ -250,7 +250,7 @@ static bool sGestalt_IconUtilitiesHas48PixelIcons()
 	return false;
 	}
 
-static bool sGestalt_IconUtilitiesHas32BitIcons()
+static bool spGestalt_IconUtilitiesHas32BitIcons()
 	{
 	// AG 2000-07-22. Guess what, the window manager on iMacs (not sure which
 	// OS version) doesn't like deep icons either, so this is switched off for now,
@@ -264,7 +264,7 @@ static bool sGestalt_IconUtilitiesHas32BitIcons()
 	return false;
 	}
 
-static bool sGestalt_IconUtilitiesHas8BitDeepMasks()
+static bool spGestalt_IconUtilitiesHas8BitDeepMasks()
 	{
 	// AG 2000-04-01. Window Manager seems to have problems with 8 bit masks, as in
 	// they don't work. So I'm switching this off for now.
@@ -283,7 +283,7 @@ void ZUtil_Mac_HL::sAddPixmapToIconFamily(const ZDCPixmap& inPixmap, IconKind in
 	ZPoint sourceSize = inPixmap.Size();
 	ZCoord sourceWidthHeight = max(sourceSize.h, sourceSize.v);
 
-	bool has48PixelIcons = sGestalt_IconUtilitiesHas48PixelIcons();
+	bool has48PixelIcons = spGestalt_IconUtilitiesHas48PixelIcons();
 
 	ZCoord theCroppedWidthHeight = 48;
 	IconSize theIconSize = eHuge;
@@ -410,7 +410,7 @@ void ZUtil_Mac_HL::sAddPixmapToIconFamily(const ZDCPixmap& inPixmap, IconKind in
 					ZRect(theCroppedWidthHeight, theCroppedWidthHeight));
 
 	if (needsInvert)
-		sInvert(destAddress, destRowBytes * theCroppedWidthHeight);
+		spInvert(destAddress, destRowBytes * theCroppedWidthHeight);
 
 	::SetIconFamilyData(inIconFamilyHandle, theResType, theDataHandle);
 	theDataHandleLocker.Orphan();
@@ -565,7 +565,7 @@ ZDCPixmap ZUtil_Mac_HL::sPixmapFromIconDataHandle(Handle inIconDataHandle, IconS
 		{
 		// This step could be avoided if we had separate source and destination
 		// PixelDescs, and could let the blit take care of the transform.
-		sInvert(theDCPixmap.GetBaseAddress(), theRowBytes * theWidthHeight);
+		spInvert(theDCPixmap.GetBaseAddress(), theRowBytes * theWidthHeight);
 		}
 
 	return theDCPixmap;

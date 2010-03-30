@@ -37,14 +37,14 @@ const ZDCPattern ZDCPattern::sBackOnly = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0
 const ZDCPattern ZDCPattern::sForeOnly = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
 // Same static initialization issue applies to ZRGBColor
-static const ZRGBColor sLocalBlack(0x0000);
-static const ZRGBColor sLocalWhite(0xFFFF);
+static const ZRGBColor spLocalBlack(0x0000);
+static const ZRGBColor spLocalWhite(0xFFFF);
 
-const ZDCInk ZDCInk::sBlack(sLocalBlack);
-const ZDCInk ZDCInk::sWhite(sLocalWhite);
-const ZDCInk ZDCInk::sGray(sLocalWhite, sLocalBlack, ZDCPattern::sGray);
-const ZDCInk ZDCInk::sDkGray(sLocalWhite, sLocalBlack, ZDCPattern::sDkGray);
-const ZDCInk ZDCInk::sLtGray(sLocalWhite, sLocalBlack, ZDCPattern::sLtGray);
+const ZDCInk ZDCInk::sBlack(spLocalBlack);
+const ZDCInk ZDCInk::sWhite(spLocalWhite);
+const ZDCInk ZDCInk::sGray(spLocalWhite, spLocalBlack, ZDCPattern::sGray);
+const ZDCInk ZDCInk::sDkGray(spLocalWhite, spLocalBlack, ZDCPattern::sDkGray);
+const ZDCInk ZDCInk::sLtGray(spLocalWhite, spLocalBlack, ZDCPattern::sLtGray);
 
 #define ALLONES ZUINT64_C(0xFFFFFFFFFFFFFFFF)
 
@@ -221,13 +221,13 @@ ZDCInk::ZDCInk(const ZDCPixmap& inPixmap)
 :	fRep(inPixmap ? new ZDCInkRep(inPixmap) : nullptr)
 	{}
 
-static void sExaminePattern(const ZDCPattern& inPattern, bool& outSolidFore, bool& outSolidBack)
+static void spExaminePattern(const ZDCPattern& inPattern, bool& outSolidFore, bool& outSolidBack)
 	{
 	outSolidFore = ((*(uint64*)(inPattern.pat)) == ALLONES);
 	outSolidBack = ((*(uint64*)(inPattern.pat)) == 0);
 	}
 
-static void sExaminePatterns(const ZDCPattern& inPattern1, const ZDCPattern& inPattern2, 
+static void spExaminePatterns(const ZDCPattern& inPattern1, const ZDCPattern& inPattern2, 
 					bool& outIdentical, bool& outIdenticalInverse,
 					bool& outPattern1SolidFore, bool& outPattern1SolidBack,
 					bool& outPattern2SolidFore, bool& outPattern2SolidBack)
@@ -273,7 +273,7 @@ bool ZDCInk::Internal_IsSameAs(const ZDCInk& inOther) const
 			bool pattern1SolidBack;
 			bool pattern2SolidFore;
 			bool pattern2SolidBack;
-			sExaminePatterns(fRep->fAsTwoColor.fPattern, inOther.fRep->fAsTwoColor.fPattern,
+			spExaminePatterns(fRep->fAsTwoColor.fPattern, inOther.fRep->fAsTwoColor.fPattern,
 				identical, identicalInverse,
 				pattern1SolidFore, pattern1SolidBack,
 				pattern2SolidFore, pattern2SolidBack);
@@ -317,7 +317,7 @@ bool ZDCInk::Internal_IsSameAs(const ZDCInk& inOther) const
 	else if (fRep->fType == eTypeSolidColor && inOther.fRep->fType == eTypeTwoColor)
 		{
 		bool solidFore, solidBack;
-		sExaminePattern(inOther.fRep->fAsTwoColor.fPattern, solidFore, solidBack);
+		spExaminePattern(inOther.fRep->fAsTwoColor.fPattern, solidFore, solidBack);
 
 		if (solidFore
 			&& sSameColors(fRep->fAsSolidColor.fColor, inOther.fRep->fAsTwoColor.fForeColor))
@@ -334,7 +334,7 @@ bool ZDCInk::Internal_IsSameAs(const ZDCInk& inOther) const
 	else if (fRep->fType == eTypeTwoColor && inOther.fRep->fType == eTypeSolidColor)
 		{
 		bool solidFore, solidBack;
-		sExaminePattern(fRep->fAsTwoColor.fPattern, solidFore, solidBack);
+		spExaminePattern(fRep->fAsTwoColor.fPattern, solidFore, solidBack);
 
 		if (solidFore
 			&& sSameColors(fRep->fAsTwoColor.fForeColor, inOther.fRep->fAsSolidColor.fColor))

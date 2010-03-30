@@ -757,7 +757,7 @@ void ZTBRep_TS::Trans_CancelPostValidate(Transaction* iTransaction)
 	delete iTransaction;
 	}
 
-static void sLatestStartEarliestEnd(
+static void spLatestStartEarliestEnd(
 	const MapTransTuple_t& iTransTuples, uint64& oLatestStart, uint64& ioEarliestEnd)
 	{
 	oLatestStart = 0;
@@ -797,7 +797,7 @@ void ZTBRep_TS::Trans_Commit(Transaction* iTransaction)
 			{
 			uint64 latestStart;
 			uint64 earliestEnd = fClock;
-			sLatestStartEarliestEnd(iTransaction->fTransTuples, latestStart, earliestEnd);
+			spLatestStartEarliestEnd(iTransaction->fTransTuples, latestStart, earliestEnd);
 
 			vector<uint64> storedIDs;
 			vector<ZTuple> storedTuples;
@@ -922,7 +922,7 @@ void ZTBRep_TS::pTryValidation(Transaction* iTransaction)
 	// Check that all our reads have an intersection.
 	uint64 latestStart;
 	uint64 earliestEnd = fClock;
-	sLatestStartEarliestEnd(iTransaction->fTransTuples, latestStart, earliestEnd);
+	spLatestStartEarliestEnd(iTransaction->fTransTuples, latestStart, earliestEnd);
 
 	if (latestStart > earliestEnd)
 		{

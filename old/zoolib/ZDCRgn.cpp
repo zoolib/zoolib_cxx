@@ -152,7 +152,7 @@ HRGN ZDCRgn::GetHRGN()
 	}
 #endif
 
-static bool sDecompose_IntoVector(const ZRect& iRect, void* iRefcon)
+static bool spDecompose_IntoVector(const ZRect& iRect, void* iRefcon)
 	{
 	reinterpret_cast<vector<ZRect>*>(iRefcon)->push_back(iRect);
 	return false;
@@ -161,7 +161,7 @@ static bool sDecompose_IntoVector(const ZRect& iRect, void* iRefcon)
 void ZDCRgn::Decompose(vector<ZRect>& oRects) const
 	{
 	oRects.clear();
-	this->Decompose(sDecompose_IntoVector, &oRects);
+	this->Decompose(spDecompose_IntoVector, &oRects);
 	}
 
 size_t ZDCRgn::Decompose(DecomposeProc iProc, void* iRefcon) const

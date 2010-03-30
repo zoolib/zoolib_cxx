@@ -95,27 +95,27 @@ inline TypeID_t::TypeID_t(uint8 iType, const uint64& iID)
 	}
 } // anonymous namespace
 
-static inline void sPackTypeID(const TypeID_t& iTI, DBT& oDBT)
+static inline void spPackTypeID(const TypeID_t& iTI, DBT& oDBT)
 	{
 	oDBT.data = const_cast<uint8*>(iTI.fBuffer);
 	oDBT.size = 9;
 	}
 
-static inline uint8 sUnpackType(const DBT& iDBT)
+static inline uint8 spUnpackType(const DBT& iDBT)
 	{
 	return static_cast<const uint8*>(iDBT.data)[0];
 	}
 
-static inline uint64 sUnpackID(const void* iAddress)
+static inline uint64 spUnpackID(const void* iAddress)
 	{
 	uint64 result = *static_cast<const uint64*>(iAddress);
 	ZByteSwap_LittleToHost64(&result);
 	return result; 
 	}
 
-static inline uint64 sUnpackID(const DBT& iDBT)
+static inline uint64 spUnpackID(const DBT& iDBT)
 	{
-	return sUnpackID(static_cast<const uint8*>(iDBT.data) + iDBT.size - 8);
+	return spUnpackID(static_cast<const uint8*>(iDBT.data) + iDBT.size - 8);
 	}
 
 namespace ZANONYMOUS {
@@ -134,12 +134,12 @@ DBT_Tuple::DBT_Tuple(const ZTuple& iTuple)
 	}
 } // anonymous namespace
 
-static inline ZTuple sUnpackTuple(const DBT& iDBT)
+static inline ZTuple spUnpackTuple(const DBT& iDBT)
 	{
 	return ZTuple(ZStreamRPos_Memory(iDBT.data, iDBT.size));
 	}
 
-static inline int sCompareInc(const uint8*& ioLeft, const uint8*& ioRight)
+static inline int spCompareInc(const uint8*& ioLeft, const uint8*& ioRight)
 	{
 	// It would be feasible to do an optimized implementation that
 	// does not unpack a tuplevalue from either left or right. Punt
@@ -156,12 +156,12 @@ static inline int sCompareInc(const uint8*& ioLeft, const uint8*& ioRight)
 	return leftValue.Compare(rightValue);
 	}
 
-static int sCompareIndex(const uint8*& ioLeftCur, const uint8* iLeftEnd,
+static int spCompareIndex(const uint8*& ioLeftCur, const uint8* iLeftEnd,
 	const uint8*& ioRightCur, const uint8* iRightEnd)
 	{	
 	while (ioLeftCur < iLeftEnd && ioRightCur < iRightEnd)
 		{
-		if (int compare = sCompareInc(ioLeftCur, ioRightCur))
+		if (int compare = spCompareInc(ioLeftCur, ioRightCur))
 			return compare;
 
 		// And their values match.
@@ -189,7 +189,7 @@ static int sCompareIndex(const uint8*& ioLeftCur, const uint8* iLeftEnd,
 	return 0;
 	}
 
-static int sCompareIndex(const void* iLeftData, size_t iLeftSize,
+static int spCompareIndex(const void* iLeftData, size_t iLeftSize,
 	const void* iRightData, size_t iRightSize)
 	{
 	const uint8* leftData = static_cast<const uint8*>(iLeftData);
@@ -200,7 +200,7 @@ static int sCompareIndex(const void* iLeftData, size_t iLeftSize,
 	const uint8* rightCur = rightData + 1;
 	const uint8* rightEnd = rightData + iRightSize - 8;
 
-	if (int compare = sCompareIndex(leftCur, leftEnd, rightCur, rightEnd))
+	if (int compare = spCompareIndex(leftCur, leftEnd, rightCur, rightEnd))
 		return compare;
 
 	// Left and right are the same length, and match exactly,
@@ -333,7 +333,7 @@ void ZTS_DB::Index::Find(const std::set<uint64>& iSkipIDs,
 	// how we handle searching for keys that are shorter than
 	// stored keys.
 
-	// DB search is equivalent to lower_bound, so sCompareIndex
+	// DB search is equivalent to lower_bound, so spCompareIndex
 	// has to handle edge cases specially to simulate upper_bound.
 	// I suppose we could swap in a different comparison function
 	// for this operation.
@@ -375,11 +375,11 @@ void ZTS_DB::Index::Find(const std::set<uint64>& iSkipIDs,
 	for (;;)
 		{
 		// Bail if we've moved out of this index's nodes.
-		if (fIndexID != sUnpackType(theKey))
+		if (fIndexID != spUnpackType(theKey))
 			break;
 
 		// Verify that theKey is less (or less equal) than the limit.
-		int compare = sCompareIndex(limitData, limitSize, theKey.data, theKey.size);
+		int compare = spCompareIndex(limitData, limitSize, theKey.data, theKey.size);
 		if (bestValueLess)
 			{
 			if (compare <= 0)
@@ -397,7 +397,7 @@ void ZTS_DB::Index::Find(const std::set<uint64>& iSkipIDs,
 				}
 			}
 		// The tuple ID is in the key -- we don't actually store data for it.
-		const uint64 theID = sUnpackID(theKey);
+		const uint64 theID = spUnpackID(theKey);
 		oIDs.push_back(theID);
 		if (0 != theDB->seq(theDB, &theKey, &theData, R_NEXT))
 			break;
@@ -481,7 +481,7 @@ void ZTS_DB::Index::ToStream(const ZStreamW& iStreamW)
 		}
 	}
 
-static const DBT sNilData = { 0, 0 };
+static const DBT spNilData = { 0, 0 };
 
 void ZTS_DB::Index::Add(uint64 iID, const ZTuple& iTuple)
 	{
@@ -490,7 +490,7 @@ void ZTS_DB::Index::Add(uint64 iID, const ZTuple& iTuple)
 		DBT theKey;
 		theKey.data = theMB.GetData();
 		theKey.size = theMB.GetSize();
-		fTS->fDB->put(fTS->fDB, &theKey, &sNilData, 0);
+		fTS->fDB->put(fTS->fDB, &theKey, &spNilData, 0);
 		++fSize;
 		}
 	}
@@ -532,7 +532,7 @@ void ZTS_DB::Index::Update(uint64 iID, const ZTuple& iOldTuple, const ZTuple& iN
 		DBT theKey;
 		theKey.data = theNewMB.GetData();
 		theKey.size = theNewMB.GetSize();
-		fTS->fDB->put(fTS->fDB, &theKey, &sNilData, 0);
+		fTS->fDB->put(fTS->fDB, &theKey, &spNilData, 0);
 		++fSize;
 		}
 	}
@@ -569,10 +569,10 @@ ZTS_DB::ZTS_DB(const ZFileSpec& iFileSpec)
 	theBTI.maxkeypage = 0; // use default
 	theBTI.minkeypage = 0; // use default
 	theBTI.psize = 0; // use default
-	theBTI.compare = sBTree_Compare;
+	theBTI.compare = spBTree_Compare;
 
 	if (ZCONFIG_TS_DB_UsePrefix)
-		theBTI.prefix = sBTree_Prefix;
+		theBTI.prefix = spBTree_Prefix;
 	else
 		theBTI.prefix = nullptr;
 
@@ -625,10 +625,10 @@ ZTS_DB::ZTS_DB(const ZFileSpec& iFileSpec, const vector<vector<string> >& iIndex
 	theBTI.maxkeypage = 0; // use default
 	theBTI.minkeypage = 0; // use default
 	theBTI.psize = 0; // use default
-	theBTI.compare = sBTree_Compare;
+	theBTI.compare = spBTree_Compare;
 
 	if (ZCONFIG_TS_DB_UsePrefix)
-		theBTI.prefix = sBTree_Prefix;
+		theBTI.prefix = spBTree_Prefix;
 	else
 		theBTI.prefix = nullptr;
 
@@ -677,14 +677,14 @@ void ZTS_DB::SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
 		
 		TypeID_t ti(0, theID);
 		DBT theKey;
-		sPackTypeID(ti, theKey);
+		spPackTypeID(ti, theKey);
 		DBT theData;
 		if (0 == fDB->seq(fDB, &theKey, &theData, R_CURSOR)
-			&& 0 == sUnpackType(theKey)
-			&& theID == sUnpackID(theKey))
+			&& 0 == spUnpackType(theKey)
+			&& theID == spUnpackID(theKey))
 			{
 			// We had it before.
-			const ZTuple oldTuple = sUnpackTuple(theData);
+			const ZTuple oldTuple = spUnpackTuple(theData);
 			if (newTuple)
 				{
 				// And we have a new value, so replace the stored tuple.
@@ -707,7 +707,7 @@ void ZTS_DB::SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
 		else
 			{
 			// Didn't have it previously.
-			sPackTypeID(ti, theKey);
+			spPackTypeID(ti, theKey);
 			DBT_Tuple theDBT_Tuple(newTuple);
 			result = fDB->put(fDB, &theKey, &theDBT_Tuple, 0);
 
@@ -753,22 +753,22 @@ void ZTS_DB::Search(const ZTBSpec& iSpec, const set<uint64>& iSkipIDs, set<uint6
 		// Look for the first key of type zero, ID >= 1
 		TypeID_t ti(0, 1);
 		DBT theKey;
-		sPackTypeID(ti, theKey);
+		spPackTypeID(ti, theKey);
 		DBT theData;
 		if (0 == fDB->seq(fDB, &theKey, &theData, R_FIRST))
 			{
 			for (;;)
 				{
-				if (0 != sUnpackType(theKey))
+				if (0 != spUnpackType(theKey))
 					{
 					// We've moved past the end of the ID-->tuple keys.
 					break;
 					}
 
-				const uint64 theID = sUnpackID(theKey);
+				const uint64 theID = spUnpackID(theKey);
 				if (iSkipIDs.end() == iSkipIDs.find(theID))
 					{
-					ZTuple theTuple = sUnpackTuple(theData);
+					ZTuple theTuple = spUnpackTuple(theData);
 					if (iSpec.Matches(theTuple))
 						oIDs.insert(theID);
 					}
@@ -844,11 +844,11 @@ bool ZTS_DB::pGetTuple(uint64 iID, ZTuple& oTuple)
 		{
 		TypeID_t ti(0, iID);
 		DBT theKey;
-		sPackTypeID(ti, theKey);
+		spPackTypeID(ti, theKey);
 		DBT theData;
 		if (0 == fDB->get(fDB, &theKey, &theData, 0))
 			{
-			oTuple = sUnpackTuple(theData);
+			oTuple = spUnpackTuple(theData);
 			return true;
 			}
 		}
@@ -887,12 +887,12 @@ void ZTS_DB::pFlush()
 	fDB->sync(fDB, 0);
 	}
 
-size_t ZTS_DB::sBTree_Prefix(const DBT* iLeft, const DBT* iRight)
+size_t ZTS_DB::spBTree_Prefix(const DBT* iLeft, const DBT* iRight)
 	{
 	ZAssert(ZCONFIG_TS_DB_UsePrefix);
 
-	const int leftIndexID = sUnpackType(*iLeft);
-	const int rightIndexID = sUnpackType(*iRight);
+	const int leftIndexID = spUnpackType(*iLeft);
+	const int rightIndexID = spUnpackType(*iRight);
 	if (leftIndexID != rightIndexID)
 		return 1;
 
@@ -907,7 +907,7 @@ size_t ZTS_DB::sBTree_Prefix(const DBT* iLeft, const DBT* iRight)
 	const uint8* rightCur = rightData + 1;
 	const uint8* rightEnd = rightData + iRight->size - 8;
 
-	if (0 != sCompareIndex(leftCur, leftEnd, rightCur, rightEnd))
+	if (0 != spCompareIndex(leftCur, leftEnd, rightCur, rightEnd))
 		{
 		// Not all our values match.
 		return rightCur - rightData;
@@ -918,18 +918,18 @@ size_t ZTS_DB::sBTree_Prefix(const DBT* iLeft, const DBT* iRight)
 	return iRight->size;
 	}
 
-int ZTS_DB::sBTree_Compare(const DBT* iLeft, const DBT* iRight)
+int ZTS_DB::spBTree_Compare(const DBT* iLeft, const DBT* iRight)
 	{
-	const int leftIndexID = sUnpackType(*iLeft);
-	const int rightIndexID = sUnpackType(*iRight);
+	const int leftIndexID = spUnpackType(*iLeft);
+	const int rightIndexID = spUnpackType(*iRight);
 
 	if (const int compare = leftIndexID - rightIndexID)
 		return compare;
 
 	if (leftIndexID == 0)
 		{
-		const uint64 leftID = sUnpackID(static_cast<uint8*>(iLeft->data) + 1);
-		const uint64 rightID = sUnpackID(static_cast<uint8*>(iRight->data) + 1);
+		const uint64 leftID = spUnpackID(static_cast<uint8*>(iLeft->data) + 1);
+		const uint64 rightID = spUnpackID(static_cast<uint8*>(iRight->data) + 1);
 
 		// It's an ID
 		if (leftID < rightID)
@@ -939,7 +939,7 @@ int ZTS_DB::sBTree_Compare(const DBT* iLeft, const DBT* iRight)
 		}
 	else
 		{
-		return sCompareIndex(iLeft->data, iLeft->size, iRight->data, iRight->size);
+		return spCompareIndex(iLeft->data, iLeft->size, iRight->data, iRight->size);
 		}
 	return 0;
 	}
