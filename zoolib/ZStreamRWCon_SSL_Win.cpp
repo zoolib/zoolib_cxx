@@ -22,13 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
-#include "zoolib/ZMemory.h"
-
 #include "zoolib/ZFunctionChain.h"
+#include "zoolib/ZMemory.h"
 #include "zoolib/ZStreamerRWCon_SSL.h"
-
-#include "zoolib/ZStdIO.h"
-#include "zoolib/ZUtil_Strim_Data.h"
 
 #include <vector>
 
@@ -84,8 +80,6 @@ static void spWriteFlushFree(SecBuffer& sb, const ZStreamW& w)
 		size_t countWritten = 0;
 		w.Write(sb.pvBuffer, sb.cbBuffer, &countWritten);
 
-		ZStdIO::strim_err.Writef("Write encrypted %d\n", countWritten);
-
 		const bool shortWrite = (countWritten != sb.cbBuffer);
 		sb.cbBuffer = 0;
 
@@ -101,13 +95,10 @@ static void spWriteFlushFree(SecBuffer& sb, const ZStreamW& w)
 static bool spReadMore(vector<char>& ioBuf, const ZStreamR& r)
 	{
 	const size_t priorSize = ioBuf.size();
-	const size_t newSize = priorSize + 16;
+	const size_t newSize = priorSize + 4096;
 	ioBuf.resize(newSize);
 	size_t countRead;
 	r.Read(&ioBuf[priorSize], newSize - priorSize, &countRead);
-
-	ZStdIO::strim_err.Writef("Read encrypted %d\n", countRead);
-
 	ioBuf.resize(priorSize + countRead);
 	return countRead != 0;
 	}
@@ -240,7 +231,6 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRe
 		if (FAILED(scRet))
 			{
 			// We failed for some other reason.
-			ZStdIO::strim_err.Writef("Erroring out %08X\n", scRet);
 			fReceiveOpen = false;
 			break;
 			}
@@ -271,8 +261,6 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRe
 
 		if (decrypted)
 			{
-			ZStdIO::strim_err.Writef("Decrypted %d\n", decrypted->cbBuffer);
-
 			// Copy some decrypted data to our destination.
 			const size_t countToCopy = std::min(iCount, size_t(decrypted->cbBuffer));
 			ZBlockCopy(decrypted->pvBuffer, localDest, countToCopy);
@@ -287,8 +275,6 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRe
 
 		if (encrypted)
 			{
-			ZStdIO::strim_err.Writef("Preserving encrypted data %d\n", encrypted->cbBuffer);
-
 			// There is some unused data, move it to the front of fBufferEnc,
 			// and resize fBufferEnc to reference only that data.
 			ZBlockMove(encrypted->pvBuffer, &fBufferEnc[0], encrypted->cbBuffer);
@@ -318,8 +304,6 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRe
 
 	if (oCountRead)
 		*oCountRead = localDest - static_cast<char*>(iDest);
-
-	ZStdIO::strim_err.Writef("Read plain %d\n", localDest - static_cast<char*>(iDest));
 	}
 
 size_t ZStreamRWCon_SSL_Win::Imp_CountReadable()
