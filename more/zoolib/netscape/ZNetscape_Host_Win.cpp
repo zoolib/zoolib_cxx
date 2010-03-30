@@ -206,8 +206,8 @@ LRESULT Host_Win::WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM i
 		case WM_MOUSEACTIVATE:
 		case WM_KEYDOWN:
 		case WM_KEYUP:
-		case WM_CHAR:
-		case WM_DEADCHAR:
+//##		case WM_CHAR:
+//##		case WM_DEADCHAR:
 		case WM_SETCURSOR:
 		case WM_KILLFOCUS:
 			{

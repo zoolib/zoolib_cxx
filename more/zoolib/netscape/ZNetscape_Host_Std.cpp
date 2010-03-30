@@ -146,14 +146,11 @@ const char* HostMeister_Std::UserAgent(NPP npp)
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s << "UserAgent";
 
-	if (Host_Std* theHost = sHostFromNPP_Std(npp))
-		{
-		if (const char* theUA = theHost->Host_UserAgent(npp))
-			return theUA;
-		}
-
 	#if defined(XP_WIN)
-		return "Mozilla/5.0 (Windows; U; Windows NT 5.1)";
+		// From WebKit, PluginViewWin.cpp.
+		// Flash pre 10.0 will not request windowless mode unless a Mozilla-ish user agent
+		// is returned. By inspection this seems to be the minimal UA that will work.
+		return "Mozilla/5.0 (rv:1.8.1) Gecko/20061010";
 	#elif ZCONFIG(Processor, PPC)
 		return "Mozilla/5.0 (Macintosh; U; PPC Mac OS X)";
 	#else
@@ -842,11 +839,6 @@ NPError Host_Std::Host_DestroyStream(NPP npp, NPStream* stream, NPReason reason)
 void Host_Std::Host_Status(NPP npp, const char* message)
 	{}
 
-const char* Host_Std::Host_UserAgent(NPP npp)
-	{
-	return nullptr;
-	}
-
 void* Host_Std::Host_GetJavaPeer(NPP npp)
 	{
 	return nullptr;
@@ -856,7 +848,7 @@ static string sFixURL(const string& iBaseURL, const string& iRelativeURL)
 	{
 	string relScheme;
 	string relHost;
-	ip_port relPort = 80;
+	ip_port relPort;
 	string relPath;
 	if (!ZHTTP::sParseURL(iRelativeURL, &relScheme, &relHost, &relPort, &relPath))
 		return string();
@@ -873,6 +865,9 @@ static string sFixURL(const string& iBaseURL, const string& iRelativeURL)
 		string basePath;
 		if (!ZHTTP::sParseURL(iBaseURL, &baseScheme, &baseHost, &basePort, &basePath))
 			return string();
+
+		if (!basePort)
+			basePort = 80;
 
 		const string resultURL = baseScheme + "://" + baseHost + ZString::sFormat(":%d", basePort);
 		if (relPath.substr(0, 1) == "/")

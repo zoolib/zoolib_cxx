@@ -48,6 +48,7 @@ public:
 	static Host_Std* sHostFromNPP_Std(NPP npp);
 	static Host_Std* sHostFromStream_Std(NPStream* iNPStream);
 
+// From HostMeister
 	virtual NPError GetURL(NPP npp, const char* URL, const char* window);
 
 	virtual NPError PostURL(NPP npp,
@@ -167,7 +168,7 @@ public:
 	Host_Std(ZRef<GuestFactory> iGuestFactory);
 	virtual ~Host_Std();
 
-// Simple or stub implementations of necessary Host methods
+// Our protocol
 	virtual NPError Host_GetURL(NPP npp, const char* URL, const char* window);
 
 	virtual NPError Host_PostURL(NPP npp,
@@ -184,7 +185,9 @@ public:
 
 	virtual void Host_Status(NPP npp, const char* message);
 
-	virtual const char* Host_UserAgent(NPP npp);
+// The defining call to UserAgent generally occurs before we've got a Host instance to
+// handle it. If you need to modify the UA response, do so in your HostMeister.
+//	virtual const char* Host_UserAgent(NPP npp);
 
 	virtual void* Host_GetJavaPeer(NPP npp);
 
