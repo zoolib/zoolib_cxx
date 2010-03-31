@@ -18,7 +18,6 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZStreamR_Source.h"
 #include "zoolib/ZStream_Tee.h"
 #include "zoolib/ZMemory.h" // For ZBlockMove & ZBlockCopy
 
@@ -81,18 +80,8 @@ void ZStreamR_Tee::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 
 void ZStreamR_Tee::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
-#if 1
 	// Bypass ZStreamR_Filter's Imp_Skip
 	ZStreamR::Imp_Skip(iCount, oCountSkipped);
-#else
-	uint64 countSkippedR;
-	fStreamR.Skip(iCount, &countSkippedR);
-	uint64 countSkippedW;
-	ZStreamR_Source(0x55).CopyTo(fStreamW, countSkippedR, nullptr, &countSkippedW);
-	ZAssertLog(kDebug_Stream_Tee, countSkippedR == countSkippedW);
-	if (oCountSkipped)
-		*oCountSkipped = countSkippedR;
-#endif
 	}
 
 // =================================================================================================
