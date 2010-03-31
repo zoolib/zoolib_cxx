@@ -751,7 +751,7 @@ string sGetString0(const Val& iVal)
 	return string();
 	}
 
-static ZRef<ZStreamerR> sMakeStreamer_Transfer(
+static ZRef<ZStreamerR> spMakeStreamer_Transfer(
 	const Map& iHeader, ZRef<ZStreamerR> iStreamerR)
 	{
 	// According to the spec, if content is chunked, content-length must be ignored.
@@ -773,7 +773,7 @@ static ZRef<ZStreamerR> sMakeStreamer_Transfer(
 
 ZRef<ZStreamerR> sMakeContentStreamer(const Map& iHeader, ZRef<ZStreamerR> iStreamerR)
 	{
-	iStreamerR = sMakeStreamer_Transfer(iHeader, iStreamerR);
+	iStreamerR = spMakeStreamer_Transfer(iHeader, iStreamerR);
 
 	// We could/should look for gzip Content-Encoding, and wrap a decoding filter around it.
 
@@ -1720,7 +1720,7 @@ bool sIs_qdtext(char iChar)
 #pragma mark -
 #pragma mark * ZHTTP::StreamR_Chunked
 
-static uint64 pReadChunkSize(const ZStreamR& s)
+static uint64 spReadChunkSize(const ZStreamR& s)
 	{
 	uint64 result = 0;
 	for (;;)
@@ -1760,7 +1760,7 @@ static uint64 pReadChunkSize(const ZStreamR& s)
 StreamR_Chunked::StreamR_Chunked(const ZStreamR& iStreamSource)
 :	fStreamSource(iStreamSource)
 	{
-	fChunkSize = pReadChunkSize(fStreamSource);
+	fChunkSize = spReadChunkSize(fStreamSource);
 	fHitEnd = fChunkSize == 0;
 	}
 
@@ -1778,7 +1778,7 @@ void StreamR_Chunked::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 			uint64 countSkipped;
 			fStreamSource.Skip(2, &countSkipped);
 			if (countSkipped == 2)
-				fChunkSize = pReadChunkSize(fStreamSource);
+				fChunkSize = spReadChunkSize(fStreamSource);
 			if (fChunkSize == 0)
 				fHitEnd = true;
 			}
