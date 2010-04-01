@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Thread_Win)
 
+#include "zoolib/ZCompat_Win.h"
+
 #include <new> // For std::bad_alloc
 #include <process.h> // For _beginthreadex
 
@@ -47,17 +49,24 @@ ZTSS_Win::Value ZTSS_Win::sGet(Key iKey)
 #pragma mark -
 #pragma mark * ZMtx_Win
 
+
+
+
 ZMtx_Win::ZMtx_Win(const char* iName)
-	{ ::InitializeCriticalSection(&fCRITICAL_SECTION); }
+	{
+	ZAssertCompile(sizeof(Dummy_CRITICAL_SECTION) == sizeof(CRITICAL_SECTION));
+
+	::InitializeCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&fCRITICAL_SECTION));
+	}
 
 ZMtx_Win::~ZMtx_Win()
-	{ ::DeleteCriticalSection(&fCRITICAL_SECTION); }
+	{ ::DeleteCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&fCRITICAL_SECTION)); }
 
 void ZMtx_Win::Acquire()
-	{ ::EnterCriticalSection(&fCRITICAL_SECTION); }
+	{ ::EnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&fCRITICAL_SECTION)); }
 
 void ZMtx_Win::Release()
-	{ ::LeaveCriticalSection(&fCRITICAL_SECTION); }
+	{ ::LeaveCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&fCRITICAL_SECTION)); }
 
 // =================================================================================================
 #pragma mark -
