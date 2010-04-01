@@ -23,8 +23,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
+#include "zoolib/ZCompat_algorithm.h" // For swap
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZStdInt.h" // For int64
+
+#include <typeinfo>
 
 // =================================================================================================
 #pragma mark -
@@ -35,9 +38,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
-
-#include "zoolib/ZCompat_algorithm.h" // For swap
-#include <typeinfo>
 
 #ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 	#if ZCONFIG(Compiler, CodeWarrior)
