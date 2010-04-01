@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZStreamerRWCon_SSL.h"
+#include "zoolib/ZUtil_STL.h"
 
 #include <vector>
 
@@ -32,13 +33,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Some #include fixups
 #ifndef SecInvalidateHandle
-	#define SecInvalidateHandle( x )    \
-            ((PSecHandle) x)->dwLower = (ULONG_PTR) -1 ; \
-            ((PSecHandle) x)->dwUpper = (ULONG_PTR) -1 ;
+	#define SecInvalidateHandle( x ) \
+		((PSecHandle) x)->dwLower = (ULONG_PTR) -1 ; \
+		((PSecHandle) x)->dwUpper = (ULONG_PTR) -1 ;
 #endif
-
+	
 #ifndef SP_PROT_SSL3TLS1_CLIENTS
-	#define SP_PROT_SSL3TLS1_CLIENTS        (SP_PROT_TLS1_CLIENT | SP_PROT_SSL3_CLIENT)
+	#define SP_PROT_SSL3TLS1_CLIENTS (SP_PROT_TLS1_CLIENT | SP_PROT_SSL3_CLIENT)
 #endif
 
 #ifndef SEC_I_CONTEXT_EXPIRED
@@ -211,7 +212,7 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRe
 		// be modified by DecryptMessage.
 		SecBuffer inSB[4];
 		inSB[0].cbBuffer = fBufferEnc.size();
-		inSB[0].pvBuffer = &fBufferEnc[0];
+		inSB[0].pvBuffer = ZUtil_STL::sFirstOrNil(fBufferEnc);
 		inSB[0].BufferType = SECBUFFER_DATA;
 
 		inSB[1].BufferType = SECBUFFER_EMPTY;
@@ -225,7 +226,7 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRe
 
 		SECURITY_STATUS scRet = sPSFT->DecryptMessage(&fCtxtHandle, &inSBD, 0, nullptr);
 
-		if (scRet == SEC_E_INCOMPLETE_MESSAGE)
+		if (scRet == SEC_E_INCOMPLETE_MESSAGE || (FAILED(scRet) && fBufferEnc.empty()))
 			{
 			// fBufferEnc holds an incomplete chunk, DecryptMessage needs
 			// more data before it can do the decrypt.
@@ -479,7 +480,7 @@ bool ZStreamRWCon_SSL_Win::pHandshake()
 
 		// Data from peer is in fBufferEnc, and passed to schannel via inSB[0].
 		inSB[0].cbBuffer = fBufferEnc.size();
-		inSB[0].pvBuffer = &fBufferEnc[0];
+		inSB[0].pvBuffer = ZUtil_STL::sFirstOrNil(fBufferEnc);
 		inSB[0].BufferType = SECBUFFER_TOKEN;
 
 		// After calling schannel, any unused data in fBufferEnc is described by inSB[1].
