@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
+ZMACRO_MSVCStaticLib_cpp(TextCoder_Unicode)
+
 using std::min;
 using std::string;
 

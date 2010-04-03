@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTextCoder_ICU.h"
 
 #if ZCONFIG_API_Enabled(TextCoder_ICU)
+ZMACRO_MSVCStaticLib_cpp(TextCoder_ICU)
 
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZFunctionChain.h"

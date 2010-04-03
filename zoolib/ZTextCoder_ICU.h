@@ -36,6 +36,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(TextCoder_ICU)
 
+#include "zoolib/ZCompat_MSVCStaticLib.h"
+ZMACRO_MSVCStaticLib_Reference(TextCoder_ICU)
+
 struct UConverter;
 
 NAMESPACE_ZOOLIB_BEGIN
