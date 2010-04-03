@@ -255,7 +255,7 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRe
 		// must be preserved for subsequent use.
 		// This assignment of information to buffers is only something I've determined
 		// by inspection, so for safety we walk through them to find the two we care
-		// about -- the decrypted data and any unsed encrypted data.
+		// about -- the decrypted data and any unused encrypted data.
 
 		SecBuffer* decrypted = nullptr;
 		SecBuffer* encrypted = nullptr;
