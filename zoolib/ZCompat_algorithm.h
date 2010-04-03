@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZCompat_Algorithm__
-#define __ZCompat_Algorithm__
+#ifndef __ZCompat_algorithm__
+#define __ZCompat_algorithm__
 #include "zconfig.h"
 
 #if !defined(__MWERKS__) && defined(_MSC_VER) && (_MSC_VER < 1200)
@@ -28,4 +28,4 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <algorithm>
 #endif
 
-#endif // __ZCompat_Algorithm__
+#endif // __ZCompat_algorithm__
