@@ -486,16 +486,18 @@ void Manager_Client::GetDeviceIDs(vector<uint64>& oDeviceIDs)
 			const ZStreamR& r = theSRWCon->GetStreamR();
 
 			size_t theCount = r.ReadCount();
-			oDeviceIDs.reserve(theCount);
+			
+			vector<uint64> deviceIDs;
+			deviceIDs.reserve(theCount);
 
 			for (size_t x = 0; x < theCount; ++x)
-				oDeviceIDs.push_back(r.ReadUInt64());
+				deviceIDs.push_back(r.ReadUInt64());
+
+			oDeviceIDs.swap(deviceIDs);
 			}
 		}
 	catch (...)
-		{
-		oDeviceIDs.clear();
-		}
+		{}
 	}
 
 ZRef<Device> Manager_Client::Open(uint64 iDeviceID)
