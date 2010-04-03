@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
+ZMACRO_MSVCStaticLib_cpp(Unicode_Normalize_Win)
+
 #include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZFunctionChain.h"
 

@@ -37,6 +37,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(GRgnRep_HRGN)
 
+#include "zoolib/ZCompat_MSVCStaticLib.h"
+ZMACRO_MSVCStaticLib_Reference(GRgnRep_HRGN)
+
 #include "zoolib/ZCompat_Win.h"
 
 NAMESPACE_ZOOLIB_BEGIN

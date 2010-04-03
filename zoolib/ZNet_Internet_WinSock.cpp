@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Internet_WinSock)
 
+ZMACRO_MSVCStaticLib_cpp(Net_Internet_WinSock)
+
 #include "zoolib/ZCompat_cmath.h"
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZMemory.h"
@@ -73,6 +75,32 @@ class Make_Endpoint
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * InitializeWinSock
+
+namespace ZANONYMOUS {
+
+class InitializeWinSock
+	{
+public:
+	InitializeWinSock()
+		{
+		// Low order byte is major version number, high order byte is minor version number.
+		int result = ::WSAStartup(0x0002, &fWSADATA);
+		if (result)
+			ZDebugLogf(2, ("WSAStartup got error %d", GetLastError()));
+		}
+
+	~InitializeWinSock()
+		{ ::WSACleanup(); }
+
+private:
+	WSADATA fWSADATA;
+	} sInitializeWinSock;
+
+} // anonymous namespace 
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZNet_Internet_WinSock
 
 ZNet::Error ZNet_Internet_WinSock::sTranslateError(int inNativeError)
@@ -90,33 +118,6 @@ ZNet::Error ZNet_Internet_WinSock::sTranslateError(int inNativeError)
 		}*/
 	return theError;
 	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZNet_Internet_WinSock::InitHelper__
-
-class ZNet_Internet_WinSock::InitHelper__
-	{
-public:
-	InitHelper__();
-	~InitHelper__();
-private:
-	WSADATA fWSADATA;
-	static InitHelper__ spInitHelper__;
-	};
-
-ZNet_Internet_WinSock::InitHelper__ ZNet_Internet_WinSock::InitHelper__::spInitHelper__;
-
-ZNet_Internet_WinSock::InitHelper__::InitHelper__()
-	{
-	// Low order byte is major version number, high order byte is minor version number.
-	int result = ::WSAStartup(0x0002, &fWSADATA);
-	if (result)
-		ZDebugLogf(2, ("WSAStartup got error %d", GetLastError()));
-	}
-
-ZNet_Internet_WinSock::InitHelper__::~InitHelper__()
-	{ ::WSACleanup(); }
 
 // =================================================================================================
 #pragma mark -

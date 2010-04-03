@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(TextCoder_Win)
 
+ZMACRO_MSVCStaticLib_cpp(TextCoder_Win)
+
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZUnicode.h"

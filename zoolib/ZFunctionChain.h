@@ -24,6 +24,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+/**
+\file
+If you're using the MSVC linker and putting a factory in a static library, be aware that
+the statically-initialized factory will not be considered active code unless some other
+part of the containing translation unit is active. See ZCompat_MSVCStaticLib.h for
+more discussion and suggested workarounds.
+*/
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZFunctionChain_T

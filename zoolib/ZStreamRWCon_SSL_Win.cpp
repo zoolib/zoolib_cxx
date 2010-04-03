@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_SPI_Enabled(Win)
 
+ZMACRO_MSVCStaticLib_cpp(StreamRWCon_SSL_Win)
+
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZMemory.h"
 #include "zoolib/ZStreamerRWCon_SSL.h"

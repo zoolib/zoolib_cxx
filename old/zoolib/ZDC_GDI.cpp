@@ -22,6 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(DC_GDI)
 
+#include "zoolib/ZCompat_MSVCStaticLib.h"
+ZMACRO_MSVCStaticLib_cpp(DC_GDI)
+
 #include "zoolib/ZCompat_algorithm.h" // For min
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZMemory.h"
