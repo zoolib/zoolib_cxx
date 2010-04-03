@@ -145,10 +145,10 @@ static string16 spAsString16(JSStringRef iRef)
 #pragma mark -
 #pragma mark * ZJavaScriptCore::ContextRefSetter
 
-static ZTSS::Key sContextRefKey = ZTSS::sCreate();
+static ZTSS::Key spContextRefKey = ZTSS::sCreate();
 
 static JSContextRef spCurrentContextRef()
-	{ return static_cast<JSContextRef>(ZTSS::sGet(sContextRefKey)); }
+	{ return static_cast<JSContextRef>(ZTSS::sGet(spContextRefKey)); }
 
 JSContextRef sCurrentContextRef()
 	{
@@ -160,11 +160,11 @@ JSContextRef sCurrentContextRef()
 ContextRefSetter::ContextRefSetter(JSContextRef iJSContextRef)
 	{
 	fJSContextRef_Prior = spCurrentContextRef();
-	ZTSS::sSet(sContextRefKey, iJSContextRef);
+	ZTSS::sSet(spContextRefKey, iJSContextRef);
 	}
 
 ContextRefSetter::~ContextRefSetter()
-	{ ZTSS::sSet(sContextRefKey, fJSContextRef_Prior); }
+	{ ZTSS::sSet(spContextRefKey, fJSContextRef_Prior); }
 
 // =================================================================================================
 #pragma mark -
@@ -372,7 +372,7 @@ bool Value::sQFromAny(const ZAny& iAny, Value& oVal)
 			{
 			Value local;
 			if (sQFromAny(theValue->Get(i), local))
-				theMap.Set((*i).first, local);
+				theMap.Set(theValue->NameOf(i), local);
 			}
 		oVal = theMap;
 		}
