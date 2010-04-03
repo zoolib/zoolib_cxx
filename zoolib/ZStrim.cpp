@@ -89,7 +89,7 @@ rather than the UTF16* entry point. In either case the program at the other end
 of the network connection would see text that was encoded appropriately.
 
 \note A short read is not necessarily indicative of an end of stream condition.
-If the buffer does not have enough space for enough code units to make up a
+If the buffer does not have space for enough code units to make up a
 complete code point then the read will return without reading any of that final
 code point's code units. For this reason, when reading UTF-8, you should always
 pass a buffer that is at least six code units in length, and when reading UTF-16
