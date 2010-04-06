@@ -1,5 +1,7 @@
 #include "zoolib/tql/ZTQL_Optimize.h"
-#include "zoolib/zql/ZQL_Expr_Query.h"
+#include "zoolib/zql/ZQL_Expr_All.h"
+#include "zoolib/zql/ZQL_Expr_Restrict.h"
+#include "zoolib/zql/ZQL_Expr_Select.h"
 
 #include "zoolib/zql/ZQL_Util_Strim_Query.h"
 
@@ -30,7 +32,7 @@ using namespace ZQL;
 using std::set;
 using std::string;
 
-typedef ZExpr_Logical Spec;
+typedef ZExpr_Logic Spec;
 typedef Expr_Relation Query;
 typedef ZMap_Expr Map;
 typedef ZRelHead RelHead;
@@ -50,11 +52,11 @@ static Query A(const string& iIDName)
 //static Query D(const Query& iQuery1, const Query& iQuery2)
 //	{ return sDifference(iQuery1, iQuery2); }
 
-static Query E(const Val* iVals, size_t iCount)
-	{ return sExplicit(iVals, iCount); }
+//static Query E(const Val* iVals, size_t iCount)
+//	{ return sExplicit(iVals, iCount); }
 
-static Query E(const std::vector<Val>& iVals)
-	{ return sExplicit(iVals); }
+//static Query E(const std::vector<Val>& iVals)
+//	{ return sExplicit(iVals); }
 
 static Query I(const Query& iQuery1, const Query& iQuery2)
 	{ return sIntersect(iQuery1, iQuery2); }
@@ -404,7 +406,7 @@ void sTestQL(const ZStrimW& s)
 
 	ZYadOptions theYadOptions(true);
 	
-	ZExpr_Logical theCondition = CName("Disc Number") == CConst(int32(2)) & CName("Track Number") > CConst(int32(10));
+	ZExpr_Logic theCondition = CName("Disc Number") == CConst(int32(2)) & CName("Track Number") > CConst(int32(10));
 
 //	const ZVal_Any theVal = sFromYadR(ZVal_Any(), theYadR);
 //	theYadR = sMakeYadR(theVal);

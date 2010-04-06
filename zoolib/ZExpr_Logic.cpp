@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Logical.h"
+#include "zoolib/ZExpr_Logic.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -26,16 +26,16 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZExprRep
 
-ZExprRep_Logical::ZExprRep_Logical()
+ZExprRep_Logic::ZExprRep_Logic()
 	{}
 
-ZExprRep_Logical::~ZExprRep_Logical()
+ZExprRep_Logic::~ZExprRep_Logic()
 	{}
 
-bool ZExprRep_Logical::Accept(ZVisitor_ExprRep& iVisitor)
+bool ZExprRep_Logic::Accept(ZVisitor_ExprRep& iVisitor)
 	{
-	if (ZVisitor_ExprRep_Logical* theVisitor =
-		dynamic_cast<ZVisitor_ExprRep_Logical*>(&iVisitor))
+	if (ZVisitor_ExprRep_Logic* theVisitor =
+		dynamic_cast<ZVisitor_ExprRep_Logic*>(&iVisitor))
 		{
 		return this->Accept(*theVisitor);
 		}
@@ -45,120 +45,120 @@ bool ZExprRep_Logical::Accept(ZVisitor_ExprRep& iVisitor)
 		}
 	}
 
-bool ZExprRep_Logical::Accept(ZVisitor_ExprRep_Logical& iVisitor)
+bool ZExprRep_Logic::Accept(ZVisitor_ExprRep_Logic& iVisitor)
 	{ return ZExprRep::Accept(iVisitor); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExprRep_Logical_True
+#pragma mark * ZExprRep_Logic_True
 
-ZExprRep_Logical_True::ZExprRep_Logical_True()
+ZExprRep_Logic_True::ZExprRep_Logic_True()
 	{}
 
-bool ZExprRep_Logical_True::Accept(ZVisitor_ExprRep_Logical& iVisitor)
-	{ return iVisitor.Visit_Logical_True(this); }
+bool ZExprRep_Logic_True::Accept(ZVisitor_ExprRep_Logic& iVisitor)
+	{ return iVisitor.Visit_Logic_True(this); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExprRep_Logical_False
+#pragma mark * ZExprRep_Logic_False
 
-ZExprRep_Logical_False::ZExprRep_Logical_False()
+ZExprRep_Logic_False::ZExprRep_Logic_False()
 	{}
 
-bool ZExprRep_Logical_False::Accept(ZVisitor_ExprRep_Logical& iVisitor)
-	{ return iVisitor.Visit_Logical_False(this); }
+bool ZExprRep_Logic_False::Accept(ZVisitor_ExprRep_Logic& iVisitor)
+	{ return iVisitor.Visit_Logic_False(this); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExprRep_Logical_Not
+#pragma mark * ZExprRep_Logic_Not
 
-ZExprRep_Logical_Not::ZExprRep_Logical_Not(ZRef<ZExprRep_Logical> iOperand)
+ZExprRep_Logic_Not::ZExprRep_Logic_Not(ZRef<ZExprRep_Logic> iOperand)
 :	fOperand(iOperand)
 	{}
 
-ZExprRep_Logical_Not::~ZExprRep_Logical_Not()
+ZExprRep_Logic_Not::~ZExprRep_Logic_Not()
 	{}
 
-bool ZExprRep_Logical_Not::Accept(ZVisitor_ExprRep_Logical& iVisitor)
-	{ return iVisitor.Visit_Logical_Not(this); }
+bool ZExprRep_Logic_Not::Accept(ZVisitor_ExprRep_Logic& iVisitor)
+	{ return iVisitor.Visit_Logic_Not(this); }
 
-ZRef<ZExprRep_Logical> ZExprRep_Logical_Not::GetOperand()
+ZRef<ZExprRep_Logic> ZExprRep_Logic_Not::GetOperand()
 	{ return fOperand; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExprRep_Logical_Dyadic
+#pragma mark * ZExprRep_Logic_Dyadic
 
-ZExprRep_Logical_Dyadic::ZExprRep_Logical_Dyadic(
-	ZRef<ZExprRep_Logical> iLHS, ZRef<ZExprRep_Logical> iRHS)
+ZExprRep_Logic_Dyadic::ZExprRep_Logic_Dyadic(
+	ZRef<ZExprRep_Logic> iLHS, ZRef<ZExprRep_Logic> iRHS)
 :	fLHS(iLHS)
 ,	fRHS(iRHS)
 	{}
 
-ZExprRep_Logical_Dyadic::~ZExprRep_Logical_Dyadic()
+ZExprRep_Logic_Dyadic::~ZExprRep_Logic_Dyadic()
 	{}
 
-ZRef<ZExprRep_Logical> ZExprRep_Logical_Dyadic::GetLHS()
+ZRef<ZExprRep_Logic> ZExprRep_Logic_Dyadic::GetLHS()
 	{ return fLHS; }
 
-ZRef<ZExprRep_Logical> ZExprRep_Logical_Dyadic::GetRHS()
+ZRef<ZExprRep_Logic> ZExprRep_Logic_Dyadic::GetRHS()
 	{ return fRHS; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExprRep_Logical_And
+#pragma mark * ZExprRep_Logic_And
 
-ZExprRep_Logical_And::ZExprRep_Logical_And(ZRef<ZExprRep_Logical> iLHS, ZRef<ZExprRep_Logical> iRHS)
-:	ZExprRep_Logical_Dyadic(iLHS, iRHS)
+ZExprRep_Logic_And::ZExprRep_Logic_And(ZRef<ZExprRep_Logic> iLHS, ZRef<ZExprRep_Logic> iRHS)
+:	ZExprRep_Logic_Dyadic(iLHS, iRHS)
 	{}
 
-bool ZExprRep_Logical_And::Accept(ZVisitor_ExprRep_Logical& iVisitor)
-	{ return iVisitor.Visit_Logical_And(this); }
+bool ZExprRep_Logic_And::Accept(ZVisitor_ExprRep_Logic& iVisitor)
+	{ return iVisitor.Visit_Logic_And(this); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExprRep_Logical_Or
+#pragma mark * ZExprRep_Logic_Or
 
-ZExprRep_Logical_Or::ZExprRep_Logical_Or(ZRef<ZExprRep_Logical> iLHS, ZRef<ZExprRep_Logical> iRHS)
-:	ZExprRep_Logical_Dyadic(iLHS, iRHS)
+ZExprRep_Logic_Or::ZExprRep_Logic_Or(ZRef<ZExprRep_Logic> iLHS, ZRef<ZExprRep_Logic> iRHS)
+:	ZExprRep_Logic_Dyadic(iLHS, iRHS)
 	{}
 
-bool ZExprRep_Logical_Or::Accept(ZVisitor_ExprRep_Logical& iVisitor)
-	{ return iVisitor.Visit_Logical_Or(this); }
+bool ZExprRep_Logic_Or::Accept(ZVisitor_ExprRep_Logic& iVisitor)
+	{ return iVisitor.Visit_Logic_Or(this); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_ExprRep_Logical
+#pragma mark * ZVisitor_ExprRep_Logic
 
-bool ZVisitor_ExprRep_Logical::Visit_Logical_True(ZRef<ZExprRep_Logical_True> iRep)
+bool ZVisitor_ExprRep_Logic::Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep)
 	{ return ZVisitor_ExprRep::Visit_ExprRep(iRep); }
 
-bool ZVisitor_ExprRep_Logical::Visit_Logical_False(ZRef<ZExprRep_Logical_False> iRep)
+bool ZVisitor_ExprRep_Logic::Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep)
 	{ return ZVisitor_ExprRep::Visit_ExprRep(iRep); }
 
-bool ZVisitor_ExprRep_Logical::Visit_Logical_Not(ZRef<ZExprRep_Logical_Not> iRep)
+bool ZVisitor_ExprRep_Logic::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep)
 	{
 	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
 		return false;
 
-	if (ZRef<ZExprRep_Logical> theRep = iRep->GetOperand())
+	if (ZRef<ZExprRep_Logic> theRep = iRep->GetOperand())
 		return theRep->Accept(*this);
 	
 	return true;
 	}
 
-bool ZVisitor_ExprRep_Logical::Visit_Logical_And(ZRef<ZExprRep_Logical_And> iRep)
+bool ZVisitor_ExprRep_Logic::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
 	{
 	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
 		return false;
 
-	if (ZRef<ZExprRep_Logical> theLHS = iRep->GetLHS())
+	if (ZRef<ZExprRep_Logic> theLHS = iRep->GetLHS())
 		{
 		if (!theLHS->Accept(*this))
 			return false;
 		}
 
-	if (ZRef<ZExprRep_Logical> theRHS = iRep->GetRHS())
+	if (ZRef<ZExprRep_Logic> theRHS = iRep->GetRHS())
 		{
 		if (!theRHS->Accept(*this))
 			return false;
@@ -167,18 +167,18 @@ bool ZVisitor_ExprRep_Logical::Visit_Logical_And(ZRef<ZExprRep_Logical_And> iRep
 	return true;
 	}
 
-bool ZVisitor_ExprRep_Logical::Visit_Logical_Or(ZRef<ZExprRep_Logical_Or> iRep)
+bool ZVisitor_ExprRep_Logic::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
 	{
 	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
 		return false;
 
-	if (ZRef<ZExprRep_Logical> theLHS = iRep->GetLHS())
+	if (ZRef<ZExprRep_Logic> theLHS = iRep->GetLHS())
 		{
 		if (!theLHS->Accept(*this))
 			return false;
 		}
 
-	if (ZRef<ZExprRep_Logical> theRHS = iRep->GetRHS())
+	if (ZRef<ZExprRep_Logic> theRHS = iRep->GetRHS())
 		{
 		if (!theRHS->Accept(*this))
 			return false;
@@ -189,59 +189,59 @@ bool ZVisitor_ExprRep_Logical::Visit_Logical_Or(ZRef<ZExprRep_Logical_Or> iRep)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExpr_Logical
+#pragma mark * ZExpr_Logic
 
-ZExpr_Logical::ZExpr_Logical()
+ZExpr_Logic::ZExpr_Logic()
 	{}
 
-ZExpr_Logical::ZExpr_Logical(const ZExpr_Logical& iOther)
+ZExpr_Logic::ZExpr_Logic(const ZExpr_Logic& iOther)
 :	inherited(iOther)
 	{}
 
-ZExpr_Logical::~ZExpr_Logical()
+ZExpr_Logic::~ZExpr_Logic()
 	{}
 
-ZExpr_Logical& ZExpr_Logical::operator=(const ZExpr_Logical& iOther)
+ZExpr_Logic& ZExpr_Logic::operator=(const ZExpr_Logic& iOther)
 	{
 	inherited::operator=(iOther);
 	return *this;
 	}
 
-ZExpr_Logical::ZExpr_Logical(const ZRef<ZExprRep_Logical>& iRep)
+ZExpr_Logic::ZExpr_Logic(const ZRef<ZExprRep_Logic>& iRep)
 :	inherited(iRep)
 	{}
 
-ZExpr_Logical::operator ZRef<ZExprRep_Logical>() const
-	{ return this->StaticCast<ZExprRep_Logical>(); }
+ZExpr_Logic::operator ZRef<ZExprRep_Logic>() const
+	{ return this->StaticCast<ZExprRep_Logic>(); }
 
-ZExpr_Logical operator&(const ZExpr_Logical& iLHS, const ZExpr_Logical& iRHS)
+ZExpr_Logic operator&(const ZExpr_Logic& iLHS, const ZExpr_Logic& iRHS)
 	{
 	if (iLHS)
 		{
 		if (iRHS)
-			return ZExpr_Logical(new ZExprRep_Logical_And(iLHS, iRHS));
+			return ZExpr_Logic(new ZExprRep_Logic_And(iLHS, iRHS));
 		}
-	return ZExpr_Logical();
+	return ZExpr_Logic();
 	}
 
-ZExpr_Logical& operator&=(ZExpr_Logical& iLHS, const ZExpr_Logical& iRHS)
+ZExpr_Logic& operator&=(ZExpr_Logic& iLHS, const ZExpr_Logic& iRHS)
 	{
 	iLHS = iLHS & iRHS;
 	return iLHS;
 	}
 
-ZExpr_Logical operator|(const ZExpr_Logical& iLHS, const ZExpr_Logical& iRHS)
+ZExpr_Logic operator|(const ZExpr_Logic& iLHS, const ZExpr_Logic& iRHS)
 	{
 	if (iLHS)
 		{
 		if (iRHS)
-			return ZExpr_Logical(new ZExprRep_Logical_Or(iLHS, iRHS));
+			return ZExpr_Logic(new ZExprRep_Logic_Or(iLHS, iRHS));
 		return iLHS;
 		}
 	return iRHS;
 	}
 
-ZExpr_Logical& operator|=(ZExpr_Logical& iLHS, const ZExpr_Logical& iRHS)
+ZExpr_Logic& operator|=(ZExpr_Logic& iLHS, const ZExpr_Logic& iRHS)
 	{
 	iLHS = iLHS | iRHS;
 	return iLHS;

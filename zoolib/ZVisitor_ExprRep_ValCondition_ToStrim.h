@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZVisitor_ExprRep_ValCondition_ToStrim__
 #include "zconfig.h"
 
-#include "zoolib/ZVisitor_ExprRep_Logical_ToStrim.h"
+#include "zoolib/ZVisitor_ExprRep_Logic_ToStrim.h"
 #include "zoolib/ZExpr_ValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -32,7 +32,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZVisitor_ExprRep_ValCondition_ToStrim
 
 class ZVisitor_ExprRep_ValCondition_ToStrim
-:	public virtual ZVisitor_ExprRep_Logical_ToStrim
+:	public virtual ZVisitor_ExprRep_Logic_ToStrim
 ,	public virtual ZVisitor_ExprRep_ValCondition
 	{
 public:

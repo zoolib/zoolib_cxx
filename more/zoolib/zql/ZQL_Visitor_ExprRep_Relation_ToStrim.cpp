@@ -151,7 +151,8 @@ bool Visitor_ExprRep_Relation_ToStrim::Visit_Rename(ZRef<ExprRep_Relation_Rename
 bool Visitor_ExprRep_Relation_ToStrim::Visit_Union(ZRef<ExprRep_Relation_Union> iRep)
 	{ return this->pWriteDyadic("Union", iRep); }
 
-bool Visitor_ExprRep_Relation_ToStrim::pWriteDyadic(const string& iFunctionName, ZRef<ExprRep_Relation_Dyadic> iRep)
+bool Visitor_ExprRep_Relation_ToStrim::pWriteDyadic(
+	const string& iFunctionName, ZRef<ExprRep_Relation_Dyadic> iRep)
 	{
 	spWrite(iFunctionName, fStrimW);
 

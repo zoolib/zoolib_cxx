@@ -30,7 +30,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 ZVisitor_ExprRep_ValCondition_ToStrim::ZVisitor_ExprRep_ValCondition_ToStrim(
 	const Options& iOptions, const ZStrimW& iStrimW)
-:	ZVisitor_ExprRep_Logical_ToStrim(iOptions, iStrimW)
+:	ZVisitor_ExprRep_Logic_ToStrim(iOptions, iStrimW)
 ,	ZVisitor_ExprRep_ToStrim(iOptions, iStrimW)
 	{}
 

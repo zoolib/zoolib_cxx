@@ -18,8 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Strim_RelHead.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Select_ToStrim.h"
+#include "zoolib/zql/ZQL_Expr_All.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
@@ -28,47 +27,70 @@ using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_ExprRep_Select_ToStrim
+#pragma mark * ExprRep_All
 
-namespace ZANONYMOUS {
+ExprRep_All::ExprRep_All(const string& iIDPropName)
+:	fIDPropName(iIDPropName)
+	{}
 
-void spWrite_EffectiveRelHeadComment(ZRef<ExprRep_Relation> iRep, const ZStrimW& iStrimW)
+ExprRep_All::ExprRep_All(const ZRelHead& iRelHead)
+:	fRelHead(iRelHead)
+	{}
+
+ExprRep_All::ExprRep_All(const string& iIDPropName, const ZRelHead& iRelHead)
+:	fIDPropName(iIDPropName)
+,	fRelHead(iRelHead)
+	{}
+
+ExprRep_All::~ExprRep_All()
+	{}
+
+bool ExprRep_All::Accept(Visitor_ExprRep_Relation& iVisitor)
 	{
-	iStrimW.Write(" // ");
-	ZUtil_Strim_RelHead::sWrite_RelHead(iRep->GetRelHead(), iStrimW);
+	if (Visitor_ExprRep_All* theVisitor =
+		dynamic_cast<Visitor_ExprRep_All*>(&iVisitor))
+		{
+		return theVisitor->Visit_All(this);
+		}
+	else
+		{
+		return ExprRep_Relation::Accept(iVisitor);
+		}
 	}
 
-} // anonymous namespace
+ZRelHead ExprRep_All::GetRelHead()
+	{
+	ZRelHead result = fRelHead;
+	if (!fIDPropName.empty())
+		result |= fIDPropName;
+	return result;
+	}
+
+const string& ExprRep_All::GetIDPropName()
+	{ return fIDPropName; }
+
+const ZRelHead& ExprRep_All::GetAllRelHead()
+	{ return fRelHead; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_ExprRep_Select_ToStrim
+#pragma mark * Visitor_ExprRep_All
 
-Visitor_ExprRep_Select_ToStrim::Visitor_ExprRep_Select_ToStrim(
-	const Options& iOptions, const ZStrimW& iStrimW)
-:	ZVisitor_ExprRep_ToStrim(iOptions, iStrimW)
-	{}
+bool Visitor_ExprRep_All::Visit_All(ZRef<ExprRep_All> iRep)
+	{ return Visitor_ExprRep_Relation::Visit_ExprRep(iRep); }
 
-bool Visitor_ExprRep_Select_ToStrim::Visit_Select(ZRef<ExprRep_Select> iRep)
-	{
-	fStrimW << "Select";
+// =================================================================================================
+#pragma mark -
+#pragma mark * Query operators
 
-	if (fOptions.fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iRep, fStrimW);
+Expr_Relation sAll(const ZRelHead& iRelHead)
+	{ return Expr_Relation(new ExprRep_All(iRelHead)); }
 
-	this->pWriteLFIndent();
-	fStrimW << "(";
-	this->pWriteLFIndent();
-	this->Write(iRep->GetExprRep_Logic());
-	fStrimW << ",";
+Expr_Relation sAllID(const string& iIDName)
+	{ return Expr_Relation(new ExprRep_All(iIDName)); }
 
-	this->pWriteLFIndent();
-	this->Write(iRep->GetExprRep_Relation());
-	this->pWriteLFIndent();
-
-	fStrimW << ")";
-	return true;
-	}
+Expr_Relation sAllID(const string& iIDName, const ZRelHead& iRelHead)
+	{ return Expr_Relation(new ExprRep_All(iIDName, iRelHead)); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

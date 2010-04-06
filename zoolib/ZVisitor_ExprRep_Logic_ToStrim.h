@@ -18,41 +18,35 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Visitor_ExprRep_Relation_ToStrim__
-#define __ZQL_Visitor_ExprRep_Relation_ToStrim__
+#ifndef __ZVisitor_ExprRep_Logic_ToStrim__
+#define __ZVisitor_ExprRep_Logic_ToStrim__
 #include "zconfig.h"
 
+#include "zoolib/ZExpr_Logic.h"
+#include "zoolib/ZStrim.h"
 #include "zoolib/ZVisitor_ExprRep_ToStrim.h"
 
-#include "zoolib/zql/ZQL_Expr_Relation.h"
-
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Query_ToStrim
+#pragma mark * ZVisitor_ExprRep_Logic_ToStrim
 
-class Visitor_ExprRep_Relation_ToStrim
+class ZVisitor_ExprRep_Logic_ToStrim
 :	public virtual ZVisitor_ExprRep_ToStrim
-,	public virtual Visitor_ExprRep_Relation
+,	public virtual ZVisitor_ExprRep_Logic
 	{
 public:
-	Visitor_ExprRep_Relation_ToStrim(const Options& iOptions, const ZStrimW& iStrimW);
+	ZVisitor_ExprRep_Logic_ToStrim(const Options& iOptions, const ZStrimW& iStrimW);
 
-// From Visitor_ExprRep_Relation
-	virtual bool Visit_Difference(ZRef<ExprRep_Relation_Difference> iRep);
-	virtual bool Visit_Intersect(ZRef<ExprRep_Relation_Intersect> iRep);
-	virtual bool Visit_Join(ZRef<ExprRep_Relation_Join> iRep);
-	virtual bool Visit_Project(ZRef<ExprRep_Relation_Project> iRep);
-	virtual bool Visit_Rename(ZRef<ExprRep_Relation_Rename> iRep);
-	virtual bool Visit_Union(ZRef<ExprRep_Relation_Union> iRep);
-
-private:
-	bool pWriteDyadic(const std::string& iFunctionName, ZRef<ExprRep_Relation_Dyadic> iRep);
+// From ZVisitor_ExprRep_Logic
+	virtual bool Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep);
+	virtual bool Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep);
+	virtual bool Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
+	virtual bool Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
+	virtual bool Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);
 	};
 
-} // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Visitor_ExprRep_Relation_ToStrim__
+#endif // __ZVisitor_ExprRep_Logic_ToStrim__

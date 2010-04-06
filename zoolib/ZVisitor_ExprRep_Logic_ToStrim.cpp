@@ -18,41 +18,57 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Visitor_ExprRep_Relation_ToStrim__
-#define __ZQL_Visitor_ExprRep_Relation_ToStrim__
-#include "zconfig.h"
-
-#include "zoolib/ZVisitor_ExprRep_ToStrim.h"
-
-#include "zoolib/zql/ZQL_Expr_Relation.h"
+#include "zoolib/ZVisitor_ExprRep_Logic_ToStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Query_ToStrim
+#pragma mark * ZVisitor_ExprRep_Logic_ToStrim
 
-class Visitor_ExprRep_Relation_ToStrim
-:	public virtual ZVisitor_ExprRep_ToStrim
-,	public virtual Visitor_ExprRep_Relation
+ZVisitor_ExprRep_Logic_ToStrim::ZVisitor_ExprRep_Logic_ToStrim(
+	const Options& iOptions, const ZStrimW& iStrimW)
+:	ZVisitor_ExprRep_ToStrim(iOptions, iStrimW)
+	{}
+
+bool ZVisitor_ExprRep_Logic_ToStrim::Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep)
 	{
-public:
-	Visitor_ExprRep_Relation_ToStrim(const Options& iOptions, const ZStrimW& iStrimW);
+	fStrimW << "any";
+	return true;
+	}
 
-// From Visitor_ExprRep_Relation
-	virtual bool Visit_Difference(ZRef<ExprRep_Relation_Difference> iRep);
-	virtual bool Visit_Intersect(ZRef<ExprRep_Relation_Intersect> iRep);
-	virtual bool Visit_Join(ZRef<ExprRep_Relation_Join> iRep);
-	virtual bool Visit_Project(ZRef<ExprRep_Relation_Project> iRep);
-	virtual bool Visit_Rename(ZRef<ExprRep_Relation_Rename> iRep);
-	virtual bool Visit_Union(ZRef<ExprRep_Relation_Union> iRep);
+bool ZVisitor_ExprRep_Logic_ToStrim::Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep)
+	{
+	fStrimW << "none";
+	return true;
+	}
 
-private:
-	bool pWriteDyadic(const std::string& iFunctionName, ZRef<ExprRep_Relation_Dyadic> iRep);
-	};
+bool ZVisitor_ExprRep_Logic_ToStrim::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep)
+	{
+	fStrimW << "!(";
+	iRep->GetOperand()->Accept(*this);
+	fStrimW << ")";
+	return true;
+	}
 
-} // namespace ZQL
+bool ZVisitor_ExprRep_Logic_ToStrim::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
+	{
+	fStrimW << "(";
+	iRep->GetLHS()->Accept(*this);
+	fStrimW << " & ";
+	iRep->GetRHS()->Accept(*this);
+	fStrimW << ")";
+	return true;
+	}
+
+bool ZVisitor_ExprRep_Logic_ToStrim::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
+	{
+	fStrimW << "(";
+	iRep->GetLHS()->Accept(*this);
+	fStrimW << " | ";
+	iRep->GetRHS()->Accept(*this);
+	fStrimW << ")";
+	return true;
+	}
+
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Visitor_ExprRep_Relation_ToStrim__

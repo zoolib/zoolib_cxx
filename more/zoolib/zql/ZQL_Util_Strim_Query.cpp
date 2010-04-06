@@ -45,7 +45,7 @@ public:
 
 Visitor_Query_ToStrim::Visitor_Query_ToStrim(const Options& iOptions, const ZStrimW& iStrimW)
 :	ZVisitor_ExprRep_ToStrim(iOptions, iStrimW)
-,	ZVisitor_ExprRep_Logical_ToStrim(iOptions, iStrimW)
+,	ZVisitor_ExprRep_Logic_ToStrim(iOptions, iStrimW)
 ,	ZVisitor_ExprRep_ValCondition_ToStrim(iOptions, iStrimW)
 ,	Visitor_ExprRep_Relation_ToStrim(iOptions, iStrimW)
 ,	Visitor_ExprRep_Restrict_ToStrim(iOptions, iStrimW)

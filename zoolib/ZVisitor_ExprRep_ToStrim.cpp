@@ -46,13 +46,9 @@ ZVisitor_ExprRep_ToStrim::ZVisitor_ExprRep_ToStrim(const Options& iOptions, cons
 bool ZVisitor_ExprRep_ToStrim::Visit_ExprRep(ZRef<ZExprRep> iRep)
 	{
 	if (iRep)
-		{
-		fStrimW << "/* unhandled expr: " << typeid(*iRep.Get()).name() << " */";
-		}
+		fStrimW << "/* unhandled ZExprRep: " << typeid(*iRep.Get()).name() << " */";
 	else
-		{
-		fStrimW << "/*null expr*/";
-		}
+		fStrimW << "/*null ZExprRep*/";
 	return true;
 	}
 

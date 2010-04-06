@@ -18,11 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Visitor_ExprRep_Relation_ToStrim__
-#define __ZQL_Visitor_ExprRep_Relation_ToStrim__
+#ifndef __ZQL_Expr_All__
+#define __ZQL_Expr_All__ 1
 #include "zconfig.h"
-
-#include "zoolib/ZVisitor_ExprRep_ToStrim.h"
 
 #include "zoolib/zql/ZQL_Expr_Relation.h"
 
@@ -31,28 +29,52 @@ namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Query_ToStrim
+#pragma mark * ExprRep_All
 
-class Visitor_ExprRep_Relation_ToStrim
-:	public virtual ZVisitor_ExprRep_ToStrim
-,	public virtual Visitor_ExprRep_Relation
+class ExprRep_All : public ExprRep_Relation
 	{
 public:
-	Visitor_ExprRep_Relation_ToStrim(const Options& iOptions, const ZStrimW& iStrimW);
+	ExprRep_All(const std::string& iIDPropName);
+	ExprRep_All(const ZRelHead& iRelHead);
+	ExprRep_All(const std::string& iIDPropName, const ZRelHead& iRelHead);
 
-// From Visitor_ExprRep_Relation
-	virtual bool Visit_Difference(ZRef<ExprRep_Relation_Difference> iRep);
-	virtual bool Visit_Intersect(ZRef<ExprRep_Relation_Intersect> iRep);
-	virtual bool Visit_Join(ZRef<ExprRep_Relation_Join> iRep);
-	virtual bool Visit_Project(ZRef<ExprRep_Relation_Project> iRep);
-	virtual bool Visit_Rename(ZRef<ExprRep_Relation_Rename> iRep);
-	virtual bool Visit_Union(ZRef<ExprRep_Relation_Union> iRep);
+	virtual ~ExprRep_All();
+
+// From ExprRep_Relation
+	virtual bool Accept(Visitor_ExprRep_Relation& iVisitor);
+
+	virtual ZRelHead GetRelHead();
+
+// Our protocol
+	const std::string& GetIDPropName();
+	const ZRelHead& GetAllRelHead();
 
 private:
-	bool pWriteDyadic(const std::string& iFunctionName, ZRef<ExprRep_Relation_Dyadic> iRep);
+	const std::string fIDPropName;
+	const ZRelHead fRelHead;
 	};
 
-} // namespace ZQL
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_ExprRep_All
+
+class Visitor_ExprRep_All : public virtual Visitor_ExprRep_Relation
+	{
+public:
+	virtual bool Visit_All(ZRef<ExprRep_All> iRep);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Query operators
+
+Expr_Relation sAll(const ZRelHead& iRelHead);
+
+Expr_Relation sAllID(const std::string& iIDName);
+
+Expr_Relation sAllID(const std::string& iIDName, const ZRelHead& iRelHead);
+
+}// namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Visitor_ExprRep_Relation_ToStrim__
+#endif // __ZQL_Expr_All__

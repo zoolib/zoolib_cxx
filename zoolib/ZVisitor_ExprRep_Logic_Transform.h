@@ -18,57 +18,30 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZVisitor_ExprRep_Logical_ToStrim.h"
+#ifndef __ZVisitor_ExprRep_Logic_Transform__
+#define __ZVisitor_ExprRep_Logic_Transform__
+#include "zconfig.h"
+
+#include "zoolib/ZExpr_Logic.h"
+#include "zoolib/ZVisitor_ExprRep_Transform.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_ExprRep_Logical_ToStrim
+#pragma mark * ZVisitor_ExprRep_Logic_Transform
 
-ZVisitor_ExprRep_Logical_ToStrim::ZVisitor_ExprRep_Logical_ToStrim(
-	const Options& iOptions, const ZStrimW& iStrimW)
-:	ZVisitor_ExprRep_ToStrim(iOptions, iStrimW)
-	{}
-
-bool ZVisitor_ExprRep_Logical_ToStrim::Visit_Logical_True(ZRef<ZExprRep_Logical_True> iRep)
+class ZVisitor_ExprRep_Logic_Transform
+:	public virtual ZVisitor_ExprRep_Transform
+,	public virtual ZVisitor_ExprRep_Logic
 	{
-	fStrimW << "any";
-	return true;
-	}
-
-bool ZVisitor_ExprRep_Logical_ToStrim::Visit_Logical_False(ZRef<ZExprRep_Logical_False> iRep)
-	{
-	fStrimW << "none";
-	return true;
-	}
-
-bool ZVisitor_ExprRep_Logical_ToStrim::Visit_Logical_Not(ZRef<ZExprRep_Logical_Not> iRep)
-	{
-	fStrimW << "!(";
-	iRep->GetOperand()->Accept(*this);
-	fStrimW << ")";
-	return true;
-	}
-
-bool ZVisitor_ExprRep_Logical_ToStrim::Visit_Logical_And(ZRef<ZExprRep_Logical_And> iRep)
-	{
-	fStrimW << "(";
-	iRep->GetLHS()->Accept(*this);
-	fStrimW << " & ";
-	iRep->GetRHS()->Accept(*this);
-	fStrimW << ")";
-	return true;
-	}
-
-bool ZVisitor_ExprRep_Logical_ToStrim::Visit_Logical_Or(ZRef<ZExprRep_Logical_Or> iRep)
-	{
-	fStrimW << "(";
-	iRep->GetLHS()->Accept(*this);
-	fStrimW << " | ";
-	iRep->GetRHS()->Accept(*this);
-	fStrimW << ")";
-	return true;
-	}
+public:
+// From ZVisitor_ExprRep_Logic
+	virtual bool Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
+	virtual bool Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
+	virtual bool Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);
+	};
 
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZVisitor_ExprRep_Logic_Transform__

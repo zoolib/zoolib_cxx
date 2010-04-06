@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZQL_Expr_Select__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Logical.h"
+#include "zoolib/ZExpr_Logic.h"
 #include "zoolib/zql/ZQL_Expr_Relation.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -38,7 +38,7 @@ class ExprRep_Select : public ExprRep_Relation
 	{
 public:
 	ExprRep_Select(
-		const ZRef<ZExprRep_Logical>& iExprRep_Logical,
+		const ZRef<ZExprRep_Logic>& iExprRep_Logic,
 		const ZRef<ExprRep_Relation>& iExprRep_Relation);
 
 	virtual ~ExprRep_Select();
@@ -51,11 +51,11 @@ public:
 // Our protocol
 	virtual bool Accept(Visitor_ExprRep_Select& iVisitor);
 
-	ZRef<ZExprRep_Logical> GetExprRep_Logical();
+	ZRef<ZExprRep_Logic> GetExprRep_Logic();
 	ZRef<ExprRep_Relation> GetExprRep_Relation();
 
 private:
-	const ZRef<ZExprRep_Logical> fExprRep_Logical;
+	const ZRef<ZExprRep_Logic> fExprRep_Logic;
 	const ZRef<ExprRep_Relation> fExprRep_Relation;
 	};
 
@@ -95,11 +95,11 @@ public:
 #pragma mark -
 #pragma mark * Query operators
 
-Expr_Select sSelect(const ZExpr_Logical& iExpr_Logical, const Expr_Relation& iExpr_Relation);
+Expr_Select sSelect(const ZExpr_Logic& iExpr_Logic, const Expr_Relation& iExpr_Relation);
 
-Expr_Select operator&(const ZExpr_Logical& iExpr_Logical, const Expr_Relation& iExpr_Relation);
+Expr_Select operator&(const ZExpr_Logic& iExpr_Logic, const Expr_Relation& iExpr_Relation);
 
-Expr_Select operator&(const Expr_Relation& iExpr_Relation, const ZExpr_Logical& iExpr_Logical);
+Expr_Select operator&(const Expr_Relation& iExpr_Relation, const ZExpr_Logic& iExpr_Logic);
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

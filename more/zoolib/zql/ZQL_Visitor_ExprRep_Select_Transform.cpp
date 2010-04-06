@@ -18,35 +18,28 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_ExprRep_Logical_ToStrim__
-#define __ZVisitor_ExprRep_Logical_ToStrim__
-#include "zconfig.h"
-
-#include "zoolib/ZExpr_Logical.h"
-#include "zoolib/ZStrim.h"
-#include "zoolib/ZVisitor_ExprRep_ToStrim.h"
+#include "zoolib/zql/ZQL_Visitor_ExprRep_Select_Transform.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_ExprRep_Logical_ToStrim
+#pragma mark * Visitor_ExprRep_Select_Transform
 
-class ZVisitor_ExprRep_Logical_ToStrim
-:	public virtual ZVisitor_ExprRep_ToStrim
-,	public virtual ZVisitor_ExprRep_Logical
+bool Visitor_ExprRep_Select_Transform::Visit_Select(ZRef<ExprRep_Select> iRep)
 	{
-public:
-	ZVisitor_ExprRep_Logical_ToStrim(const Options& iOptions, const ZStrimW& iStrimW);
+	ZRef<ZExprRep_Logic> oldLogical = iRep->GetExprRep_Logic();
+	ZRef<ExprRep_Relation> oldRelation = iRep->GetExprRep_Relation();
+	ZRef<ZExprRep_Logic> newLogical = this->Transform(oldLogical).DynamicCast<ZExprRep_Logic>();
+	ZRef<ExprRep_Relation> newRelation = this->Transform(oldRelation).DynamicCast<ExprRep_Relation>();
+	if (oldLogical == newLogical && oldRelation == newRelation)
+		fResult = iRep;
+	else
+		fResult = new ExprRep_Select(newLogical, newRelation);
 
-// From ZVisitor_ExprRep_Logical
-	virtual bool Visit_Logical_True(ZRef<ZExprRep_Logical_True> iRep);
-	virtual bool Visit_Logical_False(ZRef<ZExprRep_Logical_False> iRep);
-	virtual bool Visit_Logical_Not(ZRef<ZExprRep_Logical_Not> iRep);
-	virtual bool Visit_Logical_And(ZRef<ZExprRep_Logical_And> iRep);
-	virtual bool Visit_Logical_Or(ZRef<ZExprRep_Logical_Or> iRep);
-	};
+	return true;
+	}
 
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZVisitor_ExprRep_Logical_ToStrim__

@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-typedef ZExpr_Logical Spec;
+typedef ZExpr_Logic Spec;
 typedef ZExpr_Relation Query;
 typedef ZMap_Expr Map;
 typedef ZRelHead RelHead;
@@ -86,7 +86,7 @@ static Spec spAsTSpec(const ZTBSpec& iTBSpec)
 			if (sisfirst)
 				{
 				sisfirst = false;
-				sect = ZExpr_Logical(new ZExprRep_ValCondition(theCondition));
+				sect = ZExpr_Logic(new ZExprRep_ValCondition(theCondition));
 				}
 			else
 				{

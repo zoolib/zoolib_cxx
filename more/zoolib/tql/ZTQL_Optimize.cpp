@@ -20,7 +20,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/tql/ZTQL_Optimize.h"
 
-#include "zoolib/zql/ZQL_Expr_Query.h"
+//#include "zoolib/zql/ZQL_Expr_Query.h"
+#include "zoolib/zql/ZQL_Expr_Restrict.h"
+#include "zoolib/zql/ZQL_Visitor_ExprRep_Select_Transform.h"
 #include "zoolib/ZExpr_ValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -52,11 +54,11 @@ static void spCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight, Con
 		}
 	}
 
-static void spGather(ZRef<ZExprRep_Logical> iRep, CondUnion& oResult)
+static void spGather(ZRef<ZExprRep_Logic> iRep, CondUnion& oResult)
 	{
 	ZAssert(oResult.empty());
 
-	if (ZRef<ZExprRep_Logical_And> lo = ZRefDynamicCast<ZExprRep_Logical_And>(iRep))
+	if (ZRef<ZExprRep_Logic_And> lo = ZRefDynamicCast<ZExprRep_Logic_And>(iRep))
 		{
 		CondUnion left;
 		spGather(lo->GetLHS(), left);
@@ -64,7 +66,7 @@ static void spGather(ZRef<ZExprRep_Logical> iRep, CondUnion& oResult)
 		spGather(lo->GetRHS(), right);
 		spCrossMultiply(left, right, oResult);
 		}
-	else if (ZRef<ZExprRep_Logical_Or> lo = ZRefDynamicCast<ZExprRep_Logical_Or>(iRep))
+	else if (ZRef<ZExprRep_Logic_Or> lo = ZRefDynamicCast<ZExprRep_Logic_Or>(iRep))
 		{
 		CondUnion left;
 		spGather(lo->GetLHS(), left);
@@ -78,11 +80,11 @@ static void spGather(ZRef<ZExprRep_Logical> iRep, CondUnion& oResult)
 		oResult.resize(1);
 		oResult[0].push_back(lo->GetValCondition());
 		}
-	else if (ZRef<ZExprRep_Logical_True> lo = ZRefDynamicCast<ZExprRep_Logical_True>(iRep))
+	else if (ZRef<ZExprRep_Logic_True> lo = ZRefDynamicCast<ZExprRep_Logic_True>(iRep))
 		{
 		oResult.resize(1);
 		}
-	else if (ZRef<ZExprRep_Logical_False> lo = ZRefDynamicCast<ZExprRep_Logical_False>(iRep))
+	else if (ZRef<ZExprRep_Logic_False> lo = ZRefDynamicCast<ZExprRep_Logic_False>(iRep))
 		{
 		// Do nothing.
 		}
@@ -98,31 +100,31 @@ static void spGather(ZRef<ZExprRep_Logical> iRep, CondUnion& oResult)
 	}
 
 static ZRef<ExprRep_Relation> spConvertSelect(
-	ZRef<ExprRep_Relation> iRelational, ZRef<ZExprRep_Logical> iLogical)
+	ZRef<ExprRep_Relation> iRelation, ZRef<ZExprRep_Logic> iLogical)
 	{
-	if (!iRelational)
+	if (!iRelation)
 		return ZRef<ExprRep_Relation>();
 
 	CondUnion resultLogical;
 	spGather(iLogical, resultLogical);
 
-	ZRef<ExprRep_Relation> resultRelational;
+	ZRef<ExprRep_Relation> resultRelation;
 	for (CondUnion::const_iterator iterUnion = resultLogical.begin();
 		iterUnion != resultLogical.end(); ++iterUnion)
 		{
-		ZRef<ExprRep_Relation> current = iRelational;
+		ZRef<ExprRep_Relation> current = iRelation;
 		for (CondSect::const_iterator iterSect = iterUnion->begin();
 			iterSect != iterUnion->end(); ++iterSect)
 			{
 			current = new ExprRep_Restrict(*iterSect, current);
 			}
 
-		if (resultRelational)
-			resultRelational = new ExprRep_Relation_Union(current, resultRelational);
+		if (resultRelation)
+			resultRelation = new ExprRep_Relation_Union(current, resultRelation);
 		else
-			resultRelational = current;
+			resultRelation = current;
 		}
-	return resultRelational;
+	return resultRelation;
 	}
 
 // =================================================================================================
@@ -131,16 +133,19 @@ static ZRef<ExprRep_Relation> spConvertSelect(
 
 namespace ZANONYMOUS {
 
-class Optimize : public QueryTransformer
+class Optimize
+:	public virtual Visitor_ExprRep_Select_Transform
 	{
 public:
-	virtual ZRef<ExprRep_Relation> Transform_Select(ZRef<ExprRep_Select> iRep);
+// From Visitor_ExprRep_Select
+	virtual bool Visit_Select(ZRef<ExprRep_Select> iRep);
 	};
 
-ZRef<ExprRep_Relation> Optimize::Transform_Select(ZRef<ExprRep_Select> iRep)
+bool Optimize::Visit_Select(ZRef<ExprRep_Select> iRep)
 	{
-	ZRef<ExprRep_Relation> newRep = this->Transform(iRep->GetExprRep_Relation());
-	return spConvertSelect(newRep, iRep->GetExprRep_Logical());
+	ZRef<ExprRep_Relation> newRep = this->Transform(iRep->GetExprRep_Relation()).DynamicCast<ExprRep_Relation>();
+	fResult = spConvertSelect(newRep, iRep->GetExprRep_Logic());
+	return true;
 	}
 
 } // anonymous namespace
@@ -148,7 +153,7 @@ ZRef<ExprRep_Relation> Optimize::Transform_Select(ZRef<ExprRep_Select> iRep)
 namespace ZQL {
 
 ZRef<ExprRep_Relation> sOptimize(ZRef<ExprRep_Relation> iRep)
-	{ return Optimize().Transform(iRep); }
+	{ return Optimize().Transform(iRep).DynamicCast<ExprRep_Relation>(); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

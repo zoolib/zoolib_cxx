@@ -31,8 +31,8 @@ namespace ZQL {
 #pragma mark * ExprRep_Select
 
 ExprRep_Select::ExprRep_Select(
-	const ZRef<ZExprRep_Logical>& iExprRep_Logical, const ZRef<ExprRep_Relation>& iExprRep_Relation)
-:	fExprRep_Logical(iExprRep_Logical)
+	const ZRef<ZExprRep_Logic>& iExprRep_Logic, const ZRef<ExprRep_Relation>& iExprRep_Relation)
+:	fExprRep_Logic(iExprRep_Logic)
 ,	fExprRep_Relation(iExprRep_Relation)
 	{}
 
@@ -53,13 +53,13 @@ bool ExprRep_Select::Accept(Visitor_ExprRep_Relation& iVisitor)
 	}
 
 ZRelHead ExprRep_Select::GetRelHead()
-	{ return sGetRelHead(fExprRep_Logical) | fExprRep_Relation->GetRelHead(); }
+	{ return sGetRelHead(fExprRep_Logic) | fExprRep_Relation->GetRelHead(); }
 
 bool ExprRep_Select::Accept(Visitor_ExprRep_Select& iVisitor)
 	{ return iVisitor.Visit_Select(this); }
 
-ZRef<ZExprRep_Logical> ExprRep_Select::GetExprRep_Logical()
-	{ return fExprRep_Logical; }
+ZRef<ZExprRep_Logic> ExprRep_Select::GetExprRep_Logic()
+	{ return fExprRep_Logic; }
 
 ZRef<ExprRep_Relation> ExprRep_Select::GetExprRep_Relation()
 	{ return fExprRep_Relation; }
@@ -73,9 +73,9 @@ bool Visitor_ExprRep_Select::Visit_Select(ZRef<ExprRep_Select> iRep)
 	if (!Visitor_ExprRep_Relation::Visit_ExprRep(iRep))
 		return false;
 
-	if (ZRef<ZExprRep_Logical> theExpr_Logical = iRep->GetExprRep_Logical())
+	if (ZRef<ZExprRep_Logic> theExpr_Logic = iRep->GetExprRep_Logic())
 		{
-		if (!theExpr_Logical->Accept(*this))
+		if (!theExpr_Logic->Accept(*this))
 			return false;
 		}
 
@@ -119,14 +119,14 @@ Expr_Select::operator ZRef<ExprRep_Select>() const
 #pragma mark -
 #pragma mark *
 
-Expr_Select sSelect(const ZExpr_Logical& iExpr_Logical, const Expr_Relation& iExpr_Relation)
-	{ return Expr_Select(new ExprRep_Select(iExpr_Logical, iExpr_Relation)); }
+Expr_Select sSelect(const ZExpr_Logic& iExpr_Logic, const Expr_Relation& iExpr_Relation)
+	{ return Expr_Select(new ExprRep_Select(iExpr_Logic, iExpr_Relation)); }
 
-Expr_Select operator&(const ZExpr_Logical& iExpr_Logical, const Expr_Relation& iExpr_Relation)
-	{ return Expr_Select(new ExprRep_Select(iExpr_Logical, iExpr_Relation)); }
+Expr_Select operator&(const ZExpr_Logic& iExpr_Logic, const Expr_Relation& iExpr_Relation)
+	{ return Expr_Select(new ExprRep_Select(iExpr_Logic, iExpr_Relation)); }
 
-Expr_Select operator&(const Expr_Relation& iExpr_Relation, const ZExpr_Logical& iExpr_Logical)
-	{ return Expr_Select(new ExprRep_Select(iExpr_Logical, iExpr_Relation)); }
+Expr_Select operator&(const Expr_Relation& iExpr_Relation, const ZExpr_Logic& iExpr_Logic)
+	{ return Expr_Select(new ExprRep_Select(iExpr_Logic, iExpr_Relation)); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

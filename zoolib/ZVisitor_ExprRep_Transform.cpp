@@ -18,41 +18,32 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Visitor_ExprRep_Relation_ToStrim__
-#define __ZQL_Visitor_ExprRep_Relation_ToStrim__
-#include "zconfig.h"
-
-#include "zoolib/ZVisitor_ExprRep_ToStrim.h"
-
-#include "zoolib/zql/ZQL_Expr_Relation.h"
+#include "zoolib/ZVisitor_ExprRep_Transform.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Query_ToStrim
+#pragma mark * ZVisitor_ExprRep_Transform
 
-class Visitor_ExprRep_Relation_ToStrim
-:	public virtual ZVisitor_ExprRep_ToStrim
-,	public virtual Visitor_ExprRep_Relation
+ZVisitor_ExprRep_Transform::ZVisitor_ExprRep_Transform()
+	{}
+
+bool ZVisitor_ExprRep_Transform::Visit_ExprRep(ZRef<ZExprRep> iRep)
 	{
-public:
-	Visitor_ExprRep_Relation_ToStrim(const Options& iOptions, const ZStrimW& iStrimW);
+	fResult = iRep;
+	return true;
+	}
 
-// From Visitor_ExprRep_Relation
-	virtual bool Visit_Difference(ZRef<ExprRep_Relation_Difference> iRep);
-	virtual bool Visit_Intersect(ZRef<ExprRep_Relation_Intersect> iRep);
-	virtual bool Visit_Join(ZRef<ExprRep_Relation_Join> iRep);
-	virtual bool Visit_Project(ZRef<ExprRep_Relation_Project> iRep);
-	virtual bool Visit_Rename(ZRef<ExprRep_Relation_Rename> iRep);
-	virtual bool Visit_Union(ZRef<ExprRep_Relation_Union> iRep);
+ZRef<ZExprRep> ZVisitor_ExprRep_Transform::Transform(ZRef<ZExprRep> iExprRep)
+	{
+	ZRef<ZExprRep> result;
+	if (iExprRep)
+		{
+		iExprRep->Accept(*this);
+		result.swap(fResult);
+		}
+	return result;
+	}
 
-private:
-	bool pWriteDyadic(const std::string& iFunctionName, ZRef<ExprRep_Relation_Dyadic> iRep);
-	};
-
-} // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Visitor_ExprRep_Relation_ToStrim__
