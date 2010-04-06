@@ -107,6 +107,7 @@ class Starter_T
 public:
 	typedef void (*Proc)(T);
 
+private:
 	struct ProxyParam
 		{
 		Proc fProc;
@@ -117,11 +118,12 @@ public:
 			{}
 		};
 
+	
+	static ProcResult_t
 	#if ZCONFIG_API_Enabled(Thread_Win)
-		static ProcResult_t __stdcall sEntry(ProxyParam* iProxyParam)
-	#else
-		static ProcResult_t sEntry(ProxyParam* iProxyParam)
+		__stdcall
 	#endif
+	sEntry(ProxyParam* iProxyParam)
 		{
 		ProxyParam localProxyParam = *iProxyParam;
 
@@ -141,8 +143,20 @@ public:
 		return 0;
 		}
 
+public:
 	static void sCreate(Proc iProc, T iParam)
-		{ sCreateRaw(0, (ProcRaw_t)sEntry, new ProxyParam(iProc, iParam)); }
+		{
+		ProxyParam* thePP = new ProxyParam(iProc, iParam);
+		try
+			{
+			sCreateRaw(0, (ProcRaw_t)sEntry, thePP);
+			}
+		catch (...)
+			{
+			delete thePP;
+			throw;
+			}
+		}
 	};
 
 template <class T>

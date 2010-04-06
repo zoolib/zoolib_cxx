@@ -73,11 +73,11 @@ InitHelper::~InitHelper()
 		}
 	}
 
+static ProcResult_t
 #if ZCONFIG_API_Enabled(ThreadImp_Win)
-	static ProcResult_t __stdcall spEntryVoid(ProcVoid_t iProc)
-#else
-	static ProcResult_t spEntryVoid(ProcVoid_t iProc)
+	__stdcall
 #endif
+spEntryVoid(ProcVoid_t iProc)
 	{
 	sStarted();
 	try
@@ -92,10 +92,10 @@ InitHelper::~InitHelper()
 
 void sCreateVoid(ProcVoid_t iProcVoid)
 	{
-	union Converter_t
+	union
 		{
-		void* fAsPointer;
 		ProcVoid_t fAsProc;
+		void* fAsPointer;
 		} theConverter;
 
 	theConverter.fAsProc = iProcVoid;
