@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,37 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_TQL_Query__
-#define __ZUtil_Strim_TQL_Query__
+#ifndef __ZUtil_Strim_ValCondition__
+#define __ZUtil_Strim_ValCondition__
 #include "zconfig.h"
 
 #include "zoolib/ZStrim.h"
-#include "zoolib/ZExpr_Query.h"
+#include "zoolib/ZValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-namespace ZUtil_Strim_TQL {
+namespace ZUtil_Strim_ValCondition {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_Strim_TQL
+#pragma mark * ZUtil_Strim_ValCondition
 
-struct Options
-	{
-	Options();
+void sToStrim(const ZValCondition& iValCondition, const ZStrimW& iStrimW);
 
-	std::string fEOLString;
-	std::string fIndentString;
-	};
-
-void sToStrim(const ZRef<ZExprRep_Relation>& iRep, const ZStrimW& s);
-
-void sToStrim(size_t iInitialIndent, const Options& iOptions,
-	const ZRef<ZExprRep_Relation>& iRep,
-	const ZStrimW& s);
-
-} // namespace ZUtil_Strim_TQL
+} // namespace ZUtil_Strim_ValCondition
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZUtil_Strim_TQL_Query__
+#endif // __ZUtil_Strim_ValCondition__

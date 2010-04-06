@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,24 +18,33 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTQL_Optimize__
-#define __ZTQL_Optimize__ 1
+#ifndef __ZQL_Visitor_ExprRep_Restrict_ToStrim__
+#define __ZQL_Visitor_ExprRep_Restrict_ToStrim__
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Relation.h"
+#include "zoolib/ZValCondition.h"
+#include "zoolib/ZVisitor_ExprRep_ToStrim.h"
+#include "zoolib/zql/ZQL_Expr_Restrict.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL
+#pragma mark * Visitor_ExprRep_Restrict_ToStrim
 
-namespace ZQL {
+class Visitor_ExprRep_Restrict_ToStrim
+:	public virtual ZVisitor_ExprRep_ToStrim
+,	public virtual Visitor_ExprRep_Restrict
+	{
+public:
+	Visitor_ExprRep_Restrict_ToStrim(const Options& iOptions, const ZStrimW& iStrimW);
 
-ZRef<ExprRep_Relation> sOptimize(ZRef<ExprRep_Relation> iRep);
+// From Visitor_ExprRep_Restrict
+	virtual bool Visit_Restrict(ZRef<ExprRep_Restrict> iRep);
+	};
 
-} // namespace ZTQL
-
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZTQL_Optimize__
+#endif // __ZQL_Visitor_ExprRep_Restrict_ToStrim__

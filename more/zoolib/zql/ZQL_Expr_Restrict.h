@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,24 +18,21 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTQL_Optimize__
-#define __ZTQL_Optimize__ 1
+#ifndef __ZQL_Expr_Restrict__
+#define __ZQL_Expr_Restrict__ 1
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Relation.h"
+#include "zoolib/zql/ZQL_Expr_Restrict_T.h"
+#include "zoolib/ZValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZTQL
-
 namespace ZQL {
 
-ZRef<ExprRep_Relation> sOptimize(ZRef<ExprRep_Relation> iRep);
+typedef Visitor_ExprRep_Restrict_T<ZVal_Expr> Visitor_ExprRep_Restrict;
+typedef ExprRep_Restrict_T<ZVal_Expr> ExprRep_Restrict;
+typedef Expr_Restrict_T<ZVal_Expr> Expr_Restrict;
 
-} // namespace ZTQL
-
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZTQL_Optimize__
+#endif // __ZQL_Expr_Restrict_T__

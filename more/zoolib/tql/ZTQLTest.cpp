@@ -1,8 +1,9 @@
 #include "zoolib/tql/ZTQL_Optimize.h"
-#include "zoolib/ZExpr_Query.h"
+#include "zoolib/zql/ZQL_Expr_Query.h"
 
-#include "zoolib/tql/ZUtil_Strim_TQL_Query.h"
-#include "zoolib/tql/ZUtil_TQLConvert.h"
+#include "zoolib/zql/ZQL_Util_Strim_Query.h"
+
+//#include "zoolib/tql/ZUtil_TQLConvert.h"
 #include "zoolib/ZExpr_ValCondition.h"
 
 #include "zoolib/ZUtil_Strim_Tuple.h"
@@ -24,13 +25,13 @@
 
 NAMESPACE_ZOOLIB_USING
 
-using namespace ZTQL;
+using namespace ZQL;
 
 using std::set;
 using std::string;
 
 typedef ZExpr_Logical Spec;
-typedef ZExpr_Relation Query;
+typedef Expr_Relation Query;
 typedef ZMap_Expr Map;
 typedef ZRelHead RelHead;
 typedef ZVal_Expr Val;
@@ -269,17 +270,18 @@ static Query sQuery()
 static void sDumpQuery(const ZStrimW& s, Query iQuery)
 	{
 	s << "ZTQL::Query equivalent -----------------------\n";
-	ZUtil_Strim_TQL::sToStrim(iQuery, s);
+	Util_Strim_Query::sToStrim(iQuery, s);
 
 	s << "\nZTQL::Query optimized -----------------------\n";
 	
-	ZExpr_Relation theNode = sOptimize(iQuery);
+	Expr_Relation theNode = sOptimize(iQuery);
 	
-	ZUtil_Strim_TQL::sToStrim(theNode, s);
+	Util_Strim_Query::sToStrim(theNode, s);
 
 	s << "\n";	
 	}
 
+#if 0
 static void sTestOne(const string& iLabel, const ZStrimW& s, const ZTBQuery& iTBQ)
 	{
 	const Query query = ZUtil_TQLConvert::sConvert(iTBQ, false);
@@ -288,7 +290,7 @@ static void sTestOne(const string& iLabel, const ZStrimW& s, const ZTBQuery& iTB
 
 	sDumpQuery(s, query);
 	}
-
+#endif
 void sTestQL(const ZStrimW& s);
 void sTestQL2(const ZStrimW& s)
 	{
@@ -320,6 +322,12 @@ void sTestQL2(const ZStrimW& s)
 
 void sTestQL3(const ZStrimW& s)
 	{
+	Spec theSpec = CVar("TestVar1") == CConst(1) | CVar("TestVar2") == CConst(2);
+	Expr_Relation theExp = sSelect(theSpec, sAll(ZRelHead(true)));
+	sDumpQuery(s, theExp);
+
+	sDumpQuery(s, theExp * theExp);
+
 	ZMap_Expr theMap;
 	theMap.Set("name", ZMap_Expr().Set("last", string("fred")));
 //	Spec theSpec = CTrail("name/last") < CConst("fred1");
@@ -334,15 +342,14 @@ void sTestQL3(const ZStrimW& s)
 	else
 		s << "Doesn't\n";
 
-	ZExpr_Relation theExp = sSelect(CVar("TestVar1") == CConst(1) & CVar("TestVar2") == CConst(2), sAll(ZRelHead(true)));
-	sDumpQuery(s, theExp);
-
 
 //	return;
 	
 //	Query theQuery = sAllID("$ID$") & theSpec;
 //	sDumpQuery(s, theQuery);
-	sDumpQuery(s, sQuery());
+
+//##	sDumpQuery(s, sQuery());
+#if 0
 //	sDumpQuery(s, sQueryNoHead());
 //	sDumpQuery(s, ZUtil_TQLConvert::sConvert(sTBQuery(), false));
 
@@ -376,6 +383,7 @@ void sTestQL3(const ZStrimW& s)
 //	Query query = sQuery();
 //	ZUtil_StrimTQL::sToStrim(s, query);
 //	s << "\n";
+#endif
 	}
 
 
@@ -398,8 +406,8 @@ void sTestQL(const ZStrimW& s)
 	
 	ZExpr_Logical theCondition = CName("Disc Number") == CConst(int32(2)) & CName("Track Number") > CConst(int32(10));
 
-	const ZVal_Any theVal = sFromYadR(ZVal_Any(), theYadR);
-	theYadR = sMakeYadR(theVal);
+//	const ZVal_Any theVal = sFromYadR(ZVal_Any(), theYadR);
+//	theYadR = sMakeYadR(theVal);
 	theYadR = ZUtil_Yad::sWalk(theYadR, "Tracks");
 	if (ZRef<ZYadMapR> theYadMapR = theYadR.DynamicCast<ZYadMapR>())
 		{
@@ -414,9 +422,8 @@ void sTestQL(const ZStrimW& s)
 			if (sMatches(theCondition, theVal))
 				{
 				ZYad_ZooLibStrim::sToStrim(0, theYadOptions, sMakeYadR(theVal), s);
+				s << "\n";
 				}
 			}
 		}
-
-	
 	}

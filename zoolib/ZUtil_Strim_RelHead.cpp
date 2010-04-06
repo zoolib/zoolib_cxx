@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,16 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZUtil_Strim_RelHead.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
-#include "zoolib/tql/ZUtil_Strim_TQL.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_Strim_TQL
+#pragma mark * ZUtil_Strim_RelHead
 
-namespace ZUtil_Strim_TQL {
+namespace ZUtil_Strim_RelHead {
 
 using std::set;
 using std::string;
@@ -59,6 +59,6 @@ void sWrite_RelHead(const ZRelHead& iRelHead, const ZStrimW& s)
 	s.Write("]");
 	}
 
-} // namespace ZUtil_Strim_TQL
+} // namespace ZUtil_Strim_RelHead
 
 NAMESPACE_ZOOLIB_END

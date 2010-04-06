@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,24 +18,35 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTQL_Optimize__
-#define __ZTQL_Optimize__ 1
+#ifndef __ZVisitor_ExprRep_Logical_ToStrim__
+#define __ZVisitor_ExprRep_Logical_ToStrim__
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Relation.h"
+#include "zoolib/ZExpr_Logical.h"
+#include "zoolib/ZStrim.h"
+#include "zoolib/ZVisitor_ExprRep_ToStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL
+#pragma mark * ZVisitor_ExprRep_Logical_ToStrim
 
-namespace ZQL {
+class ZVisitor_ExprRep_Logical_ToStrim
+:	public virtual ZVisitor_ExprRep_ToStrim
+,	public virtual ZVisitor_ExprRep_Logical
+	{
+public:
+	ZVisitor_ExprRep_Logical_ToStrim(const Options& iOptions, const ZStrimW& iStrimW);
 
-ZRef<ExprRep_Relation> sOptimize(ZRef<ExprRep_Relation> iRep);
-
-} // namespace ZTQL
+// From ZVisitor_ExprRep_Logical
+	virtual bool Visit_Logical_True(ZRef<ZExprRep_Logical_True> iRep);
+	virtual bool Visit_Logical_False(ZRef<ZExprRep_Logical_False> iRep);
+	virtual bool Visit_Logical_Not(ZRef<ZExprRep_Logical_Not> iRep);
+	virtual bool Visit_Logical_And(ZRef<ZExprRep_Logical_And> iRep);
+	virtual bool Visit_Logical_Or(ZRef<ZExprRep_Logical_Or> iRep);
+	};
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZTQL_Optimize__
+#endif // __ZVisitor_ExprRep_Logical_ToStrim__

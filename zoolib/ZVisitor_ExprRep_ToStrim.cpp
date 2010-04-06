@@ -18,37 +18,59 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZExpr_Physical__
-#define __ZExpr_Physical__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZExpr_Relation.h"
+#include "zoolib/ZVisitor_ExprRep_ToStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExprRep_Physical
+#pragma mark * ZVisitor_ExprRep_ToStrim::Options
 
-class ZExprRep_Physical : public ZExprRep_Relation
-	{
-protected:
-	ZExprRep_Physical();
-
-public:
-	virtual ~ZExprRep_Physical();
-	};
+ZVisitor_ExprRep_ToStrim::Options::Options()
+:	fEOLString("\n")
+,	fIndentString("  ")
+,	fInitialIndent(0)
+,	fDebuggingOutput(false)
+	{}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_ExprRep_Physical
+#pragma mark * ZVisitor_ExprRep_ToStrim
 
-class ZVisitor_ExprRep_Physical : public virtual ZVisitor_ExprRep_Relation
+ZVisitor_ExprRep_ToStrim::ZVisitor_ExprRep_ToStrim(const Options& iOptions, const ZStrimW& iStrimW)
+:	fOptions(iOptions)
+,	fStrimW(iStrimW)
+,	fIndent(0)
+	{}
+
+bool ZVisitor_ExprRep_ToStrim::Visit_ExprRep(ZRef<ZExprRep> iRep)
 	{
-public:
-	virtual bool Visit_Physical(ZRef<ZExprRep_Physical> iRep);
-	};
+	if (iRep)
+		{
+		fStrimW << "/* unhandled expr: " << typeid(*iRep.Get()).name() << " */";
+		}
+	else
+		{
+		fStrimW << "/*null expr*/";
+		}
+	return true;
+	}
+
+void ZVisitor_ExprRep_ToStrim::Write(ZRef<ZExprRep> iExprRep)
+	{
+	if (iExprRep)
+		{
+		++fIndent;
+		iExprRep->Accept(*this);
+		--fIndent;
+		}
+	}
+
+void ZVisitor_ExprRep_ToStrim::pWriteLFIndent()
+	{
+	fStrimW.Write(fOptions.fEOLString);
+	for (size_t x = 0; x < fIndent; ++x)
+		fStrimW.Write(fOptions.fIndentString);
+	}
 
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZExpr_Physical__

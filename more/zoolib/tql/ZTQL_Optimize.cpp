@@ -20,14 +20,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/tql/ZTQL_Optimize.h"
 
-#include "zoolib/ZExpr_Query.h"
+#include "zoolib/zql/ZQL_Expr_Query.h"
 #include "zoolib/ZExpr_ValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+using namespace ZQL;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL, spConvertSelect
+#pragma mark * ZQL, spConvertSelect
 
 // Turns a Select into a tree of Restrict and Union.
 
@@ -96,28 +97,28 @@ static void spGather(ZRef<ZExprRep_Logical> iRep, CondUnion& oResult)
 		}
 	}
 
-static ZRef<ZExprRep_Relation> spConvertSelect(
-	ZRef<ZExprRep_Relation> iRelational, ZRef<ZExprRep_Logical> iLogical)
+static ZRef<ExprRep_Relation> spConvertSelect(
+	ZRef<ExprRep_Relation> iRelational, ZRef<ZExprRep_Logical> iLogical)
 	{
 	if (!iRelational)
-		return ZRef<ZExprRep_Relation>();
+		return ZRef<ExprRep_Relation>();
 
 	CondUnion resultLogical;
 	spGather(iLogical, resultLogical);
 
-	ZRef<ZExprRep_Relation> resultRelational;
+	ZRef<ExprRep_Relation> resultRelational;
 	for (CondUnion::const_iterator iterUnion = resultLogical.begin();
 		iterUnion != resultLogical.end(); ++iterUnion)
 		{
-		ZRef<ZExprRep_Relation> current = iRelational;
+		ZRef<ExprRep_Relation> current = iRelational;
 		for (CondSect::const_iterator iterSect = iterUnion->begin();
 			iterSect != iterUnion->end(); ++iterSect)
 			{
-			current = new ZExprRep_Restrict(*iterSect, current);
+			current = new ExprRep_Restrict(*iterSect, current);
 			}
 
 		if (resultRelational)
-			resultRelational = new ZExprRep_Relation_Union(current, resultRelational);
+			resultRelational = new ExprRep_Relation_Union(current, resultRelational);
 		else
 			resultRelational = current;
 		}
@@ -126,25 +127,28 @@ static ZRef<ZExprRep_Relation> spConvertSelect(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL
+#pragma mark * ZQL
 
 namespace ZANONYMOUS {
 
-class Optimize : public ZQueryTransformer
+class Optimize : public QueryTransformer
 	{
 public:
-	virtual ZRef<ZExprRep_Relation> Transform_Select(ZRef<ZExprRep_Select> iRep);
+	virtual ZRef<ExprRep_Relation> Transform_Select(ZRef<ExprRep_Select> iRep);
 	};
 
-ZRef<ZExprRep_Relation> Optimize::Transform_Select(ZRef<ZExprRep_Select> iRep)
+ZRef<ExprRep_Relation> Optimize::Transform_Select(ZRef<ExprRep_Select> iRep)
 	{
-	ZRef<ZExprRep_Relation> newRep = this->Transform(iRep->GetExpr_Relation());
-	return spConvertSelect(newRep, iRep->GetExpr_Logical());
+	ZRef<ExprRep_Relation> newRep = this->Transform(iRep->GetExprRep_Relation());
+	return spConvertSelect(newRep, iRep->GetExprRep_Logical());
 	}
 
 } // anonymous namespace
 
-ZRef<ZExprRep_Relation> ZTQL::sOptimize(ZRef<ZExprRep_Relation> iRep)
+namespace ZQL {
+
+ZRef<ExprRep_Relation> sOptimize(ZRef<ExprRep_Relation> iRep)
 	{ return Optimize().Transform(iRep); }
 
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END

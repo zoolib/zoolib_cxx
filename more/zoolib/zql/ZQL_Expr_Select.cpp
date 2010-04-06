@@ -18,68 +18,68 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Select.h"
+#include "zoolib/zql/ZQL_Expr_Select.h"
 #include "zoolib/ZExpr_ValCondition.h" // For sGetRelHead
 
 using std::string;
-//using std::vector;
 
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExprRep_Select
+#pragma mark * ExprRep_Select
 
-ZExprRep_Select::ZExprRep_Select(
-	const ZRef<ZExprRep_Logical>& iExpr_Logical, const ZRef<ZExprRep_Relation>& iExpr_Relation)
-:	fExpr_Logical(iExpr_Logical)
-,	fExpr_Relation(iExpr_Relation)
+ExprRep_Select::ExprRep_Select(
+	const ZRef<ZExprRep_Logical>& iExprRep_Logical, const ZRef<ExprRep_Relation>& iExprRep_Relation)
+:	fExprRep_Logical(iExprRep_Logical)
+,	fExprRep_Relation(iExprRep_Relation)
 	{}
 
-ZExprRep_Select::~ZExprRep_Select()
+ExprRep_Select::~ExprRep_Select()
 	{}
 
-bool ZExprRep_Select::Accept(ZVisitor_ExprRep_Relation& iVisitor)
+bool ExprRep_Select::Accept(Visitor_ExprRep_Relation& iVisitor)
 	{
-	if (ZVisitor_ExprRep_Select* theVisitor =
-		dynamic_cast<ZVisitor_ExprRep_Select*>(&iVisitor))
+	if (Visitor_ExprRep_Select* theVisitor =
+		dynamic_cast<Visitor_ExprRep_Select*>(&iVisitor))
 		{
 		return this->Accept(*theVisitor);
 		}
 	else
 		{
-		return ZExprRep_Relation::Accept(iVisitor);
+		return ExprRep_Relation::Accept(iVisitor);
 		}
 	}
 
-ZRelHead ZExprRep_Select::GetRelHead()
-	{ return sGetRelHead(fExpr_Logical) | fExpr_Relation->GetRelHead(); }
+ZRelHead ExprRep_Select::GetRelHead()
+	{ return sGetRelHead(fExprRep_Logical) | fExprRep_Relation->GetRelHead(); }
 
-bool ZExprRep_Select::Accept(ZVisitor_ExprRep_Select& iVisitor)
+bool ExprRep_Select::Accept(Visitor_ExprRep_Select& iVisitor)
 	{ return iVisitor.Visit_Select(this); }
 
-ZRef<ZExprRep_Logical> ZExprRep_Select::GetExpr_Logical()
-	{ return fExpr_Logical; }
+ZRef<ZExprRep_Logical> ExprRep_Select::GetExprRep_Logical()
+	{ return fExprRep_Logical; }
 
-ZRef<ZExprRep_Relation> ZExprRep_Select::GetExpr_Relation()
-	{ return fExpr_Relation; }
+ZRef<ExprRep_Relation> ExprRep_Select::GetExprRep_Relation()
+	{ return fExprRep_Relation; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_ExprRep_Select
+#pragma mark * Visitor_ExprRep_Select
 
-bool ZVisitor_ExprRep_Select::Visit_Select(ZRef<ZExprRep_Select> iRep)
+bool Visitor_ExprRep_Select::Visit_Select(ZRef<ExprRep_Select> iRep)
 	{
-	if (!ZVisitor_ExprRep_Relation::Visit_ExprRep(iRep))
+	if (!Visitor_ExprRep_Relation::Visit_ExprRep(iRep))
 		return false;
 
-	if (ZRef<ZExprRep_Logical> theExpr_Logical = iRep->GetExpr_Logical())
+	if (ZRef<ZExprRep_Logical> theExpr_Logical = iRep->GetExprRep_Logical())
 		{
 		if (!theExpr_Logical->Accept(*this))
 			return false;
 		}
 
-	if (ZRef<ZExprRep_Relation> theExpr_Relation = iRep->GetExpr_Relation())
+	if (ZRef<ExprRep_Relation> theExpr_Relation = iRep->GetExprRep_Relation())
 		{
 		if (!theExpr_Relation->Accept(*this))
 			return false;
@@ -90,42 +90,43 @@ bool ZVisitor_ExprRep_Select::Visit_Select(ZRef<ZExprRep_Select> iRep)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExpr_Select
+#pragma mark * Expr_Select
 
-ZExpr_Select::ZExpr_Select()
+Expr_Select::Expr_Select()
 	{}
 
-ZExpr_Select::ZExpr_Select(const ZExpr_Select& iOther)
+Expr_Select::Expr_Select(const Expr_Select& iOther)
 :	inherited(iOther)
 	{}
 
-ZExpr_Select::~ZExpr_Select()
+Expr_Select::~Expr_Select()
 	{}
 
-ZExpr_Select& ZExpr_Select::operator=(const ZExpr_Select& iOther)
+Expr_Select& Expr_Select::operator=(const Expr_Select& iOther)
 	{
 	inherited::operator=(iOther);
 	return *this;
 	}
 
-ZExpr_Select::ZExpr_Select(const ZRef<ZExprRep_Select>& iRep)
+Expr_Select::Expr_Select(const ZRef<ExprRep_Select>& iRep)
 :	inherited(iRep)
 	{}
 
-ZExpr_Select::operator ZRef<ZExprRep_Select>() const
-	{ return this->StaticCast<ZExprRep_Select>(); }
+Expr_Select::operator ZRef<ExprRep_Select>() const
+	{ return this->StaticCast<ExprRep_Select>(); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark *
 
-ZExpr_Select sSelect(const ZExpr_Logical& iExpr_Logical, const ZExpr_Relation& iExpr_Relation)
-	{ return ZExpr_Select(new ZExprRep_Select(iExpr_Logical, iExpr_Relation)); }
+Expr_Select sSelect(const ZExpr_Logical& iExpr_Logical, const Expr_Relation& iExpr_Relation)
+	{ return Expr_Select(new ExprRep_Select(iExpr_Logical, iExpr_Relation)); }
 
-ZExpr_Select operator&(const ZExpr_Logical& iExpr_Logical, const ZExpr_Relation& iExpr_Relation)
-	{ return ZExpr_Select(new ZExprRep_Select(iExpr_Logical, iExpr_Relation)); }
+Expr_Select operator&(const ZExpr_Logical& iExpr_Logical, const Expr_Relation& iExpr_Relation)
+	{ return Expr_Select(new ExprRep_Select(iExpr_Logical, iExpr_Relation)); }
 
-ZExpr_Select operator&(const ZExpr_Relation& iExpr_Relation, const ZExpr_Logical& iExpr_Logical)
-	{ return ZExpr_Select(new ZExprRep_Select(iExpr_Logical, iExpr_Relation)); }
+Expr_Select operator&(const Expr_Relation& iExpr_Relation, const ZExpr_Logical& iExpr_Logical)
+	{ return Expr_Select(new ExprRep_Select(iExpr_Logical, iExpr_Relation)); }
 
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END

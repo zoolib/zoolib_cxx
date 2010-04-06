@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,26 +18,42 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_TQL__
-#define __ZUtil_Strim_TQL__
-#include "zconfig.h"
-
-#include "zoolib/ZRelHead.h"
-#include "zoolib/ZStrim.h"
+#include "zoolib/zql/ZQL_Expr_Physical.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-
-namespace ZUtil_Strim_TQL {
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_Strim_TQL
+#pragma mark * ExprRep_Physical
 
-void sWrite_PropName(const std::string& iName, const ZStrimW& s);
-void sWrite_RelHead(const ZRelHead& iRelHead, const ZStrimW& s);
+ExprRep_Physical::ExprRep_Physical()
+	{}
 
-} // namespace ZUtil_Strim_TQL
+ExprRep_Physical::~ExprRep_Physical()
+	{}
 
+bool ExprRep_Physical::Accept(Visitor_ExprRep_Relation& iVisitor)
+	{
+	if (Visitor_ExprRep_Physical* theVisitor =
+		dynamic_cast<Visitor_ExprRep_Physical*>(&iVisitor))
+		{
+		return this->Accept(*theVisitor);
+		}
+	else
+		{
+		return ExprRep_Relation::Accept(iVisitor);
+		}
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_ExprRep_Physical
+
+bool Visitor_ExprRep_Physical::Visit_Physical(ZRef<ExprRep_Physical> iRep)
+	{
+	return Visitor_ExprRep_Relation::Visit_ExprRep(iRep);
+	}
+
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZUtil_Strim_TQL__

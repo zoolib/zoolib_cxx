@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,24 +18,57 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTQL_Optimize__
-#define __ZTQL_Optimize__ 1
-#include "zconfig.h"
-
-#include "zoolib/zql/ZQL_Expr_Relation.h"
+#include "zoolib/ZUtil_Strim_RelHead.h"
+#include "zoolib/zql/ZQL_Visitor_ExprRep_Select_ToStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZQL {
+
+using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL
+#pragma mark * Visitor_ExprRep_Select_ToStrim
 
-namespace ZQL {
+namespace ZANONYMOUS {
 
-ZRef<ExprRep_Relation> sOptimize(ZRef<ExprRep_Relation> iRep);
+void spWrite_EffectiveRelHeadComment(ZRef<ExprRep_Relation> iRep, const ZStrimW& iStrimW)
+	{
+	iStrimW.Write(" // ");
+	ZUtil_Strim_RelHead::sWrite_RelHead(iRep->GetRelHead(), iStrimW);
+	}
 
-} // namespace ZTQL
+} // anonymous namespace
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_ExprRep_Select_ToStrim
+
+Visitor_ExprRep_Select_ToStrim::Visitor_ExprRep_Select_ToStrim(
+	const Options& iOptions, const ZStrimW& iStrimW)
+:	ZVisitor_ExprRep_ToStrim(iOptions, iStrimW)
+	{}
+
+bool Visitor_ExprRep_Select_ToStrim::Visit_Select(ZRef<ExprRep_Select> iRep)
+	{
+	fStrimW << "Select";
+
+	if (fOptions.fDebuggingOutput)
+		spWrite_EffectiveRelHeadComment(iRep, fStrimW);
+
+	this->pWriteLFIndent();
+	fStrimW << "(";
+	this->pWriteLFIndent();
+	this->Write(iRep->GetExprRep_Logical());
+	fStrimW << ",";
+
+	this->pWriteLFIndent();
+	this->Write(iRep->GetExprRep_Relation());
+	this->pWriteLFIndent();
+
+	fStrimW << ")";
+	return true;
+	}
+
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZTQL_Optimize__

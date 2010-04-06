@@ -18,88 +18,90 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZExpr_Select__
-#define __ZExpr_Select__ 1
+#ifndef __ZQL_Expr_Select__
+#define __ZQL_Expr_Select__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Logical.h"
-#include "zoolib/ZExpr_Relation.h"
+#include "zoolib/zql/ZQL_Expr_Relation.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZQL {
 
-class ZVisitor_ExprRep_Select;
+class Visitor_ExprRep_Select;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExprRep_Select
+#pragma mark * ExprRep_Select
 
-class ZExprRep_Select : public ZExprRep_Relation
+class ExprRep_Select : public ExprRep_Relation
 	{
 public:
-	ZExprRep_Select(
-		const ZRef<ZExprRep_Logical>& iExpr_Logical,
-		const ZRef<ZExprRep_Relation>& iExpr_Relation);
+	ExprRep_Select(
+		const ZRef<ZExprRep_Logical>& iExprRep_Logical,
+		const ZRef<ExprRep_Relation>& iExprRep_Relation);
 
-	virtual ~ZExprRep_Select();
+	virtual ~ExprRep_Select();
 
 // From ZExprRep_Relation
-	virtual bool Accept(ZVisitor_ExprRep_Relation& iVisitor);
+	virtual bool Accept(Visitor_ExprRep_Relation& iVisitor);
 
 	virtual ZRelHead GetRelHead();
 
 // Our protocol
-	virtual bool Accept(ZVisitor_ExprRep_Select& iVisitor);
+	virtual bool Accept(Visitor_ExprRep_Select& iVisitor);
 
-	ZRef<ZExprRep_Logical> GetExpr_Logical();
-	ZRef<ZExprRep_Relation> GetExpr_Relation();
+	ZRef<ZExprRep_Logical> GetExprRep_Logical();
+	ZRef<ExprRep_Relation> GetExprRep_Relation();
 
 private:
-	const ZRef<ZExprRep_Logical> fExpr_Logical;
-	const ZRef<ZExprRep_Relation> fExpr_Relation;
+	const ZRef<ZExprRep_Logical> fExprRep_Logical;
+	const ZRef<ExprRep_Relation> fExprRep_Relation;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_ExprRep_Select
+#pragma mark * Visitor_ExprRep_Select
 
-class ZVisitor_ExprRep_Select : public virtual ZVisitor_ExprRep_Relation
+class Visitor_ExprRep_Select : public virtual Visitor_ExprRep_Relation
 	{
 public:
-	virtual bool Visit_Select(ZRef<ZExprRep_Select> iRep);
+	virtual bool Visit_Select(ZRef<ExprRep_Select> iRep);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExpr_Select
+#pragma mark * Expr_Select
 
-class ZExpr_Select : public ZExpr_Relation
+class Expr_Select : public Expr_Relation
 	{
-	typedef ZExpr_Relation inherited;
+	typedef Expr_Relation inherited;
 
-	ZExpr_Select operator=(const ZExpr_Relation&);
-	ZExpr_Select operator=(const ZRef<ZExprRep_Relation>&);
+	Expr_Select operator=(const Expr_Relation&);
+	Expr_Select operator=(const ZRef<ExprRep_Relation>&);
 
 public:
-	ZExpr_Select();
-	ZExpr_Select(const ZExpr_Select& iOther);
-	~ZExpr_Select();
-	ZExpr_Select& operator=(const ZExpr_Select& iOther);
+	Expr_Select();
+	Expr_Select(const Expr_Select& iOther);
+	~Expr_Select();
+	Expr_Select& operator=(const Expr_Select& iOther);
 
-	ZExpr_Select(const ZRef<ZExprRep_Select>& iRep);
+	Expr_Select(const ZRef<ExprRep_Select>& iRep);
 
-	operator ZRef<ZExprRep_Select>() const;
+	operator ZRef<ExprRep_Select>() const;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Query operators
 
-ZExpr_Select sSelect(const ZExpr_Logical& iExpr_Logical, const ZExpr_Relation& iExpr_Relation);
+Expr_Select sSelect(const ZExpr_Logical& iExpr_Logical, const Expr_Relation& iExpr_Relation);
 
-ZExpr_Select operator&(const ZExpr_Logical& iExpr_Logical, const ZExpr_Relation& iExpr_Relation);
+Expr_Select operator&(const ZExpr_Logical& iExpr_Logical, const Expr_Relation& iExpr_Relation);
 
-ZExpr_Select operator&(const ZExpr_Relation& iExpr_Relation, const ZExpr_Logical& iExpr_Logical);
+Expr_Select operator&(const Expr_Relation& iExpr_Relation, const ZExpr_Logical& iExpr_Logical);
 
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZExpr_Select__
+#endif // __ZQL_Expr_Select__

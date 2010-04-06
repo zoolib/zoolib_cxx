@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,29 +18,30 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_TQL_Spec__
-#define __ZUtil_Strim_TQL_Spec__
+#ifndef __ZVisitor_ExprRep_ValCondition_ToStrim__
+#define __ZVisitor_ExprRep_ValCondition_ToStrim__
 #include "zconfig.h"
 
+#include "zoolib/ZVisitor_ExprRep_Logical_ToStrim.h"
 #include "zoolib/ZExpr_ValCondition.h"
-#include "zoolib/ZValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZStrimW;
-
-namespace ZUtil_Strim_TQL {
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_Strim_TQL
+#pragma mark * ZVisitor_ExprRep_ValCondition_ToStrim
 
-void sToStrim(const ZValCondition& iValCondition, const ZStrimW& iStrimW);
-void sToStrim(const ZRef<ZExprRep_Logical>& iRep, const ZStrimW& iStrimW);
-void sWrite(const ZVal_Expr& iVal, const ZStrimW& s);
+class ZVisitor_ExprRep_ValCondition_ToStrim
+:	public virtual ZVisitor_ExprRep_Logical_ToStrim
+,	public virtual ZVisitor_ExprRep_ValCondition
+	{
+public:
+	ZVisitor_ExprRep_ValCondition_ToStrim(const Options& iOptions, const ZStrimW& iStrimW);
 
-} // namespace ZUtil_Strim_TQL
+// From ZVisitor_ExprRep_ValCondition
+	virtual bool Visit_ValCondition(ZRef<ZExprRep_ValCondition> iRep);
+	};
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZUtil_Strim_TQL_Spec__
+#endif // __ZVisitor_ExprRep_ValCondition_ToStrim__

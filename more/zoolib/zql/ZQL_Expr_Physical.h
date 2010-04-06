@@ -18,18 +18,42 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Physical.h"
+#ifndef __ZQL_Expr_Physical__
+#define __ZQL_Expr_Physical__ 1
+#include "zconfig.h"
+
+#include "zoolib/zql/ZQL_Expr_Relation.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExprRep_Physical
+#pragma mark * ExprRep_Physical
 
-ZExprRep_Physical::ZExprRep_Physical()
-	{}
+class ExprRep_Physical : public ExprRep_Relation
+	{
+protected:
+	ExprRep_Physical();
 
-ZExprRep_Physical::~ZExprRep_Physical()
-	{}
+public:
+	virtual ~ExprRep_Physical();
 
+// From ZExprRep_Relation
+	virtual bool Accept(Visitor_ExprRep_Relation& iVisitor);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_ExprRep_Physical
+
+class Visitor_ExprRep_Physical : public virtual Visitor_ExprRep_Relation
+	{
+public:
+	virtual bool Visit_Physical(ZRef<ExprRep_Physical> iRep);
+	};
+
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZQL_Expr_Physical__

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,24 +18,50 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTQL_Optimize__
-#define __ZTQL_Optimize__ 1
+#ifndef __ZVisitor_ExprRep_ToStrim__
+#define __ZVisitor_ExprRep_ToStrim__
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Relation.h"
+#include "zoolib/ZExpr.h"
+#include "zoolib/ZStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL
+#pragma mark * ZVisitor_ExprRep_ToStrim
 
-namespace ZQL {
+class ZVisitor_ExprRep_ToStrim
+:	public virtual ZVisitor_ExprRep
+	{
+public:
+	struct Options
+		{
+		Options();
 
-ZRef<ExprRep_Relation> sOptimize(ZRef<ExprRep_Relation> iRep);
+		std::string fEOLString;
+		std::string fIndentString;
+		size_t fInitialIndent;
+		bool fDebuggingOutput;
+		};
 
-} // namespace ZTQL
+	ZVisitor_ExprRep_ToStrim(const Options& iOptions, const ZStrimW& iStrimW);
+
+// From ZVisitor_ExprRep
+	virtual bool Visit_ExprRep(ZRef<ZExprRep> iRep);
+
+// Our protocol
+	void Write(ZRef<ZExprRep> iExprRep);
+
+protected:
+	void pWriteLFIndent();
+
+	const Options& fOptions;
+	const ZStrimW& fStrimW;
+
+	size_t fIndent;
+	};
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZTQL_Optimize__
+#endif // __ZVisitor_ExprRep_ToStrim__

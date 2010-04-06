@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,24 +18,26 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTQL_Optimize__
-#define __ZTQL_Optimize__ 1
+#ifndef __ZUtil_Strim_RelHead__
+#define __ZUtil_Strim_RelHead__
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Relation.h"
+#include "zoolib/ZRelHead.h"
+#include "zoolib/ZStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZUtil_Strim_RelHead {
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL
+#pragma mark * ZUtil_Strim_RelHead
 
-namespace ZQL {
+void sWrite_PropName(const std::string& iName, const ZStrimW& s);
+void sWrite_RelHead(const ZRelHead& iRelHead, const ZStrimW& s);
 
-ZRef<ExprRep_Relation> sOptimize(ZRef<ExprRep_Relation> iRep);
-
-} // namespace ZTQL
+} // namespace ZUtil_Strim_RelHead
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZTQL_Optimize__
+#endif // __ZUtil_Strim_RelHead__

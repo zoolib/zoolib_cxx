@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,24 +18,29 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTQL_Optimize__
-#define __ZTQL_Optimize__ 1
+#ifndef __ZQL_Util_Strim_Query__
+#define __ZQL_Util_Strim_Query__
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Relation.h"
+#include "zoolib/ZExpr.h"
+#include "zoolib/ZVisitor_ExprRep_ToStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZQL {
+namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL
+#pragma mark * ZQL_Util_Strim_Query
 
-namespace ZQL {
+void sToStrim(const ZRef<ZExprRep>& iRep, const ZStrimW& iStrimW);
 
-ZRef<ExprRep_Relation> sOptimize(ZRef<ExprRep_Relation> iRep);
+void sToStrim(const ZRef<ZExprRep>& iRep,
+	const ZVisitor_ExprRep_ToStrim::Options& iOptions,
+	const ZStrimW& iStrimW);
 
-} // namespace ZTQL
-
+} // namespace Util_Strim_Query
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZTQL_Optimize__
+#endif // __ZQL_Util_Strim_Query__

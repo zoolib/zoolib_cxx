@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,24 +18,57 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZTQL_Optimize__
-#define __ZTQL_Optimize__ 1
-#include "zconfig.h"
-
-#include "zoolib/zql/ZQL_Expr_Relation.h"
+#include "zoolib/ZVisitor_ExprRep_Logical_ToStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTQL
+#pragma mark * ZVisitor_ExprRep_Logical_ToStrim
 
-namespace ZQL {
+ZVisitor_ExprRep_Logical_ToStrim::ZVisitor_ExprRep_Logical_ToStrim(
+	const Options& iOptions, const ZStrimW& iStrimW)
+:	ZVisitor_ExprRep_ToStrim(iOptions, iStrimW)
+	{}
 
-ZRef<ExprRep_Relation> sOptimize(ZRef<ExprRep_Relation> iRep);
+bool ZVisitor_ExprRep_Logical_ToStrim::Visit_Logical_True(ZRef<ZExprRep_Logical_True> iRep)
+	{
+	fStrimW << "any";
+	return true;
+	}
 
-} // namespace ZTQL
+bool ZVisitor_ExprRep_Logical_ToStrim::Visit_Logical_False(ZRef<ZExprRep_Logical_False> iRep)
+	{
+	fStrimW << "none";
+	return true;
+	}
+
+bool ZVisitor_ExprRep_Logical_ToStrim::Visit_Logical_Not(ZRef<ZExprRep_Logical_Not> iRep)
+	{
+	fStrimW << "!(";
+	iRep->GetOperand()->Accept(*this);
+	fStrimW << ")";
+	return true;
+	}
+
+bool ZVisitor_ExprRep_Logical_ToStrim::Visit_Logical_And(ZRef<ZExprRep_Logical_And> iRep)
+	{
+	fStrimW << "(";
+	iRep->GetLHS()->Accept(*this);
+	fStrimW << " & ";
+	iRep->GetRHS()->Accept(*this);
+	fStrimW << ")";
+	return true;
+	}
+
+bool ZVisitor_ExprRep_Logical_ToStrim::Visit_Logical_Or(ZRef<ZExprRep_Logical_Or> iRep)
+	{
+	fStrimW << "(";
+	iRep->GetLHS()->Accept(*this);
+	fStrimW << " | ";
+	iRep->GetRHS()->Accept(*this);
+	fStrimW << ")";
+	return true;
+	}
 
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZTQL_Optimize__
