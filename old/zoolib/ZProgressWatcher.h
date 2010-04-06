@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZProgressWatcher__
 #define __ZProgressWatcher__ 1
-
 #include "zconfig.h"
 #include "zoolib/ZTypes.h"
 #include <string>

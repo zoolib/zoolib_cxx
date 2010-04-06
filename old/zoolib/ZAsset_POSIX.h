@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZAsset_POSIX__
 #define __ZAsset_POSIX__ 1
-
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
