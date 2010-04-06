@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZCommandLine_TValue__
 #define __ZCommandLine_TValue__ 1
-
 #include "zconfig.h"
 
 #include "zoolib/ZCommandLine.h"

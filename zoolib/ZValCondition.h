@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZValCondition__
 #define __ZValCondition__ 1
-
 #include "zconfig.h"
 
 #include "zoolib/ZValCondition_T.h"

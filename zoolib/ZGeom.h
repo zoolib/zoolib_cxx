@@ -32,9 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Include these after the platform files -- cmath causes problems
 // for Mac headers ('relation' is undefined) when building with CW.
-#include "zoolib/ZCompat_algorithm.h" // For min and max
 #include "zoolib/ZCompat_cmath.h" // For sqrt
-#include "zoolib/ZCompat_operator_bool.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 

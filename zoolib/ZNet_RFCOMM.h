@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZNet_RFCOMM__
 #define __ZNet_RFCOMM__ 1
-
 #include "zconfig.h"
 
 #include "zoolib/ZNet.h"
