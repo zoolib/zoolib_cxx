@@ -175,8 +175,23 @@ bool ZWorkerRunner_Threaded::IsAwake(ZRef<ZWorker> iWorker)
 
 void ZWorkerRunner_Threaded::Start()
 	{
-	ZWorkerRunner::pAttachWorker(fWorker);
-	ZThread::sCreate_T<ZRef<ZWorkerRunner_Threaded> >(spRun, this);
+	try
+		{
+		ZWorkerRunner::pAttachWorker(fWorker);
+		ZThread::sCreate_T<ZRef<ZWorkerRunner_Threaded> >(spRun, this);
+		}
+	catch (...)
+		{
+		try
+			{
+			ZWorkerRunner::pDetachWorker(fWorker);
+			}
+		catch (...)
+			{
+			throw;
+			}
+		throw;
+		}
 	}
 
 void ZWorkerRunner_Threaded::pRun()
