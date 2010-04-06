@@ -98,7 +98,7 @@ void ZStreamR_Buffered::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 			else
 				{
 				// We're asking for less data than the stream guarantees it could provide without
-				// blocking, in which case we fill up as much of our buffer as we can,  so some
+				// blocking, in which case we fill up as much of our buffer as we can, so some
 				// later request will be able to be satisfied straight from our buffer.
 				size_t countToRead = min(fBufferSize, countReadable);
 				size_t countRead;

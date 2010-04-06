@@ -263,7 +263,7 @@ void ZBitWriterBE::WriteBits(
 		}
 
 	if (oCountBytesWritten)
-		*oCountBytesWritten = localDest  - static_cast<uint8*>(iDest);
+		*oCountBytesWritten = localDest - static_cast<uint8*>(iDest);
 	}
 
 /// Flush the buffer by writing pending bits to \a iStream.
@@ -362,7 +362,7 @@ void ZBitWriterLE::WriteBits(
 		}
 
 	if (oCountBytesWritten)
-		*oCountBytesWritten = localDest  - static_cast<uint8*>(iDest);
+		*oCountBytesWritten = localDest - static_cast<uint8*>(iDest);
 	}
 
 /// Flush the buffer by writing pending bits to \a iStream.

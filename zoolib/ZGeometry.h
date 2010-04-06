@@ -69,8 +69,8 @@ template <class T>
 class ZGPointPOD_T
 	{
 public:
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZGPointPOD_T<T>,
-    	operator_bool_generator_type, operator_bool_type);
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZGPointPOD_T<T>,
+		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(x || y); }
@@ -218,8 +218,8 @@ template <class T>
 class ZGExtentPOD_T
 	{
 public:
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZGExtentPOD_T<T>,
-    	operator_bool_generator_type, operator_bool_type);
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZGExtentPOD_T<T>,
+		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(h || v); }
@@ -373,8 +373,8 @@ template <class T>
 class ZGRectPOD_T
 	{
 public:
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZGRectPOD_T<T>,
-    	operator_bool_generator_type, operator_bool_type);
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZGRectPOD_T<T>,
+		operator_bool_generator_type, operator_bool_type);
 	operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(extent); }
 

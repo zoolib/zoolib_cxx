@@ -1330,7 +1330,7 @@ int ZVal_ZooLib::pUncheckedCompare(const ZVal_ZooLib& iOther) const
 		case eZType_Int32: return sCompare_T(fData.fAs_Int32, iOther.fData.fAs_Int32);
 		case eZType_Int64: return sCompare_T(fData.fAs_Int64, iOther.fData.fAs_Int64);
 		case eZType_Bool: return sCompare_T(fData.fAs_Bool, iOther.fData.fAs_Bool);
-		case eZType_Float:  return sCompare_T(fData.fAs_Float, iOther.fData.fAs_Float);
+		case eZType_Float: return sCompare_T(fData.fAs_Float, iOther.fData.fAs_Float);
 		case eZType_Double: return sCompare_T(fData.fAs_Double, iOther.fData.fAs_Double);
 		case eZType_Time: return sCompare_T(fData.fAs_Time, iOther.fData.fAs_Time);
 		case eZType_Pointer: return sCompare_T(fData.fAs_Pointer, iOther.fData.fAs_Pointer);

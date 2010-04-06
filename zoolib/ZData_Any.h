@@ -35,8 +35,8 @@ NAMESPACE_ZOOLIB_BEGIN
 
 class ZData_Any
 	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZData_Any,
-    	operator_bool_generator_type, operator_bool_type);
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZData_Any,
+		operator_bool_generator_type, operator_bool_type);
 	class Rep;
 
 public:

@@ -75,7 +75,7 @@ enum Kind
 
 class ZFileSpec
 	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZFileSpec, operator_bool_generator_type, operator_bool_type);
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZFileSpec, operator_bool_generator_type, operator_bool_type);
 public:
 	typedef ZFile::Error Error;
 
@@ -179,7 +179,7 @@ private:
 
 class ZFileIter
 	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZFileIter, operator_bool_generator_type, operator_bool_type);
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZFileIter, operator_bool_generator_type, operator_bool_type);
 public:
 	ZFileIter();
 	ZFileIter(const ZFileIter& iOther);
@@ -204,7 +204,7 @@ private:
 
 class ZFileTreeIter
 	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(
 		ZFileTreeIter, operator_bool_generator_type, operator_bool_type);
 public:
 	ZFileTreeIter();

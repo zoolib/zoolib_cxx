@@ -48,7 +48,7 @@ class ZRegexRep;
 
 class ZRegex
 	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZRegex, operator_bool_generator_type, operator_bool_type);
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZRegex, operator_bool_generator_type, operator_bool_type);
 public:
 	ZRegex();
 	ZRegex(const ZRegex& iOther);

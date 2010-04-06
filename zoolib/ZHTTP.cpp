@@ -896,7 +896,7 @@ bool sRead_range(const ZStreamU& iStream, Map* ioFields)
 /*
 There are three basic forms for a range request, which
 we encode as a tuple with a form as follows:
-bytes=x-y	{ begin = int64(x);  end = int64(y); } // (x to y inclusive)
+bytes=x-y	{ begin = int64(x); end = int64(y); } // (x to y inclusive)
 bytes=x-	{ begin = int64(x); } // (x to the end)
 bytes=-y	{ last = int64(y); } // (last y)
 */

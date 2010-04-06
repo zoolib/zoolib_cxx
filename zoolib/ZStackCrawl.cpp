@@ -180,11 +180,11 @@ static void spGetSymNameAndOffset(const void* iAddress, string& oSymName, size_t
 
 		bool inited2 = ::SymLoadModule(
 						currentProcess, // process handle
-						nullptr,            // file handle
+						nullptr, // file handle
 						moduleFileName, // path to exe
-						nullptr,            // module name
-						0,              // load address
-						0);             // module size
+						nullptr, // module name
+						0, // load address
+						0); // module size
 		spInited = true;
 		}
 

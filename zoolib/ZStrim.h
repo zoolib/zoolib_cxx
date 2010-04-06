@@ -360,7 +360,7 @@ public:
 /**
 A derivation of ZStrimW that provides implementations of ZStrimW::Imp_WriteUTF16 and
 ZStrimW::Imp_WriteUTF8 that call through to ZStrimW::Imp_WriteUTF32, which must be implemented
-by subclasses.  We redeclare ZStrimW::Imp_WriteUTF32 as pure virtual for emphasis.
+by subclasses. We redeclare ZStrimW::Imp_WriteUTF32 as pure virtual for emphasis.
 */
 
 class ZStrimW_NativeUTF32 : public ZStrimW
@@ -378,7 +378,7 @@ public:
 /**
 A derivation of ZStrimW that provides implementations of ZStrimW::Imp_WriteUTF32 and
 ZStrimW::Imp_WriteUTF8 that call through to ZStrimW::Imp_WriteUTF16, which must be implemented
-by subclasses.  We redeclare ZStrimW::Imp_WriteUTF16 as pure virtual for emphasis.
+by subclasses. We redeclare ZStrimW::Imp_WriteUTF16 as pure virtual for emphasis.
 */
 
 class ZStrimW_NativeUTF16 : public ZStrimW
@@ -396,7 +396,7 @@ public:
 /**
 A derivation of ZStrimW that provides implementations of ZStrimW::Imp_WriteUTF32 and
 ZStrimW::Imp_WriteUTF16 that call through to ZStrimW::Imp_WriteUTF8, which must be implemented
-by subclasses.  We redeclare ZStrimW::Imp_WriteUTF8 as pure virtual for emphasis.
+by subclasses. We redeclare ZStrimW::Imp_WriteUTF8 as pure virtual for emphasis.
 */
 
 class ZStrimW_NativeUTF8 : public ZStrimW

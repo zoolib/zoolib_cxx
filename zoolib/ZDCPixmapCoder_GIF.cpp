@@ -440,7 +440,7 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			// Skip any data blocks.
 			StreamR_Chunk(iStream).SkipAll();
 			}
-		else if (blockType  == ',')
+		else if (blockType == ',')
 			{
 			// It's an image.
 			ZRect curBounds;

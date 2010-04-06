@@ -376,7 +376,7 @@ public:
 	static uint32 sConvert(
 		uint32 iPixval, uint32 iMask, int32 iShift, uint32 iMultiplier, uint32 iAdd)
 		{
-		return iAdd + (((iPixval & iMask) >> iShift) *  iMultiplier);
+		return iAdd + (((iPixval & iMask) >> iShift) * iMultiplier);
 		}
 
 	void AsRGBA(uint32 iPixval, ZRGBA_POD& oColor) const
@@ -422,7 +422,7 @@ public:
 	static uint32 sConvert(
 		uint32 iPixval, uint32 iMask, int32 iShift, uint32 iMultiplier, uint32 iAdd)
 		{
-		return iAdd + (((iPixval & iMask) >> iShift) *  iMultiplier);
+		return iAdd + (((iPixval & iMask) >> iShift) * iMultiplier);
 		}
 
 	void AsRGBA(uint32 iPixval, ZRGBA_POD& oColor) const

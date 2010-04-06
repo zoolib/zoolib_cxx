@@ -34,7 +34,7 @@ When first created it contains 2^64 \em empty tuples, which is why you don't nee
 needn't be physically stored.
 
 In addition a tuplestore allocates IDs, on demand it will return IDs that have never been
-allocated before and  never will again. This lets us add new data to a tuplestore without
+allocated before and never will again. This lets us add new data to a tuplestore without
 overwriting IDs that have already been used.
 
 The class ZTS defines an API for reading and writing entries in a tuplestore. Generally though

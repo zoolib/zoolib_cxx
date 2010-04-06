@@ -50,8 +50,8 @@ template <class T>
 class ZPoint_T
 	{
 public:
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZPoint_T<T>,
-    	operator_bool_generator_type, operator_bool_type);
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZPoint_T<T>,
+		operator_bool_generator_type, operator_bool_type);
 	operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(h || v); }
 
@@ -219,8 +219,8 @@ template <class T>
 class ZRect_T
 	{
 public:
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRect_T<T>,
-    	operator_bool_generator_type, operator_bool_type);
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRect_T<T>,
+		operator_bool_generator_type, operator_bool_type);
 	operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(left < right && top < bottom); }
 

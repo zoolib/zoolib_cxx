@@ -63,11 +63,11 @@ private:
 	class Compare
 		{
 	public:
-        typedef Key value_type;
+		typedef Key value_type;
 
 		Compare();
 
-        bool operator()(const value_type& iLeft, const value_type& iRight) const;
+		bool operator()(const value_type& iLeft, const value_type& iRight) const;
 
 		ZTextCollator fTextCollator;
 		};

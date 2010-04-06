@@ -45,7 +45,7 @@ static void spRead(FILE* iFILE, void* iDest, size_t iCount, size_t* oCountRead)
 		{
 		while (iCount)
 			{
-			size_t countRead = fread(localDest, 1,  iCount, iFILE);
+			size_t countRead = fread(localDest, 1, iCount, iFILE);
 			if (countRead == 0)
 				break;
 			iCount -= countRead;

@@ -60,7 +60,7 @@ enum
 	{
 	ePriority_Emerg = 0, ///< System on fire?
 	ePriority_Alert = 1, ///< action must be taken immediately
-	ePriority_Crit = 2,  ///< critical conditions
+	ePriority_Crit = 2, ///< critical conditions
 	ePriority_Err = 3, ///< error conditions
 	ePriority_Warning = 4,///< warning conditions
 	ePriority_Notice = 5, ///< normal but significant condition
@@ -90,7 +90,7 @@ std::string sNameFromPriority(EPriority iPriority);
 
 class StrimW : public ZStrimW
 	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(StrimW, operator_bool_generator_type, operator_bool_type);
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(StrimW, operator_bool_generator_type, operator_bool_type);
 public:
 	StrimW(EPriority iPriority, const std::string& iName);
 	StrimW(EPriority iPriority, const char* iName);

@@ -145,7 +145,7 @@ void ZStreamR_ZLibDecode::pInit(ZStream_ZLib::EFormatR iFormatR, size_t iBufferS
 		case ZStream_ZLib::eFormatR_Raw: windowBits = -15; break;
 		}
 
-	int error = inflateInit2(&fState,  windowBits);
+	int error = inflateInit2(&fState, windowBits);
 	if (Z_OK != error)
 		throw runtime_error("ZStreamR_ZLibDecode problem");
 	}

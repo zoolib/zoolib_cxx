@@ -99,7 +99,7 @@ class ZGRgn
 	ZRef<ZGRgnRep> fRep;
 
 public:
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZGRgn, operator_bool_generator_type, operator_bool_type);
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZGRgn, operator_bool_generator_type, operator_bool_type);
 	operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(fRep && !fRep->IsEmpty()); }
 

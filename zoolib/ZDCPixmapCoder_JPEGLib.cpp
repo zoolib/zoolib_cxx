@@ -453,7 +453,7 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 	struct jpeg_decompress_struct theJDS;
 
 	JPEGErrorMgr theEM(theJDS);
-			  
+
 	theEM.BeforeCall();
 	::jpeg_create_decompress(&theJDS);
 

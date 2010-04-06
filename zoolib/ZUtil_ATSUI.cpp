@@ -44,7 +44,7 @@ ATSUStyle sAsATSUStyle(const ZDCFont& iFont, float iFontSize)
 	if (iFontSize > 0)
 		atsuSize = iFontSize * 65536.0;
 
-    ATSUFontID theATSUFontID;
+	ATSUFontID theATSUFontID;
 	string fontName = iFont.GetName();
 	if (noErr != ::ATSUFindFontFromName((char*)fontName.data(), fontName.size(),
 		kFontFullName, kFontMacintoshPlatform,
@@ -108,11 +108,11 @@ ATSUTextLayout sCreateLayout(
 	if (!iStyle)
 		return nullptr;
 
-  	if (!iTextLength)
-  		return nullptr;
+	if (!iTextLength)
+		return nullptr;
 
 	UniCharCount runLengths = kATSUToTextEnd;
-  	ATSUTextLayout theLayout = nullptr;
+	ATSUTextLayout theLayout = nullptr;
 	::ATSUCreateTextLayoutWithTextPtr((ConstUniCharArrayPtr)iText,
 		kATSUFromTextBeginning, kATSUToTextEnd,
 		iTextLength,

@@ -136,7 +136,7 @@ inline bool ZAtomic_CompareAndSwap(ZAtomic_t* iAtomic, int iOldValue, int iNewVa
 		"bne- 1b\n"
 		"isync\n"
 		: "=m" (iAtomic->fValue), "=&r" (oldValue)
-		:  "r" (iAtomic), "r" (iOldValue), "r" (iNewValue)
+		: "r" (iAtomic), "r" (iOldValue), "r" (iNewValue)
 		: "cc"
 		);
 	return oldValue == iOldValue;

@@ -92,10 +92,10 @@ protected:
 		{
 		void* DebugInfo;
 		long LockCount;
-	    long RecursionCount;
-	    void* OwningThread;
-	    void* LockSemaphore;
-	    void* SpinCount;
+		long RecursionCount;
+		void* OwningThread;
+		void* LockSemaphore;
+		void* SpinCount;
 		};
 
 	Dummy_CRITICAL_SECTION fCRITICAL_SECTION;

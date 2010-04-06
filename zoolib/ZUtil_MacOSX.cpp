@@ -64,7 +64,7 @@ void ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
 		*localFuncs = localDest++;
 		}
 
-    ::MakeDataExecutable(&ioStorage[0], ioStorage.size());
+	::MakeDataExecutable(&ioStorage[0], ioStorage.size());
 	}
 
 NAMESPACE_ZOOLIB_END

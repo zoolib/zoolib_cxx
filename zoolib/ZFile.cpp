@@ -299,7 +299,7 @@ string ZFileSpec::AsString() const
 	return string();
 	}
 
-/** \brief  Return a native textual representation of the path that would
+/** \brief Return a native textual representation of the path that would
 be passed to the file system to access this node. */
 /**
 The representation will be in the syntax used by the underlying API.
@@ -498,7 +498,7 @@ ZFileSpec ZFileSpec::CreateDir(ZFile::Error* oError) const
 	return ZFileSpec();
 	}
 
-/** \brief  Move the entity in the file system referenced by
+/** \brief Move the entity in the file system referenced by
 the file spec to the location referenced by \a iDest. */
 ZFileSpec ZFileSpec::MoveTo(const ZFileSpec& iDest, ZFile::Error* oError) const
 	{

@@ -155,7 +155,7 @@ ZTime ZTime::sNow()
 
 	// Subtract the number of seconds between 1601 and 1970.
 	result -= kEpochDelta_1601_To_1970;
-    return result;
+	return result;
 
 #else
 

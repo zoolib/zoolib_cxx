@@ -294,7 +294,7 @@ be executing against it.
 
 We've already seen that a ZTBQuery can be initialized from a ZTBSpec, and
 a ZTBIter initialized from such a ZTBQuery will return all the tuples
-that match the specification.  The other simple instantiations of a ZTBQuery
+that match the specification. The other simple instantiations of a ZTBQuery
 take an ID or a list of IDs in a \c vector, \c set or pointer and count. A
 ZTBIter initialized from one of the following queries would simply return
 the tuples with the specified IDs.

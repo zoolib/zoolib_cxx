@@ -149,7 +149,7 @@ static NameToCodePage_t spNameToCodePage[] =
 		{ "ibm870", 870, 2055 },	// IBM EBCDIC - Multilingual/ROECE (Latin-2) 
 //		{ "ibm874", 874, -1 },		// ANSI/OEM - Thai (same as CP28605, ISO 8859-15) <--- Not true?
 		{ "ibm949", 949, -1 },		// ANSI/OEM - Korean (Unified Hangeul Code)
-		{ "ibm950", 950, -1 },		// ANSI/OEM -  Traditional Chinese (Taiwan; Hong Kong SAR, PRC)
+		{ "ibm950", 950, -1 },		// ANSI/OEM - Traditional Chinese (Taiwan; Hong Kong SAR, PRC)
 
 		{ "macintosh", 10000, 2027 },		// MAC - Roman
 		{ "x-mac-japanese", 10001, -1 },

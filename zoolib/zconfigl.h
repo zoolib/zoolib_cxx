@@ -156,7 +156,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 // The second define is ZCONFIG_Debug, which takes its value from ZCONFIG_DebugLevel if we're doing
-// a SYM build, otherwise it  is set to 0. You can override ZCONFIG_Debug by setting its value in
+// a SYM build, otherwise it is set to 0. You can override ZCONFIG_Debug by setting its value in
 // your zconfig.h before including this file.
 // With XCode we could base debug off !__OPTIMIZE__
 #ifndef ZCONFIG_Debug

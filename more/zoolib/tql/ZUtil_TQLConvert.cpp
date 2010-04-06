@@ -341,7 +341,7 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFil
 			{
 			if (iName)
 				{
-				theQ = sJoin(theQ,  sAllID(sIDName, RelHead(*iName) | thePropName));
+				theQ = sJoin(theQ, sAllID(sIDName, RelHead(*iName) | thePropName));
 				if (iVerbose)
 					theQ = sProject(RelHead(*iName) | "$$Property_Name", theQ);
 				else

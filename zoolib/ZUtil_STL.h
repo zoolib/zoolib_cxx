@@ -142,7 +142,7 @@ bool sEraseIfContains(std::vector<T>& ioVector, T iElement)
 	}
 
 
-/** If  ioSet contains iElement then it is removed and true returned.
+/** If ioSet contains iElement then it is removed and true returned.
 Otherwise no change is made to ioSet and false is returned. */
 template <typename T>
 bool sEraseIfContains(std::set<T>& ioSet, T iElement)

@@ -109,14 +109,14 @@ private:
 		};
 
 #ifdef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-    public: // so ZAnyBaseCast can be non-friend
+	public: // so ZAnyBaseCast can be non-friend
 #else
-private:
-	template<typename ValueType>
-	friend ValueType* ZAnyBaseCast(ZAnyBase*);
+	private:
+		template<typename ValueType>
+		friend ValueType* ZAnyBaseCast(ZAnyBase*);
 
-	template<typename ValueType>
-	friend const ValueType* ZAnyBaseCast(const ZAnyBase*);
+		template<typename ValueType>
+		friend const ValueType* ZAnyBaseCast(const ZAnyBase*);
 #endif
 
 	placeholder* content;

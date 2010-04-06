@@ -496,7 +496,7 @@ static OSStatus spOTAcceptQ(EndpointRef listener, EndpointRef worker, TCall* cal
 		OTResult look = ::OTLook(listener);
 
 		// Only two async events should be able to cause Accept to "look", namely 
-		// T_LISTEN and T_DISCONNECT.  However, the "tilisten" module prevents 
+		// T_LISTEN and T_DISCONNECT. However, the "tilisten" module prevents 
 		// further connection attempts coming up while we're still thinking about 
 		// this one, so the only event that should come up is T_DISCONNECT.
 
@@ -504,8 +504,8 @@ static OSStatus spOTAcceptQ(EndpointRef listener, EndpointRef worker, TCall* cal
 		if (look == T_DISCONNECT)
 			{
 			// If we get a T_DISCONNECT, it should be for the current pending 
-			// connection attempt.  We receive the disconnect info and check 
-			// the sequence number against that in the call.  If they match, 
+			// connection attempt. We receive the disconnect info and check 
+			// the sequence number against that in the call. If they match, 
 			// the connection attempt disappeared and we return kOTNoDataErr.
 			// If they don't match, that's weird.
 

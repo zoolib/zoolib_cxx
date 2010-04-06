@@ -163,7 +163,7 @@ protected:
 
 	uint16 fPendingPrefix;
 
-	bool  fFresh;
+	bool fFresh;
 
 	ZBitWriterBE fBitWriter;
 	};

@@ -36,7 +36,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 class ZTrail
 	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTrail, operator_bool_generator_type, operator_bool_type);
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTrail, operator_bool_generator_type, operator_bool_type);
 public:
 	operator operator_bool_type() const;
 

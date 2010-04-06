@@ -35,42 +35,42 @@ ZYad_JSON provides Yad facilities to read and write JSON source.
 
 ZMap is isomorphic to JSON's object, ZSeq to JSON's array, and strings, booleans
 and null translate back and forth without trouble. JSON's only other primitive is
-the number, whereas ZVal_ZooLib explicitly stores and retrieves integers of different sizes,
+the number, whereas ZVal explicitly stores and retrieves integers of different sizes,
 floats and doubles, raw bytes and other composite types.
 
-ZYad_JSON writes all ZVal_ZooLib number types as JSON numbers. When reading, JSON numbers
+ZYad_JSON writes all ZVal number types as JSON numbers. When reading, JSON numbers
 are stored as int64s, unless the mantissa has a fractional component or exceeds 2^64,
 or if there is an exponent,in which case a double is used.
 
 The mappings are as follows:
-
+	
 <pre>
 
-JSON          ZVal_ZooLib
+JSON          ZVal
 ----          -------
 null          null
-object        ZMap_ZooLib
-array         ZSeq_ZooLib
+object        ZMap
+array         ZSeq
 boolean       bool
 string        string
 number        int64 or double
 
 
-ZVal_ZooLib      JSON
--------          ----
-null             null
-ZMap_ZooLib      object
-ZSeq_ZooLib     array
-bool             boolean
-string           string
-int8             number
-int16            number
-int32            number
-int64            number
-float            number
-double           number
-uint64 (ID)      number
-time             number
+ZVal         JSON
+----         ----
+null         null
+ZMap         object
+ZSeq         array
+bool         boolean
+string       string
+int8         number
+int16        number
+int32        number
+int64        number
+float        number
+double       number
+uint64 (ID)  number
+time         number
 
 all other types are written as nulls in maps and lists if the appropriate
 preserve flag is passed, otherwise they are skipped.

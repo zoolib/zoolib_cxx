@@ -45,7 +45,7 @@ class ZDCPixmapRaster;
 
 class ZDCPixmap
 	{
-    ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZDCPixmap, operator_bool_generator_type, operator_bool_type);
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZDCPixmap, operator_bool_generator_type, operator_bool_type);
 
 public:
 // The usual mantra: constructor, copy constructor, destructor, assignment

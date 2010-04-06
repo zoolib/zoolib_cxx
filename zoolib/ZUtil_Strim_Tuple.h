@@ -46,7 +46,7 @@ struct Format
 
 bool sFromStrim(const ZStrimU& iStrimU, ZTValue& oTV);
 
-}  // namespace ZUtil_Strim_Tuple
+} // namespace ZUtil_Strim_Tuple
 
 // =================================================================================================
 #pragma mark -
