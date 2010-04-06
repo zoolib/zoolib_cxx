@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZStream_Tee__
 #define __ZStream_Tee__ 1
-
 #include "zconfig.h"
 
 #include "zoolib/ZStream_Filter.h"

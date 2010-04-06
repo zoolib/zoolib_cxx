@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZStreamR_Random__
 #define __ZStreamR_Random__ 1
-
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"

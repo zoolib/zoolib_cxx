@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZStream_Chunked__
 #define __ZStream_Chunked__ 1
-
 #include "zconfig.h"
 
 #include "zoolib/ZStream.h"

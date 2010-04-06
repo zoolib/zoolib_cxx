@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZStreamMUX__
 #define __ZStreamMUX__ 1
-
 #include "zconfig.h"
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZDList.h"
