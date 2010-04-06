@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZExpr_ValCondition_T__
 #define __ZExpr_ValCondition_T__ 1
-
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Logical.h"
@@ -84,7 +83,7 @@ ZExprRep_ValCondition_T<Val>::GetValCondition()
 #pragma mark * ZVisitor_ExprRep_ValCondition_T
 
 template <class Val>
-class ZVisitor_ExprRep_ValCondition_T : public ZVisitor_ExprRep_Logical
+class ZVisitor_ExprRep_ValCondition_T : public virtual ZVisitor_ExprRep_Logical
 	{
 public:
 	virtual bool Visit_ValCondition(ZRef<ZExprRep_ValCondition_T<Val> > iRep);

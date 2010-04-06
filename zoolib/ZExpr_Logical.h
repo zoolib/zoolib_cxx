@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZExpr_Logical__
 #define __ZExpr_Logical__ 1
-
 #include "zconfig.h"
 
 #include "zoolib/ZExpr.h"

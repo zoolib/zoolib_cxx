@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZExpr_ValCondition__
 #define __ZExpr_ValCondition__ 1
-
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_ValCondition_T.h"
@@ -31,6 +30,8 @@ NAMESPACE_ZOOLIB_BEGIN
 typedef ZExprRep_ValCondition_T<ZVal_Expr> ZExprRep_ValCondition;
 
 typedef ZExpr_ValCondition_T<ZVal_Expr> ZExpr_ValCondition;
+
+typedef ZVisitor_ExprRep_ValCondition_T<ZVal_Expr> ZVisitor_ExprRep_ValCondition;
 
 inline ZRelHead sGetRelHead(const ZRef<ZExprRep_Logical>& iRep)
 	{ return sGetRelHead_T<ZVal_Expr>(iRep); }

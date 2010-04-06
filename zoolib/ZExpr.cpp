@@ -33,7 +33,7 @@ ZExprRep::~ZExprRep()
 	{}
 
 bool ZExprRep::Accept(ZVisitor_ExprRep& iVisitor)
-	{ return true; }
+	{ return iVisitor.Visit_ExprRep(this); }
 
 // =================================================================================================
 #pragma mark -
