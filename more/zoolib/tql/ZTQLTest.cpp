@@ -5,7 +5,7 @@
 
 #include "zoolib/zql/ZQL_Util_Strim_Query.h"
 
-//#include "zoolib/tql/ZUtil_TQLConvert.h"
+#include "zoolib/tql/ZUtil_TQLConvert.h"
 #include "zoolib/ZExpr_ValCondition.h"
 
 #include "zoolib/ZUtil_Strim_Tuple.h"
@@ -277,19 +277,22 @@ static Query sQuery()
 
 static void sDumpQuery(const ZStrimW& s, Query iQuery)
 	{
+	ZVisitor_ExprRep_ToStrim::Options theOptions;
+	theOptions.fDebuggingOutput = true;
+
 	s << "ZTQL::Query equivalent -----------------------\n";
-	Util_Strim_Query::sToStrim(iQuery, s);
+	Util_Strim_Query::sToStrim(iQuery, theOptions, s);
 
 	s << "\nZTQL::Query optimized -----------------------\n";
 	
 	Expr_Relation theNode = sOptimize(iQuery);
 	
-	Util_Strim_Query::sToStrim(theNode, s);
+	Util_Strim_Query::sToStrim(theNode, theOptions, s);
 
 	s << "\n";	
 	}
 
-#if 0
+#if 1
 static void sTestOne(const string& iLabel, const ZStrimW& s, const ZTBQuery& iTBQ)
 	{
 	const Query query = ZUtil_TQLConvert::sConvert(iTBQ, false);
@@ -397,36 +400,36 @@ void sTestQL3(const ZStrimW& s)
 //	Query theQuery = sAllID("$ID$") & theSpec;
 //	sDumpQuery(s, theQuery);
 
-//##	sDumpQuery(s, sQuery());
+	sDumpQuery(s, sQuery());
 #if 0
 //	sDumpQuery(s, sQueryNoHead());
 //	sDumpQuery(s, ZUtil_TQLConvert::sConvert(sTBQuery(), false));
 
 //	sDumpQuery(s, badPassword());
-	return;
+//	return;
 	
 	const ZTBQuery allViews
 		= ZTBSpec::sEquals("Object", "view") & ZTBSpec::sEquals("titl", "something");
-//	sTestOne("allviews", s, allViews);
+	sTestOne("allviews", s, allViews);
 
 	const ZTBQuery allContains = ZTBSpec::sEquals("Link", "contains");
 	sTestOne("allContains", s, allContains);
 
 	const ZTBQuery allNotes
 		= ZTBSpec::sEquals("Object", "note") | ZTBSpec::sEquals("Object", "attachment");
-//	sTestOne("allNotes", s, allNotes);
+	sTestOne("allNotes", s, allNotes);
 
 	const ZTBQuery partial1 = ZTBQuery("from", allViews);
 //	sTestOne("partial1", s, partial1);
 
 	const ZTBQuery partial2 = allContains & partial1;
-//	sTestOne("partial2", s, partial2);
+	sTestOne("partial2", s, partial2);
 	
 	const ZTBQuery partial3(partial2, "to");
-//	sTestOne("partial3", s, partial3);
+	sTestOne("partial3", s, partial3);
 
 	const ZTBQuery partial4 = partial3 & allNotes;
-//	sTestOne("partial4", s, partial4);
+	sTestOne("partial4", s, partial4);
 
 
 //	Query query = sQuery();

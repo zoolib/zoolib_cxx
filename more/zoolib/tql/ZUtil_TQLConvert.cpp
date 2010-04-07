@@ -19,22 +19,24 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/tql/ZUtil_TQLConvert.h"
-#include "zoolib/ZExpr_Query.h"
+#include "zoolib/zql/ZQL_Expr_All.h"
+#include "zoolib/zql/ZQL_Expr_Select.h"
 #include "zoolib/ZExpr_ValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-
-typedef ZExpr_Logic Spec;
-typedef ZExpr_Relation Query;
-typedef ZMap_Expr Map;
-typedef ZRelHead RelHead;
-typedef ZVal_Expr Val;
-typedef ZValCondition Condition;
 
 namespace ZUtil_TQLConvert {
 
 using std::string;
 using std::vector;
+using namespace ZQL;
+
+typedef ZExpr_Logic Spec;
+typedef Expr_Relation Query;
+typedef ZMap_Expr Map;
+typedef ZRelHead RelHead;
+typedef ZVal_Expr Val;
+typedef ZValCondition Condition;
 
 // =================================================================================================
 #pragma mark -
@@ -81,7 +83,7 @@ static Spec spAsTSpec(const ZTBSpec& iTBSpec)
 			ZValCondition_T<Val> theCondition(
 				CName(siter->GetPropName()),
 				new ZValComparatorRep_Simple_T<Val>(theComparator),
-				CConst(siter->GetTValue()));
+				CConst(siter->GetTValue().AsAny()));
 
 			if (sisfirst)
 				{
@@ -224,29 +226,10 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFil
 			cur.Set(sIDName, Val(*i));
 			theVals.push_back(cur);
 			}
-		Query theQ = sExplicit(&theVals[0], theVals.size());
-		return theQ;
-		#if 0
-		if (iFilter)
-			{
-			const RelHead theRelHead = sMakeRelHead(iFilter);
-			theQ = sAll(sIDName, theRelHead).Join(theQ);
-			theQ = theQ.Select(*iFilter);
-			}
-
-		if (iName)
-			{
-			#if iVerbose
-				return theQ.Project(RelHead(*iName) | "$$ComboReturn$$");
-			#else
-				return theQ.Project(*iName);
-			#endif
-			}
-		else
-			{
-			return theQ;
-			}
-		#endif
+		ZUnimplemented();
+//		Query theQ = sExplicit(&theVals[0], theVals.size());
+//		return theQ;
+		return Query();
 		}
 	else if (ZTBQueryNode_ID_FromSource* theNode_ID_FromSource =
 		ZRefDynamicCast<ZTBQueryNode_ID_FromSource>(iNode))
