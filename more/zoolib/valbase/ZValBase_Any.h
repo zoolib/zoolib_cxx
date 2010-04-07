@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZVal_Any.h"
-#include "zoolib/zqe/ZQE_Iterator.h"
 #include "zoolib/zqe/ZQE_Visitor_ExprRep_MakeIterator.h"
 #include "zoolib/zql/ZQL_Expr_Concrete.h"
 #include "zoolib/zql/ZQL_Expr_Restrict.h"
