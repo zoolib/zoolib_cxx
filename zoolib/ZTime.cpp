@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZCompare.h"
+#include "zoolib/ZCompat_cmath.h" // For NAN, isnan etc.
 #include "zoolib/ZTime.h"
+#include "zoolib/ZTypes.h" // For countof
 
 #include "zoolib/ZCONFIG_SPI.h"
-
-#include "zoolib/ZCompat_cmath.h" // For NAN, isnan etc.
-#include "zoolib/ZTypes.h" // For countof
 
 #if ZCONFIG_SPI_Enabled(POSIX)
 #	include <sys/time.h> // For timeval
@@ -53,6 +53,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 NAMESPACE_ZOOLIB_BEGIN
+
+ZMACRO_CompareRegistration_T(ZTime)
 
 // =================================================================================================
 #pragma mark -
