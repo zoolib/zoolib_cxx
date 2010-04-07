@@ -18,8 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZThread.h"
 #include "zoolib/ZYad_Any.h"
-#include "zoolib/valbase/ZValBase_YadSeqRPos.h"
+#include "zoolib/valbase/ZValBase_YadSeqR.h"
 #include "zoolib/zqe/ZQE_Visitor_ExprRep_MakeIterator.h"
 #include "zoolib/zqe/ZQE_Iterator_Any.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
@@ -28,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zql/ZQL_Expr_Select.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZValBase_YadSeqRPos {
+namespace ZValBase_YadSeqR {
 
 // =================================================================================================
 #pragma mark -
@@ -37,27 +38,48 @@ namespace ZValBase_YadSeqRPos {
 class ExprRep_Concrete : public ZQL::ExprRep_Concrete
 	{
 public:
-	ExprRep_Concrete(ZRef<ZYadSeqRPos> iYadSeqRPos);
+	ExprRep_Concrete(ZRef<ZYadSeqR> iYadSeqR);
 
 // From ExprRep_Relation via ExprRep_Concrete
 	virtual ZRelHead GetRelHead();
 
 // Our protocol
-	ZRef<ZYadSeqRPos> GetYadSeqRPos();
+	ZRef<ZQE::Result> ReadInc(size_t& ioIndex);
 
 private:
-	ZRef<ZYadSeqRPos> fYadSeqRPos;
+	ZMtx fMtx;
+	ZRef<ZYadSeqR> fYadSeqR;
+	ZSeq_Any fSeq;
 	};
 
-ExprRep_Concrete::ExprRep_Concrete(ZRef<ZYadSeqRPos> iYadSeqRPos)
-:	fYadSeqRPos(iYadSeqRPos)
+ExprRep_Concrete::ExprRep_Concrete(ZRef<ZYadSeqR> iYadSeqR)
+:	fYadSeqR(iYadSeqR)
 	{}
 
 ZRelHead ExprRep_Concrete::GetRelHead()
 	{ return ZRelHead(true); }
 
-ZRef<ZYadSeqRPos> ExprRep_Concrete::GetYadSeqRPos()
-	{ return fYadSeqRPos; }
+ZRef<ZQE::Result> ExprRep_Concrete::ReadInc(size_t& ioIndex)
+	{
+	ZAcqMtx acq(fMtx);
+
+	if (ioIndex < fSeq.Count())
+		return new ZQE::Result_Any(fSeq.Get(ioIndex++));
+
+	if (ZRef<ZYadR> theYadR = fYadSeqR->ReadInc())
+		{
+		const ZVal_Any theVal = sFromYadR(ZVal_Any(), theYadR);
+		++ioIndex;
+		if (this->GetRefCount() > 1)
+			{
+			fSeq.Append(theVal);
+			ZAssert(ioIndex == fSeq.Count());
+			}
+		return new ZQE::Result_Any(theVal);
+		}
+
+	return ZRef<ZQE::Result>();
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -66,32 +88,31 @@ ZRef<ZYadSeqRPos> ExprRep_Concrete::GetYadSeqRPos()
 class Iterator : public ZQE::Iterator
 	{
 public:
-	Iterator(ZRef<ZYadSeqRPos> iYadSeqRPos);
+	Iterator(ZRef<ExprRep_Concrete> iExprRep, size_t iIndex);
+
 	virtual ~Iterator();
 	
 	virtual ZRef<ZQE::Iterator> Clone();
 	virtual ZRef<ZQE::Result> ReadInc();
 
 protected:
-	ZRef<ZYadSeqRPos> fYadSeqRPos;
+	ZRef<ExprRep_Concrete> fExprRep;
+	size_t fIndex;
 	};
 
-Iterator::Iterator(ZRef<ZYadSeqRPos> iYadSeqRPos)
-:	fYadSeqRPos(iYadSeqRPos)
+Iterator::Iterator(ZRef<ExprRep_Concrete> iExprRep, size_t iIndex)
+:	fExprRep(iExprRep)
+,	fIndex(0)
 	{}
 
 Iterator::~Iterator()
 	{}
 
 ZRef<ZQE::Iterator> Iterator::Clone()
-	{ return new Iterator(fYadSeqRPos->Clone()); }
+	{ return new Iterator(fExprRep, fIndex); }
 
 ZRef<ZQE::Result> Iterator::ReadInc()
-	{
-	if (ZRef<ZYadR> theYadR = fYadSeqRPos->ReadInc())
-		return new ZQE::Result_Any(sFromYadR(ZVal_Any(), theYadR));
-	return ZRef<ZQE::Result>();
-	}
+	{ return fExprRep->ReadInc(fIndex); }
 
 // =================================================================================================
 #pragma mark -
@@ -118,7 +139,7 @@ bool Visitor_ExprRep_Concrete_MakeIterator::Visit_Concrete(ZRef<ZQL::ExprRep_Con
 	{
 	if (ZRef<ExprRep_Concrete> theRep = iRep.DynamicCast<ExprRep_Concrete>())
 		{
-		fIterator = new Iterator(theRep->GetYadSeqRPos());
+		fIterator = new Iterator(theRep, 0);
 		return true;
 		}
 	return Visitor_ExprRep_Concrete::Visit_Concrete(iRep);
@@ -143,13 +164,17 @@ bool Visitor_ExprRep_Concrete_MakeIterator::Visit_Select(ZRef<ZQL::ExprRep_Selec
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValBase_YadSeqRPos pseudo constructors
+#pragma mark * ZValBase_YadSeqR pseudo constructors
 
-ZQL::Expr_Relation sRelation(ZRef<ZYadSeqRPos> iYadSeqRPos)
-	{ return ZQL::Expr_Relation(new ExprRep_Concrete(iYadSeqRPos)); }
+ZQL::Expr_Relation sRelation(ZRef<ZYadSeqR> iYadSeqR)
+	{
+	// Could do a dynamic cast on iYadSeqR to see if it's really a ZYadSeqRPos,
+	// in which case returning a ZValBase_YadSeqRPos::Iterator would be a win.
+	return ZQL::Expr_Relation(new ExprRep_Concrete(iYadSeqR));
+	}
 
 ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::ExprRep_Relation> iExprRep)
 	{ return Visitor_ExprRep_Concrete_MakeIterator().MakeIterator(iExprRep); }
 
-} // namespace ZValBase_YadSeqRPos
+} // namespace ZValBase_YadSeqR
 NAMESPACE_ZOOLIB_END

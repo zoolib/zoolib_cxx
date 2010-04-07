@@ -71,24 +71,6 @@ public:
 	virtual bool Visit_Select(ZRef<ZQL::ExprRep_Select> iRep);
 	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Iterator
-
-class Iterator : public ZQE::Iterator
-	{
-public:
-	Iterator(const ZSeq_Any& iSeq);
-	virtual ~Iterator();
-	
-	virtual ZRef<ZQE::Result> ReadInc();
-	virtual void Rewind();
-
-protected:
-	const ZSeq_Any fSeq;
-	size_t fIndex;
-	};
-
 } // namespace ZValBase_Any
 NAMESPACE_ZOOLIB_END
 

@@ -23,71 +23,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZYad.h"
-#include "zoolib/zqe/ZQE_Visitor_ExprRep_MakeIterator.h"
-#include "zoolib/zql/ZQL_Expr_Concrete.h"
-#include "zoolib/zql/ZQL_Expr_Restrict.h"
-#include "zoolib/zql/ZQL_Expr_Select.h"
+#include "zoolib/zqe/ZQE_Iterator.h"
+#include "zoolib/zql/ZQL_Expr_Relation.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase_YadSeqRPos {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ExprRep_Concrete
+#pragma mark * ZValBase_YadSeqRPos pseudo constructors
 
-class ExprRep_Concrete : public ZQL::ExprRep_Concrete
-	{
-public:
-	ExprRep_Concrete(ZRef<ZYadSeqRPos> iYadSeqRPos);
-
-// From ExprRep_Relation via ExprRep_Concrete
-	virtual ZRelHead GetRelHead();
-
-// Our protocol
-	ZRef<ZYadSeqRPos> GetYadSeqRPos();
-
-private:
-	ZRef<ZYadSeqRPos> fYadSeqRPos;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_ExprRep_Concrete_MakeIterator
-
-class Visitor_ExprRep_Concrete_MakeIterator
-:	public virtual ZQL::Visitor_ExprRep_Concrete
-,	public virtual ZQL::Visitor_ExprRep_Restrict
-,	public virtual ZQL::Visitor_ExprRep_Select
-,	public virtual ZQE::Visitor_ExprRep_MakeIterator
-	{
-public:
-// From Visitor_ExprRep_Concrete
-	virtual bool Visit_Concrete(ZRef<ZQL::ExprRep_Concrete> iRep);	
-
-// From Visitor_ExprRep_Restrict
-	virtual bool Visit_Restrict(ZRef<ZQL::ExprRep_Restrict> iRep);
-
-// From Visitor_ExprRep_Select
-	virtual bool Visit_Select(ZRef<ZQL::ExprRep_Select> iRep);
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Iterator
-
-class Iterator : public ZQE::Iterator
-	{
-public:
-	Iterator(const ZRef<ZYadSeqRPos>& iYadSeqRPos);
-	virtual ~Iterator();
-	
-	virtual ZRef<ZQE::Result> ReadInc();
-	virtual void Rewind();
-
-protected:
-	ZRef<ZYadSeqRPos> fYadSeqRPos_Model;
-	ZRef<ZYadSeqRPos> fYadSeqRPos;
-	};
+ZQL::Expr_Relation sRelation(ZRef<ZYadSeqRPos> iYadSeqRPos);
+ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::ExprRep_Relation> iExprRep);
 
 } // namespace ZValBase_YadSeqRPos
 NAMESPACE_ZOOLIB_END

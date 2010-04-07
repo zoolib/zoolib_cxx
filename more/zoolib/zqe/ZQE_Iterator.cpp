@@ -42,8 +42,26 @@ Iterator_Intersect::Iterator_Intersect(ZRef<Iterator> iIterator_LHS, ZRef<Iterat
 ,	fIterator_RHS(iIterator_RHS)
 	{}
 
+ZRef<Iterator> Iterator_Intersect::Clone()
+	{
+	if (fIterator_RHS_Model)
+		{
+		// Hmm -- we could/should require that a Clone can
+		// happen only prior to first call to ReadInc.
+		return new Iterator_Intersect(
+			fIterator_LHS->Clone(), fIterator_RHS->Clone(), fIterator_RHS_Model->Clone());
+		}
+	else
+		{
+		return new Iterator_Intersect(fIterator_LHS->Clone(), fIterator_RHS->Clone());
+		}
+	}
+
 ZRef<Result> Iterator_Intersect::ReadInc()
 	{
+	if (!fIterator_RHS_Model)
+		fIterator_RHS_Model = fIterator_RHS->Clone();
+
 	for (;;)
 		{
 		if (ZRef<Result> theLHS = fIterator_LHS->ReadInc())
@@ -54,13 +72,13 @@ ZRef<Result> Iterator_Intersect::ReadInc()
 					{
 					if (theLHS->SameAs(theRHS))
 						{
-						fIterator_RHS->Rewind();
+						fIterator_RHS = fIterator_RHS_Model->Clone();
 						return theLHS;
 						}
 					}
 				else
 					{
-					fIterator_RHS->Rewind();
+					fIterator_RHS = fIterator_RHS_Model->Clone();
 					break;
 					}
 				}
@@ -72,11 +90,12 @@ ZRef<Result> Iterator_Intersect::ReadInc()
 		}
 	}
 
-void Iterator_Intersect::Rewind()
-	{
-	fIterator_LHS->Rewind();
-	fIterator_RHS->Rewind();
-	}
+Iterator_Intersect::Iterator_Intersect(ZRef<Iterator> iIterator_LHS,
+	ZRef<Iterator> iIterator_RHS, ZRef<Iterator> iIterator_RHS_Model)
+:	fIterator_LHS(iIterator_LHS)
+,	fIterator_RHS(iIterator_RHS)
+,	fIterator_RHS_Model(iIterator_RHS_Model)
+	{}
 
 // =================================================================================================
 #pragma mark -
@@ -87,8 +106,24 @@ Iterator_Join::Iterator_Join(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iItera
 ,	fIterator_RHS(iIterator_RHS)
 	{}
 
+ZRef<Iterator> Iterator_Join::Clone()
+	{
+	if (fIterator_RHS_Model)
+		{
+		return new Iterator_Join(
+			fIterator_LHS->Clone(), fIterator_RHS->Clone(), fIterator_RHS_Model->Clone());
+		}
+	else
+		{
+		return new Iterator_Join(fIterator_LHS->Clone(), fIterator_RHS->Clone());
+		}
+	}
+
 ZRef<Result> Iterator_Join::ReadInc()
 	{
+	if (!fIterator_RHS_Model)
+		fIterator_RHS_Model = fIterator_RHS->Clone();
+
 	for (;;)
 		{
 		if (!fResult_LHS)
@@ -106,19 +141,19 @@ ZRef<Result> Iterator_Join::ReadInc()
 					return joinedResult;
 				continue;
 				}
-			fIterator_RHS->Rewind();
+			fIterator_RHS = fIterator_RHS_Model->Clone();
 			fResult_LHS.Clear();
 			break;
 			}
 		}
 	}
 
-void Iterator_Join::Rewind()
-	{
-	fIterator_LHS->Rewind();
-	fIterator_RHS->Rewind();
-	fResult_LHS.Clear();
-	}
+Iterator_Join::Iterator_Join(ZRef<Iterator> iIterator_LHS,
+	ZRef<Iterator> iIterator_RHS, ZRef<Iterator> iIterator_RHS_Model)
+:	fIterator_LHS(iIterator_LHS)
+,	fIterator_RHS(iIterator_RHS)
+,	fIterator_RHS_Model(iIterator_RHS_Model)
+	{}
 
 // =================================================================================================
 #pragma mark -
@@ -129,6 +164,9 @@ Iterator_Union::Iterator_Union(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIte
 ,	fIterator_RHS(iIterator_RHS)
 	{}
 
+ZRef<Iterator> Iterator_Union::Clone()
+	{ return new Iterator_Union(fIterator_LHS->Clone(), fIterator_RHS->Clone()); }
+
 ZRef<Result> Iterator_Union::ReadInc()
 	{
 	if (ZRef<Result> result = fIterator_LHS->ReadInc())
@@ -138,12 +176,6 @@ ZRef<Result> Iterator_Union::ReadInc()
 		return result;
 
 	return ZRef<Result>();
-	}
-
-void Iterator_Union::Rewind()
-	{
-	fIterator_LHS->Rewind();
-	fIterator_RHS->Rewind();
 	}
 
 } // namespace ZQE

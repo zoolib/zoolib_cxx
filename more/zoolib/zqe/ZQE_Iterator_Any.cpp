@@ -35,6 +35,9 @@ Iterator_Any_Restrict::Iterator_Any_Restrict(
 ,	fIterator(iIterator)
 	{}
 
+ZRef<ZQE::Iterator> Iterator_Any_Restrict::Clone()
+	{ return new Iterator_Any_Restrict(fValCondition, fIterator->Clone()); }
+
 ZRef<ZQE::Result> Iterator_Any_Restrict::ReadInc()
 	{
 	for (;;)
@@ -56,9 +59,6 @@ ZRef<ZQE::Result> Iterator_Any_Restrict::ReadInc()
 		}
 	}
 
-void Iterator_Any_Restrict::Rewind()
-	{ fIterator->Rewind(); }
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Iterator_Any_Select
@@ -68,6 +68,9 @@ Iterator_Any_Select::Iterator_Any_Select(
 :	fExprRep_Logic(iExprRep_Logic)
 ,	fIterator(iIterator)
 	{}
+
+ZRef<ZQE::Iterator> Iterator_Any_Select::Clone()
+	{ return new Iterator_Any_Select(fExprRep_Logic, fIterator->Clone()); }
 
 ZRef<ZQE::Result> Iterator_Any_Select::ReadInc()
 	{
@@ -88,9 +91,6 @@ ZRef<ZQE::Result> Iterator_Any_Select::ReadInc()
 			}
 		}
 	}
-
-void Iterator_Any_Select::Rewind()
-	{ fIterator->Rewind(); }
 
 } // namespace ZQE
 NAMESPACE_ZOOLIB_END

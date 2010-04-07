@@ -35,8 +35,8 @@ namespace ZQE {
 class Result : public ZRefCountedWithFinalize
 	{
 public:
-	virtual bool SameAs(ZRef<Result> iOther);
-	virtual ZRef<Result> JoinedWith(ZRef<Result> iOther);
+	virtual bool SameAs(ZRef<Result> iOther) = 0;
+	virtual ZRef<Result> JoinedWith(ZRef<Result> iOther) = 0;
 	};
 
 } // namespace ZQE

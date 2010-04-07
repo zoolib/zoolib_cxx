@@ -39,8 +39,8 @@ protected:
 public:
 	virtual ~Iterator();
 	
+	virtual ZRef<Iterator> Clone() = 0;
 	virtual ZRef<Result> ReadInc() = 0;
-	virtual void Rewind() = 0;
 	};
 
 // =================================================================================================
@@ -52,12 +52,16 @@ class Iterator_Intersect : public Iterator
 public:
 	Iterator_Intersect(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
 	
+	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
-	virtual void Rewind();
 
 private:
+	Iterator_Intersect(ZRef<Iterator> iIterator_LHS,
+		ZRef<Iterator> iIterator_RHS, ZRef<Iterator> iIterator_RHS_Model);
+
 	ZRef<Iterator> fIterator_LHS;
 	ZRef<Iterator> fIterator_RHS;
+	ZRef<Iterator> fIterator_RHS_Model;
 	};
 
 // =================================================================================================
@@ -69,12 +73,16 @@ class Iterator_Join : public Iterator
 public:
 	Iterator_Join(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
 	
+	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
-	virtual void Rewind();
 
 private:
+	Iterator_Join(ZRef<Iterator> iIterator_LHS,
+		ZRef<Iterator> iIterator_RHS, ZRef<Iterator> iIterator_RHS_Model);
+
 	ZRef<Iterator> fIterator_LHS;
 	ZRef<Iterator> fIterator_RHS;
+	ZRef<Iterator> fIterator_RHS_Model;
 	ZRef<Result> fResult_LHS;
 	};
 
@@ -87,8 +95,8 @@ class Iterator_Union : public Iterator
 public:
 	Iterator_Union(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
 	
+	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
-	virtual void Rewind();
 
 private:
 	ZRef<Iterator> fIterator_LHS;

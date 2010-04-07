@@ -38,8 +38,8 @@ class Iterator_Any_Restrict : public ZQE::Iterator
 public:
 	Iterator_Any_Restrict(const ZValCondition& iValCondition, ZRef<ZQE::Iterator> iIterator);
 	
+	virtual ZRef<Iterator> Clone();
 	virtual ZRef<ZQE::Result> ReadInc();
-	virtual void Rewind();
 
 private:
 	ZValCondition fValCondition;
@@ -55,8 +55,8 @@ class Iterator_Any_Select : public ZQE::Iterator
 public:
 	Iterator_Any_Select(ZRef<ZExprRep_Logic> iExprRep_Logic, ZRef<ZQE::Iterator> iIterator);
 	
+	virtual ZRef<Iterator> Clone();
 	virtual ZRef<ZQE::Result> ReadInc();
-	virtual void Rewind();
 
 private:
 	ZRef<ZExprRep_Logic> fExprRep_Logic;

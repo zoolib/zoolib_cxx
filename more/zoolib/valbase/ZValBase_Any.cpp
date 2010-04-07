@@ -27,6 +27,49 @@ namespace ZValBase_Any {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Iterator
+
+class Iterator : public ZQE::Iterator
+	{
+public:
+	Iterator(const ZSeq_Any& iSeq);
+	Iterator(const ZSeq_Any& iSeq, size_t iIndex);
+
+	virtual ~Iterator();
+	
+	virtual ZRef<ZQE::Iterator> Clone();
+	virtual ZRef<ZQE::Result> ReadInc();
+
+private:
+	const ZSeq_Any fSeq;
+	size_t fIndex;
+	};
+
+Iterator::Iterator(const ZSeq_Any& iSeq)
+:	fSeq(iSeq)
+,	fIndex(0)
+	{}
+
+Iterator::Iterator(const ZSeq_Any& iSeq, size_t iIndex)
+:	fSeq(iSeq)
+,	fIndex(iIndex)
+	{}
+
+Iterator::~Iterator()
+	{}
+
+ZRef<ZQE::Iterator> Iterator::Clone()
+	{ return new Iterator(fSeq, fIndex); }
+
+ZRef<ZQE::Result> Iterator::ReadInc()
+	{
+	if (fIndex < fSeq.Count())
+		return new ZQE::Result_Any(fSeq.Get(fIndex++));
+	return ZRef<ZQE::Result>();
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ExprRep_Concrete
 
 ExprRep_Concrete::ExprRep_Concrete(const ZSeq_Any& iSeq)
@@ -69,28 +112,6 @@ bool Visitor_ExprRep_Concrete_MakeIterator::Visit_Select(ZRef<ZQL::ExprRep_Selec
 
 	return true;	
 	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Iterator
-
-Iterator::Iterator(const ZSeq_Any& iSeq)
-:	fSeq(iSeq)
-,	fIndex(0)
-	{}
-
-Iterator::~Iterator()
-	{}
-
-ZRef<ZQE::Result> Iterator::ReadInc()
-	{
-	if (fIndex < fSeq.Count())
-		return new ZQE::Result_Any(fSeq.Get(fIndex++));
-	return ZRef<ZQE::Result>();
-	}
-	
-void Iterator::Rewind()
-	{ fIndex = 0; }
 
 } // namespace ZValBase_Seq
 NAMESPACE_ZOOLIB_END

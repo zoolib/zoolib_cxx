@@ -18,23 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZLog.h"
 #include "zoolib/zqe/ZQE_Result.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQE {
-
-bool Result::SameAs(ZRef<Result> iOther)
-	{
-	ZLOGFUNCTION(eDebug);
-	return this == iOther;
-	}
-
-ZRef<Result> Result::JoinedWith(ZRef<Result> iOther)
-	{
-	ZLOGFUNCTION(eDebug);
-	return this;
-	}
 
 } // namespace ZQE
 NAMESPACE_ZOOLIB_END

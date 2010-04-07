@@ -26,6 +26,7 @@
 #include "zoolib/ZYad_MapAsSeq.h"
 
 #include "zoolib/valbase/ZValBase_Any.h"
+#include "zoolib/valbase/ZValBase_YadSeqR.h"
 #include "zoolib/valbase/ZValBase_YadSeqRPos.h"
 
 #include "zoolib/ZYadSeqR_ExprRep_Logic.h"
@@ -439,6 +440,60 @@ void sTestQL3(const ZStrimW& s)
 	}
 
 
+void sTestQL5(const ZStrimW& s)
+	{
+	ZSeq_Any s1;
+	for (int32 x = 0; x < 10; ++x)
+		{
+		ZMap_Any aMap;
+		aMap.Set("field", x);
+		aMap.Set("field1", string("I'm in seq1"));
+		s1.Append(aMap);
+		}
+
+	ZSeq_Any s2;
+	for (int32 x = 0; x < 10; x += 2)
+		{
+		ZMap_Any aMap;
+		aMap.Set("field", x);
+		aMap.Set("field2", string("I'm in seq2"));
+		s2.Append(aMap);
+		}
+
+	ZRef<ZYadSeqR> yad1 = sMakeYadR(s1).DynamicCast<ZYadSeqR>();
+	ZRef<ZYadSeqR> yad2 = sMakeYadR(s2).DynamicCast<ZYadSeqR>();
+
+	Expr_Relation thePhys1 = ZValBase_YadSeqR::sRelation(yad1);
+	Expr_Relation thePhys2 = ZValBase_YadSeqR::sRelation(yad2);
+
+	Expr_Relation sect = thePhys1 * thePhys2;
+	
+	ZRef<ZQE::Iterator> theIterator = ZValBase_YadSeqR::sIterator(sect);
+		
+
+	ZYadOptions theYadOptions(true);
+
+	for (;;)
+		{
+		if (ZRef<ZQE::Result> theZQEResult = theIterator->ReadInc())
+			{
+			if (ZRef<ZQE::Result_Any> theResult = theZQEResult.DynamicCast<ZQE::Result_Any>())
+				{
+				ZYad_ZooLibStrim::sToStrim(0, theYadOptions, sMakeYadR(theResult->GetVal()), s);
+				s << "\n";
+				}
+			else
+				{
+				s.Writef("%08X, ", theZQEResult.Get());
+				}
+			}
+		else
+			{
+			break;
+			}
+		}
+	}
+
 void sTestQL(const ZStrimW& s)
 	{
 	ZRef<ZStreamerR> theStreamerR = ZFileSpec("/Users/ag/Music/iTunes/iTunes Music Library.xml").OpenR();
@@ -468,23 +523,23 @@ void sTestQL(const ZStrimW& s)
 #if 1
 	if (theYadSeqR)
 		{
-		const ZSeq_Any theSeq = sFromYadR(ZVal_Any(), theYadSeqR).GetSeq();
+//		const ZSeq_Any theSeq = sFromYadR(ZVal_Any(), theYadSeqR).GetSeq();
 		
 		s.Writef("\nElapsed, read: %gms\n", 1000.0 * (ZTime::sNow() - start));
 
 		start = ZTime::sNow();
-		Expr_Relation thePhys(new ZValBase_YadSeqRPos::ExprRep_Concrete(sMakeYadR(theSeq).DynamicCast<ZYadSeqRPos>()));
+		Expr_Relation thePhys = ZValBase_YadSeqR::sRelation(theYadSeqR);
+//		Expr_Relation thePhys(new ZValBase_YadSeqRPos::ExprRep_Concrete(sMakeYadR(theSeq).DynamicCast<ZYadSeqRPos>()));
 //		Expr_Relation thePhys(new ZValBase_Any::ExprRep_Concrete(theSeq));
 		thePhys = thePhys & theCondition;
+		thePhys = thePhys & thePhys;
 
 		Util_Strim_Query::sToStrim(thePhys, s);
 		s << "\n";
 
 //		thePhys = Expr_Relation(sOptimize(thePhys));
 
-		ZRef<ZQE::Iterator> theIterator =
-			ZValBase_YadSeqRPos::Visitor_ExprRep_Concrete_MakeIterator().MakeIterator(thePhys);
-//			ZValBase_Any::Visitor_ExprRep_Concrete_MakeIterator().MakeIterator(thePhys);
+		ZRef<ZQE::Iterator> theIterator = ZValBase_YadSeqR::sIterator(thePhys);
 
 		for (;;)
 			{
@@ -492,8 +547,8 @@ void sTestQL(const ZStrimW& s)
 				{
 				if (ZRef<ZQE::Result_Any> theResult = theZQEResult.DynamicCast<ZQE::Result_Any>())
 					{
-//					ZYad_ZooLibStrim::sToStrim(0, theYadOptions, sMakeYadR(theResult->GetVal()), s);
-//					s << "\n";
+					ZYad_ZooLibStrim::sToStrim(0, theYadOptions, sMakeYadR(theResult->GetVal()), s);
+					s << "\n";
 					}
 				else
 					{

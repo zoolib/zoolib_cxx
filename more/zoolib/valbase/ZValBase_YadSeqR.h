@@ -18,37 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Result_Any__
-#define __ZQE_Result_Any__ 1
+#ifndef __ZValBase_YadSeqR__
+#define __ZValBase_YadSeqR__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZVal_Any.h"
-#include "zoolib/zqe/ZQE_Result.h"
+#include "zoolib/ZYad.h"
+#include "zoolib/zqe/ZQE_Iterator.h"
+#include "zoolib/zql/ZQL_Expr_Relation.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQE {
+namespace ZValBase_YadSeqR {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Result
+#pragma mark * ZValBase_YadSeqR pseudo constructors
 
-class Result_Any : public Result
-	{
-public:
-	Result_Any(const ZVal_Any& iVal);
+ZQL::Expr_Relation sRelation(ZRef<ZYadSeqR> iYadSeqR);
+ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::ExprRep_Relation> iExprRep);
 
-// From Result
-	virtual bool SameAs(ZRef<Result> iOther);
-	virtual ZRef<Result> JoinedWith(ZRef<Result> iOther);
-
-// Our protocol
-	const ZVal_Any& GetVal();
-
-private:
-	const ZVal_Any fVal;
-	};
-
-} // namespace ZQE
+} // namespace ZValBase_YadSeqR
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQE_Result_Val_Any__
+#endif // __ZValBase_YadSeqR__
