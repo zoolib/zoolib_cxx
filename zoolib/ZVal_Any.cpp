@@ -298,7 +298,7 @@ int ZMap_Any::Compare(const ZMap_Any& iOther) const
 
 	if (!fRep)
 		{
-		// We have no rep, and iOther must have a rep (or fRep would be == iOther.fRep).
+		// We have no rep, (iOther must have a rep or fRep would be == iOther.fRep).
 		if (iOther.fRep->fMap.empty())
 			{
 			// And iOther's map is empty, we're equivalent.
