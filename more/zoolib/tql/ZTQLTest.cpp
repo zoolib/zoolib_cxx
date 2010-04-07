@@ -25,6 +25,12 @@
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_MapAsSeq.h"
 
+#include "zoolib/valbase/ZValBase_Any.h"
+#include "zoolib/valbase/ZValBase_YadSeqRPos.h"
+
+#include "zoolib/ZYadSeqR_ExprRep_Logic.h"
+#include "zoolib/zqe/ZQE_Result_Any.h"
+
 NAMESPACE_ZOOLIB_USING
 
 using namespace ZQL;
@@ -322,6 +328,47 @@ void sTestQL2(const ZStrimW& s)
 	int res4 = sCompare_T(val1, val1);
 	}
 
+void sTestQL4(const ZStrimW& s)
+	{
+	ZSeq_Any theSeq;
+	for (int x = 0; x < 20; ++x)
+		{
+		ZMap_Any innerMap;
+		innerMap.Set("field", x);
+		ZMap_Any outerMap;
+		outerMap.Set("inner", innerMap);
+		theSeq.Append(outerMap);
+		}
+
+	Expr_Relation thePhys(new ZValBase_Any::ExprRep_Concrete(theSeq));
+//	ZExpr_ValCondition theSpec1 = CVal() > CConst(10);
+//	Spec theSpec = Spec(false) | (CVal() > CConst(10));
+//	Spec theSpec = ();
+	Spec theSpec = ZExpr_ValCondition(CTrail("inner/field") < CConst(10));
+	thePhys = thePhys & theSpec;
+
+	Util_Strim_Query::sToStrim(thePhys, s);
+	s << "\n";
+
+	thePhys = Expr_Relation(sOptimize(thePhys));
+
+	ZRef<ZQE::Iterator> theIterator =
+		ZValBase_Any::Visitor_ExprRep_Concrete_MakeIterator().MakeIterator(thePhys);
+
+	for (;;)
+		{
+		if (ZRef<ZQE::Result> theResult = theIterator->ReadInc())
+			{
+			s.Writef("%08X, ", theResult.Get());
+			}
+		else
+			{
+			break;
+			}
+		}
+
+	}
+
 void sTestQL3(const ZStrimW& s)
 	{
 	Spec theSpec = CVar("TestVar1") == CConst(1) | CVar("TestVar2") == CConst(2);
@@ -403,17 +450,69 @@ void sTestQL(const ZStrimW& s)
 	ZRef<ZML::StrimmerU> theStrimmerU_ML = new ZML::StrimmerU(theStrimmerU_Unreader);
 
 	ZRef<ZYadR> theYadR = ZYad_XMLPList::sMakeYadR(theStrimmerU_ML);
+	theYadR = ZUtil_Yad::sWalk(theYadR, "Tracks");
 
 	ZYadOptions theYadOptions(true);
-	
-	ZExpr_Logic theCondition = CName("Disc Number") == CConst(int32(2)) & CName("Track Number") > CConst(int32(10));
 
-//	const ZVal_Any theVal = sFromYadR(ZVal_Any(), theYadR);
-//	theYadR = sMakeYadR(theVal);
-	theYadR = ZUtil_Yad::sWalk(theYadR, "Tracks");
+	ZExpr_Logic theCondition =
+		CName("Disc Number") == CConst(int32(2)) & CName("Track Number") > CConst(int32(10));
+
+	ZRef<ZYadSeqR> theYadSeqR;
 	if (ZRef<ZYadMapR> theYadMapR = theYadR.DynamicCast<ZYadMapR>())
+		theYadSeqR = sMapAsSeq("Dummy", theYadMapR);
+
+	ZTime start = ZTime::sNow();
+#if 1
+	if (theYadSeqR)
 		{
-		ZRef<ZYadSeqR> theYadSeqR = sMapAsSeq("Dummy", theYadMapR);
+		const ZSeq_Any theSeq = sFromYadR(ZVal_Any(), theYadSeqR).GetSeq();
+		
+		s.Writef("\nElapsed, read: %gms\n", 1000.0 * (ZTime::sNow() - start));
+
+		start = ZTime::sNow();
+		Expr_Relation thePhys(new ZValBase_YadSeqRPos::ExprRep_Concrete(sMakeYadR(theSeq).DynamicCast<ZYadSeqRPos>()));
+//		Expr_Relation thePhys(new ZValBase_Any::ExprRep_Concrete(theSeq));
+		thePhys = thePhys & theCondition;
+
+		Util_Strim_Query::sToStrim(thePhys, s);
+		s << "\n";
+
+//		thePhys = Expr_Relation(sOptimize(thePhys));
+
+		ZRef<ZQE::Iterator> theIterator =
+			ZValBase_YadSeqRPos::Visitor_ExprRep_Concrete_MakeIterator().MakeIterator(thePhys);
+//			ZValBase_Any::Visitor_ExprRep_Concrete_MakeIterator().MakeIterator(thePhys);
+
+		for (;;)
+			{
+			if (ZRef<ZQE::Result> theZQEResult = theIterator->ReadInc())
+				{
+				if (ZRef<ZQE::Result_Any> theResult = theZQEResult.DynamicCast<ZQE::Result_Any>())
+					{
+//					ZYad_ZooLibStrim::sToStrim(0, theYadOptions, sMakeYadR(theResult->GetVal()), s);
+//					s << "\n";
+					}
+				else
+					{
+					s.Writef("%08X, ", theZQEResult.Get());
+					}
+				}
+			else
+				{
+				break;
+				}
+			}
+		}
+#elif 1
+	if (theYadSeqR)
+		{
+		theYadSeqR = new ZYadSeqR_ExprRep_Logic(theYadSeqR, theCondition);
+		theYadSeqR->SkipAll();
+//		ZYad_ZooLibStrim::sToStrim(0, theYadOptions, theYadSeqR, s);
+		}
+#elif 0
+	if (theYadSeqR)
+		{
 		for (;;)
 			{
 			ZRef<ZYadR> inner = theYadSeqR->ReadInc();
@@ -423,9 +522,11 @@ void sTestQL(const ZStrimW& s)
 
 			if (sMatches(theCondition, theVal))
 				{
-				ZYad_ZooLibStrim::sToStrim(0, theYadOptions, sMakeYadR(theVal), s);
-				s << "\n";
+//				ZYad_ZooLibStrim::sToStrim(0, theYadOptions, sMakeYadR(theVal), s);
+//				s << "\n";
 				}
 			}
 		}
+#endif
+	s.Writef("\nElapsed: %gms\n", 1000.0 * (ZTime::sNow() - start));
 	}

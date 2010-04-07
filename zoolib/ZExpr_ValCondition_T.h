@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZExpr_Logic.h"
 #include "zoolib/ZValCondition_T.h"
+#include "zoolib/ZVisitor_ExprRep_Logic_Eval.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -171,17 +172,13 @@ template <class Val>
 ZExpr_Logic operator&(
 	const ZValCondition_T<Val>& iLHS,
 	const ZExpr_Logic& iRHS)
-	{
-	return ZExpr_Logic(new ZExprRep_Logic_And(new ZExprRep_ValCondition_T<Val>(iLHS), iRHS));
-	}
+	{ return ZExpr_Logic(new ZExprRep_Logic_And(new ZExprRep_ValCondition_T<Val>(iLHS), iRHS)); }
 
 template <class Val>
 ZExpr_Logic operator&(
 	const ZExpr_Logic& iLHS,
 	const ZValCondition_T<Val>& iRHS)
-	{
-	return ZExpr_Logic(new ZExprRep_Logic_And(new ZExprRep_ValCondition_T<Val>(iRHS), iLHS));
-	}
+	{ return ZExpr_Logic(new ZExprRep_Logic_And(new ZExprRep_ValCondition_T<Val>(iRHS), iLHS)); }
 
 template <class Val>
 ZExpr_Logic& operator&=(
@@ -206,9 +203,7 @@ template <class Val>
 ZExpr_Logic operator|(
 	const ZValCondition_T<Val>& iLHS,
 	const ZExpr_Logic& iRHS)
-	{
-	return ZExpr_Logic(new ZExprRep_Logic_Or(new ZExprRep_ValCondition_T<Val>(iLHS), iRHS));
-	}
+	{ return ZExpr_Logic(new ZExprRep_Logic_Or(new ZExprRep_ValCondition_T<Val>(iLHS), iRHS)); }
 
 template <class Val>
 ZExpr_Logic operator|(
@@ -280,26 +275,20 @@ ZRelHead sGetRelHead_T(const ZRef<ZExprRep_Logic>& iRep)
 
 template <class Val>
 class ZVisitor_ExprRep_ValCondition_Matches_T
-:	public ZVisitor_ExprRep_ValCondition_T<Val>
+:	public virtual ZVisitor_ExprRep_Logic_Eval
+,	public virtual ZVisitor_ExprRep_ValCondition_T<Val>
 	{
 	typedef ZVisitor_ExprRep_ValCondition_T<Val> inherited;
 public:
 
 	ZVisitor_ExprRep_ValCondition_Matches_T(const Val& iVal);
 
-// From ZVisitor_ExprRep_Logic via ZVisitor_ExprRep_ValCondition_T
-	virtual bool Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep);
-	virtual bool Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep);
-	virtual bool Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
-	virtual bool Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
-	virtual bool Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);
-
 // From ZVisitor_ExprRep_ValCondition_T
 	virtual bool Visit_ValCondition(ZRef<ZExprRep_ValCondition_T<Val> > iRep);
 
 private:
 	const Val& fVal;
-	ZValContext fContext;
+	ZValContext fValContext;
 	};
 
 template <class Val>
@@ -309,58 +298,15 @@ ZVisitor_ExprRep_ValCondition_Matches_T<Val>::ZVisitor_ExprRep_ValCondition_Matc
 	{}
 
 template <class Val>
-bool ZVisitor_ExprRep_ValCondition_Matches_T<Val>::Visit_Logic_True(
-	ZRef<ZExprRep_Logic_True> iRep)
-	{ return true; }
-
-template <class Val>
-bool ZVisitor_ExprRep_ValCondition_Matches_T<Val>::Visit_Logic_False(
-	ZRef<ZExprRep_Logic_False> iRep)
-	{ return false; }
-
-template <class Val>
-bool ZVisitor_ExprRep_ValCondition_Matches_T<Val>::Visit_Logic_Not(
-	ZRef<ZExprRep_Logic_Not> iRep)
-	{
-	if (ZRef<ZExprRep_Logic> theRep = iRep->GetOperand())
-		return ! theRep->Accept(*this);
-	return true;
-	}
-
-template <class Val>
-bool ZVisitor_ExprRep_ValCondition_Matches_T<Val>::Visit_Logic_And(
-	ZRef<ZExprRep_Logic_And> iRep)
-	{
-	if (ZRef<ZExprRep_Logic> theLHS = iRep->GetLHS())
-		{
-		if (ZRef<ZExprRep_Logic> theRHS = iRep->GetRHS())
-			return theLHS->Accept(*this) && theRHS->Accept(*this);
-		}
-	return false;
-	}
-
-template <class Val>
-bool ZVisitor_ExprRep_ValCondition_Matches_T<Val>::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
-	{
-	if (ZRef<ZExprRep_Logic> theLHS = iRep->GetLHS())
-		{
-		if (theLHS->Accept(*this))
-			return true;
-		}
-
-	if (ZRef<ZExprRep_Logic> theRHS = iRep->GetRHS())
-		{
-		if (theRHS->Accept(*this))
-			return true;
-		}
-
-	return false;
-	}
-
-template <class Val>
 bool ZVisitor_ExprRep_ValCondition_Matches_T<Val>::Visit_ValCondition(
 	ZRef<ZExprRep_ValCondition_T<Val> > iRep)
-	{ return iRep->GetValCondition().Matches(fContext, fVal); }
+	{
+//	return iRep->GetValCondition().Matches(fValContext, fVal);
+	if (iRep->GetValCondition().Matches(fValContext, fVal))
+		return true;
+	else
+		return false;
+	}
 
 template <class Val>
 bool sMatches_T(const ZRef<ZExprRep_Logic>& iRep, const Val& iVal)

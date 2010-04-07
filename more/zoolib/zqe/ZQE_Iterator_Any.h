@@ -18,54 +18,52 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Strim_RelHead.h"
-#include "zoolib/ZVisitor_ExprRep_ValCondition_ToStrim.h"
-#include "zoolib/zql/ZQL_Util_Strim_Query.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_ToStrim.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Restrict_ToStrim.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Select_ToStrim.h"
+#ifndef __ZQE_Iterator_Any__
+#define __ZQE_Iterator_Any__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZExpr_Logic.h"
+#include "zoolib/ZValCondition.h"
+#include "zoolib/zqe/ZQE_Iterator.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
-namespace Util_Strim_Query {
+namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Query_ToStrim
+#pragma mark * Iterator_Any_Restrict
 
-class Visitor_Query_ToStrim
-:	public virtual ZVisitor_ExprRep_ValCondition_ToStrim
-,	public virtual Visitor_ExprRep_Relation_ToStrim
-,	public virtual Visitor_ExprRep_Restrict_ToStrim
-,	public virtual Visitor_ExprRep_Select_ToStrim
+class Iterator_Any_Restrict : public ZQE::Iterator
 	{
 public:
-	Visitor_Query_ToStrim(const Options& iOptions, const ZStrimW& iStrimW);
-	};
+	Iterator_Any_Restrict(const ZValCondition& iValCondition, ZRef<ZQE::Iterator> iIterator);
+	
+	virtual ZRef<ZQE::Result> ReadInc();
+	virtual void Rewind();
 
-Visitor_Query_ToStrim::Visitor_Query_ToStrim(const Options& iOptions, const ZStrimW& iStrimW)
-:	ZVisitor_ExprRep_ToStrim(iOptions, iStrimW)
-,	ZVisitor_ExprRep_Logic_ToStrim(iOptions, iStrimW)
-,	ZVisitor_ExprRep_ValCondition_ToStrim(iOptions, iStrimW)
-,	Visitor_ExprRep_Relation_ToStrim(iOptions, iStrimW)
-,	Visitor_ExprRep_Restrict_ToStrim(iOptions, iStrimW)
-,	Visitor_ExprRep_Select_ToStrim(iOptions, iStrimW)
-	{}
+private:
+	ZValCondition fValCondition;
+	ZRef<Iterator> fIterator;
+	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_Strim_TQL
+#pragma mark * Iterator_Any_Select
 
-void sToStrim(const ZRef<ZExprRep>& iRep, const ZStrimW& iStrimW)
-	{ sToStrim(iRep, ZVisitor_ExprRep_ToStrim::Options(), iStrimW); }
-
-void sToStrim(const ZRef<ZExprRep>& iRep,
-	const ZVisitor_ExprRep_ToStrim::Options& iOptions,
-	const ZStrimW& iStrimW)
+class Iterator_Any_Select : public ZQE::Iterator
 	{
-	Visitor_Query_ToStrim(iOptions, iStrimW).Write(iRep);
-	}
+public:
+	Iterator_Any_Select(ZRef<ZExprRep_Logic> iExprRep_Logic, ZRef<ZQE::Iterator> iIterator);
+	
+	virtual ZRef<ZQE::Result> ReadInc();
+	virtual void Rewind();
 
-} // namespace Util_Strim_Query
-} // namespace ZQL
+private:
+	ZRef<ZExprRep_Logic> fExprRep_Logic;
+	ZRef<Iterator> fIterator;
+	};
+
+} // namespace ZQE
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZQE_Iterator_Any__

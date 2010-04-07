@@ -93,7 +93,9 @@ ZExprRep_Logic_Dyadic::ZExprRep_Logic_Dyadic(
 	ZRef<ZExprRep_Logic> iLHS, ZRef<ZExprRep_Logic> iRHS)
 :	fLHS(iLHS)
 ,	fRHS(iRHS)
-	{}
+	{
+	ZAssert(fLHS && fRHS);
+	}
 
 ZExprRep_Logic_Dyadic::~ZExprRep_Logic_Dyadic()
 	{}
@@ -209,6 +211,14 @@ ZExpr_Logic& ZExpr_Logic::operator=(const ZExpr_Logic& iOther)
 
 ZExpr_Logic::ZExpr_Logic(const ZRef<ZExprRep_Logic>& iRep)
 :	inherited(iRep)
+	{}
+
+ZExpr_Logic::ZExpr_Logic(ZExprRep_Logic* iRep)
+:	inherited(iRep)
+	{}
+
+ZExpr_Logic::ZExpr_Logic(bool iBool)
+:	inherited(iBool ? static_cast<ZExprRep_Logic*>(new ZExprRep_Logic_True) : static_cast<ZExprRep_Logic*>(new ZExprRep_Logic_False))
 	{}
 
 ZExpr_Logic::operator ZRef<ZExprRep_Logic>() const

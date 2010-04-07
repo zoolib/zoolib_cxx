@@ -18,42 +18,30 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_Expr_Physical.h"
+#ifndef __ZVisitor_ExprRep_Logic_Eval__
+#define __ZVisitor_ExprRep_Logic_Eval__
+#include "zconfig.h"
+
+#include "zoolib/ZExpr_Logic.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ExprRep_Physical
+#pragma mark * ZVisitor_ExprRep_Logic_Eval
 
-ExprRep_Physical::ExprRep_Physical()
-	{}
-
-ExprRep_Physical::~ExprRep_Physical()
-	{}
-
-bool ExprRep_Physical::Accept(Visitor_ExprRep_Relation& iVisitor)
+class ZVisitor_ExprRep_Logic_Eval
+:	public virtual ZVisitor_ExprRep_Logic
 	{
-	if (Visitor_ExprRep_Physical* theVisitor =
-		dynamic_cast<Visitor_ExprRep_Physical*>(&iVisitor))
-		{
-		return this->Accept(*theVisitor);
-		}
-	else
-		{
-		return ExprRep_Relation::Accept(iVisitor);
-		}
-	}
+public:
+// From ZVisitor_ExprRep_Logic
+	virtual bool Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep);
+	virtual bool Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep);
+	virtual bool Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
+	virtual bool Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
+	virtual bool Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);
+	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_ExprRep_Physical
-
-bool Visitor_ExprRep_Physical::Visit_Physical(ZRef<ExprRep_Physical> iRep)
-	{
-	return Visitor_ExprRep_Relation::Visit_ExprRep(iRep);
-	}
-
-} // namespace ZQL
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZVisitor_ExprRep_Logic_Eval__

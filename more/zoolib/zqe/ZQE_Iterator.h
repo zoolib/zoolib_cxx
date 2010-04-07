@@ -18,42 +18,85 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Expr_Physical__
-#define __ZQL_Expr_Physical__ 1
+#ifndef __ZQE_Iterator__
+#define __ZQE_Iterator__ 1
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Relation.h"
+#include "zoolib/zqe/ZQE_Result.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
+namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ExprRep_Physical
+#pragma mark * Iterator
 
-class ExprRep_Physical : public ExprRep_Relation
+class Iterator : public ZRefCountedWithFinalize
 	{
 protected:
-	ExprRep_Physical();
+	Iterator();
 
 public:
-	virtual ~ExprRep_Physical();
-
-// From ZExprRep_Relation
-	virtual bool Accept(Visitor_ExprRep_Relation& iVisitor);
+	virtual ~Iterator();
+	
+	virtual ZRef<Result> ReadInc() = 0;
+	virtual void Rewind() = 0;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_ExprRep_Physical
+#pragma mark * Iterator_Intersect
 
-class Visitor_ExprRep_Physical : public virtual Visitor_ExprRep_Relation
+class Iterator_Intersect : public Iterator
 	{
 public:
-	virtual bool Visit_Physical(ZRef<ExprRep_Physical> iRep);
+	Iterator_Intersect(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
+	
+	virtual ZRef<Result> ReadInc();
+	virtual void Rewind();
+
+private:
+	ZRef<Iterator> fIterator_LHS;
+	ZRef<Iterator> fIterator_RHS;
 	};
 
-} // namespace ZQL
+// =================================================================================================
+#pragma mark -
+#pragma mark * Iterator_Join
+
+class Iterator_Join : public Iterator
+	{
+public:
+	Iterator_Join(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
+	
+	virtual ZRef<Result> ReadInc();
+	virtual void Rewind();
+
+private:
+	ZRef<Iterator> fIterator_LHS;
+	ZRef<Iterator> fIterator_RHS;
+	ZRef<Result> fResult_LHS;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Iterator_Union
+
+class Iterator_Union : public Iterator
+	{
+public:
+	Iterator_Union(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
+	
+	virtual ZRef<Result> ReadInc();
+	virtual void Rewind();
+
+private:
+	ZRef<Iterator> fIterator_LHS;
+	ZRef<Iterator> fIterator_RHS;
+	};
+
+
+} // namespace ZQE
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Expr_Physical__
+#endif // __ZQE_Iterator__

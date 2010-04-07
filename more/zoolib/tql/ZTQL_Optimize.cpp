@@ -18,28 +18,29 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZExpr_ValCondition.h"
+#include "zoolib/ZVisitor_ExprRep_Logic_Transform.h"
 #include "zoolib/tql/ZTQL_Optimize.h"
-
-//#include "zoolib/zql/ZQL_Expr_Query.h"
 #include "zoolib/zql/ZQL_Expr_Restrict.h"
 #include "zoolib/zql/ZQL_Visitor_ExprRep_Select_Transform.h"
-#include "zoolib/ZExpr_ValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 using namespace ZQL;
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZQL, spConvertSelect
-
 // Turns a Select into a tree of Restrict and Union.
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Local stuff
+
 using std::vector;
+
+namespace ZANONYMOUS {
 
 typedef vector<ZValCondition> CondSect;
 typedef vector<CondSect> CondUnion;
 
-static void spCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight, CondUnion& oResult)
+void spCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight, CondUnion& oResult)
 	{
 	for (CondUnion::const_iterator iterLeft = iLeft.begin();
 		iterLeft != iLeft.end(); ++iterLeft)
@@ -54,52 +55,88 @@ static void spCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight, Con
 		}
 	}
 
-static void spGather(ZRef<ZExprRep_Logic> iRep, CondUnion& oResult)
-	{
-	ZAssert(oResult.empty());
+void spGather(ZRef<ZExprRep_Logic> iRep, CondUnion& oResult);
 
-	if (ZRef<ZExprRep_Logic_And> lo = ZRefDynamicCast<ZExprRep_Logic_And>(iRep))
-		{
-		CondUnion left;
-		spGather(lo->GetLHS(), left);
-		CondUnion right;
-		spGather(lo->GetRHS(), right);
-		spCrossMultiply(left, right, oResult);
-		}
-	else if (ZRef<ZExprRep_Logic_Or> lo = ZRefDynamicCast<ZExprRep_Logic_Or>(iRep))
-		{
-		CondUnion left;
-		spGather(lo->GetLHS(), left);
-		CondUnion right;
-		spGather(lo->GetRHS(), right);
-		oResult = left;
-		oResult.insert(oResult.end(), right.begin(), right.end());
-		}
-	else if (ZRef<ZExprRep_ValCondition> lo = ZRefDynamicCast<ZExprRep_ValCondition>(iRep))
-		{
-		oResult.resize(1);
-		oResult[0].push_back(lo->GetValCondition());
-		}
-	else if (ZRef<ZExprRep_Logic_True> lo = ZRefDynamicCast<ZExprRep_Logic_True>(iRep))
-		{
-		oResult.resize(1);
-		}
-	else if (ZRef<ZExprRep_Logic_False> lo = ZRefDynamicCast<ZExprRep_Logic_False>(iRep))
-		{
-		// Do nothing.
-		}
-	else if (iRep)
-		{
-		// Unknown LogOp
-		ZUnimplemented();
-		}
-	else
-		{
-		// Nil LogOp is equivalent to false.
-		}
+class Gather
+:	public virtual ZVisitor_ExprRep_Logic_Transform
+,	public virtual ZVisitor_ExprRep_ValCondition
+	{
+public:
+	Gather(CondUnion& oResult);
+
+//	From ZVisitor_ExprRep_Logic_Transform
+	virtual bool Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep);
+	virtual bool Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep);
+	virtual bool Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
+	virtual bool Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
+	virtual bool Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);	
+
+// From ZVisitor_ExprRep_ValCondition
+	virtual bool Visit_ValCondition(ZRef<ZExprRep_ValCondition> iRep);
+
+private:
+	CondUnion& fResult;
+	};
+
+Gather::Gather(CondUnion& oResult)
+:	fResult(oResult)
+	{}
+
+bool Gather::Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep)
+	{
+	fResult.resize(1);
+	return true;
 	}
 
-static ZRef<ExprRep_Relation> spConvertSelect(
+bool Gather::Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep)
+	{
+	ZAssert(fResult.empty());
+//	fResult.clear();
+	return true;
+	}
+
+bool Gather::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep)
+	{
+	ZUnimplemented();
+	return true;
+	}
+
+bool Gather::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
+	{
+	CondUnion left;
+	spGather(iRep->GetLHS(), left);
+	CondUnion right;
+	spGather(iRep->GetRHS(), right);
+	spCrossMultiply(left, right, fResult);
+	return true;
+	}
+
+bool Gather::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
+	{
+	CondUnion left;
+	spGather(iRep->GetLHS(), left);
+	CondUnion right;
+	spGather(iRep->GetRHS(), right);
+	fResult.swap(left);
+	fResult.insert(fResult.end(), right.begin(), right.end());
+	return true;
+	}
+
+bool Gather::Visit_ValCondition(ZRef<ZExprRep_ValCondition> iRep)
+	{
+	fResult.resize(1);
+	fResult[0].push_back(iRep->GetValCondition());
+	return true;
+	}
+
+void spGather(ZRef<ZExprRep_Logic> iRep, CondUnion& oResult)
+	{
+	ZAssert(oResult.empty());
+	Gather theGather(oResult);
+	iRep->Accept(theGather);
+	}
+
+ZRef<ExprRep_Relation> spConvertSelect(
 	ZRef<ExprRep_Relation> iRelation, ZRef<ZExprRep_Logic> iLogical)
 	{
 	if (!iRelation)
@@ -126,12 +163,6 @@ static ZRef<ExprRep_Relation> spConvertSelect(
 		}
 	return resultRelation;
 	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZQL
-
-namespace ZANONYMOUS {
 
 class Optimize
 :	public virtual Visitor_ExprRep_Select_Transform
