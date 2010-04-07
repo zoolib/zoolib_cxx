@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZYad.h"
 #include "zoolib/zqe/ZQE_Iterator.h"
-#include "zoolib/zql/ZQL_Expr_Relation.h"
+#include "zoolib/zql/ZQL_Expr_Concrete.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase_YadSeqRPos {
@@ -33,7 +33,8 @@ namespace ZValBase_YadSeqRPos {
 #pragma mark -
 #pragma mark * ZValBase_YadSeqRPos pseudo constructors
 
-ZQL::Expr_Relation sRelation(ZRef<ZYadSeqRPos> iYadSeqRPos);
+ZQL::Expr_Concrete sConcrete(ZRef<ZYadSeqRPos> iYadSeqRPos);
+
 ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::ExprRep_Relation> iExprRep);
 
 } // namespace ZValBase_YadSeqRPos

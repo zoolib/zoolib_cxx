@@ -460,12 +460,13 @@ void sTestQL5(const ZStrimW& s)
 		s2.Append(aMap);
 		}
 
-	ZRef<ZYadSeqR> yad1 = sMakeYadR(s1).DynamicCast<ZYadSeqR>();
-	ZRef<ZYadSeqR> yad2 = sMakeYadR(s2).DynamicCast<ZYadSeqR>();
+	ZRef<ZYadSeqR> yad1 = sMakeYadR(s1);
+	ZRef<ZYadSeqR> yad2 = sMakeYadR(s2);
 
-	Expr_Relation thePhys1 = ZValBase_YadSeqR::sRelation(yad1);
-	Expr_Relation thePhys2 = ZValBase_YadSeqR::sRelation(yad2);
+	Expr_Concrete thePhys1 = ZValBase_YadSeqR::sConcrete(yad1);
+	Expr_Concrete thePhys2 = ZValBase_YadSeqR::sConcrete(yad2);
 
+//	Expr_Relation sect = sJoin(thePhys1, thePhys2);
 	Expr_Relation sect = thePhys1 * thePhys2;
 	
 	ZRef<ZQE::Iterator> theIterator = ZValBase_YadSeqR::sIterator(sect);
@@ -528,9 +529,7 @@ void sTestQL(const ZStrimW& s)
 		s.Writef("\nElapsed, read: %gms\n", 1000.0 * (ZTime::sNow() - start));
 
 		start = ZTime::sNow();
-		Expr_Relation thePhys = ZValBase_YadSeqR::sRelation(theYadSeqR);
-//		Expr_Relation thePhys(new ZValBase_YadSeqRPos::ExprRep_Concrete(sMakeYadR(theSeq).DynamicCast<ZYadSeqRPos>()));
-//		Expr_Relation thePhys(new ZValBase_Any::ExprRep_Concrete(theSeq));
+		Expr_Relation thePhys = ZValBase_YadSeqR::sConcrete(theYadSeqR);
 		thePhys = thePhys & theCondition;
 		thePhys = thePhys & thePhys;
 
@@ -567,23 +566,6 @@ void sTestQL(const ZStrimW& s)
 		theYadSeqR = new ZYadSeqR_ExprRep_Logic(theYadSeqR, theCondition);
 		theYadSeqR->SkipAll();
 //		ZYad_ZooLibStrim::sToStrim(0, theYadOptions, theYadSeqR, s);
-		}
-#elif 0
-	if (theYadSeqR)
-		{
-		for (;;)
-			{
-			ZRef<ZYadR> inner = theYadSeqR->ReadInc();
-			if (!inner)
-				break;
-			ZVal_Any theVal = sFromYadR(ZVal_Any(), inner);
-
-			if (sMatches(theCondition, theVal))
-				{
-//				ZYad_ZooLibStrim::sToStrim(0, theYadOptions, sMakeYadR(theVal), s);
-//				s << "\n";
-				}
-			}
 		}
 #endif
 	s.Writef("\nElapsed: %gms\n", 1000.0 * (ZTime::sNow() - start));

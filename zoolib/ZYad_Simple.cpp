@@ -32,8 +32,7 @@ using std::string;
 static void spThrowParseException(const string& iMessage)
 	{ throw ZYadParseException_Simple(iMessage); }
 
-bool spRead_Until(
-	const ZStrimU& iStrimU, UTF32 iTerminator, string& oString)
+bool spRead_Until(const ZStrimU& iStrimU, UTF32 iTerminator, string& oString)
 	{
 	oString.clear();
 	return ZUtil_Strim::sCopy_Until(iStrimU, iTerminator, ZStrimW_String(oString));

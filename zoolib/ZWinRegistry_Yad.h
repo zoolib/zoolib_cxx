@@ -39,7 +39,7 @@ namespace ZWinRegistry {
 
 ZRef<ZYadR> sMakeYadR(const Val& iVal);
 
-ZRef<ZYadMapR> sMakeYadR(const KeyRef& iKeyRef);
+ZRef<ZYadMapRPos> sMakeYadR(const KeyRef& iKeyRef);
 
 } // namespace ZWinRegistry
 

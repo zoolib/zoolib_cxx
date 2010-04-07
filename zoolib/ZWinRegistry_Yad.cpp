@@ -40,12 +40,12 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 		return sMakeYadR(*theVal);
 
 	if (const string16* theVal = iVal.PGet_T<string16>())
-		return sMakeYadR(ZAny(ZUnicode::sAsUTF8(*theVal)));
+		return sMakeYadR(ZUnicode::sAsUTF8(*theVal));
 
 	return sMakeYadR(iVal.AsAny());
 	}
 
-ZRef<ZYadMapR> sMakeYadR(const KeyRef& iKeyRef)
+ZRef<ZYadMapRPos> sMakeYadR(const KeyRef& iKeyRef)
 	{ return new ZYadMapRPos_Val_T<KeyRef>(iKeyRef); }
 
 } // namespace ZWinRegistry

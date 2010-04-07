@@ -102,9 +102,9 @@ public:
 
 ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal);
 
-ZRef<ZYadSeqR> sMakeYadR(const ZSeq_ZooLib& iSeq);
+ZRef<ZYadSeqRPos> sMakeYadR(const ZSeq_ZooLib& iSeq);
 
-ZRef<ZYadMapR> sMakeYadR(const ZMap_ZooLib& iMap);
+ZRef<ZYadMapRPos> sMakeYadR(const ZMap_ZooLib& iMap);
 
 // =================================================================================================
 #pragma mark -

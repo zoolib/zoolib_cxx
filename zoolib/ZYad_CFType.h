@@ -146,11 +146,11 @@ ZRef<ZYadStrimR> sMakeYadR(const ZRef<CFStringRef>& iString);
 ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFMutableDataRef>& iData);
 ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFDataRef>& iData);
 
-ZRef<ZYadSeqR> sMakeYadR(const ZRef<CFMutableArrayRef>& iArray);
-ZRef<ZYadSeqR> sMakeYadR(const ZRef<CFArrayRef>& iArray);
+ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<CFMutableArrayRef>& iArray);
+ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<CFArrayRef>& iArray);
 
-ZRef<ZYadMapR> sMakeYadR(const ZRef<CFMutableDictionaryRef>& iDictionary);
-ZRef<ZYadMapR> sMakeYadR(const ZRef<CFDictionaryRef>& iDictionary);
+ZRef<ZYadMapRPos> sMakeYadR(const ZRef<CFMutableDictionaryRef>& iDictionary);
+ZRef<ZYadMapRPos> sMakeYadR(const ZRef<CFDictionaryRef>& iDictionary);
 
 // =================================================================================================
 #pragma mark -

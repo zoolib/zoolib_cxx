@@ -125,10 +125,10 @@ ZRef<ZYadR> sMakeYadR(const Val& iVal)
 	return new ZYadPrimR_Any(iVal.AsAny());
 	}
 
-ZRef<ZYadSeqR> sMakeYadR(const Seq& iSeq)
+ZRef<ZYadSeqRPos> sMakeYadR(const Seq& iSeq)
 	{ return new YadSeqRPos(iSeq); }
 
-ZRef<ZYadMapR> sMakeYadR(const Map& iMap)
+ZRef<ZYadMapRPos> sMakeYadR(const Map& iMap)
 	{ return new YadMapRPos(iMap); }
 
 } // namespace ZPhotoshop

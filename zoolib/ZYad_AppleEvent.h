@@ -40,9 +40,9 @@ typedef ZYadMapRPos_Val_T<ZMap_AppleEvent> ZYadMapRPos_AppleEvent;
 
 ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal);
 
-ZRef<ZYadSeqR> sMakeYadR(const ZSeq_AppleEvent& iSeq);
+ZRef<ZYadSeqRPos> sMakeYadR(const ZSeq_AppleEvent& iSeq);
 
-ZRef<ZYadMapR> sMakeYadR(const ZMap_AppleEvent& iMap);
+ZRef<ZYadMapRPos> sMakeYadR(const ZMap_AppleEvent& iMap);
 
 NAMESPACE_ZOOLIB_END
 

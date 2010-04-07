@@ -35,7 +35,7 @@ ZRef<ZYadR> sMakeYadR(const ZAny& iVal)
 		return sMakeYadR(*theVal);
 
 	if (const ZData_Any* theVal = iVal.PGet_T<ZData_Any>())
-		return new ZYadStreamRPos_Any(*theVal);
+		return sMakeYadR(*theVal);
 
 	if (const ZSeq_Any* theVal = iVal.PGet_T<ZSeq_Any>())
 		return sMakeYadR(*theVal);
@@ -49,10 +49,10 @@ ZRef<ZYadR> sMakeYadR(const ZAny& iVal)
 ZRef<ZYadStreamR> sMakeYadR(const ZData_Any& iData)
 	{ return new ZYadStreamRPos_Any(iData); }
 
-ZRef<ZYadSeqR> sMakeYadR(const ZSeq_Any& iSeq)
+ZRef<ZYadSeqRPos> sMakeYadR(const ZSeq_Any& iSeq)
 	{ return new ZYadSeqRPos_Any(iSeq); }
 
-ZRef<ZYadMapR> sMakeYadR(const ZMap_Any& iMap)
+ZRef<ZYadMapRPos> sMakeYadR(const ZMap_Any& iMap)
 	{ return new ZYadMapRPos_Any(iMap); }
 
 // =================================================================================================
@@ -73,6 +73,10 @@ public:
 	virtual bool Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
 	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 
+// Our protocol
+	ZVal_Any GetVal(ZRef<ZYadR> iYadR);
+
+private:
 	bool fRepeatedPropsAsSeq;
 	const ZVal_Any& fDefault;
 	ZVal_Any fOutput;
@@ -100,9 +104,7 @@ ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYad
 	if (ZRef<ZYadSeqRPos_Any> asSeq = iYadR.DynamicCast<ZYadSeqRPos_Any>())
 		return asSeq->GetSeq();
 
-	Visitor_Yad_GetVal_Any theVisitor(iRepeatedPropsAsSeq, iDefault);
-	iYadR->Accept(theVisitor);
-	return theVisitor.fOutput;
+	return Visitor_Yad_GetVal_Any(iRepeatedPropsAsSeq, iDefault).GetVal(iYadR);
 	}
 
 Visitor_Yad_GetVal_Any::Visitor_Yad_GetVal_Any(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault)
@@ -133,7 +135,7 @@ bool Visitor_Yad_GetVal_Any::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	ZSeq_Any theSeq;
 
 	while (ZRef<ZYadR> theChild = iYadSeqR->ReadInc())
-		theSeq.Append(sFromYadR(fDefault, theChild));
+		theSeq.Append(this->GetVal(theChild));
 
 	fOutput = theSeq;
 	return true;
@@ -146,7 +148,7 @@ bool Visitor_Yad_GetVal_Any::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	string theName;
 	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
 		{
-		ZVal_Any theVal = sFromYadR(fRepeatedPropsAsSeq, fDefault, theChild);
+		ZVal_Any theVal = this->GetVal(theChild);
 		if (fRepeatedPropsAsSeq)
 			{
 			if (ZVal_Any* prior = theMap.PGet(theName))
@@ -167,6 +169,17 @@ bool Visitor_Yad_GetVal_Any::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 
 	fOutput = theMap;
 	return true;
+	}
+
+ZVal_Any Visitor_Yad_GetVal_Any::GetVal(ZRef<ZYadR> iYadR)
+	{
+	ZVal_Any result;
+	if (iYadR)
+		{
+		iYadR->Accept(*this);
+		std::swap(result, fOutput);
+		}
+	return result;
 	}
 
 NAMESPACE_ZOOLIB_END

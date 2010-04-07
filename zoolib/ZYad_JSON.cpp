@@ -623,9 +623,7 @@ ZRef<ZYadR> ZYad_JSON::sMakeYadR(ZRef<ZStrimmerU> iStrimmerU)
 	{ return spMakeYadR_JSON(iStrimmerU); }
 
 void ZYad_JSON::sToStrim(ZRef<ZYadR> iYadR, const ZStrimW& s)
-	{
-	sToStrim(0, ZYadOptions(), iYadR, s);
-	}
+	{ sToStrim(0, ZYadOptions(), iYadR, s); }
 
 void ZYad_JSON::sToStrim(size_t iInitialIndent, const ZYadOptions& iOptions,
 	ZRef<ZYadR> iYadR, const ZStrimW& s)

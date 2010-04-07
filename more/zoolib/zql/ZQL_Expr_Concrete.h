@@ -53,6 +53,28 @@ public:
 	virtual bool Visit_Concrete(ZRef<ExprRep_Concrete> iRep);
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Expr_Concrete
+
+class Expr_Concrete : public Expr_Relation
+	{
+	typedef Expr_Relation inherited;
+
+	Expr_Concrete operator=(const Expr_Relation&);
+	Expr_Concrete operator=(const ZRef<ExprRep_Relation>&);
+
+public:
+	Expr_Concrete();
+	Expr_Concrete(const Expr_Concrete& iOther);
+	~Expr_Concrete();
+	Expr_Concrete& operator=(const Expr_Concrete& iOther);
+
+	Expr_Concrete(const ZRef<ExprRep_Concrete>& iRep);
+
+	operator ZRef<ExprRep_Concrete>() const;
+	};
+
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 

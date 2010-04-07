@@ -53,5 +53,32 @@ bool ExprRep_Concrete::Accept(Visitor_ExprRep_Relation& iVisitor)
 bool Visitor_ExprRep_Concrete::Visit_Concrete(ZRef<ExprRep_Concrete> iRep)
 	{ return Visitor_ExprRep_Relation::Visit_ExprRep(iRep); }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Expr_Concrete
+
+Expr_Concrete::Expr_Concrete()
+	{}
+
+Expr_Concrete::Expr_Concrete(const Expr_Concrete& iOther)
+:	inherited(iOther)
+	{}
+
+Expr_Concrete::~Expr_Concrete()
+	{}
+
+Expr_Concrete& Expr_Concrete::operator=(const Expr_Concrete& iOther)
+	{
+	inherited::operator=(iOther);
+	return *this;
+	}
+
+Expr_Concrete::Expr_Concrete(const ZRef<ExprRep_Concrete>& iRep)
+:	inherited(iRep)
+	{}
+
+Expr_Concrete::operator ZRef<ExprRep_Concrete>() const
+	{ return this->StaticCast<ExprRep_Concrete>(); }
+
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

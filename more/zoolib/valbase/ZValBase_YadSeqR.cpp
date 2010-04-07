@@ -166,11 +166,11 @@ bool Visitor_ExprRep_Concrete_MakeIterator::Visit_Select(ZRef<ZQL::ExprRep_Selec
 #pragma mark -
 #pragma mark * ZValBase_YadSeqR pseudo constructors
 
-ZQL::Expr_Relation sRelation(ZRef<ZYadSeqR> iYadSeqR)
+ZQL::Expr_Concrete sConcrete(ZRef<ZYadSeqR> iYadSeqR)
 	{
 	// Could do a dynamic cast on iYadSeqR to see if it's really a ZYadSeqRPos,
 	// in which case returning a ZValBase_YadSeqRPos::Iterator would be a win.
-	return ZQL::Expr_Relation(new ExprRep_Concrete(iYadSeqR));
+	return ZQL::Expr_Concrete(new ExprRep_Concrete(iYadSeqR));
 	}
 
 ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::ExprRep_Relation> iExprRep)

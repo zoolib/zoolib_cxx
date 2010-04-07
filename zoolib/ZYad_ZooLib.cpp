@@ -166,10 +166,10 @@ ZRef<ZYadR> sMakeYadR(const ZVal_ZooLib& iVal)
 	return new ZYadPrimR_ZooLib(iVal);
 	}
 
-ZRef<ZYadSeqR> sMakeYadR(const ZSeq_ZooLib& iSeq)
+ZRef<ZYadSeqRPos> sMakeYadR(const ZSeq_ZooLib& iSeq)
 	{ return new ZYadSeqRPos_ZooLib(iSeq); }
 
-ZRef<ZYadMapR> sMakeYadR(const ZMap_ZooLib& iMap)
+ZRef<ZYadMapRPos> sMakeYadR(const ZMap_ZooLib& iMap)
 	{ return new ZYadMapRPos_ZooLib(iMap); }
 
 // =================================================================================================

@@ -70,10 +70,10 @@ ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal)
 	return new ZYadMapRPos_Any(spAsMap(iVal));
 	}
 
-ZRef<ZYadSeqR> sMakeYadR(const ZSeq_AppleEvent& iSeq)
+ZRef<ZYadSeqRPos> sMakeYadR(const ZSeq_AppleEvent& iSeq)
 	{ return new ZYadSeqRPos_AppleEvent(iSeq); }
 
-ZRef<ZYadMapR> sMakeYadR(const ZMap_AppleEvent& iMap)
+ZRef<ZYadMapRPos> sMakeYadR(const ZMap_AppleEvent& iMap)
 	{ return new ZYadMapRPos_AppleEvent(iMap); }
 
 NAMESPACE_ZOOLIB_END

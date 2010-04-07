@@ -39,9 +39,9 @@ ZRef<ZYadR> sMakeYadR(const ZAny& iVal);
 
 ZRef<ZYadStreamR> sMakeYadR(const ZData_Any& iData);
 
-ZRef<ZYadSeqR> sMakeYadR(const ZSeq_Any& iSeq);
+ZRef<ZYadSeqRPos> sMakeYadR(const ZSeq_Any& iSeq);
 
-ZRef<ZYadMapR> sMakeYadR(const ZMap_Any& iMap);
+ZRef<ZYadMapRPos> sMakeYadR(const ZMap_Any& iMap);
 
 // =================================================================================================
 #pragma mark -

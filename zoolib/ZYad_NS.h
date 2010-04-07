@@ -146,11 +146,11 @@ ZRef<ZYadStrimR> sMakeYadR(const ZRef<NSString>& iString);
 ZRef<ZYadStreamR> sMakeYadR(const ZRef<NSMutableData>& iData);
 ZRef<ZYadStreamR> sMakeYadR(const ZRef<NSData>& iData);
 
-ZRef<ZYadSeqR> sMakeYadR(const ZRef<NSMutableArray>& iArray);
-ZRef<ZYadSeqR> sMakeYadR(const ZRef<NSArray>& iArray);
+ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<NSMutableArray>& iArray);
+ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<NSArray>& iArray);
 
-ZRef<ZYadMapR> sMakeYadR(const ZRef<NSMutableDictionary>& iDictionary);
-ZRef<ZYadMapR> sMakeYadR(const ZRef<NSDictionary>& iDictionary);
+ZRef<ZYadMapRPos> sMakeYadR(const ZRef<NSMutableDictionary>& iDictionary);
+ZRef<ZYadMapRPos> sMakeYadR(const ZRef<NSDictionary>& iDictionary);
 
 // =================================================================================================
 #pragma mark -

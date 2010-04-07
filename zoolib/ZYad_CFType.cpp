@@ -188,16 +188,16 @@ ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFMutableDataRef>& iData)
 ZRef<ZYadStreamR> sMakeYadR(const ZRef<CFDataRef>& iData)
 	{ return new ZYadStreamRPos_CFType(iData); }
 
-ZRef<ZYadSeqR> sMakeYadR(const ZRef<CFMutableArrayRef>& iArray)
+ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<CFMutableArrayRef>& iArray)
 	{ return new ZYadSeqRPos_CFType(iArray); }
 
-ZRef<ZYadSeqR> sMakeYadR(const ZRef<CFArrayRef>& iArray)
+ZRef<ZYadSeqRPos> sMakeYadR(const ZRef<CFArrayRef>& iArray)
 	{ return new ZYadSeqRPos_CFType(iArray); }
 
-ZRef<ZYadMapR> sMakeYadR(const ZRef<CFMutableDictionaryRef>& iDictionary)
+ZRef<ZYadMapRPos> sMakeYadR(const ZRef<CFMutableDictionaryRef>& iDictionary)
 	{ return new ZYadMapRPos_CFType(iDictionary); }
 
-ZRef<ZYadMapR> sMakeYadR(const ZRef<CFDictionaryRef>& iDictionary)
+ZRef<ZYadMapRPos> sMakeYadR(const ZRef<CFDictionaryRef>& iDictionary)
 	{ return new ZYadMapRPos_CFType(iDictionary); }
 
 // =================================================================================================
@@ -218,6 +218,10 @@ public:
 	virtual bool Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
 	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 
+// Our protocol
+	ZRef<CFTypeRef> GetCFTypeRef(ZRef<ZYadR> iYadR);
+
+private:
 	ZRef<CFTypeRef> fDefault;
 	ZRef<CFTypeRef> fOutput;
 	};
@@ -229,9 +233,7 @@ ZRef<CFTypeRef> sFromYadR(const ZRef<CFTypeRef>& iDefault, ZRef<ZYadR> iYadR)
 	if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iYadR))
 		return theYadR->GetVal();
 
-	Visitor_Yad_GetVal_CFType theVisitor(iDefault);
-	iYadR->Accept(theVisitor);
-	return theVisitor.fOutput;
+	return Visitor_Yad_GetVal_CFType(iDefault).GetCFTypeRef(iYadR);
 	}
 
 Visitor_Yad_GetVal_CFType::Visitor_Yad_GetVal_CFType(ZRef<CFTypeRef> iDefault)
@@ -263,7 +265,7 @@ bool Visitor_Yad_GetVal_CFType::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	ZSeq_CFType theSeq;
 
 	while (ZRef<ZYadR> theChild = iYadSeqR->ReadInc())
-		theSeq.Append(sFromYadR(fDefault, theChild));
+		theSeq.Append(this->GetCFTypeRef(theChild));
 
 	fOutput = theSeq;
 	return true;
@@ -275,10 +277,21 @@ bool Visitor_Yad_GetVal_CFType::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 
 	string theName;
 	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
-		theMap.Set(theName, sFromYadR(fDefault, theChild));
+		theMap.Set(theName, this->GetCFTypeRef(theChild));
 
 	fOutput = theMap;
 	return true;
+	}
+
+ZRef<CFTypeRef> Visitor_Yad_GetVal_CFType::GetCFTypeRef(ZRef<ZYadR> iYadR)
+	{
+	ZRef<CFTypeRef> result;
+	if (iYadR)
+		{
+		iYadR->Accept(*this);
+		std::swap(result, fOutput);
+		}
+	return result;
 	}
 
 NAMESPACE_ZOOLIB_END

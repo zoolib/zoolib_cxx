@@ -145,8 +145,8 @@ bool Visitor_ExprRep_Concrete_MakeIterator::Visit_Select(ZRef<ZQL::ExprRep_Selec
 #pragma mark -
 #pragma mark * ZValBase_YadSeqRPos pseudo constructors
 
-ZQL::Expr_Relation sRelation(ZRef<ZYadSeqRPos> iYadSeqRPos)
-	{ return ZQL::Expr_Relation(new ExprRep_Concrete(iYadSeqRPos)); }
+ZQL::Expr_Concrete sConcrete(ZRef<ZYadSeqRPos> iYadSeqRPos)
+	{ return ZQL::Expr_Concrete(new ExprRep_Concrete(iYadSeqRPos)); }
 
 ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::ExprRep_Relation> iExprRep)
 	{ return Visitor_ExprRep_Concrete_MakeIterator().MakeIterator(iExprRep); }
