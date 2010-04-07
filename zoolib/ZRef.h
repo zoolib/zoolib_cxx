@@ -366,6 +366,16 @@ template <class O, class T> inline O ZRefStaticCast(const ZRef<const T*>& iVal)
 	{ return static_cast<O>(iVal.Get()); }
 
 // =================================================================================================
+#pragma mark -
+#pragma mark * ZooLib::nullref, akin to std::nullptr
+
+const class nullref_t
+	{
+public:
+	template <class T> operator ZRef<T>() const { return ZRef<T>(); }
+private:
+	void operator&() const;
+	} nullref = {};
 
 NAMESPACE_ZOOLIB_END
 
