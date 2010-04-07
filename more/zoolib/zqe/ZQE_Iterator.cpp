@@ -134,7 +134,7 @@ ZRef<Result> Iterator_Union::ReadInc()
 	if (ZRef<Result> result = fIterator_LHS->ReadInc())
 		return result;
 
-	if (ZRef<Result> result = fIterator_LHS->ReadInc())
+	if (ZRef<Result> result = fIterator_RHS->ReadInc())
 		return result;
 
 	return ZRef<Result>();
