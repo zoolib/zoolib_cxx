@@ -18,31 +18,63 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZYadSeqR_ExprRep_Logic__
-#define __ZYadSeqR_ExprRep_Logic__ 1
+#ifndef __ZYadSeqR_ApplyID__
+#define __ZYadSeqR_ApplyID__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Logic.h"
 #include "zoolib/ZYad.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadSeqR_ExprRep_Logic
+#pragma mark * ZYadSeqR_ApplyID
 
-class ZYadSeqR_ExprRep_Logic : public ZYadSeqR
+class ZYadSeqR_ApplyID : public ZYadSeqR
 	{
 public:
-	ZYadSeqR_ExprRep_Logic(ZRef<ZYadSeqR> iYadSeqR, ZRef<ZExprRep_Logic> iExprRep_Logic);
-	virtual ~ZYadSeqR_ExprRep_Logic();
+	ZYadSeqR_ApplyID(
+		ZRef<ZYadSeqR> iYadSeqR, const std::string& iIDName, const std::string& iValName);
+
+	virtual ~ZYadSeqR_ApplyID();
 
 // From ZYadSeqR
 	virtual ZRef<ZYadR> ReadInc();
 
 private:
 	ZRef<ZYadSeqR> fYadSeqR;
-	ZRef<ZExprRep_Logic> fExprRep_Logic;
+	const std::string fIDName;
+	const std::string fValName;
+	uint64 fNextID;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadSeqRPos_ApplyID
+
+class ZYadSeqRPos_ApplyID : public ZYadSeqRPos
+	{
+public:
+	ZYadSeqRPos_ApplyID(
+		ZRef<ZYadSeqRPos> iYadSeqRPos, const std::string& iIDName, const std::string& iValName);
+
+	virtual ~ZYadSeqRPos_ApplyID();
+
+// From ZYadSeqR via ZYadSeqRPos
+	virtual ZRef<ZYadR> ReadInc();
+
+// From ZYadSeqRPos
+	virtual ZRef<ZYadSeqRPos> Clone();
+
+	virtual uint64 GetPosition();
+	virtual void SetPosition(uint64 iPosition);
+
+	virtual uint64 GetSize();
+
+private:
+	ZRef<ZYadSeqRPos> fYadSeqRPos;
+	const std::string fIDName;
+	const std::string fValName;
 	};
 
 NAMESPACE_ZOOLIB_END

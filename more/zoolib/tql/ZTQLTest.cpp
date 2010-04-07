@@ -29,7 +29,7 @@
 #include "zoolib/valbase/ZValBase_YadSeqR.h"
 #include "zoolib/valbase/ZValBase_YadSeqRPos.h"
 
-#include "zoolib/ZYadSeqR_ExprRep_Logic.h"
+#include "zoolib/ZYadSeq_ExprRep_Logic.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
 
 NAMESPACE_ZOOLIB_USING

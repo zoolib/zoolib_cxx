@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZExpr_ValCondition.h"
 #include "zoolib/ZYad_Any.h"
-#include "zoolib/ZYadSeqR_ExprRep_Logic.h"
+#include "zoolib/ZYadSeq_ExprRep_Logic.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -53,5 +53,47 @@ ZRef<ZYadR> ZYadSeqR_ExprRep_Logic::ReadInc()
 			}
 		}
 	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZYadSeqRPos_ExprRep_Logic
+
+ZYadSeqRPos_ExprRep_Logic::ZYadSeqRPos_ExprRep_Logic(
+	ZRef<ZYadSeqRPos> iYadSeqRPos, ZRef<ZExprRep_Logic> iExprRep_Logic)
+:	fYadSeqRPos(iYadSeqRPos)
+,	fExprRep_Logic(iExprRep_Logic)
+	{}
+
+ZYadSeqRPos_ExprRep_Logic::~ZYadSeqRPos_ExprRep_Logic()
+	{}
+
+ZRef<ZYadR> ZYadSeqRPos_ExprRep_Logic::ReadInc()
+	{
+	for (;;)
+		{
+		if (ZRef<ZYadR> theYadR = fYadSeqRPos->ReadInc())
+			{
+			const ZVal_Any theVal = sFromYadR(ZVal_Any(), theYadR);
+			if (sMatches(fExprRep_Logic, theVal))
+				return sMakeYadR(theVal);
+			}
+		else
+			{
+			return ZRef<ZYadR>();
+			}
+		}
+	}
+
+ZRef<ZYadSeqRPos> ZYadSeqRPos_ExprRep_Logic::Clone()
+	{ return new ZYadSeqRPos_ExprRep_Logic(fYadSeqRPos->Clone(), fExprRep_Logic); }
+
+uint64 ZYadSeqRPos_ExprRep_Logic::GetPosition()
+	{ return fYadSeqRPos->GetPosition(); }
+
+void ZYadSeqRPos_ExprRep_Logic::SetPosition(uint64 iPosition)
+	{ fYadSeqRPos->SetPosition(iPosition); }
+
+uint64 ZYadSeqRPos_ExprRep_Logic::GetSize()
+	{ return fYadSeqRPos->GetSize(); }
 
 NAMESPACE_ZOOLIB_END
