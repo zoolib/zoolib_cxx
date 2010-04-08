@@ -32,6 +32,19 @@ ZExprRep::ZExprRep()
 ZExprRep::~ZExprRep()
 	{}
 
+bool ZExprRep::Accept(ZVisitor& iVisitor)
+	{
+	if (ZVisitor_ExprRep* theVisitor =
+		dynamic_cast<ZVisitor_ExprRep*>(&iVisitor))
+		{
+		return this->Accept(*theVisitor);
+		}
+	else
+		{
+		return ZRefCountedWithFinalize::Accept(iVisitor);
+		}
+	}
+
 bool ZExprRep::Accept(ZVisitor_ExprRep& iVisitor)
 	{ return iVisitor.Visit_ExprRep(this); }
 
@@ -40,6 +53,6 @@ bool ZExprRep::Accept(ZVisitor_ExprRep& iVisitor)
 #pragma mark * ZVisitor_ExprRep
 
 bool ZVisitor_ExprRep::Visit_ExprRep(ZRef<ZExprRep> iRep)
-	{ return true; }
+	{ return ZVisitor::Visit(iRep); }
 
 NAMESPACE_ZOOLIB_END

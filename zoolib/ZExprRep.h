@@ -40,6 +40,10 @@ protected:
 public:
 	virtual ~ZExprRep();
 
+// From ZRefCountedWithFinalize
+	virtual bool Accept(ZVisitor& iVisitor);
+
+// Our protocol
 	virtual bool Accept(ZVisitor_ExprRep& iVisitor);
 	};
 
@@ -47,9 +51,10 @@ public:
 #pragma mark -
 #pragma mark * ZVisitor_ExprRep
 
-class ZVisitor_ExprRep
+class ZVisitor_ExprRep : public ZVisitor
 	{
 public:
+// Our protocol
 	virtual bool Visit_ExprRep(ZRef<ZExprRep> iRep);
 	};
 

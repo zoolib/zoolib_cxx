@@ -92,6 +92,19 @@ ZYadParseException::ZYadParseException(const char* iWhat)
 ZYadR::ZYadR()
 	{}
 
+bool ZYadR::Accept(ZVisitor& iVisitor)
+	{
+	if (ZVisitor_Yad* theVisitor =
+		dynamic_cast<ZVisitor_Yad*>(&iVisitor))
+		{
+		return this->Accept(*theVisitor);
+		}
+	else
+		{
+		return ZRefCountedWithFinalize::Accept(iVisitor);
+		}
+	}
+
 void ZYadR::Finish()
 	{}
 
@@ -310,14 +323,8 @@ bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 
 */
 
-ZVisitor_Yad::ZVisitor_Yad()
-	{}
-
-ZVisitor_Yad::~ZVisitor_Yad()
-	{}
-
 bool ZVisitor_Yad::Visit_YadR(ZRef<ZYadR> iYadR)
-	{ return false; }
+	{ return ZVisitor::Visit(iYadR); }
 
 bool ZVisitor_Yad::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{ return this->Visit_YadR(iYadPrimR); }

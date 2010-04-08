@@ -109,7 +109,7 @@ static Query U(const Query& iQuery1, const Query& iQuery2)
 
 static void sTesterfsdfsdf()
 	{
-	Condition theCondition = CName("Object").EQ(CConst("view"));
+	Condition theCondition = CName("Object") == CConst("view");
 	}
 
 static const string sProps_note[] = { "Object", "titl", "crea", "text", "stat" };
@@ -120,14 +120,14 @@ static const RelHead sRelHead_view(sProps_view, countof(sProps_view));
 
 static Query sNotesWithIDs()
 	{
-	return sAllID("noteID", sRelHead_note) & (CName("Object").EQ(CConst("note")));
+	return sAllID("noteID", sRelHead_note) & (CName("Object") == CConst("note"));
 	}
 
 static const string sProps_Link[] = { "Link", "from", "to" };
 static const RelHead sRelHead_Link(sProps_Link, countof(sProps_Link));
 static Query sLinks_Owns()
 	{
-	return sAll(sRelHead_Link) & (CName("Link").EQ(CConst("owns")));
+	return sAll(sRelHead_Link) & (CName("Link") == CConst("owns"));
 	}
 
 static void sTest()
@@ -233,7 +233,7 @@ static Query sAllNotes()
 
 static Query sAllNotesNoHead()
 	{
-	return sAllID("$ID$") & (CName("Object").EQ(CConst("note")));
+	return sAllID("$ID$") & (CName("Object") == CConst("note"));
 	}
 
 static Query sAllViews()
@@ -245,13 +245,13 @@ static Query sAllViews()
 static Query sAllViewsNoHead()
 	{
 //	return sAllID("$ID$", sRelHead_view) & Spec(true);
-	return sAllID("$ID$") & (CName("Object").EQ(CConst("view")));
+	return sAllID("$ID$") & (CName("Object") == CConst("view"));
 	}
 
 static Query sAllContains()
 	{
 	Query theQuery = sAll(sRelHead_Link) & (CName("Link") == CConst("contains"));
-//	Query theQuery = sAll(sRelHead_Link) & (CName("Link").EQ(CConst("contains")));
+//	Query theQuery = sAll(sRelHead_Link) & EQ(CName("Link"), CConst("contains")));
 	return sDrop(theQuery, "Link");
 	}
 

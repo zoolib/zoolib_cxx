@@ -144,4 +144,14 @@ ZRefCountedWithFinalize::ZRefCountedWithFinalize()
 ZRefCountedWithFinalize::~ZRefCountedWithFinalize()
 	{}
 
+bool ZRefCountedWithFinalize::Accept(ZVisitor& iVisitor)
+	{ return iVisitor.Visit(this); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVisitor
+
+bool ZVisitor::Visit(ZRef<ZRefCountedWithFinalize> iRep)
+	{ return true; }
+
 NAMESPACE_ZOOLIB_END

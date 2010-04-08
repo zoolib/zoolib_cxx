@@ -78,6 +78,9 @@ protected:
 	ZYadR();
 
 public:
+// From ZRefCountedWithFinalize
+	virtual bool Accept(ZVisitor& iVisitor);
+	
 // Our protocol
 	virtual void Finish();
 	virtual ZRef<ZYadR> Meta();
@@ -208,12 +211,9 @@ public:
 #pragma mark -
 #pragma mark * ZVisitor_Yad
 
-class ZVisitor_Yad
+class ZVisitor_Yad : public ZVisitor
 	{
 public:
-	ZVisitor_Yad();
-	~ZVisitor_Yad();
-
 	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
 	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);

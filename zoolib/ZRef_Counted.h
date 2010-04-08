@@ -31,6 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+class ZVisitor;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZRefCounted
@@ -97,6 +99,19 @@ class ZRefCountedWithFinalize : public virtual ZRefCountedWithFinalizeBase
 public:
 	ZRefCountedWithFinalize();
 	virtual ~ZRefCountedWithFinalize();
+
+// Our protocol
+	virtual bool Accept(ZVisitor& iVisitor);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVisitor
+
+class ZVisitor
+	{
+public:
+	virtual bool Visit(ZRef<ZRefCountedWithFinalize> iRep);
 	};
 
 NAMESPACE_ZOOLIB_END
