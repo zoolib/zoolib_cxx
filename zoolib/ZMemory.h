@@ -20,8 +20,41 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef __ZMemory__
 #define __ZMemory__ 1
+#include "zconfig.h"
 
 #include "zoolib/ZCONFIG_SPI.h"
+
+#include <cstring> // Needed for memmove, memcpy and memset
+
+NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * memmove, memcpy, memset, bzero wrappers.
+
+inline void ZMemMove(void* iDest, const void* iSource, size_t iCount)
+	{ std::memmove(iDest, iSource, iCount); }
+
+inline void ZMemCopy(void* iDest, const void* iSource, size_t iCount)
+	{ std::memcpy(iDest, iSource, iCount); }
+
+inline void ZMemSet(void* iDest, unsigned char iValue, size_t iCount)
+	{ std::memset(iDest, iValue, iCount); }
+
+inline void ZMemZero(void* iDest, size_t iCount)
+	{
+	#if ZCONFIG_SPI_Enabled(POSIX)
+		::bzero(iDest, iCount);
+	#else
+		ZMemSet(iDest, 0, iCount);
+	#endif
+	}
+
+template <class T>
+void ZMemClear_T(T& iT)
+	{ ZMemZero(&iT, sizeof(iT)); }
+
+NAMESPACE_ZOOLIB_END
 
 // =================================================================================================
 #pragma mark -
@@ -32,19 +65,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // the C standard API. This is because these methods started off as simple wrappers around MacOS
 // procedures which also had what might to you seem to be awkward ordering. Sorry.
 
-#include <string.h> // This is needed for memmove, memcpy and memset
+#define ZBlockMove(srcPtr, destPtr, byteCount) ZMemMove(destPtr, srcPtr, byteCount)
+#define ZBlockCopy(srcPtr, destPtr, byteCount) ZMemCopy(destPtr, srcPtr, byteCount)
 
-#define ZBlockMove(srcPtr, destPtr, byteCount) ::memmove((destPtr), (srcPtr), (size_t)(byteCount))
-#define ZBlockCopy(srcPtr, destPtr, byteCount) ::memcpy((destPtr), (srcPtr), (size_t)(byteCount))
-
-#define ZBlockSet(destPtr, size, value) ::memset((destPtr), (int)(value), (size_t)(size))
-
-#if ZCONFIG_SPI_Enabled(POSIX)
-#	define ZBlockZero(destPtr, size) ::bzero((destPtr), (size_t)(size))
-#else
-#	define ZBlockZero(destPtr, size) ::memset((destPtr), 0, (size_t)(size))
-#endif
+#define ZBlockSet(destPtr, byteCount, value) ZMemSet(destPtr, value, byteCount)
+#define ZBlockZero(destPtr, byteCount) ZMemZero(destPtr, byteCount)
 
 // =================================================================================================
 
 #endif // __ZMemory__
+
