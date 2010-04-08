@@ -550,28 +550,28 @@ inline void ZByteSwap_32(volatile void* iValueAddress)
 #		define ZByteSwap_EndianBig 0
 #	endif
 
-	inline int16 ZByteSwap_16(int16 iValue)
+	inline uint16 ZByteSwap_16(uint16 iValue)
 		{ return (iValue >> 8) | (iValue << 8); }
 
-	inline int32 ZByteSwap_32(int32 iValue)
-		{ return ZByteSwap_16(iValue) << 16 | ZByteSwap_16(uint32(iValue) >> 16); }
+	inline uint32 ZByteSwap_32(uint32 iValue)
+		{ return ZByteSwap_16(iValue) << 16 | ZByteSwap_16(iValue >> 16); }
 
 	inline void ZByteSwap_16(void* iValue)
-		{ *static_cast<int16*>(iValue) = ZByteSwap_16(*static_cast<int16*>(iValue)); }
+		{ *static_cast<uint16*>(iValue) = ZByteSwap_16(*static_cast<uint16*>(iValue)); }
 
 	inline void ZByteSwap_32(void* iValue)
-		{ *static_cast<int32*>(iValue) = ZByteSwap_32(*static_cast<int32*>(iValue)); }
+		{ *static_cast<uint32*>(iValue) = ZByteSwap_32(*static_cast<uint32*>(iValue)); }
 
-	inline int16 ZByteSwap_Read16(const volatile void* iValueAddress)
+	inline uint16 ZByteSwap_Read16(const volatile void* iValueAddress)
 		{ return ZByteSwap_16(*static_cast<const volatile uint16*>(iValueAddress)); }
 
-	inline int32 ZByteSwap_Read32(const volatile void* iValueAddress)
+	inline uint32 ZByteSwap_Read32(const volatile void* iValueAddress)
 		{ return ZByteSwap_32(*static_cast<const volatile uint32*>(iValueAddress)); }
 
-	inline void ZByteSwap_Write16(volatile void* iValueAddress, int16 iValue)
+	inline void ZByteSwap_Write16(volatile void* iValueAddress, uint16 iValue)
 		{ *static_cast<volatile uint16*>(iValueAddress) = ZByteSwap_16(iValue); }
 
-	inline void ZByteSwap_Write32(volatile void* iValueAddress, int32 iValue)
+	inline void ZByteSwap_Write32(volatile void* iValueAddress, uint32 iValue)
 		{ *static_cast<volatile uint32*>(iValueAddress) = ZByteSwap_32(iValue); }
 
 #endif // ZByteSwap_EndianBig
@@ -580,47 +580,47 @@ inline void ZByteSwap_32(volatile void* iValueAddress)
 #pragma mark -
 #pragma mark * 64 bit stuff
 
-inline int64 ZByteSwap_64(int64 iValue)
+inline uint64 ZByteSwap_64(uint64 iValue)
 	{
 	union
 		{
-		uint64 fInt64;
-		uint32 fInt32[2];
+		uint64 fUInt64;
+		uint32 fUInt32[2];
 		} u;
 
-	u.fInt32[1] = ZByteSwap_32(iValue & 0xffffffff);
-	u.fInt32[0] = ZByteSwap_32(iValue >> 32);
-	return u.fInt64;
+	u.fUInt32[1] = ZByteSwap_32(iValue & 0xffffffff);
+	u.fUInt32[0] = ZByteSwap_32(iValue >> 32);
+	return u.fUInt64;
 	}
 
 inline void ZByteSwap_64(volatile void* iValueAddress)
 	{
 	union u_t
 		{
-		uint64 fInt64;
-		uint32 fInt32[2];
+		uint64 fUInt64;
+		uint32 fUInt32[2];
 		};
 
 	volatile u_t* theU = static_cast<volatile u_t*>(iValueAddress);
-	int32 temp = theU->fInt32[1];
-	theU->fInt32[1] = ZByteSwap_32(theU->fInt32[0]);
-	theU->fInt32[0] = ZByteSwap_32(temp);
+	uint32 temp = theU->fUInt32[1];
+	theU->fUInt32[1] = ZByteSwap_32(theU->fUInt32[0]);
+	theU->fUInt32[0] = ZByteSwap_32(temp);
 	}
 
 inline int64 ZByteSwap_Read64(const volatile void* iValueAddress)
 	{
 	union
 		{
-		uint64 fInt64;
-		uint32 fInt32[2];
+		uint64 fUInt64;
+		uint32 fUInt32[2];
 		} u;
 
 	const volatile uint32* source = static_cast<const volatile uint32*>(iValueAddress);
-	u.fInt32[1] = source[0];
-	u.fInt32[0] = source[1];
-	u.fInt32[1] = ZByteSwap_32(u.fInt32[1]);
-	u.fInt32[0] = ZByteSwap_32(u.fInt32[0]);
-	return u.fInt64;
+	u.fUInt32[1] = source[0];
+	u.fUInt32[0] = source[1];
+	u.fUInt32[1] = ZByteSwap_32(u.fUInt32[1]);
+	u.fUInt32[0] = ZByteSwap_32(u.fUInt32[0]);
+	return u.fUInt64;
 	}
 
 inline void ZByteSwap_Write64(volatile void* iValueAddress, int64 iValue)
