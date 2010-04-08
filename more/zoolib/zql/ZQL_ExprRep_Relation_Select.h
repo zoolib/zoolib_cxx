@@ -43,7 +43,7 @@ public:
 
 	virtual ~ExprRep_Relation_Select();
 
-// From ZExprRep_Relation
+// From ExprRep_Relation
 	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 
 	virtual ZRelHead GetRelHead();
