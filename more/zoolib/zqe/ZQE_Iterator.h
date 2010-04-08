@@ -39,6 +39,7 @@ protected:
 public:
 	virtual ~Iterator();
 	
+// Our protocol
 	virtual ZRef<Iterator> Clone() = 0;
 	virtual ZRef<Result> ReadInc() = 0;
 	};
@@ -52,6 +53,7 @@ class Iterator_Intersect : public Iterator
 public:
 	Iterator_Intersect(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
 	
+// From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
 
@@ -73,6 +75,7 @@ class Iterator_Join : public Iterator
 public:
 	Iterator_Join(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
 	
+// From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
 
@@ -95,6 +98,7 @@ class Iterator_Union : public Iterator
 public:
 	Iterator_Union(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
 	
+// From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
 
@@ -102,7 +106,6 @@ private:
 	ZRef<Iterator> fIterator_LHS;
 	ZRef<Iterator> fIterator_RHS;
 	};
-
 
 } // namespace ZQE
 NAMESPACE_ZOOLIB_END
