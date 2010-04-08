@@ -87,17 +87,17 @@ public:
 
 	double fVal;
 
-	static const uint32 kEpochDelta_1900_To_1904
-		= 4U * 365 * 24 * 60 * 60; // 126,144,000
+	static const uint32 kEpochDelta_1900_To_1904 =
+		4U * 365 * 24 * 60 * 60; // 126,144,000
 
-	static const uint32 kEpochDelta_1904_To_1970
-		= ((66U * 365) + 17) * 24 * 60 * 60; // 2,082,844,800
+	static const uint32 kEpochDelta_1904_To_1970 =
+		((66U * 365) + 17) * 24 * 60 * 60; // 2,082,844,800
 
-	static const uint32 kEpochDelta_1900_To_1970
-		= ((70U * 365) + 17) * 24 * 60 * 60; // 2,208,988,800
+	static const uint32 kEpochDelta_1900_To_1970 =
+		((70U * 365) + 17) * 24 * 60 * 60; // 2,208,988,800
 
-	static const uint64 kEpochDelta_1601_To_1970
-		= ((ZUINT64_C(369) * 365) + 89) * 24 * 60 * 60; // == 11,644,473,600
+	static const uint64 kEpochDelta_1601_To_1970 =
+		((ZUINT64_C(369) * 365) + 89) * 24 * 60 * 60; // == 11,644,473,600
 	};
 
 template <> inline int sCompare_T(const ZTime& iL, const ZTime& iR)

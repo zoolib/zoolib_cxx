@@ -305,8 +305,8 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		
 		bool allEmptied = true;
 		bool sentAny = false;
-		vector<ZTValue>& vectorTransactionTuples
-			= response.SetMutableVector("Transactions");
+		vector<ZTValue>& vectorTransactionTuples =
+			response.SetMutableVector("Transactions");
 
 		for (set<Transaction*>::iterator i = fTransactions_HaveTuplesToSend.begin();
 			i != fTransactions_HaveTuplesToSend.end(); ++i)
@@ -409,8 +409,8 @@ bool ZTBServer::Write(const ZStreamW& iStream)
 		response.SetString("extra", "low priority");
 		
 		bool allEmptied = true;
-		vector<ZTValue>& vectorTransactionTuples
-			= response.SetMutableVector("Transactions");
+		vector<ZTValue>& vectorTransactionTuples =
+			response.SetMutableVector("Transactions");
 
 		for (set<Transaction*>::iterator i = fTransactions_HaveTuplesToSend.begin();
 			i != fTransactions_HaveTuplesToSend.end(); ++i)

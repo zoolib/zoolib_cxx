@@ -221,8 +221,8 @@ static UINT spLookupName(const string& iName)
 			{
 			for (size_t x = 0; x < countof(spNameToCodePage); ++x)
 				{
-				spMap_NameToCodePage[spCanonicalName(spNameToCodePage[x].fName)]
-					= spNameToCodePage[x].fCodePage;
+				spMap_NameToCodePage[spCanonicalName(spNameToCodePage[x].fName)] =
+					spNameToCodePage[x].fCodePage;
 				}
 			spBuilt_NameToCodePage = true;
 			}

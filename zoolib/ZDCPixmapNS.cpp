@@ -596,8 +596,8 @@ void ZDCPixmapNS::PixvalAccessor::SetPixval(void* iRowAddress, int32 inHCoord, u
 		case eCase1ByteWithShiftBE:
 		case eCase1ByteWithShiftLE:
 			{
-			uint8* destAddress
-				= static_cast<uint8*>(iRowAddress) + (inHCoord >> fDivisorShift);
+			uint8* destAddress =
+				static_cast<uint8*>(iRowAddress) + (inHCoord >> fDivisorShift);
 			*destAddress = (*destAddress & fBitNotMask[inHCoord & fModMask])
 				| (iPixval << fBitShift[inHCoord & fModMask]);
 			break;
@@ -1658,8 +1658,8 @@ void ZDCPixmapNS::MapPixvalToRGB_Gray::AsRGBAs(const uint32* iPixvals,
 		{
 		uint32 pixVal = *iPixvals++;
 
-		oColors->red = oColors->green = oColors->blue
-			= sConvert(pixVal, fMaskL, fShiftL, fMultiplierL, fAddL) >> 16;
+		oColors->red = oColors->green = oColors->blue =
+			sConvert(pixVal, fMaskL, fShiftL, fMultiplierL, fAddL) >> 16;
 
 		oColors->alpha = sConvert(pixVal, fMaskA, fShiftA, fMultiplierA, fAddA) >> 16;
 		}
@@ -1832,8 +1832,8 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBA_POD* iColors
 	vector<uint32> vectorPixvals;
 	for (size_t x = 0; x < iCount; ++x)
 		{
-		vector<uint32>::iterator insertIter
-			= lower_bound(vectorPixvals.begin(), vectorPixvals.end(), iPixvals[x]);
+		vector<uint32>::iterator insertIter =
+			lower_bound(vectorPixvals.begin(), vectorPixvals.end(), iPixvals[x]);
 
 		insertIter = vectorPixvals.insert(insertIter, iPixvals[x]);
 		vectorColors.insert(
@@ -1875,8 +1875,8 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBA_POD* iColors
 	vector<uint32> vectorPixvals;
 	for (size_t x = 0; x < iCount; ++x)
 		{
-		vector<uint32>::iterator insertIter
-			= lower_bound(vectorPixvals.begin(), vectorPixvals.end(), iPixvals[x]);
+		vector<uint32>::iterator insertIter =
+			lower_bound(vectorPixvals.begin(), vectorPixvals.end(), iPixvals[x]);
 
 		insertIter = vectorPixvals.insert(insertIter, iPixvals[x]);
 		vectorColors.insert(
@@ -2429,21 +2429,21 @@ void ZDCPixmapNS::sMunge(
 	const ZRect& iBounds, MungeProc iMungeProc, void* iRefcon)
 	{
 	ZRef<PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
-	if (PixelDescRep_Color* thePixelDescRep_Color
-		= ZRefDynamicCast<PixelDescRep_Color>(thePixelDescRep))
+	if (PixelDescRep_Color* thePixelDescRep_Color =
+		ZRefDynamicCast<PixelDescRep_Color>(thePixelDescRep))
 		{
 		sMunge_T(iBaseAddress, iRasterDesc,
 			*thePixelDescRep_Color, *thePixelDescRep_Color, iBounds, iMungeProc, iRefcon);
 		}
-	else if (PixelDescRep_Indexed* thePixelDescRep_Indexed
-		= ZRefDynamicCast<PixelDescRep_Indexed>(thePixelDescRep))
+	else if (PixelDescRep_Indexed* thePixelDescRep_Indexed =
+		ZRefDynamicCast<PixelDescRep_Indexed>(thePixelDescRep))
 		{
 		thePixelDescRep_Indexed->BuildReverseLookupIfNeeded();
 		sMunge_T(iBaseAddress, iRasterDesc,
 			*thePixelDescRep_Indexed, *thePixelDescRep_Indexed, iBounds, iMungeProc, iRefcon);
 		}
-	else if (PixelDescRep_Gray* thePixelDescRep_Gray
-		= ZRefDynamicCast<PixelDescRep_Gray>(thePixelDescRep))
+	else if (PixelDescRep_Gray* thePixelDescRep_Gray =
+		ZRefDynamicCast<PixelDescRep_Gray>(thePixelDescRep))
 		{
 		sMunge_T(iBaseAddress, iRasterDesc,
 			*thePixelDescRep_Gray, *thePixelDescRep_Gray, iBounds, iMungeProc, iRefcon);
@@ -2540,11 +2540,11 @@ static void sBlitWithMaps_T(
 		{
 		for (int32 vCurrent = 0; vCurrent < vCount; ++vCurrent)
 			{
-			const void* sourceRowAddress
-				= iSourceRasterDesc.CalcRowAddress(iSourceBase, iSourceBounds.top + vCurrent);
+			const void* sourceRowAddress =
+				iSourceRasterDesc.CalcRowAddress(iSourceBase, iSourceBounds.top + vCurrent);
 
-			void* destRowAddress
-				= iDestRasterDesc.CalcRowAddressDest(iDestBase, iDestLocation.v + vCurrent);
+			void* destRowAddress =
+				iDestRasterDesc.CalcRowAddressDest(iDestBase, iDestLocation.v + vCurrent);
 
 			sBlitRowInvert_T(
 				sourceRowAddress, iSourceRasterDesc.fPixvalDesc, iSourcePixvalToRGB,
@@ -2558,11 +2558,11 @@ static void sBlitWithMaps_T(
 		{
 		for (int32 vCurrent = 0; vCurrent < vCount; ++vCurrent)
 			{
-			const void* sourceRowAddress
-				= iSourceRasterDesc.CalcRowAddress(iSourceBase, iSourceBounds.top + vCurrent);
+			const void* sourceRowAddress =
+				iSourceRasterDesc.CalcRowAddress(iSourceBase, iSourceBounds.top + vCurrent);
 
-			void* destRowAddress
-				= iDestRasterDesc.CalcRowAddressDest(iDestBase, iDestLocation.v + vCurrent);
+			void* destRowAddress =
+				iDestRasterDesc.CalcRowAddressDest(iDestBase, iDestLocation.v + vCurrent);
 
 			sBlitRow_T(
 				sourceRowAddress, iSourceRasterDesc.fPixvalDesc, iSourcePixvalToRGB,
@@ -2605,11 +2605,11 @@ void ZDCPixmapNS::sBlitPixvals(const void* iSourceBase, const RasterDesc& iSourc
 		{
 		for (int32 vCurrent = 0; vCurrent < vCount; ++vCurrent)
 			{
-			const void* sourceRowAddress
-				= iSourceRasterDesc.CalcRowAddress(iSourceBase, iSourceBounds.top + vCurrent);
+			const void* sourceRowAddress =
+				iSourceRasterDesc.CalcRowAddress(iSourceBase, iSourceBounds.top + vCurrent);
 
-			void* destRowAddress
-				= iDestRasterDesc.CalcRowAddressDest(iDestBase, iDestLocation.v + vCurrent);
+			void* destRowAddress =
+				iDestRasterDesc.CalcRowAddressDest(iDestBase, iDestLocation.v + vCurrent);
 
 			PixvalAccessor sourceAccessor(iSourceRasterDesc.fPixvalDesc);
 			PixvalAccessor destAccessor(iDestRasterDesc.fPixvalDesc);
@@ -2640,11 +2640,11 @@ void ZDCPixmapNS::sBlit(
 	ZRef<PixelDescRep> sourcePixelDescRep = iSourcePixelDesc.GetRep();
 	ZRef<PixelDescRep> destPixelDescRep = iDestPixelDesc.GetRep();
 
-	if (PixelDescRep_Color* sourcePixelDescRep_Color
-		= ZRefDynamicCast<PixelDescRep_Color>(sourcePixelDescRep))
+	if (PixelDescRep_Color* sourcePixelDescRep_Color =
+		ZRefDynamicCast<PixelDescRep_Color>(sourcePixelDescRep))
 		{
-		if (PixelDescRep_Color* destPixelDescRep_Color
-			= ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
+		if (PixelDescRep_Color* destPixelDescRep_Color =
+			ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
 			{
 			if (!iInvertColors && sourcePixelDescRep_Color->Matches(destPixelDescRep_Color))
 				{
@@ -2659,16 +2659,16 @@ void ZDCPixmapNS::sBlit(
 					iSourceBounds, iDestLocation, iInvertColors);
 				}
 			}
-		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed
-			= ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
+		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed =
+			ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
 			{
 			destPixelDescRep_Indexed->BuildReverseLookupIfNeeded();
 			sBlitWithMaps_T(iSourceBase, iSourceRasterDesc, *sourcePixelDescRep_Color,
 				iDestBase, iDestRasterDesc, *destPixelDescRep_Indexed,
 				iSourceBounds, iDestLocation, iInvertColors);
 			}
-		else if (PixelDescRep_Gray* destPixelDescRep_Gray
-			= ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
+		else if (PixelDescRep_Gray* destPixelDescRep_Gray =
+			ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
 			{
 			sBlitWithMaps_T(iSourceBase, iSourceRasterDesc, *sourcePixelDescRep_Color,
 				iDestBase, iDestRasterDesc, *destPixelDescRep_Gray,
@@ -2681,18 +2681,18 @@ void ZDCPixmapNS::sBlit(
 				iSourceBounds, iDestLocation, iInvertColors);
 			}
 		}
-	else if (PixelDescRep_Indexed* sourcePixelDescRep_Indexed
-		= ZRefDynamicCast<PixelDescRep_Indexed>(sourcePixelDescRep))
+	else if (PixelDescRep_Indexed* sourcePixelDescRep_Indexed =
+		ZRefDynamicCast<PixelDescRep_Indexed>(sourcePixelDescRep))
 		{
-		if (PixelDescRep_Color* destPixelDescRep_Color
-			= ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
+		if (PixelDescRep_Color* destPixelDescRep_Color =
+			ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
 			{
 			sBlitWithMaps_T(iSourceBase, iSourceRasterDesc, *sourcePixelDescRep_Indexed,
 				iDestBase, iDestRasterDesc, *destPixelDescRep_Color,
 				iSourceBounds, iDestLocation, iInvertColors);
 			}
-		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed
-			= ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
+		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed =
+			ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
 			{
 			if (!iInvertColors && sourcePixelDescRep_Indexed->Matches(destPixelDescRep_Indexed))
 				{
@@ -2708,8 +2708,8 @@ void ZDCPixmapNS::sBlit(
 					iSourceBounds, iDestLocation, iInvertColors);
 				}
 			}
-		else if (PixelDescRep_Gray* destPixelDescRep_Gray
-			= ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
+		else if (PixelDescRep_Gray* destPixelDescRep_Gray =
+			ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
 			{
 			sBlitWithMaps_T(iSourceBase, iSourceRasterDesc, *sourcePixelDescRep_Indexed,
 				iDestBase, iDestRasterDesc, *destPixelDescRep_Gray,
@@ -2722,26 +2722,26 @@ void ZDCPixmapNS::sBlit(
 				iSourceBounds, iDestLocation, iInvertColors);
 			}
 		}
-	else if (PixelDescRep_Gray* sourcePixelDescRep_Gray
-		= ZRefDynamicCast<PixelDescRep_Gray>(sourcePixelDescRep))
+	else if (PixelDescRep_Gray* sourcePixelDescRep_Gray =
+		ZRefDynamicCast<PixelDescRep_Gray>(sourcePixelDescRep))
 		{
-		if (PixelDescRep_Color* destPixelDescRep_Color
-			= ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
+		if (PixelDescRep_Color* destPixelDescRep_Color =
+			ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
 			{
 			sBlitWithMaps_T(iSourceBase, iSourceRasterDesc, *sourcePixelDescRep_Gray,
 				iDestBase, iDestRasterDesc, *destPixelDescRep_Color,
 				iSourceBounds, iDestLocation, iInvertColors);
 			}
-		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed
-			= ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
+		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed =
+			ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
 			{
 			destPixelDescRep_Indexed->BuildReverseLookupIfNeeded();
 			sBlitWithMaps_T(iSourceBase, iSourceRasterDesc, *sourcePixelDescRep_Gray,
 				iDestBase, iDestRasterDesc, *destPixelDescRep_Indexed,
 				iSourceBounds, iDestLocation, iInvertColors);
 			}
-		else if (PixelDescRep_Gray* destPixelDescRep_Gray
-			= ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
+		else if (PixelDescRep_Gray* destPixelDescRep_Gray =
+			ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
 			{
 			if (!iInvertColors && sourcePixelDescRep_Gray->Matches(destPixelDescRep_Gray))
 				{
@@ -2765,23 +2765,23 @@ void ZDCPixmapNS::sBlit(
 		}
 	else
 		{
-		if (PixelDescRep_Color* destPixelDescRep_Color
-			= ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
+		if (PixelDescRep_Color* destPixelDescRep_Color =
+			ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
 			{
 			sBlitWithMaps_T(iSourceBase, iSourceRasterDesc, iSourcePixelDesc,
 				iDestBase, iDestRasterDesc, *destPixelDescRep_Color,
 				iSourceBounds, iDestLocation, iInvertColors);
 			}
-		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed
-			= ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
+		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed =
+			ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
 			{
 			destPixelDescRep_Indexed->BuildReverseLookupIfNeeded();
 			sBlitWithMaps_T(iSourceBase, iSourceRasterDesc, iSourcePixelDesc,
 				iDestBase, iDestRasterDesc, *destPixelDescRep_Indexed,
 				iSourceBounds, iDestLocation, iInvertColors);
 			}
-		else if (PixelDescRep_Gray* destPixelDescRep_Gray
-			= ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
+		else if (PixelDescRep_Gray* destPixelDescRep_Gray =
+			ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
 			{
 			sBlitWithMaps_T(iSourceBase, iSourceRasterDesc, iSourcePixelDesc,
 				iDestBase, iDestRasterDesc, *destPixelDescRep_Gray,
@@ -2866,11 +2866,11 @@ void ZDCPixmapNS::sBlitRow(
 	ZRef<PixelDescRep> sourcePixelDescRep = iSourcePixelDesc.GetRep();
 	ZRef<PixelDescRep> destPixelDescRep = iDestPixelDesc.GetRep();
 
-	if (PixelDescRep_Color* sourcePixelDescRep_Color
-		= ZRefDynamicCast<PixelDescRep_Color>(sourcePixelDescRep))
+	if (PixelDescRep_Color* sourcePixelDescRep_Color =
+		ZRefDynamicCast<PixelDescRep_Color>(sourcePixelDescRep))
 		{
-		if (PixelDescRep_Color* destPixelDescRep_Color
-			= ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
+		if (PixelDescRep_Color* destPixelDescRep_Color =
+			ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
 			{
 			if (!iInvertColors && sourcePixelDescRep_Color->Matches(destPixelDescRep_Color))
 				{
@@ -2889,8 +2889,8 @@ void ZDCPixmapNS::sBlitRow(
 					iCount, iInvertColors);
 				}
 			}
-		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed
-			= ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
+		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed =
+			ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
 			{
 			destPixelDescRep_Indexed->BuildReverseLookupIfNeeded();
 			sBlitRowWithMaps_T(
@@ -2900,8 +2900,8 @@ void ZDCPixmapNS::sBlitRow(
 				iDestH,
 				iCount, iInvertColors);
 			}
-		else if (PixelDescRep_Gray* destPixelDescRep_Gray
-			= ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
+		else if (PixelDescRep_Gray* destPixelDescRep_Gray =
+			ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
 			{
 			sBlitRowWithMaps_T(
 				iSourceBase, iSourcePixvalDesc, *sourcePixelDescRep_Color,
@@ -2920,11 +2920,11 @@ void ZDCPixmapNS::sBlitRow(
 				iCount, iInvertColors);
 			}
 		}
-	else if (PixelDescRep_Indexed* sourcePixelDescRep_Indexed
-		= ZRefDynamicCast<PixelDescRep_Indexed>(sourcePixelDescRep))
+	else if (PixelDescRep_Indexed* sourcePixelDescRep_Indexed =
+		ZRefDynamicCast<PixelDescRep_Indexed>(sourcePixelDescRep))
 		{
-		if (PixelDescRep_Color* destPixelDescRep_Color
-			= ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
+		if (PixelDescRep_Color* destPixelDescRep_Color =
+			ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
 			{
 			sBlitRowWithMaps_T(
 				iSourceBase, iSourcePixvalDesc, *sourcePixelDescRep_Indexed,
@@ -2933,8 +2933,8 @@ void ZDCPixmapNS::sBlitRow(
 				iDestH,
 				iCount, iInvertColors);
 			}
-		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed
-			= ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
+		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed =
+			ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
 			{
 			if (!iInvertColors && sourcePixelDescRep_Indexed->Matches(destPixelDescRep_Indexed))
 				{
@@ -2956,8 +2956,8 @@ void ZDCPixmapNS::sBlitRow(
 					iCount, iInvertColors);
 				}
 			}
-		else if (PixelDescRep_Gray* destPixelDescRep_Gray
-			= ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
+		else if (PixelDescRep_Gray* destPixelDescRep_Gray =
+			ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
 			{
 			sBlitRowWithMaps_T(
 				iSourceBase, iSourcePixvalDesc, *sourcePixelDescRep_Indexed,
@@ -2976,11 +2976,11 @@ void ZDCPixmapNS::sBlitRow(
 				iCount, iInvertColors);
 			}
 		}
-	else if (PixelDescRep_Gray* sourcePixelDescRep_Gray
-		= ZRefDynamicCast<PixelDescRep_Gray>(sourcePixelDescRep))
+	else if (PixelDescRep_Gray* sourcePixelDescRep_Gray =
+		ZRefDynamicCast<PixelDescRep_Gray>(sourcePixelDescRep))
 		{
-		if (PixelDescRep_Color* destPixelDescRep_Color
-			= ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
+		if (PixelDescRep_Color* destPixelDescRep_Color =
+			ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
 			{
 			sBlitRowWithMaps_T(
 				iSourceBase, iSourcePixvalDesc, *sourcePixelDescRep_Gray,
@@ -2989,8 +2989,8 @@ void ZDCPixmapNS::sBlitRow(
 				iDestH,
 				iCount, iInvertColors);
 			}
-		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed
-			= ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
+		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed =
+			ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
 			{
 			destPixelDescRep_Indexed->BuildReverseLookupIfNeeded();
 			sBlitRowWithMaps_T(
@@ -3000,8 +3000,8 @@ void ZDCPixmapNS::sBlitRow(
 				iDestH,
 				iCount, iInvertColors);
 			}
-		else if (PixelDescRep_Gray* destPixelDescRep_Gray
-			= ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
+		else if (PixelDescRep_Gray* destPixelDescRep_Gray =
+			ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
 			{
 			if (!iInvertColors && sourcePixelDescRep_Gray->Matches(destPixelDescRep_Gray))
 				{
@@ -3034,8 +3034,8 @@ void ZDCPixmapNS::sBlitRow(
 		}
 	else
 		{
-		if (PixelDescRep_Color* destPixelDescRep_Color
-			= ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
+		if (PixelDescRep_Color* destPixelDescRep_Color =
+			ZRefDynamicCast<PixelDescRep_Color>(destPixelDescRep))
 			{
 			sBlitRowWithMaps_T(
 				iSourceBase, iSourcePixvalDesc, iSourcePixelDesc,
@@ -3044,8 +3044,8 @@ void ZDCPixmapNS::sBlitRow(
 				iDestH,
 				iCount, iInvertColors);
 			}
-		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed
-			= ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
+		else if (PixelDescRep_Indexed* destPixelDescRep_Indexed =
+			ZRefDynamicCast<PixelDescRep_Indexed>(destPixelDescRep))
 			{
 			destPixelDescRep_Indexed->BuildReverseLookupIfNeeded();
 			sBlitRowWithMaps_T(
@@ -3055,8 +3055,8 @@ void ZDCPixmapNS::sBlitRow(
 				iDestH,
 				iCount, iInvertColors);
 			}
-		else if (PixelDescRep_Gray* destPixelDescRep_Gray
-			= ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
+		else if (PixelDescRep_Gray* destPixelDescRep_Gray =
+			ZRefDynamicCast<PixelDescRep_Gray>(destPixelDescRep))
 			{
 			sBlitRowWithMaps_T(
 				iSourceBase, iSourcePixvalDesc, iSourcePixelDesc,

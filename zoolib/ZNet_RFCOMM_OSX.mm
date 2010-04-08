@@ -132,8 +132,8 @@ ZNetListener_RFCOMM_OSX::ZNetListener_RFCOMM_OSX(CFDictionaryRef iServiceDict)
 		throw runtime_error("ZNetListener_RFCOMM_OSX, couldn't initialize");
 		}
 
-	IOBluetoothSDPServiceRecord* serviceRecord
-		= [IOBluetoothSDPServiceRecord withSDPServiceRecordRef:serviceRecordRef];
+	IOBluetoothSDPServiceRecord* serviceRecord =
+		[IOBluetoothSDPServiceRecord withSDPServiceRecordRef:serviceRecordRef];
 
 	[serviceRecord getRFCOMMChannelID:&fChannelID];
 	[serviceRecord getServiceRecordHandle:&fHandle];

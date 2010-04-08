@@ -146,8 +146,8 @@ static bool spAcquireCredentials(bool iVerify, bool iCheckName, CredHandle& oCre
 #pragma mark -
 #pragma mark * ZStreamRWCon_SSL_Win
 
-static const DWORD spRequirements
-	= ISC_REQ_SEQUENCE_DETECT
+static const DWORD spRequirements =
+	ISC_REQ_SEQUENCE_DETECT
 	| ISC_REQ_REPLAY_DETECT
 	| ISC_REQ_CONFIDENTIALITY
 	| ISC_REQ_EXTENDED_ERROR

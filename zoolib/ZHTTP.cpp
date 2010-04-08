@@ -695,8 +695,8 @@ ZTrail sDecodeTrail(const string& iURL)
 
 string sEncodeComponent(const string& iString)
 	{
-	static const char spValidChars[]
-		= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	static const char spValidChars[] =
+		"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	static const size_t spValidCharsLen = sizeof(spValidChars) - 1;
 
 	string result;
@@ -706,8 +706,8 @@ string sEncodeComponent(const string& iString)
 	string::size_type lastGood = 0;
 	for (;;)
 		{
-		string::size_type nextProb
-			= iString.find_first_not_of(spValidChars, lastGood, spValidCharsLen);
+		string::size_type nextProb =
+			iString.find_first_not_of(spValidChars, lastGood, spValidCharsLen);
 
 		if (nextProb == string::npos)
 			{

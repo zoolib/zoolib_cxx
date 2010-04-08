@@ -592,8 +592,8 @@ void ZTBRep_TS::Trans_Search(Transaction* iTransaction, const ZTBSpec& iSpec, se
 					resultIter != currentResults.end(); /*no increment*/)
 					{
 					uint64 currentID = *resultIter++;
-					MapTransTuple_t::iterator gottenIter
-						= iTransaction->fTransTuples.find(currentID);
+					MapTransTuple_t::iterator gottenIter =
+						iTransaction->fTransTuples.find(currentID);
 
 					ZAssertStop(kDebug, gottenIter != iTransaction->fTransTuples.end());
 					ZAssertStop(kDebug, (*gottenIter).second.fWritten);

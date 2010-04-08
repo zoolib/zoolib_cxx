@@ -302,8 +302,8 @@ bool ZVal_ZooLib::sQFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
-	else if (const ZRef<ZRefCountedWithFinalize>* theValue
-		= ZAnyCast<ZRef<ZRefCountedWithFinalize> >(&iAny))
+	else if (const ZRef<ZRefCountedWithFinalize>* theValue =
+		ZAnyCast<ZRef<ZRefCountedWithFinalize> >(&iAny))
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
@@ -1354,11 +1354,11 @@ int ZVal_ZooLib::pUncheckedCompare(const ZVal_ZooLib& iOther) const
 			}
 		case eZType_RefCounted:
 			{
-			const ZRef<ZRefCountedWithFinalize>* thisZRef
-				= sFetch_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes);
+			const ZRef<ZRefCountedWithFinalize>* thisZRef =
+				sFetch_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes);
 
-			const ZRef<ZRefCountedWithFinalize>* otherZRef
-				= sFetch_T<ZRef<ZRefCountedWithFinalize> >(iOther.fType.fBytes);
+			const ZRef<ZRefCountedWithFinalize>* otherZRef =
+				sFetch_T<ZRef<ZRefCountedWithFinalize> >(iOther.fType.fBytes);
 			
 			if (*thisZRef < *otherZRef)
 				return -1;

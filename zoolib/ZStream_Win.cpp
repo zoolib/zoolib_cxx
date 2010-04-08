@@ -126,8 +126,8 @@ void ZStreamRPos_Win_MultiResource::Imp_Read(void* iDest, size_t iCount, size_t*
 	char* localDest = reinterpret_cast<char*>(iDest);
 	while (iCount)
 		{
-		vector<size_t>::iterator theIter
-			= upper_bound(fVector_Ends.begin(), fVector_Ends.end(), fPosition);
+		vector<size_t>::iterator theIter =
+			upper_bound(fVector_Ends.begin(), fVector_Ends.end(), fPosition);
 		if (theIter == fVector_Ends.end())
 			break;
 

@@ -380,11 +380,11 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 
 		// Special-case RGB sources.
 		bool done = false;
-		if (PixelDescRep_Color* thePixelDescRep_Color
-			= ZRefDynamicCast<PixelDescRep_Color>(thePixelDescRep))
+		if (PixelDescRep_Color* thePixelDescRep_Color =
+			ZRefDynamicCast<PixelDescRep_Color>(thePixelDescRep))
 			{
-			PixelDescRep_Color* destPDR
-				= ZRefDynamicCast<PixelDescRep_Color>(destPixelDesc.GetRep());
+			PixelDescRep_Color* destPDR =
+				ZRefDynamicCast<PixelDescRep_Color>(destPixelDesc.GetRep());
 
 			if (false && thePixelDescRep_Color->Matches(destPDR))
 				{
@@ -392,8 +392,8 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 				JSAMPROW rowPtr[1];
 				for (size_t y = iBounds.top; y < iBounds.bottom; ++y)
 					{
-					const JSAMPLE* sourceRowAddress
-						= static_cast<const JSAMPLE*>(iRasterDesc.CalcRowAddress(iBaseAddress, y));
+					const JSAMPLE* sourceRowAddress =
+						static_cast<const JSAMPLE*>(iRasterDesc.CalcRowAddress(iBaseAddress, y));
 					sourceRowAddress += (3 * iBounds.left);
 					rowPtr[0] = const_cast<JSAMPLE*>(sourceRowAddress);
 
@@ -505,8 +505,8 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 			int scanlinesRead = ::jpeg_read_scanlines(&theJDS, rowPtr, 1);
 			ZAssertStop(1, scanlinesRead == 1);
 
-			void* destRowAddress
-				= destRasterDesc.CalcRowAddressDest(destBaseAddress, theJDS.output_scanline - 1);
+			void* destRowAddress =
+				destRasterDesc.CalcRowAddressDest(destBaseAddress, theJDS.output_scanline - 1);
 
 			sBlitRow(
 				rowPtr[0], sourcePixvalDesc, sourcePixelDesc, 0,

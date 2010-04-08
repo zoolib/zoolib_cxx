@@ -427,8 +427,8 @@ ZTBQuery& ZTBQuery::operator|=(const ZTBQuery& iQuery)
 		if (ZRef<ZTBQueryNode_Combo> myQNC = ZRefDynamicCast<ZTBQueryNode_Combo>(fNode))
 			{
 			newVectorSect = myQNC->GetIntersections();
-			if (ZRef<ZTBQueryNode_Combo> otherQNC
-				= ZRefDynamicCast<ZTBQueryNode_Combo>(iQuery.fNode))
+			if (ZRef<ZTBQueryNode_Combo> otherQNC =
+				ZRefDynamicCast<ZTBQueryNode_Combo>(iQuery.fNode))
 				{
 				const vector<ZTBQueryNode_Combo::Intersection>&
 					rightVectorSect = otherQNC->GetIntersections();

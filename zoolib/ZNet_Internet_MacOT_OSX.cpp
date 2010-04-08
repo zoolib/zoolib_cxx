@@ -451,8 +451,8 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Constructor(void* iParam)
 		bindReq.addr.buf = (UInt8*)&theInetAddress;
 		bindReq.addr.len = sizeof(theInetAddress);
 		bindReq.qlen = theStruct->fListenQueueSize;
-		theStruct->fResult
-			= ::OTBind(theStruct->fListener->fEndpointRef, &bindReq, nullptr);
+		theStruct->fResult =
+			::OTBind(theStruct->fListener->fEndpointRef, &bindReq, nullptr);
 		}
 
 	if (theStruct->fResult != noErr)

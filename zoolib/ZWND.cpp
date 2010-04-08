@@ -220,8 +220,8 @@ ZWNDW* ZWNDW::sFromHWNDNilOkayW(HWND iHWND)
 		// This is an HWND in this process. Check for the marker property.
 		if (::GetPropW(iHWND, L"ZWNDW"))
 			{
-			if (ZWNDW* theZWNDW
-				= reinterpret_cast<ZWNDW*>((LONG_PTR)::GetWindowLongPtrW(iHWND, GWLP_USERDATA)))
+			if (ZWNDW* theZWNDW =
+				reinterpret_cast<ZWNDW*>((LONG_PTR)::GetWindowLongPtrW(iHWND, GWLP_USERDATA)))
 				{
 				ZAssertStop(0, theZWNDW->fHWND == iHWND);
 				return theZWNDW;
@@ -315,8 +315,8 @@ ZWNDSubClassW* ZWNDSubClassW::sFromHWNDNilOkayW(HWND iHWND)
 	DWORD currentProcessID = ::GetCurrentProcessId();
 	if (windowProcessID == currentProcessID)
 		{
-		if (ZWNDSubClassW* theZWND
-			= reinterpret_cast<ZWNDSubClassW*>(::GetPropW(iHWND, L"ZWNDSubClassW")))
+		if (ZWNDSubClassW* theZWND =
+			reinterpret_cast<ZWNDSubClassW*>(::GetPropW(iHWND, L"ZWNDSubClassW")))
 			{
 			ZAssertStop(0, theZWND->fHWND == iHWND);
 			return theZWND;

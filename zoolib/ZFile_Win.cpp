@@ -394,8 +394,8 @@ static ZFile::Error spSetSize(HANDLE iFileHANDLE, uint64 iSize)
 	{
 	// Remember our current position
 	LONG originalPositionHigh = 0;
-	DWORD originalPositionLow
-		= ::SetFilePointer(iFileHANDLE, 0, &originalPositionHigh, FILE_CURRENT);
+	DWORD originalPositionLow =
+		::SetFilePointer(iFileHANDLE, 0, &originalPositionHigh, FILE_CURRENT);
 	uint64 originalPosition = spAsUInt64(originalPositionHigh, originalPositionLow);
 
 	// Put the position at the desired end of file

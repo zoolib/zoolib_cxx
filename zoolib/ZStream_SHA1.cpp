@@ -236,8 +236,8 @@ void ZStream_SHA1::sUpdate(ZStream_SHA1::Context& ioContext, const void* iData, 
 void ZStream_SHA1::sFinal(ZStream_SHA1::Context& ioContext, uint8 oDigest[20])
 	{
 	// Remember the bit count.
-	const uint64 finalBitCountBE
-		= ZByteSwap_HostToBig64(ioContext.fBuffersSent * 512 + ioContext.fSpaceUsed * 8);
+	const uint64 finalBitCountBE =
+		ZByteSwap_HostToBig64(ioContext.fBuffersSent * 512 + ioContext.fSpaceUsed * 8);
 
 	// Pad the stream with a single 0x80.
 	const uint8 pad80 = 0x80;

@@ -185,8 +185,8 @@ true if iVector contains iElement. */
 template <typename T>
 bool sSortedContains(const std::vector<T>& iVector, T iElement)
 	{
-	typename std::vector<T>::const_iterator i
-		= lower_bound(iVector.begin(), iVector.end(), iElement);
+	typename std::vector<T>::const_iterator i =
+		lower_bound(iVector.begin(), iVector.end(), iElement);
 	return i != iVector.end() && *i == iElement;
 	}
 

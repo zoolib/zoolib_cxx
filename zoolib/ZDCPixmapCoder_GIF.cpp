@@ -124,8 +124,8 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 	const PixelDesc& iPixelDesc,
 	const ZRect& iBounds)
 	{
-	ZRef<PixelDescRep_Indexed> thePixelDescRep_Indexed
-		= ZRefDynamicCast<PixelDescRep_Indexed>(iPixelDesc.GetRep());
+	ZRef<PixelDescRep_Indexed> thePixelDescRep_Indexed =
+		ZRefDynamicCast<PixelDescRep_Indexed>(iPixelDesc.GetRep());
 	ZAssertStop(2, thePixelDescRep_Indexed);
 
 	if (fTransparent)
@@ -217,8 +217,8 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 				for (ZCoord currentY = iBounds.top + spInterlaceStart[pass];
 					currentY < iBounds.bottom; currentY += spInterlaceIncrement[pass])
 					{
-					const void* sourceRowAddress
-						= iRasterDesc.CalcRowAddress(iBaseAddress, currentY);
+					const void* sourceRowAddress =
+						iRasterDesc.CalcRowAddress(iBaseAddress, currentY);
 
 					sBlitRowPixvals(
 						sourceRowAddress, iRasterDesc.fPixvalDesc, iBounds.left,
@@ -233,8 +233,8 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 			{
 			for (ZCoord currentY = iBounds.top; currentY < iBounds.bottom; ++currentY)
 				{
-				const void* sourceRowAddress
-					= iRasterDesc.CalcRowAddress(iBaseAddress, currentY);
+				const void* sourceRowAddress =
+					iRasterDesc.CalcRowAddress(iBaseAddress, currentY);
 
 				sBlitRowPixvals(
 					sourceRowAddress, iRasterDesc.fPixvalDesc, iBounds.left,
@@ -404,8 +404,8 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			8, // 6
 			8, // 7
 			};
-		int rowBytes
-			= sCalcRowBytes(sPhysicalDepths[strmGlobalColorTableSize], fSize.h, 4);
+		int rowBytes =
+			sCalcRowBytes(sPhysicalDepths[strmGlobalColorTableSize], fSize.h, 4);
 
 		RasterDesc theRasterDesc(
 			PixvalDesc(strmGlobalColorTableSize + 1, true),

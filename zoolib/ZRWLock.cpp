@@ -210,8 +210,8 @@ void ZRWLock::ReturnLock()
 		// there can't be a current writer
 		ZAssertStop(kDebug_RWLock, fThreadID_CurrentWriter == 0);
 
-		vector<ZThread::ID>::iterator theIter
-			= find(fVector_CurrentReaders.begin(), fVector_CurrentReaders.end(), currentID);
+		vector<ZThread::ID>::iterator theIter =
+			find(fVector_CurrentReaders.begin(), fVector_CurrentReaders.end(), currentID);
 		ZAssertStop(kDebug_RWLock, theIter != fVector_CurrentReaders.end());
 		fVector_CurrentReaders.erase(theIter);
 

@@ -99,8 +99,8 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 	const PixelDesc& iPixelDesc,
 	const ZRect& iBounds)
 	{
-	png_structp write_ptr
-		= ::png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+	png_structp write_ptr =
+		::png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	png_infop info_ptr = nullptr;
 
 	vector<uint8> theRowBufferVector;
@@ -121,8 +121,8 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 
 		ZRef<PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
 
-		if (PixelDescRep_Indexed* thePixelDescRep_Indexed
-			= ZRefDynamicCast<PixelDescRep_Indexed>(thePixelDescRep))
+		if (PixelDescRep_Indexed* thePixelDescRep_Indexed =
+			ZRefDynamicCast<PixelDescRep_Indexed>(thePixelDescRep))
 			{
 			::png_set_IHDR(write_ptr, info_ptr, iBounds.Width(), iBounds.Height(), 8,
 				PNG_COLOR_TYPE_PALETTE, PNG_INTERLACE_NONE,
@@ -242,8 +242,8 @@ ZDCPixmapDecoder_PNG::~ZDCPixmapDecoder_PNG()
 
 void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 	{
-	png_structp read_ptr
-		= ::png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+	png_structp read_ptr =
+		::png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	png_infop info_ptr = nullptr;
 
 	try

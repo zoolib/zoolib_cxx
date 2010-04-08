@@ -2611,8 +2611,8 @@ void ZBlockStore_PhaseTree::UnuseSlot(Slot* iSlot, bool iPurge)
 
 							ZAssertStop(ZCONFIG_PhaseTree_Debug, theSlot->fSlotNumber);
 
-							map<uint32, Slot*>::iterator cacheIter
-								= fSlots_Cached.find(theSlot->fSlotNumber);
+							map<uint32, Slot*>::iterator cacheIter =
+								fSlots_Cached.find(theSlot->fSlotNumber);
 							ZAssertStopf(ZCONFIG_PhaseTree_Debug,
 								cacheIter != fSlots_Cached.end(),
 								("Slot: %d, state: %d", theSlot->fSlotNumber, theSlot->fState));

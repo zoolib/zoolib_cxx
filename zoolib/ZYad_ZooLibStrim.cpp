@@ -906,8 +906,8 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 			theValue->h,
 			theValue->v);
 		}
-	else if (const ZRef<ZRefCountedWithFinalize>* theValue
-		= ZAnyCast<ZRef<ZRefCountedWithFinalize> >(&iVal))
+	else if (const ZRef<ZRefCountedWithFinalize>* theValue =
+		ZAnyCast<ZRef<ZRefCountedWithFinalize> >(&iVal))
 		{
 		s.Writef("RefCounted(%p)", theValue->Get());
 		}

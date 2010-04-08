@@ -387,8 +387,8 @@ static pascal OSStatus spUnicodeToTextFallback_Null(UniChar *iSrcUniStr, ByteCou
 	return noErr;
 	}
 
-static UnicodeToTextFallbackUPP spUnicodeToTextFallback_NullUPP
-	= NewUnicodeToTextFallbackUPP(spUnicodeToTextFallback_Null);
+static UnicodeToTextFallbackUPP spUnicodeToTextFallback_NullUPP =
+	NewUnicodeToTextFallbackUPP(spUnicodeToTextFallback_Null);
 
 void ZTextEncoder_Mac::Init(TextEncoding iDestEncoding)
 	{

@@ -95,8 +95,8 @@ void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 	size_t theColorsCount = 0;
 
 	ZRef<PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
-	if (PixelDescRep_Indexed* thePixelDescRep_Indexed
-		= ZRefDynamicCast<PixelDescRep_Indexed>(thePixelDescRep))
+	if (PixelDescRep_Indexed* thePixelDescRep_Indexed =
+		ZRefDynamicCast<PixelDescRep_Indexed>(thePixelDescRep))
 		{
 		destPixvalDesc.fDepth = spNearestIndexedDepth(iRasterDesc.fPixvalDesc.fDepth);
 		destPixelDesc = thePixelDescRep_Indexed;
@@ -287,8 +287,8 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 		case 4:
 		case 8:
 			{
-			sourcePixelDesc
-				= PixelDesc(&sourceColorVector[0], sourceColorVector.size());
+			sourcePixelDesc =
+				PixelDesc(&sourceColorVector[0], sourceColorVector.size());
 			thePixmap = ZDCPixmap(sourceRasterDesc, ZPoint(biWidth, biHeight), sourcePixelDesc);
 			break;
 			}
@@ -296,24 +296,24 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			{
 			sourcePixelDesc = PixelDesc(0x7C00, 0x03E0, 0x001F, 0);
 			sourceRasterDesc.fPixvalDesc.fBigEndian = false;
-			thePixmap
-				= ZDCPixmap(ZPoint(biWidth, biHeight), eFormatEfficient_Color_16);
+			thePixmap =
+				ZDCPixmap(ZPoint(biWidth, biHeight), eFormatEfficient_Color_16);
 			break;
 			}
 		case 24:
 			{
-			sourcePixelDesc
-				= PixelDesc(0x000000FF, 0x0000FF00, 0x00FF0000, 0x00000000);
-			thePixmap
-				= ZDCPixmap(ZPoint(biWidth, biHeight), eFormatEfficient_Color_24);
+			sourcePixelDesc =
+				PixelDesc(0x000000FF, 0x0000FF00, 0x00FF0000, 0x00000000);
+			thePixmap =
+				ZDCPixmap(ZPoint(biWidth, biHeight), eFormatEfficient_Color_24);
 			break;
 			}
 		case 32:
 			{
-			sourcePixelDesc
-				= PixelDesc(0x0000FF00, 0x00FF0000, 0xFF000000, 0x00000000);
-			thePixmap
-				= ZDCPixmap(ZPoint(biWidth, biHeight), eFormatEfficient_Color_32);
+			sourcePixelDesc =
+				PixelDesc(0x0000FF00, 0x00FF0000, 0xFF000000, 0x00000000);
+			thePixmap =
+				ZDCPixmap(ZPoint(biWidth, biHeight), eFormatEfficient_Color_32);
 			break;
 			}
 		}

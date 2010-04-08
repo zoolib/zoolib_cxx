@@ -381,8 +381,8 @@ public:
 
 	void AsRGBA(uint32 iPixval, ZRGBA_POD& oColor) const
 		{
-		oColor.red = oColor.green = oColor.blue
-			= sConvert(iPixval, fMaskL, fShiftL, fMultiplierL, fAddL) >> 16;
+		oColor.red = oColor.green = oColor.blue =
+			sConvert(iPixval, fMaskL, fShiftL, fMultiplierL, fAddL) >> 16;
 
 		oColor.alpha = sConvert(iPixval, fMaskA, fShiftA, fMultiplierA, fAddA) >> 16;
 		}

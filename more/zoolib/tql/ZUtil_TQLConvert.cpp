@@ -164,8 +164,8 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFil
 		ZAssert(theNode_Combo->GetSort().empty());
 		// Don't support sorting, yet.
 
-		const vector<ZTBQueryNode_Combo::Intersection>& theIntersections
-			= theNode_Combo->GetIntersections();
+		const vector<ZTBQueryNode_Combo::Intersection>& theIntersections =
+			theNode_Combo->GetIntersections();
 
 		Query outerQ;
 		bool outerIsFirst = true;

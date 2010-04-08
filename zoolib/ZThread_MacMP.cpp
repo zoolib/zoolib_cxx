@@ -126,11 +126,11 @@ ID sID()
 void sSleep(double iDuration)
 	{
 	const Nanoseconds nowU = ::AbsoluteToNanoseconds(::UpTime());
-	const double targetDouble
-		= double(*reinterpret_cast<const uint64*>(&nowU)) / 1e9 + iDuration;
+	const double targetDouble =
+		double(*reinterpret_cast<const uint64*>(&nowU)) / 1e9 + iDuration;
 	const uint64 targetU = uint64(targetDouble * 1e9);
-	AbsoluteTime targetA
-		= ::NanosecondsToAbsolute(*reinterpret_cast<const Nanoseconds*>(&targetU));
+	AbsoluteTime targetA =
+		::NanosecondsToAbsolute(*reinterpret_cast<const Nanoseconds*>(&targetU));
 	::MPDelayUntil(&targetA);
 	}
 

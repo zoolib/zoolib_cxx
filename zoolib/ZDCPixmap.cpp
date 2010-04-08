@@ -73,8 +73,8 @@ ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource1, const ZDCPixmap& iSource2, const
 	resultSize.h = max(source1Size.h, max(source2Size.h, maskSize.h));
 	resultSize.v = max(source1Size.v, max(source2Size.v, maskSize.v));
 
-	EFormatStandard theStandardFormat
-		= sMapEfficientToStandard(eFormatEfficient_Color_32);
+	EFormatStandard theStandardFormat =
+		sMapEfficientToStandard(eFormatEfficient_Color_32);
 
 	RasterDesc theRasterDesc(resultSize, theStandardFormat);
 	PixelDesc thePixelDesc(theStandardFormat);
@@ -424,8 +424,8 @@ void ZDCPixmap::Munge(bool iMungeColorTable, MungeProc iMungeProc, void* iRefcon
 
 	if (iMungeColorTable)
 		{
-		if (PixelDescRep_Indexed* thePixelDescRep_Indexed
-			= ZRefDynamicCast<PixelDescRep_Indexed>(fRep->GetPixelDesc().GetRep()))
+		if (PixelDescRep_Indexed* thePixelDescRep_Indexed =
+			ZRefDynamicCast<PixelDescRep_Indexed>(fRep->GetPixelDesc().GetRep()))
 			{
 			const ZRGBA_POD* theColors;
 			size_t theCount;
@@ -731,12 +731,12 @@ ZRef<ZDCPixmapRep> ZDCPixmapRep::Touch()
 		{
 		const RasterDesc& ourRasterDesc = fRaster->GetRasterDesc();
 		RasterDesc newRasterDesc = ourRasterDesc;
-		newRasterDesc.fRowBytes
-			= sCalcRowBytes(fBounds.Width(), newRasterDesc.fPixvalDesc.fDepth, 4);
+		newRasterDesc.fRowBytes =
+			sCalcRowBytes(fBounds.Width(), newRasterDesc.fPixvalDesc.fDepth, 4);
 		newRasterDesc.fRowCount = fBounds.Height();
 
-		ZRef<ZDCPixmapRep> newRep
-			= sCreate(newRasterDesc, fBounds.Size(), fPixelDesc);
+		ZRef<ZDCPixmapRep> newRep =
+			sCreate(newRasterDesc, fBounds.Size(), fPixelDesc);
 
 		newRep->CopyFrom(ZPoint(0,0),
 			fRaster->GetBaseAddress(), ourRasterDesc, fPixelDesc, fBounds);

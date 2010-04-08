@@ -164,8 +164,8 @@ ZRef<ZStreamerR> sRequest(
 					if ("HEAD" == iMethod)
 						return new ZStreamerR_T<ZStreamR_Null>();
 
-					ZRef<ZStreamerR> theStreamerR
-						= sMakeContentStreamer(theHeaders, theEP);
+					ZRef<ZStreamerR> theStreamerR =
+						sMakeContentStreamer(theHeaders, theEP);
 
 					if (!theStreamerR)
 						theStreamerR = theEP;
@@ -275,8 +275,8 @@ ZRef<ZStreamerR> sPost(
 					if (oFields)
 						*oFields = theHeaders;
 
-					ZRef<ZStreamerR> theStreamerR
-						= sMakeContentStreamer(theHeaders, theEP);
+					ZRef<ZStreamerR> theStreamerR =
+						sMakeContentStreamer(theHeaders, theEP);
 
 					if (!theStreamerR)
 						theStreamerR = theEP;
@@ -317,8 +317,8 @@ ZRef<ZStreamerR> sPostRaw(
 					if (oFields)
 						*oFields = theHeaders;
 
-					ZRef<ZStreamerR> theStreamerR
-						= sMakeContentStreamer(theHeaders, theEP);
+					ZRef<ZStreamerR> theStreamerR =
+						sMakeContentStreamer(theHeaders, theEP);
 
 					if (!theStreamerR)
 						theStreamerR = theEP;

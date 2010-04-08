@@ -513,8 +513,8 @@ bool ZTSoup::Sync()
 		theEnd = changedTupleIDs.end();
 		iterChangedTuples != theEnd; ++iterChangedTuples)
 		{
-		map<uint64, PCrouton>::iterator iterPCrouton
-			= fID_To_PCrouton.find(*iterChangedTuples);
+		map<uint64, PCrouton>::iterator iterPCrouton =
+			fID_To_PCrouton.find(*iterChangedTuples);
 
 		// We never toss a PCrouton that has not positively been unregistered.
 		ZAssertStop(ZTSoup::kDebug, fID_To_PCrouton.end() != iterPCrouton);
