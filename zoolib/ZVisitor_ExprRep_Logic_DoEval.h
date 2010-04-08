@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,33 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_TQLConvert__
-#define __ZUtil_TQLConvert__
+#ifndef __ZVisitor_ExprRep_Logic_DoEval__
+#define __ZVisitor_ExprRep_Logic_DoEval__
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_ExprRep_Relation.h"
-#include "zoolib/tuplebase/ZTBQuery.h"
+#include "zoolib/ZExprRep_Logic.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-namespace ZUtil_TQLConvert {
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_TQLConvert
+#pragma mark * ZVisitor_ExprRep_Logic_DoEval
 
-ZRef<ZQL::ExprRep_Relation> sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
+class ZVisitor_ExprRep_Logic_DoEval
+:	public virtual ZVisitor_ExprRep_Logic
+	{
+public:
+// From ZVisitor_ExprRep_Logic
+	virtual bool Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep);
+	virtual bool Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep);
+	virtual bool Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
+	virtual bool Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
+	virtual bool Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);
 
-} // namespace ZUtil_TQLConvert
+// Our protocol
+	bool DoEval(ZRef<ZExprRep> iExprRep);
+	};
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZUtil_TQLConvert__
+#endif // __ZVisitor_ExprRep_Logic_DoEval__

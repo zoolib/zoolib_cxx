@@ -1,12 +1,11 @@
 #include "zoolib/tql/ZTQL_Optimize.h"
-#include "zoolib/zql/ZQL_Expr_All.h"
-#include "zoolib/zql/ZQL_Expr_Restrict.h"
-#include "zoolib/zql/ZQL_Expr_Select.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Restrict.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Select.h"
 
 #include "zoolib/zql/ZQL_Util_Strim_Query.h"
 
 #include "zoolib/tql/ZUtil_TQLConvert.h"
-#include "zoolib/ZExpr_ValCondition.h"
+#include "zoolib/ZExprRep_Logic_ValCondition.h"
 
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
@@ -41,12 +40,25 @@ using namespace ZQL;
 using std::set;
 using std::string;
 
+
+typedef ZRef<ZExprRep_Logic> ZExpr_Logic;
+typedef ZRef<ZQL::ExprRep_Relation> Expr_Relation;
+
 typedef ZExpr_Logic Spec;
 typedef Expr_Relation Query;
 typedef ZMap_Expr Map;
 typedef ZRelHead RelHead;
 typedef ZVal_Expr Val;
 typedef ZValCondition Condition;
+
+ZRef<ExprRep_Relation> sAll(const ZRelHead& iRelHead)
+	{ return ZValBase::sConcrete(); }
+
+ZRef<ExprRep_Relation> sAllID(const std::string& iIDName)
+	{ return ZValBase::sConcrete(); }
+
+ZRef<ExprRep_Relation> sAllID(const std::string& iIDName, const ZRelHead& iRelHead)
+	{ return ZValBase::sConcrete(); }
 
 // =================================================================================================
 #pragma mark -
@@ -144,7 +156,7 @@ static Spec sBadAuthors()
 			| CName("pass") == CName("unam")
 			);
 */
-	return ZExpr_ValCondition(theSpec);
+	return new ZExprRep_Logic_ValCondition(theSpec);
 	}
 
 static Query badPassword()
@@ -180,7 +192,7 @@ static Query sPrefix(const string& iPrefix, const RelHead& iIgnore, Query iQuery
 
 	bool universal;
 	set<string> theNames;
-	iQuery.GetRelHead().GetNames(universal, theNames);
+	iQuery->GetRelHead().GetNames(universal, theNames);
 	for (set<string>::iterator i = theNames.begin(); i != theNames.end(); ++i)
 		{
 		if (iIgnore.Contains(*i))
@@ -202,7 +214,7 @@ static Query sSuperJoin(
 
 static Query sDrop(Query iQuery, const string& iTName)
 	{
-	RelHead theRelHead = iQuery.GetRelHead();
+	RelHead theRelHead = iQuery->GetRelHead();
 	if (theRelHead.Contains(iTName))
 		return sProject(theRelHead - iTName, iQuery);
 	return iQuery;	
@@ -280,7 +292,7 @@ static Query sQuery()
 
 static void sDumpQuery(const ZStrimW& s, Query iQuery)
 	{
-	ZVisitor_ExprRep_ToStrim::Options theOptions;
+	ZVisitor_ExprRep_DoToStrim::Options theOptions;
 	theOptions.fDebuggingOutput = true;
 
 	s << "ZTQL::Query equivalent -----------------------\n";
@@ -350,7 +362,7 @@ void sTestQL4(const ZStrimW& s)
 //	ZExpr_ValCondition theSpec1 = CVal() > CConst(10);
 //	Spec theSpec = Spec(false) | (CVal() > CConst(10));
 //	Spec theSpec = ();
-	Spec theSpec = ZExpr_ValCondition(CTrail("inner/field") < CConst(10));
+	Spec theSpec = new ZExprRep_Logic_ValCondition(CTrail("inner/field") < CConst(10));
 	thePhys = thePhys & theSpec;
 
 	Util_Strim_Query::sToStrim(thePhys, s);
@@ -386,12 +398,12 @@ void sTestQL3(const ZStrimW& s)
 	theMap.Set("name", ZMap_Expr().Set("last", string("fred")));
 //	Spec theSpec = CTrail("name/last") < CConst("fred1");
 	
-	if (sMatches(ZExpr_ValCondition(CTrail("name/last") < CConst("fred1")), theMap))
+	if (sMatches(new ZExprRep_Logic_ValCondition(CTrail("name/last") < CConst("fred1")), theMap))
 		s << "Matches\n";
 	else
 		s << "Doesn't\n";
 
-	if (sMatches(ZExpr_ValCondition(CTrail("name/last") >= CConst("fred1")), theMap))
+	if (sMatches(new ZExprRep_Logic_ValCondition(CTrail("name/last") >= CConst("fred1")), theMap))
 		s << "Matches\n";
 	else
 		s << "Doesn't\n";
@@ -464,8 +476,8 @@ void sTestQL5(const ZStrimW& s)
 	ZRef<ZYadSeqR> yad1 = sMakeYadR(s1);
 	ZRef<ZYadSeqR> yad2 = sMakeYadR(s2);
 
-	Expr_Concrete thePhys1 = ZValBase_YadSeqR::sConcrete(yad1);
-	Expr_Concrete thePhys2 = ZValBase_YadSeqR::sConcrete(yad2);
+	Expr_Relation thePhys1 = ZValBase_YadSeqR::sConcrete(yad1);
+	Expr_Relation thePhys2 = ZValBase_YadSeqR::sConcrete(yad2);
 
 //	Expr_Relation sect = sJoin(thePhys1, thePhys2);
 	Expr_Relation sect = thePhys1 * thePhys2;
@@ -515,6 +527,15 @@ void sTestQL(const ZStrimW& s)
 	ZRef<ZStreamerR> theStreamerR = ZFileSpec("../../itunes.zstream").OpenR();
 	ZRef<ZYadR> theYadR = ZYad_ZooLibStream::sMakeYadR(theStreamerR);
 	#endif
+
+		{
+		ZExpr_Logic theCondition =
+			CName("Disc Number") == CConst(int32(2)) & CName("Track Number") > CConst(int32(10));
+		Expr_Relation thePhys = ZValBase::sConcrete() & theCondition;
+		Util_Strim_Query::sToStrim(thePhys, s);
+		s << "\n";
+		}
+
 
 	ZSeq_Any theSeqTracks;
 	if (ZRef<ZYadMapR> theYadMapR = ZUtil_Yad::sWalk(theYadR, "Tracks").DynamicCast<ZYadMapR>())

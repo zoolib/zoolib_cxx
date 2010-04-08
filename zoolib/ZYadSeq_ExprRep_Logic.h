@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZYadSeq_ExprRep_Logic__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Logic.h"
+#include "zoolib/ZExprRep_Logic.h"
 #include "zoolib/ZYad.h"
 
 NAMESPACE_ZOOLIB_BEGIN

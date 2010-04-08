@@ -18,54 +18,49 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Iterator_Any__
-#define __ZQE_Iterator_Any__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZExprRep_Logic.h"
-#include "zoolib/ZValCondition.h"
-#include "zoolib/zqe/ZQE_Iterator.h"
+#include "zoolib/ZVisitor_ExprRep_Logic_DoTransform.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Iterator_Any_Restrict
+#pragma mark * ZVisitor_ExprRep_Logic_DoTransform
 
-class Iterator_Any_Restrict : public ZQE::Iterator
+bool ZVisitor_ExprRep_Logic_DoTransform::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep)
 	{
-public:
-	Iterator_Any_Restrict(const ZValCondition& iValCondition, ZRef<ZQE::Iterator> iIterator);
-	
-// From Iterator
-	virtual ZRef<Iterator> Clone();
-	virtual ZRef<ZQE::Result> ReadInc();
+	ZRef<ZExprRep_Logic> oldRep = iRep->GetOperand();
+	ZRef<ZExprRep_Logic> newRep = this->DoTransform(oldRep).DynamicCast<ZExprRep_Logic>();
+	if (oldRep == newRep)
+		fResult = iRep;
+	else
+		fResult = new ZExprRep_Logic_Not(newRep);
+	return true;
+	}
 
-private:
-	ZValCondition fValCondition;
-	ZRef<Iterator> fIterator;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Iterator_Any_Select
-
-class Iterator_Any_Select : public ZQE::Iterator
+bool ZVisitor_ExprRep_Logic_DoTransform::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
 	{
-public:
-	Iterator_Any_Select(ZRef<ZExprRep_Logic> iExprRep_Logic, ZRef<ZQE::Iterator> iIterator);
-	
-// From Iterator
-	virtual ZRef<Iterator> Clone();
-	virtual ZRef<ZQE::Result> ReadInc();
+	ZRef<ZExprRep_Logic> oldLHS = iRep->GetLHS();
+	ZRef<ZExprRep_Logic> oldRHS = iRep->GetRHS();
+	ZRef<ZExprRep_Logic> newLHS = this->DoTransform(oldLHS).DynamicCast<ZExprRep_Logic>();
+	ZRef<ZExprRep_Logic> newRHS = this->DoTransform(oldRHS).DynamicCast<ZExprRep_Logic>();
+	if (oldLHS == newLHS && oldRHS == newRHS)
+		fResult = iRep;
+	else
+		fResult = new ZExprRep_Logic_And(newLHS, newRHS);
+	return true;
+	}
 
-private:
-	ZRef<ZExprRep_Logic> fExprRep_Logic;
-	ZRef<Iterator> fIterator;
-	};
+bool ZVisitor_ExprRep_Logic_DoTransform::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
+	{
+	ZRef<ZExprRep_Logic> oldLHS = iRep->GetLHS();
+	ZRef<ZExprRep_Logic> oldRHS = iRep->GetRHS();
+	ZRef<ZExprRep_Logic> newLHS = this->DoTransform(oldLHS).DynamicCast<ZExprRep_Logic>();
+	ZRef<ZExprRep_Logic> newRHS = this->DoTransform(oldRHS).DynamicCast<ZExprRep_Logic>();
+	if (oldLHS == newLHS && oldRHS == newRHS)
+		fResult = iRep;
+	else
+		fResult = new ZExprRep_Logic_Or(newLHS, newRHS);
+	return true;
+	}
 
-} // namespace ZQE
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQE_Iterator_Any__

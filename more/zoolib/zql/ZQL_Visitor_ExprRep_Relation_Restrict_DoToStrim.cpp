@@ -18,54 +18,58 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Iterator_Any__
-#define __ZQE_Iterator_Any__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZExprRep_Logic.h"
-#include "zoolib/ZValCondition.h"
-#include "zoolib/zqe/ZQE_Iterator.h"
+#include "zoolib/ZUtil_Strim_RelHead.h"
+#include "zoolib/ZUtil_Strim_ValCondition.h"
+#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Restrict_DoToStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQE {
+namespace ZQL {
+
+using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Iterator_Any_Restrict
+#pragma mark * Visitor_ExprRep_Relation_Restrict_DoToStrim
 
-class Iterator_Any_Restrict : public ZQE::Iterator
+namespace ZANONYMOUS {
+
+void spWrite_EffectiveRelHeadComment(ZRef<ExprRep_Relation> iRep, const ZStrimW& iStrimW)
 	{
-public:
-	Iterator_Any_Restrict(const ZValCondition& iValCondition, ZRef<ZQE::Iterator> iIterator);
-	
-// From Iterator
-	virtual ZRef<Iterator> Clone();
-	virtual ZRef<ZQE::Result> ReadInc();
+	iStrimW.Write(" // ");
+	ZUtil_Strim_RelHead::sWrite_RelHead(iRep->GetRelHead(), iStrimW);
+	}
 
-private:
-	ZValCondition fValCondition;
-	ZRef<Iterator> fIterator;
-	};
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Iterator_Any_Select
+#pragma mark * Visitor_ExprRep_Relation_Restrict_DoToStrim
 
-class Iterator_Any_Select : public ZQE::Iterator
+Visitor_ExprRep_Relation_Restrict_DoToStrim::Visitor_ExprRep_Relation_Restrict_DoToStrim(
+	const Options& iOptions, const ZStrimW& iStrimW)
+:	ZVisitor_ExprRep_DoToStrim(iOptions, iStrimW)
+	{}
+
+bool Visitor_ExprRep_Relation_Restrict_DoToStrim::Visit_ExprRep_Relation_Restrict(ZRef<ExprRep_Relation_Restrict> iRep)
 	{
-public:
-	Iterator_Any_Select(ZRef<ZExprRep_Logic> iExprRep_Logic, ZRef<ZQE::Iterator> iIterator);
-	
-// From Iterator
-	virtual ZRef<Iterator> Clone();
-	virtual ZRef<ZQE::Result> ReadInc();
+	fStrimW << "Restrict";
 
-private:
-	ZRef<ZExprRep_Logic> fExprRep_Logic;
-	ZRef<Iterator> fIterator;
-	};
+	if (fOptions.fDebuggingOutput)
+		spWrite_EffectiveRelHeadComment(iRep, fStrimW);
 
-} // namespace ZQE
+	this->pWriteLFIndent();
+	fStrimW << "(";
+	this->pWriteLFIndent();
+	ZUtil_Strim_ValCondition::sToStrim(iRep->GetValCondition(), fStrimW);
+	fStrimW << ",";
+
+	this->pWriteLFIndent();
+	this->DoToStrim(iRep->GetExprRep());
+	this->pWriteLFIndent();
+
+	fStrimW << ")";
+	return true;
+	}
+
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQE_Iterator_Any__

@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZQL_Util_Strim_Query__
 #include "zconfig.h"
 
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_ExprRep_ToStrim.h"
+#include "zoolib/ZExprRep.h"
+#include "zoolib/ZVisitor_ExprRep_DoToStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
@@ -36,7 +36,7 @@ namespace Util_Strim_Query {
 void sToStrim(const ZRef<ZExprRep>& iRep, const ZStrimW& iStrimW);
 
 void sToStrim(const ZRef<ZExprRep>& iRep,
-	const ZVisitor_ExprRep_ToStrim::Options& iOptions,
+	const ZVisitor_ExprRep_DoToStrim::Options& iOptions,
 	const ZStrimW& iStrimW);
 
 } // namespace Util_Strim_Query

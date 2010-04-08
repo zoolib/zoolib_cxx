@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,43 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_TQLConvert__
-#define __ZUtil_TQLConvert__
+#ifndef __ZQE_Visitor_ExprRep_DoMakeIterator__
+#define __ZQE_Visitor_ExprRep_DoMakeIterator__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZExprRep.h"
+#include "zoolib/zqe/ZQE_Iterator.h"
 #include "zoolib/zql/ZQL_ExprRep_Relation.h"
-#include "zoolib/tuplebase/ZTBQuery.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZQE {
 
-namespace ZUtil_TQLConvert {
+using namespace ZQL;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_TQLConvert
+#pragma mark * Visitor_ExprRep_DoMakeIterator
 
-ZRef<ZQL::ExprRep_Relation> sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
+class Visitor_ExprRep_DoMakeIterator
+:	public virtual Visitor_ExprRep_Relation
+	{
+public:
+// From Visitor_ExprRep_Relation
+	virtual bool Visit_ExprRep_Relation_Difference(ZRef<ExprRep_Relation_Difference> iRep);
+	virtual bool Visit_ExprRep_Relation_Intersect(ZRef<ExprRep_Relation_Intersect> iRep);
+	virtual bool Visit_ExprRep_Relation_Join(ZRef<ExprRep_Relation_Join> iRep);
+	virtual bool Visit_ExprRep_Relation_Project(ZRef<ExprRep_Relation_Project> iRep);
+	virtual bool Visit_ExprRep_Relation_Rename(ZRef<ExprRep_Relation_Rename> iRep);
+	virtual bool Visit_ExprRep_Relation_Union(ZRef<ExprRep_Relation_Union> iRep);
 
-} // namespace ZUtil_TQLConvert
+// Our protocol
+	ZRef<Iterator> DoMakeIterator(ZRef<ZExprRep> iExprRep);
 
+protected:
+	ZRef<Iterator> fIterator;
+	};
+
+} // namespace ZQE
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZUtil_TQLConvert__
+#endif // __ZQE_Visitor_ExprRep_DoMakeIterator__

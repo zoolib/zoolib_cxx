@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,34 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_TQLConvert__
-#define __ZUtil_TQLConvert__
-#include "zconfig.h"
-
-#include "zoolib/zql/ZQL_ExprRep_Relation.h"
-#include "zoolib/tuplebase/ZTBQuery.h"
+#include "zoolib/ZVisitor_ExprRep_Logic_DoEval.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-namespace ZUtil_TQLConvert {
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_TQLConvert
+#pragma mark * ZVisitor_ExprRep_Logic_DoEval
 
-ZRef<ZQL::ExprRep_Relation> sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
+bool ZVisitor_ExprRep_Logic_DoEval::Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep)
+	{ return true; }
 
-} // namespace ZUtil_TQLConvert
+bool ZVisitor_ExprRep_Logic_DoEval::Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep)
+	{ return false; }
+
+bool ZVisitor_ExprRep_Logic_DoEval::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep)
+	{ return ! this->DoEval(iRep); }
+
+bool ZVisitor_ExprRep_Logic_DoEval::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
+	{ return this->DoEval(iRep->GetLHS()) && this->DoEval(iRep->GetRHS()); }
+
+bool ZVisitor_ExprRep_Logic_DoEval::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
+	{ return this->DoEval(iRep->GetLHS()) || this->DoEval(iRep->GetRHS()); }
+
+bool ZVisitor_ExprRep_Logic_DoEval::DoEval(ZRef<ZExprRep> iExprRep)
+	{
+	if (iExprRep)
+		return iExprRep->Accept(*this);
+	return false;
+	}
 
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZUtil_TQLConvert__

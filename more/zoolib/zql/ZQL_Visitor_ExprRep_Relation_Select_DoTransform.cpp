@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,28 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_TQLConvert__
-#define __ZUtil_TQLConvert__
-#include "zconfig.h"
-
-#include "zoolib/zql/ZQL_ExprRep_Relation.h"
-#include "zoolib/tuplebase/ZTBQuery.h"
+#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Select_DoTransform.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-
-namespace ZUtil_TQLConvert {
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_TQLConvert
+#pragma mark * Visitor_ExprRep_Relation_Select_DoTransform
 
-ZRef<ZQL::ExprRep_Relation> sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
+bool Visitor_ExprRep_Relation_Select_DoTransform::Visit_ExprRep_Relation_Select(ZRef<ExprRep_Relation_Select> iRep)
+	{
+	ZRef<ZExprRep_Logic> oldLogical = iRep->GetExprRep_Logic();
+	ZRef<ExprRep_Relation> oldRelation = iRep->GetExprRep_Relation();
+	ZRef<ZExprRep_Logic> newLogical = this->DoTransform(oldLogical).DynamicCast<ZExprRep_Logic>();
+	ZRef<ExprRep_Relation> newRelation = this->DoTransform(oldRelation).DynamicCast<ExprRep_Relation>();
+	if (oldLogical == newLogical && oldRelation == newRelation)
+		fResult = iRep;
+	else
+		fResult = new ExprRep_Relation_Select(newLogical, newRelation);
 
-} // namespace ZUtil_TQLConvert
+	return true;
+	}
 
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZUtil_TQLConvert__

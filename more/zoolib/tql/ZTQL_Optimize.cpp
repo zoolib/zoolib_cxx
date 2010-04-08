@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_ValCondition.h"
-#include "zoolib/ZVisitor_ExprRep_Logic_Transform.h"
+#include "zoolib/ZExprRep_Logic_ValCondition.h"
+#include "zoolib/ZVisitor_ExprRep_Logic_DoTransform.h"
 #include "zoolib/tql/ZTQL_Optimize.h"
-#include "zoolib/zql/ZQL_Expr_Restrict.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Select_Transform.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Restrict.h"
+#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Select_DoTransform.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 using namespace ZQL;
@@ -58,21 +58,21 @@ void spCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight, CondUnion&
 void spGather(ZRef<ZExprRep_Logic> iRep, CondUnion& oResult);
 
 class Gather
-:	public virtual ZVisitor_ExprRep_Logic_Transform
-,	public virtual ZVisitor_ExprRep_ValCondition
+:	public virtual ZVisitor_ExprRep_Logic_DoTransform
+,	public virtual ZVisitor_ExprRep_Logic_ValCondition
 	{
 public:
 	Gather(CondUnion& oResult);
 
-//	From ZVisitor_ExprRep_Logic_Transform
+//	From ZVisitor_ExprRep_Logic_DoTransform
 	virtual bool Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep);
 	virtual bool Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep);
 	virtual bool Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
 	virtual bool Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
 	virtual bool Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);	
 
-// From ZVisitor_ExprRep_ValCondition
-	virtual bool Visit_ValCondition(ZRef<ZExprRep_ValCondition> iRep);
+// From ZVisitor_ExprRep_Logic_ValCondition
+	virtual bool Visit_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep);
 
 private:
 	CondUnion& fResult;
@@ -122,7 +122,7 @@ bool Gather::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
 	return true;
 	}
 
-bool Gather::Visit_ValCondition(ZRef<ZExprRep_ValCondition> iRep)
+bool Gather::Visit_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep)
 	{
 	fResult.resize(1);
 	fResult[0].push_back(iRep->GetValCondition());
@@ -153,7 +153,7 @@ ZRef<ExprRep_Relation> spConvertSelect(
 		for (CondSect::const_iterator iterSect = iterUnion->begin();
 			iterSect != iterUnion->end(); ++iterSect)
 			{
-			current = new ExprRep_Restrict(*iterSect, current);
+			current = new ExprRep_Relation_Restrict(*iterSect, current);
 			}
 
 		if (resultRelation)
@@ -165,16 +165,16 @@ ZRef<ExprRep_Relation> spConvertSelect(
 	}
 
 class Optimize
-:	public virtual Visitor_ExprRep_Select_Transform
+:	public virtual Visitor_ExprRep_Relation_Select_DoTransform
 	{
 public:
-// From Visitor_ExprRep_Select
-	virtual bool Visit_Select(ZRef<ExprRep_Select> iRep);
+// From Visitor_ExprRep_Relation_Select
+	virtual bool Visit_ExprRep_Relation_Select(ZRef<ExprRep_Relation_Select> iRep);
 	};
 
-bool Optimize::Visit_Select(ZRef<ExprRep_Select> iRep)
+bool Optimize::Visit_ExprRep_Relation_Select(ZRef<ExprRep_Relation_Select> iRep)
 	{
-	ZRef<ExprRep_Relation> newRep = this->Transform(iRep->GetExprRep_Relation()).DynamicCast<ExprRep_Relation>();
+	ZRef<ExprRep_Relation> newRep = this->DoTransform(iRep->GetExprRep_Relation()).DynamicCast<ExprRep_Relation>();
 	fResult = spConvertSelect(newRep, iRep->GetExprRep_Logic());
 	return true;
 	}
@@ -184,7 +184,7 @@ bool Optimize::Visit_Select(ZRef<ExprRep_Select> iRep)
 namespace ZQL {
 
 ZRef<ExprRep_Relation> sOptimize(ZRef<ExprRep_Relation> iRep)
-	{ return Optimize().Transform(iRep).DynamicCast<ExprRep_Relation>(); }
+	{ return Optimize().DoTransform(iRep).DynamicCast<ExprRep_Relation>(); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

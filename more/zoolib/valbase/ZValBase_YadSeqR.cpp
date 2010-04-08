@@ -23,20 +23,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/valbase/ZValBase.h"
 #include "zoolib/valbase/ZValBase_YadSeqR.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Concrete.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase_YadSeqR {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ExprRep_Concrete declaration
+#pragma mark * ExprRep_Relation_Concrete declaration
 
-class ExprRep_Concrete : public ZValBase::ExprRep_Concrete
+class ExprRep_Relation_Concrete : public ZValBase::ExprRep_Relation_Concrete
 	{
 public:
-	ExprRep_Concrete(ZRef<ZYadSeqR> iYadSeqR);
+	ExprRep_Relation_Concrete(ZRef<ZYadSeqR> iYadSeqR);
 
-// From ZValBase::ExprRep_Concrete
+// From ZValBase::ExprRep_Relation_Concrete
 	virtual ZRef<ZQE::Iterator> MakeIterator();
 
 // Our protocol
@@ -55,7 +56,7 @@ private:
 class Iterator : public ZQE::Iterator
 	{
 public:
-	Iterator(ZRef<ExprRep_Concrete> iExprRep, size_t iIndex);
+	Iterator(ZRef<ExprRep_Relation_Concrete> iExprRep, size_t iIndex);
 
 	virtual ~Iterator();
 	
@@ -63,11 +64,11 @@ public:
 	virtual ZRef<ZQE::Result> ReadInc();
 
 protected:
-	ZRef<ExprRep_Concrete> fExprRep;
+	ZRef<ExprRep_Relation_Concrete> fExprRep;
 	size_t fIndex;
 	};
 
-Iterator::Iterator(ZRef<ExprRep_Concrete> iExprRep, size_t iIndex)
+Iterator::Iterator(ZRef<ExprRep_Relation_Concrete> iExprRep, size_t iIndex)
 :	fExprRep(iExprRep)
 ,	fIndex(0)
 	{}
@@ -83,16 +84,16 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ExprRep_Concrete definition
+#pragma mark * ExprRep_Relation_Concrete definition
 
-ExprRep_Concrete::ExprRep_Concrete(ZRef<ZYadSeqR> iYadSeqR)
+ExprRep_Relation_Concrete::ExprRep_Relation_Concrete(ZRef<ZYadSeqR> iYadSeqR)
 :	fYadSeqR(iYadSeqR)
 	{}
 
-ZRef<ZQE::Iterator> ExprRep_Concrete::MakeIterator()
+ZRef<ZQE::Iterator> ExprRep_Relation_Concrete::MakeIterator()
 	{ return new Iterator(this, 0); }
 
-ZRef<ZQE::Result> ExprRep_Concrete::ReadInc(size_t& ioIndex)
+ZRef<ZQE::Result> ExprRep_Relation_Concrete::ReadInc(size_t& ioIndex)
 	{
 	ZAcqMtx acq(fMtx);
 
@@ -118,11 +119,11 @@ ZRef<ZQE::Result> ExprRep_Concrete::ReadInc(size_t& ioIndex)
 #pragma mark -
 #pragma mark * ZValBase_YadSeqR pseudo constructors
 
-ZQL::Expr_Concrete sConcrete(ZRef<ZYadSeqR> iYadSeqR)
+ZRef<ZQL::ExprRep_Relation> sConcrete(ZRef<ZYadSeqR> iYadSeqR)
 	{
 	// Could do a dynamic cast on iYadSeqR to see if it's really a ZYadSeqRPos,
 	// in which case returning a ZValBase_YadSeqRPos::Iterator would be a win.
-	return ZQL::Expr_Concrete(new ExprRep_Concrete(iYadSeqR));
+	return new ExprRep_Relation_Concrete(iYadSeqR);
 	}
 
 } // namespace ZValBase_YadSeqR

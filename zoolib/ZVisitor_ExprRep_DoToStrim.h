@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,50 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_TQLConvert__
-#define __ZUtil_TQLConvert__
+#ifndef __ZVisitor_ExprRep_DoToStrim__
+#define __ZVisitor_ExprRep_DoToStrim__
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_ExprRep_Relation.h"
-#include "zoolib/tuplebase/ZTBQuery.h"
+#include "zoolib/ZExprRep.h"
+#include "zoolib/ZStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-namespace ZUtil_TQLConvert {
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_TQLConvert
+#pragma mark * ZVisitor_ExprRep_DoToStrim
 
-ZRef<ZQL::ExprRep_Relation> sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
+class ZVisitor_ExprRep_DoToStrim
+:	public virtual ZVisitor_ExprRep
+	{
+public:
+	struct Options
+		{
+		Options();
 
-} // namespace ZUtil_TQLConvert
+		std::string fEOLString;
+		std::string fIndentString;
+		size_t fInitialIndent;
+		bool fDebuggingOutput;
+		};
+
+	ZVisitor_ExprRep_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW);
+
+// From ZVisitor_ExprRep
+	virtual bool Visit_ExprRep(ZRef<ZExprRep> iRep);
+
+// Our protocol
+	void DoToStrim(ZRef<ZExprRep> iExprRep);
+
+protected:
+	void pWriteLFIndent();
+
+	const Options& fOptions;
+	const ZStrimW& fStrimW;
+
+	size_t fIndent;
+	};
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZUtil_TQLConvert__
+#endif // __ZVisitor_ExprRep_DoToStrim__

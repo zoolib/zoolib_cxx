@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,20 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_TQLConvert__
-#define __ZUtil_TQLConvert__
+#ifndef __ZQL_ExprRep_Relation_Restrict__
+#define __ZQL_ExprRep_Relation_Restrict__ 1
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_ExprRep_Relation.h"
-#include "zoolib/tuplebase/ZTBQuery.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Restrict_T.h"
+#include "zoolib/ZValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZQL {
 
-namespace ZUtil_TQLConvert {
+typedef Visitor_ExprRep_Relation_Restrict_T<ZVal_Expr> Visitor_ExprRep_Relation_Restrict;
+typedef ExprRep_Relation_Restrict_T<ZVal_Expr> ExprRep_Relation_Restrict;
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZUtil_TQLConvert
-
-ZRef<ZQL::ExprRep_Relation> sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
-
-} // namespace ZUtil_TQLConvert
-
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZUtil_TQLConvert__
+#endif // __ZQL_ExprRep_Relation_Restrict_T__

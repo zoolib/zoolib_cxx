@@ -19,9 +19,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/tql/ZUtil_TQLConvert.h"
-#include "zoolib/zql/ZQL_Expr_All.h"
-#include "zoolib/zql/ZQL_Expr_Select.h"
-#include "zoolib/ZExpr_ValCondition.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Select.h"
+#include "zoolib/ZExprRep_Logic_ValCondition.h"
+#include "zoolib/valbase/ZValBase.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -31,8 +31,17 @@ using std::string;
 using std::vector;
 using namespace ZQL;
 
-typedef ZExpr_Logic Spec;
-typedef Expr_Relation Query;
+ZRef<ExprRep_Relation> sAll(const ZRelHead& iRelHead)
+	{ return ZValBase::sConcrete(); }
+
+ZRef<ExprRep_Relation> sAllID(const std::string& iIDName)
+	{ return ZValBase::sConcrete(); }
+
+ZRef<ExprRep_Relation> sAllID(const std::string& iIDName, const ZRelHead& iRelHead)
+	{ return ZValBase::sConcrete(); }
+
+typedef ZRef<ZExprRep_Logic> Spec;
+typedef ZRef<ExprRep_Relation> Query;
 typedef ZMap_Expr Map;
 typedef ZRelHead RelHead;
 typedef ZVal_Expr Val;
@@ -88,7 +97,7 @@ static Spec spAsTSpec(const ZTBSpec& iTBSpec)
 			if (sisfirst)
 				{
 				sisfirst = false;
-				sect = ZExpr_Logic(new ZExprRep_ValCondition(theCondition));
+				sect = new ZExprRep_Logic_ValCondition(theCondition);
 				}
 			else
 				{

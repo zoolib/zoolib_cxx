@@ -19,11 +19,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZUtil_Strim_RelHead.h"
-#include "zoolib/ZVisitor_ExprRep_ValCondition_ToStrim.h"
+#include "zoolib/ZVisitor_ExprRep_Logic_ValCondition_DoToStrim.h"
 #include "zoolib/zql/ZQL_Util_Strim_Query.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_ToStrim.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Restrict_ToStrim.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Select_ToStrim.h"
+#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_DoToStrim.h"
+#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Restrict_DoToStrim.h"
+#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Select_DoToStrim.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Concrete.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
@@ -31,38 +32,48 @@ namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Query_ToStrim
+#pragma mark * Visitor_Query_DoToStrim
 
-class Visitor_Query_ToStrim
-:	public virtual ZVisitor_ExprRep_ValCondition_ToStrim
-,	public virtual Visitor_ExprRep_Relation_ToStrim
-,	public virtual Visitor_ExprRep_Restrict_ToStrim
-,	public virtual Visitor_ExprRep_Select_ToStrim
+class Visitor_Query_DoToStrim
+:	public virtual ZVisitor_ExprRep_Logic_ValCondition_DoToStrim
+,	public virtual Visitor_ExprRep_Relation_DoToStrim
+,	public virtual Visitor_ExprRep_Relation_Restrict_DoToStrim
+,	public virtual Visitor_ExprRep_Relation_Select_DoToStrim
+,	public virtual Visitor_ExprRep_Relation_Concrete
 	{
 public:
-	Visitor_Query_ToStrim(const Options& iOptions, const ZStrimW& iStrimW);
+	Visitor_Query_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW);
+
+// From Visitor_ExprRep_Relation_Concrete
+	bool Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep);
 	};
 
-Visitor_Query_ToStrim::Visitor_Query_ToStrim(const Options& iOptions, const ZStrimW& iStrimW)
-:	ZVisitor_ExprRep_ToStrim(iOptions, iStrimW)
-,	ZVisitor_ExprRep_Logic_ToStrim(iOptions, iStrimW)
-,	ZVisitor_ExprRep_ValCondition_ToStrim(iOptions, iStrimW)
-,	Visitor_ExprRep_Relation_ToStrim(iOptions, iStrimW)
-,	Visitor_ExprRep_Restrict_ToStrim(iOptions, iStrimW)
-,	Visitor_ExprRep_Select_ToStrim(iOptions, iStrimW)
+Visitor_Query_DoToStrim::Visitor_Query_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW)
+:	ZVisitor_ExprRep_DoToStrim(iOptions, iStrimW)
+,	ZVisitor_ExprRep_Logic_DoToStrim(iOptions, iStrimW)
+,	ZVisitor_ExprRep_Logic_ValCondition_DoToStrim(iOptions, iStrimW)
+,	Visitor_ExprRep_Relation_DoToStrim(iOptions, iStrimW)
+,	Visitor_ExprRep_Relation_Restrict_DoToStrim(iOptions, iStrimW)
+,	Visitor_ExprRep_Relation_Select_DoToStrim(iOptions, iStrimW)
 	{}
+
+bool Visitor_Query_DoToStrim::Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep)
+	{
+	fStrimW << "/* Relation_Concrete: " << typeid(*iRep.Get()).name() << " */";
+	return true;
+	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_Strim_TQL
 
 void sToStrim(const ZRef<ZExprRep>& iRep, const ZStrimW& iStrimW)
-	{ sToStrim(iRep, ZVisitor_ExprRep_ToStrim::Options(), iStrimW); }
+	{ sToStrim(iRep, ZVisitor_ExprRep_DoToStrim::Options(), iStrimW); }
 
 void sToStrim(const ZRef<ZExprRep>& iRep,
-	const ZVisitor_ExprRep_ToStrim::Options& iOptions,
+	const ZVisitor_ExprRep_DoToStrim::Options& iOptions,
 	const ZStrimW& iStrimW)
-	{ Visitor_Query_ToStrim(iOptions, iStrimW).Write(iRep); }
+	{ Visitor_Query_DoToStrim(iOptions, iStrimW).DoToStrim(iRep); }
 
 } // namespace Util_Strim_Query
 } // namespace ZQL

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,40 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_TQLConvert__
-#define __ZUtil_TQLConvert__
-#include "zconfig.h"
-
-#include "zoolib/zql/ZQL_ExprRep_Relation.h"
-#include "zoolib/tuplebase/ZTBQuery.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Concrete.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-
-namespace ZUtil_TQLConvert {
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_TQLConvert
+#pragma mark * ExprRep_Relation_Concrete
 
-ZRef<ZQL::ExprRep_Relation> sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
+ExprRep_Relation_Concrete::ExprRep_Relation_Concrete()
+	{}
 
-} // namespace ZUtil_TQLConvert
+ExprRep_Relation_Concrete::~ExprRep_Relation_Concrete()
+	{}
 
+bool ExprRep_Relation_Concrete::Accept(Visitor_ExprRep_Relation& iVisitor)
+	{
+	if (Visitor_ExprRep_Relation_Concrete* theVisitor =
+		dynamic_cast<Visitor_ExprRep_Relation_Concrete*>(&iVisitor))
+		{
+		return theVisitor->Visit_ExprRep_Relation_Concrete(this);
+		}
+	else
+		{
+		return ExprRep_Relation::Accept(iVisitor);
+		}
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_ExprRep_Relation_Concrete
+
+bool Visitor_ExprRep_Relation_Concrete::Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep)
+	{ return Visitor_ExprRep_Relation::Visit_ExprRep(iRep); }
+
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZUtil_TQLConvert__

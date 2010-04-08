@@ -26,6 +26,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+namespace ZValBase_SQLite {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZValBase_SQLite
+
+class Domain : public ZRefCountedWithFinalization
+	{
+public:
+	
+//	Expr_Concrete GetConcrete
+	
+private:
+	sqlite* fDB;
+	};
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValBase_SQLite
@@ -46,6 +62,7 @@ private:
 	};
 
 
+} // namespace ZValBase_SQLite
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZValBase_SQLite__

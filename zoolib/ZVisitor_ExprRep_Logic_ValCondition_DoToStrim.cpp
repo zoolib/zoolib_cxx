@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,26 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_TQLConvert__
-#define __ZUtil_TQLConvert__
-#include "zconfig.h"
-
-#include "zoolib/zql/ZQL_ExprRep_Relation.h"
-#include "zoolib/tuplebase/ZTBQuery.h"
+#include "zoolib/ZUtil_Strim_ValCondition.h"
+#include "zoolib/ZVisitor_ExprRep_Logic_ValCondition_DoToStrim.h"
+#include "zoolib/ZDebug.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-namespace ZUtil_TQLConvert {
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_TQLConvert
+#pragma mark * ZVisitor_ExprRep_Logic_ValCondition_DoToStrim
 
-ZRef<ZQL::ExprRep_Relation> sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
+ZVisitor_ExprRep_Logic_ValCondition_DoToStrim::ZVisitor_ExprRep_Logic_ValCondition_DoToStrim(
+	const Options& iOptions, const ZStrimW& iStrimW)
+:	ZVisitor_ExprRep_Logic_DoToStrim(iOptions, iStrimW)
+,	ZVisitor_ExprRep_DoToStrim(iOptions, iStrimW)
+	{}
 
-} // namespace ZUtil_TQLConvert
+bool ZVisitor_ExprRep_Logic_ValCondition_DoToStrim::Visit_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep)
+	{
+	ZUtil_Strim_ValCondition::sToStrim(iRep->GetValCondition(), fStrimW);
+	return true;
+	}
 
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZUtil_TQLConvert__

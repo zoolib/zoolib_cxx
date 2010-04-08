@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2007 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,25 +18,42 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_TQLConvert__
-#define __ZUtil_TQLConvert__
+#ifndef __ZQL_ExprRep_Relation_Concrete__
+#define __ZQL_ExprRep_Relation_Concrete__ 1
 #include "zconfig.h"
 
 #include "zoolib/zql/ZQL_ExprRep_Relation.h"
-#include "zoolib/tuplebase/ZTBQuery.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-
-namespace ZUtil_TQLConvert {
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_TQLConvert
+#pragma mark * ExprRep_Relation_Concrete
 
-ZRef<ZQL::ExprRep_Relation> sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
+class ExprRep_Relation_Concrete : public ExprRep_Relation
+	{
+protected:
+	ExprRep_Relation_Concrete();
 
-} // namespace ZUtil_TQLConvert
+public:
+	virtual ~ExprRep_Relation_Concrete();
 
+// From ExprRep_Relation
+	virtual bool Accept(Visitor_ExprRep_Relation& iVisitor);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_ExprRep_Relation_Concrete
+
+class Visitor_ExprRep_Relation_Concrete : public virtual Visitor_ExprRep_Relation
+	{
+public:
+	virtual bool Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep);
+	};
+
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZUtil_TQLConvert__
+#endif // __ZQL_ExprRep_Relation_Concrete__
