@@ -289,8 +289,8 @@ bool Host_Mac::pDeliverEvent(EventRef iEventRef)
 	return false;
 	}
 
-EventLoopTimerUPP Host_Mac::sEventLoopTimerUPP_Idle
-	= NewEventLoopTimerUPP(sEventLoopTimer_Idle);
+EventLoopTimerUPP Host_Mac::sEventLoopTimerUPP_Idle =
+	NewEventLoopTimerUPP(sEventLoopTimer_Idle);
 
 pascal void Host_Mac::sEventLoopTimer_Idle(EventLoopTimerRef iTimer, void* iRefcon)
 	{ static_cast<Host_Mac*>(iRefcon)->EventLoopTimer_Idle(iTimer); }
@@ -427,8 +427,8 @@ void Host_WindowRef::DoEvent(const EventRecord& iEvent)
 	}
 
 
-EventHandlerUPP Host_WindowRef::sEventHandlerUPP_Window
-	= NewEventHandlerUPP(sEventHandler_Window);
+EventHandlerUPP Host_WindowRef::sEventHandlerUPP_Window =
+	NewEventHandlerUPP(sEventHandler_Window);
 
 pascal OSStatus Host_WindowRef::sEventHandler_Window(
 	EventHandlerCallRef iCallRef, EventRef iEventRef, void* iRefcon)

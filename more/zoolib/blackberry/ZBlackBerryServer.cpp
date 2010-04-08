@@ -404,8 +404,8 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 			{
 			if (i->fLive && i->fID == deviceID)
 				{
-				Handler_DeviceFinished* theHandler
-					= new Handler_DeviceFinished(iSRWCon, iSRWCon, this);
+				Handler_DeviceFinished* theHandler =
+					new Handler_DeviceFinished(iSRWCon, iSRWCon, this);
 				i->fHandlers.push_back(theHandler);
 				locker.Release();
 
@@ -482,13 +482,13 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 				w.WriteUInt32(writeSize);
 				w.Flush();
 				// Use a standard copier for the device-->client direction
-				ZRef<ZWorker> deviceToClient
-					= new ZStreamerCopier(ZRef<ZTaskMaster>(), deviceCon, iSRWCon, readSize);
+				ZRef<ZWorker> deviceToClient =
+					new ZStreamerCopier(ZRef<ZTaskMaster>(), deviceCon, iSRWCon, readSize);
 				sStartWorkerRunner(deviceToClient);
 
 				// And our specialized copier for the client-->device direction.
-				ZRef<ZWorker> clientToDevice
-					= new StreamerCopier_Chunked(iSRWCon, deviceCon);
+				ZRef<ZWorker> clientToDevice =
+					new StreamerCopier_Chunked(iSRWCon, deviceCon);
 				sStartWorkerRunner(clientToDevice);
 
 				return;

@@ -46,8 +46,8 @@ ZRef<ZBlackBerry::Manager> sMakeManager(ZRef<ZStreamerRWConFactory> iFactory)
 			{
 			if (ZRef<ZStreamerRWCon> theSRWCon = iFactory->MakeStreamerRWCon())
 				{
-				ZRef<ZStreamerRWConFactory> theFactory
-					= new ZStreamerRWConFactory_Precon(theSRWCon, iFactory);
+				ZRef<ZStreamerRWConFactory> theFactory =
+					new ZStreamerRWConFactory_Precon(theSRWCon, iFactory);
 				return new ZBlackBerry::Manager_Client(theFactory, true);
 				}
 			}
@@ -65,8 +65,8 @@ ZRef<ZBlackBerry::Manager> sMakeManager()
 		{
 		if (ZLOG(s, eDebug, "sMakeManager"))
 			s << "org_zoolib_BlackBerryDaemon_tcp = " << daemonAddressTCP;
-		if (ZRef<ZBlackBerry::Manager> theManager
-			= sMakeManager(new ZNetName_Internet(daemonAddressTCP, 17983)))
+		if (ZRef<ZBlackBerry::Manager> theManager =
+			sMakeManager(new ZNetName_Internet(daemonAddressTCP, 17983)))
 			{
 			return theManager;
 			}
@@ -77,15 +77,15 @@ ZRef<ZBlackBerry::Manager> sMakeManager()
 		{
 		if (ZLOG(s, eDebug, "sMakeManager"))
 			s << "org_zoolib_BlackBerryDaemon_local = " << daemonAddressLocal;
-		if (ZRef<ZBlackBerry::Manager> theManager
-			= sMakeManager(new ZNetAddress_Local(daemonAddressLocal)))
+		if (ZRef<ZBlackBerry::Manager> theManager =
+			sMakeManager(new ZNetAddress_Local(daemonAddressLocal)))
 			{
 			return theManager;
 			}
 		}
 
-	if (ZRef<ZBlackBerry::Manager> theManager
-		= sMakeManager(new ZNetAddress_Local("/tmp/org.zoolib.BlackBerryDaemon")))
+	if (ZRef<ZBlackBerry::Manager> theManager =
+		sMakeManager(new ZNetAddress_Local("/tmp/org.zoolib.BlackBerryDaemon")))
 		{
 		return theManager;
 		}

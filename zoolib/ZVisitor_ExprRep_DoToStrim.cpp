@@ -20,6 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZVisitor_ExprRep_DoToStrim.h"
 
+#include <typeinfo>
+
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================

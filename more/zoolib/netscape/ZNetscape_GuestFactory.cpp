@@ -161,12 +161,12 @@ GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 
 	fShutdown = sLookup_T<NPP_ShutdownProcPtr>(fHMODULE, "NP_Shutdown");
 	
-	NP_InitializeFuncPtr theInit
-		= sLookup_T<NP_InitializeFuncPtr>
+	NP_InitializeFuncPtr theInit =
+		sLookup_T<NP_InitializeFuncPtr>
 		(fHMODULE, "NP_Initialize");
 
-	NP_GetEntryPointsFuncPtr theEntryPoints
-		= sLookup_T<NP_GetEntryPointsFuncPtr>
+	NP_GetEntryPointsFuncPtr theEntryPoints =
+		sLookup_T<NP_GetEntryPointsFuncPtr>
 		(fHMODULE, "NP_GetEntryPoints");
 
 	if (!fShutdown || !theInit || !theEntryPoints)
@@ -258,12 +258,12 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 
 		fShutdown = sLookup_T<NPP_ShutdownProcPtr>(fNSModule, "_NP_Shutdown");
 
-		NP_GetEntryPointsFuncPtr theEntryPoints
-			= sLookup_T<NP_GetEntryPointsFuncPtr>
+		NP_GetEntryPointsFuncPtr theEntryPoints =
+			sLookup_T<NP_GetEntryPointsFuncPtr>
 			(fNSModule, "_NP_GetEntryPoints");
 
-		NP_InitializeFuncPtr theInit
-			= sLookup_T<NP_InitializeFuncPtr>
+		NP_InitializeFuncPtr theInit =
+			sLookup_T<NP_InitializeFuncPtr>
 			(fNSModule, "_NP_Initialize");
 
 		if (!fShutdown || !theInit || !theEntryPoints)
@@ -299,8 +299,8 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 		// Call main, which itself will be a CFM function, but the bundle function
 		// lookup mechanism will have created a MachO-callable thunk for it.
 		
-		MainFuncPtr theMain
-			= sLookup_T<MainFuncPtr>
+		MainFuncPtr theMain =
+			sLookup_T<MainFuncPtr>
 			(theBundleRef, CFSTR("main"));
 
 		if (!theMain)
@@ -406,12 +406,12 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(ZRef<CFPlugInRef> iPlugInRef)
 
 		fShutdown = sLookup_T<NPP_ShutdownProcPtr>(theBundleRef, CFSTR("NP_Shutdown"));
 
-		NP_GetEntryPointsFuncPtr theEntryPoints
-			= sLookup_T<NP_GetEntryPointsFuncPtr>
+		NP_GetEntryPointsFuncPtr theEntryPoints =
+			sLookup_T<NP_GetEntryPointsFuncPtr>
 			(theBundleRef, CFSTR("NP_GetEntryPoints"));
 
-		NP_InitializeFuncPtr theInit
-			= sLookup_T<NP_InitializeFuncPtr>
+		NP_InitializeFuncPtr theInit =
+			sLookup_T<NP_InitializeFuncPtr>
 			(theBundleRef, CFSTR("NP_Initialize"));
 
 		if (!fShutdown || !theInit || !theEntryPoints)
