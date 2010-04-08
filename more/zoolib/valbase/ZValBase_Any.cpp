@@ -18,9 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zqe/ZQE_Iterator_Any.h"
-#include "zoolib/zqe/ZQE_Result_Any.h"
+#include "zoolib/ZYad_Any.h"
+#include "zoolib/valbase/ZValBase.h"
 #include "zoolib/valbase/ZValBase_Any.h"
+#include "zoolib/zqe/ZQE_Result_Any.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase_Any {
@@ -72,46 +73,35 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 #pragma mark -
 #pragma mark * ExprRep_Concrete
 
+class ExprRep_Concrete : public ZValBase::ExprRep_Concrete
+	{
+public:
+	ExprRep_Concrete(const ZSeq_Any& iSeq);
+
+// From ZValBase::ExprRep_Concrete
+	virtual ZRef<ZQE::Iterator> MakeIterator();
+
+private:
+	const ZSeq_Any fSeq;
+	};
+
 ExprRep_Concrete::ExprRep_Concrete(const ZSeq_Any& iSeq)
 :	fSeq(iSeq)
 	{}
 
-ZRelHead ExprRep_Concrete::GetRelHead()
-	{ return ZRelHead(true); }
-
-const ZSeq_Any& ExprRep_Concrete::GetSeq()
-	{ return fSeq; }
+ZRef<ZQE::Iterator> ExprRep_Concrete::MakeIterator()
+	{ return new Iterator(fSeq); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_ExprRep_Concrete_MakeIterator
+#pragma mark * ZValBase_Any pseudo constructors
 
-bool Visitor_ExprRep_Concrete_MakeIterator::Visit_Concrete(ZRef<ZQL::ExprRep_Concrete> iRep)
+ZQL::Expr_Concrete sConcrete(const ZSeq_Any& iSeq)
 	{
-	if (ZRef<ExprRep_Concrete> theRep = iRep.DynamicCast<ExprRep_Concrete>())
-		{
-		fIterator = new Iterator(theRep->GetSeq());
-		return true;
-		}
-	return Visitor_ExprRep_Concrete::Visit_Concrete(iRep);
+	// Could do a dynamic cast on iYadSeqR to see if it's really a ZYadSeqRPos,
+	// in which case returning a ZValBase_YadSeqRPos::Iterator would be a win.
+	return ZQL::Expr_Concrete(new ExprRep_Concrete(iSeq));
 	}
 
-bool Visitor_ExprRep_Concrete_MakeIterator::Visit_Restrict(ZRef<ZQL::ExprRep_Restrict> iRep)
-	{
-	// Could specialize here if we discover that theIterator is ours.
-	if (ZRef<ZQE::Iterator> theIterator = this->MakeIterator(iRep->GetExprRep()))
-		fIterator = new ZQE::Iterator_Any_Restrict(iRep->GetValCondition(), theIterator);
-
-	return true;	
-	}
-
-bool Visitor_ExprRep_Concrete_MakeIterator::Visit_Select(ZRef<ZQL::ExprRep_Select> iRep)
-	{
-	if (ZRef<ZQE::Iterator> theIterator = this->MakeIterator(iRep->GetExprRep_Relation()))
-		fIterator = new ZQE::Iterator_Any_Select(iRep->GetExprRep_Logic(), theIterator);
-
-	return true;	
-	}
-
-} // namespace ZValBase_Seq
+} // namespace ZValBase_YadSeqR
 NAMESPACE_ZOOLIB_END

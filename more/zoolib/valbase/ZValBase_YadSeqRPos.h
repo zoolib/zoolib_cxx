@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZYad.h"
-#include "zoolib/zqe/ZQE_Iterator.h"
 #include "zoolib/zql/ZQL_Expr_Concrete.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -34,8 +33,6 @@ namespace ZValBase_YadSeqRPos {
 #pragma mark * ZValBase_YadSeqRPos pseudo constructors
 
 ZQL::Expr_Concrete sConcrete(ZRef<ZYadSeqRPos> iYadSeqRPos);
-
-ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::ExprRep_Relation> iExprRep);
 
 } // namespace ZValBase_YadSeqRPos
 NAMESPACE_ZOOLIB_END

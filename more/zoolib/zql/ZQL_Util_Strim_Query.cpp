@@ -62,9 +62,7 @@ void sToStrim(const ZRef<ZExprRep>& iRep, const ZStrimW& iStrimW)
 void sToStrim(const ZRef<ZExprRep>& iRep,
 	const ZVisitor_ExprRep_ToStrim::Options& iOptions,
 	const ZStrimW& iStrimW)
-	{
-	Visitor_Query_ToStrim(iOptions, iStrimW).Write(iRep);
-	}
+	{ Visitor_Query_ToStrim(iOptions, iStrimW).Write(iRep); }
 
 } // namespace Util_Strim_Query
 } // namespace ZQL

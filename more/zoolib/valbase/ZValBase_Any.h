@@ -23,53 +23,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZVal_Any.h"
-#include "zoolib/zqe/ZQE_Visitor_ExprRep_MakeIterator.h"
 #include "zoolib/zql/ZQL_Expr_Concrete.h"
-#include "zoolib/zql/ZQL_Expr_Restrict.h"
-#include "zoolib/zql/ZQL_Expr_Select.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase_Any {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ExprRep_Concrete
+#pragma mark * ZValBase_Any pseudo constructors
 
-class ExprRep_Concrete : public ZQL::ExprRep_Concrete
-	{
-public:
-	ExprRep_Concrete(const ZSeq_Any& iSeq);
-
-// From ExprRep_Relation via ExprRep_Concrete
-	virtual ZRelHead GetRelHead();
-
-// Our protocol
-	const ZSeq_Any& GetSeq();
-
-private:
-	const ZSeq_Any fSeq;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_ExprRep_Concrete_MakeIterator
-
-class Visitor_ExprRep_Concrete_MakeIterator
-:	public virtual ZQL::Visitor_ExprRep_Concrete
-,	public virtual ZQL::Visitor_ExprRep_Restrict
-,	public virtual ZQL::Visitor_ExprRep_Select
-,	public virtual ZQE::Visitor_ExprRep_MakeIterator
-	{
-public:
-// From Visitor_ExprRep_Concrete
-	virtual bool Visit_Concrete(ZRef<ZQL::ExprRep_Concrete> iRep);	
-
-// From Visitor_ExprRep_Restrict
-	virtual bool Visit_Restrict(ZRef<ZQL::ExprRep_Restrict> iRep);
-
-// From Visitor_ExprRep_Select
-	virtual bool Visit_Select(ZRef<ZQL::ExprRep_Select> iRep);
-	};
+ZQL::Expr_Concrete sConcrete(const ZSeq_Any& iSeq);
 
 } // namespace ZValBase_Any
 NAMESPACE_ZOOLIB_END

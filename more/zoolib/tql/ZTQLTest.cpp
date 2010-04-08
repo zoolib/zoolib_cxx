@@ -24,7 +24,9 @@
 #include "zoolib/ZUtil_Yad.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_MapAsSeq.h"
+#include "zoolib/ZYad_ZooLibStream.h"
 
+#include "zoolib/valbase/ZValBase.h"
 #include "zoolib/valbase/ZValBase_Any.h"
 #include "zoolib/valbase/ZValBase_YadSeqR.h"
 #include "zoolib/valbase/ZValBase_YadSeqRPos.h"
@@ -344,7 +346,7 @@ void sTestQL4(const ZStrimW& s)
 		theSeq.Append(outerMap);
 		}
 
-	Expr_Relation thePhys(new ZValBase_Any::ExprRep_Concrete(theSeq));
+	Expr_Relation thePhys(ZValBase_Any::sConcrete(theSeq));
 //	ZExpr_ValCondition theSpec1 = CVal() > CConst(10);
 //	Spec theSpec = Spec(false) | (CVal() > CConst(10));
 //	Spec theSpec = ();
@@ -356,8 +358,7 @@ void sTestQL4(const ZStrimW& s)
 
 	thePhys = Expr_Relation(sOptimize(thePhys));
 
-	ZRef<ZQE::Iterator> theIterator =
-		ZValBase_Any::Visitor_ExprRep_Concrete_MakeIterator().MakeIterator(thePhys);
+	ZRef<ZQE::Iterator> theIterator = ZValBase::sIterator(thePhys);
 
 	for (;;)
 		{
@@ -469,7 +470,7 @@ void sTestQL5(const ZStrimW& s)
 //	Expr_Relation sect = sJoin(thePhys1, thePhys2);
 	Expr_Relation sect = thePhys1 * thePhys2;
 	
-	ZRef<ZQE::Iterator> theIterator = ZValBase_YadSeqR::sIterator(sect);
+	ZRef<ZQE::Iterator> theIterator = ZValBase::sIterator(sect);
 		
 
 	ZYadOptions theYadOptions(true);
@@ -497,6 +498,7 @@ void sTestQL5(const ZStrimW& s)
 
 void sTestQL(const ZStrimW& s)
 	{
+	#if 0
 	ZRef<ZStreamerR> theStreamerR = ZFileSpec("/Users/ag/Music/iTunes/iTunes Music Library.xml").OpenR();
 	theStreamerR = new ZStreamerR_Buffered(4096, theStreamerR);
 
@@ -509,36 +511,53 @@ void sTestQL(const ZStrimW& s)
 	ZRef<ZML::StrimmerU> theStrimmerU_ML = new ZML::StrimmerU(theStrimmerU_Unreader);
 
 	ZRef<ZYadR> theYadR = ZYad_XMLPList::sMakeYadR(theStrimmerU_ML);
-	theYadR = ZUtil_Yad::sWalk(theYadR, "Tracks");
+	#else
+	ZRef<ZStreamerR> theStreamerR = ZFileSpec("../../itunes.zstream").OpenR();
+	ZRef<ZYadR> theYadR = ZYad_ZooLibStream::sMakeYadR(theStreamerR);
+	#endif
+
+	ZSeq_Any theSeqTracks;
+	if (ZRef<ZYadMapR> theYadMapR = ZUtil_Yad::sWalk(theYadR, "Tracks").DynamicCast<ZYadMapR>())
+		theSeqTracks = sFromYadR(ZVal_Any(), sMapAsSeq("Dummy", theYadMapR)).GetSeq();
+
+	ZSeq_Any theSeqPlayList;
+	if (ZRef<ZYadSeqR> theYadSeqR = ZUtil_Yad::sWalk(theYadR, "Playlists").DynamicCast<ZYadSeqR>())
+		{
+		ZSeq_Any aSeq = sFromYadR(ZVal_Any(), theYadSeqR).GetSeq();
+		theSeqPlayList = aSeq.Get_T<Map>(0).Get_T<ZSeq_Any>("Playlist Items");
+		}
+	
 
 	ZYadOptions theYadOptions(true);
 
 	ZExpr_Logic theCondition =
 		CName("Disc Number") == CConst(int32(2)) & CName("Track Number") > CConst(int32(10));
 
-	ZRef<ZYadSeqR> theYadSeqR;
-	if (ZRef<ZYadMapR> theYadMapR = theYadR.DynamicCast<ZYadMapR>())
-		theYadSeqR = sMapAsSeq("Dummy", theYadMapR);
+//	ZRef<ZYadSeqR> theYadSeqR;
+//	if (ZRef<ZYadMapR> theYadMapR = theYadR.DynamicCast<ZYadMapR>())
+//		theYadSeqR = sMapAsSeq("Dummy", theYadMapR);
 
 	ZTime start = ZTime::sNow();
 #if 1
-	if (theYadSeqR)
+//	if (theYadSeqR)
 		{
 //		const ZSeq_Any theSeq = sFromYadR(ZVal_Any(), theYadSeqR).GetSeq();
 		
 		s.Writef("\nElapsed, read: %gms\n", 1000.0 * (ZTime::sNow() - start));
 
 		start = ZTime::sNow();
-		Expr_Relation thePhys = ZValBase_YadSeqR::sConcrete(theYadSeqR);
-		thePhys = thePhys & theCondition;
-		thePhys = thePhys & thePhys;
+		Expr_Relation theTracks = ZValBase_Any::sConcrete(theSeqTracks);
+		Expr_Relation thePlayList = ZValBase_Any::sConcrete(theSeqPlayList);
+//		Expr_Relation thePhys = ZValBase_YadSeqR::sConcrete(theYadSeqR);
+		Expr_Relation thePhys = theTracks & theCondition;
+//		Expr_Relation thePhys = sJoin(thePlayList, theTracks);
 
 		Util_Strim_Query::sToStrim(thePhys, s);
 		s << "\n";
 
 //		thePhys = Expr_Relation(sOptimize(thePhys));
 
-		ZRef<ZQE::Iterator> theIterator = ZValBase_YadSeqR::sIterator(thePhys);
+		ZRef<ZQE::Iterator> theIterator = ZValBase::sIterator(thePhys);
 
 		for (;;)
 			{
