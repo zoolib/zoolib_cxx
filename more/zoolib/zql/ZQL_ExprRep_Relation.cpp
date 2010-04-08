@@ -32,21 +32,21 @@ namespace ZQL {
 ExprRep_Relation::ExprRep_Relation()
 	{}
 
-bool ExprRep_Relation::Accept(ZVisitor_ExprRep& iVisitor)
+bool ExprRep_Relation::Accept_ExprRep(ZVisitor_ExprRep& iVisitor)
 	{
 	if (Visitor_ExprRep_Relation* theVisitor =
 		dynamic_cast<Visitor_ExprRep_Relation*>(&iVisitor))
 		{
-		return this->Accept(*theVisitor);
+		return this->Accept_ExprRep_Relation(*theVisitor);
 		}
 	else
 		{
-		return ZExprRep::Accept(iVisitor);
+		return ZExprRep::Accept_ExprRep(iVisitor);
 		}
 	}
 
-bool ExprRep_Relation::Accept(Visitor_ExprRep_Relation& iVisitor)
-	{ return ZExprRep::Accept(iVisitor); }
+bool ExprRep_Relation::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
+	{ return ZExprRep::Accept_ExprRep(iVisitor); }
 
 // =================================================================================================
 #pragma mark -
@@ -76,7 +76,7 @@ ExprRep_Relation_Difference::ExprRep_Relation_Difference(
 :	ExprRep_Relation_Dyadic(iLHS, iRHS)
 	{}
 
-bool ExprRep_Relation_Difference::Accept(Visitor_ExprRep_Relation& iVisitor)
+bool ExprRep_Relation_Difference::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
 	{ return iVisitor.Visit_ExprRep_Relation_Difference(this); }
 
 ZRelHead ExprRep_Relation_Difference::GetRelHead()
@@ -99,7 +99,7 @@ ExprRep_Relation_Intersect::ExprRep_Relation_Intersect(
 :	ExprRep_Relation_Dyadic(iLHS, iRHS)
 	{}
 
-bool ExprRep_Relation_Intersect::Accept(Visitor_ExprRep_Relation& iVisitor)
+bool ExprRep_Relation_Intersect::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
 	{ return iVisitor.Visit_ExprRep_Relation_Intersect(this); }
 
 ZRelHead ExprRep_Relation_Intersect::GetRelHead()
@@ -122,7 +122,7 @@ ExprRep_Relation_Join::ExprRep_Relation_Join(
 :	ExprRep_Relation_Dyadic(iLHS, iRHS)
 	{}
 
-bool ExprRep_Relation_Join::Accept(Visitor_ExprRep_Relation& iVisitor)
+bool ExprRep_Relation_Join::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
 	{ return iVisitor.Visit_ExprRep_Relation_Join(this); }
 
 ZRelHead ExprRep_Relation_Join::GetRelHead()
@@ -143,7 +143,7 @@ ExprRep_Relation_Project::ExprRep_Relation_Project(
 ExprRep_Relation_Project::~ExprRep_Relation_Project()
 	{}
 
-bool ExprRep_Relation_Project::Accept(Visitor_ExprRep_Relation& iVisitor)
+bool ExprRep_Relation_Project::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
 	{ return iVisitor.Visit_ExprRep_Relation_Project(this); }
 
 ZRelHead ExprRep_Relation_Project::GetRelHead()
@@ -169,7 +169,7 @@ ExprRep_Relation_Rename::ExprRep_Relation_Rename(
 ExprRep_Relation_Rename::~ExprRep_Relation_Rename()
 	{}
 
-bool ExprRep_Relation_Rename::Accept(Visitor_ExprRep_Relation& iVisitor)
+bool ExprRep_Relation_Rename::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
 	{ return iVisitor.Visit_ExprRep_Relation_Rename(this); }
 
 ZRelHead ExprRep_Relation_Rename::GetRelHead()
@@ -201,7 +201,7 @@ ExprRep_Relation_Union::ExprRep_Relation_Union(
 :	ExprRep_Relation_Dyadic(iLHS, iRHS)
 	{}
 
-bool ExprRep_Relation_Union::Accept(Visitor_ExprRep_Relation& iVisitor)
+bool ExprRep_Relation_Union::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
 	{ return iVisitor.Visit_ExprRep_Relation_Union(this); }
 
 ZRelHead ExprRep_Relation_Union::GetRelHead()
@@ -221,60 +221,33 @@ ZRelHead ExprRep_Relation_Union::GetRelHead()
 
 bool Visitor_ExprRep_Relation::Visit_ExprRep_Relation_Difference(ZRef<ExprRep_Relation_Difference> iRep)
 	{
-	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
-		return false;
-
 	if (ZRef<ExprRep_Relation> theLHS = iRep->GetLHS())
-		{
-		if (!theLHS->Accept(*this))
-			return false;
-		}
+		theLHS->Accept(*this);
 
 	if (ZRef<ExprRep_Relation> theRHS = iRep->GetRHS())
-		{
-		if (!theRHS->Accept(*this))
-			return false;
-		}
+		theRHS->Accept(*this);
 
 	return true;
 	}
 
 bool Visitor_ExprRep_Relation::Visit_ExprRep_Relation_Intersect(ZRef<ExprRep_Relation_Intersect> iRep)
 	{
-	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
-		return false;
-
 	if (ZRef<ExprRep_Relation> theLHS = iRep->GetLHS())
-		{
-		if (!theLHS->Accept(*this))
-			return false;
-		}
+		theLHS->Accept(*this);
 
 	if (ZRef<ExprRep_Relation> theRHS = iRep->GetRHS())
-		{
-		if (!theRHS->Accept(*this))
-			return false;
-		}
+		theRHS->Accept(*this);
 
 	return true;
 	}
 
 bool Visitor_ExprRep_Relation::Visit_ExprRep_Relation_Join(ZRef<ExprRep_Relation_Join> iRep)
 	{
-	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
-		return false;
-
 	if (ZRef<ExprRep_Relation> theLHS = iRep->GetLHS())
-		{
-		if (!theLHS->Accept(*this))
-			return false;
-		}
+		theLHS->Accept(*this);
 
 	if (ZRef<ExprRep_Relation> theRHS = iRep->GetRHS())
-		{
-		if (!theRHS->Accept(*this))
-			return false;
-		}
+		theRHS->Accept(*this);
 
 	return true;
 	}
@@ -285,44 +258,26 @@ bool Visitor_ExprRep_Relation::Visit_ExprRep_Relation_Project(ZRef<ExprRep_Relat
 		return false;
 
 	if (ZRef<ExprRep_Relation> theExprRep = iRep->GetExprRep())
-		{
-		if (!theExprRep->Accept(*this))
-			return false;
-		}
+		theExprRep->Accept(*this);
 
 	return true;
 	}
 
 bool Visitor_ExprRep_Relation::Visit_ExprRep_Relation_Rename(ZRef<ExprRep_Relation_Rename> iRep)
 	{
-	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
-		return false;
-
 	if (ZRef<ExprRep_Relation> theExprRep = iRep->GetExprRep())
-		{
-		if (!theExprRep->Accept(*this))
-			return false;
-		}
+		theExprRep->Accept(*this);
 
 	return true;
 	}
 
 bool Visitor_ExprRep_Relation::Visit_ExprRep_Relation_Union(ZRef<ExprRep_Relation_Union> iRep)
 	{
-	if (!ZVisitor_ExprRep::Visit_ExprRep(iRep))
-		return false;
-
 	if (ZRef<ExprRep_Relation> theLHS = iRep->GetLHS())
-		{
-		if (!theLHS->Accept(*this))
-			return false;
-		}
+		theLHS->Accept(*this);
 
 	if (ZRef<ExprRep_Relation> theRHS = iRep->GetRHS())
-		{
-		if (!theRHS->Accept(*this))
-			return false;
-		}
+		theRHS->Accept(*this);
 
 	return true;
 	}

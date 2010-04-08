@@ -45,12 +45,12 @@ public:
 	virtual ~ExprRep_Relation_Restrict_T();
 
 // From ExprRep_Relation
-	virtual bool Accept(Visitor_ExprRep_Relation& iVisitor);
+	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 
 	virtual ZRelHead GetRelHead();
 
 // Our protocol
-	virtual bool Accept(Visitor_ExprRep_Relation_Restrict_T<Val>& iVisitor);
+	virtual bool Accept_ExprRep_Relation_Restrict(Visitor_ExprRep_Relation_Restrict_T<Val>& iVisitor);
 
 	ZValCondition_T<Val> GetValCondition();
 	ZRef<ExprRep_Relation> GetExprRep();
@@ -72,16 +72,16 @@ ExprRep_Relation_Restrict_T<Val>::~ExprRep_Relation_Restrict_T()
 	{}
 
 template <class Val>
-bool ExprRep_Relation_Restrict_T<Val>::Accept(Visitor_ExprRep_Relation& iVisitor)
+bool ExprRep_Relation_Restrict_T<Val>::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
 	{
 	if (Visitor_ExprRep_Relation_Restrict_T<Val>* theVisitor =
 		dynamic_cast<Visitor_ExprRep_Relation_Restrict_T<Val>*>(&iVisitor))
 		{
-		return this->Accept(*theVisitor);
+		return this->Accept_ExprRep_Relation_Restrict(*theVisitor);
 		}
 	else
 		{
-		return ExprRep_Relation::Accept(iVisitor);
+		return ExprRep_Relation::Accept_ExprRep_Relation(iVisitor);
 		}
 	}
 
@@ -90,7 +90,7 @@ ZRelHead ExprRep_Relation_Restrict_T<Val>::GetRelHead()
 	{ return fExprRep->GetRelHead() | fValCondition.GetRelHead(); }
 	
 template <class Val>
-bool ExprRep_Relation_Restrict_T<Val>::Accept(Visitor_ExprRep_Relation_Restrict_T<Val>& iVisitor)
+bool ExprRep_Relation_Restrict_T<Val>::Accept_ExprRep_Relation_Restrict(Visitor_ExprRep_Relation_Restrict_T<Val>& iVisitor)
 	{ return iVisitor.Visit_ExprRep_Relation_Restrict(this); }
 
 template <class Val>
@@ -115,14 +115,8 @@ public:
 template <class Val>
 bool Visitor_ExprRep_Relation_Restrict_T<Val>::Visit_ExprRep_Relation_Restrict(ZRef<ExprRep_Relation_Restrict_T<Val> > iRep)
 	{
-	if (!Visitor_ExprRep_Relation::Visit_ExprRep(iRep))
-		return false;
-
 	if (ZRef<ExprRep_Relation> theExprRep = iRep->GetExprRep())
-		{
-		if (!theExprRep->Accept(*this))
-			return false;
-		}
+		theExprRep->Accept(*this);
 
 	return true;
 	}

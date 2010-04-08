@@ -40,7 +40,7 @@ public:
 	virtual ~ExprRep_Relation_Concrete();
 
 // From ExprRep_Relation
-	virtual bool Accept(Visitor_ExprRep_Relation& iVisitor);
+	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 	};
 
 // =================================================================================================

@@ -32,21 +32,21 @@ ZExprRep_Logic::ZExprRep_Logic()
 ZExprRep_Logic::~ZExprRep_Logic()
 	{}
 
-bool ZExprRep_Logic::Accept(ZVisitor_ExprRep& iVisitor)
+bool ZExprRep_Logic::Accept_ExprRep(ZVisitor_ExprRep& iVisitor)
 	{
 	if (ZVisitor_ExprRep_Logic* theVisitor =
 		dynamic_cast<ZVisitor_ExprRep_Logic*>(&iVisitor))
 		{
-		return this->Accept(*theVisitor);
+		return this->Accept_ExprRep_Logic(*theVisitor);
 		}
 	else
 		{
-		return ZExprRep::Accept(iVisitor);
+		return ZExprRep::Accept_ExprRep(iVisitor);
 		}
 	}
 
-bool ZExprRep_Logic::Accept(ZVisitor_ExprRep_Logic& iVisitor)
-	{ return ZExprRep::Accept(iVisitor); }
+bool ZExprRep_Logic::Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor)
+	{ return ZExprRep::Accept_ExprRep(iVisitor); }
 
 // =================================================================================================
 #pragma mark -
@@ -55,7 +55,7 @@ bool ZExprRep_Logic::Accept(ZVisitor_ExprRep_Logic& iVisitor)
 ZExprRep_Logic_True::ZExprRep_Logic_True()
 	{}
 
-bool ZExprRep_Logic_True::Accept(ZVisitor_ExprRep_Logic& iVisitor)
+bool ZExprRep_Logic_True::Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor)
 	{ return iVisitor.Visit_Logic_True(this); }
 
 // =================================================================================================
@@ -65,7 +65,7 @@ bool ZExprRep_Logic_True::Accept(ZVisitor_ExprRep_Logic& iVisitor)
 ZExprRep_Logic_False::ZExprRep_Logic_False()
 	{}
 
-bool ZExprRep_Logic_False::Accept(ZVisitor_ExprRep_Logic& iVisitor)
+bool ZExprRep_Logic_False::Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor)
 	{ return iVisitor.Visit_Logic_False(this); }
 
 // =================================================================================================
@@ -79,7 +79,7 @@ ZExprRep_Logic_Not::ZExprRep_Logic_Not(ZRef<ZExprRep_Logic> iOperand)
 ZExprRep_Logic_Not::~ZExprRep_Logic_Not()
 	{}
 
-bool ZExprRep_Logic_Not::Accept(ZVisitor_ExprRep_Logic& iVisitor)
+bool ZExprRep_Logic_Not::Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor)
 	{ return iVisitor.Visit_Logic_Not(this); }
 
 ZRef<ZExprRep_Logic> ZExprRep_Logic_Not::GetOperand()
@@ -114,7 +114,7 @@ ZExprRep_Logic_And::ZExprRep_Logic_And(ZRef<ZExprRep_Logic> iLHS, ZRef<ZExprRep_
 :	ZExprRep_Logic_Dyadic(iLHS, iRHS)
 	{}
 
-bool ZExprRep_Logic_And::Accept(ZVisitor_ExprRep_Logic& iVisitor)
+bool ZExprRep_Logic_And::Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor)
 	{ return iVisitor.Visit_Logic_And(this); }
 
 // =================================================================================================
@@ -125,7 +125,7 @@ ZExprRep_Logic_Or::ZExprRep_Logic_Or(ZRef<ZExprRep_Logic> iLHS, ZRef<ZExprRep_Lo
 :	ZExprRep_Logic_Dyadic(iLHS, iRHS)
 	{}
 
-bool ZExprRep_Logic_Or::Accept(ZVisitor_ExprRep_Logic& iVisitor)
+bool ZExprRep_Logic_Or::Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor)
 	{ return iVisitor.Visit_Logic_Or(this); }
 
 // =================================================================================================

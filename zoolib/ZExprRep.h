@@ -44,14 +44,14 @@ public:
 	virtual bool Accept(ZVisitor& iVisitor);
 
 // Our protocol
-	virtual bool Accept(ZVisitor_ExprRep& iVisitor);
+	virtual bool Accept_ExprRep(ZVisitor_ExprRep& iVisitor);
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVisitor_ExprRep
 
-class ZVisitor_ExprRep : public ZVisitor
+class ZVisitor_ExprRep : public virtual ZVisitor
 	{
 public:
 // Our protocol

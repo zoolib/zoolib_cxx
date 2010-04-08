@@ -43,10 +43,10 @@ protected:
 
 public:
 // From ZExprRep
-	virtual bool Accept(ZVisitor_ExprRep& iVisitor);
+	virtual bool Accept_ExprRep(ZVisitor_ExprRep& iVisitor);
 
 // Our protocol
-	virtual bool Accept(Visitor_ExprRep_Relation& iVisitor);
+	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 
 	virtual ZRelHead GetRelHead() = 0;
 	};
@@ -83,7 +83,7 @@ public:
 		ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS);
 
 // From ExprRep_Relation via ExprRep_Relation_Dyadic
-	virtual bool Accept(Visitor_ExprRep_Relation& iVisitor);
+	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 	virtual ZRelHead GetRelHead();
 	};
 
@@ -98,7 +98,7 @@ public:
 		ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS);
 
 // From ExprRep_Relation via ExprRep_Relation_Dyadic
-	virtual bool Accept(Visitor_ExprRep_Relation& iVisitor);
+	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 	virtual ZRelHead GetRelHead();
 	};
 
@@ -112,7 +112,7 @@ public:
 	ExprRep_Relation_Join(ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS);
 
 // From ExprRep_Relation via ExprRep_Relation_Dyadic
-	virtual bool Accept(Visitor_ExprRep_Relation& iVisitor);
+	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 	virtual ZRelHead GetRelHead();
 	};
 
@@ -127,7 +127,7 @@ public:
 	virtual ~ExprRep_Relation_Project();
 
 // From ExprRep_Relation
-	virtual bool Accept(Visitor_ExprRep_Relation& iVisitor);
+	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 	virtual ZRelHead GetRelHead();
 
 // Our protocol
@@ -152,7 +152,7 @@ public:
 	virtual ~ExprRep_Relation_Rename();
 
 // From ExprRep_Relation
-	virtual bool Accept(Visitor_ExprRep_Relation& iVisitor);
+	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 	virtual ZRelHead GetRelHead();
 
 // Our protocol
@@ -176,7 +176,7 @@ public:
 	ExprRep_Relation_Union(ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS);
 
 // From ExprRep_Relation via ExprRep_Relation_Dyadic
-	virtual bool Accept(Visitor_ExprRep_Relation& iVisitor);
+	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 	virtual ZRelHead GetRelHead();
 	};
 

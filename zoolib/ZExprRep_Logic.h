@@ -41,10 +41,10 @@ public:
 	virtual ~ZExprRep_Logic();
 
 // From ZExprRep
-	virtual bool Accept(ZVisitor_ExprRep& iVisitor);
+	virtual bool Accept_ExprRep(ZVisitor_ExprRep& iVisitor);
 
 // Our protocol
-	virtual bool Accept(ZVisitor_ExprRep_Logic& iVisitor);
+	virtual bool Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
 	};
 
 // =================================================================================================
@@ -57,7 +57,7 @@ public:
 	ZExprRep_Logic_True();
 
 // From ZExprRep_Logic
-	virtual bool Accept(ZVisitor_ExprRep_Logic& iVisitor);
+	virtual bool Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
 	};
 
 // =================================================================================================
@@ -70,7 +70,7 @@ public:
 	ZExprRep_Logic_False();
 
 // From ZExprRep_Logic
-	virtual bool Accept(ZVisitor_ExprRep_Logic& iVisitor);
+	virtual bool Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
 	};
 
 // =================================================================================================
@@ -84,7 +84,7 @@ public:
 	virtual ~ZExprRep_Logic_Not();
 
 // From ZExprRep_Logic
-	virtual bool Accept(ZVisitor_ExprRep_Logic& iVisitor);
+	virtual bool Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
 
 // Our protocol
 	ZRef<ZExprRep_Logic> GetOperand();
@@ -122,7 +122,7 @@ public:
 	ZExprRep_Logic_And(ZRef<ZExprRep_Logic> iLHS, ZRef<ZExprRep_Logic> iRHS);
 
 // From ZExprRep_Logic
-	virtual bool Accept(ZVisitor_ExprRep_Logic& iVisitor);
+	virtual bool Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
 	};
 
 // =================================================================================================
@@ -135,7 +135,7 @@ public:
 	ZExprRep_Logic_Or(ZRef<ZExprRep_Logic> iLHS, ZRef<ZExprRep_Logic> iRHS);
 
 // From ZExprRep_Logic
-	virtual bool Accept(ZVisitor_ExprRep_Logic& iVisitor);
+	virtual bool Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
 	};
 
 // =================================================================================================

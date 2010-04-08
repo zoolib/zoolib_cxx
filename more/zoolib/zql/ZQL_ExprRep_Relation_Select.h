@@ -44,12 +44,12 @@ public:
 	virtual ~ExprRep_Relation_Select();
 
 // From ZExprRep_Relation
-	virtual bool Accept(Visitor_ExprRep_Relation& iVisitor);
+	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 
 	virtual ZRelHead GetRelHead();
 
 // Our protocol
-	virtual bool Accept(Visitor_ExprRep_Relation_Select& iVisitor);
+	virtual bool Accept_ExprRep_Relation_Select(Visitor_ExprRep_Relation_Select& iVisitor);
 
 	ZRef<ZExprRep_Logic> GetExprRep_Logic();
 	ZRef<ExprRep_Relation> GetExprRep_Relation();

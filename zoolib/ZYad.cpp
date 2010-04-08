@@ -97,7 +97,7 @@ bool ZYadR::Accept(ZVisitor& iVisitor)
 	if (ZVisitor_Yad* theVisitor =
 		dynamic_cast<ZVisitor_Yad*>(&iVisitor))
 		{
-		return this->Accept(*theVisitor);
+		return this->Accept_Yad(*theVisitor);
 		}
 	else
 		{
@@ -111,7 +111,7 @@ void ZYadR::Finish()
 ZRef<ZYadR> ZYadR::Meta()
 	{ return ZRef<ZYadR>(); }
 
-bool ZYadR::Accept(ZVisitor_Yad& iVisitor)
+bool ZYadR::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadR(this); }
 
 // =================================================================================================
@@ -125,7 +125,7 @@ bool ZYadR::Accept(ZVisitor_Yad& iVisitor)
 
 */
 
-bool ZYadPrimR::Accept(ZVisitor_Yad& iVisitor)
+bool ZYadPrimR::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadPrimR(this); }
 
 bool ZYadPrimR::IsSimple(const ZYadOptions& iOptions)
@@ -142,7 +142,7 @@ bool ZYadPrimR::IsSimple(const ZYadOptions& iOptions)
 
 */
 
-bool ZYadStreamR::Accept(ZVisitor_Yad& iVisitor)
+bool ZYadStreamR::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadStreamR(this); }
 
 bool ZYadStreamR::IsSimple(const ZYadOptions& iOptions)
@@ -159,7 +159,7 @@ bool ZYadStreamR::IsSimple(const ZYadOptions& iOptions)
 
 */
 
-bool ZYadStrimR::Accept(ZVisitor_Yad& iVisitor)
+bool ZYadStrimR::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadStrimR(this); }
 
 bool ZYadStrimR::IsSimple(const ZYadOptions& iOptions)
@@ -176,7 +176,7 @@ bool ZYadStrimR::IsSimple(const ZYadOptions& iOptions)
 
 */
 
-bool ZYadSeqR::Accept(ZVisitor_Yad& iVisitor)
+bool ZYadSeqR::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadSeqR(this); }
 
 bool ZYadSeqR::IsSimple(const ZYadOptions& iOptions)
@@ -202,7 +202,7 @@ void ZYadSeqR::SkipAll()
 
 */
 
-bool ZYadSeqRPos::Accept(ZVisitor_Yad& iVisitor)
+bool ZYadSeqRPos::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadSeqRPos(this); }
 
 bool ZYadSeqRPos::IsSimple(const ZYadOptions& iOptions)
@@ -248,7 +248,7 @@ void ZYadSeqRPos::SkipAll()
 
 */
 
-bool ZYadMapR::Accept(ZVisitor_Yad& iVisitor)
+bool ZYadMapR::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadMapR(this); }
 
 bool ZYadMapR::IsSimple(const ZYadOptions& iOptions)
@@ -277,7 +277,7 @@ void ZYadMapR::SkipAll()
 
 */
 
-bool ZYadMapRPos::Accept(ZVisitor_Yad& iVisitor)
+bool ZYadMapRPos::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ return iVisitor.Visit_YadMapRPos(this); }
 
 bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)

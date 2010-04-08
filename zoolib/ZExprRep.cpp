@@ -37,7 +37,7 @@ bool ZExprRep::Accept(ZVisitor& iVisitor)
 	if (ZVisitor_ExprRep* theVisitor =
 		dynamic_cast<ZVisitor_ExprRep*>(&iVisitor))
 		{
-		return this->Accept(*theVisitor);
+		return this->Accept_ExprRep(*theVisitor);
 		}
 	else
 		{
@@ -45,7 +45,7 @@ bool ZExprRep::Accept(ZVisitor& iVisitor)
 		}
 	}
 
-bool ZExprRep::Accept(ZVisitor_ExprRep& iVisitor)
+bool ZExprRep::Accept_ExprRep(ZVisitor_ExprRep& iVisitor)
 	{ return iVisitor.Visit_ExprRep(this); }
 
 // =================================================================================================

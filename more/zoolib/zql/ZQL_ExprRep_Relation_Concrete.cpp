@@ -33,7 +33,7 @@ ExprRep_Relation_Concrete::ExprRep_Relation_Concrete()
 ExprRep_Relation_Concrete::~ExprRep_Relation_Concrete()
 	{}
 
-bool ExprRep_Relation_Concrete::Accept(Visitor_ExprRep_Relation& iVisitor)
+bool ExprRep_Relation_Concrete::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
 	{
 	if (Visitor_ExprRep_Relation_Concrete* theVisitor =
 		dynamic_cast<Visitor_ExprRep_Relation_Concrete*>(&iVisitor))

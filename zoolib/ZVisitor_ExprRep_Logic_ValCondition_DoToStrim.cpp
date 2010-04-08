@@ -34,7 +34,7 @@ ZVisitor_ExprRep_Logic_ValCondition_DoToStrim::ZVisitor_ExprRep_Logic_ValConditi
 ,	ZVisitor_ExprRep_DoToStrim(iOptions, iStrimW)
 	{}
 
-bool ZVisitor_ExprRep_Logic_ValCondition_DoToStrim::Visit_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep)
+bool ZVisitor_ExprRep_Logic_ValCondition_DoToStrim::Visit_Logic_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep)
 	{
 	ZUtil_Strim_ValCondition::sToStrim(iRep->GetValCondition(), fStrimW);
 	return true;

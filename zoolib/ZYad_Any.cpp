@@ -61,10 +61,10 @@ ZRef<ZYadMapRPos> sMakeYadR(const ZMap_Any& iMap)
 
 namespace ZANONYMOUS {
 
-class Visitor_Yad_GetVal_Any : public ZVisitor_Yad
+class Visitor_GetVal : public ZVisitor_Yad
 	{
 public:
-	Visitor_Yad_GetVal_Any(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault);
+	Visitor_GetVal(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault);
 
 // From ZVisitor_Yad
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
@@ -84,53 +84,30 @@ private:
 
 } // anonymous namespace
 
-ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
-	{ return sFromYadR(false, iDefault, iYadR); }
-
-ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
-	{
-	if (ZRef<ZYadPrimR_Any> asPrim = iYadR.DynamicCast<ZYadPrimR_Any>())
-		return asPrim->GetAny();
-
-	if (ZRef<ZYadStrimU_String> asString = iYadR.DynamicCast<ZYadStrimU_String>())
-		return asString->GetStrim().GetString8();
-
-	if (ZRef<ZYadStreamRPos_Any> asYadStream = iYadR.DynamicCast<ZYadStreamRPos_Any>())
-		return asYadStream->GetStream().GetData();
-
-	if (ZRef<ZYadMapRPos_Any> asMap = iYadR.DynamicCast<ZYadMapRPos_Any>())
-		return asMap->GetMap();
-
-	if (ZRef<ZYadSeqRPos_Any> asSeq = iYadR.DynamicCast<ZYadSeqRPos_Any>())
-		return asSeq->GetSeq();
-
-	return Visitor_Yad_GetVal_Any(iRepeatedPropsAsSeq, iDefault).GetVal(iYadR);
-	}
-
-Visitor_Yad_GetVal_Any::Visitor_Yad_GetVal_Any(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault)
+Visitor_GetVal::Visitor_GetVal(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault)
 :	fRepeatedPropsAsSeq(iRepeatedPropsAsSeq)
 ,	fDefault(iDefault)
 	{}
 
-bool Visitor_Yad_GetVal_Any::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
+bool Visitor_GetVal::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{
 	fOutput = iYadPrimR->AsAny();
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_Any::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+bool Visitor_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{
 	fOutput = sReadAll_T<ZData_Any>(iYadStreamR->GetStreamR());
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_Any::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+bool Visitor_GetVal::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	{
 	fOutput = iYadStrimR->GetStrimR().ReadAll8();
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_Any::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+bool Visitor_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	{
 	ZSeq_Any theSeq;
 
@@ -141,7 +118,7 @@ bool Visitor_Yad_GetVal_Any::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_Any::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+bool Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	{
 	ZMap_Any theMap;
 
@@ -171,7 +148,7 @@ bool Visitor_Yad_GetVal_Any::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	return true;
 	}
 
-ZVal_Any Visitor_Yad_GetVal_Any::GetVal(ZRef<ZYadR> iYadR)
+ZVal_Any Visitor_GetVal::GetVal(ZRef<ZYadR> iYadR)
 	{
 	ZVal_Any result;
 	if (iYadR)
@@ -180,6 +157,29 @@ ZVal_Any Visitor_Yad_GetVal_Any::GetVal(ZRef<ZYadR> iYadR)
 		std::swap(result, fOutput);
 		}
 	return result;
+	}
+
+ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
+	{ return sFromYadR(false, iDefault, iYadR); }
+
+ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYadR> iYadR)
+	{
+	if (ZRef<ZYadPrimR_Any> asPrim = iYadR.DynamicCast<ZYadPrimR_Any>())
+		return asPrim->GetAny();
+
+	if (ZRef<ZYadStrimU_String> asString = iYadR.DynamicCast<ZYadStrimU_String>())
+		return asString->GetStrim().GetString8();
+
+	if (ZRef<ZYadStreamRPos_Any> asYadStream = iYadR.DynamicCast<ZYadStreamRPos_Any>())
+		return asYadStream->GetStream().GetData();
+
+	if (ZRef<ZYadMapRPos_Any> asMap = iYadR.DynamicCast<ZYadMapRPos_Any>())
+		return asMap->GetMap();
+
+	if (ZRef<ZYadSeqRPos_Any> asSeq = iYadR.DynamicCast<ZYadSeqRPos_Any>())
+		return asSeq->GetSeq();
+
+	return Visitor_GetVal(iRepeatedPropsAsSeq, iDefault).GetVal(iYadR);
 	}
 
 NAMESPACE_ZOOLIB_END

@@ -39,23 +39,23 @@ ExprRep_Relation_Select::ExprRep_Relation_Select(
 ExprRep_Relation_Select::~ExprRep_Relation_Select()
 	{}
 
-bool ExprRep_Relation_Select::Accept(Visitor_ExprRep_Relation& iVisitor)
+bool ExprRep_Relation_Select::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
 	{
 	if (Visitor_ExprRep_Relation_Select* theVisitor =
 		dynamic_cast<Visitor_ExprRep_Relation_Select*>(&iVisitor))
 		{
-		return this->Accept(*theVisitor);
+		return this->Accept_ExprRep_Relation_Select(*theVisitor);
 		}
 	else
 		{
-		return ExprRep_Relation::Accept(iVisitor);
+		return ExprRep_Relation::Accept_ExprRep_Relation(iVisitor);
 		}
 	}
 
 ZRelHead ExprRep_Relation_Select::GetRelHead()
 	{ return sGetRelHead(fExprRep_Logic) | fExprRep_Relation->GetRelHead(); }
 
-bool ExprRep_Relation_Select::Accept(Visitor_ExprRep_Relation_Select& iVisitor)
+bool ExprRep_Relation_Select::Accept_ExprRep_Relation_Select(Visitor_ExprRep_Relation_Select& iVisitor)
 	{ return iVisitor.Visit_ExprRep_Relation_Select(this); }
 
 ZRef<ZExprRep_Logic> ExprRep_Relation_Select::GetExprRep_Logic()
@@ -70,20 +70,11 @@ ZRef<ExprRep_Relation> ExprRep_Relation_Select::GetExprRep_Relation()
 
 bool Visitor_ExprRep_Relation_Select::Visit_ExprRep_Relation_Select(ZRef<ExprRep_Relation_Select> iRep)
 	{
-	if (!Visitor_ExprRep_Relation::Visit_ExprRep(iRep))
-		return false;
-
 	if (ZRef<ZExprRep_Logic> theExprRep_Logic = iRep->GetExprRep_Logic())
-		{
-		if (!theExprRep_Logic->Accept(*this))
-			return false;
-		}
+		theExprRep_Logic->Accept(*this);
 
 	if (ZRef<ExprRep_Relation> theExprRep_Relation = iRep->GetExprRep_Relation())
-		{
-		if (!theExprRep_Relation->Accept(*this))
-			return false;
-		}
+		theExprRep_Relation->Accept(*this);
 
 	return true;
 	}

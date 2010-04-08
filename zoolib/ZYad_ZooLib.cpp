@@ -178,10 +178,10 @@ ZRef<ZYadMapRPos> sMakeYadR(const ZMap_ZooLib& iMap)
 
 namespace ZANONYMOUS {
 
-class Visitor_Yad_GetVal_ZooLib : public ZVisitor_Yad
+class Visitor_GetVal : public ZVisitor_Yad
 	{
 public:
-	Visitor_Yad_GetVal_ZooLib(const ZVal_ZooLib& iDefault);
+	Visitor_GetVal(const ZVal_ZooLib& iDefault);
 
 // From ZVisitor_Yad
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
@@ -190,65 +190,67 @@ public:
 	virtual bool Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
 	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 
+// Our protocol
+	ZVal_ZooLib GetVal(ZRef<ZYadR> iYadR);
+
+private:
 	ZVal_ZooLib fDefault;
 	ZVal_ZooLib fOutput;
 	};
 
 } // anonymous namespace
 
-ZVal_ZooLib sFromYadR(const ZVal_ZooLib& iDefault, ZRef<ZYadR> iYadR)
-	{
-	if (ZRef<ZYadR_ZooLib> theYadR = ZRefDynamicCast<ZYadR_ZooLib>(iYadR))
-		return theYadR->GetVal();
-
-	Visitor_Yad_GetVal_ZooLib theVisitor(iDefault);
-	iYadR->Accept(theVisitor);
-	return theVisitor.fOutput;
-	}
-
-Visitor_Yad_GetVal_ZooLib::Visitor_Yad_GetVal_ZooLib(const ZVal_ZooLib& iDefault)
+Visitor_GetVal::Visitor_GetVal(const ZVal_ZooLib& iDefault)
 :	fDefault(iDefault)
 	{}
 
-bool Visitor_Yad_GetVal_ZooLib::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
+bool Visitor_GetVal::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{
 	fOutput = ZVal_ZooLib::sDFromAny(fDefault, iYadPrimR->AsAny());
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_ZooLib::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+bool Visitor_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{
 	fOutput = sReadAll_T<ZData_ZooLib>(iYadStreamR->GetStreamR());
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_ZooLib::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+bool Visitor_GetVal::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	{
 	fOutput = iYadStrimR->GetStrimR().ReadAll8();
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_ZooLib::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+bool Visitor_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	{
 	ZSeq_ZooLib theSeq;
 
 	while (ZRef<ZYadR> theChild = iYadSeqR->ReadInc())
-		theSeq.Append(sFromYadR(fDefault, theChild));
+		theSeq.Append(this->GetVal(theChild));
 
 	fOutput = theSeq;
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_ZooLib::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+bool Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	{
 	ZMap_ZooLib theMap;
 
 	string theName;
 	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
-		theMap.Set(theName, sFromYadR(fDefault, theChild));
+		theMap.Set(theName, this->GetVal(theChild));
 
 	fOutput = theMap;
 	return true;
+	}
+
+ZVal_ZooLib sFromYadR(const ZVal_ZooLib& iDefault, ZRef<ZYadR> iYadR)
+	{
+	if (ZRef<ZYadR_ZooLib> theYadR = ZRefDynamicCast<ZYadR_ZooLib>(iYadR))
+		return theYadR->GetVal();
+
+	return Visitor_GetVal(iDefault).GetVal(iYadR);
 	}
 
 NAMESPACE_ZOOLIB_END

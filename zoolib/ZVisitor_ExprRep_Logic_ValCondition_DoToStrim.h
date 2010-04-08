@@ -39,7 +39,7 @@ public:
 	ZVisitor_ExprRep_Logic_ValCondition_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW);
 
 // From ZVisitor_ExprRep_Logic_ValCondition
-	virtual bool Visit_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep);
+	virtual bool Visit_Logic_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep);
 	};
 
 NAMESPACE_ZOOLIB_END

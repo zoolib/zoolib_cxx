@@ -72,7 +72,7 @@ public:
 	virtual bool Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);	
 
 // From ZVisitor_ExprRep_Logic_ValCondition
-	virtual bool Visit_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep);
+	virtual bool Visit_Logic_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep);
 
 private:
 	CondUnion& fResult;
@@ -122,7 +122,7 @@ bool Gather::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
 	return true;
 	}
 
-bool Gather::Visit_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep)
+bool Gather::Visit_Logic_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep)
 	{
 	fResult.resize(1);
 	fResult[0].push_back(iRep->GetValCondition());

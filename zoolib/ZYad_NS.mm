@@ -186,10 +186,10 @@ ZRef<ZYadMapRPos> sMakeYadR(const ZRef<NSDictionary>& iDictionary)
 
 namespace ZANONYMOUS {
 
-class Visitor_Yad_GetVal_NS : public ZVisitor_Yad
+class Visitor_GetVal : public ZVisitor_Yad
 	{
 public:
-	Visitor_Yad_GetVal_NS(ZRef<NSObject> iDefault);
+	Visitor_GetVal(ZRef<NSObject> iDefault);
 
 // From ZVisitor_Yad
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
@@ -199,7 +199,7 @@ public:
 	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 
 // Our protocol
-	ZRef<NSObject> GetNSObject(ZRef<ZYadR> iYadR);
+	ZRef<NSObject> GetVal(ZRef<ZYadR> iYadR);
 
 private:
 	ZRef<NSObject> fDefault;
@@ -208,31 +208,23 @@ private:
 
 } // anonymous namespace
 
-ZRef<NSObject> sFromYadR(const ZRef<NSObject>& iDefault, ZRef<ZYadR> iYadR)
-	{
-	if (ZRef<ZYadR_NS> theYadR = iYadR.DynamicCast<ZYadR_NS>())
-		return theYadR->GetVal();
-
-	return Visitor_Yad_GetVal_NS(iDefault).GetNSObject(iYadR);
-	}
-
-Visitor_Yad_GetVal_NS::Visitor_Yad_GetVal_NS(ZRef<NSObject> iDefault)
+Visitor_GetVal::Visitor_GetVal(ZRef<NSObject> iDefault)
 :	fDefault(iDefault)
 	{}
 
-bool Visitor_Yad_GetVal_NS::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
+bool Visitor_GetVal::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{
 	fOutput = ZUtil_NS::sDAsNSObject(fDefault, iYadPrimR->AsAny());
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_NS::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+bool Visitor_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{
 	fOutput = sReadAll_T<ZData_NS>(iYadStreamR->GetStreamR());
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_NS::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+bool Visitor_GetVal::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	{
 	NSMutableString* result = ZUtil_NS::sStringMutable();
 	ZStrimW_NSString(result).CopyAllFrom(iYadStrimR->GetStrimR());
@@ -240,30 +232,30 @@ bool Visitor_Yad_GetVal_NS::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_NS::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+bool Visitor_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	{
 	ZSeq_NS theSeq;
 
 	while (ZRef<ZYadR> theChild = iYadSeqR->ReadInc())
-		theSeq.Append(this->GetNSObject(theChild));
+		theSeq.Append(this->GetVal(theChild));
 
 	fOutput = theSeq;
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_NS::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+bool Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	{
 	ZMap_NS theMap;
 
 	string theName;
 	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
-		theMap.Set(theName, this->GetNSObject(theChild));
+		theMap.Set(theName, this->GetVal(theChild));
 
 	fOutput = theMap;
 	return true;
 	}
 
-ZRef<NSObject> Visitor_Yad_GetVal_NS::GetNSObject(ZRef<ZYadR> iYadR)
+ZRef<NSObject> Visitor_GetVal::GetVal(ZRef<ZYadR> iYadR)
 	{
 	ZRef<NSObject> result;
 	if (iYadR)
@@ -274,6 +266,14 @@ ZRef<NSObject> Visitor_Yad_GetVal_NS::GetNSObject(ZRef<ZYadR> iYadR)
 	return result;
 	}
 
+
+ZRef<NSObject> sFromYadR(const ZRef<NSObject>& iDefault, ZRef<ZYadR> iYadR)
+	{
+	if (ZRef<ZYadR_NS> theYadR = iYadR.DynamicCast<ZYadR_NS>())
+		return theYadR->GetVal();
+
+	return Visitor_GetVal(iDefault).GetVal(iYadR);
+	}
 NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(Cocoa)

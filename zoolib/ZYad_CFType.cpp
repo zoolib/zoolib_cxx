@@ -206,10 +206,10 @@ ZRef<ZYadMapRPos> sMakeYadR(const ZRef<CFDictionaryRef>& iDictionary)
 
 namespace ZANONYMOUS {
 
-class Visitor_Yad_GetVal_CFType : public ZVisitor_Yad
+class Visitor_GetVal : public ZVisitor_Yad
 	{
 public:
-	Visitor_Yad_GetVal_CFType(ZRef<CFTypeRef> iDefault);
+	Visitor_GetVal(ZRef<CFTypeRef> iDefault);
 
 // From ZVisitor_Yad
 	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
@@ -219,7 +219,7 @@ public:
 	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 
 // Our protocol
-	ZRef<CFTypeRef> GetCFTypeRef(ZRef<ZYadR> iYadR);
+	ZRef<CFTypeRef> GetVal(ZRef<ZYadR> iYadR);
 
 private:
 	ZRef<CFTypeRef> fDefault;
@@ -228,31 +228,23 @@ private:
 
 } // anonymous namespace
 
-ZRef<CFTypeRef> sFromYadR(const ZRef<CFTypeRef>& iDefault, ZRef<ZYadR> iYadR)
-	{
-	if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iYadR))
-		return theYadR->GetVal();
-
-	return Visitor_Yad_GetVal_CFType(iDefault).GetCFTypeRef(iYadR);
-	}
-
-Visitor_Yad_GetVal_CFType::Visitor_Yad_GetVal_CFType(ZRef<CFTypeRef> iDefault)
+Visitor_GetVal::Visitor_GetVal(ZRef<CFTypeRef> iDefault)
 :	fDefault(iDefault)
 	{}
 
-bool Visitor_Yad_GetVal_CFType::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
+bool Visitor_GetVal::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{
 	fOutput = ZUtil_CFType::sDAsCFType(fDefault, iYadPrimR->AsAny());
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_CFType::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+bool Visitor_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
 	{
 	fOutput = sReadAll_T<ZData_CFType>(iYadStreamR->GetStreamR());
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_CFType::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+bool Visitor_GetVal::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	{
 	ZRef<CFMutableStringRef> result = ZUtil_CFType::sStringMutable();
 	ZStrimW_CFString(result).CopyAllFrom(iYadStrimR->GetStrimR());
@@ -260,30 +252,30 @@ bool Visitor_Yad_GetVal_CFType::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_CFType::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+bool Visitor_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	{
 	ZSeq_CFType theSeq;
 
 	while (ZRef<ZYadR> theChild = iYadSeqR->ReadInc())
-		theSeq.Append(this->GetCFTypeRef(theChild));
+		theSeq.Append(this->GetVal(theChild));
 
 	fOutput = theSeq;
 	return true;
 	}
 
-bool Visitor_Yad_GetVal_CFType::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+bool Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	{
 	ZMap_CFType theMap;
 
 	string theName;
 	while (ZRef<ZYadR> theChild = iYadMapR->ReadInc(theName))
-		theMap.Set(theName, this->GetCFTypeRef(theChild));
+		theMap.Set(theName, this->GetVal(theChild));
 
 	fOutput = theMap;
 	return true;
 	}
 
-ZRef<CFTypeRef> Visitor_Yad_GetVal_CFType::GetCFTypeRef(ZRef<ZYadR> iYadR)
+ZRef<CFTypeRef> Visitor_GetVal::GetVal(ZRef<ZYadR> iYadR)
 	{
 	ZRef<CFTypeRef> result;
 	if (iYadR)
@@ -292,6 +284,14 @@ ZRef<CFTypeRef> Visitor_Yad_GetVal_CFType::GetCFTypeRef(ZRef<ZYadR> iYadR)
 		std::swap(result, fOutput);
 		}
 	return result;
+	}
+
+ZRef<CFTypeRef> sFromYadR(const ZRef<CFTypeRef>& iDefault, ZRef<ZYadR> iYadR)
+	{
+	if (ZRef<ZYadR_CFType> theYadR = ZRefDynamicCast<ZYadR_CFType>(iYadR))
+		return theYadR->GetVal();
+
+	return Visitor_GetVal(iDefault).GetVal(iYadR);
 	}
 
 NAMESPACE_ZOOLIB_END
