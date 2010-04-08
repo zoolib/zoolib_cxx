@@ -488,8 +488,7 @@ ZValComparand_T<Val>::LT(const ZRef<ComparandRep>& iRHS) const
 	{
 	return ZValCondition_T<Val>
 		(*this,
-		new ZValComparatorRep_Simple_T<Val>(
-			ZValComparatorRep_Simple_T<Val>::eLT),
+		new ZValComparatorRep_Simple_T<Val>(ZValComparatorRep_Simple_T<Val>::eLT),
 		iRHS);
 	}
 
@@ -499,8 +498,7 @@ ZValComparand_T<Val>::LE(const ZRef<ComparandRep>& iRHS) const
 	{
 	return ZValCondition_T<Val>
 		(*this,
-		new ZValComparatorRep_Simple_T<Val>(
-			ZValComparatorRep_Simple_T<Val>::eLE),
+		new ZValComparatorRep_Simple_T<Val>(ZValComparatorRep_Simple_T<Val>::eLE),
 		iRHS);
 	}
 
@@ -510,8 +508,7 @@ ZValComparand_T<Val>::EQ(const ZRef<ComparandRep>& iRHS) const
 	{
 	return ZValCondition_T<Val>
 		(*this,
-		new ZValComparatorRep_Simple_T<Val>(
-			ZValComparatorRep_Simple_T<Val>::eEQ),
+		new ZValComparatorRep_Simple_T<Val>(ZValComparatorRep_Simple_T<Val>::eEQ),
 		iRHS);
 	}
 
@@ -521,8 +518,7 @@ ZValComparand_T<Val>::GE(const ZRef<ComparandRep>& iRHS) const
 	{
 	return ZValCondition_T<Val>
 		(*this,
-		new ZValComparatorRep_Simple_T<Val>(
-			ZValComparatorRep_Simple_T<Val>::eGE),
+		new ZValComparatorRep_Simple_T<Val>(ZValComparatorRep_Simple_T<Val>::eGE),
 		iRHS);
 	}
 
@@ -532,8 +528,7 @@ ZValComparand_T<Val>::GT(const ZRef<ComparandRep>& iRHS) const
 	{
 	return ZValCondition_T<Val>
 		(*this,
-		new ZValComparatorRep_Simple_T<Val>(
-			ZValComparatorRep_Simple_T<Val>::eGT),
+		new ZValComparatorRep_Simple_T<Val>(ZValComparatorRep_Simple_T<Val>::eGT),
 		iRHS);
 	}
 
@@ -548,8 +543,7 @@ ZValCondition_T<Val> operator<(
 	{
 	return ZValCondition_T<Val>
 		(iLHS,
-		new ZValComparatorRep_Simple_T<Val>(
-			ZValComparatorRep_Simple_T<Val>::eLT),
+		new ZValComparatorRep_Simple_T<Val>(ZValComparatorRep_Simple_T<Val>::eLT),
 		iRHS);
 	}
 
@@ -560,8 +554,7 @@ ZValCondition_T<Val> operator<=(
 	{
 	return ZValCondition_T<Val>
 		(iLHS,
-		new ZValComparatorRep_Simple_T<Val>(
-			ZValComparatorRep_Simple_T<Val>::eLE),
+		new ZValComparatorRep_Simple_T<Val>(ZValComparatorRep_Simple_T<Val>::eLE),
 		iRHS);
 	}
 
@@ -572,8 +565,7 @@ ZValCondition_T<Val> operator==(
 	{
 	return ZValCondition_T<Val>
 		(iLHS,
-		new ZValComparatorRep_Simple_T<Val>(
-			ZValComparatorRep_Simple_T<Val>::eEQ),
+		new ZValComparatorRep_Simple_T<Val>(ZValComparatorRep_Simple_T<Val>::eEQ),
 		iRHS);
 	}
 
@@ -584,8 +576,7 @@ ZValCondition_T<Val> operator>=(
 	{
 	return ZValCondition_T<Val>
 		(iLHS,
-		new ZValComparatorRep_Simple_T<Val>(
-			ZValComparatorRep_Simple_T<Val>::eGE),
+		new ZValComparatorRep_Simple_T<Val>(ZValComparatorRep_Simple_T<Val>::eGE),
 		iRHS);
 	}
 
@@ -596,8 +587,7 @@ ZValCondition_T<Val> operator>(
 	{
 	return ZValCondition_T<Val>
 		(iLHS,
-		new ZValComparatorRep_Simple_T<Val>(
-			ZValComparatorRep_Simple_T<Val>::eGT),
+		new ZValComparatorRep_Simple_T<Val>(ZValComparatorRep_Simple_T<Val>::eGT),
 		iRHS);
 	}
 
@@ -608,50 +598,32 @@ ZValCondition_T<Val> operator>(
 template <class Val>
 ZValComparand_T<Val>
 CConst_T(const char* iVal)
-	{
-	return ZValComparand_T<Val>(
-		new ZValComparandRep_Const_T<Val>(std::string(iVal)));
-	}
+	{ return ZValComparand_T<Val>( new ZValComparandRep_Const_T<Val>(std::string(iVal))); }
 
 template <class Val>
 ZValComparand_T<Val>
 CConst_T(const Val& iVal)
-	{
-	return ZValComparand_T<Val>(
-		new ZValComparandRep_Const_T<Val>(iVal));
-	}
+	{ return ZValComparand_T<Val>( new ZValComparandRep_Const_T<Val>(iVal)); }
 
 template <class Val>
 ZValComparand_T<Val>
 CName_T(const std::string& iName)
-	{
-	return ZValComparand_T<Val>(
-		new ZValComparandRep_Trail_T<Val>(ZTrail(&iName, &iName + 1)));
-	}
+	{ return ZValComparand_T<Val>( new ZValComparandRep_Trail_T<Val>(ZTrail(&iName, &iName + 1))); }
 
 template <class Val>
 ZValComparand_T<Val>
 CTrail_T(const ZTrail& iTrail)
-	{
-	return ZValComparand_T<Val>(
-		new ZValComparandRep_Trail_T<Val>(iTrail));
-	}
+	{ return ZValComparand_T<Val>( new ZValComparandRep_Trail_T<Val>(iTrail)); }
 
 template <class Val>
 ZValComparand_T<Val>
 CVal_T()
-	{
-	return ZValComparand_T<Val>(
-		new ZValComparandRep_Trail_T<Val>(ZTrail()));
-	}
+	{ return ZValComparand_T<Val>(new ZValComparandRep_Trail_T<Val>(ZTrail())); }
 
 template <class Val>
 ZValComparand_T<Val>
 CVar_T(const std::string& iVarName)
-	{
-	return ZValComparand_T<Val>(
-		new ZValComparandRep_Var_T<Val>(iVarName));
-	}
+	{ return ZValComparand_T<Val>( new ZValComparandRep_Var_T<Val>(iVarName)); }
 
 NAMESPACE_ZOOLIB_END
 

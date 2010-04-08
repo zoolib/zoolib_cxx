@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYadSeq_ApplyID.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-
+// FIXME. Could return a ZYadMapR with a constant for the ID, and the actual yad for the value.
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadSeqR_ExprRep_Logic

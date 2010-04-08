@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
+class Visitor_ExprRep_Relation_Concrete;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ExprRep_Relation_Concrete
@@ -41,6 +43,9 @@ public:
 
 // From ExprRep_Relation
 	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
+
+// Our protocol
+	virtual bool Accept_ExprRep_Relation_Concrete(Visitor_ExprRep_Relation_Concrete& iVisitor);
 	};
 
 // =================================================================================================

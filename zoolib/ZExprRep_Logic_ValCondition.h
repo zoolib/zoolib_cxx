@@ -27,9 +27,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZExprRep_Logic_ValCondition
+
 typedef ZExprRep_Logic_ValCondition_T<ZVal_Expr> ZExprRep_Logic_ValCondition;
 
 typedef ZVisitor_ExprRep_Logic_ValCondition_T<ZVal_Expr> ZVisitor_ExprRep_Logic_ValCondition;
+
 
 inline ZRelHead sGetRelHead(const ZRef<ZExprRep_Logic>& iRep)
 	{ return sGetRelHead_T<ZVal_Expr>(iRep); }

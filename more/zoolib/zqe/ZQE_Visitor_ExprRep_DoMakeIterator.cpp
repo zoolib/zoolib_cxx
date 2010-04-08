@@ -27,12 +27,14 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Visitor_ExprRep_DoMakeIterator
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Difference(ZRef<ExprRep_Relation_Difference> iRep)
+bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Difference(
+	ZRef<ExprRep_Relation_Difference> iRep)
 	{
 	return true;
 	}
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Intersect(ZRef<ExprRep_Relation_Intersect> iRep)
+bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Intersect(
+	ZRef<ExprRep_Relation_Intersect> iRep)
 	{
 	if (ZRef<Iterator> lhs = this->DoMakeIterator(iRep->GetLHS()))
 		{
@@ -52,17 +54,20 @@ bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Join(ZRef<ExprRep_Re
 	return true;
 	}
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Project(ZRef<ExprRep_Relation_Project> iRep)
+bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Project(
+	ZRef<ExprRep_Relation_Project> iRep)
 	{
 	return true;
 	}
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Rename(ZRef<ExprRep_Relation_Rename> iRep)
+bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Rename(
+	ZRef<ExprRep_Relation_Rename> iRep)
 	{
 	return true;
 	}
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Union(ZRef<ExprRep_Relation_Union> iRep)
+bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Union(
+	ZRef<ExprRep_Relation_Union> iRep)
 	{
 	if (ZRef<Iterator> lhs = this->DoMakeIterator(iRep->GetLHS()))
 		{

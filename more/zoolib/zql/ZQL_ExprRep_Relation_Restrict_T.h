@@ -50,7 +50,8 @@ public:
 	virtual ZRelHead GetRelHead();
 
 // Our protocol
-	virtual bool Accept_ExprRep_Relation_Restrict(Visitor_ExprRep_Relation_Restrict_T<Val>& iVisitor);
+	virtual bool Accept_ExprRep_Relation_Restrict(
+		Visitor_ExprRep_Relation_Restrict_T<Val>& iVisitor);
 
 	ZValCondition_T<Val> GetValCondition();
 	ZRef<ExprRep_Relation> GetExprRep();
@@ -90,7 +91,8 @@ ZRelHead ExprRep_Relation_Restrict_T<Val>::GetRelHead()
 	{ return fExprRep->GetRelHead() | fValCondition.GetRelHead(); }
 	
 template <class Val>
-bool ExprRep_Relation_Restrict_T<Val>::Accept_ExprRep_Relation_Restrict(Visitor_ExprRep_Relation_Restrict_T<Val>& iVisitor)
+bool ExprRep_Relation_Restrict_T<Val>::Accept_ExprRep_Relation_Restrict(
+	Visitor_ExprRep_Relation_Restrict_T<Val>& iVisitor)
 	{ return iVisitor.Visit_ExprRep_Relation_Restrict(this); }
 
 template <class Val>
@@ -113,7 +115,8 @@ public:
 	};
 
 template <class Val>
-bool Visitor_ExprRep_Relation_Restrict_T<Val>::Visit_ExprRep_Relation_Restrict(ZRef<ExprRep_Relation_Restrict_T<Val> > iRep)
+bool Visitor_ExprRep_Relation_Restrict_T<Val>::Visit_ExprRep_Relation_Restrict(
+	ZRef<ExprRep_Relation_Restrict_T<Val> > iRep)
 	{
 	if (ZRef<ExprRep_Relation> theExprRep = iRep->GetExprRep())
 		theExprRep->Accept(*this);

@@ -50,7 +50,8 @@ Visitor_ExprRep_Relation_Restrict_DoToStrim::Visitor_ExprRep_Relation_Restrict_D
 :	ZVisitor_ExprRep_DoToStrim(iOptions, iStrimW)
 	{}
 
-bool Visitor_ExprRep_Relation_Restrict_DoToStrim::Visit_ExprRep_Relation_Restrict(ZRef<ExprRep_Relation_Restrict> iRep)
+bool Visitor_ExprRep_Relation_Restrict_DoToStrim::Visit_ExprRep_Relation_Restrict(
+	ZRef<ExprRep_Relation_Restrict> iRep)
 	{
 	fStrimW << "Restrict";
 

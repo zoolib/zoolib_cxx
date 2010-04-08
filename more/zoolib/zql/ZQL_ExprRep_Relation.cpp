@@ -219,7 +219,8 @@ ZRelHead ExprRep_Relation_Union::GetRelHead()
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation
 
-bool Visitor_ExprRep_Relation::Visit_ExprRep_Relation_Difference(ZRef<ExprRep_Relation_Difference> iRep)
+bool Visitor_ExprRep_Relation::Visit_ExprRep_Relation_Difference(
+	ZRef<ExprRep_Relation_Difference> iRep)
 	{
 	if (ZRef<ExprRep_Relation> theLHS = iRep->GetLHS())
 		theLHS->Accept(*this);
@@ -230,7 +231,8 @@ bool Visitor_ExprRep_Relation::Visit_ExprRep_Relation_Difference(ZRef<ExprRep_Re
 	return true;
 	}
 
-bool Visitor_ExprRep_Relation::Visit_ExprRep_Relation_Intersect(ZRef<ExprRep_Relation_Intersect> iRep)
+bool Visitor_ExprRep_Relation::Visit_ExprRep_Relation_Intersect(
+	ZRef<ExprRep_Relation_Intersect> iRep)
 	{
 	if (ZRef<ExprRep_Relation> theLHS = iRep->GetLHS())
 		theLHS->Accept(*this);
@@ -286,10 +288,12 @@ bool Visitor_ExprRep_Relation::Visit_ExprRep_Relation_Union(ZRef<ExprRep_Relatio
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<ExprRep_Relation> sIntersect(const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS)
+ZRef<ExprRep_Relation> sIntersect(
+	const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS)
 	{ return new ExprRep_Relation_Intersect(iLHS, iRHS); }
 
-ZRef<ExprRep_Relation> sJoin(const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS)
+ZRef<ExprRep_Relation> sJoin(
+	const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS)
 	{ return new ExprRep_Relation_Join(iLHS, iRHS); }
 
 ZRef<ExprRep_Relation> sProject(const ZRelHead& iRelHead, const ZRef<ExprRep_Relation>& iExpr)
@@ -299,16 +303,20 @@ ZRef<ExprRep_Relation> sRename(const string& iOldPropName, const string& iNewPro
 	const ZRef<ExprRep_Relation>& iExpr)
 	{ return new ExprRep_Relation_Rename(iExpr, iOldPropName, iNewPropName); }
 
-ZRef<ExprRep_Relation> sUnion(const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS)
+ZRef<ExprRep_Relation> sUnion(
+	const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS)
 	{ return new ExprRep_Relation_Union(iLHS, iRHS); }
 
-ZRef<ExprRep_Relation> operator&(const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS)
+ZRef<ExprRep_Relation> operator&(
+	const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS)
 	{ return new ExprRep_Relation_Intersect(iLHS, iRHS); }
 
-ZRef<ExprRep_Relation> operator*(const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS)
+ZRef<ExprRep_Relation> operator*(
+	const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS)
 	{ return new ExprRep_Relation_Join(iLHS, iRHS); }
 
-ZRef<ExprRep_Relation> operator|(const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS)
+ZRef<ExprRep_Relation> operator|(
+	const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS)
 	{ return new ExprRep_Relation_Union(iLHS, iRHS); }
 
 } // namespace ZQL

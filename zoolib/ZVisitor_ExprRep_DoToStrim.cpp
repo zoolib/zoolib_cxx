@@ -37,7 +37,8 @@ ZVisitor_ExprRep_DoToStrim::Options::Options()
 #pragma mark -
 #pragma mark * ZVisitor_ExprRep_DoToStrim
 
-ZVisitor_ExprRep_DoToStrim::ZVisitor_ExprRep_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW)
+ZVisitor_ExprRep_DoToStrim::ZVisitor_ExprRep_DoToStrim(
+	const Options& iOptions, const ZStrimW& iStrimW)
 :	fOptions(iOptions)
 ,	fStrimW(iStrimW)
 ,	fIndent(0)

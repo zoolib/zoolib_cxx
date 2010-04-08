@@ -27,12 +27,15 @@ namespace ZQL {
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation_Select_DoTransform
 
-bool Visitor_ExprRep_Relation_Select_DoTransform::Visit_ExprRep_Relation_Select(ZRef<ExprRep_Relation_Select> iRep)
+bool Visitor_ExprRep_Relation_Select_DoTransform::Visit_ExprRep_Relation_Select(
+	ZRef<ExprRep_Relation_Select> iRep)
 	{
 	ZRef<ZExprRep_Logic> oldLogical = iRep->GetExprRep_Logic();
 	ZRef<ExprRep_Relation> oldRelation = iRep->GetExprRep_Relation();
 	ZRef<ZExprRep_Logic> newLogical = this->DoTransform(oldLogical).DynamicCast<ZExprRep_Logic>();
-	ZRef<ExprRep_Relation> newRelation = this->DoTransform(oldRelation).DynamicCast<ExprRep_Relation>();
+	ZRef<ExprRep_Relation> newRelation =
+		this->DoTransform(oldRelation).DynamicCast<ExprRep_Relation>();
+
 	if (oldLogical == newLogical && oldRelation == newRelation)
 		fResult = iRep;
 	else

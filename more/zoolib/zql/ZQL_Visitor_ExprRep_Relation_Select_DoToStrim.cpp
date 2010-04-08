@@ -49,7 +49,8 @@ Visitor_ExprRep_Relation_Select_DoToStrim::Visitor_ExprRep_Relation_Select_DoToS
 :	ZVisitor_ExprRep_DoToStrim(iOptions, iStrimW)
 	{}
 
-bool Visitor_ExprRep_Relation_Select_DoToStrim::Visit_ExprRep_Relation_Select(ZRef<ExprRep_Relation_Select> iRep)
+bool Visitor_ExprRep_Relation_Select_DoToStrim::Visit_ExprRep_Relation_Select(
+	ZRef<ExprRep_Relation_Select> iRep)
 	{
 	fStrimW << "Select";
 

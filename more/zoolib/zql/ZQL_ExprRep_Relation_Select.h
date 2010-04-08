@@ -73,11 +73,14 @@ public:
 #pragma mark -
 #pragma mark * Query operators
 
-ZRef<ExprRep_Relation_Select> sSelect(const ZRef<ZExprRep_Logic>& iExprRep_Logic, const ZRef<ExprRep_Relation>& iExprRep_Relation);
+ZRef<ExprRep_Relation_Select> sSelect(
+	const ZRef<ZExprRep_Logic>& iExprRep_Logic, const ZRef<ExprRep_Relation>& iExprRep_Relation);
 
-ZRef<ExprRep_Relation_Select> operator&(const ZRef<ZExprRep_Logic>& iExprRep_Logic, const ZRef<ExprRep_Relation>& iExprRep_Relation);
+ZRef<ExprRep_Relation_Select> operator&(
+	const ZRef<ZExprRep_Logic>& iExprRep_Logic, const ZRef<ExprRep_Relation>& iExprRep_Relation);
 
-ZRef<ExprRep_Relation_Select> operator&(const ZRef<ExprRep_Relation>& iExprRep_Relation, const ZRef<ZExprRep_Logic>& iExprRep_Logic);
+ZRef<ExprRep_Relation_Select> operator&(
+	const ZRef<ExprRep_Relation>& iExprRep_Relation, const ZRef<ZExprRep_Logic>& iExprRep_Logic);
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

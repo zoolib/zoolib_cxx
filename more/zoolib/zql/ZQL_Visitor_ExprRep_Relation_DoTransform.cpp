@@ -29,7 +29,8 @@ namespace ZQL {
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation_DoTransform
 
-bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Difference(ZRef<ExprRep_Relation_Difference> iRep)
+bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Difference(
+	ZRef<ExprRep_Relation_Difference> iRep)
 	{
 	ZRef<ExprRep_Relation> newLHS, newRHS;
 	if (this->pTransformDyadic(iRep, newLHS, newRHS))
@@ -39,7 +40,8 @@ bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Difference(ZRe
 	return true;
 	}
 
-bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Intersect(ZRef<ExprRep_Relation_Intersect> iRep)
+bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Intersect(
+	ZRef<ExprRep_Relation_Intersect> iRep)
 	{
 	ZRef<ExprRep_Relation> newLHS, newRHS;
 	if (this->pTransformDyadic(iRep, newLHS, newRHS))
@@ -49,7 +51,8 @@ bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Intersect(ZRef
 	return true;
 	}
 
-bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Join(ZRef<ExprRep_Relation_Join> iRep)
+bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Join(
+	ZRef<ExprRep_Relation_Join> iRep)
 	{
 	ZRef<ExprRep_Relation> newLHS, newRHS;
 	if (this->pTransformDyadic(iRep, newLHS, newRHS))
@@ -59,7 +62,8 @@ bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Join(ZRef<Expr
 	return true;
 	}
 
-bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Project(ZRef<ExprRep_Relation_Project> iRep)
+bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Project(
+	ZRef<ExprRep_Relation_Project> iRep)
 	{
 	ZRef<ExprRep_Relation> oldRep = iRep->GetExprRep();
 	ZRef<ExprRep_Relation> newRep = this->DoTransform(oldRep).DynamicCast<ExprRep_Relation>();
@@ -70,7 +74,8 @@ bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Project(ZRef<E
 	return true;
 	}
 
-bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Rename(ZRef<ExprRep_Relation_Rename> iRep)
+bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Rename(
+	ZRef<ExprRep_Relation_Rename> iRep)
 	{
 	ZRef<ExprRep_Relation> oldRep = iRep->GetExprRep();
 	ZRef<ExprRep_Relation> newRep = this->DoTransform(oldRep).DynamicCast<ExprRep_Relation>();
@@ -81,7 +86,8 @@ bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Rename(ZRef<Ex
 	return true;
 	}
 
-bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Union(ZRef<ExprRep_Relation_Union> iRep)
+bool Visitor_ExprRep_Relation_DoTransform::Visit_ExprRep_Relation_Union(
+	ZRef<ExprRep_Relation_Union> iRep)
 	{
 	ZRef<ExprRep_Relation> newLHS, newRHS;
 	if (this->pTransformDyadic(iRep, newLHS, newRHS))

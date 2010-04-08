@@ -27,7 +27,8 @@ namespace ZQL {
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation_Restrict_DoTransform
 
-bool Visitor_ExprRep_Relation_Restrict_DoTransform::Visit_ExprRep_Relation_Restrict(ZRef<ExprRep_Relation_Restrict> iRep)
+bool Visitor_ExprRep_Relation_Restrict_DoTransform::Visit_ExprRep_Relation_Restrict(
+	ZRef<ExprRep_Relation_Restrict> iRep)
 	{
 	ZRef<ExprRep_Relation> oldRep = iRep->GetExprRep();
 	ZRef<ExprRep_Relation> newRep = this->DoTransform(oldRep).DynamicCast<ExprRep_Relation>();

@@ -64,13 +64,16 @@ Visitor_ExprRep_Relation_DoToStrim::Visitor_ExprRep_Relation_DoToStrim(
 :	ZVisitor_ExprRep_DoToStrim(iOptions, iStrimW)
 	{}
 
-bool Visitor_ExprRep_Relation_DoToStrim::Visit_ExprRep_Relation_Difference(ZRef<ExprRep_Relation_Difference> iRep)
+bool Visitor_ExprRep_Relation_DoToStrim::Visit_ExprRep_Relation_Difference(
+	ZRef<ExprRep_Relation_Difference> iRep)
 	{ return this->pWriteDyadic("Difference", iRep); }
 
-bool Visitor_ExprRep_Relation_DoToStrim::Visit_ExprRep_Relation_Intersect(ZRef<ExprRep_Relation_Intersect> iRep)
+bool Visitor_ExprRep_Relation_DoToStrim::Visit_ExprRep_Relation_Intersect(
+	ZRef<ExprRep_Relation_Intersect> iRep)
 	{ return this->pWriteDyadic("Intersect", iRep); }
 
-bool Visitor_ExprRep_Relation_DoToStrim::Visit_ExprRep_Relation_Join(ZRef<ExprRep_Relation_Join> iRep)
+bool Visitor_ExprRep_Relation_DoToStrim::Visit_ExprRep_Relation_Join(
+	ZRef<ExprRep_Relation_Join> iRep)
 	{
 	ZRef<ExprRep_Relation> theLHS = iRep->GetLHS();
 	ZRef<ExprRep_Relation> theRHS = iRep->GetRHS();
@@ -102,7 +105,8 @@ bool Visitor_ExprRep_Relation_DoToStrim::Visit_ExprRep_Relation_Join(ZRef<ExprRe
 	return true;
 	}
 
-bool Visitor_ExprRep_Relation_DoToStrim::Visit_ExprRep_Relation_Project(ZRef<ExprRep_Relation_Project> iRep)
+bool Visitor_ExprRep_Relation_DoToStrim::Visit_ExprRep_Relation_Project(
+	ZRef<ExprRep_Relation_Project> iRep)
 	{
 	spWrite("Project", fStrimW);
 
@@ -124,7 +128,8 @@ bool Visitor_ExprRep_Relation_DoToStrim::Visit_ExprRep_Relation_Project(ZRef<Exp
 	return true;
 	}
 
-bool Visitor_ExprRep_Relation_DoToStrim::Visit_ExprRep_Relation_Rename(ZRef<ExprRep_Relation_Rename> iRep)
+bool Visitor_ExprRep_Relation_DoToStrim::Visit_ExprRep_Relation_Rename(
+	ZRef<ExprRep_Relation_Rename> iRep)
 	{
 	spWrite("Rename", fStrimW);
 
@@ -148,7 +153,8 @@ bool Visitor_ExprRep_Relation_DoToStrim::Visit_ExprRep_Relation_Rename(ZRef<Expr
 	return true;
 	}
 
-bool Visitor_ExprRep_Relation_DoToStrim::Visit_ExprRep_Relation_Union(ZRef<ExprRep_Relation_Union> iRep)
+bool Visitor_ExprRep_Relation_DoToStrim::Visit_ExprRep_Relation_Union(
+	ZRef<ExprRep_Relation_Union> iRep)
 	{ return this->pWriteDyadic("Union", iRep); }
 
 bool Visitor_ExprRep_Relation_DoToStrim::pWriteDyadic(

@@ -55,7 +55,8 @@ bool ExprRep_Relation_Select::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& 
 ZRelHead ExprRep_Relation_Select::GetRelHead()
 	{ return sGetRelHead(fExprRep_Logic) | fExprRep_Relation->GetRelHead(); }
 
-bool ExprRep_Relation_Select::Accept_ExprRep_Relation_Select(Visitor_ExprRep_Relation_Select& iVisitor)
+bool ExprRep_Relation_Select::Accept_ExprRep_Relation_Select(
+	Visitor_ExprRep_Relation_Select& iVisitor)
 	{ return iVisitor.Visit_ExprRep_Relation_Select(this); }
 
 ZRef<ZExprRep_Logic> ExprRep_Relation_Select::GetExprRep_Logic()
@@ -68,7 +69,8 @@ ZRef<ExprRep_Relation> ExprRep_Relation_Select::GetExprRep_Relation()
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation_Select
 
-bool Visitor_ExprRep_Relation_Select::Visit_ExprRep_Relation_Select(ZRef<ExprRep_Relation_Select> iRep)
+bool Visitor_ExprRep_Relation_Select::Visit_ExprRep_Relation_Select(
+	ZRef<ExprRep_Relation_Select> iRep)
 	{
 	if (ZRef<ZExprRep_Logic> theExprRep_Logic = iRep->GetExprRep_Logic())
 		theExprRep_Logic->Accept(*this);
@@ -82,13 +84,16 @@ bool Visitor_ExprRep_Relation_Select::Visit_ExprRep_Relation_Select(ZRef<ExprRep
 #pragma mark -
 #pragma mark *
 
-ZRef<ExprRep_Relation_Select> sSelect(const ZRef<ZExprRep_Logic>& iExprRep_Logic, const ZRef<ExprRep_Relation>& iExprRep_Relation)
+ZRef<ExprRep_Relation_Select> sSelect(
+	const ZRef<ZExprRep_Logic>& iExprRep_Logic, const ZRef<ExprRep_Relation>& iExprRep_Relation)
 	{ return new ExprRep_Relation_Select(iExprRep_Logic, iExprRep_Relation); }
 
-ZRef<ExprRep_Relation_Select> operator&(const ZRef<ZExprRep_Logic>& iExprRep_Logic, const ZRef<ExprRep_Relation>& iExprRep_Relation)
+ZRef<ExprRep_Relation_Select> operator&(
+	const ZRef<ZExprRep_Logic>& iExprRep_Logic, const ZRef<ExprRep_Relation>& iExprRep_Relation)
 	{ return new ExprRep_Relation_Select(iExprRep_Logic, iExprRep_Relation); }
 
-ZRef<ExprRep_Relation_Select> operator&(const ZRef<ExprRep_Relation>& iExprRep_Relation, const ZRef<ZExprRep_Logic>& iExprRep_Logic)
+ZRef<ExprRep_Relation_Select> operator&(
+	const ZRef<ExprRep_Relation>& iExprRep_Relation, const ZRef<ZExprRep_Logic>& iExprRep_Logic)
 	{ return new ExprRep_Relation_Select(iExprRep_Logic, iExprRep_Relation); }
 
 } // namespace ZQL

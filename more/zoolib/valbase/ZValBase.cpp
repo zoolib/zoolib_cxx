@@ -62,7 +62,8 @@ public:
 	virtual bool Visit_ExprRep_Relation_Select(ZRef<ZQL::ExprRep_Relation_Select> iRep);
 	};
 
-bool Visitor_DoMakeIterator::Visit_ExprRep_Relation_Concrete(ZRef<ZQL::ExprRep_Relation_Concrete> iRep)
+bool Visitor_DoMakeIterator::Visit_ExprRep_Relation_Concrete(
+	ZRef<ZQL::ExprRep_Relation_Concrete> iRep)
 	{
 	if (ZRef<ExprRep_Relation_Concrete> theRep = iRep.DynamicCast<ExprRep_Relation_Concrete>())
 		{
@@ -72,7 +73,8 @@ bool Visitor_DoMakeIterator::Visit_ExprRep_Relation_Concrete(ZRef<ZQL::ExprRep_R
 	return Visitor_ExprRep_Relation_Concrete::Visit_ExprRep_Relation_Concrete(iRep);
 	}
 
-bool Visitor_DoMakeIterator::Visit_ExprRep_Relation_Restrict(ZRef<ZQL::ExprRep_Relation_Restrict> iRep)
+bool Visitor_DoMakeIterator::Visit_ExprRep_Relation_Restrict(
+	ZRef<ZQL::ExprRep_Relation_Restrict> iRep)
 	{
 	if (ZRef<ZQE::Iterator> theIterator = this->DoMakeIterator(iRep->GetExprRep()))
 		fIterator = new ZQE::Iterator_Any_Restrict(iRep->GetValCondition(), theIterator);
@@ -117,7 +119,8 @@ ZRef<ZQL::ExprRep_Relation> sConcrete()
 	{
 	// Take a ZRelHead as a param?
 	// Put this outside of ZValBase? Perhaps over in ZQL?
-	// Need to return an Expr_Relation_Concrete that can be handled by ZQL::Util_Strim_Query::Visitor_Query_DoToStrim
+	// Need to return an Expr_Relation_Concrete that can be
+	// handled by ZQL::Util_Strim_Query::Visitor_Query_DoToStrim
 	return new ExprRep_Relation_Concrete_Dummy;
 	}
 

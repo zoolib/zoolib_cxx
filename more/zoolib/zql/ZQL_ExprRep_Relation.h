@@ -199,24 +199,31 @@ public:
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<ExprRep_Relation> sIntersect(const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS);
+ZRef<ExprRep_Relation> sIntersect(
+	const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS);
 
-ZRef<ExprRep_Relation> sJoin(const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS);
+ZRef<ExprRep_Relation> sJoin(
+	const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS);
 
 ZRef<ExprRep_Relation> sProject(const ZRelHead& iRelHead, const ZRef<ExprRep_Relation>& iExpr);
 
 ZRef<ExprRep_Relation> sRename(const std::string& iOldPropName, const std::string& iNewPropName,
 	const ZRef<ExprRep_Relation>& iExpr);
 
-ZRef<ExprRep_Relation> sUnion(const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS);
+ZRef<ExprRep_Relation> sUnion(
+	const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS);
 
-ZRef<ExprRep_Relation> operator&(const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS);
+ZRef<ExprRep_Relation> operator&(
+	const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS);
 
-ZRef<ExprRep_Relation> operator&(const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS);
+ZRef<ExprRep_Relation> operator&(
+	const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS);
 
-ZRef<ExprRep_Relation> operator*(const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS);
+ZRef<ExprRep_Relation> operator*(
+	const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS);
 
-ZRef<ExprRep_Relation> operator|(const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS);
+ZRef<ExprRep_Relation> operator|(
+	const ZRef<ExprRep_Relation>& iLHS, const ZRef<ExprRep_Relation>& iRHS);
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

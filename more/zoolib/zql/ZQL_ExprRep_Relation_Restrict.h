@@ -28,8 +28,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
-typedef Visitor_ExprRep_Relation_Restrict_T<ZVal_Expr> Visitor_ExprRep_Relation_Restrict;
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZQL::ExprRep_Relation_Restrict
+
 typedef ExprRep_Relation_Restrict_T<ZVal_Expr> ExprRep_Relation_Restrict;
+
+typedef Visitor_ExprRep_Relation_Restrict_T<ZVal_Expr> Visitor_ExprRep_Relation_Restrict;
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
