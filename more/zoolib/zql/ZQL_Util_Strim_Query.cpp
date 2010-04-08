@@ -32,9 +32,11 @@ namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Query_DoToStrim
+#pragma mark * Visitor_DoToStrim
 
-class Visitor_Query_DoToStrim
+namespace ZANONYMOUS {
+
+class Visitor_DoToStrim
 :	public virtual ZVisitor_ExprRep_Logic_ValCondition_DoToStrim
 ,	public virtual Visitor_ExprRep_Relation_DoToStrim
 ,	public virtual Visitor_ExprRep_Relation_Restrict_DoToStrim
@@ -42,13 +44,15 @@ class Visitor_Query_DoToStrim
 ,	public virtual Visitor_ExprRep_Relation_Concrete
 	{
 public:
-	Visitor_Query_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW);
+	Visitor_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW);
 
 // From Visitor_ExprRep_Relation_Concrete
 	bool Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep);
 	};
 
-Visitor_Query_DoToStrim::Visitor_Query_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW)
+} // anonymous namespace
+
+Visitor_DoToStrim::Visitor_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW)
 :	ZVisitor_ExprRep_DoToStrim(iOptions, iStrimW)
 ,	ZVisitor_ExprRep_Logic_DoToStrim(iOptions, iStrimW)
 ,	ZVisitor_ExprRep_Logic_ValCondition_DoToStrim(iOptions, iStrimW)
@@ -57,7 +61,7 @@ Visitor_Query_DoToStrim::Visitor_Query_DoToStrim(const Options& iOptions, const 
 ,	Visitor_ExprRep_Relation_Select_DoToStrim(iOptions, iStrimW)
 	{}
 
-bool Visitor_Query_DoToStrim::Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep)
+bool Visitor_DoToStrim::Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep)
 	{
 	fStrimW << "/* Relation_Concrete: " << typeid(*iRep.Get()).name() << " */";
 	return true;
@@ -73,7 +77,7 @@ void sToStrim(const ZRef<ZExprRep>& iRep, const ZStrimW& iStrimW)
 void sToStrim(const ZRef<ZExprRep>& iRep,
 	const ZVisitor_ExprRep_DoToStrim::Options& iOptions,
 	const ZStrimW& iStrimW)
-	{ Visitor_Query_DoToStrim(iOptions, iStrimW).DoToStrim(iRep); }
+	{ Visitor_DoToStrim(iOptions, iStrimW).DoToStrim(iRep); }
 
 } // namespace Util_Strim_Query
 } // namespace ZQL
