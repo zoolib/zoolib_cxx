@@ -620,6 +620,11 @@ ZValComparand_T<Val>
 CVal_T()
 	{ return ZValComparand_T<Val>(new ZValComparandRep_Trail_T<Val>(ZTrail())); }
 
+// FIXME
+// I'm not sure that we need Var -- when we're using ZValCondition in relational queries
+// we get the same effect by joining an explicit single-result relation with the target
+// against which we matching the condition.
+
 template <class Val>
 ZValComparand_T<Val>
 CVar_T(const std::string& iVarName)

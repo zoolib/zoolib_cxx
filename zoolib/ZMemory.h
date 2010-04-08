@@ -51,7 +51,7 @@ inline void ZMemZero(void* iDest, size_t iCount)
 	}
 
 template <class T>
-void ZMemClear_T(T& iT)
+void ZMemZero_T(T& iT)
 	{ ZMemZero(&iT, sizeof(iT)); }
 
 NAMESPACE_ZOOLIB_END
@@ -65,11 +65,15 @@ NAMESPACE_ZOOLIB_END
 // the C standard API. This is because these methods started off as simple wrappers around MacOS
 // procedures which also had what might to you seem to be awkward ordering. Sorry.
 
+#if 0
+
 #define ZBlockMove(srcPtr, destPtr, byteCount) ZMemMove(destPtr, srcPtr, byteCount)
 #define ZBlockCopy(srcPtr, destPtr, byteCount) ZMemCopy(destPtr, srcPtr, byteCount)
 
 #define ZBlockSet(destPtr, byteCount, value) ZMemSet(destPtr, value, byteCount)
 #define ZBlockZero(destPtr, byteCount) ZMemZero(destPtr, byteCount)
+
+#endif
 
 // =================================================================================================
 

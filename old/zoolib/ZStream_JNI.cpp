@@ -68,7 +68,7 @@ void ZStreamR_JNI::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 			break;
 		jboolean isCopy;
 		jbyte* elems = static_cast<jbyte*>(fEnv->GetPrimitiveArrayCritical(theBufferArray, &isCopy));
-		ZBlockCopy(elems, localDest, countRead);
+		ZMemCopy(localDest, elems, countRead);
 		fEnv->ReleasePrimitiveArrayCritical(theBufferArray, elems, JNI_ABORT);
 		localDest += countRead;
 		countRemaining -= countRead;

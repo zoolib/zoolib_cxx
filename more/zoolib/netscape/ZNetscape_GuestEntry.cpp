@@ -78,8 +78,8 @@ EXPORT_DEF(int) main(
 		// Take a local copy of the passed-in table, no bigger than what was
 		// passed, and no bigger than what we're expecting.
 		NPNetscapeFuncs_Z localNPNF;
-		ZBlockZero(&localNPNF, sizeof(localNPNF));
-		ZBlockCopy(iNPNF, &localNPNF, min(size_t(iNPNF->size), sizeof(localNPNF)));
+		ZMemZero_T(localNPNF);
+		ZMemCopy(&localNPNF, iNPNF, min(size_t(iNPNF->size), sizeof(localNPNF)));
 
 		// Rewrite them as CFM-callable thunks.
 		ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(

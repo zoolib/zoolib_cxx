@@ -149,9 +149,7 @@ class Make_Encoder
 #pragma mark * Utility functions
 
 static void spCopyUTF32(const void* iSource, void* iDest, size_t iCount)
-	{
-	ZBlockCopy(iSource, iDest, iCount * sizeof(UTF32));
-	}
+	{ ZMemCopy(iDest, iSource, iCount * sizeof(UTF32)); }
 
 static void spCopyUTF32Swapped(const void* iSource, void* iDest, size_t iCount)
 	{

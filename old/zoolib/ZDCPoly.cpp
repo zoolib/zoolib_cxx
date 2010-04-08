@@ -72,7 +72,7 @@ SOFTWARE.
 
 #include "zoolib/ZDCPoly.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZMemory.h" // For ZMemCopy
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 #	include ZMACINCLUDE3(CoreServices,CarbonCore,MacMemory.h) // For HLock etc.
@@ -639,8 +639,8 @@ void ZDCPoly::sDecompose(const ZPoint* iPoints, size_t iCount, bool iEvenOdd,
 					transitionCoordsAllocatedSize *= 2;
 					ZCoord* newTransitionCoords = new ZCoord[transitionCoordsAllocatedSize];
 
-					ZBlockCopy(transitionCoords, newTransitionCoords,
-						sizeof(ZCoord) * transitionCoordsUsedSize);
+					ZMemCopy(newTransitionCoords,
+						transitionCoords, sizeof(ZCoord) * transitionCoordsUsedSize);
 
 					delete[] transitionCoords;
 					transitionCoords = newTransitionCoords;
@@ -722,8 +722,8 @@ void ZDCPoly::sDecompose(const ZPoint* iPoints, size_t iCount, bool iEvenOdd,
 						transitionCoordsAllocatedSize *= 2;
 						ZCoord* newTransitionCoords = new ZCoord[transitionCoordsAllocatedSize];
 
-						ZBlockCopy(transitionCoords, newTransitionCoords,
-							sizeof(ZCoord) * transitionCoordsUsedSize);
+						ZMemCopy(newTransitionCoords,
+							transitionCoords, sizeof(ZCoord) * transitionCoordsUsedSize);
 
 						delete[] transitionCoords;
 						transitionCoords = newTransitionCoords;

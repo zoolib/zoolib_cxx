@@ -42,7 +42,7 @@ Host_Win::Host_Win(ZRef<GuestFactory> iGuestFactory, HWND iHWND)
 	fTimerID(0),
 	fInnerWND(nullptr)
 	{
-	ZBlockZero(&fNPWindow, sizeof(fNPWindow));
+	ZMemZero_T(fNPWindow);
 	this->Attach(iHWND);
 	fTimerID = ::SetTimer(iHWND, 1, 50, nullptr);
 	}

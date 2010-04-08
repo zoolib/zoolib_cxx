@@ -145,7 +145,7 @@ ZBigRegion::ZBigRegion(const ZBigRegion& iOther)
 	fExtent = iOther.fExtent;
 	fRects = new ZRect_T<int32>[fNumRects];
 	fNumRectsAllocated = fNumRects;
-	ZBlockCopy(iOther.fRects, fRects, fNumRects * sizeof(ZRect_T<int32>));
+	ZMemCopy(fRects, iOther.fRects, fNumRects * sizeof(ZRect_T<int32>));
 	}
 
 ZBigRegion::ZBigRegion(const ZRect_T<int32>& iBounds)
@@ -190,7 +190,7 @@ ZBigRegion& ZBigRegion::operator=(const ZBigRegion& iOther)
 
 		fNumRects = iOther.fNumRects;
 		fExtent = iOther.fExtent;
-		ZBlockCopy(iOther.fRects, fRects, fNumRects * sizeof(ZRect_T<int32>));
+		ZMemCopy(fRects, iOther.fRects, fNumRects * sizeof(ZRect_T<int32>));
 		}
 	return *this;
 	}
@@ -409,7 +409,7 @@ ZBigRegion& ZBigRegion::operator^=(const ZBigRegion& iOther)
 void ZBigRegion::spReallocate(ZBigRegion& ioRegion, ZRect_T<int32>*& oRect)
 	{
 	ZRect_T<int32>* newArray = new ZRect_T<int32>[2 * ioRegion.fNumRectsAllocated];
-	ZBlockCopy(ioRegion.fRects, newArray, ioRegion.fNumRectsAllocated * sizeof(ZRect_T<int32>));
+	ZMemCopy(newArray, ioRegion.fRects, ioRegion.fNumRectsAllocated * sizeof(ZRect_T<int32>));
 	delete[] ioRegion.fRects;
 	ioRegion.fRects = newArray;
 	ioRegion.fNumRectsAllocated = 2 * ioRegion.fNumRectsAllocated;
@@ -438,8 +438,8 @@ void ZBigRegion::spCopy(const ZBigRegion& iSource, ZBigRegion& oDestination)
 	oDestination.fNumRects = iSource.fNumRects;
 	oDestination.fExtent = iSource.fExtent;
 
-	ZBlockCopy(iSource.fRects, oDestination.fRects,
-		oDestination.fNumRects * sizeof(ZRect_T<int32>));
+	ZMemCopy(oDestination.fRects,
+		iSource.fRects, oDestination.fNumRects * sizeof(ZRect_T<int32>));
 	}
 
 void ZBigRegion::spSetExtents(ZBigRegion& ioRegion)
@@ -1058,7 +1058,7 @@ void ZBigRegion::spRegionOp(ZBigRegion& ioNewRegion,
 		if (ioNewRegion.fNumRects == 0)
 			ioNewRegion.fNumRectsAllocated = 1;
 		ZRect_T<int32>* newRects = new ZRect_T<int32>[ioNewRegion.fNumRectsAllocated];
-		ZBlockCopy(ioNewRegion.fRects, newRects, ioNewRegion.fNumRects * sizeof(ZRect_T<int32>));
+		ZMemCopy(newRects, ioNewRegion.fRects, ioNewRegion.fNumRects * sizeof(ZRect_T<int32>));
 		delete[] ioNewRegion.fRects;
 		ioNewRegion.fRects = newRects;
 		}

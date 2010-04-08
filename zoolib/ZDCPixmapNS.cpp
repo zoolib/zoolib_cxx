@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCPixmapNS.h"
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZFunctionChain.h"
-#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZMemory.h" // For ZMemCopy
 
 #include <vector>
 
@@ -974,8 +974,8 @@ void ZDCPixmapNS::PixvalAccessor::GetPixvals(const void* iRowAddress,
 			}
 		case eCase4Bytes:
 			{
-			ZBlockCopy(static_cast<const uint32*>(iRowAddress) + iStartH,
-				oPixvals, iCount * sizeof(uint32));
+			ZMemCopy(oPixvals,
+				static_cast<const uint32*>(iRowAddress) + iStartH, iCount * sizeof(uint32));
 			break;
 			}
 		case eCase4BytesWithSwap:
@@ -1480,8 +1480,8 @@ void ZDCPixmapNS::PixvalAccessor::SetPixvals(void* iRowAddress,
 			}
 		case eCase4Bytes:
 			{
-			ZBlockCopy(iPixvals, static_cast<uint32*>(iRowAddress) + iStartH,
-				iCount * sizeof(uint32));
+			ZMemCopy(static_cast<uint32*>(iRowAddress) + iStartH,
+				iPixvals, iCount * sizeof(uint32));
 			break;
 			}
 		case eCase4BytesWithSwap:
@@ -1793,7 +1793,7 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBA_POD* iColors
 
 	fCount = iCount;
 	fColors = new ZRGBA_POD[iCount];
-	ZBlockCopy(iColors, fColors, iCount * sizeof(ZRGBA_POD));
+	ZMemCopy(fColors, iColors, iCount * sizeof(ZRGBA_POD));
 	}
 
 ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBA_POD* iColors,
@@ -1811,7 +1811,7 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBA_POD* iColors
 
 	fCount = iCount;
 	fColors = new ZRGBA_POD[iCount];
-	ZBlockCopy(iColors, fColors, iCount * sizeof(ZRGBA_POD));
+	ZMemCopy(fColors, iColors, iCount * sizeof(ZRGBA_POD));
 
 	// Set the alpha value to be completely opaque.
 	for (size_t x = 0; x < iCount; ++x)
@@ -1854,8 +1854,8 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBA_POD* iColors
 		throw;
 		}
 
-	ZBlockCopy(&vectorColors[0], fColors, iCount * sizeof(ZRGBA_POD));
-	ZBlockCopy(&vectorPixvals[0], MapPixvalToRGB_Indexed::fPixvals, iCount * sizeof(uint32));
+	ZMemCopy(fColors, &vectorColors[0], iCount * sizeof(ZRGBA_POD));
+	ZMemCopy(MapPixvalToRGB_Indexed::fPixvals, &vectorPixvals[0], iCount * sizeof(uint32));
 	}
 
 ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBA_POD* iColors,
@@ -1897,8 +1897,8 @@ ZDCPixmapNS::PixelDescRep_Indexed::PixelDescRep_Indexed(const ZRGBA_POD* iColors
 		throw;
 		}
 
-	ZBlockCopy(&vectorColors[0], fColors, iCount * sizeof(ZRGBA_POD));
-	ZBlockCopy(&vectorPixvals[0], MapPixvalToRGB_Indexed::fPixvals, iCount * sizeof(uint32));
+	ZMemCopy(fColors, &vectorColors[0], iCount * sizeof(ZRGBA_POD));
+	ZMemCopy(MapPixvalToRGB_Indexed::fPixvals, &vectorPixvals[0], iCount * sizeof(uint32));
 
 	// Set the alpha value to be completely opaque.
 	for (size_t x = 0; x < iCount; ++x)
@@ -2276,8 +2276,8 @@ void ZDCPixmapNS::sFill(void* iBaseAddress, const RasterDesc& iRasterDesc, uint3
 
 		if (byte1 == byte2 && byte2 == byte3)
 			{
-			// We're lucky -- all the bytes of the pixVal are the same, so we can use ZBlockSet.
-			ZBlockSet(iBaseAddress, iRasterDesc.fRowBytes * iRasterDesc.fRowCount, byte1);
+			// We're lucky -- all the bytes of the pixVal are the same, so we can use ZMemSet.
+			ZMemSet(iBaseAddress, byte1, iRasterDesc.fRowBytes * iRasterDesc.fRowCount);
 			}
 		else
 			{
@@ -2344,9 +2344,9 @@ void ZDCPixmapNS::sFill(void* iBaseAddress, const RasterDesc& iRasterDesc, uint3
 		if (((storedValue & 0xFFFF) == ((storedValue >> 16) & 0xFFFF))
 			&& ((storedValue & 0xFF) == ((storedValue >> 8) & 0xFF)))
 			{
-			// We're lucky -- all the bytes of the pixVal are the same so we can use ZBlockSet.
-			ZBlockSet(iBaseAddress,
-				iRasterDesc.fRowBytes * iRasterDesc.fRowCount, storedValue & 0xFF);
+			// We're lucky -- all the bytes of the pixVal are the same so we can use ZMemSet.
+			ZMemSet(iBaseAddress,
+				storedValue & 0xFF, iRasterDesc.fRowBytes * iRasterDesc.fRowCount);
 			}
 		else
 			{
@@ -2598,7 +2598,7 @@ void ZDCPixmapNS::sBlitPixvals(const void* iSourceBase, const RasterDesc& iSourc
 					iDestRasterDesc.CalcRowAddressDest(iDestBase, iDestLocation.v + vCurrent))
 					+ hOffsetDest;
 
-			ZBlockCopy(sourceRowAddress, destRowAddress, countToCopy);
+			ZMemCopy(destRowAddress, sourceRowAddress, countToCopy);
 			}
 		}
 	else
@@ -2835,7 +2835,7 @@ void ZDCPixmapNS::sBlitRowPixvals(
 		int32 countToCopy = iCount * iSourcePixvalDesc.fDepth / 8;
 		const uint8* sourceAddress = static_cast<const uint8*>(iSourceBase) + hOffsetSource;
 		uint8* destAddress = static_cast<uint8*>(iDestBase) + hOffsetDest;
-		ZBlockCopy(sourceAddress, destAddress, countToCopy);
+		ZMemCopy(destAddress, sourceAddress, countToCopy);
 		}
 	else
 		{

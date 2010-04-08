@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCPixmap.h"
 #include "zoolib/ZFunctionChain.h"
-#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZMemory.h" // For ZMemCopy
 #include "zoolib/ZStream.h"
 
 #include <vector>
@@ -529,7 +529,7 @@ ZDCPixmapRaster_Simple::ZDCPixmapRaster_Simple(ZRef<ZDCPixmapRaster> iOther)
 	// may *read* past the end of a buffer in some situations.
 	fBuffer = new uint8[bufferSize + 4];
 	fBaseAddress = fBuffer;
-	ZBlockCopy(iOther->GetBaseAddress(), fBuffer, bufferSize);
+	ZMemCopy(fBuffer, iOther->GetBaseAddress(), bufferSize);
 	}
 
 ZDCPixmapRaster_Simple::~ZDCPixmapRaster_Simple()

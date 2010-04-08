@@ -572,7 +572,7 @@ void ZTextDecoder::Decode(const ZStreamR& iStreamR, UTF32* iDest, size_t iDestCU
 		// Remove the consumed code units from the buffer by reducing bufferUsed
 		// and moving any remaining data to the front of the buffer.
 		bufferUsed -= countConsumed;
-		ZBlockMove(buffer + countConsumed, buffer, bufferUsed);
+		ZMemMove(buffer, buffer + countConsumed, bufferUsed);
 
 		localDest += utf32Generated;
 		iDestCU -= utf32Generated;

@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZStream_Buffered.h"
-#include "zoolib/ZMemory.h" // For ZBlockMove & ZBlockCopy
+#include "zoolib/ZMemory.h" // For ZMemCopy
 
 using std::min;
 
@@ -74,7 +74,7 @@ void ZStreamR_Buffered::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 			{
 			// We have some data in our buffer, use it up first.
 			size_t countToMove = min(countInBuffer, iCount);
-			ZBlockCopy(fBuffer + fBufferOffset, localDest, countToMove);
+			ZMemCopy(localDest, fBuffer + fBufferOffset, countToMove);
 			fBufferOffset += countToMove;
 			localDest += countToMove;
 			iCount -= countToMove;
@@ -111,8 +111,8 @@ void ZStreamR_Buffered::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 				// feeding out from (fBufferOffset), but just how much more data is actually valid.
 				if (countRead < countToRead)
 					{
-					ZBlockMove(fBuffer + (fBufferSize - countToRead),
-						fBuffer + (fBufferSize - countRead), countRead);
+					ZMemMove(fBuffer + (fBufferSize - countRead),
+						fBuffer + (fBufferSize - countToRead), countRead);
 					}
 				fBufferOffset = fBufferSize - countRead;
 				}
@@ -221,7 +221,7 @@ void ZStreamW_Buffered::Imp_Write(const void* iSource, size_t iCount, size_t* oC
 			// Either we already have data in the buffer, or we have an empty buffer
 			// and less than a buffer's worth to send.
 			size_t countToCopy = min(iCount, fBufferSize - fBufferOffset);
-			ZBlockCopy(localSource, fBuffer + fBufferOffset, countToCopy);
+			ZMemCopy(fBuffer + fBufferOffset, localSource, countToCopy);
 			fBufferOffset += countToCopy;
 			localSource += countToCopy;
 			iCount -= countToCopy;
@@ -358,7 +358,7 @@ void ZStreamR_DynamicBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCou
 			fStreamSource.Read(buffer, min(iCount, sizeof(buffer)), &countRead);
 			if (countRead == 0)
 				break;
-			ZBlockCopy(buffer, localDest, countRead);
+			ZMemCopy(localDest, buffer, countRead);
 	
 			size_t countWritten;
 			fStreamBuffer.Write(buffer, countRead, &countWritten);

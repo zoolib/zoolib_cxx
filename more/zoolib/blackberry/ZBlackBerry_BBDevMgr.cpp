@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZMemory.h" // For ZMemCopy
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUnicode.h"
 
@@ -263,7 +263,7 @@ void Channel_BBDevMgr::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 		if (fEnd > fStart)
 			{
 			const size_t countToCopy = std::min(iCount, fEnd - fStart);
-			ZBlockCopy(&fBuffer[fStart], localDest, countToCopy);
+			ZMemCopy(localDest, &fBuffer[fStart], countToCopy);
 			localDest += countToCopy;
 			fStart += countToCopy;
 			if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))

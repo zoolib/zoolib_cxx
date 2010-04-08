@@ -407,12 +407,12 @@ PixPatHandle ZUtil_Mac_LL::sPixPatHandleFromPixmap(const ZDCPixmap& inPixmap)
 	// Copy the color table
 	size_t cTabSize = ::GetHandleSize((Handle)sourcePixMap.pmTable);
 	::SetHandleSize((Handle)thePixPatHandle[0]->patMap[0]->pmTable, cTabSize);
-	ZBlockCopy(sourcePixMap.pmTable[0], thePixPatHandle[0]->patMap[0]->pmTable[0], cTabSize);
+	ZMemCopy(thePixPatHandle[0]->patMap[0]->pmTable[0], sourcePixMap.pmTable[0], cTabSize);
 
 	// And all the pixel data
 	size_t pixelDataSize = (sourcePixMap.rowBytes & 0x3FFF) * sourcePixMap.bounds.bottom;
 	::SetHandleSize((Handle)thePixPatHandle[0]->patData, pixelDataSize);
-	ZBlockCopy(sourcePixMap.baseAddr, thePixPatHandle[0]->patData[0], pixelDataSize);
+	ZMemCopy(thePixPatHandle[0]->patData[0], sourcePixMap.baseAddr, pixelDataSize);
 
 	::PixPatChanged(thePixPatHandle);
 

@@ -98,7 +98,7 @@ static HFONT spCreateHFONT(const ZDCFont& iFont)
 	if (ZUtil_Win::sUseWAPI())
 		{
 		LOGFONTW theLOGFONT;
-		ZBlockZero(&theLOGFONT, sizeof(theLOGFONT));
+		ZMemZero_T(theLOGFONT);
 
 		theLOGFONT.lfHeight = -iFont.GetSize();
 
@@ -117,13 +117,13 @@ static HFONT spCreateHFONT(const ZDCFont& iFont)
 		theLOGFONT.lfQuality = ANTIALIASED_QUALITY;
 
 		string16 fontName = ZUnicode::sAsUTF16(iFont.GetName());
-		ZBlockCopy(fontName.c_str(), theLOGFONT.lfFaceName, sizeof(UTF16) * (fontName.size() + 1));
+		ZMemCopy(theLOGFONT.lfFaceName, fontName.c_str(), sizeof(UTF16) * (fontName.size() + 1));
 		theHFONT = ::CreateFontIndirectW(&theLOGFONT);
 		}
 	else
 		{
 		LOGFONTA theLOGFONT;
-		ZBlockZero(&theLOGFONT, sizeof(theLOGFONT));
+		ZMemZero_T(theLOGFONT);
 
 		theLOGFONT.lfHeight = -iFont.GetSize();
 
@@ -140,7 +140,7 @@ static HFONT spCreateHFONT(const ZDCFont& iFont)
 			theLOGFONT.lfUnderline = 0xFF;
 		
 		string fontName = iFont.GetName();
-		ZBlockCopy(fontName.c_str(), theLOGFONT.lfFaceName, (fontName.size() + 1));
+		ZMemCopy(theLOGFONT.lfFaceName, fontName.c_str(), (fontName.size() + 1));
 		theHFONT = ::CreateFontIndirectA(&theLOGFONT);
 		}
 	return theHFONT;

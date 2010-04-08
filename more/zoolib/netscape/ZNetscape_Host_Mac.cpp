@@ -95,7 +95,7 @@ Host_Mac::Host_Mac(ZRef<GuestFactory> iGuestFactory, bool iAllowCG)
 	#endif
 
 	#if !defined(NP_NO_QUICKDRAW)
-		ZBlockZero(&fNP_Port, sizeof(fNP_Port));
+		ZMemZero_T(fNP_Port);
 	#endif
 
 	fNPWindow.type = NPWindowTypeDrawable;

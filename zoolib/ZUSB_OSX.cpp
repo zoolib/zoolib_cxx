@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZMemory.h" // For ZMemCopy
 #include "zoolib/ZString.h"
 #include "zoolib/ZThread.h"
 #include "zoolib/ZUtil_Strim_Data.h"
@@ -453,7 +453,7 @@ void StreamerR_TO::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 		if (fEnd > fOffset)
 			{
 			const size_t countToCopy = min(fEnd - fOffset, iCount);
-			ZBlockCopy(fBuffer + fOffset, localDest, countToCopy);
+			ZMemCopy(localDest, fBuffer + fOffset, countToCopy);
 			localDest += countToCopy;
 			fOffset += countToCopy;
 			break;
@@ -608,7 +608,7 @@ void StreamerR_Async::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 		if (fOffset < fEnd)
 			{
 			const size_t countToCopy = min(fEnd - fOffset, iCount);
-			ZBlockCopy(fBuffer + fOffset, localDest, countToCopy);
+			ZMemCopy(localDest, fBuffer + fOffset, countToCopy);
 			localDest += countToCopy;
 			fOffset += countToCopy;
 			break;

@@ -451,7 +451,7 @@ string ZUtil_Time::sAsString_ISO8601_us(ZTime iTime, bool iIncludeT)
  	{
  	const char* theCString = iString.c_str();
 	struct tm theTM;
-	ZBlockZero(&theTM, sizeof(theTM));
+	ZMemZero_T(theTM);
 
 	bool gotIt = false;
 	double seconds;

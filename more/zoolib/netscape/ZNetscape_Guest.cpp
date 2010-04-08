@@ -407,7 +407,7 @@ GuestMeister::GuestMeister()
 	{
 	ZAssert(!spGuestMeister);
 	spGuestMeister = this;
-	ZBlockZero(&fNPNF, sizeof(fNPNF));
+	ZMemZero_T(fNPNF);
 	}
 
 GuestMeister::~GuestMeister()

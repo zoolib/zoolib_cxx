@@ -277,7 +277,7 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRe
 			{
 			// Copy some decrypted data to our destination.
 			const size_t countToCopy = std::min(iCount, size_t(decrypted->cbBuffer));
-			ZBlockCopy(decrypted->pvBuffer, localDest, countToCopy);
+			ZMemCopy(localDest, decrypted->pvBuffer, countToCopy);
 			localDest += countToCopy;
 			iCount -= countToCopy;
 
@@ -291,7 +291,7 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRe
 			{
 			// There is some unused data, move it to the front of fBufferEnc,
 			// and resize fBufferEnc to reference only that data.
-			ZBlockMove(encrypted->pvBuffer, &fBufferEnc[0], encrypted->cbBuffer);
+			ZMemMove(&fBufferEnc[0], encrypted->pvBuffer, encrypted->cbBuffer);
 			fBufferEnc.resize(encrypted->cbBuffer);
 			}
 		else
@@ -356,7 +356,7 @@ void ZStreamRWCon_SSL_Win::Imp_Write(const void* iSource, size_t iCount, size_t*
 
 	// Encryption happens in-place, copy the plaintext to the appropriate offset of the buffer.
 	const size_t countToEncrypt = min(iCount, size_t(theSizes.cbMaximumMessage));
-	ZBlockCopy(iSource, &buffer[theSizes.cbHeader], countToEncrypt);
+	ZMemCopy(&buffer[theSizes.cbHeader], iSource, countToEncrypt);
 
 	SecBuffer outSB[4];
 	outSB[0].cbBuffer = theSizes.cbHeader;

@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream_Chunked.h"
 
-#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZMemory.h" // For ZMemCopy
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -126,7 +126,7 @@ void ZStreamW_Chunked::Imp_Write(const void* iSource, size_t iCount, size_t* oCo
 		if (fBufferUsed == 255)
 			this->pFlush();
 		size_t countToCopy = min(iCount, size_t(255 - fBufferUsed));
-		ZBlockCopy(localSource, fBuffer + fBufferUsed, countToCopy);
+		ZMemCopy(fBuffer + fBufferUsed, localSource, countToCopy);
 		fBufferUsed += countToCopy;
 		iCount -= countToCopy;
 		localSource += countToCopy;

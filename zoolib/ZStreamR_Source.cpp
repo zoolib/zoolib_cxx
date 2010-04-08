@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZStreamR_Source.h"
-#include "zoolib/ZMemory.h" // For ZBlockSet & ZBlockCopy
+#include "zoolib/ZMemory.h" // For ZMemSet & ZMemCopy
 
 using std::min;
 using std::pair;
@@ -41,7 +41,7 @@ ZStreamR_Source::ZStreamR_Source()
 	{
 	fData = new uint8[1024];
 	fDataSize = 1024;
-	ZBlockZero(fData, 1024);
+	ZMemZero(fData, 1024);
 	fOffset = 0;
 	}
 
@@ -49,7 +49,7 @@ ZStreamR_Source::ZStreamR_Source(uint8 iData)
 	{
 	fData = new uint8[1024];
 	fDataSize = 1024;
-	ZBlockSet(fData, 1024, iData);
+	ZMemSet(fData, iData, 1024);
 	fOffset = 0;
 	}
 
@@ -57,7 +57,7 @@ ZStreamR_Source::ZStreamR_Source(const void* iData, size_t iDataSize)
 	{
 	fData = new uint8[iDataSize];
 	fDataSize = iDataSize;
-	ZBlockCopy(iData, fData, fDataSize);
+	ZMemCopy(fData, iData, fDataSize);
 	fOffset = 0;
 	}
 
@@ -65,7 +65,7 @@ ZStreamR_Source::ZStreamR_Source(const pair<const void*, size_t>& iParam)
 	{
 	fData = new uint8[iParam.second];
 	fDataSize = iParam.second;
-	ZBlockCopy(iParam.first, fData, fDataSize);
+	ZMemCopy(fData, iParam.first, fDataSize);
 	fOffset = 0;
 	}
 
@@ -80,7 +80,7 @@ void ZStreamR_Source::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 	while (iCount)
 		{
 		size_t countToMove = min(iCount, fDataSize - fOffset);
-		ZBlockCopy(fData + fOffset, localDest, countToMove);
+		ZMemCopy(localDest, fData + fOffset, countToMove);
 		fOffset = (fOffset + countToMove) % fDataSize;
 		localDest += countToMove;
 		iCount -= countToMove;

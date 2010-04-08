@@ -132,7 +132,7 @@ void ZStreamRPos_PageBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCou
 
 		size_t offsetInBuffer = fPosition % fBufferSize;
 		size_t copySize = min(iCount, fBufferSize - offsetInBuffer);
-		ZBlockCopy(buffer_Found->fData + offsetInBuffer, localDest, copySize);
+		ZMemCopy(localDest, buffer_Found->fData + offsetInBuffer, copySize);
 		iCount -= copySize;
 		fPosition += copySize;
 		localDest += copySize;
@@ -325,7 +325,7 @@ void ZStreamRWPos_PageBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCo
 			}
 
 		size_t copySize = min(iCount, fBufferSize - offsetInBuffer);
-		ZBlockCopy(buffer_Found->fData + offsetInBuffer, localDest, copySize);
+		ZMemCopy(localDest, buffer_Found->fData + offsetInBuffer, copySize);
 		iCount -= copySize;
 		fPosition += copySize;
 		localDest += copySize;
@@ -397,7 +397,7 @@ void ZStreamRWPos_PageBuffered::Imp_Write(const void* iSource, size_t iCount, si
 			}
 
 		size_t copySize = min(iCount, fBufferSize - offsetInBuffer);
-		ZBlockCopy(localSource, buffer_Found->fData + offsetInBuffer, copySize);
+		ZMemCopy(buffer_Found->fData + offsetInBuffer, localSource, copySize);
 		buffer_Found->fDirty = true;
 
 		iCount -= copySize;

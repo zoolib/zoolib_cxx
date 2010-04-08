@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZLog.h"
-#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZMemory.h" // For ZMemCopy
 #include "zoolib/ZStream_Limited.h"
 #include "zoolib/ZStream_SHA1.h"
 #include "zoolib/ZUtil_STL.h"
@@ -1340,7 +1340,7 @@ bool Device_Streamer::pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iCha
 
 			// Hash the password into bytes 4 - 24
 			uint8 prefixedHash[24];
-			ZBlockCopy(thePWHash.fData, &prefixedHash[4], 20);
+			ZMemCopy(&prefixedHash[4], thePWHash.fData, 20);
 
 			// Put the challenge into bytes 0 - 3
 			ZByteSwap_WriteBig32(&prefixedHash[0], iChannel->fChallenge);

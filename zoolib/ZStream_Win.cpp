@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h" // For lower_bound, min
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZMemory.h" // For ZMemCopy
 #include "zoolib/ZStream_Memory.h" // For ZStreamRPos_Memory
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Win.h"
@@ -150,8 +150,8 @@ void ZStreamRPos_Win_MultiResource::Imp_Read(void* iDest, size_t iCount, size_t*
 		if (countToMove == 0)
 			break;
 
-		ZBlockCopy(
-			reinterpret_cast<char*>(fLPVOID_Current) + fPosition - fBegin, localDest, countToMove);
+		ZMemCopy(localDest,
+			reinterpret_cast<char*>(fLPVOID_Current) + fPosition - fBegin, countToMove);
 
 		fPosition += countToMove;
 		localDest += countToMove;

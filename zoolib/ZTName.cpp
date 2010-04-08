@@ -138,7 +138,7 @@ inline ZTName::String::String(const char* iString, size_t iSize)
 :	fSize(iSize)
 	{
 	ZAssertStop(kDebug, fSize);
-	ZBlockCopy(iString, fBuffer, fSize);
+	ZMemCopy(fBuffer, iString, fSize);
 	}
 
 inline int ZTName::String::Compare(const String& iOther) const
@@ -195,7 +195,7 @@ int ZTName::sPreRegister(const char* const* iNames, size_t iCount)
 					{
 					PNRep* newRep = reinterpret_cast<PNRep*>(new char[theLength + 1]);
 					newRep->fLength = theLength;
-					ZBlockCopy(theName, newRep->fBuffer, theLength);
+					ZMemCopy(newRep->fBuffer, theName, theLength);
 					spNames->insert(theIter, newRep);
 					}
 				}

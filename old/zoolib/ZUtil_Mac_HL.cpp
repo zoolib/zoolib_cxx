@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDC_QD.h"
 #include "zoolib/ZMacOSX.h"
-#include "zoolib/ZMemory.h" // For ZBlockMove and ZBlockSet
+#include "zoolib/ZMemory.h" // For ZMemZero
 #include "zoolib/ZUtil_Mac_LL.h"
 
 #include ZMACINCLUDE3(CoreServices,CarbonCore,Gestalt.h)
@@ -381,12 +381,12 @@ void ZUtil_Mac_HL::sAddPixmapToIconFamily(const ZDCPixmap& inPixmap, IconKind in
 		if (hasMask)
 			{
 			::SetHandleSize(theDataHandle, 2 * destRowBytes * theCroppedWidthHeight);
-			ZBlockSet(*theDataHandle, 2 * destRowBytes * theCroppedWidthHeight, 0);
+			ZMemZero(*theDataHandle, 2 * destRowBytes * theCroppedWidthHeight);
 			}
 		else
 			{
 			::SetHandleSize(theDataHandle, destRowBytes * theCroppedWidthHeight);
-			ZBlockSet(*theDataHandle, destRowBytes * theCroppedWidthHeight, 0);
+			ZMemZero(*theDataHandle, destRowBytes * theCroppedWidthHeight);
 			}
 		}
 

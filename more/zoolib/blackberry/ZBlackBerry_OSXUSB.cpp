@@ -45,7 +45,7 @@ static bool spSendControlMessage(IOUSBDeviceInterface182** iUDI,
 	unsigned int timeout)
 	{
 	IOUSBDevRequestTO urequest;
-	ZBlockZero(&urequest, sizeof(urequest));
+	ZMemZero_T(urequest);
 
 	urequest.bmRequestType = bRequestType;
 	urequest.bRequest = bRequest;

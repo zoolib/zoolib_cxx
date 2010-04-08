@@ -122,7 +122,7 @@ ValString::ValString(const ValString& iOther)
 :	fSize(iOther.fSize)
 	{
 	fBuffer = new char[fSize];
-	ZBlockCopy(iOther.fBuffer, fBuffer, fSize);
+	ZMemCopy(fBuffer, iOther.fBuffer, fSize);
 	}
 
 ValString::ValString(const string& iOther)
@@ -130,14 +130,14 @@ ValString::ValString(const string& iOther)
 	{
 	fBuffer = new char[fSize];
 	if (fSize)
-		ZBlockCopy(iOther.data(), fBuffer, fSize);
+		ZMemCopy(fBuffer, iOther.data(), fSize);
 	}
 
 ValString::ValString(const char* iString, size_t iLength)
 :	fSize(iLength)
 	{
 	fBuffer = new char[fSize];
-	ZBlockCopy(iString, fBuffer, fSize);
+	ZMemCopy(fBuffer, iString, fSize);
 	}
 
 ValString::ValString(const ZStreamR& iStreamR, size_t iSize)
@@ -182,7 +182,7 @@ void ValString::ToString(string& oString) const
 	{
 	oString.resize(fSize);
 	if (fSize)
-		ZBlockCopy(fBuffer, const_cast<char*>(oString.data()), fSize);
+		ZMemCopy(const_cast<char*>(oString.data()), fBuffer, fSize);
 	}
 
 // =================================================================================================
@@ -629,7 +629,7 @@ ZVal_ZooLib::ZVal_ZooLib(const char* iVal)
 		{
 		fType.fType = -int(theSize)-1;
 		if (theSize)
-			ZBlockCopy(iVal, fType.fBytes, theSize);
+			ZMemCopy(fType.fBytes, iVal, theSize);
 		}
 	else
 		{
@@ -645,7 +645,7 @@ ZVal_ZooLib::ZVal_ZooLib(const string& iVal)
 		{
 		fType.fType = -int(theSize)-1;
 		if (theSize)
-			ZBlockCopy(iVal.data(), fType.fBytes, theSize);
+			ZMemCopy(fType.fBytes, iVal.data(), theSize);
 		}
 	else
 		{
@@ -1014,7 +1014,7 @@ void ZVal_ZooLib::Set_T<ConstCharStar_t>(const ConstCharStar_t& iVal)
 		{
 		fType.fType = -int(theSize)-1;
 		if (theSize)
-			ZBlockCopy(iVal, fType.fBytes, theSize);
+			ZMemCopy(fType.fBytes, iVal, theSize);
 		}
 	else
 		{
@@ -1032,7 +1032,7 @@ void ZVal_ZooLib::Set_T<string>(const string& iVal)
 		{
 		fType.fType = -int(theSize)-1;
 		if (theSize)
-			ZBlockCopy(iVal.data(), fType.fBytes, theSize);
+			ZMemCopy(fType.fBytes, iVal.data(), theSize);
 		}
 	else
 		{

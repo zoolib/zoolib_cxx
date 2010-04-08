@@ -156,7 +156,7 @@ GuestFactory_Win::GuestFactory_Win(HMODULE iHMODULE)
 	GuestFactory::GetNPNF(fNPNF);
 
 	// And clean out our plugin functions struct
-	ZBlockZero(&fNPPluginFuncs, sizeof(fNPPluginFuncs));
+	ZMemZero_T(fNPPluginFuncs);
 	fNPPluginFuncs.size = sizeof(NPPluginFuncs);
 
 	fShutdown = sLookup_T<NPP_ShutdownProcPtr>(fHMODULE, "NP_Shutdown");
@@ -237,7 +237,7 @@ GuestFactory_HostMachO::GuestFactory_HostMachO(ZRef<CFPlugInRef> iPlugInRef)
 	GuestFactory::GetNPNF(fNPNF);
 
 	// And clean out our plugin functions struct
-	ZBlockZero(&fNPPluginFuncs, sizeof(fNPPluginFuncs));
+	ZMemZero_T(fNPPluginFuncs);
 	fNPPluginFuncs.size = sizeof(NPPluginFuncs);
 
 	ZRef<CFBundleRef> theBundleRef = ::CFPlugInGetBundle(fPlugInRef);
@@ -383,7 +383,7 @@ GuestFactory_HostCFM::GuestFactory_HostCFM(ZRef<CFPlugInRef> iPlugInRef)
 	GuestFactory::GetNPNF(fNPNF);
 
 	// And clean out our plugin functions struct
-	ZBlockZero(&fNPPluginFuncs, sizeof(fNPPluginFuncs));
+	ZMemZero_T(fNPPluginFuncs);
 	fNPPluginFuncs.size = sizeof(NPPluginFuncs);
 
 	CFBundleRef theBundleRef = ::CFPlugInGetBundle(fPlugInRef);

@@ -602,7 +602,7 @@ ZStackCrawl::Frame ZStackCrawl::At(size_t iIndex) const
 		#endif
 		}
 
-	ZBlockZero(&result, sizeof(result));
+	ZMemZero_T(result);
 	return result;
 	}
 

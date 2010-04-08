@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTName__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZMemory.h" // For ZMemCopy
 #include "zoolib/ZTypes.h" // For intptr_t
 
 #include <string>
@@ -113,7 +113,7 @@ public:
 
 	String(const String& iOther)
 	:	fSize(iOther.fSize)
-		{ ZBlockCopy(iOther.fBuffer, fBuffer, fSize); }
+		{ ZMemCopy(fBuffer, iOther.fBuffer, fSize); }
 
 	String(const char* iString, size_t iSize);		
 

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_algorithm.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZMemory.h" // For ZMemCopy
 
 using std::min;
 using std::string;
@@ -45,7 +45,7 @@ void ZStreamRPos_String::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead
 	{
 	if (size_t countToRead = ZStream::sClampedSize(iCount, fString.size(), fPosition))
 		{
-		ZBlockCopy(&fString.at(fPosition), iDest, countToRead);
+		ZMemCopy(iDest, &fString.at(fPosition), countToRead);
 		fPosition += countToRead;
 		if (oCountRead)
 			*oCountRead = countToRead;
@@ -92,7 +92,7 @@ void ZStreamWPos_String::Imp_Write(const void* iSource, size_t iCount, size_t* o
 
 	if (size_t countToWrite = ZStream::sClampedSize(iCount, fString.size(), fPosition))
 		{
-		ZBlockCopy(iSource, &fString.at(fPosition), countToWrite);
+		ZMemCopy(&fString.at(fPosition), iSource, countToWrite);
 		fPosition += countToWrite;
 		if (oCountWritten)
 			*oCountWritten = countToWrite;
@@ -137,7 +137,7 @@ void ZStreamRWPos_String::Imp_Read(void* iDest, size_t iCount, size_t* oCountRea
 	{
 	if (size_t countToRead = ZStream::sClampedSize(iCount, fString.size(), fPosition))
 		{
-		ZBlockCopy(&fString.at(fPosition), iDest, countToRead);
+		ZMemCopy(iDest, &fString.at(fPosition), countToRead);
 		fPosition += countToRead;
 		if (oCountRead)
 			*oCountRead = countToRead;
@@ -163,7 +163,7 @@ void ZStreamRWPos_String::Imp_Write(const void* iSource, size_t iCount, size_t* 
 
 	if (size_t countToMove = ZStream::sClampedSize(iCount, fString.size(), fPosition))
 		{
-		ZBlockCopy(iSource, &fString.at(fPosition), countToMove);
+		ZMemCopy(&fString.at(fPosition), iSource, countToMove);
 		fPosition += countToMove;
 		if (oCountWritten)
 			*oCountWritten = countToMove;

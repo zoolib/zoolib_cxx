@@ -88,7 +88,7 @@ void ZStrimR_Boundary::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 			if (fEnd > fStart)
 				{
 				size_t countToMove = std::min(fEnd - fStart, countRemaining);
-				ZBlockCopy(fBuffer + fStart, localDest, countToMove * sizeof(UTF32));
+				ZMemCopy(localDest, fBuffer + fStart, countToMove * sizeof(UTF32));
 				fStart += countToMove;
 				localDest += countToMove;
 				countRemaining -= countToMove;
@@ -99,7 +99,7 @@ void ZStrimR_Boundary::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 					break;
 
 				// Shuffle existing code units to the beginning of the buffer.
-				ZBlockMove(fBuffer + fEnd, fBuffer, (boundarySize - fEnd) * sizeof(UTF32));
+				ZMemMove(fBuffer, fBuffer + fEnd, (boundarySize - fEnd) * sizeof(UTF32));
 
 				// And top up the tail.
 				size_t countRead;
@@ -110,8 +110,8 @@ void ZStrimR_Boundary::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 					// The source strim has insufficient code units to fill our buffer,
 					// so shuffle stuff back up so that the code units that *are* in the
 					// buffer align with its end.
-					ZBlockMove(fBuffer, fBuffer + fEnd - countRead,
-						(boundarySize - (fEnd - countRead)) * sizeof(UTF32));
+					ZMemMove(fBuffer + fEnd - countRead,
+						fBuffer, (boundarySize - (fEnd - countRead)) * sizeof(UTF32));
 
 					// The first code unit that can be returned to the caller is
 					// at offset fStart, and the last is at the end of the buffer.

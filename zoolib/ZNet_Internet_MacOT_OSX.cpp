@@ -555,7 +555,7 @@ void ZNetListener_TCP_MacOT_OSX::sMP_Listen(void* iParam)
 	Listen_t* theStruct = static_cast<Listen_t*>(iParam);
 
 	TCall theTCall;
-	ZBlockZero(&theTCall, sizeof(theTCall));
+	ZMemZero_T(theTCall);
 	theTCall.addr.buf = reinterpret_cast<UInt8*>(&theStruct->fInetAddress);
 	theTCall.addr.maxlen = sizeof(theStruct->fInetAddress);
 

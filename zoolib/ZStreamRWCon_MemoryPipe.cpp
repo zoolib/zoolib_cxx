@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZStreamRWCon_MemoryPipe.h"
-#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZMemory.h" // For ZMemCopy
 #include "zoolib/ZTime.h"
 
 using std::min;
@@ -59,7 +59,7 @@ void ZStreamRWCon_MemoryPipe::Imp_Read(void* iDest, size_t iCount, size_t* oCoun
 			{
 			// We've got a source waiting to give us data.
 			size_t countToCopy = min(localEnd - localDest, fSourceEnd - fSource);
-			ZBlockCopy(fSource, localDest, countToCopy);
+			ZMemCopy(localDest, fSource, countToCopy);
 			localDest += countToCopy;
 			fSource += countToCopy;
 			fCondition_Write.Broadcast();
@@ -189,7 +189,7 @@ void ZStreamRWCon_MemoryPipe::Imp_Write(const void* iSource, size_t iCount, size
 			size_t countToCopy = min(fDestCount, size_t(localEnd - localSource));
 			if (fDest)
 				{
-				ZBlockCopy(localSource, fDest, countToCopy);
+				ZMemCopy(fDest, localSource, countToCopy);
 				fDest += countToCopy;
 				}
 			localSource += countToCopy;

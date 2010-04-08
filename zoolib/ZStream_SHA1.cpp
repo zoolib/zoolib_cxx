@@ -201,7 +201,7 @@ void ZStream_SHA1::sUpdate(ZStream_SHA1::Context& ioContext, const void* iData, 
 			if (countRemaining < 64)
 				{
 				// And we have less than 64 bytes to use -- just transcribe it into our buffer.
-				ZBlockCopy(localData, ioContext.fBuffer8 + ioContext.fSpaceUsed, countRemaining);
+				ZMemCopy(ioContext.fBuffer8 + ioContext.fSpaceUsed, localData, countRemaining);
 				ioContext.fSpaceUsed = countRemaining;
 				countRemaining = 0;
 				}
@@ -219,7 +219,7 @@ void ZStream_SHA1::sUpdate(ZStream_SHA1::Context& ioContext, const void* iData, 
 			{
 			// Top up our existing buffer.
 			size_t countToCopy = min(countRemaining, 64 - ioContext.fSpaceUsed);
-			ZBlockCopy(localData, ioContext.fBuffer8 + ioContext.fSpaceUsed, countToCopy);
+			ZMemCopy(ioContext.fBuffer8 + ioContext.fSpaceUsed, localData, countToCopy);
 			countRemaining -= countToCopy;
 			ioContext.fSpaceUsed += countToCopy;
 			localData += countToCopy;

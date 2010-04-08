@@ -73,7 +73,7 @@ void ZStreamR_Boundary::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 			if (fDataEnd > fDataStart)
 				{
 				size_t countToMove = min(fDataEnd - fDataStart, iCount);
-				ZBlockCopy(fBuffer + fDataStart, localDest, countToMove);
+				ZMemCopy(localDest, fBuffer + fDataStart, countToMove);
 				fDataStart += countToMove;
 				localDest += countToMove;
 				iCount -= countToMove;
@@ -84,7 +84,7 @@ void ZStreamR_Boundary::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 					break;
 
 				// Shuffle existing stuff to beginning of buffer.
-				ZBlockMove(fBuffer + fDataEnd, fBuffer, boundarySize - fDataEnd);
+				ZMemMove(fBuffer, fBuffer + fDataEnd, boundarySize - fDataEnd);
 
 				// Top up the tail.
 				size_t countRead;
@@ -95,7 +95,7 @@ void ZStreamR_Boundary::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 					// The source stream has gone empty without our having already seen the
 					// boundary. Shuffle the data we do have so the last byte aligns with
 					// the end of the buffer.
-					ZBlockMove(fBuffer, fBuffer + fDataEnd - countRead,
+					ZMemMove(fBuffer + fDataEnd - countRead, fBuffer,
 						boundarySize - (fDataEnd - countRead));
 
 					// The first returnable byte is at fDataStart, and the last is at

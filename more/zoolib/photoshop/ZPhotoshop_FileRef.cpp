@@ -143,7 +143,7 @@ static Handle spHandleDuplicate(Handle iHandle)
 
 	size_t theSize = spPSHandle->GetSize(iHandle);
 	Handle result = spPSHandle->New(theSize);
-	ZBlockCopy(iHandle[0], UseHandle(result).Ptr(), theSize);
+	ZMemCopy(UseHandle(result).Ptr(), iHandle[0], theSize);
 	return result;
 	}
 

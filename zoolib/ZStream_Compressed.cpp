@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Stream_ZLib)
 
-#include "zoolib/ZMemory.h" // For ZBlockCopy
+#include "zoolib/ZMemory.h" // For ZMemCopy
 #include "zoolib/ZUtil_STL.h"
 
 #define kDebug_StreamRWPos_Compressed 2
@@ -80,7 +80,7 @@ void ZStreamW_Compressed::Imp_Write(const void* iSource, size_t iCount, size_t* 
 		else
 			{
 			size_t countToCopy = min(fChunkSize - fChunkPosition, iCount);
-			ZBlockCopy(localSource, fBuffer + fChunkPosition, countToCopy);
+			ZMemCopy(fBuffer + fChunkPosition, localSource, countToCopy);
 			iCount -= countToCopy;
 			localSource += countToCopy;
 			fChunkPosition += countToCopy;
