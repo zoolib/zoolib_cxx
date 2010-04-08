@@ -540,7 +540,6 @@ bool ZStreamRWCon_SSL_Win::pHandshake()
 			else
 				fBufferEnc.clear();
 
-
 			if (result == SEC_E_OK) 
 				{
 				// Handshake completed successfully.

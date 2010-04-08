@@ -26,11 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_operator_bool.h"
 
-// s == strim name
-// p == priority
-// f == facility
-
-
 #if ZCONFIG(Compiler, GCC)
 #	define ZMACRO_PRETTY_FUNCTION __PRETTY_FUNCTION__
 #elif ZCONFIG(Compiler, MSVC)
@@ -38,6 +33,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #else
 #	define ZMACRO_PRETTY_FUNCTION __FUNCTION__
 #endif
+
+// s == strim name
+// p == priority
+// f == facility
 
 #define ZLOGPF(s, p) const ZooLib::ZLog::S& s = ZLog::S(ZLog::p, ZMACRO_PRETTY_FUNCTION)
 #define ZLOGF(s, p) const ZooLib::ZLog::S& s = ZLog::S(ZLog::p, __FUNCTION__)

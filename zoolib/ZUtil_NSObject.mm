@@ -54,7 +54,6 @@ NSString* sString(const string16& iString16)
 		length:iString16.length()];
 	}
 
-
 NSMutableString* sStringMutable()
 	{ return [NSMutableString string]; }
 

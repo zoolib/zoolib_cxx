@@ -49,9 +49,6 @@ ZTSS_Win::Value ZTSS_Win::sGet(Key iKey)
 #pragma mark -
 #pragma mark * ZMtx_Win
 
-
-
-
 ZMtx_Win::ZMtx_Win(const char* iName)
 	{
 	ZAssertCompile(sizeof(Dummy_CRITICAL_SECTION) == sizeof(CRITICAL_SECTION));

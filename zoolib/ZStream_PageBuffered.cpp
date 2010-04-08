@@ -404,7 +404,6 @@ void ZStreamRWPos_PageBuffered::Imp_Write(const void* iSource, size_t iCount, si
 		fPosition += copySize;
 		localSource += copySize;
 
-
 		if (fBuffer_Head != buffer_Found)
 			{
 			// Move buffer_Found to the head of the list by removing it

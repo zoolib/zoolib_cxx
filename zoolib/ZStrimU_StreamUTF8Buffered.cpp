@@ -41,7 +41,6 @@ ZStrimU_StreamUTF8Buffered::ZStrimU_StreamUTF8Buffered(size_t iBufferSize, const
 ZStrimU_StreamUTF8Buffered::~ZStrimU_StreamUTF8Buffered()
 	{}
 
-
 // Do a more optimal version of this?
 static void spUTF8ToUTF32(
 	const UTF8* iStart, size_t iCountCU,

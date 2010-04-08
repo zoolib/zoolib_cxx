@@ -101,5 +101,4 @@ NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(CoreGraphics)
 
-
 #endif // __ZStream_MacOSX__

@@ -687,7 +687,6 @@ bool Device_Streamer::Write(const ZStreamW& iStreamW)
 		fCondition.Broadcast();
 		}
 
-
 	return false;
 	}
 
@@ -1372,7 +1371,6 @@ bool Device_Streamer::pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iCha
 			
 			if (iChannel->fWaitingForSequence)
 				return false;
-
 
 			if (ZLOG(s, eDebug + 1, "ZBlackBerry::Device_Streamer"))
 				{

@@ -886,7 +886,6 @@ the pending tag plus its attributes to be emitted to the sink strim
 followed by the actual write. ZML::StrimW::Attr trips an assertion if the strim
 is not in the correct mode.
 
-
 Note that ZML::StrimW descends from NonCopyable, in order to enforce
 that it can't be assigned or copy constructed from another ZML::StrimW. Nevertheless
 we declare a copy constructor and then don't define it. Why? In the words of

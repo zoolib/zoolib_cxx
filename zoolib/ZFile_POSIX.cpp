@@ -784,9 +784,6 @@ ZRef<ZFileLoc_POSIX> ZFileLoc_POSIX::sGet_App()
 
 #endif
 
-
-
-
 ZFileLoc_POSIX::ZFileLoc_POSIX(bool iIsAtRoot)
 :	fIsAtRoot(iIsAtRoot)
 	{}

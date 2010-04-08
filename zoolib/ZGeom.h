@@ -492,7 +492,6 @@ public:
 		return *this;
 		}
 
-
 	ZRect_T Centered(const ZRect_T& other) const
 		{
 		T width = T(right - left);

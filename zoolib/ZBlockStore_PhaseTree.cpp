@@ -2745,7 +2745,6 @@ void ZBlockStore_PhaseTree::ReleaseSlotNumber(uint32 iSlotNumber)
 	ZAssertStopf(ZCONFIG_PhaseTree_Debug,
 		!ZUtil_STL::sContains(fSlots_Loaded, iSlotNumber), ("Slot: %d", iSlotNumber));
 
-
 	// However, the slot could be cached.
 	map<uint32, Slot*>::iterator iterCached = fSlots_Cached.find(iSlotNumber);
 	if (iterCached != fSlots_Cached.end())
@@ -3245,7 +3244,6 @@ void ZBlockStore_PhaseTree::Index_SetKey(Slot* iSlot, bool iIsLeaf, size_t iOffs
 		ZAssertStop(ZCONFIG_PhaseTree_Debug, iOffset < ReadField(iSlot, 0));
 	WriteField(iSlot, 1 + iOffset, iKey);
 	}
-
 
 void ZBlockStore_PhaseTree::Index_SetChild(Slot* iSlot, bool iIsLeaf,
 	size_t iOffset, uint32 iSlotNumber)

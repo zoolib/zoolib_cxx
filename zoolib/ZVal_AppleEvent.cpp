@@ -74,7 +74,6 @@ static bool spAECheckIsRecord(const AEDesc* theDesc)
 
 #endif // TARGET_RT_MAC_CFM
 
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * 

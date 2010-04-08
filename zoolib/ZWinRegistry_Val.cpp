@@ -379,7 +379,6 @@ bool KeyRef::QGet(const string16& iName, Val& oVal) const
 		}
 	}
 
-
 bool KeyRef::QGet(const string8& iName, Val& oVal) const
 	{ return this->QGet(ZUnicode::sAsUTF16(iName), oVal); }
 

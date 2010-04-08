@@ -47,7 +47,6 @@ ZStreamW_HexStrim::ZStreamW_HexStrim(const std::string& iByteSeparator,
 	fWrittenAny(false)
 	{}
 
-
 /**
 \param iByteSeparator A UTF-8 string to be inserted between each byte that is output.
 \param iChunkSeparator A UTF-8 string to be inserted between each chunk that is output.

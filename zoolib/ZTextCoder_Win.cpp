@@ -163,7 +163,6 @@ static NameToCodePage_t spNameToCodePage[] =
 		{ "x-mac-icelandic", 10079, -1 },
 	};
 
-
 static string spCanonicalName(const string& iName)
 	{
 	string result;
@@ -359,7 +358,6 @@ static void spMBToWC_CanFail(
 			}
 		}
 	}
-
 
 bool ZTextDecoder_Win::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,

@@ -347,7 +347,6 @@ protected:
 	const ZStrimW& fStrimW;
 	};
 
-
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZStrimmer__

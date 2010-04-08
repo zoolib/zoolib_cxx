@@ -1218,7 +1218,6 @@ UTF32 Functions_Read_T<I, UTF8>::sReadInc(I& ioCurrent)
 		}
 	}
 
-
 template <class I>
 bool Functions_Read_T<I, UTF8>::sReadInc(I& ioCurrent, I iEnd, UTF32& oCP)
 	{

@@ -57,7 +57,6 @@ template <class T> struct ZAELookup_CPP2Desc {};
 	ZMACRO_AELookup_Desc2CPP(DescType, cpp_t) \
 	ZMACRO_AELookup_CPP2Desc(cpp_t, DescType)
 
-
 ZMACRO_AELookup(int16, typeSInt16)
 ZMACRO_AELookup(int32, typeSInt32)
 ZMACRO_AELookup(uint32, typeUInt32)

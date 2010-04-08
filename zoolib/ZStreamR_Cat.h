@@ -70,7 +70,6 @@ protected:
 	ZStreamR_Cat fStream;
 	};
 
-
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZStreamR_Cat__

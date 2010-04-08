@@ -148,7 +148,6 @@ string ZString::sSubstitute(const string& iString,
 	return sSubstitute(iString, theParams, 5);
 	}
 
-
 /// Return iString with occurrences of '%' followed by [0-9] replaced by strings from iParams.
 /** A '%' followed by any character other than [0-9] will cause the following character to
 appear in the result, so '%%' will appear as '%' in the result. If a substitution is indicated but

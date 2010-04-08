@@ -85,7 +85,6 @@ private:
 	bool fLastWasCR;
 	};
 
-
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZStrim_CRLF__

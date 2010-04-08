@@ -245,6 +245,17 @@ bool Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	return true;
 	}
 
+ZVal_ZooLib Visitor_GetVal::GetVal(ZRef<ZYadR> iYadR)
+	{
+	ZVal_ZooLib result;
+	if (iYadR)
+		{
+		iYadR->Accept(*this);
+		std::swap(result, fOutput);
+		}
+	return result;
+	}
+
 ZVal_ZooLib sFromYadR(const ZVal_ZooLib& iDefault, ZRef<ZYadR> iYadR)
 	{
 	if (ZRef<ZYadR_ZooLib> theYadR = ZRefDynamicCast<ZYadR_ZooLib>(iYadR))

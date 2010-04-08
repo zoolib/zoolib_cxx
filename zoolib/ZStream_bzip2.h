@@ -128,7 +128,6 @@ void sAnalyze(const ZStreamR& iStreamR, vector<pair<uint64, uint32> >& oOffsets)
 
 } // namespace ZStream_bzip2
 
-
 NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_API_Enabled(Stream_bzip2)

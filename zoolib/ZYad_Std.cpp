@@ -101,5 +101,4 @@ ZRef<ZYadR> ZYadMapR_Std::ReadInc(std::string& oName)
 	return fValue;
 	}
 
-
 NAMESPACE_ZOOLIB_END

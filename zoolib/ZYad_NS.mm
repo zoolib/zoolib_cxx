@@ -266,7 +266,6 @@ ZRef<NSObject> Visitor_GetVal::GetVal(ZRef<ZYadR> iYadR)
 	return result;
 	}
 
-
 ZRef<NSObject> sFromYadR(const ZRef<NSObject>& iDefault, ZRef<ZYadR> iYadR)
 	{
 	if (ZRef<ZYadR_NS> theYadR = iYadR.DynamicCast<ZYadR_NS>())

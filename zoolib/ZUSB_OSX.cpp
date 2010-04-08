@@ -765,7 +765,6 @@ ZUSBInterfaceInterface::~ZUSBInterfaceInterface()
 	CFRunLoopSourceRef theSource = fII[0]->GetInterfaceAsyncEventSource(fII);
 	::CFRunLoopRemoveSource(fRunLoopRef, theSource, kCFRunLoopDefaultMode);
 
-
 	if (fOpen)
 		fII[0]->USBInterfaceClose(fII);
 	fII[0]->Release(fII);
@@ -780,8 +779,6 @@ ZRef<ZStreamerR> ZUSBInterfaceInterface::OpenR(int iPipeRefR)
 	if (fOpen)
 //		return new StreamerR_Async(this, fII, iPipeRefR, 1024);
 		return new StreamerR_TO(this, fII, iPipeRefR, 1024);
-
-
 
 	return ZRef<ZStreamerR>();
 	}

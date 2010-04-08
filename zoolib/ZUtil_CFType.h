@@ -41,7 +41,6 @@ ZRef<CFStringRef> sString();
 ZRef<CFStringRef> sString(const string8& iString8);
 ZRef<CFStringRef> sString(const string16& iString16);
 
-
 ZRef<CFMutableStringRef> sStringMutable();
 ZRef<CFMutableStringRef> sStringMutable(const string8& iString8);
 ZRef<CFMutableStringRef> sStringMutable(const string16& iString16);

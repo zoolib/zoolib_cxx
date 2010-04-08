@@ -426,7 +426,6 @@ void Host_WindowRef::DoEvent(const EventRecord& iEvent)
 	Host_Mac::DoEvent(theER);
 	}
 
-
 EventHandlerUPP Host_WindowRef::sEventHandlerUPP_Window =
 	NewEventHandlerUPP(sEventHandler_Window);
 

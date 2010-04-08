@@ -181,8 +181,6 @@ Offset  Dec  Acc  Inc
 10       8    -    -
 \endverbatim
 
-
-
 \bug
 CodeWarrior building for Mach-o defines wchar_t to be a 32 bits in size. The CW debugger,
 as of 8.3 at least, always treats wchar_t as being 16 bits in size, which can make

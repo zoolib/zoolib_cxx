@@ -190,7 +190,6 @@ void ZRWLock::ReturnLock()
 
 	ZThread::ID currentID = ZThread::sID();
 
-
 	if (fThreadID_CurrentWriter == currentID)
 		{
 		// We're returning the the write lock.

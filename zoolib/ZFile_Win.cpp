@@ -1284,7 +1284,6 @@ string ZFileLoc_WinNT::GetName(ZFile::Error* oErr) const
 	return ZUnicode::sAsUTF8(fBase);
 	}
 
-
 ZTrail ZFileLoc_WinNT::TrailTo(ZRef<ZFileLoc> iDest, ZFile::Error* oErr) const
 	{
 	if (ZFileLoc_WinNT* dest = ZRefDynamicCast<ZFileLoc_WinNT>(iDest))

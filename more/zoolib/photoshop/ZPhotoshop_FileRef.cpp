@@ -61,7 +61,6 @@ OSErr
   AliasHandle *    inAlias,
   Boolean *        isDirectory)            /* can be NULL */;
 
-
 static OSErr 
 FSNewAliasMinimalUnicode(
   const FSRef *    targetParentRef,
