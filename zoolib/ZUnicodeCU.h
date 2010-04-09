@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,26 +18,42 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUnicodeString__
-#define __ZUnicodeString__ 1
+#ifndef __ZUnicodeCU__
+#define __ZUnicodeCU__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZUnicodeCU.h"
-
-#include <string>
+#include "zoolib/ZStdInt.h" // For uint16, uint32
 
 NAMESPACE_ZOOLIB_BEGIN
 
-/// A basic_string specialization that holds a sequence of UTF32 code units.
-typedef std::basic_string<UTF32> string32;
+// =================================================================================================
 
-/// A basic_string specialization that holds a sequence of UTF16 code units.
-typedef std::basic_string<UTF16> string16;
+namespace ZUnicode {
 
-/// A basic_string specialization that holds a sequence of UTF8 code units.
-/// It is actually the same type as std::string.
-typedef std::basic_string<UTF8> string8;
+// This lets us typedef UTF16 or UTF32 from wchar_t, with
+// the other being a regular unsigned integer.
+
+template <int s> struct Types_T {};
+
+template <> struct Types_T<4>
+	{
+	typedef wchar_t utf32_t;
+	typedef uint16 utf16_t;
+	};
+
+template <> struct Types_T<2>
+	{
+	typedef uint32 utf32_t;
+	typedef wchar_t utf16_t;
+	};
+
+} // namespace ZUnicode
+
+// Definitions of UTF32, UTF16 and UTF8
+typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf32_t UTF32;
+typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf16_t UTF16;
+typedef char UTF8;
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZUnicodeString__
+#endif // __ZUnicodeCU__

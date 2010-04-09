@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZTypes.h" // For ZRectPOD and ZPointPOD
+#include "zoolib/ZTypes.h"
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
 #	include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGGeometry.h)

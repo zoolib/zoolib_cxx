@@ -33,42 +33,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
-
-namespace ZUnicode {
-// This template and its two specializations below let us
-// determine cleanly whether wchar_t is 16 or 32 bits.
-template <int s> struct Types_T {};
-
-template <> struct Types_T<4>
-	{
-	typedef wchar_t utf32_t;
-	typedef uint16 utf16_t;
-	};
-
-template <> struct Types_T<2>
-	{
-	typedef uint32 utf32_t;
-	typedef wchar_t utf16_t;
-	};
-
-} // namespace ZUnicode
-
-// Definitions of UTF32, UTF16 and UTF8
-typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf32_t UTF32;
-typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf16_t UTF16;
-typedef char UTF8;
-
-// =================================================================================================
-
-// Use the ZFourCC inline if possible.
-inline uint32 ZFourCC(uint8 a, uint8 b, uint8 c, uint8 d)
-	{ return uint32((a << 24) | (b << 16) | (c << 8) | d); }
-
-// And the macro if a compile-time constant is needed (case statements).
-#define ZFOURCC(a,b,c,d) \
-	((uint32)((((uint8)a) << 24) | (((uint8)b) << 16) | (((uint8)c) << 8) | (((uint8)d))))
-
-// =================================================================================================
+#pragma mark -
+#pragma mark * ZPointPOD
 
 struct ZPointPOD
 	{
@@ -77,6 +43,10 @@ struct ZPointPOD
 	};
 
 template <> int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR);
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZRectPOD
 
 struct ZRectPOD
 	{
@@ -87,6 +57,16 @@ struct ZRectPOD
 	};
 
 template <> int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR);
+
+// =================================================================================================
+
+// Use the ZFourCC inline if possible.
+inline uint32 ZFourCC(uint8 a, uint8 b, uint8 c, uint8 d)
+	{ return uint32((a << 24) | (b << 16) | (c << 8) | d); }
+
+// And the macro if a compile-time constant is needed (case statements).
+#define ZFOURCC(a,b,c,d) \
+	((uint32)((((uint8)a) << 24) | (((uint8)b) << 16) | (((uint8)c) << 8) | (((uint8)d))))
 
 // =================================================================================================
 
