@@ -41,7 +41,7 @@ void ZFileFormat_AppleDouble::Writer::SetIsAppleSingle(bool iIsAppleSingle)
 	fIsAppleSingle = iIsAppleSingle;
 	}
 
-void ZFileFormat_AppleDouble::Writer::Add(uint32 iEntryID, ZRef<ZStreamerRPos> iStreamerRPos)
+void ZFileFormat_AppleDouble::Writer::Append(uint32 iEntryID, ZRef<ZStreamerRPos> iStreamerRPos)
 	{
 	Entry theEntry;
 	theEntry.fID = iEntryID;
@@ -50,31 +50,31 @@ void ZFileFormat_AppleDouble::Writer::Add(uint32 iEntryID, ZRef<ZStreamerRPos> i
 	fEntries.push_back(theEntry);
 	}
 
-void ZFileFormat_AppleDouble::Writer::Add(uint32 iEntryID, const ZStreamRPos& iStreamRPos)
+void ZFileFormat_AppleDouble::Writer::Append(uint32 iEntryID, const ZStreamRPos& iStreamRPos)
 	{
 	ZRef<ZStreamerRWPos> theStreamer = new ZStreamerRWPos_T<ZStreamRWPos_RAM>;
 	theStreamer->GetStreamW().CopyAllFrom(iStreamRPos);
-	this->Add(iEntryID, theStreamer);
+	this->Append(iEntryID, theStreamer);
 	}
 
-void ZFileFormat_AppleDouble::Writer::Add(uint32 iEntryID, const ZStreamR& iStreamR, size_t iSize)
+void ZFileFormat_AppleDouble::Writer::Append(uint32 iEntryID, const ZStreamR& iStreamR, size_t iSize)
 	{
 	ZRef<ZStreamerRWPos> theStreamer = new ZStreamerRWPos_T<ZStreamRWPos_RAM>;
 	theStreamer->GetStreamW().CopyFrom(iStreamR, iSize);
-	this->Add(iEntryID, theStreamer);
+	this->Append(iEntryID, theStreamer);
 	}
 
-void ZFileFormat_AppleDouble::Writer::Add(uint32 iEntryID, const void* iSource, size_t iSize)
+void ZFileFormat_AppleDouble::Writer::Append(uint32 iEntryID, const void* iSource, size_t iSize)
 	{
 	ZRef<ZStreamerRWPos> theStreamer = new ZStreamerRWPos_T<ZStreamRWPos_RAM>;
 	theStreamer->GetStreamWPos().Write(iSource, iSize);
-	this->Add(iEntryID, theStreamer);
+	this->Append(iEntryID, theStreamer);
 	}
 
 ZRef<ZStreamerRWPos> ZFileFormat_AppleDouble::Writer::Create(uint32 iEntryID)
 	{
 	ZRef<ZStreamerRWPos> theStreamer = new ZStreamerRWPos_T<ZStreamRWPos_RAM>;
-	this->Add(iEntryID, theStreamer);
+	this->Append(iEntryID, theStreamer);
 	return theStreamer;
 	}
 

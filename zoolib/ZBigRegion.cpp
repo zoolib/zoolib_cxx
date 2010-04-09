@@ -119,8 +119,8 @@ ZBigRegion ZBigRegion::sRects(const ZRect_T<int32>* iRects, size_t iCount, bool 
 			{
 			ZBigRegionAccumulator theAccumulator;
 			while (iCount--)
-				theAccumulator.Add(ZBigRegion(*iRects++));
-			resultRgn = theAccumulator.GetResult();
+				theAccumulator.Include(ZBigRegion(*iRects++));
+			resultRgn = theAccumulator.Get();
 			}
 		}
 	return resultRgn;

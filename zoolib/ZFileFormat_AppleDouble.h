@@ -51,10 +51,10 @@ public:
 
 	void SetIsAppleSingle(bool iIsAppleSingle);
 
-	void Add(uint32 iEntryID, ZRef<ZStreamerRPos> iStreamerRPos);
-	void Add(uint32 iEntryID, const ZStreamRPos& iStreamRPos);
-	void Add(uint32 iEntryID, const ZStreamR& iStreamR, size_t iSize);
-	void Add(uint32 iEntryID, const void* iSource, size_t iSize);
+	void Append(uint32 iEntryID, ZRef<ZStreamerRPos> iStreamerRPos);
+	void Append(uint32 iEntryID, const ZStreamRPos& iStreamRPos);
+	void Append(uint32 iEntryID, const ZStreamR& iStreamR, size_t iSize);
+	void Append(uint32 iEntryID, const void* iSource, size_t iSize);
 
 	ZRef<ZStreamerRWPos> Create(uint32 iEntryID);
 	

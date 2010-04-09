@@ -60,7 +60,7 @@ public:
 	:	fCount(0)
 		{}
 
-	void Add(const T& iT)
+	void Include(const T& iT)
 		{
 		fStack.push_back(iT);
 
@@ -74,7 +74,7 @@ public:
 			}
 		}
 
-	T GetResult() const
+	T Get() const
 		{
 		T result;
 		for (typename S::const_iterator i = fStack.begin(); i != fStack.end(); ++i)
