@@ -148,7 +148,17 @@ void Visitor_DoToStrim::Visit_ExprRep_Relation_Binary_Union(
 	{ this->pWriteBinary("Union", iRep); }
 
 void Visitor_DoToStrim::Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep)
-	{ pStrimW() << "/* Relation_Concrete: " << typeid(*iRep.Get()).name() << " */"; }
+	{
+	const ZStrimW& w = pStrimW();
+
+	w << "/* Relation_Concrete: " << typeid(*iRep.Get()).name() << " */";
+
+	if (pOptions().fDebuggingOutput)
+		{
+		this->pWriteLFIndent();
+		spWrite_EffectiveRelHeadComment(iRep, w);
+		}
+	}
 
 void Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Project(
 	ZRef<ExprRep_Relation_Unary_Project> iRep)
@@ -187,7 +197,7 @@ void Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Rename(
 
 	this->pWriteLFIndent();
 	spWrite_PropName(iRep->GetOld(), w);
-	spWrite(", ", w);
+	spWrite("-->", w);
 	spWrite_PropName(iRep->GetNew(), w);
 	spWrite(",", w);
 
