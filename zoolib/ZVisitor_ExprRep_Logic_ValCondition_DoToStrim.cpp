@@ -28,16 +28,10 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZVisitor_ExprRep_Logic_ValCondition_DoToStrim
 
-ZVisitor_ExprRep_Logic_ValCondition_DoToStrim::ZVisitor_ExprRep_Logic_ValCondition_DoToStrim(
-	const Options& iOptions, const ZStrimW& iStrimW)
-:	ZVisitor_ExprRep_Logic_DoToStrim(iOptions, iStrimW)
-,	ZVisitor_ExprRep_DoToStrim(iOptions, iStrimW)
-	{}
-
 bool ZVisitor_ExprRep_Logic_ValCondition_DoToStrim::Visit_Logic_ValCondition(
 	ZRef<ZExprRep_Logic_ValCondition> iRep)
 	{
-	ZUtil_Strim_ValCondition::sToStrim(iRep->GetValCondition(), fStrimW);
+	ZUtil_Strim_ValCondition::sToStrim(iRep->GetValCondition(), pStrimW());
 	return true;
 	}
 

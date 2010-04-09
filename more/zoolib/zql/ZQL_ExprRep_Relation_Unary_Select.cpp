@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_ExprRep_Relation_Select.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Select.h"
 #include "zoolib/ZExprRep_Logic_ValCondition.h" // For sGetRelHead
 
 using std::string;
@@ -28,55 +28,58 @@ namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ExprRep_Relation_Select
+#pragma mark * ExprRep_Relation_Unary_Select
 
-ExprRep_Relation_Select::ExprRep_Relation_Select(
-	const ZRef<ZExprRep_Logic>& iExprRep_Logic, const ZRef<ExprRep_Relation>& iExprRep_Relation)
-:	fExprRep_Logic(iExprRep_Logic)
-,	fExprRep_Relation(iExprRep_Relation)
+ExprRep_Relation_Unary_Select::ExprRep_Relation_Unary_Select(
+	const ZRef<ExprRep_Relation>& iExprRep_Relation, const ZRef<ZExprRep_Logic>& iExprRep_Logic)
+:	ExprRep_Relation_Unary(iExprRep_Relation)
+,	fExprRep_Logic(iExprRep_Logic)
 	{}
 
-ExprRep_Relation_Select::~ExprRep_Relation_Select()
+ExprRep_Relation_Unary_Select::~ExprRep_Relation_Unary_Select()
 	{}
 
-bool ExprRep_Relation_Select::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
+ZRelHead ExprRep_Relation_Unary_Select::GetRelHead()
+	{ return this->GetExprRep_Relation()->GetRelHead() | sGetRelHead(fExprRep_Logic); }
+
+bool ExprRep_Relation_Unary_Select::Accept_ExprRep_Relation_Unary(
+	Visitor_ExprRep_Relation_Unary& iVisitor)
 	{
-	if (Visitor_ExprRep_Relation_Select* theVisitor =
-		dynamic_cast<Visitor_ExprRep_Relation_Select*>(&iVisitor))
+	if (Visitor_ExprRep_Relation_Unary_Select* theVisitor =
+		dynamic_cast<Visitor_ExprRep_Relation_Unary_Select*>(&iVisitor))
 		{
-		return this->Accept_ExprRep_Relation_Select(*theVisitor);
+		return this->Accept_ExprRep_Relation_Unary_Select(*theVisitor);
 		}
 	else
 		{
-		return ExprRep_Relation::Accept_ExprRep_Relation(iVisitor);
+		return ExprRep_Relation_Unary::Accept_ExprRep_Relation_Unary(iVisitor);
 		}
 	}
+bool ExprRep_Relation_Unary_Select::Accept_ExprRep_Relation_Unary_Select(
+	Visitor_ExprRep_Relation_Unary_Select& iVisitor)
+	{ return iVisitor.Visit_ExprRep_Relation_Unary_Select(this); }
 
-ZRelHead ExprRep_Relation_Select::GetRelHead()
-	{ return sGetRelHead(fExprRep_Logic) | fExprRep_Relation->GetRelHead(); }
+ZRef<ExprRep_Relation_Unary> ExprRep_Relation_Unary_Select::Clone(
+	ZRef<ExprRep_Relation> iExprRep_Relation)
+	{ return new ExprRep_Relation_Unary_Select(iExprRep_Relation, fExprRep_Logic); }
 
-bool ExprRep_Relation_Select::Accept_ExprRep_Relation_Select(
-	Visitor_ExprRep_Relation_Select& iVisitor)
-	{ return iVisitor.Visit_ExprRep_Relation_Select(this); }
-
-ZRef<ZExprRep_Logic> ExprRep_Relation_Select::GetExprRep_Logic()
+ZRef<ZExprRep_Logic> ExprRep_Relation_Unary_Select::GetExprRep_Logic()
 	{ return fExprRep_Logic; }
-
-ZRef<ExprRep_Relation> ExprRep_Relation_Select::GetExprRep_Relation()
-	{ return fExprRep_Relation; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_ExprRep_Relation_Select
+#pragma mark * Visitor_ExprRep_Relation_Unary_Select
 
-bool Visitor_ExprRep_Relation_Select::Visit_ExprRep_Relation_Select(
-	ZRef<ExprRep_Relation_Select> iRep)
+bool Visitor_ExprRep_Relation_Unary_Select::Visit_ExprRep_Relation_Unary_Select(
+	ZRef<ExprRep_Relation_Unary_Select> iRep)
 	{
+	//??
+	Visitor_ExprRep_Relation_Unary::Visit_ExprRep_Relation_Unary(iRep);
+//	if (ZRef<ExprRep_Relation> theExprRep_Relation = iRep->GetExprRep_Relation())
+//		theExprRep_Relation->Accept(*this);
+
 	if (ZRef<ZExprRep_Logic> theExprRep_Logic = iRep->GetExprRep_Logic())
 		theExprRep_Logic->Accept(*this);
-
-	if (ZRef<ExprRep_Relation> theExprRep_Relation = iRep->GetExprRep_Relation())
-		theExprRep_Relation->Accept(*this);
 
 	return true;
 	}
@@ -84,17 +87,17 @@ bool Visitor_ExprRep_Relation_Select::Visit_ExprRep_Relation_Select(
 #pragma mark -
 #pragma mark *
 
-ZRef<ExprRep_Relation_Select> sSelect(
+ZRef<ExprRep_Relation_Unary_Select> sSelect(
 	const ZRef<ZExprRep_Logic>& iExprRep_Logic, const ZRef<ExprRep_Relation>& iExprRep_Relation)
-	{ return new ExprRep_Relation_Select(iExprRep_Logic, iExprRep_Relation); }
+	{ return new ExprRep_Relation_Unary_Select(iExprRep_Relation, iExprRep_Logic); }
 
-ZRef<ExprRep_Relation_Select> operator&(
+ZRef<ExprRep_Relation_Unary_Select> operator&(
 	const ZRef<ZExprRep_Logic>& iExprRep_Logic, const ZRef<ExprRep_Relation>& iExprRep_Relation)
-	{ return new ExprRep_Relation_Select(iExprRep_Logic, iExprRep_Relation); }
+	{ return new ExprRep_Relation_Unary_Select(iExprRep_Relation, iExprRep_Logic); }
 
-ZRef<ExprRep_Relation_Select> operator&(
+ZRef<ExprRep_Relation_Unary_Select> operator&(
 	const ZRef<ExprRep_Relation>& iExprRep_Relation, const ZRef<ZExprRep_Logic>& iExprRep_Logic)
-	{ return new ExprRep_Relation_Select(iExprRep_Logic, iExprRep_Relation); }
+	{ return new ExprRep_Relation_Unary_Select(iExprRep_Relation, iExprRep_Logic); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

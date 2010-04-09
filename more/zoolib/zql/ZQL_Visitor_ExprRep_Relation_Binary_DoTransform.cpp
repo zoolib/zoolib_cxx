@@ -18,25 +18,29 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_ExprRep_Relation_Restrict__
-#define __ZQL_ExprRep_Relation_Restrict__ 1
-#include "zconfig.h"
-
-#include "zoolib/zql/ZQL_ExprRep_Relation_Restrict_T.h"
-#include "zoolib/ZValCondition.h"
+#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Binary_DoTransform.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL::ExprRep_Relation_Restrict
+#pragma mark * Visitor_ExprRep_Relation_Binary_DoTransform
 
-typedef ExprRep_Relation_Restrict_T<ZVal_Expr> ExprRep_Relation_Restrict;
+bool Visitor_ExprRep_Relation_Binary_DoTransform::Visit_ExprRep_Relation_Binary(
+	ZRef<ExprRep_Relation_Binary> iRep)
+	{
+	ZRef<ExprRep_Relation> oldLHS = iRep->GetLHS();
+	ZRef<ExprRep_Relation> oldRHS = iRep->GetRHS();
+	ZRef<ExprRep_Relation> newLHS = this->DoTransform(oldLHS).DynamicCast<ExprRep_Relation>();
+	ZRef<ExprRep_Relation> newRHS = this->DoTransform(oldRHS).DynamicCast<ExprRep_Relation>();
+	if (oldLHS == newLHS && oldRHS == newRHS)
+		fResult = iRep;
+	else
+		fResult = iRep->Clone(newLHS, newRHS);
 
-typedef Visitor_ExprRep_Relation_Restrict_T<ZVal_Expr> Visitor_ExprRep_Relation_Restrict;
+	return true;
+	}
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_ExprRep_Relation_Restrict_T__

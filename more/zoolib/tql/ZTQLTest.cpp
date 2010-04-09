@@ -1,6 +1,6 @@
 #include "zoolib/tql/ZTQL_Optimize.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Restrict.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Select.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Restrict.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Select.h"
 
 #include "zoolib/zql/ZQL_Util_Strim_Query.h"
 

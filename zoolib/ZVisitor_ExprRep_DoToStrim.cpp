@@ -38,25 +38,45 @@ ZVisitor_ExprRep_DoToStrim::Options::Options()
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVisitor_ExprRep_DoToStrim
+static ZStrimW_Null sNull;
 
-ZVisitor_ExprRep_DoToStrim::ZVisitor_ExprRep_DoToStrim(
-	const Options& iOptions, const ZStrimW& iStrimW)
-:	fOptions(iOptions)
-,	fStrimW(iStrimW)
+ZVisitor_ExprRep_DoToStrim::ZVisitor_ExprRep_DoToStrim()
+:	fOptions(nullptr)
+,	fStrimW(nullptr)
 ,	fIndent(0)
 	{}
 
 bool ZVisitor_ExprRep_DoToStrim::Visit_ExprRep(ZRef<ZExprRep> iRep)
 	{
 	if (iRep)
-		fStrimW << "/* unhandled ZExprRep: " << typeid(*iRep.Get()).name() << " */";
+		pStrimW() << "/* unhandled ZExprRep: " << typeid(*iRep.Get()).name() << " */";
 	else
-		fStrimW << "/*null ZExprRep*/";
+		pStrimW() << "/*null ZExprRep*/";
 	return true;
+	}
+
+void ZVisitor_ExprRep_DoToStrim::StartToStrim(
+	const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZExprRep> iExprRep)
+	{
+	ZAssert(!fOptions && !fStrimW);
+	fOptions = &iOptions;
+	fStrimW = &iStrimW;
+	try
+		{
+		this->DoToStrim(iExprRep);
+		}
+	catch (...)
+		{
+		fOptions = nullptr;
+		fStrimW = nullptr;
+		fIndent = 0;
+		throw;
+		}
 	}
 
 void ZVisitor_ExprRep_DoToStrim::DoToStrim(ZRef<ZExprRep> iExprRep)
 	{
+	ZAssert(fOptions && fStrimW);
 	if (iExprRep)
 		{
 		++fIndent;
@@ -65,11 +85,23 @@ void ZVisitor_ExprRep_DoToStrim::DoToStrim(ZRef<ZExprRep> iExprRep)
 		}
 	}
 
+const  ZVisitor_ExprRep_DoToStrim::Options& ZVisitor_ExprRep_DoToStrim::pOptions()
+	{
+	ZAssert(fOptions);
+	return *fOptions;
+	}
+
+const ZStrimW& ZVisitor_ExprRep_DoToStrim::pStrimW()
+	{
+	ZAssert(fStrimW);
+	return *fStrimW;
+	}
+
 void ZVisitor_ExprRep_DoToStrim::pWriteLFIndent()
 	{
-	fStrimW.Write(fOptions.fEOLString);
+	pStrimW().Write(pOptions().fEOLString);
 	for (size_t x = 0; x < fIndent; ++x)
-		fStrimW.Write(fOptions.fIndentString);
+		pStrimW().Write(pOptions().fIndentString);
 	}
 
 NAMESPACE_ZOOLIB_END

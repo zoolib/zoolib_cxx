@@ -18,26 +18,26 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Restrict_DoTransform.h"
+#ifndef __ZQL_ExprRep_Relation_Unary_Restrict__
+#define __ZQL_ExprRep_Relation_Unary_Restrict__ 1
+#include "zconfig.h"
+
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Restrict_T.h"
+#include "zoolib/ZValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_ExprRep_Relation_Restrict_DoTransform
+#pragma mark * ZQL::ExprRep_Relation_Unary_Restrict
 
-bool Visitor_ExprRep_Relation_Restrict_DoTransform::Visit_ExprRep_Relation_Restrict(
-	ZRef<ExprRep_Relation_Restrict> iRep)
-	{
-	ZRef<ExprRep_Relation> oldRep = iRep->GetExprRep();
-	ZRef<ExprRep_Relation> newRep = this->DoTransform(oldRep).DynamicCast<ExprRep_Relation>();
-	if (oldRep == newRep)
-		fResult = iRep;
-	else
-		fResult = new ExprRep_Relation_Restrict(iRep->GetValCondition(), newRep);
-	return true;
-	}
+typedef ExprRep_Relation_Unary_Restrict_T<ZVal_Expr> ExprRep_Relation_Unary_Restrict;
+
+typedef Visitor_ExprRep_Relation_Unary_Restrict_T<ZVal_Expr>
+	Visitor_ExprRep_Relation_Unary_Restrict;
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZQL_ExprRep_Relation_Unary_Restrict_T__

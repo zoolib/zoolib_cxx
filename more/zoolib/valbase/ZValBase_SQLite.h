@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZValBase_SQLite__
 #define __ZValBase_SQLite__ 1
 #include "zconfig.h"
-
+#if 0
 #include <sqlite.h>
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -64,5 +64,5 @@ private:
 
 } // namespace ZValBase_SQLite
 NAMESPACE_ZOOLIB_END
-
+#endif
 #endif // __ZValBase_SQLite__

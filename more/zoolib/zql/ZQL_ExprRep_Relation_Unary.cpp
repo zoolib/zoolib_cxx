@@ -18,32 +18,54 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Visitor_ExprRep_Relation_Select_DoToStrim__
-#define __ZQL_Visitor_ExprRep_Relation_Select_DoToStrim__
-#include "zconfig.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary.h"
 
-#include "zoolib/ZVisitor_ExprRep_DoToStrim.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Select.h"
+using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_ExprRep_Relation_Select_DoToStrim
+#pragma mark * ExprRep_Relation
 
-class Visitor_ExprRep_Relation_Select_DoToStrim
-:	public virtual ZVisitor_ExprRep_DoToStrim
-,	public virtual Visitor_ExprRep_Relation_Select
+ExprRep_Relation_Unary::ExprRep_Relation_Unary(ZRef<ExprRep_Relation> iExprRep_Relation)
+:	fExprRep_Relation(iExprRep_Relation)
+	{}
+
+ExprRep_Relation_Unary::~ExprRep_Relation_Unary()
+	{}
+
+bool ExprRep_Relation_Unary::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
 	{
-public:
-	Visitor_ExprRep_Relation_Select_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW);
+	if (Visitor_ExprRep_Relation_Unary* theVisitor =
+		dynamic_cast<Visitor_ExprRep_Relation_Unary*>(&iVisitor))
+		{
+		return this->Accept_ExprRep_Relation_Unary(*theVisitor);
+		}
+	else
+		{
+		return ExprRep_Relation::Accept_ExprRep_Relation(iVisitor);
+		}
+	}
 
-// From Visitor_ExprRep_Relation_Select
-	virtual bool Visit_ExprRep_Relation_Select(ZRef<ExprRep_Relation_Select> iRep);
-	};
+bool ExprRep_Relation_Unary::Accept_ExprRep_Relation_Unary(Visitor_ExprRep_Relation_Unary& iVisitor)
+	{ return ExprRep_Relation::Accept_ExprRep_Relation(iVisitor); }
+
+ZRef<ExprRep_Relation> ExprRep_Relation_Unary::GetExprRep_Relation()
+	{ return fExprRep_Relation; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_ExprRep_Relation_Unary
+
+bool Visitor_ExprRep_Relation_Unary::Visit_ExprRep_Relation_Unary(ZRef<ExprRep_Relation_Unary> iRep)
+	{
+	if (ZRef<ExprRep_Relation> theRelation = iRep->GetExprRep_Relation())
+		theRelation->Accept(*this);
+
+	return true;
+	}
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Visitor_ExprRep_Relation_Select_DoToStrim__

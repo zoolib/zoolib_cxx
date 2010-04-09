@@ -18,40 +18,60 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Visitor_ExprRep_Relation_DoTransform__
-#define __ZQL_Visitor_ExprRep_Relation_DoTransform__
+#ifndef __ZQL_ExprRep_Relation_Unary_Rename__
+#define __ZQL_ExprRep_Relation_Unary_Rename__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZVisitor_ExprRep_DoTransform.h"
-
-#include "zoolib/zql/ZQL_ExprRep_Relation.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
+class Visitor_ExprRep_Relation_Unary_Rename;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Query_DoTransform
+#pragma mark * ExprRep_Relation_Unary_Rename
 
-class Visitor_ExprRep_Relation_DoTransform
-:	public virtual ZVisitor_ExprRep_DoTransform
-,	public virtual Visitor_ExprRep_Relation
+class ExprRep_Relation_Unary_Rename : public ExprRep_Relation_Unary
 	{
 public:
-// From Visitor_ExprRep_Relation
-	virtual bool Visit_ExprRep_Relation_Difference(ZRef<ExprRep_Relation_Difference> iRep);
-	virtual bool Visit_ExprRep_Relation_Intersect(ZRef<ExprRep_Relation_Intersect> iRep);
-	virtual bool Visit_ExprRep_Relation_Join(ZRef<ExprRep_Relation_Join> iRep);
-	virtual bool Visit_ExprRep_Relation_Project(ZRef<ExprRep_Relation_Project> iRep);
-	virtual bool Visit_ExprRep_Relation_Rename(ZRef<ExprRep_Relation_Rename> iRep);
-	virtual bool Visit_ExprRep_Relation_Union(ZRef<ExprRep_Relation_Union> iRep);
+	ExprRep_Relation_Unary_Rename(ZRef<ExprRep_Relation> iExprRep_Relation,
+		const std::string& iOld, const std::string& iNew);
+
+	virtual ~ExprRep_Relation_Unary_Rename();
+
+// From ExprRep_Relation via ExprRep_Relation_Unary
+	virtual ZRelHead GetRelHead();
+
+// From ExprRep_Relation_Unary
+	virtual bool Accept_ExprRep_Relation_Unary(Visitor_ExprRep_Relation_Unary& iVisitor);
+
+	virtual ZRef<ExprRep_Relation_Unary> Clone(ZRef<ExprRep_Relation> iExprRep_Relation);
+
+// Our protocol
+	virtual bool Accept_ExprRep_Relation_Unary_Rename(
+		Visitor_ExprRep_Relation_Unary_Rename& iVisitor);
+
+	const std::string& GetOld();
+	const std::string& GetNew();
 
 private:
-	bool pTransformDyadic(ZRef<ExprRep_Relation_Dyadic> iRep,
-		ZRef<ExprRep_Relation>& oNewLHS, ZRef<ExprRep_Relation>& oNewRHS);
+	const std::string fOld;
+	const std::string fNew;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_ExprRep_Relation_Unary_Rename
+
+class Visitor_ExprRep_Relation_Unary_Rename : public virtual Visitor_ExprRep_Relation_Unary
+	{
+public:
+	virtual bool Visit_ExprRep_Relation_Unary_Rename(ZRef<ExprRep_Relation_Unary_Rename> iRep);
 	};
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Visitor_ExprRep_Relation_DoTransform__
+#endif // __ZQL_ExprRep_Relation_Unary_Rename__

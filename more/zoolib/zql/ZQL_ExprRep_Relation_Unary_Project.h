@@ -18,30 +18,58 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Visitor_ExprRep_Relation_Restrict_DoTransform__
-#define __ZQL_Visitor_ExprRep_Relation_Restrict_DoTransform__
+#ifndef __ZQL_ExprRep_Relation_Unary_Project__
+#define __ZQL_ExprRep_Relation_Unary_Project__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZVisitor_ExprRep_DoTransform.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Restrict.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
+class Visitor_ExprRep_Relation_Unary_Project;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_ExprRep_Relation_Restrict_DoTransform
+#pragma mark * ExprRep_Relation_Unary_Project
 
-class Visitor_ExprRep_Relation_Restrict_DoTransform
-:	public virtual ZVisitor_ExprRep_DoTransform
-,	public virtual Visitor_ExprRep_Relation_Restrict
+class ExprRep_Relation_Unary_Project : public ExprRep_Relation_Unary
 	{
 public:
-// From Visitor_ExprRep_Relation_Restrict
-	virtual bool Visit_ExprRep_Relation_Restrict(ZRef<ExprRep_Relation_Restrict> iRep);
+	ExprRep_Relation_Unary_Project(
+		const ZRef<ExprRep_Relation>& iExprRep_Relation, const ZRelHead& iRelHead);
+
+	virtual ~ExprRep_Relation_Unary_Project();
+
+// From ExprRep_Relation via ExprRep_Relation_Unary
+	virtual ZRelHead GetRelHead();
+
+// From ExprRep_Relation_Unary
+	virtual bool Accept_ExprRep_Relation_Unary(Visitor_ExprRep_Relation_Unary& iVisitor);
+
+	virtual ZRef<ExprRep_Relation_Unary> Clone(ZRef<ExprRep_Relation> iExprRep_Relation);
+
+// Our protocol
+	virtual bool Accept_ExprRep_Relation_Unary_Project(
+		Visitor_ExprRep_Relation_Unary_Project& iVisitor);
+
+	ZRelHead GetProjectRelHead();
+
+private:
+	const ZRelHead fRelHead;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_ExprRep_Relation_Unary_Project
+
+class Visitor_ExprRep_Relation_Unary_Project : public virtual Visitor_ExprRep_Relation_Unary
+	{
+public:
+	virtual bool Visit_ExprRep_Relation_Unary_Project(ZRef<ExprRep_Relation_Unary_Project> iRep);
 	};
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Visitor_ExprRep_Relation_Restrict_DoTransform__
+#endif // __ZQL_ExprRep_Relation_Unary_Project__

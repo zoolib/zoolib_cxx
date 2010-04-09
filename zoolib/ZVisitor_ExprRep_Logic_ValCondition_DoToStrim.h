@@ -36,8 +36,6 @@ class ZVisitor_ExprRep_Logic_ValCondition_DoToStrim
 ,	public virtual ZVisitor_ExprRep_Logic_ValCondition
 	{
 public:
-	ZVisitor_ExprRep_Logic_ValCondition_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW);
-
 // From ZVisitor_ExprRep_Logic_ValCondition
 	virtual bool Visit_Logic_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep);
 	};

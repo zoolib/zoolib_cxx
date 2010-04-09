@@ -18,33 +18,27 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Visitor_ExprRep_Relation_Restrict_DoToStrim__
-#define __ZQL_Visitor_ExprRep_Relation_Restrict_DoToStrim__
-#include "zconfig.h"
-
-#include "zoolib/ZValCondition.h"
-#include "zoolib/ZVisitor_ExprRep_DoToStrim.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Restrict.h"
+#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Unary_DoTransform.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_ExprRep_Relation_Restrict_DoToStrim
+#pragma mark * Visitor_ExprRep_Relation_Unary_DoTransform
 
-class Visitor_ExprRep_Relation_Restrict_DoToStrim
-:	public virtual ZVisitor_ExprRep_DoToStrim
-,	public virtual Visitor_ExprRep_Relation_Restrict
+bool Visitor_ExprRep_Relation_Unary_DoTransform::Visit_ExprRep_Relation_Unary(
+	ZRef<ExprRep_Relation_Unary> iRep)
 	{
-public:
-	Visitor_ExprRep_Relation_Restrict_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW);
+	ZRef<ExprRep_Relation> oldRep = iRep->GetExprRep_Relation();
+	ZRef<ExprRep_Relation> newRep = this->DoTransform(oldRep).DynamicCast<ExprRep_Relation>();
+	if (oldRep == newRep)
+		fResult = iRep;
+	else
+		fResult = iRep->Clone(newRep);
 
-// From Visitor_ExprRep_Relation_Restrict
-	virtual bool Visit_ExprRep_Relation_Restrict(ZRef<ExprRep_Relation_Restrict> iRep);
-	};
+	return true;
+	}
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Visitor_ExprRep_Relation_Restrict_DoToStrim__

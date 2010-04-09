@@ -18,56 +18,57 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_ExprRep_DoToStrim__
-#define __ZVisitor_ExprRep_DoToStrim__
+#ifndef __ZQL_ExprRep_Relation_Binary__
+#define __ZQL_ExprRep_Relation_Binary__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExprRep.h"
-#include "zoolib/ZStrim.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZQL {
+
+class Visitor_ExprRep_Relation_Binary;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_ExprRep_DoToStrim
+#pragma mark * ExprRep_Relation_Binary
 
-class ZVisitor_ExprRep_DoToStrim
-:	public virtual ZVisitor_ExprRep
+class ExprRep_Relation_Binary : public ExprRep_Relation
 	{
+protected:
+	ExprRep_Relation_Binary(ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS);
+
 public:
-	struct Options
-		{
-		Options();
+	virtual ~ExprRep_Relation_Binary();
 
-		std::string fEOLString;
-		std::string fIndentString;
-		size_t fInitialIndent;
-		bool fDebuggingOutput;
-		};
-
-	ZVisitor_ExprRep_DoToStrim();
-
-// From ZVisitor_ExprRep
-	virtual bool Visit_ExprRep(ZRef<ZExprRep> iRep);
+// From ExprRep_Relation
+	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 
 // Our protocol
-	void StartToStrim(const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZExprRep> iExprRep);
+	virtual bool Accept_ExprRep_Relation_Binary(Visitor_ExprRep_Relation_Binary& iVisitor);
+	
+	virtual ZRef<ExprRep_Relation_Binary> Clone (
+		ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS) = 0;
 
-	void DoToStrim(ZRef<ZExprRep> iExprRep);
+	ZRef<ExprRep_Relation> GetLHS();
+	ZRef<ExprRep_Relation> GetRHS();
 
 protected:
-	const Options& pOptions();
-	const ZStrimW& pStrimW();
-
-	void pWriteLFIndent();
-
-private:
-	const Options* fOptions;
-	const ZStrimW* fStrimW;
-
-	size_t fIndent;
+	const ZRef<ExprRep_Relation> fLHS;
+	const ZRef<ExprRep_Relation> fRHS;
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_ExprRep_Relation_Binary
+
+class Visitor_ExprRep_Relation_Binary : public virtual Visitor_ExprRep_Relation
+	{
+public:
+	virtual bool Visit_ExprRep_Relation_Binary(ZRef<ExprRep_Relation_Binary> iRep);
+	};
+
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZVisitor_ExprRep_DoToStrim__
+#endif // __ZQL_ExprRep_Relation_Binary__

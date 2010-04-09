@@ -37,8 +37,6 @@ class ZVisitor_ExprRep_Logic_DoToStrim
 ,	public virtual ZVisitor_ExprRep_Logic
 	{
 public:
-	ZVisitor_ExprRep_Logic_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW);
-
 // From ZVisitor_ExprRep_Logic
 	virtual bool Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep);
 	virtual bool Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep);

@@ -18,41 +18,31 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Visitor_ExprRep_Relation_DoToStrim__
-#define __ZQL_Visitor_ExprRep_Relation_DoToStrim__
+#ifndef __ZQL_Visitor_ExprRep_Relation_Unary_DoTransform__
+#define __ZQL_Visitor_ExprRep_Relation_Unary_DoTransform__
 #include "zconfig.h"
 
-#include "zoolib/ZVisitor_ExprRep_DoToStrim.h"
+#include "zoolib/ZVisitor_ExprRep_DoTransform.h"
 
-#include "zoolib/zql/ZQL_ExprRep_Relation.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Query_DoToStrim
+#pragma mark * Visitor_Query_DoTransform
 
-class Visitor_ExprRep_Relation_DoToStrim
-:	public virtual ZVisitor_ExprRep_DoToStrim
-,	public virtual Visitor_ExprRep_Relation
+class Visitor_ExprRep_Relation_Unary_DoTransform
+:	public virtual ZVisitor_ExprRep_DoTransform
+,	public virtual Visitor_ExprRep_Relation_Unary
 	{
 public:
-	Visitor_ExprRep_Relation_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW);
-
-// From Visitor_ExprRep_Relation
-	virtual bool Visit_ExprRep_Relation_Difference(ZRef<ExprRep_Relation_Difference> iRep);
-	virtual bool Visit_ExprRep_Relation_Intersect(ZRef<ExprRep_Relation_Intersect> iRep);
-	virtual bool Visit_ExprRep_Relation_Join(ZRef<ExprRep_Relation_Join> iRep);
-	virtual bool Visit_ExprRep_Relation_Project(ZRef<ExprRep_Relation_Project> iRep);
-	virtual bool Visit_ExprRep_Relation_Rename(ZRef<ExprRep_Relation_Rename> iRep);
-	virtual bool Visit_ExprRep_Relation_Union(ZRef<ExprRep_Relation_Union> iRep);
-
-private:
-	bool pWriteDyadic(const std::string& iFunctionName, ZRef<ExprRep_Relation_Dyadic> iRep);
+// From Visitor_ExprRep_Unary_Relation
+	virtual bool Visit_ExprRep_Relation_Unary(ZRef<ExprRep_Relation_Unary> iRep);
 	};
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Visitor_ExprRep_Relation_DoToStrim__
+#endif // __ZQL_Visitor_ExprRep_Relation_DoTransform__

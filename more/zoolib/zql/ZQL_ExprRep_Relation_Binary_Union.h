@@ -18,30 +18,52 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Visitor_ExprRep_Relation_Select_DoTransform__
-#define __ZQL_Visitor_ExprRep_Relation_Select_DoTransform__
+#ifndef __ZQL_ExprRep_Relation_Binary_Union__
+#define __ZQL_ExprRep_Relation_Binary_Union__ 1
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_DoTransform.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Select.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Binary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
+class Visitor_ExprRep_Relation_Binary_Union;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_ExprRep_Relation_Select_DoTransform
+#pragma mark * ExprRep_Relation_Binary_Union
 
-class Visitor_ExprRep_Relation_Select_DoTransform
-:	public virtual Visitor_ExprRep_Relation_DoTransform
-,	public virtual Visitor_ExprRep_Relation_Select
+class ExprRep_Relation_Binary_Union : public ExprRep_Relation_Binary
 	{
 public:
-// From Visitor_ExprRep_Relation_Select
-	virtual bool Visit_ExprRep_Relation_Select(ZRef<ExprRep_Relation_Select> iRep);
+	ExprRep_Relation_Binary_Union(ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS);
+	virtual ~ExprRep_Relation_Binary_Union();
+
+// From ExprRep_Relation via ExprRep_Relation_Binary
+	virtual ZRelHead GetRelHead();
+
+// From ExprRep_Relation_Binary
+	virtual bool Accept_ExprRep_Relation_Binary(Visitor_ExprRep_Relation_Binary& iVisitor);
+
+	virtual ZRef<ExprRep_Relation_Binary> Clone(
+		ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS);
+
+// Our protocol
+	virtual bool Accept_ExprRep_Relation_Binary_Union(
+		Visitor_ExprRep_Relation_Binary_Union& iVisitor);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_ExprRep_Relation_Binary_Union
+
+class Visitor_ExprRep_Relation_Binary_Union : public virtual Visitor_ExprRep_Relation_Binary
+	{
+public:
+	virtual bool Visit_ExprRep_Relation_Binary_Union(ZRef<ExprRep_Relation_Binary_Union> iRep);
 	};
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Visitor_ExprRep_Relation_Select_DoTransform__
+#endif // __ZQL_ExprRep_Relation_Binary__

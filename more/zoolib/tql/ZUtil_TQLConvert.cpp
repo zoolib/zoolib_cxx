@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/tql/ZUtil_TQLConvert.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Select.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Select.h"
 #include "zoolib/ZExprRep_Logic_ValCondition.h"
 #include "zoolib/valbase/ZValBase.h"
 

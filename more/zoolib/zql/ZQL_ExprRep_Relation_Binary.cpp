@@ -18,28 +18,61 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Select_DoTransform.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Binary.h"
+
+using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_ExprRep_Relation_Select_DoTransform
+#pragma mark * ExprRep_Relation_Binary
 
-bool Visitor_ExprRep_Relation_Select_DoTransform::Visit_ExprRep_Relation_Select(
-	ZRef<ExprRep_Relation_Select> iRep)
+ExprRep_Relation_Binary::ExprRep_Relation_Binary(
+	ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS)
+:	fLHS(iLHS)
+,	fRHS(iRHS)
+	{}
+
+ExprRep_Relation_Binary::~ExprRep_Relation_Binary()
+	{}
+
+bool ExprRep_Relation_Binary::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
 	{
-	ZRef<ZExprRep_Logic> oldLogical = iRep->GetExprRep_Logic();
-	ZRef<ExprRep_Relation> oldRelation = iRep->GetExprRep_Relation();
-	ZRef<ZExprRep_Logic> newLogical = this->DoTransform(oldLogical).DynamicCast<ZExprRep_Logic>();
-	ZRef<ExprRep_Relation> newRelation =
-		this->DoTransform(oldRelation).DynamicCast<ExprRep_Relation>();
-
-	if (oldLogical == newLogical && oldRelation == newRelation)
-		fResult = iRep;
+	if (Visitor_ExprRep_Relation_Binary* theVisitor =
+		dynamic_cast<Visitor_ExprRep_Relation_Binary*>(&iVisitor))
+		{
+		return this->Accept_ExprRep_Relation_Binary(*theVisitor);
+		}
 	else
-		fResult = new ExprRep_Relation_Select(newLogical, newRelation);
+		{
+		return ExprRep_Relation::Accept_ExprRep_Relation(iVisitor);
+		}
+	}
+
+bool ExprRep_Relation_Binary::Accept_ExprRep_Relation_Binary(
+	Visitor_ExprRep_Relation_Binary& iVisitor)
+	{ return ExprRep_Relation::Accept_ExprRep_Relation(iVisitor); }
+
+ZRef<ExprRep_Relation> ExprRep_Relation_Binary::GetLHS()
+	{ return fLHS; }
+
+ZRef<ExprRep_Relation> ExprRep_Relation_Binary::GetRHS()
+	{ return fRHS; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_ExprRep_Relation_Binary
+
+bool Visitor_ExprRep_Relation_Binary::Visit_ExprRep_Relation_Binary(
+	ZRef<ExprRep_Relation_Binary> iRep)
+	{
+	if (ZRef<ExprRep_Relation> theRelation = iRep->GetLHS())
+		theRelation->Accept(*this);
+
+	if (ZRef<ExprRep_Relation> theRelation = iRep->GetRHS())
+		theRelation->Accept(*this);
 
 	return true;
 	}

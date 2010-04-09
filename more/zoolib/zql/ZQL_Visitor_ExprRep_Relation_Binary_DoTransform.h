@@ -18,58 +18,31 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Strim_RelHead.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Select_DoToStrim.h"
+#ifndef __ZQL_Visitor_ExprRep_Relation_Binary_DoTransform__
+#define __ZQL_Visitor_ExprRep_Relation_Binary_DoTransform__
+#include "zconfig.h"
+
+#include "zoolib/ZVisitor_ExprRep_DoTransform.h"
+
+#include "zoolib/zql/ZQL_ExprRep_Relation_Binary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
-using std::string;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_ExprRep_Relation_Select_DoToStrim
+#pragma mark * Visitor_Query_DoTransform
 
-namespace ZANONYMOUS {
-
-void spWrite_EffectiveRelHeadComment(ZRef<ExprRep_Relation> iRep, const ZStrimW& iStrimW)
+class Visitor_ExprRep_Relation_Binary_DoTransform
+:	public virtual ZVisitor_ExprRep_DoTransform
+,	public virtual Visitor_ExprRep_Relation_Binary
 	{
-	iStrimW.Write(" // ");
-	ZUtil_Strim_RelHead::sWrite_RelHead(iRep->GetRelHead(), iStrimW);
-	}
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_ExprRep_Relation_Select_DoToStrim
-
-Visitor_ExprRep_Relation_Select_DoToStrim::Visitor_ExprRep_Relation_Select_DoToStrim(
-	const Options& iOptions, const ZStrimW& iStrimW)
-:	ZVisitor_ExprRep_DoToStrim(iOptions, iStrimW)
-	{}
-
-bool Visitor_ExprRep_Relation_Select_DoToStrim::Visit_ExprRep_Relation_Select(
-	ZRef<ExprRep_Relation_Select> iRep)
-	{
-	fStrimW << "Select";
-
-	if (fOptions.fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iRep, fStrimW);
-
-	this->pWriteLFIndent();
-	fStrimW << "(";
-	this->pWriteLFIndent();
-	this->DoToStrim(iRep->GetExprRep_Logic());
-	fStrimW << ",";
-
-	this->pWriteLFIndent();
-	this->DoToStrim(iRep->GetExprRep_Relation());
-	this->pWriteLFIndent();
-
-	fStrimW << ")";
-	return true;
-	}
+public:
+// From Visitor_ExprRep_Binary_Relation
+	virtual bool Visit_ExprRep_Relation_Binary(ZRef<ExprRep_Relation_Binary> iRep);
+	};
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZQL_Visitor_ExprRep_Relation_DoTransform__

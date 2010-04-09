@@ -18,59 +18,54 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Strim_RelHead.h"
-#include "zoolib/ZUtil_Strim_ValCondition.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Restrict_DoToStrim.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Binary_Join.h"
+
+using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
-using std::string;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_ExprRep_Relation_Restrict_DoToStrim
+#pragma mark * ExprRep_Relation_Binary_Join
 
-namespace ZANONYMOUS {
-
-void spWrite_EffectiveRelHeadComment(ZRef<ExprRep_Relation> iRep, const ZStrimW& iStrimW)
-	{
-	iStrimW.Write(" // ");
-	ZUtil_Strim_RelHead::sWrite_RelHead(iRep->GetRelHead(), iStrimW);
-	}
-
-} // anonymous namespace
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_ExprRep_Relation_Restrict_DoToStrim
-
-Visitor_ExprRep_Relation_Restrict_DoToStrim::Visitor_ExprRep_Relation_Restrict_DoToStrim(
-	const Options& iOptions, const ZStrimW& iStrimW)
-:	ZVisitor_ExprRep_DoToStrim(iOptions, iStrimW)
+ExprRep_Relation_Binary_Join::ExprRep_Relation_Binary_Join(
+	ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS)
+:	ExprRep_Relation_Binary(iLHS, iRHS)
 	{}
 
-bool Visitor_ExprRep_Relation_Restrict_DoToStrim::Visit_ExprRep_Relation_Restrict(
-	ZRef<ExprRep_Relation_Restrict> iRep)
+ZRelHead ExprRep_Relation_Binary_Join::GetRelHead()
+	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
+
+bool ExprRep_Relation_Binary_Join::Accept_ExprRep_Relation_Binary(
+	Visitor_ExprRep_Relation_Binary& iVisitor)
 	{
-	fStrimW << "Restrict";
-
-	if (fOptions.fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iRep, fStrimW);
-
-	this->pWriteLFIndent();
-	fStrimW << "(";
-	this->pWriteLFIndent();
-	ZUtil_Strim_ValCondition::sToStrim(iRep->GetValCondition(), fStrimW);
-	fStrimW << ",";
-
-	this->pWriteLFIndent();
-	this->DoToStrim(iRep->GetExprRep());
-	this->pWriteLFIndent();
-
-	fStrimW << ")";
-	return true;
+	if (Visitor_ExprRep_Relation_Binary_Join* theVisitor =
+		dynamic_cast<Visitor_ExprRep_Relation_Binary_Join*>(&iVisitor))
+		{
+		return this->Accept_ExprRep_Relation_Binary_Join(*theVisitor);
+		}
+	else
+		{
+		return ExprRep_Relation_Binary::Accept_ExprRep_Relation_Binary(iVisitor);
+		}
 	}
+
+bool ExprRep_Relation_Binary_Join::Accept_ExprRep_Relation_Binary_Join(
+	Visitor_ExprRep_Relation_Binary_Join& iVisitor)
+	{ return ExprRep_Relation::Accept_ExprRep_Relation(iVisitor); }
+
+ZRef<ExprRep_Relation_Binary> ExprRep_Relation_Binary_Join::Clone(
+	ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS)
+	{ return new ExprRep_Relation_Binary_Join(iLHS, iRHS); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_ExprRep_Relation_Binary_Join
+
+bool Visitor_ExprRep_Relation_Binary_Join::Visit_ExprRep_Relation_Binary_Join(
+	ZRef<ExprRep_Relation_Binary_Join> iRep)
+	{ return Visitor_ExprRep_Relation_Binary::Visit_ExprRep_Relation_Binary(iRep); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

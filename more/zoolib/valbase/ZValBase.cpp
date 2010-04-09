@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Result_Any.h"
 #include "zoolib/zqe/ZQE_Visitor_ExprRep_DoMakeIterator.h"
 #include "zoolib/zql/ZQL_ExprRep_Relation_Concrete.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Restrict.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Select.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Restrict.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase {
@@ -46,21 +45,40 @@ ZRelHead ExprRep_Relation_Concrete::GetRelHead()
 namespace ZANONYMOUS {
 
 class Visitor_DoMakeIterator
-:	public virtual ZQL::Visitor_ExprRep_Relation_Concrete
-,	public virtual ZQL::Visitor_ExprRep_Relation_Restrict
-,	public virtual ZQL::Visitor_ExprRep_Relation_Select
-,	public virtual ZQE::Visitor_ExprRep_DoMakeIterator
+:	public virtual ZQE::Visitor_ExprRep_DoMakeIterator
+,	public virtual ZQL::Visitor_ExprRep_Relation_Unary_Restrict
+,	public virtual ZQL::Visitor_ExprRep_Relation_Concrete
 	{
 public:
-// From Visitor_ExprRep_Relation_Concrete
+// Via ZQE::Visitor_ExprRep_DoMakeIterator
+	virtual bool Visit_ExprRep_Relation_Unary_Select(
+		ZRef<ZQL::ExprRep_Relation_Unary_Select> iRep);
+
+// From ZQL::Visitor_ExprRep_Relation_Unary_Restrict
+	virtual bool Visit_ExprRep_Relation_Unary_Restrict(
+		ZRef<ZQL::ExprRep_Relation_Unary_Restrict> iRep);
+
+// From ZQL::Visitor_ExprRep_Relation_Concrete
 	virtual bool Visit_ExprRep_Relation_Concrete(ZRef<ZQL::ExprRep_Relation_Concrete> iRep);	
-
-// From Visitor_ExprRep_Relation_Restrict
-	virtual bool Visit_ExprRep_Relation_Restrict(ZRef<ZQL::ExprRep_Relation_Restrict> iRep);
-
-// From Visitor_ExprRep_Relation_Select
-	virtual bool Visit_ExprRep_Relation_Select(ZRef<ZQL::ExprRep_Relation_Select> iRep);
 	};
+
+bool Visitor_DoMakeIterator::Visit_ExprRep_Relation_Unary_Select(
+	ZRef<ZQL::ExprRep_Relation_Unary_Select> iRep)
+	{
+	if (ZRef<ZQE::Iterator> theIterator = this->DoMakeIterator(iRep->GetExprRep_Relation()))
+		fIterator = new ZQE::Iterator_Any_Select(iRep->GetExprRep_Logic(), theIterator);
+
+	return true;	
+	}
+
+bool Visitor_DoMakeIterator::Visit_ExprRep_Relation_Unary_Restrict(
+	ZRef<ZQL::ExprRep_Relation_Unary_Restrict> iRep)
+	{
+	if (ZRef<ZQE::Iterator> theIterator = this->DoMakeIterator(iRep->GetExprRep_Relation()))
+		fIterator = new ZQE::Iterator_Any_Restrict(iRep->GetValCondition(), theIterator);
+
+	return true;	
+	}
 
 bool Visitor_DoMakeIterator::Visit_ExprRep_Relation_Concrete(
 	ZRef<ZQL::ExprRep_Relation_Concrete> iRep)
@@ -71,23 +89,6 @@ bool Visitor_DoMakeIterator::Visit_ExprRep_Relation_Concrete(
 		return true;
 		}
 	return Visitor_ExprRep_Relation_Concrete::Visit_ExprRep_Relation_Concrete(iRep);
-	}
-
-bool Visitor_DoMakeIterator::Visit_ExprRep_Relation_Restrict(
-	ZRef<ZQL::ExprRep_Relation_Restrict> iRep)
-	{
-	if (ZRef<ZQE::Iterator> theIterator = this->DoMakeIterator(iRep->GetExprRep()))
-		fIterator = new ZQE::Iterator_Any_Restrict(iRep->GetValCondition(), theIterator);
-
-	return true;	
-	}
-
-bool Visitor_DoMakeIterator::Visit_ExprRep_Relation_Select(ZRef<ZQL::ExprRep_Relation_Select> iRep)
-	{
-	if (ZRef<ZQE::Iterator> theIterator = this->DoMakeIterator(iRep->GetExprRep_Relation()))
-		fIterator = new ZQE::Iterator_Any_Select(iRep->GetExprRep_Logic(), theIterator);
-
-	return true;	
 	}
 
 } // anonymous namespace

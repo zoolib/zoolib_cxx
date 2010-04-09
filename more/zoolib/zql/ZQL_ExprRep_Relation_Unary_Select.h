@@ -18,71 +18,73 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_ExprRep_Relation_Select__
-#define __ZQL_ExprRep_Relation_Select__ 1
+#ifndef __ZQL_ExprRep_Relation_Unary_Select__
+#define __ZQL_ExprRep_Relation_Unary_Select__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZExprRep_Logic.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
-class Visitor_ExprRep_Relation_Select;
+class Visitor_ExprRep_Relation_Unary_Select;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ExprRep_Relation_Select
+#pragma mark * ExprRep_Relation_Unary_Select
 
-class ExprRep_Relation_Select : public ExprRep_Relation
+class ExprRep_Relation_Unary_Select : public ExprRep_Relation_Unary
 	{
 public:
-	ExprRep_Relation_Select(
-		const ZRef<ZExprRep_Logic>& iExprRep_Logic,
-		const ZRef<ExprRep_Relation>& iExprRep_Relation);
+	ExprRep_Relation_Unary_Select(
+		const ZRef<ExprRep_Relation>& iExprRep_Relation,
+		const ZRef<ZExprRep_Logic>& iExprRep_Logic);
 
-	virtual ~ExprRep_Relation_Select();
+	virtual ~ExprRep_Relation_Unary_Select();
 
-// From ExprRep_Relation
-	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
-
+// From ExprRep_Relation via ExprRep_Relation_Unary
 	virtual ZRelHead GetRelHead();
 
+// From ExprRep_Relation_Unary
+	virtual bool Accept_ExprRep_Relation_Unary(Visitor_ExprRep_Relation_Unary& iVisitor);
+
+	virtual ZRef<ExprRep_Relation_Unary> Clone(ZRef<ExprRep_Relation> iExprRep_Relation);
+
 // Our protocol
-	virtual bool Accept_ExprRep_Relation_Select(Visitor_ExprRep_Relation_Select& iVisitor);
+	virtual bool Accept_ExprRep_Relation_Unary_Select(
+		Visitor_ExprRep_Relation_Unary_Select& iVisitor);
 
 	ZRef<ZExprRep_Logic> GetExprRep_Logic();
-	ZRef<ExprRep_Relation> GetExprRep_Relation();
 
 private:
 	const ZRef<ZExprRep_Logic> fExprRep_Logic;
-	const ZRef<ExprRep_Relation> fExprRep_Relation;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_ExprRep_Relation_Select
+#pragma mark * Visitor_ExprRep_Relation_Unary_Select
 
-class Visitor_ExprRep_Relation_Select : public virtual Visitor_ExprRep_Relation
+class Visitor_ExprRep_Relation_Unary_Select : public virtual Visitor_ExprRep_Relation_Unary
 	{
 public:
-	virtual bool Visit_ExprRep_Relation_Select(ZRef<ExprRep_Relation_Select> iRep);
+	virtual bool Visit_ExprRep_Relation_Unary_Select(ZRef<ExprRep_Relation_Unary_Select> iRep);
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Query operators
 
-ZRef<ExprRep_Relation_Select> sSelect(
+ZRef<ExprRep_Relation_Unary_Select> sSelect(
 	const ZRef<ZExprRep_Logic>& iExprRep_Logic, const ZRef<ExprRep_Relation>& iExprRep_Relation);
 
-ZRef<ExprRep_Relation_Select> operator&(
+ZRef<ExprRep_Relation_Unary_Select> operator&(
 	const ZRef<ZExprRep_Logic>& iExprRep_Logic, const ZRef<ExprRep_Relation>& iExprRep_Relation);
 
-ZRef<ExprRep_Relation_Select> operator&(
+ZRef<ExprRep_Relation_Unary_Select> operator&(
 	const ZRef<ExprRep_Relation>& iExprRep_Relation, const ZRef<ZExprRep_Logic>& iExprRep_Logic);
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_ExprRep_Relation_Select__
+#endif // __ZQL_ExprRep_Relation_Unary_Select__

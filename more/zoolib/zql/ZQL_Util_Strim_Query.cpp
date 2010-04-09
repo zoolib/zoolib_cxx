@@ -19,16 +19,51 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZUtil_Strim_RelHead.h"
+#include "zoolib/ZUtil_Strim_ValCondition.h"
 #include "zoolib/ZVisitor_ExprRep_Logic_ValCondition_DoToStrim.h"
 #include "zoolib/zql/ZQL_Util_Strim_Query.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_DoToStrim.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Restrict_DoToStrim.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Select_DoToStrim.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Binary_Difference.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Binary_Intersect.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Binary_Join.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Binary_Union.h"
 #include "zoolib/zql/ZQL_ExprRep_Relation_Concrete.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Project.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Rename.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Restrict.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Select.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 namespace Util_Strim_Query {
+
+using std::string;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Static helpers
+
+namespace ZANONYMOUS {
+
+void spWrite(const string& iString, const ZStrimW& s)
+	{ s.Write(iString); }
+
+void spWrite(const UTF8* iString, const ZStrimW& s)
+	{ s.Write(iString); }
+
+void spWrite_RelHead(const ZRelHead& iRelHead, const ZStrimW& iStrimW)
+	{ ZUtil_Strim_RelHead::sWrite_RelHead(iRelHead, iStrimW); }
+
+void spWrite_PropName(const string& iPropName, const ZStrimW& iStrimW)
+	{ ZUtil_Strim_RelHead::sWrite_PropName(iPropName, iStrimW); }
+
+void spWrite_EffectiveRelHeadComment(ZRef<ExprRep_Relation> iRep, const ZStrimW& iStrimW)
+	{
+	iStrimW.Write(" // ");
+	ZUtil_Strim_RelHead::sWrite_RelHead(iRep->GetRelHead(), iStrimW);
+	}
+
+} // anonymous namespace
+
 
 // =================================================================================================
 #pragma mark -
@@ -38,32 +73,207 @@ namespace ZANONYMOUS {
 
 class Visitor_DoToStrim
 :	public virtual ZVisitor_ExprRep_Logic_ValCondition_DoToStrim
-,	public virtual Visitor_ExprRep_Relation_DoToStrim
-,	public virtual Visitor_ExprRep_Relation_Restrict_DoToStrim
-,	public virtual Visitor_ExprRep_Relation_Select_DoToStrim
-,	public virtual Visitor_ExprRep_Relation_Concrete
+,	public virtual ZQL::Visitor_ExprRep_Relation_Binary_Difference
+,	public virtual ZQL::Visitor_ExprRep_Relation_Binary_Intersect
+,	public virtual ZQL::Visitor_ExprRep_Relation_Binary_Join
+,	public virtual ZQL::Visitor_ExprRep_Relation_Binary_Union
+,	public virtual ZQL::Visitor_ExprRep_Relation_Concrete
+,	public virtual ZQL::Visitor_ExprRep_Relation_Unary_Project
+,	public virtual ZQL::Visitor_ExprRep_Relation_Unary_Rename
+,	public virtual ZQL::Visitor_ExprRep_Relation_Unary_Restrict
+,	public virtual ZQL::Visitor_ExprRep_Relation_Unary_Select
 	{
 public:
-	Visitor_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW);
+	virtual bool Visit_ExprRep_Relation_Binary_Difference(
+		ZRef<ExprRep_Relation_Binary_Difference> iRep);
+	virtual bool Visit_ExprRep_Relation_Binary_Intersect(
+		ZRef<ExprRep_Relation_Binary_Intersect> iRep);
+	virtual bool Visit_ExprRep_Relation_Binary_Join(ZRef<ExprRep_Relation_Binary_Join> iRep);
+	virtual bool Visit_ExprRep_Relation_Binary_Union(ZRef<ExprRep_Relation_Binary_Union> iRep);
 
-// From Visitor_ExprRep_Relation_Concrete
-	bool Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep);
+	virtual bool Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep);
+
+	virtual bool Visit_ExprRep_Relation_Unary_Project(ZRef<ExprRep_Relation_Unary_Project> iRep);
+	virtual bool Visit_ExprRep_Relation_Unary_Rename(ZRef<ExprRep_Relation_Unary_Rename> iRep);
+	virtual bool Visit_ExprRep_Relation_Unary_Restrict(ZRef<ExprRep_Relation_Unary_Restrict> iRep);
+	virtual bool Visit_ExprRep_Relation_Unary_Select(ZRef<ExprRep_Relation_Unary_Select> iRep);
+
+private:
+	bool pWriteBinary(const std::string& iFunctionName, ZRef<ExprRep_Relation_Binary> iRep);
 	};
 
 } // anonymous namespace
 
-Visitor_DoToStrim::Visitor_DoToStrim(const Options& iOptions, const ZStrimW& iStrimW)
-:	ZVisitor_ExprRep_DoToStrim(iOptions, iStrimW)
-,	ZVisitor_ExprRep_Logic_DoToStrim(iOptions, iStrimW)
-,	ZVisitor_ExprRep_Logic_ValCondition_DoToStrim(iOptions, iStrimW)
-,	Visitor_ExprRep_Relation_DoToStrim(iOptions, iStrimW)
-,	Visitor_ExprRep_Relation_Restrict_DoToStrim(iOptions, iStrimW)
-,	Visitor_ExprRep_Relation_Select_DoToStrim(iOptions, iStrimW)
-	{}
+bool Visitor_DoToStrim::Visit_ExprRep_Relation_Binary_Difference(
+	ZRef<ExprRep_Relation_Binary_Difference> iRep)
+	{ return this->pWriteBinary("Difference", iRep); }
+
+bool Visitor_DoToStrim::Visit_ExprRep_Relation_Binary_Intersect(
+	ZRef<ExprRep_Relation_Binary_Intersect> iRep)
+	{ return this->pWriteBinary("Intersect", iRep); }
+
+bool Visitor_DoToStrim::Visit_ExprRep_Relation_Binary_Join(
+	ZRef<ExprRep_Relation_Binary_Join> iRep)
+	{
+	const ZStrimW& w = pStrimW();
+	w << "Join";
+
+	if (pOptions().fDebuggingOutput)
+		spWrite_EffectiveRelHeadComment(iRep, w);
+
+	this->pWriteLFIndent();
+	w << "(";
+
+	if (pOptions().fDebuggingOutput)
+		{
+		w << " // Joining on: ";
+		const ZRelHead joinOn = iRep->GetLHS()->GetRelHead()
+			& iRep->GetRHS()->GetRelHead();
+		spWrite_RelHead(joinOn, w);
+		}
+
+	this->pWriteLFIndent();
+	this->DoToStrim(iRep->GetLHS());
+	w << ", ";
+
+	this->pWriteLFIndent();
+	this->DoToStrim(iRep->GetRHS());
+	this->pWriteLFIndent();
+
+	w << ")";
+
+	return true;
+	}
+
+bool Visitor_DoToStrim::Visit_ExprRep_Relation_Binary_Union(
+	ZRef<ExprRep_Relation_Binary_Union> iRep)
+	{ return this->pWriteBinary("Union", iRep); }
 
 bool Visitor_DoToStrim::Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep)
 	{
-	fStrimW << "/* Relation_Concrete: " << typeid(*iRep.Get()).name() << " */";
+	pStrimW() << "/* Relation_Concrete: " << typeid(*iRep.Get()).name() << " */";
+	return true;
+	}
+
+bool Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Project(
+	ZRef<ExprRep_Relation_Unary_Project> iRep)
+	{
+	const ZStrimW& w = pStrimW();
+	spWrite("Project", w);
+
+	if (pOptions().fDebuggingOutput)
+		spWrite_EffectiveRelHeadComment(iRep, w);
+
+	this->pWriteLFIndent();
+	spWrite("(", w);
+
+	this->pWriteLFIndent();
+	spWrite_RelHead(iRep->GetProjectRelHead(), w);
+	spWrite(",", w);
+
+	this->pWriteLFIndent();
+	this->DoToStrim(iRep->GetExprRep_Relation());
+	this->pWriteLFIndent();
+
+	spWrite(")", w);
+	return true;
+	}
+
+bool Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Rename(
+	ZRef<ExprRep_Relation_Unary_Rename> iRep)
+	{
+	const ZStrimW& w = pStrimW();
+	spWrite("Rename", w);
+
+	if (pOptions().fDebuggingOutput)
+		spWrite_EffectiveRelHeadComment(iRep, w);
+
+	this->pWriteLFIndent();
+	spWrite("(", w);
+
+	this->pWriteLFIndent();
+	spWrite_PropName(iRep->GetOld(), w);
+	spWrite(", ", w);
+	spWrite_PropName(iRep->GetNew(), w);
+	spWrite(",", w);
+
+	this->pWriteLFIndent();
+	this->DoToStrim(iRep->GetExprRep_Relation());
+	this->pWriteLFIndent();
+
+	spWrite(")", w);
+	return true;
+	}
+
+bool Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Restrict(
+	ZRef<ExprRep_Relation_Unary_Restrict> iRep)
+	{
+	const ZStrimW& w = pStrimW();
+	w << "Restrict";
+
+	if (pOptions().fDebuggingOutput)
+		spWrite_EffectiveRelHeadComment(iRep, w);
+
+	this->pWriteLFIndent();
+	w << "(";
+	this->pWriteLFIndent();
+	ZUtil_Strim_ValCondition::sToStrim(iRep->GetValCondition(), w);
+	w << ",";
+
+	this->pWriteLFIndent();
+	this->DoToStrim(iRep->GetExprRep_Relation());
+	this->pWriteLFIndent();
+
+	w << ")";
+	return true;
+	}
+
+bool Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Select(
+	ZRef<ExprRep_Relation_Unary_Select> iRep)
+	{
+	const ZStrimW& w = pStrimW();
+	w << "Select";
+
+	if (pOptions().fDebuggingOutput)
+		spWrite_EffectiveRelHeadComment(iRep, w);
+
+	this->pWriteLFIndent();
+	w << "(";
+	this->pWriteLFIndent();
+	this->DoToStrim(iRep->GetExprRep_Logic());
+	w << ",";
+
+	this->pWriteLFIndent();
+	this->DoToStrim(iRep->GetExprRep_Relation());
+	this->pWriteLFIndent();
+
+	w << ")";
+	return true;
+	}
+
+
+bool Visitor_DoToStrim::pWriteBinary(
+	const std::string& iFunctionName, ZRef<ExprRep_Relation_Binary> iRep)
+	{
+	const ZStrimW& w = pStrimW();
+	w << iFunctionName;
+
+	if (pOptions().fDebuggingOutput)
+		spWrite_EffectiveRelHeadComment(iRep, w);
+
+	this->pWriteLFIndent();
+	w << "(";
+
+	this->pWriteLFIndent();
+	this->DoToStrim(iRep->GetLHS());
+	w << ", ";
+
+	this->pWriteLFIndent();
+	this->DoToStrim(iRep->GetRHS());
+	this->pWriteLFIndent();
+
+	w << ")";
+
 	return true;
 	}
 
@@ -77,7 +287,7 @@ void sToStrim(const ZRef<ZExprRep>& iRep, const ZStrimW& iStrimW)
 void sToStrim(const ZRef<ZExprRep>& iRep,
 	const ZVisitor_ExprRep_DoToStrim::Options& iOptions,
 	const ZStrimW& iStrimW)
-	{ Visitor_DoToStrim(iOptions, iStrimW).DoToStrim(iRep); }
+	{ Visitor_DoToStrim().StartToStrim(iOptions, iStrimW, iRep); }
 
 } // namespace Util_Strim_Query
 } // namespace ZQL

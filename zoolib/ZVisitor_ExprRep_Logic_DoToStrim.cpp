@@ -26,48 +26,43 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZVisitor_ExprRep_Logic_DoToStrim
 
-ZVisitor_ExprRep_Logic_DoToStrim::ZVisitor_ExprRep_Logic_DoToStrim(
-	const Options& iOptions, const ZStrimW& iStrimW)
-:	ZVisitor_ExprRep_DoToStrim(iOptions, iStrimW)
-	{}
-
 bool ZVisitor_ExprRep_Logic_DoToStrim::Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep)
 	{
-	fStrimW << "any";
+	pStrimW() << "any";
 	return true;
 	}
 
 bool ZVisitor_ExprRep_Logic_DoToStrim::Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep)
 	{
-	fStrimW << "none";
+	pStrimW() << "none";
 	return true;
 	}
 
 bool ZVisitor_ExprRep_Logic_DoToStrim::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep)
 	{
-	fStrimW << "!(";
+	pStrimW() << "!(";
 	this->DoToStrim(iRep->GetOperand());
-	fStrimW << ")";
+	pStrimW() << ")";
 	return true;
 	}
 
 bool ZVisitor_ExprRep_Logic_DoToStrim::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
 	{
-	fStrimW << "(";
+	pStrimW() << "(";
 	this->DoToStrim(iRep->GetLHS());
-	fStrimW << " & ";
+	pStrimW() << " & ";
 	this->DoToStrim(iRep->GetRHS());
-	fStrimW << ")";
+	pStrimW() << ")";
 	return true;
 	}
 
 bool ZVisitor_ExprRep_Logic_DoToStrim::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
 	{
-	fStrimW << "(";
+	pStrimW() << "(";
 	this->DoToStrim(iRep->GetLHS());
-	fStrimW << " | ";
+	pStrimW() << " | ";
 	this->DoToStrim(iRep->GetRHS());
-	fStrimW << ")";
+	pStrimW() << ")";
 	return true;
 	}
 

@@ -27,14 +27,14 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Visitor_ExprRep_DoMakeIterator
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Difference(
-	ZRef<ExprRep_Relation_Difference> iRep)
+bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Binary_Difference(
+	ZRef<ExprRep_Relation_Binary_Difference> iRep)
 	{
 	return true;
 	}
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Intersect(
-	ZRef<ExprRep_Relation_Intersect> iRep)
+bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Binary_Intersect(
+	ZRef<ExprRep_Relation_Binary_Intersect> iRep)
 	{
 	if (ZRef<Iterator> lhs = this->DoMakeIterator(iRep->GetLHS()))
 		{
@@ -44,7 +44,8 @@ bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Intersect(
 	return true;
 	}
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Join(ZRef<ExprRep_Relation_Join> iRep)
+bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Binary_Join(
+	ZRef<ExprRep_Relation_Binary_Join> iRep)
 	{
 	if (ZRef<Iterator> lhs = this->DoMakeIterator(iRep->GetLHS()))
 		{
@@ -54,20 +55,8 @@ bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Join(ZRef<ExprRep_Re
 	return true;
 	}
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Project(
-	ZRef<ExprRep_Relation_Project> iRep)
-	{
-	return true;
-	}
-
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Rename(
-	ZRef<ExprRep_Relation_Rename> iRep)
-	{
-	return true;
-	}
-
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Union(
-	ZRef<ExprRep_Relation_Union> iRep)
+bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Binary_Union(
+	ZRef<ExprRep_Relation_Binary_Union> iRep)
 	{
 	if (ZRef<Iterator> lhs = this->DoMakeIterator(iRep->GetLHS()))
 		{
@@ -76,6 +65,24 @@ bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Union(
 		else
 			fIterator = lhs;
 		}
+	return true;
+	}
+
+bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Unary_Project(
+	ZRef<ExprRep_Relation_Unary_Project> iRep)
+	{
+	return true;
+	}
+
+bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Unary_Rename(
+	ZRef<ExprRep_Relation_Unary_Rename> iRep)
+	{
+	return true;
+	}
+
+bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Unary_Select(
+	ZRef<ExprRep_Relation_Unary_Select> iRep)
+	{
 	return true;
 	}
 

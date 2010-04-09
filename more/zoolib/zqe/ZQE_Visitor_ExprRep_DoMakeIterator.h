@@ -22,9 +22,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZQE_Visitor_ExprRep_DoMakeIterator__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExprRep.h"
 #include "zoolib/zqe/ZQE_Iterator.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Binary_Difference.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Binary_Intersect.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Binary_Join.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Binary_Union.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Project.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Rename.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Select.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQE {
@@ -36,16 +41,25 @@ using namespace ZQL;
 #pragma mark * Visitor_ExprRep_DoMakeIterator
 
 class Visitor_ExprRep_DoMakeIterator
-:	public virtual Visitor_ExprRep_Relation
+:	public virtual ZQL::Visitor_ExprRep_Relation_Binary_Difference
+,	public virtual ZQL::Visitor_ExprRep_Relation_Binary_Intersect
+,	public virtual ZQL::Visitor_ExprRep_Relation_Binary_Join
+,	public virtual ZQL::Visitor_ExprRep_Relation_Binary_Union
+,	public virtual ZQL::Visitor_ExprRep_Relation_Unary_Project
+,	public virtual ZQL::Visitor_ExprRep_Relation_Unary_Rename
+,	public virtual ZQL::Visitor_ExprRep_Relation_Unary_Select
 	{
 public:
-// From Visitor_ExprRep_Relation
-	virtual bool Visit_ExprRep_Relation_Difference(ZRef<ExprRep_Relation_Difference> iRep);
-	virtual bool Visit_ExprRep_Relation_Intersect(ZRef<ExprRep_Relation_Intersect> iRep);
-	virtual bool Visit_ExprRep_Relation_Join(ZRef<ExprRep_Relation_Join> iRep);
-	virtual bool Visit_ExprRep_Relation_Project(ZRef<ExprRep_Relation_Project> iRep);
-	virtual bool Visit_ExprRep_Relation_Rename(ZRef<ExprRep_Relation_Rename> iRep);
-	virtual bool Visit_ExprRep_Relation_Union(ZRef<ExprRep_Relation_Union> iRep);
+	virtual bool Visit_ExprRep_Relation_Binary_Difference(
+		ZRef<ExprRep_Relation_Binary_Difference> iRep);
+	virtual bool Visit_ExprRep_Relation_Binary_Intersect(
+		ZRef<ExprRep_Relation_Binary_Intersect> iRep);
+	virtual bool Visit_ExprRep_Relation_Binary_Join(ZRef<ExprRep_Relation_Binary_Join> iRep);
+	virtual bool Visit_ExprRep_Relation_Binary_Union(ZRef<ExprRep_Relation_Binary_Union> iRep);
+
+	virtual bool Visit_ExprRep_Relation_Unary_Project(ZRef<ExprRep_Relation_Unary_Project> iRep);
+	virtual bool Visit_ExprRep_Relation_Unary_Rename(ZRef<ExprRep_Relation_Unary_Rename> iRep);
+	virtual bool Visit_ExprRep_Relation_Unary_Select(ZRef<ExprRep_Relation_Unary_Select> iRep);
 
 // Our protocol
 	ZRef<Iterator> DoMakeIterator(ZRef<ZExprRep> iExprRep);

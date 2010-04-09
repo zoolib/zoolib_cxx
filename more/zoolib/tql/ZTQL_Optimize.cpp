@@ -21,8 +21,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZExprRep_Logic_ValCondition.h"
 #include "zoolib/ZVisitor_ExprRep_Logic_DoTransform.h"
 #include "zoolib/tql/ZTQL_Optimize.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Restrict.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Select_DoTransform.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Restrict.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Select.h"
+#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Binary_DoTransform.h"
+#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Unary_DoTransform.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 using namespace ZQL;
@@ -153,7 +155,7 @@ ZRef<ExprRep_Relation> spConvertSelect(
 		for (CondSect::const_iterator iterSect = iterUnion->begin();
 			iterSect != iterUnion->end(); ++iterSect)
 			{
-			current = new ExprRep_Relation_Restrict(*iterSect, current);
+			current = new ExprRep_Relation_Unary_Restrict(current, *iterSect);
 			}
 
 		if (resultRelation)
@@ -165,16 +167,19 @@ ZRef<ExprRep_Relation> spConvertSelect(
 	}
 
 class Optimize
-:	public virtual Visitor_ExprRep_Relation_Select_DoTransform
+:	public virtual Visitor_ExprRep_Relation_Binary_DoTransform
+,	public virtual Visitor_ExprRep_Relation_Unary_DoTransform
 	{
 public:
-// From Visitor_ExprRep_Relation_Select
-	virtual bool Visit_ExprRep_Relation_Select(ZRef<ExprRep_Relation_Select> iRep);
+// From Visitor_ExprRep_Relation_Unary_Select
+	virtual bool Visit_ExprRep_Relation_Unary_Select(ZRef<ExprRep_Relation_Unary_Select> iRep);
 	};
 
-bool Optimize::Visit_ExprRep_Relation_Select(ZRef<ExprRep_Relation_Select> iRep)
+bool Optimize::Visit_ExprRep_Relation_Unary_Select(ZRef<ExprRep_Relation_Unary_Select> iRep)
 	{
-	ZRef<ExprRep_Relation> newRep = this->DoTransform(iRep->GetExprRep_Relation()).DynamicCast<ExprRep_Relation>();
+	ZRef<ExprRep_Relation> newRep =
+		this->DoTransform(iRep->GetExprRep_Relation()).DynamicCast<ExprRep_Relation>();
+
 	fResult = spConvertSelect(newRep, iRep->GetExprRep_Logic());
 	return true;
 	}

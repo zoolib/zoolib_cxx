@@ -18,56 +18,54 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_ExprRep_DoToStrim__
-#define __ZVisitor_ExprRep_DoToStrim__
+#ifndef __ZQL_ExprRep_Relation_Unary__
+#define __ZQL_ExprRep_Relation_Unary__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExprRep.h"
-#include "zoolib/ZStrim.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZQL {
+
+class Visitor_ExprRep_Relation_Unary;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_ExprRep_DoToStrim
+#pragma mark * ExprRep_Relation_Unary
 
-class ZVisitor_ExprRep_DoToStrim
-:	public virtual ZVisitor_ExprRep
+class ExprRep_Relation_Unary : public ExprRep_Relation
 	{
+protected:
+	ExprRep_Relation_Unary(ZRef<ExprRep_Relation> iExprRep_Relation);
+
 public:
-	struct Options
-		{
-		Options();
+	virtual ~ExprRep_Relation_Unary();
 
-		std::string fEOLString;
-		std::string fIndentString;
-		size_t fInitialIndent;
-		bool fDebuggingOutput;
-		};
-
-	ZVisitor_ExprRep_DoToStrim();
-
-// From ZVisitor_ExprRep
-	virtual bool Visit_ExprRep(ZRef<ZExprRep> iRep);
+// From ExprRep_Relation
+	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 
 // Our protocol
-	void StartToStrim(const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZExprRep> iExprRep);
+	virtual bool Accept_ExprRep_Relation_Unary(Visitor_ExprRep_Relation_Unary& iVisitor);
 
-	void DoToStrim(ZRef<ZExprRep> iExprRep);
+	virtual ZRef<ExprRep_Relation_Unary> Clone(ZRef<ExprRep_Relation> iExprRep_Relation) = 0;
 
-protected:
-	const Options& pOptions();
-	const ZStrimW& pStrimW();
-
-	void pWriteLFIndent();
+	ZRef<ExprRep_Relation> GetExprRep_Relation();
 
 private:
-	const Options* fOptions;
-	const ZStrimW* fStrimW;
-
-	size_t fIndent;
+	const ZRef<ExprRep_Relation> fExprRep_Relation;
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_ExprRep_Relation_Unary
+
+class Visitor_ExprRep_Relation_Unary : public virtual Visitor_ExprRep_Relation
+	{
+public:
+	virtual bool Visit_ExprRep_Relation_Unary(ZRef<ExprRep_Relation_Unary> iRep);
+	};
+
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZVisitor_ExprRep_DoToStrim__
+#endif // __ZQL_ExprRep_Relation_Unary__
