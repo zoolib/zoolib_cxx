@@ -92,17 +92,21 @@ void Visitor_DoMakeIterator::Visit_ExprRep_Relation_Concrete(
 class ExprRep_Relation_Concrete_Dummy : public ZQL::ExprRep_Relation_Concrete
 	{
 public:
-	ExprRep_Relation_Concrete_Dummy();
+	ExprRep_Relation_Concrete_Dummy(const ZRelHead& iRelHead);
 
 // From ExprRep_Relation via ExprRep_Relation_Concrete
 	virtual ZRelHead GetRelHead();
+
+private:
+	ZRelHead fRelHead;
 	};
 
-ExprRep_Relation_Concrete_Dummy::ExprRep_Relation_Concrete_Dummy()
+ExprRep_Relation_Concrete_Dummy::ExprRep_Relation_Concrete_Dummy(const ZRelHead& iRelHead)
+:	fRelHead(iRelHead)
 	{}
 
 ZRelHead ExprRep_Relation_Concrete_Dummy::GetRelHead()
-	{ return ZRelHead(true); }
+	{ return fRelHead; }
 
 // =================================================================================================
 #pragma mark -
@@ -110,12 +114,12 @@ ZRelHead ExprRep_Relation_Concrete_Dummy::GetRelHead()
 
 ZRef<ZQL::ExprRep_Relation> sConcrete()
 	{
-	// Take a ZRelHead as a param?
 	// Put this outside of ZValBase? Perhaps over in ZQL?
-	// Need to return an Expr_Relation_Concrete that can be
-	// handled by ZQL::Util_Strim_Query::Visitor_Query_DoToStrim
-	return new ExprRep_Relation_Concrete_Dummy;
+	return sConcrete(ZRelHead(true));
 	}
+
+ZRef<ZQL::ExprRep_Relation> sConcrete(const ZRelHead& iRelHead)
+	{ return new ExprRep_Relation_Concrete_Dummy(iRelHead); }
 
 ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::ExprRep_Relation> iExprRep)
 	{ return Visitor_DoMakeIterator().DoMakeIterator(iExprRep); }

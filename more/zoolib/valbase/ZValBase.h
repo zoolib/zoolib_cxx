@@ -50,6 +50,7 @@ public:
 #pragma mark * ZValBase pseudo constructors
 
 ZRef<ZQL::ExprRep_Relation> sConcrete();
+ZRef<ZQL::ExprRep_Relation> sConcrete(const ZRelHead& iRelHead);
 
 ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::ExprRep_Relation> iExprRep);
 
