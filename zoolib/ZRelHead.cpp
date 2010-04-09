@@ -192,7 +192,7 @@ ZRelHead ZRelHead::operator|(const ZRelHead& iOther) const
 		if (iOther.fUniversal)
 			{
 			resultUniversal = true;
-			spXor(fNames, iOther.fNames, result);
+			spAnd(fNames, iOther.fNames, result);
 			}
 		else
 			{
@@ -231,9 +231,7 @@ ZRelHead ZRelHead::operator-(const ZRelHead& iOther) const
 		if (iOther.fUniversal)
 			{
 			resultUniversal = false;
-			set<string> result2;
-			spXor(fNames, iOther.fNames, result2);
-			spAnd(result2, iOther.fNames, result);
+			spMinus(iOther.fNames, fNames, result);
 			}
 		else
 			{
@@ -298,20 +296,22 @@ bool ZRelHead::Contains(const ZRelHead& iOther) const
 bool ZRelHead::Contains(const string& iName) const
 	{ return fUniversal != (fNames.end() != fNames.find(iName)); }
 
-void ZRelHead::Add(const string& iName)
+ZRelHead& ZRelHead::Add(const string& iName)
 	{
 	if (fUniversal)
 		fNames.erase(iName);
 	else
 		fNames.insert(iName);
+	return *this;
 	}
 
-void ZRelHead::Remove(const string& iName)
+ZRelHead& ZRelHead::Remove(const string& iName)
 	{
 	if (fUniversal)
 		fNames.insert(iName);
 	else
 		fNames.erase(iName);
+	return *this;
 	}
 
 void ZRelHead::GetNames(bool& oUniversal, std::set<string>& oNames) const
@@ -331,3 +331,105 @@ ZRelHead operator&(const string& iName, const ZRelHead& iRelHead)
 	}
 
 NAMESPACE_ZOOLIB_END
+
+#if ! ZCONFIG_ExcludeTests
+
+#include "zoolib/ZStrim.h"
+#include "zoolib/ZUtil_Strim_RelHead.h"
+
+NAMESPACE_ZOOLIB_USING
+
+const ZStrimW& operator<<(const ZStrimW& iStrimW, const ZRelHead& iRelHead)
+	{
+	ZUtil_Strim_RelHead::sWrite_RelHead(iRelHead, iStrimW);
+	return iStrimW;
+	}
+
+#define show(a) s << #a << ": " << (a) << "\n";
+
+#define verify(a,b) s << #a << ": " << (a); \
+	check(s, a,b);
+
+static void check(const ZStrimW& w, const ZRelHead& sample, const ZRelHead& expected)
+	{
+	if (sample != expected)
+		w << ", Should be: " << expected;
+	else
+		w << ", OK";
+	w << "\n";
+	}
+
+void sTestRelHead(const ZStrimW& s)
+	{
+	const ZRelHead none(false);
+	const ZRelHead univ(true);
+	ZRelHead a = ZRelHead().Add("A");
+	ZRelHead b = ZRelHead().Add("B");
+	ZRelHead c = ZRelHead().Add("C");
+	ZRelHead ab = ZRelHead().Add("A").Add("B");
+	ZRelHead ac = ZRelHead().Add("A").Add("C");
+	ZRelHead bc = ZRelHead().Add("B").Add("C");
+	ZRelHead abc = ZRelHead().Add("A").Add("B").Add("C");
+
+	ZRelHead _a = ZRelHead(true).Remove("A");
+	ZRelHead _b = ZRelHead(true).Remove("B");
+	ZRelHead _c = ZRelHead(true).Remove("C");
+	ZRelHead _ab = ZRelHead(true).Remove("A").Remove("B");
+	ZRelHead _ac = ZRelHead(true).Remove("A").Remove("C");
+	ZRelHead _bc = ZRelHead(true).Remove("B").Remove("C");
+	ZRelHead _abc = ZRelHead(true).Remove("A").Remove("B").Remove("C");
+
+	show(none)
+	show(univ)
+	show(a)
+	show(b)
+	show(c)
+	show(ab)
+	show(ac)
+	show(bc)
+	show(abc)
+	show(_a)
+	show(_b)
+	show(_c)
+	show(_ab)
+	show(_ac)
+	show(_bc)
+	show(_abc)
+
+
+	verify(a | a, a)
+	verify(a & a, a)
+	verify(a - a, none)
+	verify(a ^ a, none)
+
+	verify(a | b, ab)
+	verify(a & b, none)
+	verify(a - b, a)
+	verify(a ^ b, ab)
+
+	verify(ab | bc, abc)
+	verify(ab & bc, b)
+	verify(ab - bc, a)
+	verify(ab ^ bc, ac)
+
+	verify(_a | _a, _a)
+	verify(_a & _a, _a)
+	verify(_a - _a, none)
+	verify(_a ^ _a, none)
+
+	verify(_a | b, _a)
+	verify(_a & b, b)
+	verify(_a - b, _ab)
+	verify(_a ^ b, _ab)
+
+	verify(a | _b, _b)
+	verify(a & _b, a)
+	verify(a - _b, none)
+	verify(a ^ _b, _ab)
+
+	verify(_a | _b, univ)
+	verify(_a & _b, _ab)
+	verify(_a - _b, b)
+	verify(_a ^ _b, ab)
+	}
+#endif // ! ZCONFIG_ExcludeTests

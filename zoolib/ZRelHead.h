@@ -72,8 +72,8 @@ public:
 	bool Contains(const ZRelHead& iOther) const;
 	bool Contains(const std::string& iName) const;
 
-	void Add(const std::string& iName);
-	void Remove(const std::string& iName);
+	ZRelHead& Add(const std::string& iName);
+	ZRelHead& Remove(const std::string& iName);
 
 	void GetNames(bool& oUniversal, std::set<std::string>& oNames) const;
 
