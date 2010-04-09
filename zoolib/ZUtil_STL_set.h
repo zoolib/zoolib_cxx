@@ -18,28 +18,63 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRelHead__
-#define __ZRelHead__ 1
+#ifndef __ZUtil_STL_set__
+#define __ZUtil_STL_set__
 #include "zconfig.h"
 
-#include "zoolib/ZUniSet_T.h"
+#include "zoolib/ZCompat_algorithm.h"
 
-#include <string>
+#include <set>
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRelHead
+#pragma mark * ZUtil_STL_set
 
-typedef ZUniSet_T<std::string> ZRelHead;
+namespace ZUtil_STL_set {
 
-ZRelHead operator|(const char* iElem, const ZRelHead& iRelHead);
-ZRelHead operator|(const ZRelHead& iRelHead, const char* iElem);
+template <class T>
+void sOr(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResult)
+	{
+	set_union(iLHS.begin(), iLHS.end(),
+		iRHS.begin(), iRHS.end(),
+		inserter(oResult, oResult.end()));
+	}
 
-ZRelHead operator&(const ZRelHead& iRelHead, const char* iElem);
-ZRelHead operator&(const char* iElem, const ZRelHead& iRelHead);
+template <class T>
+void sAnd(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResult)
+	{
+	set_intersection(iLHS.begin(), iLHS.end(),
+		iRHS.begin(), iRHS.end(),
+		inserter(oResult, oResult.end()));
+	}
+
+template <class T>
+void sMinus(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResult)
+	{
+	set_difference(iLHS.begin(), iLHS.end(),
+		iRHS.begin(), iRHS.end(),
+		inserter(oResult, oResult.end()));
+	}
+
+template <class T>
+void sXor(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResult)
+	{
+	set_symmetric_difference(iLHS.begin(), iLHS.end(),
+		iRHS.begin(), iRHS.end(),
+		inserter(oResult, oResult.end()));
+	}
+
+template <class T>
+bool sIncludes(const std::set<T>& iLHS, const std::set<T>& iRHS)
+	{
+	return includes(iLHS.begin(), iLHS.end(),
+		iRHS.begin(), iRHS.end());
+	}
+
+} // namespace ZUtil_STL_set
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZRelHead__
+#endif // __ZUtil_STL_set__
