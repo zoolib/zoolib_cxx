@@ -41,15 +41,14 @@ void sWrite_PropName(const string& iName, const ZStrimW& s)
 void sWrite_RelHead(const ZRelHead& iRelHead, const ZStrimW& s)
 	{
 	bool universal;
-	set<string> names;
-	iRelHead.GetElems(universal, names);
+	const set<string>& names = iRelHead.GetElems(universal);
 
 	s.Write("[");
 	if (universal)
 		s.Write("~");
 
 	bool isFirst = true;
-	for (set<string>::iterator i = names.begin(); i != names.end(); ++i)
+	for (set<string>::const_iterator i = names.begin(); i != names.end(); ++i)
 		{
 		if (!isFirst)
 			s.Write(", ");

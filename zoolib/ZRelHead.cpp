@@ -75,21 +75,21 @@ void sTestRelHead(const ZStrimW& s)
 	{
 	const ZRelHead none(false);
 	const ZRelHead univ(true);
-	ZRelHead a = ZRelHead().Add("A");
-	ZRelHead b = ZRelHead().Add("B");
-	ZRelHead c = ZRelHead().Add("C");
-	ZRelHead ab = ZRelHead().Add("A").Add("B");
-	ZRelHead ac = ZRelHead().Add("A").Add("C");
-	ZRelHead bc = ZRelHead().Add("B").Add("C");
-	ZRelHead abc = ZRelHead().Add("A").Add("B").Add("C");
+	ZRelHead a = ZRelHead().Insert("A");
+	ZRelHead b = ZRelHead().Insert("B");
+	ZRelHead c = ZRelHead().Insert("C");
+	ZRelHead ab = ZRelHead().Insert("A").Insert("B");
+	ZRelHead ac = ZRelHead().Insert("A").Insert("C");
+	ZRelHead bc = ZRelHead().Insert("B").Insert("C");
+	ZRelHead abc = ZRelHead().Insert("A").Insert("B").Insert("C");
 
-	ZRelHead _a = ZRelHead(true).Remove("A");
-	ZRelHead _b = ZRelHead(true).Remove("B");
-	ZRelHead _c = ZRelHead(true).Remove("C");
-	ZRelHead _ab = ZRelHead(true).Remove("A").Remove("B");
-	ZRelHead _ac = ZRelHead(true).Remove("A").Remove("C");
-	ZRelHead _bc = ZRelHead(true).Remove("B").Remove("C");
-	ZRelHead _abc = ZRelHead(true).Remove("A").Remove("B").Remove("C");
+	ZRelHead _a = ZRelHead(true).Erase("A");
+	ZRelHead _b = ZRelHead(true).Erase("B");
+	ZRelHead _c = ZRelHead(true).Erase("C");
+	ZRelHead _ab = ZRelHead(true).Erase("A").Erase("B");
+	ZRelHead _ac = ZRelHead(true).Erase("A").Erase("C");
+	ZRelHead _bc = ZRelHead(true).Erase("B").Erase("C");
+	ZRelHead _abc = ZRelHead(true).Erase("A").Erase("B").Erase("C");
 
 	show(none)
 	show(univ)

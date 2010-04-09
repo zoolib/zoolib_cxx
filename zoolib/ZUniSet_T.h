@@ -77,10 +77,11 @@ public:
 	bool Contains(const ZUniSet_T& iOther) const;
 	bool Contains(const T& iElem) const;
 
-	ZUniSet_T& Add(const T& iElem);
-	ZUniSet_T& Remove(const T& iElem);
+	ZUniSet_T& Insert(const T& iElem);
+	ZUniSet_T& Erase(const T& iElem);
 
 	void GetElems(bool& oUniversal, std::set<T>& oElems) const;
+	const std::set<T>& GetElems(bool& oUniversal) const;
 
 private:
 	bool fUniversal;
@@ -349,7 +350,7 @@ bool ZUniSet_T<T>::Contains(const T& iElem) const
 	{ return fUniversal != (fElems.end() != fElems.find(iElem)); }
 
 template <class T>
-ZUniSet_T<T>& ZUniSet_T<T>::Add(const T& iElem)
+ZUniSet_T<T>& ZUniSet_T<T>::Insert(const T& iElem)
 	{
 	if (fUniversal)
 		fElems.erase(iElem);
@@ -359,7 +360,7 @@ ZUniSet_T<T>& ZUniSet_T<T>::Add(const T& iElem)
 	}
 
 template <class T>
-ZUniSet_T<T>& ZUniSet_T<T>::Remove(const T& iElem)
+ZUniSet_T<T>& ZUniSet_T<T>::Erase(const T& iElem)
 	{
 	if (fUniversal)
 		fElems.insert(iElem);
@@ -373,6 +374,13 @@ void ZUniSet_T<T>::GetElems(bool& oUniversal, std::set<T>& oElems) const
 	{
 	oUniversal = fUniversal;
 	oElems = fElems;
+	}
+
+template <class T>
+const std::set<T>& ZUniSet_T<T>::GetElems(bool& oUniversal) const
+	{
+	oUniversal = fUniversal;
+	return fElems;
 	}
 
 template <class T>
