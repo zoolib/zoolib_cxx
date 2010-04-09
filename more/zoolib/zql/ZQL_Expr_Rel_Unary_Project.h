@@ -75,6 +75,10 @@ public:
 
 ZRef<Expr_Rel_Unary_Project> sProject(const ZRef<Expr_Rel>& iExpr, const ZRelHead& iRelHead);
 
+ZRef<Expr_Rel_Unary_Project> operator&(const ZRef<Expr_Rel>& iExpr, const ZRelHead& iRelHead);
+
+ZRef<Expr_Rel_Unary_Project> operator&(const ZRelHead& iRelHead, const ZRef<Expr_Rel>& iExpr);
+
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 

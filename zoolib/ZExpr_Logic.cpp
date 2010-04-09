@@ -166,10 +166,10 @@ void ZVisitor_Expr_Logic::Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
 #pragma mark -
 #pragma mark * Operators
 
-ZRef<ZExpr_Logic_Not> sNot(const ZRef<ZExpr_Logic>& iExpr_Logic)
+ZRef<ZExpr_Logic_Not> operator~(const ZRef<ZExpr_Logic>& iExpr_Logic)
 	{ return new ZExpr_Logic_Not(iExpr_Logic); }
 
-ZRef<ZExpr_Logic> sNot(const ZRef<ZExpr_Logic_Not>& iExpr_Logic_Not)
+ZRef<ZExpr_Logic> operator~(const ZRef<ZExpr_Logic_Not>& iExpr_Logic_Not)
 	{ return iExpr_Logic_Not->GetOperand(); }
 
 ZRef<ZExpr_Logic> operator&(bool iBool, const ZRef<ZExpr_Logic>& iExpr_Logic)

@@ -156,10 +156,10 @@ static Spec sBadAuthors()
 //	Spec result = operator!(theSpec);
 //	if (!theSpec)
 //		;
-	Spec result = sNot(theSpec);
-	result = sNot(result);
-	result = sNot(sNot(theSpec));
-	return sLogic(theSpec);
+	Spec result = ~theSpec;
+	result = ~result;
+	result = ~~theSpec;
+	return ~~theSpec;
 	}
 
 static Query badPassword()
@@ -172,7 +172,7 @@ static Query badPassword()
 static Query badPassword2()
 	{
 //	return (A("authorID") & sBadAuthors()).Project("authorID");
-	return sProject(A("authorID") & sBadAuthors(), string("authorID"));
+	return A("authorID") & sBadAuthors() & ZRelHead("authorID");
 	}
 
 // S(A(@authorID), @Object == "author" & (@fnam == @pass | @lnam == @pass | @unam == @pass));
@@ -194,7 +194,7 @@ static Query sPrefix(const string& iPrefix, const RelHead& iIgnore, Query iQuery
 
 	bool universal;
 	set<string> theNames;
-	iQuery->GetRelHead().GetNames(universal, theNames);
+	iQuery->GetRelHead().GetElems(universal, theNames);
 	for (set<string>::iterator i = theNames.begin(); i != theNames.end(); ++i)
 		{
 		if (iIgnore.Contains(*i))
@@ -216,10 +216,12 @@ static Query sSuperJoin(
 
 static Query sDrop(Query iQuery, const string& iTName)
 	{
-	RelHead theRelHead = iQuery->GetRelHead();
-	if (theRelHead.Contains(iTName))
-		return sProject(iQuery, theRelHead - iTName);
-	return iQuery;	
+	return iQuery & (ZRelHead(true) - iTName);
+//	RelHead theRelHead = iQuery->GetRelHead();
+//	return iQuery & (theRelHead - iTName);
+//	if (theRelHead.Contains(iTName))
+//		return iQuery & theRelHead - iTName;
+//	return iQuery;	
 	}
 
 static Query sAllIDs()
@@ -240,14 +242,13 @@ static Query sAllNotesNoHead()
 
 static Query sAllViews()
 	{
-	Query theQuery = sAllID("$ID$", sRelHead_view) & (CName("Object") == CConst("view"));
+	Query theQuery = sAllID("$ID$", sRelHead_view) & (CName("Object") == CConst("view") & CName("Objectdis") == CConst("view"));
 	return sDrop(theQuery, "Object");
 	}
 
 static Query sAllViewsNoHead()
 	{
-//	return sAllID("$ID$", sRelHead_view) & Spec(true);
-	return sAllID("$ID$") & (CName("Object") == CConst("view"));
+	return sAllID("$ID$") & (CName("Object") == CConst("view") & CName("Objectdis") == CConst("view"));
 	}
 
 static Query sAllContains()

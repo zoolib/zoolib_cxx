@@ -138,8 +138,8 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Binary_Join(
 
 	this->pWriteLFIndent();
 	this->DoToStrim(iRep->GetRHS());
-	this->pWriteLFIndent();
 
+	this->pWriteLFIndent();
 	w << ")";
 	}
 
@@ -151,13 +151,19 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iRep)
 	{
 	const ZStrimW& w = pStrimW();
 
-	w << "/* Relation_Concrete: " << typeid(*iRep.Get()).name() << " */";
+	w << "Concrete";
+
+	this->pWriteLFIndent();
+	w << "(";
 
 	if (pOptions().fDebuggingOutput)
-		{
-		this->pWriteLFIndent();
 		spWrite_EffectiveRelHeadComment(iRep, w);
-		}
+
+	this->pWriteLFIndent();
+	w << "// " << typeid(*iRep.Get()).name();
+
+	this->pWriteLFIndent();
+	w << ")";
 	}
 
 void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Project(
@@ -178,8 +184,8 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Project(
 
 	this->pWriteLFIndent();
 	this->DoToStrim(iRep->GetExpr_Rel());
-	this->pWriteLFIndent();
 
+	this->pWriteLFIndent();
 	spWrite(")", w);
 	}
 
@@ -203,8 +209,8 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Rename(
 
 	this->pWriteLFIndent();
 	this->DoToStrim(iRep->GetExpr_Rel());
-	this->pWriteLFIndent();
 
+	this->pWriteLFIndent();
 	spWrite(")", w);
 	}
 
@@ -225,8 +231,8 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Restrict(
 
 	this->pWriteLFIndent();
 	this->DoToStrim(iRep->GetExpr_Rel());
-	this->pWriteLFIndent();
 
+	this->pWriteLFIndent();
 	w << ")";
 	}
 
@@ -247,8 +253,8 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Select(
 
 	this->pWriteLFIndent();
 	this->DoToStrim(iRep->GetExpr_Rel());
-	this->pWriteLFIndent();
 
+	this->pWriteLFIndent();
 	w << ")";
 	}
 
@@ -271,8 +277,8 @@ void Visitor_DoToStrim::pWriteBinary(
 
 	this->pWriteLFIndent();
 	this->DoToStrim(iRep->GetRHS());
-	this->pWriteLFIndent();
 
+	this->pWriteLFIndent();
 	w << ")";
 	}
 

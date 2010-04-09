@@ -42,7 +42,7 @@ void sWrite_RelHead(const ZRelHead& iRelHead, const ZStrimW& s)
 	{
 	bool universal;
 	set<string> names;
-	iRelHead.GetNames(universal, names);
+	iRelHead.GetElems(universal, names);
 
 	s.Write("[");
 	if (universal)

@@ -156,6 +156,10 @@ public:
 #pragma mark -
 #pragma mark * Operators
 
+ZRef<ZExpr_Logic_Not> operator~(const ZRef<ZExpr_Logic>& iExpr_Logic);
+ZRef<ZExpr_Logic> operator~(const ZRef<ZExpr_Logic_Not>& iExpr_Logic_Not);
+
+ZRef<ZExpr_Logic> sNot(const ZRef<ZExpr_Logic_Not>& iExpr_Logic_Not);
 ZRef<ZExpr_Logic_Not> sNot(const ZRef<ZExpr_Logic>& iExpr_Logic);
 
 ZRef<ZExpr_Logic> sNot(const ZRef<ZExpr_Logic_Not>& iExpr_Logic_Not);

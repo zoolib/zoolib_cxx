@@ -81,5 +81,11 @@ void Visitor_Expr_Rel_Unary_Project::Visit_Expr_Rel_Unary_Project(
 ZRef<Expr_Rel_Unary_Project> sProject(const ZRef<Expr_Rel>& iExpr, const ZRelHead& iRelHead)
 	{ return new Expr_Rel_Unary_Project(iExpr, iRelHead); }
 
+ZRef<Expr_Rel_Unary_Project> operator&(const ZRef<Expr_Rel>& iExpr, const ZRelHead& iRelHead)
+	{ return new Expr_Rel_Unary_Project(iExpr, iRelHead); }
+
+ZRef<Expr_Rel_Unary_Project> operator&(const ZRelHead& iRelHead, const ZRef<Expr_Rel>& iExpr)
+	{ return new Expr_Rel_Unary_Project(iExpr, iRelHead); }
+
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

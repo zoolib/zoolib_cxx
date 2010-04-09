@@ -110,7 +110,7 @@ ZRef<ZExpr_Logic> sLogic(const ZValCondition_T<Val>& iValCondition)
 	{ return new ZExpr_Logic_ValCondition_T<Val>(iValCondition); }
 
 template <class Val>
-ZRef<ZExpr_Logic_Not> sNot(const ZValCondition_T<Val>& iValCondition)
+ZRef<ZExpr_Logic_Not> operator~(const ZValCondition_T<Val>& iValCondition)
 	{ return new ZExpr_Logic_Not(new ZExpr_Logic_ValCondition_T<Val>(iValCondition)); }
 
 template <class Val>
@@ -162,10 +162,10 @@ ZRef<ZExpr_Logic> operator&(const ZRef<ZExpr_Logic>& iLHS, const ZValCondition_T
 	{ return new ZExpr_Logic_And(new ZExpr_Logic_ValCondition_T<Val>(iRHS), iLHS); }
 
 template <class Val>
-ZRef<ZExpr_Logic>& operator&=(ZRef<ZExpr_Logic>& iLHS, const ZValCondition_T<Val>& iRHS)
+ZRef<ZExpr_Logic>& operator&=(ZRef<ZExpr_Logic>& ioLHS, const ZValCondition_T<Val>& iRHS)
 	{
-	iLHS = iLHS & iRHS;
-	return iLHS;
+	ioLHS = ioLHS & iRHS;
+	return ioLHS;
 	}
 
 template <class Val>
@@ -185,10 +185,10 @@ ZRef<ZExpr_Logic> operator|(const ZRef<ZExpr_Logic>& iLHS, const ZValCondition_T
 	{ return new ZExpr_Logic_Or(new ZExpr_Logic_ValCondition_T<Val>(iRHS), iLHS); }
 
 template <class Val>
-ZRef<ZExpr_Logic>& operator|=(ZRef<ZExpr_Logic>& iLHS, const ZValCondition_T<Val>& iRHS)
+ZRef<ZExpr_Logic>& operator|=(ZRef<ZExpr_Logic>& ioLHS, const ZValCondition_T<Val>& iRHS)
 	{
-	iLHS = iLHS | iRHS;
-	return iLHS;
+	ioLHS = ioLHS | iRHS;
+	return ioLHS;
 	}
 
 // =================================================================================================

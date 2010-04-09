@@ -286,7 +286,7 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFil
 				{
 				// Do nothing -- already have the IDs.
 				if (iVerbose)
-					theQ = sProject(theQ, "$$FromSource$$");
+					theQ = sProject(theQ, ZRelHead("$$FromSource$$"));
 				}
 			}
 		return theQ;
