@@ -34,6 +34,9 @@ ExprRep_Relation_Binary_Join::ExprRep_Relation_Binary_Join(
 :	ExprRep_Relation_Binary(iLHS, iRHS)
 	{}
 
+ExprRep_Relation_Binary_Join::~ExprRep_Relation_Binary_Join()
+	{}
+
 ZRelHead ExprRep_Relation_Binary_Join::GetRelHead()
 	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
 

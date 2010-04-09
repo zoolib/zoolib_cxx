@@ -34,6 +34,9 @@ ExprRep_Relation_Binary_Union::ExprRep_Relation_Binary_Union(
 :	ExprRep_Relation_Binary(iLHS, iRHS)
 	{}
 
+ExprRep_Relation_Binary_Union::~ExprRep_Relation_Binary_Union()
+	{}
+
 ZRelHead ExprRep_Relation_Binary_Union::GetRelHead()
 	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
 

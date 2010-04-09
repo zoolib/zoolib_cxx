@@ -42,7 +42,7 @@ void ExprRep_Relation_Concrete::Accept_ExprRep_Relation(Visitor_ExprRep_Relation
 		}
 	else
 		{
-		ExprRep_Relation::Accept(iVisitor);
+		ExprRep_Relation::Accept_ExprRep_Relation(iVisitor);
 		}
 	}
 
