@@ -106,7 +106,11 @@ void ZVisitor_Expr_Logic_ValCondition_T<Val>::Visit_Logic_ValCondition(
 #pragma mark * Operators
 
 template <class Val>
-ZRef<ZExpr_Logic> operator!(const ZValCondition_T<Val>& iValCondition)
+ZRef<ZExpr_Logic> sLogic(const ZValCondition_T<Val>& iValCondition)
+	{ return new ZExpr_Logic_ValCondition_T<Val>(iValCondition); }
+
+template <class Val>
+ZRef<ZExpr_Logic_Not> sNot(const ZValCondition_T<Val>& iValCondition)
 	{ return new ZExpr_Logic_Not(new ZExpr_Logic_ValCondition_T<Val>(iValCondition)); }
 
 template <class Val>

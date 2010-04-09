@@ -152,7 +152,14 @@ static Spec sBadAuthors()
 			| CName("pass") == CName("unam")
 			);
 */
-	return true & theSpec;
+//	return true & theSpec;
+//	Spec result = operator!(theSpec);
+//	if (!theSpec)
+//		;
+	Spec result = sNot(theSpec);
+	result = sNot(result);
+	result = sNot(sNot(theSpec));
+	return sLogic(theSpec);
 	}
 
 static Query badPassword()
@@ -388,6 +395,7 @@ void sTestQL4(const ZStrimW& s)
 
 void sTestQL3(const ZStrimW& s)
 	{
+sBadAuthors();
 	sDumpQuery(s, sQueryNoHead());
 	sDumpQuery(s, sQuery());
 
