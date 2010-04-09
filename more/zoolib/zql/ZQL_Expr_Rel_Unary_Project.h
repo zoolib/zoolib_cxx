@@ -18,52 +18,58 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Expr_Relation_Binary_Join__
-#define __ZQL_Expr_Relation_Binary_Join__ 1
+#ifndef __ZQL_Expr_Rel_Unary_Project__
+#define __ZQL_Expr_Rel_Unary_Project__ 1
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Relation_Binary.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
-class Visitor_Expr_Relation_Binary_Join;
+class Visitor_Expr_Rel_Unary_Project;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Binary_Join
+#pragma mark * Expr_Rel_Unary_Project
 
-class Expr_Relation_Binary_Join : public Expr_Relation_Binary
+class Expr_Rel_Unary_Project : public Expr_Rel_Unary
 	{
 public:
-	Expr_Relation_Binary_Join(ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS);
-	virtual ~Expr_Relation_Binary_Join();
+	Expr_Rel_Unary_Project(
+		const ZRef<Expr_Rel>& iExpr_Rel, const ZRelHead& iRelHead);
 
-// From Expr_Relation via Expr_Relation_Binary
+	virtual ~Expr_Rel_Unary_Project();
+
+// From Expr_Rel via Expr_Rel_Unary
 	virtual ZRelHead GetRelHead();
 
-// From Expr_Relation_Binary
-	virtual void Accept_Expr_Relation_Binary(Visitor_Expr_Relation_Binary& iVisitor);
+// From Expr_Rel_Unary
+	virtual void Accept_Expr_Rel_Unary(Visitor_Expr_Rel_Unary& iVisitor);
 
-	virtual ZRef<Expr_Relation_Binary> Clone(
-		ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS);
+	virtual ZRef<Expr_Rel_Unary> Clone(ZRef<Expr_Rel> iExpr_Rel);
 
 // Our protocol
-	virtual void Accept_Expr_Relation_Binary_Join(
-		Visitor_Expr_Relation_Binary_Join& iVisitor);
+	virtual void Accept_Expr_Rel_Unary_Project(
+		Visitor_Expr_Rel_Unary_Project& iVisitor);
+
+	ZRelHead GetProjectRelHead();
+
+private:
+	const ZRelHead fRelHead;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Relation_Binary_Join
+#pragma mark * Visitor_Expr_Rel_Unary_Project
 
-class Visitor_Expr_Relation_Binary_Join : public virtual Visitor_Expr_Relation_Binary
+class Visitor_Expr_Rel_Unary_Project : public virtual Visitor_Expr_Rel_Unary
 	{
 public:
-	virtual void Visit_Expr_Relation_Binary_Join(ZRef<Expr_Relation_Binary_Join> iRep);
+	virtual void Visit_Expr_Rel_Unary_Project(ZRef<Expr_Rel_Unary_Project> iRep);
 	};
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Expr_Relation_Binary__
+#endif // __ZQL_Expr_Rel_Unary_Project__

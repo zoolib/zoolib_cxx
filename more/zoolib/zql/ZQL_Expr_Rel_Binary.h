@@ -18,54 +18,57 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_Expr_Relation_Binary_Difference.h"
+#ifndef __ZQL_Expr_Rel_Binary__
+#define __ZQL_Expr_Rel_Binary__ 1
+#include "zconfig.h"
 
-using std::string;
+#include "zoolib/zql/ZQL_Expr_Rel.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
+class Visitor_Expr_Rel_Binary;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Binary_Difference
+#pragma mark * Expr_Rel_Binary
 
-Expr_Relation_Binary_Difference::Expr_Relation_Binary_Difference(
-	ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS)
-:	Expr_Relation_Binary(iLHS, iRHS)
-	{}
-
-ZRelHead Expr_Relation_Binary_Difference::GetRelHead()
-	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
-
-void Expr_Relation_Binary_Difference::Accept_Expr_Relation_Binary(
-	Visitor_Expr_Relation_Binary& iVisitor)
+class Expr_Rel_Binary : public Expr_Rel
 	{
-	if (Visitor_Expr_Relation_Binary_Difference* theVisitor =
-		dynamic_cast<Visitor_Expr_Relation_Binary_Difference*>(&iVisitor))
-		{
-		this->Accept_Expr_Relation_Binary_Difference(*theVisitor);
-		}
-	else
-		{
-		Expr_Relation_Binary::Accept_Expr_Relation_Binary(iVisitor);
-		}
-	}
+protected:
+	Expr_Rel_Binary(ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS);
 
-void Expr_Relation_Binary_Difference::Accept_Expr_Relation_Binary_Difference(
-	Visitor_Expr_Relation_Binary_Difference& iVisitor)
-	{ iVisitor.Visit_Expr_Relation_Binary_Difference(this); }
+public:
+	virtual ~Expr_Rel_Binary();
 
-ZRef<Expr_Relation_Binary> Expr_Relation_Binary_Difference::Clone(
-	ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS)
-	{ return new Expr_Relation_Binary_Difference(iLHS, iRHS); }
+// From Expr_Rel
+	virtual void Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor);
+
+// Our protocol
+	virtual void Accept_Expr_Rel_Binary(Visitor_Expr_Rel_Binary& iVisitor);
+	
+	virtual ZRef<Expr_Rel_Binary> Clone (
+		ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS) = 0;
+
+	ZRef<Expr_Rel> GetLHS();
+	ZRef<Expr_Rel> GetRHS();
+
+protected:
+	const ZRef<Expr_Rel> fLHS;
+	const ZRef<Expr_Rel> fRHS;
+	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Relation_Binary_Difference
+#pragma mark * Visitor_Expr_Rel_Binary
 
-void Visitor_Expr_Relation_Binary_Difference::Visit_Expr_Relation_Binary_Difference(
-	ZRef<Expr_Relation_Binary_Difference> iRep)
-	{ Visitor_Expr_Relation_Binary::Visit_Expr_Relation_Binary(iRep); }
+class Visitor_Expr_Rel_Binary : public virtual Visitor_Expr_Rel
+	{
+public:
+	virtual void Visit_Expr_Rel_Binary(ZRef<Expr_Rel_Binary> iRep);
+	};
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZQL_Expr_Rel_Binary__

@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_Expr_Relation_Binary_Union.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary_Rename.h"
 
 using std::string;
 
@@ -27,48 +27,64 @@ namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Binary_Union
+#pragma mark * Expr_Rel_Unary_Rename
 
-Expr_Relation_Binary_Union::Expr_Relation_Binary_Union(
-	ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS)
-:	Expr_Relation_Binary(iLHS, iRHS)
+Expr_Rel_Unary_Rename::Expr_Rel_Unary_Rename(
+	ZRef<Expr_Rel> iExpr_Rel, const std::string& iOld, const std::string& iNew)
+:	Expr_Rel_Unary(iExpr_Rel)
+,	fOld(iOld)
+,	fNew(iNew)
 	{}
 
-Expr_Relation_Binary_Union::~Expr_Relation_Binary_Union()
+Expr_Rel_Unary_Rename::~Expr_Rel_Unary_Rename()
 	{}
 
-ZRelHead Expr_Relation_Binary_Union::GetRelHead()
-	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
-
-void Expr_Relation_Binary_Union::Accept_Expr_Relation_Binary(
-	Visitor_Expr_Relation_Binary& iVisitor)
+ZRelHead Expr_Rel_Unary_Rename::GetRelHead()
 	{
-	if (Visitor_Expr_Relation_Binary_Union* theVisitor =
-		dynamic_cast<Visitor_Expr_Relation_Binary_Union*>(&iVisitor))
+	ZRelHead theRelHead = this->GetExpr_Rel()->GetRelHead();
+	if (theRelHead.Contains(fOld))
 		{
-		this->Accept_Expr_Relation_Binary_Union(*theVisitor);
+		theRelHead -= fOld;
+		theRelHead |= fNew;
+		}
+	return theRelHead;
+	}
+
+void Expr_Rel_Unary_Rename::Accept_Expr_Rel_Unary(
+	Visitor_Expr_Rel_Unary& iVisitor)
+	{
+	if (Visitor_Expr_Rel_Unary_Rename* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Unary_Rename*>(&iVisitor))
+		{
+		this->Accept_Expr_Rel_Unary_Rename(*theVisitor);
 		}
 	else
 		{
-		Expr_Relation_Binary::Accept_Expr_Relation_Binary(iVisitor);
+		Expr_Rel_Unary::Accept_Expr_Rel_Unary(iVisitor);
 		}
 	}
 
-void Expr_Relation_Binary_Union::Accept_Expr_Relation_Binary_Union(
-	Visitor_Expr_Relation_Binary_Union& iVisitor)
-	{ iVisitor.Visit_Expr_Relation_Binary_Union(this); }
+ZRef<Expr_Rel_Unary> Expr_Rel_Unary_Rename::Clone(
+	ZRef<Expr_Rel> iExpr_Rel)
+	{ return new Expr_Rel_Unary_Rename(iExpr_Rel, fOld, fNew); }
 
-ZRef<Expr_Relation_Binary> Expr_Relation_Binary_Union::Clone(
-	ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS)
-	{ return new Expr_Relation_Binary_Union(iLHS, iRHS); }
+void Expr_Rel_Unary_Rename::Accept_Expr_Rel_Unary_Rename(
+	Visitor_Expr_Rel_Unary_Rename& iVisitor)
+	{ iVisitor.Visit_Expr_Rel_Unary_Rename(this); }
+
+const string& Expr_Rel_Unary_Rename::GetOld()
+	{ return fOld; }
+
+const string& Expr_Rel_Unary_Rename::GetNew()
+	{ return fNew; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Relation_Binary_Union
+#pragma mark * Visitor_Expr_Rel_Unary_Rename
 
-void Visitor_Expr_Relation_Binary_Union::Visit_Expr_Relation_Binary_Union(
-	ZRef<Expr_Relation_Binary_Union> iRep)
-	{ Visitor_Expr_Relation_Binary::Visit_Expr_Relation_Binary(iRep); }
+void Visitor_Expr_Rel_Unary_Rename::Visit_Expr_Rel_Unary_Rename(
+	ZRef<Expr_Rel_Unary_Rename> iRep)
+	{ Visitor_Expr_Rel_Unary::Visit_Expr_Rel_Unary(iRep); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

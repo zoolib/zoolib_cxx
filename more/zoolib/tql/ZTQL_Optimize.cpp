@@ -21,11 +21,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZExpr_Logic_ValCondition.h"
 #include "zoolib/ZVisitor_Expr_Logic_DoTransform.h"
 #include "zoolib/tql/ZTQL_Optimize.h"
-#include "zoolib/zql/ZQL_Expr_Relation_Binary_Union.h"
-#include "zoolib/zql/ZQL_Expr_Relation_Unary_Restrict.h"
-#include "zoolib/zql/ZQL_Expr_Relation_Unary_Select.h"
-#include "zoolib/zql/ZQL_Visitor_Expr_Relation_Binary_DoTransform.h"
-#include "zoolib/zql/ZQL_Visitor_Expr_Relation_Unary_DoTransform.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Binary_Union.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary_Restrict.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
+#include "zoolib/zql/ZQL_Visitor_Expr_Rel_Binary_DoTransform.h"
+#include "zoolib/zql/ZQL_Visitor_Expr_Rel_Unary_DoTransform.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 using namespace ZQL;
@@ -129,28 +129,28 @@ void spGather(ZRef<ZExpr_Logic> iRep, CondUnion& oResult)
 	iRep->Accept(theGather);
 	}
 
-ZRef<Expr_Relation> spConvertSelect(
-	ZRef<Expr_Relation> iRelation, ZRef<ZExpr_Logic> iLogical)
+ZRef<Expr_Rel> spConvertSelect(
+	ZRef<Expr_Rel> iRelation, ZRef<ZExpr_Logic> iLogical)
 	{
 	if (!iRelation)
-		return ZRef<Expr_Relation>();
+		return ZRef<Expr_Rel>();
 
 	CondUnion resultLogical;
 	spGather(iLogical, resultLogical);
 
-	ZRef<Expr_Relation> resultRelation;
+	ZRef<Expr_Rel> resultRelation;
 	for (CondUnion::const_iterator iterUnion = resultLogical.begin();
 		iterUnion != resultLogical.end(); ++iterUnion)
 		{
-		ZRef<Expr_Relation> current = iRelation;
+		ZRef<Expr_Rel> current = iRelation;
 		for (CondSect::const_iterator iterSect = iterUnion->begin();
 			iterSect != iterUnion->end(); ++iterSect)
 			{
-			current = new Expr_Relation_Unary_Restrict(current, *iterSect);
+			current = new Expr_Rel_Unary_Restrict(current, *iterSect);
 			}
 
 		if (resultRelation)
-			resultRelation = new Expr_Relation_Binary_Union(current, resultRelation);
+			resultRelation = new Expr_Rel_Binary_Union(current, resultRelation);
 		else
 			resultRelation = current;
 		}
@@ -158,18 +158,18 @@ ZRef<Expr_Relation> spConvertSelect(
 	}
 
 class Optimize
-:	public virtual Visitor_Expr_Relation_Binary_DoTransform
-,	public virtual Visitor_Expr_Relation_Unary_DoTransform
+:	public virtual Visitor_Expr_Rel_Binary_DoTransform
+,	public virtual Visitor_Expr_Rel_Unary_DoTransform
 	{
 public:
-// From Visitor_Expr_Relation_Unary_Select
-	virtual void Visit_Expr_Relation_Unary_Select(ZRef<Expr_Relation_Unary_Select> iRep);
+// From Visitor_Expr_Rel_Unary_Select
+	virtual void Visit_Expr_Rel_Unary_Select(ZRef<Expr_Rel_Unary_Select> iRep);
 	};
 
-void Optimize::Visit_Expr_Relation_Unary_Select(ZRef<Expr_Relation_Unary_Select> iRep)
+void Optimize::Visit_Expr_Rel_Unary_Select(ZRef<Expr_Rel_Unary_Select> iRep)
 	{
-	ZRef<Expr_Relation> newRep =
-		this->DoTransform(iRep->GetExpr_Relation()).DynamicCast<Expr_Relation>();
+	ZRef<Expr_Rel> newRep =
+		this->DoTransform(iRep->GetExpr_Rel()).DynamicCast<Expr_Rel>();
 
 	fResult = spConvertSelect(newRep, iRep->GetExpr_Logic());
 	}
@@ -178,8 +178,8 @@ void Optimize::Visit_Expr_Relation_Unary_Select(ZRef<Expr_Relation_Unary_Select>
 
 namespace ZQL {
 
-ZRef<Expr_Relation> sOptimize(ZRef<Expr_Relation> iRep)
-	{ return Optimize().DoTransform(iRep).DynamicCast<Expr_Relation>(); }
+ZRef<Expr_Rel> sOptimize(ZRef<Expr_Rel> iRep)
+	{ return Optimize().DoTransform(iRep).DynamicCast<Expr_Rel>(); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

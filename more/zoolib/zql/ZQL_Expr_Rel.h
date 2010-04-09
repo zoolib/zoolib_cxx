@@ -18,52 +18,80 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_Expr_Relation_Unary.h"
+#ifndef __ZQL_Expr_Rel__
+#define __ZQL_Expr_Rel__ 1
+#include "zconfig.h"
 
-using std::string;
+#include "zoolib/ZExpr.h"
+#include "zoolib/ZRelHead.h"
+
+#include <string>
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Relation
-
-Expr_Relation_Unary::Expr_Relation_Unary(ZRef<Expr_Relation> iExpr_Relation)
-:	fExpr_Relation(iExpr_Relation)
-	{}
-
-Expr_Relation_Unary::~Expr_Relation_Unary()
-	{}
-
-void Expr_Relation_Unary::Accept_Expr_Relation(Visitor_Expr_Relation& iVisitor)
-	{
-	if (Visitor_Expr_Relation_Unary* theVisitor =
-		dynamic_cast<Visitor_Expr_Relation_Unary*>(&iVisitor))
-		{
-		this->Accept_Expr_Relation_Unary(*theVisitor);
-		}
-	else
-		{
-		Expr_Relation::Accept_Expr_Relation(iVisitor);
-		}
-	}
-
-void Expr_Relation_Unary::Accept_Expr_Relation_Unary(Visitor_Expr_Relation_Unary& iVisitor)
-	{ iVisitor.Visit_Expr_Relation_Unary(this); }
-
-ZRef<Expr_Relation> Expr_Relation_Unary::GetExpr_Relation()
-	{ return fExpr_Relation; }
+class Visitor_Expr_Rel;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Relation_Unary
+#pragma mark * Expr_Rel
 
-void Visitor_Expr_Relation_Unary::Visit_Expr_Relation_Unary(ZRef<Expr_Relation_Unary> iRep)
+class Expr_Rel : public ZExpr
 	{
-	if (ZRef<Expr_Relation> theRelation = iRep->GetExpr_Relation())
-		theRelation->Accept(*this);
-	}
+protected:
+	Expr_Rel();
+
+public:
+// From ZExpr
+	virtual void Accept_Expr(ZVisitor_Expr& iVisitor);
+
+// Our protocol
+	virtual void Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor);
+
+	virtual ZRelHead GetRelHead() = 0;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_Expr_Rel
+
+class Visitor_Expr_Rel : public virtual ZVisitor_Expr
+	{
+public:
+	virtual void Visit_Expr_Rel(ZRef<Expr_Rel> iRep);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Relational operators
+
+ZRef<Expr_Rel> sIntersect(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+
+ZRef<Expr_Rel> sJoin(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+
+ZRef<Expr_Rel> sProject(const ZRelHead& iRelHead, const ZRef<Expr_Rel>& iExpr);
+
+ZRef<Expr_Rel> sRename(const std::string& iOldPropName, const std::string& iNewPropName,
+	const ZRef<Expr_Rel>& iExpr);
+
+ZRef<Expr_Rel> sUnion(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+
+ZRef<Expr_Rel> operator&(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+
+ZRef<Expr_Rel> operator&(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+
+ZRef<Expr_Rel> operator*(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+
+ZRef<Expr_Rel> operator|(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZQL_Expr_Rel__

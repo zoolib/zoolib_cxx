@@ -18,78 +18,45 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZYad_Any.h"
-#include "zoolib/valbase/ZValBase.h"
-#include "zoolib/valbase/ZValBase_YadSeqRPos.h"
-#include "zoolib/zqe/ZQE_Result_Any.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZValBase_YadSeqRPos {
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Iterator
-
-class Iterator : public ZQE::Iterator
-	{
-public:
-	Iterator(ZRef<ZYadSeqRPos> iYadSeqRPos);
-	virtual ~Iterator();
-	
-	virtual ZRef<ZQE::Iterator> Clone();
-	virtual ZRef<ZQE::Result> ReadInc();
-
-protected:
-	ZRef<ZYadSeqRPos> fYadSeqRPos;
-	};
-
-Iterator::Iterator(ZRef<ZYadSeqRPos> iYadSeqRPos)
-:	fYadSeqRPos(iYadSeqRPos)
-	{}
-
-Iterator::~Iterator()
-	{}
-
-ZRef<ZQE::Iterator> Iterator::Clone()
-	{ return new Iterator(fYadSeqRPos->Clone()); }
-
-ZRef<ZQE::Result> Iterator::ReadInc()
-	{
-	if (ZRef<ZYadR> theYadR = fYadSeqRPos->ReadInc())
-		return new ZQE::Result_Any(sFromYadR(ZVal_Any(), theYadR));
-	return ZRef<ZQE::Result>();
-	}
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Expr_Rel_Concrete
 
-class Expr_Rel_Concrete : public ZValBase::Expr_Rel_Concrete
-	{
-public:
-	Expr_Rel_Concrete(ZRef<ZYadSeqRPos> iYadSeqRPos);
-
-// From ZValBase::Expr_Rel_Concrete
-	virtual ZRef<ZQE::Iterator> MakeIterator();
-
-private:
-	ZRef<ZYadSeqRPos> fYadSeqRPos;
-	};
-
-Expr_Rel_Concrete::Expr_Rel_Concrete(ZRef<ZYadSeqRPos> iYadSeqRPos)
-:	fYadSeqRPos(iYadSeqRPos)
+Expr_Rel_Concrete::Expr_Rel_Concrete()
 	{}
 
-ZRef<ZQE::Iterator> Expr_Rel_Concrete::MakeIterator()
-	{ return new Iterator(fYadSeqRPos); }
+Expr_Rel_Concrete::~Expr_Rel_Concrete()
+	{}
+
+void Expr_Rel_Concrete::Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor)
+	{
+	if (Visitor_Expr_Rel_Concrete* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Concrete*>(&iVisitor))
+		{
+		this->Accept_Expr_Rel_Concrete(*theVisitor);
+		}
+	else
+		{
+		Expr_Rel::Accept_Expr_Rel(iVisitor);
+		}
+	}
+
+void Expr_Rel_Concrete::Accept_Expr_Rel_Concrete(
+	Visitor_Expr_Rel_Concrete& iVisitor)
+	{ iVisitor.Visit_Expr_Rel_Concrete(this); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValBase_YadSeqRPos pseudo constructors
+#pragma mark * Visitor_Expr_Rel_Concrete
 
-ZRef<ZQL::Expr_Rel> sConcrete(ZRef<ZYadSeqRPos> iYadSeqRPos)
-	{ return new Expr_Rel_Concrete(iYadSeqRPos); }
+void Visitor_Expr_Rel_Concrete::Visit_Expr_Rel_Concrete(
+	ZRef<Expr_Rel_Concrete> iRep)
+	{ ZVisitor_Expr::Visit_Expr(iRep); }
 
-} // namespace ZValBase_YadSeqRPos
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END

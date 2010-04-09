@@ -18,27 +18,54 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_Visitor_Expr_Relation_Binary_DoTransform.h"
+#ifndef __ZQL_Expr_Rel_Unary__
+#define __ZQL_Expr_Rel_Unary__ 1
+#include "zconfig.h"
+
+#include "zoolib/zql/ZQL_Expr_Rel.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
+class Visitor_Expr_Rel_Unary;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Relation_Binary_DoTransform
+#pragma mark * Expr_Rel_Unary
 
-void Visitor_Expr_Relation_Binary_DoTransform::Visit_Expr_Relation_Binary(
-	ZRef<Expr_Relation_Binary> iRep)
+class Expr_Rel_Unary : public Expr_Rel
 	{
-	ZRef<Expr_Relation> oldLHS = iRep->GetLHS();
-	ZRef<Expr_Relation> oldRHS = iRep->GetRHS();
-	ZRef<Expr_Relation> newLHS = this->DoTransform(oldLHS).DynamicCast<Expr_Relation>();
-	ZRef<Expr_Relation> newRHS = this->DoTransform(oldRHS).DynamicCast<Expr_Relation>();
-	if (oldLHS == newLHS && oldRHS == newRHS)
-		fResult = iRep;
-	else
-		fResult = iRep->Clone(newLHS, newRHS);
-	}
+protected:
+	Expr_Rel_Unary(ZRef<Expr_Rel> iExpr_Rel);
+
+public:
+	virtual ~Expr_Rel_Unary();
+
+// From Expr_Rel
+	virtual void Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor);
+
+// Our protocol
+	virtual void Accept_Expr_Rel_Unary(Visitor_Expr_Rel_Unary& iVisitor);
+
+	virtual ZRef<Expr_Rel_Unary> Clone(ZRef<Expr_Rel> iExpr_Rel) = 0;
+
+	ZRef<Expr_Rel> GetExpr_Rel();
+
+private:
+	const ZRef<Expr_Rel> fExpr_Rel;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_Expr_Rel_Unary
+
+class Visitor_Expr_Rel_Unary : public virtual Visitor_Expr_Rel
+	{
+public:
+	virtual void Visit_Expr_Rel_Unary(ZRef<Expr_Rel_Unary> iRep);
+	};
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZQL_Expr_Rel_Unary__

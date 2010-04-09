@@ -18,45 +18,27 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_Expr_Relation_Concrete.h"
+#include "zoolib/zql/ZQL_Visitor_Expr_Rel_Binary_DoTransform.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Concrete
+#pragma mark * Visitor_Expr_Rel_Binary_DoTransform
 
-Expr_Relation_Concrete::Expr_Relation_Concrete()
-	{}
-
-Expr_Relation_Concrete::~Expr_Relation_Concrete()
-	{}
-
-void Expr_Relation_Concrete::Accept_Expr_Relation(Visitor_Expr_Relation& iVisitor)
+void Visitor_Expr_Rel_Binary_DoTransform::Visit_Expr_Rel_Binary(
+	ZRef<Expr_Rel_Binary> iRep)
 	{
-	if (Visitor_Expr_Relation_Concrete* theVisitor =
-		dynamic_cast<Visitor_Expr_Relation_Concrete*>(&iVisitor))
-		{
-		this->Accept_Expr_Relation_Concrete(*theVisitor);
-		}
+	ZRef<Expr_Rel> oldLHS = iRep->GetLHS();
+	ZRef<Expr_Rel> oldRHS = iRep->GetRHS();
+	ZRef<Expr_Rel> newLHS = this->DoTransform(oldLHS).DynamicCast<Expr_Rel>();
+	ZRef<Expr_Rel> newRHS = this->DoTransform(oldRHS).DynamicCast<Expr_Rel>();
+	if (oldLHS == newLHS && oldRHS == newRHS)
+		fResult = iRep;
 	else
-		{
-		Expr_Relation::Accept_Expr_Relation(iVisitor);
-		}
+		fResult = iRep->Clone(newLHS, newRHS);
 	}
-
-void Expr_Relation_Concrete::Accept_Expr_Relation_Concrete(
-	Visitor_Expr_Relation_Concrete& iVisitor)
-	{ iVisitor.Visit_Expr_Relation_Concrete(this); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Relation_Concrete
-
-void Visitor_Expr_Relation_Concrete::Visit_Expr_Relation_Concrete(
-	ZRef<Expr_Relation_Concrete> iRep)
-	{ ZVisitor_Expr::Visit_Expr(iRep); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

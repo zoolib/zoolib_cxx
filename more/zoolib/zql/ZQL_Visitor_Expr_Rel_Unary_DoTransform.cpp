@@ -18,23 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValBase_YadSeqRPos__
-#define __ZValBase_YadSeqRPos__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZYad.h"
-#include "zoolib/zql/ZQL_Expr_Rel.h"
+#include "zoolib/zql/ZQL_Visitor_Expr_Rel_Unary_DoTransform.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZValBase_YadSeqRPos {
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValBase_YadSeqRPos pseudo constructors
+#pragma mark * Visitor_Expr_Rel_Unary_DoTransform
 
-ZRef<ZQL::Expr_Rel> sConcrete(ZRef<ZYadSeqRPos> iYadSeqRPos);
+void Visitor_Expr_Rel_Unary_DoTransform::Visit_Expr_Rel_Unary(
+	ZRef<Expr_Rel_Unary> iRep)
+	{
+	ZRef<Expr_Rel> oldRep = iRep->GetExpr_Rel();
+	ZRef<Expr_Rel> newRep = this->DoTransform(oldRep).DynamicCast<Expr_Rel>();
+	if (oldRep == newRep)
+		fResult = iRep;
+	else
+		fResult = iRep->Clone(newRep);
+	}
 
-} // namespace ZValBase_YadSeqRPos
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZValBase_YadSeqRPos__

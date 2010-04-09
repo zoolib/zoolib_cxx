@@ -18,31 +18,57 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Visitor_Expr_Relation_Binary_DoTransform__
-#define __ZQL_Visitor_Expr_Relation_Binary_DoTransform__
-#include "zconfig.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Binary_Union.h"
 
-#include "zoolib/ZVisitor_Expr_DoTransform.h"
-
-#include "zoolib/zql/ZQL_Expr_Relation_Binary.h"
+using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Query_DoTransform
+#pragma mark * Expr_Rel_Binary_Union
 
-class Visitor_Expr_Relation_Binary_DoTransform
-:	public virtual ZVisitor_Expr_DoTransform
-,	public virtual Visitor_Expr_Relation_Binary
+Expr_Rel_Binary_Union::Expr_Rel_Binary_Union(
+	ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS)
+:	Expr_Rel_Binary(iLHS, iRHS)
+	{}
+
+Expr_Rel_Binary_Union::~Expr_Rel_Binary_Union()
+	{}
+
+ZRelHead Expr_Rel_Binary_Union::GetRelHead()
+	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
+
+void Expr_Rel_Binary_Union::Accept_Expr_Rel_Binary(
+	Visitor_Expr_Rel_Binary& iVisitor)
 	{
-public:
-// From Visitor_Expr_Binary_Relation
-	virtual void Visit_Expr_Relation_Binary(ZRef<Expr_Relation_Binary> iRep);
-	};
+	if (Visitor_Expr_Rel_Binary_Union* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Binary_Union*>(&iVisitor))
+		{
+		this->Accept_Expr_Rel_Binary_Union(*theVisitor);
+		}
+	else
+		{
+		Expr_Rel_Binary::Accept_Expr_Rel_Binary(iVisitor);
+		}
+	}
+
+void Expr_Rel_Binary_Union::Accept_Expr_Rel_Binary_Union(
+	Visitor_Expr_Rel_Binary_Union& iVisitor)
+	{ iVisitor.Visit_Expr_Rel_Binary_Union(this); }
+
+ZRef<Expr_Rel_Binary> Expr_Rel_Binary_Union::Clone(
+	ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS)
+	{ return new Expr_Rel_Binary_Union(iLHS, iRHS); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_Expr_Rel_Binary_Union
+
+void Visitor_Expr_Rel_Binary_Union::Visit_Expr_Rel_Binary_Union(
+	ZRef<Expr_Rel_Binary_Union> iRep)
+	{ Visitor_Expr_Rel_Binary::Visit_Expr_Rel_Binary(iRep); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Visitor_Expr_Relation_DoTransform__

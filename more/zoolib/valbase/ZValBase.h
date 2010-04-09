@@ -23,22 +23,22 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/zqe/ZQE_Iterator.h"
-#include "zoolib/zql/ZQL_Expr_Relation_Concrete.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Concrete
+#pragma mark * Expr_Rel_Concrete
 
-class Expr_Relation_Concrete : public ZQL::Expr_Relation_Concrete
+class Expr_Rel_Concrete : public ZQL::Expr_Rel_Concrete
 	{
 protected:
-	Expr_Relation_Concrete();
+	Expr_Rel_Concrete();
 
 public:
-// From Expr_Relation via Expr_Relation_Concrete
+// From Expr_Rel via Expr_Rel_Concrete
 	virtual ZRelHead GetRelHead();
 
 // Our protocol
@@ -49,10 +49,10 @@ public:
 #pragma mark -
 #pragma mark * ZValBase pseudo constructors
 
-ZRef<ZQL::Expr_Relation> sConcrete();
-ZRef<ZQL::Expr_Relation> sConcrete(const ZRelHead& iRelHead);
+ZRef<ZQL::Expr_Rel> sConcrete();
+ZRef<ZQL::Expr_Rel> sConcrete(const ZRelHead& iRelHead);
 
-ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::Expr_Relation> iExpr);
+ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::Expr_Rel> iExpr);
 
 } // namespace __ZValBase__
 NAMESPACE_ZOOLIB_END

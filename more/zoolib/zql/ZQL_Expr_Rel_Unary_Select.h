@@ -18,57 +18,73 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Expr_Relation_Binary__
-#define __ZQL_Expr_Relation_Binary__ 1
+#ifndef __ZQL_Expr_Rel_Unary_Select__
+#define __ZQL_Expr_Rel_Unary_Select__ 1
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Relation.h"
+#include "zoolib/ZExpr_Logic.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
-class Visitor_Expr_Relation_Binary;
+class Visitor_Expr_Rel_Unary_Select;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Binary
+#pragma mark * Expr_Rel_Unary_Select
 
-class Expr_Relation_Binary : public Expr_Relation
+class Expr_Rel_Unary_Select : public Expr_Rel_Unary
 	{
-protected:
-	Expr_Relation_Binary(ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS);
-
 public:
-	virtual ~Expr_Relation_Binary();
+	Expr_Rel_Unary_Select(
+		const ZRef<Expr_Rel>& iExpr_Rel,
+		const ZRef<ZExpr_Logic>& iExpr_Logic);
 
-// From Expr_Relation
-	virtual void Accept_Expr_Relation(Visitor_Expr_Relation& iVisitor);
+	virtual ~Expr_Rel_Unary_Select();
+
+// From Expr_Rel via Expr_Rel_Unary
+	virtual ZRelHead GetRelHead();
+
+// From Expr_Rel_Unary
+	virtual void Accept_Expr_Rel_Unary(Visitor_Expr_Rel_Unary& iVisitor);
+
+	virtual ZRef<Expr_Rel_Unary> Clone(ZRef<Expr_Rel> iExpr_Rel);
 
 // Our protocol
-	virtual void Accept_Expr_Relation_Binary(Visitor_Expr_Relation_Binary& iVisitor);
-	
-	virtual ZRef<Expr_Relation_Binary> Clone (
-		ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS) = 0;
+	virtual void Accept_Expr_Rel_Unary_Select(
+		Visitor_Expr_Rel_Unary_Select& iVisitor);
 
-	ZRef<Expr_Relation> GetLHS();
-	ZRef<Expr_Relation> GetRHS();
+	ZRef<ZExpr_Logic> GetExpr_Logic();
 
-protected:
-	const ZRef<Expr_Relation> fLHS;
-	const ZRef<Expr_Relation> fRHS;
+private:
+	const ZRef<ZExpr_Logic> fExpr_Logic;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Relation_Binary
+#pragma mark * Visitor_Expr_Rel_Unary_Select
 
-class Visitor_Expr_Relation_Binary : public virtual Visitor_Expr_Relation
+class Visitor_Expr_Rel_Unary_Select : public virtual Visitor_Expr_Rel_Unary
 	{
 public:
-	virtual void Visit_Expr_Relation_Binary(ZRef<Expr_Relation_Binary> iRep);
+	virtual void Visit_Expr_Rel_Unary_Select(ZRef<Expr_Rel_Unary_Select> iRep);
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Query operators
+
+ZRef<Expr_Rel_Unary_Select> sSelect(
+	const ZRef<ZExpr_Logic>& iExpr_Logic, const ZRef<Expr_Rel>& iExpr_Rel);
+
+ZRef<Expr_Rel_Unary_Select> operator&(
+	const ZRef<ZExpr_Logic>& iExpr_Logic, const ZRef<Expr_Rel>& iExpr_Rel);
+
+ZRef<Expr_Rel_Unary_Select> operator&(
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Logic>& iExpr_Logic);
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Expr_Relation_Binary__
+#endif // __ZQL_Expr_Rel_Unary_Select__

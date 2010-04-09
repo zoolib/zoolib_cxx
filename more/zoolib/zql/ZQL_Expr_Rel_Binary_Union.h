@@ -18,52 +18,52 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Expr_Relation_Binary_Union__
-#define __ZQL_Expr_Relation_Binary_Union__ 1
+#ifndef __ZQL_Expr_Rel_Binary_Union__
+#define __ZQL_Expr_Rel_Binary_Union__ 1
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Relation_Binary.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Binary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
-class Visitor_Expr_Relation_Binary_Union;
+class Visitor_Expr_Rel_Binary_Union;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Binary_Union
+#pragma mark * Expr_Rel_Binary_Union
 
-class Expr_Relation_Binary_Union : public Expr_Relation_Binary
+class Expr_Rel_Binary_Union : public Expr_Rel_Binary
 	{
 public:
-	Expr_Relation_Binary_Union(ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS);
-	virtual ~Expr_Relation_Binary_Union();
+	Expr_Rel_Binary_Union(ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS);
+	virtual ~Expr_Rel_Binary_Union();
 
-// From Expr_Relation via Expr_Relation_Binary
+// From Expr_Rel via Expr_Rel_Binary
 	virtual ZRelHead GetRelHead();
 
-// From Expr_Relation_Binary
-	virtual void Accept_Expr_Relation_Binary(Visitor_Expr_Relation_Binary& iVisitor);
+// From Expr_Rel_Binary
+	virtual void Accept_Expr_Rel_Binary(Visitor_Expr_Rel_Binary& iVisitor);
 
-	virtual ZRef<Expr_Relation_Binary> Clone(
-		ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS);
+	virtual ZRef<Expr_Rel_Binary> Clone(
+		ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS);
 
 // Our protocol
-	virtual void Accept_Expr_Relation_Binary_Union(
-		Visitor_Expr_Relation_Binary_Union& iVisitor);
+	virtual void Accept_Expr_Rel_Binary_Union(
+		Visitor_Expr_Rel_Binary_Union& iVisitor);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Relation_Binary_Union
+#pragma mark * Visitor_Expr_Rel_Binary_Union
 
-class Visitor_Expr_Relation_Binary_Union : public virtual Visitor_Expr_Relation_Binary
+class Visitor_Expr_Rel_Binary_Union : public virtual Visitor_Expr_Rel_Binary
 	{
 public:
-	virtual void Visit_Expr_Relation_Binary_Union(ZRef<Expr_Relation_Binary_Union> iRep);
+	virtual void Visit_Expr_Rel_Binary_Union(ZRef<Expr_Rel_Binary_Union> iRep);
 	};
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Expr_Relation_Binary__
+#endif // __ZQL_Expr_Rel_Binary__

@@ -18,26 +18,31 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Expr_Relation_Unary_Restrict__
-#define __ZQL_Expr_Relation_Unary_Restrict__ 1
+#ifndef __ZQL_Visitor_Expr_Rel_Unary_DoTransform__
+#define __ZQL_Visitor_Expr_Rel_Unary_DoTransform__
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Relation_Unary_Restrict_T.h"
-#include "zoolib/ZValCondition.h"
+#include "zoolib/ZVisitor_Expr_DoTransform.h"
+
+#include "zoolib/zql/ZQL_Expr_Rel_Unary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL::Expr_Relation_Unary_Restrict
+#pragma mark * Visitor_Query_DoTransform
 
-typedef Expr_Relation_Unary_Restrict_T<ZVal_Expr> Expr_Relation_Unary_Restrict;
-
-typedef Visitor_Expr_Relation_Unary_Restrict_T<ZVal_Expr>
-	Visitor_Expr_Relation_Unary_Restrict;
+class Visitor_Expr_Rel_Unary_DoTransform
+:	public virtual ZVisitor_Expr_DoTransform
+,	public virtual Visitor_Expr_Rel_Unary
+	{
+public:
+// From Visitor_Expr_Unary_Rel
+	virtual void Visit_Expr_Rel_Unary(ZRef<Expr_Rel_Unary> iRep);
+	};
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Expr_Relation_Unary_Restrict_T__
+#endif // __ZQL_Visitor_Expr_Rel_DoTransform__

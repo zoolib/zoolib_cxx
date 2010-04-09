@@ -18,47 +18,47 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Expr_Relation_Concrete__
-#define __ZQL_Expr_Relation_Concrete__ 1
+#ifndef __ZQL_Expr_Rel_Concrete__
+#define __ZQL_Expr_Rel_Concrete__ 1
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Relation.h"
+#include "zoolib/zql/ZQL_Expr_Rel.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
-class Visitor_Expr_Relation_Concrete;
+class Visitor_Expr_Rel_Concrete;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Concrete
+#pragma mark * Expr_Rel_Concrete
 
-class Expr_Relation_Concrete : public Expr_Relation
+class Expr_Rel_Concrete : public Expr_Rel
 	{
 protected:
-	Expr_Relation_Concrete();
+	Expr_Rel_Concrete();
 
 public:
-	virtual ~Expr_Relation_Concrete();
+	virtual ~Expr_Rel_Concrete();
 
-// From Expr_Relation
-	virtual void Accept_Expr_Relation(Visitor_Expr_Relation& iVisitor);
+// From Expr_Rel
+	virtual void Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor);
 
 // Our protocol
-	virtual void Accept_Expr_Relation_Concrete(Visitor_Expr_Relation_Concrete& iVisitor);
+	virtual void Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Relation_Concrete
+#pragma mark * Visitor_Expr_Rel_Concrete
 
-class Visitor_Expr_Relation_Concrete : public virtual Visitor_Expr_Relation
+class Visitor_Expr_Rel_Concrete : public virtual Visitor_Expr_Rel
 	{
 public:
-	virtual void Visit_Expr_Relation_Concrete(ZRef<Expr_Relation_Concrete> iRep);
+	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iRep);
 	};
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Expr_Relation_Concrete__
+#endif // __ZQL_Expr_Rel_Concrete__

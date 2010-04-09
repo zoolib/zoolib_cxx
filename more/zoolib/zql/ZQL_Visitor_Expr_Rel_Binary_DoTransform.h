@@ -18,54 +18,31 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Expr_Relation_Unary__
-#define __ZQL_Expr_Relation_Unary__ 1
+#ifndef __ZQL_Visitor_Expr_Rel_Binary_DoTransform__
+#define __ZQL_Visitor_Expr_Rel_Binary_DoTransform__
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Relation.h"
+#include "zoolib/ZVisitor_Expr_DoTransform.h"
+
+#include "zoolib/zql/ZQL_Expr_Rel_Binary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
-class Visitor_Expr_Relation_Unary;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Unary
+#pragma mark * Visitor_Query_DoTransform
 
-class Expr_Relation_Unary : public Expr_Relation
-	{
-protected:
-	Expr_Relation_Unary(ZRef<Expr_Relation> iExpr_Relation);
-
-public:
-	virtual ~Expr_Relation_Unary();
-
-// From Expr_Relation
-	virtual void Accept_Expr_Relation(Visitor_Expr_Relation& iVisitor);
-
-// Our protocol
-	virtual void Accept_Expr_Relation_Unary(Visitor_Expr_Relation_Unary& iVisitor);
-
-	virtual ZRef<Expr_Relation_Unary> Clone(ZRef<Expr_Relation> iExpr_Relation) = 0;
-
-	ZRef<Expr_Relation> GetExpr_Relation();
-
-private:
-	const ZRef<Expr_Relation> fExpr_Relation;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Relation_Unary
-
-class Visitor_Expr_Relation_Unary : public virtual Visitor_Expr_Relation
+class Visitor_Expr_Rel_Binary_DoTransform
+:	public virtual ZVisitor_Expr_DoTransform
+,	public virtual Visitor_Expr_Rel_Binary
 	{
 public:
-	virtual void Visit_Expr_Relation_Unary(ZRef<Expr_Relation_Unary> iRep);
+// From Visitor_Expr_Binary_Rel
+	virtual void Visit_Expr_Rel_Binary(ZRef<Expr_Rel_Binary> iRep);
 	};
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Expr_Relation_Unary__
+#endif // __ZQL_Visitor_Expr_Rel_DoTransform__

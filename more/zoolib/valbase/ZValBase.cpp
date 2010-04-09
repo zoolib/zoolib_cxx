@@ -22,20 +22,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Iterator_Any.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
 #include "zoolib/zqe/ZQE_Visitor_Expr_DoMakeIterator.h"
-#include "zoolib/zql/ZQL_Expr_Relation_Concrete.h"
-#include "zoolib/zql/ZQL_Expr_Relation_Unary_Restrict.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary_Restrict.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Concrete
+#pragma mark * Expr_Rel_Concrete
 
-Expr_Relation_Concrete::Expr_Relation_Concrete()
+Expr_Rel_Concrete::Expr_Rel_Concrete()
 	{}
 
-ZRelHead Expr_Relation_Concrete::GetRelHead()
+ZRelHead Expr_Rel_Concrete::GetRelHead()
 	{ return ZRelHead(true); }
 
 // =================================================================================================
@@ -46,40 +46,40 @@ namespace ZANONYMOUS {
 
 class Visitor_DoMakeIterator
 :	public virtual ZQE::Visitor_Expr_DoMakeIterator
-,	public virtual ZQL::Visitor_Expr_Relation_Unary_Restrict
-,	public virtual ZQL::Visitor_Expr_Relation_Concrete
+,	public virtual ZQL::Visitor_Expr_Rel_Unary_Restrict
+,	public virtual ZQL::Visitor_Expr_Rel_Concrete
 	{
 public:
 // Via ZQE::Visitor_Expr_DoMakeIterator
-	virtual void Visit_Expr_Relation_Unary_Select(
-		ZRef<ZQL::Expr_Relation_Unary_Select> iRep);
+	virtual void Visit_Expr_Rel_Unary_Select(
+		ZRef<ZQL::Expr_Rel_Unary_Select> iRep);
 
-// From ZQL::Visitor_Expr_Relation_Unary_Restrict
-	virtual void Visit_Expr_Relation_Unary_Restrict(
-		ZRef<ZQL::Expr_Relation_Unary_Restrict> iRep);
+// From ZQL::Visitor_Expr_Rel_Unary_Restrict
+	virtual void Visit_Expr_Rel_Unary_Restrict(
+		ZRef<ZQL::Expr_Rel_Unary_Restrict> iRep);
 
-// From ZQL::Visitor_Expr_Relation_Concrete
-	virtual void Visit_Expr_Relation_Concrete(ZRef<ZQL::Expr_Relation_Concrete> iRep);	
+// From ZQL::Visitor_Expr_Rel_Concrete
+	virtual void Visit_Expr_Rel_Concrete(ZRef<ZQL::Expr_Rel_Concrete> iRep);	
 	};
 
-void Visitor_DoMakeIterator::Visit_Expr_Relation_Unary_Select(
-	ZRef<ZQL::Expr_Relation_Unary_Select> iRep)
+void Visitor_DoMakeIterator::Visit_Expr_Rel_Unary_Select(
+	ZRef<ZQL::Expr_Rel_Unary_Select> iRep)
 	{
-	if (ZRef<ZQE::Iterator> theIterator = this->DoMakeIterator(iRep->GetExpr_Relation()))
+	if (ZRef<ZQE::Iterator> theIterator = this->DoMakeIterator(iRep->GetExpr_Rel()))
 		fIterator = new ZQE::Iterator_Any_Select(iRep->GetExpr_Logic(), theIterator);
 	}
 
-void Visitor_DoMakeIterator::Visit_Expr_Relation_Unary_Restrict(
-	ZRef<ZQL::Expr_Relation_Unary_Restrict> iRep)
+void Visitor_DoMakeIterator::Visit_Expr_Rel_Unary_Restrict(
+	ZRef<ZQL::Expr_Rel_Unary_Restrict> iRep)
 	{
-	if (ZRef<ZQE::Iterator> theIterator = this->DoMakeIterator(iRep->GetExpr_Relation()))
+	if (ZRef<ZQE::Iterator> theIterator = this->DoMakeIterator(iRep->GetExpr_Rel()))
 		fIterator = new ZQE::Iterator_Any_Restrict(iRep->GetValCondition(), theIterator);
 	}
 
-void Visitor_DoMakeIterator::Visit_Expr_Relation_Concrete(
-	ZRef<ZQL::Expr_Relation_Concrete> iRep)
+void Visitor_DoMakeIterator::Visit_Expr_Rel_Concrete(
+	ZRef<ZQL::Expr_Rel_Concrete> iRep)
 	{
-	if (ZRef<Expr_Relation_Concrete> theRep = iRep.DynamicCast<Expr_Relation_Concrete>())
+	if (ZRef<Expr_Rel_Concrete> theRep = iRep.DynamicCast<Expr_Rel_Concrete>())
 		fIterator = theRep->MakeIterator();
 	}
 
@@ -87,41 +87,41 @@ void Visitor_DoMakeIterator::Visit_Expr_Relation_Concrete(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Concrete_Dummy
+#pragma mark * Expr_Rel_Concrete_Dummy
 
-class Expr_Relation_Concrete_Dummy : public ZQL::Expr_Relation_Concrete
+class Expr_Rel_Concrete_Dummy : public ZQL::Expr_Rel_Concrete
 	{
 public:
-	Expr_Relation_Concrete_Dummy(const ZRelHead& iRelHead);
+	Expr_Rel_Concrete_Dummy(const ZRelHead& iRelHead);
 
-// From Expr_Relation via Expr_Relation_Concrete
+// From Expr_Rel via Expr_Rel_Concrete
 	virtual ZRelHead GetRelHead();
 
 private:
 	ZRelHead fRelHead;
 	};
 
-Expr_Relation_Concrete_Dummy::Expr_Relation_Concrete_Dummy(const ZRelHead& iRelHead)
+Expr_Rel_Concrete_Dummy::Expr_Rel_Concrete_Dummy(const ZRelHead& iRelHead)
 :	fRelHead(iRelHead)
 	{}
 
-ZRelHead Expr_Relation_Concrete_Dummy::GetRelHead()
+ZRelHead Expr_Rel_Concrete_Dummy::GetRelHead()
 	{ return fRelHead; }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValBase pseudo constructors
 
-ZRef<ZQL::Expr_Relation> sConcrete()
+ZRef<ZQL::Expr_Rel> sConcrete()
 	{
 	// Put this outside of ZValBase? Perhaps over in ZQL?
 	return sConcrete(ZRelHead(true));
 	}
 
-ZRef<ZQL::Expr_Relation> sConcrete(const ZRelHead& iRelHead)
-	{ return new Expr_Relation_Concrete_Dummy(iRelHead); }
+ZRef<ZQL::Expr_Rel> sConcrete(const ZRelHead& iRelHead)
+	{ return new Expr_Rel_Concrete_Dummy(iRelHead); }
 
-ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::Expr_Relation> iExpr)
+ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::Expr_Rel> iExpr)
 	{ return Visitor_DoMakeIterator().DoMakeIterator(iExpr); }
 
 } // namespace ZValBase_YadSeqR

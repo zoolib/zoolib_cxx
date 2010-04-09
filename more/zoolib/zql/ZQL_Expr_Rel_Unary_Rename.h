@@ -18,54 +18,60 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_Expr_Relation_Binary_Intersect.h"
+#ifndef __ZQL_Expr_Rel_Unary_Rename__
+#define __ZQL_Expr_Rel_Unary_Rename__ 1
+#include "zconfig.h"
 
-using std::string;
+#include "zoolib/zql/ZQL_Expr_Rel_Unary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
+class Visitor_Expr_Rel_Unary_Rename;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Binary_Intersect
+#pragma mark * Expr_Rel_Unary_Rename
 
-Expr_Relation_Binary_Intersect::Expr_Relation_Binary_Intersect(
-	ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS)
-:	Expr_Relation_Binary(iLHS, iRHS)
-	{}
-
-ZRelHead Expr_Relation_Binary_Intersect::GetRelHead()
-	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
-
-void Expr_Relation_Binary_Intersect::Accept_Expr_Relation_Binary(
-	Visitor_Expr_Relation_Binary& iVisitor)
+class Expr_Rel_Unary_Rename : public Expr_Rel_Unary
 	{
-	if (Visitor_Expr_Relation_Binary_Intersect* theVisitor =
-		dynamic_cast<Visitor_Expr_Relation_Binary_Intersect*>(&iVisitor))
-		{
-		this->Accept_Expr_Relation_Binary_Intersect(*theVisitor);
-		}
-	else
-		{
-		Expr_Relation_Binary::Accept_Expr_Relation_Binary(iVisitor);
-		}
-	}
+public:
+	Expr_Rel_Unary_Rename(ZRef<Expr_Rel> iExpr_Rel,
+		const std::string& iOld, const std::string& iNew);
 
-void Expr_Relation_Binary_Intersect::Accept_Expr_Relation_Binary_Intersect(
-	Visitor_Expr_Relation_Binary_Intersect& iVisitor)
-	{ iVisitor.Visit_Expr_Relation_Binary_Intersect(this); }
+	virtual ~Expr_Rel_Unary_Rename();
 
-ZRef<Expr_Relation_Binary> Expr_Relation_Binary_Intersect::Clone(
-	ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS)
-	{ return new Expr_Relation_Binary_Intersect(iLHS, iRHS); }
+// From Expr_Rel via Expr_Rel_Unary
+	virtual ZRelHead GetRelHead();
+
+// From Expr_Rel_Unary
+	virtual void Accept_Expr_Rel_Unary(Visitor_Expr_Rel_Unary& iVisitor);
+
+	virtual ZRef<Expr_Rel_Unary> Clone(ZRef<Expr_Rel> iExpr_Rel);
+
+// Our protocol
+	virtual void Accept_Expr_Rel_Unary_Rename(
+		Visitor_Expr_Rel_Unary_Rename& iVisitor);
+
+	const std::string& GetOld();
+	const std::string& GetNew();
+
+private:
+	const std::string fOld;
+	const std::string fNew;
+	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Relation_Binary_Intersect
+#pragma mark * Visitor_Expr_Rel_Unary_Rename
 
-void Visitor_Expr_Relation_Binary_Intersect::Visit_Expr_Relation_Binary_Intersect(
-	ZRef<Expr_Relation_Binary_Intersect> iRep)
-	{ Visitor_Expr_Relation_Binary::Visit_Expr_Relation_Binary(iRep); }
+class Visitor_Expr_Rel_Unary_Rename : public virtual Visitor_Expr_Rel_Unary
+	{
+public:
+	virtual void Visit_Expr_Rel_Unary_Rename(ZRef<Expr_Rel_Unary_Rename> iRep);
+	};
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZQL_Expr_Rel_Unary_Rename__

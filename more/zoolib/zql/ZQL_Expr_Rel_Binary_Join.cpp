@@ -18,31 +18,57 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Visitor_Expr_Relation_Unary_DoTransform__
-#define __ZQL_Visitor_Expr_Relation_Unary_DoTransform__
-#include "zconfig.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Binary_Join.h"
 
-#include "zoolib/ZVisitor_Expr_DoTransform.h"
-
-#include "zoolib/zql/ZQL_Expr_Relation_Unary.h"
+using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Query_DoTransform
+#pragma mark * Expr_Rel_Binary_Join
 
-class Visitor_Expr_Relation_Unary_DoTransform
-:	public virtual ZVisitor_Expr_DoTransform
-,	public virtual Visitor_Expr_Relation_Unary
+Expr_Rel_Binary_Join::Expr_Rel_Binary_Join(
+	ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS)
+:	Expr_Rel_Binary(iLHS, iRHS)
+	{}
+
+Expr_Rel_Binary_Join::~Expr_Rel_Binary_Join()
+	{}
+
+ZRelHead Expr_Rel_Binary_Join::GetRelHead()
+	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
+
+void Expr_Rel_Binary_Join::Accept_Expr_Rel_Binary(
+	Visitor_Expr_Rel_Binary& iVisitor)
 	{
-public:
-// From Visitor_Expr_Unary_Relation
-	virtual void Visit_Expr_Relation_Unary(ZRef<Expr_Relation_Unary> iRep);
-	};
+	if (Visitor_Expr_Rel_Binary_Join* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Binary_Join*>(&iVisitor))
+		{
+		this->Accept_Expr_Rel_Binary_Join(*theVisitor);
+		}
+	else
+		{
+		Expr_Rel_Binary::Accept_Expr_Rel_Binary(iVisitor);
+		}
+	}
+
+void Expr_Rel_Binary_Join::Accept_Expr_Rel_Binary_Join(
+	Visitor_Expr_Rel_Binary_Join& iVisitor)
+	{ iVisitor.Visit_Expr_Rel_Binary_Join(this); }
+
+ZRef<Expr_Rel_Binary> Expr_Rel_Binary_Join::Clone(
+	ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS)
+	{ return new Expr_Rel_Binary_Join(iLHS, iRHS); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_Expr_Rel_Binary_Join
+
+void Visitor_Expr_Rel_Binary_Join::Visit_Expr_Rel_Binary_Join(
+	ZRef<Expr_Rel_Binary_Join> iRep)
+	{ Visitor_Expr_Rel_Binary::Visit_Expr_Rel_Binary(iRep); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Visitor_Expr_Relation_DoTransform__

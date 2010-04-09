@@ -18,25 +18,53 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_Visitor_Expr_Relation_Unary_DoTransform.h"
+#ifndef __ZQL_Expr_Rel_Binary_Intersect__
+#define __ZQL_Expr_Rel_Binary_Intersect__ 1
+#include "zconfig.h"
+
+#include "zoolib/zql/ZQL_Expr_Rel_Binary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
+class Visitor_Expr_Rel_Binary_Intersect;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Relation_Unary_DoTransform
+#pragma mark * Expr_Rel_Binary_Intersect
 
-void Visitor_Expr_Relation_Unary_DoTransform::Visit_Expr_Relation_Unary(
-	ZRef<Expr_Relation_Unary> iRep)
+class Expr_Rel_Binary_Intersect : public Expr_Rel_Binary
 	{
-	ZRef<Expr_Relation> oldRep = iRep->GetExpr_Relation();
-	ZRef<Expr_Relation> newRep = this->DoTransform(oldRep).DynamicCast<Expr_Relation>();
-	if (oldRep == newRep)
-		fResult = iRep;
-	else
-		fResult = iRep->Clone(newRep);
-	}
+public:
+	Expr_Rel_Binary_Intersect(ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS);
+	virtual ~Expr_Rel_Binary_Intersect();
+
+// From Expr_Rel via Expr_Rel_Binary
+	virtual ZRelHead GetRelHead();
+
+// From Expr_Rel_Binary
+	virtual void Accept_Expr_Rel_Binary(Visitor_Expr_Rel_Binary& iVisitor);
+
+	virtual ZRef<Expr_Rel_Binary> Clone(
+		ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS);
+
+// Our protocol
+	virtual void Accept_Expr_Rel_Binary_Intersect(
+		Visitor_Expr_Rel_Binary_Intersect& iVisitor);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_Expr_Rel_Binary_Intersect
+
+class Visitor_Expr_Rel_Binary_Intersect : public virtual Visitor_Expr_Rel_Binary
+	{
+public:
+	virtual void Visit_Expr_Rel_Binary_Intersect(
+		ZRef<Expr_Rel_Binary_Intersect> iRep);
+	};
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZQL_Expr_Rel_Binary__

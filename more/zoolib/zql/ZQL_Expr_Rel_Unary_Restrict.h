@@ -18,23 +18,26 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValBase_YadSeqRPos__
-#define __ZValBase_YadSeqRPos__ 1
+#ifndef __ZQL_Expr_Rel_Unary_Restrict__
+#define __ZQL_Expr_Rel_Unary_Restrict__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZYad.h"
-#include "zoolib/zql/ZQL_Expr_Rel.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary_Restrict_T.h"
+#include "zoolib/ZValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZValBase_YadSeqRPos {
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValBase_YadSeqRPos pseudo constructors
+#pragma mark * ZQL::Expr_Rel_Unary_Restrict
 
-ZRef<ZQL::Expr_Rel> sConcrete(ZRef<ZYadSeqRPos> iYadSeqRPos);
+typedef Expr_Rel_Unary_Restrict_T<ZVal_Expr> Expr_Rel_Unary_Restrict;
 
-} // namespace ZValBase_YadSeqRPos
+typedef Visitor_Expr_Rel_Unary_Restrict_T<ZVal_Expr>
+	Visitor_Expr_Rel_Unary_Restrict;
+
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZValBase_YadSeqRPos__
+#endif // __ZQL_Expr_Rel_Unary_Restrict_T__

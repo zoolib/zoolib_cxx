@@ -1,6 +1,6 @@
 #include "zoolib/tql/ZTQL_Optimize.h"
-#include "zoolib/zql/ZQL_Expr_Relation_Unary_Restrict.h"
-#include "zoolib/zql/ZQL_Expr_Relation_Unary_Select.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary_Restrict.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
 
 #include "zoolib/zql/ZQL_Util_Strim_Query.h"
 
@@ -41,19 +41,19 @@ using std::set;
 using std::string;
 
 typedef ZRef<ZExpr_Logic> Spec;
-typedef ZRef<Expr_Relation> Query;
+typedef ZRef<Expr_Rel> Query;
 typedef ZMap_Expr Map;
 typedef ZRelHead RelHead;
 typedef ZVal_Expr Val;
 typedef ZValCondition Condition;
 
-ZRef<Expr_Relation> sAll(const ZRelHead& iRelHead)
+ZRef<Expr_Rel> sAll(const ZRelHead& iRelHead)
 	{ return ZValBase::sConcrete(iRelHead); }
 
-ZRef<Expr_Relation> sAllID(const std::string& iIDName)
+ZRef<Expr_Rel> sAllID(const std::string& iIDName)
 	{ return ZValBase::sConcrete(ZRelHead(true) | iIDName); }
 
-ZRef<Expr_Relation> sAllID(const std::string& iIDName, const ZRelHead& iRelHead)
+ZRef<Expr_Rel> sAllID(const std::string& iIDName, const ZRelHead& iRelHead)
 	{ return ZValBase::sConcrete(iRelHead | iIDName); }
 
 // =================================================================================================

@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/tql/ZUtil_TQLConvert.h"
-#include "zoolib/zql/ZQL_Expr_Relation_Unary_Select.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
 #include "zoolib/ZExpr_Logic_ValCondition.h"
 #include "zoolib/valbase/ZValBase.h"
 
@@ -31,17 +31,17 @@ using std::string;
 using std::vector;
 using namespace ZQL;
 
-ZRef<Expr_Relation> sAll(const ZRelHead& iRelHead)
+ZRef<Expr_Rel> sAll(const ZRelHead& iRelHead)
 	{ return ZValBase::sConcrete(); }
 
-ZRef<Expr_Relation> sAllID(const std::string& iIDName)
+ZRef<Expr_Rel> sAllID(const std::string& iIDName)
 	{ return ZValBase::sConcrete(); }
 
-ZRef<Expr_Relation> sAllID(const std::string& iIDName, const ZRelHead& iRelHead)
+ZRef<Expr_Rel> sAllID(const std::string& iIDName, const ZRelHead& iRelHead)
 	{ return ZValBase::sConcrete(); }
 
 typedef ZRef<ZExpr_Logic> Spec;
-typedef ZRef<Expr_Relation> Query;
+typedef ZRef<Expr_Rel> Query;
 typedef ZMap_Expr Map;
 typedef ZRelHead RelHead;
 typedef ZVal_Expr Val;

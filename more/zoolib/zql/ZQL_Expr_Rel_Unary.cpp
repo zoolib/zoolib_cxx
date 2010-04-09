@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_Expr_Relation_Binary_Join.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary.h"
 
 using std::string;
 
@@ -27,48 +27,43 @@ namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Binary_Join
+#pragma mark * Expr_Rel
 
-Expr_Relation_Binary_Join::Expr_Relation_Binary_Join(
-	ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS)
-:	Expr_Relation_Binary(iLHS, iRHS)
+Expr_Rel_Unary::Expr_Rel_Unary(ZRef<Expr_Rel> iExpr_Rel)
+:	fExpr_Rel(iExpr_Rel)
 	{}
 
-Expr_Relation_Binary_Join::~Expr_Relation_Binary_Join()
+Expr_Rel_Unary::~Expr_Rel_Unary()
 	{}
 
-ZRelHead Expr_Relation_Binary_Join::GetRelHead()
-	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
-
-void Expr_Relation_Binary_Join::Accept_Expr_Relation_Binary(
-	Visitor_Expr_Relation_Binary& iVisitor)
+void Expr_Rel_Unary::Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor)
 	{
-	if (Visitor_Expr_Relation_Binary_Join* theVisitor =
-		dynamic_cast<Visitor_Expr_Relation_Binary_Join*>(&iVisitor))
+	if (Visitor_Expr_Rel_Unary* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Unary*>(&iVisitor))
 		{
-		this->Accept_Expr_Relation_Binary_Join(*theVisitor);
+		this->Accept_Expr_Rel_Unary(*theVisitor);
 		}
 	else
 		{
-		Expr_Relation_Binary::Accept_Expr_Relation_Binary(iVisitor);
+		Expr_Rel::Accept_Expr_Rel(iVisitor);
 		}
 	}
 
-void Expr_Relation_Binary_Join::Accept_Expr_Relation_Binary_Join(
-	Visitor_Expr_Relation_Binary_Join& iVisitor)
-	{ iVisitor.Visit_Expr_Relation_Binary_Join(this); }
+void Expr_Rel_Unary::Accept_Expr_Rel_Unary(Visitor_Expr_Rel_Unary& iVisitor)
+	{ iVisitor.Visit_Expr_Rel_Unary(this); }
 
-ZRef<Expr_Relation_Binary> Expr_Relation_Binary_Join::Clone(
-	ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS)
-	{ return new Expr_Relation_Binary_Join(iLHS, iRHS); }
+ZRef<Expr_Rel> Expr_Rel_Unary::GetExpr_Rel()
+	{ return fExpr_Rel; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Relation_Binary_Join
+#pragma mark * Visitor_Expr_Rel_Unary
 
-void Visitor_Expr_Relation_Binary_Join::Visit_Expr_Relation_Binary_Join(
-	ZRef<Expr_Relation_Binary_Join> iRep)
-	{ Visitor_Expr_Relation_Binary::Visit_Expr_Relation_Binary(iRep); }
+void Visitor_Expr_Rel_Unary::Visit_Expr_Rel_Unary(ZRef<Expr_Rel_Unary> iRep)
+	{
+	if (ZRef<Expr_Rel> theRelation = iRep->GetExpr_Rel())
+		theRelation->Accept(*this);
+	}
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
