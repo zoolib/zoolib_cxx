@@ -73,16 +73,16 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Query operators
+#pragma mark * Relational operators
 
 ZRef<Expr_Rel_Unary_Select> sSelect(
-	const ZRef<ZExpr_Logic>& iExpr_Logic, const ZRef<Expr_Rel>& iExpr_Rel);
-
-ZRef<Expr_Rel_Unary_Select> operator&(
-	const ZRef<ZExpr_Logic>& iExpr_Logic, const ZRef<Expr_Rel>& iExpr_Rel);
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Logic>& iExpr_Logic);
 
 ZRef<Expr_Rel_Unary_Select> operator&(
 	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Logic>& iExpr_Logic);
+
+ZRef<Expr_Rel_Unary_Select> operator&(
+	const ZRef<ZExpr_Logic>& iExpr_Logic, const ZRef<Expr_Rel>& iExpr_Rel);
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

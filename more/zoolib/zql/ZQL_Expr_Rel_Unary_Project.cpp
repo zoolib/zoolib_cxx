@@ -74,5 +74,12 @@ void Visitor_Expr_Rel_Unary_Project::Visit_Expr_Rel_Unary_Project(
 	ZRef<Expr_Rel_Unary_Project> iRep)
 	{ Visitor_Expr_Rel_Unary::Visit_Expr_Rel_Unary(iRep); }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Relational operators
+
+ZRef<Expr_Rel_Unary_Project> sProject(const ZRef<Expr_Rel>& iExpr, const ZRelHead& iRelHead)
+	{ return new Expr_Rel_Unary_Project(iExpr, iRelHead); }
+
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

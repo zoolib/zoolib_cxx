@@ -64,6 +64,16 @@ public:
 		ZRef<Expr_Rel_Binary_Intersect> iRep);
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Relational operators
+
+ZRef<Expr_Rel_Binary_Intersect> sIntersect(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+
+ZRef<Expr_Rel_Binary_Intersect> operator&(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 

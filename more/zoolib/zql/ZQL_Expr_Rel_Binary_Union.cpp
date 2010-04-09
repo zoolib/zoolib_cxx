@@ -70,5 +70,17 @@ void Visitor_Expr_Rel_Binary_Union::Visit_Expr_Rel_Binary_Union(
 	ZRef<Expr_Rel_Binary_Union> iRep)
 	{ Visitor_Expr_Rel_Binary::Visit_Expr_Rel_Binary(iRep); }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Relational operators
+
+ZRef<Expr_Rel_Binary_Union> sUnion(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+	{ return new Expr_Rel_Binary_Union(iLHS, iRHS); }
+
+ZRef<Expr_Rel_Binary_Union> operator|(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+	{ return new Expr_Rel_Binary_Union(iLHS, iRHS); }
+
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

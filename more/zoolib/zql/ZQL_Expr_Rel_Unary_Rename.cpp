@@ -29,11 +29,11 @@ namespace ZQL {
 #pragma mark -
 #pragma mark * Expr_Rel_Unary_Rename
 
-Expr_Rel_Unary_Rename::Expr_Rel_Unary_Rename(
-	ZRef<Expr_Rel> iExpr_Rel, const std::string& iOld, const std::string& iNew)
+Expr_Rel_Unary_Rename::Expr_Rel_Unary_Rename(ZRef<Expr_Rel> iExpr_Rel,
+	const std::string& iNew, const std::string& iOld)
 :	Expr_Rel_Unary(iExpr_Rel)
-,	fOld(iOld)
 ,	fNew(iNew)
+,	fOld(iOld)
 	{}
 
 Expr_Rel_Unary_Rename::~Expr_Rel_Unary_Rename()
@@ -66,17 +66,17 @@ void Expr_Rel_Unary_Rename::Accept_Expr_Rel_Unary(
 
 ZRef<Expr_Rel_Unary> Expr_Rel_Unary_Rename::Clone(
 	ZRef<Expr_Rel> iExpr_Rel)
-	{ return new Expr_Rel_Unary_Rename(iExpr_Rel, fOld, fNew); }
+	{ return new Expr_Rel_Unary_Rename(iExpr_Rel, fNew, fOld); }
 
 void Expr_Rel_Unary_Rename::Accept_Expr_Rel_Unary_Rename(
 	Visitor_Expr_Rel_Unary_Rename& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Unary_Rename(this); }
 
-const string& Expr_Rel_Unary_Rename::GetOld()
-	{ return fOld; }
-
 const string& Expr_Rel_Unary_Rename::GetNew()
 	{ return fNew; }
+
+const string& Expr_Rel_Unary_Rename::GetOld()
+	{ return fOld; }
 
 // =================================================================================================
 #pragma mark -
@@ -85,6 +85,14 @@ const string& Expr_Rel_Unary_Rename::GetNew()
 void Visitor_Expr_Rel_Unary_Rename::Visit_Expr_Rel_Unary_Rename(
 	ZRef<Expr_Rel_Unary_Rename> iRep)
 	{ Visitor_Expr_Rel_Unary::Visit_Expr_Rel_Unary(iRep); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Relational operators
+
+ZRef<Expr_Rel_Unary_Rename> sRename(const ZRef<Expr_Rel>& iExpr,
+	const string& iNewPropName, const string& iOldPropName)
+	{ return new Expr_Rel_Unary_Rename(iExpr, iNewPropName, iOldPropName); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

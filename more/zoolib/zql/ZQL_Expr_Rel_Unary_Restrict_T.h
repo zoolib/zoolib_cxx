@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZQL_Expr_Rel_Unary_Restrict_T__ 1
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Rel_Unary.h"
 #include "zoolib/ZValCondition_T.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {

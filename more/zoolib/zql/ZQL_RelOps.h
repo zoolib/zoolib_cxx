@@ -18,57 +18,19 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Expr_Rel__
-#define __ZQL_Expr_Rel__ 1
+#ifndef __ZQL_RelOps__
+#define __ZQL_RelOps__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZRelHead.h"
+#include "zoolib/ZExpr_Logic.h"
+#include "zoolib/ZExpr_Logic_ValCondition.h" // For ValCondition/Logic operators
+#include "zoolib/zql/ZQL_Expr_Rel.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Binary_Intersect.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Binary_Join.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Binary_Union.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary_Project.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary_Restrict.h" // For restrict templated operators
+#include "zoolib/zql/ZQL_Expr_Rel_Unary_Rename.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
 
-#include <string>
-
-NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
-
-class Visitor_Expr_Rel;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Expr_Rel
-
-class Expr_Rel : public ZExpr
-	{
-protected:
-	Expr_Rel();
-
-public:
-// From ZExpr
-	virtual void Accept_Expr(ZVisitor_Expr& iVisitor);
-
-// Our protocol
-	virtual void Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor);
-
-	virtual ZRelHead GetRelHead() = 0;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel
-
-class Visitor_Expr_Rel : public virtual ZVisitor_Expr
-	{
-public:
-	virtual void Visit_Expr_Rel(ZRef<Expr_Rel> iRep);
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Rel
-
-// A useful typedef.
-typedef ZRef<Expr_Rel> Rel;
-
-} // namespace ZQL
-NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Expr_Rel__
+#endif // __ZQL_RelOps__

@@ -19,13 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/zql/ZQL_Expr_Rel.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Binary_Intersect.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Binary_Join.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Binary_Union.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Project.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Rename.h"
-
-using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
@@ -59,41 +52,6 @@ void Expr_Rel::Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor)
 
 void Visitor_Expr_Rel::Visit_Expr_Rel(ZRef<Expr_Rel> iRep)
 	{ ZVisitor_Expr::Visit_Expr(iRep); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Relational operators
-
-ZRef<Expr_Rel> sIntersect(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
-	{ return new Expr_Rel_Binary_Intersect(iLHS, iRHS); }
-
-ZRef<Expr_Rel> sJoin(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
-	{ return new Expr_Rel_Binary_Join(iLHS, iRHS); }
-
-ZRef<Expr_Rel> sProject(const ZRelHead& iRelHead, const ZRef<Expr_Rel>& iExpr)
-	{ return new Expr_Rel_Unary_Project(iExpr, iRelHead); }
-
-ZRef<Expr_Rel> sRename(const string& iOldPropName, const string& iNewPropName,
-	const ZRef<Expr_Rel>& iExpr)
-	{ return new Expr_Rel_Unary_Rename(iExpr, iOldPropName, iNewPropName); }
-
-ZRef<Expr_Rel> sUnion(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
-	{ return new Expr_Rel_Binary_Union(iLHS, iRHS); }
-
-ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
-	{ return new Expr_Rel_Binary_Intersect(iLHS, iRHS); }
-
-ZRef<Expr_Rel> operator*(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
-	{ return new Expr_Rel_Binary_Join(iLHS, iRHS); }
-
-ZRef<Expr_Rel> operator|(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
-	{ return new Expr_Rel_Binary_Union(iLHS, iRHS); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

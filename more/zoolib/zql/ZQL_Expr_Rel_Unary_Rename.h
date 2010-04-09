@@ -37,7 +37,7 @@ class Expr_Rel_Unary_Rename : public Expr_Rel_Unary
 	{
 public:
 	Expr_Rel_Unary_Rename(ZRef<Expr_Rel> iExpr_Rel,
-		const std::string& iOld, const std::string& iNew);
+		const std::string& iNew, const std::string& iOld);
 
 	virtual ~Expr_Rel_Unary_Rename();
 
@@ -53,12 +53,12 @@ public:
 	virtual void Accept_Expr_Rel_Unary_Rename(
 		Visitor_Expr_Rel_Unary_Rename& iVisitor);
 
-	const std::string& GetOld();
 	const std::string& GetNew();
+	const std::string& GetOld();
 
 private:
-	const std::string fOld;
 	const std::string fNew;
+	const std::string fOld;
 	};
 
 // =================================================================================================
@@ -70,6 +70,13 @@ class Visitor_Expr_Rel_Unary_Rename : public virtual Visitor_Expr_Rel_Unary
 public:
 	virtual void Visit_Expr_Rel_Unary_Rename(ZRef<Expr_Rel_Unary_Rename> iRep);
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Relational operators
+
+ZRef<Expr_Rel_Unary_Rename> sRename(const ZRef<Expr_Rel>& iExpr,
+	const std::string& iNewPropName, const std::string& iOldPropName);
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

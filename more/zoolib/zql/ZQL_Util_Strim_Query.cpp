@@ -196,9 +196,9 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Rename(
 	spWrite("(", w);
 
 	this->pWriteLFIndent();
-	spWrite_PropName(iRep->GetOld(), w);
-	spWrite("-->", w);
 	spWrite_PropName(iRep->GetNew(), w);
+	spWrite("<--", w);
+	spWrite_PropName(iRep->GetOld(), w);
 	spWrite(",", w);
 
 	this->pWriteLFIndent();

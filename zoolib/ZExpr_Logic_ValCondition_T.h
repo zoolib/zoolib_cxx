@@ -106,9 +106,43 @@ void ZVisitor_Expr_Logic_ValCondition_T<Val>::Visit_Logic_ValCondition(
 #pragma mark * Operators
 
 template <class Val>
-ZRef<ZExpr_Logic> operator&(
-	const ZValCondition_T<Val>& iLHS,
-	const ZValCondition_T<Val>& iRHS)
+ZRef<ZExpr_Logic> operator!(const ZValCondition_T<Val>& iValCondition)
+	{ return new ZExpr_Logic_Not(new ZExpr_Logic_ValCondition_T<Val>(iValCondition)); }
+
+template <class Val>
+ZRef<ZExpr_Logic> operator&(bool iBool, const ZValCondition_T<Val>& iValCondition)
+	{
+	if (iBool)
+		return new ZExpr_Logic_ValCondition_T<Val>(iValCondition);
+	return new ZExpr_Logic_False;
+	}
+
+template <class Val>
+ZRef<ZExpr_Logic> operator&(const ZValCondition_T<Val>& iValCondition, bool iBool)
+	{
+	if (iBool)
+		return new ZExpr_Logic_ValCondition_T<Val>(iValCondition);
+	return new ZExpr_Logic_False;
+	}
+
+template <class Val>
+ZRef<ZExpr_Logic> operator|(bool iBool, const ZValCondition_T<Val>& iValCondition)
+	{
+	if (iBool)
+		return new ZExpr_Logic_True;
+	return new ZExpr_Logic_ValCondition_T<Val>(iValCondition);
+	}
+
+template <class Val>
+ZRef<ZExpr_Logic> operator|(const ZValCondition_T<Val>& iValCondition, bool iBool)
+	{
+	if (iBool)
+		return new ZExpr_Logic_True;
+	return new ZExpr_Logic_ValCondition_T<Val>(iValCondition);
+	}
+
+template <class Val>
+ZRef<ZExpr_Logic> operator&(const ZValCondition_T<Val>& iLHS, const ZValCondition_T<Val>& iRHS)
 	{
 	return new ZExpr_Logic_And(
 		new ZExpr_Logic_ValCondition_T<Val>(iLHS),
@@ -116,30 +150,22 @@ ZRef<ZExpr_Logic> operator&(
 	}
 
 template <class Val>
-ZRef<ZExpr_Logic> operator&(
-	const ZValCondition_T<Val>& iLHS,
-	const ZRef<ZExpr_Logic>& iRHS)
+ZRef<ZExpr_Logic> operator&(const ZValCondition_T<Val>& iLHS, const ZRef<ZExpr_Logic>& iRHS)
 	{ return new ZExpr_Logic_And(new ZExpr_Logic_ValCondition_T<Val>(iLHS), iRHS); }
 
 template <class Val>
-ZRef<ZExpr_Logic> operator&(
-	const ZRef<ZExpr_Logic>& iLHS,
-	const ZValCondition_T<Val>& iRHS)
+ZRef<ZExpr_Logic> operator&(const ZRef<ZExpr_Logic>& iLHS, const ZValCondition_T<Val>& iRHS)
 	{ return new ZExpr_Logic_And(new ZExpr_Logic_ValCondition_T<Val>(iRHS), iLHS); }
 
 template <class Val>
-ZRef<ZExpr_Logic>& operator&=(
-	ZRef<ZExpr_Logic>& iLHS,
-	const ZValCondition_T<Val>& iRHS)
+ZRef<ZExpr_Logic>& operator&=(ZRef<ZExpr_Logic>& iLHS, const ZValCondition_T<Val>& iRHS)
 	{
 	iLHS = iLHS & iRHS;
 	return iLHS;
 	}
 
 template <class Val>
-ZRef<ZExpr_Logic> operator|(
-	const ZValCondition_T<Val>& iLHS,
-	const ZValCondition_T<Val>& iRHS)
+ZRef<ZExpr_Logic> operator|(const ZValCondition_T<Val>& iLHS, const ZValCondition_T<Val>& iRHS)
 	{
 	return new ZExpr_Logic_Or(
 		new ZExpr_Logic_ValCondition_T<Val>(iLHS),
@@ -147,23 +173,15 @@ ZRef<ZExpr_Logic> operator|(
 	}
 
 template <class Val>
-ZRef<ZExpr_Logic> operator|(
-	const ZValCondition_T<Val>& iLHS,
-	const ZRef<ZExpr_Logic>& iRHS)
+ZRef<ZExpr_Logic> operator|(const ZValCondition_T<Val>& iLHS, const ZRef<ZExpr_Logic>& iRHS)
 	{ return new ZExpr_Logic_Or(new ZExpr_Logic_ValCondition_T<Val>(iLHS), iRHS); }
 
 template <class Val>
-ZRef<ZExpr_Logic> operator|(
-	const ZRef<ZExpr_Logic>& iLHS,
-	const ZValCondition_T<Val>& iRHS)
-	{
-	return new ZExpr_Logic_Or(new ZExpr_Logic_ValCondition_T<Val>(iRHS), iLHS);
-	}
+ZRef<ZExpr_Logic> operator|(const ZRef<ZExpr_Logic>& iLHS, const ZValCondition_T<Val>& iRHS)
+	{ return new ZExpr_Logic_Or(new ZExpr_Logic_ValCondition_T<Val>(iRHS), iLHS); }
 
 template <class Val>
-ZRef<ZExpr_Logic>& operator|=(
-	ZRef<ZExpr_Logic>& iLHS,
-	const ZValCondition_T<Val>& iRHS)
+ZRef<ZExpr_Logic>& operator|=(ZRef<ZExpr_Logic>& iLHS, const ZValCondition_T<Val>& iRHS)
 	{
 	iLHS = iLHS | iRHS;
 	return iLHS;
@@ -216,14 +234,14 @@ ZRelHead sGetRelHead_T(const ZRef<ZExpr_Logic>& iRep)
 #pragma mark * Matches
 
 template <class Val>
-class ZVisitor_Expr_Logic_ValCondition_Matches_T
+class ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T
 :	public virtual ZVisitor_Expr_Logic_DoEval
 ,	public virtual ZVisitor_Expr_Logic_ValCondition_T<Val>
 	{
 	typedef ZVisitor_Expr_Logic_ValCondition_T<Val> inherited;
 public:
 
-	ZVisitor_Expr_Logic_ValCondition_Matches_T(const Val& iVal);
+	ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T(const Val& iVal);
 
 // From ZVisitor_Expr_Logic_ValCondition_T
 	virtual void Visit_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition_T<Val> > iRep);
@@ -234,13 +252,13 @@ private:
 	};
 
 template <class Val>
-ZVisitor_Expr_Logic_ValCondition_Matches_T<Val>::ZVisitor_Expr_Logic_ValCondition_Matches_T(
-	const Val& iVal)
+ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T<Val>::
+ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T(const Val& iVal)
 :	fVal(iVal)
 	{}
 
 template <class Val>
-void ZVisitor_Expr_Logic_ValCondition_Matches_T<Val>::Visit_Logic_ValCondition(
+void ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T<Val>::Visit_Logic_ValCondition(
 	ZRef<ZExpr_Logic_ValCondition_T<Val> > iRep)
 	{ fResult = iRep->GetValCondition().Matches(fValContext, fVal); }
 
@@ -248,7 +266,7 @@ template <class Val>
 bool sMatches_T(const ZRef<ZExpr_Logic>& iRep, const Val& iVal)
 	{
 	if (iRep)
-		return ZVisitor_Expr_Logic_ValCondition_Matches_T<Val>(iVal).DoEval(iRep);
+		return ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T<Val>(iVal).DoEval(iRep);
 	return false;
 	}
 

@@ -19,8 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/tql/ZUtil_TQLConvert.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
-#include "zoolib/ZExpr_Logic_ValCondition.h"
+#include "zoolib/zql/ZQL_RelOps.h"
 #include "zoolib/valbase/ZValBase.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -137,19 +136,19 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFil
 		Query theQ;
 		if (iName)
 			{
-			theQ = sSelect(*iFilter, sAll(filterRelHead | *iName));
+			theQ = sSelect(sAll(filterRelHead | *iName), *iFilter);
 			if (iVerbose)
-				theQ = sProject(RelHead(*iName) | "$$All_Name$$", theQ);
+				theQ = sProject(theQ, RelHead(*iName) | "$$All_Name$$");
 			else
-				theQ = sProject(*iName, theQ);
+				theQ = sProject(theQ, *iName);
 			}
 		else
 			{
-			theQ = sSelect(*iFilter, sAllID(sIDName, filterRelHead));
+			theQ = sSelect(sAllID(sIDName, filterRelHead), *iFilter);
 			if (iVerbose)
-				theQ = sProject(RelHead(sIDName) | "$$All$$", theQ);
+				theQ = sProject(theQ, RelHead(sIDName) | "$$All$$");
 			else
-				theQ = sProject(sIDName, theQ);
+				theQ = sProject(theQ, sIDName);
 			}
 		return theQ;
 		}
@@ -211,14 +210,14 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFil
 		if (iName)
 			{
 			if (iVerbose)
-				return sProject(RelHead(*iName) | "$$ComboReturn_Name$$", outerQ);
+				return sProject(outerQ, RelHead(*iName) | "$$ComboReturn_Name$$");
 			else
 				return outerQ;//.Project(*iName);
 			}
 		else
 			{
 			if (iVerbose)
-				return sProject(RelHead(sIDName) | "$$ComboReturn$$", outerQ);
+				return sProject(outerQ, RelHead(sIDName) | "$$ComboReturn$$");
 			else
 				return outerQ;//.Project(sIDName);
 			}
@@ -250,7 +249,7 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFil
 		Query theQ = spConvert(sourceNode, &sourcePropName, nullptr, iVerbose);
 
 		// Rename it to sIDName.
-		theQ = sRename(sourcePropName, sIDName, theQ);
+		theQ = sRename(theQ, sIDName, sourcePropName);
 		
 		// Get the referenced tuples and filter them
 		if (iFilter)
@@ -258,19 +257,19 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFil
 			const RelHead filterRelHead = sGetRelHead(*iFilter);
 			if (iName)
 				{
-				theQ = sJoin(theQ, sSelect(*iFilter, sAllID(sIDName, filterRelHead | *iName)));
+				theQ = sJoin(theQ, sSelect(sAllID(sIDName, filterRelHead | *iName), *iFilter));
 				if (iVerbose)
-					theQ = sProject(RelHead(*iName) | "$$FromSource_Name_Filter$$", theQ);
+					theQ = sProject(theQ, RelHead(*iName) | "$$FromSource_Name_Filter$$");
 				else
-					theQ = sProject(*iName, theQ);
+					theQ = sProject(theQ, *iName);
 				}
 			else
 				{
-				theQ = sJoin(theQ, sSelect(*iFilter, sAllID(sIDName, filterRelHead)));
+				theQ = sJoin(theQ, sSelect(sAllID(sIDName, filterRelHead), *iFilter));
 				if (iVerbose)
-					theQ = sProject(RelHead(sIDName) | "$$FromSource_Filter$$", theQ);
+					theQ = sProject(theQ, RelHead(sIDName) | "$$FromSource_Filter$$");
 				else
-					theQ = sProject(sIDName, theQ);
+					theQ = sProject(theQ, sIDName);
 				}
 			}
 		else
@@ -279,15 +278,15 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFil
 				{
 				theQ = sJoin(theQ, sAllID(sIDName, *iName));
 				if (iVerbose)
-					theQ = sProject(RelHead(*iName) | "$$FromSource_Name$$", theQ);
+					theQ = sProject(theQ, RelHead(*iName) | "$$FromSource_Name$$");
 				else
-					theQ = sProject(*iName, theQ);
+					theQ = sProject(theQ, *iName);
 				}
 			else
 				{
 				// Do nothing -- already have the IDs.
 				if (iVerbose)
-					theQ = sProject("$$FromSource$$", theQ);
+					theQ = sProject(theQ, "$$FromSource$$");
 				}
 			}
 		return theQ;
@@ -302,7 +301,7 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFil
 		Query theQ = spConvert(sourceNode, nullptr, nullptr, iVerbose);
 
 		// Renamed to thePropName;
-		theQ = sRename(sIDName, thePropName, theQ);
+		theQ = sRename(theQ, thePropName, sIDName);
 
 		// Get tuples whose property 'thePropName' match the IDs and filter them
 		if (iFilter)
@@ -311,22 +310,22 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFil
 			if (iName)
 				{
 				theQ = sJoin(theQ, sAllID(sIDName, filterRelHead | *iName | thePropName));
-				theQ = sProject(filterRelHead | *iName, theQ);
-				theQ = sSelect(*iFilter, theQ);
+				theQ = sProject(theQ, filterRelHead | *iName);
+				theQ = sSelect(theQ, *iFilter);
 				if (iVerbose)
-					theQ = sProject(RelHead(*iName) | "$$Property_Name_Filter$$", theQ);
+					theQ = sProject(theQ, RelHead(*iName) | "$$Property_Name_Filter$$");
 				else
-					theQ = sProject(*iName, theQ);
+					theQ = sProject(theQ, *iName);
 				}
 			else
 				{
 				theQ = sJoin(theQ, sAllID(sIDName, filterRelHead | thePropName));
-				theQ = sProject(filterRelHead, theQ);
-				theQ = sSelect(*iFilter, theQ);
+				theQ = sProject(theQ, filterRelHead);
+				theQ = sSelect(theQ, *iFilter);
 				if (iVerbose)
-					theQ = sProject(RelHead(sIDName) | "$$Property_Filter$$", theQ);
+					theQ = sProject(theQ, RelHead(sIDName) | "$$Property_Filter$$");
 				else
-					theQ = sProject(sIDName, theQ);
+					theQ = sProject(theQ, sIDName);
 				}
 			}
 		else
@@ -335,17 +334,17 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFil
 				{
 				theQ = sJoin(theQ, sAllID(sIDName, RelHead(*iName) | thePropName));
 				if (iVerbose)
-					theQ = sProject(RelHead(*iName) | "$$Property_Name", theQ);
+					theQ = sProject(theQ, RelHead(*iName) | "$$Property_Name");
 				else
-					theQ = sProject(*iName, theQ);
+					theQ = sProject(theQ, *iName);
 				}
 			else
 				{
 				theQ = sJoin(theQ, sAllID(sIDName, thePropName));
 				if (iVerbose)
-					theQ = sProject(RelHead(sIDName) | "$$Property", theQ);
+					theQ = sProject(theQ, RelHead(sIDName) | "$$Property");
 				else
-					theQ = sProject(sIDName, theQ);
+					theQ = sProject(theQ, sIDName);
 				}
 			}
 		return theQ;

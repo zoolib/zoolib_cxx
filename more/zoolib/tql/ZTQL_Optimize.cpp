@@ -176,6 +176,10 @@ void Optimize::Visit_Expr_Rel_Unary_Select(ZRef<Expr_Rel_Unary_Select> iRep)
 
 } // anonymous namespace
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZQL::sOptimize
+
 namespace ZQL {
 
 ZRef<Expr_Rel> sOptimize(ZRef<Expr_Rel> iRep)

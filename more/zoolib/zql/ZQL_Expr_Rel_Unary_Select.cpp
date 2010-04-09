@@ -84,18 +84,18 @@ void Visitor_Expr_Rel_Unary_Select::Visit_Expr_Rel_Unary_Select(
 
 // =================================================================================================
 #pragma mark -
-#pragma mark *
+#pragma mark * Relational operators
 
 ZRef<Expr_Rel_Unary_Select> sSelect(
-	const ZRef<ZExpr_Logic>& iExpr_Logic, const ZRef<Expr_Rel>& iExpr_Rel)
-	{ return new Expr_Rel_Unary_Select(iExpr_Rel, iExpr_Logic); }
-
-ZRef<Expr_Rel_Unary_Select> operator&(
-	const ZRef<ZExpr_Logic>& iExpr_Logic, const ZRef<Expr_Rel>& iExpr_Rel)
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Logic>& iExpr_Logic)
 	{ return new Expr_Rel_Unary_Select(iExpr_Rel, iExpr_Logic); }
 
 ZRef<Expr_Rel_Unary_Select> operator&(
 	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Logic>& iExpr_Logic)
+	{ return new Expr_Rel_Unary_Select(iExpr_Rel, iExpr_Logic); }
+
+ZRef<Expr_Rel_Unary_Select> operator&(
+	const ZRef<ZExpr_Logic>& iExpr_Logic, const ZRef<Expr_Rel>& iExpr_Rel)
 	{ return new Expr_Rel_Unary_Select(iExpr_Rel, iExpr_Logic); }
 
 } // namespace ZQL

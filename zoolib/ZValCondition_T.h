@@ -598,22 +598,22 @@ ZValCondition_T<Val> operator>(
 template <class Val>
 ZValComparand_T<Val>
 CConst_T(const char* iVal)
-	{ return ZValComparand_T<Val>( new ZValComparandRep_Const_T<Val>(std::string(iVal))); }
+	{ return ZValComparand_T<Val>(new ZValComparandRep_Const_T<Val>(std::string(iVal))); }
 
 template <class Val>
 ZValComparand_T<Val>
 CConst_T(const Val& iVal)
-	{ return ZValComparand_T<Val>( new ZValComparandRep_Const_T<Val>(iVal)); }
+	{ return ZValComparand_T<Val>(new ZValComparandRep_Const_T<Val>(iVal)); }
 
 template <class Val>
 ZValComparand_T<Val>
 CName_T(const std::string& iName)
-	{ return ZValComparand_T<Val>( new ZValComparandRep_Trail_T<Val>(ZTrail(&iName, &iName + 1))); }
+	{ return ZValComparand_T<Val>(new ZValComparandRep_Trail_T<Val>(ZTrail(&iName, &iName + 1))); }
 
 template <class Val>
 ZValComparand_T<Val>
 CTrail_T(const ZTrail& iTrail)
-	{ return ZValComparand_T<Val>( new ZValComparandRep_Trail_T<Val>(iTrail)); }
+	{ return ZValComparand_T<Val>(new ZValComparandRep_Trail_T<Val>(iTrail)); }
 
 template <class Val>
 ZValComparand_T<Val>
@@ -628,7 +628,7 @@ CVal_T()
 template <class Val>
 ZValComparand_T<Val>
 CVar_T(const std::string& iVarName)
-	{ return ZValComparand_T<Val>( new ZValComparandRep_Var_T<Val>(iVarName)); }
+	{ return ZValComparand_T<Val>(new ZValComparandRep_Var_T<Val>(iVarName)); }
 
 NAMESPACE_ZOOLIB_END
 

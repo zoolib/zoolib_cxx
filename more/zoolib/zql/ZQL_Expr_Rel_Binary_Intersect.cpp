@@ -67,5 +67,17 @@ void Visitor_Expr_Rel_Binary_Intersect::Visit_Expr_Rel_Binary_Intersect(
 	ZRef<Expr_Rel_Binary_Intersect> iRep)
 	{ Visitor_Expr_Rel_Binary::Visit_Expr_Rel_Binary(iRep); }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Relational operators
+
+ZRef<Expr_Rel_Binary_Intersect> sIntersect(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+	{ return new Expr_Rel_Binary_Intersect(iLHS, iRHS); }
+
+ZRef<Expr_Rel_Binary_Intersect> operator&(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+	{ return new Expr_Rel_Binary_Intersect(iLHS, iRHS); }
+
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

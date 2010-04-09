@@ -63,6 +63,16 @@ public:
 	virtual void Visit_Expr_Rel_Binary_Join(ZRef<Expr_Rel_Binary_Join> iRep);
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Relational operators
+
+ZRef<Expr_Rel_Binary_Join> sJoin(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+
+ZRef<Expr_Rel_Binary_Join> operator*(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 

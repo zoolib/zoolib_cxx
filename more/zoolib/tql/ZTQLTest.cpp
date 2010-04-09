@@ -1,11 +1,11 @@
 #include "zoolib/tql/ZTQL_Optimize.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Restrict.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
+//#include "zoolib/zql/ZQL_Expr_Rel_Unary_Restrict.h"
+//#include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
 
 #include "zoolib/zql/ZQL_Util_Strim_Query.h"
 
 #include "zoolib/tql/ZUtil_TQLConvert.h"
-#include "zoolib/ZExpr_Logic_ValCondition.h"
+//#include "zoolib/ZExpr_Logic_ValCondition.h"
 
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
@@ -33,6 +33,8 @@
 #include "zoolib/ZYadSeq_Expr_Logic.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
 
+#include "zoolib/zql/ZQL_RelOps.h"
+
 NAMESPACE_ZOOLIB_USING
 
 using namespace ZQL;
@@ -41,19 +43,19 @@ using std::set;
 using std::string;
 
 typedef ZRef<ZExpr_Logic> Spec;
-typedef ZRef<Expr_Rel> Query;
+typedef Rel Query;
 typedef ZMap_Expr Map;
 typedef ZRelHead RelHead;
 typedef ZVal_Expr Val;
 typedef ZValCondition Condition;
 
-ZRef<Expr_Rel> sAll(const ZRelHead& iRelHead)
+Query sAll(const ZRelHead& iRelHead)
 	{ return ZValBase::sConcrete(iRelHead); }
 
-ZRef<Expr_Rel> sAllID(const std::string& iIDName)
+Query sAllID(const std::string& iIDName)
 	{ return ZValBase::sConcrete(ZRelHead(true) | iIDName); }
 
-ZRef<Expr_Rel> sAllID(const std::string& iIDName, const ZRelHead& iRelHead)
+Query sAllID(const std::string& iIDName, const ZRelHead& iRelHead)
 	{ return ZValBase::sConcrete(iRelHead | iIDName); }
 
 // =================================================================================================
@@ -81,16 +83,14 @@ static Query I(const Query& iQuery1, const Query& iQuery2)
 static Query J(const Query& iQuery1, const Query& iQuery2)
 	{ return sJoin(iQuery1, iQuery2); }
 
-//static Query P(const string& iPropName0, const Query& iQuery)
-//	{ return sProject(iQuery, iPropName0); }
-static Query P(const RelHead& iRelHead, const Query& iQuery)
-	{ return sProject(iRelHead, iQuery); }
+static Query P(const Query& iQuery, const RelHead& iRelHead)
+	{ return sProject(iQuery, iRelHead); }
 
-static Query R(const string& iOldPropName, const string& iNewPropName, const Query& iQuery)
-	{ return sRename(iOldPropName, iNewPropName, iQuery); }
+static Query R(const Query& iQuery, const string& iNewPropName, const string& iOldPropName)
+	{ return sRename(iQuery, iNewPropName, iOldPropName); }
 
-static Query S(const Spec& iSpec, const Query& iQuery)
-	{ return sSelect(iSpec, iQuery); }
+static Query S(const Query& iQuery, const Spec& iSpec)
+	{ return sSelect(iQuery, iSpec); }
 
 static Query U(const Query& iQuery1, const Query& iQuery2)
 	{ return sUnion(iQuery1, iQuery2); }
@@ -152,21 +152,20 @@ static Spec sBadAuthors()
 			| CName("pass") == CName("unam")
 			);
 */
-	return new ZExpr_Logic_ValCondition(theSpec);
+	return true & theSpec;
 	}
 
 static Query badPassword()
 	{
 	return A("authorID") & sBadAuthors();
 
-	return P(RelHead("authorID"),
-		A("authorID") & sBadAuthors());
+	return P(A("authorID") & sBadAuthors(), RelHead("authorID"));
 	}
 
 static Query badPassword2()
 	{
 //	return (A("authorID") & sBadAuthors()).Project("authorID");
-	return sProject(string("authorID"), A("authorID") & sBadAuthors());
+	return sProject(A("authorID") & sBadAuthors(), string("authorID"));
 	}
 
 // S(A(@authorID), @Object == "author" & (@fnam == @pass | @lnam == @pass | @unam == @pass));
@@ -193,7 +192,7 @@ static Query sPrefix(const string& iPrefix, const RelHead& iIgnore, Query iQuery
 		{
 		if (iIgnore.Contains(*i))
 			continue;
-		iQuery = sRename(*i, iPrefix + *i, iQuery);
+		iQuery = sRename(iQuery, iPrefix + *i, *i);
 		}
 	return iQuery;
 	}
@@ -212,7 +211,7 @@ static Query sDrop(Query iQuery, const string& iTName)
 	{
 	RelHead theRelHead = iQuery->GetRelHead();
 	if (theRelHead.Contains(iTName))
-		return sProject(theRelHead - iTName, iQuery);
+		return sProject(iQuery, theRelHead - iTName);
 	return iQuery;	
 	}
 
@@ -253,16 +252,16 @@ static Query sAllContains()
 
 static Query sQueryNoHead()
 	{
-	Query allViews = sRename("$ID$", "from", sAllViewsNoHead());
-	Query allNotes = sRename("$ID$", "to", sAllNotesNoHead());
+	Query allViews = sRename(sAllViewsNoHead(), "from", "$ID$");
+	Query allNotes = sRename(sAllNotesNoHead(), "to", "$ID$");
 	Query allContains = sAllContains();
 	return allViews * (allContains * allNotes);
 	}
 
 static Query sQuery()
 	{
-	Query allViews = sRename("$ID$", "from", sAllViews());
-	Query allNotes = sRename("$ID$", "to", sAllNotes());
+	Query allViews = sRename(sAllViews(), "from", "$ID$");
+	Query allNotes = sRename(sAllNotes(), "to", "$ID$");
 	Query allContains = sAllContains();
 
 	return sPrefix("view.", RelHead("from"), allViews)
@@ -283,7 +282,7 @@ static Query sQuery()
 // %
 // ^
 
-	return sRename("$ID$", "from", sAllViews()) * sRename("to", "$ID$", sAllContains()) * sRename("titl", "noteTitle", sAllNotes());
+	return sRename(sAllViews(), "from", "$ID$") * sRename(sAllContains(), "$ID$", "to") * sRename(sAllNotes(), "noteTitle", "titl");
 	}
 
 static void sDumpQuery(const ZStrimW& s, Query iQuery)
@@ -363,7 +362,7 @@ void sTestQL4(const ZStrimW& s)
 //	ZExpr_ValCondition theSpec1 = CVal() > CConst(10);
 //	Spec theSpec = Spec(false) | (CVal() > CConst(10));
 //	Spec theSpec = ();
-	Spec theSpec = new ZExpr_Logic_ValCondition(CTrail("inner/field") < CConst(10));
+	Spec theSpec = true & CTrail("inner/field") < CConst(10);
 	thePhys = thePhys & theSpec;
 
 	Util_Strim_Query::sToStrim(thePhys, s);
@@ -394,7 +393,7 @@ void sTestQL3(const ZStrimW& s)
 
 return;
 	Spec theSpec = CVar("TestVar1") == CConst(1) | CVar("TestVar2") == CConst(2);
-	Query theExp = sSelect(theSpec, sAll(ZRelHead(true)));
+	Query theExp = sSelect(sAll(ZRelHead(true)), theSpec);
 
 	sDumpQuery(s, theExp);
 
@@ -404,12 +403,12 @@ return;
 	theMap.Set("name", ZMap_Expr().Set("last", string("fred")));
 //	Spec theSpec = CTrail("name/last") < CConst("fred1");
 	
-	if (sMatches(new ZExpr_Logic_ValCondition(CTrail("name/last") < CConst("fred1")), theMap))
+	if (sMatches(true & (CTrail("name/last") < CConst("fred1")), theMap))
 		s << "Matches\n";
 	else
 		s << "Doesn't\n";
 
-	if (sMatches(new ZExpr_Logic_ValCondition(CTrail("name/last") >= CConst("fred1")), theMap))
+	if (sMatches(true & (CTrail("name/last") >= CConst("fred1")), theMap))
 		s << "Matches\n";
 	else
 		s << "Doesn't\n";
