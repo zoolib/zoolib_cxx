@@ -40,9 +40,9 @@ public:
 
 	ZTupleIndex_General(const std::string* iPropNames, size_t iPropNameCount);
 
-	virtual void Add(uint64 iID, const ZTuple* iTuple);
+	virtual void Insert(uint64 iID, const ZTuple* iTuple);
 
-	virtual void Remove(uint64 iID, const ZTuple* iTuple);
+	virtual void Erase(uint64 iID, const ZTuple* iTuple);
 
 	virtual void Find(const std::set<uint64>& iSkipIDs,
 		std::vector<const ZTBSpec::Criterion*>& ioCriteria, std::vector<uint64>& oIDs);

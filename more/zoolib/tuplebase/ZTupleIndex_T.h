@@ -81,14 +81,14 @@ public:
 		std::copy(iPropNames, iPropNames + kPropCount, fPropNames);
 		}
 
-	virtual void Add(uint64 iID, const ZTuple* iTuple)
+	virtual void Insert(uint64 iID, const ZTuple* iTuple)
 		{
 		Key theKey;
 		if (this->pKeyFromTuple(iID, iTuple, theKey))
 			fSet.insert(theKey);
 		}
 
-	virtual void Remove(uint64 iID, const ZTuple* iTuple)
+	virtual void Erase(uint64 iID, const ZTuple* iTuple)
 		{
 		Key theKey;
 		if (this->pKeyFromTuple(iID, iTuple, theKey))

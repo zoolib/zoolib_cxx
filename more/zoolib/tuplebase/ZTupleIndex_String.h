@@ -36,9 +36,9 @@ class ZTupleIndex_String : public ZTupleIndex
 public:
 	ZTupleIndex_String(const ZTName& iPropName);
 
-	virtual void Add(uint64 iID, const ZTuple* iTuple);
+	virtual void Insert(uint64 iID, const ZTuple* iTuple);
 
-	virtual void Remove(uint64 iID, const ZTuple* iTuple);
+	virtual void Erase(uint64 iID, const ZTuple* iTuple);
 
 	virtual void Find(const std::set<uint64>& iSkipIDs,
 		std::vector<const ZTBSpec::Criterion*>& ioCriteria, std::vector<uint64>& oIDs);

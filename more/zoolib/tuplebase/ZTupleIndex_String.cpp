@@ -52,14 +52,14 @@ ZTupleIndex_String::ZTupleIndex_String(const ZTName& iPropName)
 :	fPropName(iPropName)
 	{}
 
-void ZTupleIndex_String::Add(uint64 iID, const ZTuple* iTuple)
+void ZTupleIndex_String::Insert(uint64 iID, const ZTuple* iTuple)
 	{
 	Key theKey;
 	if (this->pKeyFromTuple(iID, iTuple, theKey))
 		fSet.insert(theKey);
 	}
 
-void ZTupleIndex_String::Remove(uint64 iID, const ZTuple* iTuple)
+void ZTupleIndex_String::Erase(uint64 iID, const ZTuple* iTuple)
 	{
 	Key theKey;
 	if (this->pKeyFromTuple(iID, iTuple, theKey))

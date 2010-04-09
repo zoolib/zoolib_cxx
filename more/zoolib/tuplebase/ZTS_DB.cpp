@@ -237,9 +237,9 @@ public:
 	Index(ZTS_DB* iTS, uint8 iIndexID, const vector<string>& iPropNames);
 
 // From ZTupleIndex
-	virtual void Add(uint64 iID, const ZTuple* iTuple);
+	virtual void Insert(uint64 iID, const ZTuple* iTuple);
 
-	virtual void Remove(uint64 iID, const ZTuple* iTuple);
+	virtual void Erase(uint64 iID, const ZTuple* iTuple);
 
 	virtual void Find(const std::set<uint64>& iSkipIDs,
 		std::vector<const ZTBSpec::Criterion*>& ioCriteria, std::vector<uint64>& oIDs);
@@ -249,8 +249,8 @@ public:
 // Our protocol
 	void ToStream(const ZStreamW& iStreamW);
 
-	void Add(uint64 iID, const ZTuple& iTuple);
-	void Remove(uint64 iID, const ZTuple& iTuple);
+	void Insert(uint64 iID, const ZTuple& iTuple);
+	void Erase(uint64 iID, const ZTuple& iTuple);
 	void Update(uint64 iID, const ZTuple& iOldTuple, const ZTuple& iNewTuple);
 
 private:
@@ -279,12 +279,12 @@ ZTS_DB::Index::Index(ZTS_DB* iTS, uint8 iIndexID, const vector<string>& iPropNam
 	fPropNames(iPropNames.begin(), iPropNames.end())
 	{}
 
-void ZTS_DB::Index::Add(uint64 iID, const ZTuple* iTuple)
+void ZTS_DB::Index::Insert(uint64 iID, const ZTuple* iTuple)
 	{
 	ZUnimplemented();
 	}
 
-void ZTS_DB::Index::Remove(uint64 iID, const ZTuple* iTuple)
+void ZTS_DB::Index::Erase(uint64 iID, const ZTuple* iTuple)
 	{
 	ZUnimplemented();
 	}
@@ -483,7 +483,7 @@ void ZTS_DB::Index::ToStream(const ZStreamW& iStreamW)
 
 static const DBT spNilData = { 0, 0 };
 
-void ZTS_DB::Index::Add(uint64 iID, const ZTuple& iTuple)
+void ZTS_DB::Index::Insert(uint64 iID, const ZTuple& iTuple)
 	{
 	if (ZMemoryBlock theMB = this->pKeyFromTuple(iID, iTuple))
 		{
@@ -495,7 +495,7 @@ void ZTS_DB::Index::Add(uint64 iID, const ZTuple& iTuple)
 		}
 	}
 
-void ZTS_DB::Index::Remove(uint64 iID, const ZTuple& iTuple)
+void ZTS_DB::Index::Erase(uint64 iID, const ZTuple& iTuple)
 	{
 	if (ZMemoryBlock theMB = this->pKeyFromTuple(iID, iTuple))
 		{
@@ -701,7 +701,7 @@ void ZTS_DB::SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
 				fDB->del(fDB, &theKey, R_CURSOR);
 				// And remove the old value from indices.
 				for (vector<ZTupleIndex*>::iterator i = fIndices.begin(); i != fIndices.end(); ++i)
-					static_cast<Index*>(*i)->Remove(theID, oldTuple);
+					static_cast<Index*>(*i)->Erase(theID, oldTuple);
 				}
 			}
 		else
@@ -712,7 +712,7 @@ void ZTS_DB::SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples)
 			result = fDB->put(fDB, &theKey, &theDBT_Tuple, 0);
 
 			for (vector<ZTupleIndex*>::iterator i = fIndices.begin(); i != fIndices.end(); ++i)
-				static_cast<Index*>(*i)->Add(theID, newTuple);
+				static_cast<Index*>(*i)->Insert(theID, newTuple);
 			}
 		}
 	}

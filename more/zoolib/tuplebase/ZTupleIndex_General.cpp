@@ -92,14 +92,14 @@ ZTupleIndex_General::ZTupleIndex_General(const std::string* iPropNames, size_t i
 	copy(iPropNames, iPropNames + iPropNameCount, fPropNames);
 	}
 
-void ZTupleIndex_General::Add(uint64 iID, const ZTuple* iTuple)
+void ZTupleIndex_General::Insert(uint64 iID, const ZTuple* iTuple)
 	{
 	Key theKey;
 	if (this->pKeyFromTuple(iID, iTuple, theKey))
 		fSet.insert(theKey);
 	}
 
-void ZTupleIndex_General::Remove(uint64 iID, const ZTuple* iTuple)
+void ZTupleIndex_General::Erase(uint64 iID, const ZTuple* iTuple)
 	{
 	Key theKey;
 	if (this->pKeyFromTuple(iID, iTuple, theKey))

@@ -130,7 +130,7 @@ void ZTS_RAM::SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples
 			// We had it before, so must remove it from indices.
 			const ZTuple* oldTuple = &position->second;
 			for (vector<ZTupleIndex*>::iterator i = fIndices.begin(); i != fIndices.end(); ++i)
-				(*i)->Remove(theID, oldTuple);
+				(*i)->Erase(theID, oldTuple);
 			}
 
 		if (newTuple)
@@ -150,7 +150,7 @@ void ZTS_RAM::SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples
 			// Enter the tuple in our indices.
 			const ZTuple* storedTuple = &position->second;
 			for (vector<ZTupleIndex*>::iterator i = fIndices.begin(); i != fIndices.end(); ++i)
-				(*i)->Add(theID, storedTuple);
+				(*i)->Insert(theID, storedTuple);
 			}
 		else if (hadIt)
 			{
@@ -359,7 +359,7 @@ void ZTS_RAM::AddIndex(ZRef<ZTupleIndexFactory> iIndexFactory)
 	ZTupleIndex* theIndex = iIndexFactory->Make();
 	fIndices.push_back(theIndex);
 	for (map<uint64, ZTuple>::const_iterator i = fTuples.begin(); i != fTuples.end(); ++i)
-		theIndex->Add(i->first, &i->second);
+		theIndex->Insert(i->first, &i->second);
 	}
 
 void ZTS_RAM::AddIndices(const vector<ZRef<ZTupleIndexFactory> >& iIndexFactories)

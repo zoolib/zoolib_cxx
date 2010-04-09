@@ -645,7 +645,7 @@ void ZTBRep_TS::Trans_SetTuple(Transaction* iTransaction, uint64 iID, const ZTup
 			for (vector<ZTupleIndex*>::iterator
 				i = iTransaction->fIndices.begin(); i != iTransaction->fIndices.end(); ++i)
 				{
-				(*i)->Remove(iID, &theTransTuple.fValue_Current);
+				(*i)->Erase(iID, &theTransTuple.fValue_Current);
 				}
 			}
 		else
@@ -672,7 +672,7 @@ void ZTBRep_TS::Trans_SetTuple(Transaction* iTransaction, uint64 iID, const ZTup
 	for (vector<ZTupleIndex*>::iterator i = iTransaction->fIndices.begin();
 		i != iTransaction->fIndices.end(); ++i)
 		{
-		(*i)->Add(iID, &iTuple);
+		(*i)->Insert(iID, &iTuple);
 		}
 	}
 

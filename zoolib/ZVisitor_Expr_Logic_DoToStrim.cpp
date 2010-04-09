@@ -34,7 +34,7 @@ void ZVisitor_Expr_Logic_DoToStrim::Visit_Logic_False(ZRef<ZExpr_Logic_False> iR
 
 void ZVisitor_Expr_Logic_DoToStrim::Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
 	{
-	pStrimW() << "!(";
+	pStrimW() << "~(";
 	this->DoToStrim(iRep->GetOperand());
 	pStrimW() << ")";
 	}
