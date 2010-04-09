@@ -308,7 +308,7 @@ ZAny sAsAny(ZRef<CFTypeRef> iVal)
 	{ return sDAsAny(ZAny(), iVal); }
 
 static ZRef<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
-	{ return Adopt_T<CFTypeRef>(::CFNumberCreate( kCFAllocatorDefault, iType, iVal)); }
+	{ return Adopt_T<CFTypeRef>(::CFNumberCreate(kCFAllocatorDefault, iType, iVal)); }
 
 ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
 	{

@@ -1667,7 +1667,7 @@ void ZBlockStore_PhaseTree::WriteToBlock(BlockID iBlockID, Slot*& ioBlockSlot,
 				size_t countToMove = min(countRemaining, fCapacity_Data - positionInData);
 				Slot* dataSlot = this->Block_FindDataSlotForWrite(ioBlockSlot,
 					localPosition, positionInData != 0 || countToMove != fCapacity_Data);
-				ZMemCopy( reinterpret_cast<char*>(dataSlot->fData) + positionInData,
+				ZMemCopy(reinterpret_cast<char*>(dataSlot->fData) + positionInData,
 					localSource, countToMove);
 				countRemaining -= countToMove;
 				localSource += countToMove;
