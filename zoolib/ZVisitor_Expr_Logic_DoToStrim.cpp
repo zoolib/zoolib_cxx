@@ -18,29 +18,43 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
-#include "zconfig.h"
-
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/ZVisitor_Expr_Logic_DoToStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
-namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * ZVisitor_Expr_Logic_DoToStrim
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+void ZVisitor_Expr_Logic_DoToStrim::Visit_Logic_True(ZRef<ZExpr_Logic_True> iRep)
+	{ pStrimW() << "any"; }
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
+void ZVisitor_Expr_Logic_DoToStrim::Visit_Logic_False(ZRef<ZExpr_Logic_False> iRep)
+	{ pStrimW() << "none"; }
 
-} // namespace Util_Strim_Query
-} // namespace ZQL
+void ZVisitor_Expr_Logic_DoToStrim::Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
+	{
+	pStrimW() << "!(";
+	this->DoToStrim(iRep->GetOperand());
+	pStrimW() << ")";
+	}
+
+void ZVisitor_Expr_Logic_DoToStrim::Visit_Logic_And(ZRef<ZExpr_Logic_And> iRep)
+	{
+	pStrimW() << "(";
+	this->DoToStrim(iRep->GetLHS());
+	pStrimW() << " & ";
+	this->DoToStrim(iRep->GetRHS());
+	pStrimW() << ")";
+	}
+
+void ZVisitor_Expr_Logic_DoToStrim::Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
+	{
+	pStrimW() << "(";
+	this->DoToStrim(iRep->GetLHS());
+	pStrimW() << " | ";
+	this->DoToStrim(iRep->GetRHS());
+	pStrimW() << ")";
+	}
+
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Util_Strim_Query__

@@ -18,29 +18,33 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
+#ifndef __ZExpr_Logic_ValCondition__
+#define __ZExpr_Logic_ValCondition__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/ZExpr_Logic_ValCondition_T.h"
+#include "zoolib/ZValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
-namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * ZExpr_Logic_ValCondition
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+typedef ZExpr_Logic_ValCondition_T<ZVal_Expr> ZExpr_Logic_ValCondition;
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
+typedef ZVisitor_Expr_Logic_ValCondition_T<ZVal_Expr> ZVisitor_Expr_Logic_ValCondition;
 
-} // namespace Util_Strim_Query
-} // namespace ZQL
+
+inline ZRelHead sGetRelHead(const ZRef<ZExpr_Logic>& iRep)
+	{ return sGetRelHead_T<ZVal_Expr>(iRep); }
+
+inline bool sMatches(const ZRef<ZExpr_Logic>& iRep, const ZVal_Expr& iVal)
+	{ return sMatches_T<ZVal_Expr>(iRep, iVal); }
+
+inline bool sMatches(const ZValCondition& iValCondition, const ZVal_Expr& iVal)
+	{ return sMatches_T<ZVal_Expr>(iValCondition, iVal); }
+
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Util_Strim_Query__
+#endif // __ZExpr_Logic_ValCondition__

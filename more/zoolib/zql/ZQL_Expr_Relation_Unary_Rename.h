@@ -18,29 +18,60 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
+#ifndef __ZQL_Expr_Relation_Unary_Rename__
+#define __ZQL_Expr_Relation_Unary_Rename__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/zql/ZQL_Expr_Relation_Unary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
-namespace Util_Strim_Query {
+
+class Visitor_Expr_Relation_Unary_Rename;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * Expr_Relation_Unary_Rename
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+class Expr_Relation_Unary_Rename : public Expr_Relation_Unary
+	{
+public:
+	Expr_Relation_Unary_Rename(ZRef<Expr_Relation> iExpr_Relation,
+		const std::string& iOld, const std::string& iNew);
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
+	virtual ~Expr_Relation_Unary_Rename();
 
-} // namespace Util_Strim_Query
+// From Expr_Relation via Expr_Relation_Unary
+	virtual ZRelHead GetRelHead();
+
+// From Expr_Relation_Unary
+	virtual void Accept_Expr_Relation_Unary(Visitor_Expr_Relation_Unary& iVisitor);
+
+	virtual ZRef<Expr_Relation_Unary> Clone(ZRef<Expr_Relation> iExpr_Relation);
+
+// Our protocol
+	virtual void Accept_Expr_Relation_Unary_Rename(
+		Visitor_Expr_Relation_Unary_Rename& iVisitor);
+
+	const std::string& GetOld();
+	const std::string& GetNew();
+
+private:
+	const std::string fOld;
+	const std::string fNew;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_Expr_Relation_Unary_Rename
+
+class Visitor_Expr_Relation_Unary_Rename : public virtual Visitor_Expr_Relation_Unary
+	{
+public:
+	virtual void Visit_Expr_Relation_Unary_Rename(ZRef<Expr_Relation_Unary_Rename> iRep);
+	};
+
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Util_Strim_Query__
+#endif // __ZQL_Expr_Relation_Unary_Rename__

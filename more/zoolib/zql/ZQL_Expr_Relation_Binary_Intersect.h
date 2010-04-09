@@ -18,29 +18,53 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
+#ifndef __ZQL_Expr_Relation_Binary_Intersect__
+#define __ZQL_Expr_Relation_Binary_Intersect__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/zql/ZQL_Expr_Relation_Binary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
-namespace Util_Strim_Query {
+
+class Visitor_Expr_Relation_Binary_Intersect;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * Expr_Relation_Binary_Intersect
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+class Expr_Relation_Binary_Intersect : public Expr_Relation_Binary
+	{
+public:
+	Expr_Relation_Binary_Intersect(ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS);
+	virtual ~Expr_Relation_Binary_Intersect();
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
+// From Expr_Relation via Expr_Relation_Binary
+	virtual ZRelHead GetRelHead();
 
-} // namespace Util_Strim_Query
+// From Expr_Relation_Binary
+	virtual void Accept_Expr_Relation_Binary(Visitor_Expr_Relation_Binary& iVisitor);
+
+	virtual ZRef<Expr_Relation_Binary> Clone(
+		ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS);
+
+// Our protocol
+	virtual void Accept_Expr_Relation_Binary_Intersect(
+		Visitor_Expr_Relation_Binary_Intersect& iVisitor);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_Expr_Relation_Binary_Intersect
+
+class Visitor_Expr_Relation_Binary_Intersect : public virtual Visitor_Expr_Relation_Binary
+	{
+public:
+	virtual void Visit_Expr_Relation_Binary_Intersect(
+		ZRef<Expr_Relation_Binary_Intersect> iRep);
+	};
+
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Util_Strim_Query__
+#endif // __ZQL_Expr_Relation_Binary__

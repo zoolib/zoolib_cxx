@@ -18,77 +18,82 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZExpr_Logic_ValCondition.h"
 #include "zoolib/ZYad_Any.h"
-#include "zoolib/ZYadSeq_ApplyID.h"
+#include "zoolib/ZYadSeq_Expr_Logic.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-// FIXME. Could return a ZYadMapR with a constant for the ID, and the actual yad for the value.
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZYadSeqR_Expr_Logic
 
-ZYadSeqR_ApplyID::ZYadSeqR_ApplyID(
-	ZRef<ZYadSeqR> iYadSeqR, const std::string& iIDName, const std::string& iValName)
+ZYadSeqR_Expr_Logic::ZYadSeqR_Expr_Logic(
+	ZRef<ZYadSeqR> iYadSeqR, ZRef<ZExpr_Logic> iExpr_Logic)
 :	fYadSeqR(iYadSeqR)
-,	fIDName(iIDName)
-,	fValName(iValName)
-,	fNextID(1)
+,	fExpr_Logic(iExpr_Logic)
 	{}
 
-ZYadSeqR_ApplyID::~ZYadSeqR_ApplyID()
+ZYadSeqR_Expr_Logic::~ZYadSeqR_Expr_Logic()
 	{}
 
-ZRef<ZYadR> ZYadSeqR_ApplyID::ReadInc()
+ZRef<ZYadR> ZYadSeqR_Expr_Logic::ReadInc()
 	{
-	if (ZRef<ZYadR> theYadR = fYadSeqR->ReadInc())
+	for (;;)
 		{
-		ZMap_Any theMap;
-		theMap.Set(fIDName, ++fNextID);
-		theMap.Set(fValName, sFromYadR(ZVal_Any(), theYadR));
-		return sMakeYadR(theMap);
+		if (ZRef<ZYadR> theYadR = fYadSeqR->ReadInc())
+			{
+			const ZVal_Any theVal = sFromYadR(ZVal_Any(), theYadR);
+			if (sMatches(fExpr_Logic, theVal))
+				return sMakeYadR(theVal);
+			}
+		else
+			{
+			return ZRef<ZYadR>();
+			}
 		}
-
-	return ZRef<ZYadR>();
 	}
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZYadSeqRPos_ApplyID
+#pragma mark * ZYadSeqRPos_Expr_Logic
 
-ZYadSeqRPos_ApplyID::ZYadSeqRPos_ApplyID(
-	ZRef<ZYadSeqRPos> iYadSeqRPos, const std::string& iIDName, const std::string& iValName)
+ZYadSeqRPos_Expr_Logic::ZYadSeqRPos_Expr_Logic(
+	ZRef<ZYadSeqRPos> iYadSeqRPos, ZRef<ZExpr_Logic> iExpr_Logic)
 :	fYadSeqRPos(iYadSeqRPos)
-,	fIDName(iIDName)
-,	fValName(iValName)
+,	fExpr_Logic(iExpr_Logic)
 	{}
 
-ZYadSeqRPos_ApplyID::~ZYadSeqRPos_ApplyID()
+ZYadSeqRPos_Expr_Logic::~ZYadSeqRPos_Expr_Logic()
 	{}
 
-ZRef<ZYadR> ZYadSeqRPos_ApplyID::ReadInc()
+ZRef<ZYadR> ZYadSeqRPos_Expr_Logic::ReadInc()
 	{
-	const uint64 thePosition = fYadSeqRPos->GetPosition();
-	if (ZRef<ZYadR> theYadR = fYadSeqRPos->ReadInc())
+	for (;;)
 		{
-		ZMap_Any theMap;
-		theMap.Set(fIDName, thePosition);
-		theMap.Set(fValName, sFromYadR(ZVal_Any(), theYadR));
-		return sMakeYadR(theMap);
+		if (ZRef<ZYadR> theYadR = fYadSeqRPos->ReadInc())
+			{
+			const ZVal_Any theVal = sFromYadR(ZVal_Any(), theYadR);
+			if (sMatches(fExpr_Logic, theVal))
+				return sMakeYadR(theVal);
+			}
+		else
+			{
+			return ZRef<ZYadR>();
+			}
 		}
-
-	return ZRef<ZYadR>();
 	}
 
-ZRef<ZYadSeqRPos> ZYadSeqRPos_ApplyID::Clone()
-	{ return new ZYadSeqRPos_ApplyID(fYadSeqRPos->Clone(), fIDName, fValName); }
+ZRef<ZYadSeqRPos> ZYadSeqRPos_Expr_Logic::Clone()
+	{ return new ZYadSeqRPos_Expr_Logic(fYadSeqRPos->Clone(), fExpr_Logic); }
 
-uint64 ZYadSeqRPos_ApplyID::GetPosition()
+uint64 ZYadSeqRPos_Expr_Logic::GetPosition()
 	{ return fYadSeqRPos->GetPosition(); }
 
-void ZYadSeqRPos_ApplyID::SetPosition(uint64 iPosition)
+void ZYadSeqRPos_Expr_Logic::SetPosition(uint64 iPosition)
 	{ fYadSeqRPos->SetPosition(iPosition); }
 
-uint64 ZYadSeqRPos_ApplyID::GetSize()
+uint64 ZYadSeqRPos_Expr_Logic::GetSize()
 	{ return fYadSeqRPos->GetSize(); }
 
 NAMESPACE_ZOOLIB_END

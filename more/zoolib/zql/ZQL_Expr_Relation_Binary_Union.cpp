@@ -18,43 +18,57 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValBase__
-#define __ZValBase__ 1
-#include "zconfig.h"
+#include "zoolib/zql/ZQL_Expr_Relation_Binary_Union.h"
 
-#include "zoolib/zqe/ZQE_Iterator.h"
-#include "zoolib/zql/ZQL_Expr_Relation_Concrete.h"
+using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZValBase {
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Concrete
+#pragma mark * Expr_Relation_Binary_Union
 
-class Expr_Relation_Concrete : public ZQL::Expr_Relation_Concrete
+Expr_Relation_Binary_Union::Expr_Relation_Binary_Union(
+	ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS)
+:	Expr_Relation_Binary(iLHS, iRHS)
+	{}
+
+Expr_Relation_Binary_Union::~Expr_Relation_Binary_Union()
+	{}
+
+ZRelHead Expr_Relation_Binary_Union::GetRelHead()
+	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
+
+void Expr_Relation_Binary_Union::Accept_Expr_Relation_Binary(
+	Visitor_Expr_Relation_Binary& iVisitor)
 	{
-protected:
-	Expr_Relation_Concrete();
+	if (Visitor_Expr_Relation_Binary_Union* theVisitor =
+		dynamic_cast<Visitor_Expr_Relation_Binary_Union*>(&iVisitor))
+		{
+		this->Accept_Expr_Relation_Binary_Union(*theVisitor);
+		}
+	else
+		{
+		Expr_Relation_Binary::Accept_Expr_Relation_Binary(iVisitor);
+		}
+	}
 
-public:
-// From Expr_Relation via Expr_Relation_Concrete
-	virtual ZRelHead GetRelHead();
+void Expr_Relation_Binary_Union::Accept_Expr_Relation_Binary_Union(
+	Visitor_Expr_Relation_Binary_Union& iVisitor)
+	{ iVisitor.Visit_Expr_Relation_Binary_Union(this); }
 
-// Our protocol
-	virtual ZRef<ZQE::Iterator> MakeIterator() = 0;
-	};
+ZRef<Expr_Relation_Binary> Expr_Relation_Binary_Union::Clone(
+	ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS)
+	{ return new Expr_Relation_Binary_Union(iLHS, iRHS); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValBase pseudo constructors
+#pragma mark * Visitor_Expr_Relation_Binary_Union
 
-ZRef<ZQL::Expr_Relation> sConcrete();
-ZRef<ZQL::Expr_Relation> sConcrete(const ZRelHead& iRelHead);
+void Visitor_Expr_Relation_Binary_Union::Visit_Expr_Relation_Binary_Union(
+	ZRef<Expr_Relation_Binary_Union> iRep)
+	{ Visitor_Expr_Relation_Binary::Visit_Expr_Relation_Binary(iRep); }
 
-ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::Expr_Relation> iExpr);
-
-} // namespace __ZValBase__
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZValBase__

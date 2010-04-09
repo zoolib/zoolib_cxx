@@ -18,29 +18,34 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
+#ifndef __ZVisitor_Expr_DoTransform__
+#define __ZVisitor_Expr_DoTransform__
 #include "zconfig.h"
 
 #include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
-namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * ZVisitor_Expr_DoTransform
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+class ZVisitor_Expr_DoTransform
+:	public virtual ZVisitor_Expr
+	{
+public:
+	ZVisitor_Expr_DoTransform();
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
+// From ZVisitor_Expr
+	virtual void Visit_Expr(ZRef<ZExpr> iRep);
 
-} // namespace Util_Strim_Query
-} // namespace ZQL
+// Our protocol
+	ZRef<ZExpr> DoTransform(ZRef<ZExpr> iExpr);
+
+protected:
+	ZRef<ZExpr> fResult;
+	};
+
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Util_Strim_Query__
+#endif // __ZVisitor_Expr_DoTransform__

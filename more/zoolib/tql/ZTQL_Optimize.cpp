@@ -18,14 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExprRep_Logic_ValCondition.h"
-#include "zoolib/ZVisitor_ExprRep_Logic_DoTransform.h"
+#include "zoolib/ZExpr_Logic_ValCondition.h"
+#include "zoolib/ZVisitor_Expr_Logic_DoTransform.h"
 #include "zoolib/tql/ZTQL_Optimize.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Binary_Union.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Restrict.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Select.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Binary_DoTransform.h"
-#include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Unary_DoTransform.h"
+#include "zoolib/zql/ZQL_Expr_Relation_Binary_Union.h"
+#include "zoolib/zql/ZQL_Expr_Relation_Unary_Restrict.h"
+#include "zoolib/zql/ZQL_Expr_Relation_Unary_Select.h"
+#include "zoolib/zql/ZQL_Visitor_Expr_Relation_Binary_DoTransform.h"
+#include "zoolib/zql/ZQL_Visitor_Expr_Relation_Unary_DoTransform.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 using namespace ZQL;
@@ -58,24 +58,24 @@ void spCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight, CondUnion&
 		}
 	}
 
-void spGather(ZRef<ZExprRep_Logic> iRep, CondUnion& oResult);
+void spGather(ZRef<ZExpr_Logic> iRep, CondUnion& oResult);
 
 class Gather
-:	public virtual ZVisitor_ExprRep_Logic_DoTransform
-,	public virtual ZVisitor_ExprRep_Logic_ValCondition
+:	public virtual ZVisitor_Expr_Logic_DoTransform
+,	public virtual ZVisitor_Expr_Logic_ValCondition
 	{
 public:
 	Gather(CondUnion& oResult);
 
-//	From ZVisitor_ExprRep_Logic_DoTransform
-	virtual void Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep);
-	virtual void Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep);
-	virtual void Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
-	virtual void Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
-	virtual void Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);	
+//	From ZVisitor_Expr_Logic_DoTransform
+	virtual void Visit_Logic_True(ZRef<ZExpr_Logic_True> iRep);
+	virtual void Visit_Logic_False(ZRef<ZExpr_Logic_False> iRep);
+	virtual void Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iRep);
+	virtual void Visit_Logic_And(ZRef<ZExpr_Logic_And> iRep);
+	virtual void Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iRep);	
 
-// From ZVisitor_ExprRep_Logic_ValCondition
-	virtual void Visit_Logic_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep);
+// From ZVisitor_Expr_Logic_ValCondition
+	virtual void Visit_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition> iRep);
 
 private:
 	CondUnion& fResult;
@@ -85,19 +85,19 @@ Gather::Gather(CondUnion& oResult)
 :	fResult(oResult)
 	{}
 
-void Gather::Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep)
+void Gather::Visit_Logic_True(ZRef<ZExpr_Logic_True> iRep)
 	{ fResult.resize(1); }
 
-void Gather::Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep)
+void Gather::Visit_Logic_False(ZRef<ZExpr_Logic_False> iRep)
 	{
 	ZAssert(fResult.empty());
 //	fResult.clear();
 	}
 
-void Gather::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep)
+void Gather::Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
 	{ ZUnimplemented(); }
 
-void Gather::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
+void Gather::Visit_Logic_And(ZRef<ZExpr_Logic_And> iRep)
 	{
 	CondUnion left;
 	spGather(iRep->GetLHS(), left);
@@ -106,7 +106,7 @@ void Gather::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
 	spCrossMultiply(left, right, fResult);
 	}
 
-void Gather::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
+void Gather::Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
 	{
 	CondUnion left;
 	spGather(iRep->GetLHS(), left);
@@ -116,41 +116,41 @@ void Gather::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
 	fResult.insert(fResult.end(), right.begin(), right.end());
 	}
 
-void Gather::Visit_Logic_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep)
+void Gather::Visit_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition> iRep)
 	{
 	fResult.resize(1);
 	fResult[0].push_back(iRep->GetValCondition());
 	}
 
-void spGather(ZRef<ZExprRep_Logic> iRep, CondUnion& oResult)
+void spGather(ZRef<ZExpr_Logic> iRep, CondUnion& oResult)
 	{
 	ZAssert(oResult.empty());
 	Gather theGather(oResult);
 	iRep->Accept(theGather);
 	}
 
-ZRef<ExprRep_Relation> spConvertSelect(
-	ZRef<ExprRep_Relation> iRelation, ZRef<ZExprRep_Logic> iLogical)
+ZRef<Expr_Relation> spConvertSelect(
+	ZRef<Expr_Relation> iRelation, ZRef<ZExpr_Logic> iLogical)
 	{
 	if (!iRelation)
-		return ZRef<ExprRep_Relation>();
+		return ZRef<Expr_Relation>();
 
 	CondUnion resultLogical;
 	spGather(iLogical, resultLogical);
 
-	ZRef<ExprRep_Relation> resultRelation;
+	ZRef<Expr_Relation> resultRelation;
 	for (CondUnion::const_iterator iterUnion = resultLogical.begin();
 		iterUnion != resultLogical.end(); ++iterUnion)
 		{
-		ZRef<ExprRep_Relation> current = iRelation;
+		ZRef<Expr_Relation> current = iRelation;
 		for (CondSect::const_iterator iterSect = iterUnion->begin();
 			iterSect != iterUnion->end(); ++iterSect)
 			{
-			current = new ExprRep_Relation_Unary_Restrict(current, *iterSect);
+			current = new Expr_Relation_Unary_Restrict(current, *iterSect);
 			}
 
 		if (resultRelation)
-			resultRelation = new ExprRep_Relation_Binary_Union(current, resultRelation);
+			resultRelation = new Expr_Relation_Binary_Union(current, resultRelation);
 		else
 			resultRelation = current;
 		}
@@ -158,28 +158,28 @@ ZRef<ExprRep_Relation> spConvertSelect(
 	}
 
 class Optimize
-:	public virtual Visitor_ExprRep_Relation_Binary_DoTransform
-,	public virtual Visitor_ExprRep_Relation_Unary_DoTransform
+:	public virtual Visitor_Expr_Relation_Binary_DoTransform
+,	public virtual Visitor_Expr_Relation_Unary_DoTransform
 	{
 public:
-// From Visitor_ExprRep_Relation_Unary_Select
-	virtual void Visit_ExprRep_Relation_Unary_Select(ZRef<ExprRep_Relation_Unary_Select> iRep);
+// From Visitor_Expr_Relation_Unary_Select
+	virtual void Visit_Expr_Relation_Unary_Select(ZRef<Expr_Relation_Unary_Select> iRep);
 	};
 
-void Optimize::Visit_ExprRep_Relation_Unary_Select(ZRef<ExprRep_Relation_Unary_Select> iRep)
+void Optimize::Visit_Expr_Relation_Unary_Select(ZRef<Expr_Relation_Unary_Select> iRep)
 	{
-	ZRef<ExprRep_Relation> newRep =
-		this->DoTransform(iRep->GetExprRep_Relation()).DynamicCast<ExprRep_Relation>();
+	ZRef<Expr_Relation> newRep =
+		this->DoTransform(iRep->GetExpr_Relation()).DynamicCast<Expr_Relation>();
 
-	fResult = spConvertSelect(newRep, iRep->GetExprRep_Logic());
+	fResult = spConvertSelect(newRep, iRep->GetExpr_Logic());
 	}
 
 } // anonymous namespace
 
 namespace ZQL {
 
-ZRef<ExprRep_Relation> sOptimize(ZRef<ExprRep_Relation> iRep)
-	{ return Optimize().DoTransform(iRep).DynamicCast<ExprRep_Relation>(); }
+ZRef<Expr_Relation> sOptimize(ZRef<Expr_Relation> iRep)
+	{ return Optimize().DoTransform(iRep).DynamicCast<Expr_Relation>(); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

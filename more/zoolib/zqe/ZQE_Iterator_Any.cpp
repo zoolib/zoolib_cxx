@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExprRep_Logic_ValCondition.h"
+#include "zoolib/ZExpr_Logic_ValCondition.h"
 #include "zoolib/zqe/ZQE_Iterator_Any.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
 
@@ -64,13 +64,13 @@ ZRef<ZQE::Result> Iterator_Any_Restrict::ReadInc()
 #pragma mark * Iterator_Any_Select
 
 Iterator_Any_Select::Iterator_Any_Select(
-	ZRef<ZExprRep_Logic> iExprRep_Logic, ZRef<ZQE::Iterator> iIterator)
-:	fExprRep_Logic(iExprRep_Logic)
+	ZRef<ZExpr_Logic> iExpr_Logic, ZRef<ZQE::Iterator> iIterator)
+:	fExpr_Logic(iExpr_Logic)
 ,	fIterator(iIterator)
 	{}
 
 ZRef<ZQE::Iterator> Iterator_Any_Select::Clone()
-	{ return new Iterator_Any_Select(fExprRep_Logic, fIterator->Clone()); }
+	{ return new Iterator_Any_Select(fExpr_Logic, fIterator->Clone()); }
 
 ZRef<ZQE::Result> Iterator_Any_Select::ReadInc()
 	{
@@ -81,7 +81,7 @@ ZRef<ZQE::Result> Iterator_Any_Select::ReadInc()
 			if (ZRef<ZQE::Result_Any> theResult =
 				theZQEResult.DynamicCast<ZQE::Result_Any>())
 				{
-				if (sMatches(fExprRep_Logic, theResult->GetVal()))
+				if (sMatches(fExpr_Logic, theResult->GetVal()))
 					return theResult;
 				}
 			}

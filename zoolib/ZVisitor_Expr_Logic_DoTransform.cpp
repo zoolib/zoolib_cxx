@@ -18,29 +18,46 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
-#include "zconfig.h"
-
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/ZVisitor_Expr_Logic_DoTransform.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
-namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * ZVisitor_Expr_Logic_DoTransform
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+void ZVisitor_Expr_Logic_DoTransform::Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
+	{
+	ZRef<ZExpr_Logic> oldRep = iRep->GetOperand();
+	ZRef<ZExpr_Logic> newRep = this->DoTransform(oldRep).DynamicCast<ZExpr_Logic>();
+	if (oldRep == newRep)
+		fResult = iRep;
+	else
+		fResult = new ZExpr_Logic_Not(newRep);
+	}
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
+void ZVisitor_Expr_Logic_DoTransform::Visit_Logic_And(ZRef<ZExpr_Logic_And> iRep)
+	{
+	ZRef<ZExpr_Logic> oldLHS = iRep->GetLHS();
+	ZRef<ZExpr_Logic> oldRHS = iRep->GetRHS();
+	ZRef<ZExpr_Logic> newLHS = this->DoTransform(oldLHS).DynamicCast<ZExpr_Logic>();
+	ZRef<ZExpr_Logic> newRHS = this->DoTransform(oldRHS).DynamicCast<ZExpr_Logic>();
+	if (oldLHS == newLHS && oldRHS == newRHS)
+		fResult = iRep;
+	else
+		fResult = new ZExpr_Logic_And(newLHS, newRHS);
+	}
 
-} // namespace Util_Strim_Query
-} // namespace ZQL
+void ZVisitor_Expr_Logic_DoTransform::Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
+	{
+	ZRef<ZExpr_Logic> oldLHS = iRep->GetLHS();
+	ZRef<ZExpr_Logic> oldRHS = iRep->GetRHS();
+	ZRef<ZExpr_Logic> newLHS = this->DoTransform(oldLHS).DynamicCast<ZExpr_Logic>();
+	ZRef<ZExpr_Logic> newRHS = this->DoTransform(oldRHS).DynamicCast<ZExpr_Logic>();
+	if (oldLHS == newLHS && oldRHS == newRHS)
+		fResult = iRep;
+	else
+		fResult = new ZExpr_Logic_Or(newLHS, newRHS);
+	}
+
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Util_Strim_Query__

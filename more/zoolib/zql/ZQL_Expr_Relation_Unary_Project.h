@@ -18,29 +18,58 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
+#ifndef __ZQL_Expr_Relation_Unary_Project__
+#define __ZQL_Expr_Relation_Unary_Project__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/zql/ZQL_Expr_Relation_Unary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
-namespace Util_Strim_Query {
+
+class Visitor_Expr_Relation_Unary_Project;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * Expr_Relation_Unary_Project
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+class Expr_Relation_Unary_Project : public Expr_Relation_Unary
+	{
+public:
+	Expr_Relation_Unary_Project(
+		const ZRef<Expr_Relation>& iExpr_Relation, const ZRelHead& iRelHead);
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
+	virtual ~Expr_Relation_Unary_Project();
 
-} // namespace Util_Strim_Query
+// From Expr_Relation via Expr_Relation_Unary
+	virtual ZRelHead GetRelHead();
+
+// From Expr_Relation_Unary
+	virtual void Accept_Expr_Relation_Unary(Visitor_Expr_Relation_Unary& iVisitor);
+
+	virtual ZRef<Expr_Relation_Unary> Clone(ZRef<Expr_Relation> iExpr_Relation);
+
+// Our protocol
+	virtual void Accept_Expr_Relation_Unary_Project(
+		Visitor_Expr_Relation_Unary_Project& iVisitor);
+
+	ZRelHead GetProjectRelHead();
+
+private:
+	const ZRelHead fRelHead;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_Expr_Relation_Unary_Project
+
+class Visitor_Expr_Relation_Unary_Project : public virtual Visitor_Expr_Relation_Unary
+	{
+public:
+	virtual void Visit_Expr_Relation_Unary_Project(ZRef<Expr_Relation_Unary_Project> iRep);
+	};
+
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Util_Strim_Query__
+#endif // __ZQL_Expr_Relation_Unary_Project__

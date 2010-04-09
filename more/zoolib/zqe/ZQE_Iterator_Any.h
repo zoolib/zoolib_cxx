@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZQE_Iterator_Any__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExprRep_Logic.h"
+#include "zoolib/ZExpr_Logic.h"
 #include "zoolib/ZValCondition.h"
 #include "zoolib/zqe/ZQE_Iterator.h"
 
@@ -54,14 +54,14 @@ private:
 class Iterator_Any_Select : public ZQE::Iterator
 	{
 public:
-	Iterator_Any_Select(ZRef<ZExprRep_Logic> iExprRep_Logic, ZRef<ZQE::Iterator> iIterator);
+	Iterator_Any_Select(ZRef<ZExpr_Logic> iExpr_Logic, ZRef<ZQE::Iterator> iIterator);
 	
 // From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<ZQE::Result> ReadInc();
 
 private:
-	ZRef<ZExprRep_Logic> fExprRep_Logic;
+	ZRef<ZExpr_Logic> fExpr_Logic;
 	ZRef<Iterator> fIterator;
 	};
 

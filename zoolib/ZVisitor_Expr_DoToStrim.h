@@ -18,29 +18,56 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
+#ifndef __ZVisitor_Expr_DoToStrim__
+#define __ZVisitor_Expr_DoToStrim__
 #include "zconfig.h"
 
 #include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/ZStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
-namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * ZVisitor_Expr_DoToStrim
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+class ZVisitor_Expr_DoToStrim
+:	public virtual ZVisitor_Expr
+	{
+public:
+	struct Options
+		{
+		Options();
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
+		std::string fEOLString;
+		std::string fIndentString;
+		size_t fInitialIndent;
+		bool fDebuggingOutput;
+		};
 
-} // namespace Util_Strim_Query
-} // namespace ZQL
+	ZVisitor_Expr_DoToStrim();
+
+// From ZVisitor_Expr
+	virtual void Visit_Expr(ZRef<ZExpr> iRep);
+
+// Our protocol
+	void StartToStrim(const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZExpr> iExpr);
+
+	void DoToStrim(ZRef<ZExpr> iExpr);
+
+protected:
+	const Options& pOptions();
+	const ZStrimW& pStrimW();
+
+	void pWriteLFIndent();
+
+private:
+	const Options* fOptions;
+	const ZStrimW* fStrimW;
+
+	size_t fIndent;
+	};
+
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Util_Strim_Query__
+#endif // __ZVisitor_Expr_DoToStrim__

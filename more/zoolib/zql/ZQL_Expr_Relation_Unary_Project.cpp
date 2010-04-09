@@ -18,43 +18,61 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValBase__
-#define __ZValBase__ 1
-#include "zconfig.h"
+#include "zoolib/zql/ZQL_Expr_Relation_Unary_Project.h"
 
-#include "zoolib/zqe/ZQE_Iterator.h"
-#include "zoolib/zql/ZQL_Expr_Relation_Concrete.h"
+using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZValBase {
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Concrete
+#pragma mark * Expr_Relation_Unary_Project
 
-class Expr_Relation_Concrete : public ZQL::Expr_Relation_Concrete
+Expr_Relation_Unary_Project::Expr_Relation_Unary_Project(
+		const ZRef<Expr_Relation>& iExpr_Relation, const ZRelHead& iRelHead)
+:	Expr_Relation_Unary(iExpr_Relation)
+,	fRelHead(iRelHead)
+	{}
+
+Expr_Relation_Unary_Project::~Expr_Relation_Unary_Project()
+	{}
+
+ZRelHead Expr_Relation_Unary_Project::GetRelHead()
+	{ return this->GetExpr_Relation()->GetRelHead() & fRelHead; }
+
+void Expr_Relation_Unary_Project::Accept_Expr_Relation_Unary(
+	Visitor_Expr_Relation_Unary& iVisitor)
 	{
-protected:
-	Expr_Relation_Concrete();
+	if (Visitor_Expr_Relation_Unary_Project* theVisitor =
+		dynamic_cast<Visitor_Expr_Relation_Unary_Project*>(&iVisitor))
+		{
+		this->Accept_Expr_Relation_Unary_Project(*theVisitor);
+		}
+	else
+		{
+		Expr_Relation_Unary::Accept_Expr_Relation_Unary(iVisitor);
+		}
+	}
 
-public:
-// From Expr_Relation via Expr_Relation_Concrete
-	virtual ZRelHead GetRelHead();
+ZRef<Expr_Relation_Unary> Expr_Relation_Unary_Project::Clone(
+	ZRef<Expr_Relation> iExpr_Relation)
+	{ return new Expr_Relation_Unary_Project(iExpr_Relation, fRelHead); }
 
-// Our protocol
-	virtual ZRef<ZQE::Iterator> MakeIterator() = 0;
-	};
+void Expr_Relation_Unary_Project::Accept_Expr_Relation_Unary_Project(
+	Visitor_Expr_Relation_Unary_Project& iVisitor)
+	{ iVisitor.Visit_Expr_Relation_Unary_Project(this); }
+
+ZRelHead Expr_Relation_Unary_Project::GetProjectRelHead()
+	{ return fRelHead; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValBase pseudo constructors
+#pragma mark * Visitor_Expr_Relation_Unary_Project
 
-ZRef<ZQL::Expr_Relation> sConcrete();
-ZRef<ZQL::Expr_Relation> sConcrete(const ZRelHead& iRelHead);
+void Visitor_Expr_Relation_Unary_Project::Visit_Expr_Relation_Unary_Project(
+	ZRef<Expr_Relation_Unary_Project> iRep)
+	{ Visitor_Expr_Relation_Unary::Visit_Expr_Relation_Unary(iRep); }
 
-ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::Expr_Relation> iExpr);
-
-} // namespace __ZValBase__
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZValBase__

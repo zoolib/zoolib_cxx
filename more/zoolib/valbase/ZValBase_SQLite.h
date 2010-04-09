@@ -51,8 +51,8 @@ class ZValBase_SQLite
 public:
 	ZValBase_SQLite(sqlite* iDB);
 
-	// Get list of ZExprRep_Physicals representing tables?
-	// get list of table names?, then be able to get a ZExprRep_Physical for the table?
+	// Get list of ZExpr_Physicals representing tables?
+	// get list of table names?, then be able to get a ZExpr_Physical for the table?
 	
 	// then again, we probably want to transform the expr-tree into an sql statement,
 	// to be passed to sqlite.

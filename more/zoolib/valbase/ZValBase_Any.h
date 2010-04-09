@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZVal_Any.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation.h"
+#include "zoolib/zql/ZQL_Expr_Relation.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase_Any {
@@ -32,7 +32,7 @@ namespace ZValBase_Any {
 #pragma mark -
 #pragma mark * ZValBase_Any pseudo constructors
 
-ZRef<ZQL::ExprRep_Relation> sConcrete(const ZSeq_Any& iSeq);
+ZRef<ZQL::Expr_Relation> sConcrete(const ZSeq_Any& iSeq);
 
 } // namespace ZValBase_Any
 NAMESPACE_ZOOLIB_END

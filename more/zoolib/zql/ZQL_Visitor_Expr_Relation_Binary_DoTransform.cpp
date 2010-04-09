@@ -18,29 +18,27 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
-#include "zconfig.h"
-
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/zql/ZQL_Visitor_Expr_Relation_Binary_DoTransform.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
-namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * Visitor_Expr_Relation_Binary_DoTransform
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+void Visitor_Expr_Relation_Binary_DoTransform::Visit_Expr_Relation_Binary(
+	ZRef<Expr_Relation_Binary> iRep)
+	{
+	ZRef<Expr_Relation> oldLHS = iRep->GetLHS();
+	ZRef<Expr_Relation> oldRHS = iRep->GetRHS();
+	ZRef<Expr_Relation> newLHS = this->DoTransform(oldLHS).DynamicCast<Expr_Relation>();
+	ZRef<Expr_Relation> newRHS = this->DoTransform(oldRHS).DynamicCast<Expr_Relation>();
+	if (oldLHS == newLHS && oldRHS == newRHS)
+		fResult = iRep;
+	else
+		fResult = iRep->Clone(newLHS, newRHS);
+	}
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
-
-} // namespace Util_Strim_Query
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Util_Strim_Query__

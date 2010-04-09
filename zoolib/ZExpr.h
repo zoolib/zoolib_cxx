@@ -18,29 +18,46 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
+#ifndef __ZExpr__
+#define __ZExpr__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/ZRef_Counted.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
-namespace Util_Strim_Query {
+
+class ZVisitor_Expr;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * ZExpr
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+class ZExpr : public ZRefCountedWithFinalize
+	{
+protected:
+	ZExpr();
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
+public:
+	virtual ~ZExpr();
 
-} // namespace Util_Strim_Query
-} // namespace ZQL
+// From ZRefCountedWithFinalize
+	virtual void Accept(ZVisitor& iVisitor);
+
+// Our protocol
+	virtual void Accept_Expr(ZVisitor_Expr& iVisitor);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVisitor_Expr
+
+class ZVisitor_Expr : public virtual ZVisitor
+	{
+public:
+// Our protocol
+	virtual void Visit_Expr(ZRef<ZExpr> iRep);
+	};
+
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Util_Strim_Query__
+#endif // __ZExpr__

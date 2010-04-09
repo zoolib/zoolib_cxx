@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/valbase/ZValBase.h"
 #include "zoolib/valbase/ZValBase_Any.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Concrete.h"
+#include "zoolib/zql/ZQL_Expr_Relation_Concrete.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase_Any {
@@ -72,36 +72,36 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ExprRep_Relation_Concrete
+#pragma mark * Expr_Relation_Concrete
 
-class ExprRep_Relation_Concrete : public ZValBase::ExprRep_Relation_Concrete
+class Expr_Relation_Concrete : public ZValBase::Expr_Relation_Concrete
 	{
 public:
-	ExprRep_Relation_Concrete(const ZSeq_Any& iSeq);
+	Expr_Relation_Concrete(const ZSeq_Any& iSeq);
 
-// From ZValBase::ExprRep_Relation_Concrete
+// From ZValBase::Expr_Relation_Concrete
 	virtual ZRef<ZQE::Iterator> MakeIterator();
 
 private:
 	const ZSeq_Any fSeq;
 	};
 
-ExprRep_Relation_Concrete::ExprRep_Relation_Concrete(const ZSeq_Any& iSeq)
+Expr_Relation_Concrete::Expr_Relation_Concrete(const ZSeq_Any& iSeq)
 :	fSeq(iSeq)
 	{}
 
-ZRef<ZQE::Iterator> ExprRep_Relation_Concrete::MakeIterator()
+ZRef<ZQE::Iterator> Expr_Relation_Concrete::MakeIterator()
 	{ return new Iterator(fSeq); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValBase_Any pseudo constructors
 
-ZRef<ZQL::ExprRep_Relation> sConcrete(const ZSeq_Any& iSeq)
+ZRef<ZQL::Expr_Relation> sConcrete(const ZSeq_Any& iSeq)
 	{
 	// Could do a dynamic cast on iYadSeqR to see if it's really a ZYadSeqRPos,
 	// in which case returning a ZValBase_YadSeqRPos::Iterator would be a win.
-	return new ExprRep_Relation_Concrete(iSeq);
+	return new Expr_Relation_Concrete(iSeq);
 	}
 
 } // namespace ZValBase_YadSeqR

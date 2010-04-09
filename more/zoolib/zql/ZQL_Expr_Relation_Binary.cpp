@@ -18,29 +18,62 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
-#include "zconfig.h"
+#include "zoolib/zql/ZQL_Expr_Relation_Binary.h"
 
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
-namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * Expr_Relation_Binary
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+Expr_Relation_Binary::Expr_Relation_Binary(
+	ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS)
+:	fLHS(iLHS)
+,	fRHS(iRHS)
+	{}
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
+Expr_Relation_Binary::~Expr_Relation_Binary()
+	{}
 
-} // namespace Util_Strim_Query
+void Expr_Relation_Binary::Accept_Expr_Relation(Visitor_Expr_Relation& iVisitor)
+	{
+	if (Visitor_Expr_Relation_Binary* theVisitor =
+		dynamic_cast<Visitor_Expr_Relation_Binary*>(&iVisitor))
+		{
+		this->Accept_Expr_Relation_Binary(*theVisitor);
+		}
+	else
+		{
+		Expr_Relation::Accept_Expr_Relation(iVisitor);
+		}
+	}
+
+void Expr_Relation_Binary::Accept_Expr_Relation_Binary(
+	Visitor_Expr_Relation_Binary& iVisitor)
+	{ iVisitor.Visit_Expr_Relation_Binary(this); }
+
+ZRef<Expr_Relation> Expr_Relation_Binary::GetLHS()
+	{ return fLHS; }
+
+ZRef<Expr_Relation> Expr_Relation_Binary::GetRHS()
+	{ return fRHS; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_Expr_Relation_Binary
+
+void Visitor_Expr_Relation_Binary::Visit_Expr_Relation_Binary(
+	ZRef<Expr_Relation_Binary> iRep)
+	{
+	if (ZRef<Expr_Relation> theRelation = iRep->GetLHS())
+		theRelation->Accept(*this);
+
+	if (ZRef<Expr_Relation> theRelation = iRep->GetRHS())
+		theRelation->Accept(*this);
+	}
+
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Util_Strim_Query__

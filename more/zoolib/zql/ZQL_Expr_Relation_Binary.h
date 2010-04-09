@@ -18,29 +18,57 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
+#ifndef __ZQL_Expr_Relation_Binary__
+#define __ZQL_Expr_Relation_Binary__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/zql/ZQL_Expr_Relation.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
-namespace Util_Strim_Query {
+
+class Visitor_Expr_Relation_Binary;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * Expr_Relation_Binary
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+class Expr_Relation_Binary : public Expr_Relation
+	{
+protected:
+	Expr_Relation_Binary(ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS);
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
+public:
+	virtual ~Expr_Relation_Binary();
 
-} // namespace Util_Strim_Query
+// From Expr_Relation
+	virtual void Accept_Expr_Relation(Visitor_Expr_Relation& iVisitor);
+
+// Our protocol
+	virtual void Accept_Expr_Relation_Binary(Visitor_Expr_Relation_Binary& iVisitor);
+	
+	virtual ZRef<Expr_Relation_Binary> Clone (
+		ZRef<Expr_Relation> iLHS, ZRef<Expr_Relation> iRHS) = 0;
+
+	ZRef<Expr_Relation> GetLHS();
+	ZRef<Expr_Relation> GetRHS();
+
+protected:
+	const ZRef<Expr_Relation> fLHS;
+	const ZRef<Expr_Relation> fRHS;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_Expr_Relation_Binary
+
+class Visitor_Expr_Relation_Binary : public virtual Visitor_Expr_Relation
+	{
+public:
+	virtual void Visit_Expr_Relation_Binary(ZRef<Expr_Relation_Binary> iRep);
+	};
+
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Util_Strim_Query__
+#endif // __ZQL_Expr_Relation_Binary__

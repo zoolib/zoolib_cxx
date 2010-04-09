@@ -18,29 +18,17 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
-#include "zconfig.h"
-
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/ZUtil_Strim_ValCondition.h"
+#include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoToStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
-namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * ZVisitor_Expr_Logic_ValCondition_DoToStrim
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+void ZVisitor_Expr_Logic_ValCondition_DoToStrim::Visit_Logic_ValCondition(
+	ZRef<ZExpr_Logic_ValCondition> iRep)
+	{ ZUtil_Strim_ValCondition::sToStrim(iRep->GetValCondition(), pStrimW()); }
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
-
-} // namespace Util_Strim_Query
-} // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Util_Strim_Query__

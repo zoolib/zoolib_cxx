@@ -18,29 +18,31 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
+#ifndef __ZQL_Visitor_Expr_Relation_Binary_DoTransform__
+#define __ZQL_Visitor_Expr_Relation_Binary_DoTransform__
 #include "zconfig.h"
 
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/ZVisitor_Expr_DoTransform.h"
+
+#include "zoolib/zql/ZQL_Expr_Relation_Binary.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
-namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * Visitor_Query_DoTransform
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+class Visitor_Expr_Relation_Binary_DoTransform
+:	public virtual ZVisitor_Expr_DoTransform
+,	public virtual Visitor_Expr_Relation_Binary
+	{
+public:
+// From Visitor_Expr_Binary_Relation
+	virtual void Visit_Expr_Relation_Binary(ZRef<Expr_Relation_Binary> iRep);
+	};
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
-
-} // namespace Util_Strim_Query
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Util_Strim_Query__
+#endif // __ZQL_Visitor_Expr_Relation_DoTransform__

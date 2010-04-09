@@ -18,29 +18,28 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
+#ifndef __ZVisitor_Expr_Logic_ValCondition_DoToStrim__
+#define __ZVisitor_Expr_Logic_ValCondition_DoToStrim__
 #include "zconfig.h"
 
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/ZVisitor_Expr_Logic_DoToStrim.h"
+#include "zoolib/ZExpr_Logic_ValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
-namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * ZVisitor_Expr_Logic_ValCondition_DoToStrim
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+class ZVisitor_Expr_Logic_ValCondition_DoToStrim
+:	public virtual ZVisitor_Expr_Logic_DoToStrim
+,	public virtual ZVisitor_Expr_Logic_ValCondition
+	{
+public:
+// From ZVisitor_Expr_Logic_ValCondition
+	virtual void Visit_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition> iRep);
+	};
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
-
-} // namespace Util_Strim_Query
-} // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Util_Strim_Query__
+#endif // __ZVisitor_Expr_Logic_ValCondition_DoToStrim__

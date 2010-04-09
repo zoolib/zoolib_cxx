@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/valbase/ZValBase.h"
 #include "zoolib/valbase/ZValBase_YadSeqRPos.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Concrete.h"
+#include "zoolib/zql/ZQL_Expr_Relation_Concrete.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase_YadSeqRPos {
@@ -63,33 +63,33 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ExprRep_Relation_Concrete
+#pragma mark * Expr_Relation_Concrete
 
-class ExprRep_Relation_Concrete : public ZValBase::ExprRep_Relation_Concrete
+class Expr_Relation_Concrete : public ZValBase::Expr_Relation_Concrete
 	{
 public:
-	ExprRep_Relation_Concrete(ZRef<ZYadSeqRPos> iYadSeqRPos);
+	Expr_Relation_Concrete(ZRef<ZYadSeqRPos> iYadSeqRPos);
 
-// From ZValBase::ExprRep_Relation_Concrete
+// From ZValBase::Expr_Relation_Concrete
 	virtual ZRef<ZQE::Iterator> MakeIterator();
 
 private:
 	ZRef<ZYadSeqRPos> fYadSeqRPos;
 	};
 
-ExprRep_Relation_Concrete::ExprRep_Relation_Concrete(ZRef<ZYadSeqRPos> iYadSeqRPos)
+Expr_Relation_Concrete::Expr_Relation_Concrete(ZRef<ZYadSeqRPos> iYadSeqRPos)
 :	fYadSeqRPos(iYadSeqRPos)
 	{}
 
-ZRef<ZQE::Iterator> ExprRep_Relation_Concrete::MakeIterator()
+ZRef<ZQE::Iterator> Expr_Relation_Concrete::MakeIterator()
 	{ return new Iterator(fYadSeqRPos); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValBase_YadSeqRPos pseudo constructors
 
-ZRef<ZQL::ExprRep_Relation> sConcrete(ZRef<ZYadSeqRPos> iYadSeqRPos)
-	{ return new ExprRep_Relation_Concrete(iYadSeqRPos); }
+ZRef<ZQL::Expr_Relation> sConcrete(ZRef<ZYadSeqRPos> iYadSeqRPos)
+	{ return new Expr_Relation_Concrete(iYadSeqRPos); }
 
 } // namespace ZValBase_YadSeqRPos
 NAMESPACE_ZOOLIB_END

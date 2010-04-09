@@ -18,29 +18,42 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
-#include "zconfig.h"
-
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/ZVisitor_Expr_Logic_DoEval.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
-namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * ZVisitor_Expr_Logic_DoEval
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+ZVisitor_Expr_Logic_DoEval::ZVisitor_Expr_Logic_DoEval()
+:	fResult(false)
+	{}
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
+void ZVisitor_Expr_Logic_DoEval::Visit_Logic_True(ZRef<ZExpr_Logic_True> iRep)
+	{ fResult = true; }
 
-} // namespace Util_Strim_Query
-} // namespace ZQL
+void ZVisitor_Expr_Logic_DoEval::Visit_Logic_False(ZRef<ZExpr_Logic_False> iRep)
+	{ fResult = false; }
+
+void ZVisitor_Expr_Logic_DoEval::Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
+	{ fResult = ! this->DoEval(iRep); }
+
+void ZVisitor_Expr_Logic_DoEval::Visit_Logic_And(ZRef<ZExpr_Logic_And> iRep)
+	{ fResult = this->DoEval(iRep->GetLHS()) && this->DoEval(iRep->GetRHS()); }
+
+void ZVisitor_Expr_Logic_DoEval::Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
+	{ fResult = this->DoEval(iRep->GetLHS()) || this->DoEval(iRep->GetRHS()); }
+
+bool ZVisitor_Expr_Logic_DoEval::DoEval(ZRef<ZExpr> iExpr)
+	{
+	bool result = false;
+	if (iExpr)
+		{
+		iExpr->Accept(*this);
+		std::swap(result, fResult);
+		}
+	return result;
+	}
+
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Util_Strim_Query__

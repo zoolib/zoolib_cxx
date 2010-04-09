@@ -1,11 +1,11 @@
 #include "zoolib/tql/ZTQL_Optimize.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Restrict.h"
-#include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Select.h"
+#include "zoolib/zql/ZQL_Expr_Relation_Unary_Restrict.h"
+#include "zoolib/zql/ZQL_Expr_Relation_Unary_Select.h"
 
 #include "zoolib/zql/ZQL_Util_Strim_Query.h"
 
 #include "zoolib/tql/ZUtil_TQLConvert.h"
-#include "zoolib/ZExprRep_Logic_ValCondition.h"
+#include "zoolib/ZExpr_Logic_ValCondition.h"
 
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
@@ -30,7 +30,7 @@
 #include "zoolib/valbase/ZValBase_YadSeqR.h"
 #include "zoolib/valbase/ZValBase_YadSeqRPos.h"
 
-#include "zoolib/ZYadSeq_ExprRep_Logic.h"
+#include "zoolib/ZYadSeq_Expr_Logic.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
 
 NAMESPACE_ZOOLIB_USING
@@ -40,25 +40,21 @@ using namespace ZQL;
 using std::set;
 using std::string;
 
-
-typedef ZRef<ZExprRep_Logic> ZExpr_Logic;
-typedef ZRef<ZQL::ExprRep_Relation> Expr_Relation;
-
-typedef ZExpr_Logic Spec;
-typedef Expr_Relation Query;
+typedef ZRef<ZExpr_Logic> Spec;
+typedef ZRef<Expr_Relation> Query;
 typedef ZMap_Expr Map;
 typedef ZRelHead RelHead;
 typedef ZVal_Expr Val;
 typedef ZValCondition Condition;
 
-ZRef<ExprRep_Relation> sAll(const ZRelHead& iRelHead)
-	{ return ZValBase::sConcrete(); }
+ZRef<Expr_Relation> sAll(const ZRelHead& iRelHead)
+	{ return ZValBase::sConcrete(iRelHead); }
 
-ZRef<ExprRep_Relation> sAllID(const std::string& iIDName)
-	{ return ZValBase::sConcrete(); }
+ZRef<Expr_Relation> sAllID(const std::string& iIDName)
+	{ return ZValBase::sConcrete(ZRelHead(true) | iIDName); }
 
-ZRef<ExprRep_Relation> sAllID(const std::string& iIDName, const ZRelHead& iRelHead)
-	{ return ZValBase::sConcrete(); }
+ZRef<Expr_Relation> sAllID(const std::string& iIDName, const ZRelHead& iRelHead)
+	{ return ZValBase::sConcrete(iRelHead | iIDName); }
 
 // =================================================================================================
 #pragma mark -
@@ -156,7 +152,7 @@ static Spec sBadAuthors()
 			| CName("pass") == CName("unam")
 			);
 */
-	return new ZExprRep_Logic_ValCondition(theSpec);
+	return new ZExpr_Logic_ValCondition(theSpec);
 	}
 
 static Query badPassword()
@@ -292,7 +288,7 @@ static Query sQuery()
 
 static void sDumpQuery(const ZStrimW& s, Query iQuery)
 	{
-	ZVisitor_ExprRep_DoToStrim::Options theOptions;
+	ZVisitor_Expr_DoToStrim::Options theOptions;
 	theOptions.fDebuggingOutput = true;
 
 	s << "ZTQL::Query equivalent -----------------------\n";
@@ -300,11 +296,16 @@ static void sDumpQuery(const ZStrimW& s, Query iQuery)
 
 	s << "\nZTQL::Query optimized -----------------------\n";
 	
-	Expr_Relation theNode = sOptimize(iQuery);
+	Query theNode = sOptimize(iQuery);
 	
 	Util_Strim_Query::sToStrim(theNode, theOptions, s);
 
 	s << "\n";	
+	}
+
+void sTestQL6(const ZStrimW& s)
+	{
+	
 	}
 
 #if 1
@@ -358,17 +359,17 @@ void sTestQL4(const ZStrimW& s)
 		theSeq.Append(outerMap);
 		}
 
-	Expr_Relation thePhys(ZValBase_Any::sConcrete(theSeq));
+	Query thePhys(ZValBase_Any::sConcrete(theSeq));
 //	ZExpr_ValCondition theSpec1 = CVal() > CConst(10);
 //	Spec theSpec = Spec(false) | (CVal() > CConst(10));
 //	Spec theSpec = ();
-	Spec theSpec = new ZExprRep_Logic_ValCondition(CTrail("inner/field") < CConst(10));
+	Spec theSpec = new ZExpr_Logic_ValCondition(CTrail("inner/field") < CConst(10));
 	thePhys = thePhys & theSpec;
 
 	Util_Strim_Query::sToStrim(thePhys, s);
 	s << "\n";
 
-	thePhys = Expr_Relation(sOptimize(thePhys));
+	thePhys = sOptimize(thePhys);
 
 	ZRef<ZQE::Iterator> theIterator = ZValBase::sIterator(thePhys);
 
@@ -388,8 +389,13 @@ void sTestQL4(const ZStrimW& s)
 
 void sTestQL3(const ZStrimW& s)
 	{
+	sDumpQuery(s, sQueryNoHead());
+	sDumpQuery(s, sQuery());
+
+return;
 	Spec theSpec = CVar("TestVar1") == CConst(1) | CVar("TestVar2") == CConst(2);
-	Expr_Relation theExp = sSelect(theSpec, sAll(ZRelHead(true)));
+	Query theExp = sSelect(theSpec, sAll(ZRelHead(true)));
+
 	sDumpQuery(s, theExp);
 
 	sDumpQuery(s, theExp * theExp);
@@ -398,12 +404,12 @@ void sTestQL3(const ZStrimW& s)
 	theMap.Set("name", ZMap_Expr().Set("last", string("fred")));
 //	Spec theSpec = CTrail("name/last") < CConst("fred1");
 	
-	if (sMatches(new ZExprRep_Logic_ValCondition(CTrail("name/last") < CConst("fred1")), theMap))
+	if (sMatches(new ZExpr_Logic_ValCondition(CTrail("name/last") < CConst("fred1")), theMap))
 		s << "Matches\n";
 	else
 		s << "Doesn't\n";
 
-	if (sMatches(new ZExprRep_Logic_ValCondition(CTrail("name/last") >= CConst("fred1")), theMap))
+	if (sMatches(new ZExpr_Logic_ValCondition(CTrail("name/last") >= CConst("fred1")), theMap))
 		s << "Matches\n";
 	else
 		s << "Doesn't\n";
@@ -414,7 +420,6 @@ void sTestQL3(const ZStrimW& s)
 //	Query theQuery = sAllID("$ID$") & theSpec;
 //	sDumpQuery(s, theQuery);
 
-	sDumpQuery(s, sQuery());
 #if 0
 //	sDumpQuery(s, sQueryNoHead());
 //	sDumpQuery(s, ZUtil_TQLConvert::sConvert(sTBQuery(), false));
@@ -476,11 +481,11 @@ void sTestQL5(const ZStrimW& s)
 	ZRef<ZYadSeqR> yad1 = sMakeYadR(s1);
 	ZRef<ZYadSeqR> yad2 = sMakeYadR(s2);
 
-	Expr_Relation thePhys1 = ZValBase_YadSeqR::sConcrete(yad1);
-	Expr_Relation thePhys2 = ZValBase_YadSeqR::sConcrete(yad2);
+	Query thePhys1 = ZValBase_YadSeqR::sConcrete(yad1);
+	Query thePhys2 = ZValBase_YadSeqR::sConcrete(yad2);
 
-//	Expr_Relation sect = sJoin(thePhys1, thePhys2);
-	Expr_Relation sect = thePhys1 * thePhys2;
+//	Query sect = sJoin(thePhys1, thePhys2);
+	Query sect = thePhys1 * thePhys2;
 	
 	ZRef<ZQE::Iterator> theIterator = ZValBase::sIterator(sect);
 		
@@ -529,9 +534,9 @@ void sTestQL(const ZStrimW& s)
 	#endif
 
 		{
-		ZExpr_Logic theCondition =
+		Spec theCondition =
 			CName("Disc Number") == CConst(int32(2)) & CName("Track Number") > CConst(int32(10));
-		Expr_Relation thePhys = ZValBase::sConcrete() & theCondition;
+		Query thePhys = ZValBase::sConcrete() & theCondition;
 		Util_Strim_Query::sToStrim(thePhys, s);
 		s << "\n";
 		}
@@ -551,7 +556,7 @@ void sTestQL(const ZStrimW& s)
 
 	ZYadOptions theYadOptions(true);
 
-	ZExpr_Logic theCondition =
+	Spec theCondition =
 		CName("Disc Number") == CConst(int32(2)) & CName("Track Number") > CConst(int32(10));
 
 //	ZRef<ZYadSeqR> theYadSeqR;
@@ -567,16 +572,16 @@ void sTestQL(const ZStrimW& s)
 		s.Writef("\nElapsed, read: %gms\n", 1000.0 * (ZTime::sNow() - start));
 
 		start = ZTime::sNow();
-		Expr_Relation theTracks = ZValBase_Any::sConcrete(theSeqTracks);
-		Expr_Relation thePlayList = ZValBase_Any::sConcrete(theSeqPlayList);
-//		Expr_Relation thePhys = ZValBase_YadSeqR::sConcrete(theYadSeqR);
-		Expr_Relation thePhys = theTracks & theCondition;
-//		Expr_Relation thePhys = sJoin(thePlayList, theTracks);
+		Query theTracks = ZValBase_Any::sConcrete(theSeqTracks);
+		Query thePlayList = ZValBase_Any::sConcrete(theSeqPlayList);
+//		Query thePhys = ZValBase_YadSeqR::sConcrete(theYadSeqR);
+		Query thePhys = theTracks & theCondition;
+//		Query thePhys = sJoin(thePlayList, theTracks);
 
 		Util_Strim_Query::sToStrim(thePhys, s);
 		s << "\n";
 
-//		thePhys = Expr_Relation(sOptimize(thePhys));
+//		thePhys = sOptimize(thePhys);
 
 		ZRef<ZQE::Iterator> theIterator = ZValBase::sIterator(thePhys);
 
@@ -603,7 +608,7 @@ void sTestQL(const ZStrimW& s)
 #elif 1
 	if (theYadSeqR)
 		{
-		theYadSeqR = new ZYadSeqR_ExprRep_Logic(theYadSeqR, theCondition);
+		theYadSeqR = new ZYadSeqR_Expr_Logic(theYadSeqR, theCondition);
 		theYadSeqR->SkipAll();
 //		ZYad_ZooLibStrim::sToStrim(0, theYadOptions, theYadSeqR, s);
 		}

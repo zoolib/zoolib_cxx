@@ -18,29 +18,26 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
+#ifndef __ZQL_Expr_Relation_Unary_Restrict__
+#define __ZQL_Expr_Relation_Unary_Restrict__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/zql/ZQL_Expr_Relation_Unary_Restrict_T.h"
+#include "zoolib/ZValCondition.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
-namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * ZQL::Expr_Relation_Unary_Restrict
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+typedef Expr_Relation_Unary_Restrict_T<ZVal_Expr> Expr_Relation_Unary_Restrict;
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
+typedef Visitor_Expr_Relation_Unary_Restrict_T<ZVal_Expr>
+	Visitor_Expr_Relation_Unary_Restrict;
 
-} // namespace Util_Strim_Query
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Util_Strim_Query__
+#endif // __ZQL_Expr_Relation_Unary_Restrict_T__

@@ -18,43 +18,89 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValBase__
-#define __ZValBase__ 1
-#include "zconfig.h"
+#include "zoolib/ZVisitor_Expr_DoToStrim.h"
 
-#include "zoolib/zqe/ZQE_Iterator.h"
-#include "zoolib/zql/ZQL_Expr_Relation_Concrete.h"
+#include <typeinfo>
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZValBase {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Relation_Concrete
+#pragma mark * ZVisitor_Expr_DoToStrim::Options
 
-class Expr_Relation_Concrete : public ZQL::Expr_Relation_Concrete
+ZVisitor_Expr_DoToStrim::Options::Options()
+:	fEOLString("\n")
+,	fIndentString("  ")
+,	fInitialIndent(0)
+,	fDebuggingOutput(false)
+	{}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVisitor_Expr_DoToStrim
+static ZStrimW_Null sNull;
+
+ZVisitor_Expr_DoToStrim::ZVisitor_Expr_DoToStrim()
+:	fOptions(nullptr)
+,	fStrimW(nullptr)
+,	fIndent(0)
+	{}
+
+void ZVisitor_Expr_DoToStrim::Visit_Expr(ZRef<ZExpr> iRep)
 	{
-protected:
-	Expr_Relation_Concrete();
+	if (iRep)
+		pStrimW() << "/* unhandled ZExpr: " << typeid(*iRep.Get()).name() << " */";
+	else
+		pStrimW() << "/*null ZExpr*/";
+	}
 
-public:
-// From Expr_Relation via Expr_Relation_Concrete
-	virtual ZRelHead GetRelHead();
+void ZVisitor_Expr_DoToStrim::StartToStrim(
+	const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZExpr> iExpr)
+	{
+	ZAssert(!fOptions && !fStrimW);
+	fOptions = &iOptions;
+	fStrimW = &iStrimW;
+	try
+		{
+		this->DoToStrim(iExpr);
+		}
+	catch (...)
+		{
+		fOptions = nullptr;
+		fStrimW = nullptr;
+		fIndent = 0;
+		throw;
+		}
+	}
 
-// Our protocol
-	virtual ZRef<ZQE::Iterator> MakeIterator() = 0;
-	};
+void ZVisitor_Expr_DoToStrim::DoToStrim(ZRef<ZExpr> iExpr)
+	{
+	ZAssert(fOptions && fStrimW);
+	if (iExpr)
+		{
+		++fIndent;
+		iExpr->Accept(*this);
+		--fIndent;
+		}
+	}
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZValBase pseudo constructors
+const  ZVisitor_Expr_DoToStrim::Options& ZVisitor_Expr_DoToStrim::pOptions()
+	{
+	ZAssert(fOptions);
+	return *fOptions;
+	}
 
-ZRef<ZQL::Expr_Relation> sConcrete();
-ZRef<ZQL::Expr_Relation> sConcrete(const ZRelHead& iRelHead);
+const ZStrimW& ZVisitor_Expr_DoToStrim::pStrimW()
+	{
+	ZAssert(fStrimW);
+	return *fStrimW;
+	}
 
-ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::Expr_Relation> iExpr);
+void ZVisitor_Expr_DoToStrim::pWriteLFIndent()
+	{
+	pStrimW().Write(pOptions().fEOLString);
+	for (size_t x = 0; x < fIndent; ++x)
+		pStrimW().Write(pOptions().fIndentString);
+	}
 
-} // namespace __ZValBase__
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZValBase__

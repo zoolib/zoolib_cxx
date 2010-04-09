@@ -18,29 +18,52 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
-#include "zconfig.h"
+#include "zoolib/zql/ZQL_Expr_Relation_Unary.h"
 
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
-namespace Util_Strim_Query {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * Expr_Relation
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+Expr_Relation_Unary::Expr_Relation_Unary(ZRef<Expr_Relation> iExpr_Relation)
+:	fExpr_Relation(iExpr_Relation)
+	{}
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
+Expr_Relation_Unary::~Expr_Relation_Unary()
+	{}
 
-} // namespace Util_Strim_Query
+void Expr_Relation_Unary::Accept_Expr_Relation(Visitor_Expr_Relation& iVisitor)
+	{
+	if (Visitor_Expr_Relation_Unary* theVisitor =
+		dynamic_cast<Visitor_Expr_Relation_Unary*>(&iVisitor))
+		{
+		this->Accept_Expr_Relation_Unary(*theVisitor);
+		}
+	else
+		{
+		Expr_Relation::Accept_Expr_Relation(iVisitor);
+		}
+	}
+
+void Expr_Relation_Unary::Accept_Expr_Relation_Unary(Visitor_Expr_Relation_Unary& iVisitor)
+	{ iVisitor.Visit_Expr_Relation_Unary(this); }
+
+ZRef<Expr_Relation> Expr_Relation_Unary::GetExpr_Relation()
+	{ return fExpr_Relation; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_Expr_Relation_Unary
+
+void Visitor_Expr_Relation_Unary::Visit_Expr_Relation_Unary(ZRef<Expr_Relation_Unary> iRep)
+	{
+	if (ZRef<Expr_Relation> theRelation = iRep->GetExpr_Relation())
+		theRelation->Accept(*this);
+	}
+
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Util_Strim_Query__
