@@ -898,7 +898,7 @@ NPError Host_Std::Host_GetURLNotify(NPP npp,
 	if (theURL.substr(0, 5) == "http:")
 		{
 		ZRef<HTTPFetcher> theFetcher = new HTTPFetcher(this, theURL, nullptr, notifyData);
-		fHTTPFetchers.Add(theFetcher);
+		fHTTPFetchers.Insert(theFetcher);
 		sStartWorkerRunner(theFetcher);
 		return NPERR_NO_ERROR;
 		}
@@ -921,7 +921,7 @@ NPError Host_Std::Host_PostURLNotify(NPP npp,
 		{
 		ZHTTP::Data theData(buf, len);
 		ZRef<HTTPFetcher> theFetcher = new HTTPFetcher(this, theURL, &theData, notifyData);
-		fHTTPFetchers.Add(theFetcher);
+		fHTTPFetchers.Insert(theFetcher);
 		sStartWorkerRunner(theFetcher);
 		return NPERR_NO_ERROR;
 		}
@@ -1023,7 +1023,7 @@ void Host_Std::SendDataAsync(
 	{
 	Sender* theSender = new Sender(this, this->GetNPP(),
 		iNotifyData, iURL, iMIME, iHeaders, iStreamerR);
-	fSenders.Add(theSender);
+	fSenders.Insert(theSender);
 	}
 
 void Host_Std::SendDataSync(

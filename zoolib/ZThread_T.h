@@ -274,7 +274,7 @@ public:
 		while (theWaiter.fCount > 0)
 			fCnd.Wait(fMtx);
 
-		fWaiters.Remove(&theWaiter);
+		fWaiters.Erase(&theWaiter);
 		}
 
 	bool pWaitUntil(int iCount, ZTime iDeadline)
@@ -293,7 +293,7 @@ public:
 		while (theWaiter.fCount > 0 && fCnd.WaitUntil(fMtx, iDeadline))
 			{}
 
-		fWaiters.Remove(&theWaiter);
+		fWaiters.Erase(&theWaiter);
 
 		if (int acquired = iCount - theWaiter.fCount)
 			{

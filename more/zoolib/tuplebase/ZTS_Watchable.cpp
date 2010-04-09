@@ -364,13 +364,13 @@ void ZTS_Watchable::Watcher_Finalize(Watcher* iWatcher)
 		
 		// Detach theWatcherQuery from its PQuery.
 		PQuery* thePQuery = theWatcherQuery->fPQuery;
-		thePQuery->fUsingWatcherQueries.Remove(theWatcherQuery);
+		thePQuery->fUsingWatcherQueries.Erase(theWatcherQuery);
 		this->pReleasePQuery(thePQuery);
 
 		// If it had been tripped it will be on this watcher's list
 		// of tripped queries and must be removed or we'll trip an assertion
 		// in theWatcherQuery's destructor.
-		iWatcher->fTrippedWatcherQueries.RemoveIfContains(theWatcherQuery);
+		iWatcher->fTrippedWatcherQueries.EraseIfContains(theWatcherQuery);
 
 		delete theWatcherQuery;
 		}
@@ -512,10 +512,10 @@ void ZTS_Watchable::Watcher_Sync(Watcher* iWatcher,
 		WatcherQuery* theWatcherQuery = ZUtil_STL::sEraseAndReturn(kDebug,
 			iWatcher->fRefcon_To_WatcherQuery, *iRemovedQueries++);
 
-		iWatcher->fTrippedWatcherQueries.RemoveIfContains(theWatcherQuery);
+		iWatcher->fTrippedWatcherQueries.EraseIfContains(theWatcherQuery);
 
 		PQuery* thePQuery = theWatcherQuery->fPQuery;
-		thePQuery->fUsingWatcherQueries.Remove(theWatcherQuery);
+		thePQuery->fUsingWatcherQueries.Erase(theWatcherQuery);
 		delete theWatcherQuery;
 		this->pReleasePQuery(thePQuery);
 		}

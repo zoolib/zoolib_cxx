@@ -789,7 +789,7 @@ bool ZStreamMUX::pWrite(const ZStreamW& iStreamW)
 			theEP->fCondition_Send.Broadcast();
 			if (theEP->fListener)
 				{
-				theEP->fListener->fEndpoints_Pending.Remove(theEP);
+				theEP->fListener->fEndpoints_Pending.Erase(theEP);
 				theEP->fListener = nullptr;
 				}
 //			localEPs.push_back(theEP);
@@ -1138,7 +1138,7 @@ void ZStreamMUX::pAbort(Endpoint* iEP)
 
 		if (iEP->fListener)
 			{
-			iEP->fListener->fEndpoints_Pending.Remove(iEP);
+			iEP->fListener->fEndpoints_Pending.Erase(iEP);
 			iEP->fListener = nullptr;
 			}
 		}

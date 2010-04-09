@@ -87,7 +87,7 @@ struct DListHead
 			this->Insert(iL);
 		}
 
-	void Remove(L* iL)
+	void Erase(L* iL)
 		{
 		ZAssertStop(L::kDebug, fHeadL);
 		ZAssertStop(L::kDebug, iL->fPrev);
@@ -115,10 +115,10 @@ struct DListHead
 		iL->fPrev = nullptr;
 		}
 
-	void RemoveIfContains(L* iL)
+	void EraseIfContains(L* iL)
 		{
 		if (iL->fNext)
-			this->Remove(iL);
+			this->Erase(iL);
 		}
 
 	void PushFront(L* iL)
@@ -137,7 +137,7 @@ struct DListHead
 		{
 		ZAssertStop(L::kDebug, fHeadL);
 		L* theL = fHeadL;
-		this->Remove(theL);
+		this->Erase(theL);
 		return static_cast<P*>(theL);
 		}
 
@@ -146,7 +146,7 @@ struct DListHead
 		{
 		ZAssertStop(L::kDebug, fHeadL);
 		L* theL = fHeadL->fPrev;
-		this->Remove(theL);
+		this->Erase(theL);
 		return static_cast<P*>(theL);
 		}
 

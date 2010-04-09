@@ -1154,7 +1154,7 @@ void ZTBRep_TS::pDisposeTransTuple(TransTuple& iTransTuple)
 
 	TupleInUse& theTupleInUse = iTransTuple.fTupleInUse;
 
-	theTupleInUse.fUsingTransTuples.Remove(&iTransTuple);
+	theTupleInUse.fUsingTransTuples.Erase(&iTransTuple);
 
 	this->pReleaseTupleInUse(theTupleInUse);
 	}

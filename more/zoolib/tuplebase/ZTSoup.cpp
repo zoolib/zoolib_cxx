@@ -314,7 +314,7 @@ void ZTSoup::Register(ZRef<ZTCrouton> iTCrouton, uint64 iID)
 	thePCrouton->fTCroutons_Using.Insert(theTCrouton);
 
 	fPCroutons_Update.InsertIfNotContains(thePCrouton);
-	fPCroutons_Pending.RemoveIfContains(thePCrouton);
+	fPCroutons_Pending.EraseIfContains(thePCrouton);
 	this->pTriggerUpdate();
 
 	if (thePCrouton->fHasValue)
@@ -619,8 +619,8 @@ void ZTSoup::Update()
 					{
 					// It's not in use, not syncing or pending, is not known
 					// to the watcher so we can toss it.
-					fPCroutons_Sync.RemoveIfContains(thePCrouton);
-					fPCroutons_Changed.RemoveIfContains(thePCrouton);
+					fPCroutons_Sync.EraseIfContains(thePCrouton);
+					fPCroutons_Changed.EraseIfContains(thePCrouton);
 					if (ZLOG(s, eDebug + 1, "ZTSoup"))
 						s.Writef("Deleting PCrouton, ID: %llX", thePCrouton->fID);
 
@@ -652,8 +652,8 @@ void ZTSoup::Update()
 		else
 			{
 			// It's not in use, is not known to the watcher, so we can toss it.
-			fPSieves_Sync.RemoveIfContains(thePSieve);
-			fPSieves_Changed.RemoveIfContains(thePSieve);
+			fPSieves_Sync.EraseIfContains(thePSieve);
+			fPSieves_Changed.EraseIfContains(thePSieve);
 			ZUtil_STL::sEraseMustContain(kDebug, fTBQuery_To_PSieve, thePSieve->fTBQuery);
 			}
 		}
@@ -774,9 +774,9 @@ void ZTSoup::Purge()
 
 		ZAssertStop(ZTSoup::kDebug, !thePSieve->fTSieves_Using);
 
-		fPSieves_Update.RemoveIfContains(thePSieve);
-		fPSieves_Sync.RemoveIfContains(thePSieve);
-		fPSieves_Changed.RemoveIfContains(thePSieve);
+		fPSieves_Update.EraseIfContains(thePSieve);
+		fPSieves_Sync.EraseIfContains(thePSieve);
+		fPSieves_Changed.EraseIfContains(thePSieve);
 		}
 	fTBQuery_To_PSieve.clear();
 
@@ -787,11 +787,11 @@ void ZTSoup::Purge()
 
 		ZAssertStop(ZTSoup::kDebug, !thePCrouton->fTCroutons_Using);
 
-		fPCroutons_Update.RemoveIfContains(thePCrouton);
-		fPCroutons_Sync.RemoveIfContains(thePCrouton);
-		fPCroutons_Changed.RemoveIfContains(thePCrouton);
-		fPCroutons_Syncing.RemoveIfContains(thePCrouton);
-		fPCroutons_Pending.RemoveIfContains(thePCrouton);
+		fPCroutons_Update.EraseIfContains(thePCrouton);
+		fPCroutons_Sync.EraseIfContains(thePCrouton);
+		fPCroutons_Changed.EraseIfContains(thePCrouton);
+		fPCroutons_Syncing.EraseIfContains(thePCrouton);
+		fPCroutons_Pending.EraseIfContains(thePCrouton);
 		}
 	fID_To_PCrouton.clear();
 	}
@@ -887,7 +887,7 @@ void ZTSoup::pDisposingTSieve(ZTSieve* iTSieve)
 
 	PSieve* thePSieve = iTSieve->fPSieve;
 
-	thePSieve->fTSieves_Using.Remove(iTSieve);
+	thePSieve->fTSieves_Using.Erase(iTSieve);
 
 	if (!thePSieve->fTSieves_Using)
 		{
@@ -908,7 +908,7 @@ void ZTSoup::pDisposingTCrouton(ZTCrouton* iTCrouton)
 		s.Writef("Disposing TCrouton, ID: %llX", thePCrouton->fID);
 		}
 
-	thePCrouton->fTCroutons_Using.Remove(iTCrouton);
+	thePCrouton->fTCroutons_Using.Erase(iTCrouton);
 
 	if (!thePCrouton->fTCroutons_Using)
 		{

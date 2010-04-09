@@ -124,7 +124,7 @@ private:
 		return fList.empty();
 		}
 
-	bool pAdd(const T& iT)
+	bool pInsert(const T& iT)
 		{
 		ZGuardMtx guard(fMtx);
 
@@ -186,7 +186,7 @@ private:
 		{
 		ZGuardMtx guard(fMtx);
 
-		(*ioIter.fNextEntry).fIters.Remove(&ioIter);
+		(*ioIter.fNextEntry).fIters.Erase(&ioIter);
 		ioIter.fRep.Clear();
 		}
 
@@ -235,8 +235,8 @@ public:
 	bool Empty() const
 		{ return fRep->pEmpty(); }
 
-	bool Add(const T& iT)
-		{ return fRep->pAdd(iT); }
+	bool Insert(const T& iT)
+		{ return fRep->pInsert(iT); }
 
 	bool Erase(const T& iT)
 		{ return fRep->pErase(iT); }
@@ -382,7 +382,7 @@ bool ZSafeSetRep<T>::pReadInc(ZSafeSetIterConst<T>& ioIter, T& oValue)
 		}
 	else
 		{
-		(*ioIter.fNextEntry).fIters.Remove(&ioIter);
+		(*ioIter.fNextEntry).fIters.Erase(&ioIter);
 		oValue = (*ioIter.fNextEntry).fT;
 
 		if (++ioIter.fNextEntry == fList.end())
@@ -404,7 +404,7 @@ bool ZSafeSetRep<T>::pReadErase(ZSafeSetIter<T>& ioIter, T& oValue)
 		}
 	else
 		{
-		(*ioIter.fNextEntry).fIters.Remove(&ioIter);
+		(*ioIter.fNextEntry).fIters.Erase(&ioIter);
 		oValue = (*ioIter.fNextEntry).fT;
 
 		for (DListIteratorEraseAll<ZSafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
