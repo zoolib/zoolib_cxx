@@ -27,7 +27,7 @@ namespace ZQL {
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation_Binary_DoTransform
 
-bool Visitor_ExprRep_Relation_Binary_DoTransform::Visit_ExprRep_Relation_Binary(
+void Visitor_ExprRep_Relation_Binary_DoTransform::Visit_ExprRep_Relation_Binary(
 	ZRef<ExprRep_Relation_Binary> iRep)
 	{
 	ZRef<ExprRep_Relation> oldLHS = iRep->GetLHS();
@@ -38,8 +38,6 @@ bool Visitor_ExprRep_Relation_Binary_DoTransform::Visit_ExprRep_Relation_Binary(
 		fResult = iRep;
 	else
 		fResult = iRep->Clone(newLHS, newRHS);
-
-	return true;
 	}
 
 } // namespace ZQL

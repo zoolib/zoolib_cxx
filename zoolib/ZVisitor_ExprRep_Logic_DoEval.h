@@ -34,15 +34,20 @@ class ZVisitor_ExprRep_Logic_DoEval
 :	public virtual ZVisitor_ExprRep_Logic
 	{
 public:
+	ZVisitor_ExprRep_Logic_DoEval();
+
 // From ZVisitor_ExprRep_Logic
-	virtual bool Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep);
-	virtual bool Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep);
-	virtual bool Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
-	virtual bool Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
-	virtual bool Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);
+	virtual void Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep);
+	virtual void Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep);
+	virtual void Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
+	virtual void Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
+	virtual void Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);
 
 // Our protocol
 	bool DoEval(ZRef<ZExprRep> iExprRep);
+
+protected:
+	bool fResult;
 	};
 
 NAMESPACE_ZOOLIB_END

@@ -50,17 +50,17 @@ ZRelHead ExprRep_Relation_Unary_Rename::GetRelHead()
 	return theRelHead;
 	}
 
-bool ExprRep_Relation_Unary_Rename::Accept_ExprRep_Relation_Unary(
+void ExprRep_Relation_Unary_Rename::Accept_ExprRep_Relation_Unary(
 	Visitor_ExprRep_Relation_Unary& iVisitor)
 	{
 	if (Visitor_ExprRep_Relation_Unary_Rename* theVisitor =
 		dynamic_cast<Visitor_ExprRep_Relation_Unary_Rename*>(&iVisitor))
 		{
-		return this->Accept_ExprRep_Relation_Unary_Rename(*theVisitor);
+		this->Accept_ExprRep_Relation_Unary_Rename(*theVisitor);
 		}
 	else
 		{
-		return ExprRep_Relation_Unary::Accept_ExprRep_Relation_Unary(iVisitor);
+		ExprRep_Relation_Unary::Accept_ExprRep_Relation_Unary(iVisitor);
 		}
 	}
 
@@ -68,9 +68,9 @@ ZRef<ExprRep_Relation_Unary> ExprRep_Relation_Unary_Rename::Clone(
 	ZRef<ExprRep_Relation> iExprRep_Relation)
 	{ return new ExprRep_Relation_Unary_Rename(iExprRep_Relation, fOld, fNew); }
 
-bool ExprRep_Relation_Unary_Rename::Accept_ExprRep_Relation_Unary_Rename(
+void ExprRep_Relation_Unary_Rename::Accept_ExprRep_Relation_Unary_Rename(
 	Visitor_ExprRep_Relation_Unary_Rename& iVisitor)
-	{ return iVisitor.Visit_ExprRep_Relation_Unary_Rename(this); }
+	{ iVisitor.Visit_ExprRep_Relation_Unary_Rename(this); }
 
 const string& ExprRep_Relation_Unary_Rename::GetOld()
 	{ return fOld; }
@@ -82,9 +82,9 @@ const string& ExprRep_Relation_Unary_Rename::GetNew()
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation_Unary_Rename
 
-bool Visitor_ExprRep_Relation_Unary_Rename::Visit_ExprRep_Relation_Unary_Rename(
+void Visitor_ExprRep_Relation_Unary_Rename::Visit_ExprRep_Relation_Unary_Rename(
 	ZRef<ExprRep_Relation_Unary_Rename> iRep)
-	{ return Visitor_ExprRep_Relation_Unary::Visit_ExprRep_Relation_Unary(iRep); }
+	{ Visitor_ExprRep_Relation_Unary::Visit_ExprRep_Relation_Unary(iRep); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

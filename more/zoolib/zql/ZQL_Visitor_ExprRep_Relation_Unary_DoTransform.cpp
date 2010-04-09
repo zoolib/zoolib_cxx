@@ -27,7 +27,7 @@ namespace ZQL {
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation_Unary_DoTransform
 
-bool Visitor_ExprRep_Relation_Unary_DoTransform::Visit_ExprRep_Relation_Unary(
+void Visitor_ExprRep_Relation_Unary_DoTransform::Visit_ExprRep_Relation_Unary(
 	ZRef<ExprRep_Relation_Unary> iRep)
 	{
 	ZRef<ExprRep_Relation> oldRep = iRep->GetExprRep_Relation();
@@ -36,8 +36,6 @@ bool Visitor_ExprRep_Relation_Unary_DoTransform::Visit_ExprRep_Relation_Unary(
 		fResult = iRep;
 	else
 		fResult = iRep->Clone(newRep);
-
-	return true;
 	}
 
 } // namespace ZQL

@@ -46,13 +46,12 @@ ZVisitor_ExprRep_DoToStrim::ZVisitor_ExprRep_DoToStrim()
 ,	fIndent(0)
 	{}
 
-bool ZVisitor_ExprRep_DoToStrim::Visit_ExprRep(ZRef<ZExprRep> iRep)
+void ZVisitor_ExprRep_DoToStrim::Visit_ExprRep(ZRef<ZExprRep> iRep)
 	{
 	if (iRep)
 		pStrimW() << "/* unhandled ZExprRep: " << typeid(*iRep.Get()).name() << " */";
 	else
 		pStrimW() << "/*null ZExprRep*/";
-	return true;
 	}
 
 void ZVisitor_ExprRep_DoToStrim::StartToStrim(

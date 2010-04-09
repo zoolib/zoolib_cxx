@@ -84,35 +84,35 @@ class Visitor_DoToStrim
 ,	public virtual ZQL::Visitor_ExprRep_Relation_Unary_Select
 	{
 public:
-	virtual bool Visit_ExprRep_Relation_Binary_Difference(
+	virtual void Visit_ExprRep_Relation_Binary_Difference(
 		ZRef<ExprRep_Relation_Binary_Difference> iRep);
-	virtual bool Visit_ExprRep_Relation_Binary_Intersect(
+	virtual void Visit_ExprRep_Relation_Binary_Intersect(
 		ZRef<ExprRep_Relation_Binary_Intersect> iRep);
-	virtual bool Visit_ExprRep_Relation_Binary_Join(ZRef<ExprRep_Relation_Binary_Join> iRep);
-	virtual bool Visit_ExprRep_Relation_Binary_Union(ZRef<ExprRep_Relation_Binary_Union> iRep);
+	virtual void Visit_ExprRep_Relation_Binary_Join(ZRef<ExprRep_Relation_Binary_Join> iRep);
+	virtual void Visit_ExprRep_Relation_Binary_Union(ZRef<ExprRep_Relation_Binary_Union> iRep);
 
-	virtual bool Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep);
+	virtual void Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep);
 
-	virtual bool Visit_ExprRep_Relation_Unary_Project(ZRef<ExprRep_Relation_Unary_Project> iRep);
-	virtual bool Visit_ExprRep_Relation_Unary_Rename(ZRef<ExprRep_Relation_Unary_Rename> iRep);
-	virtual bool Visit_ExprRep_Relation_Unary_Restrict(ZRef<ExprRep_Relation_Unary_Restrict> iRep);
-	virtual bool Visit_ExprRep_Relation_Unary_Select(ZRef<ExprRep_Relation_Unary_Select> iRep);
+	virtual void Visit_ExprRep_Relation_Unary_Project(ZRef<ExprRep_Relation_Unary_Project> iRep);
+	virtual void Visit_ExprRep_Relation_Unary_Rename(ZRef<ExprRep_Relation_Unary_Rename> iRep);
+	virtual void Visit_ExprRep_Relation_Unary_Restrict(ZRef<ExprRep_Relation_Unary_Restrict> iRep);
+	virtual void Visit_ExprRep_Relation_Unary_Select(ZRef<ExprRep_Relation_Unary_Select> iRep);
 
 private:
-	bool pWriteBinary(const std::string& iFunctionName, ZRef<ExprRep_Relation_Binary> iRep);
+	void pWriteBinary(const std::string& iFunctionName, ZRef<ExprRep_Relation_Binary> iRep);
 	};
 
 } // anonymous namespace
 
-bool Visitor_DoToStrim::Visit_ExprRep_Relation_Binary_Difference(
+void Visitor_DoToStrim::Visit_ExprRep_Relation_Binary_Difference(
 	ZRef<ExprRep_Relation_Binary_Difference> iRep)
-	{ return this->pWriteBinary("Difference", iRep); }
+	{ this->pWriteBinary("Difference", iRep); }
 
-bool Visitor_DoToStrim::Visit_ExprRep_Relation_Binary_Intersect(
+void Visitor_DoToStrim::Visit_ExprRep_Relation_Binary_Intersect(
 	ZRef<ExprRep_Relation_Binary_Intersect> iRep)
-	{ return this->pWriteBinary("Intersect", iRep); }
+	{ this->pWriteBinary("Intersect", iRep); }
 
-bool Visitor_DoToStrim::Visit_ExprRep_Relation_Binary_Join(
+void Visitor_DoToStrim::Visit_ExprRep_Relation_Binary_Join(
 	ZRef<ExprRep_Relation_Binary_Join> iRep)
 	{
 	const ZStrimW& w = pStrimW();
@@ -141,21 +141,16 @@ bool Visitor_DoToStrim::Visit_ExprRep_Relation_Binary_Join(
 	this->pWriteLFIndent();
 
 	w << ")";
-
-	return true;
 	}
 
-bool Visitor_DoToStrim::Visit_ExprRep_Relation_Binary_Union(
+void Visitor_DoToStrim::Visit_ExprRep_Relation_Binary_Union(
 	ZRef<ExprRep_Relation_Binary_Union> iRep)
-	{ return this->pWriteBinary("Union", iRep); }
+	{ this->pWriteBinary("Union", iRep); }
 
-bool Visitor_DoToStrim::Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep)
-	{
-	pStrimW() << "/* Relation_Concrete: " << typeid(*iRep.Get()).name() << " */";
-	return true;
-	}
+void Visitor_DoToStrim::Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep)
+	{ pStrimW() << "/* Relation_Concrete: " << typeid(*iRep.Get()).name() << " */"; }
 
-bool Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Project(
+void Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Project(
 	ZRef<ExprRep_Relation_Unary_Project> iRep)
 	{
 	const ZStrimW& w = pStrimW();
@@ -176,10 +171,9 @@ bool Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Project(
 	this->pWriteLFIndent();
 
 	spWrite(")", w);
-	return true;
 	}
 
-bool Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Rename(
+void Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Rename(
 	ZRef<ExprRep_Relation_Unary_Rename> iRep)
 	{
 	const ZStrimW& w = pStrimW();
@@ -202,10 +196,9 @@ bool Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Rename(
 	this->pWriteLFIndent();
 
 	spWrite(")", w);
-	return true;
 	}
 
-bool Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Restrict(
+void Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Restrict(
 	ZRef<ExprRep_Relation_Unary_Restrict> iRep)
 	{
 	const ZStrimW& w = pStrimW();
@@ -225,10 +218,9 @@ bool Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Restrict(
 	this->pWriteLFIndent();
 
 	w << ")";
-	return true;
 	}
 
-bool Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Select(
+void Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Select(
 	ZRef<ExprRep_Relation_Unary_Select> iRep)
 	{
 	const ZStrimW& w = pStrimW();
@@ -248,11 +240,10 @@ bool Visitor_DoToStrim::Visit_ExprRep_Relation_Unary_Select(
 	this->pWriteLFIndent();
 
 	w << ")";
-	return true;
 	}
 
 
-bool Visitor_DoToStrim::pWriteBinary(
+void Visitor_DoToStrim::pWriteBinary(
 	const std::string& iFunctionName, ZRef<ExprRep_Relation_Binary> iRep)
 	{
 	const ZStrimW& w = pStrimW();
@@ -273,8 +264,6 @@ bool Visitor_DoToStrim::pWriteBinary(
 	this->pWriteLFIndent();
 
 	w << ")";
-
-	return true;
 	}
 
 // =================================================================================================

@@ -41,10 +41,10 @@ public:
 	virtual ~ZExprRep_Logic();
 
 // From ZExprRep
-	virtual bool Accept_ExprRep(ZVisitor_ExprRep& iVisitor);
+	virtual void Accept_ExprRep(ZVisitor_ExprRep& iVisitor);
 
 // Our protocol
-	virtual bool Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
+	virtual void Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
 	};
 
 // =================================================================================================
@@ -57,7 +57,7 @@ public:
 	ZExprRep_Logic_True();
 
 // From ZExprRep_Logic
-	virtual bool Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
+	virtual void Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
 	};
 
 // =================================================================================================
@@ -70,7 +70,7 @@ public:
 	ZExprRep_Logic_False();
 
 // From ZExprRep_Logic
-	virtual bool Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
+	virtual void Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
 	};
 
 // =================================================================================================
@@ -84,7 +84,7 @@ public:
 	virtual ~ZExprRep_Logic_Not();
 
 // From ZExprRep_Logic
-	virtual bool Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
+	virtual void Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
 
 // Our protocol
 	ZRef<ZExprRep_Logic> GetOperand();
@@ -122,7 +122,7 @@ public:
 	ZExprRep_Logic_And(ZRef<ZExprRep_Logic> iLHS, ZRef<ZExprRep_Logic> iRHS);
 
 // From ZExprRep_Logic
-	virtual bool Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
+	virtual void Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
 	};
 
 // =================================================================================================
@@ -135,7 +135,7 @@ public:
 	ZExprRep_Logic_Or(ZRef<ZExprRep_Logic> iLHS, ZRef<ZExprRep_Logic> iRHS);
 
 // From ZExprRep_Logic
-	virtual bool Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
+	virtual void Accept_ExprRep_Logic(ZVisitor_ExprRep_Logic& iVisitor);
 	};
 
 // =================================================================================================
@@ -145,11 +145,11 @@ public:
 class ZVisitor_ExprRep_Logic : public virtual ZVisitor_ExprRep
 	{
 public:
-	virtual bool Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep);
-	virtual bool Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep);
-	virtual bool Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
-	virtual bool Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
-	virtual bool Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);
+	virtual void Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep);
+	virtual void Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep);
+	virtual void Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
+	virtual void Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
+	virtual void Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);
 	};
 
 // =================================================================================================

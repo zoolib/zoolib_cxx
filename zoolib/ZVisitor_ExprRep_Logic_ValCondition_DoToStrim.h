@@ -37,7 +37,7 @@ class ZVisitor_ExprRep_Logic_ValCondition_DoToStrim
 	{
 public:
 // From ZVisitor_ExprRep_Logic_ValCondition
-	virtual bool Visit_Logic_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep);
+	virtual void Visit_Logic_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep);
 	};
 
 NAMESPACE_ZOOLIB_END

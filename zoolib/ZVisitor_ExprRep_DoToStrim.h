@@ -48,7 +48,7 @@ public:
 	ZVisitor_ExprRep_DoToStrim();
 
 // From ZVisitor_ExprRep
-	virtual bool Visit_ExprRep(ZRef<ZExprRep> iRep);
+	virtual void Visit_ExprRep(ZRef<ZExprRep> iRep);
 
 // Our protocol
 	void StartToStrim(const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZExprRep> iExprRep);

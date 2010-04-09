@@ -38,22 +38,22 @@ ExprRep_Relation_Binary::ExprRep_Relation_Binary(
 ExprRep_Relation_Binary::~ExprRep_Relation_Binary()
 	{}
 
-bool ExprRep_Relation_Binary::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
+void ExprRep_Relation_Binary::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
 	{
 	if (Visitor_ExprRep_Relation_Binary* theVisitor =
 		dynamic_cast<Visitor_ExprRep_Relation_Binary*>(&iVisitor))
 		{
-		return this->Accept_ExprRep_Relation_Binary(*theVisitor);
+		this->Accept_ExprRep_Relation_Binary(*theVisitor);
 		}
 	else
 		{
-		return ExprRep_Relation::Accept_ExprRep_Relation(iVisitor);
+		ExprRep_Relation::Accept_ExprRep_Relation(iVisitor);
 		}
 	}
 
-bool ExprRep_Relation_Binary::Accept_ExprRep_Relation_Binary(
+void ExprRep_Relation_Binary::Accept_ExprRep_Relation_Binary(
 	Visitor_ExprRep_Relation_Binary& iVisitor)
-	{ return ExprRep_Relation::Accept_ExprRep_Relation(iVisitor); }
+	{ iVisitor.Visit_ExprRep_Relation_Binary(this); }
 
 ZRef<ExprRep_Relation> ExprRep_Relation_Binary::GetLHS()
 	{ return fLHS; }
@@ -65,7 +65,7 @@ ZRef<ExprRep_Relation> ExprRep_Relation_Binary::GetRHS()
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation_Binary
 
-bool Visitor_ExprRep_Relation_Binary::Visit_ExprRep_Relation_Binary(
+void Visitor_ExprRep_Relation_Binary::Visit_ExprRep_Relation_Binary(
 	ZRef<ExprRep_Relation_Binary> iRep)
 	{
 	if (ZRef<ExprRep_Relation> theRelation = iRep->GetLHS())
@@ -73,8 +73,6 @@ bool Visitor_ExprRep_Relation_Binary::Visit_ExprRep_Relation_Binary(
 
 	if (ZRef<ExprRep_Relation> theRelation = iRep->GetRHS())
 		theRelation->Accept(*this);
-
-	return true;
 	}
 
 } // namespace ZQL

@@ -29,11 +29,8 @@ NAMESPACE_ZOOLIB_BEGIN
 ZVisitor_ExprRep_DoTransform::ZVisitor_ExprRep_DoTransform()
 	{}
 
-bool ZVisitor_ExprRep_DoTransform::Visit_ExprRep(ZRef<ZExprRep> iRep)
-	{
-	fResult = iRep;
-	return true;
-	}
+void ZVisitor_ExprRep_DoTransform::Visit_ExprRep(ZRef<ZExprRep> iRep)
+	{ fResult = iRep; }
 
 ZRef<ZExprRep> ZVisitor_ExprRep_DoTransform::DoTransform(ZRef<ZExprRep> iExprRep)
 	{

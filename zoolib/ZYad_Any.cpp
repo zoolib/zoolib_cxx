@@ -67,11 +67,11 @@ public:
 	Visitor_GetVal(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault);
 
 // From ZVisitor_Yad
-	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
-	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
-	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
-	virtual bool Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
-	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
+	virtual void Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
+	virtual void Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
+	virtual void Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
+	virtual void Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
+	virtual void Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 
 // Our protocol
 	ZVal_Any GetVal(ZRef<ZYadR> iYadR);
@@ -89,25 +89,16 @@ Visitor_GetVal::Visitor_GetVal(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefaul
 ,	fDefault(iDefault)
 	{}
 
-bool Visitor_GetVal::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
-	{
-	fOutput = iYadPrimR->AsAny();
-	return true;
-	}
+void Visitor_GetVal::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
+	{ fOutput = iYadPrimR->AsAny(); }
 
-bool Visitor_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
-	{
-	fOutput = sReadAll_T<ZData_Any>(iYadStreamR->GetStreamR());
-	return true;
-	}
+void Visitor_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+	{ fOutput = sReadAll_T<ZData_Any>(iYadStreamR->GetStreamR()); }
 
-bool Visitor_GetVal::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
-	{
-	fOutput = iYadStrimR->GetStrimR().ReadAll8();
-	return true;
-	}
+void Visitor_GetVal::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+	{ fOutput = iYadStrimR->GetStrimR().ReadAll8(); }
 
-bool Visitor_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+void Visitor_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	{
 	ZSeq_Any theSeq;
 
@@ -115,10 +106,9 @@ bool Visitor_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 		theSeq.Append(this->GetVal(theChild));
 
 	fOutput = theSeq;
-	return true;
 	}
 
-bool Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+void Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	{
 	ZMap_Any theMap;
 
@@ -145,7 +135,6 @@ bool Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 		}
 
 	fOutput = theMap;
-	return true;
 	}
 
 ZVal_Any Visitor_GetVal::GetVal(ZRef<ZYadR> iYadR)

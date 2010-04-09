@@ -37,23 +37,23 @@ ExprRep_Relation_Binary_Difference::ExprRep_Relation_Binary_Difference(
 ZRelHead ExprRep_Relation_Binary_Difference::GetRelHead()
 	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
 
-bool ExprRep_Relation_Binary_Difference::Accept_ExprRep_Relation_Binary(
+void ExprRep_Relation_Binary_Difference::Accept_ExprRep_Relation_Binary(
 	Visitor_ExprRep_Relation_Binary& iVisitor)
 	{
 	if (Visitor_ExprRep_Relation_Binary_Difference* theVisitor =
 		dynamic_cast<Visitor_ExprRep_Relation_Binary_Difference*>(&iVisitor))
 		{
-		return this->Accept_ExprRep_Relation_Binary_Difference(*theVisitor);
+		this->Accept_ExprRep_Relation_Binary_Difference(*theVisitor);
 		}
 	else
 		{
-		return ExprRep_Relation_Binary::Accept_ExprRep_Relation_Binary(iVisitor);
+		ExprRep_Relation_Binary::Accept_ExprRep_Relation_Binary(iVisitor);
 		}
 	}
 
-bool ExprRep_Relation_Binary_Difference::Accept_ExprRep_Relation_Binary_Difference(
+void ExprRep_Relation_Binary_Difference::Accept_ExprRep_Relation_Binary_Difference(
 	Visitor_ExprRep_Relation_Binary_Difference& iVisitor)
-	{ return ExprRep_Relation::Accept_ExprRep_Relation(iVisitor); }
+	{ iVisitor.Visit_ExprRep_Relation_Binary_Difference(this); }
 
 ZRef<ExprRep_Relation_Binary> ExprRep_Relation_Binary_Difference::Clone(
 	ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS)
@@ -63,9 +63,9 @@ ZRef<ExprRep_Relation_Binary> ExprRep_Relation_Binary_Difference::Clone(
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation_Binary_Difference
 
-bool Visitor_ExprRep_Relation_Binary_Difference::Visit_ExprRep_Relation_Binary_Difference(
+void Visitor_ExprRep_Relation_Binary_Difference::Visit_ExprRep_Relation_Binary_Difference(
 	ZRef<ExprRep_Relation_Binary_Difference> iRep)
-	{ return Visitor_ExprRep_Relation_Binary::Visit_ExprRep_Relation_Binary(iRep); }
+	{ Visitor_ExprRep_Relation_Binary::Visit_ExprRep_Relation_Binary(iRep); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

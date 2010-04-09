@@ -33,30 +33,30 @@ ExprRep_Relation_Concrete::ExprRep_Relation_Concrete()
 ExprRep_Relation_Concrete::~ExprRep_Relation_Concrete()
 	{}
 
-bool ExprRep_Relation_Concrete::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
+void ExprRep_Relation_Concrete::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
 	{
 	if (Visitor_ExprRep_Relation_Concrete* theVisitor =
 		dynamic_cast<Visitor_ExprRep_Relation_Concrete*>(&iVisitor))
 		{
-		return this->Accept_ExprRep_Relation_Concrete(*theVisitor);
+		this->Accept_ExprRep_Relation_Concrete(*theVisitor);
 		}
 	else
 		{
-		return ExprRep_Relation::Accept(iVisitor);
+		ExprRep_Relation::Accept(iVisitor);
 		}
 	}
 
-bool ExprRep_Relation_Concrete::Accept_ExprRep_Relation_Concrete(
+void ExprRep_Relation_Concrete::Accept_ExprRep_Relation_Concrete(
 	Visitor_ExprRep_Relation_Concrete& iVisitor)
-	{ return iVisitor.Visit_ExprRep_Relation_Concrete(this); }
+	{ iVisitor.Visit_ExprRep_Relation_Concrete(this); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation_Concrete
 
-bool Visitor_ExprRep_Relation_Concrete::Visit_ExprRep_Relation_Concrete(
+void Visitor_ExprRep_Relation_Concrete::Visit_ExprRep_Relation_Concrete(
 	ZRef<ExprRep_Relation_Concrete> iRep)
-	{ return ZVisitor_ExprRep::Visit_ExprRep(iRep); }
+	{ ZVisitor_ExprRep::Visit_ExprRep(iRep); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

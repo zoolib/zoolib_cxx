@@ -43,13 +43,13 @@ public:
 	virtual ZRelHead GetRelHead();
 
 // From ExprRep_Relation_Binary
-	virtual bool Accept_ExprRep_Relation_Binary(Visitor_ExprRep_Relation_Binary& iVisitor);
+	virtual void Accept_ExprRep_Relation_Binary(Visitor_ExprRep_Relation_Binary& iVisitor);
 
 	virtual ZRef<ExprRep_Relation_Binary> Clone(
 		ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS);
 
 // Our protocol
-	virtual bool Accept_ExprRep_Relation_Binary_Union(
+	virtual void Accept_ExprRep_Relation_Binary_Union(
 		Visitor_ExprRep_Relation_Binary_Union& iVisitor);
 	};
 
@@ -60,7 +60,7 @@ public:
 class Visitor_ExprRep_Relation_Binary_Union : public virtual Visitor_ExprRep_Relation_Binary
 	{
 public:
-	virtual bool Visit_ExprRep_Relation_Binary_Union(ZRef<ExprRep_Relation_Binary_Union> iRep);
+	virtual void Visit_ExprRep_Relation_Binary_Union(ZRef<ExprRep_Relation_Binary_Union> iRep);
 	};
 
 } // namespace ZQL

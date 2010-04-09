@@ -101,7 +101,7 @@ public:
 	virtual ~ZRefCountedWithFinalize();
 
 // Our protocol
-	virtual bool Accept(ZVisitor& iVisitor);
+	virtual void Accept(ZVisitor& iVisitor);
 	};
 
 // =================================================================================================
@@ -111,7 +111,7 @@ public:
 class ZVisitor
 	{
 public:
-	virtual bool Visit(ZRef<ZRefCountedWithFinalize> iRep);
+	virtual void Visit(ZRef<ZRefCountedWithFinalize> iRep);
 	};
 
 NAMESPACE_ZOOLIB_END

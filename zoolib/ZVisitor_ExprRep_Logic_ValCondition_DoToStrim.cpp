@@ -20,7 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_Strim_ValCondition.h"
 #include "zoolib/ZVisitor_ExprRep_Logic_ValCondition_DoToStrim.h"
-#include "zoolib/ZDebug.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -28,11 +27,8 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZVisitor_ExprRep_Logic_ValCondition_DoToStrim
 
-bool ZVisitor_ExprRep_Logic_ValCondition_DoToStrim::Visit_Logic_ValCondition(
+void ZVisitor_ExprRep_Logic_ValCondition_DoToStrim::Visit_Logic_ValCondition(
 	ZRef<ZExprRep_Logic_ValCondition> iRep)
-	{
-	ZUtil_Strim_ValCondition::sToStrim(iRep->GetValCondition(), pStrimW());
-	return true;
-	}
+	{ ZUtil_Strim_ValCondition::sToStrim(iRep->GetValCondition(), pStrimW()); }
 
 NAMESPACE_ZOOLIB_END

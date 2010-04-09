@@ -41,10 +41,10 @@ public:
 	virtual ~ZExprRep();
 
 // From ZRefCountedWithFinalize
-	virtual bool Accept(ZVisitor& iVisitor);
+	virtual void Accept(ZVisitor& iVisitor);
 
 // Our protocol
-	virtual bool Accept_ExprRep(ZVisitor_ExprRep& iVisitor);
+	virtual void Accept_ExprRep(ZVisitor_ExprRep& iVisitor);
 	};
 
 // =================================================================================================
@@ -55,7 +55,7 @@ class ZVisitor_ExprRep : public virtual ZVisitor
 	{
 public:
 // Our protocol
-	virtual bool Visit_ExprRep(ZRef<ZExprRep> iRep);
+	virtual void Visit_ExprRep(ZRef<ZExprRep> iRep);
 	};
 
 NAMESPACE_ZOOLIB_END

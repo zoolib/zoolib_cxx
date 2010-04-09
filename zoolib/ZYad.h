@@ -79,12 +79,12 @@ protected:
 
 public:
 // From ZRefCountedWithFinalize
-	virtual bool Accept(ZVisitor& iVisitor);
+	virtual void Accept(ZVisitor& iVisitor);
 	
 // Our protocol
 	virtual void Finish();
 	virtual ZRef<ZYadR> Meta();
-	virtual bool Accept_Yad(ZVisitor_Yad& iVisitor);
+	virtual void Accept_Yad(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions) = 0;
 	};
 
@@ -97,7 +97,7 @@ class ZYadPrimR
 	{
 public:
 // From ZYadR
-	virtual bool Accept_Yad(ZVisitor_Yad& iVisitor);
+	virtual void Accept_Yad(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
@@ -114,7 +114,7 @@ class ZYadStreamR
 	{
 public:
 // From ZYadR
-	virtual bool Accept_Yad(ZVisitor_Yad& iVisitor);
+	virtual void Accept_Yad(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
@@ -127,7 +127,7 @@ class ZYadStrimR
 ,	public virtual ZStrimmerR
 	{
 // From ZYadR
-	virtual bool Accept_Yad(ZVisitor_Yad& iVisitor);
+	virtual void Accept_Yad(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 	};
 
@@ -139,7 +139,7 @@ class ZYadSeqR : public virtual ZYadR
 	{
 public:
 // From ZYadR
-	virtual bool Accept_Yad(ZVisitor_Yad& iVisitor);
+	virtual void Accept_Yad(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
@@ -157,7 +157,7 @@ class ZYadSeqRPos : public virtual ZYadSeqR
 	{
 public:
 // From ZYadR
-	virtual bool Accept_Yad(ZVisitor_Yad& iVisitor);
+	virtual void Accept_Yad(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Default implementation of ZYadSeqR protocol
@@ -181,7 +181,7 @@ class ZYadMapR : public virtual ZYadR
 	{
 public:
 // From ZYadR
-	virtual bool Accept_Yad(ZVisitor_Yad& iVisitor);
+	virtual void Accept_Yad(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
@@ -198,7 +198,7 @@ class ZYadMapRPos : public virtual ZYadMapR
 	{
 public:
 // From ZYadR
-	virtual bool Accept_Yad(ZVisitor_Yad& iVisitor);
+	virtual void Accept_Yad(ZVisitor_Yad& iVisitor);
 	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
@@ -214,14 +214,14 @@ public:
 class ZVisitor_Yad : public virtual ZVisitor
 	{
 public:
-	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
-	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
-	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
-	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
-	virtual bool Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
-	virtual bool Visit_YadSeqRPos(ZRef<ZYadSeqRPos> iYadSeqRPos);
-	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
-	virtual bool Visit_YadMapRPos(ZRef<ZYadMapRPos> iYadMapRPos);
+	virtual void Visit_YadR(ZRef<ZYadR> iYadR);
+	virtual void Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
+	virtual void Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
+	virtual void Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
+	virtual void Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
+	virtual void Visit_YadSeqRPos(ZRef<ZYadSeqRPos> iYadSeqRPos);
+	virtual void Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
+	virtual void Visit_YadMapRPos(ZRef<ZYadMapRPos> iYadMapRPos);
 	};
 
 // =================================================================================================

@@ -41,17 +41,17 @@ ExprRep_Relation_Unary_Project::~ExprRep_Relation_Unary_Project()
 ZRelHead ExprRep_Relation_Unary_Project::GetRelHead()
 	{ return this->GetExprRep_Relation()->GetRelHead() & fRelHead; }
 
-bool ExprRep_Relation_Unary_Project::Accept_ExprRep_Relation_Unary(
+void ExprRep_Relation_Unary_Project::Accept_ExprRep_Relation_Unary(
 	Visitor_ExprRep_Relation_Unary& iVisitor)
 	{
 	if (Visitor_ExprRep_Relation_Unary_Project* theVisitor =
 		dynamic_cast<Visitor_ExprRep_Relation_Unary_Project*>(&iVisitor))
 		{
-		return this->Accept_ExprRep_Relation_Unary_Project(*theVisitor);
+		this->Accept_ExprRep_Relation_Unary_Project(*theVisitor);
 		}
 	else
 		{
-		return ExprRep_Relation_Unary::Accept_ExprRep_Relation_Unary(iVisitor);
+		ExprRep_Relation_Unary::Accept_ExprRep_Relation_Unary(iVisitor);
 		}
 	}
 
@@ -59,9 +59,9 @@ ZRef<ExprRep_Relation_Unary> ExprRep_Relation_Unary_Project::Clone(
 	ZRef<ExprRep_Relation> iExprRep_Relation)
 	{ return new ExprRep_Relation_Unary_Project(iExprRep_Relation, fRelHead); }
 
-bool ExprRep_Relation_Unary_Project::Accept_ExprRep_Relation_Unary_Project(
+void ExprRep_Relation_Unary_Project::Accept_ExprRep_Relation_Unary_Project(
 	Visitor_ExprRep_Relation_Unary_Project& iVisitor)
-	{ return iVisitor.Visit_ExprRep_Relation_Unary_Project(this); }
+	{ iVisitor.Visit_ExprRep_Relation_Unary_Project(this); }
 
 ZRelHead ExprRep_Relation_Unary_Project::GetProjectRelHead()
 	{ return fRelHead; }
@@ -70,9 +70,9 @@ ZRelHead ExprRep_Relation_Unary_Project::GetProjectRelHead()
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation_Unary_Project
 
-bool Visitor_ExprRep_Relation_Unary_Project::Visit_ExprRep_Relation_Unary_Project(
+void Visitor_ExprRep_Relation_Unary_Project::Visit_ExprRep_Relation_Unary_Project(
 	ZRef<ExprRep_Relation_Unary_Project> iRep)
-	{ return Visitor_ExprRep_Relation_Unary::Visit_ExprRep_Relation_Unary(iRep); }
+	{ Visitor_ExprRep_Relation_Unary::Visit_ExprRep_Relation_Unary(iRep); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

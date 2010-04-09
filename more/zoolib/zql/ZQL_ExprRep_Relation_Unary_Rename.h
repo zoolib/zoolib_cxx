@@ -45,12 +45,12 @@ public:
 	virtual ZRelHead GetRelHead();
 
 // From ExprRep_Relation_Unary
-	virtual bool Accept_ExprRep_Relation_Unary(Visitor_ExprRep_Relation_Unary& iVisitor);
+	virtual void Accept_ExprRep_Relation_Unary(Visitor_ExprRep_Relation_Unary& iVisitor);
 
 	virtual ZRef<ExprRep_Relation_Unary> Clone(ZRef<ExprRep_Relation> iExprRep_Relation);
 
 // Our protocol
-	virtual bool Accept_ExprRep_Relation_Unary_Rename(
+	virtual void Accept_ExprRep_Relation_Unary_Rename(
 		Visitor_ExprRep_Relation_Unary_Rename& iVisitor);
 
 	const std::string& GetOld();
@@ -68,7 +68,7 @@ private:
 class Visitor_ExprRep_Relation_Unary_Rename : public virtual Visitor_ExprRep_Relation_Unary
 	{
 public:
-	virtual bool Visit_ExprRep_Relation_Unary_Rename(ZRef<ExprRep_Relation_Unary_Rename> iRep);
+	virtual void Visit_ExprRep_Relation_Unary_Rename(ZRef<ExprRep_Relation_Unary_Rename> iRep);
 	};
 
 } // namespace ZQL

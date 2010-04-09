@@ -92,16 +92,16 @@ ZYadParseException::ZYadParseException(const char* iWhat)
 ZYadR::ZYadR()
 	{}
 
-bool ZYadR::Accept(ZVisitor& iVisitor)
+void ZYadR::Accept(ZVisitor& iVisitor)
 	{
 	if (ZVisitor_Yad* theVisitor =
 		dynamic_cast<ZVisitor_Yad*>(&iVisitor))
 		{
-		return this->Accept_Yad(*theVisitor);
+		this->Accept_Yad(*theVisitor);
 		}
 	else
 		{
-		return ZRefCountedWithFinalize::Accept(iVisitor);
+		ZRefCountedWithFinalize::Accept(iVisitor);
 		}
 	}
 
@@ -111,8 +111,8 @@ void ZYadR::Finish()
 ZRef<ZYadR> ZYadR::Meta()
 	{ return ZRef<ZYadR>(); }
 
-bool ZYadR::Accept_Yad(ZVisitor_Yad& iVisitor)
-	{ return iVisitor.Visit_YadR(this); }
+void ZYadR::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadR(this); }
 
 // =================================================================================================
 #pragma mark -
@@ -125,8 +125,8 @@ bool ZYadR::Accept_Yad(ZVisitor_Yad& iVisitor)
 
 */
 
-bool ZYadPrimR::Accept_Yad(ZVisitor_Yad& iVisitor)
-	{ return iVisitor.Visit_YadPrimR(this); }
+void ZYadPrimR::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadPrimR(this); }
 
 bool ZYadPrimR::IsSimple(const ZYadOptions& iOptions)
 	{ return true; }
@@ -142,8 +142,8 @@ bool ZYadPrimR::IsSimple(const ZYadOptions& iOptions)
 
 */
 
-bool ZYadStreamR::Accept_Yad(ZVisitor_Yad& iVisitor)
-	{ return iVisitor.Visit_YadStreamR(this); }
+void ZYadStreamR::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadStreamR(this); }
 
 bool ZYadStreamR::IsSimple(const ZYadOptions& iOptions)
 	{ return false; }
@@ -159,8 +159,8 @@ bool ZYadStreamR::IsSimple(const ZYadOptions& iOptions)
 
 */
 
-bool ZYadStrimR::Accept_Yad(ZVisitor_Yad& iVisitor)
-	{ return iVisitor.Visit_YadStrimR(this); }
+void ZYadStrimR::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadStrimR(this); }
 
 bool ZYadStrimR::IsSimple(const ZYadOptions& iOptions)
 	{ return false; }
@@ -176,8 +176,8 @@ bool ZYadStrimR::IsSimple(const ZYadOptions& iOptions)
 
 */
 
-bool ZYadSeqR::Accept_Yad(ZVisitor_Yad& iVisitor)
-	{ return iVisitor.Visit_YadSeqR(this); }
+void ZYadSeqR::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadSeqR(this); }
 
 bool ZYadSeqR::IsSimple(const ZYadOptions& iOptions)
 	{ return false; }
@@ -202,8 +202,8 @@ void ZYadSeqR::SkipAll()
 
 */
 
-bool ZYadSeqRPos::Accept_Yad(ZVisitor_Yad& iVisitor)
-	{ return iVisitor.Visit_YadSeqRPos(this); }
+void ZYadSeqRPos::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadSeqRPos(this); }
 
 bool ZYadSeqRPos::IsSimple(const ZYadOptions& iOptions)
 	{
@@ -248,8 +248,8 @@ void ZYadSeqRPos::SkipAll()
 
 */
 
-bool ZYadMapR::Accept_Yad(ZVisitor_Yad& iVisitor)
-	{ return iVisitor.Visit_YadMapR(this); }
+void ZYadMapR::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadMapR(this); }
 
 bool ZYadMapR::IsSimple(const ZYadOptions& iOptions)
 	{ return false; }
@@ -277,8 +277,8 @@ void ZYadMapR::SkipAll()
 
 */
 
-bool ZYadMapRPos::Accept_Yad(ZVisitor_Yad& iVisitor)
-	{ return iVisitor.Visit_YadMapRPos(this); }
+void ZYadMapRPos::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadMapRPos(this); }
 
 bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 	{
@@ -323,29 +323,29 @@ bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 
 */
 
-bool ZVisitor_Yad::Visit_YadR(ZRef<ZYadR> iYadR)
-	{ return ZVisitor::Visit(iYadR); }
+void ZVisitor_Yad::Visit_YadR(ZRef<ZYadR> iYadR)
+	{ ZVisitor::Visit(iYadR); }
 
-bool ZVisitor_Yad::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
-	{ return this->Visit_YadR(iYadPrimR); }
+void ZVisitor_Yad::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
+	{ this->Visit_YadR(iYadPrimR); }
 
-bool ZVisitor_Yad::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
-	{ return this->Visit_YadR(iYadStreamR); }
+void ZVisitor_Yad::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+	{ this->Visit_YadR(iYadStreamR); }
 
-bool ZVisitor_Yad::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
-	{ return this->Visit_YadR(iYadStrimR); }
+void ZVisitor_Yad::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+	{ this->Visit_YadR(iYadStrimR); }
 
-bool ZVisitor_Yad::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
-	{ return this->Visit_YadR(iYadSeqR); }
+void ZVisitor_Yad::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+	{ this->Visit_YadR(iYadSeqR); }
 
-bool ZVisitor_Yad::Visit_YadSeqRPos(ZRef<ZYadSeqRPos> iYadSeqRPos)
-	{ return this->Visit_YadSeqR(iYadSeqRPos); }
+void ZVisitor_Yad::Visit_YadSeqRPos(ZRef<ZYadSeqRPos> iYadSeqRPos)
+	{ this->Visit_YadSeqR(iYadSeqRPos); }
 
-bool ZVisitor_Yad::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
-	{ return this->Visit_YadR(iYadMapR); }
+void ZVisitor_Yad::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+	{ this->Visit_YadR(iYadMapR); }
 
-bool ZVisitor_Yad::Visit_YadMapRPos(ZRef<ZYadMapRPos> iYadMapRPos)
-	{ return this->Visit_YadMapR(iYadMapRPos); }
+void ZVisitor_Yad::Visit_YadMapRPos(ZRef<ZYadMapRPos> iYadMapRPos)
+	{ this->Visit_YadMapR(iYadMapRPos); }
 
 // =================================================================================================
 #pragma mark -

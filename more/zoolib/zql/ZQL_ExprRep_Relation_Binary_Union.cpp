@@ -37,23 +37,23 @@ ExprRep_Relation_Binary_Union::ExprRep_Relation_Binary_Union(
 ZRelHead ExprRep_Relation_Binary_Union::GetRelHead()
 	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
 
-bool ExprRep_Relation_Binary_Union::Accept_ExprRep_Relation_Binary(
+void ExprRep_Relation_Binary_Union::Accept_ExprRep_Relation_Binary(
 	Visitor_ExprRep_Relation_Binary& iVisitor)
 	{
 	if (Visitor_ExprRep_Relation_Binary_Union* theVisitor =
 		dynamic_cast<Visitor_ExprRep_Relation_Binary_Union*>(&iVisitor))
 		{
-		return this->Accept_ExprRep_Relation_Binary_Union(*theVisitor);
+		this->Accept_ExprRep_Relation_Binary_Union(*theVisitor);
 		}
 	else
 		{
-		return ExprRep_Relation_Binary::Accept_ExprRep_Relation_Binary(iVisitor);
+		ExprRep_Relation_Binary::Accept_ExprRep_Relation_Binary(iVisitor);
 		}
 	}
 
-bool ExprRep_Relation_Binary_Union::Accept_ExprRep_Relation_Binary_Union(
+void ExprRep_Relation_Binary_Union::Accept_ExprRep_Relation_Binary_Union(
 	Visitor_ExprRep_Relation_Binary_Union& iVisitor)
-	{ return ExprRep_Relation::Accept_ExprRep_Relation(iVisitor); }
+	{ iVisitor.Visit_ExprRep_Relation_Binary_Union(this); }
 
 ZRef<ExprRep_Relation_Binary> ExprRep_Relation_Binary_Union::Clone(
 	ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS)
@@ -63,9 +63,9 @@ ZRef<ExprRep_Relation_Binary> ExprRep_Relation_Binary_Union::Clone(
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation_Binary_Union
 
-bool Visitor_ExprRep_Relation_Binary_Union::Visit_ExprRep_Relation_Binary_Union(
+void Visitor_ExprRep_Relation_Binary_Union::Visit_ExprRep_Relation_Binary_Union(
 	ZRef<ExprRep_Relation_Binary_Union> iRep)
-	{ return Visitor_ExprRep_Relation_Binary::Visit_ExprRep_Relation_Binary(iRep); }
+	{ Visitor_ExprRep_Relation_Binary::Visit_ExprRep_Relation_Binary(iRep); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

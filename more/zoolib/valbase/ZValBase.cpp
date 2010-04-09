@@ -51,44 +51,36 @@ class Visitor_DoMakeIterator
 	{
 public:
 // Via ZQE::Visitor_ExprRep_DoMakeIterator
-	virtual bool Visit_ExprRep_Relation_Unary_Select(
+	virtual void Visit_ExprRep_Relation_Unary_Select(
 		ZRef<ZQL::ExprRep_Relation_Unary_Select> iRep);
 
 // From ZQL::Visitor_ExprRep_Relation_Unary_Restrict
-	virtual bool Visit_ExprRep_Relation_Unary_Restrict(
+	virtual void Visit_ExprRep_Relation_Unary_Restrict(
 		ZRef<ZQL::ExprRep_Relation_Unary_Restrict> iRep);
 
 // From ZQL::Visitor_ExprRep_Relation_Concrete
-	virtual bool Visit_ExprRep_Relation_Concrete(ZRef<ZQL::ExprRep_Relation_Concrete> iRep);	
+	virtual void Visit_ExprRep_Relation_Concrete(ZRef<ZQL::ExprRep_Relation_Concrete> iRep);	
 	};
 
-bool Visitor_DoMakeIterator::Visit_ExprRep_Relation_Unary_Select(
+void Visitor_DoMakeIterator::Visit_ExprRep_Relation_Unary_Select(
 	ZRef<ZQL::ExprRep_Relation_Unary_Select> iRep)
 	{
 	if (ZRef<ZQE::Iterator> theIterator = this->DoMakeIterator(iRep->GetExprRep_Relation()))
 		fIterator = new ZQE::Iterator_Any_Select(iRep->GetExprRep_Logic(), theIterator);
-
-	return true;	
 	}
 
-bool Visitor_DoMakeIterator::Visit_ExprRep_Relation_Unary_Restrict(
+void Visitor_DoMakeIterator::Visit_ExprRep_Relation_Unary_Restrict(
 	ZRef<ZQL::ExprRep_Relation_Unary_Restrict> iRep)
 	{
 	if (ZRef<ZQE::Iterator> theIterator = this->DoMakeIterator(iRep->GetExprRep_Relation()))
 		fIterator = new ZQE::Iterator_Any_Restrict(iRep->GetValCondition(), theIterator);
-
-	return true;	
 	}
 
-bool Visitor_DoMakeIterator::Visit_ExprRep_Relation_Concrete(
+void Visitor_DoMakeIterator::Visit_ExprRep_Relation_Concrete(
 	ZRef<ZQL::ExprRep_Relation_Concrete> iRep)
 	{
 	if (ZRef<ExprRep_Relation_Concrete> theRep = iRep.DynamicCast<ExprRep_Relation_Concrete>())
-		{
 		fIterator = theRep->MakeIterator();
-		return true;
-		}
-	return Visitor_ExprRep_Relation_Concrete::Visit_ExprRep_Relation_Concrete(iRep);
 	}
 
 } // anonymous namespace

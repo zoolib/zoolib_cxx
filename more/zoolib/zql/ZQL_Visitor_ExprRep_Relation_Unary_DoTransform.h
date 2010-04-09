@@ -39,7 +39,7 @@ class Visitor_ExprRep_Relation_Unary_DoTransform
 	{
 public:
 // From Visitor_ExprRep_Unary_Relation
-	virtual bool Visit_ExprRep_Relation_Unary(ZRef<ExprRep_Relation_Unary> iRep);
+	virtual void Visit_ExprRep_Relation_Unary(ZRef<ExprRep_Relation_Unary> iRep);
 	};
 
 } // namespace ZQL

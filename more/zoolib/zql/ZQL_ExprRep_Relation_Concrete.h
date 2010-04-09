@@ -42,10 +42,10 @@ public:
 	virtual ~ExprRep_Relation_Concrete();
 
 // From ExprRep_Relation
-	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
+	virtual void Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 
 // Our protocol
-	virtual bool Accept_ExprRep_Relation_Concrete(Visitor_ExprRep_Relation_Concrete& iVisitor);
+	virtual void Accept_ExprRep_Relation_Concrete(Visitor_ExprRep_Relation_Concrete& iVisitor);
 	};
 
 // =================================================================================================
@@ -55,7 +55,7 @@ public:
 class Visitor_ExprRep_Relation_Concrete : public virtual Visitor_ExprRep_Relation
 	{
 public:
-	virtual bool Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep);
+	virtual void Visit_ExprRep_Relation_Concrete(ZRef<ExprRep_Relation_Concrete> iRep);
 	};
 
 } // namespace ZQL

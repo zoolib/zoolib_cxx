@@ -42,10 +42,10 @@ public:
 	virtual ~ExprRep_Relation_Unary();
 
 // From ExprRep_Relation
-	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
+	virtual void Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 
 // Our protocol
-	virtual bool Accept_ExprRep_Relation_Unary(Visitor_ExprRep_Relation_Unary& iVisitor);
+	virtual void Accept_ExprRep_Relation_Unary(Visitor_ExprRep_Relation_Unary& iVisitor);
 
 	virtual ZRef<ExprRep_Relation_Unary> Clone(ZRef<ExprRep_Relation> iExprRep_Relation) = 0;
 
@@ -62,7 +62,7 @@ private:
 class Visitor_ExprRep_Relation_Unary : public virtual Visitor_ExprRep_Relation
 	{
 public:
-	virtual bool Visit_ExprRep_Relation_Unary(ZRef<ExprRep_Relation_Unary> iRep);
+	virtual void Visit_ExprRep_Relation_Unary(ZRef<ExprRep_Relation_Unary> iRep);
 	};
 
 } // namespace ZQL

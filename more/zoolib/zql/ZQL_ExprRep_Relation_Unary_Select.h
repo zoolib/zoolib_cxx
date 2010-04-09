@@ -47,12 +47,12 @@ public:
 	virtual ZRelHead GetRelHead();
 
 // From ExprRep_Relation_Unary
-	virtual bool Accept_ExprRep_Relation_Unary(Visitor_ExprRep_Relation_Unary& iVisitor);
+	virtual void Accept_ExprRep_Relation_Unary(Visitor_ExprRep_Relation_Unary& iVisitor);
 
 	virtual ZRef<ExprRep_Relation_Unary> Clone(ZRef<ExprRep_Relation> iExprRep_Relation);
 
 // Our protocol
-	virtual bool Accept_ExprRep_Relation_Unary_Select(
+	virtual void Accept_ExprRep_Relation_Unary_Select(
 		Visitor_ExprRep_Relation_Unary_Select& iVisitor);
 
 	ZRef<ZExprRep_Logic> GetExprRep_Logic();
@@ -68,7 +68,7 @@ private:
 class Visitor_ExprRep_Relation_Unary_Select : public virtual Visitor_ExprRep_Relation_Unary
 	{
 public:
-	virtual bool Visit_ExprRep_Relation_Unary_Select(ZRef<ExprRep_Relation_Unary_Select> iRep);
+	virtual void Visit_ExprRep_Relation_Unary_Select(ZRef<ExprRep_Relation_Unary_Select> iRep);
 	};
 
 // =================================================================================================

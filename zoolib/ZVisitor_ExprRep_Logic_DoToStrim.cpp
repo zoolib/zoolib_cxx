@@ -26,44 +26,35 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZVisitor_ExprRep_Logic_DoToStrim
 
-bool ZVisitor_ExprRep_Logic_DoToStrim::Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep)
-	{
-	pStrimW() << "any";
-	return true;
-	}
+void ZVisitor_ExprRep_Logic_DoToStrim::Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep)
+	{ pStrimW() << "any"; }
 
-bool ZVisitor_ExprRep_Logic_DoToStrim::Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep)
-	{
-	pStrimW() << "none";
-	return true;
-	}
+void ZVisitor_ExprRep_Logic_DoToStrim::Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep)
+	{ pStrimW() << "none"; }
 
-bool ZVisitor_ExprRep_Logic_DoToStrim::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep)
+void ZVisitor_ExprRep_Logic_DoToStrim::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep)
 	{
 	pStrimW() << "!(";
 	this->DoToStrim(iRep->GetOperand());
 	pStrimW() << ")";
-	return true;
 	}
 
-bool ZVisitor_ExprRep_Logic_DoToStrim::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
+void ZVisitor_ExprRep_Logic_DoToStrim::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
 	{
 	pStrimW() << "(";
 	this->DoToStrim(iRep->GetLHS());
 	pStrimW() << " & ";
 	this->DoToStrim(iRep->GetRHS());
 	pStrimW() << ")";
-	return true;
 	}
 
-bool ZVisitor_ExprRep_Logic_DoToStrim::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
+void ZVisitor_ExprRep_Logic_DoToStrim::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
 	{
 	pStrimW() << "(";
 	this->DoToStrim(iRep->GetLHS());
 	pStrimW() << " | ";
 	this->DoToStrim(iRep->GetRHS());
 	pStrimW() << ")";
-	return true;
 	}
 
 NAMESPACE_ZOOLIB_END

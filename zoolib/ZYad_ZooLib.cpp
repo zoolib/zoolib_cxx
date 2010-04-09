@@ -184,11 +184,11 @@ public:
 	Visitor_GetVal(const ZVal_ZooLib& iDefault);
 
 // From ZVisitor_Yad
-	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
-	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
-	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
-	virtual bool Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
-	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
+	virtual void Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
+	virtual void Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
+	virtual void Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
+	virtual void Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
+	virtual void Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 
 // Our protocol
 	ZVal_ZooLib GetVal(ZRef<ZYadR> iYadR);
@@ -204,25 +204,16 @@ Visitor_GetVal::Visitor_GetVal(const ZVal_ZooLib& iDefault)
 :	fDefault(iDefault)
 	{}
 
-bool Visitor_GetVal::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
-	{
-	fOutput = ZVal_ZooLib::sDFromAny(fDefault, iYadPrimR->AsAny());
-	return true;
-	}
+void Visitor_GetVal::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
+	{ fOutput = ZVal_ZooLib::sDFromAny(fDefault, iYadPrimR->AsAny()); }
 
-bool Visitor_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
-	{
-	fOutput = sReadAll_T<ZData_ZooLib>(iYadStreamR->GetStreamR());
-	return true;
-	}
+void Visitor_GetVal::Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR)
+	{ fOutput = sReadAll_T<ZData_ZooLib>(iYadStreamR->GetStreamR()); }
 
-bool Visitor_GetVal::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
-	{
-	fOutput = iYadStrimR->GetStrimR().ReadAll8();
-	return true;
-	}
+void Visitor_GetVal::Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR)
+	{ fOutput = iYadStrimR->GetStrimR().ReadAll8(); }
 
-bool Visitor_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
+void Visitor_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 	{
 	ZSeq_ZooLib theSeq;
 
@@ -230,10 +221,9 @@ bool Visitor_GetVal::Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR)
 		theSeq.Append(this->GetVal(theChild));
 
 	fOutput = theSeq;
-	return true;
 	}
 
-bool Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
+void Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 	{
 	ZMap_ZooLib theMap;
 
@@ -242,7 +232,6 @@ bool Visitor_GetVal::Visit_YadMapR(ZRef<ZYadMapR> iYadMapR)
 		theMap.Set(theName, this->GetVal(theChild));
 
 	fOutput = theMap;
-	return true;
 	}
 
 ZVal_ZooLib Visitor_GetVal::GetVal(ZRef<ZYadR> iYadR)

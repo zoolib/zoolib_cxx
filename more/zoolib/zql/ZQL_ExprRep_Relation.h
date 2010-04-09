@@ -43,141 +43,12 @@ protected:
 
 public:
 // From ZExprRep
-	virtual bool Accept_ExprRep(ZVisitor_ExprRep& iVisitor);
+	virtual void Accept_ExprRep(ZVisitor_ExprRep& iVisitor);
 
 // Our protocol
-	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
+	virtual void Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
 
 	virtual ZRelHead GetRelHead() = 0;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ExprRep_Relation_Dyadic
-
-class ExprRep_Relation_Dyadic : public ExprRep_Relation
-	{
-protected:
-	ExprRep_Relation_Dyadic(ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS);
-
-public:
-	virtual ~ExprRep_Relation_Dyadic();
-
-// Our protocol
-	ZRef<ExprRep_Relation> GetLHS();
-	ZRef<ExprRep_Relation> GetRHS();
-
-protected:
-	const ZRef<ExprRep_Relation> fLHS;
-	const ZRef<ExprRep_Relation> fRHS;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ExprRep_Relation_Difference
-
-class ExprRep_Relation_Difference : public ExprRep_Relation_Dyadic
-	{
-public:
-	ExprRep_Relation_Difference(
-		ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS);
-
-// From ExprRep_Relation via ExprRep_Relation_Dyadic
-	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
-	virtual ZRelHead GetRelHead();
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ExprRep_Relation_Intersect
-
-class ExprRep_Relation_Intersect : public ExprRep_Relation_Dyadic
-	{
-public:
-	ExprRep_Relation_Intersect(
-		ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS);
-
-// From ExprRep_Relation via ExprRep_Relation_Dyadic
-	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
-	virtual ZRelHead GetRelHead();
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ExprRep_Relation_Join
-
-class ExprRep_Relation_Join : public ExprRep_Relation_Dyadic
-	{
-public:
-	ExprRep_Relation_Join(ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS);
-
-// From ExprRep_Relation via ExprRep_Relation_Dyadic
-	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
-	virtual ZRelHead GetRelHead();
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ExprRep_Relation_Project
-
-class ExprRep_Relation_Project : public ExprRep_Relation
-	{
-public:
-	ExprRep_Relation_Project(ZRef<ExprRep_Relation> iExprRep, const ZRelHead& iRelHead);
-	virtual ~ExprRep_Relation_Project();
-
-// From ExprRep_Relation
-	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
-	virtual ZRelHead GetRelHead();
-
-// Our protocol
-	ZRef<ExprRep_Relation> GetExprRep();
-	const ZRelHead& GetProjectRelHead();
-
-private:
-	const ZRef<ExprRep_Relation> fExprRep;
-	const ZRelHead fRelHead;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ExprRep_Relation_Rename
-
-class ExprRep_Relation_Rename : public ExprRep_Relation
-	{
-public:
-	ExprRep_Relation_Rename(
-		ZRef<ExprRep_Relation> iExprRep, const std::string& iOld, const std::string& iNew);
-
-	virtual ~ExprRep_Relation_Rename();
-
-// From ExprRep_Relation
-	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
-	virtual ZRelHead GetRelHead();
-
-// Our protocol
-	ZRef<ExprRep_Relation> GetExprRep();
-	const std::string& GetOld();
-	const std::string& GetNew();
-
-private:
-	const ZRef<ExprRep_Relation> fExprRep;
-	const std::string fOld;
-	const std::string fNew;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ExprRep_Relation_Union
-
-class ExprRep_Relation_Union : public ExprRep_Relation_Dyadic
-	{
-public:
-	ExprRep_Relation_Union(ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS);
-
-// From ExprRep_Relation via ExprRep_Relation_Dyadic
-	virtual bool Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor);
-	virtual ZRelHead GetRelHead();
 	};
 
 // =================================================================================================
@@ -187,12 +58,7 @@ public:
 class Visitor_ExprRep_Relation : public virtual ZVisitor_ExprRep
 	{
 public:
-	virtual bool Visit_ExprRep_Relation_Difference(ZRef<ExprRep_Relation_Difference> iRep);
-	virtual bool Visit_ExprRep_Relation_Intersect(ZRef<ExprRep_Relation_Intersect> iRep);
-	virtual bool Visit_ExprRep_Relation_Join(ZRef<ExprRep_Relation_Join> iRep);
-	virtual bool Visit_ExprRep_Relation_Project(ZRef<ExprRep_Relation_Project> iRep);
-	virtual bool Visit_ExprRep_Relation_Rename(ZRef<ExprRep_Relation_Rename> iRep);
-	virtual bool Visit_ExprRep_Relation_Union(ZRef<ExprRep_Relation_Union> iRep);
+	virtual void Visit_ExprRep_Relation(ZRef<ExprRep_Relation> iRep);
 	};
 
 // =================================================================================================

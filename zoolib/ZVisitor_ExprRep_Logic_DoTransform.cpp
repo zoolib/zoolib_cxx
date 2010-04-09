@@ -26,7 +26,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZVisitor_ExprRep_Logic_DoTransform
 
-bool ZVisitor_ExprRep_Logic_DoTransform::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep)
+void ZVisitor_ExprRep_Logic_DoTransform::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep)
 	{
 	ZRef<ZExprRep_Logic> oldRep = iRep->GetOperand();
 	ZRef<ZExprRep_Logic> newRep = this->DoTransform(oldRep).DynamicCast<ZExprRep_Logic>();
@@ -34,10 +34,9 @@ bool ZVisitor_ExprRep_Logic_DoTransform::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not
 		fResult = iRep;
 	else
 		fResult = new ZExprRep_Logic_Not(newRep);
-	return true;
 	}
 
-bool ZVisitor_ExprRep_Logic_DoTransform::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
+void ZVisitor_ExprRep_Logic_DoTransform::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
 	{
 	ZRef<ZExprRep_Logic> oldLHS = iRep->GetLHS();
 	ZRef<ZExprRep_Logic> oldRHS = iRep->GetRHS();
@@ -47,10 +46,9 @@ bool ZVisitor_ExprRep_Logic_DoTransform::Visit_Logic_And(ZRef<ZExprRep_Logic_And
 		fResult = iRep;
 	else
 		fResult = new ZExprRep_Logic_And(newLHS, newRHS);
-	return true;
 	}
 
-bool ZVisitor_ExprRep_Logic_DoTransform::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
+void ZVisitor_ExprRep_Logic_DoTransform::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
 	{
 	ZRef<ZExprRep_Logic> oldLHS = iRep->GetLHS();
 	ZRef<ZExprRep_Logic> oldRHS = iRep->GetRHS();
@@ -60,7 +58,6 @@ bool ZVisitor_ExprRep_Logic_DoTransform::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> 
 		fResult = iRep;
 	else
 		fResult = new ZExprRep_Logic_Or(newLHS, newRHS);
-	return true;
 	}
 
 NAMESPACE_ZOOLIB_END

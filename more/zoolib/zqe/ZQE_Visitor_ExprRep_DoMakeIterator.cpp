@@ -27,13 +27,11 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Visitor_ExprRep_DoMakeIterator
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Binary_Difference(
+void Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Binary_Difference(
 	ZRef<ExprRep_Relation_Binary_Difference> iRep)
-	{
-	return true;
-	}
+	{}
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Binary_Intersect(
+void Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Binary_Intersect(
 	ZRef<ExprRep_Relation_Binary_Intersect> iRep)
 	{
 	if (ZRef<Iterator> lhs = this->DoMakeIterator(iRep->GetLHS()))
@@ -41,10 +39,9 @@ bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Binary_Intersect(
 		if (ZRef<Iterator> rhs = this->DoMakeIterator(iRep->GetRHS()))
 			fIterator = new Iterator_Intersect(lhs, rhs);
 		}
-	return true;
 	}
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Binary_Join(
+void Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Binary_Join(
 	ZRef<ExprRep_Relation_Binary_Join> iRep)
 	{
 	if (ZRef<Iterator> lhs = this->DoMakeIterator(iRep->GetLHS()))
@@ -52,10 +49,9 @@ bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Binary_Join(
 		if (ZRef<Iterator> rhs = this->DoMakeIterator(iRep->GetRHS()))
 			fIterator = new Iterator_Join(lhs, rhs);
 		}
-	return true;
 	}
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Binary_Union(
+void Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Binary_Union(
 	ZRef<ExprRep_Relation_Binary_Union> iRep)
 	{
 	if (ZRef<Iterator> lhs = this->DoMakeIterator(iRep->GetLHS()))
@@ -65,26 +61,19 @@ bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Binary_Union(
 		else
 			fIterator = lhs;
 		}
-	return true;
 	}
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Unary_Project(
+void Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Unary_Project(
 	ZRef<ExprRep_Relation_Unary_Project> iRep)
-	{
-	return true;
-	}
+	{}
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Unary_Rename(
+void Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Unary_Rename(
 	ZRef<ExprRep_Relation_Unary_Rename> iRep)
-	{
-	return true;
-	}
+	{}
 
-bool Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Unary_Select(
+void Visitor_ExprRep_DoMakeIterator::Visit_ExprRep_Relation_Unary_Select(
 	ZRef<ExprRep_Relation_Unary_Select> iRep)
-	{
-	return true;
-	}
+	{}
 
 ZRef<Iterator> Visitor_ExprRep_DoMakeIterator::DoMakeIterator(ZRef<ZExprRep> iExprRep)
 	{

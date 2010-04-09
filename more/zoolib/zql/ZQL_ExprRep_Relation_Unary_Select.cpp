@@ -42,22 +42,22 @@ ExprRep_Relation_Unary_Select::~ExprRep_Relation_Unary_Select()
 ZRelHead ExprRep_Relation_Unary_Select::GetRelHead()
 	{ return this->GetExprRep_Relation()->GetRelHead() | sGetRelHead(fExprRep_Logic); }
 
-bool ExprRep_Relation_Unary_Select::Accept_ExprRep_Relation_Unary(
+void ExprRep_Relation_Unary_Select::Accept_ExprRep_Relation_Unary(
 	Visitor_ExprRep_Relation_Unary& iVisitor)
 	{
 	if (Visitor_ExprRep_Relation_Unary_Select* theVisitor =
 		dynamic_cast<Visitor_ExprRep_Relation_Unary_Select*>(&iVisitor))
 		{
-		return this->Accept_ExprRep_Relation_Unary_Select(*theVisitor);
+		this->Accept_ExprRep_Relation_Unary_Select(*theVisitor);
 		}
 	else
 		{
-		return ExprRep_Relation_Unary::Accept_ExprRep_Relation_Unary(iVisitor);
+		ExprRep_Relation_Unary::Accept_ExprRep_Relation_Unary(iVisitor);
 		}
 	}
-bool ExprRep_Relation_Unary_Select::Accept_ExprRep_Relation_Unary_Select(
+void ExprRep_Relation_Unary_Select::Accept_ExprRep_Relation_Unary_Select(
 	Visitor_ExprRep_Relation_Unary_Select& iVisitor)
-	{ return iVisitor.Visit_ExprRep_Relation_Unary_Select(this); }
+	{ iVisitor.Visit_ExprRep_Relation_Unary_Select(this); }
 
 ZRef<ExprRep_Relation_Unary> ExprRep_Relation_Unary_Select::Clone(
 	ZRef<ExprRep_Relation> iExprRep_Relation)
@@ -70,7 +70,7 @@ ZRef<ZExprRep_Logic> ExprRep_Relation_Unary_Select::GetExprRep_Logic()
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation_Unary_Select
 
-bool Visitor_ExprRep_Relation_Unary_Select::Visit_ExprRep_Relation_Unary_Select(
+void Visitor_ExprRep_Relation_Unary_Select::Visit_ExprRep_Relation_Unary_Select(
 	ZRef<ExprRep_Relation_Unary_Select> iRep)
 	{
 	//??
@@ -80,9 +80,8 @@ bool Visitor_ExprRep_Relation_Unary_Select::Visit_ExprRep_Relation_Unary_Select(
 
 	if (ZRef<ZExprRep_Logic> theExprRep_Logic = iRep->GetExprRep_Logic())
 		theExprRep_Logic->Accept(*this);
-
-	return true;
 	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark *

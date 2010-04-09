@@ -26,26 +26,34 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZVisitor_ExprRep_Logic_DoEval
 
-bool ZVisitor_ExprRep_Logic_DoEval::Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep)
-	{ return true; }
+ZVisitor_ExprRep_Logic_DoEval::ZVisitor_ExprRep_Logic_DoEval()
+:	fResult(false)
+	{}
 
-bool ZVisitor_ExprRep_Logic_DoEval::Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep)
-	{ return false; }
+void ZVisitor_ExprRep_Logic_DoEval::Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep)
+	{ fResult = true; }
 
-bool ZVisitor_ExprRep_Logic_DoEval::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep)
-	{ return ! this->DoEval(iRep); }
+void ZVisitor_ExprRep_Logic_DoEval::Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep)
+	{ fResult = false; }
 
-bool ZVisitor_ExprRep_Logic_DoEval::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
-	{ return this->DoEval(iRep->GetLHS()) && this->DoEval(iRep->GetRHS()); }
+void ZVisitor_ExprRep_Logic_DoEval::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep)
+	{ fResult = ! this->DoEval(iRep); }
 
-bool ZVisitor_ExprRep_Logic_DoEval::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
-	{ return this->DoEval(iRep->GetLHS()) || this->DoEval(iRep->GetRHS()); }
+void ZVisitor_ExprRep_Logic_DoEval::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
+	{ fResult = this->DoEval(iRep->GetLHS()) && this->DoEval(iRep->GetRHS()); }
+
+void ZVisitor_ExprRep_Logic_DoEval::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
+	{ fResult = this->DoEval(iRep->GetLHS()) || this->DoEval(iRep->GetRHS()); }
 
 bool ZVisitor_ExprRep_Logic_DoEval::DoEval(ZRef<ZExprRep> iExprRep)
 	{
+	bool result = false;
 	if (iExprRep)
-		return iExprRep->Accept(*this);
-	return false;
+		{
+		iExprRep->Accept(*this);
+		std::swap(result, fResult);
+		}
+	return result;
 	}
 
 NAMESPACE_ZOOLIB_END

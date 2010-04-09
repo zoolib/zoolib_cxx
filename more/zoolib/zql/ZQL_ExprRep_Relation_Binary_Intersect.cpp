@@ -37,23 +37,23 @@ ExprRep_Relation_Binary_Intersect::ExprRep_Relation_Binary_Intersect(
 ZRelHead ExprRep_Relation_Binary_Intersect::GetRelHead()
 	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
 
-bool ExprRep_Relation_Binary_Intersect::Accept_ExprRep_Relation_Binary(
+void ExprRep_Relation_Binary_Intersect::Accept_ExprRep_Relation_Binary(
 	Visitor_ExprRep_Relation_Binary& iVisitor)
 	{
 	if (Visitor_ExprRep_Relation_Binary_Intersect* theVisitor =
 		dynamic_cast<Visitor_ExprRep_Relation_Binary_Intersect*>(&iVisitor))
 		{
-		return this->Accept_ExprRep_Relation_Binary_Intersect(*theVisitor);
+		this->Accept_ExprRep_Relation_Binary_Intersect(*theVisitor);
 		}
 	else
 		{
-		return ExprRep_Relation_Binary::Accept_ExprRep_Relation_Binary(iVisitor);
+		ExprRep_Relation_Binary::Accept_ExprRep_Relation_Binary(iVisitor);
 		}
 	}
 
-bool ExprRep_Relation_Binary_Intersect::Accept_ExprRep_Relation_Binary_Intersect(
+void ExprRep_Relation_Binary_Intersect::Accept_ExprRep_Relation_Binary_Intersect(
 	Visitor_ExprRep_Relation_Binary_Intersect& iVisitor)
-	{ return ExprRep_Relation::Accept_ExprRep_Relation(iVisitor); }
+	{ iVisitor.Visit_ExprRep_Relation_Binary_Intersect(this); }
 
 ZRef<ExprRep_Relation_Binary> ExprRep_Relation_Binary_Intersect::Clone(
 	ZRef<ExprRep_Relation> iLHS, ZRef<ExprRep_Relation> iRHS)
@@ -63,9 +63,9 @@ ZRef<ExprRep_Relation_Binary> ExprRep_Relation_Binary_Intersect::Clone(
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation_Binary_Intersect
 
-bool Visitor_ExprRep_Relation_Binary_Intersect::Visit_ExprRep_Relation_Binary_Intersect(
+void Visitor_ExprRep_Relation_Binary_Intersect::Visit_ExprRep_Relation_Binary_Intersect(
 	ZRef<ExprRep_Relation_Binary_Intersect> iRep)
-	{ return Visitor_ExprRep_Relation_Binary::Visit_ExprRep_Relation_Binary(iRep); }
+	{ Visitor_ExprRep_Relation_Binary::Visit_ExprRep_Relation_Binary(iRep); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

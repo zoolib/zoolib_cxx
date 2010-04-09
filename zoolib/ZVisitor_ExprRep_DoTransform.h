@@ -37,7 +37,7 @@ public:
 	ZVisitor_ExprRep_DoTransform();
 
 // From ZVisitor_ExprRep
-	virtual bool Visit_ExprRep(ZRef<ZExprRep> iRep);
+	virtual void Visit_ExprRep(ZRef<ZExprRep> iRep);
 
 // Our protocol
 	ZRef<ZExprRep> DoTransform(ZRef<ZExprRep> iExprRep);

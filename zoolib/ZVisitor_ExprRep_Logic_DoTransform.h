@@ -37,9 +37,9 @@ class ZVisitor_ExprRep_Logic_DoTransform
 	{
 public:
 // From ZVisitor_ExprRep_Logic
-	virtual bool Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
-	virtual bool Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
-	virtual bool Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);
+	virtual void Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
+	virtual void Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
+	virtual void Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);
 	};
 
 NAMESPACE_ZOOLIB_END

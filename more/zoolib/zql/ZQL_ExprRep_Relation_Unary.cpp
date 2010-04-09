@@ -36,21 +36,21 @@ ExprRep_Relation_Unary::ExprRep_Relation_Unary(ZRef<ExprRep_Relation> iExprRep_R
 ExprRep_Relation_Unary::~ExprRep_Relation_Unary()
 	{}
 
-bool ExprRep_Relation_Unary::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
+void ExprRep_Relation_Unary::Accept_ExprRep_Relation(Visitor_ExprRep_Relation& iVisitor)
 	{
 	if (Visitor_ExprRep_Relation_Unary* theVisitor =
 		dynamic_cast<Visitor_ExprRep_Relation_Unary*>(&iVisitor))
 		{
-		return this->Accept_ExprRep_Relation_Unary(*theVisitor);
+		this->Accept_ExprRep_Relation_Unary(*theVisitor);
 		}
 	else
 		{
-		return ExprRep_Relation::Accept_ExprRep_Relation(iVisitor);
+		ExprRep_Relation::Accept_ExprRep_Relation(iVisitor);
 		}
 	}
 
-bool ExprRep_Relation_Unary::Accept_ExprRep_Relation_Unary(Visitor_ExprRep_Relation_Unary& iVisitor)
-	{ return ExprRep_Relation::Accept_ExprRep_Relation(iVisitor); }
+void ExprRep_Relation_Unary::Accept_ExprRep_Relation_Unary(Visitor_ExprRep_Relation_Unary& iVisitor)
+	{ iVisitor.Visit_ExprRep_Relation_Unary(this); }
 
 ZRef<ExprRep_Relation> ExprRep_Relation_Unary::GetExprRep_Relation()
 	{ return fExprRep_Relation; }
@@ -59,12 +59,10 @@ ZRef<ExprRep_Relation> ExprRep_Relation_Unary::GetExprRep_Relation()
 #pragma mark -
 #pragma mark * Visitor_ExprRep_Relation_Unary
 
-bool Visitor_ExprRep_Relation_Unary::Visit_ExprRep_Relation_Unary(ZRef<ExprRep_Relation_Unary> iRep)
+void Visitor_ExprRep_Relation_Unary::Visit_ExprRep_Relation_Unary(ZRef<ExprRep_Relation_Unary> iRep)
 	{
 	if (ZRef<ExprRep_Relation> theRelation = iRep->GetExprRep_Relation())
 		theRelation->Accept(*this);
-
-	return true;
 	}
 
 } // namespace ZQL

@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZExprRep_Logic_ValCondition.h"
 #include "zoolib/ZVisitor_ExprRep_Logic_DoTransform.h"
 #include "zoolib/tql/ZTQL_Optimize.h"
+#include "zoolib/zql/ZQL_ExprRep_Relation_Binary_Union.h"
 #include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Restrict.h"
 #include "zoolib/zql/ZQL_ExprRep_Relation_Unary_Select.h"
 #include "zoolib/zql/ZQL_Visitor_ExprRep_Relation_Binary_DoTransform.h"
@@ -67,14 +68,14 @@ public:
 	Gather(CondUnion& oResult);
 
 //	From ZVisitor_ExprRep_Logic_DoTransform
-	virtual bool Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep);
-	virtual bool Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep);
-	virtual bool Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
-	virtual bool Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
-	virtual bool Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);	
+	virtual void Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep);
+	virtual void Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep);
+	virtual void Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep);
+	virtual void Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep);
+	virtual void Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep);	
 
 // From ZVisitor_ExprRep_Logic_ValCondition
-	virtual bool Visit_Logic_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep);
+	virtual void Visit_Logic_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep);
 
 private:
 	CondUnion& fResult;
@@ -84,36 +85,28 @@ Gather::Gather(CondUnion& oResult)
 :	fResult(oResult)
 	{}
 
-bool Gather::Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep)
-	{
-	fResult.resize(1);
-	return true;
-	}
+void Gather::Visit_Logic_True(ZRef<ZExprRep_Logic_True> iRep)
+	{ fResult.resize(1); }
 
-bool Gather::Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep)
+void Gather::Visit_Logic_False(ZRef<ZExprRep_Logic_False> iRep)
 	{
 	ZAssert(fResult.empty());
 //	fResult.clear();
-	return true;
 	}
 
-bool Gather::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep)
-	{
-	ZUnimplemented();
-	return true;
-	}
+void Gather::Visit_Logic_Not(ZRef<ZExprRep_Logic_Not> iRep)
+	{ ZUnimplemented(); }
 
-bool Gather::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
+void Gather::Visit_Logic_And(ZRef<ZExprRep_Logic_And> iRep)
 	{
 	CondUnion left;
 	spGather(iRep->GetLHS(), left);
 	CondUnion right;
 	spGather(iRep->GetRHS(), right);
 	spCrossMultiply(left, right, fResult);
-	return true;
 	}
 
-bool Gather::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
+void Gather::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
 	{
 	CondUnion left;
 	spGather(iRep->GetLHS(), left);
@@ -121,14 +114,12 @@ bool Gather::Visit_Logic_Or(ZRef<ZExprRep_Logic_Or> iRep)
 	spGather(iRep->GetRHS(), right);
 	fResult.swap(left);
 	fResult.insert(fResult.end(), right.begin(), right.end());
-	return true;
 	}
 
-bool Gather::Visit_Logic_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep)
+void Gather::Visit_Logic_ValCondition(ZRef<ZExprRep_Logic_ValCondition> iRep)
 	{
 	fResult.resize(1);
 	fResult[0].push_back(iRep->GetValCondition());
-	return true;
 	}
 
 void spGather(ZRef<ZExprRep_Logic> iRep, CondUnion& oResult)
@@ -159,7 +150,7 @@ ZRef<ExprRep_Relation> spConvertSelect(
 			}
 
 		if (resultRelation)
-			resultRelation = new ExprRep_Relation_Union(current, resultRelation);
+			resultRelation = new ExprRep_Relation_Binary_Union(current, resultRelation);
 		else
 			resultRelation = current;
 		}
@@ -172,16 +163,15 @@ class Optimize
 	{
 public:
 // From Visitor_ExprRep_Relation_Unary_Select
-	virtual bool Visit_ExprRep_Relation_Unary_Select(ZRef<ExprRep_Relation_Unary_Select> iRep);
+	virtual void Visit_ExprRep_Relation_Unary_Select(ZRef<ExprRep_Relation_Unary_Select> iRep);
 	};
 
-bool Optimize::Visit_ExprRep_Relation_Unary_Select(ZRef<ExprRep_Relation_Unary_Select> iRep)
+void Optimize::Visit_ExprRep_Relation_Unary_Select(ZRef<ExprRep_Relation_Unary_Select> iRep)
 	{
 	ZRef<ExprRep_Relation> newRep =
 		this->DoTransform(iRep->GetExprRep_Relation()).DynamicCast<ExprRep_Relation>();
 
 	fResult = spConvertSelect(newRep, iRep->GetExprRep_Logic());
-	return true;
 	}
 
 } // anonymous namespace

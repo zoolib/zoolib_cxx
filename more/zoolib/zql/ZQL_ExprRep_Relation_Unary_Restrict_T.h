@@ -48,12 +48,12 @@ public:
 	virtual ZRelHead GetRelHead();
 
 // From ExprRep_Relation_Unary
-	virtual bool Accept_ExprRep_Relation_Unary(Visitor_ExprRep_Relation_Unary& iVisitor);
+	virtual void Accept_ExprRep_Relation_Unary(Visitor_ExprRep_Relation_Unary& iVisitor);
 
 	virtual ZRef<ExprRep_Relation_Unary> Clone(ZRef<ExprRep_Relation> iExprRep_Relation);
 
 // Our protocol
-	virtual bool Accept_ExprRep_Relation_Unary_Restrict(
+	virtual void Accept_ExprRep_Relation_Unary_Restrict(
 		Visitor_ExprRep_Relation_Unary_Restrict_T<Val>& iVisitor);
 
 	ZValCondition_T<Val> GetValCondition();
@@ -78,17 +78,17 @@ ZRelHead ExprRep_Relation_Unary_Restrict_T<Val>::GetRelHead()
 	{ return this->GetExprRep_Relation()->GetRelHead() | fValCondition.GetRelHead(); }
 	
 template <class Val>
-bool ExprRep_Relation_Unary_Restrict_T<Val>::Accept_ExprRep_Relation_Unary(
+void ExprRep_Relation_Unary_Restrict_T<Val>::Accept_ExprRep_Relation_Unary(
 	Visitor_ExprRep_Relation_Unary& iVisitor)
 	{
 	if (Visitor_ExprRep_Relation_Unary_Restrict_T<Val>* theVisitor =
 		dynamic_cast<Visitor_ExprRep_Relation_Unary_Restrict_T<Val>*>(&iVisitor))
 		{
-		return this->Accept_ExprRep_Relation_Unary_Restrict(*theVisitor);
+		this->Accept_ExprRep_Relation_Unary_Restrict(*theVisitor);
 		}
 	else
 		{
-		return ExprRep_Relation_Unary::Accept_ExprRep_Relation_Unary(iVisitor);
+		ExprRep_Relation_Unary::Accept_ExprRep_Relation_Unary(iVisitor);
 		}
 	}
 
@@ -98,9 +98,9 @@ ZRef<ExprRep_Relation_Unary> ExprRep_Relation_Unary_Restrict_T<Val>::Clone(
 	{ return new ExprRep_Relation_Unary_Restrict_T<Val>(iExprRep_Relation, fValCondition); }
 
 template <class Val>
-bool ExprRep_Relation_Unary_Restrict_T<Val>::Accept_ExprRep_Relation_Unary_Restrict(
+void ExprRep_Relation_Unary_Restrict_T<Val>::Accept_ExprRep_Relation_Unary_Restrict(
 	Visitor_ExprRep_Relation_Unary_Restrict_T<Val>& iVisitor)
-	{ return iVisitor.Visit_ExprRep_Relation_Unary_Restrict(this); }
+	{ iVisitor.Visit_ExprRep_Relation_Unary_Restrict(this); }
 
 template <class Val>
 ZValCondition_T<Val> ExprRep_Relation_Unary_Restrict_T<Val>::GetValCondition()
@@ -114,18 +114,14 @@ template <class Val>
 class Visitor_ExprRep_Relation_Unary_Restrict_T : public virtual Visitor_ExprRep_Relation_Unary
 	{
 public:
-	virtual bool Visit_ExprRep_Relation_Unary_Restrict(
+	virtual void Visit_ExprRep_Relation_Unary_Restrict(
 		ZRef<ExprRep_Relation_Unary_Restrict_T<Val> > iRep);
 	};
 
 template <class Val>
-bool Visitor_ExprRep_Relation_Unary_Restrict_T<Val>::Visit_ExprRep_Relation_Unary_Restrict(
+void Visitor_ExprRep_Relation_Unary_Restrict_T<Val>::Visit_ExprRep_Relation_Unary_Restrict(
 	ZRef<ExprRep_Relation_Unary_Restrict_T<Val> > iRep)
-	{
-	Visitor_ExprRep_Relation_Unary::Visit_ExprRep_Relation_Unary(iRep);
-
-	return true;
-	}
+	{ Visitor_ExprRep_Relation_Unary::Visit_ExprRep_Relation_Unary(iRep); }
 
 // =================================================================================================
 #pragma mark -

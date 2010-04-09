@@ -103,12 +103,12 @@ public:
 		size_t iIndent, const ZYadOptions& iOptions, const ZStrimW& iStrimW);
 
 // From ZVisitor_Yad
-	virtual bool Visit_YadR(ZRef<ZYadR> iYadR);
-	virtual bool Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
-	virtual bool Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
-	virtual bool Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
-	virtual bool Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
-	virtual bool Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
+	virtual void Visit_YadR(ZRef<ZYadR> iYadR);
+	virtual void Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR);
+	virtual void Visit_YadStreamR(ZRef<ZYadStreamR> iYadStreamR);
+	virtual void Visit_YadStrimR(ZRef<ZYadStrimR> iYadStrimR);
+	virtual void Visit_YadSeqR(ZRef<ZYadSeqR> iYadSeqR);
+	virtual void Visit_YadMapR(ZRef<ZYadMapR> iYadMapR);
 
 private:
 	class SaveState;
