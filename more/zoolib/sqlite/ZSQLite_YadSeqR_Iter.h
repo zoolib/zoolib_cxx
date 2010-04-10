@@ -18,43 +18,33 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValBase_SQLite__
-#define __ZValBase_SQLite__ 1
+#ifndef __ZSQLite_YadSeqR_Iter__
+#define __ZSQLite_YadSeqR_Iter__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZUnicodeString.h"
+#include "zoolib/ZYad_Std.h"
 #include "zoolib/sqlite/ZSQLite.h"
-#include "zoolib/valbase/ZValBase.h"
-#include "zoolib/zql/ZQL_Expr_Rel.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZValBase_SQLite {
+namespace ZSQLite {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValBase_SQLite::Domain
+#pragma mark * ZSQLite::YadSeqR_Iter
 
-class ConcreteDomain : public ZQL::ConcreteDomain
+class YadSeqR_Iter : public ZYadSeqR_Std
 	{
 public:
-	ConcreteDomain(ZRef<ZSQLite::DB> iDB);
-	
-	ZRef<ZSQLite::DB> GetDB();
+	YadSeqR_Iter(ZRef<Iter> iIter);
+	virtual ~YadSeqR_Iter();
+
+	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:
-	ZRef<ZSQLite::DB> fDB;
+	ZRef<Iter> fIter;
 	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZValBase_SQLite pseudo constructors
-
-ZRef<ZQL::Expr_Rel> sConcrete_Table(ZRef<ConcreteDomain> iConcreteDomain, const string8& iName);
-
-ZRef<ZQL::Expr_Rel> sConcrete_SQL(ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL);
-
-} // namespace ZValBase_SQLite
+} // namespace ZSQLite
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZValBase_SQLite__
+#endif // __ZSQLite_YadSeqR_Iter__

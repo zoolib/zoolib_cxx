@@ -2,7 +2,7 @@
 //#include "zoolib/zql/ZQL_Expr_Rel_Unary_Restrict.h"
 //#include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
 
-#include "zoolib/zql/ZQL_Util_Strim_Query.h"
+#include "zoolib/zql/ZQL_Util_Strim_Rel.h"
 
 #include "zoolib/tql/ZUtil_TQLConvert.h"
 //#include "zoolib/ZExpr_Logic_ValCondition.h"
@@ -34,6 +34,9 @@
 #include "zoolib/zqe/ZQE_Result_Any.h"
 
 #include "zoolib/zql/ZQL_RelOps.h"
+#include "zoolib/valbase/ZValBase_SQLite.h"
+#include "zoolib/sqlite/ZSQLite.h"
+#include "zoolib/sqlite/ZSQLite_YadSeqR_Iter.h"
 
 NAMESPACE_ZOOLIB_USING
 
@@ -48,6 +51,8 @@ typedef ZMap_Expr Map;
 typedef ZRelHead RelHead;
 typedef ZVal_Expr Val;
 typedef ZValCondition Condition;
+
+static ZYadOptions theYadOptions(true);
 
 Query sAll(const ZRelHead& iRelHead)
 	{ return ZValBase::sConcrete(iRelHead); }
@@ -295,24 +300,19 @@ static Query sQuery()
 
 static void sDumpQuery(const ZStrimW& s, Query iQuery)
 	{
-	ZVisitor_Expr_DoToStrim::Options theOptions;
+	Util_Strim_Rel::Options theOptions;
 	theOptions.fDebuggingOutput = true;
 
 	s << "ZTQL::Query equivalent -----------------------\n";
-	Util_Strim_Query::sToStrim(iQuery, theOptions, s);
+	Util_Strim_Rel::sToStrim(iQuery, theOptions, s);
 
 	s << "\nZTQL::Query optimized -----------------------\n";
 	
 	Query theNode = sOptimize(iQuery);
 	
-	Util_Strim_Query::sToStrim(theNode, theOptions, s);
+	Util_Strim_Rel::sToStrim(theNode, theOptions, s);
 
 	s << "\n";	
-	}
-
-void sTestQL6(const ZStrimW& s)
-	{
-	
 	}
 
 #if 1
@@ -373,7 +373,7 @@ void sTestQL4(const ZStrimW& s)
 	Spec theSpec = true & CTrail("inner/field") < CConst(10);
 	thePhys = thePhys & theSpec;
 
-	Util_Strim_Query::sToStrim(thePhys, s);
+	Util_Strim_Rel::sToStrim(thePhys, s);
 	s << "\n";
 
 	thePhys = sOptimize(thePhys);
@@ -466,6 +466,68 @@ return;
 	}
 
 
+void sTestQL6(const ZStrimW& s)
+	{
+	using namespace ZValBase_SQLite;
+	using namespace ZSQLite;
+
+//	ZRef<DB> theDB = new DB("/Users/ag/sqlitetest/test.db");
+	ZRef<DB> theDB = new DB("/Users/ag/sqlitetest/FS.db");
+//	ZRef<DB> theDB = new DB("/Users/ag/sqlitetest/MyVideos34.db");
+
+	ZRef<ZValBase_SQLite::ConcreteDomain> theConcreteDomain =
+		new ZValBase_SQLite::ConcreteDomain(theDB);
+
+//	Rel thePhys1 = ZValBase_SQLite::sConcrete_Table(theConcreteDomain, "airports");
+//	Rel thePhys1 = ZValBase_SQLite::sConcrete_SQL(theConcreteDomain, "select * from sqlite_master");
+	Rel thePhys1 = ZValBase_SQLite::sConcrete_SQL(theConcreteDomain, "select * from airports");
+	sDumpQuery(s, thePhys1);
+
+	for (ZRef<ZQE::Iterator> theIterator = ZValBase::sIterator(thePhys1);;)
+		{
+		if (ZRef<ZQE::Result> theZQEResult = theIterator->ReadInc())
+			{
+			if (ZRef<ZQE::Result_Any> theResult = theZQEResult.DynamicCast<ZQE::Result_Any>())
+				{
+				ZYad_ZooLibStrim::sToStrim(0, theYadOptions, sMakeYadR(theResult->GetVal()), s);
+				s << "\n";
+				}
+			else
+				{
+				s.Writef("%08X, ", theZQEResult.Get());
+				}
+			}
+		else
+			{
+			break;
+			}
+		}
+
+//	ZRef<Iter> theIter = new Iter(theDB, "select * from sqlite_master;");
+	ZRef<ZYadSeqR> theYadSeqR = new YadSeqR_Iter(new Iter(theDB, "select * from sqlite_master;"));
+//	ZYad_ZooLibStrim::sToStrim(0, theYadOptions, theYadSeqR, s);
+	ZSeq_Any theTables = sFromYadR(ZVal_Any(), theYadSeqR).GetSeq();
+
+	ZYad_ZooLibStrim::sToStrim(0, theYadOptions, sMakeYadR(theTables), s);
+	s << "\n------------------------------------------------------------------";
+	for (size_t x = 0; x < theTables.Count(); ++x)
+		{
+		ZMap_Any theMap = theTables.Get(x).GetMap();
+		s << "\n";
+		ZYad_ZooLibStrim::sToStrim(0, theYadOptions, sMakeYadR(theMap), s);
+		string8 theName = theMap.Get_T<string>("name");
+
+		ZYad_ZooLibStrim::sToStrim(0, theYadOptions, new YadSeqR_Iter(new Iter(theDB, "pragma table_info(" + theName + ");")), s);
+
+		s << "-------------\n";
+
+//		ZRef<ZYadSeqR> theYadSeqR = new YadSeqR_Iter(new Iter(theDB, "select * from " + theName + ";"));
+//		ZYad_ZooLibStrim::sToStrim(0, theYadOptions, theYadSeqR, s);
+		}
+	s << "\n";
+	}
+
+
 void sTestQL5(const ZStrimW& s)
 	{
 	ZSeq_Any s1;
@@ -497,8 +559,6 @@ void sTestQL5(const ZStrimW& s)
 	
 	ZRef<ZQE::Iterator> theIterator = ZValBase::sIterator(sect);
 		
-
-	ZYadOptions theYadOptions(true);
 
 	for (;;)
 		{
@@ -545,7 +605,7 @@ void sTestQL(const ZStrimW& s)
 		Spec theCondition =
 			CName("Disc Number") == CConst(int32(2)) & CName("Track Number") > CConst(int32(10));
 		Query thePhys = ZValBase::sConcrete() & theCondition;
-		Util_Strim_Query::sToStrim(thePhys, s);
+		Util_Strim_Rel::sToStrim(thePhys, s);
 		s << "\n";
 		}
 
@@ -586,7 +646,7 @@ void sTestQL(const ZStrimW& s)
 		Query thePhys = theTracks & theCondition;
 //		Query thePhys = sJoin(thePlayList, theTracks);
 
-		Util_Strim_Query::sToStrim(thePhys, s);
+		Util_Strim_Rel::sToStrim(thePhys, s);
 		s << "\n";
 
 //		thePhys = sOptimize(thePhys);

@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZVisitor_Expr_DoToStrim.h"
 
 #include <typeinfo>
@@ -71,6 +72,8 @@ void ZVisitor_Expr_DoToStrim::StartToStrim(
 		fIndent = 0;
 		throw;
 		}
+	fOptions = nullptr;
+	fStrimW = nullptr;
 	}
 
 void ZVisitor_Expr_DoToStrim::DoToStrim(ZRef<ZExpr> iExpr)

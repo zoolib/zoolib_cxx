@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim_RelHead.h"
 #include "zoolib/ZUtil_Strim_ValCondition.h"
 #include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoToStrim.h"
-#include "zoolib/zql/ZQL_Util_Strim_Query.h"
+#include "zoolib/zql/ZQL_Util_Strim_Rel.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Binary_Difference.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Binary_Intersect.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Binary_Join.h"
@@ -34,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
-namespace Util_Strim_Query {
+namespace Util_Strim_Rel {
 
 using std::string;
 
@@ -151,16 +151,13 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iRep)
 	{
 	const ZStrimW& w = pStrimW();
 
-	w << "Concrete";
+	w << "Concrete // " << typeid(*iRep.Get()).name();
 
 	this->pWriteLFIndent();
 	w << "(";
 
 	if (pOptions().fDebuggingOutput)
 		spWrite_EffectiveRelHeadComment(iRep, w);
-
-	this->pWriteLFIndent();
-	w << "// " << typeid(*iRep.Get()).name();
 
 	this->pWriteLFIndent();
 	w << ")";
@@ -286,14 +283,14 @@ void Visitor_DoToStrim::pWriteBinary(
 #pragma mark -
 #pragma mark * ZUtil_Strim_TQL
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW)
-	{ sToStrim(iRep, ZVisitor_Expr_DoToStrim::Options(), iStrimW); }
+void sToStrim(const Rel& iRel, const ZStrimW& iStrimW)
+	{ sToStrim(iRel, ZVisitor_Expr_DoToStrim::Options(), iStrimW); }
 
-void sToStrim(const ZRef<ZExpr>& iRep,
+void sToStrim(const Rel& iRel,
 	const ZVisitor_Expr_DoToStrim::Options& iOptions,
 	const ZStrimW& iStrimW)
-	{ Visitor_DoToStrim().StartToStrim(iOptions, iStrimW, iRep); }
+	{ Visitor_DoToStrim().StartToStrim(iOptions, iStrimW, iRel); }
 
-} // namespace Util_Strim_Query
+} // namespace Util_Strim_Rel
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

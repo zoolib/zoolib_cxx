@@ -18,29 +18,67 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Util_Strim_Query__
-#define __ZQL_Util_Strim_Query__
-#include "zconfig.h"
-
-#include "zoolib/ZExpr.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/ZYad_Any.h"
+#include "zoolib/sqlite/ZSQLite_YadSeqR_Iter.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
-namespace Util_Strim_Query {
+namespace ZSQLite {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL_Util_Strim_Query
+#pragma mark * Anonymous YadMapR
 
-void sToStrim(const ZRef<ZExpr>& iRep, const ZStrimW& iStrimW);
+namespace ZANONYMOUS {
 
-void sToStrim(const ZRef<ZExpr>& iRep,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW);
+class YadMapR : public ZYadMapR_Std
+	{
+public:
+	YadMapR(ZRef<Iter> iIter);
 
-} // namespace Util_Strim_Query
-} // namespace ZQL
+	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
+
+private:
+	ZRef<Iter> fIter;
+	size_t fIndex;
+	};
+
+YadMapR::YadMapR(ZRef<Iter> iIter)
+:	fIter(iIter)
+,	fIndex(0)
+	{}
+
+void YadMapR::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR)
+	{
+	if (fIndex < fIter->Count())
+		{
+		oName = fIter->NameOf(fIndex);
+		oYadR = sMakeYadR(fIter->Get(fIndex));
+		++fIndex;
+		}
+	}
+
+} // anonymous namespace
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZSQLite::YadSeqR_Iter
+
+YadSeqR_Iter::YadSeqR_Iter(ZRef<Iter> iIter)
+:	fIter(iIter)
+	{}
+
+YadSeqR_Iter::~YadSeqR_Iter()
+	{}
+
+void YadSeqR_Iter::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
+	{
+	if (!iIsFirst)
+		fIter->Advance();
+
+	if (fIter->HasValue())
+		oYadR = new YadMapR(fIter);
+	}
+
+
+} // namespace ZSQLite
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Util_Strim_Query__

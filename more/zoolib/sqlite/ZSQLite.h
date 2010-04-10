@@ -18,43 +18,69 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValBase_SQLite__
-#define __ZValBase_SQLite__ 1
+#ifndef __ZSQLite__
+#define __ZSQLite__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZUnicodeString.h"
-#include "zoolib/sqlite/ZSQLite.h"
-#include "zoolib/valbase/ZValBase.h"
-#include "zoolib/zql/ZQL_Expr_Rel.h"
+#include "zoolib/ZVal_Any.h"
+
+#include <sqlite3.h>
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZValBase_SQLite {
+namespace ZSQLite {
+
+class Iter;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValBase_SQLite::Domain
+#pragma mark * ZSQLite
 
-class ConcreteDomain : public ZQL::ConcreteDomain
+class DB : public ZRefCountedWithFinalize
 	{
 public:
-	ConcreteDomain(ZRef<ZSQLite::DB> iDB);
-	
-	ZRef<ZSQLite::DB> GetDB();
+	DB(const string8& iPath);
+	virtual ~DB();
+
+	sqlite3* GetDB();
 
 private:
-	ZRef<ZSQLite::DB> fDB;
+	sqlite3* fDB;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValBase_SQLite pseudo constructors
+#pragma mark * Iter
 
-ZRef<ZQL::Expr_Rel> sConcrete_Table(ZRef<ConcreteDomain> iConcreteDomain, const string8& iName);
+class Iter : public ZRefCountedWithFinalize
+	{
+	Iter(ZRef<DB> iDB, const string8& iSQL, size_t iPosition);
 
-ZRef<ZQL::Expr_Rel> sConcrete_SQL(ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL);
+public:
+	Iter(ZRef<DB> iDB, const string8& iSQL);
+	virtual ~Iter();
 
-} // namespace ZValBase_SQLite
+	ZRef<Iter> Clone(bool iRewound);
+	void Rewind();
+	bool HasValue();
+	void Advance();
+
+	size_t Count();
+	string8 NameOf(size_t iIndex);
+	ZAny Get(size_t iIndex);
+
+private:
+	void pAdvance();
+
+	ZRef<DB> fDB;
+	const string8 fSQL;
+	sqlite3_stmt* fStmt;
+	bool fHasValue;
+	uint64 fPosition;
+	};
+
+} // namespace ZSQLite
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZValBase_SQLite__
+#endif // __ZSQLite__

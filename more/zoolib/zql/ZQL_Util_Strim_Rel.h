@@ -18,43 +18,31 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValBase_SQLite__
-#define __ZValBase_SQLite__ 1
+#ifndef __ZQL_Util_Strim_Rel__
+#define __ZQL_Util_Strim_Rel__
 #include "zconfig.h"
 
-#include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZUnicodeString.h"
-#include "zoolib/sqlite/ZSQLite.h"
-#include "zoolib/valbase/ZValBase.h"
+#include "zoolib/ZVisitor_Expr_DoToStrim.h"
 #include "zoolib/zql/ZQL_Expr_Rel.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZValBase_SQLite {
+namespace ZQL {
+namespace Util_Strim_Rel {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValBase_SQLite::Domain
+#pragma mark * ZQL_Util_Strim_Rel
 
-class ConcreteDomain : public ZQL::ConcreteDomain
-	{
-public:
-	ConcreteDomain(ZRef<ZSQLite::DB> iDB);
-	
-	ZRef<ZSQLite::DB> GetDB();
+typedef ZVisitor_Expr_DoToStrim::Options Options;
 
-private:
-	ZRef<ZSQLite::DB> fDB;
-	};
+void sToStrim(const Rel& iRel, const ZStrimW& iStrimW);
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZValBase_SQLite pseudo constructors
+void sToStrim(const Rel& iRel,
+	const ZVisitor_Expr_DoToStrim::Options& iOptions,
+	const ZStrimW& iStrimW);
 
-ZRef<ZQL::Expr_Rel> sConcrete_Table(ZRef<ConcreteDomain> iConcreteDomain, const string8& iName);
-
-ZRef<ZQL::Expr_Rel> sConcrete_SQL(ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL);
-
-} // namespace ZValBase_SQLite
+} // namespace Util_Strim_Rel
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZValBase_SQLite__
+#endif // __ZQL_Util_Strim_Rel__

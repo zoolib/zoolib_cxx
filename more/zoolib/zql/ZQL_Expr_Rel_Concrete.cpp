@@ -25,6 +25,16 @@ namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ConcreteDomain
+
+ConcreteDomain::ConcreteDomain()
+	{}
+
+ConcreteDomain::~ConcreteDomain()
+	{}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Expr_Rel_Concrete
 
 Expr_Rel_Concrete::Expr_Rel_Concrete()
@@ -49,6 +59,9 @@ void Expr_Rel_Concrete::Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor)
 void Expr_Rel_Concrete::Accept_Expr_Rel_Concrete(
 	Visitor_Expr_Rel_Concrete& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Concrete(this); }
+
+ZRef<ConcreteDomain> Expr_Rel_Concrete::GetConcreteDomain()
+	{ return nullref; }
 
 // =================================================================================================
 #pragma mark -

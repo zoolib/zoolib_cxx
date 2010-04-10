@@ -31,6 +31,17 @@ class Visitor_Expr_Rel_Concrete;
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ConcreteDomain
+
+class ConcreteDomain : public ZRefCountedWithFinalize
+	{
+public:
+	ConcreteDomain();
+	virtual ~ConcreteDomain();
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * Expr_Rel_Concrete
 
 class Expr_Rel_Concrete : public Expr_Rel
@@ -46,6 +57,8 @@ public:
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor);
+
+	virtual ZRef<ConcreteDomain> GetConcreteDomain();
 	};
 
 // =================================================================================================
