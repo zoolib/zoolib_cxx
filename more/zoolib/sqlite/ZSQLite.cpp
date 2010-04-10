@@ -50,6 +50,12 @@ sqlite3* DB::GetDB()
 #pragma mark -
 #pragma mark * Iter
 
+// fPosition is one-based, so that zero can be a special value.
+// fPosition == 0 is the initial state, referencing the first result
+// but not knowing if that result is there.
+// fPosition == 1 still references the first result, but sqlite3_step
+// has been called, and fHasValue tells us if we've got a value.
+
 Iter::Iter(ZRef<DB> iDB, const string8& iSQL, size_t iPosition)
 :	fDB(iDB)
 ,	fSQL(iSQL)
@@ -57,15 +63,18 @@ Iter::Iter(ZRef<DB> iDB, const string8& iSQL, size_t iPosition)
 ,	fHasValue(false)
 ,	fPosition(0)
 	{
-	const char* tail;
-	if (SQLITE_OK != ::sqlite3_prepare_v2(fDB->GetDB(), fSQL.c_str(), -1, &fStmt, &tail))
+	::sqlite3_prepare_v2(fDB->GetDB(), fSQL.c_str(), fSQL.size(), &fStmt, nullptr);
+
+	if (fStmt)
 		{
-		fStmt = nullptr;
-		}
-	else
-		{
-		while (iPosition--)
-			this->pAdvance();
+		// See note above. If iPosition == 1 we're referencing the first result,
+		// but if neither HasValue nor Get is ever called then we'll save ourselves
+		// some work by not calling sqlite3_step yet.
+		if (iPosition >= 1)
+			{
+			while (iPosition--)
+				this->pAdvance();
+			}
 		}
 	}
 
@@ -75,26 +84,7 @@ Iter::Iter(ZRef<DB> iDB, const string8& iSQL)
 ,	fStmt(nullptr)
 ,	fHasValue(false)
 ,	fPosition(0)
-	{
-	const char* tail;
-	if (SQLITE_OK != ::sqlite3_prepare_v2(fDB->GetDB(), fSQL.c_str(), -1, &fStmt, &tail))
-		fStmt = nullptr;
-	}
-
-void Iter::pAdvance()
-	{
-	ZAssert(fStmt);
-
-	if ((fPosition == 0 || fHasValue) && SQLITE_ROW == ::sqlite3_step(fStmt))
-		{
-		++fPosition;
-		fHasValue = true;
-		}
-	else
-		{
-		fHasValue = false;
-		}
-	}
+	{ ::sqlite3_prepare_v2(fDB->GetDB(), fSQL.c_str(), fSQL.size(), &fStmt, nullptr); }
 
 Iter::~Iter()
 	{
@@ -104,13 +94,13 @@ Iter::~Iter()
 
 ZRef<Iter> Iter::Clone(bool iRewound)
 	{
-	if (!fStmt)
-		return this;
-
-	if (iRewound)
-		return new Iter(fDB, fSQL);
-
-	return new Iter(fDB, fSQL, fPosition);
+	if (fStmt)
+		{
+		if (iRewound)
+			return new Iter(fDB, fSQL);
+		return new Iter(fDB, fSQL, fPosition);
+		}
+	return this;
 	}
 
 void Iter::Rewind()
@@ -161,34 +151,51 @@ ZAny Iter::Get(size_t iIndex)
 	{
 	if (fStmt)
 		{
-		switch (::sqlite3_column_type(fStmt, iIndex))
+		if (fPosition == 0)
+			this->pAdvance();
+
+		if (fHasValue)
 			{
-			case SQLITE_INTEGER:
+			switch (::sqlite3_column_type(fStmt, iIndex))
 				{
-				return ZAny(int64(::sqlite3_column_int64(fStmt, iIndex)));
+				case SQLITE_INTEGER:
+					{
+					return ZAny(int64(::sqlite3_column_int64(fStmt, iIndex)));
+					}
+				case SQLITE_FLOAT:
+					{
+					return ZAny(::sqlite3_column_double(fStmt, iIndex));
+					}
+				case SQLITE_TEXT:
+					{
+					const unsigned char* theText = ::sqlite3_column_text(fStmt, iIndex);
+					return ZAny(string8((const char*)theText, ::sqlite3_column_bytes(fStmt, iIndex)));
+					}
+				case SQLITE_BLOB:
+					{
+					const void* theData = ::sqlite3_column_blob(fStmt, iIndex);
+					return ZAny(ZData_Any(theData, ::sqlite3_column_bytes(fStmt, iIndex)));
+					}
 				}
-			case SQLITE_FLOAT:
-				{
-				return ZAny(::sqlite3_column_double(fStmt, iIndex));
-				}
-			case SQLITE_TEXT:
-				{
-				const unsigned char* theText = ::sqlite3_column_text(fStmt, iIndex);
-				return ZAny(string8((const char*)theText, ::sqlite3_column_bytes(fStmt, iIndex)));
-				}
-			case SQLITE_BLOB:
-				{
-				const void* theData = ::sqlite3_column_blob(fStmt, iIndex);
-				return ZAny(ZData_Any(theData, ::sqlite3_column_bytes(fStmt, iIndex)));
-				}
-			case SQLITE_NULL:
-			default:
-				break;
 			}
 		}
 	return ZAny();
 	}
 
+void Iter::pAdvance()
+	{
+	ZAssert(fStmt);
+
+	if ((fHasValue || fPosition == 0) && SQLITE_ROW == ::sqlite3_step(fStmt))
+		{
+		++fPosition;
+		fHasValue = true;
+		}
+	else
+		{
+		fHasValue = false;
+		}
+	}
 
 } // namespace ZSQLite
 NAMESPACE_ZOOLIB_END
