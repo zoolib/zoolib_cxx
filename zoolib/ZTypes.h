@@ -26,9 +26,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompare_T.h"
 #include "zoolib/ZStdInt.h"
+#include "zoolib/ZUnicodeCU.h"
 
-// Pull in definition of size_t, which is heavily used by zoolib.
-#include <stddef.h>
+#include <stddef.h> // For size_t
 
 NAMESPACE_ZOOLIB_BEGIN
 
