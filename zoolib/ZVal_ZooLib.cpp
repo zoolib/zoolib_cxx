@@ -27,6 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 
 #include <map>
+#include <string.h>
 #include <typeinfo>
 
 using std::map;
@@ -1590,25 +1591,25 @@ void ZVal_ZooLib::pCopy(const ZVal_ZooLib& iOther)
 				fData.fAs_Point = iOther.fData.fAs_Point;
 				break;
 			case eZType_String:
-				sCopyConstruct_T<ValString>(iOther.fType.fBytes, fType.fBytes);
+				sCopyConstruct_T<ValString>(fType.fBytes, iOther.fType.fBytes);
 				break;
 #if 0//##
 			case eZType_Name:
-				sCopyConstruct_T<ZTName>(iOther.fType.fBytes, fType.fBytes);
+				sCopyConstruct_T<ZTName>(fType.fBytes, iOther.fType.fBytes);
 				break;
 #endif//##
 			case eZType_Tuple:
-				sCopyConstruct_T<ZMap_ZooLib>(iOther.fType.fBytes, fType.fBytes);
+				sCopyConstruct_T<ZMap_ZooLib>(fType.fBytes, iOther.fType.fBytes);
 				break;
 			case eZType_RefCounted:
 				sCopyConstruct_T<ZRef<ZRefCountedWithFinalize> >
-					(iOther.fType.fBytes, fType.fBytes);				
+					(fType.fBytes, iOther.fType.fBytes);
 				break;
 			case eZType_Raw:
-				sCopyConstruct_T<ZData_ZooLib>(iOther.fType.fBytes, fType.fBytes);
+				sCopyConstruct_T<ZData_ZooLib>(fType.fBytes, iOther.fType.fBytes);
 				break;
 			case eZType_Vector:
-				sCopyConstruct_T<ZSeq_ZooLib>(iOther.fType.fBytes, fType.fBytes);
+				sCopyConstruct_T<ZSeq_ZooLib>(fType.fBytes, iOther.fType.fBytes);
 				break;
 			default:
 				ZDebugStopf(kDebug_Tuple, ("Unknown type (%d)", fType.fType));

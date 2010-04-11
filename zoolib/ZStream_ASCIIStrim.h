@@ -38,7 +38,7 @@ class ZStreamR_ASCIIStrim : public ZStreamR
 	{
 public:
 	ZStreamR_ASCIIStrim(const ZStrimR& iStrimR);
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 private:
 	const ZStrimR& fStrimR;

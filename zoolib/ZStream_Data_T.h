@@ -43,10 +43,10 @@ public:
 		{}
 
 // From ZStreamR via ZStreamRPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 		{
 		size_t countToCopy = ZStream::sClampedSize(iCount, fData.GetSize(), fPosition);
-		fData.CopyTo(fPosition, iDest, countToCopy);
+		fData.CopyTo(fPosition, oDest, countToCopy);
 		fPosition += countToCopy;
 
 		if (oCountRead)
@@ -112,10 +112,10 @@ public:
 		}
 
 // From ZStreamR via ZStreamRWPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 		{
 		const size_t countToCopy = ZStream::sClampedSize(iCount, fSizeLogical, fPosition);
-		fData.CopyTo(fPosition, iDest, countToCopy);
+		fData.CopyTo(fPosition, oDest, countToCopy);
 		fPosition += countToCopy;
 
 		if (oCountRead)

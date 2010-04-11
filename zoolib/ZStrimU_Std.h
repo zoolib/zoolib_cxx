@@ -39,7 +39,7 @@ public:
 	ZStrimU_Std(ZTextDecoder* iDecoder, const ZStreamR& iStreamR);
 
 // From ZStrimR via ZStrimU 
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
 // From ZStrimU
 	virtual void Imp_Unread(UTF32 iCP);

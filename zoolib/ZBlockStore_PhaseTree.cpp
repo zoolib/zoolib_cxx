@@ -180,7 +180,7 @@ public:
 	~StreamRPos();
 
 // From ZStreamR via ZStreamRPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 
 // From ZStreamRPos
@@ -210,10 +210,10 @@ ZBlockStore_PhaseTree::StreamRPos::~StreamRPos()
 	fBlockStore->StreamDisposing(fBlockSlot);
 	}
 
-void ZBlockStore_PhaseTree::StreamRPos::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZBlockStore_PhaseTree::StreamRPos::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	size_t countRead;
-	fBlockStore->ReadFromBlock(fBlockID, fBlockSlot, fPosition, iDest, iCount, countRead);
+	fBlockStore->ReadFromBlock(fBlockID, fBlockSlot, fPosition, oDest, iCount, countRead);
 	if (oCountRead)
 		*oCountRead = countRead;
 	fPosition += countRead;
@@ -270,7 +270,7 @@ public:
 	~StreamRWPos();
 
 // From ZStreamR via ZStreamRWPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 
 // From ZStreamW via ZStreamRWPos
@@ -307,10 +307,10 @@ ZBlockStore_PhaseTree::StreamRWPos::~StreamRWPos()
 	fBlockStore->StreamDisposing(fBlockSlot);
 	}
 
-void ZBlockStore_PhaseTree::StreamRWPos::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZBlockStore_PhaseTree::StreamRWPos::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	size_t countRead;
-	fBlockStore->ReadFromBlock(fBlockID, fBlockSlot, fPosition, iDest, iCount, countRead);
+	fBlockStore->ReadFromBlock(fBlockID, fBlockSlot, fPosition, oDest, iCount, countRead);
 	if (oCountRead)
 		*oCountRead = countRead;
 	fPosition += countRead;
@@ -1588,7 +1588,7 @@ ZBlockStore_PhaseTree::Slot* ZBlockStore_PhaseTree::FindBlockSlotForWrite(BlockI
 	}
 
 void ZBlockStore_PhaseTree::ReadFromBlock(BlockID iBlockID, Slot*& ioBlockSlot,
-	uint64 iPosition, void* iDest, size_t iCount, size_t& oCountRead)
+	uint64 iPosition, void* oDest, size_t iCount, size_t& oCountRead)
 	{
 	oCountRead = 0;
 	if (iCount == 0)
@@ -1602,14 +1602,14 @@ void ZBlockStore_PhaseTree::ReadFromBlock(BlockID iBlockID, Slot*& ioBlockSlot,
 		size_t countRemaining = min(uint64(iCount), theSize > iPosition ? theSize - iPosition : 0);
 		if (theSize <= fCapacity_BlockRoot_Byte)
 			{
-			ZMemCopy(iDest,
+			ZMemCopy(oDest,
 				reinterpret_cast<char*>(FieldAddress(ioBlockSlot, 1)) + iPosition, countRemaining);
 			oCountRead = countRemaining;
 			}
 		else
 			{
 			size_t localPosition = iPosition;
-			char* localDest = reinterpret_cast<char*>(iDest);
+			char* localDest = reinterpret_cast<char*>(oDest);
 			while (countRemaining)
 				{
 				Slot* dataSlot = this->Block_FindDataSlot(ioBlockSlot, localPosition);

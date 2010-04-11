@@ -118,7 +118,7 @@ bool NPObject_T<Variant_t>::Enumerate(std::vector<NPIdentifier>& oIdentifiers)
 	{
 	oIdentifiers.clear();
 	NPIdentifier* theIDs = nullptr;
-	uint32_t theCount;
+	uint32 theCount;
 	if (!static_cast<Self_t*>(this)->Enumerate(theIDs, theCount))
 		return false;
 

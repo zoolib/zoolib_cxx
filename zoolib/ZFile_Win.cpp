@@ -251,7 +251,7 @@ static ZFile::Error spCloseFileHANDLE(HANDLE iFileHANDLE)
 	return ZFile::errorNone;
 	}
 
-static ZFile::Error spRead(HANDLE iFileHANDLE, void* iDest, size_t iCount, size_t* oCountRead)
+static ZFile::Error spRead(HANDLE iFileHANDLE, void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (oCountRead)
 		*oCountRead = 0;
@@ -260,7 +260,7 @@ static ZFile::Error spRead(HANDLE iFileHANDLE, void* iDest, size_t iCount, size_
 		return ZFile::errorNone;
 
 	DWORD countRead = 0;
-	if (!::ReadFile(iFileHANDLE, iDest, iCount, &countRead, nullptr))
+	if (!::ReadFile(iFileHANDLE, oDest, iCount, &countRead, nullptr))
 		return spTranslateError(::GetLastError());
 
 	if (oCountRead)
@@ -289,7 +289,7 @@ static ZFile::Error spWrite(
 	}
 
 static ZFile::Error spReadAt(
-	HANDLE iFileHANDLE, uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
+	HANDLE iFileHANDLE, uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (oCountRead)
 		*oCountRead = 0;
@@ -301,7 +301,7 @@ static ZFile::Error spReadAt(
 	theOVERLAPPED.OffsetHigh = iOffset >> 32;
 	theOVERLAPPED.hEvent = 0;
 	DWORD countRead = 0;
-	if (!::ReadFile(iFileHANDLE, iDest, iCount, &countRead, &theOVERLAPPED))
+	if (!::ReadFile(iFileHANDLE, oDest, iCount, &countRead, &theOVERLAPPED))
 		{
 		int err = ::GetLastError();
 		if (err != ERROR_IO_PENDING)
@@ -696,9 +696,9 @@ string ZFileLoc_Win::GetName(ZFile::Error* oErr) const
 	return fBase;
 	}
 
-ZTrail ZFileLoc_Win::TrailTo(ZRef<ZFileLoc> iDest, ZFile::Error* oErr) const
+ZTrail ZFileLoc_Win::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const
 	{
-	if (ZFileLoc_Win* dest = ZRefDynamicCast<ZFileLoc_Win>(iDest))
+	if (ZFileLoc_Win* dest = ZRefDynamicCast<ZFileLoc_Win>(oDest))
 		{
 		if (fBase == dest->fBase)
 			{
@@ -938,12 +938,12 @@ ZRef<ZFileLoc> ZFileLoc_Win::CreateDir(ZFile::Error* oErr)
 	return this;
 	}
 
-ZRef<ZFileLoc> ZFileLoc_Win::MoveTo(ZRef<ZFileLoc> iDest, ZFile::Error* oErr)
+ZRef<ZFileLoc> ZFileLoc_Win::MoveTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr)
 	{
-	if (ZFileLoc_Win* dest = ZRefDynamicCast<ZFileLoc_Win>(iDest))
+	if (ZFileLoc_Win* dest = ZRefDynamicCast<ZFileLoc_Win>(oDest))
 		{
 		if (::MoveFileA(this->pGetPath().c_str(), dest->pGetPath().c_str()))
-			return iDest;
+			return oDest;
 		if (oErr)
 			*oErr = spTranslateError(::GetLastError());
 		return ZRef<ZFileLoc>();
@@ -1284,9 +1284,9 @@ string ZFileLoc_WinNT::GetName(ZFile::Error* oErr) const
 	return ZUnicode::sAsUTF8(fBase);
 	}
 
-ZTrail ZFileLoc_WinNT::TrailTo(ZRef<ZFileLoc> iDest, ZFile::Error* oErr) const
+ZTrail ZFileLoc_WinNT::TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const
 	{
-	if (ZFileLoc_WinNT* dest = ZRefDynamicCast<ZFileLoc_WinNT>(iDest))
+	if (ZFileLoc_WinNT* dest = ZRefDynamicCast<ZFileLoc_WinNT>(oDest))
 		{
 		if (fBase == dest->fBase)
 			{
@@ -1547,12 +1547,12 @@ ZRef<ZFileLoc> ZFileLoc_WinNT::CreateDir(ZFile::Error* oErr)
 	return this;
 	}
 
-ZRef<ZFileLoc> ZFileLoc_WinNT::MoveTo(ZRef<ZFileLoc> iDest, ZFile::Error* oErr)
+ZRef<ZFileLoc> ZFileLoc_WinNT::MoveTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr)
 	{
-	if (ZFileLoc_WinNT* dest = ZRefDynamicCast<ZFileLoc_WinNT>(iDest))
+	if (ZFileLoc_WinNT* dest = ZRefDynamicCast<ZFileLoc_WinNT>(oDest))
 		{
 		if (::MoveFileW(this->pGetPath().c_str(), dest->pGetPath().c_str()))
-			return iDest;
+			return oDest;
 		if (oErr)
 			*oErr = spTranslateError(::GetLastError());
 		return ZRef<ZFileLoc>();
@@ -1705,7 +1705,7 @@ ZFileR_Win::~ZFileR_Win()
 		spCloseFileHANDLE(fFileHANDLE);
 	}
 
-ZFile::Error ZFileR_Win::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
+ZFile::Error ZFileR_Win::ReadAt(uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	ZGuardMtx locker(fMutex);
 	if (fPosition != iOffset)
@@ -1720,7 +1720,7 @@ ZFile::Error ZFileR_Win::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size
 		}
 
 	size_t countRead;
-	ZFile::Error err = spRead(fFileHANDLE, iDest, iCount, &countRead);
+	ZFile::Error err = spRead(fFileHANDLE, oDest, iCount, &countRead);
 	if (err != ZFile::errorNone)
 		{
 		if (oCountRead)
@@ -1753,8 +1753,8 @@ ZFileR_WinNT::~ZFileR_WinNT()
 		spCloseFileHANDLE(fFileHANDLE);
 	}
 
-ZFile::Error ZFileR_WinNT::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
-	{ return spReadAt(fFileHANDLE, iOffset, iDest, iCount, oCountRead); }
+ZFile::Error ZFileR_WinNT::ReadAt(uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead)
+	{ return spReadAt(fFileHANDLE, iOffset, oDest, iCount, oCountRead); }
 
 ZFile::Error ZFileR_WinNT::GetSize(uint64& oSize)
 	{ return spGetSize(fFileHANDLE, oSize); }
@@ -1875,7 +1875,7 @@ ZFileRW_Win::~ZFileRW_Win()
 		spCloseFileHANDLE(fFileHANDLE);
 	}
 
-ZFile::Error ZFileRW_Win::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
+ZFile::Error ZFileRW_Win::ReadAt(uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	ZGuardMtx locker(fMutex);
 	if (fPosition != iOffset)
@@ -1890,7 +1890,7 @@ ZFile::Error ZFileRW_Win::ReadAt(uint64 iOffset, void* iDest, size_t iCount, siz
 		}
 
 	size_t countRead;
-	ZFile::Error err = spRead(fFileHANDLE, iDest, iCount, &countRead);
+	ZFile::Error err = spRead(fFileHANDLE, oDest, iCount, &countRead);
 	if (err != ZFile::errorNone)
 		{
 		if (oCountRead)
@@ -1973,8 +1973,8 @@ ZFileRW_WinNT::~ZFileRW_WinNT()
 		spCloseFileHANDLE(fFileHANDLE);
 	}
 
-ZFile::Error ZFileRW_WinNT::ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
-	{ return spReadAt(fFileHANDLE, iOffset, iDest, iCount, oCountRead); }
+ZFile::Error ZFileRW_WinNT::ReadAt(uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead)
+	{ return spReadAt(fFileHANDLE, iOffset, oDest, iCount, oCountRead); }
 
 ZFile::Error ZFileRW_WinNT::WriteAt(
 	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
@@ -2007,8 +2007,8 @@ ZStreamRPos_File_Win::~ZStreamRPos_File_Win()
 		spCloseFileHANDLE(fFileHANDLE);
 	}
 
-void ZStreamRPos_File_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ spRead(fFileHANDLE, iDest, iCount, oCountRead); }
+void ZStreamRPos_File_Win::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+	{ spRead(fFileHANDLE, oDest, iCount, oCountRead); }
 
 uint64 ZStreamRPos_File_Win::Imp_GetPosition()
 	{
@@ -2121,8 +2121,8 @@ ZStreamRWPos_File_Win::~ZStreamRWPos_File_Win()
 		spCloseFileHANDLE(fFileHANDLE);
 	}
 
-void ZStreamRWPos_File_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ spRead(fFileHANDLE, iDest, iCount, oCountRead); }
+void ZStreamRWPos_File_Win::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+	{ spRead(fFileHANDLE, oDest, iCount, oCountRead); }
 
 void ZStreamRWPos_File_Win::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{ spWrite(fFileHANDLE, iSource, iCount, oCountWritten); }

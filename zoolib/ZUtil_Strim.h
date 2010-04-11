@@ -69,38 +69,38 @@ bool sTryRead_Double(const ZStrimU& iStrimU, double& oDouble);
 bool sTryRead_SignedDouble(const ZStrimU& iStrimU, double& oDouble);
 
 
-void sCopy_WS(const ZStrimU& iStrimU, const ZStrimW& iDest);
+void sCopy_WS(const ZStrimU& iStrimU, const ZStrimW& oDest);
 void sSkip_WS(const ZStrimU& iStrimU);
 
 
-void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZStrimW& iDest);
+void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZStrimW& oDest);
 void sSkip_WSAndCPlusPlusComments(const ZStrimU& iStrimU);
 
 
-void sCopy_Line(const ZStrimR& iStrimR, const ZStrimW& iDest);
+void sCopy_Line(const ZStrimR& iStrimR, const ZStrimW& oDest);
 void sSkip_Line(const ZStrimR& iStrimR);
 string8 sRead_Line(const ZStrimR& iStrimR);
 
 
-bool sCopy_Until(const ZStrimR& iStrimR, UTF32 iTerminator, const ZStrimW& iDest);
+bool sCopy_Until(const ZStrimR& iStrimR, UTF32 iTerminator, const ZStrimW& oDest);
 bool sSkip_Until(const ZStrimR& iStrimR, UTF32 iTerminator);
 string8 sRead_Until(const ZStrimR& iStrimR, UTF32 iTerminator);
 
 
-bool sCopy_Until(const ZStrimR& iStrimR, const string8& iTerminator, const ZStrimW& iDest);
+bool sCopy_Until(const ZStrimR& iStrimR, const string8& iTerminator, const ZStrimW& oDest);
 bool sSkip_Until(const ZStrimR& iStrimR, const string8& iTerminator);
 string8 sRead_Until(const ZStrimR& iStrimR, const string8& iTerminator);
 
 
-void sCopy_EscapedString(const ZStrimU& iStrimU, UTF32 iTerminator, const ZStrimW& iDest);
+void sCopy_EscapedString(const ZStrimU& iStrimU, UTF32 iTerminator, const ZStrimW& oDest);
 void sRead_EscapedString(const ZStrimU& iStrimU, UTF32 iTerminator, string8& oString);
 
 
-bool sTryCopy_EscapedString(const ZStrimU& iStrimU, UTF32 iDelimiter, const ZStrimW& iDest);
+bool sTryCopy_EscapedString(const ZStrimU& iStrimU, UTF32 iDelimiter, const ZStrimW& oDest);
 bool sTryRead_EscapedString(const ZStrimU& iStrimU, UTF32 iDelimiter, string8& oString);
 
 
-bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& iDest);
+bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& oDest);
 bool sTryRead_Identifier(const ZStrimU& iStrimU, string8& oString);
 // Other methods for other kinds of identifiers? -- Java, C++, Pascal, AlphaNum etc
 

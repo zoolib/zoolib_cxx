@@ -32,43 +32,43 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * Placement construction/destruction
 
 template <class T>
-inline T* sConstruct_T(void* iBytes)
+inline T* sConstruct_T(void* oBytes)
 	{
-	new(iBytes) T();
-	return static_cast<T*>(iBytes);
+	new(oBytes) T();
+	return static_cast<T*>(oBytes);
 	}
 
 template <class T>
-inline T* sConstruct_T(void* iBytes, const T& iOther)
+inline T* sConstruct_T(void* oBytes, const T& iOther)
 	{
-	new(iBytes) T(iOther);
-	return static_cast<T*>(iBytes);
+	new(oBytes) T(iOther);
+	return static_cast<T*>(oBytes);
 	}
 
 template <class T, class P0>
-inline T* sConstruct_T(void* iBytes, const P0& iP0)
+inline T* sConstruct_T(void* oBytes, const P0& iP0)
 	{
-	new(iBytes) T(iP0);
-	return static_cast<T*>(iBytes);
+	new(oBytes) T(iP0);
+	return static_cast<T*>(oBytes);
 	}
 
 template <class T, class P0, class P1>
-inline T* sConstruct_T(void* iBytes, const P0& iP0, const P1& iP1)
+inline T* sConstruct_T(void* oBytes, const P0& iP0, const P1& iP1)
 	{
-	new(iBytes) T(iP0, iP1);
-	return static_cast<T*>(iBytes);
+	new(oBytes) T(iP0, iP1);
+	return static_cast<T*>(oBytes);
 	}
 
 template <class T>
-inline T* sCopyConstruct_T(const void* iSource, void* iBytes)
+inline T* sCopyConstruct_T(void* oBytes, const void* iSource)
 	{
-	new(iBytes) T(*static_cast<const T*>(iSource));
-	return static_cast<T*>(iBytes);
+	new(oBytes) T(*static_cast<const T*>(iSource));
+	return static_cast<T*>(oBytes);
 	}
 
 template <class T>
-inline void sDestroy_T(void* iBytes)
-	{ static_cast<T*>(iBytes)->~T(); }
+inline void sDestroy_T(void* oBytes)
+	{ static_cast<T*>(oBytes)->~T(); }
 
 template <class T>
 inline const T* sFetch_T(const void* iBytes)

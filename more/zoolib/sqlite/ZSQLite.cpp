@@ -166,7 +166,7 @@ ZAny Iter::Get(size_t iIndex)
 					{
 					return ZAny(::sqlite3_column_double(fStmt, iIndex));
 					}
-				case SQLITE_TEXT:
+				case SQLITE3_TEXT:
 					{
 					const unsigned char* theText = ::sqlite3_column_text(fStmt, iIndex);
 					return ZAny(string8((const char*)theText, ::sqlite3_column_bytes(fStmt, iIndex)));

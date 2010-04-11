@@ -64,9 +64,9 @@ ZStreamR_Buffered::~ZStreamR_Buffered()
 	delete[] fBuffer;
 	}
 
-void ZStreamR_Buffered::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_Buffered::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	while (iCount)
 		{
 		size_t countInBuffer = fBufferSize - fBufferOffset;
@@ -119,7 +119,7 @@ void ZStreamR_Buffered::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 			}
 		}
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
 size_t ZStreamR_Buffered::Imp_CountReadable()
@@ -326,9 +326,9 @@ ZStreamR_DynamicBuffered::ZStreamR_DynamicBuffered(
 ZStreamR_DynamicBuffered::~ZStreamR_DynamicBuffered()
 	{}
 
-void ZStreamR_DynamicBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_DynamicBuffered::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	char* localDest = static_cast<char*>(iDest);
+	char* localDest = static_cast<char*>(oDest);
 	while (iCount)
 		{
 		size_t countRead;
@@ -352,7 +352,7 @@ void ZStreamR_DynamicBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCou
 		else if (fMode == eModeAppend)
 			{
 			// We have to read into a local buffer because we're going to pass
-			// what we read to fStreamBuffer, and iDest could reference memory that's
+			// what we read to fStreamBuffer, and oDest could reference memory that's
 			// not safe to read (the garbage buffer, for example).
 			char buffer[sStackBufferSize];
 			fStreamSource.Read(buffer, min(iCount, sizeof(buffer)), &countRead);
@@ -379,7 +379,7 @@ void ZStreamR_DynamicBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCou
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - static_cast<char*>(iDest);
+		*oCountRead = localDest - static_cast<char*>(oDest);
 	}
 
 size_t ZStreamR_DynamicBuffered::Imp_CountReadable()

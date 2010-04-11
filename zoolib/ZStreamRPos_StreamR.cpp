@@ -59,9 +59,9 @@ ZStreamRPos_StreamR::ZStreamRPos_StreamR(const ZStreamR& iSource, const ZStreamR
 ZStreamRPos_StreamR::~ZStreamRPos_StreamR()
 	{}
 
-void ZStreamRPos_StreamR::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRPos_StreamR::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	while (iCount)
 		{
 		size_t countRead;
@@ -95,7 +95,7 @@ void ZStreamRPos_StreamR::Imp_Read(void* iDest, size_t iCount, size_t* oCountRea
 			}
 		}	
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
 size_t ZStreamRPos_StreamR::Imp_CountReadable()

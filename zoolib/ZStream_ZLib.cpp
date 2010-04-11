@@ -74,11 +74,11 @@ ZStreamR_ZLibDecode::~ZStreamR_ZLibDecode()
 	delete[] fBuffer;
 	}
 
-void ZStreamR_ZLibDecode::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_ZLibDecode::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	ZAssertStop(kDebug_ZLib, fState.avail_in == 0);
 	fState.avail_out = iCount;
-	fState.next_out = reinterpret_cast<Bytef*>(iDest);
+	fState.next_out = reinterpret_cast<Bytef*>(oDest);
 	for (;;)
 		{
 		/*int result = */::inflate(&fState, Z_NO_FLUSH);

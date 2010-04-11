@@ -104,9 +104,9 @@ ZStreamRPos_PageBuffered::~ZStreamRPos_PageBuffered()
 		}
 	}
 
-void ZStreamRPos_PageBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRPos_PageBuffered::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	char* localDest = reinterpret_cast<char*>(iDest);
+	char* localDest = reinterpret_cast<char*>(oDest);
 	iCount = ZStream::sClampedSize(iCount, fStreamReal.GetSize(), fPosition);
 	while (iCount)
 		{
@@ -157,7 +157,7 @@ void ZStreamRPos_PageBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCou
 			}
 		}
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<char*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<char*>(oDest);
 	}
 
 size_t ZStreamRPos_PageBuffered::Imp_CountReadable()
@@ -287,9 +287,9 @@ ZStreamRWPos_PageBuffered::~ZStreamRWPos_PageBuffered()
 		}
 	}
 
-void ZStreamRWPos_PageBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRWPos_PageBuffered::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	char* localDest = reinterpret_cast<char*>(iDest);
+	char* localDest = reinterpret_cast<char*>(oDest);
 	uint64 streamSize = fStreamReal.GetSize();
 	iCount = ZStream::sClampedSize(iCount, streamSize, fPosition);
 	while (iCount)
@@ -350,7 +350,7 @@ void ZStreamRWPos_PageBuffered::Imp_Read(void* iDest, size_t iCount, size_t* oCo
 			}
 		}
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<char*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<char*>(oDest);
 	}
 
 void ZStreamRWPos_PageBuffered::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)

@@ -46,13 +46,13 @@ ZStreamR_Tee::ZStreamR_Tee(const ZStreamR& iStreamR, const ZStreamW& iStreamW)
 ZStreamR_Tee::~ZStreamR_Tee()
 	{}
 
-void ZStreamR_Tee::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_Tee::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	char* localDest = static_cast<char*>(iDest);
+	char* localDest = static_cast<char*>(oDest);
 	while (iCount)
 		{
 		// We have to read into a local buffer because we're going to pass
-		// what we read to fStreamW, and iDest could reference memory that's
+		// what we read to fStreamW, and oDest could reference memory that's
 		// not safe to read (the garbage buffer, for example).
 		char buffer[sStackBufferSize];
 
@@ -75,7 +75,7 @@ void ZStreamR_Tee::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 		iCount -= countRead;
 		}
 	if (oCountRead)
-		*oCountRead = localDest - static_cast<char*>(iDest);
+		*oCountRead = localDest - static_cast<char*>(oDest);
 	}
 
 void ZStreamR_Tee::Imp_Skip(uint64 iCount, uint64* oCountSkipped)

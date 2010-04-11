@@ -41,11 +41,11 @@ ZStreamRPos_String::ZStreamRPos_String(const string& inString)
 ZStreamRPos_String::~ZStreamRPos_String()
 	{}
 
-void ZStreamRPos_String::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRPos_String::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (size_t countToRead = ZStream::sClampedSize(iCount, fString.size(), fPosition))
 		{
-		ZMemCopy(iDest, &fString.at(fPosition), countToRead);
+		ZMemCopy(oDest, &fString.at(fPosition), countToRead);
 		fPosition += countToRead;
 		if (oCountRead)
 			*oCountRead = countToRead;
@@ -133,11 +133,11 @@ ZStreamRWPos_String::ZStreamRWPos_String(string& inString)
 ZStreamRWPos_String::~ZStreamRWPos_String()
 	{}
 
-void ZStreamRWPos_String::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRWPos_String::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (size_t countToRead = ZStream::sClampedSize(iCount, fString.size(), fPosition))
 		{
-		ZMemCopy(iDest, &fString.at(fPosition), countToRead);
+		ZMemCopy(oDest, &fString.at(fPosition), countToRead);
 		fPosition += countToRead;
 		if (oCountRead)
 			*oCountRead = countToRead;

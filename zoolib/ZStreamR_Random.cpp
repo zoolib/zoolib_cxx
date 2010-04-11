@@ -42,10 +42,10 @@ ZStreamR_Random::ZStreamR_Random(int32 iSeed)
 ZStreamR_Random::~ZStreamR_Random()
 	{}
 
-void ZStreamR_Random::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_Random::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	size_t countRemaining = iCount;
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	while (countRemaining--)
 		{
 		fState = (fState * 16807) % 0x7FFFFFFF;

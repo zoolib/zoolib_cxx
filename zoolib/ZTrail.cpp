@@ -407,15 +407,15 @@ bool ZTrail::IsNormalized() const
 	}
 
 /**
-Return a trail that would navigate from iSource to iDest. The vectors iSource and iDest
+Return a trail that would navigate from iSource to oDest. The vectors iSource and oDest
 are considered to be lists of names of nodes starting at the root or other common node.
 This code is used by ZFileLoc implementations, but is also available to application code.
 */
-ZTrail ZTrail::sTrailFromTo(const vector<string>& iSource, const vector<string>& iDest)
+ZTrail ZTrail::sTrailFromTo(const vector<string>& iSource, const vector<string>& oDest)
 	{
 	size_t matchUntil = 0;
-	while (matchUntil < iSource.size() && matchUntil < iDest.size()
-		&& iSource[matchUntil] == iDest[matchUntil])
+	while (matchUntil < iSource.size() && matchUntil < oDest.size()
+		&& iSource[matchUntil] == oDest[matchUntil])
 		{
 		++matchUntil;
 		}
@@ -424,8 +424,8 @@ ZTrail ZTrail::sTrailFromTo(const vector<string>& iSource, const vector<string>&
 	if (matchUntil < iSource.size())
 		theTrail.AppendBounces(iSource.size() - matchUntil);
 
-	if (matchUntil < iDest.size())
-		theTrail.AppendTrail(iDest.begin() + matchUntil, iDest.end());
+	if (matchUntil < oDest.size())
+		theTrail.AppendTrail(oDest.begin() + matchUntil, oDest.end());
 
 	return theTrail;
 	}

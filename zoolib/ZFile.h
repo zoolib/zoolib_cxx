@@ -117,7 +117,7 @@ public:
 	std::string AsString() const;
 	std::string AsString_Native() const;
 
-	ZTrail TrailTo(const ZFileSpec& iDest, Error* oError = 0) const;
+	ZTrail TrailTo(const ZFileSpec& oDest, Error* oError = 0) const;
 	ZTrail TrailFrom(const ZFileSpec& iSource, Error* oError = 0) const;
 
 	ZFile::Kind Kind(Error* oError = 0) const;
@@ -136,7 +136,7 @@ public:
 
 	ZFileSpec CreateDir(Error* oError = 0) const;
 
-	ZFileSpec MoveTo(const ZFileSpec& iDest, Error* oError = 0) const;
+	ZFileSpec MoveTo(const ZFileSpec& oDest, Error* oError = 0) const;
 	bool Delete(Error* oError = 0) const;
 
 	// Open/create with stream API (stateful).
@@ -240,7 +240,7 @@ public:
 	virtual ZRef<ZFileIterRep> CreateIterRep();
 
 	virtual std::string GetName(ZFile::Error* oError) const = 0;
-	virtual ZTrail TrailTo(ZRef<ZFileLoc> iDest, ZFile::Error* oError) const = 0;
+	virtual ZTrail TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oError) const = 0;
 
 	virtual ZRef<ZFileLoc> GetAncestor(size_t iCount, ZFile::Error* oError);
 	virtual ZRef<ZFileLoc> GetParent(ZFile::Error* oError) = 0;
@@ -260,7 +260,7 @@ public:
 
 	virtual ZRef<ZFileLoc> CreateDir(ZFile::Error* oError) = 0;
 
-	virtual ZRef<ZFileLoc> MoveTo(ZRef<ZFileLoc> iDest, ZFile::Error* oError) = 0;
+	virtual ZRef<ZFileLoc> MoveTo(ZRef<ZFileLoc> oDest, ZFile::Error* oError) = 0;
 	virtual bool Delete(ZFile::Error* oError) = 0;
 
 	virtual ZRef<ZStreamerRPos> OpenRPos(bool iPreventWriters, ZFile::Error* oError);
@@ -356,7 +356,7 @@ protected:
 	ZFileR() {}
 
 public:
-	virtual ZFile::Error ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead) = 0;
+	virtual ZFile::Error ReadAt(uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead) = 0;
 
 	virtual ZFile::Error GetSize(uint64& oSize) = 0;
 	};
@@ -398,7 +398,7 @@ protected:
 
 public:
 // From ZFileR/ZFileW. Re-declared here for disambiguation.
-	virtual ZFile::Error ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead) = 0;
+	virtual ZFile::Error ReadAt(uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead) = 0;
 	virtual ZFile::Error WriteAt(
 		uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten) = 0;
 
@@ -422,7 +422,7 @@ public:
 	~ZStreamRPos_FileR();
 
 // From ZStreamR via ZStreamRPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 // From ZStreamRPos
 	virtual uint64 Imp_GetPosition();
@@ -510,7 +510,7 @@ public:
 	~ZStreamRWPos_FileRW();
 
 // From ZStreamR via ZStreamRWPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 // From ZStreamW via ZStreamRWPos
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
@@ -559,7 +559,7 @@ public:
 	ZFileR_StreamerRPos(ZRef<ZStreamerRPos> iStreamer);
 
 // From ZFileR
-	virtual ZFile::Error ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead);
+	virtual ZFile::Error ReadAt(uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead);
 
 	virtual ZFile::Error GetSize(uint64& oSize);
 
@@ -608,7 +608,7 @@ public:
 	ZFileRW_StreamerRWPos(ZRef<ZStreamerRWPos> iStreamer);
 
 // From ZFileR/ZFileW via ZFileRW.
-	virtual ZFile::Error ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead);
+	virtual ZFile::Error ReadAt(uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead);
 	virtual ZFile::Error WriteAt(
 		uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
 

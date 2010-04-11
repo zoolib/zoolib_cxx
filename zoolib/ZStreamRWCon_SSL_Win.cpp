@@ -181,9 +181,9 @@ ZStreamRWCon_SSL_Win::~ZStreamRWCon_SSL_Win()
 	sPSFT->FreeCredentialsHandle(&fCredHandle);
 	}
 
-void ZStreamRWCon_SSL_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRWCon_SSL_Win::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	char* localDest = static_cast<char*>(iDest);
+	char* localDest = static_cast<char*>(oDest);
 
 	while (iCount)
 		{
@@ -199,7 +199,7 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRe
 			iCount -= countToRead;
 			}
 
-		if (localDest != iDest)
+		if (localDest != oDest)
 			{
 			// We've somehow managed to read some data, just above or down
 			// below, and so can bail from the loop.
@@ -317,7 +317,7 @@ void ZStreamRWCon_SSL_Win::Imp_Read(void* iDest, size_t iCount, size_t* oCountRe
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - static_cast<char*>(iDest);
+		*oCountRead = localDest - static_cast<char*>(oDest);
 	}
 
 size_t ZStreamRWCon_SSL_Win::Imp_CountReadable()

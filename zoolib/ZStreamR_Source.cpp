@@ -74,9 +74,9 @@ ZStreamR_Source::~ZStreamR_Source()
 	delete[] fData;
 	}
 
-void ZStreamR_Source::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_Source::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	while (iCount)
 		{
 		size_t countToMove = min(iCount, fDataSize - fOffset);
@@ -86,7 +86,7 @@ void ZStreamR_Source::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 		iCount -= countToMove;
 		}
 	if (oCountRead)
-		*oCountRead += localDest - reinterpret_cast<uint8*>(iDest);
+		*oCountRead += localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
 void ZStreamR_Source::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,

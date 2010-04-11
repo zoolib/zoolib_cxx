@@ -88,8 +88,8 @@ ZStreamRWCon_SSL_OSX::~ZStreamRWCon_SSL_OSX()
 		::SSLDisposeContext(fSSLCR);
 	}
 
-void ZStreamRWCon_SSL_OSX::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ ::SSLRead(fSSLCR, iDest, iCount, oCountRead); }
+void ZStreamRWCon_SSL_OSX::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+	{ ::SSLRead(fSSLCR, oDest, iCount, oCountRead); }
 
 size_t ZStreamRWCon_SSL_OSX::Imp_CountReadable()
 	{
@@ -122,7 +122,7 @@ void ZStreamRWCon_SSL_OSX::Imp_Abort()
 	::SSLClose(fSSLCR); // ???
 	}
 
-OSStatus ZStreamRWCon_SSL_OSX::pRead(void* iDest, size_t* ioCount)
+OSStatus ZStreamRWCon_SSL_OSX::pRead(void* oDest, size_t* ioCount)
 	{
 	try
 		{
@@ -133,7 +133,7 @@ OSStatus ZStreamRWCon_SSL_OSX::pRead(void* iDest, size_t* ioCount)
 			fStreamW.Flush();
 			}
 		size_t countRead;
-		fStreamR.ReadAll(iDest, countToRead, &countRead);
+		fStreamR.ReadAll(oDest, countToRead, &countRead);
 		*ioCount = countRead;
 		if (countRead == 0)
 			return ioErr;
@@ -145,12 +145,12 @@ OSStatus ZStreamRWCon_SSL_OSX::pRead(void* iDest, size_t* ioCount)
 		}		
 	}
 
-OSStatus ZStreamRWCon_SSL_OSX::spRead(SSLConnectionRef iRefcon, void* iDest, size_t* ioCount)
+OSStatus ZStreamRWCon_SSL_OSX::spRead(SSLConnectionRef iRefcon, void* oDest, size_t* ioCount)
 	{
 	ZStreamRWCon_SSL_OSX* theS =
 		const_cast<ZStreamRWCon_SSL_OSX*>(static_cast<const ZStreamRWCon_SSL_OSX*>(iRefcon));
 
-	return theS->pRead(iDest, ioCount);
+	return theS->pRead(oDest, ioCount);
 	}
 
 OSStatus ZStreamRWCon_SSL_OSX::pWrite(const void* iSource, size_t* ioCount)

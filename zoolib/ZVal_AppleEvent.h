@@ -146,6 +146,8 @@ class ZSeq_AppleEvent
 		operator_bool_generator_type, operator_bool_type);
 
 public:
+	typedef ZVal_AppleEvent Val_t;
+
 	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
 
 	operator operator_bool_type() const;
@@ -191,6 +193,7 @@ class ZMap_AppleEvent
 
 public:
 	typedef ZMapIndex_T<ZMap_AppleEvent> Index_t;
+	typedef ZVal_AppleEvent Val_t;
 
 	ZMap_Any AsMap_Any(const ZAny& iDefault) const;
 

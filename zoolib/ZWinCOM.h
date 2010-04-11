@@ -104,7 +104,7 @@ public:
 	Variant(bool iVal);
 	Variant(float iVal);
 	Variant(double iVal);
-	Variant(const std::string& iVal);
+	Variant(const string8& iVal);
 	Variant(const string16& iVal);
 	Variant(ZRef<IUnknown> iVal);
 	Variant(ZRef<IDispatch> iVal);

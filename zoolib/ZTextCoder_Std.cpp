@@ -82,12 +82,12 @@ class Make_Encoder
 
 bool ZTextDecoder_ASCII::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	UTF32* iDest, size_t iDestCU, size_t* oDestCU)
+	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	const uint8* localSource = static_cast<const uint8*>(iSource);
 	const uint8* localSourceEnd = localSource + iSourceBytes;
-	UTF32* localDest = iDest;
-	UTF32* localDestEnd = iDest + iDestCU;
+	UTF32* localDest = oDest;
+	UTF32* localDestEnd = oDest + iDestCU;
 
 	while (localSource < localSourceEnd && localDest < localDestEnd)
 		{
@@ -101,7 +101,7 @@ bool ZTextDecoder_ASCII::Decode(
 	if (oSourceBytesSkipped)
 		*oSourceBytesSkipped = 0;
 	if (oDestCU)
-		*oDestCU = localDest - iDest;
+		*oDestCU = localDest - oDest;
 	return true;
 	}
 
@@ -110,11 +110,11 @@ bool ZTextDecoder_ASCII::Decode(
 #pragma mark * ZTextEncoder_ASCII
 
 void ZTextEncoder_ASCII::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-	void* iDest, size_t iDestBytes, size_t* oDestBytes)
+	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	const UTF32* localSource = iSource;
 	const UTF32* localSourceEnd = iSource + iSourceCU;
-	uint8* localDest = static_cast<uint8*>(iDest);
+	uint8* localDest = static_cast<uint8*>(oDest);
 	uint8* localDestEnd = localDest + iDestBytes;
 
 	while (localSource < localSourceEnd && localDest < localDestEnd)
@@ -129,7 +129,7 @@ void ZTextEncoder_ASCII::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 	if (oSourceCU)
 		*oSourceCU = localSource - iSource;
 	if (oDestBytes)
-		*oDestBytes = localDest - static_cast<uint8*>(iDest);
+		*oDestBytes = localDest - static_cast<uint8*>(oDest);
 	}
 
 // =================================================================================================
@@ -138,12 +138,12 @@ void ZTextEncoder_ASCII::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 
 bool ZTextDecoder_ISO8859_1::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	UTF32* iDest, size_t iDestCU, size_t* oDestCU)
+	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	const uint8* localSource = static_cast<const uint8*>(iSource);
 	const uint8* localSourceEnd = localSource + iSourceBytes;
-	UTF32* localDest = iDest;
-	UTF32* localDestEnd = iDest + iDestCU;
+	UTF32* localDest = oDest;
+	UTF32* localDestEnd = oDest + iDestCU;
 
 	while (localSource < localSourceEnd && localDest < localDestEnd)
 		*localDest++ = uint32(*localSource++);
@@ -153,7 +153,7 @@ bool ZTextDecoder_ISO8859_1::Decode(
 	if (oSourceBytesSkipped)
 		*oSourceBytesSkipped = 0;
 	if (oDestCU)
-		*oDestCU = localDest - iDest;
+		*oDestCU = localDest - oDest;
 	return true;
 	}
 
@@ -162,11 +162,11 @@ bool ZTextDecoder_ISO8859_1::Decode(
 #pragma mark * ZTextEncoder_ISO8859_1
 
 void ZTextEncoder_ISO8859_1::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-	void* iDest, size_t iDestBytes, size_t* oDestBytes)
+	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	const UTF32* localSource = iSource;
 	const UTF32* localSourceEnd = iSource + iSourceCU;
-	uint8* localDest = static_cast<uint8*>(iDest);
+	uint8* localDest = static_cast<uint8*>(oDest);
 	uint8* localDestEnd = localDest + iDestBytes;
 
 	while (localSource < localSourceEnd && localDest < localDestEnd)
@@ -181,7 +181,7 @@ void ZTextEncoder_ISO8859_1::Encode(const UTF32* iSource, size_t iSourceCU, size
 	if (oSourceCU)
 		*oSourceCU = localSource - iSource;
 	if (oDestBytes)
-		*oDestBytes = localDest - static_cast<uint8*>(iDest);
+		*oDestBytes = localDest - static_cast<uint8*>(oDest);
 	}
 
 // =================================================================================================
@@ -226,12 +226,12 @@ static const UTF32 spMacToUnicode[256] =
 
 bool ZTextDecoder_MacRoman::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	UTF32* iDest, size_t iDestCU, size_t* oDestCU)
+	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	const uint8* localSource = static_cast<const uint8*>(iSource);
 	const uint8* localSourceEnd = localSource + iSourceBytes;
-	UTF32* localDest = iDest;
-	UTF32* localDestEnd = iDest + iDestCU;
+	UTF32* localDest = oDest;
+	UTF32* localDestEnd = oDest + iDestCU;
 
 	while (localSource < localSourceEnd && localDest < localDestEnd)
 		*localDest++ = spMacToUnicode[*localSource++];
@@ -241,7 +241,7 @@ bool ZTextDecoder_MacRoman::Decode(
 	if (oSourceBytesSkipped)
 		*oSourceBytesSkipped = 0;
 	if (oDestCU)
-		*oDestCU = localDest - iDest;
+		*oDestCU = localDest - oDest;
 	return true;
 	}
 
@@ -327,11 +327,11 @@ static const UnicodeToMac_t spUnicodeToMac[256] =
 	};
 
 void ZTextEncoder_MacRoman::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-	void* iDest, size_t iDestBytes, size_t* oDestBytes)
+	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	const UTF32* localSource = iSource;
 	const UTF32* localSourceEnd = iSource + iSourceCU;
-	uint8* localDest = static_cast<uint8*>(iDest);
+	uint8* localDest = static_cast<uint8*>(oDest);
 	uint8* localDestEnd = localDest + iDestBytes;
 
 	while (localSource < localSourceEnd && localDest < localDestEnd)
@@ -350,7 +350,7 @@ void ZTextEncoder_MacRoman::Encode(const UTF32* iSource, size_t iSourceCU, size_
 	if (oSourceCU)
 		*oSourceCU = localSource - iSource;
 	if (oDestBytes)
-		*oDestBytes = localDest - static_cast<uint8*>(iDest);
+		*oDestBytes = localDest - static_cast<uint8*>(oDest);
 	}
 
 // =================================================================================================
@@ -372,12 +372,12 @@ static const UTF32 spCP1252ToUnicode[128] =
 
 bool ZTextDecoder_CP1252::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	UTF32* iDest, size_t iDestCU, size_t* oDestCU)
+	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	const uint8* localSource = static_cast<const uint8*>(iSource);
 	const uint8* localSourceEnd = localSource + iSourceBytes;
-	UTF32* localDest = iDest;
-	UTF32* localDestEnd = iDest + iDestCU;
+	UTF32* localDest = oDest;
+	UTF32* localDestEnd = oDest + iDestCU;
 
 	while (localSource < localSourceEnd && localDest < localDestEnd)
 		{
@@ -393,7 +393,7 @@ bool ZTextDecoder_CP1252::Decode(
 	if (oSourceBytesSkipped)
 		*oSourceBytesSkipped = 0;
 	if (oDestCU)
-		*oDestCU = localDest - iDest;
+		*oDestCU = localDest - oDest;
 	return true;
 	}
 
@@ -431,11 +431,11 @@ static const uint8 spCP1252_Page20[48] =
 	};
 
 void ZTextEncoder_CP1252::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-	void* iDest, size_t iDestBytes, size_t* oDestBytes)
+	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	const UTF32* localSource = iSource;
 	const UTF32* localSourceEnd = iSource + iSourceCU;
-	uint8* localDest = static_cast<uint8*>(iDest);
+	uint8* localDest = static_cast<uint8*>(oDest);
 	uint8* localDestEnd = localDest + iDestBytes;
 
 	while (localSource < localSourceEnd && localDest < localDestEnd)
@@ -453,7 +453,7 @@ void ZTextEncoder_CP1252::Encode(const UTF32* iSource, size_t iSourceCU, size_t*
 	if (oSourceCU)
 		*oSourceCU = localSource - iSource;
 	if (oDestBytes)
-		*oDestBytes = localDest - static_cast<uint8*>(iDest);
+		*oDestBytes = localDest - static_cast<uint8*>(oDest);
 	}
 
 // =================================================================================================
@@ -472,12 +472,12 @@ static const UTF32 spCP850ToUnicode[128] =
 
 bool ZTextDecoder_CP850::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	UTF32* iDest, size_t iDestCU, size_t* oDestCU)
+	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	const uint8* localSource = static_cast<const uint8*>(iSource);
 	const uint8* localSourceEnd = localSource + iSourceBytes;
-	UTF32* localDest = iDest;
-	UTF32* localDestEnd = iDest + iDestCU;
+	UTF32* localDest = oDest;
+	UTF32* localDestEnd = oDest + iDestCU;
 
 	while (localSource < localSourceEnd && localDest < localDestEnd)
 		{
@@ -493,7 +493,7 @@ bool ZTextDecoder_CP850::Decode(
 	if (oSourceBytesSkipped)
 		*oSourceBytesSkipped = 0;
 	if (oDestCU)
-		*oDestCU = localDest - iDest;
+		*oDestCU = localDest - oDest;
 	return true;
 	}
 
@@ -543,11 +543,11 @@ static const unsigned char spCP850_Page25[168] =
 	};
 
 void ZTextEncoder_CP850::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-	void* iDest, size_t iDestBytes, size_t* oDestBytes)
+	void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	const UTF32* localSource = iSource;
 	const UTF32* localSourceEnd = iSource + iSourceCU;
-	uint8* localDest = static_cast<uint8*>(iDest);
+	uint8* localDest = static_cast<uint8*>(oDest);
 	uint8* localDestEnd = localDest + iDestBytes;
 
 	while (localSource < localSourceEnd && localDest < localDestEnd)
@@ -564,7 +564,7 @@ void ZTextEncoder_CP850::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 	if (oSourceCU)
 		*oSourceCU = localSource - iSource;
 	if (oDestBytes)
-		*oDestBytes = localDest - static_cast<uint8*>(iDest);
+		*oDestBytes = localDest - static_cast<uint8*>(oDest);
 	}
 
 NAMESPACE_ZOOLIB_END

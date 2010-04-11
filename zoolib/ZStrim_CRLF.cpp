@@ -50,12 +50,12 @@ ZStrimR_CRLFRemove::ZStrimR_CRLFRemove(UTF32 iReplaceCP, const ZStrimR& iStrimSo
 	ZAssertStop(2, ZUnicode::sIsValid(fReplaceCP));
 	}
 
-void ZStrimR_CRLFRemove::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimR_CRLFRemove::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	UTF32 buffer[kBufSize];
 
-	UTF32* localDest = iDest;
-	UTF32* localDestEnd = iDest + iCount;
+	UTF32* localDest = oDest;
+	UTF32* localDestEnd = oDest + iCount;
 	while (localDestEnd > localDest)
 		{
 		size_t countRead;
@@ -97,7 +97,7 @@ void ZStrimR_CRLFRemove::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCou
 		}
 
 	if (oCount)
-		*oCount = localDest - iDest;
+		*oCount = localDest - oDest;
 	}
 
 // =================================================================================================

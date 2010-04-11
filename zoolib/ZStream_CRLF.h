@@ -40,7 +40,7 @@ public:
 	~ZStreamR_CRLFRemove();
 
 // From ZStreamR
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 protected:
 	const ZStreamR& fStreamSource;
@@ -59,7 +59,7 @@ public:
 	~ZStreamR_CRLFInsert();
 
 // From ZStreamR
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 protected:
 	const ZStreamR& fStreamSource;

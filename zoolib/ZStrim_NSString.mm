@@ -46,7 +46,7 @@ ZStrimR_NSString::ZStrimR_NSString(ZRef<NSString> iString)
 ZStrimR_NSString::~ZStrimR_NSString()
 	{}
 
-void ZStrimR_NSString::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimR_NSString::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	const size_t length = [fString length];
 	if (0 == length)
@@ -65,14 +65,14 @@ void ZStrimR_NSString::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 		ZUnicode::sUTF16ToUTF32(
 			buffer, cuToCopy,
 			&countConsumed, nullptr,
-			iDest, iCount,
+			oDest, iCount,
 			oCount);
 		fPosition += countConsumed;
 		}
 	}
 
 #if 0
-void ZStrimR_NSString::Imp_ReadUTF16(UTF16* iDest,
+void ZStrimR_NSString::Imp_ReadUTF16(UTF16* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	const CFIndex length = [fString length];
@@ -92,7 +92,7 @@ void ZStrimR_NSString::Imp_ReadUTF16(UTF16* iDest,
 			ZUnicode::sUTF16ToUTF16(
 				start + fPosition, countAvailable,
 				&countConsumed, nullptr,
-				iDest, iCountCU,
+				oDest, iCountCU,
 				oCountCU,
 				iCountCP, oCountCP);
 			}
@@ -104,7 +104,7 @@ void ZStrimR_NSString::Imp_ReadUTF16(UTF16* iDest,
 			ZUnicode::sUTF16ToUTF16(
 				buffer, cuToCopy,
 				&countConsumed, nullptr,
-				iDest, iCountCU,
+				oDest, iCountCU,
 				oCountCU,
 				iCountCP, oCountCP);
 			}
@@ -112,7 +112,7 @@ void ZStrimR_NSString::Imp_ReadUTF16(UTF16* iDest,
 		}
 	}
 
-void ZStrimR_NSString::Imp_ReadUTF8(UTF8* iDest,
+void ZStrimR_NSString::Imp_ReadUTF8(UTF8* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	const CFIndex length = ::NSStringGetLength(fString);
@@ -132,7 +132,7 @@ void ZStrimR_NSString::Imp_ReadUTF8(UTF8* iDest,
 			ZUnicode::sUTF16ToUTF8(
 				start + fPosition, length - fPosition,
 				&countConsumed, nullptr,
-				iDest, iCountCU,
+				oDest, iCountCU,
 				oCountCU,
 				iCountCP, oCountCP);
 			}
@@ -144,7 +144,7 @@ void ZStrimR_NSString::Imp_ReadUTF8(UTF8* iDest,
 			ZUnicode::sUTF16ToUTF8(
 				buffer, cuToCopy,
 				&countConsumed, nullptr,
-				iDest, iCountCU,
+				oDest, iCountCU,
 				oCountCU,
 				iCountCP, oCountCP);
 			}

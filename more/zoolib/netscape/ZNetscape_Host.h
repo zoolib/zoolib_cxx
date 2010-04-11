@@ -62,10 +62,10 @@ protected:
 public:
 	static bool sIsString(NPIdentifier iNPI);
 	static string sAsString(NPIdentifier iNPI);
-	static int32_t sAsInt(NPIdentifier iNPI);
+	static int32 sAsInt(NPIdentifier iNPI);
 
 	static NPIdentifier sAsNPI(const string& iName);
-	static NPIdentifier sAsNPI(int32_t iInt);
+	static NPIdentifier sAsNPI(int32 iInt);
 
 	void Retain();
 	void Release();
@@ -91,7 +91,7 @@ public:
 	bool RemoveProperty(const string& iName);
 	bool RemoveProperty(size_t iIndex);
 
-	bool Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount);
+	bool Enumerate(NPIdentifier*& oIdentifiers, uint32& oCount);
 	};
 
 // =================================================================================================
@@ -112,14 +112,14 @@ protected:
 
 	virtual bool Imp_InvokeDefault(const NPVariantH* iArgs, size_t iCount, NPVariantH& oResult);
 	virtual bool Imp_HasProperty(const string& iName);
-	virtual bool Imp_HasProperty(int32_t iInt);
+	virtual bool Imp_HasProperty(int32 iInt);
 	virtual bool Imp_GetProperty(const string& iName, NPVariantH& oResult);
-	virtual bool Imp_GetProperty(int32_t iInt, NPVariantH& oResult);
+	virtual bool Imp_GetProperty(int32 iInt, NPVariantH& oResult);
 	virtual bool Imp_SetProperty(const string& iName, const NPVariantH& iValue);
-	virtual bool Imp_SetProperty(int32_t iInt, const NPVariantH& iValue);
+	virtual bool Imp_SetProperty(int32 iInt, const NPVariantH& iValue);
 	virtual bool Imp_RemoveProperty(const string& iName);
-	virtual bool Imp_RemoveProperty(int32_t iInt);
-	virtual bool Imp_Enumerate(NPIdentifier*& oIDs, uint32_t& oCount);
+	virtual bool Imp_RemoveProperty(int32 iInt);
+	virtual bool Imp_Enumerate(NPIdentifier*& oIDs, uint32& oCount);
 	virtual bool Imp_Enumerate(std::vector<string>& oNames);
 
 private:
@@ -129,10 +129,10 @@ private:
 	static bool spHasMethod(NPObject* npobj, NPIdentifier name);
 
 	static bool spInvoke(NPObject* npobj,
-		NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result);
+		NPIdentifier name, const NPVariant* args, unsigned argCount, NPVariant* result);
 
 	static bool spInvokeDefault(NPObject* npobj,
-		const NPVariant* args, uint32_t argCount, NPVariant* result);
+		const NPVariant* args, unsigned argCount, NPVariant* result);
 
 	static bool spHasProperty(NPObject* npobj, NPIdentifier name);
 	static bool spGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result);
@@ -213,15 +213,15 @@ public:
 	virtual NPIdentifier GetStringIdentifier(const NPUTF8* name) = 0;
 
 	virtual void GetStringIdentifiers(
-		const NPUTF8* *names, int32_t nameCount, NPIdentifier* identifiers) = 0;
+		const NPUTF8* *names, int32 nameCount, NPIdentifier* identifiers) = 0;
 
-	virtual NPIdentifier GetIntIdentifier(int32_t intid) = 0;
+	virtual NPIdentifier GetIntIdentifier(int32 intid) = 0;
 
 	virtual bool IdentifierIsString(NPIdentifier identifier) = 0;
 
 	virtual NPUTF8* UTF8FromIdentifier(NPIdentifier identifier) = 0;
 
-	virtual int32_t IntFromIdentifier(NPIdentifier identifier) = 0;
+	virtual int32 IntFromIdentifier(NPIdentifier identifier) = 0;
 
 	virtual NPObject* CreateObject(NPP npp, NPClass* aClass) = 0;
 
@@ -230,11 +230,11 @@ public:
 	virtual void ReleaseObject(NPObject* obj) = 0;
 
 	virtual bool Invoke(NPP npp,
-		NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount,
+		NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32 argCount,
 		NPVariant* result) = 0;
 
 	virtual bool InvokeDefault(NPP npp,
-		NPObject* obj, const NPVariant* args, uint32_t argCount, NPVariant* result) = 0;
+		NPObject* obj, const NPVariant* args, uint32 argCount, NPVariant* result) = 0;
 
 	virtual bool Evaluate(NPP npp,
 		NPObject* obj, NPString* script, NPVariant* result) = 0;
@@ -260,26 +260,26 @@ public:
 	virtual void PopPopupsEnabledState(NPP npp) = 0;
 
 	virtual bool Enumerate
-		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count) = 0;
+		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32 *count) = 0;
 
 	virtual void PluginThreadAsyncCall
 		(NPP npp, void (*func)(void *), void *userData) = 0;
 
 	virtual bool Construct
-		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result) = 0;
+		(NPP npp, NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result) = 0;
 
 private:
 	static NPError spGetURL(NPP npp, const char* URL, const char* window);
 
 	static NPError spPostURL(NPP npp,
-		const char* URL, const char* window, uint32 len, const char* buf, NPBool file);
+		const char* URL, const char* window, ::uint32 len, const char* buf, NPBool file);
 
 	static NPError spRequestRead(NPStream* stream, NPByteRange* rangeList);
 
 	static NPError spNewStream(NPP npp,
 		NPMIMEType type, const char* window, NPStream** stream);
 
-	static int32 spWrite(NPP npp, NPStream* stream, int32 len, void* buffer);
+	static ::int32 spWrite(NPP npp, NPStream* stream, ::int32 len, void* buffer);
 
 	static NPError spDestroyStream(NPP npp, NPStream* stream, NPReason reason);
 
@@ -287,11 +287,11 @@ private:
 
 	static const char* spUserAgent(NPP npp);
 
-	static void* spMemAlloc(uint32 size);
+	static void* spMemAlloc(::uint32 size);
 
 	static void spMemFree(void* ptr);
 
-	static uint32 spMemFlush(uint32 size);
+	static ::uint32 spMemFlush(::uint32 size);
 
 	static void spReloadPlugins(NPBool reloadPages);
 
@@ -304,7 +304,7 @@ private:
 
 	static NPError spPostURLNotify(NPP npp,
 		const char* URL, const char* window,
-		uint32 len, const char* buf, NPBool file, void* notifyData);
+		::uint32 len, const char* buf, NPBool file, void* notifyData);
 
 	static NPError spGetValue(NPP npp, NPNVariable variable, void* ret_value);
 

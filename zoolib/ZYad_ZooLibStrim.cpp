@@ -18,6 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZGeom_POD.h"
 #include "zoolib/ZStreamW_HexStrim.h"
 #include "zoolib/ZStrimR_Boundary.h"
 #include "zoolib/ZStrim_Escaped.h"
@@ -391,14 +392,14 @@ void ZYadStrimR_ZooLibStrim_Quote::Finish()
 const ZStrimR& ZYadStrimR_ZooLibStrim_Quote::GetStrimR()
 	{ return *this; }
 
-void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	using namespace ZUtil_Strim;
 
 	const ZStrimU& theStrimU = fStrimmerU->GetStrimU();
 
-	UTF32* localDest = iDest;
-	UTF32* localDestEnd = iDest + iCount;
+	UTF32* localDest = oDest;
+	UTF32* localDestEnd = oDest + iCount;
 	bool exhausted = false;
 	while (localDestEnd > localDest && !exhausted)
 		{
@@ -471,7 +472,7 @@ void ZYadStrimR_ZooLibStrim_Quote::Imp_ReadUTF32(UTF32* iDest, size_t iCount, si
 		}
 
 	if (oCount)
-		*oCount = localDest - iDest;	
+		*oCount = localDest - oDest;	
 	}
 
 // =================================================================================================

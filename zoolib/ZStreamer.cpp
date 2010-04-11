@@ -165,11 +165,11 @@ ZStreamR_Streamer::ZStreamR_Streamer(ZRef<ZStreamerR> iStreamer)
 ZStreamR_Streamer::~ZStreamR_Streamer()
 	{}
 
-void ZStreamR_Streamer::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_Streamer::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (fStreamer)
 		{
-		fStreamer->GetStreamR().Read(iDest, iCount, oCountRead);
+		fStreamer->GetStreamR().Read(oDest, iCount, oCountRead);
 		}
 	else
 		{
@@ -234,11 +234,11 @@ ZStreamU_Streamer::ZStreamU_Streamer(ZRef<ZStreamerU> iStreamer)
 ZStreamU_Streamer::~ZStreamU_Streamer()
 	{}
 
-void ZStreamU_Streamer::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamU_Streamer::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (fStreamer)
 		{
-		fStreamer->GetStreamU().Read(iDest, iCount, oCountRead);
+		fStreamer->GetStreamU().Read(oDest, iCount, oCountRead);
 		}
 	else
 		{
@@ -309,11 +309,11 @@ ZStreamRPos_Streamer::ZStreamRPos_Streamer(ZRef<ZStreamerRPos> iStreamer)
 ZStreamRPos_Streamer::~ZStreamRPos_Streamer()
 	{}
 
-void ZStreamRPos_Streamer::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRPos_Streamer::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (fStreamer)
 		{
-		fStreamer->GetStreamRPos().Read(iDest, iCount, oCountRead);
+		fStreamer->GetStreamRPos().Read(oDest, iCount, oCountRead);
 		}
 	else
 		{
@@ -548,11 +548,11 @@ ZStreamRWPos_Streamer::ZStreamRWPos_Streamer(ZRef<ZStreamerRWPos> iStreamer)
 ZStreamRWPos_Streamer::~ZStreamRWPos_Streamer()
 	{}
 
-void ZStreamRWPos_Streamer::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRWPos_Streamer::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (fStreamer)
 		{
-		fStreamer->GetStreamRWPos().Read(iDest, iCount, oCountRead);
+		fStreamer->GetStreamRWPos().Read(oDest, iCount, oCountRead);
 		}
 	else
 		{

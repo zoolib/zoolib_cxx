@@ -34,8 +34,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQE {
 
-using namespace ZQL;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Visitor_Expr_DoMakeIterator
@@ -50,16 +48,14 @@ class Visitor_Expr_DoMakeIterator
 ,	public virtual ZQL::Visitor_Expr_Rel_Unary_Select
 	{
 public:
-	virtual void Visit_Expr_Rel_Binary_Difference(
-		ZRef<Expr_Rel_Binary_Difference> iRep);
-	virtual void Visit_Expr_Rel_Binary_Intersect(
-		ZRef<Expr_Rel_Binary_Intersect> iRep);
-	virtual void Visit_Expr_Rel_Binary_Join(ZRef<Expr_Rel_Binary_Join> iRep);
-	virtual void Visit_Expr_Rel_Binary_Union(ZRef<Expr_Rel_Binary_Union> iRep);
+	virtual void Visit_Expr_Rel_Binary_Difference(ZRef<ZQL::Expr_Rel_Binary_Difference> iRep);
+	virtual void Visit_Expr_Rel_Binary_Intersect(ZRef<ZQL::Expr_Rel_Binary_Intersect> iRep);
+	virtual void Visit_Expr_Rel_Binary_Join(ZRef<ZQL::Expr_Rel_Binary_Join> iRep);
+	virtual void Visit_Expr_Rel_Binary_Union(ZRef<ZQL::Expr_Rel_Binary_Union> iRep);
 
-	virtual void Visit_Expr_Rel_Unary_Project(ZRef<Expr_Rel_Unary_Project> iRep);
-	virtual void Visit_Expr_Rel_Unary_Rename(ZRef<Expr_Rel_Unary_Rename> iRep);
-	virtual void Visit_Expr_Rel_Unary_Select(ZRef<Expr_Rel_Unary_Select> iRep);
+	virtual void Visit_Expr_Rel_Unary_Project(ZRef<ZQL::Expr_Rel_Unary_Project> iRep);
+	virtual void Visit_Expr_Rel_Unary_Rename(ZRef<ZQL::Expr_Rel_Unary_Rename> iRep);
+	virtual void Visit_Expr_Rel_Unary_Select(ZRef<ZQL::Expr_Rel_Unary_Select> iRep);
 
 // Our protocol
 	ZRef<Iterator> DoMakeIterator(ZRef<ZExpr> iExpr);

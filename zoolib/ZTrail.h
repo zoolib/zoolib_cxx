@@ -100,7 +100,7 @@ public:
 		{ return fComps; }
 
 	static ZTrail sTrailFromTo(const std::vector<std::string>& iSource,
-		const std::vector<std::string>& iDest);
+		const std::vector<std::string>& oDest);
 
 	static void sParseStringAndAppend(
 		const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,

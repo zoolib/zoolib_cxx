@@ -49,9 +49,9 @@ ZStreamR_Memory::ZStreamR_Memory(const void* iAddress)
 :	fAddress(static_cast<const char*>(iAddress))
 	{}
 
-void ZStreamR_Memory::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_Memory::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	ZMemCopy(iDest, fAddress, iCount);
+	ZMemCopy(oDest, fAddress, iCount);
 	fAddress += iCount;
 	if (oCountRead)
 		*oCountRead = iCount;
@@ -132,10 +132,10 @@ ZStreamRPos_Memory::ZStreamRPos_Memory(const pair<const void*, size_t>& iParam)
 	fSize(iParam.second)
 	{}
 
-void ZStreamRPos_Memory::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRPos_Memory::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	size_t countToCopy = ZStream::sClampedSize(iCount, fSize, fPosition);
-	ZMemCopy(iDest, fAddress + fPosition, countToCopy);
+	ZMemCopy(oDest, fAddress + fPosition, countToCopy);
 	fPosition += countToCopy;
 	if (oCountRead)
 		*oCountRead = countToCopy;

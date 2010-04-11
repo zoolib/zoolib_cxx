@@ -64,10 +64,10 @@ ZStreamR_RateCapped::ZStreamR_RateCapped(
 ZStreamR_RateCapped::~ZStreamR_RateCapped()
 	{}
 
-void ZStreamR_RateCapped::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_RateCapped::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	size_t realCount = fLimiter.GetCount(fLastCount, iCount);
-	ZStreamR_Filter::Imp_Read(iDest, realCount, &fLastCount);
+	ZStreamR_Filter::Imp_Read(oDest, realCount, &fLastCount);
 	if (oCountRead)
 		*oCountRead = fLastCount;
 	}
@@ -102,10 +102,10 @@ ZStreamU_RateCapped::ZStreamU_RateCapped(
 ZStreamU_RateCapped::~ZStreamU_RateCapped()
 	{}
 
-void ZStreamU_RateCapped::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamU_RateCapped::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	size_t realCount = fLimiter.GetCount(fLastCount, iCount);
-	ZStreamU_Filter::Imp_Read(iDest, realCount, &fLastCount);
+	ZStreamU_Filter::Imp_Read(oDest, realCount, &fLastCount);
 	if (oCountRead)
 		*oCountRead = fLastCount;
 	}
@@ -140,10 +140,10 @@ ZStreamRPos_RateCapped::ZStreamRPos_RateCapped(
 ZStreamRPos_RateCapped::~ZStreamRPos_RateCapped()
 	{}
 
-void ZStreamRPos_RateCapped::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRPos_RateCapped::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	size_t realCount = fLimiter.GetCount(fLastCount, iCount);
-	ZStreamRPos_Filter::Imp_Read(iDest, realCount, &fLastCount);
+	ZStreamRPos_Filter::Imp_Read(oDest, realCount, &fLastCount);
 	if (oCountRead)
 		*oCountRead = fLastCount;
 	}

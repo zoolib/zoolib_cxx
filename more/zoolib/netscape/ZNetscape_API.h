@@ -29,6 +29,33 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * Standard integer types.
+
+// Much as it pains me, the standard npapi.h files do introduce global definitions
+// for int16, uint16, int32 and uint32, so we have to do the same.
+
+#ifndef _INT16
+	#define _INT16
+	using ZStdInt::int16;
+#endif
+
+#ifndef _UINT16
+	#define _UINT16
+	using ZStdInt::uint16;
+#endif
+
+#ifndef _INT32
+	#define _INT32
+	using ZStdInt::int32;
+#endif
+
+#ifndef _UINT32
+	#define _UINT32
+	using ZStdInt::uint32;
+#endif
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * NPAPI platform designation
 
 #if ZCONFIG_SPI_Enabled(Win)
@@ -108,9 +135,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark -
 #pragma mark * Basic data typedefs
 
-typedef uint8 NPBool;
-typedef int16 NPError;
-typedef int16 NPReason;
+typedef ZStdInt::uint8 NPBool;
+typedef ZStdInt::int16 NPError;
+typedef ZStdInt::int16 NPReason;
 typedef char* NPMIMEType;
 
 // =================================================================================================
@@ -119,8 +146,8 @@ typedef char* NPMIMEType;
 
 typedef struct _NPP
 	{
-    void* pdata;
-    void* ndata;
+	void* pdata;
+	void* ndata;
 	} NPP_t;
 
 typedef NPP_t* NPP;
@@ -131,13 +158,13 @@ typedef NPP_t* NPP;
 
 typedef struct _NPStream
 	{
-    void* pdata;
-    void* ndata;
-    const char* url;
-    uint32 end;
-    uint32 lastmodified;
-    void* notifyData;
-    const char* headers;
+	void* pdata;
+	void* ndata;
+	const char* url;
+	ZStdInt::uint32 end;
+	uint32 lastmodified;
+	void* notifyData;
+	const char* headers;
 	} NPStream;
 
 // =================================================================================================
@@ -146,9 +173,9 @@ typedef struct _NPStream
 
 typedef struct _NPByteRange
 	{
-    int32 offset;
-    uint32 length;
-    struct _NPByteRange* next;
+	int32 offset;
+	uint32 length;
+	struct _NPByteRange* next;
 	} NPByteRange;
 
 // =================================================================================================
@@ -157,8 +184,8 @@ typedef struct _NPByteRange
 
 typedef struct _NPSavedData
 	{
-    int32 len;
-    void* buf;
+	int32 len;
+	void* buf;
 	} NPSavedData;
 
 // =================================================================================================
@@ -167,10 +194,10 @@ typedef struct _NPSavedData
 
 typedef struct _NPRect
 	{
-    uint16 top;
-    uint16 left;
-    uint16 bottom;
-    uint16 right;
+	uint16 top;
+	uint16 left;
+	uint16 bottom;
+	uint16 right;
 	} NPRect;
 
 // =================================================================================================
@@ -180,28 +207,28 @@ typedef struct _NPRect
 #if defined(XP_UNIX)
 enum
 	{
-    NP_SETWINDOW = 1,
-    NP_PRINT
+	NP_SETWINDOW = 1,
+	NP_PRINT
 	};
 
 typedef struct
 	{
-    int32 type;
+	int32 type;
 	} NPAnyCallbackStruct;
 
 typedef struct
 	{
-    int32 type;
-    Display* display;
-    Visual* visual;
-    Colormap colormap;
-    unsigned int depth;
+	int32 type;
+	Display* display;
+	Visual* visual;
+	Colormap colormap;
+	unsigned int depth;
 	} NPSetWindowCallbackStruct;
 
 typedef struct
 	{
-    int32 type;
-    FILE* fp;
+	int32 type;
+	FILE* fp;
 	} NPPrintCallbackStruct;
 #endif // XP_UNIX
 
@@ -213,65 +240,65 @@ typedef struct
 
 typedef enum
 	{
-    NPPVpluginNameString = 1,
-    NPPVpluginDescriptionString = 2,
-    NPPVpluginWindowBool = 3,
-    NPPVpluginTransparentBool = 4,
-    NPPVjavaClass = 5,
-    NPPVpluginWindowSize = 6,
-    NPPVpluginTimerInterval = 7,
-    NPPVpluginScriptableInstance = (10 | NP_ABI_MASK),
-    NPPVpluginScriptableIID = 11,
-    NPPVjavascriptPushCallerBool = 12,
-    NPPVpluginKeepLibraryInMemory = 13,
-    NPPVpluginNeedsXEmbed = 14,
-    NPPVpluginScriptableNPObject = 15,
-    NPPVformValue = 16,
-    NPPVpluginUrlRequestsDisplayedBool = 17,
-    NPPVpluginWantsAllNetworkStreams = 18
+	NPPVpluginNameString = 1,
+	NPPVpluginDescriptionString = 2,
+	NPPVpluginWindowBool = 3,
+	NPPVpluginTransparentBool = 4,
+	NPPVjavaClass = 5,
+	NPPVpluginWindowSize = 6,
+	NPPVpluginTimerInterval = 7,
+	NPPVpluginScriptableInstance = (10 | NP_ABI_MASK),
+	NPPVpluginScriptableIID = 11,
+	NPPVjavascriptPushCallerBool = 12,
+	NPPVpluginKeepLibraryInMemory = 13,
+	NPPVpluginNeedsXEmbed = 14,
+	NPPVpluginScriptableNPObject = 15,
+	NPPVformValue = 16,
+	NPPVpluginUrlRequestsDisplayedBool = 17,
+	NPPVpluginWantsAllNetworkStreams = 18
 
 	#if defined(XP_MACOSX)
-	    , NPPVpluginDrawingModel = 1000
-	    , NPPVpluginEventModel = 1001
-	    , NPPVpluginTextInputFuncs = 1002
+		, NPPVpluginDrawingModel = 1000
+		, NPPVpluginEventModel = 1001
+		, NPPVpluginTextInputFuncs = 1002
 	#endif
 	} NPPVariable;
 
 typedef enum
 	{
-    NPNVxDisplay = 1,
-    NPNVxtAppContext = 2,
-    NPNVnetscapeWindow = 3,
-    NPNVjavascriptEnabledBool = 4,
-    NPNVasdEnabledBool = 5,
-    NPNVisOfflineBool = 6,
+	NPNVxDisplay = 1,
+	NPNVxtAppContext = 2,
+	NPNVnetscapeWindow = 3,
+	NPNVjavascriptEnabledBool = 4,
+	NPNVasdEnabledBool = 5,
+	NPNVisOfflineBool = 6,
 
-    NPNVserviceManager = (10 | NP_ABI_MASK),
-    NPNVDOMElement = (11 | NP_ABI_MASK),
-    NPNVDOMWindow = (12 | NP_ABI_MASK),
-    NPNVToolkit = (13 | NP_ABI_MASK),
-    NPNVSupportsXEmbedBool = 14,
+	NPNVserviceManager = (10 | NP_ABI_MASK),
+	NPNVDOMElement = (11 | NP_ABI_MASK),
+	NPNVDOMWindow = (12 | NP_ABI_MASK),
+	NPNVToolkit = (13 | NP_ABI_MASK),
+	NPNVSupportsXEmbedBool = 14,
 
-    NPNVWindowNPObject = 15,
-    NPNVPluginElementNPObject = 16,
-    NPNVSupportsWindowless = 17
+	NPNVWindowNPObject = 15,
+	NPNVPluginElementNPObject = 16,
+	NPNVSupportsWindowless = 17
 
 	#if defined(XP_MACOSX)
-    	, NPNVpluginDrawingModel = 1000
+		, NPNVpluginDrawingModel = 1000
 
 		#ifndef NP_NO_QUICKDRAW
-		    , NPNVsupportsQuickDrawBool = 2000
+			, NPNVsupportsQuickDrawBool = 2000
 		#endif
 
-	    , NPNVsupportsCoreGraphicsBool = 2001
-	    , NPNVsupportsOpenGLBool = 2002
+		, NPNVsupportsCoreGraphicsBool = 2001
+		, NPNVsupportsOpenGLBool = 2002
 
 		#ifndef NP_NO_CARBON
-		    , NPNVsupportsCarbonBool = 2003
+			, NPNVsupportsCarbonBool = 2003
 		#endif
 
-	    , NPNVsupportsCocoaBool = 2004	    
-	    , NPNVbrowserTextInputFuncs = 1002
+		, NPNVsupportsCocoaBool = 2004		
+		, NPNVbrowserTextInputFuncs = 1002
 	#endif
 	} NPNVariable;
 
@@ -281,8 +308,8 @@ typedef enum
 
 typedef enum
 	{
-    NPWindowTypeWindow = 1,
-    NPWindowTypeDrawable
+	NPWindowTypeWindow = 1,
+	NPWindowTypeDrawable
 	} NPWindowType;
 
 // =================================================================================================
@@ -293,10 +320,10 @@ typedef enum
 	typedef enum
 		{
 		#ifndef NP_NO_QUICKDRAW
-	    	NPDrawingModelQuickDraw = 0,
+			NPDrawingModelQuickDraw = 0,
 		#endif
-	    NPDrawingModelCoreGraphics = 1,
-	    NPDrawingModelOpenGL = 2
+		NPDrawingModelCoreGraphics = 1,
+		NPDrawingModelOpenGL = 2
 		} NPDrawingModel;
 #endif
 
@@ -309,26 +336,26 @@ typedef enum
 	typedef enum
 		{
 		#ifndef NP_NO_CARBON
-		    NPEventModelCarbon = 0,
+			NPEventModelCarbon = 0,
 		#endif
-	    NPEventModelCocoa = 1,
+		NPEventModelCocoa = 1,
 		} NPEventModel;
 
 	typedef enum
 		{
-	    NPCocoaEventDrawRect = 1,
-	    NPCocoaEventMouseDown,
-	    NPCocoaEventMouseUp,
-	    NPCocoaEventMouseMoved,
-	    NPCocoaEventMouseEntered,
-	    NPCocoaEventMouseExited,
-	    NPCocoaEventMouseDragged,
-	    NPCocoaEventKeyDown,
-	    NPCocoaEventKeyUp,
-	    NPCocoaEventFlagsChanged,
-	    NPCocoaEventFocusChanged,
-	    NPCocoaEventWindowFocusChanged,
-	    NPCocoaEventScrollWheel,
+		NPCocoaEventDrawRect = 1,
+		NPCocoaEventMouseDown,
+		NPCocoaEventMouseUp,
+		NPCocoaEventMouseMoved,
+		NPCocoaEventMouseEntered,
+		NPCocoaEventMouseExited,
+		NPCocoaEventMouseDragged,
+		NPCocoaEventKeyDown,
+		NPCocoaEventKeyUp,
+		NPCocoaEventFlagsChanged,
+		NPCocoaEventFocusChanged,
+		NPCocoaEventWindowFocusChanged,
+		NPCocoaEventScrollWheel,
 		} NPCocoaEventType;
 
 	typedef struct _NPNSString NPNSString;
@@ -337,42 +364,42 @@ typedef enum
 
 	typedef struct _NPCocoaEvent
 		{
-	    NPCocoaEventType type;
-	    uint32 version;
-	    
-	    union
-	    	{
-	        struct
-	        	{
-	            uint32 modifierFlags;
-	            double pluginX;
-	            double pluginY;            
-	            int32 buttonNumber;
-	            int32 clickCount;
-	            double deltaX;
-	            double deltaY;
-	            double deltaZ;
-		        } mouse;
-	        struct
-	        	{
-	            uint32 modifierFlags;
-	            NPNSString *characters;
-	            NPNSString *charactersIgnoringModifiers;
-	            NPBool isARepeat;
-	            uint16 keyCode;
-		        } key;
-	        struct
-	        	{
-	            double x;
-	            double y;
-	            double width;
-	            double height;
-		        } draw;
-	        struct
-	        	{
-	            NPBool hasFocus;
-		        } focus;        
-		    } data;
+		NPCocoaEventType type;
+		uint32 version;
+		
+		union
+			{
+			struct
+				{
+				uint32 modifierFlags;
+				double pluginX;
+				double pluginY;			
+				int32 buttonNumber;
+				int32 clickCount;
+				double deltaX;
+				double deltaY;
+				double deltaZ;
+				} mouse;
+			struct
+				{
+				uint32 modifierFlags;
+				NPNSString *characters;
+				NPNSString *charactersIgnoringModifiers;
+				NPBool isARepeat;
+				uint16 keyCode;
+				} key;
+			struct
+				{
+				double x;
+				double y;
+				double width;
+				double height;
+				} draw;
+			struct
+				{
+				NPBool hasFocus;
+				} focus;		
+			} data;
 		} NPCocoaEvent;
 #endif
 
@@ -382,16 +409,16 @@ typedef enum
 
 typedef struct _NPWindow
 	{
-    void* window;
-    int32 x;
-    int32 y;
-    uint32 width;
-    uint32 height;
-    NPRect clipRect;
+	void* window;
+	int32 x;
+	int32 y;
+	uint32 width;
+	uint32 height;
+	NPRect clipRect;
 	#if defined(XP_UNIX)
-	    void* ws_info;
+		void* ws_info;
 	#endif
-    NPWindowType type;
+	NPWindowType type;
 	} NPWindow;
 
 // =================================================================================================
@@ -400,25 +427,25 @@ typedef struct _NPWindow
 
 typedef struct _NPFullPrint
 	{
-    NPBool pluginPrinted;
-    NPBool printOne;
-    void* platformPrint;
+	NPBool pluginPrinted;
+	NPBool printOne;
+	void* platformPrint;
 	} NPFullPrint;
 
 typedef struct _NPEmbedPrint
 	{
-    NPWindow window;
-    void* platformPrint;
+	NPWindow window;
+	void* platformPrint;
 	} NPEmbedPrint;
 
 typedef struct _NPPrint
 	{
-    uint16 mode;
-    union
-	    {
-        NPFullPrint fullPrint;
-        NPEmbedPrint embedPrint;
-    	} print;
+	uint16 mode;
+	union
+		{
+		NPFullPrint fullPrint;
+		NPEmbedPrint embedPrint;
+		} print;
 	} NPPrint;
 
 // =================================================================================================
@@ -445,9 +472,9 @@ typedef struct _NPPrint
 
 	typedef struct _NPEvent
 		{
-	    uint16   event;
-	    uint32   wParam;
-	    uint32   lParam;
+		uint16   event;
+		uint32   wParam;
+		uint32   lParam;
 		} NPEvent;
 
 #elif defined(XP_UNIX)
@@ -500,22 +527,22 @@ typedef struct _NPPrint
 
 	typedef struct NP_CGContext
 		{
-	    CGContextRef context;
+		CGContextRef context;
 		#if defined(NP_NO_CARBON)
-	    	NPNSWindow* window;
+			NPNSWindow* window;
 		#else
-	    	void* window;
+			void* window;
 		#endif
 		} NP_CGContext;
 
 
 	typedef struct NP_GLContext
 		{
-	    CGLContextObj context;
+		CGLContextObj context;
 		#if defined(NP_NO_CARBON)
-		    NPNSWindow* window;
+			NPNSWindow* window;
 		#else
-		    void* window;
+			void* window;
 		#endif
 		} NP_GLContext;
 
@@ -527,9 +554,9 @@ typedef struct _NPPrint
 	#ifndef NP_NO_QUICKDRAW
 		typedef struct NP_Port
 			{
-		    CGrafPtr port;
-		    int32 portx;
-		    int32 porty;
+			CGrafPtr port;
+			int32 portx;
+			int32 porty;
 			} NP_Port;
 	#endif
 
@@ -562,7 +589,7 @@ typedef struct _NPPrint
 #define NP_ASFILE 3
 #define NP_ASFILEONLY 4
 
-#define NP_MAXREADY    (((unsigned)(~0)<<1)>>1)
+#define NP_MAXREADY	(((unsigned)(~0)<<1)>>1)
 
 // =================================================================================================
 #pragma mark -
@@ -622,32 +649,32 @@ typedef struct NPClass NPClass;
 typedef char NPUTF8;
 typedef struct _NPString
 	{
-    const NPUTF8* utf8characters;
-    uint32_t utf8length;
+	const NPUTF8* utf8characters;
+	uint32_t utf8length;
 	} NPString;
   
 typedef enum
 	{
-    NPVariantType_Void,
-    NPVariantType_Null,
-    NPVariantType_Bool,
-    NPVariantType_Int32,
-    NPVariantType_Double,
-    NPVariantType_String,
-    NPVariantType_Object
+	NPVariantType_Void,
+	NPVariantType_Null,
+	NPVariantType_Bool,
+	NPVariantType_Int32,
+	NPVariantType_Double,
+	NPVariantType_String,
+	NPVariantType_Object
 	} NPVariantType;
 
 typedef struct _NPVariant
 	{
-    NPVariantType type;
-    union
-    	{
-        bool boolValue;
-        int32_t intValue;
-        double doubleValue;
-        NPString stringValue;
-        NPObject *objectValue;
-	    } value;
+	NPVariantType type;
+	union
+		{
+		bool boolValue;
+		int32_t intValue;
+		double doubleValue;
+		NPString stringValue;
+		NPObject *objectValue;
+		} value;
 	} NPVariant;
 
 typedef void *NPIdentifier;
@@ -657,9 +684,9 @@ typedef void (*NPDeallocateFunctionPtr)(NPObject *obj);
 typedef void (*NPInvalidateFunctionPtr)(NPObject *obj);
 typedef bool (*NPHasMethodFunctionPtr)(NPObject *obj, NPIdentifier name);
 typedef bool (*NPInvokeFunctionPtr)
-	(NPObject *obj, NPIdentifier name, const NPVariant *args, uint32_t argCount, NPVariant *result);
+	(NPObject *obj, NPIdentifier name, const NPVariant *args, unsigned argCount, NPVariant *result);
 typedef bool (*NPInvokeDefaultFunctionPtr)
-	(NPObject *npobj, const NPVariant *args, uint32_t argCount, NPVariant *result);
+	(NPObject *npobj, const NPVariant *args, unsigned argCount, NPVariant *result);
 typedef bool (*NPHasPropertyFunctionPtr)(NPObject *obj, NPIdentifier name);
 typedef bool (*NPGetPropertyFunctionPtr)(NPObject *obj, NPIdentifier name, NPVariant *result);
 typedef bool (*NPSetPropertyFunctionPtr)(NPObject *obj, NPIdentifier name, const NPVariant *value);
@@ -668,26 +695,26 @@ typedef bool (*NPEnumerationFunctionPtr)(NPObject *npobj, NPIdentifier **value, 
 
 struct NPClass
 	{
-    uint32_t structVersion;
-    NPAllocateFunctionPtr allocate;
-    NPDeallocateFunctionPtr deallocate;
-    NPInvalidateFunctionPtr invalidate;
-    NPHasMethodFunctionPtr hasMethod;
-    NPInvokeFunctionPtr invoke;
-    NPInvokeDefaultFunctionPtr invokeDefault;
-    NPHasPropertyFunctionPtr hasProperty;
-    NPGetPropertyFunctionPtr getProperty;
-    NPSetPropertyFunctionPtr setProperty;
-    NPRemovePropertyFunctionPtr removeProperty;
-    NPEnumerationFunctionPtr enumerate;
+	uint32_t structVersion;
+	NPAllocateFunctionPtr allocate;
+	NPDeallocateFunctionPtr deallocate;
+	NPInvalidateFunctionPtr invalidate;
+	NPHasMethodFunctionPtr hasMethod;
+	NPInvokeFunctionPtr invoke;
+	NPInvokeDefaultFunctionPtr invokeDefault;
+	NPHasPropertyFunctionPtr hasProperty;
+	NPGetPropertyFunctionPtr getProperty;
+	NPSetPropertyFunctionPtr setProperty;
+	NPRemovePropertyFunctionPtr removeProperty;
+	NPEnumerationFunctionPtr enumerate;
 	};
 
 #define NP_CLASS_STRUCT_VERSION 2
 
 struct NPObject
 	{
-    NPClass *_class;
-    uint32_t referenceCount;
+	NPClass *_class;
+	uint32_t referenceCount;
 	};
 
 // =================================================================================================
@@ -784,58 +811,58 @@ ZMacCFM_DefineProc0(void*, NPP_GetJavaClassProcPtr);
 
 typedef struct _NPNetscapeFuncs
 	{
-    uint16 size;
-    uint16 version;
-    
-    NPN_GetURLProcPtr geturl;
-    NPN_PostURLProcPtr posturl;
-    NPN_RequestReadProcPtr requestread;
-    NPN_NewStreamProcPtr newstream;
-    NPN_WriteProcPtr write;
-    NPN_DestroyStreamProcPtr destroystream;
-    NPN_StatusProcPtr status;
-    NPN_UserAgentProcPtr uagent;
-    NPN_MemAllocProcPtr memalloc;
-    NPN_MemFreeProcPtr memfree;
-    NPN_MemFlushProcPtr memflush;
-    NPN_ReloadPluginsProcPtr reloadplugins;
-    NPN_GetJavaEnvProcPtr getJavaEnv;
-    NPN_GetJavaPeerProcPtr getJavaPeer;
-    NPN_GetURLNotifyProcPtr geturlnotify;
-    NPN_PostURLNotifyProcPtr posturlnotify;
-    NPN_GetValueProcPtr getvalue;
-    NPN_SetValueProcPtr setvalue;
-    NPN_InvalidateRectProcPtr invalidaterect;
-    NPN_InvalidateRegionProcPtr invalidateregion;
-    NPN_ForceRedrawProcPtr forceredraw;
-    
-    NPN_GetStringIdentifierProcPtr getstringidentifier;
-    NPN_GetStringIdentifiersProcPtr getstringidentifiers;
-    NPN_GetIntIdentifierProcPtr getintidentifier;
-    NPN_IdentifierIsStringProcPtr identifierisstring;
-    NPN_UTF8FromIdentifierProcPtr utf8fromidentifier;
-    NPN_IntFromIdentifierProcPtr intfromidentifier;
-    NPN_CreateObjectProcPtr createobject;
-    NPN_RetainObjectProcPtr retainobject;
-    NPN_ReleaseObjectProcPtr releaseobject;
-    NPN_InvokeProcPtr invoke;
-    NPN_InvokeDefaultProcPtr invokeDefault;
-    NPN_EvaluateProcPtr evaluate;
-    NPN_GetPropertyProcPtr getproperty;
-    NPN_SetPropertyProcPtr setproperty;
-    NPN_RemovePropertyProcPtr removeproperty;
-    NPN_HasPropertyProcPtr hasproperty;
-    NPN_HasMethodProcPtr hasmethod;
-    NPN_ReleaseVariantValueProcPtr releasevariantvalue;
-    NPN_SetExceptionProcPtr setexception;
-    NPN_PushPopupsEnabledStateProcPtr pushpopupsenabledstate;
-    NPN_PopPopupsEnabledStateProcPtr poppopupsenabledstate;
-    NPN_EnumerateProcPtr enumerate;
-    NPN_PluginThreadAsyncCallProcPtr pluginthreadasynccall;
-    NPN_ConstructProcPtr construct;
-    NPN_ScheduleTimerProcPtr scheduletimer;
-    NPN_UnscheduleTimerProcPtr unscheduletimer;
-    NPN_PopUpContextMenuProcPtr popupcontextmenu;
+	uint16 size;
+	uint16 version;
+	
+	NPN_GetURLProcPtr geturl;
+	NPN_PostURLProcPtr posturl;
+	NPN_RequestReadProcPtr requestread;
+	NPN_NewStreamProcPtr newstream;
+	NPN_WriteProcPtr write;
+	NPN_DestroyStreamProcPtr destroystream;
+	NPN_StatusProcPtr status;
+	NPN_UserAgentProcPtr uagent;
+	NPN_MemAllocProcPtr memalloc;
+	NPN_MemFreeProcPtr memfree;
+	NPN_MemFlushProcPtr memflush;
+	NPN_ReloadPluginsProcPtr reloadplugins;
+	NPN_GetJavaEnvProcPtr getJavaEnv;
+	NPN_GetJavaPeerProcPtr getJavaPeer;
+	NPN_GetURLNotifyProcPtr geturlnotify;
+	NPN_PostURLNotifyProcPtr posturlnotify;
+	NPN_GetValueProcPtr getvalue;
+	NPN_SetValueProcPtr setvalue;
+	NPN_InvalidateRectProcPtr invalidaterect;
+	NPN_InvalidateRegionProcPtr invalidateregion;
+	NPN_ForceRedrawProcPtr forceredraw;
+	
+	NPN_GetStringIdentifierProcPtr getstringidentifier;
+	NPN_GetStringIdentifiersProcPtr getstringidentifiers;
+	NPN_GetIntIdentifierProcPtr getintidentifier;
+	NPN_IdentifierIsStringProcPtr identifierisstring;
+	NPN_UTF8FromIdentifierProcPtr utf8fromidentifier;
+	NPN_IntFromIdentifierProcPtr intfromidentifier;
+	NPN_CreateObjectProcPtr createobject;
+	NPN_RetainObjectProcPtr retainobject;
+	NPN_ReleaseObjectProcPtr releaseobject;
+	NPN_InvokeProcPtr invoke;
+	NPN_InvokeDefaultProcPtr invokeDefault;
+	NPN_EvaluateProcPtr evaluate;
+	NPN_GetPropertyProcPtr getproperty;
+	NPN_SetPropertyProcPtr setproperty;
+	NPN_RemovePropertyProcPtr removeproperty;
+	NPN_HasPropertyProcPtr hasproperty;
+	NPN_HasMethodProcPtr hasmethod;
+	NPN_ReleaseVariantValueProcPtr releasevariantvalue;
+	NPN_SetExceptionProcPtr setexception;
+	NPN_PushPopupsEnabledStateProcPtr pushpopupsenabledstate;
+	NPN_PopPopupsEnabledStateProcPtr poppopupsenabledstate;
+	NPN_EnumerateProcPtr enumerate;
+	NPN_PluginThreadAsyncCallProcPtr pluginthreadasynccall;
+	NPN_ConstructProcPtr construct;
+	NPN_ScheduleTimerProcPtr scheduletimer;
+	NPN_UnscheduleTimerProcPtr unscheduletimer;
+	NPN_PopUpContextMenuProcPtr popupcontextmenu;
 	} NPNetscapeFuncs;
 
 // =================================================================================================
@@ -844,22 +871,22 @@ typedef struct _NPNetscapeFuncs
 
 typedef struct _NPPluginFuncs
 	{
-    uint16 size;
-    uint16 version;
-    NPP_NewProcPtr newp;
-    NPP_DestroyProcPtr destroy;
-    NPP_SetWindowProcPtr setwindow;
-    NPP_NewStreamProcPtr newstream;
-    NPP_DestroyStreamProcPtr destroystream;
-    NPP_StreamAsFileProcPtr asfile;
-    NPP_WriteReadyProcPtr writeready;
-    NPP_WriteProcPtr write;
-    NPP_PrintProcPtr print;
-    NPP_HandleEventProcPtr event;
-    NPP_URLNotifyProcPtr urlnotify;
-    JRIGlobalRef javaClass;
-    NPP_GetValueProcPtr getvalue;
-    NPP_SetValueProcPtr setvalue;
+	uint16 size;
+	uint16 version;
+	NPP_NewProcPtr newp;
+	NPP_DestroyProcPtr destroy;
+	NPP_SetWindowProcPtr setwindow;
+	NPP_NewStreamProcPtr newstream;
+	NPP_DestroyStreamProcPtr destroystream;
+	NPP_StreamAsFileProcPtr asfile;
+	NPP_WriteReadyProcPtr writeready;
+	NPP_WriteProcPtr write;
+	NPP_PrintProcPtr print;
+	NPP_HandleEventProcPtr event;
+	NPP_URLNotifyProcPtr urlnotify;
+	JRIGlobalRef javaClass;
+	NPP_GetValueProcPtr getvalue;
+	NPP_SetValueProcPtr setvalue;
 	} NPPluginFuncs;
 
 // =================================================================================================
@@ -880,7 +907,7 @@ typedef struct _NPPluginFuncs
 
 
 typedef ZNetscape_API_EXPORTED_CALLBACK(NPError, NP_GetEntryPointsFuncPtr)(NPPluginFuncs*);
-typedef ZNetscape_API_EXPORTED_CALLBACK(void, NPP_ShutdownProcPtr)(void);    
+typedef ZNetscape_API_EXPORTED_CALLBACK(void, NPP_ShutdownProcPtr)(void);	
  
 #if defined(XP_MACOSX)
 	typedef void (*BP_CreatePluginMIMETypesPreferencesFuncPtr)(void);

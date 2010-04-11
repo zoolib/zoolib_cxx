@@ -317,12 +317,12 @@ string ZFileSpec::AsString_Native() const
 	return string();
 	}
 
-/// Return a ZTrail representing the steps to get from this file spec to \a iDest.
-ZTrail ZFileSpec::TrailTo(const ZFileSpec& iDest, ZFile::Error* oError) const
+/// Return a ZTrail representing the steps to get from this file spec to \a oDest.
+ZTrail ZFileSpec::TrailTo(const ZFileSpec& oDest, ZFile::Error* oError) const
 	{
 	if (ZRef<ZFileLoc> myRealLoc = this->pPhysicalLoc())
 		{
-		if (ZRef<ZFileLoc> destRealLoc = iDest.pPhysicalLoc())
+		if (ZRef<ZFileLoc> destRealLoc = oDest.pPhysicalLoc())
 			return myRealLoc->TrailTo(destRealLoc, oError);
 		}
 
@@ -499,14 +499,14 @@ ZFileSpec ZFileSpec::CreateDir(ZFile::Error* oError) const
 	}
 
 /** \brief Move the entity in the file system referenced by
-the file spec to the location referenced by \a iDest. */
-ZFileSpec ZFileSpec::MoveTo(const ZFileSpec& iDest, ZFile::Error* oError) const
+the file spec to the location referenced by \a oDest. */
+ZFileSpec ZFileSpec::MoveTo(const ZFileSpec& oDest, ZFile::Error* oError) const
 	{
-	if (fLoc && iDest.fLoc)
+	if (fLoc && oDest.fLoc)
 		{
 		if (ZRef<ZFileLoc> myRealLoc = this->pPhysicalLoc())
 			{
-			if (ZRef<ZFileLoc> destRealLoc = iDest.pPhysicalLoc())
+			if (ZRef<ZFileLoc> destRealLoc = oDest.pPhysicalLoc())
 				return myRealLoc->MoveTo(destRealLoc, oError);
 			}
 		if (oError)
@@ -1073,10 +1073,10 @@ ZStreamRPos_FileR::ZStreamRPos_FileR(ZRef<ZFileR> iFile)
 ZStreamRPos_FileR::~ZStreamRPos_FileR()
 	{}
 
-void ZStreamRPos_FileR::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRPos_FileR::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	size_t countRead;
-	if (ZFile::errorNone == fFile->ReadAt(fPosition, iDest, iCount, &countRead))
+	if (ZFile::errorNone == fFile->ReadAt(fPosition, oDest, iCount, &countRead))
 		{
 		fPosition += countRead;
 		if (oCountRead)
@@ -1196,10 +1196,10 @@ ZStreamRWPos_FileRW::ZStreamRWPos_FileRW(ZRef<ZFileRW> iFile)
 ZStreamRWPos_FileRW::~ZStreamRWPos_FileRW()
 	{}
 
-void ZStreamRWPos_FileRW::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRWPos_FileRW::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	size_t countRead;
-	if (ZFile::errorNone == fFile->ReadAt(fPosition, iDest, iCount, &countRead))
+	if (ZFile::errorNone == fFile->ReadAt(fPosition, oDest, iCount, &countRead))
 		{
 		fPosition += countRead;
 		if (oCountRead)
@@ -1273,11 +1273,11 @@ ZFileR_StreamerRPos::ZFileR_StreamerRPos(ZRef<ZStreamerRPos> iStreamer)
 	{}
 
 ZFile::Error ZFileR_StreamerRPos::ReadAt(
-	uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
+	uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	fMutex.Acquire();
 	fStream.SetPosition(iOffset);
-	fStream.Read(iDest, iCount, oCountRead);
+	fStream.Read(oDest, iCount, oCountRead);
 	fMutex.Release();
 	return ZFile::errorNone;
 	}
@@ -1351,11 +1351,11 @@ ZFileRW_StreamerRWPos::ZFileRW_StreamerRWPos(ZRef<ZStreamerRWPos> iStreamer)
 	{}
 
 ZFile::Error ZFileRW_StreamerRWPos::ReadAt(
-	uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead)
+	uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	fMutex.Acquire();
 	fStream.SetPosition(iOffset);
-	fStream.Read(iDest, iCount, oCountRead);
+	fStream.Read(oDest, iCount, oCountRead);
 	fMutex.Release();
 	return ZFile::errorNone;
 	}

@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVisitor_Expr_Logic_DoTransform.h"
 #include "zoolib/tql/ZTQL_Optimize.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Binary_Union.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Unary_Restrict.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
 #include "zoolib/zql/ZQL_Visitor_Expr_Rel_Binary_DoTransform.h"
@@ -159,12 +160,20 @@ ZRef<Expr_Rel> spConvertSelect(
 
 class Optimize
 :	public virtual Visitor_Expr_Rel_Binary_DoTransform
+,	public virtual Visitor_Expr_Rel_Concrete
 ,	public virtual Visitor_Expr_Rel_Unary_DoTransform
+,	public virtual Visitor_Expr_Rel_Unary_Select
 	{
 public:
+// From Visitor_Expr_Rel_Concrete
+	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iRep);
+
 // From Visitor_Expr_Rel_Unary_Select
 	virtual void Visit_Expr_Rel_Unary_Select(ZRef<Expr_Rel_Unary_Select> iRep);
 	};
+
+void Optimize::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iRep)
+	{ fResult = iRep; }
 
 void Optimize::Visit_Expr_Rel_Unary_Select(ZRef<Expr_Rel_Unary_Select> iRep)
 	{

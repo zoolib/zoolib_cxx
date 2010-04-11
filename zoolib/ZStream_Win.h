@@ -45,7 +45,7 @@ public:
 	~ZStreamRPos_Win_MultiResource();
 
 // From ZStreamR via ZStreamRPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 // From ZStreamRPos

@@ -38,10 +38,10 @@ ZStrimR_Limited::ZStrimR_Limited(size_t iLimitCP, const ZStrimR& iSource)
 	fSource(iSource)
 	{}
 
-void ZStrimR_Limited::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimR_Limited::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	size_t countRead;
-	fSource.Read(iDest, min(fRemainingCP, iCount), &countRead);
+	fSource.Read(oDest, min(fRemainingCP, iCount), &countRead);
 	fRemainingCP -= countRead;
 	if (oCount)
 		*oCount = countRead;

@@ -740,11 +740,11 @@ struct Imp_Read_t
 	size_t* fCountRead;
 	};
 
-void ZNetEndpoint_TCP_MacOT_OSX::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZNetEndpoint_TCP_MacOT_OSX::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	Imp_Read_t theStruct;
 	theStruct.fEndpointRef = fEndpointRef;
-	theStruct.fDest = iDest;
+	theStruct.fDest = oDest;
 	theStruct.fCount = iCount;
 	theStruct.fCountRead = oCountRead;
 	ZMacMP::sInvokeInMP(sMP_Imp_Read, &theStruct);

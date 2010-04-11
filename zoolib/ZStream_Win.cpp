@@ -121,9 +121,9 @@ ZStreamRPos_Win_MultiResource::~ZStreamRPos_Win_MultiResource()
 		::FreeResource(fHGLOBAL_Current);
 	}
 
-void ZStreamRPos_Win_MultiResource::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRPos_Win_MultiResource::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	char* localDest = reinterpret_cast<char*>(iDest);
+	char* localDest = reinterpret_cast<char*>(oDest);
 	while (iCount)
 		{
 		vector<size_t>::iterator theIter =
@@ -158,7 +158,7 @@ void ZStreamRPos_Win_MultiResource::Imp_Read(void* iDest, size_t iCount, size_t*
 		iCount -= countToMove;
 		}
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<char*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<char*>(oDest);
 	}
 
 void ZStreamRPos_Win_MultiResource::Imp_Skip(uint64 iCount, uint64* oCountSkipped)

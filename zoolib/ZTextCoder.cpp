@@ -487,7 +487,7 @@ ZTextDecoder* ZTextDecoder::sMake(const std::string& iCharset)
 /**
 \fn bool ZTextDecoder::Decode( \
 const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped, \
-UTF32* iDest, size_t iDestCU, size_t* oDestCU)
+UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 
 \brief Decode UTF-32 text, reading the encoded form from a buffer in memory.
 
@@ -501,9 +501,9 @@ particularly when handling source buffers that contain valid but incomplete data
 \param oSourceBytesSkipped (optional output) The number of bytes of encoded data that were
 				illegal or malformed in some fashion, were ignored and so did not contribute
 				to any generated UTF-32 code units.
-\param iDest Points to the start of the buffer into which UTF-32 is to be placed.
+\param oDest Points to the start of the buffer into which UTF-32 is to be placed.
 \param iDestCU The maximum number of UTF-32 code units to be generated. It's the size
-				of the buffer referenced by \a iDest.
+				of the buffer referenced by \a oDest.
 \param oDestCU (optional output) The number of UTF-32 code units that were generated. This
 				will also be the number of Unicode code points, provided that your decoder does
 				not generate illegal UTF-32 code units.
@@ -532,18 +532,18 @@ in order to generate a certain quantity of output. The default implementation of
 ZTextDecoder::Decode has to nibble away at the stream in order not to over-read it.
 
 \param iStreamR The stream from which encoded data is to be read.
-\param iDest Points to the start of the buffer into which UTF-32 is to be placed.
+\param oDest Points to the start of the buffer into which UTF-32 is to be placed.
 \param iDestCU The maximum number of UTF-32 code units to be generated. It's the size
-				of the buffer referenced by \a iDest.
+				of the buffer referenced by \a oDest.
 \param oDestCU (optional output) The number of UTF-32 code units that were generated. This
 				will also be the number of Unicode code points, provided that your decoder does
 				not generate illegal UTF-32 code units.
 */
-void ZTextDecoder::Decode(const ZStreamR& iStreamR, UTF32* iDest, size_t iDestCU, size_t* oDestCU)
+void ZTextDecoder::Decode(const ZStreamR& iStreamR, UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	uint8 buffer[kBufSize];
 
-	UTF32* localDest = iDest;
+	UTF32* localDest = oDest;
 	size_t bufferUsed = 0;
 	while (iDestCU)
 		{
@@ -579,7 +579,7 @@ void ZTextDecoder::Decode(const ZStreamR& iStreamR, UTF32* iDest, size_t iDestCU
 		}
 
 	if (oDestCU)
-		*oDestCU = localDest - iDest;
+		*oDestCU = localDest - oDest;
 	}
 
 /** \brief Decode a single UTF-32 codepoint from a ZStreamR.
@@ -631,16 +631,16 @@ ZTextEncoder* ZTextEncoder::sMake(const std::string& iCharset)
 
 /**
 \fn void ZTextEncoder::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU, \
-void* iDest, size_t iDestBytes, size_t* oDestBytes)
+void* oDest, size_t iDestBytes, size_t* oDestBytes)
 
 \brief Encode UTF-32 text, writing the encoded form to a buffer in memory.
 
 \param iSource Points to the start of UTF-32 text to be encoded.
 \param iSourceCU The number UTF-32 code units that are available to be encoded.
 \param oSourceCU (optional output) The number of UTF-32 code units that were consumed.
-\param iDest Points to the start of the buffer into which the encoded data is to be placed.
+\param oDest Points to the start of the buffer into which the encoded data is to be placed.
 \param iDestBytes The maximum number bytes of encoded data to be generated. It's the size
-				of the buffer referenced by \a iDest.
+				of the buffer referenced by \a oDest.
 \param oDestBytes (optional output) The number of bytes of encoded data that were generated.
 
 It's entirely legal for an encoder to consume UTF-32 without generating any encoded data. If

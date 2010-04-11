@@ -72,9 +72,9 @@ ZStreamR_LZWEncodeNoPatent::ZStreamR_LZWEncodeNoPatent(
 ZStreamR_LZWEncodeNoPatent::~ZStreamR_LZWEncodeNoPatent()
 	{}
 
-void ZStreamR_LZWEncodeNoPatent::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_LZWEncodeNoPatent::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	while (!fFinished && iCount)
 		{
 		size_t countRead;
@@ -108,7 +108,7 @@ void ZStreamR_LZWEncodeNoPatent::Imp_Read(void* iDest, size_t iCount, size_t* oC
 		iCount -= countRead;
 		}
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
 size_t ZStreamR_LZWEncodeNoPatent::Imp_CountReadable()
@@ -176,9 +176,9 @@ ZStreamR_LZWDecode::~ZStreamR_LZWDecode()
 	delete[] fSuffix;
 	}
 
-void ZStreamR_LZWDecode::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_LZWDecode::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	while (iCount)
 		{
 		if (fStackTop == fStackEnd)
@@ -247,7 +247,7 @@ void ZStreamR_LZWDecode::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead
 		iCount -= countToCopy;
 		}
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
 size_t ZStreamR_LZWDecode::Imp_CountReadable()

@@ -35,10 +35,10 @@ ZStrimU_Unreader::ZStrimU_Unreader(const ZStrimR& iStrimSource)
 :	fStrimSource(iStrimSource)
 	{}
 
-void ZStrimU_Unreader::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimU_Unreader::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
-	UTF32* localDest = iDest;
-	UTF32* localDestEnd = iDest + iCount;
+	UTF32* localDest = oDest;
+	UTF32* localDestEnd = oDest + iCount;
 	while (localDest < localDestEnd)
 		{
 		if (fStack.empty())
@@ -57,7 +57,7 @@ void ZStrimU_Unreader::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 		}
 
 	if (oCount)
-		*oCount = localDest - iDest;
+		*oCount = localDest - oDest;
 	}
 
 bool ZStrimU_Unreader::Imp_ReadCP(UTF32& oCP)

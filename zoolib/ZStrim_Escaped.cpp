@@ -37,12 +37,12 @@ ZStrimR_Escaped::ZStrimR_Escaped(const ZStrimU& iStrimSource, UTF32 iDelimiter)
 ZStrimR_Escaped::~ZStrimR_Escaped()
 	{}
 
-void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	using namespace ZUtil_Strim;
 
-	UTF32* localDest = iDest;
-	UTF32* localDestEnd = iDest + iCount;
+	UTF32* localDest = oDest;
+	UTF32* localDestEnd = oDest + iCount;
 	while (localDestEnd > localDest)
 		{
 		UTF32 theCP;
@@ -139,7 +139,7 @@ void ZStrimR_Escaped::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 		}
 
 	if (oCount)
-		*oCount = localDest - iDest;	
+		*oCount = localDest - oDest;	
 	}
 
 // =================================================================================================

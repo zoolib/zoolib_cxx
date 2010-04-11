@@ -113,9 +113,9 @@ ZFileFormat_QuickTime::StreamR_Chunk::~StreamR_Chunk()
 		}
 	}
 
-void ZFileFormat_QuickTime::StreamR_Chunk::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZFileFormat_QuickTime::StreamR_Chunk::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 
 	while (iCount && fCountRemaining)
 		{
@@ -129,7 +129,7 @@ void ZFileFormat_QuickTime::StreamR_Chunk::Imp_Read(void* iDest, size_t iCount, 
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
 size_t ZFileFormat_QuickTime::StreamR_Chunk::Imp_CountReadable()
@@ -211,9 +211,9 @@ ZFileFormat_QuickTime::StreamRPos_Chunk::~StreamRPos_Chunk()
 	}
 
 void ZFileFormat_QuickTime::StreamRPos_Chunk::Imp_Read(
-	void* iDest, size_t iCount, size_t* oCountRead)
+	void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	size_t countRemaining = ZStream::sClampedSize(iCount, fStart + fSize, fStream.GetPosition());
 	while (countRemaining)
 		{
@@ -226,7 +226,7 @@ void ZFileFormat_QuickTime::StreamRPos_Chunk::Imp_Read(
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
 void ZFileFormat_QuickTime::StreamRPos_Chunk::Imp_CopyToDispatch(

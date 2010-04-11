@@ -265,12 +265,12 @@ template <class I>
 inline bool sDecRead(I iStart, I& ioCurrent, I iEnd, UTF32& oCP)
 	{ return Functions_Read_T<I>::sDecRead(iStart, ioCurrent, iEnd, oCP); }
 
-/** If \a ICP is a valid code point then write it to \a iDest. If there is insufficient space
+/** If \a ICP is a valid code point then write it to \a oDest. If there is insufficient space
 to hold the code units then return false. Writing an invalid code point will return true,
 as invalid code points require zero code units to represent them. */
 template <class I>
-inline bool sWrite(I iDest, I iEnd, UTF32 iCP)
-	{ return Functions_Write_T<I>::sWrite(iDest, iEnd, iCP); }
+inline bool sWrite(I oDest, I iEnd, UTF32 iCP)
+	{ return Functions_Write_T<I>::sWrite(oDest, iEnd, iCP); }
 
 /** If \a ICP is a valid code point then write it to \a ioDest and advance \a ioDest
 appropriately. If there is insufficient space to hold the code units then return false.
@@ -391,20 +391,20 @@ inline string8 sAsUTF8(const string8& iString)
 void sUTF32ToUTF32(
 	const UTF32* iSource, size_t iSourceCount,
 	size_t* oSourceCount, size_t* oSourceCountSkipped,
-	UTF32* iDest, size_t iDestCount,
+	UTF32* oDest, size_t iDestCount,
 	size_t* oDestCount);
 
 void sUTF32ToUTF16(
 	const UTF32* iSource, size_t iSourceCount,
 	size_t* oSourceCount, size_t* oSourceCountSkipped,
-	UTF16* iDest, size_t iDestCU,
+	UTF16* oDest, size_t iDestCU,
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP);
 
 void sUTF32ToUTF8(
 	const UTF32* iSource, size_t iSourceCount,
 	size_t* oSourceCount, size_t* oSourceCountSkipped,
-	UTF8* iDest, size_t iDestCU,
+	UTF8* oDest, size_t iDestCU,
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP);
 
@@ -412,20 +412,20 @@ void sUTF32ToUTF8(
 bool sUTF16ToUTF32(
 	const UTF16* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
-	UTF32* iDest, size_t iDestCount,
+	UTF32* oDest, size_t iDestCount,
 	size_t* oDestCount);
 
 bool sUTF16ToUTF16(
 	const UTF16* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
-	UTF16* iDest, size_t iDestCU,
+	UTF16* oDest, size_t iDestCU,
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP);
 
 bool sUTF16ToUTF8(
 	const UTF16* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
-	UTF8* iDest, size_t iDestCU,
+	UTF8* oDest, size_t iDestCU,
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP);
 
@@ -433,20 +433,20 @@ bool sUTF16ToUTF8(
 bool sUTF8ToUTF32(
 	const UTF8* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
-	UTF32* iDest, size_t iDestCount,
+	UTF32* oDest, size_t iDestCount,
 	size_t* oDestCount);
 
 bool sUTF8ToUTF16(
 	const UTF8* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
-	UTF16* iDest, size_t iDestCU,
+	UTF16* oDest, size_t iDestCU,
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP);
 
 bool sUTF8ToUTF8(
 	const UTF8* iSource, size_t iSourceCU,
 	size_t* oSourceCU, size_t* oSourceCUSkipped,
-	UTF8* iDest, size_t iDestCU,
+	UTF8* oDest, size_t iDestCU,
 	size_t* oDestCU,
 	size_t iMaxCP, size_t* oCountCP);
 

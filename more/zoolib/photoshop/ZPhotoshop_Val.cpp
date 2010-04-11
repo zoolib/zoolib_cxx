@@ -672,7 +672,7 @@ void Spec::Entry::pCopyFrom(const Entry& iOther)
 			}
 		case formEnumerated:
 			{
-			sCopyConstruct_T<Enumerated>(iOther.fData.fBytes, fData.fBytes);
+			sCopyConstruct_T<Enumerated>(fData.fBytes, iOther.fData.fBytes);
 			break;
 			}
 		case formIdentifier:
@@ -687,7 +687,7 @@ void Spec::Entry::pCopyFrom(const Entry& iOther)
 			}
 		case formName:
 			{
-			sCopyConstruct_T<string8>(iOther.fData.fBytes, fData.fBytes);
+			sCopyConstruct_T<string8>(fData.fBytes, iOther.fData.fBytes);
 			break;
 			}
 		case formOffset:

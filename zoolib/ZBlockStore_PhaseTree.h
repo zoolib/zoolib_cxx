@@ -104,7 +104,7 @@ protected:
 	Slot* FindBlockSlotForWrite(BlockID iBlockID);
 
 	void ReadFromBlock(BlockID iBlockID, Slot*& ioBlockSlot,
-		uint64 iPosition, void* iDest, size_t iCount, size_t& oCountRead);
+		uint64 iPosition, void* oDest, size_t iCount, size_t& oCountRead);
 
 	void WriteToBlock(BlockID iBlockID, Slot*& ioBlockSlot,
 		uint64 iPosition, const void* iSource, size_t iCount, size_t& oCountWritten);

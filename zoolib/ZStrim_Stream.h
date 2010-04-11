@@ -42,7 +42,7 @@ public:
 	ZStrimR_StreamUTF32BE(const ZStreamR& iStreamR);
 
 // From ZStrimR
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
 private:
 	const ZStreamR& fStreamR;
@@ -60,7 +60,7 @@ public:
 	ZStrimR_StreamUTF32LE(const ZStreamR& iStreamR);
 
 // From ZStrimR
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
 private:
 	const ZStreamR& fStreamR;
@@ -78,7 +78,7 @@ public:
 	ZStrimR_StreamUTF16BE(const ZStreamR& iStreamR);
 
 // From ZStrimR
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
 private:
 	const ZStreamR& fStreamR;
@@ -96,7 +96,7 @@ public:
 	ZStrimR_StreamUTF16LE(const ZStreamR& iStreamR);
 
 // From ZStrimR
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
 private:
 	const ZStreamR& fStreamR;
@@ -114,10 +114,10 @@ public:
 	ZStrimR_StreamUTF8(const ZStreamR& iStreamR);
 
 // From ZStrimR
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
 	virtual void Imp_ReadUTF8(UTF8*
-		iDest, size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
+		oDest, size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
 private:
 	const ZStreamR& fStreamR;
@@ -233,7 +233,7 @@ public:
 	~ZStrimR_StreamDecoder();
 
 // From ZStrimR
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
 // Our protocol
 	void SetDecoder(ZTextDecoder* iDecoder);

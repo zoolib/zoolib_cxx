@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZCompat_algorithm.h"
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZStream.h"
 #include "zoolib/ZTextCoder.h"
 #include "zoolib/ZUnicode.h"
@@ -39,26 +40,26 @@ static const size_t kBufSize = sStackBufferSize;
 #pragma mark -
 #pragma mark * Static helpers
 
-static void spReadUTF32_UTF32(const ZStreamR& iStreamR, UTF32* iDest, size_t iCount, size_t* oCount)
-	{ iStreamR.Read(iDest, iCount, oCount); }
+static void spReadUTF32_UTF32(const ZStreamR& iStreamR, UTF32* oDest, size_t iCount, size_t* oCount)
+	{ iStreamR.Read(oDest, iCount, oCount); }
 
 static void spReadUTF32_UTF32Swap(const ZStreamR& iStreamR,
-	UTF32* iDest, size_t iCount, size_t* oCount)
+	UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	size_t countRead;
-	iStreamR.Read(iDest, iCount, &countRead);
+	iStreamR.Read(oDest, iCount, &countRead);
 	if (oCount)
 		*oCount = countRead;
 
 	while (countRead--)
 		{
-		*iDest = ZByteSwap_Read32(iDest);
-		++iDest;
+		*oDest = ZByteSwap_Read32(oDest);
+		++oDest;
 		}
 	}
 
 static void spReadUTF32_UTF16(const ZStreamR& iStreamR,
-	UTF32* iDest, const size_t iCount, size_t* oCount)
+	UTF32* oDest, const size_t iCount, size_t* oCount)
 	{
 	ZUnimplemented(); // Actually, just untested
 	UTF16 utf16Buffer[kBufSize];
@@ -74,18 +75,18 @@ static void spReadUTF32_UTF16(const ZStreamR& iStreamR,
 		ZUnicode::sUTF16ToUTF32(
 			utf16Buffer, utf16Read,
 			&utf16Consumed, nullptr,
-			iDest, localCount,
+			oDest, localCount,
 			&utf32Generated);
 
 		localCount -= utf32Generated;
-		iDest += utf32Generated;
+		oDest += utf32Generated;
 		}
 	if (oCount)
 		*oCount = iCount - localCount;
 	}
 
 static void spReadUTF32_UTF16Swap(const ZStreamR& iStreamR,
-	UTF32* iDest, const size_t iCount, size_t* oCount)
+	UTF32* oDest, const size_t iCount, size_t* oCount)
 	{
 	ZUnimplemented(); // Actually, just untested
 	UTF16 utf16Buffer[kBufSize];
@@ -108,21 +109,21 @@ static void spReadUTF32_UTF16Swap(const ZStreamR& iStreamR,
 		ZUnicode::sUTF16ToUTF32(
 			utf16Buffer, utf16Read,
 			&utf16Consumed, nullptr,
-			iDest, localCount,
+			oDest, localCount,
 			&utf32Generated);
 
 		localCount -= utf32Generated;
-		iDest += utf32Generated;
+		oDest += utf32Generated;
 		}
 	if (oCount)
 		*oCount = iCount - localCount;
 	}
 
 static void spReadUTF32_UTF8(const ZStreamR& iStreamR,
-	UTF32* iDest, const size_t iCount, size_t* oCount)
+	UTF32* oDest, const size_t iCount, size_t* oCount)
 	{
-	UTF32* localDest = iDest;
-	UTF32* localDestEnd = iDest + iCount;
+	UTF32* localDest = oDest;
+	UTF32* localDestEnd = oDest + iCount;
 	
 	uint8 curByte;
 	bool gotByte = false;
@@ -168,16 +169,16 @@ static void spReadUTF32_UTF8(const ZStreamR& iStreamR,
 			}
 		}
 	if (oCount)
-		*oCount = localDest - iDest;
+		*oCount = localDest - oDest;
 	}
 
-static void spReadUTF8_UTF8(const ZStreamR& iStreamR, UTF8* iDest,
+static void spReadUTF8_UTF8(const ZStreamR& iStreamR, UTF8* oDest,
 	const size_t iCountCU, size_t* oCountCU,
 	const size_t iCountCP, size_t* oCountCP)
 	{
 	size_t localCountCP = iCountCP;
-	UTF8* localDest = iDest;
-	UTF8* localDestEnd = iDest + iCountCU;
+	UTF8* localDest = oDest;
+	UTF8* localDestEnd = oDest + iCountCU;
 	
 	uint8 curByte;
 	bool gotByte = false;
@@ -233,7 +234,7 @@ static void spReadUTF8_UTF8(const ZStreamR& iStreamR, UTF8* iDest,
 	if (oCountCP)
 		*oCountCP = iCountCP - localCountCP;
 	if (oCountCU)
-		*oCountCU = localDest - iDest;
+		*oCountCU = localDest - oDest;
 	}
 
 // =================================================================================================
@@ -244,12 +245,12 @@ ZStrimR_StreamUTF32BE::ZStrimR_StreamUTF32BE(const ZStreamR& iStreamR)
 :	fStreamR(iStreamR)
 	{}
 
-void ZStrimR_StreamUTF32BE::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimR_StreamUTF32BE::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	if (ZCONFIG(Endian, Big))
-		spReadUTF32_UTF32(fStreamR, iDest, iCount, oCount);
+		spReadUTF32_UTF32(fStreamR, oDest, iCount, oCount);
 	else
-		spReadUTF32_UTF32Swap(fStreamR, iDest, iCount, oCount);
+		spReadUTF32_UTF32Swap(fStreamR, oDest, iCount, oCount);
 	}
 
 // =================================================================================================
@@ -260,12 +261,12 @@ ZStrimR_StreamUTF32LE::ZStrimR_StreamUTF32LE(const ZStreamR& iStreamR)
 :	fStreamR(iStreamR)
 	{}
 
-void ZStrimR_StreamUTF32LE::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimR_StreamUTF32LE::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	if (ZCONFIG(Endian, Big))
-		spReadUTF32_UTF32Swap(fStreamR, iDest, iCount, oCount);
+		spReadUTF32_UTF32Swap(fStreamR, oDest, iCount, oCount);
 	else
-		spReadUTF32_UTF32(fStreamR, iDest, iCount, oCount);
+		spReadUTF32_UTF32(fStreamR, oDest, iCount, oCount);
 	}
 
 // =================================================================================================
@@ -276,12 +277,12 @@ ZStrimR_StreamUTF16BE::ZStrimR_StreamUTF16BE(const ZStreamR& iStreamR)
 :	fStreamR(iStreamR)
 	{}
 
-void ZStrimR_StreamUTF16BE::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimR_StreamUTF16BE::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	if (ZCONFIG(Endian, Big))
-		spReadUTF32_UTF16(fStreamR, iDest, iCount, oCount);
+		spReadUTF32_UTF16(fStreamR, oDest, iCount, oCount);
 	else
-		spReadUTF32_UTF16Swap(fStreamR, iDest, iCount, oCount);
+		spReadUTF32_UTF16Swap(fStreamR, oDest, iCount, oCount);
 	}
 
 // =================================================================================================
@@ -292,12 +293,12 @@ ZStrimR_StreamUTF16LE::ZStrimR_StreamUTF16LE(const ZStreamR& iStreamR)
 :	fStreamR(iStreamR)
 	{}
 
-void ZStrimR_StreamUTF16LE::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimR_StreamUTF16LE::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	if (ZCONFIG(Endian, Big))
-		spReadUTF32_UTF16Swap(fStreamR, iDest, iCount, oCount);
+		spReadUTF32_UTF16Swap(fStreamR, oDest, iCount, oCount);
 	else
-		spReadUTF32_UTF16(fStreamR, iDest, iCount, oCount);
+		spReadUTF32_UTF16(fStreamR, oDest, iCount, oCount);
 	}
 
 // =================================================================================================
@@ -308,12 +309,12 @@ ZStrimR_StreamUTF8::ZStrimR_StreamUTF8(const ZStreamR& iStreamR)
 :	fStreamR(iStreamR)
 	{}
 
-void ZStrimR_StreamUTF8::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
-	{ spReadUTF32_UTF8(fStreamR, iDest, iCount, oCount); }
+void ZStrimR_StreamUTF8::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
+	{ spReadUTF32_UTF8(fStreamR, oDest, iCount, oCount); }
 
-void ZStrimR_StreamUTF8::Imp_ReadUTF8(UTF8* iDest,
+void ZStrimR_StreamUTF8::Imp_ReadUTF8(UTF8* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
-	{ spReadUTF8_UTF8(fStreamR, iDest, iCountCU, oCountCU, iCountCP, oCountCP); }
+	{ spReadUTF8_UTF8(fStreamR, oDest, iCountCU, oCountCU, iCountCP, oCountCP); }
 
 // =================================================================================================
 #pragma mark -
@@ -537,8 +538,8 @@ ZStrimR_StreamDecoder::~ZStrimR_StreamDecoder()
 	delete fDecoder;
 	}
 
-void ZStrimR_StreamDecoder::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
-	{ fDecoder->Decode(fStreamR, iDest, iCount, oCount); }
+void ZStrimR_StreamDecoder::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
+	{ fDecoder->Decode(fStreamR, oDest, iCount, oCount); }
 
 void ZStrimR_StreamDecoder::SetDecoder(ZTextDecoder* iDecoder)
 	{

@@ -24,6 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/netscape/ZNetscape_Variant.h"
 
+#include <cstring>
+
 NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZNetscape {
@@ -349,7 +351,7 @@ void NPVariant_T<T>::pSetString(const char* iChars, size_t iLength)
 	{
 	sNPStringLength(value.stringValue) = iLength;
 	char* p = static_cast<char*>(sMalloc_T(*this, iLength + 1));
-	strncpy(p, iChars, iLength);
+	std::strncpy(p, iChars, iLength);
 	sNPStringChars(value.stringValue) = p;
 	}
 

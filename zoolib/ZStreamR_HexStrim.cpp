@@ -41,11 +41,11 @@ ZStreamR_HexStrim::ZStreamR_HexStrim(bool iAllowUnderscore, const ZStrimU& iStri
 ZStreamR_HexStrim::~ZStreamR_HexStrim()
 	{}
 
-void ZStreamR_HexStrim::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_HexStrim::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	using namespace ZUtil_Strim;
 
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 
 	while (iCount)
 		{
@@ -75,7 +75,7 @@ void ZStreamR_HexStrim::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
 NAMESPACE_ZOOLIB_END

@@ -211,7 +211,7 @@ public:
 	virtual const ZStreamWCon& GetStreamWCon();
 
 // From ZStreamR via ZStreamRCon
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 	virtual bool Imp_WaitReadable(double iTimeout);
 
@@ -320,11 +320,11 @@ const ZStreamRCon& Channel_Streamer::GetStreamRCon()
 const ZStreamWCon& Channel_Streamer::GetStreamWCon()
 	{ return *this; }
 
-void Channel_Streamer::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void Channel_Streamer::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (ZRef<Device_Streamer> theDevice_Streamer = fDevice_Streamer)
 		{
-		theDevice_Streamer->Channel_Read(this, iDest, iCount, oCountRead);
+		theDevice_Streamer->Channel_Read(this, oDest, iCount, oCountRead);
 		return;
 		}
 
@@ -769,9 +769,9 @@ bool Device_Streamer::Channel_Finalize(Channel_Streamer* iChannel)
 	}
 
 void Device_Streamer::Channel_Read(
-	Channel_Streamer* iChannel, void* iDest, size_t iCount, size_t* oCountRead)
+	Channel_Streamer* iChannel, void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = static_cast<uint8*>(iDest);
+	uint8* localDest = static_cast<uint8*>(oDest);
 	deque<uint8>& theBuffer = iChannel->fReceive_Buffer;
 
 	ZMutexLocker locker(fMutex);
@@ -802,7 +802,7 @@ void Device_Streamer::Channel_Read(
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - static_cast<uint8*>(iDest);
+		*oCountRead = localDest - static_cast<uint8*>(oDest);
 	}
 
 size_t Device_Streamer::Channel_CountReadable(Channel_Streamer* iChannel)

@@ -54,7 +54,7 @@ ZStreamRW_FlushOnRead::ZStreamRW_FlushOnRead(const ZStreamR& iStreamR, const ZSt
 ZStreamRW_FlushOnRead::~ZStreamRW_FlushOnRead()
 	{}
 
-void ZStreamRW_FlushOnRead::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRW_FlushOnRead::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (ZThreadSafe_Swap(fLastWasWrite, 0))
 		{
@@ -62,7 +62,7 @@ void ZStreamRW_FlushOnRead::Imp_Read(void* iDest, size_t iCount, size_t* oCountR
 		fStreamW.Flush();
 		}
 
-	fStreamR.Read(iDest, iCount, oCountRead);
+	fStreamR.Read(oDest, iCount, oCountRead);
 	}
 
 size_t ZStreamRW_FlushOnRead::Imp_CountReadable()

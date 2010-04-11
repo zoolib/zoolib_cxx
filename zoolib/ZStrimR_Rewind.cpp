@@ -45,9 +45,9 @@ ZStrimR_Rewind::ZStrimR_Rewind(const ZStrimR& iStrimSource, const ZStreamRWPos& 
 ZStrimR_Rewind::~ZStrimR_Rewind()
 	{}
 
-void ZStrimR_Rewind::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimR_Rewind::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
-	UTF32* localDest = iDest;
+	UTF32* localDest = oDest;
 	size_t countRemaining = iCount;
 	while (countRemaining)
 		{
@@ -70,7 +70,7 @@ void ZStrimR_Rewind::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 			}
 		}
 	if (oCount)
-		*oCount = localDest - iDest;
+		*oCount = localDest - oDest;
 	}
 
 void ZStrimR_Rewind::Rewind()

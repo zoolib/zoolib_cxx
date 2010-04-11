@@ -102,13 +102,13 @@ string NPObjectH::sAsString(NPIdentifier iNPI)
 	return result;
 	}
 
-int32_t NPObjectH::sAsInt(NPIdentifier iNPI)
+int32 NPObjectH::sAsInt(NPIdentifier iNPI)
 	{ return HostMeister::sGet()->IntFromIdentifier(iNPI); }
 
 NPIdentifier NPObjectH::sAsNPI(const string& iName)
 	{ return HostMeister::sGet()->GetStringIdentifier(iName.c_str()); }
 
-NPIdentifier NPObjectH::sAsNPI(int32_t iInt)
+NPIdentifier NPObjectH::sAsNPI(int32 iInt)
 	{ return HostMeister::sGet()->GetIntIdentifier(iInt); }
 
 void NPObjectH::Retain()
@@ -151,7 +151,7 @@ bool NPObjectH::RemoveProperty(const string& iName)
 bool NPObjectH::RemoveProperty(size_t iIndex)
 	{ return HostMeister::sGet()->RemoveProperty(fake, this, sAsNPI(iIndex)); }
 
-bool NPObjectH::Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount)
+bool NPObjectH::Enumerate(NPIdentifier*& oIdentifiers, uint32& oCount)
 	{ return HostMeister::sGet()->Enumerate(fake, this, &oIdentifiers, &oCount); }
 
 // =================================================================================================
@@ -203,28 +203,28 @@ bool ObjectH::Imp_HasProperty(const string& iName)
 	return false;
 	}
 
-bool ObjectH::Imp_HasProperty(int32_t iInt)
+bool ObjectH::Imp_HasProperty(int32 iInt)
 	{ return false; }
 
 bool ObjectH::Imp_GetProperty(const string& iName, NPVariantH& oResult)
 	{ return false; }
 
-bool ObjectH::Imp_GetProperty(int32_t iInt, NPVariantH& oResult)
+bool ObjectH::Imp_GetProperty(int32 iInt, NPVariantH& oResult)
 	{ return false; }
 
 bool ObjectH::Imp_SetProperty(const string& iName, const NPVariantH& iValue)
 	{ return false; }
 
-bool ObjectH::Imp_SetProperty(int32_t iInt, const NPVariantH& iValue)
+bool ObjectH::Imp_SetProperty(int32 iInt, const NPVariantH& iValue)
 	{ return false; }
 
 bool ObjectH::Imp_RemoveProperty(const string& iName)
 	{ return false; }
 
-bool ObjectH::Imp_RemoveProperty(int32_t iInt)
+bool ObjectH::Imp_RemoveProperty(int32 iInt)
 	{ return false; }
 
-bool ObjectH::Imp_Enumerate(NPIdentifier*& oIDs, uint32_t& oCount)
+bool ObjectH::Imp_Enumerate(NPIdentifier*& oIDs, uint32& oCount)
 	{
 	using std::vector;
 	vector<string> theNames;
@@ -272,7 +272,7 @@ bool ObjectH::spHasMethod(NPObject* npobj, NPIdentifier name)
 	}
 
 bool ObjectH::spInvoke(NPObject* npobj,
-	NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result)
+	NPIdentifier name, const NPVariant* args, unsigned argCount, NPVariant* result)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		return static_cast<ObjectH*>(npobj)->Imp_Invoke(
@@ -284,7 +284,7 @@ bool ObjectH::spInvoke(NPObject* npobj,
 	}
 
 bool ObjectH::spInvokeDefault(NPObject* npobj,
-	const NPVariant* args, uint32_t argCount, NPVariant* result)
+	const NPVariant* args, unsigned argCount, NPVariant* result)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		return static_cast<ObjectH*>(npobj)->Imp_InvokeDefault(
@@ -355,7 +355,7 @@ bool ObjectH::spRemoveProperty(NPObject* npobj, NPIdentifier name)
 bool ObjectH::spEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t* oCount)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
-		return static_cast<ObjectH*>(npobj)->Imp_Enumerate(*oIdentifiers, *oCount);
+		return static_cast<ObjectH*>(npobj)->Imp_Enumerate(*oIdentifiers, *(uint32*)oCount);
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
@@ -508,7 +508,7 @@ NPError HostMeister::spGetURL(NPP npp, const char* URL, const char* window)
 	}
 
 NPError HostMeister::spPostURL(NPP npp,
-	const char* URL, const char* window, uint32 len, const char* buf, NPBool file)
+	const char* URL, const char* window, ::uint32 len, const char* buf, NPBool file)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->PostURL(npp, URL, window, len, buf, file);
@@ -530,7 +530,7 @@ NPError HostMeister::spNewStream(NPP npp,
 	ZNETSCAPE_AFTER_NPERROR
 	}
 
-int32 HostMeister::spWrite(NPP npp, NPStream* stream, int32 len, void* buffer)
+::int32 HostMeister::spWrite(NPP npp, NPStream* stream, ::int32 len, void* buffer)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->Write(npp, stream, len, buffer);
@@ -558,7 +558,7 @@ const char* HostMeister::spUserAgent(NPP npp)
 	ZNETSCAPE_AFTER_RETURN_NIL
 	}
 
-void* HostMeister::spMemAlloc(uint32 size)
+void* HostMeister::spMemAlloc(::uint32 size)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->MemAlloc(size);
@@ -572,7 +572,7 @@ void HostMeister::spMemFree(void* ptr)
 	ZNETSCAPE_AFTER_VOID
 	}
 
-uint32 HostMeister::spMemFlush(uint32 size)
+::uint32 HostMeister::spMemFlush(::uint32 size)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->MemFlush(size);
@@ -610,7 +610,7 @@ NPError HostMeister::spGetURLNotify(NPP npp,
 
 NPError HostMeister::spPostURLNotify(NPP npp,
 	const char* URL, const char* window,
-	uint32 len, const char* buf, NPBool file, void* notifyData)
+	::uint32 len, const char* buf, NPBool file, void* notifyData)
 	{
 	ZNETSCAPE_BEFORE
 		return sGet()->PostURLNotify(npp, URL, window, len, buf, file, notifyData);
@@ -817,7 +817,7 @@ bool HostMeister::spEnumerate
 	(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count)
 	{
 	ZNETSCAPE_BEFORE
-		return sGet()->Enumerate(npp, npobj, identifier, count);
+		return sGet()->Enumerate(npp, npobj, identifier, (uint32*)count);
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 

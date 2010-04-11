@@ -41,7 +41,7 @@ public:
 	~ZStreamRPos_String();
 
 // From ZStreamR via ZStreamRPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 // From ZStreamRPos
 	virtual uint64 Imp_GetPosition();
@@ -94,7 +94,7 @@ public:
 	~ZStreamRWPos_String();
 
 // From ZStreamR via ZStreamRWPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 // From ZStreamW via ZStreamRWPos
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);

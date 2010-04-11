@@ -123,7 +123,7 @@ ZStreamRPos_Compressed::ZStreamRPos_Compressed(const ZStreamRPos& iSource)
 ZStreamRPos_Compressed::~ZStreamRPos_Compressed()
 	{}
 
-void ZStreamRPos_Compressed::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRPos_Compressed::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	size_t chunkNumber = fPosition / fChunkSize;
 	if (chunkNumber >= fOffsets.size() || fPosition >= fSize)
@@ -139,7 +139,7 @@ void ZStreamRPos_Compressed::Imp_Read(void* iDest, size_t iCount, size_t* oCount
 
 	size_t countToRead = ZStream::sClampedCount(iCount, fSize, fPosition);
 	size_t countRead;
-	decoder.Read(iDest, countToRead, &countRead);
+	decoder.Read(oDest, countToRead, &countRead);
 	fPosition += countRead;
 	if (oCountRead)
 		*oCountRead = countRead;

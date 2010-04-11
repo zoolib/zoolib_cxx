@@ -56,10 +56,10 @@ ZStreamR_Count::ZStreamR_Count(uint64& oCount, const ZStreamR& iStreamSource)
 ZStreamR_Count::~ZStreamR_Count()
 	{}
 
-void ZStreamR_Count::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_Count::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	size_t countRead;
-	fStreamSource.Read(iDest, iCount, &countRead);
+	fStreamSource.Read(oDest, iCount, &countRead);
 	*fCountPtr += countRead;
 	if (oCountRead)
 		*oCountRead = countRead;

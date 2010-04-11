@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZCompat_algorithm.h"
+#include "zoolib/ZDebug.h"
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -208,19 +209,19 @@ of time how much data will be readable, but this interface doesn't.
 */
 
 
-/** \brief Read \a iCount bytes into memory starting at \a iDest.
+/** \brief Read \a iCount bytes into memory starting at \a oDest.
 
-\param iDest The address in memory at which read data is to be placed. It is the
-caller's responsibilty to ensure that \a iDest to \a iDest + \a iCount is correctly
+\param oDest The address in memory at which read data is to be placed. It is the
+caller's responsibilty to ensure that \a oDest to \a oDest + \a iCount is correctly
 allocated and writeable.
 \param iCount The number of bytes to read
 
 If \a iCount bytes cannot be read from the stream an end of read stream exception
 will be thrown.
 */
-void ZStreamR::Read(void* iDest, size_t iCount) const
+void ZStreamR::Read(void* oDest, size_t iCount) const
 	{
-	char* localDest = reinterpret_cast<char*>(iDest);
+	char* localDest = reinterpret_cast<char*>(oDest);
 	size_t countRemaining = iCount;
 	while (countRemaining > 0)
 		{
@@ -234,9 +235,9 @@ void ZStreamR::Read(void* iDest, size_t iCount) const
 		}
 	}
 
-void ZStreamR::ReadAll(void* iDest, size_t iCount, size_t* oCountRead) const
+void ZStreamR::ReadAll(void* oDest, size_t iCount, size_t* oCountRead) const
 	{
-	char* localDest = reinterpret_cast<char*>(iDest);
+	char* localDest = reinterpret_cast<char*>(oDest);
 	size_t countRemaining = iCount;
 	while (countRemaining > 0)
 		{
@@ -250,7 +251,7 @@ void ZStreamR::ReadAll(void* iDest, size_t iCount, size_t* oCountRead) const
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<char*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<char*>(oDest);
 	}
 
 /** \brief Read data from this stream and write it
@@ -1184,15 +1185,15 @@ ZStreamU_Unreader::ZStreamU_Unreader(const ZStreamR& iStreamSource)
 	fState(eStateFresh)
 	{}
 
-void ZStreamU_Unreader::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamU_Unreader::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (fStreamSourceU)
 		{
-		fStreamSourceU->Imp_Read(iDest, iCount, oCountRead);
+		fStreamSourceU->Imp_Read(oDest, iCount, oCountRead);
 		return;
 		}
 
-	char* localDest = reinterpret_cast<char*>(iDest);
+	char* localDest = reinterpret_cast<char*>(oDest);
 	char* localDestEnd = localDest + iCount;
 
 	while (localDest < localDestEnd)
@@ -1214,7 +1215,7 @@ void ZStreamU_Unreader::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 
 	if (iCount)
 		{
-		if (localDest == reinterpret_cast<char*>(iDest))
+		if (localDest == reinterpret_cast<char*>(oDest))
 			{
 			fState = eStateHitEnd;
 			}
@@ -1226,7 +1227,7 @@ void ZStreamU_Unreader::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 		}
 	
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<char*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<char*>(oDest);
 	}
 
 void ZStreamU_Unreader::Imp_Unread()
@@ -1279,7 +1280,7 @@ ZStreamR_Null::ZStreamR_Null()
 ZStreamR_Null::~ZStreamR_Null()
 	{}
 
-void ZStreamR_Null::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_Null::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (oCountRead)
 		*oCountRead = 0;
@@ -1327,7 +1328,7 @@ ZStreamRPos_Null::ZStreamRPos_Null()
 ZStreamRPos_Null::~ZStreamRPos_Null()
 	{}
 
-void ZStreamRPos_Null::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRPos_Null::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (oCountRead)
 		*oCountRead = 0;

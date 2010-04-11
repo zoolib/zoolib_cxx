@@ -54,13 +54,13 @@ ZStreamR_CRLFRemove::ZStreamR_CRLFRemove(char iReplaceChar, const ZStreamR& iStr
 ZStreamR_CRLFRemove::~ZStreamR_CRLFRemove()
 	{}
 
-void ZStreamR_CRLFRemove::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_CRLFRemove::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	char buffer[kBufSize];
 
 	if (oCountRead)
 		*oCountRead = 0;
-	char* localDest = reinterpret_cast<char*>(iDest);
+	char* localDest = reinterpret_cast<char*>(oDest);
 	size_t countRemaining = iCount;
 	while (countRemaining)
 		{
@@ -110,7 +110,7 @@ ZStreamR_CRLFInsert::ZStreamR_CRLFInsert(const ZStreamR& iStreamSource)
 ZStreamR_CRLFInsert::~ZStreamR_CRLFInsert()
 	{}
 
-void ZStreamR_CRLFInsert::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_CRLFInsert::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (oCountRead)
 		*oCountRead = 0;
@@ -118,7 +118,7 @@ void ZStreamR_CRLFInsert::Imp_Read(void* iDest, size_t iCount, size_t* oCountRea
 	if (iCount == 0)
 		return;
 
-	char* localDest = reinterpret_cast<char*>(iDest);
+	char* localDest = reinterpret_cast<char*>(oDest);
 	size_t countRemaining = iCount;
 
 	while (countRemaining)

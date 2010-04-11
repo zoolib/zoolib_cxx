@@ -24,7 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include <cstring> // Needed for memmove, memcpy and memset
+#include <cstddef> // For std::size_t
+#include <cstring> // For std::memmove, std::memcpy and std::memset
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -32,21 +33,21 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * memmove, memcpy, memset, bzero wrappers.
 
-inline void ZMemMove(void* iDest, const void* iSource, size_t iCount)
-	{ std::memmove(iDest, iSource, iCount); }
+inline void ZMemMove(void* oDest, const void* iSource, std::size_t iCount)
+	{ std::memmove(oDest, iSource, iCount); }
 
-inline void ZMemCopy(void* iDest, const void* iSource, size_t iCount)
-	{ std::memcpy(iDest, iSource, iCount); }
+inline void ZMemCopy(void* oDest, const void* iSource, std::size_t iCount)
+	{ std::memcpy(oDest, iSource, iCount); }
 
-inline void ZMemSet(void* iDest, unsigned char iValue, size_t iCount)
-	{ std::memset(iDest, iValue, iCount); }
+inline void ZMemSet(void* oDest, unsigned char iValue, std::size_t iCount)
+	{ std::memset(oDest, iValue, iCount); }
 
-inline void ZMemZero(void* iDest, size_t iCount)
+inline void ZMemZero(void* oDest, std::size_t iCount)
 	{
 	#if ZCONFIG_SPI_Enabled(POSIX)
-		::bzero(iDest, iCount);
+		::bzero(oDest, iCount);
 	#else
-		ZMemSet(iDest, 0, iCount);
+		ZMemSet(oDest, 0, iCount);
 	#endif
 	}
 
@@ -78,4 +79,3 @@ NAMESPACE_ZOOLIB_END
 // =================================================================================================
 
 #endif // __ZMemory__
-

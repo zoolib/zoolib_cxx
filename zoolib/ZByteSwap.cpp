@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZByteSwap.h"
+#include "zoolib/ZDebug.h"
 
 // Switch off optimization for CodeWarrior -- it runs out of registers.
 #if ZCONFIG(Compiler, CodeWarrior)

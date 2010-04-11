@@ -123,7 +123,7 @@ sConvert returns a query whose RelHead is [$ID$], unless iName is non-null in wh
 case the RelHead is [*iName]. The tuples returned have been filtered by iFilter, if any.
 */
 
-static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, Spec* iFilter, bool iVerbose)
+static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, const Spec* iFilter, bool iVerbose)
 	{
 	if (ZRefDynamicCast<ZTBQueryNode_All>(iNode))
 		{

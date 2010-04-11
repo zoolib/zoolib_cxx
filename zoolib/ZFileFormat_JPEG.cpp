@@ -220,9 +220,9 @@ ZFileFormat_JPEG::StreamR_Segment::~StreamR_Segment()
 		}
 	}
 
-void ZFileFormat_JPEG::StreamR_Segment::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZFileFormat_JPEG::StreamR_Segment::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	while (iCount && fCountRemaining)
 		{
 		size_t countRead;
@@ -234,7 +234,7 @@ void ZFileFormat_JPEG::StreamR_Segment::Imp_Read(void* iDest, size_t iCount, siz
 		iCount -= countRead;
 		}
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
 size_t ZFileFormat_JPEG::StreamR_Segment::Imp_CountReadable()

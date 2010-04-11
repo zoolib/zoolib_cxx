@@ -1,0 +1,4 @@
+/**
+\mainpage
+Some words for the main page
+*/

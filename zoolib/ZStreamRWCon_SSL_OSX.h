@@ -44,7 +44,7 @@ public:
 	~ZStreamRWCon_SSL_OSX();
 
 // From ZStreamR via ZStreamRCon
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 
 // From ZStreamRCon
@@ -60,8 +60,8 @@ public:
 	virtual void Imp_Abort();
 
 private:
-	OSStatus pRead(void* iDest, size_t* ioCount);
-	static OSStatus spRead(SSLConnectionRef iRefcon, void* iDest, size_t* ioCount);
+	OSStatus pRead(void* oDest, size_t* ioCount);
+	static OSStatus spRead(SSLConnectionRef iRefcon, void* oDest, size_t* ioCount);
 
 	OSStatus pWrite(const void* iSource, size_t* ioCount);
 	static OSStatus spWrite(SSLConnectionRef iRefcon, const void* iSource, size_t* ioCount);

@@ -47,9 +47,9 @@ ZStreamRWCon_MemoryPipe::~ZStreamRWCon_MemoryPipe()
 	ZAssertStop(2, fSource == nullptr && fDest == nullptr);
 	}
 
-void ZStreamRWCon_MemoryPipe::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRWCon_MemoryPipe::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = static_cast<uint8*>(iDest);
+	uint8* localDest = static_cast<uint8*>(oDest);
 	uint8* localEnd = localDest + iCount;
 
 	ZGuardMtx locker(fMutex);
@@ -79,7 +79,7 @@ void ZStreamRWCon_MemoryPipe::Imp_Read(void* iDest, size_t iCount, size_t* oCoun
 			fDestCount = 0;
 			}
 
-		if (localDest != static_cast<uint8*>(iDest))
+		if (localDest != static_cast<uint8*>(oDest))
 			{
 			// We were able to get *some* data. Let's give up for now
 			// and possibly allow a writer to build up a head of steam, as it were.
@@ -88,7 +88,7 @@ void ZStreamRWCon_MemoryPipe::Imp_Read(void* iDest, size_t iCount, size_t* oCoun
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - static_cast<uint8*>(iDest);
+		*oCountRead = localDest - static_cast<uint8*>(oDest);
 	}
 
 size_t ZStreamRWCon_MemoryPipe::Imp_CountReadable()

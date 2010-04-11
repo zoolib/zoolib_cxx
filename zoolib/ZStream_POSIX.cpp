@@ -38,9 +38,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <sys/param.h>
 #endif
 
-static void spRead(FILE* iFILE, void* iDest, size_t iCount, size_t* oCountRead)
+NAMESPACE_ZOOLIB_BEGIN
+
+static void spRead(FILE* iFILE, void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	char* localDest = reinterpret_cast<char*>(iDest);
+	char* localDest = reinterpret_cast<char*>(oDest);
 	if (iFILE)
 		{
 		while (iCount)
@@ -53,7 +55,7 @@ static void spRead(FILE* iFILE, void* iDest, size_t iCount, size_t* oCountRead)
 			}		
 		}
 	if (oCountRead)
-		*oCountRead = reinterpret_cast<char*>(iDest) - localDest;
+		*oCountRead = reinterpret_cast<char*>(oDest) - localDest;
 	}
 
 static void spWrite(FILE* iFILE, const void* iSource, size_t iCount, size_t* oCountWritten)
@@ -128,8 +130,6 @@ static uint64 spGetSize(FILE* iFILE)
 // This one's difficult to support
 //static void spSetSize(FILE* iFILE, uint64 iSize)
 
-NAMESPACE_ZOOLIB_BEGIN
-
 using std::range_error;
 
 // =================================================================================================
@@ -152,8 +152,8 @@ ZStreamR_FILE::~ZStreamR_FILE()
 		fclose(fFILE);
 	}
 
-void ZStreamR_FILE::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ spRead(fFILE, iDest, iCount, oCountRead); }
+void ZStreamR_FILE::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+	{ spRead(fFILE, oDest, iCount, oCountRead); }
 
 // =================================================================================================
 #pragma mark -
@@ -175,8 +175,8 @@ ZStreamRPos_FILE::~ZStreamRPos_FILE()
 		fclose(fFILE);
 	}
 
-void ZStreamRPos_FILE::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ spRead(fFILE, iDest, iCount, oCountRead); }
+void ZStreamRPos_FILE::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+	{ spRead(fFILE, oDest, iCount, oCountRead); }
 
 uint64 ZStreamRPos_FILE::Imp_GetPosition()
 	{ return spGetPosition(fFILE); }
@@ -225,10 +225,10 @@ void ZStreamW_FILE::Imp_Flush()
 
 #if defined(__USE_GNU)
 
-static ssize_t spReadStreamR(void* iCookie, char* iDest, size_t iCount)
+static ssize_t spReadStreamR(void* iCookie, char* oDest, size_t iCount)
 	{
 	size_t countRead;
-	static_cast<ZStreamR*>(iCookie)->Read(iDest, iCount, &countRead);
+	static_cast<ZStreamR*>(iCookie)->Read(oDest, iCount, &countRead);
 	return countRead;
 	}
 
@@ -270,17 +270,17 @@ static int spSeekStreamRPos(void* iCookie, _IO_off64_t *iPos, int iWhence)
 	return spSeekStreamRPos(*static_cast<ZStreamRPos*>(iCookie), *iPos, iWhence);
 	}
 
-static ssize_t spReadStreamerR(void* iCookie, char* iDest, size_t iCount)
+static ssize_t spReadStreamerR(void* iCookie, char* oDest, size_t iCount)
 	{
 	size_t countRead;
-	static_cast<ZRef<ZStreamerR>*>(iCookie)[0]->GetStreamR().Read(iDest, iCount, &countRead);
+	static_cast<ZRef<ZStreamerR>*>(iCookie)[0]->GetStreamR().Read(oDest, iCount, &countRead);
 	return countRead;
 	}
 
-static ssize_t spReadStreamerRPos(void* iCookie, char* iDest, size_t iCount)
+static ssize_t spReadStreamerRPos(void* iCookie, char* oDest, size_t iCount)
 	{
 	size_t countRead;
-	static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamR().Read(iDest, iCount, &countRead);
+	static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamR().Read(oDest, iCount, &countRead);
 	return countRead;
 	}
 
@@ -377,10 +377,10 @@ FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
 
 #elif defined(BSD)
 
-static int spReadStreamR(void* iCookie, char* iDest, int iCount)
+static int spReadStreamR(void* iCookie, char* oDest, int iCount)
 	{
 	size_t countRead;
-	static_cast<ZStreamR*>(iCookie)->Read(iDest, iCount, &countRead);
+	static_cast<ZStreamR*>(iCookie)->Read(oDest, iCount, &countRead);
 	return countRead;
 	}
 
@@ -422,17 +422,17 @@ static int spWriteStreamW(void* iCookie, const char* iSource, int iCount)
 	return countWritten;;
 	}
 
-static int spReadStreamerR(void* iCookie, char* iDest, int iCount)
+static int spReadStreamerR(void* iCookie, char* oDest, int iCount)
 	{
 	size_t countRead;
-	static_cast<ZRef<ZStreamerR>*>(iCookie)[0]->GetStreamR().Read(iDest, iCount, &countRead);
+	static_cast<ZRef<ZStreamerR>*>(iCookie)[0]->GetStreamR().Read(oDest, iCount, &countRead);
 	return countRead;
 	}
 
-static int spReadStreamerRPos(void* iCookie, char* iDest, int iCount)
+static int spReadStreamerRPos(void* iCookie, char* oDest, int iCount)
 	{
 	size_t countRead;
-	static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamR().Read(iDest, iCount, &countRead);
+	static_cast<ZRef<ZStreamerRPos>*>(iCookie)[0]->GetStreamR().Read(oDest, iCount, &countRead);
 	return countRead;
 	}
 

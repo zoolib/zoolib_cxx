@@ -310,12 +310,12 @@ ZStreamR_SHA1::~ZStreamR_SHA1()
 		ZStream_SHA1::sFinal(fContext, fDigest);
 	}
 
-void ZStreamR_SHA1::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_SHA1::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	size_t countRead;
-	fStreamSource.Read(iDest, iCount, &countRead);
+	fStreamSource.Read(oDest, iCount, &countRead);
 	if (countRead)
-		ZStream_SHA1::sUpdate(fContext, iDest, countRead);
+		ZStream_SHA1::sUpdate(fContext, oDest, countRead);
 	if (oCountRead)
 		*oCountRead = countRead;
 	}

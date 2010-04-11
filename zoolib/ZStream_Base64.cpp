@@ -26,32 +26,32 @@ NAMESPACE_ZOOLIB_BEGIN
 static const uint8 spBase64EncodeTable[] =
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-static void spBase64Encode(const uint8* iSource, size_t iSourceCount, uint8* iDest)
+static void spBase64Encode(const uint8* iSource, size_t iSourceCount, uint8* oDest)
 	{
 	switch (iSourceCount)
 		{
 		case 3:
 			{
-			iDest[0] = spBase64EncodeTable[iSource[0] >> 2];
-			iDest[1] = spBase64EncodeTable[((iSource[0] & 0x03) << 4) | (iSource[1] >> 4)];
-			iDest[2] = spBase64EncodeTable[((iSource[1] & 0x0F) << 2) | (iSource[2] >> 6)];
-			iDest[3] = spBase64EncodeTable[iSource[2] & 0x3F];
+			oDest[0] = spBase64EncodeTable[iSource[0] >> 2];
+			oDest[1] = spBase64EncodeTable[((iSource[0] & 0x03) << 4) | (iSource[1] >> 4)];
+			oDest[2] = spBase64EncodeTable[((iSource[1] & 0x0F) << 2) | (iSource[2] >> 6)];
+			oDest[3] = spBase64EncodeTable[iSource[2] & 0x3F];
 			break;
 			}
 		case 2:
 			{
-			iDest[0] = spBase64EncodeTable[iSource[0] >> 2];
-			iDest[1] = spBase64EncodeTable[((iSource[0] & 0x03) << 4) | (iSource[1] >> 4)];
-			iDest[2] = spBase64EncodeTable[((iSource[1] & 0x0F) << 2)];
-			iDest[3] = '=';
+			oDest[0] = spBase64EncodeTable[iSource[0] >> 2];
+			oDest[1] = spBase64EncodeTable[((iSource[0] & 0x03) << 4) | (iSource[1] >> 4)];
+			oDest[2] = spBase64EncodeTable[((iSource[1] & 0x0F) << 2)];
+			oDest[3] = '=';
 			break;
 			}
 		case 1:
 			{
-			iDest[0] = spBase64EncodeTable[iSource[0] >> 2];
-			iDest[1] = spBase64EncodeTable[((iSource[0] & 0x03) << 4)];
-			iDest[2] = '=';
-			iDest[3] = '=';
+			oDest[0] = spBase64EncodeTable[iSource[0] >> 2];
+			oDest[1] = spBase64EncodeTable[((iSource[0] & 0x03) << 4)];
+			oDest[2] = '=';
+			oDest[3] = '=';
 			break;
 			}
 		default:
@@ -96,12 +96,12 @@ ZStreamR_Base64Encode::ZStreamR_Base64Encode(const ZStreamR& iStreamSource)
 ZStreamR_Base64Encode::~ZStreamR_Base64Encode()
 	{}
 
-void ZStreamR_Base64Encode::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_Base64Encode::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (oCountRead)
 		*oCountRead = 0;
 
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	size_t countRemaining = iCount;
 	while (countRemaining)
 		{
@@ -147,12 +147,12 @@ ZStreamR_Base64Decode::ZStreamR_Base64Decode(const ZStreamR& iStreamSource)
 ZStreamR_Base64Decode::~ZStreamR_Base64Decode()
 	{}
 
-void ZStreamR_Base64Decode::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_Base64Decode::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (oCountRead)
 		*oCountRead = 0;
 
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	size_t countRemaining = iCount;
 	while (countRemaining)
 		{

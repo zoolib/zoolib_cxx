@@ -204,7 +204,7 @@ struct Functions_Read_T
 template <class I, typename C = typename std::iterator_traits<I>::value_type>
 struct Functions_Write_T
 	{
-	static bool sWrite(I iDest, I iEnd, UTF32 iCP);
+	static bool sWrite(I oDest, I iEnd, UTF32 iCP);
 	static bool sWriteInc(I& ioDest, I iEnd, UTF32 iCP);
 	};
 

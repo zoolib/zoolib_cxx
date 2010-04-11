@@ -86,7 +86,7 @@ private:
 	bool Endpoint_Finalize(Endpoint* iEP);
 
 	void Endpoint_Read(Endpoint* iEP,
-		void* iDest, size_t iCount, size_t* oCountRead);
+		void* oDest, size_t iCount, size_t* oCountRead);
 
 	size_t Endpoint_CountReadable(Endpoint* iEP);
 

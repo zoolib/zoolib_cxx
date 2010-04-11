@@ -74,8 +74,8 @@ static void spSetSocketOptions(int iSocket)
 int ZNet_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
 	{ return ::send(iSocket, iSource, iCount, 0); }
 
-int ZNet_Socket::sReceive(int iSocket, char* iDest, size_t iCount)
-	{ return ::recv(iSocket, iDest, iCount, 0); }
+int ZNet_Socket::sReceive(int iSocket, char* oDest, size_t iCount)
+	{ return ::recv(iSocket, oDest, iCount, 0); }
 
 #elif defined(linux) || defined(__sun__)
 
@@ -134,21 +134,21 @@ int ZNet_Socket::sSend(int iSocket, const char* iSource, size_t iCount)
 		}
 	}
 
-int ZNet_Socket::sReceive(int iSocket, char* iDest, size_t iCount)
+int ZNet_Socket::sReceive(int iSocket, char* oDest, size_t iCount)
 	{
 	if (spCanUse_MSG_NOSIGNAL)
 		{
-		return ::recv(iSocket, iDest, iCount, MSG_NOSIGNAL);
+		return ::recv(iSocket, oDest, iCount, MSG_NOSIGNAL);
 		}
 	else
 		{
 		if (spChecked_MSG_NOSIGNAL)
 			{
-			return ::recv(iSocket, iDest, iCount, 0);
+			return ::recv(iSocket, oDest, iCount, 0);
 			}
 		else
 			{
-			int result = ::recv(iSocket, iDest, iCount, MSG_NOSIGNAL);
+			int result = ::recv(iSocket, oDest, iCount, MSG_NOSIGNAL);
 
 			if (result >= 0)
 				{
@@ -160,7 +160,7 @@ int ZNet_Socket::sReceive(int iSocket, char* iDest, size_t iCount)
 				if (errno == EINVAL)
 					{
 					spChecked_MSG_NOSIGNAL = true;
-					return ::recv(iSocket, iDest, iCount, 0);
+					return ::recv(iSocket, oDest, iCount, 0);
 					}				
 				}
 			return result;
@@ -321,9 +321,9 @@ const ZStreamWCon& ZNetEndpoint_Socket::GetStreamWCon()
 int ZNetEndpoint_Socket::GetSocketFD()
 	{ return fSocketFD; }
 
-void ZNetEndpoint_Socket::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZNetEndpoint_Socket::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	char* localDest = static_cast<char*>(iDest);
+	char* localDest = static_cast<char*>(oDest);
 	while (iCount)
 		{
 		int result = sReceive(fSocketFD, localDest, iCount);
@@ -356,7 +356,7 @@ void ZNetEndpoint_Socket::Imp_Read(void* iDest, size_t iCount, size_t* oCountRea
 			}
 		}
 	if (oCountRead)
-		*oCountRead = localDest - static_cast<char*>(iDest);
+		*oCountRead = localDest - static_cast<char*>(oDest);
 	}
 
 size_t ZNetEndpoint_Socket::Imp_CountReadable()

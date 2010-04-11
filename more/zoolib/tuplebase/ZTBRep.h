@@ -82,7 +82,7 @@ public:
 	virtual void Count(const ZTBQuery& iQuery, Callback_Count_t iCallback, void* iRefcon) = 0;
 
 	typedef void (*Callback_GetTuple_t)(void* iRefcon,
-		size_t iCount, const uint64* ioIDs, const ZTuple* iTuples);
+		size_t iCount, const uint64* iIDs, const ZTuple* iTuples);
 	virtual void GetTuples(size_t iCount, const uint64* iIDs,
 					Callback_GetTuple_t iCallback_Get, void* iRefcon) = 0;
 

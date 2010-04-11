@@ -54,11 +54,11 @@ ZStreamRW_FIFO::~ZStreamRW_FIFO()
 		fCondition_UserCount.Wait(fMutex);
 	}
 
-void ZStreamRW_FIFO::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRW_FIFO::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	ZGuardMtx locker(fMutex);
 	++fUserCount;
-	uint8* localDest = static_cast<uint8*>(iDest);
+	uint8* localDest = static_cast<uint8*>(oDest);
 	while (iCount)
 		{
 		const size_t countToCopy = min(iCount, fBuffer.size());
@@ -79,7 +79,7 @@ void ZStreamRW_FIFO::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 			}
 		}
 	if (oCountRead)
-		*oCountRead = localDest - static_cast<uint8*>(iDest);
+		*oCountRead = localDest - static_cast<uint8*>(oDest);
 
 	--fUserCount;
 	fCondition_UserCount.Broadcast();

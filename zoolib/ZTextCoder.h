@@ -60,9 +60,9 @@ public:
 
 	virtual bool Decode(
 		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-		UTF32* iDest, size_t iDestCU, size_t* oDestCU) = 0;
+		UTF32* oDest, size_t iDestCU, size_t* oDestCU) = 0;
 
-	virtual void Decode(const ZStreamR& iStreamR, UTF32* iDest, size_t iDestCU, size_t* oDestCU);
+	virtual void Decode(const ZStreamR& iStreamR, UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 
 	virtual bool Decode(const ZStreamR& iStreamR, UTF32& oCP);
 
@@ -86,7 +86,7 @@ public:
 	static ZTextEncoder* sMake(const std::string& iCharset);
 
 	virtual void Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-		void* iDest, size_t iDestBytes, size_t* oDestBytes) = 0;
+		void* oDest, size_t iDestBytes, size_t* oDestBytes) = 0;
 
 	virtual void Encode(const ZStreamW& iStreamW,
 		const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU);

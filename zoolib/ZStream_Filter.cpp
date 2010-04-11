@@ -33,8 +33,8 @@ ZStreamR_Filter::ZStreamR_Filter(const ZStreamR& iStreamReal)
 ZStreamR_Filter::~ZStreamR_Filter()
 	{}
 
-void ZStreamR_Filter::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ const_cast<ZStreamR&>(fStreamReal).Imp_Read(iDest, iCount, oCountRead); }
+void ZStreamR_Filter::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+	{ const_cast<ZStreamR&>(fStreamReal).Imp_Read(oDest, iCount, oCountRead); }
 
 size_t ZStreamR_Filter::Imp_CountReadable()
 	{ return const_cast<ZStreamR&>(fStreamReal).Imp_CountReadable(); }
@@ -67,8 +67,8 @@ ZStreamRCon_Filter::ZStreamRCon_Filter(const ZStreamRCon& iStreamReal)
 ZStreamRCon_Filter::~ZStreamRCon_Filter()
 	{}
 
-void ZStreamRCon_Filter::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ const_cast<ZStreamRCon&>(fStreamReal).Imp_Read(iDest, iCount, oCountRead); }
+void ZStreamRCon_Filter::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+	{ const_cast<ZStreamRCon&>(fStreamReal).Imp_Read(oDest, iCount, oCountRead); }
 
 size_t ZStreamRCon_Filter::Imp_CountReadable()
 	{ return const_cast<ZStreamRCon&>(fStreamReal).Imp_CountReadable(); }
@@ -96,8 +96,8 @@ ZStreamU_Filter::ZStreamU_Filter(const ZStreamU& iStreamReal)
 ZStreamU_Filter::~ZStreamU_Filter()
 	{}
 
-void ZStreamU_Filter::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ const_cast<ZStreamU&>(fStreamReal).Imp_Read(iDest, iCount, oCountRead); }
+void ZStreamU_Filter::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+	{ const_cast<ZStreamU&>(fStreamReal).Imp_Read(oDest, iCount, oCountRead); }
 
 size_t ZStreamU_Filter::Imp_CountReadable()
 	{ return const_cast<ZStreamU&>(fStreamReal).Imp_CountReadable(); }
@@ -122,8 +122,8 @@ ZStreamRPos_Filter::ZStreamRPos_Filter(const ZStreamRPos& iStreamReal)
 ZStreamRPos_Filter::~ZStreamRPos_Filter()
 	{}
 
-void ZStreamRPos_Filter::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ const_cast<ZStreamRPos&>(fStreamReal).Imp_Read(iDest, iCount, oCountRead); }
+void ZStreamRPos_Filter::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+	{ const_cast<ZStreamRPos&>(fStreamReal).Imp_Read(oDest, iCount, oCountRead); }
 
 size_t ZStreamRPos_Filter::Imp_CountReadable()
 	{ return const_cast<ZStreamRPos&>(fStreamReal).Imp_CountReadable(); }
@@ -220,8 +220,8 @@ ZStreamRWPos_Filter::ZStreamRWPos_Filter(const ZStreamRWPos& iStreamReal)
 ZStreamRWPos_Filter::~ZStreamRWPos_Filter()
 	{}
 
-void ZStreamRWPos_Filter::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
-	{ const_cast<ZStreamRWPos&>(fStreamReal).Imp_Read(iDest, iCount, oCountRead); }
+void ZStreamRWPos_Filter::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
+	{ const_cast<ZStreamRWPos&>(fStreamReal).Imp_Read(oDest, iCount, oCountRead); }
 
 size_t ZStreamRWPos_Filter::Imp_CountReadable()
 	{ return const_cast<ZStreamRWPos&>(fStreamReal).Imp_CountReadable(); }

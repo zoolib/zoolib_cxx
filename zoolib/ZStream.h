@@ -100,9 +100,9 @@ public:
 /** \name Read raw data
 Read data from this stream into memory.
 */	//@{
-	void Read(void* iDest, size_t iCount) const;
-	void Read(void* iDest, size_t iCount, size_t* oCountRead) const;
-	void ReadAll(void* iDest, size_t iCount, size_t* oCountRead) const;
+	void Read(void* oDest, size_t iCount) const;
+	void Read(void* oDest, size_t iCount, size_t* oCountRead) const;
+	void ReadAll(void* oDest, size_t iCount, size_t* oCountRead) const;
 	//@}
 
 
@@ -188,7 +188,7 @@ Read single bytes without exceptions being thrown.
 /** \name Essential overrides
 All ZStreamR functionality is implemented by calling this method.
 */	//@{
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead) = 0;
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead) = 0;
 	//@}
 
 
@@ -211,8 +211,8 @@ but particular subclasses may have more efficient implementations available.
 	};
 
 /** Read data into memory, returning the count actually read. */
-inline void ZStreamR::Read(void* iDest, size_t iCount, size_t* oCountRead) const
-	{ const_cast<ZStreamR*>(this)->Imp_Read(iDest, iCount, oCountRead); }
+inline void ZStreamR::Read(void* oDest, size_t iCount, size_t* oCountRead) const
+	{ const_cast<ZStreamR*>(this)->Imp_Read(oDest, iCount, oCountRead); }
 
 /** Attempt to skip bytes, returning the count actually skipped. */
 inline void ZStreamR::Skip(uint64 iCount, uint64* oCountSkipped) const
@@ -620,7 +620,7 @@ public:
 	ZStreamU_Unreader(const ZStreamR& iStreamSource);
 
 // From ZStreamR
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 // From ZStreamU
 	virtual void Imp_Unread();
@@ -645,7 +645,7 @@ public:
 	~ZStreamR_Null();
 
 // From ZStreamR
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
 		uint64* oCountRead, uint64* oCountWritten);
@@ -669,7 +669,7 @@ public:
 	~ZStreamRPos_Null();
 
 // From ZStreamR via ZStreamRPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
 		uint64* oCountRead, uint64* oCountWritten);

@@ -36,14 +36,14 @@ ZStreamR_CFStream::ZStreamR_CFStream(CFReadStreamRef iCFStream)
 ZStreamR_CFStream::~ZStreamR_CFStream()
 	{}
 
-void ZStreamR_CFStream::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_CFStream::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (oCountRead)
 		*oCountRead = 0;
 
 	if (fCFStream)
 		{
-		CFIndex result = ::CFReadStreamRead(fCFStream, static_cast<UInt8*>(iDest), iCount);
+		CFIndex result = ::CFReadStreamRead(fCFStream, static_cast<UInt8*>(oDest), iCount);
 
 		if (result > 0 && oCountRead)
 			*oCountRead = result;
@@ -93,10 +93,10 @@ void ZStreamW_CFStream::Imp_Write(const void* iSource, size_t iCount, size_t* oC
 
 namespace ZANONYMOUS {
 
-size_t sGetBytesR(void* iInfo, void* iBuffer, size_t iCount)
+size_t sGetBytesR(void* iInfo, void* oBuffer, size_t iCount)
 	{
 	size_t countRead;
-	static_cast<ZRef<ZStreamerR>*>(iInfo)[0]->GetStreamR().Read(iBuffer, iCount, &countRead);
+	static_cast<ZRef<ZStreamerR>*>(iInfo)[0]->GetStreamR().Read(oBuffer, iCount, &countRead);
 	return countRead;
 	}
 
@@ -136,10 +136,10 @@ CGDataProviderRef ZStream_MacOSX::sCGDataProviderCreate(ZRef<ZStreamerR> iStream
 
 namespace ZANONYMOUS {
 
-size_t sGetBytesRewind(void* iInfo, void* iBuffer, size_t iCount)
+size_t sGetBytesRewind(void* iInfo, void* oBuffer, size_t iCount)
 	{
 	size_t countRead;
-	static_cast<ZRef<ZStreamerRPos>*>(iInfo)[0]->GetStreamR().Read(iBuffer, iCount, &countRead);
+	static_cast<ZRef<ZStreamerRPos>*>(iInfo)[0]->GetStreamR().Read(oBuffer, iCount, &countRead);
 	return countRead;
 	}
 

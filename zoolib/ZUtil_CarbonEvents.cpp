@@ -43,10 +43,10 @@ using std::string;
 #pragma mark * ZUtil_CarbonEvents
 
 bool ZUtil_CarbonEvents::sQGetParam(EventRef iEventRef, EventParamName iName, EventParamType iType,
-	size_t iBufferSize, void* iBuffer)
+	size_t iBufferSize, void* oBuffer)
 	{
 	return noErr == ::GetEventParameter(
-		iEventRef, iName, iType, nullptr, iBufferSize, nullptr, iBuffer);
+		iEventRef, iName, iType, nullptr, iBufferSize, nullptr, oBuffer);
 	}
 
 size_t ZUtil_CarbonEvents::sGetParamLength(

@@ -38,7 +38,7 @@ public:
 	ZStreamR_Memory(const void* iAddress);
 
 // From ZStreamR
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
 		uint64* oCountRead, uint64* oCountWritten);
@@ -74,7 +74,7 @@ public:
 	ZStreamRPos_Memory(const std::pair<const void*, size_t>& iParam);
 
 // From ZStreamR via ZStreamRPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 
 	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,

@@ -40,9 +40,9 @@ ZStreamR_Chunked::ZStreamR_Chunked(const ZStreamR& iStreamSource)
 ZStreamR_Chunked::~ZStreamR_Chunked()
 	{}
 
-void ZStreamR_Chunked::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_Chunked::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	while (iCount && !fHitEnd)
 		{
 		if (fChunkSize == 0)
@@ -61,7 +61,7 @@ void ZStreamR_Chunked::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 			}
 		}
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
 size_t ZStreamR_Chunked::Imp_CountReadable()

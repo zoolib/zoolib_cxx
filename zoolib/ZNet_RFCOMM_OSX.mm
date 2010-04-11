@@ -235,11 +235,11 @@ ZRef<ZNetAddress> ZNetEndpoint_RFCOMM_OSX::GetLocalAddress()
 ZRef<ZNetAddress> ZNetEndpoint_RFCOMM_OSX::GetRemoteAddress()
 	{ return ZNetEndpoint::GetRemoteAddress(); }
 
-void ZNetEndpoint_RFCOMM_OSX::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZNetEndpoint_RFCOMM_OSX::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	ZGuardMtx locker(fMutex);
 
-	char* localDest = static_cast<char*>(iDest);
+	char* localDest = static_cast<char*>(oDest);
 
 	while (iCount)
 		{
@@ -269,7 +269,7 @@ void ZNetEndpoint_RFCOMM_OSX::Imp_Read(void* iDest, size_t iCount, size_t* oCoun
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - static_cast<char*>(iDest);
+		*oCountRead = localDest - static_cast<char*>(oDest);
 	}
 
 size_t ZNetEndpoint_RFCOMM_OSX::Imp_CountReadable()

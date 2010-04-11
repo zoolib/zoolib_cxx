@@ -231,7 +231,7 @@ bool ZBitWriterBE::WriteBits(const ZStreamW& iStream, size_t iCountBits, uint32 
 	return true;
 	}
 
-/// Write the low \a iCountBits from \a iBits to \a iDest.
+/// Write the low \a iCountBits from \a iBits to \a oDest.
 /**
 Bits are written one byte at a time, so are buffered by ZBitWriterBE until 8
 are available. The number of bytes actually written is returned in \a oCountBytesWritten,
@@ -240,12 +240,12 @@ high within consecutive bytes. Passing 16 or 32 bits at a time in \a iBits will
 thus put the data into memory in little endian order.
 */
 void ZBitWriterBE::WriteBits(
-	void* iDest, size_t iCountBits, uint32 iBits, size_t* oCountBytesWritten)
+	void* oDest, size_t iCountBits, uint32 iBits, size_t* oCountBytesWritten)
 	{
 	ZAssertStop(kDebug_BitStream, iCountBits <= 32);
 	ZAssertStop(kDebug_BitStream, iBits < (1 << iCountBits));
 
-	uint8* localDest = static_cast<uint8*>(iDest);
+	uint8* localDest = static_cast<uint8*>(oDest);
 	while (iCountBits)
 		{
 		if (fAvailBits == 0)
@@ -263,7 +263,7 @@ void ZBitWriterBE::WriteBits(
 		}
 
 	if (oCountBytesWritten)
-		*oCountBytesWritten = localDest - static_cast<uint8*>(iDest);
+		*oCountBytesWritten = localDest - static_cast<uint8*>(oDest);
 	}
 
 /// Flush the buffer by writing pending bits to \a iStream.
@@ -273,15 +273,15 @@ void ZBitWriterBE::Finish(const ZStreamW& iStream)
 		iStream.Write(&fBuffer, 1, nullptr);
 	}
 
-/// Flush the buffer by writing pending bits to \a iDest.
+/// Flush the buffer by writing pending bits to \a oDest.
 /**
 The number of bytes written is returned in \a oCountBytesWritten.
 */
-void ZBitWriterBE::Finish(void* iDest, size_t* oCountBytesWritten)
+void ZBitWriterBE::Finish(void* oDest, size_t* oCountBytesWritten)
 	{
 	if (fAvailBits != 8)
 		{
-		*static_cast<uint8*>(iDest) = fBuffer;
+		*static_cast<uint8*>(oDest) = fBuffer;
 		if (oCountBytesWritten)
 			*oCountBytesWritten = 1;
 		fAvailBits = 8;
@@ -335,7 +335,7 @@ bool ZBitWriterLE::WriteBits(const ZStreamW& iStream, size_t iCountBits, uint32 
 	return true;
 	}
 
-/// Write the low \a iCountBits from \a iBits to \a iDest.
+/// Write the low \a iCountBits from \a iBits to \a oDest.
 /**
 Bits are written one byte at a time, so are buffered by ZBitWriterLE until 8
 are available. The number of bytes actually written is returned in \a oCountBytesWritten,
@@ -343,12 +343,12 @@ and can of course be zero. The bits in memory are considered to be ordered from 
 low within consecutive bytes, but are passed in from low to high.
 */
 void ZBitWriterLE::WriteBits(
-	void* iDest, size_t iCountBits, uint32 iBits, size_t* oCountBytesWritten)
+	void* oDest, size_t iCountBits, uint32 iBits, size_t* oCountBytesWritten)
 	{
 	ZAssertStop(kDebug_BitStream, iCountBits <= 32);
 	ZAssertStop(kDebug_BitStream, iBits < (1 << iCountBits));
 
-	uint8* localDest = static_cast<uint8*>(iDest);
+	uint8* localDest = static_cast<uint8*>(oDest);
 	while (iCountBits--)
 		{
 		if (fAvailBits-- == 0)
@@ -362,7 +362,7 @@ void ZBitWriterLE::WriteBits(
 		}
 
 	if (oCountBytesWritten)
-		*oCountBytesWritten = localDest - static_cast<uint8*>(iDest);
+		*oCountBytesWritten = localDest - static_cast<uint8*>(oDest);
 	}
 
 /// Flush the buffer by writing pending bits to \a iStream.
@@ -372,15 +372,15 @@ void ZBitWriterLE::Finish(const ZStreamW& iStream)
 		iStream.Write(&fBuffer, 1, nullptr);
 	}
 
-/// Flush the buffer by writing pending bits to \a iDest.
+/// Flush the buffer by writing pending bits to \a oDest.
 /**
 The number of bytes written is returned in \a oCountBytesWritten.
 */
-void ZBitWriterLE::Finish(void* iDest, size_t* oCountBytesWritten)
+void ZBitWriterLE::Finish(void* oDest, size_t* oCountBytesWritten)
 	{
 	if (fAvailBits != 8)
 		{
-		*static_cast<uint8*>(iDest) = fBuffer;
+		*static_cast<uint8*>(oDest) = fBuffer;
 		if (oCountBytesWritten)
 			*oCountBytesWritten = 1;
 		fAvailBits = 8;

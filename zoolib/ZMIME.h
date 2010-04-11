@@ -60,7 +60,7 @@ public:
 	StreamR_Header(const ZStreamR& iStream);
 
 // From ZStreamR
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 private:
 	const ZStreamR& fStreamR;
@@ -88,7 +88,7 @@ public:
 	StreamR_Line(const ZStreamR& iStream);
 
 // From ZStreamR
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 // Our protocol
 	bool HitLF() const;

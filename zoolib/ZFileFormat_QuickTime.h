@@ -64,7 +64,7 @@ public:
 	~StreamR_Chunk();
 
 // From ZStreamR
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 	virtual bool Imp_WaitReadable(double iTimeout);
 
@@ -96,7 +96,7 @@ public:
 	~StreamRPos_Chunk();
 
 // From ZStreamR via ZStreamRPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 	virtual void Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,
 		uint64* oCountRead, uint64* oCountWritten);

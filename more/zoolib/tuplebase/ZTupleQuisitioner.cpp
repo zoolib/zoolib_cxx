@@ -29,8 +29,8 @@ using std::vector;
 namespace std {
 
 inline void swap(
-	pair<uint64, vector<const ZOOLIB_PREFIX::ZTValue*> >& a,
-	pair<uint64, vector<const ZOOLIB_PREFIX::ZTValue*> >& b)
+	pair<ZStdInt::uint64, vector<const ZOOLIB_PREFIX::ZTValue*> >& a,
+	pair<ZStdInt::uint64, vector<const ZOOLIB_PREFIX::ZTValue*> >& b)
 	{
 	swap(a.first, b.first);
 	a.second.swap(b.second);

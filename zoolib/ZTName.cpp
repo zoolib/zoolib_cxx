@@ -40,7 +40,7 @@ static const int kDebug = 2;
 static inline int spCompare(const void* iLeft, size_t iLeftLength,
 	const void* iRight, size_t iRightLength)
 	{
-	if (int compare = memcmp(iLeft, iRight,
+	if (int compare = std::memcmp(iLeft, iRight,
 		iLeftLength < iRightLength ? iLeftLength : iRightLength))
 		{
 		return compare;
@@ -179,7 +179,7 @@ int ZTName::sPreRegister(const char* const* iNames, size_t iCount)
 	while (iCount--)
 		{
 		const char* theName = *iNames++;
-		if (size_t theLength = strlen(theName))
+		if (size_t theLength = std::strlen(theName))
 			{
 			// It's important that we only allow strings < 255 (ie 254 or fewer).
 			// ZTName::ToStream writes the entirety of the
@@ -258,7 +258,7 @@ ZTName::ZTName(const std::string& iString)
 
 ZTName::ZTName(const char* iString)
 	{
-	size_t theLength = ::strlen(iString);
+	size_t theLength = std::strlen(iString);
 	fData = spLookupAndTag(iString, theLength);
 	if (!fData)
 		fString = new (theLength) String(iString, theLength);

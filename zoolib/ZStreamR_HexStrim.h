@@ -41,7 +41,7 @@ public:
 	ZStreamR_HexStrim(bool iAllowUnderscore, const ZStrimU& iStrimU);
 
 	virtual ~ZStreamR_HexStrim();
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 private:
 	const ZStrimU& fStrimU;

@@ -385,9 +385,9 @@ ZRef<ZNetAddress> ZNetEndpoint_TCP_WinSock::GetRemoteAddress()
 	return ZRef<ZNetAddress>();
 	}
 
-void ZNetEndpoint_TCP_WinSock::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZNetEndpoint_TCP_WinSock::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	char* localDest = static_cast<char*>(iDest);
+	char* localDest = static_cast<char*>(oDest);
 	if (iCount)
 		{
 		int result = ::recv(fSOCKET, localDest, iCount, 0);
@@ -398,7 +398,7 @@ void ZNetEndpoint_TCP_WinSock::Imp_Read(void* iDest, size_t iCount, size_t* oCou
 			}
 		}
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<char*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<char*>(oDest);
 	}
 
 size_t ZNetEndpoint_TCP_WinSock::Imp_CountReadable()

@@ -107,13 +107,13 @@ ZTextDecoder_ICU::~ZTextDecoder_ICU()
 
 bool ZTextDecoder_ICU::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	UTF32* iDest, size_t iDestCU, size_t* oDestCU)
+	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	UChar utf16Buffer[kBufSize];
 
 	const char* localSource = static_cast<const char*>(iSource);
 
-	UTF32* localDest = iDest;
+	UTF32* localDest = oDest;
 	size_t localDestCU = iDestCU;
 
 	fCountSkipped = 0;
@@ -151,7 +151,7 @@ bool ZTextDecoder_ICU::Decode(
 	if (oSourceBytesSkipped)
 		*oSourceBytesSkipped = fCountSkipped;
 	if (oDestCU)
-		*oDestCU = localDest - iDest;
+		*oDestCU = localDest - oDest;
 	return true;
 	}
 
@@ -188,12 +188,12 @@ ZTextEncoder_ICU::~ZTextEncoder_ICU()
 	}
 
 void ZTextEncoder_ICU::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-					void* iDest, size_t iDestBytes, size_t* oDestBytes)
+					void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	UChar utf16Buffer[kBufSize];
 
 	const UTF32* localSource = iSource;
-	char* localDest = static_cast<char*>(iDest);
+	char* localDest = static_cast<char*>(oDest);
 
 	UErrorCode status = U_ZERO_ERROR;
 
@@ -237,7 +237,7 @@ void ZTextEncoder_ICU::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 	if (oSourceCU)
 		*oSourceCU = localSource - iSource;
 	if (oDestBytes)
-		*oDestBytes = localDest - static_cast<char*>(iDest);
+		*oDestBytes = localDest - static_cast<char*>(oDest);
 	}
 
 void ZTextEncoder_ICU::Reset()

@@ -83,7 +83,7 @@ public:
 	~ZStreamR_SHA1();
 
 // From ZStreamR
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 // Our protocol
 	void GetDigest(uint8 oDigest[20]);

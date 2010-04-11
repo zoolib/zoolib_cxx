@@ -61,7 +61,7 @@ public:
 	virtual ZRef<ZFileIterRep> CreateIterRep();
 
 	virtual std::string GetName(ZFile::Error* oErr) const;
-	virtual ZTrail TrailTo(ZRef<ZFileLoc> iDest, ZFile::Error* oErr) const;
+	virtual ZTrail TrailTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr) const;
 
 	virtual ZRef<ZFileLoc> GetParent(ZFile::Error* oErr);
 	virtual ZRef<ZFileLoc> GetDescendant(
@@ -79,7 +79,7 @@ public:
 
 	virtual ZRef<ZFileLoc> CreateDir(ZFile::Error* oError);
 
-	virtual ZRef<ZFileLoc> MoveTo(ZRef<ZFileLoc> iDest, ZFile::Error* oErr);
+	virtual ZRef<ZFileLoc> MoveTo(ZRef<ZFileLoc> oDest, ZFile::Error* oErr);
 	virtual bool Delete(ZFile::Error* oErr);
 
 	virtual ZRef<ZStreamerRPos> OpenRPos(bool iPreventWriters, ZFile::Error* oErr);
@@ -117,7 +117,7 @@ public:
 	virtual ~ZFileR_POSIX();
 
 // From ZFileR
-	virtual ZFile::Error ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead);
+	virtual ZFile::Error ReadAt(uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead);
 
 	virtual ZFile::Error GetSize(uint64& oSize);
 	
@@ -163,7 +163,7 @@ public:
 
 // From ZFileRW
 	virtual ZFile::Error ReadAt(
-		uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead);
+		uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead);
 	virtual ZFile::Error WriteAt(
 		uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
 
@@ -189,7 +189,7 @@ public:
 	virtual ~ZFileR_POSIXMutex();
 
 // From ZFileR
-	virtual ZFile::Error ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead);
+	virtual ZFile::Error ReadAt(uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead);
 
 	virtual ZFile::Error GetSize(uint64& oSize);
 	
@@ -238,7 +238,7 @@ public:
 	virtual ~ZFileRW_POSIXMutex();
 
 // From ZFileRW
-	virtual ZFile::Error ReadAt(uint64 iOffset, void* iDest, size_t iCount, size_t* oCountRead);
+	virtual ZFile::Error ReadAt(uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead);
 	virtual ZFile::Error WriteAt(
 		uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten);
 
@@ -266,7 +266,7 @@ public:
 	~ZStreamRPos_File_POSIX();
 
 // From ZStreamR via ZStreamRPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 // From ZStreamRPos
 	virtual uint64 Imp_GetPosition();
@@ -356,7 +356,7 @@ public:
 	~ZStreamRWPos_File_POSIX();
 
 // From ZStreamR via ZStreamRWPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 // From ZStreamW via ZStreamRWPos
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);

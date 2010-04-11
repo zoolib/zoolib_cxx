@@ -110,7 +110,7 @@ static Query U(const Query& iQuery1, const Query& iQuery2)
 
 static void sTesterfsdfsdf()
 	{
-	Condition theCondition = CName("Object") == CConst("view");
+	Condition theCondition = CName("Object") == CString("view");
 	}
 
 static const string sProps_note[] = { "Object", "titl", "crea", "text", "stat" };
@@ -121,14 +121,14 @@ static const RelHead sRelHead_view(sProps_view, countof(sProps_view));
 
 static Query sNotesWithIDs()
 	{
-	return sAllID("noteID", sRelHead_note) & (CName("Object") == CConst("note"));
+	return sAllID("noteID", sRelHead_note) & (CName("Object") == CString("note"));
 	}
 
 static const string sProps_Link[] = { "Link", "from", "to" };
 static const RelHead sRelHead_Link(sProps_Link, countof(sProps_Link));
 static Query sLinks_Owns()
 	{
-	return sAll(sRelHead_Link) & (CName("Link") == CConst("owns"));
+	return sAll(sRelHead_Link) & (CName("Link") == CString("owns"));
 	}
 
 static void sTest()
@@ -143,7 +143,7 @@ static Spec sBadAuthors()
 	ZValCondition theSpec = a > b;
 //	Spec theSpec = operator<< <>(a << b;
 //	ZExpr_ValCondition_T<ZVal_Expr>::Expr_Condition result = CName_T<ZVal_Expr>("Object") == CConst_T<ZVal_Expr>("author");
-//	ZExpr_ValCondition_T<ZVal_Expr>::Expr_Condition result = CName("Object") == CConst("author");
+//	ZExpr_ValCondition_T<ZVal_Expr>::Expr_Condition result = CName("Object") == CString("author");
 //	ZExpr_ValCondition_T<ZVal_Expr>::Expr_Condition result = operator==<ZVal_Expr>(CName_T<ZVal_Expr>("Object"), CName_T<ZVal_Expr>("author"));
 //	const Spec theSpec = operator==<ZVal_Expr>(CName_T<ZVal_Expr>("Object"), CName_T<ZVal_Expr>("author"));
 //	const Spec theSpec = (CName("Object") == CConst("author"));
@@ -236,30 +236,30 @@ static Query sAllIDs()
 
 static Query sAllNotes()
 	{
-	Query theQuery = sAllID("$ID$", sRelHead_note) & (CName("Object") == CConst("note"));
+	Query theQuery = sAllID("$ID$", sRelHead_note) & (CName("Object") == CString("note"));
 	return sDrop(theQuery, "Object");
 	}
 
 static Query sAllNotesNoHead()
 	{
-	return sAllID("$ID$") & (CName("Object") == CConst("note"));
+	return sAllID("$ID$") & (CName("Object") == CString("note"));
 	}
 
 static Query sAllViews()
 	{
-	Query theQuery = sAllID("$ID$", sRelHead_view) & (CName("Object") == CConst("view") & CName("Objectdis") == CConst("view"));
+	Query theQuery = sAllID("$ID$", sRelHead_view) & (CName("Object") == CString("view") & CName("Objectdis") == CString("view"));
 	return sDrop(theQuery, "Object");
 	}
 
 static Query sAllViewsNoHead()
 	{
-	return sAllID("$ID$") & (CName("Object") == CConst("view") & CName("Objectdis") == CConst("view"));
+	return sAllID("$ID$") & (CName("Object") == CString("view") & CName("Objectdis") == CString("view"));
 	}
 
 static Query sAllContains()
 	{
-	Query theQuery = sAll(sRelHead_Link) & (CName("Link") == CConst("contains"));
-//	Query theQuery = sAll(sRelHead_Link) & EQ(CName("Link"), CConst("contains")));
+	Query theQuery = sAll(sRelHead_Link) & (CName("Link") == CString("contains"));
+//	Query theQuery = sAll(sRelHead_Link) & EQ(CName("Link"), CString("contains")));
 	return sDrop(theQuery, "Link");
 	}
 
@@ -301,18 +301,10 @@ static Query sQuery()
 static void sDumpQuery(const ZStrimW& s, Query iQuery)
 	{
 	Util_Strim_Rel::Options theOptions;
-	theOptions.fDebuggingOutput = true;
+//##	theOptions.fDebuggingOutput = true;
 
-	s << "ZTQL::Query equivalent -----------------------\n";
 	Util_Strim_Rel::sToStrim(iQuery, theOptions, s);
-
-	s << "\nZTQL::Query optimized -----------------------\n";
-	
-	Query theNode = sOptimize(iQuery);
-	
-	Util_Strim_Rel::sToStrim(theNode, theOptions, s);
-
-	s << "\n";	
+	s << "\n";
 	}
 
 #if 1
@@ -410,14 +402,14 @@ return;
 
 	ZMap_Expr theMap;
 	theMap.Set("name", ZMap_Expr().Set("last", string("fred")));
-//	Spec theSpec = CTrail("name/last") < CConst("fred1");
+//	Spec theSpec = CTrail("name/last") < CString("fred1");
 	
-	if (sMatches(true & (CTrail("name/last") < CConst("fred1")), theMap))
+	if (sMatches(true & (CTrail("name/last") < CString("fred1")), theMap))
 		s << "Matches\n";
 	else
 		s << "Doesn't\n";
 
-	if (sMatches(true & (CTrail("name/last") >= CConst("fred1")), theMap))
+	if (sMatches(true & (CTrail("name/last") >= CString("fred1")), theMap))
 		s << "Matches\n";
 	else
 		s << "Doesn't\n";
@@ -471,6 +463,49 @@ void sTestQL6(const ZStrimW& s)
 	using namespace ZValBase_SQLite;
 	using namespace ZSQLite;
 
+	ZRef<DB> theDB = new DB("/Users/ag/sqlitetest/MyVideos34.db");
+
+	ZRef<ZValBase_SQLite::ConcreteDomain> theConcreteDomain =
+		new ZValBase_SQLite::ConcreteDomain(theDB);
+
+	Rel theRel = sConcrete_SQL(theConcreteDomain, "select * from sqlite_master");
+	Rel theRel_ = sConcrete_SQL(theConcreteDomain, "select * from sqlite_master");
+//	theRel = theRel & (CName("type") < CConst(0));
+	theRel = theRel & (CName("type") == CString("table") | CName("type") == CString("view"));
+	
+	sDumpQuery(s, theRel);
+
+	theRel = sOptimize(theRel);
+
+	sDumpQuery(s, theRel);
+
+	for (ZRef<ZQE::Iterator> theIterator = ZValBase::sIterator(theRel);;)
+		{
+		if (ZRef<ZQE::Result> theZQEResult = theIterator->ReadInc())
+			{
+			if (ZRef<ZQE::Result_Any> theResult = theZQEResult.DynamicCast<ZQE::Result_Any>())
+				{
+				ZYad_ZooLibStrim::sToStrim(0, theYadOptions, sMakeYadR(theResult->GetVal()), s);
+				s << "\n";
+				}
+			else
+				{
+				s.Writef("%08X, ", theZQEResult.Get());
+				}
+			}
+		else
+			{
+			break;
+			}
+		}
+	s << "\n";
+	}
+
+void sTestQL7(const ZStrimW& s)
+	{
+	using namespace ZValBase_SQLite;
+	using namespace ZSQLite;
+
 //	ZRef<DB> theDB = new DB("/Users/ag/sqlitetest/test.db");
 	ZRef<DB> theDB = new DB("/Users/ag/sqlitetest/FS.db");
 //	ZRef<DB> theDB = new DB("/Users/ag/sqlitetest/MyVideos34.db");
@@ -480,10 +515,19 @@ void sTestQL6(const ZStrimW& s)
 
 //	Rel thePhys1 = ZValBase_SQLite::sConcrete_Table(theConcreteDomain, "airports");
 //	Rel thePhys1 = ZValBase_SQLite::sConcrete_SQL(theConcreteDomain, "select * from sqlite_master");
-	Rel thePhys1 = ZValBase_SQLite::sConcrete_SQL(theConcreteDomain, "select * from airports");
-	sDumpQuery(s, thePhys1);
+	
+	Spec theCondition =
+		CName("id") == CString("AAL") | CName("useForRandom") == CConst(int64(1));
 
-	for (ZRef<ZQE::Iterator> theIterator = ZValBase::sIterator(thePhys1);;)
+	Rel theRel1 = sConcrete_SQL(theConcreteDomain, "select * from airports");
+
+	Rel theRel = theRel1;
+	theRel = theRel | sConcrete_SQL(theConcreteDomain, "select * from airlines");
+	theRel = theRel & theCondition;
+
+	sDumpQuery(s, theRel);
+
+	for (ZRef<ZQE::Iterator> theIterator = ZValBase::sIterator(theRel);;)
 		{
 		if (ZRef<ZQE::Result> theZQEResult = theIterator->ReadInc())
 			{

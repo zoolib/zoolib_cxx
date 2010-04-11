@@ -301,22 +301,22 @@ string8 ZStrimR::ReadUTF8(size_t iCountCP) const
 	}
 
 
-/** Read \a iCount code units into the memory starting at \a iDest and
-extending to \a iDest + \a iCount. The number of code units actually
+/** Read \a iCount code units into the memory starting at \a oDest and
+extending to \a oDest + \a iCount. The number of code units actually
 read is placed in oCount.*/
-void ZStrimR::Read(UTF32* iDest, size_t iCount, size_t* oCount) const
-	{ const_cast<ZStrimR*>(this)->Imp_ReadUTF32(iDest, iCount, oCount); }
+void ZStrimR::Read(UTF32* oDest, size_t iCount, size_t* oCount) const
+	{ const_cast<ZStrimR*>(this)->Imp_ReadUTF32(oDest, iCount, oCount); }
 
 /// \overload
-void ZStrimR::Read(UTF16* iDest, size_t iCountCU, size_t* oCountCU) const
-	{ const_cast<ZStrimR*>(this)->Imp_ReadUTF16(iDest, iCountCU, oCountCU, iCountCU, nullptr); }
+void ZStrimR::Read(UTF16* oDest, size_t iCountCU, size_t* oCountCU) const
+	{ const_cast<ZStrimR*>(this)->Imp_ReadUTF16(oDest, iCountCU, oCountCU, iCountCU, nullptr); }
 
 /// \overload
-void ZStrimR::Read(UTF8* iDest, size_t iCountCU, size_t* oCountCU) const
-	{ const_cast<ZStrimR*>(this)->Imp_ReadUTF8(iDest, iCountCU, oCountCU, iCountCU, nullptr); }
+void ZStrimR::Read(UTF8* oDest, size_t iCountCU, size_t* oCountCU) const
+	{ const_cast<ZStrimR*>(this)->Imp_ReadUTF8(oDest, iCountCU, oCountCU, iCountCU, nullptr); }
 
 
-/** Read code points into the buffer at \a iDest. No more than \a iCountCU code units will
+/** Read code points into the buffer at \a oDest. No more than \a iCountCU code units will
 be read, and no more code units than make up \a iCountCP code points will be read. If
 \a oCountCU is non-nil then the actual number of code units will be placed in \a *oCountCU. If
 \a oCountCP is non-nil then the actual number of code points will be placed in \a *oCountCP. Note
@@ -325,14 +325,14 @@ of their operation, whereas for others its necessary that they examine the read 
 some overhead. If you don't \em need to know the number of code points then it is best to
 pass nil for \a oCountCP.
 */
-void ZStrimR::Read(UTF16* iDest,
+void ZStrimR::Read(UTF16* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP) const
-	{ const_cast<ZStrimR*>(this)->Imp_ReadUTF16(iDest, iCountCU, oCountCU, iCountCP, oCountCP); }
+	{ const_cast<ZStrimR*>(this)->Imp_ReadUTF16(oDest, iCountCU, oCountCU, iCountCP, oCountCP); }
 
 /// \overload
-void ZStrimR::Read(UTF8* iDest,
+void ZStrimR::Read(UTF8* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP) const
-	{ const_cast<ZStrimR*>(this)->Imp_ReadUTF8(iDest, iCountCU, oCountCU, iCountCP, oCountCP); }
+	{ const_cast<ZStrimR*>(this)->Imp_ReadUTF8(oDest, iCountCU, oCountCU, iCountCP, oCountCP); }
 
 
 /// Read data from this strim and write it to \a iStrimW until this strim reaches its end.
@@ -519,11 +519,11 @@ void ZStrimR::SkipAll(size_t* oCountCPSkipped) const
 		}
 	}
 
-void ZStrimR::Imp_ReadUTF16(UTF16* iDest,
+void ZStrimR::Imp_ReadUTF16(UTF16* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	UTF32 utf32Buffer[kBufSize];
-	UTF16* localDest = iDest;
+	UTF16* localDest = oDest;
 	size_t localCountCP = iCountCP;
 	// If we've got space for two code units we are assured of
 	// being able to read at least one code point.
@@ -553,14 +553,14 @@ void ZStrimR::Imp_ReadUTF16(UTF16* iDest,
 	if (oCountCP)
 		*oCountCP = iCountCP - localCountCP;
 	if (oCountCU)
-		*oCountCU = localDest - iDest;
+		*oCountCU = localDest - oDest;
 	}
 
-void ZStrimR::Imp_ReadUTF8(UTF8* iDest,
+void ZStrimR::Imp_ReadUTF8(UTF8* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	UTF32 utf32Buffer[kBufSize];
-	UTF8* localDest = iDest;
+	UTF8* localDest = oDest;
 	size_t localCountCP = iCountCP;
 	// If we've got space for six code units we are assured of
 	// being able to read at least one code point.
@@ -590,7 +590,7 @@ void ZStrimR::Imp_ReadUTF8(UTF8* iDest,
 	if (oCountCP)
 		*oCountCP = iCountCP - localCountCP;
 	if (oCountCU)
-		*oCountCU = localDest - iDest;
+		*oCountCU = localDest - oDest;
 	}
 
 
@@ -1485,13 +1485,13 @@ void ZStrimW_NativeUTF8::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, s
 
 /// A derivation of ZStrimR that is empty
 
-void ZStrimR_Null::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimR_Null::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	if (oCount)
 		*oCount = 0;
 	}
 
-void ZStrimR_Null::Imp_ReadUTF16(UTF16* iDest,
+void ZStrimR_Null::Imp_ReadUTF16(UTF16* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	if (oCountCU)
@@ -1500,7 +1500,7 @@ void ZStrimR_Null::Imp_ReadUTF16(UTF16* iDest,
 		*oCountCP = 0;
 	}
 
-void ZStrimR_Null::Imp_ReadUTF8(UTF8* iDest,
+void ZStrimR_Null::Imp_ReadUTF8(UTF8* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	if (oCountCU)
@@ -1589,7 +1589,7 @@ ZStrimU_String32::ZStrimU_String32(const string32& iString)
 ZStrimU_String32::~ZStrimU_String32()
 	{}
 
-void ZStrimU_String32::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimU_String32::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	const size_t theLength = fString.length();
 	if (fPosition >= theLength)
@@ -1603,13 +1603,13 @@ void ZStrimU_String32::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 		ZUnicode::sUTF32ToUTF32(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
-			iDest, iCount,
+			oDest, iCount,
 			oCount);
 		fPosition += countConsumed;
 		}
 	}
 
-void ZStrimU_String32::Imp_ReadUTF16(UTF16* iDest,
+void ZStrimU_String32::Imp_ReadUTF16(UTF16* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	const size_t theLength = fString.length();
@@ -1626,14 +1626,14 @@ void ZStrimU_String32::Imp_ReadUTF16(UTF16* iDest,
 		ZUnicode::sUTF32ToUTF16(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
-			iDest, iCountCU,
+			oDest, iCountCU,
 			oCountCU,
 			iCountCP, oCountCP);
 		fPosition += countConsumed;
 		}
 	}
 
-void ZStrimU_String32::Imp_ReadUTF8(UTF8* iDest,
+void ZStrimU_String32::Imp_ReadUTF8(UTF8* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	const size_t theLength = fString.length();
@@ -1650,7 +1650,7 @@ void ZStrimU_String32::Imp_ReadUTF8(UTF8* iDest,
 		ZUnicode::sUTF32ToUTF8(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
-			iDest, iCountCU,
+			oDest, iCountCU,
 			oCountCU,
 			iCountCP, oCountCP);
 		fPosition += countConsumed;
@@ -1690,7 +1690,7 @@ ZStrimU_String16::ZStrimU_String16(const string16& iString)
 ZStrimU_String16::~ZStrimU_String16()
 	{}
 
-void ZStrimU_String16::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimU_String16::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	const size_t theLength = fString.length();
 	if (fPosition >= theLength)
@@ -1704,13 +1704,13 @@ void ZStrimU_String16::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 		ZUnicode::sUTF16ToUTF32(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
-			iDest, iCount,
+			oDest, iCount,
 			oCount);
 		fPosition += countConsumed;
 		}
 	}
 
-void ZStrimU_String16::Imp_ReadUTF16(UTF16* iDest,
+void ZStrimU_String16::Imp_ReadUTF16(UTF16* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	const size_t theLength = fString.length();
@@ -1727,14 +1727,14 @@ void ZStrimU_String16::Imp_ReadUTF16(UTF16* iDest,
 		ZUnicode::sUTF16ToUTF16(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
-			iDest, iCountCU,
+			oDest, iCountCU,
 			oCountCU,
 			iCountCP, oCountCP);
 		fPosition += countConsumed;
 		}
 	}
 
-void ZStrimU_String16::Imp_ReadUTF8(UTF8* iDest,
+void ZStrimU_String16::Imp_ReadUTF8(UTF8* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	const size_t theLength = fString.length();
@@ -1751,7 +1751,7 @@ void ZStrimU_String16::Imp_ReadUTF8(UTF8* iDest,
 		ZUnicode::sUTF16ToUTF8(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
-			iDest, iCountCU,
+			oDest, iCountCU,
 			oCountCU,
 			iCountCP, oCountCP);
 		fPosition += countConsumed;
@@ -1793,7 +1793,7 @@ ZStrimU_String8::ZStrimU_String8(const string8& iString)
 ZStrimU_String8::~ZStrimU_String8()
 	{}
 
-void ZStrimU_String8::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimU_String8::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	const size_t theLength = fString.length();
 	if (fPosition >= theLength)
@@ -1807,13 +1807,13 @@ void ZStrimU_String8::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 		ZUnicode::sUTF8ToUTF32(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
-			iDest, iCount,
+			oDest, iCount,
 			oCount);
 		fPosition += countConsumed;
 		}
 	}
 
-void ZStrimU_String8::Imp_ReadUTF16(UTF16* iDest,
+void ZStrimU_String8::Imp_ReadUTF16(UTF16* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	const size_t theLength = fString.length();
@@ -1830,14 +1830,14 @@ void ZStrimU_String8::Imp_ReadUTF16(UTF16* iDest,
 		ZUnicode::sUTF8ToUTF16(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
-			iDest, iCountCU,
+			oDest, iCountCU,
 			oCountCU,
 			iCountCP, oCountCP);
 		fPosition += countConsumed;
 		}
 	}
 
-void ZStrimU_String8::Imp_ReadUTF8(UTF8* iDest,
+void ZStrimU_String8::Imp_ReadUTF8(UTF8* oDest,
 	size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP)
 	{
 	const size_t theLength = fString.length();
@@ -1854,7 +1854,7 @@ void ZStrimU_String8::Imp_ReadUTF8(UTF8* iDest,
 		ZUnicode::sUTF8ToUTF8(
 			fString.data() + fPosition, theLength - fPosition,
 			&countConsumed, nullptr,
-			iDest, iCountCU,
+			oDest, iCountCU,
 			oCountCU,
 			iCountCP, oCountCP);
 		fPosition += countConsumed;

@@ -84,18 +84,18 @@ public:
 
 /** \name String buffers
 */	//@{
-	void Read(UTF32* iDest, size_t iCount, size_t* oCount) const;
-	void Read(UTF16* iDest, size_t iCountCU, size_t* oCountCU) const;
-	void Read(UTF8* iDest, size_t iCountCU, size_t* oCountCU) const;
+	void Read(UTF32* oDest, size_t iCount, size_t* oCount) const;
+	void Read(UTF16* oDest, size_t iCountCU, size_t* oCountCU) const;
+	void Read(UTF8* oDest, size_t iCountCU, size_t* oCountCU) const;
 	//@}
 
 
 /** \name String buffers, limiting and reporting both CU and CP
 */	//@{
-	void Read(UTF16* iDest,
+	void Read(UTF16* oDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP) const;
 
-	void Read(UTF8* iDest,
+	void Read(UTF8* oDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP) const;
 	//@}
 
@@ -129,7 +129,7 @@ Skip over code points from this strim without returning them to the caller.
 /** \name Essential overrides
 These methods must be overridden by subclasses.
 */	//@{
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount) = 0;
+	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount) = 0;
 	//@}
 
 
@@ -137,10 +137,10 @@ These methods must be overridden by subclasses.
 Default implementations that directly or indirectly call ZStrimR::Imp_ReadUTF32 are provided,
 but particular subclasses may have more efficient implementations available.
 */	//@{
-	virtual void Imp_ReadUTF16(UTF16* iDest,
+	virtual void Imp_ReadUTF16(UTF16* oDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
-	virtual void Imp_ReadUTF8(UTF8* iDest,
+	virtual void Imp_ReadUTF8(UTF8* oDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
 	virtual void Imp_CopyToDispatch(const ZStrimW& iStrimW,
@@ -532,12 +532,12 @@ public:
 class ZStrimR_Null : public ZStrimR
 	{
 public:
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
-	virtual void Imp_ReadUTF16(UTF16* iDest,
+	virtual void Imp_ReadUTF16(UTF16* oDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
-	virtual void Imp_ReadUTF8(UTF8* iDest,
+	virtual void Imp_ReadUTF8(UTF8* oDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
 	virtual void Imp_CopyToDispatch(const ZStrimW& iStrimW,
@@ -584,12 +584,12 @@ public:
 	~ZStrimU_String32();
 
 // From ZStrimR via ZStrimU
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
-	virtual void Imp_ReadUTF16(UTF16* iDest,
+	virtual void Imp_ReadUTF16(UTF16* oDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
-	virtual void Imp_ReadUTF8(UTF8* iDest,
+	virtual void Imp_ReadUTF8(UTF8* oDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
 	virtual bool Imp_ReadCP(UTF32& oCP);
@@ -616,12 +616,12 @@ public:
 	~ZStrimU_String16();
 
 // From ZStrimR via ZStrimU
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
-	virtual void Imp_ReadUTF16(UTF16* iDest,
+	virtual void Imp_ReadUTF16(UTF16* oDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
-	virtual void Imp_ReadUTF8(UTF8* iDest,
+	virtual void Imp_ReadUTF8(UTF8* oDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
 // From ZStrimU
@@ -646,12 +646,12 @@ public:
 	~ZStrimU_String8();
 
 // From ZStrimR via ZStrimU
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
-	virtual void Imp_ReadUTF16(UTF16* iDest,
+	virtual void Imp_ReadUTF16(UTF16* oDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
-	virtual void Imp_ReadUTF8(UTF8* iDest,
+	virtual void Imp_ReadUTF8(UTF8* oDest,
 		size_t iCountCU, size_t* oCountCU, size_t iCountCP, size_t* oCountCP);
 
 // From ZStrimU

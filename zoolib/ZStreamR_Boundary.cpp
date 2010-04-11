@@ -58,16 +58,16 @@ ZStreamR_Boundary::~ZStreamR_Boundary()
 	delete[] fBuffer;
 	}
 
-void ZStreamR_Boundary::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_Boundary::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (!fBuffer)
 		{
-		fStreamSource.Read(iDest, iCount, oCountRead);
+		fStreamSource.Read(oDest, iCount, oCountRead);
 		}
 	else
 		{
 		const size_t boundarySize = fBoundary.size();
-		uint8* localDest = reinterpret_cast<uint8*>(iDest);
+		uint8* localDest = reinterpret_cast<uint8*>(oDest);
 		while (iCount)
 			{
 			if (fDataEnd > fDataStart)
@@ -135,7 +135,7 @@ void ZStreamR_Boundary::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 				}
 			}
 		if (oCountRead)
-			*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
+			*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 		}
 	}
 

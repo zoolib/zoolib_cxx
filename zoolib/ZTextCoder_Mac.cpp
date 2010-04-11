@@ -130,7 +130,7 @@ static bool spInitedSourceOffsets = false;
 
 bool ZTextDecoder_Mac::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	UTF32* iDest, size_t iDestCU, size_t* oDestCU)
+	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	// When we're working with a destination buffer that can't hold all the source material
 	// we have ConvertFromTextToUnicode write into the local array 'offsets' the byte
@@ -148,7 +148,7 @@ bool ZTextDecoder_Mac::Decode(
 	UniChar utf16Buffer[kBufSize];
 
 	const uint8* localSource = static_cast<const uint8*>(iSource);
-	UTF32* localDest = iDest;
+	UTF32* localDest = oDest;
 	bool sourceComplete = true;
 
 	size_t sourceBytesSkipped = 0;
@@ -270,7 +270,7 @@ bool ZTextDecoder_Mac::Decode(
 	if (oSourceBytesSkipped)
 		*oSourceBytesSkipped = sourceBytesSkipped;
 	if (oDestCU)
-		*oDestCU = localDest - iDest;
+		*oDestCU = localDest - oDest;
 	return true;
 	}
 
@@ -314,14 +314,14 @@ ZTextEncoder_Mac::~ZTextEncoder_Mac()
 	}
 
 void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-					void* iDest, size_t iDestBytes, size_t* oDestBytes)
+					void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	// utf16Buffer is the source for calls to ConvertFromUnicodeToText, we use
 	// ZUnicode::sUTF32ToUTF16 to populate it from the UTF-32 we're passed.
 	UniChar utf16Buffer[kBufSize];
 
 	const UTF32* localSource = iSource;
-	uint8* localDest = static_cast<uint8*>(iDest);
+	uint8* localDest = static_cast<uint8*>(oDest);
 
 	// We allow the use of fallbacks, but have installed a custom fallback handler
 	// that emits no code units. So Unicode code points which the encoder can't
@@ -374,7 +374,7 @@ void ZTextEncoder_Mac::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 	if (oSourceCU)
 		*oSourceCU = localSource - iSource;
 	if (oDestBytes)
-		*oDestBytes = localDest - static_cast<uint8*>(iDest);
+		*oDestBytes = localDest - static_cast<uint8*>(oDest);
 	}
 
 static pascal OSStatus spUnicodeToTextFallback_Null(UniChar *iSrcUniStr, ByteCount iSrcUniStrLen,

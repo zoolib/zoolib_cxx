@@ -1364,7 +1364,7 @@ bool sParseURL(const string& iURL,
 		}
 	else
 		{
-		start = dividerOffset + strlen(schemeDivider);
+		start = dividerOffset + std::strlen(schemeDivider);
 		if (oScheme)
 			*oScheme = iURL.substr(0, dividerOffset);
 		}
@@ -1767,9 +1767,9 @@ StreamR_Chunked::StreamR_Chunked(const ZStreamR& iStreamSource)
 StreamR_Chunked::~StreamR_Chunked()
 	{}
 
-void StreamR_Chunked::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void StreamR_Chunked::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	while (iCount && !fHitEnd)
 		{
 		if (fChunkSize == 0)
@@ -1796,7 +1796,7 @@ void StreamR_Chunked::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 			}
 		}
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
 size_t StreamR_Chunked::Imp_CountReadable()

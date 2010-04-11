@@ -38,7 +38,7 @@ public:
 	~ZStreamR_Filter();
 
 // From ZStreamR
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 	virtual bool Imp_WaitReadable(double iTimeout);
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
@@ -65,7 +65,7 @@ public:
 	~ZStreamRCon_Filter();
 
 // From ZStreamR via ZStreamRCon
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual bool Imp_WaitReadable(double iTimeout);
 	virtual size_t Imp_CountReadable();
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
@@ -90,7 +90,7 @@ public:
 	~ZStreamU_Filter();
 
 // From ZStreamR via ZStreamU
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 	virtual bool Imp_WaitReadable(double iTimeout);
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
@@ -114,7 +114,7 @@ public:
 	~ZStreamRPos_Filter();
 
 // From ZStreamR via ZStreamRPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
@@ -208,7 +208,7 @@ public:
 	~ZStreamRWPos_Filter();
 
 // From ZStreamR via ZStreamRWPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 

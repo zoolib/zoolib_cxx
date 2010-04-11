@@ -1,0 +1,76 @@
+/**
+\defgroup NamingConvention Naming Convention
+
+\section ScopePrefixes Prefixes Designate Scope
+Most of my confusion when reading unfamiliar C++ is determining from which scope a name is drawn.
+
+We've got parameters, local and instance variables, and class, file and namespace statics to
+distinguish. ZooLib uses name prefixes to make distinct the scope in which a name is defined.
+
+- \c f - instance variables. (\c f is an abbreviation of 'field', cf MacApp/Taligent/Object Pascal).
+
+- \c s - static variables and functions. These are class or namespace static, and are publicly
+accessible.
+
+- \c sp - static private variables and functions. If file static then obviously they're not publicly
+visible. If class static, then they're marked protected if intended for use by subclasses,
+private if only for use by the class itself.
+
+- \c i - input parameter. This is the most common type of parameter and probably conforms most closely
+to the classic definition of a parameter. Its value at entry will very likely affect what the
+function does. Its value in the calling scope will not be changed by the function's execution.
+If the function cannot operate without its value, then it's a compulsory parameter and is passed by
+value or const reference. If the parameter is optional it's passed by const pointer, so the caller
+can pass nullptr indicating that no value is available.
+
+- \c o - output parameter. Output parameters let a function return multiple values.
+Its value on entry will not affect the function's execution and the function takes full
+responsibility for giving it an appropriate value before returning. If the parameter is compulsory
+it is passed by non-const reference. If optional, by non-const pointer.
+
+- \c io - input/output parameter. An input/output parameter's value at entry may affect the
+function's execution and should thus have a sensible value. Its value in the calling scope
+may be changed by the function's execution. If compulsory, pass by non-const reference. If
+optional by non-const pointer, just as with output parameters.
+
+- \c e - enumeration value. Enumerations tend to be class public, so we don't encode the scope
+itself, just that it is an enumeration value.
+scope in the name.
+
+- \c E - enumeration type
+
+\section Names Names
+Types are nouns or noun phrases; functions are verbs or verb phrases.
+
+Names that are phrases are CamelCased, each word in the phrase has its first letter upper cased.
+If there is a prefix, the prefix is lower cased and the 'meat' starts with an upper case letter, the
+remainder being CamelCased.
+
+For non-class types I'll usually use a \c _t suffix, and for template types/classes/functions a
+\c _T suffix.
+
+Classes and method names have an upper case initial letter.
+
+Local variables have a lower case initial letter. I often use a  \c the prefix, but the really
+just whatever reads best.
+
+Pretty much everything else has a scope prefix.
+
+\section CompoundNames Compound Names
+
+This may be the most controversial stylistic decision, but I've found it helpful.
+
+Much of ZooLib
+consists of abstract interfaces and a suite of concrete implementations. In such situations the
+base is named with a noun or noun phrase (CamelCased of course). Concrete implementations are
+named with the base name, an underscore, and a distinguishing noun or noun phrase. This
+approach keeps hierarchies together when their members are sorted lexicographically. It
+also provides a strong hint of a type's likely compatibility -- if you see an \c XxxYyy_Zzz
+it can generally be passed to a function expecting an \c XxxYyy.
+
+For types that are related but not type-compatible I use reverse English order noun phrases, so
+\c XxxYyy and \c XxxZzz are probably part of an \c Xxx package.
+
+The goal is not to be rigidly prescriptive, but to make several hundreds of names somewhat
+predictable and intelligible.
+*/

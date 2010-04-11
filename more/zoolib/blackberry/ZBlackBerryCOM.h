@@ -70,7 +70,7 @@ ZWinCOM_CLASS_(IChannel, IUnknown,
 	virtual STDMETHODIMP Params(ChannelParams* oParams) = 0;
 	virtual STDMETHODIMP hostBuffers(uint16 iRHS) = 0;
 	virtual STDMETHODIMP PacketsAvailable(int32* oPacketsAvailable) = 0;
-	virtual STDMETHODIMP ReadPacket(void* iDest, int32 iCount, int32* oCount) = 0;
+	virtual STDMETHODIMP ReadPacket(void* oDest, int32 iCount, int32* oCount) = 0;
 	virtual STDMETHODIMP WritePacket(const void* iSource, int32 iLength) = 0;
 	};
 

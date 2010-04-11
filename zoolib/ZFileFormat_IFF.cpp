@@ -150,9 +150,9 @@ ZFileFormat_IFF::StreamR_Chunk::~StreamR_Chunk()
 		}
 	}
 
-void ZFileFormat_IFF::StreamR_Chunk::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZFileFormat_IFF::StreamR_Chunk::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 
 	while (iCount && fCountRemaining)
 		{
@@ -166,7 +166,7 @@ void ZFileFormat_IFF::StreamR_Chunk::Imp_Read(void* iDest, size_t iCount, size_t
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
 size_t ZFileFormat_IFF::StreamR_Chunk::Imp_CountReadable()
@@ -265,9 +265,9 @@ ZFileFormat_IFF::StreamRPos_Chunk::~StreamRPos_Chunk()
 		}
 	}
 
-void ZFileFormat_IFF::StreamRPos_Chunk::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZFileFormat_IFF::StreamRPos_Chunk::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	size_t countRemaining = ZStream::sClampedSize(iCount, fStart + fSize, fStream.GetPosition());
 	while (countRemaining)
 		{
@@ -280,7 +280,7 @@ void ZFileFormat_IFF::StreamRPos_Chunk::Imp_Read(void* iDest, size_t iCount, siz
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
 void ZFileFormat_IFF::StreamRPos_Chunk::Imp_CopyToDispatch(const ZStreamW& iStreamW, uint64 iCount,

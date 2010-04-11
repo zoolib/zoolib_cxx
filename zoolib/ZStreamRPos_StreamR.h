@@ -39,7 +39,7 @@ public:
 	~ZStreamRPos_StreamR();
 
 // From ZStreamR via ZStreamRPos
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 // From ZStreamRPos
 	virtual size_t Imp_CountReadable();

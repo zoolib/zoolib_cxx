@@ -273,6 +273,8 @@ class Seq
 		operator_bool_generator_type, operator_bool_type);
 
 public:
+	typedef Val Val_t;
+
 	operator operator_bool_type() const;
 
 	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
@@ -321,6 +323,7 @@ class Map
 		operator_bool_generator_type, operator_bool_type);
 public:
 	typedef ZMapIndex_T<Map> Index_t;
+	typedef Val Val_t;
 
 	operator operator_bool_type() const;
 

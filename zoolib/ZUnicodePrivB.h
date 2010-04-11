@@ -356,14 +356,14 @@ bool Functions_Read_T<I, UTF32>::sDecRead(I iStart, I& ioCurrent, I iEnd, UTF32&
 template <class I>
 struct Functions_Write_T<I, UTF32>
 	{
-	static bool sWrite(I iDest, I iEnd, UTF32 iCP);
+	static bool sWrite(I oDest, I iEnd, UTF32 iCP);
 	static bool sWriteInc(I& ioDest, I iEnd, UTF32 iCP);
 	};
 
 template <class I>
-bool Functions_Write_T<I, UTF32>::sWrite(I iDest, I iEnd, UTF32 iCP)
+bool Functions_Write_T<I, UTF32>::sWrite(I oDest, I iEnd, UTF32 iCP)
 	{
-	return sWriteInc(iDest, iEnd, iCP);
+	return sWriteInc(oDest, iEnd, iCP);
 	}
 
 template <class I>
@@ -829,14 +829,14 @@ bool Functions_Read_T<I, UTF16>::sDecRead(I iStart, I& ioCurrent, I iEnd, UTF32&
 template <class I>
 struct Functions_Write_T<I, UTF16>
 	{
-	static bool sWrite(I iDest, I iEnd, UTF32 iCP);
+	static bool sWrite(I oDest, I iEnd, UTF32 iCP);
 	static bool sWriteInc(I& ioDest, I iEnd, UTF32 iCP);
 	};
 
 template <class I>
-bool Functions_Write_T<I, UTF16>::sWrite(I iDest, I iEnd, UTF32 iCP)
+bool Functions_Write_T<I, UTF16>::sWrite(I oDest, I iEnd, UTF32 iCP)
 	{
-	return sWriteInc(iDest, iEnd, iCP);
+	return sWriteInc(oDest, iEnd, iCP);
 	}
 
 template <class I>
@@ -1406,21 +1406,21 @@ bool Functions_Read_T<I, UTF8>::sDecRead(I iStart, I& ioCurrent, I iEnd, UTF32& 
 template <class I>
 struct Functions_Write_T<I, UTF8>
 	{
-	static bool sWrite(I iDest, I iEnd, UTF32 iCP);
+	static bool sWrite(I oDest, I iEnd, UTF32 iCP);
 	static bool sWriteInc(I& ioDest, I iEnd, UTF32 iCP);
 	};
 
 template <class I>
-bool Functions_Write_T<I, UTF8>::sWrite(I iDest, I iEnd, UTF32 iCP)
+bool Functions_Write_T<I, UTF8>::sWrite(I oDest, I iEnd, UTF32 iCP)
 	{
 	if (sIsValidCP(iCP))
 		{
 		size_t bytesToWrite;
 		if (iCP < 0x80)
 			{
-			if (iDest <= iEnd)
+			if (oDest <= iEnd)
 				{
-				*iDest = iCP;
+				*oDest = iCP;
 				return true;
 				}
 			return false;
@@ -1431,8 +1431,8 @@ bool Functions_Write_T<I, UTF8>::sWrite(I iDest, I iEnd, UTF32 iCP)
 		else if (iCP < 0x4000000) bytesToWrite = 5;
 		else bytesToWrite = 6;
 
-		iDest += bytesToWrite;
-		if (iDest >= iEnd)
+		oDest += bytesToWrite;
+		if (oDest >= iEnd)
 			return false;
 
 		const UTF32 byteMask = 0xBF;
@@ -1440,13 +1440,13 @@ bool Functions_Write_T<I, UTF8>::sWrite(I iDest, I iEnd, UTF32 iCP)
 		switch (bytesToWrite)
 			{
 			// note: code falls through cases
-			case 6:	*--iDest = (iCP | byteMark) & byteMask; iCP >>= 6;
-			case 5:	*--iDest = (iCP | byteMark) & byteMask; iCP >>= 6;
-			case 4:	*--iDest = (iCP | byteMark) & byteMask; iCP >>= 6;
-			case 3:	*--iDest = (iCP | byteMark) & byteMask; iCP >>= 6;
-			case 2:	*--iDest = (iCP | byteMark) & byteMask; iCP >>= 6;
+			case 6:	*--oDest = (iCP | byteMark) & byteMask; iCP >>= 6;
+			case 5:	*--oDest = (iCP | byteMark) & byteMask; iCP >>= 6;
+			case 4:	*--oDest = (iCP | byteMark) & byteMask; iCP >>= 6;
+			case 3:	*--oDest = (iCP | byteMark) & byteMask; iCP >>= 6;
+			case 2:	*--oDest = (iCP | byteMark) & byteMask; iCP >>= 6;
 			}
-		*--iDest = iCP | sUTF8StartByteMark[bytesToWrite];
+		*--oDest = iCP | sUTF8StartByteMark[bytesToWrite];
 		}
 	return true;
 	}

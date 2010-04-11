@@ -127,19 +127,19 @@ void ZData_NS::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
 void ZData_NS::CopyFrom(const void* iSource, size_t iCount)
 	{ this->CopyFrom(0, iSource, iCount); }
 
-void ZData_NS::CopyTo(size_t iOffset, void* iDest, size_t iCount) const
+void ZData_NS::CopyTo(size_t iOffset, void* oDest, size_t iCount) const
 	{
 	if (iCount)
 		{
 		NSData* theData = this->pData();
 		ZAssert(theData);
 		const NSRange theRange = { iOffset, iCount };
-		[theData getBytes:iDest range:theRange];
+		[theData getBytes:oDest range:theRange];
 		}
 	}
 
-void ZData_NS::CopyTo(void* iDest, size_t iCount) const
-	{ this->CopyTo(0, iDest, iCount); }
+void ZData_NS::CopyTo(void* oDest, size_t iCount) const
+	{ this->CopyTo(0, oDest, iCount); }
 
 NSData* ZData_NS::pData() const
 	{ return inherited::Get(); }

@@ -123,13 +123,13 @@ string NPObjectG::sAsString(NPIdentifier iNPI)
 	return result;
 	}
 
-int32_t NPObjectG::sAsInt(NPIdentifier iNPI)
+int32 NPObjectG::sAsInt(NPIdentifier iNPI)
 	{ return GuestMeister::sGet()->Host_IntFromIdentifier(iNPI); }
 
 NPIdentifier NPObjectG::sAsNPI(const string& iName)
 	{ return GuestMeister::sGet()->Host_GetStringIdentifier(iName.c_str()); }
 
-NPIdentifier NPObjectG::sAsNPI(int32_t iInt)
+NPIdentifier NPObjectG::sAsNPI(int32 iInt)
 	{ return GuestMeister::sGet()->Host_GetIntIdentifier(iInt); }
 
 void NPObjectG::Retain()
@@ -182,7 +182,7 @@ bool NPObjectG::RemoveProperty(size_t iIndex)
 	{ return GuestMeister::sGet()->Host_RemoveProperty(
 		NPPSetter::sCurrent(), this, sAsNPI(iIndex)); }
 
-bool NPObjectG::Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount)
+bool NPObjectG::Enumerate(NPIdentifier*& oIdentifiers, uint32& oCount)
 	{ return GuestMeister::sGet()->Host_Enumerate(
 		NPPSetter::sCurrent(), this, &oIdentifiers, &oCount); }
 
@@ -240,28 +240,28 @@ bool ObjectG::Imp_HasProperty(const std::string& iName)
 	return false;
 	}
 
-bool ObjectG::Imp_HasProperty(int32_t iInt)
+bool ObjectG::Imp_HasProperty(int32 iInt)
 	{ return false; }
 
 bool ObjectG::Imp_GetProperty(const std::string& iName, NPVariantG& oResult)
 	{ return false; }
 
-bool ObjectG::Imp_GetProperty(int32_t iInt, NPVariantG& oResult)
+bool ObjectG::Imp_GetProperty(int32 iInt, NPVariantG& oResult)
 	{ return false; }
 
 bool ObjectG::Imp_SetProperty(const std::string& iName, const NPVariantG& iValue)
 	{ return false; }
 
-bool ObjectG::Imp_SetProperty(int32_t iInt, const NPVariantG& iValue)
+bool ObjectG::Imp_SetProperty(int32 iInt, const NPVariantG& iValue)
 	{ return false; }
 
 bool ObjectG::Imp_RemoveProperty(const std::string& iName)
 	{ return false; }
 
-bool ObjectG::Imp_RemoveProperty(int32_t iInt)
+bool ObjectG::Imp_RemoveProperty(int32 iInt)
 	{ return false; }
 
-bool ObjectG::Imp_Enumerate(NPIdentifier*& oIDs, uint32_t& oCount)
+bool ObjectG::Imp_Enumerate(NPIdentifier*& oIDs, uint32& oCount)
 	{
 	using std::string;
 	using std::vector;
@@ -310,7 +310,7 @@ bool ObjectG::spHasMethod(NPObject* npobj, NPIdentifier name)
 	}
 
 bool ObjectG::spInvoke(NPObject* npobj,
-	NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result)
+	NPIdentifier name, const NPVariant* args, unsigned argCount, NPVariant* result)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		return static_cast<ObjectG*>(npobj)->Imp_Invoke(
@@ -322,7 +322,7 @@ bool ObjectG::spInvoke(NPObject* npobj,
 	}
 
 bool ObjectG::spInvokeDefault(NPObject* npobj,
-	const NPVariant* args, uint32_t argCount, NPVariant* result)
+	const NPVariant* args, unsigned argCount, NPVariant* result)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
 		return static_cast<ObjectG*>(npobj)->Imp_InvokeDefault(
@@ -393,7 +393,7 @@ bool ObjectG::spRemoveProperty(NPObject* npobj, NPIdentifier name)
 bool ObjectG::spEnumerate(NPObject* npobj, NPIdentifier** oIdentifiers, uint32_t* oCount)
 	{
 	ZNETSCAPE_BEFORE_OBJECT(npobj)
-		return static_cast<ObjectG*>(npobj)->Imp_Enumerate(*oIdentifiers, *oCount);
+		return static_cast<ObjectG*>(npobj)->Imp_Enumerate(*oIdentifiers, *(uint32*)oCount);
 	ZNETSCAPE_AFTER_RETURN_FALSE
 	}
 
@@ -593,10 +593,10 @@ NPIdentifier GuestMeister::Host_GetStringIdentifier(const NPUTF8* name)
 	{ return fNPNF.getstringidentifier(name); }
 
 void GuestMeister::Host_GetStringIdentifiers(
-	const NPUTF8** names, int32_t nameCount, NPIdentifier* identifiers)
+	const NPUTF8** names, int32 nameCount, NPIdentifier* identifiers)
 	{ return fNPNF.getstringidentifiers(names, nameCount, identifiers); }
 
-NPIdentifier GuestMeister::Host_GetIntIdentifier(int32_t intid)
+NPIdentifier GuestMeister::Host_GetIntIdentifier(int32 intid)
 	{ return fNPNF.getintidentifier(intid); }
 
 bool GuestMeister::Host_IdentifierIsString(NPIdentifier identifier)
@@ -605,10 +605,10 @@ bool GuestMeister::Host_IdentifierIsString(NPIdentifier identifier)
 NPUTF8* GuestMeister::Host_UTF8FromIdentifier(NPIdentifier identifier)
 	{ return fNPNF.utf8fromidentifier(identifier); }
 
-int32_t GuestMeister::Host_IntFromIdentifier(NPIdentifier identifier)
+int32 GuestMeister::Host_IntFromIdentifier(NPIdentifier identifier)
 	{
 	// WebKit 10.4 header is wrong -- return type is NPIdentifier, so coerce to correct type.
-	return (int32_t)(fNPNF.intfromidentifier(identifier));
+	return (int32)(fNPNF.intfromidentifier(identifier));
 	}
 
 NPObject* GuestMeister::Host_CreateObject(NPP npp, NPClass* aClass)
@@ -729,10 +729,10 @@ void GuestMeister::Host_PopPopupsEnabledState(NPP npp)
 	}
 
 bool GuestMeister::Host_Enumerate
-	(NPP npp, NPObject* npobj, NPIdentifier** identifier, uint32_t* count)
+	(NPP npp, NPObject* npobj, NPIdentifier** identifier, uint32* count)
 	{
 	if (fNPNF.enumerate)
-		return fNPNF.enumerate(npp, npobj, identifier, count);
+		return fNPNF.enumerate(npp, npobj, identifier, (uint32_t*)count);
 	return false;
 	}
 
@@ -743,7 +743,7 @@ void GuestMeister::Host_PluginThreadAsyncCall(NPP npp, void (*func)(void *), voi
 	}
 
 bool GuestMeister::Host_Construct
-	(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
+	(NPP npp, NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result)
 	{
 	if (fNPNF.construct)
 		return fNPNF.construct(npp, obj, args, argCount, result);
@@ -979,10 +979,10 @@ NPIdentifier Guest::Host_GetStringIdentifier(const NPUTF8* name)
 	{ return GuestMeister::sGet()->Host_GetStringIdentifier(name); }
 
 void Guest::Host_GetStringIdentifiers(
-	const NPUTF8** names, int32_t nameCount, NPIdentifier* identifiers)
+	const NPUTF8** names, int32 nameCount, NPIdentifier* identifiers)
 	{ return GuestMeister::sGet()->Host_GetStringIdentifiers(names, nameCount, identifiers); }
 
-NPIdentifier Guest::Host_GetIntIdentifier(int32_t intid)
+NPIdentifier Guest::Host_GetIntIdentifier(int32 intid)
 	{ return GuestMeister::sGet()->Host_GetIntIdentifier(intid); }
 
 bool Guest::Host_IdentifierIsString(NPIdentifier identifier)
@@ -991,7 +991,7 @@ bool Guest::Host_IdentifierIsString(NPIdentifier identifier)
 NPUTF8* Guest::Host_UTF8FromIdentifier(NPIdentifier identifier)
 	{ return GuestMeister::sGet()->Host_UTF8FromIdentifier(identifier); }
 
-int32_t Guest::Host_IntFromIdentifier(NPIdentifier identifier)
+int32 Guest::Host_IntFromIdentifier(NPIdentifier identifier)
 	{ return GuestMeister::sGet()->Host_IntFromIdentifier(identifier); }
 
 NPObject* Guest::Host_CreateObject(NPClass* aClass)
@@ -1043,14 +1043,14 @@ void Guest::Host_PopPopupsEnabledState()
 	{ return GuestMeister::sGet()->Host_PopPopupsEnabledState(fNPP); }
 
 bool Guest::Host_Enumerate
-	(NPObject *npobj, NPIdentifier **identifier, uint32_t *count)
+	(NPObject *npobj, NPIdentifier **identifier, uint32 *count)
 	{ return GuestMeister::sGet()->Host_Enumerate(fNPP, npobj, identifier, count); }
 
 void Guest::Host_PluginThreadAsyncCall(void (*func)(void *), void *userData)
 	{ return GuestMeister::sGet()->Host_PluginThreadAsyncCall(fNPP, func, userData); }
 
 bool Guest::Host_Construct
-	(NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
+	(NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result)
 	{ return GuestMeister::sGet()->Host_Construct(fNPP, obj, args, argCount, result); }
 
 ZRef<NPObjectG> Guest::Host_GetWindowObject()

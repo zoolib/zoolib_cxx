@@ -44,22 +44,22 @@ ZStrimU_StreamUTF8Buffered::~ZStrimU_StreamUTF8Buffered()
 // Do a more optimal version of this?
 static void spUTF8ToUTF32(
 	const UTF8* iStart, size_t iCountCU,
-	UTF32* iDest, size_t iDestCount,
+	UTF32* oDest, size_t iDestCount,
 	size_t& oDestCount)
 	{
 	ZUnicode::sUTF8ToUTF32(
 		iStart, iCountCU,
 		nullptr, nullptr,
-		iDest, iDestCount,
+		oDest, iDestCount,
 		&oDestCount);
 	}
 
-void ZStrimU_StreamUTF8Buffered::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimU_StreamUTF8Buffered::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	// Optimize the common case -- single CU, with data in the buffer.
 	if (iCount == 1 && fFeedOut < fFeedIn)
 		{
-		*iDest = fBuffer[fFeedOut++];
+		*oDest = fBuffer[fFeedOut++];
 		if (oCount)
 			*oCount = 1;
 		return;
@@ -68,7 +68,7 @@ void ZStrimU_StreamUTF8Buffered::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size
 	const size_t bufSize = fBuffer.size();
 	vector<UTF8> utf8Buffer(bufSize, 0);
 
-	UTF32* localDest = iDest;
+	UTF32* localDest = oDest;
 	while (iCount)
 		{
 		if (fFeedOut < fFeedIn)
@@ -114,7 +114,7 @@ void ZStrimU_StreamUTF8Buffered::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size
 		}
 
 	if (oCount)
-		*oCount = localDest - iDest;
+		*oCount = localDest - oDest;
 	}
 
 void ZStrimU_StreamUTF8Buffered::Imp_Unread(UTF32 iCP)

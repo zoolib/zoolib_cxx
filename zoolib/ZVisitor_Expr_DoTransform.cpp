@@ -34,13 +34,13 @@ void ZVisitor_Expr_DoTransform::Visit_Expr(ZRef<ZExpr> iRep)
 
 ZRef<ZExpr> ZVisitor_Expr_DoTransform::DoTransform(ZRef<ZExpr> iExpr)
 	{
+	ZRef<ZExpr> theResult;
 	if (iExpr)
+		{
 		iExpr->Accept(*this);
-
-	if (fResult)
-		return fResult;
-
-	return iExpr;
+		theResult.swap(fResult);
+		}
+	return theResult;
 	}
 
 NAMESPACE_ZOOLIB_END

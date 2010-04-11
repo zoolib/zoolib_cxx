@@ -26,7 +26,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 
 using std::min;
-using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -156,7 +155,7 @@ Variant::Variant(double iVal)
 	dblVal = iVal;
 	}
 
-Variant::Variant(const std::string& iVal)
+Variant::Variant(const string8& iVal)
 	{
 	::VariantInit(this);
 	vt = VT_BSTR;
@@ -307,7 +306,7 @@ bool Variant::QGet_T<double>(double& oVal) const
 	}
 
 template <>
-bool Variant::QGet_T<string>(string& oVal) const
+bool Variant::QGet_T<string8>(string8& oVal) const
 	{
 	if (VT_BSTR == vt)
 		{
@@ -439,7 +438,7 @@ void Variant::Set_T<double>(const double& iVal)
 	}
 
 template <>
-void Variant::Set_T<string>(const string& iVal)
+void Variant::Set_T<string8>(const string8& iVal)
 	{
 	::VariantClear(this);
 	vt = VT_BSTR;

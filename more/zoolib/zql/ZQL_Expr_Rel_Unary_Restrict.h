@@ -30,7 +30,7 @@ namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL::Expr_Rel_Unary_Restrict
+#pragma mark * Expr_Rel_Unary_Restrict
 
 typedef Expr_Rel_Unary_Restrict_T<ZVal_Expr> Expr_Rel_Unary_Restrict;
 

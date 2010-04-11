@@ -76,10 +76,10 @@ protected:
 public:
 	static bool sIsString(NPIdentifier iNPI);
 	static std::string sAsString(NPIdentifier iNPI);
-	static int32_t sAsInt(NPIdentifier iNPI);
+	static int32 sAsInt(NPIdentifier iNPI);
 
 	static NPIdentifier sAsNPI(const std::string& iName);
-	static NPIdentifier sAsNPI(int32_t iInt);
+	static NPIdentifier sAsNPI(int32 iInt);
 
 	void Retain();
 	void Release();
@@ -105,7 +105,7 @@ public:
 	bool RemoveProperty(const std::string& iName);
 	bool RemoveProperty(size_t iIndex);
 
-	bool Enumerate(NPIdentifier*& oIdentifiers, uint32_t& oCount);
+	bool Enumerate(NPIdentifier*& oIdentifiers, uint32& oCount);
 	};
 
 // =================================================================================================
@@ -131,14 +131,14 @@ protected:
 
 	virtual bool Imp_InvokeDefault(const NPVariantG* iArgs, size_t iCount, NPVariantG& oResult);
 	virtual bool Imp_HasProperty(const std::string& iName);
-	virtual bool Imp_HasProperty(int32_t iInt);
+	virtual bool Imp_HasProperty(int32 iInt);
 	virtual bool Imp_GetProperty(const std::string& iName, NPVariantG& oResult);
-	virtual bool Imp_GetProperty(int32_t iInt, NPVariantG& oResult);
+	virtual bool Imp_GetProperty(int32 iInt, NPVariantG& oResult);
 	virtual bool Imp_SetProperty(const std::string& iName, const NPVariantG& iValue);
-	virtual bool Imp_SetProperty(int32_t iInt, const NPVariantG& iValue);
+	virtual bool Imp_SetProperty(int32 iInt, const NPVariantG& iValue);
 	virtual bool Imp_RemoveProperty(const std::string& iName);
-	virtual bool Imp_RemoveProperty(int32_t iInt);
-	virtual bool Imp_Enumerate(NPIdentifier*& oIDs, uint32_t& oCount);
+	virtual bool Imp_RemoveProperty(int32 iInt);
+	virtual bool Imp_Enumerate(NPIdentifier*& oIDs, uint32& oCount);
 	virtual bool Imp_Enumerate(std::vector<std::string>& oNames);
 
 private:
@@ -148,10 +148,10 @@ private:
 	static bool spHasMethod(NPObject* npobj, NPIdentifier name);
 
 	static bool spInvoke(NPObject* npobj,
-		NPIdentifier name, const NPVariant* args, uint32_t argCount, NPVariant* result);
+		NPIdentifier name, const NPVariant* args, unsigned argCount, NPVariant* result);
 
 	static bool spInvokeDefault(NPObject* npobj,
-		const NPVariant* args, uint32_t argCount, NPVariant* result);
+		const NPVariant* args, unsigned argCount, NPVariant* result);
 
 	static bool spHasProperty(NPObject* npobj, NPIdentifier name);
 	static bool spGetProperty(NPObject* npobj, NPIdentifier name, NPVariant* result);
@@ -232,15 +232,15 @@ public:
 	NPIdentifier Host_GetStringIdentifier(const NPUTF8* name);
 
 	void Host_GetStringIdentifiers(
-		const NPUTF8** names, int32_t nameCount, NPIdentifier* identifiers);
+		const NPUTF8** names, int32 nameCount, NPIdentifier* identifiers);
 
-	NPIdentifier Host_GetIntIdentifier(int32_t intid);
+	NPIdentifier Host_GetIntIdentifier(int32 intid);
 
 	bool Host_IdentifierIsString(NPIdentifier identifier);
 
 	NPUTF8* Host_UTF8FromIdentifier(NPIdentifier identifier);
 
-	int32_t Host_IntFromIdentifier(NPIdentifier identifier);
+	int32 Host_IntFromIdentifier(NPIdentifier identifier);
 
 	NPObject* Host_CreateObject(NPP npp, NPClass* aClass);
 
@@ -277,12 +277,12 @@ public:
 	void Host_PopPopupsEnabledState(NPP npp);
 
 	bool Host_Enumerate
-		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
+		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32 *count);
 
 	void Host_PluginThreadAsyncCall(NPP npp, void (*func)(void *), void *userData);
 
 	bool Host_Construct
-		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
+		(NPP npp, NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result);
 
 // Calls from host to the guest meister.
 	virtual NPError New(
@@ -302,7 +302,7 @@ public:
 	virtual int32 WriteReady(NPP npp, NPStream* stream) = 0;
 
 	virtual int32 Write(NPP npp,
-		NPStream* stream, int32_t offset, int32_t len, void* buffer) = 0;
+		NPStream* stream, int32 offset, int32 len, void* buffer) = 0;
 
 	virtual void StreamAsFile(NPP npp, NPStream* stream, const char* fname) = 0;
 
@@ -420,15 +420,15 @@ public:
 	NPIdentifier Host_GetStringIdentifier(const NPUTF8* name);
 
 	void Host_GetStringIdentifiers(
-		const NPUTF8** names, int32_t nameCount, NPIdentifier* identifiers);
+		const NPUTF8** names, int32 nameCount, NPIdentifier* identifiers);
 
-	NPIdentifier Host_GetIntIdentifier(int32_t intid);
+	NPIdentifier Host_GetIntIdentifier(int32 intid);
 
 	bool Host_IdentifierIsString(NPIdentifier identifier);
 
 	NPUTF8* Host_UTF8FromIdentifier(NPIdentifier identifier);
 
-	int32_t Host_IntFromIdentifier(NPIdentifier identifier);
+	int32 Host_IntFromIdentifier(NPIdentifier identifier);
 
 	NPObject* Host_CreateObject(NPClass* aClass);
 
@@ -464,12 +464,12 @@ public:
 	void Host_PopPopupsEnabledState();
 
 	bool Host_Enumerate
-		(NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
+		(NPObject *npobj, NPIdentifier **identifier, uint32 *count);
 
 	void Host_PluginThreadAsyncCall(void (*func)(void *), void *userData);
 
 	bool Host_Construct
-		(NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
+		(NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result);
 
 	ZRef<NPObjectG> Host_GetWindowObject();
 	ZRef<NPObjectG> Host_GetPluginObject();

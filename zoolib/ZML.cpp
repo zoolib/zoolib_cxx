@@ -324,12 +324,12 @@ StrimU::StrimU(const ZStrimU& iStrim, EntityCallback iCallback, void* iRefcon)
 StrimU::~StrimU()
 	{}
 
-void StrimU::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void StrimU::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	if (fToken == eToken_Fresh)
 		this->pAdvance();
 
-	UTF32* localDest = iDest;
+	UTF32* localDest = oDest;
 	if (fToken == eToken_Text)
 		{
 		while (iCount)
@@ -376,7 +376,7 @@ void StrimU::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 		}
 
 	if (oCount)
-		*oCount = localDest - iDest;
+		*oCount = localDest - oDest;
 	}
 
 void StrimU::Imp_Unread(UTF32 iCP)
@@ -721,9 +721,9 @@ StrimR_TextOnly::StrimR_TextOnly(StrimU& iStrimU)
 :	fStrimU(iStrimU)
 	{}
 
-void StrimR_TextOnly::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void StrimR_TextOnly::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
-	UTF32* localDest = iDest;
+	UTF32* localDest = oDest;
 	while (iCount)
 		{
 		if (fStrimU.Current() == eToken_Text)
@@ -768,7 +768,7 @@ void StrimR_TextOnly::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 		}
 
 	if (oCount)
-		*oCount = localDest - iDest;
+		*oCount = localDest - oDest;
 	}
 
 string StrimR_TextOnly::BackName() const

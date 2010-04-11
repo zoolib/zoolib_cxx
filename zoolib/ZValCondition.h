@@ -44,8 +44,8 @@ typedef ZMap_Any ZMap_Expr;
 typedef ZValCondition_T<ZVal_Expr> ZValCondition;
 typedef ZValComparand_T<ZVal_Expr> ZValComparand;
 
-inline ZValComparand CConst(const char* iVal)
-	{ return CConst_T<ZVal_Expr>(iVal); }
+inline ZValComparand CString(const std::string& iVal)
+	{ return CConst_T<ZVal_Expr>(string8(iVal)); }
 
 inline ZValComparand CConst(const ZVal_Expr& iVal)
 	{ return CConst_T<ZVal_Expr>(iVal); }

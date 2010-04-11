@@ -104,9 +104,10 @@ public:
 	static KeyRef sHKLM();
 	static KeyRef sHKU();
 
-	void swap(KeyRef& rhs);
-
 	typedef size_t Index_t;
+	typedef Val Val_t;
+
+	void swap(KeyRef& rhs);
 
 	KeyRef();
 	KeyRef(const KeyRef& iOther);

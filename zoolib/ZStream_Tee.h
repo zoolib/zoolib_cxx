@@ -39,7 +39,7 @@ public:
 	ZStreamR_Tee(const ZStreamR& iStreamR, const ZStreamW& iStreamW);
 	~ZStreamR_Tee();
 
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
 protected:

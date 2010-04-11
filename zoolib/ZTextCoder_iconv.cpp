@@ -156,12 +156,12 @@ ZTextDecoder_iconv::~ZTextDecoder_iconv()
 
 bool ZTextDecoder_iconv::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	UTF32* iDest, size_t iDestCU, size_t* oDestCU)
+	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	const char* localSource = static_cast<const char*>(iSource);
 	size_t localSourceBytes = iSourceBytes;
 
-	char* localDest = reinterpret_cast<char*>(iDest);
+	char* localDest = reinterpret_cast<char*>(oDest);
 	size_t localDestBytes = iDestCU * sizeof(UTF32);
 
 	size_t sourceBytesSkipped = 0;
@@ -200,7 +200,7 @@ bool ZTextDecoder_iconv::Decode(
 	if (oSourceBytesSkipped)
 		*oSourceBytesSkipped = sourceBytesSkipped;
 	if (oDestCU)
-		*oDestCU = reinterpret_cast<UTF32*>(localDest) - iDest;
+		*oDestCU = reinterpret_cast<UTF32*>(localDest) - oDest;
 	return sourceComplete;
 	}
 
@@ -262,12 +262,12 @@ ZTextEncoder_iconv::~ZTextEncoder_iconv()
 	}
 
 void ZTextEncoder_iconv::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-					void* iDest, size_t iDestBytes, size_t* oDestBytes)
+					void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	const char* localSource = static_cast<const char*>(static_cast<const void*>(iSource));
 	size_t localSourceBytes = iSourceCU * sizeof(UTF32);
 
-	char* localDest = static_cast<char*>(iDest);
+	char* localDest = static_cast<char*>(oDest);
 	size_t localDestBytes = iDestBytes;
 
 	while (localSourceBytes && localDestBytes)
@@ -302,7 +302,7 @@ void ZTextEncoder_iconv::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 	if (oSourceCU)
 		*oSourceCU = reinterpret_cast<const UTF32*>(localSource) - iSource;
 	if (oDestBytes)
-		*oDestBytes = localDest - static_cast<char*>(iDest);
+		*oDestBytes = localDest - static_cast<char*>(oDest);
 	}
 
 void ZTextEncoder_iconv::Reset()

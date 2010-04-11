@@ -378,7 +378,7 @@ bool sTryRead_SignedDouble(const ZStrimU& iStrimU, double& oDouble)
 
 // ----------
 
-void sCopy_WS(const ZStrimU& iStrimU, const ZStrimW& iDest)
+void sCopy_WS(const ZStrimU& iStrimU, const ZStrimW& oDest)
 	{
 	for (;;)
 		{
@@ -390,7 +390,7 @@ void sCopy_WS(const ZStrimU& iStrimU, const ZStrimW& iDest)
 			iStrimU.Unread(theCP);
 			break;
 			}
-		iDest.WriteCP(theCP);
+		oDest.WriteCP(theCP);
 		}
 	}
 
@@ -411,7 +411,7 @@ void sSkip_WS(const ZStrimU& iStrimU)
 
 // ----------
 
-void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZStrimW& iDest)
+void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZStrimW& oDest)
 	{
 	ZAssert(iStrimU.UnreadableLimit() >= 2);
 
@@ -422,23 +422,23 @@ void sCopy_WSAndCPlusPlusComments(const ZStrimU& iStrimU, const ZStrimW& iDest)
 			{
 			if (ZUnicode::sIsWhitespace(firstCP))
 				{
-				iDest.WriteCP(firstCP);
+				oDest.WriteCP(firstCP);
 				continue;
 				}
 			else if (firstCP == '/')
 				{
 				if (sTryRead_CP(iStrimU, '/'))
 					{
-					iDest.Write("//");
-					sCopy_Line(iStrimU, iDest);
+					oDest.Write("//");
+					sCopy_Line(iStrimU, oDest);
 					continue;
 					}
 				else if (sTryRead_CP(iStrimU, '*'))
 					{
-					iDest.Write("/*");
-					if (!sCopy_Until(iStrimU, "*/", iDest))
+					oDest.Write("/*");
+					if (!sCopy_Until(iStrimU, "*/", oDest))
 						spThrowParseException("Unexpected end of data while parsing a /**/ comment");
-					iDest.Write("*/");
+					oDest.Write("*/");
 					continue;
 					}
 				}
@@ -453,7 +453,7 @@ void sSkip_WSAndCPlusPlusComments(const ZStrimU& iStrimU)
 
 // ----------
 
-void sCopy_Line(const ZStrimR& iStrimR, const ZStrimW& iDest)
+void sCopy_Line(const ZStrimR& iStrimR, const ZStrimW& oDest)
 	{
 	for (;;)
 		{
@@ -462,7 +462,7 @@ void sCopy_Line(const ZStrimR& iStrimR, const ZStrimW& iDest)
 			break;
 		if (ZUnicode::sIsEOL(theCP))
 			break;
-		iDest.WriteCP(theCP);
+		oDest.WriteCP(theCP);
 		}	
 	}
 
@@ -478,7 +478,7 @@ string8 sRead_Line(const ZStrimR& iStrimR)
 
 // ----------
 
-bool sCopy_Until(const ZStrimR& iStrimR, UTF32 iTerminator, const ZStrimW& iDest)
+bool sCopy_Until(const ZStrimR& iStrimR, UTF32 iTerminator, const ZStrimW& oDest)
 	{
 	for (;;)
 		{
@@ -487,7 +487,7 @@ bool sCopy_Until(const ZStrimR& iStrimR, UTF32 iTerminator, const ZStrimW& iDest
 			return false;
 		if (theCP == iTerminator)
 			return true;
-		iDest.WriteCP(theCP);
+		oDest.WriteCP(theCP);
 		}		
 	}
 
@@ -504,10 +504,10 @@ string8 sRead_Until(const ZStrimR& iStrimR, UTF32 iTerminator)
 // ----------
 
 bool sCopy_Until(const ZStrimR& iStrimR,
-	const string8& iTerminator, const ZStrimW& iDest)
+	const string8& iTerminator, const ZStrimW& oDest)
 	{
 	ZStrimR_Boundary theStrimBoundary(iTerminator, iStrimR);
-	theStrimBoundary.CopyAllTo(iDest);
+	theStrimBoundary.CopyAllTo(oDest);
 	return theStrimBoundary.HitBoundary();
 	}
 
@@ -524,9 +524,9 @@ string8 sRead_Until(const ZStrimR& iStrimR, const string8& iTerminator)
 // ----------
 
 void sCopy_EscapedString(
-	const ZStrimU& iStrimU, UTF32 iTerminator, const ZStrimW& iDest)
+	const ZStrimU& iStrimU, UTF32 iTerminator, const ZStrimW& oDest)
 	{
-	ZStrimR_Escaped(iStrimU, iTerminator).CopyAllTo(iDest);
+	ZStrimR_Escaped(iStrimU, iTerminator).CopyAllTo(oDest);
 	}
 
 void sRead_EscapedString(const ZStrimU& iStrimU, UTF32 iTerminator, string8& oString)
@@ -539,12 +539,12 @@ void sRead_EscapedString(const ZStrimU& iStrimU, UTF32 iTerminator, string8& oSt
 // ----------
 
 bool sTryCopy_EscapedString(const ZStrimU& iStrimU,
-	UTF32 iDelimiter, const ZStrimW& iDest)
+	UTF32 iDelimiter, const ZStrimW& oDest)
 	{
 	if (!sTryRead_CP(iStrimU, iDelimiter))
 		return false;
 
-	sCopy_EscapedString(iStrimU, iDelimiter, iDest);
+	sCopy_EscapedString(iStrimU, iDelimiter, oDest);
 
 	if (!sTryRead_CP(iStrimU, iDelimiter))
 		spThrowParseException("Missing string delimiter");
@@ -561,7 +561,7 @@ bool sTryRead_EscapedString(const ZStrimU& iStrimU, UTF32 iDelimiter, string8& o
 
 // ----------
 
-bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& iDest)
+bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& oDest)
 	{
 	UTF32 theCP;
 	if (!iStrimU.ReadCP(theCP))
@@ -573,7 +573,7 @@ bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& iDest)
 		return false;
 		}
 
-	iDest.WriteCP(theCP);
+	oDest.WriteCP(theCP);
 
 	for (;;)
 		{
@@ -586,7 +586,7 @@ bool sTryCopy_Identifier(const ZStrimU& iStrimU, const ZStrimW& iDest)
 			iStrimU.Unread(theCP);
 			break;
 			}
-		iDest.WriteCP(theCP);
+		oDest.WriteCP(theCP);
 		}
 
 	return true;

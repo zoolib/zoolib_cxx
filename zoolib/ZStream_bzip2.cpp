@@ -72,11 +72,11 @@ ZStreamR_bzip2Decode::~ZStreamR_bzip2Decode()
 	delete[] fBuffer;
 	}
 
-void ZStreamR_bzip2Decode::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_bzip2Decode::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	ZAssertStop(kDebug_bzip2, fState.avail_in == 0);
 	fState.avail_out = iCount;
-	fState.next_out = static_cast<char*>(iDest);
+	fState.next_out = static_cast<char*>(oDest);
 	for (;;)
 		{
 		int result = ::BZ2_bzDecompress(&fState);

@@ -91,10 +91,10 @@ public:
 	~ZBitWriterBE();
 
 	bool WriteBits(const ZStreamW& iStream, size_t iCountBits, uint32 iBits);
-	void WriteBits(void* iDest, size_t iCountBits, uint32 iBits, size_t* oCountBytesWritten);
+	void WriteBits(void* oDest, size_t iCountBits, uint32 iBits, size_t* oCountBytesWritten);
 
 	void Finish(const ZStreamW& iStream);
-	void Finish(void* iDest, size_t* oCountBytesWritten);
+	void Finish(void* oDest, size_t* oCountBytesWritten);
 
 private:
 	uint8 fBuffer;
@@ -114,10 +114,10 @@ public:
 	~ZBitWriterLE();
 
 	bool WriteBits(const ZStreamW& iStream, size_t iCountBits, uint32 iBits);
-	void WriteBits(void* iDest, size_t iCountBits, uint32 iBits, size_t* oCountBytesWritten);
+	void WriteBits(void* oDest, size_t iCountBits, uint32 iBits, size_t* oCountBytesWritten);
 
 	void Finish(const ZStreamW& iStream);
-	void Finish(void* iDest, size_t* oCountBytesWritten);
+	void Finish(void* oDest, size_t* oCountBytesWritten);
 
 private:
 	uint8 fBuffer;

@@ -333,12 +333,12 @@ ZStreamR_MD5::~ZStreamR_MD5()
 		ZStream_MD5::sFinal(fContext, fDigest);
 	}
 
-void ZStreamR_MD5::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_MD5::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	size_t countRead;
-	fStreamSource.Read(iDest, iCount, &countRead);
+	fStreamSource.Read(oDest, iCount, &countRead);
 	if (countRead)
-		ZStream_MD5::sUpdate(fContext, iDest, countRead);
+		ZStream_MD5::sUpdate(fContext, oDest, countRead);
 	if (oCountRead)
 		*oCountRead = countRead;
 	}

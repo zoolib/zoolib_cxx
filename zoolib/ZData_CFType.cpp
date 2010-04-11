@@ -129,19 +129,19 @@ void ZData_CFType::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
 void ZData_CFType::CopyFrom(const void* iSource, size_t iCount)
 	{ this->CopyFrom(0, iSource, iCount); }
 
-void ZData_CFType::CopyTo(size_t iOffset, void* iDest, size_t iCount) const
+void ZData_CFType::CopyTo(size_t iOffset, void* oDest, size_t iCount) const
 	{
 	if (iCount)
 		{
 		CFDataRef theData = this->pData();
 		ZAssert(theData);
 		const CFRange theRange = { iOffset, iCount };
-		::CFDataGetBytes(theData, theRange, static_cast<UInt8*>(iDest));
+		::CFDataGetBytes(theData, theRange, static_cast<UInt8*>(oDest));
 		}
 	}
 
-void ZData_CFType::CopyTo(void* iDest, size_t iCount) const
-	{ this->CopyTo(0, iDest, iCount); }
+void ZData_CFType::CopyTo(void* oDest, size_t iCount) const
+	{ this->CopyTo(0, oDest, iCount); }
 
 CFDataRef ZData_CFType::pData() const
 	{ return inherited::Get(); }

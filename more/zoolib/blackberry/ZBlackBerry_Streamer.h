@@ -69,7 +69,7 @@ public:
 private:
 	bool Channel_Finalize(Channel_Streamer* iChannel);
 
-	void Channel_Read(Channel_Streamer* iChannel, void* iDest, size_t iCount, size_t* oCountRead);
+	void Channel_Read(Channel_Streamer* iChannel, void* oDest, size_t iCount, size_t* oCountRead);
 
 	size_t Channel_CountReadable(Channel_Streamer* iChannel);
 

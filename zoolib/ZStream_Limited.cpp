@@ -38,10 +38,10 @@ ZStreamR_Limited::ZStreamR_Limited(uint64 iLimit, const ZStreamR& iStreamSource)
 ZStreamR_Limited::~ZStreamR_Limited()
 	{}
 
-void ZStreamR_Limited::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_Limited::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	size_t countRead;
-	fStreamSource.Read(iDest, min(uint64(iCount), fCountRemaining), &countRead);
+	fStreamSource.Read(oDest, min(uint64(iCount), fCountRemaining), &countRead);
 	fCountRemaining -= countRead;
 	if (oCountRead)
 		*oCountRead = countRead;
@@ -126,11 +126,11 @@ ZStreamRPos_Limited::ZStreamRPos_Limited(
 ZStreamRPos_Limited::~ZStreamRPos_Limited()
 	{}
 
-void ZStreamRPos_Limited::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamRPos_Limited::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	uint64 curPos = fStreamSource.GetPosition();
 	if (fOffset + fLimit > curPos)
-		fStreamSource.Read(iDest, min(uint64(iCount), fOffset + fLimit - curPos), oCountRead);
+		fStreamSource.Read(oDest, min(uint64(iCount), fOffset + fLimit - curPos), oCountRead);
 	else if (oCountRead)
 		*oCountRead = 0;
 	}

@@ -40,9 +40,9 @@ ZStreamR_Cat::ZStreamR_Cat(const ZStreamR& iStreamR1, const ZStreamR& iStreamR2)
 ZStreamR_Cat::~ZStreamR_Cat()
 	{}
 
-void ZStreamR_Cat::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_Cat::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	char* localDest = static_cast<char*>(iDest);
+	char* localDest = static_cast<char*>(oDest);
 	while (iCount)
 		{
 		size_t countRead;
@@ -63,7 +63,7 @@ void ZStreamR_Cat::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - static_cast<char*>(iDest);
+		*oCountRead = localDest - static_cast<char*>(oDest);
 	}
 
 size_t ZStreamR_Cat::Imp_CountReadable()

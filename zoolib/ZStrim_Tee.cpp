@@ -37,14 +37,14 @@ ZStrimR_Tee::ZStrimR_Tee(const ZStrimR& iSource, const ZStrimW& iSink)
 	fSink(iSink)
 	{}
 
-void ZStrimR_Tee::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimR_Tee::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
-	UTF32* localDest = iDest;
+	UTF32* localDest = oDest;
 	size_t countRemaining = iCount;
 	while (countRemaining)
 		{
 		// We have to read into a local buffer because we're going to pass
-		// what we read to fSink, and iDest could reference memory that's
+		// what we read to fSink, and oDest could reference memory that's
 		// not safe to read (the garbage buffer, for example).
 		UTF32 buffer[sStackBufferSize];
 
@@ -68,7 +68,7 @@ void ZStrimR_Tee::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
 		}
 
 	if (oCount)
-		*oCount = localDest - iDest;
+		*oCount = localDest - oDest;
 	}
 
 // =================================================================================================

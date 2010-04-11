@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZString__ 1
 #include "zconfig.h"
 
-#include <stdarg.h>
+#include <cstdarg>
 #include <string>
 
-#include "zoolib/ZTypes.h" // for uint64
+#include "zoolib/ZStdInt.h" // for uint64
 
 // ==================================================
 
@@ -36,7 +36,7 @@ namespace ZString {
 using std::string;
 
 string sFormat(const char* iString, ...);
-string sFormat(const char* iString, va_list iArgs);
+string sFormat(const char* iString, std::va_list iArgs);
 
 string sSubstitute(const string& iString,
 	const string& iS0);

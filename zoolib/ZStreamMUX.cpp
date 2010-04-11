@@ -219,7 +219,7 @@ public:
 	virtual const ZStreamWCon& GetStreamWCon();
 
 // From ZStreamR via ZStreamRCon
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 	virtual bool Imp_WaitReadable(double iTimeout);
 
@@ -347,11 +347,11 @@ const ZStreamRCon& ZStreamMUX::Endpoint::GetStreamRCon()
 const ZStreamWCon& ZStreamMUX::Endpoint::GetStreamWCon()
 	{ return *this; }
 
-void ZStreamMUX::Endpoint::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamMUX::Endpoint::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (ZRef<ZStreamMUX> theMUX = fMUX)
 		{
-		theMUX->Endpoint_Read(this, iDest, iCount, oCountRead);
+		theMUX->Endpoint_Read(this, oDest, iCount, oCountRead);
 		}
 	else
 		{
@@ -854,9 +854,9 @@ bool ZStreamMUX::Endpoint_Finalize(Endpoint* iEP)
 	}
 
 void ZStreamMUX::Endpoint_Read(Endpoint* iEP,
-	void* iDest, size_t iCount, size_t* oCountRead)
+	void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = static_cast<uint8*>(iDest);
+	uint8* localDest = static_cast<uint8*>(oDest);
 	deque<uint8>& theBR = iEP->fBuffer_Receive;
 
 	ZMutexLocker locker(fMutex);
@@ -881,7 +881,7 @@ void ZStreamMUX::Endpoint_Read(Endpoint* iEP,
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - static_cast<uint8*>(iDest);
+		*oCountRead = localDest - static_cast<uint8*>(oDest);
 	}
 
 size_t ZStreamMUX::Endpoint_CountReadable(Endpoint* iEP)

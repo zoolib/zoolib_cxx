@@ -66,7 +66,7 @@ public:
 
 	virtual bool Decode(
 		const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-		UTF32* iDest, size_t iDestCU, size_t* oDestCU);
+		UTF32* oDest, size_t iDestCU, size_t* oDestCU);
 
 	virtual void Reset();
 
@@ -90,7 +90,7 @@ public:
 	using ZTextEncoder::Encode;
 
 	virtual void Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-		void* iDest, size_t iDestBytes, size_t* oDestBytes);
+		void* oDest, size_t iDestBytes, size_t* oDestBytes);
 
 	virtual void Reset();
 

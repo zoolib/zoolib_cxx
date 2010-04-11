@@ -268,7 +268,7 @@ ZTextDecoder_Win::~ZTextDecoder_Win()
 	{}
 
 static void spMBToWC(UINT iSourceCodePage, const CHAR* iSource, size_t iSourceCU, size_t& oSourceCU,
-			WCHAR* iDest, size_t iDestCU, size_t& oDestCU)
+			WCHAR* oDest, size_t iDestCU, size_t& oDestCU)
 	{
 	ZAssertStop(1, iSourceCU && iDestCU);
 
@@ -279,7 +279,7 @@ static void spMBToWC(UINT iSourceCodePage, const CHAR* iSource, size_t iSourceCU
 		// much space we would need.
 		for (;;)
 			{
-			int result = ::MultiByteToWideChar(iSourceCodePage, 0, iSource, iSourceCU, iDest, 0);
+			int result = ::MultiByteToWideChar(iSourceCodePage, 0, iSource, iSourceCU, oDest, 0);
 			if (result <= iDestCU)
 				break;
 			// There is insufficient space. Scale the source count to match. This is of course
@@ -291,7 +291,7 @@ static void spMBToWC(UINT iSourceCodePage, const CHAR* iSource, size_t iSourceCU
 	for (;;)
 		{
 		if (int result = ::MultiByteToWideChar(
-			iSourceCodePage, 0, iSource, iSourceCU, iDest, iDestCU))
+			iSourceCodePage, 0, iSource, iSourceCU, oDest, iDestCU))
 			{
 			oSourceCU = iSourceCU;
 			oDestCU = result;
@@ -317,7 +317,7 @@ static void spMBToWC(UINT iSourceCodePage, const CHAR* iSource, size_t iSourceCU
 
 static void spMBToWC_CanFail(
 	UINT iSourceCodePage, const CHAR* iSource, size_t iSourceCU, size_t& oSourceCU,
-	WCHAR* iDest, size_t iDestCU, size_t& oDestCU)
+	WCHAR* oDest, size_t iDestCU, size_t& oDestCU)
 	{
 	ZAssertStop(1, iSourceCU && iDestCU);
 
@@ -325,7 +325,7 @@ static void spMBToWC_CanFail(
 	for (;;)
 		{
 		if (int result = ::MultiByteToWideChar(
-			iSourceCodePage, theFlags, iSource, iSourceCU, iDest, iDestCU))
+			iSourceCodePage, theFlags, iSource, iSourceCU, oDest, iDestCU))
 			{
 			oSourceCU = iSourceCU;
 			oDestCU = result;
@@ -361,12 +361,12 @@ static void spMBToWC_CanFail(
 
 bool ZTextDecoder_Win::Decode(
 	const void* iSource, size_t iSourceBytes, size_t* oSourceBytes, size_t* oSourceBytesSkipped,
-	UTF32* iDest, size_t iDestCU, size_t* oDestCU)
+	UTF32* oDest, size_t iDestCU, size_t* oDestCU)
 	{
 	WCHAR utf16Buffer[kBufSize];
 
 	const CHAR* localSource = static_cast<const CHAR*>(iSource);
-	UTF32* localDest = iDest;
+	UTF32* localDest = oDest;
 
 	if (oSourceBytesSkipped)
 		*oSourceBytesSkipped = 0;
@@ -419,7 +419,7 @@ bool ZTextDecoder_Win::Decode(
 	if (oSourceBytes)
 		*oSourceBytes = localSource - static_cast<const CHAR*>(iSource);
 	if (oDestCU)
-		*oDestCU = localDest - iDest;
+		*oDestCU = localDest - oDest;
 	return true;
 	}
 
@@ -453,7 +453,7 @@ ZTextEncoder_Win::~ZTextEncoder_Win()
 	{}
 
 static void spWCToMB(UINT iDestCodePage, const WCHAR* iSource, size_t iSourceCU, size_t& oSourceCU,
-			CHAR* iDest, size_t iDestCU, size_t& oDestCU)
+			CHAR* oDest, size_t iDestCU, size_t& oDestCU)
 	{
 	ZAssertStop(1, iSourceCU && iDestCU);
 	if (iSourceCU > iDestCU)
@@ -462,7 +462,7 @@ static void spWCToMB(UINT iDestCodePage, const WCHAR* iSource, size_t iSourceCU,
 		for (;;)
 			{
 			int result = ::WideCharToMultiByte(
-				iDestCodePage, 0, iSource, iSourceCU, iDest, 0, nullptr, nullptr);
+				iDestCodePage, 0, iSource, iSourceCU, oDest, 0, nullptr, nullptr);
 
 			if (result <= iDestCU)
 				break;
@@ -475,7 +475,7 @@ static void spWCToMB(UINT iDestCodePage, const WCHAR* iSource, size_t iSourceCU,
 	for (;;)
 		{
 		if (int result = ::WideCharToMultiByte(
-			iDestCodePage, 0, iSource, iSourceCU, iDest, iDestCU, nullptr, nullptr))
+			iDestCodePage, 0, iSource, iSourceCU, oDest, iDestCU, nullptr, nullptr))
 			{
 			oSourceCU = iSourceCU;
 			oDestCU = result;
@@ -502,12 +502,12 @@ static void spWCToMB(UINT iDestCodePage, const WCHAR* iSource, size_t iSourceCU,
 	}
 
 void ZTextEncoder_Win::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oSourceCU,
-					void* iDest, size_t iDestBytes, size_t* oDestBytes)
+					void* oDest, size_t iDestBytes, size_t* oDestBytes)
 	{
 	WCHAR utf16Buffer[kBufSize];
 
 	const UTF32* localSource = iSource;
-	CHAR* localDest = static_cast<CHAR*>(iDest);
+	CHAR* localDest = static_cast<CHAR*>(oDest);
 
 	while (iSourceCU && iDestBytes)
 		{
@@ -544,7 +544,7 @@ void ZTextEncoder_Win::Encode(const UTF32* iSource, size_t iSourceCU, size_t* oS
 	if (oSourceCU)
 		*oSourceCU = localSource - iSource;
 	if (oDestBytes)
-		*oDestBytes = localDest - static_cast<CHAR*>(iDest);
+		*oDestBytes = localDest - static_cast<CHAR*>(oDest);
 	}
 
 void ZTextEncoder_Win::Init(UINT iDestCodePage)

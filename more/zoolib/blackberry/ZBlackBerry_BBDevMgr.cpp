@@ -83,7 +83,7 @@ public:
 	virtual const ZStreamWCon& GetStreamWCon();
 
 // From ZStreamR via ZStreamRCon
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 	virtual bool Imp_WaitReadable(double iTimeout);
 
@@ -246,12 +246,12 @@ const ZStreamRCon& Channel_BBDevMgr::GetStreamRCon()
 const ZStreamWCon& Channel_BBDevMgr::GetStreamWCon()
 	{ return *this; }
 
-void Channel_BBDevMgr::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void Channel_BBDevMgr::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 		s.Writef("Imp_Read, iCount: %d", iCount);
 
-	uint8* localDest = static_cast<uint8*>(iDest);
+	uint8* localDest = static_cast<uint8*>(oDest);
 
 	ZMutexLocker locker(fMutex);
 
@@ -282,7 +282,7 @@ void Channel_BBDevMgr::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - static_cast<uint8*>(iDest);
+		*oCountRead = localDest - static_cast<uint8*>(oDest);
 	}
 
 size_t Channel_BBDevMgr::Imp_CountReadable()

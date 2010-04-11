@@ -68,7 +68,7 @@ public:
 	const ZStreamR& GetStreamR();
 
 // From ZStreamR
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 	virtual size_t Imp_CountReadable();
 	virtual void Imp_Skip(uint64 iCount, uint64* oCountSkipped);
 
@@ -90,11 +90,11 @@ void ZYadStreamR_ZooLibStreamNew::Finish()
 const ZStreamR& ZYadStreamR_ZooLibStreamNew::GetStreamR()
 	{ return *this; }
 
-void ZYadStreamR_ZooLibStreamNew::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZYadStreamR_ZooLibStreamNew::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	const ZStreamR& theStreamR = fStreamerR->GetStreamR();
 
-	uint8* localDest = reinterpret_cast<uint8*>(iDest);
+	uint8* localDest = reinterpret_cast<uint8*>(oDest);
 	while (iCount && !fHitEnd)
 		{
 		if (fChunkSize == 0)
@@ -113,7 +113,7 @@ void ZYadStreamR_ZooLibStreamNew::Imp_Read(void* iDest, size_t iCount, size_t* o
 			}
 		}
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<uint8*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
 size_t ZYadStreamR_ZooLibStreamNew::Imp_CountReadable()

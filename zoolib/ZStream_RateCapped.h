@@ -59,7 +59,7 @@ public:
 	~ZStreamR_RateCapped();
 
 // From ZStreamR via ZStreamR_Filter
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 protected:
 	RateLimiter fLimiter;
@@ -97,7 +97,7 @@ public:
 	~ZStreamU_RateCapped();
 
 // From ZStreamR via ZStreamU_Filter
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 protected:
 	RateLimiter fLimiter;
@@ -135,7 +135,7 @@ public:
 	~ZStreamRPos_RateCapped();
 
 // From ZStreamR via ZStreamRPos_Filter
-	virtual void Imp_Read(void* iDest, size_t iCount, size_t* oCountRead);
+	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
 
 protected:
 	RateLimiter fLimiter;

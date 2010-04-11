@@ -71,17 +71,17 @@ ZStrimR_Boundary::~ZStrimR_Boundary()
 	delete[] fBuffer;
 	}
 
-void ZStrimR_Boundary::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount)
+void ZStrimR_Boundary::Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount)
 	{
 	if (!fBuffer)
 		{
-		fStrimSource.Read(iDest, iCount, oCount);
+		fStrimSource.Read(oDest, iCount, oCount);
 		}
 	else
 		{
 		const size_t boundarySize = fBoundary.size();
 
-		UTF32* localDest = iDest;
+		UTF32* localDest = oDest;
 		size_t countRemaining = iCount;
 		while (countRemaining > 0)
 			{
@@ -150,7 +150,7 @@ void ZStrimR_Boundary::Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount
 				}
 			}
 		if (oCount)
-			*oCount = localDest - iDest;
+			*oCount = localDest - oDest;
 		}
 	}
 

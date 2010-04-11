@@ -151,16 +151,12 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iRep)
 	{
 	const ZStrimW& w = pStrimW();
 
-	w << "Concrete // " << typeid(*iRep.Get()).name();
+	w << "Concrete";
+	// We always include the relhead
+	spWrite_EffectiveRelHeadComment(iRep, w);
 
 	this->pWriteLFIndent();
-	w << "(";
-
-	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iRep, w);
-
-	this->pWriteLFIndent();
-	w << ")";
+	w << "( /*" << typeid(*iRep.Get()).name() << "*/ )";
 	}
 
 void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Project(

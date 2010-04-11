@@ -95,12 +95,12 @@ ZMIME::StreamR_Header::StreamR_Header(const ZStreamR& iStream)
 // we have some other initial state?
 	{}
 
-void ZMIME::StreamR_Header::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZMIME::StreamR_Header::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	if (oCountRead)
 		*oCountRead = 0;
 
-	uint8* localDest = static_cast<uint8*>(iDest);
+	uint8* localDest = static_cast<uint8*>(oDest);
 	uint8* localEnd = localDest + iCount;
 
 	while (localDest < localEnd && fState != eSeen_LF_LF)
@@ -155,7 +155,7 @@ void ZMIME::StreamR_Header::Imp_Read(void* iDest, size_t iCount, size_t* oCountR
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - static_cast<uint8*>(iDest);
+		*oCountRead = localDest - static_cast<uint8*>(oDest);
 	}
 
 // =================================================================================================
@@ -168,9 +168,9 @@ ZMIME::StreamR_Line::StreamR_Line(const ZStreamR& iStream)
 	fEmpty(true)
 	{}
 
-void ZMIME::StreamR_Line::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZMIME::StreamR_Line::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	uint8* localDest = static_cast<uint8*>(iDest);
+	uint8* localDest = static_cast<uint8*>(oDest);
 	uint8* localEnd = localDest + iCount;
 
 	while (localDest < localEnd && fState != eSeen_LF)
@@ -200,7 +200,7 @@ void ZMIME::StreamR_Line::Imp_Read(void* iDest, size_t iCount, size_t* oCountRea
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - static_cast<uint8*>(iDest);
+		*oCountRead = localDest - static_cast<uint8*>(oDest);
 	}
 
 bool ZMIME::StreamR_Line::HitLF() const

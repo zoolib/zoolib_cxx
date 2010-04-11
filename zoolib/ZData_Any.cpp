@@ -151,17 +151,17 @@ void ZData_Any::CopyFrom(size_t iOffset, const void* iSource, size_t iCount)
 void ZData_Any::CopyFrom(const void* iSource, size_t iCount)
 	{ this->CopyFrom(0, iSource, iCount); }
 
-void ZData_Any::CopyTo(size_t iOffset, void* iDest, size_t iCount) const
+void ZData_Any::CopyTo(size_t iOffset, void* oDest, size_t iCount) const
 	{
 	ZAssertStop(2, iCount + iOffset <= this->GetSize());
 	if (iCount == 0)
 		return;
 	vector<char>::const_iterator begin = fRep->fVector.begin() + iOffset;
-	std::copy(begin, begin + iCount, static_cast<char*>(iDest));
+	std::copy(begin, begin + iCount, static_cast<char*>(oDest));
 	}
 
-void ZData_Any::CopyTo(void* iDest, size_t iCount) const
-	{ this->CopyTo(0, iDest, iCount); }
+void ZData_Any::CopyTo(void* oDest, size_t iCount) const
+	{ this->CopyTo(0, oDest, iCount); }
 
 void ZData_Any::pTouch()
 	{

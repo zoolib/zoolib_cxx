@@ -22,9 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDebug__ 1
 #include "zconfig.h"
 
-#include <stddef.h> // for size_t
-
-#include <stdarg.h> // For va_list
+#include <cstdarg> // For std::va_list
+#include <cstddef> // For std::size_t
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -45,13 +44,13 @@ struct Params_t
 	const char* fUserMessage;
 	};
 
-typedef void (*Function_t)(const Params_t& iParams, va_list iArgs);
+typedef void (*Function_t)(const Params_t& iParams, std::va_list iArgs);
 
 extern void sInvoke(int iLevel, bool iStop,
 	const char* iFileName, const char* iFunctionName, int iLine,
 	const char* iConditionMessage, const char* iUserMessage, ...);
 
-size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams);
+std::size_t sFormatStandardMessage(char* iBuf, int iBufSize, const Params_t& iParams);
 
 #if ZCONFIG(Compiler,GCC)
 #	define ZMACRO_Unwrap(b...) b

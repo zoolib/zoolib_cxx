@@ -102,7 +102,7 @@ public:
 	const ZStrimR& GetStrimR();
 
 // From ZStrimR
-	virtual void Imp_ReadUTF32(UTF32* iDest, size_t iCount, size_t* oCount);
+	virtual void Imp_ReadUTF32(UTF32* oDest, size_t iCount, size_t* oCount);
 
 private:
 	ZRef<ZStrimmerU> fStrimmerU;

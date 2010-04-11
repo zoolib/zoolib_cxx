@@ -72,8 +72,8 @@ public:
 	void CopyFrom(size_t iOffset, const void* iSource, size_t iCount);
 	void CopyFrom(const void* iSource, size_t iCount);
 
-	void CopyTo(size_t iOffset, void* iDest, size_t iCount) const;
-	void CopyTo(void* iDest, size_t iCount) const;
+	void CopyTo(size_t iOffset, void* oDest, size_t iCount) const;
+	void CopyTo(void* oDest, size_t iCount) const;
 
 private:
 	CFDataRef pData() const;

@@ -31,9 +31,9 @@ ZStreamR_ASCIIStrim::ZStreamR_ASCIIStrim(const ZStrimR& iStrimR)
 :	fStrimR(iStrimR)
 	{}
 
-void ZStreamR_ASCIIStrim::Imp_Read(void* iDest, size_t iCount, size_t* oCountRead)
+void ZStreamR_ASCIIStrim::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	UTF8* localDest = reinterpret_cast<UTF8*>(iDest);
+	UTF8* localDest = reinterpret_cast<UTF8*>(oDest);
 
 	if (iCount < 6)
 		{
@@ -89,7 +89,7 @@ void ZStreamR_ASCIIStrim::Imp_Read(void* iDest, size_t iCount, size_t* oCountRea
 		}
 
 	if (oCountRead)
-		*oCountRead = localDest - reinterpret_cast<UTF8*>(iDest);
+		*oCountRead = localDest - reinterpret_cast<UTF8*>(oDest);
 	}
 
 // =================================================================================================

@@ -38,12 +38,12 @@ template <int s> struct Types_T {};
 template <> struct Types_T<4>
 	{
 	typedef wchar_t utf32_t;
-	typedef uint16 utf16_t;
+	typedef ZStdInt::uint16 utf16_t;
 	};
 
 template <> struct Types_T<2>
 	{
-	typedef uint32 utf32_t;
+	typedef ZStdInt::uint32 utf32_t;
 	typedef wchar_t utf16_t;
 	};
 
