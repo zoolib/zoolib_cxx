@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2000 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -19,3 +19,31 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZMemory.h"
+
+NAMESPACE_ZOOLIB_BEGIN
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * memmove, memcpy, memset, bzero wrappers.
+
+int ZMemCompare(const void* iL, std::size_t iCountL, const void* iR, std::size_t iCountR)
+	{
+	if (iCountL < iCountR)
+		{
+		if (int compare = std::memcmp(iL, iR, iCountL))
+			return compare;
+		return -1;
+		}
+	else if (iCountL > iCountR)
+		{
+		if (int compare = std::memcmp(iL, iR, iCountL))
+			return compare;
+		return 1;
+		}
+	else
+		{
+		return std::memcmp(iL, iR, iCountL);
+		}
+	}
+
+NAMESPACE_ZOOLIB_END

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2000 Andrew Green and Learning in Motion, Inc.
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -25,19 +25,24 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include <cstddef> // For std::size_t
-#include <cstring> // For std::memmove, std::memcpy and std::memset
+#include <cstring> // For std::memcmp, std::memcpy, std::memmove and std::memset
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * memmove, memcpy, memset, bzero wrappers.
+#pragma mark * memcmp, memcpy, memmove, memset, bzero wrappers.
 
-inline void ZMemMove(void* oDest, const void* iSource, std::size_t iCount)
-	{ std::memmove(oDest, iSource, iCount); }
+inline int ZMemCompare(const void* iLHS, const void* iRHS, std::size_t iCount)
+	{ return std::memcmp(iLHS, iRHS, iCount); }
+
+int ZMemCompare(const void* iL, std::size_t iCountL, const void* iR, std::size_t iCountR);
 
 inline void ZMemCopy(void* oDest, const void* iSource, std::size_t iCount)
 	{ std::memcpy(oDest, iSource, iCount); }
+
+inline void ZMemMove(void* oDest, const void* iSource, std::size_t iCount)
+	{ std::memmove(oDest, iSource, iCount); }
 
 inline void ZMemSet(void* oDest, unsigned char iValue, std::size_t iCount)
 	{ std::memset(oDest, iValue, iCount); }
@@ -52,30 +57,9 @@ inline void ZMemZero(void* oDest, std::size_t iCount)
 	}
 
 template <class T>
-void ZMemZero_T(T& iT)
-	{ ZMemZero(&iT, sizeof(iT)); }
+void ZMemZero_T(T& oT)
+	{ ZMemZero(&oT, sizeof(oT)); }
 
 NAMESPACE_ZOOLIB_END
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * BlockMove, BlockCopy, BlockSet wrappers
-
-// ZBlockMove, ZBlockCopy and ZBlockSet -- standardizes the API and takes advantage of any native
-// performance enhacnements that may be available. Note that the parameter order is reversed from
-// the C standard API. This is because these methods started off as simple wrappers around MacOS
-// procedures which also had what might to you seem to be awkward ordering. Sorry.
-
-#if 0
-
-#define ZBlockMove(srcPtr, destPtr, byteCount) ZMemMove(destPtr, srcPtr, byteCount)
-#define ZBlockCopy(srcPtr, destPtr, byteCount) ZMemCopy(destPtr, srcPtr, byteCount)
-
-#define ZBlockSet(destPtr, byteCount, value) ZMemSet(destPtr, value, byteCount)
-#define ZBlockZero(destPtr, byteCount) ZMemZero(destPtr, byteCount)
-
-#endif
-
-// =================================================================================================
 
 #endif // __ZMemory__
