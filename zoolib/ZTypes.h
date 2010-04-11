@@ -28,35 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStdInt.h"
 #include "zoolib/ZUnicodeCU.h"
 
-#include <stddef.h> // For size_t
-
 NAMESPACE_ZOOLIB_BEGIN
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZPointPOD
-
-struct ZPointPOD
-	{
-	int32 h;
-	int32 v;
-	};
-
-template <> int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR);
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZRectPOD
-
-struct ZRectPOD
-	{
-	int32 left;
-	int32 top;
-	int32 right;
-	int32 bottom;
-	};
-
-template <> int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR);
 
 // =================================================================================================
 

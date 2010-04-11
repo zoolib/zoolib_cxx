@@ -19,11 +19,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #ifndef __ZStdInt__
-#define __ZStdInt__
+#define __ZStdInt__ 1
 #include "zconfig.h"
 
-// Macros for explicit 64 bit integers
+#include <cstddef> // For std::size_t
 
+// Macros for 64 bit integer constants
 #if ZCONFIG(Compiler, MSVC)
 	#define ZINT64_C(v) (v##i64)
 	#define ZUINT64_C(v) (v##ui64)
@@ -32,7 +33,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define ZUINT64_C(v) (v##ULL)
 #endif
 
-// The usual suite of types with known sizes and signedness.
+// =================================================================================================
+#pragma mark -
+#pragma mark * Standard integers
+// Get the names int8, uint8, int16, uint16, int32, uint32,
+// int64 and uint64 into namespace ZStdInt. if you provide
+// a project-specific header, it must achieve the same result.
 
 #if defined(ZProjectHeader_StdInt)
 
@@ -42,26 +48,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#include ZProjectHeader_StdInt
 
 #else // defined(ZProjectHeader_StdInt)
-
-	#include "zoolib/ZCONFIG_SPI.h"
-
-	#if ZCONFIG_SPI_Enabled(MacOSX) \
-		|| ZCONFIG_SPI_Enabled(MacClassic) \
-		|| ZCONFIG_SPI_Enabled(Carbon64)
-
-		#if __arm__
-			#include <MacTypes.h>
-		#else
-			#include ZMACINCLUDE3(CoreServices,CarbonCore,MacTypes.h)
-		#endif
-
-		// Doing this makes a lot of stuff more directly compatible on Mac.
-		#ifndef _UINT32
-			#define _UINT32 1
-			typedef UInt32 uint32;
-		#endif
-
-	#endif
 
 	#if ZCONFIG(Compiler, MSVC)
 
@@ -111,30 +97,60 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	#endif
 
-	typedef int8_t int8;
-	typedef uint8_t uint8;
+	#include "zoolib/ZCONFIG_SPI.h"
 
-	typedef int16_t int16;
-	typedef uint16_t uint16;
+	// Pick up Mac's UInt32 if it's available
+	#if ZCONFIG_SPI_Enabled(MacOSX) \
+		|| ZCONFIG_SPI_Enabled(MacClassic) \
+		|| ZCONFIG_SPI_Enabled(Carbon64)
 
-	#ifndef _INT32
-		#ifndef _MSL_USING_MW_C_HEADERS
-			#define _INT32 1
+		#if __arm__
+			#include <MacTypes.h>
+		#else
+			#include ZMACINCLUDE3(CoreServices,CarbonCore,MacTypes.h)
 		#endif
+	#endif
+
+	namespace ZStdInt
+		{
+		typedef int8_t int8;
+		typedef uint8_t uint8;
+
+		typedef int16_t int16;
+		typedef uint16_t uint16;
+
 		typedef int32_t int32;
-	#endif
 
-	#ifndef _UINT32
-		#define _UINT32 1
-		typedef uint32_t uint32;
-	#endif
+		// Doing this makes a lot of stuff more directly compatible on Mac.
+		#if ZCONFIG_SPI_Enabled(MacOSX) \
+			|| ZCONFIG_SPI_Enabled(MacClassic) \
+			|| ZCONFIG_SPI_Enabled(Carbon64)
+			typedef UInt32 uint32;
+		#else
+			typedef uint32_t uint32;
+		#endif
 
-	typedef int64_t int64;
-	typedef uint64_t uint64;
+		typedef int64_t int64;
+		typedef uint64_t uint64;
+		} // namespace ZStdInt
 
 #endif // defined(ZStdInt_ProjectHeader)
 
 NAMESPACE_ZOOLIB_BEGIN
+
+// Pull the ZStdInt names into namespace ZooLib. If you'd like to use
+// these names unadorned, you can do 'using namespace ZooLib' or
+// 'using namespace ZStdInt', or indeed use the same explicit injection.
+using ZStdInt::int8;
+using ZStdInt::uint8;
+using ZStdInt::int16;
+using ZStdInt::uint16;
+using ZStdInt::int32;
+using ZStdInt::uint32;
+using ZStdInt::int64;
+using ZStdInt::uint64;
+
+using std::size_t;
 
 template <int size> struct ZIntTrait_T;
 
