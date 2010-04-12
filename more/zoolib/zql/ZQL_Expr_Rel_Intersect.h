@@ -18,54 +18,62 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Expr_Rel_Unary__
-#define __ZQL_Expr_Rel_Unary__ 1
+#ifndef __ZQL_Expr_Rel_Intersect__
+#define __ZQL_Expr_Rel_Intersect__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZExpr_Op_T.h"
 #include "zoolib/zql/ZQL_Expr_Rel.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
-class Visitor_Expr_Rel_Unary;
+class Visitor_Expr_Rel_Intersect;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Unary
+#pragma mark * Expr_Rel_Intersect
 
-class Expr_Rel_Unary : public Expr_Rel
+class Expr_Rel_Intersect
+:	public virtual Expr_Rel
+,	public virtual ZExpr_Op2_T<Expr_Rel>
 	{
-protected:
-	Expr_Rel_Unary(ZRef<Expr_Rel> iExpr_Rel);
-
+	typedef ZExpr_Op2_T<Expr_Rel> inherited;
 public:
-	virtual ~Expr_Rel_Unary();
+	Expr_Rel_Intersect(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1);
 
-// From Expr_Rel
-	virtual void Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor);
+// From ZExpr_Op2_T
+	virtual void Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor);
+
+	virtual ZRef<Expr_Rel> Self();
+	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1);
 
 // Our protocol
-	virtual void Accept_Expr_Rel_Unary(Visitor_Expr_Rel_Unary& iVisitor);
-
-	virtual ZRef<Expr_Rel_Unary> Clone(ZRef<Expr_Rel> iExpr_Rel) = 0;
-
-	ZRef<Expr_Rel> GetExpr_Rel();
-
-private:
-	const ZRef<Expr_Rel> fExpr_Rel;
+	virtual void Accept_Expr_Rel_Intersect(Visitor_Expr_Rel_Intersect& iVisitor);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_Unary
+#pragma mark * Visitor_Expr_Rel_Intersect
 
-class Visitor_Expr_Rel_Unary : public virtual Visitor_Expr_Rel
+class Visitor_Expr_Rel_Intersect : public virtual ZVisitor_Expr_Op2_T<Expr_Rel>
 	{
+	typedef ZVisitor_Expr_Op2_T<Expr_Rel> inherited;
 public:
-	virtual void Visit_Expr_Rel_Unary(ZRef<Expr_Rel_Unary> iExpr);
+	virtual void Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect> iExpr);
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Relational operators
+
+ZRef<Expr_Rel_Intersect> sIntersect(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+
+ZRef<Expr_Rel_Intersect> operator&(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Expr_Rel_Unary__
+#endif // __ZQL_Expr_Rel__

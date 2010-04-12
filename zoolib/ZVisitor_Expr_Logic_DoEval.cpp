@@ -29,22 +29,19 @@ NAMESPACE_ZOOLIB_BEGIN
 ZVisitor_Expr_Logic_DoEval::ZVisitor_Expr_Logic_DoEval()
 	{}
 
-void ZVisitor_Expr_Logic_DoEval::Visit_Logic_True(ZRef<ZExpr_Logic_True> iRep)
-	{ this->pSetResult(ZAny(true)); }
+void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iRep)
+	{ this->pSetResult(true); }
 
-void ZVisitor_Expr_Logic_DoEval::Visit_Logic_False(ZRef<ZExpr_Logic_False> iRep)
-	{ this->pSetResult(ZAny(false)); }
+void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iRep)
+	{ this->pSetResult(false); }
 
-void ZVisitor_Expr_Logic_DoEval::Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
-	{ this->pSetResult(ZAny(! this->pDoEval(iRep))); }
+void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
+	{ this->pSetResult(! this->Do(iRep)); }
 
-void ZVisitor_Expr_Logic_DoEval::Visit_Logic_And(ZRef<ZExpr_Logic_And> iRep)
-	{ this->pSetResult(ZAny(this->pDoEval(iRep->GetLHS()) && this->pDoEval(iRep->GetRHS()))); }
+void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep)
+	{ this->pSetResult(this->Do(iRep->GetLHS()) && this->Do(iRep->GetRHS())); }
 
-void ZVisitor_Expr_Logic_DoEval::Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
-	{ this->pSetResult(ZAny(this->pDoEval(iRep->GetLHS()) || this->pDoEval(iRep->GetRHS()))); }
-
-bool ZVisitor_Expr_Logic_DoEval::pDoEval(ZRef<ZExpr_Logic> iExpr)
-	{ return this->DoEval(iExpr).DGet_T<bool>(false); }
+void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
+	{ this->pSetResult(this->Do(iRep->GetLHS()) || this->Do(iRep->GetRHS())); }
 
 NAMESPACE_ZOOLIB_END

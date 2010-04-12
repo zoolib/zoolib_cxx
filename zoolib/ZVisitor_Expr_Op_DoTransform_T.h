@@ -18,27 +18,53 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_Visitor_Expr_Rel_Binary_DoTransform.h"
+#ifndef __ZVisitor_Expr_Op_DoTransform_T__
+#define __ZVisitor_Expr_Op_DoTransform_T__
+#include "zconfig.h"
+
+#include "zoolib/ZExpr_Op_T.h"
+#include "zoolib/ZVisitor_Expr_Do_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_Binary_DoTransform
+#pragma mark * ZVisitor_Expr_Op_DoTransform_T
 
-void Visitor_Expr_Rel_Binary_DoTransform::Visit_Expr_Rel_Binary(
-	ZRef<Expr_Rel_Binary> iExpr)
+template <class T>
+class ZVisitor_Expr_Op_DoTransform_T
+:	public virtual ZVisitor_Expr_Do_T<ZRef<T> >
+,	public virtual ZVisitor_Expr_Op0_T<T>
+,	public virtual ZVisitor_Expr_Op1_T<T>
+,	public virtual ZVisitor_Expr_Op2_T<T>
 	{
-	ZRef<Expr_Rel> oldLHS = iExpr->GetLHS();
-	ZRef<Expr_Rel> oldRHS = iExpr->GetRHS();
-	ZRef<Expr_Rel> newLHS = this->DoTransform(oldLHS).DynamicCast<Expr_Rel>();
-	ZRef<Expr_Rel> newRHS = this->DoTransform(oldRHS).DynamicCast<Expr_Rel>();
-	if (oldLHS == newLHS && oldRHS == newRHS)
-		fResult = iExpr;
-	else
-		fResult = iExpr->Clone(newLHS, newRHS);
-	}
+public:
+	virtual void Visit_Expr_Op0(ZRef<ZExpr_Op1_T<T> > iExpr)
+		{ this->pSetResult(iExpr->Self()); }
 
-} // namespace ZQL
+	virtual void Visit_Expr_Op1(ZRef<ZExpr_Op1_T<T> > iExpr)
+		{
+		ZRef<T> oldOp0 = iExpr->GetOp0();
+		ZRef<T> newOp0 = this->Do(oldOp0);
+		if (oldOp0 == newOp0)
+			this->pSetResult(iExpr->Self());
+		else
+			this->pSetResult(iExpr->Clone(newOp0));
+		}
+
+	virtual void Visit_Expr_Op2(ZRef<ZExpr_Op2_T<T> > iExpr)
+		{
+		ZRef<T> oldOp0 = iExpr->GetOp0();
+		ZRef<T> oldOp1 = iExpr->GetOp1();
+		ZRef<T> newOp0 = this->Do(oldOp0);
+		ZRef<T> newOp1 = this->Do(oldOp1);
+		if (oldOp0 == newOp0 && oldOp1 == newOp1)
+			this->pSetResult(iExpr->Self());
+		else
+			this->pSetResult(iExpr->Clone(newOp0, newOp1));
+		}
+	};
+
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZVisitor_Expr_Op_DoTransform_T__

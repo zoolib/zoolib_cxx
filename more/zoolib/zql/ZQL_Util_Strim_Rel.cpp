@@ -21,15 +21,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim_ValCondition.h"
 #include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoToStrim.h"
 #include "zoolib/zql/ZQL_Util_Strim_Rel.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Binary_Difference.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Binary_Intersect.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Binary_Join.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Binary_Union.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Difference.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Intersect.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Join.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Union.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Project.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Rename.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Restrict.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Project.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Rename.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Restrict.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Select.h"
 #include "zoolib/zql/ZQL_Util_Strim_RelHead.h"
 #include "zoolib/zql/ZQL_Visitor_Expr_Rel_DoGetRelHead.h"
 
@@ -45,8 +45,8 @@ using std::string;
 
 namespace ZANONYMOUS {
 
-RelHead spGetRelHead(ZRef<Expr_Rel> iExpr)
-	{ return Visitor_Expr_Rel_DoGetRelHead().DoGetRelHead(iExpr); }
+RelHead spGetRelHead(ZRef<ZExpr> iExpr)
+	{ return Visitor_Expr_Rel_DoGetRelHead().Do(iExpr); }
 
 void spWrite(const string& iString, const ZStrimW& s)
 	{ s.Write(iString); }
@@ -60,7 +60,7 @@ void spWrite_RelHead(const RelHead& iRelHead, const ZStrimW& iStrimW)
 void spWrite_PropName(const string& iPropName, const ZStrimW& iStrimW)
 	{ Util_Strim_RelHead::sWrite_PropName(iPropName, iStrimW); }
 
-void spWrite_EffectiveRelHeadComment(ZRef<Expr_Rel> iExpr, const ZStrimW& iStrimW)
+void spWrite_EffectiveRelHeadComment(ZRef<ZExpr> iExpr, const ZStrimW& iStrimW)
 	{
 	iStrimW.Write(" // ");
 	Util_Strim_RelHead::sWrite_RelHead(spGetRelHead(iExpr), iStrimW);
@@ -77,47 +77,42 @@ namespace ZANONYMOUS {
 
 class Visitor_DoToStrim
 :	public virtual ZVisitor_Expr_Logic_ValCondition_DoToStrim
-,	public virtual ZQL::Visitor_Expr_Rel_Binary_Difference
-,	public virtual ZQL::Visitor_Expr_Rel_Binary_Intersect
-,	public virtual ZQL::Visitor_Expr_Rel_Binary_Join
-,	public virtual ZQL::Visitor_Expr_Rel_Binary_Union
+,	public virtual ZQL::Visitor_Expr_Rel_Difference
+,	public virtual ZQL::Visitor_Expr_Rel_Intersect
+,	public virtual ZQL::Visitor_Expr_Rel_Join
+,	public virtual ZQL::Visitor_Expr_Rel_Union
 ,	public virtual ZQL::Visitor_Expr_Rel_Concrete
-,	public virtual ZQL::Visitor_Expr_Rel_Unary_Project
-,	public virtual ZQL::Visitor_Expr_Rel_Unary_Rename
-,	public virtual ZQL::Visitor_Expr_Rel_Unary_Restrict
-,	public virtual ZQL::Visitor_Expr_Rel_Unary_Select
+,	public virtual ZQL::Visitor_Expr_Rel_Project
+,	public virtual ZQL::Visitor_Expr_Rel_Rename
+,	public virtual ZQL::Visitor_Expr_Rel_Restrict
+,	public virtual ZQL::Visitor_Expr_Rel_Select
 	{
 public:
-	virtual void Visit_Expr_Rel_Binary_Difference(
-		ZRef<Expr_Rel_Binary_Difference> iExpr);
-	virtual void Visit_Expr_Rel_Binary_Intersect(
-		ZRef<Expr_Rel_Binary_Intersect> iExpr);
-	virtual void Visit_Expr_Rel_Binary_Join(ZRef<Expr_Rel_Binary_Join> iExpr);
-	virtual void Visit_Expr_Rel_Binary_Union(ZRef<Expr_Rel_Binary_Union> iExpr);
+	virtual void Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Difference> iExpr);
+	virtual void Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect> iExpr);
+	virtual void Visit_Expr_Rel_Join(ZRef<Expr_Rel_Join> iExpr);
+	virtual void Visit_Expr_Rel_Union(ZRef<Expr_Rel_Union> iExpr);
 
 	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
 
-	virtual void Visit_Expr_Rel_Unary_Project(ZRef<Expr_Rel_Unary_Project> iExpr);
-	virtual void Visit_Expr_Rel_Unary_Rename(ZRef<Expr_Rel_Unary_Rename> iExpr);
-	virtual void Visit_Expr_Rel_Unary_Restrict(ZRef<Expr_Rel_Unary_Restrict> iExpr);
-	virtual void Visit_Expr_Rel_Unary_Select(ZRef<Expr_Rel_Unary_Select> iExpr);
+	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr);
+	virtual void Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr);
+	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr);
+	virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr);
 
 private:
-	void pWriteBinary(const std::string& iFunctionName, ZRef<Expr_Rel_Binary> iExpr);
+	void pWriteBinary(const std::string& iFunctionName, ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr);
 	};
 
 } // anonymous namespace
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Binary_Difference(
-	ZRef<Expr_Rel_Binary_Difference> iExpr)
+void Visitor_DoToStrim::Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Difference> iExpr)
 	{ this->pWriteBinary("Difference", iExpr); }
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Binary_Intersect(
-	ZRef<Expr_Rel_Binary_Intersect> iExpr)
+void Visitor_DoToStrim::Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect> iExpr)
 	{ this->pWriteBinary("Intersect", iExpr); }
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Binary_Join(
-	ZRef<Expr_Rel_Binary_Join> iExpr)
+void Visitor_DoToStrim::Visit_Expr_Rel_Join(ZRef<Expr_Rel_Join> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Join";
@@ -146,8 +141,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Binary_Join(
 	w << ")";
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Binary_Union(
-	ZRef<Expr_Rel_Binary_Union> iExpr)
+void Visitor_DoToStrim::Visit_Expr_Rel_Union(ZRef<Expr_Rel_Union> iExpr)
 	{ this->pWriteBinary("Union", iExpr); }
 
 void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
@@ -162,8 +156,8 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
 	w << "( /*" << typeid(*iExpr.Get()).name() << "*/ )";
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Project(
-	ZRef<Expr_Rel_Unary_Project> iExpr)
+void Visitor_DoToStrim::Visit_Expr_Rel_Project(
+	ZRef<Expr_Rel_Project> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	spWrite("Project", w);
@@ -179,14 +173,14 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Project(
 	spWrite(",", w);
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetExpr_Rel());
+	this->DoToStrim(iExpr->GetOp0());
 
 	this->pWriteLFIndent();
 	spWrite(")", w);
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Rename(
-	ZRef<Expr_Rel_Unary_Rename> iExpr)
+void Visitor_DoToStrim::Visit_Expr_Rel_Rename(
+	ZRef<Expr_Rel_Rename> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	spWrite("Rename", w);
@@ -204,14 +198,14 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Rename(
 	spWrite(",", w);
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetExpr_Rel());
+	this->DoToStrim(iExpr->GetOp0());
 
 	this->pWriteLFIndent();
 	spWrite(")", w);
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Restrict(
-	ZRef<Expr_Rel_Unary_Restrict> iExpr)
+void Visitor_DoToStrim::Visit_Expr_Rel_Restrict(
+	ZRef<Expr_Rel_Restrict> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Restrict";
@@ -226,14 +220,14 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Restrict(
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetExpr_Rel());
+	this->DoToStrim(iExpr->GetOp0());
 
 	this->pWriteLFIndent();
 	w << ")";
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Select(
-	ZRef<Expr_Rel_Unary_Select> iExpr)
+void Visitor_DoToStrim::Visit_Expr_Rel_Select(
+	ZRef<Expr_Rel_Select> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Select";
@@ -248,7 +242,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Select(
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetExpr_Rel());
+	this->DoToStrim(iExpr->GetOp0());
 
 	this->pWriteLFIndent();
 	w << ")";
@@ -256,7 +250,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Select(
 
 
 void Visitor_DoToStrim::pWriteBinary(
-	const std::string& iFunctionName, ZRef<Expr_Rel_Binary> iExpr)
+	const std::string& iFunctionName, ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << iFunctionName;

@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Logic_ValCondition_T.h"
+#include "zoolib/ZVisitor_Expr_Do_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -32,63 +33,39 @@ NAMESPACE_ZOOLIB_BEGIN
 
 template <class Val>
 class ZVisitor_Expr_Logic_ValCondition_DoGetNames_T
-:	public ZVisitor_Expr_Logic_ValCondition_T<Val>
+:	public virtual ZVisitor_Expr_Do_T<std::set<std::string> >
+,	public virtual ZVisitor_Expr_Logic_ValCondition_T<Val>
+,	public virtual ZVisitor_Expr_Op1_T<ZExpr_Logic>
+,	public virtual ZVisitor_Expr_Op2_T<ZExpr_Logic>
 	{
 public:
-// From ZVisitor_Expr_Logic via ZVisitor_Expr_Logic_ValCondition_T
-	virtual void Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr);
-	virtual void Visit_Logic_And(ZRef<ZExpr_Logic_And> iExpr);
-	virtual void Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr);
-
 // From ZVisitor_Expr_Logic_ValCondition_T
-	virtual void Visit_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr);
+	virtual void Visit_Expr_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr);
 
-// Our protocol
-	std::set<std::string> DoGetNames(ZRef<ZExpr_Logic> iExpr);
+// From ZVisitor_Expr_Op1_T
+	virtual void Visit_Expr_Op1(ZRef<ZExpr_Op1_T<ZExpr_Logic> > iExpr);
 
-protected:
-	std::set<std::string> fResult;
+// From ZVisitor_Expr_Op2_T
+	virtual void Visit_Expr_Op2(ZRef<ZExpr_Op2_T<ZExpr_Logic> > iExpr);
 	};
 
 template <class Val>
-void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Logic_Not(
-	ZRef<ZExpr_Logic_Not> iExpr)
-	{ fResult = this->DoGetNames(iExpr); }
-
-template <class Val>
-void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Logic_And(
-	ZRef<ZExpr_Logic_And> iExpr)
-	{
-	std::set<std::string> result;
-	ZUtil_STL_set::sOr(this->DoGetNames(iExpr->GetLHS()), this->DoGetNames(iExpr->GetRHS()), result);
-	fResult.swap(result);
-	}
-
-template <class Val>
-void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Logic_Or(
-	ZRef<ZExpr_Logic_Or> iExpr)
-	{
-	std::set<std::string> result;
-	ZUtil_STL_set::sOr(this->DoGetNames(iExpr->GetLHS()), this->DoGetNames(iExpr->GetRHS()), result);
-	fResult.swap(result);
-	}
-
-template <class Val>
-void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Logic_ValCondition(
+void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Expr_Logic_ValCondition(
 	ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr)
-	{ fResult = iExpr->GetValCondition().GetNames(); }
+	{ this->pSetResult(iExpr->GetValCondition().GetNames()); }
 
 template <class Val>
-std::set<std::string> ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::DoGetNames(
-	ZRef<ZExpr_Logic> iExpr)
+void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Expr_Op1(
+	ZRef<ZExpr_Op1_T<ZExpr_Logic> > iExpr)
+	{ this->pSetResult(this->Do(iExpr->GetOp0())); }
+
+template <class Val>
+void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Expr_Op2(
+	ZRef<ZExpr_Op2_T<ZExpr_Logic> > iExpr)
 	{
-	std::set<std::string> theResult;
-	if (iExpr)
-		{
-		iExpr->Accept(*this);
-		std::swap(theResult, fResult);
-		}
-	return theResult;
+	std::set<std::string> result;
+	ZUtil_STL_set::sOr(this->Do(iExpr->GetOp0()), this->Do(iExpr->GetOp0()), result);
+	this->pSetResult(result);
 	}
 
 NAMESPACE_ZOOLIB_END

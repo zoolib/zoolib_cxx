@@ -18,34 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_DoTransform__
-#define __ZVisitor_Expr_DoTransform__
+#ifndef __ZQL_Expr_Rel_Restrict__
+#define __ZQL_Expr_Rel_Restrict__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr.h"
+#include "zoolib/ZValCondition.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Restrict_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_DoTransform
+#pragma mark * Expr_Rel_Restrict
 
-class ZVisitor_Expr_DoTransform
-:	public virtual ZVisitor_Expr
-	{
-public:
-	ZVisitor_Expr_DoTransform();
+typedef Expr_Rel_Restrict_T<ZVal_Expr> Expr_Rel_Restrict;
 
-// From ZVisitor_Expr
-	virtual void Visit_Expr(ZRef<ZExpr> iRep);
+typedef Visitor_Expr_Rel_Restrict_T<ZVal_Expr> Visitor_Expr_Rel_Restrict;
 
-// Our protocol
-	ZRef<ZExpr> DoTransform(ZRef<ZExpr> iExpr);
-
-protected:
-	ZRef<ZExpr> fResult;
-	};
-
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZVisitor_Expr_DoTransform__
+#endif // __ZQL_Expr_Rel_Restrict_T__

@@ -37,13 +37,7 @@ ConcreteDomain::~ConcreteDomain()
 #pragma mark -
 #pragma mark * Expr_Rel_Concrete
 
-Expr_Rel_Concrete::Expr_Rel_Concrete()
-	{}
-
-Expr_Rel_Concrete::~Expr_Rel_Concrete()
-	{}
-
-void Expr_Rel_Concrete::Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor)
+void Expr_Rel_Concrete::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor)
 	{
 	if (Visitor_Expr_Rel_Concrete* theVisitor =
 		dynamic_cast<Visitor_Expr_Rel_Concrete*>(&iVisitor))
@@ -52,13 +46,18 @@ void Expr_Rel_Concrete::Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor)
 		}
 	else
 		{
-		Expr_Rel::Accept_Expr_Rel(iVisitor);
+		inherited::Accept_Expr_Op0(iVisitor);
 		}
 	}
 
-void Expr_Rel_Concrete::Accept_Expr_Rel_Concrete(
-	Visitor_Expr_Rel_Concrete& iVisitor)
+void Expr_Rel_Concrete::Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Concrete(this); }
+
+ZRef<Expr_Rel> Expr_Rel_Concrete::Self()
+	{ return this; }
+
+ZRef<Expr_Rel> Expr_Rel_Concrete::Clone()
+	{ return this; }
 
 ZRef<ConcreteDomain> Expr_Rel_Concrete::GetConcreteDomain()
 	{ return nullref; }
@@ -67,9 +66,8 @@ ZRef<ConcreteDomain> Expr_Rel_Concrete::GetConcreteDomain()
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Concrete
 
-void Visitor_Expr_Rel_Concrete::Visit_Expr_Rel_Concrete(
-	ZRef<Expr_Rel_Concrete> iExpr)
-	{ ZVisitor_Expr::Visit_Expr(iExpr); }
+void Visitor_Expr_Rel_Concrete::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
+	{ inherited::Visit_Expr_Op0(iExpr); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_Expr_Rel_Unary.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Intersect.h"
 
 using std::string;
 
@@ -27,43 +27,52 @@ namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel
+#pragma mark * Expr_Rel_Intersect
 
-Expr_Rel_Unary::Expr_Rel_Unary(ZRef<Expr_Rel> iExpr_Rel)
-:	fExpr_Rel(iExpr_Rel)
+Expr_Rel_Intersect::Expr_Rel_Intersect(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
+:	inherited(iOp0, iOp1)
 	{}
 
-Expr_Rel_Unary::~Expr_Rel_Unary()
-	{}
-
-void Expr_Rel_Unary::Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor)
+void Expr_Rel_Intersect::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Unary* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel_Unary*>(&iVisitor))
+	if (Visitor_Expr_Rel_Intersect* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Intersect*>(&iVisitor))
 		{
-		this->Accept_Expr_Rel_Unary(*theVisitor);
+		this->Accept_Expr_Rel_Intersect(*theVisitor);
 		}
 	else
 		{
-		Expr_Rel::Accept_Expr_Rel(iVisitor);
+		inherited::Accept_Expr_Op2(iVisitor);
 		}
 	}
 
-void Expr_Rel_Unary::Accept_Expr_Rel_Unary(Visitor_Expr_Rel_Unary& iVisitor)
-	{ iVisitor.Visit_Expr_Rel_Unary(this); }
+ZRef<Expr_Rel> Expr_Rel_Intersect::Self()
+	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Unary::GetExpr_Rel()
-	{ return fExpr_Rel; }
+ZRef<Expr_Rel> Expr_Rel_Intersect::Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
+	{ return new Expr_Rel_Intersect(iOp0, iOp1); }
+
+void Expr_Rel_Intersect::Accept_Expr_Rel_Intersect(Visitor_Expr_Rel_Intersect& iVisitor)
+	{ iVisitor.Visit_Expr_Rel_Intersect(this); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_Unary
+#pragma mark * Visitor_Expr_Rel_Intersect
 
-void Visitor_Expr_Rel_Unary::Visit_Expr_Rel_Unary(ZRef<Expr_Rel_Unary> iExpr)
-	{
-	if (ZRef<Expr_Rel> theRelation = iExpr->GetExpr_Rel())
-		theRelation->Accept(*this);
-	}
+void Visitor_Expr_Rel_Intersect::Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect> iExpr)
+	{ inherited::Visit_Expr_Op2(iExpr); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Relational operators
+
+ZRef<Expr_Rel_Intersect> sIntersect(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+	{ return new Expr_Rel_Intersect(iLHS, iRHS); }
+
+ZRef<Expr_Rel_Intersect> operator&(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+	{ return new Expr_Rel_Intersect(iLHS, iRHS); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

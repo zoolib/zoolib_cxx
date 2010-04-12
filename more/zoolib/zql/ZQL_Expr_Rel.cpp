@@ -30,28 +30,5 @@ namespace ZQL {
 Expr_Rel::Expr_Rel()
 	{}
 
-void Expr_Rel::Accept_Expr(ZVisitor_Expr& iVisitor)
-	{
-	if (Visitor_Expr_Rel* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel*>(&iVisitor))
-		{
-		this->Accept_Expr_Rel(*theVisitor);
-		}
-	else
-		{
-		ZExpr::Accept_Expr(iVisitor);
-		}
-	}
-
-void Expr_Rel::Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor)
-	{ iVisitor.Visit_Expr_Rel(this); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel
-
-void Visitor_Expr_Rel::Visit_Expr_Rel(ZRef<Expr_Rel> iExpr)
-	{ ZVisitor_Expr::Visit_Expr(iExpr); }
-
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

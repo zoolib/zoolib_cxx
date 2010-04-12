@@ -26,20 +26,20 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Logic_DoToStrim
 
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Logic_True(ZRef<ZExpr_Logic_True> iRep)
+void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iRep)
 	{ pStrimW() << "any"; }
 
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Logic_False(ZRef<ZExpr_Logic_False> iRep)
+void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iRep)
 	{ pStrimW() << "none"; }
 
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
+void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
 	{
 	pStrimW() << "~(";
 	this->DoToStrim(iRep->GetOperand());
 	pStrimW() << ")";
 	}
 
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Logic_And(ZRef<ZExpr_Logic_And> iRep)
+void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep)
 	{
 	pStrimW() << "(";
 	this->DoToStrim(iRep->GetLHS());
@@ -48,7 +48,7 @@ void ZVisitor_Expr_Logic_DoToStrim::Visit_Logic_And(ZRef<ZExpr_Logic_And> iRep)
 	pStrimW() << ")";
 	}
 
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
+void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
 	{
 	pStrimW() << "(";
 	this->DoToStrim(iRep->GetLHS());

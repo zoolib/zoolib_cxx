@@ -22,134 +22,196 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZExpr_Logic__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr.h"
+#include "zoolib/ZExpr_Op_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZVisitor_Expr_Logic;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExpr
+#pragma mark * ZExpr_Logic
 
-class ZExpr_Logic : public ZExpr
+class ZExpr_Logic : public virtual ZExpr
 	{
 protected:
 	ZExpr_Logic();
 
 public:
 	virtual ~ZExpr_Logic();
-
-// From ZExpr
-	virtual void Accept_Expr(ZVisitor_Expr& iVisitor);
-
-// Our protocol
-	virtual void Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor);
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZExpr_Logic_True
 
-class ZExpr_Logic_True : public ZExpr_Logic
+class ZVisitor_Expr_Logic_True;
+
+class ZExpr_Logic_True
+:	public virtual ZExpr_Logic
+,	public virtual ZExpr_Op0_T<ZExpr_Logic>
 	{
+	typedef ZExpr_Op0_T<ZExpr_Logic> inherited;
 public:
 	ZExpr_Logic_True();
 
-// From ZExpr_Logic
-	virtual void Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor);
+// From ZExpr_Op0
+	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZExpr_Logic>& iVisitor);
+
+	virtual ZRef<ZExpr_Logic> Self();
+	virtual ZRef<ZExpr_Logic> Clone();
+
+// Our protocol
+	virtual void Accept_Expr_Logic_True(ZVisitor_Expr_Logic_True& iVisitor);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVisitor_Expr_Logic_True
+
+class ZVisitor_Expr_Logic_True : public virtual ZVisitor_Expr_Op0_T<ZExpr_Logic>
+	{
+	typedef ZVisitor_Expr_Op0_T<ZExpr_Logic> inherited;
+public:
+	virtual void Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iExpr);
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZExpr_Logic_False
 
-class ZExpr_Logic_False : public ZExpr_Logic
+class ZVisitor_Expr_Logic_False;
+
+class ZExpr_Logic_False
+:	public virtual ZExpr_Logic
+,	public virtual ZExpr_Op0_T<ZExpr_Logic>
 	{
+	typedef ZExpr_Op0_T<ZExpr_Logic> inherited;
 public:
 	ZExpr_Logic_False();
 
-// From ZExpr_Logic
-	virtual void Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor);
+// From ZExpr_Op0
+	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZExpr_Logic>& iVisitor);
+
+	virtual ZRef<ZExpr_Logic> Self();
+	virtual ZRef<ZExpr_Logic> Clone();
+
+// Our protocol
+	virtual void Accept_Expr_Logic_False(ZVisitor_Expr_Logic_False& iVisitor);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVisitor_Expr_Logic_False
+
+class ZVisitor_Expr_Logic_False : public virtual ZVisitor_Expr_Op0_T<ZExpr_Logic>
+	{
+	typedef ZVisitor_Expr_Op0_T<ZExpr_Logic> inherited;
+public:
+	virtual void Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iExpr);
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZExpr_Logic_Not
 
-class ZExpr_Logic_Not : public ZExpr_Logic
-	{
-public:
-	ZExpr_Logic_Not(ZRef<ZExpr_Logic> iOperand);
-	virtual ~ZExpr_Logic_Not();
+class ZVisitor_Expr_Logic_Not;
 
-// From ZExpr_Logic
-	virtual void Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor);
+class ZExpr_Logic_Not
+:	public virtual ZExpr_Logic
+,	public virtual ZExpr_Op1_T<ZExpr_Logic>
+	{
+	typedef ZExpr_Op1_T<ZExpr_Logic> inherited;
+public:
+	ZExpr_Logic_Not(ZRef<ZExpr_Logic> iOp0);
+
+// From ZExpr_Op1_T
+	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<ZExpr_Logic>& iVisitor);
+
+	virtual ZRef<ZExpr_Logic> Self();
+	virtual ZRef<ZExpr_Logic> Clone(ZRef<ZExpr_Logic> iOp0);
 
 // Our protocol
-	ZRef<ZExpr_Logic> GetOperand();
-
-private:
-	ZRef<ZExpr_Logic> fOperand;
+	virtual void Accept_Expr_Logic_Not(ZVisitor_Expr_Logic_Not& iVisitor);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExpr_Logic_Dyadic
+#pragma mark * ZVisitor_Expr_Logic_Not
 
-class ZExpr_Logic_Dyadic : public ZExpr_Logic
+class ZVisitor_Expr_Logic_Not : public virtual ZVisitor_Expr_Op1_T<ZExpr_Logic>
 	{
+	typedef ZVisitor_Expr_Op1_T<ZExpr_Logic> inherited;
 public:
-	ZExpr_Logic_Dyadic(ZRef<ZExpr_Logic> iLHS, ZRef<ZExpr_Logic> iRHS);
-	virtual ~ZExpr_Logic_Dyadic();
-
-// Our protocol
-	ZRef<ZExpr_Logic> GetLHS();
-	ZRef<ZExpr_Logic> GetRHS();
-
-protected:
-	ZRef<ZExpr_Logic> fLHS;
-	ZRef<ZExpr_Logic> fRHS;
+	virtual void Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr);
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZExpr_Logic_And
 
-class ZExpr_Logic_And : public ZExpr_Logic_Dyadic
-	{
-public:
-	ZExpr_Logic_And(ZRef<ZExpr_Logic> iLHS, ZRef<ZExpr_Logic> iRHS);
+class ZVisitor_Expr_Logic_And;
 
-// From ZExpr_Logic
-	virtual void Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor);
+class ZExpr_Logic_And
+:	public virtual ZExpr_Logic
+,	public virtual ZExpr_Op2_T<ZExpr_Logic>
+	{
+	typedef ZExpr_Op2_T<ZExpr_Logic> inherited;
+public:
+	ZExpr_Logic_And(ZRef<ZExpr_Logic> iOp0, ZRef<ZExpr_Logic> iOp1);
+
+// From ZExpr_Op2_T
+	virtual void Accept_Expr_Op2(ZVisitor_Expr_Op2_T<ZExpr_Logic>& iVisitor);
+
+	virtual ZRef<ZExpr_Logic> Self();
+	virtual ZRef<ZExpr_Logic> Clone(ZRef<ZExpr_Logic> iOp0, ZRef<ZExpr_Logic> iOp1);
+
+// Our protocol
+	virtual void Accept_Expr_Logic_And(ZVisitor_Expr_Logic_And& iVisitor);
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVisitor_Expr_Logic_And
+
+class ZVisitor_Expr_Logic_And : public virtual ZVisitor_Expr_Op2_T<ZExpr_Logic>
+	{
+	typedef ZVisitor_Expr_Op2_T<ZExpr_Logic> inherited;
+public:
+	virtual void Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iExpr);
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZExpr_Logic_Or
 
-class ZExpr_Logic_Or : public ZExpr_Logic_Dyadic
-	{
-public:
-	ZExpr_Logic_Or(ZRef<ZExpr_Logic> iLHS, ZRef<ZExpr_Logic> iRHS);
+class ZVisitor_Expr_Logic_Or;
 
-// From ZExpr_Logic
-	virtual void Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor);
+class ZExpr_Logic_Or
+:	public virtual ZExpr_Logic
+,	public virtual ZExpr_Op2_T<ZExpr_Logic>
+	{
+	typedef ZExpr_Op2_T<ZExpr_Logic> inherited;
+public:
+	ZExpr_Logic_Or(ZRef<ZExpr_Logic> iOp0, ZRef<ZExpr_Logic> iOp1);
+
+// From ZExpr_Op2_T
+	virtual void Accept_Expr_Op2(ZVisitor_Expr_Op2_T<ZExpr_Logic>& iVisitor);
+
+	virtual ZRef<ZExpr_Logic> Self();
+	virtual ZRef<ZExpr_Logic> Clone(ZRef<ZExpr_Logic> iOp0, ZRef<ZExpr_Logic> iOp1);
+
+// Our protocol
+	virtual void Accept_Expr_Logic_Or(ZVisitor_Expr_Logic_Or& iVisitor);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Logic
+#pragma mark * ZVisitor_Expr_Logic_Or
 
-class ZVisitor_Expr_Logic : public virtual ZVisitor_Expr
+class ZVisitor_Expr_Logic_Or : public virtual ZVisitor_Expr_Op2_T<ZExpr_Logic>
 	{
+	typedef ZVisitor_Expr_Op2_T<ZExpr_Logic> inherited;
 public:
-	virtual void Visit_Logic_True(ZRef<ZExpr_Logic_True> iExpr);
-	virtual void Visit_Logic_False(ZRef<ZExpr_Logic_False> iExpr);
-	virtual void Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr);
-	virtual void Visit_Logic_And(ZRef<ZExpr_Logic_And> iExpr);
-	virtual void Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr);
+	virtual void Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr);
 	};
 
 // =================================================================================================

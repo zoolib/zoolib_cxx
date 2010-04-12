@@ -27,69 +27,52 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_DoMakeIterator
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Binary_Difference(
-	ZRef<ZQL::Expr_Rel_Binary_Difference> iExpr)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Difference(
+	ZRef<ZQL::Expr_Rel_Difference> iExpr)
 	{}
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Binary_Intersect(
-	ZRef<ZQL::Expr_Rel_Binary_Intersect> iExpr)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Intersect(ZRef<ZQL::Expr_Rel_Intersect> iExpr)
 	{
-	if (ZRef<Iterator> lhs = this->DoMakeIterator(iExpr->GetLHS()))
+	if (ZRef<Iterator> lhs = this->Do(iExpr->GetLHS()))
 		{
-		if (ZRef<Iterator> rhs = this->DoMakeIterator(iExpr->GetRHS()))
-			fIterator = new Iterator_Intersect(lhs, rhs);
+		if (ZRef<Iterator> rhs = this->Do(iExpr->GetRHS()))
+			this->pSetResult(new Iterator_Intersect(lhs, rhs));
 		}
 	}
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Binary_Join(
-	ZRef<ZQL::Expr_Rel_Binary_Join> iExpr)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Join(ZRef<ZQL::Expr_Rel_Join> iExpr)
 	{
-	if (ZRef<Iterator> lhs = this->DoMakeIterator(iExpr->GetLHS()))
+	if (ZRef<Iterator> lhs = this->Do(iExpr->GetLHS()))
 		{
-		if (ZRef<Iterator> rhs = this->DoMakeIterator(iExpr->GetRHS()))
-			fIterator = new Iterator_Join(lhs, rhs);
+		if (ZRef<Iterator> rhs = this->Do(iExpr->GetRHS()))
+			this->pSetResult(new Iterator_Join(lhs, rhs));
 		}
 	}
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Binary_Union(
-	ZRef<ZQL::Expr_Rel_Binary_Union> iExpr)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Union(ZRef<ZQL::Expr_Rel_Union> iExpr)
 	{
-	if (ZRef<Iterator> lhs = this->DoMakeIterator(iExpr->GetLHS()))
+	if (ZRef<Iterator> lhs = this->Do(iExpr->GetLHS()))
 		{
-		if (ZRef<Iterator> rhs = this->DoMakeIterator(iExpr->GetRHS()))
-			fIterator = new Iterator_Union(lhs, rhs);
+		if (ZRef<Iterator> rhs = this->Do(iExpr->GetRHS()))
+			this->pSetResult(new Iterator_Union(lhs, rhs));
 		else
-			fIterator = lhs;
+			this->pSetResult(lhs);
 		}
 	}
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Unary_Project(
-	ZRef<ZQL::Expr_Rel_Unary_Project> iExpr)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Project(ZRef<ZQL::Expr_Rel_Project> iExpr)
 	{
 	ZUnimplemented();
 	}
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Unary_Rename(
-	ZRef<ZQL::Expr_Rel_Unary_Rename> iExpr)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Rename(ZRef<ZQL::Expr_Rel_Rename> iExpr)
 	{
 	ZUnimplemented();
 	}
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Unary_Select(
-	ZRef<ZQL::Expr_Rel_Unary_Select> iExpr)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Select(ZRef<ZQL::Expr_Rel_Select> iExpr)
 	{
 	ZUnimplemented();
-	}
-
-ZRef<Iterator> Visitor_Expr_Rel_DoMakeIterator::DoMakeIterator(ZRef<ZQL::Expr_Rel> iExpr)
-	{
-	ZRef<Iterator> theIterator;
-	if (iExpr)
-		{
-		iExpr->Accept(*this);
-		theIterator.swap(fIterator);
-		}
-	return theIterator;	
 	}
 
 } // namespace ZQE

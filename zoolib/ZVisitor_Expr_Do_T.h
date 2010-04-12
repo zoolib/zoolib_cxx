@@ -18,25 +18,64 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Expr_Rel_Unary_Restrict__
-#define __ZQL_Expr_Rel_Unary_Restrict__ 1
+#ifndef __ZVisitor_Expr_Do_T__
+#define __ZVisitor_Expr_Do_T__
 #include "zconfig.h"
 
-#include "zoolib/ZValCondition.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Restrict_T.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZExpr.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Unary_Restrict
+#pragma mark * ZVisitor_Expr_Do_T
 
-typedef Expr_Rel_Unary_Restrict_T<ZVal_Expr> Expr_Rel_Unary_Restrict;
+template <class Result_t>
+class ZVisitor_Expr_Do_T
+:	public virtual ZVisitor_Expr
+	{
+public:
+	ZVisitor_Expr_Do_T()
+	:	fHasResult(false)
+		{}
 
-typedef Visitor_Expr_Rel_Unary_Restrict_T<ZVal_Expr> Visitor_Expr_Rel_Unary_Restrict;
+// Our protocol
+	bool Do(ZRef<ZExpr> iExpr, Result_t& oResult)
+		{
+		if (iExpr)
+			{
+			iExpr->Accept(*this);
+			if (fHasResult)
+				{
+				fHasResult = false;
+				oResult = fResult;
+				return true;
+				}
+			}
+		return false;
+		}
 
-} // namespace ZQL
+	Result_t Do(ZRef<ZExpr> iExpr)
+		{
+		Result_t result;
+		this->Do(iExpr, result);
+		return result;
+		}
+
+protected:
+	void pSetResult(const Result_t& iResult)
+		{
+		ZAssert(!fHasResult);
+		fHasResult = true;
+		fResult = iResult;
+		}
+
+private:
+	bool fHasResult;
+	Result_t fResult;
+	};
+
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Expr_Rel_Unary_Restrict_T__
+#endif // __ZVisitor_Expr_Do_T__

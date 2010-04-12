@@ -27,7 +27,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Logic_ValCondition_DoToStrim
 
-void ZVisitor_Expr_Logic_ValCondition_DoToStrim::Visit_Logic_ValCondition(
+void ZVisitor_Expr_Logic_ValCondition_DoToStrim::Visit_Expr_Logic_ValCondition(
 	ZRef<ZExpr_Logic_ValCondition> iRep)
 	{ ZUtil_Strim_ValCondition::sToStrim(iRep->GetValCondition(), pStrimW()); }
 

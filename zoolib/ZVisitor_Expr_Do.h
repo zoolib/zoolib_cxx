@@ -18,31 +18,33 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Visitor_Expr_Rel_Binary_DoTransform__
-#define __ZQL_Visitor_Expr_Rel_Binary_DoTransform__
+#ifndef __ZVisitor_Expr_Do__
+#define __ZVisitor_Expr_Do__
 #include "zconfig.h"
 
-#include "zoolib/ZVisitor_Expr_DoTransform.h"
-
-#include "zoolib/zql/ZQL_Expr_Rel_Binary.h"
+#include "zoolib/ZExpr.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Query_DoTransform
+#pragma mark * ZVisitor_Expr_Do
 
-class Visitor_Expr_Rel_Binary_DoTransform
-:	public virtual ZVisitor_Expr_DoTransform
-,	public virtual Visitor_Expr_Rel_Binary
+class ZVisitor_Expr_Do
+:	public virtual ZVisitor_Expr
 	{
 public:
-// From Visitor_Expr_Binary_Rel
-	virtual void Visit_Expr_Rel_Binary(ZRef<Expr_Rel_Binary> iExpr);
+	ZVisitor_Expr_Do()
+		{}
+
+// Our protocol
+	void Do(ZRef<ZExpr> iExpr)
+		{
+		if (iExpr)
+			iExpr->Accept(*this);
+		}
 	};
 
-} // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Visitor_Expr_Rel_DoTransform__
+#endif // __ZVisitor_Expr_Do_T__

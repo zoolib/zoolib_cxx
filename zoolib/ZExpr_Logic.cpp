@@ -32,22 +32,6 @@ ZExpr_Logic::ZExpr_Logic()
 ZExpr_Logic::~ZExpr_Logic()
 	{}
 
-void ZExpr_Logic::Accept_Expr(ZVisitor_Expr& iVisitor)
-	{
-	if (ZVisitor_Expr_Logic* theVisitor =
-		dynamic_cast<ZVisitor_Expr_Logic*>(&iVisitor))
-		{
-		this->Accept_Expr_Logic(*theVisitor);
-		}
-	else
-		{
-		ZExpr::Accept_Expr(iVisitor);
-		}
-	}
-
-void ZExpr_Logic::Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor)
-	{ ZExpr::Accept_Expr(iVisitor); }
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZExpr_Logic_True
@@ -55,8 +39,34 @@ void ZExpr_Logic::Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor)
 ZExpr_Logic_True::ZExpr_Logic_True()
 	{}
 
-void ZExpr_Logic_True::Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor)
-	{ iVisitor.Visit_Logic_True(this); }
+void ZExpr_Logic_True::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZExpr_Logic>& iVisitor)
+	{
+	if (ZVisitor_Expr_Logic_True* theVisitor =
+		dynamic_cast<ZVisitor_Expr_Logic_True*>(&iVisitor))
+		{
+		this->Accept_Expr_Logic_True(*theVisitor);
+		}
+	else
+		{
+		inherited::Accept_Expr_Op0(iVisitor);
+		}
+	}
+
+ZRef<ZExpr_Logic> ZExpr_Logic_True::Self()
+	{ return this; }
+
+ZRef<ZExpr_Logic> ZExpr_Logic_True::Clone()
+	{ return this; }
+
+void ZExpr_Logic_True::Accept_Expr_Logic_True(ZVisitor_Expr_Logic_True& iVisitor)
+	{ iVisitor.Visit_Expr_Logic_True(this); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVisitor_Expr_Logic_True
+
+void ZVisitor_Expr_Logic_True::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iExpr)
+	{ inherited::Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
 #pragma mark -
@@ -65,102 +75,145 @@ void ZExpr_Logic_True::Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor)
 ZExpr_Logic_False::ZExpr_Logic_False()
 	{}
 
-void ZExpr_Logic_False::Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor)
-	{ iVisitor.Visit_Logic_False(this); }
+void ZExpr_Logic_False::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZExpr_Logic>& iVisitor)
+	{
+	if (ZVisitor_Expr_Logic_False* theVisitor =
+		dynamic_cast<ZVisitor_Expr_Logic_False*>(&iVisitor))
+		{
+		this->Accept_Expr_Logic_False(*theVisitor);
+		}
+	else
+		{
+		inherited::Accept_Expr_Op0(iVisitor);
+		}
+	}
+
+ZRef<ZExpr_Logic> ZExpr_Logic_False::Self()
+	{ return this; }
+
+ZRef<ZExpr_Logic> ZExpr_Logic_False::Clone()
+	{ return this; }
+
+void ZExpr_Logic_False::Accept_Expr_Logic_False(ZVisitor_Expr_Logic_False& iVisitor)
+	{ iVisitor.Visit_Expr_Logic_False(this); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVisitor_Expr_Logic_False
+
+void ZVisitor_Expr_Logic_False::Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iExpr)
+	{ inherited::Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZExpr_Logic_Not
 
-ZExpr_Logic_Not::ZExpr_Logic_Not(ZRef<ZExpr_Logic> iOperand)
-:	fOperand(iOperand)
+ZExpr_Logic_Not::ZExpr_Logic_Not(ZRef<ZExpr_Logic> iOp0)
+:	inherited(iOp0)
 	{}
 
-ZExpr_Logic_Not::~ZExpr_Logic_Not()
-	{}
+void ZExpr_Logic_Not::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<ZExpr_Logic>& iVisitor)
+	{
+	if (ZVisitor_Expr_Logic_Not* theVisitor =
+		dynamic_cast<ZVisitor_Expr_Logic_Not*>(&iVisitor))
+		{
+		this->Accept_Expr_Logic_Not(*theVisitor);
+		}
+	else
+		{
+		inherited::Accept_Expr_Op1(iVisitor);
+		}
+	}
 
-void ZExpr_Logic_Not::Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor)
-	{ iVisitor.Visit_Logic_Not(this); }
+ZRef<ZExpr_Logic> ZExpr_Logic_Not::Self()
+	{ return this; }
 
-ZRef<ZExpr_Logic> ZExpr_Logic_Not::GetOperand()
-	{ return fOperand; }
+ZRef<ZExpr_Logic> ZExpr_Logic_Not::Clone(ZRef<ZExpr_Logic> iOp0)
+	{ return new ZExpr_Logic_Not(iOp0); }
+
+void ZExpr_Logic_Not::Accept_Expr_Logic_Not(ZVisitor_Expr_Logic_Not& iVisitor)
+	{ iVisitor.Visit_Expr_Logic_Not(this); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExpr_Logic_Dyadic
+#pragma mark * ZVisitor_Expr_Logic_Not
 
-ZExpr_Logic_Dyadic::ZExpr_Logic_Dyadic(
-	ZRef<ZExpr_Logic> iLHS, ZRef<ZExpr_Logic> iRHS)
-:	fLHS(iLHS)
-,	fRHS(iRHS)
-	{
-	ZAssert(fLHS && fRHS);
-	}
-
-ZExpr_Logic_Dyadic::~ZExpr_Logic_Dyadic()
-	{}
-
-ZRef<ZExpr_Logic> ZExpr_Logic_Dyadic::GetLHS()
-	{ return fLHS; }
-
-ZRef<ZExpr_Logic> ZExpr_Logic_Dyadic::GetRHS()
-	{ return fRHS; }
+void ZVisitor_Expr_Logic_Not::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr)
+	{ inherited::Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZExpr_Logic_And
 
-ZExpr_Logic_And::ZExpr_Logic_And(ZRef<ZExpr_Logic> iLHS, ZRef<ZExpr_Logic> iRHS)
-:	ZExpr_Logic_Dyadic(iLHS, iRHS)
+ZExpr_Logic_And::ZExpr_Logic_And(ZRef<ZExpr_Logic> iOp0, ZRef<ZExpr_Logic> iOp1)
+:	inherited(iOp0, iOp1)
 	{}
 
-void ZExpr_Logic_And::Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor)
-	{ iVisitor.Visit_Logic_And(this); }
+void ZExpr_Logic_And::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<ZExpr_Logic>& iVisitor)
+	{
+	if (ZVisitor_Expr_Logic_And* theVisitor =
+		dynamic_cast<ZVisitor_Expr_Logic_And*>(&iVisitor))
+		{
+		this->Accept_Expr_Logic_And(*theVisitor);
+		}
+	else
+		{
+		inherited::Accept_Expr_Op2(iVisitor);
+		}
+	}
+
+ZRef<ZExpr_Logic> ZExpr_Logic_And::Self()
+	{ return this; }
+
+ZRef<ZExpr_Logic> ZExpr_Logic_And::Clone(ZRef<ZExpr_Logic> iOp0, ZRef<ZExpr_Logic> iOp1)
+	{ return new ZExpr_Logic_And(iOp0, iOp1); }
+
+void ZExpr_Logic_And::Accept_Expr_Logic_And(ZVisitor_Expr_Logic_And& iVisitor)
+	{ iVisitor.Visit_Expr_Logic_And(this); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVisitor_Expr_Logic_And
+
+void ZVisitor_Expr_Logic_And::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iExpr)
+	{ inherited::Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZExpr_Logic_Or
 
-ZExpr_Logic_Or::ZExpr_Logic_Or(ZRef<ZExpr_Logic> iLHS, ZRef<ZExpr_Logic> iRHS)
-:	ZExpr_Logic_Dyadic(iLHS, iRHS)
+ZExpr_Logic_Or::ZExpr_Logic_Or(ZRef<ZExpr_Logic> iOp0, ZRef<ZExpr_Logic> iOp1)
+:	inherited(iOp0, iOp1)
 	{}
 
-void ZExpr_Logic_Or::Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor)
-	{ iVisitor.Visit_Logic_Or(this); }
+void ZExpr_Logic_Or::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<ZExpr_Logic>& iVisitor)
+	{
+	if (ZVisitor_Expr_Logic_Or* theVisitor =
+		dynamic_cast<ZVisitor_Expr_Logic_Or*>(&iVisitor))
+		{
+		this->Accept_Expr_Logic_Or(*theVisitor);
+		}
+	else
+		{
+		inherited::Accept_Expr_Op2(iVisitor);
+		}
+	}
+
+ZRef<ZExpr_Logic> ZExpr_Logic_Or::Self()
+	{ return this; }
+
+ZRef<ZExpr_Logic> ZExpr_Logic_Or::Clone(ZRef<ZExpr_Logic> iOp0, ZRef<ZExpr_Logic> iOp1)
+	{ return new ZExpr_Logic_Or(iOp0, iOp1); }
+
+void ZExpr_Logic_Or::Accept_Expr_Logic_Or(ZVisitor_Expr_Logic_Or& iVisitor)
+	{ iVisitor.Visit_Expr_Logic_Or(this); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Logic
+#pragma mark * ZVisitor_Expr_Logic_Or
 
-void ZVisitor_Expr_Logic::Visit_Logic_True(ZRef<ZExpr_Logic_True> iExpr)
-	{ ZVisitor_Expr::Visit_Expr(iExpr); }
-
-void ZVisitor_Expr_Logic::Visit_Logic_False(ZRef<ZExpr_Logic_False> iExpr)
-	{ ZVisitor_Expr::Visit_Expr(iExpr); }
-
-void ZVisitor_Expr_Logic::Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr)
-	{
-	if (ZRef<ZExpr_Logic> theExpr = iExpr->GetOperand())
-		theExpr->Accept(*this);
-	}
-
-void ZVisitor_Expr_Logic::Visit_Logic_And(ZRef<ZExpr_Logic_And> iExpr)
-	{
-	if (ZRef<ZExpr_Logic> theLHS = iExpr->GetLHS())
-		theLHS->Accept(*this);
-
-	if (ZRef<ZExpr_Logic> theRHS = iExpr->GetRHS())
-		theRHS->Accept(*this);
-	}
-
-void ZVisitor_Expr_Logic::Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr)
-	{
-	if (ZRef<ZExpr_Logic> theLHS = iExpr->GetLHS())
-		theLHS->Accept(*this);
-
-	if (ZRef<ZExpr_Logic> theRHS = iExpr->GetRHS())
-		theRHS->Accept(*this);
-	}
+void ZVisitor_Expr_Logic_Or::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr)
+	{ inherited::Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
 #pragma mark -
@@ -170,7 +223,7 @@ ZRef<ZExpr_Logic_Not> operator~(const ZRef<ZExpr_Logic>& iExpr_Logic)
 	{ return new ZExpr_Logic_Not(iExpr_Logic); }
 
 ZRef<ZExpr_Logic> operator~(const ZRef<ZExpr_Logic_Not>& iExpr_Logic_Not)
-	{ return iExpr_Logic_Not->GetOperand(); }
+	{ return iExpr_Logic_Not->GetOp0(); }
 
 ZRef<ZExpr_Logic> operator&(bool iBool, const ZRef<ZExpr_Logic>& iExpr_Logic)
 	{

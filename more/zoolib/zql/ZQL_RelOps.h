@@ -22,15 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZQL_RelOps__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Logic.h"
 #include "zoolib/ZExpr_Logic_ValCondition.h" // For ValCondition/Logic operators
-#include "zoolib/zql/ZQL_Expr_Rel.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Binary_Intersect.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Binary_Join.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Binary_Union.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Project.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Restrict.h" // For restrict templated operators
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Rename.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Intersect.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Join.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Union.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Project.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Restrict.h" // For restrict templated operators
+#include "zoolib/zql/ZQL_Expr_Rel_Rename.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Select.h"
 
 #endif // __ZQL_RelOps__

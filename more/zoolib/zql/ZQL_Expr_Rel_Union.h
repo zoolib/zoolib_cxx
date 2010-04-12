@@ -18,50 +18,62 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Expr_Rel_Binary_Difference__
-#define __ZQL_Expr_Rel_Binary_Difference__ 1
+#ifndef __ZQL_Expr_Rel_Union__
+#define __ZQL_Expr_Rel_Union__ 1
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Rel_Binary.h"
+#include "zoolib/ZExpr_Op_T.h"
+#include "zoolib/zql/ZQL_Expr_Rel.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
-class Visitor_Expr_Rel_Binary_Difference;
+class Visitor_Expr_Rel_Union;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Binary_Difference
+#pragma mark * Expr_Rel_Union
 
-class Expr_Rel_Binary_Difference : public Expr_Rel_Binary
+class Expr_Rel_Union
+:	public virtual Expr_Rel
+,	public virtual ZExpr_Op2_T<Expr_Rel>
 	{
+	typedef ZExpr_Op2_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Binary_Difference(ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS);
-	virtual ~Expr_Rel_Binary_Difference();
+	Expr_Rel_Union(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1);
 
-// From Expr_Rel_Binary
-	virtual void Accept_Expr_Rel_Binary(Visitor_Expr_Rel_Binary& iVisitor);
+// From ZExpr_Op2_T
+	virtual void Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor);
 
-	virtual ZRef<Expr_Rel_Binary> Clone(
-		ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS);
+	virtual ZRef<Expr_Rel> Self();
+	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1);
 
 // Our protocol
-	virtual void Accept_Expr_Rel_Binary_Difference(
-		Visitor_Expr_Rel_Binary_Difference& iVisitor);
+	virtual void Accept_Expr_Rel_Union(Visitor_Expr_Rel_Union& iVisitor);
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_Binary_Difference
+#pragma mark * Visitor_Expr_Rel_Union
 
-class Visitor_Expr_Rel_Binary_Difference : public virtual Visitor_Expr_Rel_Binary
+class Visitor_Expr_Rel_Union : public virtual ZVisitor_Expr_Op2_T<Expr_Rel>
 	{
+	typedef ZVisitor_Expr_Op2_T<Expr_Rel> inherited;
 public:
-	virtual void Visit_Expr_Rel_Binary_Difference(
-		ZRef<Expr_Rel_Binary_Difference> iExpr);
+	virtual void Visit_Expr_Rel_Union(ZRef<Expr_Rel_Union> iExpr);
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Relational operators
+
+ZRef<Expr_Rel_Union> sUnion(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+
+ZRef<Expr_Rel_Union> operator|(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Expr_Rel_Binary__
+#endif // __ZQL_Expr_Rel__

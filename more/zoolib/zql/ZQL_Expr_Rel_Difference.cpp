@@ -18,60 +18,49 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Expr_Rel_Binary_Intersect__
-#define __ZQL_Expr_Rel_Binary_Intersect__ 1
-#include "zconfig.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Difference.h"
 
-#include "zoolib/zql/ZQL_Expr_Rel_Binary.h"
+using std::string;
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
-class Visitor_Expr_Rel_Binary_Intersect;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Binary_Intersect
+#pragma mark * Expr_Rel_Difference
 
-class Expr_Rel_Binary_Intersect : public Expr_Rel_Binary
+Expr_Rel_Difference::Expr_Rel_Difference(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
+:	inherited(iOp0, iOp1)
+	{}
+
+void Expr_Rel_Difference::Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor)
 	{
-public:
-	Expr_Rel_Binary_Intersect(ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS);
-	virtual ~Expr_Rel_Binary_Intersect();
+	if (Visitor_Expr_Rel_Difference* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Difference*>(&iVisitor))
+		{
+		this->Accept_Expr_Rel_Difference(*theVisitor);
+		}
+	else
+		{
+		inherited::Accept_Expr_Op2(iVisitor);
+		}
+	}
 
-// From Expr_Rel_Binary
-	virtual void Accept_Expr_Rel_Binary(Visitor_Expr_Rel_Binary& iVisitor);
+ZRef<Expr_Rel> Expr_Rel_Difference::Self()
+	{ return this; }
 
-	virtual ZRef<Expr_Rel_Binary> Clone(
-		ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS);
+ZRef<Expr_Rel> Expr_Rel_Difference::Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
+	{ return new Expr_Rel_Difference(iOp0, iOp1); }
 
-// Our protocol
-	virtual void Accept_Expr_Rel_Binary_Intersect(
-		Visitor_Expr_Rel_Binary_Intersect& iVisitor);
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel_Binary_Intersect
-
-class Visitor_Expr_Rel_Binary_Intersect : public virtual Visitor_Expr_Rel_Binary
-	{
-public:
-	virtual void Visit_Expr_Rel_Binary_Intersect(
-		ZRef<Expr_Rel_Binary_Intersect> iExpr);
-	};
+void Expr_Rel_Difference::Accept_Expr_Rel_Difference(Visitor_Expr_Rel_Difference& iVisitor)
+	{ iVisitor.Visit_Expr_Rel_Difference(this); }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Relational operators
+#pragma mark * Visitor_Expr_Rel_Difference
 
-ZRef<Expr_Rel_Binary_Intersect> sIntersect(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
-
-ZRef<Expr_Rel_Binary_Intersect> operator&(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
+void Visitor_Expr_Rel_Difference::Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Difference> iExpr)
+	{ inherited::Visit_Expr_Op2(iExpr); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZQL_Expr_Rel_Binary__

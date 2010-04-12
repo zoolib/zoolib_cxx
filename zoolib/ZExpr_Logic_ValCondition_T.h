@@ -34,14 +34,20 @@ template <class Val> class ZVisitor_Expr_Logic_ValCondition_T;
 #pragma mark * ZExpr_Logic_ValCondition_T
 
 template <class Val>
-class ZExpr_Logic_ValCondition_T : public ZExpr_Logic
+class ZExpr_Logic_ValCondition_T
+:	public virtual ZExpr_Logic
+,	public virtual ZExpr_Op0_T<ZExpr_Logic>
 	{
+	typedef ZExpr_Op0_T<ZExpr_Logic> inherited;
 public:
 	ZExpr_Logic_ValCondition_T(const ZValCondition_T<Val>& iCondition);
 	virtual ~ZExpr_Logic_ValCondition_T();
 
-// From ZExpr_Logic
-	virtual void Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor);
+// From ZExpr_Op0
+	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZExpr_Logic>& iVisitor);
+
+	virtual ZRef<ZExpr_Logic> Self();
+	virtual ZRef<ZExpr_Logic> Clone();
 
 // Our protocol
 	virtual void Accept_Expr_Logic_ValCondition(ZVisitor_Expr_Logic_ValCondition_T<Val>& iVisitor);
@@ -53,7 +59,8 @@ private:
 	};
 
 template <class Val>
-ZExpr_Logic_ValCondition_T<Val>::ZExpr_Logic_ValCondition_T(const ZValCondition_T<Val>& iValCondition)
+ZExpr_Logic_ValCondition_T<Val>::ZExpr_Logic_ValCondition_T(
+	const ZValCondition_T<Val>& iValCondition)
 :	fValCondition(iValCondition)
 	{}
 
@@ -62,7 +69,7 @@ ZExpr_Logic_ValCondition_T<Val>::~ZExpr_Logic_ValCondition_T()
 	{}
 
 template <class Val>
-void ZExpr_Logic_ValCondition_T<Val>::Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor)
+void ZExpr_Logic_ValCondition_T<Val>::Accept_Expr_Op0(ZVisitor_Expr_Op0_T<ZExpr_Logic>& iVisitor)
 	{
 	if (ZVisitor_Expr_Logic_ValCondition_T<Val>* theVisitor =
 		dynamic_cast<ZVisitor_Expr_Logic_ValCondition_T<Val>*>(&iVisitor))
@@ -71,13 +78,22 @@ void ZExpr_Logic_ValCondition_T<Val>::Accept_Expr_Logic(ZVisitor_Expr_Logic& iVi
 		}
 	else
 		{
-		ZExpr_Logic::Accept_Expr_Logic(iVisitor);
+		inherited::Accept_Expr_Op0(iVisitor);
 		}
 	}
 
 template <class Val>
-void ZExpr_Logic_ValCondition_T<Val>::Accept_Expr_Logic_ValCondition(ZVisitor_Expr_Logic_ValCondition_T<Val>& iVisitor)
-	{ iVisitor.Visit_Logic_ValCondition(this); }
+ZRef<ZExpr_Logic> ZExpr_Logic_ValCondition_T<Val>::Self()
+	{ return this; }
+
+template <class Val>
+ZRef<ZExpr_Logic> ZExpr_Logic_ValCondition_T<Val>::Clone()
+	{ return this; }
+
+template <class Val>
+void ZExpr_Logic_ValCondition_T<Val>::Accept_Expr_Logic_ValCondition(
+	ZVisitor_Expr_Logic_ValCondition_T<Val>& iVisitor)
+	{ iVisitor.Visit_Expr_Logic_ValCondition(this); }
 
 template <class Val>
 const ZValCondition_T<Val>&
@@ -89,16 +105,17 @@ ZExpr_Logic_ValCondition_T<Val>::GetValCondition()
 #pragma mark * ZVisitor_Expr_Logic_ValCondition_T
 
 template <class Val>
-class ZVisitor_Expr_Logic_ValCondition_T : public virtual ZVisitor_Expr_Logic
+class ZVisitor_Expr_Logic_ValCondition_T : public virtual ZVisitor_Expr_Op0_T<ZExpr_Logic>
 	{
+	typedef ZVisitor_Expr_Op0_T<ZExpr_Logic> inherited;
 public:
-	virtual void Visit_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr);
+	virtual void Visit_Expr_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr);
 	};
 
 template <class Val>
-void ZVisitor_Expr_Logic_ValCondition_T<Val>::Visit_Logic_ValCondition(
+void ZVisitor_Expr_Logic_ValCondition_T<Val>::Visit_Expr_Logic_ValCondition(
 	ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr)
-	{ ZVisitor_Expr_Logic::Visit_Expr(iExpr); }
+	{ inherited::Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
 #pragma mark -

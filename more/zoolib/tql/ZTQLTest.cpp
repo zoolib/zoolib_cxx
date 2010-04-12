@@ -39,6 +39,8 @@
 #include "zoolib/sqlite/ZSQLite_YadSeqR_Iter.h"
 #include "zoolib/zql/ZQL_Visitor_Expr_Rel_DoGetRelHead.h"
 
+#include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoToStrim.h"
+
 NAMESPACE_ZOOLIB_USING
 
 using namespace ZQL;
@@ -55,7 +57,7 @@ typedef ZValCondition Condition;
 static ZYadOptions theYadOptions(true);
 
 RelHead spGetRelHead(ZRef<Expr_Rel> iExpr)
-	{ return Visitor_Expr_Rel_DoGetRelHead().DoGetRelHead(iExpr); }
+	{ return Visitor_Expr_Rel_DoGetRelHead().Do(iExpr); }
 
 Query sAll(const RelHead& iRelHead)
 	{ return ZValBase::sConcrete(iRelHead); }
@@ -392,7 +394,11 @@ void sTestQL4(const ZStrimW& s)
 
 void sTestQL3(const ZStrimW& s)
 	{
-sBadAuthors();
+	Spec theSpec2 = CVar("TestVar1") == CConst(1) | CVar("TestVar2") == CConst(2);
+	ZVisitor_Expr_Logic_ValCondition_DoToStrim().StartToStrim(ZVisitor_Expr_DoToStrim::Options(), s, theSpec2);
+
+
+//	sBadAuthors();
 	sDumpQuery(s, sQueryNoHead());
 	sDumpQuery(s, sQuery());
 

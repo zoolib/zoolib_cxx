@@ -40,27 +40,12 @@ class Visitor_Expr_Rel;
 // That might not be the case forever -- we might blur the distinction between Rel and Logic
 // expressions, but for now it's useful for catching incompatible operations.
 
-class Expr_Rel : public ZExpr
+class Expr_Rel : public virtual ZExpr
 	{
 protected:
 	Expr_Rel();
 
 public:
-// From ZExpr
-	virtual void Accept_Expr(ZVisitor_Expr& iVisitor);
-
-// Our protocol
-	virtual void Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor);
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel
-
-class Visitor_Expr_Rel : public virtual ZVisitor_Expr
-	{
-public:
-	virtual void Visit_Expr_Rel(ZRef<Expr_Rel> iExpr);
 	};
 
 // =================================================================================================

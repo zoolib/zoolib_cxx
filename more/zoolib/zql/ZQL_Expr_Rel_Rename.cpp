@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_Expr_Rel_Binary.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Rename.h"
 
 using std::string;
 
@@ -27,53 +27,60 @@ namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Binary
+#pragma mark * Expr_Rel_Rename
 
-Expr_Rel_Binary::Expr_Rel_Binary(
-	ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS)
-:	fLHS(iLHS)
-,	fRHS(iRHS)
+Expr_Rel_Rename::Expr_Rel_Rename(ZRef<Expr_Rel> iOp0,
+	const std::string& iNew, const std::string& iOld)
+:	inherited(iOp0)
+,	fNew(iNew)
+,	fOld(iOld)
 	{}
 
-Expr_Rel_Binary::~Expr_Rel_Binary()
+Expr_Rel_Rename::~Expr_Rel_Rename()
 	{}
 
-void Expr_Rel_Binary::Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor)
+void Expr_Rel_Rename::Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor)
 	{
-	if (Visitor_Expr_Rel_Binary* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel_Binary*>(&iVisitor))
+	if (Visitor_Expr_Rel_Rename* theVisitor =
+		dynamic_cast<Visitor_Expr_Rel_Rename*>(&iVisitor))
 		{
-		this->Accept_Expr_Rel_Binary(*theVisitor);
+		this->Accept_Expr_Rel_Rename(*theVisitor);
 		}
 	else
 		{
-		Expr_Rel::Accept_Expr_Rel(iVisitor);
+		inherited::Accept_Expr_Op1(iVisitor);
 		}
 	}
 
-void Expr_Rel_Binary::Accept_Expr_Rel_Binary(
-	Visitor_Expr_Rel_Binary& iVisitor)
-	{ iVisitor.Visit_Expr_Rel_Binary(this); }
+ZRef<Expr_Rel> Expr_Rel_Rename::Self()
+	{ return this; }
 
-ZRef<Expr_Rel> Expr_Rel_Binary::GetLHS()
-	{ return fLHS; }
+ZRef<Expr_Rel> Expr_Rel_Rename::Clone(ZRef<Expr_Rel> iOp0)
+	{ return new Expr_Rel_Rename(iOp0, fNew, fOld); }
 
-ZRef<Expr_Rel> Expr_Rel_Binary::GetRHS()
-	{ return fRHS; }
+void Expr_Rel_Rename::Accept_Expr_Rel_Rename(Visitor_Expr_Rel_Rename& iVisitor)
+	{ iVisitor.Visit_Expr_Rel_Rename(this); }
+
+const string& Expr_Rel_Rename::GetNew()
+	{ return fNew; }
+
+const string& Expr_Rel_Rename::GetOld()
+	{ return fOld; }
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_Binary
+#pragma mark * Visitor_Expr_Rel_Rename
 
-void Visitor_Expr_Rel_Binary::Visit_Expr_Rel_Binary(
-	ZRef<Expr_Rel_Binary> iExpr)
-	{
-	if (ZRef<Expr_Rel> theRelation = iExpr->GetLHS())
-		theRelation->Accept(*this);
+void Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
+	{ inherited::Visit_Expr_Op1(iExpr); }
 
-	if (ZRef<Expr_Rel> theRelation = iExpr->GetRHS())
-		theRelation->Accept(*this);
-	}
+// =================================================================================================
+#pragma mark -
+#pragma mark * Relational operators
+
+ZRef<Expr_Rel_Rename> sRename(const ZRef<Expr_Rel>& iExpr,
+	const string& iNewPropName, const string& iOldPropName)
+	{ return new Expr_Rel_Rename(iExpr, iNewPropName, iOldPropName); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

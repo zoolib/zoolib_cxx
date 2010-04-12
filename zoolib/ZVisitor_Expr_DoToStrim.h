@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZVisitor_Expr_DoToStrim__
 #include "zconfig.h"
 
-#include "zoolib/ZExpr.h"
 #include "zoolib/ZStrim.h"
+#include "zoolib/ZVisitor_Expr_Do.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -32,7 +32,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZVisitor_Expr_DoToStrim
 
 class ZVisitor_Expr_DoToStrim
-:	public virtual ZVisitor_Expr
+:	public virtual ZVisitor_Expr_Do
 	{
 public:
 	struct Options

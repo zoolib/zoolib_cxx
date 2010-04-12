@@ -18,31 +18,53 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Visitor_Expr_Rel_Unary_DoTransform__
-#define __ZQL_Visitor_Expr_Rel_Unary_DoTransform__
+#ifndef __ZQL_Expr_Rel_Difference__
+#define __ZQL_Expr_Rel_Difference__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZVisitor_Expr_DoTransform.h"
-
-#include "zoolib/zql/ZQL_Expr_Rel_Unary.h"
+#include "zoolib/ZExpr_Op_T.h"
+#include "zoolib/zql/ZQL_Expr_Rel.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
+class Visitor_Expr_Rel_Difference;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Query_DoTransform
+#pragma mark * Expr_Rel_Difference
 
-class Visitor_Expr_Rel_Unary_DoTransform
-:	public virtual ZVisitor_Expr_DoTransform
-,	public virtual Visitor_Expr_Rel_Unary
+class Expr_Rel_Difference
+:	public virtual Expr_Rel
+,	public virtual ZExpr_Op2_T<Expr_Rel>
 	{
+	typedef ZExpr_Op2_T<Expr_Rel> inherited;
 public:
-// From Visitor_Expr_Unary_Rel
-	virtual void Visit_Expr_Rel_Unary(ZRef<Expr_Rel_Unary> iExpr);
+	Expr_Rel_Difference(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1);
+
+// From ZExpr_Op2_T
+	virtual void Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor);
+
+	virtual ZRef<Expr_Rel> Self();
+	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1);
+
+// Our protocol
+	virtual void Accept_Expr_Rel_Difference(Visitor_Expr_Rel_Difference& iVisitor);
+	};
+
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_Expr_Rel_Difference
+
+class Visitor_Expr_Rel_Difference : public virtual ZVisitor_Expr_Op2_T<Expr_Rel>
+	{
+	typedef ZVisitor_Expr_Op2_T<Expr_Rel> inherited;
+public:
+	virtual void Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Difference> iExpr);
 	};
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Visitor_Expr_Rel_DoTransform__
+#endif // __ZQL_Expr_Rel__

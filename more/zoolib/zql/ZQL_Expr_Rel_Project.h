@@ -18,66 +18,69 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zql/ZQL_Expr_Rel_Binary_Union.h"
+#ifndef __ZQL_Expr_Rel_Project__
+#define __ZQL_Expr_Rel_Project__ 1
+#include "zconfig.h"
 
-using std::string;
+#include "zoolib/ZExpr_Op_T.h"
+#include "zoolib/zql/ZQL_Expr_Rel.h"
+#include "zoolib/zql/ZQL_RelHead.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
+class Visitor_Expr_Rel_Project;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Binary_Union
+#pragma mark * Expr_Rel_Project
 
-Expr_Rel_Binary_Union::Expr_Rel_Binary_Union(
-	ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS)
-:	Expr_Rel_Binary(iLHS, iRHS)
-	{}
-
-Expr_Rel_Binary_Union::~Expr_Rel_Binary_Union()
-	{}
-
-void Expr_Rel_Binary_Union::Accept_Expr_Rel_Binary(
-	Visitor_Expr_Rel_Binary& iVisitor)
+class Expr_Rel_Project
+:	public virtual Expr_Rel
+,	public virtual ZExpr_Op1_T<Expr_Rel>
 	{
-	if (Visitor_Expr_Rel_Binary_Union* theVisitor =
-		dynamic_cast<Visitor_Expr_Rel_Binary_Union*>(&iVisitor))
-		{
-		this->Accept_Expr_Rel_Binary_Union(*theVisitor);
-		}
-	else
-		{
-		Expr_Rel_Binary::Accept_Expr_Rel_Binary(iVisitor);
-		}
-	}
+	typedef ZExpr_Op1_T<Expr_Rel> inherited;
+public:
+	Expr_Rel_Project(ZRef<Expr_Rel> iOp0, const RelHead& iRelHead);
+	virtual ~Expr_Rel_Project();
 
-void Expr_Rel_Binary_Union::Accept_Expr_Rel_Binary_Union(
-	Visitor_Expr_Rel_Binary_Union& iVisitor)
-	{ iVisitor.Visit_Expr_Rel_Binary_Union(this); }
+// From ZExpr_Op1_T<Expr_Rel>
+	virtual void Accept_Expr_Op1(ZVisitor_Expr_Op1_T<Expr_Rel>& iVisitor);
 
-ZRef<Expr_Rel_Binary> Expr_Rel_Binary_Union::Clone(
-	ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS)
-	{ return new Expr_Rel_Binary_Union(iLHS, iRHS); }
+	virtual ZRef<Expr_Rel> Self();
+	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0);
+
+// Our protocol
+	virtual void Accept_Expr_Rel_Project(Visitor_Expr_Rel_Project& iVisitor);
+
+	RelHead GetRelHead();
+
+private:
+	const RelHead fRelHead;
+	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_Binary_Union
+#pragma mark * Visitor_Expr_Rel_Project
 
-void Visitor_Expr_Rel_Binary_Union::Visit_Expr_Rel_Binary_Union(
-	ZRef<Expr_Rel_Binary_Union> iExpr)
-	{ Visitor_Expr_Rel_Binary::Visit_Expr_Rel_Binary(iExpr); }
+class Visitor_Expr_Rel_Project : public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
+	{
+	typedef ZVisitor_Expr_Op1_T<Expr_Rel> inherited;
+public:
+	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr);
+	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Binary_Union> sUnion(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
-	{ return new Expr_Rel_Binary_Union(iLHS, iRHS); }
+ZRef<Expr_Rel_Project> sProject(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead);
 
-ZRef<Expr_Rel_Binary_Union> operator|(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
-	{ return new Expr_Rel_Binary_Union(iLHS, iRHS); }
+ZRef<Expr_Rel_Project> operator&(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead);
+
+ZRef<Expr_Rel_Project> operator&(const RelHead& iRelHead, const ZRef<Expr_Rel>& iExpr);
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZQL_Expr_Rel_Project__

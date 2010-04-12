@@ -39,10 +39,10 @@ typedef ZVisitor_Expr_Logic_ValCondition_T<ZVal_Expr> ZVisitor_Expr_Logic_ValCon
 
 
 inline std::set<std::string> sGetNames(const ZRef<ZExpr_Logic>& iExpr)
-	{ return ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<ZVal_Expr>().DoGetNames(iExpr); }
+	{ return ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<ZVal_Expr>().Do(iExpr); }
 
 inline bool sMatches(const ZRef<ZExpr_Logic>& iExpr, const ZVal_Expr& iVal)
-	{ return ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T<ZVal_Expr>(iVal).DoEval(iExpr); }
+	{ return ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T<ZVal_Expr>(iVal).Do(iExpr); }
 
 inline bool sMatches(const ZValCondition& iValCondition, const ZVal_Expr& iVal)
 	{ return sMatches(new ZExpr_Logic_ValCondition(iValCondition), iVal); }

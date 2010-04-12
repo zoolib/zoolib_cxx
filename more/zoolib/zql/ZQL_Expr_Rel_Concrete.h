@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZQL_Expr_Rel_Concrete__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZExpr_Op_T.h"
 #include "zoolib/zql/ZQL_Expr_Rel.h"
 #include "zoolib/zql/ZQL_RelHead.h"
 
@@ -45,16 +46,17 @@ public:
 #pragma mark -
 #pragma mark * Expr_Rel_Concrete
 
-class Expr_Rel_Concrete : public Expr_Rel
+class Expr_Rel_Concrete
+:	public virtual Expr_Rel
+,	public virtual ZExpr_Op0_T<Expr_Rel>
 	{
-protected:
-	Expr_Rel_Concrete();
-
+	typedef ZExpr_Op0_T<Expr_Rel> inherited;
 public:
-	virtual ~Expr_Rel_Concrete();
+// From ZExpr_Op0_T<Expr_Rel>
+	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
 
-// From Expr_Rel
-	virtual void Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor);
+	virtual ZRef<Expr_Rel> Self();
+	virtual ZRef<Expr_Rel> Clone();
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor);
@@ -67,8 +69,9 @@ public:
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Concrete
 
-class Visitor_Expr_Rel_Concrete : public virtual Visitor_Expr_Rel
+class Visitor_Expr_Rel_Concrete : public virtual ZVisitor_Expr_Op0_T<Expr_Rel>
 	{
+	typedef ZVisitor_Expr_Op0_T<Expr_Rel> inherited;
 public:
 	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
 	};

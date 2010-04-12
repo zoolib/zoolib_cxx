@@ -34,15 +34,18 @@ NAMESPACE_ZOOLIB_BEGIN
 
 class ZVisitor_Expr_Logic_DoToStrim
 :	public virtual ZVisitor_Expr_DoToStrim
-,	public virtual ZVisitor_Expr_Logic
+,	public virtual ZVisitor_Expr_Logic_True
+,	public virtual ZVisitor_Expr_Logic_False
+,	public virtual ZVisitor_Expr_Logic_Not
+,	public virtual ZVisitor_Expr_Logic_And
+,	public virtual ZVisitor_Expr_Logic_Or
 	{
 public:
-// From ZVisitor_Expr_Logic
-	virtual void Visit_Logic_True(ZRef<ZExpr_Logic_True> iRep);
-	virtual void Visit_Logic_False(ZRef<ZExpr_Logic_False> iRep);
-	virtual void Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iRep);
-	virtual void Visit_Logic_And(ZRef<ZExpr_Logic_And> iRep);
-	virtual void Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iRep);
+	virtual void Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iRep);
+	virtual void Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iRep);
+	virtual void Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iRep);
+	virtual void Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep);
+	virtual void Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep);
 	};
 
 NAMESPACE_ZOOLIB_END

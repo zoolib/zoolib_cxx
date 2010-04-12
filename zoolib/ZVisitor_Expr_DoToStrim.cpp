@@ -79,12 +79,9 @@ void ZVisitor_Expr_DoToStrim::StartToStrim(
 void ZVisitor_Expr_DoToStrim::DoToStrim(ZRef<ZExpr> iExpr)
 	{
 	ZAssert(fOptions && fStrimW);
-	if (iExpr)
-		{
-		++fIndent;
-		iExpr->Accept(*this);
-		--fIndent;
-		}
+	++fIndent;
+	this->Do(iExpr);
+	--fIndent;
 	}
 
 const  ZVisitor_Expr_DoToStrim::Options& ZVisitor_Expr_DoToStrim::pOptions()

@@ -27,54 +27,49 @@ namespace ZQL {
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_DoGetRelHead
 
-void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Rel_Binary(
-	ZRef<Expr_Rel_Binary> iExpr)
+void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Op1(ZRef<ZExpr_Op1_T<Expr_Rel> > iExpr)
 	{
 	RelHead result;
 
-	if (ZRef<Expr_Rel> theLHS = iExpr->GetLHS())
-		result = result | this->DoGetRelHead(theLHS);
+	if (ZRef<Expr_Rel> theExpr = iExpr->GetOp0())
+		result = this->Do(theExpr);
 
-	if (ZRef<Expr_Rel> theRHS = iExpr->GetRHS())
-		result = result | this->DoGetRelHead(theRHS);
-
-	fResult = result;
+	this->pSetResult(result);
 	}
 
-void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Rel_Concrete(
-	ZRef<Expr_Rel_Concrete> iExpr)
-	{ fResult = iExpr->GetRelHead(); }
-
-void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Rel_Unary(
-	ZRef<Expr_Rel_Unary> iExpr)
+void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Op2(ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr)
 	{
 	RelHead result;
 
-	if (ZRef<Expr_Rel> theExpr = iExpr->GetExpr_Rel())
-		result = this->DoGetRelHead(theExpr);
+	if (ZRef<Expr_Rel> theExpr = iExpr->GetOp0())
+		result = result | this->Do(theExpr);
 
-	fResult = result;
+	if (ZRef<Expr_Rel> theExpr = iExpr->GetOp1())
+		result = result | this->Do(theExpr);
+
+	this->pSetResult(result);
 	}
 
-void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Rel_Unary_Project(
-	ZRef<Expr_Rel_Unary_Project> iExpr)
+void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
+	{ this->pSetResult(iExpr->GetRelHead()); }
+
+void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
 	{
 	RelHead result;
 
-	if (ZRef<Expr_Rel> theExpr = iExpr->GetExpr_Rel())
-		result = this->DoGetRelHead(theExpr) & iExpr->GetRelHead();
+	if (ZRef<Expr_Rel> theExpr = iExpr->GetOp0())
+		result = this->Do(theExpr) & iExpr->GetRelHead();
 
-	fResult = result;
+	this->pSetResult(result);
 	}
 
-void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Rel_Unary_Rename(
-	ZRef<Expr_Rel_Unary_Rename> iExpr)
+void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 	{
 	RelHead result;
 
-	if (ZRef<Expr_Rel> theExpr = iExpr->GetExpr_Rel())
+	if (ZRef<Expr_Rel> theExpr = iExpr->GetOp0())
 		{
-		result = this->DoGetRelHead(theExpr);
+		result = this->Do(theExpr);
 		const std::string oldName = iExpr->GetOld();
 		if (result.Contains(oldName))
 			{
@@ -83,18 +78,7 @@ void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Rel_Unary_Rename(
 			}
 		}
 
-	fResult = result;
-	}
-
-RelHead Visitor_Expr_Rel_DoGetRelHead::DoGetRelHead(ZRef<Expr_Rel> iExpr)
-	{
-	RelHead theResult;
-	if (iExpr)
-		{
-		iExpr->Accept(*this);
-		std::swap(theResult, fResult);
-		}
-	return theResult;	
+	this->pSetResult(result);
 	}
 
 } // namespace ZQL

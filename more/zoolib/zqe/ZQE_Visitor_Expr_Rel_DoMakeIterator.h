@@ -22,14 +22,15 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZQE_Visitor_Expr_Rel_DoMakeIterator__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZVisitor_Expr_Do_T.h"
 #include "zoolib/zqe/ZQE_Iterator.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Binary_Difference.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Binary_Intersect.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Binary_Join.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Binary_Union.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Project.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Rename.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Difference.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Intersect.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Join.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Union.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Project.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Rename.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Select.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQE {
@@ -39,29 +40,24 @@ namespace ZQE {
 #pragma mark * Visitor_Expr_Rel_DoMakeIterator
 
 class Visitor_Expr_Rel_DoMakeIterator
-:	public virtual ZQL::Visitor_Expr_Rel_Binary_Difference
-,	public virtual ZQL::Visitor_Expr_Rel_Binary_Intersect
-,	public virtual ZQL::Visitor_Expr_Rel_Binary_Join
-,	public virtual ZQL::Visitor_Expr_Rel_Binary_Union
-,	public virtual ZQL::Visitor_Expr_Rel_Unary_Project
-,	public virtual ZQL::Visitor_Expr_Rel_Unary_Rename
-,	public virtual ZQL::Visitor_Expr_Rel_Unary_Select
+:	public virtual ZVisitor_Expr_Do_T<ZRef<Iterator> >
+,	public virtual ZQL::Visitor_Expr_Rel_Difference
+,	public virtual ZQL::Visitor_Expr_Rel_Intersect
+,	public virtual ZQL::Visitor_Expr_Rel_Join
+,	public virtual ZQL::Visitor_Expr_Rel_Union
+,	public virtual ZQL::Visitor_Expr_Rel_Project
+,	public virtual ZQL::Visitor_Expr_Rel_Rename
+,	public virtual ZQL::Visitor_Expr_Rel_Select
 	{
 public:
-	virtual void Visit_Expr_Rel_Binary_Difference(ZRef<ZQL::Expr_Rel_Binary_Difference> iExpr);
-	virtual void Visit_Expr_Rel_Binary_Intersect(ZRef<ZQL::Expr_Rel_Binary_Intersect> iExpr);
-	virtual void Visit_Expr_Rel_Binary_Join(ZRef<ZQL::Expr_Rel_Binary_Join> iExpr);
-	virtual void Visit_Expr_Rel_Binary_Union(ZRef<ZQL::Expr_Rel_Binary_Union> iExpr);
+	virtual void Visit_Expr_Rel_Difference(ZRef<ZQL::Expr_Rel_Difference> iExpr);
+	virtual void Visit_Expr_Rel_Intersect(ZRef<ZQL::Expr_Rel_Intersect> iExpr);
+	virtual void Visit_Expr_Rel_Join(ZRef<ZQL::Expr_Rel_Join> iExpr);
+	virtual void Visit_Expr_Rel_Union(ZRef<ZQL::Expr_Rel_Union> iExpr);
 
-	virtual void Visit_Expr_Rel_Unary_Project(ZRef<ZQL::Expr_Rel_Unary_Project> iExpr);
-	virtual void Visit_Expr_Rel_Unary_Rename(ZRef<ZQL::Expr_Rel_Unary_Rename> iExpr);
-	virtual void Visit_Expr_Rel_Unary_Select(ZRef<ZQL::Expr_Rel_Unary_Select> iExpr);
-
-// Our protocol
-	ZRef<Iterator> DoMakeIterator(ZRef<ZQL::Expr_Rel> iExpr);
-
-protected:
-	ZRef<Iterator> fIterator;
+	virtual void Visit_Expr_Rel_Project(ZRef<ZQL::Expr_Rel_Project> iExpr);
+	virtual void Visit_Expr_Rel_Rename(ZRef<ZQL::Expr_Rel_Rename> iExpr);
+	virtual void Visit_Expr_Rel_Select(ZRef<ZQL::Expr_Rel_Select> iExpr);
 	};
 
 } // namespace ZQE

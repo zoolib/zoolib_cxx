@@ -22,11 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZQL_Visitor_Expr_Rel_DoGetRelHead__ 1
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Rel_Binary.h"
+#include "zoolib/ZExpr_Op_T.h"
+#include "zoolib/ZVisitor_Expr_Do_T.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Project.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Rename.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Project.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Rename.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Select.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
@@ -36,26 +37,20 @@ namespace ZQL {
 #pragma mark * Visitor_Expr_Rel_DoGetRelHead
 
 class Visitor_Expr_Rel_DoGetRelHead
-:	public virtual Visitor_Expr_Rel_Binary
+:	public virtual ZVisitor_Expr_Do_T<RelHead>
+,	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
+,	public virtual ZVisitor_Expr_Op2_T<Expr_Rel>
 ,	public virtual Visitor_Expr_Rel_Concrete
-,	public virtual Visitor_Expr_Rel_Unary
-,	public virtual Visitor_Expr_Rel_Unary_Project
-,	public virtual Visitor_Expr_Rel_Unary_Rename
+,	public virtual Visitor_Expr_Rel_Project
+,	public virtual Visitor_Expr_Rel_Rename
 	{
 public:
-	virtual void Visit_Expr_Rel_Binary(ZRef<Expr_Rel_Binary> iExpr);
+	virtual void Visit_Expr_Op1(ZRef<ZExpr_Op1_T<Expr_Rel> > iExpr);
+	virtual void Visit_Expr_Op2(ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr);
 
 	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
-
-	virtual void Visit_Expr_Rel_Unary(ZRef<Expr_Rel_Unary> iExpr);
-	virtual void Visit_Expr_Rel_Unary_Project(ZRef<Expr_Rel_Unary_Project> iExpr);
-	virtual void Visit_Expr_Rel_Unary_Rename(ZRef<Expr_Rel_Unary_Rename> iExpr);
-
-// Our protocol
-	RelHead DoGetRelHead(ZRef<Expr_Rel> iExpr);
-
-protected:
-	RelHead fResult;
+	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr);
+	virtual void Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr);
 	};
 
 } // namespace ZQL
