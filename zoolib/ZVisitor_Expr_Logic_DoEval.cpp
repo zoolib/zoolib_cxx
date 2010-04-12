@@ -27,33 +27,24 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZVisitor_Expr_Logic_DoEval
 
 ZVisitor_Expr_Logic_DoEval::ZVisitor_Expr_Logic_DoEval()
-:	fResult(false)
 	{}
 
 void ZVisitor_Expr_Logic_DoEval::Visit_Logic_True(ZRef<ZExpr_Logic_True> iRep)
-	{ fResult = true; }
+	{ this->pSetResult(ZAny(true)); }
 
 void ZVisitor_Expr_Logic_DoEval::Visit_Logic_False(ZRef<ZExpr_Logic_False> iRep)
-	{ fResult = false; }
+	{ this->pSetResult(ZAny(false)); }
 
 void ZVisitor_Expr_Logic_DoEval::Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
-	{ fResult = ! this->DoEval(iRep); }
+	{ this->pSetResult(ZAny(! this->pDoEval(iRep))); }
 
 void ZVisitor_Expr_Logic_DoEval::Visit_Logic_And(ZRef<ZExpr_Logic_And> iRep)
-	{ fResult = this->DoEval(iRep->GetLHS()) && this->DoEval(iRep->GetRHS()); }
+	{ this->pSetResult(ZAny(this->pDoEval(iRep->GetLHS()) && this->pDoEval(iRep->GetRHS()))); }
 
 void ZVisitor_Expr_Logic_DoEval::Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
-	{ fResult = this->DoEval(iRep->GetLHS()) || this->DoEval(iRep->GetRHS()); }
+	{ this->pSetResult(ZAny(this->pDoEval(iRep->GetLHS()) || this->pDoEval(iRep->GetRHS()))); }
 
-bool ZVisitor_Expr_Logic_DoEval::DoEval(ZRef<ZExpr> iExpr)
-	{
-	bool result = false;
-	if (iExpr)
-		{
-		iExpr->Accept(*this);
-		std::swap(result, fResult);
-		}
-	return result;
-	}
+bool ZVisitor_Expr_Logic_DoEval::pDoEval(ZRef<ZExpr_Logic> iExpr)
+	{ return this->DoEval(iExpr).DGet_T<bool>(false); }
 
 NAMESPACE_ZOOLIB_END

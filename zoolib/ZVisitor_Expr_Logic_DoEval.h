@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Logic.h"
+#include "zoolib/ZVisitor_Expr_DoEval.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -31,7 +32,8 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZVisitor_Expr_Logic_DoEval
 
 class ZVisitor_Expr_Logic_DoEval
-:	public virtual ZVisitor_Expr_Logic
+:	public virtual ZVisitor_Expr_DoEval
+,	public virtual ZVisitor_Expr_Logic
 	{
 public:
 	ZVisitor_Expr_Logic_DoEval();
@@ -43,11 +45,8 @@ public:
 	virtual void Visit_Logic_And(ZRef<ZExpr_Logic_And> iRep);
 	virtual void Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iRep);
 
-// Our protocol
-	bool DoEval(ZRef<ZExpr> iExpr);
-
 protected:
-	bool fResult;
+	bool pDoEval(ZRef<ZExpr_Logic> iExpr);
 	};
 
 NAMESPACE_ZOOLIB_END

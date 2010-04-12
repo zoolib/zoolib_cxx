@@ -36,17 +36,15 @@ class ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T
 :	public virtual ZVisitor_Expr_Logic_DoEval
 ,	public virtual ZVisitor_Expr_Logic_ValCondition_T<Val>
 	{
-	typedef ZVisitor_Expr_Logic_ValCondition_T<Val> inherited;
 public:
-
 	ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T(const Val& iVal);
 
 // From ZVisitor_Expr_Logic_ValCondition_T
 	virtual void Visit_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr);
 
 private:
-	const Val& fVal;
 	ZValContext fValContext;
+	const Val& fVal;
 	};
 
 template <class Val>
@@ -58,7 +56,7 @@ ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T(const Val& iVal)
 template <class Val>
 void ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T<Val>::Visit_Logic_ValCondition(
 	ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr)
-	{ fResult = iExpr->GetValCondition().Matches(fValContext, fVal); }
+	{ this->pSetResult(ZAny(iExpr->GetValCondition().Matches(fValContext, fVal))); }
 
 NAMESPACE_ZOOLIB_END
 

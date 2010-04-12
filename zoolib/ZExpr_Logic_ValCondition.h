@@ -24,8 +24,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZExpr_Logic_ValCondition_T.h"
 #include "zoolib/ZValCondition.h"
-#include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoGetNames_T.h"
 #include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T.h"
+#include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoGetNames_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
