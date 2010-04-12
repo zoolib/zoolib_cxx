@@ -33,7 +33,7 @@ NAMESPACE_ZOOLIB_BEGIN
 template <class T>
 class ZUniSet_T
 	{
-	explicit ZUniSet_T(bool iUniversal, std::set<T>& ioElems, bool iKnowWhatImDoing);
+	explicit ZUniSet_T(bool iUniversal, std::set<T>* ioElems);
 
 public:
 	void swap(ZUniSet_T& iOther);
@@ -43,7 +43,7 @@ public:
 	~ZUniSet_T();
 	ZUniSet_T& operator=(const ZUniSet_T& iOther);
 
-	explicit ZUniSet_T(bool iUniversal);
+	static ZUniSet_T sUniversal();
 
 	ZUniSet_T(const std::set<T>& iElems);
 	ZUniSet_T(bool iUniversal, const std::set<T>& iElems);
@@ -111,9 +111,12 @@ void ZUniSet_T<T>::swap(ZUniSet_T& iOther)
 	}
 
 template <class T>
-ZUniSet_T<T>::ZUniSet_T(bool iUniversal, std::set<T>& ioElems, bool iKnowWhatImDoing)
+ZUniSet_T<T>::ZUniSet_T(bool iUniversal, std::set<T>* ioElems)
 :	fUniversal(iUniversal)
-	{ fElems.swap(ioElems); }
+	{
+	if (ioElems)
+		ioElems->swap(fElems);
+	}
 
 template <class T>
 ZUniSet_T<T>::ZUniSet_T()
@@ -139,9 +142,8 @@ ZUniSet_T<T>& ZUniSet_T<T>::operator=(const ZUniSet_T& iOther)
 	}
 
 template <class T>
-ZUniSet_T<T>::ZUniSet_T(bool iUniversal)
-:	fUniversal(iUniversal)
-	{}
+ZUniSet_T<T> ZUniSet_T<T>::sUniversal()
+	{ return ZUniSet_T<T>(true, (std::set<T>*)(0)); }
 
 template <class T>
 ZUniSet_T<T>::ZUniSet_T(const std::set<T>& iElems)
@@ -243,7 +245,7 @@ ZUniSet_T<T> ZUniSet_T<T>::operator&(const ZUniSet_T& iOther) const
 			ZUtil_STL_set::sAnd(iOther.fElems, fElems, result);
 			}
 		}
-	return ZUniSet_T(resultUniversal, result, true);
+	return ZUniSet_T(resultUniversal, &result);
 	}
 
 template <class T>
@@ -284,7 +286,7 @@ ZUniSet_T<T> ZUniSet_T<T>::operator|(const ZUniSet_T& iOther) const
 			ZUtil_STL_set::sOr(fElems, iOther.fElems, result);
 			}
 		}
-	return ZUniSet_T(resultUniversal, result, true);
+	return ZUniSet_T(resultUniversal, &result);
 	}
 
 template <class T>
@@ -325,7 +327,7 @@ ZUniSet_T<T> ZUniSet_T<T>::operator-(const ZUniSet_T& iOther) const
 			ZUtil_STL_set::sMinus(fElems, iOther.fElems, result);
 			}
 		}
-	return ZUniSet_T(resultUniversal, result, true);
+	return ZUniSet_T(resultUniversal, &result);
 	}
 
 template <class T>
@@ -341,7 +343,7 @@ ZUniSet_T<T> ZUniSet_T<T>::operator^(const ZUniSet_T& iOther) const
 	std::set<T> result;
 	bool resultUniversal = fUniversal ^ iOther.fUniversal;
 	ZUtil_STL_set::sXor(fElems, iOther.fElems, result);
-	return ZUniSet_T(resultUniversal, result, true);
+	return ZUniSet_T(resultUniversal, &result);
 	}
 
 template <class T>
