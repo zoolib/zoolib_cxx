@@ -60,15 +60,6 @@ void ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T<Val>::Visit_Logic_ValCond
 	ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr)
 	{ fResult = iExpr->GetValCondition().Matches(fValContext, fVal); }
 
-template <class Val>
-bool sMatches_T(const ZRef<ZExpr_Logic>& iExpr, const Val& iVal)
-	{ return ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T<Val>(iVal).DoEval(iExpr); }
-
-template <class Val>
-bool sMatches_T(const ZValCondition_T<Val>& iValCondition, const Val& iVal)
-	{ return sMatches_T<Val>(new ZExpr_Logic_ValCondition_T<Val>(iValCondition), iVal); }
-
-
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T__

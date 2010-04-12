@@ -28,7 +28,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * GetNames
+#pragma mark * ZVisitor_Expr_Logic_ValCondition_DoGetNames_T
 
 template <class Val>
 class ZVisitor_Expr_Logic_ValCondition_DoGetNames_T
