@@ -35,6 +35,11 @@ class Visitor_Expr_Rel;
 #pragma mark -
 #pragma mark * Expr_Rel
 
+// Although Expr_Rel is anemic, we need it as the base for Rel_Binary, Rel_Concrete
+// and Rel_Unary, so there is a common type against which relation operators can match.
+// That might not be the case forever -- we might blur the distinction between Rel and Logic
+// expressions, but for now it's useful for catching incompatible operations.
+
 class Expr_Rel : public ZExpr
 	{
 protected:
