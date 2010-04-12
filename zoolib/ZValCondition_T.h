@@ -426,11 +426,7 @@ bool ZValCondition_T<Val>::Matches(ZValContext& iContext, const Val& iVal) const
 
 template <class Val>
 std::set<std::string> ZValCondition_T<Val>::GetNames() const
-	{
-	std::set<std::string> result;
-	ZUtil_STL_set::sOr(fLHS.GetNames(), fRHS.GetNames(), result);
-	return result;
-	}
+	{ return ZUtil_STL_set::sOr(fLHS.GetNames(), fRHS.GetNames()); }
 
 // =================================================================================================
 #pragma mark -

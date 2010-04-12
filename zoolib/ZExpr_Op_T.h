@@ -122,10 +122,6 @@ public:
 	ZRef<T> GetOp0()
 		{ return fOp0; }
 
-// temporary
-	ZRef<T> GetOperand()
-		{ return fOp0; }
-
 private:
 	const ZRef<T> fOp0;
 	};
@@ -188,12 +184,6 @@ public:
 		{ return fOp0; }
 
 	ZRef<T> GetOp1()
-		{ return fOp1; }
-// temporary
-	ZRef<T> GetLHS()
-		{ return fOp0; }
-
-	ZRef<T> GetRHS()
 		{ return fOp1; }
 
 private:

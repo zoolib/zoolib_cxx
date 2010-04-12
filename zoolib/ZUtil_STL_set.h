@@ -43,11 +43,27 @@ void sOr(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResult)
 	}
 
 template <class T>
+std::set<T> sOr(const std::set<T>& iLHS, const std::set<T>& iRHS)
+	{
+	std::set<T> result;
+	sOr(iLHS, iRHS, result);
+	return result;
+	}
+
+template <class T>
 void sAnd(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResult)
 	{
 	set_intersection(iLHS.begin(), iLHS.end(),
 		iRHS.begin(), iRHS.end(),
 		inserter(oResult, oResult.end()));
+	}
+
+template <class T>
+std::set<T> sAnd(const std::set<T>& iLHS, const std::set<T>& iRHS)
+	{
+	std::set<T> result;
+	sAnd(iLHS, iRHS, result);
+	return result;
 	}
 
 template <class T>
@@ -59,11 +75,27 @@ void sMinus(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResu
 	}
 
 template <class T>
+std::set<T> sMinus(const std::set<T>& iLHS, const std::set<T>& iRHS)
+	{
+	std::set<T> result;
+	sMinus(iLHS, iRHS, result);
+	return result;
+	}
+
+template <class T>
 void sXor(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResult)
 	{
 	set_symmetric_difference(iLHS.begin(), iLHS.end(),
 		iRHS.begin(), iRHS.end(),
 		inserter(oResult, oResult.end()));
+	}
+
+template <class T>
+std::set<T> sXor(const std::set<T>& iLHS, const std::set<T>& iRHS)
+	{
+	std::set<T> result;
+	sXor(iLHS, iRHS, result);
+	return result;
 	}
 
 template <class T>

@@ -35,25 +35,25 @@ void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_False(ZRef<ZExpr_Logic_Fals
 void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
 	{
 	pStrimW() << "~(";
-	this->DoToStrim(iRep->GetOperand());
+	this->DoToStrim(iRep->GetOp0());
 	pStrimW() << ")";
 	}
 
 void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep)
 	{
 	pStrimW() << "(";
-	this->DoToStrim(iRep->GetLHS());
+	this->DoToStrim(iRep->GetOp0());
 	pStrimW() << " & ";
-	this->DoToStrim(iRep->GetRHS());
+	this->DoToStrim(iRep->GetOp1());
 	pStrimW() << ")";
 	}
 
 void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
 	{
 	pStrimW() << "(";
-	this->DoToStrim(iRep->GetLHS());
+	this->DoToStrim(iRep->GetOp0());
 	pStrimW() << " | ";
-	this->DoToStrim(iRep->GetRHS());
+	this->DoToStrim(iRep->GetOp1());
 	pStrimW() << ")";
 	}
 

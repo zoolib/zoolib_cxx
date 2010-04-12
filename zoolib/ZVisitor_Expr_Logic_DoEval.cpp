@@ -39,9 +39,9 @@ void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iRep
 	{ this->pSetResult(! this->Do(iRep)); }
 
 void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep)
-	{ this->pSetResult(this->Do(iRep->GetLHS()) && this->Do(iRep->GetRHS())); }
+	{ this->pSetResult(this->Do(iRep->GetOp0()) && this->Do(iRep->GetOp1())); }
 
 void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
-	{ this->pSetResult(this->Do(iRep->GetLHS()) || this->Do(iRep->GetRHS())); }
+	{ this->pSetResult(this->Do(iRep->GetOp0()) || this->Do(iRep->GetOp1())); }
 
 NAMESPACE_ZOOLIB_END

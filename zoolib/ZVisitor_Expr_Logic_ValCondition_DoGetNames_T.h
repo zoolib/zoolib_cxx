@@ -62,11 +62,7 @@ void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Expr_Op1(
 template <class Val>
 void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Expr_Op2(
 	ZRef<ZExpr_Op2_T<ZExpr_Logic> > iExpr)
-	{
-	std::set<std::string> result;
-	ZUtil_STL_set::sOr(this->Do(iExpr->GetOp0()), this->Do(iExpr->GetOp0()), result);
-	this->pSetResult(result);
-	}
+	{ this->pSetResult(ZUtil_STL_set::sOr(this->Do(iExpr->GetOp0()), this->Do(iExpr->GetOp0()))); }
 
 NAMESPACE_ZOOLIB_END
 

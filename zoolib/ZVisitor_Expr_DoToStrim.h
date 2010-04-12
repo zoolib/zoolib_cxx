@@ -51,7 +51,7 @@ public:
 	virtual void Visit_Expr(ZRef<ZExpr> iRep);
 
 // Our protocol
-	void StartToStrim(const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZExpr> iExpr);
+	void DoToStrim(const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZExpr> iExpr);
 
 	void DoToStrim(ZRef<ZExpr> iExpr);
 

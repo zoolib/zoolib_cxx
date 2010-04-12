@@ -126,16 +126,16 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Join(ZRef<Expr_Rel_Join> iExpr)
 	if (pOptions().fDebuggingOutput)
 		{
 		w << " // Joining on: ";
-		const RelHead joinOn = spGetRelHead(iExpr->GetLHS()) & spGetRelHead(iExpr->GetRHS());
+		const RelHead joinOn = spGetRelHead(iExpr->GetOp0()) & spGetRelHead(iExpr->GetOp1());
 		spWrite_RelHead(joinOn, w);
 		}
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetLHS());
+	this->DoToStrim(iExpr->GetOp0());
 	w << ", ";
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetRHS());
+	this->DoToStrim(iExpr->GetOp1());
 
 	this->pWriteLFIndent();
 	w << ")";
@@ -262,11 +262,11 @@ void Visitor_DoToStrim::pWriteBinary(
 	w << "(";
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetLHS());
+	this->DoToStrim(iExpr->GetOp0());
 	w << ", ";
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetRHS());
+	this->DoToStrim(iExpr->GetOp1());
 
 	this->pWriteLFIndent();
 	w << ")";
@@ -282,7 +282,7 @@ void sToStrim(const Rel& iRel, const ZStrimW& iStrimW)
 void sToStrim(const Rel& iRel,
 	const ZVisitor_Expr_DoToStrim::Options& iOptions,
 	const ZStrimW& iStrimW)
-	{ Visitor_DoToStrim().StartToStrim(iOptions, iStrimW, iRel); }
+	{ Visitor_DoToStrim().DoToStrim(iOptions, iStrimW, iRel); }
 
 } // namespace Util_Strim_Rel
 } // namespace ZQL

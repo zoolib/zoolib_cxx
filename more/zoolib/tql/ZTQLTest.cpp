@@ -395,7 +395,8 @@ void sTestQL4(const ZStrimW& s)
 void sTestQL3(const ZStrimW& s)
 	{
 	Spec theSpec2 = CVar("TestVar1") == CConst(1) | CVar("TestVar2") == CConst(2);
-	ZVisitor_Expr_Logic_ValCondition_DoToStrim().StartToStrim(ZVisitor_Expr_DoToStrim::Options(), s, theSpec2);
+	ZVisitor_Expr_Logic_ValCondition_DoToStrim().
+		DoToStrim(ZVisitor_Expr_DoToStrim::Options(), s, theSpec2);
 
 
 //	sBadAuthors();

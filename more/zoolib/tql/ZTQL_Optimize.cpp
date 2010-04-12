@@ -99,10 +99,10 @@ void Gather::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr)
 void Gather::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iExpr)
 	{
 	CondUnion left;
-	spGather(iExpr->GetLHS(), left);
+	spGather(iExpr->GetOp0(), left);
 
 	CondUnion right;
-	spGather(iExpr->GetRHS(), right);
+	spGather(iExpr->GetOp1(), right);
 
 	CondUnion result;
 	spCrossMultiply(left, right, result);
@@ -113,9 +113,9 @@ void Gather::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iExpr)
 void Gather::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr)
 	{
 	CondUnion left;
-	spGather(iExpr->GetLHS(), left);
+	spGather(iExpr->GetOp0(), left);
 	CondUnion right;
-	spGather(iExpr->GetRHS(), right);
+	spGather(iExpr->GetOp1(), right);
 
 	CondUnion result;
 	result.swap(left);

@@ -33,30 +33,30 @@ void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Difference(
 
 void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Intersect(ZRef<ZQL::Expr_Rel_Intersect> iExpr)
 	{
-	if (ZRef<Iterator> lhs = this->Do(iExpr->GetLHS()))
+	if (ZRef<Iterator> op0 = this->Do(iExpr->GetOp0()))
 		{
-		if (ZRef<Iterator> rhs = this->Do(iExpr->GetRHS()))
-			this->pSetResult(new Iterator_Intersect(lhs, rhs));
+		if (ZRef<Iterator> op1 = this->Do(iExpr->GetOp1()))
+			this->pSetResult(new Iterator_Intersect(op0, op1));
 		}
 	}
 
 void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Join(ZRef<ZQL::Expr_Rel_Join> iExpr)
 	{
-	if (ZRef<Iterator> lhs = this->Do(iExpr->GetLHS()))
+	if (ZRef<Iterator> op0 = this->Do(iExpr->GetOp0()))
 		{
-		if (ZRef<Iterator> rhs = this->Do(iExpr->GetRHS()))
-			this->pSetResult(new Iterator_Join(lhs, rhs));
+		if (ZRef<Iterator> op1 = this->Do(iExpr->GetOp1()))
+			this->pSetResult(new Iterator_Join(op0, op1));
 		}
 	}
 
 void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Union(ZRef<ZQL::Expr_Rel_Union> iExpr)
 	{
-	if (ZRef<Iterator> lhs = this->Do(iExpr->GetLHS()))
+	if (ZRef<Iterator> op0 = this->Do(iExpr->GetOp0()))
 		{
-		if (ZRef<Iterator> rhs = this->Do(iExpr->GetRHS()))
-			this->pSetResult(new Iterator_Union(lhs, rhs));
+		if (ZRef<Iterator> op1 = this->Do(iExpr->GetOp1()))
+			this->pSetResult(new Iterator_Union(op0, op1));
 		else
-			this->pSetResult(lhs);
+			this->pSetResult(op0);
 		}
 	}
 

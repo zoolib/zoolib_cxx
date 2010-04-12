@@ -55,25 +55,31 @@ void ZVisitor_Expr_DoToStrim::Visit_Expr(ZRef<ZExpr> iRep)
 		pStrimW() << "/*null ZExpr*/";
 	}
 
-void ZVisitor_Expr_DoToStrim::StartToStrim(
+void ZVisitor_Expr_DoToStrim::DoToStrim(
 	const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZExpr> iExpr)
 	{
-	ZAssert(!fOptions && !fStrimW);
+	const Options* priorOptions = fOptions;
+	const ZStrimW* priorStrimW = fStrimW;
+	int priorIndent = fIndent;
+
 	fOptions = &iOptions;
 	fStrimW = &iStrimW;
+
 	try
 		{
 		this->DoToStrim(iExpr);
 		}
 	catch (...)
 		{
-		fOptions = nullptr;
-		fStrimW = nullptr;
-		fIndent = 0;
+		fOptions = priorOptions;
+		fStrimW = priorStrimW;
+		fIndent = priorIndent;
 		throw;
 		}
-	fOptions = nullptr;
-	fStrimW = nullptr;
+
+	fOptions = priorOptions;
+	fStrimW = priorStrimW;
+	fIndent = priorIndent;
 	}
 
 void ZVisitor_Expr_DoToStrim::DoToStrim(ZRef<ZExpr> iExpr)
