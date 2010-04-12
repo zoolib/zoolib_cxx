@@ -132,33 +132,33 @@ void ZExpr_Logic_Or::Accept_Expr_Logic(ZVisitor_Expr_Logic& iVisitor)
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Logic
 
-void ZVisitor_Expr_Logic::Visit_Logic_True(ZRef<ZExpr_Logic_True> iRep)
-	{ ZVisitor_Expr::Visit_Expr(iRep); }
+void ZVisitor_Expr_Logic::Visit_Logic_True(ZRef<ZExpr_Logic_True> iExpr)
+	{ ZVisitor_Expr::Visit_Expr(iExpr); }
 
-void ZVisitor_Expr_Logic::Visit_Logic_False(ZRef<ZExpr_Logic_False> iRep)
-	{ ZVisitor_Expr::Visit_Expr(iRep); }
+void ZVisitor_Expr_Logic::Visit_Logic_False(ZRef<ZExpr_Logic_False> iExpr)
+	{ ZVisitor_Expr::Visit_Expr(iExpr); }
 
-void ZVisitor_Expr_Logic::Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
+void ZVisitor_Expr_Logic::Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr)
 	{
-	if (ZRef<ZExpr_Logic> theRep = iRep->GetOperand())
-		theRep->Accept(*this);
+	if (ZRef<ZExpr_Logic> theExpr = iExpr->GetOperand())
+		theExpr->Accept(*this);
 	}
 
-void ZVisitor_Expr_Logic::Visit_Logic_And(ZRef<ZExpr_Logic_And> iRep)
+void ZVisitor_Expr_Logic::Visit_Logic_And(ZRef<ZExpr_Logic_And> iExpr)
 	{
-	if (ZRef<ZExpr_Logic> theLHS = iRep->GetLHS())
+	if (ZRef<ZExpr_Logic> theLHS = iExpr->GetLHS())
 		theLHS->Accept(*this);
 
-	if (ZRef<ZExpr_Logic> theRHS = iRep->GetRHS())
+	if (ZRef<ZExpr_Logic> theRHS = iExpr->GetRHS())
 		theRHS->Accept(*this);
 	}
 
-void ZVisitor_Expr_Logic::Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
+void ZVisitor_Expr_Logic::Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr)
 	{
-	if (ZRef<ZExpr_Logic> theLHS = iRep->GetLHS())
+	if (ZRef<ZExpr_Logic> theLHS = iExpr->GetLHS())
 		theLHS->Accept(*this);
 
-	if (ZRef<ZExpr_Logic> theRHS = iRep->GetRHS())
+	if (ZRef<ZExpr_Logic> theRHS = iExpr->GetRHS())
 		theRHS->Accept(*this);
 	}
 

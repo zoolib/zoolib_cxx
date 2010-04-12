@@ -34,9 +34,6 @@ Expr_Rel_Binary_Difference::Expr_Rel_Binary_Difference(
 :	Expr_Rel_Binary(iLHS, iRHS)
 	{}
 
-ZRelHead Expr_Rel_Binary_Difference::GetRelHead()
-	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
-
 void Expr_Rel_Binary_Difference::Accept_Expr_Rel_Binary(
 	Visitor_Expr_Rel_Binary& iVisitor)
 	{
@@ -64,8 +61,8 @@ ZRef<Expr_Rel_Binary> Expr_Rel_Binary_Difference::Clone(
 #pragma mark * Visitor_Expr_Rel_Binary_Difference
 
 void Visitor_Expr_Rel_Binary_Difference::Visit_Expr_Rel_Binary_Difference(
-	ZRef<Expr_Rel_Binary_Difference> iRep)
-	{ Visitor_Expr_Rel_Binary::Visit_Expr_Rel_Binary(iRep); }
+	ZRef<Expr_Rel_Binary_Difference> iExpr)
+	{ Visitor_Expr_Rel_Binary::Visit_Expr_Rel_Binary(iExpr); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

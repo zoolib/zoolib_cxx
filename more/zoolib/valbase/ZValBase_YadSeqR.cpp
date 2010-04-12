@@ -37,6 +37,9 @@ class Expr_Rel_Concrete : public ZValBase::Expr_Rel_Concrete
 public:
 	Expr_Rel_Concrete(ZRef<ZYadSeqR> iYadSeqR);
 
+// From ZQL::Expr_Rel_Concrete via ZValBase::Expr_Rel_Concrete
+	virtual ZQL::RelHead GetRelHead();
+
 // From ZValBase::Expr_Rel_Concrete
 	virtual ZRef<ZQE::Iterator> MakeIterator();
 
@@ -89,6 +92,9 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 Expr_Rel_Concrete::Expr_Rel_Concrete(ZRef<ZYadSeqR> iYadSeqR)
 :	fYadSeqR(iYadSeqR)
 	{}
+
+ZQL::RelHead Expr_Rel_Concrete::GetRelHead()
+	{ return ZQL::RelHead(true); }
 
 ZRef<ZQE::Iterator> Expr_Rel_Concrete::MakeIterator()
 	{ return new Iterator(this, 0); }

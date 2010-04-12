@@ -59,9 +59,9 @@ ZRef<Expr_Rel> Expr_Rel_Unary::GetExpr_Rel()
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Unary
 
-void Visitor_Expr_Rel_Unary::Visit_Expr_Rel_Unary(ZRef<Expr_Rel_Unary> iRep)
+void Visitor_Expr_Rel_Unary::Visit_Expr_Rel_Unary(ZRef<Expr_Rel_Unary> iExpr)
 	{
-	if (ZRef<Expr_Rel> theRelation = iRep->GetExpr_Rel())
+	if (ZRef<Expr_Rel> theRelation = iExpr->GetExpr_Rel())
 		theRelation->Accept(*this);
 	}
 

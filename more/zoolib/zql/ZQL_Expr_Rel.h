@@ -23,7 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZExpr.h"
-#include "zoolib/ZRelHead.h"
 
 #include <string>
 
@@ -47,8 +46,6 @@ public:
 
 // Our protocol
 	virtual void Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor);
-
-	virtual ZRelHead GetRelHead() = 0;
 	};
 
 // =================================================================================================
@@ -58,7 +55,7 @@ public:
 class Visitor_Expr_Rel : public virtual ZVisitor_Expr
 	{
 public:
-	virtual void Visit_Expr_Rel(ZRef<Expr_Rel> iRep);
+	virtual void Visit_Expr_Rel(ZRef<Expr_Rel> iExpr);
 	};
 
 // =================================================================================================

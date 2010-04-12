@@ -44,9 +44,6 @@ public:
 
 	virtual ~Expr_Rel_Unary_Restrict_T();
 
-// From Expr_Rel via Expr_Rel_Unary
-	virtual ZRelHead GetRelHead();
-
 // From Expr_Rel_Unary
 	virtual void Accept_Expr_Rel_Unary(Visitor_Expr_Rel_Unary& iVisitor);
 
@@ -72,10 +69,6 @@ Expr_Rel_Unary_Restrict_T<Val>::Expr_Rel_Unary_Restrict_T(
 template <class Val>
 Expr_Rel_Unary_Restrict_T<Val>::~Expr_Rel_Unary_Restrict_T()
 	{}
-
-template <class Val>
-ZRelHead Expr_Rel_Unary_Restrict_T<Val>::GetRelHead()
-	{ return this->GetExpr_Rel()->GetRelHead() | fValCondition.GetRelHead(); }
 	
 template <class Val>
 void Expr_Rel_Unary_Restrict_T<Val>::Accept_Expr_Rel_Unary(
@@ -115,13 +108,13 @@ class Visitor_Expr_Rel_Unary_Restrict_T : public virtual Visitor_Expr_Rel_Unary
 	{
 public:
 	virtual void Visit_Expr_Rel_Unary_Restrict(
-		ZRef<Expr_Rel_Unary_Restrict_T<Val> > iRep);
+		ZRef<Expr_Rel_Unary_Restrict_T<Val> > iExpr);
 	};
 
 template <class Val>
 void Visitor_Expr_Rel_Unary_Restrict_T<Val>::Visit_Expr_Rel_Unary_Restrict(
-	ZRef<Expr_Rel_Unary_Restrict_T<Val> > iRep)
-	{ Visitor_Expr_Rel_Unary::Visit_Expr_Rel_Unary(iRep); }
+	ZRef<Expr_Rel_Unary_Restrict_T<Val> > iExpr)
+	{ Visitor_Expr_Rel_Unary::Visit_Expr_Rel_Unary(iExpr); }
 
 // =================================================================================================
 #pragma mark -

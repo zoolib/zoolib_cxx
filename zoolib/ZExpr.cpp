@@ -52,7 +52,7 @@ void ZExpr::Accept_Expr(ZVisitor_Expr& iVisitor)
 #pragma mark -
 #pragma mark * ZVisitor_Expr
 
-void ZVisitor_Expr::Visit_Expr(ZRef<ZExpr> iRep)
-	{ ZVisitor::Visit(iRep); }
+void ZVisitor_Expr::Visit_Expr(ZRef<ZExpr> iExpr)
+	{ ZVisitor::Visit(iExpr); }
 
 NAMESPACE_ZOOLIB_END

@@ -145,11 +145,11 @@ public:
 class ZVisitor_Expr_Logic : public virtual ZVisitor_Expr
 	{
 public:
-	virtual void Visit_Logic_True(ZRef<ZExpr_Logic_True> iRep);
-	virtual void Visit_Logic_False(ZRef<ZExpr_Logic_False> iRep);
-	virtual void Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iRep);
-	virtual void Visit_Logic_And(ZRef<ZExpr_Logic_And> iRep);
-	virtual void Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iRep);
+	virtual void Visit_Logic_True(ZRef<ZExpr_Logic_True> iExpr);
+	virtual void Visit_Logic_False(ZRef<ZExpr_Logic_False> iExpr);
+	virtual void Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr);
+	virtual void Visit_Logic_And(ZRef<ZExpr_Logic_And> iExpr);
+	virtual void Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr);
 	};
 
 // =================================================================================================

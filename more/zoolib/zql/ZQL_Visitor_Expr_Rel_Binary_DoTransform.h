@@ -39,7 +39,7 @@ class Visitor_Expr_Rel_Binary_DoTransform
 	{
 public:
 // From Visitor_Expr_Binary_Rel
-	virtual void Visit_Expr_Rel_Binary(ZRef<Expr_Rel_Binary> iRep);
+	virtual void Visit_Expr_Rel_Binary(ZRef<Expr_Rel_Binary> iExpr);
 	};
 
 } // namespace ZQL

@@ -28,14 +28,14 @@ namespace ZQL {
 #pragma mark * Visitor_Expr_Rel_Unary_DoTransform
 
 void Visitor_Expr_Rel_Unary_DoTransform::Visit_Expr_Rel_Unary(
-	ZRef<Expr_Rel_Unary> iRep)
+	ZRef<Expr_Rel_Unary> iExpr)
 	{
-	ZRef<Expr_Rel> oldRep = iRep->GetExpr_Rel();
-	ZRef<Expr_Rel> newRep = this->DoTransform(oldRep).DynamicCast<Expr_Rel>();
-	if (oldRep == newRep)
-		fResult = iRep;
+	ZRef<Expr_Rel> oldExpr = iExpr->GetExpr_Rel();
+	ZRef<Expr_Rel> newExpr = this->DoTransform(oldExpr).DynamicCast<Expr_Rel>();
+	if (oldExpr == newExpr)
+		fResult = iExpr;
 	else
-		fResult = iRep->Clone(newRep);
+		fResult = iExpr->Clone(newExpr);
 	}
 
 } // namespace ZQL

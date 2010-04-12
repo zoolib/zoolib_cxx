@@ -66,12 +66,12 @@ ZRef<Expr_Rel> Expr_Rel_Binary::GetRHS()
 #pragma mark * Visitor_Expr_Rel_Binary
 
 void Visitor_Expr_Rel_Binary::Visit_Expr_Rel_Binary(
-	ZRef<Expr_Rel_Binary> iRep)
+	ZRef<Expr_Rel_Binary> iExpr)
 	{
-	if (ZRef<Expr_Rel> theRelation = iRep->GetLHS())
+	if (ZRef<Expr_Rel> theRelation = iExpr->GetLHS())
 		theRelation->Accept(*this);
 
-	if (ZRef<Expr_Rel> theRelation = iRep->GetRHS())
+	if (ZRef<Expr_Rel> theRelation = iExpr->GetRHS())
 		theRelation->Accept(*this);
 	}
 

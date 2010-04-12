@@ -18,28 +18,47 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRelHead__
-#define __ZRelHead__ 1
+#ifndef __ZQL_Visitor_Expr_Rel_DoGetRelHead__
+#define __ZQL_Visitor_Expr_Rel_DoGetRelHead__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZUniSet_T.h"
-
-#include <string>
+#include "zoolib/zql/ZQL_Expr_Rel_Binary.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary_Project.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary_Rename.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRelHead
+#pragma mark * Visitor_Expr_Rel_DoGetRelHead
 
-typedef ZUniSet_T<std::string> ZRelHead;
+class Visitor_Expr_Rel_DoGetRelHead
+:	public virtual Visitor_Expr_Rel_Binary
+,	public virtual Visitor_Expr_Rel_Concrete
+,	public virtual Visitor_Expr_Rel_Unary
+,	public virtual Visitor_Expr_Rel_Unary_Project
+,	public virtual Visitor_Expr_Rel_Unary_Rename
+	{
+public:
+	virtual void Visit_Expr_Rel_Binary(ZRef<Expr_Rel_Binary> iExpr);
 
-ZRelHead operator|(const char* iElem, const ZRelHead& iRelHead);
-ZRelHead operator|(const ZRelHead& iRelHead, const char* iElem);
+	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
 
-ZRelHead operator&(const ZRelHead& iRelHead, const char* iElem);
-ZRelHead operator&(const char* iElem, const ZRelHead& iRelHead);
+	virtual void Visit_Expr_Rel_Unary(ZRef<Expr_Rel_Unary> iExpr);
+	virtual void Visit_Expr_Rel_Unary_Project(ZRef<Expr_Rel_Unary_Project> iExpr);
+	virtual void Visit_Expr_Rel_Unary_Rename(ZRef<Expr_Rel_Unary_Rename> iExpr);
 
+// Our protocol
+	RelHead DoGetRelHead(ZRef<Expr_Rel> iExpr);
+
+protected:
+	RelHead fResult;
+	};
+
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZRelHead__
+#endif // __ZQL_Visitor_Expr_Rel_DoGetRelHead__

@@ -90,8 +90,8 @@ ZRef<Result> Iterator_Intersect::ReadInc()
 		}
 	}
 
-Iterator_Intersect::Iterator_Intersect(ZRef<Iterator> iIterator_LHS,
-	ZRef<Iterator> iIterator_RHS, ZRef<Iterator> iIterator_RHS_Model)
+Iterator_Intersect::Iterator_Intersect(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS,
+	ZRef<Iterator> iIterator_RHS_Model)
 :	fIterator_LHS(iIterator_LHS)
 ,	fIterator_RHS(iIterator_RHS)
 ,	fIterator_RHS_Model(iIterator_RHS_Model)
@@ -148,8 +148,8 @@ ZRef<Result> Iterator_Join::ReadInc()
 		}
 	}
 
-Iterator_Join::Iterator_Join(ZRef<Iterator> iIterator_LHS,
-	ZRef<Iterator> iIterator_RHS, ZRef<Iterator> iIterator_RHS_Model)
+Iterator_Join::Iterator_Join(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS,
+	ZRef<Iterator> iIterator_RHS_Model)
 :	fIterator_LHS(iIterator_LHS)
 ,	fIterator_RHS(iIterator_RHS)
 ,	fIterator_RHS_Model(iIterator_RHS_Model)

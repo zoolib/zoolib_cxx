@@ -65,7 +65,7 @@ protected:
 class Visitor_Expr_Rel_Binary : public virtual Visitor_Expr_Rel
 	{
 public:
-	virtual void Visit_Expr_Rel_Binary(ZRef<Expr_Rel_Binary> iRep);
+	virtual void Visit_Expr_Rel_Binary(ZRef<Expr_Rel_Binary> iExpr);
 	};
 
 } // namespace ZQL

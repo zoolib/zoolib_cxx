@@ -28,16 +28,16 @@ namespace ZQL {
 #pragma mark * Visitor_Expr_Rel_Binary_DoTransform
 
 void Visitor_Expr_Rel_Binary_DoTransform::Visit_Expr_Rel_Binary(
-	ZRef<Expr_Rel_Binary> iRep)
+	ZRef<Expr_Rel_Binary> iExpr)
 	{
-	ZRef<Expr_Rel> oldLHS = iRep->GetLHS();
-	ZRef<Expr_Rel> oldRHS = iRep->GetRHS();
+	ZRef<Expr_Rel> oldLHS = iExpr->GetLHS();
+	ZRef<Expr_Rel> oldRHS = iExpr->GetRHS();
 	ZRef<Expr_Rel> newLHS = this->DoTransform(oldLHS).DynamicCast<Expr_Rel>();
 	ZRef<Expr_Rel> newRHS = this->DoTransform(oldRHS).DynamicCast<Expr_Rel>();
 	if (oldLHS == newLHS && oldRHS == newRHS)
-		fResult = iRep;
+		fResult = iExpr;
 	else
-		fResult = iRep->Clone(newLHS, newRHS);
+		fResult = iExpr->Clone(newLHS, newRHS);
 	}
 
 } // namespace ZQL

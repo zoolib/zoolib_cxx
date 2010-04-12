@@ -37,6 +37,7 @@
 #include "zoolib/valbase/ZValBase_SQLite.h"
 #include "zoolib/sqlite/ZSQLite.h"
 #include "zoolib/sqlite/ZSQLite_YadSeqR_Iter.h"
+#include "zoolib/zql/ZQL_Visitor_Expr_Rel_DoGetRelHead.h"
 
 NAMESPACE_ZOOLIB_USING
 
@@ -48,19 +49,21 @@ using std::string;
 typedef ZRef<ZExpr_Logic> Spec;
 typedef Rel Query;
 typedef ZMap_Expr Map;
-typedef ZRelHead RelHead;
 typedef ZVal_Expr Val;
 typedef ZValCondition Condition;
 
 static ZYadOptions theYadOptions(true);
 
-Query sAll(const ZRelHead& iRelHead)
+RelHead spGetRelHead(ZRef<Expr_Rel> iExpr)
+	{ return Visitor_Expr_Rel_DoGetRelHead().DoGetRelHead(iExpr); }
+
+Query sAll(const RelHead& iRelHead)
 	{ return ZValBase::sConcrete(iRelHead); }
 
 Query sAllID(const std::string& iIDName)
-	{ return ZValBase::sConcrete(ZRelHead(true) | iIDName); }
+	{ return ZValBase::sConcrete(RelHead(true) | iIDName); }
 
-Query sAllID(const std::string& iIDName, const ZRelHead& iRelHead)
+Query sAllID(const std::string& iIDName, const RelHead& iRelHead)
 	{ return ZValBase::sConcrete(iRelHead | iIDName); }
 
 // =================================================================================================
@@ -177,7 +180,7 @@ static Query badPassword()
 static Query badPassword2()
 	{
 //	return (A("authorID") & sBadAuthors()).Project("authorID");
-	return A("authorID") & sBadAuthors() & ZRelHead("authorID");
+	return A("authorID") & sBadAuthors() & RelHead("authorID");
 	}
 
 // S(A(@authorID), @Object == "author" & (@fnam == @pass | @lnam == @pass | @unam == @pass));
@@ -199,7 +202,7 @@ static Query sPrefix(const string& iPrefix, const RelHead& iIgnore, Query iQuery
 
 	bool universal;
 	set<string> theNames;
-	iQuery->GetRelHead().GetElems(universal, theNames);
+	spGetRelHead(iQuery).GetElems(universal, theNames);
 	for (set<string>::iterator i = theNames.begin(); i != theNames.end(); ++i)
 		{
 		if (iIgnore.Contains(*i))
@@ -221,7 +224,7 @@ static Query sSuperJoin(
 
 static Query sDrop(Query iQuery, const string& iTName)
 	{
-	return iQuery & (ZRelHead(true) - iTName);
+	return iQuery & (RelHead(true) - iTName);
 //	RelHead theRelHead = iQuery->GetRelHead();
 //	return iQuery & (theRelHead - iTName);
 //	if (theRelHead.Contains(iTName))
@@ -301,7 +304,7 @@ static Query sQuery()
 static void sDumpQuery(const ZStrimW& s, Query iQuery)
 	{
 	Util_Strim_Rel::Options theOptions;
-//##	theOptions.fDebuggingOutput = true;
+	theOptions.fDebuggingOutput = true;
 
 	Util_Strim_Rel::sToStrim(iQuery, theOptions, s);
 	s << "\n";
@@ -394,7 +397,7 @@ sBadAuthors();
 
 return;
 	Spec theSpec = CVar("TestVar1") == CConst(1) | CVar("TestVar2") == CConst(2);
-	Query theExp = sSelect(sAll(ZRelHead(true)), theSpec);
+	Query theExp = sSelect(sAll(RelHead(true)), theSpec);
 
 	sDumpQuery(s, theExp);
 

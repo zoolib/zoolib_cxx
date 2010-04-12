@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/zql/ZQL_Expr_Rel_Unary.h"
+#include "zoolib/zql/ZQL_RelHead.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
@@ -37,12 +38,9 @@ class Expr_Rel_Unary_Project : public Expr_Rel_Unary
 	{
 public:
 	Expr_Rel_Unary_Project(
-		const ZRef<Expr_Rel>& iExpr_Rel, const ZRelHead& iRelHead);
+		const ZRef<Expr_Rel>& iExpr_Rel, const RelHead& iRelHead);
 
 	virtual ~Expr_Rel_Unary_Project();
-
-// From Expr_Rel via Expr_Rel_Unary
-	virtual ZRelHead GetRelHead();
 
 // From Expr_Rel_Unary
 	virtual void Accept_Expr_Rel_Unary(Visitor_Expr_Rel_Unary& iVisitor);
@@ -53,10 +51,10 @@ public:
 	virtual void Accept_Expr_Rel_Unary_Project(
 		Visitor_Expr_Rel_Unary_Project& iVisitor);
 
-	ZRelHead GetProjectRelHead();
+	RelHead GetRelHead();
 
 private:
-	const ZRelHead fRelHead;
+	const RelHead fRelHead;
 	};
 
 // =================================================================================================
@@ -66,18 +64,18 @@ private:
 class Visitor_Expr_Rel_Unary_Project : public virtual Visitor_Expr_Rel_Unary
 	{
 public:
-	virtual void Visit_Expr_Rel_Unary_Project(ZRef<Expr_Rel_Unary_Project> iRep);
+	virtual void Visit_Expr_Rel_Unary_Project(ZRef<Expr_Rel_Unary_Project> iExpr);
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Unary_Project> sProject(const ZRef<Expr_Rel>& iExpr, const ZRelHead& iRelHead);
+ZRef<Expr_Rel_Unary_Project> sProject(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead);
 
-ZRef<Expr_Rel_Unary_Project> operator&(const ZRef<Expr_Rel>& iExpr, const ZRelHead& iRelHead);
+ZRef<Expr_Rel_Unary_Project> operator&(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead);
 
-ZRef<Expr_Rel_Unary_Project> operator&(const ZRelHead& iRelHead, const ZRef<Expr_Rel>& iExpr);
+ZRef<Expr_Rel_Unary_Project> operator&(const RelHead& iRelHead, const ZRef<Expr_Rel>& iExpr);
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

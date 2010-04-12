@@ -39,9 +39,6 @@ public:
 	Expr_Rel_Binary_Intersect(ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS);
 	virtual ~Expr_Rel_Binary_Intersect();
 
-// From Expr_Rel via Expr_Rel_Binary
-	virtual ZRelHead GetRelHead();
-
 // From Expr_Rel_Binary
 	virtual void Accept_Expr_Rel_Binary(Visitor_Expr_Rel_Binary& iVisitor);
 
@@ -61,7 +58,7 @@ class Visitor_Expr_Rel_Binary_Intersect : public virtual Visitor_Expr_Rel_Binary
 	{
 public:
 	virtual void Visit_Expr_Rel_Binary_Intersect(
-		ZRef<Expr_Rel_Binary_Intersect> iRep);
+		ZRef<Expr_Rel_Binary_Intersect> iExpr);
 	};
 
 // =================================================================================================

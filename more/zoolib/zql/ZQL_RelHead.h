@@ -18,46 +18,30 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Strim_RelHead.h"
-#include "zoolib/ZYad_ZooLibStrim.h"
+#ifndef __ZQL_RelHead__
+#define __ZQL_RelHead__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZUniSet_T.h"
+
+#include <string>
 
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_Strim_RelHead
+#pragma mark * RelHead
 
-namespace ZUtil_Strim_RelHead {
+typedef ZUniSet_T<std::string> RelHead;
 
-using std::set;
-using std::string;
+RelHead operator|(const char* iElem, const RelHead& iRelHead);
+RelHead operator|(const RelHead& iRelHead, const char* iElem);
 
-void sWrite_PropName(const string& iName, const ZStrimW& s)
-	{
-	s.Write("@");
-	ZYad_ZooLibStrim::sWrite_PropName(iName, s);
-	}
+RelHead operator&(const RelHead& iRelHead, const char* iElem);
+RelHead operator&(const char* iElem, const RelHead& iRelHead);
 
-void sWrite_RelHead(const ZRelHead& iRelHead, const ZStrimW& s)
-	{
-	bool universal;
-	const set<string>& names = iRelHead.GetElems(universal);
-
-	s.Write("[");
-	if (universal)
-		s.Write("~");
-
-	bool isFirst = true;
-	for (set<string>::const_iterator i = names.begin(); i != names.end(); ++i)
-		{
-		if (!isFirst)
-			s.Write(", ");
-		isFirst = false;
-		sWrite_PropName(*i, s);
-		}
-	s.Write("]");
-	}
-
-} // namespace ZUtil_Strim_RelHead
-
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZQL_RelHead__

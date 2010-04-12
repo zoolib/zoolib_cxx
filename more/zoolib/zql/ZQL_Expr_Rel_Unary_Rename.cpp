@@ -39,17 +39,6 @@ Expr_Rel_Unary_Rename::Expr_Rel_Unary_Rename(ZRef<Expr_Rel> iExpr_Rel,
 Expr_Rel_Unary_Rename::~Expr_Rel_Unary_Rename()
 	{}
 
-ZRelHead Expr_Rel_Unary_Rename::GetRelHead()
-	{
-	ZRelHead theRelHead = this->GetExpr_Rel()->GetRelHead();
-	if (theRelHead.Contains(fOld))
-		{
-		theRelHead -= fOld;
-		theRelHead |= fNew;
-		}
-	return theRelHead;
-	}
-
 void Expr_Rel_Unary_Rename::Accept_Expr_Rel_Unary(
 	Visitor_Expr_Rel_Unary& iVisitor)
 	{
@@ -83,8 +72,8 @@ const string& Expr_Rel_Unary_Rename::GetOld()
 #pragma mark * Visitor_Expr_Rel_Unary_Rename
 
 void Visitor_Expr_Rel_Unary_Rename::Visit_Expr_Rel_Unary_Rename(
-	ZRef<Expr_Rel_Unary_Rename> iRep)
-	{ Visitor_Expr_Rel_Unary::Visit_Expr_Rel_Unary(iRep); }
+	ZRef<Expr_Rel_Unary_Rename> iExpr)
+	{ Visitor_Expr_Rel_Unary::Visit_Expr_Rel_Unary(iExpr); }
 
 // =================================================================================================
 #pragma mark -

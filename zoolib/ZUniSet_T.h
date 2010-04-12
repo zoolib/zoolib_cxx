@@ -36,12 +36,17 @@ class ZUniSet_T
 	explicit ZUniSet_T(bool iUniversal, std::set<T>& ioElems, bool iKnowWhatImDoing);
 
 public:
+	void swap(ZUniSet_T& iOther);
+
 	ZUniSet_T();
 	ZUniSet_T(const ZUniSet_T& iOther);
 	~ZUniSet_T();
 	ZUniSet_T& operator=(const ZUniSet_T& iOther);
 
 	explicit ZUniSet_T(bool iUniversal);
+
+	ZUniSet_T(const std::set<T>& iElems);
+	ZUniSet_T(bool iUniversal, const std::set<T>& iElems);
 
 	ZUniSet_T(const T& iElem);
 
@@ -99,6 +104,13 @@ ZUniSet_T<T> operator&(const T& iElem, const ZUniSet_T<T>& iUniSet_T);
 #pragma mark * ZUniSet_T definition
 
 template <class T>
+void ZUniSet_T<T>::swap(ZUniSet_T& iOther)
+	{
+	std::swap(fUniversal, iOther.fUniversal);
+	std::swap(fElems, iOther.fElems);
+	}
+
+template <class T>
 ZUniSet_T<T>::ZUniSet_T(bool iUniversal, std::set<T>& ioElems, bool iKnowWhatImDoing)
 :	fUniversal(iUniversal)
 	{ fElems.swap(ioElems); }
@@ -129,6 +141,18 @@ ZUniSet_T<T>& ZUniSet_T<T>::operator=(const ZUniSet_T& iOther)
 template <class T>
 ZUniSet_T<T>::ZUniSet_T(bool iUniversal)
 :	fUniversal(iUniversal)
+	{}
+
+template <class T>
+ZUniSet_T<T>::ZUniSet_T(const std::set<T>& iElems)
+:	fUniversal(false)
+,	fElems(iElems)
+	{}
+
+template <class T>
+ZUniSet_T<T>::ZUniSet_T(bool iUniversal, const std::set<T>& iElems)
+:	fUniversal(iUniversal)
+,	fElems(iElems)
 	{}
 
 template <class T>
@@ -393,4 +417,9 @@ ZUniSet_T<T> operator&(const T& iElem, const ZUniSet_T<T>& iUniSet_T)
 
 NAMESPACE_ZOOLIB_END
 
+namespace std {
+template <class T>
+inline void swap(ZOOLIB_PREFIX::ZUniSet_T<T>& a, ZOOLIB_PREFIX::ZUniSet_T<T>& b)
+	{ a.swap(b); }
+}
 #endif // __ZUniSet_T__

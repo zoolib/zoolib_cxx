@@ -18,7 +18,6 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Strim_RelHead.h"
 #include "zoolib/ZUtil_Strim_ValCondition.h"
 #include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoToStrim.h"
 #include "zoolib/zql/ZQL_Util_Strim_Rel.h"
@@ -31,6 +30,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zql/ZQL_Expr_Rel_Unary_Rename.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Unary_Restrict.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
+#include "zoolib/zql/ZQL_Util_Strim_RelHead.h"
+#include "zoolib/zql/ZQL_Visitor_Expr_Rel_DoGetRelHead.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
@@ -44,22 +45,25 @@ using std::string;
 
 namespace ZANONYMOUS {
 
+RelHead spGetRelHead(ZRef<Expr_Rel> iExpr)
+	{ return Visitor_Expr_Rel_DoGetRelHead().DoGetRelHead(iExpr); }
+
 void spWrite(const string& iString, const ZStrimW& s)
 	{ s.Write(iString); }
 
 void spWrite(const UTF8* iString, const ZStrimW& s)
 	{ s.Write(iString); }
 
-void spWrite_RelHead(const ZRelHead& iRelHead, const ZStrimW& iStrimW)
-	{ ZUtil_Strim_RelHead::sWrite_RelHead(iRelHead, iStrimW); }
+void spWrite_RelHead(const RelHead& iRelHead, const ZStrimW& iStrimW)
+	{ Util_Strim_RelHead::sWrite_RelHead(iRelHead, iStrimW); }
 
 void spWrite_PropName(const string& iPropName, const ZStrimW& iStrimW)
-	{ ZUtil_Strim_RelHead::sWrite_PropName(iPropName, iStrimW); }
+	{ Util_Strim_RelHead::sWrite_PropName(iPropName, iStrimW); }
 
-void spWrite_EffectiveRelHeadComment(ZRef<Expr_Rel> iRep, const ZStrimW& iStrimW)
+void spWrite_EffectiveRelHeadComment(ZRef<Expr_Rel> iExpr, const ZStrimW& iStrimW)
 	{
 	iStrimW.Write(" // ");
-	ZUtil_Strim_RelHead::sWrite_RelHead(iRep->GetRelHead(), iStrimW);
+	Util_Strim_RelHead::sWrite_RelHead(spGetRelHead(iExpr), iStrimW);
 	}
 
 } // anonymous namespace
@@ -85,41 +89,41 @@ class Visitor_DoToStrim
 	{
 public:
 	virtual void Visit_Expr_Rel_Binary_Difference(
-		ZRef<Expr_Rel_Binary_Difference> iRep);
+		ZRef<Expr_Rel_Binary_Difference> iExpr);
 	virtual void Visit_Expr_Rel_Binary_Intersect(
-		ZRef<Expr_Rel_Binary_Intersect> iRep);
-	virtual void Visit_Expr_Rel_Binary_Join(ZRef<Expr_Rel_Binary_Join> iRep);
-	virtual void Visit_Expr_Rel_Binary_Union(ZRef<Expr_Rel_Binary_Union> iRep);
+		ZRef<Expr_Rel_Binary_Intersect> iExpr);
+	virtual void Visit_Expr_Rel_Binary_Join(ZRef<Expr_Rel_Binary_Join> iExpr);
+	virtual void Visit_Expr_Rel_Binary_Union(ZRef<Expr_Rel_Binary_Union> iExpr);
 
-	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iRep);
+	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
 
-	virtual void Visit_Expr_Rel_Unary_Project(ZRef<Expr_Rel_Unary_Project> iRep);
-	virtual void Visit_Expr_Rel_Unary_Rename(ZRef<Expr_Rel_Unary_Rename> iRep);
-	virtual void Visit_Expr_Rel_Unary_Restrict(ZRef<Expr_Rel_Unary_Restrict> iRep);
-	virtual void Visit_Expr_Rel_Unary_Select(ZRef<Expr_Rel_Unary_Select> iRep);
+	virtual void Visit_Expr_Rel_Unary_Project(ZRef<Expr_Rel_Unary_Project> iExpr);
+	virtual void Visit_Expr_Rel_Unary_Rename(ZRef<Expr_Rel_Unary_Rename> iExpr);
+	virtual void Visit_Expr_Rel_Unary_Restrict(ZRef<Expr_Rel_Unary_Restrict> iExpr);
+	virtual void Visit_Expr_Rel_Unary_Select(ZRef<Expr_Rel_Unary_Select> iExpr);
 
 private:
-	void pWriteBinary(const std::string& iFunctionName, ZRef<Expr_Rel_Binary> iRep);
+	void pWriteBinary(const std::string& iFunctionName, ZRef<Expr_Rel_Binary> iExpr);
 	};
 
 } // anonymous namespace
 
 void Visitor_DoToStrim::Visit_Expr_Rel_Binary_Difference(
-	ZRef<Expr_Rel_Binary_Difference> iRep)
-	{ this->pWriteBinary("Difference", iRep); }
+	ZRef<Expr_Rel_Binary_Difference> iExpr)
+	{ this->pWriteBinary("Difference", iExpr); }
 
 void Visitor_DoToStrim::Visit_Expr_Rel_Binary_Intersect(
-	ZRef<Expr_Rel_Binary_Intersect> iRep)
-	{ this->pWriteBinary("Intersect", iRep); }
+	ZRef<Expr_Rel_Binary_Intersect> iExpr)
+	{ this->pWriteBinary("Intersect", iExpr); }
 
 void Visitor_DoToStrim::Visit_Expr_Rel_Binary_Join(
-	ZRef<Expr_Rel_Binary_Join> iRep)
+	ZRef<Expr_Rel_Binary_Join> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Join";
 
 	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iRep, w);
+		spWrite_EffectiveRelHeadComment(iExpr, w);
 
 	this->pWriteLFIndent();
 	w << "(";
@@ -127,125 +131,124 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Binary_Join(
 	if (pOptions().fDebuggingOutput)
 		{
 		w << " // Joining on: ";
-		const ZRelHead joinOn = iRep->GetLHS()->GetRelHead()
-			& iRep->GetRHS()->GetRelHead();
+		const RelHead joinOn = spGetRelHead(iExpr->GetLHS()) & spGetRelHead(iExpr->GetRHS());
 		spWrite_RelHead(joinOn, w);
 		}
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iRep->GetLHS());
+	this->DoToStrim(iExpr->GetLHS());
 	w << ", ";
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iRep->GetRHS());
+	this->DoToStrim(iExpr->GetRHS());
 
 	this->pWriteLFIndent();
 	w << ")";
 	}
 
 void Visitor_DoToStrim::Visit_Expr_Rel_Binary_Union(
-	ZRef<Expr_Rel_Binary_Union> iRep)
-	{ this->pWriteBinary("Union", iRep); }
+	ZRef<Expr_Rel_Binary_Union> iExpr)
+	{ this->pWriteBinary("Union", iExpr); }
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iRep)
+void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 
 	w << "Concrete";
 	// We always include the relhead
-	spWrite_EffectiveRelHeadComment(iRep, w);
+	spWrite_EffectiveRelHeadComment(iExpr, w);
 
 	this->pWriteLFIndent();
-	w << "( /*" << typeid(*iRep.Get()).name() << "*/ )";
+	w << "( /*" << typeid(*iExpr.Get()).name() << "*/ )";
 	}
 
 void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Project(
-	ZRef<Expr_Rel_Unary_Project> iRep)
+	ZRef<Expr_Rel_Unary_Project> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	spWrite("Project", w);
 
 	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iRep, w);
+		spWrite_EffectiveRelHeadComment(iExpr, w);
 
 	this->pWriteLFIndent();
 	spWrite("(", w);
 
 	this->pWriteLFIndent();
-	spWrite_RelHead(iRep->GetProjectRelHead(), w);
+	spWrite_RelHead(iExpr->GetRelHead(), w);
 	spWrite(",", w);
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iRep->GetExpr_Rel());
+	this->DoToStrim(iExpr->GetExpr_Rel());
 
 	this->pWriteLFIndent();
 	spWrite(")", w);
 	}
 
 void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Rename(
-	ZRef<Expr_Rel_Unary_Rename> iRep)
+	ZRef<Expr_Rel_Unary_Rename> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	spWrite("Rename", w);
 
 	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iRep, w);
+		spWrite_EffectiveRelHeadComment(iExpr, w);
 
 	this->pWriteLFIndent();
 	spWrite("(", w);
 
 	this->pWriteLFIndent();
-	spWrite_PropName(iRep->GetNew(), w);
+	spWrite_PropName(iExpr->GetNew(), w);
 	spWrite("<--", w);
-	spWrite_PropName(iRep->GetOld(), w);
+	spWrite_PropName(iExpr->GetOld(), w);
 	spWrite(",", w);
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iRep->GetExpr_Rel());
+	this->DoToStrim(iExpr->GetExpr_Rel());
 
 	this->pWriteLFIndent();
 	spWrite(")", w);
 	}
 
 void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Restrict(
-	ZRef<Expr_Rel_Unary_Restrict> iRep)
+	ZRef<Expr_Rel_Unary_Restrict> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Restrict";
 
 	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iRep, w);
+		spWrite_EffectiveRelHeadComment(iExpr, w);
 
 	this->pWriteLFIndent();
 	w << "(";
 	this->pWriteLFIndent();
-	ZUtil_Strim_ValCondition::sToStrim(iRep->GetValCondition(), w);
+	ZUtil_Strim_ValCondition::sToStrim(iExpr->GetValCondition(), w);
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iRep->GetExpr_Rel());
+	this->DoToStrim(iExpr->GetExpr_Rel());
 
 	this->pWriteLFIndent();
 	w << ")";
 	}
 
 void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Select(
-	ZRef<Expr_Rel_Unary_Select> iRep)
+	ZRef<Expr_Rel_Unary_Select> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Select";
 
 	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iRep, w);
+		spWrite_EffectiveRelHeadComment(iExpr, w);
 
 	this->pWriteLFIndent();
 	w << "(";
 	this->pWriteLFIndent();
-	this->DoToStrim(iRep->GetExpr_Logic());
+	this->DoToStrim(iExpr->GetExpr_Logic());
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iRep->GetExpr_Rel());
+	this->DoToStrim(iExpr->GetExpr_Rel());
 
 	this->pWriteLFIndent();
 	w << ")";
@@ -253,23 +256,23 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Unary_Select(
 
 
 void Visitor_DoToStrim::pWriteBinary(
-	const std::string& iFunctionName, ZRef<Expr_Rel_Binary> iRep)
+	const std::string& iFunctionName, ZRef<Expr_Rel_Binary> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << iFunctionName;
 
 	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iRep, w);
+		spWrite_EffectiveRelHeadComment(iExpr, w);
 
 	this->pWriteLFIndent();
 	w << "(";
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iRep->GetLHS());
+	this->DoToStrim(iExpr->GetLHS());
 	w << ", ";
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iRep->GetRHS());
+	this->DoToStrim(iExpr->GetRHS());
 
 	this->pWriteLFIndent();
 	w << ")";

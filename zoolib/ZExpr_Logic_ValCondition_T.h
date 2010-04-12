@@ -93,13 +93,13 @@ template <class Val>
 class ZVisitor_Expr_Logic_ValCondition_T : public virtual ZVisitor_Expr_Logic
 	{
 public:
-	virtual void Visit_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition_T<Val> > iRep);
+	virtual void Visit_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr);
 	};
 
 template <class Val>
 void ZVisitor_Expr_Logic_ValCondition_T<Val>::Visit_Logic_ValCondition(
-	ZRef<ZExpr_Logic_ValCondition_T<Val> > iRep)
-	{ ZVisitor_Expr_Logic::Visit_Expr(iRep); }
+	ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr)
+	{ ZVisitor_Expr_Logic::Visit_Expr(iExpr); }
 
 // =================================================================================================
 #pragma mark -
@@ -193,45 +193,72 @@ ZRef<ZExpr_Logic>& operator|=(ZRef<ZExpr_Logic>& ioLHS, const ZValCondition_T<Va
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * GetRelHead
+#pragma mark * GetNames
 
 template <class Val>
-class ZVisitor_Expr_Logic_ValCondition_GetRelHead_T
+class ZVisitor_Expr_Logic_ValCondition_DoGetNames_T
 :	public ZVisitor_Expr_Logic_ValCondition_T<Val>
 	{
-	typedef ZVisitor_Expr_Logic_ValCondition_T<Val> inherited;
 public:
-	ZVisitor_Expr_Logic_ValCondition_GetRelHead_T(ZRelHead& ioRelHead);
+// From ZVisitor_Expr_Logic via ZVisitor_Expr_Logic_ValCondition_T
+	virtual void Visit_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr);
+	virtual void Visit_Logic_And(ZRef<ZExpr_Logic_And> iExpr);
+	virtual void Visit_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr);
 
 // From ZVisitor_Expr_Logic_ValCondition_T
-	virtual void Visit_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition_T<Val> > iRep);
+	virtual void Visit_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr);
 
-private:
-	ZRelHead& fRelHead;
+// Our protocol
+	std::set<std::string> DoGetNames(ZRef<ZExpr_Logic> iExpr);
+
+protected:
+	std::set<std::string> fResult;
 	};
 
 template <class Val>
-ZVisitor_Expr_Logic_ValCondition_GetRelHead_T<Val>::ZVisitor_Expr_Logic_ValCondition_GetRelHead_T(
-	ZRelHead& ioRelHead)
-:	fRelHead(ioRelHead)
-	{}
+void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Logic_Not(
+	ZRef<ZExpr_Logic_Not> iExpr)
+	{ fResult = this->DoGetNames(iExpr); }
 
 template <class Val>
-void ZVisitor_Expr_Logic_ValCondition_GetRelHead_T<Val>::Visit_Logic_ValCondition(
-	ZRef<ZExpr_Logic_ValCondition_T<Val> > iRep)
-	{ fRelHead |= iRep->GetValCondition().GetRelHead(); }
-
-template <class Val>
-ZRelHead sGetRelHead_T(const ZRef<ZExpr_Logic>& iRep)
+void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Logic_And(
+	ZRef<ZExpr_Logic_And> iExpr)
 	{
-	ZRelHead theRelHead;
-	if (iRep)
-		{
-		ZVisitor_Expr_Logic_ValCondition_GetRelHead_T<Val> theVisitor(theRelHead);
-		iRep->Accept(theVisitor);
-		}
-	return theRelHead;
+	std::set<std::string> result;
+	ZUtil_STL_set::sOr(this->DoGetNames(iExpr->GetLHS()), this->DoGetNames(iExpr->GetRHS()), result);
+	fResult.swap(result);
 	}
+
+template <class Val>
+void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Logic_Or(
+	ZRef<ZExpr_Logic_Or> iExpr)
+	{
+	std::set<std::string> result;
+	ZUtil_STL_set::sOr(this->DoGetNames(iExpr->GetLHS()), this->DoGetNames(iExpr->GetRHS()), result);
+	fResult.swap(result);
+	}
+
+template <class Val>
+void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Logic_ValCondition(
+	ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr)
+	{ fResult = iExpr->GetValCondition().GetNames(); }
+
+template <class Val>
+std::set<std::string> ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::DoGetNames(
+	ZRef<ZExpr_Logic> iExpr)
+	{
+	std::set<std::string> theResult;
+	if (iExpr)
+		{
+		iExpr->Accept(*this);
+		std::swap(theResult, fResult);
+		}
+	return theResult;
+	}
+
+template <class Val>
+std::set<std::string> sGetNames_T(const ZRef<ZExpr_Logic>& iExpr)
+	{ return ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>().DoGetNames(iExpr); }
 
 // =================================================================================================
 #pragma mark -
@@ -248,7 +275,7 @@ public:
 	ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T(const Val& iVal);
 
 // From ZVisitor_Expr_Logic_ValCondition_T
-	virtual void Visit_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition_T<Val> > iRep);
+	virtual void Visit_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr);
 
 private:
 	const Val& fVal;
@@ -263,16 +290,12 @@ ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T(const Val& iVal)
 
 template <class Val>
 void ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T<Val>::Visit_Logic_ValCondition(
-	ZRef<ZExpr_Logic_ValCondition_T<Val> > iRep)
-	{ fResult = iRep->GetValCondition().Matches(fValContext, fVal); }
+	ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr)
+	{ fResult = iExpr->GetValCondition().Matches(fValContext, fVal); }
 
 template <class Val>
-bool sMatches_T(const ZRef<ZExpr_Logic>& iRep, const Val& iVal)
-	{
-	if (iRep)
-		return ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T<Val>(iVal).DoEval(iRep);
-	return false;
-	}
+bool sMatches_T(const ZRef<ZExpr_Logic>& iExpr, const Val& iVal)
+	{ return ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T<Val>(iVal).DoEval(iExpr); }
 
 template <class Val>
 bool sMatches_T(const ZValCondition_T<Val>& iValCondition, const Val& iVal)

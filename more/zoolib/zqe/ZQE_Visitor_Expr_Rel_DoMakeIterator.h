@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQE_Visitor_Expr_DoMakeIterator__
-#define __ZQE_Visitor_Expr_DoMakeIterator__ 1
+#ifndef __ZQE_Visitor_Expr_Rel_DoMakeIterator__
+#define __ZQE_Visitor_Expr_Rel_DoMakeIterator__ 1
 #include "zconfig.h"
 
 #include "zoolib/zqe/ZQE_Iterator.h"
@@ -36,9 +36,9 @@ namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_DoMakeIterator
+#pragma mark * Visitor_Expr_Rel_DoMakeIterator
 
-class Visitor_Expr_DoMakeIterator
+class Visitor_Expr_Rel_DoMakeIterator
 :	public virtual ZQL::Visitor_Expr_Rel_Binary_Difference
 ,	public virtual ZQL::Visitor_Expr_Rel_Binary_Intersect
 ,	public virtual ZQL::Visitor_Expr_Rel_Binary_Join
@@ -48,17 +48,17 @@ class Visitor_Expr_DoMakeIterator
 ,	public virtual ZQL::Visitor_Expr_Rel_Unary_Select
 	{
 public:
-	virtual void Visit_Expr_Rel_Binary_Difference(ZRef<ZQL::Expr_Rel_Binary_Difference> iRep);
-	virtual void Visit_Expr_Rel_Binary_Intersect(ZRef<ZQL::Expr_Rel_Binary_Intersect> iRep);
-	virtual void Visit_Expr_Rel_Binary_Join(ZRef<ZQL::Expr_Rel_Binary_Join> iRep);
-	virtual void Visit_Expr_Rel_Binary_Union(ZRef<ZQL::Expr_Rel_Binary_Union> iRep);
+	virtual void Visit_Expr_Rel_Binary_Difference(ZRef<ZQL::Expr_Rel_Binary_Difference> iExpr);
+	virtual void Visit_Expr_Rel_Binary_Intersect(ZRef<ZQL::Expr_Rel_Binary_Intersect> iExpr);
+	virtual void Visit_Expr_Rel_Binary_Join(ZRef<ZQL::Expr_Rel_Binary_Join> iExpr);
+	virtual void Visit_Expr_Rel_Binary_Union(ZRef<ZQL::Expr_Rel_Binary_Union> iExpr);
 
-	virtual void Visit_Expr_Rel_Unary_Project(ZRef<ZQL::Expr_Rel_Unary_Project> iRep);
-	virtual void Visit_Expr_Rel_Unary_Rename(ZRef<ZQL::Expr_Rel_Unary_Rename> iRep);
-	virtual void Visit_Expr_Rel_Unary_Select(ZRef<ZQL::Expr_Rel_Unary_Select> iRep);
+	virtual void Visit_Expr_Rel_Unary_Project(ZRef<ZQL::Expr_Rel_Unary_Project> iExpr);
+	virtual void Visit_Expr_Rel_Unary_Rename(ZRef<ZQL::Expr_Rel_Unary_Rename> iExpr);
+	virtual void Visit_Expr_Rel_Unary_Select(ZRef<ZQL::Expr_Rel_Unary_Select> iExpr);
 
 // Our protocol
-	ZRef<Iterator> DoMakeIterator(ZRef<ZExpr> iExpr);
+	ZRef<Iterator> DoMakeIterator(ZRef<ZQL::Expr_Rel> iExpr);
 
 protected:
 	ZRef<Iterator> fIterator;
@@ -67,4 +67,4 @@ protected:
 } // namespace ZQE
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQE_Visitor_Expr_DoMakeIterator__
+#endif // __ZQE_Visitor_Expr_Rel_DoMakeIterator__

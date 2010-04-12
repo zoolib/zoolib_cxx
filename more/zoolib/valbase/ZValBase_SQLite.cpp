@@ -83,8 +83,8 @@ class Expr_Rel_Concrete : public ZValBase::Expr_Rel_Concrete
 public:
 	Expr_Rel_Concrete(ZRef<ConcreteDomain> iConcreteDomain, ZRef<Iter> iIter);
 
-// From ExprRel via ZValBase::Expr_Rel_Concrete
-	virtual ZRelHead GetRelHead();
+// From ZQL::Expr_Rel_Concrete via ZValBase::Expr_Rel_Concrete
+	virtual ZQL::RelHead GetRelHead();
 
 // From ZValBase::Expr_Rel_Concrete
 	virtual ZRef<ZQE::Iterator> MakeIterator();
@@ -99,9 +99,9 @@ Expr_Rel_Concrete::Expr_Rel_Concrete(ZRef<ConcreteDomain> iConcreteDomain, ZRef<
 ,	fIter(iIter)
 	{}
 
-ZRelHead Expr_Rel_Concrete::GetRelHead()
+ZQL::RelHead Expr_Rel_Concrete::GetRelHead()
 	{
-	ZRelHead result;
+	ZQL::RelHead result;
 	for (size_t x = 0; x < fIter->Count(); ++x)
 		result.Insert(fIter->NameOf(x));
 	return result;

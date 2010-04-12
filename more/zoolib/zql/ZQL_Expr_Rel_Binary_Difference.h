@@ -39,9 +39,6 @@ public:
 	Expr_Rel_Binary_Difference(ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS);
 	virtual ~Expr_Rel_Binary_Difference();
 
-// From Expr_Rel via Expr_Rel_Binary
-	virtual ZRelHead GetRelHead();
-
 // From Expr_Rel_Binary
 	virtual void Accept_Expr_Rel_Binary(Visitor_Expr_Rel_Binary& iVisitor);
 
@@ -61,7 +58,7 @@ class Visitor_Expr_Rel_Binary_Difference : public virtual Visitor_Expr_Rel_Binar
 	{
 public:
 	virtual void Visit_Expr_Rel_Binary_Difference(
-		ZRef<Expr_Rel_Binary_Difference> iRep);
+		ZRef<Expr_Rel_Binary_Difference> iExpr);
 	};
 
 } // namespace ZQL

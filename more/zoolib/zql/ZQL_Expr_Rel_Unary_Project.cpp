@@ -30,16 +30,13 @@ namespace ZQL {
 #pragma mark * Expr_Rel_Unary_Project
 
 Expr_Rel_Unary_Project::Expr_Rel_Unary_Project(
-		const ZRef<Expr_Rel>& iExpr_Rel, const ZRelHead& iRelHead)
+		const ZRef<Expr_Rel>& iExpr_Rel, const RelHead& iRelHead)
 :	Expr_Rel_Unary(iExpr_Rel)
 ,	fRelHead(iRelHead)
 	{}
 
 Expr_Rel_Unary_Project::~Expr_Rel_Unary_Project()
 	{}
-
-ZRelHead Expr_Rel_Unary_Project::GetRelHead()
-	{ return this->GetExpr_Rel()->GetRelHead() & fRelHead; }
 
 void Expr_Rel_Unary_Project::Accept_Expr_Rel_Unary(
 	Visitor_Expr_Rel_Unary& iVisitor)
@@ -63,7 +60,7 @@ void Expr_Rel_Unary_Project::Accept_Expr_Rel_Unary_Project(
 	Visitor_Expr_Rel_Unary_Project& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Unary_Project(this); }
 
-ZRelHead Expr_Rel_Unary_Project::GetProjectRelHead()
+RelHead Expr_Rel_Unary_Project::GetRelHead()
 	{ return fRelHead; }
 
 // =================================================================================================
@@ -71,20 +68,20 @@ ZRelHead Expr_Rel_Unary_Project::GetProjectRelHead()
 #pragma mark * Visitor_Expr_Rel_Unary_Project
 
 void Visitor_Expr_Rel_Unary_Project::Visit_Expr_Rel_Unary_Project(
-	ZRef<Expr_Rel_Unary_Project> iRep)
-	{ Visitor_Expr_Rel_Unary::Visit_Expr_Rel_Unary(iRep); }
+	ZRef<Expr_Rel_Unary_Project> iExpr)
+	{ Visitor_Expr_Rel_Unary::Visit_Expr_Rel_Unary(iExpr); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Relational operators
 
-ZRef<Expr_Rel_Unary_Project> sProject(const ZRef<Expr_Rel>& iExpr, const ZRelHead& iRelHead)
+ZRef<Expr_Rel_Unary_Project> sProject(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead)
 	{ return new Expr_Rel_Unary_Project(iExpr, iRelHead); }
 
-ZRef<Expr_Rel_Unary_Project> operator&(const ZRef<Expr_Rel>& iExpr, const ZRelHead& iRelHead)
+ZRef<Expr_Rel_Unary_Project> operator&(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead)
 	{ return new Expr_Rel_Unary_Project(iExpr, iRelHead); }
 
-ZRef<Expr_Rel_Unary_Project> operator&(const ZRelHead& iRelHead, const ZRef<Expr_Rel>& iExpr)
+ZRef<Expr_Rel_Unary_Project> operator&(const RelHead& iRelHead, const ZRef<Expr_Rel>& iExpr)
 	{ return new Expr_Rel_Unary_Project(iExpr, iRelHead); }
 
 } // namespace ZQL

@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/zql/ZQL_Expr_Rel_Unary_Select.h"
-#include "zoolib/ZExpr_Logic_ValCondition.h" // For sGetRelHead
 
 using std::string;
 
@@ -38,9 +37,6 @@ Expr_Rel_Unary_Select::Expr_Rel_Unary_Select(
 
 Expr_Rel_Unary_Select::~Expr_Rel_Unary_Select()
 	{}
-
-ZRelHead Expr_Rel_Unary_Select::GetRelHead()
-	{ return this->GetExpr_Rel()->GetRelHead() | sGetRelHead(fExpr_Logic); }
 
 void Expr_Rel_Unary_Select::Accept_Expr_Rel_Unary(
 	Visitor_Expr_Rel_Unary& iVisitor)
@@ -71,14 +67,14 @@ ZRef<ZExpr_Logic> Expr_Rel_Unary_Select::GetExpr_Logic()
 #pragma mark * Visitor_Expr_Rel_Unary_Select
 
 void Visitor_Expr_Rel_Unary_Select::Visit_Expr_Rel_Unary_Select(
-	ZRef<Expr_Rel_Unary_Select> iRep)
+	ZRef<Expr_Rel_Unary_Select> iExpr)
 	{
 	//??
-	Visitor_Expr_Rel_Unary::Visit_Expr_Rel_Unary(iRep);
-//	if (ZRef<Expr_Rel> theExpr_Rel = iRep->GetExpr_Rel())
+	Visitor_Expr_Rel_Unary::Visit_Expr_Rel_Unary(iExpr);
+//	if (ZRef<Expr_Rel> theExpr_Rel = iExpr->GetExpr_Rel())
 //		theExpr_Rel->Accept(*this);
 
-	if (ZRef<ZExpr_Logic> theExpr_Logic = iRep->GetExpr_Logic())
+	if (ZRef<ZExpr_Logic> theExpr_Logic = iExpr->GetExpr_Logic())
 		theExpr_Logic->Accept(*this);
 	}
 

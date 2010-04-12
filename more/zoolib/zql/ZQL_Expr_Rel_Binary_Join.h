@@ -39,9 +39,6 @@ public:
 	Expr_Rel_Binary_Join(ZRef<Expr_Rel> iLHS, ZRef<Expr_Rel> iRHS);
 	virtual ~Expr_Rel_Binary_Join();
 
-// From Expr_Rel via Expr_Rel_Binary
-	virtual ZRelHead GetRelHead();
-
 // From Expr_Rel_Binary
 	virtual void Accept_Expr_Rel_Binary(Visitor_Expr_Rel_Binary& iVisitor);
 
@@ -60,7 +57,7 @@ public:
 class Visitor_Expr_Rel_Binary_Join : public virtual Visitor_Expr_Rel_Binary
 	{
 public:
-	virtual void Visit_Expr_Rel_Binary_Join(ZRef<Expr_Rel_Binary_Join> iRep);
+	virtual void Visit_Expr_Rel_Binary_Join(ZRef<Expr_Rel_Binary_Join> iExpr);
 	};
 
 // =================================================================================================

@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/zql/ZQL_Expr_Rel.h"
+#include "zoolib/zql/ZQL_RelHead.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
@@ -58,6 +59,7 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor);
 
+	virtual RelHead GetRelHead() = 0;
 	virtual ZRef<ConcreteDomain> GetConcreteDomain();
 	};
 
@@ -68,7 +70,7 @@ public:
 class Visitor_Expr_Rel_Concrete : public virtual Visitor_Expr_Rel
 	{
 public:
-	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iRep);
+	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
 	};
 
 } // namespace ZQL

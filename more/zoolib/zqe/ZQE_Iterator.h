@@ -58,8 +58,8 @@ public:
 	virtual ZRef<Result> ReadInc();
 
 private:
-	Iterator_Intersect(ZRef<Iterator> iIterator_LHS,
-		ZRef<Iterator> iIterator_RHS, ZRef<Iterator> iIterator_RHS_Model);
+	Iterator_Intersect(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS,
+		ZRef<Iterator> iIterator_RHS_Model);
 
 	ZRef<Iterator> fIterator_LHS;
 	ZRef<Iterator> fIterator_RHS;
@@ -80,8 +80,8 @@ public:
 	virtual ZRef<Result> ReadInc();
 
 private:
-	Iterator_Join(ZRef<Iterator> iIterator_LHS,
-		ZRef<Iterator> iIterator_RHS, ZRef<Iterator> iIterator_RHS_Model);
+	Iterator_Join(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS,
+		ZRef<Iterator> iIterator_RHS_Model);
 
 	ZRef<Iterator> fIterator_LHS;
 	ZRef<Iterator> fIterator_RHS;

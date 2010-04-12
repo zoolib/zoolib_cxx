@@ -37,9 +37,6 @@ Expr_Rel_Binary_Union::Expr_Rel_Binary_Union(
 Expr_Rel_Binary_Union::~Expr_Rel_Binary_Union()
 	{}
 
-ZRelHead Expr_Rel_Binary_Union::GetRelHead()
-	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
-
 void Expr_Rel_Binary_Union::Accept_Expr_Rel_Binary(
 	Visitor_Expr_Rel_Binary& iVisitor)
 	{
@@ -67,8 +64,8 @@ ZRef<Expr_Rel_Binary> Expr_Rel_Binary_Union::Clone(
 #pragma mark * Visitor_Expr_Rel_Binary_Union
 
 void Visitor_Expr_Rel_Binary_Union::Visit_Expr_Rel_Binary_Union(
-	ZRef<Expr_Rel_Binary_Union> iRep)
-	{ Visitor_Expr_Rel_Binary::Visit_Expr_Rel_Binary(iRep); }
+	ZRef<Expr_Rel_Binary_Union> iExpr)
+	{ Visitor_Expr_Rel_Binary::Visit_Expr_Rel_Binary(iExpr); }
 
 // =================================================================================================
 #pragma mark -

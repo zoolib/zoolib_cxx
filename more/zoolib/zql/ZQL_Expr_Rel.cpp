@@ -50,8 +50,8 @@ void Expr_Rel::Accept_Expr_Rel(Visitor_Expr_Rel& iVisitor)
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel
 
-void Visitor_Expr_Rel::Visit_Expr_Rel(ZRef<Expr_Rel> iRep)
-	{ ZVisitor_Expr::Visit_Expr(iRep); }
+void Visitor_Expr_Rel::Visit_Expr_Rel(ZRef<Expr_Rel> iExpr)
+	{ ZVisitor_Expr::Visit_Expr(iExpr); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

@@ -36,11 +36,11 @@ typedef ZExpr_Logic_ValCondition_T<ZVal_Expr> ZExpr_Logic_ValCondition;
 typedef ZVisitor_Expr_Logic_ValCondition_T<ZVal_Expr> ZVisitor_Expr_Logic_ValCondition;
 
 
-inline ZRelHead sGetRelHead(const ZRef<ZExpr_Logic>& iRep)
-	{ return sGetRelHead_T<ZVal_Expr>(iRep); }
+inline std::set<std::string> sGetNames(const ZRef<ZExpr_Logic>& iExpr)
+	{ return sGetNames_T<ZVal_Expr>(iExpr); }
 
-inline bool sMatches(const ZRef<ZExpr_Logic>& iRep, const ZVal_Expr& iVal)
-	{ return sMatches_T<ZVal_Expr>(iRep, iVal); }
+inline bool sMatches(const ZRef<ZExpr_Logic>& iExpr, const ZVal_Expr& iVal)
+	{ return sMatches_T<ZVal_Expr>(iExpr, iVal); }
 
 inline bool sMatches(const ZValCondition& iValCondition, const ZVal_Expr& iVal)
 	{ return sMatches_T<ZVal_Expr>(iValCondition, iVal); }

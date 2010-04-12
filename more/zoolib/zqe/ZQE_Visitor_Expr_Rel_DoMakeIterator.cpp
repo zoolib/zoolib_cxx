@@ -18,67 +18,70 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zqe/ZQE_Visitor_Expr_DoMakeIterator.h"
+#include "zoolib/zqe/ZQE_Visitor_Expr_Rel_DoMakeIterator.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_DoMakeIterator
+#pragma mark * Visitor_Expr_Rel_DoMakeIterator
 
-void Visitor_Expr_DoMakeIterator::Visit_Expr_Rel_Binary_Difference(
-	ZRef<ZQL::Expr_Rel_Binary_Difference> iRep)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Binary_Difference(
+	ZRef<ZQL::Expr_Rel_Binary_Difference> iExpr)
 	{}
 
-void Visitor_Expr_DoMakeIterator::Visit_Expr_Rel_Binary_Intersect(
-	ZRef<ZQL::Expr_Rel_Binary_Intersect> iRep)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Binary_Intersect(
+	ZRef<ZQL::Expr_Rel_Binary_Intersect> iExpr)
 	{
-	if (ZRef<Iterator> lhs = this->DoMakeIterator(iRep->GetLHS()))
+	if (ZRef<Iterator> lhs = this->DoMakeIterator(iExpr->GetLHS()))
 		{
-		if (ZRef<Iterator> rhs = this->DoMakeIterator(iRep->GetRHS()))
+		if (ZRef<Iterator> rhs = this->DoMakeIterator(iExpr->GetRHS()))
 			fIterator = new Iterator_Intersect(lhs, rhs);
 		}
 	}
 
-void Visitor_Expr_DoMakeIterator::Visit_Expr_Rel_Binary_Join(ZRef<ZQL::Expr_Rel_Binary_Join> iRep)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Binary_Join(
+	ZRef<ZQL::Expr_Rel_Binary_Join> iExpr)
 	{
-	if (ZRef<Iterator> lhs = this->DoMakeIterator(iRep->GetLHS()))
+	if (ZRef<Iterator> lhs = this->DoMakeIterator(iExpr->GetLHS()))
 		{
-		if (ZRef<Iterator> rhs = this->DoMakeIterator(iRep->GetRHS()))
+		if (ZRef<Iterator> rhs = this->DoMakeIterator(iExpr->GetRHS()))
 			fIterator = new Iterator_Join(lhs, rhs);
 		}
 	}
 
-void Visitor_Expr_DoMakeIterator::Visit_Expr_Rel_Binary_Union(
-	ZRef<ZQL::Expr_Rel_Binary_Union> iRep)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Binary_Union(
+	ZRef<ZQL::Expr_Rel_Binary_Union> iExpr)
 	{
-	if (ZRef<Iterator> lhs = this->DoMakeIterator(iRep->GetLHS()))
+	if (ZRef<Iterator> lhs = this->DoMakeIterator(iExpr->GetLHS()))
 		{
-		if (ZRef<Iterator> rhs = this->DoMakeIterator(iRep->GetRHS()))
+		if (ZRef<Iterator> rhs = this->DoMakeIterator(iExpr->GetRHS()))
 			fIterator = new Iterator_Union(lhs, rhs);
 		else
 			fIterator = lhs;
 		}
 	}
 
-void Visitor_Expr_DoMakeIterator::Visit_Expr_Rel_Unary_Project(
-	ZRef<ZQL::Expr_Rel_Unary_Project> iRep)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Unary_Project(
+	ZRef<ZQL::Expr_Rel_Unary_Project> iExpr)
 	{
 	ZUnimplemented();
 	}
 
-void Visitor_Expr_DoMakeIterator::Visit_Expr_Rel_Unary_Rename(ZRef<ZQL::Expr_Rel_Unary_Rename> iRep)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Unary_Rename(
+	ZRef<ZQL::Expr_Rel_Unary_Rename> iExpr)
 	{
 	ZUnimplemented();
 	}
 
-void Visitor_Expr_DoMakeIterator::Visit_Expr_Rel_Unary_Select(ZRef<ZQL::Expr_Rel_Unary_Select> iRep)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Unary_Select(
+	ZRef<ZQL::Expr_Rel_Unary_Select> iExpr)
 	{
 	ZUnimplemented();
 	}
 
-ZRef<Iterator> Visitor_Expr_DoMakeIterator::DoMakeIterator(ZRef<ZExpr> iExpr)
+ZRef<Iterator> Visitor_Expr_Rel_DoMakeIterator::DoMakeIterator(ZRef<ZQL::Expr_Rel> iExpr)
 	{
 	ZRef<Iterator> theIterator;
 	if (iExpr)

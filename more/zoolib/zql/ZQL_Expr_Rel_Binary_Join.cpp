@@ -37,9 +37,6 @@ Expr_Rel_Binary_Join::Expr_Rel_Binary_Join(
 Expr_Rel_Binary_Join::~Expr_Rel_Binary_Join()
 	{}
 
-ZRelHead Expr_Rel_Binary_Join::GetRelHead()
-	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
-
 void Expr_Rel_Binary_Join::Accept_Expr_Rel_Binary(
 	Visitor_Expr_Rel_Binary& iVisitor)
 	{
@@ -67,8 +64,8 @@ ZRef<Expr_Rel_Binary> Expr_Rel_Binary_Join::Clone(
 #pragma mark * Visitor_Expr_Rel_Binary_Join
 
 void Visitor_Expr_Rel_Binary_Join::Visit_Expr_Rel_Binary_Join(
-	ZRef<Expr_Rel_Binary_Join> iRep)
-	{ Visitor_Expr_Rel_Binary::Visit_Expr_Rel_Binary(iRep); }
+	ZRef<Expr_Rel_Binary_Join> iExpr)
+	{ Visitor_Expr_Rel_Binary::Visit_Expr_Rel_Binary(iExpr); }
 
 // =================================================================================================
 #pragma mark -

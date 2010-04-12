@@ -34,9 +34,6 @@ Expr_Rel_Binary_Intersect::Expr_Rel_Binary_Intersect(
 :	Expr_Rel_Binary(iLHS, iRHS)
 	{}
 
-ZRelHead Expr_Rel_Binary_Intersect::GetRelHead()
-	{ return this->GetLHS()->GetRelHead() | this->GetRHS()->GetRelHead(); }
-
 void Expr_Rel_Binary_Intersect::Accept_Expr_Rel_Binary(
 	Visitor_Expr_Rel_Binary& iVisitor)
 	{
@@ -64,8 +61,8 @@ ZRef<Expr_Rel_Binary> Expr_Rel_Binary_Intersect::Clone(
 #pragma mark * Visitor_Expr_Rel_Binary_Intersect
 
 void Visitor_Expr_Rel_Binary_Intersect::Visit_Expr_Rel_Binary_Intersect(
-	ZRef<Expr_Rel_Binary_Intersect> iRep)
-	{ Visitor_Expr_Rel_Binary::Visit_Expr_Rel_Binary(iRep); }
+	ZRef<Expr_Rel_Binary_Intersect> iExpr)
+	{ Visitor_Expr_Rel_Binary::Visit_Expr_Rel_Binary(iExpr); }
 
 // =================================================================================================
 #pragma mark -

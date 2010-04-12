@@ -43,9 +43,6 @@ public:
 
 	virtual ~Expr_Rel_Unary_Select();
 
-// From Expr_Rel via Expr_Rel_Unary
-	virtual ZRelHead GetRelHead();
-
 // From Expr_Rel_Unary
 	virtual void Accept_Expr_Rel_Unary(Visitor_Expr_Rel_Unary& iVisitor);
 
@@ -68,7 +65,7 @@ private:
 class Visitor_Expr_Rel_Unary_Select : public virtual Visitor_Expr_Rel_Unary
 	{
 public:
-	virtual void Visit_Expr_Rel_Unary_Select(ZRef<Expr_Rel_Unary_Select> iRep);
+	virtual void Visit_Expr_Rel_Unary_Select(ZRef<Expr_Rel_Unary_Select> iExpr);
 	};
 
 // =================================================================================================

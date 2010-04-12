@@ -38,9 +38,6 @@ protected:
 	Expr_Rel_Concrete();
 
 public:
-// From Expr_Rel via Expr_Rel_Concrete
-	virtual ZRelHead GetRelHead();
-
 // Our protocol
 	virtual ZRef<ZQE::Iterator> MakeIterator() = 0;
 	};
@@ -50,7 +47,7 @@ public:
 #pragma mark * ZValBase pseudo constructors
 
 ZRef<ZQL::Expr_Rel> sConcrete();
-ZRef<ZQL::Expr_Rel> sConcrete(const ZRelHead& iRelHead);
+ZRef<ZQL::Expr_Rel> sConcrete(const ZQL::RelHead& iRelHead);
 
 ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::Expr_Rel> iExpr);
 

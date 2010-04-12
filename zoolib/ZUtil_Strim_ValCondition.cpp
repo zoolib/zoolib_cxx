@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZUtil_Strim_ValCondition.h"
-#include "zoolib/ZUtil_Strim_RelHead.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
@@ -38,6 +37,12 @@ typedef ZValComparandRep_Const_T<ZVal_Expr> ZValComparandRep_Const;
 #pragma mark -
 #pragma mark * Static helper functions
 
+static void spWrite_PropName(const string& iName, const ZStrimW& s)
+	{
+	s.Write("@");
+	ZYad_ZooLibStrim::sWrite_PropName(iName, s);
+	}
+
 static void spToStrim(const ZRef<ZValCondition::ComparandRep>& iCR, const ZStrimW& s)
 	{
 	if (!iCR)
@@ -48,9 +53,9 @@ static void spToStrim(const ZRef<ZValCondition::ComparandRep>& iCR, const ZStrim
 		{
 		const ZTrail& theTrail = cr->GetTrail();
 		if (theTrail.Count() == 1)
-			ZUtil_Strim_RelHead::sWrite_PropName(theTrail.At(0), s);
+			spWrite_PropName(theTrail.At(0), s);
 		else
-			ZUtil_Strim_RelHead::sWrite_PropName("/" + theTrail.AsString(), s);
+			spWrite_PropName("/" + theTrail.AsString(), s);
 		}
 	else if (ZRef<ZValComparandRep_Var> cr = iCR.DynamicCast<ZValComparandRep_Var>())
 		{

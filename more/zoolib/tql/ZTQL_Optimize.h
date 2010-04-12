@@ -32,7 +32,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZQL {
 
-ZRef<Expr_Rel> sOptimize(ZRef<Expr_Rel> iRep);
+ZRef<Expr_Rel> sOptimize(ZRef<Expr_Rel> iExpr);
 
 } // namespace ZTQL
 

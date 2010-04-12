@@ -62,7 +62,7 @@ private:
 class Visitor_Expr_Rel_Unary : public virtual Visitor_Expr_Rel
 	{
 public:
-	virtual void Visit_Expr_Rel_Unary(ZRef<Expr_Rel_Unary> iRep);
+	virtual void Visit_Expr_Rel_Unary(ZRef<Expr_Rel_Unary> iExpr);
 	};
 
 } // namespace ZQL

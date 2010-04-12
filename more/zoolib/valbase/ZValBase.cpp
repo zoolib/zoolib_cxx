@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/valbase/ZValBase.h"
 #include "zoolib/zqe/ZQE_Iterator_Any.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
-#include "zoolib/zqe/ZQE_Visitor_Expr_DoMakeIterator.h"
+#include "zoolib/zqe/ZQE_Visitor_Expr_Rel_DoMakeIterator.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Unary_Restrict.h"
 
@@ -35,9 +35,6 @@ namespace ZValBase {
 Expr_Rel_Concrete::Expr_Rel_Concrete()
 	{}
 
-ZRelHead Expr_Rel_Concrete::GetRelHead()
-	{ return ZRelHead(true); }
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Visitor_DoMakeIterator
@@ -45,42 +42,42 @@ ZRelHead Expr_Rel_Concrete::GetRelHead()
 namespace ZANONYMOUS {
 
 class Visitor_DoMakeIterator
-:	public virtual ZQE::Visitor_Expr_DoMakeIterator
+:	public virtual ZQE::Visitor_Expr_Rel_DoMakeIterator
 ,	public virtual ZQL::Visitor_Expr_Rel_Unary_Restrict
 ,	public virtual ZQL::Visitor_Expr_Rel_Concrete
 	{
 public:
-// Via ZQE::Visitor_Expr_DoMakeIterator
+// Via ZQE::Visitor_Expr_Rel_DoMakeIterator
 	virtual void Visit_Expr_Rel_Unary_Select(
-		ZRef<ZQL::Expr_Rel_Unary_Select> iRep);
+		ZRef<ZQL::Expr_Rel_Unary_Select> iExpr);
 
 // From ZQL::Visitor_Expr_Rel_Unary_Restrict
 	virtual void Visit_Expr_Rel_Unary_Restrict(
-		ZRef<ZQL::Expr_Rel_Unary_Restrict> iRep);
+		ZRef<ZQL::Expr_Rel_Unary_Restrict> iExpr);
 
 // From ZQL::Visitor_Expr_Rel_Concrete
-	virtual void Visit_Expr_Rel_Concrete(ZRef<ZQL::Expr_Rel_Concrete> iRep);	
+	virtual void Visit_Expr_Rel_Concrete(ZRef<ZQL::Expr_Rel_Concrete> iExpr);	
 	};
 
 void Visitor_DoMakeIterator::Visit_Expr_Rel_Unary_Select(
-	ZRef<ZQL::Expr_Rel_Unary_Select> iRep)
+	ZRef<ZQL::Expr_Rel_Unary_Select> iExpr)
 	{
-	if (ZRef<ZQE::Iterator> theIterator = this->DoMakeIterator(iRep->GetExpr_Rel()))
-		fIterator = new ZQE::Iterator_Any_Select(iRep->GetExpr_Logic(), theIterator);
+	if (ZRef<ZQE::Iterator> theIterator = this->DoMakeIterator(iExpr->GetExpr_Rel()))
+		fIterator = new ZQE::Iterator_Any_Select(iExpr->GetExpr_Logic(), theIterator);
 	}
 
 void Visitor_DoMakeIterator::Visit_Expr_Rel_Unary_Restrict(
-	ZRef<ZQL::Expr_Rel_Unary_Restrict> iRep)
+	ZRef<ZQL::Expr_Rel_Unary_Restrict> iExpr)
 	{
-	if (ZRef<ZQE::Iterator> theIterator = this->DoMakeIterator(iRep->GetExpr_Rel()))
-		fIterator = new ZQE::Iterator_Any_Restrict(iRep->GetValCondition(), theIterator);
+	if (ZRef<ZQE::Iterator> theIterator = this->DoMakeIterator(iExpr->GetExpr_Rel()))
+		fIterator = new ZQE::Iterator_Any_Restrict(iExpr->GetValCondition(), theIterator);
 	}
 
 void Visitor_DoMakeIterator::Visit_Expr_Rel_Concrete(
-	ZRef<ZQL::Expr_Rel_Concrete> iRep)
+	ZRef<ZQL::Expr_Rel_Concrete> iExpr)
 	{
-	if (ZRef<Expr_Rel_Concrete> theRep = iRep.DynamicCast<Expr_Rel_Concrete>())
-		fIterator = theRep->MakeIterator();
+	if (ZRef<Expr_Rel_Concrete> theExpr = iExpr.DynamicCast<Expr_Rel_Concrete>())
+		fIterator = theExpr->MakeIterator();
 	}
 
 } // anonymous namespace
@@ -92,20 +89,20 @@ void Visitor_DoMakeIterator::Visit_Expr_Rel_Concrete(
 class Expr_Rel_Concrete_Dummy : public ZQL::Expr_Rel_Concrete
 	{
 public:
-	Expr_Rel_Concrete_Dummy(const ZRelHead& iRelHead);
+	Expr_Rel_Concrete_Dummy(const ZQL::RelHead& iRelHead);
 
-// From Expr_Rel via Expr_Rel_Concrete
-	virtual ZRelHead GetRelHead();
+// From ZQL::Expr_Rel_Concrete
+	virtual ZQL::RelHead GetRelHead();
 
 private:
-	ZRelHead fRelHead;
+	const ZQL::RelHead fRelHead;
 	};
 
-Expr_Rel_Concrete_Dummy::Expr_Rel_Concrete_Dummy(const ZRelHead& iRelHead)
+Expr_Rel_Concrete_Dummy::Expr_Rel_Concrete_Dummy(const ZQL::RelHead& iRelHead)
 :	fRelHead(iRelHead)
 	{}
 
-ZRelHead Expr_Rel_Concrete_Dummy::GetRelHead()
+ZQL::RelHead Expr_Rel_Concrete_Dummy::GetRelHead()
 	{ return fRelHead; }
 
 // =================================================================================================
@@ -115,10 +112,10 @@ ZRelHead Expr_Rel_Concrete_Dummy::GetRelHead()
 ZRef<ZQL::Expr_Rel> sConcrete()
 	{
 	// Put this outside of ZValBase? Perhaps over in ZQL?
-	return sConcrete(ZRelHead(true));
+	return sConcrete(ZQL::RelHead(true));
 	}
 
-ZRef<ZQL::Expr_Rel> sConcrete(const ZRelHead& iRelHead)
+ZRef<ZQL::Expr_Rel> sConcrete(const ZQL::RelHead& iRelHead)
 	{ return new Expr_Rel_Concrete_Dummy(iRelHead); }
 
 ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::Expr_Rel> iExpr)

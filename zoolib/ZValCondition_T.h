@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZRelHead.h"
 #include "zoolib/ZTrail.h"
+#include "zoolib/ZUtil_STL_set.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -173,7 +173,7 @@ public:
 	virtual ~ZValComparandRep_T();
 
 	virtual Val Imp_GetVal(ZValContext& iContext, const Val& iVal) = 0;
-	virtual ZRelHead GetRelHead();
+	virtual std::set<std::string> GetNames();
 	};
 
 template <class Val>
@@ -185,8 +185,8 @@ ZValComparandRep_T<Val>::~ZValComparandRep_T()
 	{}
 
 template <class Val>
-ZRelHead ZValComparandRep_T<Val>::GetRelHead()
-	{ return ZRelHead(); }
+std::set<std::string> ZValComparandRep_T<Val>::GetNames()
+	{ return std::set<std::string>(); }
 
 // =================================================================================================
 #pragma mark -
@@ -233,7 +233,7 @@ public:
 
 // From ZValComparandRep_T
 	virtual Val Imp_GetVal(ZValContext& iContext, const Val& iVal);
-	virtual ZRelHead GetRelHead();
+	virtual std::set<std::string> GetNames();
 
 // Our protocol
 	const ZTrail& GetTrail();
@@ -258,12 +258,12 @@ Val ZValComparandRep_Trail_T<Val>::Imp_GetVal(ZValContext& iContext, const Val& 
 	}
 
 template <class Val>
-ZRelHead ZValComparandRep_Trail_T<Val>::GetRelHead()
+std::set<std::string> ZValComparandRep_Trail_T<Val>::GetNames()
 	{
-	ZRelHead theRelHead;
+	std::set<std::string> theNames;
 	if (fTrail.Count())
-		theRelHead |= fTrail.At(0);
-	return theRelHead;
+		theNames.insert(fTrail.At(0));
+	return theNames;
 	}
 
 template <class Val>
@@ -326,7 +326,7 @@ public:
 	ZValComparand_T& operator=(const ZRef<ComparandRep>& iRep);
 
 	Val GetVal(ZValContext& iContext, const Val& iVal) const;
-	ZRelHead GetRelHead() const;
+	std::set<std::string> GetNames() const;
 
 	ZValCondition_T<Val> LT(const ZRef<ComparandRep>& iRHS) const;
 	ZValCondition_T<Val> LE(const ZRef<ComparandRep>& iRHS) const;
@@ -362,7 +362,7 @@ public:
 
 	bool Matches(ZValContext& iContext, const Val& iVal) const;
 
-	ZRelHead GetRelHead() const;
+	std::set<std::string> GetNames() const;
 
 private:
 	ZValComparand_T<Val> fLHS;
@@ -425,8 +425,12 @@ bool ZValCondition_T<Val>::Matches(ZValContext& iContext, const Val& iVal) const
 	{ return fComparator->Matches(fLHS.GetVal(iContext, iVal), fRHS.GetVal(iContext, iVal)); }
 
 template <class Val>
-ZRelHead ZValCondition_T<Val>::GetRelHead() const
-	{ return fLHS.GetRelHead() | fRHS.GetRelHead(); }
+std::set<std::string> ZValCondition_T<Val>::GetNames() const
+	{
+	std::set<std::string> result;
+	ZUtil_STL_set::sOr(fLHS.GetNames(), fRHS.GetNames(), result);
+	return result;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -475,11 +479,11 @@ Val ZValComparand_T<Val>::GetVal(ZValContext& iContext, const Val& iVal) const
 	}
 
 template <class Val>
-ZRelHead ZValComparand_T<Val>::GetRelHead() const
+std::set<std::string> ZValComparand_T<Val>::GetNames() const
 	{
 	if (*this)
-		return (*this)->GetRelHead();
-	return ZRelHead();
+		return (*this)->GetNames();
+	return std::set<std::string>();
 	}
 
 template <class Val>

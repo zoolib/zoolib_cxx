@@ -30,19 +30,18 @@ using std::string;
 using std::vector;
 using namespace ZQL;
 
-ZRef<Expr_Rel> sAll(const ZRelHead& iRelHead)
+ZRef<Expr_Rel> sAll(const RelHead& iRelHead)
 	{ return ZValBase::sConcrete(); }
 
 ZRef<Expr_Rel> sAllID(const std::string& iIDName)
 	{ return ZValBase::sConcrete(); }
 
-ZRef<Expr_Rel> sAllID(const std::string& iIDName, const ZRelHead& iRelHead)
+ZRef<Expr_Rel> sAllID(const std::string& iIDName, const RelHead& iRelHead)
 	{ return ZValBase::sConcrete(); }
 
 typedef ZRef<ZExpr_Logic> Spec;
 typedef ZRef<Expr_Rel> Query;
 typedef ZMap_Expr Map;
-typedef ZRelHead RelHead;
 typedef ZVal_Expr Val;
 typedef ZValCondition Condition;
 
@@ -131,7 +130,7 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, const Spec
 		// except as a clause in a combo with a filter.
 		ZAssert(iFilter);
 
-		const RelHead filterRelHead = sGetRelHead(*iFilter);
+		const RelHead filterRelHead = sGetNames(*iFilter);
 
 		Query theQ;
 		if (iName)
@@ -254,7 +253,7 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, const Spec
 		// Get the referenced tuples and filter them
 		if (iFilter)
 			{
-			const RelHead filterRelHead = sGetRelHead(*iFilter);
+			const RelHead filterRelHead = sGetNames(*iFilter);
 			if (iName)
 				{
 				theQ = sJoin(theQ, sSelect(sAllID(sIDName, filterRelHead | *iName), *iFilter));
@@ -286,7 +285,7 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, const Spec
 				{
 				// Do nothing -- already have the IDs.
 				if (iVerbose)
-					theQ = sProject(theQ, ZRelHead("$$FromSource$$"));
+					theQ = sProject(theQ, RelHead("$$FromSource$$"));
 				}
 			}
 		return theQ;
@@ -306,7 +305,7 @@ static Query spConvert(ZRef<ZTBQueryNode> iNode, const string* iName, const Spec
 		// Get tuples whose property 'thePropName' match the IDs and filter them
 		if (iFilter)
 			{
-			const RelHead filterRelHead = sGetRelHead(*iFilter);
+			const RelHead filterRelHead = sGetNames(*iFilter);
 			if (iName)
 				{
 				theQ = sJoin(theQ, sAllID(sIDName, filterRelHead | *iName | thePropName));

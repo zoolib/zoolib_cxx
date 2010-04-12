@@ -68,8 +68,8 @@ ZRef<ConcreteDomain> Expr_Rel_Concrete::GetConcreteDomain()
 #pragma mark * Visitor_Expr_Rel_Concrete
 
 void Visitor_Expr_Rel_Concrete::Visit_Expr_Rel_Concrete(
-	ZRef<Expr_Rel_Concrete> iRep)
-	{ ZVisitor_Expr::Visit_Expr(iRep); }
+	ZRef<Expr_Rel_Concrete> iExpr)
+	{ ZVisitor_Expr::Visit_Expr(iExpr); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

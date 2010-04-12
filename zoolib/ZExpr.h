@@ -55,7 +55,7 @@ class ZVisitor_Expr : public virtual ZVisitor
 	{
 public:
 // Our protocol
-	virtual void Visit_Expr(ZRef<ZExpr> iRep);
+	virtual void Visit_Expr(ZRef<ZExpr> iExpr);
 	};
 
 NAMESPACE_ZOOLIB_END
