@@ -112,7 +112,7 @@ ZQL::RelHead Expr_Rel_Concrete_Dummy::GetRelHead()
 ZRef<ZQL::Expr_Rel> sConcrete()
 	{
 	// Put this outside of ZValBase? Perhaps over in ZQL?
-	return sConcrete(ZQL::RelHead(true));
+	return sConcrete(ZQL::RelHead::sUniversal());
 	}
 
 ZRef<ZQL::Expr_Rel> sConcrete(const ZQL::RelHead& iRelHead)

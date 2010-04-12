@@ -85,7 +85,7 @@ Expr_Rel_Concrete::Expr_Rel_Concrete(ZRef<ZYadSeqRPos> iYadSeqRPos)
 	{}
 
 ZQL::RelHead Expr_Rel_Concrete::GetRelHead()
-	{ return ZQL::RelHead(true); }
+	{ return ZQL::RelHead::sUniversal(); }
 
 ZRef<ZQE::Iterator> Expr_Rel_Concrete::MakeIterator()
 	{ return new Iterator(fYadSeqRPos); }

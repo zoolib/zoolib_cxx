@@ -18,35 +18,46 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZExpr_Logic_ValCondition__
-#define __ZExpr_Logic_ValCondition__ 1
-#include "zconfig.h"
-
-#include "zoolib/ZExpr_Logic_ValCondition_T.h"
-#include "zoolib/ZValCondition.h"
-#include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoGetNames_T.h"
-#include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T.h"
+#include "zoolib/zql/ZQL_Util_Strim_RelHead.h"
+#include "zoolib/ZYad_ZooLibStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
+namespace ZQL {
+namespace Util_Strim_RelHead {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExpr_Logic_ValCondition
+#pragma mark * Util_Strim_RelHead
 
-typedef ZExpr_Logic_ValCondition_T<ZVal_Expr> ZExpr_Logic_ValCondition;
+using std::set;
+using std::string;
 
-typedef ZVisitor_Expr_Logic_ValCondition_T<ZVal_Expr> ZVisitor_Expr_Logic_ValCondition;
+void sWrite_PropName(const string& iName, const ZStrimW& s)
+	{
+	s.Write("@");
+	ZYad_ZooLibStrim::sWrite_PropName(iName, s);
+	}
 
+void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s)
+	{
+	bool universal;
+	const set<string>& names = iRelHead.GetElems(universal);
 
-inline std::set<std::string> sGetNames(const ZRef<ZExpr_Logic>& iExpr)
-	{ return ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<ZVal_Expr>().DoGetNames(iExpr); }
+	s.Write("[");
+	if (universal)
+		s.Write("~");
 
-inline bool sMatches(const ZRef<ZExpr_Logic>& iExpr, const ZVal_Expr& iVal)
-	{ return ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T<ZVal_Expr>(iVal).DoEval(iExpr); }
+	bool isFirst = true;
+	for (set<string>::const_iterator i = names.begin(); i != names.end(); ++i)
+		{
+		if (!isFirst)
+			s.Write(", ");
+		isFirst = false;
+		sWrite_PropName(*i, s);
+		}
+	s.Write("]");
+	}
 
-inline bool sMatches(const ZValCondition& iValCondition, const ZVal_Expr& iVal)
-	{ return sMatches(new ZExpr_Logic_ValCondition(iValCondition), iVal); }
-
+} // namespace Util_Strim_RelHead
+} // namespace ZQL
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZExpr_Logic_ValCondition__

@@ -61,7 +61,7 @@ Query sAll(const RelHead& iRelHead)
 	{ return ZValBase::sConcrete(iRelHead); }
 
 Query sAllID(const std::string& iIDName)
-	{ return ZValBase::sConcrete(RelHead(true) | iIDName); }
+	{ return ZValBase::sConcrete(RelHead::sUniversal() | iIDName); }
 
 Query sAllID(const std::string& iIDName, const RelHead& iRelHead)
 	{ return ZValBase::sConcrete(iRelHead | iIDName); }
@@ -205,9 +205,9 @@ static Query sPrefix(const string& iPrefix, const RelHead& iIgnore, Query iQuery
 	spGetRelHead(iQuery).GetElems(universal, theNames);
 	for (set<string>::iterator i = theNames.begin(); i != theNames.end(); ++i)
 		{
-		if (iIgnore.Contains(*i))
-			continue;
-		iQuery = sRename(iQuery, iPrefix + *i, *i);
+		string theString = *i;
+		if (universal == iIgnore.Contains(theString))
+			iQuery = sRename(iQuery, iPrefix + theString, theString);
 		}
 	return iQuery;
 	}
@@ -224,7 +224,7 @@ static Query sSuperJoin(
 
 static Query sDrop(Query iQuery, const string& iTName)
 	{
-	return iQuery & (RelHead(true) - iTName);
+	return iQuery & (RelHead::sUniversal() - iTName);
 //	RelHead theRelHead = iQuery->GetRelHead();
 //	return iQuery & (theRelHead - iTName);
 //	if (theRelHead.Contains(iTName))
@@ -280,9 +280,10 @@ static Query sQuery()
 	Query allNotes = sRename(sAllNotes(), "to", "$ID$");
 	Query allContains = sAllContains();
 
+	RelHead theIgnore("to");
 	return sPrefix("view.", RelHead("from"), allViews)
 		* allContains
-		* sPrefix("note.", RelHead("to"), allNotes);
+		* sPrefix("note.", theIgnore, allNotes);
 
 //	Query result2 = sPrefix("note.", RelHead("to"), allNotes) * result1;
 //	Query result1 = sSuperJoin("view.", allViews, RelHead("from"), allContains, "");
@@ -397,7 +398,7 @@ sBadAuthors();
 
 return;
 	Spec theSpec = CVar("TestVar1") == CConst(1) | CVar("TestVar2") == CConst(2);
-	Query theExp = sSelect(sAll(RelHead(true)), theSpec);
+	Query theExp = sSelect(sAll(RelHead::sUniversal()), theSpec);
 
 	sDumpQuery(s, theExp);
 

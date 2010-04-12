@@ -76,8 +76,8 @@ static void check(const ZStrimW& w, const RelHead& sample, const RelHead& expect
 
 void sTestRelHead(const ZStrimW& s)
 	{
-	const RelHead none(false);
-	const RelHead univ(true);
+	const RelHead none;
+	const RelHead univ = RelHead::sUniversal();
 	RelHead a = RelHead().Insert("A");
 	RelHead b = RelHead().Insert("B");
 	RelHead c = RelHead().Insert("C");
@@ -86,13 +86,13 @@ void sTestRelHead(const ZStrimW& s)
 	RelHead bc = RelHead().Insert("B").Insert("C");
 	RelHead abc = RelHead().Insert("A").Insert("B").Insert("C");
 
-	RelHead _a = RelHead(true).Erase("A");
-	RelHead _b = RelHead(true).Erase("B");
-	RelHead _c = RelHead(true).Erase("C");
-	RelHead _ab = RelHead(true).Erase("A").Erase("B");
-	RelHead _ac = RelHead(true).Erase("A").Erase("C");
-	RelHead _bc = RelHead(true).Erase("B").Erase("C");
-	RelHead _abc = RelHead(true).Erase("A").Erase("B").Erase("C");
+	RelHead _a = RelHead::sUniversal().Erase("A");
+	RelHead _b = RelHead::sUniversal().Erase("B");
+	RelHead _c = RelHead::sUniversal().Erase("C");
+	RelHead _ab = RelHead::sUniversal().Erase("A").Erase("B");
+	RelHead _ac = RelHead::sUniversal().Erase("A").Erase("C");
+	RelHead _bc = RelHead::sUniversal().Erase("B").Erase("C");
+	RelHead _abc = RelHead::sUniversal().Erase("A").Erase("B").Erase("C");
 
 	show(none)
 	show(univ)

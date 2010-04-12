@@ -94,7 +94,7 @@ Expr_Rel_Concrete::Expr_Rel_Concrete(ZRef<ZYadSeqR> iYadSeqR)
 	{}
 
 ZQL::RelHead Expr_Rel_Concrete::GetRelHead()
-	{ return ZQL::RelHead(true); }
+	{ return ZQL::RelHead::sUniversal(); }
 
 ZRef<ZQE::Iterator> Expr_Rel_Concrete::MakeIterator()
 	{ return new Iterator(this, 0); }
