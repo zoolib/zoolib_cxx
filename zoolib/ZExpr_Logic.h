@@ -34,9 +34,6 @@ class ZExpr_Logic : public virtual ZExpr
 	{
 protected:
 	ZExpr_Logic();
-
-public:
-	virtual ~ZExpr_Logic();
 	};
 
 // =================================================================================================
