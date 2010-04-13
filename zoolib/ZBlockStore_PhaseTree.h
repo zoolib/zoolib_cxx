@@ -36,17 +36,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
-// A grotesque hack so that this file can be checked into HEAD and a couple of branches
-// that are experiencing problems with double allocation of keys.
-#ifdef ZThread_SafeGet
-#	define ZThreadSafe_t ZThread_Safe_t
-#	define ZThreadSafe_Set ZThread_SafeSetReturnVoid
-#	define ZThreadSafe_Get ZThread_SafeGet
-#	define ZThreadSafe_IncReturnOld ZThread_SafeIncReturnOld
-#	define ZThreadSafe_DecReturnNew ZThread_SafeDecReturnNew
-#endif // ZThread_SafeGet
-
-// =================================================================================================
 #pragma mark -
 #pragma mark * ZBlockStore_PhaseTree
 
