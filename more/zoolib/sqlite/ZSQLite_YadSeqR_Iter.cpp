@@ -79,6 +79,5 @@ void YadSeqR_Iter::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 		oYadR = new YadMapR(fIter);
 	}
 
-
 } // namespace ZSQLite
 NAMESPACE_ZOOLIB_END
