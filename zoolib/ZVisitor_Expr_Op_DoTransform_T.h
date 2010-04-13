@@ -39,7 +39,7 @@ class ZVisitor_Expr_Op_DoTransform_T
 ,	public virtual ZVisitor_Expr_Op2_T<T>
 	{
 public:
-	virtual void Visit_Expr_Op0(ZRef<ZExpr_Op1_T<T> > iExpr)
+	virtual void Visit_Expr_Op0(ZRef<ZExpr_Op0_T<T> > iExpr)
 		{ this->pSetResult(iExpr->Self()); }
 
 	virtual void Visit_Expr_Op1(ZRef<ZExpr_Op1_T<T> > iExpr)
