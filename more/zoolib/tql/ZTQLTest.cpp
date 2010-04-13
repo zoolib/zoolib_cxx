@@ -273,7 +273,8 @@ static Query sQueryNoHead()
 	Query allViews = sRename(sAllViewsNoHead(), "from", "$ID$");
 	Query allNotes = sRename(sAllNotesNoHead(), "to", "$ID$");
 	Query allContains = sAllContains();
-	return allViews * (allContains * allNotes);
+	return allViews;// * (allContains);// * allNotes);
+//	return allViews * (allContains * allNotes);
 	}
 
 static Query sQuery()
@@ -394,6 +395,7 @@ void sTestQL4(const ZStrimW& s)
 
 void sTestQL3(const ZStrimW& s)
 	{
+//	sDumpQuery(s, sOptimize(sAll(string("test"))));
 	Spec theSpec2 = CVar("TestVar1") == CConst(1) | CVar("TestVar2") == CConst(2);
 	ZVisitor_Expr_Logic_ValCondition_DoToStrim().
 		DoToStrim(ZVisitor_Expr_DoToStrim::Options(), s, theSpec2);

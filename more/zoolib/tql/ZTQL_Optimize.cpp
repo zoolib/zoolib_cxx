@@ -58,8 +58,6 @@ void spCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight, CondUnion&
 		}
 	}
 
-void spGather(ZRef<ZExpr_Logic> iExpr, CondUnion& oResult);
-
 class Gather
 :	public virtual ZVisitor_Expr_Do_T<CondUnion>
 ,	public virtual ZVisitor_Expr_Logic_True
@@ -89,20 +87,15 @@ void Gather::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iExpr)
 	}
 
 void Gather::Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iExpr)
-	{
-	this->pSetResult(CondUnion());
-	}
+	{ this->pSetResult(CondUnion()); }
 
 void Gather::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr)
 	{ ZUnimplemented(); }
 
 void Gather::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iExpr)
 	{
-	CondUnion left;
-	spGather(iExpr->GetOp0(), left);
-
-	CondUnion right;
-	spGather(iExpr->GetOp1(), right);
+	CondUnion left = this->Do(iExpr->GetOp0());
+	CondUnion right = this->Do(iExpr->GetOp1());
 
 	CondUnion result;
 	spCrossMultiply(left, right, result);
@@ -112,10 +105,8 @@ void Gather::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iExpr)
 
 void Gather::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr)
 	{
-	CondUnion left;
-	spGather(iExpr->GetOp0(), left);
-	CondUnion right;
-	spGather(iExpr->GetOp1(), right);
+	CondUnion left = this->Do(iExpr->GetOp0());
+	CondUnion right = this->Do(iExpr->GetOp1());
 
 	CondUnion result;
 	result.swap(left);
@@ -161,19 +152,12 @@ ZRef<Expr_Rel> spConvertSelect(ZRef<Expr_Rel> iRelation, ZRef<ZExpr_Logic> iLogi
 
 class Optimize
 :	public virtual ZVisitor_Expr_Op_DoTransform_T<Expr_Rel>
-,	public virtual Visitor_Expr_Rel_Concrete
 ,	public virtual Visitor_Expr_Rel_Select
 	{
 public:
-// From Visitor_Expr_Rel_Concrete
-	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
-
 // From Visitor_Expr_Rel_Select
 	virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr);
 	};
-
-void Optimize::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
-	{ this->pSetResult(iExpr); }
 
 void Optimize::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	{
