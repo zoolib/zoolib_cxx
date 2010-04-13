@@ -27,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Project.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Rename.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Select.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
