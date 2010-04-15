@@ -105,7 +105,8 @@ ZExpr_Logic_ValCondition_T<Val>::GetValCondition()
 #pragma mark * ZVisitor_Expr_Logic_ValCondition_T
 
 template <class Val>
-class ZVisitor_Expr_Logic_ValCondition_T : public virtual ZVisitor_Expr_Op0_T<ZExpr_Logic>
+class ZVisitor_Expr_Logic_ValCondition_T
+:	public virtual ZVisitor_Expr_Op0_T<ZExpr_Logic>
 	{
 	typedef ZVisitor_Expr_Op0_T<ZExpr_Logic> inherited;
 public:
@@ -115,7 +116,7 @@ public:
 template <class Val>
 void ZVisitor_Expr_Logic_ValCondition_T<Val>::Visit_Expr_Logic_ValCondition(
 	ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr)
-	{ inherited::Visit_Expr_Op0(iExpr); }
+	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
 #pragma mark -

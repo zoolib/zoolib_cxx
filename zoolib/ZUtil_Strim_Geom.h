@@ -49,7 +49,7 @@ inline const ZStrimW& operator<<(const ZStrimW& s, const ZGExtentPOD_T<C>& val)
 	{ return s.Writef("(%g, %g)", double(val.h), double(val.v)); }
 
 template <class C>
-inline const ZStrimW& operator<<(const ZStrimW& s, const ZGRect_T<C>& val)
+inline const ZStrimW& operator<<(const ZStrimW& s, const ZGRectPOD_T<C>& val)
 	{
 	s << "(" << val.origin << ", " << val.extent << ")";
 	return s;

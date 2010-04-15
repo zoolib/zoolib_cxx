@@ -63,7 +63,7 @@ void ZExpr_Logic_True::Accept_Expr_Logic_True(ZVisitor_Expr_Logic_True& iVisitor
 #pragma mark * ZVisitor_Expr_Logic_True
 
 void ZVisitor_Expr_Logic_True::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iExpr)
-	{ inherited::Visit_Expr_Op0(iExpr); }
+	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
 #pragma mark -
@@ -99,7 +99,7 @@ void ZExpr_Logic_False::Accept_Expr_Logic_False(ZVisitor_Expr_Logic_False& iVisi
 #pragma mark * ZVisitor_Expr_Logic_False
 
 void ZVisitor_Expr_Logic_False::Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iExpr)
-	{ inherited::Visit_Expr_Op0(iExpr); }
+	{ this->Visit_Expr_Op0(iExpr); }
 
 // =================================================================================================
 #pragma mark -
@@ -136,7 +136,7 @@ void ZExpr_Logic_Not::Accept_Expr_Logic_Not(ZVisitor_Expr_Logic_Not& iVisitor)
 #pragma mark * ZVisitor_Expr_Logic_Not
 
 void ZVisitor_Expr_Logic_Not::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr)
-	{ inherited::Visit_Expr_Op1(iExpr); }
+	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================
 #pragma mark -
@@ -173,7 +173,7 @@ void ZExpr_Logic_And::Accept_Expr_Logic_And(ZVisitor_Expr_Logic_And& iVisitor)
 #pragma mark * ZVisitor_Expr_Logic_And
 
 void ZVisitor_Expr_Logic_And::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iExpr)
-	{ inherited::Visit_Expr_Op2(iExpr); }
+	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
 #pragma mark -
@@ -210,11 +210,21 @@ void ZExpr_Logic_Or::Accept_Expr_Logic_Or(ZVisitor_Expr_Logic_Or& iVisitor)
 #pragma mark * ZVisitor_Expr_Logic_Or
 
 void ZVisitor_Expr_Logic_Or::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr)
-	{ inherited::Visit_Expr_Op2(iExpr); }
+	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Operators
+
+static ZRef<ZExpr_Logic_True> spTrue = new ZExpr_Logic_True;
+
+ZRef<ZExpr_Logic> sTrue()
+	{ return spTrue; }
+
+static ZRef<ZExpr_Logic_False> spFalse = new ZExpr_Logic_False;
+
+ZRef<ZExpr_Logic> sFalse()
+	{ return spFalse; }
 
 ZRef<ZExpr_Logic_Not> operator~(const ZRef<ZExpr_Logic>& iExpr_Logic)
 	{ return new ZExpr_Logic_Not(iExpr_Logic); }
@@ -226,39 +236,35 @@ ZRef<ZExpr_Logic> operator&(bool iBool, const ZRef<ZExpr_Logic>& iExpr_Logic)
 	{
 	if (iBool)
 		return iExpr_Logic;
-	return new ZExpr_Logic_False;
+	return sFalse();
 	}
 
 ZRef<ZExpr_Logic> operator&(const ZRef<ZExpr_Logic>& iExpr_Logic, bool iBool)
 	{
 	if (iBool)
 		return iExpr_Logic;
-	return new ZExpr_Logic_False;
+	return sFalse();
 	}
-
 
 ZRef<ZExpr_Logic> operator|(bool iBool, const ZRef<ZExpr_Logic>& iExpr_Logic)
 	{
 	if (iBool)
-		return new ZExpr_Logic_True;
+		return sTrue();
 	return iExpr_Logic;
 	}
 
 ZRef<ZExpr_Logic> operator|(const ZRef<ZExpr_Logic>& iExpr_Logic, bool iBool)
 	{
 	if (iBool)
-		return new ZExpr_Logic_True;
+		return sTrue();
 	return iExpr_Logic;
 	}
 
 ZRef<ZExpr_Logic> operator&(const ZRef<ZExpr_Logic>& iLHS, const ZRef<ZExpr_Logic>& iRHS)
 	{
-	if (iLHS)
-		{
-		if (iRHS)
-			return new ZExpr_Logic_And(iLHS, iRHS);
-		}
-	return nullref;
+	if (iLHS && iRHS)
+		return new ZExpr_Logic_And(iLHS, iRHS);
+	return sFalse();
 	}
 
 ZRef<ZExpr_Logic>& operator&=(ZRef<ZExpr_Logic>& iLHS, const ZRef<ZExpr_Logic>& iRHS)

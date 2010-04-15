@@ -27,10 +27,10 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZVisitor_Expr_Logic_DoToStrim
 
 void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iRep)
-	{ pStrimW() << "any"; }
+	{ pStrimW() << "true"; }
 
 void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iRep)
-	{ pStrimW() << "none"; }
+	{ pStrimW() << "false"; }
 
 void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
 	{

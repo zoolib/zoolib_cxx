@@ -26,6 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZUtil_STL_set.h"
 
+#include <map>
+
 NAMESPACE_ZOOLIB_BEGIN
 
 class ZValContext
@@ -174,6 +176,7 @@ public:
 
 	virtual Val Imp_GetVal(ZValContext& iContext, const Val& iVal) = 0;
 	virtual std::set<std::string> GetNames();
+	virtual ZRef<ZValComparandRep_T> Renamed(const std::map<std::string, std::string>& iRenameMap);
 	};
 
 template <class Val>
@@ -187,6 +190,11 @@ ZValComparandRep_T<Val>::~ZValComparandRep_T()
 template <class Val>
 std::set<std::string> ZValComparandRep_T<Val>::GetNames()
 	{ return std::set<std::string>(); }
+
+template <class Val>
+ZRef<ZValComparandRep_T<Val> > ZValComparandRep_T<Val>::Renamed(
+	const std::map<std::string, std::string>& iRenameMap)
+	{ return this; }
 
 // =================================================================================================
 #pragma mark -
@@ -234,6 +242,8 @@ public:
 // From ZValComparandRep_T
 	virtual Val Imp_GetVal(ZValContext& iContext, const Val& iVal);
 	virtual std::set<std::string> GetNames();
+	virtual ZRef<ZValComparandRep_T<Val> > Renamed(
+		const std::map<std::string, std::string>& iRenameMap);
 
 // Our protocol
 	const ZTrail& GetTrail();
@@ -269,6 +279,20 @@ std::set<std::string> ZValComparandRep_Trail_T<Val>::GetNames()
 template <class Val>
 const ZTrail& ZValComparandRep_Trail_T<Val>::GetTrail()
 	{ return fTrail; }
+
+template <class Val>
+ZRef<ZValComparandRep_T<Val> > ZValComparandRep_Trail_T<Val>::Renamed(
+	const std::map<std::string, std::string>& iRenameMap)
+	{
+	if (fTrail.Count())
+		{
+		std::string theName = fTrail.At(0);
+		std::map<std::string, std::string>::const_iterator i = iRenameMap.find(theName);
+		if (i != iRenameMap.end())
+			return new ZValComparandRep_Trail_T((*i).second + fTrail.SubTrail(1));
+		}
+	return this;
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -364,6 +388,9 @@ public:
 
 	std::set<std::string> GetNames() const;
 
+	bool Renamed(
+		const std::map<std::string, std::string>& iRenameMap, ZValCondition_T& oResult) const;
+
 private:
 	ZValComparand_T<Val> fLHS;
 	ZRef<ComparatorRep> fComparator;
@@ -427,6 +454,18 @@ bool ZValCondition_T<Val>::Matches(ZValContext& iContext, const Val& iVal) const
 template <class Val>
 std::set<std::string> ZValCondition_T<Val>::GetNames() const
 	{ return ZUtil_STL_set::sOr(fLHS.GetNames(), fRHS.GetNames()); }
+
+template <class Val>
+bool ZValCondition_T<Val>::Renamed(
+	const std::map<std::string, std::string>& iRenameMap, ZValCondition_T& oResult) const
+	{
+	ZRef<ZValComparandRep_T<Val> > newLHS = fLHS->Renamed(iRenameMap);
+	ZRef<ZValComparandRep_T<Val> > newRHS = fRHS->Renamed(iRenameMap);
+	if (newLHS == fLHS && newRHS == fRHS)
+		return false;
+	oResult = ZValCondition_T(newLHS, fComparator, newRHS);
+	return true;
+	}
 
 // =================================================================================================
 #pragma mark -

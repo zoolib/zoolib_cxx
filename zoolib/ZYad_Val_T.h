@@ -32,7 +32,8 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZYadR_Val_T
 
 template <class Val_t>
-class ZYadR_Val_T : public virtual ZYadR
+class ZYadR_Val_T
+:	public virtual ZYadR
 	{
 public:
 	typedef ZYadR_Val_T YadBase_t;
@@ -64,8 +65,8 @@ protected:
 
 template <class Data_t>
 class ZYadStreamRPos_Val_T
-:	public ZYadStreamR,
-	public ZStreamerRPos_T<ZStreamRPos_Data_T<Data_t> >
+:	public ZYadStreamR
+,	public ZStreamerRPos_T<ZStreamRPos_Data_T<Data_t> >
 	{
 public:
 	ZYadStreamRPos_Val_T(const Data_t& iData)

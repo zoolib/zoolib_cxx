@@ -30,7 +30,8 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZExpr_Logic
 
-class ZExpr_Logic : public virtual ZExpr
+class ZExpr_Logic
+:	public virtual ZExpr
 	{
 protected:
 	ZExpr_Logic();
@@ -64,7 +65,8 @@ public:
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Logic_True
 
-class ZVisitor_Expr_Logic_True : public virtual ZVisitor_Expr_Op0_T<ZExpr_Logic>
+class ZVisitor_Expr_Logic_True
+:	public virtual ZVisitor_Expr_Op0_T<ZExpr_Logic>
 	{
 	typedef ZVisitor_Expr_Op0_T<ZExpr_Logic> inherited;
 public:
@@ -99,7 +101,8 @@ public:
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Logic_False
 
-class ZVisitor_Expr_Logic_False : public virtual ZVisitor_Expr_Op0_T<ZExpr_Logic>
+class ZVisitor_Expr_Logic_False
+:	public virtual ZVisitor_Expr_Op0_T<ZExpr_Logic>
 	{
 	typedef ZVisitor_Expr_Op0_T<ZExpr_Logic> inherited;
 public:
@@ -134,7 +137,8 @@ public:
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Logic_Not
 
-class ZVisitor_Expr_Logic_Not : public virtual ZVisitor_Expr_Op1_T<ZExpr_Logic>
+class ZVisitor_Expr_Logic_Not
+:	public virtual ZVisitor_Expr_Op1_T<ZExpr_Logic>
 	{
 	typedef ZVisitor_Expr_Op1_T<ZExpr_Logic> inherited;
 public:
@@ -169,7 +173,8 @@ public:
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Logic_And
 
-class ZVisitor_Expr_Logic_And : public virtual ZVisitor_Expr_Op2_T<ZExpr_Logic>
+class ZVisitor_Expr_Logic_And
+:	public virtual ZVisitor_Expr_Op2_T<ZExpr_Logic>
 	{
 	typedef ZVisitor_Expr_Op2_T<ZExpr_Logic> inherited;
 public:
@@ -204,7 +209,8 @@ public:
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Logic_Or
 
-class ZVisitor_Expr_Logic_Or : public virtual ZVisitor_Expr_Op2_T<ZExpr_Logic>
+class ZVisitor_Expr_Logic_Or
+:	public virtual ZVisitor_Expr_Op2_T<ZExpr_Logic>
 	{
 	typedef ZVisitor_Expr_Op2_T<ZExpr_Logic> inherited;
 public:
@@ -214,6 +220,9 @@ public:
 // =================================================================================================
 #pragma mark -
 #pragma mark * Operators
+
+ZRef<ZExpr_Logic> sTrue();
+ZRef<ZExpr_Logic> sFalse();
 
 ZRef<ZExpr_Logic_Not> operator~(const ZRef<ZExpr_Logic>& iExpr_Logic);
 ZRef<ZExpr_Logic> operator~(const ZRef<ZExpr_Logic_Not>& iExpr_Logic_Not);

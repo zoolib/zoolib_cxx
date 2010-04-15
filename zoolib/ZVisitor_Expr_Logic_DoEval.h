@@ -40,8 +40,6 @@ class ZVisitor_Expr_Logic_DoEval
 ,	public virtual ZVisitor_Expr_Logic_Or
 	{
 public:
-	ZVisitor_Expr_Logic_DoEval();
-
 // From ZVisitor_Expr_Logic_XXX
 	virtual void Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iRep);
 	virtual void Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iRep);

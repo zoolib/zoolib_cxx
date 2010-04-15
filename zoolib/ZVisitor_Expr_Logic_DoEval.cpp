@@ -26,9 +26,6 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZVisitor_Expr_Logic_DoEval
 
-ZVisitor_Expr_Logic_DoEval::ZVisitor_Expr_Logic_DoEval()
-	{}
-
 void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iRep)
 	{ this->pSetResult(true); }
 

@@ -38,21 +38,27 @@ class ZVisitor_Expr_Do_T
 public:
 	ZVisitor_Expr_Do_T()
 	:	fHasResult(false)
+	,	fResult(nullptr)
 		{}
 
 // Our protocol
 	bool Do(ZRef<ZExpr> iExpr, Result_t& oResult)
 		{
+		Result_t* priorResult = fResult;
+		fResult = &oResult;
+
 		if (iExpr)
 			{
 			iExpr->Accept(*this);
 			if (fHasResult)
 				{
 				fHasResult = false;
-				oResult = fResult;
+				fResult = priorResult;
 				return true;
 				}
 			}
+
+		fResult = priorResult;
 		return false;
 		}
 
@@ -66,14 +72,14 @@ public:
 protected:
 	void pSetResult(const Result_t& iResult)
 		{
-		ZAssert(!fHasResult);
+		ZAssert(!fHasResult && fResult);
 		fHasResult = true;
-		fResult = iResult;
+		*fResult = iResult;
 		}
 
 private:
 	bool fHasResult;
-	Result_t fResult;
+	Result_t* fResult;
 	};
 
 NAMESPACE_ZOOLIB_END

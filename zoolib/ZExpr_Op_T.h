@@ -34,7 +34,8 @@ template <class T>
 class ZVisitor_Expr_Op0_T;
 
 template <class T>
-class ZExpr_Op0_T : public virtual ZExpr
+class ZExpr_Op0_T
+:	public virtual ZExpr
 	{
 protected:
 	ZExpr_Op0_T()
@@ -71,12 +72,13 @@ public:
 #pragma mark * ZVisitor_Expr_Op0
 
 template <class T>
-class ZVisitor_Expr_Op0_T : public virtual ZVisitor_Expr
+class ZVisitor_Expr_Op0_T
+:	public virtual ZVisitor_Expr
 	{
 public:
 // Our protocol
 	virtual void Visit_Expr_Op0(ZRef<ZExpr_Op0_T<T> > iExpr)
-		{ ZVisitor_Expr::Visit_Expr(iExpr); }
+		{ this->Visit_Expr(iExpr); }
 	};
 
 // =================================================================================================
@@ -87,7 +89,8 @@ template <class T>
 class ZVisitor_Expr_Op1_T;
 
 template <class T>
-class ZExpr_Op1_T : public virtual ZExpr
+class ZExpr_Op1_T
+:	public virtual ZExpr
 	{
 protected:
 	ZExpr_Op1_T(ZRef<T> iOp0)
@@ -131,12 +134,13 @@ private:
 #pragma mark * ZVisitor_Expr_Op1_T
 
 template <class T>
-class ZVisitor_Expr_Op1_T : public virtual ZVisitor_Expr
+class ZVisitor_Expr_Op1_T
+:	public virtual ZVisitor_Expr
 	{
 public:
 // Our protocol
 	virtual void Visit_Expr_Op1(ZRef<ZExpr_Op1_T<T> > iExpr)
-		{ ZVisitor_Expr::Visit_Expr(iExpr); }
+		{ this->Visit_Expr(iExpr); }
 	};
 
 // =================================================================================================
@@ -147,7 +151,8 @@ template <class T>
 class ZVisitor_Expr_Op2_T;
 
 template <class T>
-class ZExpr_Op2_T : public virtual ZExpr
+class ZExpr_Op2_T
+:	public virtual ZExpr
 	{
 protected:
 	ZExpr_Op2_T(ZRef<T> iOp0, ZRef<T> iOp1)
@@ -196,12 +201,13 @@ private:
 #pragma mark * ZVisitor_Expr_Op2_T
 
 template <class T>
-class ZVisitor_Expr_Op2_T : public virtual ZVisitor_Expr
+class ZVisitor_Expr_Op2_T
+:	public virtual ZVisitor_Expr
 	{
 public:
 // Our protocol
 	virtual void Visit_Expr_Op2(ZRef<ZExpr_Op2_T<T> > iExpr)
-		{ ZVisitor_Expr::Visit_Expr(iExpr); }
+		{ this->Visit_Expr(iExpr); }
 	};
 
 NAMESPACE_ZOOLIB_END

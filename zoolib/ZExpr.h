@@ -51,7 +51,8 @@ public:
 #pragma mark -
 #pragma mark * ZVisitor_Expr
 
-class ZVisitor_Expr : public virtual ZVisitor
+class ZVisitor_Expr
+:	public virtual ZVisitor
 	{
 public:
 // Our protocol

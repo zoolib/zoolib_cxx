@@ -135,7 +135,8 @@ class ZYadStrimR
 #pragma mark -
 #pragma mark * ZYadSeqR
 
-class ZYadSeqR : public virtual ZYadR
+class ZYadSeqR
+:	public virtual ZYadR
 	{
 public:
 // From ZYadR
@@ -153,7 +154,8 @@ public:
 #pragma mark -
 #pragma mark * ZYadSeqRPos
 
-class ZYadSeqRPos : public virtual ZYadSeqR
+class ZYadSeqRPos
+:	public virtual ZYadSeqR
 	{
 public:
 // From ZYadR
@@ -177,7 +179,8 @@ public:
 #pragma mark -
 #pragma mark * ZYadMapR
 
-class ZYadMapR : public virtual ZYadR
+class ZYadMapR
+:	public virtual ZYadR
 	{
 public:
 // From ZYadR
@@ -194,7 +197,8 @@ public:
 #pragma mark -
 #pragma mark * ZYadMapRPos
 
-class ZYadMapRPos : public virtual ZYadMapR
+class ZYadMapRPos
+:	public virtual ZYadMapR
 	{
 public:
 // From ZYadR
@@ -211,7 +215,8 @@ public:
 #pragma mark -
 #pragma mark * ZVisitor_Yad
 
-class ZVisitor_Yad : public virtual ZVisitor
+class ZVisitor_Yad
+:	public virtual ZVisitor
 	{
 public:
 	virtual void Visit_YadR(ZRef<ZYadR> iYadR);

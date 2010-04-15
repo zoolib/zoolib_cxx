@@ -64,6 +64,7 @@ void ZVisitor_Expr_DoToStrim::DoToStrim(
 
 	fOptions = &iOptions;
 	fStrimW = &iStrimW;
+	fIndent = iOptions.fInitialIndent;
 
 	try
 		{
