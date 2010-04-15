@@ -62,12 +62,18 @@ ZRef<Expr_Rel> Expr_Rel_Concrete::Clone()
 ZRef<ConcreteDomain> Expr_Rel_Concrete::GetConcreteDomain()
 	{ return nullref; }
 
+string8 Expr_Rel_Concrete::GetName()
+	{ return string8(); }
+
+string8 Expr_Rel_Concrete::GetDescription()
+	{ return string8(); }
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Concrete
 
 void Visitor_Expr_Rel_Concrete::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
-	{ inherited::Visit_Expr_Op0(iExpr); }
+	{ this->Visit_Expr_Op0(iExpr); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

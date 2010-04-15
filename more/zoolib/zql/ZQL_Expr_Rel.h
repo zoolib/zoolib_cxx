@@ -35,7 +35,8 @@ class Visitor_Expr_Rel;
 #pragma mark -
 #pragma mark * Expr_Rel
 
-class Expr_Rel : public virtual ZExpr
+class Expr_Rel
+:	public virtual ZExpr
 	{
 protected:
 	Expr_Rel();

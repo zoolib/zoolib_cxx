@@ -110,5 +110,5 @@ ZRef<ZQL::Expr_Rel> sConcrete(const ZSeq_Any& iSeq)
 	return new Expr_Rel_Concrete(iSeq);
 	}
 
-} // namespace ZValBase_YadSeqR
+} // namespace ZValBase_Any
 NAMESPACE_ZOOLIB_END

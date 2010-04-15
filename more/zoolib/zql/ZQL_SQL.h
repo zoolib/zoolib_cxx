@@ -18,71 +18,55 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Expr_Rel_Concrete__
-#define __ZQL_Expr_Rel_Concrete__ 1
+#ifndef __ZQL_SQL__
+#define __ZQL_SQL__
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Op_T.h"
 #include "zoolib/ZUnicodeString.h"
-#include "zoolib/zql/ZQL_Expr_Rel.h"
-#include "zoolib/zql/ZQL_RelHead.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
+
+#include <map>
+#include <vector>
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
-
-class Visitor_Expr_Rel_Concrete;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ConcreteDomain
-
-class ConcreteDomain : public ZRefCountedWithFinalize
-	{
-public:
-	ConcreteDomain();
-	virtual ~ConcreteDomain();
-	};
+namespace SQL {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Concrete
+#pragma mark * ZQL::SQL::Expr_Rel_SFW
 
-class Expr_Rel_Concrete
-:	public virtual Expr_Rel
-,	public virtual ZExpr_Op0_T<Expr_Rel>
+class Expr_Rel_SFW : public Expr_Rel_Concrete
 	{
-	typedef ZExpr_Op0_T<Expr_Rel> inherited;
 public:
-// From ZExpr_Op0_T<Expr_Rel>
-	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
+	Expr_Rel_SFW(const std::map<string8, string8>& iRenameMap,
+		const RelHead& iRelHead,
+		ZRef<ZExpr_Logic> iCondition,
+		const std::vector<ZRef<Expr_Rel_Concrete> >& iRels);
 
-	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone();
+// From Expr_Rel_Concrete
+	virtual RelHead GetRelHead();
 
 // Our protocol
-	virtual void Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor);
+	const std::map<string8, string8>& GetRenameMap();
+	ZRef<ZExpr_Logic> GetCondition();
+	const std::vector<ZRef<Expr_Rel_Concrete> >& GetRels();
 
-	virtual RelHead GetRelHead() = 0;
-	virtual ZRef<ConcreteDomain> GetConcreteDomain();
-
-// Experimental. Perhaps should be something we ask of the ConcreteDomain?
-	virtual string8 GetName();
-	virtual string8 GetDescription();
+public:
+	const std::map<string8, string8> fRenameMap;
+	const RelHead fRelHead;
+	const ZRef<ZExpr_Logic> fCondition;
+	const std::vector<ZRef<Expr_Rel_Concrete> > fRels;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_Concrete
+#pragma mark * ZQL::SQL::sConvert
 
-class Visitor_Expr_Rel_Concrete
-:	public virtual ZVisitor_Expr_Op0_T<Expr_Rel>
-	{
-	typedef ZVisitor_Expr_Op0_T<Expr_Rel> inherited;
-public:
-	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
-	};
+ZRef<Expr_Rel_SFW> sConvert(ZRef<Expr_Rel> iExpr);
 
+} // namespace SQL
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Expr_Rel_Concrete__
+#endif // __ZQL_SQL__

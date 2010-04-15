@@ -25,6 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Result_Any.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
 
+#include <vector>
+
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase_YadSeqR {
 
@@ -49,7 +51,7 @@ public:
 private:
 	ZMtx fMtx;
 	ZRef<ZYadSeqR> fYadSeqR;
-	ZSeq_Any fSeq;
+	std::vector<ZRef<ZQE::Result> > fVector;
 	};
 
 // =================================================================================================
@@ -103,19 +105,19 @@ ZRef<ZQE::Result> Expr_Rel_Concrete::ReadInc(size_t& ioIndex)
 	{
 	ZAcqMtx acq(fMtx);
 
-	if (ioIndex < fSeq.Count())
-		return new ZQE::Result_Any(fSeq.Get(ioIndex++));
+	if (ioIndex < fVector.size())
+		return fVector.at(ioIndex++);
 
 	if (ZRef<ZYadR> theYadR = fYadSeqR->ReadInc())
 		{
-		const ZVal_Any theVal = sFromYadR(ZVal_Any(), theYadR);
-		++ioIndex;
+		ZRef<ZQE::Result_Any> result = new ZQE::Result_Any(sFromYadR(ZVal_Any(), theYadR));
 		if (this->GetRefCount() > 1)
 			{
-			fSeq.Append(theVal);
-			ZAssert(ioIndex == fSeq.Count());
+			fVector.push_back(result);
+			++ioIndex;
+			ZAssert(ioIndex == fVector.size());
 			}
-		return new ZQE::Result_Any(theVal);
+		return result;
 		}
 
 	return ZRef<ZQE::Result>();

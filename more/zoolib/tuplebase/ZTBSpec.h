@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTBSpec__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZRegex.h"
 #include "zoolib/ZTextCollator.h"
 #include "zoolib/ZTuple.h"
+#include "zoolib/tuplebase/ZRegex.h"
 
 #include <set>
 #include <vector>

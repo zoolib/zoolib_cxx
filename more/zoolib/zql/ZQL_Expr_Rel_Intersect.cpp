@@ -60,7 +60,7 @@ void Expr_Rel_Intersect::Accept_Expr_Rel_Intersect(Visitor_Expr_Rel_Intersect& i
 #pragma mark * Visitor_Expr_Rel_Intersect
 
 void Visitor_Expr_Rel_Intersect::Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect> iExpr)
-	{ inherited::Visit_Expr_Op2(iExpr); }
+	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
 #pragma mark -

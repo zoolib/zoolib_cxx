@@ -54,6 +54,9 @@ ZRef<ZQL::Expr_Rel> sConcrete_Table(ZRef<ConcreteDomain> iConcreteDomain, const 
 
 ZRef<ZQL::Expr_Rel> sConcrete_SQL(ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL);
 
+ZRef<ZQL::Expr_Rel> sConcrete_SQL(
+	ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL, const string8& iPrefix);
+
 } // namespace ZValBase_SQLite
 NAMESPACE_ZOOLIB_END
 

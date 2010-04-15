@@ -63,7 +63,8 @@ private:
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Select
 
-class Visitor_Expr_Rel_Select : public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
+class Visitor_Expr_Rel_Select
+:	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
 	{
 	typedef ZVisitor_Expr_Op1_T<Expr_Rel> inherited;
 public:

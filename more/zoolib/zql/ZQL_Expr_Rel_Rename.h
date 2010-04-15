@@ -64,7 +64,8 @@ private:
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Rename
 
-class Visitor_Expr_Rel_Rename : public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
+class Visitor_Expr_Rel_Rename
+:	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
 	{
 	typedef ZVisitor_Expr_Op1_T<Expr_Rel> inherited;
 public:

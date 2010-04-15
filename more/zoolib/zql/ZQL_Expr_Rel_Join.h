@@ -56,7 +56,8 @@ public:
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Join
 
-class Visitor_Expr_Rel_Join : public virtual ZVisitor_Expr_Op2_T<Expr_Rel>
+class Visitor_Expr_Rel_Join
+:	public virtual ZVisitor_Expr_Op2_T<Expr_Rel>
 	{
 	typedef ZVisitor_Expr_Op2_T<Expr_Rel> inherited;
 public:
@@ -70,7 +71,7 @@ public:
 ZRef<Expr_Rel_Join> sJoin(
 	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
 
-ZRef<Expr_Rel_Join> operator*(
+ZRef<Expr_Rel> operator*(
 	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
 
 } // namespace ZQL

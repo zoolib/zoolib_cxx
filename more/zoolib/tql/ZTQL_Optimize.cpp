@@ -22,10 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/tql/ZTQL_Optimize.h"
 #include "zoolib/ZVisitor_Expr_Do_T.h"
 #include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Union.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Restrict.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Select.h"
+#include "zoolib/zql/ZQL_Expr_Rel_Union.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 using namespace ZQL;
@@ -36,26 +35,26 @@ using namespace ZQL;
 #pragma mark -
 #pragma mark * Local stuff
 
-using std::vector;
-
 namespace ZANONYMOUS {
 
-typedef vector<ZValCondition> CondSect;
-typedef vector<CondSect> CondUnion;
+typedef std::vector<ZValCondition> CondSect;
+typedef std::vector<CondSect> CondUnion;
 
-void spCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight, CondUnion& oResult)
+CondUnion spCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight)
 	{
+	CondUnion result;
 	for (CondUnion::const_iterator iterLeft = iLeft.begin();
 		iterLeft != iLeft.end(); ++iterLeft)
 		{
 		for (CondUnion::const_iterator iterRight = iRight.begin();
 			iterRight != iRight.end(); ++iterRight)
 			{
-			oResult.push_back(*iterLeft);
-			CondSect& temp = oResult.back();
+			result.push_back(*iterLeft);
+			CondSect& temp = result.back();
 			temp.insert(temp.end(), iterRight->begin(), iterRight->end());
 			}
 		}
+	return result;
 	}
 
 class Gather
@@ -94,22 +93,20 @@ void Gather::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iExpr)
 
 void Gather::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iExpr)
 	{
-	CondUnion left = this->Do(iExpr->GetOp0());
-	CondUnion right = this->Do(iExpr->GetOp1());
+	const CondUnion left = this->Do(iExpr->GetOp0());
+	const CondUnion right = this->Do(iExpr->GetOp1());
 
-	CondUnion result;
-	spCrossMultiply(left, right, result);
+	const CondUnion result = spCrossMultiply(left, right);
 
 	this->pSetResult(result);
 	}
 
 void Gather::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr)
 	{
-	CondUnion left = this->Do(iExpr->GetOp0());
-	CondUnion right = this->Do(iExpr->GetOp1());
+	const CondUnion left = this->Do(iExpr->GetOp0());
+	const CondUnion right = this->Do(iExpr->GetOp1());
 
-	CondUnion result;
-	result.swap(left);
+	CondUnion result = left;
 	result.insert(result.end(), right.begin(), right.end());
 
 	this->pSetResult(result);
@@ -129,7 +126,7 @@ ZRef<Expr_Rel> spConvertSelect(ZRef<Expr_Rel> iRelation, ZRef<ZExpr_Logic> iLogi
 	if (!iRelation)
 		return ZRef<Expr_Rel>();
 
-	CondUnion resultLogical = Gather().Do(iLogical);
+	const CondUnion resultLogical = Gather().Do(iLogical);
 
 	ZRef<Expr_Rel> resultRelation;
 	for (CondUnion::const_iterator iterUnion = resultLogical.begin();

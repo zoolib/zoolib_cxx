@@ -153,11 +153,11 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
 	spWrite_EffectiveRelHeadComment(iExpr, w);
 
 	this->pWriteLFIndent();
-	w << "( /*" << typeid(*iExpr.Get()).name() << "*/ )";
+	w << "(" << iExpr->GetName() << "/*" << iExpr->GetDescription() << "*/";
+	w << "/*" << typeid(*iExpr.Get()).name() << "*/ )";
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Project(
-	ZRef<Expr_Rel_Project> iExpr)
+void Visitor_DoToStrim::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	spWrite("Project", w);
@@ -179,8 +179,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Project(
 	spWrite(")", w);
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Rename(
-	ZRef<Expr_Rel_Rename> iExpr)
+void Visitor_DoToStrim::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	spWrite("Rename", w);
@@ -204,8 +203,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Rename(
 	spWrite(")", w);
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Restrict(
-	ZRef<Expr_Rel_Restrict> iExpr)
+void Visitor_DoToStrim::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Restrict";
@@ -226,8 +224,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Restrict(
 	w << ")";
 	}
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Select(
-	ZRef<Expr_Rel_Select> iExpr)
+void Visitor_DoToStrim::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << "Select";
@@ -277,11 +274,9 @@ void Visitor_DoToStrim::pWriteBinary(
 #pragma mark * ZUtil_Strim_TQL
 
 void sToStrim(const Rel& iRel, const ZStrimW& iStrimW)
-	{ sToStrim(iRel, ZVisitor_Expr_DoToStrim::Options(), iStrimW); }
+	{ sToStrim(iRel, Options(), iStrimW); }
 
-void sToStrim(const Rel& iRel,
-	const ZVisitor_Expr_DoToStrim::Options& iOptions,
-	const ZStrimW& iStrimW)
+void sToStrim(const Rel& iRel, const Options& iOptions, const ZStrimW& iStrimW)
 	{ Visitor_DoToStrim().DoToStrim(iOptions, iStrimW, iRel); }
 
 } // namespace Util_Strim_Rel

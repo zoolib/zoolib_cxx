@@ -60,7 +60,7 @@ void Expr_Rel_Union::Accept_Expr_Rel_Union(Visitor_Expr_Rel_Union& iVisitor)
 #pragma mark * Visitor_Expr_Rel_Union
 
 void Visitor_Expr_Rel_Union::Visit_Expr_Rel_Union(ZRef<Expr_Rel_Union> iExpr)
-	{ inherited::Visit_Expr_Op2(iExpr); }
+	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
 #pragma mark -

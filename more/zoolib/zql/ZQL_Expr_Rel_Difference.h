@@ -57,7 +57,8 @@ public:
 #pragma mark -
 #pragma mark * Visitor_Expr_Rel_Difference
 
-class Visitor_Expr_Rel_Difference : public virtual ZVisitor_Expr_Op2_T<Expr_Rel>
+class Visitor_Expr_Rel_Difference
+:	public virtual ZVisitor_Expr_Op2_T<Expr_Rel>
 	{
 	typedef ZVisitor_Expr_Op2_T<Expr_Rel> inherited;
 public:

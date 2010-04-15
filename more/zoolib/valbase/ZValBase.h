@@ -34,9 +34,6 @@ namespace ZValBase {
 
 class Expr_Rel_Concrete : public ZQL::Expr_Rel_Concrete
 	{
-protected:
-	Expr_Rel_Concrete();
-
 public:
 // Our protocol
 	virtual ZRef<ZQE::Iterator> MakeIterator() = 0;
@@ -48,10 +45,11 @@ public:
 
 ZRef<ZQL::Expr_Rel> sConcrete();
 ZRef<ZQL::Expr_Rel> sConcrete(const ZQL::RelHead& iRelHead);
+ZRef<ZQL::Expr_Rel> sConcrete(const ZQL::RelHead& iRelHead, const string8& iName);
 
 ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::Expr_Rel> iExpr);
 
-} // namespace __ZValBase__
+} // namespace ZValBase
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZValBase__

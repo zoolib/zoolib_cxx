@@ -60,7 +60,7 @@ void Expr_Rel_Join::Accept_Expr_Rel_Join(Visitor_Expr_Rel_Join& iVisitor)
 #pragma mark * Visitor_Expr_Rel_Join
 
 void Visitor_Expr_Rel_Join::Visit_Expr_Rel_Join(ZRef<Expr_Rel_Join> iExpr)
-	{ inherited::Visit_Expr_Op2(iExpr); }
+	{ this->Visit_Expr_Op2(iExpr); }
 
 // =================================================================================================
 #pragma mark -
@@ -70,7 +70,7 @@ ZRef<Expr_Rel_Join> sJoin(
 	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
 	{ return new Expr_Rel_Join(iLHS, iRHS); }
 
-ZRef<Expr_Rel_Join> operator*(
+ZRef<Expr_Rel> operator*(
 	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
 	{ return new Expr_Rel_Join(iLHS, iRHS); }
 

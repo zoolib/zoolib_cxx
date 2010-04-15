@@ -18,71 +18,43 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZQL_Expr_Rel_Concrete__
-#define __ZQL_Expr_Rel_Concrete__ 1
+#ifndef __ZQL_Util__
+#define __ZQL_Util__
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Op_T.h"
-#include "zoolib/ZUnicodeString.h"
 #include "zoolib/zql/ZQL_Expr_Rel.h"
-#include "zoolib/zql/ZQL_RelHead.h"
+
+#include <vector>
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
-
-class Visitor_Expr_Rel_Concrete;
+namespace Util {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ConcreteDomain
+#pragma mark * Util
 
-class ConcreteDomain : public ZRefCountedWithFinalize
+class Problem : public ZRefCountedWithFinalize
 	{
 public:
-	ConcreteDomain();
-	virtual ~ConcreteDomain();
+	Problem(ZRef<Expr_Rel> iRel, std::string iDescription);
+
+	ZRef<Expr_Rel> GetRel() const;
+	std::string GetDescription() const;
+
+private:
+	ZRef<Expr_Rel> fRel;
+	std::string fDescription;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Concrete
+#pragma mark * Util
 
-class Expr_Rel_Concrete
-:	public virtual Expr_Rel
-,	public virtual ZExpr_Op0_T<Expr_Rel>
-	{
-	typedef ZExpr_Op0_T<Expr_Rel> inherited;
-public:
-// From ZExpr_Op0_T<Expr_Rel>
-	virtual void Accept_Expr_Op0(ZVisitor_Expr_Op0_T<Expr_Rel>& iVisitor);
+bool sValidate(std::vector<Problem>& oProblems, ZRef<Expr_Rel> iRel);
 
-	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone();
-
-// Our protocol
-	virtual void Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor);
-
-	virtual RelHead GetRelHead() = 0;
-	virtual ZRef<ConcreteDomain> GetConcreteDomain();
-
-// Experimental. Perhaps should be something we ask of the ConcreteDomain?
-	virtual string8 GetName();
-	virtual string8 GetDescription();
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel_Concrete
-
-class Visitor_Expr_Rel_Concrete
-:	public virtual ZVisitor_Expr_Op0_T<Expr_Rel>
-	{
-	typedef ZVisitor_Expr_Op0_T<Expr_Rel> inherited;
-public:
-	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
-	};
-
+} // namespace Util
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZQL_Expr_Rel_Concrete__
+#endif // __ZQL_Util__

@@ -81,10 +81,15 @@ namespace ZANONYMOUS {
 class Expr_Rel_Concrete : public ZValBase::Expr_Rel_Concrete
 	{
 public:
-	Expr_Rel_Concrete(ZRef<ConcreteDomain> iConcreteDomain, ZRef<Iter> iIter);
+	Expr_Rel_Concrete(
+		ZRef<ConcreteDomain> iConcreteDomain, ZRef<Iter> iIter, const string8& iPrefix,
+		const string8& iDescription);
 
 // From ZQL::Expr_Rel_Concrete via ZValBase::Expr_Rel_Concrete
 	virtual ZQL::RelHead GetRelHead();
+
+	virtual string8 GetName();
+	virtual string8 GetDescription();
 
 // From ZValBase::Expr_Rel_Concrete
 	virtual ZRef<ZQE::Iterator> MakeIterator();
@@ -92,20 +97,34 @@ public:
 private:
 	ZRef<ConcreteDomain> fConcreteDomain;
 	ZRef<Iter> fIter;
+	const string8 fPrefix;
+
+	const string8 fName;
+	const string8 fDescription;
 	};
 
-Expr_Rel_Concrete::Expr_Rel_Concrete(ZRef<ConcreteDomain> iConcreteDomain, ZRef<Iter> iIter)
+Expr_Rel_Concrete::Expr_Rel_Concrete(
+	ZRef<ConcreteDomain> iConcreteDomain, ZRef<Iter> iIter, const string8& iPrefix,
+	const string8& iDescription)
 :	fConcreteDomain(iConcreteDomain)
 ,	fIter(iIter)
+,	fPrefix(iPrefix)
+,	fDescription(iDescription)
 	{}
 
 ZQL::RelHead Expr_Rel_Concrete::GetRelHead()
 	{
 	ZQL::RelHead result;
 	for (size_t x = 0; x < fIter->Count(); ++x)
-		result.Insert(fIter->NameOf(x));
+		result.Insert(fPrefix + fIter->NameOf(x));
 	return result;
 	}
+
+string8 Expr_Rel_Concrete::GetName()
+	{ return fName; }
+
+string8 Expr_Rel_Concrete::GetDescription()
+	{ return fDescription; }
 
 ZRef<ZQE::Iterator> Expr_Rel_Concrete::MakeIterator()
 	{ return new Iterator(fIter->Clone(true)); }
@@ -129,16 +148,21 @@ ZRef<ZSQLite::DB> ConcreteDomain::GetDB()
 
 ZRef<ZQL::Expr_Rel> sConcrete_Table(ZRef<ConcreteDomain> iConcreteDomain, const string8& iName)
 	{
+//	ZRef<Iter> iter = new Iter(iConcreteDomain->GetDB(), "select * from " + iName + ";" );
 	ZRef<Iter> iter = new Iter(iConcreteDomain->GetDB(), "pragma table_info(" + iName + ");");
-	return new Expr_Rel_Concrete(iConcreteDomain, iter);
+
+	return new Expr_Rel_Concrete(iConcreteDomain, iter, string8(), string8());
 	}
 
 ZRef<ZQL::Expr_Rel> sConcrete_SQL(ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL)
+	{ return sConcrete_SQL(iConcreteDomain, iSQL, string8()); }
+
+ZRef<ZQL::Expr_Rel> sConcrete_SQL(
+	ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL, const string8& iPrefix)
 	{
 	ZRef<Iter> iter = new Iter(iConcreteDomain->GetDB(), iSQL);
-	return new Expr_Rel_Concrete(iConcreteDomain, iter);
+	return new Expr_Rel_Concrete(iConcreteDomain, iter, iPrefix, iSQL);
 	}
-
 
 } // namespace ZValBase_SQLite
 NAMESPACE_ZOOLIB_END

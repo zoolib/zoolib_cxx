@@ -60,7 +60,7 @@ void Expr_Rel_Difference::Accept_Expr_Rel_Difference(Visitor_Expr_Rel_Difference
 #pragma mark * Visitor_Expr_Rel_Difference
 
 void Visitor_Expr_Rel_Difference::Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Difference> iExpr)
-	{ inherited::Visit_Expr_Op2(iExpr); }
+	{ this->Visit_Expr_Op2(iExpr); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

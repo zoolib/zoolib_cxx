@@ -68,7 +68,7 @@ ZRef<ZExpr_Logic> Expr_Rel_Select::GetExpr_Logic()
 
 void Visitor_Expr_Rel_Select::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	{
-	inherited::Visit_Expr_Op1(iExpr);
+	this->Visit_Expr_Op1(iExpr);
 
 	if (ZRef<ZExpr_Logic> theExpr_Logic = iExpr->GetExpr_Logic())
 		theExpr_Logic->Accept(*this);

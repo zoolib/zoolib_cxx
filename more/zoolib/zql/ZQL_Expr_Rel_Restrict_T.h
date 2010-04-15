@@ -107,7 +107,8 @@ ZValCondition_T<Val> Expr_Rel_Restrict_T<Val>::GetValCondition()
 #pragma mark * Visitor_Expr_Rel_Restrict_T
 
 template <class Val>
-class Visitor_Expr_Rel_Restrict_T : public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
+class Visitor_Expr_Rel_Restrict_T
+:	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
 	{
 	typedef ZVisitor_Expr_Op1_T<Expr_Rel> inherited;
 public:
@@ -117,7 +118,7 @@ public:
 template <class Val>
 void Visitor_Expr_Rel_Restrict_T<Val>::Visit_Expr_Rel_Restrict(
 	ZRef<Expr_Rel_Restrict_T<Val> > iExpr)
-	{ inherited::Visit_Expr_Op1(iExpr); }
+	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================
 #pragma mark -

@@ -67,7 +67,7 @@ RelHead Expr_Rel_Project::GetRelHead()
 #pragma mark * Visitor_Expr_Rel_Project
 
 void Visitor_Expr_Rel_Project::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
-	{ inherited::Visit_Expr_Op1(iExpr); }
+	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================
 #pragma mark -

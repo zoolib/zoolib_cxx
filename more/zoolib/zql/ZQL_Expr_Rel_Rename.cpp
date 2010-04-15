@@ -72,7 +72,7 @@ const string& Expr_Rel_Rename::GetOld()
 #pragma mark * Visitor_Expr_Rel_Rename
 
 void Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
-	{ inherited::Visit_Expr_Op1(iExpr); }
+	{ this->Visit_Expr_Op1(iExpr); }
 
 // =================================================================================================
 #pragma mark -
