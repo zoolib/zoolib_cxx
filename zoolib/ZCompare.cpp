@@ -82,4 +82,18 @@ int ZCompare::sCompare(const char* iTypeName, const void* iL, const void* iR)
 	return iL < iR ? -1 : iL > iR ? 1 : 0;
 	}
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCompareRegistration_Void
+
+namespace ZANONYMOUS {
+class ZCompareRegistration_Void : public ZCompare
+	{
+public:
+	ZCompareRegistration_Void() : ZCompare(typeid(void).name()) {}
+	virtual int Compare(const void* iL, const void* iR)
+		{ return 0; }
+	} ZMACRO_CONCAT(sComparer_,__LINE__);
+} // anonymous namespace
+
 NAMESPACE_ZOOLIB_END
