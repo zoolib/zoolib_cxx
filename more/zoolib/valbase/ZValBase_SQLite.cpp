@@ -36,7 +36,7 @@ namespace ZANONYMOUS {
 class Iterator : public ZQE::Iterator
 	{
 public:
-	Iterator(ZRef<Iter> iIter);
+	Iterator(ZRef<Iter> iIter, const string8& iPrefix);
 
 	virtual ~Iterator();
 	
@@ -45,17 +45,19 @@ public:
 
 protected:
 	ZRef<Iter> fIter;
+	const string8 fPrefix;
 	};
 
-Iterator::Iterator(ZRef<Iter> iIter)
+Iterator::Iterator(ZRef<Iter> iIter, const string8& iPrefix)
 :	fIter(iIter)
+,	fPrefix(iPrefix)
 	{}
 
 Iterator::~Iterator()
 	{}
 
 ZRef<ZQE::Iterator> Iterator::Clone()
-	{ return new Iterator(fIter->Clone(false)); }
+	{ return new Iterator(fIter->Clone(false), fPrefix); }
 
 ZRef<ZQE::Result> Iterator::ReadInc()
 	{
@@ -63,7 +65,7 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 		{
 		ZMap_Any theMap;
 		for (size_t x = 0; x < fIter->Count(); ++x)
-			theMap.Set(fIter->NameOf(x), fIter->Get(x));
+			theMap.Set(fPrefix + fIter->NameOf(x), fIter->Get(x));
 		fIter->Advance();
 		return new ZQE::Result_Any(theMap);
 		}
@@ -127,7 +129,7 @@ string8 Expr_Rel_Concrete::GetDescription()
 	{ return fDescription; }
 
 ZRef<ZQE::Iterator> Expr_Rel_Concrete::MakeIterator()
-	{ return new Iterator(fIter->Clone(true)); }
+	{ return new Iterator(fIter->Clone(true), fPrefix); }
 
 } // anonymous namespace
 

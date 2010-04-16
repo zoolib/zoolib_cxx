@@ -36,24 +36,33 @@ namespace ZANONYMOUS {
 
 class Visitor_DoMakeIterator
 :	public virtual ZQE::Visitor_Expr_Rel_DoMakeIterator
-,	public virtual ZQL::Visitor_Expr_Rel_Restrict
 ,	public virtual ZQL::Visitor_Expr_Rel_Concrete
+,	public virtual ZQL::Visitor_Expr_Rel_Restrict
 	{
 public:
-// Via ZQE::Visitor_Expr_Rel_DoMakeIterator
-	virtual void Visit_Expr_Rel_Select(ZRef<ZQL::Expr_Rel_Select> iExpr);
-
-// From ZQL::Visitor_Expr_Rel_Restrict
-	virtual void Visit_Expr_Rel_Restrict(ZRef<ZQL::Expr_Rel_Restrict> iExpr);
-
-// From ZQL::Visitor_Expr_Rel_Concrete
 	virtual void Visit_Expr_Rel_Concrete(ZRef<ZQL::Expr_Rel_Concrete> iExpr);	
+	virtual void Visit_Expr_Rel_Project(ZRef<ZQL::Expr_Rel_Project> iExpr);
+	virtual void Visit_Expr_Rel_Rename(ZRef<ZQL::Expr_Rel_Rename> iExpr);
+	virtual void Visit_Expr_Rel_Restrict(ZRef<ZQL::Expr_Rel_Restrict> iExpr);
+	virtual void Visit_Expr_Rel_Select(ZRef<ZQL::Expr_Rel_Select> iExpr);
 	};
 
-void Visitor_DoMakeIterator::Visit_Expr_Rel_Select(ZRef<ZQL::Expr_Rel_Select> iExpr)
+void Visitor_DoMakeIterator::Visit_Expr_Rel_Concrete(ZRef<ZQL::Expr_Rel_Concrete> iExpr)
+	{
+	if (ZRef<Expr_Rel_Concrete> theExpr = iExpr.DynamicCast<Expr_Rel_Concrete>())
+		this->pSetResult(theExpr->MakeIterator());
+	}
+
+void Visitor_DoMakeIterator::Visit_Expr_Rel_Project(ZRef<ZQL::Expr_Rel_Project> iExpr)
 	{
 	if (ZRef<ZQE::Iterator> theIterator = this->Do(iExpr->GetOp0()))
-		this->pSetResult(new ZQE::Iterator_Any_Select(iExpr->GetExpr_Logic(), theIterator));
+		this->pSetResult(new ZQE::Iterator_Any_Project(iExpr->GetRelHead(), theIterator));
+	}
+
+void Visitor_DoMakeIterator::Visit_Expr_Rel_Rename(ZRef<ZQL::Expr_Rel_Rename> iExpr)
+	{
+	if (ZRef<ZQE::Iterator> theIterator = this->Do(iExpr->GetOp0()))
+		this->pSetResult(new ZQE::Iterator_Any_Rename(iExpr->GetNew(), iExpr->GetOld(), theIterator));
 	}
 
 void Visitor_DoMakeIterator::Visit_Expr_Rel_Restrict(ZRef<ZQL::Expr_Rel_Restrict> iExpr)
@@ -62,10 +71,10 @@ void Visitor_DoMakeIterator::Visit_Expr_Rel_Restrict(ZRef<ZQL::Expr_Rel_Restrict
 		this->pSetResult(new ZQE::Iterator_Any_Restrict(iExpr->GetValCondition(), theIterator));
 	}
 
-void Visitor_DoMakeIterator::Visit_Expr_Rel_Concrete(ZRef<ZQL::Expr_Rel_Concrete> iExpr)
+void Visitor_DoMakeIterator::Visit_Expr_Rel_Select(ZRef<ZQL::Expr_Rel_Select> iExpr)
 	{
-	if (ZRef<Expr_Rel_Concrete> theExpr = iExpr.DynamicCast<Expr_Rel_Concrete>())
-		this->pSetResult(theExpr->MakeIterator());
+	if (ZRef<ZQE::Iterator> theIterator = this->Do(iExpr->GetOp0()))
+		this->pSetResult(new ZQE::Iterator_Any_Select(iExpr->GetExpr_Logic(), theIterator));
 	}
 
 } // anonymous namespace

@@ -25,6 +25,84 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQE {
 
+using std::string;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Iterator_Any_Project
+
+Iterator_Any_Project::Iterator_Any_Project(
+	const ZQL::RelHead& iRelHead, ZRef<Iterator> iIterator)
+:	fRelHead(iRelHead)
+,	fIterator(iIterator)
+	{}
+
+ZRef<Iterator> Iterator_Any_Project::Clone()
+	{ return new Iterator_Any_Project(fRelHead, fIterator->Clone()); }
+
+ZRef<Result> Iterator_Any_Project::ReadInc()
+	{
+	if (ZRef<Result> theResult = fIterator->ReadInc())
+		{
+		if (ZRef<Result_Any> theResult_Any = theResult.DynamicCast<Result_Any>())
+			{
+			const ZAny theAny = theResult_Any->GetVal();
+			if (const ZMap_Any* theMap = theAny.PGet_T<ZMap_Any>())
+				{
+				ZMap_Any newMap;
+				for (ZMap_Any::Index_t i = theMap->Begin(); i != theMap->End(); ++i)
+					{
+					const string theName = theMap->NameOf(i);
+					if (fRelHead.Contains(theName))
+						newMap.Set(theName, theMap->Get(i));
+					}
+				return new Result_Any(newMap);
+				}
+			return theResult_Any;
+			}
+		}
+	return nullref;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Iterator_Any_Rename
+
+Iterator_Any_Rename::Iterator_Any_Rename(
+	const std::string& iNew, const std::string& iOld, ZRef<Iterator> iIterator)
+:	fNew(iNew)
+,	fOld(iOld)
+,	fIterator(iIterator)
+	{}
+
+ZRef<Iterator> Iterator_Any_Rename::Clone()
+	{ return new Iterator_Any_Rename(fNew, fOld, fIterator->Clone()); }
+
+ZRef<Result> Iterator_Any_Rename::ReadInc()
+	{
+	if (ZRef<Result> theResult = fIterator->ReadInc())
+		{
+		if (ZRef<Result_Any> theResult_Any = theResult.DynamicCast<Result_Any>())
+			{
+			const ZAny theAny = theResult_Any->GetVal();
+			if (const ZMap_Any* theMap = theAny.PGet_T<ZMap_Any>())
+				{
+				ZMap_Any newMap = *theMap;
+				ZMap_Any::Index_t theIndex = newMap.IndexOf(fOld);
+				if (theIndex != newMap.End())
+					{
+					const ZVal_Any theVal = newMap.Get(theIndex);
+					newMap.Erase(theIndex);
+					newMap.Set(fNew, theVal);
+					return new Result_Any(newMap);
+					}
+				}
+			return theResult_Any;
+			}
+		}
+	return nullref;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Iterator_Any_Restrict
@@ -35,26 +113,25 @@ Iterator_Any_Restrict::Iterator_Any_Restrict(
 ,	fIterator(iIterator)
 	{}
 
-ZRef<ZQE::Iterator> Iterator_Any_Restrict::Clone()
+ZRef<Iterator> Iterator_Any_Restrict::Clone()
 	{ return new Iterator_Any_Restrict(fValCondition, fIterator->Clone()); }
 
-ZRef<ZQE::Result> Iterator_Any_Restrict::ReadInc()
+ZRef<Result> Iterator_Any_Restrict::ReadInc()
 	{
 	for (;;)
 		{
-		if (ZRef<ZQE::Result> theZQEResult = fIterator->ReadInc())
+		if (ZRef<Result> theResult = fIterator->ReadInc())
 			{
-			if (ZRef<ZQE::Result_Any> theResult =
-				theZQEResult.DynamicCast<ZQE::Result_Any>())
+			if (ZRef<Result_Any> theResult_Any = theResult.DynamicCast<Result_Any>())
 				{
 				ZValContext theContext;
-				if (fValCondition.Matches(theContext, theResult->GetVal()))
+				if (fValCondition.Matches(theContext, theResult_Any->GetVal()))
 					return theResult;
 				}
 			}
 		else
 			{
-			return ZRef<ZQE::Result>();
+			return nullref;
 			}
 		}
 	}
@@ -63,31 +140,29 @@ ZRef<ZQE::Result> Iterator_Any_Restrict::ReadInc()
 #pragma mark -
 #pragma mark * Iterator_Any_Select
 
-Iterator_Any_Select::Iterator_Any_Select(
-	ZRef<ZExpr_Logic> iExpr_Logic, ZRef<ZQE::Iterator> iIterator)
+Iterator_Any_Select::Iterator_Any_Select(ZRef<ZExpr_Logic> iExpr_Logic, ZRef<Iterator> iIterator)
 :	fExpr_Logic(iExpr_Logic)
 ,	fIterator(iIterator)
 	{}
 
-ZRef<ZQE::Iterator> Iterator_Any_Select::Clone()
+ZRef<Iterator> Iterator_Any_Select::Clone()
 	{ return new Iterator_Any_Select(fExpr_Logic, fIterator->Clone()); }
 
-ZRef<ZQE::Result> Iterator_Any_Select::ReadInc()
+ZRef<Result> Iterator_Any_Select::ReadInc()
 	{
 	for (;;)
 		{
-		if (ZRef<ZQE::Result> theZQEResult = fIterator->ReadInc())
+		if (ZRef<Result> theResult = fIterator->ReadInc())
 			{
-			if (ZRef<ZQE::Result_Any> theResult =
-				theZQEResult.DynamicCast<ZQE::Result_Any>())
+			if (ZRef<Result_Any> theResult_Any = theResult.DynamicCast<Result_Any>())
 				{
-				if (sMatches(fExpr_Logic, theResult->GetVal()))
+				if (sMatches(fExpr_Logic, theResult_Any->GetVal()))
 					return theResult;
 				}
 			}
 		else
 			{
-			return ZRef<ZQE::Result>();
+			return nullref;
 			}
 		}
 	}

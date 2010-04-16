@@ -55,12 +55,14 @@ namespace ZANONYMOUS {
 class Doer
 :	public virtual ZVisitor_Do_T<RelHead>
 ,	public virtual Visitor_Expr_Rel_DoGetRelHead
+,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Restrict
 ,	public virtual Visitor_Expr_Rel_Select
 	{
 public:
 	Doer(vector<Problem>& oProblems);
 
+	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr);
 	virtual void Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr);
 	virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr);
 
@@ -72,10 +74,25 @@ Doer::Doer(vector<Problem>& oProblems)
 :	fProblems(oProblems)
 	{}
 
+void Doer::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
+	{
+	const RelHead providedRelHead = this->Do(iExpr->GetOp0());
+	const RelHead requiredRelHead = iExpr->GetRelHead();
+
+	if (!providedRelHead.Contains(requiredRelHead))
+		{
+		fProblems.push_back(
+			Problem(iExpr, "Project references property(s) not provided by expr"));
+		}
+
+	this->pSetResult(providedRelHead & requiredRelHead);
+	}
+
 void Doer::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr)
 	{
 	const RelHead providedRelHead = this->Do(iExpr->GetOp0());
 	const RelHead requiredRelHead = iExpr->GetValCondition().GetNames();
+
 	if (!providedRelHead.Contains(requiredRelHead))
 		{
 		fProblems.push_back(
@@ -89,6 +106,7 @@ void Doer::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	{
 	const RelHead providedRelHead = this->Do(iExpr->GetOp0());
 	const RelHead requiredRelHead = sGetNames(iExpr->GetExpr_Logic());
+
 	if (!providedRelHead.Contains(requiredRelHead))
 		{
 		fProblems.push_back(

@@ -25,25 +25,66 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZExpr_Logic.h"
 #include "zoolib/ZValCondition.h"
 #include "zoolib/zqe/ZQE_Iterator.h"
+#include "zoolib/zql/ZQL_RelHead.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQE {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Iterator_Any_Restrict
+#pragma mark * Iterator_Any_Project
 
-class Iterator_Any_Restrict : public ZQE::Iterator
+class Iterator_Any_Project
+:	public Iterator
 	{
 public:
-	Iterator_Any_Restrict(const ZValCondition& iValCondition, ZRef<ZQE::Iterator> iIterator);
+	Iterator_Any_Project(const ZQL::RelHead& iRelHead, ZRef<Iterator> iIterator);
 	
 // From Iterator
 	virtual ZRef<Iterator> Clone();
-	virtual ZRef<ZQE::Result> ReadInc();
+	virtual ZRef<Result> ReadInc();
 
 private:
-	ZValCondition fValCondition;
+	ZQL::RelHead fRelHead;
+	ZRef<Iterator> fIterator;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Iterator_Any_Rename
+
+class Iterator_Any_Rename
+:	public Iterator
+	{
+public:
+	Iterator_Any_Rename(const std::string& iNew, const std::string& iOld, ZRef<Iterator> iIterator);
+	
+// From Iterator
+	virtual ZRef<Iterator> Clone();
+	virtual ZRef<Result> ReadInc();
+
+private:
+	const std::string fNew;
+	const std::string fOld;
+	ZRef<Iterator> fIterator;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Iterator_Any_Restrict
+
+class Iterator_Any_Restrict
+:	public Iterator
+	{
+public:
+	Iterator_Any_Restrict(const ZValCondition& iValCondition, ZRef<Iterator> iIterator);
+	
+// From Iterator
+	virtual ZRef<Iterator> Clone();
+	virtual ZRef<Result> ReadInc();
+
+private:
+	const ZValCondition fValCondition;
 	ZRef<Iterator> fIterator;
 	};
 
@@ -51,14 +92,14 @@ private:
 #pragma mark -
 #pragma mark * Iterator_Any_Select
 
-class Iterator_Any_Select : public ZQE::Iterator
+class Iterator_Any_Select : public Iterator
 	{
 public:
-	Iterator_Any_Select(ZRef<ZExpr_Logic> iExpr_Logic, ZRef<ZQE::Iterator> iIterator);
+	Iterator_Any_Select(ZRef<ZExpr_Logic> iExpr_Logic, ZRef<Iterator> iIterator);
 	
 // From Iterator
 	virtual ZRef<Iterator> Clone();
-	virtual ZRef<ZQE::Result> ReadInc();
+	virtual ZRef<Result> ReadInc();
 
 private:
 	ZRef<ZExpr_Logic> fExpr_Logic;

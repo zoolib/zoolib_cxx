@@ -497,6 +497,7 @@ string8 sAsSQL(ZRef<Expr_Rel_SFW> iSFW)
 
 		if (universal)
 			{
+			// Hmm, not really correct, but there's no SQL notation for "everything but...".
 			s << " *";
 			}
 		else
