@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAny.h"
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZStrimmer.h"
+#include "zoolib/ZVisitor.h"
 
 #include <string>
 
@@ -72,13 +73,14 @@ public:
 #pragma mark -
 #pragma mark * ZYadR
 
-class ZYadR : public ZRefCountedWithFinalize
+class ZYadR
+:	public ZVisitee
 	{
 protected:
 	ZYadR();
 
 public:
-// From ZRefCountedWithFinalize
+// From ZVisitee
 	virtual void Accept(ZVisitor& iVisitor);
 	
 // Our protocol

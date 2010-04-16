@@ -18,43 +18,26 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZVisitor_Expr_Logic_DoToStrim.h"
+#include "zoolib/ZVisitor.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Logic_DoToStrim
+#pragma mark * ZVisitee
+// Visitee, acceptee, invitor, 
 
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iRep)
-	{ pStrimW() << "true"; }
+// Or receiver? Something which receives a visitor. Perhaps Accept should be invite -- an
+// invitation is what precedes the visit.
 
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iRep)
-	{ pStrimW() << "false"; }
+void ZVisitee::Accept(ZVisitor& iVisitor)
+	{ iVisitor.Visit(this); }
 
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
-	{
-	pStrimW() << "~(";
-	this->pDoToStrim(iRep->GetOp0());
-	pStrimW() << ")";
-	}
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZVisitor
 
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep)
-	{
-	pStrimW() << "(";
-	this->pDoToStrim(iRep->GetOp0());
-	pStrimW() << " & ";
-	this->pDoToStrim(iRep->GetOp1());
-	pStrimW() << ")";
-	}
-
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
-	{
-	pStrimW() << "(";
-	this->pDoToStrim(iRep->GetOp0());
-	pStrimW() << " | ";
-	this->pDoToStrim(iRep->GetOp1());
-	pStrimW() << ")";
-	}
+void ZVisitor::Visit(ZRef<ZVisitee> iRep)
+	{}
 
 NAMESPACE_ZOOLIB_END

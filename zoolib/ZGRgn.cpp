@@ -46,6 +46,7 @@ ZGRgnRep::ZGRgnRep()
 
 ZGRgn::ZGRgn()
 	{}
+
 ZGRgn::~ZGRgn()
 	{}
 

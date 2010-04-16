@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAny.h"
 #include "zoolib/ZData_Any.h"
-#include "zoolib/ZRef.h"
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal.h"
@@ -108,6 +107,7 @@ class ZSeq_Any
 	class Rep;
 
 public:
+	typedef std::vector<ZVal_Any> Vector_t;
 	typedef ZVal_Any Val_t;
 
 	operator operator_bool_type() const;
@@ -117,9 +117,9 @@ public:
 	~ZSeq_Any();
 	ZSeq_Any& operator=(const ZSeq_Any& iOther);
 
-	ZSeq_Any(const std::vector<ZVal_Any>& iOther);
+	ZSeq_Any(const Vector_t& iOther);
 
-	ZSeq_Any& operator=(const std::vector<ZVal_Any>& iOther);
+	ZSeq_Any& operator=(const Vector_t& iOther);
 
 	template <class Iterator>
 	ZSeq_Any(Iterator begin, Iterator end);
@@ -188,20 +188,20 @@ S ZSeq_Any::Get_T(size_t iIndex) const
 #pragma mark * ZSeq_Any::Rep
 
 class ZSeq_Any::Rep
-:	public ZRefCounted
+:	public ZCountedWithoutFinalize
 	{
 private:
 	Rep();
 	virtual ~Rep();
 	
-	Rep(const std::vector<ZVal_Any>& iVector);
+	Rep(const Vector_t& iVector);
 
 	template <class Iterator>
 	Rep(Iterator begin, Iterator end)
 	:	fVector(begin, end)
 		{}
 
-	std::vector<ZVal_Any> fVector;
+	Vector_t fVector;
 	friend class ZSeq_Any;
 	};
 
@@ -357,20 +357,20 @@ S ZMap_Any::Get_T(const Index_t& iIndex) const
 #pragma mark * ZMap_Any::Rep
 
 class ZMap_Any::Rep
-:	public ZRefCounted
+:	public ZCountedWithoutFinalize
 	{
 private:
 	Rep();
 	virtual ~Rep();
 	
-	Rep(const std::map<std::string, ZVal_Any>& iMap);
+	Rep(const Map_t& iMap);
 
 	template <class Iterator>
 	Rep(Iterator begin, Iterator end)
 	:	fMap(begin, end)
 		{}
 
-	std::map<std::string, ZVal_Any> fMap;
+	Map_t fMap;
 	friend class ZMap_Any;
 	};
 

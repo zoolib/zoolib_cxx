@@ -113,7 +113,7 @@ public:
 	ZVal_ZooLib(const ZData_ZooLib& iVal);
 	ZVal_ZooLib(const ZSeq_ZooLib& iVal);
 	ZVal_ZooLib(const ZMap_ZooLib& iVal);
-	ZVal_ZooLib(const ZRef<ZRefCountedWithFinalize>& iVal);
+	ZVal_ZooLib(const ZRef<ZCounted>& iVal);
 	ZVal_ZooLib(const void* iSource, size_t iSize);
 	ZVal_ZooLib(const ZStreamR& iStreamR, size_t iSize);
 
@@ -159,7 +159,7 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Time, ZTime)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Rect, ZRectPOD)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Point, ZPointPOD)
-	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, RefCounted, ZRef<ZRefCountedWithFinalize>)
+	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, RefCounted, ZRef<ZCounted>)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Pointer, VoidStar_t)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Data, ZData_ZooLib)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Seq, ZSeq_ZooLib)

@@ -293,8 +293,8 @@ bool ZVal_ZooLib::sQFromAny(const ZAny& iAny, ZVal_ZooLib& oVal)
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
-	else if (const ZRef<ZRefCountedWithFinalize>* theValue =
-		ZAnyCast<ZRef<ZRefCountedWithFinalize> >(&iAny))
+	else if (const ZRef<ZCounted>* theValue =
+		ZAnyCast<ZRef<ZCounted> >(&iAny))
 		{
 		oVal = ZVal_ZooLib(*theValue);
 		}
@@ -663,7 +663,7 @@ ZVal_ZooLib::ZVal_ZooLib(const ZMap_ZooLib& iVal)
 	sConstruct_T(fType.fBytes, iVal);
 	}
 
-ZVal_ZooLib::ZVal_ZooLib(const ZRef<ZRefCountedWithFinalize>& iVal)
+ZVal_ZooLib::ZVal_ZooLib(const ZRef<ZCounted>& iVal)
 	{
 	fType.fType = eZType_RefCounted;
 	sConstruct_T(fType.fBytes, iVal);
@@ -881,11 +881,11 @@ bool ZVal_ZooLib::QGet_T<ZMap_ZooLib>(ZMap_ZooLib& oVal) const
 	}
 
 template <>
-bool ZVal_ZooLib::QGet_T<ZRef<ZRefCountedWithFinalize> >(ZRef<ZRefCountedWithFinalize>& oVal) const
+bool ZVal_ZooLib::QGet_T<ZRef<ZCounted> >(ZRef<ZCounted>& oVal) const
 	{
 	if (fType.fType == eZType_RefCounted)
 		{
-		oVal = *sFetch_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes);
+		oVal = *sFetch_T<ZRef<ZCounted> >(fType.fBytes);
 		return true;
 		}
 	return false;
@@ -1057,7 +1057,7 @@ void ZVal_ZooLib::Set_T<ZMap_ZooLib>(const ZMap_ZooLib& iVal)
 	}
 
 template <>
-void ZVal_ZooLib::Set_T<ZRef<ZRefCountedWithFinalize> >(const ZRef<ZRefCountedWithFinalize>& iVal)
+void ZVal_ZooLib::Set_T<ZRef<ZCounted> >(const ZRef<ZCounted>& iVal)
 	{
 	this->pRelease();
 	fType.fType = eZType_RefCounted;
@@ -1293,7 +1293,7 @@ ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Type, ZType)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Time, ZTime)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Rect, ZRectPOD)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Point, ZPointPOD)
-ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, RefCounted, ZRef<ZRefCountedWithFinalize>)
+ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, RefCounted, ZRef<ZCounted>)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Pointer, VoidStar_t)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Data, ZData_ZooLib)
 ZMACRO_ZValAccessors_Def_Entry(ZVal_ZooLib, Seq, ZSeq_ZooLib)
@@ -1345,11 +1345,11 @@ int ZVal_ZooLib::pUncheckedCompare(const ZVal_ZooLib& iOther) const
 			}
 		case eZType_RefCounted:
 			{
-			const ZRef<ZRefCountedWithFinalize>* thisZRef =
-				sFetch_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes);
+			const ZRef<ZCounted>* thisZRef =
+				sFetch_T<ZRef<ZCounted> >(fType.fBytes);
 
-			const ZRef<ZRefCountedWithFinalize>* otherZRef =
-				sFetch_T<ZRef<ZRefCountedWithFinalize> >(iOther.fType.fBytes);
+			const ZRef<ZCounted>* otherZRef =
+				sFetch_T<ZRef<ZCounted> >(iOther.fType.fBytes);
 			
 			if (*thisZRef < *otherZRef)
 				return -1;
@@ -1410,8 +1410,8 @@ bool ZVal_ZooLib::pUncheckedLess(const ZVal_ZooLib& iOther) const
 			}
 		case eZType_RefCounted:
 			{
-			return *sFetch_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes)
-				< *sFetch_T<ZRef<ZRefCountedWithFinalize> >(iOther.fType.fBytes);
+			return *sFetch_T<ZRef<ZCounted> >(fType.fBytes)
+				< *sFetch_T<ZRef<ZCounted> >(iOther.fType.fBytes);
 			}
 		case eZType_Raw:
 			{
@@ -1471,8 +1471,8 @@ bool ZVal_ZooLib::pUncheckedEqual(const ZVal_ZooLib& iOther) const
 			}
 		case eZType_RefCounted:
 			{
-			return *sFetch_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes)
-				== *sFetch_T<ZRef<ZRefCountedWithFinalize> >(iOther.fType.fBytes);
+			return *sFetch_T<ZRef<ZCounted> >(fType.fBytes)
+				== *sFetch_T<ZRef<ZCounted> >(iOther.fType.fBytes);
 			}
 		case eZType_Raw:
 			{
@@ -1514,7 +1514,7 @@ void ZVal_ZooLib::pRelease()
 		case eZType_Tuple: sDestroy_T<ZMap_ZooLib>(fType.fBytes); break;
 		case eZType_RefCounted:
 			{
-			sDestroy_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes);
+			sDestroy_T<ZRef<ZCounted> >(fType.fBytes);
 			break;
 			}
 		case eZType_Raw: sDestroy_T<ZData_ZooLib>(fType.fBytes); break;
@@ -1592,7 +1592,7 @@ void ZVal_ZooLib::pCopy(const ZVal_ZooLib& iOther)
 				sCopyConstruct_T<ZMap_ZooLib>(fType.fBytes, iOther.fType.fBytes);
 				break;
 			case eZType_RefCounted:
-				sCopyConstruct_T<ZRef<ZRefCountedWithFinalize> >
+				sCopyConstruct_T<ZRef<ZCounted> >
 					(fType.fBytes, iOther.fType.fBytes);
 				break;
 			case eZType_Raw:
@@ -1725,7 +1725,7 @@ void ZVal_ZooLib::pFromStream(ZType iType, const ZStreamR& iStreamR)
 		case eZType_RefCounted:
 			{
 			// Construct a nil refcounted.
-			sConstruct_T<ZRef<ZRefCountedWithFinalize> >(fType.fBytes);
+			sConstruct_T<ZRef<ZCounted> >(fType.fBytes);
 			break;
 			}
 		case eZType_Raw:
@@ -1763,7 +1763,7 @@ void ZVal_ZooLib::pFromStream(ZType iType, const ZStreamR& iStreamR)
 #pragma mark -
 #pragma mark * ZSeq_ZooLib::Rep
 
-class ZSeq_ZooLib::Rep : public ZRefCounted
+class ZSeq_ZooLib::Rep : public ZCountedWithoutFinalize
 	{
 public:
 	Rep();
@@ -2043,7 +2043,7 @@ void NameVal::ToStream(const ZStreamW& iStreamW) const
 #pragma mark -
 #pragma mark * ZMap_ZooLib::Rep
 
-class ZMap_ZooLib::Rep : public ZRefCounted
+class ZMap_ZooLib::Rep : public ZCountedWithoutFinalize
 	{
 public:
 	Rep();

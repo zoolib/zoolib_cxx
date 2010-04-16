@@ -19,8 +19,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZThread.h"
+#include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZRefWeak.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -29,13 +29,13 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZWeakRefereeProxy
 
-class ZWeakRefereeProxy : public ZRefCountedWithFinalize
+class ZWeakRefereeProxy : public ZCounted
 	{
 public:
 	ZWeakRefereeProxy(ZWeakReferee* iReferee);
 	virtual ~ZWeakRefereeProxy();
 
-// From ZRefCountedWithFinalize
+// From ZCounted
 	virtual void Finalize();
 
 private:

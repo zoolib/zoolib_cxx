@@ -39,7 +39,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZStreamMUX
 
 class ZStreamMUX
-:	public ZRefCountedWithFinalize,
+:	public ZCounted,
 	public ZWeakReferee
 	{
 public:
@@ -49,7 +49,7 @@ public:
 	ZStreamMUX(const Options& iOptions);
 	~ZStreamMUX();
 
-// From ZRefCountedWithFinalize
+// From ZCounted
 	virtual void Finalize();
 
 // Our protocol

@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZGeom.h"
-#include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZRGBA.h"
+#include "zoolib/ZRef_Counted.h"
 
 // For documentation, see ZDCPixmapNS.cpp
 
@@ -570,7 +570,7 @@ protected:
 #pragma mark -
 #pragma mark * ZDCPixmapNS::PixelDescRep
 
-class ZDCPixmapNS::PixelDescRep : public ZRefCounted
+class ZDCPixmapNS::PixelDescRep : public ZCountedWithoutFinalize
 	{
 protected:
 	PixelDescRep();

@@ -84,7 +84,7 @@ private:
 #pragma mark -
 #pragma mark * ZNetNameRegistered_AppleTalk
 
-class ZNetNameRegistered_AppleTalk : public ZRefCountedWithFinalize
+class ZNetNameRegistered_AppleTalk : public ZCounted
 	{
 protected:
 	ZNetNameRegistered_AppleTalk();

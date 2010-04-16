@@ -26,8 +26,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDCPixmapNS.h"
 #include "zoolib/ZGeom.h"
 #include "zoolib/ZMulti_T.h"
-#include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZRGBA.h"
+#include "zoolib/ZRef_Counted.h"
 
 // For documentation, see ZDCPixmapNS.cpp
 
@@ -182,7 +182,7 @@ private:
 #pragma mark -
 #pragma mark * ZDCPixmapRaster
 
-class ZDCPixmapRaster : public ZRefCountedWithFinalize, NonCopyable
+class ZDCPixmapRaster : public ZCounted, NonCopyable
 	{
 protected:
 	ZDCPixmapRaster(const ZDCPixmapNS::RasterDesc& iRasterDesc);
@@ -243,7 +243,7 @@ public:
 #pragma mark -
 #pragma mark * ZDCPixmapCache
 
-class ZDCPixmapCache : public ZRefCountedWithFinalize
+class ZDCPixmapCache : public ZCounted
 	{
 protected:
 	ZDCPixmapCache();
@@ -258,7 +258,7 @@ public:
 #pragma mark -
 #pragma mark * ZDCPixmapRep
 
-class ZDCPixmapRep : public ZRefCountedWithFinalize, NonCopyable
+class ZDCPixmapRep : public ZCounted, NonCopyable
 	{
 protected:
 	ZDCPixmapRep();

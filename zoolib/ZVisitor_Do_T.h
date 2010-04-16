@@ -18,33 +18,70 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Do__
-#define __ZVisitor_Expr_Do__
+#ifndef __ZVisitor_Do_T__
+#define __ZVisitor_Do_T__
 #include "zconfig.h"
 
-#include "zoolib/ZExpr.h"
+#include "zoolib/ZDebug.h"
+#include "zoolib/ZVisitor.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Do
+#pragma mark * ZVisitor_Do_T
 
-class ZVisitor_Expr_Do
-:	public virtual ZVisitor_Expr
+template <class Result_t>
+class ZVisitor_Do_T
+:	public virtual ZVisitor
 	{
 public:
-	ZVisitor_Expr_Do()
+	ZVisitor_Do_T()
+	:	fHasResult(false)
+	,	fResult(nullptr)
 		{}
 
 // Our protocol
-	void Do(ZRef<ZExpr> iExpr)
+	bool Do(ZRef<ZVisitee> iRep, Result_t& oResult)
 		{
-		if (iExpr)
-			iExpr->Accept(*this);
+		if (iRep)
+			{
+			Result_t* priorResult = fResult;
+			fResult = &oResult;
+
+			iRep->Accept(*this);
+			if (fHasResult)
+				{
+				fHasResult = false;
+				fResult = priorResult;
+				return true;
+				}
+			fResult = priorResult;
+			}
+
+		return false;
 		}
+
+	Result_t Do(ZRef<ZVisitee> iRep)
+		{
+		Result_t result;
+		this->Do(iRep, result);
+		return result;
+		}
+
+protected:
+	void pSetResult(const Result_t& iResult)
+		{
+		ZAssert(!fHasResult && fResult);
+		fHasResult = true;
+		*fResult = iResult;
+		}
+
+private:
+	bool fHasResult;
+	Result_t* fResult;
 	};
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZVisitor_Expr_Do__
+#endif // __ZVisitor_Do_T__

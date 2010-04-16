@@ -227,7 +227,7 @@ private:
 #pragma mark -
 #pragma mark * ZFileLoc
 
-class ZFileLoc : public ZRefCountedWithFinalize
+class ZFileLoc : public ZCounted
 	{
 protected:
 	ZFileLoc();
@@ -286,7 +286,7 @@ public:
 #pragma mark -
 #pragma mark * ZFileIterRep
 
-class ZFileIterRep : public ZRefCountedWithFinalize
+class ZFileIterRep : public ZCounted
 	{
 protected:
 	ZFileIterRep();
@@ -331,7 +331,7 @@ private:
 #pragma mark -
 #pragma mark * ZFileIterRep_Std::RealRep
 
-class ZFileIterRep_Std::RealRep : public ZRefCountedWithFinalize
+class ZFileIterRep_Std::RealRep : public ZCounted
 	{
 protected:
 	RealRep() {};
@@ -349,7 +349,7 @@ public:
 /// Base interface for stateless read access.
 
 class ZFileR
-:	public ZRefCountedWithFinalize,
+:	public ZCounted,
 	NonCopyable
 	{
 protected:
@@ -368,7 +368,7 @@ public:
 /// Base interface for stateless write access.
 
 class ZFileW
-:	public ZRefCountedWithFinalize,
+:	public ZCounted,
 	NonCopyable
 	{
 protected:

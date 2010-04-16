@@ -42,7 +42,7 @@ template <class Val> class ZValCondition_T;
 #pragma mark * ZValComparatorRep_T
 
 template <class Val>
-class ZValComparatorRep_T : public ZRefCountedWithFinalize
+class ZValComparatorRep_T : public ZCounted
 	{
 protected:
 	ZValComparatorRep_T();
@@ -166,7 +166,7 @@ public:
 #pragma mark * ZValComparandRep_T
 
 template <class Val>
-class ZValComparandRep_T : public ZRefCountedWithFinalize
+class ZValComparandRep_T : public ZCounted
 	{
 protected:
 	ZValComparandRep_T();

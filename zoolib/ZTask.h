@@ -34,7 +34,7 @@ class ZTask;
 #pragma mark * ZTaskMaster
 
 class ZTaskMaster
-:	public ZRefCountedWithFinalize,
+:	public ZCounted,
 	public ZWeakReferee
 	{
 public:
@@ -52,7 +52,7 @@ private:
 #pragma mark -
 #pragma mark * ZTask
 
-class ZTask : public ZRefCountedWithFinalize
+class ZTask : public ZCounted
 	{
 public:
 	ZTask(ZRef<ZTaskMaster> iTaskMaster);

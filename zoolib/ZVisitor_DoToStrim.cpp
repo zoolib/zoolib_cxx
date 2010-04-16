@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/ZVisitor_DoToStrim.h"
 
 #include <typeinfo>
 
@@ -27,9 +27,9 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_DoToStrim::Options
+#pragma mark * ZVisitor_DoToStrim::Options
 
-ZVisitor_Expr_DoToStrim::Options::Options()
+ZVisitor_DoToStrim::Options::Options()
 :	fEOLString("\n")
 ,	fIndentString("  ")
 ,	fInitialIndent(0)
@@ -38,29 +38,29 @@ ZVisitor_Expr_DoToStrim::Options::Options()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_DoToStrim
+#pragma mark * ZVisitor_DoToStrim
 static ZStrimW_Null sNull;
 
-ZVisitor_Expr_DoToStrim::ZVisitor_Expr_DoToStrim()
+ZVisitor_DoToStrim::ZVisitor_DoToStrim()
 :	fOptions(nullptr)
 ,	fStrimW(nullptr)
 ,	fIndent(0)
 	{}
 
-void ZVisitor_Expr_DoToStrim::Visit_Expr(ZRef<ZExpr> iRep)
+void ZVisitor_DoToStrim::Visit(ZRef<ZVisitee> iRep)
 	{
 	if (iRep)
-		pStrimW() << "/* unhandled ZExpr: " << typeid(*iRep.Get()).name() << " */";
+		pStrimW() << "/* unhandled ZVisitee: " << typeid(*iRep.Get()).name() << " */";
 	else
-		pStrimW() << "/*null ZExpr*/";
+		pStrimW() << "/*null ZVisitee*/";
 	}
 
-void ZVisitor_Expr_DoToStrim::DoToStrim(
-	const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZExpr> iExpr)
+void ZVisitor_DoToStrim::DoToStrim(
+	const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZVisitee> iRep)
 	{
 	const Options* priorOptions = fOptions;
 	const ZStrimW* priorStrimW = fStrimW;
-	int priorIndent = fIndent;
+	const int priorIndent = fIndent;
 
 	fOptions = &iOptions;
 	fStrimW = &iStrimW;
@@ -68,7 +68,7 @@ void ZVisitor_Expr_DoToStrim::DoToStrim(
 
 	try
 		{
-		this->DoToStrim(iExpr);
+		this->pDoToStrim(iRep);
 		}
 	catch (...)
 		{
@@ -83,27 +83,30 @@ void ZVisitor_Expr_DoToStrim::DoToStrim(
 	fIndent = priorIndent;
 	}
 
-void ZVisitor_Expr_DoToStrim::DoToStrim(ZRef<ZExpr> iExpr)
+void ZVisitor_DoToStrim::pDoToStrim(ZRef<ZVisitee> iRep)
 	{
 	ZAssert(fOptions && fStrimW);
-	++fIndent;
-	this->Do(iExpr);
-	--fIndent;
+	if (iRep)
+		{
+		++fIndent;
+		iRep->Accept(*this);
+		--fIndent;
+		}
 	}
 
-const  ZVisitor_Expr_DoToStrim::Options& ZVisitor_Expr_DoToStrim::pOptions()
+const  ZVisitor_DoToStrim::Options& ZVisitor_DoToStrim::pOptions()
 	{
 	ZAssert(fOptions);
 	return *fOptions;
 	}
 
-const ZStrimW& ZVisitor_Expr_DoToStrim::pStrimW()
+const ZStrimW& ZVisitor_DoToStrim::pStrimW()
 	{
 	ZAssert(fStrimW);
 	return *fStrimW;
 	}
 
-void ZVisitor_Expr_DoToStrim::pWriteLFIndent()
+void ZVisitor_DoToStrim::pWriteLFIndent()
 	{
 	pStrimW().Write(pOptions().fEOLString);
 	for (size_t x = 0; x < fIndent; ++x)

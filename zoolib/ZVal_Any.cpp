@@ -81,7 +81,7 @@ ZSeq_Any::Rep::Rep()
 ZSeq_Any::Rep::~Rep()
 	{}
 	
-ZSeq_Any::Rep::Rep(const vector<ZVal_Any>& iVector)
+ZSeq_Any::Rep::Rep(const Vector_t& iVector)
 :	fVector(iVector)
 	{}
 
@@ -108,11 +108,11 @@ ZSeq_Any& ZSeq_Any::operator=(const ZSeq_Any& iOther)
 	return *this;
 	}
 
-ZSeq_Any::ZSeq_Any(const vector<ZVal_Any>& iOther)
+ZSeq_Any::ZSeq_Any(const Vector_t& iOther)
 :	fRep(new Rep(iOther))
 	{}
 
-ZSeq_Any& ZSeq_Any::operator=(const vector<ZVal_Any>& iOther)
+ZSeq_Any& ZSeq_Any::operator=(const Vector_t& iOther)
 	{
 	fRep = new Rep(iOther);
 	return *this;
@@ -249,7 +249,7 @@ ZMap_Any::Rep::Rep()
 ZMap_Any::Rep::~Rep()
 	{}
 
-ZMap_Any::Rep::Rep(const map<string, ZVal_Any>& iMap)
+ZMap_Any::Rep::Rep(const Map_t& iMap)
 :	fMap(iMap)
 	{}
 
@@ -257,7 +257,7 @@ ZMap_Any::Rep::Rep(const map<string, ZVal_Any>& iMap)
 #pragma mark -
 #pragma mark * ZMap_Any
 
-static map<string, ZVal_Any> spEmptyMap;
+static ZMap_Any::Map_t spEmptyMap;
 
 ZMap_Any::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(fRep && !fRep->fMap.empty()); }
@@ -278,11 +278,11 @@ ZMap_Any& ZMap_Any::operator=(const ZMap_Any& iOther)
 	return *this;
 	}
 
-ZMap_Any::ZMap_Any(const map<string, ZVal_Any>& iOther)
+ZMap_Any::ZMap_Any(const Map_t& iOther)
 :	fRep(new Rep(iOther.begin(), iOther.end()))
 	{}
 
-ZMap_Any& ZMap_Any::operator=(map<string, ZVal_Any>& iOther)
+ZMap_Any& ZMap_Any::operator=(Map_t& iOther)
 	{
 	fRep = new Rep(iOther.begin(), iOther.end());
 	return *this;
@@ -326,7 +326,7 @@ int ZMap_Any::Compare(const ZMap_Any& iOther) const
 			}
 		}
 
-	for (map<string, ZVal_Any>::const_iterator iterThis = fRep->fMap.begin(),
+	for (Map_t::const_iterator iterThis = fRep->fMap.begin(),
 		iterOther = iOther.fRep->fMap.begin(),
 		endThis = fRep->fMap.end(),
 		endOther = iOther.fRep->fMap.end();
@@ -391,7 +391,7 @@ ZVal_Any* ZMap_Any::PGet(const string8& iName)
 
 ZVal_Any* ZMap_Any::PGet(const Index_t& iIndex)
 	{
-	map<string, ZVal_Any>::iterator theIndex = this->pTouch(iIndex);
+	Map_t::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())
 		return &(*theIndex).second;
 	return nullptr;
@@ -472,7 +472,7 @@ ZMap_Any& ZMap_Any::Set(const string8& iName, const ZVal_Any& iVal)
 
 ZMap_Any& ZMap_Any::Set(const Index_t& iIndex, const ZVal_Any& iVal)
 	{
-	map<string, ZVal_Any>::iterator theIndex = this->pTouch(iIndex);
+	Map_t::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())
 		(*theIndex).second = iVal;
 	return *this;
@@ -480,7 +480,7 @@ ZMap_Any& ZMap_Any::Set(const Index_t& iIndex, const ZVal_Any& iVal)
 
 ZMap_Any& ZMap_Any::Erase(const Index_t& iIndex)
 	{
-	map<string, ZVal_Any>::iterator theIndex = this->pTouch(iIndex);
+	Map_t::iterator theIndex = this->pTouch(iIndex);
 	if (theIndex != this->End())
 		fRep->fMap.erase(theIndex);
 	return *this;
@@ -544,7 +544,7 @@ void ZMap_Any::pTouch()
 		}
 	}
 
-map<string, ZVal_Any>::iterator ZMap_Any::pTouch(const Index_t& iIndex)
+ZMap_Any::Map_t::iterator ZMap_Any::pTouch(const Index_t& iIndex)
 	{
 	if (!fRep)
 		{

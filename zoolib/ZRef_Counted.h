@@ -22,97 +22,34 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRef_Counted__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZAtomic.h"
-#include "zoolib/ZThreadSafe.h"
-
-// ZRef_Counted does not itself use the definitions in
-// ZRef.h, but most/all users of ZRef_Counted do.
 #include "zoolib/ZRef.h"
+#include "zoolib/ZCounted.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZVisitor;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRefCounted
+#pragma mark * ZCountedBase (really ZCounted)
 
-class ZRefCounted
-	{
-public:
-	ZRefCounted();
-	virtual ~ZRefCounted();
-
-	void Retain() { ZThreadSafe_Inc(fRefCount); }
-	void Release();
-	int GetRefCount() const;
-
-private:
-	ZThreadSafe_t fRefCount;
-	};
-
-inline void sRetain(ZRefCounted& iObject)
+inline void sRetain(ZCountedBase& iObject)
 	{ iObject.Retain(); }
 
-inline void sRelease(ZRefCounted& iObject)
+inline void sRelease(ZCountedBase& iObject)
 	{ iObject.Release(); }
+
+typedef ZCounted ZRefCountedWithFinalize;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRefCountedWithFinalizeBase
+#pragma mark * ZCountedWithoutFinalize
 
-class ZRefCountedWithFinalizeBase
-	{
-public:
-	ZRefCountedWithFinalizeBase();
-	virtual ~ZRefCountedWithFinalizeBase();
-
-	virtual void Initialize();
-	virtual void Finalize();
-
-	void FinalizationComplete();
-
-	void Retain();
-	void Release();
-	int GetRefCount() const;
-
-protected:
-	int pCOMAddRef();
-	int pCOMRelease();
-
-private:
-	ZAtomic_t fRefCount;
-	};
-
-inline void sRetain(ZRefCountedWithFinalizeBase& iObject)
+inline void sRetain(ZCountedWithoutFinalize& iObject)
 	{ iObject.Retain(); }
 
-inline void sRelease(ZRefCountedWithFinalizeBase& iObject)
+inline void sRelease(ZCountedWithoutFinalize& iObject)
 	{ iObject.Release(); }
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZRefCountedWithFinalize
-
-class ZRefCountedWithFinalize : public virtual ZRefCountedWithFinalizeBase
-	{
-public:
-	ZRefCountedWithFinalize();
-	virtual ~ZRefCountedWithFinalize();
-
-// Our protocol
-	virtual void Accept(ZVisitor& iVisitor);
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZVisitor
-
-class ZVisitor
-	{
-public:
-	virtual void Visit(ZRef<ZRefCountedWithFinalize> iRep);
-	};
+typedef ZCountedWithoutFinalize ZRefCounted;
 
 NAMESPACE_ZOOLIB_END
 

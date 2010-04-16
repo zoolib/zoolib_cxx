@@ -47,7 +47,7 @@ public:
 #pragma mark -
 #pragma mark * ZGRgnRep
 
-class ZGRgnRep : public ZRefCountedWithFinalize
+class ZGRgnRep : public ZCounted
 	{
 protected:
 	ZGRgnRep();

@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Op_T.h"
-#include "zoolib/ZVisitor_Expr_Do_T.h"
+#include "zoolib/ZVisitor_Do_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -33,7 +33,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 template <class T>
 class ZVisitor_Expr_Op_DoTransform_T
-:	public virtual ZVisitor_Expr_Do_T<ZRef<T> >
+:	public virtual ZVisitor_Do_T<ZRef<T> >
 ,	public virtual ZVisitor_Expr_Op0_T<T>
 ,	public virtual ZVisitor_Expr_Op1_T<T>
 ,	public virtual ZVisitor_Expr_Op2_T<T>

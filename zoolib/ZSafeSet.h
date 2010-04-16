@@ -32,9 +32,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-using std::list;
-using std::map;
-
 template <class T> class ZSafeSet;
 template <class T> class ZSafeSetIter;
 template <class T> class ZSafeSetIterConst;
@@ -50,7 +47,7 @@ class DLink_SafeSetIterConst
 
 template <class T>
 class ZSafeSetRep
-:	public ZRefCountedWithFinalize,
+:	public ZCounted,
 	public ZWeakReferee
 	{
 private:
@@ -64,8 +61,8 @@ private:
 		DListHead<DLink_SafeSetIterConst<T> > fIters;
 		};
 
-	typedef list<Entry> EntryList;
-	typedef map<T, typename EntryList::iterator> EntryMap;
+	typedef std::list<Entry> EntryList;
+	typedef std::map<T, typename EntryList::iterator> EntryMap;
 
 	ZSafeSetRep()
 		{}
@@ -73,7 +70,8 @@ private:
 	ZSafeSetRep(const ZSafeSetRep& iOther)
 		{
 		ZGuardMtx guard(iOther.fMtx);
-		for (typename list<Entry>::iterator i = iOther.fList.begin(); i != iOther.fList.end(); ++i)
+		for (typename EntryList::iterator i = iOther.fList.begin();
+			i != iOther.fList.end(); ++i)
 			{
 			const T& val = *i;
 			typename EntryList::iterator listIter = fList.insert(fList.end(), Entry(val));
@@ -84,7 +82,7 @@ private:
 	virtual ~ZSafeSetRep()
 		{}
 
-	// From ZRefCountedWithFinalize
+	// From ZCounted
 	virtual void Finalize()
 		{
 		{ // Scope for guard

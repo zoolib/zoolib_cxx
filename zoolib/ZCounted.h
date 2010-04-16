@@ -18,56 +18,67 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_DoToStrim__
-#define __ZVisitor_Expr_DoToStrim__
+#ifndef __ZCounted__
+#define __ZCounted__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
-#include "zoolib/ZVisitor_Expr_Do.h"
+#include "zoolib/ZAtomic.h"
+#include "zoolib/ZThreadSafe.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_DoToStrim
+#pragma mark * ZCountedBase
 
-class ZVisitor_Expr_DoToStrim
-:	public virtual ZVisitor_Expr_Do
+class ZCountedBase
 	{
 public:
-	struct Options
-		{
-		Options();
+	ZCountedBase();
+	virtual ~ZCountedBase();
 
-		std::string fEOLString;
-		std::string fIndentString;
-		size_t fInitialIndent;
-		bool fDebuggingOutput;
-		};
+	virtual void Initialize();
+	virtual void Finalize();
 
-	ZVisitor_Expr_DoToStrim();
+	void FinalizationComplete();
 
-// From ZVisitor_Expr
-	virtual void Visit_Expr(ZRef<ZExpr> iRep);
-
-// Our protocol
-	void DoToStrim(const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZExpr> iExpr);
-
-	void DoToStrim(ZRef<ZExpr> iExpr);
+	void Retain();
+	void Release();
+	int GetRefCount() const;
 
 protected:
-	const Options& pOptions();
-	const ZStrimW& pStrimW();
-
-	void pWriteLFIndent();
+	int pCOMAddRef();
+	int pCOMRelease();
 
 private:
-	const Options* fOptions;
-	const ZStrimW* fStrimW;
+	ZAtomic_t fRefCount;
+	};
 
-	size_t fIndent;
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCounted
+
+class ZCounted : public virtual ZCountedBase
+	{};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCountedWithoutFinalize
+
+class ZCountedWithoutFinalize
+	{
+public:
+	ZCountedWithoutFinalize();
+	virtual ~ZCountedWithoutFinalize();
+
+	void Retain() { ZThreadSafe_Inc(fRefCount); }
+	void Release();
+	int GetRefCount() const;
+
+private:
+	ZThreadSafe_t fRefCount;
 	};
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZVisitor_Expr_DoToStrim__
+#endif // __ZCounted__

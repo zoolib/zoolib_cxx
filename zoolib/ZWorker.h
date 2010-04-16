@@ -35,7 +35,7 @@ class ZWorkerRunner;
 #pragma mark * ZWorker
 
 class ZWorker
-:	public virtual ZRefCountedWithFinalize
+:	public virtual ZCounted
 	{
 public:
 	virtual void RunnerAttached();
@@ -62,7 +62,7 @@ private:
 #pragma mark * ZWorkerRunner
 
 class ZWorkerRunner
-:	public ZRefCountedWithFinalize
+:	public ZCounted
 ,	public ZWeakReferee
 	{
 protected:

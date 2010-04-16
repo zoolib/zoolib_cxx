@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Logic.h"
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/ZVisitor_DoToStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -32,7 +32,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark * ZVisitor_Expr_Logic_DoToStrim
 
 class ZVisitor_Expr_Logic_DoToStrim
-:	public virtual ZVisitor_Expr_DoToStrim
+:	public virtual ZVisitor_DoToStrim
 ,	public virtual ZVisitor_Expr_Logic_True
 ,	public virtual ZVisitor_Expr_Logic_False
 ,	public virtual ZVisitor_Expr_Logic_Not

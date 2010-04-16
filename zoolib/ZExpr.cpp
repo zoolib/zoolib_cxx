@@ -26,12 +26,6 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZExpr
 
-ZExpr::ZExpr()
-	{}
-
-ZExpr::~ZExpr()
-	{}
-
 void ZExpr::Accept(ZVisitor& iVisitor)
 	{
 	if (ZVisitor_Expr* theVisitor =
@@ -41,7 +35,7 @@ void ZExpr::Accept(ZVisitor& iVisitor)
 		}
 	else
 		{
-		ZRefCountedWithFinalize::Accept(iVisitor);
+		ZVisitee::Accept(iVisitor);
 		}
 	}
 
@@ -53,6 +47,6 @@ void ZExpr::Accept_Expr(ZVisitor_Expr& iVisitor)
 #pragma mark * ZVisitor_Expr
 
 void ZVisitor_Expr::Visit_Expr(ZRef<ZExpr> iExpr)
-	{ ZVisitor::Visit(iExpr); }
+	{ this->Visit(iExpr); }
 
 NAMESPACE_ZOOLIB_END

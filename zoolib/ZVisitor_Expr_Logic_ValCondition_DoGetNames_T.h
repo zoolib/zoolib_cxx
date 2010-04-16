@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Logic_ValCondition_T.h"
-#include "zoolib/ZVisitor_Expr_Do_T.h"
+#include "zoolib/ZVisitor_Do_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -33,7 +33,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 template <class Val>
 class ZVisitor_Expr_Logic_ValCondition_DoGetNames_T
-:	public virtual ZVisitor_Expr_Do_T<std::set<std::string> >
+:	public virtual ZVisitor_Do_T<std::set<std::string> >
 ,	public virtual ZVisitor_Expr_Logic_ValCondition_T<Val>
 ,	public virtual ZVisitor_Expr_Op1_T<ZExpr_Logic>
 ,	public virtual ZVisitor_Expr_Op2_T<ZExpr_Logic>

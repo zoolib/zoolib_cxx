@@ -36,7 +36,7 @@ ZMACRO_CompareRegistration_T(ZData_Any)
 #pragma mark -
 #pragma mark * ZData_Any::Rep
 
-class ZData_Any::Rep : public ZRefCounted
+class ZData_Any::Rep : public ZCountedWithoutFinalize
 	{
 public:
 	Rep();

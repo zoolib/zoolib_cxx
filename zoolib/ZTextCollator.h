@@ -160,7 +160,7 @@ private:
 #pragma mark -
 #pragma mark * ZTextCollatorRep
 
-class ZTextCollatorRep : public ZRefCounted
+class ZTextCollatorRep : public ZCountedWithoutFinalize
 	{
 protected:
 	ZTextCollatorRep();

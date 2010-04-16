@@ -49,7 +49,7 @@ class ZUSBInterfaceInterface;
 #pragma mark -
 #pragma mark * ZUSBWatcher
 
-class ZUSBWatcher : public ZRefCounted
+class ZUSBWatcher : public ZCountedWithoutFinalize
 	{
 public:
 	class Observer
@@ -78,7 +78,7 @@ private:
 #pragma mark -
 #pragma mark * ZUSBDevice
 
-class ZUSBDevice : public ZRefCounted
+class ZUSBDevice : public ZCountedWithoutFinalize
 	{
 public:
 	class Observer
@@ -124,7 +124,7 @@ private:
 #pragma mark -
 #pragma mark * ZUSBInterfaceInterface
 
-class ZUSBInterfaceInterface : public ZRefCounted
+class ZUSBInterfaceInterface : public ZCountedWithoutFinalize
 	{
 	friend class ZUSBDevice;
 

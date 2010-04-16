@@ -18,43 +18,56 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZVisitor_Expr_Logic_DoToStrim.h"
+#ifndef __ZVisitor_DoToStrim__
+#define __ZVisitor_DoToStrim__
+#include "zconfig.h"
+
+#include "zoolib/ZStrim.h"
+#include "zoolib/ZVisitor.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Logic_DoToStrim
+#pragma mark * ZVisitor_DoToStrim
 
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iRep)
-	{ pStrimW() << "true"; }
-
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_False(ZRef<ZExpr_Logic_False> iRep)
-	{ pStrimW() << "false"; }
-
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_Not(ZRef<ZExpr_Logic_Not> iRep)
+class ZVisitor_DoToStrim
+:	public virtual ZVisitor
 	{
-	pStrimW() << "~(";
-	this->pDoToStrim(iRep->GetOp0());
-	pStrimW() << ")";
-	}
+public:
+	struct Options
+		{
+		Options();
 
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep)
-	{
-	pStrimW() << "(";
-	this->pDoToStrim(iRep->GetOp0());
-	pStrimW() << " & ";
-	this->pDoToStrim(iRep->GetOp1());
-	pStrimW() << ")";
-	}
+		std::string fEOLString;
+		std::string fIndentString;
+		size_t fInitialIndent;
+		bool fDebuggingOutput;
+		};
 
-void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
-	{
-	pStrimW() << "(";
-	this->pDoToStrim(iRep->GetOp0());
-	pStrimW() << " | ";
-	this->pDoToStrim(iRep->GetOp1());
-	pStrimW() << ")";
-	}
+	ZVisitor_DoToStrim();
+
+// From ZVisitor
+	virtual void Visit(ZRef<ZVisitee> iRep);
+
+// Our protocol
+	void DoToStrim(const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZVisitee> iRep);
+
+protected:
+	void pDoToStrim(ZRef<ZVisitee> iRep);
+
+	const Options& pOptions();
+	const ZStrimW& pStrimW();
+
+	void pWriteLFIndent();
+
+private:
+	const Options* fOptions;
+	const ZStrimW* fStrimW;
+
+	size_t fIndent;
+	};
 
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZVisitor_DoToStrim__

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZExpr__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZRef_Counted.h"
+#include "zoolib/ZVisitor.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -32,15 +32,10 @@ class ZVisitor_Expr;
 #pragma mark -
 #pragma mark * ZExpr
 
-class ZExpr : public ZRefCountedWithFinalize
+class ZExpr : public ZVisitee
 	{
-protected:
-	ZExpr();
-
 public:
-	virtual ~ZExpr();
-
-// From ZRefCountedWithFinalize
+// From ZVisitee
 	virtual void Accept(ZVisitor& iVisitor);
 
 // Our protocol

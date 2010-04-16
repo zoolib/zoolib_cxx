@@ -43,7 +43,7 @@ public:
 	ZServer();
 	virtual ~ZServer();
 
-// From ZRefCountedWithFinalize
+// From ZCounted
 	virtual void Finalize();
 
 // From ZTaskMaster

@@ -101,7 +101,7 @@ void ZYadR::Accept(ZVisitor& iVisitor)
 		}
 	else
 		{
-		ZRefCountedWithFinalize::Accept(iVisitor);
+		ZVisitee::Accept(iVisitor);
 		}
 	}
 
@@ -324,7 +324,7 @@ bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 */
 
 void ZVisitor_Yad::Visit_YadR(ZRef<ZYadR> iYadR)
-	{ ZVisitor::Visit(iYadR); }
+	{ this->Visit(iYadR); }
 
 void ZVisitor_Yad::Visit_YadPrimR(ZRef<ZYadPrimR> iYadPrimR)
 	{ this->Visit_YadR(iYadPrimR); }

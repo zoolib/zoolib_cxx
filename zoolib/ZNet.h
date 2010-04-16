@@ -95,7 +95,7 @@ public:
 /// Subclasses of this are returned by ZNetAddress instances when
 /// ZNetAddress::CreateLookup is called. It's an iterator that returns zero or
 /// more names that are considered to map to the address in question.
-class ZNetAddressLookup : public ZRefCountedWithFinalize
+class ZNetAddressLookup : public ZCounted
 	{
 public:
 	virtual ~ZNetAddressLookup();
@@ -138,7 +138,7 @@ public:
 /// Subclasses of this are returned by ZNetName instances when
 /// ZNetName::CreateLookup is called. It's an iterator that returns zero or
 /// more addresses that the name maps to.
-class ZNetNameLookup : public ZRefCountedWithFinalize
+class ZNetNameLookup : public ZCounted
 	{
 public:
 	virtual ~ZNetNameLookup();
@@ -201,7 +201,7 @@ public:
 #pragma mark -
 #pragma mark * ZNetEndpointDG
 
-class ZNetEndpointDG : public ZRefCountedWithFinalize
+class ZNetEndpointDG : public ZCounted
 	{
 protected:
 	ZNetEndpointDG();
