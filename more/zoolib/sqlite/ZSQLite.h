@@ -35,7 +35,7 @@ namespace ZSQLite {
 #pragma mark -
 #pragma mark * ZSQLite
 
-class DB : public ZRefCountedWithFinalize
+class DB : public ZCounted
 	{
 public:
 	DB(const string8& iPath);
@@ -51,7 +51,7 @@ private:
 #pragma mark -
 #pragma mark * Iter
 
-class Iter : public ZRefCountedWithFinalize
+class Iter : public ZCounted
 	{
 	Iter(ZRef<DB> iDB, const string8& iSQL, size_t iPosition);
 

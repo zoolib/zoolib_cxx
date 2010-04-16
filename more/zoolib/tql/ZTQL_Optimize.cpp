@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZExpr_Logic_ValCondition.h"
 #include "zoolib/tql/ZTQL_Optimize.h"
-#include "zoolib/ZVisitor_Expr_Do_T.h"
+#include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Restrict.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Select.h"
@@ -58,7 +58,7 @@ CondUnion spCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight)
 	}
 
 class Gather
-:	public virtual ZVisitor_Expr_Do_T<CondUnion>
+:	public virtual ZVisitor_Do_T<CondUnion>
 ,	public virtual ZVisitor_Expr_Logic_True
 ,	public virtual ZVisitor_Expr_Logic_False
 ,	public virtual ZVisitor_Expr_Logic_Not

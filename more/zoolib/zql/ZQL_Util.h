@@ -34,7 +34,7 @@ namespace Util {
 #pragma mark -
 #pragma mark * Util
 
-class Problem : public ZRefCountedWithFinalize
+class Problem : public ZCounted
 	{
 public:
 	Problem(ZRef<Expr_Rel> iRel, std::string iDescription);

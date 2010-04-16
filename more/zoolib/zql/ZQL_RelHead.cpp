@@ -23,21 +23,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * RelHead, extra operators
-
-RelHead operator|(const char* iElem, const RelHead& iRelHead)
-	{ return iRelHead | std::string(iElem); }
-
-RelHead operator|(const RelHead& iRelHead, const char* iElem)
-	{ return iRelHead | std::string(iElem); }
-
-RelHead operator&(const RelHead& iRelHead, const char* iElem)
-	{ return iRelHead & std::string(iElem); }
-
-RelHead operator&(const char* iElem, const RelHead& iRelHead)
-	{ return iRelHead & std::string(iElem); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

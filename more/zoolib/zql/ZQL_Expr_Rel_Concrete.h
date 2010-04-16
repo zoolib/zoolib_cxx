@@ -36,7 +36,7 @@ class Visitor_Expr_Rel_Concrete;
 #pragma mark -
 #pragma mark * ConcreteDomain
 
-class ConcreteDomain : public ZRefCountedWithFinalize
+class ConcreteDomain : public ZCounted
 	{
 public:
 	ConcreteDomain();

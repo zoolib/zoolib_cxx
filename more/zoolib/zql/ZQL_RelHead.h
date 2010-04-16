@@ -35,11 +35,26 @@ namespace ZQL {
 
 typedef ZUniSet_T<std::string> RelHead;
 
-RelHead operator|(const char* iElem, const RelHead& iRelHead);
-RelHead operator|(const RelHead& iRelHead, const char* iElem);
+inline RelHead operator&(const RelHead& iRelHead, const char* iElem)
+	{ return iRelHead & std::string(iElem); }
 
-RelHead operator&(const RelHead& iRelHead, const char* iElem);
-RelHead operator&(const char* iElem, const RelHead& iRelHead);
+inline RelHead operator&(const char* iElem, const RelHead& iRelHead)
+	{ return iRelHead & std::string(iElem); }
+
+inline RelHead operator|(const char* iElem, const RelHead& iRelHead)
+	{ return iRelHead | std::string(iElem); }
+
+inline RelHead operator|(const RelHead& iRelHead, const char* iElem)
+	{ return iRelHead | std::string(iElem); }
+
+inline RelHead operator-(const RelHead& iRelHead, const char* iElem)
+	{ return iRelHead - std::string(iElem); }
+
+inline RelHead operator^(const char* iElem, const RelHead& iRelHead)
+	{ return iRelHead ^ std::string(iElem); }
+
+inline RelHead operator^(const RelHead& iRelHead, const char* iElem)
+	{ return iRelHead ^ std::string(iElem); }
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

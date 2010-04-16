@@ -350,7 +350,7 @@ inline int sCompare_T(const ZTBSpec::Criterion& iL, const ZTBSpec::Criterion& iR
 #pragma mark -
 #pragma mark * ZTBSpec::Criterion::Rep
 
-class ZTBSpec::Criterion::Rep : public ZRefCounted
+class ZTBSpec::Criterion::Rep : public ZCountedWithoutFinalize
 	{
 private:
 	Rep();

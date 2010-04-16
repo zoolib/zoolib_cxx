@@ -31,7 +31,7 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Iterator
 
-class Iterator : public ZRefCountedWithFinalize
+class Iterator : public ZCounted
 	{
 protected:
 	Iterator();

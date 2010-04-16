@@ -35,7 +35,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZTS
 
-class ZTS : public ZRefCounted, NonCopyable
+class ZTS : public ZCountedWithoutFinalize, NonCopyable
 	{
 protected:
 	ZTS();

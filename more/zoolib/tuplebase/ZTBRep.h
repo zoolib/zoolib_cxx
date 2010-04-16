@@ -36,7 +36,7 @@ class ZTBRepTransaction;
 #pragma mark * ZTBRep
 
 class ZTBRep
-:	public ZRefCountedWithFinalize,
+:	public ZCounted,
 	private ZTxnTarget,
 	NonCopyable
 	{

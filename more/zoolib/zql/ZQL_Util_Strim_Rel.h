@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZQL_Util_Strim_Rel__
 #include "zconfig.h"
 
-#include "zoolib/ZVisitor_Expr_DoToStrim.h"
+#include "zoolib/ZVisitor_DoToStrim.h"
 #include "zoolib/zql/ZQL_Expr_Rel.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -33,7 +33,7 @@ namespace Util_Strim_Rel {
 #pragma mark -
 #pragma mark * ZQL_Util_Strim_Rel
 
-typedef ZVisitor_Expr_DoToStrim::Options Options;
+typedef ZVisitor_DoToStrim::Options Options;
 
 void sToStrim(const Rel& iRel, const ZStrimW& iStrimW);
 

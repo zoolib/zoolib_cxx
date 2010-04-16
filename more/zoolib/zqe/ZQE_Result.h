@@ -32,7 +32,7 @@ namespace ZQE {
 #pragma mark -
 #pragma mark * Result
 
-class Result : public ZRefCountedWithFinalize
+class Result : public ZCounted
 	{
 public:
 	virtual bool SameAs(ZRef<Result> iOther) = 0;

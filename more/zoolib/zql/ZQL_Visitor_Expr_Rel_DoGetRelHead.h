@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Op_T.h"
-#include "zoolib/ZVisitor_Expr_Do_T.h"
+#include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Project.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Rename.h"
@@ -36,7 +36,7 @@ namespace ZQL {
 #pragma mark * Visitor_Expr_Rel_DoGetRelHead
 
 class Visitor_Expr_Rel_DoGetRelHead
-:	public virtual ZVisitor_Expr_Do_T<RelHead>
+:	public virtual ZVisitor_Do_T<RelHead>
 ,	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
 ,	public virtual ZVisitor_Expr_Op2_T<Expr_Rel>
 ,	public virtual Visitor_Expr_Rel_Concrete

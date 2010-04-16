@@ -79,7 +79,7 @@ protected:
 #pragma mark -
 #pragma mark * ZTupleIndexFactory
 
-class ZTupleIndexFactory : public ZRefCounted
+class ZTupleIndexFactory : public ZCountedWithoutFinalize
 	{
 public:
 	virtual ~ZTupleIndexFactory();

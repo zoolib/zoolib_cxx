@@ -36,7 +36,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZTSWatcher
 
-class ZTSWatcher : public ZRefCountedWithFinalize, NonCopyable
+class ZTSWatcher : public ZCounted, NonCopyable
 	{
 protected:
 	ZTSWatcher();
@@ -87,7 +87,7 @@ public:
 #pragma mark -
 #pragma mark * ZTSWatcherFactory
 
-class ZTSWatcherFactory : public ZRefCountedWithFinalize
+class ZTSWatcherFactory : public ZCounted
 	{
 protected:
 	ZTSWatcherFactory();

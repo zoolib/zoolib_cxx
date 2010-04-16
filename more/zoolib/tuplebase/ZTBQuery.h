@@ -216,7 +216,7 @@ class ZTBQueryNode_ID_Constant;
 class ZTBQueryNode_ID_FromSource;
 class ZTBQueryNode_Property;
 
-class ZTBQueryNode : public ZRefCounted
+class ZTBQueryNode : public ZCountedWithoutFinalize
 	{
 protected:
 	ZTBQueryNode();

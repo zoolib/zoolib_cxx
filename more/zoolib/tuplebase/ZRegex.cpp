@@ -49,7 +49,7 @@ using std::string;
 #pragma mark -
 #pragma mark * ZRegexRep
 
-class ZRegexRep : public ZRefCounted
+class ZRegexRep : public ZCountedWithoutFinalize
 	{
 public:
 	ZRegexRep(const std::string& iRegex, int iStrength);

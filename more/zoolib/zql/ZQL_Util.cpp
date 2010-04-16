@@ -53,7 +53,7 @@ string Problem::GetDescription() const
 namespace ZANONYMOUS {
 
 class Doer
-:	public virtual ZVisitor_Expr_Do_T<RelHead>
+:	public virtual ZVisitor_Do_T<RelHead>
 ,	public virtual Visitor_Expr_Rel_DoGetRelHead
 ,	public virtual Visitor_Expr_Rel_Restrict
 ,	public virtual Visitor_Expr_Rel_Select

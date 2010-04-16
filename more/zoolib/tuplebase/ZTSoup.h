@@ -40,7 +40,7 @@ class ZTSieve;
 #pragma mark * ZTSoup
 
 class ZTSoup
-:	public ZRefCountedWithFinalize
+:	public ZCounted
 	{
 public:
 	enum { kDebug = ZCONFIG_Debug_TSoup_Debug };
@@ -182,7 +182,7 @@ class DLink_ZTSieve_Using
 	{};
 
 class ZTSieve
-:	public ZRefCountedWithFinalize
+:	public ZCounted
 ,	public DLink_ZTSieve_Using
 	{
 public:
@@ -220,7 +220,7 @@ class DLink_ZTCrouton_Using
 	{};
 
 class ZTCrouton
-:	public ZRefCountedWithFinalize
+:	public ZCounted
 ,	public DLink_ZTCrouton_Using
 	{
 public:

@@ -77,42 +77,28 @@ void Visitor_DoMakeIterator::Visit_Expr_Rel_Concrete(ZRef<ZQL::Expr_Rel_Concrete
 class Expr_Rel_Concrete_Dummy : public ZQL::Expr_Rel_Concrete
 	{
 public:
-	Expr_Rel_Concrete_Dummy(const ZQL::RelHead& iRelHead, const string8* iName);
+	Expr_Rel_Concrete_Dummy(const ZQL::RelHead& iRelHead, const string8& iName);
 
 // From ZQL::Expr_Rel_Concrete
 	virtual ZQL::RelHead GetRelHead();
 
-	virtual bool GetName(string8& oName);
+	virtual string8 GetName();
 
 private:
 	const ZQL::RelHead fRelHead;
-	bool fNamed;
-	string8 fName;
+	const string8 fName;
 	};
 
-Expr_Rel_Concrete_Dummy::Expr_Rel_Concrete_Dummy(const ZQL::RelHead& iRelHead, const string8* iName)
+Expr_Rel_Concrete_Dummy::Expr_Rel_Concrete_Dummy(const ZQL::RelHead& iRelHead, const string8& iName)
 :	fRelHead(iRelHead)
-,	fNamed(false)
-	{
-	if (iName)
-		{
-		fNamed = true;
-		fName = *iName;
-		}
-	}
+,	fName(iName)
+	{}
 
 ZQL::RelHead Expr_Rel_Concrete_Dummy::GetRelHead()
 	{ return fRelHead; }
 
-bool Expr_Rel_Concrete_Dummy::GetName(string8& oName)
-	{
-	if (fNamed)
-		{
-		oName = fName;
-		return true;
-		}
-	return false;
-	}
+string8 Expr_Rel_Concrete_Dummy::GetName()
+	{ return fName; }
 
 // =================================================================================================
 #pragma mark -
@@ -124,10 +110,10 @@ ZRef<ZQL::Expr_Rel> sConcrete()
 	{ return sConcrete(ZQL::RelHead::sUniversal()); }
 
 ZRef<ZQL::Expr_Rel> sConcrete(const ZQL::RelHead& iRelHead)
-	{ return new Expr_Rel_Concrete_Dummy(iRelHead, nullptr); }
+	{ return new Expr_Rel_Concrete_Dummy(iRelHead, string8()); }
 
 ZRef<ZQL::Expr_Rel> sConcrete(const ZQL::RelHead& iRelHead, const string8& iName)
-	{ return new Expr_Rel_Concrete_Dummy(iRelHead, &iName); }
+	{ return new Expr_Rel_Concrete_Dummy(iRelHead, iName); }
 
 ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::Expr_Rel> iExpr)
 	{ return Visitor_DoMakeIterator().Do(iExpr); }

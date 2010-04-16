@@ -38,13 +38,13 @@ static void spDumpRel(const ZStrimW& s, Rel iRel)
 
 static void sDumpSFW(const ZStrimW& s, ZRef<SQL::Expr_Rel_SFW> iExpr)
 	{
-	ZVisitor_Expr_DoToStrim::Options theOptions;
+	ZVisitor_DoToStrim::Options theOptions;
 	theOptions.fInitialIndent = 1;
 
 	const map<string8, string8>& theMap = iExpr->GetRenameMap();
 	s << "Renames:\n";
 	for (map<string8, string8>::const_iterator i = theMap.begin(); i != theMap.end(); ++i)
-		s << "  " << (*i).first << "<--" << (*i).second << "\n" ;
+		s << "  " << (*i).second << "<--" << (*i).first << "\n" ;
 
 	s << "Relhead:\n  ";
 	Util_Strim_RelHead::sWrite_RelHead(iExpr->GetRelHead(), s);
@@ -62,6 +62,8 @@ static void sDumpSFW(const ZStrimW& s, ZRef<SQL::Expr_Rel_SFW> iExpr)
 		Util_Strim_Rel::sToStrim(*i, theOptions, s);
 		s << "\n";
 		}
+
+	s << sAsSQL(iExpr) << "\n";
 	}
 
 static void spDumpProblems(const ZStrimW& s, Rel iRel)
@@ -80,16 +82,25 @@ static void spDumpProblems(const ZStrimW& s, Rel iRel)
 
 Rel genre = ZValBase::sConcrete(RelHead() | "genre.idGenre" | "genre.strGenre", "genre");
 Rel genrelinkmovie = ZValBase::sConcrete(RelHead() | "genrelinkmovie.idGenre" | "genrelinkmovie.idMovie", "genrelinkmovie");
-Rel movie = ZValBase::sConcrete(RelHead() | "movie.idMovie" | "movie.file" | "movie.idGenre", "movie");
+Rel movie = ZValBase::sConcrete(RelHead() | "movie.idMovie" | "movie.c00" , "movie");
 Spec theSpec = CName("movie.idMovie") == CName("link.idMovie") & CName("movie.idGenre") == CName("link.idGenre");
 
 void sTestQL3(const ZStrimW& s)
 	{
-	Rel theRel = (genre * genrelinkmovie) & CName("genre.idGenre") == CName("genrelinkmovie.idGenre");
-	theRel = sRename(theRel, "idGenre", "genre.idGenre");
+	Rel lgenre = genre;
+	lgenre = sRename(lgenre, "idGenre", "genre.idGenre");
+	Rel theRel = (lgenre * genrelinkmovie) & CName("idGenre") == CName("genrelinkmovie.idGenre");
 	spDumpRel(s, theRel);
 	spDumpProblems(s, theRel);
-	sDumpSFW(s, ZQL::SQL::sConvert(theRel));
+	ZRef<SQL::Expr_Rel_SFW> theSFW = ZQL::SQL::sConvert(theRel);
+	sDumpSFW(s, theSFW);
+
+	{
+	Rel another = (theRel * movie) & (CName("movie.idMovie") == CName("genrelinkmovie.idMovie"));
+	spDumpRel(s, another);
+	spDumpProblems(s, another);
+	sDumpSFW(s, ZQL::SQL::sConvert(another));
+	}
 	}
 
 static Rel spRel()

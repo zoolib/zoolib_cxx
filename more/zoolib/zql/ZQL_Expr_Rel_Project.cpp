@@ -20,8 +20,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zql/ZQL_Expr_Rel_Project.h"
 
-using std::string;
-
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 

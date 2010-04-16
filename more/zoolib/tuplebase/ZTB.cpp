@@ -573,7 +573,7 @@ ZTBRepTransaction* ZTBTxn::GetTBRepTransaction() const
 #pragma mark -
 #pragma mark * ZTBIterRep
 
-class ZTBIterRep : public ZRefCounted
+class ZTBIterRep : public ZCountedWithoutFinalize
 	{
 public:
 	ZTBIterRep(ZTBRepTransaction* iTransaction, const ZTBQuery& iQuery);

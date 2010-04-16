@@ -821,7 +821,7 @@ int ZTBSpec::Criterion::Compare(const Criterion& iOther) const
 #pragma mark -
 #pragma mark * ZTBSpec::Rep
 
-class ZTBSpec::Rep : public ZRefCounted
+class ZTBSpec::Rep : public ZCountedWithoutFinalize
 	{
 public:
 	Rep();

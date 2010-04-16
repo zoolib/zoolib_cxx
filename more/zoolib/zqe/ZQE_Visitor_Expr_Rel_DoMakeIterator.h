@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZQE_Visitor_Expr_Rel_DoMakeIterator__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZVisitor_Expr_Do_T.h"
+#include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/zqe/ZQE_Iterator.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Difference.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Intersect.h"
@@ -40,7 +40,7 @@ namespace ZQE {
 #pragma mark * Visitor_Expr_Rel_DoMakeIterator
 
 class Visitor_Expr_Rel_DoMakeIterator
-:	public virtual ZVisitor_Expr_Do_T<ZRef<Iterator> >
+:	public virtual ZVisitor_Do_T<ZRef<Iterator> >
 ,	public virtual ZQL::Visitor_Expr_Rel_Difference
 ,	public virtual ZQL::Visitor_Expr_Rel_Intersect
 ,	public virtual ZQL::Visitor_Expr_Rel_Join

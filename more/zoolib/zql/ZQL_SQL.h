@@ -65,6 +65,8 @@ public:
 
 ZRef<Expr_Rel_SFW> sConvert(ZRef<Expr_Rel> iExpr);
 
+string8 sAsSQL(ZRef<Expr_Rel_SFW> iSFW);
+
 } // namespace SQL
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

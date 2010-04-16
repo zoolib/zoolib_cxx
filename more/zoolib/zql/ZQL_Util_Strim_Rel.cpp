@@ -101,7 +101,7 @@ public:
 	virtual void Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr);
 
 private:
-	void pWriteBinary(const std::string& iFunctionName, ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr);
+	void pWriteBinary(const string& iFunctionName, ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr);
 	};
 
 } // anonymous namespace
@@ -131,11 +131,11 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Join(ZRef<Expr_Rel_Join> iExpr)
 		}
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetOp0());
+	this->pDoToStrim(iExpr->GetOp0());
 	w << ", ";
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetOp1());
+	this->pDoToStrim(iExpr->GetOp1());
 
 	this->pWriteLFIndent();
 	w << ")";
@@ -173,7 +173,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
 	spWrite(",", w);
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetOp0());
+	this->pDoToStrim(iExpr->GetOp0());
 
 	this->pWriteLFIndent();
 	spWrite(")", w);
@@ -197,7 +197,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 	spWrite(",", w);
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetOp0());
+	this->pDoToStrim(iExpr->GetOp0());
 
 	this->pWriteLFIndent();
 	spWrite(")", w);
@@ -218,7 +218,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr)
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetOp0());
+	this->pDoToStrim(iExpr->GetOp0());
 
 	this->pWriteLFIndent();
 	w << ")";
@@ -235,11 +235,11 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	this->pWriteLFIndent();
 	w << "(";
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetExpr_Logic());
+	this->pDoToStrim(iExpr->GetExpr_Logic());
 	w << ",";
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetOp0());
+	this->pDoToStrim(iExpr->GetOp0());
 
 	this->pWriteLFIndent();
 	w << ")";
@@ -247,7 +247,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 
 
 void Visitor_DoToStrim::pWriteBinary(
-	const std::string& iFunctionName, ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr)
+	const string& iFunctionName, ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr)
 	{
 	const ZStrimW& w = pStrimW();
 	w << iFunctionName;
@@ -259,11 +259,11 @@ void Visitor_DoToStrim::pWriteBinary(
 	w << "(";
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetOp0());
+	this->pDoToStrim(iExpr->GetOp0());
 	w << ", ";
 
 	this->pWriteLFIndent();
-	this->DoToStrim(iExpr->GetOp1());
+	this->pDoToStrim(iExpr->GetOp1());
 
 	this->pWriteLFIndent();
 	w << ")";
