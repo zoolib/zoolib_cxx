@@ -25,10 +25,6 @@ NAMESPACE_ZOOLIB_BEGIN
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZVisitee
-// Visitee, acceptee, invitor, 
-
-// Or receiver? Something which receives a visitor. Perhaps Accept should be invite -- an
-// invitation is what precedes the visit.
 
 void ZVisitee::Accept(ZVisitor& iVisitor)
 	{ iVisitor.Visit(this); }
