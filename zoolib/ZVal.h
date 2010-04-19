@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZVal__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZStdInt.h" // For size_t
 #include "zoolib/ZString.h"//##
-#include "zoolib/ZTypes.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
