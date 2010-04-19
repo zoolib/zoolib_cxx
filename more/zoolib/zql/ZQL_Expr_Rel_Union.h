@@ -71,7 +71,7 @@ public:
 ZRef<Expr_Rel_Union> sUnion(
 	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
 
-ZRef<Expr_Rel_Union> operator|(
+ZRef<Expr_Rel> operator|(
 	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
 
 } // namespace ZQL

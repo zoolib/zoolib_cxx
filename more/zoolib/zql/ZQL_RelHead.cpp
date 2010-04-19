@@ -48,7 +48,7 @@ const ZStrimW& operator<<(const ZStrimW& iStrimW, const RelHead& iRelHead)
 #define show(a) s << #a << ": " << (a) << "\n";
 
 #define verify(a,b) s << #a << ": " << (a); \
-	check(s, a,b);
+	check(s, a, b);
 
 static void check(const ZStrimW& w, const RelHead& sample, const RelHead& expected)
 	{
@@ -132,4 +132,5 @@ void sTestRelHead(const ZStrimW& s)
 	verify(_a - _b, b)
 	verify(_a ^ _b, ab)
 	}
+
 #endif // ! ZCONFIG_ExcludeTests

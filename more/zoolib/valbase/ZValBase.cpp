@@ -56,25 +56,28 @@ void Visitor_DoMakeIterator::Visit_Expr_Rel_Concrete(ZRef<ZQL::Expr_Rel_Concrete
 void Visitor_DoMakeIterator::Visit_Expr_Rel_Project(ZRef<ZQL::Expr_Rel_Project> iExpr)
 	{
 	if (ZRef<ZQE::Iterator> theIterator = this->Do(iExpr->GetOp0()))
-		this->pSetResult(new ZQE::Iterator_Any_Project(iExpr->GetRelHead(), theIterator));
+		this->pSetResult(new ZQE::Iterator_Any_Project(theIterator, iExpr->GetRelHead()));
 	}
 
 void Visitor_DoMakeIterator::Visit_Expr_Rel_Rename(ZRef<ZQL::Expr_Rel_Rename> iExpr)
 	{
 	if (ZRef<ZQE::Iterator> theIterator = this->Do(iExpr->GetOp0()))
-		this->pSetResult(new ZQE::Iterator_Any_Rename(iExpr->GetNew(), iExpr->GetOld(), theIterator));
+		{
+		this->pSetResult(
+			new ZQE::Iterator_Any_Rename(theIterator, iExpr->GetNew(), iExpr->GetOld()));
+		}
 	}
 
 void Visitor_DoMakeIterator::Visit_Expr_Rel_Restrict(ZRef<ZQL::Expr_Rel_Restrict> iExpr)
 	{
 	if (ZRef<ZQE::Iterator> theIterator = this->Do(iExpr->GetOp0()))
-		this->pSetResult(new ZQE::Iterator_Any_Restrict(iExpr->GetValCondition(), theIterator));
+		this->pSetResult(new ZQE::Iterator_Any_Restrict(theIterator, iExpr->GetValCondition()));
 	}
 
 void Visitor_DoMakeIterator::Visit_Expr_Rel_Select(ZRef<ZQL::Expr_Rel_Select> iExpr)
 	{
 	if (ZRef<ZQE::Iterator> theIterator = this->Do(iExpr->GetOp0()))
-		this->pSetResult(new ZQE::Iterator_Any_Select(iExpr->GetExpr_Logic(), theIterator));
+		this->pSetResult(new ZQE::Iterator_Any_Select(theIterator, iExpr->GetExpr_Logic()));
 	}
 
 } // anonymous namespace

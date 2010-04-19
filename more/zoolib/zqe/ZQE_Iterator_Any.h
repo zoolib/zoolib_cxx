@@ -38,15 +38,15 @@ class Iterator_Any_Project
 :	public Iterator
 	{
 public:
-	Iterator_Any_Project(const ZQL::RelHead& iRelHead, ZRef<Iterator> iIterator);
+	Iterator_Any_Project(ZRef<Iterator> iIterator, const ZQL::RelHead& iRelHead);
 	
 // From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
 
 private:
-	ZQL::RelHead fRelHead;
 	ZRef<Iterator> fIterator;
+	ZQL::RelHead fRelHead;
 	};
 
 // =================================================================================================
@@ -57,16 +57,16 @@ class Iterator_Any_Rename
 :	public Iterator
 	{
 public:
-	Iterator_Any_Rename(const std::string& iNew, const std::string& iOld, ZRef<Iterator> iIterator);
+	Iterator_Any_Rename(ZRef<Iterator> iIterator, const std::string& iNew, const std::string& iOld);
 	
 // From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
 
 private:
+	ZRef<Iterator> fIterator;
 	const std::string fNew;
 	const std::string fOld;
-	ZRef<Iterator> fIterator;
 	};
 
 // =================================================================================================
@@ -77,15 +77,15 @@ class Iterator_Any_Restrict
 :	public Iterator
 	{
 public:
-	Iterator_Any_Restrict(const ZValCondition& iValCondition, ZRef<Iterator> iIterator);
+	Iterator_Any_Restrict(ZRef<Iterator> iIterator, const ZValCondition& iValCondition);
 	
 // From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
 
 private:
-	const ZValCondition fValCondition;
 	ZRef<Iterator> fIterator;
+	const ZValCondition fValCondition;
 	};
 
 // =================================================================================================
@@ -95,15 +95,15 @@ private:
 class Iterator_Any_Select : public Iterator
 	{
 public:
-	Iterator_Any_Select(ZRef<ZExpr_Logic> iExpr_Logic, ZRef<Iterator> iIterator);
+	Iterator_Any_Select(ZRef<Iterator> iIterator, ZRef<ZExpr_Logic> iExpr_Logic);
 	
 // From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
 
 private:
-	ZRef<ZExpr_Logic> fExpr_Logic;
 	ZRef<Iterator> fIterator;
+	ZRef<ZExpr_Logic> fExpr_Logic;
 	};
 
 } // namespace ZQE

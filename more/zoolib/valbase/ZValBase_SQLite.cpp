@@ -153,7 +153,7 @@ ZRef<ZQL::Expr_Rel> sConcrete_Table(ZRef<ConcreteDomain> iConcreteDomain, const 
 //	ZRef<Iter> iter = new Iter(iConcreteDomain->GetDB(), "select * from " + iName + ";" );
 	ZRef<Iter> iter = new Iter(iConcreteDomain->GetDB(), "pragma table_info(" + iName + ");");
 
-	return new Expr_Rel_Concrete(iConcreteDomain, iter, string8(), string8());
+	return new Expr_Rel_Concrete(iConcreteDomain, iter, iName + ".", string8());
 	}
 
 ZRef<ZQL::Expr_Rel> sConcrete_SQL(ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL)

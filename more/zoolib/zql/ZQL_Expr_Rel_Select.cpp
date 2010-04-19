@@ -80,11 +80,11 @@ ZRef<Expr_Rel_Select> sSelect(
 	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Logic>& iExpr_Logic)
 	{ return new Expr_Rel_Select(iExpr_Rel, iExpr_Logic); }
 
-ZRef<Expr_Rel_Select> operator&(
+ZRef<Expr_Rel> operator&(
 	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Logic>& iExpr_Logic)
 	{ return new Expr_Rel_Select(iExpr_Rel, iExpr_Logic); }
 
-ZRef<Expr_Rel_Select> operator&(
+ZRef<Expr_Rel> operator&(
 	const ZRef<ZExpr_Logic>& iExpr_Logic, const ZRef<Expr_Rel>& iExpr_Rel)
 	{ return new Expr_Rel_Select(iExpr_Rel, iExpr_Logic); }
 

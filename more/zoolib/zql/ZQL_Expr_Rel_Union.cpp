@@ -68,7 +68,7 @@ ZRef<Expr_Rel_Union> sUnion(
 	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
 	{ return new Expr_Rel_Union(iLHS, iRHS); }
 
-ZRef<Expr_Rel_Union> operator|(
+ZRef<Expr_Rel> operator|(
 	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
 	{ return new Expr_Rel_Union(iLHS, iRHS); }
 

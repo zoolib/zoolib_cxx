@@ -130,12 +130,12 @@ ZRef<Expr_Rel_Restrict_T<Val> > sRestrict_T(
 	{ return new Expr_Rel_Restrict_T<Val>(iExpr_Rel, iValCondition); }
 
 template <class Val>
-ZRef<Expr_Rel_Restrict_T<Val> > operator&(
+ZRef<Expr_Rel> operator&(
 	const ZRef<Expr_Rel>& iExpr_Rel, const ZValCondition_T<Val>& iValCondition)
 	{ return new Expr_Rel_Restrict_T<Val>(iExpr_Rel, iValCondition); }
 
 template <class Val>
-ZRef<Expr_Rel_Restrict_T<Val> > operator&(
+ZRef<Expr_Rel> operator&(
 	const ZValCondition_T<Val>& iValCondition, const ZRef<Expr_Rel>& iExpr_Rel)
 	{ return new Expr_Rel_Restrict_T<Val>(iExpr_Rel, iValCondition); }
 

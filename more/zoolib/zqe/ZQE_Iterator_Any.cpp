@@ -32,13 +32,13 @@ using std::string;
 #pragma mark * Iterator_Any_Project
 
 Iterator_Any_Project::Iterator_Any_Project(
-	const ZQL::RelHead& iRelHead, ZRef<Iterator> iIterator)
-:	fRelHead(iRelHead)
-,	fIterator(iIterator)
+	ZRef<Iterator> iIterator, const ZQL::RelHead& iRelHead)
+:	fIterator(iIterator)
+,	fRelHead(iRelHead)
 	{}
 
 ZRef<Iterator> Iterator_Any_Project::Clone()
-	{ return new Iterator_Any_Project(fRelHead, fIterator->Clone()); }
+	{ return new Iterator_Any_Project(fIterator->Clone(), fRelHead); }
 
 ZRef<Result> Iterator_Any_Project::ReadInc()
 	{
@@ -69,14 +69,14 @@ ZRef<Result> Iterator_Any_Project::ReadInc()
 #pragma mark * Iterator_Any_Rename
 
 Iterator_Any_Rename::Iterator_Any_Rename(
-	const std::string& iNew, const std::string& iOld, ZRef<Iterator> iIterator)
-:	fNew(iNew)
+	ZRef<Iterator> iIterator, const std::string& iNew, const std::string& iOld)
+:	fIterator(iIterator)
+,	fNew(iNew)
 ,	fOld(iOld)
-,	fIterator(iIterator)
 	{}
 
 ZRef<Iterator> Iterator_Any_Rename::Clone()
-	{ return new Iterator_Any_Rename(fNew, fOld, fIterator->Clone()); }
+	{ return new Iterator_Any_Rename(fIterator->Clone(), fNew, fOld); }
 
 ZRef<Result> Iterator_Any_Rename::ReadInc()
 	{
@@ -108,13 +108,13 @@ ZRef<Result> Iterator_Any_Rename::ReadInc()
 #pragma mark * Iterator_Any_Restrict
 
 Iterator_Any_Restrict::Iterator_Any_Restrict(
-	const ZValCondition& iValCondition, ZRef<Iterator> iIterator)
-:	fValCondition(iValCondition)
-,	fIterator(iIterator)
+	ZRef<Iterator> iIterator, const ZValCondition& iValCondition)
+:	fIterator(iIterator)
+,	fValCondition(iValCondition)
 	{}
 
 ZRef<Iterator> Iterator_Any_Restrict::Clone()
-	{ return new Iterator_Any_Restrict(fValCondition, fIterator->Clone()); }
+	{ return new Iterator_Any_Restrict(fIterator->Clone(), fValCondition); }
 
 ZRef<Result> Iterator_Any_Restrict::ReadInc()
 	{
@@ -140,13 +140,13 @@ ZRef<Result> Iterator_Any_Restrict::ReadInc()
 #pragma mark -
 #pragma mark * Iterator_Any_Select
 
-Iterator_Any_Select::Iterator_Any_Select(ZRef<ZExpr_Logic> iExpr_Logic, ZRef<Iterator> iIterator)
-:	fExpr_Logic(iExpr_Logic)
-,	fIterator(iIterator)
+Iterator_Any_Select::Iterator_Any_Select(ZRef<Iterator> iIterator, ZRef<ZExpr_Logic> iExpr_Logic)
+:	fIterator(iIterator)
+,	fExpr_Logic(iExpr_Logic)
 	{}
 
 ZRef<Iterator> Iterator_Any_Select::Clone()
-	{ return new Iterator_Any_Select(fExpr_Logic, fIterator->Clone()); }
+	{ return new Iterator_Any_Select(fIterator->Clone(), fExpr_Logic); }
 
 ZRef<Result> Iterator_Any_Select::ReadInc()
 	{
