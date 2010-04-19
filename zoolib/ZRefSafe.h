@@ -66,7 +66,7 @@ public:
 
 	ZRefSafe& operator=(T* iP)
 		{
-		ZGuardMtx guard(fMtx);
+		ZAcqMtx acq(fMtx);
 		std::swap(iP, fP);
 		spRetain(fP);
 		spRelease(iP);	
@@ -81,7 +81,7 @@ public:
 	template <class O>
 	ZRefSafe& operator=(const ZRef<O>& iOther)
 		{
-		ZGuardMtx guard(fMtx);
+		ZAcqMtx acq(fMtx);
 		T* theP = iOther.Get();
 		std::swap(theP, fP);
 		spRetain(fP);
@@ -92,27 +92,27 @@ public:
 	template <class O>
 	operator ZRef<O>()
 		{
-		ZGuardMtx guard(fMtx);
+		ZAcqMtx acq(fMtx);
 		return ZRef<O>(fP);
 		}
 
 	template <class O>
 	bool operator==(const ZRef<O>& iOther) const
 		{
-		ZGuardMtx guard(fMtx);
+		ZAcqMtx acq(fMtx);
 		return fP == iOther.Get();
 		}
 
 	template <class O>
 	bool operator!=(const ZRef<O>& iOther) const
 		{
-		ZGuardMtx guard(fMtx);
+		ZAcqMtx acq(fMtx);
 		return fP != iOther.Get();
 		}
 
 	void Clear()
 		{
-		ZGuardMtx guard(fMtx);
+		ZAcqMtx acq(fMtx);
 		T* theP = nullptr;
 		std::swap(theP, fP);
 		spRelease(theP);

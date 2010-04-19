@@ -75,9 +75,12 @@ NAMESPACE_ZOOLIB_BEGIN
 
 #endif
 
-typedef ZGuard_T<ZMtx> ZGuardMtx;
 typedef ZAcquirer_T<ZMtx> ZAcqMtx;
 typedef ZReleaser_T<ZMtx> ZRelMtx;
+
+typedef ZGuardR_T<ZMtx> ZGuardRMtx;
+
+typedef ZAcqMtx ZGuardMtx;
 
 // =================================================================================================
 #pragma mark -

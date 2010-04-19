@@ -138,7 +138,7 @@ typedef ZMtx ZMutexNR;
 
 typedef ZGuardR_T<ZMutexBase> ZLocker;
 typedef ZGuardR_T<ZMutex> ZMutexLocker;
-typedef ZGuardMtx ZMutexNRLocker;
+typedef ZAcqMtx ZMutexNRLocker;
 
 // =================================================================================================
 

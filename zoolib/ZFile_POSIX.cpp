@@ -598,7 +598,7 @@ RealRep_POSIX::~RealRep_POSIX()
 
 bool RealRep_POSIX::HasValue(size_t iIndex)
 	{
-	ZGuardMtx locker(fMtx);
+	ZAcqMtx locker(fMtx);
 	while (fDIR && iIndex >= fNames.size())
 		{
 		// We must use dirent64/readdir64 on linux if we want to be able to read directories on
@@ -645,14 +645,14 @@ bool RealRep_POSIX::HasValue(size_t iIndex)
 
 ZFileSpec RealRep_POSIX::GetSpec(size_t iIndex)
 	{
-	ZGuardMtx locker(fMtx);
+	ZAcqMtx locker(fMtx);
 	ZAssertStop(kDebug_File_POSIX, iIndex < fNames.size());
 	return ZFileSpec(fFileLoc, fNames[iIndex]);
 	}
 
 string RealRep_POSIX::GetName(size_t iIndex)
 	{
-	ZGuardMtx locker(fMtx);
+	ZAcqMtx locker(fMtx);
 	ZAssertStop(kDebug_File_POSIX, iIndex < fNames.size());
 	return fNames[iIndex];
 	}
@@ -1352,7 +1352,7 @@ ZFileR_POSIXMutex::~ZFileR_POSIXMutex()
 ZFile::Error ZFileR_POSIXMutex::ReadAt(
 	uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	ZGuardMtx locker(fMtx);
+	ZAcqMtx locker(fMtx);
 	if (fPosition != iOffset)
 		{
 		ZFile::Error err = spSetPosition(fFD, iOffset);
@@ -1388,7 +1388,7 @@ ZFileW_POSIXMutex::~ZFileW_POSIXMutex()
 ZFile::Error ZFileW_POSIXMutex::WriteAt(
 	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	ZGuardMtx locker(fMtx);
+	ZAcqMtx locker(fMtx);
 	if (fPosition != iOffset)
 		{
 		ZFile::Error err = spSetPosition(fFD, iOffset);
@@ -1433,7 +1433,7 @@ ZFileRW_POSIXMutex::~ZFileRW_POSIXMutex()
 ZFile::Error ZFileRW_POSIXMutex::ReadAt(
 	uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	ZGuardMtx locker(fMtx);
+	ZAcqMtx locker(fMtx);
 	if (fPosition != iOffset)
 		{
 		ZFile::Error err = spSetPosition(fFD, iOffset);
@@ -1450,7 +1450,7 @@ ZFile::Error ZFileRW_POSIXMutex::ReadAt(
 ZFile::Error ZFileRW_POSIXMutex::WriteAt(
 	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	ZGuardMtx locker(fMtx);
+	ZAcqMtx locker(fMtx);
 	if (fPosition != iOffset)
 		{
 		ZFile::Error err = spSetPosition(fFD, iOffset);

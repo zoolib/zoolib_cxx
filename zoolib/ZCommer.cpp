@@ -42,35 +42,32 @@ void ZCommer::ReadStarted()
 	{
 	ZStreamerReader::ReadStarted();
 
-	bool callStarted = false;
-	{
-	ZGuardMtx locker(fMtx);
+	ZGuardRMtx guard(fMtx);
 	ZAssert(!fReadStarted);
 	fReadStarted = true;
 	fCnd.Broadcast();
 	if (fReadStarted && fWriteStarted)
-		callStarted = true;
-	}
-
-	if (callStarted)
+		{
+		guard.Release();
 		this->Started();
+		}
 	}
 
 void ZCommer::ReadFinished()
 	{
-	bool callFinished = false;
-
-	{
-	ZGuardMtx locker(fMtx);
+	ZGuardRMtx guard(fMtx);
 	ZAssert(fReadStarted);
 	fReadStarted = false;
 	fCnd.Broadcast();
 	if (!fReadStarted && !fWriteStarted)
-		callFinished = true;
-	}
-
-	if (callFinished)
+		{
+		guard.Release();
 		this->Finished();
+		}
+	else
+		{
+		guard.Release();
+		}
 
 	ZStreamerReader::ReadFinished();
 	}
@@ -79,35 +76,32 @@ void ZCommer::WriteStarted()
 	{
 	ZStreamerWriter::WriteStarted();
 
-	bool callStarted = false;
-	{
-	ZGuardMtx locker(fMtx);
+	ZGuardRMtx guard(fMtx);
 	ZAssert(!fWriteStarted);
 	fWriteStarted = true;
 	fCnd.Broadcast();
 	if (fReadStarted && fWriteStarted)
-		callStarted = true;
-	}
-
-	if (callStarted)
+		{
+		guard.Release();
 		this->Started();
+		}
 	}
 
 void ZCommer::WriteFinished()
 	{
-	bool callFinished = false;
-
-	{
-	ZGuardMtx locker(fMtx);
+	ZGuardRMtx guard(fMtx);
 	ZAssert(fWriteStarted);
 	fWriteStarted = false;
 	fCnd.Broadcast();
 	if (!fReadStarted && !fWriteStarted)
-		callFinished = true;
-	}
-
-	if (callFinished)
+		{
+		guard.Release();
 		this->Finished();
+		}
+	else
+		{
+		guard.Release();
+		}
 
 	ZStreamerWriter::WriteFinished();
 	}

@@ -63,22 +63,6 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZGuard_T
-
-template <class Mtx>
-class ZGuard_T : NonCopyable
-	{
-private:
-	Mtx& fMtx;
-
-public:
-	ZGuard_T(Mtx& iMtx) : fMtx(iMtx) { fMtx.Acquire(); }
-	ZGuard_T(const Mtx& iMtx) : fMtx(const_cast<Mtx&>(iMtx)) { fMtx.Acquire(); }
-	~ZGuard_T() { fMtx.Release(); }
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZGuardR_T
 
 template <class Mtx>
