@@ -24,7 +24,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExpr
+#pragma mark * ZExpr_Logic
 
 ZExpr_Logic::ZExpr_Logic()
 	{}

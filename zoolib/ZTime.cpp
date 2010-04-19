@@ -213,7 +213,7 @@ ZTime ZTime::sSystem()
 		{
 		// On NT we try to use the performance counter of CPU 0. Some types of CPU
 		// do not have performance counters that run in sync, so using the
-		// counter from whatever CPU on this code happens to be executed defeats
+		// counter from whatever CPU on which this code happens to be executed defeats
 		// the whole point of sSystem.
 		DWORD_PTR oldmask = ::SetThreadAffinityMask(::GetCurrentThread(), 1);
 
