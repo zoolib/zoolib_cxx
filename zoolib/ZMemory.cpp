@@ -36,7 +36,7 @@ int ZMemCompare(const void* iL, std::size_t iCountL, const void* iR, std::size_t
 		}
 	else if (iCountL > iCountR)
 		{
-		if (int compare = std::memcmp(iL, iR, iCountL))
+		if (int compare = std::memcmp(iL, iR, iCountR))
 			return compare;
 		return 1;
 		}
