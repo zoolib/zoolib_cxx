@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Win.h"
+#include "zoolib/ZUtil_WinFile.h"
 
 #include <cctype>
 
@@ -253,97 +254,29 @@ static ZFile::Error spCloseFileHANDLE(HANDLE iFileHANDLE)
 
 static ZFile::Error spRead(HANDLE iFileHANDLE, void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	if (oCountRead)
-		*oCountRead = 0;
-
-	if (iCount == 0) // Avoid null read
-		return ZFile::errorNone;
-
-	DWORD countRead = 0;
-	if (!::ReadFile(iFileHANDLE, oDest, iCount, &countRead, nullptr))
-		return spTranslateError(::GetLastError());
-
-	if (oCountRead)
-		*oCountRead = countRead;
-
-	return ZFile::errorNone;
+	return spTranslateError(
+		ZUtil_WinFile::sRead(iFileHANDLE, oDest, iCount, oCountRead));
 	}
 
 static ZFile::Error spWrite(
 	HANDLE iFileHANDLE, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	if (oCountWritten)
-		*oCountWritten = 0;
-
-	if (iCount == 0) // Avoid null write
-		return ZFile::errorNone;
-
-	DWORD countWritten = 0;
-	if (!::WriteFile(iFileHANDLE, iSource, iCount, &countWritten, nullptr))
-		return spTranslateError(::GetLastError());
-
-	if (oCountWritten)
-		*oCountWritten = countWritten;
-
-	return ZFile::errorNone;
+	return spTranslateError(
+		ZUtil_WinFile::sWrite(iFileHANDLE, iSource, iCount, oCountWritten));
 	}
 
 static ZFile::Error spReadAt(
 	HANDLE iFileHANDLE, uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	if (oCountRead)
-		*oCountRead = 0;
-
-	OVERLAPPED theOVERLAPPED;
-	theOVERLAPPED.Internal = 0;
-	theOVERLAPPED.InternalHigh = 0;
-	theOVERLAPPED.Offset = iOffset;
-	theOVERLAPPED.OffsetHigh = iOffset >> 32;
-	theOVERLAPPED.hEvent = 0;
-	DWORD countRead = 0;
-	if (!::ReadFile(iFileHANDLE, oDest, iCount, &countRead, &theOVERLAPPED))
-		{
-		int err = ::GetLastError();
-		if (err != ERROR_IO_PENDING)
-			return spTranslateError(err);
-
-		if (!::GetOverlappedResult(iFileHANDLE, &theOVERLAPPED, &countRead, TRUE))
-			return spTranslateError(::GetLastError());
-		}
-
-	if (oCountRead)
-		*oCountRead = countRead;
-
-	return ZFile::errorNone;
+	return spTranslateError(
+		ZUtil_WinFile::sRead(iFileHANDLE, &iOffset, oDest, iCount, oCountRead));
 	}
 
-static ZFile::Error spWriteAt(
-	HANDLE iFileHANDLE, uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
+static ZFile::Error spWriteAt(HANDLE iFileHANDLE, uint64 iOffset,
+	const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	if (oCountWritten)
-		*oCountWritten = 0;
-
-	OVERLAPPED theOVERLAPPED;
-	theOVERLAPPED.Internal = 0;
-	theOVERLAPPED.InternalHigh = 0;
-	theOVERLAPPED.Offset = iOffset;
-	theOVERLAPPED.OffsetHigh = iOffset >> 32;
-	theOVERLAPPED.hEvent = 0;
-	DWORD countWritten = 0;
-	if (!::WriteFile(iFileHANDLE, iSource, iCount, &countWritten, &theOVERLAPPED))
-		{
-		int err = ::GetLastError();
-		if (err != ERROR_IO_PENDING)
-			return spTranslateError(err);
-
-		if (!::GetOverlappedResult(iFileHANDLE, &theOVERLAPPED, &countWritten, TRUE))
-			return spTranslateError(::GetLastError());
-		}
-
-	if (oCountWritten)
-		*oCountWritten = countWritten;
-
-	return ZFile::errorNone;
+	return spTranslateError(
+		ZUtil_WinFile::sWrite(iFileHANDLE, &iOffset, iSource, iCount, oCountWritten));
 	}
 
 static ZFile::Error spGetPosition(HANDLE iFileHANDLE, uint64& oPosition)
@@ -422,11 +355,7 @@ static ZFile::Error spSetSize(HANDLE iFileHANDLE, uint64 iSize)
 	}
 
 static ZFile::Error spFlush(HANDLE iFileHANDLE)
-	{
-	if (!::FlushFileBuffers(iFileHANDLE))
-		return spTranslateError(::GetLastError());
-	return ZFile::errorNone;
-	}
+	{ return spTranslateError(ZUtil_WinFile::sFlush(iFileHANDLE)); }
 
 static ZFile::Error spFlushVolume(HANDLE iFileHANDLE)
 	{

@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,31 +18,45 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_POSIXFD__
-#define __ZUtil_POSIXFD__ 1
+#ifndef __ZUtil_WinFile__
+#define __ZUtil_WinFile__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#if ZCONFIG_SPI_Enabled(POSIX)
+#if ZCONFIG_SPI_Enabled(Win)
 
+#include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZStdInt.h" // For size_t
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_POSIXFD
+#pragma mark * ZUtil_WinFile
 
-namespace ZUtil_POSIXFD {
+namespace ZUtil_WinFile {
 
-bool sWaitReadable(int iFD, double iTimeout);
-void sWaitWriteable(int iFD);
-size_t sCountReadable(int iFD);
+#if 0
+bool sWaitReadable(HANDLE iHANDLE, double iTimeout);
+void sWaitWriteable(HANDLE iHANDLE);
+size_t sCountReadable(HANDLE iHANDLE);
+#endif
 
-} // namespace ZUtil_POSIXFD
+DWORD sFlush(HANDLE iHANDLE);
+
+DWORD sRead(HANDLE iHANDLE, void* oDest, size_t iCount, size_t* oCountRead);
+DWORD sWrite(HANDLE iHANDLE, const void* iSource, size_t iCount, size_t* oCountWritten);
+
+DWORD sRead(HANDLE iHANDLE, const uint64* iOffset,
+	void* oDest, size_t iCount, size_t* oCountRead);
+
+DWORD sWrite(HANDLE iHANDLE, const uint64* iOffset,
+	const void* iSource, size_t iCount, size_t* oCountWritten);
+
+} // namespace ZUtil_WinFile
 
 NAMESPACE_ZOOLIB_END
 
-#endif // ZCONFIG_SPI_Enabled(POSIX)
+#endif // ZCONFIG_SPI_Enabled(Win)
 
-#endif // __ZUtil_POSIXFD__
+#endif // __ZUtil_WinFile__

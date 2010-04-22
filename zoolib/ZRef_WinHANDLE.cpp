@@ -74,9 +74,28 @@ static HANDLE spDuplicateHandle(HANDLE iHANDLE)
 // =================================================================================================
 
 ZMACRO_ZRef_WinHANDLE_WithReleaser(HKEY, RegCloseKey)
+
 //ZMACRO_ZRef_WinHANDLE_WithReleaser(HINSTANCE, FreeLibrary)
 
 //ZMACRO_ZRef_WinHANDLE_WithReleaserDecl(HKEY, WINADVAPI LONG, RegCloseKey)
 //ZMACRO_ZRef_WinHANDLE_WithReleaserDecl(HINSTANCE, WINBASEAPI BOOL, FreeLibrary)
+
+NAMESPACE_ZOOLIB_BEGIN
+
+template <>
+void sRetain_T(HANDLE& ioHANDLE)
+	{
+	if (ioHANDLE)
+		ioHANDLE = spDuplicateHandle(ioHANDLE);
+	}
+
+template <>
+void sRelease_T(HANDLE iHANDLE)
+	{
+	if (iHANDLE) 
+		::CloseHandle(iHANDLE);
+	}
+
+NAMESPACE_ZOOLIB_END
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
