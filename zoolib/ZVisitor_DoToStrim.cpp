@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZDebug.h"
+#include "zoolib/ZSetRestore_T.h"
 #include "zoolib/ZVisitor_DoToStrim.h"
 
 #include <typeinfo>

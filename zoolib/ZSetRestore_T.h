@@ -18,60 +18,33 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Do_T__
-#define __ZVisitor_Do_T__
+#ifndef __ZSetRestore_T__
+#define __ZSetRestore_T__ 1
 #include "zconfig.h"
-
-#include "zoolib/ZDebug.h"
-#include "zoolib/ZSetRestore_T.h"
-#include "zoolib/ZVisitor.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Do_T
+#pragma mark * ZSetRestore_T
 
-template <class Result_t>
-class ZVisitor_Do_T
-:	public virtual ZVisitor
+template <class T>
+class ZSetRestore_T
 	{
 public:
-	ZVisitor_Do_T()
-	:	fResultPtr(nullptr)
-		{}
+	ZSetRestore_T(T& ioRef, T iVal)
+	:	fRef(ioRef)
+	,	fPrior(ioRef)
+		{ fRef = iVal; }
 
-// Our protocol
-	bool Do(ZRef<ZVisitee> iRep, Result_t& oResult)
-		{
-		if (iRep)
-			{
-			ZSetRestore_T<Result_t*> sr(fResultPtr, &oResult);
-			iRep->Accept(*this);
-			return !fResultPtr;
-			}
-		return false;
-		}
-
-	Result_t Do(ZRef<ZVisitee> iRep)
-		{
-		Result_t result;
-		this->Do(iRep, result);
-		return result;
-		}
-
-protected:
-	void pSetResult(const Result_t& iResult)
-		{
-		ZAssert(fResultPtr);
-		*fResultPtr = iResult;
-		fResultPtr = nullptr;
-		}
+	~ZSetRestore_T()
+		{ fRef = fPrior; }
 
 private:
-	Result_t* fResultPtr;
+	T& fRef;
+	const T fPrior;
 	};
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZVisitor_Do_T__
+#endif // __ZSetRestore_T__

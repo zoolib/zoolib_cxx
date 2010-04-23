@@ -28,29 +28,6 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSetRestore_T
-
-// Temporary home for this.
-
-template <class T>
-class ZSetRestore_T
-	{
-public:
-	ZSetRestore_T(T& ioRef, T iVal)
-	:	fRef(ioRef)
-	,	fPrior(ioRef)
-		{ fRef = iVal; }
-
-	~ZSetRestore_T()
-		{ fRef = fPrior; }
-
-private:
-	T& fRef;
-	const T fPrior;
-	};
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZVisitee
 
 class ZVisitor;
