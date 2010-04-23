@@ -22,9 +22,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZSQLite__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZAny.h"
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZUnicodeString.h"
-#include "zoolib/ZVal_Any.h"
 
 #include <sqlite3.h>
 
