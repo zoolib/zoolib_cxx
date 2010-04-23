@@ -37,8 +37,7 @@ class ZVisitor_Do_T
 	{
 public:
 	ZVisitor_Do_T()
-	:	fHasResult(false)
-	,	fResult(nullptr)
+	:	fResultPtr(nullptr)
 		{}
 
 // Our protocol
@@ -46,19 +45,10 @@ public:
 		{
 		if (iRep)
 			{
-			Result_t* priorResult = fResult;
-			fResult = &oResult;
-
+			ZSetRestore_T<Result_t*> sr(fResultPtr, &oResult);
 			iRep->Accept(*this);
-			if (fHasResult)
-				{
-				fHasResult = false;
-				fResult = priorResult;
-				return true;
-				}
-			fResult = priorResult;
+			return !fResultPtr;
 			}
-
 		return false;
 		}
 
@@ -72,14 +62,13 @@ public:
 protected:
 	void pSetResult(const Result_t& iResult)
 		{
-		ZAssert(!fHasResult && fResult);
-		fHasResult = true;
-		*fResult = iResult;
+		ZAssert(fResultPtr);
+		*fResultPtr = iResult;
+		fResultPtr = nullptr;
 		}
 
 private:
-	bool fHasResult;
-	Result_t* fResult;
+	Result_t* fResultPtr;
 	};
 
 NAMESPACE_ZOOLIB_END

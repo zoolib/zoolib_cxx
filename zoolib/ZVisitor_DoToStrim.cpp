@@ -58,29 +58,11 @@ void ZVisitor_DoToStrim::Visit(ZRef<ZVisitee> iRep)
 void ZVisitor_DoToStrim::DoToStrim(
 	const Options& iOptions, const ZStrimW& iStrimW, ZRef<ZVisitee> iRep)
 	{
-	const Options* priorOptions = fOptions;
-	const ZStrimW* priorStrimW = fStrimW;
-	const int priorIndent = fIndent;
+	ZSetRestore_T<const Options*> sr1(fOptions, &iOptions);
+	ZSetRestore_T<const ZStrimW*> sr2(fStrimW, &iStrimW);
+	ZSetRestore_T<size_t> sr3(fIndent, iOptions.fInitialIndent);
 
-	fOptions = &iOptions;
-	fStrimW = &iStrimW;
-	fIndent = iOptions.fInitialIndent;
-
-	try
-		{
-		this->pDoToStrim(iRep);
-		}
-	catch (...)
-		{
-		fOptions = priorOptions;
-		fStrimW = priorStrimW;
-		fIndent = priorIndent;
-		throw;
-		}
-
-	fOptions = priorOptions;
-	fStrimW = priorStrimW;
-	fIndent = priorIndent;
+	this->pDoToStrim(iRep);
 	}
 
 void ZVisitor_DoToStrim::pDoToStrim(ZRef<ZVisitee> iRep)
@@ -94,7 +76,7 @@ void ZVisitor_DoToStrim::pDoToStrim(ZRef<ZVisitee> iRep)
 		}
 	}
 
-const  ZVisitor_DoToStrim::Options& ZVisitor_DoToStrim::pOptions()
+const ZVisitor_DoToStrim::Options& ZVisitor_DoToStrim::pOptions()
 	{
 	ZAssert(fOptions);
 	return *fOptions;
