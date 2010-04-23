@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------------------------------
-Copyright (c) 2009 Andrew Green
+Copyright (c) 2010 Andrew Green
 http://www.zoolib.org
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -18,73 +18,46 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorker__
-#define __ZWorker__ 1
+#ifndef __ZWorkerRunner_Thread__
+#define __ZWorkerRunner_Thread__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZRefWeak.h"
-#include "zoolib/ZTime.h"
+#include "zoolib/ZThread.h"
+#include "zoolib/ZWorker.h"
+
+#include "zoolib/ZCompat_MSVCStaticLib.h"
+ZMACRO_MSVCStaticLib_Reference(WorkerRunner_Thread)
 
 NAMESPACE_ZOOLIB_BEGIN
 
-class ZWorkerRunner;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorker
+#pragma mark * ZWorkerRunner_Thread
 
-class ZWorker
-:	public virtual ZCounted
+class ZWorkerRunner_Thread : public ZWorkerRunner
 	{
 public:
-	virtual void RunnerAttached();
-	virtual void RunnerDetached();
+	ZWorkerRunner_Thread(ZRef<ZWorker> iWorker);
 
-	virtual bool Work() = 0;
+// From ZWorkerRunner
+	virtual void Wake(ZRef<ZWorker> iWorker);
+	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
+	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval);
+	virtual bool IsAwake(ZRef<ZWorker> iWorker);
 
-	void Wake();
-	void WakeAt(ZTime iSystemTime);
-	void WakeIn(double iInterval);
-
-	bool IsAwake();
+// Our protocol
+	void Start();
 
 private:
-	void pRunnerAttached();
-	void pRunnerDetached();
+	void pRun();
+	static void spRun(ZRef<ZWorkerRunner_Thread> iParam);
 
-	ZRefWeak<ZWorkerRunner> fRunner;
-	friend class ZWorkerRunner;
+	ZMtx fMtx;
+	ZCnd fCnd;
+	ZRef<ZWorker> fWorker;
+	ZTime fNextWake;
 	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZWorkerRunner
-
-class ZWorkerRunner
-:	public ZCounted
-,	public ZWeakReferee
-	{
-protected:
-// Called by subclasses
-	void pAttachWorker(ZRef<ZWorker> iWorker);
-	void pDetachWorker(ZRef<ZWorker> iWorker);
-
-// Called by ZWorker instances.
-	virtual void Wake(ZRef<ZWorker> iWorker) = 0;
-	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime) = 0;
-	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval) = 0;
-	virtual bool IsAwake(ZRef<ZWorker> iWorker) = 0;
-
-	friend class ZWorker;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Utility methods
-
-void sStartWorkerRunner(ZRef<ZWorker> iWorker);
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZWorker__
+#endif // __ZWorkerRunner_Thread__

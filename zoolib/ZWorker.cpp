@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZLog.h"
-#include "zoolib/ZThread.h"
+#include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZWorker.h"
+#include "zoolib/ZWorkerRunner_Thread.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -82,6 +82,12 @@ void ZWorker::pRunnerDetached()
 #pragma mark -
 #pragma mark * ZWorkerRunner
 
+/**
+\class ZWorkerRunner
+\ingroup Worker
+\sa Worker
+*/
+
 void ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 	{
 	ZAssert(iWorker);
@@ -104,142 +110,9 @@ void ZWorkerRunner::pDetachWorker(ZRef<ZWorker> iWorker)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_Threaded
-
-class ZWorkerRunner_Threaded : public ZWorkerRunner
-	{
-public:
-	ZWorkerRunner_Threaded(ZRef<ZWorker> iWorker);
-
-// From ZWorkerRunner
-	virtual void Wake(ZRef<ZWorker> iWorker);
-	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
-	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval);
-	virtual bool IsAwake(ZRef<ZWorker> iWorker);
-
-// Our protocol
-	void Start();
-
-private:
-	void pRun();
-	static void spRun(ZRef<ZWorkerRunner_Threaded> iParam);
-
-	ZMtx fMtx;
-	ZCnd fCnd;
-	ZRef<ZWorker> fWorker;
-	ZTime fNextWake;
-	};
-
-ZWorkerRunner_Threaded::ZWorkerRunner_Threaded(ZRef<ZWorker> iWorker)
-:	fWorker(iWorker)
-,	fNextWake(ZTime::sSystem())
-	{}
-
-void ZWorkerRunner_Threaded::Wake(ZRef<ZWorker> iWorker)
-	{
-	ZAcqMtx acq(fMtx);
-	ZAssert(iWorker == fWorker);
-	fNextWake = 0;
-	fCnd.Broadcast();
-	}
-
-void ZWorkerRunner_Threaded::WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime)
-	{
-	ZAcqMtx acq(fMtx);
-	ZAssert(iWorker == fWorker);
-	if (fNextWake > iSystemTime)
-		{
-		fNextWake = iSystemTime;
-		fCnd.Broadcast();
-		}
-	}
-
-void ZWorkerRunner_Threaded::WakeIn(ZRef<ZWorker> iWorker, double iInterval)
-	{
-	ZAcqMtx acq(fMtx);
-	ZAssert(iWorker == fWorker);
-	ZTime newWake = ZTime::sSystem() + iInterval;
-	if (fNextWake > newWake)
-		{
-		fNextWake = newWake;
-		fCnd.Broadcast();
-		}
-	}
-
-bool ZWorkerRunner_Threaded::IsAwake(ZRef<ZWorker> iWorker)
-	{
-	ZAcqMtx acq(fMtx);
-	return fNextWake <= ZTime::sSystem();
-	}
-
-void ZWorkerRunner_Threaded::Start()
-	{
-	try
-		{
-		ZWorkerRunner::pAttachWorker(fWorker);
-		ZThread::sCreate_T<ZRef<ZWorkerRunner_Threaded> >(spRun, this);
-		}
-	catch (...)
-		{
-		try
-			{
-			ZWorkerRunner::pDetachWorker(fWorker);
-			}
-		catch (...)
-			{
-			throw;
-			}
-		throw;
-		}
-	}
-
-void ZWorkerRunner_Threaded::pRun()
-	{
-	ZLOGFUNCTION(eDebug);
-
-	ZAcqMtx acq(fMtx);
-	for (;;)
-		{
-		for (;;)
-			{
-			const ZTime now = ZTime::sSystem();
-			if (fNextWake <= now)
-				{
-				fNextWake = now + 3600;
-				break;
-				}
-
-			fCnd.WaitFor(fMtx, fNextWake - now);
-			}
-
-		ZRelMtx rel(fMtx);
-		try
-			{
-			if (!fWorker->Work())
-				break;
-			}
-		catch (...)
-			{
-			break;
-			}
-		}
-
-	ZWorkerRunner::pDetachWorker(fWorker);
-	fWorker.Clear();
-	fCnd.Broadcast();
-	}
-
-void ZWorkerRunner_Threaded::spRun(ZRef<ZWorkerRunner_Threaded> iParam)
-	{ iParam->pRun(); }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * Utility methods
 
 void sStartWorkerRunner(ZRef<ZWorker> iWorker)
-	{
-	ZRef<ZWorkerRunner_Threaded> theRunner = new ZWorkerRunner_Threaded(iWorker);
-	theRunner->Start();
-	}
+	{ ZFunctionChain_T<ZRef<ZWorkerRunner>, ZRef<ZWorker> >::sInvoke(iWorker); }
 
 NAMESPACE_ZOOLIB_END
