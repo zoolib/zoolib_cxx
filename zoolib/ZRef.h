@@ -133,12 +133,6 @@ public:
 	bool operator!=(const T* iP) const
 		{ return fP != iP; }
 
-	bool operator==(const ZRef& iOther) const
-		{ return fP == iOther.Get(); }
-
-	bool operator!=(const ZRef& iOther) const
-		{ return fP != iOther.Get(); }
-
 	template <class O>
 	bool operator==(const ZRef<O>& iOther) const
 		{ return fP == iOther.Get(); }
@@ -294,12 +288,6 @@ public:
 
 	bool operator!=(const T* iP) const
 		{ return fP != iP; }
-
-	bool operator==(const ZRef& iOther) const
-		{ return fP == iOther.Get(); }
-
-	bool operator!=(const ZRef& iOther) const
-		{ return fP != iOther.Get(); }
 
 	template <class O>
 	bool operator==(const ZRef<O>& iOther) const
