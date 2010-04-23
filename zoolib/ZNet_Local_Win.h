@@ -41,6 +41,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Local_Win)
 
+#include "zoolib/ZCompat_MSVCStaticLib.h"
+ZMACRO_MSVCStaticLib_Reference(Net_Local_Win)
+
 #include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZUnicodeString.h"
 
@@ -126,6 +129,7 @@ private:
 
 // From ZStreamW via ZStreamWCon
 	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
+	virtual void Imp_Flush();
 
 // From ZStreamRCon
 	virtual bool Imp_ReceiveDisconnect(double iTimeout);

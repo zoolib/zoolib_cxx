@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Net_Local_Win)
 
+ZMACRO_MSVCStaticLib_cpp(Net_Local_Win)
+
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZRef_WinHANDLE.h"
-#include "zoolib/ZMemory.h"
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_WinFile.h"
 
