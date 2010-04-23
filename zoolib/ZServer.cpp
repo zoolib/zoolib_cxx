@@ -90,14 +90,7 @@ ZServer::~ZServer()
 
 void ZServer::Finalize()
 	{
-	{ // Scope for locker
-	ZGuardMtx locker(fMtx);
-	if (fStreamerListener)
-		{
-		fStreamerListener->Kill();
-		while (fStreamerListener)
-			fCnd.Wait(fMtx);
-		}
+	this->StopListenerWait();
 
 	for (ZSafeSetIter<ZRef<Responder> > i = fResponders; /*no test*/; /*no inc*/)
 		{
@@ -113,14 +106,13 @@ void ZServer::Finalize()
 		return;
 		}
 	this->FinalizationComplete();
-	}
 
 	delete this;
 	}
 
 void ZServer::Task_Finished(ZRef<ZTask> iTask)
 	{
-	ZGuardMtx locker(fMtx);
+	ZAcqMtx acq(fMtx);
 
 	if (fStreamerListener == iTask)
 		{
@@ -136,7 +128,7 @@ void ZServer::Task_Finished(ZRef<ZTask> iTask)
 
 void ZServer::StartListener(ZRef<ZStreamerRWFactory> iFactory)
 	{
-	ZGuardMtx locker(fMtx);
+	ZAcqMtx acq(fMtx);
 
 	ZAssert(!fStreamerListener);
 	ZAssert(iFactory);
@@ -148,22 +140,19 @@ void ZServer::StartListener(ZRef<ZStreamerRWFactory> iFactory)
 
 void ZServer::StopListener()
 	{
-	ZRef<StreamerListener> theSL;
-
-	{
-	ZGuardMtx locker(fMtx);
-	theSL = fStreamerListener;
-	}
-
-	if (theSL)
+	ZGuardRMtx guard(fMtx);
+	if (ZRef<StreamerListener> theSL = fStreamerListener)
+		{
+		guard.Release();
 		theSL->Kill();
+		}
 	}
 
 void ZServer::StopListenerWait()
 	{
 	this->StopListener();
 
-	ZGuardMtx locker(fMtx);
+	ZAcqMtx acq(fMtx);
 	while (fStreamerListener)
 		fCnd.Wait(fMtx);
 	}
@@ -183,7 +172,7 @@ void ZServer::KillRespondersWait()
 	{
 	this->KillResponders();
 
-	ZGuardMtx locker(fMtx);
+	ZAcqMtx acq(fMtx);
 	while (!fResponders.Empty())
 		fCnd.Wait(fMtx);
 	}
