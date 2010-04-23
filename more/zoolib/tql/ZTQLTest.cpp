@@ -46,9 +46,9 @@ static void sDumpSFW(const ZStrimW& s, ZRef<SQL::Expr_Rel_SFW> iExpr)
 	ZVisitor_DoToStrim::Options theOptions;
 	theOptions.fInitialIndent = 1;
 
-	const map<string8, string8>& theMap = iExpr->GetRenameMap();
+	const Rename_t& theRename = iExpr->GetRename();
 	s << "Renames:\n";
-	for (map<string8, string8>::const_iterator i = theMap.begin(); i != theMap.end(); ++i)
+	for (Rename_t::const_iterator i = theRename.begin(); i != theRename.end(); ++i)
 		s << "  " << (*i).second << "<--" << (*i).first << "\n" ;
 
 	s << "Relhead:\n  ";

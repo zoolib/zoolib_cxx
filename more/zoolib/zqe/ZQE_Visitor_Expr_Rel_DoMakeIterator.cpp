@@ -29,7 +29,9 @@ namespace ZQE {
 
 void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Difference(
 	ZRef<ZQL::Expr_Rel_Difference> iExpr)
-	{}
+	{
+	ZUnimplemented();
+	}
 
 void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Intersect(ZRef<ZQL::Expr_Rel_Intersect> iExpr)
 	{

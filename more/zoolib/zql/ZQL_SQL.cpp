@@ -18,13 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoToStrim.h"
-#include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
 #include "zoolib/ZExpr_Logic_ValCondition.h"
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZTime.h"
 #include "zoolib/ZUtil_Strim.h"
+#include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoToStrim.h"
+#include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
 
 #include "zoolib/zql/ZQL_Expr_Rel_Join.h"
 #include "zoolib/zql/ZQL_Expr_Rel_Project.h"
@@ -45,11 +45,9 @@ using std::vector;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Anonymous
+#pragma mark * DoRename
 
 namespace ZANONYMOUS {
-
-typedef map<string8, string8> Rename_t;
 
 class DoRename
 :	public virtual ZVisitor_Expr_Op_DoTransform_T<ZExpr_Logic>
@@ -75,6 +73,14 @@ void DoRename::Visit_Expr_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition> iExp
 	else
 		this->pSetResult(iExpr);
 	}
+
+} // anonymous namespace
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Doer
+
+namespace ZANONYMOUS {
 
 class Doer
 :	public virtual ZVisitor_Expr_Op_DoTransform_T<Expr_Rel_SFW>
@@ -118,8 +124,8 @@ void Doer::Visit_Expr_Rel_Join(ZRef<Expr_Rel_Join> iExpr)
 	ZRef<Expr_Rel_SFW> sfw0 = this->Do(iExpr->GetOp0());
 	ZRef<Expr_Rel_SFW> sfw1 = this->Do(iExpr->GetOp1());
 
-	Rename_t theRename = sfw0->GetRenameMap();
-	const Rename_t& theRename1 = sfw1->GetRenameMap();
+	Rename_t theRename = sfw0->GetRename();
+	const Rename_t& theRename1 = sfw1->GetRename();
 	theRename.insert(theRename1.begin(), theRename1.end());
 	
 	vector<ZRef<Expr_Rel_Concrete> > rels = sfw0->GetRels();
@@ -152,7 +158,7 @@ void Doer::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
 	ZRef<Expr_Rel_SFW> sfw0 = this->Do(iExpr->GetOp0());
 
 	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
-		sfw0->GetRenameMap(),
+		sfw0->GetRename(),
 		sfw0->GetRelHead() & iExpr->GetRelHead(),
 		sfw0->GetCondition(),
 		sfw0->GetRels());
@@ -176,7 +182,7 @@ void Doer::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 
 	const string8& oldName = iExpr->GetOld();
 	const string8& newName = iExpr->GetNew();
-	Rename_t theRename = sfw0->GetRenameMap();
+	Rename_t theRename = sfw0->GetRename();
 	bool foundIt = false;
 	for (Rename_t::iterator i = theRename.begin(); i != theRename.end(); /*no inc*/)
 		{
@@ -199,33 +205,24 @@ void Doer::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 	this->pSetResult(result);	
 	}
 
-static Rename_t spInvert(const Rename_t& iRename)
-	{
-	Rename_t result;
-	for (Rename_t::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
-		result[(*i).second] = (*i).first;
-
-	return result;
-	}
-
 static ZValCondition spRenamedInverse(
 	const ZValCondition& iValCondition, const Rename_t& iRename)
 	{
 	ZValCondition result;
-	if (iValCondition.Renamed(spInvert(iRename), result))
+	if (iValCondition.Renamed(sInvert(iRename), result))
 		return result;
 	return iValCondition;
 	}
 
 static ZRef<ZExpr_Logic> spRenamedInverse(
 	ZRef<ZExpr_Logic> iExpr_Logic, const Rename_t& iRename)
-	{ return DoRename(spInvert(iRename)).Do(iExpr_Logic); }
+	{ return DoRename(sInvert(iRename)).Do(iExpr_Logic); }
 
 void Doer::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr)
 	{
 	ZRef<Expr_Rel_SFW> sfw0 = this->Do(iExpr->GetOp0());
 
-	const Rename_t& theRename = sfw0->GetRenameMap();	
+	const Rename_t& theRename = sfw0->GetRename();	
 	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
 		theRename,
 		sfw0->GetRelHead(),
@@ -239,7 +236,7 @@ void Doer::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	{
 	ZRef<Expr_Rel_SFW> sfw0 = this->Do(iExpr->GetOp0());
 
-	const Rename_t& theRename = sfw0->GetRenameMap();	
+	const Rename_t& theRename = sfw0->GetRename();	
 	ZRef<Expr_Rel_SFW> result = new Expr_Rel_SFW(
 		theRename,
 		sfw0->GetRelHead(),
@@ -249,17 +246,17 @@ void Doer::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 	this->pSetResult(result);
 	}
 
-} // namespace ZANONYMOUS
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Expr_Rel_SFW
 
-Expr_Rel_SFW::Expr_Rel_SFW(const map<string8, string8>& iRenameMap,
+Expr_Rel_SFW::Expr_Rel_SFW(const Rename_t& iRename,
 	const RelHead& iRelHead,
 	ZRef<ZExpr_Logic> iCondition,
 	const vector<ZRef<Expr_Rel_Concrete> >& iRels)
-:	fRenameMap(iRenameMap)
+:	fRename(iRename)
 ,	fRelHead(iRelHead)
 ,	fCondition(iCondition)
 ,	fRels(iRels)
@@ -268,8 +265,8 @@ Expr_Rel_SFW::Expr_Rel_SFW(const map<string8, string8>& iRenameMap,
 RelHead Expr_Rel_SFW::GetRelHead()
 	{ return fRelHead; }
 
-const map<string8, string8>& Expr_Rel_SFW::GetRenameMap()
-	{ return fRenameMap; }
+const Rename_t& Expr_Rel_SFW::GetRename()
+	{ return fRename; }
 
 ZRef<ZExpr_Logic> Expr_Rel_SFW::GetCondition()
 	{ return fCondition; }
@@ -279,10 +276,14 @@ const vector<ZRef<Expr_Rel_Concrete> >& Expr_Rel_SFW::GetRels()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL::SQL
+#pragma mark * ZQL::SQL::sConvert
 
 ZRef<Expr_Rel_SFW> sConvert(ZRef<Expr_Rel> iExpr)
 	{ return Doer().Do(iExpr); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ToStrim_SQL
 
 namespace ZANONYMOUS {
 
@@ -481,16 +482,18 @@ void ToStrim_SQL::Visit_Expr_Logic_ValCondition(
 
 } // anonymous namespace
 
-string8 sAsSQL(ZRef<Expr_Rel_SFW> iSFW)
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZQL::SQL::sConvert
+
+void sAsSQL(ZRef<Expr_Rel_SFW> iSFW, const ZStrimW& s)
 	{
-	string8 result;
-	ZStrimW_String s(result);
 	if (iSFW)
 		{
 		s << "SELECT";
 		const RelHead& theRelHead = iSFW->GetRelHead();
 		
-		const Rename_t theRename = spInvert(iSFW->GetRenameMap());
+		const Rename_t theRename = sInvert(iSFW->GetRename());
 
 		bool universal;
 		const set<string8>& names = theRelHead.GetElems(universal);
@@ -542,6 +545,12 @@ string8 sAsSQL(ZRef<Expr_Rel_SFW> iSFW)
 		ToStrim_SQL().DoToStrim(ToStrim_SQL::Options(), s, iSFW->GetCondition()); 
 		s << ";";
 		}
+	}
+
+string8 sAsSQL(ZRef<Expr_Rel_SFW> iSFW)
+	{
+	string8 result;
+	sAsSQL(iSFW, ZStrimW_String(result));
 	return result;
 	}
 

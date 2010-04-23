@@ -23,6 +23,18 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Rename_t
+
+Rename_t sInvert(const Rename_t& iRename)
+	{
+	Rename_t result;
+	for (Rename_t::const_iterator i = iRename.begin(); i != iRename.end(); ++i)
+		result[(*i).second] = (*i).first;
+
+	return result;
+	}
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

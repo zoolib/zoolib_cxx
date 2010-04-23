@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUniSet_T.h"
 
 #include <string>
+#include <map>
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQL {
@@ -55,6 +56,14 @@ inline RelHead operator^(const char* iElem, const RelHead& iRelHead)
 
 inline RelHead operator^(const RelHead& iRelHead, const char* iElem)
 	{ return iRelHead ^ std::string(iElem); }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Rename_t
+
+typedef std::map<std::string, std::string> Rename_t;
+
+Rename_t sInvert(const Rename_t& iRename);
 
 } // namespace ZQL
 NAMESPACE_ZOOLIB_END

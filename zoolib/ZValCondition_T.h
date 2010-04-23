@@ -30,6 +30,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
+// There is an equivalent typedef in ZQL_RelHead, and it's possible that it
+// should be promoted to its own file, but for now that seems excessive.
+typedef std::map<std::string, std::string> Rename_t;
+
 class ZValContext
 	{};
 
@@ -176,7 +180,7 @@ public:
 
 	virtual Val Imp_GetVal(ZValContext& iContext, const Val& iVal) = 0;
 	virtual std::set<std::string> GetNames();
-	virtual ZRef<ZValComparandRep_T> Renamed(const std::map<std::string, std::string>& iRenameMap);
+	virtual ZRef<ZValComparandRep_T> Renamed(const Rename_t& iRename);
 	};
 
 template <class Val>
@@ -192,8 +196,7 @@ std::set<std::string> ZValComparandRep_T<Val>::GetNames()
 	{ return std::set<std::string>(); }
 
 template <class Val>
-ZRef<ZValComparandRep_T<Val> > ZValComparandRep_T<Val>::Renamed(
-	const std::map<std::string, std::string>& iRenameMap)
+ZRef<ZValComparandRep_T<Val> > ZValComparandRep_T<Val>::Renamed(const Rename_t& iRename)
 	{ return this; }
 
 // =================================================================================================
@@ -243,7 +246,7 @@ public:
 	virtual Val Imp_GetVal(ZValContext& iContext, const Val& iVal);
 	virtual std::set<std::string> GetNames();
 	virtual ZRef<ZValComparandRep_T<Val> > Renamed(
-		const std::map<std::string, std::string>& iRenameMap);
+		const Rename_t& iRename);
 
 // Our protocol
 	const ZTrail& GetTrail();
@@ -282,13 +285,13 @@ const ZTrail& ZValComparandRep_Trail_T<Val>::GetTrail()
 
 template <class Val>
 ZRef<ZValComparandRep_T<Val> > ZValComparandRep_Trail_T<Val>::Renamed(
-	const std::map<std::string, std::string>& iRenameMap)
+	const Rename_t& iRename)
 	{
 	if (fTrail.Count())
 		{
 		std::string theName = fTrail.At(0);
-		std::map<std::string, std::string>::const_iterator i = iRenameMap.find(theName);
-		if (i != iRenameMap.end())
+		Rename_t::const_iterator i = iRename.find(theName);
+		if (i != iRename.end())
 			return new ZValComparandRep_Trail_T((*i).second + fTrail.SubTrail(1));
 		}
 	return this;
@@ -388,8 +391,7 @@ public:
 
 	std::set<std::string> GetNames() const;
 
-	bool Renamed(
-		const std::map<std::string, std::string>& iRenameMap, ZValCondition_T& oResult) const;
+	bool Renamed(const Rename_t& iRename, ZValCondition_T& oResult) const;
 
 private:
 	ZValComparand_T<Val> fLHS;
@@ -456,11 +458,10 @@ std::set<std::string> ZValCondition_T<Val>::GetNames() const
 	{ return ZUtil_STL_set::sOr(fLHS.GetNames(), fRHS.GetNames()); }
 
 template <class Val>
-bool ZValCondition_T<Val>::Renamed(
-	const std::map<std::string, std::string>& iRenameMap, ZValCondition_T& oResult) const
+bool ZValCondition_T<Val>::Renamed(const Rename_t& iRename, ZValCondition_T& oResult) const
 	{
-	ZRef<ZValComparandRep_T<Val> > newLHS = fLHS->Renamed(iRenameMap);
-	ZRef<ZValComparandRep_T<Val> > newRHS = fRHS->Renamed(iRenameMap);
+	ZRef<ZValComparandRep_T<Val> > newLHS = fLHS->Renamed(iRename);
+	ZRef<ZValComparandRep_T<Val> > newRHS = fRHS->Renamed(iRename);
 	if (newLHS == fLHS && newRHS == fRHS)
 		return false;
 	oResult = ZValCondition_T(newLHS, fComparator, newRHS);
