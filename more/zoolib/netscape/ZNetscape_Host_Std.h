@@ -116,11 +116,11 @@ public:
 	virtual void ReleaseObject(NPObject* obj);
 
 	virtual bool Invoke(NPP npp,
-		NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount,
+		NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32 argCount,
 		NPVariant* result);
 
 	virtual bool InvokeDefault(NPP npp,
-		NPObject* obj, const NPVariant* args, uint32_t argCount, NPVariant* result);
+		NPObject* obj, const NPVariant* args, uint32 argCount, NPVariant* result);
 
 	virtual bool Evaluate(NPP npp,
 		NPObject* obj, NPString* script, NPVariant* result);
@@ -146,13 +146,13 @@ public:
 	virtual void PopPopupsEnabledState(NPP npp);
 
 	virtual bool Enumerate
-		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32_t *count);
+		(NPP npp, NPObject *npobj, NPIdentifier **identifier, uint32 *count);
 
 	virtual void PluginThreadAsyncCall
 		(NPP npp, void (*func)(void *), void *userData);
 
 	virtual bool Construct
-		(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result);
+		(NPP npp, NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result);
 
 private:
 	std::set<std::string> fStrings;

@@ -349,7 +349,7 @@ void HostMeister_Std::ReleaseObject(NPObject* obj)
 	}
 
 bool HostMeister_Std::Invoke(NPP npp,
-	NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount,
+	NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32 argCount,
 	NPVariant* result)
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
@@ -365,7 +365,7 @@ bool HostMeister_Std::Invoke(NPP npp,
 	}
 
 bool HostMeister_Std::InvokeDefault(NPP npp,
-	NPObject* obj, const NPVariant* args, uint32_t argCount, NPVariant* result)
+	NPObject* obj, const NPVariant* args, uint32 argCount, NPVariant* result)
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s.Writef("InvokeDefault");
@@ -495,7 +495,7 @@ void HostMeister_Std::PopPopupsEnabledState(NPP npp)
 	}
 
 bool HostMeister_Std::Enumerate
-	(NPP, NPObject* obj, NPIdentifier **identifier, uint32_t *count)
+	(NPP, NPObject* obj, NPIdentifier **identifier, uint32 *count)
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s.Writef("Enumerate");
@@ -503,7 +503,7 @@ bool HostMeister_Std::Enumerate
 	if (NPClass_Z* theClass = sGetClass(obj))
 		{
 		if (theClass->enumerate)
-			return theClass->enumerate(obj, identifier, count);
+			return theClass->enumerate(obj, identifier, (uint32_t*)count);
 		}
 
 	return false;
@@ -517,7 +517,7 @@ void HostMeister_Std::PluginThreadAsyncCall
 	}
 
 bool HostMeister_Std::Construct
-	(NPP npp, NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
+	(NPP npp, NPObject* obj, const NPVariant *args, uint32 argCount, NPVariant *result)
 	{
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		s.Writef("Construct");
