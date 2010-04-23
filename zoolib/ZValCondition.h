@@ -30,36 +30,36 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-typedef ZVal_Any ZVal_Expr;
 typedef ZMap_Any ZMap_Expr;
-//typedef ZVal_CFType ZVal_Expr;
+
 //typedef ZMap_CFType ZMap_Expr;
-//typedef ZVal_ZooLib ZVal_Expr;
 //typedef ZMap_ZooLib ZMap_Expr;
+
+typedef ZMap_Expr::Val_t ZVal_Expr;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValCondition
 
 typedef ZValCondition_T<ZVal_Expr> ZValCondition;
-typedef ZValComparand_T<ZVal_Expr> ZValComparand;
+typedef ZValComparandPseudo_T<ZVal_Expr> ZValComparandPseudo;
 
-inline ZValComparand CString(const std::string& iVal)
+inline ZValComparandPseudo CString(const std::string& iVal)
 	{ return CConst_T<ZVal_Expr>(string8(iVal)); }
 
-inline ZValComparand CConst(const ZVal_Expr& iVal)
+inline ZValComparandPseudo CConst(const ZVal_Expr& iVal)
 	{ return CConst_T<ZVal_Expr>(iVal); }
 
-inline ZValComparand CName(const std::string& iName)
+inline ZValComparandPseudo CName(const std::string& iName)
 	{ return CName_T<ZVal_Expr>(iName); }
 
-inline ZValComparand CTrail(const ZTrail& iTrail)
+inline ZValComparandPseudo CTrail(const ZTrail& iTrail)
 	{ return CTrail_T<ZVal_Expr>(iTrail); }
 
-inline ZValComparand CVal()
+inline ZValComparandPseudo CVal()
 	{ return CVal_T<ZVal_Expr>(); }
 
-inline ZValComparand CVar(const std::string& iVarName)
+inline ZValComparandPseudo CVar(const std::string& iVarName)
 	{ return CVar_T<ZVal_Expr>(iVarName); }
 
 NAMESPACE_ZOOLIB_END

@@ -336,10 +336,10 @@ void ToStrim_SQL::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
 	pStrimW() << ")";
 	}
 
-typedef ZValComparatorRep_Simple_T<ZVal_Expr> ZValComparatorRep_Simple;
-typedef ZValComparandRep_Trail_T<ZVal_Expr> ZValComparandRep_Trail;
-typedef ZValComparandRep_Var_T<ZVal_Expr> ZValComparandRep_Var;
-typedef ZValComparandRep_Const_T<ZVal_Expr> ZValComparandRep_Const;
+typedef ZValComparator_Simple_T<ZVal_Expr> ZValComparator_Simple;
+typedef ZValComparand_Trail_T<ZVal_Expr> ZValComparand_Trail;
+typedef ZValComparand_Var_T<ZVal_Expr> ZValComparand_Var;
+typedef ZValComparand_Const_T<ZVal_Expr> ZValComparand_Const;
 
 // =================================================================================================
 #pragma mark -
@@ -404,7 +404,7 @@ static void spToStrim(const ZRef<ZValCondition::ComparandRep>& iCR, const ZStrim
 		{
 		s << "!!Null Comparand!!";
 		}
-	else if (ZRef<ZValComparandRep_Trail> cr = iCR.DynamicCast<ZValComparandRep_Trail>())
+	else if (ZRef<ZValComparand_Trail> cr = iCR.DynamicCast<ZValComparand_Trail>())
 		{
 		const ZTrail& theTrail = cr->GetTrail();
 		if (theTrail.Count() == 1)
@@ -412,11 +412,11 @@ static void spToStrim(const ZRef<ZValCondition::ComparandRep>& iCR, const ZStrim
 		else
 			spWrite_PropName("/" + theTrail.AsString(), s);
 		}
-	else if (ZRef<ZValComparandRep_Var> cr = iCR.DynamicCast<ZValComparandRep_Var>())
+	else if (ZRef<ZValComparand_Var> cr = iCR.DynamicCast<ZValComparand_Var>())
 		{
 		s << "$" << cr->GetVarName();
 		}
-	else if (ZRef<ZValComparandRep_Const> cr = iCR.DynamicCast<ZValComparandRep_Const>())
+	else if (ZRef<ZValComparand_Const> cr = iCR.DynamicCast<ZValComparand_Const>())
 		{
 		spToStrim_SimpleValue(s, cr->GetVal());
 		}
@@ -432,31 +432,31 @@ static void spToStrim(const ZRef<ZValCondition::ComparatorRep>& iCR, const ZStri
 		{
 		s << "!!Null Comparator!!";
 		}
-	else if (ZRef<ZValComparatorRep_Simple> cr = iCR.DynamicCast<ZValComparatorRep_Simple>())
+	else if (ZRef<ZValComparator_Simple> cr = iCR.DynamicCast<ZValComparator_Simple>())
 		{
 		switch (cr->GetEComparator())
 			{
-			case ZValComparatorRep_Simple::eLT:
+			case ZValComparator_Simple::eLT:
 				{
 				s << " < ";
 				break;
 				}
-			case ZValComparatorRep_Simple::eLE:
+			case ZValComparator_Simple::eLE:
 				{
 				s << " <= ";
 				break;
 				}
-			case ZValComparatorRep_Simple::eEQ:
+			case ZValComparator_Simple::eEQ:
 				{
 				s << " = ";
 				break;
 				}
-			case ZValComparatorRep_Simple::eGE:
+			case ZValComparator_Simple::eGE:
 				{
 				s << " >= ";
 				break;
 				}
-			case ZValComparatorRep_Simple::eGT:
+			case ZValComparator_Simple::eGT:
 				{
 				s << " > ";
 				break;

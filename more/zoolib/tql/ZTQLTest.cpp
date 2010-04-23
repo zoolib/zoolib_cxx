@@ -89,6 +89,7 @@ Rel genre = ZValBase::sConcrete(RelHead() | "genre.idGenre" | "genre.strGenre", 
 Rel genrelinkmovie = ZValBase::sConcrete(RelHead() | "genrelinkmovie.idGenre" | "genrelinkmovie.idMovie", "genrelinkmovie");
 Rel movie = ZValBase::sConcrete(RelHead() | "movie.idMovie" | "movie.c00" , "movie");
 Spec theSpec = CName("movie.idMovie") == CName("link.idMovie") & CName("movie.idGenre") == CName("link.idGenre");
+//Spec theSpec = CName("movie.idMovie") == CName("link.idMovie") & CName("movie.idGenre") == CName("link.idGenre");
 
 void sTestQL1(const ZStrimW& s)
 	{

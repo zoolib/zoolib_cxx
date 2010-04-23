@@ -64,23 +64,23 @@ static Spec spAsTSpec(const ZTBSpec& iTBSpec)
 		for (vector<ZTBSpec::Criterion>::const_iterator siter = uiter->begin();
 			siter != uiter->end(); ++siter)
 			{
-			ZValComparatorRep_Simple_T<Val>::EComparator theComparator;
+			ZValComparator_Simple_T<Val>::EComparator theComparator;
 			switch (siter->GetComparator().fRel)
 				{
 				case ZTBSpec::eRel_Less:
-					theComparator = ZValComparatorRep_Simple_T<Val>::eLT;
+					theComparator = ZValComparator_Simple_T<Val>::eLT;
 					break;
 				case ZTBSpec::eRel_LessEqual:
-					theComparator = ZValComparatorRep_Simple_T<Val>::eLE;
+					theComparator = ZValComparator_Simple_T<Val>::eLE;
 					break;
 				case ZTBSpec::eRel_Equal:
-					theComparator = ZValComparatorRep_Simple_T<Val>::eEQ;
+					theComparator = ZValComparator_Simple_T<Val>::eEQ;
 					break;
 				case ZTBSpec::eRel_GreaterEqual:
-					theComparator = ZValComparatorRep_Simple_T<Val>::eGE;
+					theComparator = ZValComparator_Simple_T<Val>::eGE;
 					break;
 				case ZTBSpec::eRel_Greater:
-					theComparator = ZValComparatorRep_Simple_T<Val>::eGT;
+					theComparator = ZValComparator_Simple_T<Val>::eGT;
 					break;
 				default:
 					ZUnimplemented();
@@ -89,7 +89,7 @@ static Spec spAsTSpec(const ZTBSpec& iTBSpec)
 
 			ZValCondition_T<Val> theCondition(
 				CName(siter->GetPropName()),
-				new ZValComparatorRep_Simple_T<Val>(theComparator),
+				new ZValComparator_Simple_T<Val>(theComparator),
 				CConst(siter->GetTValue().AsAny()));
 
 			if (sisfirst)
