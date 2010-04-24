@@ -38,6 +38,7 @@ public:
 	YadSeqR_Iter(ZRef<Iter> iIter);
 	virtual ~YadSeqR_Iter();
 
+// From ZYadSeqR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR);
 
 private:

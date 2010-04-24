@@ -35,6 +35,7 @@ class YadMapR : public ZYadMapR_Std
 public:
 	YadMapR(ZRef<Iter> iIter);
 
+// From ZYadMapR_Std
 	virtual void Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oYadR);
 
 private:
