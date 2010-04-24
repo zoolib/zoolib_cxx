@@ -56,8 +56,9 @@ public:
 	Result_t Do(ZRef<ZVisitee> iRep)
 		{
 		Result_t result;
-		this->Do(iRep, result);
-		return result;
+		if (this->Do(iRep, result))
+			return result;
+		return Result_t();
 		}
 
 protected:

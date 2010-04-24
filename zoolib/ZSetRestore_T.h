@@ -34,15 +34,15 @@ class ZSetRestore_T
 public:
 	ZSetRestore_T(T& ioRef, T iVal)
 	:	fRef(ioRef)
-	,	fPrior(ioRef)
-		{ fRef = iVal; }
+	,	fValPrior(ioRef)
+		{ ioRef = iVal; }
 
 	~ZSetRestore_T()
-		{ fRef = fPrior; }
+		{ fRef = fValPrior; }
 
 private:
 	T& fRef;
-	const T fPrior;
+	const T fValPrior;
 	};
 
 NAMESPACE_ZOOLIB_END
