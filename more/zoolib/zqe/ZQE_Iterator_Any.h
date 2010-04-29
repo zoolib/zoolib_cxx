@@ -92,7 +92,8 @@ private:
 #pragma mark -
 #pragma mark * Iterator_Any_Select
 
-class Iterator_Any_Select : public Iterator
+class Iterator_Any_Select
+:	public Iterator
 	{
 public:
 	Iterator_Any_Select(ZRef<Iterator> iIterator, ZRef<ZExpr_Logic> iExpr_Logic);
