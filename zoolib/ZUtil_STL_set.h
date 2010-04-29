@@ -34,8 +34,10 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZUtil_STL_set {
 
+using std::set;
+
 template <class T>
-void sOr(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResult)
+void sOr(const set<T>& iLHS, const set<T>& iRHS, set<T>& oResult)
 	{
 	set_union(iLHS.begin(), iLHS.end(),
 		iRHS.begin(), iRHS.end(),
@@ -43,15 +45,15 @@ void sOr(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResult)
 	}
 
 template <class T>
-std::set<T> sOr(const std::set<T>& iLHS, const std::set<T>& iRHS)
+set<T> sOr(const set<T>& iLHS, const set<T>& iRHS)
 	{
-	std::set<T> result;
+	set<T> result;
 	sOr(iLHS, iRHS, result);
 	return result;
 	}
 
 template <class T>
-void sAnd(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResult)
+void sAnd(const set<T>& iLHS, const set<T>& iRHS, set<T>& oResult)
 	{
 	set_intersection(iLHS.begin(), iLHS.end(),
 		iRHS.begin(), iRHS.end(),
@@ -59,15 +61,15 @@ void sAnd(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResult
 	}
 
 template <class T>
-std::set<T> sAnd(const std::set<T>& iLHS, const std::set<T>& iRHS)
+set<T> sAnd(const set<T>& iLHS, const set<T>& iRHS)
 	{
-	std::set<T> result;
+	set<T> result;
 	sAnd(iLHS, iRHS, result);
 	return result;
 	}
 
 template <class T>
-void sMinus(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResult)
+void sMinus(const set<T>& iLHS, const set<T>& iRHS, set<T>& oResult)
 	{
 	set_difference(iLHS.begin(), iLHS.end(),
 		iRHS.begin(), iRHS.end(),
@@ -75,15 +77,15 @@ void sMinus(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResu
 	}
 
 template <class T>
-std::set<T> sMinus(const std::set<T>& iLHS, const std::set<T>& iRHS)
+set<T> sMinus(const set<T>& iLHS, const set<T>& iRHS)
 	{
-	std::set<T> result;
+	set<T> result;
 	sMinus(iLHS, iRHS, result);
 	return result;
 	}
 
 template <class T>
-void sXor(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResult)
+void sXor(const set<T>& iLHS, const set<T>& iRHS, set<T>& oResult)
 	{
 	set_symmetric_difference(iLHS.begin(), iLHS.end(),
 		iRHS.begin(), iRHS.end(),
@@ -91,15 +93,15 @@ void sXor(const std::set<T>& iLHS, const std::set<T>& iRHS, std::set<T>& oResult
 	}
 
 template <class T>
-std::set<T> sXor(const std::set<T>& iLHS, const std::set<T>& iRHS)
+set<T> sXor(const set<T>& iLHS, const set<T>& iRHS)
 	{
-	std::set<T> result;
+	set<T> result;
 	sXor(iLHS, iRHS, result);
 	return result;
 	}
 
 template <class T>
-bool sIncludes(const std::set<T>& iLHS, const std::set<T>& iRHS)
+bool sIncludes(const set<T>& iLHS, const set<T>& iRHS)
 	{
 	return includes(iLHS.begin(), iLHS.end(),
 		iRHS.begin(), iRHS.end());
