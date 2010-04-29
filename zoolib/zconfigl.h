@@ -353,4 +353,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZMACRO_CONCAT_(x, y) x ## y
 #define ZMACRO_CONCAT(x, y) ZMACRO_CONCAT_(x,y)
 
+#ifdef __cplusplus
+	#define ZMACRO_ExternC_Begin extern "C" {
+	#define ZMACRO_ExternC_End } // extern "C"
+#else
+	#define ZMACRO_ExternC_Begin
+	#define ZMACRO_ExternC_End
+#endif
+
 #endif // __zconfigl__
