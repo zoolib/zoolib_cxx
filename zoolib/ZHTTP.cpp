@@ -740,9 +740,8 @@ string sEncodeTrail(const ZTrail& iTrail)
 
 string sGetString0(const Val& iVal)
 	{
-	string result;
-	if (iVal.QGet_T(result))
-		return result;
+	if (ZQ_T<string> result = iVal.QGet_T<string>())
+		return result.Get();
 
 	const Seq& theSeq = iVal.GetSeq();
 	if (theSeq.Count())
@@ -762,11 +761,8 @@ static ZRef<ZStreamerR> spMakeStreamer_Transfer(
 		return new ZStreamerR_FT<StreamR_Chunked>(iStreamerR);
 		}
 
-	int64 contentLength;
-	if (iHeader.Get("content-length").QGet_T(contentLength))
-		{
-		return new ZStreamerR_FT<ZStreamR_Limited>(contentLength, iStreamerR);
-		}
+	if (ZQ_T<int64> contentLength = iHeader.Get("content-length").QGet_T<int64>())
+		return new ZStreamerR_FT<ZStreamR_Limited>(contentLength.Get(), iStreamerR);
 
 	return iStreamerR;
 	}
