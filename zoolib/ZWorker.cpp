@@ -18,9 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZDebug.h"
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZWorker.h"
-#include "zoolib/ZWorkerRunner_Thread.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -113,6 +113,9 @@ void ZWorkerRunner::pDetachWorker(ZRef<ZWorker> iWorker)
 #pragma mark * Utility methods
 
 void sStartWorkerRunner(ZRef<ZWorker> iWorker)
-	{ ZFunctionChain_T<ZRef<ZWorkerRunner>, ZRef<ZWorker> >::sInvoke(iWorker); }
+	{
+	bool result = ZFunctionChain_T<ZRef<ZWorkerRunner>, ZRef<ZWorker> >::sInvoke(iWorker);
+	ZAssert(result);
+	}
 
 NAMESPACE_ZOOLIB_END
