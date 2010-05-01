@@ -24,7 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZStream.h"
 #include "zoolib/ZStream_Memory.h"
 #include "zoolib/ZUtil_STL.h"

@@ -23,7 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/ZMemoryBlock.h"
+#include "zoolib/ZData_Any.h"
+#include "zoolib/ZStream_Data_T.h"
+
 #include "zoolib/tuplebase/ZTBQuery.h"
 
 #include <map>
@@ -31,6 +33,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <vector>
 
 NAMESPACE_ZOOLIB_BEGIN
+
+typedef ZData_Any ZMemoryBlock;
+typedef ZStreamRPos_Data_T<ZData_Any> ZStreamRPos_MemoryBlock;
+typedef ZStreamRWPos_Data_T<ZData_Any> ZStreamRWPos_MemoryBlock;
 
 // =================================================================================================
 #pragma mark -
@@ -79,7 +85,7 @@ public:
 
 	int64 fRefcon;
 	bool fPrefetch;
-	ZMemoryBlock fMemoryBlock;
+	ZData_Any fMemoryBlock;
 	ZTBQuery fTBQuery;
 	};
 

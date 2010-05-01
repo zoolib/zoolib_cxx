@@ -117,7 +117,7 @@ private:
 	ZRef<ZTS> fTS;
 	ZMutex fMutex_Structure;
 
-	std::map<ZMemoryBlock, PQuery*> fMB_To_PQuery;
+	std::map<ZData_Any, PQuery*> fMB_To_PQuery;
 
 	std::map<ZTName, std::set<PSpec*> > fPropName_To_PSpec;
 	std::map<ZTBSpec, PSpec*> fTBSpec_To_PSpec;

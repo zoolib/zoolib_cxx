@@ -23,13 +23,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/tuplebase/ZTBSpec.h"
+#include "zoolib/ZData_Any.h"
+#include "zoolib/ZStream_Data_T.h"
 #include "zoolib/ZThreadOld.h"
 #include "zoolib/ZTuple.h"
+
+#include "zoolib/tuplebase/ZTBSpec.h"
 
 #include <set>
 
 NAMESPACE_ZOOLIB_BEGIN
+
+typedef ZData_Any ZMemoryBlock;
+typedef ZStreamRPos_Data_T<ZData_Any> ZStreamRPos_MemoryBlock;
+typedef ZStreamRWPos_Data_T<ZData_Any> ZStreamRWPos_MemoryBlock;
 
 // =================================================================================================
 #pragma mark -

@@ -19,7 +19,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZMemoryBlock.h"
 #include "zoolib/ZStream_ASCIIStrim.h"
 #include "zoolib/ZStream_Base64.h"
 #include "zoolib/ZUtil_Strim.h"
