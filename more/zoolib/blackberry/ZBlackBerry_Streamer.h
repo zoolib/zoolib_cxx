@@ -30,24 +30,21 @@ NAMESPACE_ZOOLIB_BEGIN
 
 namespace ZBlackBerry {
 
+class Commer_Streamer;
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZBlackBerry::Device_Streamer
 
-class Channel_Streamer;
-
 class Device_Streamer
-:	public Device,
-	public ZCommer,
-	public ZWeakReferee
+:	public Device
 	{
-	friend class Channel_Streamer;
-
 public:
 	Device_Streamer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 	virtual ~Device_Streamer();
 
 // From ZBlackBerry::Device
+	virtual void Start();
 	virtual void Stop();
 
 	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
@@ -57,70 +54,8 @@ public:
 
 	virtual uint32 GetPIN();
 
-// From ZStreamReader via ZCommer	
-	virtual bool Read(const ZStreamR& iStreamR);
-
-// From ZStreamWriter via ZCommer	
-	virtual bool Write(const ZStreamW& iStreamW);
-
-// From ZCommer
-	virtual void Finished();
-
 private:
-	bool Channel_Finalize(Channel_Streamer* iChannel);
-
-	void Channel_Read(Channel_Streamer* iChannel, void* oDest, size_t iCount, size_t* oCountRead);
-
-	size_t Channel_CountReadable(Channel_Streamer* iChannel);
-
-	bool Channel_WaitReadable(Channel_Streamer* iChannel, double iTimeout);
-
-	void Channel_Write(
-		Channel_Streamer* iChannel, const void* iSource, size_t iCount, size_t* oCountWritten);
-
-	void Channel_SendDisconnect(Channel_Streamer* iChannel);
-
-	bool Channel_ReceiveDisconnect(Channel_Streamer* iChannel, double iTimeout);
-
-	void Channel_Abort(Channel_Streamer* iChannel);
-
-	ZRef<Channel_Streamer> pFindChannel(uint16 iChannelID);
-	ZRef<Channel_Streamer> pFindChannel(const std::string& iName);
-	bool pDetachIfUnused(Channel_Streamer* iChannel);
-
-	void pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZStreamR& iStreamR);
-
-	bool pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iChannel);
-
-	class StreamW_Chunked;
-	bool pSend(StreamW_Chunked& iSC, uint16 iChannelID, const ZStreamW& iStreamW);
-	bool pSendFunky(uint16 iLength, const ZStreamW& iStreamW);
-	void pFlush(const ZStreamW& iStreamW);
-
-	ZMutex fMutex;
-	ZCondition fCondition;
-
-	struct GetAttribute_t
-		{
-		uint16 fObject;
-		uint16 fAttribute;
-		bool fFinished;
-		Data fResult;
-		};
-	bool fGetAttributeSent;
-	GetAttribute_t* fGetAttribute;
-
-	enum ELifecycle
-		{
-		eLifecycle_Running,
-		eLifecycle_StreamsDead,
-		eLifecycle_StoppingRun,
-		eLifecycle_StoppingRead
-		};
-
-	ELifecycle fLifecycle;
-
-	std::vector<Channel_Streamer*> fChannels;
+	ZRef<Commer_Streamer> fCommer;
 	};
 
 } // namespace ZBlackBerry

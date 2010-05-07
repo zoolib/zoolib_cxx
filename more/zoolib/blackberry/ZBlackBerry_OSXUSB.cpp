@@ -245,11 +245,7 @@ ZRef<Device> Manager_OSXUSB::Open(uint64 iDeviceID)
 					if (ZRef<ZStreamerR> theSR = theII->OpenR(3))
 						{
 						if (ZRef<ZStreamerW> theSW = theII->OpenW(4))
-							{
-							ZRef<Device_Streamer> theDevice = new Device_Streamer(theSR, theSW);
-							sStartCommerRunners(theDevice);
-							return theDevice;
-							}
+							return new Device_Streamer(theSR, theSW);
 						}
 					}
 				}
