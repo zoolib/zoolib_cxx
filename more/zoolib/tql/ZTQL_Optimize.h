@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTQL_Optimize__ 1
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Rel.h"
+#include "zoolib/zra/ZRA_Expr_Rel.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
@@ -30,7 +30,7 @@ NAMESPACE_ZOOLIB_BEGIN
 #pragma mark -
 #pragma mark * ZTQL
 
-namespace ZQL {
+namespace ZRA {
 
 ZRef<Expr_Rel> sOptimize(ZRef<Expr_Rel> iExpr);
 

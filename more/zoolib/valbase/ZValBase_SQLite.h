@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/sqlite/ZSQLite.h"
 #include "zoolib/valbase/ZValBase.h"
-#include "zoolib/zql/ZQL_Expr_Rel.h"
+#include "zoolib/zra/ZRA_Expr_Rel.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase_SQLite {
@@ -35,7 +35,7 @@ namespace ZValBase_SQLite {
 #pragma mark -
 #pragma mark * ZValBase_SQLite::Domain
 
-class ConcreteDomain : public ZQL::ConcreteDomain
+class ConcreteDomain : public ZRA::ConcreteDomain
 	{
 public:
 	ConcreteDomain(ZRef<ZSQLite::DB> iDB);
@@ -50,11 +50,11 @@ private:
 #pragma mark -
 #pragma mark * ZValBase_SQLite pseudo constructors
 
-ZRef<ZQL::Expr_Rel> sConcrete_Table(ZRef<ConcreteDomain> iConcreteDomain, const string8& iName);
+ZRef<ZRA::Expr_Rel> sConcrete_Table(ZRef<ConcreteDomain> iConcreteDomain, const string8& iName);
 
-ZRef<ZQL::Expr_Rel> sConcrete_SQL(ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL);
+ZRef<ZRA::Expr_Rel> sConcrete_SQL(ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL);
 
-ZRef<ZQL::Expr_Rel> sConcrete_SQL(
+ZRef<ZRA::Expr_Rel> sConcrete_SQL(
 	ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL, const string8& iPrefix);
 
 } // namespace ZValBase_SQLite

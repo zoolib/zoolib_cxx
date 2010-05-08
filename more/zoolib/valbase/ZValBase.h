@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/zqe/ZQE_Iterator.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase {
@@ -32,7 +32,7 @@ namespace ZValBase {
 #pragma mark -
 #pragma mark * Expr_Rel_Concrete
 
-class Expr_Rel_Concrete : public ZQL::Expr_Rel_Concrete
+class Expr_Rel_Concrete : public ZRA::Expr_Rel_Concrete
 	{
 public:
 // Our protocol
@@ -43,11 +43,11 @@ public:
 #pragma mark -
 #pragma mark * ZValBase pseudo constructors
 
-ZRef<ZQL::Expr_Rel> sConcrete();
-ZRef<ZQL::Expr_Rel> sConcrete(const ZQL::RelHead& iRelHead);
-ZRef<ZQL::Expr_Rel> sConcrete(const ZQL::RelHead& iRelHead, const string8& iName);
+ZRef<ZRA::Expr_Rel> sConcrete();
+ZRef<ZRA::Expr_Rel> sConcrete(const ZRA::RelHead& iRelHead);
+ZRef<ZRA::Expr_Rel> sConcrete(const ZRA::RelHead& iRelHead, const string8& iName);
 
-ZRef<ZQE::Iterator> sIterator(ZRef<ZQL::Expr_Rel> iExpr);
+ZRef<ZQE::Iterator> sIterator(ZRef<ZRA::Expr_Rel> iExpr);
 
 } // namespace ZValBase
 NAMESPACE_ZOOLIB_END

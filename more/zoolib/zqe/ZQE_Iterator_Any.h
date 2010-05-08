@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZExpr_Logic.h"
 #include "zoolib/ZValCondition.h"
 #include "zoolib/zqe/ZQE_Iterator.h"
-#include "zoolib/zql/ZQL_RelHead.h"
+#include "zoolib/zra/ZRA_RelHead.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZQE {
@@ -38,7 +38,7 @@ class Iterator_Any_Project
 :	public Iterator
 	{
 public:
-	Iterator_Any_Project(ZRef<Iterator> iIterator, const ZQL::RelHead& iRelHead);
+	Iterator_Any_Project(ZRef<Iterator> iIterator, const ZRA::RelHead& iRelHead);
 	
 // From Iterator
 	virtual ZRef<Iterator> Clone();
@@ -46,7 +46,7 @@ public:
 
 private:
 	ZRef<Iterator> fIterator;
-	ZQL::RelHead fRelHead;
+	ZRA::RelHead fRelHead;
 	};
 
 // =================================================================================================

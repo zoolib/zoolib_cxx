@@ -9,15 +9,15 @@
 #include "zoolib/valbase/ZValBase_YadSeqR.h"
 #include "zoolib/valbase/ZValBase_YadSeqRPos.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
-#include "zoolib/zql/ZQL_RelOps.h"
-#include "zoolib/zql/ZQL_SQL.h"
-#include "zoolib/zql/ZQL_Util.h"
-#include "zoolib/zql/ZQL_Util_Strim_Rel.h"
-#include "zoolib/zql/ZQL_Util_Strim_RelHead.h"
+#include "zoolib/zra/ZRA_RelOps.h"
+#include "zoolib/zra/ZRA_SQL.h"
+#include "zoolib/zra/ZRA_Util.h"
+#include "zoolib/zra/ZRA_Util_Strim_Rel.h"
+#include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
 NAMESPACE_ZOOLIB_USING
 
-using namespace ZQL;
+using namespace ZRA;
 
 using std::map;
 using std::set;
@@ -73,10 +73,10 @@ static void sDumpSFW(const ZStrimW& s, ZRef<SQL::Expr_Rel_SFW> iExpr)
 
 static void spDumpProblems(const ZStrimW& s, Rel iRel)
 	{
-	vector<ZQL::Util::Problem> theProblems;
+	vector<ZRA::Util::Problem> theProblems;
 	if (!sValidate(theProblems, iRel))
 		{
-		for (vector<ZQL::Util::Problem>::const_iterator i = theProblems.begin(); i != theProblems.end(); ++i)
+		for (vector<ZRA::Util::Problem>::const_iterator i = theProblems.begin(); i != theProblems.end(); ++i)
 			{
 			s << (*i).GetDescription() << "\n";
 			spDumpRel(s, (*i).GetRel());
@@ -98,14 +98,14 @@ void sTestQL1(const ZStrimW& s)
 	Rel theRel = (lgenre * genrelinkmovie) & CName("idGenre") == CName("genrelinkmovie.idGenre");
 	spDumpRel(s, theRel);
 	spDumpProblems(s, theRel);
-	ZRef<SQL::Expr_Rel_SFW> theSFW = ZQL::SQL::sConvert(theRel);
+	ZRef<SQL::Expr_Rel_SFW> theSFW = ZRA::SQL::sConvert(theRel);
 	sDumpSFW(s, theSFW);
 
 	{
 	Rel another = (theRel * movie) & (CName("movie.idMovie") == CName("genrelinkmovie.idMovie"));
 	spDumpRel(s, another);
 	spDumpProblems(s, another);
-	sDumpSFW(s, ZQL::SQL::sConvert(another));
+	sDumpSFW(s, ZRA::SQL::sConvert(another));
 	}
 	}
 
@@ -143,8 +143,8 @@ void sTestQL3(const ZStrimW& s)
 //	spDumpRel(s, theRel2);
 //	spDumpProblems(s, theRel2);
 
-	ZRef<SQL::Expr_Rel_SFW> theSFW = ZQL::SQL::sConvert(theRel);
-//	ZRef<SQL::Expr_Rel_SFW> theSFW = ZQL::SQL::sConvert(theRel2);
+	ZRef<SQL::Expr_Rel_SFW> theSFW = ZRA::SQL::sConvert(theRel);
+//	ZRef<SQL::Expr_Rel_SFW> theSFW = ZRA::SQL::sConvert(theRel2);
 
 	sDumpSFW(s, theSFW);
 

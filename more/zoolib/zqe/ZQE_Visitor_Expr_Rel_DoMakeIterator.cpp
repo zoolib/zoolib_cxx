@@ -28,12 +28,12 @@ namespace ZQE {
 #pragma mark * Visitor_Expr_Rel_DoMakeIterator
 
 void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Difference(
-	ZRef<ZQL::Expr_Rel_Difference> iExpr)
+	ZRef<ZRA::Expr_Rel_Difference> iExpr)
 	{
 	ZUnimplemented();
 	}
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Intersect(ZRef<ZQL::Expr_Rel_Intersect> iExpr)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Intersect(ZRef<ZRA::Expr_Rel_Intersect> iExpr)
 	{
 	if (ZRef<Iterator> op0 = this->Do(iExpr->GetOp0()))
 		{
@@ -42,7 +42,7 @@ void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Intersect(ZRef<ZQL::Expr_Re
 		}
 	}
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Join(ZRef<ZQL::Expr_Rel_Join> iExpr)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Join(ZRef<ZRA::Expr_Rel_Join> iExpr)
 	{
 	if (ZRef<Iterator> op0 = this->Do(iExpr->GetOp0()))
 		{
@@ -51,7 +51,7 @@ void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Join(ZRef<ZQL::Expr_Rel_Joi
 		}
 	}
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Union(ZRef<ZQL::Expr_Rel_Union> iExpr)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Union(ZRef<ZRA::Expr_Rel_Union> iExpr)
 	{
 	if (ZRef<Iterator> op0 = this->Do(iExpr->GetOp0()))
 		{
@@ -62,17 +62,17 @@ void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Union(ZRef<ZQL::Expr_Rel_Un
 		}
 	}
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Project(ZRef<ZQL::Expr_Rel_Project> iExpr)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr)
 	{
 	ZUnimplemented();
 	}
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Rename(ZRef<ZQL::Expr_Rel_Rename> iExpr)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr)
 	{
 	ZUnimplemented();
 	}
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Select(ZRef<ZQL::Expr_Rel_Select> iExpr)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iExpr)
 	{
 	ZUnimplemented();
 	}

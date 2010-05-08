@@ -22,12 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/tql/ZTQL_Optimize.h"
 #include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Restrict.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Select.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Union.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Select.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Union.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-using namespace ZQL;
+using namespace ZRA;
 
 // Turns a Select into a tree of Restrict and Union.
 
@@ -167,12 +167,12 @@ void Optimize::Visit_Expr_Rel_Select(ZRef<Expr_Rel_Select> iExpr)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZQL::sOptimize
+#pragma mark * ZRA::sOptimize
 
-namespace ZQL {
+namespace ZRA {
 
 ZRef<Expr_Rel> sOptimize(ZRef<Expr_Rel> iExpr)
 	{ return Optimize().Do(iExpr); }
 
-} // namespace ZQL
+} // namespace ZRA
 NAMESPACE_ZOOLIB_END

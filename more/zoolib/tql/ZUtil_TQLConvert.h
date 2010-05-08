@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZUtil_TQLConvert__
 #include "zconfig.h"
 
-#include "zoolib/zql/ZQL_Expr_Rel.h"
+#include "zoolib/zra/ZRA_Expr_Rel.h"
 #include "zoolib/tuplebase/ZTBQuery.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -33,7 +33,7 @@ namespace ZUtil_TQLConvert {
 #pragma mark -
 #pragma mark * ZUtil_TQLConvert
 
-ZRef<ZQL::Expr_Rel> sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
+ZRef<ZRA::Expr_Rel> sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
 
 } // namespace ZUtil_TQLConvert
 

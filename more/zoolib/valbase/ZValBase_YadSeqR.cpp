@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/valbase/ZValBase.h"
 #include "zoolib/valbase/ZValBase_YadSeqR.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 
 #include <vector>
 
@@ -39,8 +39,8 @@ class Expr_Rel_Concrete : public ZValBase::Expr_Rel_Concrete
 public:
 	Expr_Rel_Concrete(ZRef<ZYadSeqR> iYadSeqR);
 
-// From ZQL::Expr_Rel_Concrete via ZValBase::Expr_Rel_Concrete
-	virtual ZQL::RelHead GetRelHead();
+// From ZRA::Expr_Rel_Concrete via ZValBase::Expr_Rel_Concrete
+	virtual ZRA::RelHead GetRelHead();
 
 // From ZValBase::Expr_Rel_Concrete
 	virtual ZRef<ZQE::Iterator> MakeIterator();
@@ -95,8 +95,8 @@ Expr_Rel_Concrete::Expr_Rel_Concrete(ZRef<ZYadSeqR> iYadSeqR)
 :	fYadSeqR(iYadSeqR)
 	{}
 
-ZQL::RelHead Expr_Rel_Concrete::GetRelHead()
-	{ return ZQL::RelHead::sUniversal(); }
+ZRA::RelHead Expr_Rel_Concrete::GetRelHead()
+	{ return ZRA::RelHead::sUniversal(); }
 
 ZRef<ZQE::Iterator> Expr_Rel_Concrete::MakeIterator()
 	{ return new Iterator(this, 0); }
@@ -127,7 +127,7 @@ ZRef<ZQE::Result> Expr_Rel_Concrete::ReadInc(size_t& ioIndex)
 #pragma mark -
 #pragma mark * ZValBase_YadSeqR pseudo constructors
 
-ZRef<ZQL::Expr_Rel> sConcrete(ZRef<ZYadSeqR> iYadSeqR)
+ZRef<ZRA::Expr_Rel> sConcrete(ZRef<ZYadSeqR> iYadSeqR)
 	{
 	// Could do a dynamic cast on iYadSeqR to see if it's really a ZYadSeqRPos,
 	// in which case returning a ZValBase_YadSeqRPos::Iterator would be a win.

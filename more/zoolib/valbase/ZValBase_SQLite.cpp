@@ -87,8 +87,8 @@ public:
 		ZRef<ConcreteDomain> iConcreteDomain, ZRef<Iter> iIter, const string8& iPrefix,
 		const string8& iDescription);
 
-// From ZQL::Expr_Rel_Concrete via ZValBase::Expr_Rel_Concrete
-	virtual ZQL::RelHead GetRelHead();
+// From ZRA::Expr_Rel_Concrete via ZValBase::Expr_Rel_Concrete
+	virtual ZRA::RelHead GetRelHead();
 
 	virtual string8 GetName();
 	virtual string8 GetDescription();
@@ -114,9 +114,9 @@ Expr_Rel_Concrete::Expr_Rel_Concrete(
 ,	fDescription(iDescription)
 	{}
 
-ZQL::RelHead Expr_Rel_Concrete::GetRelHead()
+ZRA::RelHead Expr_Rel_Concrete::GetRelHead()
 	{
-	ZQL::RelHead result;
+	ZRA::RelHead result;
 	for (size_t x = 0; x < fIter->Count(); ++x)
 		result.Insert(fPrefix + fIter->NameOf(x));
 	return result;
@@ -148,7 +148,7 @@ ZRef<ZSQLite::DB> ConcreteDomain::GetDB()
 #pragma mark -
 #pragma mark * ZValBase_SQLite pseudo constructors
 
-ZRef<ZQL::Expr_Rel> sConcrete_Table(ZRef<ConcreteDomain> iConcreteDomain, const string8& iName)
+ZRef<ZRA::Expr_Rel> sConcrete_Table(ZRef<ConcreteDomain> iConcreteDomain, const string8& iName)
 	{
 //	ZRef<Iter> iter = new Iter(iConcreteDomain->GetDB(), "select * from " + iName + ";" );
 	ZRef<Iter> iter = new Iter(iConcreteDomain->GetDB(), "pragma table_info(" + iName + ");");
@@ -156,10 +156,10 @@ ZRef<ZQL::Expr_Rel> sConcrete_Table(ZRef<ConcreteDomain> iConcreteDomain, const 
 	return new Expr_Rel_Concrete(iConcreteDomain, iter, iName + ".", string8());
 	}
 
-ZRef<ZQL::Expr_Rel> sConcrete_SQL(ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL)
+ZRef<ZRA::Expr_Rel> sConcrete_SQL(ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL)
 	{ return sConcrete_SQL(iConcreteDomain, iSQL, string8()); }
 
-ZRef<ZQL::Expr_Rel> sConcrete_SQL(
+ZRef<ZRA::Expr_Rel> sConcrete_SQL(
 	ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL, const string8& iPrefix)
 	{
 	ZRef<Iter> iter = new Iter(iConcreteDomain->GetDB(), iSQL);

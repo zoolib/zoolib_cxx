@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/valbase/ZValBase.h"
 #include "zoolib/valbase/ZValBase_YadSeqRPos.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
-#include "zoolib/zql/ZQL_Expr_Rel_Concrete.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase_YadSeqRPos {
@@ -70,8 +70,8 @@ class Expr_Rel_Concrete : public ZValBase::Expr_Rel_Concrete
 public:
 	Expr_Rel_Concrete(ZRef<ZYadSeqRPos> iYadSeqRPos);
 
-// From ZQL::Expr_Rel_Concrete via ZValBase::Expr_Rel_Concrete
-	virtual ZQL::RelHead GetRelHead();
+// From ZRA::Expr_Rel_Concrete via ZValBase::Expr_Rel_Concrete
+	virtual ZRA::RelHead GetRelHead();
 
 // From ZValBase::Expr_Rel_Concrete
 	virtual ZRef<ZQE::Iterator> MakeIterator();
@@ -84,8 +84,8 @@ Expr_Rel_Concrete::Expr_Rel_Concrete(ZRef<ZYadSeqRPos> iYadSeqRPos)
 :	fYadSeqRPos(iYadSeqRPos)
 	{}
 
-ZQL::RelHead Expr_Rel_Concrete::GetRelHead()
-	{ return ZQL::RelHead::sUniversal(); }
+ZRA::RelHead Expr_Rel_Concrete::GetRelHead()
+	{ return ZRA::RelHead::sUniversal(); }
 
 ZRef<ZQE::Iterator> Expr_Rel_Concrete::MakeIterator()
 	{ return new Iterator(fYadSeqRPos); }
@@ -94,7 +94,7 @@ ZRef<ZQE::Iterator> Expr_Rel_Concrete::MakeIterator()
 #pragma mark -
 #pragma mark * ZValBase_YadSeqRPos pseudo constructors
 
-ZRef<ZQL::Expr_Rel> sConcrete(ZRef<ZYadSeqRPos> iYadSeqRPos)
+ZRef<ZRA::Expr_Rel> sConcrete(ZRef<ZYadSeqRPos> iYadSeqRPos)
 	{ return new Expr_Rel_Concrete(iYadSeqRPos); }
 
 } // namespace ZValBase_YadSeqRPos

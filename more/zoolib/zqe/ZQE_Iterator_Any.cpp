@@ -32,7 +32,7 @@ using std::string;
 #pragma mark * Iterator_Any_Project
 
 Iterator_Any_Project::Iterator_Any_Project(
-	ZRef<Iterator> iIterator, const ZQL::RelHead& iRelHead)
+	ZRef<Iterator> iIterator, const ZRA::RelHead& iRelHead)
 :	fIterator(iIterator)
 ,	fRelHead(iRelHead)
 	{}

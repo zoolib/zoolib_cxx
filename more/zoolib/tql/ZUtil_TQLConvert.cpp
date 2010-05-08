@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/tql/ZUtil_TQLConvert.h"
-#include "zoolib/zql/ZQL_RelOps.h"
+#include "zoolib/zra/ZRA_RelOps.h"
 #include "zoolib/valbase/ZValBase.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -28,7 +28,7 @@ namespace ZUtil_TQLConvert {
 
 using std::string;
 using std::vector;
-using namespace ZQL;
+using namespace ZRA;
 
 ZRef<Expr_Rel> sAll(const RelHead& iRelHead)
 	{ return ZValBase::sConcrete(); }

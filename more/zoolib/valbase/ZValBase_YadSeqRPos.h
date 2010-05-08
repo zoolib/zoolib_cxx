@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZYad.h"
-#include "zoolib/zql/ZQL_Expr_Rel.h"
+#include "zoolib/zra/ZRA_Expr_Rel.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 namespace ZValBase_YadSeqRPos {
@@ -32,7 +32,7 @@ namespace ZValBase_YadSeqRPos {
 #pragma mark -
 #pragma mark * ZValBase_YadSeqRPos pseudo constructors
 
-ZRef<ZQL::Expr_Rel> sConcrete(ZRef<ZYadSeqRPos> iYadSeqRPos);
+ZRef<ZRA::Expr_Rel> sConcrete(ZRef<ZYadSeqRPos> iYadSeqRPos);
 
 } // namespace ZValBase_YadSeqRPos
 NAMESPACE_ZOOLIB_END
