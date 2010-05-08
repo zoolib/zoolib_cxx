@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NAMESPACE_ZOOLIB_BEGIN
 
-// There is an equivalent typedef in ZQL_RelHead, and it's possible that it
+// There is an equivalent typedef in ZRA_RelHead, and it's possible that it
 // should be promoted to its own file, but for now that seems excessive.
 typedef std::map<std::string, std::string> Rename_t;
 
