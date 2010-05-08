@@ -245,8 +245,7 @@ public:
 // From ZValComparand_T
 	virtual Val GetVal(ZValContext& iContext, const Val& iVal);
 	virtual std::set<std::string> GetNames();
-	virtual ZRef<ZValComparand_T<Val> > Renamed(
-		const Rename_t& iRename);
+	virtual ZRef<ZValComparand_T<Val> > Renamed(const Rename_t& iRename);
 
 // Our protocol
 	const ZTrail& GetTrail();
@@ -284,8 +283,7 @@ const ZTrail& ZValComparand_Trail_T<Val>::GetTrail()
 	{ return fTrail; }
 
 template <class Val>
-ZRef<ZValComparand_T<Val> > ZValComparand_Trail_T<Val>::Renamed(
-	const Rename_t& iRename)
+ZRef<ZValComparand_T<Val> > ZValComparand_Trail_T<Val>::Renamed(const Rename_t& iRename)
 	{
 	if (fTrail.Count())
 		{
@@ -443,6 +441,9 @@ bool ZValCondition_T<Val>::Renamed(const Rename_t& iRename, ZValCondition_T& oRe
 #pragma mark -
 #pragma mark * ZValComparandPseudo_T
 
+// This subclass of ZRef<ZValComparand_T<Val> > is returned by the C-prefixed pseudo constructor
+// functions so we can use overloaded operators to construct a ZValCondition_T<Val>.
+
 template <class Val>
 class ZValComparandPseudo_T
 :	public ZRef<ZValComparand_T<Val> >
@@ -485,7 +486,7 @@ CVal_T()
 // FIXME
 // I'm not sure that we need Var -- when we're using ZValCondition in relational queries
 // we get the same effect by joining an explicit single-result relation with the target
-// against which we matching the condition.
+// against which we're matching the condition.
 
 template <class Val>
 ZValComparandPseudo_T<Val>
