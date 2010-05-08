@@ -119,7 +119,7 @@ template <typename T>
 bool sInsertIfNotContains(std::set<T>& ioSet, T iElement)
 	{
 	typename std::set<T>::iterator i = ioSet.lower_bound(iElement);
-	if (ioSet.end() == i || *i != iElement)
+	if (ioSet.end() == i || !(*i == iElement))
 		{
 		ioSet.insert(i, iElement);
 		return true;
@@ -213,7 +213,7 @@ template <typename T>
 bool sSortedEraseIfContains(std::vector<T>& iVector, T iElement)
 	{
 	typename std::vector<T>::iterator i = lower_bound(iVector.begin(), iVector.end(), iElement);
-	if (i == iVector.end() || *i != iElement)
+	if (i == iVector.end() || !(*i == iElement))
 		return false;
 	iVector.erase(i);
 	return true;
@@ -227,7 +227,7 @@ template <typename T>
 void sSortedInsertMustNotContain(const int iDebugLevel, std::vector<T>& iVector, T iElement)
 	{
 	typename std::vector<T>::iterator i = lower_bound(iVector.begin(), iVector.end(), iElement);
-	ZAssertStop(iDebugLevel, i == iVector.end() || *i != iElement);
+	ZAssertStop(iDebugLevel, i == iVector.end() || !(*i == iElement));
 	iVector.insert(i, iElement);
 	}
 
