@@ -29,7 +29,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCountedBase (really ZCounted)
+#pragma mark * sRetain/sRelase for ZCountedBase derivatives (ie ZCounted)
 
 inline void sRetain(ZCountedBase& iObject)
 	{ iObject.Retain(); }
@@ -37,11 +37,9 @@ inline void sRetain(ZCountedBase& iObject)
 inline void sRelease(ZCountedBase& iObject)
 	{ iObject.Release(); }
 
-typedef ZCounted ZRefCountedWithFinalize;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCountedWithoutFinalize
+#pragma mark * sRetain/sRelease for ZCountedWithoutFinalize derivatives
 
 inline void sRetain(ZCountedWithoutFinalize& iObject)
 	{ iObject.Retain(); }
@@ -49,6 +47,11 @@ inline void sRetain(ZCountedWithoutFinalize& iObject)
 inline void sRelease(ZCountedWithoutFinalize& iObject)
 	{ iObject.Release(); }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Typedefs for older code
+
+typedef ZCounted ZRefCountedWithFinalize;
 typedef ZCountedWithoutFinalize ZRefCounted;
 
 NAMESPACE_ZOOLIB_END
