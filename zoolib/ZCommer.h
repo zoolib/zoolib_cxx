@@ -48,6 +48,7 @@ public:
 	virtual void WriteStarted();
 	virtual void WriteFinished();
 
+// Our protocol
 	virtual void Started();
 	virtual void Finished();
 
