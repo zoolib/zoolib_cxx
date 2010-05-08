@@ -73,7 +73,7 @@ be able to provide guidance.
 
 \subsection LexicalScoping Lexical scoping is your friend.
 We're working with C++. We're able to declare variables in
-places that C never allowed. So do so. Declare variables as close their point of first usage as
+places that C never allowed. So do so. Declare variables as close to their point of first usage as
 possible. A variable that is declared too early may inadvertantly be used without having been
 given an appropriate value (doing so with simple types will trigger a warning, complex types won't.)
 Use different names in different scopes if the variables have different intents, but don't be scared
