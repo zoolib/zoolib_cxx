@@ -21,7 +21,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __ZQ_T__
 #define __ZQ_T__
 #include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZCtorDtor.h" // For placement ctor/copy/dtor/assign
