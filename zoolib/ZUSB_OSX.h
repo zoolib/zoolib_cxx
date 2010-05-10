@@ -135,6 +135,8 @@ class ZUSBInterfaceInterface : public ZCountedWithoutFinalize
 public:
 	virtual ~ZUSBInterfaceInterface();
 
+	IOUSBInterfaceInterface190** GetIOUSBInterfaceInterface();
+
 	ZRef<ZUSBDevice> GetUSBDevice();
 
 	ZRef<ZStreamerR> OpenR(int iPipeRefR);

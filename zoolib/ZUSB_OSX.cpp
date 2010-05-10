@@ -197,14 +197,18 @@ ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_
 			throw runtime_error("Got zero configurations");
 			}
 
-		IOUSBConfigurationDescriptorPtr confDesc;
-		spThrowIfErr(fIOUSBDeviceInterface[0]->
-			GetConfigurationDescriptorPtr(fIOUSBDeviceInterface, 0, &confDesc));
+		// If the device is composite, which is common and definitely the case for BlackBerrys,
+		// then the AppleUSBComposite driver will have already configured it. So I'm
+		// disabling this call to SetConfiguration.
+		if (false)
+			{
+			IOUSBConfigurationDescriptorPtr confDesc;
+			spThrowIfErr(fIOUSBDeviceInterface[0]->
+				GetConfigurationDescriptorPtr(fIOUSBDeviceInterface, 0, &confDesc));
 
-// I'm disabling this unconditional SetConfiguration as it causes what looks like
-// a device re-enumeration, and does not appear to be essential for connecting to BlackBerries.
-//##		spThrowIfErr(fIOUSBDeviceInterface[0]->
-//##			SetConfiguration(fIOUSBDeviceInterface, confDesc->bConfigurationValue));
+			spThrowIfErr(fIOUSBDeviceInterface[0]->
+			SetConfiguration(fIOUSBDeviceInterface, confDesc->bConfigurationValue));
+			}
 		}
 	catch (...)
 		{
@@ -770,6 +774,9 @@ ZUSBInterfaceInterface::~ZUSBInterfaceInterface()
 	fII[0]->Release(fII);
 	fII = nullptr;
 	}
+
+IOUSBInterfaceInterface190** ZUSBInterfaceInterface::GetIOUSBInterfaceInterface()
+	{ return fII; }
 
 ZRef<ZUSBDevice> ZUSBInterfaceInterface::GetUSBDevice()
 	{ return fUSBDevice; }
