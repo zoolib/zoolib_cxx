@@ -24,8 +24,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/blackberry/ZBlackBerry_Streamer.h"
 
+#include "zoolib/ZByteSwap.h"
 #include "zoolib/ZLog.h"
 #include "zoolib/ZMemory.h"
+#include "zoolib/ZStream_Memory.h"
 
 using std::runtime_error;
 using std::vector;
@@ -42,10 +44,10 @@ static bool spSendControlMessage(IOUSBDeviceInterface182** iUDI,
 	uint8_t bRequestType, uint8_t bRequest,
 	uint16_t wValue, uint16_t wIndex,
 	void* bytes, unsigned int numbytes,
-	unsigned int timeout)
+	unsigned int timeout,
+	size_t* oCountDone)
 	{
-	IOUSBDevRequestTO urequest;
-	ZMemZero_T(urequest);
+	IOUSBDevRequestTO urequest = {0};
 
 	urequest.bmRequestType = bRequestType;
 	urequest.bRequest = bRequest;
@@ -54,8 +56,25 @@ static bool spSendControlMessage(IOUSBDeviceInterface182** iUDI,
 	urequest.wLength = numbytes;
 	urequest.pData = bytes;
 	urequest.completionTimeout = timeout;
+	if (oCountDone)
+		*oCountDone = urequest.wLenDone;
 
 	return noErr == iUDI[0]->DeviceRequestTO(iUDI, &urequest);
+	}
+
+static bool spSendControlMessage(IOUSBDeviceInterface182** iUDI,
+	uint8_t bRequestType, uint8_t bRequest,
+	uint16_t wValue, uint16_t wIndex,
+	void* bytes, unsigned int numbytes,
+	unsigned int timeout)
+	{
+	return spSendControlMessage(
+		iUDI,
+		bRequestType, bRequest,
+		wValue, wIndex,
+		bytes, numbytes,
+		timeout,
+		nullptr);
 	}
 
 static bool spSetConfiguration(IOUSBDeviceInterface182** iUDI)
@@ -230,6 +249,67 @@ void Manager_OSXUSB::GetDeviceIDs(vector<uint64>& oDeviceIDs)
 		}
 	}
 
+static bool spGetPipeRefs(ZRef<ZUSBInterfaceInterface> iInterfaceInterface, int& oPipeRefR, int& oPipeRefW)
+	{
+	ZRef<ZUSBDevice> theUSBDevice = iInterfaceInterface->GetUSBDevice();
+
+	const IOUSBDeviceDescriptor theDescriptor = theUSBDevice->GetDeviceDescriptor();
+
+	if (ZByteSwap_LittleToHost16(theDescriptor.bcdUSB) < 0x106)
+		{
+		oPipeRefR = 3;
+		oPipeRefW = 4;
+		return true;
+		}
+
+	if (IOUSBDeviceInterface182** theUDI = theUSBDevice->GetIOUSBDeviceInterface())
+		{
+		char buffer[64];
+
+		// This request gives us a table of which tells us which endpoints (in enumeration
+		// order) are used for what purpose. Types 0 and 1 are unknown, type 2 is the
+		// multiplex comms endpoints we want, and type 3 is for virtual serial ports.
+		size_t countRead;
+		if (!spSendControlMessage(theUDI, 0xc0, 0xa8, 0, 0, buffer, sizeof(buffer), 100, &countRead))
+			return false;
+
+		ZStreamRPos_Memory r(buffer, countRead);
+		/*const uint16 theLength = */r.ReadUInt16LE();
+		/*const uint16 theVersion = */r.ReadUInt16LE();
+		const size_t count = r.ReadUInt8();
+		int thePipeRef = 1;
+		for (size_t x = 0; x < count; x++)
+			{
+			// Each entry in the table consists of an index (which so far
+			// tracks the 1-based offset in the table), a type, and a count
+			// of the number of endpoints used. So we accumulate the number
+			// of endpoints till we hit an entry with type 2.
+			/*const uint8 index = */r.ReadUInt8();
+			const uint8 type = r.ReadUInt8();
+			const uint8 numEPs = r.ReadUInt8();
+			if (2 == type)
+				{
+				UInt8 numEPs;
+				IOUSBInterfaceInterface190** theII =
+					iInterfaceInterface->GetIOUSBInterfaceInterface();
+				if (0 == theII[0]->GetNumEndpoints(theII, &numEPs))
+					{
+					if (thePipeRef + 1 <= numEPs)
+						{
+						oPipeRefR = thePipeRef;
+						oPipeRefW = thePipeRef + 1;
+						return true;
+						}
+					}
+				// Might as well bail.
+				break;
+				}
+			thePipeRef += numEPs;
+			}
+		}
+	return false;
+	}
+
 ZRef<Device> Manager_OSXUSB::Open(uint64 iDeviceID)
 	{
 	ZMutexLocker locker(fMutex);
@@ -242,10 +322,14 @@ ZRef<Device> Manager_OSXUSB::Open(uint64 iDeviceID)
 				if (ZRef<ZUSBInterfaceInterface> theII =
 					theUSBDevice->CreateInterfaceInterface(fRunLoopRef, 0xFF))
 					{
-					if (ZRef<ZStreamerR> theSR = theII->OpenR(3))
+					int pipeRefR, pipeRefW;
+					if (spGetPipeRefs(theII, pipeRefR, pipeRefW))
 						{
-						if (ZRef<ZStreamerW> theSW = theII->OpenW(4))
-							return new Device_Streamer(theSR, theSW);
+						if (ZRef<ZStreamerR> theSR = theII->OpenR(pipeRefR))
+							{
+							if (ZRef<ZStreamerW> theSW = theII->OpenW(pipeRefW))
+								return new Device_Streamer(theSR, theSW);
+							}
 						}
 					}
 				}
@@ -268,7 +352,6 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 
 	uint16 theIDVendor = iUSBDevice->GetIDVendor();
 	uint16 theIDProduct = iUSBDevice->GetIDProduct();
-	const IOUSBDeviceDescriptor theDescriptor = iUSBDevice->GetDeviceDescriptor();
 
 	if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
 		s.Writef("Added, IDVendor: 0x%X, IDProduct: 0x%X", theIDVendor, theIDProduct);
