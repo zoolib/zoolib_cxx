@@ -40,6 +40,10 @@ template <> int sCompare_T(const signed char& iL, const signed char& iR)
 	{ return iL - iR; }
 
 
+template <> int sCompare_T(const wchar_t& iL, const wchar_t& iR)
+	{ return iL < iR ? -1 : iR < iL ? 1 : 0; }
+
+
 template <> int sCompare_T(const short& iL, const short& iR)
 	{ return iL - iR; }
 
