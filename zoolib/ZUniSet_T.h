@@ -424,4 +424,5 @@ template <class T>
 inline void swap(ZOOLIB_PREFIX::ZUniSet_T<T>& a, ZOOLIB_PREFIX::ZUniSet_T<T>& b)
 	{ a.swap(b); }
 }
+
 #endif // __ZUniSet_T__
