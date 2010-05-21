@@ -191,14 +191,6 @@ void sRefCopy(void* oDest, T* iP)
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * NoRetain wrapper
-
-template <class P>
-Adopt_T<P> NoRetain(P iP)
-	{ return Adopt_T<P>(iP); }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZRef partially specialized for pointer types
 
 template <class T> void sRetain_T(T& ioPtr);
@@ -336,6 +328,16 @@ public:
 private:
 	T* fP;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * NoRetain wrapper
+
+// Deprecated. Use Adopt<P> from ZTypes.h instead.
+
+template <class P>
+Adopt_T<P> NoRetain(P iP)
+	{ return Adopt_T<P>(iP); }
 
 // =================================================================================================
 #pragma mark -
