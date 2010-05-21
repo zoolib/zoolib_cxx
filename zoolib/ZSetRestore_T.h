@@ -26,6 +26,30 @@ NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZSaveRestore_T
+
+template <class T>
+class ZSaveRestore_T
+	{
+public:
+	ZSaveRestore_T(T& ioRef)
+	:	fRef(ioRef)
+	,	fValPrior(ioRef)
+		{}
+
+	~ZSaveRestore_T()
+		{ fRef = fValPrior; }
+
+	const T& GetPrior() const
+		{ return fValPrior; }
+
+private:
+	T& fRef;
+	const T fValPrior;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZSetRestore_T
 
 template <class T>
@@ -39,6 +63,9 @@ public:
 
 	~ZSetRestore_T()
 		{ fRef = fValPrior; }
+
+	const T& GetPrior() const
+		{ return fValPrior; }
 
 private:
 	T& fRef;
