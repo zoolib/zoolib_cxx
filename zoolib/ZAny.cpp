@@ -166,6 +166,8 @@ bool sQCoerceInt(const ZAny& iAny, int64& oVal)
 		oVal = *theVal;
 	else if (const unsigned char* theVal = iAny.PGet_T<unsigned char>())
 		oVal = *theVal;
+	else if (const wchar_t* theVal = iAny.PGet_T<wchar_t>())
+		oVal = *theVal;
 	else if (const short* theVal = iAny.PGet_T<short>())
 		oVal = *theVal;
 	else if (const unsigned short* theVal = iAny.PGet_T<unsigned short>())
