@@ -142,6 +142,8 @@ template <> inline int sCompare_T(const ConstVoidStar_t& iL, const ConstVoidStar
 
 // =================================================================================================
 
+const bool I_KNOW_WHAT_IM_DOING = true;
+
 NAMESPACE_ZOOLIB_END
 
 #endif // __ZTypes__
