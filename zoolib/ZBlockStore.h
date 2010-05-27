@@ -24,8 +24,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h" // For ZStreamerRWPos
 
-#include <string> // For string
-
 NAMESPACE_ZOOLIB_BEGIN
 
 class ZBlockStore
