@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Static variables in a translation unit are initialized before any regular code in the
 translation unit executes. In practice the initialization happens when the containing
-executable or dynamic library is loaded. When your \cmain() is called, or your call to
+executable or dynamic library is loaded. When your \c main() is called, or your call to
 <code>LoadLibrary()/dlopen()</code> completes, any static variables will have been initialized.
 
 \section TheProblem The Problem
