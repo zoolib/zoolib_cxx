@@ -35,8 +35,11 @@ namespace ZUtil_Strim_Data {
 
 void sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& s);
 void sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& s, uint64 iMax);
+void sDumpData(bool iShowSize, const ZStreamRPos& iStreamRPos, const ZStrimW& s, uint64 iMax);
 void sDumpData(const ZStrimW& s, const void* iSource, uint64 iCount);
 void sDumpData(const ZStrimW& s, const void* iSource, uint64 iCount, uint64 iMax);
+void sDumpData(const ZStrimW& s, bool iShowSize, const void* iSource, uint64 iCount);
+void sDumpData(const ZStrimW& s, bool iShowSize, const void* iSource, uint64 iCount, uint64 iMax);
 
 } // ZUtil_Strim_Data
 

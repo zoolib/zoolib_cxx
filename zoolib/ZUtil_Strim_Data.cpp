@@ -37,6 +37,9 @@ void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& 
 	{ sDumpData(iStreamRPos, s, ZUINT64_C(0xFFFFFFFFFFFFFFFF)); }
 
 void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& s, uint64 iMax)
+	{ sDumpData(true, iStreamRPos, s, iMax); }
+
+void ZUtil_Strim_Data::sDumpData(bool iShowSize, const ZStreamRPos& iStreamRPos, const ZStrimW& s, uint64 iMax)
 	{
 	const string byteSeparator = " ";
 	const string chunkSeparator = "\n";
@@ -45,9 +48,12 @@ void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& 
 	const uint64 theCount = iStreamRPos.GetSize() - iStreamRPos.GetPosition();
 	uint64 countRemaining = min(theCount, iMax);
 
-	s.Writef("Size: %lld/%llX", theCount, theCount);
-	if (theCount > countRemaining)
-		s.Writef(", showing first %lld bytes", countRemaining);
+	if (iShowSize)
+		{
+		s.Writef("Size: %lld/%llX", theCount, theCount);
+		if (theCount > countRemaining)
+			s.Writef(", showing first %lld bytes", countRemaining);
+		}
 
 	while (countRemaining)
 		{
@@ -92,14 +98,24 @@ void ZUtil_Strim_Data::sDumpData(const ZStreamRPos& iStreamRPos, const ZStrimW& 
 
 void ZUtil_Strim_Data::sDumpData(const ZStrimW& s, const void* iSource, uint64 iCount, uint64 iMax)
 	{
-	if (iCount)
-		ZUtil_Strim_Data::sDumpData(ZStreamRPos_Memory(iSource, iCount), s, iMax);
+	ZUtil_Strim_Data::sDumpData(s, true, iSource, iCount, iMax);
 	}
 
 void ZUtil_Strim_Data::sDumpData(const ZStrimW& s, const void* iSource, uint64 iCount)
 	{
+	ZUtil_Strim_Data::sDumpData(s, true, iSource, iCount);
+	}
+
+void ZUtil_Strim_Data::sDumpData(const ZStrimW& s, bool iShowSize, const void* iSource, uint64 iCount, uint64 iMax)
+	{
 	if (iCount)
-		ZUtil_Strim_Data::sDumpData(ZStreamRPos_Memory(iSource, iCount), s);
+		ZUtil_Strim_Data::sDumpData(iShowSize, ZStreamRPos_Memory(iSource, iCount), s, iMax);
+	}
+
+void ZUtil_Strim_Data::sDumpData(const ZStrimW& s, bool iShowSize, const void* iSource, uint64 iCount)
+	{
+	if (iCount)
+		ZUtil_Strim_Data::sDumpData(iShowSize, ZStreamRPos_Memory(iSource, iCount), s, ZUINT64_C(0xFFFFFFFFFFFFFFFF));
 	}
 
 NAMESPACE_ZOOLIB_END
