@@ -18,35 +18,28 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZExpr_Logic_ValCondition__
-#define __ZExpr_Logic_ValCondition__ 1
+#ifndef __ZVisitor_Expr_Logic_ValPred_DoToStrim__
+#define __ZVisitor_Expr_Logic_ValPred_DoToStrim__
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Logic_ValCondition_T.h"
-#include "zoolib/ZValCondition.h"
-#include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T.h"
-#include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoGetNames_T.h"
+#include "zoolib/ZVisitor_Expr_Logic_DoToStrim.h"
+#include "zoolib/ZExpr_Logic_ValPred.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZExpr_Logic_ValCondition
+#pragma mark * ZVisitor_Expr_Logic_ValPred_DoToStrim
 
-typedef ZExpr_Logic_ValCondition_T<ZVal_Expr> ZExpr_Logic_ValCondition;
-
-typedef ZVisitor_Expr_Logic_ValCondition_T<ZVal_Expr> ZVisitor_Expr_Logic_ValCondition;
-
-
-inline std::set<std::string> sGetNames(const ZRef<ZExpr_Logic>& iExpr)
-	{ return ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<ZVal_Expr>().Do(iExpr); }
-
-inline bool sMatches(const ZRef<ZExpr_Logic>& iExpr, const ZVal_Expr& iVal)
-	{ return ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T<ZVal_Expr>(iVal).Do(iExpr); }
-
-inline bool sMatches(const ZValCondition& iValCondition, const ZVal_Expr& iVal)
-	{ return sMatches(new ZExpr_Logic_ValCondition(iValCondition), iVal); }
+class ZVisitor_Expr_Logic_ValPred_DoToStrim
+:	public virtual ZVisitor_Expr_Logic_DoToStrim
+,	public virtual ZVisitor_Expr_Logic_ValPred
+	{
+public:
+// From ZVisitor_Expr_Logic_ValPred
+	virtual void Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iRep);
+	};
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZExpr_Logic_ValCondition__
+#endif // __ZVisitor_Expr_Logic_ValPred_DoToStrim__

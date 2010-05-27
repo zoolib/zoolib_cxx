@@ -1,0 +1,24 @@
+/**
+\defgroup BuildingZooLib Building ZooLib
+
+ZooLib is not a monolithic framework. It's more like a kit, something from which you draw pieces as you need them. So we tend not to build it as a standalone library or dll, instead we simply incorporate the source files we need for the task at hand.
+
+Generally any ZooLib source file can be included in any project, regardless of compiler or operating system. Code that depends on a compiler or OS facility is conditionally compiled and simply drops out if it's not usable. The file ZCONFIG_SPI.h uses compiler and environment-provided macro definitions to set up SPI (Service Provider Interface) macros that indicate whether a feature is available or not. Some of the SPI macros are quite broad e.g. Are we building for Mac OS X? Are we building for Windows?. Most are more specific e.g. Is CoreFoundation available? Is pthreads available?
+
+SPI features are marked with two macros. For example the pthread macros are ZCONFIG_SPI_Avail__pthread and ZCONFIG_SPI_Desired__pthread. If the Avail macro evaluates true it indicates that the feature is available. If the Desired macro evaluates true, it indicates that the project would like to use the feature. You test for availability and desirability with the macro ZCONFIG_SPI_Enabled(pthread). By default all features are marked as desired, and are marked as available if we can be sure they are available. So you can force use of a feature by setting ZCONFIG_SPI_Avail__XXX true, and force non-use by setting ZCONFIG_SPI_Desired__XXX false.
+
+Every ZooLib header file starts with
+\code
+#include "zconfig.h"
+\endcode
+There is a default copy of this file in \c zoolib/default_config. If you wish to provide project-specific settings, create your own \c zconfig.h file and make sure it's found before the default one. The simplest way to do that is to put it in with your own source files, and to make sure that \c zoolib/default_config is not in your project's include paths.
+
+To use ZooLib in your own project:
+- Put the ZooLib directory somewhere stable.
+- In your project, add the \c zoolib/source/zoolib/cxx directory to your header search paths.
+- If you \e don't need to make any configuration changes, add \c zoolib/source/zoolib/cxx/default_config to your header search paths.
+- If you want to use any features from the more directory, add \c zoolib/source/zoolib/cxx/more to your header search paths.
+- Add to your project whichever ZooLib cpp/mm files you need.
+
+You can see sample projects in \c zoolib_samples, a sibling of the top-level zoolib directory. 
+*/

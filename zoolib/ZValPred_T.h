@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValCondition_T__
-#define __ZValCondition_T__ 1
+#ifndef __ZValPred_T__
+#define __ZValPred_T__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZRef_Counted.h"
@@ -39,7 +39,7 @@ class ZValContext
 
 template <class Val> class ZValComparand_T;
 
-template <class Val> class ZValCondition_T;
+template <class Val> class ZValPred_T;
 
 // =================================================================================================
 #pragma mark -
@@ -84,7 +84,7 @@ public:
 
 	ZValComparator_Simple_T(EComparator iEComparator);
 
-// From ComparatorRep
+// From ZValComparator_T
 	virtual bool Matches(const Val& iLHS, const Val& iRHS);
 
 // Our protocol
@@ -130,7 +130,7 @@ class ZValComparator_StringContains_T : public ZValComparator_T<Val>
 public:
 	ZValComparator_StringContains_T(int iStrength);
 
-// From ComparatorRep
+// From ZValComparator_T
 	virtual bool Matches(const Val& iLHS, const Val& iRHS);
 
 private:
@@ -147,7 +147,7 @@ class ZValComparator_SeqContains_T : public ZValComparator_T<Val>
 public:
 	ZValComparator_SeqContains_T();
 
-// From ComparatorRep
+// From ZValComparator_T
 	virtual bool Matches(const Val& iLHS, const Val& iRHS);
 	};
 
@@ -161,7 +161,7 @@ class ZValComparator_Regex_T : public ZValComparator_T<Val>
 public:
 	ZValComparator_Regex_T();
 
-// From ComparatorRep
+// From ZValComparator_T
 	virtual bool Matches(const Val& iLHS, const Val& iRHS);
 	};
 
@@ -333,59 +333,61 @@ std::string ZValComparand_Var_T<Val>::GetVarName()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValCondition_T
+#pragma mark * ZValPred_T
 
 template <class Val>
-class ZValCondition_T
+class ZValPred_T
 	{
 public:
-	typedef ZValComparand_T<Val> ComparandRep;
-	typedef ZValComparator_T<Val> ComparatorRep;
+	typedef ZValComparand_T<Val> Comparand;
+	typedef ZValComparator_T<Val> Comparator;
 
-	ZValCondition_T();
-	ZValCondition_T(const ZValCondition_T& iOther);
-	~ZValCondition_T();
-	ZValCondition_T& operator=(const ZValCondition_T& iOther);
+	ZValPred_T();
+	ZValPred_T(const ZValPred_T& iOther);
+	~ZValPred_T();
+	ZValPred_T& operator=(const ZValPred_T& iOther);
 
-	ZValCondition_T(
-		const ZRef<ComparandRep>& iLHS,
-		const ZRef<ComparatorRep>& iComparator,
-		const ZRef<ComparandRep>& iRHS);
+	ZValPred_T(
+		const ZRef<Comparand>& iLHS,
+		const ZRef<Comparator>& iComparator,
+		const ZRef<Comparand>& iRHS);
 
-	ZRef<ComparandRep> GetLHS() const;
-	ZRef<ComparatorRep> GetComparator() const;
-	ZRef<ComparandRep> GetRHS() const;
+	ZRef<Comparand> GetLHS() const;
+	ZRef<Comparator> GetComparator() const;
+	ZRef<Comparand> GetRHS() const;
 
 	bool Matches(ZValContext& iContext, const Val& iVal) const;
 
 	std::set<std::string> GetNames() const;
 
-	bool Renamed(const Rename_t& iRename, ZValCondition_T& oResult) const;
+	bool Renamed(const Rename_t& iRename, ZValPred_T& oResult) const;
+
+	ZValPred_T Renamed(const Rename_t& iRename) const;
 
 private:
-	ZRef<ComparandRep> fLHS;
-	ZRef<ComparatorRep> fComparator;
-	ZRef<ComparandRep> fRHS;
+	ZRef<Comparand> fLHS;
+	ZRef<Comparator> fComparator;
+	ZRef<Comparand> fRHS;
 	};
 
 template <class Val>
-ZValCondition_T<Val>::ZValCondition_T()
+ZValPred_T<Val>::ZValPred_T()
 	{}
 
 template <class Val>
-ZValCondition_T<Val>::ZValCondition_T(const ZValCondition_T& iOther)
+ZValPred_T<Val>::ZValPred_T(const ZValPred_T& iOther)
 :	fLHS(iOther.fLHS)
 ,	fComparator(iOther.fComparator)
 ,	fRHS(iOther.fRHS)
 	{}
 
 template <class Val>
-ZValCondition_T<Val>::~ZValCondition_T()
+ZValPred_T<Val>::~ZValPred_T()
 	{}
 
 template <class Val>
-ZValCondition_T<Val>&
-ZValCondition_T<Val>::operator=(const ZValCondition_T& iOther)
+ZValPred_T<Val>&
+ZValPred_T<Val>::operator=(const ZValPred_T& iOther)
 	{
 	fLHS = iOther.fLHS;
 	fComparator = iOther.fComparator;
@@ -394,55 +396,59 @@ ZValCondition_T<Val>::operator=(const ZValCondition_T& iOther)
 	}
 
 template <class Val>
-ZValCondition_T<Val>::ZValCondition_T(
-	const ZRef<ComparandRep>& iLHS,
-	const ZRef<ComparatorRep>& iComparator,
-	const ZRef<ComparandRep>& iRHS)
+ZValPred_T<Val>::ZValPred_T(
+	const ZRef<Comparand>& iLHS,
+	const ZRef<Comparator>& iComparator,
+	const ZRef<Comparand>& iRHS)
 :	fLHS(iLHS)
 ,	fComparator(iComparator)
 ,	fRHS(iRHS)
 	{}
 
 template <class Val>
-ZRef<typename ZValCondition_T<Val>::ComparandRep>
-ZValCondition_T<Val>::GetLHS() const
+ZRef<typename ZValPred_T<Val>::Comparand>
+ZValPred_T<Val>::GetLHS() const
 	{ return fLHS; }
 
 template <class Val>
-ZRef<typename ZValCondition_T<Val>::ComparatorRep>
-ZValCondition_T<Val>::GetComparator() const
+ZRef<typename ZValPred_T<Val>::Comparator>
+ZValPred_T<Val>::GetComparator() const
 	{ return fComparator; }
 
 template <class Val>
-ZRef<typename ZValCondition_T<Val>::ComparandRep>
-ZValCondition_T<Val>::GetRHS() const
+ZRef<typename ZValPred_T<Val>::Comparand>
+ZValPred_T<Val>::GetRHS() const
 	{ return fRHS; }
 
 template <class Val>
-bool ZValCondition_T<Val>::Matches(ZValContext& iContext, const Val& iVal) const
+bool ZValPred_T<Val>::Matches(ZValContext& iContext, const Val& iVal) const
 	{ return fComparator->Matches(fLHS->GetVal(iContext, iVal), fRHS->GetVal(iContext, iVal)); }
 
 template <class Val>
-std::set<std::string> ZValCondition_T<Val>::GetNames() const
+std::set<std::string> ZValPred_T<Val>::GetNames() const
 	{ return ZUtil_STL_set::sOr(fLHS->GetNames(), fRHS->GetNames()); }
 
 template <class Val>
-bool ZValCondition_T<Val>::Renamed(const Rename_t& iRename, ZValCondition_T& oResult) const
+bool ZValPred_T<Val>::Renamed(const Rename_t& iRename, ZValPred_T& oResult) const
 	{
 	ZRef<ZValComparand_T<Val> > newLHS = fLHS->Renamed(iRename);
 	ZRef<ZValComparand_T<Val> > newRHS = fRHS->Renamed(iRename);
 	if (newLHS == fLHS && newRHS == fRHS)
 		return false;
-	oResult = ZValCondition_T(newLHS, fComparator, newRHS);
+	oResult = ZValPred_T(newLHS, fComparator, newRHS);
 	return true;
 	}
+
+template <class Val>
+ZValPred_T<Val> ZValPred_T<Val>::Renamed(const Rename_t& iRename) const
+	{ return ZValPred_T(fLHS->Renamed(iRename), fComparator, fRHS->Renamed(iRename)); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValComparandPseudo_T
 
 // This subclass of ZRef<ZValComparand_T<Val> > is returned by the C-prefixed pseudo constructor
-// functions so we can use overloaded operators to construct a ZValCondition_T<Val>.
+// functions so we can use overloaded operators to construct a ZValPred_T<Val>.
 
 template <class Val>
 class ZValComparandPseudo_T
@@ -484,7 +490,7 @@ CVal_T()
 	{ return new ZValComparand_Trail_T<Val>(ZTrail()); }
 
 // FIXME
-// I'm not sure that we need Var -- when we're using ZValCondition in relational queries
+// I'm not sure that we need Var -- when we're using ZValPred in relational queries
 // we get the same effect by joining an explicit single-result relation with the target
 // against which we're matching the condition.
 
@@ -498,55 +504,55 @@ CVar_T(const std::string& iVarName)
 #pragma mark * Comparison operators taking comparands and returning a condition
 
 template <class Val>
-ZValCondition_T<Val> operator<(
+ZValPred_T<Val> operator<(
 	const ZValComparandPseudo_T<Val>& iLHS,
 	const ZValComparandPseudo_T<Val>& iRHS)
 	{
-	return ZValCondition_T<Val>
+	return ZValPred_T<Val>
 		(iLHS,
 		new ZValComparator_Simple_T<Val>(ZValComparator_Simple_T<Val>::eLT),
 		iRHS);
 	}
 
 template <class Val>
-ZValCondition_T<Val> operator<=(
+ZValPred_T<Val> operator<=(
 	const ZValComparandPseudo_T<Val>& iLHS,
 	const ZValComparandPseudo_T<Val>& iRHS)
 	{
-	return ZValCondition_T<Val>
+	return ZValPred_T<Val>
 		(iLHS,
 		new ZValComparator_Simple_T<Val>(ZValComparator_Simple_T<Val>::eLE),
 		iRHS);
 	}
 
 template <class Val>
-ZValCondition_T<Val> operator==(
+ZValPred_T<Val> operator==(
 	const ZValComparandPseudo_T<Val>& iLHS,
 	const ZValComparandPseudo_T<Val>& iRHS)
 	{
-	return ZValCondition_T<Val>
+	return ZValPred_T<Val>
 		(iLHS,
 		new ZValComparator_Simple_T<Val>(ZValComparator_Simple_T<Val>::eEQ),
 		iRHS);
 	}
 
 template <class Val>
-ZValCondition_T<Val> operator>=(
+ZValPred_T<Val> operator>=(
 	const ZValComparandPseudo_T<Val>& iLHS,
 	const ZValComparandPseudo_T<Val>& iRHS)
 	{
-	return ZValCondition_T<Val>
+	return ZValPred_T<Val>
 		(iLHS,
 		new ZValComparator_Simple_T<Val>(ZValComparator_Simple_T<Val>::eGE),
 		iRHS);
 	}
 
 template <class Val>
-ZValCondition_T<Val> operator>(
+ZValPred_T<Val> operator>(
 	const ZValComparandPseudo_T<Val>& iLHS,
 	const ZValComparandPseudo_T<Val>& iRHS)
 	{
-	return ZValCondition_T<Val>
+	return ZValPred_T<Val>
 		(iLHS,
 		new ZValComparator_Simple_T<Val>(ZValComparator_Simple_T<Val>::eGT),
 		iRHS);
@@ -554,4 +560,4 @@ ZValCondition_T<Val> operator>(
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZValCondition_T__
+#endif // __ZValPred_T__

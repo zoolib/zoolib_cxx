@@ -18,17 +18,59 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Strim_ValCondition.h"
-#include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoToStrim.h"
+#ifndef __ZValPredCompound__
+#define __ZValPredCompound__ 1
+#include "zconfig.h"
+
+#include "zoolib/ZExpr_Logic_ValPred.h"
+#include "zoolib/ZValPred.h"
+
+#include <vector>
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Logic_ValCondition_DoToStrim
+#pragma mark * ZValPredCompound
 
-void ZVisitor_Expr_Logic_ValCondition_DoToStrim::Visit_Expr_Logic_ValCondition(
-	ZRef<ZExpr_Logic_ValCondition> iRep)
-	{ ZUtil_Strim_ValCondition::sToStrim(iRep->GetValCondition(), pStrimW()); }
+class ZValPredCompound
+	{
+public:
+	typedef std::vector<ZValPred> Sect;
+	typedef std::vector<Sect> SectUnion;
+
+	static ZValPredCompound sTrue();
+	static ZValPredCompound sFalse();
+	
+	ZValPredCompound();
+	ZValPredCompound(const ZValPredCompound& iOther);
+	~ZValPredCompound();
+	ZValPredCompound& operator=(const ZValPredCompound& iOther);
+
+	ZValPredCompound(SectUnion* ioSectUnion);
+
+	ZValPredCompound(const ZValPred& iValPred);
+	ZValPredCompound(const Sect& iSect);
+	ZValPredCompound(const SectUnion& iSectUnion);
+
+	bool IsAny() const;
+	bool IsNone() const;
+
+	ZValPredCompound operator&(const ZValPredCompound& iOther) const;
+	ZValPredCompound& operator&=(const ZValPredCompound& iOther);
+
+	ZValPredCompound operator|(const ZValPredCompound& iOther) const;
+	ZValPredCompound& operator|=(const ZValPredCompound& iOther);
+
+	bool Matches(ZValContext& iContext, const ZVal_Any& iVal) const;
+
+public:
+	SectUnion fSectUnion;
+	};
+
+ZValPredCompound sAsValPredCompound(ZRef<ZExpr_Logic> iExpr);
+ZRef<ZExpr_Logic> sAsExpr_Logic(const ZValPredCompound& iVCF);
 
 NAMESPACE_ZOOLIB_END
+
+#endif // __ZValPredCompound__

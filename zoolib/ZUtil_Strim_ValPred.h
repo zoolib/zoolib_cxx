@@ -18,23 +18,25 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValBase_YadSeqRPos__
-#define __ZValBase_YadSeqRPos__ 1
+#ifndef __ZUtil_Strim_ValPred__
+#define __ZUtil_Strim_ValPred__
 #include "zconfig.h"
 
-#include "zoolib/ZYad.h"
-#include "zoolib/zra/ZRA_Expr_Rel.h"
+#include "zoolib/ZStrim.h"
+#include "zoolib/ZValPred.h"
 
 NAMESPACE_ZOOLIB_BEGIN
-namespace ZValBase_YadSeqRPos {
+
+namespace ZUtil_Strim_ValPred {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValBase_YadSeqRPos pseudo constructors
+#pragma mark * ZUtil_Strim_ValPred
 
-ZRef<ZRA::Expr_Rel> sConcrete(ZRef<ZYadSeqRPos> iYadSeqRPos);
+void sToStrim(const ZValPred& iValPred, const ZStrimW& iStrimW);
 
-} // namespace ZValBase_YadSeqRPos
+} // namespace ZUtil_Strim_ValPred
+
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZValBase_YadSeqRPos__
+#endif // __ZUtil_Strim_ValPred__

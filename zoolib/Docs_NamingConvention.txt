@@ -51,8 +51,8 @@ For non-class types I'll usually use a \c _t suffix, and for template types/clas
 
 Classes and method names have an upper case initial letter.
 
-Local variables have a lower case initial letter. I often use a  \c the prefix, but the really
-just whatever reads best.
+Local variables have a lower case initial letter. I often use a  \c the prefix, but the
+goal is just to make it read well.
 
 Pretty much everything else has a scope prefix.
 

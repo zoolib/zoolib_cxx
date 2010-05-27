@@ -18,46 +18,17 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T__
-#define __ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T__
-#include "zconfig.h"
-
-#include "zoolib/ZExpr_Logic_ValCondition_T.h"
-#include "zoolib/ZVisitor_Expr_Logic_DoEval.h"
+#include "zoolib/ZUtil_Strim_ValPred.h"
+#include "zoolib/ZVisitor_Expr_Logic_ValPred_DoToStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T
+#pragma mark * ZVisitor_Expr_Logic_ValPred_DoToStrim
 
-template <class Val>
-class ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T
-:	public virtual ZVisitor_Expr_Logic_DoEval
-,	public virtual ZVisitor_Expr_Logic_ValCondition_T<Val>
-	{
-public:
-	ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T(const Val& iVal);
-
-// From ZVisitor_Expr_Logic_ValCondition_T
-	virtual void Visit_Expr_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr);
-
-private:
-	ZValContext fValContext;
-	const Val& fVal;
-	};
-
-template <class Val>
-ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T<Val>::
-ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T(const Val& iVal)
-:	fVal(iVal)
-	{}
-
-template <class Val>
-void ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T<Val>::Visit_Expr_Logic_ValCondition(
-	ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr)
-	{ this->pSetResult(iExpr->GetValCondition().Matches(fValContext, fVal)); }
+void ZVisitor_Expr_Logic_ValPred_DoToStrim::Visit_Expr_Logic_ValPred(
+	ZRef<ZExpr_Logic_ValPred> iRep)
+	{ ZUtil_Strim_ValPred::sToStrim(iRep->GetValPred(), pStrimW()); }
 
 NAMESPACE_ZOOLIB_END
-
-#endif // __ZVisitor_Expr_Logic_ValCondition_DoEval_Matches_T__

@@ -18,25 +18,35 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_ValCondition__
-#define __ZUtil_Strim_ValCondition__
+#ifndef __ZExpr_Logic_ValPred__
+#define __ZExpr_Logic_ValPred__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStrim.h"
-#include "zoolib/ZValCondition.h"
+#include "zoolib/ZExpr_Logic_ValPred_T.h"
+#include "zoolib/ZValPred.h"
+#include "zoolib/ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T.h"
+#include "zoolib/ZVisitor_Expr_Logic_ValPred_DoGetNames_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-namespace ZUtil_Strim_ValCondition {
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_Strim_ValCondition
+#pragma mark * ZExpr_Logic_ValPred
 
-void sToStrim(const ZValCondition& iValCondition, const ZStrimW& iStrimW);
+typedef ZExpr_Logic_ValPred_T<ZVal_Expr> ZExpr_Logic_ValPred;
 
-} // namespace ZUtil_Strim_ValCondition
+typedef ZVisitor_Expr_Logic_ValPred_T<ZVal_Expr> ZVisitor_Expr_Logic_ValPred;
+
+
+inline std::set<std::string> sGetNames(const ZRef<ZExpr_Logic>& iExpr)
+	{ return ZVisitor_Expr_Logic_ValPred_DoGetNames_T<ZVal_Expr>().Do(iExpr); }
+
+inline bool sMatches(const ZRef<ZExpr_Logic>& iExpr, const ZVal_Expr& iVal)
+	{ return ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T<ZVal_Expr>(iVal).Do(iExpr); }
+
+inline bool sMatches(const ZValPred& iValPred, const ZVal_Expr& iVal)
+	{ return sMatches(new ZExpr_Logic_ValPred(iValPred), iVal); }
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZUtil_Strim_ValCondition__
+#endif // __ZExpr_Logic_ValPred__

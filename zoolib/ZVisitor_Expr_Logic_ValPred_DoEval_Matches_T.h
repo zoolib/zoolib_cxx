@@ -18,50 +18,46 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZValCondition__
-#define __ZValCondition__ 1
+#ifndef __ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T__
+#define __ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T__
 #include "zconfig.h"
 
-#include "zoolib/ZValCondition_T.h"
-
-#include "zoolib/ZVal_Any.h"
-//#include "zoolib/ZVal_CFType.h"
-//#include "zoolib/ZVal_Zoolib.h"
+#include "zoolib/ZExpr_Logic_ValPred_T.h"
+#include "zoolib/ZVisitor_Expr_Logic_DoEval.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-typedef ZMap_Any ZMap_Expr;
-
-//typedef ZMap_CFType ZMap_Expr;
-//typedef ZMap_ZooLib ZMap_Expr;
-
-typedef ZMap_Expr::Val_t ZVal_Expr;
-
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZValCondition
+#pragma mark * ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T
 
-typedef ZValCondition_T<ZVal_Expr> ZValCondition;
-typedef ZValComparandPseudo_T<ZVal_Expr> ZValComparandPseudo;
+template <class Val>
+class ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T
+:	public virtual ZVisitor_Expr_Logic_DoEval
+,	public virtual ZVisitor_Expr_Logic_ValPred_T<Val>
+	{
+public:
+	ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T(const Val& iVal);
 
-inline ZValComparandPseudo CString(const std::string& iVal)
-	{ return CConst_T<ZVal_Expr>(string8(iVal)); }
+// From ZVisitor_Expr_Logic_ValPred_T
+	virtual void Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred_T<Val> > iExpr);
 
-inline ZValComparandPseudo CConst(const ZVal_Expr& iVal)
-	{ return CConst_T<ZVal_Expr>(iVal); }
+private:
+	ZValContext fValContext;
+	const Val& fVal;
+	};
 
-inline ZValComparandPseudo CName(const std::string& iName)
-	{ return CName_T<ZVal_Expr>(iName); }
+template <class Val>
+ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T<Val>::
+ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T(const Val& iVal)
+:	fVal(iVal)
+	{}
 
-inline ZValComparandPseudo CTrail(const ZTrail& iTrail)
-	{ return CTrail_T<ZVal_Expr>(iTrail); }
-
-inline ZValComparandPseudo CVal()
-	{ return CVal_T<ZVal_Expr>(); }
-
-inline ZValComparandPseudo CVar(const std::string& iVarName)
-	{ return CVar_T<ZVal_Expr>(iVarName); }
+template <class Val>
+void ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T<Val>::Visit_Expr_Logic_ValPred(
+	ZRef<ZExpr_Logic_ValPred_T<Val> > iExpr)
+	{ this->pSetResult(iExpr->GetValPred().Matches(fValContext, fVal)); }
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZValCondition__
+#endif // __ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T__

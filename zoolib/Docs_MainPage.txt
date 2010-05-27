@@ -1,4 +1,63 @@
 /**
 \mainpage
-Some words for the main page
+
+ZooLib is a C++ library that I've been developing and using since 1992, and which has been open source since 2000.
+
+As it's under active development you may want to subscribe to the zoolib-checkins mailing list at <https://lists.sourceforge.net/lists/listinfo/zoolib-checkins>.
+
+It has several purposes:
+- To extend the longevity of code I write, by providing some isolation from the inevitable compiler, library and operating system differences and changes.
+- To provide simpler APIs for common tasks and to isolate workarounds.
+- To be a repository of useful building blocks.
+
+So its content is somewhat eclectic, but can be considered as falling into four groups:
+- OS abstractions
+- ZooLib abstractions
+- Higher level facilities
+- API and product-specific facilities
+
+\section MainOSAbstractions OS Abstractions
+Yep, another suite of OS wrappers, sorry. In my defense in 2010 we've only just witnessed the standardization of a portable thread API, and still don't have standard networking or file system APIs. You don't have to learn ZooLib's OS abstractions, and obviously you don't have to use them in your own code. But they're pretty robust and are there if you want.
+
+- \link Threads Threads\endlink
+- \link Networking Networking\endlink
+- \link Files Files\endlink
+
+\section MainZooLibAbstractions ZooLib Abstractions
+- Byte streams
+- String streams
+- Unicode and text encodings
+- Variant types
+- Structured data parsing and generation
+- Work and task management
+- Reference counting
+
+\subsection MainByteAndStringStreams Byte and String Streams
+ZooLib makes an explicit distinction between a \link Stream byte stream \endlink and a \link Strim string stream \endlink (a \em strim in our parlance). The former is just what you'd expect -- an entity to which you can write (or from which you can read) bytes. With the latter you write or read unicode strings (and in the limit, single unicode code points).
+
+\subsection MainUnicodeAndTextEncodings Unicode and Text Encodings
+ZooLib provides platform-appropriate typedefs for UTF8, UTF16 and UTF32 code units, and string8, string16 and string32 (basic_string parameterized on those types.) There's a complete suite of 8<-->16<-->32<-->8 conversion functions that work with raw buffers, strings and iterators. String streams take and return strings using whichever serialization is most convenient for your code, regardless of the underlying encoding.
+
+\subsection MainVariantTypes Variant Types
+Variants are a fairly new addition to ZooLIb. Variants like OSX's CFTypeRef show up all over the place but have wildly differing APIs. ZooLib has a standard API for working with variants, such that you can often change a typedef or parametrize a template on a different variant type without changing code. If nothing else they mean you don't have to remember multiple APIs.
+
+\subsection MainStructuredData Structured Data Parsing and Generation
+XML of one sort and another, JSON, in-memory variant types, the windows registry, AppleEvents and similar RPC representations can all be worked with using the ZYadR suite.
+
+\section MainHigherLevelFacilities Higher Level Facilities
+- Wide variety of streams and strims
+- Generic Pixmap
+- Pixmap codecs
+
+\section MainAPIFacilities API and Product-Specific Facilities
+- \link BlackBerry BlackBerry\endlink
+- Javascriptcore bindings
+- Netscape plugins
+- Photoshop
+- Sqlite
+- Tuplebase and tuplesoup
+- \link ZRA Relational algebra\endlink
+- \link ZQE Relational query executor\endlink
+- Dataspace
+
 */

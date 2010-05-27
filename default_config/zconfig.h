@@ -22,6 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __zconfig__ 1
 
 #include "zoolib/zconfigd.h"
+
+// For projects that need special settings, copy this file to a location that will be found
+// first by your compiler and put any settings here -- after zconfid.h, and before zconfigl.h.
+
 #include "zoolib/zconfigl.h"
 
 #endif // __zconfig__

@@ -18,28 +18,50 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Logic_ValCondition_DoToStrim__
-#define __ZVisitor_Expr_Logic_ValCondition_DoToStrim__
+#ifndef __ZValPred__
+#define __ZValPred__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZVisitor_Expr_Logic_DoToStrim.h"
-#include "zoolib/ZExpr_Logic_ValCondition.h"
+#include "zoolib/ZValPred_T.h"
+
+#include "zoolib/ZVal_Any.h"
+//#include "zoolib/ZVal_CFType.h"
+//#include "zoolib/ZVal_Zoolib.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
+typedef ZMap_Any ZMap_Expr;
+
+//typedef ZMap_CFType ZMap_Expr;
+//typedef ZMap_ZooLib ZMap_Expr;
+
+typedef ZMap_Expr::Val_t ZVal_Expr;
+
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Logic_ValCondition_DoToStrim
+#pragma mark * ZValPred
 
-class ZVisitor_Expr_Logic_ValCondition_DoToStrim
-:	public virtual ZVisitor_Expr_Logic_DoToStrim
-,	public virtual ZVisitor_Expr_Logic_ValCondition
-	{
-public:
-// From ZVisitor_Expr_Logic_ValCondition
-	virtual void Visit_Expr_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition> iRep);
-	};
+typedef ZValPred_T<ZVal_Expr> ZValPred;
+typedef ZValComparandPseudo_T<ZVal_Expr> ZValComparandPseudo;
+
+inline ZValComparandPseudo CString(const std::string& iVal)
+	{ return CConst_T<ZVal_Expr>(string8(iVal)); }
+
+inline ZValComparandPseudo CConst(const ZVal_Expr& iVal)
+	{ return CConst_T<ZVal_Expr>(iVal); }
+
+inline ZValComparandPseudo CName(const std::string& iName)
+	{ return CName_T<ZVal_Expr>(iName); }
+
+inline ZValComparandPseudo CTrail(const ZTrail& iTrail)
+	{ return CTrail_T<ZVal_Expr>(iTrail); }
+
+inline ZValComparandPseudo CVal()
+	{ return CVal_T<ZVal_Expr>(); }
+
+inline ZValComparandPseudo CVar(const std::string& iVarName)
+	{ return CVar_T<ZVal_Expr>(iVarName); }
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZVisitor_Expr_Logic_ValCondition_DoToStrim__
+#endif // __ZValPred__

@@ -18,29 +18,29 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZVisitor_Expr_Logic_ValCondition_DoGetNames_T__
-#define __ZVisitor_Expr_Logic_ValCondition_DoGetNames_T__
+#ifndef __ZVisitor_Expr_Logic_ValPred_DoGetNames_T__
+#define __ZVisitor_Expr_Logic_ValPred_DoGetNames_T__
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Logic_ValCondition_T.h"
+#include "zoolib/ZExpr_Logic_ValPred_T.h"
 #include "zoolib/ZVisitor_Do_T.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZVisitor_Expr_Logic_ValCondition_DoGetNames_T
+#pragma mark * ZVisitor_Expr_Logic_ValPred_DoGetNames_T
 
 template <class Val>
-class ZVisitor_Expr_Logic_ValCondition_DoGetNames_T
+class ZVisitor_Expr_Logic_ValPred_DoGetNames_T
 :	public virtual ZVisitor_Do_T<std::set<std::string> >
-,	public virtual ZVisitor_Expr_Logic_ValCondition_T<Val>
+,	public virtual ZVisitor_Expr_Logic_ValPred_T<Val>
 ,	public virtual ZVisitor_Expr_Op1_T<ZExpr_Logic>
 ,	public virtual ZVisitor_Expr_Op2_T<ZExpr_Logic>
 	{
 public:
-// From ZVisitor_Expr_Logic_ValCondition_T
-	virtual void Visit_Expr_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr);
+// From ZVisitor_Expr_Logic_ValPred_T
+	virtual void Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred_T<Val> > iExpr);
 
 // From ZVisitor_Expr_Op1_T
 	virtual void Visit_Expr_Op1(ZRef<ZExpr_Op1_T<ZExpr_Logic> > iExpr);
@@ -50,20 +50,20 @@ public:
 	};
 
 template <class Val>
-void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Expr_Logic_ValCondition(
-	ZRef<ZExpr_Logic_ValCondition_T<Val> > iExpr)
-	{ this->pSetResult(iExpr->GetValCondition().GetNames()); }
+void ZVisitor_Expr_Logic_ValPred_DoGetNames_T<Val>::Visit_Expr_Logic_ValPred(
+	ZRef<ZExpr_Logic_ValPred_T<Val> > iExpr)
+	{ this->pSetResult(iExpr->GetValPred().GetNames()); }
 
 template <class Val>
-void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Expr_Op1(
+void ZVisitor_Expr_Logic_ValPred_DoGetNames_T<Val>::Visit_Expr_Op1(
 	ZRef<ZExpr_Op1_T<ZExpr_Logic> > iExpr)
 	{ this->pSetResult(this->Do(iExpr->GetOp0())); }
 
 template <class Val>
-void ZVisitor_Expr_Logic_ValCondition_DoGetNames_T<Val>::Visit_Expr_Op2(
+void ZVisitor_Expr_Logic_ValPred_DoGetNames_T<Val>::Visit_Expr_Op2(
 	ZRef<ZExpr_Op2_T<ZExpr_Logic> > iExpr)
 	{ this->pSetResult(ZUtil_STL_set::sOr(this->Do(iExpr->GetOp0()), this->Do(iExpr->GetOp0()))); }
 
 NAMESPACE_ZOOLIB_END
 
-#endif // __ZVisitor_Expr_Logic_ValCondition_DoToStrim__
+#endif // __ZVisitor_Expr_Logic_ValPred_DoToStrim__

@@ -18,13 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Strim_ValCondition.h"
+#include "zoolib/ZUtil_Strim_ValPred.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
 NAMESPACE_ZOOLIB_BEGIN
 
-namespace ZUtil_Strim_ValCondition {
+namespace ZUtil_Strim_ValPred {
 
 using std::string;
 
@@ -43,7 +43,7 @@ static void spWrite_PropName(const string& iName, const ZStrimW& s)
 	ZYad_ZooLibStrim::sWrite_PropName(iName, s);
 	}
 
-static void spToStrim(const ZRef<ZValCondition::ComparandRep>& iCR, const ZStrimW& s)
+static void spToStrim(const ZRef<ZValPred::Comparand>& iCR, const ZStrimW& s)
 	{
 	if (!iCR)
 		{
@@ -72,7 +72,7 @@ static void spToStrim(const ZRef<ZValCondition::ComparandRep>& iCR, const ZStrim
 		}
 	}
 
-static void spToStrim(const ZRef<ZValCondition::ComparatorRep>& iCR, const ZStrimW& s)
+static void spToStrim(const ZRef<ZValPred::Comparator>& iCR, const ZStrimW& s)
 	{
 	if (!iCR)
 		{
@@ -117,15 +117,15 @@ static void spToStrim(const ZRef<ZValCondition::ComparatorRep>& iCR, const ZStri
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZUtil_Strim_ValCondition
+#pragma mark * ZUtil_Strim_ValPred
 
-void sToStrim(const ZValCondition& iValCondition, const ZStrimW& s)
+void sToStrim(const ZValPred& iValPred, const ZStrimW& s)
 	{
-	spToStrim(iValCondition.GetLHS(), s);
-	spToStrim(iValCondition.GetComparator(), s);
-	spToStrim(iValCondition.GetRHS(), s);
+	spToStrim(iValPred.GetLHS(), s);
+	spToStrim(iValPred.GetComparator(), s);
+	spToStrim(iValPred.GetRHS(), s);
 	}
 
-} // namespace ZUtil_Strim_ValCondition
+} // namespace ZUtil_Strim_ValPred
 
 NAMESPACE_ZOOLIB_END
