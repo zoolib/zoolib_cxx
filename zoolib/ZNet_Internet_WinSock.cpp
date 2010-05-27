@@ -18,6 +18,10 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+// FD_SETSIZE is defined to be 64 if no definition is
+// already in place, so we provide a more sensible size.
+#define FD_SETSIZE 1024
+
 #include "zoolib/ZNet_Internet_WinSock.h"
 
 #if ZCONFIG_API_Enabled(Net_Internet_WinSock)
