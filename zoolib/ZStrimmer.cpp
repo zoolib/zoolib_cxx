@@ -24,6 +24,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 /**
 \defgroup Strimmer
+\sa Strim
 \sa Streamer
 
 The various \c ZStrimmerXX interfaces fulfill the same role for strims that \c ZStreamerXX

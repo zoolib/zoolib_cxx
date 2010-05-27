@@ -45,6 +45,8 @@ NAMESPACE_ZOOLIB_BEGIN
 
 /**
 \defgroup Stream
+\sa Streamer
+
 \section ReadStreams Read Streams
 A read stream is an entity from which you can read bytes. At its simplest
 you can say 'here is a block of memory, read X bytes into it'. The read

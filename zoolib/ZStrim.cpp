@@ -43,6 +43,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 /**
 \defgroup Strim
+\sa Strimmer
 \sa ZUnicode
 \sa Unicode
 

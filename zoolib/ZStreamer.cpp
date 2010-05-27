@@ -24,6 +24,7 @@ NAMESPACE_ZOOLIB_BEGIN
 
 /**
 \defgroup Streamer
+\sa Stream
 
 The various \c ZStreamXX classes are just interfaces. They make it easy to wrap a
 standard lightweight API around arbitrary data sources, sinks and filters, and
@@ -47,9 +48,9 @@ easier to wrap arbitrary streams inside a streamer there are template definition
 two constructors. One takes no parameters, the other takes a single parameter which is
 passed on to your stream's constructor.
 
-\c ZStreamerX_FT is the template for a filter stream. Its default constructor is
-protected and thus inaccessible to code, because a filter stream makes no sense without
-a sink/source stream. Of the two accessible constructors one takes a \c ZRef<ZStreamerXX>
+\c ZStreamerX_FT is the template for a filter streamer. Its default constructor is
+protected and thus inaccessible to code, because a filter streamer makes no sense without
+a sink/source streamer. Of the two accessible constructors one takes a \c ZRef<ZStreamerXX>
 and a single parameter, the other takes only a \c ZRef<ZStreamerXX>. Your filter stream
 will be constructed with either the parameter and the result of \c ZStreamerXX::GetStreamXX,
 or with just the result of \c ZStreamerXX::GetStreamXX.
