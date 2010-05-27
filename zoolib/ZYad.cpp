@@ -193,6 +193,44 @@ void ZYadSeqR::SkipAll()
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYadSeqRClone
+
+void ZYadSeqRClone::Accept_Yad(ZVisitor_Yad& iVisitor)
+	{ iVisitor.Visit_YadSeqR(this); }//##
+
+bool ZYadSeqRClone::IsSimple(const ZYadOptions& iOptions)
+	{
+	if (ZRef<ZYadSeqRClone> clone = this->Clone())
+		{
+		if (ZRef<ZYadR> theYadR = clone->ReadInc())
+			{
+			if (!clone->Skip())
+				{
+				// We've exhausted ouselves, so we had just one entry, and
+				// we're simple if that entry is simple.
+				return theYadR->IsSimple(iOptions);
+				}
+			else
+				{
+				// We have at least one more entry, so we're not simple.
+				return false;
+				}
+			}
+		else
+			{
+			// We're empty, and thus simple.
+			return true;
+			}
+		}
+	else
+		{
+		// We couldn't clone, so assume we're complex.
+		return false;
+		}
+	}
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYadSeqRPos
 
 /**
@@ -280,6 +318,7 @@ void ZYadMapR::SkipAll()
 void ZYadMapRPos::Accept_Yad(ZVisitor_Yad& iVisitor)
 	{ iVisitor.Visit_YadMapRPos(this); }
 
+#if 0 //##
 bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 	{
 	if (ZRef<ZYadMapRPos> clone = this->Clone())
@@ -311,6 +350,7 @@ bool ZYadMapRPos::IsSimple(const ZYadOptions& iOptions)
 		return false;
 		}
 	}
+#endif //##
 
 // =================================================================================================
 #pragma mark -

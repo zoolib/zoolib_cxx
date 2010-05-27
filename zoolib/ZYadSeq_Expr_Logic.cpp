@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Logic_ValCondition.h"
+#include "zoolib/ZExpr_Logic_ValPred.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYadSeq_Expr_Logic.h"
 
@@ -84,8 +84,8 @@ ZRef<ZYadR> ZYadSeqRPos_Expr_Logic::ReadInc()
 		}
 	}
 
-ZRef<ZYadSeqRPos> ZYadSeqRPos_Expr_Logic::Clone()
-	{ return new ZYadSeqRPos_Expr_Logic(fYadSeqRPos->Clone(), fExpr_Logic); }
+//##ZRef<ZYadSeqRPos> ZYadSeqRPos_Expr_Logic::Clone()
+//##	{ return new ZYadSeqRPos_Expr_Logic(fYadSeqRPos->Clone(), fExpr_Logic); }
 
 uint64 ZYadSeqRPos_Expr_Logic::GetPosition()
 	{ return fYadSeqRPos->GetPosition(); }

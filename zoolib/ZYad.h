@@ -154,6 +154,22 @@ public:
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZYadSeqRClone
+
+class ZYadSeqRClone
+:	public virtual ZYadSeqR
+	{
+public:
+// From ZYadR
+	virtual void Accept_Yad(ZVisitor_Yad& iVisitor);
+	virtual bool IsSimple(const ZYadOptions& iOptions);
+
+// Our protocol
+	virtual ZRef<ZYadSeqRClone> Clone() = 0;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZYadSeqRPos
 
 class ZYadSeqRPos
@@ -169,7 +185,7 @@ public:
 	virtual void SkipAll();
 
 // Our protocol
-	virtual ZRef<ZYadSeqRPos> Clone() = 0;
+//##	virtual ZRef<ZYadSeqRPos> Clone() = 0;
 
 	virtual uint64 GetPosition() = 0;
 	virtual void SetPosition(uint64 iPosition) = 0;
@@ -205,10 +221,10 @@ class ZYadMapRPos
 public:
 // From ZYadR
 	virtual void Accept_Yad(ZVisitor_Yad& iVisitor);
-	virtual bool IsSimple(const ZYadOptions& iOptions);
+//##	virtual bool IsSimple(const ZYadOptions& iOptions);
 
 // Our protocol
-	virtual ZRef<ZYadMapRPos> Clone() = 0;
+//##	virtual ZRef<ZYadMapRPos> Clone() = 0;
 
 	virtual void SetPosition(const std::string& iName) = 0;
 	};
