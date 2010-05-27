@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZYad.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -36,6 +36,6 @@ ZRef<ZYadR> sMakeYadR(ZRef<ZYadR> iYadR, bool iPreserveSeqs, bool iPreserveMaps)
 
 } // namespace ZYad_JSONNormalize
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZYad_JSON__

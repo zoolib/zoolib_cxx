@@ -31,7 +31,7 @@ using std::min;
 using std::max;
 using std::runtime_error;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #define kDebug_ZLib 2
 
@@ -361,6 +361,6 @@ ZStreamerW_ZLibEncode::~ZStreamerW_ZLibEncode()
 const ZStreamW& ZStreamerW_ZLibEncode::GetStreamW()
 	{ return fStream; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Stream_ZLib)

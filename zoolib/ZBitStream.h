@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 /*
 Bits may be packed from high-to-low (128 down to 1) or from low-to-high (1, 2, 4 ... 128) in
@@ -124,6 +124,6 @@ private:
 	size_t fAvailBits;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZBitStream__

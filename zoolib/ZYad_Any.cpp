@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_Std.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 
@@ -59,7 +59,7 @@ ZRef<ZYadMapRPos> sMakeYadR(const ZMap_Any& iMap)
 #pragma mark -
 #pragma mark * sFromYadR
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Visitor_GetVal : public ZVisitor_Yad
 	{
@@ -171,4 +171,4 @@ ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYad
 	return Visitor_GetVal(iRepeatedPropsAsSeq, iDefault).GetVal(iYadR);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

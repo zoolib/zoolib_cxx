@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSWatcherDefines__
 #include "zconfig.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 enum EReq
 	{
@@ -39,6 +39,6 @@ enum EResp
 	eResp_SyncSuggested
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZTSWatcherDefines__

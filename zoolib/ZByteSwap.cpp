@@ -33,7 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	endif
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 void ZByteSwap_Test();
 void ZByteSwap_Test()
@@ -69,4 +69,4 @@ void ZByteSwap_Test()
 	ZAssertStop(0, 0xF0DEBC9A78563412LL == value64);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

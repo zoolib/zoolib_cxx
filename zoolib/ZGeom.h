@@ -34,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // for Mac headers ('relation' is undefined) when building with CW.
 #include "zoolib/ZCompat_cmath.h" // For sqrt
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -877,6 +877,6 @@ inline ZRect_T<T>::operator ZRectPOD() const
 		{ return BRect(left, top, right - 1, bottom - 1); }
 #endif
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZGeom__

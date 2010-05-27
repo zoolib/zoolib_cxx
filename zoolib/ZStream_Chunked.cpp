@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMemory.h" // For ZMemCopy
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::min;
 
@@ -151,4 +151,4 @@ void ZStreamW_Chunked::pFlush()
 		}
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

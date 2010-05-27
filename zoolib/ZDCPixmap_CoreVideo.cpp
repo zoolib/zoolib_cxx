@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#define CVPIXELFORMAT(a) kCVPixelFormatType_##a
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZDCPixmap_CoreVideo {
 
@@ -111,6 +111,6 @@ ZDCPixmap sPixmap(ZRef<CVPixelBufferRef> iPBR)
 
 } // namespace ZDCPixmap_CoreVideo
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(MacOSX)

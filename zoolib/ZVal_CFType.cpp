@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include ZMACINCLUDE2(CoreFoundation,CFNumber.h)
 #include ZMACINCLUDE2(CoreFoundation,CFString.h)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using ZUtil_CFType::sAsUTF8;
 using ZUtil_CFType::sString;
@@ -824,6 +824,6 @@ CFMutableDictionaryRef ZMap_CFType::pTouch()
 	return theMutableDictionary;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CFType)

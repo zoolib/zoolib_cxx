@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim_Escaped.h"
 #include "zoolib/ZYad_Std.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -135,6 +135,6 @@ void sToStrim(size_t iInitialIndent, const ZYadOptions& iOptions,
 
 } // namespace ZYad_JSON
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZYad_JSON__

@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -468,6 +468,6 @@ inline const ZTBSpec::Comparator& ZTBSpec::Criterion::GetComparator() const
 inline const ZTValue& ZTBSpec::Criterion::GetTValue() const
 	{ return fRep->fTValue; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZTBSpec__

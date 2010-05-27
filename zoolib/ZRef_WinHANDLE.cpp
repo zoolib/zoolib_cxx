@@ -29,16 +29,16 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define ZMACRO_ZRef_WinHANDLE_Decl(HANDLE_t) \
 	typedef struct HANDLE_t##__ * HANDLE_t; \
-	NAMESPACE_ZOOLIB_BEGIN \
+	namespace ZooLib { \
 	template <> void sRetain_T(HANDLE_t& ioHANDLE) \
 	{ if (ioHANDLE) ioHANDLE = static_cast<HANDLE_t>(spDuplicateHandle(ioHANDLE)); } \
-	NAMESPACE_ZOOLIB_END
+	} // namespace ZooLib
 
 #define ZMACRO_ZRef_WinHANDLE_WithReleaser(HANDLE_t, Releaser) \
 	ZMACRO_ZRef_WinHANDLE_Decl(HANDLE_t) \
-	NAMESPACE_ZOOLIB_BEGIN \
+	namespace ZooLib { \
 	template <> void sRelease_T(HANDLE_t iHANDLE) { if (iHANDLE) Releaser(iHANDLE); } \
-	NAMESPACE_ZOOLIB_END
+	} // namespace ZooLib
 
 #define ZMACRO_ZRef_WinHANDLE_WithReleaserDecl(HANDLE_t, Qual, Releaser) \
 	Qual WINAPI Releaser(HANDLE_t); \
@@ -80,7 +80,7 @@ ZMACRO_ZRef_WinHANDLE_WithReleaser(HKEY, RegCloseKey)
 //ZMACRO_ZRef_WinHANDLE_WithReleaserDecl(HKEY, WINADVAPI LONG, RegCloseKey)
 //ZMACRO_ZRef_WinHANDLE_WithReleaserDecl(HINSTANCE, WINBASEAPI BOOL, FreeLibrary)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 template <>
 void sRetain_T(HANDLE& ioHANDLE)
@@ -96,6 +96,6 @@ void sRelease_T(HANDLE iHANDLE)
 		::CloseHandle(iHANDLE);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CFType)

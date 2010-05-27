@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -227,4 +227,4 @@ void ZTxnTarget::RegisterWithTxn(const ZTxn& iTxn)
 	iTxn.pRegisterTarget(this);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

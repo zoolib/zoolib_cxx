@@ -36,13 +36,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_Collator
 :	public ZFunctionChain_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>
@@ -217,6 +217,6 @@ bool ZTextCollatorRep_ICU::Contains(const UTF16* iPattern, size_t iPatternLength
 	return spContains(fCollator, iPattern, iPatternLength, iTarget, iTargetLength);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(TextCollator_ICU)

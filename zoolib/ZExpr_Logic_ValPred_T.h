@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZExpr_Logic.h"
 #include "zoolib/ZValPred_T.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 template <class Val> class ZVisitor_Expr_Logic_ValPred_T;
 
@@ -208,6 +208,6 @@ ZRef<ZExpr_Logic>& operator|=(ZRef<ZExpr_Logic>& ioLHS, const ZValPred_T<Val>& i
 	return ioLHS;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZExpr_Logic_ValPred_T__

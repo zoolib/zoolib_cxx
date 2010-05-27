@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_ZooLib.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -69,4 +69,4 @@ const ZStrimW& operator<<(const ZStrimW& s, const ZUtil_Strim_Tuple::Format& iFo
 	return s;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

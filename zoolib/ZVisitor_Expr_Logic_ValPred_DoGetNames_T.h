@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZExpr_Logic_ValPred_T.h"
 #include "zoolib/ZVisitor_Do_T.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -64,6 +64,6 @@ void ZVisitor_Expr_Logic_ValPred_DoGetNames_T<Val>::Visit_Expr_Op2(
 	ZRef<ZExpr_Op2_T<ZExpr_Logic> > iExpr)
 	{ this->pSetResult(ZUtil_STL_set::sOr(this->Do(iExpr->GetOp0()), this->Do(iExpr->GetOp0()))); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZVisitor_Expr_Logic_ValPred_DoToStrim__

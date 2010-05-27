@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::set;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -285,4 +285,4 @@ bool ZTupleIndex::sGatherMergeConstraints(const ZTName& iPropName,
 ZTupleIndexFactory::~ZTupleIndexFactory()
 	{}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

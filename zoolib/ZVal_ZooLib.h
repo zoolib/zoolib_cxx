@@ -39,7 +39,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define ZCONFIG_Val_ZooLib_Packed 1
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -532,7 +532,7 @@ inline bool operator>=(const ZMap_ZooLib& l, const ZMap_ZooLib& r)
 template <> inline int sCompare_T(const ZMap_ZooLib& iL, const ZMap_ZooLib& iR)
 	{ return iL.Compare(iR); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
@@ -540,7 +540,7 @@ NAMESPACE_ZOOLIB_END
 
 namespace std {
 
-inline void swap(ZOOLIB_PREFIX::ZVal_ZooLib& a, ZOOLIB_PREFIX::ZVal_ZooLib& b)
+inline void swap(ZooLib::ZVal_ZooLib& a, ZooLib::ZVal_ZooLib& b)
 	{ a.swap(b); }
 
 } // namespace std

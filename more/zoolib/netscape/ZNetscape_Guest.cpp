@@ -41,7 +41,7 @@ using std::string;
 	NPPSetter theSetter(npp);\
 	try {
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZNetscape {
 
@@ -1069,4 +1069,4 @@ ZRef<NPObjectG> Guest::Host_GetPluginObject()
 
 } // namespace ZNetscape
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

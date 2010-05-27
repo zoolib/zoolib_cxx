@@ -47,7 +47,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define ZLOGTRACE(p) ZooLib::ZLog::sLogTrace(ZooLib::ZLog::p, __FILE__, __LINE__)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZLog {
 
@@ -157,6 +157,6 @@ void sLogTrace(EPriority iPriority, const char* iFile, int iLine);
 
 } // namespace ZLog
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZLog__

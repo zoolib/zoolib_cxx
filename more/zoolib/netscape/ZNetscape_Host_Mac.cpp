@@ -40,7 +40,7 @@ enum
 	};
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 
@@ -884,6 +884,6 @@ OSStatus Host_HIViewRef::EventHandler_View(EventHandlerCallRef iCallRef, EventRe
 
 } // namespace ZNetscape
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // defined(XP_MAC) || defined(XP_MACOSX)

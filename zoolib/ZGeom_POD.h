@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompare_T.h"
 #include "zoolib/ZStdInt.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -53,6 +53,6 @@ struct ZRectPOD
 
 template <> int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR);
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZGeomPOD

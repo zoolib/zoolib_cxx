@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept>
 
-int ZOOLIB_PREFIX::ZMainNS::sArgC;
-char** ZOOLIB_PREFIX::ZMainNS::sArgV;
+int ZooLib::ZMainNS::sArgC;
+char** ZooLib::ZMainNS::sArgV;
 
 /** spMain puts argc and argv into the globals ZMainNS::sArgC and
 ZMain::sArgV, and then invokes the application-defined ZMain, wrapping
@@ -34,7 +34,7 @@ using ZDebugLogf. */
 
 static int spMain(int argc, char **argv)
 	{
-	NAMESPACE_ZOOLIB_USING
+	using namespace ZooLib;
 
 	ZMainNS::sArgC = argc;
 	ZMainNS::sArgV = argv;
@@ -103,7 +103,7 @@ extern "C" int APIENTRY WinMain(
 #	include <fcntl.h>
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 void ZMainNS::sDaemonize(bool iForceFDClose)
 	{
@@ -147,4 +147,4 @@ void ZMainNS::sDaemonize(bool iForceFDClose)
 	#endif // ZCONFIG_SPI_Enabled(POSIX)
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

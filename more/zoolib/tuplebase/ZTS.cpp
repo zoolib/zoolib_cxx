@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/tuplebase/ZTS.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 /**
 \defgroup Tuplestore
@@ -125,4 +125,4 @@ ZTuple ZTS::GetTuple(uint64 iID)
 	return theTuple;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

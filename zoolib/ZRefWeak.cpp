@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZRefWeak.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -163,4 +163,4 @@ ZWeakReferee* ZRefWeakBase::pLockUse() const
 void ZRefWeakBase::pUnlock() const
 	{ fWRP->pUnlock(); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

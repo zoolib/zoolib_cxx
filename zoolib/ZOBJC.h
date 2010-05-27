@@ -51,7 +51,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	typedef struct objc_NSAutoreleasePool NSAutoreleasePool;
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -67,7 +67,7 @@ private:
 	NSAutoreleasePool* fPool;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __cplusplus
 

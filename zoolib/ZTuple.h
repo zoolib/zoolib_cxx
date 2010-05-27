@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZVal_ZooLib.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 typedef ZVal_ZooLib ZTValue;
 
@@ -93,6 +93,6 @@ public:
 #undef ZMACRO_ZMapAccessors_Decl_Entry
 #undef ZMACRO_ZMapAccessors_Decl
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZTuple__

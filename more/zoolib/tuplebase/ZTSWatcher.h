@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 typedef ZData_Any ZMemoryBlock;
 typedef ZStreamRPos_Data_T<ZData_Any> ZStreamRPos_MemoryBlock;
@@ -103,6 +103,6 @@ public:
 	virtual ZRef<ZTSWatcher> MakeTSWatcher() = 0;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZTSWatcher__

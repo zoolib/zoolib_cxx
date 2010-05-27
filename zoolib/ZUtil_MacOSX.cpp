@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -67,6 +67,6 @@ void ZUtil_MacOSX::sCreateThunks_MachOCalledByCFM(
 	::MakeDataExecutable(&ioStorage[0], ioStorage.size());
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Carbon) && ZCONFIG(Processor, PPC)

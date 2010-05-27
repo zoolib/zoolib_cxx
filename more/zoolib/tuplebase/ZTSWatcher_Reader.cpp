@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZUtil_STL.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::map;
 using std::pair;
@@ -390,5 +390,5 @@ ZRef<ZTSWatcher> ZTSWatcherFactory_Reader::MakeTSWatcher()
 	return ZRef<ZTSWatcher>();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 

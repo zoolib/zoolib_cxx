@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZStrimU_Std.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -79,4 +79,4 @@ ZTextDecoder* ZStrimU_Std::SetDecoderReturnOld(ZTextDecoder* iDecoder)
 size_t ZStrimU_Std::GetLineCount()
 	{ return fLineCount; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

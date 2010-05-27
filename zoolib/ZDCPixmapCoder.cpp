@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDCPixmapCoder.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -96,4 +96,4 @@ ZDCPixmap ZDCPixmapDecoder::Read(const ZStreamR& iStream)
 	return thePixmap;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

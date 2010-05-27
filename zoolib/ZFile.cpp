@@ -28,7 +28,7 @@ using std::min;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 /**
 \defgroup File
@@ -1402,4 +1402,4 @@ ZFile::Error ZFileRW_StreamerRWPos::FlushVolume()
 	return ZFile::errorNone;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

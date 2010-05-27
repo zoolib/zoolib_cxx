@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTuple.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::vector;
 
@@ -140,4 +140,4 @@ ZMACRO_ZMapAccessors_Def(const_iterator)
 #undef ZMACRO_ZMapAccessors_Def_Entry
 #undef ZMACRO_ZMapAccessors_Def
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

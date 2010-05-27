@@ -30,7 +30,7 @@ using std::map;
 using std::pair;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -363,4 +363,4 @@ void ZTSWatcherServerAsync::pCallback()
 void ZTSWatcherServerAsync::spCallback(void* iRefcon)
 	{ static_cast<ZTSWatcherServerAsync*>(iRefcon)->pCallback(); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

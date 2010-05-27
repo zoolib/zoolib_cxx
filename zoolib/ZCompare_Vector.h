@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // Forward declaration of iterator comparison
 template <class InputIterator>
@@ -84,6 +84,6 @@ inline int sCompareIterators_T(
 		}
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZCompare_Vector__

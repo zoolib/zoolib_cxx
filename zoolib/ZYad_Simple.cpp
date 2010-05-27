@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZYad_Simple.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 
@@ -111,4 +111,4 @@ void ZYadMapR_Simple::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>
 ZRef<ZYadR> ZYad_Simple::sMakeYadR(ZRef<ZStrimmerU> iStrimmerU)
 	{ return new ZYadMapR_Simple(iStrimmerU); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

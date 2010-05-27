@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -195,4 +195,4 @@ void ZStreamRWPos_String::Imp_SetSize(uint64 iSize)
 	fString.resize(realSize);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

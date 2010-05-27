@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVal_Any.h"
 #include "zoolib/ZYad_Val_T.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 typedef ZYadStreamRPos_Val_T<ZData_Any> ZYadStreamRPos_Any;
 typedef ZYadSeqRPos_Val_T<ZSeq_Any> ZYadSeqRPos_Any;
@@ -50,6 +50,6 @@ ZRef<ZYadMapRPos> sMakeYadR(const ZMap_Any& iMap);
 ZVal_Any sFromYadR(const ZVal_Any& iDefault, ZRef<ZYadR> iYadR);
 ZVal_Any sFromYadR(bool iRepeatedPropsAsSeq, const ZVal_Any& iDefault, ZRef<ZYadR> iYadR);
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZYad_Any__

@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZML.h"
 #include "zoolib/ZYad.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -50,6 +50,6 @@ ZRef<ZYadR> sMakeYadR(ZRef<ZML::StrimmerU> iStrimmerU);
 
 } // namespace ZYad_XMLAttr
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZYad_XMLAttr__

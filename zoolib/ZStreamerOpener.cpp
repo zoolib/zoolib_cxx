@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamerOpener.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -50,4 +50,4 @@ void ZStreamerOpener::Kill()
 ZRef<ZStreamerRW> ZStreamerOpener::GetStreamerRW()
 	{ return fStreamerRW; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

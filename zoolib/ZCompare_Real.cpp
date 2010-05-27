@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompare_Real.h"
 #include "zoolib/ZCompat_cmath.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // To provide stable ordering between floating point values we
 // arbitrarily say that a nan is less than any non-nan value.
@@ -67,4 +67,4 @@ int sCompare_T(const double& iL, const double& iR)
 
 ZMACRO_CompareRegistration_T(double)
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

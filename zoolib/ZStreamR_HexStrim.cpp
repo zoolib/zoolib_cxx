@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim.h"
 #include "zoolib/ZUtil_Strim.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -78,4 +78,4 @@ void ZStreamR_HexStrim::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 		*oCountRead = localDest - reinterpret_cast<uint8*>(oDest);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

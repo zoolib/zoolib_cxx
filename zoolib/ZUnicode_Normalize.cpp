@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode_Normalize.h"
 #include "zoolib/ZFunctionChain.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZUnicode {
 
 // =================================================================================================
@@ -43,4 +43,4 @@ string16 sNormalized(const string16& iString, ENormForm iNormForm)
 	}
 
 } // namespace ZUnicode
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

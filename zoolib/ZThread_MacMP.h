@@ -40,7 +40,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE3(CoreServices,CarbonCore,Multiprocessing.h)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZMtx_MacMP;
 class ZSem_MacMP;
@@ -124,7 +124,7 @@ void sSleep(double iDuration);
 
 } // namespace ZThread_MacMP
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Thread_MacMP)
 

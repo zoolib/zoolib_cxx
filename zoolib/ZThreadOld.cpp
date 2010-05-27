@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZTime.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -154,4 +154,4 @@ void ZSemaphore::Signal(int32 iCount)
 		ZSem::Signal();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

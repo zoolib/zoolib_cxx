@@ -33,7 +33,7 @@ using std::deque;
 using std::min;
 using std::runtime_error;
 
-NAMESPACE_ZOOLIB_USING
+using namespace ZooLib;
 
 // =================================================================================================
 #pragma mark -
@@ -110,11 +110,11 @@ NAMESPACE_ZOOLIB_USING
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 } // anonymous namespace
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -356,6 +356,6 @@ void ZNetEndpoint_RFCOMM_OSX::pClosed()
 	fCondition.Broadcast();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Net_RFCOMM_OSX)

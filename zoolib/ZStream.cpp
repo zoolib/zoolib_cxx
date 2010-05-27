@@ -39,7 +39,7 @@ using std::nothrow;
 using std::range_error;
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #define kDebug_Stream 2
 
@@ -1475,4 +1475,4 @@ void ZStreamWPos_Null::pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 	fSize = max(fSize, fPosition);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

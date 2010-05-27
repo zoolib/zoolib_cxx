@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <map>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // There is an equivalent typedef in ZRA_RelHead, and it's possible that it
 // should be promoted to its own file, but for now that seems excessive.
@@ -558,6 +558,6 @@ ZValPred_T<Val> operator>(
 		iRHS);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZValPred_T__

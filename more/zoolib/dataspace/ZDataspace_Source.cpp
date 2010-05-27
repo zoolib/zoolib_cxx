@@ -52,7 +52,7 @@ static ZRef<Expr_Rel> spConcrete(
 #pragma mark -
 #pragma mark * DoRename (anonymous)
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class DoRename
 :	public virtual ZVisitor_Expr_Op_DoTransform_T<ZExpr_Logic>
@@ -85,7 +85,7 @@ void DoRename::Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr)
 #pragma mark -
 #pragma mark * Gather (anonymous)
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Gather_t
 	{

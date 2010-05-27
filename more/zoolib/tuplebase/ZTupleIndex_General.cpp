@@ -26,7 +26,7 @@ using std::set;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -375,4 +375,4 @@ ZTupleIndexFactory_General::ZTupleIndexFactory_General(
 ZTupleIndex* ZTupleIndexFactory_General::Make()
 	{ return new ZTupleIndex_General(fPropNames, fPropNameCount); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

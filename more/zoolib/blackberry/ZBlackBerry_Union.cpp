@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::pair;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZBlackBerry {
 
@@ -151,4 +151,4 @@ ZRef<Device> Manager_Union::Open(uint64 iDeviceID)
 
 } // namespace ZBlackBerry
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

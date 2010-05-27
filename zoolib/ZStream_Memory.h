@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -232,6 +232,6 @@ protected:
 // Alternate template-based definition:
 // typedef ZStreamerW_T<ZStreamWPos_Memory> ZStreamerWPos_Memory;
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZStream_Memory__

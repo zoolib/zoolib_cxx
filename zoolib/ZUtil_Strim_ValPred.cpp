@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZUtil_Strim_ValPred {
 
@@ -128,4 +128,4 @@ void sToStrim(const ZValPred& iValPred, const ZStrimW& s)
 
 } // namespace ZUtil_Strim_ValPred
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

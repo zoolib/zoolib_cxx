@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZAny.h"
 #include "zoolib/ZRef_CFType.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZData_CFType;
 typedef ZData_CFType ZData_CF;
@@ -81,7 +81,7 @@ private:
 	bool fMutable;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 

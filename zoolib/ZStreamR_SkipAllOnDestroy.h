@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream_Filter.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -45,6 +45,6 @@ protected:
 // Example streamer template:
 // typedef ZStreamerR_FT<ZStreamR_SkipAllOnDestroy> ZStreamerR_SkipAllOnDestroy;
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZStreamR_SkipAllOnDestroy__

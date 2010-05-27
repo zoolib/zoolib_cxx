@@ -27,13 +27,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::map;
 using std::pair;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * CompareCharStars
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class CompareCharStars
 	{
@@ -86,7 +86,7 @@ int ZCompare::sCompare(const char* iTypeName, const void* iL, const void* iR)
 #pragma mark -
 #pragma mark * ZCompareRegistration_Void
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 class ZCompareRegistration_Void : public ZCompare
 	{
 public:
@@ -96,4 +96,4 @@ public:
 	} ZMACRO_CONCAT(sComparer_,__LINE__);
 } // anonymous namespace
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

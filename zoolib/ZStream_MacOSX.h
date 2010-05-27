@@ -34,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGDataConsumer.h)
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -75,7 +75,7 @@ private:
 
 typedef ZStreamerW_T<ZStreamW_CFStream> ZStreamerW_CFStream;
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
 
@@ -85,7 +85,7 @@ NAMESPACE_ZOOLIB_END
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZStream_MacOSX {
 
@@ -97,7 +97,7 @@ CGDataConsumerRef sCGDataConsumerCreate(ZRef<ZStreamerW> iStreamer);
 
 } // namespace ZStream_MacOSX
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CoreGraphics)
 

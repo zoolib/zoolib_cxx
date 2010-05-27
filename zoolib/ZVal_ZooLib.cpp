@@ -39,7 +39,7 @@ using std::vector;
 
 #define kDebug_Tuple 1
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static ZTName spNilName;
 static ZMap_ZooLib::PropList spEmptyProperties;
@@ -58,7 +58,7 @@ static inline bool spIsSpecialString(size_t iSize)
 #pragma mark -
 #pragma mark * ValString
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 /** ValString is a lighterweight implementation of immutable strings, used
 for holding longer string properties in ZVal_ZooLib instances. */
@@ -2596,4 +2596,4 @@ ZRef<ZMap_ZooLib::Rep> ZMap_ZooLib::sRepFromStream(const ZStreamR& iStreamR)
 	return theRep;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

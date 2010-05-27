@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStream.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -50,6 +50,6 @@ protected:
 
 //typedef ZStreamerR_T<ZStreamR_Random> ZStreamerR_Random;
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZStreamR_Random__

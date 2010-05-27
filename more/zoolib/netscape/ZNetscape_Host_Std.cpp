@@ -42,7 +42,7 @@ using std::set;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZNetscape {
 
@@ -1122,4 +1122,4 @@ ZRef<NPObjectH> Host_Std::Guest_GetNPObject()
 
 } // namespace ZNetscape
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

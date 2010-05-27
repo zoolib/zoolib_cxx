@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCounted.h"
 #include "zoolib/ZDebug.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -132,4 +132,4 @@ void ZCountedWithoutFinalize::Release()
 int ZCountedWithoutFinalize::GetRefCount() const
 	{ return ZThreadSafe_Get(fRefCount); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -31,13 +31,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_USING
+using namespace ZooLib;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUtil_NSObject
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZUtil_NSObject {
 
@@ -257,7 +257,7 @@ NSObject* sAsNSObject(const ZAny& iVal)
 
 } // namespace ZUtil_NSObject
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 // =================================================================================================
 @implementation NSObject (ZAny_Additions)

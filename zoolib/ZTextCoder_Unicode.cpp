@@ -32,7 +32,7 @@ ZMACRO_MSVCStaticLib_cpp(TextCoder_Unicode)
 using std::min;
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static const size_t kBufSize = sStackBufferSize;
 
@@ -40,7 +40,7 @@ static const size_t kBufSize = sStackBufferSize;
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_Decoder
 :	public ZFunctionChain_T<ZTextDecoder*, const string&>
@@ -763,4 +763,4 @@ bool ZTextDecoder_Unicode_AutoDetect::Decode(
 void ZTextDecoder_Unicode_AutoDetect::Reset()
 	{ fType = eFresh; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

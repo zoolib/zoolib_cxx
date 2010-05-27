@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::min;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #define kDebug_LZW 2
 
@@ -598,4 +598,4 @@ void ZStreamW_LZWDecode::Imp_Flush()
 	fStreamSink.Flush();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

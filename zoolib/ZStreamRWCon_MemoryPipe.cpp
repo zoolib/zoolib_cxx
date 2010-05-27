@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::min;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -363,4 +363,4 @@ const ZStreamRCon& ZStreamerRWCon_MemoryPipe::GetStreamRCon()
 const ZStreamWCon& ZStreamerRWCon_MemoryPipe::GetStreamWCon()
 	{ return fStream; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

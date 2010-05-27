@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::min;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -98,6 +98,6 @@ ZStreamerRPos_Mac_PartialResource::~ZStreamerRPos_Mac_PartialResource()
 const ZStreamRPos& ZStreamerRPos_Mac_PartialResource::GetStreamRPos()
 	{ return fStream; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Carbon64)

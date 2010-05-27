@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZThread.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -91,4 +91,4 @@ void ZStreamerRWFactory_Retry::Abort()
 	fStreamerRWFactory.Clear();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

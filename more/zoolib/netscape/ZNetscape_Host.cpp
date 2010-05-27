@@ -34,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZNETSCAPE_BEFORE_OBJECT(a) \
 	try {
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZNetscape {
 
@@ -932,4 +932,4 @@ NPError Host::Guest_SetValue(NPNVariable iNPNVariable, void* iValue)
 
 } // namespace ZNetscape
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

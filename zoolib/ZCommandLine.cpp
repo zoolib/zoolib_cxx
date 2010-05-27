@@ -343,7 +343,7 @@ equivalent of command-line options.
 using std::exception;
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -645,4 +645,4 @@ int64 ZCommandLine::Int64::operator()() const
 	return fDefault;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

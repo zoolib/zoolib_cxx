@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrimR_Boundary.h"
 #include "zoolib/ZYad_Std.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -164,6 +164,6 @@ void sWrite_PropName(const std::string& iPropName, const ZStrimW& s);
 
 } // namespace ZYad_ZooLibStrim
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZYad_ZooLibStrim__

@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZRGBA.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -34,6 +34,6 @@ typedef ZRGBA_POD ZRGBColorPOD;
 typedef ZRGBA ZRGBColor;
 typedef ZRGBAMap ZRGBColorMap;
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZRGBColor__

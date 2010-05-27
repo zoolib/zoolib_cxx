@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTuple.h"
 #include "zoolib/ZYad.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZStrimW;
 
@@ -56,6 +56,6 @@ const ZStrimW& operator<<(const ZStrimW& s, const ZTValue& iTV);
 
 const ZStrimW& operator<<(const ZStrimW& s, const ZUtil_Strim_Tuple::Format& iFormat);
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZUtil_Strim_Tuple__

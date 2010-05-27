@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCtorDtor__ 1
 #include "zconfig.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -75,6 +75,6 @@ template <class T>
 inline T* sFetch_T(void* iBytes)
 	{ return static_cast<T*>(iBytes); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZCtorDtor__

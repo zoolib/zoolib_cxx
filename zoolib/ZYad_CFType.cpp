@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <CoreFoundation/CFString.h>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::min;
 using std::string;
@@ -88,7 +88,7 @@ ZYadSeqRPos_CFType::ZYadSeqRPos_CFType(const ZRef<CFArrayRef>& iArray, uint64 iP
 #pragma mark -
 #pragma mark * ZYadMapRPos_CFType
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 struct GatherContents_t
 	{
@@ -204,7 +204,7 @@ ZRef<ZYadMapRPos> sMakeYadR(const ZRef<CFDictionaryRef>& iDictionary)
 #pragma mark -
 #pragma mark * sFromYadR
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Visitor_GetVal : public ZVisitor_Yad
 	{
@@ -285,6 +285,6 @@ ZRef<CFTypeRef> sFromYadR(const ZRef<CFTypeRef>& iDefault, ZRef<ZYadR> iYadR)
 	return Visitor_GetVal(iDefault).GetVal(iYadR);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CFType)

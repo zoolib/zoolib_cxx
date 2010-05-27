@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRGBA.h"
 #include "zoolib/ZCompat_algorithm.h" // For min/max
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::min;
 using std::max;
@@ -101,4 +101,4 @@ ZRGBA_POD& ZRGBA_POD::operator-=(const ZRGBA_POD& other)
 	return *this;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

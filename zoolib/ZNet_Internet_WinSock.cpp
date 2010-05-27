@@ -35,13 +35,13 @@ ZMACRO_MSVCStaticLib_cpp(Net_Internet_WinSock)
 
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_NameLookup
 :	public ZFunctionChain_T<ZRef<ZNetNameLookup>, ZNetName_Internet::LookupParam_t>
@@ -81,7 +81,7 @@ class Make_Endpoint
 #pragma mark -
 #pragma mark * InitializeWinSock
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class InitializeWinSock
 	{
@@ -518,6 +518,6 @@ void ZNetEndpoint_TCP_WinSock::Imp_Abort()
 	::shutdown(fSOCKET, 2);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Net_Internet_WinSock)

@@ -49,7 +49,7 @@ extern "C" {
 using std::min;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using namespace ZDCPixmapNS;
 
@@ -57,7 +57,7 @@ using namespace ZDCPixmapNS;
 #pragma mark -
 #pragma mark * JPEGErrorMgr
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class JPEGErrorMgr : public jpeg_error_mgr
 	{
@@ -131,7 +131,7 @@ void JPEGErrorMgr::spReset(j_common_ptr cinfo)
 #pragma mark -
 #pragma mark * JPEGWriter
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class JPEGWriter : public jpeg_destination_mgr
 	{
@@ -207,7 +207,7 @@ void JPEGWriter::spTerminate(j_compress_ptr iCInfo)
 #pragma mark -
 #pragma mark * JPEGReader
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class JPEGReader : public jpeg_source_mgr
 	{
@@ -524,6 +524,6 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 	::jpeg_destroy_decompress(&theJDS);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(JPEGLib)

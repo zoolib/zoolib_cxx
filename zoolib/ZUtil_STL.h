@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZUtil_STL {
 
@@ -287,6 +287,6 @@ void sInsertMustNotContain(const int iDebugLevel, std::map<K, V>& ioMap, K iKey,
 
 } // namespace ZUtil_STL
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZUtil_STL__

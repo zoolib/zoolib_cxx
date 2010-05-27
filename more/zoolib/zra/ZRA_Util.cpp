@@ -50,7 +50,7 @@ string Problem::GetDescription() const
 #pragma mark -
 #pragma mark * Anonymous
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Doer
 :	public virtual ZVisitor_Do_T<RelHead>

@@ -27,7 +27,7 @@ using std::string;
 #pragma mark -
 #pragma mark * ZAnyBase, copied/reworked from boost::any
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 ZAnyBase::ZAnyBase()
 :	content(0)
@@ -64,13 +64,13 @@ const void* ZAnyBase::voidstar() const
 void* ZAnyBase::voidstar()
 	{ return content ? content->voidstar() : nullptr; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZAny
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 ZAny::operator operator_bool_type() const
 	{ return operator_bool_generator_type::translate(this->type() != typeid(void)); }
@@ -81,13 +81,13 @@ void ZAny::Clear()
 	this->swap(temp);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Coercion
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 bool sQCoerceBool(const ZAny& iAny, bool& oVal)
 	{
@@ -234,4 +234,4 @@ double sCoerceReal(const ZAny& iAny)
 	return 0.0;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

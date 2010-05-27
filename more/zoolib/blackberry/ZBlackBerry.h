@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <set>
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZBlackBerry {
 
@@ -166,6 +166,6 @@ public:
 
 } // namespace ZBlackBerry
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZBlackBerry__

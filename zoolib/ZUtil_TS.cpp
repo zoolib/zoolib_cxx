@@ -36,7 +36,7 @@ using std::pair;
 using std::runtime_error;
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZUtil_TS {
 
@@ -382,4 +382,4 @@ void sWriteMagicText(const ZStreamW& iStreamW)
 
 } // namespace ZUtil_TS
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

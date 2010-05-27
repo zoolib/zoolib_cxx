@@ -27,14 +27,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "unicode/unorm.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZUnicode {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUnicode, normalization, ICU
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 string16 sNormalized(const string16& iString, ENormForm iNormForm)
 	{
@@ -82,6 +82,6 @@ class Function
 } // namespace ZANONYMOUS
 
 } // namespace ZUnicode
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(ICU)

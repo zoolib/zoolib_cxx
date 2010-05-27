@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNet.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -148,4 +148,4 @@ ZNetEndpointDG::ZNetEndpointDG()
 ZNetEndpointDG::~ZNetEndpointDG()
 	{}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

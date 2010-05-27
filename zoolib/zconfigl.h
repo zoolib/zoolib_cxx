@@ -28,19 +28,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define ZCONFIG(a, b)\
 	((ZCONFIG_##a##_##b) && (((ZCONFIG_##a) & (ZCONFIG_##a##_##b))==(ZCONFIG_##a##_##b)))
 
-// Disable some ZCONFIG_XXX stuff, to flush out older code.
-#undef ZCONFIG_OS
-#define ZCONFIG_OS $@ZCONFIG_OS_Is_Disabled
-
-#undef ZCONFIG_API_Graphics
-#define ZCONFIG_API_Graphics $@ZCONFIG_API_Graphics_Is_Disabled
-
-#undef ZCONFIG_API_OSWindow
-#define ZCONFIG_API_OSWindow $@ZCONFIG_API_OSWindow_Is_Disabled
-
-#undef ZCONFIG_API_Thread
-#define ZCONFIG_API_Thread $@ZCONFIG_API_Thread_Is_Disabled
-
 // =================================================================================================
 // Compiler
 
@@ -184,39 +171,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef ZCONFIG_Debug
 #	error "Can't figure out if we're debugging."
-#endif
-
-// =================================================================================================
-// Declare namespace std and use it -- injecting all std names into global
-// namespace. A necessary hack until we've gone through all source and done this on
-// a case by case basis. This can be switched *off* by defining ZCONFIG_NamespaceHack
-// as zero in your zconfig.h file.
-
-#ifndef ZCONFIG_NamespaceHack
-#	define ZCONFIG_NamespaceHack 0
-#endif
-
-#ifndef SKIPOMPARSE
-#	if ZCONFIG_NamespaceHack && defined(__cplusplus)
-		namespace std {}
-		using namespace std;
-#	endif
-#endif
-
-// Object Master doesn't parse anonymous namespaces, so we define
-// this symbol and use it instead.
-#define ZANONYMOUS
-
-#ifdef ZCONFIG_Suppress_Namespace_ZooLib
-#	define ZOOLIB_PREFIX 
-#	define NAMESPACE_ZOOLIB_BEGIN
-#	define NAMESPACE_ZOOLIB_END
-#	define NAMESPACE_ZOOLIB_USING
-#else
-#	define ZOOLIB_PREFIX ZooLib
-#	define NAMESPACE_ZOOLIB_BEGIN namespace ZooLib {
-#	define NAMESPACE_ZOOLIB_END }
-#	define NAMESPACE_ZOOLIB_USING using namespace ZooLib;
 #endif
 
 // =================================================================================================

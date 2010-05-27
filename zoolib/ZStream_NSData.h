@@ -28,12 +28,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZData_NS.h"
 #include "zoolib/ZStream_Data_T.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 typedef ZStreamRPos_Data_T<ZData_NS> ZStreamRPos_NSData;
 typedef ZStreamRWPos_Data_T<ZData_NS> ZStreamRWPos_NSData;
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Cocoa)
 

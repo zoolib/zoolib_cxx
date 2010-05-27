@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -55,6 +55,6 @@ void sCreateThunks_MachOCalledByCFM(void* ioFuncs, size_t iCount, std::vector<ch
 
 } // namespace ZUtil_MacOSX
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZUtil_MacOSX__

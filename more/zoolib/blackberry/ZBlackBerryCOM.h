@@ -34,7 +34,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZBlackBerryCOM {
 
@@ -166,7 +166,7 @@ ZWinCOM_CLASS_(IDeviceManager, IUnknown,
 
 } // namespace ZBlackBerryCOM
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 

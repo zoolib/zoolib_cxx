@@ -31,7 +31,7 @@ using std::strcmp;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 template <> int sCompare_T(const ZVal_Any& iL, const ZVal_Any& iR)
 	{ return iL.Compare(iR); }
@@ -562,4 +562,4 @@ ZMap_Any::Map_t::iterator ZMap_Any::pTouch(const Index_t& iIndex)
 		}
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

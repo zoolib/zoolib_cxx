@@ -26,11 +26,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 template <> int sCompare_T(const std::string& iL, const std::string& iR)
 	{ return iL.compare(iR); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZCompare_String__

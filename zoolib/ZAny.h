@@ -48,7 +48,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	#endif
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZAnyBase
 	{
@@ -139,13 +139,13 @@ const ValueType* ZAnyBaseCast(const ZAnyBase* operand)
 	return &static_cast<ZAnyBase::holder<ValueType>*>(operand->content)->held;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZAny
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZAny : private ZAnyBase
 	{
@@ -259,13 +259,13 @@ template<typename ValueType>
 const ValueType* ZAnyCast(const ZAny* operand)
 	{ return operand->PGet_T<ValueType>(); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZAny coercion
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 ZQ_T<bool> sQCoerceBool(const ZAny& iAny);
 bool sQCoerceBool(const ZAny& iAny, bool& oVal);
@@ -282,6 +282,6 @@ bool sQCoerceReal(const ZAny& iAny, double& oVal);
 double sDCoerceReal(double iDefault, const ZAny& iAny);
 double sCoerceReal(const ZAny& iAny);
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZAny__

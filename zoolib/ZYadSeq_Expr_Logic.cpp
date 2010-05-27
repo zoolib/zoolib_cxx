@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYadSeq_Expr_Logic.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -96,4 +96,4 @@ void ZYadSeqRPos_Expr_Logic::SetPosition(uint64 iPosition)
 uint64 ZYadSeqRPos_Expr_Logic::GetSize()
 	{ return fYadSeqRPos->GetSize(); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

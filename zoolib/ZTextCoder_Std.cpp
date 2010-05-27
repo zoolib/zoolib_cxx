@@ -30,13 +30,13 @@ ZMACRO_MSVCStaticLib_cpp(TextCoder_Std)
 
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_Decoder
 :	public ZFunctionChain_T<ZTextDecoder*, const string&>
@@ -567,4 +567,4 @@ void ZTextEncoder_CP850::Encode(const UTF32* iSource, size_t iSourceCU, size_t* 
 		*oDestBytes = localDest - static_cast<uint8*>(oDest);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

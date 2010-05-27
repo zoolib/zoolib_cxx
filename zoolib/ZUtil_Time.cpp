@@ -50,7 +50,7 @@ using std::string;
 #	define DO_IT_OURSELVES 0
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -480,4 +480,4 @@ string ZUtil_Time::sAsString_ISO8601_us(ZTime iTime, bool iIncludeT)
 	return ZTime();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

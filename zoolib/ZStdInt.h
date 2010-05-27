@@ -136,7 +136,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #endif // defined(ZStdInt_ProjectHeader)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // Pull the ZStdInt names into namespace ZooLib. If you'd like to use
 // these names unadorned, you can do 'using namespace ZooLib' or
@@ -165,6 +165,6 @@ enum { ZLongIs64Bit = ZIntTrait_T<sizeof(long)>::eIs64Bit };
 
 enum { ZIntIs64Bit = ZIntTrait_T<sizeof(int)>::eIs64Bit };
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZStdInt__

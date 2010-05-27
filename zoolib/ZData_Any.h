@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZRef.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -77,6 +77,6 @@ private:
 template <> inline int sCompare_T(const ZData_Any& iL, const ZData_Any& iR)
 	{ return iL.Compare(iR); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZData_Any__

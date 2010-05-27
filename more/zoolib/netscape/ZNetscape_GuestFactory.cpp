@@ -43,7 +43,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdexcept>
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::runtime_error;
 using std::vector;
@@ -482,4 +482,4 @@ ZRef<ZNetscape::GuestFactory> ZNetscape::sMakeGuestFactory(const std::string& iN
 	return ZRef<ZNetscape::GuestFactory>();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

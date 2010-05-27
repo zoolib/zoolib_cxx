@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream.h"
 #include "zoolib/ZYad_Std.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -80,6 +80,6 @@ ZRef<ZYadR> sMakeYadR(ZRef<ZStreamerU> iStreamerU);
 
 } // namespace ZYad_Bencode
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZYad_Bencode__

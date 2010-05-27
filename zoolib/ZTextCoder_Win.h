@@ -41,7 +41,7 @@ ZMACRO_MSVCStaticLib_Reference(TextCoder_Win)
 
 #include "zoolib/ZCompat_Win.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -87,7 +87,7 @@ private:
 	UINT fDestCodePage;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(TextCoder_Win)
 

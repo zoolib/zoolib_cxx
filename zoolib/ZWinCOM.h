@@ -38,7 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Necessary when building with Cocotron
 #include <ole2.h>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 
@@ -190,7 +190,7 @@ bool operator==(const string16& l, const String& r);
 
 } // namespace ZWinCOM
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
@@ -198,7 +198,7 @@ NAMESPACE_ZOOLIB_END
 
 namespace std {
 
-inline void swap(ZOOLIB_PREFIX::ZWinCOM::Variant& a, ZOOLIB_PREFIX::ZWinCOM::Variant& b)
+inline void swap(ZooLib::ZWinCOM::Variant& a, ZooLib::ZWinCOM::Variant& b)
 	{ a.swap(b); }
 
 } // namespace std

@@ -40,7 +40,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZStreamer.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZUSBDevice;
 class ZUSBInterfaceInterface;
@@ -151,7 +151,7 @@ private:
 	bool fOpen;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(USB_OSX)
 

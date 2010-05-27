@@ -31,7 +31,7 @@ namespace ZValBase_Any {
 #pragma mark -
 #pragma mark * Iterator (anonymous)
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Iterator : public ZQE::Iterator
 	{

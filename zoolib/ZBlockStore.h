@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h" // For ZStreamerRWPos
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZBlockStore
 	{
@@ -56,6 +56,6 @@ public:
 	virtual size_t EfficientSize() = 0;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZBlockStore__

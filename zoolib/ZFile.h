@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTime.h"
 #include "zoolib/ZTrail.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZFileIterRep;
 class ZFileLoc;
@@ -624,6 +624,6 @@ private:
 	const ZStreamRWPos& fStream;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZFile__

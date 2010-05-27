@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::runtime_error;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZBlackBerry {
 
@@ -452,6 +452,6 @@ void Manager_OSXUSB::Detached(ZRef<ZUSBDevice> iUSBDevice)
 
 } // namespace ZBlackBerry
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(BlackBerry_OSXUSB)

@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 #include "zoolib/tuplebase/ZTBQuery.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZUtil_TQLConvert {
 
@@ -37,6 +37,6 @@ ZRef<ZRA::Expr_Rel> sConvert(const ZTBQuery& iTBQuery, bool iVerbose);
 
 } // namespace ZUtil_TQLConvert
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZUtil_TQLConvert__

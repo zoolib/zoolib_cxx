@@ -31,7 +31,7 @@ using std::search;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -433,4 +433,4 @@ ZTrail ZTrail::sTrailFromTo(const vector<string>& iSource, const vector<string>&
 ZTrail operator+(const string& iPOSIXTrail, const ZTrail& iTrail)
 	{ return ZTrail(iPOSIXTrail) + iTrail; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

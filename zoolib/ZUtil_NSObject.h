@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal_Any.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -86,7 +86,7 @@ NSObject* sAsNSObject(const ZAny& iVal);
 
 } // namespace ZUtil_NSObject
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 @interface NSObject (ZAny_Additions)
 -(ZooLib::ZAny)asAnyWithDefault:(const ZooLib::ZAny&)iDefault;

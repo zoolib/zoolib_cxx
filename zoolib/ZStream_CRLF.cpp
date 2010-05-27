@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static char spCR[] = { '\r' };
 static char spLF[] = { '\n' };
@@ -368,4 +368,4 @@ void ZStreamW_CRLFInsert::Imp_Flush()
 	fStreamSink.Flush();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTuple.h"
 #include "zoolib/ZTxn.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZTBRepTransaction;
 
@@ -101,6 +101,6 @@ public:
 	virtual void Commit(Callback_Commit_t iCallback_Commit, void* iRefcon) = 0;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZTBRep__

@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::max;
 using std::min;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -144,4 +144,4 @@ ZStrimmerW_Tee::~ZStrimmerW_Tee()
 const ZStrimW& ZStrimmerW_Tee::GetStrimW()
 	{ return fStrim; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

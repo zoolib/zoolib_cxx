@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZStreamerRWCon_SSL.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 ZRef<ZStreamerRWCon> sMake_StreamerRWCon_SSL(
 	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
@@ -32,4 +32,4 @@ ZRef<ZStreamerRWCon> sMake_StreamerRWCon_SSL(
 	return ZFunctionChain_T<ZRef<ZStreamerRWCon>, MakeSSLParam_t>::sInvoke(theParam);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

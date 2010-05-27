@@ -47,7 +47,7 @@ using std::vector;
 #pragma mark -
 #pragma mark * DoRename (anonymous)
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class DoRename
 :	public virtual ZVisitor_Expr_Op_DoTransform_T<ZExpr_Logic>
@@ -80,7 +80,7 @@ void DoRename::Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr)
 #pragma mark -
 #pragma mark * MakeSFW (anonymous)
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class MakeSFW
 :	public virtual ZVisitor_Expr_Op_DoTransform_T<Expr_Rel_SFW>
@@ -281,7 +281,7 @@ ZRef<Expr_Rel_SFW> sConvert(ZRef<Expr_Rel> iExpr)
 #pragma mark -
 #pragma mark * ToStrim_SQL (anonymous)
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class ToStrim_SQL
 :	public virtual ZVisitor_DoToStrim

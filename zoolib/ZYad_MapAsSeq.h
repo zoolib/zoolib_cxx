@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZYad.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -32,6 +32,6 @@ NAMESPACE_ZOOLIB_BEGIN
 
 ZRef<ZYadSeqR> sMapAsSeq(const std::string& iNamePropName, ZRef<ZYadMapR> iYadMap);
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZYad_MapAsSeq__

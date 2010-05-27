@@ -41,7 +41,7 @@ and on Windows,
 
 #include <boost/regex.hpp>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 
@@ -115,6 +115,6 @@ bool ZRegex::Matches(const string& iTarget) const
 	return false;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Regex)

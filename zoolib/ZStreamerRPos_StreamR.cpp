@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamerRPos_StreamR.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -39,4 +39,4 @@ const ZStreamR& ZStreamerRPos_StreamR::GetStreamR()
 const ZStreamRPos& ZStreamerRPos_StreamR::GetStreamRPos()
 	{ return fStreamRPos_StreamR; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

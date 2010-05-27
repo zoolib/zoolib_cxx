@@ -43,7 +43,7 @@ using std::string;
 #	define va_copy(dest, src) dest = src
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 
@@ -347,4 +347,4 @@ void ZString::sToPString(const char* inString, unsigned char* outPString, size_t
 	outPString[0] = sourceLength;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

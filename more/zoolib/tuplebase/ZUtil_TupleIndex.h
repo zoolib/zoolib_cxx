@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/tuplebase/ZTupleIndex.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -47,6 +47,6 @@ ZRef<ZTupleIndexFactory> sCreate_String(const std::string& iPropName);
 
 } // namespace ZUtil_TupleIndex
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZUtil_TupleIndex__

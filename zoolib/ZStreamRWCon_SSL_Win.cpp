@@ -53,13 +53,13 @@ using std::min;
 using std::runtime_error;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_SSL
 :	public ZFunctionChain_T<ZRef<ZStreamerRWCon>, MakeSSLParam_t>
@@ -572,6 +572,6 @@ const ZStreamWCon& ZStreamerRWCon_SSL_Win::GetStreamWCon()
 ZStreamRWCon_SSL_Win& ZStreamerRWCon_SSL_Win::GetStream()
 	{ return fStream; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)

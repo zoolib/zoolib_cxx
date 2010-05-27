@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamR_SkipAllOnDestroy.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -46,4 +46,4 @@ ZStreamR_SkipAllOnDestroy::~ZStreamR_SkipAllOnDestroy()
 		{}
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

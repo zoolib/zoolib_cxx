@@ -29,8 +29,7 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
-//NAMESPACE_ZOOLIB_BEGIN
-NAMESPACE_ZOOLIB_USING
+using namespace ZooLib;
 
 #if ZCONFIG_API_Enabled(StackCrawl)
 
@@ -252,7 +251,7 @@ static void spGetSymNameAndOffset(const void* iAddress, string& oSymName, size_t
 #include <link.h>
 #include <unistd.h>
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Symbols
 	{

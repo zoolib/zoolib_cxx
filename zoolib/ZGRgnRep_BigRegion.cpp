@@ -22,13 +22,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFunctionChain.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Helper functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 bool sDecomposeRepProc(const ZRect& iRect, void* iRefcon)
 	{
@@ -61,7 +61,7 @@ ZGRgnRep_BigRegion* sMakeRep(const ZRef<ZGRgnRep>& iRep)
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_Rect
 :	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRect&>
@@ -106,7 +106,7 @@ ZGRgnRep_BigRegion::ZGRgnRep_BigRegion(const ZBigRegion& iBigRegion)
 ZGRgnRep_BigRegion::~ZGRgnRep_BigRegion()
 	{}
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 struct DecomposeBigRegion_t
 	{
@@ -238,4 +238,4 @@ ZRef<ZGRgnRep> ZGRgnRep_BigRegion::Xoring(const ZRef<ZGRgnRep>& iRep)
 ZBigRegion& ZGRgnRep_BigRegion::GetBigRegion()
 	{ return fBigRegion; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

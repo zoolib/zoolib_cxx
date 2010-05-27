@@ -15,8 +15,7 @@
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
-NAMESPACE_ZOOLIB_USING
-
+using namespace ZooLib;
 using namespace ZRA;
 
 using std::map;

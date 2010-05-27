@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZStdInt.h" // For size_t
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -55,7 +55,7 @@ DWORD sWrite(HANDLE iHANDLE, const uint64* iOffset,
 
 } // namespace ZUtil_WinFile
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 

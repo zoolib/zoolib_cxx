@@ -31,7 +31,7 @@ using std::set;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static ZTuple spTupleFromNode(const ZRef<ZTBQueryNode>& iNode);
 static ZRef<ZTBQueryNode> spNodeFromTuple(const ZTuple& iTuple);
@@ -1198,4 +1198,4 @@ int ZTBQueryNode_GT_ID_FromSource::pCompare_ID_FromSource(
 int ZTBQueryNode_GT_Property::pCompare_Property(ZTBQueryNode_Property* iProperty)
 	{ return 1; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

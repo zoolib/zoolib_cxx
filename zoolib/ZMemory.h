@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstddef> // For std::size_t
 #include <cstring> // For std::memcmp, std::memcpy, std::memmove and std::memset
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -60,6 +60,6 @@ template <class T>
 void ZMemZero_T(T& oT)
 	{ ZMemZero(&oT, sizeof(oT)); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZMemory__

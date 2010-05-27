@@ -28,14 +28,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE2(CoreFoundation,CFString.h)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZUnicode {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUnicode, normalization, CF
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 #if defined(kCFCoreFoundationVersionNumber10_2)
 
@@ -99,6 +99,6 @@ class Function
 } // namespace ZANONYMOUS
 
 } // namespace ZUnicode
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CFType)

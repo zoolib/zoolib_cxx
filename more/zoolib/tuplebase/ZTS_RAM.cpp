@@ -34,7 +34,7 @@ using std::runtime_error;
 using std::set;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #define kDebug_TS_RAM 2
 
@@ -412,4 +412,4 @@ void ZTS_RAM::GetData(uint64& oNextUnusedID, map<uint64, ZTuple>& oTuples)
 	oTuples = fTuples;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

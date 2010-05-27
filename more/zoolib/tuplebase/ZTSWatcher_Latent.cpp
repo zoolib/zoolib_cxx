@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/tuplebase/ZTSWatcher_Latent.h"
 #include "zoolib/ZUtil_STL.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::map;
 using std::pair;
@@ -579,5 +579,5 @@ void ZTSWatcher_Latent::pCallback()
 void ZTSWatcher_Latent::spCallback(void* iRefcon)
 	{ static_cast<ZTSWatcher_Latent*>(iRefcon)->pCallback(); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 

@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // ==================================================
 #pragma mark -
@@ -144,4 +144,4 @@ ZRef<ZNetEndpoint_ADSP> ZNetEndpoint_ADSP::sCreateConnectedEndpoint(
 	return ZRef<ZNetEndpoint_ADSP>();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

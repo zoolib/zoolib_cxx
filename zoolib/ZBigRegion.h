@@ -75,7 +75,7 @@ SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -247,6 +247,6 @@ public:
 typedef ZAccumulator_T<ZBigRegion, ZBigRegionUnioner_t, std::vector<ZBigRegion> >
 	ZBigRegionAccumulator;
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZBigRegion__

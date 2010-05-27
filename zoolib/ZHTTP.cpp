@@ -33,7 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <ctype.h>
 #include <stdio.h> // For sprintf
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::max;
 using std::min;
@@ -1890,4 +1890,4 @@ void StreamW_Chunked::pFlush()
 
 } // namespace ZHTTP
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

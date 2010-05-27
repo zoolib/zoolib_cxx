@@ -24,13 +24,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ZMACRO_MSVCStaticLib_cpp(WorkerRunner_Thread)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Maker
 :	public ZFunctionChain_T<ZRef<ZWorkerRunner>, ZRef<ZWorker> >
@@ -162,4 +162,4 @@ void ZWorkerRunner_Thread::pRun()
 void ZWorkerRunner_Thread::spRun(ZRef<ZWorkerRunner_Thread> iParam)
 	{ iParam->pRun(); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

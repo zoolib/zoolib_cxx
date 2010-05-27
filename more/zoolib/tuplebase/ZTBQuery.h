@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <set>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -633,6 +633,6 @@ inline bool ZTBQuery::operator>(const ZTBQuery& iOther) const
 inline bool ZTBQuery::operator>=(const ZTBQuery& iOther) const
 	{ return !(*this < iOther); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZTBQuery__

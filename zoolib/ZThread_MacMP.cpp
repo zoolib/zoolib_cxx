@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // For UpTime etc
 #include ZMACINCLUDE3(CoreServices,CarbonCore,DriverServices.h)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -136,6 +136,6 @@ void sSleep(double iDuration)
 
 } // namespace ZThread_MacMP
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Thread_MacMP)

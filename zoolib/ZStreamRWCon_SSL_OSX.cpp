@@ -27,13 +27,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE3(CoreServices,CarbonCore,MacErrors.h) // For ioErr
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_SSL
 :	public ZFunctionChain_T<ZRef<ZStreamerRWCon>, MakeSSLParam_t>
@@ -203,6 +203,6 @@ const ZStreamWCon& ZStreamerRWCon_SSL_OSX::GetStreamWCon()
 ZStreamRWCon_SSL_OSX& ZStreamerRWCon_SSL_OSX::GetStream()
 	{ return fStream; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(MacOSX)

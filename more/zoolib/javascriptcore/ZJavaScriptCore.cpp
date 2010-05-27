@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZVal_Any.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::map;
 using std::string;
@@ -984,4 +984,4 @@ JSClassRef ObjectImp::spGetJSClass()
 
 } // namespace ZJavaScriptCore
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -29,7 +29,7 @@ using std::pair;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static const int kDebug = 2;
 
@@ -50,7 +50,7 @@ static inline int spCompare(const void* iLeft, size_t iLeftLength,
 	return int(iLeftLength) - int(iRightLength);
 	}
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 struct PNRep
 	{
@@ -476,4 +476,4 @@ void ZTName::String::ToStream(const ZStreamW& iStreamW) const
 	iStreamW.Write(fBuffer, fSize);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

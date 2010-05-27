@@ -41,7 +41,7 @@ ZMACRO_MSVCStaticLib_Reference(TextCoder_ICU)
 
 struct UConverter;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -93,7 +93,7 @@ private:
 	UConverter* fConverter;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(TextCoder_ICU)
 

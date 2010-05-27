@@ -42,7 +42,7 @@ A million repetitions of "a"
 
 using std::min;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static void spCheckIt(ZStream_SHA1::Context& ioContext, const uint8 iDigest[20])
 	{
@@ -393,4 +393,4 @@ void ZStreamW_SHA1::GetDigest(uint8 oDigest[20])
 	ZStream_SHA1::sFinal(tempContext, oDigest);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

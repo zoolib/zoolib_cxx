@@ -35,7 +35,7 @@ using std::find;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #define kDebug_File_Win 2
 /*!\file
@@ -48,7 +48,7 @@ If fBase is empty then fComps must also be empty and we represent the root.
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_FileLoc
 :	public ZFunctionChain_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>
@@ -422,7 +422,7 @@ static ZTime spAsZTime(const FILETIME& iFT)
 #pragma mark -
 #pragma mark * RealRep_Win
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class RealRep_Win : public ZFileIterRep_Std::RealRep
 	{
@@ -1014,7 +1014,7 @@ string ZFileLoc_Win::pGetPath()
 #pragma mark -
 #pragma mark * RealRep_WinNT
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class RealRep_WinNT : public ZFileIterRep_Std::RealRep
 	{
@@ -2097,6 +2097,6 @@ ZStreamerRWPos_File_Win::~ZStreamerRWPos_File_Win()
 const ZStreamRWPos& ZStreamerRWPos_File_Win::GetStreamRWPos()
 	{ return fStream; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(File_Win)

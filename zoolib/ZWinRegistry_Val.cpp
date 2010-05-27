@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZByteSwap.h"
 #include "zoolib/ZUnicode.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZWinRegistry {
 
@@ -544,6 +544,6 @@ HKEY& KeyRef::OParam()
 
 } // namespace ZWinRegistry
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)

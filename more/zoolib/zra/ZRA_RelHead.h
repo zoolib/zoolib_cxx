@@ -138,7 +138,7 @@ Rename_t sInvert(const Rename_t& iRename);
 
 namespace std {
 template <class T>
-inline void swap(ZOOLIB_PREFIX::ZRA::RelHead& a, ZOOLIB_PREFIX::ZRA::RelHead& b)
+inline void swap(ZooLib::ZRA::RelHead& a, ZooLib::ZRA::RelHead& b)
 	{ a.swap(b); }
 }
 

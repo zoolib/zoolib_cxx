@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamRW_FlushOnRead.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -172,4 +172,4 @@ const ZStreamR& ZStreamerRW_FlushOnRead::GetStreamR()
 const ZStreamW& ZStreamerRW_FlushOnRead::GetStreamW()
 	{ return fStream; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

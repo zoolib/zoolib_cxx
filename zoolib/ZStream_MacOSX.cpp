@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_MacOSX.h"
 #include "zoolib/ZStreamer.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
 
@@ -91,7 +91,7 @@ void ZStreamW_CFStream::Imp_Write(const void* iSource, size_t iCount, size_t* oC
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 size_t sGetBytesR(void* iInfo, void* oBuffer, size_t iCount)
 	{
@@ -134,7 +134,7 @@ CGDataProviderRef ZStream_MacOSX::sCGDataProviderCreate(ZRef<ZStreamerR> iStream
 #pragma mark -
 #pragma mark * ZStream_MacOSX::sCGDataProviderCreateRewind
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 size_t sGetBytesRewind(void* iInfo, void* oBuffer, size_t iCount)
 	{
@@ -177,7 +177,7 @@ CGDataProviderRef ZStream_MacOSX::sCGDataProviderCreateRewind(ZRef<ZStreamerRPos
 #pragma mark -
 #pragma mark * CGDataConsumerRef, ZStreamerW
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 size_t sPutBytesW(void* iInfo, const void* iBuffer, size_t iCount)
 	{
@@ -206,4 +206,4 @@ CGDataConsumerRef ZStream_MacOSX::sCGDataConsumerCreate(ZRef<ZStreamerW> iStream
 
 #endif // ZCONFIG_SPI_Enabled(CoreGraphics)
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

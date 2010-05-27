@@ -37,7 +37,7 @@ using std::set;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #ifdef ZCONFIG_TS_Watchable_DumpStuff
 #	define kDebug_DumpStuff ZCONFIG_TS_Watchable_DumpStuff
@@ -1018,4 +1018,4 @@ ZTSWatcherFactory_TS_Watchable::ZTSWatcherFactory_TS_Watchable(ZRef<ZTS_Watchabl
 ZRef<ZTSWatcher> ZTSWatcherFactory_TS_Watchable::MakeTSWatcher()
 	{ return fTS_Watchable->NewWatcher(); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

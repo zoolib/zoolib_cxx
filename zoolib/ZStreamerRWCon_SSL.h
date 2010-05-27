@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamer.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 struct MakeSSLParam_t
 	{
@@ -35,6 +35,6 @@ struct MakeSSLParam_t
 ZRef<ZStreamerRWCon> sMake_StreamerRWCon_SSL(
 	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZStreamerRWCon_SSL__

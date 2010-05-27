@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZVal_AppleEvent;
 class ZSeq_AppleEvent;
@@ -262,7 +262,7 @@ private:
 	AEKeyword pKeyOf(size_t iIndex) const;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
@@ -270,13 +270,13 @@ NAMESPACE_ZOOLIB_END
 
 namespace std {
 
-inline void swap(ZOOLIB_PREFIX::ZVal_AppleEvent& a, ZOOLIB_PREFIX::ZVal_AppleEvent& b)
+inline void swap(ZooLib::ZVal_AppleEvent& a, ZooLib::ZVal_AppleEvent& b)
 	{ a.swap(b); }
 
-inline void swap(ZOOLIB_PREFIX::ZSeq_AppleEvent& a, ZOOLIB_PREFIX::ZSeq_AppleEvent& b)
+inline void swap(ZooLib::ZSeq_AppleEvent& a, ZooLib::ZSeq_AppleEvent& b)
 	{ a.swap(b); }
 
-inline void swap(ZOOLIB_PREFIX::ZMap_AppleEvent& a, ZOOLIB_PREFIX::ZMap_AppleEvent& b)
+inline void swap(ZooLib::ZMap_AppleEvent& a, ZooLib::ZMap_AppleEvent& b)
 	{ a.swap(b); }
 
 } // namespace std

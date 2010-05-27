@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -126,4 +126,4 @@ void ZStrimU_StreamUTF8Buffered::Imp_Unread(UTF32 iCP)
 size_t ZStrimU_StreamUTF8Buffered::Imp_UnreadableLimit()
 	{ return fBuffer.size(); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

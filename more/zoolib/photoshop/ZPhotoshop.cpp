@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/photoshop/ZPhotoshop.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZPhotoshop {
 
@@ -30,4 +30,4 @@ namespace ZPhotoshop {
 
 } // namespace ZPhotoshop
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

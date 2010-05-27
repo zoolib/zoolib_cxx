@@ -42,7 +42,7 @@ using std::string;
 #pragma mark -
 #pragma mark * Static helpers
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 void spWrite(const string& iString, const ZStrimW& s)
 	{ s.Write(iString); }
@@ -68,7 +68,7 @@ void spWrite_EffectiveRelHeadComment(ZRef<Expr_Rel> iExpr, const ZStrimW& iStrim
 #pragma mark -
 #pragma mark * Visitor_DoToStrim
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Visitor_DoToStrim
 :	public virtual ZVisitor_Expr_Logic_ValPred_DoToStrim

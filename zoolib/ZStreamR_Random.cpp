@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamR_Random.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -64,4 +64,4 @@ void ZStreamR_Random::SetSeed(int32 iSeed)
 	fState = iSeed ? iSeed : 1;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZVisitor_Expr_Logic_DoToStrim.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -57,4 +57,4 @@ void ZVisitor_Expr_Logic_DoToStrim::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRe
 	pStrimW() << ")";
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

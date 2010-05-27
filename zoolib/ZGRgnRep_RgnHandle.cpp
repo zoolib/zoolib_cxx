@@ -26,13 +26,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFunctionChain.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Helper functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 RgnHandle sCopyRgn(RgnHandle iSource)
 	{
@@ -105,7 +105,7 @@ RgnHandle sMakeRgnHandle(const ZRef<ZGRgnRep>& iRep)
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_Rect
 :	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRect&>
@@ -148,7 +148,7 @@ ZGRgnRep_RgnHandle::ZGRgnRep_RgnHandle(RgnHandle iRgnHandle)
 ZGRgnRep_RgnHandle::~ZGRgnRep_RgnHandle()
 	{ ::DisposeRgn(fRgnHandle); }
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 struct DecomposeRgnHandle_t
 	{
@@ -345,6 +345,6 @@ ZRef<ZGRgnRep> ZGRgnRep_RgnHandle::Xoring(const ZRef<ZGRgnRep>& iRep)
 RgnHandle ZGRgnRep_RgnHandle::GetRgnHandle()
 	{ return fRgnHandle; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(GRgnRep_RgnHandle)

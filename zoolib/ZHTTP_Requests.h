@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZHTTP.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -50,6 +50,6 @@ ZRef<ZStreamerR> sPostRaw(
 
 } // namespace ZHTTP
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZHTTP_Requests__

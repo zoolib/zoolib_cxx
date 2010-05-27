@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZYad_FS.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::min;
 using std::string;
@@ -169,4 +169,4 @@ ZRef<ZYadR> ZYad_FS::sMakeYadR(const ZFileSpec& iFS)
 	return ZRef<ZYadR>();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

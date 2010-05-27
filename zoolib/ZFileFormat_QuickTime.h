@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZFileFormat_QuickTime {
 
@@ -156,6 +156,6 @@ private:
 
 } // namespace ZFileFormat_QuickTime
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZFileFormat_QuickTime__

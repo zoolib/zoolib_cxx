@@ -42,7 +42,7 @@ using std::set;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #define ASSERTLOCKED(a) ZAssertStop(kDebug, a.IsLocked())
 #define ASSERTUNLOCKED(a) ZAssertStop(kDebug, !a.IsLocked())
@@ -81,7 +81,7 @@ public:
 #pragma mark -
 #pragma mark * Non-releasing allocator
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 // RealAllocator and TTAllocator, names I'm not overly fond of.
 // RealAllocator is a simple class that allocates space
@@ -1197,4 +1197,4 @@ void ZTBRep_TS::pReleaseTupleInUse(TupleInUse& iTupleInUse)
 	ZUtil_STL::sEraseMustContain(kDebug, fTuplesInUse, iTupleInUse.fID);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

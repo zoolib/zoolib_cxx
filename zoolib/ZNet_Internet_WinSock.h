@@ -43,7 +43,7 @@ ZMACRO_MSVCStaticLib_Reference(Net_Internet_WinSock)
 
 #include <winsock.h>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -152,7 +152,7 @@ private:
 	SOCKET fSOCKET;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Net_Internet_WinSock)
 

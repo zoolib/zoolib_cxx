@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // ==================================================
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZString {
 
@@ -109,6 +109,6 @@ void sToPString(const char* iString, unsigned char* oPString, size_t iMaxLength)
 
 } // namespace ZString
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZString__

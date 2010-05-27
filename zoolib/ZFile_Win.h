@@ -40,7 +40,7 @@ ZMACRO_MSVCStaticLib_Reference(File_Win)
 
 #if ZCONFIG_API_Enabled(File_Win)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -464,7 +464,7 @@ private:
 	ZStreamRWPos_File_Win fStream;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(File_Win)
 

@@ -58,7 +58,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_algorithm.h" // For min and max
 #include "zoolib/ZCompat_operator_bool.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -1346,6 +1346,6 @@ typedef ZGPoint_T<float> ZGPointf;
 typedef ZGExtent_T<float> ZGExtentf;
 typedef ZGRect_T<float> ZGRectf;
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZGeometry__

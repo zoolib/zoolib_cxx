@@ -39,7 +39,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <poll.h>
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZUtil_POSIXFD {
 
 // =================================================================================================
@@ -105,6 +105,6 @@ size_t sCountReadable(int iFD)
 	}
 
 } // namespace ZUtil_POSIXFD
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(POSIX)

@@ -29,7 +29,7 @@ namespace ZValBase {
 #pragma mark -
 #pragma mark * Visitor_DoMakeIterator (anonymous)
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Visitor_DoMakeIterator
 :	public virtual ZQE::Visitor_DoMakeIterator_Any

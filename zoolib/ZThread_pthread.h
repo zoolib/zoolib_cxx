@@ -41,7 +41,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <pthread.h>
 #include <semaphore.h>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZCnd_pthread;
 class ZMtx_pthread;
@@ -156,7 +156,7 @@ void sSleep(double iDuration);
 
 } // namespace ZThread_pthread
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Thread_pthread)
 

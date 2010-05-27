@@ -32,7 +32,7 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static const size_t kBufSize = sStackBufferSize;
 
@@ -40,7 +40,7 @@ static const size_t kBufSize = sStackBufferSize;
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_Decoder
 :	public ZFunctionChain_T<ZTextDecoder*, const string&>
@@ -310,6 +310,6 @@ void ZTextEncoder_iconv::Reset()
 	::iconv(fConverter, nullptr, 0, nullptr, 0);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(TextCoder_iconv)

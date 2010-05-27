@@ -3,7 +3,7 @@
 #include "zoolib/ZStream_POSIX.h"
 #include "zoolib/ZStrim_Stream.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static ZStreamR_FILE spStreamR_In(stdin);
 static ZStreamW_FILE spStreamW_Out(stdout);
@@ -25,4 +25,4 @@ const ZStrimW& strim_err = spStrimW_Err;
 
 } // namespace ZStdIO
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

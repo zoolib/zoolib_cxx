@@ -46,7 +46,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 typedef unsigned long DWORD;
 typedef void* LPVOID;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZMtx_Win;
 class ZSem_Win;
@@ -141,7 +141,7 @@ void sSleep(double iDuration);
 
 } // namespace ZThread_Win
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Thread_Win)
 

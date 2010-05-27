@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamerFactory_Precon.h"
 #include "zoolib/ZLog.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -77,4 +77,4 @@ ZRef<ZStreamerRWCon> ZStreamerRWConFactory_Precon::MakeStreamerRWCon()
 	return ZRef<ZStreamerRWCon>();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

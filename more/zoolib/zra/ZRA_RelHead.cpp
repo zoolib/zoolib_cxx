@@ -171,7 +171,7 @@ Rename_t sInvert(const Rename_t& iRename)
 #include "zoolib/ZStrim.h"
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 
-NAMESPACE_ZOOLIB_USING
+using namespace ZooLib;
 using namespace ZRA;
 
 const ZStrimW& operator<<(const ZStrimW& iStrimW, const RelHead& iRelHead)

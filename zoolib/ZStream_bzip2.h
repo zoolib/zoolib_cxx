@@ -38,7 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <bzlib.h>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -128,7 +128,7 @@ void sAnalyze(const ZStreamR& iStreamR, vector<pair<uint64, uint32> >& oOffsets)
 
 } // namespace ZStream_bzip2
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Stream_bzip2)
 

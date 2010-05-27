@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNet.h"
 #include "zoolib/ZTypes.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // ==================================================
 #pragma mark -
@@ -123,6 +123,6 @@ public:
 	static ZRef<ZNetEndpoint_ADSP> sCreateConnectedEndpoint(int16 iNet, uint8 iNode, int8 iSocket);
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZNet_AppleTalk__

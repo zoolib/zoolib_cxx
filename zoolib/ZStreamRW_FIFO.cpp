@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamRW_FIFO.h"
 #include "zoolib/ZUtil_STL.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::deque;
 using std::min;
@@ -164,4 +164,4 @@ void ZStreamRW_FIFO::Reset()
 	fCondition_Write.Broadcast();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_Tee.h"
 #include "zoolib/ZUtil_Strim_Tuple.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::map;
 using std::pair;
@@ -912,5 +912,5 @@ void ZTSWatcherServer::pCallback()
 void ZTSWatcherServer::spCallback(void* iRefcon)
 	{ static_cast<ZTSWatcherServer*>(iRefcon)->pCallback(); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 

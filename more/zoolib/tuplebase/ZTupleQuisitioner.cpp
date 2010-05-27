@@ -29,8 +29,8 @@ using std::vector;
 namespace std {
 
 inline void swap(
-	pair<ZStdInt::uint64, vector<const ZOOLIB_PREFIX::ZTValue*> >& a,
-	pair<ZStdInt::uint64, vector<const ZOOLIB_PREFIX::ZTValue*> >& b)
+	pair<ZStdInt::uint64, vector<const ZooLib::ZTValue*> >& a,
+	pair<ZStdInt::uint64, vector<const ZooLib::ZTValue*> >& b)
 	{
 	swap(a.first, b.first);
 	a.second.swap(b.second);
@@ -38,7 +38,7 @@ inline void swap(
 
 } // namespace std
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 
@@ -105,7 +105,7 @@ static void spExtractProps(const vector<ZTBQuery::SortSpec>& iSort, const ZTuple
 
 // =================================================================================================
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 struct CompareTuples_t
 	{
 	CompareTuples_t(ZTextCollator* ioTextCollators, const vector<ZTBQuery::SortSpec>& iSort);
@@ -225,7 +225,7 @@ static int spCompareSuffix(ZTextCollator* ioTextCollators, size_t iOffset,
 
 // =================================================================================================
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 struct ComparePrefix_t
 	{
 	ComparePrefix_t(ZTextCollator* ioTextCollators, size_t iOffset,
@@ -840,4 +840,4 @@ void ZTupleQuisitioner::Query_Intersection(const ZTBQueryNode_Combo::Intersectio
 	ioIDs.insert(ioIDs.end(), results.begin(), results.end());
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

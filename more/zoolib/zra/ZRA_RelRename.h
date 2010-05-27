@@ -84,7 +84,7 @@ private:
 
 namespace std {
 template <class T>
-inline void swap(ZOOLIB_PREFIX::ZRA::RelRename& a, ZOOLIB_PREFIX::ZRA::RelRename& b)
+inline void swap(ZooLib::ZRA::RelRename& a, ZooLib::ZRA::RelRename& b)
 	{ a.swap(b); }
 }
 

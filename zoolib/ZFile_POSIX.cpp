@@ -65,13 +65,13 @@ using std::strchr;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_FileLoc
 :	public ZFunctionChain_T<ZRef<ZFileLoc>, ZFileLoc::ELoc>
@@ -561,7 +561,7 @@ static void spGetCWD(vector<string>& oComps)
 #pragma mark -
 #pragma mark * RealRep
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class RealRep_POSIX : public ZFileIterRep_Std::RealRep
 	{
@@ -1650,6 +1650,6 @@ ZStreamerRWPos_File_POSIX::~ZStreamerRWPos_File_POSIX()
 const ZStreamRWPos& ZStreamerRWPos_File_POSIX::GetStreamRWPos()
 	{ return fStream; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(File_POSIX)

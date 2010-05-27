@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZDebug.h" // For ZAssertCompile
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZUtil_ATSUI {
 
@@ -165,6 +165,6 @@ bool Attributes::Apply(ATSUStyle iStyle)
 
 } // namespace ZUtil_ATSUI
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Util_ATSUI)

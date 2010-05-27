@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZValPredCompound.h"
 #include "zoolib/ZVisitor_Do_T.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 typedef ZValPredCompound::Sect Sect;
 typedef ZValPredCompound::SectUnion SectUnion;
@@ -190,7 +190,7 @@ bool ZValPredCompound::Matches(ZValContext& iContext, const ZVal_Any& iVal) cons
 #pragma mark -
 #pragma mark * AsValPredCompound (anonymous)
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class AsValPredCompound
 :	public virtual ZVisitor_Do_T<ZValPredCompound>
@@ -259,4 +259,4 @@ ZRef<ZExpr_Logic> sAsExpr_Logic(const ZValPredCompound& iVCF)
 	return result;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -33,7 +33,7 @@ using std::string;
 #pragma mark -
 #pragma mark * Iterator (anonymous)
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Iterator : public ZQE::Iterator
 	{
@@ -80,7 +80,7 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 #pragma mark -
 #pragma mark * Expr_Rel_Concrete (anonymous)
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Expr_Rel_Concrete : public ZValBase::Expr_Rel_Concrete
 	{

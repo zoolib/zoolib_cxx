@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -36,6 +36,6 @@ ZRef<Expr_Rel> sOptimize(ZRef<Expr_Rel> iExpr);
 
 } // namespace ZTQL
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZTQL_Optimize__

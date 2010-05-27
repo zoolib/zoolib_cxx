@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZUtil_Strim {
 
@@ -617,4 +617,4 @@ void sWriteExact(const ZStrimW& iStrimW, double iDouble)
 
 } // namespace ZUtil_Strim
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

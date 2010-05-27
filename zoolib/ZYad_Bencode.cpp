@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Bencode.h"
 #include "zoolib/ZUnicode.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 
@@ -222,4 +222,4 @@ void ZYadMapR_Bencode::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR
 ZRef<ZYadR> ZYad_Bencode::sMakeYadR(ZRef<ZStreamerU> iStreamerU)
 	{ return spMakeYadR_Bencode(iStreamerU); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

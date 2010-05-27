@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_JSONNormalize.h"
 #include "zoolib/ZYad_Std.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 
@@ -191,4 +191,4 @@ ZRef<ZYadR> ZYad_JSONNormalize::sMakeYadR(
 	ZRef<ZYadR> iYadR, bool iPreserveSeqs, bool iPreserveMaps)
 	{ return spMakeYadR_JSONNormalize(iYadR, true, iPreserveSeqs, iPreserveMaps); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

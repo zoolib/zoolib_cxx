@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZGRgn.h"
 #include "zoolib/ZFunctionChain.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -333,4 +333,4 @@ ZGRgn ZGRgn::Xoring(const ZGRgn& iOther) const
 		return *this;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

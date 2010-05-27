@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::max;
 using std::min;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -97,4 +97,4 @@ void ZStrimW_Limited::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size
 void ZStrimW_Limited::Imp_Flush()
 	{ fSink.Flush(); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

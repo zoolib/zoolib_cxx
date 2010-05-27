@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <map>
 #include <stdexcept>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZStreamR;
 class ZStreamW;
@@ -160,6 +160,6 @@ void sWriteMagicText(const ZStreamW& iStreamW);
 
 } // namespace ZUtil_TS
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZUtil_TS__

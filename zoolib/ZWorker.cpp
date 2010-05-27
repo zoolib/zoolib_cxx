@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZWorker.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 /**
 \defgroup Worker
@@ -118,4 +118,4 @@ void sStartWorkerRunner(ZRef<ZWorker> iWorker)
 	ZAssert(result);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

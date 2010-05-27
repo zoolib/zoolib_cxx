@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::vector;
 using std::wstring;
@@ -212,6 +212,6 @@ DWORD WINAPI ZWinService::sServiceCtrlHandlerEx(
 		->ServiceCtrlHandlerEx(dwControl, dwEventType, lpEventData);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)

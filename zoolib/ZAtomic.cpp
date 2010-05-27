@@ -40,7 +40,7 @@ ZAssertCompile(sizeof(ZooLib::ZAtomic_t) == sizeof(int));
 // We attach a register declarator to each parameter so that CW does not generate
 // code to save the values of the registers we use explicitly.
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // -----------------------------------------------
 #if !defined(DEFINED_ZAtomic_CompareAndSwap)
@@ -75,7 +75,7 @@ noGood:
 #endif
 // -----------------------------------------------
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, PPC)
 
@@ -85,7 +85,7 @@ NAMESPACE_ZOOLIB_END
 
 #if ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, x86)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // -----------------------------------------------
 #if !defined(DEFINED_ZAtomic_CompareAndSwap)
@@ -185,7 +185,7 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 #endif
 // -----------------------------------------------
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, x86)
 
@@ -197,7 +197,7 @@ NAMESPACE_ZOOLIB_END
 
 #include <libkern/OSAtomic.h>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // -----------------------------------------------
 #if !defined(DEFINED_ZAtomic_CompareAndSwap)
@@ -241,7 +241,7 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 #endif
 // -----------------------------------------------
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // defined(__MACH__)
 
@@ -253,7 +253,7 @@ NAMESPACE_ZOOLIB_END
 
 #include "zoolib/ZCompat_Win.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // -----------------------------------------------
 #if !defined(DEFINED_ZAtomic_CompareAndSwap)
@@ -308,7 +308,7 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 #endif
 // -----------------------------------------------
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
@@ -324,7 +324,7 @@ NAMESPACE_ZOOLIB_END
 #pragma mark -
 #pragma mark * Default implementations that depend on CAS or ZAtomic_Add.
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // -----------------------------------------------
 #if !defined(DEFINED_ZAtomic_Swap)
@@ -382,4 +382,4 @@ void ZAtomic_Dec(ZAtomic_t* iAtomic)
 #endif
 // -----------------------------------------------
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

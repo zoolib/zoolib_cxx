@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicode.h"
 #include "zoolib/ZUtil_Strim.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -281,4 +281,4 @@ void ZStrimW_Escaped::Imp_WriteUTF32(const UTF32* iSource, size_t iCountCU, size
 		*oCountCU = iCountCU - localCount;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

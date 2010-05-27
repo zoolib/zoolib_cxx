@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZUnicodeString.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZTextCollatorRep;
 class ZTextCollationKeyRep;
@@ -372,6 +372,6 @@ public:
 		const UTF32* iTarget, size_t iTargetLength) = 0;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZTextCollator__

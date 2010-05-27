@@ -42,7 +42,7 @@ ZMACRO_MSVCStaticLib_Reference(GRgnRep_HRGN)
 
 #include "zoolib/ZCompat_Win.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -100,7 +100,7 @@ private:
 	HRGN fHRGN;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(GRgnRep_HRGN)
 

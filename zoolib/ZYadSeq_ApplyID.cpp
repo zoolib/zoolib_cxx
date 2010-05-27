@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYadSeq_ApplyID.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 // FIXME. Could return a ZYadMapR with a constant for the ID, and the actual yad for the value.
 // =================================================================================================
 #pragma mark -
@@ -91,4 +91,4 @@ void ZYadSeqRPos_ApplyID::SetPosition(uint64 iPosition)
 uint64 ZYadSeqRPos_ApplyID::GetSize()
 	{ return fYadSeqRPos->GetSize(); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

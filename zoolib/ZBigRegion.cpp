@@ -75,7 +75,7 @@ using std::min;
 using std::numeric_limits;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #define kDebug_BigRegion 3
 
@@ -1155,4 +1155,4 @@ int32 ZBigRegion::spCoalesce(ZBigRegion& ioRegion, int32 prevStart, int32 curSta
 	return curStart;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

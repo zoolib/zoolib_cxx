@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdarg.h> // For va_list
 #include <stdexcept> // For range_error
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZStrimW;
 
@@ -720,6 +720,6 @@ private:
 	const ZStrimW* fSink;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZStrim__

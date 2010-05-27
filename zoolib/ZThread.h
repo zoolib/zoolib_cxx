@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread_T.h" // For ZGuard_T, ZAcquirer_T, ZReleaser_T
 #include "zoolib/ZThread_Win.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -171,6 +171,6 @@ void sCreateVoid(ProcVoid_t iProcVoid);
 
 } // namespace ZThread
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZThread__

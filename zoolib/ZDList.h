@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // In these templates, P is Pointer and L is Link.
 
@@ -283,6 +283,6 @@ private:
 	L* fNext;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZDList__

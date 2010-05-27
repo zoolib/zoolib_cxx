@@ -23,8 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/netscape/ZNetscape_GuestEntry.h"
 #include "zoolib/ZUtil_MacOSX.h"
 
-NAMESPACE_ZOOLIB_USING
-
+using namespace ZooLib;
 using ZNetscape::NPNetscapeFuncs_Z;
 
 using std::min;

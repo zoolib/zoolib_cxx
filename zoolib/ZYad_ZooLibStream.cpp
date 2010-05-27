@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_ZooLib.h"
 #include "zoolib/ZYad_ZooLibStream.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::min;
 using std::string;
@@ -424,4 +424,4 @@ ZRef<ZYadR> spMakeYadR_ZooLibStream(ZRef<ZStreamerR> iStreamerR)
 	return ZRef<ZYadR>();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

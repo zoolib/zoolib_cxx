@@ -33,7 +33,7 @@ using std::set;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using namespace ZUtil_STL;
 
@@ -840,4 +840,4 @@ void ZTBServer::TearDown()
 	sDeleteEraseAll(fTransactions_Commit_Acked);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

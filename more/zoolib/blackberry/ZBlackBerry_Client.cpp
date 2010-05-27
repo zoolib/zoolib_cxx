@@ -28,7 +28,7 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZBlackBerry {
 
@@ -523,4 +523,4 @@ ZRef<Device> Manager_Client::Open(uint64 iDeviceID)
 
 } // namespace ZBlackBerry
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE2(CoreVideo,CVPixelBuffer.h)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -42,7 +42,7 @@ ZDCPixmap sPixmap(ZRef<CVPixelBufferRef> iPBR);
 
 } // namespace ZDCPixmap_CoreVideo
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(MacOSX)
 

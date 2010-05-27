@@ -33,7 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include ZMACINCLUDE3(ApplicationServices,QD,Fonts.h)
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
 
@@ -237,4 +237,4 @@ void ZDCFont::FromStream(const ZStreamR& inStream)
 	}
 #endif
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVal_AppleEvent.h"
 #include "zoolib/ZYad_Val_T.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 typedef ZYadR_Val_T<ZVal_AppleEvent> ZYadR_AppleEvent;
 typedef ZYadSeqRPos_Val_T<ZSeq_AppleEvent> ZYadSeqRPos_AppleEvent;
@@ -44,7 +44,7 @@ ZRef<ZYadSeqRPos> sMakeYadR(const ZSeq_AppleEvent& iSeq);
 
 ZRef<ZYadMapRPos> sMakeYadR(const ZMap_AppleEvent& iMap);
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(AppleEvent)
 

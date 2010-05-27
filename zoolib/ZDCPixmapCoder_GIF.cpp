@@ -29,7 +29,7 @@ using std::min;
 using std::runtime_error;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using namespace ZDCPixmapNS;
 
@@ -37,7 +37,7 @@ using namespace ZDCPixmapNS;
 #pragma mark -
 #pragma mark * Stream_Chunk
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 typedef ZStreamR_Chunked StreamR_Chunk;
 typedef ZStreamW_Chunked StreamW_Chunk;
@@ -472,4 +472,4 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 
 // =================================================================================================
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

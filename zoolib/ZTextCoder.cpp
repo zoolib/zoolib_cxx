@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static const size_t kBufSize = sStackBufferSize;
 
@@ -35,7 +35,7 @@ static const size_t kBufSize = sStackBufferSize;
 #pragma mark -
 #pragma mark * ZTextCoder
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 struct CharsetEntry_t
 	{
 	const char* fName;
@@ -699,4 +699,4 @@ void ZTextEncoder::Encode(const ZStreamW& iStreamW, UTF32 iCP)
 void ZTextEncoder::Reset()
 	{}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

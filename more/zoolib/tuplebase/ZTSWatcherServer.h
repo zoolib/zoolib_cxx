@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/tuplebase/ZTSWatcher.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZStreamR;
 class ZStreamW;
@@ -48,6 +48,6 @@ private:
 	ZRef<ZTSWatcher> fWatcher;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZTSWatcherServer__

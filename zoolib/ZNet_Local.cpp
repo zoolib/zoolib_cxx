@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZFunctionChain.h"
 #include "zoolib/ZString.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 
@@ -101,4 +101,4 @@ ZRef<ZNetEndpoint_Local> ZNetEndpoint_Local::sCreateConnected(const string& iPat
 		::sInvoke(MakeParam_t(iPath));
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -36,7 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::min;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 typedef ZDCPixmapNS::PixelDescRep PDRep;
 typedef ZDCPixmapNS::PixelDescRep_Indexed PDRep_Indexed;
@@ -401,4 +401,4 @@ void ZDCPixmapBlit::sApplyMatte(
 		iDestAddress, iDestRD, iDestB, iDestPD);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

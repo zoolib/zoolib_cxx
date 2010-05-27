@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define kDebug_IFF 1
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::min;
 using std::pair;
@@ -401,4 +401,4 @@ void ZFileFormat_IFF::StreamWPos_Chunk::pInit(uint32 iChunkType)
 	fStart = fStream.GetPosition();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

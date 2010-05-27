@@ -38,7 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <csignal>
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZUtil_Debug {
 
@@ -300,4 +300,4 @@ ZLog::EPriority sGetLogPriority()
 
 } // namespace ZUtil_Debug
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

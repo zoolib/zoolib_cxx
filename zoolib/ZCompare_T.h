@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZCompare_T__ 1
 #include "zconfig.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 template <class T> int sCompare_T(const T& iL, const T& iR);
 
@@ -33,6 +33,6 @@ public:
 		{ return sCompare_T<T>(iL, iR); }
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZCompare_Vector__

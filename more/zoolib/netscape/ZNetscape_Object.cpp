@@ -20,10 +20,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/netscape/ZNetscape_Object.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZNetscape {
 
 } // namespace ZNetscape
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

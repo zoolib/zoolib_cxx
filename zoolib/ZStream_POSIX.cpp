@@ -38,7 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <sys/param.h>
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static void spRead(FILE* iFILE, void* oDest, size_t iCount, size_t* oCountRead)
 	{
@@ -524,4 +524,4 @@ FILE* sStreamerOpen(ZRef<ZStreamerW> iStreamerW)
 
 #endif
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

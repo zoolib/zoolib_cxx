@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::min;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #define kDebug_Stream_Buffered 2
 
@@ -526,4 +526,4 @@ ZStreamerW_DynamicBuffered::~ZStreamerW_DynamicBuffered()
 const ZStreamW& ZStreamerW_DynamicBuffered::GetStreamW()
 	{ return fStream; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

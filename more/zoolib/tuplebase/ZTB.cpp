@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #define kDebug_TB 0
 
@@ -751,5 +751,5 @@ size_t ZTBIter::EraseAll()
 	return count;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 

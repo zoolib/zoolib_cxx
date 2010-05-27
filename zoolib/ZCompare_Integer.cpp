@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompare.h"
 #include "zoolib/ZCompare_Integer.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 ZMACRO_CompareRegistration_T(bool)
 ZMACRO_CompareRegistration_T(char)
@@ -47,4 +47,4 @@ ZMACRO_CompareRegistration_T(unsigned long)
 
 #endif
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

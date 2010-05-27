@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::pair;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 //#define kDebug_Stream_Memory 2
 
@@ -415,4 +415,4 @@ const ZStreamWPos& ZStreamerWPos_Memory::GetStreamWPos()
 void* ZStreamerWPos_Memory::GetCurrentAddress()
 	{ return fStream.GetCurrentAddress(); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

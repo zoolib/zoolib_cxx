@@ -52,7 +52,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	include <sys/sysctl.h>
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 ZMACRO_CompareRegistration_T(ZTime)
 
@@ -298,4 +298,4 @@ ZTime ZTime::sSinceBoot()
 #endif
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

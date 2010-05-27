@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTask.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 /**
 \defgroup Task
@@ -81,4 +81,4 @@ void ZTask::pFinished()
 		theTaskMaster->pTask_Finished(this);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

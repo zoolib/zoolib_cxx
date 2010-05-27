@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -174,6 +174,6 @@ inline bool ZTName::operator>=(const ZTName& iOther) const
 inline bool ZTName::Equals(const ZTName& iOther) const
 	{ return 0 == this->Compare(iOther); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZTName__

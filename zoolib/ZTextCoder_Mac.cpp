@@ -37,7 +37,7 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 ZAssertCompile(sizeof(UniChar) == sizeof(UTF16));
 
@@ -47,7 +47,7 @@ static const size_t kBufSize = sStackBufferSize;
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_Decoder
 :	public ZFunctionChain_T<ZTextDecoder*, const string&>
@@ -407,6 +407,6 @@ void ZTextEncoder_Mac::Init(TextEncoding iDestEncoding)
 		kUnicodeFallbackCustomOnly | kUnicodeFallbackInterruptSafeMask, nullptr);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(TextCoder_Mac)

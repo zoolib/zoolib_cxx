@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZExpr.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -49,4 +49,4 @@ void ZExpr::Accept_Expr(ZVisitor_Expr& iVisitor)
 void ZVisitor_Expr::Visit_Expr(ZRef<ZExpr> iExpr)
 	{ this->Visit(iExpr); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

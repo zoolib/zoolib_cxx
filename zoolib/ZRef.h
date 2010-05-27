@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h" // For Adopt_T
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -367,11 +367,11 @@ private:
 	void operator&() const;
 	} nullref = {};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 namespace std {
 template <class T>
-inline void swap(ZOOLIB_PREFIX::ZRef<T>& a, ZOOLIB_PREFIX::ZRef<T>& b)
+inline void swap(ZooLib::ZRef<T>& a, ZooLib::ZRef<T>& b)
 	{ a.swap(b); }
 }
 

@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::vector;
 
@@ -170,4 +170,4 @@ void ZData_Any::pTouch()
 	fRep = new Rep(fRep->fVector);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

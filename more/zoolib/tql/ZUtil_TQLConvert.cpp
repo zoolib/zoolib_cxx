@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Util_RelOperators.h"
 #include "zoolib/valbase/ZValBase.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZUtil_TQLConvert {
 
@@ -367,4 +367,4 @@ Query sConvert(const ZTBQuery& iTBQuery, bool iVerbose)
 
 } // namespace ZUtil_TQLConvert
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -51,7 +51,7 @@ into this:
   }
 */
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::pair;
 using std::string;
@@ -197,4 +197,4 @@ ZRef<ZYadR> sMakeYadR(ZRef<ZML::StrimmerU> iStrimmerU)
 
 } // namespace ZYad_XMLAttr
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

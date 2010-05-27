@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZServer.h"
 #include "zoolib/ZStreamerListener.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -213,4 +213,4 @@ ZServer::Responder::~Responder()
 ZRef<ZServer> ZServer::Responder::GetServer()
 	{ return this->GetTaskMaster().StaticCast<ZServer>(); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

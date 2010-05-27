@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZVisitor_Expr_Logic_DoEval.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -41,4 +41,4 @@ void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iRep
 void ZVisitor_Expr_Logic_DoEval::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iRep)
 	{ this->pSetResult(this->Do(iRep->GetOp0()) || this->Do(iRep->GetOp1())); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

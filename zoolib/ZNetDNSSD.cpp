@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::runtime_error;
 using std::string;
@@ -201,6 +201,6 @@ void ZNetNameRegistered_DNSSD::spDNSServiceRegisterReply(
 	theNNR->pDNSServiceRegisterReply(flags, errorCode, name, regtype, domain);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(NetDNSSD)

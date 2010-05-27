@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZThread.h"
 #include "zoolib/ZTypes.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 
@@ -519,6 +519,6 @@ string ZUtil_CarbonEvents::sEventTypeAsString(UInt16 iEventType)
 	return ZString::sFormat("%u", iEventType);
 	}
 		
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Carbon64)

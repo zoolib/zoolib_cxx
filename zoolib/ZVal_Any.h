@@ -33,7 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <map>
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZVal_Any;
 class ZSeq_Any;
@@ -388,6 +388,6 @@ ZMap_Any::ZMap_Any(Iterator begin, Iterator end)
 :	fRep(new Rep(begin, end))
 	{}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZVal_Any__

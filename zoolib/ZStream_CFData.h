@@ -29,12 +29,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZData_CFType.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 typedef ZStreamRPos_Data_T<ZData_CFType> ZStreamRPos_CFData;
 typedef ZStreamRWPos_Data_T<ZData_CFType> ZStreamRWPos_CFData;
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 

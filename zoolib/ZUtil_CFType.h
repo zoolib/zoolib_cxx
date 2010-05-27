@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/ZVal_Any.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -85,7 +85,7 @@ ZMap_Any sAsMap_Any(const ZAny& iDefault, const ZRef<CFDictionaryRef>& iCFDictio
 
 } // namespace ZUtil_CFType
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
 

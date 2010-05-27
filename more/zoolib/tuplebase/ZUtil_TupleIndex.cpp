@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -88,4 +88,4 @@ ZRef<ZTupleIndexFactory> ZUtil_TupleIndex::sCreate_String(const string& iPropNam
 	return new ZTupleIndexFactory_String(iPropName);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

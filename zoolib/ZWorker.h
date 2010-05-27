@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRefWeak.h"
 #include "zoolib/ZTime.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZWorkerRunner;
 
@@ -85,6 +85,6 @@ protected:
 
 void sStartWorkerRunner(ZRef<ZWorker> iWorker);
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZWorker__

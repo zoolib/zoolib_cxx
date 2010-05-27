@@ -20,11 +20,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZYad_MapAsSeq.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class YadMapR : public ZYadMapR
 	{
@@ -107,4 +107,4 @@ ZRef<ZYadSeqR> sMapAsSeq(const string& iNamePropName, ZRef<ZYadMapR> iYadMapR)
 	return new YadSeqR(iNamePropName, iYadMapR);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

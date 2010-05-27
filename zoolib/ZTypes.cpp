@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZTypes.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -133,4 +133,4 @@ const char* ZTypeAsString(ZType iType)
 
 char sGarbageBuffer[4096];
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

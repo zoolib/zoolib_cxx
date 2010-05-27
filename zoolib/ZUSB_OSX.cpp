@@ -33,7 +33,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <IOKit/IOMessage.h>
 #include <IOKit/IOCFPlugIn.h>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::exception;
 using std::min;
@@ -391,7 +391,7 @@ void ZUSBDevice::pFetchDeviceDescriptor()
 #pragma mark -
 #pragma mark * StreamerR_TO
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class StreamerR_TO
 :	public ZStreamerR,
@@ -528,7 +528,7 @@ bool StreamerR_TO::pRefill(double iTimeout)
 #pragma mark -
 #pragma mark * StreamerR_Async
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class StreamerR_Async
 :	public ZStreamerR,
@@ -682,7 +682,7 @@ void StreamerR_Async::spCompletion(void* iRefcon, IOReturn iResult, void* iArg)
 #pragma mark -
 #pragma mark * StreamerW
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class StreamerW
 :	public ZStreamerW,
@@ -812,6 +812,6 @@ void ZUSBInterfaceInterface::Close()
 		}
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(USB_OSX)

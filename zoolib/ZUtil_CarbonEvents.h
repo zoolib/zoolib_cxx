@@ -54,7 +54,7 @@ enum {
 
 #include <string>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -101,7 +101,7 @@ std::string sEventTypeAsString(UInt16 iEventType);
 
 } // namespace ZUtil_CarbonEvents
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Carbon64)
 

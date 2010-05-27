@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZYad.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::min;
 using std::string;
@@ -422,4 +422,4 @@ bool ZYadStrimU_String::IsSimple(const ZYadOptions& iOptions)
 ZRef<ZYadR> sMakeYadR(const string& iVal)
 	{ return new ZYadStrimU_String(iVal); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

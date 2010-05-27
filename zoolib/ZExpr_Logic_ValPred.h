@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T.h"
 #include "zoolib/ZVisitor_Expr_Logic_ValPred_DoGetNames_T.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -47,6 +47,6 @@ inline bool sMatches(const ZRef<ZExpr_Logic>& iExpr, const ZVal_Expr& iVal)
 inline bool sMatches(const ZValPred& iValPred, const ZVal_Expr& iVal)
 	{ return sMatches(new ZExpr_Logic_ValPred(iValPred), iVal); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZExpr_Logic_ValPred__

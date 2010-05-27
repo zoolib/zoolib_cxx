@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStrim_NSString.h"
 #include "zoolib/ZUtil_NSObject.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZUtil_NS = ZUtil_NSObject;
 
@@ -184,7 +184,7 @@ ZRef<ZYadMapRPos> sMakeYadR(const ZRef<NSDictionary>& iDictionary)
 #pragma mark -
 #pragma mark * sFromYadR
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Visitor_GetVal : public ZVisitor_Yad
 	{
@@ -264,6 +264,6 @@ ZRef<NSObject> sFromYadR(const ZRef<NSObject>& iDefault, ZRef<ZYadR> iYadR)
 
 	return Visitor_GetVal(iDefault).GetVal(iYadR);
 	}
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Cocoa)

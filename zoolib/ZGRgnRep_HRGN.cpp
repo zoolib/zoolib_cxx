@@ -28,13 +28,13 @@ ZMACRO_MSVCStaticLib_cpp(GRgnRep_HRGN)
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Helper functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 HRGN sCopyHRGN(HRGN iSource)
 	{
@@ -100,7 +100,7 @@ HRGN sMakeHRGN(const ZRef<ZGRgnRep>& iRep)
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_Rect
 :	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRect&>
@@ -205,7 +205,7 @@ bool ZGRgnRep_HRGN::IsEqualTo(const ZRef<ZGRgnRep>& iRep)
 	return result;
 	}
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 void sCompressHRGN(HRGN ioTarget, HRGN ioTemp1, HRGN ioTemp2,
 	ZCoord iDelta, bool iHorizontal, bool iGrow)
@@ -412,6 +412,6 @@ ZRef<ZGRgnRep> ZGRgnRep_HRGN::Xoring(const ZRef<ZGRgnRep>& iRep)
 HRGN ZGRgnRep_HRGN::GetHRGN()
 	{ return fHRGN; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(GRgnRep_HRGN)

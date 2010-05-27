@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamRWPos_RAM.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -86,4 +86,4 @@ uint64 ZStreamRWPos_RAM::Imp_GetSize()
 void ZStreamRWPos_RAM::Imp_SetSize(uint64 iSize)
 	{ fDeque.resize(iSize); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

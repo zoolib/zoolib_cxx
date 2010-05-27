@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	define kDebug_QTFile 1
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::min;
 using std::pair;
@@ -325,4 +325,4 @@ uint64 ZFileFormat_QuickTime::StreamWPos_Chunk::Imp_GetSize()
 void ZFileFormat_QuickTime::StreamWPos_Chunk::Imp_SetSize(uint64 iSize)
 	{ fStream.SetSize(iSize + fStart); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

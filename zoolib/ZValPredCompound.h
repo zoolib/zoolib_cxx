@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -71,6 +71,6 @@ public:
 ZValPredCompound sAsValPredCompound(ZRef<ZExpr_Logic> iExpr);
 ZRef<ZExpr_Logic> sAsExpr_Logic(const ZValPredCompound& iVCF);
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZValPredCompound__

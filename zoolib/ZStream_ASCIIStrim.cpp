@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_ASCIIStrim.h"
 #include "zoolib/ZStrim.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -113,4 +113,4 @@ void ZStreamW_ASCIIStrim::Imp_Write(const void* iSource, size_t iCount, size_t* 
 		*oCountWritten = localSource - static_cast<const char*>(iSource);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

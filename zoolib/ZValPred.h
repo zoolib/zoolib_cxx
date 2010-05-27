@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //#include "zoolib/ZVal_CFType.h"
 //#include "zoolib/ZVal_Zoolib.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 typedef ZMap_Any ZMap_Expr;
 
@@ -62,6 +62,6 @@ inline ZValComparandPseudo CVal()
 inline ZValComparandPseudo CVar(const std::string& iVarName)
 	{ return CVar_T<ZVal_Expr>(iVarName); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZValPred__

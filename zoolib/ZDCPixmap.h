@@ -31,7 +31,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // For documentation, see ZDCPixmapNS.cpp
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZDCPixmapCache;
 class ZDCPixmapRep;
@@ -413,6 +413,6 @@ inline const ZRef<ZDCPixmapRaster>& ZDCPixmapRep::GetRaster()
 
 // =================================================================================================
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZDCPixmap__

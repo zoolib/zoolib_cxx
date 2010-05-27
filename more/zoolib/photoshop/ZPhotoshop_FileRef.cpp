@@ -84,7 +84,7 @@ FSNewAliasMinimalUnicode(
 
 #endif // __PIMac__
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 
@@ -99,7 +99,7 @@ static AutoSuite<PSHandleSuite2>
 #pragma mark -
 #pragma mark * UseHandle
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class UseHandle
 	{
@@ -529,4 +529,4 @@ Handle& FileRef::OParam()
 
 } // namespace ZPhotoshop
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

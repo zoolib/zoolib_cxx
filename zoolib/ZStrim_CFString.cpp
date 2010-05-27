@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::max;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static const size_t kBufSize = sStackBufferSize;
 
@@ -228,6 +228,6 @@ void ZStrimW_CFString::Imp_WriteUTF16(const UTF16* iSource, size_t iCountCU, siz
 		*oCountCU = iCountCU;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CFType)

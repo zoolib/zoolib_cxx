@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZGeom_POD.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -46,4 +46,4 @@ int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR)
 	return sCompare_T(iL.v, iR.v);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -34,7 +34,7 @@ in 1993, for which no copyright is claimed.
 
 using std::min;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 
@@ -410,4 +410,4 @@ void ZStreamW_MD5::GetDigest(uint8 oDigest[16])
 	ZStream_MD5::sFinal(tempContext, oDigest);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

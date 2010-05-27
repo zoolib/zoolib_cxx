@@ -42,7 +42,7 @@ extern "C" {
 #include <dns_sd.h>
 }
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -114,7 +114,7 @@ private:
 	ip_port fPort;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(NetDNSSD)
 

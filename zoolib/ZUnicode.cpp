@@ -203,7 +203,7 @@ by using <code>\#pragma ushort_wchar_t on</code>
 
 // =================================================================================================
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 ZAssertCompile(sizeof(UTF32) == 4);
 ZAssertCompile(sizeof(UTF16) == 2);
@@ -280,11 +280,11 @@ string8& operator+=(string8& ioString, UTF32 iCP)
 	return ioString;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 // =================================================================================================
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZUnicode {
 
@@ -834,4 +834,4 @@ string16 sAsUTF16(const string8& iString)
 
 } // namespace ZUnicode
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

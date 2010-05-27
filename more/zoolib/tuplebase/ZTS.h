@@ -32,7 +32,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <set>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 typedef ZData_Any ZMemoryBlock;
 typedef ZStreamRPos_Data_T<ZData_Any> ZStreamRPos_MemoryBlock;
@@ -64,6 +64,6 @@ public:
 	ZTuple GetTuple(uint64 iID);
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZTS__

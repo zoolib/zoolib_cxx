@@ -32,7 +32,7 @@ using std::pair;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #define kDebug 1
 
@@ -1720,4 +1720,4 @@ bool ZStreamMUX::pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP)
 	return false;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

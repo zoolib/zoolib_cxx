@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZVal.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 /**
 \defgroup ZVal Variant Types
@@ -113,4 +113,4 @@ ZNetscape::VariantG, ZNetscape::VariantH and ZWinCOM::Variant. As far as possibl
 are type compatible with native types e.g a ZWinCOM::Variant can be used where a VARIANT
 would be expected. Oftentimes there's no native ZVal type, instead the native API has */
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

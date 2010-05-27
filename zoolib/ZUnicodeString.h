@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 /// A basic_string specialization that holds a sequence of UTF32 code units.
 typedef std::basic_string<UTF32> string32;
@@ -38,6 +38,6 @@ typedef std::basic_string<UTF16> string16;
 /// It is actually the same type as std::string.
 typedef std::basic_string<UTF8> string8;
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZUnicodeString__

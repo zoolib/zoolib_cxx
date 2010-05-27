@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_Std.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 
@@ -76,6 +76,6 @@ ZRef<ZYadSeqRPos> sMakeYadR(const ZSeq_AppleEvent& iSeq)
 ZRef<ZYadMapRPos> sMakeYadR(const ZMap_AppleEvent& iMap)
 	{ return new ZYadMapRPos_AppleEvent(iMap); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(AppleEvent)

@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::min;
 using std::pair;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static const size_t kBufSize = sStackBufferSize;
 
@@ -603,4 +603,4 @@ ZTextEncoder* ZStrimW_StreamEncoder::SetEncoderReturnOld(ZTextEncoder* iEncoder)
 	return prior;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

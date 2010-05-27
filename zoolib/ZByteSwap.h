@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStdInt.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // AG 2000-02-06. Much of the code in this file inlines. For that to work we need the various
 // compilers to see quite different code. The first section of this file is #ifed out of
@@ -868,6 +868,6 @@ inline void ZByteSwap_WriteLittle64(volatile void* oValueAddress, int64 iValue)
 
 #undef ZByteSwap_EndianBig
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZByteSwap__

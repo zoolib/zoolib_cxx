@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStdInt.h"
 #include "zoolib/ZUnicodeCU.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 
@@ -102,7 +102,7 @@ extern char sGarbageBuffer[4096];
 template<class T, int N>
 uint8 (&byte_array_of_same_dimension_as(T(&)[N]))[N];
 
-#define countof(x) sizeof(ZOOLIB_PREFIX::byte_array_of_same_dimension_as((x)))
+#define countof(x) sizeof(ZooLib::byte_array_of_same_dimension_as((x)))
 
 // =================================================================================================
 
@@ -144,6 +144,6 @@ template <> inline int sCompare_T(const ConstVoidStar_t& iL, const ConstVoidStar
 
 const bool I_KNOW_WHAT_IM_DOING = true;
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZTypes__

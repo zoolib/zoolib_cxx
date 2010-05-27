@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstdarg> // For std::va_list
 #include <cstddef> // For std::size_t
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -107,6 +107,6 @@ template <> struct AssertCompile<true> { typedef bool IsValid; };
 
 } // namespace ZDebug
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZDebug__

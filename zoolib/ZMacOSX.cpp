@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #	endif
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 bool ZMacOSX::sIsMacOSX()
 	{
@@ -57,4 +57,4 @@ bool ZMacOSX::sIsMacOSX()
 	#endif
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

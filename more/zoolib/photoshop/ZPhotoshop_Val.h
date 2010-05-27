@@ -39,7 +39,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "PIActions.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -396,7 +396,7 @@ private:
 
 } // namespace ZPhotoshop
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
@@ -404,16 +404,16 @@ NAMESPACE_ZOOLIB_END
 
 namespace std {
 
-inline void swap(ZOOLIB_PREFIX::ZPhotoshop::Spec& a, ZOOLIB_PREFIX::ZPhotoshop::Spec& b)
+inline void swap(ZooLib::ZPhotoshop::Spec& a, ZooLib::ZPhotoshop::Spec& b)
 	{ a.swap(b); }
 
-inline void swap(ZOOLIB_PREFIX::ZPhotoshop::Val& a, ZOOLIB_PREFIX::ZPhotoshop::Val& b)
+inline void swap(ZooLib::ZPhotoshop::Val& a, ZooLib::ZPhotoshop::Val& b)
 	{ a.swap(b); }
 
-inline void swap(ZOOLIB_PREFIX::ZPhotoshop::Seq& a, ZOOLIB_PREFIX::ZPhotoshop::Seq& b)
+inline void swap(ZooLib::ZPhotoshop::Seq& a, ZooLib::ZPhotoshop::Seq& b)
 	{ a.swap(b); }
 
-inline void swap(ZOOLIB_PREFIX::ZPhotoshop::Map& a, ZOOLIB_PREFIX::ZPhotoshop::Map& b)
+inline void swap(ZooLib::ZPhotoshop::Map& a, ZooLib::ZPhotoshop::Map& b)
 	{ a.swap(b); }
 
 } // namespace std

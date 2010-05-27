@@ -47,7 +47,7 @@ ZMACRO_MSVCStaticLib_Reference(Net_Local_Win)
 #include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZUnicodeString.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -148,7 +148,7 @@ private:
 
 // =================================================================================================
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Net_Local_Win)
 

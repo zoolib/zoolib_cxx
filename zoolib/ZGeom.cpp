@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // implicitly return a pointer to a Point (for example) when a ZPoint was used as a parameter
 // to a routine. Handy, but not easy to support when more than one API is active at once.
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 template<> const ZPoint_T<int16> ZPoint_T<int16>::sZero(0, 0);
 template<> const ZRect_T<int16> ZRect_T<int16>::sZero(0, 0, 0, 0);
@@ -41,4 +41,4 @@ template<> const ZRect_T<float> ZRect_T<float>::sZero(0, 0, 0, 0);
 template<> const ZPoint_T<double> ZPoint_T<double>::sZero(0, 0);
 template<> const ZRect_T<double> ZRect_T<double>::sZero(0, 0, 0, 0);
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

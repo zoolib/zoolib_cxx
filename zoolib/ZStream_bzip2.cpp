@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept> // For runtime_error
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::min;
 using std::max;
@@ -344,6 +344,6 @@ void ZStream_bzip2::sAnalyze(const ZStreamR& iStreamR, vector<pair<uint64, uint3
 		}
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(Stream_bzip2)

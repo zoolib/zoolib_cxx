@@ -51,7 +51,7 @@ identify those entities that satisfy a RelHead.
 #pragma mark -
 #pragma mark * spAsVal (anonymous)
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 ZVal_Any spAsVal(const Daton& iDaton)
 	{
@@ -82,7 +82,7 @@ ZVal_Any spAsVal(const Daton& iDaton)
 #pragma mark -
 #pragma mark * Iterator (anonymous)
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Iterator : public ZQE::Iterator
 	{
@@ -151,7 +151,7 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 #pragma mark -
 #pragma mark * Visitor_DoMakeIterator (anonymous)
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Visitor_DoMakeIterator
 :	public virtual ZQE::Visitor_DoMakeIterator_Any

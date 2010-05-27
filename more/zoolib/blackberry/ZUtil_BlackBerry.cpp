@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZNet_Local.h"
 #include "zoolib/ZStreamerFactory_Precon.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -113,4 +113,4 @@ ZRef<ZBlackBerry::Manager> sMakeManager()
 
 } // namespace ZUtil_BlackBerry
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

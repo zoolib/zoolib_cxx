@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZGeometry.h"
 #include "zoolib/ZStrim.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 template <class C>
 inline const ZStrimW& operator<<(const ZStrimW& s, const ZRect_T<C>& val)
@@ -55,6 +55,6 @@ inline const ZStrimW& operator<<(const ZStrimW& s, const ZGRectPOD_T<C>& val)
 	return s;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZUtil_Strim_Geom__

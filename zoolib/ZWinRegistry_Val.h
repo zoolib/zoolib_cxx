@@ -38,7 +38,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZWinRegistry {
 
@@ -152,7 +152,7 @@ public:
 
 } // namespace ZWinRegistry
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
@@ -160,8 +160,7 @@ NAMESPACE_ZOOLIB_END
 
 namespace std {
 
-inline void swap(ZOOLIB_PREFIX::ZWinRegistry::KeyRef& a,
-	ZOOLIB_PREFIX::ZWinRegistry::KeyRef& b)
+inline void swap(ZooLib::ZWinRegistry::KeyRef& a, ZooLib::ZWinRegistry::KeyRef& b)
 	{ a.swap(b); }
 
 } // namespace std

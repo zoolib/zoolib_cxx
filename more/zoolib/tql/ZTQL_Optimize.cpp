@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 using namespace ZRA;
 
 // Turns a Select into a tree of Restrict and Union.
@@ -35,7 +35,7 @@ using namespace ZRA;
 #pragma mark -
 #pragma mark * Local stuff
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 typedef std::vector<ZValPred> CondSect;
 typedef std::vector<CondSect> CondUnion;
@@ -175,4 +175,4 @@ ZRef<Expr_Rel> sOptimize(ZRef<Expr_Rel> iExpr)
 	{ return Optimize().Do(iExpr); }
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

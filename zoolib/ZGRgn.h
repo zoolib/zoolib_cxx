@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZGRgnRep;
 
@@ -311,6 +311,6 @@ public:
 
 typedef ZAccumulator_T<ZGRgn, ZGRgnUnioner_t, std::vector<ZGRgn> > ZGRgnAccumulator;
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZGRgn__

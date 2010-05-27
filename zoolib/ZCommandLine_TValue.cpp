@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::exception;
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // TODO. Paramaterize the value type, so we can use CFType or
 // ZVal_Any, and also parameterize the parser.
@@ -92,4 +92,4 @@ const ZTValue& ZCommandLine::TValue::operator()() const
 	return fDefault;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

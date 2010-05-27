@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZUtil_STL.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 using ZUtil_STL::sFirstOrNil;
 
 using std::map;
@@ -32,7 +32,7 @@ using std::pair;
 using std::set;
 using std::vector;
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 enum EReg { eReg_Fresh, eReg_Pending, eReg_Done };
 } // anonymous namespace
 
@@ -1007,5 +1007,5 @@ ZTSWatcherFactory_TSWatcherMUX::ZTSWatcherFactory_TSWatcherMUX(
 ZRef<ZTSWatcher> ZTSWatcherFactory_TSWatcherMUX::MakeTSWatcher()
 	{ return fMUX->NewWatcher(fAlwaysForceSync); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 

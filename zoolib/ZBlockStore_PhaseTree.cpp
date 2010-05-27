@@ -34,7 +34,7 @@ using std::min;
 using std::set;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #ifndef kDebug_PhaseTreeFile
 #	define kDebug_PhaseTreeFile 3
@@ -3938,4 +3938,4 @@ void ZBlockStore_PhaseTree::Extent_RecursiveDeletePartial(
 		}
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

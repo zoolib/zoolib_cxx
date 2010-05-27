@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -378,4 +378,4 @@ const ZStrimW& operator<<(const ZStrimW& s, const ZTBSpec& iTBSpec)
 	return s;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

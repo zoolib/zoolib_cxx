@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include ZMACINCLUDE2(CoreFoundation,CFData.h)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using ZUtil_CFType::sData;
 using ZUtil_CFType::sDataMutable;
@@ -170,6 +170,6 @@ CFMutableDataRef ZData_CFType::pTouch()
 	return theMutableData;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(CFType)

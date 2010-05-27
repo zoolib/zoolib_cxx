@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZAtomic__ 1
 #include "zconfig.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -69,7 +69,7 @@ inline void ZAtomicPtr_Set(ZAtomicPtr_t* iAtomicPtr, void* iParam)
 
 bool ZAtomic_CompareAndSwapPtr(ZAtomicPtr_t* iAtomicPtr, void* iOldValue, void* iNewValue);
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 // =================================================================================================
 #pragma mark -
@@ -77,7 +77,7 @@ NAMESPACE_ZOOLIB_END
 
 #if ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, 68K)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // -----------------------------------------------
 #if !defined(DEFINED_ZAtomic_CompareAndSwap)
@@ -95,7 +95,7 @@ inline asm bool ZAtomic_CompareAndSwap(ZAtomic_t* iAtomic : __A0,
 #endif
 // -----------------------------------------------
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG(Compiler, CodeWarrior) && ZCONFIG(Processor, 68K)
 
@@ -117,7 +117,7 @@ can be enabled later if necessary. */
 #	define ZAtomic_PPC405_ERR77(rA,rB)
 #endif
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // -----------------------------------------------
 #if !defined(DEFINED_ZAtomic_CompareAndSwap)
@@ -167,7 +167,7 @@ inline int ZAtomic_Swap(ZAtomic_t* iAtomic, int iParam)
 #endif
 // -----------------------------------------------
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG(Compiler, GCC) && ZCONFIG(Processor, PPC)
 
@@ -179,7 +179,7 @@ NAMESPACE_ZOOLIB_END
 
 #define ZooLib_SMPLockPrefix "lock; "
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // -----------------------------------------------
 #if !defined(DEFINED_ZAtomic_CompareAndSwap)
@@ -282,7 +282,7 @@ inline void ZAtomic_Dec(ZAtomic_t* iAtomic)
 #endif
 // -----------------------------------------------
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG(Compiler, GCC) && ZCONFIG(Processor, x86)
 
@@ -292,7 +292,7 @@ NAMESPACE_ZOOLIB_END
 
 #if ZCONFIG(Compiler, MSVC) && ZCONFIG(Processor, x86)
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // -----------------------------------------------
 #if !defined(DEFINED_ZAtomic_CompareAndSwap)
@@ -394,7 +394,7 @@ inline void ZAtomic_Dec(ZAtomic_t* iAtomic)
 #endif
 // -----------------------------------------------
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG(Compiler, MSVC) && ZCONFIG(Processor, x86)
 

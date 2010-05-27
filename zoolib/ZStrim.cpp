@@ -32,7 +32,7 @@ using std::nothrow;
 using std::range_error;
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #if ZCONFIG(Compiler, MSVC)
 #	define vsnprintf _vsnprintf
@@ -2013,4 +2013,4 @@ void ZStrimW_Indirect::SetSink(const ZStrimW* iStrimW)
 	fSink = iStrimW;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

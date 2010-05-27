@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStream_Base64.h"
 #include "zoolib/ZDebug.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 static const uint8 spBase64EncodeTable[] =
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -320,4 +320,4 @@ void ZStreamW_Base64Decode::Imp_Flush()
 	fStreamSink.Flush();
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

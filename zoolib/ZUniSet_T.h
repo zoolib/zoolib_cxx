@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZUtil_STL_set.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -417,11 +417,11 @@ template <class T>
 ZUniSet_T<T> operator&(const T& iElem, const ZUniSet_T<T>& iUniSet_T)
 	{ return iUniSet_T & iElem; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 namespace std {
 template <class T>
-inline void swap(ZOOLIB_PREFIX::ZUniSet_T<T>& a, ZOOLIB_PREFIX::ZUniSet_T<T>& b)
+inline void swap(ZooLib::ZUniSet_T<T>& a, ZooLib::ZUniSet_T<T>& b)
 	{ a.swap(b); }
 }
 

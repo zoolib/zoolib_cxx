@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZNet.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // Need to figure out what the accessors for all this stuff are.
 
@@ -101,6 +101,6 @@ public:
 	ZRef<ZNetEndpoint_RFCOMM> sCreate(const DeviceAddress_t& iDA, int iChannelID);
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZNet_RFCOMM__

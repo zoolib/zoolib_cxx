@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStdInt.h" // For uint16, uint32
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 
@@ -54,6 +54,6 @@ typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf32_t UTF32;
 typedef ZUnicode::Types_T<sizeof(wchar_t)>::utf16_t UTF16;
 typedef char UTF8;
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZUnicodeCU__

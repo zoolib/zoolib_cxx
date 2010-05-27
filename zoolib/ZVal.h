@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStdInt.h" // For size_t
 #include "zoolib/ZString.h"//##
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -90,6 +90,6 @@ const typename Map_t::Val_t* sPGeti(const Map_t& iMap, const std::string& iNamei
 	return nullptr;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZVal__

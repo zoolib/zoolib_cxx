@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -268,7 +268,7 @@ void ZBlackBerryServer::Handler_DeviceFinished::TripIt()
 #pragma mark -
 #pragma mark * StreamCopier_Chunked
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class StreamerCopier_Chunked : public ZWorker
 	{
@@ -608,4 +608,4 @@ void ZBlackBerryServer::pRemove_DeviceFinished(Handler_DeviceFinished* iHandler)
 		}
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

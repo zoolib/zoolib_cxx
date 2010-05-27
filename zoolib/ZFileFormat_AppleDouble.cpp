@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamR_Source.h"
 #include "zoolib/ZStreamRWPos_RAM.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::vector;
 
@@ -124,4 +124,4 @@ void ZFileFormat_AppleDouble::Writer::ToStream(const ZStreamW& iStreamW) const
 		}
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

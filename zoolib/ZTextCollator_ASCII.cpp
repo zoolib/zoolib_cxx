@@ -25,13 +25,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::min;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_Collator
 :	public ZFunctionChain_T<ZRef<ZTextCollatorRep>, const ZTextCollatorRep::Param_t&>
@@ -198,4 +198,4 @@ bool ZTextCollatorRep_ASCII::Contains(const UTF8* iPattern, size_t iPatternLengt
 	return spContains(fStrength, iPattern, iPatternLength, iTarget, iTargetLength);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

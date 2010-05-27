@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZStdInt.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -103,6 +103,6 @@ public:
 template <> inline int sCompare_T(const ZTime& iL, const ZTime& iR)
 	{ return iL.Compare(iR); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZTime__

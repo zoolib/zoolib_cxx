@@ -5,7 +5,7 @@
 #include "zoolib/ZStream.h"
 #include "zoolib/ZStrim.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZStdIO {
 
@@ -19,6 +19,6 @@ extern const ZStrimW& strim_err;
 
 } // namespace ZStdIO
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZStdIO__

@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <fcntl.h> // For O_RDWR etc
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::exception;
 using std::runtime_error;
@@ -79,7 +79,7 @@ finally by ID.
 #pragma mark -
 #pragma mark * Helpers
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 struct TypeID_t
 	{
 	TypeID_t(uint8 iType, const uint64& iID);
@@ -117,7 +117,7 @@ static inline uint64 spUnpackID(const DBT& iDBT)
 	return spUnpackID(static_cast<const uint8*>(iDBT.data) + iDBT.size - 8);
 	}
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 class DBT_Tuple : public DBT
 	{
 public:
@@ -943,6 +943,6 @@ int ZTS_DB::spBTree_Compare(const DBT* iLeft, const DBT* iRight)
 	return 0;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(TS_DB)

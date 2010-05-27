@@ -78,7 +78,7 @@ static bool spAECheckIsRecord(const AEDesc* theDesc)
 #pragma mark -
 #pragma mark * 
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // TODO look at TN2046 "AEStream and friends"
 
@@ -871,6 +871,6 @@ AEKeyword ZMap_AppleEvent::pKeyOf(size_t iIndex) const
 	return 0;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(AppleEvent)

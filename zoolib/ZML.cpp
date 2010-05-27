@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdio.h> // For sprintf
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZML {
 
@@ -968,7 +968,7 @@ static void spWriteIndent(const ZStrimW& iStrim, const string8& iString, size_t 
 		iStrim.Write(iString);
 	}
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 struct Entity_t
 	{
@@ -1528,4 +1528,4 @@ ZML::StrimW& StrimmerW::GetStrim()
 
 } // namespace ZML
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

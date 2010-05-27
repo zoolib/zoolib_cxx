@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using std::runtime_error;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using namespace ZDCPixmapNS;
 
@@ -532,4 +532,4 @@ static void spReadRLE4(const ZStreamR& iStream,
 		}
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

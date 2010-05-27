@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRef.h"
 #include "zoolib/ZCompat_NSObject.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -39,7 +39,7 @@ void sRelease(struct objc_object& iOb);
 void sRetain(NSObject& iNSObject);
 void sRelease(NSObject& iNSObject);
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Cocoa)
 

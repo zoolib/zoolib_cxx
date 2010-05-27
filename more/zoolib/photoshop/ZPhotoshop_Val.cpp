@@ -331,7 +331,7 @@ static AutoSuite<ASZStringSuite>
 #pragma mark -
 #pragma mark * Using statements
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::map;
 using std::pair;
@@ -1509,4 +1509,4 @@ size_t Map::pCount() const
 
 } // namespace ZPhotoshop
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

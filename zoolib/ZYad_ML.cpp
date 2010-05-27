@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_ML.h"
 #include "zoolib/ZYad_Any.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 using std::vector;
@@ -156,4 +156,4 @@ void ZYadMapR_ML::Imp_ReadInc(bool iIsFirst, std::string& oName, ZRef<ZYadR>& oY
 		spThrowParseException("Expected value or end tag '" + fTagName + "'");
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

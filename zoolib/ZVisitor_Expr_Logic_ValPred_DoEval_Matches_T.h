@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZExpr_Logic_ValPred_T.h"
 #include "zoolib/ZVisitor_Expr_Logic_DoEval.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -58,6 +58,6 @@ void ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T<Val>::Visit_Expr_Logic_ValPred
 	ZRef<ZExpr_Logic_ValPred_T<Val> > iExpr)
 	{ this->pSetResult(iExpr->GetValPred().Matches(fValContext, fVal)); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZVisitor_Expr_Logic_ValPred_DoEval_Matches_T__

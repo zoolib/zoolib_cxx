@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRef.h"
 #include "zoolib/ZCounted.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -54,6 +54,6 @@ inline void sRelease(ZCountedWithoutFinalize& iObject)
 typedef ZCounted ZRefCountedWithFinalize;
 typedef ZCountedWithoutFinalize ZRefCounted;
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZRef_Counted__

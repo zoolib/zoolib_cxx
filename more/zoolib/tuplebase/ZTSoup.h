@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZRefWeak.h"
 #include "zoolib/tuplebase/ZTSWatcher.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 class ZTCrouton;
 class ZTSieve;
@@ -319,6 +319,6 @@ public:
 		{ return new Crouton_t; }
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZSoup__

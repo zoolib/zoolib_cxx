@@ -20,10 +20,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZWorkerRunner_ThreadPool.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZWorkerRunner_ThreadPool
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompare_T.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 template <> int sCompare_T(const bool& iL, const bool& iR)
 	{ return int(iL) - int(iR); }
@@ -83,6 +83,6 @@ template <> int sCompare_T(const unsigned long& iL, const unsigned long& iR)
 
 #endif
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZCompare_Integer__

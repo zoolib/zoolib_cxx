@@ -25,7 +25,7 @@ using std::nothrow;
 using std::range_error;
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -76,4 +76,4 @@ void ZStrimU_Unreader::Imp_Unread(UTF32 iCP)
 size_t ZStrimU_Unreader::Imp_UnreadableLimit()
 	{ return size_t(-1); }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

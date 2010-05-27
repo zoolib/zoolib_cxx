@@ -36,7 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <ctype.h> // For isalnum
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZHTTP {
 
@@ -463,4 +463,4 @@ static bool spReadPOST(const ZStreamR& iStreamR, const Map& iHeader, Val& oVal)
 
 } // namespace ZHTTP
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

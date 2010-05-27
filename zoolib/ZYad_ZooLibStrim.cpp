@@ -29,7 +29,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 using std::vector;
@@ -1154,4 +1154,4 @@ void ZYad_ZooLibStrim::sWrite_PropName(const string& iPropName, const ZStrimW& i
 		}
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

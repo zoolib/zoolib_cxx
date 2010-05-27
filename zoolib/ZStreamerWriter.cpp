@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamerWriter.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -58,4 +58,4 @@ void ZStreamerWriter::WriteStarted()
 void ZStreamerWriter::WriteFinished()
 	{}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

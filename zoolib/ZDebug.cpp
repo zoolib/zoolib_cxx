@@ -36,7 +36,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark -
 #pragma mark * ZDebug
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 namespace ZDebug {
 
@@ -272,5 +272,5 @@ public:
 
 } // namespace ZDebug
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 

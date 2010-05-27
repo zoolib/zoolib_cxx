@@ -28,7 +28,7 @@ namespace ZSQLite {
 #pragma mark -
 #pragma mark * Anonymous YadMapR
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class YadMapR : public ZYadMapR_Std
 	{

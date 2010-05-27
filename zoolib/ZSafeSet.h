@@ -30,7 +30,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <list>
 #include <map>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 template <class T> class ZSafeSet;
 template <class T> class ZSafeSetIter;
@@ -453,6 +453,6 @@ bool ZSafeSetRep<T>::pErase(const T& iT)
 	return true;		
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZSafeSet__

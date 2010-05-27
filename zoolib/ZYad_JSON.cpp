@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUtil_Strim.h"
 #include "zoolib/ZYad_JSON.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 
@@ -622,4 +622,4 @@ void ZYad_JSON::sToStrim(size_t iInitialIndent, const ZYadOptions& iOptions,
 	iYadR->Accept(theWriter);
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

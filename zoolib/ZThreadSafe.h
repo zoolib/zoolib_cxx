@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZAtomic.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -81,6 +81,6 @@ typedef ZAtomic_t ZThreadSafe_t;
 
 #endif // ZCONFIG_Thread_Preemptive
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZThreadSafe__

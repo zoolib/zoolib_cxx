@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZStreamerReader.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -67,4 +67,4 @@ void ZStreamerReader::ReadStarted()
 void ZStreamerReader::ReadFinished()
 	{}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

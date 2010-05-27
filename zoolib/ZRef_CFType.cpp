@@ -27,10 +27,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // =================================================================================================
 
 #define ZOOLIB_RETAIN_RELEASE(a) \
-	NAMESPACE_ZOOLIB_BEGIN \
+	namespace ZooLib { \
 	template <> void sRetain_T(a& ioRef) { if (ioRef) ::CFRetain(ioRef); } \
 	template <> void sRelease_T(a iRef) { if (iRef) ::CFRelease(iRef); } \
-	NAMESPACE_ZOOLIB_END
+	} // namespace ZooLib
 
 // =================================================================================================
 // CFTypeRef declared in CFBase.h

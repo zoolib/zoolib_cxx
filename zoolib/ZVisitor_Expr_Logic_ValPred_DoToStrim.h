@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVisitor_Expr_Logic_DoToStrim.h"
 #include "zoolib/ZExpr_Logic_ValPred.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -40,6 +40,6 @@ public:
 	virtual void Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iRep);
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZVisitor_Expr_Logic_ValPred_DoToStrim__

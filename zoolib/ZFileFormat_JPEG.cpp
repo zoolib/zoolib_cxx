@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamW_HexStrim.h"
 #include "zoolib/ZStrim.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::min;
 
@@ -423,4 +423,4 @@ void sDumpSegments(const ZStreamR& iStreamR, const ZStrimW& iStrimW)
 	}
 } // namespace ZFileFormat_JPEG
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

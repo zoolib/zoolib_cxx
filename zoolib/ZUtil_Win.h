@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 #if ZCONFIG_SPI_Enabled(Win)
 
@@ -39,6 +39,6 @@ void sDisallowWAPI();
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZUtil_Win__

@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZMemory.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -46,4 +46,4 @@ int ZMemCompare(const void* iL, std::size_t iCountL, const void* iR, std::size_t
 		}
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

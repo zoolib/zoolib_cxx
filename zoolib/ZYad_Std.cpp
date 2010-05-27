@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZYad_Std.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using std::string;
 
@@ -101,4 +101,4 @@ ZRef<ZYadR> ZYadMapR_Std::ReadInc(std::string& oName)
 	return fValue;
 	}
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

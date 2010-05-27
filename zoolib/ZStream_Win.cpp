@@ -34,7 +34,7 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -193,6 +193,6 @@ ZStreamerRPos_Win_MultiResource::~ZStreamerRPos_Win_MultiResource()
 const ZStreamRPos& ZStreamerRPos_Win_MultiResource::GetStreamRPos()
 	{ return fStream; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)

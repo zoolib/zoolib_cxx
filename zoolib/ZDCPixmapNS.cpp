@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define kDebug_PixmapNS 2
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 using namespace ZDCPixmapNS;
 
@@ -105,7 +105,7 @@ different parts of the ZDCPixmap suite.
 
 // =================================================================================================
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 struct StandardToInfoGray_t
 	{
@@ -3079,4 +3079,4 @@ void ZDCPixmapNS::sBlitRow(
 
 // =================================================================================================
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

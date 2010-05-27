@@ -27,14 +27,14 @@ ZMACRO_MSVCStaticLib_cpp(Unicode_Normalize_Win)
 #include "zoolib/ZCompat_Win.h"
 #include "zoolib/ZFunctionChain.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZUnicode {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZUnicode, normalization, Win
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 #if WINVER >= 0x0600
 
@@ -136,6 +136,6 @@ class Function
 } // namespace ZANONYMOUS
 
 } // namespace ZUnicode
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)

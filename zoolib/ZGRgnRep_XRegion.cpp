@@ -24,13 +24,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZFunctionChain.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Helper functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 Region sCopyRegion(Region iSource)
 	{
@@ -92,7 +92,7 @@ Region sMakeRegion(const ZRef<ZGRgnRep>& iRep)
 #pragma mark -
 #pragma mark * Factory functions
 
-namespace ZANONYMOUS {
+namespace { // anonymous
 
 class Make_Rect
 :	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRect&>
@@ -338,6 +338,6 @@ ZRef<ZGRgnRep> ZGRgnRep_XRegion::Xoring(const ZRef<ZGRgnRep>& iRep)
 Region ZGRgnRep_XRegion::GetRegion()
 	{ return fRegion; }
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_API_Enabled(GRgnRep_XRegion)

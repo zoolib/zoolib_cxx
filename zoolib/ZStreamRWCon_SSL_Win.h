@@ -38,7 +38,7 @@ ZMACRO_MSVCStaticLib_Reference(StreamRWCon_SSL_Win)
 #define SECURITY_WIN32 1
 #include <Security.h>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
@@ -108,7 +108,7 @@ private:
 	ZStreamRWCon_SSL_Win fStream;
 	};
 
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // ZCONFIG_SPI_Enabled(Win)
 
