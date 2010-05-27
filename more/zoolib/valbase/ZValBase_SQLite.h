@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/valbase/ZValBase.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZValBase_SQLite {
 
 // =================================================================================================
@@ -52,12 +52,7 @@ private:
 
 ZRef<ZRA::Expr_Rel> sConcrete_Table(ZRef<ConcreteDomain> iConcreteDomain, const string8& iName);
 
-ZRef<ZRA::Expr_Rel> sConcrete_SQL(ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL);
-
-ZRef<ZRA::Expr_Rel> sConcrete_SQL(
-	ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL, const string8& iPrefix);
-
 } // namespace ZValBase_SQLite
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZValBase_SQLite__

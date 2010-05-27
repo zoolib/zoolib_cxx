@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/sqlite/ZSQLite_YadSeqR_Iter.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZSQLite {
 
 // =================================================================================================
@@ -81,4 +81,4 @@ void YadSeqR_Iter::Imp_ReadInc(bool iIsFirst, ZRef<ZYadR>& oYadR)
 	}
 
 } // namespace ZSQLite
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

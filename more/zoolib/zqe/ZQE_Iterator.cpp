@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zqe/ZQE_Iterator.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
@@ -99,27 +99,27 @@ Iterator_Intersect::Iterator_Intersect(ZRef<Iterator> iIterator_LHS, ZRef<Iterat
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Iterator_Join
+#pragma mark * Iterator_Product
 
-Iterator_Join::Iterator_Join(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS)
+Iterator_Product::Iterator_Product(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS)
 :	fIterator_LHS(iIterator_LHS)
 ,	fIterator_RHS(iIterator_RHS)
 	{}
 
-ZRef<Iterator> Iterator_Join::Clone()
+ZRef<Iterator> Iterator_Product::Clone()
 	{
 	if (fIterator_RHS_Model)
 		{
-		return new Iterator_Join(
+		return new Iterator_Product(
 			fIterator_LHS->Clone(), fIterator_RHS->Clone(), fIterator_RHS_Model->Clone());
 		}
 	else
 		{
-		return new Iterator_Join(fIterator_LHS->Clone(), fIterator_RHS->Clone());
+		return new Iterator_Product(fIterator_LHS->Clone(), fIterator_RHS->Clone());
 		}
 	}
 
-ZRef<Result> Iterator_Join::ReadInc()
+ZRef<Result> Iterator_Product::ReadInc()
 	{
 	if (!fIterator_RHS_Model)
 		fIterator_RHS_Model = fIterator_RHS->Clone();
@@ -137,7 +137,7 @@ ZRef<Result> Iterator_Join::ReadInc()
 			{
 			if (ZRef<Result> theRHS_Result = fIterator_RHS->ReadInc())
 				{
-				if (ZRef<Result> joinedResult = fResult_LHS->JoinedWith(theRHS_Result))
+				if (ZRef<Result> joinedResult = fResult_LHS->ProductWith(theRHS_Result))
 					return joinedResult;
 				continue;
 				}
@@ -148,7 +148,7 @@ ZRef<Result> Iterator_Join::ReadInc()
 		}
 	}
 
-Iterator_Join::Iterator_Join(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS,
+Iterator_Product::Iterator_Product(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS,
 	ZRef<Iterator> iIterator_RHS_Model)
 :	fIterator_LHS(iIterator_LHS)
 ,	fIterator_RHS(iIterator_RHS)
@@ -179,4 +179,4 @@ ZRef<Result> Iterator_Union::ReadInc()
 	}
 
 } // namespace ZQE
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

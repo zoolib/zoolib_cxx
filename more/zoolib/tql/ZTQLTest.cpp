@@ -1,4 +1,4 @@
-#include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoToStrim.h"
+#include "zoolib/ZVisitor_Expr_Logic_ValPred_DoToStrim.h"
 #include "zoolib/ZYad_Any.h"
 #include "zoolib/ZYad_JSON.h"
 
@@ -7,9 +7,9 @@
 #include "zoolib/valbase/ZValBase_Any.h"
 #include "zoolib/valbase/ZValBase_SQLite.h"
 #include "zoolib/valbase/ZValBase_YadSeqR.h"
-#include "zoolib/valbase/ZValBase_YadSeqRPos.h"
+#include "zoolib/valbase/ZValBase_YadSeqRClone.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
-#include "zoolib/zra/ZRA_RelOps.h"
+#include "zoolib/zra/ZRA_Util_RelOperators.h"
 #include "zoolib/zra/ZRA_SQL.h"
 #include "zoolib/zra/ZRA_Util.h"
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
@@ -56,7 +56,7 @@ static void sDumpSFW(const ZStrimW& s, ZRef<SQL::Expr_Rel_SFW> iExpr)
 	s << "\n";
 
 	s << "Condition:\n  ";
-	ZVisitor_Expr_Logic_ValCondition_DoToStrim().DoToStrim(theOptions, s, iExpr->GetCondition()); 
+	ZVisitor_Expr_Logic_ValPred_DoToStrim().DoToStrim(theOptions, s, iExpr->GetCondition()); 
 	s << "\n";
 
 	s << "Rels:\n";
@@ -85,11 +85,13 @@ static void spDumpProblems(const ZStrimW& s, Rel iRel)
 		}
 	}
 
-Rel genre = ZValBase::sConcrete(RelHead() | "genre.idGenre" | "genre.strGenre", "genre");
-Rel genrelinkmovie = ZValBase::sConcrete(RelHead() | "genrelinkmovie.idGenre" | "genrelinkmovie.idMovie", "genrelinkmovie");
-Rel movie = ZValBase::sConcrete(RelHead() | "movie.idMovie" | "movie.c00" , "movie");
+#if 1
+Rel genre = sConcrete(nullref, "genre", RelHead() | "genre.idGenre" | "genre.strGenre");
+Rel genrelinkmovie = sConcrete(nullref, "genrelinkmovie", RelHead() | "genrelinkmovie.idGenre" | "genrelinkmovie.idMovie");
+Rel movie = sConcrete(nullref, "movie", RelHead() | "movie.idMovie" | "movie.c00");
 Spec theSpec = CName("movie.idMovie") == CName("link.idMovie") & CName("movie.idGenre") == CName("link.idGenre");
 //Spec theSpec = CName("movie.idMovie") == CName("link.idMovie") & CName("movie.idGenre") == CName("link.idGenre");
+#endif
 
 void sTestQL1(const ZStrimW& s)
 	{
@@ -119,16 +121,19 @@ static Rel spRel2()
 	return theSpec & (genrelinkmovie * movie * genre);
 	}
 
-void sTestQL3(const ZStrimW& s)
+void sTestQL4(const ZStrimW& s)
 	{
 	ZRef<ZSQLite::DB> theDB = new ZSQLite::DB("/Users/ag/sqlitetest/MyVideos34.db");
 	ZRef<ZValBase_SQLite::ConcreteDomain> theConcreteDomain =
 		new ZValBase_SQLite::ConcreteDomain(theDB);
 
-	Rel theRel_genre = sConcrete_SQL(theConcreteDomain, "select * from genre;", "genre.");
+//	Rel theRel_genre = sConcrete_SQL(theConcreteDomain, "select * from genre;", "genre.");
+	Rel theRel_genre = sConcrete_Table(theConcreteDomain, "genre");
 	theRel_genre = sRename(theRel_genre, "idGenre", "genre.idGenre");
-	Rel theRel_genrelinkmovie = sConcrete_SQL(theConcreteDomain, "select * from genrelinkmovie;", "genrelinkmovie.");
-	Rel theRel_movie = sConcrete_SQL(theConcreteDomain, "select * from movie;", "movie.");
+//	Rel theRel_genrelinkmovie = sConcrete_SQL(theConcreteDomain, "select * from genrelinkmovie;", "genrelinkmovie.");
+	Rel theRel_genrelinkmovie = sConcrete_Table(theConcreteDomain, "genrelinkmovie");
+//	Rel theRel_movie = sConcrete_SQL(theConcreteDomain, "select * from movie;", "movie.");
+	Rel theRel_movie = sConcrete_Table(theConcreteDomain, "movie");
 	Spec theSpec = CName("movie.idMovie") == CName("genrelinkmovie.idMovie") & CName("idGenre") == CName("genrelinkmovie.idGenre");
 
 	Rel theRel = theSpec & (theRel_genre * theRel_genrelinkmovie * theRel_movie);
@@ -169,3 +174,4 @@ void sTestQL3(const ZStrimW& s)
 		}
 	s << "\n";
 	}
+

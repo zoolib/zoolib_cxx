@@ -25,16 +25,17 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZValBase_YadSeqR {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValBase_YadSeqR pseudo constructors
 
-ZRef<ZRA::Expr_Rel> sConcrete(ZRef<ZYadSeqR> iYadSeqR);
+ZRef<ZRA::Expr_Rel> sConcrete(
+	const string8& iName, const ZRA::RelHead& iRelHead, ZRef<ZYadSeqR> iYadSeqR);
 
 } // namespace ZValBase_YadSeqR
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZValBase_YadSeqR__

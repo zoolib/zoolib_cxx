@@ -23,11 +23,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Logic.h"
-#include "zoolib/ZValCondition.h"
+#include "zoolib/ZValPred.h"
 #include "zoolib/zqe/ZQE_Iterator.h"
-#include "zoolib/zra/ZRA_RelHead.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
+#include "zoolib/zqe/ZQE_Visitor_Expr_Rel_DoMakeIterator.h"
+//#include "zoolib/zra/ZRA_RelHead.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
@@ -77,7 +79,7 @@ class Iterator_Any_Restrict
 :	public Iterator
 	{
 public:
-	Iterator_Any_Restrict(ZRef<Iterator> iIterator, const ZValCondition& iValCondition);
+	Iterator_Any_Restrict(ZRef<Iterator> iIterator, const ZValPred& iValPred);
 	
 // From Iterator
 	virtual ZRef<Iterator> Clone();
@@ -85,7 +87,7 @@ public:
 
 private:
 	ZRef<Iterator> fIterator;
-	const ZValCondition fValCondition;
+	const ZValPred fValPred;
 	};
 
 // =================================================================================================
@@ -107,7 +109,22 @@ private:
 	ZRef<ZExpr_Logic> fExpr_Logic;
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_DoMakeIterator_Any
+
+class Visitor_DoMakeIterator_Any
+:	public virtual ZQE::Visitor_Expr_Rel_DoMakeIterator
+,	public virtual ZRA::Visitor_Expr_Rel_Restrict
+	{
+public:
+	virtual void Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr);
+	virtual void Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr);
+	virtual void Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict> iExpr);
+	virtual void Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iExpr);
+	};
+
 } // namespace ZQE
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZQE_Iterator_Any__

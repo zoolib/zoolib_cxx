@@ -18,17 +18,48 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_RelOps__
-#define __ZRA_RelOps__ 1
-#include "zconfig.h"
+#include "zoolib/dataspace/ZDataspace_Source_Dummy.h"
 
-#include "zoolib/ZExpr_Logic_ValCondition.h" // For ValCondition/Logic operators
-#include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Join.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Union.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Project.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h" // For restrict templated operators
-#include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Select.h"
+#include "zoolib/ZExpr_Logic.h"
+#include "zoolib/ZStdIO.h"
+#include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 
-#endif // __ZRA_RelOps__
+namespace ZooLib {
+namespace ZDataspace {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Source_Dummy
+
+Source_Dummy::Source_Dummy(const set<RelHead>& iRelHeads)
+:	fRelHeads(iRelHeads)
+	{}
+
+Source_Dummy::~Source_Dummy()
+	{}
+
+set<RelHead> Source_Dummy::GetRelHeads()
+	{ return fRelHeads; }
+
+void Source_Dummy::Update(
+	bool iLocalOnly,
+	AddedSearch* iAdded, size_t iAddedCount,
+	int64* iRemoved, size_t iRemovedCount,
+	vector<SearchResult>& oChanged,
+	Clock& oClock)
+	{
+	while (iAddedCount--)
+		{
+		SearchResult dummy;
+		dummy.fRefcon = iAdded->fRefcon;
+		oChanged.push_back(dummy);
+
+		ZRA::Util_Strim_Rel::sToStrim(iAdded->fRel, ZStdIO::strim_err);
+		ZStdIO::strim_err << "\n";
+		++iAdded;
+		}
+	}
+
+
+} // namespace ZDataspace
+} // namespace ZooLib

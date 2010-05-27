@@ -20,8 +20,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zqe/ZQE_Result.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZQE {
 
 } // namespace ZQE
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

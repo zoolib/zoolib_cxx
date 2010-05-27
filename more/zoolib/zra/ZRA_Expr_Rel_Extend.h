@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 #include "zoolib/zra/ZRA_RelHead.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 class Visitor_Expr_Rel_Extend;
@@ -50,10 +50,11 @@ public:
 	virtual ZRef<Expr_Rel> Self();
 	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0);
 
+// From Expr_Rel
+	virtual ZRA::RelHead GetRelHead();
+
 // Our protocol
 	virtual void Accept_Expr_Rel_Extend(Visitor_Expr_Rel_Extend& iVisitor);
-
-	RelHead GetRelHead();
 
 private:
 	const RelHead fRelHead;
@@ -78,6 +79,6 @@ public:
 ZRef<Expr_Rel_Extend> sExtend(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead);
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZRA_Expr_Rel_Extend__

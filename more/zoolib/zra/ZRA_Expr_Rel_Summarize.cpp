@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zra/ZRA_Expr_Rel_Summarize.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
@@ -75,4 +75,4 @@ ZRef<Expr_Rel_Summarize> sSummarize(const ZRef<Expr_Rel>& iExpr, const RelHead& 
 	{ return new Expr_Rel_Summarize(iExpr, iRelHead); }
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

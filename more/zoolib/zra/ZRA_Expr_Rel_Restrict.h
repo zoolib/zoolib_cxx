@@ -22,10 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_Expr_Rel_Restrict__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZValCondition.h"
+#include "zoolib/ZValPred.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Restrict_T.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
@@ -37,6 +37,6 @@ typedef Expr_Rel_Restrict_T<ZVal_Expr> Expr_Rel_Restrict;
 typedef Visitor_Expr_Rel_Restrict_T<ZVal_Expr> Visitor_Expr_Rel_Restrict;
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZRA_Expr_Rel_Restrict_T__

@@ -18,11 +18,11 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Logic_ValCondition.h"
+#include "zoolib/ZExpr_Logic_ValPred.h"
 #include "zoolib/zqe/ZQE_Iterator_Any.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZQE {
 
 using std::string;
@@ -49,16 +49,22 @@ ZRef<Result> Iterator_Any_Project::ReadInc()
 			const ZAny theAny = theResult_Any->GetVal();
 			if (const ZMap_Any* theMap = theAny.PGet_T<ZMap_Any>())
 				{
+				ZRA::RelHead sourceRelHead;
 				ZMap_Any newMap;
 				for (ZMap_Any::Index_t i = theMap->Begin(); i != theMap->End(); ++i)
 					{
 					const string theName = theMap->NameOf(i);
+					sourceRelHead |= theName;
 					if (fRelHead.Contains(theName))
 						newMap.Set(theName, theMap->Get(i));
 					}
-				return new Result_Any(newMap);
+				if (sourceRelHead.Contains(fRelHead))
+					return new Result_Any(newMap, theResult_Any);
 				}
-			return theResult_Any;
+			else
+				{
+				return theResult_Any;
+				}
 			}
 		}
 	return nullref;
@@ -84,7 +90,7 @@ ZRef<Result> Iterator_Any_Rename::ReadInc()
 		{
 		if (ZRef<Result_Any> theResult_Any = theResult.DynamicCast<Result_Any>())
 			{
-			const ZAny theAny = theResult_Any->GetVal();
+			const ZAny& theAny = theResult_Any->GetVal();
 			if (const ZMap_Any* theMap = theAny.PGet_T<ZMap_Any>())
 				{
 				ZMap_Any newMap = *theMap;
@@ -94,7 +100,8 @@ ZRef<Result> Iterator_Any_Rename::ReadInc()
 					const ZVal_Any theVal = newMap.Get(theIndex);
 					newMap.Erase(theIndex);
 					newMap.Set(fNew, theVal);
-					return new Result_Any(newMap);
+
+					return new Result_Any(newMap, theResult_Any);
 					}
 				}
 			return theResult_Any;
@@ -108,30 +115,26 @@ ZRef<Result> Iterator_Any_Rename::ReadInc()
 #pragma mark * Iterator_Any_Restrict
 
 Iterator_Any_Restrict::Iterator_Any_Restrict(
-	ZRef<Iterator> iIterator, const ZValCondition& iValCondition)
+	ZRef<Iterator> iIterator, const ZValPred& iValPred)
 :	fIterator(iIterator)
-,	fValCondition(iValCondition)
+,	fValPred(iValPred)
 	{}
 
 ZRef<Iterator> Iterator_Any_Restrict::Clone()
-	{ return new Iterator_Any_Restrict(fIterator->Clone(), fValCondition); }
+	{ return new Iterator_Any_Restrict(fIterator->Clone(), fValPred); }
 
 ZRef<Result> Iterator_Any_Restrict::ReadInc()
 	{
 	for (;;)
 		{
-		if (ZRef<Result> theResult = fIterator->ReadInc())
-			{
-			if (ZRef<Result_Any> theResult_Any = theResult.DynamicCast<Result_Any>())
-				{
-				ZValContext theContext;
-				if (fValCondition.Matches(theContext, theResult_Any->GetVal()))
-					return theResult;
-				}
-			}
-		else
-			{
+		ZRef<Result> theResult = fIterator->ReadInc();
+		if (!theResult)
 			return nullref;
+		if (ZRef<Result_Any> theResult_Any = theResult.DynamicCast<Result_Any>())
+			{
+			ZValContext theContext;
+			if (fValPred.Matches(theContext, theResult_Any->GetVal()))
+				return theResult;
 			}
 		}
 	}
@@ -152,20 +155,47 @@ ZRef<Result> Iterator_Any_Select::ReadInc()
 	{
 	for (;;)
 		{
-		if (ZRef<Result> theResult = fIterator->ReadInc())
-			{
-			if (ZRef<Result_Any> theResult_Any = theResult.DynamicCast<Result_Any>())
-				{
-				if (sMatches(fExpr_Logic, theResult_Any->GetVal()))
-					return theResult;
-				}
-			}
-		else
-			{
+		ZRef<Result> theResult = fIterator->ReadInc();
+		if (!theResult)
 			return nullref;
+		if (ZRef<Result_Any> theResult_Any = theResult.DynamicCast<Result_Any>())
+			{
+			if (sMatches(fExpr_Logic, theResult_Any->GetVal()))
+				return theResult;
 			}
 		}
 	}
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Visitor_DoMakeIterator_Any
+
+void Visitor_DoMakeIterator_Any::Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr)
+	{
+	if (ZRef<ZQE::Iterator> theIterator = this->Do(iExpr->GetOp0()))
+		this->pSetResult(new ZQE::Iterator_Any_Project(theIterator, iExpr->GetProjectRelHead()));
+	}
+
+void Visitor_DoMakeIterator_Any::Visit_Expr_Rel_Rename(ZRef<ZRA::Expr_Rel_Rename> iExpr)
+	{
+	if (ZRef<ZQE::Iterator> theIterator = this->Do(iExpr->GetOp0()))
+		{
+		this->pSetResult(
+			new ZQE::Iterator_Any_Rename(theIterator, iExpr->GetNew(), iExpr->GetOld()));
+		}
+	}
+
+void Visitor_DoMakeIterator_Any::Visit_Expr_Rel_Restrict(ZRef<ZRA::Expr_Rel_Restrict> iExpr)
+	{
+	if (ZRef<ZQE::Iterator> theIterator = this->Do(iExpr->GetOp0()))
+		this->pSetResult(new ZQE::Iterator_Any_Restrict(theIterator, iExpr->GetValPred()));
+	}
+
+void Visitor_DoMakeIterator_Any::Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_Select> iExpr)
+	{
+	if (ZRef<ZQE::Iterator> theIterator = this->Do(iExpr->GetOp0()))
+		this->pSetResult(new ZQE::Iterator_Any_Select(theIterator, iExpr->GetExpr_Logic()));
+	}
+
 } // namespace ZQE
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

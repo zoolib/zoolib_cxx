@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
@@ -57,6 +57,9 @@ ZRef<Expr_Rel> Expr_Rel_Select::Clone(ZRef<Expr_Rel> iOp0)
 void Expr_Rel_Select::Accept_Expr_Rel_Select( Visitor_Expr_Rel_Select& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Select(this); }
 
+RelHead Expr_Rel_Select::GetRelHead()
+	{ return this->GetOp0()->GetRelHead(); }
+
 ZRef<ZExpr_Logic> Expr_Rel_Select::GetExpr_Logic()
 	{ return fExpr_Logic; }
 
@@ -82,11 +85,11 @@ ZRef<Expr_Rel_Select> sSelect(
 
 ZRef<Expr_Rel> operator&(
 	const ZRef<Expr_Rel>& iExpr_Rel, const ZRef<ZExpr_Logic>& iExpr_Logic)
-	{ return new Expr_Rel_Select(iExpr_Rel, iExpr_Logic); }
+	{ return sSelect(iExpr_Rel, iExpr_Logic); }
 
 ZRef<Expr_Rel> operator&(
 	const ZRef<ZExpr_Logic>& iExpr_Logic, const ZRef<Expr_Rel>& iExpr_Rel)
-	{ return new Expr_Rel_Select(iExpr_Rel, iExpr_Logic); }
+	{ return sSelect(iExpr_Rel, iExpr_Logic); }
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

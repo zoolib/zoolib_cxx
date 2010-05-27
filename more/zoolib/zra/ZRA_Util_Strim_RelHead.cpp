@@ -21,7 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
 #include "zoolib/ZYad_ZooLibStrim.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 namespace Util_Strim_RelHead {
 
@@ -40,12 +40,9 @@ void sWrite_PropName(const string& iName, const ZStrimW& s)
 
 void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s)
 	{
-	bool universal;
-	const set<string>& names = iRelHead.GetElems(universal);
+	const set<string>& names = iRelHead.GetElems();
 
 	s.Write("[");
-	if (universal)
-		s.Write("~");
 
 	bool isFirst = true;
 	for (set<string>::const_iterator i = names.begin(); i != names.end(); ++i)
@@ -60,4 +57,4 @@ void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s)
 
 } // namespace Util_Strim_RelHead
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

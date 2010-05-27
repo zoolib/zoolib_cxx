@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using std::string;
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
@@ -58,6 +58,17 @@ ZRef<Expr_Rel> Expr_Rel_Rename::Self()
 ZRef<Expr_Rel> Expr_Rel_Rename::Clone(ZRef<Expr_Rel> iOp0)
 	{ return new Expr_Rel_Rename(iOp0, fNew, fOld); }
 
+RelHead Expr_Rel_Rename::GetRelHead()
+	{
+	RelHead result = this->GetOp0()->GetRelHead();
+	if (result.Contains(fOld))
+		{
+		result -= fOld;
+		result |= fNew;
+		}
+	return result;
+	}
+
 void Expr_Rel_Rename::Accept_Expr_Rel_Rename(Visitor_Expr_Rel_Rename& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Rename(this); }
 
@@ -83,4 +94,4 @@ ZRef<Expr_Rel_Rename> sRename(const ZRef<Expr_Rel>& iExpr,
 	{ return new Expr_Rel_Rename(iExpr, iNewPropName, iOldPropName); }
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zra/ZRA_Expr_Rel_Difference.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
@@ -61,4 +61,4 @@ void Visitor_Expr_Rel_Difference::Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Differ
 	{ this->Visit_Expr_Op2(iExpr); }
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

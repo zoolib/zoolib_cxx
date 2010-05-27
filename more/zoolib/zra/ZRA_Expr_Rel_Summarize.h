@@ -18,15 +18,15 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Expr_Rel_Project__
-#define __ZRA_Expr_Rel_Project__ 1
+#ifndef __ZRA_Expr_Rel_Summarize__
+#define __ZRA_Expr_Rel_Summarize__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Op_T.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 #include "zoolib/zra/ZRA_RelHead.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 class Visitor_Expr_Rel_Summarize;
@@ -50,10 +50,11 @@ public:
 	virtual ZRef<Expr_Rel> Self();
 	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0);
 
+// From Expr_Rel
+	virtual RelHead GetRelHead();
+
 // Our protocol
 	virtual void Accept_Expr_Rel_Summarize(Visitor_Expr_Rel_Summarize& iVisitor);
-
-	RelHead GetRelHead();
 
 private:
 	const RelHead fRelHead;
@@ -78,6 +79,6 @@ public:
 ZRef<Expr_Rel_Summarize> sSummarize(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead);
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
-#endif // __ZRA_Expr_Rel_Project__
+#endif // __ZRA_Expr_Rel_Summarize__

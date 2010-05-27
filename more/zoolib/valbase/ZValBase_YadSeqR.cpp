@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZValBase_YadSeqR {
 
 // =================================================================================================
@@ -37,10 +37,11 @@ namespace ZValBase_YadSeqR {
 class Expr_Rel_Concrete : public ZValBase::Expr_Rel_Concrete
 	{
 public:
-	Expr_Rel_Concrete(ZRef<ZYadSeqR> iYadSeqR);
+	Expr_Rel_Concrete(const string8& iName, const ZRA::RelHead& iRelHead, ZRef<ZYadSeqR> iYadSeqR);
 
 // From ZRA::Expr_Rel_Concrete via ZValBase::Expr_Rel_Concrete
 	virtual ZRA::RelHead GetRelHead();
+	virtual string8 GetName();
 
 // From ZValBase::Expr_Rel_Concrete
 	virtual ZRef<ZQE::Iterator> MakeIterator();
@@ -50,6 +51,8 @@ public:
 
 private:
 	ZMtx fMtx;
+	const string8 fName;
+	const ZRA::RelHead fRelHead;
 	ZRef<ZYadSeqR> fYadSeqR;
 	std::vector<ZRef<ZQE::Result> > fVector;
 	};
@@ -91,12 +94,18 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 #pragma mark -
 #pragma mark * Expr_Rel_Concrete definition
 
-Expr_Rel_Concrete::Expr_Rel_Concrete(ZRef<ZYadSeqR> iYadSeqR)
-:	fYadSeqR(iYadSeqR)
+Expr_Rel_Concrete::Expr_Rel_Concrete(
+	const string8& iName, const ZRA::RelHead& iRelHead, ZRef<ZYadSeqR> iYadSeqR)
+:	fName(iName)
+,	fRelHead(iRelHead)
+,	fYadSeqR(iYadSeqR)
 	{}
 
 ZRA::RelHead Expr_Rel_Concrete::GetRelHead()
-	{ return ZRA::RelHead::sUniversal(); }
+	{ return fRelHead; }
+
+string8 Expr_Rel_Concrete::GetName()
+	{ return fName; }
 
 ZRef<ZQE::Iterator> Expr_Rel_Concrete::MakeIterator()
 	{ return new Iterator(this, 0); }
@@ -127,12 +136,13 @@ ZRef<ZQE::Result> Expr_Rel_Concrete::ReadInc(size_t& ioIndex)
 #pragma mark -
 #pragma mark * ZValBase_YadSeqR pseudo constructors
 
-ZRef<ZRA::Expr_Rel> sConcrete(ZRef<ZYadSeqR> iYadSeqR)
+ZRef<ZRA::Expr_Rel> sConcrete(
+	const string8& iName, const ZRA::RelHead& iRelHead, ZRef<ZYadSeqR> iYadSeqR)
 	{
 	// Could do a dynamic cast on iYadSeqR to see if it's really a ZYadSeqRPos,
 	// in which case returning a ZValBase_YadSeqRPos::Iterator would be a win.
-	return new Expr_Rel_Concrete(iYadSeqR);
+	return new Expr_Rel_Concrete(iName, iYadSeqR);
 	}
 
 } // namespace ZValBase_YadSeqR
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

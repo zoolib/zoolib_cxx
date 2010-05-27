@@ -18,63 +18,74 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Expr_Rel_Join__
-#define __ZRA_Expr_Rel_Join__ 1
+#ifndef __ZDataspace_Source_Union__
+#define __ZDataspace_Source_Union__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZExpr_Op_T.h"
-#include "zoolib/zra/ZRA_Expr_Rel.h"
+#include "zoolib/ZDList.h"
 
-NAMESPACE_ZOOLIB_BEGIN
-namespace ZRA {
+#include "zoolib/dataspace/ZDataspace_Source.h"
 
-class Visitor_Expr_Rel_Join;
+namespace ZooLib {
+namespace ZDataspace {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Expr_Rel_Join
+#pragma mark * Source_Union
 
-class Expr_Rel_Join
-:	public virtual Expr_Rel
-,	public virtual ZExpr_Op2_T<Expr_Rel>
+class Source_Union : public Source
 	{
-	typedef ZExpr_Op2_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Join(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1);
+	enum { kDebug = 1 };
 
-// From ZExpr_Op2_T
-	virtual void Accept_Expr_Op2(ZVisitor_Expr_Op2_T<Expr_Rel>& iVisitor);
+	Source_Union();
+	virtual ~Source_Union();
 
-	virtual ZRef<Expr_Rel> Self();
-	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1);
+// From Source
+	virtual set<RelHead> GetRelHeads();
+
+	virtual void Update(
+		bool iLocalOnly,
+		AddedSearch* iAdded, size_t iAddedCount,
+		int64* iRemoved, size_t iRemovedCount,
+		vector<SearchResult>& oChanged,
+		Clock& oClock);
 
 // Our protocol
-	virtual void Accept_Expr_Rel_Join(Visitor_Expr_Rel_Join& iVisitor);
+	void InsertSource(Source* iSource);
+	void EraseSource(Source* iSource);
+
+private:
+	class PQuery;
+	class DLink_PQuery_Changed;
+
+	int64 fNextRefcon;
+	map<int64, PQuery*> fMap_RefconToPQuery;
+	DListHead<DLink_PQuery_Changed> fPQuery_Changed;
+
+
+	class PSourceProduct;
+	class DLink_PSourceProduct_ToAdd;
+	class DLink_PSourceProduct_InPQuery;
+
+	class PSourceSearches;
+	class DLink_PSourceSearches_ToAdd;
+	class DLink_PSourceSearches_InPQuery;
+
+	class PSource;
+
+	map<Source*, PSource*> fMap_SourceToPSource;
+
+	Clock fClock;
+	
+	class Iterator_Product;
+	friend class Iterator_Product;
+
+	class Iterator_Searches;
+	friend class Iterator_Searches;
 	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Visitor_Expr_Rel_Join
+} // namespace ZDataspace
+} // namespace ZooLib
 
-class Visitor_Expr_Rel_Join
-:	public virtual ZVisitor_Expr_Op2_T<Expr_Rel>
-	{
-	typedef ZVisitor_Expr_Op2_T<Expr_Rel> inherited;
-public:
-	virtual void Visit_Expr_Rel_Join(ZRef<Expr_Rel_Join> iExpr);
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Relational operators
-
-ZRef<Expr_Rel_Join> sJoin(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
-
-ZRef<Expr_Rel> operator*(
-	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
-
-} // namespace ZRA
-NAMESPACE_ZOOLIB_END
-
-#endif // __ZRA_Expr_Rel__
+#endif // __ZDataspace_Source_Union__

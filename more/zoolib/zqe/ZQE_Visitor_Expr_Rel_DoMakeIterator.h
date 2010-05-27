@@ -26,13 +26,13 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Iterator.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Difference.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Join.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
@@ -43,7 +43,7 @@ class Visitor_Expr_Rel_DoMakeIterator
 :	public virtual ZVisitor_Do_T<ZRef<Iterator> >
 ,	public virtual ZRA::Visitor_Expr_Rel_Difference
 ,	public virtual ZRA::Visitor_Expr_Rel_Intersect
-,	public virtual ZRA::Visitor_Expr_Rel_Join
+,	public virtual ZRA::Visitor_Expr_Rel_Product
 ,	public virtual ZRA::Visitor_Expr_Rel_Union
 ,	public virtual ZRA::Visitor_Expr_Rel_Project
 ,	public virtual ZRA::Visitor_Expr_Rel_Rename
@@ -52,7 +52,7 @@ class Visitor_Expr_Rel_DoMakeIterator
 public:
 	virtual void Visit_Expr_Rel_Difference(ZRef<ZRA::Expr_Rel_Difference> iExpr);
 	virtual void Visit_Expr_Rel_Intersect(ZRef<ZRA::Expr_Rel_Intersect> iExpr);
-	virtual void Visit_Expr_Rel_Join(ZRef<ZRA::Expr_Rel_Join> iExpr);
+	virtual void Visit_Expr_Rel_Product(ZRef<ZRA::Expr_Rel_Product> iExpr);
 	virtual void Visit_Expr_Rel_Union(ZRef<ZRA::Expr_Rel_Union> iExpr);
 
 	virtual void Visit_Expr_Rel_Project(ZRef<ZRA::Expr_Rel_Project> iExpr);
@@ -61,6 +61,6 @@ public:
 	};
 
 } // namespace ZQE
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZQE_Visitor_Expr_Rel_DoMakeIterator__

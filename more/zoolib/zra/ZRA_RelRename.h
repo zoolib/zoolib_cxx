@@ -18,68 +18,74 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zra/ZRA_Visitor_Expr_Rel_DoGetRelHead.h"
+#ifndef __ZRA_RelRename__
+#define __ZRA_RelRename__ 1
+#include "zconfig.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+#include "zoolib/ZUnicodeString.h"
+#include "zoolib/zra/ZRA_RelHead.h"
+
+#include <map>
+#include <set>
+
+namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_DoGetRelHead
+#pragma mark * RelRename
 
-void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Op1(ZRef<ZExpr_Op1_T<Expr_Rel> > iExpr)
+class RelRename
 	{
-	RelHead result;
+public:
+	typedef std::pair<string8, string8> Elem_t;
 
-	if (ZRef<Expr_Rel> theExpr = iExpr->GetOp0())
-		result = this->Do(theExpr);
+	RelRename(std::set<Elem_t>* ioElems);
 
-	this->pSetResult(result);
-	}
+	void swap(RelRename& iOther);
 
-void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Op2(ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr)
-	{
-	RelHead result;
+	RelRename();
+	RelRename(const RelRename& iOther);
+	~RelRename();
+	RelRename& operator=(const RelRename& iOther);
 
-	if (ZRef<Expr_Rel> theExpr = iExpr->GetOp0())
-		result = result | this->Do(theExpr);
+	RelRename(const std::set<Elem_t>& iElems);
 
-	if (ZRef<Expr_Rel> theExpr = iExpr->GetOp1())
-		result = result | this->Do(theExpr);
+	RelRename(const RelHead& iRelHead);
 
-	this->pSetResult(result);
-	}
+	RelRename Inverted() const;
 
-void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
-	{ this->pSetResult(iExpr->GetRelHead()); }
+	bool operator==(const RelRename& iOther) const;
+	bool operator!=(const RelRename& iOther) const;
+	bool operator<(const RelRename& iOther) const;
 
-void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
-	{
-	RelHead result;
+	RelRename& operator|=(const RelRename& iOther);
+	RelRename operator|(const RelRename& iOther) const;
 
-	if (ZRef<Expr_Rel> theExpr = iExpr->GetOp0())
-		result = this->Do(theExpr) & iExpr->GetRelHead();
+	void ApplyToFrom(const string8& iNameTo, const string8& iNameFrom);
 
-	this->pSetResult(result);
-	}
+	const std::set<Elem_t>& GetElems() const;
 
-void Visitor_Expr_Rel_DoGetRelHead::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
-	{
-	RelHead result;
+	RelHead GetRelHead_To() const;
+	RelHead GetRelHead_From() const;
 
-	if (ZRef<Expr_Rel> theExpr = iExpr->GetOp0())
-		{
-		result = this->Do(theExpr);
-		const std::string oldName = iExpr->GetOld();
-		if (result.Contains(oldName))
-			{
-			result -= oldName;
-			result |= iExpr->GetNew();
-			}
-		}
+	std::map<string8, string8> GetRename() const;
 
-	this->pSetResult(result);
-	}
+private:
+	std::set<Elem_t> fElems;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Rename_t
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
+
+namespace std {
+template <class T>
+inline void swap(ZOOLIB_PREFIX::ZRA::RelRename& a, ZOOLIB_PREFIX::ZRA::RelRename& b)
+	{ a.swap(b); }
+}
+
+#endif // __ZRA_RelRename__

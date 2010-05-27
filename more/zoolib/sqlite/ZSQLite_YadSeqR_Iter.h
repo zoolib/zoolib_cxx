@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZYad_Std.h"
 #include "zoolib/sqlite/ZSQLite.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZSQLite {
 
 // =================================================================================================
@@ -46,6 +46,6 @@ private:
 	};
 
 } // namespace ZSQLite
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZSQLite_YadSeqR_Iter__

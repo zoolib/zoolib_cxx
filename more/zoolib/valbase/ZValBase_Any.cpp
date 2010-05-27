@@ -24,12 +24,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Result_Any.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZValBase_Any {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Iterator
+#pragma mark * Iterator (anonymous)
+
+namespace ZANONYMOUS {
 
 class Iterator : public ZQE::Iterator
 	{
@@ -70,6 +72,8 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 	return ZRef<ZQE::Result>();
 	}
 
+} // anonymous namespace
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Expr_Rel_Concrete
@@ -77,24 +81,33 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 class Expr_Rel_Concrete : public ZValBase::Expr_Rel_Concrete
 	{
 public:
-	Expr_Rel_Concrete(const ZSeq_Any& iSeq);
+	Expr_Rel_Concrete(const string8& iName, const ZRA::RelHead& iRelHead, const ZSeq_Any& iSeq);
 
 // From ZRA::Expr_Rel_Concrete via ZValBase::Expr_Rel_Concrete
 	virtual ZRA::RelHead GetRelHead();
+	virtual string8 GetName();
 
 // From ZValBase::Expr_Rel_Concrete
 	virtual ZRef<ZQE::Iterator> MakeIterator();
 
 private:
+	const string8 fName;
+	const ZRA::RelHead fRelHead;
 	const ZSeq_Any fSeq;
 	};
 
-Expr_Rel_Concrete::Expr_Rel_Concrete(const ZSeq_Any& iSeq)
-:	fSeq(iSeq)
+Expr_Rel_Concrete::Expr_Rel_Concrete(
+	const string8& iName, const ZRA::RelHead& iRelHead, const ZSeq_Any& iSeq)
+:	fName(iName)
+,	fRelHead(iRelHead)
+,	fSeq(iSeq)
 	{}
 
 ZRA::RelHead Expr_Rel_Concrete::GetRelHead()
-	{ return ZRA::RelHead::sUniversal(); }
+	{ return fRelHead; }
+
+string8 Expr_Rel_Concrete::GetName()
+	{ return fName; }
 
 ZRef<ZQE::Iterator> Expr_Rel_Concrete::MakeIterator()
 	{ return new Iterator(fSeq); }
@@ -103,12 +116,25 @@ ZRef<ZQE::Iterator> Expr_Rel_Concrete::MakeIterator()
 #pragma mark -
 #pragma mark * ZValBase_Any pseudo constructors
 
-ZRef<ZRA::Expr_Rel> sConcrete(const ZSeq_Any& iSeq)
+ZRef<ZRA::Expr_Rel> sConcrete(
+	const string8& iName, const ZRA::RelHead& iRelHead, const ZSeq_Any& iSeq)
+	{ return new Expr_Rel_Concrete(iName, iRelHead, iSeq); }
+
+ZVal_Any sApplyRelHead(const ZRA::RelHead& iRelHead, const ZVal_Any& iVal)
 	{
-	// Could do a dynamic cast on iYadSeqR to see if it's really a ZYadSeqRPos,
-	// in which case returning a ZValBase_YadSeqRPos::Iterator would be a win.
-	return new Expr_Rel_Concrete(iSeq);
+	if (const ZMap_Any* theMap = iVal.PGet_T<ZMap_Any>())
+		{
+		ZMap_Any newMap;
+		for (ZMap_Any::Index_t i = theMap->Begin(); i != theMap->End(); ++i)
+			{
+			const string8& theName = theMap->NameOf(i);
+			if (iRelHead.Contains(theName))
+				newMap.Set(theName, theMap->Get(i));
+			}
+		return newMap;
+		}
+	return iVal;
 	}
 
 } // namespace ZValBase_Any
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

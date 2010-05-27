@@ -23,9 +23,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZValCondition.h"
+#include "zoolib/ZValPred.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
@@ -36,10 +36,10 @@ class Result : public ZCounted
 	{
 public:
 	virtual bool SameAs(ZRef<Result> iOther) = 0;
-	virtual ZRef<Result> JoinedWith(ZRef<Result> iOther) = 0;
+	virtual ZRef<Result> ProductWith(ZRef<Result> iOther) = 0;
 	};
 
 } // namespace ZQE
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZQE_Result__

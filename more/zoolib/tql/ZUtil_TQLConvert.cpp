@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/tql/ZUtil_TQLConvert.h"
-#include "zoolib/zra/ZRA_RelOps.h"
+#include "zoolib/zra/ZRA_Util_RelOperators.h"
 #include "zoolib/valbase/ZValBase.h"
 
 NAMESPACE_ZOOLIB_BEGIN
@@ -43,7 +43,11 @@ typedef ZRef<ZExpr_Logic> Spec;
 typedef ZRef<Expr_Rel> Query;
 typedef ZMap_Expr Map;
 typedef ZVal_Expr Val;
-typedef ZValCondition Condition;
+typedef ZValPred Condition;
+
+ZRef<Expr_Rel> sJoin(
+	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
+	{ return sProduct(iLHS, iRHS); }
 
 // =================================================================================================
 #pragma mark -
@@ -87,7 +91,7 @@ static Spec spAsTSpec(const ZTBSpec& iTBSpec)
 					break;
 				}
 
-			ZValCondition_T<Val> theCondition(
+			ZValPred_T<Val> theCondition(
 				CName(siter->GetPropName()),
 				new ZValComparator_Simple_T<Val>(theComparator),
 				CConst(siter->GetTValue().AsAny()));
@@ -95,7 +99,7 @@ static Spec spAsTSpec(const ZTBSpec& iTBSpec)
 			if (sisfirst)
 				{
 				sisfirst = false;
-				sect = new ZExpr_Logic_ValCondition(theCondition);
+				sect = new ZExpr_Logic_ValPred(theCondition);
 				}
 			else
 				{

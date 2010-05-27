@@ -25,7 +25,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVal_Any.h"
 #include "zoolib/zqe/ZQE_Result.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+#include <set>
+
+namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
@@ -36,19 +38,25 @@ class Result_Any : public Result
 	{
 public:
 	Result_Any(const ZVal_Any& iVal);
+	Result_Any(const ZVal_Any& iVal, ZRef<Result_Any> iOther);
 
 // From Result
 	virtual bool SameAs(ZRef<Result> iOther);
-	virtual ZRef<Result> JoinedWith(ZRef<Result> iOther);
+	virtual ZRef<Result> ProductWith(ZRef<Result> iOther);
 
 // Our protocol
 	const ZVal_Any& GetVal();
+	
+	void AddAnnotation(ZRef<ZCounted> iCounted);
+	void AddAnnotations(const std::set<ZRef<ZCounted> >& iAnnotations);
+	const std::set<ZRef<ZCounted> >& GetAnnotations();
 
 private:
 	const ZVal_Any fVal;
+	std::set<ZRef<ZCounted> > fAnnotations;
 	};
 
 } // namespace ZQE
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZQE_Result_Val_Any__

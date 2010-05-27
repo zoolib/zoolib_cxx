@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zqe/ZQE_Visitor_Expr_Rel_DoMakeIterator.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
@@ -42,12 +42,12 @@ void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Intersect(ZRef<ZRA::Expr_Re
 		}
 	}
 
-void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Join(ZRef<ZRA::Expr_Rel_Join> iExpr)
+void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Product(ZRef<ZRA::Expr_Rel_Product> iExpr)
 	{
 	if (ZRef<Iterator> op0 = this->Do(iExpr->GetOp0()))
 		{
 		if (ZRef<Iterator> op1 = this->Do(iExpr->GetOp1()))
-			this->pSetResult(new Iterator_Join(op0, op1));
+			this->pSetResult(new Iterator_Product(op0, op1));
 		}
 	}
 
@@ -78,4 +78,4 @@ void Visitor_Expr_Rel_DoMakeIterator::Visit_Expr_Rel_Select(ZRef<ZRA::Expr_Rel_S
 	}
 
 } // namespace ZQE
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

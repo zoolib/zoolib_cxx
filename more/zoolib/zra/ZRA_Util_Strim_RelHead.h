@@ -18,14 +18,14 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZUtil_Strim_RelHead__
-#define __ZUtil_Strim_RelHead__
+#ifndef __ZRA_Util_Strim_RelHead__
+#define __ZRA_Util_Strim_RelHead__
 #include "zconfig.h"
 
 #include "zoolib/zra/ZRA_RelHead.h"
 #include "zoolib/ZStrim.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 namespace Util_Strim_RelHead {
 
@@ -38,6 +38,6 @@ void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s);
 
 } // namespace Util_Strim_RelHead
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
-#endif // __ZUtil_Strim_RelHead__
+#endif // __ZRA_Util_Strim_RelHead__

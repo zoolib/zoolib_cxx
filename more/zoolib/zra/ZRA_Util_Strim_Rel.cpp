@@ -18,12 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_Strim_ValCondition.h"
-#include "zoolib/ZVisitor_Expr_Logic_ValCondition_DoToStrim.h"
+#include "zoolib/ZUtil_Strim_ValPred.h"
+#include "zoolib/ZVisitor_Expr_Logic_ValPred_DoToStrim.h"
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Difference.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Join.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Product.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
@@ -31,9 +31,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 #include "zoolib/zra/ZRA_Util_Strim_RelHead.h"
-#include "zoolib/zra/ZRA_Visitor_Expr_Rel_DoGetRelHead.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 namespace Util_Strim_Rel {
 
@@ -44,9 +43,6 @@ using std::string;
 #pragma mark * Static helpers
 
 namespace ZANONYMOUS {
-
-RelHead spGetRelHead(ZRef<ZExpr> iExpr)
-	{ return Visitor_Expr_Rel_DoGetRelHead().Do(iExpr); }
 
 void spWrite(const string& iString, const ZStrimW& s)
 	{ s.Write(iString); }
@@ -60,14 +56,13 @@ void spWrite_RelHead(const RelHead& iRelHead, const ZStrimW& iStrimW)
 void spWrite_PropName(const string& iPropName, const ZStrimW& iStrimW)
 	{ Util_Strim_RelHead::sWrite_PropName(iPropName, iStrimW); }
 
-void spWrite_EffectiveRelHeadComment(ZRef<ZExpr> iExpr, const ZStrimW& iStrimW)
+void spWrite_EffectiveRelHeadComment(ZRef<Expr_Rel> iExpr, const ZStrimW& iStrimW)
 	{
 	iStrimW.Write(" // ");
-	Util_Strim_RelHead::sWrite_RelHead(spGetRelHead(iExpr), iStrimW);
+	Util_Strim_RelHead::sWrite_RelHead(iExpr->GetRelHead(), iStrimW);
 	}
 
 } // anonymous namespace
-
 
 // =================================================================================================
 #pragma mark -
@@ -76,21 +71,21 @@ void spWrite_EffectiveRelHeadComment(ZRef<ZExpr> iExpr, const ZStrimW& iStrimW)
 namespace ZANONYMOUS {
 
 class Visitor_DoToStrim
-:	public virtual ZVisitor_Expr_Logic_ValCondition_DoToStrim
-,	public virtual ZRA::Visitor_Expr_Rel_Difference
-,	public virtual ZRA::Visitor_Expr_Rel_Intersect
-,	public virtual ZRA::Visitor_Expr_Rel_Join
-,	public virtual ZRA::Visitor_Expr_Rel_Union
-,	public virtual ZRA::Visitor_Expr_Rel_Concrete
-,	public virtual ZRA::Visitor_Expr_Rel_Project
-,	public virtual ZRA::Visitor_Expr_Rel_Rename
-,	public virtual ZRA::Visitor_Expr_Rel_Restrict
-,	public virtual ZRA::Visitor_Expr_Rel_Select
+:	public virtual ZVisitor_Expr_Logic_ValPred_DoToStrim
+,	public virtual Visitor_Expr_Rel_Difference
+,	public virtual Visitor_Expr_Rel_Intersect
+,	public virtual Visitor_Expr_Rel_Product
+,	public virtual Visitor_Expr_Rel_Union
+,	public virtual Visitor_Expr_Rel_Concrete
+,	public virtual Visitor_Expr_Rel_Project
+,	public virtual Visitor_Expr_Rel_Rename
+,	public virtual Visitor_Expr_Rel_Restrict
+,	public virtual Visitor_Expr_Rel_Select
 	{
 public:
 	virtual void Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Difference> iExpr);
 	virtual void Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect> iExpr);
-	virtual void Visit_Expr_Rel_Join(ZRef<Expr_Rel_Join> iExpr);
+	virtual void Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr);
 	virtual void Visit_Expr_Rel_Union(ZRef<Expr_Rel_Union> iExpr);
 
 	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
@@ -112,10 +107,10 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Difference(ZRef<Expr_Rel_Difference> iExp
 void Visitor_DoToStrim::Visit_Expr_Rel_Intersect(ZRef<Expr_Rel_Intersect> iExpr)
 	{ this->pWriteBinary("Intersect", iExpr); }
 
-void Visitor_DoToStrim::Visit_Expr_Rel_Join(ZRef<Expr_Rel_Join> iExpr)
+void Visitor_DoToStrim::Visit_Expr_Rel_Product(ZRef<Expr_Rel_Product> iExpr)
 	{
 	const ZStrimW& w = pStrimW();
-	w << "Join";
+	w << "Product";
 
 	if (pOptions().fDebuggingOutput)
 		spWrite_EffectiveRelHeadComment(iExpr, w);
@@ -123,12 +118,12 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Join(ZRef<Expr_Rel_Join> iExpr)
 	this->pWriteLFIndent();
 	w << "(";
 
-	if (pOptions().fDebuggingOutput)
-		{
-		w << " // Joining on: ";
-		const RelHead joinOn = spGetRelHead(iExpr->GetOp0()) & spGetRelHead(iExpr->GetOp1());
-		spWrite_RelHead(joinOn, w);
-		}
+//	if (pOptions().fDebuggingOutput)
+//		{
+//		w << " // Joining on: ";
+//		const RelHead joinOn = spGetRelHead(iExpr->GetOp0()) & spGetRelHead(iExpr->GetOp1());
+//		spWrite_RelHead(joinOn, w);
+//		}
 
 	this->pWriteLFIndent();
 	this->pDoToStrim(iExpr->GetOp0());
@@ -153,8 +148,12 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
 	spWrite_EffectiveRelHeadComment(iExpr, w);
 
 	this->pWriteLFIndent();
-	w << "(" << iExpr->GetName() << "/*" << iExpr->GetDescription() << "*/";
-	w << "/*" << typeid(*iExpr.Get()).name() << "*/ )";
+	w
+		<< "("
+		<< iExpr->GetName()
+		<< "/*" << iExpr->GetDescription() << "*/"
+		<< "/*" << typeid(*iExpr.Get()).name() << "*/"
+		<< ")";
 	}
 
 void Visitor_DoToStrim::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
@@ -169,7 +168,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
 	spWrite("(", w);
 
 	this->pWriteLFIndent();
-	spWrite_RelHead(iExpr->GetRelHead(), w);
+	spWrite_RelHead(iExpr->GetProjectRelHead(), w);
 	spWrite(",", w);
 
 	this->pWriteLFIndent();
@@ -214,7 +213,7 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr)
 	this->pWriteLFIndent();
 	w << "(";
 	this->pWriteLFIndent();
-	ZUtil_Strim_ValCondition::sToStrim(iExpr->GetValCondition(), w);
+	ZUtil_Strim_ValPred::sToStrim(iExpr->GetValPred(), w);
 	w << ",";
 
 	this->pWriteLFIndent();
@@ -253,7 +252,7 @@ void Visitor_DoToStrim::pWriteBinary(
 	w << iFunctionName;
 
 	if (pOptions().fDebuggingOutput)
-		spWrite_EffectiveRelHeadComment(iExpr, w);
+		spWrite_EffectiveRelHeadComment(iExpr->Self(), w);
 
 	this->pWriteLFIndent();
 	w << "(";
@@ -281,4 +280,4 @@ void sToStrim(const Rel& iRel, const Options& iOptions, const ZStrimW& iStrimW)
 
 } // namespace Util_Strim_Rel
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

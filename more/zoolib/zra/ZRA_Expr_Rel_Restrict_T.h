@@ -23,10 +23,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZExpr_Op_T.h"
-#include "zoolib/ZValCondition_T.h"
+#include "zoolib/ZValPred_T.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 template <class Val>
@@ -43,7 +43,7 @@ class Expr_Rel_Restrict_T
 	{
 	typedef ZExpr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Restrict_T(ZRef<Expr_Rel> iOp0, const ZValCondition_T<Val>& iValCondition);
+	Expr_Rel_Restrict_T(ZRef<Expr_Rel> iOp0, const ZValPred_T<Val>& iValPred);
 	virtual ~Expr_Rel_Restrict_T();
 
 // From ZExpr_Op1_T<Expr_Rel>
@@ -52,20 +52,23 @@ public:
 	virtual ZRef<Expr_Rel> Self();
 	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0);
 
+// From Expr_Rel
+	virtual RelHead GetRelHead();
+
 // Our protocol
 	virtual void Accept_Expr_Rel_Restrict(Visitor_Expr_Rel_Restrict_T<Val>& iVisitor);
 
-	ZValCondition_T<Val> GetValCondition();
+	ZValPred_T<Val> GetValPred();
 
 private:
-	const ZValCondition_T<Val> fValCondition;
+	const ZValPred_T<Val> fValPred;
 	};
 
 template <class Val>
 Expr_Rel_Restrict_T<Val>::Expr_Rel_Restrict_T(
-	ZRef<Expr_Rel> iOp0, const ZValCondition_T<Val>& iValCondition)
+	ZRef<Expr_Rel> iOp0, const ZValPred_T<Val>& iValPred)
 :	inherited(iOp0)
-,	fValCondition(iValCondition)
+,	fValPred(iValPred)
 	{}
 
 template <class Val>
@@ -92,15 +95,19 @@ ZRef<Expr_Rel> Expr_Rel_Restrict_T<Val>::Self()
 
 template <class Val>
 ZRef<Expr_Rel> Expr_Rel_Restrict_T<Val>::Clone(ZRef<Expr_Rel> iOp0)
-	{ return new Expr_Rel_Restrict_T<Val>(iOp0, fValCondition); }
+	{ return new Expr_Rel_Restrict_T<Val>(iOp0, fValPred); }
+
+template <class Val>
+RelHead Expr_Rel_Restrict_T<Val>::GetRelHead()
+	{ return this->GetOp0()->GetRelHead(); }
 
 template <class Val>
 void Expr_Rel_Restrict_T<Val>::Accept_Expr_Rel_Restrict(Visitor_Expr_Rel_Restrict_T<Val>& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Restrict(this); }
 
 template <class Val>
-ZValCondition_T<Val> Expr_Rel_Restrict_T<Val>::GetValCondition()
-	{ return fValCondition; }
+ZValPred_T<Val> Expr_Rel_Restrict_T<Val>::GetValPred()
+	{ return fValPred; }
 
 // =================================================================================================
 #pragma mark -
@@ -126,20 +133,20 @@ void Visitor_Expr_Rel_Restrict_T<Val>::Visit_Expr_Rel_Restrict(
 
 template <class Val>
 ZRef<Expr_Rel_Restrict_T<Val> > sRestrict_T(
-	const ZValCondition_T<Val>& iValCondition, const ZRef<Expr_Rel>& iExpr_Rel)
-	{ return new Expr_Rel_Restrict_T<Val>(iExpr_Rel, iValCondition); }
+	const ZValPred_T<Val>& iValPred, const ZRef<Expr_Rel>& iExpr_Rel)
+	{ return new Expr_Rel_Restrict_T<Val>(iExpr_Rel, iValPred); }
 
 template <class Val>
 ZRef<Expr_Rel> operator&(
-	const ZRef<Expr_Rel>& iExpr_Rel, const ZValCondition_T<Val>& iValCondition)
-	{ return new Expr_Rel_Restrict_T<Val>(iExpr_Rel, iValCondition); }
+	const ZRef<Expr_Rel>& iExpr_Rel, const ZValPred_T<Val>& iValPred)
+	{ return sRestrict_T<Val>(iValPred, iExpr_Rel); }
 
 template <class Val>
 ZRef<Expr_Rel> operator&(
-	const ZValCondition_T<Val>& iValCondition, const ZRef<Expr_Rel>& iExpr_Rel)
-	{ return new Expr_Rel_Restrict_T<Val>(iExpr_Rel, iValCondition); }
+	const ZValPred_T<Val>& iValPred, const ZRef<Expr_Rel>& iExpr_Rel)
+	{ return sRestrict_T<Val>(iValPred, iExpr_Rel); }
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZRA_Expr_Rel_Restrict_T__

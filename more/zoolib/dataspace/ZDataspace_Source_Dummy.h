@@ -18,4 +18,41 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/zra/ZRA_RelOps.h"
+#ifndef __ZDataspace_Source_Dummy__
+#define __ZDataspace_Source_Dummy__ 1
+#include "zconfig.h"
+
+#include "zoolib/dataspace/ZDataspace_Source.h"
+
+namespace ZooLib {
+namespace ZDataspace {
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * Source_Dummy
+
+class Source_Dummy : public Source
+	{
+public:
+	// Some kind of index specs to be passed in too.
+	Source_Dummy(const set<RelHead>& iRelHeads);
+	virtual ~Source_Dummy();
+
+// From Source
+	virtual set<RelHead> GetRelHeads();
+
+	virtual void Update(
+		bool iLocalOnly,
+		AddedSearch* iAdded, size_t iAddedCount,
+		int64* iRemoved, size_t iRemovedCount,
+		vector<SearchResult>& oChanged,
+		Clock& oClock);
+
+private:
+	set<RelHead> fRelHeads;
+	};
+
+} // namespace ZDataspace
+} // namespace ZooLib
+
+#endif // __ZDataspace_Source_Dummy__

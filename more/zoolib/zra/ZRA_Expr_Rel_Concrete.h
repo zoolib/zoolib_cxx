@@ -26,8 +26,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZUnicodeString.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 #include "zoolib/zra/ZRA_RelHead.h"
+#include "zoolib/zra/ZRA_RelRename.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 class Visitor_Expr_Rel_Concrete;
@@ -62,11 +63,10 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Concrete(Visitor_Expr_Rel_Concrete& iVisitor);
 
-	virtual RelHead GetRelHead() = 0;
 	virtual ZRef<ConcreteDomain> GetConcreteDomain();
+	virtual string8 GetName();
 
 // Experimental. Perhaps should be something we ask of the ConcreteDomain?
-	virtual string8 GetName();
 	virtual string8 GetDescription();
 	};
 
@@ -82,7 +82,31 @@ public:
 	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
 	};
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Expr_Rel_Concrete_Simple
+
+class Expr_Rel_Concrete_Simple : public Expr_Rel_Concrete
+	{
+public:
+	Expr_Rel_Concrete_Simple(
+		ZRef<ConcreteDomain> iConcreteDomain, const string8& iName, const RelHead& iRelHead);
+
+// From Expr_Rel_Concrete
+	virtual ZRef<ConcreteDomain> GetConcreteDomain();
+	virtual string8 GetName();
+	virtual RelHead GetRelHead();
+
+private:
+	ZRef<ConcreteDomain> fConcreteDomain;
+	const string8 fName;
+	const RelHead fRelHead;
+	};
+
+ZRef<Expr_Rel> sConcrete(
+	ZRef<ConcreteDomain> iConcreteDomain, const string8& iName, const RelHead& iRelHead);
+
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZRA_Expr_Rel_Concrete__

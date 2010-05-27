@@ -27,7 +27,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <string>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 class Visitor_Expr_Rel_Rename;
@@ -50,6 +50,9 @@ public:
 
 	virtual ZRef<Expr_Rel> Self();
 	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0);
+
+// From Expr_Rel
+	virtual RelHead GetRelHead();
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Rename(Visitor_Expr_Rel_Rename& iVisitor);
@@ -82,6 +85,6 @@ ZRef<Expr_Rel_Rename> sRename(const ZRef<Expr_Rel>& iExpr,
 	const std::string& iNewPropName, const std::string& iOldPropName);
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZRA_Expr_Rel_Rename__

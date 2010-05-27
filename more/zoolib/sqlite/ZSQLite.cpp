@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZSQLite {
 
 // =================================================================================================
@@ -198,4 +198,4 @@ void Iter::pAdvance()
 	}
 
 } // namespace ZSQLite
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

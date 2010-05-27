@@ -23,11 +23,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZExpr.h"
+#include "zoolib/ZUnicodeString.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+#include "zoolib/zra/ZRA_RelHead.h"
+
+#include <stdexcept>
+
+namespace ZooLib {
 namespace ZRA {
-
-class Visitor_Expr_Rel;
 
 // =================================================================================================
 #pragma mark -
@@ -38,6 +41,9 @@ class Expr_Rel
 	{
 protected:
 	Expr_Rel();
+	
+public:
+	virtual RelHead GetRelHead() = 0;
 	};
 
 // =================================================================================================
@@ -47,7 +53,38 @@ protected:
 // A useful typedef.
 typedef ZRef<Expr_Rel> Rel;
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Semantic Error Handling
+
+class SemanticError : public std::runtime_error
+	{
+public:
+	SemanticError(const string8& iMessage)
+	:	runtime_error(iMessage)
+		{}
+	};
+
+void sSemanticError(const string8& iMessage);
+
+enum ESemanticErrorMode
+	{
+	eSemanticErrorMode_Throw,
+	eSemanticErrorMode_Log,
+	eSemanticErrorMode_Ignore
+	};
+
+class SemanticErrorModeSetter
+	{
+public:
+	SemanticErrorModeSetter(ESemanticErrorMode iMode);
+	~SemanticErrorModeSetter();
+
+private:
+	ESemanticErrorMode fPrior;
+	};
+
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZRA_Expr_Rel__

@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
@@ -75,5 +75,33 @@ string8 Expr_Rel_Concrete::GetDescription()
 void Visitor_Expr_Rel_Concrete::Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr)
 	{ this->Visit_Expr_Op0(iExpr); }
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Expr_Rel_Concrete_Simple
+
+Expr_Rel_Concrete_Simple::Expr_Rel_Concrete_Simple(
+	ZRef<ConcreteDomain> iConcreteDomain, const string8& iName, const RelHead& iRelHead)
+:	fConcreteDomain(iConcreteDomain)
+,	fName(iName)
+,	fRelHead(iRelHead)
+	{}
+
+ZRef<ConcreteDomain> Expr_Rel_Concrete_Simple::GetConcreteDomain()
+	{ return fConcreteDomain; }
+
+string8 Expr_Rel_Concrete_Simple::GetName()
+	{ return fName; }
+
+RelHead Expr_Rel_Concrete_Simple::GetRelHead()
+	{ return fRelHead; }
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * sConcrete
+
+ZRef<Expr_Rel> sConcrete(
+	ZRef<ConcreteDomain> iConcreteDomain, const string8& iName, const RelHead& iRelHead)
+	{ return new Expr_Rel_Concrete_Simple(iConcreteDomain, iName, iRelHead); }
+
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

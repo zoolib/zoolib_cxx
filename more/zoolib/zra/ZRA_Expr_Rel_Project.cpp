@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
@@ -54,10 +54,13 @@ ZRef<Expr_Rel> Expr_Rel_Project::Self()
 ZRef<Expr_Rel> Expr_Rel_Project::Clone(ZRef<Expr_Rel> iOp0)
 	{ return new Expr_Rel_Project(iOp0, fRelHead); }
 
+RelHead Expr_Rel_Project::GetRelHead()
+	{ return fRelHead & this->GetOp0()->GetRelHead(); }
+
 void Expr_Rel_Project::Accept_Expr_Rel_Project(Visitor_Expr_Rel_Project& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Project(this); }
 
-RelHead Expr_Rel_Project::GetRelHead()
+RelHead Expr_Rel_Project::GetProjectRelHead()
 	{ return fRelHead; }
 
 // =================================================================================================
@@ -75,10 +78,10 @@ ZRef<Expr_Rel_Project> sProject(const ZRef<Expr_Rel>& iExpr, const RelHead& iRel
 	{ return new Expr_Rel_Project(iExpr, iRelHead); }
 
 ZRef<Expr_Rel_Project> operator&(const ZRef<Expr_Rel>& iExpr, const RelHead& iRelHead)
-	{ return new Expr_Rel_Project(iExpr, iRelHead); }
+	{ return sProject(iExpr, iRelHead); }
 
 ZRef<Expr_Rel_Project> operator&(const RelHead& iRelHead, const ZRef<Expr_Rel>& iExpr)
-	{ return new Expr_Rel_Project(iExpr, iRelHead); }
+	{ return sProject(iExpr, iRelHead); }
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

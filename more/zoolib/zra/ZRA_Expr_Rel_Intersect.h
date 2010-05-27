@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZExpr_Op_T.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 class Visitor_Expr_Rel_Intersect;
@@ -47,6 +47,9 @@ public:
 
 	virtual ZRef<Expr_Rel> Self();
 	virtual ZRef<Expr_Rel> Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1);
+
+// From Expr_Rel
+	virtual RelHead GetRelHead();
 
 // Our protocol
 	virtual void Accept_Expr_Rel_Intersect(Visitor_Expr_Rel_Intersect& iVisitor);
@@ -75,6 +78,6 @@ ZRef<Expr_Rel> operator&(
 	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS);
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZRA_Expr_Rel__

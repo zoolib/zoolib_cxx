@@ -18,9 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZLog.h"
+#include "zoolib/ZThread.h"
+
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
@@ -30,5 +33,41 @@ namespace ZRA {
 Expr_Rel::Expr_Rel()
 	{}
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Semantic Error Handling
+
+static ZTSS::Key sKey = ZTSS::sCreate();
+
+static ESemanticErrorMode spGet()
+	{ return (ESemanticErrorMode)(long long)(ZTSS::sGet(sKey)); }
+
+static void spSet(ESemanticErrorMode iMode)
+	{ ZTSS::sSet(sKey, reinterpret_cast<ZTSS::Value>(iMode)); }
+
+void sSemanticError(const string8& iMessage)
+	{
+	switch (spGet())
+		{
+		case eSemanticErrorMode_Throw:
+			throw SemanticError("ZRA Semantic Error: " + iMessage);
+		case eSemanticErrorMode_Log:
+			{
+			if (ZLOGF(s, eErr))
+				s << "ZRA Semantic Error: " + iMessage;
+			break;
+			}
+		case eSemanticErrorMode_Ignore:
+			break;
+		}
+	}
+
+SemanticErrorModeSetter::SemanticErrorModeSetter(ESemanticErrorMode iMode)
+:	fPrior(spGet())
+	{ spSet(iMode); }
+
+SemanticErrorModeSetter::~SemanticErrorModeSetter()
+	{ spSet(fPrior); }
+
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

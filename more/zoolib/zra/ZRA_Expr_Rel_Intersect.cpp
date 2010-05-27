@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zra/ZRA_Expr_Rel_Intersect.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
@@ -50,6 +50,9 @@ ZRef<Expr_Rel> Expr_Rel_Intersect::Self()
 ZRef<Expr_Rel> Expr_Rel_Intersect::Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
 	{ return new Expr_Rel_Intersect(iOp0, iOp1); }
 
+RelHead Expr_Rel_Intersect::GetRelHead()
+	{ return this->GetOp0()->GetRelHead() & this->GetOp1()->GetRelHead(); }
+
 void Expr_Rel_Intersect::Accept_Expr_Rel_Intersect(Visitor_Expr_Rel_Intersect& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Intersect(this); }
 
@@ -70,7 +73,7 @@ ZRef<Expr_Rel_Intersect> sIntersect(
 
 ZRef<Expr_Rel> operator&(
 	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
-	{ return new Expr_Rel_Intersect(iLHS, iRHS); }
+	{ return sIntersect(iLHS, iRHS); }
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

@@ -23,55 +23,20 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZQE {
 
 using std::string;
 using std::vector;
 
-static ZMap_Any spJoin(const ZMap_Any& l, const ZMap_Any& r)
+static ZMap_Any spProduct(const ZMap_Any& l, const ZMap_Any& r)
 	{
-	typedef ZMap_Any::Index_t Index_t;
-
-	ZMap_Any result;
-	vector<string> rVisited;
-	Index_t rEnd = r.End();
-
-	for (Index_t lIter = l.Begin(), lEnd = l.End();
+	ZMap_Any result = r;
+	for (ZMap_Any::Index_t lIter = l.Begin(), lEnd = l.End();
 		lIter != lEnd; ++lIter)
 		{
-		const string& lName = l.NameOf(lIter);
-		const ZVal_Any lVal = l.Get(lIter);
-		Index_t rIter = r.IndexOf(lName);
-		if (rIter == rEnd)
-			{
-			// It's in l, not in r. Include it in result.
-			result.Set(lName, lVal);			
-			}
-		else
-			{
-			if (0 == lVal.Compare(r.Get(rIter)))
-				{
-				// They're the same.
-				result.Set(lName, lVal);
-				rVisited.push_back(lName);
-				}
-			else
-				{
-				// They're different, and we should bail;
-				return ZMap_Any();
-				}
-			}
+		result.Set(l.NameOf(lIter), l.Get(lIter));
 		}
-	// We've got all the values in l that are not in r, or are in r with
-	// the same value as that in l. Now include all the remaining values from r.
-	for (Index_t rIter = r.Begin(); rIter != rEnd; ++rIter)
-		{
-		const string rName = r.NameOf(rIter);
-		if (!ZUtil_STL::sContains(rVisited, rName))
-			result.Set(rName, r.Get(rIter));
-		}
-
 	return result;
 	}
 
@@ -83,6 +48,11 @@ Result_Any::Result_Any(const ZVal_Any& iVal)
 :	fVal(iVal)
 	{}
 
+Result_Any::Result_Any(const ZVal_Any& iVal, ZRef<Result_Any> iOther)
+:	fVal(iVal)
+,	fAnnotations(iOther->GetAnnotations())
+	{}
+
 bool Result_Any::SameAs(ZRef<Result> iOther)
 	{
 	if (ZRef<Result_Any> other = iOther.DynamicCast<Result_Any>())
@@ -92,7 +62,7 @@ bool Result_Any::SameAs(ZRef<Result> iOther)
 	return false;
 	}
 
-ZRef<Result> Result_Any::JoinedWith(ZRef<Result> iOther)
+ZRef<Result> Result_Any::ProductWith(ZRef<Result> iOther)
 	{
 	if (ZRef<Result_Any> other = iOther.DynamicCast<Result_Any>())
 		{
@@ -100,8 +70,10 @@ ZRef<Result> Result_Any::JoinedWith(ZRef<Result> iOther)
 			{
 			if (const ZMap_Any* mapOther = other->GetVal().PGet_T<ZMap_Any>())
 				{
-				if (const ZMap_Any result = spJoin(*mapThis, *mapOther))
-					return new Result_Any(result);
+				ZRef<Result_Any> theResult = new Result_Any(spProduct(*mapThis, *mapOther));
+				theResult->AddAnnotations(this->GetAnnotations());
+				theResult->AddAnnotations(other->GetAnnotations());
+				return theResult;
 				}
 			}
 		}
@@ -111,5 +83,14 @@ ZRef<Result> Result_Any::JoinedWith(ZRef<Result> iOther)
 const ZVal_Any& Result_Any::GetVal()
 	{ return fVal; }
 
+void Result_Any::AddAnnotation(ZRef<ZCounted> iCounted)
+	{ fAnnotations.insert(iCounted); }
+
+void Result_Any::AddAnnotations(const std::set<ZRef<ZCounted> >& iAnnotations)
+	{ fAnnotations.insert(iAnnotations.begin(), iAnnotations.end()); }
+
+const std::set<ZRef<ZCounted> >& Result_Any::GetAnnotations()
+	{ return fAnnotations; }
+
 } // namespace ZQE
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

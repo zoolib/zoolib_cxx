@@ -28,7 +28,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <sqlite3.h>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZSQLite {
 
 // =================================================================================================
@@ -79,6 +79,6 @@ private:
 	};
 
 } // namespace ZSQLite
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZSQLite__

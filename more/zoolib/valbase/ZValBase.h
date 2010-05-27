@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Iterator.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZValBase {
 
 // =================================================================================================
@@ -43,13 +43,9 @@ public:
 #pragma mark -
 #pragma mark * ZValBase pseudo constructors
 
-ZRef<ZRA::Expr_Rel> sConcrete();
-ZRef<ZRA::Expr_Rel> sConcrete(const ZRA::RelHead& iRelHead);
-ZRef<ZRA::Expr_Rel> sConcrete(const ZRA::RelHead& iRelHead, const string8& iName);
-
 ZRef<ZQE::Iterator> sIterator(ZRef<ZRA::Expr_Rel> iExpr);
 
 } // namespace ZValBase
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZValBase__

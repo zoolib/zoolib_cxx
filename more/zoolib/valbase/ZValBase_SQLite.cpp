@@ -18,18 +18,20 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
+#include "zoolib/ZYad_Any.h"
 #include "zoolib/valbase/ZValBase.h"
 #include "zoolib/valbase/ZValBase_SQLite.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZValBase_SQLite {
 
 using namespace ZSQLite;
+using std::string;
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Anonymous Iterator
+#pragma mark * Iterator (anonymous)
 
 namespace ZANONYMOUS {
 
@@ -76,7 +78,7 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Anonymous Expr_Rel_Concrete
+#pragma mark * Expr_Rel_Concrete (anonymous)
 
 namespace ZANONYMOUS {
 
@@ -84,7 +86,9 @@ class Expr_Rel_Concrete : public ZValBase::Expr_Rel_Concrete
 	{
 public:
 	Expr_Rel_Concrete(
-		ZRef<ConcreteDomain> iConcreteDomain, ZRef<Iter> iIter, const string8& iPrefix,
+		ZRef<ConcreteDomain> iConcreteDomain, ZRef<Iter> iIter,
+		const string8& iPrefix,
+		const string8& iName,
 		const string8& iDescription);
 
 // From ZRA::Expr_Rel_Concrete via ZValBase::Expr_Rel_Concrete
@@ -106,11 +110,14 @@ private:
 	};
 
 Expr_Rel_Concrete::Expr_Rel_Concrete(
-	ZRef<ConcreteDomain> iConcreteDomain, ZRef<Iter> iIter, const string8& iPrefix,
+	ZRef<ConcreteDomain> iConcreteDomain, ZRef<Iter> iIter,
+	const string8& iPrefix,
+	const string8& iName,
 	const string8& iDescription)
 :	fConcreteDomain(iConcreteDomain)
 ,	fIter(iIter)
 ,	fPrefix(iPrefix)
+,	fName(iName)
 ,	fDescription(iDescription)
 	{}
 
@@ -150,14 +157,16 @@ ZRef<ZSQLite::DB> ConcreteDomain::GetDB()
 
 ZRef<ZRA::Expr_Rel> sConcrete_Table(ZRef<ConcreteDomain> iConcreteDomain, const string8& iName)
 	{
-//	ZRef<Iter> iter = new Iter(iConcreteDomain->GetDB(), "select * from " + iName + ";" );
-	ZRef<Iter> iter = new Iter(iConcreteDomain->GetDB(), "pragma table_info(" + iName + ");");
+	ZRef<Iter> iter = new Iter(iConcreteDomain->GetDB(), "select * from " + iName + ";" );
+//	ZRef<Iter> iter = new Iter(iConcreteDomain->GetDB(), "pragma table_info(" + iName + ");");
 
-	return new Expr_Rel_Concrete(iConcreteDomain, iter, iName + ".", string8());
+	return new Expr_Rel_Concrete(iConcreteDomain, iter, iName + ".", iName, string8());
 	}
 
+#if 0
+
 ZRef<ZRA::Expr_Rel> sConcrete_SQL(ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL)
-	{ return sConcrete_SQL(iConcreteDomain, iSQL, string8()); }
+	{ return sConcrete_SQL(iConcreteDomain, iSQL, string8(), string8()); }
 
 ZRef<ZRA::Expr_Rel> sConcrete_SQL(
 	ZRef<ConcreteDomain> iConcreteDomain, const string8& iSQL, const string8& iPrefix)
@@ -165,6 +174,7 @@ ZRef<ZRA::Expr_Rel> sConcrete_SQL(
 	ZRef<Iter> iter = new Iter(iConcreteDomain->GetDB(), iSQL);
 	return new Expr_Rel_Concrete(iConcreteDomain, iter, iPrefix, iSQL);
 	}
+#endif
 
 } // namespace ZValBase_SQLite
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

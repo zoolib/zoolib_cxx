@@ -18,7 +18,7 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Logic_ValCondition.h"
+#include "zoolib/ZExpr_Logic_ValPred.h"
 #include "zoolib/tql/ZTQL_Optimize.h"
 #include "zoolib/ZVisitor_Do_T.h"
 #include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
@@ -37,7 +37,7 @@ using namespace ZRA;
 
 namespace ZANONYMOUS {
 
-typedef std::vector<ZValCondition> CondSect;
+typedef std::vector<ZValPred> CondSect;
 typedef std::vector<CondSect> CondUnion;
 
 CondUnion spCrossMultiply(const CondUnion& iLeft, const CondUnion& iRight)
@@ -64,7 +64,7 @@ class Gather
 ,	public virtual ZVisitor_Expr_Logic_Not
 ,	public virtual ZVisitor_Expr_Logic_And
 ,	public virtual ZVisitor_Expr_Logic_Or
-,	public virtual ZVisitor_Expr_Logic_ValCondition
+,	public virtual ZVisitor_Expr_Logic_ValPred
 	{
 public:
 //	From ZVisitor_Expr_Logic_DoTransform
@@ -74,8 +74,8 @@ public:
 	virtual void Visit_Expr_Logic_And(ZRef<ZExpr_Logic_And> iExpr);
 	virtual void Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr);	
 
-// From ZVisitor_Expr_Logic_ValCondition
-	virtual void Visit_Expr_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition> iExpr);
+// From ZVisitor_Expr_Logic_ValPred
+	virtual void Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr);
 	};
 
 void Gather::Visit_Expr_Logic_True(ZRef<ZExpr_Logic_True> iExpr)
@@ -112,11 +112,11 @@ void Gather::Visit_Expr_Logic_Or(ZRef<ZExpr_Logic_Or> iExpr)
 	this->pSetResult(result);
 	}
 
-void Gather::Visit_Expr_Logic_ValCondition(ZRef<ZExpr_Logic_ValCondition> iExpr)
+void Gather::Visit_Expr_Logic_ValPred(ZRef<ZExpr_Logic_ValPred> iExpr)
 	{
 	CondUnion result;
 	result.resize(1);
-	result[0].push_back(iExpr->GetValCondition());
+	result[0].push_back(iExpr->GetValPred());
 
 	this->pSetResult(result);
 	}

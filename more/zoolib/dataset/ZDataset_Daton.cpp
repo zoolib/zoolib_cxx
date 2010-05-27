@@ -18,41 +18,46 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRA_Visitor_Expr_Rel_DoGetRelHead__
-#define __ZRA_Visitor_Expr_Rel_DoGetRelHead__ 1
-#include "zconfig.h"
+#include "zoolib/dataset/ZDataset_Daton.h"
 
-#include "zoolib/ZExpr_Op_T.h"
-#include "zoolib/ZVisitor_Do_T.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Project.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Rename.h"
-
-NAMESPACE_ZOOLIB_BEGIN
-namespace ZRA {
+namespace ZooLib {
+namespace ZDataset {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Visitor_Expr_Rel_DoGetRelHead
+#pragma mark * Daton
 
-class Visitor_Expr_Rel_DoGetRelHead
-:	public virtual ZVisitor_Do_T<RelHead>
-,	public virtual ZVisitor_Expr_Op1_T<Expr_Rel>
-,	public virtual ZVisitor_Expr_Op2_T<Expr_Rel>
-,	public virtual Visitor_Expr_Rel_Concrete
-,	public virtual Visitor_Expr_Rel_Project
-,	public virtual Visitor_Expr_Rel_Rename
+Daton::Daton()
+	{}
+
+Daton::Daton(const Daton& iOther)
+:	fData(iOther.fData)
+	{}
+
+Daton::~Daton()
+	{}
+
+Daton& Daton::operator=(const Daton& iOther)
 	{
-public:
-	virtual void Visit_Expr_Op1(ZRef<ZExpr_Op1_T<Expr_Rel> > iExpr);
-	virtual void Visit_Expr_Op2(ZRef<ZExpr_Op2_T<Expr_Rel> > iExpr);
+	fData = iOther.fData;
+	return *this;
+	}
 
-	virtual void Visit_Expr_Rel_Concrete(ZRef<Expr_Rel_Concrete> iExpr);
-	virtual void Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr);
-	virtual void Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr);
-	};
+Daton::Daton(ZData iData)
+:	fData(iData)
+	{}
 
-} // namespace ZRA
-NAMESPACE_ZOOLIB_END
+bool Daton::operator==(const Daton& iOther) const
+	{ return fData == iOther.fData; }
 
-#endif // __ZRA_Visitor_Expr_Rel_DoGetRelHead__
+bool Daton::operator!=(const Daton& iOther) const
+	{ return fData != iOther.fData; }
+
+bool Daton::operator<(const Daton& iOther) const
+	{ return fData < iOther.fData; }
+
+ZData Daton::GetData() const
+	{ return fData; }
+
+} // namespace ZDataset
+} // namespace ZooLib

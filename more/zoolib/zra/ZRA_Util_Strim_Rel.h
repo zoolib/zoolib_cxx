@@ -25,7 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVisitor_DoToStrim.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 namespace Util_Strim_Rel {
 
@@ -41,6 +41,6 @@ void sToStrim(const Rel& iRel, const Options& iOptions, const ZStrimW& iStrimW);
 
 } // namespace Util_Strim_Rel
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZRA_Util_Strim_Rel__

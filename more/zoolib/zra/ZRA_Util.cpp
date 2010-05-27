@@ -18,13 +18,13 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZExpr_Logic_ValCondition.h"
-#include "zoolib/zra/ZRA_Visitor_Expr_Rel_DoGetRelHead.h"
+#include "zoolib/ZExpr_Logic_ValPred.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Project.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Select.h"
 #include "zoolib/zra/ZRA_Util.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 namespace Util {
 
@@ -54,7 +54,6 @@ namespace ZANONYMOUS {
 
 class Doer
 :	public virtual ZVisitor_Do_T<RelHead>
-,	public virtual Visitor_Expr_Rel_DoGetRelHead
 ,	public virtual Visitor_Expr_Rel_Project
 ,	public virtual Visitor_Expr_Rel_Restrict
 ,	public virtual Visitor_Expr_Rel_Select
@@ -77,7 +76,7 @@ Doer::Doer(vector<Problem>& oProblems)
 void Doer::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
 	{
 	const RelHead providedRelHead = this->Do(iExpr->GetOp0());
-	const RelHead requiredRelHead = iExpr->GetRelHead();
+	const RelHead requiredRelHead = iExpr->GetProjectRelHead();
 
 	if (!providedRelHead.Contains(requiredRelHead))
 		{
@@ -91,12 +90,12 @@ void Doer::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
 void Doer::Visit_Expr_Rel_Restrict(ZRef<Expr_Rel_Restrict> iExpr)
 	{
 	const RelHead providedRelHead = this->Do(iExpr->GetOp0());
-	const RelHead requiredRelHead = iExpr->GetValCondition().GetNames();
+	const RelHead requiredRelHead = iExpr->GetValPred().GetNames();
 
 	if (!providedRelHead.Contains(requiredRelHead))
 		{
 		fProblems.push_back(
-			Problem(iExpr, "Restrict's ValCondition requires property(s) not provided by expr"));
+			Problem(iExpr, "Restrict's ValPred requires property(s) not provided by expr"));
 		}
 
 	this->pSetResult(providedRelHead);
@@ -131,4 +130,4 @@ bool sValidate(vector<Problem>& oProblems, ZRef<Expr_Rel> iRel)
 
 } // namespace Util
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

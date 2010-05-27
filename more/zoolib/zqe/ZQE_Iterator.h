@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zqe/ZQE_Result.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZQE {
 
 // =================================================================================================
@@ -68,19 +68,19 @@ private:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Iterator_Join
+#pragma mark * Iterator_Product
 
-class Iterator_Join : public Iterator
+class Iterator_Product : public Iterator
 	{
 public:
-	Iterator_Join(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
+	Iterator_Product(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
 	
 // From Iterator
 	virtual ZRef<Iterator> Clone();
 	virtual ZRef<Result> ReadInc();
 
 private:
-	Iterator_Join(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS,
+	Iterator_Product(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS,
 		ZRef<Iterator> iIterator_RHS_Model);
 
 	ZRef<Iterator> fIterator_LHS;
@@ -108,6 +108,6 @@ private:
 	};
 
 } // namespace ZQE
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZQE_Iterator__

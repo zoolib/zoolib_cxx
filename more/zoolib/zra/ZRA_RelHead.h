@@ -22,50 +22,124 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_RelHead__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZUniSet_T.h"
+#include "zoolib/ZUnicodeString.h"
 
-#include <string>
 #include <map>
+#include <set>
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * RelHead
 
-typedef ZUniSet_T<std::string> RelHead;
+class RelHead
+	{
+	explicit RelHead(std::set<string8>* ioElems);
+
+public:
+	void swap(RelHead& iOther);
+
+	RelHead();
+	RelHead(const RelHead& iOther);
+	~RelHead();
+	RelHead& operator=(const RelHead& iOther);
+
+	RelHead(const string8& iElem);
+
+	RelHead(const std::set<string8>& iElems);
+
+	template <class Iterator>
+	RelHead(Iterator iBegin, Iterator iEnd);
+
+	template <class Iterator>
+	RelHead(Iterator iBegin, size_t iCount);
+
+	bool operator==(const RelHead& iOther) const;
+	bool operator!=(const RelHead& iOther) const;
+	bool operator<(const RelHead& iOther) const;
+
+	RelHead& operator&=(const RelHead& iOther);
+	RelHead operator&(const RelHead& iOther) const;
+
+	RelHead& operator|=(const RelHead& iOther);
+	RelHead operator|(const RelHead& iOther) const;
+
+	RelHead& operator-=(const RelHead& iOther);
+	RelHead operator-(const RelHead& iOther) const;
+
+	RelHead& operator^=(const RelHead& iOther);
+	RelHead operator^(const RelHead& iOther) const;
+
+	bool Contains(const RelHead& iOther) const;
+	bool Contains(const string8& iElem) const;
+
+	RelHead& Insert(const string8& iElem);
+	RelHead& Erase(const string8& iElem);
+
+	const std::set<string8>& GetElems() const;
+
+private:
+	std::set<string8> fElems;
+	};
+
+template <class Iterator>
+RelHead::RelHead(Iterator iBegin, Iterator iEnd)
+:	fElems(iBegin, iEnd)
+	{}
+
+template <class Iterator>
+RelHead::RelHead(Iterator iBegin, size_t iCount)
+:	fElems(iBegin, iBegin + iCount)
+	{}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * RelHead operators
+
+inline RelHead operator&(const string8& iElem, const RelHead& iRelHead)
+	{ return iRelHead & iElem; }
+
+inline RelHead operator|(const string8& iElem, const RelHead& iRelHead)
+	{ return iRelHead | iElem; }
 
 inline RelHead operator&(const RelHead& iRelHead, const char* iElem)
-	{ return iRelHead & std::string(iElem); }
+	{ return iRelHead & string8(iElem); }
 
 inline RelHead operator&(const char* iElem, const RelHead& iRelHead)
-	{ return iRelHead & std::string(iElem); }
+	{ return iRelHead & string8(iElem); }
 
 inline RelHead operator|(const char* iElem, const RelHead& iRelHead)
-	{ return iRelHead | std::string(iElem); }
+	{ return iRelHead | string8(iElem); }
 
 inline RelHead operator|(const RelHead& iRelHead, const char* iElem)
-	{ return iRelHead | std::string(iElem); }
+	{ return iRelHead | string8(iElem); }
 
 inline RelHead operator-(const RelHead& iRelHead, const char* iElem)
-	{ return iRelHead - std::string(iElem); }
+	{ return iRelHead - string8(iElem); }
 
 inline RelHead operator^(const char* iElem, const RelHead& iRelHead)
-	{ return iRelHead ^ std::string(iElem); }
+	{ return iRelHead ^ string8(iElem); }
 
 inline RelHead operator^(const RelHead& iRelHead, const char* iElem)
-	{ return iRelHead ^ std::string(iElem); }
+	{ return iRelHead ^ string8(iElem); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Rename_t
 
-typedef std::map<std::string, std::string> Rename_t;
+typedef std::map<string8, string8> Rename_t;
 
 Rename_t sInvert(const Rename_t& iRename);
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
+
+namespace std {
+template <class T>
+inline void swap(ZOOLIB_PREFIX::ZRA::RelHead& a, ZOOLIB_PREFIX::ZRA::RelHead& b)
+	{ a.swap(b); }
+}
 
 #endif // __ZRA_RelHead__

@@ -20,7 +20,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/zra/ZRA_Expr_Rel_Union.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZRA {
 
 // =================================================================================================
@@ -50,6 +50,9 @@ ZRef<Expr_Rel> Expr_Rel_Union::Self()
 ZRef<Expr_Rel> Expr_Rel_Union::Clone(ZRef<Expr_Rel> iOp0, ZRef<Expr_Rel> iOp1)
 	{ return new Expr_Rel_Union(iOp0, iOp1); }
 
+RelHead Expr_Rel_Union::GetRelHead()
+	{ return this->GetOp0()->GetRelHead() | this->GetOp1()->GetRelHead(); }
+
 void Expr_Rel_Union::Accept_Expr_Rel_Union(Visitor_Expr_Rel_Union& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Union(this); }
 
@@ -70,7 +73,7 @@ ZRef<Expr_Rel_Union> sUnion(
 
 ZRef<Expr_Rel> operator|(
 	const ZRef<Expr_Rel>& iLHS, const ZRef<Expr_Rel>& iRHS)
-	{ return new Expr_Rel_Union(iLHS, iRHS); }
+	{ return sUnion(iLHS, iRHS); }
 
 } // namespace ZRA
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib

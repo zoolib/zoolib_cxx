@@ -25,16 +25,19 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZVal_Any.h"
 #include "zoolib/zra/ZRA_Expr_Rel.h"
 
-NAMESPACE_ZOOLIB_BEGIN
+namespace ZooLib {
 namespace ZValBase_Any {
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZValBase_Any pseudo constructors
 
-ZRef<ZRA::Expr_Rel> sConcrete(const ZSeq_Any& iSeq);
+ZRef<ZRA::Expr_Rel> sConcrete(
+	const string8& iName, const ZRA::RelHead& iRelHead, const ZSeq_Any& iSeq);
+
+ZVal_Any sApplyRelHead(const ZRA::RelHead& iRelHead, const ZVal_Any& iVal);
 
 } // namespace ZValBase_Any
-NAMESPACE_ZOOLIB_END
+} // namespace ZooLib
 
 #endif // __ZValBase_Any__
