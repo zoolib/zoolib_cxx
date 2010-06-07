@@ -70,8 +70,12 @@ ZWorkerRunner_CFRunLoop::ZWorkerRunner_CFRunLoop(ZRef<CFRunLoopRef> iRunLoop)
 	}
 
 ZWorkerRunner_CFRunLoop::~ZWorkerRunner_CFRunLoop()
+	{}
+
+void ZWorkerRunner_CFRunLoop::Finalize()
 	{
 	::CFRunLoopTimerInvalidate(fRunLoopTimer);
+	ZWorkerRunner::Finalize();
 	}
 
 void ZWorkerRunner_CFRunLoop::Wake(ZRef<ZWorker> iWorker)
@@ -115,8 +119,7 @@ void ZWorkerRunner_CFRunLoop::Add(ZRef<ZWorker> iWorker)
 
 void ZWorkerRunner_CFRunLoop::pTrigger(CFAbsoluteTime iAbsoluteTime)
 	{
-	CFAbsoluteTime theTime = CFRunLoopTimerGetNextFireDate(fRunLoopTimer);
-	if (iAbsoluteTime <= theTime)
+	if (iAbsoluteTime <= ::CFRunLoopTimerGetNextFireDate(fRunLoopTimer))
 		::CFRunLoopTimerSetNextFireDate(fRunLoopTimer, iAbsoluteTime);
 	}
 
@@ -166,7 +169,10 @@ void ZWorkerRunner_CFRunLoop::pRunLoopTimerCallBack()
 		this->pTrigger(earliestLater);
 
 	if (fWorkersSet.Empty())
-		{}
+		{
+		// No workers registered, if this object were a per-thread singleton,
+		// this is where we could release it.
+		}
 	}
 
 void ZWorkerRunner_CFRunLoop::spRunLoopTimerCallBack(CFRunLoopTimerRef iTimer, void* iRefcon)

@@ -45,6 +45,9 @@ public:
 	ZWorkerRunner_CFRunLoop(ZRef<CFRunLoopRef> iRunLoop);
 	virtual ~ZWorkerRunner_CFRunLoop();
 
+// From ZCounted via ZWorkerRunner
+	virtual void Finalize();
+
 // From ZWorkerRunner
 	virtual void Wake(ZRef<ZWorker> iWorker);
 	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
