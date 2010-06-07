@@ -322,7 +322,6 @@ void ZVal_AppleEvent::Clear()
 template <>
 bool ZVal_AppleEvent::QGet_T<bool>(bool& oVal) const
 	{
-	// What about typeBoolean?
 	if (typeTrue == descriptorType)
 		{
 		oVal = true;
