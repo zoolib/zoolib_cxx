@@ -63,9 +63,9 @@ RelRename::RelRename(const set<Elem_t>& iElems)
 
 RelRename::RelRename(const RelHead& iRelHead)
 	{
-	const set<string8>& theElems = iRelHead.GetElems();
-	for (set<string8>::const_iterator i = theElems.begin(); i != theElems.end(); ++i)
-		fElems.insert(make_pair(*i, *i));
+	const RelHead::Base_t& theElems = iRelHead.GetElems();
+	for (RelHead::Base_t::const_iterator i = theElems.begin(); i != theElems.end(); ++i)
+		fElems.insert(std::make_pair(*i, *i));
 	}
 
 RelRename RelRename::Inverted() const
@@ -98,7 +98,7 @@ RelRename RelRename::operator|(const RelRename& iOther) const
 	return RelRename(&result);
 	}
 
-void RelRename::ApplyToFrom(const string8& iNameTo, const string8& iNameFrom)
+void RelRename::ApplyToFrom(const RelHead::key_type& iNameTo, const RelHead::key_type& iNameFrom)
 	{
 	set<Elem_t> result;
 	for (set<Elem_t>::const_iterator i = fElems.begin(); i != fElems.end(); ++i)
@@ -134,9 +134,9 @@ RelHead RelRename::GetRelHead_From() const
 	return result;
 	}
 
-map<string8, string8> RelRename::GetRename() const
+map<RelHead::key_type, RelHead::key_type> RelRename::GetRename() const
 	{
-	map<string8, string8> result;
+	map<RelHead::key_type, RelHead::key_type> result;
 	for (set<Elem_t>::const_iterator i = fElems.begin(); i != fElems.end(); ++i)
 		result[(*i).second] = (*i).first;
 	return result;

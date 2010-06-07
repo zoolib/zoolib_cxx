@@ -112,11 +112,13 @@ public:
 	void Set_T(const S& iVal);
 
 // Typename accessors
+/// \cond DoxygenIgnore
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_NS)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, NSString, ZRef<NSString>)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, Data, ZData_NS)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, Seq, ZSeq_NS)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_NS, Map, ZMap_NS)
+/// \endcond DoxygenIgnore
 	};
 
 // =================================================================================================

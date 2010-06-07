@@ -24,8 +24,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCommer.h"
 #include "zoolib/ZTask.h"
-#include "zoolib/ZThreadOld.h"
 #include "zoolib/ZTuple.h"
+
+#include "zoolib/tuplebase/ZThreadOld.h"
 
 #include <set>
 

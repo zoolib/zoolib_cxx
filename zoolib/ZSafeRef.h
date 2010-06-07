@@ -18,8 +18,8 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRefSafe__
-#define __ZRefSafe__ 1
+#ifndef __ZSafeRef__
+#define __ZSafeRef__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZRef.h"
@@ -29,16 +29,13 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRefSafe declaration
+#pragma mark * ZSafeRef declaration
 
 template <class T>
-class ZRefSafe
+class ZSafeRef
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRefSafe,
-		operator_bool_generator_type, operator_bool_type);
-
-	ZRefSafe(const ZRefSafe&); // Not implemented
-	const ZRefSafe& operator=(const ZRefSafe&); // Not implemented
+	ZSafeRef(const ZSafeRef&); // Not implemented
+	const ZSafeRef& operator=(const ZSafeRef&); // Not implemented
 
 	static void spRetain(T* iP)
 		{
@@ -53,18 +50,18 @@ class ZRefSafe
 		}
 
 public:
-	ZRefSafe()
+	ZSafeRef()
 	:	fP(nullptr)
 		{}
 
-	ZRefSafe(T* iP)
+	ZSafeRef(T* iP)
 	:	fP(fP)
 		{ spRetain(fP); }
 
-	~ZRefSafe()
+	~ZSafeRef()
 		{ spRelease(fP); }
 
-	ZRefSafe& operator=(T* iP)
+	ZSafeRef& operator=(T* iP)
 		{
 		ZAcqMtx acq(fMtx);
 		std::swap(iP, fP);
@@ -74,12 +71,12 @@ public:
 		}
 
 	template <class O>
-	ZRefSafe(const ZRef<O>& iOther)
+	ZSafeRef(const ZRef<O>& iOther)
 	:	fP(iOther.Get())
 		{ spRetain(fP); }
 
 	template <class O>
-	ZRefSafe& operator=(const ZRef<O>& iOther)
+	ZSafeRef& operator=(const ZRef<O>& iOther)
 		{
 		ZAcqMtx acq(fMtx);
 		T* theP = iOther.Get();
@@ -118,6 +115,8 @@ public:
 		spRelease(theP);
 		}
 
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZSafeRef,
+		operator_bool_generator_type, operator_bool_type);
 	operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(fP); }
 

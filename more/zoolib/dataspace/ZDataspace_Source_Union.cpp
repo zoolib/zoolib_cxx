@@ -24,6 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/dataspace/ZDataspace_Source_Union.h"
 
 #include "zoolib/zqe/ZQE_Iterator_Any.h"
+#include "zoolib/zqe/ZQE_Iterator_Std.h"
 #include "zoolib/zqe/ZQE_Result_Any.h"
 
 #include "zoolib/zra/ZRA_Util_RelOperators.h"
@@ -119,11 +120,12 @@ class Source_Union::PQuery
 :	public DLink_PQuery_Changed
 	{
 public:
-	PQuery(const AddedSearch& iAddedSearch);
+	PQuery(int64 iRefcon);
 
 	void Regenerate();
 
 	int64 fRefcon;
+	ZRef<ZRA::Expr_Rel> fRel;
 	SearchThing fSearchThing;
 
 	DListHead<DLink_PSourceProduct_InPQuery> fPSourceProducts;
@@ -136,15 +138,15 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_Union::Iterator_Product
+#pragma mark * Source_Union::Iterator_PSourceProduct
 
-class Source_Union::Iterator_Product : public ZQE::Iterator
+class Source_Union::Iterator_PSourceProduct : public ZQE::Iterator
 	{
 public:
-	Iterator_Product(PSourceProduct* iPSP);
-	Iterator_Product(PSourceProduct* iPSP, size_t iIndex);
+	Iterator_PSourceProduct(PSourceProduct* iPSP);
+	Iterator_PSourceProduct(PSourceProduct* iPSP, size_t iIndex);
 
-	virtual ~Iterator_Product();
+	virtual ~Iterator_PSourceProduct();
 	
 	virtual ZRef<ZQE::Iterator> Clone();
 	virtual ZRef<ZQE::Result> ReadInc();
@@ -154,24 +156,24 @@ private:
 	size_t fIndex;
 	};
 
-Source_Union::Iterator_Product::Iterator_Product(PSourceProduct* iPSP)
+Source_Union::Iterator_PSourceProduct::Iterator_PSourceProduct(PSourceProduct* iPSP)
 :	fPSP(iPSP)
 ,	fIndex(0)
 	{}
 
-Source_Union::Iterator_Product::Iterator_Product(
+Source_Union::Iterator_PSourceProduct::Iterator_PSourceProduct(
 	PSourceProduct* iPSP, size_t iIndex)
 :	fPSP(iPSP)
 ,	fIndex(iIndex)
 	{}
 
-Source_Union::Iterator_Product::~Iterator_Product()
+Source_Union::Iterator_PSourceProduct::~Iterator_PSourceProduct()
 	{}
 
-ZRef<ZQE::Iterator> Source_Union::Iterator_Product::Clone()
-	{ return new Iterator_Product(fPSP, fIndex); }
+ZRef<ZQE::Iterator> Source_Union::Iterator_PSourceProduct::Clone()
+	{ return new Iterator_PSourceProduct(fPSP, fIndex); }
 
-ZRef<ZQE::Result> Source_Union::Iterator_Product::ReadInc()
+ZRef<ZQE::Result> Source_Union::Iterator_PSourceProduct::ReadInc()
 	{
 	if (fIndex < fPSP->fResults.size())
 		return fPSP->fResults[fIndex++];
@@ -180,15 +182,15 @@ ZRef<ZQE::Result> Source_Union::Iterator_Product::ReadInc()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_Union::Iterator_Searches
+#pragma mark * Source_Union::Iterator_PSourceSearches
 
-class Source_Union::Iterator_Searches : public ZQE::Iterator
+class Source_Union::Iterator_PSourceSearches : public ZQE::Iterator
 	{
 public:
-	Iterator_Searches(PSourceSearches* iPSS, size_t iWhichVector);
-	Iterator_Searches(PSourceSearches* iPSS, size_t iWhichVector, size_t iIndex);
+	Iterator_PSourceSearches(PSourceSearches* iPSS, size_t iWhichVector);
+	Iterator_PSourceSearches(PSourceSearches* iPSS, size_t iWhichVector, size_t iIndex);
 
-	virtual ~Iterator_Searches();
+	virtual ~Iterator_PSourceSearches();
 	
 	virtual ZRef<ZQE::Iterator> Clone();
 	virtual ZRef<ZQE::Result> ReadInc();
@@ -199,26 +201,27 @@ private:
 	size_t fIndex;
 	};
 
-Source_Union::Iterator_Searches::Iterator_Searches(PSourceSearches* iPSS, size_t iWhichVector)
+Source_Union::Iterator_PSourceSearches::Iterator_PSourceSearches(
+	PSourceSearches* iPSS, size_t iWhichVector)
 :	fPSS(iPSS)
 ,	fWhichVector(iWhichVector)
 ,	fIndex(0)
 	{}
 
-Source_Union::Iterator_Searches::Iterator_Searches(
+Source_Union::Iterator_PSourceSearches::Iterator_PSourceSearches(
 	PSourceSearches* iPSS, size_t iWhichVector, size_t iIndex)
 :	fPSS(iPSS)
 ,	fWhichVector(iWhichVector)
 ,	fIndex(iIndex)
 	{}
 
-Source_Union::Iterator_Searches::~Iterator_Searches()
+Source_Union::Iterator_PSourceSearches::~Iterator_PSourceSearches()
 	{}
 
-ZRef<ZQE::Iterator> Source_Union::Iterator_Searches::Clone()
-	{ return new Iterator_Searches(fPSS, fWhichVector, fIndex); }
+ZRef<ZQE::Iterator> Source_Union::Iterator_PSourceSearches::Clone()
+	{ return new Iterator_PSourceSearches(fPSS, fWhichVector, fIndex); }
 
-ZRef<ZQE::Result> Source_Union::Iterator_Searches::ReadInc()
+ZRef<ZQE::Result> Source_Union::Iterator_PSourceSearches::ReadInc()
 	{
 	if (fIndex < fPSS->fResultsVector[fWhichVector].size())
 		return fPSS->fResultsVector[fWhichVector][fIndex++];
@@ -229,14 +232,13 @@ ZRef<ZQE::Result> Source_Union::Iterator_Searches::ReadInc()
 #pragma mark -
 #pragma mark * Source_Union::PQuery definition
 
-Source_Union::PQuery::PQuery(const AddedSearch& iAddedSearch)
-:	fRefcon(iAddedSearch.fRefcon)
-,	fSearchThing(sAsSearchThing(iAddedSearch.fRel))
+Source_Union::PQuery::PQuery(int64 iRefcon)
+:	fRefcon(iRefcon)
 	{}
 
 void Source_Union::PQuery::Regenerate()
 	{
-	ZRA::Util_Strim_Rel::sToStrim(sAsRel(fSearchThing), ZStdIO::strim_err);
+	ZRA::Util_Strim_Rel::sToStrim(fRel, ZStdIO::strim_err);
 	ZStdIO::strim_err << "\n";
 
 	fResults.clear();
@@ -255,7 +257,7 @@ void Source_Union::PQuery::Regenerate()
 			iter = fPSourceSearches; iter; iter.Advance())
 			{
 			PSourceSearches* thePSS = iter.Current();
-			ZRef<ZQE::Iterator> anIterator = new Iterator_Searches(thePSS, x);
+			ZRef<ZQE::Iterator> anIterator = new Iterator_PSourceSearches(thePSS, x);
 			if (theUnion)
 				theUnion = new ZQE::Iterator_Union(theUnion, anIterator);
 			else
@@ -275,7 +277,8 @@ void Source_Union::PQuery::Regenerate()
 		iter = fPSourceProducts; iter; iter.Advance())
 		{
 		PSourceProduct* thePSP = iter.Current();
-		ZRef<ZQE::Iterator> anIterator = new Iterator_Product(thePSP);
+		ZRef<ZQE::Iterator> anIterator = new Iterator_PSourceProduct(thePSP);
+
 		if (theProduct)
 			theProduct = new ZQE::Iterator_Product(theProduct, anIterator);
 		else
@@ -343,30 +346,35 @@ static ZValPred spRenamed(const RelRename& iRelRename, const ZValPred& iPred)
 	}
 
 static PredCompound::Sect spExtractPertinent(
-	const PredCompound::Sect& iSect, const RelRename& iRelRename)
+	PredCompound::Sect& ioSect, const RelRename& iRelRename)
 	{
 	// iRelHead -- the set of names provided by the source
 	// So we preserve only those ZValPreds whose names all appear in iRelHead
-	
+	 
 	const RelHead theTos = iRelRename.GetRelHead_To();
 	PredCompound::Sect result;
-	for (PredCompound::Sect::const_iterator iterSect = iSect.begin();
-		iterSect != iSect.end(); ++iterSect)
+	for (PredCompound::Sect::iterator iterSect = ioSect.begin();
+		iterSect != ioSect.end(); /*no inc*/)
 		{
 		if (theTos.Contains((*iterSect).GetNames()))
 			{
 			result.push_back(spRenamed(iRelRename.Inverted(), *iterSect));
+			iterSect = ioSect.erase(iterSect);
+			}
+		else
+			{
+			++iterSect;
 			}
 		}
 	return result;
 	}
 
 static PredCompound spExtractPertinent(
-	const PredCompound& iPredCompound, const RelRename& iRelRename)
+	PredCompound& ioPredCompound, const RelRename& iRelRename)
 	{
 	PredCompound result;
-	for (PredCompound::SectUnion::const_iterator iterUnion = iPredCompound.fSectUnion.begin();
-		iterUnion != iPredCompound.fSectUnion.end(); ++iterUnion)
+	for (PredCompound::SectUnion::iterator iterUnion = ioPredCompound.fSectUnion.begin();
+		iterUnion != ioPredCompound.fSectUnion.end(); ++iterUnion)
 		{
 		result |= spExtractPertinent(*iterUnion, iRelRename);
 		}
@@ -397,11 +405,15 @@ Source_Union::~Source_Union()
 
 set<RelHead> Source_Union::GetRelHeads()
 	{
+	// If any of our sources have an relhead set (signifying universality) then we must do the same.
 	set<RelHead> result;
 	for (map<Source*, PSource*>::iterator i = fMap_SourceToPSource.begin();
 		i != fMap_SourceToPSource.end(); ++i)
 		{
-		result = ZUtil_STL_set::sOr(result, (*i).first->GetRelHeads());
+		const set<RelHead>& theRelHeads = (*i).first->GetRelHeads();
+		if (theRelHeads.empty())
+			return set<RelHead>();
+		result = ZUtil_STL_set::sOr(result, theRelHeads);
 		}
 	return result;
 	}
@@ -413,47 +425,115 @@ void Source_Union::Update(
 	vector<SearchResult>& oChanged,
 	Clock& oClock)
 	{
+	if (fPSources_ToRemove.empty() && fPSources_ToAdd.empty())
+		{
+		this->pUpdate(iAdded, iAddedCount, iRemoved, iRemovedCount, oChanged, oClock);
+		return;
+		}
+
+	// Remove sources.
+	for (set<PSource*>::iterator iterPSource = fPSources_ToRemove.begin();
+		iterPSource != fPSources_ToRemove.end(); ++iterPSource)
+		{
+		PSource* thePSource = *iterPSource;
+		ZUtil_STL::sEraseMustContain(kDebug, fMap_SourceToPSource, thePSource->fSource);
+
+		for (map<int64, PSourceProduct*>::iterator
+			i = thePSource->fMap_RefconToPSourceProduct.begin();
+			i != thePSource->fMap_RefconToPSourceProduct.end(); ++i)
+			{
+			PSourceProduct* thePSP = (*i).second;
+			thePSP->fPQuery->fPSourceProducts.Erase(thePSP);
+			delete thePSP;
+			}
+
+		for (map<int64, PSourceSearches*>::iterator
+			i = thePSource->fMap_RefconToPSourceSearches.begin();
+			i != thePSource->fMap_RefconToPSourceSearches.end(); ++i)
+			{
+			PSourceSearches* thePSS = (*i).second;
+			thePSS->fPQuery->fPSourceSearches.Erase(thePSS);
+			delete thePSS;
+			}
+
+		delete thePSource;
+		}
+	fPSources_ToRemove.clear();
+
+	// Remember which queries were registered, don't bother to re-register any in iRemoved.
+	set<int64> removedSorted(iRemoved, iRemoved + iRemovedCount);
+	vector<int64> theRemoved;
+	vector<AddedSearch> theAdded(iAdded, iAdded + iAddedCount);
+	for (map<int64, PQuery*>::iterator i = fMap_RefconToPQuery.begin();
+		i != fMap_RefconToPQuery.end(); ++i)
+		{
+		PQuery* thePQuery = (*i).second;
+		if (!ZUtil_STL::sContains(removedSorted, thePQuery->fRefcon))
+			theAdded.push_back(AddedSearch(thePQuery->fRefcon, thePQuery->fRel));
+		theRemoved.push_back(thePQuery->fRefcon);
+		}
+
+	// Remove them
+	this->pUpdate(nullptr, 0,
+		ZUtil_STL::sFirstOrNil(theRemoved), theRemoved.size(),
+		oChanged, oClock);
+
+	// We won't get any changes, but ensure that the vector is clear.
 	oChanged.clear();
+
+	// Add in new sources
+	for (set<PSource*>::iterator iterPSource = fPSources_ToAdd.begin();
+		iterPSource != fPSources_ToAdd.end(); ++iterPSource)
+		{
+		PSource* thePSource = *iterPSource;
+		ZUtil_STL::sInsertMustNotContain(kDebug,
+			fMap_SourceToPSource, thePSource->fSource, thePSource);	
+		}
+	fPSources_ToAdd.clear();
+
+	// And register/re-register queries.
+	this->pUpdate(ZUtil_STL::sFirstOrNil(theAdded), theAdded.size(),
+		nullptr, 0,
+		oChanged, oClock);
+	}
+
+void Source_Union::InsertSource(Source* iSource)
+	{
+	ZAssert(! ZUtil_STL::sContains(fMap_SourceToPSource, iSource));
+	fPSources_ToAdd.insert(new PSource(iSource));
+	}
+
+void Source_Union::EraseSource(Source* iSource)
+	{
+	ZAssert(ZUtil_STL::sContains(fMap_SourceToPSource, iSource));
+	ZUtil_STL::sInsertMustNotContain(kDebug, fPSources_ToAdd, fMap_SourceToPSource[iSource]);
+	}
+
+void Source_Union::pUpdate(
+	AddedSearch* iAdded, size_t iAddedCount,
+	int64* iRemoved, size_t iRemovedCount,
+	vector<SearchResult>& oChanged,
+	Clock& oClock)
+	{
+	oChanged.clear();
+
+	ZAssert(fPQuery_Changed.Empty());
 
 	while (iRemovedCount--)
 		{
 		PQuery* thePQuery = ZUtil_STL::sEraseAndReturn(kDebug, fMap_RefconToPQuery, *iRemoved++);
-
-		for (DListIteratorEraseAll<PSourceProduct, DLink_PSourceProduct_InPQuery>
-			iter = thePQuery->fPSourceProducts; iter; iter.Advance())
-			{
-			PSourceProduct* thePSourceProduct = iter.Current();
-			PSource* thePSource = thePSourceProduct->fPSource;
-
-			thePSource->fMap_RefconToPSourceProduct.erase(thePSourceProduct->fRefcon);
-
-			thePSource->fPSourceQueries_ToRemove.push_back(thePSourceProduct->fRefcon);
-
-			delete thePSourceProduct;
-			}
-
-		for (DListIteratorEraseAll<PSourceSearches, DLink_PSourceSearches_InPQuery>
-			iter = thePQuery->fPSourceSearches; iter; iter.Advance())
-			{
-			PSourceSearches* thePSourceSearches = iter.Current();
-			PSource* thePSource = thePSourceSearches->fPSource;
-
-			int64 theRefcon = thePSourceSearches->fFirstRefcon;
-
-			thePSource->fMap_RefconToPSourceSearches.erase(theRefcon);
-
-			for (size_t x = thePSourceSearches->fPQuery->fRels.size(); x; --x)
-				thePSource->fPSourceQueries_ToRemove.push_back(theRefcon++);
-
-			delete thePSourceSearches;
-			}
-
-		delete thePQuery;
+		this->pDetachPQuery(thePQuery);
 		}
-	
+
 	while (iAddedCount--)
 		{
-		PQuery* thePQuery = new PQuery(*iAdded++);
+		PQuery* thePQuery = new PQuery(iAdded->fRefcon);
+		thePQuery->fRel = iAdded->fRel;
+		++iAdded;
+
+		thePQuery->fSearchThing = sAsSearchThing(thePQuery->fRel);
+		ZUtil_STL::sInsertMustNotContain(kDebug,
+			fMap_RefconToPQuery, thePQuery->fRefcon, thePQuery);
 		
 		// Go through the SearchThing's RelRenames, for each see if there's a
 		// single source that handles it, leaving any remainder to other sources.
@@ -481,7 +561,7 @@ void Source_Union::Update(
 					}
 				}
 
- 			if (! soleSourceHandlingRelRename || true)//##
+ 			if (! soleSourceHandlingRelRename)
 				{
 				++iterRelRenames;
 				}
@@ -542,7 +622,9 @@ void Source_Union::Update(
 		i != fMap_SourceToPSource.end(); ++i)
 		{
 		PSource* thePSource = (*i).second;
-		if (thePSource->fPSourceProducts_ToAdd.Size() || thePSource->fPSourceSearches_ToAdd.Size())
+		if (thePSource->fPSourceProducts_ToAdd.Size()
+			|| thePSource->fPSourceSearches_ToAdd.Size()
+			|| thePSource->fPSourceQueries_ToRemove.size())
 			{
 			vector<AddedSearch> localAdded;
 
@@ -577,7 +659,7 @@ void Source_Union::Update(
 			
 			vector<SearchResult> localChanged;
 			Clock localClock;
-			thePSource->fSource->Update(iLocalOnly,
+			thePSource->fSource->Update(false,
 				ZUtil_STL::sFirstOrNil(localAdded), localAdded.size(),
 				ZUtil_STL::sFirstOrNil(localRemoved), localRemoved.size(),
 				localChanged,
@@ -642,43 +724,40 @@ void Source_Union::Update(
 	oClock = fClock;
 	}
 
-
-// For both Insert and Remove we need to look at existing PQuerys and determine
-// if they need to be reorganized -- a new source can invalidate the pushing of
-// a product down into a single source. Losing a source can allow us to push a product.
-void Source_Union::InsertSource(Source* iSource)
+void Source_Union::pDetachPQuery(PQuery* iPQuery)
 	{
-	ZAssert(fMap_RefconToPQuery.empty());
+	fPQuery_Changed.EraseIfContains(iPQuery);
 
-	PSource* thePSource = new PSource(iSource);
-	ZUtil_STL::sInsertMustNotContain(kDebug, fMap_SourceToPSource, iSource, thePSource);	
-
-#if 0
-	for (map<int64, PQuery*>::iterator i = fMap_RefconToPQuery.begin();
-		i != fMap_RefconToPQuery.end(); ++i)
+	for (DListIteratorEraseAll<PSourceProduct, DLink_PSourceProduct_InPQuery>
+		iter = iPQuery->fPSourceProducts; iter; iter.Advance())
 		{
-		this->pInstallQueryForPSource((*i).second, thePSource);
+		PSourceProduct* thePSourceProduct = iter.Current();
+		PSource* thePSource = thePSourceProduct->fPSource;
+
+		thePSource->fMap_RefconToPSourceProduct.erase(thePSourceProduct->fRefcon);
+
+		thePSource->fPSourceQueries_ToRemove.push_back(thePSourceProduct->fRefcon);
+
+		delete thePSourceProduct;
 		}
-#endif
-	}
 
-void Source_Union::EraseSource(Source* iSource)
-	{
-	ZAssert(fMap_RefconToPQuery.empty());
-
-	PSource* thePSource = ZUtil_STL::sEraseAndReturn(kDebug, fMap_SourceToPSource, iSource);
-
-#if 0
-	for (map<int64, PSourceQuery*>::iterator i = thePSource->fMap_RefconToPSourceQuery.begin();
-		i != thePSource->fMap_RefconToPSourceQuery.end(); ++i)
+	for (DListIteratorEraseAll<PSourceSearches, DLink_PSourceSearches_InPQuery>
+		iter = iPQuery->fPSourceSearches; iter; iter.Advance())
 		{
-		PSourceQuery* thePSourceQuery = (*i).second;
-		thePSourceQuery->fPQuery->fPSourceQueries.Erase(thePSourceQuery);
-		delete thePSourceQuery;
-		}
-#endif
+		PSourceSearches* thePSourceSearches = iter.Current();
+		PSource* thePSource = thePSourceSearches->fPSource;
 
-	delete thePSource;
+		int64 theRefcon = thePSourceSearches->fFirstRefcon;
+
+		thePSource->fMap_RefconToPSourceSearches.erase(theRefcon);
+
+		for (size_t x = thePSourceSearches->fPQuery->fRels.size(); x; --x)
+			thePSource->fPSourceQueries_ToRemove.push_back(theRefcon++);
+
+		delete thePSourceSearches;
+		}
+
+	delete iPQuery;
 	}
 
 } // namespace ZDataspace

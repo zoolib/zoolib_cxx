@@ -100,12 +100,12 @@ public:
 	virtual void Imp_Abort();
 
 private:
-	bool pRefill(ZMutexLocker& iLocker, ZRef<IChannel> iChannel, double* ioTimeout);
+	bool pRefill(ZGuardRMtxR& iLocker, ZRef<IChannel> iChannel, double* ioTimeout);
 	void pAbort();
 	ZRef<IChannel> pUseChannel();
 
-	ZMutex fMutex;
-	ZCondition fCondition_Reader;
+	ZMtxR fMutex;
+	ZCnd fCondition_Reader;
 
 	ZRef<IDevice> fDevice;
 	bool fPreserveBoundaries;
@@ -213,7 +213,7 @@ STDMETHODIMP Channel_BBDevMgr::OnNewData()
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 		s << "OnNewData";
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	fCondition_Reader.Broadcast();
 
 	return NOERROR;
@@ -227,7 +227,7 @@ STDMETHODIMP Channel_BBDevMgr::OnClose()
 	// Close initiated by device removal or the other side. An abort
 	// here seems to deadlock, hence our use of the fClosed flag.
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	fClosed = true;
 	fCondition_Reader.Broadcast();
 
@@ -253,7 +253,7 @@ void Channel_BBDevMgr::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 
 	uint8* localDest = static_cast<uint8*>(oDest);
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	for (;;)
 		{
@@ -290,7 +290,7 @@ size_t Channel_BBDevMgr::Imp_CountReadable()
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 		s << "Imp_CountReadable";
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	if (fEnd <= fStart)
 		{
 		ZRef<IChannel> theChannel = this->pUseChannel();
@@ -308,7 +308,7 @@ bool Channel_BBDevMgr::Imp_WaitReadable(double iTimeout)
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 		s << "Imp_WaitReadable";
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	for (;;)
 		{
@@ -332,7 +332,7 @@ bool Channel_BBDevMgr::Imp_ReceiveDisconnect(double iTimeout)
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 		s << "Imp_ReceiveDisconnect";
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	for (;;)
 		{
@@ -358,7 +358,7 @@ void Channel_BBDevMgr::Imp_Write(const void* iSource, size_t iCount, size_t* oCo
 
 	const uint8* localSource = static_cast<const uint8*>(iSource);
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (ZRef<IChannel> theChannel = this->pUseChannel())
 		{
@@ -396,7 +396,7 @@ void Channel_BBDevMgr::Imp_Abort()
 	this->pAbort();
 	}
 
-bool Channel_BBDevMgr::pRefill(ZMutexLocker& iLocker, ZRef<IChannel> iChannel, double* ioTimeout)
+bool Channel_BBDevMgr::pRefill(ZGuardRMtxR& iLocker, ZRef<IChannel> iChannel, double* ioTimeout)
 	{
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Channel_BBDevMgr"))
 		s.Writef("pRefill");
@@ -465,7 +465,7 @@ bool Channel_BBDevMgr::pRefill(ZMutexLocker& iLocker, ZRef<IChannel> iChannel, d
 
 void Channel_BBDevMgr::pAbort()
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	fClosed = true;
 	fChannel.Clear();
 	fCondition_Reader.Broadcast();
@@ -473,7 +473,6 @@ void Channel_BBDevMgr::pAbort()
 
 ZRef<IChannel> Channel_BBDevMgr::pUseChannel()
 	{
-	ZAssert(fMutex.IsLocked());
 	return fChannel;
 	}
 
@@ -501,7 +500,7 @@ private:
 	bool pGetProperty(const string16& iName, VARIANT& oValue);
 	ZRef<IDevice> pUseDevice();
 
-	ZMutex fMutex;
+	ZMtxR fMutex;
 	ZRef<IDevice> fDevice;
 	};
 
@@ -576,7 +575,7 @@ bool Device_BBDevMgr::Matches(IDevice* iDevice)
 
 void Device_BBDevMgr::pDisconnected()
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	fDevice.Clear();
 	this->pFinished();
 	}
@@ -613,7 +612,7 @@ bool Device_BBDevMgr::pGetProperty(const string16& iName, VARIANT& oValue)
 
 ZRef<IDevice> Device_BBDevMgr::pUseDevice()
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	return fDevice;
 	}
 
@@ -622,8 +621,7 @@ ZRef<IDevice> Device_BBDevMgr::pUseDevice()
 #pragma mark * ZBlackBerry::Manager_BBDevMgr
 
 Manager_BBDevMgr::Manager_BBDevMgr()
-:	fMutex("Manager_BBDevMgr::fMutex"),
-	fNextID(1)
+:	fNextID(1)
 	{
 	HRESULT theHRESULT = ::CoCreateInstance(
 		IDeviceManager::sCLSID,
@@ -632,14 +630,12 @@ Manager_BBDevMgr::Manager_BBDevMgr()
 		ZUUIDOF(IDeviceManager),
 		sCOMVoidPtr(fDeviceManager));
 
-	printf("%08X", theHRESULT);
-
 	if (fDeviceManager)
 		{
 		fDeviceManager->Advise(this, &fCookie);
 
 		// Build the initial list
-		ZMutexLocker locker(fMutex);
+		ZGuardRMtxR locker(fMutex);
 
 		ZRef<IDevices> theDevices;
 		if (SUCCEEDED(fDeviceManager->Devices(sCOMPtr(theDevices)) && theDevices))
@@ -698,7 +694,7 @@ STDMETHODIMP Manager_BBDevMgr::DeviceConnect(IDevice* iDevice)
 	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_BBDevMgr"))
 		s.Writef("DeviceConnect, iDevice: %08X", iDevice);
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	Entry_t anEntry;
 	anEntry.fID = fNextID++;
@@ -707,7 +703,7 @@ STDMETHODIMP Manager_BBDevMgr::DeviceConnect(IDevice* iDevice)
 
 	locker.Release();
 
-	this->pNotifyObservers();
+	Manager::pChanged();
 
 	return S_OK;
 	}
@@ -717,7 +713,7 @@ STDMETHODIMP Manager_BBDevMgr::DeviceDisconnect(IDevice* iDevice)
 	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_BBDevMgr"))
 		s.Writef("DeviceDisconnect, iDevice: %08X", iDevice);
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	for (vector<Entry_t>::iterator i = fEntries.begin(); i != fEntries.end(); /*no inc*/)
 		{
@@ -734,7 +730,7 @@ STDMETHODIMP Manager_BBDevMgr::DeviceDisconnect(IDevice* iDevice)
 
 	locker.Release();
 
-	this->pNotifyObservers();
+	Manager::pChanged();
 	return S_OK;
 	}
 
@@ -743,7 +739,7 @@ void Manager_BBDevMgr::GetDeviceIDs(vector<uint64>& oDeviceIDs)
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Manager_BBDevMgr"))
 		s << "GetDeviceIDs";
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	for (vector<Entry_t>::iterator i = fEntries.begin(); i != fEntries.end(); ++i)
 		oDeviceIDs.push_back(i->fID);
@@ -754,7 +750,7 @@ ZRef<Device> Manager_BBDevMgr::Open(uint64 iDeviceID)
 	if (ZLOG(s, eDebug + 3, "ZBlackBerry::Manager_BBDevMgr"))
 		s << "Open";
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	for (vector<Entry_t>::iterator i = fEntries.begin(); i != fEntries.end(); ++i)
 		{

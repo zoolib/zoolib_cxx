@@ -51,12 +51,12 @@ std::string sAEKeywordAsString(AEKeyword iKeyword);
 class ZVal_AppleEvent
 :	public AEDesc
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZVal_AppleEvent,
-		operator_bool_generator_type, operator_bool_type);
-
 public:
 	ZAny AsAny() const;
 	ZAny DAsAny(const ZAny& iDefault) const;
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZVal_AppleEvent,
+		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const;
 
@@ -119,6 +119,7 @@ public:
 	AEDesc& OParam();
 
 // Typename accessors
+/// \cond DoxygenIgnore
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Int16, int16)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Int32, int32)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, Int64, int64)
@@ -133,6 +134,7 @@ public:
 #if ZCONFIG_SPI_Enabled(Carbon)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_AppleEvent, FSSpec, FSSpec)
 #endif
+/// \endcond DoxygenIgnore
 	};
 
 // =================================================================================================
@@ -142,13 +144,13 @@ public:
 class ZSeq_AppleEvent
 :	public AEDescList
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZSeq_AppleEvent,
-		operator_bool_generator_type, operator_bool_type);
-
 public:
 	typedef ZVal_AppleEvent Val_t;
 
 	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZSeq_AppleEvent,
+		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const;
 
@@ -188,14 +190,14 @@ public:
 class ZMap_AppleEvent
 :	public AERecord
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZMap_AppleEvent,
-		operator_bool_generator_type, operator_bool_type);
-
 public:
 	typedef ZMapIndex_T<ZMap_AppleEvent> Index_t;
 	typedef ZVal_AppleEvent Val_t;
 
 	ZMap_Any AsMap_Any(const ZAny& iDefault) const;
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZMap_AppleEvent,
+		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const;
 

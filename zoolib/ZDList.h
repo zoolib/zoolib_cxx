@@ -37,10 +37,11 @@ namespace ZooLib {
 template <typename L>
 struct DListHead
 	{
+	DListHead() : fHeadL(nullptr), fSize(0) {}
+
+
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
 		DListHead, operator_bool_generator_type, operator_bool_type);
-
-	DListHead() : fHeadL(nullptr), fSize(0) {}
 
 	operator operator_bool_type() const { return operator_bool_generator_type::translate(fHeadL); }
 
@@ -181,9 +182,6 @@ public:
 template <typename P, typename L>
 class DListIterator
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
-		DListIterator, operator_bool_generator_type, operator_bool_type);
-
 public:
 	enum { kDebug = L::kDebug };
 
@@ -192,6 +190,8 @@ public:
 		fCurrent(iDListHead.fHeadL)
 		{}
 
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
+		DListIterator, operator_bool_generator_type, operator_bool_type);
 	operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(fCurrent); }
 
@@ -219,9 +219,6 @@ private:
 template <typename P, typename L>
 class DListIteratorEraseAll
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
-		DListIteratorEraseAll, operator_bool_generator_type, operator_bool_type);
-
 public:
 	enum { kDebug = L::kDebug };
 
@@ -248,6 +245,9 @@ public:
 		fDListHead.fHeadL = nullptr;
 		fDListHead.fSize = 0;
 		}
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(
+		DListIteratorEraseAll, operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const
 		{

@@ -18,11 +18,12 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZRefWeak__
-#define __ZRefWeak__ 1
+#ifndef __ZWeakRef__
+#define __ZWeakRef__ 1
 #include "zconfig.h"
 
 #include "zoolib/ZRef.h"
+#include "zoolib/ZThread.h"
 
 namespace ZooLib {
 
@@ -43,23 +44,24 @@ protected:
 private:
 	ZWeakRefereeProxy* pGetWeakRefereeProxy();
 
-	friend class ZRefWeakBase;
+	friend class ZWeakRefBase;
+	ZMtx fMtx;
 	ZWeakRefereeProxy* fWRP;
 	};
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRefWeakBase
+#pragma mark * ZWeakRefBase
 
-class ZRefWeakBase
+class ZWeakRefBase
 	{
 protected:
-	ZRefWeakBase();
-	ZRefWeakBase(const ZRefWeakBase& iOther);
-	ZRefWeakBase(ZWeakReferee* iWeakReferee);
-	~ZRefWeakBase();
+	ZWeakRefBase();
+	ZWeakRefBase(const ZWeakRefBase& iOther);
+	ZWeakRefBase(ZWeakReferee* iWeakReferee);
+	~ZWeakRefBase();
 
-	void pAssignFrom(const ZRefWeakBase& iOther);
+	void pAssignFrom(const ZWeakRefBase& iOther);
 	void pAssignFrom(ZWeakReferee* iWeakReferee);
 
 	void pClear();
@@ -72,73 +74,82 @@ protected:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRefWeak
+#pragma mark * ZWeakRef
 
 template <class T>
-class ZRefWeak : protected ZRefWeakBase
+class ZWeakRef : protected ZWeakRefBase
 	{
 public:
-	ZRefWeak()
+	ZWeakRef()
 		{}
 
-	~ZRefWeak()
+	~ZWeakRef()
 		{}
 
-	ZRefWeak(const ZRefWeak& iOther)
-	:	ZRefWeakBase(iOther)
+	ZWeakRef(const ZWeakRef& iOther)
+	:	ZWeakRefBase(iOther)
 		{}
 
-	ZRefWeak& operator=(const ZRefWeak& iOther)
+	ZWeakRef& operator=(const ZWeakRef& iOther)
 		{
-		ZRefWeakBase::pAssignFrom(iOther);
+		ZWeakRefBase::pAssignFrom(iOther);
 		return *this;
 		}
 
 	template <class O>
-	ZRefWeak(const ZRefWeak<O>& iOther)
-	:	ZRefWeakBase(iOther)
+	ZWeakRef(const ZWeakRef<O>& iOther)
+	:	ZWeakRefBase(iOther)
 		{
 		// Ensure that T is a supertype of O
 		static_cast<T*>(static_cast<O*>(0));
 		}
 
 	template <class O>
-	ZRefWeak& operator=(const ZRefWeak<O>& iOther)
+	ZWeakRef& operator=(const ZWeakRef<O>& iOther)
 		{
 		static_cast<T*>(static_cast<O*>(0));
-		ZRefWeakBase::pAssignFrom(iOther);
+		ZWeakRefBase::pAssignFrom(iOther);
 		return *this;
 		}
 
 	template <class O>
-	ZRefWeak(const ZRef<O>& iRef)
-	:	ZRefWeakBase(iRef.Get())
+	ZWeakRef(const ZRef<O>& iRef)
+	:	ZWeakRefBase(iRef.Get())
 		{
 		static_cast<T*>(static_cast<O*>(0));
 		}
 
 	template <class O>
-	ZRefWeak& operator=(const ZRef<O>& iRef)
+	ZWeakRef& operator=(const ZRef<O>& iRef)
 		{
 		static_cast<T*>(static_cast<O*>(0));
-		ZRefWeakBase::pAssignFrom(iRef.Get());
+		ZWeakRefBase::pAssignFrom(iRef.Get());
 		return *this;
 		}
 
 	void Clear()
-		{ ZRefWeakBase::pClear(); }
+		{ ZWeakRefBase::pClear(); }
 
 	template <class O>
 	operator ZRef<O>() const
 		{
 		ZRef<O> result;
-		if (ZWeakReferee* theWeakReferee = ZRefWeakBase::pLockUse())
+		if (ZWeakReferee* theWeakReferee = ZWeakRefBase::pLockUse())
 			{
 			result = static_cast<O*>(theWeakReferee);
-			ZRefWeakBase::pUnlock();
+			ZWeakRefBase::pUnlock();
 			}
 		return result;
 		}
+
+	bool operator==(const ZWeakRef& iOther) const
+		{ return ZRef<T>(*this) == ZRef<T>(iOther); }
+
+	bool operator!=(const ZWeakRef& iOther) const
+		{ return ZRef<T>(*this) != ZRef<T>(iOther); }
+
+	bool operator<(const ZWeakRef& iOther) const
+		{ return ZRef<T>(*this) < ZRef<T>(iOther); }
 	};
 
 } // namespace ZooLib

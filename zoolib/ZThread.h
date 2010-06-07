@@ -43,6 +43,8 @@ namespace ZooLib {
 
 	typedef ZCnd_pthread ZCnd;
 	typedef ZMtx_pthread ZMtx;
+	typedef ZMtxR_pthread ZMtxR;
+
 	typedef ZSem_pthread ZSem;
 	typedef ZSemNoTimeout_pthread ZSemNoTimeout;
 
@@ -53,6 +55,8 @@ namespace ZooLib {
 
 	typedef ZCnd_MacMP ZCnd;
 	typedef ZMtx_MacMP ZMtx;
+	typedef ZMtxR_MacMP ZMtxR;
+
 	typedef ZSem_MacMP ZSem;
 
 #elif ZCONFIG_API_Enabled(Thread_Win)
@@ -62,6 +66,8 @@ namespace ZooLib {
 
 	typedef ZCnd_Win ZCnd;
 	typedef ZMtx_Win ZMtx;
+	typedef ZMtxR_Win ZMtxR;
+
 	typedef ZSem_Win ZSem;
 
 #elif ZCONFIG_API_Enabled(Thread_boost)
@@ -75,12 +81,18 @@ namespace ZooLib {
 
 #endif
 
+// =================================================================================================
+#pragma mark -
+#pragma mark * Acquirer, Releaser, Guard
+
 typedef ZAcquirer_T<ZMtx> ZAcqMtx;
+typedef ZAcquirer_T<ZMtxR> ZAcqMtxR;
+
 typedef ZReleaser_T<ZMtx> ZRelMtx;
+typedef ZReleaser_T<ZMtxR> ZRelMtxR;
 
 typedef ZGuardR_T<ZMtx> ZGuardRMtx;
-
-typedef ZAcqMtx ZGuardMtx;
+typedef ZGuardR_T<ZMtxR> ZGuardRMtxR;
 
 // =================================================================================================
 #pragma mark -

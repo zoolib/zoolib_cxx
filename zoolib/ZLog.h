@@ -89,7 +89,6 @@ std::string sNameFromPriority(EPriority iPriority);
 
 class StrimW : public ZStrimW
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(StrimW, operator_bool_generator_type, operator_bool_type);
 public:
 	StrimW(EPriority iPriority, const std::string& iName);
 	StrimW(EPriority iPriority, const char* iName);
@@ -101,6 +100,7 @@ public:
 	virtual void Imp_WriteUTF8(const UTF8* iSource, size_t iCountCU, size_t* oCountCU);
 
 // Our protocol
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(StrimW, operator_bool_generator_type, operator_bool_type);
 	operator operator_bool_type() const;
 	void Emit() const;
 

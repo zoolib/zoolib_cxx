@@ -25,8 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace ZooLib {
 namespace ZQE {
 
-using std::string;
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Iterator_Any_Project
@@ -53,7 +51,7 @@ ZRef<Result> Iterator_Any_Project::ReadInc()
 				ZMap_Any newMap;
 				for (ZMap_Any::Index_t i = theMap->Begin(); i != theMap->End(); ++i)
 					{
-					const string theName = theMap->NameOf(i);
+					const string8 theName = theMap->NameOf(i);
 					sourceRelHead |= theName;
 					if (fRelHead.Contains(theName))
 						newMap.Set(theName, theMap->Get(i));
@@ -75,7 +73,7 @@ ZRef<Result> Iterator_Any_Project::ReadInc()
 #pragma mark * Iterator_Any_Rename
 
 Iterator_Any_Rename::Iterator_Any_Rename(
-	ZRef<Iterator> iIterator, const std::string& iNew, const std::string& iOld)
+	ZRef<Iterator> iIterator, const ZRA::RelName& iNew, const ZRA::RelName& iOld)
 :	fIterator(iIterator)
 ,	fNew(iNew)
 ,	fOld(iOld)

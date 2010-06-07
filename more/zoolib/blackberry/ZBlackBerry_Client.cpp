@@ -139,21 +139,19 @@ public:
 	virtual ~Device_Client();
 
 // From Device
-	virtual void Stop();
-
 	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const string& iName, const PasswordHash* iPasswordHash, Error* oError);
 	virtual Data GetAttribute(uint16 iObject, uint16 iAttribute);
 	virtual uint32 GetPIN();
-
-// From ZStreamerReader via ZCommer
-	virtual void ReadStarted();
 
 // From ZCommer
 	virtual bool Read(const ZStreamR& r);
 	virtual bool Write(const ZStreamW& w);
 
 	virtual void Finished();
+
+// Our protocol
+	void Stop();
 
 private:
 	ZRef<ZStreamerRWConFactory> fFactory;
@@ -173,20 +171,7 @@ Device_Client::Device_Client(ZRef<ZStreamerRWCon> theSRWCon,
 
 Device_Client::~Device_Client()
 	{
-	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device_Client"))
-		s << "~Device_Client";
-	}
-
-static void spWriteString(const ZStreamW& w, const string& iString)
-	{
-	w.WriteCount(iString.size());
-	w.WriteString(iString);
-	}
-
-void Device_Client::Stop()
-	{
-	fOpen = false;
-	ZStreamerWriter::Wake();
+	ZLOGFUNCTION(eDebug + 2);
 	}
 
 ZRef<Channel> Device_Client::Open(bool iPreserveBoundaries,
@@ -211,7 +196,8 @@ ZRef<Channel> Device_Client::Open(bool iPreserveBoundaries,
 				w.WriteBool(false);
 				}
 
-			spWriteString(w, iName);
+			w.WriteCount(iName.size());
+			w.WriteString(iName);
 
 			w.Flush();
 
@@ -279,27 +265,23 @@ uint32 Device_Client::GetPIN()
 		}
 	catch (...)
 		{}
-	return false;
+	return 0;
 	}
 
-void Device_Client::ReadStarted()
-	{
-	ZCommer::ReadStarted();
-	fOpen = false;
-	ZStreamerWriter::Wake();
-	}
-
+/// \sa ZBlackBerryServer::Handler_DeviceFinished::Read
 bool Device_Client::Read(const ZStreamR& r)
 	{
-	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device_Client"))
-		s << "Read, entered";
+	ZLOGFUNCTION(eDebug + 2);
+
 	const bool req = r.ReadBool();
 	ZAssert(!req);
-	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device_Client"))
-		s << "Read, got false";
+
+	fOpen = false;
+	ZStreamerWriter::Wake();
 	return false;
 	}
 
+/// \sa ZBlackBerryServer::Handler_DeviceFinished::Read
 bool Device_Client::Write(const ZStreamW& w)
 	{
 	if (!fOpen)
@@ -309,16 +291,24 @@ bool Device_Client::Write(const ZStreamW& w)
 		w.WriteBool(false);
 		return false;
 		}
+
 	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device_Client"))
-		s << "Write, Return true";
+		s << "Write nothing, return true";
+
 	return true;
 	}
 
 void Device_Client::Finished()
 	{
-	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Device_Client"))
-		s << "Finished";
-	this->pFinished();
+	ZLOGFUNCTION(eDebug + 2);
+	Device::pFinished();
+	}
+
+/// \sa ZBlackBerryServer::Handler_DeviceFinished::TripIt
+void Device_Client::Stop()
+	{
+	fOpen = false;
+	ZStreamerWriter::Wake();
 	}
 
 // =================================================================================================
@@ -339,7 +329,7 @@ public:
 	virtual void Finished();
 
 private:
-	ZRefWeak<Manager_Client> fManager;
+	ZWeakRef<Manager_Client> fManager;
 	bool fSendNotificationRequest;
 	bool fSendClose;
 
@@ -369,7 +359,7 @@ bool Manager_Client::Commer_Changed::Read(const ZStreamR& r)
 	if (req)
 		{
 		if (ZRef<Manager_Client> theManager = fManager)
-			theManager->pNotifyObservers();
+			theManager->pChanged();
 
 		fSendNotificationRequest = true;
 		ZStreamerWriter::Wake();
@@ -394,13 +384,13 @@ bool Manager_Client::Commer_Changed::Write(const ZStreamW& w)
 		fSendNotificationRequest = false;
 		w.WriteBool(true);
 		}
+
 	return true;
 	}
 
 void Manager_Client::Commer_Changed::Finished()
 	{
-	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client::Commer_Changed"))
-		s << "Finished";
+	ZLOGFUNCTION(eDebug + 2);
 
 	if (ZRef<Manager_Client> theManager = fManager)
 		theManager->pDetached(this);
@@ -421,8 +411,10 @@ Manager_Client::Manager_Client(ZRef<ZStreamerRWConFactory> iFactory, bool iAutoR
 Manager_Client::~Manager_Client()
 	{}
 
-void Manager_Client::Start()
+void Manager_Client::Initialize()
 	{
+	Manager::Initialize();
+
 	ZRef<ZStreamerRWCon> theSRWCon = fFactory->MakeStreamerRWCon();
 	if (!theSRWCon)
 		throw runtime_error("ZBlackBerry::Manager_Client, Couldn't connect");
@@ -430,47 +422,17 @@ void Manager_Client::Start()
 	this->pStartCommer(theSRWCon);
 	}
 
-void Manager_Client::pDetached(ZRef<Commer_Changed> iCommer)
-	{
-	while (fAutoReconnect)
-		{
-		if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client"))
-			s << "Detached, retrying";
-		ZTime nextTry = ZTime::sNow() + 2.0;
-		if (ZRef<ZStreamerRWCon> theSRWCon = fFactory->MakeStreamerRWCon())
-			{
-			this->pStartCommer(theSRWCon);
-			return;
-			}
-		if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client"))
-			s << "Detached, retry failed";
-
-		ZThread::sSleep(max(0.1, nextTry - ZTime::sNow()));
-		}
-
-	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client"))
-		s << "Detached, not retrying";
-
-	this->pStopped();
-	}
-
-void Manager_Client::pStartCommer(ZRef<ZStreamerRWCon> iSRWCon)
-	{
-	iSRWCon->GetStreamW().WriteUInt8(0);
-
-	fCommer_Changed = new Commer_Changed(iSRWCon, this);
-	this->pStarted();
-
-	sStartCommerRunners(fCommer_Changed);	
-	}
-
-void Manager_Client::Stop()
+void Manager_Client::Finalize()
 	{
 //	fAutoReconnect = false;
-	fCommer_Changed->fManager.Clear();
-	fCommer_Changed->ZStreamerWriter::Wake();
-	fCommer_Changed.Clear();
-	this->pStopped();
+	if (ZRef<Commer_Changed> theCommer_Changed = fCommer_Changed)
+		{
+		fCommer_Changed.Clear();
+		theCommer_Changed->fManager.Clear();
+		theCommer_Changed->ZStreamerWriter::Wake();
+		}
+
+	Manager::Finalize();
 	}
 
 void Manager_Client::GetDeviceIDs(vector<uint64>& oDeviceIDs)
@@ -518,7 +480,45 @@ ZRef<Device> Manager_Client::Open(uint64 iDeviceID)
 		}
 	catch (...)
 		{}
-	return ZRef<Device>();
+	return nullref;
+	}
+
+
+void Manager_Client::pDetached(ZRef<Commer_Changed> iCommer)
+	{
+	ZAssert(iCommer == fCommer_Changed);
+	fCommer_Changed.Clear();
+	
+	while (fAutoReconnect)
+		{
+		if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client"))
+			s << "Detached, retrying";
+		ZTime nextTry = ZTime::sNow() + 2.0;
+		if (ZRef<ZStreamerRWCon> theSRWCon = fFactory->MakeStreamerRWCon())
+			{
+			this->pStartCommer(theSRWCon);
+			return;
+			}
+		if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client"))
+			s << "Detached, retry failed";
+
+		ZThread::sSleep(max(0.1, nextTry - ZTime::sNow()));
+		}
+
+	if (ZLOG(s, eDebug + 2, "ZBlackBerry::Manager_Client"))
+		s << "Detached, not retrying";
+
+	this->pChanged();
+	}
+
+void Manager_Client::pStartCommer(ZRef<ZStreamerRWCon> iSRWCon)
+	{
+	iSRWCon->GetStreamW().WriteUInt8(0);
+
+	fCommer_Changed = new Commer_Changed(iSRWCon, this);
+	this->pChanged();
+
+	sStartCommerRunners(fCommer_Changed);	
 	}
 
 } // namespace ZBlackBerry

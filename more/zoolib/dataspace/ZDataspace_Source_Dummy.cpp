@@ -21,6 +21,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/dataspace/ZDataspace_Source_Dummy.h"
 
 #include "zoolib/ZExpr_Logic.h"
+
 #include "zoolib/ZStdIO.h"
 #include "zoolib/zra/ZRA_Util_Strim_Rel.h"
 
@@ -59,7 +60,6 @@ void Source_Dummy::Update(
 		++iAdded;
 		}
 	}
-
 
 } // namespace ZDataspace
 } // namespace ZooLib

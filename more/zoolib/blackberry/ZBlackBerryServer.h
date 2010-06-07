@@ -33,8 +33,6 @@ namespace ZooLib {
 #pragma mark * ZBlackBerryServer
 
 class ZBlackBerryServer
-:	ZBlackBerry::Manager::Observer,
-	ZBlackBerry::Device::Observer
 	{
 public:
 	ZBlackBerryServer(ZRef<ZBlackBerry::Manager> iManager);
@@ -43,34 +41,38 @@ public:
 	void HandleRequest(ZRef<ZStreamerRWCon> iSRWCon);
 
 private:
-// From Manager::Observer
-	virtual void ManagerChanged(ZRef<ZBlackBerry::Manager> iManager);
+	class CB_ManagerChanged;
+	friend class CB_ManagerChanged;
+	ZRef<CB_ManagerChanged> fCB_ManagerChanged;
 
-// From Device::Observer
-	virtual void Finished(ZRef<ZBlackBerry::Device> iDevice);
+	class CB_DeviceFinished;
+	friend class CB_DeviceFinished;
+	ZRef<CB_DeviceFinished> fCB_DeviceFinished;
 
-private:
-	ZMutex fMutex;
-	ZCondition fCondition;
+	void pManagerChanged(ZRef<ZBlackBerry::Manager> iManager);
+	void pDeviceFinished(ZRef<ZBlackBerry::Device> iDevice);
+
+	ZMtxR fMutex;
+	ZCnd fCondition;
 	ZRef<ZBlackBerry::Manager> fManager;
 
 	ZRef<ZBlackBerry::Device> pGetDevice(uint64 iDeviceID);
 
 	class Handler_ManagerChanged;
 	friend class Handler_ManagerChanged;
-	void pRemove_ManagerChanged(Handler_ManagerChanged*);
-	std::vector<Handler_ManagerChanged*> fHandlers_ManagerChanged;
+	void pRemove_ManagerChanged(ZRef<Handler_ManagerChanged>);
+	std::vector<ZRef<Handler_ManagerChanged> > fHandlers_ManagerChanged;
 
 	class Handler_DeviceFinished;
 	friend class Handler_DeviceFinished;
-	void pRemove_DeviceFinished(Handler_DeviceFinished*);
+	void pRemove_DeviceFinished(ZRef<Handler_DeviceFinished>);
 
 	struct Entry_t
 		{
 		uint64 fID;
 		bool fLive;
 		ZRef<ZBlackBerry::Device> fDevice;
-		std::vector<Handler_DeviceFinished*> fHandlers;
+		std::vector<ZRef<Handler_DeviceFinished> > fHandlers;
 		};
 
 	std::vector<Entry_t> fEntries;

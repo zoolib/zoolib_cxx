@@ -36,6 +36,9 @@ class ZUniSet_T
 	explicit ZUniSet_T(bool iUniversal, std::set<T>* ioElems);
 
 public:
+	typedef T key_type;
+	typedef T value_type;
+
 	void swap(ZUniSet_T& iOther);
 
 	ZUniSet_T();

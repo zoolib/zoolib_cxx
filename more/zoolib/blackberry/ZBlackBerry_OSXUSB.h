@@ -58,31 +58,28 @@ namespace ZBlackBerry {
 #pragma mark * ZBlackBerry::Manager_OSXUSB
 
 class Manager_OSXUSB
-:	public Manager,
-	ZUSBWatcher::Observer,
-	ZUSBDevice::Observer
+:	public Manager
+,	public ZWeakReferee
 	{
 public:
 	Manager_OSXUSB(CFRunLoopRef iRunLoopRef, bool iAllowMassStorage);
 
 	virtual ~Manager_OSXUSB();
 
-// From Manager
-	virtual void Start();
-	virtual void Stop();
+// From ZCounted
+	virtual void Initialize();
+	virtual void Finalize();
 
+// From Manager
 	virtual void GetDeviceIDs(std::vector<uint64>& oDeviceIDs);
 
 	virtual ZRef<Device> Open(uint64 iDeviceID);
 
-// From ZUSBWatcher::Observer
-	virtual void Added(ZRef<ZUSBDevice> iUSBDevice);
-
-// From ZUSBDevice::Observer
-	virtual void Detached(ZRef<ZUSBDevice> iUSBDevice);
-	
 private:
-	ZMutex fMutex;
+	void pDeviceAttached(ZRef<ZUSBDevice> iDevice);
+	void pDeviceDetached(ZRef<ZUSBDevice> iDevice);
+
+	ZMtxR fMutex;
 	CFRunLoopRef fRunLoopRef;
 	bool fAllowMassStorage;
 	
@@ -97,6 +94,14 @@ private:
 	ZRef<ZUSBWatcher> fUSBWatcher_Pearl_HS;
 	ZRef<ZUSBWatcher> fUSBWatcher_Dual_HS;
 	ZRef<ZUSBWatcher> fUSBWatcher_Storm_HS;
+
+	class CB_DeviceAttached;
+	friend class CB_DeviceAttached;
+	ZRef<CB_DeviceAttached> fCB_DeviceAttached;
+
+	class CB_DeviceDetached;
+	friend class CB_DeviceDetached;
+	ZRef<CB_DeviceDetached> fCB_DeviceDetached;
 
 	struct Device_t
 		{

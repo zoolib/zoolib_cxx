@@ -38,8 +38,6 @@ class ZTextCollationKeyRep;
 
 class ZTextCollator
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTextCollator,
-		operator_bool_generator_type, operator_bool_type);
 public:
 	ZTextCollator();
 	ZTextCollator(const ZTextCollator& iOther);
@@ -49,6 +47,9 @@ public:
 	ZTextCollator(int iStrength);
 	ZTextCollator(const string8& iLocaleName, int iStrength);
 	ZTextCollator(const char* iLocaleName, int iStrength);
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTextCollator,
+		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(fRep && true); }
@@ -105,8 +106,6 @@ private:
 
 class ZTextCollationKey
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTextCollationKey,
-		operator_bool_generator_type, operator_bool_type);
 public:
 	ZTextCollationKey();
 	ZTextCollationKey(const ZTextCollationKey& iOther);
@@ -120,6 +119,9 @@ public:
 	ZTextCollationKey(const ZTextCollator& iCollator, const UTF8* iPattern, size_t iPatternLength);
 	ZTextCollationKey(const ZTextCollator& iCollator, const UTF16* iPattern, size_t iPatternLength);
 	ZTextCollationKey(const ZTextCollator& iCollator, const UTF32* iPattern, size_t iPatternLength);
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTextCollationKey,
+		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(fRep && true); }

@@ -33,6 +33,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/zqe/ZQE_Iterator_Any.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 
+#include "zoolib/ZStdIO.h"
+#include "zoolib/zra/ZRA_Util_Strim_Rel.h"
+
 namespace ZooLib {
 namespace ZDataspace {
 
@@ -171,22 +174,20 @@ Visitor_DoMakeIterator::Visitor_DoMakeIterator(Source_Dataset* iSource)
 	{}
 
 void Visitor_DoMakeIterator::Visit_Expr_Rel_Concrete(ZRef<ZRA::Expr_Rel_Concrete> iExpr)
-	{
-	this->pSetResult(fSource->pMakeIterator(iExpr->GetRelHead()));
-	}
+	{ this->pSetResult(fSource->pMakeIterator(iExpr->GetRelHead())); }
 
 } // anonymous namespace
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * Source_Dataset::Query
+#pragma mark * Source_Dataset::PQuery
 
-class Source_Dataset::Query
+class Source_Dataset::PQuery
 	{
 public:
 	int64 fRefcon;
 	ZRef<ZRA::Expr_Rel> fRel;
-	ZRef<ZQE::Result> fResults;
+//	ZRef<ZQE::Result> fResults;
 	};
 
 // =================================================================================================
@@ -214,34 +215,39 @@ void Source_Dataset::Update(
 
 	while (iAddedCount--)
 		{
-		Query* theQuery = new Query;
-		theQuery->fRefcon = iAdded->fRefcon;
-		theQuery->fRel = iAdded->fRel;
-		fRels[theQuery->fRefcon] = theQuery;
+		PQuery* thePQuery = new PQuery;
+		thePQuery->fRefcon = iAdded->fRefcon;
+		thePQuery->fRel = iAdded->fRel;
+		ZUtil_STL::sInsertMustNotContain(kDebug,
+			fMap_RefconToPQuery, thePQuery->fRefcon, thePQuery);
+
+		ZRA::Util_Strim_Rel::sToStrim(iAdded->fRel, ZStdIO::strim_err);
+		ZStdIO::strim_err << "\n";
+
 		++iAdded;
 		}
 	
 	while (iRemovedCount--)
 		{
-		map<int64, Query*>::iterator i = fRels.find(*iRemoved++);
-		delete (*i).second;
+		PQuery* thePQuery = ZUtil_STL::sEraseAndReturn(kDebug, fMap_RefconToPQuery, *iRemoved++);
+		delete thePQuery;
 		}
 
 	// Pick up (and index) values from dataset
 	this->pPull();
 
-	for (map<int64, Query*>::iterator i = fRels.begin(); i != fRels.end(); ++i)
+	for (map<int64, PQuery*>::iterator i = fMap_RefconToPQuery.begin();
+		i != fMap_RefconToPQuery.end(); ++i)
 		{
 		SearchResult theSearchResult;
 		theSearchResult.fRefcon = (*i).first;
 
-		ZRef<ZQE::Iterator> theIterator = Visitor_DoMakeIterator(this).Do((*i).second->fRel);
-		for (;;)
+		for (ZRef<ZQE::Iterator> theIterator = Visitor_DoMakeIterator(this).Do((*i).second->fRel);;)
 			{
-			if (ZRef<ZQE::Result> theResult = theIterator->ReadInc())
-				theSearchResult.fResults.push_back(theResult);
-			else
+			ZRef<ZQE::Result> theResult = theIterator->ReadInc();
+			if (!theResult)
 				break;
+			theSearchResult.fResults.push_back(theResult);
 			}
 		oChanged.push_back(theSearchResult);
 		}
@@ -269,7 +275,8 @@ void Source_Dataset::pPull()
 	fClock = newClock;
 
 	const Map_NamedClock_Delta_t& theNCDM = clockedDeltas->GetMap();
-	for (Map_NamedClock_Delta_t::const_iterator iterNCDM = theNCDM.begin(), endNCDM = theNCDM.end();
+	for (Map_NamedClock_Delta_t::const_iterator
+		iterNCDM = theNCDM.begin(), endNCDM = theNCDM.end();
 		iterNCDM != endNCDM; ++iterNCDM)
 		{
 		const NamedClock& theNamedClock = (*iterNCDM).first;

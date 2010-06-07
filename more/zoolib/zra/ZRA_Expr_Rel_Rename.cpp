@@ -30,7 +30,7 @@ namespace ZRA {
 #pragma mark * Expr_Rel_Rename
 
 Expr_Rel_Rename::Expr_Rel_Rename(ZRef<Expr_Rel> iOp0,
-	const std::string& iNew, const std::string& iOld)
+	const RelName& iNew, const RelName& iOld)
 :	inherited(iOp0)
 ,	fNew(iNew)
 ,	fOld(iOld)
@@ -72,10 +72,10 @@ RelHead Expr_Rel_Rename::GetRelHead()
 void Expr_Rel_Rename::Accept_Expr_Rel_Rename(Visitor_Expr_Rel_Rename& iVisitor)
 	{ iVisitor.Visit_Expr_Rel_Rename(this); }
 
-const string& Expr_Rel_Rename::GetNew()
+const RelName& Expr_Rel_Rename::GetNew()
 	{ return fNew; }
 
-const string& Expr_Rel_Rename::GetOld()
+const RelName& Expr_Rel_Rename::GetOld()
 	{ return fOld; }
 
 // =================================================================================================
@@ -90,7 +90,7 @@ void Visitor_Expr_Rel_Rename::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 #pragma mark * Relational operators
 
 ZRef<Expr_Rel_Rename> sRename(const ZRef<Expr_Rel>& iExpr,
-	const string& iNewPropName, const string& iOldPropName)
+	const RelName& iNewPropName, const RelName& iOldPropName)
 	{ return new Expr_Rel_Rename(iExpr, iNewPropName, iOldPropName); }
 
 } // namespace ZRA

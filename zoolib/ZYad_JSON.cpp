@@ -28,7 +28,7 @@ namespace ZooLib {
 
 using std::string;
 
-/*! \namespace ZYad_JSON
+/*! \namespace ZooLib::ZYad_JSON
 JSON is JavaScript Object Notation. See <http://www.crockford.com/JSON/index.html>.
 
 ZYad_JSON provides Yad facilities to read and write JSON source.

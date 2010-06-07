@@ -43,6 +43,8 @@ ZOOLIB_RETAIN_RELEASE(CFTypeRef)
 
 ZOOLIB_CF_MUTABLE(Bundle)
 ZOOLIB_CF_MUTABLE(ReadStream)
+ZOOLIB_CF_MUTABLE(RunLoop)
+ZOOLIB_CF_MUTABLE(RunLoopTimer)
 ZOOLIB_CF_MUTABLE(WriteStream)
 
 // =================================================================================================

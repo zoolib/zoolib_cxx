@@ -162,7 +162,7 @@ void MakeSFW::Visit_Expr_Rel_Project(ZRef<Expr_Rel_Project> iExpr)
 	this->pSetResult(result);
 	}
 
-static RelHead spRenamed(RelHead iRelHead, const string8& iOld, const string8& iNew)
+static RelHead spRenamed(RelHead iRelHead, const RelName& iOld, const RelName& iNew)
 	{
 	if (iRelHead.Contains(iOld))
 		{
@@ -176,8 +176,8 @@ void MakeSFW::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 	{
 	ZRef<Expr_Rel_SFW> sfw0 = this->Do(iExpr->GetOp0());
 
-	const string8& oldName = iExpr->GetOld();
-	const string8& newName = iExpr->GetNew();
+	const RelName& oldName = iExpr->GetOld();
+	const RelName& newName = iExpr->GetNew();
 	Rename_t theRename = sfw0->GetRename();
 	bool foundIt = false;
 	for (Rename_t::iterator i = theRename.begin(); i != theRename.end(); /*no inc*/)
@@ -504,11 +504,12 @@ void sAsSQL(ZRef<Expr_Rel_SFW> iSFW, const ZStrimW& s)
 			Rename_t::const_iterator alias = theRename.find(theName);
 			if (alias != theRename.end())
 				{
-				s << " " << (*alias).second << " AS " << theName;
+				s << " " << (*alias).second << " AS '" << theName << "'";
 				}
 			else
 				{
-				s << " " << theName;
+				s << " " << theName << " AS '" << theName << "'";
+//				s << " " << theName;
 				}
 			}
 

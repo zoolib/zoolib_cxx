@@ -37,6 +37,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <IOKit/IOKitLib.h> // For IONotificationPortRef
 #include <IOKit/usb/IOUSBLib.h>
 
+#include "zoolib/ZCallback_T.h"
 #include "zoolib/ZRef_Counted.h"
 #include "zoolib/ZStreamer.h"
 
@@ -49,20 +50,16 @@ class ZUSBInterfaceInterface;
 #pragma mark -
 #pragma mark * ZUSBWatcher
 
-class ZUSBWatcher : public ZCountedWithoutFinalize
+class ZUSBWatcher : public ZCounted
 	{
 public:
-	class Observer
-		{
-	public:
-		virtual void Added(ZRef<ZUSBDevice> iUSBDevice) = 0;
-		};
-
 	ZUSBWatcher(IONotificationPortRef iIONotificationPortRef,
 		SInt32 iUSBVendor, SInt32 iUSBProduct);
 	virtual ~ZUSBWatcher();
 
-	void SetObserver(Observer* iObserver);
+	typedef ZCallback_T<ZRef<ZUSBDevice> > CB_DeviceAttached;
+	void RegisterDeviceAttached(ZRef<CB_DeviceAttached> iCallback);
+	void UnregisterDeviceAttached(ZRef<CB_DeviceAttached> iCallback);
 
 private:
 	void pDeviceAdded(io_iterator_t iIterator);
@@ -71,26 +68,22 @@ private:
 	IONotificationPortRef fIONotificationPortRef;
 	io_iterator_t fNotification;
 
-	Observer* fObserver;
+	ZCallbackSet_T<ZRef<ZUSBDevice> > fCallbacks;
 	};
 
 // ================================================================================================
 #pragma mark -
 #pragma mark * ZUSBDevice
 
-class ZUSBDevice : public ZCountedWithoutFinalize
+class ZUSBDevice : public ZCounted
 	{
 public:
-	class Observer
-		{
-	public:
-		virtual void Detached(ZRef<ZUSBDevice> iUSBDevice) = 0;
-		};
-
 	ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_t iUSBDevice);
 	virtual ~ZUSBDevice();
 
-	void SetObserver(Observer* iObserver);
+	typedef ZCallback_T<ZRef<ZUSBDevice> > CB_DeviceDetached;
+	void RegisterDeviceDetached(ZRef<CB_DeviceDetached> iCallback);
+	void UnregisterDeviceDetached(ZRef<CB_DeviceDetached> iCallback);
 
 	IOUSBDeviceInterface182** GetIOUSBDeviceInterface();
 	
@@ -114,7 +107,7 @@ private:
 	IOUSBDeviceInterface182** fIOUSBDeviceInterface;
 	io_object_t fNotification;
 	UInt32 fLocationID;
-	Observer* fObserver;
+	ZCallbackSet_T<ZRef<ZUSBDevice> > fCallbacks;
 	bool fDetached;
 	bool fHasIOUSBDeviceDescriptor;
 	IOUSBDeviceDescriptor fIOUSBDeviceDescriptor;

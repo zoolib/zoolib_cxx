@@ -38,7 +38,7 @@ typedef ZExpr_Logic_ValPred_T<ZVal_Expr> ZExpr_Logic_ValPred;
 typedef ZVisitor_Expr_Logic_ValPred_T<ZVal_Expr> ZVisitor_Expr_Logic_ValPred;
 
 
-inline std::set<std::string> sGetNames(const ZRef<ZExpr_Logic>& iExpr)
+inline std::set<ZTrail> sGetNames(const ZRef<ZExpr_Logic>& iExpr)
 	{ return ZVisitor_Expr_Logic_ValPred_DoGetNames_T<ZVal_Expr>().Do(iExpr); }
 
 inline bool sMatches(const ZRef<ZExpr_Logic>& iExpr, const ZVal_Expr& iVal)

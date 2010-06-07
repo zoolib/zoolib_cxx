@@ -34,15 +34,18 @@ namespace ZBlackBerry {
 
 class Manager_Union
 :	public Manager,
-	Manager::Observer
+	Manager::CB_ManagerChanged
 	{
 public:
 	Manager_Union(const std::vector<ZRef<Manager> >& iManagers);
-
 	virtual ~Manager_Union();
 
-// From Manager::Observer
-	virtual void ManagerChanged(ZRef<ZBlackBerry::Manager> iManager);
+// From ZCounted
+	virtual void Initialize();
+	virtual void Finalize();
+
+// From Manager::CB_ManagerChanged
+	virtual void Invoke(ZRef<ZBlackBerry::Manager> iManager);
 
 // From Manager
 	virtual void GetDeviceIDs(std::vector<uint64>& oDeviceIDs);
@@ -52,7 +55,7 @@ public:
 private:
 	void pValidate();
 
-	ZMutex fMutex;
+	ZMtxR fMutex;
 
 	struct Entry_t
 		{

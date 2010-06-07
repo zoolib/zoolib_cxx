@@ -138,12 +138,12 @@ struct Enumerated
 
 class Spec
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Spec,
-		operator_bool_generator_type, operator_bool_type);
-
 	struct Entry;
 
 public:
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Spec,
+		operator_bool_generator_type, operator_bool_type);
+
 	operator operator_bool_type() const;
 
 	void swap(Spec& iOther);
@@ -249,6 +249,7 @@ public:
 	Val(const Spec& iVal);
 
 // Typename accessors
+/// \cond DoxygenIgnore
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Int32, int32)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Double, double)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Bool, bool)
@@ -261,6 +262,7 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Seq, Seq)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Map, Map)
 	ZMACRO_ZValAccessors_Decl_Entry(Val, Spec, Spec)
+/// \endcond DoxygenIgnore
 	};
 
 // =================================================================================================
@@ -269,11 +271,11 @@ public:
 
 class Seq
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Seq,
-		operator_bool_generator_type, operator_bool_type);
-
 public:
 	typedef Val Val_t;
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Seq,
+		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const;
 
@@ -319,11 +321,12 @@ private:
 
 class Map
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Map,
-		operator_bool_generator_type, operator_bool_type);
 public:
 	typedef ZMapIndex_T<Map> Index_t;
 	typedef Val Val_t;
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Map,
+		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const;
 

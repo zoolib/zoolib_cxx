@@ -267,7 +267,7 @@ ZTime ZTime::sBoot()
 #endif
 	}
 
-ZTime ZTime::sSinceBoot()
+double ZTime::sSinceBoot()
 	{
 #if ZCONFIG_SPI_Enabled(Linux)
 
@@ -284,7 +284,7 @@ ZTime ZTime::sSinceBoot()
 	if (0 == ::sysinfo(&theSI))
 		return ZTime(theSI.uptime);
 
-	return ZTime();
+	return -1;
 	
 #elif ZCONFIG_SPI_Enabled(BSD)
 
@@ -293,7 +293,7 @@ ZTime ZTime::sSinceBoot()
 #else
 
 	// Assume that sSystem is returning elapsed time since boot.
-	return sSystem();
+	return sSystem().fVal;
 	
 #endif
 	}

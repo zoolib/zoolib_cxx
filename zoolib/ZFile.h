@@ -75,7 +75,6 @@ enum Kind
 
 class ZFileSpec
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZFileSpec, operator_bool_generator_type, operator_bool_type);
 public:
 	typedef ZFile::Error Error;
 
@@ -100,6 +99,7 @@ public:
 
 	ZFileSpec(const std::string& iPath);
 
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZFileSpec, operator_bool_generator_type, operator_bool_type);
 	operator operator_bool_type() const;
 
 	static ZFileSpec sCWD();
@@ -179,7 +179,6 @@ private:
 
 class ZFileIter
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZFileIter, operator_bool_generator_type, operator_bool_type);
 public:
 	ZFileIter();
 	ZFileIter(const ZFileIter& iOther);
@@ -187,6 +186,7 @@ public:
 	~ZFileIter();
 	ZFileIter& operator=(const ZFileIter& iOther);
 
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZFileIter, operator_bool_generator_type, operator_bool_type);
 	operator operator_bool_type() const;
 	ZFileIter& Advance();
 	ZFileSpec Current() const;
@@ -204,8 +204,6 @@ private:
 
 class ZFileTreeIter
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(
-		ZFileTreeIter, operator_bool_generator_type, operator_bool_type);
 public:
 	ZFileTreeIter();
 	ZFileTreeIter(const ZFileTreeIter& iOther);
@@ -213,6 +211,8 @@ public:
 	~ZFileTreeIter();
 	ZFileTreeIter& operator=(const ZFileTreeIter& iOther);
 
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(
+		ZFileTreeIter, operator_bool_generator_type, operator_bool_type);
 	operator operator_bool_type() const;
 	ZFileTreeIter& Advance();
 	ZFileSpec Current() const;

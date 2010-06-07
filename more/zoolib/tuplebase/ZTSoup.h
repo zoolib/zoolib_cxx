@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZTSoup__ 1
 
 #include "zoolib/ZDList.h"
-#include "zoolib/ZThreadOld.h"
-#include "zoolib/ZRefWeak.h"
+#include "zoolib/ZWeakRef.h"
+#include "zoolib/tuplebase/ZThreadOld.h"
 #include "zoolib/tuplebase/ZTSWatcher.h"
 
 namespace ZooLib {
@@ -260,7 +260,7 @@ public:
 
 private:
 	friend class ZTBowl;
-	ZRefWeak<ZTBowl> fTBowl;
+	ZWeakRef<ZTBowl> fTBowl;
 	};
 
 // =================================================================================================

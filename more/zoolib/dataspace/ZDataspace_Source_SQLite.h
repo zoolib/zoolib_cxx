@@ -36,6 +36,8 @@ namespace ZDataspace {
 class Source_SQLite : public Source
 	{
 public:
+	enum { kDebug = 1 };
+
 	Source_SQLite(ZRef<ZSQLite::DB> iDB);
 	virtual ~Source_SQLite();
 
@@ -50,7 +52,11 @@ public:
 
 private:
 	ZRef<ZSQLite::DB> fDB;
+	int fChangeCount;
 	Clock fClock;
+
+	class PQuery;
+	map<int64, PQuery*> fMap_RefconToPQuery;
 	};
 
 } // namespace ZDataspace

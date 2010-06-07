@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZBlackBerry__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZStreamer.h"
-#include "zoolib/ZThreadOld.h"
+#include "zoolib/ZCallback_T.h"
 #include "zoolib/ZData_Any.h"
+#include "zoolib/ZStreamer.h"
+#include "zoolib/ZThread.h"
 
 #include <set>
 #include <vector>
@@ -45,9 +46,33 @@ class Channel;
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZBlackBerry::StartStop
+
+class StartStop : public ZCounted
+	{
+protected:
+	StartStop();
+
+public:
+// From ZCounted
+	virtual void Initialize();
+	virtual void Finalize();
+
+// Our protocol
+	virtual void Started();
+	virtual void Stopped();
+
+private:
+	ZMtxR fMutex;
+	ZCnd fCondition;
+	int fStartCount;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZBlackBerry::Manager
 
-class Manager : public ZRefCountedWithFinalize
+class Manager : public ZCounted
 	{
 protected:
 	Manager();
@@ -55,58 +80,32 @@ protected:
 public:
 	virtual ~Manager();
 
-// From ZRefCountedWithFinalize
-	virtual void Initialize();
-	virtual void Finalize();
-
 // Our protocol
-	virtual void Start();
-	virtual void Stop();
-
 	virtual void GetDeviceIDs(std::vector<uint64>& oDeviceIDs) = 0;
 	virtual ZRef<Device> Open(uint64 iDeviceID) = 0;
 
-	class Observer
-		{
-	public:
-		virtual void ManagerChanged(ZRef<Manager> iManager) = 0;
-		};
-
-	void ObserverAdd(Observer* iObserver);
-	void ObserverRemove(Observer* iObserver);
+	typedef ZCallback_T<ZRef<Manager> > CB_ManagerChanged;
+	void RegisterManagerChanged(ZRef<CB_ManagerChanged> iCallback);
+	void UnregisterManagerChanged(ZRef<CB_ManagerChanged> iCallback);
 
 protected:
-	void pNotifyObservers();
-
-	void pStarted();
-	void pStopped();
+	void pChanged();
 
 private:
-	ZMutex fMutex;
-	ZCondition fCondition;
-	int fStartCount;
-	std::set<Observer*> fObservers;
+	ZCallbackSet_T<ZRef<Manager> > fCallbacks;
 	};
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZBlackBerry::Device
 
-class Device : public ZRefCountedWithFinalize
+class Device : public ZCounted
 	{
 protected:
 	Device();
 
 public:
 	virtual ~Device();
-
-// From ZRefCountedWithFinalize
-	virtual void Initialize();
-	virtual void Finalize();
-
-// Our protocol
-	virtual void Start();
-	virtual void Stop();
 
 	enum Error
 		{
@@ -128,23 +127,15 @@ public:
 	virtual Data GetAttribute(uint16 iObject, uint16 iAttribute) = 0;
 	virtual uint32 GetPIN();
 
-	class Observer
-		{
-	public:
-		virtual void Finished(ZRef<Device> iDevice) = 0;
-		};
-
-	void ObserverAdd(Observer* iObserver);
-	void ObserverRemove(Observer* iObserver);
+	typedef ZCallback_T<ZRef<Device> > CB_DeviceFinished;
+	void RegisterDeviceFinished(ZRef<CB_DeviceFinished> iCallback);
+	void UnregisterDeviceFinished(ZRef<CB_DeviceFinished> iCallback);
 
 protected:
 	void pFinished();
 
 private:
-	ZMutex fMutex;
-	ZCondition fCondition;
-	int fStartCount;
-	std::set<Observer*> fObservers;
+	ZCallbackSet_T<ZRef<Device> > fCallbacks;
 	};
 
 // =================================================================================================

@@ -52,7 +52,7 @@ void ZStreamRWCon_MemoryPipe::Imp_Read(void* oDest, size_t iCount, size_t* oCoun
 	uint8* localDest = static_cast<uint8*>(oDest);
 	uint8* localEnd = localDest + iCount;
 
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	while (localDest < localEnd)
 		{
 		if (fSource && fSource < fSourceEnd)
@@ -93,7 +93,7 @@ void ZStreamRWCon_MemoryPipe::Imp_Read(void* oDest, size_t iCount, size_t* oCoun
 
 size_t ZStreamRWCon_MemoryPipe::Imp_CountReadable()
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	if (fSource)
 		return fSourceEnd - fSource;	
 	return 0;
@@ -102,7 +102,7 @@ size_t ZStreamRWCon_MemoryPipe::Imp_CountReadable()
 bool ZStreamRWCon_MemoryPipe::Imp_WaitReadable(double iTimeout)
 	{
 	const ZTime deadline = ZTime::sSystem() + iTimeout;
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	for (;;)
 		{
 		if (fSource && fSource < fSourceEnd || fWriteClosed)
@@ -125,7 +125,7 @@ void ZStreamRWCon_MemoryPipe::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 	{
 	uint64 countRemaining = iCount;
 
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	while (countRemaining)
 		{
 		if (fSource && fSource < fSourceEnd)
@@ -157,7 +157,7 @@ void ZStreamRWCon_MemoryPipe::Imp_Skip(uint64 iCount, uint64* oCountSkipped)
 bool ZStreamRWCon_MemoryPipe::Imp_ReceiveDisconnect(double iTimeout)
 	{
 	const ZTime deadline = ZTime::sSystem() + iTimeout;
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	for (;;)
 		{
 		if (fSource && fSource < fSourceEnd)
@@ -179,7 +179,7 @@ void ZStreamRWCon_MemoryPipe::Imp_Write(const void* iSource, size_t iCount, size
 	const uint8* localSource = static_cast<const uint8*>(iSource);
 	const uint8* localEnd = localSource + iCount;
 
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	while (localSource < localEnd && !fWriteClosed)
 		{
 		if (fDestCount)
@@ -231,7 +231,7 @@ void ZStreamRWCon_MemoryPipe::Imp_CopyFrom(const ZStreamR& iStreamR, uint64 iCou
 
 void ZStreamRWCon_MemoryPipe::Imp_SendDisconnect()
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	if (!fWriteClosed)
 		{
 		fWriteClosed = true;
@@ -242,7 +242,7 @@ void ZStreamRWCon_MemoryPipe::Imp_SendDisconnect()
 
 void ZStreamRWCon_MemoryPipe::Imp_Abort()
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	if (!fWriteClosed)
 		{
 		fWriteClosed = true;
@@ -260,7 +260,7 @@ void ZStreamRWCon_MemoryPipe::pCopyTo(const ZStreamW& iStreamW, uint64 iCount,
 		*oCountWritten = 0;
 
 	uint64 countRemaining = iCount;
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	while (countRemaining)
 		{
 		if (fSource && fSource < fSourceEnd)
@@ -303,7 +303,7 @@ void ZStreamRWCon_MemoryPipe::pCopyFrom(const ZStreamR& iStreamR, uint64 iCount,
 	if (oCountWritten)
 		*oCountWritten = 0;
 
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	uint64 countRemaining = iCount;
 	while (countRemaining && !fWriteClosed)
 		{

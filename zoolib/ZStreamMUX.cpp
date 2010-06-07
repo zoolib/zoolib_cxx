@@ -152,7 +152,7 @@ public:
 	virtual void Finished();
 
 private:
-	ZRefWeak<ZStreamMUX> fStreamMUX;
+	ZWeakRef<ZStreamMUX> fStreamMUX;
 	};
 
 ZStreamMUX::Commer::Commer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW,
@@ -236,10 +236,10 @@ public:
 	virtual void Imp_Abort();
 
 private:
-	ZRefWeak<ZStreamMUX> fMUX;
+	ZWeakRef<ZStreamMUX> fMUX;
 
-	ZCondition fCondition_Receive;
-	ZCondition fCondition_Send;
+	ZCnd fCondition_Receive;
+	ZCnd fCondition_Send;
 	uint32 fEPID;
 
 	Listener* fListener;
@@ -427,8 +427,8 @@ public:
 	virtual void Cancel();
 
 private:
-	ZRefWeak<ZStreamMUX> fMUX;
-	ZCondition fCondition;
+	ZWeakRef<ZStreamMUX> fMUX;
+	ZCnd fCondition;
 	const string fName;
 	const size_t fReceiveBufferSize;
 	DListHead<DLink_Endpoint_Pending> fEndpoints_Pending;
@@ -495,8 +495,7 @@ ZStreamMUX::Options::Options(size_t iMaxFragmentSize, size_t iDefaultReceiveBuff
 #pragma mark * ZStreamMUX
 
 ZStreamMUX::ZStreamMUX()
-:	fMutex("ZStreamMUX::fMutex"),
-	fMaxFragmentSize(kDefaultMaxFragmentSize),
+:	fMaxFragmentSize(kDefaultMaxFragmentSize),
 	fDefaultReceiveBufferSize(kDefaultReceiveBufferSize),
 	fLifecycle(eLifecycle_Running),
 	fTime_LastRead(0),
@@ -529,7 +528,7 @@ ZStreamMUX::~ZStreamMUX()
 
 void ZStreamMUX::Finalize()
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	if (this->GetRefCount() != 1)
 		{
 		this->FinalizationComplete();
@@ -578,7 +577,7 @@ void ZStreamMUX::Start(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 
 void ZStreamMUX::Stop()
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (fLifecycle == eLifecycle_Running)
 		{
@@ -605,7 +604,7 @@ ZRef<ZStreamerRWConFactory> ZStreamMUX::Listen(const std::string& iName)
 ZRef<ZStreamerRWConFactory> ZStreamMUX::Listen(
 	const std::string& iName, size_t iReceiveBufferSize)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	map<std::string, Listener*>::iterator i = fMap_NameToListener.find(iName);
 	if (i == fMap_NameToListener.end())
 		{
@@ -621,7 +620,7 @@ ZRef<ZStreamerRWCon> ZStreamMUX::Connect(const std::string& iName)
 
 ZRef<ZStreamerRWCon> ZStreamMUX::Connect(const std::string& iName, size_t iReceiveBufferSize)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (fLifecycle == eLifecycle_Running)
 		{
@@ -662,7 +661,7 @@ uint32 ZStreamMUX::sGetConID(ZRef<ZStreamerRWCon> iCon)
 
 void ZStreamMUX::SetPingInterval(double iInterval)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	fPingInterval = iInterval;
 	if (fCommer)
 		fCommer.StaticCast<ZStreamerWriter>()->Wake();
@@ -670,7 +669,7 @@ void ZStreamMUX::SetPingInterval(double iInterval)
 
 bool ZStreamMUX::pRead(const ZStreamR& iStreamR)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	if (fLifecycle == eLifecycle_Running
 		|| fLifecycle == eLifecycle_StoppingRun)
 		{
@@ -694,7 +693,7 @@ bool ZStreamMUX::pRead(const ZStreamR& iStreamR)
 
 bool ZStreamMUX::pWrite(const ZStreamW& iStreamW)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	uint32 nextEPID = 1;
 	bool anEndpointWroteSinceReset = false;
@@ -820,7 +819,7 @@ bool ZStreamMUX::pWrite(const ZStreamW& iStreamW)
 
 bool ZStreamMUX::Endpoint_Finalize(Endpoint* iEP)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 		{
@@ -859,7 +858,7 @@ void ZStreamMUX::Endpoint_Read(Endpoint* iEP,
 	uint8* localDest = static_cast<uint8*>(oDest);
 	deque<uint8>& theBR = iEP->fBuffer_Receive;
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	while (iCount)
 		{
 		if (const size_t countToRead = min(iCount, theBR.size()))
@@ -886,7 +885,7 @@ void ZStreamMUX::Endpoint_Read(Endpoint* iEP,
 
 size_t ZStreamMUX::Endpoint_CountReadable(Endpoint* iEP)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 //	if (iEP->fStateEP != eStateEP_Connected
 //		|| iEP->fStateReceive == eStateReceive_Closed)
 //		{
@@ -899,7 +898,7 @@ size_t ZStreamMUX::Endpoint_CountReadable(Endpoint* iEP)
 bool ZStreamMUX::Endpoint_WaitReadable(Endpoint* iEP, double iTimeout)
 	{
 	const ZTime deadline = ZTime::sSystem() + iTimeout;
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	for (;;)
 		{
 		if (iEP->fStateEP != eStateEP_Connected
@@ -918,7 +917,7 @@ bool ZStreamMUX::Endpoint_WaitReadable(Endpoint* iEP, double iTimeout)
 void ZStreamMUX::Endpoint_Write(Endpoint* iEP,
 	const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	const uint8* localSource = static_cast<const uint8*>(iSource);
 	while (iCount)
 		{
@@ -948,7 +947,7 @@ void ZStreamMUX::Endpoint_Write(Endpoint* iEP,
 bool ZStreamMUX::Endpoint_ReceiveDisconnect(Endpoint* iEP, double iTimeout)
 	{
 	const ZTime deadline = ZTime::sSystem() + iTimeout;
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 		{
@@ -978,7 +977,7 @@ bool ZStreamMUX::Endpoint_ReceiveDisconnect(Endpoint* iEP, double iTimeout)
 
 void ZStreamMUX::Endpoint_SendDisconnect(Endpoint* iEP)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (iEP->fStateEP == eStateEP_Connected && iEP->fStateSend == eStateSend_Open)
 		{
@@ -1002,7 +1001,7 @@ void ZStreamMUX::Endpoint_SendDisconnect(Endpoint* iEP)
 
 void ZStreamMUX::Endpoint_Abort(Endpoint* iEP)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	this->pAbort(iEP);
 
@@ -1011,7 +1010,7 @@ void ZStreamMUX::Endpoint_Abort(Endpoint* iEP)
 
 void ZStreamMUX::Listener_Finalize(Listener* iListener)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	if (iListener->GetRefCount() != 1)
 		{
 		iListener->FinalizationComplete();
@@ -1033,7 +1032,7 @@ void ZStreamMUX::Listener_Finalize(Listener* iListener)
 
 ZRef<ZStreamerRWCon> ZStreamMUX::Listener_Listen(Listener* iListener)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (!iListener->fCancelled && iListener->fEndpoints_Pending.Empty())
 		iListener->fCondition.Wait(fMutex);
@@ -1048,7 +1047,7 @@ ZRef<ZStreamerRWCon> ZStreamMUX::Listener_Listen(Listener* iListener)
 
 void ZStreamMUX::Listener_Cancel(Listener* iListener)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	// Wake everything, and let any call to Listener_Listen complete.
 	iListener->fCondition.Broadcast();
@@ -1056,8 +1055,6 @@ void ZStreamMUX::Listener_Cancel(Listener* iListener)
 
 uint32 ZStreamMUX::pGetUnusedID()
 	{
-	ZAssert(fMutex.IsLocked());
-
 	// The first candidate (local) ID is 3. If the current entry is at least
 	// two greater than the candidate ID then the candidate is
 	// not in use and can be returned. Otherwise the next candidate
@@ -1081,7 +1078,6 @@ uint32 ZStreamMUX::pGetUnusedID()
 
 ZStreamMUX::Endpoint* ZStreamMUX::pGetEndpointNilOkay(uint32 iGlobalID)
 	{
-	ZAssert(fMutex.IsLocked());
 	map<uint32, Endpoint*>::iterator i = fMap_IDToEndpoint.find(iGlobalID);
 	if (i != fMap_IDToEndpoint.end())
 		return i->second;
@@ -1090,7 +1086,6 @@ ZStreamMUX::Endpoint* ZStreamMUX::pGetEndpointNilOkay(uint32 iGlobalID)
 
 ZStreamMUX::Endpoint* ZStreamMUX::pGetEndpoint(uint32 iGlobalID)
 	{
-	ZAssert(fMutex.IsLocked());
 	map<uint32, Endpoint*>::iterator i = fMap_IDToEndpoint.find(iGlobalID);
 	ZAssert(i != fMap_IDToEndpoint.end());
 	return i->second;
@@ -1098,8 +1093,6 @@ ZStreamMUX::Endpoint* ZStreamMUX::pGetEndpoint(uint32 iGlobalID)
 
 bool ZStreamMUX::pDetachIfUnused(Endpoint* iEP)
 	{
-	ZAssert(fMutex.IsLocked());
-
 	if (iEP->fStateSend != eStateSend_Closed)
 		return false;
 
@@ -1123,8 +1116,6 @@ bool ZStreamMUX::pDetachIfUnused(Endpoint* iEP)
 
 void ZStreamMUX::pAbort(Endpoint* iEP)
 	{
-	ZAssert(fMutex.IsLocked());
-
 	if (ZLOG(s, eDebug + 1, "ZStreamMUX"))
 		{
 		s.Writef("pAbort, this: %08X, theID: %d",
@@ -1156,11 +1147,9 @@ void ZStreamMUX::pAbort(Endpoint* iEP)
 
 void ZStreamMUX::pReadOne(const ZStreamR& iStreamR)
 	{
-	ZAssert(!fMutex.IsLocked());
-
 	const uint8 theMessage = iStreamR.ReadUInt8();
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	fTime_LastRead = ZTime::sSystem();
 
@@ -1574,8 +1563,6 @@ void ZStreamMUX::pFlush(const ZStreamW& iStreamW)
 
 bool ZStreamMUX::pWriteOne(const ZStreamW& iStreamW, Endpoint* iEP)
 	{
-	ZAssert(fMutex.IsLocked());
-
 	const uint32 theEPID = iEP->fEPID;
 
 	switch (iEP->fStateEP)

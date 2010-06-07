@@ -34,78 +34,6 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZTSS_pthread
-
-namespace ZTSS_pthread {
-
-Key sCreate()
-	{
-	Key theKey;
-	::pthread_key_create(&theKey, nullptr);
-	return theKey;
-	}
-
-void sFree(Key iKey)
-	{ ::pthread_key_delete(iKey); }
-
-void sSet(Key iKey, Value iValue)
-	{ ::pthread_setspecific(iKey, iValue); }
-
-} // namespace ZTSS_pthread
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCnd_pthread
-
-bool ZCnd_pthread::WaitFor(ZMtx_pthread& iMtx, double iTimeout)
-	{
-	if (iTimeout <= 0)
-		return false;
-	return this->WaitUntil(iMtx, ZTime::sSystem() + iTimeout);
-	}
-
-bool ZCnd_pthread::WaitUntil(ZMtx_pthread& iMtx, ZTime iDeadline)
-	{
-	timespec theTimeSpec;
-	theTimeSpec.tv_sec = time_t(iDeadline.fVal);
-	theTimeSpec.tv_nsec = int(fmod(iDeadline.fVal, 1.0) * 1e9);
-
-	int result = ::pthread_cond_timedwait(&fCond, &iMtx.fMutex, &theTimeSpec);
-	return result == 0;
-	}
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZSemNoTimeout_pthread
-
-ZSemNoTimeout_pthread::ZSemNoTimeout_pthread()
-	{ ::sem_init(&fSem, 0, 0); }
-
-ZSemNoTimeout_pthread::~ZSemNoTimeout_pthread()
-	{ ::sem_destroy(&fSem); }
-
-void ZSemNoTimeout_pthread::Wait()
-	{
-	for (;;)
-		{
-		if (int result = ::sem_wait(&fSem))
-			{
-			if (EINTR == result)
-				continue;
-//##			ZUnimplemented();
-			}
-		break;
-		}
-	}
-
-bool ZSemNoTimeout_pthread::TryWait()
-	{ return 0 == ::sem_trywait(&fSem); }
-
-void ZSemNoTimeout_pthread::Signal()
-	{ ::sem_post(&fSem); }
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZThread_pthread
 
 namespace ZThread_pthread {
@@ -143,6 +71,91 @@ void sSleep(double iDuration)
 	}
 
 } // namespace ZThread_pthread
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZTSS_pthread
+
+namespace ZTSS_pthread {
+
+Key sCreate()
+	{
+	Key theKey;
+	::pthread_key_create(&theKey, nullptr);
+	return theKey;
+	}
+
+void sFree(Key iKey)
+	{ ::pthread_key_delete(iKey); }
+
+void sSet(Key iKey, Value iValue)
+	{ ::pthread_setspecific(iKey, iValue); }
+
+} // namespace ZTSS_pthread
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCnd_pthread
+
+bool ZCnd_pthread::pWaitFor(pthread_mutex_t& iMtx, double iTimeout)
+	{
+	if (iTimeout <= 0)
+		return false;
+	return this->pWaitUntil(iMtx, ZTime::sSystem() + iTimeout);
+	}
+
+bool ZCnd_pthread::pWaitUntil(pthread_mutex_t& iMtx, ZTime iDeadline)
+	{
+	timespec theTimeSpec;
+	theTimeSpec.tv_sec = time_t(iDeadline.fVal);
+	theTimeSpec.tv_nsec = int(fmod(iDeadline.fVal, 1.0) * 1e9);
+
+	int result = ::pthread_cond_timedwait(&fCond, &iMtx, &theTimeSpec);
+	return result == 0;
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMtxR_pthread
+
+ZMtxR_pthread::ZMtxR_pthread()
+	{
+    pthread_mutexattr_t attr;
+	::pthread_mutexattr_init(&attr);
+	::pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+	::pthread_mutex_init(&fMutex, &attr);
+	::pthread_mutexattr_destroy(&attr);
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZSemNoTimeout_pthread
+
+ZSemNoTimeout_pthread::ZSemNoTimeout_pthread()
+	{ ::sem_init(&fSem, 0, 0); }
+
+ZSemNoTimeout_pthread::~ZSemNoTimeout_pthread()
+	{ ::sem_destroy(&fSem); }
+
+void ZSemNoTimeout_pthread::Wait()
+	{
+	for (;;)
+		{
+		if (int result = ::sem_wait(&fSem))
+			{
+			if (EINTR == result)
+				continue;
+//##			ZUnimplemented();
+			}
+		break;
+		}
+	}
+
+bool ZSemNoTimeout_pthread::TryWait()
+	{ return 0 == ::sem_trywait(&fSem); }
+
+void ZSemNoTimeout_pthread::Signal()
+	{ ::sem_post(&fSem); }
 
 } // namespace ZooLib
 

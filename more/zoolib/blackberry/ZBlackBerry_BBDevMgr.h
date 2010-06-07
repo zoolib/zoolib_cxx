@@ -75,8 +75,8 @@ public:
 	virtual ZRef<Device> Open(uint64 iDeviceID);
 
 private:
-	ZMutex fMutex;
-	ZCondition fCondition;
+	ZMtxR fMutex;
+	ZCnd fCondition;
 
 	ZRef<IDeviceManager> fDeviceManager;
 	uint32 fCookie;

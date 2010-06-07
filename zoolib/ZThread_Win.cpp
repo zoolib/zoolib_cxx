@@ -31,6 +31,27 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZThread_Win
+
+void ZThread_Win::sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
+	{
+	ID theID;
+	HANDLE theThreadHANDLE = (HANDLE) ::_beginthreadex(nullptr, 0, iProc, iParam, 0, &theID);
+	if (!theThreadHANDLE || theThreadHANDLE == (HANDLE)-1)
+		throw std::bad_alloc();
+	::CloseHandle(theThreadHANDLE);
+	}
+
+ZThread_Win::ID ZThread_Win::sID()
+	{ return ::GetCurrentThreadId(); }
+
+void ZThread_Win::sSleep(double iDuration)
+	{ ::Sleep(DWORD(iDuration * 1e3)); }
+
+ZAssertCompile(sizeof(ZThread_Win::Dummy_CRITICAL_SECTION) == sizeof(CRITICAL_SECTION));
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZTSS_Win
 
 ZTSS_Win::Key ZTSS_Win::sCreate()
@@ -49,12 +70,8 @@ ZTSS_Win::Value ZTSS_Win::sGet(Key iKey)
 #pragma mark -
 #pragma mark * ZMtx_Win
 
-ZMtx_Win::ZMtx_Win(const char* iName)
-	{
-	ZAssertCompile(sizeof(Dummy_CRITICAL_SECTION) == sizeof(CRITICAL_SECTION));
-
-	::InitializeCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&fCRITICAL_SECTION));
-	}
+ZMtx_Win::ZMtx_Win()
+	{ ::InitializeCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&fCRITICAL_SECTION)); }
 
 ZMtx_Win::~ZMtx_Win()
 	{ ::DeleteCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&fCRITICAL_SECTION)); }
@@ -86,29 +103,6 @@ bool ZSem_Win::WaitUntil(ZTime iDeadline)
 
 void ZSem_Win::Signal()
 	{ ::ReleaseSemaphore(fHANDLE, 1, nullptr); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZThread_Win
-
-namespace ZThread_Win {
-
-void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
-	{
-	ID theID;
-	HANDLE theThreadHANDLE = (HANDLE) ::_beginthreadex(nullptr, 0, iProc, iParam, 0, &theID);
-	if (!theThreadHANDLE || theThreadHANDLE == (HANDLE)-1)
-		throw std::bad_alloc();
-	::CloseHandle(theThreadHANDLE);
-	}
-
-ID sID()
-	{ return ::GetCurrentThreadId(); }
-
-void sSleep(double iDuration)
-	{ ::Sleep(DWORD(iDuration * 1e3)); }
-
-} // namespace ZThread_Win
 
 } // namespace ZooLib
 

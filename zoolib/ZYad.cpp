@@ -27,8 +27,9 @@ using std::string;
 
 /**
 \defgroup Yad Yad (Yet Another Data)
-Yad is another neologism by Eric Cooper. As an acronym it stands for Yet Another Data, but
-interestingly it is also a hebrew word. From <http://en.wikipedia.org/wiki/Yad>:
+Yad is another neologism by <a href="http://www.linkedin.com/in/ericbwcooper">Eric Cooper</a>.
+It's an acronym for <em>Yet Another Data</em>, but interestingly is also a Hebrew word.
+From <a href="http://en.wikipedia.org/wiki/Yad">Wikipedia</a>:
 
 	\par
 	<em>A yad (Hebrew: יד‎), literally, 'hand,' is a Jewish ritual pointer, used to point to the text

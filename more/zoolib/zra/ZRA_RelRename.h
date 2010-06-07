@@ -38,7 +38,7 @@ namespace ZRA {
 class RelRename
 	{
 public:
-	typedef std::pair<string8, string8> Elem_t;
+	typedef std::pair<RelName, RelName> Elem_t;
 
 	RelRename(std::set<Elem_t>* ioElems);
 
@@ -62,14 +62,14 @@ public:
 	RelRename& operator|=(const RelRename& iOther);
 	RelRename operator|(const RelRename& iOther) const;
 
-	void ApplyToFrom(const string8& iNameTo, const string8& iNameFrom);
+	void ApplyToFrom(const RelName& iNameTo, const RelName& iNameFrom);
 
 	const std::set<Elem_t>& GetElems() const;
 
 	RelHead GetRelHead_To() const;
 	RelHead GetRelHead_From() const;
 
-	std::map<string8, string8> GetRename() const;
+	std::map<RelName, RelName> GetRename() const;
 
 private:
 	std::set<Elem_t> fElems;

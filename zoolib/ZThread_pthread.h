@@ -45,6 +45,26 @@ namespace ZooLib {
 
 class ZCnd_pthread;
 class ZMtx_pthread;
+class ZMtxR_pthread;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZThread_pthread
+
+namespace ZThread_pthread {
+
+typedef void* ProcResult_t;
+typedef void* ProcParam_t;
+
+typedef ProcResult_t (*ProcRaw_t)(ProcParam_t iParam);
+
+typedef pthread_t ID;
+
+void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam);
+ID sID();
+void sSleep(double iDuration);
+
+} // namespace ZThread_pthread
 
 // =================================================================================================
 #pragma mark -
@@ -77,10 +97,18 @@ public:
 	void Wait(ZMtx_pthread& iMtx);
 	bool WaitFor(ZMtx_pthread& iMtx, double iTimeout);
 	bool WaitUntil(ZMtx_pthread& iMtx, ZTime iDeadline);
+
+	void Wait(ZMtxR_pthread& iMtx);
+	bool WaitFor(ZMtxR_pthread& iMtx, double iTimeout);
+	bool WaitUntil(ZMtxR_pthread& iMtx, ZTime iDeadline);
+
 	void Signal();
 	void Broadcast();
 
 protected:
+	bool pWaitFor(pthread_mutex_t& iMtx, double iTimeout);
+	bool pWaitUntil(pthread_mutex_t& iMtx, ZTime iDeadline);
+
 	pthread_cond_t fCond;
 	};
 
@@ -91,8 +119,26 @@ protected:
 class ZMtx_pthread : NonCopyable
 	{
 public:
-	ZMtx_pthread(const char* iName = nullptr) { ::pthread_mutex_init(&fMutex, nullptr); }
+	ZMtx_pthread() { ::pthread_mutex_init(&fMutex, nullptr); }
 	~ZMtx_pthread() { ::pthread_mutex_destroy(&fMutex); }
+
+	void Acquire() { ::pthread_mutex_lock(&fMutex); }
+	void Release() { ::pthread_mutex_unlock(&fMutex); }
+
+protected:
+	pthread_mutex_t fMutex;
+	friend class ZCnd_pthread;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMtxR_pthread
+
+class ZMtxR_pthread : NonCopyable
+	{
+public:
+	ZMtxR_pthread();
+	~ZMtxR_pthread() { ::pthread_mutex_destroy(&fMutex); }
 
 	void Acquire() { ::pthread_mutex_lock(&fMutex); }
 	void Release() { ::pthread_mutex_unlock(&fMutex); }
@@ -106,12 +152,35 @@ protected:
 #pragma mark -
 #pragma mark * ZCnd_pthread inlines
 
-inline ZCnd_pthread::ZCnd_pthread() { ::pthread_cond_init(&fCond, nullptr); }
-inline ZCnd_pthread::~ZCnd_pthread() { ::pthread_cond_destroy(&fCond); }
+inline ZCnd_pthread::ZCnd_pthread()
+	{ ::pthread_cond_init(&fCond, nullptr); }
 
-inline void ZCnd_pthread::Wait(ZMtx_pthread& iMtx) { ::pthread_cond_wait(&fCond, &iMtx.fMutex); }
-inline void ZCnd_pthread::Signal() { ::pthread_cond_signal(&fCond); }
-inline void ZCnd_pthread::Broadcast() { ::pthread_cond_broadcast(&fCond); }
+inline ZCnd_pthread::~ZCnd_pthread()
+	{ ::pthread_cond_destroy(&fCond); }
+
+inline void ZCnd_pthread::Wait(ZMtx_pthread& iMtx)
+	{ ::pthread_cond_wait(&fCond, &iMtx.fMutex); }
+
+inline bool ZCnd_pthread::WaitFor(ZMtx_pthread& iMtx, double iTimeout)
+	{ return this->pWaitFor(iMtx.fMutex, iTimeout); }
+
+inline bool ZCnd_pthread::WaitUntil(ZMtx_pthread& iMtx, ZTime iDeadline)
+	{ return this->pWaitUntil(iMtx.fMutex, iDeadline); }
+
+inline void ZCnd_pthread::Wait(ZMtxR_pthread& iMtx)
+	{ ::pthread_cond_wait(&fCond, &iMtx.fMutex); }
+
+inline bool ZCnd_pthread::WaitFor(ZMtxR_pthread& iMtx, double iTimeout)
+	{ return this->pWaitFor(iMtx.fMutex, iTimeout); }
+
+inline bool ZCnd_pthread::WaitUntil(ZMtxR_pthread& iMtx, ZTime iDeadline)
+	{ return this->pWaitUntil(iMtx.fMutex, iDeadline); }
+
+inline void ZCnd_pthread::Signal()
+	{ ::pthread_cond_signal(&fCond); }
+
+inline void ZCnd_pthread::Broadcast()
+	{ ::pthread_cond_broadcast(&fCond); }
 
 // =================================================================================================
 #pragma mark -
@@ -136,25 +205,6 @@ public:
 protected:
 	sem_t fSem;
 	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZThread_pthread
-
-namespace ZThread_pthread {
-
-typedef void* ProcResult_t;
-typedef void* ProcParam_t;
-
-typedef ProcResult_t (*ProcRaw_t)(ProcParam_t iParam);
-
-typedef pthread_t ID;
-
-void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam);
-ID sID();
-void sSleep(double iDuration);
-
-} // namespace ZThread_pthread
 
 } // namespace ZooLib
 

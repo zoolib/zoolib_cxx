@@ -18,138 +18,16 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#include "zoolib/ZUtil_STL.h"
-#include "zoolib/ZUtil_STL_set.h"
-
 #include "zoolib/zra/ZRA_RelHead.h"
 
 namespace ZooLib {
 namespace ZRA {
 
-using std::set;
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * RelHead
-
-RelHead::RelHead(set<string8>* ioElems)
-	{
-	ioElems->swap(fElems);
-	}
-
-void RelHead::swap(RelHead& iOther)
-	{ fElems.swap(iOther.fElems); }
-
-RelHead::RelHead()
-	{}
-
-RelHead::RelHead(const RelHead& iOther)
-:	fElems(iOther.fElems)
-	{}
-
-RelHead::~RelHead()
-	{}
-
-RelHead& RelHead::operator=(const RelHead& iOther)
-	{
-	fElems = iOther.fElems;
-	return *this;
-	}
-
-RelHead::RelHead(const string8& iElem)
-:	fElems(&iElem, &iElem + 1)
-	{}
-
-RelHead::RelHead(const set<string8>& iElems)
-:	fElems(iElems)
-	{}
-
-bool RelHead::operator==(const RelHead& iOther) const
-	{ return fElems == iOther.fElems; }
-
-bool RelHead::operator!=(const RelHead& iOther) const
-	{ return fElems != iOther.fElems; }
-	
-bool RelHead::operator<(const RelHead& iOther) const
-	{ return fElems < iOther.fElems; }
-
-RelHead& RelHead::operator&=(const RelHead& iOther)
-	{
-	*this = *this & iOther;
-	return *this;
-	}
-
-RelHead RelHead::operator&(const RelHead& iOther) const
-	{
-	set<string8> result;
-	ZUtil_STL_set::sAnd(fElems, iOther.fElems, result);
-	return RelHead(&result);
-	}
-
-RelHead& RelHead::operator|=(const RelHead& iOther)
-	{
-	*this = *this | iOther;
-	return *this;
-	}
-
-RelHead RelHead::operator|(const RelHead& iOther) const
-	{
-	set<string8> result;
-	ZUtil_STL_set::sOr(fElems, iOther.fElems, result);
-	return RelHead(&result);
-	}
-
-RelHead& RelHead::operator-=(const RelHead& iOther)
-	{
-	*this = *this - iOther;
-	return *this;
-	}
-
-RelHead RelHead::operator-(const RelHead& iOther) const
-	{
-	set<string8> result;
-	ZUtil_STL_set::sMinus(fElems, iOther.fElems, result);
-	return RelHead(&result);
-	}
-
-RelHead& RelHead::operator^=(const RelHead& iOther)
-	{
-	*this = *this ^ iOther;
-	return *this;
-	}
-
-RelHead RelHead::operator^(const RelHead& iOther) const
-	{
-	set<string8> result;
-	ZUtil_STL_set::sXor(fElems, iOther.fElems, result);
-	return RelHead(&result);
-	}
-
-bool RelHead::Contains(const RelHead& iOther) const
-	{ return ZUtil_STL_set::sIncludes(fElems, iOther.fElems); }
-
-bool RelHead::Contains(const string8& iElem) const
-	{ return ZUtil_STL::sContains(fElems, iElem); }
-
-RelHead& RelHead::Insert(const string8& iElem)
-	{
-	fElems.insert(iElem);
-	return *this;
-	}
-
-RelHead& RelHead::Erase(const string8& iElem)
-	{
-	fElems.erase(iElem);
-	return *this;
-	}
-
-const set<string8>& RelHead::GetElems() const
-	{ return fElems; }
-
 // =================================================================================================
 #pragma mark -
 #pragma mark * Rename_t
 
+/*
 Rename_t sInvert(const Rename_t& iRename)
 	{
 	Rename_t result;
@@ -158,6 +36,7 @@ Rename_t sInvert(const Rename_t& iRename)
 
 	return result;
 	}
+*/
 
 } // namespace ZRA
 } // namespace ZooLib

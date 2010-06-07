@@ -42,22 +42,30 @@ Manager_Union::Manager_Union(const vector<ZRef<Manager> >& iManagers)
 		anEntry.fManager = theManager;
 		anEntry.fValid = false;
 		fEntries.push_back(anEntry);
-		theManager->ObserverAdd(this);
+		theManager->RegisterManagerChanged(this);
 		}
+	}
+
+void Manager_Union::Initialize()
+	{
+	Manager::Initialize();
+	for (vector<Entry_t>::const_iterator i = fEntries.begin(); i != fEntries.end(); ++i)
+		(*i).fManager->RegisterManagerChanged(this);
+	}
+
+void Manager_Union::Finalize()
+	{
+	for (vector<Entry_t>::const_iterator i = fEntries.begin(); i != fEntries.end(); ++i)
+		(*i).fManager->UnregisterManagerChanged(this);
+	Manager::Finalize();
 	}
 
 Manager_Union::~Manager_Union()
-	{
-	for (vector<Entry_t>::iterator iterEntries = fEntries.begin();
-		iterEntries != fEntries.end(); ++iterEntries)
-		{
-		iterEntries->fManager->ObserverRemove(this);
-		}
-	}
+	{}
 
-void Manager_Union::ManagerChanged(ZRef<ZBlackBerry::Manager> iManager)
+void Manager_Union::Invoke(ZRef<ZBlackBerry::Manager> iManager)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	for (vector<Entry_t>::iterator iterEntries = fEntries.begin();
 		iterEntries != fEntries.end(); ++iterEntries)
 		{
@@ -67,12 +75,12 @@ void Manager_Union::ManagerChanged(ZRef<ZBlackBerry::Manager> iManager)
 
 	locker.Release();
 
-	this->pNotifyObservers();
+	Manager::pChanged();
 	}
 
 void Manager_Union::GetDeviceIDs(vector<uint64>& oDeviceIDs)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	this->pValidate();
 
 	for (vector<Entry_t>::iterator iterEntries = fEntries.begin();
@@ -88,8 +96,6 @@ void Manager_Union::GetDeviceIDs(vector<uint64>& oDeviceIDs)
 
 void Manager_Union::pValidate()
 	{
-	ZAssert(fMutex.IsLocked());
-
 	for (vector<Entry_t>::iterator iterEntries = fEntries.begin();
 		iterEntries != fEntries.end(); ++iterEntries)
 		{
@@ -129,7 +135,7 @@ void Manager_Union::pValidate()
 
 ZRef<Device> Manager_Union::Open(uint64 iDeviceID)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	for (vector<Entry_t>::iterator iterEntries = fEntries.begin();
 		iterEntries != fEntries.end(); ++iterEntries)
 		{
@@ -146,7 +152,7 @@ ZRef<Device> Manager_Union::Open(uint64 iDeviceID)
 				}
 			}
 		}
-	return ZRef<Device>();
+	return nullref;
 	}
 
 } // namespace ZBlackBerry

@@ -90,9 +90,11 @@ public:
 	int Compare(const ZVal_Any& iOther) const;
 
 // Typename accessors
+/// \cond DoxygenIgnore
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Data, ZData_Any)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Seq, ZSeq_Any)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_Any, Map, ZMap_Any)
+/// \endcond DoxygenIgnore
 	};
 
 // =================================================================================================
@@ -101,14 +103,14 @@ public:
 
 class ZSeq_Any
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZSeq_Any,
-		operator_bool_generator_type, operator_bool_type);
-
 	class Rep;
 
 public:
 	typedef std::vector<ZVal_Any> Vector_t;
 	typedef ZVal_Any Val_t;
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZSeq_Any,
+		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const;
 
@@ -220,15 +222,15 @@ ZSeq_Any::ZSeq_Any(Iterator begin, Iterator end)
 
 class ZMap_Any
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZMap_Any,
-		operator_bool_generator_type, operator_bool_type);
-
 	class Rep;
 
 public:
 	typedef std::map<std::string, ZVal_Any> Map_t;
 	typedef Map_t::iterator Index_t;
 	typedef ZVal_Any Val_t;
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZMap_Any,
+		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const;
 

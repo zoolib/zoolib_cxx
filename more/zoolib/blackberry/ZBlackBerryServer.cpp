@@ -46,14 +46,14 @@ public:
 	virtual bool Read(const ZStreamR& r);
 	virtual bool Write(const ZStreamW& w);
 
-	virtual void Detached();
+	virtual void Finished();
 
 // Called by ZBlackBerryServer
 	void TripIt();
 
 private:
 	ZBlackBerryServer* fServer;
-	ZMutex fMutex;
+	ZMtxR fMutex;
 	enum EState
 		{ eState_Quiet, eState_Changed, eState_Waiting, eState_SendChanged, eState_SendClosed};
 	EState fState;
@@ -64,23 +64,19 @@ ZBlackBerryServer::Handler_ManagerChanged::Handler_ManagerChanged(
 	ZBlackBerryServer* iServer)
 :	ZCommer(iStreamerR, iStreamerW),
 	fServer(iServer),
-	fMutex("ZBlackBerryServer::Handler_ManagerChanged::fMutex"),
 	fState(eState_Quiet)
 	{}
 
 ZBlackBerryServer::Handler_ManagerChanged::~Handler_ManagerChanged()
 	{
-	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_ManagerChanged~"))
-		{
-		s << "~Handler_ManagerChanged";
-		}
+	ZLOGFUNCTION(eDebug + 2);
 	}
 
 bool ZBlackBerryServer::Handler_ManagerChanged::Read(const ZStreamR& r)
 	{
 	const bool req = r.ReadBool();
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	if (!req)
 		{
 		fState = eState_SendClosed;
@@ -111,7 +107,7 @@ bool ZBlackBerryServer::Handler_ManagerChanged::Read(const ZStreamR& r)
 
 bool ZBlackBerryServer::Handler_ManagerChanged::Write(const ZStreamW& w)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (fState == eState_SendChanged)
 		{
@@ -130,21 +126,16 @@ bool ZBlackBerryServer::Handler_ManagerChanged::Write(const ZStreamW& w)
 	return true;
 	}
 
-void ZBlackBerryServer::Handler_ManagerChanged::Detached()
+void ZBlackBerryServer::Handler_ManagerChanged::Finished()
 	{
-	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_ManagerChanged"))
-		{
-		s << "Detached";
-		}
+	ZLOGFUNCTION(eDebug+2);
 
 	fServer->pRemove_ManagerChanged(this);
-
-	delete this;
 	}
 
 void ZBlackBerryServer::Handler_ManagerChanged::TripIt()
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (fState == eState_Waiting)
 		fState = eState_SendChanged;
@@ -172,15 +163,14 @@ public:
 	virtual bool Read(const ZStreamR& r);
 	virtual bool Write(const ZStreamW& w);
 
-	virtual void Detached();
+	virtual void Finished();
 
 // Called by ZBlackBerryServer
 	void TripIt();
 
 private:
 	ZBlackBerryServer* fServer;
-	bool fClientOpen;
-	bool fRunning;
+	bool fOpen;
 	};
 
 ZBlackBerryServer::Handler_DeviceFinished::Handler_DeviceFinished(
@@ -188,79 +178,57 @@ ZBlackBerryServer::Handler_DeviceFinished::Handler_DeviceFinished(
 	ZBlackBerryServer* iServer)
 :	ZCommer(iStreamerR, iStreamerW),
 	fServer(iServer),
-	fClientOpen(true),
-	fRunning(true)
+	fOpen(true)
 	{}
 
 ZBlackBerryServer::Handler_DeviceFinished::~Handler_DeviceFinished()
 	{
-	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
-		{
-		s << "~Handler_DeviceFinished";
-		}
+	ZLOGFUNCTION(eDebug + 2);
 	}
 
+/// \sa ZBlackBerry::Device_Client::Read
 bool ZBlackBerryServer::Handler_DeviceFinished::Read(const ZStreamR& r)
 	{
-	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
-		{
-		s << "Read, entered";
-		}
+	ZLOGFUNCTION(eDebug + 2);
 
 	const bool req = r.ReadBool();
 	ZAssert(!req);
 
-	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
-		{
-		s << "Read, got false";
-		}
-
-	ZAssert(fClientOpen);
-	fClientOpen = false;
+	fOpen = false;
 	ZStreamerWriter::Wake();
 	return false;
 	}
 
+/// \sa ZBlackBerry::Device_Client::Write
 bool ZBlackBerryServer::Handler_DeviceFinished::Write(const ZStreamW& w)
 	{
-	if (!fClientOpen || !fRunning)
+	if (!fOpen)
 		{
 		if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
-			{
 			s << "Write false, return false";
-			}
 
 		w.WriteBool(false);
 		return false;
 		}
 
 	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
-		{
-		s << "Write, Return true";
-		}
+		s << "Write nothing, return true";
 
 	return true;
 	}
 
-void ZBlackBerryServer::Handler_DeviceFinished::Detached()
+void ZBlackBerryServer::Handler_DeviceFinished::Finished()
 	{
-	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
-		{
-		s << "Detached";
-		}
-
+	ZLOGFUNCTION(eDebug+2);
 	fServer->pRemove_DeviceFinished(this);
-
-	delete this;
 	}
 
+/// \sa ZBlackBerry::Device_Client::Stop
 void ZBlackBerryServer::Handler_DeviceFinished::TripIt()
 	{
-	if (ZLOG(s, eDebug + 2, "ZBlackBerryServer::Handler_DeviceFinished"))
-		{
-		s << "TripIt";
-		}
-	fRunning = false;
+	ZLOGFUNCTION(eDebug + 2);
+
+	fOpen = false;
 	ZStreamerWriter::Wake();
 	}
 
@@ -333,6 +301,50 @@ bool StreamerCopier_Chunked::Work()
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZBlackBerryServer::CB_ManagerChanged
+
+class ZBlackBerryServer::CB_ManagerChanged
+:	public ZBlackBerry::Manager::CB_ManagerChanged
+	{
+public:
+	CB_ManagerChanged(ZBlackBerryServer* iBBServer)
+	:	fBBServer(iBBServer)
+		{}
+
+	virtual void Invoke(ZRef<ZBlackBerry::Manager> iParam)
+		{
+		if (fBBServer)
+			fBBServer->pManagerChanged(iParam);
+		}
+	
+private:
+	ZBlackBerryServer* fBBServer;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZBlackBerryServer::CB_DeviceFinished
+
+class ZBlackBerryServer::CB_DeviceFinished
+:	public ZBlackBerry::Device::CB_DeviceFinished
+	{
+public:
+	CB_DeviceFinished(ZBlackBerryServer* iBBServer)
+	:	fBBServer(iBBServer)
+		{}
+
+	virtual void Invoke(ZRef<ZBlackBerry::Device> iParam)
+		{
+		if (fBBServer)
+			fBBServer->pDeviceFinished(iParam);
+		}
+	
+private:
+	ZBlackBerryServer* fBBServer;
+	};
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZBlackBerryServer
 
 static string spReadString(const ZStreamR& r)
@@ -344,9 +356,11 @@ static string spReadString(const ZStreamR& r)
 
 ZBlackBerryServer::ZBlackBerryServer(ZRef<ZBlackBerry::Manager> iManager)
 :	fManager(iManager)
+,	fCB_ManagerChanged(new CB_ManagerChanged(this))
+,	fCB_DeviceFinished(new CB_DeviceFinished(this))
 	{
-	fManager->ObserverAdd(this);
-	this->ManagerChanged(fManager);
+	fManager->RegisterManagerChanged(fCB_ManagerChanged);
+	this->pManagerChanged(fManager);
 	}
 
 ZBlackBerryServer::~ZBlackBerryServer()
@@ -356,7 +370,7 @@ ZBlackBerryServer::~ZBlackBerryServer()
 	for (vector<Entry_t>::iterator i = fEntries.begin(); i != fEntries.end(); ++i)
 		ZAssert(i->fHandlers.empty());
 
-	fManager->ObserverRemove(this);
+	fManager->UnregisterManagerChanged(fCB_ManagerChanged);
 	}
 
 void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
@@ -368,8 +382,8 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 	if (req == 0)
 		{		
 		// Async changed notifications
-		ZMutexLocker locker(fMutex);
-		Handler_ManagerChanged* theHandler = new Handler_ManagerChanged(iSRWCon, iSRWCon, this);
+		ZGuardRMtxR locker(fMutex);
+		ZRef<Handler_ManagerChanged> theHandler = new Handler_ManagerChanged(iSRWCon, iSRWCon, this);
 		fHandlers_ManagerChanged.push_back(theHandler);
 		locker.Release();
 
@@ -378,7 +392,7 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 	else if (req == 1)
 		{
 		// Synchronous get device IDs
-		ZMutexLocker locker(fMutex);
+		ZGuardRMtxR locker(fMutex);
 
 		vector<uint64> theIDs;
 		for (vector<Entry_t>::iterator i = fEntries.begin(); i != fEntries.end(); ++i)
@@ -397,14 +411,14 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 		// Async device finished notifications
 		const uint64 deviceID = r.ReadUInt64();
 
-		ZMutexLocker locker(fMutex);
+		ZGuardRMtxR locker(fMutex);
 
 		bool gotIt = false;
 		for (vector<Entry_t>::iterator i = fEntries.begin(); !gotIt && i != fEntries.end(); ++i)
 			{
 			if (i->fLive && i->fID == deviceID)
 				{
-				Handler_DeviceFinished* theHandler =
+				ZRef<Handler_DeviceFinished> theHandler =
 					new Handler_DeviceFinished(iSRWCon, iSRWCon, this);
 				i->fHandlers.push_back(theHandler);
 				locker.Release();
@@ -507,22 +521,10 @@ void ZBlackBerryServer::HandleRequest(ZRef<ZStreamerRWCon> iSRWCon)
 		}
 	}
 
-ZRef<ZBlackBerry::Device> ZBlackBerryServer::pGetDevice(uint64 iDeviceID)
-	{
-	ZMutexLocker locker(fMutex);
-
-	for (vector<Entry_t>::iterator i = fEntries.begin(); i != fEntries.end(); ++i)
-		{
-		if (i->fLive && i->fID == iDeviceID)
-			return i->fDevice;
-		}
-	return ZRef<ZBlackBerry::Device>();
-	}
-
-void ZBlackBerryServer::ManagerChanged(ZRef<ZBlackBerry::Manager> iManager)
+void ZBlackBerryServer::pManagerChanged(ZRef<ZBlackBerry::Manager> iManager)
 	{
 	// Hmmm. Deadlock?
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	vector<uint64> theIDs;
 	fManager->GetDeviceIDs(theIDs);
@@ -547,28 +549,28 @@ void ZBlackBerryServer::ManagerChanged(ZRef<ZBlackBerry::Manager> iManager)
 				theEntry.fID = curID;
 				theEntry.fDevice = theDevice;
 				fEntries.push_back(theEntry);
-				theDevice->ObserverAdd(this);
+				theDevice->RegisterDeviceFinished(fCB_DeviceFinished);
 				}
 			}
 		}
 
-	for (vector<Handler_ManagerChanged*>::iterator i = fHandlers_ManagerChanged.begin();
+	for (vector<ZRef<Handler_ManagerChanged> >::iterator i = fHandlers_ManagerChanged.begin();
 		i != fHandlers_ManagerChanged.end(); ++i)
 		{
 		(*i)->TripIt();
 		}
 	}
 
-void ZBlackBerryServer::Finished(ZRef<ZBlackBerry::Device> iDevice)
+void ZBlackBerryServer::pDeviceFinished(ZRef<ZBlackBerry::Device> iDevice)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	for (vector<Entry_t>::iterator i = fEntries.begin();
 		i != fEntries.end(); ++i)
 		{
 		if (i->fDevice == iDevice)
 			{
 			i->fLive = false;
-			iDevice->ObserverRemove(this);
+			iDevice->UnregisterDeviceFinished(fCB_DeviceFinished);
 
 			if (i->fHandlers.empty())
 				{
@@ -576,7 +578,7 @@ void ZBlackBerryServer::Finished(ZRef<ZBlackBerry::Device> iDevice)
 				}
 			else
 				{
-				for (vector<Handler_DeviceFinished*>::iterator j = i->fHandlers.begin();
+				for (vector<ZRef<Handler_DeviceFinished> >::iterator j = i->fHandlers.begin();
 					j != i->fHandlers.end(); ++j)
 					{
 					(*j)->TripIt();
@@ -587,15 +589,27 @@ void ZBlackBerryServer::Finished(ZRef<ZBlackBerry::Device> iDevice)
 		}
 	}
 
-void ZBlackBerryServer::pRemove_ManagerChanged(Handler_ManagerChanged* iHandler)
+ZRef<ZBlackBerry::Device> ZBlackBerryServer::pGetDevice(uint64 iDeviceID)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
+
+	for (vector<Entry_t>::iterator i = fEntries.begin(); i != fEntries.end(); ++i)
+		{
+		if (i->fLive && i->fID == iDeviceID)
+			return i->fDevice;
+		}
+	return nullref;
+	}
+
+void ZBlackBerryServer::pRemove_ManagerChanged(ZRef<Handler_ManagerChanged> iHandler)
+	{
+	ZGuardRMtxR locker(fMutex);
 	ZUtil_STL::sEraseMustContain(1, fHandlers_ManagerChanged, iHandler);
 	}
 
-void ZBlackBerryServer::pRemove_DeviceFinished(Handler_DeviceFinished* iHandler)
+void ZBlackBerryServer::pRemove_DeviceFinished(ZRef<Handler_DeviceFinished> iHandler)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	for (vector<Entry_t>::iterator i = fEntries.begin();
 		i != fEntries.end(); ++i)
 		{

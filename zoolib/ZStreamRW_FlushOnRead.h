@@ -65,7 +65,7 @@ public:
 
 protected:
 	ZThreadSafe_t fLastWasWrite;
-	ZMtx fMutex_Write;
+	ZMtx fMutex;
 	const ZStreamR& fStreamR;
 	const ZStreamW& fStreamW;
 	};

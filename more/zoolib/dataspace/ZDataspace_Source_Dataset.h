@@ -56,6 +56,8 @@ private:
 class Source_Dataset : public Source
 	{
 public:
+	enum { kDebug = 1 };
+
 	// Some kind of index specs to be passed in too.
 	Source_Dataset(ZRef<ZDataset::Dataset> iDataset);
 	virtual ~Source_Dataset();
@@ -81,8 +83,8 @@ private:
 
 	map<ZDataset::Daton, pair<ZDataset::NamedClock, ZVal_Any> > fMap;
 	
-	class Query;
-	map<int64, Query*> fRels;
+	class PQuery;
+	map<int64, PQuery*> fMap_RefconToPQuery;
 	};
 
 } // namespace ZDataspace

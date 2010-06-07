@@ -72,11 +72,8 @@ bool ZWorker::IsAwake()
 	return false;
 	}
 
-void ZWorker::pRunnerAttached()
-	{ this->RunnerAttached(); }
-
-void ZWorker::pRunnerDetached()
-	{ this->RunnerDetached(); }
+bool ZWorker::IsAttached()
+	{ return ZRef<ZWorkerRunner>(fRunner); }
 
 // =================================================================================================
 #pragma mark -
@@ -95,7 +92,12 @@ void ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 
 	iWorker->fRunner = ZRef<ZWorkerRunner>(this);
 
-	iWorker->pRunnerAttached();
+	try
+		{
+		iWorker->RunnerAttached();
+		}
+	catch (...)
+		{}
 	}
 
 void ZWorkerRunner::pDetachWorker(ZRef<ZWorker> iWorker)
@@ -105,7 +107,12 @@ void ZWorkerRunner::pDetachWorker(ZRef<ZWorker> iWorker)
 
 	iWorker->fRunner.Clear();
 
-	iWorker->pRunnerDetached();
+	try
+		{
+		iWorker->RunnerDetached();
+		}
+	catch (...)
+		{}
 	}
 
 // =================================================================================================

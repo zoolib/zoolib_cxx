@@ -19,9 +19,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZDebug.h"
-#include "zoolib/ZThread.h"
 #include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZRefWeak.h"
+#include "zoolib/ZWeakRef.h"
 
 namespace ZooLib {
 
@@ -47,7 +46,7 @@ private:
 	ZMtx fMtx;
 	ZWeakReferee* fReferee;
 	friend class ZWeakReferee;
-	friend class ZRefWeakBase;
+	friend class ZWeakRefBase;
 	};
 
 ZWeakRefereeProxy::ZWeakRefereeProxy(ZWeakReferee* iReferee)
@@ -61,27 +60,31 @@ ZWeakRefereeProxy::~ZWeakRefereeProxy()
 
 void ZWeakRefereeProxy::Finalize()
 	{
-	fMtx.Acquire();
+	ZGuardRMtx guard(fMtx);
 	this->FinalizationComplete();
-	const bool inUse = fReferee || this->GetRefCount();
-	fMtx.Release();
-	if (!inUse)
+	if (!fReferee && !this->GetRefCount())
+		{
+		guard.Release();
 		delete this;
+		}
 	}
 
 void ZWeakRefereeProxy::pDetachReferee(ZWeakReferee* iReferee)
 	{
-	fMtx.Acquire();
+	ZGuardRMtx guard(fMtx);
 	ZAssert(iReferee == fReferee);
 	fReferee = nullptr;
-	const bool inUse = fReferee || this->GetRefCount();
-	fMtx.Release();
-	if (!inUse)
+	if (!this->GetRefCount())
+		{
+		guard.Release();
 		delete this;
+		}
 	}
 
 ZWeakReferee* ZWeakRefereeProxy::pLockUse()
 	{
+	// Do not use a guard here -- we want to hold the lock
+	// after we've returned if fReferee is non-null.
 	fMtx.Acquire();
 	if (fReferee)
 		return fReferee;
@@ -105,6 +108,7 @@ ZWeakReferee::~ZWeakReferee()
 
 void ZWeakReferee::pDetachProxy()
 	{
+	ZAcqMtx acq(fMtx);
 	if (ZWeakRefereeProxy* theWRP = fWRP)
 		{
 		fWRP = nullptr;
@@ -114,6 +118,7 @@ void ZWeakReferee::pDetachProxy()
 
 ZWeakRefereeProxy* ZWeakReferee::pGetWeakRefereeProxy()
 	{
+	ZAcqMtx acq(fMtx);
 	if (!fWRP)
 		fWRP = new ZWeakRefereeProxy(this);
 	return fWRP;
@@ -121,28 +126,28 @@ ZWeakRefereeProxy* ZWeakReferee::pGetWeakRefereeProxy()
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZRefWeakBase
+#pragma mark * ZWeakRefBase
 
-ZRefWeakBase::ZRefWeakBase()
+ZWeakRefBase::ZWeakRefBase()
 	{}
 
-ZRefWeakBase::ZRefWeakBase(const ZRefWeakBase& iOther)
+ZWeakRefBase::ZWeakRefBase(const ZWeakRefBase& iOther)
 :	fWRP(iOther.fWRP)
 	{}
 
-ZRefWeakBase::ZRefWeakBase(ZWeakReferee* iWeakReferee)
+ZWeakRefBase::ZWeakRefBase(ZWeakReferee* iWeakReferee)
 	{
 	if (iWeakReferee)
 		fWRP = iWeakReferee->pGetWeakRefereeProxy();
 	}
 
-ZRefWeakBase::~ZRefWeakBase()
+ZWeakRefBase::~ZWeakRefBase()
 	{}
 
-void ZRefWeakBase::pAssignFrom(const ZRefWeakBase& iOther)
+void ZWeakRefBase::pAssignFrom(const ZWeakRefBase& iOther)
 	{ fWRP = iOther.fWRP; }
 
-void ZRefWeakBase::pAssignFrom(ZWeakReferee* iWeakReferee)
+void ZWeakRefBase::pAssignFrom(ZWeakReferee* iWeakReferee)
 	{
 	if (iWeakReferee)
 		fWRP = iWeakReferee->pGetWeakRefereeProxy();
@@ -150,17 +155,17 @@ void ZRefWeakBase::pAssignFrom(ZWeakReferee* iWeakReferee)
 		fWRP.Clear();
 	}
 
-void ZRefWeakBase::pClear()
+void ZWeakRefBase::pClear()
 	{ fWRP.Clear(); }
 
-ZWeakReferee* ZRefWeakBase::pLockUse() const
+ZWeakReferee* ZWeakRefBase::pLockUse() const
 	{
 	if (fWRP)
 		return fWRP->pLockUse();
 	return nullptr;
 	}
 
-void ZRefWeakBase::pUnlock() const
+void ZWeakRefBase::pUnlock() const
 	{ fWRP->pUnlock(); }
 
 } // namespace ZooLib

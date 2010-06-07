@@ -22,9 +22,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_RelHead__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZUnicodeString.h"
+#include "zoolib/ZSet_T.h"
 
-#include <map>
+#include "zoolib/zra/ZRA_RelName.h"
+
 #include <set>
 
 namespace ZooLib {
@@ -34,102 +35,38 @@ namespace ZRA {
 #pragma mark -
 #pragma mark * RelHead
 
-class RelHead
-	{
-	explicit RelHead(std::set<string8>* ioElems);
-
-public:
-	void swap(RelHead& iOther);
-
-	RelHead();
-	RelHead(const RelHead& iOther);
-	~RelHead();
-	RelHead& operator=(const RelHead& iOther);
-
-	RelHead(const string8& iElem);
-
-	RelHead(const std::set<string8>& iElems);
-
-	template <class Iterator>
-	RelHead(Iterator iBegin, Iterator iEnd);
-
-	template <class Iterator>
-	RelHead(Iterator iBegin, size_t iCount);
-
-	bool operator==(const RelHead& iOther) const;
-	bool operator!=(const RelHead& iOther) const;
-	bool operator<(const RelHead& iOther) const;
-
-	RelHead& operator&=(const RelHead& iOther);
-	RelHead operator&(const RelHead& iOther) const;
-
-	RelHead& operator|=(const RelHead& iOther);
-	RelHead operator|(const RelHead& iOther) const;
-
-	RelHead& operator-=(const RelHead& iOther);
-	RelHead operator-(const RelHead& iOther) const;
-
-	RelHead& operator^=(const RelHead& iOther);
-	RelHead operator^(const RelHead& iOther) const;
-
-	bool Contains(const RelHead& iOther) const;
-	bool Contains(const string8& iElem) const;
-
-	RelHead& Insert(const string8& iElem);
-	RelHead& Erase(const string8& iElem);
-
-	const std::set<string8>& GetElems() const;
-
-private:
-	std::set<string8> fElems;
-	};
-
-template <class Iterator>
-RelHead::RelHead(Iterator iBegin, Iterator iEnd)
-:	fElems(iBegin, iEnd)
-	{}
-
-template <class Iterator>
-RelHead::RelHead(Iterator iBegin, size_t iCount)
-:	fElems(iBegin, iBegin + iCount)
-	{}
+typedef ZSet_T<RelName> RelHead;
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * RelHead operators
 
-inline RelHead operator&(const string8& iElem, const RelHead& iRelHead)
-	{ return iRelHead & iElem; }
-
-inline RelHead operator|(const string8& iElem, const RelHead& iRelHead)
-	{ return iRelHead | iElem; }
-
 inline RelHead operator&(const RelHead& iRelHead, const char* iElem)
-	{ return iRelHead & string8(iElem); }
+	{ return iRelHead & RelHead::key_type(iElem); }
 
 inline RelHead operator&(const char* iElem, const RelHead& iRelHead)
-	{ return iRelHead & string8(iElem); }
+	{ return iRelHead & RelHead::key_type(iElem); }
 
 inline RelHead operator|(const char* iElem, const RelHead& iRelHead)
-	{ return iRelHead | string8(iElem); }
+	{ return iRelHead | RelHead::key_type(iElem); }
 
 inline RelHead operator|(const RelHead& iRelHead, const char* iElem)
-	{ return iRelHead | string8(iElem); }
+	{ return iRelHead | RelHead::key_type(iElem); }
 
 inline RelHead operator-(const RelHead& iRelHead, const char* iElem)
-	{ return iRelHead - string8(iElem); }
+	{ return iRelHead - RelHead::key_type(iElem); }
 
 inline RelHead operator^(const char* iElem, const RelHead& iRelHead)
-	{ return iRelHead ^ string8(iElem); }
+	{ return iRelHead ^ RelHead::key_type(iElem); }
 
 inline RelHead operator^(const RelHead& iRelHead, const char* iElem)
-	{ return iRelHead ^ string8(iElem); }
+	{ return iRelHead ^ RelHead::key_type(iElem); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * Rename_t
 
-typedef std::map<string8, string8> Rename_t;
+typedef std::map<RelName, RelName> Rename_t;
 
 Rename_t sInvert(const Rename_t& iRename);
 

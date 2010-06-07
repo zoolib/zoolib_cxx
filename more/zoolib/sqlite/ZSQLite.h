@@ -39,12 +39,15 @@ class DB : public ZCounted
 	{
 public:
 	DB(const string8& iPath);
+	DB(sqlite3* iDB, bool iAdopt);
+
 	virtual ~DB();
 
 	sqlite3* GetDB();
 
 private:
 	sqlite3* fDB;
+	bool fAdopted;
 	};
 
 // =================================================================================================

@@ -93,8 +93,7 @@ static IOUSBDeviceInterface182** spCreate_USBDeviceInterface(io_service_t iUSBDe
 
 ZUSBWatcher::ZUSBWatcher(
 	IONotificationPortRef iIONotificationPortRef, SInt32 iUSBVendor, SInt32 iUSBProduct)
-:	fObserver(nullptr),
-	fIONotificationPortRef(iIONotificationPortRef),
+:	fIONotificationPortRef(iIONotificationPortRef),
 	fNotification(0)
 	{
 	ZMap_CF theMap(Adopt(::IOServiceMatching(kIOUSBDeviceClassName)));
@@ -112,12 +111,14 @@ ZUSBWatcher::~ZUSBWatcher()
 		::IOObjectRelease(fNotification);
 	}
 
-void ZUSBWatcher::SetObserver(Observer* iObserver)
+void ZUSBWatcher::RegisterDeviceAttached(ZRef<CB_DeviceAttached> iCallback)
 	{
-	fObserver = iObserver;
-	// Iterate once to get already-present devices and arm the notification
+	fCallbacks.Register(iCallback);
 	this->pDeviceAdded(fNotification);
 	}
+
+void ZUSBWatcher::UnregisterDeviceAttached(ZRef<CB_DeviceAttached> iCallback)
+	{ fCallbacks.Unregister(iCallback); }
 
 void ZUSBWatcher::pDeviceAdded(io_iterator_t iIterator)
 	{
@@ -129,14 +130,14 @@ void ZUSBWatcher::pDeviceAdded(io_iterator_t iIterator)
 		try
 			{
 			ZRef<ZUSBDevice> theUSBDevice = new ZUSBDevice(fIONotificationPortRef, iter);
-			fObserver->Added(theUSBDevice);
+			fCallbacks.Invoke(theUSBDevice);
 			}
 		catch (exception& ex)
 			{
 			if (ZLOG(s, eInfo, "ZUSBWatcher"))
 				s << "Couldn't instantiate ZUSBDevice, caught exception: " << ex.what();
 
-			fObserver->Added(ZRef<ZUSBDevice>());
+			fCallbacks.Invoke(nullref);
 			}
 
 		::IOObjectRelease(iter);
@@ -154,7 +155,6 @@ ZUSBDevice::ZUSBDevice(IONotificationPortRef iIONotificationPortRef, io_service_
 :	fIOUSBDeviceInterface(nullptr),
 	fNotification(0),
 	fLocationID(0),
-	fObserver(nullptr),
 	fDetached(false),
 	fHasIOUSBDeviceDescriptor(false)
 	{
@@ -244,15 +244,15 @@ ZUSBDevice::~ZUSBDevice()
 		}
 	}
 
-void ZUSBDevice::SetObserver(Observer* iObserver)
+void ZUSBDevice::RegisterDeviceDetached(ZRef<CB_DeviceDetached> iCallback)
 	{
-	fObserver = iObserver;
+	fCallbacks.Register(iCallback);
 	if (fDetached)
-		{
-		fDetached = false;
-		fObserver->Detached(this);
-		}
+		fCallbacks.Invoke(this);
 	}
+
+void ZUSBDevice::UnregisterDeviceDetached(ZRef<CB_DeviceDetached> iCallback)
+	{ fCallbacks.Unregister(iCallback); }
 
 IOUSBDeviceInterface182** ZUSBDevice::GetIOUSBDeviceInterface()
 	{ return fIOUSBDeviceInterface; }
@@ -338,10 +338,8 @@ void ZUSBDevice::pDeviceNotification(
 		if (ZLOG(s, eInfo, "ZUSBDevice"))
 			s.Writef("Device removed, service: 0x%08x.", iService);
 
-		if (fObserver)
-			fObserver->Detached(this);
-		else
-			fDetached = true;
+		fDetached = true;
+		fCallbacks.Invoke(this);
 		}
 	}
 
@@ -464,7 +462,7 @@ void StreamerR_TO::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 			}
 		else
 			{
-			if (!this->pRefill(1000))
+			if (!this->pRefill(1.0))
 				break;
 			}
 		}
@@ -588,7 +586,7 @@ StreamerR_Async::StreamerR_Async(ZRef<ZUSBInterfaceInterface> iUSBII,
 
 StreamerR_Async::~StreamerR_Async()
 	{
-	ZGuardMtx guard(fMtx);
+	ZAcqMtx acq(fMtx);
 	fOpen = false;
 	if (fPending)
 		{
@@ -606,7 +604,7 @@ void StreamerR_Async::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
 	uint8* localDest = static_cast<uint8*>(oDest);
 
-	ZGuardMtx guard(fMtx);
+	ZAcqMtx acq(fMtx);
 	while (fOpen)
 		{
 		if (fOffset < fEnd)
@@ -636,7 +634,7 @@ size_t StreamerR_Async::Imp_CountReadable()
 
 bool StreamerR_Async::Imp_WaitReadable(double iTimeout)
 	{
-	ZGuardMtx guard(fMtx);
+	ZAcqMtx acq(fMtx);
 
 	if (fOpen)
 		{
@@ -668,7 +666,7 @@ void StreamerR_Async::pTriggerRead()
 void StreamerR_Async::pCompletion(IOReturn iResult, void* iArg)
 	{
 	// We'll deadlock if completion is called as a result of ReadPipeAsync being called.
-	ZGuardMtx guard(fMtx);
+	ZAcqMtx acq(fMtx);
 	fPending = false;
 	ZAssert(fOffset == 0 && fEnd == 0);
 	fEnd = reinterpret_cast<size_t>(iArg);

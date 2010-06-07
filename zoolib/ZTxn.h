@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_NonCopyable.h"
-#include "zoolib/ZThreadOld.h"
+#include "zoolib/ZThread.h"
 #include "zoolib/ZTypes.h"
 
 #include <map>
@@ -59,7 +59,7 @@ private:
 
 	int32 fID;
 
-	ZMutex fMutex;
+	ZMtxR fMutex;
 	mutable std::vector<ZTxnTarget*> fTargets;
 
 	friend class ZTxnTarget;

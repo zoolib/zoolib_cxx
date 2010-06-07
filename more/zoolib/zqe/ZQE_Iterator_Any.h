@@ -25,9 +25,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZExpr_Logic.h"
 #include "zoolib/ZValPred.h"
 #include "zoolib/zqe/ZQE_Iterator.h"
-#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 #include "zoolib/zqe/ZQE_Visitor_Expr_Rel_DoMakeIterator.h"
-//#include "zoolib/zra/ZRA_RelHead.h"
+#include "zoolib/zra/ZRA_Expr_Rel_Restrict.h"
 
 namespace ZooLib {
 namespace ZQE {
@@ -59,7 +58,7 @@ class Iterator_Any_Rename
 :	public Iterator
 	{
 public:
-	Iterator_Any_Rename(ZRef<Iterator> iIterator, const std::string& iNew, const std::string& iOld);
+	Iterator_Any_Rename(ZRef<Iterator> iIterator, const ZRA::RelName& iNew, const ZRA::RelName& iOld);
 	
 // From Iterator
 	virtual ZRef<Iterator> Clone();
@@ -67,8 +66,8 @@ public:
 
 private:
 	ZRef<Iterator> fIterator;
-	const std::string fNew;
-	const std::string fOld;
+	const ZRA::RelName fNew;
+	const ZRA::RelName fOld;
 	};
 
 // =================================================================================================

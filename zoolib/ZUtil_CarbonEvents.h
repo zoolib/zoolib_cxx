@@ -91,9 +91,9 @@ template <typename T>
 void sSetParam_T(EventRef iEventRef, EventParamName iName, EventParamType iType, const T& iParam)
 	{ sSetParam(iEventRef, iName, iType, sizeof(T), &iParam); }
 
-typedef void (*Callback_t)(void* iRefcon);
+typedef void (*CallbackProc_t)(void* iRefcon);
 
-void sInvokeOnMainThread(Callback_t iCallback, void* iRefcon);
+void sInvokeOnMainThread(CallbackProc_t iCallback, void* iRefcon);
 
 std::string sEventAsString(EventClass iEC, EventKind iEK);
 

@@ -476,6 +476,7 @@ VARIANT& Variant::OParam()
 	return *this;
 	}
 
+/// \cond DoxygenIgnore
 ZMACRO_ZValAccessors_Def_Entry(Variant, Int8, int8)
 ZMACRO_ZValAccessors_Def_Entry(Variant, UInt, uint8)
 ZMACRO_ZValAccessors_Def_Entry(Variant, Int16, int16)
@@ -492,6 +493,7 @@ ZMACRO_ZValAccessors_Def_Entry(Variant, String8, string8)
 ZMACRO_ZValAccessors_Def_Entry(Variant, String16, string16)
 ZMACRO_ZValAccessors_Def_Entry(Variant, Unknown, ZRef<IUnknown>)
 ZMACRO_ZValAccessors_Def_Entry(Variant, Dispatch, ZRef<IDispatch>)
+/// \endcond DoxygenIgnore
 
 // =================================================================================================
 #pragma mark -

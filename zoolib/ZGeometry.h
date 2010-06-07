@@ -374,6 +374,7 @@ class ZGRectPOD_T
 public:
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZGRectPOD_T<T>,
 		operator_bool_generator_type, operator_bool_type);
+
 	operator operator_bool_type() const
 		{ return operator_bool_generator_type::translate(extent); }
 

@@ -32,7 +32,7 @@ namespace ZooLib {
 
 // There is an equivalent typedef in ZRA_RelHead, and it's possible that it
 // should be promoted to its own file, but for now that seems excessive.
-typedef std::map<std::string, std::string> Rename_t;
+typedef std::map<ZTrail, ZTrail> Rename_t;
 
 class ZValContext
 	{};
@@ -179,7 +179,7 @@ public:
 	virtual ~ZValComparand_T();
 
 	virtual Val GetVal(ZValContext& iContext, const Val& iVal) = 0;
-	virtual std::set<std::string> GetNames();
+	virtual std::set<ZTrail> GetNames();
 	virtual ZRef<ZValComparand_T> Renamed(const Rename_t& iRename);
 	};
 
@@ -192,8 +192,8 @@ ZValComparand_T<Val>::~ZValComparand_T()
 	{}
 
 template <class Val>
-std::set<std::string> ZValComparand_T<Val>::GetNames()
-	{ return std::set<std::string>(); }
+std::set<ZTrail> ZValComparand_T<Val>::GetNames()
+	{ return std::set<ZTrail>(); }
 
 template <class Val>
 ZRef<ZValComparand_T<Val> > ZValComparand_T<Val>::Renamed(const Rename_t& iRename)
@@ -244,7 +244,7 @@ public:
 
 // From ZValComparand_T
 	virtual Val GetVal(ZValContext& iContext, const Val& iVal);
-	virtual std::set<std::string> GetNames();
+	virtual std::set<ZTrail> GetNames();
 	virtual ZRef<ZValComparand_T<Val> > Renamed(const Rename_t& iRename);
 
 // Our protocol
@@ -270,11 +270,11 @@ Val ZValComparand_Trail_T<Val>::GetVal(ZValContext& iContext, const Val& iVal)
 	}
 
 template <class Val>
-std::set<std::string> ZValComparand_Trail_T<Val>::GetNames()
-	{
-	std::set<std::string> theNames;
+std::set<ZTrail> ZValComparand_Trail_T<Val>::GetNames()
+	{ 
+	std::set<ZTrail> theNames;
 	if (fTrail.Count())
-		theNames.insert(fTrail.At(0));
+		theNames.insert(fTrail);
 	return theNames;
 	}
 
@@ -287,10 +287,9 @@ ZRef<ZValComparand_T<Val> > ZValComparand_Trail_T<Val>::Renamed(const Rename_t& 
 	{
 	if (fTrail.Count())
 		{
-		std::string theName = fTrail.At(0);
-		Rename_t::const_iterator i = iRename.find(theName);
+		Rename_t::const_iterator i = iRename.find(fTrail);
 		if (i != iRename.end())
-			return new ZValComparand_Trail_T((*i).second + fTrail.SubTrail(1));
+			return new ZValComparand_Trail_T((*i).second);
 		}
 	return this;
 	}
@@ -358,7 +357,7 @@ public:
 
 	bool Matches(ZValContext& iContext, const Val& iVal) const;
 
-	std::set<std::string> GetNames() const;
+	std::set<ZTrail> GetNames() const;
 
 	bool Renamed(const Rename_t& iRename, ZValPred_T& oResult) const;
 
@@ -425,7 +424,7 @@ bool ZValPred_T<Val>::Matches(ZValContext& iContext, const Val& iVal) const
 	{ return fComparator->Matches(fLHS->GetVal(iContext, iVal), fRHS->GetVal(iContext, iVal)); }
 
 template <class Val>
-std::set<std::string> ZValPred_T<Val>::GetNames() const
+std::set<ZTrail> ZValPred_T<Val>::GetNames() const
 	{ return ZUtil_STL_set::sOr(fLHS->GetNames(), fRHS->GetNames()); }
 
 template <class Val>

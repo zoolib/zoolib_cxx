@@ -33,6 +33,38 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZThread_MacMP
+
+namespace ZThread_MacMP {
+
+void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
+	{
+	if (iStackSize == 0)
+		iStackSize = 1024 * 1024;
+
+	ID theID;
+	if (noErr != ::MPCreateTask(iProc, iParam, iStackSize, 0, nullptr, nullptr, 0, &theID))
+		throw std::bad_alloc();
+	}
+
+ID sID()
+	{ return ::MPCurrentTaskID(); }
+
+void sSleep(double iDuration)
+	{
+	const Nanoseconds nowU = ::AbsoluteToNanoseconds(::UpTime());
+	const double targetDouble =
+		double(*reinterpret_cast<const uint64*>(&nowU)) / 1e9 + iDuration;
+	const uint64 targetU = uint64(targetDouble * 1e9);
+	AbsoluteTime targetA =
+		::NanosecondsToAbsolute(*reinterpret_cast<const Nanoseconds*>(&targetU));
+	::MPDelayUntil(&targetA);
+	}
+
+} // namespace ZThread_MacMP
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZTSS_MacMP
 
 ZTSS_MacMP::Key ZTSS_MacMP::sCreate()
@@ -55,17 +87,31 @@ ZTSS_MacMP::Value ZTSS_MacMP::sGet(Key iKey)
 #pragma mark -
 #pragma mark * ZMtx_MacMP
 
-ZMtx_MacMP::ZMtx_MacMP(const char* iName)
+/*
+MPCriticalRegionID is recursive, but we want to ensure that ZMtx_MacMP
+asserts or deadlocks when recursive acquisition is attempted so that we
+match the behavior of other non-recursive mutexes.
+*/
+
+ZMtx_MacMP::ZMtx_MacMP()
 	{ ::MPCreateCriticalRegion(&fMPCriticalRegionID); }
 
 ZMtx_MacMP::~ZMtx_MacMP()
 	{ ::MPDeleteCriticalRegion(fMPCriticalRegionID); }
 
 void ZMtx_MacMP::Acquire()
-	{ ::MPEnterCriticalRegion(fMPCriticalRegionID, kDurationForever); }
+	{
+	ZAssert(fOwner != ZThread_MacMP::sID());
+	::MPEnterCriticalRegion(fMPCriticalRegionID, kDurationForever);
+	fOwner = ZThread_MacMP::sID();
+	}
 
 void ZMtx_MacMP::Release()
-	{ ::MPExitCriticalRegion(fMPCriticalRegionID); }
+	{
+	ZAssert(fOwner == ZThread_MacMP::sID());
+	fOwner = 0;
+	::MPExitCriticalRegion(fMPCriticalRegionID);
+	}
 
 // =================================================================================================
 #pragma mark -
@@ -103,38 +149,6 @@ bool ZSem_MacMP::WaitUntil(ZTime iDeadline)
 
 void ZSem_MacMP::Signal()
 	{ ::MPSignalSemaphore(fMPSemaphoreID); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZThread_MacMP
-
-namespace ZThread_MacMP {
-
-void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam)
-	{
-	if (iStackSize == 0)
-		iStackSize = 1024 * 1024;
-
-	ID theID;
-	if (noErr != ::MPCreateTask(iProc, iParam, iStackSize, 0, nullptr, nullptr, 0, &theID))
-		throw std::bad_alloc();
-	}
-
-ID sID()
-	{ return ::MPCurrentTaskID(); }
-
-void sSleep(double iDuration)
-	{
-	const Nanoseconds nowU = ::AbsoluteToNanoseconds(::UpTime());
-	const double targetDouble =
-		double(*reinterpret_cast<const uint64*>(&nowU)) / 1e9 + iDuration;
-	const uint64 targetU = uint64(targetDouble * 1e9);
-	AbsoluteTime targetA =
-		::NanosecondsToAbsolute(*reinterpret_cast<const Nanoseconds*>(&targetU));
-	::MPDelayUntil(&targetA);
-	}
-
-} // namespace ZThread_MacMP
 
 } // namespace ZooLib
 

@@ -56,10 +56,17 @@ static bool spSendControlMessage(IOUSBDeviceInterface182** iUDI,
 	urequest.wLength = numbytes;
 	urequest.pData = bytes;
 	urequest.completionTimeout = timeout;
+
+	if (noErr != iUDI[0]->DeviceRequestTO(iUDI, &urequest))
+		{
+		if (oCountDone)
+			*oCountDone = 0;
+		return false;
+		}		
+
 	if (oCountDone)
 		*oCountDone = urequest.wLenDone;
-
-	return noErr == iUDI[0]->DeviceRequestTO(iUDI, &urequest);
+	return true;
 	}
 
 static bool spSendControlMessage(IOUSBDeviceInterface182** iUDI,
@@ -154,6 +161,48 @@ static void spChangeMode(ZRef<ZUSBDevice> iUSBDevice, bool iAllowMassStorage)
 #pragma mark -
 #pragma mark * ZBlackBerry::Manager_OSXUSB
 
+class Manager_OSXUSB::CB_DeviceAttached : public ZUSBWatcher::CB_DeviceAttached
+	{
+public:
+	CB_DeviceAttached(ZRef<Manager_OSXUSB> iManager)
+	:	fManager(iManager)
+		{}
+
+	virtual void Invoke(ZRef<ZUSBDevice> iParam)
+		{
+		if (ZRef<Manager_OSXUSB> theManager = fManager)
+			theManager->pDeviceAttached(iParam);
+		}
+	
+private:
+	ZWeakRef<Manager_OSXUSB> fManager;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZBlackBerry::Manager_OSXUSB
+
+class Manager_OSXUSB::CB_DeviceDetached : public ZUSBDevice::CB_DeviceDetached
+	{
+public:
+	CB_DeviceDetached(ZRef<Manager_OSXUSB> iManager)
+	:	fManager(iManager)
+		{}
+
+	virtual void Invoke(ZRef<ZUSBDevice> iParam)
+		{
+		if (ZRef<Manager_OSXUSB> theManager = fManager)
+			theManager->pDeviceDetached(iParam);
+		}
+	
+private:
+	ZWeakRef<Manager_OSXUSB> fManager;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZBlackBerry::Manager_OSXUSB
+
 Manager_OSXUSB::Manager_OSXUSB(CFRunLoopRef iRunLoopRef, bool iAllowMassStorage)
 :	fRunLoopRef(iRunLoopRef),
 	fAllowMassStorage(iAllowMassStorage),
@@ -176,49 +225,53 @@ Manager_OSXUSB::~Manager_OSXUSB()
 		::mach_port_deallocate(::mach_task_self(), fMasterPort);
 	}
 
-void Manager_OSXUSB::Start()
+void Manager_OSXUSB::Initialize()
 	{
-	if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
-		s << "Start";
+	Manager::Initialize();
+
+	ZLOGFUNCTION(eDebug);
+
+	fCB_DeviceAttached = new CB_DeviceAttached(this);
+	fCB_DeviceDetached = new CB_DeviceDetached(this);
 
 	fIONotificationPortRef = ::IONotificationPortCreate(fMasterPort);
 
 	fUSBWatcher_Trad = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 1);
-	fUSBWatcher_Trad->SetObserver(this);
+	fUSBWatcher_Trad->RegisterDeviceAttached(fCB_DeviceAttached);
 
 	fUSBWatcher_Pearl = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 6);
-	fUSBWatcher_Pearl->SetObserver(this);
+	fUSBWatcher_Pearl->RegisterDeviceAttached(fCB_DeviceAttached);
 
 	fUSBWatcher_Dual = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 4);
-	fUSBWatcher_Dual->SetObserver(this);
+	fUSBWatcher_Dual->RegisterDeviceAttached(fCB_DeviceAttached);
 
 	fUSBWatcher_Trad_HS = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8001);
-	fUSBWatcher_Trad_HS->SetObserver(this);
+	fUSBWatcher_Trad_HS->RegisterDeviceAttached(fCB_DeviceAttached);
 
 	fUSBWatcher_Pearl_HS = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8006);
-	fUSBWatcher_Pearl_HS->SetObserver(this);
+	fUSBWatcher_Pearl_HS->RegisterDeviceAttached(fCB_DeviceAttached);
 
 	fUSBWatcher_Dual_HS = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8004);
-	fUSBWatcher_Dual_HS->SetObserver(this);
+	fUSBWatcher_Dual_HS->RegisterDeviceAttached(fCB_DeviceAttached);
 
 	fUSBWatcher_Storm_HS = new ZUSBWatcher(fIONotificationPortRef, 0xFCA, 0x8007);
-	fUSBWatcher_Storm_HS->SetObserver(this);
+	fUSBWatcher_Storm_HS->RegisterDeviceAttached(fCB_DeviceAttached);
 
 	::CFRunLoopAddSource(fRunLoopRef,
 		::IONotificationPortGetRunLoopSource(fIONotificationPortRef),
 		kCFRunLoopDefaultMode);
-
-	Manager::Start();
 	}
 
-void Manager_OSXUSB::Stop()
+void Manager_OSXUSB::Finalize()
 	{
-	if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
-		s << "Stop";
+	ZLOGFUNCTION(eDebug);
 
 	::CFRunLoopRemoveSource(fRunLoopRef,
 		::IONotificationPortGetRunLoopSource(fIONotificationPortRef),
 		kCFRunLoopDefaultMode);
+
+	fCB_DeviceAttached.Clear();
+	fCB_DeviceDetached.Clear();
 
 	fUSBWatcher_Trad.Clear();
 	fUSBWatcher_Pearl.Clear();
@@ -234,12 +287,13 @@ void Manager_OSXUSB::Stop()
 		::IONotificationPortDestroy(fIONotificationPortRef);
 		fIONotificationPortRef = nullptr;
 		}
-	Manager::Stop();
+
+	Manager::Finalize();
 	}
 
 void Manager_OSXUSB::GetDeviceIDs(vector<uint64>& oDeviceIDs)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	const ZTime atMostThis = ZTime::sSystem();
 	for (vector<Device_t>::iterator i = fDevices.begin(); i != fDevices.end(); ++i)
 		{
@@ -249,70 +303,79 @@ void Manager_OSXUSB::GetDeviceIDs(vector<uint64>& oDeviceIDs)
 		}
 	}
 
-static bool spGetPipeRefs(ZRef<ZUSBInterfaceInterface> iInterfaceInterface, int& oPipeRefR, int& oPipeRefW)
+static bool spGetPipeRefs(
+	ZRef<ZUSBInterfaceInterface> iInterfaceInterface, int& oPipeRefR, int& oPipeRefW)
 	{
-	ZRef<ZUSBDevice> theUSBDevice = iInterfaceInterface->GetUSBDevice();
-
-	const IOUSBDeviceDescriptor theDescriptor = theUSBDevice->GetDeviceDescriptor();
-
-	if (ZByteSwap_LittleToHost16(theDescriptor.bcdUSB) < 0x106)
+	try
 		{
-		oPipeRefR = 3;
-		oPipeRefW = 4;
-		return true;
-		}
+		ZRef<ZUSBDevice> theUSBDevice = iInterfaceInterface->GetUSBDevice();
 
-	if (IOUSBDeviceInterface182** theUDI = theUSBDevice->GetIOUSBDeviceInterface())
-		{
-		char buffer[64];
+		const IOUSBDeviceDescriptor theDescriptor = theUSBDevice->GetDeviceDescriptor();
 
-		// This request gives us a table of which tells us which endpoints (in enumeration
-		// order) are used for what purpose. Types 0 and 1 are unknown, type 2 is the
-		// multiplex comms endpoints we want, and type 3 is for virtual serial ports.
-		size_t countRead;
-		if (!spSendControlMessage(theUDI, 0xc0, 0xa8, 0, 0, buffer, sizeof(buffer), 100, &countRead))
-			return false;
-
-		ZStreamRPos_Memory r(buffer, countRead);
-		/*const uint16 theLength = */r.ReadUInt16LE();
-		/*const uint16 theVersion = */r.ReadUInt16LE();
-		const size_t count = r.ReadUInt8();
-		int thePipeRef = 1;
-		for (size_t x = 0; x < count; x++)
+		if (ZByteSwap_LittleToHost16(theDescriptor.bcdUSB) < 0x106)
 			{
-			// Each entry in the table consists of an index (which so far
-			// tracks the 1-based offset in the table), a type, and a count
-			// of the number of endpoints used. So we accumulate the number
-			// of endpoints till we hit an entry with type 2.
-			/*const uint8 index = */r.ReadUInt8();
-			const uint8 type = r.ReadUInt8();
-			const uint8 numEPs = r.ReadUInt8();
-			if (2 == type)
+			oPipeRefR = 3;
+			oPipeRefW = 4;
+			return true;
+			}
+
+		if (IOUSBDeviceInterface182** theUDI = theUSBDevice->GetIOUSBDeviceInterface())
+			{
+			char buffer[64];
+
+			// This request gives us a table of which tells us which endpoints (in enumeration
+			// order) are used for what purpose. Types 0 and 1 are unknown, type 2 is the
+			// multiplex comms endpoints we want, and type 3 is for virtual serial ports.
+			size_t countRead;
+			if (!spSendControlMessage(theUDI, 0xc0, 0xa8, 0, 0, buffer, sizeof(buffer), 100, &countRead))
+				return false;
+
+			ZStreamRPos_Memory r(buffer, countRead);
+			/*const uint16 theLength = */r.ReadUInt16LE();
+			/*const uint16 theVersion = */r.ReadUInt16LE();
+			const size_t count = r.ReadUInt8();
+			int thePipeRef = 1;
+			for (size_t x = 0; x < count; x++)
 				{
-				UInt8 numEPs;
-				IOUSBInterfaceInterface190** theII =
-					iInterfaceInterface->GetIOUSBInterfaceInterface();
-				if (0 == theII[0]->GetNumEndpoints(theII, &numEPs))
+				// Each entry in the table consists of an index (which so far
+				// tracks the 1-based offset in the table), a type, and a count
+				// of the number of endpoints used. So we accumulate the number
+				// of endpoints till we hit an entry with type 2.
+				/*const uint8 index = */r.ReadUInt8();
+				const uint8 type = r.ReadUInt8();
+				const uint8 numEPs = r.ReadUInt8();
+				if (2 == type)
 					{
-					if (thePipeRef + 1 <= numEPs)
+					UInt8 numEPs;
+					IOUSBInterfaceInterface190** theII =
+						iInterfaceInterface->GetIOUSBInterfaceInterface();
+					if (0 == theII[0]->GetNumEndpoints(theII, &numEPs))
 						{
-						oPipeRefR = thePipeRef;
-						oPipeRefW = thePipeRef + 1;
-						return true;
+						if (thePipeRef + 1 <= numEPs)
+							{
+							oPipeRefR = thePipeRef;
+							oPipeRefW = thePipeRef + 1;
+							return true;
+							}
 						}
+					// Might as well bail.
+					break;
 					}
-				// Might as well bail.
-				break;
+				thePipeRef += numEPs;
 				}
-			thePipeRef += numEPs;
 			}
 		}
+	catch (...)
+		{
+		ZLOGTRACE(eInfo);
+		}
+
 	return false;
 	}
 
 ZRef<Device> Manager_OSXUSB::Open(uint64 iDeviceID)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	for (vector<Device_t>::iterator i = fDevices.begin(); i != fDevices.end(); ++i)
 		{
 		if (i->fID == iDeviceID)
@@ -338,8 +401,10 @@ ZRef<Device> Manager_OSXUSB::Open(uint64 iDeviceID)
 	return ZRef<Device>();
 	}
 
-void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
+void Manager_OSXUSB::pDeviceAttached(ZRef<ZUSBDevice> iUSBDevice)
 	{
+	ZLOGFUNCTION(eDebug);
+
 	if (!iUSBDevice)
 		{
 		// Watcher fired, but could not create a USBDevice.
@@ -394,7 +459,7 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 		return;
 		}
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	Device_t theD;
 	theD.fID = fNextID++;
 	theD.fUSBDevice = iUSBDevice;
@@ -417,20 +482,16 @@ void Manager_OSXUSB::Added(ZRef<ZUSBDevice> iUSBDevice)
 	fDevices.push_back(theD);
 	locker.Release();
 
-	iUSBDevice->SetObserver(this);
+	iUSBDevice->RegisterDeviceDetached(fCB_DeviceDetached);
 
-	this->pNotifyObservers();
+	Manager::pChanged();
 	}
 
-void Manager_OSXUSB::Detached(ZRef<ZUSBDevice> iUSBDevice)
+void Manager_OSXUSB::pDeviceDetached(ZRef<ZUSBDevice> iUSBDevice)
 	{
-	// Trip if we recurse somehow.
-	ZAssert(!fMutex.IsLocked());
+	ZLOGFUNCTION(eDebug);
 
-	if (ZLOG(s, eDebug, "ZBlackBerry::Manager_OSXUSB"))
-		s << "Detached";
-
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	bool gotIt = false;
 	for (vector<Device_t>::iterator i = fDevices.begin(); i != fDevices.end(); ++i)
 		{
@@ -445,7 +506,9 @@ void Manager_OSXUSB::Detached(ZRef<ZUSBDevice> iUSBDevice)
 		
 	locker.Release();
 
-	this->pNotifyObservers();
+	iUSBDevice->UnregisterDeviceDetached(fCB_DeviceDetached);
+
+	Manager::pChanged();
 	}
 
 // =================================================================================================

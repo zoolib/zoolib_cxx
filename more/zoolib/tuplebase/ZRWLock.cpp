@@ -38,8 +38,7 @@ using std::vector;
 #pragma mark * ZRWLock
 
 ZRWLock::ZRWLock(const char* iName)
-:	fMutex_Structure("ZRWLock::fMutex_Structure"),
-	fSem_Access(1, "ZRWLock::fSem_Access"),
+:	fSem_Access(1, "ZRWLock::fSem_Access"),
 	fSem_SubsequentReaders(0, "ZRWLock::fSem_SubsequentReaders"),
 	fCount_WaitingWriters(0),
 	fCount_CurrentWriter(0),

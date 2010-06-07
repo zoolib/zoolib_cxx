@@ -44,69 +44,6 @@ public:
 	virtual ZRef<Result> ReadInc() = 0;
 	};
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * Iterator_Intersect
-
-class Iterator_Intersect : public Iterator
-	{
-public:
-	Iterator_Intersect(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
-	
-// From Iterator
-	virtual ZRef<Iterator> Clone();
-	virtual ZRef<Result> ReadInc();
-
-private:
-	Iterator_Intersect(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS,
-		ZRef<Iterator> iIterator_RHS_Model);
-
-	ZRef<Iterator> fIterator_LHS;
-	ZRef<Iterator> fIterator_RHS;
-	ZRef<Iterator> fIterator_RHS_Model;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Iterator_Product
-
-class Iterator_Product : public Iterator
-	{
-public:
-	Iterator_Product(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
-	
-// From Iterator
-	virtual ZRef<Iterator> Clone();
-	virtual ZRef<Result> ReadInc();
-
-private:
-	Iterator_Product(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS,
-		ZRef<Iterator> iIterator_RHS_Model);
-
-	ZRef<Iterator> fIterator_LHS;
-	ZRef<Iterator> fIterator_RHS;
-	ZRef<Iterator> fIterator_RHS_Model;
-	ZRef<Result> fResult_LHS;
-	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * Iterator_Union
-
-class Iterator_Union : public Iterator
-	{
-public:
-	Iterator_Union(ZRef<Iterator> iIterator_LHS, ZRef<Iterator> iIterator_RHS);
-	
-// From Iterator
-	virtual ZRef<Iterator> Clone();
-	virtual ZRef<Result> ReadInc();
-
-private:
-	ZRef<Iterator> fIterator_LHS;
-	ZRef<Iterator> fIterator_RHS;
-	};
-
 } // namespace ZQE
 } // namespace ZooLib
 

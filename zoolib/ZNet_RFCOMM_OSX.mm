@@ -160,7 +160,7 @@ ZRef<ZNetEndpoint> ZNetListener_RFCOMM_OSX::Listen()
 	{
 	ZRef<ZNetEndpoint> result;
 
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	if (fQueue.empty())
 		fCondition.Wait(fMutex);
 
@@ -180,7 +180,7 @@ void ZNetListener_RFCOMM_OSX::CancelListen()
 
 void ZNetListener_RFCOMM_OSX::pChannelOpened(IOBluetoothRFCOMMChannel* iChannel)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	[iChannel release]; // ??
 	fQueue.push_back(iChannel);
 	fCondition.Broadcast();
@@ -237,7 +237,7 @@ ZRef<ZNetAddress> ZNetEndpoint_RFCOMM_OSX::GetRemoteAddress()
 
 void ZNetEndpoint_RFCOMM_OSX::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 
 	char* localDest = static_cast<char*>(oDest);
 
@@ -274,14 +274,14 @@ void ZNetEndpoint_RFCOMM_OSX::Imp_Read(void* oDest, size_t iCount, size_t* oCoun
 
 size_t ZNetEndpoint_RFCOMM_OSX::Imp_CountReadable()
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	return fBuffer.size();
 	}
 
 bool ZNetEndpoint_RFCOMM_OSX::Imp_WaitReadable(double iTimeout)
 	{
 	const ZTime deadline = ZTime::sSystem() + iTimeout;
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	for (;;)
 		{
 		if (fBuffer.size())
@@ -317,7 +317,7 @@ void ZNetEndpoint_RFCOMM_OSX::Imp_Write(const void* iSource, size_t iCount, size
 bool ZNetEndpoint_RFCOMM_OSX::Imp_ReceiveDisconnect(double iTimeout)
 	{
 	const ZTime deadline = ZTime::sSystem() + iTimeout;
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	for (;;)
 		{
 		if (!fBuffer.empty())
@@ -343,7 +343,7 @@ void ZNetEndpoint_RFCOMM_OSX::Imp_Abort()
 
 void ZNetEndpoint_RFCOMM_OSX::pReceived(const void* iSource, size_t iLength)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	const uint8* data = static_cast<const uint8*>(iSource);
 	fBuffer.insert(fBuffer.end(), data, data + iLength);
 	fCondition.Broadcast();
@@ -351,7 +351,7 @@ void ZNetEndpoint_RFCOMM_OSX::pReceived(const void* iSource, size_t iLength)
 
 void ZNetEndpoint_RFCOMM_OSX::pClosed()
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	fOpen = false;
 	fCondition.Broadcast();
 	}

@@ -25,7 +25,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZUnicodeString.h"
 
-#include <string>
 #include <vector>
 
 namespace ZooLib {
@@ -36,8 +35,8 @@ namespace ZooLib {
 
 class ZTrail
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTrail, operator_bool_generator_type, operator_bool_type);
 public:
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTrail, operator_bool_generator_type, operator_bool_type);
 	operator operator_bool_type() const;
 
 	ZTrail();
@@ -46,12 +45,13 @@ public:
 	ZTrail& operator=(const ZTrail& iTrail);
 
 	explicit ZTrail(bool iValid);
-	ZTrail(const std::string& iPOSIXTrail);
+
+	ZTrail(const string8& iPOSIXTrail);
 	ZTrail(const char* iPOSIXTrail);
 	ZTrail(const char* iPOSIXTrail, size_t iSize);
 
-	ZTrail(const std::string& iSeparator, const std::string& iIgnore,
-		const std::string& iBounce, const std::string& iTrail);
+	ZTrail(const string8& iSeparator, const string8& iIgnore,
+		const string8& iBounce, const string8& iTrail);
 
 	template <class I>
 	ZTrail(const I& iBegin, const I& iEnd)
@@ -69,7 +69,7 @@ public:
 	void AppendTrail(const I& iBegin, const I& iEnd)
 		{ fComps.insert(fComps.end(), iBegin, iEnd); }
 	void AppendTrail(const ZTrail& iTrail);
-	void AppendComp(const std::string& iComp);
+	void AppendComp(const string8& iComp);
 	void AppendBounce();
 	void AppendBounces(size_t iCount);
 
@@ -77,18 +77,18 @@ public:
 	void PrependTrail(const I& iBegin, const I& iEnd)
 		{ fComps.insert(fComps.begin(), iBegin, iEnd);}
 	void PrependTrail(const ZTrail& iTrail);
-	void PrependComp(const std::string& iComp);
+	void PrependComp(const string8& iComp);
 	void PrependBounce();
 	void PrependBounces(size_t iCount);
 
-	std::string AsString() const;
-	std::string AsString(const std::string& iSeparator, const std::string& iBounce) const;
+	string8 AsString() const;
+	string8 AsString(const string8& iSeparator, const string8& iBounce) const;
 
 	ZTrail Branch() const;
-	std::string Leaf() const;
+	string8 Leaf() const;
 
 	size_t Count() const;
-	std::string At(size_t iIndex) const;
+	string8 At(size_t iIndex) const;
 	ZTrail SubTrail(size_t iBegin, size_t iEnd) const;
 	ZTrail SubTrail(size_t iBegin) const;
 
@@ -96,31 +96,31 @@ public:
 	ZTrail& Normalize();
 	bool IsNormalized() const;
 
-	const std::vector<std::string>& GetComps() const
+	const std::vector<string8>& GetComps() const
 		{ return fComps; }
 
-	static ZTrail sTrailFromTo(const std::vector<std::string>& iSource,
-		const std::vector<std::string>& oDest);
+	static ZTrail sTrailFromTo(const std::vector<string8>& iSource,
+		const std::vector<string8>& oDest);
 
 	static void sParseStringAndAppend(
 		const UTF8* iSeparator, const UTF8* iIgnore, const UTF8* iBounce,
 		const UTF8* iPath, size_t iPathSize,
-		std::vector<std::string>& ioComps);
+		std::vector<string8>& ioComps);
 
 	static void sParseStringAndAppend(
 		const UTF16* iSeparator, const UTF16* iIgnore, const UTF16* iBounce,
 		const UTF16* iPath, size_t iPathSize,
 		std::vector<string16>& ioComps);
 
-	static size_t sNormalize_ReturnLeadingBounces(const std::vector<std::string>& iComps,
-		std::vector<std::string>& oComps);
+	static size_t sNormalize_ReturnLeadingBounces(const std::vector<string8>& iComps,
+		std::vector<string8>& oComps);
 
 private:
-	std::vector<std::string> fComps;
+	std::vector<string8> fComps;
 	bool fValid;
 	};
 
-ZTrail operator+(const std::string& iPOSIXTrail, const ZTrail& iTrail);
+ZTrail operator+(const string8& iPOSIXTrail, const ZTrail& iTrail);
 
 } // namespace ZooLib
 

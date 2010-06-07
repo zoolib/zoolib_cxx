@@ -35,12 +35,13 @@ namespace ZooLib {
 
 class ZData_Any
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZData_Any,
-		operator_bool_generator_type, operator_bool_type);
 	class Rep;
 
 public:
 	ZAny AsAny() const;
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZData_Any,
+		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const;
 

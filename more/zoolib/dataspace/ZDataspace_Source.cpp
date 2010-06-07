@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZExpr_Logic_ValPred.h"
+#include "zoolib/ZUtil_STL.h"
 #include "zoolib/ZVisitor_Expr_Op_DoTransform_T.h"
 
 #include "zoolib/dataspace/ZDataspace_Source.h"
@@ -160,8 +161,8 @@ void Gather::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 	{
 	Gather_t g0 = this->Do(iExpr->GetOp0());
 
-	const string8& oldName = iExpr->GetOld();
-	const string8& newName = iExpr->GetNew();
+	const RelName& oldName = iExpr->GetOld();
+	const RelName& newName = iExpr->GetNew();
 
 	for (vector<RelRename>::iterator i = g0.fRelRenames.begin(); i != g0.fRelRenames.end(); ++i)
 		(*i).ApplyToFrom(newName, oldName);
@@ -252,6 +253,15 @@ Source::Source()
 
 Source::~Source()
 	{}
+
+void Source::Register(ZRef<Callback> iCallback)
+	{ fCallbacks.Register(iCallback); }
+
+void Source::Unregister(ZRef<Callback> iCallback)
+	{ fCallbacks.Unregister(iCallback); }
+
+void Source::pInvokeCallbacks()
+	{ fCallbacks.Invoke(this); }
 
 } // namespace ZDataspace
 } // namespace ZooLib

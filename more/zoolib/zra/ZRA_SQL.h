@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRA_SQL__
 #include "zconfig.h"
 
-#include "zoolib/ZUnicodeString.h"
+#include "zoolib/ZStrim.h"
 #include "zoolib/zra/ZRA_Expr_Rel_Concrete.h"
 
 #include <map>

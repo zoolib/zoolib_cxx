@@ -47,6 +47,25 @@ class ZSem_MacMP;
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZThread_MacMP
+
+namespace ZThread_MacMP {
+
+typedef OSStatus ProcResult_t;
+typedef void* ProcParam_t;
+
+typedef TaskProc ProcRaw_t;
+
+typedef MPTaskID ID;
+
+void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam);
+ID sID();
+void sSleep(double iDuration);
+
+} // namespace ZThread_MacMP
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZTSS_MacMP
 
 namespace ZTSS_MacMP {
@@ -64,18 +83,12 @@ Value sGet(Key iKey);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCnd_MacMP
-
-typedef ZCnd_T<ZMtx_MacMP, ZSem_MacMP> ZCnd_MacMP;
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZMtx_MacMP
 
 class ZMtx_MacMP : NonCopyable
 	{
 public:
-	ZMtx_MacMP(const char* iName = nullptr);
+	ZMtx_MacMP();
 	~ZMtx_MacMP();
 
 	void Acquire();
@@ -83,7 +96,26 @@ public:
 
 protected:
 	MPCriticalRegionID fMPCriticalRegionID;
+	MPTaskID fOwner;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCndBase_MacMP
+
+typedef ZCndBase_T<ZMtx_MacMP, ZSem_MacMP> ZCndBase_MacMP;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMtxR_MacMP
+
+typedef ZMtxR_T<ZMtx_MacMP, ZCndBase_MacMP, ZThread_MacMP::ID, ZThread_MacMP::sID> ZMtxR_MacMP;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCnd_MacMP
+
+typedef ZCndR_T<ZMtxR_MacMP, ZCndBase_MacMP> ZCnd_MacMP;
 
 // =================================================================================================
 #pragma mark -
@@ -93,7 +125,6 @@ class ZSem_MacMP : NonCopyable
 	{
 public:
 	ZSem_MacMP();
-
 	~ZSem_MacMP();
 
 	void Wait();
@@ -104,25 +135,6 @@ public:
 protected:
 	MPSemaphoreID fMPSemaphoreID;
 	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZThread_MacMP
-
-namespace ZThread_MacMP {
-
-typedef OSStatus ProcResult_t;
-typedef void* ProcParam_t;
-
-typedef TaskProc ProcRaw_t;
-
-typedef MPTaskID ID;
-
-void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam);
-ID sID();
-void sSleep(double iDuration);
-
-} // namespace ZThread_MacMP
 
 } // namespace ZooLib
 

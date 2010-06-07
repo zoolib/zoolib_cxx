@@ -22,6 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDataspace_Source__ 1
 #include "zconfig.h"
 
+#include "zoolib/ZCallback_T.h"
 #include "zoolib/ZValPredCompound.h"
 
 #include "zoolib/zqe/ZQE_Result.h"
@@ -76,6 +77,7 @@ class AddedSearch
 	{
 public:
 	AddedSearch(int64 iRefcon, ZRef<ZRA::Expr_Rel> iRel);
+
 	int64 fRefcon;
 	ZRef<ZRA::Expr_Rel> fRel;
 	};
@@ -90,6 +92,14 @@ public:
 	int64 fRefcon;
 	vector<ZRef<ZQE::Result> > fResults;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * 
+
+class Source;
+
+typedef ZCallback_T<Source*> Callback;
 
 // =================================================================================================
 #pragma mark -
@@ -111,6 +121,15 @@ public:
 		int64* iRemoved, size_t iRemovedCount,
 		vector<SearchResult>& oChanged,
 		Clock& oClock) = 0;	
+
+	void Register(ZRef<Callback> iCallback);
+	void Unregister(ZRef<Callback> iCallback);
+
+protected:
+	void pInvokeCallbacks();
+
+private:
+	ZCallbackSet_T<Source*> fCallbacks;
 	};
 
 } // namespace ZDataspace

@@ -23,9 +23,10 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZDList.h"
+#include "zoolib/ZQ_T.h"
 #include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZRefWeak.h"
 #include "zoolib/ZThread.h"
+#include "zoolib/ZWeakRef.h"
 
 #include <list>
 #include <map>
@@ -43,7 +44,7 @@ class DLink_SafeSetIterConst
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZSafeSet
+#pragma mark * ZSafeSetRep
 
 template <class T>
 class ZSafeSetRep
@@ -69,7 +70,7 @@ private:
 
 	ZSafeSetRep(const ZSafeSetRep& iOther)
 		{
-		ZGuardMtx guard(iOther.fMtx);
+		ZAcqMtx acq(iOther.fMtx);
 		for (typename EntryList::iterator i = iOther.fList.begin();
 			i != iOther.fList.end(); ++i)
 			{
@@ -86,7 +87,7 @@ private:
 	virtual void Finalize()
 		{
 		{ // Scope for guard
-		ZGuardMtx guard(fMtx);
+		ZAcqMtx acq(fMtx);
 		if (this->GetRefCount() != 1)
 			{
 			this->FinalizationComplete();
@@ -112,19 +113,19 @@ private:
 
 	size_t pSize() const
 		{
-		ZGuardMtx guard(fMtx);
+		ZAcqMtx acq(fMtx);
 		return fList.size();
 		}
 
 	bool pEmpty() const
 		{
-		ZGuardMtx guard(fMtx);
+		ZAcqMtx acq(fMtx);
 		return fList.empty();
 		}
 
 	bool pInsert(const T& iT)
 		{
-		ZGuardMtx guard(fMtx);
+		ZAcqMtx acq(fMtx);
 
 		typename EntryMap::iterator mapIter = fMap.lower_bound(iT);
 		if (mapIter != fMap.end() && (*mapIter).first == iT)
@@ -139,7 +140,7 @@ private:
 
 	void pClear()
 		{
-		ZGuardMtx guard(fMtx);
+		ZAcqMtx acq(fMtx);
 		// Invalidate all iterators referencing entries.
 		for (typename EntryList::iterator listIter = fList.begin();
 			listIter != fList.end(); ++listIter)
@@ -158,7 +159,7 @@ private:
 	void pInit(ZRef<ZSafeSetRep> iSelf,
 		ZSafeSetIterConst<T>& ioIter)
 		{
-		ZGuardMtx guard(fMtx);
+		ZAcqMtx acq(fMtx);
 		ioIter.fNextEntry = fList.begin();
 		if (ioIter.fNextEntry != fList.end())
 			{
@@ -170,7 +171,7 @@ private:
 	void pInitFrom(ZRef<ZSafeSetRep> iSelf,
 		ZSafeSetIterConst<T>& ioIter, const ZSafeSetIterConst<T>& iOther)
 		{
-		ZGuardMtx guard(fMtx);
+		ZAcqMtx acq(fMtx);
 
 		ioIter.fNextEntry = iOther.fNextEntry;
 		if (ioIter.fNextEntry != fList.end())
@@ -182,14 +183,17 @@ private:
 
 	void pDestroy(ZSafeSetIterConst<T>& ioIter)
 		{
-		ZGuardMtx guard(fMtx);
+		ZAcqMtx acq(fMtx);
 
 		(*ioIter.fNextEntry).fIters.Erase(&ioIter);
 		ioIter.fRep.Clear();
 		}
 
 	bool pReadInc(ZSafeSetIterConst<T>& ioIter, T& oValue);
+	ZQ_T<T> pReadInc(ZSafeSetIterConst<T>& ioIter);
+
 	bool pReadErase(ZSafeSetIter<T>& ioIter, T& oValue);
+	ZQ_T<T> pReadErase(ZSafeSetIter<T>& ioIter);
 
 	ZMtx fMtx;
 	EntryList fList;
@@ -307,6 +311,13 @@ public:
 		return false;
 		}
 
+	ZQ_T<T> QReadInc()
+		{
+		if (ZRef<ZSafeSetRep<T> > theRep = fRep)
+			return theRep->pReadInc(*this);
+		return ZQ_T<T>();
+		}
+
 	T ReadInc()
 		{
 		T temp;
@@ -316,7 +327,7 @@ public:
 		}
 
 protected:
-	ZRefWeak<ZSafeSetRep<T> > fRep;
+	ZWeakRef<ZSafeSetRep<T> > fRep;
 
 private:
 	typename ZSafeSetRep<T>::EntryList::iterator fNextEntry;
@@ -350,10 +361,16 @@ public:
 	
 	bool QReadErase(T& oValue)
 		{
-		// Hmm, don't know why I need to qualify the reference to fRep.
 		if (ZRef<ZSafeSetRep<T> > theRep = ZSafeSetIterConst<T>::fRep)
 			return theRep->pReadErase(*this, oValue);
 		return false;
+		}
+
+	ZQ_T<T> QReadInc()
+		{
+		if (ZRef<ZSafeSetRep<T> > theRep = ZSafeSetIterConst<T>::fRep)
+			return theRep->pReadErase(*this);
+		return ZQ_T<T>();
 		}
 
 	T ReadErase()
@@ -372,38 +389,63 @@ public:
 template <class T>
 bool ZSafeSetRep<T>::pReadInc(ZSafeSetIterConst<T>& ioIter, T& oValue)
 	{
-	ZGuardMtx guard(fMtx);
+	if (ZQ_T<T> result = this->pReadInc(ioIter))
+		{
+		oValue = result.Get();
+		return true;
+		}
+	return false;
+	}
+
+template <class T>
+ZQ_T<T> ZSafeSetRep<T>::pReadInc(ZSafeSetIterConst<T>& ioIter)
+	{
+	ZAcqMtx acq(fMtx);
+	ZQ_T<T> result;
 	if (ioIter.fNextEntry == fList.end())
 		{
 		ioIter.fRep.Clear();
-		return false;
 		}
 	else
 		{
 		(*ioIter.fNextEntry).fIters.Erase(&ioIter);
-		oValue = (*ioIter.fNextEntry).fT;
+		
+		result = (*ioIter.fNextEntry).fT;
 
 		if (++ioIter.fNextEntry == fList.end())
 			ioIter.fRep.Clear();
 		else
 			(*ioIter.fNextEntry).fIters.PushBack(&ioIter);
-		return true;
+			
 		}
+	return result;
 	}
 
 template <class T>
 bool ZSafeSetRep<T>::pReadErase(ZSafeSetIter<T>& ioIter, T& oValue)
 	{
-	ZGuardMtx guard(fMtx);
+	if (ZQ_T<T> result = this->pReadErase(ioIter))
+		{
+		oValue = result.Get();
+		return true;
+		}
+	return false;
+	}
+
+template <class T>
+ZQ_T<T> ZSafeSetRep<T>::pReadErase(ZSafeSetIter<T>& ioIter)
+	{
+	ZAcqMtx acq(fMtx);
+	ZQ_T<T> result;
 	if (ioIter.fNextEntry == fList.end())
 		{
 		ioIter.fRep.Clear();
-		return false;
 		}
 	else
 		{
 		(*ioIter.fNextEntry).fIters.Erase(&ioIter);
-		oValue = (*ioIter.fNextEntry).fT;
+
+		result = (*ioIter.fNextEntry).fT;
 
 		for (DListIteratorEraseAll<ZSafeSetIterConst<T>, DLink_SafeSetIterConst<T> >
 			i = (*ioIter.fNextEntry).fIters; i; i.Advance())
@@ -422,15 +464,15 @@ bool ZSafeSetRep<T>::pReadErase(ZSafeSetIter<T>& ioIter, T& oValue)
 		else
 			(*ioIter.fNextEntry).fIters.PushBack(&ioIter);		
 
-		fMap.erase(oValue);
-		return true;
+		fMap.erase(result.Get());
 		}
+	return result;
 	}
 
 template <class T>
 bool ZSafeSetRep<T>::pErase(const T& iT)
 	{
-	ZGuardMtx guard(fMtx);
+	ZAcqMtx acq(fMtx);
 
 	typename EntryMap::iterator mapIter = fMap.lower_bound(iT);
 	if (mapIter == fMap.end() || (*mapIter).first != iT)

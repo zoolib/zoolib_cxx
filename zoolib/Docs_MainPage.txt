@@ -56,8 +56,8 @@ XML of one sort and another, JSON, in-memory variant types, the windows registry
 - Photoshop
 - Sqlite
 - Tuplebase and tuplesoup
-- \link ZRA Relational algebra\endlink
-- \link ZQE Relational query executor\endlink
+- \link ZooLib::ZRA Relational algebra\endlink
+- \link ZooLib::ZQE Relational query executor\endlink
 - Dataspace
 
 */

@@ -97,8 +97,8 @@ NamedClock::NamedClock(const Nombre& iNombre, Clock iClock)
 
 bool NamedClock::operator<(const NamedClock& iRHS) const
 	{
-	bool aleb = fClock.LE(iRHS.fClock);
-	bool blea = iRHS.fClock.LE(fClock);
+	const bool aleb = fClock.LE(iRHS.fClock);
+	const bool blea = iRHS.fClock.LE(fClock);
 
 	if (aleb)
 		{
@@ -131,11 +131,8 @@ Delta::Delta(const map<Daton, bool>& iStatements)
 :	fStatements(iStatements)
 	{}
 
-Delta::Delta(map<Daton, bool>& ioStatements, bool iKnowWhatImDoing)
-	{
-	ZAssert(iKnowWhatImDoing);
-	fStatements.swap(ioStatements);
-	}
+Delta::Delta(map<Daton, bool>* ioStatements)
+	{ ioStatements->swap(fStatements); }
 
 const map<Daton, bool>& Delta::GetStatements()
 	{ return fStatements; }
@@ -148,11 +145,8 @@ ClockedDeltas::ClockedDeltas(const Map_NamedClock_Delta_t& iMap)
 :	fMap(iMap)
 	{}
 
-ClockedDeltas::ClockedDeltas(Map_NamedClock_Delta_t& ioMap, bool iKnowWhatImDoing)
-	{
-	ZAssert(iKnowWhatImDoing);
-	fMap.swap(ioMap);
-	}
+ClockedDeltas::ClockedDeltas(Map_NamedClock_Delta_t* ioMap)
+	{ ioMap->swap(fMap); }
 
 const Map_NamedClock_Delta_t& ClockedDeltas::GetMap()
 	{ return fMap; }
@@ -250,7 +244,7 @@ void Dataset::GetClockedDeltas(
 			}
 		}
 
-	oClockedDeltas = new ClockedDeltas(resultMap, I_KNOW_WHAT_IM_DOING);
+	oClockedDeltas = new ClockedDeltas(&resultMap);
 	oClock = fClock.Peek();
 	}
 
@@ -273,18 +267,6 @@ public:
 	result_type operator()(const first_argument_type& i1, const second_argument_type& i2) const
 		{ return i1.first < i2.first; }
 	};
-
-#if 0
-class CompareTSReverse
-	{
-public:
-	typedef TSIndex_t value_type;
-
-	// We want oldest ts first, so we reverse the sense of the compare.
-	bool operator()(const value_type& iLeft, const value_type& iRight) const
-		{ return iRight.first < iLeft.first; }
-	};
-#endif
 
 set<Daton> Dataset::GetComposed()
 	{
@@ -352,13 +334,13 @@ void Dataset::pCommit()
 		{
 		fClock.Event();
 		
-		ZRef<Delta> theDelta = new Delta(fPendingStatements, I_KNOW_WHAT_IM_DOING);
+		ZRef<Delta> theDelta = new Delta(&fPendingStatements);
 
 		Map_NamedClock_Delta_t theMap;
 		theMap.insert(
 			Map_NamedClock_Delta_t::value_type(NamedClock(fNombre, fClock.Peek()), theDelta));
 
-		ZRef<ClockedDeltas> theClockedDeltas = new ClockedDeltas(theMap, I_KNOW_WHAT_IM_DOING);
+		ZRef<ClockedDeltas> theClockedDeltas = new ClockedDeltas(&theMap);
 
 		fClockedDeltasChain = new ClockedDeltasChain(fClockedDeltasChain, theClockedDeltas);
 

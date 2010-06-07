@@ -27,6 +27,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTuple.h"
 #include "zoolib/ZTxn.h"
 
+#include "zoolib/tuplebase/ZThreadOld.h"
+
 namespace ZooLib {
 
 class ZTBRepTransaction;

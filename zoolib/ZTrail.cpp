@@ -22,13 +22,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZTrail.h"
 #include "zoolib/ZUnicode.h"
 
-#include <string.h> // For strlen
+#include <cstring> // For std::strlen
 
 using std::basic_string;
 using std::char_traits;
 using std::min;
 using std::search;
-using std::string;
 using std::vector;
 
 namespace ZooLib {
@@ -89,12 +88,12 @@ void sParseStringAndAppend_T(
 		}
 	}
 
-static void spNormalize_KeepLeadingBounces(const vector<string>& iComps, vector<string>& oComps)
+static void spNormalize_KeepLeadingBounces(const vector<string8>& iComps, vector<string8>& oComps)
 	{
-	for (vector<string>::const_iterator current = iComps.begin();
+	for (vector<string8>::const_iterator current = iComps.begin();
 		current != iComps.end(); ++current)
 		{
-		// Note that an empty string is our notation for a bounce.
+		// Note that an empty string8 is our notation for a bounce.
 		if ((*current).empty() && !oComps.empty() && !oComps.back().empty())
 			{
 			// The current component is a bounce, the new list is not empty
@@ -128,8 +127,8 @@ void ZTrail::sParseStringAndAppend(
 	vector<string16>& ioComps)
 	{ return sParseStringAndAppend_T(iSeparator, iIgnore, iBounce, iTrail, iTrailSize, ioComps); }
 
-size_t ZTrail::sNormalize_ReturnLeadingBounces(const vector<string>& iComps,
-	vector<string>& oComps)
+size_t ZTrail::sNormalize_ReturnLeadingBounces(const vector<string8>& iComps,
+	vector<string8>& oComps)
 	{
 	spNormalize_KeepLeadingBounces(iComps, oComps);
 	size_t bounces = 0;
@@ -167,7 +166,7 @@ ZTrail::ZTrail(bool iValid)
 :	fValid(iValid)
 	{}
 
-ZTrail::ZTrail(const string& iPOSIXTrail)
+ZTrail::ZTrail(const string8& iPOSIXTrail)
 :	fValid(true)
 	{
 	if (size_t trailLength = iPOSIXTrail.size())
@@ -177,7 +176,7 @@ ZTrail::ZTrail(const string& iPOSIXTrail)
 ZTrail::ZTrail(const char* iPOSIXTrail)
 :	fValid(true)
 	{
-	if (size_t trailLength = strlen(iPOSIXTrail))
+	if (size_t trailLength = std::strlen(iPOSIXTrail))
 		sParseStringAndAppend("/", ".", "..", iPOSIXTrail, trailLength, fComps);
 	}
 
@@ -188,8 +187,8 @@ ZTrail::ZTrail(const char* iPOSIXTrail, size_t iSize)
 		sParseStringAndAppend("/", ".", "..", iPOSIXTrail, iSize, fComps);
 	}
 
-ZTrail::ZTrail(const std::string& iSeparator, const std::string& iIgnore,
-	const std::string& iBounce, const std::string& iTrail)
+ZTrail::ZTrail(const string8& iSeparator, const string8& iIgnore,
+	const string8& iBounce, const string8& iTrail)
 :	fValid(true)
 	{
 	if (size_t trailLength = iTrail.size())
@@ -254,7 +253,7 @@ void ZTrail::AppendTrail(const ZTrail& iTrail)
 		}
 	}
 
-void ZTrail::AppendComp(const string& iComp)
+void ZTrail::AppendComp(const string8& iComp)
 	{
 	fValid = true;
 	fComps.push_back(iComp);
@@ -263,13 +262,13 @@ void ZTrail::AppendComp(const string& iComp)
 void ZTrail::AppendBounce()
 	{
 	fValid = true;
-	fComps.push_back(string());
+	fComps.push_back(string8());
 	}
 
 void ZTrail::AppendBounces(size_t iCount)
 	{
 	fValid = true;
-	string empty;
+	string8 empty;
 	while (iCount--)
 		fComps.push_back(empty);
 	}
@@ -290,7 +289,7 @@ void ZTrail::PrependTrail(const ZTrail& iTrail)
 		}
 	}
 
-void ZTrail::PrependComp(const string& iComp)
+void ZTrail::PrependComp(const string8& iComp)
 	{
 	fValid = true;
 	fComps.insert(fComps.begin(), iComp);
@@ -299,24 +298,24 @@ void ZTrail::PrependComp(const string& iComp)
 void ZTrail::PrependBounce()
 	{
 	fValid = true;
-	fComps.insert(fComps.begin(), string());
+	fComps.insert(fComps.begin(), string8());
 	}
 
 void ZTrail::PrependBounces(size_t iCount)
 	{
 	fValid = true;
-	string empty;
+	string8 empty;
 	while (iCount--)
 		fComps.insert(fComps.begin(), empty);
 	}
 
-string ZTrail::AsString() const
+string8 ZTrail::AsString() const
 	{ return this->AsString("/", ".."); }
 
-std::string ZTrail::AsString(const std::string& iSeparator, const std::string& iBounce) const
+string8 ZTrail::AsString(const string8& iSeparator, const string8& iBounce) const
 	{
-	string result;
-	for (vector<string>::const_iterator i = fComps.begin(); i != fComps.end(); ++i)
+	string8 result;
+	for (vector<string8>::const_iterator i = fComps.begin(); i != fComps.end(); ++i)
 		{
 		if (!result.empty())
 			result += iSeparator;
@@ -336,21 +335,21 @@ ZTrail ZTrail::Branch() const
 	return ZTrail(fComps.begin(), fComps.end() - 1);
 	}
 
-string ZTrail::Leaf() const
+string8 ZTrail::Leaf() const
 	{
 	if (fComps.empty())
-		return string();
+		return string8();
 	return fComps.back();
 	}
 
 size_t ZTrail::Count() const
 	{ return fComps.size(); }
 
-string ZTrail::At(size_t iIndex) const
+string8 ZTrail::At(size_t iIndex) const
 	{
 	if (iIndex < fComps.size())
 		return fComps[iIndex];
-	return string();
+	return string8();
 	}
 
 ZTrail ZTrail::SubTrail(size_t iBegin, size_t iEnd) const
@@ -371,7 +370,7 @@ ZTrail ZTrail::SubTrail(size_t iBegin) const
 /// Return a normalized version of the trail.
 ZTrail ZTrail::Normalized() const
 	{
-	vector<string> newComps;
+	vector<string8> newComps;
 	spNormalize_KeepLeadingBounces(fComps, newComps);
 	return ZTrail(newComps.begin(), newComps.end());
 	}
@@ -379,7 +378,7 @@ ZTrail ZTrail::Normalized() const
 /// Normalize the trail and return a reference to it.
 ZTrail& ZTrail::Normalize()
 	{
-	vector<string> newComps;
+	vector<string8> newComps;
 	spNormalize_KeepLeadingBounces(fComps, newComps);
 	fComps = newComps;
 	return *this;
@@ -392,7 +391,7 @@ by zero or more regular components.
 */
 bool ZTrail::IsNormalized() const
 	{
-	vector<string>::const_iterator i = fComps.begin();
+	vector<string8>::const_iterator i = fComps.begin();
 
 	// Skip any leading bounces.
 	while (i != fComps.end() && (*i).empty())
@@ -411,7 +410,7 @@ Return a trail that would navigate from iSource to oDest. The vectors iSource an
 are considered to be lists of names of nodes starting at the root or other common node.
 This code is used by ZFileLoc implementations, but is also available to application code.
 */
-ZTrail ZTrail::sTrailFromTo(const vector<string>& iSource, const vector<string>& oDest)
+ZTrail ZTrail::sTrailFromTo(const vector<string8>& iSource, const vector<string8>& oDest)
 	{
 	size_t matchUntil = 0;
 	while (matchUntil < iSource.size() && matchUntil < oDest.size()
@@ -430,7 +429,7 @@ ZTrail ZTrail::sTrailFromTo(const vector<string>& iSource, const vector<string>&
 	return theTrail;
 	}
 
-ZTrail operator+(const string& iPOSIXTrail, const ZTrail& iTrail)
+ZTrail operator+(const string8& iPOSIXTrail, const ZTrail& iTrail)
 	{ return ZTrail(iPOSIXTrail) + iTrail; }
 
 } // namespace ZooLib

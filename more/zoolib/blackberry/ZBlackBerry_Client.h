@@ -22,8 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZBlackBerry_Client__ 1
 #include "zconfig.h"
 
-#include "zoolib/blackberry/ZBlackBerry.h"
 #include "zoolib/ZCommer.h"
+#include "zoolib/blackberry/ZBlackBerry.h"
 
 namespace ZooLib {
 
@@ -44,10 +44,11 @@ public:
 	Manager_Client(ZRef<ZStreamerRWConFactory> iFactory, bool iAutoReconnect);
 	virtual ~Manager_Client();
 
-// From Manager
-	virtual void Start();
-	virtual void Stop();
+// From ZCounted
+	virtual void Initialize();
+	virtual void Finalize();
 
+// From Manager
 	virtual void GetDeviceIDs(std::vector<uint64>& oDeviceIDs);
 
 	virtual ZRef<Device> Open(uint64 iDeviceID);

@@ -30,22 +30,32 @@ namespace Util_Strim_RelHead {
 #pragma mark * Util_Strim_RelHead
 
 using std::set;
-using std::string;
 
-void sWrite_PropName(const string& iName, const ZStrimW& s)
+void sWrite_PropName(const string8& iName, const ZStrimW& s)
 	{
 	s.Write("@");
 	ZYad_ZooLibStrim::sWrite_PropName(iName, s);
 	}
 
+void sWrite_PropName(const ZTrail& iName, const ZStrimW& s)
+	{
+	s.Write("@");
+	for (size_t x = 0; x < iName.Count(); ++x)
+		{
+		if (x)
+			s << "/";
+		ZYad_ZooLibStrim::sWrite_PropName(iName.At(x), s);
+		}
+	}
+
 void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s)
 	{
-	const set<string>& names = iRelHead.GetElems();
+	const RelHead::Base_t& names = iRelHead.GetElems();
 
 	s.Write("[");
 
 	bool isFirst = true;
-	for (set<string>::const_iterator i = names.begin(); i != names.end(); ++i)
+	for (RelHead::Base_t::const_iterator i = names.begin(); i != names.end(); ++i)
 		{
 		if (!isFirst)
 			s.Write(", ");

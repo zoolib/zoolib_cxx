@@ -47,10 +47,11 @@ namespace ZooLib {
 \sa ZUnicode
 \sa Unicode
 
-The word \e strim was coined by Eric Cooper. It's a nice punchy designator
-for a <i>string stream</i>, an interface that is akin to a stream but geared
-towards the reading and writing of unicode strings. In working with strims
-you should understand the terms <i>code unit</i> and <i>code point</i>, which
+The word \e strim was coined by
+<a href="http://www.linkedin.com/in/ericbwcooper">Eric Cooper</a>.
+It's a nice punchy designator for a <i>string stream</i>, an interface that is akin to
+a stream but geared towards the reading and writing of unicode strings. In working with
+strims you should understand the terms <i>code unit</i> and <i>code point</i>, which
 are covered in the documentation sections \ref Unicode and \ref ZUnicode.
 
 If you're working with ASCII or other single-byte encoding of text then the

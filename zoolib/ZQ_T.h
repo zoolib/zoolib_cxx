@@ -84,7 +84,9 @@ public:
 
 		fHasValue = true;
 
-		sCopyConstruct_T<T>(fBytes, iValue);
+		sCopyConstruct_T<T>(fBytes, &iValue);
+
+		return *this;
 		}
 
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZQ_T,

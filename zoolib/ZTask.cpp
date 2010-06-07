@@ -34,7 +34,7 @@ namespace ZooLib {
 /**
 \class ZTaskMaster
 \ingroup Task
-\sa task
+\sa Task
 */
 
 void ZTaskMaster::Task_Finished(ZRef<ZTask> iTask)
@@ -59,7 +59,7 @@ void ZTaskMaster::pTask_Finished(ZRef<ZTask> iTask)
 /**
 \class ZTask
 \ingroup Task
-\sa task
+\sa Task
 */
 
 ZTask::ZTask(ZRef<ZTaskMaster> iTaskMaster)

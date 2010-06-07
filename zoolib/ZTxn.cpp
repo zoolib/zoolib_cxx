@@ -19,6 +19,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
 #include "zoolib/ZCompat_algorithm.h"
+#include "zoolib/ZThreadSafe.h"
 #include "zoolib/ZTxn.h"
 #include "zoolib/ZUtil_STL.h"
 
@@ -43,7 +44,7 @@ ZTxn::ZTxn()
 
 ZTxn::~ZTxn()
 	{
-	ZMutexLocker locker(fMutex);
+	ZAcqMtxR locker(fMutex);
 	if (!fTargets.empty())
 		{
 		try
@@ -64,36 +65,34 @@ int32 ZTxn::GetID() const
 
 bool ZTxn::Commit()
 	{
-	ZMutexLocker locker(fMutex);
+	ZAcqMtxR locker(fMutex);
 	return this->pCommit();
 	}
 
 void ZTxn::Abort()
 	{
-	ZMutexLocker locker(fMutex);
+	ZAcqMtxR locker(fMutex);
 	this->pAbort();	
 	}
 
 struct Waiter_Validate
 	{
-	ZMutex* fMutex;
-	ZCondition* fCondition;
+	ZMtxR* fMutex;
+	ZCnd* fCondition;
 	bool fCompleted;
 	bool fOkay;
 	};
 
 struct Waiter_Commit
 	{
-	ZMutex* fMutex;
-	ZCondition* fCondition;
+	ZMtxR* fMutex;
+	ZCnd* fCondition;
 	bool fCompleted;
 	};
 
 bool ZTxn::pCommit()
 	{
-//	ZAssertStop(0, fMutex.IsLocked());
-
-	ZCondition theCondition;
+	ZCnd theCondition;
 
 	vector<Waiter_Validate> waiterValidates(fTargets.size());
 	for (size_t x = 0; x < fTargets.size(); ++x)
@@ -192,7 +191,7 @@ void ZTxn::pAbort()
 
 void ZTxn::pRegisterTarget(ZTxnTarget* iTarget) const
 	{
-	ZMutexLocker locker(fMutex);
+	ZAcqMtxR locker(fMutex);
 	ZAssertStop(0, !ZUtil_STL::sContains(fTargets, iTarget));
 	fTargets.push_back(iTarget);
 	}

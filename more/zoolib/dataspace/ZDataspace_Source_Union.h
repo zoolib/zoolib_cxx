@@ -73,16 +73,26 @@ private:
 	class DLink_PSourceSearches_InPQuery;
 
 	class PSource;
+	set<PSource*> fPSources_ToAdd;
+	set<PSource*> fPSources_ToRemove;
 
 	map<Source*, PSource*> fMap_SourceToPSource;
 
 	Clock fClock;
 	
-	class Iterator_Product;
-	friend class Iterator_Product;
+	void pUpdate(
+		AddedSearch* iAdded, size_t iAddedCount,
+		int64* iRemoved, size_t iRemovedCount,
+		vector<SearchResult>& oChanged,
+		Clock& oClock);
 
-	class Iterator_Searches;
-	friend class Iterator_Searches;
+	void pDetachPQuery(PQuery* iPQuery);
+
+	class Iterator_PSourceProduct;
+	friend class Iterator_PSourceProduct;
+
+	class Iterator_PSourceSearches;
+	friend class Iterator_PSourceSearches;
 	};
 
 } // namespace ZDataspace

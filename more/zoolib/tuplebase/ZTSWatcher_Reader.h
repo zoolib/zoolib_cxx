@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZStreamerReader.h"
-#include "zoolib/ZThreadOld.h"
+#include "zoolib/tuplebase/ZThreadOld.h"
 #include "zoolib/tuplebase/ZTSWatcher.h"
 
 namespace ZooLib {

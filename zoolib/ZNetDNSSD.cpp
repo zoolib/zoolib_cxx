@@ -41,7 +41,7 @@ void ZNetNameRegistered_DNSSD::pInit(ip_port iPort,
 	const char* iDomain,
 	ConstPString* iTXT, size_t iTXTCount)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 
 	vector<uint8> theTXTData;
 	if (iTXT && iTXTCount)
@@ -134,32 +134,32 @@ ZNetNameRegistered_DNSSD::ZNetNameRegistered_DNSSD(ip_port iPort,
 
 ZNetNameRegistered_DNSSD::~ZNetNameRegistered_DNSSD()
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	if (fDNSServiceRef)
 		::DNSServiceRefDeallocate(fDNSServiceRef);
 	}
 
 std::string ZNetNameRegistered_DNSSD::GetName() const
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	return fName;
 	}
 
 std::string ZNetNameRegistered_DNSSD::GetRegType() const
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	return fRegType;
 	}
 
 std::string ZNetNameRegistered_DNSSD::GetDomain() const
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	return fDomain;
 	}
 
 ip_port ZNetNameRegistered_DNSSD::GetPort() const
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	return fPort;
 	}
 
@@ -170,7 +170,7 @@ void ZNetNameRegistered_DNSSD::pDNSServiceRegisterReply(
 	const char* regtype,
 	const char* domain)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 
 	if (ZLOG(s, eNotice, "ZNetNameRegistered_DNSSD"))
 		{
@@ -194,7 +194,7 @@ void ZNetNameRegistered_DNSSD::spDNSServiceRegisterReply(
 		return;
 
 	ZNetNameRegistered_DNSSD* theNNR = static_cast<ZNetNameRegistered_DNSSD*>(context);
-	ZGuardMtx locker(theNNR->fMutex);
+	ZAcqMtx acq(theNNR->fMutex);
 
 	ZAssert(sdRef == theNNR->fDNSServiceRef);
 	

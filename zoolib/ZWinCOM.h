@@ -77,10 +77,11 @@ namespace ZWinCOM {
 class Variant
 :	public VARIANT
 	{
+
+public:
 	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(Variant,
 		operator_bool_generator_type, operator_bool_type);
 
-public:
 	operator operator_bool_type() const;
 
 	void swap(Variant& iOther);
@@ -133,6 +134,7 @@ public:
 	VARIANT& OParam();
 
 // Typename accessors
+/// \cond DoxygenIgnore
 	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int8, int8)
 	ZMACRO_ZValAccessors_Decl_Entry(Variant, UInt, uint8)
 	ZMACRO_ZValAccessors_Decl_Entry(Variant, Int16, int16)
@@ -149,6 +151,7 @@ public:
 	ZMACRO_ZValAccessors_Decl_Entry(Variant, String16, string16)
 	ZMACRO_ZValAccessors_Decl_Entry(Variant, Unknown, ZRef<IUnknown>)
 	ZMACRO_ZValAccessors_Decl_Entry(Variant, Dispatch, ZRef<IDispatch>)
+/// \endcond DoxygenIgnore
 	};
 
 // =================================================================================================

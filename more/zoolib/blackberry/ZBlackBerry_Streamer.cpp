@@ -189,12 +189,14 @@ class Channel_Streamer;
 
 class Commer_Streamer
 :	public ZCommer,
+	public ZTask,
 	public ZWeakReferee
 	{
 	friend class Channel_Streamer;
 
 public:
-	Commer_Streamer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
+	Commer_Streamer(ZRef<ZTaskMaster> iTaskMaster,
+		ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 	virtual ~Commer_Streamer();
 
 // From ZStreamReader via ZCommer	
@@ -202,6 +204,9 @@ public:
 
 // From ZStreamWriter via ZCommer	
 	virtual bool Write(const ZStreamW& iStreamW);
+
+// From ZCommer
+	virtual void Finished();
 
 // Called by Device_Streamer
 	void Stop();
@@ -243,8 +248,8 @@ private:
 	bool pSendFunky(uint16 iLength, const ZStreamW& iStreamW);
 	void pFlush(const ZStreamW& iStreamW);
 
-	ZMutex fMutex;
-	ZCondition fCondition;
+	ZMtxR fMutex;
+	ZCnd fCondition;
 
 	struct GetAttribute_t
 		{
@@ -316,7 +321,7 @@ public:
 	virtual void Imp_Abort();
 
 private:
-	ZRefWeak<Commer_Streamer> fCommer_Streamer;
+	ZWeakRef<Commer_Streamer> fCommer_Streamer;
 	EState fState;
 	Device::Error fError;
 	bool fPreserveBoundaries;
@@ -325,8 +330,8 @@ private:
 	PasswordHash fPasswordHash;
 	uint16 fChannelID;
 	uint32 fChallenge;
-	ZCondition fCondition_Receive;
-	ZCondition fCondition_Send;
+	ZCnd fCondition_Receive;
+	ZCnd fCondition_Send;
 	uint32 fNextSequence;
 	bool fWaitingForSequence;
 
@@ -360,8 +365,7 @@ Channel_Streamer::Channel_Streamer(ZRef<Commer_Streamer> iCommer_Streamer,
 
 Channel_Streamer::~Channel_Streamer()
 	{
-	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Channel_Streamer"))
-		s.Writef("~Channel_Streamer, this: %08X, channelID: %d", this, fChannelID);
+	ZLOGFUNCTION(eDebug + 1);
 	}
 
 void Channel_Streamer::Finalize()
@@ -472,9 +476,10 @@ void Channel_Streamer::Imp_Abort()
 #pragma mark -
 #pragma mark * Commer_Streamer definition
 
-Commer_Streamer::Commer_Streamer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
+Commer_Streamer::Commer_Streamer(ZRef<ZTaskMaster> iTaskMaster,
+	ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
 :	ZCommer(iStreamerR, iStreamerW),
-	fMutex("ZBlackBerry::Commer_Streamer::fMutex"),
+	ZTask(iTaskMaster),
 	fGetAttributeSent(false),
 	fGetAttribute(nullptr),
 	fLifecycle(eLifecycle_Running)
@@ -482,13 +487,12 @@ Commer_Streamer::Commer_Streamer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> i
 
 Commer_Streamer::~Commer_Streamer()
 	{
-	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Commer_Streamer"))
-		s << "~Commer_Streamer";
+	ZLOGFUNCTION(eDebug + 2);
 	}
 
 bool Commer_Streamer::Read(const ZStreamR& iStreamR)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	if (fLifecycle == eLifecycle_Running
 		|| fLifecycle == eLifecycle_StoppingRun)
 		{
@@ -523,7 +527,7 @@ bool Commer_Streamer::Read(const ZStreamR& iStreamR)
 
 bool Commer_Streamer::Write(const ZStreamW& iStreamW)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	size_t nextIndex = 0;
 	bool aChannelWroteSinceReset = false;
@@ -657,12 +661,17 @@ bool Commer_Streamer::Write(const ZStreamW& iStreamW)
 	return false;
 	}
 
+void Commer_Streamer::Finished()
+	{
+	ZWeakReferee::pDetachProxy();
+	ZTask::pFinished();
+	}
+
 void Commer_Streamer::Stop()
 	{
-	if (ZLOG(s, eDebug, "ZBlackBerry::Commer_Streamer"))
-		s << "Stop, Enter";
+	ZLOGFUNCTION(eDebug);
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (fLifecycle == eLifecycle_Running)
 		{
@@ -690,15 +699,12 @@ void Commer_Streamer::Stop()
 		if (ZLOG(s, eDebug, "ZBlackBerry::Commer_Streamer"))
 			s << "Stop, already stopping/stopped";
 		}
-
-	if (ZLOG(s, eDebug, "ZBlackBerry::Commer_Streamer"))
-		s << "Stop, Exit";
 	}
 
 ZRef<Channel> Commer_Streamer::Open(bool iPreserveBoundaries,
 	const string& iName, const PasswordHash* iPasswordHash, Device::Error* oError)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Commer_Streamer"))
 		s << "Open name: " << iName;
@@ -747,7 +753,7 @@ ZRef<Channel> Commer_Streamer::Open(bool iPreserveBoundaries,
 
 Data Commer_Streamer::GetAttribute(uint16 iObject, uint16 iAttribute)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (fLifecycle != eLifecycle_Running)
 		return Data();
@@ -780,7 +786,7 @@ uint32 Commer_Streamer::GetPIN()
 
 bool Commer_Streamer::Channel_Finalize(Channel_Streamer* iChannel)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (iChannel->GetRefCount() != 1)
 		{
@@ -857,7 +863,7 @@ void Commer_Streamer::Channel_Read(
 	uint8* localDest = static_cast<uint8*>(oDest);
 	deque<uint8>& theBuffer = iChannel->fReceive_Buffer;
 
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	while (iCount)
 		{
 		if (iChannel->fState != eState_Connected)
@@ -890,7 +896,7 @@ void Commer_Streamer::Channel_Read(
 
 size_t Commer_Streamer::Channel_CountReadable(Channel_Streamer* iChannel)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	if (iChannel->fState != eState_Connected)
 		return 0;
 	return iChannel->fReceive_Buffer.size();
@@ -899,7 +905,7 @@ size_t Commer_Streamer::Channel_CountReadable(Channel_Streamer* iChannel)
 bool Commer_Streamer::Channel_WaitReadable(Channel_Streamer* iChannel, double iTimeout)
 	{
 	const ZTime deadline = ZTime::sSystem() + iTimeout;
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	for (;;)
 		{
 		if (iChannel->fState != eState_Connected || iChannel->fReceive_Buffer.size())
@@ -912,7 +918,7 @@ bool Commer_Streamer::Channel_WaitReadable(Channel_Streamer* iChannel, double iT
 void Commer_Streamer::Channel_Write(
 	Channel_Streamer* iChannel, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 	const uint8* localSource = static_cast<const uint8*>(iSource);
 
 	// Wait till any other write has completed
@@ -943,7 +949,7 @@ void Commer_Streamer::Channel_Write(
 
 void Commer_Streamer::Channel_SendDisconnect(Channel_Streamer* iChannel)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Commer_Streamer"))
 		s.Writef("Channel_SendDisconnect, ID: %d", iChannel->fChannelID);
@@ -957,7 +963,7 @@ void Commer_Streamer::Channel_SendDisconnect(Channel_Streamer* iChannel)
 
 bool Commer_Streamer::Channel_ReceiveDisconnect(Channel_Streamer* iChannel, double iTimeout)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Commer_Streamer"))
 		s.Writef("Channel_ReceiveDisconnect, ID: %d", iChannel->fChannelID);
@@ -970,7 +976,7 @@ bool Commer_Streamer::Channel_ReceiveDisconnect(Channel_Streamer* iChannel, doub
 
 void Commer_Streamer::Channel_Abort(Channel_Streamer* iChannel)
 	{
-	ZMutexLocker locker(fMutex);
+	ZGuardRMtxR locker(fMutex);
 
 	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Commer_Streamer"))
 		s.Writef("Channel_Abort, ID: %d", iChannel->fChannelID);
@@ -992,8 +998,6 @@ void Commer_Streamer::Channel_Abort(Channel_Streamer* iChannel)
 
 ZRef<Channel_Streamer> Commer_Streamer::pFindChannel(uint16 iChannelID)
 	{
-	ZAssert(fMutex.IsLocked());
-	
 	for (vector<Channel_Streamer*>::iterator i = fChannels.begin(); i != fChannels.end(); ++i)
 		{
 		if ((*i)->fChannelID == iChannelID)
@@ -1013,8 +1017,6 @@ ZRef<Channel_Streamer> Commer_Streamer::pFindChannel(uint16 iChannelID)
 
 ZRef<Channel_Streamer> Commer_Streamer::pFindChannel(const string& iName)
 	{
-	ZAssert(fMutex.IsLocked());
-	
 	for (vector<Channel_Streamer*>::iterator i = fChannels.begin(); i != fChannels.end(); ++i)
 		{
 		if ((*i)->fName == iName)
@@ -1029,7 +1031,6 @@ ZRef<Channel_Streamer> Commer_Streamer::pFindChannel(const string& iName)
 
 bool Commer_Streamer::pDetachIfUnused(Channel_Streamer* iChannel)
 	{
-	ZAssert(fMutex.IsLocked());
 	if (iChannel->GetRefCount() != 0)
 		return false;
 
@@ -1043,8 +1044,6 @@ bool Commer_Streamer::pDetachIfUnused(Channel_Streamer* iChannel)
 
 void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZStreamR& iStreamR)
 	{
-	ZAssert(!fMutex.IsLocked());
-
 	if (ZLOG(s, eDebug + 1, "ZBlackBerry::Commer_Streamer"))
 		s.Writef("pReadOne, ID: %d, size: %d", iChannelID, iPayloadSize);
 
@@ -1054,7 +1053,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 		vector<uint8> readBuffer(iPayloadSize, 0);
 		iStreamR.Read(&readBuffer[0], iPayloadSize);
 
-		ZMutexLocker locker(fMutex);
+		ZGuardRMtxR locker(fMutex);
 		if (ZRef<Channel_Streamer> theChannel = this->pFindChannel(iChannelID))
 			{
 			deque<uint8>& theBuffer = theChannel->fReceive_Buffer;
@@ -1095,7 +1094,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				Data theMB(iPayloadSize - 1);
 				iStreamR.Read(theMB.GetData(), theMB.GetSize());
 
-				ZMutexLocker locker(fMutex);
+				ZGuardRMtxR locker(fMutex);
 				ZAssert(fGetAttribute);
 				fGetAttribute->fFinished = true;
 				fGetAttribute->fResult = theMB;
@@ -1123,7 +1122,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				nameBuf[16] = 0;
 				const string theName(nameBuf);
 
-				ZMutexLocker locker(fMutex);
+				ZGuardRMtxR locker(fMutex);
 				if (ZRef<Channel_Streamer> theChannel = this->pFindChannel(theName))
 					{
 					ZAssert(theChannel->fState == eState_LookupSent);
@@ -1177,7 +1176,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				/*const uint16 param = */iStreamR.ReadUInt16LE();
 				const uint32 challenge = iStreamR.ReadUInt32();
 
-				ZMutexLocker locker(fMutex);
+				ZGuardRMtxR locker(fMutex);
 				if (ZRef<Channel_Streamer> theChannel = this->pFindChannel(theChannelID))
 					{
 					if (!theChannel->fHasPasswordHash)
@@ -1210,7 +1209,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 
 				const uint16 theChannelID = iStreamR.ReadUInt16LE();
 
-				ZMutexLocker locker(fMutex);
+				ZGuardRMtxR locker(fMutex);
 				if (ZRef<Channel_Streamer> theChannel = this->pFindChannel(theChannelID))
 					{
 					theChannel->fState = eState_CloseNeeded;
@@ -1228,7 +1227,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 
 				const uint16 theChannelID = iStreamR.ReadUInt16LE();
 
-				ZMutexLocker locker(fMutex);
+				ZGuardRMtxR locker(fMutex);
 				if (ZRef<Channel_Streamer> theChannel = this->pFindChannel(theChannelID))
 					{
 					theChannel->fState = eState_Connected;
@@ -1250,7 +1249,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 					s.Writef("Received close for channelID: %d", theChannelID);
 					}
 
-				ZMutexLocker locker(fMutex);
+				ZGuardRMtxR locker(fMutex);
 				if (ZRef<Channel_Streamer> theChannel = this->pFindChannel(theChannelID))
 					{
 					if (theChannel->fState == eState_Connected)
@@ -1288,7 +1287,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 
 				const uint16 theChannelID = iStreamR.ReadUInt16LE();
 
-				ZMutexLocker locker(fMutex);
+				ZGuardRMtxR locker(fMutex);
 				if (ZRef<Channel_Streamer> theChannel = this->pFindChannel(theChannelID))
 					{
 					theChannel->fState = eState_Dead;
@@ -1306,7 +1305,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 
 				const uint16 theChannelID = iStreamR.ReadUInt16LE();
 
-				ZMutexLocker locker(fMutex);
+				ZGuardRMtxR locker(fMutex);
 				if (ZRef<Channel_Streamer> theChannel = this->pFindChannel(theChannelID))
 					{
 					theChannel->fState = eState_Dead;
@@ -1337,7 +1336,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 				// for a particular channel.
 				uint32 sequence = iStreamR.ReadUInt32LE();
 
-				ZMutexLocker locker(fMutex);
+				ZGuardRMtxR locker(fMutex);
 				if (ZRef<Channel_Streamer> theChannel = this->pFindChannel(seqChannelID))
 					{
 					// Check that next sequence is good
@@ -1371,8 +1370,6 @@ static void spSHA1(const void* iSource, size_t iSourceSize, uint8 oDigest[20])
 
 bool Commer_Streamer::pWriteOne(const ZStreamW& iStreamW, Channel_Streamer* iChannel)
 	{
-	ZAssert(fMutex.IsLocked());
-
 	switch (iChannel->fState)
 		{
 		case eState_LookupNeeded:
@@ -1594,24 +1591,29 @@ void Commer_Streamer::pFlush(const ZStreamW& iStreamW)
 #pragma mark * ZBlackBerry::Device_Streamer
 
 Device_Streamer::Device_Streamer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW)
-:	fCommer(new Commer_Streamer(iStreamerR, iStreamerW))
+:	fStreamerR(iStreamerR),
+	fStreamerW(iStreamerW)
 	{}
 
 Device_Streamer::~Device_Streamer()
-	{
-	fCommer->Stop();
-	}
+	{}
 
-void Device_Streamer::Start()
+void Device_Streamer::Initialize()
 	{
-	Device::Start();
+	Device::Initialize();
+	fCommer = new Commer_Streamer(this, fStreamerR, fStreamerW);
 	sStartCommerRunners(fCommer);
 	}
 
-void Device_Streamer::Stop()
+void Device_Streamer::Finalize()
 	{
-	fCommer->Stop();
-	Device::Stop();
+	ZWeakReferee::pDetachProxy();
+	if (ZRef<Commer_Streamer> theCommer = fCommer)
+		{
+		fCommer.Clear();
+		theCommer->Stop();
+		}
+	Device::Finalize();
 	}
 
 ZRef<Channel> Device_Streamer::Open(bool iPreserveBoundaries,
@@ -1634,6 +1636,15 @@ uint32 Device_Streamer::GetPIN()
 	if (fCommer)
 		return fCommer->GetPIN();
 	return 0;
+	}
+
+void Device_Streamer::Task_Finished(ZRef<ZTask> iTask)
+	{
+	if (iTask == fCommer)
+		{
+		fCommer.Clear();
+		Device::pFinished();
+		}
 	}
 
 } // namespace ZBlackBerry

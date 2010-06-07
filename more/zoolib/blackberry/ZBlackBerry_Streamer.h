@@ -24,7 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/blackberry/ZBlackBerry.h"
 #include "zoolib/ZCommer.h"
-#include "zoolib/ZRefWeak.h"
+#include "zoolib/ZTask.h"
 
 namespace ZooLib {
 
@@ -38,14 +38,15 @@ class Commer_Streamer;
 
 class Device_Streamer
 :	public Device
+,	public ZTaskMaster
 	{
 public:
 	Device_Streamer(ZRef<ZStreamerR> iStreamerR, ZRef<ZStreamerW> iStreamerW);
 	virtual ~Device_Streamer();
 
 // From ZBlackBerry::Device
-	virtual void Start();
-	virtual void Stop();
+	virtual void Initialize();
+	virtual void Finalize();
 
 	virtual ZRef<Channel> Open(bool iPreserveBoundaries,
 		const std::string& iName, const PasswordHash* iPasswordHash, Error* oError);
@@ -54,8 +55,13 @@ public:
 
 	virtual uint32 GetPIN();
 
+// From ZTaskMaster
+	virtual void Task_Finished(ZRef<ZTask> iTask);
+
 private:
 	ZRef<Commer_Streamer> fCommer;
+	ZRef<ZStreamerR> fStreamerR;
+	ZRef<ZStreamerW> fStreamerW;
 	};
 
 } // namespace ZBlackBerry

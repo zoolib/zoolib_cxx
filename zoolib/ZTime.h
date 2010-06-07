@@ -34,31 +34,43 @@ namespace ZooLib {
 
 class ZTime
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTime, operator_bool_generator_type, operator_bool_type);
 public:
 	ZTime();
 
-	ZTime(double iDouble) : fVal(iDouble) {}
+	ZTime(double iDouble)
+	:	fVal(iDouble)
+		{}
 
-	ZTime& operator=(double iDouble) { fVal = iDouble; return *this; }
+	ZTime& operator=(double iDouble)
+		{ fVal = iDouble; return *this; }
+
+	double GetVal() const
+		{ return fVal; }
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZTime, operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const;
 
 	bool operator<(const ZTime& iOther) const;
 
-	bool operator<=(const ZTime& iOther) const { return !(iOther < *this); }
+	bool operator<=(const ZTime& iOther) const
+		{ return !(iOther < *this); }
 
-	bool operator>(const ZTime& iOther) const { return iOther < *this; }
+	bool operator>(const ZTime& iOther) const
+		{ return iOther < *this; }
 
-	bool operator>=(const ZTime& iOther) const { return !(*this < iOther); }
+	bool operator>=(const ZTime& iOther) const
+		{ return !(*this < iOther); }
 
 	bool operator==(const ZTime& iOther) const;
 
-	bool operator!=(const ZTime& iOther) const { return !(*this == iOther); }
+	bool operator!=(const ZTime& iOther) const
+		{ return !(*this == iOther); }
 
 	int Compare(const ZTime& iOther) const;
 
-	double operator-(const ZTime& iOther) const { return fVal - iOther.fVal; }
+	double operator-(const ZTime& iOther) const
+		{ return fVal - iOther.fVal; }
 
 	ZTime operator-(double iInterval)
 		{
@@ -83,7 +95,8 @@ public:
 	static ZTime sNow();
 	static ZTime sSystem();
 	static ZTime sBoot();
-	static ZTime sSinceBoot();
+
+	static double sSinceBoot();
 
 	double fVal;
 
@@ -98,9 +111,17 @@ public:
 
 	static const uint64 kEpochDelta_1601_To_1970 =
 		((ZUINT64_C(369) * 365) + 89) * 24 * 60 * 60; // == 11,644,473,600
+
+	static const uint32 kEpochDelta_1970_To_2001 = -978307200U;
+
+	static const uint32 kEpochDelta_2001_To_1970 = 978307200U;
 	};
 
-template <> inline int sCompare_T(const ZTime& iL, const ZTime& iR)
+inline ZTime operator+(double iInterval, const ZTime& iTime)
+	{ return iTime + iInterval; }
+
+template <>
+inline int sCompare_T(const ZTime& iL, const ZTime& iR)
 	{ return iL.Compare(iR); }
 
 } // namespace ZooLib

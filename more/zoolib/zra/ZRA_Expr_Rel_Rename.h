@@ -42,7 +42,7 @@ class Expr_Rel_Rename
 	{
 	typedef ZExpr_Op1_T<Expr_Rel> inherited;
 public:
-	Expr_Rel_Rename(ZRef<Expr_Rel> iOp0, const std::string& iNew, const std::string& iOld);
+	Expr_Rel_Rename(ZRef<Expr_Rel> iOp0, const RelName& iNew, const RelName& iOld);
 	virtual ~Expr_Rel_Rename();
 
 // From ZExpr_Op1_T<Expr_Rel>
@@ -57,12 +57,12 @@ public:
 // Our protocol
 	virtual void Accept_Expr_Rel_Rename(Visitor_Expr_Rel_Rename& iVisitor);
 
-	const std::string& GetNew();
-	const std::string& GetOld();
+	const RelName& GetNew();
+	const RelName& GetOld();
 
 private:
-	const std::string fNew;
-	const std::string fOld;
+	const RelName fNew;
+	const RelName fOld;
 	};
 
 // =================================================================================================
@@ -82,7 +82,7 @@ public:
 #pragma mark * Relational operators
 
 ZRef<Expr_Rel_Rename> sRename(const ZRef<Expr_Rel>& iExpr,
-	const std::string& iNewPropName, const std::string& iOldPropName);
+	const RelName& iNewPropName, const RelName& iOldPropName);
 
 } // namespace ZRA
 } // namespace ZooLib

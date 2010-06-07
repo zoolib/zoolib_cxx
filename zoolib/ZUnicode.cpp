@@ -59,7 +59,6 @@ trademarks of Taligent, Inc.
 
 /**
 \defgroup Unicode
-\sa ZUnicode
 
 If you're unfamiliar with Unicode I recommend reading Markus Kuhn's excellent backgrounder
 <a href="http://www.cl.cam.ac.uk/~mgk25/unicode.html">UTF-8 and Unicode FAQ for Unix/Linux</a>.
@@ -79,7 +78,7 @@ than one code unit may be required.
 */
 
 /**
-\namespace ZUnicode
+\namespace ZooLib::ZUnicode
 \brief The ZUnicode namespace defines a collection of data types and functions for
 working with Unicode data.
 \ingroup Unicode
@@ -129,11 +128,11 @@ is not followed by a low surrogate, or a low surrogate without a preceding high 
 range. So it's clearly possible to have \c UTF32 code units that do not map to a code point. Given
 that Unicode and ISO 10646 will never assign characters beyond plane 16, we further restrict
 valid UTF-32 code units to be in the range 0 to 0x10FFFF. Finally, code units from the
-high and low surrgate blocks (0xDC00 to 0xDFFF) are also illegal. Strictly speaking U+FFFF
+high and low surrogate blocks (0xDC00 to 0xDFFF) are also illegal. Strictly speaking U+FFFF
 and all code points of the form U+xxFFFF are illegal, but we don't filter them out.
 
 The Unicode standard recommends that illegal code units are each decoded as U+FFFD, the
-replacement character. That's a good strategy when decoding a body of material in
+replacement character. That's reasonable when decoding a body of material in
 one hit, but it's ambiguous when randomly accessing data in memory. ZUnicode's
 convention is that illegal code units and code unit sequences are skipped.
 They contribute to any count of code units, but do not generate code points and do not
@@ -164,21 +163,21 @@ Value     3CCNNC2CN2
 Illegal   -----X---X
 
 The table below shows for each offset which offset will be returned/used when
-decremented, accessed or incremented. You should note that illegal byte sequences
+accessed, incremented or decremented. Note that illegal byte sequences
 are effectively transparent to those operations.
 
-Offset  Dec  Acc  Inc
- 0       -    0    3
- 1       0    3    4
- 2       0    3    4
- 3       0    3    4
- 4       3    4    6
- 5       4    6    8
- 6       4    6    8
- 7       6    8    -
- 8       6    8    -
- 9       8    -    -
-10       8    -    -
+Offset  Acc  Inc  Dec
+ 0       0    3    -
+ 1       3    4    0
+ 2       3    4    0
+ 3       3    4    0
+ 4       4    6    3
+ 5       6    8    4
+ 6       6    8    4
+ 7       8    -    6
+ 8       8    -    6
+ 9       -    -    8
+10       -    -    8
 \endverbatim
 
 \bug

@@ -97,7 +97,7 @@ class Delta : public ZCountedWithoutFinalize
 	{
 public:
 	Delta(const map<Daton, bool>& iStatements);
-	Delta(map<Daton, bool>& ioStatements, bool iIKnowWhatImDoing);
+	Delta(map<Daton, bool>* ioStatements);
 
 	const map<Daton, bool>& GetStatements();
 
@@ -119,7 +119,7 @@ class ClockedDeltas : public ZCountedWithoutFinalize
 	{
 public:
 	ClockedDeltas(const Map_NamedClock_Delta_t& iMap);
-	ClockedDeltas(Map_NamedClock_Delta_t& ioMap, bool iKnowWhatImDoing);
+	ClockedDeltas(Map_NamedClock_Delta_t* ioMap);
 
 	const Map_NamedClock_Delta_t& GetMap();
 

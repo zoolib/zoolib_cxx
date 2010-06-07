@@ -32,14 +32,20 @@ namespace ZSQLite {
 
 DB::DB(const string8& iPath)
 :	fDB(nullptr)
+,	fAdopted(true)
 	{
 	if (SQLITE_OK != ::sqlite3_open(iPath.c_str(), &fDB))
 		throw std::runtime_error(std::string(__FUNCTION__) + ", Couldn't open sqlite database");
 	}
 
+DB::DB(sqlite3* iDB, bool iAdopt)
+:	fDB(iDB)
+,	fAdopted(iAdopt)
+	{}
+
 DB::~DB()
 	{
-	if (fDB)
+	if (fDB && fAdopted)
 		::sqlite3_close(fDB);
 	}
 

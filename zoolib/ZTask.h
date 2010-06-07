@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZRefWeak.h"
+#include "zoolib/ZWeakRef.h"
 
 namespace ZooLib {
 
@@ -67,7 +67,7 @@ protected:
 	void pFinished();
 
 private:
-	ZRefWeak<ZTaskMaster> fTaskMaster;
+	ZWeakRef<ZTaskMaster> fTaskMaster;
 	friend class ZTaskMaster;
 	};
 

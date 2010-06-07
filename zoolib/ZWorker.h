@@ -23,8 +23,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZRef_Counted.h"
-#include "zoolib/ZRefWeak.h"
 #include "zoolib/ZTime.h"
+#include "zoolib/ZWeakRef.h"
 
 namespace ZooLib {
 
@@ -35,7 +35,7 @@ class ZWorkerRunner;
 #pragma mark * ZWorker
 
 class ZWorker
-:	public virtual ZCounted
+:	public ZCounted
 	{
 public:
 	virtual void RunnerAttached();
@@ -48,12 +48,10 @@ public:
 	void WakeIn(double iInterval);
 
 	bool IsAwake();
+	bool IsAttached();
 
 private:
-	void pRunnerAttached();
-	void pRunnerDetached();
-
-	ZRefWeak<ZWorkerRunner> fRunner;
+	ZWeakRef<ZWorkerRunner> fRunner;
 	friend class ZWorkerRunner;
 	};
 

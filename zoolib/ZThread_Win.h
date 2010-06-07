@@ -53,6 +53,35 @@ class ZSem_Win;
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZThread_Win
+
+namespace ZThread_Win {
+
+typedef unsigned ProcResult_t;
+typedef void* ProcParam_t;
+
+typedef ProcResult_t (__stdcall *ProcRaw_t)(ProcParam_t iParam);
+
+typedef unsigned int ID;
+
+void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam);
+ID sID();
+void sSleep(double iDuration);
+
+struct Dummy_CRITICAL_SECTION
+	{
+	void* DebugInfo;
+	long LockCount;
+	long RecursionCount;
+	void* OwningThread;
+	void* LockSemaphore;
+	void* SpinCount;
+	};
+
+} // namespace ZThread_Win
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZTSS_Win
 
 namespace ZTSS_Win {
@@ -70,36 +99,38 @@ Value sGet(Key iKey);
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCnd_Win
-
-typedef ZCnd_T<ZMtx_Win, ZSem_Win> ZCnd_Win;
-
-// =================================================================================================
-#pragma mark -
 #pragma mark * ZMtx_Win
 
 class ZMtx_Win : NonCopyable
 	{
 public:
-	ZMtx_Win(const char* iName = nullptr);
+	ZMtx_Win();
 	~ZMtx_Win();
 
 	void Acquire();
 	void Release();
 
 protected:
-	struct Dummy_CRITICAL_SECTION
-		{
-		void* DebugInfo;
-		long LockCount;
-		long RecursionCount;
-		void* OwningThread;
-		void* LockSemaphore;
-		void* SpinCount;
-		};
-
-	Dummy_CRITICAL_SECTION fCRITICAL_SECTION;
+	ZThread_Win::Dummy_CRITICAL_SECTION fCRITICAL_SECTION;
 	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCndBase_Win
+
+typedef ZCndBase_T<ZMtx_Win, ZSem_Win> ZCndBase_Win;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMtxR_Win
+
+typedef ZMtxR_T<ZMtx_Win, ZCndBase_Win, ZThread_Win::ID, ZThread_Win::sID> ZMtxR_Win;
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZCnd_Win
+
+typedef ZCndR_T<ZMtxR_Win, ZCndBase_Win> ZCnd_Win;
 
 // =================================================================================================
 #pragma mark -
@@ -121,25 +152,6 @@ protected:
 	typedef void* Dummy_HANDLE;
 	Dummy_HANDLE fHANDLE;
 	};
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZThread_Win
-
-namespace ZThread_Win {
-
-typedef unsigned ProcResult_t;
-typedef void* ProcParam_t;
-
-typedef ProcResult_t (__stdcall *ProcRaw_t)(ProcParam_t iParam);
-
-typedef unsigned int ID;
-
-void sCreateRaw(size_t iStackSize, ProcRaw_t iProc, void* iParam);
-ID sID();
-void sSleep(double iDuration);
-
-} // namespace ZThread_Win
 
 } // namespace ZooLib
 

@@ -53,9 +53,6 @@ void spWrite(const UTF8* iString, const ZStrimW& s)
 void spWrite_RelHead(const RelHead& iRelHead, const ZStrimW& iStrimW)
 	{ Util_Strim_RelHead::sWrite_RelHead(iRelHead, iStrimW); }
 
-void spWrite_PropName(const string& iPropName, const ZStrimW& iStrimW)
-	{ Util_Strim_RelHead::sWrite_PropName(iPropName, iStrimW); }
-
 void spWrite_EffectiveRelHeadComment(ZRef<Expr_Rel> iExpr, const ZStrimW& iStrimW)
 	{
 	iStrimW.Write(" // ");
@@ -190,9 +187,9 @@ void Visitor_DoToStrim::Visit_Expr_Rel_Rename(ZRef<Expr_Rel_Rename> iExpr)
 	spWrite("(", w);
 
 	this->pWriteLFIndent();
-	spWrite_PropName(iExpr->GetNew(), w);
+	Util_Strim_RelHead::sWrite_PropName(iExpr->GetNew(), w);
 	spWrite("<--", w);
-	spWrite_PropName(iExpr->GetOld(), w);
+	Util_Strim_RelHead::sWrite_PropName(iExpr->GetOld(), w);
 	spWrite(",", w);
 
 	this->pWriteLFIndent();

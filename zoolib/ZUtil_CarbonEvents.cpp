@@ -81,7 +81,7 @@ public:
 	Handler();
 	~Handler();
 
-	void InvokeOnMainThread(Callback_t iCallback, void* iRefcon);
+	void InvokeOnMainThread(CallbackProc_t iCallback, void* iRefcon);
 
 private:
 	static EventHandlerUPP spEventHandlerUPP;
@@ -96,7 +96,7 @@ private:
 
 struct Context_t
 	{
-	Callback_t fCallback;
+	CallbackProc_t fCallbackProc;
 	void* fRefcon;
 	};
 
@@ -125,11 +125,11 @@ Handler::~Handler()
 	fEventQueueRef = nullptr;
 	}
 
-void Handler::InvokeOnMainThread(Callback_t iCallback, void* iRefcon)
+void Handler::InvokeOnMainThread(CallbackProc_t iCallbackProc, void* iRefcon)
 	{
 	if (fMainID == ZThread::sID())
 		{
-		iCallback(iRefcon);
+		iCallbackProc(iRefcon);
 		}
 	else
 		{
@@ -138,7 +138,7 @@ void Handler::InvokeOnMainThread(Callback_t iCallback, void* iRefcon)
 			::GetCurrentEventTime(), kEventAttributeNone, &theEventRef);
 
 		Context_t theContext;
-		theContext.fCallback = iCallback;
+		theContext.fCallbackProc = iCallbackProc;
 		theContext.fRefcon = iRefcon;
 		sSetParam_T(theEventRef, 'Cont', typeData, theContext);
 
@@ -181,7 +181,7 @@ OSStatus Handler::EventHandler(EventHandlerCallRef iCallRef, EventRef iEventRef)
 					{
 					Context_t theContext;
 					if (sGetParam_T(iEventRef, 'Cont', typeData, theContext))
-						theContext.fCallback(theContext.fRefcon);
+						theContext.fCallbackProc(theContext.fRefcon);
 					return noErr;
 					}
 				}
@@ -191,13 +191,13 @@ OSStatus Handler::EventHandler(EventHandlerCallRef iCallRef, EventRef iEventRef)
 	return eventNotHandledErr;
 	}
 
-Handler sHandler;
+Handler spHandler;
 
 } // anonymous namespace
 
-void ZUtil_CarbonEvents::sInvokeOnMainThread(Callback_t iCallback, void* iRefcon)
+void ZUtil_CarbonEvents::sInvokeOnMainThread(CallbackProc_t iCallback, void* iRefcon)
 	{
-	sHandler.InvokeOnMainThread(iCallback, iRefcon);
+	spHandler.InvokeOnMainThread(iCallback, iRefcon);
 	}
 
 #define CLASSONLY(a) case a: theClass = #a; break

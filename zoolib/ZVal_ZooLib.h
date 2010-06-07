@@ -68,9 +68,6 @@ typedef ZMap_ZooLib ZMap_Z;
 
 class ZVal_ZooLib
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZVal_ZooLib,
-		operator_bool_generator_type, operator_bool_type);
-
 public:
 	static bool sQFromAny(const ZAny& iAny, ZVal_ZooLib& oVal);
 	static ZVal_ZooLib sDFromAny(const ZVal_ZooLib& iDefault, const ZAny& iAny);
@@ -78,6 +75,9 @@ public:
 
 	ZAny AsAny() const;
 	ZAny DAsAny(const ZAny& iDefault) const;
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZVal_ZooLib,
+		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const;
 
@@ -153,6 +153,7 @@ public:
 	void ToStream(const ZStreamW& iStreamW) const;
 
 // Typename accessors
+/// \cond DoxygenIgnore
 	ZMACRO_ZValAccessors_Decl_Std(ZVal_ZooLib)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, ID, uint64)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Type, ZType)
@@ -168,6 +169,7 @@ public:
 // Backwards compatibility
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Raw, ZData_ZooLib)
 	ZMACRO_ZValAccessors_Decl_Entry(ZVal_ZooLib, Tuple, ZMap_ZooLib)
+/// \endcond DoxygenIgnore
 
 private:
 	int pUncheckedCompare(const ZVal_ZooLib& iOther) const;
@@ -272,15 +274,15 @@ public:
 
 class ZSeq_ZooLib
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZSeq_ZooLib,
-		operator_bool_generator_type, operator_bool_type);
-
 	class Rep;
 
 public:
 	typedef ZVal_ZooLib Val_t;
 
 	ZSeq_Any AsSeq_Any(const ZAny& iDefault) const;
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZSeq_ZooLib,
+		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const;
 
@@ -399,9 +401,6 @@ public:
 
 class ZMap_ZooLib
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZMap_ZooLib,
-		operator_bool_generator_type, operator_bool_type);
-
 	class Rep;
 
 public:
@@ -410,6 +409,9 @@ public:
 	typedef ZVal_ZooLib Val_t;
 
 	ZMap_Any AsMap_Any(const ZAny& iDefault) const;
+
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(ZMap_ZooLib,
+		operator_bool_generator_type, operator_bool_type);
 
 	operator operator_bool_type() const;
 

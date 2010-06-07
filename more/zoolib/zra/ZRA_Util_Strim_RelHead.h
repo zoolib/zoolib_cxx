@@ -33,7 +33,8 @@ namespace Util_Strim_RelHead {
 #pragma mark -
 #pragma mark * ZUtil_Strim_RelHead
 
-void sWrite_PropName(const std::string& iName, const ZStrimW& s);
+void sWrite_PropName(const string8& iName, const ZStrimW& s);
+void sWrite_PropName(const ZTrail& iName, const ZStrimW& s);
 void sWrite_RelHead(const RelHead& iRelHead, const ZStrimW& s);
 
 } // namespace Util_Strim_RelHead

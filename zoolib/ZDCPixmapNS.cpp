@@ -35,7 +35,7 @@ using std::lower_bound;
 using std::min;
 using std::vector;
 
-/*! \namespace ZDCPixmapNS
+/*! \namespace ZooLib::ZDCPixmapNS
 ZDCPixmapNS encompasses a suite of types and methods primarily used by ZDCPixmap but that can also
 be called explicitly, which is useful when working with pixmap data that's owned by other code.
 

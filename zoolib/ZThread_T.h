@@ -97,7 +97,7 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZCnd_T
+#pragma mark * ZCndBase_T
 
 /*
 "Implementing Condition Variables with Semaphores",
@@ -110,15 +110,15 @@ http://www.cse.wustl.edu/~schmidt/win32-cv-1.html
 */
 
 template <class Mtx, class Sem>
-class ZCnd_T : NonCopyable
+class ZCndBase_T : NonCopyable
 	{
 private:
 	Sem fSem;
 	ZAtomic_t fWaitingThreads;
 
 public:
-	ZCnd_T() : fWaitingThreads(0) {}
-	~ZCnd_T() {}
+	ZCndBase_T() : fWaitingThreads(0) {}
+	~ZCndBase_T() {}
 
 	void Wait(Mtx& iMtx)
 		{
@@ -189,7 +189,31 @@ public:
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZMtx_Win
+#pragma mark * ZCndR_T
+
+template <class MtxR, class Cnd>
+class ZCndR_T : public Cnd
+	{
+public:
+	void Wait(MtxR& iMtxR)
+		{ iMtxR.pWait(*this); }
+
+	bool WaitFor(MtxR& iMtxR, double iTimeout)
+		{ return iMtxR.pWaitFor(*this, iTimeout); }
+
+	bool WaitUntil(MtxR& iMtxR, ZTime iDeadline)
+		{ return iMtxR.pWaitUntil(*this, iDeadline); }
+
+	using Cnd::Wait;
+	using Cnd::WaitFor;
+	using Cnd::WaitUntil;
+	using Cnd::Signal;
+	using Cnd::Broadcast;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMtx_T
 
 template <class Sem>
 class ZMtx_T : NonCopyable
@@ -203,6 +227,90 @@ public:
 
 	void Acquire() { fSem.Wait(); }
 	void Release() { fSem.Signal(); }
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZMtxR_T
+
+template <class Mtx, class Cnd, class ThreadID, ThreadID (*GetThreadIDProc)()>
+class ZMtxR_T : NonCopyable
+	{
+public:
+	friend class ZCndR_T<ZMtxR_T, Cnd>;
+
+	ZMtxR_T() : fOwner(0), fCount(0) {}
+
+	~ZMtxR_T() {}
+
+	void Acquire()
+		{
+		const ThreadID current = GetThreadIDProc();
+		if (fOwner != current)
+			{
+			fMtx.Acquire();
+			fOwner = current;
+			ZAssert(fCount == 0);
+			}
+		++fCount;
+		}
+
+	void Release()
+		{
+		ZAssert(fOwner == GetThreadIDProc());
+
+		if (0 == --fCount)
+			{
+			fOwner = 0;
+			fMtx.Release();
+			}		
+		}
+
+private:
+	void pWait(Cnd& iCnd)
+		{
+		const ThreadID current = GetThreadIDProc();
+		ZAssert(fOwner == current);
+
+		const int priorCount = fCount;
+		fCount = 0;
+		fOwner = 0;
+		iCnd.Wait(fMtx);
+		fOwner = current;
+		fCount = priorCount;
+		}
+
+	bool pWaitFor(Cnd& iCnd, double iTimeout)
+		{
+		const ThreadID current = GetThreadIDProc();
+		ZAssert(fOwner == current);
+
+		const int priorCount = fCount;
+		fCount = 0;
+		fOwner = 0;
+		bool result = iCnd.WaitFor(fMtx, iTimeout);
+		fOwner = current;
+		fCount = priorCount;
+		return result;
+		}
+
+	bool pWaitUntil(Cnd& iCnd, ZTime iDeadline)
+		{
+		const ThreadID current = GetThreadIDProc();
+		ZAssert(fOwner == current);
+
+		const int priorCount = fCount;
+		fCount = 0;
+		fOwner = 0;
+		bool result = iCnd.WaitUntil(fMtx, iDeadline);
+		fOwner = current;
+		fCount = priorCount;
+		return result;
+		}
+
+	ThreadID fOwner;
+	Mtx fMtx;
+	int fCount;
 	};
 
 // =================================================================================================

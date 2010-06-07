@@ -66,7 +66,6 @@ class StrimU
 :	public ZStrimU
 ,	NonCopyable
 	{
-	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(StrimU, operator_bool_generator_type, operator_bool_type);
 public:
 	StrimU(const ZStrimU& iStrim);
 	StrimU(const ZStrimU& iStrim, bool iRecognizeEntitiesInAttributeValues);
@@ -81,6 +80,7 @@ public:
 	virtual size_t Imp_UnreadableLimit();
 
 // Our protocol
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES(StrimU, operator_bool_generator_type, operator_bool_type);
 	operator operator_bool_type() const;
 	EToken Current() const;
 	ZML::StrimU& Advance();
