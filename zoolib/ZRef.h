@@ -31,6 +31,10 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
+#pragma mark * ZooLib::nullref, akin to std::nullptr
+
+// =================================================================================================
+#pragma mark -
 #pragma mark * ZRef
 
 template <class T>
@@ -87,6 +91,10 @@ public:
 		spRelease(theP);
 		return *this;
 		}
+
+	ZRef(const null_t&)
+	:	fP(nullptr)
+		{}
 
 	ZRef(T* iP)
 	:	fP(iP)
@@ -236,6 +244,10 @@ public:
 		return *this;
 		}
 
+	ZRef(const null_t&)
+	:	fP(nullptr)
+		{}
+
 	ZRef(T* iP)
 	:	fP(iP)
 		{ spRetain(fP); }
@@ -354,18 +366,6 @@ template <class O, class T> inline O ZRefStaticCast(const ZRef<T*>& iVal)
 
 template <class O, class T> inline O ZRefStaticCast(const ZRef<const T*>& iVal)
 	{ return static_cast<O>(iVal.Get()); }
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZooLib::nullref, akin to std::nullptr
-
-const class nullref_t
-	{
-public:
-	template <class T> operator ZRef<T>() const { return ZRef<T>(); }
-private:
-	void operator&() const;
-	} nullref = {};
 
 } // namespace ZooLib
 

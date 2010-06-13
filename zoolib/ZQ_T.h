@@ -23,6 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZCompat_operator_bool.h"
+#include "zoolib/ZCompat_algorithm.h" // For std::swap
 #include "zoolib/ZCtorDtor.h" // For placement ctor/copy/dtor/assign
 #include "zoolib/ZDebug.h"
 
@@ -36,6 +37,31 @@ template <class T>
 class ZQ_T
 	{
 public:
+	void swap(ZQ_T& iOther)
+		{
+		if (fHasValue)
+			{
+			if (iOther.fHasValue)
+				{
+				std::swap(*(T*)fBytes, *(T*)iOther.fBytes);
+				}
+			else
+				{
+				sCopyConstruct_T<T>(iOther.fBytes, fBytes);
+				sDestroy_T<T>(fBytes);
+				iOther.fHasValue = true;
+				fHasValue = false;
+				}
+			}
+		else if (iOther.fHasValue)
+			{
+			sCopyConstruct_T<T>(fBytes, iOther.fBytes);
+			sDestroy_T<T>(iOther.fBytes);
+			iOther.fHasValue = false;
+			fHasValue = true;
+			}			
+		}
+
 	ZQ_T()
 	:	fHasValue(false)
 		{}
@@ -66,6 +92,10 @@ public:
 				sCopyConstruct_T<T>(fBytes, iOther.fBytes);
 			}
 		}
+
+	ZQ_T(const null_t& iP0)
+	:	fHasValue(false)
+		{}
 
 	template <class P0>
 	ZQ_T(const P0& iP0)
@@ -99,6 +129,15 @@ public:
 		{
 		ZAssert(fHasValue);
 		return *sFetch_T<T>(fBytes);
+		}
+
+	void Clear()
+		{
+		if (fHasValue)
+			{
+			sDestroy_T<T>(fBytes);
+			fHasValue = false;
+			}
 		}
 
 private:
