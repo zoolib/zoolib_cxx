@@ -224,12 +224,12 @@ ZTime ZTime::sSystem()
 			uint64 time;
 			::QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&time));
 
-			::SetThreadAffinityMask(GetCurrentThread(), oldmask);
+			::SetThreadAffinityMask(::GetCurrentThread(), oldmask);
 
 			return double(time) / double(frequency);
 			}
 
-		::SetThreadAffinityMask(GetCurrentThread(), oldmask);
+		::SetThreadAffinityMask(::GetCurrentThread(), oldmask);
 		}
 
 	// Use GetTickCount if we're not on NT or QPC is not available.
