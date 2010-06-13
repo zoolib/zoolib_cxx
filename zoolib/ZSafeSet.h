@@ -315,7 +315,7 @@ public:
 		{
 		if (ZRef<ZSafeSetRep<T> > theRep = fRep)
 			return theRep->pReadInc(*this);
-		return ZQ_T<T>();
+		return null;
 		}
 
 	T ReadInc()
@@ -370,7 +370,7 @@ public:
 		{
 		if (ZRef<ZSafeSetRep<T> > theRep = ZSafeSetIterConst<T>::fRep)
 			return theRep->pReadErase(*this);
-		return ZQ_T<T>();
+		return null;
 		}
 
 	T ReadErase()
