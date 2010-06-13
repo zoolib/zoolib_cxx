@@ -18,27 +18,33 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorkerRunner_EventLoop_Carbon__
-#define __ZWorkerRunner_EventLoop_Carbon__ 1
+#ifndef __ZWorkerRunner_EventLoop_Win__
+#define __ZWorkerRunner_EventLoop_Win__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
 #include "zoolib/ZWorkerRunner_EventLoop.h"
 
-#if ZCONFIG_SPI_Enabled(Carbon64)
+#if ZCONFIG_SPI_Enabled(Win)
+
+#include "zoolib/ZWND.h"
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_EventLoop_Carbon
+#pragma mark * ZWorkerRunner_EventLoop_Win
 
-class ZWorkerRunner_EventLoop_Carbon
+class ZWorkerRunner_EventLoop_Win
 :	public ZWorkerRunner_EventLoop
+,	private ZWNDW
 	{
 public:
-	ZWorkerRunner_EventLoop_Carbon();
-	virtual ~ZWorkerRunner_EventLoop_Carbon();
+	ZWorkerRunner_EventLoop_Win();
+	virtual ~ZWorkerRunner_EventLoop_Win();
+
+// From ZCounted via ZWorkerRunner_EventLoop
+	virtual void Initialize();
 
 // From ZWorkerRunner_EventLoop
 	virtual void pQueueCallback();
@@ -47,11 +53,12 @@ public:
 	static void sStartWorker(ZRef<ZWorker> iWorker);
 
 private:
-	static void spCallback(void* iRefcon);
+// From ZWNDW
+	LRESULT WindowProc(HWND iHWND, UINT iMessage, WPARAM iWPARAM, LPARAM iLPARAM);
 	};
 
 } // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(Carbon64)
+#endif // ZCONFIG_SPI_Enabled(Win)
 
-#endif // __ZWorkerRunner_EventLoop_Carbon__
+#endif // __ZWorkerRunner_EventLoop_Win__

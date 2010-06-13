@@ -18,40 +18,59 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZWorkerRunner_EventLoop_Carbon__
-#define __ZWorkerRunner_EventLoop_Carbon__ 1
+#ifndef __ZWorkerRunner_EventLoop__
+#define __ZWorkerRunner_EventLoop__ 1
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZWorkerRunner_EventLoop.h"
+#include "zoolib/ZSafeSet.h"
+#include "zoolib/ZWorker.h"
 
-#if ZCONFIG_SPI_Enabled(Carbon64)
+#include <map>
 
 namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark * ZWorkerRunner_EventLoop_Carbon
+#pragma mark * ZWorkerRunner_EventLoop
 
-class ZWorkerRunner_EventLoop_Carbon
-:	public ZWorkerRunner_EventLoop
+class ZWorkerRunner_EventLoop
+:	public ZWorkerRunner
 	{
 public:
-	ZWorkerRunner_EventLoop_Carbon();
-	virtual ~ZWorkerRunner_EventLoop_Carbon();
+	ZWorkerRunner_EventLoop();
+	virtual ~ZWorkerRunner_EventLoop();
 
-// From ZWorkerRunner_EventLoop
-	virtual void pQueueCallback();
+// From ZWorkerRunner
+	virtual void Wake(ZRef<ZWorker> iWorker);
+	virtual void WakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime);
+	virtual void WakeIn(ZRef<ZWorker> iWorker, double iInterval);
+	virtual bool IsAwake(ZRef<ZWorker> iWorker);
 
-// Our protocol
-	static void sStartWorker(ZRef<ZWorker> iWorker);
+protected:
+// Must be implemented by subclasses
+	virtual void pQueueCallback() = 0;
+
+// Called by subclasses
+	void pStartWorker(ZRef<ZWorker> iWorker);
+	void pCallback();
 
 private:
-	static void spCallback(void* iRefcon);
+	class Worker_Waker;
+	friend class Worker_Waker;
+
+	bool pTriggerCallback();
+
+	void pWake(ZRef<ZWorker> iWorker, ZTime iSystemTime);
+
+	ZMtxR fMtx;
+	ZCnd fCnd;
+	bool fCallbackTriggered;
+	ZRef<Worker_Waker> fWorker_Waker;
+	std::map<ZRef<ZWorker>, ZTime> fWorkersMap;
+	ZSafeSet<ZRef<ZWorker> > fWorkersSet;
 	};
 
 } // namespace ZooLib
 
-#endif // ZCONFIG_SPI_Enabled(Carbon64)
-
-#endif // __ZWorkerRunner_EventLoop_Carbon__
+#endif // __ZWorkerRunner_EventLoop__

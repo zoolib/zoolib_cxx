@@ -22,6 +22,8 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZLog.h"
 #include "zoolib/ZWorkerRunner_Thread.h"
 
+#include <typeinfo>
+
 ZMACRO_MSVCStaticLib_cpp(WorkerRunner_Thread)
 
 namespace ZooLib {
@@ -104,21 +106,16 @@ bool ZWorkerRunner_Thread::IsAwake(ZRef<ZWorker> iWorker)
 void ZWorkerRunner_Thread::Start()
 	{
 	ZRef<ZWorkerRunner_Thread> self = this;
+
+	ZWorkerRunner::pAttachWorker(fWorker);
+
 	try
 		{
-		ZWorkerRunner::pAttachWorker(fWorker);
 		ZThread::sCreate_T<ZRef<ZWorkerRunner_Thread> >(spRun, this);
 		}
 	catch (...)
 		{
-		try
-			{
-			ZWorkerRunner::pDetachWorker(fWorker);
-			}
-		catch (...)
-			{
-			throw;
-			}
+		ZWorkerRunner::pDetachWorker(fWorker);
 		throw;
 		}
 	}
@@ -126,6 +123,8 @@ void ZWorkerRunner_Thread::Start()
 void ZWorkerRunner_Thread::pRun()
 	{
 	ZLOGFUNCTION(eDebug);
+	if (ZLOGF(s, eDebug))
+		s << typeid(*fWorker.Get()).name();
 
 	ZAcqMtx acq(fMtx);
 	for (;;)
@@ -143,15 +142,8 @@ void ZWorkerRunner_Thread::pRun()
 			}
 
 		ZRelMtx rel(fMtx);
-		try
-			{
-			if (!fWorker->Work())
-				break;
-			}
-		catch (...)
-			{
+		if (!this->pInvokeWork(fWorker))
 			break;
-			}
 		}
 
 	ZWorkerRunner::pDetachWorker(fWorker);

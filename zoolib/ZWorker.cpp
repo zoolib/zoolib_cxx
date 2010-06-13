@@ -115,6 +115,18 @@ void ZWorkerRunner::pDetachWorker(ZRef<ZWorker> iWorker)
 		{}
 	}
 
+bool ZWorkerRunner::pInvokeWork(ZRef<ZWorker> iWorker)
+	{
+	try
+		{
+		return iWorker->Work();
+		}
+	catch (...)
+		{}
+
+	return false;
+	}
+
 // =================================================================================================
 #pragma mark -
 #pragma mark * Utility methods

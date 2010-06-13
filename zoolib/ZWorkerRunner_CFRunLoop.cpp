@@ -108,26 +108,44 @@ bool ZWorkerRunner_CFRunLoop::IsAwake(ZRef<ZWorker> iWorker)
 	}
 
 void ZWorkerRunner_CFRunLoop::Add(ZRef<ZWorker> iWorker)
+	{ this->pAdd(iWorker, CFAbsoluteTime(0)); }
+
+void ZWorkerRunner_CFRunLoop::AddWakeAt(ZRef<ZWorker> iWorker, ZTime iSystemTime)
+	{ this->pAdd(iWorker, spSystemAsAbsoluteTime(iSystemTime)); }
+
+void ZWorkerRunner_CFRunLoop::AddWakeIn(ZRef<ZWorker> iWorker, double iInterval)
+	{ this->pAdd(iWorker, spDelayAsAbsoluteTime(iInterval)); }
+
+// Assume that main thread will become the thread used by that returned
+// by CFRunLoopGetMain, which is only available on 10.5+.
+static ZRef<ZWorkerRunner_CFRunLoop> spWR = new ZWorkerRunner_CFRunLoop(::CFRunLoopGetCurrent());
+
+ZRef<ZWorkerRunner_CFRunLoop> ZWorkerRunner_CFRunLoop::sMain()
+	{ return spWR; }
+
+void ZWorkerRunner_CFRunLoop::pAdd(ZRef<ZWorker> iWorker, CFAbsoluteTime iAbsoluteTime)
 	{
 	ZAcqMtxR acq(fMtx);
 	ZWorkerRunner::pAttachWorker(iWorker);
 
 	fWorkersSet.Insert(iWorker);
-	ZUtil_STL::sInsertMustNotContain(1, fWorkersMap, iWorker, CFAbsoluteTime(0));
+	ZUtil_STL::sInsertMustNotContain(1, fWorkersMap, iWorker, iAbsoluteTime);
 	this->pTrigger(0);
 	}
 
 void ZWorkerRunner_CFRunLoop::pTrigger(CFAbsoluteTime iAbsoluteTime)
 	{
-	if (iAbsoluteTime <= ::CFRunLoopTimerGetNextFireDate(fRunLoopTimer))
+	CFAbsoluteTime nextTime = ::CFRunLoopTimerGetNextFireDate(fRunLoopTimer);
+	if (iAbsoluteTime <= nextTime || iAbsoluteTime < ::CFAbsoluteTimeGetCurrent())
 		::CFRunLoopTimerSetNextFireDate(fRunLoopTimer, iAbsoluteTime);
 	}
 
 void ZWorkerRunner_CFRunLoop::pRunLoopTimerCallBack()
 	{
-	ZRef<ZWorkerRunner_CFRunLoop> self = this;
-
 	const CFAbsoluteTime now = ::CFAbsoluteTimeGetCurrent();
+	// Reset our next fire date now, so any call to pTrigger has a
+	// sensible distant value against which to be compared.
+	::CFRunLoopTimerSetNextFireDate(fRunLoopTimer, now + 30 * 1e6);
 
 	bool gotEarliestLater = false;
 	CFAbsoluteTime earliestLater;
@@ -142,7 +160,7 @@ void ZWorkerRunner_CFRunLoop::pRunLoopTimerCallBack()
 
 			if (theTime <= now)
 				{
-				if (! theWorker->Work())
+				if (!this->pInvokeWork(theWorker))
 					{
 					guard.Acquire();
 					fWorkersSet.Erase(theWorker);

@@ -67,6 +67,7 @@ protected:
 // Called by subclasses
 	void pAttachWorker(ZRef<ZWorker> iWorker);
 	void pDetachWorker(ZRef<ZWorker> iWorker);
+	bool pInvokeWork(ZRef<ZWorker> iWorker);
 
 // Called by ZWorker instances.
 	virtual void Wake(ZRef<ZWorker> iWorker) = 0;
@@ -82,6 +83,101 @@ protected:
 #pragma mark * Utility methods
 
 void sStartWorkerRunner(ZRef<ZWorker> iWorker);
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWorker_T0
+
+class ZWorker_T0 : public ZWorker
+	{
+public:
+	typedef bool (*Function_t)(ZRef<ZWorker> iWorker);
+
+	ZWorker_T0(Function_t iFunction)
+	:	fFunction(iFunction)
+		{}
+
+	virtual bool Work()
+		{ return fFunction(this); }
+
+private:
+	Function_t fFunction;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWorker_T1
+
+template <class T0>
+class ZWorker_T1 : public ZWorker
+	{
+public:
+	typedef bool (*Function_t)(ZRef<ZWorker>, const T0&);
+
+	ZWorker_T1(Function_t iFunction, const T0& iT0)
+	:	fFunction(iFunction)
+	,	fT0(iT0)
+		{}
+
+	virtual bool Work()
+		{ return fFunction(this, fT0); }
+
+private:
+	Function_t fFunction;
+	T0 fT0;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWorker_T2
+
+template <class T0, class T1>
+class ZWorker_T2 : public ZWorker
+	{
+public:
+	typedef bool (*Function_t)(ZRef<ZWorker>, const T0&, const T1&);
+
+	ZWorker_T2(Function_t iFunction, const T0& iT0, const T1& iT1)
+	:	fFunction(iFunction)
+	,	fT0(iT0)
+	,	fT1(iT1)
+		{}
+
+	virtual bool Work()
+		{ return fFunction(this, fT0, fT1); }
+
+private:
+	Function_t fFunction;
+	T0 fT0;
+	T1 fT1;
+	};
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZWorker_T3
+
+template <class T0, class T1, class T2>
+class ZWorker_T3 : public ZWorker
+	{
+public:
+	typedef bool (*Function_t)(ZRef<ZWorker>, const T0&, const T1&, const T2&);
+
+	ZWorker_T3(Function_t iFunction, const T0& iT0, const T1& iT1, const T2& iT2)
+	:	fFunction(iFunction)
+	,	fT0(iT0)
+	,	fT1(iT1)
+	,	fT2(iT2)
+		{}
+
+	virtual bool Work()
+		{ return fFunction(this, fT0, fT1, fT2); }
+
+private:
+	Function_t fFunction;
+	T0 fT0;
+	T1 fT1;
+	T2 fT2;
+	};
 
 } // namespace ZooLib
 
