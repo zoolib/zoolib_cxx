@@ -566,8 +566,6 @@ Host_Std::HTTPFetcher::HTTPFetcher(
 
 bool Host_Std::HTTPFetcher::Work()
 	{
-	ZLOGFUNCTION(eDebug);
-
 	try
 		{
 		string theURL = fURL;

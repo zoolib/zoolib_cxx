@@ -65,7 +65,7 @@ ZRef<Result> Iterator_Any_Project::ReadInc()
 				}
 			}
 		}
-	return nullref;
+	return null;
 	}
 
 // =================================================================================================
@@ -105,7 +105,7 @@ ZRef<Result> Iterator_Any_Rename::ReadInc()
 			return theResult_Any;
 			}
 		}
-	return nullref;
+	return null;
 	}
 
 // =================================================================================================
@@ -127,7 +127,7 @@ ZRef<Result> Iterator_Any_Restrict::ReadInc()
 		{
 		ZRef<Result> theResult = fIterator->ReadInc();
 		if (!theResult)
-			return nullref;
+			return null;
 		if (ZRef<Result_Any> theResult_Any = theResult.DynamicCast<Result_Any>())
 			{
 			ZValContext theContext;
@@ -155,7 +155,7 @@ ZRef<Result> Iterator_Any_Select::ReadInc()
 		{
 		ZRef<Result> theResult = fIterator->ReadInc();
 		if (!theResult)
-			return nullref;
+			return null;
 		if (ZRef<Result_Any> theResult_Any = theResult.DynamicCast<Result_Any>())
 			{
 			if (sMatches(fExpr_Logic, theResult_Any->GetVal()))

@@ -77,7 +77,7 @@ ZRef<Result> Result_Any::ProductWith(ZRef<Result> iOther)
 				}
 			}
 		}
-	return nullref;
+	return null;
 	}
 
 const ZVal_Any& Result_Any::GetVal()

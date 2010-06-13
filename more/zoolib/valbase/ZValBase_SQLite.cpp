@@ -70,7 +70,7 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 		fIter->Advance();
 		return new ZQE::Result_Any(theMap);
 		}
-	return nullref;
+	return null;
 	}
 
 } // anonymous namespace

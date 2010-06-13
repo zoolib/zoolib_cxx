@@ -85,9 +85,9 @@ static void spDumpProblems(const ZStrimW& s, Rel iRel)
 	}
 
 #if 1
-Rel genre = sConcrete(nullref, "genre", RelHead() | "genre.idGenre" | "genre.strGenre");
-Rel genrelinkmovie = sConcrete(nullref, "genrelinkmovie", RelHead() | "genrelinkmovie.idGenre" | "genrelinkmovie.idMovie");
-Rel movie = sConcrete(nullref, "movie", RelHead() | "movie.idMovie" | "movie.c00");
+Rel genre = sConcrete(null, "genre", RelHead() | "genre.idGenre" | "genre.strGenre");
+Rel genrelinkmovie = sConcrete(null, "genrelinkmovie", RelHead() | "genrelinkmovie.idGenre" | "genrelinkmovie.idMovie");
+Rel movie = sConcrete(null, "movie", RelHead() | "movie.idMovie" | "movie.c00");
 Spec theSpec = CName("movie.idMovie") == CName("link.idMovie") & CName("movie.idGenre") == CName("link.idGenre");
 //Spec theSpec = CName("movie.idMovie") == CName("link.idMovie") & CName("movie.idGenre") == CName("link.idGenre");
 #endif

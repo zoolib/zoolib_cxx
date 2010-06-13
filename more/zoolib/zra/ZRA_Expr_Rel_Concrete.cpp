@@ -60,7 +60,7 @@ ZRef<Expr_Rel> Expr_Rel_Concrete::Clone()
 	{ return this; }
 
 ZRef<ConcreteDomain> Expr_Rel_Concrete::GetConcreteDomain()
-	{ return nullref; }
+	{ return null; }
 
 string8 Expr_Rel_Concrete::GetName()
 	{ return string8(); }
