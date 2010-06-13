@@ -26,7 +26,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 
-#define ZOOLIB_RETAIN_RELEASE(a) \
+#define ZMACRO_RETAIN_RELEASE(a) \
 	namespace ZooLib { \
 	template <> void sRetain_T(a& ioRef) { if (ioRef) ::CFRetain(ioRef); } \
 	template <> void sRelease_T(a iRef) { if (iRef) ::CFRelease(iRef); } \
@@ -34,76 +34,77 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // =================================================================================================
 // CFTypeRef declared in CFBase.h
-ZOOLIB_RETAIN_RELEASE(CFTypeRef)
+ZMACRO_RETAIN_RELEASE(CFTypeRef)
 
 // =================================================================================================
-#define ZOOLIB_CF_MUTABLE(a) \
+#define ZMACRO_CF_MUTABLE(a) \
 	typedef struct __CF##a * CF##a##Ref; \
-	ZOOLIB_RETAIN_RELEASE(CF##a##Ref)
+	ZMACRO_RETAIN_RELEASE(CF##a##Ref)
 
-ZOOLIB_CF_MUTABLE(Bundle)
-ZOOLIB_CF_MUTABLE(ReadStream)
-ZOOLIB_CF_MUTABLE(RunLoop)
-ZOOLIB_CF_MUTABLE(RunLoopTimer)
-ZOOLIB_CF_MUTABLE(WriteStream)
+ZMACRO_CF_MUTABLE(Bundle)
+ZMACRO_CF_MUTABLE(Error)
+ZMACRO_CF_MUTABLE(ReadStream)
+ZMACRO_CF_MUTABLE(RunLoop)
+ZMACRO_CF_MUTABLE(RunLoopTimer)
+ZMACRO_CF_MUTABLE(WriteStream)
 
 // =================================================================================================
-#define ZOOLIB_CF_CONST(a) \
+#define ZMACRO_CF_CONST(a) \
 	typedef const struct __CF##a * CF##a##Ref; \
-	ZOOLIB_RETAIN_RELEASE(CF##a##Ref)
+	ZMACRO_RETAIN_RELEASE(CF##a##Ref)
 
-ZOOLIB_CF_CONST(URL)
-ZOOLIB_CF_CONST(Null)
+ZMACRO_CF_CONST(URL)
+ZMACRO_CF_CONST(Null)
 
 // =================================================================================================
-#define ZOOLIB_CF(a) \
+#define ZMACRO_CF(a) \
 	typedef const struct __CF##a * CF##a##Ref; \
 	typedef struct __CF##a * CFMutable##a##Ref; \
-	ZOOLIB_RETAIN_RELEASE(CF##a##Ref) \
-	ZOOLIB_RETAIN_RELEASE(CFMutable##a##Ref)
+	ZMACRO_RETAIN_RELEASE(CF##a##Ref) \
+	ZMACRO_RETAIN_RELEASE(CFMutable##a##Ref)
 
-ZOOLIB_CF(Array)
-ZOOLIB_CF(Boolean)
-ZOOLIB_CF(Data)
-ZOOLIB_CF(Dictionary)
-ZOOLIB_CF(Number)
-ZOOLIB_CF(String)
+ZMACRO_CF(Array)
+ZMACRO_CF(Boolean)
+ZMACRO_CF(Data)
+ZMACRO_CF(Dictionary)
+ZMACRO_CF(Number)
+ZMACRO_CF(String)
 
 // =================================================================================================
-#define ZOOLIB_CG(a) \
+#define ZMACRO_CG(a) \
 	typedef struct CG##a * CG##a##Ref; \
-	ZOOLIB_RETAIN_RELEASE(CG##a##Ref)
+	ZMACRO_RETAIN_RELEASE(CG##a##Ref)
 
-ZOOLIB_CG(Color)
-ZOOLIB_CG(ColorSpace)
-ZOOLIB_CG(Context)
-ZOOLIB_CG(DataProvider)
-ZOOLIB_CG(Gradient)
-ZOOLIB_CG(Image)
+ZMACRO_CG(Color)
+ZMACRO_CG(ColorSpace)
+ZMACRO_CG(Context)
+ZMACRO_CG(DataProvider)
+ZMACRO_CG(Gradient)
+ZMACRO_CG(Image)
 
 // =================================================================================================
 typedef struct OpaqueSecKeychainRef *SecKeychainRef;
-ZOOLIB_RETAIN_RELEASE(SecKeychainRef)
+ZMACRO_RETAIN_RELEASE(SecKeychainRef)
 
 typedef struct OpaqueSecKeychainItemRef *SecKeychainItemRef;
-ZOOLIB_RETAIN_RELEASE(SecKeychainItemRef)
+ZMACRO_RETAIN_RELEASE(SecKeychainItemRef)
 
 typedef struct OpaqueSecKeychainSearchRef *SecKeychainSearchRef;
-ZOOLIB_RETAIN_RELEASE(SecKeychainSearchRef)
+ZMACRO_RETAIN_RELEASE(SecKeychainSearchRef)
 
 typedef const struct __SCDynamicStore *	SCDynamicStoreRef;
-ZOOLIB_RETAIN_RELEASE(SCDynamicStoreRef)
+ZMACRO_RETAIN_RELEASE(SCDynamicStoreRef)
 
 // =================================================================================================
 typedef const struct __AXUIElement *AXUIElementRef;
-ZOOLIB_RETAIN_RELEASE(AXUIElementRef)
+ZMACRO_RETAIN_RELEASE(AXUIElementRef)
 
 // =================================================================================================
 typedef struct __CVBuffer *CVBufferRef;
-ZOOLIB_RETAIN_RELEASE(CVBufferRef)
+ZMACRO_RETAIN_RELEASE(CVBufferRef)
 
 // =================================================================================================
 typedef struct OpaquePasteboardRef* PasteboardRef;
-ZOOLIB_RETAIN_RELEASE(PasteboardRef)
+ZMACRO_RETAIN_RELEASE(PasteboardRef)
 
 #endif // ZCONFIG_SPI_Enabled(CFType)
