@@ -227,6 +227,9 @@ public:
 	virtual ~ZStreamerR_T() {}
 
 	template <class P>
+	ZStreamerR_T(P& iParam) : fStream(iParam) {}
+
+	template <class P>
 	ZStreamerR_T(const P& iParam) : fStream(iParam) {}
 
 // From ZStreamerR
@@ -251,6 +254,12 @@ protected:
 
 public:
 	virtual ~ZStreamerR_FT() {}
+
+	template <class P>
+	ZStreamerR_FT(P& iParam, ZRef<ZStreamerR> iStreamer)
+	:	fStreamerReal(iStreamer),
+		fStream(iParam, iStreamer->GetStreamR())
+		{}
 
 	template <class P>
 	ZStreamerR_FT(const P& iParam, ZRef<ZStreamerR> iStreamer)
@@ -287,6 +296,9 @@ public:
 	virtual ~ZStreamerRCon_T() {}
 
 	template <class P>
+	ZStreamerRCon_T(P& iParam) : fStream(iParam) {}
+
+	template <class P>
 	ZStreamerRCon_T(const P& iParam) : fStream(iParam) {}
 
 // From ZStreamerR
@@ -314,6 +326,12 @@ protected:
 
 public:
 	virtual ~ZStreamerRCon_FT() {}
+
+	template <class P>
+	ZStreamerRCon_FT(P& iParam, ZRef<ZStreamerRCon> iStreamer)
+	:	fStreamerReal(iStreamer),
+		fStream(iParam, iStreamer->GetStreamRCon())
+		{}
 
 	template <class P>
 	ZStreamerRCon_FT(const P& iParam, ZRef<ZStreamerRCon> iStreamer)
@@ -353,6 +371,9 @@ public:
 	virtual ~ZStreamerU_T() {}
 
 	template <class P>
+	ZStreamerU_T(P& iParam) : fStream(iParam) {}
+
+	template <class P>
 	ZStreamerU_T(const P& iParam) : fStream(iParam) {}
 
 // From ZStreamerR
@@ -382,6 +403,12 @@ public:
 	virtual ~ZStreamerU_FT() {}
 
 	template <class P>
+	ZStreamerU_FT(P& iParam, ZRef<ZStreamerR> iStreamer)
+	:	fStreamerReal(iStreamer),
+		fStream(iParam, iStreamer->GetStreamR())
+		{}
+
+	template <class P>
 	ZStreamerU_FT(const P& iParam, ZRef<ZStreamerR> iStreamer)
 	:	fStreamerReal(iStreamer),
 		fStream(iParam, iStreamer->GetStreamR())
@@ -390,6 +417,12 @@ public:
 	ZStreamerU_FT(ZRef<ZStreamerR> iStreamer)
 	:	fStreamerReal(iStreamer),
 		fStream(iStreamer->GetStreamR())
+		{}
+
+	template <class P>
+	ZStreamerU_FT(P& iParam, ZRef<ZStreamerR> iStreamer)
+	:	fStreamerReal(iStreamer),
+		fStream(iParam, iStreamer->GetStreamR())
 		{}
 
 	template <class P>
@@ -430,6 +463,9 @@ public:
 	virtual ~ZStreamerRPos_T() {}
 
 	template <class P>
+	ZStreamerRPos_T(P& iParam) : fStream(iParam) {}
+
+	template <class P>
 	ZStreamerRPos_T(const P& iParam) : fStream(iParam) {}
 
 // From ZStreamerR
@@ -460,6 +496,12 @@ protected:
 
 public:
 	virtual ~ZStreamerRPos_FT() {}
+
+	template <class P>
+	ZStreamerRPos_FT(P& iParam, ZRef<ZStreamerRPos> iStreamer)
+	:	fStreamerReal(iStreamer),
+		fStream(iParam, iStreamer->GetStreamRPos())
+		{}
 
 	template <class P>
 	ZStreamerRPos_FT(const P& iParam, ZRef<ZStreamerRPos> iStreamer)
@@ -502,6 +544,9 @@ public:
 	virtual ~ZStreamerW_T() {}
 
 	template <class P>
+	ZStreamerW_T(P& iParam) : fStream(iParam) {}
+
+	template <class P>
 	ZStreamerW_T(const P& iParam) : fStream(iParam) {}
 
 // From ZStreamerW
@@ -526,6 +571,12 @@ protected:
 
 public:
 	virtual ~ZStreamerW_FT() {}
+
+	template <class P>
+	ZStreamerW_FT(P& iParam, ZRef<ZStreamerW> iStreamer)
+	:	fStreamerReal(iStreamer),
+		fStream(iParam, iStreamer->GetStreamW())
+		{}
 
 	template <class P>
 	ZStreamerW_FT(const P& iParam, ZRef<ZStreamerW> iStreamer)
@@ -562,6 +613,9 @@ public:
 	virtual ~ZStreamerWCon_T() {}
 
 	template <class P>
+	ZStreamerWCon_T(P& iParam) : fStream(iParam) {}
+
+	template <class P>
 	ZStreamerWCon_T(const P& iParam) : fStream(iParam) {}
 
 // From ZStreamerW via ZStreamerWCon
@@ -589,6 +643,12 @@ protected:
 
 public:
 	virtual ~ZStreamerWCon_FT() {}
+
+	template <class P>
+	ZStreamerWCon_FT(P& iParam, ZRef<ZStreamerWCon> iStreamer)
+	:	fStreamerReal(iStreamer),
+		fStream(iParam, iStreamer->GetStreamWCon())
+		{}
 
 	template <class P>
 	ZStreamerWCon_FT(const P& iParam, ZRef<ZStreamerWCon> iStreamer)
@@ -628,6 +688,9 @@ public:
 	virtual ~ZStreamerWPos_T() {}
 
 	template <class P>
+	ZStreamerWPos_T(P& iParam) : fStream(iParam) {}
+
+	template <class P>
 	ZStreamerWPos_T(const P& iParam) : fStream(iParam) {}
 
 // From ZStreamerW via ZStreamerWPos
@@ -655,6 +718,12 @@ protected:
 
 public:
 	virtual ~ZStreamerWPos_FT() {}
+
+	template <class P>
+	ZStreamerWPos_FT(P& iParam, ZRef<ZStreamerWPos> iStreamer)
+	:	fStreamerReal(iStreamer),
+		fStream(iParam, iStreamer->GetStreamWPos())
+		{}
 
 	template <class P>
 	ZStreamerWPos_FT(const P& iParam, ZRef<ZStreamerWPos> iStreamer)
@@ -692,6 +761,9 @@ public:
 	ZStreamerRWPos_T() {}
 
 	virtual ~ZStreamerRWPos_T() {}
+
+	template <class P>
+	ZStreamerRWPos_T(P& iParam) : fStream(iParam) {}
 
 	template <class P>
 	ZStreamerRWPos_T(const P& iParam) : fStream(iParam) {}
@@ -733,6 +805,12 @@ protected:
 
 public:
 	virtual ~ZStreamerRWPos_FT() {}
+
+	template <class P>
+	ZStreamerRWPos_FT(P& iParam, ZRef<ZStreamerRWPos> iStreamer)
+	:	fStreamerReal(iStreamer),
+		fStream(iParam, iStreamer->GetStreamRWPos())
+		{}
 
 	template <class P>
 	ZStreamerRWPos_FT(const P& iParam, ZRef<ZStreamerRWPos> iStreamer)
@@ -782,6 +860,9 @@ public:
 	ZStreamerRW_T() {}
 
 	virtual ~ZStreamerRW_T() {}
+
+	template <class P>
+	ZStreamerRW_T(P& iParam) : fStream(iParam) {}
 
 	template <class P>
 	ZStreamerRW_T(const P& iParam) : fStream(iParam) {}
