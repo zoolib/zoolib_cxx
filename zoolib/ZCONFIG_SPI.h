@@ -42,8 +42,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma mark AppleEvent
 #ifndef ZCONFIG_SPI_Avail__AppleEvent
 #	define ZCONFIG_SPI_Avail__AppleEvent \
-	(ZCONFIG_SPI_Avail__Carbon && ZCONFIG_SPI_Desired__Carbon) \
-	|| (ZCONFIG_SPI_Avail__MacOSX && ZCONFIG_SPI_Desired__MacOSX)
+	(ZCONFIG_SPI_Avail__Carbon64 && ZCONFIG_SPI_Desired__Carbon64)
 #endif
 
 #ifndef ZCONFIG_SPI_Desired__AppleEvent
