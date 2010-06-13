@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZRWLock__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZThreadOld.h"
+#include "zoolib/tuplebase/ZThreadOld.h"
 
 #include <vector>
 
