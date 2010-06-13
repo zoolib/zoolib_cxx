@@ -55,7 +55,7 @@ public:
 		{}
 
 	ZSafeRef(T* iP)
-	:	fP(fP)
+	:	fP(iP)
 		{ spRetain(fP); }
 
 	~ZSafeRef()
