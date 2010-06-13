@@ -46,7 +46,8 @@ public:
 	virtual void WriteStarted();
 	virtual void WriteFinished();
 
-	virtual bool Write(const ZStreamW& iStreamW) = 0;
+	virtual bool Write(const ZRef<ZStreamerW>& iStreamerW);
+	virtual bool Write(const ZStreamW& iStreamW);
 
 protected:
 	ZRef<ZStreamerW> fStreamerW;

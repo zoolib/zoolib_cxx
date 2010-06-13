@@ -47,7 +47,8 @@ public:
 	virtual void ReadStarted();
 	virtual void ReadFinished();
 
-	virtual bool Read(const ZStreamR& iStreamR) = 0;
+	virtual bool Read(ZRef<ZStreamerR> iStreamerR);
+	virtual bool Read(const ZStreamR& iStreamR);
 
 protected:
 	ZRef<ZStreamerR> fStreamerR;

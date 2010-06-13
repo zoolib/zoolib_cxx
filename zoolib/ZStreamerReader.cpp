@@ -47,7 +47,7 @@ void ZStreamerReader::RunnerDetached()
 
 bool ZStreamerReader::Work()
 	{
-	if (this->Read(fStreamerR->GetStreamR()))
+	if (this->Read(fStreamerR))
 		{
 		// ##
 		// See comment in ZStreamerListener::Work.
@@ -66,5 +66,11 @@ void ZStreamerReader::ReadStarted()
 
 void ZStreamerReader::ReadFinished()
 	{}
+
+bool ZStreamerReader::Read(ZRef<ZStreamerR> iStreamerR)
+	{ return this->Read(iStreamerR->GetStreamR()); }
+
+bool ZStreamerReader::Read(const ZStreamR& iStreamR)
+	{ return false; }
 
 } // namespace ZooLib

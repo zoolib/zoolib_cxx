@@ -44,7 +44,7 @@ void ZStreamerWriter::RunnerDetached()
 
 bool ZStreamerWriter::Work()
 	{
-	const bool result = this->Write(fStreamerW->GetStreamW());
+	const bool result = this->Write(fStreamerW);
 
 	if (!result || !this->IsAwake())
 		fStreamerW->GetStreamW().Flush();
@@ -57,5 +57,11 @@ void ZStreamerWriter::WriteStarted()
 
 void ZStreamerWriter::WriteFinished()
 	{}
+
+bool ZStreamerWriter::Write(const ZRef<ZStreamerW>& iStreamerW)
+	{ return this->Write(iStreamerW->GetStreamW()); }
+
+bool ZStreamerWriter::Write(const ZStreamW& iStreamW)
+	{ return false; }
 
 } // namespace ZooLib
