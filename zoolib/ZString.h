@@ -25,6 +25,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstdarg>
 #include <string>
 
+#include "zoolib/ZQ_T.h"
 #include "zoolib/ZStdInt.h" // for uint64
 
 // ==================================================
@@ -73,14 +74,17 @@ bool sContainsi(const string& iTarget, const string& iCandidate);
 // -- 
 // ZUtil_Tuple-style conversion API
 
+ZQ_T<int64> sQInt64(const string& iString);
 bool sQInt64(const string& iString, int64& oVal);
 int64 sDInt64(int64 iDefault, const string& iString);
 int64 sInt64(const string& iString);
 
+ZQ_T<uint64> sQUInt64(const string& iString);
 bool sQUInt64(const string& iString, uint64& oVal);
 uint64 sDUInt64(uint64 iDefault, const string& iString);
 uint64 sUInt64(const string& iString);
 
+ZQ_T<double> sQDouble(const string& iString);
 bool sQDouble(const string& iString, double& oVal);
 double sDDouble(double iDefault, const string& iString);
 double sDouble(const string& iString);

@@ -157,21 +157,17 @@ ZRef<ZYadR> sMakeYadR(const ZRef<CFTypeRef>& iVal)
 	{
 	const ZVal_CFType theVal = iVal;
 
-	ZMap_CFType asMap;
-	if (theVal.QGetMap(asMap))
-		return new ZYadMapRPos_CFType(asMap);
-		
-	ZSeq_CFType asSeq;
-	if (theVal.QGetSeq(asSeq))
-		return new ZYadSeqRPos_CFType(asSeq);
-		
-	ZData_CFType asData;
-	if (theVal.QGetData(asData))
-		return new ZYadStreamRPos_CFType(asData);
+	if (ZQ_T<ZMap_CFType> theQ = theVal.QGet_T<ZMap_CFType>())
+		return new ZYadMapRPos_CFType(theQ.Get());
 
-	ZRef<CFStringRef> asCFString;
-	if (theVal.QGetCFString(asCFString))
-		return new ZYadStrimR_CFType(asCFString);
+	if (ZQ_T<ZSeq_CFType> theQ = theVal.QGet_T<ZSeq_CFType>())
+		return new ZYadSeqRPos_CFType(theQ.Get());
+
+	if (ZQ_T<ZData_CFType> theQ = theVal.QGet_T<ZData_CFType>())
+		return new ZYadStreamRPos_CFType(theQ.Get());
+
+	if (ZQ_T<ZRef<CFStringRef> > theQ = theVal.QGet_T<ZRef<CFStringRef> >())
+		return sMakeYadR(theQ.Get());
 
 	return new ZYadPrimR_CFType(iVal);
 	}

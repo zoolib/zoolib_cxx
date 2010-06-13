@@ -308,6 +308,7 @@ ZAny sAsAny(ZRef<CFTypeRef> iVal)
 	{ return sDAsAny(ZAny(), iVal); }
 
 static ZRef<CFTypeRef> spMakeNumber(CFNumberType iType, const void* iVal)
+//	{ return Adopt<CFTypeRef>(::CFNumberCreate(kCFAllocatorDefault, iType, iVal)); }
 	{ return Adopt_T<CFTypeRef>(::CFNumberCreate(kCFAllocatorDefault, iType, iVal)); }
 
 ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
@@ -368,7 +369,7 @@ ZRef<CFTypeRef> sDAsCFType(const ZRef<CFTypeRef>& iDefault, const ZAny& iVal)
 		}
 	else if (const ZTime* theValue = iVal.PGet_T<ZTime>())
 		{
-		return Adopt_T<CFTypeRef>(::CFDateCreate(kCFAllocatorDefault,
+		return Adopt<CFTypeRef>(::CFDateCreate(kCFAllocatorDefault,
 			theValue->fVal - kCFAbsoluteTimeIntervalSince1970));
 		}
 	else if (const char* theValue = iVal.PGet_T<char>())

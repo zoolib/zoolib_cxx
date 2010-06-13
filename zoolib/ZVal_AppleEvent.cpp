@@ -320,30 +320,27 @@ void ZVal_AppleEvent::Clear()
 	{ ::AEDisposeDesc(this); }
 
 template <>
-bool ZVal_AppleEvent::QGet_T<bool>(bool& oVal) const
+ZQ_T<bool> ZVal_AppleEvent::QGet_T<bool>() const
 	{
 	if (typeTrue == descriptorType)
 		{
-		oVal = true;
 		return true;
 		}
 	else if (typeFalse == descriptorType)
 		{
-		oVal = false;
-		return true;
+		return false;
 		}
 	else if (typeBoolean == descriptorType)
 		{
 		Boolean theFlag;
 		::AEGetDescData(this, &theFlag, sizeof(theFlag));
-		oVal = theFlag;
-		return true;
+		return true && theFlag;
 		}
-	return false;
+	return ZQ_T<bool>();
 	}
 
 template <>
-bool ZVal_AppleEvent::QGet_T<string>(string& oVal) const
+ZQ_T<string> ZVal_AppleEvent::QGet_T<string>() const
 	{
 	if (false)
 		{}
@@ -351,71 +348,64 @@ bool ZVal_AppleEvent::QGet_T<string>(string& oVal) const
 	else if (typeUTF8Text == descriptorType)
 		{
 		const size_t theSize = ::AEGetDescDataSize(this);
-		oVal.resize(theSize);
+		string theString(' ', theSize);
 		if (theSize)
-			{
-			::AEGetDescData(this, const_cast<char*>(oVal.data()), theSize);
-			return true;
-			}
+			::AEGetDescData(this, const_cast<char*>(theString.data()), theSize);
+		return theString;
 		}
 	#endif
 	else if (typeChar == descriptorType)
 		{
 		const size_t theSize = ::AEGetDescDataSize(this);
-		oVal.resize(theSize);
+		string theString(' ', theSize);
 		if (theSize)
-			{
-			::AEGetDescData(this, const_cast<char*>(oVal.data()), theSize);
-			return true;
-			}
+			::AEGetDescData(this, const_cast<char*>(theString.data()), theSize);
+		return theString;
 		}
-	return false;
+	return ZQ_T<string>();
 	}
 
 template <>
-bool ZVal_AppleEvent::QGet_T<ZSeq_AppleEvent>(ZSeq_AppleEvent& oVal) const
+ZQ_T<ZSeq_AppleEvent> ZVal_AppleEvent::QGet_T<ZSeq_AppleEvent>() const
 	{
 	if (typeAEList == descriptorType)
-		{
-		oVal = *static_cast<const AEDescList*>(this);
-		return true;
-		}
-	return false;
+		return ZSeq_AppleEvent(*static_cast<const AEDescList*>(this));
+
+	return ZQ_T<ZSeq_AppleEvent>();
 	}
 
 template <>
-bool ZVal_AppleEvent::QGet_T<ZMap_AppleEvent>(ZMap_AppleEvent& oVal) const
+ZQ_T<ZMap_AppleEvent> ZVal_AppleEvent::QGet_T<ZMap_AppleEvent>() const
 	{
 	if (spAECheckIsRecord(this))
-		{
-		oVal = *static_cast<const AERecord*>(this);
-		return true;
-		}
-	return false;
-	}
+		return ZMap_AppleEvent(*static_cast<const AEDescList*>(this));
 
-#if ZCONFIG_SPI_Enabled(Carbon)
-template <>
-bool ZVal_AppleEvent::QGet_T<FSSpec>(FSSpec& oVal) const
-	{
-	if (ZAELookup_CPP2Desc<FSSpec>::sDescType == descriptorType)
-		{
-		::AEGetDescData(this, &oVal, sizeof(oVal));
-		return true;
-		}
-	return false;
+	return ZQ_T<ZMap_AppleEvent>();
 	}
-#endif // ZCONFIG_SPI_Enabled(Carbon)
 
 template <class S>
-bool ZVal_AppleEvent::QGet_T(S& oVal) const
+ZQ_T<S> ZVal_AppleEvent::QGet_T() const
 	{
-	if (ZAELookup_CPP2Desc<S>::sDescType == descriptorType)
+	const DescType desiredDescType = ZAELookup_CPP2Desc<S>::sDescType;
+	if (desiredDescType == descriptorType)
 		{
-		::AEGetDescData(this, &oVal, sizeof(oVal));
-		return true;
+		S theVal;
+		::AEGetDescData(this, &theVal, sizeof(theVal));
+		return theVal;
 		}
-	return false;
+
+	AEDesc coerced;
+	::AEInitializeDescInline(&coerced);
+	if (noErr == ::AECoerceDesc(this, desiredDescType, &coerced))
+		{
+		S theVal;
+		::AEGetDescData(&coerced, &theVal, sizeof(theVal));
+		::AEDisposeDesc(&coerced);
+		return theVal;
+		}
+
+	::AEDisposeDesc(&coerced);
+	return ZQ_T<S>();
 	}
 
 template <>
@@ -550,7 +540,15 @@ void ZSeq_AppleEvent::Clear()
 	::AECreateList(nullptr, 0, false, this);
 	}
 
-bool ZSeq_AppleEvent::ZSeq_AppleEvent::QGet(size_t iIndex, ZVal_AppleEvent& oVal) const
+ZQ_T<ZVal_AppleEvent> ZSeq_AppleEvent::QGet(size_t iIndex) const
+	{
+	ZVal_AppleEvent result;
+	if (noErr == ::AEGetNthDesc(this, iIndex + 1, typeWildCard, nullptr, &result.OParam()))
+		return result;
+	return ZQ_T<ZVal_AppleEvent>();
+	}
+
+bool ZSeq_AppleEvent::QGet(size_t iIndex, ZVal_AppleEvent& oVal) const
 	{ return noErr == ::AEGetNthDesc(this, iIndex + 1, typeWildCard, nullptr, &oVal.OParam()); }
 
 ZVal_AppleEvent ZSeq_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, size_t iIndex) const
@@ -689,6 +687,33 @@ void ZMap_AppleEvent::Clear()
 	::AECreateList(nullptr, 0, true, this);
 	}
 
+ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGet(AEKeyword iName) const
+	{
+	ZVal_AppleEvent result;
+	if (noErr == ::AEGetKeyDesc(this, iName, typeWildCard, &result.OParam()))
+		return result;
+	return ZQ_T<ZVal_AppleEvent>();
+	}
+
+ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGet(const string& iName) const
+	{
+	ZVal_AppleEvent result;
+	if (noErr == ::AEGetKeyDesc(this, spAsAEKeyword(iName), typeWildCard, &result.OParam()))
+		return result;
+	return ZQ_T<ZVal_AppleEvent>();
+	}
+
+ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGet(Index_t iIndex) const
+	{
+	ZVal_AppleEvent result;
+	if (noErr == ::AEGetNthDesc(this, iIndex.GetIndex() + 1, typeWildCard,
+		nullptr, &result.OParam()))
+		{
+		return result;
+		}
+	return ZQ_T<ZVal_AppleEvent>();
+	}
+
 bool ZMap_AppleEvent::QGet(AEKeyword iName, ZVal_AppleEvent& oVal) const
 	{ return noErr ==::AEGetKeyDesc(this, iName, typeWildCard, &oVal.OParam()); }
 
@@ -703,26 +728,23 @@ bool ZMap_AppleEvent::QGet(Index_t iIndex, ZVal_AppleEvent& oVal) const
 
 ZVal_AppleEvent ZMap_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, AEKeyword iName) const
 	{
-	ZVal_AppleEvent result;
-	if (this->QGet(iName, result))
-		return result;
+	if (ZQ_T<ZVal_AppleEvent> theVal = this->QGet(iName))
+		return theVal.Get();
 	return iDefault;
 	}
 
 ZVal_AppleEvent ZMap_AppleEvent::DGet(
 	const ZVal_AppleEvent& iDefault, const std::string& iName) const
 	{
-	ZVal_AppleEvent result;
-	if (this->QGet(iName, result))
-		return result;
+	if (ZQ_T<ZVal_AppleEvent> theVal = this->QGet(iName))
+		return theVal.Get();
 	return iDefault;
 	}
 
 ZVal_AppleEvent ZMap_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, Index_t iIndex) const
 	{
-	ZVal_AppleEvent result;
-	if (this->QGet(iIndex, result))
-		return result;
+	if (ZQ_T<ZVal_AppleEvent> theVal = this->QGet(iIndex))
+		return theVal.Get();
 	return iDefault;
 	}
 

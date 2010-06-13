@@ -223,141 +223,129 @@ void ZVal_CFType::Clear()
 	{ inherited::Clear(); }
 
 template <>
-bool ZVal_CFType::QGet_T<int8>(int8& oVal) const
+ZQ_T<int8> ZVal_CFType::QGet_T<int8>() const
 	{
-	if (spGetNumber_T(*this, kCFNumberSInt8Type, oVal))
-		return true;
-	if (spGetNumber_T(*this, kCFNumberCharType, oVal))
-		return true;
-	return false;
+	int8 theVal;
+	if (spGetNumber_T(*this, kCFNumberSInt8Type, theVal))
+		return theVal;
+	if (spGetNumber_T(*this, kCFNumberCharType, theVal))
+		return theVal;
+	return null;
 	}
 
 template <>
-bool ZVal_CFType::QGet_T<int16>(int16& oVal) const
+ZQ_T<int16> ZVal_CFType::QGet_T<int16>() const
 	{
-	if (spGetNumber_T(*this, kCFNumberSInt16Type, oVal))
-		return true;
-	if (spGetNumber_T(*this, kCFNumberShortType, oVal))
-		return true;
-	return false;
+	int16 theVal;
+	if (spGetNumber_T(*this, kCFNumberSInt16Type, theVal))
+		return theVal;
+	if (spGetNumber_T(*this, kCFNumberShortType, theVal))
+		return theVal;
+	return null;
 	}
 
 template <>
-bool ZVal_CFType::QGet_T<int32>(int32& oVal) const
+ZQ_T<int32> ZVal_CFType::QGet_T<int32>() const
 	{
-	if (spGetNumber_T(*this, kCFNumberSInt32Type, oVal))
-		return true;
-	if (spGetNumber_T(*this, kCFNumberIntType, oVal))
-		return true;
+	int32 theVal;
+	if (spGetNumber_T(*this, kCFNumberSInt32Type, theVal))
+		return theVal;
+	if (spGetNumber_T(*this, kCFNumberIntType, theVal))
+		return theVal;
 
 	#if !ZCONFIG_Is64Bit
-		if (spGetNumber_T(*this, kCFNumberLongType, oVal))
-			return true;
+		if (spGetNumber_T(*this, kCFNumberLongType, theVal))
+			return theVal;
 	#endif
 
-	return false;
+	return null;
 	}
 
 template <>
-bool ZVal_CFType::QGet_T<int64>(int64& oVal) const
+ZQ_T<int64> ZVal_CFType::QGet_T<int64>() const
 	{
-	if (spGetNumber_T(*this, kCFNumberSInt64Type, oVal))
-		return true;
-	if (spGetNumber_T(*this, kCFNumberLongLongType, oVal))
-		return true;
+	int64 theVal;
+	if (spGetNumber_T(*this, kCFNumberSInt64Type, theVal))
+		return theVal;
+	if (spGetNumber_T(*this, kCFNumberLongLongType, theVal))
+		return theVal;
 
 	#if ZCONFIG_Is64Bit
-		if (spGetNumber_T(*this, kCFNumberLongType, oVal))
-			return true;
+		if (spGetNumber_T(*this, kCFNumberLongType, theVal))
+			return theVal;
 	#endif
 
-	return false;
+	return null;
 	}
 
 template <>
-bool ZVal_CFType::QGet_T<bool>(bool& oVal) const
+ZQ_T<bool> ZVal_CFType::QGet_T<bool>() const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFBooleanGetTypeID())
-		{
-		oVal = ::CFBooleanGetValue(this->StaticCast<CFBooleanRef>());
-		return true;
-		}
-	return false;
+		return true &&::CFBooleanGetValue(this->StaticCast<CFBooleanRef>());
+	return null;
 	}
 
 template <>
-bool ZVal_CFType::QGet_T<float>(float& oVal) const
+ZQ_T<float> ZVal_CFType::QGet_T<float>() const
 	{
-	if (spGetNumber_T(*this, kCFNumberFloat32Type, oVal))
-		return true;
-	if (spGetNumber_T(*this, kCFNumberFloatType, oVal))
-		return true;
-	return false;
+	float theVal;
+	if (spGetNumber_T(*this, kCFNumberFloat32Type, theVal))
+		return theVal;
+	if (spGetNumber_T(*this, kCFNumberFloatType, theVal))
+		return theVal;
+	return null;
 	}
 
 template <>
-bool ZVal_CFType::QGet_T<double>(double& oVal) const
+ZQ_T<double> ZVal_CFType::QGet_T<double>() const
 	{
-	if (spGetNumber_T(*this, kCFNumberFloat64Type, oVal))
-		return true;
-	if (spGetNumber_T(*this, kCFNumberDoubleType, oVal))
-		return true;
-	return false;
+	double theVal;
+	if (spGetNumber_T(*this, kCFNumberFloat64Type, theVal))
+		return theVal;
+	if (spGetNumber_T(*this, kCFNumberDoubleType, theVal))
+		return theVal;
+	return null;
 	}
 
 template <>
-bool ZVal_CFType::QGet_T<string8>(string8& oVal) const
-	{
-	if (*this && ::CFGetTypeID(*this) == ::CFStringGetTypeID())
-		{
-		oVal = sAsUTF8(this->StaticCast<CFStringRef>());
-		return true;
-		}
-	return false;
-	}
-
-template <>
-bool ZVal_CFType::QGet_T<ZRef<CFStringRef> >(ZRef<CFStringRef>& oVal) const
+ZQ_T<string8> ZVal_CFType::QGet_T<string8>() const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFStringGetTypeID())
-		{
-		oVal = this->StaticCast<CFStringRef>();
-		return true;
-		}
-	return false;
+		return sAsUTF8(this->StaticCast<CFStringRef>());
+	return null;
 	}
 
 template <>
-bool ZVal_CFType::QGet_T<ZData_CFType>(ZData_CFType& oVal) const
+ZQ_T<ZRef<CFStringRef> > ZVal_CFType::QGet_T<ZRef<CFStringRef> >() const
+	{
+	if (*this && ::CFGetTypeID(*this) == ::CFStringGetTypeID())
+		return this->StaticCast<CFStringRef>();
+	return null;
+	}
+
+template <>
+ZQ_T<ZData_CFType> ZVal_CFType::QGet_T<ZData_CFType>() const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFDataGetTypeID())
-		{
-		oVal = this->StaticCast<CFDataRef>();
-		return true;
-		}
-	return false;
+		return this->StaticCast<CFDataRef>();
+	return null;
 	}
 
 template <>
-bool ZVal_CFType::QGet_T<ZSeq_CFType>(ZSeq_CFType& oVal) const
+ZQ_T<ZSeq_CFType> ZVal_CFType::QGet_T<ZSeq_CFType>() const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFArrayGetTypeID())
-		{
-		oVal = this->StaticCast<CFArrayRef>();
-		return true;
-		}
-	return false;
+		return this->StaticCast<CFArrayRef>();
+	return null;
 	}
 
 template <>
-bool ZVal_CFType::QGet_T<ZMap_CFType>(ZMap_CFType& oVal) const
+ZQ_T<ZMap_CFType> ZVal_CFType::QGet_T<ZMap_CFType>() const
 	{
 	if (*this && ::CFGetTypeID(*this) == ::CFDictionaryGetTypeID())
-		{
-		oVal = this->StaticCast<CFDictionaryRef>();
-		return true;
-		}
-	return false;
+		return this->StaticCast<CFDictionaryRef>();
+	return null;
 	}
 
 template <>

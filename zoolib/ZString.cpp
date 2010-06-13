@@ -220,63 +220,93 @@ bool ZString::sContainsi(const string& iTarget, const string& iCandidate)
 	return std::string::npos != ZUnicode::sToLower(iTarget).find(ZUnicode::sToLower(iCandidate));
 	}
 
-bool ZString::sQInt64(const string& iString, int64& oVal)
+ZQ_T<int64> ZString::sQInt64(const string& iString)
 	{
 	if (iString.size())
 		{
-		if (sscanf(iString.c_str(), "%lld", &oVal) > 0)
-			return true;
+		int64 result;
+		if (sscanf(iString.c_str(), "%lld", &result) > 0)
+			return result;
+		}
+	return ZQ_T<int64>();
+	}
+
+bool ZString::sQInt64(const string& iString, int64& oVal)
+	{
+	if (ZQ_T<int64> qInt64 = sQInt64(iString))
+		{
+		oVal = qInt64.Get();
+		return true;
 		}
 	return false;
 	}
 
 int64 ZString::sDInt64(int64 iDefault, const string& iString)
 	{
-	int64 result;
-	if (sQInt64(iString, result))
-		return result;
+	if (ZQ_T<int64> qInt64 = sQInt64(iString))
+		return qInt64.Get();
 	return iDefault;
 	}
 
 int64 ZString::sInt64(const string& iString)
 	{ return sDInt64(0, iString); }
 
-bool ZString::sQUInt64(const string& iString, uint64& oVal)
+ZQ_T<uint64> ZString::sQUInt64(const string& iString)
 	{
 	if (iString.size())
 		{
-		if (sscanf(iString.c_str(), "%llu", &oVal) > 0)
-			return true;
+		uint64 result;
+		if (sscanf(iString.c_str(), "%llu", &result) > 0)
+			return ZQ_T<uint64>(result);
+		}
+	return ZQ_T<uint64>();
+	}
+
+bool ZString::sQUInt64(const string& iString, uint64& oVal)
+	{
+	if (ZQ_T<uint64> qUInt64 = sQUInt64(iString))
+		{
+		oVal = qUInt64.Get();
+		return true;
 		}
 	return false;
 	}
 
 uint64 ZString::sDUInt64(uint64 iDefault, const string& iString)
 	{
-	uint64 result;
-	if (sQUInt64(iString, result))
-		return result;
+	if (ZQ_T<uint64> qUInt64 = sQUInt64(iString))
+		return qUInt64.Get();
 	return iDefault;
 	}
 
 uint64 ZString::sUInt64(const string& iString)
 	{ return sDUInt64(0, iString); }
 
-bool ZString::sQDouble(const string& iString, double& oVal)
+ZQ_T<double> ZString::sQDouble(const string& iString)
 	{
 	if (iString.size())
 		{
-		if (sscanf(iString.c_str(), "%lf", &oVal) > 0)
-			return true;
+		double result;
+		if (sscanf(iString.c_str(), "%lf", &result) > 0)
+			return ZQ_T<double>(result);
+		}
+	return ZQ_T<double>();
+	}
+
+bool ZString::sQDouble(const string& iString, double& oVal)
+	{
+	if (ZQ_T<double> qDouble = sQDouble(iString))
+		{
+		oVal = qDouble.Get();
+		return true;
 		}
 	return false;
 	}
 
 double ZString::sDDouble(double iDefault, const string& iString)
 	{
-	double result;
-	if (sQDouble(iString, result))
-		return result;
+	if (ZQ_T<double> qDouble = sQDouble(iString))
+		return qDouble.Get();
 	return iDefault;
 	}
 

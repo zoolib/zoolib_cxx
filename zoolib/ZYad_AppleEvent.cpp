@@ -52,17 +52,14 @@ static ZMap_Any spAsMap(const AEDesc& iAEDesc)
 
 ZRef<ZYadR> sMakeYadR(const ZVal_AppleEvent& iVal)
 	{
-	ZMap_AppleEvent asMap;
-	if (iVal.QGetMap(asMap))
-		return new ZYadMapRPos_AppleEvent(asMap);
-		
-	ZSeq_AppleEvent asSeq;
-	if (iVal.QGetSeq(asSeq))
-		return new ZYadSeqRPos_AppleEvent(asSeq);
-		
-	string8 asString;
-	if (iVal.QGetString(asString))
-		return sMakeYadR(asString);
+	if (ZQ_T<ZMap_AppleEvent> theQ = iVal.QGet_T<ZMap_AppleEvent>())
+		return new ZYadMapRPos_AppleEvent(theQ.Get());
+
+	if (ZQ_T<ZSeq_AppleEvent> theQ = iVal.QGet_T<ZSeq_AppleEvent>())
+		return new ZYadSeqRPos_AppleEvent(theQ.Get());
+
+	if (ZQ_T<string8> theQ = iVal.QGet_T<string8>())
+		return sMakeYadR(theQ.Get());
 
 //	if (iVal.QGetData(asData))
 //		return new ZYadStreamRPos_AppleEvent(asData);

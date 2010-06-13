@@ -137,7 +137,7 @@ void ZUSBWatcher::pDeviceAdded(io_iterator_t iIterator)
 			if (ZLOG(s, eInfo, "ZUSBWatcher"))
 				s << "Couldn't instantiate ZUSBDevice, caught exception: " << ex.what();
 
-			fCallbacks.Invoke(nullref);
+			fCallbacks.Invoke(null);
 			}
 
 		::IOObjectRelease(iter);

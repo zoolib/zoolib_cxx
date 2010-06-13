@@ -89,53 +89,43 @@ void ZAny::Clear()
 
 namespace ZooLib {
 
+ZQ_T<bool> sQCoerceBool(const ZAny& iAny)
+	{
+	if (const bool* pBool = iAny.PGet_T<bool>())
+		return *pBool;
+	
+	if (ZQ_T<int64> qInt64 = sQCoerceInt(iAny))
+		return (0 != qInt64.Get());
+
+	if (ZQ_T<double> qDouble = sQCoerceReal(iAny))
+		return (0.0 != qDouble.Get());
+
+	if (const string* pString = iAny.PGet_T<string>())
+		{
+		if (pString->empty())
+			return false;
+
+		if (ZQ_T<double> qDouble = ZString::sQDouble(*pString))
+			return (0.0 != qDouble.Get());
+
+		if (ZQ_T<int64> qInt64 = ZString::sQInt64(*pString))
+			return (0 != qInt64.Get());
+
+		if (ZString::sEquali(*pString, "t") || ZString::sEquali(*pString, "true"))
+			return true;
+
+		if (ZString::sEquali(*pString, "f") || ZString::sEquali(*pString, "false"))
+			return false;
+		}
+	return ZQ_T<bool>();
+	}
+
 bool sQCoerceBool(const ZAny& iAny, bool& oVal)
 	{
-	int64 asInt64;
-	if (sQCoerceInt(iAny, asInt64))
+	if (ZQ_T<bool> qBool = sQCoerceBool(iAny))
 		{
-		oVal = (0 != asInt64);
+		oVal = qBool.Get();
 		return true;
-		}
-
-	double asDouble;
-	if (sQCoerceReal(iAny, asDouble))
-		{
-		oVal =(0.0 != asDouble);
-		return true;
-		}
-
-	if (const string* asString = iAny.PGet_T<string>())
-		{
-		if (asString->empty())
-			{
-			oVal = false;
-			return true;
-			}
-
-		if (ZString::sQDouble(*asString, asDouble))
-			{
-			oVal = (0.0 != asDouble);
-			return true;
-			}
-
-		if (ZString::sQInt64(*asString, asInt64))
-			{
-			oVal = (0 != asInt64);
-			return true;
-			}
-
-		if (ZString::sEquali(*asString, "t") || ZString::sEquali(*asString, "true"))
-			{
-			oVal = true;
-			return true;
-			}
-
-		if (ZString::sEquali(*asString, "f") || ZString::sEquali(*asString, "false"))
-			{
-			oVal = false;
-			return true;
-			}
 		}
 	return false;
 	}
@@ -156,82 +146,88 @@ bool sCoerceBool(const ZAny& iAny)
 	return false;
 	}
 
-bool sQCoerceInt(const ZAny& iAny, int64& oVal)
+ZQ_T<int64> sQCoerceInt(const ZAny& iAny)
 	{
 	if (false)
 		{}
 	else if (const char* theVal = iAny.PGet_T<char>())
-		oVal = *theVal;
+		return *theVal;
 	else if (const signed char* theVal = iAny.PGet_T<signed char>())
-		oVal = *theVal;
+		return *theVal;
 	else if (const unsigned char* theVal = iAny.PGet_T<unsigned char>())
-		oVal = *theVal;
+		return *theVal;
 	else if (const wchar_t* theVal = iAny.PGet_T<wchar_t>())
-		oVal = *theVal;
+		return *theVal;
 	else if (const short* theVal = iAny.PGet_T<short>())
-		oVal = *theVal;
+		return *theVal;
 	else if (const unsigned short* theVal = iAny.PGet_T<unsigned short>())
-		oVal = *theVal;
+		return *theVal;
 	else if (const int* theVal = iAny.PGet_T<int>())
-		oVal = *theVal;
+		return *theVal;
 	else if (const unsigned int* theVal = iAny.PGet_T<unsigned int>())
-		oVal = *theVal;
+		return *theVal;
 	else if (const long* theVal = iAny.PGet_T<long>())
-		oVal = *theVal;
+		return *theVal;
 	else if (const unsigned long* theVal = iAny.PGet_T<unsigned long>())
-		oVal = *theVal;
+		return *theVal;
 	else if (const int64* theVal = iAny.PGet_T<int64>())
-		oVal = *theVal;
+		return *theVal;
 	else if (const uint64* theVal = iAny.PGet_T<uint64>())
-		oVal = *theVal;
-	else
-		return false;
-	return true;
+		return *theVal;
+
+	return ZQ_T<int64>();
+	}
+
+bool sQCoerceInt(const ZAny& iAny, int64& oVal)
+	{
+	if (ZQ_T<int64> qInt64 = sQCoerceInt(iAny))
+		{
+		oVal = qInt64.Get();
+		return true;
+		}
+	return false;
 	}
 
 int64 sDCoerceInt(int64 iDefault, const ZAny& iAny)
 	{
-	int64 result;
-	if (sQCoerceInt(iAny, result))
-		return result;
+	if (ZQ_T<int64> qInt = sQCoerceInt(iAny))
+		return qInt.Get();
 	return iDefault;
 	}
 
 int64 sCoerceInt(const ZAny& iAny)
-	{
-	int64 result;
-	if (sQCoerceInt(iAny, result))
-		return result;
-	return 0;
-	}
+	{ return sDCoerceInt(0, iAny); }
 
-bool sQCoerceReal(const ZAny& iAny, double& oVal)
+ZQ_T<double> sQCoerceReal(const ZAny& iAny)
 	{
 	if (false)
 		{}
 	else if (const float* theVal = iAny.PGet_T<float>())
-		oVal = *theVal;
+		return *theVal;
 	else if (const double* theVal = iAny.PGet_T<double>())
-		oVal = *theVal;
-	else
-		return false;
-	return true;
+		return *theVal;
+
+	return ZQ_T<double>();
+	}
+
+bool sQCoerceReal(const ZAny& iAny, double& oVal)
+	{
+	if (ZQ_T<double> qDouble = sQCoerceReal(iAny))
+		{
+		oVal = qDouble.Get();
+		return true;
+		}
+	return false;
 	}
 
 double sDCoerceReal(double iDefault, const ZAny& iAny)
 	{
-	int64 result;
-	if (sQCoerceInt(iAny, result))
-		return result;
+	if (ZQ_T<double> qDouble = sQCoerceReal(iAny))
+		return qDouble.Get();
 	return iDefault;
 	}
 
 double sCoerceReal(const ZAny& iAny)
-	{
-	double result;
-	if (sQCoerceReal(iAny, result))
-		return result;
-	return 0.0;
-	}
+	{ return sDCoerceReal(0.0, iAny); }
 
 } // namespace ZooLib

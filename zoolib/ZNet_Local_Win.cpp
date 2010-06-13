@@ -170,7 +170,7 @@ ZRef<ZNetEndpoint> ZNetListener_Local_Win::Listen()
 			return new ZNetEndpoint_Local_Win(theHANDLE);
 			}
 		}
-	return nullref;
+	return null;
 	}
 
 void ZNetListener_Local_Win::CancelListen()
@@ -229,7 +229,7 @@ const ZStreamWCon& ZNetEndpoint_Local_Win::GetStreamWCon()
 ZRef<ZNetAddress> ZNetEndpoint_Local_Win::GetRemoteAddress()
 	{
 	ZUnimplemented();
-	return nullref;
+	return null;
 	}
 
 ZRef<HANDLE> ZNetEndpoint_Local_Win::GetHANDLE()
