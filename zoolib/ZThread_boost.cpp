@@ -58,7 +58,7 @@ void ZCnd_boost::Broadcast()
 #pragma mark -
 #pragma mark * ZMtx_boost
 
-ZMtx_boost::ZMtx_boost(const char* iName)
+ZMtx_boost::ZMtx_boost()
 	{}
 
 ZMtx_boost::~ZMtx_boost()

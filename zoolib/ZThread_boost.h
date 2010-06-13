@@ -46,7 +46,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if ZCONFIG_API_Enabled(Thread_boost)
 
-#include "zoolib/ZDList.h"
+//#include "zoolib/ZDList.h"
 #include "zoolib/ZThread_T.h"
 #include "zoolib/ZTypes.h"
 
@@ -79,7 +79,7 @@ public:
 class ZMtx_boost : public boost::mutex
 	{
 public:
-	ZMtx_boost(const char* iName = nullptr);
+	ZMtx_boost();
 	~ZMtx_boost();
 
 	void Acquire();
