@@ -58,14 +58,16 @@ public:
 
 	void Invoke(Param_t iParam)
 		{
-		for (ZSafeSetIterConst<ZWeakRef<ZCallback_T<Param_t> > > iter = fCallbacks;;)
+		for (ZSafeSetIterConst<ZWeakRef<ZCallback_T<Param_t> > > iter = fCallbacks;
+			/*no test*/; /*no inc*/)
 			{
-			ZWeakRef<ZCallback_T<Param_t> > theRW;
-			if (!iter.QReadInc(theRW))
-				break;
-
-			if (ZRef<ZCallback_T<Param_t> > theCB = theRW)
-				theCB.Get()->Invoke(iParam);
+			if (ZQ_T<ZWeakRef<ZCallback_T<Param_t> > > theQ = iter.QReadInc())
+				{
+				if (ZRef<ZCallback_T<Param_t> > theCB = theQ.Get())
+					theCB.Get()->Invoke(iParam);
+				continue;
+				}
+			break;
 			}
 		}
 
