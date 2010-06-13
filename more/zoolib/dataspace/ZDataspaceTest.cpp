@@ -135,7 +135,7 @@ void sDataspaceTest(const ZStrimW& w)
 
 //	spDump(theSource.GetRelHeads(), w);
 
-	ZRA::Rel relMovie = sConcrete(nullref, "movie", rhMovie);
+	ZRA::Rel relMovie = sConcrete(null, "movie", rhMovie);
 
 	{
 	vector<AddedSearch> theAddedSearches;

@@ -203,10 +203,10 @@ SearchThing sAsSearchThing(ZRef<ZRA::Expr_Rel> iRel)
 	}
 
 ZRef<Expr_Rel> sAsRel(const RelHead& iRelHead)
-	{ return sConcrete(nullref, "Fake", iRelHead); }
+	{ return sConcrete(null, "Fake", iRelHead); }
 
 ZRef<Expr_Rel> sAsRel(const RelRename& iRelRename)
-	{ return spConcrete(nullref, "FakeRenamed", iRelRename); }
+	{ return spConcrete(null, "FakeRenamed", iRelRename); }
 
 ZRef<Expr_Rel> sAsRel(const vector<RelRename>& iRelRenames)
 	{
@@ -225,7 +225,7 @@ ZRef<Expr_Rel> sAsRelFrom(const vector<RelRename>& iRelRenames)
 	for (vector<RelRename>::const_iterator i = iRelRenames.begin();
 		i != iRelRenames.end(); ++i)
 		{
-		result = result * sConcrete(nullref, "FakeProduct", (*i).GetRelHead_From());
+		result = result * sConcrete(null, "FakeProduct", (*i).GetRelHead_From());
 		}
 	return result;
 	}

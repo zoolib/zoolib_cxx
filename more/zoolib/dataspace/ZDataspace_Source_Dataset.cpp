@@ -145,7 +145,7 @@ ZRef<ZQE::Result> Iterator::ReadInc()
 			}
 		++fCurrent;
 		}
-	return nullref;
+	return null;
 	}
 
 } // anonymous namespace

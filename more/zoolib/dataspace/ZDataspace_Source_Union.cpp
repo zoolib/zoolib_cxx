@@ -177,7 +177,7 @@ ZRef<ZQE::Result> Source_Union::Iterator_PSourceProduct::ReadInc()
 	{
 	if (fIndex < fPSP->fResults.size())
 		return fPSP->fResults[fIndex++];
-	return nullref;
+	return null;
 	}
 
 // =================================================================================================
@@ -225,7 +225,7 @@ ZRef<ZQE::Result> Source_Union::Iterator_PSourceSearches::ReadInc()
 	{
 	if (fIndex < fPSS->fResultsVector[fWhichVector].size())
 		return fPSS->fResultsVector[fWhichVector][fIndex++];
-	return nullref;
+	return null;
 	}
 
 // =================================================================================================
