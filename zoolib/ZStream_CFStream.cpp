@@ -18,21 +18,9 @@ OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------------------------- */
 
-#ifndef __ZStream_MacOSX__
-#define __ZStream_MacOSX__ 1
-#include "zconfig.h"
-#include "zoolib/ZCONFIG_SPI.h"
-
-#include "zoolib/ZStreamer.h"
+#include "zoolib/ZStream_CFStream.h"
 
 #if ZCONFIG_SPI_Enabled(CoreFoundation)
-
-#include <CoreFoundation/CFStream.h>
-
-#if ZCONFIG_SPI_Enabled(CoreGraphics)
-#	include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGDataProvider.h)
-#	include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGDataConsumer.h)
-#endif
 
 namespace ZooLib {
 
@@ -40,65 +28,60 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * ZStreamR_CFStream
 
-class ZStreamR_CFStream : public ZStreamR
+ZStreamR_CFStream::ZStreamR_CFStream(CFReadStreamRef iCFStream)
+:	fCFStream(iCFStream)
+	{}
+
+ZStreamR_CFStream::~ZStreamR_CFStream()
+	{}
+
+void ZStreamR_CFStream::Imp_Read(void* oDest, size_t iCount, size_t* oCountRead)
 	{
-public:
-	ZStreamR_CFStream(CFReadStreamRef iCFStream);
-	~ZStreamR_CFStream();
+	if (oCountRead)
+		*oCountRead = 0;
 
-// From ZStreamR
-	virtual void Imp_Read(void* oDest, size_t iCount, size_t* oCountRead);
-	virtual size_t Imp_CountReadable();
+	if (fCFStream)
+		{
+		CFIndex result = ::CFReadStreamRead(fCFStream, static_cast<UInt8*>(oDest), iCount);
 
-private:
-	ZRef<CFReadStreamRef> fCFStream;
-	};
-
-typedef ZStreamerR_T<ZStreamR_CFStream> ZStreamerR_CFStream;
+		if (result > 0 && oCountRead)
+			*oCountRead = result;
+		}
+	}
+	
+size_t ZStreamR_CFStream::Imp_CountReadable()
+	{
+	if (fCFStream && ::CFReadStreamHasBytesAvailable(fCFStream))
+		return 1;
+	return 0;
+	}
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZStreamW_CFStream
 
-class ZStreamW_CFStream : public ZStreamW
+ZStreamW_CFStream::ZStreamW_CFStream(CFWriteStreamRef iCFStream)
+:	fCFStream(iCFStream)
+	{}
+
+ZStreamW_CFStream::~ZStreamW_CFStream()
+	{}
+
+void ZStreamW_CFStream::Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-public:
-	ZStreamW_CFStream(CFWriteStreamRef iCFStream);
-	~ZStreamW_CFStream();
+	if (oCountWritten)
+		*oCountWritten = 0;
 
-// From ZStreamW
-	virtual void Imp_Write(const void* iSource, size_t iCount, size_t* oCountWritten);
+	if (fCFStream)
+		{
+		CFIndex result = ::CFWriteStreamWrite(fCFStream,
+			static_cast<const UInt8*>(iSource), iCount);
 
-private:
-	ZRef<CFWriteStreamRef> fCFStream;
-	};
-
-typedef ZStreamerW_T<ZStreamW_CFStream> ZStreamerW_CFStream;
-
-} // namespace ZooLib
+		if (result > 0 && oCountWritten)
+			*oCountWritten = result;
+		}
+	}
 
 #endif // ZCONFIG_SPI_Enabled(CoreFoundation)
 
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZStream_MacOSX
-
-#if ZCONFIG_SPI_Enabled(CoreGraphics)
-
-namespace ZooLib {
-
-namespace ZStream_MacOSX {
-
-CGDataProviderRef sCGDataProviderCreate(ZRef<ZStreamerR> iStreamer);
-
-CGDataProviderRef sCGDataProviderCreateRewind(ZRef<ZStreamerRPos> iStreamer);
-
-CGDataConsumerRef sCGDataConsumerCreate(ZRef<ZStreamerW> iStreamer);
-
-} // namespace ZStream_MacOSX
-
 } // namespace ZooLib
-
-#endif // ZCONFIG_SPI_Enabled(CoreGraphics)
-
-#endif // __ZStream_MacOSX__
