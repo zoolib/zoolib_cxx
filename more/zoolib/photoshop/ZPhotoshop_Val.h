@@ -299,7 +299,7 @@ public:
 
 	void Clear();
 
-	bool QGet(size_t iIndex, Val& oVal) const;
+	ZQ_T<Val> QGet(size_t iIndex) const;
 	Val DGet(const Val& iDefault, size_t iIndex) const;
 	Val Get(size_t iIndex) const;
 
@@ -351,9 +351,9 @@ public:
 // ZMap protocol
 	void Clear();
 
-	bool QGet(KeyID iKey, Val& oVal) const;
-	bool QGet(const string8& iName, Val& oVal) const;
-	bool QGet(Index_t iIndex, Val& iVal) const;
+	ZQ_T<Val> QGet(KeyID iKey) const;
+	ZQ_T<Val> QGet(const string8& iName) const;
+	ZQ_T<Val> QGet(Index_t iIndex) const;
 
 	Val DGet(const Val& iDefault, KeyID iKey) const;
 	Val DGet(const Val& iDefault, const string8& iName) const;

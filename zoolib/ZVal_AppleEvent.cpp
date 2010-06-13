@@ -545,11 +545,8 @@ ZQ_T<ZVal_AppleEvent> ZSeq_AppleEvent::QGet(size_t iIndex) const
 	ZVal_AppleEvent result;
 	if (noErr == ::AEGetNthDesc(this, iIndex + 1, typeWildCard, nullptr, &result.OParam()))
 		return result;
-	return ZQ_T<ZVal_AppleEvent>();
+	return null;
 	}
-
-bool ZSeq_AppleEvent::QGet(size_t iIndex, ZVal_AppleEvent& oVal) const
-	{ return noErr == ::AEGetNthDesc(this, iIndex + 1, typeWildCard, nullptr, &oVal.OParam()); }
 
 ZVal_AppleEvent ZSeq_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, size_t iIndex) const
 	{
@@ -692,7 +689,7 @@ ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGet(AEKeyword iName) const
 	ZVal_AppleEvent result;
 	if (noErr == ::AEGetKeyDesc(this, iName, typeWildCard, &result.OParam()))
 		return result;
-	return ZQ_T<ZVal_AppleEvent>();
+	return null;
 	}
 
 ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGet(const string& iName) const
@@ -700,7 +697,7 @@ ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGet(const string& iName) const
 	ZVal_AppleEvent result;
 	if (noErr == ::AEGetKeyDesc(this, spAsAEKeyword(iName), typeWildCard, &result.OParam()))
 		return result;
-	return ZQ_T<ZVal_AppleEvent>();
+	return null;
 	}
 
 ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGet(Index_t iIndex) const
@@ -711,19 +708,7 @@ ZQ_T<ZVal_AppleEvent> ZMap_AppleEvent::QGet(Index_t iIndex) const
 		{
 		return result;
 		}
-	return ZQ_T<ZVal_AppleEvent>();
-	}
-
-bool ZMap_AppleEvent::QGet(AEKeyword iName, ZVal_AppleEvent& oVal) const
-	{ return noErr ==::AEGetKeyDesc(this, iName, typeWildCard, &oVal.OParam()); }
-
-bool ZMap_AppleEvent::QGet(const string& iName, ZVal_AppleEvent& oVal) const
-	{ return noErr == ::AEGetKeyDesc(this, spAsAEKeyword(iName), typeWildCard, &oVal.OParam()); }
-
-bool ZMap_AppleEvent::QGet(Index_t iIndex, ZVal_AppleEvent& oVal) const
-	{
-	return noErr == ::AEGetNthDesc(this, iIndex.GetIndex() + 1, typeWildCard,
-		nullptr, &oVal.OParam());
+	return null;
 	}
 
 ZVal_AppleEvent ZMap_AppleEvent::DGet(const ZVal_AppleEvent& iDefault, AEKeyword iName) const

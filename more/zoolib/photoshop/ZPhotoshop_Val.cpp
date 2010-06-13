@@ -166,21 +166,21 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		{ \
 		int32 theVal; \
 		if (noErr == SUITE->GetInteger(P0, P1, &theVal)) \
-			{ oVal = theVal; return true; } \
+			{ return theVal; } \
 		break; \
 		} \
 	case typeIEEE64BitFloatingPoint: \
 		{ \
 		double theVal; \
 		if (noErr == SUITE->GetFloat(P0, P1, &theVal)) \
-			{ oVal = theVal; return true; } \
+			{ return theVal; } \
 		break; \
 		} \
 	case typeUnitFloat: \
 		{ \
 		UnitFloat theVal; \
 		if (noErr == SUITE->GetUnitFloat(P0, P1, &theVal.fUnitID, &theVal.fValue)) \
-			{ oVal = theVal; return true; } \
+			{ return theVal; } \
 		break; \
 		} \
 	case typeChar: \
@@ -190,10 +190,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			{ \
 			string8 result(size_t(theLength + 1), ' '); \
 			if (0 == theLength || noErr == SUITE->GetString(P0, P1, &result[0], theLength + 1)) \
-				{ \
-				oVal = result.substr(0, theLength); \
-				return true; \
-				} \
+				return result.substr(0, theLength); \
 			} \
 		break; \
 		} \
@@ -201,31 +198,28 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		{ \
 		Boolean theVal; \
 		if (noErr == SUITE->GetBoolean(P0, P1, &theVal)) \
-			{ oVal = bool(theVal); return true; } \
+			{ return bool(theVal); } \
 		break; \
 		} \
 	case typeEnumerated: \
 		{ \
 		Enumerated theVal; \
 		if (noErr == SUITE->GetEnumerated(P0, P1, &theVal.fEnumType, &theVal.fValue)) \
-			{ oVal = theVal; return true; } \
+			{ return theVal; } \
 		break; \
 		} \
 	case typeObjectSpecifier: \
 		{ \
 		PIActionReference theVal; \
 		if (noErr == SUITE->GetReference(P0, P1, &theVal)) \
-			{ \
-			oVal = Spec(Adopt(theVal)); \
-			return true; \
-			} \
+			return Spec(Adopt(theVal)); \
 		break; \
 		} \
 	case typeValueList: \
 		{ \
 		PIActionList theVal; \
 		if (noErr == SUITE->GetList(P0, P1, &theVal)) \
-			{ oVal = Seq(Adopt(theVal)); return true; } \
+			return Seq(Adopt(theVal)); \
 		break; \
 		} \
 	case typeObject: \
@@ -233,7 +227,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		DescriptorClassID theDCID; \
 		PIActionDescriptor theVal; \
 		if (noErr == SUITE->GetObject(P0, P1, &theDCID, &theVal)) \
-			{ oVal = Map(theDCID, Adopt(theVal)); return true; } \
+			return Map(theDCID, Adopt(theVal)); \
 		break; \
 		} \
 	/* global object? */ \
@@ -248,7 +242,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		{ \
 		FileRef theVal; \
 		if (noErr == SUITE->GetAlias(P0, P1, &theVal.OParam())) \
-			{ oVal = theVal; return true; } \
+			{ return theVal; } \
 		break; \
 		} \
 	case typeRawData: \
@@ -258,10 +252,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			{ \
 			Data result(theLength); \
 			if (0 == theLength || noErr == SUITE->GetData(P0, P1, result.GetData())) \
-				{ \
-				oVal = result; \
-				return true; \
-				} \
+				return result; \
 			} \
 		break; \
 		} \
@@ -1190,29 +1181,28 @@ void Seq::Clear()
 	spPSActionList->Make(&fAL);	
 	}
 
-bool Seq::QGet(size_t iIndex, Val& oVal) const
+ZQ_T<Val> Seq::QGet(size_t iIndex) const
 	{
-	if (iIndex >= this->Count())
-		return false;
-
-	TypeID theType;
-	if (noErr != spPSActionList->GetType(fAL, iIndex, &theType))
-		return false;
-
-	switch (theType)
+	if (iIndex < this->Count())
 		{
-		GETTERCASES(spPSActionList, fAL, iIndex)
-		default:
-			ZUnimplemented();
+		TypeID theType;
+		if (noErr == spPSActionList->GetType(fAL, iIndex, &theType))
+			{
+			switch (theType)
+				{
+				GETTERCASES(spPSActionList, fAL, iIndex)
+				default:
+					ZUnimplemented();
+				}
+			}
 		}
-	return false;
+	return null;
 	}
 
 Val Seq::DGet(const Val& iDefault, size_t iIndex) const
 	{
-	Val result;
-	if (this->QGet(iIndex, result))
-		return result;
+	if (ZQ_T<Val> theQ = this->QGet(iIndex))
+		return theQ.Get();
 	return iDefault;
 	}
 
@@ -1326,51 +1316,48 @@ Map::Map(const string8& iType, Adopt_T<PIActionDescriptor> iOther)
 void Map::Clear()
 	{ spPSActionDescriptor->Clear(fAD); }
 
-bool Map::QGet(KeyID iKey, Val& oVal) const
+ZQ_T<Val> Map::QGet(KeyID iKey) const
 	{
-	if (!fAD)
-		return false;
-
-	TypeID theType;
-	if (noErr != spPSActionDescriptor->GetType(fAD, iKey, &theType))
-		return false;
-
-	switch (theType)
+	if (fAD)
 		{
-		GETTERCASES(spPSActionDescriptor, fAD, iKey)
-		default:
-			ZUnimplemented();
+		TypeID theType;
+		if (noErr != spPSActionDescriptor->GetType(fAD, iKey, &theType))
+			{
+			switch (theType)
+				{
+				GETTERCASES(spPSActionDescriptor, fAD, iKey)
+				default:
+					ZUnimplemented();
+				}
+			}
 		}
-	return false;
+	return null;
 	}
 
-bool Map::QGet(const string8& iName, Val& oVal) const
-	{ return this->QGet(spAsKeyID(iName), oVal); }
+ZQ_T<Val> Map::QGet(const string8& iName) const
+	{ return this->QGet(spAsKeyID(iName)); }
 
-bool Map::QGet(Index_t iIndex, Val& oVal) const
-	{ return this->QGet(this->KeyOf(iIndex), oVal); }
+ZQ_T<Val> Map::QGet(Index_t iIndex) const
+	{ return this->QGet(this->KeyOf(iIndex)); }
 
 Val Map::DGet(const Val& iDefault, KeyID iKey) const
 	{
-	Val result;
-	if (this->QGet(iKey, result))
-		return result;
+	if (ZQ_T<Val> theQ = this->QGet(iKey))
+		return theQ.Get();
 	return iDefault;
 	}
 
 Val Map::DGet(const Val& iDefault, const string8& iName) const
 	{
-	Val result;
-	if (this->QGet(iName, result))
-		return result;
+	if (ZQ_T<Val> theQ = this->QGet(iName))
+		return theQ.Get();
 	return iDefault;
 	}
 
 Val Map::DGet(const Val& iDefault, Index_t iIndex) const
 	{
-	Val result;
-	if (this->QGet(iIndex, result))
-		return result;
+	if (ZQ_T<Val> theQ = this->QGet(iIndex))
+		return theQ.Get();
 	return iDefault;
 	}
 

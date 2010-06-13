@@ -77,45 +77,34 @@ static string16 spReadLimited(const UTF16* iSource, size_t iLimit)
 	return result;
 	}
 
-static bool spQGet(DWORD iType, const void* iBuffer, DWORD iLength, Val& oVal)
+static ZQ_T<Val> spQGet(DWORD iType, const void* iBuffer, DWORD iLength)
 	{
 	switch (iType)
 		{
 		case REG_NONE:
 			{
-			oVal = Val();
-			return true;
+			return Val();
 			}
 		case REG_BINARY:
 			{
-			oVal = Data(iBuffer, iLength);
-			return true;
+			return Data(iBuffer, iLength);
 			}
 		case REG_DWORD_LITTLE_ENDIAN:
 			{
 			if (iLength == 4)
-				{
-				oVal = int32(ZByteSwap_ReadLittle32(iBuffer));
-				return true;
-				}
+				return int32(ZByteSwap_ReadLittle32(iBuffer));
 			break;
 			}
 		case REG_DWORD_BIG_ENDIAN:
 			{
 			if (iLength == 4)
-				{
-				oVal = int32(ZByteSwap_ReadBig32(iBuffer));
-				return true;
-				}
+				return int32(ZByteSwap_ReadBig32(iBuffer));
 			break;
 			}
 		case REG_QWORD_LITTLE_ENDIAN:
 			{
 			if (iLength == 8)
-				{
-				oVal = int64(ZByteSwap_ReadLittle64(iBuffer));
-				return true;
-				}
+				return int64(ZByteSwap_ReadLittle64(iBuffer));
 			break;
 			}
 		case REG_EXPAND_SZ:
@@ -129,17 +118,16 @@ static bool spQGet(DWORD iType, const void* iBuffer, DWORD iLength, Val& oVal)
 
 				if (REG_EXPAND_SZ == iType)
 					{
-					oVal = String_Env(asString16);
+					return String_Env(asString16);
 					}
 				else if (REG_LINK == iType)
 					{
-					oVal = String_Link(asString16);
+					return String_Link(asString16);
 					}
 				else
 					{
-					oVal = asString16;
+					return asString16;
 					}
-				return true;
 				}
 			break;
 			}
@@ -154,11 +142,10 @@ static bool spQGet(DWORD iType, const void* iBuffer, DWORD iLength, Val& oVal)
 				cur += curString.length() + 1;
 				}
 
-			oVal = theVec;
-			return true;
+			return theVec;
 			}
 		}
-	return false;
+	return null;
 	}
 
 static string8 spKeyName(const ZRef<HKEY>& iHKEY, DWORD iMaxLengthKeyName, size_t iIndex)
@@ -329,10 +316,10 @@ KeyRef& KeyRef::operator=(const ZRef<HKEY>& iOther)
 	return *this;
 	}
 
-bool KeyRef::QGet(const string16& iName, Val& oVal) const
+ZQ_T<Val> KeyRef::QGet(const string16& iName) const
 	{
 	if (iName.empty())
-		return false;
+		return null;
 
 	if (iName[0] != '!')
 		{
@@ -344,10 +331,9 @@ bool KeyRef::QGet(const string16& iName, Val& oVal) const
 			KEY_READ,
 			&subKey.OParam()))
 			{
-			oVal = subKey;
-			return true;
+			return subKey;
 			}
-		return false;
+		return null;
 		}
 
 	DWORD curLength = 1024;
@@ -365,7 +351,7 @@ bool KeyRef::QGet(const string16& iName, Val& oVal) const
 			&length);
 
 		if (ERROR_SUCCESS == result)
-			return spQGet(type, &bufferVec[0], length, oVal);
+			return spQGet(type, &bufferVec[0], length);
 
 		if (ERROR_MORE_DATA == result)
 			{
@@ -375,18 +361,18 @@ bool KeyRef::QGet(const string16& iName, Val& oVal) const
 			continue;
 			}
 
-		return false;
+		return null;
 		}
 	}
 
-bool KeyRef::QGet(const string8& iName, Val& oVal) const
-	{ return this->QGet(ZUnicode::sAsUTF16(iName), oVal); }
+ZQ_T<Val> KeyRef::QGet(const string8& iName) const
+	{ return this->QGet(ZUnicode::sAsUTF16(iName)); }
 
-bool KeyRef::QGet(const Index_t& iIndex, Val& oVal) const
+ZQ_T<Val> KeyRef::QGet(const Index_t& iIndex) const
 	{
 	DWORD countKeys, maxLengthKeyName, countValues, maxLengthValueName;
 	if (!spCount(*this, &countKeys, &maxLengthKeyName, &countValues, &maxLengthValueName))
-		return false;
+		return null;
 
 	size_t offset = iIndex;
 	if (offset < countKeys)
@@ -411,16 +397,15 @@ bool KeyRef::QGet(const Index_t& iIndex, Val& oVal) const
 				KEY_READ,
 				&subKey.OParam()))
 				{
-				oVal = subKey;
-				return true;
+				return subKey;
 				}
 			}
-		return false;
+		return null;
 		}
 
 	offset -= countKeys;
 	if (offset >= countValues)
-		return false;
+		return null;
 		
 	vector<WCHAR> theName(maxLengthValueName);
 	DWORD curLength = 1024;
@@ -441,7 +426,7 @@ bool KeyRef::QGet(const Index_t& iIndex, Val& oVal) const
 			&length);
 
 		if (ERROR_SUCCESS == result)
-			return spQGet(type, &bufferVec[0], length, oVal);
+			return spQGet(type, &bufferVec[0], length);
 
 		if (ERROR_MORE_DATA == result)
 			{
@@ -450,31 +435,28 @@ bool KeyRef::QGet(const Index_t& iIndex, Val& oVal) const
 			continue;
 			}
 
-		return false;
+		return null;
 		}
 	}
 
 Val KeyRef::DGet(const Val& iDefault, const string16& iName) const
 	{
-	Val result;
-	if (this->QGet(iName, result))
-		return result;
+	if (ZQ_T<Val> theQ = this->QGet(iName))
+		return theQ.Get();
 	return iDefault;
 	}
 
 Val KeyRef::DGet(const Val& iDefault, const string8& iName) const
 	{
-	Val result;
-	if (this->QGet(ZUnicode::sAsUTF16(iName), result))
-		return result;
+	if (ZQ_T<Val> theQ = this->QGet(ZUnicode::sAsUTF16(iName)))
+		return theQ.Get();
 	return iDefault;
 	}
 
 Val KeyRef::DGet(const Val& iDefault, const Index_t& iIndex) const
 	{
-	Val result;
-	if (this->QGet(iIndex, result))
-		return result;
+	if (ZQ_T<Val> theQ = this->QGet(iIndex))
+		return theQ.Get();
 	return iDefault;
 	}
 

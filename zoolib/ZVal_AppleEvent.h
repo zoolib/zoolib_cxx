@@ -180,7 +180,6 @@ public:
 	void Clear();
 
 	ZQ_T<ZVal_AppleEvent> QGet(size_t iIndex) const;
-	bool QGet(size_t iIndex, ZVal_AppleEvent& oVal) const;
 	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, size_t iIndex) const;
 	ZVal_AppleEvent Get(size_t iIndex) const;
 
@@ -232,10 +231,6 @@ public:
 	ZQ_T<ZVal_AppleEvent> QGet(AEKeyword iName) const;
 	ZQ_T<ZVal_AppleEvent> QGet(const std::string& iName) const;
 	ZQ_T<ZVal_AppleEvent> QGet(Index_t iPropIter) const;
-
-	bool QGet(AEKeyword iName, ZVal_AppleEvent& oVal) const;
-	bool QGet(const std::string& iName, ZVal_AppleEvent& oVal) const;
-	bool QGet(Index_t iPropIter, ZVal_AppleEvent& oVal) const;
 
 	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, AEKeyword iName) const;
 	ZVal_AppleEvent DGet(const ZVal_AppleEvent& iDefault, const std::string& iName) const;

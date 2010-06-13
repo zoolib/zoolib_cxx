@@ -518,27 +518,23 @@ size_t ZSeq_CFType::Count() const
 void ZSeq_CFType::Clear()
 	{ inherited::Clear(); }
 
-bool ZSeq_CFType::QGet(size_t iIndex, ZRef<CFTypeRef>& oVal) const
+ZQ_T<ZVal_CFType> ZSeq_CFType::QGet(size_t iIndex) const
 	{
 	if (CFArrayRef theArray = this->pArray())
 		{
 		if (size_t theCount = ::CFArrayGetCount(theArray))
 			{
 			if (iIndex < theCount)
-				{
-				oVal = ::CFArrayGetValueAtIndex(theArray, iIndex);
-				return true;
-				}
+				return ::CFArrayGetValueAtIndex(theArray, iIndex);
 			}
 		}
-	return false;
+	return null;
 	}
 
 ZVal_CFType ZSeq_CFType::DGet(const ZVal_CFType& iDefault, size_t iIndex) const
 	{
-	ZVal_CFType result;
-	if (this->QGet(iIndex, result))
-		return result;
+	if (ZQ_T<ZVal_CFType> theQ = this->QGet(iIndex))
+		return theQ.Get();
 	return iDefault;
 	}
 
@@ -713,45 +709,37 @@ ZMap_CFType& ZMap_CFType::operator=(const Adopt_T<CFDictionaryRef>& iOther)
 void ZMap_CFType::Clear()
 	{ inherited::Clear(); }
 
-bool ZMap_CFType::QGet(const string8& iName, ZRef<CFTypeRef>& oVal) const
+ZQ_T<ZVal_CFType> ZMap_CFType::QGet(const string8& iName) const
 	{
 	if (CFDictionaryRef theDictionary = this->pDictionary())
 		{
 		if (CFTypeRef theVal = ::CFDictionaryGetValue(theDictionary, sString(iName)))
-			{
-			oVal = theVal;
-			return true;
-			}
+			return theVal;
 		}
-	return false;
+	return null;
 	}
 
-bool ZMap_CFType::QGet(CFStringRef iName, ZRef<CFTypeRef>& oVal) const
+ZQ_T<ZVal_CFType> ZMap_CFType::QGet(CFStringRef iName) const
 	{
 	if (CFDictionaryRef theDictionary = this->pDictionary())
 		{
 		if (CFTypeRef theVal = ::CFDictionaryGetValue(theDictionary, iName))
-			{
-			oVal = theVal;
-			return true;
-			}
+			return theVal;
 		}
-	return false;
+	return null;
 	}
 
 ZVal_CFType ZMap_CFType::DGet(const ZVal_CFType& iDefault, const string8& iName) const
 	{
-	ZVal_CFType theVal;
-	if (this->QGet(iName, theVal))
-		return theVal;
+	if (ZQ_T<ZVal_CFType> theQ = this->QGet(iName))
+		return theQ.Get();
 	return iDefault;
 	}
 
 ZVal_CFType ZMap_CFType::DGet(const ZVal_CFType& iDefault, CFStringRef iName) const
 	{
-	ZVal_CFType theVal;
-	if (this->QGet(iName, theVal))
-		return theVal;
+	if (ZQ_T<ZVal_CFType> theQ = this->QGet(iName))
+		return theQ.Get();
 	return iDefault;
 	}
 
