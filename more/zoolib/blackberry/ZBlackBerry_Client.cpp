@@ -480,7 +480,7 @@ ZRef<Device> Manager_Client::Open(uint64 iDeviceID)
 		}
 	catch (...)
 		{}
-	return nullref;
+	return null;
 	}
 
 

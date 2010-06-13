@@ -598,7 +598,7 @@ ZRef<ZBlackBerry::Device> ZBlackBerryServer::pGetDevice(uint64 iDeviceID)
 		if (i->fLive && i->fID == iDeviceID)
 			return i->fDevice;
 		}
-	return nullref;
+	return null;
 	}
 
 void ZBlackBerryServer::pRemove_ManagerChanged(ZRef<Handler_ManagerChanged> iHandler)

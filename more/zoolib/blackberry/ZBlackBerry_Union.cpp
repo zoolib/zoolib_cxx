@@ -152,7 +152,7 @@ ZRef<Device> Manager_Union::Open(uint64 iDeviceID)
 				}
 			}
 		}
-	return nullref;
+	return null;
 	}
 
 } // namespace ZBlackBerry

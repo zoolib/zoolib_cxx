@@ -1621,7 +1621,7 @@ ZRef<Channel> Device_Streamer::Open(bool iPreserveBoundaries,
 	{
 	if (fCommer)
 		return fCommer->Open(iPreserveBoundaries, iName, iPasswordHash, oError);
-	return nullref;
+	return null;
 	}
 
 Data Device_Streamer::GetAttribute(uint16 iObject, uint16 iAttribute)
