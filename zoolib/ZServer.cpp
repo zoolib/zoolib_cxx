@@ -61,9 +61,9 @@ void ZServer::StreamerListener::ListenFinished()
 
 bool ZServer::StreamerListener::Connected(ZRef<ZStreamerRW> iStreamerRW)
 	{
-	if (ZRef<ZTaskMaster> theTaskMaster = this->GetTaskMaster())
+	if (ZRef<ZServer> theServer = this->GetTaskMaster().StaticCast<ZServer>())
 		{
-		theTaskMaster.StaticCast<ZServer>()->pConnected(iStreamerRW);
+		theServer->pConnected(iStreamerRW);
 		return true;
 		}
 	return false;
@@ -72,7 +72,7 @@ bool ZServer::StreamerListener::Connected(ZRef<ZStreamerRW> iStreamerRW)
 void ZServer::StreamerListener::Kill()
 	{
 	ZStreamerListener::Stop();
-	ZWorker::Wake();
+	ZStreamerListener::Wake();
 	}
 
 // =================================================================================================
@@ -179,9 +179,10 @@ void ZServer::KillRespondersWait()
 
 ZRef<ZStreamerRWFactory> ZServer::GetFactory()
 	{
+	ZAcqMtx acq(fMtx);
 	if (ZRef<StreamerListener> theStreamerListener = fStreamerListener)
 		return theStreamerListener->GetFactory();
-	return ZRef<ZStreamerRWFactory>();
+	return null;
 	}
 
 ZSafeSetIterConst<ZRef<ZServer::Responder> > ZServer::GetResponders()
