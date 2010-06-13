@@ -38,10 +38,9 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZThread_T.h"
 
-// ZThread_Win.h gets pulled in by ZThread.h, which is referenced in quite
-// a few places. We want to avoid pulling in the full Windows headers if
-// possible, so in ZMtx_Win and ZSem_Win we define dummy versions of
-// HANDLE and CRITICAL_SECTION, and cast in the .cpp file.
+// ZThread_Win.h gets pulled in by ZThread.h, which is referenced in quite a few places. We want
+// to avoid pulling in the full Windows headers if possible, so we define dummy versions of HANDLE
+// and CRITICAL_SECTION, and cast in the .cpp file.
 
 typedef unsigned long DWORD;
 typedef void* LPVOID;
@@ -77,6 +76,8 @@ struct Dummy_CRITICAL_SECTION
 	void* LockSemaphore;
 	void* SpinCount;
 	};
+
+typedef void* Dummy_HANDLE;
 
 } // namespace ZThread_Win
 
@@ -149,8 +150,7 @@ public:
 	void Signal();
 
 protected:
-	typedef void* Dummy_HANDLE;
-	Dummy_HANDLE fHANDLE;
+	ZThread_Win::Dummy_HANDLE fHANDLE;
 	};
 
 } // namespace ZooLib
