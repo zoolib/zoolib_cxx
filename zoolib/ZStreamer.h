@@ -420,9 +420,9 @@ public:
 		{}
 
 	template <class P>
-	ZStreamerU_FT(P& iParam, ZRef<ZStreamerR> iStreamer)
+	ZStreamerU_FT(P& iParam, ZRef<ZStreamerU> iStreamer)
 	:	fStreamerReal(iStreamer),
-		fStream(iParam, iStreamer->GetStreamR())
+		fStream(iParam, iStreamer->GetStreamU())
 		{}
 
 	template <class P>
