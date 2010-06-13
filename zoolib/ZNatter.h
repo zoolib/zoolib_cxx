@@ -46,12 +46,13 @@ public:
 	virtual ~ZNatterChannel();
 
 	ZQ_T<ZData_Any> Receive(ZRef<ZNatterExchange>* oExchange);
+	void Send(ZData_Any iData);
 
 private:
 	// Called by ZNatterExchange instances
-	void pExchange_Add(ZNatterExchange* iExchange);
-	void pExchange_Remove(ZNatterExchange* iExchange);
-	ZQ_T<ZData_Any> pExchange_SendReceive(ZRef<ZNatterExchange> iExchange, ZData_Any iData);
+	void pAdd(ZNatterExchange* iExchange);
+	void pRemove(ZNatterExchange* iExchange);
+	ZQ_T<ZData_Any> pSendReceive(ZRef<ZNatterExchange> iExchange, ZData_Any iData);
 
 	ZQ_T<ZData_Any> pReadFor(ZGuardRMtxR& iGuard, ZRef<ZNatterExchange> iExchange);
 	void pRead(ZGuardRMtxR& iGuard);
@@ -86,10 +87,6 @@ private:
 class ZNatterExchange
 :	public ZCounted
 	{
-private:
-	// Called by ZNatterChannel::Receive
-	ZNatterExchange(bool dummy, ZRef<ZNatterChannel> iChannel);
-
 public:
 	ZNatterExchange(ZRef<ZNatterChannel> iChannel);
 	virtual ~ZNatterExchange();
