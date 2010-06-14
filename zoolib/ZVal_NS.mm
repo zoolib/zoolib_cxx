@@ -43,7 +43,7 @@ using ZUtil_NS::sDictionaryMutable;
 template <class T>
 T* spAs_T(NSObject* iObj)
 	{
-	if ([iObj isMemberOfClass:[NSNumber class]])
+	if ([iObj isMemberOfClass:[T class]])
 		return static_cast<T*>(iObj);
 	return nullptr;
 	}
@@ -200,135 +200,99 @@ void ZVal_NS::Clear()
 	{ inherited::Clear(); }
 
 template <>
-bool ZVal_NS::QGet_T<int8>(int8& oVal) const
+ZQ_T<int8> ZVal_NS::QGet_T<int8>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
-		{
-		oVal = [asNumber charValue];
-		return true;
-		}
-	return false;
+		return [asNumber charValue];
+	return null;
 	}
 
 template <>
-bool ZVal_NS::QGet_T<int16>(int16& oVal) const
+ZQ_T<int16> ZVal_NS::QGet_T<int16>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
-		{
-		oVal = [asNumber shortValue];
-		return true;
-		}
-	return false;
+		return [asNumber shortValue];
+	return null;
 	}
 
 template <>
-bool ZVal_NS::QGet_T<int32>(int32& oVal) const
+ZQ_T<int32> ZVal_NS::QGet_T<int32>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
-		{
-		oVal = [asNumber intValue];
-		return true;
-		}
-	return false;
+		return [asNumber intValue];
+	return null;
 	}
 
 template <>
-bool ZVal_NS::QGet_T<int64>(int64& oVal) const
+ZQ_T<int64> ZVal_NS::QGet_T<int64>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
-		{
-		oVal = [asNumber longLongValue];
-		return true;
-		}
-	return false;
+		return [asNumber longLongValue];
+	return null;
 	}
 
 template <>
-bool ZVal_NS::QGet_T<bool>(bool& oVal) const
+ZQ_T<bool> ZVal_NS::QGet_T<bool>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
-		{
-		oVal = [asNumber boolValue];
-		return true;
-		}
-	return false;
+		return [asNumber boolValue];
+	return null;
 	}
 
 template <>
-bool ZVal_NS::QGet_T<float>(float& oVal) const
+ZQ_T<float> ZVal_NS::QGet_T<float>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
-		{
-		oVal = [asNumber floatValue];
-		return true;
-		}
-	return false;
+		return [asNumber floatValue];
+	return null;
 	}
 
 template <>
-bool ZVal_NS::QGet_T<double>(double& oVal) const
+ZQ_T<double> ZVal_NS::QGet_T<double>() const
 	{
 	if (NSNumber* asNumber = spAsNumber(inherited::Get()))
-		{
-		oVal = [asNumber doubleValue];
-		return true;
-		}
-	return false;
+		return [asNumber doubleValue];
+	return null;
 	}
 
 template <>
-bool ZVal_NS::QGet_T<string8>(string8& oVal) const
+ZQ_T<string8> ZVal_NS::QGet_T<string8>() const
 	{
 	if (NSString* asString = spAs_T<NSString>(inherited::Get()))
-		{
-		oVal = sAsUTF8(asString);
-		return true;
-		}
-	return false;
+		return sAsUTF8(asString);
+	return null;
 	}
 
 template <>
-bool ZVal_NS::QGet_T<ZRef<NSString> >(ZRef<NSString>& oVal) const
+ZQ_T<ZRef<NSString> > ZVal_NS::QGet_T<ZRef<NSString> >() const
 	{
 	if (ZRef<NSString> asString = spAs_T<NSString>(inherited::Get()))
-		{
-		oVal = asString;
-		return true;
-		}
-	return false;
+		return asString;
+	return null;
 	}
 
 template <>
-bool ZVal_NS::QGet_T<ZData_NS>(ZData_NS& oVal) const
+ZQ_T<ZData_NS> ZVal_NS::QGet_T<ZData_NS>() const
 	{
 	if (ZRef<NSData> asData = spAs_T<NSData>(inherited::Get()))
-		{
-		oVal = asData;
-		return true;
-		}
-	return false;
+		return asData;
+	return null;
 	}
 
 template <>
-bool ZVal_NS::QGet_T<ZSeq_NS>(ZSeq_NS& oVal) const
+ZQ_T<ZSeq_NS> ZVal_NS::QGet_T<ZSeq_NS>() const
 	{
 	if (ZRef<NSArray> asArray = spAs_T<NSArray>(inherited::Get()))
-		{
-		oVal = asArray;
-		return true;
-		}
-	return false;
+		return asArray;
+	return null;
 	}
 
 template <>
-bool ZVal_NS::QGet_T<ZMap_NS>(ZMap_NS& oVal) const
+ZQ_T<ZMap_NS> ZVal_NS::QGet_T<ZMap_NS>() const
 	{
 	if (ZRef<NSDictionary> asDictionary = spAs_T<NSDictionary>(inherited::Get()))
-		{
-		oVal = asDictionary;
-		return true;
-		}
-	return false;
+		return asDictionary;
+	return null;
 	}
 
 template <>
@@ -498,27 +462,23 @@ size_t ZSeq_NS::Count() const
 void ZSeq_NS::Clear()
 	{ inherited::Clear(); }
 
-bool ZSeq_NS::QGet(size_t iIndex, ZRef<NSObject>& oVal) const
+ZQ_T<ZVal_NS> ZSeq_NS::QGet(size_t iIndex) const
 	{
 	if (NSArray* theArray = this->pArray())
 		{
 		if (size_t theCount = [theArray count])
 			{
 			if (iIndex < theCount)
-				{
-				oVal = [theArray objectAtIndex:iIndex];
-				return true;
-				}
+				return ZRef<NSObject>([theArray objectAtIndex:iIndex]);
 			}
 		}
-	return false;
+	return null;
 	}
 
 ZVal_NS ZSeq_NS::DGet(const ZVal_NS& iDefault, size_t iIndex) const
 	{
-	ZVal_NS result;
-	if (this->QGet(iIndex, result))
-		return result;
+	if (ZQ_T<ZVal_NS> theQ = this->QGet(iIndex))
+		return theQ.Get();
 	return iDefault;
 	}
 
@@ -690,45 +650,37 @@ ZMap_NS& ZMap_NS::operator=(const Adopt_T<NSDictionary>& iOther)
 void ZMap_NS::Clear()
 	{ inherited::Clear(); }
 
-bool ZMap_NS::QGet(const string8& iName, ZRef<NSObject>& oVal) const
+ZQ_T<ZVal_NS> ZMap_NS::QGet(const string8& iName) const
 	{
 	if (NSDictionary* theDictionary = this->pDictionary())
 		{
 		if (NSObject* theVal = [theDictionary objectForKey:sString(iName)])
-			{
-			oVal = theVal;
-			return true;
-			}
+			return theVal;
 		}
-	return false;
+	return null;
 	}
 
-bool ZMap_NS::QGet(NSString* iName, ZRef<NSObject>& oVal) const
+ZQ_T<ZVal_NS> ZMap_NS::QGet(NSString* iName) const
 	{
 	if (NSDictionary* theDictionary = this->pDictionary())
 		{
 		if (NSObject* theVal = [theDictionary objectForKey:iName])
-			{
-			oVal = theVal;
-			return true;
-			}
+			return theVal;
 		}
-	return false;
+	return null;
 	}
 
 ZVal_NS ZMap_NS::DGet(const ZVal_NS& iDefault, const string8& iName) const
 	{
-	ZVal_NS theVal;
-	if (this->QGet(iName, theVal))
-		return theVal;
+	if (ZQ_T<ZVal_NS> theQ = this->QGet(iName))
+		return theQ.Get();
 	return iDefault;
 	}
 
 ZVal_NS ZMap_NS::DGet(const ZVal_NS& iDefault, NSString* iName) const
 	{
-	ZVal_NS theVal;
-	if (this->QGet(iName, theVal))
-		return theVal;
+	if (ZQ_T<ZVal_NS> theQ = this->QGet(iName))
+		return theQ.Get();
 	return iDefault;
 	}
 

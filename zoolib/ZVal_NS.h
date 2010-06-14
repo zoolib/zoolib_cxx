@@ -93,7 +93,18 @@ public:
 	void Clear();
 
 	template <class S>
-	bool QGet_T(S& oVal) const;
+	ZQ_T<S> QGet_T() const;
+
+	template <class S>
+	bool QGet_T(S& oVal) const
+		{
+		if (ZQ_T<S> theQ = this->QGet_T<S>())
+			{
+			oVal = theQ.Get();
+			return true;
+			}
+		return false;
+		}
 
 	template <class S>
 	S DGet_T(const S& iDefault) const
@@ -161,7 +172,7 @@ public:
 
 	void Clear();
 
-	bool QGet(size_t iIndex, ZRef<NSObject>& oVal) const;
+	ZQ_T<ZVal_NS> QGet(size_t iIndex) const;
 	ZVal_NS DGet(const ZVal_NS& iDefault, size_t iIndex) const;
 	ZVal_NS Get(size_t iIndex) const;
 
@@ -217,8 +228,8 @@ public:
 // ZMap protocol
 	void Clear();
 
-	bool QGet(const string8& iName, ZRef<NSObject>& oVal) const;
-	bool QGet(NSString* iName, ZRef<NSObject>& oVal) const;
+	ZQ_T<ZVal_NS> QGet(const string8& iName) const;
+	ZQ_T<ZVal_NS> QGet(NSString* iName) const;
 
 	ZVal_NS DGet(const ZVal_NS& iDefault, const string8& iName) const;
 	ZVal_NS DGet(const ZVal_NS& iDefault, NSString* iName) const;
