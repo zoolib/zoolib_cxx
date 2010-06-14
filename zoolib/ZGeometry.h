@@ -26,7 +26,11 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZGeom_POD.h"
 
 #if ZCONFIG_SPI_Enabled(CoreGraphics)
-#	include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGGeometry.h)
+#	if ZCONFIG_SPI_Enabled(iPhone)
+#		include ZMACINCLUDE2(CoreGraphics,CGGeometry.h)
+#	else
+#		include ZMACINCLUDE3(ApplicationServices,CoreGraphics,CGGeometry.h)
+#	endif
 #endif
 
 #if ZCONFIG_SPI_Enabled(QuickDraw)
