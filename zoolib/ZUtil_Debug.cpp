@@ -221,12 +221,12 @@ void LogMeister::LogIt(
 			<< ZUtil_Time::sAsString_ISO8601_us(now, false)
 			#if __MACH__
 				// GDB on Mac uses the mach thread ID for the systag.
-				<< ZString::sFormat(" %5x/", ((int)mach_thread_self()))
+				<< ZStringf(" %5x/", ((int)mach_thread_self()))
 			#else
 				<< " 0x"
 			#endif
-			<< ZString::sFormat("%X", ZThread::sID())
-			<< " P" << ZString::sFormat("%X", iPriority)
+			<< ZStringf("%llX", (uint64)ZThread::sID())
+			<< " P" << ZStringf("%X", iPriority)
 			<< " " << extraSpace << iName
 			<< " - " << iMessage << "\n";
 

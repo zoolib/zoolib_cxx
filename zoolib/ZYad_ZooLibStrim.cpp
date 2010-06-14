@@ -824,28 +824,28 @@ static void spToStrim_SimpleValue(const ZStrimW& s, const ZAny& iVal,
 		if (ZIntIs32Bit)
 			s.Writef("int32(%d)", *theValue);
 		else
-			s.Writef("int64(%lld)", *theValue);
+			s.Writef("int64(%lld)", int64(*theValue));
 		}
 	else if (const unsigned int* theValue = ZAnyCast<unsigned int>(&iVal))
 		{
 		if (ZIntIs32Bit)
 			s.Writef("int32(%d)", *theValue);
 		else
-			s.Writef("int64(%lld)", *theValue);
+			s.Writef("int64(%lld)", int64(*theValue));
 		}
 	else if (const long* theValue = ZAnyCast<long>(&iVal))
 		{
 		if (ZLongIs32Bit)
-			s.Writef("int32(%d)", *theValue);
+			s.Writef("int32(%ld)", *theValue);
 		else
-			s.Writef("int64(%lld)", *theValue);
+			s.Writef("int64(%lld)", int64(*theValue));
 		}
 	else if (const unsigned long* theValue = ZAnyCast<unsigned long>(&iVal))
 		{
 		if (ZLongIs32Bit)
-			s.Writef("int32(%d)", *theValue);
+			s.Writef("int32(%ld)", long(*theValue));
 		else
-			s.Writef("int64(%lld)", *theValue);
+			s.Writef("int64(%lld)", int64(*theValue));
 		}
 	else if (const int64* theValue = ZAnyCast<int64>(&iVal))
 		{

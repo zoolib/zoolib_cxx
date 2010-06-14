@@ -77,7 +77,7 @@ ZNetName_Internet::~ZNetName_Internet()
 	{}
 
 string ZNetName_Internet::AsString() const
-	{ return fName + ZString::sFormat(":%d", fPort); }
+	{ return fName + ZStringf(":%d", fPort); }
 
 ZRef<ZNetNameLookup> ZNetName_Internet::CreateLookup(size_t iMaxAddresses) const
 	{

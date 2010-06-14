@@ -52,7 +52,7 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Retry::MakeStreamerRW()
 
 		if (ZLOG(s, eDebug, "ZStreamerRWFactory_Retry"))
 			{
-			s.Writef("Connect, attempt %d of %d",
+			s.Writef("Connect, attempt %zu of %zu",
 				attempt, fCount);
 			}
 
@@ -77,7 +77,7 @@ ZRef<ZStreamerRW> ZStreamerRWFactory_Retry::MakeStreamerRW()
 		else
 			{
 			if (ZLOG(s, eInfo, "ZStreamerRWFactory_Retry"))
-				s.Writef("Connect failed after %d attempts", fCount);
+				s.Writef("Connect failed after %zu attempts", fCount);
 
 			break;
 			}

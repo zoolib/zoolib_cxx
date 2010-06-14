@@ -68,7 +68,7 @@ public:
 		namespace { class CLASS : public ZCompareRegistration_T<t, ZCompare_T<t> > {} INST; }
 #else
 
-	template <class T, int (*CompareProc)(const T& iL, const T& iR)>
+	template <class T, int (*CompareProc)(const T&, const T&)>
 	class ZCompareRegistration_T : public ZCompare
 		{
 	public:

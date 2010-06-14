@@ -47,17 +47,17 @@ namespace ZooLib {
 
 // =================================================================================================
 
-string ZString::sFormat(const char* iString, ...)
+string ZStringf(const char* iString, ...)
 	{
 	va_list args;
 	va_start(args, iString);
-	string result = sFormat(iString, args);
+	string result = ZStringf(iString, args);
 	va_end(args);
 
 	return result;
 	}
 
-std::string ZString::sFormat(const char* iString, va_list iArgs)
+string ZStringf(const char* iString, std::va_list iArgs)
 	{
 	string result(512, ' ');
 	while (true)
@@ -89,6 +89,21 @@ std::string ZString::sFormat(const char* iString, va_list iArgs)
 
 	return result;
 	}
+
+// =================================================================================================
+
+string ZString::sFormat(const char* iString, ...)
+	{
+	va_list args;
+	va_start(args, iString);
+	string result = sFormat(iString, args);
+	va_end(args);
+
+	return result;
+	}
+
+string ZString::sFormat(const char* iString, va_list iArgs)
+	{ return ZStringf(iString, iArgs); }
 
 // =================================================================================================
 
@@ -217,7 +232,7 @@ bool ZString::sEquali(const string& iLeft, const string& iRight)
 
 bool ZString::sContainsi(const string& iTarget, const string& iCandidate)
 	{
-	return std::string::npos != ZUnicode::sToLower(iTarget).find(ZUnicode::sToLower(iCandidate));
+	return string::npos != ZUnicode::sToLower(iTarget).find(ZUnicode::sToLower(iCandidate));
 	}
 
 ZQ_T<int64> ZString::sQInt64(const string& iString)

@@ -96,7 +96,7 @@ ZRef<ZYadR> YadSeqR::ReadInc()
 	return ZRef<ZYadR>();
 	}
 
-} // namespace ZANONYMOUS
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

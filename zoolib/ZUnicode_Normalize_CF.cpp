@@ -96,7 +96,7 @@ class Function
 		}	
 	} sFunction0;
 
-} // namespace ZANONYMOUS
+} // anonymous namespace
 
 } // namespace ZUnicode
 } // namespace ZooLib

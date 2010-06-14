@@ -52,7 +52,7 @@ static string spErrorAsString(IOReturn iError)
 		case kIOReturnNoDevice: return "kIOReturnNotResponding";
 		case kIOReturnBadArgument: return "kIOReturnNotResponding";
 		case kIOReturnAborted: return "kIOReturnAborted";
-		default: return ZString::sFormat("%d", iError);
+		default: return ZStringf("%d", iError);
 		}
 	}
 

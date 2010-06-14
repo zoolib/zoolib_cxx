@@ -60,12 +60,12 @@ EPriority sPriorityFromName(const string& iString)
 string sNameFromPriority(EPriority iPriority)
 	{
 	if (iPriority < 0)
-		return ZString::sFormat("%d", iPriority);
+		return ZStringf("%d", iPriority);
 
 	if (iPriority <= eDebug)
 		return spNames[iPriority];
 
-	return spNames[eDebug] + ZString::sFormat("+%d", iPriority - eDebug);
+	return spNames[eDebug] + ZStringf("+%d", iPriority - eDebug);
 	}
 
 // =================================================================================================
@@ -209,7 +209,7 @@ FunctionEntryExit::~FunctionEntryExit()
 void sLogTrace(EPriority iPriority, const char* iFile, int iLine)
 	{
 	if (const S& s = S(iPriority, "ZLOGTRACE"))
-		s << iFile << ":" << ZString::sFormat("%d", iLine);
+		s << iFile << ":" << ZStringf("%d", iLine);
 	}
 
 } // namespace ZLog

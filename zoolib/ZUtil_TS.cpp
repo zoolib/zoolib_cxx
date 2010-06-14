@@ -363,13 +363,13 @@ void sRead(const ZStreamRPos& iStreamRPos, uint64& oNextUnusedID, Sink& iSink)
 		catch (ZUtil_Strim::ParseException& ex)
 			{
 			string newMessage = string("ParseException '") + ex.what()
-					+ "' at line " + ZString::sFormat("%d", theStrimU.GetLineCount());
+					+ "' at line " + ZStringf("%zu", theStrimU.GetLineCount());
 			throw ZUtil_Strim::ParseException(newMessage);
 			}
 		catch (Ex_MalformedText& ex)
 			{
 			string newMessage = string("Ex_MalformedText '") + ex.what()
-					+ "' at line " + ZString::sFormat("%d", theStrimU.GetLineCount());
+					+ "' at line " + ZStringf("%zu", theStrimU.GetLineCount());
 			throw Ex_MalformedText(newMessage);
 			}
 		}

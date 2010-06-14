@@ -493,7 +493,7 @@ string ZUtil_CarbonEvents::sEventAsString(EventClass iEC, EventKind iEK)
 		}
 
 	if (theKind.empty())
-		theKind = ZString::sFormat("%u", iEK);
+		theKind = ZStringf("%u", iEK);
 
 	return theClass + "/" + theKind;
 	}
@@ -516,7 +516,7 @@ string ZUtil_CarbonEvents::sEventTypeAsString(UInt16 iEventType)
 		EVENT(osEvt);
 		EVENT(kHighLevelEvent);
 		}
-	return ZString::sFormat("%u", iEventType);
+	return ZStringf("%u", iEventType);
 	}
 		
 } // namespace ZooLib

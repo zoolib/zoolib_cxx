@@ -1272,7 +1272,7 @@ const StrimW& StrimW::Attrf(const string8& iName, const UTF8* iValue, ...) const
 	{
 	va_list args;
 	va_start(args, iValue);
-	string8 theValue = ZString::sFormat(iValue, args);
+	string8 theValue = ZStringf(iValue, args);
 	va_end(args);
 
 	const_cast<StrimW*>(this)->pAttr(iName, new string8(theValue));

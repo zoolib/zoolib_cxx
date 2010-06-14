@@ -98,7 +98,7 @@ private:
 	char* fBuffer;
 	};
 
-} // namespace ZANONYMOUS
+} // anonymous namespace
 
 inline ValString::~ValString()
 	{ delete[] fBuffer; }

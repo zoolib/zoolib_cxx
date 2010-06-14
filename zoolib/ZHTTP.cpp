@@ -173,12 +173,12 @@ void Response::Set(const string& iName, const string& iValue)
 
 void Response::Set(const string& iName, int iValue)
 	{
-	fHeaders.push_back(pair<string, string>(iName, ZString::sFormat("%d", iValue)));
+	fHeaders.push_back(pair<string, string>(iName, ZStringf("%d", iValue)));
 	}
 
 void Response::Set(const string& iName, uint64 iValue)
 	{
-	fHeaders.push_back(pair<string, string>(iName, ZString::sFormat("%lld", iValue)));
+	fHeaders.push_back(pair<string, string>(iName, ZStringf("%lld", iValue)));
 	}
 
 void Response::Send(const ZStreamW& s) const

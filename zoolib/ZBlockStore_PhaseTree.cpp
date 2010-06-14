@@ -1347,9 +1347,9 @@ void ZBlockStore_PhaseTree::DumpMeta()
 	{
 	fMutex_Slots.Acquire();
 	fprintf(stdout, "Root Slot: %d, Height: %d, Highwater: %d, "
-		"ReleasedClean: %d, ReleasedForked: %d, Forked: %d\n",
-		fRootSlotNumber, fHeight, fHighWater, fSlots_ReleasedClean.size(),
-		fSlots_ReleasedForked.size(), fSlots_Forked.size());
+		"ReleasedClean: %zu, ReleasedForked: %zu, Forked: %zu\n",
+		fRootSlotNumber, fHeight, fHighWater,
+		fSlots_ReleasedClean.size(), fSlots_ReleasedForked.size(), fSlots_Forked.size());
 
 	int loadedHitRate = 0;
 	int cachedHitRate = 0;
@@ -1360,7 +1360,7 @@ void ZBlockStore_PhaseTree::DumpMeta()
 		}
 
 	fprintf(stdout,
-		"Loaded slots: %d, use requests: %d, use cached %d, "
+		"Loaded slots: %zu, use requests: %d, use cached %d, "
 		"use failures: %d, loaded hit rate: %d, cached hit rate\n",
 		fSlots_Loaded.size(), fUseRequests, fUseCached,
 		fUseFailures, 100 - loadedHitRate, 100 - cachedHitRate);
@@ -1397,7 +1397,7 @@ void ZBlockStore_PhaseTree::DumpOne(Slot* iSlot, int iHeight, int iIndent)
 	if (iHeight)
 		{
 		spPrintIndent(iIndent);
-		fprintf(stdout, "Count: %d Slot: %d\n", count, iSlot->fSlotNumber);
+		fprintf(stdout, "Count: %zu Slot: %d\n", count, iSlot->fSlotNumber);
 		for (size_t x = 0; x <= count; ++x)
 			{
 			if (x)
@@ -1415,7 +1415,7 @@ void ZBlockStore_PhaseTree::DumpOne(Slot* iSlot, int iHeight, int iIndent)
 	else
 		{
 		spPrintIndent(iIndent);
-		fprintf(stdout, "Count: %d Slot: %d\n", count, iSlot->fSlotNumber);
+		fprintf(stdout, "Count: %zu Slot: %d\n", count, iSlot->fSlotNumber);
 		for (size_t x = 0; x < count; ++x)
 			{
 			spPrintIndent(iIndent);

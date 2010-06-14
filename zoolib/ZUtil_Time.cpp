@@ -424,7 +424,7 @@ string ZUtil_Time::sAsString_ISO8601(ZTime iTime, bool iIncludeT)
 	// to the count of seconds, so to get up to 7 digits in the fraction we
 	// need to allow ten digits overall.
 	const string YmdHM = spYmdHM(iTime, iIncludeT);
-	return YmdHM + ZString::sFormat("%.10g", 100.0 + fmod(iTime.fVal, 60)).substr(1);
+	return YmdHM + ZStringf("%.10g", 100.0 + fmod(iTime.fVal, 60)).substr(1);
 	}
 
 string ZUtil_Time::sAsString_ISO8601_s(ZTime iTime, bool iIncludeT)
@@ -438,13 +438,13 @@ string ZUtil_Time::sAsString_ISO8601_s(ZTime iTime, bool iIncludeT)
 string ZUtil_Time::sAsString_ISO8601_ms(ZTime iTime, bool iIncludeT)
 	{
 	const string YmdHM = spYmdHM(iTime, iIncludeT);
-	return YmdHM + ZString::sFormat("%06.3f", fmod(iTime.fVal, 60));
+	return YmdHM + ZStringf("%06.3f", fmod(iTime.fVal, 60));
 	}
 
 string ZUtil_Time::sAsString_ISO8601_us(ZTime iTime, bool iIncludeT)
 	{
 	const string YmdHM = spYmdHM(iTime, iIncludeT);
-	return YmdHM + ZString::sFormat("%09.6f", fmod(iTime.fVal, 60));
+	return YmdHM + ZStringf("%09.6f", fmod(iTime.fVal, 60));
 	}
 
  ZTime ZUtil_Time::sFromString_ISO8601(const string& iString)

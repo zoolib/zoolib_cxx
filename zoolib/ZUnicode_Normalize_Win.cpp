@@ -133,7 +133,7 @@ class Function
 
 #endif // WINVER >= 0x0500
 
-} // namespace ZANONYMOUS
+} // anonymous namespace
 
 } // namespace ZUnicode
 } // namespace ZooLib
