@@ -27,6 +27,14 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdarg.h> // For va_list
 #include <stdexcept> // For range_error
 
+#ifndef ZMACRO_ATTRIBUTE_FORMAT_PRINTF
+	#if ZCONFIG(Compiler,GCC)
+		#define ZMACRO_ATTRIBUTE_FORMAT_PRINTF(m,n) __attribute__((format(printf,m,n)))
+	#else
+		#define ZMACRO_ATTRIBUTE_FORMAT_PRINTF(m,n)
+	#endif
+#endif
+
 namespace ZooLib {
 
 class ZStrimW;
@@ -254,8 +262,10 @@ public:
 
 /** \name Formatted strings
 */	//@{
-	const ZStrimW& Writef(const UTF8* iString, ...) const;
-	const ZStrimW& Writef(size_t& oWritten, const UTF8* iString, ...) const;
+	const ZStrimW& Writef(const UTF8* iString, ...) const
+		ZMACRO_ATTRIBUTE_FORMAT_PRINTF(2,3);
+	const ZStrimW& Writef(size_t& oWritten, const UTF8* iString, ...) const
+		ZMACRO_ATTRIBUTE_FORMAT_PRINTF(3,4);
 	const ZStrimW& Writev(const UTF8* iString, va_list iArgs) const;
 	const ZStrimW& Writev(size_t& oWritten, const UTF8* iString, va_list iArgs) const;
 	//@}
@@ -492,6 +502,7 @@ public:
 
 
 	const Self_t& Writef(const UTF8* iString, ...) const
+		ZMACRO_ATTRIBUTE_FORMAT_PRINTF(2,3)
 		{
 		va_list args;
 		va_start(args, iString);
@@ -501,6 +512,7 @@ public:
 		}
 
 	const Self_t& Writef(size_t& oWritten, const UTF8* iString, ...) const
+		ZMACRO_ATTRIBUTE_FORMAT_PRINTF(3,4)
 		{
 		va_list args;
 		va_start(args, iString);
