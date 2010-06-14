@@ -105,7 +105,7 @@ string sAsString(NPNVariable iVar)
 			CASE(NPNVsupportsOpenGLBool);
 		#endif
 		}
-	return ZString::sFormat("NPNVariable=%d", iVar);
+	return ZStringf("NPNVariable=%d", iVar);
 	}
 
 string sAsString(NPPVariable iVar)
@@ -129,7 +129,7 @@ string sAsString(NPPVariable iVar)
 			CASE(NPPVpluginDrawingModel);
 		#endif
 		}
-	return ZString::sFormat("NPPVariable=%d", iVar);
+	return ZStringf("NPPVariable=%d", iVar);
 	}
 
 #undef CASE

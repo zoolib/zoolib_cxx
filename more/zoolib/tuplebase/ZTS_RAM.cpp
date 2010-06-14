@@ -116,7 +116,7 @@ void ZTS_RAM::SetTuples(size_t iCount, const uint64* iIDs, const ZTuple* iTuples
 			{
 			if (ZLOG(s, eErr, "ZTS_RAM::SetTuples"))
 				{
-				s.Writef("Ignoring ID %X, which is zero or lies beyond the allocated range (%X)",
+				s.Writef("Ignoring ID %llx, which is zero or lies beyond the allocated range (%llx)",
 					theID, fNextUnusedID);
 				}
 			continue;

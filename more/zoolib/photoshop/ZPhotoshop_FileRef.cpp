@@ -129,7 +129,7 @@ void* UseHandle::Ptr() const
 size_t UseHandle::Size() const
 	{ return spPSHandle->GetSize(fHandle); }
 
-} // namespace ZANONYMOUS
+} // anonymous namespace
 
 // =================================================================================================
 #pragma mark -

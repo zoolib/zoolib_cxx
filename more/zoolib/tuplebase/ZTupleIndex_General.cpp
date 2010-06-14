@@ -195,7 +195,7 @@ size_t ZTupleIndex_General::CanHandle(const ZTBSpec::CriterionSect& iCriterionSe
 void ZTupleIndex_General::WriteDescription(const ZStrimW& s)
 	{
 	s << "ZTupleIndex_General. ";
-	s.Writef("%d entries, indexing on ", fSet.size());
+	s.Writef("%zu entries, indexing on ", fSet.size());
 	for (size_t x = 0; x < fPropNameCount; ++x)
 		s << fPropNames[x].AsString() << ", ";
 	}

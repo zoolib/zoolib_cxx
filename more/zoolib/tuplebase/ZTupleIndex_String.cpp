@@ -161,7 +161,7 @@ size_t ZTupleIndex_String::CanHandle(const ZTBSpec::CriterionSect& iCriterionSec
 void ZTupleIndex_String::WriteDescription(const ZStrimW& s)
 	{
 	s << "ZTupleIndex_String. ";
-	s.Writef("%d entries, ", fSet.size());
+	s.Writef("%zu entries, ", fSet.size());
 	s << "indexing on " << fPropName.AsString();
 	}
 

@@ -279,7 +279,7 @@ void ZTSoup::Register(ZRef<ZTSieve> iTSieve, const ZTBQuery& iTBQuery, bool iPre
 
 	if (ZLOG(s, eDebug + 1, "ZTSoup"))
 		{
-		s.Writef("Registering against sieve, ID: %X", thePSieve);
+		s.Writef("Registering against sieve, ID: %p", thePSieve);
 		if (!thePSieve->fWatcherKnown)
 			s << ", not known to watcher";
 		}
@@ -402,7 +402,7 @@ bool ZTSoup::Sync()
 						<< " On update list? "
 						<< (static_cast<DLink_PCrouton_Update*>
 							(thePCrouton)->fNext ? "yes " : "no ")
-						<< ZString::sFormat("%llX: ", thePCrouton->fID)
+						<< ZStringf("%llX: ", thePCrouton->fID)
 						<< thePCrouton->fValue;
 					}
 				}
@@ -448,7 +448,7 @@ bool ZTSoup::Sync()
 				s << "Got a PSieve on the sync list that maybe shouldn't be there: "
 					<< " On update list? "
 					<< (static_cast<DLink_PSieve_Update*>(thePSieve)->fNext ? "yes " : "no ")
-					<< ZString::sFormat("ID: %llX, value: ", reinterpret_cast<int64>(thePSieve))
+					<< ZStringf("ID: %llX, value: ", reinterpret_cast<int64>(thePSieve))
 					<< thePSieve->fTBQuery.AsTuple();
 				}
 			}
@@ -730,7 +730,7 @@ void ZTSoup::Update()
 	if (fPCroutons_Pending)
 		{
 		if (ZLOG(s, eDebug + 1, "ZTSoup"))
-			s.Writef("Moving %d croutons from pending to update", fPCroutons_Pending.Size());
+			s.Writef("Moving %zu croutons from pending to update", fPCroutons_Pending.Size());
 
 		for (DListIteratorEraseAll<PCrouton, DLink_PCrouton_Pending>
 			iter = fPCroutons_Pending;
@@ -1231,9 +1231,9 @@ void ZTBowl::Changed(ZTSoup::EChanged iChanged)
 				if (ZLOG(s, eDebug, "ZTBowl"))
 					{
 					s << "Changed, removing TCrouton, ID: "
-						<< ZString::sFormat("%llX", theTCrouton->GetID())
-						<< ", Address: " << ZString::sFormat("%X", theTCrouton.Get())
-						<< ", Refcount: " << ZString::sFormat("%d", theTCrouton->GetRefCount());
+						<< ZStringf("%llX", theTCrouton->GetID())
+						<< ", Address: " << ZStringf("%p", theTCrouton.Get())
+						<< ", Refcount: " << ZStringf("%d", theTCrouton->GetRefCount());
 					}
 
 				(*i).StaticCast<ZTCrouton_Bowl>()->fTBowl.Clear();
@@ -1257,8 +1257,8 @@ void ZTBowl::Changed(ZTSoup::EChanged iChanged)
 
 		if (ZLOG(s, eDebug, "ZTBowl"))
 			{
-			s << "Changed, added TCrouton, ID: " << ZString::sFormat("%llX", *i)
-				<< ", Address: " << ZString::sFormat("%X", newCrouton.Get());
+			s << "Changed, added TCrouton, ID: " << ZStringf("%llX", *i)
+				<< ", Address: " << ZStringf("%p", newCrouton.Get());
 			}
 
 		this->GetTSoup()->Register(newCrouton, *i);

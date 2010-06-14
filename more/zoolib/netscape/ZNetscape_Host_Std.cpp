@@ -867,7 +867,7 @@ static string spFixURL(const string& iBaseURL, const string& iRelativeURL)
 		if (!basePort)
 			basePort = 80;
 
-		const string resultURL = baseScheme + "://" + baseHost + ZString::sFormat(":%d", basePort);
+		const string resultURL = baseScheme + "://" + baseHost + ZStringf(":%d", basePort);
 		if (relPath.substr(0, 1) == "/")
 			{
 			return resultURL + relPath;

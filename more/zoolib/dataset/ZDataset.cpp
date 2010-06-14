@@ -64,7 +64,7 @@ string Nombre::AsString() const
 	{
 	string result;
 	for (vector<uint64>::const_iterator i = fForks.begin(); i != fForks.end(); ++i)
-		result += "/" + ZString::sFormat("%llu", *i);
+		result += "/" + ZStringf("%llu", *i);
 	return result;
 	}
 
@@ -121,7 +121,7 @@ Clock NamedClock::GetClock() const
 	{ return fClock; }
 
 string NamedClock::AsString() const
-	{ return fNombre.AsString() + ":" /*+ ZString::sFormat("%llu", fClock)*/; }
+	{ return fNombre.AsString() + ":" /*+ ZStringf("%llu", fClock)*/; }
 
 // =================================================================================================
 #pragma mark -
