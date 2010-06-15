@@ -103,7 +103,7 @@ void ZWorkerRunner::pAttachWorker(ZRef<ZWorker> iWorker)
 void ZWorkerRunner::pDetachWorker(ZRef<ZWorker> iWorker)
 	{
 	ZAssert(iWorker);
-	ZAssert(this == ZRef<ZWorkerRunner>(iWorker->fRunner));
+	ZAssert(ZRef<ZWorkerRunner>(iWorker->fRunner) == this);
 
 	iWorker->fRunner.Clear();
 
