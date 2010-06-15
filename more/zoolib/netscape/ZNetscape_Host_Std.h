@@ -99,15 +99,15 @@ public:
 	virtual NPIdentifier GetStringIdentifier(const NPUTF8* name);
 
 	virtual void GetStringIdentifiers(
-		const NPUTF8* *names, int32_t nameCount, NPIdentifier* identifiers);
+		const NPUTF8* *names, int32 nameCount, NPIdentifier* identifiers);
 
-	virtual NPIdentifier GetIntIdentifier(int32_t intid);
+	virtual NPIdentifier GetIntIdentifier(int32 intid);
 
 	virtual bool IdentifierIsString(NPIdentifier identifier);
 
 	virtual NPUTF8* UTF8FromIdentifier(NPIdentifier identifier);
 
-	virtual int32_t IntFromIdentifier(NPIdentifier identifier);
+	virtual int32 IntFromIdentifier(NPIdentifier identifier);
 
 	virtual NPObject* CreateObject(NPP npp, NPClass* aClass);
 

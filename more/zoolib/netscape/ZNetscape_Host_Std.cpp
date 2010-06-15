@@ -283,13 +283,13 @@ NPIdentifier HostMeister_Std::GetStringIdentifier(const NPUTF8* name)
 	}
 
 void HostMeister_Std::GetStringIdentifiers(
-	const NPUTF8* *names, int32_t nameCount, NPIdentifier* identifiers)
+	const NPUTF8* *names, int32 nameCount, NPIdentifier* identifiers)
 	{
 	while (--nameCount)
 		*identifiers++ = this->GetStringIdentifier(*names++);
 	}
 
-NPIdentifier HostMeister_Std::GetIntIdentifier(int32_t intid)
+NPIdentifier HostMeister_Std::GetIntIdentifier(int32 intid)
 	{ return reinterpret_cast<NPIdentifier>((intptr_t(intid) << 1) | 0x1); }
 
 bool HostMeister_Std::IdentifierIsString(NPIdentifier identifier)
@@ -302,9 +302,9 @@ NPUTF8* HostMeister_Std::UTF8FromIdentifier(NPIdentifier identifier)
 	return nullptr;
 	}
 
-int32_t HostMeister_Std::IntFromIdentifier(NPIdentifier identifier)
+int32 HostMeister_Std::IntFromIdentifier(NPIdentifier identifier)
 	{
-	const int32_t asInt = reinterpret_cast<intptr_t>(identifier);
+	const int32 asInt = reinterpret_cast<intptr_t>(identifier);
 	if (asInt & 0x1)
 		return asInt >> 1;
 	return 0;
