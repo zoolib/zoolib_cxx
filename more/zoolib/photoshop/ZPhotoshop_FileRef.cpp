@@ -493,8 +493,7 @@ ZTrail FileRef::AsTrail() const
 		// an 8 bit string in the system codepage, skipping the NUL terminator.
 		ZStreamRPos_Memory theStreamR(header, handleSize - 1);
 		const string8 theWinPath =
-			ZStrimR_StreamDecoder(new ZTextDecoder_Win(spSystemCodePage()), theStreamR)
-			.theStrimR.ReadAll8();
+			ZStrimR_StreamDecoder(new ZTextDecoder_Win(spSystemCodePage()), theStreamR).ReadAll8();
 		return sWinAsTrail(theWinPath);
 
 	#else
