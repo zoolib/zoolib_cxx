@@ -496,7 +496,7 @@ RealRep_Win::~RealRep_Win()
 
 bool RealRep_Win::HasValue(size_t iIndex)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	while (fHANDLE != INVALID_HANDLE_VALUE && iIndex >= fNames.size())
 		{
 		WIN32_FIND_DATAA theWFD;
@@ -517,14 +517,14 @@ bool RealRep_Win::HasValue(size_t iIndex)
 
 ZFileSpec RealRep_Win::GetSpec(size_t iIndex)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	ZAssertStop(kDebug_File_Win, iIndex < fNames.size());
 	return ZFileSpec(fFileLoc, fNames[iIndex]);
 	}
 
 string RealRep_Win::GetName(size_t iIndex)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	ZAssertStop(kDebug_File_Win, iIndex < fNames.size());
 	return fNames[iIndex];
 	}
@@ -1088,7 +1088,7 @@ RealRep_WinNT::~RealRep_WinNT()
 
 bool RealRep_WinNT::HasValue(size_t iIndex)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	while (fHANDLE != INVALID_HANDLE_VALUE && iIndex >= fNames.size())
 		{
 		WIN32_FIND_DATAW theWFD;
@@ -1109,14 +1109,14 @@ bool RealRep_WinNT::HasValue(size_t iIndex)
 
 ZFileSpec RealRep_WinNT::GetSpec(size_t iIndex)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	ZAssertStop(kDebug_File_Win, iIndex < fNames.size());
 	return ZFileSpec(fFileLoc, ZUnicode::sAsUTF8(fNames[iIndex]));
 	}
 
 string RealRep_WinNT::GetName(size_t iIndex)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	ZAssertStop(kDebug_File_Win, iIndex < fNames.size());
 	return ZUnicode::sAsUTF8(fNames[iIndex]);
 	}
@@ -1638,7 +1638,7 @@ ZFileR_Win::~ZFileR_Win()
 
 ZFile::Error ZFileR_Win::ReadAt(uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	if (fPosition != iOffset)
 		{
 		ZFile::Error err = spSetPosition(fFileHANDLE, iOffset);
@@ -1709,7 +1709,7 @@ ZFileW_Win::~ZFileW_Win()
 ZFile::Error ZFileW_Win::WriteAt(
 	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	if (fPosition != iOffset)
 		{
 		ZFile::Error err = spSetPosition(fFileHANDLE, iOffset);
@@ -1742,20 +1742,20 @@ ZFile::Error ZFileW_Win::GetSize(uint64& oSize)
 
 ZFile::Error ZFileW_Win::SetSize(uint64 iSize)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	fPosition = kInvalidPos;
 	return spSetSize(fFileHANDLE, iSize);
 	}
 
 ZFile::Error ZFileW_Win::Flush()
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	return spFlushVolume(fFileHANDLE);
 	}
 
 ZFile::Error ZFileW_Win::FlushVolume()
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	return spFlushVolume(fFileHANDLE);
 	}
 
@@ -1808,7 +1808,7 @@ ZFileRW_Win::~ZFileRW_Win()
 
 ZFile::Error ZFileRW_Win::ReadAt(uint64 iOffset, void* oDest, size_t iCount, size_t* oCountRead)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	if (fPosition != iOffset)
 		{
 		ZFile::Error err = spSetPosition(fFileHANDLE, iOffset);
@@ -1839,7 +1839,7 @@ ZFile::Error ZFileRW_Win::ReadAt(uint64 iOffset, void* oDest, size_t iCount, siz
 ZFile::Error ZFileRW_Win::WriteAt(
 	uint64 iOffset, const void* iSource, size_t iCount, size_t* oCountWritten)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	if (fPosition != iOffset)
 		{
 		ZFile::Error err = spSetPosition(fFileHANDLE, iOffset);
@@ -1872,20 +1872,20 @@ ZFile::Error ZFileRW_Win::GetSize(uint64& oSize)
 
 ZFile::Error ZFileRW_Win::SetSize(uint64 iSize)
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	fPosition = kInvalidPos;
 	return spSetSize(fFileHANDLE, iSize);
 	}
 
 ZFile::Error ZFileRW_Win::Flush()
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	return spFlush(fFileHANDLE);
 	}
 
 ZFile::Error ZFileRW_Win::FlushVolume()
 	{
-	ZGuardMtx locker(fMutex);
+	ZAcqMtx acq(fMutex);
 	return spFlushVolume(fFileHANDLE);
 	}
 
