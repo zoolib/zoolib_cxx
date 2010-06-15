@@ -103,7 +103,7 @@ template <> struct AssertCompile<true> { typedef bool IsValid; };
 #define ZUnimplemented() ZDebugStopf(0, ("Unimplemented routine"))
 
 // There are still quite a lot of places where plain old ZAssert is used.
-#define ZAssert(a) ZAssertStop(1, a)
+#define ZAssert(a) ZAssertStop(0, a)
 
 } // namespace ZDebug
 
