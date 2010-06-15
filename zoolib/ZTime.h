@@ -112,7 +112,7 @@ public:
 	static const uint64 kEpochDelta_1601_To_1970 =
 		((ZUINT64_C(369) * 365) + 89) * 24 * 60 * 60; // == 11,644,473,600
 
-	static const uint32 kEpochDelta_1970_To_2001 = -978307200U;
+	static const int32 kEpochDelta_1970_To_2001 = -978307200;
 
 	static const uint32 kEpochDelta_2001_To_1970 = 978307200U;
 	};
