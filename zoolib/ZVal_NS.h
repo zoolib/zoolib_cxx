@@ -27,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/NSArray.h>
 #import <Foundation/NSDictionary.h>
-//#import <Foundation/NSArray.h>
 
 #include "zoolib/ZCompat_operator_bool.h"
 #include "zoolib/ZData_NS.h"
@@ -61,6 +60,7 @@ public:
 	~ZVal_NS();
 	ZVal_NS& operator=(const ZVal_NS& iOther);
 
+	ZVal_NS(struct objc_object* iVal);
 	ZVal_NS(NSObject* iVal);
 	ZVal_NS(const ZRef<NSObject>& iVal);
 	ZVal_NS(const Adopt_T<NSObject>& iVal);

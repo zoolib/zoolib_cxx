@@ -98,6 +98,10 @@ ZVal_NS& ZVal_NS::operator=(const ZVal_NS& iOther)
 	return *this;
 	}
 
+ZVal_NS::ZVal_NS(struct objc_object* iVal)
+:	inherited(iVal)
+	{}
+
 ZVal_NS::ZVal_NS(NSObject* iVal)
 :	inherited(iVal)
 	{}
@@ -469,7 +473,7 @@ ZQ_T<ZVal_NS> ZSeq_NS::QGet(size_t iIndex) const
 		if (size_t theCount = [theArray count])
 			{
 			if (iIndex < theCount)
-				return ZRef<NSObject>([theArray objectAtIndex:iIndex]);
+				return ZVal_NS([theArray objectAtIndex:iIndex]);
 			}
 		}
 	return null;
