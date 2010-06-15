@@ -27,6 +27,12 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZDebug.h"
 #include "zoolib/ZTypes.h" // For Adopt_T
 
+#ifdef __OBJC__
+	@class NSObject;
+//	#include "zoolib/ZOBJC.h"
+//	#include <Foundation/NSObject.h>
+#endif // __OBJC__
+
 namespace ZooLib {
 
 // =================================================================================================
@@ -59,15 +65,20 @@ private:
 		}
 
 public:
-//	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRef,
-//		operator_bool_generator_type, operator_bool_type);
 
-//	operator operator_bool_type() const
-//		{ return operator_bool_generator_type::translate(fP); }
+#ifdef __OBJC__
+	operator bool() const { return !!fP; }
 
-	// Needed for Objective C method invocation. Need to conditionalize this
-	// vs operator_bool_type based on T being derived from objc_object.
-	operator T*() const { return fP; }
+	template <class O>
+	operator O*() const { return fP; }
+
+#else
+	ZOOLIB_DEFINE_OPERATOR_BOOL_TYPES_T(ZRef,
+		operator_bool_generator_type, operator_bool_type);
+
+	operator operator_bool_type() const
+		{ return operator_bool_generator_type::translate(fP); }
+#endif
 
 	void swap(ZRef& iOther)
 		{ std::swap(fP, iOther.fP); }
