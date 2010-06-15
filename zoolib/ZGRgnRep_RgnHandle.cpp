@@ -41,7 +41,7 @@ RgnHandle sCopyRgn(RgnHandle iSource)
 	return result;
 	}
 
-RgnHandle sNewRectRgn(const ZRect& iRect)
+RgnHandle sNewRectRgn(const ZRectPOD& iRect)
 	{
 	RgnHandle result = ::NewRgn();
 	::MacSetRectRgn(result, iRect.left, iRect.top, iRect.right, iRect.bottom);
@@ -54,7 +54,7 @@ struct State_t
 	RgnHandle fTemp;
 	};
 
-bool sDecomposeRepProc(const ZRect& iRect, void* iRefcon)
+bool sDecomposeRepProc(const ZRectPOD& iRect, void* iRefcon)
 	{
 	// Use ZAccumulator_T at some point.
 	State_t* theState = static_cast<State_t*>(iRefcon);
@@ -108,7 +108,7 @@ RgnHandle sMakeRgnHandle(const ZRef<ZGRgnRep>& iRep)
 namespace { // anonymous
 
 class Make_Rect
-:	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRect&>
+:	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRectPOD&>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -164,8 +164,12 @@ OSStatus sDecompose_RgnHandle(UInt16 iMessage, RgnHandle iRgnHandle,
 		{
 		DecomposeRgnHandle_t* theStruct = reinterpret_cast<DecomposeRgnHandle_t*>(iRefcon);
 		++theStruct->fCallsMade;
-		if (theStruct->fDecomposeProc(*iRect, theStruct->fRefcon))
+		if (theStruct->fDecomposeProc(
+			sRectPOD(iRect->left, iRect->top, iRect->right, iRect->bottom),
+			theStruct->fRefcon))
+			{
 			return userCanceledErr;
+			}
 		}
 	return noErr;
 	}
@@ -196,11 +200,11 @@ bool ZGRgnRep_RgnHandle::Contains(ZCoord iH, ZCoord iV)
 bool ZGRgnRep_RgnHandle::IsEmpty()
 	{ return ::EmptyRgn(fRgnHandle); }
 
-ZRect ZGRgnRep_RgnHandle::Bounds()
+ZRectPOD ZGRgnRep_RgnHandle::Bounds()
 	{
 	Rect theRect;
 	::GetRegionBounds(fRgnHandle, &theRect);
-	return theRect;
+	return sRectPOD(theRect.left, theRect.top, theRect.right, theRect.bottom);
 	}
 
 bool ZGRgnRep_RgnHandle::IsSimpleRect()
@@ -236,42 +240,42 @@ ZRef<ZGRgnRep> ZGRgnRep_RgnHandle::Offsetted(ZCoord iH, ZCoord iV)
 	return new ZGRgnRep_RgnHandle(result);
 	}
 
-void ZGRgnRep_RgnHandle::Include(const ZRect& iRect)
+void ZGRgnRep_RgnHandle::Include(const ZRectPOD& iRect)
 	{
 	RgnHandle temp = sNewRectRgn(iRect);
 	::MacUnionRgn(fRgnHandle, temp, fRgnHandle);
 	::DisposeRgn(temp);
 	}
 
-ZRef<ZGRgnRep> ZGRgnRep_RgnHandle::Including(const ZRect& iRect)
+ZRef<ZGRgnRep> ZGRgnRep_RgnHandle::Including(const ZRectPOD& iRect)
 	{
 	RgnHandle result = sNewRectRgn(iRect);
 	::MacUnionRgn(fRgnHandle, result, result);
 	return new ZGRgnRep_RgnHandle(result);
 	}
 
-void ZGRgnRep_RgnHandle::Intersect(const ZRect& iRect)
+void ZGRgnRep_RgnHandle::Intersect(const ZRectPOD& iRect)
 	{
 	RgnHandle temp = sNewRectRgn(iRect);
 	::SectRgn(fRgnHandle, temp, fRgnHandle);
 	::DisposeRgn(temp);
 	}
 
-ZRef<ZGRgnRep> ZGRgnRep_RgnHandle::Intersecting(const ZRect& iRect)
+ZRef<ZGRgnRep> ZGRgnRep_RgnHandle::Intersecting(const ZRectPOD& iRect)
 	{
 	RgnHandle result = sNewRectRgn(iRect);
 	::SectRgn(fRgnHandle, result, result);
 	return new ZGRgnRep_RgnHandle(result);
 	}
 
-void ZGRgnRep_RgnHandle::Exclude(const ZRect& iRect)
+void ZGRgnRep_RgnHandle::Exclude(const ZRectPOD& iRect)
 	{
 	RgnHandle temp = sNewRectRgn(iRect);
 	::DiffRgn(fRgnHandle, temp, fRgnHandle);
 	::DisposeRgn(temp);
 	}
 
-ZRef<ZGRgnRep> ZGRgnRep_RgnHandle::Excluding(const ZRect& iRect)
+ZRef<ZGRgnRep> ZGRgnRep_RgnHandle::Excluding(const ZRectPOD& iRect)
 	{
 	RgnHandle result = sNewRectRgn(iRect);
 	::DiffRgn(fRgnHandle, result, result);

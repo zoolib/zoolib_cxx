@@ -46,7 +46,7 @@ public:
 		const void* iBaseAddress,
 		const ZDCPixmapNS::RasterDesc& iRasterDesc,
 		const ZDCPixmapNS::PixelDesc& iPixelDesc,
-		const ZRect& iBounds);
+		const ZRectPOD& iBounds);
 
 private:
 	int fQuality;

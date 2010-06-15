@@ -30,7 +30,7 @@ namespace ZooLib {
 
 namespace { // anonymous
 
-bool sDecomposeRepProc(const ZRect& iRect, void* iRefcon)
+bool sDecomposeRepProc(const ZRectPOD& iRect, void* iRefcon)
 	{
 	// Use ZAccumulator_T at some point.
 	ZBigRegion* theBigRegion = static_cast<ZBigRegion*>(iRefcon);
@@ -64,7 +64,7 @@ ZGRgnRep_BigRegion* sMakeRep(const ZRef<ZGRgnRep>& iRep)
 namespace { // anonymous
 
 class Make_Rect
-:	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRect&>
+:	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRectPOD&>
 	{
 public:
 	Make_Rect() : Base_t(false) {}
@@ -114,7 +114,7 @@ struct DecomposeBigRegion_t
 	void* fRefcon;
 	};
 
-bool sDecompose_BigRegion(const ZRect_T<int32>& iRect, void* iRefcon)
+bool sDecompose_BigRegion(const ZRectPOD& iRect, void* iRefcon)
 	{
 	DecomposeBigRegion_t* theStruct = static_cast<DecomposeBigRegion_t*>(iRefcon);
 	return theStruct->fDecomposeProc(iRect, theStruct->fRefcon);
@@ -136,7 +136,7 @@ bool ZGRgnRep_BigRegion::Contains(ZCoord iH, ZCoord iV)
 bool ZGRgnRep_BigRegion::IsEmpty()
 	{ return fBigRegion.IsEmpty(); }
 
-ZRect ZGRgnRep_BigRegion::Bounds()
+ZRectPOD ZGRgnRep_BigRegion::Bounds()
 	{ return fBigRegion.Bounds(); }
 
 bool ZGRgnRep_BigRegion::IsSimpleRect()
@@ -156,39 +156,39 @@ ZRef<ZGRgnRep> ZGRgnRep_BigRegion::Insetted(ZCoord iH, ZCoord iV)
 	}
 
 void ZGRgnRep_BigRegion::Offset(ZCoord iH, ZCoord iV)
-	{ fBigRegion += ZPoint_T<int32>(iH, iV); }
+	{ fBigRegion += sPointPOD(iH, iV); }
 
 ZRef<ZGRgnRep> ZGRgnRep_BigRegion::Offsetted(ZCoord iH, ZCoord iV)
 	{
 	ZGRgnRep_BigRegion* result = new ZGRgnRep_BigRegion(fBigRegion);
-	result->fBigRegion += ZPoint_T<int32>(iH, iV);
+	result->fBigRegion += sPointPOD(iH, iV);
 	return result;
 	}
 
-void ZGRgnRep_BigRegion::Include(const ZRect& iRect)
+void ZGRgnRep_BigRegion::Include(const ZRectPOD& iRect)
 	{ fBigRegion |= iRect; }
 
-ZRef<ZGRgnRep> ZGRgnRep_BigRegion::Including(const ZRect& iRect)
+ZRef<ZGRgnRep> ZGRgnRep_BigRegion::Including(const ZRectPOD& iRect)
 	{
 	ZGRgnRep_BigRegion* result = new ZGRgnRep_BigRegion(fBigRegion);
 	result->fBigRegion |= iRect;
 	return result;
 	}
 
-void ZGRgnRep_BigRegion::Intersect(const ZRect& iRect)
+void ZGRgnRep_BigRegion::Intersect(const ZRectPOD& iRect)
 	{ fBigRegion &= iRect; }
 
-ZRef<ZGRgnRep> ZGRgnRep_BigRegion::Intersecting(const ZRect& iRect)
+ZRef<ZGRgnRep> ZGRgnRep_BigRegion::Intersecting(const ZRectPOD& iRect)
 	{
 	ZGRgnRep_BigRegion* result = new ZGRgnRep_BigRegion(fBigRegion);
 	result->fBigRegion &= iRect;
 	return result;
 	}
 
-void ZGRgnRep_BigRegion::Exclude(const ZRect& iRect)
+void ZGRgnRep_BigRegion::Exclude(const ZRectPOD& iRect)
 	{ fBigRegion -= iRect; }
 
-ZRef<ZGRgnRep> ZGRgnRep_BigRegion::Excluding(const ZRect& iRect)
+ZRef<ZGRgnRep> ZGRgnRep_BigRegion::Excluding(const ZRectPOD& iRect)
 	{
 	ZGRgnRep_BigRegion* result = new ZGRgnRep_BigRegion(fBigRegion);
 	result->fBigRegion -= iRect;

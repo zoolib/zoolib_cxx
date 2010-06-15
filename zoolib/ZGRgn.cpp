@@ -27,9 +27,9 @@ namespace ZooLib {
 #pragma mark -
 #pragma mark * Factory functions
 
-static ZRef<ZGRgnRep> spMake(const ZRect& iBounds)
+static ZRef<ZGRgnRep> spMake(const ZRectPOD& iBounds)
 	{
-	return ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRect&>
+	return ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRectPOD&>
 		::sInvoke(iBounds);
 	}
 
@@ -70,15 +70,15 @@ ZGRgn& ZGRgn::operator=(const ZRef<ZGRgnRep>& iRep)
 	return *this;
 	}
 
-ZGRgn::ZGRgn(const ZRect& iRect)
+ZGRgn::ZGRgn(const ZRectPOD& iRect)
 :	fRep(spMake(iRect))
 	{}
 
 ZGRgn::ZGRgn(ZCoord iLeft, ZCoord iTop, ZCoord iRight, ZCoord iBottom)
-:	fRep(spMake(ZRect(iLeft, iTop, iRight, iBottom)))
+:	fRep(spMake(sRectPOD(iLeft, iTop, iRight, iBottom)))
 	{}
 
-ZGRgn& ZGRgn::operator=(const ZRect& iRect)
+ZGRgn& ZGRgn::operator=(const ZRectPOD& iRect)
 	{
 	fRep = spMake(iRect);
 	return *this;
@@ -100,11 +100,11 @@ void ZGRgn::Clear()
 bool ZGRgn::IsEmpty() const
 	{ return !fRep && fRep->IsEmpty(); }
 
-ZRect ZGRgn::Bounds() const
+ZRectPOD ZGRgn::Bounds() const
 	{
 	if (fRep)
 		return fRep->Bounds();
-	return ZRect(0, 0);
+	return sRectPOD(0, 0, 0, 0);
 	}
 
 bool ZGRgn::IsSimpleRect() const
@@ -121,7 +121,7 @@ bool ZGRgn::Contains(ZCoord iH, ZCoord iV) const
 	return false;
 	}
 
-bool ZGRgn::Contains(const ZPoint& iPoint) const
+bool ZGRgn::Contains(const ZPointPOD& iPoint) const
 	{
 	if (fRep)
 		return fRep->Contains(iPoint.h, iPoint.v);
@@ -191,7 +191,7 @@ ZGRgn ZGRgn::Offsetted(ZCoord iOffsetH, ZCoord iOffsetV) const
 	return *this;
 	}
 
-void ZGRgn::Include(const ZRect& iRect)
+void ZGRgn::Include(const ZRectPOD& iRect)
 	{
 	if (!fRep)
 		fRep = spMake(iRect);
@@ -201,7 +201,7 @@ void ZGRgn::Include(const ZRect& iRect)
 		fRep->Include(iRect);
 	}
 
-ZGRgn ZGRgn::Including(const ZRect& iRect) const
+ZGRgn ZGRgn::Including(const ZRectPOD& iRect) const
 	{
 	if (!fRep)
 		return ZGRgn(spMake(iRect));
@@ -209,7 +209,7 @@ ZGRgn ZGRgn::Including(const ZRect& iRect) const
 		return ZGRgn(fRep->Including(iRect));
 	}
 
-void ZGRgn::Intersect(const ZRect& iRect)
+void ZGRgn::Intersect(const ZRectPOD& iRect)
 	{
 	if (fRep)
 		{
@@ -220,14 +220,14 @@ void ZGRgn::Intersect(const ZRect& iRect)
 		}
 	}
 
-ZGRgn ZGRgn::Intersecting(const ZRect& iRect) const
+ZGRgn ZGRgn::Intersecting(const ZRectPOD& iRect) const
 	{
 	if (fRep)
 		return ZGRgn(fRep->Intersecting(iRect));
 	return *this;
 	}
 
-void ZGRgn::Exclude(const ZRect& iRect)
+void ZGRgn::Exclude(const ZRectPOD& iRect)
 	{
 	if (fRep)
 		{
@@ -238,7 +238,7 @@ void ZGRgn::Exclude(const ZRect& iRect)
 		}
 	}
 
-ZGRgn ZGRgn::Excluding(const ZRect& iRect) const
+ZGRgn ZGRgn::Excluding(const ZRectPOD& iRect) const
 	{
 	if (fRep)
 		return ZGRgn(fRep->Excluding(iRect));

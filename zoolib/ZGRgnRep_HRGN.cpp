@@ -43,7 +43,7 @@ HRGN sCopyHRGN(HRGN iSource)
 	return result;
 	}
 
-HRGN sNewRectHRGN(const ZRect& iRect)
+HRGN sNewRectHRGN(const ZRectPOD& iRect)
 	{ return ::CreateRectRgn(iRect.left, iRect.top, iRect.right, iRect.bottom); }
 
 struct State_t
@@ -52,7 +52,7 @@ struct State_t
 	HRGN fTemp;
 	};
 
-bool sDecomposeRepProc(const ZRect& iRect, void* iRefcon)
+bool sDecomposeRepProc(const ZRectPOD& iRect, void* iRefcon)
 	{
 	// Use ZAccumulator_T at some point.
 	State_t* theState = static_cast<State_t*>(iRefcon);
@@ -103,7 +103,7 @@ HRGN sMakeHRGN(const ZRef<ZGRgnRep>& iRep)
 namespace { // anonymous
 
 class Make_Rect
-:	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRect&>
+:	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRectPOD&>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -182,7 +182,7 @@ bool ZGRgnRep_HRGN::IsEmpty()
 	return NULLREGION == ::GetRgnBox(fHRGN, &dummyRect);
 	}
 
-ZRect ZGRgnRep_HRGN::Bounds()
+ZRectPOD ZGRgnRep_HRGN::Bounds()
 	{
 	RECT theRECT;
 	::GetRgnBox(fHRGN, &theRECT);
@@ -303,42 +303,42 @@ ZRef<ZGRgnRep> ZGRgnRep_HRGN::Offsetted(ZCoord iH, ZCoord iV)
 	return new ZGRgnRep_HRGN(result);
 	}
 
-void ZGRgnRep_HRGN::Include(const ZRect& iRect)
+void ZGRgnRep_HRGN::Include(const ZRectPOD& iRect)
 	{
 	HRGN temp = sNewRectHRGN(iRect);
 	::CombineRgn(fHRGN, fHRGN, temp, RGN_OR);
 	::DeleteObject(temp);
 	}
 
-ZRef<ZGRgnRep> ZGRgnRep_HRGN::Including(const ZRect& iRect)
+ZRef<ZGRgnRep> ZGRgnRep_HRGN::Including(const ZRectPOD& iRect)
 	{
 	HRGN result = sNewRectHRGN(iRect);
 	::CombineRgn(result, fHRGN, result, RGN_OR);
 	return new ZGRgnRep_HRGN(result);
 	}
 
-void ZGRgnRep_HRGN::Intersect(const ZRect& iRect)
+void ZGRgnRep_HRGN::Intersect(const ZRectPOD& iRect)
 	{
 	HRGN temp = sNewRectHRGN(iRect);
 	::CombineRgn(fHRGN, fHRGN, temp, RGN_AND);
 	::DeleteObject(temp);
 	}
 
-ZRef<ZGRgnRep> ZGRgnRep_HRGN::Intersecting(const ZRect& iRect)
+ZRef<ZGRgnRep> ZGRgnRep_HRGN::Intersecting(const ZRectPOD& iRect)
 	{
 	HRGN result = sNewRectHRGN(iRect);
 	::CombineRgn(result, fHRGN, result, RGN_AND);
 	return new ZGRgnRep_HRGN(result);
 	}
 
-void ZGRgnRep_HRGN::Exclude(const ZRect& iRect)
+void ZGRgnRep_HRGN::Exclude(const ZRectPOD& iRect)
 	{
 	HRGN temp = sNewRectHRGN(iRect);
 	::CombineRgn(fHRGN, fHRGN, temp, RGN_DIFF);
 	::DeleteObject(temp);
 	}
 
-ZRef<ZGRgnRep> ZGRgnRep_HRGN::Excluding(const ZRect& iRect)
+ZRef<ZGRgnRep> ZGRgnRep_HRGN::Excluding(const ZRectPOD& iRect)
 	{
 	HRGN result = sNewRectHRGN(iRect);
 	::CombineRgn(result, fHRGN, result, RGN_DIFF);

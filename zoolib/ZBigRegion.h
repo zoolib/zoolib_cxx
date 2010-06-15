@@ -71,7 +71,7 @@ SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZAccumulator_T.h"
-#include "zoolib/ZGeom.h"
+#include "zoolib/ZGeom_POD.h"
 
 #include <vector>
 
@@ -87,18 +87,18 @@ namespace ZooLib {
 class ZBigRegion
 	{
 public:
-	static ZBigRegion sRects(const ZRect_T<int32>* iRects, size_t iCount, bool iAlreadySorted);
+	static ZBigRegion sRects(const ZRectPOD* iRects, size_t iCount, bool iAlreadySorted);
 
 	ZBigRegion();
 	ZBigRegion(const ZBigRegion& iOther);
-	ZBigRegion(const ZRect_T<int32>& iBounds);
-	ZBigRegion(const ZPoint_T<int32>& iSize);
+	ZBigRegion(const ZRectPOD& iBounds);
+	ZBigRegion(const ZPointPOD& iSize);
 	~ZBigRegion();
 
 	ZBigRegion& operator=(const ZBigRegion& iOther);
-	ZBigRegion& operator=(const ZRect_T<int32>& iBounds);
+	ZBigRegion& operator=(const ZRectPOD& iBounds);
 
-	ZBigRegion Inset(const ZPoint_T<int32>& iInset) const
+	ZBigRegion Inset(const ZPointPOD& iInset) const
 		{ return this->Inset(iInset.h, iInset.v); }
 	ZBigRegion Inset(int32 iInsetH, int32 iInsetV) const
 		{
@@ -107,37 +107,37 @@ public:
 		return tempRgn;
 		}
 
-	void MakeInset(const ZPoint_T<int32>& iInset)
+	void MakeInset(const ZPointPOD& iInset)
 		{ this->MakeInset(iInset.h, iInset.v); }
 	void MakeInset(int32 iInsetH, int32 iInsetV);
 
-	bool Contains(const ZPoint_T<int32>& iPoint) const;
+	bool Contains(const ZPointPOD& iPoint) const;
 	bool Contains(int32 iH, int32 iV) const;
 
 	void MakeEmpty();
 	bool IsEmpty() const;
 
-	ZRect_T<int32> Bounds() const;
+	ZRectPOD Bounds() const;
 	bool IsSimpleRect() const;
 
-	void Decompose(std::vector<ZRect_T<int32> >& oRects) const;
-	typedef bool (*DecomposeProc)(const ZRect_T<int32>& iRect, void* iRefcon);
+	void Decompose(std::vector<ZRectPOD >& oRects) const;
+	typedef bool (*DecomposeProc)(const ZRectPOD& iRect, void* iRefcon);
 	int32 Decompose(DecomposeProc iProc, void* iRefcon) const;
 
 	bool operator==(const ZBigRegion& iOther) const;
 	bool operator!=(const ZBigRegion& iOther) const
 		{ return ! (*this == iOther); }
 
-	ZBigRegion& operator+=(const ZPoint_T<int32>& iOffset);
-	ZBigRegion operator+(const ZPoint_T<int32>& iOffset) const
+	ZBigRegion& operator+=(const ZPointPOD& iOffset);
+	ZBigRegion operator+(const ZPointPOD& iOffset) const
 		{
 		ZBigRegion newRegion(*this);
 		return newRegion += iOffset;
 		}
 
-	ZBigRegion& operator-=(const ZPoint_T<int32>& iOffset)
-		{ return *this += (-iOffset); }
-	ZBigRegion operator-(const ZPoint_T<int32>& iOffset) const
+	ZBigRegion& operator-=(const ZPointPOD& iOffset)
+		{ return *this += sPointPOD(-iOffset.h, -iOffset.v); }
+	ZBigRegion operator-(const ZPointPOD& iOffset) const
 		{
 		ZBigRegion newRegion(*this);
 		return newRegion -= iOffset;
@@ -184,39 +184,39 @@ public:
 		ZBigRegion& oDestination);
 
 protected:
-	static void spSpaceCheck(ZBigRegion& ioRegion, ZRect_T<int32>*& oRect);
-	static void spReallocate(ZBigRegion& ioRegion, ZRect_T<int32>*& oRect);
+	static void spSpaceCheck(ZBigRegion& ioRegion, ZRectPOD*& oRect);
+	static void spReallocate(ZBigRegion& ioRegion, ZRectPOD*& oRect);
 	static void spCopy(const ZBigRegion& iSource, ZBigRegion& oDestination);
 	static void spSetExtents(ZBigRegion& ioRegion);
 
 	static void spUnionNonOverlapping(ZBigRegion& ioRegion,
-		ZRect_T<int32>* r, ZRect_T<int32>* rEnd, int32 y1, int32 y2);
+		ZRectPOD* r, ZRectPOD* rEnd, int32 y1, int32 y2);
 
 	static void spUnionOverlapping(ZBigRegion& ioRegion,
-		ZRect_T<int32>* r1, ZRect_T<int32>* r1End,
-		ZRect_T<int32>* r2, ZRect_T<int32>* r2End,
+		ZRectPOD* r1, ZRectPOD* r1End,
+		ZRectPOD* r2, ZRectPOD* r2End,
 		int32 y1, int32 y2);
 
 	static void spIntersectionOverlapping(ZBigRegion& ioRegion,
-		ZRect_T<int32>* r1, ZRect_T<int32>* r1End,
-		ZRect_T<int32>* r2, ZRect_T<int32>* r2End,
+		ZRectPOD* r1, ZRectPOD* r1End,
+		ZRectPOD* r2, ZRectPOD* r2End,
 		int32 y1, int32 y2);
 
 	static void spDifferenceNonOverlapping(ZBigRegion& ioRegion,
-		ZRect_T<int32>* r, ZRect_T<int32>* rEnd,
+		ZRectPOD* r, ZRectPOD* rEnd,
 		int32 y1, int32 y2);
 
 	static void spDifferenceOverlapping(ZBigRegion& ioRegion,
-		ZRect_T<int32>* r1, ZRect_T<int32>* r1End,
-		ZRect_T<int32>* r2, ZRect_T<int32>* r2End,
+		ZRectPOD* r1, ZRectPOD* r1End,
+		ZRectPOD* r2, ZRectPOD* r2End,
 		int32 y1, int32 y2);
 
 	typedef void (*NonOverlappingFuncPtr)(ZBigRegion& ioRegion,
-		ZRect_T<int32>* r, ZRect_T<int32>* rEnd, int32 y1, int32 y2);
+		ZRectPOD* r, ZRectPOD* rEnd, int32 y1, int32 y2);
 
 	typedef void (*OverlappingFuncPtr)(ZBigRegion& ioRegion,
-		ZRect_T<int32>* r1, ZRect_T<int32>* r1End,
-		ZRect_T<int32>* r2, ZRect_T<int32>* r2End,
+		ZRectPOD* r1, ZRectPOD* r1End,
+		ZRectPOD* r2, ZRectPOD* r2End,
 		int32 y1, int32 y2);
 
 	static void spRegionOp(ZBigRegion& ioNewRegion,
@@ -227,10 +227,10 @@ protected:
 
 	static int32 spCoalesce(ZBigRegion& ioRegion, int32 prevStart, int32 curStart);
 
-	ZRect_T<int32>* fRects;
+	ZRectPOD* fRects;
 	size_t fNumRectsAllocated;
 	size_t fNumRects;
-	ZRect_T<int32> fExtent;
+	ZRectPOD fExtent;
 	};
 
 // =================================================================================================

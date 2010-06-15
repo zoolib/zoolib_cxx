@@ -328,7 +328,7 @@ ZDCPixmapNS::PixvalDesc::PixvalDesc(EFormatStandard iFormat)
 #pragma mark -
 #pragma mark * ZDCPixmapNS::RasterDesc
 
-ZDCPixmapNS::RasterDesc::RasterDesc(ZPoint iSize, EFormatStandard iFormat, bool iFlipped)
+ZDCPixmapNS::RasterDesc::RasterDesc(ZPointPOD iSize, EFormatStandard iFormat, bool iFlipped)
 	{
 	for (size_t x = 0; x < countof(sStandardToInfoColor); ++x)
 		{
@@ -2361,7 +2361,7 @@ void ZDCPixmapNS::sFill(void* iBaseAddress, const RasterDesc& iRasterDesc, uint3
 	}
 
 void ZDCPixmapNS::sFill(
-	void* iBaseAddress, const RasterDesc& iRasterDesc, const ZRect& iBounds, uint32 iPixval)
+	void* iBaseAddress, const RasterDesc& iRasterDesc, const ZRectPOD& iBounds, uint32 iPixval)
 	{
 	int32 hSize = iBounds.Width();
 
@@ -2409,7 +2409,7 @@ template <class S, class D>
 static void sMunge_T(
 	void* iBaseAddress, const RasterDesc& iRasterDesc,
 	const S& iMapPixvalToRGB, const D& iMapRGBToPixval,
-	const ZRect& iBounds, MungeProc iMungeProc, void* iRefcon)
+	const ZRectPOD& iBounds, MungeProc iMungeProc, void* iRefcon)
 	{
 	int32 hSize = iBounds.Width();
 	int32 vSize = iBounds.Height();
@@ -2426,7 +2426,7 @@ static void sMunge_T(
 
 void ZDCPixmapNS::sMunge(
 	void* iBaseAddress, const RasterDesc& iRasterDesc, const PixelDesc& iPixelDesc,
-	const ZRect& iBounds, MungeProc iMungeProc, void* iRefcon)
+	const ZRectPOD& iBounds, MungeProc iMungeProc, void* iRefcon)
 	{
 	ZRef<PixelDescRep> thePixelDescRep = iPixelDesc.GetRep();
 	if (PixelDescRep_Color* thePixelDescRep_Color =
@@ -2529,7 +2529,7 @@ template <class S, class D>
 static void sBlitWithMaps_T(
 	const void* iSourceBase, const RasterDesc& iSourceRasterDesc, const S& iSourcePixvalToRGB,
 	void* iDestBase, const RasterDesc& iDestRasterDesc, const D& iDestRGBToPixval,
-	const ZRect& iSourceBounds, ZPoint iDestLocation, bool iInvertColors)
+	const ZRectPOD& iSourceBounds, ZPointPOD iDestLocation, bool iInvertColors)
 	{
 	PixvalDesc sourcePixvalDesc = iSourceRasterDesc.fPixvalDesc;
 
@@ -2576,7 +2576,7 @@ static void sBlitWithMaps_T(
 
 void ZDCPixmapNS::sBlitPixvals(const void* iSourceBase, const RasterDesc& iSourceRasterDesc,
 	void* iDestBase, const RasterDesc& iDestRasterDesc,
-	const ZRect& iSourceBounds, ZPoint iDestLocation)
+	const ZRectPOD& iSourceBounds, ZPointPOD iDestLocation)
 	{
 	int32 vCount = iSourceBounds.Height();
 	int32 hCount = iSourceBounds.Width();
@@ -2634,7 +2634,7 @@ void ZDCPixmapNS::sBlitPixvals(const void* iSourceBase, const RasterDesc& iSourc
 void ZDCPixmapNS::sBlit(
 	const void* iSourceBase, const RasterDesc& iSourceRasterDesc, const PixelDesc& iSourcePixelDesc,
 	void* iDestBase, const RasterDesc& iDestRasterDesc, const PixelDesc& iDestPixelDesc,
-	const ZRect& iSourceBounds, ZPoint iDestLocation)
+	const ZRectPOD& iSourceBounds, ZPointPOD iDestLocation)
 	{
 	bool iInvertColors = false;
 	ZRef<PixelDescRep> sourcePixelDescRep = iSourcePixelDesc.GetRep();

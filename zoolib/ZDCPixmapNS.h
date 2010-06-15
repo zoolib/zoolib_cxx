@@ -22,7 +22,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define __ZDCPixmapNS__ 1
 #include "zconfig.h"
 
-#include "zoolib/ZGeom.h"
+#include "zoolib/ZGeom_POD.h"
 #include "zoolib/ZRGBA.h"
 #include "zoolib/ZRef_Counted.h"
 
@@ -188,7 +188,7 @@ public:
 	:	fPixvalDesc(iPixvalDesc), fRowBytes(iRowBytes), fRowCount(iRowCount), fFlipped(iFlipped)
 		{}
 
-	RasterDesc(ZPoint iSize, EFormatStandard iFormat, bool iFlipped = false);
+	RasterDesc(ZPointPOD iSize, EFormatStandard iFormat, bool iFlipped = false);
 
 	bool operator==(const RasterDesc& iOther) const
 		{
@@ -862,12 +862,12 @@ private:
 namespace ZDCPixmapNS {
 
 void sFill(void* iBaseAddress, const RasterDesc& iRasterDesc, uint32 iPixval);
-void sFill(void* iBaseAddress, const RasterDesc& iRasterDesc, const ZRect& iBounds, uint32 iPixval);
+void sFill(void* iBaseAddress, const RasterDesc& iRasterDesc, const ZRectPOD& iBounds, uint32 iPixval);
 
 // ==================================================
 
 void sMunge(void* iBaseAddress,
-	const RasterDesc& iRasterDesc, const PixelDesc& iPixelDesc, const ZRect& iBounds,
+	const RasterDesc& iRasterDesc, const PixelDesc& iPixelDesc, const ZRectPOD& iBounds,
 	MungeProc iMungeProc, void* iRefcon);
 
 // ==================================================
@@ -875,12 +875,12 @@ void sMunge(void* iBaseAddress,
 void sBlitPixvals(
 	const void* iSourceBase, const RasterDesc& iSourceRasterDesc,
 	void* iDestBase, const RasterDesc& iDestRasterDesc,
-	const ZRect& iSourceBounds, ZPoint iDestLocation);
+	const ZRectPOD& iSourceBounds, ZPointPOD iDestLocation);
 
 void sBlit(
 	const void* iSourceBase, const RasterDesc& iSourceRasterDesc, const PixelDesc& iSourcePixelDesc,
 	void* iDestBase, const RasterDesc& iDestRasterDesc, const PixelDesc& iDestPixelDesc,
-	const ZRect& iSourceBounds, ZPoint iDestLocation);
+	const ZRectPOD& iSourceBounds, ZPointPOD iDestLocation);
 
 void sBlitRowPixvals(
 	const void* iSourceBase, const PixvalDesc& iSourcePixvalDesc, int32 iSourceH,

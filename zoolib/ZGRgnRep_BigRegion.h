@@ -45,7 +45,7 @@ public:
 
 	virtual bool Contains(ZCoord iH, ZCoord iV);
 	virtual bool IsEmpty();
-	virtual ZRect Bounds();
+	virtual ZRectPOD Bounds();
 	virtual bool IsSimpleRect();
 	virtual bool IsEqualTo(const ZRef<ZGRgnRep>& iRep);
 
@@ -55,14 +55,14 @@ public:
 	virtual void Offset(ZCoord iH, ZCoord iV);
 	virtual ZRef<ZGRgnRep> Offsetted(ZCoord iH, ZCoord iV);
 
-	virtual void Include(const ZRect& iRect);
-	virtual ZRef<ZGRgnRep> Including(const ZRect& iRect);
+	virtual void Include(const ZRectPOD& iRect);
+	virtual ZRef<ZGRgnRep> Including(const ZRectPOD& iRect);
 
-	virtual void Intersect(const ZRect& iRect);
-	virtual ZRef<ZGRgnRep> Intersecting(const ZRect& iRect);
+	virtual void Intersect(const ZRectPOD& iRect);
+	virtual ZRef<ZGRgnRep> Intersecting(const ZRectPOD& iRect);
 
-	virtual void Exclude(const ZRect& iRect);
-	virtual ZRef<ZGRgnRep> Excluding(const ZRect& iRect);
+	virtual void Exclude(const ZRectPOD& iRect);
+	virtual ZRef<ZGRgnRep> Excluding(const ZRectPOD& iRect);
 
 	virtual void Include(const ZRef<ZGRgnRep>& iRep);
 	virtual ZRef<ZGRgnRep> Including(const ZRef<ZGRgnRep>& iRep);

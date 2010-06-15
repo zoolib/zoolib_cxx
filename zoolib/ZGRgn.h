@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 
 #include "zoolib/ZAccumulator_T.h"
-#include "zoolib/ZGeom.h"
+#include "zoolib/ZGeom_POD.h"
 #include "zoolib/ZRef_Counted.h"
 
 #include <vector>
@@ -53,12 +53,12 @@ protected:
 	ZGRgnRep();
 
 public:
-	typedef bool (*DecomposeProc)(const ZRect& iRect, void* iRefcon);
+	typedef bool (*DecomposeProc)(const ZRectPOD& iRect, void* iRefcon);
 	virtual size_t Decompose(DecomposeProc iProc, void* iRefcon) = 0;
 
 	virtual bool Contains(ZCoord iH, ZCoord iV) = 0;
 	virtual bool IsEmpty() = 0;
-	virtual ZRect Bounds() = 0;
+	virtual ZRectPOD Bounds() = 0;
 	virtual bool IsSimpleRect() = 0;
 	virtual bool IsEqualTo(const ZRef<ZGRgnRep>& iRep) = 0;
 
@@ -68,14 +68,14 @@ public:
 	virtual void Offset(ZCoord iH, ZCoord iV) = 0;
 	virtual ZRef<ZGRgnRep> Offsetted(ZCoord iH, ZCoord iV) = 0;
 
-	virtual void Include(const ZRect& iRect) = 0;
-	virtual ZRef<ZGRgnRep> Including(const ZRect& iRect) = 0;
+	virtual void Include(const ZRectPOD& iRect) = 0;
+	virtual ZRef<ZGRgnRep> Including(const ZRectPOD& iRect) = 0;
 
-	virtual void Intersect(const ZRect& iRect) = 0;
-	virtual ZRef<ZGRgnRep> Intersecting(const ZRect& iRect) = 0;
+	virtual void Intersect(const ZRectPOD& iRect) = 0;
+	virtual ZRef<ZGRgnRep> Intersecting(const ZRectPOD& iRect) = 0;
 
-	virtual void Exclude(const ZRect& iRect) = 0;
-	virtual ZRef<ZGRgnRep> Excluding(const ZRect& iRect) = 0;
+	virtual void Exclude(const ZRectPOD& iRect) = 0;
+	virtual ZRef<ZGRgnRep> Excluding(const ZRectPOD& iRect) = 0;
 
 	virtual void Include(const ZRef<ZGRgnRep>& iRep) = 0;
 	virtual ZRef<ZGRgnRep> Including(const ZRef<ZGRgnRep>& iRep) = 0;
@@ -120,9 +120,9 @@ public:
 	ZGRgn& operator=(const ZRef<ZGRgnRep>& iRep);
 
 // Convenience construction, assignment from rects
-	ZGRgn(const ZRect& iRect);
+	ZGRgn(const ZRectPOD& iRect);
 	ZGRgn(ZCoord iLeft, ZCoord iTop, ZCoord iRight, ZCoord iBottom);
-	ZGRgn& operator=(const ZRect& iRect);
+	ZGRgn& operator=(const ZRectPOD& iRect);
 
 	void Fresh();
 	ZRef<ZGRgnRep> GetRep() const;
@@ -135,13 +135,13 @@ public:
 
 	bool IsEmpty() const;
 
-	ZRect Bounds() const;
+	ZRectPOD Bounds() const;
 
 	bool IsSimpleRect() const;
 
 	bool Contains(ZCoord iH, ZCoord iV) const;
 
-	bool Contains(const ZPoint& iPoint) const;
+	bool Contains(const ZPointPOD& iPoint) const;
 
 	bool IsEqualTo(const ZGRgn& iOther) const;
 
@@ -156,23 +156,23 @@ public:
 	void Inset(ZCoord iH, ZCoord iV);
 	ZGRgn Insetted(ZCoord iH, ZCoord iV) const;
 	
-	void Inset(const ZPoint& iPoint);
-	ZGRgn Insetted(const ZPoint& iPoint) const;
+	void Inset(const ZPointPOD& iPoint);
+	ZGRgn Insetted(const ZPointPOD& iPoint) const;
 
 	void Offset(ZCoord iOffsetH, ZCoord iOffsetV);
 	ZGRgn Offsetted(ZCoord iOffsetH, ZCoord iOffsetV) const;
 
-	void Offset(const ZPoint& iOffset);
-	ZGRgn Offsetted(const ZPoint& iOffset) const;
+	void Offset(const ZPointPOD& iOffset);
+	ZGRgn Offsetted(const ZPointPOD& iOffset) const;
 
-	void Include(const ZRect& iRect);
-	ZGRgn Including(const ZRect& iRect) const;
+	void Include(const ZRectPOD& iRect);
+	ZGRgn Including(const ZRectPOD& iRect) const;
 
-	void Intersect(const ZRect& iRect);
-	ZGRgn Intersecting(const ZRect& iRect) const;
+	void Intersect(const ZRectPOD& iRect);
+	ZGRgn Intersecting(const ZRectPOD& iRect) const;
 
-	void Exclude(const ZRect& iRect);
-	ZGRgn Excluding(const ZRect& iRect) const;
+	void Exclude(const ZRectPOD& iRect);
+	ZGRgn Excluding(const ZRectPOD& iRect) const;
 
 	void Include(const ZGRgn& iOther);
 	ZGRgn Including(const ZGRgn& iOther) const;
@@ -187,26 +187,26 @@ public:
 	ZGRgn Xoring(const ZGRgn& iOther) const;
 
 // Algebraic API
-	void operator+=(const ZPoint& iOffset);
+	void operator+=(const ZPointPOD& iOffset);
 
-	ZGRgn operator+(const ZPoint& iOffset) const;
+	ZGRgn operator+(const ZPointPOD& iOffset) const;
 
-	void operator-=(const ZPoint& iOffset);
+	void operator-=(const ZPointPOD& iOffset);
 
-	ZGRgn operator-(const ZPoint& iOffset) const;
+	ZGRgn operator-(const ZPointPOD& iOffset) const;
 
 // Combining with rectangles
-	void operator|=(const ZRect& iRect);
+	void operator|=(const ZRectPOD& iRect);
 
-	ZGRgn operator|(const ZRect& iRect) const;
+	ZGRgn operator|(const ZRectPOD& iRect) const;
 
-	void operator&=(const ZRect& iRect);
+	void operator&=(const ZRectPOD& iRect);
 
-	ZGRgn operator&(const ZRect& iRect) const;
+	ZGRgn operator&(const ZRectPOD& iRect) const;
 
-	void operator-=(const ZRect& iRect);
+	void operator-=(const ZRectPOD& iRect);
 
-	ZGRgn operator-(const ZRect& iRect) const;
+	ZGRgn operator-(const ZRectPOD& iRect) const;
 
 // Combining with regions
 	void operator|=(const ZGRgn& iOther);
@@ -232,46 +232,46 @@ inline bool ZGRgn::operator==(const ZGRgn& iOther) const
 inline bool ZGRgn::operator!=(const ZGRgn& iOther) const
 	{ return ! this->IsEqualTo(iOther); }
 
-inline void ZGRgn::Inset(const ZPoint& iInset)
+inline void ZGRgn::Inset(const ZPointPOD& iInset)
 	{ return this->Inset(iInset.h, iInset.v); }
 
-inline ZGRgn ZGRgn::Insetted(const ZPoint& iInset) const
+inline ZGRgn ZGRgn::Insetted(const ZPointPOD& iInset) const
 	{ return this->Insetted(iInset.h, iInset.v); }
 
-inline void ZGRgn::Offset(const ZPoint& iOffset)
+inline void ZGRgn::Offset(const ZPointPOD& iOffset)
 	{ return this->Offset(iOffset.h, iOffset.v); }
 
-inline ZGRgn ZGRgn::Offsetted(const ZPoint& iOffset) const
+inline ZGRgn ZGRgn::Offsetted(const ZPointPOD& iOffset) const
 	{ return this->Offsetted(iOffset.h, iOffset.v); }
 
-inline void ZGRgn::operator+=(const ZPoint& iOffset)
+inline void ZGRgn::operator+=(const ZPointPOD& iOffset)
 	{ return this->Offset(iOffset.h, iOffset.v); }
 
-inline ZGRgn ZGRgn::operator+(const ZPoint& iOffset) const
+inline ZGRgn ZGRgn::operator+(const ZPointPOD& iOffset) const
 	{ return this->Offsetted(iOffset.h, iOffset.v); }
 
-inline void ZGRgn::operator-=(const ZPoint& iOffset)
+inline void ZGRgn::operator-=(const ZPointPOD& iOffset)
 	{ return this->Offset(-iOffset.h, -iOffset.v); }
 
-inline ZGRgn ZGRgn::operator-(const ZPoint& iOffset) const
+inline ZGRgn ZGRgn::operator-(const ZPointPOD& iOffset) const
 	{ return this->Offsetted(-iOffset.h, -iOffset.v); }
 
-inline void ZGRgn::operator|=(const ZRect& iRect)
+inline void ZGRgn::operator|=(const ZRectPOD& iRect)
 	{ return this->Include(iRect); }
 
-inline ZGRgn ZGRgn::operator|(const ZRect& iRect) const
+inline ZGRgn ZGRgn::operator|(const ZRectPOD& iRect) const
 	{ return this->Including(iRect); }
 
-inline void ZGRgn::operator&=(const ZRect& iRect)
+inline void ZGRgn::operator&=(const ZRectPOD& iRect)
 	{ return this->Intersect(iRect); }
 
-inline ZGRgn ZGRgn::operator&(const ZRect& iRect) const
+inline ZGRgn ZGRgn::operator&(const ZRectPOD& iRect) const
 	{ return this->Intersecting(iRect); }
 
-inline void ZGRgn::operator-=(const ZRect& iRect)
+inline void ZGRgn::operator-=(const ZRectPOD& iRect)
 	{ return this->Exclude(iRect); }
 
-inline ZGRgn ZGRgn::operator-(const ZRect& iRect) const
+inline ZGRgn ZGRgn::operator-(const ZRectPOD& iRect) const
 	{ return this->Excluding(iRect); }
 
 inline void ZGRgn::operator|=(const ZGRgn& iOther)

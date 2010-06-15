@@ -97,7 +97,7 @@ void ZDCPixmapEncoder_PNG::Imp_Write(const ZStreamW& iStream,
 	const void* iBaseAddress,
 	const RasterDesc& iRasterDesc,
 	const PixelDesc& iPixelDesc,
-	const ZRect& iBounds)
+	const ZRectPOD& iBounds)
 	{
 	png_structp write_ptr =
 		::png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
@@ -341,7 +341,7 @@ void ZDCPixmapDecoder_PNG::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 		theRasterDesc.fRowCount = thePNGHeight;
 		theRasterDesc.fFlipped = false;
 
-		oPixmap = ZDCPixmap(theRasterDesc, ZPoint(thePNGWidth, thePNGHeight), thePixelDesc);
+		oPixmap = ZDCPixmap(theRasterDesc, sPointPOD(thePNGWidth, thePNGHeight), thePixelDesc);
 		void* baseAddress = oPixmap.GetRaster()->GetBaseAddress();
 		vector<void*> theRowPointers(thePNGHeight);
 		for (size_t y = 0; y < thePNGHeight; ++y)

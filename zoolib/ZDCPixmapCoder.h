@@ -50,14 +50,14 @@ public:
 		const void* iBaseAddress,
 		const ZDCPixmapNS::RasterDesc& iRasterDesc,
 		const ZDCPixmapNS::PixelDesc& iPixelDesc,
-		const ZRect& iBounds);
+		const ZRectPOD& iBounds);
 
 	/** API that must be overridden. */
 	virtual void Imp_Write(const ZStreamW& iStream,
 		const void* iBaseAddress,
 		const ZDCPixmapNS::RasterDesc& iRasterDesc,
 		const ZDCPixmapNS::PixelDesc& iPixelDesc,
-		const ZRect& iBounds) = 0;
+		const ZRectPOD& iBounds) = 0;
 	};
 
 // =================================================================================================

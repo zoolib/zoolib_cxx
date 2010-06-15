@@ -122,7 +122,7 @@ void ZDCPixmapEncoder_GIF::Imp_Write(const ZStreamW& iStream,
 	const void* iBaseAddress,
 	const RasterDesc& iRasterDesc,
 	const PixelDesc& iPixelDesc,
-	const ZRect& iBounds)
+	const ZRectPOD& iBounds)
 	{
 	ZRef<PixelDescRep_Indexed> thePixelDescRep_Indexed =
 		ZRefDynamicCast<PixelDescRep_Indexed>(iPixelDesc.GetRep());
@@ -283,7 +283,7 @@ static void spReadColorTable(const ZStreamR& iStream,
 	}
 
 static void spReadImageData(const ZStreamR& iStream,
-	bool iInterlaced, const ZRect& iBounds, ZRef<ZDCPixmapRaster> ioRaster)
+	bool iInterlaced, const ZRectPOD& iBounds, ZRef<ZDCPixmapRaster> ioRaster)
 	{
 	uint8 initialCodeSize = iStream.ReadUInt8();
 
@@ -443,7 +443,7 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 		else if (blockType == ',')
 			{
 			// It's an image.
-			ZRect curBounds;
+			ZRectPOD curBounds;
 			curBounds.left = iStream.ReadUInt16LE();
 			curBounds.top = iStream.ReadUInt16LE();
 			curBounds.right = curBounds.left + iStream.ReadUInt16LE();
@@ -464,7 +464,7 @@ void ZDCPixmapDecoder_GIF::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 				}
 
 			spReadImageData(iStream, strmIsInterlaced, curBounds, fRaster);
-			oPixmap = new ZDCPixmapRep(fRaster, ZRect(fSize), thePixelDesc);
+			oPixmap = new ZDCPixmapRep(fRaster, sRectPOD(fSize), thePixelDesc);
 			return;
 			}
 		}

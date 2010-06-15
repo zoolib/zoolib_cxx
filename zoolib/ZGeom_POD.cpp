@@ -24,7 +24,31 @@ namespace ZooLib {
 
 // =================================================================================================
 #pragma mark -
-#pragma mark *
+#pragma mark * ZPointPOD
+
+ZPointPOD sPointPOD(int32 iH, int32 iV)
+	{
+	const ZPointPOD result = {iH, iV};
+	return result;
+	}
+
+template <>
+int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR)
+	{
+	if (int compare = sCompare_T(iL.h, iR.h))
+		return compare;
+	return sCompare_T(iL.v, iR.v);
+	}
+
+// =================================================================================================
+#pragma mark -
+#pragma mark * ZRectPOD
+
+ZRectPOD sRectPOD(int32 iLeft, int32 iTop, int32 iRight, int32 iBottom)
+	{
+	const ZRectPOD result = {iLeft, iTop, iRight, iBottom};
+	return result;
+	}
 
 template <>
 int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR)
@@ -36,14 +60,6 @@ int sCompare_T(const ZRectPOD& iL, const ZRectPOD& iR)
 	if (int compare = sCompare_T(iL.right, iR.right))
 		return compare;
 	return sCompare_T(iL.bottom, iR.bottom);
-	}
-
-template <>
-int sCompare_T(const ZPointPOD& iL, const ZPointPOD& iR)
-	{
-	if (int compare = sCompare_T(iL.h, iR.h))
-		return compare;
-	return sCompare_T(iL.v, iR.v);
 	}
 
 } // namespace ZooLib

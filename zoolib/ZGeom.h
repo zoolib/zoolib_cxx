@@ -23,7 +23,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zconfig.h"
 #include "zoolib/ZCONFIG_SPI.h"
 
-#include "zoolib/ZGeometry.h" // Pulls in platform types
+#include "zoolib/ZGeometry.h" // Pulls in platform types and ZGeom_POD
 
 #if ZCONFIG_SPI_Enabled(BeOS)
 #	include <interface/Point.h>
@@ -35,12 +35,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZCompat_cmath.h" // For sqrt
 
 namespace ZooLib {
-
-// =================================================================================================
-#pragma mark -
-#pragma mark * ZCoord
-
-typedef int32 ZCoord;
 
 // =================================================================================================
 #pragma mark -

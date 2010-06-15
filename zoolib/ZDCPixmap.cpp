@@ -66,10 +66,10 @@ ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource1, const ZDCPixmap& iSource2, const
 		return;
 		}
 
-	ZPoint source1Size = iSource1.Size();
-	ZPoint source2Size = iSource2.Size();
-	ZPoint maskSize = iMask.Size();
-	ZPoint resultSize;
+	ZPointPOD source1Size = iSource1.Size();
+	ZPointPOD source2Size = iSource2.Size();
+	ZPointPOD maskSize = iMask.Size();
+	ZPointPOD resultSize;
 	resultSize.h = max(source1Size.h, max(source2Size.h, maskSize.h));
 	resultSize.v = max(source1Size.v, max(source2Size.v, maskSize.v));
 
@@ -79,7 +79,7 @@ ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource1, const ZDCPixmap& iSource2, const
 	RasterDesc theRasterDesc(resultSize, theStandardFormat);
 	PixelDesc thePixelDesc(theStandardFormat);
 
-	fRep = ZDCPixmapRep::sCreate(theRasterDesc, resultSize, thePixelDesc);
+	fRep = ZDCPixmapRep::sCreate(theRasterDesc, sRectPOD(resultSize), thePixelDesc);
 
 	// Do a simple version for now
 	for (ZCoord y = 0; y < resultSize.v; ++y)
@@ -95,62 +95,62 @@ ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource1, const ZDCPixmap& iSource2, const
 		}
 	}
 
-ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatEfficient iFormat)
+ZDCPixmap::ZDCPixmap(ZPointPOD iSize, EFormatEfficient iFormat)
 	{
 	EFormatStandard theStandardFormat = sMapEfficientToStandard(iFormat);
 
 	RasterDesc theRasterDesc(iSize, theStandardFormat);
 	PixelDesc thePixelDesc(theStandardFormat);
 
-	fRep = ZDCPixmapRep::sCreate(theRasterDesc, iSize, thePixelDesc);
+	fRep = ZDCPixmapRep::sCreate(theRasterDesc, sRectPOD(iSize), thePixelDesc);
 	}
 
-ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatEfficient iFormat, const ZRGBA_POD& iFillColor)
+ZDCPixmap::ZDCPixmap(ZPointPOD iSize, EFormatEfficient iFormat, const ZRGBA_POD& iFillColor)
 	{
 	EFormatStandard theStandardFormat = sMapEfficientToStandard(iFormat);
 
 	RasterDesc theRasterDesc(iSize, theStandardFormat);
 	PixelDesc thePixelDesc(theStandardFormat);
 
-	fRep = ZDCPixmapRep::sCreate(theRasterDesc, iSize, thePixelDesc);
+	fRep = ZDCPixmapRep::sCreate(theRasterDesc, sRectPOD(iSize), thePixelDesc);
 
 	uint32 fillPixval = fRep->GetPixelDesc().AsPixval(iFillColor);
 	fRep->GetRaster()->Fill(fillPixval);
 	}
 
-ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatStandard iFormat)
+ZDCPixmap::ZDCPixmap(ZPointPOD iSize, EFormatStandard iFormat)
 	{
 	RasterDesc theRasterDesc(iSize, iFormat);
 	PixelDesc thePixelDesc(iFormat);
 
-	fRep = ZDCPixmapRep::sCreate(theRasterDesc, iSize, thePixelDesc);
+	fRep = ZDCPixmapRep::sCreate(theRasterDesc, sRectPOD(iSize), thePixelDesc);
 	}
 
-ZDCPixmap::ZDCPixmap(ZPoint iSize, EFormatStandard iFormat, const ZRGBA_POD& iFillColor)
+ZDCPixmap::ZDCPixmap(ZPointPOD iSize, EFormatStandard iFormat, const ZRGBA_POD& iFillColor)
 	{
 	RasterDesc theRasterDesc(iSize, iFormat);
 	PixelDesc thePixelDesc(iFormat);
 
-	fRep = ZDCPixmapRep::sCreate(theRasterDesc, iSize, thePixelDesc);
+	fRep = ZDCPixmapRep::sCreate(theRasterDesc, sRectPOD(iSize), thePixelDesc);
 
 	uint32 fillPixval = fRep->GetPixelDesc().AsPixval(iFillColor);
 	fRep->GetRaster()->Fill(fillPixval);
 	}
 
-ZDCPixmap::ZDCPixmap(const RasterDesc& iRasterDesc, ZPoint iSize, const PixelDesc& iPixelDesc)
+ZDCPixmap::ZDCPixmap(const RasterDesc& iRasterDesc, ZPointPOD iSize, const PixelDesc& iPixelDesc)
 	{
-	fRep = ZDCPixmapRep::sCreate(iRasterDesc, iSize, iPixelDesc);
+	fRep = ZDCPixmapRep::sCreate(iRasterDesc, sRectPOD(iSize), iPixelDesc);
 	}
 
-ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource, const ZRect& iSourceBounds)
+ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource, const ZRectPOD& iSourceBounds)
 	{
 	ZRef<ZDCPixmapRep> sourceRep = iSource.GetRep();
 	if (!sourceRep)
 		return;
 
-	ZRect originalBounds = sourceRep->GetBounds();
+	ZRectPOD originalBounds = sourceRep->GetBounds();
 
-	ZRect realBounds = (iSourceBounds + originalBounds.TopLeft()) & originalBounds;
+	ZRectPOD realBounds = (iSourceBounds + originalBounds.TopLeft()) & originalBounds;
 	if (realBounds.IsEmpty())
 		return;
 
@@ -158,7 +158,7 @@ ZDCPixmap::ZDCPixmap(const ZDCPixmap& iSource, const ZRect& iSourceBounds)
 		sourceRep->GetRaster(), realBounds, sourceRep->GetPixelDesc());
 	}
 
-ZDCPixmap::ZDCPixmap(ZPoint iSize, const uint8* iPixvals,
+ZDCPixmap::ZDCPixmap(ZPointPOD iSize, const uint8* iPixvals,
 	const ZRGBA_POD* iColorTable, size_t iColorTableSize)
 	{
 	RasterDesc theRasterDesc;
@@ -170,10 +170,10 @@ ZDCPixmap::ZDCPixmap(ZPoint iSize, const uint8* iPixvals,
 
 	ZRef<ZDCPixmapRaster> theRaster = new ZDCPixmapRaster_StaticData(iPixvals, theRasterDesc);
 	PixelDesc thePixelDesc(iColorTable, iColorTableSize);
-	fRep = ZDCPixmapRep::sCreate(theRaster, iSize, thePixelDesc);
+	fRep = ZDCPixmapRep::sCreate(theRaster, sRectPOD(iSize), thePixelDesc);
 	}
 
-ZDCPixmap::ZDCPixmap(ZPoint iSize, const char* iPixvals,
+ZDCPixmap::ZDCPixmap(ZPointPOD iSize, const char* iPixvals,
 	const ZRGBAMap* iColorMap, size_t iColorMapSize)
 	{
 	RasterDesc theRasterDesc;
@@ -184,17 +184,17 @@ ZDCPixmap::ZDCPixmap(ZPoint iSize, const char* iPixvals,
 	theRasterDesc.fFlipped = false;
 	ZRef<ZDCPixmapRaster> theRaster = new ZDCPixmapRaster_StaticData(iPixvals, theRasterDesc);
 	PixelDesc thePixelDesc(iColorMap, iColorMapSize);
-	fRep = ZDCPixmapRep::sCreate(theRaster, iSize, thePixelDesc);
+	fRep = ZDCPixmapRep::sCreate(theRaster, sRectPOD(iSize), thePixelDesc);
 	}
 
 bool ZDCPixmap::operator==(const ZDCPixmap& other) const
 	{ return fRep == other.fRep; }
 
-ZPoint ZDCPixmap::Size() const
+ZPointPOD ZDCPixmap::Size() const
 	{
 	if (fRep)
 		return fRep->GetSize();
-	return ZPoint::sZero;
+	return sPointPOD(0, 0);
 	}
 
 ZCoord ZDCPixmap::Width() const
@@ -250,12 +250,12 @@ void ZDCPixmap::SetPixval(ZCoord iLocationH, ZCoord iLocationV, uint32 iPixval)
 	fRep->SetPixval(iLocationH, iLocationV, iPixval);
 	}
 
-void ZDCPixmap::CopyFrom(ZPoint iDestLocation, const ZDCPixmap& iSource, const ZRect& iSourceBounds)
+void ZDCPixmap::CopyFrom(ZPointPOD iDestLocation, const ZDCPixmap& iSource, const ZRectPOD& iSourceBounds)
 	{
 	if (!fRep)
 		return;
 
-	ZPoint destSize = fRep->GetSize();
+	ZPointPOD destSize = fRep->GetSize();
 	if (iDestLocation.h >= destSize.h || iDestLocation.v >= destSize.v)
 		return;
 
@@ -264,8 +264,8 @@ void ZDCPixmap::CopyFrom(ZPoint iDestLocation, const ZDCPixmap& iSource, const Z
 		return;
 
 	// Copy parameters into modifiable locals
-	ZRect realSourceBounds = iSourceBounds;
-	ZPoint realDestLocation = iDestLocation;
+	ZRectPOD realSourceBounds = iSourceBounds;
+	ZPointPOD realDestLocation = iDestLocation;
 
 	// Clip location and top left of bounds against zero
 	if (realDestLocation.h < 0)
@@ -291,8 +291,8 @@ void ZDCPixmap::CopyFrom(ZPoint iDestLocation, const ZDCPixmap& iSource, const Z
 		}
 
 	// Get the limiting bounds for our source and dest
-	ZRect availSourceBounds = sourceRep->GetBounds();
-	ZRect availDestBounds = fRep->GetBounds();
+	ZRectPOD availSourceBounds = sourceRep->GetBounds();
+	ZRectPOD availDestBounds = fRep->GetBounds();
 
 	// Offset into actual coordinates
 	realSourceBounds += availSourceBounds.TopLeft();
@@ -311,18 +311,18 @@ void ZDCPixmap::CopyFrom(ZPoint iDestLocation, const ZDCPixmap& iSource, const Z
 	fRep->CopyFrom(realDestLocation, sourceRep, realSourceBounds);
 	}
 
-void ZDCPixmap::CopyFrom(ZPoint iDestLocation,
+void ZDCPixmap::CopyFrom(ZPointPOD iDestLocation,
 			const void* iSourceBaseAddress,
 			const RasterDesc& iSourceRasterDesc,
 			const PixelDesc& iSourcePixelDesc,
-			const ZRect& iSourceBounds)
+			const ZRectPOD& iSourceBounds)
 	{
 	if (!fRep)
 		return;
 
 	// Copy parameters into modifiable locals
-	ZRect realSourceBounds = iSourceBounds;
-	ZPoint realDestLocation = iDestLocation;
+	ZRectPOD realSourceBounds = iSourceBounds;
+	ZPointPOD realDestLocation = iDestLocation;
 
 	// Clip location and top left of bounds against zero
 	if (realDestLocation.h < 0)
@@ -348,7 +348,7 @@ void ZDCPixmap::CopyFrom(ZPoint iDestLocation,
 		}
 
 	// Get the limiting bounds for our dest
-	ZRect availDestBounds = fRep->GetBounds();
+	ZRectPOD availDestBounds = fRep->GetBounds();
 
 	// Offset into actual coordinates
 	realDestLocation += availDestBounds.TopLeft();
@@ -364,18 +364,18 @@ void ZDCPixmap::CopyFrom(ZPoint iDestLocation,
 		iSourceBaseAddress, iSourceRasterDesc, iSourcePixelDesc, realSourceBounds);
 	}
 
-void ZDCPixmap::CopyTo(ZPoint iDestLocation,
+void ZDCPixmap::CopyTo(ZPointPOD iDestLocation,
 	void* iDestBaseAddress,
 	const RasterDesc& iDestRasterDesc,
 	const PixelDesc& iDestPixelDesc,
-	const ZRect& iSourceBounds) const
+	const ZRectPOD& iSourceBounds) const
 	{
 	if (!fRep)
 		return;
 
 	// Copy parameters into modifiable locals
-	ZRect realSourceBounds = iSourceBounds;
-	ZPoint realDestLocation = iDestLocation;
+	ZRectPOD realSourceBounds = iSourceBounds;
+	ZPointPOD realDestLocation = iDestLocation;
 
 	// Clip location and top left of bounds against zero
 	if (realDestLocation.h < 0)
@@ -401,7 +401,7 @@ void ZDCPixmap::CopyTo(ZPoint iDestLocation,
 		}
 
 	// Get the limiting bounds for our source
-	ZRect availSourceBounds = fRep->GetBounds();
+	ZRectPOD availSourceBounds = fRep->GetBounds();
 
 	// Offset into actual coordinates
 	realSourceBounds += availSourceBounds.TopLeft();
@@ -590,7 +590,7 @@ ZDCPixmapCache::~ZDCPixmapCache()
 
 ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
 	const ZRef<ZDCPixmapRaster>& iRaster,
-	const ZRect& iBounds,
+	const ZRectPOD& iBounds,
 	const PixelDesc& iPixelDesc)
 	{
 	ZRef<ZDCPixmapRep> result;
@@ -604,7 +604,7 @@ ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
 
 ZRef<ZDCPixmapRep> ZDCPixmapRep::sCreate(
 	const RasterDesc& iRasterDesc,
-	const ZRect& iBounds,
+	const ZRectPOD& iBounds,
 	const PixelDesc& iPixelDesc)
 	{
 	ZRef<ZDCPixmapRep> result;
@@ -622,7 +622,7 @@ ZDCPixmapRep::ZDCPixmapRep()
 	{}
 
 ZDCPixmapRep::ZDCPixmapRep(const ZRef<ZDCPixmapRaster>& iRaster,
-	const ZRect& iBounds, const PixelDesc& iPixelDesc)
+	const ZRectPOD& iBounds, const PixelDesc& iPixelDesc)
 :	fRaster(iRaster),
 	fBounds(iBounds),
 	fPixelDesc(iPixelDesc)
@@ -665,14 +665,14 @@ void ZDCPixmapRep::SetPixval(ZCoord iLocationH, ZCoord iLocationV, uint32 iPixva
 	fRaster->SetPixval(iLocationH, iLocationV, iPixval);
 	}
 
-void ZDCPixmapRep::CopyFrom(ZPoint iDestLocation,
-	const ZRef<ZDCPixmapRep>& iSourceRep, const ZRect& iSourceBounds)
+void ZDCPixmapRep::CopyFrom(ZPointPOD iDestLocation,
+	const ZRef<ZDCPixmapRep>& iSourceRep, const ZRectPOD& iSourceBounds)
 	{
 	if (kDebug_Pixmap <= ZCONFIG_Debug)
 		{
 		ZAssertStop(kDebug_Pixmap, iSourceBounds == (iSourceBounds & iSourceRep->GetBounds()));
 	
-		ZRect destBounds = iSourceBounds + (iDestLocation - iSourceBounds.TopLeft());
+		ZRectPOD destBounds = iSourceBounds + (iDestLocation - iSourceBounds.TopLeft());
 		ZAssertStop(kDebug_Pixmap, destBounds == (destBounds & fBounds));
 		}
 
@@ -687,15 +687,15 @@ void ZDCPixmapRep::CopyFrom(ZPoint iDestLocation,
 		iDestLocation);
 	}
 
-void ZDCPixmapRep::CopyFrom(ZPoint iDestLocation,
+void ZDCPixmapRep::CopyFrom(ZPointPOD iDestLocation,
 	const void* iSourceBaseAddress,
 	const RasterDesc& iSourceRasterDesc,
 	const PixelDesc& iSourcePixelDesc,
-	const ZRect& iSourceBounds)
+	const ZRectPOD& iSourceBounds)
 	{
 	if (kDebug_Pixmap <= ZCONFIG_Debug)
 		{
-		ZRect destBounds = iSourceBounds + (iDestLocation - iSourceBounds.TopLeft());
+		ZRectPOD destBounds = iSourceBounds + (iDestLocation - iSourceBounds.TopLeft());
 		ZAssertStop(kDebug_Pixmap, destBounds == (destBounds & fBounds));
 		}
 
@@ -705,11 +705,11 @@ void ZDCPixmapRep::CopyFrom(ZPoint iDestLocation,
 		iSourceBounds, iDestLocation);
 	}
 
-void ZDCPixmapRep::CopyTo(ZPoint iDestLocation,
+void ZDCPixmapRep::CopyTo(ZPointPOD iDestLocation,
 	void* iDestBaseAddress,
 	const RasterDesc& iDestRasterDesc,
 	const PixelDesc& iDestPixelDesc,
-	const ZRect& iSourceBounds)
+	const ZRectPOD& iSourceBounds)
 	{
 	ZAssertStop(kDebug_Pixmap, iSourceBounds == (iSourceBounds & fBounds));
 
@@ -736,9 +736,9 @@ ZRef<ZDCPixmapRep> ZDCPixmapRep::Touch()
 		newRasterDesc.fRowCount = fBounds.Height();
 
 		ZRef<ZDCPixmapRep> newRep =
-			sCreate(newRasterDesc, fBounds.Size(), fPixelDesc);
+			sCreate(newRasterDesc, sRectPOD(fBounds.Size()), fPixelDesc);
 
-		newRep->CopyFrom(ZPoint(0,0),
+		newRep->CopyFrom(sPointPOD(0,0),
 			fRaster->GetBaseAddress(), ourRasterDesc, fPixelDesc, fBounds);
 
 		return newRep;

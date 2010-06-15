@@ -24,10 +24,7 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "zoolib/ZCompat_NonCopyable.h"
 #include "zoolib/ZDCPixmapNS.h"
-#include "zoolib/ZGeom.h"
 #include "zoolib/ZMulti_T.h"
-#include "zoolib/ZRGBA.h"
-#include "zoolib/ZRef_Counted.h"
 
 // For documentation, see ZDCPixmapNS.cpp
 
@@ -68,37 +65,37 @@ public:
 	specifies the depth and type of pixmap that's required, but makes no comment on the layout
 	of the pixmap. Platform specific code does the work of interpreting what 'efficient'
 	means for its purposes. */
-	ZDCPixmap(ZPoint iSize, ZDCPixmapNS::EFormatEfficient iFormat);
+	ZDCPixmap(ZPointPOD iSize, ZDCPixmapNS::EFormatEfficient iFormat);
 
 	/** \overload */
-	ZDCPixmap(ZPoint iSize, ZDCPixmapNS::EFormatEfficient iFormat, const ZRGBA_POD& iFillColor);
+	ZDCPixmap(ZPointPOD iSize, ZDCPixmapNS::EFormatEfficient iFormat, const ZRGBA_POD& iFillColor);
 
 	/** This constructor is a shorthand for creating a pixmap that has a known pixel layout, where
 	that layout is specified by the EFormatStandard enum that is passed in. The pixmap *may* be the
 	same as what the 'efficient' would create, but that will depend entirely on which platform the
 	code executes on. If iFillColor is non-nullptr, the pixmap's contents will be initialized to that
 	color, otherwise its contents will be undefined. */
-	ZDCPixmap(ZPoint iSize, ZDCPixmapNS::EFormatStandard iFormat);
+	ZDCPixmap(ZPointPOD iSize, ZDCPixmapNS::EFormatStandard iFormat);
 
 	/** \overload */
-	ZDCPixmap(ZPoint iSize, ZDCPixmapNS::EFormatStandard iFormat, const ZRGBA_POD& iFillColor);
+	ZDCPixmap(ZPointPOD iSize, ZDCPixmapNS::EFormatStandard iFormat, const ZRGBA_POD& iFillColor);
 
 	/** \overload */
 	ZDCPixmap(const ZDCPixmapNS::RasterDesc& iRasterDesc,
-		ZPoint iSize, const ZDCPixmapNS::PixelDesc& iPixelDesc);
+		ZPointPOD iSize, const ZDCPixmapNS::PixelDesc& iPixelDesc);
 
 	/** Initialized from a subset of a source. The actual bounds to be copied will be the
 	intersection of \a iSourceBounds and the bounds of \a iSource. The new pixmap will most
 	likely share iSource's raster, making this a very inexpensive operation, until a mutating
 	operation occurs. */
-	ZDCPixmap(const ZDCPixmap& iSource, const ZRect& iSourceBounds);
+	ZDCPixmap(const ZDCPixmap& iSource, const ZRectPOD& iSourceBounds);
 
 	/** Referencing pixvals and copying a color table. */
-	ZDCPixmap(ZPoint iSize, const uint8* iPixvals,
+	ZDCPixmap(ZPointPOD iSize, const uint8* iPixvals,
 		const ZRGBA_POD* iColorTable, size_t iColorTableSize);
 
 	/** Referencing pixVals and copying a color map. */
-	ZDCPixmap(ZPoint iSize, const char* iPixvals,
+	ZDCPixmap(ZPointPOD iSize, const char* iPixvals,
 		const ZRGBAMap* iColorMap, size_t iColorMapSize);
 
 	bool operator==(const ZDCPixmap& other) const;
@@ -110,44 +107,44 @@ public:
 /** \name Dimensions
 	The number of pixels horizontally and vertically.
 */	//@{
-	ZPoint Size() const;
+	ZPointPOD Size() const;
 	ZCoord Width() const;
 	ZCoord Height() const;
 	//@}
 
 /** \name Access to pixels, by RGB.
 */	//@{
-	ZRGBA_POD GetPixel(const ZPoint& iLocation) const;
+	ZRGBA_POD GetPixel(const ZPointPOD& iLocation) const;
 	ZRGBA_POD GetPixel(ZCoord iLocationH, ZCoord iLocationV) const;
 
-	void SetPixel(const ZPoint& iLocation, const ZRGBA_POD& iColor);
+	void SetPixel(const ZPointPOD& iLocation, const ZRGBA_POD& iColor);
 	void SetPixel(ZCoord iLocationH, ZCoord iLocationV, const ZRGBA_POD& iColor);
 	//@}
 
 /** \name Access to pixels, by pixel value (aka pixval.)
 */	//@{
-	uint32 GetPixval(const ZPoint& iLocation) const;
+	uint32 GetPixval(const ZPointPOD& iLocation) const;
 	uint32 GetPixval(ZCoord iLocationH, ZCoord iLocationV) const;
 
-	void SetPixval(const ZPoint& iLocation, uint32 iPixval);
+	void SetPixval(const ZPointPOD& iLocation, uint32 iPixval);
 	void SetPixval(ZCoord iLocationH, ZCoord iLocationV, uint32 iPixval);
 	//@}
 
 /** \name Blitting rectangles of pixels
 */	//@{
-	void CopyFrom(ZPoint iDestLocation, const ZDCPixmap& iSource, const ZRect& iSourceBounds);
+	void CopyFrom(ZPointPOD iDestLocation, const ZDCPixmap& iSource, const ZRectPOD& iSourceBounds);
 
-	void CopyFrom(ZPoint iDestLocation,
+	void CopyFrom(ZPointPOD iDestLocation,
 		const void* iSourceBaseAddress,
 		const ZDCPixmapNS::RasterDesc& iSourceRasterDesc,
 		const ZDCPixmapNS::PixelDesc& iSourcePixelDesc,
-		const ZRect& iSourceBounds);
+		const ZRectPOD& iSourceBounds);
 
-	void CopyTo(ZPoint iDestLocation,
+	void CopyTo(ZPointPOD iDestLocation,
 		void* iDestBaseAddress,
 		const ZDCPixmapNS::RasterDesc& iDestRasterDesc,
 		const ZDCPixmapNS::PixelDesc& iDestPixelDesc,
-		const ZRect& iSourceBounds) const;
+		const ZRectPOD& iSourceBounds) const;
 	//@}
 
 /** \name Applying a function to every pixel
@@ -170,7 +167,7 @@ public:
 	void* GetBaseAddress();
 	const ZDCPixmapNS::RasterDesc& GetRasterDesc() const;
 	const ZDCPixmapNS::PixelDesc& GetPixelDesc() const;
-	const ZRect& GetBounds() const;
+	const ZRectPOD& GetBounds() const;
 	//@}
 
 private:
@@ -267,21 +264,21 @@ public:
 	static bool sCheckAccessEnabled() { return false; }
 
 // Factories
-	typedef ZMulti_T3<ZRef<ZDCPixmapRaster>, ZRect, ZDCPixmapNS::PixelDesc>
+	typedef ZMulti_T3<ZRef<ZDCPixmapRaster>, ZRectPOD, ZDCPixmapNS::PixelDesc>
 		CreateRaster_t;
 
 	static ZRef<ZDCPixmapRep> sCreate(const ZRef<ZDCPixmapRaster>& iRaster,
-		const ZRect& iBounds, const ZDCPixmapNS::PixelDesc& iPixelDesc);
+		const ZRectPOD& iBounds, const ZDCPixmapNS::PixelDesc& iPixelDesc);
 
-	typedef ZMulti_T3<ZDCPixmapNS::RasterDesc, ZRect, ZDCPixmapNS::PixelDesc>
+	typedef ZMulti_T3<ZDCPixmapNS::RasterDesc, ZRectPOD, ZDCPixmapNS::PixelDesc>
 		CreateRasterDesc_t;
 
 	static ZRef<ZDCPixmapRep> sCreate(const ZDCPixmapNS::RasterDesc& iRasterDesc,
-		const ZRect& iBounds, const ZDCPixmapNS::PixelDesc& iPixelDesc);
+		const ZRectPOD& iBounds, const ZDCPixmapNS::PixelDesc& iPixelDesc);
 
 // ctor/dtor
 	ZDCPixmapRep(const ZRef<ZDCPixmapRaster>& iRaster,
-		const ZRect& iBounds, const ZDCPixmapNS::PixelDesc& iPixelDesc);
+		const ZRectPOD& iBounds, const ZDCPixmapNS::PixelDesc& iPixelDesc);
 
 	virtual ~ZDCPixmapRep();
 
@@ -293,25 +290,25 @@ public:
 	void SetPixval(ZCoord iLocationH, ZCoord iLocationV, uint32 iPixval);
 
 // Blitting
-	void CopyFrom(ZPoint iDestLocation,
-		const ZRef<ZDCPixmapRep>& iSourceRep, const ZRect& iSourceBounds);
+	void CopyFrom(ZPointPOD iDestLocation,
+		const ZRef<ZDCPixmapRep>& iSourceRep, const ZRectPOD& iSourceBounds);
 
-	void CopyFrom(ZPoint iDestLocation,
+	void CopyFrom(ZPointPOD iDestLocation,
 		const void* iSourceBaseAddress,
 		const ZDCPixmapNS::RasterDesc& iSourceRasterDesc,
 		const ZDCPixmapNS::PixelDesc& iSourcePixelDesc,
-		const ZRect& iSourceBounds);
+		const ZRectPOD& iSourceBounds);
 
-	void CopyTo(ZPoint iDestLocation,
+	void CopyTo(ZPointPOD iDestLocation,
 		void* iDestBaseAddress,
 		const ZDCPixmapNS::RasterDesc& iDestRasterDesc,
 		const ZDCPixmapNS::PixelDesc& iDestPixelDesc,
-		const ZRect& iSourceBounds);
+		const ZRectPOD& iSourceBounds);
 
 // Attributes
-	ZPoint GetSize();
+	ZPointPOD GetSize();
 
-	const ZRect& GetBounds();
+	const ZRectPOD& GetBounds();
 
 	const ZDCPixmapNS::PixelDesc& GetPixelDesc();
 
@@ -324,7 +321,7 @@ public:
 
 protected:
 	ZRef<ZDCPixmapRaster> fRaster;
-	ZRect fBounds;
+	ZRectPOD fBounds;
 	ZDCPixmapNS::PixelDesc fPixelDesc;
 	ZRef<ZDCPixmapCache> fCache;
 	};
@@ -359,16 +356,16 @@ inline ZDCPixmap::ZDCPixmap(const ZRef<ZDCPixmapRep>& iRep)
 :	fRep(iRep)
 	{}
 
-inline ZRGBA_POD ZDCPixmap::GetPixel(const ZPoint& iLocation) const
+inline ZRGBA_POD ZDCPixmap::GetPixel(const ZPointPOD& iLocation) const
 	{ return this->GetPixel(iLocation.h, iLocation.v); }
 
-inline uint32 ZDCPixmap::GetPixval(const ZPoint& iLocation) const
+inline uint32 ZDCPixmap::GetPixval(const ZPointPOD& iLocation) const
 	{ return this->GetPixval(iLocation.h, iLocation.v); }
 
-inline void ZDCPixmap::SetPixel(const ZPoint& iLocation, const ZRGBA_POD& iColor)
+inline void ZDCPixmap::SetPixel(const ZPointPOD& iLocation, const ZRGBA_POD& iColor)
 	{ this->SetPixel(iLocation.h, iLocation.v, iColor); }
 
-inline void ZDCPixmap::SetPixval(const ZPoint& iLocation, uint32 iPixval)
+inline void ZDCPixmap::SetPixval(const ZPointPOD& iLocation, uint32 iPixval)
 	{ this->SetPixval(iLocation.h, iLocation.v, iPixval); }
 
 inline void ZDCPixmap::Munge(ZDCPixmapNS::MungeProc iMungeProc, void* iRefcon)
@@ -392,17 +389,17 @@ inline const ZDCPixmapNS::RasterDesc& ZDCPixmap::GetRasterDesc() const
 inline const ZDCPixmapNS::PixelDesc& ZDCPixmap::GetPixelDesc() const
 	{ return fRep->GetPixelDesc(); }
 
-inline const ZRect& ZDCPixmap::GetBounds() const
+inline const ZRectPOD& ZDCPixmap::GetBounds() const
 	{ return fRep->GetBounds(); }
 
 // =================================================================================================
 #pragma mark -
 #pragma mark * ZDCPixmapRep inline definitions
 
-inline const ZRect& ZDCPixmapRep::GetBounds()
+inline const ZRectPOD& ZDCPixmapRep::GetBounds()
 	{ return fBounds; }
 
-inline ZPoint ZDCPixmapRep::GetSize()
+inline ZPointPOD ZDCPixmapRep::GetSize()
 	{ return fBounds.Size(); }
 
 inline const ZDCPixmapNS::PixelDesc& ZDCPixmapRep::GetPixelDesc()

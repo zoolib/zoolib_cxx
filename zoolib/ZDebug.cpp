@@ -247,7 +247,7 @@ static void spHandleDebug_Win(const Params_t& iParams, va_list iArgs)
 			}
 		else
 			{
-			int result = ::MessageBoxA(nullptr, theBuf, "DebugBreak -- Application will exit",
+			/*int result = */::MessageBoxA(nullptr, theBuf, "DebugBreak -- Application will exit",
 				MB_SETFOREGROUND | MB_SYSTEMMODAL | MB_ICONHAND | MB_OK);
 
 			::ExitProcess(0);

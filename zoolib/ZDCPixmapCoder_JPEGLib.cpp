@@ -329,7 +329,7 @@ void ZDCPixmapEncoder_JPEGLib::Imp_Write(const ZStreamW& iStream,
 	const void* iBaseAddress,
 	const RasterDesc& iRasterDesc,
 	const PixelDesc& iPixelDesc,
-	const ZRect& iBounds)
+	const ZRectPOD& iBounds)
 	{
 	jpeg_compress_struct theJCS;
 
@@ -475,7 +475,7 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 			sourcePixvalDesc = PixvalDesc(eFormatStandard_Gray_8);
 			rowBufferVector.resize(theJDS.image_width);
 
-			oPixmap = ZDCPixmap(ZPoint(theJDS.image_width, theJDS.image_height),
+			oPixmap = ZDCPixmap(sPointPOD(theJDS.image_width, theJDS.image_height),
 				eFormatEfficient_Gray_8);
 			}
 		else if (theJDS.out_color_space == JCS_RGB)
@@ -484,7 +484,7 @@ void ZDCPixmapDecoder_JPEGLib::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPix
 			sourcePixvalDesc = PixvalDesc(eFormatStandard_RGB_24);
 			rowBufferVector.resize(3 * theJDS.image_width);
 
-			oPixmap = ZDCPixmap(ZPoint(theJDS.image_width, theJDS.image_height),
+			oPixmap = ZDCPixmap(sPointPOD(theJDS.image_width, theJDS.image_height),
 				eFormatEfficient_Color_24);
 			}
 		else

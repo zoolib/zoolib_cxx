@@ -45,7 +45,7 @@ public:
 		const void* iBaseAddress,
 		const ZDCPixmapNS::RasterDesc& iRasterDesc,
 		const ZDCPixmapNS::PixelDesc& iPixelDesc,
-		const ZRect& iBounds);
+		const ZRectPOD& iBounds);
 
 private:
 	bool fInterlace;
@@ -72,7 +72,7 @@ public:
 private:
 	ZRef<ZDCPixmapRaster_Simple> fRaster;
 	ZDCPixmapNS::PixelDesc fPixelDesc;
-	ZPoint fSize;
+	ZPointPOD fSize;
 	bool fReadHeader;
 	bool fReadEnd;
 	bool fIs89a;

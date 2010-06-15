@@ -39,7 +39,7 @@ Region sCopyRegion(Region iSource)
 	return result;
 	}
 
-Region sNewRectRegion(const ZRect& iRect)
+Region sNewRectRegion(const ZRectPOD& iRect)
 	{
 	Region result = ::XCreateRegion();
 	XRectangle tempRect = iRect;
@@ -47,7 +47,7 @@ Region sNewRectRegion(const ZRect& iRect)
 	return result;
 	}
 
-bool sDecomposeRepProc(const ZRect& iRect, void* iRefcon)
+bool sDecomposeRepProc(const ZRectPOD& iRect, void* iRefcon)
 	{
 	// Use ZAccumulator_T at some point.
 	Region theRegion = static_cast<Region>(iRefcon);
@@ -95,7 +95,7 @@ Region sMakeRegion(const ZRef<ZGRgnRep>& iRep)
 namespace { // anonymous
 
 class Make_Rect
-:	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRect&>
+:	public ZFunctionChain_T<ZRef<ZGRgnRep>, const ZRectPOD&>
 	{
 	virtual bool Invoke(Result_t& oResult, Param_t iParam)
 		{
@@ -161,7 +161,7 @@ size_t ZGRgnRep_XRegion::Decompose(DecomposeProc iProc, void* iRefcon)
 	for (size_t x = 0; x < skanky->numRects; ++x)
 		{
 		++callbacksMade;
-		ZRect theRect(skanky->rects[x].x1, skanky->rects[x].y1,
+		ZRectPOD theRect(skanky->rects[x].x1, skanky->rects[x].y1,
 			skanky->rects[x].x2, skanky->rects[x].y2);
 		if (iProc(theRect, iRefcon))
 			break;
@@ -175,7 +175,7 @@ bool ZGRgnRep_XRegion::Contains(ZCoord iH, ZCoord iV)
 bool ZGRgnRep_XRegion::IsEmpty()
 	{ return ::XEmptyRegion(fRegion); }
 
-ZRect ZGRgnRep_XRegion::Bounds()
+ZRectPOD ZGRgnRep_XRegion::Bounds()
 	{
 	XRectangle theBounds;
 	::XClipBox(fRegion, &theBounds);
@@ -229,13 +229,13 @@ ZRef<ZGRgnRep> ZGRgnRep_XRegion::Offsetted(ZCoord iH, ZCoord iV)
 	return new ZGRgnRep_XRegion(result);
 	}
 
-void ZGRgnRep_XRegion::Include(const ZRect& iRect)
+void ZGRgnRep_XRegion::Include(const ZRectPOD& iRect)
 	{
 	XRectangle temp = iRect;
 	::XUnionRectWithRegion(&temp, fRegion, fRegion);
 	}
 
-ZRef<ZGRgnRep> ZGRgnRep_XRegion::Including(const ZRect& iRect)
+ZRef<ZGRgnRep> ZGRgnRep_XRegion::Including(const ZRectPOD& iRect)
 	{
 	Region result = sCopyRegion(fRegion);
 	XRectangle temp = iRect;
@@ -243,28 +243,28 @@ ZRef<ZGRgnRep> ZGRgnRep_XRegion::Including(const ZRect& iRect)
 	return new ZGRgnRep_XRegion(result);
 	}
 
-void ZGRgnRep_XRegion::Intersect(const ZRect& iRect)
+void ZGRgnRep_XRegion::Intersect(const ZRectPOD& iRect)
 	{
 	Region temp = sNewRectRegion(iRect);
 	::XIntersectRegion(fRegion, temp, fRegion);
 	::XDestroyRegion(temp);
 	}
 
-ZRef<ZGRgnRep> ZGRgnRep_XRegion::Intersecting(const ZRect& iRect)
+ZRef<ZGRgnRep> ZGRgnRep_XRegion::Intersecting(const ZRectPOD& iRect)
 	{
 	Region result = sNewRectRegion(iRect);
 	::XIntersectRegion(fRegion, result, result);
 	return new ZGRgnRep_XRegion(result);
 	}
 
-void ZGRgnRep_XRegion::Exclude(const ZRect& iRect)
+void ZGRgnRep_XRegion::Exclude(const ZRectPOD& iRect)
 	{
 	Region temp = sNewRectRegion(iRect);
 	::XSubtractRegion(fRegion, temp, fRegion);
 	::XDestroyRegion(temp);
 	}
 
-ZRef<ZGRgnRep> ZGRgnRep_XRegion::Excluding(const ZRect& iRect)
+ZRef<ZGRgnRep> ZGRgnRep_XRegion::Excluding(const ZRectPOD& iRect)
 	{
 	Region result = sNewRectRegion(iRect);
 	::XSubtractRegion(fRegion, result, result);

@@ -68,7 +68,7 @@ void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 	const void* iBaseAddress,
 	const RasterDesc& iRasterDesc,
 	const PixelDesc& iPixelDesc,
-	const ZRect& iBounds)
+	const ZRectPOD& iBounds)
 	{
 	if (fWithFileHeader)
 		{
@@ -79,7 +79,7 @@ void ZDCPixmapEncoder_BMP::Imp_Write(const ZStreamW& iStream,
 		iStream.WriteUInt32LE(54); // bfOffBits
 		}
 
-	ZPoint theSize = iBounds.Size();
+	ZPointPOD theSize = iBounds.Size();
 
 	iStream.WriteUInt32LE(0x28); // biSize
 	iStream.WriteUInt32LE(theSize.h); // biWidth
@@ -289,7 +289,7 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			{
 			sourcePixelDesc =
 				PixelDesc(&sourceColorVector[0], sourceColorVector.size());
-			thePixmap = ZDCPixmap(sourceRasterDesc, ZPoint(biWidth, biHeight), sourcePixelDesc);
+			thePixmap = ZDCPixmap(sourceRasterDesc, sPointPOD(biWidth, biHeight), sourcePixelDesc);
 			break;
 			}
 		case 16:
@@ -297,7 +297,7 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			sourcePixelDesc = PixelDesc(0x7C00, 0x03E0, 0x001F, 0);
 			sourceRasterDesc.fPixvalDesc.fBigEndian = false;
 			thePixmap =
-				ZDCPixmap(ZPoint(biWidth, biHeight), eFormatEfficient_Color_16);
+				ZDCPixmap(sPointPOD(biWidth, biHeight), eFormatEfficient_Color_16);
 			break;
 			}
 		case 24:
@@ -305,7 +305,7 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			sourcePixelDesc =
 				PixelDesc(0x000000FF, 0x0000FF00, 0x00FF0000, 0x00000000);
 			thePixmap =
-				ZDCPixmap(ZPoint(biWidth, biHeight), eFormatEfficient_Color_24);
+				ZDCPixmap(sPointPOD(biWidth, biHeight), eFormatEfficient_Color_24);
 			break;
 			}
 		case 32:
@@ -313,7 +313,7 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			sourcePixelDesc =
 				PixelDesc(0x0000FF00, 0x00FF0000, 0xFF000000, 0x00000000);
 			thePixmap =
-				ZDCPixmap(ZPoint(biWidth, biHeight), eFormatEfficient_Color_32);
+				ZDCPixmap(sPointPOD(biWidth, biHeight), eFormatEfficient_Color_32);
 			break;
 			}
 		}
@@ -325,18 +325,18 @@ void ZDCPixmapDecoder_BMP::Imp_Read(const ZStreamR& iStream, ZDCPixmap& oPixmap)
 			sourceRasterDesc.fRowCount = 1;
 			vector<uint8> rowBufferVector(sourceRasterDesc.fRowBytes);
 			uint8* rowBuffer = &rowBufferVector[0];
-			ZRect sourceRect(biWidth, 1);
+			ZRectPOD sourceRect = sRectPOD(biWidth, 1);
 			for (long y = 0; y < biHeight; ++y)
 				{
 				iStream.Read(rowBuffer, sourceRasterDesc.fRowBytes);
 				if (sourceFlipped)
 					{
-					thePixmap.CopyFrom(ZPoint(0, biHeight - y - 1),
+					thePixmap.CopyFrom(sPointPOD(0, biHeight - y - 1),
 						rowBuffer, sourceRasterDesc, sourcePixelDesc, sourceRect);
 					}
 				else
 					{
-					thePixmap.CopyFrom(ZPoint(0, y),
+					thePixmap.CopyFrom(sPointPOD(0, y),
 						rowBuffer, sourceRasterDesc, sourcePixelDesc, sourceRect);
 					}
 				}

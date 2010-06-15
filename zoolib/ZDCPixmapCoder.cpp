@@ -62,7 +62,7 @@ void ZDCPixmapEncoder::Write(const ZStreamW& iStream,
 	const void* iBaseAddress,
 	const ZDCPixmapNS::RasterDesc& iRasterDesc,
 	const ZDCPixmapNS::PixelDesc& iPixelDesc,
-	const ZRect& iBounds)
+	const ZRectPOD& iBounds)
 	{
 	this->Imp_Write(iStream, iBaseAddress, iRasterDesc, iPixelDesc, iBounds);
 	}
