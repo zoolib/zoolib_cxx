@@ -623,7 +623,7 @@ ZRef<IDevice> Device_BBDevMgr::pUseDevice()
 Manager_BBDevMgr::Manager_BBDevMgr()
 :	fNextID(1)
 	{
-	HRESULT theHRESULT = ::CoCreateInstance(
+	/*HRESULT theHRESULT = */::CoCreateInstance(
 		IDeviceManager::sCLSID,
 		nullptr,
 		CLSCTX_ALL,

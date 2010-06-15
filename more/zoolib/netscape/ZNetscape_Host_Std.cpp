@@ -190,7 +190,7 @@ NPError HostMeister_Std::GetURLNotify(NPP npp,
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		{
 		s << "GetURLNotify: ";
-		s.Writef(" notifyData: %08X", notifyData);
+		s.Writef(" notifyData: %p", notifyData);
 		s << ", iRelativeURL: " << URL;
 		if (window)
 			s << ", target: " << window;
@@ -209,7 +209,7 @@ NPError HostMeister_Std::PostURLNotify(NPP npp,
 	if (ZLOG(s, eDebug, "HostMeister_Std"))
 		{
 		s << "PostURLNotify: " << URL;
-		s.Writef(" notifyData: %08X", notifyData);
+		s.Writef(" notifyData: %p", notifyData);
 		s << ", URL: " << URL;
 		if (window)
 			s << ", target: " << window;
@@ -721,7 +721,7 @@ bool Host_Std::Sender::pDeliverData()
 	const size_t countReadable = theStreamR.CountReadable();
 
 	if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
-		s.Writef("countReadable = %d", countReadable);
+		s.Writef("countReadable = %zu", countReadable);
 	
 	if (countReadable == 0)
 		return false;
@@ -747,7 +747,7 @@ bool Host_Std::Sender::pDeliverData()
 			return false;
 
 		if (ZLOG(s, eDebug + 1, "Host_Std::Sender"))
-			s.Writef("countRead = %d", countRead);
+			s.Writef("countRead = %zu", countRead);
 
 		for (size_t start = 0; start < countRead; /*no inc*/)
 			{

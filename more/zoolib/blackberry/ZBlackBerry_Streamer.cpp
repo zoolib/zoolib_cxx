@@ -1344,7 +1344,7 @@ void Commer_Streamer::pReadOne(uint16 iChannelID, uint16 iPayloadSize, const ZSt
 						{
 						if (ZLOG(s, eNotice, "ZBlackBerry::Commer_Streamer"))
 							{
-							s.Writef("channel %d, expected sequence: %d, received: %d",
+							s.Writef("channel %d, expected sequence: %u, received: %u",
 								seqChannelID, theChannel->fNextSequence, sequence);
 							}					
 						}
