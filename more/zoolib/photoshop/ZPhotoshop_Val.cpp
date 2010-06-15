@@ -1321,7 +1321,7 @@ ZQ_T<Val> Map::QGet(KeyID iKey) const
 	if (fAD)
 		{
 		TypeID theType;
-		if (noErr != spPSActionDescriptor->GetType(fAD, iKey, &theType))
+		if (noErr == spPSActionDescriptor->GetType(fAD, iKey, &theType))
 			{
 			switch (theType)
 				{
