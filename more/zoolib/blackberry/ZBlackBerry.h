@@ -27,7 +27,6 @@ OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "zoolib/ZStreamer.h"
 #include "zoolib/ZThread.h"
 
-#include <set>
 #include <vector>
 
 namespace ZooLib {
