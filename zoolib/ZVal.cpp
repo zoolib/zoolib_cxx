@@ -60,24 +60,43 @@ even unsigned vs signed).
 
 There are several ways to get a value. Which you use depends on what you're doing:
 \code
-// Assuming a Val in theVal
+// In the following we assume that something like this:
+Val theVal = 27;
+// has initialized theVal.
+
+// Example 1:
 int theInt1 = theVal.Get_T<int>();
+
+// Example 2:
 int theInt2 = theVal.DGet_T<int>(19);
+
+// Example 3: (deprecated)
 int theInt3;
 if (theVal.QGet_T<int>(theInt3))
 	{} // use theInt3
+
+// Example 4:
+if (ZQ_T<int> theQ = theVal.QGet_T<int>())
+	{} // Use theQ.Get();
+
+// Example 5:
 if (const int* theIntPtr = theVal.PGet_T<int>())
 	{} // use *theIntptr
 \endcode
-The first is the simplest -- simply call \c Get_T<yyy>, and you'll be returned a \c yyy. The actual
-value will be either the default value for a \c yyy (e.g. zero for numbers), or it will be the
-value that was stored.
+The first style is the simplest; simply call \c Get_T<yyy>, and you'll be returned a \c yyy. The
+actual value will be either the default value for a \c yyy (e.g. zero for numbers), or it will
+be the value that was stored.
 
-The second example gives you control over what the default value will be, in this case we're
-passing 19, so theInt2 will be 19 or whatever int was previously assigned to theVal.
+The second gives you control over what the default value will be, in this case we're
+passing 19, so \c theInt2 will be 19 or whatever int was previously assigned to \c theVal.
 
-The third example puts the stored value in theInt3 and returns true, or leaves theInt3 untouched
-and returns false. The 'Q' stands for Query (cf LISPish function names).
+In the third example the stored value is placed in \c theInt3 and true retured, or \c theInt3 is
+untouched and false returned. The 'Q' stands for Query (cf LISPish function names). This variant is
+increasingly being replaced by the following.
+
+Our fourth example returns a \c ZQ_T<int>. Evaluated in a boolean context a ZQ_T returns a
+true-equivalent if it had a value assigned to it, false otherwise. So we can declare space
+for the result \em and check if we got one without polluting the enclosing scope with another name. 
 
 The final example is not available in all Val suites. For those where there is an accessible
 storage location we can return a pointer to the actual value iff what's stored is of the correct
