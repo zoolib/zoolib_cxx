@@ -48,7 +48,7 @@ static void spCheckIt(ZStream_SHA1::Context& ioContext, const uint8 iDigest[20])
 	{
 	uint8 theDigest[20];
 	ZStream_SHA1::sFinal(ioContext, theDigest);
-	ZAssertLog(0, 0 == memcmp(theDigest, iDigest, 20));
+	ZAssertLog(0, 0 == ZMemCompare(theDigest, iDigest, 20));
 	}
 
 void ZStream_SHA1::sTest()
@@ -64,7 +64,7 @@ void ZStream_SHA1::sTest()
 
 	sInit(theContext);
 	static const char string2[] = "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
-	sUpdate(theContext, string2, strlen(string2));
+	sUpdate(theContext, string2, std::strlen(string2));
 	const uint8 check2[] = {
 		0x84, 0x98, 0x3E, 0x44, 0x1C, 0x3B, 0xD2, 0x6E, 0xBA, 0xAE,
 		0x4A, 0xA1, 0xF9, 0x51, 0x29, 0xE5, 0xE5, 0x46, 0x70, 0xF1 };
